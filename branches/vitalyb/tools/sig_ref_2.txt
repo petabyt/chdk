@@ -1,0 +1,9 @@
+GetSystemTime 0xFFC04D38
+GetPropertyCase 0xFFC14DEC
+SetPropertyCase 0xFFC14C9C
+RefreshPhysicalScreen 0xFFD8752C
+DisplayImagePhysicalScreen 0xffd36fe0
+SetParameterData 0xFFD75FB0
+GetParameterData 0xFFD76090
+Mount_FileSystem 0xffc602ec
+GetFocusLensSubjectDistance 0xFFEA2F3C
