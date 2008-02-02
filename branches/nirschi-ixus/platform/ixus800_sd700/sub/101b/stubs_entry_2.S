@@ -1,0 +1,14 @@
+#include "stubs_asm.h"
+
+NHSTUB(VbattGet, 0xFF82C150)
+NHSTUB(free, 0xFFB0EFDC)
+NHSTUB(kbd_pwr_on, 0xFF827ECC)
+NHSTUB(kbd_pwr_off, 0xFF827F0C)
+NHSTUB(GetCurrentAvValue, 0xFFAC4014)
+
+// null stubs
+NHSTUB(SetZoomActuatorSpeedPercent, 0xFF966BC4)
+
+NHSTUB(GetDrive_ClusterSize, 0xFF86ED94)
+NHSTUB(GetDrive_TotalClusters, 0xFF86EDD0)
+NHSTUB(GetDrive_FreeClusters, 0xFF86EE0C)
