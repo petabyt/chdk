@@ -1,1 +1,0 @@
-BUILD_NUMBER := 0.5.1
