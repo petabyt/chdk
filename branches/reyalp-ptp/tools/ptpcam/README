@@ -1,0 +1,14 @@
+requires libusb... etc.
+
+
+******************************
+for CHDK-Shell:
+
+open console in CHDK-Shell beside the button "Compile Selected"
+
+type in console without quotes "make -C tools/ptpcam -f makefile.chdkshell" for compiling
+
+close console with command "exit"
+
+After compiling you can find "ptpcam.exe" in "tools/ptpcam/"
+******************************
