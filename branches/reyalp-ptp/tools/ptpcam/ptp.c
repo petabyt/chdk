@@ -1954,7 +1954,7 @@ int ptp_chdk_exec_lua(char *script, int get_result, PTPParams* params, PTPDevice
   }
 
   script_id = ptp.Param1;
-
+  printf("script:%d\n",script_id);
   // if script didn't load correctly, we know right away from the status code, so report any errors even if wait not requested
   if (ptp.Param2 != PTP_CHDK_S_ERRTYPE_NONE) {
     // TODO - might want to filter non-error messages
@@ -2095,53 +2095,60 @@ int ptp_chdk_read_script_msg(PTPParams* params, PTPDeviceInfo* deviceinfo,ptp_ch
 
 // print message in user friendly format
 void ptp_chdk_print_script_message(ptp_chdk_script_msg *msg) {
+  char *mtype,*msubtype;
 //  printf("msg->type %d\n",msg->type);
   if(msg->type == PTP_CHDK_S_MSGTYPE_NONE) {
     return;
   }
+  printf("%d:",msg->script_id);
   if(msg->type == PTP_CHDK_S_MSGTYPE_ERR) {
     printf("%s error: ",(msg->subtype == PTP_CHDK_S_ERRTYPE_RUN)?"runtime":"syntax");
     fwrite(msg->data,msg->size,1,stdout); // may not be null terminated
     printf("\n");
     return;
   }
-  if(!(msg->type == PTP_CHDK_S_MSGTYPE_RET || msg->type == PTP_CHDK_S_MSGTYPE_USER)) {
+  if(msg->type == PTP_CHDK_S_MSGTYPE_RET) {
+    printf("ret:");
+  } else if(msg->type == PTP_CHDK_S_MSGTYPE_USER) {
+    printf("msg:");
+  } else {
 //     ptp_error(params,"unknown message type %d",msg->type);
      printf("unknown message type %d\n",msg->type);
   }
-  // we don't distinguish between return and user here
+  // 
   switch(msg->subtype) {
     case PTP_CHDK_TYPE_UNSUPPORTED:
       printf("unsupported data type: ",msg->data);
       fwrite(msg->data,msg->size,1,stdout); // may not be null terminated
-      printf("\n");
       break;
 
     case PTP_CHDK_TYPE_NIL:
-      printf("nil\n");
+      printf("nil");
       break;
 
     case PTP_CHDK_TYPE_BOOLEAN:
       if ( *(int32_t *)msg->data )
-        printf("true\n");
+        printf("true");
       else
-        printf("false\n");
+        printf("false");
       break;
 
     case PTP_CHDK_TYPE_INTEGER:
-      printf("%i (%x)\n",*(int32_t *)msg->data,*(int32_t *)msg->data);
+      printf("%i (%x)",*(int32_t *)msg->data,*(int32_t *)msg->data);
       break;
 
     case PTP_CHDK_TYPE_STRING:
+      printf("'");
       fwrite(msg->data,msg->size,1,stdout); // may not be null terminated
-      printf("\n");
+      printf("'");
       break;
 
     default:
-      printf("unknown message type %d\n",msg->type);
+      printf("unknown message type %d",msg->type);
 //        ptp_error(params,"message value has unsupported type");
       break;
   }
+  printf("\n");
 }
 
 // read and print all availble messages
@@ -2157,9 +2164,12 @@ int ptp_chdk_print_all_script_messages(PTPParams* params, PTPDeviceInfo* devicei
 //      printf("no more messages\n");
       break;
     }
+// not needed, we print script ID with message/return
+/*
     if(msg->script_id != script_id) {
       ptp_error(params,"message from unexpected script id %d",msg->script_id);
     }
+*/
     ptp_chdk_print_script_message(msg);
   }
   return 1;
