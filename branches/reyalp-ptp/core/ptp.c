@@ -253,7 +253,9 @@ static int handle_ptp(
       ptp.param1 = 0;
 #ifdef OPT_SCRIPTING
       ptp.param1 |= script_is_running()?PTP_CHDK_SCRIPT_STATUS_RUN:0;
+#ifdef OPT_LUA
       ptp.param1 |= (!script_msg_q_empty(&msg_q_out))?PTP_CHDK_SCRIPT_STATUS_MSG:0;
+#endif
 #endif
       break;
     case PTP_CHDK_GetMemory:

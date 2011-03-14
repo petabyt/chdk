@@ -22,6 +22,7 @@ lua_State* L;
 lua_State* Lt;
 
 static int lua_script_is_ptp;
+
 static int yield_hook_enabled;
 
 static void lua_script_disable_yield_hook(void) {
@@ -31,6 +32,7 @@ static void lua_script_enable_yield_hook(void) {
     yield_hook_enabled = 1;
 }
 
+#ifdef CAM_CHDK_PTP
 // create a ptp message from the given stack index
 // incompatible types will return a TYPE_UNSUPPORTED message
 static ptp_script_msg *lua_create_usb_msg( lua_State* L, int index, unsigned msgtype) {
@@ -68,8 +70,8 @@ static ptp_script_msg *lua_create_usb_msg( lua_State* L, int index, unsigned msg
             lua_pushvalue(L, index); // copy specified index to top of stack
             lua_pcall(L,1,1,0); // this will leave an error message as a string on the stack if call fails
             lua_script_enable_yield_hook();
-			// an empty table will be returned as an empty string
-			// a non-string should never show up here
+            // an empty table will be returned as an empty string
+            // a non-string should never show up here
             if ( !(lua_isstring(L,-1) /*&& ( lua_objlen(L,-1) > 0 )*/)) { 
                 return NULL;
             }
@@ -84,6 +86,17 @@ static ptp_script_msg *lua_create_usb_msg( lua_State* L, int index, unsigned msg
     }
     return ptp_script_create_msg(msgtype,datatype,datasize,data);
 }
+
+void lua_script_error_ptp(int runtime, const char *err) {
+    if(runtime) {
+        ptp_script_write_error_msg(PTP_CHDK_S_ERRTYPE_RUN, err);
+        script_end();
+    } else {
+        ptp_script_write_error_msg(PTP_CHDK_S_ERRTYPE_COMPILE, err);
+        lua_script_reset();
+    }
+}
+#endif
 
 void lua_script_reset()
 {
@@ -101,20 +114,18 @@ void lua_script_error(lua_State *Lt,int runtime)
 {
     const char *err = lua_tostring( Lt, -1 );
     script_console_add_line( err );
-    if(runtime) {
-        if(lua_script_is_ptp) {
-            ptp_script_write_error_msg(PTP_CHDK_S_ERRTYPE_RUN, err);
-            script_end();
-        } else if(conf.debug_lua_restart_on_error) {
-            lua_script_reset();
-            script_start_gui(0);
-        } else {
-            script_wait_and_end();
-        }
+    if(lua_script_is_ptp) {
+#ifdef CAM_CHDK_PTP
+        lua_script_error_ptp(runtime,err);
+#endif
     } else {
-        if(lua_script_is_ptp) {
-            ptp_script_write_error_msg(PTP_CHDK_S_ERRTYPE_COMPILE, err);
-            lua_script_reset();
+        if(runtime) {
+            if(conf.debug_lua_restart_on_error) {
+                lua_script_reset();
+                script_start_gui(0);
+            } else {
+                script_wait_and_end();
+            }
         } else {
             script_print_screen_end();
             script_wait_and_end();
@@ -126,6 +137,7 @@ void lua_script_error(lua_State *Lt,int runtime)
 // TODO more stuff from script.c should be moved here
 void lua_script_finish(lua_State *L) 
 {
+#ifdef CAM_CHDK_PTP
     if(lua_script_is_ptp) {
         // send all return values as RET messages
         int i,end = lua_gettop(L);
@@ -135,6 +147,7 @@ void lua_script_finish(lua_State *L)
             ptp_script_write_msg(lua_create_usb_msg(L,i,PTP_CHDK_S_MSGTYPE_RET)); 
         }
     }
+#endif
 }
 
 int lua_script_start( char const* script, int ptp )
