@@ -46,17 +46,19 @@ enum {
                             // param1 CHDK_PTP_SUPPORT_LUA is set if lua is supported, cleared if not
                             // all other bits and params are reserved for future use
   PTP_CHDK_ReadScriptMsg,   // read next message from camera script system
-                            // return param1 is message type: none, script error, script return, user, TODO chdk console data
-                            // return param2 is message subtype: for script return and users this is chdk_ptp_type, for error it may be an error code (TBD)
+                            // return param1 is chdk_ptp_s_msg_type
+                            // return param2 is message subtype:
+                            //   for script return and users this is ptp_chdk_script_data_type
+                            //   for error it may be an error ptp_chdk_script_error_type
                             // return param3 is script id of script that generated the message
                             // return param4 is length of the message data
                             // return data is message.
-                            // A minum of 4 bytes of zeros is returned if there would not be data otherwise
+                            // A minimum of 4 bytes of zeros is returned if there would not be data otherwise
   PTP_CHDK_WriteScriptMsg,  // write a message for scripts running on camera
                             // input param2 is target script id, 0=don't care. Messages for a non-running script will be discarded
                             // data length is handled by ptp data phase
                             // input messages do not have type or subtype, they are always a string destined for the script (similar to USER/string)
-                            // output param1 is status (OK,queue full,wrong script,script not running)
+                            // output param1 is ptp_chdk_script_msg_status
 } ptp_chdk_command;
 
 // data types as used by ReadScriptMessage
@@ -66,7 +68,7 @@ enum {
   PTP_CHDK_TYPE_BOOLEAN,
   PTP_CHDK_TYPE_INTEGER,
   PTP_CHDK_TYPE_STRING, // NOTE tables currently returned as string
-} ptp_chdk_type;
+} ptp_chdk_script_data_type;
 
 // TempData flags
 #define PTP_CHDK_TD_DOWNLOAD  0x1  // download data instead of upload
@@ -86,19 +88,26 @@ enum {
 #define PTP_CHDK_SCRIPT_SUPPORT_LUA  0x1
 
 // message types
-#define PTP_CHDK_S_MSGTYPE_NONE  0 // no messages waiting
-#define PTP_CHDK_S_MSGTYPE_ERR   1 // error message
-#define PTP_CHDK_S_MSGTYPE_RET   2 // script return value
-#define PTP_CHDK_S_MSGTYPE_USER  3 // message queued by script
+enum {
+    PTP_CHDK_S_MSGTYPE_NONE = 0, // no messages waiting
+    PTP_CHDK_S_MSGTYPE_ERR,         // error message
+    PTP_CHDK_S_MSGTYPE_RET,      // script return value
+    PTP_CHDK_S_MSGTYPE_USER,     // message queued by script
+// TODO chdk console data ?
+} ptp_chdk_script_msg_type;
 
 // error subtypes for PTP_CHDK_S_MSGTYPE_ERR and script startup status
-#define PTP_CHDK_S_ERRTYPE_NONE    0
-#define PTP_CHDK_S_ERRTYPE_COMPILE 1
-#define PTP_CHDK_S_ERRTYPE_RUN     2
+enum {
+    PTP_CHDK_S_ERRTYPE_NONE = 0,
+    PTP_CHDK_S_ERRTYPE_COMPILE,
+    PTP_CHDK_S_ERRTYPE_RUN,
+} ptp_chdk_script_error_type;
 
 // message status
-#define PTP_CHDK_S_MSGSTATUS_OK     0 // queued ok
-#define PTP_CHDK_S_MSGSTATUS_NOTRUN 1 // no script is running
-#define PTP_CHDK_S_MSGSTATUS_QFULL  2 // queue is full
-#define PTP_CHDK_S_MSGSTATUS_BADID  3 // specified ID is not running
+enum {
+    PTP_CHDK_S_MSGSTATUS_OK = 0, // queued ok
+    PTP_CHDK_S_MSGSTATUS_NOTRUN, // no script is running
+    PTP_CHDK_S_MSGSTATUS_QFULL,  // queue is full
+    PTP_CHDK_S_MSGSTATUS_BADID,  // specified ID is not running
+} ptp_chdk_script_msg_status;
 #endif // __PTP_H
