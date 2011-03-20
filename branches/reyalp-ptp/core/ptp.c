@@ -568,12 +568,9 @@ static int handle_ptp(
       ptp.param1 = PTP_CHDK_S_MSGSTATUS_OK;
       if (!script_is_running()) {
         ptp.param1 = PTP_CHDK_S_MSGSTATUS_NOTRUN;
-      }
-      // check if target script for message is running
-      if(param2 && param2 != script_run_id) {
+      } else if(param2 && param2 != script_run_id) {// check if target script for message is running
         ptp.param1 = PTP_CHDK_S_MSGSTATUS_BADID;
-      }
-      if(script_msg_q_full(&msg_q_in)) {
+      } else if(script_msg_q_full(&msg_q_in)) {
         ptp.param1 = PTP_CHDK_S_MSGSTATUS_QFULL;
       }
 
