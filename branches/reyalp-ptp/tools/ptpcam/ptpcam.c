@@ -2697,14 +2697,16 @@ int chdk(int busn, int devn, short force)
 	  int status;
       if ( ptp_chdk_get_script_support(&params,&params.deviceinfo,&status) )
       {
-        printf("script-support:%x\n",status);
+        printf("script-support:0x%x lua=%s\n",status,(status & PTP_CHDK_SCRIPT_SUPPORT_LUA) ? "yes":"no");
       }
     } else if ( !strcmp("script-status",buf) )
     {
       int status;
       if ( ptp_chdk_get_script_status(&params,&params.deviceinfo,&status) )
       {
-        printf("script-running:%x\n",status);
+        printf("script-status:0x%x run=%s msg=%s\n",status,
+                (status & PTP_CHDK_SCRIPT_STATUS_RUN) ? "yes":"no",
+                (status & PTP_CHDK_SCRIPT_STATUS_MSG) ? "yes":"no");
       }
     } else if ( !strcmp("getm",buf) )
     {
