@@ -1930,7 +1930,7 @@ int ptp_chdk_exec_lua(char *script, int get_result, PTPParams* params, PTPDevice
 
   PTP_CNT_INIT(ptp);
   ptp.Code=PTP_OC_CHDK;
-  ptp.Nparam=1;
+  ptp.Nparam=2;
   ptp.Param1=PTP_CHDK_ExecuteScript;
   ptp.Param2=PTP_CHDK_SL_LUA;
 
