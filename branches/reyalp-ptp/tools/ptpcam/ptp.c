@@ -2161,6 +2161,7 @@ int ptp_chdk_print_all_script_messages(PTPParams* params, PTPDeviceInfo* devicei
       return 0;
     }
     if(msg->type == PTP_CHDK_S_MSGTYPE_NONE) {
+        free(msg);
 //      printf("no more messages\n");
       break;
     }
@@ -2171,6 +2172,7 @@ int ptp_chdk_print_all_script_messages(PTPParams* params, PTPDeviceInfo* devicei
     }
 */
     ptp_chdk_print_script_message(msg);
+    free(msg);
   }
   return 1;
 }
