@@ -20,7 +20,7 @@ enum STANDARD_ACTIONS
     AS_SCRIPT_RUN,
     AS_MOTION_DETECTOR,
     AS_SCRIPT_READ_USB_MSG, // params: timeout
-    AS_SCRIPT_WRITE_USB_MSG, // params: timeout, size, &data
+    AS_SCRIPT_WRITE_USB_MSG, // params: timeout, msg
 };
 
 typedef int (*action_process)(long p);

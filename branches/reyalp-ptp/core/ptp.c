@@ -523,8 +523,8 @@ static int handle_ptp(
         if (script_start_ptp(buf) < 0) {
           ptp.param2 = PTP_CHDK_S_ERRTYPE_COMPILE;
         } else {
-		  ptp.param2 = PTP_CHDK_S_ERRTYPE_NONE;
-		}
+          ptp.param2 = PTP_CHDK_S_ERRTYPE_NONE;
+        }
 
         free(buf);
         
