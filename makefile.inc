@@ -319,6 +319,8 @@ PLATFORMSUB=103c
 #PLATFORM=s95
 #PLATFORMSUB=100i
 
+#PLATFORM=ixus300_sd4000
+#PLATFORMSUB=100d
 
 MEMISOSIZE="(&_end-&_start)"
 # override this on the command line or in buildconf to use PRIMARY.BIN from a different tree
