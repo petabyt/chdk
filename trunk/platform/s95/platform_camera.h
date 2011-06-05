@@ -107,6 +107,9 @@
     #define CAM_ACTIVE_AREA_Y2 2736
 
    #define CAM_ZEBRA_ASPECT_ADJUST 1
+   
+   #define CAM_STARTUP_CRASH_FILE_OPEN_FIX    1     // enable workaround for camera crash at startup when opening the conf / font files
+                                                    // see http://chdk.setepontos.com/index.php?topic=6179.0
 
    // todo - we may need this to save memory
     //#define CAM_ZEBRA_NOBUF 1
