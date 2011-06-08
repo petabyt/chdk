@@ -221,7 +221,7 @@ ROM:FF9FF43C ; -----------------------------------------------------------------
 
 long vid_get_bitmap_screen_width()
 {
-    return 320;    
+    return 360;    
 }
 
 long vid_get_bitmap_screen_height()

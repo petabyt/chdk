@@ -75,17 +75,17 @@
      #define CAM_USES_ASPECT_YCORRECTION                 0  //only uses mappings on x coordinate
  
      #undef ASPECT_XCORRECTION
-     #define ASPECT_XCORRECTION(x)                       ((((x)<<3)+(x))>>2)  //correction x*screen_buffer_width/screen_width = x*720/320 = x*9/4 = (x<<3 + x)>>2
+     #define ASPECT_XCORRECTION(x)                       ((x)<<1)
  
      #undef ASPECT_GRID_XCORRECTION
-     #define ASPECT_GRID_XCORRECTION(x)                  ((((x)<<3)/9))  //grids are designed on a 360x240 basis and screen is 320x240, we need x*320/360=x*8/9
+     #define ASPECT_GRID_XCORRECTION(x)                  (x)  //grids are designed on a 360x240 basis and screen is 320x240, we need x*320/360=x*8/9
      #undef ASPECT_GRID_YCORRECTION
-     #define ASPECT_GRID_YCORRECTION(y)                  ((y))  //y correction for grids  made on a 360x240 As the buffer is 720x240 we have no correction here.
+     #define ASPECT_GRID_YCORRECTION(y)                  (y)  //y correction for grids  made on a 360x240 As the buffer is 720x240 we have no correction here.
  
      #undef ASPECT_VIEWPORT_XCORRECTION 
      #define ASPECT_VIEWPORT_XCORRECTION(x)              ASPECT_GRID_XCORRECTION(x)
      #undef ASPECT_VIEWPORT_YCORRECTION 
-     #define ASPECT_VIEWPORT_YCORRECTION(y)              ((y))
+     #define ASPECT_VIEWPORT_YCORRECTION(y)              (y)
  
      //games mappings
      #undef GAMES_SCREEN_WIDTH

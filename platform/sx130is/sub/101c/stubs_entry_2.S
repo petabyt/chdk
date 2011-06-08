@@ -55,7 +55,7 @@ NHSTUB(Open, 0xFF836C90)                                   // orig:0xff86dcb0
 NHSTUB(PostLogicalEventForNotPowerType, 0xff891d90)
 NHSTUB(PostLogicalEventToUI, 0xff891ddc)
 NHSTUB(RenameFile_Fut, 0xFF8365E0)                         // orig:0xff8367ac
-NHSTUB(Restart, 0xff83be48)
+NHSTUB(Restart, 0xff83be44)
 NHSTUB(SetAutoShutdownTime, 0xff894060)
 NHSTUB(SetCurrentCaptureModeType, 0xff89abfc)
 NHSTUB(SetFileTimeStamp, 0xFF836F98)                       // orig:0xff94f194
@@ -85,14 +85,14 @@ NHSTUB(time, 0xff8879c8)
 
 // Missing from stubs_entry.s
 
-NHSTUB(DoAFLock, 0xFF8384D8)                                
-NHSTUB(LEDDrive, 0xFF85F1BC)                                // inner function like in sx120 and d10, sikahr:xFF96A8B0
+NHSTUB(DoAFLock, 0xff878eec)                                
+NHSTUB(LEDDrive, 0xff85f0f4)                                // inner function like in sx120 and d10, sikahr:xFF96A8B0
 NHSTUB(ScreenLock, 0xFF8A8A1C)                              // 0xFF8A8DB4 like in sx120 and d10?
 NHSTUB(ScreenUnlock, 0xFF8A8A80)                            // 0xFF8A788C like in sx120 and d10?
 //NHSTUB(ScreenLock, 0xFF8A8DB4)                            // does not draw Canon interface
 //NHSTUB(ScreenUnlock, 0xFF8A788C)                          // does not draw Canon interface
 NHSTUB(SetScriptMode, 0xFF893D88)                          
-NHSTUB(UnlockAF, 0xFF838510)                  
+NHSTUB(UnlockAF, 0xff878efc)                  
 NHSTUB(WriteSDCard, 0xFF950268)     
 NHSTUB(apex2us, 0xFFA0E804)      
 NHSTUB(GetImageFolder, 0xFF9419AC)							// function before 'GetCameraObjectTmpPath ERROR' string  
@@ -111,13 +111,17 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_STUB)
 NHSTUB(kbd_pwr_on, NULL_STUB)                  
 NHSTUB(kbd_pwr_off, NULL_STUB)
 
-
 NHSTUB(rand, 0xFFA0D940)                    
 NHSTUB(srand, 0xFFA0D934)
-
-
 
 NHSTUB(DebugAssert, 0xFF81EB78)								// Usefull in tasks
 
 // allocate from given EXMEM pool 
 NHSTUB(exmem_alloc, 0xFF888334)
+
+# Addresses for firmware task handlers (used in taskHook)
+DEF(task_CaptSeq, 0xff87b564)
+DEF(task_ExpDrv, 0xff8bfa94)
+DEF(task_InitFileModules, 0xff897938)
+DEF(task_MovieRecord, 0xff969bc8)
+DEF(task_RotaryEncoder, 0xff85fd80)
