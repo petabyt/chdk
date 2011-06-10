@@ -6,11 +6,11 @@
 NHSTUB(TurnOffBackLight , 0xFF89764C)                // was 0xFF88F4C4
 NHSTUB(PT_PlaySound, 0xFF879708)                     // was 0xFF8708C8
 NHSTUB(SetScriptMode, 0xFF810F4C)	                 // was 0xFF88A82C
-NHSTUB(WriteSDCard, 0xFF926478)	                     // was 0xFF8827A8
+NHSTUB(WriteSDCard, 0xff926660)	                     // updated 2011JUN09 was 0xff926478 was 0xFF8827A8
 NHSTUB(UnlockAF,0xFF8368B4)		                     // was 0xFF870994
 NHSTUB(DoAFLock, 0xFF83687C)	                     // was 0xFF870984
 NHSTUB(closefastdir, 0xFFA4CF80)                     // was 0xffa4d294
-NHSTUB(GetFocusLensSubjectDistance, 0xFF93578C)      // was 0xFFAD10E4	
+NHSTUB(GetFocusLensSubjectDistance, 0xff935724)      // updated 2011JUN09 was 0xff93578c 0xFFAD10E4	
 //<< 2011APR03
 
 NHSTUB(ExpCtrlTool_StartContiAE, 0xFF844034)
@@ -93,6 +93,6 @@ NHSTUB(Unmount_FileSystem,NULLSUB)
 NSTUB(MoveFocusLensToDistance, 0xffad10e4)
 NHSTUB(stat, 0xff83550c)
 
-NHSTUB(GetImageFolder, 0xFFA1901C) // function before 'GetCameraObjectTmpPath ERROR' string
+NHSTUB(GetImageFolder, 0xff91901c) // updated 2011JUN09 was 0xFFA1901C function before 'GetCameraObjectTmpPath ERROR' string
 
 
