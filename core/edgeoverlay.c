@@ -24,53 +24,50 @@ static bit_vector_t* edgebuf = NULL;
 static int xoffset = 0, yoffset = 0;
 static unsigned char* smbuf = NULL;
 
-static int slice = 0;       // the current slice of the frame we are calculating/drawing
-static int slice_height;    // the height of a single slice
+static int slice = 0;           // the current slice of the frame we are calculating/drawing
+static int slice_height;        // the height of a single slice
 
-static int viewport_size;   // whole viewport size in bytes ??
-static int viewport_width;      // screenwidth * 3, width in bytes of one viewport line ??
-static int viewport_height;
+static int viewport_byte_width; // width in bytes of one viewport line ??
+static int viewport_height;     // height of visible / used area of viewport
+static int viewport_width;      // width of visible / used area of viewport (in 3 byte units)
 static int viewport_xoffset;	// used when image size != viewport size (e.g. wide screen image on 4:3 LCD)
 static int viewport_yoffset;	// used when image size != viewport size (e.g. wide screen image on 4:3 LCD)
-#if CAM_USES_ASPECT_CORRECTION
-static int viewportw; //nandoide , width of viewport (not necessarily equal to width of screen)
-#endif
 
 static void get_viewport_size()
 {
     // since screen_height is used in the drawing downwards, we should use it
     // here too to calculate the buffer we need...
 
-#if CAM_USES_ASPECT_CORRECTION//nandoide sept-2009 get the viewport dimensions, not the screen dimensions, on sx200is they aren't the same.
+#if defined(CAM_USES_ASPECT_CORRECTION)
+    //nandoide sept-2009 get the viewport dimensions, not the screen dimensions, on sx200is they aren't the same.
     viewport_height = vid_get_viewport_height()-EDGE_HMARGIN*2; //don't trace bottom lines
-    viewportw = vid_get_viewport_width();
-    viewport_width = vid_get_viewport_buffer_width() * 3;
+    viewport_width = vid_get_viewport_width();
+    viewport_byte_width = vid_get_viewport_buffer_width() * 3;
 #else
     viewport_height = screen_height;//vid_get_viewport_height();
-    viewport_width = screen_width * 3;
+    viewport_width = screen_width;
+    viewport_byte_width = screen_width * 3;
 #endif
 
 	viewport_xoffset = vid_get_viewport_xoffset();
 	viewport_yoffset = vid_get_viewport_yoffset();
 
-    viewport_size = viewport_height * viewport_width;
     slice_height = viewport_height / EDGE_SLICES;
-
 }
 
 static void ensure_allocate_imagebuffer()
 {
     if(edgebuf == NULL)
     {
-        edgebuf = bv_create(viewport_size, 1);
+        edgebuf = bv_create(viewport_height * viewport_width, 1);
         if (edgebuf != NULL)
             memset(edgebuf->ptr, 0, edgebuf->ptrLen);
     }
     if (conf.edge_overlay_filter && (smbuf == NULL))
     {
-        smbuf = (unsigned char*)malloc(viewport_width*3);
+        smbuf = (unsigned char*)malloc(viewport_byte_width*3);
         if (smbuf != NULL)
-            memset(smbuf, 0, viewport_width*3);
+            memset(smbuf, 0, viewport_byte_width*3);
         else
         {
             // Disable filtering if we do not have enough memory for it
@@ -87,8 +84,13 @@ static void reset_edge_overlay()
         smbuf = NULL;
     }
 
-    bv_free(edgebuf);
-    edgebuf = NULL;
+    if (edgebuf != NULL)
+    {
+        draw_restore();     // Refresh display to restore Canon OSD
+        bv_free(edgebuf);
+        edgebuf = NULL;
+    }
+
     fsm_state = EDGE_LIVE;
     slice = 0;
 }
@@ -205,19 +207,14 @@ void load_edge_overlay(const char* fn)
     }
 }
 
-static void average_filter_row(const unsigned char*  ptrh1,  // previous row
-                               const unsigned char*  ptrh2,  // current row
-                               const unsigned char*  ptrh3,  // next row
-                               unsigned char*  smptr )       // write results here
+static void average_filter_row(const unsigned char* ptrh1,  // previous row
+                               unsigned char* smptr,        // write results here
+                               int x, int x_max)
 {
-    int x;
-#if CAM_USES_ASPECT_CORRECTION
-    const int x_max = (viewportw + viewport_xoffset - 2) * 3;
-#else
-    const int x_max = (screen_width + viewport_xoffset - 2) * 3;
-#endif
+    const unsigned char* ptrh2 = ptrh1 + viewport_byte_width;  // current row
+    const unsigned char* ptrh3 = ptrh2 + viewport_byte_width;  // next row
 
-    for (x=viewport_xoffset*3+6; x<x_max; x+=6)
+    for (; x<x_max; x+=6)
     {
         *(smptr + x + 1) = (*(ptrh1 + x - 1) +
                             *(ptrh1 + x + 1) +
@@ -267,6 +264,12 @@ static void average_filter_row(const unsigned char*  ptrh1,  // previous row
                             *(ptrh3 + x + 5) +
                             *(ptrh3 + x + 7)) / 9u;
     }
+
+    // copy 2nd last column to last column to prevent vertical stripe artifact.
+    smptr[x+1] = smptr[x-5];
+    smptr[x+3] = smptr[x-3];
+    smptr[x+4] = smptr[x-2];
+    smptr[x+5] = smptr[x-1];
 }
 
 // Sobel edge detector
@@ -286,13 +289,7 @@ static int calc_edge_overlay()
     const int y_min = viewport_yoffset + EDGE_HMARGIN+ slice   *slice_height;
     const int y_max = viewport_yoffset + EDGE_HMARGIN+(slice+1)*slice_height;
     const int x_min = viewport_xoffset*3 + 6;
-#if CAM_USES_ASPECT_CORRECTION
-    const int x_max = (viewportw + viewport_xoffset - 2) * 3;
-#else
-    const int x_max = (screen_width + viewport_xoffset - 2) * 3;
-#endif
-
-    const int vp_width = viewport_width;
+    const int x_max = (viewport_width + viewport_xoffset - 2) * 3;
 
     xoffset = 0;
     yoffset = 0;
@@ -321,12 +318,10 @@ static int calc_edge_overlay()
         {
             shutter_fullpress |= kbd_is_key_pressed(KEY_SHOOT_FULL);
 
-            ptrh1 = img + (y_min+y-1) * vp_width;
-            ptrh2 = img + (y_min+y  ) * vp_width;
-            ptrh3 = img + (y_min+y+1) * vp_width;
-            smptr = smbuf + (y+1) * vp_width;
+            ptrh1 = img + (y_min+y-1) * viewport_byte_width;
+            smptr = smbuf + (y+1) * viewport_byte_width;
 
-            average_filter_row(ptrh1, ptrh2, ptrh3, smptr);
+            average_filter_row(ptrh1, smptr, x_min, x_max);
         }
     }
 
@@ -343,26 +338,21 @@ static int calc_edge_overlay()
             // in memory, we save memory.
 
             // Shift
-            memcpy(smbuf+vp_width*0, smbuf+vp_width*1, vp_width);
-            memcpy(smbuf+vp_width*1, smbuf+vp_width*2, vp_width);
+            memcpy(smbuf, smbuf+viewport_byte_width, viewport_byte_width*2);
 
             // Filter new line
-            ptrh1 = img +  y * vp_width;
-            ptrh2 = img + (y+1) * vp_width;
-            ptrh3 = img + (y+2) * vp_width;
-            smptr = smbuf + 2   * vp_width;
-            average_filter_row(ptrh1, ptrh2, ptrh3, smptr);
+            ptrh1 = img + y * viewport_byte_width;
+            smptr = smbuf + 2 * viewport_byte_width;
+            average_filter_row(ptrh1, smptr, x_min, x_max);
 
-            ptrh1 = smbuf + 0 * vp_width;
-            ptrh2 = smbuf + 1 * vp_width;
-            ptrh3 = smbuf + 2 * vp_width;
+            ptrh1 = smbuf;
         }
         else
         {
-            ptrh1 = img + (y-1) * vp_width;
-            ptrh2 = img +  y    * vp_width;
-            ptrh3 = img + (y+1) * vp_width;
+            ptrh1 = img + (y-1) * viewport_byte_width;
         }
+        ptrh2 = ptrh1 + viewport_byte_width;
+        ptrh3 = ptrh2 + viewport_byte_width;
 
         // Now we do sobel on the current line
 
@@ -393,7 +383,7 @@ static int calc_edge_overlay()
 
             if (conv1 + conv2 > conf.edge_overlay_thresh)
             {
-                bv_set(edgebuf, (y-viewport_yoffset-EDGE_HMARGIN)*vp_width + xdiv3, 1);
+                bv_set(edgebuf, (y-viewport_yoffset-EDGE_HMARGIN)*viewport_width + xdiv3, 1);
             }
 
             // Do it once again for the next 'pixel'
@@ -423,7 +413,7 @@ static int calc_edge_overlay()
 
             if (conv1 + conv2 > conf.edge_overlay_thresh)
             {
-                bv_set(edgebuf, (y-viewport_yoffset-EDGE_HMARGIN)*vp_width + xdiv3+1, 1);
+                bv_set(edgebuf, (y-viewport_yoffset-EDGE_HMARGIN)*viewport_width + xdiv3+1, 1);
             }
         }   // for x
     }   // for y
@@ -451,11 +441,7 @@ static int calc_edge_overlay()
 //            {
 //                shutter_fullpress |= kbd_is_key_pressed(KEY_SHOOT_FULL);
 //
-//#if CAM_USES_ASPECT_CORRECTION
-//                for (x=12; x<(viewportw - 4); ++x)
-//#else
-//                for (x=12; x<(screen_width - 4); ++x)
-//#endif
+//                for (x=12; x<(viewport_width - 4); ++x)
 //                {
 //                    int bEdge = bv_get(edgebuf, y*viewport_width + x);
 //                    if (bEdge)
@@ -508,11 +494,7 @@ static int draw_edge_overlay()
     const int y_min = viewport_yoffset+EDGE_HMARGIN;
     const int y_max = viewport_yoffset+EDGE_HMARGIN+viewport_height;
     const int x_min = viewport_xoffset+2;
-#if CAM_USES_ASPECT_CORRECTION
-    const int x_max = (viewportw + viewport_xoffset - 2);
-#else
-    const int x_max = (screen_width + viewport_xoffset - 2);
-#endif
+    const int x_max = (viewport_width + viewport_xoffset - 2);
 
     if( !is_buffer_ready() ) return 0;
 
@@ -594,11 +576,7 @@ static int draw_edge_overlay()
 static void set_offset_from_overlap()
 {
     const int y_max = viewport_height;
-#if CAM_USES_ASPECT_CORRECTION
-    const int x_max = (viewportw - 2);
-#else
-    const int x_max = (screen_width - 2);
-#endif
+    const int x_max = (viewport_width - 2);
 
     switch(conf.edge_overlay_pano)
     {
