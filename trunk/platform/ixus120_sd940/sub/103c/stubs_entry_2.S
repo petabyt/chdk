@@ -33,7 +33,7 @@ NHSTUB(UIFS_WriteFirmInfoToFile , 0xFF956904)	// SD940 103c matched with SD90 10
 NHSTUB(SetScriptMode, 0xFF810F4C)				// SD940 103c matched with SD90 101a
 NHSTUB(LEDDrive, 0xFF8582F4)					// SD940 103c matched with SD90 101a
 NHSTUB(apex2us, 0xFF9D555C)						// SD940 103c matched with SD90 101a
-NHSTUB(WriteSDCard, 0xFF926538)					// SD940 103c matched with SD90 101a
+NHSTUB(WriteSDCard, 0xff926720)					// updated 2011JUN09 SD940 103c matched with SD90 101a
 NHSTUB(UnlockAF, 0xFF8368B4)					// SD940 103c matched with SD90 101a
 NHSTUB(DoAFLock, 0xFF83687C)					// FFA4D148
 NHSTUB(UnsetZoomForMovie, 0xFF9714AC)			// SD940 103c matched with SD90 101a
