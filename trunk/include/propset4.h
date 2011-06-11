@@ -9,7 +9,7 @@ The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 
 #define PROPCASE_FLASH_SYNC_CURTAIN              64
 #define PROPCASE_SUBJECT_DIST2                   65
-#define PROPCASE_AV                              23
+#define PROPCASE_AV                              22     // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_MIN_AV                          25
 #define PROPCASE_USER_AV                         26
 #define PROPCASE_BRACKET_MODE                    29
@@ -48,8 +48,8 @@ The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 #define PROPCASE_TIMER_MODE                      227
 #define PROPCASE_SUBJECT_DIST1                   249
 #define PROPCASE_SV_MARKET                       250
-#define PROPCASE_SV                              251
-#define PROPCASE_TV	                             266
+#define PROPCASE_SV                              347     // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
+#define PROPCASE_TV                              265     // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_USER_TV                         268
 #define PROPCASE_WB_ADJ                          273
 #define PROPCASE_ASPECT_RATIO                    300
