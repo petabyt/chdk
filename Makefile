@@ -291,6 +291,7 @@ batch-zip: version
 	cp $(topdir)bin/$(VER)-g11-100j-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-g11-100k-$(BUILD_NUMBER).zip
 	cp $(topdir)bin/$(VER)-s90-101c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s90-101b-$(BUILD_NUMBER).zip
 	cp $(topdir)bin/$(VER)-d10-100a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-d10-100b-$(BUILD_NUMBER).zip
+	cp $(topdir)bin/$(VER)-sx30-100l-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx30-100m-$(BUILD_NUMBER).zip
 	mv $(topdir)bin/$(VER)-sx1-200h-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx1-200h-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/$(VER)-sx1-201a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx1-201a-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/$(VER)-a2000-100c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a2000-100c-$(BUILD_NUMBER)_BETA.zip
@@ -495,6 +496,8 @@ batch-zip-complete: version
 	cp $(topdir)bin/s90-101c-$(BUILD_NUMBER)-full.zip $(topdir)bin/s90-101b-$(BUILD_NUMBER)-full.zip
 	cp $(topdir)bin/d10-100a-$(BUILD_NUMBER).zip $(topdir)bin/d10-100b-$(BUILD_NUMBER).zip
 	cp $(topdir)bin/d10-100a-$(BUILD_NUMBER)-full.zip $(topdir)bin/d10-100b-$(BUILD_NUMBER)-full.zip
+	cp $(topdir)bin/sx30-100l-$(BUILD_NUMBER).zip $(topdir)bin/sx30-100m-$(BUILD_NUMBER).zip
+	cp $(topdir)bin/sx30-100l-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx30-100m-$(BUILD_NUMBER)-full.zip
 	mv $(topdir)bin/sx1-200h-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx1-200h-$(BUILD_NUMBER)-full_BETA.zip
 	mv $(topdir)bin/sx1-200h-$(BUILD_NUMBER).zip $(topdir)bin/sx1-200h-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/sx1-201a-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx1-201a-$(BUILD_NUMBER)-full_BETA.zip
