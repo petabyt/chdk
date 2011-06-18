@@ -52,7 +52,7 @@ void *vid_get_viewport_fb()
 
 void *vid_get_viewport_fb_d()
 {
-    return (void*)(*(int*)(0x2790 + 0x54));  // sub_FF86AE98, similar to sd990  /// +64, +68
+	return (void*)(*(int*)(0x2790+0x58));  //  @FF869DEC  @FF869E24
 }
 
 
