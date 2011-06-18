@@ -75,10 +75,7 @@ void *vid_get_viewport_fb()
 		
 void *vid_get_viewport_fb_d()		
 {		
-	return (void*)(*(int*)(0x2790+0x54));  // SD940 103c sub_FF869E34 matched to sub in SD90 101a
-	// S940: 0x58 @FF869E74  0x2790 @FF86F9F8 (Search for aImageplayer_c	
-	// S90 : return (void*)(*(int*)(0x2A20+0x58));   // G11
-	// S90 : 0x58 @FF86FA30  0x2A20 @FF86F9F8 (Search for aImageplayer_c	
+	return (void*)(*(int*)(0x2790+0x58));  //  @FF869E3C  @FF869E74 
 }		
 			
 	
