@@ -7,7 +7,7 @@ DEF(canon_menu_active, 0x324c + 4)			// @FF896FC0
 DEF(movie_status, 0x7128 + 0x44)			// @FF985B90
 DEF(enabled_refresh_physical_screen, 0xA0D4) // @FFA4760C
 DEF(playrec_mode, 0x2f74+0x4)				// @FF889094
-DEF(FlashParamsTable,0xFFC72B4)				// @FFB0F34C
+DEF(FlashParamsTable,0xFFC724B4)			// @FFB0F34C
 DEF(physw_status, 0x34CB4)                 	// @FF8340C8
 DEF(physw_run, 0x1C30 + 0x0C)            	// @FF8340A4
 DEF(led_table, 0x25d4 + 0x04)				// @FF864814
