@@ -2,6 +2,8 @@
 
 #define NULLSUB 0xFF810B04
 
+NHSTUB(write, 0xff835444)							//** fixed 2011/06/25
+
 //>> 2011APR03  - changed to match 1.03B and 1.03C
 NHSTUB(TurnOffBackLight , 0xFF89764C)                // was 0xFF88F4C4
 NHSTUB(PT_PlaySound, 0xFF879708)                     // was 0xFF8708C8
@@ -24,7 +26,7 @@ NHSTUB(UIFS_WriteFirmInfoToFile, 0xFF95673C)
 NHSTUB(kbd_pwr_on,NULLSUB)
 NHSTUB(openfastdir, 0xFFA4CFC4)				// ??
 NHSTUB(readfastdir, 0xFFA4D0F8)				// ??
-NHSTUB(rename, 0xFF835490)
+NHSTUB(rename, 0xff834cac)							//** fixed 2011/06/25 was 0xFF835490
 NHSTUB(platformsub_kbd_fetch_data, 0xFF858DF8)
 
 // not 100% by finsig

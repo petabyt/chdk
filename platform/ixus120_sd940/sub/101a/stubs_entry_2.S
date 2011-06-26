@@ -1,5 +1,6 @@
 #include "stubs_asm.h"
 #define NULLSUB 0xFF810B04	
+NHSTUB(write, 0xff835444)			//** changed 2011/06/25
 NHSTUB(ExpCtrlTool_StartContiAE, 0xFF844034)
 NHSTUB(MakeAFScan, 0xFF940504)
 NHSTUB(EnterToCompensationEVF , 0xFF8369D4)
@@ -14,7 +15,7 @@ NHSTUB(RefreshPhysicalScreen , 0xFF9D1EA4)
 NHSTUB(ScreenLock, 0xFF9D1C7C)
 NHSTUB(ScreenUnlock,0xFF9D1CBC)
 NHSTUB(Remove , 0xFF8353E8)
-NHSTUB(rename , 0xFF835490)
+NHSTUB(rename , 0xff834cac)			//** changed 2011/06/25 - was 0xFF835490)
 NHSTUB(UIFS_WriteFirmInfoToFile , 0xFF95673C)
 NHSTUB(platformsub_kbd_fetch_data, 0xFF858DF8)
 NHSTUB(SetScriptMode, 0xFF810F4C)

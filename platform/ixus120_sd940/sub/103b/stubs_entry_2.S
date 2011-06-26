@@ -4,6 +4,7 @@
 
 NHSTUB(ExpCtrlTool_StartContiAE, 0xFF844034)	// SD940 103b matched with SD940 103c ExpCtrl
 NHSTUB(MakeAFScan, 0xFF940510)					// SD940 103b matched with SD940 103c FF9406CC SsPrepareSeqBase
+NHSTUB(write, 0xff835444)						//** changed 2011/06/25
 
 //** subs in signatures_dryos.h but not auto found 
 
@@ -25,7 +26,7 @@ NHSTUB(ScreenLock, 0xFF9D1C88)					// SD940 103b matched with SD940 103c FF9D1E4
 NHSTUB(ScreenUnlock,0xFF9D1CC8) 				// SD940 103b matched with SD940 103c FF9D1E44 next subroutine after ScreenLock
 
 NHSTUB(Remove , 0xFF8353E8)						// SD940 103b matched with SD940 103c Near identical subroutine
-NHSTUB(rename , 0xFF835490)						// SD940 103b matched with SD940 103c Sub immediately after eventproc_export_Write
+NHSTUB(rename , 0xff834cac)						//** changed 2011/06/25 - was 0xFF835490
 NHSTUB(UIFS_WriteFirmInfoToFile , 0xFF956748)	// SD940 103b matched with SD940 103c Sub immediately after FirmInfoMenu.c
 
 //** subs not in signatures_dryos.h
