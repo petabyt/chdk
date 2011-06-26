@@ -4,6 +4,7 @@
 
 NHSTUB(ExpCtrlTool_StartContiAE, 0xFF844034)
 NHSTUB(MakeAFScan, 0xFF9406CC)
+NHSTUB(write, 0xff835444)						// ** updated 2011/06/25
 
 //** subs in signatures_dryos.h but not auto found 
 
@@ -25,7 +26,7 @@ NHSTUB(ScreenLock, 0xFF9D1E44)					// SD940 103c close to SD90 101a (extra code 
 NHSTUB(ScreenUnlock,0xFF9D1E84) 				// SD940 103c matched with SD90 101a
 
 NHSTUB(Remove , 0xFF8353E8)						// SD940 103c matched with SD90 101a
-NHSTUB(rename , 0xFF835490)						// SD940 103c matched with SD90 101a
+NHSTUB(rename , 0xff834cac)						// ** updated 2011/06/25 from 0xFF835490
 NHSTUB(UIFS_WriteFirmInfoToFile , 0xFF956904)	// SD940 103c matched with SD90 101a
 
 //** subs not in signatures_dryos.h
