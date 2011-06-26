@@ -11,7 +11,7 @@ void  set_quality(int *x){ // -17 highest; +12 lowest
 void __attribute__((naked,noinline)) movie_record_task(){ 
 
  asm volatile(
-"                STMFD   SP!, {R2-R10,LR} \n"
+"                STMFD   SP!, {R2-R8,LR} \n"
 "                LDR     R8, =0x2710 \n"
 "                LDR     R4, =0x7290 \n"
 "                MOV     R7, #1 \n"

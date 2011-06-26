@@ -55,18 +55,12 @@
     #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
-    #undef  CAM_WHITE_LEVEL
-    #define CAM_WHITE_LEVEL             ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
-    #undef  CAM_BLACK_LEVEL
-    #define CAM_BLACK_LEVEL             127
 
     #undef CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE    7
 
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION  1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
-    #undef CAM_USES_ASPECT_YCORRECTION
-    #define CAM_USES_ASPECT_YCORRECTION  0  //only uses mappings on x coordinate
 
     #undef EDGE_HMARGIN
     #define EDGE_HMARGIN 2
@@ -109,7 +103,7 @@
 	#define	CAM_STARTUP_CRASH_FILE_OPEN_FIX	1				// enable fix for camera crash at startup when opening the conf / font files
 															// see http://chdk.setepontos.com/index.php?topic=6179.0
 
-#define CAM_FIRMWARE_MEMINFO    1       // Use 'GetMemInfo' to get free memory size.
+    #define CAM_FIRMWARE_MEMINFO    1       // Use 'GetMemInfo' to get free memory size.
 
 //----------------------------------------------------------
 

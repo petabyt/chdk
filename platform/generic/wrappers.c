@@ -326,7 +326,6 @@ int open (const char *name, int flags, int mode )
 #endif
 #if defined(CAM_STARTUP_CRASH_FILE_OPEN_FIX)	// enable fix for camera crash at startup when opening the conf / font files
 												// see http://chdk.setepontos.com/index.php?topic=6179.0
-	#define O_RDONLY 0							// copied from stdlib.h (including stdlib.h causes compile errors due to function definition mismatch - needs fixing)
 	if (flags == O_RDONLY)						// At startup opening the conf / font files conflicts with Canon task if use _Open. Camera can randomly crash.
 		return _open(name, flags, mode);
 #endif

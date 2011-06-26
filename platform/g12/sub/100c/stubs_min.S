@@ -2,7 +2,6 @@
 
 DEF(physw_status, 0x34474)							// found in kbd_read_keys (OK)
 DEF(full_screen_refresh, 0xA5DC)					// found in FFA53B4C, (comp to sx30)
-DEF(enabled_refresh_physical_screen, 0x45C0 + 0x14)	// possible in FF8B4F34
 DEF(physw_run, 0x1C30 + 0xC)						// found in FF8345EC, (comp to sx30)
 DEF(canon_menu_active, 0x3210 + 4)					// found in FF896370 (comp to sx30)
 DEF(canon_shoot_menu_active, 0x8AFC + 1)			// possible in FF9DC4A4 (comp to sx30)
