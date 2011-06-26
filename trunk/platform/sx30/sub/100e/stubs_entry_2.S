@@ -70,10 +70,10 @@ NHSTUB(strlen,							0xff814100) // ok (comp 1.00h)
 NHSTUB(strncpy,							0xFF81402C) // ok (comp 1.00h)
 NHSTUB(strrchr,							0xFF8140D8) // ok (comp 1.00h)
 NHSTUB(time,							0xff893b88) // ok (comp 1.00h)
-NHSTUB(LEDDrive,						0xFF98EC54) // ok (comp 1.00h)
+NHSTUB(LEDDrive,						0xff864bd4) // ok (comp 1.00h)
 NHSTUB(SetScriptMode,					0xff8a001c)	// ok (comp 1.00h)
-//NHSTUB(UnlockAndRefresh,				0xFF8B8238) // ok (comp 1.00h)
-NHSTUB(RefreshPhysicalScreen,			0xFF8B8238) // alias for UnlockAndRefresh
+//NHSTUB(UnlockAndRefresh,				0xFF8B8110) // ok (comp 1.00h)
+NHSTUB(RefreshPhysicalScreen,			0xFF8B8110) // alias for UnlockAndRefresh
 //NHSTUB(LockAndRefresh,				    0xFF8B97D8) // ok (comp 1.00h)
 NHSTUB(ScreenLock,						0xFF8B9340)	//
 NHSTUB(ScreenUnlock,					0xFF8B93A4)	//
@@ -98,7 +98,6 @@ NHSTUB(GiveSemaphore,					0xff83a9b4)
 
 # Misc
 NHSTUB(DebugAssert,						0xFF81EB78)
-NHSTUB(PT_GetPropertyCaseString,		0xFF8999C8)
 NHSTUB(err_init_task,					0xFF815FD4)
 
 # Addresses for firmware task handlers (used in taskHook)
@@ -111,7 +110,7 @@ DEF(task_ExpDrv,						0xFF8D0818)
 # Missing
 NHSTUB(kbd_pwr_off,						0xFF810B1C)								// ??? not on sx20 or s95
 NHSTUB(kbd_pwr_on,						0xFF810B1C)								// ??? not on sx20 or s95
-NHSTUB(UIFS_WriteFirmInfoToFile,		0xFF810B1C)	// Is this needed?
+NHSTUB(UIFS_WriteFirmInfoToFile,		0xff9aec84)	// Is this needed?
 NHSTUB(rewinddir,						0xFF810B1C)
 NHSTUB(SetZoomActuatorSpeedPercent,		0xFF810B1C)
 NHSTUB(Unmount_FileSystem,				0xFF810B1C)

@@ -19,7 +19,7 @@ char *hook_raw_image_addr()
 	if (*((int*)0x2E94) != 0)
 		return (char*) 0x46000000;
 	else
-		return (char*) 0x41269150;	// found at (0xFFB789C8) [search CRAW BUF]
+		return (char*) 0x41269150;	// found at (0xFFB78B78) [search CRAW BUF]
 }
 
 char *hook_alt_raw_image_addr()
@@ -32,7 +32,7 @@ char *hook_alt_raw_image_addr()
 	if (*((int*)0x2E94) == 0)
 		return (char*) 0x46000000;
 	else
-		return (char*) 0x41269150;	// found at (0xFFB789C8) [search CRAW BUF]
+		return (char*) 0x41269150;	// found at (0xFFB78B78) [search CRAW BUF]
 }
 
 long hook_raw_size()
@@ -43,7 +43,7 @@ long hook_raw_size()
 
 char *camera_jpeg_count_str()
 {
-	return (char*)0xBB618; // loc_FFA435FC (search for "9999", passed to sprintf)
+	return (char*)0xBB618; // loc_FFA43608 (search for "9999", passed to sprintf)
 }
 
 

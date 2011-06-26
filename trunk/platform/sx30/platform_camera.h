@@ -60,29 +60,24 @@
 	   -16441, 1000000,   142319, 1000000,  375979, 1000000
 
 	// cropping
-	#define CAM_JPEG_WIDTH				4368 //4320
-	#define CAM_JPEG_HEIGHT				3254 //3240
+	#define CAM_JPEG_WIDTH				4368
+	#define CAM_JPEG_HEIGHT				3254
 	#define CAM_ACTIVE_AREA_X1			24
 	#define CAM_ACTIVE_AREA_Y1			10
-	#define CAM_ACTIVE_AREA_X2			(4464-72)
-	#define CAM_ACTIVE_AREA_Y2			(3276-12)
+	#define CAM_ACTIVE_AREA_X2			(CAM_RAW_ROWPIX-72)
+	#define CAM_ACTIVE_AREA_Y2			(CAM_RAW_ROWS-12)
+
 	// camera name
 	#define PARAM_CAMERA_NAME			4 // parameter number for GetParameterData
 	#undef  CAM_SENSOR_BITS_PER_PIXEL
-	#undef  CAM_WHITE_LEVEL
-	#undef  CAM_BLACK_LEVEL
 	#define CAM_SENSOR_BITS_PER_PIXEL	12
-	#define CAM_WHITE_LEVEL				((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
-	#define CAM_BLACK_LEVEL				127
 
 	#define CAM_EXT_TV_RANGE			1
 	#define CAM_QUALITY_OVERRIDE		1
 
 	// copied from the SX200 which has the same video buffer size
 	#undef CAM_USES_ASPECT_CORRECTION
-	#undef CAM_USES_ASPECT_YCORRECTION
 	#define CAM_USES_ASPECT_CORRECTION		1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
-	#define CAM_USES_ASPECT_YCORRECTION		0  //only uses mappings on x coordinate
 
     #define CAM_ZEBRA_ASPECT_ADJUST 1
     #define CAM_ZEBRA_NOBUF 1
@@ -104,6 +99,6 @@
 
     #define CAM_KEY_CLICK_DELAY 150 // SX30 appears to need extra delay for clicks
 
-#define CAM_FIRMWARE_MEMINFO    1       // Use 'GetMemInfo' to get free memory size.
+    #define CAM_FIRMWARE_MEMINFO    1       // Use 'GetMemInfo' to get free memory size.
 
 //----------------------------------------------------------

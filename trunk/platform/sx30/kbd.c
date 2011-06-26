@@ -51,9 +51,6 @@ extern void _GetKbdState(long*);
 #define USB_REG 2
 
 static KeyMap keymap[] = {
-	/* tiny bug: key order matters. see kbd_get_pressed_key()
-	 * for example
-	 */
 
 	{ 0, KEY_ZOOM_IN	, 0x00000020 }, // 2 bits used, 4 values (0x00000060)
 	{ 0, KEY_ZOOM_IN1	, 0x00000020 }, // 2 bits used, 4 values (0x00000060)

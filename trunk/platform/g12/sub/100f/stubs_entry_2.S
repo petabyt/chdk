@@ -98,7 +98,6 @@ NHSTUB(MoveIrisWithAv,					0xFFB04A28)
 
 # Misc
 NHSTUB(DebugAssert,						0xFF81EB78)	// ok (comp 1.00c)
-NHSTUB(PT_GetPropertyCaseString,		0xFF8954F0)	// ok (comp 1.00c)
 NHSTUB(err_init_task,					0xFF815FD4)	// ok (comp 1.00c)
 
 # Addresses for firmware task handlers (used in taskHook)
@@ -111,7 +110,7 @@ DEF(task_ExpDrv,						0xFF8CC0D0)	// ok (comp 1.00c)
 # Missing
 NHSTUB(kbd_pwr_off,						0xFF810B1C)								// ??? not on sx20 or s95
 NHSTUB(kbd_pwr_on,						0xFF810B1C)								// ??? not on sx20 or s95
-NHSTUB(UIFS_WriteFirmInfoToFile,		0xFF810B1C)	// Is this needed?
+NHSTUB(UIFS_WriteFirmInfoToFile,		0xff9a9e9c)	// Is this needed?
 NHSTUB(rewinddir,						0xFF810B1C)
 NHSTUB(SetZoomActuatorSpeedPercent,		0xFF810B1C)
 NHSTUB(Unmount_FileSystem,				0xFF810B1C)

@@ -71,8 +71,8 @@
 
 #define CAM_MAKE                    "Canon"
 #define CAM_SENSOR_BITS_PER_PIXEL   10          // Bits per pixel. 10 is standard, 12 is supported except for curves
-#define CAM_WHITE_LEVEL             ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
-#define CAM_BLACK_LEVEL             31
+#define CAM_WHITE_LEVEL             ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)      // 10bpp = 1023 ((1<<10)-1), 12bpp = 4095 ((1<<12)-1)
+#define CAM_BLACK_LEVEL             ((1<<(CAM_SENSOR_BITS_PER_PIXEL-5))-1)  // 10bpp = 31 ((1<<5)-1),    12bpp = 127 ((1<<7)-1)
 
 #define CAM_BITMAP_PALETTE          1           // which color set is used for this camera
 

@@ -2,7 +2,6 @@
 
 DEF(physw_status, 0x34594)							// ok (comp 1.00h)
 DEF(full_screen_refresh, 0xB198)					// ok (comp 1.00h)
-DEF(enabled_refresh_physical_screen, 0x4CF8 + 0x14)	// ok (comp 1.00h)
 DEF(physw_run, 0x1C30 + 0xC)						// ok (comp 1.00h)
 DEF(canon_menu_active, 0x3A28 + 4)					// ok (comp 1.00h)
 DEF(canon_shoot_menu_active, 0x9900 + 1)			// ok (comp 1.00h)
