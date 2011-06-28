@@ -1,5 +1,8 @@
 #include "stubs_asm.h"
 
+NHSTUB(Open, 0xffc2609c)
+NHSTUB(write, 0xffc26198)
+
 // Not found automatically
 NHSTUB(EnterToCompensationEVF, 0xFFC27604)		// "ExpOn"
 NHSTUB(ExitFromCompensationEVF, 0xFFC27648)		// "ExpOff"
@@ -12,7 +15,7 @@ NHSTUB(SetFileTimeStamp, 0xFFC263A4)			// Maybe ok, Find 0x12CEA600
 NHSTUB(UpdateMBROnFlash, 0xFFC51140)
 NHSTUB(closedir, 0xFFDEBA54)
 NHSTUB(closefastdir, 0xFFDEBA54)				// Same as closedir
-NHSTUB(kbd_read_keys_r2, 0xFFC23B58)
+NHSTUB(kbd_read_keys_r2, 0xffc42fb0)			// 0xFFC23B58
 NHSTUB(strcat, 0xFFC7C578)
 NHSTUB(strrchr, 0xFFC0400C)
 
@@ -31,7 +34,7 @@ NHSTUB(TurnOnBackLight, 0xFFC77F84)
 NHSTUB(TurnOffBackLight, 0xFFC77F9C)
 NHSTUB(UIFS_WriteFirmInfoToFile, 0xFFD1F9D4)
 NHSTUB(kbd_read_keys, 0xFFC23B2C)
-NHSTUB(rename, 0xFFC261E4)
+NHSTUB(rename, 0xffc259ec)						// 0xFFC261E4
 NHSTUB(DoAFLock, 0xFFC27554)
 NHSTUB(UnlockAF, 0xFFC2758C)
 NHSTUB(MakeAFScan, 0xFFD0F2AC)					// Ok
@@ -50,7 +53,7 @@ NHSTUB(UnlockAndRefresh, 0xFFD7C5EC)			// "Window.c"
 NHSTUB(LockAndRefresh, 0xFFD7C5A8)				// "Window.c"
 
 // null subs, Not yet found
-NHSTUB(GetBatteryTemperature, 0xFFC00B20)		// 0xFFC4561C crashed
+NHSTUB(GetBatteryTemperature, 0xffc4561c)		// 0xFFC00B20	// 0xFFC4561C crashed ??
 NHSTUB(TurnOffMic, 0xFFC43C28)					// Doesn't work
 NHSTUB(TurnOnMic, 0xFFC43C54)					// Doesn't work
 
@@ -65,4 +68,4 @@ NHSTUB(Mount_FileSystem, 0xFFC00B20)                 // nullsub_1
 NHSTUB(Unmount_FileSystem, 0xFFC00B20)               // nullsub_1
 NHSTUB(rewinddir, 0xFFC00B20)                        // nullsub_1
 NHSTUB(kbd_pwr_on, 0xFFC00B20)
-NHSTUB(kbd_pwr_off, 0xFFC00B20)
+NHSTUB(kbd_pwr_off, 0xffc435e4)	// 0xFFC00B20)
