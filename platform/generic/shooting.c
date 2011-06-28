@@ -733,14 +733,14 @@ short shooting_get_drive_mode()
 #if defined (CAMERA_sx200is) || \
 	defined (CAMERA_g11) || \
 	defined (CAMERA_ixus100_sd780) || \
-	defined (CAMERA_a480) || \
+	defined (CAMERA_a480) || defined (CAMERA_a495) || \
 	defined (CAMERA_s90) || \
 	defined (CAMERA_sx20) || \
 	defined (CAMERA_d10) || \
 	defined (CAMERA_s95) || \
 	defined	(CAMERA_g12) || defined (CAMERA_sx30) || \
  	defined (CAMERA_sx130is) || \
-    defined (CAMERA_ixus120_sd940)
+	defined (CAMERA_ixus120_sd940) || defined (CAMERA_ixus200_sd980)
    short n;
    // unlike other cameras, sx200 does set PROPCASE_DRIVE_MODE when in custom timer mode
    // SX 200 IS 0,1,2,3,4=Off, 2 Second, Custom, Face Detection
