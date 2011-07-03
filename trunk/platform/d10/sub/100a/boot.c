@@ -180,8 +180,12 @@ void __attribute__((naked,noinline)) sub_FF810FC4_my() {
 "                MOV     R0, #0x53000\n"
 "                STR     R0, [SP,#4]\n"
 //"                LDR     R0, =0x146A2C\n"
+#ifdef OPT_CHDK_IN_EXMEM
+"                LDR     R0, =0x146A2C\n"
+#else
               "LDR     R0, =new_sa\n"
               "LDR     R0, [R0]\n"
+#endif
 "                LDR     R2, =0x2F9C00\n"
 "                LDR     R1, =0x2F24A8\n"
 "                STR     R0, [SP,#8]\n"
