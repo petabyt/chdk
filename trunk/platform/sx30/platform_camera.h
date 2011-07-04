@@ -101,4 +101,8 @@
 
     #define CAM_FIRMWARE_MEMINFO    1       // Use 'GetMemInfo' to get free memory size.
 
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
+                                                // Used to enabled bracketing in custom timer, required on many recent cameras
+                                                // see http://chdk.setepontos.com/index.php/topic,3994.405.html
+
 //----------------------------------------------------------
