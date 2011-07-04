@@ -728,22 +728,10 @@ if ((mode_get()&MODE_MASK) != MODE_PLAY){
 short shooting_get_drive_mode()
 {
     short m;
-// reyalp - this is related to http://chdk.setepontos.com/index.php/topic,3994.405.html
-// TODO
-#if defined (CAMERA_sx200is) || \
-	defined (CAMERA_g11) || \
-	defined (CAMERA_ixus100_sd780) || \
-	defined (CAMERA_a480) || defined (CAMERA_a495) || \
-	defined (CAMERA_s90) || \
-	defined (CAMERA_sx20) || \
-	defined (CAMERA_d10) || \
-	defined (CAMERA_s95) || \
-	defined	(CAMERA_g12) || defined (CAMERA_sx30) || \
- 	defined (CAMERA_sx130is) || \
-	defined (CAMERA_ixus120_sd940) || defined (CAMERA_ixus200_sd980)
+// these cameras do not set PROPCASE_DRIVE_MODE when in custom timer mode
+// SX 200 IS 0,1,2,3,4=Off, 2 Second, Custom, Face Detection
+#if defined (CAM_DRIVE_MODE_FROM_TIMER_MODE)
    short n;
-   // unlike other cameras, sx200 does set PROPCASE_DRIVE_MODE when in custom timer mode
-   // SX 200 IS 0,1,2,3,4=Off, 2 Second, Custom, Face Detection
    _GetPropertyCase(PROPCASE_TIMER_MODE, &n, sizeof(n));
    // note we return this only in custom mode.
    // Other cameras would return 3 if any timer mode is set (?) even if it doesn't do multiple exposures
