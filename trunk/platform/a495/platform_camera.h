@@ -44,6 +44,7 @@
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_EV_IN_VIDEO                 1
+	#define CAM_QUALITY_OVERRIDE            1
 
     #undef CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              8

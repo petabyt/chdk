@@ -98,7 +98,9 @@
 #define EDGE_HMARGIN                0           // define sup and inf screen margins on edge overlay without overlay.  Necessary to save memory buffer space. sx200is needs values other than 0
 // end of section by nandoid
 
-#undef CAM_QUALITY_OVERRIDE                     // camera may need shooting quality override (sx200is lacks SuperFine quality)
+#undef CAM_QUALITY_OVERRIDE                     // define this in platform_camera.h to enable 'Super Fine' JPEG compression mode
+												// used to allow super fine JPEG option on cameras where this has been removed
+												// from the Canon menu. Note: may not actually work on all cameras.
 
 #undef CAM_ZEBRA_ASPECT_ADJUST                  // zebra needs to account for real bitmap size being different from what lib.c reports
                                                 // also used by some cameras with normal bitmap layouts for memory saving ?
