@@ -1454,6 +1454,30 @@ int __attribute__((weak)) rec_mode_active(void) {
     return (playrec_mode==2 || playrec_mode==4 || playrec_mode==5);
 }
 
+// Converted from MODE_IS_VIDEO macro (philmoz July 2011)
+int mode_is_video(int m)
+{
+    m = m & MODE_SHOOTING_MASK;
+    return (m==MODE_VIDEO_STD || \
+            m==MODE_VIDEO_SPEED ||  \
+            m==MODE_VIDEO_COMPACT || \
+            m==MODE_VIDEO_MY_COLORS || \
+            m==MODE_VIDEO_COLOR_ACCENT || \
+            m==MODE_VIDEO_COLOR_SWAP || \
+            m==MODE_VIDEO_MINIATURE || \
+            m==MODE_VIDEO_TIME_LAPSE || \
+            m==MODE_VIDEO_PORTRAIT || \
+            m==MODE_VIDEO_NIGHT || \
+            m==MODE_VIDEO_INDOOR || \
+            m==MODE_VIDEO_FOLIAGE || \
+            m==MODE_VIDEO_SNOW  || \
+            m==MODE_VIDEO_BEACH || \
+            m==MODE_VIDEO_AQUARIUM || \
+            m==MODE_VIDEO_SUPER_MACRO || \
+            m==MODE_VIDEO_STITCH || \
+            m==MODE_VIDEO_MANUAL);
+}
+
 // currently nothing needs to override this, so not weak
 int /*__attribute__((weak))*/ mode_get(void) {
     int mode, t=0xFF;

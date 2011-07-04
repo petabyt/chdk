@@ -95,7 +95,10 @@ static const CapturemodeMap modemap[] = {
 	{ MODE_TV,                 32771  },
 	{ MODE_AV,                 32770  },
 	{ MODE_M,                  32769  },
+    { MODE_VIDEO_COLOR_ACCENT, 2612   },
+    { MODE_VIDEO_COLOR_SWAP,   2613   },
 	{ MODE_VIDEO_STD,          2614   }, // video standby
+    { MODE_VIDEO_MINIATURE,    2620   },
 	{ MODE_LOWLIGHT,           32801  },
 	{ MODE_QUICK,			   33315  },
 
