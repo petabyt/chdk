@@ -15,24 +15,9 @@
 /* capture mode constants. These are in their own header for easier sed processing*/
 #include "modelist.h"
 
-// this is nasty, but not as nasty as checking each of the flags all over the place
-#define MODE_IS_VIDEO(m)   (((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_STD || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_SPEED ||  \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_COMPACT || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_MY_COLORS || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_COLOR_ACCENT || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_COLOR_SWAP || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_TIME_LAPSE || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_PORTRAIT || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_NIGHT || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_INDOOR || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_FOLIAGE || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_SNOW  || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_BEACH || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_AQUARIUM || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_SUPER_MACRO || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_STITCH || \
-                            ((m)&MODE_SHOOTING_MASK)==MODE_VIDEO_MANUAL)
+// converted large macro to function in platform/generic/shooting.c (philmoz July 2011)
+extern int mode_is_video(int);
+#define MODE_IS_VIDEO(m)    mode_is_video(m)
 
 /* propcase ID constants. These are in their own header files for easier sed processing */
 #if CAM_PROPSET == 4

@@ -103,7 +103,8 @@ enum {
 	MODE_SCN_POSTER_EFFECT	, // sx30
 	MODE_SCN_FISHEYE		, // sx30
 	MODE_SCN_MINIATURE		, // sx30
-	MODE_SCN_HDR			, // g12
+	MODE_SCN_HDR			, // g12 (HDR scene mode)
+    MODE_VIDEO_MINIATURE    , // g12 (miniature effect video mode)
 };
 
 #endif
