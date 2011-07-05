@@ -47,7 +47,8 @@ static int nFirst=1;
 	defined(CAMERA_ixus75_sd750) || defined(CAMERA_a470) || defined(CAMERA_ixus90_sd790) || \
 	defined(CAMERA_ixus100_sd780) || defined(CAMERA_ixus120_sd940) || defined(CAMERA_a480) || \
 	defined(CAMERA_a495) || defined(CAMERA_a490) || defined(CAMERA_d10) || defined(CAMERA_ixus85_sd770) || \
-	defined(CAMERA_ixus95_sd1200) || defined(CAMERA_a580) || defined(CAMERA_ixus300_sd4000)
+	defined(CAMERA_ixus95_sd1200) || defined(CAMERA_a580) || defined(CAMERA_ixus300_sd4000) || \
+	defined(CAMERA_a410)
 #define ZSTEP_TABLE_SIZE 7
 static int nTxtbl[]={0,1,2,3,4,5,6};    // remote zoom steps (we need a distinct number of steps, even if the camera zooms smoothly)
 #endif
