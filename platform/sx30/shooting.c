@@ -80,13 +80,15 @@ const ISOTable iso_table[] = {
 };          
 
 /*
-http://www.usa.canon.com/consumer/controller?act=ModelInfoAct&fcategoryid=225&modelid=17630#ModelTechSpecsAct
+http://www.usa.canon.com/cusa/consumer/products/cameras/digital_cameras/powershot_sx30_is#Specifications
 Shooting Modes
-	Auto, P, Av, Tv, M, C, Portrait, Landscape, Sports, 
+	Auto, P, Av, Tv, M, C1, C2, Portrait, Landscape, Sports, 
 	Special Scene 
-		(Foliage, Snow, Beach, Sunset, Fireworks, Aquarium, Night Scene, Indoor,
-		ISO 3200, Color Accent, Color Swap),
-	Super Macro, Night Snapshot, Stitch Assist, Movie
+		(*1Smart Shutter*3, Low Light, Super Vivid, Poster Effect,
+        Color Accent, Color Swap, Fisheye Effect, Miniature Effect,
+        Beach, Foliage, Snow, Fireworks, Stitch Assist)
+    Movie
+    canon mode list at FFC67954 in 100h
 */
 static const CapturemodeMap modemap[] = {
 	{ MODE_AUTO,               32768  },
@@ -96,8 +98,12 @@ static const CapturemodeMap modemap[] = {
 	{ MODE_M,                  32769  },
 	{ MODE_PORTRAIT,           32783  },
 	{ MODE_LANDSCAPE,          32782  },
-	{ MODE_VIDEO_STD,          2614   }, // video standby
 	{ MODE_SPORTS,             33287  },
+
+    { MODE_VIDEO_COLOR_ACCENT, 2612   },
+    { MODE_VIDEO_COLOR_SWAP,   2613   },
+	{ MODE_VIDEO_STD,          2614   },
+    { MODE_VIDEO_MINIATURE,    2620   },
 
 	{ MODE_SCN_SMART_SHUTTER,  16937  },
 	{ MODE_SCN_LOWLIGHT,       16417  },
@@ -111,7 +117,8 @@ static const CapturemodeMap modemap[] = {
 	{ MODE_SCN_BEACH,          16407  },
 	{ MODE_SCN_FIREWORK,       16408  },
 	{ MODE_SCN_COLOR_ACCENT,   16925  },
-	{ MODE_SCN_COLOR_SWAP,     16926  }
+	{ MODE_SCN_COLOR_SWAP,     16926  },
+	{ MODE_SCN_STITCH,         16908  },
 };
 
 #include "../generic/shooting.c"
