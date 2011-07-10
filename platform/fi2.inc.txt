@@ -30,3 +30,9 @@ ifeq ($(KEYSYS), d4b)
 FI2KEY=
 FI2IV =
 endif
+
+# sx220, sx230
+ifeq ($(KEYSYS), d4c)
+FI2KEY=
+FI2IV =
+endif

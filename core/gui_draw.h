@@ -255,6 +255,40 @@
 #define COLOR_HISTO_B_PLAY  COLOR_HISTO_B
 #define COLOR_HISTO_BG_PLAY COLOR_BLUE_LT
 #define COLOR_HISTO_RG_PLAY COLOR_YELLOW
+#elif CAM_BITMAP_PALETTE==9 		// sx220
+#define COLOR_TRANSPARENT   0x00
+#define COLOR_WHITE         0x01
+#define COLOR_RED           0x9f
+#define COLOR_GREY          0x1a
+#define COLOR_GREY_LIGHT    0x0B
+#define COLOR_GREY_DARK     0x19
+#define COLOR_GREEN         0xa0
+#define COLOR_BLUE_LT       0x96
+#define COLOR_BLUE          0xa1
+#define COLOR_YELLOW        0x92
+#define COLOR_BLACK         0xFF
+#define COLOR_BG            0x62
+#define COLOR_FG            COLOR_WHITE
+#define COLOR_SELECTED_BG   0x0e
+#define COLOR_SELECTED_FG   COLOR_BLACK
+#define COLOR_ALT_BG        COLOR_BG
+#define COLOR_SPLASH_RED    COLOR_RED
+#define COLOR_SPLASH_PINK   0x1e			// Orange
+#define COLOR_SPLASH_GREY   0x16
+#define COLOR_HISTO_R       0x6C
+#define COLOR_HISTO_R_PLAY  COLOR_RED
+#define COLOR_HISTO_B       0x6D
+#define COLOR_HISTO_B_PLAY  COLOR_BLUE
+#define COLOR_HISTO_G       0x90
+#define COLOR_HISTO_G_PLAY	COLOR_GREEN
+#define COLOR_HISTO_BG      0x52	//COLOR_BLUE_LT
+#define COLOR_HISTO_RG      0x51	//COLOR_YELLOW
+#define COLOR_HISTO_RB      0x3D	//COLOR_RED
+#define COLOR_HISTO_RB_PLAY COLOR_HISTO_RB
+#define COLOR_HISTO_BG_PLAY COLOR_BLUE_LT
+#define COLOR_HISTO_RG_PLAY COLOR_YELLOW
+#undef SCREEN_COLOR
+#define SCREEN_COLOR            0x1D
 
 #else
 #error CAM_BITMAP_PALETTE not defined

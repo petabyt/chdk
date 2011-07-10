@@ -699,6 +699,10 @@ void shooting_set_av96_direct(short v, short is_now)
 if ((mode_get()&MODE_MASK) != MODE_PLAY){
  if(is_now) {
    _SetPropertyCase(PROPCASE_AV, &v, sizeof(v));
+   	#if defined(CAMERA_sx220hs)
+        extern int _MoveIrisWithAv(short*);
+        _MoveIrisWithAv(&v);
+	#endif
  }
  else photo_param_put_off.av96=v;
 }
@@ -1160,7 +1164,7 @@ void shooting_av_bracketing(){
         shooting_set_av96_direct(value, SET_NOW);
 // sx30 and g12 apparently do not set aperture from propcase in continuous mode
 // TODO if this is common to other models it should become a camera.h define
-#if defined(CAMERA_sx30) || defined(CAMERA_g12)
+#if defined(CAMERA_sx30) || defined(CAMERA_g12) || defined(CAMERA_sx220hs)
         extern int _MoveIrisWithAv(short*);
         _MoveIrisWithAv(&value);
 #endif
