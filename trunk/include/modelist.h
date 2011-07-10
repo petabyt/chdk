@@ -105,6 +105,12 @@ enum {
 	MODE_SCN_MINIATURE		, // sx30
 	MODE_SCN_HDR			, // g12 (HDR scene mode)
     MODE_VIDEO_MINIATURE    , // g12 (miniature effect video mode)
+	MODE_VIDEO_IFRAME_MOVIE , // sx220
+	MODE_VIDEO_MOVIE_DIGEST	, // sx220
+	MODE_SCN_HIGHSPEED_BURST, // sx220
+	MODE_SCN_BEST_IMAGE		, // sx220
+	MODE_SCN_TOY_CAMERA	, // sx220
+	MODE_SCN_MONOCHROME	, // sx220
 };
 
 #endif
