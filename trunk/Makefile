@@ -169,6 +169,7 @@ batch-zip: version
 	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
+	$(MAKE) -s --no-print-directory PLATFORM=a1100 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=a2000 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
 	#$(MAKE) -s --no-print-directory PLATFORM=s80  PLATFORMSUB=100g NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=ixus700_sd500   PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
@@ -298,6 +299,7 @@ batch-zip: version
 	cp $(topdir)bin/$(VER)-sx30-100l-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx30-100m-$(BUILD_NUMBER).zip
 	mv $(topdir)bin/$(VER)-sx1-200h-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx1-200h-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/$(VER)-sx1-201a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx1-201a-$(BUILD_NUMBER)_BETA.zip
+	mv $(topdir)bin/$(VER)-a1100-100c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a1100-100c-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/$(VER)-a2000-100c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a2000-100c-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/$(VER)-ixus90_sd790-100c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus90_sd790-100c-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/$(VER)-ixus90_sd790-100d-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus90_sd790-100d-$(BUILD_NUMBER)_BETA.zip
@@ -365,6 +367,7 @@ batch-zip-complete: version
 	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
+	$(MAKE) -s --no-print-directory PLATFORM=a1100 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=a2000 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
 	#$(MAKE) -s --no-print-directory PLATFORM=s80  PLATFORMSUB=100g NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=ixus700_sd500   PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
@@ -514,6 +517,8 @@ batch-zip-complete: version
 	mv $(topdir)bin/sx1-200h-$(BUILD_NUMBER).zip $(topdir)bin/sx1-200h-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/sx1-201a-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx1-201a-$(BUILD_NUMBER)-full_BETA.zip
 	mv $(topdir)bin/sx1-201a-$(BUILD_NUMBER).zip $(topdir)bin/sx1-201a-$(BUILD_NUMBER)_BETA.zip
+	mv $(topdir)bin/a1100-100c-$(BUILD_NUMBER)-full.zip $(topdir)bin/a1100-100c-$(BUILD_NUMBER)-full_BETA.zip
+	mv $(topdir)bin/a1100-100c-$(BUILD_NUMBER).zip $(topdir)bin/a1100-100c-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/a2000-100c-$(BUILD_NUMBER)-full.zip $(topdir)bin/a2000-100c-$(BUILD_NUMBER)-full_BETA.zip
 	mv $(topdir)bin/a2000-100c-$(BUILD_NUMBER).zip $(topdir)bin/a2000-100c-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/ixus90_sd790-100c-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus90_sd790-100c-$(BUILD_NUMBER)-full_BETA.zip
@@ -617,6 +622,7 @@ batch-clean:
 	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=101a NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=100e NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=101b NO_INC_BUILD=1 clean
+	$(MAKE) -s --no-print-directory PLATFORM=a1100 PLATFORMSUB=100c NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=a2000 PLATFORMSUB=100c NO_INC_BUILD=1 clean
 	#$(MAKE) -s --no-print-directory PLATFORM=s80  PLATFORMSUB=100g NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=ixus700_sd500   PLATFORMSUB=101a NO_INC_BUILD=1 clean
