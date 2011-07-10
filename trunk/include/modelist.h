@@ -97,20 +97,20 @@ enum {
     MODE_SCN_LONG_SHUTTER   , // only known on sx1, d10
     MODE_LOWLIGHT           , // g11
     MODE_SCN_NOSTALGIC      , // s90
-	MODE_SCN_SMART_SHUTTER	, // sx30/g12 (Smart Shutter, Smile detection mode)
-	MODE_SCN_LOWLIGHT		, // sx30
-	MODE_SCN_SUPER_VIVID	, // sx30
-	MODE_SCN_POSTER_EFFECT	, // sx30
-	MODE_SCN_FISHEYE		, // sx30
-	MODE_SCN_MINIATURE		, // sx30
-	MODE_SCN_HDR			, // g12 (HDR scene mode)
+    MODE_SCN_SMART_SHUTTER    , // sx30/g12 (Smart Shutter, Smile detection mode)
+    MODE_SCN_LOWLIGHT        , // sx30
+    MODE_SCN_SUPER_VIVID    , // sx30
+    MODE_SCN_POSTER_EFFECT    , // sx30
+    MODE_SCN_FISHEYE        , // sx30
+    MODE_SCN_MINIATURE        , // sx30
+    MODE_SCN_HDR            , // g12 (HDR scene mode)
     MODE_VIDEO_MINIATURE    , // g12 (miniature effect video mode)
-	MODE_VIDEO_IFRAME_MOVIE , // sx220
-	MODE_VIDEO_MOVIE_DIGEST	, // sx220
-	MODE_SCN_HIGHSPEED_BURST, // sx220
-	MODE_SCN_BEST_IMAGE		, // sx220
-	MODE_SCN_TOY_CAMERA	, // sx220
-	MODE_SCN_MONOCHROME	, // sx220
+    MODE_VIDEO_IFRAME_MOVIE , // sx220
+    MODE_VIDEO_MOVIE_DIGEST    , // sx220 (the camera automatically record a short video clip (up to approximately 4 seconds) every time you shoot a still image.)
+    MODE_SCN_HIGHSPEED_BURST, // sx220
+    MODE_SCN_BEST_IMAGE        , // sx220
+    MODE_SCN_TOY_CAMERA    , // sx220
+    MODE_SCN_MONOCHROME    , // sx220
     MODE_SCN_WINK_SELF_TIMER, // sx30/g12 (Smart Shutter, Wink Self Timer mode)
     MODE_SCN_FACE_SELF_TIMER, // sx30/g12 (Smart Shutter, Face Self Timer mode)
 };

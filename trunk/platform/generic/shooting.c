@@ -749,29 +749,14 @@ short shooting_get_drive_mode()
     return m;
 }
 
-// TODO this should probably use MODE_IS_VIDEO
 short shooting_can_focus()
 {
+ int m=mode_get()&MODE_SHOOTING_MASK;
 #if !CAM_CAN_SD_OVER_NOT_IN_MF && CAM_CAN_SD_OVERRIDE
- int m=mode_get()&MODE_SHOOTING_MASK;
- int mode_video=((m==MODE_VIDEO_STD) ||
-			    (m==MODE_VIDEO_SPEED) ||
-			    (m==MODE_VIDEO_COMPACT) ||
-			    (m==MODE_VIDEO_MY_COLORS) ||
-			    (m==MODE_VIDEO_TIME_LAPSE) ||
-			    (m==MODE_VIDEO_COLOR_ACCENT));
-  return (shooting_get_focus_mode() || mode_video);
+  return (shooting_get_focus_mode() || MODE_IS_VIDEO(m));
 #elif !CAM_CAN_SD_OVERRIDE
- int m=mode_get()&MODE_SHOOTING_MASK;
- int mode_video=((m==MODE_VIDEO_STD) ||
-			    (m==MODE_VIDEO_SPEED) ||
-			    (m==MODE_VIDEO_COMPACT) ||
-			    (m==MODE_VIDEO_MY_COLORS) ||
-    	        (m==MODE_VIDEO_TIME_LAPSE) ||
-			    (m==MODE_VIDEO_COLOR_ACCENT));
-  return mode_video;
+  return MODE_IS_VIDEO(m);
 #elif defined (CAMERA_ixus800_sd700)
- int m=mode_get()&MODE_SHOOTING_MASK;
 // TODO whats the reason for this ?!?
   return (shooting_get_zoom()<8) && (m!=MODE_AUTO) && (m!=MODE_SCN_UNDERWATER);
 #else
@@ -1450,24 +1435,29 @@ int __attribute__((weak)) rec_mode_active(void) {
 int mode_is_video(int m)
 {
     m = m & MODE_SHOOTING_MASK;
-    return (m==MODE_VIDEO_STD || \
-            m==MODE_VIDEO_SPEED ||  \
-            m==MODE_VIDEO_COMPACT || \
-            m==MODE_VIDEO_MY_COLORS || \
-            m==MODE_VIDEO_COLOR_ACCENT || \
-            m==MODE_VIDEO_COLOR_SWAP || \
-            m==MODE_VIDEO_MINIATURE || \
-            m==MODE_VIDEO_TIME_LAPSE || \
-            m==MODE_VIDEO_PORTRAIT || \
-            m==MODE_VIDEO_NIGHT || \
-            m==MODE_VIDEO_INDOOR || \
-            m==MODE_VIDEO_FOLIAGE || \
-            m==MODE_VIDEO_SNOW  || \
-            m==MODE_VIDEO_BEACH || \
-            m==MODE_VIDEO_AQUARIUM || \
-            m==MODE_VIDEO_SUPER_MACRO || \
-            m==MODE_VIDEO_STITCH || \
-            m==MODE_VIDEO_MANUAL);
+    return (m==MODE_VIDEO_STD ||
+            m==MODE_VIDEO_SPEED ||
+            m==MODE_VIDEO_COMPACT ||
+            m==MODE_VIDEO_MY_COLORS ||
+            m==MODE_VIDEO_COLOR_ACCENT ||
+            m==MODE_VIDEO_COLOR_SWAP ||
+            m==MODE_VIDEO_MINIATURE ||
+            m==MODE_VIDEO_TIME_LAPSE ||
+            m==MODE_VIDEO_PORTRAIT ||
+            m==MODE_VIDEO_NIGHT ||
+            m==MODE_VIDEO_INDOOR ||
+            m==MODE_VIDEO_FOLIAGE ||
+            m==MODE_VIDEO_SNOW  ||
+            m==MODE_VIDEO_BEACH ||
+            m==MODE_VIDEO_AQUARIUM ||
+            m==MODE_VIDEO_SUPER_MACRO ||
+            m==MODE_VIDEO_STITCH ||
+            m==MODE_VIDEO_MANUAL ||
+            m==MODE_VIDEO_MINIATURE ||
+            m==MODE_VIDEO_IFRAME_MOVIE
+// not clear if this should be considered a video mode ?
+/*            m==MODE_VIDEO_MOVIE_DIGEST*/ 
+            );
 }
 
 // currently nothing needs to override this, so not weak
