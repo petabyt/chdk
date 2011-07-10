@@ -97,7 +97,7 @@ enum {
     MODE_SCN_LONG_SHUTTER   , // only known on sx1, d10
     MODE_LOWLIGHT           , // g11
     MODE_SCN_NOSTALGIC      , // s90
-	MODE_SCN_SMART_SHUTTER	, // sx30
+	MODE_SCN_SMART_SHUTTER	, // sx30/g12 (Smart Shutter, Smile detection mode)
 	MODE_SCN_LOWLIGHT		, // sx30
 	MODE_SCN_SUPER_VIVID	, // sx30
 	MODE_SCN_POSTER_EFFECT	, // sx30
@@ -111,6 +111,8 @@ enum {
 	MODE_SCN_BEST_IMAGE		, // sx220
 	MODE_SCN_TOY_CAMERA	, // sx220
 	MODE_SCN_MONOCHROME	, // sx220
+    MODE_SCN_WINK_SELF_TIMER, // sx30/g12 (Smart Shutter, Wink Self Timer mode)
+    MODE_SCN_FACE_SELF_TIMER, // sx30/g12 (Smart Shutter, Face Self Timer mode)
 };
 
 #endif

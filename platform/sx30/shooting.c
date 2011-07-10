@@ -81,44 +81,51 @@ const ISOTable iso_table[] = {
 
 /*
 http://www.usa.canon.com/cusa/consumer/products/cameras/digital_cameras/powershot_sx30_is#Specifications
-Shooting Modes
-	Auto, P, Av, Tv, M, C1, C2, Portrait, Landscape, Sports, 
-	Special Scene 
-		(*1Smart Shutter*3, Low Light, Super Vivid, Poster Effect,
-        Color Accent, Color Swap, Fisheye Effect, Miniature Effect,
-        Beach, Foliage, Snow, Fireworks, Stitch Assist)
-    Movie
-    canon mode list at FFC67954 in 100h
+Shooting Modes:
+    Smart AUTO, P, Tv, Av, M, C1, C2, Portrait, Landscape, Sports, SCN, Movie
+
+SCN Scene Modes:
+    Smart Shutter, Low Light, Super Vivid, Poster Effect, Color Accent, 
+    Color Swap, Fisheye Effect, Miniature Effect, Beach, Foliage, Snow, 
+    Fireworks, Stitch Assist
+
+Movie Modes:
+    Standard, Miniature Effect, Color Accent, Color Swap
+
+Smart Shutter Modes:
+    Smile, Wink Self-timer, Face Self-Timer
 */
+// SX30 modelist table found @0xFFC67954 (firmware 1.00h)
 static const CapturemodeMap modemap[] = {
-	{ MODE_AUTO,               32768  },
-	{ MODE_P,                  32772  },
+	{ MODE_M,                  32769  },
 	{ MODE_TV,                 32771  },
 	{ MODE_AV,                 32770  },
-	{ MODE_M,                  32769  },
-	{ MODE_PORTRAIT,           32783  },
-	{ MODE_LANDSCAPE,          32782  },
-	{ MODE_SPORTS,             33287  },
+	{ MODE_P,                  32772  },
+	{ MODE_AUTO,               32768  },
 
-    { MODE_VIDEO_COLOR_ACCENT, 2612   },
-    { MODE_VIDEO_COLOR_SWAP,   2613   },
-	{ MODE_VIDEO_STD,          2614   },
-    { MODE_VIDEO_MINIATURE,    2620   },
-
+	{ MODE_SCN_STITCH,         16908  },
+	{ MODE_SCN_COLOR_ACCENT,   16925  },
+	{ MODE_SCN_COLOR_SWAP,     16926  },
+    { MODE_PORTRAIT,           32783  },
+    { MODE_SCN_FACE_SELF_TIMER,16936  },
 	{ MODE_SCN_SMART_SHUTTER,  16937  },
+    { MODE_SCN_WINK_SELF_TIMER,16938  },
 	{ MODE_SCN_LOWLIGHT,       16417  },
-	{ MODE_SCN_SUPER_VIVID,    16934  },
-	{ MODE_SCN_POSTER_EFFECT,  16935  },
 	{ MODE_SCN_FISHEYE,        16939  },
 	{ MODE_SCN_MINIATURE,      16940  },
-	{ MODE_SCN_STITCH,         16908  },
+	{ MODE_SCN_SUPER_VIVID,    16934  },
+	{ MODE_SCN_POSTER_EFFECT,  16935  },
+	{ MODE_LANDSCAPE,          32782  },
 	{ MODE_SCN_FOLIAGE,        16405  },
 	{ MODE_SCN_SNOW,           16406  },
 	{ MODE_SCN_BEACH,          16407  },
 	{ MODE_SCN_FIREWORK,       16408  },
-	{ MODE_SCN_COLOR_ACCENT,   16925  },
-	{ MODE_SCN_COLOR_SWAP,     16926  },
-	{ MODE_SCN_STITCH,         16908  },
+	{ MODE_SPORTS,             33287  },
+
+    { MODE_VIDEO_COLOR_ACCENT, 2612   },
+    { MODE_VIDEO_COLOR_SWAP,   2613   },
+    { MODE_VIDEO_MINIATURE,    2620   },
+	{ MODE_VIDEO_STD,          2614   },
 };
 
 #include "../generic/shooting.c"
