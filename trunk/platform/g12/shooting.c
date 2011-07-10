@@ -81,46 +81,58 @@ const ISOTable iso_table[] = {
 };          
 
 /*
-http://www.usa.canon.com/consumer/controller?act=ModelInfoAct&fcategoryid=225&modelid=17630#ModelTechSpecsAct
-Shooting Modes
-	Auto, P, Av, Tv, M, C, Portrait, Landscape, Sports, 
-	Special Scene 
-		(Foliage, Snow, Beach, Sunset, Fireworks, Aquarium, Night Scene, Indoor,
-		ISO 3200, Color Accent, Color Swap),
-	Super Macro, Night Snapshot, Stitch Assist, Movie
+http://www.usa.canon.com/cusa/consumer/products/cameras/digital_cameras/powershot_g12#Specifications
+Shooting Modes:
+    Smart AUTO, P, Tv, Av, M, C1, C2, Low Light, Quick Shot, SCN, Movie
+
+SCN Scene Modes:
+    Portrait, Landscape, Kids & Pets, Sports, Smart Shutter, 
+    Super Vivid, Poster Effect, Color Accent, Color Swap, 
+    High Dynamic Range, Nostalgic, Fisheye Effect, 
+    Miniature Effect, Beach, Underwater, Foliage, Snow, Fireworks, Stitch Assist
+
+Movie Modes:
+    Standard, Miniature Effect, Color Accent, Color Swap
+
+Smart Shutter Modes:
+    Smile, Wink Self-timer, Face Self-Timer
 */
+// G12 modelist table found @0xFFC89550 (firmware 1.00c)
 static const CapturemodeMap modemap[] = {
-	{ MODE_AUTO,               32768  },
-	{ MODE_P,                  32772  },
+	{ MODE_QUICK,			   33315  },
 	{ MODE_TV,                 32771  },
 	{ MODE_AV,                 32770  },
+	{ MODE_P,                  32772  },
 	{ MODE_M,                  32769  },
-    { MODE_VIDEO_COLOR_ACCENT, 2612   },
-    { MODE_VIDEO_COLOR_SWAP,   2613   },
-	{ MODE_VIDEO_STD,          2614   }, // video standby
-    { MODE_VIDEO_MINIATURE,    2620   },
+	{ MODE_AUTO,               32768  },
 	{ MODE_LOWLIGHT,           32801  },
-	{ MODE_QUICK,			   33315  },
 
-	{ MODE_SCN_PORTRAIT,       16999  },
-	{ MODE_SCN_LANDSCAPE,      16998  },
-	{ MODE_SCN_KIDS_PETS,      16402  },
-	{ MODE_SCN_SPORT,          16903  },
-	{ MODE_SCN_SMART_SHUTTER,  16937  },
-	{ MODE_SCN_SUPER_VIVID,    16934  },
-	{ MODE_SCN_POSTER_EFFECT,  16935  },
+    { MODE_SCN_STITCH,         16908  },
 	{ MODE_SCN_COLOR_ACCENT,   16925  },
 	{ MODE_SCN_COLOR_SWAP,     16926  },
-	{ MODE_SCN_HDR,            16942  },
-	{ MODE_SCN_NOSTALGIC,      16933  },
-	{ MODE_SCN_FISHEYE,        16939  },
 	{ MODE_SCN_MINIATURE,      16940  },
-	{ MODE_SCN_BEACH,          16407  },
-	{ MODE_SCN_UNDERWATER,     16409  },
+	{ MODE_SCN_FISHEYE,        16939  },
+	{ MODE_SCN_HDR,            16942  },
+	{ MODE_SCN_PORTRAIT,       16399  },
+	{ MODE_SCN_SUPER_VIVID,    16934  },
+	{ MODE_SCN_POSTER_EFFECT,  16935  },
+	{ MODE_SCN_LANDSCAPE,      16398  },
+    { MODE_SCN_FACE_SELF_TIMER,16936  },
+	{ MODE_SCN_SMART_SHUTTER,  16937  },
+    { MODE_SCN_WINK_SELF_TIMER,16938  },
 	{ MODE_SCN_FOLIAGE,        16405  },
 	{ MODE_SCN_SNOW,           16406  },
+	{ MODE_SCN_BEACH,          16407  },
+	{ MODE_SCN_UNDERWATER,     16409  },
+	{ MODE_SCN_NOSTALGIC,      16933  },
+	{ MODE_SCN_KIDS_PETS,      16402  },
 	{ MODE_SCN_FIREWORK,       16408  },
-	{ MODE_SCN_STITCH,         16908  },
+	{ MODE_SCN_SPORT,          16903  },
+
+    { MODE_VIDEO_COLOR_ACCENT, 2612   },
+    { MODE_VIDEO_COLOR_SWAP,   2613   },
+    { MODE_VIDEO_MINIATURE,    2620   },
+	{ MODE_VIDEO_STD,          2614   },
 };
 
 #include "../generic/shooting.c"
