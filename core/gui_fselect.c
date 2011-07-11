@@ -237,8 +237,7 @@ void gui_fselect_draw_initial() {
     title_font_size = strlen(fselect_title) * FONT_WIDTH;
     draw_string(head_x+((head_w-title_font_size)>>1), head_y, fselect_title, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title text
     
-    for (i = 1; i <= BORDER; i++)
-      draw_rect(main_x-i, main_y-i, main_x+main_w+i-1, main_y+main_h+i-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE)); //border frame
+    draw_rect_thick(main_x-BORDER, main_y-BORDER, main_x+main_w+BORDER-1, main_y+main_h+BORDER-1, COLOR_WHITE, BORDER); //border frame
     draw_line(body_x, body_y-1, body_x+body_w-1, body_y-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE)); //border head-body
     draw_line(foot_x, foot_y-1, foot_x+foot_w-1, foot_y-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE)); //border body-foot    
 }

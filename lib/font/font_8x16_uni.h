@@ -1,3 +1,8 @@
+// This file defines the default font for CHDK
+// It is processed by the tools/font_8x16_pack program to produce
+// a compressed version in font_8x16_uni_packed.h, which is then
+// used in font_8x16.c
+
 typedef struct {
     int charcode;
     char data[16];

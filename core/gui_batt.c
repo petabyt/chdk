@@ -38,23 +38,28 @@ unsigned long get_batt_perc() {
 //-------------------------------------------------------------------
 static void gui_batt_draw_icon () {
     coord x;
+    register coord xx, yy;
+    
+    xx = conf.batt_icon_pos.x;
+    yy = conf.batt_icon_pos.y;
+
     int perc = get_batt_perc();
     color cl = (perc<=10)?conf.osd_color_warn:(conf.batt_icon_color&0xFF);
 
     // battery icon
-    draw_rect(conf.batt_icon_pos.x+3-1,    conf.batt_icon_pos.y+1,     conf.batt_icon_pos.x+3+25+1, conf.batt_icon_pos.y+1+10,  cl);
-    draw_rect(conf.batt_icon_pos.x+3-3,    conf.batt_icon_pos.y+1+2,   conf.batt_icon_pos.x+3-2,    conf.batt_icon_pos.y+1+8,   cl);
-    draw_line(conf.batt_icon_pos.x+3-4,    conf.batt_icon_pos.y+1+2-1, conf.batt_icon_pos.x+3-4,    conf.batt_icon_pos.y+1+8+1, COLOR_BLACK);  // l
-    draw_line(conf.batt_icon_pos.x+3-2,    conf.batt_icon_pos.y+1-1,   conf.batt_icon_pos.x+3+25+2, conf.batt_icon_pos.y+1-1,   COLOR_BLACK);  // t
-    draw_line(conf.batt_icon_pos.x+3-2,    conf.batt_icon_pos.y+1+11,  conf.batt_icon_pos.x+3+25+2, conf.batt_icon_pos.y+1+11,  COLOR_BLACK);  // b
-    draw_line(conf.batt_icon_pos.x+3+25+2, conf.batt_icon_pos.y+1-1,   conf.batt_icon_pos.x+3+25+2, conf.batt_icon_pos.y+1+10,  COLOR_BLACK);  // r
+    draw_rect(xx+3-1,    yy+1,     xx+3+25+1, yy+1+10,  cl);
+    draw_rect(xx+3-3,    yy+1+2,   xx+3-2,    yy+1+8,   cl);
+    draw_vline(xx+3-4,    yy+1+2-1, 8,   COLOR_BLACK);  // l
+    draw_hline(xx+3-2,    yy+1-1,   29,  COLOR_BLACK);  // t
+    draw_hline(xx+3-2,    yy+1+11,  29,  COLOR_BLACK);  // b
+    draw_vline(xx+3+25+2, yy+1-1,   11,  COLOR_BLACK);  // r
 
     // battery fill
-    x=conf.batt_icon_pos.x+3+1+25-(perc/4);
-    if (x<=conf.batt_icon_pos.x+3) x=conf.batt_icon_pos.x+3+1;
-    if (x>conf.batt_icon_pos.x+3+25+1) x=conf.batt_icon_pos.x+3+25+1;
-    draw_filled_rect(conf.batt_icon_pos.x+3, conf.batt_icon_pos.y+1+1, x-1, conf.batt_icon_pos.y+1+9, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLACK));
-    draw_filled_rect(x, conf.batt_icon_pos.y+1+1, conf.batt_icon_pos.x+3+25, conf.batt_icon_pos.y+1+9, MAKE_COLOR(cl, cl));
+    x = xx+3+1+25-(perc/4);
+    if (x<=xx+3) x=xx+3+1;
+    if (x>xx+3+25+1) x=xx+3+25+1;
+    draw_filled_rect(xx+3, yy+1+1, x-1, yy+1+9, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLACK));
+    draw_filled_rect(x, yy+1+1, xx+3+25, yy+1+9, MAKE_COLOR(cl, cl));
 }
 
 //-------------------------------------------------------------------

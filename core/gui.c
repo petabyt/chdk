@@ -13,10 +13,18 @@
 #include "gui_palette.h"
 #include "gui_mbox.h"
 #include "gui_mpopup.h"
+#ifdef OPT_GAME_REVERSI
 #include "gui_reversi.h"
+#endif
+#ifdef OPT_GAME_SOKOBAN
 #include "gui_sokoban.h"
+#endif
+#ifdef OPT_GAME_CONNECT4
 #include "gui_4wins.h"
+#endif
+#ifdef OPT_GAME_MASTERMIND
 #include "gui_mastermind.h"
+#endif
 #include "console.h"
 #ifdef OPT_DEBUGGING
 #include "gui_debug.h"

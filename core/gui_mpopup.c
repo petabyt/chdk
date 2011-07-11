@@ -96,12 +96,8 @@ void gui_mpopup_draw() {
     
         x = 10*FONT_WIDTH;
         y = 5*FONT_HEIGHT;
-        draw_rect(x-3, y-3, x+w*FONT_WIDTH+5, y+h*FONT_HEIGHT+4, COLOR_BLACK); //shadow
-        draw_rect(x-2, y-2, x+w*FONT_WIDTH+6, y+h*FONT_HEIGHT+5, COLOR_BLACK); //shadow
-        draw_rect(x-1, y-1, x+w*FONT_WIDTH+7, y+h*FONT_HEIGHT+6, COLOR_BLACK); //shadow
-        draw_filled_rect(x-4, y-4, x+w*FONT_WIDTH+4, y+h*FONT_HEIGHT+3, MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); // main box
-        draw_rect(x-2, y-2, x+w*FONT_WIDTH+2, y+h*FONT_HEIGHT+1, COLOR_WHITE); //border
-        draw_rect(x-3, y-3, x+w*FONT_WIDTH+3, y+h*FONT_HEIGHT+2, COLOR_WHITE); //border
+        draw_rect_shadow(x-3, y-3, x+w*FONT_WIDTH+5, y+h*FONT_HEIGHT+4, COLOR_BLACK, 3); //shadow
+        draw_filled_rect_thick(x-4, y-4, x+w*FONT_WIDTH+4, y+h*FONT_HEIGHT+3, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), 3); // main box
     
         mpopup_actions_x = x;
         mpopup_actions_y = y;
@@ -147,9 +143,7 @@ void gui_browser_progress_show(const char* msg, const unsigned int perc) {
     coord x=60, y=100;
     unsigned int w=240, h=40, len;
 
-    draw_rect(x+1, y+1, x+w+1, y+h+1, COLOR_BLACK); //shadow
-    draw_rect(x+2, y+2, x+w+2, y+h+2, COLOR_BLACK); //shadow
-    draw_rect(x+3, y+3, x+w+3, y+h+3, COLOR_BLACK); //shadow
+    draw_rect_shadow(x+1, y+1, x+w+1, y+h+1, COLOR_BLACK, 3); //shadow
     draw_filled_rect(x, y, x+w, y+h, MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); // main box
     len = strlen(msg);
     draw_string(x+((w-len*FONT_WIDTH)>>1), y+2, msg, MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); //title text

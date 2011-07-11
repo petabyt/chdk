@@ -308,12 +308,17 @@ void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl));
 extern color draw_get_pixel(coord x, coord y);
 
 extern void draw_line(coord x1, coord y1, coord x2, coord y2, color cl);
+extern void draw_hline(coord x, coord y, int len, color cl);
+extern void draw_vline(coord x, coord y, int len, color cl);
 
 // draw frame
 extern void draw_rect(coord x1, coord y1, coord x2, coord y2, color cl);
+extern void draw_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness);
+extern void draw_rect_shadow(coord x1, coord y1, coord x2, coord y2, color cl, int thickness);
 extern void draw_round_rect(coord x1, coord y1, coord x2, coord y2, color cl);
 // color: hi_byte - BG; lo_byte - FG
 extern void draw_filled_rect(coord x1, coord y1, coord x2, coord y2, color cl);
+extern void draw_filled_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness);
 extern void draw_filled_round_rect(coord x1, coord y1, coord x2, coord y2, color cl);
 
 extern void draw_char(coord x, coord y, const char ch, color cl);

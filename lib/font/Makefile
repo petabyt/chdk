@@ -10,7 +10,10 @@ all: libfont.a
 
 libfont.a: $(OBJS)
 
-font_8x16.o: font_8x16.c codepages.h font_8x16_uni.h
+font_8x16.o: font_8x16.c codepages.h font_8x16_uni_packed.h
+
+font_8x16_uni_packed.h: font_8x16_uni.h $(topdir)tools/font_8x16_pack$(EXE)
+	$(topdir)tools/font_8x16_pack$(EXE) > font_8x16_uni_packed.h
 
 clean:
 	rm -f $(OBJS) libfont.a

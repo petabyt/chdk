@@ -70,8 +70,8 @@ extern int mode_is_video(int);
 #define ZOOM_DIGITAL_REACHED_MAX      13
 
 typedef struct {
-    int hackmode; // platform independent mode values from MODE_xxx enum
-    int canonmode; // PROPCASE_SHOOTING_MODE value
+    short hackmode; // platform independent mode values from MODE_xxx enum
+    short canonmode; // PROPCASE_SHOOTING_MODE value
 } CapturemodeMap;
 
 typedef struct {
