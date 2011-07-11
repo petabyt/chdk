@@ -82,8 +82,6 @@ void draw_init() {
     #endif
 }
 
-
-
 #if CAM_USES_ASPECT_CORRECTION
 
 // nandoide: sept-2009: draw_pixel_xarray draws a horizontal line at height y, from xi to xf
@@ -199,72 +197,31 @@ void draw_line(coord x1, coord y1, coord x2, coord y2, color cl) {
      }
 }
 //-------------------------------------------------------------------
-void draw_rect(coord x1, coord y1, coord x2, coord y2, color cl) {
-    unsigned int xMin, yMin, xMax, yMax, x, y;
-    if (x1>x2) {
-    	xMax=x1; xMin=x2;
-    } else {
-    	xMin=x1; xMax=x2;
-    }
-    if (y1>y2) {
-    	yMax=y1; yMin=y2;
-    } else {
-    	yMin=y1; yMax=y2;
-    }
-    if (xMax>=screen_width) xMax=screen_width-1;
-    if (xMin>=screen_width) xMin=screen_width-1;
-    if (yMax>=screen_height) yMax=screen_height-1;
-    if (yMin>=screen_height) yMin=screen_height-1;
-
-    for (y=yMin; y<=yMax; ++y) {
-      draw_pixel(xMin, y, cl & 0xff);
-      draw_pixel(xMax, y, cl & 0xff);
-    }
+void draw_hline(coord x, coord y, int len, color cl)
+{
     #if CAM_USES_ASPECT_CORRECTION &&  !CAM_USES_ASPECT_YCORRECTION
-      draw_pixel_xarray(yMin, xMin+1, xMax-1, cl & 0xff);
-      draw_pixel_xarray(yMax, xMin+1, xMax-1, cl & 0xff);
+      draw_pixel_xarray(y, x, x+len, cl);
     #else
-      for (x=xMin+1; x<=xMax-1; ++x) {
-          draw_pixel(x, yMin, cl & 0xff);
-          draw_pixel(x, yMax, cl & 0xff);
+      for (; len>=0; len--, x++) {
+          draw_pixel(x, y, cl);
       }
     #endif
 }
-//-------------------------------------------------------------------
-void draw_round_rect(coord x1, coord y1, coord x2, coord y2, color cl) { 
-    unsigned int xMin, yMin, xMax, yMax, x, y; 
-    if (x1>x2) { 
-       xMax=x1; xMin=x2; 
-    } else { 
-       xMin=x1; xMax=x2; 
-    } 
-    if (y1>y2) { 
-       yMax=y1; yMin=y2; 
-    } else { 
-       yMin=y1; yMax=y2; 
-    } 
-    if (xMax>=screen_width) xMax=screen_width-1; 
-    if (xMin>=screen_width) xMin=screen_width-1; 
-    if (yMax>=screen_height) yMax=screen_height-1; 
-    if (yMin>=screen_height) yMin=screen_height-1; 
 
-    for (y=yMin+2; y<=yMax-2; ++y) { 
-      draw_pixel(xMin, y, cl & 0xff); 
-      draw_pixel(xMax, y, cl & 0xff); 
-    } 
-    #if CAM_USES_ASPECT_CORRECTION &&  !CAM_USES_ASPECT_YCORRECTION
-       draw_pixel_xarray(yMin, xMin+2, xMax-2, cl & 0xff);
-       draw_pixel_xarray(yMax, xMin+2, xMax-2, cl & 0xff);
-    #else  
-       for (x=xMin+2; x<=xMax-2; ++x) { 
-           draw_pixel(x, yMin, cl & 0xff); 
-           draw_pixel(x, yMax, cl & 0xff); 
-       } 
-    #endif
-} 
+void draw_vline(coord x, coord y, int len, color cl)
+{
+    for (; len>=0; len--, y++) {
+      draw_pixel(x, y, cl);
+    }
+}
 //-------------------------------------------------------------------
-void draw_filled_rect(coord x1, coord y1, coord x2, coord y2, color cl) {
-    unsigned int xMin, yMin, xMax, yMax, x, y;
+
+static unsigned int xMin, yMin, xMax, yMax;
+
+static void draw_rectangle(coord x1, coord y1, coord x2, coord y2, color cl, int round) 
+{
+    register unsigned int x, y;
+
     if (x1>x2) {
     	xMax=x1; xMin=x2;
     } else {
@@ -280,7 +237,51 @@ void draw_filled_rect(coord x1, coord y1, coord x2, coord y2, color cl) {
     if (yMax>=screen_height) yMax=screen_height-1;
     if (yMin>=screen_height) yMin=screen_height-1;
 
-    draw_rect(x1, y1, x2, y2, cl);
+    for (y=yMin+(round<<1); y<=yMax-(round<<1); ++y) {
+      draw_pixel(xMin, y, cl);
+      draw_pixel(xMax, y, cl);
+    }
+    #if CAM_USES_ASPECT_CORRECTION &&  !CAM_USES_ASPECT_YCORRECTION
+      draw_pixel_xarray(yMin, xMin+1+round, xMax-1-round, cl);
+      draw_pixel_xarray(yMax, xMin+1+round, xMax-1-round, cl);
+    #else
+      for (x=xMin+1+round; x<=xMax-1-round; ++x) {
+          draw_pixel(x, yMin, cl);
+          draw_pixel(x, yMax, cl);
+      }
+    #endif
+}
+
+//-------------------------------------------------------------------
+void draw_rect(coord x1, coord y1, coord x2, coord y2, color cl) {
+    draw_rectangle(x1,y1,x2,y2,cl&0xff,0);
+}
+
+void draw_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness) {
+    int i;
+    cl = cl & 0xff;
+    for (i=0; i<thickness; i++)
+    {
+        draw_rectangle(x1+i,y1+i,x2-i,y2-i,cl,0);
+    }
+}
+
+void draw_rect_shadow(coord x1, coord y1, coord x2, coord y2, color cl, int thickness) {
+    int i;
+    cl = cl & 0xff;
+    for (i=0; i<thickness; i++)
+    {
+        draw_rectangle(x1+i,y1+i,x2+i,y2+i,cl,0);
+    }
+}
+//-------------------------------------------------------------------
+void draw_round_rect(coord x1, coord y1, coord x2, coord y2, color cl) { 
+    draw_rectangle(x1,y1,x2,y2,cl&0xff,1);
+} 
+//-------------------------------------------------------------------
+static void fill_rect(color cl) {
+    register unsigned int x, y;
+
     for (y=yMin+1; y<=yMax-1; ++y) {
       #if CAM_USES_ASPECT_CORRECTION &&  !CAM_USES_ASPECT_YCORRECTION
         draw_pixel_xarray(y, xMin+1, xMax-1, cl>>8);
@@ -292,60 +293,48 @@ void draw_filled_rect(coord x1, coord y1, coord x2, coord y2, color cl) {
     }
 }
 //-------------------------------------------------------------------
-void draw_filled_round_rect(coord x1, coord y1, coord x2, coord y2, color cl) { 
-    unsigned int xMin, yMin, xMax, yMax, x, y; 
-    if (x1>x2) { 
-       xMax=x1; xMin=x2; 
-    } else { 
-       xMin=x1; xMax=x2; 
-    } 
-    if (y1>y2) { 
-       yMax=y1; yMin=y2; 
-    } else { 
-       yMin=y1; yMax=y2; 
-    } 
-    if (xMax>=screen_width) xMax=screen_width-1; 
-    if (xMin>=screen_width) xMin=screen_width-1; 
-    if (yMax>=screen_height) yMax=screen_height-1; 
-    if (yMin>=screen_height) yMin=screen_height-1; 
+void draw_filled_rect(coord x1, coord y1, coord x2, coord y2, color cl) {
+    draw_rect(x1, y1, x2, y2, cl);
+    fill_rect(cl);
+}
 
+void draw_filled_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness) {
+    draw_rect_thick(x1, y1, x2, y2, cl, thickness);
+    fill_rect(cl);
+}
+//-------------------------------------------------------------------
+void draw_filled_round_rect(coord x1, coord y1, coord x2, coord y2, color cl) { 
     draw_round_rect(x1, y1, x2, y2, cl); 
-    for (y=yMin+1; y<=yMax-1; ++y) {
-      #if CAM_USES_ASPECT_CORRECTION &&  !CAM_USES_ASPECT_YCORRECTION
-        draw_pixel_xarray(y, xMin+1, xMax-1, cl>>8);
-      #else     
-          for (x=xMin+1; x<=xMax-1; ++x) { 
-            draw_pixel(x, y, cl>>8); 
-          }
-      #endif      
-    } 
+    fill_rect(cl);
 } 
 //-------------------------------------------------------------------
 void draw_char(coord x, coord y, const char ch, color cl) {
-    const unsigned char *sym = (unsigned char*)current_font +
-	    ((const unsigned char)ch)*FONT_HEIGHT;
+    const unsigned char *sym = (unsigned char*)current_font + ((const unsigned char)ch)*FONT_HEIGHT;
     int i, ii;
-    char c;
 
     // XXX optimize. probably use 4bit -> 32bit lookup table
     // so 4(8) pixels were drawn at a time
-    for (i=0; i<FONT_HEIGHT; i++){
-	for (ii=0; ii<FONT_WIDTH; ii++){
+    for (i=0; i<FONT_HEIGHT; i++)
+    {
+	    for (ii=0; ii<FONT_WIDTH; ii++)
+        {
             draw_pixel(x+ii ,y+i, (sym[i] & (0x80>>ii))? cl&0xff : cl>>8);
-	}
+	    }
     }
 }
 
 //-------------------------------------------------------------------
 void draw_string(coord x, coord y, const char *s, color cl) {
-    while(*s){
-	draw_char(x, y, *s, cl);
-	s++;
-	x+=FONT_WIDTH;
-	if ((x>=screen_width) && (*s)){
-	    draw_char(x-FONT_WIDTH,y, '>', cl);
-	    break;
-	}
+    while(*s)
+    {
+	    draw_char(x, y, *s, cl);
+	    s++;
+	    x+=FONT_WIDTH;
+	    if ((x>=screen_width) && (*s))
+        {
+	        draw_char(x-FONT_WIDTH,y, '>', cl);
+	        break;
+	    }
     }
 }
 
@@ -381,9 +370,7 @@ void draw_txt_char(coord col, coord row, const char ch, color cl) {
 
 //-------------------------------------------------------------------
 void draw_clear() {
-    register unsigned int i;
-    for (i=0; i<screen_buffer_size; ++i)
-        frame_buffer[0][i] = frame_buffer[1][i] = COLOR_TRANSPARENT;
+    memset(frame_buffer[0], COLOR_TRANSPARENT, screen_buffer_size*2);
 }
 
 //-------------------------------------------------------------------
@@ -392,16 +379,16 @@ void draw_restore() {
 }
 
 //-------------------------------------------------------------------
-void draw_fill(coord x, coord y, color cl_fill, color cl_bound) {
-   if (draw_get_pixel(x, y) != cl_bound && draw_get_pixel(x, y) != cl_fill) {
-       draw_pixel(x, y, cl_fill);
-
-       draw_fill((x+1), y, cl_fill,cl_bound);
-       draw_fill((x-1), y, cl_fill,cl_bound);
-       draw_fill(x, (y+1), cl_fill,cl_bound);
-       draw_fill(x, (y-1), cl_fill,cl_bound);
-   }
-}
+//void draw_fill(coord x, coord y, color cl_fill, color cl_bound) {
+//   if (draw_get_pixel(x, y) != cl_bound && draw_get_pixel(x, y) != cl_fill) {
+//       draw_pixel(x, y, cl_fill);
+//
+//       draw_fill((x+1), y, cl_fill,cl_bound);
+//       draw_fill((x-1), y, cl_fill,cl_bound);
+//       draw_fill(x, (y+1), cl_fill,cl_bound);
+//       draw_fill(x, (y-1), cl_fill,cl_bound);
+//   }
+//}
 
 //-------------------------------------------------------------------
 void draw_circle(coord x, coord y, const unsigned int r, color cl) {

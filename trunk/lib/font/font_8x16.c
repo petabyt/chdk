@@ -1,7 +1,7 @@
 #include "font.h"
 #include "stdlib.h"
 #include "codepages.h"
-#include "font_8x16_uni.h"
+#include "font_8x16_uni_packed.h"
 
 //-------------------------------------------------------------------
 #define DEFAULT_SYMBOL          0xFFFD
@@ -10,27 +10,35 @@
 unsigned char current_font[256][16];
 
 //-------------------------------------------------------------------
-static int font_find_data (int charcode) {
-    int i=0;
+static FontData* font_find_data (int charcode) {
+    int i=0, c;
 
-    while (font_data[i].charcode != -1) {
-        if (font_data[i].charcode == charcode) 
-            return i;
-        ++i;
+    while (1)
+    {
+        FontData *f = (FontData*)(font_data+i);
+        c = (f->charcode[1] << 8) | f->charcode[0];
+        if (c == 0xFFFF) return 0;
+        if (c == charcode) return f;
+        i = i + f->size + sizeof(FontData);
     }
-    return -1;
+    return 0;
 }
 
 //-------------------------------------------------------------------
 static void font_init_data(const unsigned short *src, int st, int num) {
-    int i, n;
+    int i;
+    FontData *f;
+    unsigned char *p;
 
     for (i=0; i<num; ++i) {
-        n = font_find_data(src[i]);
-        if (n==-1) {
-            n = font_find_data(DEFAULT_SYMBOL);
+        f = font_find_data(src[i]);
+        if (f == 0) 
+        {
+            f = font_find_data(DEFAULT_SYMBOL);
         }
-        memcpy(current_font[st+i], font_data[n].data, 16);
+        p = (unsigned char*)f + sizeof(FontData);
+        memset(current_font[st+i], 0, 16);
+        if (f->size > 0) memcpy(current_font[st+i]+f->offset, p, f->size);
     }
 }
 

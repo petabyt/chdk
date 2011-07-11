@@ -115,14 +115,9 @@ void gui_mbox_draw() {
             w=(bw+BUTTON_SEP)/FONT_WIDTH+1;
     
         x = ((44-w)>>1)*FONT_WIDTH; y = ((12-h)>>1)*FONT_HEIGHT;
-        draw_rect(x-3, y-3, x+w*FONT_WIDTH+5, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+8, COLOR_BLACK); //shadow
-        draw_rect(x-2, y-2, x+w*FONT_WIDTH+6, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+9, COLOR_BLACK); //shadow
-        draw_rect(x-1, y-1, x+w*FONT_WIDTH+7, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+10, COLOR_BLACK); //shadow
-        draw_filled_rect(x-4, y-4, x+w*FONT_WIDTH+4, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+7, MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); // main box
+        draw_rect_shadow(x-3, y-3, x+w*FONT_WIDTH+5, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+8, COLOR_BLACK, 3); //shadow
+        draw_filled_rect_thick(x-4, y-4, x+w*FONT_WIDTH+4, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+7, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), 3); // main box
         draw_filled_rect(x-2, y-2, x+w*FONT_WIDTH+2, y+FONT_HEIGHT+2, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title
-        draw_rect(x-2, y-2, x+w*FONT_WIDTH+2, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+5, COLOR_WHITE); //border
-        draw_rect(x-3, y-3, x+w*FONT_WIDTH+3, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+6, COLOR_WHITE); //border
-//        draw_line(x-2, y+FONT_HEIGHT+2, x+w*FONT_WIDTH+2, y+FONT_HEIGHT+2, COLOR_WHITE);
     
         l = strlen(mbox_title);
         draw_string(x+((w-l)>>1)*FONT_WIDTH, y, mbox_title, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title text

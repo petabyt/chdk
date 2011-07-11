@@ -16,22 +16,24 @@
 #define CONF_FILE  "A/CHDK/CCHDK.CFG"
 #define CONF_MAGICK_VALUE (0x33204741)
 
-#define CONF_INFO(id, param, type, def, func) { id, sizeof( param ), &param , type, {def}, func }
+#define CONF_INFO(id, param, type, def, func) { id, sizeof( param ), type, &param, {def}/*, func*/ }
 #define CONF_DEF_PTR    1
 #define CONF_DEF_VALUE  2
 
 //-------------------------------------------------------------------
 typedef struct {
     unsigned short      id;
-    unsigned short      size;
+    unsigned char       size;
+    char                type;
     void                *var;
-    int                 type;
     union {
         void            *ptr;
         int             i;
         color           cl;
     };
-    void                (*func)();
+    // Since only a few of the ConfInfo entries have a 'func' it saves space to not store the function addresses in the ConfInfo struct
+    // handled in conf_info_func code
+    //void                (*func)();
 } ConfInfo;
 
 //-------------------------------------------------------------------
@@ -402,6 +404,26 @@ static const ConfInfo conf_info[] = {
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
+// Since only a few of the ConfInfo entries have a 'func' it saves space to not store the function addresses in the ConfInfo struct
+void conf_info_func(unsigned short id)
+{
+    switch (id)
+    {
+    case  17: conf_change_histo_mode(); break;
+    case  20: conf_change_histo_layout(); break;
+    case  63: conf_change_alt_mode_button(); break;
+    case  65: conf_change_font_cp(); break;
+    case  66: conf_change_menu_rbf_file(); break;
+    case  67: conf_update_prevent_shutdown(); break;
+    case  69: conf_change_grid_file(); break;
+    case 101: conf_change_video_bitrate(); break;
+    case 183: conf_change_menu_symbol_rbf_file(); break;
+    case 194: conf_change_script_file(); break;
+    case 226: conf_change_dng(); break;
+    case 235: conf_change_dng_ext(); break;
+    }
+}
+
 //-------------------------------------------------------------------
 static void conf_change_histo_mode() {
     histogram_set_mode(conf.histo_mode);
@@ -536,18 +558,27 @@ void conf_load_defaults() {
                 memcpy(conf_info[i].var, conf_info[i].ptr, conf_info[i].size);
                 break;
         }
-        if (conf_info[i].func) {
-            conf_info[i].func();
-        }
+        conf_info_func(conf_info[i].id);
+        //if (conf_info[i].func) {
+        //    conf_info[i].func();
+        //}
     }
 }
 
 //-------------------------------------------------------------------
+
+// Structure for saved conf info (allows for changes to ConfInfo without affecting saved configurations
+typedef struct
+{
+    unsigned short id;
+    unsigned short size;
+} ConfInfoSave;
+
 void conf_save() {
     static const long t=CONF_MAGICK_VALUE;
     register int i;
     int fd;
-    char *buf=umalloc(sizeof(t)+CONF_NUM*(sizeof(conf_info[0].id)+sizeof(conf_info[0].size))+sizeof(conf));
+    char *buf = umalloc(sizeof(t) + CONF_NUM*sizeof(ConfInfoSave) + sizeof(conf));
     char *p=buf;
 
     fd = open(CONF_FILE, O_WRONLY|O_CREAT|O_TRUNC, 0777); 
@@ -555,12 +586,11 @@ void conf_save() {
         memcpy(p, &t, sizeof(t));
         p+=sizeof(t);
         for (i=0; i<CONF_NUM; ++i) {
-            memcpy(p, &(conf_info[i].id), sizeof(conf_info[i].id));
-            p+=sizeof(conf_info[i].id);
-            memcpy(p, &(conf_info[i].size), sizeof(conf_info[i].size));
-            p+=sizeof(conf_info[i].size);
+            ((ConfInfoSave*)p)->id   = conf_info[i].id;
+            ((ConfInfoSave*)p)->size = conf_info[i].size;
+            p += sizeof(ConfInfoSave);
             memcpy(p, conf_info[i].var, conf_info[i].size);
-            p+=conf_info[i].size;
+            p += conf_info[i].size;
         }
 
         write(fd, buf, p-buf);
@@ -616,9 +646,10 @@ void conf_restore() {
             if (conf_info[i].id==id && conf_info[i].size==size) {
                 if (offs + size <= rcnt) {
                    memcpy(conf_info[i].var, buf+offs, size);
-                   if (conf_info[i].func) {
-                       conf_info[i].func();
-                   }
+                   conf_info_func(conf_info[i].id);
+                   //if (conf_info[i].func) {
+                   //    conf_info[i].func();
+                   //}
                 }
                 offs += size;
                 break;

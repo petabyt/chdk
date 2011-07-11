@@ -19,9 +19,14 @@ unsigned long get_space_perc() {
 
 static void gui_space_draw_spacebar_horizontal() {
     coord x;
+    register coord xx, yy;
+    
+    xx = conf.space_hor_pos.x;
+    yy = conf.space_hor_pos.y;
+
     color cl = conf.space_color;
     int perc = get_space_perc(),height = 2;
-    float size = 0;
+    int size = 0;
     if (conf.space_warn_type == 0) {
         cl = (perc<=conf.space_perc_warn)?conf.osd_color_warn:(conf.space_color);
     }
@@ -35,45 +40,50 @@ static void gui_space_draw_spacebar_horizontal() {
     height = conf.space_bar_width+1;
     if (conf.space_bar_size == 0) {
         size = screen_width/4-4;
-        if (conf.space_hor_pos.x>(screen_width-size)) {
-            conf.space_hor_pos.x = screen_width-size;
+        if (xx>(screen_width-size)) {
+            xx = screen_width-size;
         }
     }
     if (conf.space_bar_size == 1) {
         size = screen_width/2-4;
-        if (conf.space_hor_pos.x>(screen_width-size)) {
-            conf.space_hor_pos.x = screen_width-size;
+        if (xx>(screen_width-size)) {
+            xx = screen_width-size;
         }
     }
     if (conf.space_bar_size == 2) {
         size = screen_width-4;
-        if (conf.space_hor_pos.x>(screen_width-size)) {
-            conf.space_hor_pos.x = 0;
+        if (xx>(screen_width-size)) {
+            xx = 0;
         }
     }
-    if (conf.space_hor_pos.y > (screen_height-height-3)) {
-        conf.space_hor_pos.y = screen_height-height-3;
+    if (yy > (screen_height-height-3)) {
+        yy = screen_height-height-3;
     }
-    draw_rect(conf.space_hor_pos.x+1,    conf.space_hor_pos.y+1,     conf.space_hor_pos.x+1+size+2, conf.space_hor_pos.y+1+height+1,  cl);
-    draw_line(conf.space_hor_pos.x+1-1,    conf.space_hor_pos.y+1-1, conf.space_hor_pos.x+1-1,    conf.space_hor_pos.y+1+height+2, COLOR_BLACK);  // l
-    draw_line(conf.space_hor_pos.x+1-1,    conf.space_hor_pos.y+1-1,   conf.space_hor_pos.x+1+size+3, conf.space_hor_pos.y+1-1,   COLOR_BLACK);  // t
-    draw_line(conf.space_hor_pos.x+1-1,    conf.space_hor_pos.y+1+height+2,  conf.space_hor_pos.x+1+size+3, conf.space_hor_pos.y+1+height+2,  COLOR_BLACK);  // b
-    draw_line(conf.space_hor_pos.x+1+size+3, conf.space_hor_pos.y+1-1,   conf.space_hor_pos.x+1+size+3, conf.space_hor_pos.y+1+height+2,  COLOR_BLACK);  // r
+    draw_rect(xx+1,    yy+1,     xx+1+size+2, yy+1+height+1,  cl);
+    draw_vline(xx+1-1,    yy+1-1, 1+height+2, COLOR_BLACK);  // l
+    draw_hline(xx+1-1,    yy+1-1,   1+size+3, COLOR_BLACK);  // t
+    draw_hline(xx+1-1,    yy+1+height+2,  1+size+3, COLOR_BLACK);  // b
+    draw_vline(xx+1+size+3, yy+1-1,  1+height+2,  COLOR_BLACK);  // r
 
     // space bar fill
 
-    x=conf.space_hor_pos.x+size-(perc/(100/size));
-    if (x<=conf.space_hor_pos.x+1) x=conf.space_hor_pos.x+1;
-    if (x>conf.space_hor_pos.x+size) x=conf.space_hor_pos.x+size;
-    draw_filled_rect(conf.space_hor_pos.x+1+1, conf.space_hor_pos.y+1+1, x-1, conf.space_hor_pos.y+1+height, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLACK));
-    draw_filled_rect(x, conf.space_hor_pos.y+1+1, conf.space_hor_pos.x+1+size+2, conf.space_hor_pos.y+1+height, MAKE_COLOR(cl, cl));
+    x = xx + size - ((perc*size)/100);
+    if (x<=xx+1) x=xx+1;
+    if (x>xx+size) x=xx+size;
+    draw_filled_rect(xx+1+1, yy+1+1, x-1, yy+1+height, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLACK));
+    draw_filled_rect(x, yy+1+1, xx+1+size+2, yy+1+height, MAKE_COLOR(cl, cl));
 }
 
 static void gui_space_draw_spacebar_vertical() {
     coord y;
+    register coord xx, yy;
+    
+    xx = conf.space_ver_pos.x;
+    yy = conf.space_ver_pos.y;
+
     color cl = conf.space_color;
     int perc = get_space_perc(), width = 2;
-    float size = 0;
+    int size = 0;
     if (conf.space_warn_type == 0) {
         cl = (perc<=conf.space_perc_warn)?conf.osd_color_warn:(conf.space_color);
     }
@@ -88,43 +98,46 @@ static void gui_space_draw_spacebar_vertical() {
     width = conf.space_bar_width+1;
     if (conf.space_bar_size == 0) {
         size = screen_height/4-4;
-        if (conf.space_ver_pos.y>(screen_height-size)) {
-            conf.space_ver_pos.y = screen_height-size;
+        if (yy>(screen_height-size)) {
+            yy = screen_height-size;
         }
     }
     if (conf.space_bar_size == 1) {
         size = screen_height/2-4;
-        if (conf.space_ver_pos.y>(screen_height-size)) {
-            conf.space_ver_pos.y = screen_height-size;
+        if (yy>(screen_height-size)) {
+            yy = screen_height-size;
         }
     }
     if (conf.space_bar_size == 2) {
         size = screen_height-4;
-        if (conf.space_ver_pos.y>(screen_height-size)) {
-            conf.space_ver_pos.y = 0;
+        if (yy>(screen_height-size)) {
+            yy = 0;
         }
     }
-    if (conf.space_ver_pos.x > (screen_width-width-3)) {
-        conf.space_ver_pos.x = screen_width-width-3;
+    if (xx > (screen_width-width-3)) {
+        xx = screen_width-width-3;
     }
-    draw_rect(conf.space_ver_pos.x+1,    conf.space_ver_pos.y+1,     conf.space_ver_pos.x+1+width+1, conf.space_ver_pos.y+1+size+2,  cl);
-    draw_line(conf.space_ver_pos.x+1-1,    conf.space_ver_pos.y+1-1, conf.space_ver_pos.x+1-1,    conf.space_ver_pos.y+1+5, COLOR_BLACK);   // l
-
-    draw_line(conf.space_ver_pos.x+1-1,    conf.space_ver_pos.y+1-1, conf.space_ver_pos.x+1+width+2,    conf.space_ver_pos.y+1-1, COLOR_BLACK);   // t
-    draw_line(conf.space_ver_pos.x+1-1,    conf.space_ver_pos.y+1+size+3, conf.space_ver_pos.x+1+width+2,    conf.space_ver_pos.y+1+size+3, COLOR_BLACK);   // b
-
-    draw_line(conf.space_ver_pos.x+1+width+2, conf.space_ver_pos.y+1-1,   conf.space_ver_pos.x+1+width+2, conf.space_ver_pos.y+1+size+3,  COLOR_BLACK);   // r
+    draw_rect(xx+1,    yy+1,     xx+1+width+1, yy+1+size+2,  cl);
+    draw_vline(xx+1-1,    yy+1-1, 1+5, COLOR_BLACK);   // l
+    draw_hline(xx+1-1,    yy+1-1, 1+width+2, COLOR_BLACK);   // t
+    draw_hline(xx+1-1,    yy+1+size+3, 1+width+2, COLOR_BLACK);   // b
+    draw_vline(xx+1+width+2, yy+1-1,   1+size+3,  COLOR_BLACK);   // r
 
     // space bar fill
-    y=conf.space_ver_pos.y+size-(perc/(100/size));
-    if (y<=conf.space_ver_pos.y+1) y=conf.space_ver_pos.y+1;
-    if (y>conf.space_ver_pos.y+size) y=conf.space_ver_pos.y+size;
-    draw_filled_rect(conf.space_ver_pos.x+1+1, conf.space_ver_pos.y+1+1, conf.space_ver_pos.x+1+width, y-1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLACK));
-    draw_filled_rect(conf.space_ver_pos.x+1+1, y, conf.space_ver_pos.x+1+width, conf.space_ver_pos.y+1+size+2, MAKE_COLOR(cl, cl));
+    y = yy + size - ((perc*size)/100);
+    if (y<=yy+1) y=yy+1;
+    if (y>yy+size) y=yy+size;
+    draw_filled_rect(xx+1+1, yy+1+1, xx+1+width, y-1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLACK));
+    draw_filled_rect(xx+1+1, y, xx+1+width, yy+1+size+2, MAKE_COLOR(cl, cl));
 }
 
 static void gui_space_draw_icon() {
     coord x;
+    register coord xx, yy;
+    
+    xx = conf.space_icon_pos.x;
+    yy = conf.space_icon_pos.y;
+
     color cl = conf.space_color;
     int perc = get_space_perc();
     if (conf.space_warn_type == 0) {
@@ -137,38 +150,40 @@ static void gui_space_draw_icon() {
         cl = conf.space_color;
     }
     int i;
-    int le = 23;    // length
-    int wi = 15;    // width
+#define LE  23
+#define WI  15
+//    int le = 23;    // length
+//    int wi = 15;    // width
 
-    draw_line(conf.space_icon_pos.x+5,      conf.space_icon_pos.y,       conf.space_icon_pos.x+le,     conf.space_icon_pos.y,       COLOR_BLACK);          // outer top
-    draw_line(conf.space_icon_pos.x+6,      conf.space_icon_pos.y+1,     conf.space_icon_pos.x+le-1,   conf.space_icon_pos.y+1,     MAKE_COLOR(cl, cl));   // inner top
-    draw_line(conf.space_icon_pos.x,        conf.space_icon_pos.y+5,     conf.space_icon_pos.x,        conf.space_icon_pos.y+wi,    COLOR_BLACK);          // outer left
-    draw_line(conf.space_icon_pos.x+1,      conf.space_icon_pos.y+6,     conf.space_icon_pos.x+1,      conf.space_icon_pos.y+wi-1,  MAKE_COLOR(cl, cl));   // inner left
-    draw_line(conf.space_icon_pos.x,        conf.space_icon_pos.y+wi,    conf.space_icon_pos.x+le,     conf.space_icon_pos.y+wi,    COLOR_BLACK);          // outer bottom
-    draw_line(conf.space_icon_pos.x+1,      conf.space_icon_pos.y+wi-1,  conf.space_icon_pos.x+le-1,   conf.space_icon_pos.y+wi-1,  MAKE_COLOR(cl, cl));   // inner bottom
-    draw_line(conf.space_icon_pos.x+le,     conf.space_icon_pos.y,       conf.space_icon_pos.x+le,     conf.space_icon_pos.y+wi,    COLOR_BLACK);          // outer right
-    draw_line(conf.space_icon_pos.x+le-1,   conf.space_icon_pos.y+1,     conf.space_icon_pos.x+le-1,   conf.space_icon_pos.y+wi-1,  MAKE_COLOR(cl, cl));   // inner right
-    draw_line(conf.space_icon_pos.x+5,      conf.space_icon_pos.y,       conf.space_icon_pos.x,        conf.space_icon_pos.y+5,     COLOR_BLACK);          // edge
-    draw_line(conf.space_icon_pos.x+5,      conf.space_icon_pos.y+1,     conf.space_icon_pos.x+1,      conf.space_icon_pos.y+5,     MAKE_COLOR(cl, cl));   // edge
-    draw_line(conf.space_icon_pos.x+6,      conf.space_icon_pos.y+1,     conf.space_icon_pos.x+1,      conf.space_icon_pos.y+6,     MAKE_COLOR(cl, cl));   // edge
+    draw_hline(xx+5,      yy,      LE-5,     COLOR_BLACK);          // outer top
+    draw_hline(xx+6,      yy+1,    LE-7,     MAKE_COLOR(cl, cl));   // inner top
+    draw_vline(xx,        yy+5,    WI-5,     COLOR_BLACK);          // outer left
+    draw_vline(xx+1,      yy+6,    WI-7,     MAKE_COLOR(cl, cl));   // inner left
+    draw_hline(xx,        yy+WI,   LE,       COLOR_BLACK);          // outer bottom
+    draw_hline(xx+1,      yy+WI-1, LE-2,     MAKE_COLOR(cl, cl));   // inner bottom
+    draw_vline(xx+LE,     yy,      WI,       COLOR_BLACK);          // outer right
+    draw_vline(xx+LE-1,   yy+1,    WI-2,     MAKE_COLOR(cl, cl));   // inner right
+    draw_line(xx+5,      yy,       xx,        yy+5,     COLOR_BLACK);          // edge
+    draw_line(xx+5,      yy+1,     xx+1,      yy+5,     MAKE_COLOR(cl, cl));   // edge
+    draw_line(xx+6,      yy+1,     xx+1,      yy+6,     MAKE_COLOR(cl, cl));   // edge
 
     // memory fill
-    x=le-(perc*(le-3)/100)-2;
-    if (x>5) draw_line(conf.space_icon_pos.x+6,      conf.space_icon_pos.y+2,     conf.space_icon_pos.x+x,      conf.space_icon_pos.y+2,     COLOR_BLACK);
-    if (x>2) draw_line(conf.space_icon_pos.x+x+1,    conf.space_icon_pos.y+2,     conf.space_icon_pos.x+le-2,   conf.space_icon_pos.y+2,     MAKE_COLOR(cl, cl));
-    else     draw_line(conf.space_icon_pos.x+4,      conf.space_icon_pos.y+2,     conf.space_icon_pos.x+le-2,   conf.space_icon_pos.y+2,     MAKE_COLOR(cl, cl));
-    for(i=3; i<7; i++) {                                                                                                                                                      //          /--------------|
-        if (x>7-i) draw_pixel(conf.space_icon_pos.x+8-i,     conf.space_icon_pos.y+i,     COLOR_BLACK);                                                                       //        /  1st for loop  |
-        if (x>7-i) draw_pixel(conf.space_icon_pos.x+x,       conf.space_icon_pos.y+i,     COLOR_BLACK);                                                                       //      /__________________|
-        draw_line(conf.space_icon_pos.x+x+1,                 conf.space_icon_pos.y+i,     conf.space_icon_pos.x+le-2,     conf.space_icon_pos.y+i,     MAKE_COLOR(cl, cl));   //     |                   |
-    }                                                                                                                                                                         //     |     2nd for loop  |
-    for(i=7; i<wi-2; i++) {                                                                                                                                                   //     |                   |
-        if (x>1) draw_pixel(conf.space_icon_pos.x+2,         conf.space_icon_pos.y+i,     COLOR_BLACK);                                                                       //     |-------------------|
-        if (x>1) draw_pixel(conf.space_icon_pos.x+x,         conf.space_icon_pos.y+i,     COLOR_BLACK);
-        draw_line(conf.space_icon_pos.x+x+1,                 conf.space_icon_pos.y+i,     conf.space_icon_pos.x+le-2,     conf.space_icon_pos.y+i,     MAKE_COLOR(cl, cl));
+    x = LE - (perc*(LE-3)/100) - 2;
+    if (x>5) draw_hline(xx+6,      yy+2,     x-6,     COLOR_BLACK);
+    if (x>2) draw_hline(xx+x+1,    yy+2,     LE-x-3,  MAKE_COLOR(cl, cl));
+    else     draw_hline(xx+4,      yy+2,     LE-6,    MAKE_COLOR(cl, cl));
+    for(i=3; i<7; i++) {                                                                                                     //          /--------------|
+        if (x>7-i) draw_pixel(xx+8-i,     yy+i,     COLOR_BLACK);                      //        /  1st for loop  |
+        if (x>7-i) draw_pixel(xx+x,       yy+i,     COLOR_BLACK);                      //      /__________________|
+        draw_hline(xx+x+1,                 yy+i,     LE-x-3,    MAKE_COLOR(cl, cl));   //     |                   |
+    }                                                                                                                        //     |     2nd for loop  |
+    for(i=7; i<WI-2; i++) {                                                                                                  //     |                   |
+        if (x>1) draw_pixel(xx+2,         yy+i,     COLOR_BLACK);                      //     |-------------------|
+        if (x>1) draw_pixel(xx+x,         yy+i,     COLOR_BLACK);
+        draw_hline(xx+x+1,                 yy+i,     LE-x-3,    MAKE_COLOR(cl, cl));
     }
-    if (x>1) draw_line(conf.space_icon_pos.x+2,      conf.space_icon_pos.y+wi-2,    conf.space_icon_pos.x+x,      conf.space_icon_pos.y+wi-2,    COLOR_BLACK);
-    draw_line(conf.space_icon_pos.x+x+1,             conf.space_icon_pos.y+wi-2,    conf.space_icon_pos.x+le-2,   conf.space_icon_pos.y+wi-2,    MAKE_COLOR(cl, cl));
+    if (x>1) draw_hline(xx+2,      yy+WI-2,    x-2,     COLOR_BLACK);
+    draw_hline(xx+x+1,             yy+WI-2,    LE-x-3,  MAKE_COLOR(cl, cl));
 }
 
 //-------------------------------------------------------------------
