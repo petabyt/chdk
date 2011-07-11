@@ -3,57 +3,37 @@
 
 //-------------------------------------------------------------------
 
-// Array of offsets to each string stored in the 'sbuf' array
-static unsigned short *strings = NULL;
+static char **strings = NULL;
 static int count = 0;
-
-// Strings stored in one large umalloc'ed array rather than individually (reduces memory overhead)
-// Previously when loading a language file a block of memory was allocated to read the file
-// then another block was allocated for each string in the data read from the file, then the original
-// block was freed. This version uses the same buffer to read the file and store the strings.
-static char *sbuf = NULL;   
-static int sbuflen = 0;
 
 //-------------------------------------------------------------------
 void lang_init(int num) {
     int i;
 
-    // Free old buffer (should not happen since this is only called once at startup)
-    if (strings)
-    {
+    if (strings) {
+       for (i=0; i<count; ++i)
+           if (strings[i]) ufree(strings[i]);
        ufree(strings);
-       strings = 0;
        count = 0;
     }
 
-    // Free old buffer (should not happen since this is only called once at startup)
-    if (sbuf)
-    {
-        ufree(sbuf);
-        sbuf = 0;
-        sbuflen = 0;
-    }
-
-    // Allocate offset buffer
     ++num;
-    strings = umalloc(num*sizeof(unsigned short));
+    strings = umalloc(num*sizeof(char*));
     if (strings) {
-        memset(strings, 0, num*sizeof(unsigned short));
+        memset(strings, 0, num*sizeof(char*));
         count = num;
     }
+
 }
 
 //-------------------------------------------------------------------
-// Add a string to the buffer. String is cleaned up to convert special
-// characters and the offset of the string in 'sbuf' is stored in the
-// strings array.
-static void lang_add_string(int num, char *str) {
+static void lang_add_string(int num, const char *str) {
     int f=0;
     char *p;
 
-    if (num<count) {
-       p = str;
-       strings[num] = (unsigned short)(str - sbuf);
+    if (strings && num<count) {
+       if (strings[num]) ufree(strings[num]);
+       p = strings[num] = umalloc(strlen(str)+1);
        if (p) {
            for (; *str; ++str) {
                 if (f) {
@@ -74,13 +54,11 @@ static void lang_add_string(int num, char *str) {
 }
 
 //-------------------------------------------------------------------
-// Parse the 'sbuf' memory and build the strings offset array
-void lang_load_from_sbuf()
-{
+void lang_load_from_mem(char *buf) {
     char *p, *s, *e;
     int i;
     
-    e = sbuf-1;
+    e = buf-1;
     while(e) {
         p = e+1;
         while (*p && (*p=='\r' || *p=='\n')) ++p;
@@ -103,33 +81,6 @@ void lang_load_from_sbuf()
 }
 
 //-------------------------------------------------------------------
-// Allocate a new 'sbuf' array if needed.
-// If the existing one is large enough use it instead of getting a new block of memory.
-int alloc_sbuf(int len)
-{
-    if (len > sbuflen)
-    {
-        if (sbuf) ufree(sbuf);
-        sbuf = umalloc(len);
-        if (sbuf)
-        {
-            sbuflen = len;
-        }
-    }
-    return (sbuf != 0);
-}
-//-------------------------------------------------------------------
-// Load the default language data from memory.
-void lang_load_from_mem(char *buf) {
-    if (alloc_sbuf(strlen(buf)+1))
-    {
-        memcpy(sbuf,buf,sbuflen);
-        lang_load_from_sbuf();
-    }
-}
-
-//-------------------------------------------------------------------
-// Load language data from a file.
 void lang_load_from_file(const char *filename) {
     int f, size;
     static struct stat st;
@@ -139,11 +90,12 @@ void lang_load_from_file(const char *filename) {
     if (f>=0) {
         size = (stat((char*)filename, &st)==0)?st.st_size:0;
         if (size) {
-            if (alloc_sbuf(size+1))
-            {
-                size = read(f, sbuf, size);
-                sbuf[size]=0;
-                lang_load_from_sbuf();
+            buf = umalloc(size+1);
+            if (buf) {
+                size = read(f, buf, size);
+                buf[size]=0;
+                lang_load_from_mem(buf);
+                ufree(buf);
             }
         }
         close(f);
@@ -151,10 +103,9 @@ void lang_load_from_file(const char *filename) {
 }
 
 //-------------------------------------------------------------------
-// Return the string corresponding to the 'str' index.
 char* lang_str(int str) {
     if (str && str<0x1000) {
-        return (strings && str<count && strings[str])?sbuf+strings[str]:"";
+        return (strings && str<count && strings[str])?strings[str]:"";
     } else { // not ID, just char*
         return (char*)str;
     }
