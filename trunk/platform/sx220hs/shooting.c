@@ -117,8 +117,10 @@ static const CapturemodeMap modemap[] = {
 	{ MODE_VIDEO_MOVIE_DIGEST,     	33333  },
 	{ MODE_SCN_HIGHSPEED_BURST,     16904  },
 	{ MODE_SCN_BEST_IMAGE,       	16905  },
-	{ MODE_SCN_TOY_CAMERA,  	  	 9862  },
-	{ MODE_SCN_MONOCHROME,  	  	 9754  },
+	{ MODE_SCN_TOY_CAMERA,  	  	 8751  },
+	{ MODE_SCN_MONOCHROME,  	  	 8754  },
+	{ MODE_SCN_WINK_SELF_TIMER,		16938  },
+    { MODE_SCN_FACE_SELF_TIMER,		16936  },
 };
 
 #include "../generic/shooting.c"

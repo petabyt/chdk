@@ -18,7 +18,7 @@ static long last_kbd_key = 0;
 static int usb_power=0;
 static int remote_key, remote_count;
 static int shoot_counter=0;
-//static long alt_mode_key_mask = 0x00010800; // disp + set
+static long alt_mode_key_mask = 0x00010800; // disp + set
 static int alt_mode_led=0;
 extern void _GetKbdState(long*);
 
@@ -77,6 +77,17 @@ static KeyMap keymap[] = {
 
 	{ 0, 0, 0 }
 };
+
+void kbd_set_alt_mode_key_mask(long key)
+{
+	int i;
+	for (i=0; keymap[i].hackkey; ++i) {
+		if (keymap[i].hackkey == key) {
+			alt_mode_key_mask = keymap[i].canonkey;
+			return;
+		}
+	}
+}
 
 void my_blinkk(void) {
 	int i;
