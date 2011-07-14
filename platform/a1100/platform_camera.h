@@ -52,7 +52,7 @@
 
     // color
     #undef CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              2
+    #define CAM_BITMAP_PALETTE              10
 
     // pattern
 
