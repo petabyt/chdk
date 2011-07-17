@@ -235,6 +235,7 @@ batch-zip: version
 	$(MAKE) -s --no-print-directory PLATFORM=sx110is  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
 	#$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101c NO_INC_BUILD=1 firzipsub
 	#$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101d NO_INC_BUILD=1 firzipsub
+	#$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101f NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=sx200is  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=100a NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
@@ -433,6 +434,7 @@ batch-zip-complete: version
 	$(MAKE) -s --no-print-directory PLATFORM=sx110is  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
 	#$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101c NO_INC_BUILD=1 firzipsubcomplete
 	#$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101d NO_INC_BUILD=1 firzipsubcomplete
+	#$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101f NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=sx200is  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=100a NO_INC_BUILD=1 firzipsubcomplete	
 	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete	
@@ -684,6 +686,7 @@ batch-clean:
 	$(MAKE) -s --no-print-directory PLATFORM=sx110is  PLATFORMSUB=100b NO_INC_BUILD=1 clean
 	#$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101c NO_INC_BUILD=1 clean
 	#$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101d NO_INC_BUILD=1 clean
+	#$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101f NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=sx200is  PLATFORMSUB=100c NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=100a NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=101a NO_INC_BUILD=1 clean
