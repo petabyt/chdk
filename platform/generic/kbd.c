@@ -33,12 +33,12 @@ static int shoot_counter=0;
 #define USB_REG 0
 #endif
 
-#if defined(CAMERA_a630) || defined(CAMERA_a640) || defined(CAMERA_a610) || defined(CAMERA_a620) || defined(CAMERA_ixus800_sd700) || defined(CAMERA_ixus65_sd630) || defined(CAMERA_ixus850_sd800) || defined(CAMERA_ixus900_sd900) || defined (CAMERA_ixus70_sd1000) || defined (CAMERA_ixus950_sd850)
+#if defined(CAMERA_a630) || defined(CAMERA_a640) || defined(CAMERA_a610) || defined(CAMERA_a620) || defined(CAMERA_ixus800_sd700) || defined(CAMERA_ixus65_sd630) || defined(CAMERA_ixus850_sd800) || defined(CAMERA_ixus900_sd900) || defined (CAMERA_ixus70_sd1000) || defined (CAMERA_ixus950_sd850) || defined(CAMERA_a410)
 #define USB_MASK 0x8000000
 #define USB_REG 1
 #endif
 
-#if defined(CAMERA_a430) || defined(CAMERA_a530) || defined(CAMERA_a540) || defined(CAMERA_a410)
+#if defined(CAMERA_a430) || defined(CAMERA_a530) || defined(CAMERA_a540)
 #define USB_MASK 0x4000
 #define USB_REG 2
 #endif
@@ -61,7 +61,7 @@ long x;
     x = (long)*mmio2;
 #endif
 
-#if defined(CAMERA_a610) || defined(CAMERA_a620) || defined(CAMERA_a630) || defined(CAMERA_a640) || defined(CAMERA_ixus800_sd700)
+#if defined(CAMERA_a610) || defined(CAMERA_a620) || defined(CAMERA_a630) || defined(CAMERA_a640) || defined(CAMERA_ixus800_sd700) || defined(CAMERA_a410)
         x = (long)*mmio1;
 #endif
 
@@ -72,7 +72,7 @@ long x;
 return x;
 }
 
-#if defined(CAMERA_a530) || defined(CAMERA_a540) || defined(CAMERA_a610) || defined(CAMERA_a620) || defined(CAMERA_a630) || defined(CAMERA_a640) || defined(CAMERA_a700)|| defined(CAMERA_a710) || defined (CAMERA_ixus800_sd700)
+#if defined(CAMERA_a530) || defined(CAMERA_a540) || defined(CAMERA_a610) || defined(CAMERA_a620) || defined(CAMERA_a630) || defined(CAMERA_a640) || defined(CAMERA_a700)|| defined(CAMERA_a710) || defined (CAMERA_ixus800_sd700) || defined(CAMERA_a410)
 void wait_until_remote_button_is_released(void)
 {
 long x;
