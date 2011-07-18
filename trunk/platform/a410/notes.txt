@@ -9,6 +9,10 @@ Camera depending notes:
 
 Changelog
 
+Beta 3, 2011-07-11
+- modemap is now correct
+- USB remote should work
+
 Beta 2, 2011-07-06
 - optical data corrected, aperture display is now correct
 

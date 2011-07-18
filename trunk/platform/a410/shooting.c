@@ -77,38 +77,29 @@ const ISOTable iso_table[] = {
 };
 
 /*
-http://www.usa.canon.com/cusa/support/consumer/digital_cameras/powershot_a_series/powershot_a430#Specifications
-Shooting Modes
-    Auto; Creative: P, Av, Tv, M; Image: Portrait, Landscape, Night Scene,
-    Special Scene 
-        (Foliage, Snow, Beach, Fireworks, Underwater, Indoor, Kids & Pets,
-        Night Snapshot, Color Accent, Color Swap),
-    My Colors, Stitch Assist, Movie
-Movie: 640 x 480 / 320 x 240 (30 fps/15 fps) available up to 1GB or 1 hour for each file size,
-    320 x 240 (1 min. at 60 fps), 160 x 120 (3 min. at 15 fps)
-canon mode list FFD588D4 in 100b
+canon mode list ffd39b10 in a410 100f
 */          
 static const CapturemodeMap modemap[] = {
-    { MODE_M,                  32769 },
-    { MODE_P,                  32772 },
-    { MODE_AUTO,               32768 },
-    { MODE_PORTRAIT,           32781 },
-    { MODE_NIGHT_SCENE,        32782 }, // "night scene" on dial, different from "night snapshot" under "scene" below
-    { MODE_STITCH,             33290 },
-    { MODE_SCN_NIGHT_SNAPSHOT, 16395 }, // "night snapshot"
-    { MODE_SCN_KIDS_PETS,      16399 }, // "kids and pets"
-    { MODE_SCN_INDOOR,         16400 }, // "indoor"
-    { MODE_SCN_FOLIAGE,        16401 }, // "foliage"
-    { MODE_SCN_SNOW,           16402 }, // "snow"
-    { MODE_SCN_BEACH,          16403 }, // "beach"
-    { MODE_SCN_FIREWORK,       16404 }, // "fireworks"
-    { MODE_SCN_COLOR_ACCENT,   16920 }, // "color accent"
-    { MODE_SCN_COLOR_SWAP,     16921 }, // "color swap"
-    { MODE_VIDEO_STD,          2593  },
-    { MODE_VIDEO_SPEED,        2594  }, // "fast frame rate"
-    { MODE_VIDEO_COMPACT,      2595  }, // "compact"
-    { MODE_VIDEO_COLOR_ACCENT, 2591  }, // "color accent"
-    { MODE_VIDEO_COLOR_SWAP,   2592  }, // "color swap"
+    { MODE_P,                   0 },
+    { MODE_AUTO,                4 },
+    { MODE_PORTRAIT,            5 },
+    { MODE_STITCH,              3 },
+    { MODE_SCN_NIGHT_SNAPSHOT, 10 }, // "night snapshot"
+    { MODE_SCN_KIDS_PETS,      11 }, // "kids and pets"
+    { MODE_SCN_INDOOR,          9 }, // "indoor"
+    { MODE_SCN_FOLIAGE,         6 }, // "foliage"
+    { MODE_SCN_SNOW,            7 }, // "snow"
+    { MODE_SCN_BEACH,           8 }, // "beach"
+    { MODE_SCN_FIREWORK,       12 }, // "fireworks"
+    { MODE_VIDEO_STD,          13 }, // there's only one mode for video (according to the modemap, this is supposed to be 0x1000d)
+    { MODE_SUPER_MACRO,         1 },
+    { MODE_MY_COLORS,           2 }
+    /*the modemap also contains the following:
+    0x1000d (not 0xd, but setting mode to 0xd (13) works), propcase 0 also reports 13
+    0x1000e
+    0x1000f
+    trying to set 14 or 15 fails (camera crashes)
+    */
 };
 #include "../generic/shooting.c"
 
