@@ -12,13 +12,13 @@ void lang_init(int num) {
 
     if (strings) {
        for (i=0; i<count; ++i)
-           if (strings[i]) ufree(strings[i]);
-       ufree(strings);
+           if (strings[i]) free(strings[i]);
+       free(strings);
        count = 0;
     }
 
     ++num;
-    strings = umalloc(num*sizeof(char*));
+    strings = malloc(num*sizeof(char*));
     if (strings) {
         memset(strings, 0, num*sizeof(char*));
         count = num;
@@ -32,8 +32,8 @@ static void lang_add_string(int num, const char *str) {
     char *p;
 
     if (strings && num<count) {
-       if (strings[num]) ufree(strings[num]);
-       p = strings[num] = umalloc(strlen(str)+1);
+       if (strings[num]) free(strings[num]);
+       p = strings[num] = malloc(strlen(str)+1);
        if (p) {
            for (; *str; ++str) {
                 if (f) {
