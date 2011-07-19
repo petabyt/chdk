@@ -528,42 +528,6 @@ asm volatile(
 );
 }
 
-//void __attribute__((naked,noinline)) sub_FF98C694_my(){
-// asm volatile(
-//"		STMFD	SP!, {R4-R6,LR} \n"
-//"		BL	sub_FF881D8C \n"
-//"		MOV	R4, R0 \n"
-//"		LDR	R0, =0x3BB24 \n"
-//"		LDR	R5, =0x7694 \n"
-//"		LDR	R0, [R0,#0x24] \n"
-//"		MOV	R6, #1 \n"
-//"		CMP	R0, #0 \n"
-//"		BEQ	loc_FF98C6D8 \n"
-//"		MOV	R0, #0xC \n"
-//"		BL	sub_FF888028 \n"
-//"		TST	R0, #1 \n"
-//"		STRNE	R6, [R5] \n"
-//"		LDRNE	R0, [R4,#8] \n"
-//"		ORRNE	R0, R0,	#0x40000000 \n"
-//"		STRNE	R0, [R4,#8] \n"
-//"		LDMNEFD	SP!, {R4-R6,PC} \n"
-//"loc_FF98C6D8: \n"
-//"		MOV	R0, R4 \n"
-//"		BL	sub_FF98C298 \n"
-//"		MOV	R0, R4 \n"
-//"		BL	sub_FFB06E2C \n"
-//"		MOV	R0, R4 \n"
-//
-////"		BL	sub_FFB077C0 \n"
-//"		BL	sub_FFB077C0_my \n"					// patched
-//
-//"		TST	R0, #1 \n"
-//"		STRNE	R6, [R5] \n"
-//"		LDMFD	SP!, {R4-R6,PC} \n"
-// );
-//}
-
-// TODO - can this be shrunk by jumping to firmware locations after patches ???
 void __attribute__((naked,noinline)) sub_FFB077C0_my(){
  asm volatile(
 "                STMFD   SP!, {R2-R6,LR} \n"
@@ -599,7 +563,7 @@ void __attribute__((naked,noinline)) sub_FFB077C0_my(){
 "                CMP     R0, #3 \n"
 "                BEQ     loc_FFB07894 \n"
 "                CMP     R0, #7 \n"
-"                BNE     loc_FFB078B0 \n"
+"                BNE     sub_FFB078B0 \n"   // jump to firmware
 "                MOV     R0, #0 \n"
 "                BL      sub_FF8C1D20 \n"
 "                MOV     R0, #4 \n"
@@ -631,7 +595,7 @@ void __attribute__((naked,noinline)) sub_FFB077C0_my(){
 "		BL      capt_seq_hook_raw_here\n"      		// added (16/2/2011, moved here so that long exposures work)
 
 "                MOV     R6, R0 \n"
-"                B       loc_FFB078BC \n"
+"                B       sub_FFB078BC \n"   // jump to firmware
 
 "loc_FFB07894: \n"
 "                MOV     R0, #1 \n"
@@ -641,47 +605,6 @@ void __attribute__((naked,noinline)) sub_FFB077C0_my(){
 "                STR     R4, [SP,#0x4] \n"
 "                BL      sub_FFB076A0 \n"
 "                B       loc_FFB0788C \n"
-
-"loc_FFB078B0: \n"
-"                MOV     R1, #0x22C \n"
-//"                ADR     R0, aSsstandardcapt ; "SsStandardCaptureSeq.c" \n"
-"                LDR   R0, =0xFFB07948 \n"
-"                BL      _DebugAssert \n"
-
-"loc_FFB078BC: \n"
-"                TST     R6, #1 \n"
-"                MOVNE   R0, R6 \n"
-"                BNE     locret_FFB07928 \n"
-"                MOV     R1, #0 \n"
-//"                ADR     R0, nullsub_368 \n"
-"				 LDR	 R0, =0xFFB07594 \n"
-"                BL      sub_FF8C1CF0 \n"
-"                LDR     R0, =0x3BB24 \n"
-"                LDRH    R0, [R0] \n"
-"                SUB     R12, R0, #0x4000 \n"
-"                SUBS    R12, R12, #0x20C \n"
-"                BLEQ    sub_FF8AB01C \n"
-"                MOV     R0, R5 \n"
-"                BL      sub_FFB07454 \n"
-"                BL      sub_FF98D194 \n"
-"                MOV     R3, #0x244 \n"
-"                STR     R3, [SP] \n"
-"                LDR     R2, =0x3A98 \n"
-//"                ADR     R3, aSsstandardcapt ; "SsStandardCaptureSeq.c" \n"
-"                LDR   R3, =0xFFB07948 \n"
-"                MOV     R1, #4 \n"
-"                BL      sub_FF8883A8 \n"
-"                CMP     R0, #0 \n"
-"                MOVNE   R1, #0x244 \n"
-//"                ADRNE   R0, aSsstandardcapt ; "SsStandardCaptureSeq.c" \n"
-"                LDRNE   R0, =0xFFB07948 \n"
-"                BLNE    _DebugAssert \n"
-"                LDRH    R0, [SP,#0x4] \n"
-"                STRH    R0, [R5,#0x14] \n"
-"                MOV     R0, #0 \n"
-
-"locret_FFB07928: \n"
-"                LDMFD   SP!, {R2-R6,PC} \n"
 	 );
 }
 
