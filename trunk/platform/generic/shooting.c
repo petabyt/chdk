@@ -699,10 +699,9 @@ void shooting_set_av96_direct(short v, short is_now)
 if ((mode_get()&MODE_MASK) != MODE_PLAY){
  if(is_now) {
    _SetPropertyCase(PROPCASE_AV, &v, sizeof(v));
-   	#if CAM_AV_OVERRIDE_IRIS_FIX
-        extern int _MoveIrisWithAv(short*);
-        _MoveIrisWithAv(&v);
-	#endif
+#ifdef PROPCASE_AV2
+   _SetPropertyCase(PROPCASE_AV2, &v, sizeof(v));   // Save override to property that will update JPEG header & Canon OSD
+#endif
  }
  else photo_param_put_off.av96=v;
 }
@@ -1147,6 +1146,10 @@ void shooting_av_bracketing(){
     if (value != bracketing.av96)
     {
         shooting_set_av96_direct(value, SET_NOW);
+#ifdef CAM_AV_OVERRIDE_IRIS_FIX
+        extern int _MoveIrisWithAv(short*);
+        _MoveIrisWithAv(&value);
+#endif
     }
 }
 
