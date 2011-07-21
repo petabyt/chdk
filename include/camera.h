@@ -160,7 +160,7 @@
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-#undef CAM_AV_OVERRIDE_IRIS_FIX					// for cameras that require _MoveIrisWithAv function to override Av.
+#undef CAM_AV_OVERRIDE_IRIS_FIX					// for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
 
 //----------------------------------------------------------
 // Override Default values for Camera if necessary
