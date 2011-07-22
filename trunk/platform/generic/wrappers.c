@@ -511,21 +511,7 @@ char *strcat(char *dest, const char *app) {
 }
 
 char *strrchr(const char *s, int c) {
-#if defined (CAMERA_s95)
-	// unable to find strrchr in s95 - we use our own fn
-	char *result = 0;
-
-	c = (char) c;
-
-	do {
-		if (c == *s)
-			result = (char*) s;
-	} while (*s++ != '\0');
-
-	return result;
-#else
     return _strrchr(s, c);
-#endif
 }
 
 long strtol(const char *nptr, char **endptr, int base) {

@@ -91,34 +91,38 @@ const ISOTable iso_table[] = {
 };
 
 static const CapturemodeMap modemap[] = {
-	{ MODE_AUTO,               32768  },
-	{ MODE_P,                  32772  }, // also C1,C2
+	{ MODE_P,                  32772  },
 	{ MODE_TV,                 32771  },
 	{ MODE_AV,                 32770  },
 	{ MODE_M,                  32769  },
-    { MODE_LOWLIGHT,	       32799  },
+	{ MODE_AUTO,               32768  },
+    { MODE_LOWLIGHT,	       32801  },
 
-	{ MODE_VIDEO_COLOR_ACCENT, 2601   },
-	{ MODE_VIDEO_COLOR_SWAP,   2602   },
-	{ MODE_VIDEO_STD,          2603   },
+	{ MODE_VIDEO_COLOR_ACCENT, 2612   },
+	{ MODE_VIDEO_COLOR_SWAP,   2613   },
+    { MODE_VIDEO_MINIATURE,    2620   },
+	{ MODE_VIDEO_STD,          2614   },
 
-	{ MODE_SCN_NIGHT_SNAPSHOT, 16395  },
-	{ MODE_SCN_LANDSCAPE,	   16396  },
-	{ MODE_SCN_PORTRAIT,       16397  },
-	{ MODE_SCN_STITCH,         16906  },
-	{ MODE_SCN_NOSTALGIC,      16931  },
-	{ MODE_SCN_COLOR_SWAP,     16924  },
-	{ MODE_SCN_COLOR_ACCENT,   16923  },
-	{ MODE_SCN_SNOW,           16404  },
-	{ MODE_SCN_FOLIAGE,        16403  },
-	{ MODE_SCN_AQUARIUM,       16408  },
-	{ MODE_SCN_UNDERWATER,     16407  },
-	{ MODE_SCN_BEACH,          16405  },
-	{ MODE_SCN_FIREWORK,       16406  },
-	{ MODE_SCN_NIGHT_SCENE,    16398  },
-	{ MODE_SCN_SUNSET,         16402  },
-	{ MODE_SCN_INDOOR,     	   16401  },
-	{ MODE_SCN_KIDS_PETS,      16400  }
+	{ MODE_SCN_PORTRAIT,       16399  },
+	{ MODE_SCN_LANDSCAPE,	   16398  },
+	{ MODE_SCN_KIDS_PETS,      16402  },
+    { MODE_SCN_FACE_SELF_TIMER,16936  },
+	{ MODE_SCN_SMART_SHUTTER,  16937  },
+    { MODE_SCN_WINK_SELF_TIMER,16938  },
+	{ MODE_SCN_SUPER_VIVID,    16934  },
+	{ MODE_SCN_POSTER_EFFECT,  16935  },
+	{ MODE_SCN_COLOR_ACCENT,   16925  },
+	{ MODE_SCN_COLOR_SWAP,     16926  },
+	{ MODE_SCN_HDR,            16942  },
+	{ MODE_SCN_NOSTALGIC,      16933  },
+	{ MODE_SCN_FISHEYE,        16939  },
+	{ MODE_SCN_MINIATURE,      16940  },
+	{ MODE_SCN_BEACH,          16407  },
+	{ MODE_SCN_UNDERWATER,     16409  },
+	{ MODE_SCN_FOLIAGE,        16405  },
+	{ MODE_SCN_SNOW,           16406  },
+	{ MODE_SCN_FIREWORK,       16408  },
+    { MODE_SCN_STITCH,         16908  },
 };
 
 
@@ -139,13 +143,23 @@ long get_target_file_num() {
     return n;
 }
 
-long get_target_dir_num() {
-    long n;
-
-    n = get_file_next_counter();
-    n = (n>>18)&0x3FF;
-    return n;
+#if defined(CAM_DATE_FOLDER_NAMING)
+// Camera uses date to name directory
+void get_target_dir_name(char *out)
+{
+	extern void _GetImageFolder(char*,int,int,int);
+	out[0] = 'A';
+	_GetImageFolder(out+1,get_file_next_counter(),0x400,time(NULL));
 }
+#else
+long get_target_dir_num() {
+	long n;
+	
+	n = get_file_next_counter();
+	n = (n>>18)&0x3FF;
+	return n;
+}
+#endif
 
 int circle_of_confusion = 7;
 
