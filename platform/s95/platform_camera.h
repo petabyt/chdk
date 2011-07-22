@@ -49,41 +49,14 @@
     #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
-    #undef  CAM_WHITE_LEVEL
-    #define CAM_WHITE_LEVEL             ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
-    #undef  CAM_BLACK_LEVEL
-    #define CAM_BLACK_LEVEL             127
 
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION  1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
-    #undef CAM_USES_ASPECT_YCORRECTION
-    #define CAM_USES_ASPECT_YCORRECTION  0  //only uses mappings on x coordinate
 
-    //games mappings
-	#undef GAMES_SCREEN_WIDTH
-	#define GAMES_SCREEN_WIDTH 360
-	#undef GAMES_SCREEN_HEIGHT
-	#define GAMES_SCREEN_HEIGHT 240
 
     #undef CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE    7
 
-    #undef ASPECT_XCORRECTION
-	#define ASPECT_XCORRECTION(x)  ( ( ((x)<<3) + (x) )  >>2 )
-	#undef ASPECT_GAMES_XCORRECTION
-	#define ASPECT_GAMES_XCORRECTION(x)   ( ((x)<<1) )
-	#undef ASPECT_GAMES_YCORRECTION
-	#define ASPECT_GAMES_YCORRECTION(y)   ( (y) )  //none
-
-    #undef ASPECT_GRID_XCORRECTION
-    #define ASPECT_GRID_XCORRECTION(x)  ( ((x)<<3)/9  )  //grids are designed on a 360x240 basis and screen is 320x240, we need x*320/360=x*8/9
-    #undef ASPECT_GRID_YCORRECTION
-    #define ASPECT_GRID_YCORRECTION(y)  ( (y) )       //y correction for grids  made on a 360x240 As the buffer is 720x240 we have no correction here.
-
-    #undef ASPECT_VIEWPORT_XCORRECTION
-    #define ASPECT_VIEWPORT_XCORRECTION(x) ASPECT_GRID_XCORRECTION(x) //viewport is 360x240 and screen 320x240, we need x*320/360=x*8/9, equal than grids, used by edgeoverlay
-    #undef ASPECT_VIEWPORT_YCORRECTION
-    #define ASPECT_VIEWPORT_YCORRECTION(y) ( (y) )
     #undef EDGE_HMARGIN
     #define EDGE_HMARGIN 28
 
@@ -98,15 +71,19 @@
       -1158,   1000000, 1929,   1000000, 3581,  1000000
     #define cam_CalibrationIlluminant1 17 // Standard Light A
 
-    // cropping. modified to be more in line with G11 and S90
-    #define CAM_JPEG_WIDTH  3648     // 3600
-    #define CAM_JPEG_HEIGHT 2736     // 2700
-    #define CAM_ACTIVE_AREA_X1 16    // 52
-    #define CAM_ACTIVE_AREA_Y1 8     // 14
-    #define CAM_ACTIVE_AREA_X2 3692  // 3648
-    #define CAM_ACTIVE_AREA_Y2 2776  // 2736
+    // DNG image area taken from sample images posted by whim
+    #define CAM_JPEG_WIDTH		3648
+    #define CAM_JPEG_HEIGHT		2736
+    #define CAM_ACTIVE_AREA_X1	64
+    #define CAM_ACTIVE_AREA_Y1	22
+    #define CAM_ACTIVE_AREA_X2	3728
+    #define CAM_ACTIVE_AREA_Y2	2762
 
    #define CAM_ZEBRA_ASPECT_ADJUST 1
+	
+	#define	CAM_DATE_FOLDER_NAMING	1
+
+    #define CAM_FIRMWARE_MEMINFO        1       // Use 'GetMemInfo' to get free memory size.
    
    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX    1     // enable workaround for camera crash at startup when opening the conf / font files
                                                     // see http://chdk.setepontos.com/index.php?topic=6179.0

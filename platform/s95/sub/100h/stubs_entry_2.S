@@ -11,7 +11,7 @@ NHSTUB(GetParameterData, 0xFF9BBEA4)
 NHSTUB(Lseek, 0xFF83714C)
 NHSTUB(PT_PlaySound, 0xFF88B0A8)
 NHSTUB(ReadFastDir, 0xFFAD413C)
-NHSTUB(RefreshPhysicalScreen, 0xFF8B81C4)
+NHSTUB(RefreshPhysicalScreen, 0xff8b6c8c)
 NHSTUB(Remove, 0xFF837064)
 NHSTUB(SetParameterData, 0xFF9BBD7C)
 NHSTUB(TurnOffBackLight, 0xFF8AF278)
@@ -22,7 +22,7 @@ NHSTUB(kbd_read_keys, 0xFF83498C)
 NHSTUB(openfastdir, 0xFFAD3FE8)
 NHSTUB(qsort, 0xFFB4C038)								// different from s90
 NHSTUB(readfastdir, 0xFFAD413C)							// different from s90
-NHSTUB(rename, 0xFF83710C)
+NHSTUB(rename, 0xff836914)
 NHSTUB(strtol, 0xFF840868)
 NHSTUB(Restart, 0xFF83C5B8)
 
@@ -78,7 +78,7 @@ NHSTUB(strlen, 0xff814100)
 NHSTUB(time, 0xFF8905D4)
 
 // missing from stubs_entry.s
-NHSTUB(LEDDrive, 0xFF987124)						// different from s90
+NHSTUB(LEDDrive, 0xff86491c)						// different from s90
 NHSTUB(SetScriptMode, 0xff89ce04)					// different from s90
 NHSTUB(ScreenLock, 0xFF8B7E50)
 NHSTUB(ScreenUnlock, 0xFF8B7EB4)
@@ -91,14 +91,12 @@ NHSTUB(UnsetZoomForMovie, 0xFF8AB114)
 NHSTUB(GetKbdState, 0xFF8655F0)
 NHSTUB(ExpCtrlTool_StartContiAE, 0xFF84734C)
 
-// could not find in firmware
-// we use our own implementaion in wrappers.c
-//NHSTUB(srand, NULL_STUB)
-//NHSTUB(rand, NULL_STUB)
-//NHSTUB(strrchr, NULL_STUB)
-// still need NSTUBs to keep finsig happy - reyalp
-NSTUB(srand, NULL_STUB)
-NSTUB(rand, NULL_STUB)
+NHSTUB(srand, 0xffa4feb0)
+NHSTUB(rand, 0xffa4febc)
+NHSTUB(strrchr, 0xff8140d8)
+NHSTUB(write, 0xff8370c0)
+NHSTUB(GetImageFolder, 0xff95e84c)
+NHSTUB(GetMemInfo, 0xff81a264)
 
 // could not find on s90 or s95 - ignore
 NHSTUB(kbd_pwr_on, NULL_STUB)

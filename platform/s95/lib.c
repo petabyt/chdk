@@ -39,9 +39,8 @@ void camera_set_led(int led, int state, int bright) {
 }
 
 
-// TODO - check this
 int get_flash_params_count(void){
-	return 130;
+	return 0x9a;	// found in GetParameterData
 }
 
 
