@@ -665,3 +665,29 @@ void conf_restore() {
 }
 
 //-------------------------------------------------------------------
+// Common code extracted from raw.c (raw_savefile) and gui_osd.c (gui_osd_draw_raw_info)
+// returns 0 if RAW save is disabled due to mode settings, etc, return 1 if RAW save OK
+int is_raw_enabled()
+{
+    int m = mode_get() & MODE_SHOOTING_MASK;
+
+    // NOTE: the conf.save_raw_in variables are negative logic
+    //       1 = disable saving raw in this mode, 0 = allow saving raw
+    //       variables should be named conf.disable_save_raw_in_XXX
+
+    return !(   // Return false if any of these tests are true
+        ((movie_status > 1) && conf.save_raw_in_video) ||                                   // True is movie mode and save_raw_in_video is disabled
+#ifdef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE
+        (shooting_get_prop(PROPCASE_RESOLUTION)==7) ||                                      // True if shooting resolution is 'low light'
+#endif
+        (shooting_get_prop(PROPCASE_RESOLUTION)==5) ||                                      // True if shooting resolution is ??? (what is mode 5)
+        ((m==MODE_SPORTS) && conf.save_raw_in_sports) ||                                    // True if sports mode and save_raw_in_sports is disabled
+        ((m==MODE_AUTO) && conf.save_raw_in_auto) ||                                        // True if auto mode and save_raw_in_auto is disabled
+        (conf.edge_overlay_enable && conf.save_raw_in_edgeoverlay) ||                       // True if edge overlay on and save_raw_in_edgeoverlay is disabled
+        ((shooting_get_drive_mode()==1) && conf.save_raw_in_burst && !(m==MODE_SPORTS)) ||  // True if drive mode is continuous and save_raw_in_burst is disabled and not sports mode
+        ((shooting_get_drive_mode()>=2) && conf.save_raw_in_timer) ||                       // True if drive mode is timer and save_raw_in_timer is disabled
+        ((shooting_get_prop(PROPCASE_BRACKET_MODE)==1) && conf.save_raw_in_ev_bracketing)   // True if bracketing enabled and save_raw_in_ev_bracketing is disabled
+    );
+}
+
+//-------------------------------------------------------------------

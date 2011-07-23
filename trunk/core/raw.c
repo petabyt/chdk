@@ -136,7 +136,7 @@ void create_thumbnail(char* buf) {
 
 int raw_savefile() {
     int ret = 0;
-    int fd, m=(mode_get()&MODE_SHOOTING_MASK);
+    int fd;
     static struct utimbuf t;
     static int br_counter; 
 #if DNG_SUPPORT
@@ -190,15 +190,7 @@ int raw_savefile() {
 
     state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
 
-    if (conf.save_raw
-        && (!(shooting_get_prop(PROPCASE_RESOLUTION)==5))
-        && (!((movie_status > 1) && conf.save_raw_in_video)) 
-        && (!((m==MODE_SPORTS) && conf.save_raw_in_sports)) 
-        && (!((m==MODE_AUTO) && conf.save_raw_in_auto)) 
-        && (!(conf.edge_overlay_enable && conf.save_raw_in_edgeoverlay))
-        && (!((shooting_get_drive_mode()==1) && conf.save_raw_in_burst && !(m==MODE_SPORTS))) 
-        && (!((shooting_get_drive_mode()>=2) && conf.save_raw_in_timer))
-        && (!((shooting_get_prop(PROPCASE_BRACKET_MODE)==1) && conf.save_raw_in_ev_bracketing)) )
+    if (conf.save_raw && is_raw_enabled())
     {
         int timer; char txt[30];
 
@@ -236,7 +228,8 @@ int raw_savefile() {
         if (fd>=0) {
             timer=get_tick_count();
 #if DNG_SUPPORT
-            if (conf.dng_raw) {
+            if (conf.dng_raw)
+            {
                 fill_gamma_buf();
                 create_dng_header(exif_data);
                 thumbnail_buf = malloc(DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
@@ -247,18 +240,17 @@ int raw_savefile() {
                     write(fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
                     reverse_bytes_order2(rawadr, altrawadr, hook_raw_size());
                 }
-            }
-#endif
-            if (conf.dng_raw) {
                 // Write alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
                 write(fd, (char*)(((unsigned long)altrawadr)|CAM_UNCACHED_BIT), hook_raw_size());
-            } else {
+            }
+            else 
+            {
                 // Write active RAW buffer
                 write(fd, (char*)(((unsigned long)rawadr)|CAM_UNCACHED_BIT), hook_raw_size());
             }
             close(fd);
             utime(fn, &t);
-#if DNG_SUPPORT
+
             if (conf.dng_raw) {
                 if (get_dng_header() && thumbnail_buf) {
                     if (rawadr == altrawadr)    // If only one RAW buffer then we have to swap the bytes back
@@ -268,6 +260,11 @@ int raw_savefile() {
                 if (get_dng_header()) free_dng_header();
                 if (thumbnail_buf) free(thumbnail_buf);
             }
+#else
+            // Write active RAW buffer
+            write(fd, (char*)(((unsigned long)rawadr)|CAM_UNCACHED_BIT), hook_raw_size());
+            close(fd);
+            utime(fn, &t);
 #endif
             if (conf.raw_timer) {
                 timer=get_tick_count()-timer;
