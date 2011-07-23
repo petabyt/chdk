@@ -162,6 +162,8 @@
 
 #undef CAM_AV_OVERRIDE_IRIS_FIX					// for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
 
+#undef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE        // For cameras with 'low light' mode that does now work with raw define this
+
 //----------------------------------------------------------
 // Override Default values for Camera if necessary
 //----------------------------------------------------------

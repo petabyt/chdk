@@ -98,17 +98,20 @@
 	#undef ZEBRA_HMARGIN0
 	#define ZEBRA_HMARGIN0  30 //this 30 rows are not used by the display buffer is 720x240 effective, no 960x270, i.e. (270-240) reduction in widht possible but not done (more difficult to manage it and slower).
 	
-	#define	CAM_DATE_FOLDER_NAMING	1
+	#define	CAM_DATE_FOLDER_NAMING	    1
 
 	#define	CAM_STARTUP_CRASH_FILE_OPEN_FIX	1				// enable fix for camera crash at startup when opening the conf / font files
 															// see http://chdk.setepontos.com/index.php?topic=6179.0
 
-    #define CAM_FIRMWARE_MEMINFO    1       // Use 'GetMemInfo' to get free memory size.
+    #define CAM_FIRMWARE_MEMINFO        1       // Use 'GetMemInfo' to get free memory size.
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 	
-	#define CAM_AV_OVERRIDE_IRIS_FIX	1				// for cameras that require _MoveIrisWithAv function to override Av.
+	#define CAM_AV_OVERRIDE_IRIS_FIX	1				// for cameras that require _MoveIrisWithAv function to override Av in bracketing.
+
+    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1       // For cameras with 'low light' mode that does now work with raw define this
+
 //----------------------------------------------------------
 

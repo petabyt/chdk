@@ -44,7 +44,7 @@ The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 #define PROPCASE_SHOOTING                        210
 #define PROPCASE_EV_CORRECTION_2                 211
 #define PROPCASE_IS_FLASH_READY                  212
-#define PROPCASE_RESOLUTION                      222
+#define PROPCASE_RESOLUTION                      222    // 0 = L, 1 = M1, 2 = M2, 4 = S, 7 = Low Light (G12)
 #define PROPCASE_ORIENTATION_SENSOR              223
 #define PROPCASE_TIMER_MODE                      227
 #define PROPCASE_SUBJECT_DIST1                   249

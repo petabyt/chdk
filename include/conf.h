@@ -321,4 +321,6 @@ extern const char* img_exts[NUM_IMG_EXTS];
 #define VIDEO_BITRATE_STEPS 10
 extern const char *video_bitrate_strings[VIDEO_BITRATE_STEPS];
 
+extern int is_raw_enabled();
+
 #endif
