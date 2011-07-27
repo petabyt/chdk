@@ -143,6 +143,7 @@ extern int write (int fd, const void *buffer, long nbytes);
 extern int read (int fd, void *buffer, long nbytes);
 extern int lseek (int fd, long offset, int whence);
 extern long mkdir(const char *dirname);
+extern long mkdir_if_not_exist(const char *dirname);
 extern int rename(const char *oldname, const char *newname);
 extern int chdir(char *pathname);
 extern int remove(const char *name);
