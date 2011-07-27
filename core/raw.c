@@ -74,19 +74,36 @@ int raw_init_badpixel_bin() {
         return 0;
     }
     count = 0;
-    for (c[1]=CAM_ACTIVE_AREA_Y1; c[1]<CAM_ACTIVE_AREA_Y2; c[1]++) {
-        for (c[0]=CAM_ACTIVE_AREA_X1; c[0]<CAM_ACTIVE_AREA_X2; c[0]++) {
-            if (get_raw_pixel(c[0],c[1])==0) {
-                if(f) {
-                    fwrite(c, 1, 4, f);
-                }
+#ifdef DNG_VERT_RLE_BADPIXELS
+    for (c[0]=CAM_ACTIVE_AREA_X1; c[0]<CAM_ACTIVE_AREA_X2; c[0]++)
+    {
+        for (c[1]=CAM_ACTIVE_AREA_Y1; c[1]<CAM_ACTIVE_AREA_Y2; c[1]++)
+        {
+            if (get_raw_pixel(c[0],c[1])==0)
+            {
+                unsigned short l;
+                for (l=0; l<7; l++) if (get_raw_pixel(c[0],c[1]+l+1)!=0) break;
+                c[1] = c[1] | (l << 13);
+                if (f) fwrite(c, 1, 4, f);
+                c[1] = (c[1] & 0x1FFF) + l;
+                count = count + l + 1;
+            }
+        }
+    }
+#else
+    for (c[1]=CAM_ACTIVE_AREA_Y1; c[1]<CAM_ACTIVE_AREA_Y2; c[1]++) 
+    {
+        for (c[0]=CAM_ACTIVE_AREA_X1; c[0]<CAM_ACTIVE_AREA_X2; c[0]++) 
+        {
+            if (get_raw_pixel(c[0],c[1])==0) 
+            {
+                if (f) fwrite(c, 1, 4, f);
                 count++;
             }
         }
     }
-    if(f) {
-        fclose(f);
-    }
+#endif
+    if (f) fclose(f);
     init_badpixel_bin_flag = count;
     state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
     return 1;
@@ -198,7 +215,7 @@ int raw_savefile() {
 
         t.actime = t.modtime = time(NULL);
 
-        mkdir("A/DCIM");
+        mkdir_if_not_exist("A/DCIM");
 #if defined(CAM_DATE_FOLDER_NAMING)
         if (conf.raw_in_dir)
             get_target_dir_name(dir);
@@ -207,7 +224,7 @@ int raw_savefile() {
 #else
         sprintf(dir, RAW_TARGET_DIRECTORY, (conf.raw_in_dir)?get_target_dir_num():100);
 #endif
-        mkdir(dir);
+        mkdir_if_not_exist(dir);
 
         sprintf(fn, "%s/", dir);
         if(br_counter && conf.bracketing_add_raw_suffix && (shooting_get_drive_mode()!=1)) {
@@ -469,7 +486,21 @@ void unload_bad_pixels_list_b(void) {
 void patch_bad_pixels_b(void) {
     int i;
     short* ptr=binary_list;
-    for (i=0; i<binary_count; i++, ptr+=2) if (get_raw_pixel(ptr[0], ptr[1])==0) patch_bad_pixel(ptr[0], ptr[1]);
+#ifdef DNG_VERT_RLE_BADPIXELS
+    short y, cnt;
+    for (i=0; i<binary_count; i++, ptr+=2)
+    {
+        y = ptr[1] & 0x1FFF;
+        cnt = (ptr[1] >> 13) & 7;
+        for (; cnt>=0; cnt--, y++)
+            if (get_raw_pixel(ptr[0], y)==0)
+                patch_bad_pixel(ptr[0], y);
+    }
+#else
+    for (i=0; i<binary_count; i++, ptr+=2)
+        if (get_raw_pixel(ptr[0], ptr[1])==0)
+            patch_bad_pixel(ptr[0], ptr[1]);
+#endif
 }
 /*
 void unpatch_bad_pixels_b(void) {

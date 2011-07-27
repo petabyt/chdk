@@ -357,6 +357,14 @@ long mkdir(const char *dirname)
 	return _MakeDirectory_Fut(dirname,-1); // meaning of second arg is not clear, firmware seems to use -1
 }
 
+long mkdir_if_not_exist(const char *dirname) 
+{
+    // Check if directory exists and create it if it does not.
+    struct stat st;
+    if (stat(dirname,&st) != 0) return mkdir(dirname);
+    return 0;   // Success
+}
+
 int remove(const char *name) {
 	return _DeleteFile_Fut(name);
 }

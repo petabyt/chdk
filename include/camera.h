@@ -134,6 +134,9 @@
 #undef  CAM_DNG_EXPOSURE_BIAS                   // Specify DNG exposure bias value (to override default of -0.5 in the dng.c code)
 #undef  DNG_EXT_FROM                            // Extension in the cameras known extensions to replace with .DNG to allow DNG
                                                 // files to be transfered over standard PTP. Only applicable to older cameras
+#undef  DNG_VERT_RLE_BADPIXELS                  // Enable vertical run length compression of badpixel data for DNG
+                                                // IXUS 310 HS bad pixels tend to be grouped into vertical lines of 1-4 pixels
+                                                // This reduces the file size by approx 45%
 
 // Games definitions
 #define GAMES_SCREEN_WIDTH            360        // Logical screen width for games
