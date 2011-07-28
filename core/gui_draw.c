@@ -64,6 +64,39 @@ void draw_set_environment(unsigned int (*xcorrection_proc)(unsigned int x),
 #endif
 
 //-------------------------------------------------------------------
+#ifdef CAM_DETECT_SCREEN_ERASE
+
+#define GUARD_VAL   SCREEN_COLOR
+
+void draw_set_guard()
+{
+    *((unsigned char*)(frame_buffer[0])) = GUARD_VAL;
+    *((unsigned char*)(frame_buffer[1])) = GUARD_VAL;
+}
+
+int draw_test_guard()
+{
+    if (*((unsigned char*)(frame_buffer[0])) != GUARD_VAL) return 0;
+    if (*((unsigned char*)(frame_buffer[1])) != GUARD_VAL) return 0;
+    return 1;
+}
+
+// Test a pixel value in both frame buffers, returns 0 if either doesn't match or co-ords out of range
+int draw_test_pixel(coord x, coord y, color c)
+{
+    if (x >= screen_width || y >= screen_height) return 0;
+#if CAM_USES_ASPECT_CORRECTION
+    return (frame_buffer[0][y * screen_buffer_width + aspect_xcorrection_proc(x)] == c) &&
+           (frame_buffer[1][y * screen_buffer_width + aspect_xcorrection_proc(x)] == c);
+#else
+    return (frame_buffer[0][y * screen_buffer_width + x] == c) &&
+           (frame_buffer[1][y * screen_buffer_width + x] == c);
+#endif
+}
+
+#endif
+
+//-------------------------------------------------------------------
 void draw_init() {
     register int i;
 
@@ -80,6 +113,10 @@ void draw_init() {
       draw_set_aspect_xcorrection_proc(NULL);
       draw_set_aspect_ycorrection_proc(NULL);
     #endif
+
+#ifdef CAM_DETECT_SCREEN_ERASE
+    draw_set_guard();
+#endif
 }
 
 #if CAM_USES_ASPECT_CORRECTION
@@ -376,6 +413,10 @@ void draw_clear() {
 //-------------------------------------------------------------------
 void draw_restore() {
     vid_bitmap_refresh();
+
+#ifdef CAM_DETECT_SCREEN_ERASE
+    draw_set_guard();
+#endif
 }
 
 //-------------------------------------------------------------------

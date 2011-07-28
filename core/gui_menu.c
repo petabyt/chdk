@@ -70,6 +70,15 @@ void gui_menu_init(CMenu *menu_ptr) {
 }
 
 //-------------------------------------------------------------------
+void gui_menu_force_redraw()
+{
+    if (gui_get_mode() == GUI_MODE_MENU)
+    {
+        gui_menu_redraw=2;
+    }
+}
+
+//-------------------------------------------------------------------
 static void gui_menu_color_selected(color clr) {
     *item_color = (unsigned char)(clr&0xFF);
     gui_menu_redraw=2;

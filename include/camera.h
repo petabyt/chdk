@@ -51,8 +51,14 @@
 #define CAM_EMUL_KEYPRESS_DELAY     40          // Delay to interpret <alt>-button press as longpress
 #define CAM_EMUL_KEYPRESS_DURATION  5           // Length of keypress emulation
 
-#define CAM_MENU_BORDERWIDTH        30          // Related to screen layout somehow.
-                                                // TODO someone explain what this does, probably doesn't really belong here
+#define CAM_MENU_BORDERWIDTH        30          // Defines the width of the border on each side of the CHDK menu. The CHDK menu will have this
+                                                // many pixels left blank to the on each side. Should not be less than 10 to allow room for the
+                                                // scroll bar on the right.
+
+#undef  CAM_DETECT_SCREEN_ERASE                 // Define this to add 'guard' pixel to the screen bitmap to help detect if the firmware has erase the screen
+                                                // If the guard pixel changes the CHDK ALT menu is forced to redraw.
+                                                // Take care not to place CHDK OSD elements over the guard pixel.
+                                                // The guard pixel is the first pixel of the top row in the screen bitmap.
 
 #undef  CAM_AF_SCAN_DURING_VIDEO_RECORD         // CHDK can make single AF scan during video record
 #undef  CAM_HAS_VIDEO_BUTTON                    // Camera can take stills in video mode, and vice versa
