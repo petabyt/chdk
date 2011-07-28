@@ -49,6 +49,6 @@ extern void gui_menu_init(CMenu *menu_ptr);
 extern void gui_menu_kbd_process();
 extern void gui_menu_draw();
 extern void mod_user_menu(CMenuItem curr_menu_item, int* gui_menu_add_item, int mod);
-
+extern void gui_menu_force_redraw();
 //-------------------------------------------------------------------
 #endif

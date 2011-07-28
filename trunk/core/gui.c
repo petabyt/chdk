@@ -1912,6 +1912,14 @@ void gui_redraw()
     enum Gui_Mode gui_mode_old;
     static int show_md_grid=0;
 
+#ifdef CAM_DETECT_SCREEN_ERASE
+    if (!draw_test_guard())
+    {
+        draw_set_guard();
+        gui_menu_force_redraw();
+    }
+#endif
+
 	gui_handle_splash();
 
     gui_in_redraw = 1;
@@ -2011,6 +2019,7 @@ void gui_redraw()
 
     gui_in_redraw = 0;
     if ((gui_mode_old != gui_mode && (gui_mode_old != GUI_MODE_NONE && gui_mode_old != GUI_MODE_ALT) && (gui_mode != GUI_MODE_MBOX && gui_mode != GUI_MODE_MPOPUP)) || gui_restore) {
+        if (gui_restore) gui_menu_force_redraw();
         gui_restore = 0;
         if (gui_mode != GUI_MODE_REVERSI && gui_mode != GUI_MODE_SOKOBAN && gui_mode != GUI_MODE_4WINS && gui_mode != GUI_MODE_MASTERMIND)
             draw_restore();

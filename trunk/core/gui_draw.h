@@ -335,8 +335,14 @@ extern unsigned int         screen_width, screen_height, screen_size;
 extern unsigned int         screen_buffer_width, screen_buffer_height, screen_buffer_size;
 
 //-------------------------------------------------------------------
-void draw_init();
-void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl));
+extern void draw_init();
+extern void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl));
+
+#ifdef CAM_DETECT_SCREEN_ERASE
+extern void draw_set_guard();
+extern int draw_test_guard();
+extern int draw_test_pixel(coord x, coord y, color c);
+#endif
 
 extern color draw_get_pixel(coord x, coord y);
 
