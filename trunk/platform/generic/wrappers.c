@@ -144,7 +144,15 @@ void remount_filesystem()
 
 void mark_filesystem_bootable()
 {
+#ifdef  CAM_DRYOS_2_3_R47
+    // DryOS release 47 (2011) no longer has the UpdateMBROnFlash function to write the master boot record on
+    // the SD card. Instead it has seperate functions for writing the 'BOOTDISK' and 'SCRIPT' signatures to
+    // the MBR. The firmware function also takes care of writing the bootdisk signature to the correct location
+    // for FAT32 formatted cards.
+    _MakeSDCardBootable(0);
+#else
     _UpdateMBROnFlash(0, 0x40, "BOOTDISK");
+#endif
 }
 
 void __attribute__((weak)) vid_bitmap_refresh()
