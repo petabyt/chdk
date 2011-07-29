@@ -893,6 +893,11 @@ static CMenu root_menu = {0x20,LANG_MENU_MAIN_TITLE, NULL, root_menu_items };
 static int gui_user_menu_flag;
 
 void rinit(){
+	// Erase screen if switching from user menu to main menu
+	// in case the user menu is larger than the main menu
+	// otherwise it leaves remnants of the user menu above and below
+	// the main menu.
+    draw_restore();
 	gui_menu_init(&root_menu);
 }
 
