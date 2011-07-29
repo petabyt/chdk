@@ -1,39 +1,38 @@
 #include "stubs_asm.h"
 
-//beta3
-NHSTUB(WriteSDCard,0xFF16C828)  //swaped with ReadSDCard
-NHSTUB(ReadSDCard,0xFF16C62C)
-NHSTUB(strtolx,0xFF0310F0)   	//swapped with strtol
-NHSTUB(strtol,0xFF0312EC)   	
-NHSTUB(LEDDrive,0xff0557c0)  	//corrected
-
-//beta2
-NHSTUB(GetImageFolder, 0xFF1598B8)	//doesn't work
-
 # Addresses for firmware task handlers (used in taskHook)
 DEF(task_CaptSeq,0xFF077628)	
 DEF(task_InitFileModules,0xFF095240)	
 DEF(task_RotaryEncoder,0xFF05671C)	
 DEF(task_MovieRecord,0xFF1882F0)
 DEF(task_ExpDrv,0xFF0C3E54)
+DEF(task_PhySw,0xff0244f0)
 
-NHSTUB(write, 0xff00adb8)  			 //changed. was same as Write and worked.
-NHSTUB(GetCurrentAvValue,0xFF17F15C) //changed was FF0B05D4
-NHSTUB(MoveIrisWithAv, 0xFF303638)   //added like g12. should fix avbracketing, change in generic/shooting.c
+NHSTUB(DebugAssert                             ,0xff00ec88)
+NHSTUB(GetMemInfo                              ,0xff00a29c)
+NHSTUB(GiveSemaphore                           ,0xff02b23c)
+NHSTUB(MakeSDCardBootable                      ,0xff06b04c)
+NHSTUB(PT_MoveDigitalZoomToWide                ,0xff0746e8)
+NHSTUB(PT_MoveOpticalZoomAt                    ,0xff0746c0)
+NHSTUB(ScreenLock                              ,0xff0ab250)
+NHSTUB(ScreenUnlock                            ,0xff0ab2b4)
+NHSTUB(err_init_task                           ,0xff005fd4)
+NHSTUB(WriteSDCard,0xFF16C828)
+NHSTUB(ReadSDCard,0xFF16C62C)
+NHSTUB(strtolx,0xFF0310F0)
+NHSTUB(strtol,0xFF0312EC)   	
+NHSTUB(LEDDrive,0xff0557c0)
+NHSTUB(GetImageFolder, 0xFF1598B8)
+NHSTUB(write, 0xff00adb8)
+NHSTUB(GetCurrentAvValue,0xFF17F15C)
+NHSTUB(MoveIrisWithAv, 0xFF303638)
 NHSTUB(_log10,0xFF3ACCB8)
 NHSTUB(_log,0xFF3AC778)
-
-//beta1
-NHSTUB(PutInNdFilter,0xFF36BDD4)  // NDfilter works
-NHSTUB(PutOutNdFilter,0xFF36BE0C) // NDfilter works
-NHSTUB(GetKbdState, 0xFF056474)	  // in kbd.c
-
+NHSTUB(PutInNdFilter,0xFF36BDD4)
+NHSTUB(PutOutNdFilter,0xFF36BE0C)
+NHSTUB(GetKbdState, 0xFF056474)
 NHSTUB(ufree,0xFF02B884)
-
-//EXMEM
 NHSTUB(exmem_alloc, 0xFF085434)
-
-/////////////////////SX220HS  START//////////////////////
 NHSTUB(CreateTask,0xFF00E9B0)
 NHSTUB(LocalTime,0xFF08446C)
 NHSTUB(set_control_event,0xFF0911B8)
@@ -69,7 +68,7 @@ NHSTUB(TakeSemaphore,0xff02b16c)
 NHSTUB(UnlockMainPower,0xff0917d8)
 NHSTUB(_pow,0xFF3ACE30)          
 NHSTUB(add_ptp_handler,0xff28aa1c)
-NHSTUB(localtime,0xFF08446C)  //2 times
+NHSTUB(localtime,0xFF08446C)
 NHSTUB(memset,0xFF245BEC)
 NHSTUB(memcpy,0xFF030FEC)
 NHSTUB(strftime,0xff0abac8)
@@ -77,7 +76,7 @@ NHSTUB(strncmp,0xff00406c)
 NHSTUB(strncpy,0xff004030)
 NHSTUB(time,0xff084a48)
 NHSTUB(Lseek,0xFF0272A0)
-NHSTUB(Close,0xFF027084)  //sx220 something different in code. Not sure.
+NHSTUB(Close,0xFF027084)
 NHSTUB(EnterToCompensationEVF,0xFF028E74)
 NHSTUB(ExitFromCompensationEVF,0xFF028EB8)
 NHSTUB(GetZoomLensCurrentPoint,0xFF182660)
@@ -95,25 +94,21 @@ NHSTUB(SleepTask,0xFF02B4E8)
 NHSTUB(TurnOffBackLight,0xFF0A21B8)
 NHSTUB(TurnOnBackLight,0xFF0A21A0)
 NHSTUB(UIFS_WriteFirmInfoToFile,0xFF1A4414)
-NHSTUB(Write,0xFF0270D8)  //ok
+NHSTUB(Write,0xFF0270D8)
 NHSTUB(closedir,0xFF2DD260)
 NHSTUB(closefastdir,0xFF2DD260)
 NHSTUB(free,0xFF004244)
 NHSTUB(kbd_pwr_off,0xFF000B24)
 NHSTUB(kbd_pwr_on,0xFF000B24)
 NHSTUB(kbd_read_keys,0xFF024960)
-
 NHSTUB(qsort,0xFF359478)
-NHSTUB(rename,0xFF026908)    //small difference in code vs sx210
-NHSTUB(RenameFile_Fut, 0xff026908)  //same as rename like in sx210
+NHSTUB(rename,0xFF026908)
+NHSTUB(RenameFile_Fut, 0xff026908)
 NHSTUB(strrchr,0xFF0040DC)
 NHSTUB(vsprintf,0xFF010858)
-NSTUB(readdir,0xFF2DD404) //changed from null to readfastdir
-
+NSTUB(readdir,0xFF2DD404)
 NHSTUB(openfastdir, 0xFF2DD2B0)
 NHSTUB(opendir, 0xff2dd2b0)
-
-/////////////////AUTO FOUND CHECKED//////////////////
 NHSTUB(AllocateMemory, 0xff3075d0)
 NHSTUB(AllocateUncacheableMemory, 0xff02b844)
 NHSTUB(DeleteFile_Fut, 0xff02699c)
@@ -125,26 +120,25 @@ NHSTUB(GetFocusLensSubjectDistance, 0xff17d3ec)
 NHSTUB(GetOpticalTemperature, 0xff05d084)
 NHSTUB(GetSystemTime, 0xff307628)
 NHSTUB(NewTaskShell, 0xff08a38c)
-NHSTUB(Read, 0xff00ad58) //fixed was adb8
-NHSTUB(SetFileTimeStamp, 0xFF027410)   //auto stubs was wrong here. small differences in code from sx210
+NHSTUB(Read, 0xff00ad58)
+NHSTUB(SetFileTimeStamp, 0xFF027410)
 NHSTUB(SetPropertyCase, 0xff08a828)
 NHSTUB(VbattGet, 0xff023040)
 NHSTUB(_sqrt, 0xff3aed14)
 NHSTUB(close, 0xff00abb4)
-NHSTUB(lseek, 0xff0272a0)  //corrected auto stubs. same sa Lseek
-NHSTUB(malloc, 0xFF0041EC)  //corrected auto stubs
+NHSTUB(lseek, 0xff0272a0)
+NHSTUB(malloc, 0xFF0041EC)
 NHSTUB(memcmp, 0xff0108f4)
 NHSTUB(mktime_ext, 0xff0ac0c8)
 NHSTUB(open, 0xff00ab04)
-
-NHSTUB(read, 0xff00ad58)  //fixed was adb8
+NHSTUB(read, 0xff00ad58)
 NHSTUB(reboot_fw_update, 0xff2e28a0)
 NHSTUB(stat, 0xff0272e8)
-NHSTUB(strcat, 0xFF0AB880)  //auto stubs error.
+NHSTUB(strcat, 0xFF0AB880)
 NHSTUB(strchr, 0xff0040b8)
 NHSTUB(strcmp, 0xff0108b0)
 NHSTUB(strcpy, 0xff010898)
-NHSTUB(strlen, 0xFF004104) //corrected auto stubs error
+NHSTUB(strlen, 0xFF004104)
 NHSTUB(kbd_p1_f, 0xFF0249DC)
 NHSTUB(kbd_p1_f_cont, 0xFF0249E8)
 NHSTUB(kbd_p2_f,0xFF0241C4)
@@ -156,9 +150,9 @@ NHSTUB(UnlockAndRefresh, 0xFF0AB2B4)
 NHSTUB(LockAndRefresh, 0xFF0AB250)
 NHSTUB(UnlockAF, 0xFF028C10)
 NHSTUB(DoAFLock, 0xFF028BD8)
-NHSTUB(MakeAFScan, 0xFF18B938)   //ok
+NHSTUB(MakeAFScan, 0xFF18B938)
 NHSTUB(ExpCtrlTool_StartContiAE, 0xFF037FE4)
-NHSTUB(ExpCtrlTool_StopContiAE, 0xFF0380BC)  //new added
+NHSTUB(ExpCtrlTool_StopContiAE, 0xFF0380BC)
 NHSTUB(apex2us, 0xFF246BEC)
 NHSTUB(SetScriptMode, 0xFF091610)
 NHSTUB(UpdateMBROnFlash,0xFF06AC94)
@@ -166,28 +160,17 @@ NHSTUB(mkdir,0xFF027520)
 NHSTUB(MakeDirectory,0xFF026A10)
 NHSTUB(rand,0xFF245D2C)
 NHSTUB(srand,0xFF245D20)
-///////////////SX220HS  END///////////////////
+NHSTUB(UnsetZoomForMovie, 0xFF1BB954) //not needed
 
 //Fixed errors in compiler
 STUB(FF187C10)
 STUB(FF18D1CC)
-/*
-STUB(FF000B28)
-STUB(FF00A374)
-STUB(FF005B18)
-STUB(FF005C00)
-STUB(FF18669C)
 
-*/
-NHSTUB(UnsetZoomForMovie, 0xFF1BB954) //not needed
-
-////////////NOT FOUND////////////
-////All pointed to NULL (nullsub_10 -> 0xFF02D4BC)   // SX220
+////All pointed to NULL (nullsub_10 -> 0xFF02D4BC)
 NHSTUB(Unmount_FileSystem, 0xFF02D4BC)
 NHSTUB(Mount_FileSystem, 0xFF02D4BC)
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFF02D4BC)
 NHSTUB(rewinddir, 0xFF02D4BC)
-///////////////NEW/////////////////
 NSTUB(DisableDispatch,0xFF02D4BC)
 NSTUB(CreatePhysicalVram,0xFF02D4BC)
 NSTUB(CreateTaskStrict,0xFF02D4BC)
@@ -226,4 +209,3 @@ NSTUB(taskUnlock,0xFF02D4BC)
 NSTUB(tolower,0xFF02D4BC)
 NSTUB(toupper,0xFF02D4BC)
 NSTUB(utime,0xFF02D4BC)
-
