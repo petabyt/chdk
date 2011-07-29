@@ -440,312 +440,12 @@ void __attribute__((naked,noinline)) init_file_modules_task() {
                  "MOVNE   R1, #0\n"
                  "MOVNE   R0, R5\n"
                  "BLNE    sub_FF08F3F4\n"
-                 "BL      sub_FF08B1AC_my\n"       		 //patched
+                 "BL      sub_FF08B1AC\n"
                  "BL      core_spytask_can_start\n"      //added CHDK: Set "it's-safe-to-start"-Flag for spytask
-				 "CMP     R4, #0\n"
-                 "LDMNEFD SP!, {R4-R6,PC}\n"
-                 "MOV     R0, R5\n"
-                 "LDMFD   SP!, {R4-R6,LR}\n"
-                 "MOV     R1, #0\n"
-				 "B       sub_FF08F3F4\n"
 				 
- );
-}
-
-void __attribute__((naked,noinline)) sub_FF08B1AC_my() {
- 
- asm volatile(
-                 "STMFD   SP!, {R4,LR}\n"
-                 "MOV     R0, #3\n"
-                 "BL      sub_FF06A9D0_my\n"           //patched
-                 "BL      sub_FF169D7C\n"              //nullsub_100
-                 "LDR     R4, =0x4268\n"
-                 "LDR     R0, [R4,#4]\n"
-                 "CMP     R0, #0\n"
-                 "BNE     loc_FF08B1E4\n"
-                 "BL      sub_FF069B68\n"
-                 "BL      sub_FF15943C\n"
-                 "BL      sub_FF069B68\n"
-                 "BL      sub_FF066010\n"
-                 "BL      sub_FF069A3C\n"
-                 "BL      sub_FF1594D4\n"
- "loc_FF08B1E4:\n"
-                 "MOV     R0, #1\n"
-                 "STR     R0, [R4]\n"
-                 "LDMFD   SP!, {R4,PC}\n"
- );
-}
-
-
-void __attribute__((naked,noinline)) sub_FF06A9D0_my() {
- 
- asm volatile(
-                 "STMFD   SP!, {R4-R10,LR}\n"
-                 "MOV     R6, R0\n"
-                 "BL      sub_FF06A980\n"
-                 "LDR     R1, =0x3C5A0\n"
-                 "MOV     R5, R0\n"
-                 "ADD     R4, R1, R0,LSL#7\n"
-                 "LDR     R0, [R4,#0x6C]\n"
-                 "TST     R0, #4\n"
-                 "LDRNE   R1, =0x9C4\n"
-                 "LDRNE   R0, =0xFF06A3C4\n"  //aMounter
-                 "BLNE    sub_FF00EC88\n"     //Assert
-                 "MOV     R1, R6\n"
-                 "MOV     R0, R5\n"
-                 "BL      sub_FF06A138\n"
-                 "LDR     R0, [R4,#0x38]\n"
-                 "BL      sub_FF06B010\n"
-                 "CMP     R0, #0\n"
-                 "STREQ   R0, [R4,#0x6C]\n"
-                 "MOV     R0, R5\n"
-                 "BL      sub_FF06A1C8\n"
-                 "MOV     R0, R5\n"
-                 "BL      sub_FF06A524_my\n"  //patched
-                 "MOV     R9, R0\n"
-                 "MOV     R0, R5\n"
-                 "BL      sub_FF06A840\n"
-                 "LDR     R2, =0x3C620\n"
-                 "LDR     R6, [R4,#0x3C]\n"
-                 "ADD     R1, R5, R5,LSL#4\n"
-                 "LDR     R8, [R4,#0x38]\n"
-                 "LDR     R7, [R2,R1,LSL#2]\n"
-                 "CMP     R6, #0\n"
-                 "AND     R9, R9, R0\n"
-                 "MOV     R5, #0\n"
-                 "MOVEQ   R0, #0x80000001\n"
-                 "BEQ     loc_FF06AAA0\n"
-                 "MOV     R0, R8\n"
-                 "BL      sub_FF069CB4\n"
-                 "CMP     R0, #0\n"
-                 "MOVNE   R5, #4\n"
-                 "MOV     R0, R8\n"
-                 "BL      sub_FF16CCD8\n"
-                 "CMP     R0, #0\n"
-                 "CMPNE   R7, #2\n"
-                 "BICNE   R5, R5, #4\n"
-                 "CMP     R6, #5\n"
-                 "ORRNE   R0, R5, #1\n"
-                 "BICEQ   R0, R5, #1\n"
-                 "CMP     R9, #0\n"
-                 "BICEQ   R0, R0, #2\n"
-                 "ORREQ   R0, R0, #0x80000000\n"
-                 "BICNE   R0, R0, #0x80000000\n"
-                 "ORRNE   R0, R0, #2\n"
-
- "loc_FF06AAA0:\n"
-                 "STR     R0, [R4,#0x40]\n"
-                 "LDMFD   SP!, {R4-R10,PC}\n"
-
- );
-}
-
-void __attribute__((naked,noinline)) sub_FF06A524_my() {
-
- asm volatile(
-                 "STMFD   SP!, {R4-R6,LR}\n"
-                 "MOV     R5, R0\n"
-                 "LDR     R0, =0x3C5A0\n"
-                 "ADD     R4, R0, R5,LSL#7\n"
-                 "LDR     R0, [R4,#0x6C]\n"
-                 "TST     R0, #2\n"
-                 "MOVNE   R0, #1\n"
-                 "LDMNEFD SP!, {R4-R6,PC}\n"
-                 "LDR     R0, [R4,#0x38]\n"
-                 "MOV     R1, R5\n"
-               //  "BL      sub_FF06A24C\n"   
-				 "BL      sub_FF06A24C_my\n"  //patched
-                 "CMP     R0, #0\n"
-                 "LDRNE   R0, [R4,#0x38]\n"
-                 "MOVNE   R1, R5\n"
-                 "BLNE    sub_FF06A3E8\n"
-                 "LDR     R2, =0x3C620\n"
-                 "ADD     R1, R5, R5,LSL#4\n"
-                 "LDR     R1, [R2,R1,LSL#2]\n"
-                 "CMP     R1, #4\n"
-                 "BEQ     loc_FF06A584\n"
-                 "CMP     R0, #0\n"
-                 "LDMEQFD SP!, {R4-R6,PC}\n"
-                 "MOV     R0, R5\n"
-                 "BL      sub_FF069D44\n"
- "loc_FF06A584:\n"
-                 "CMP     R0, #0\n"
-                 "LDRNE   R1, [R4,#0x6C]\n"
-                 "ORRNE   R1, R1, #2\n"
-                 "STRNE   R1, [R4,#0x6C]\n"
-                 "LDMFD   SP!, {R4-R6,PC}\n"
-
-	);
- 
-}
-
-void __attribute__((naked,noinline)) sub_FF06A24C_my() {
-
- asm volatile(
-				 "STMFD   SP!, {R4-R10,LR}\n"
-				 "MOV     R9, R0\n"
-                 "LDR     R0, =0x3C5A0\n"
-                 "MOV     R6, #0\n"
-                 "ADD     R5, R0, R1,LSL#7\n"
-                 "LDR     R0, [R5,#0x3C]\n"
-                 "MOV     R7, R6\n"
-                 "CMP     R0, #7\n"
-                 "MOV     R8, R6\n"
- 				 "ADDCC   PC, PC, R0,LSL#2\n"  
-  		 		 "B       loc_FF06A3A4\n"
-
- "loc_FF06A278:\n"
-                 "B       loc_FF06A2AC\n"
-
- "loc_FF06A27C:\n"
-                 "B       loc_FF06A294\n"
-
- "loc_FF06A280:\n"
-                 "B       loc_FF06A294\n"
-
- "loc_FF06A284:\n"
-                 "B       loc_FF06A294\n"
-
- "loc_FF06A288:\n"
-                 "B       loc_FF06A294\n"
-
- "loc_FF06A28C:\n"
-                 "B       loc_FF06A39C\n"
-
- "loc_FF06A290:\n"
-                 "B       loc_FF06A294\n"
-
- "loc_FF06A294:\n"
-				 "MOV     R2, #0\n"
-                 "MOV     R1, #0x200\n"
-                 "MOV     R0, #2\n"
-                 "BL      sub_FF085288\n"
-                 "MOVS    R4, R0\n"
-                 "BNE     loc_FF06A2B4\n"
-
- "loc_FF06A2AC:\n"
-                 "MOV     R0, #0\n"
-                 "LDMFD   SP!, {R4-R10,PC}\n"
-
- "loc_FF06A2B4:\n"
-                 "LDR     R12, [R5,#0x50]\n"
-                 "MOV     R3, R4\n"
-                 "MOV     R2, #1\n"
-                 "MOV     R1, #0\n"
-                 "MOV     R0, R9\n"
-                 "BLX     R12\n"
-                 "CMP     R0, #1\n"
-                 "BNE     loc_FF06A2E0\n"
-                 "MOV     R0, #2\n"
-                 "BL      sub_FF0853D4\n"       ///ExMemMan.c
-                 "B       loc_FF06A2AC\n"
-
- "loc_FF06A2E0:\n"
-                 "LDR     R1, [R5,#0x64]\n"
-                 "MOV     R0, R9\n"
-                 "BLX     R1\n"
-				 
-		//Allready inserted code
-
-				"MOV   R1, R4\n"           //  pointer to MBR in R1
-				"BL    mbr_read_dryos\n"   //  total sectors count in R0 before and after call
-
-				// Start of DataGhost's FAT32 autodetection code
-				// Policy: If there is a partition which has type W95 FAT32, use the first one of those for image storage
-				// According to the code below, we can use R1, R2, R3 and R12.
-				// LR wasn't really used anywhere but for storing a part of the partition signature. This is the only thing
-				// that won't work with an offset, but since we can load from LR+offset into LR, we can use this to do that :)
-				"MOV     R12, R4\n"                    // Copy the MBR start address so we have something to work with
-				"MOV     LR, R4\n"                     // Save old offset for MBR signature
-				"MOV     R1, #1\n"                     // Note the current partition number
-				"B       dg_sd_fat32_enter\n"          // We actually need to check the first partition as well, no increments yet!
-     "dg_sd_fat32:\n"
-				"CMP     R1, #4\n"                     // Did we already see the 4th partition?
-				"BEQ     dg_sd_fat32_end\n"            // Yes, break. We didn't find anything, so don't change anything.
-				"ADD     R12, R12, #0x10\n"            // Second partition
-				"ADD     R1, R1, #1\n"                 // Second partition for the loop
-     "dg_sd_fat32_enter:\n"
-				"LDRB    R2, [R12, #0x1BE]\n"          // Partition status
-				"LDRB    R3, [R12, #0x1C2]\n"          // Partition type (FAT32 = 0xB)
-				"CMP     R3, #0xB\n"                   // Is this a FAT32 partition?
-				"CMPNE   R3, #0xC\n"                   // Not 0xB, is it 0xC (FAT32 LBA) then?
-				"BNE     dg_sd_fat32\n"                // No, it isn't. Loop again.
-				"CMP     R2, #0x00\n"                  // It is, check the validity of the partition type
-				"CMPNE   R2, #0x80\n"
-				"BNE     dg_sd_fat32\n"                // Invalid, go to next partition
-                                                 // This partition is valid, it's the first one, bingo!
-				"MOV     R4, R12\n"                    // Move the new MBR offset for the partition detection.
-
-     "dg_sd_fat32_end:\n"
-				// End of DataGhost's FAT32 autodetection code
-                 "MOV     R1, R0\n"       //SX220 . Was not present in sx210
-				 "LDRB    R0, [R4,#0x1C9]\n"
-                 "LDRB    R2, [R4,#0x1C8]\n"
-                 "LDRB    R12, [R4,#0x1CC]\n"
-                 "MOV     R0, R0,LSL#24\n"
-                 "ORR     R0, R0, R2,LSL#16\n"
-                 "LDRB    R2, [R4,#0x1C7]\n"
-                 "LDRB    R3, [R4,#0x1BE]\n"
-                 "ORR     R0, R0, R2,LSL#8\n"
-                 "LDRB    R2, [R4,#0x1C6]\n"
-                 "CMP     R3, #0\n"
-                 "CMPNE   R3, #0x80\n"
-                 "ORR     R0, R0, R2\n"
-                 "LDRB    R2, [R4,#0x1CD]\n"
-                 "MOV     R2, R2,LSL#24\n"
-                 "ORR     R2, R2, R12,LSL#16\n"
-                 "LDRB    R12, [R4,#0x1CB]\n"
-                 "ORR     R2, R2, R12,LSL#8\n"
-                 "LDRB    R12, [R4,#0x1CA]\n"
-                 "ORR     R2, R2, R12\n"
-           //      "LDRB    R12, [R4,#0x1FE]\n"     //remains commented as in sx200 and sx210
-           //      "LDRB    R4, [R4,#0x1FF]\n"      //remains commented as in sx200 and sx210
-                 "LDRB    R12, [LR,#0x1FE]\n"           // + First MBR signature byte (0x55), LR is original offset.
-                 "LDRB    LR, [LR,#0x1FF]\n"            // + Last MBR signature byte (0xAA), LR is original offset.
- 			     "BNE     loc_FF06A370\n"
-                 "CMP     R1, R0\n"
-                 "BCC     loc_FF06A370\n"
-                 "ADD     R3, R0, R2\n"
-                 "CMP     R3, R1\n"
-                 "CMPLS   R12, #0x55\n"
-                 "CMPEQ   LR, #0xAA\n"  			// + R4 to LR
-                 "MOVEQ   R6, R0\n"
-                 "MOVEQ   R7, R2\n"
-                 "MOVEQ   R4, #1\n"
-                 "BEQ     loc_FF06A374\n"
-
- "loc_FF06A370:\n"
-                 "MOV     R4, R8\n"
-
- "loc_FF06A374:\n"
-				 "MOV     R0, #2\n"
-                 "BL      sub_FF0853D4\n"  		//ExMemMan.c
-                 "CMP     R4, #0\n"
-                 "BNE     loc_FF06A3B0\n"
-                 "LDR     R1, [R5,#0x64]\n"
-                 "MOV     R6, #0\n"
-                 "MOV     R0, R9\n"
-                 "BLX     R1\n"
-                 "MOV     R7, R0\n"
-                 "B       loc_FF06A3B0\n"
-
- "loc_FF06A39C:\n"
-                 "MOV     R7, #0x40\n"
-                 "B       loc_FF06A3B0\n"
-
- "loc_FF06A3A4:\n"
-                 "LDR     R1, =0x623\n"
-                 "LDR     R0, =0xFF06A3C4\n"  	//"Mounter.c" aMounter_c
-                 "BL      sub_FF00EC88\n"   	//ASSERT
-
- "loc_FF06A3B0:\n"
-                 "ADD     R1, R5, #0x44\n"
-                 "STMIA   R1, {R6-R8}\n"
-                 "MOV     R0, #1\n"
-                 "LDMFD   SP!, {R4-R10,PC}\n"
-
- );
-}
+				 "B		  sub_FF095260\n"				 //continue in firmware
+	 );
+}			 
 
 // In SX220 called RotaryEncoder FF05671C
 void __attribute__((naked,noinline)) JogDial_task_my() {
@@ -818,7 +518,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
  "labelB:\n"
  //------------------  original code ------------------
  			
-				 "LDR     R0, =0x25BC\n"		//=0xFF0569E4, changing all asc_... fixed the crash when rotating the wheel
+				 "LDR     R0, =0x25C8\n"		//=0xFF0569E4, changing all asc_... fixed the crash when rotating the wheel
                  "LDR     R0, [R0,R4,LSL#2]\n"
                  "BL      sub_FF02BCFC\n"
                  "LDR     R2, =0xFF056668\n"
@@ -852,7 +552,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
                  "LDR     R0, [R9,R4,LSL#2]\n"
                  "CMP     R0, #0\n"
                  "BEQ     loc_FF05697C\n"
-                 "LDR     R7, =0x25BC\n"   //=0xFF0569E4
+                 "LDR     R7, =0x25C8\n"   //=0xFF0569E4
                  "LDR     R0, [R7,R4,LSL#2]\n"
                  "BL      sub_FF02BCFC\n"
                  "LDR     R2, =0xFF056674\n"
@@ -911,7 +611,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
                  "LDR     R1, [SP,#4]\n"
                  "BL      sub_FF0240E0\n"
                  "LDR     R0, [R7,#0x10]\n"
-                 "LDR     R7, =0x25BC\n"		//=0xFF0569E4
+                 "LDR     R7, =0x25C8\n"		//=0xFF0569E4
                  "STR     R0, [R9,R4,LSL#2]\n"
                  "LDRH    R1, [R11]\n"
                  "LDR     R0, [SP,#0x18]\n"

@@ -137,8 +137,13 @@ long get_target_file_num() {
 
     n = (n>>4)&0x3FFF;
 
-    //n+=22;
-	return n;
+    return n;
+}
+
+void get_target_dir_name(char *out)
+{	
+	extern void _GetImageFolder(char*,int,int,int);
+	_GetImageFolder(out,get_file_next_counter(),0x400,time(NULL));
 }
 
 long get_target_dir_num() {
@@ -147,29 +152,6 @@ long get_target_dir_num() {
 	n = get_file_next_counter();
 	n = (n>>18)&0x3FF;
 	return n;
-}
-
-void get_target_dir_name(char *out)
-{	
-	//getting the dir name directly from ram @0xBECA4. @FF159918
-	char str[14];
-	strncpy(str, (char*)((int*)(0xBECA4)), 14);
-	sprintf(out, "A%s", str);
-	
-	//SX220 crashes on GetImageFolder (Mounter.c assert)
-/*	extern void _GetImageFolder(char*,int,int,int);
-	out[0] = 'A';
-	_GetImageFolder(out+1,get_file_next_counter(),0x400,time(NULL));*/
-	
-	//this one worked only for monthly, not for daily
-/*	int month;
-	struct tm *ttm;
-	unsigned long t;
-	t = time(NULL);
-	ttm = localtime(&t);
-	month = ttm->tm_mon + 1;
-	sprintf(out, "A/DCIM/%03d___%02d", get_target_dir_num(), month);*/
-
 }
 
 int circle_of_confusion = 5;
