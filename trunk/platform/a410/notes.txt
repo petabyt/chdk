@@ -9,6 +9,10 @@ Camera depending notes:
 
 Changelog
 
+Beta 4, 2011-07-28
+- experimental change: movie time limit increased to 60 minutes / recording in 320x240, 640x480 modes
+  tested in both modes, resulting files show no sign of corruption
+
 Beta 3, 2011-07-11
 - modemap is now correct
 - USB remote should work
