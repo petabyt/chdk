@@ -128,5 +128,7 @@
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
+												
+	#define CAM_DETECT_SCREEN_ERASE 1			// http://chdk.setepontos.com/index.php?topic=6705.msg71062#msg71062													
     
 //----------------------------------------------------------
