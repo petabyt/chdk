@@ -151,7 +151,7 @@ void camera_set_led(int led, int state, int bright) {
 }
 
 int get_flash_params_count(void){
- return 132; 
+ return 0x9a; 
 }
 
 void JogDial_CW(void){

@@ -83,6 +83,21 @@ const ISOTable iso_table[] = {
 };
 
 
+/*
+http://www.usa.canon.com/cusa/consumer/products/cameras/digital_cameras/powershot_sx130_is#Specifications
+Shooting Modes:
+    M, Av, Tv, P, Auto, Easy, Portrait, Landscape, Kids & Pets, SCN, Movie
+
+SCN Scene Modes:
+    Smart Shutter, Low Light, Super Vivid, Poster Effect, Color Accent, Color Swap, 
+	Fish-eye Effect, Miniature Effect, Beach, Foliage, Snow, Fireworks
+
+Movie Modes:
+    Standard, Miniature Effect, Color Accent, Color Swap
+
+Smart Shutter Modes:
+    Smile, Wink Self-timer, Face Self-Timer
+*/
 // Corrected for SX130
 static const CapturemodeMap modemap[] = {
 	{ MODE_AUTO,               32768  },
@@ -92,15 +107,17 @@ static const CapturemodeMap modemap[] = {
 	{ MODE_M,                  32769  },
   	{ MODE_KIDS_PETS,          32786  },
 	{ MODE_LANDSCAPE,          32782  },
-	{ MODE_PORTRAIT,           32873  },
+	{ MODE_PORTRAIT,           32783  },
 	{ MODE_EASY,               33314  },
 	
 	{ MODE_VIDEO_COLOR_ACCENT, 2612   },
 	{ MODE_VIDEO_COLOR_SWAP,   2613   },
 	{ MODE_VIDEO_STD,          2614   },
-	//{ MODE_VIDEO_MINIATURE,    2620   }, // not defined in modelist.h
+	{ MODE_VIDEO_MINIATURE,    2620   },
 
-	{ MODE_SCN_SMART_SHUTTER,  16938  },
+    { MODE_SCN_FACE_SELF_TIMER,16936  },
+	{ MODE_SCN_SMART_SHUTTER,  16937  },
+    { MODE_SCN_WINK_SELF_TIMER,16938  },
 	{ MODE_SCN_LOWLIGHT,       16417  },
 	{ MODE_SCN_SUPER_VIVID,    16934  },
 	{ MODE_SCN_POSTER_EFFECT,  16935  },
@@ -111,7 +128,7 @@ static const CapturemodeMap modemap[] = {
 	{ MODE_SCN_BEACH,          16407  },
 	{ MODE_SCN_FOLIAGE,        16405  },
 	{ MODE_SCN_SNOW,           16406  },
-	{ MODE_SCN_FIREWORK,       16406  }
+	{ MODE_SCN_FIREWORK,       16408  }
 };
 
 
