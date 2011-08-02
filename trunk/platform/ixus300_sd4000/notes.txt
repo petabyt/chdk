@@ -5,7 +5,7 @@ Firmware:   1.00d
 Developer:  pixel::doc (http://pixeldoc.kicks-ass.net/)
 
 
---- Note ------------------------------------------------------------
+--- Legal -----------------------------------------------------------
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
 TITLE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE
@@ -15,13 +15,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 Software or Author are not affiliated in any way with Canon INC.
 Product and Company names mentioned herein may be the trademarks of their respective owners.
 
-##############################################################################################################################
-Camera did shutdown cause by messed up filessystem on SD-Card
-Remember to reformat your sd-card and copy fresh files to avoid strange error / crash / shutdown or check filesystem.
-Remember to delete chdk config file sometimes after messing around ("Reset options to default").
-##############################################################################################################################
 
+--- Notes -----------------------------------------------------------
+Camera does not support ver.req and vers.req .
 Thanks to reyalp, asm1989 and some other guys for their support.
+
+
+--- CHDK ALT Mode ---------------------------------------------------
+To enter CHDK ALT mode press LEFT + UP on JogDial (Camera has no special button like Print for CHDK).
 
 
 --- Links -----------------------------------------------------------
@@ -30,42 +31,6 @@ Thanks to reyalp, asm1989 and some other guys for their support.
 * http://chdk.setepontos.com/index.php?topic=5574.0 - Int. Forum SD4000 Porting Thread
 * http://pixeldoc.kicks-ass.net/projects/chdk/ixus300_sd4000/
 * http://www.canon.com.my/p/EN/114-Digital-Cameras/203-IXUS/1556-Digital-IXUS-300-HS/
-
-
---- Developer Stuff -------------------------------------------------
-* Rom Start address: 0xFF810000
-* NEED_ENCODED_DISKBOOT=4 (DISKBOOT Encoding)
-* KEYSYS=d4a (Dancing Bits)
-* camera has IS
-* Propset 3 (but some props are different)
-* OS: DRYOS version 2.3, release #0043
-* Iris type aperture (used with ND filter)
-* Port is based on A720 & SD990 & SX210 & G11 & D10
-* Sensor: 10 MP, 12 Bit, RGGB Color Palette
-* UART Serial Connection to access Event Shell and DryOS Shell (http://chdk.wikia.com/wiki/SD4000#UART), 3.3V Voltage Level, 115200/8/N/1
-
-* camera does not support ver.req and vers.req
-* udumper "NewDryOs" (CardTricks) does not support 2010 cameras
-* Canon Basic dumper works
-
-* Event Procedure SystemEventInit() is not available anymore, newest cameras (DryOS rel 43 and later) only have System.Create()
-
-
---- Hardware address
-0xC0220130  Green Led (backside)
-0xc0220134  Red Led (backside)
-0xC0223030  Red AF Led (front)
-0xC0220114  JogDiag ?!?
-0xC0220118  JogDiag ?!?
-0xC022011C  JogDiag ?!?
-
-
---- Keyboard Status (physw_status)
-physw_status[0] = 0x32E94   // 0xC0220200 ?
-physw_status[1] = 0x32E98   // 0xC0220204 ?
-physw_status[2] = 0x32E9C   // 0xC0220208 ?
-physw_status[2] = 0x20000   // SD_READONLY_FLAG = SD-Card Status (locked / unlocked)
-physw_status[2] = 0x80000   // USB_MASK = USB-Power (triggered around 3,5V)
 
 
 --- Changelog -------------------------------------------------------
@@ -86,9 +51,18 @@ physw_status[2] = 0x80000   // USB_MASK = USB-Power (triggered around 3,5V)
   * Added Continous Bracketing fix from chdk2011
 * 01.02.2011 - Beta v9 is available
 * 15.02.2011 - Beta v10 is available
+* 31.05.2011 - Beta v11 is available
+* 01.06.2011 - Source added to SVN at Revision #1196
+
+
+--- Troubleshoot -----------------------------------------------------
+* Check SD-Card filesystem
+* Reformat your SD-Card and copy fresh CHDK files to avoid strange error / crash / shutdown
+* Delete CHDK config file or use "Reset options to default".
 
 
 --- ToDo ------------------------------------------------------------
+* Multi Partition Support (Autoboot CHDK with 2 Partitions on SD-Card)
 * Make bootable does not work (WriteSDCard address wrong?)
 * "Debug Parameters -> Create card with two partitions" does cause shutdown (WriteSDCard address wrong?)
 * tweak Color Palette (CAM_BITMAP_PALETTE), CHDK OSD Colors does not fit and are different in playback/record mode
@@ -99,11 +73,9 @@ physw_status[2] = 0x80000   // USB_MASK = USB-Power (triggered around 3,5V)
 * Histogram works, but Canon Color Palette does not have required colors for correct display
 * Zebra does not work (shows some shatterd dark (grey) pixel) - http://chdk.setepontos.com/index.php?topic=3410.msg32043#msg32043
 * find PROPCASE_ASPECT_RATIO to fix Zebra & co (and Y-Correction Fix like SX30 suggested by philmoz)
-* RAW files are unreadable, but DNG with "dummy" badpixel.bin from SX210 is useable
 * test "shoot_full" & "shoot_half" commands behave like they should
 * sometimes Exception (Vector 0x04) on exiting ALT Mode after script execution
 * Problems with some Scripts (probaly fixed since Stack Size commit)
-* Multi Partition Support (Autoboot CHDK with 2 Partitions on SD-Card)
 * Aperture Override aperture not working ?
 * ND Filter State not working ?
 * Remote Function does continuous mode only after second "Remote Shutter" (what is correct behavior on other Cameras?)
@@ -117,3 +89,8 @@ physw_status[2] = 0x80000   // USB_MASK = USB-Power (triggered around 3,5V)
   * Mode Switch (Playback / Record) does work
   * All functions seems to work
 * create badpixel for DNG without script does work
+* Quality Override "super fine" does work (bigger filesize, less JPG artifacts, correct EXIF)
+
+
+--- Developer Stuff -------------------------------------------------
+look at notes2.txt

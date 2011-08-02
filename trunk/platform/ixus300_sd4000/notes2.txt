@@ -1,6 +1,42 @@
 --- CHDK Canon IXUS 300 HS / Powershot SD 4000 IS / IXY 30S ------------------------
 
 
+--- Developer Stuff -------------------------------------------------
+* Rom Start address: 0xFF810000
+* NEED_ENCODED_DISKBOOT=4 (DISKBOOT Encoding)
+* KEYSYS=d4a (Dancing Bits)
+* Propset 3 (but some props are different)
+* OS: DRYOS version 2.3, release #0043
+* Iris type aperture (used with ND filter)
+* Port is based on A720 & SD990 & SX210 & G11 & D10
+* Sensor: 10 MP, 12 Bit, RGGB Color Palette
+* UART Serial Connection to access Event Shell and DryOS Shell (http://chdk.wikia.com/wiki/SD4000#UART), 3.3V Voltage Level, 115200/8/N/1
+
+* udumper "NewDryOs" (CardTricks) does not support 2010 cameras
+* Canon Basic dumper works
+
+
+--- Notes
+* Event Procedure SystemEventInit() is not available anymore, newer cameras (DryOS rel 43 and later) only have System.Create()
+
+
+--- Hardware address
+0xC0220130  Green Led (backside)
+0xc0220134  Red Led (backside)
+0xC0223030  Red AF Led (front)
+0xC0220114  JogDiag ?!?
+0xC0220118  JogDiag ?!?
+0xC022011C  JogDiag ?!?
+
+
+--- Keyboard Status (physw_status)
+physw_status[0] = 0x32E94   // 0xC0220200 ?
+physw_status[1] = 0x32E98   // 0xC0220204 ?
+physw_status[2] = 0x32E9C   // 0xC0220208 ?
+physw_status[2] = 0x20000   // SD_READONLY_FLAG = SD-Card Status (locked / unlocked)
+physw_status[2] = 0x80000   // USB_MASK = USB-Power (triggered around 3,5V)
+
+
 --- PropertyCase
 Number   Name                       Location            String
 1
@@ -133,7 +169,7 @@ FF810000    ROMBASEADDR             start of rom
 FFFFFFFF                            end of rom
 
 
---- Canon Basic - UIFS_WriteFirmInfoToFile()
+--- Event Procedure - UIFS_WriteFirmInfoToFile()
 Canon IXUS 300 HS
 P-ID:31F7  PAL D
 Firmware Ver GM1.00D (1.0.0.0)
@@ -146,7 +182,7 @@ Mecha Firm Ver.  2.08
 Empty Error List.
 
 
---- Canon Basic - ShowAllTaskInfo()
+--- Event Procedure - ShowAllTaskInfo()
  NAME            ID   STATE PRI         WAIT(ID)      STACK  %        SP
 errLogTask 00dc001c SUSPEND   0         -------   0040/0400 06  00386558
 WdtPrint   001d0007    WAIT   1    SEM(001c0014)  0098/0200 29  0037c468
@@ -214,7 +250,7 @@ ClockSave  000e0004   READY  32         -------   0060/0200 18  00379e58
 idle       00010001   READY  33         -------   0070/00a0 70  00379c40
 
 
---- Canon Basic - OpLog.WriteToSD()
+--- Event Procedure - OpLog.WriteToSD()
 #OPERATION LOG
 #VERSION=0104
 #COMMENT=
@@ -235,7 +271,7 @@ DATALOST= 0
 00001820,0x00001003,0,0x00410000,0x00000002,0x00008000
 
 
---- Canon Basic - GetLogToFile() - ROMLOG ASSERT
+--- Event Procedure - GetLogToFile() - ROMLOG ASSERT
 ASSERT!! EvntProc.c Line 221
 Occured Time  2010:08:25 20:32:30
 Task ID: 14811165
@@ -449,7 +485,7 @@ CameraConDump:
 
 
 
---- ROMLOG Execption
+--- ROMLOG Exception
 Exception!! Vector 0x10
 Occured Time  2010:08:26 22:27:41
 Task ID: 1441797
