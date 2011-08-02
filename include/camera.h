@@ -107,8 +107,8 @@
 // end of section by nandoid
 
 #undef CAM_QUALITY_OVERRIDE                     // define this in platform_camera.h to enable 'Super Fine' JPEG compression mode
-												// used to allow super fine JPEG option on cameras where this has been removed
-												// from the Canon menu. Note: may not actually work on all cameras.
+                                                // used to allow super fine JPEG option on cameras where this has been removed
+                                                // from the Canon menu. Note: may not actually work on all cameras.
 
 #undef CAM_ZEBRA_ASPECT_ADJUST                  // zebra needs to account for real bitmap size being different from what lib.c reports
                                                 // also used by some cameras with normal bitmap layouts for memory saving ?
@@ -136,7 +136,7 @@
 #undef  CAM_ACTIVE_AREA_Y1                      // Define usable area of the sensor
 #undef  CAM_ACTIVE_AREA_X2                      // Define usable area of the sensor
 #undef  CAM_ACTIVE_AREA_Y2                      // Define usable area of the sensor
-#undef  cam_CFAPattern                          // Camera Bayer sensor data layout
+#undef  cam_CFAPattern                          // Camera Bayer sensor data layout (DNG colors are messed up if not correct)
 #undef  CAM_COLORMATRIX1                        // DNG color profile matrix
 #undef  cam_CalibrationIlluminant1              // DNG color profile illuminant
 #undef  CAM_DNG_EXPOSURE_BIAS                   // Specify DNG exposure bias value (to override default of -0.5 in the dng.c code)
@@ -156,24 +156,24 @@
 #define ASPECT_GRID_XCORRECTION(x)    (x)        // Aspect ratio correction for grids. Grids are designed on a 360x240 logical screen size which matches the
 #define ASPECT_GRID_YCORRECTION(y)    (y)        // default CHDK logical screen size so no correction needed.
 
-#undef    PARAM_CAMERA_NAME                      // parameter number for GetParameterData to get camera name
+#undef  PARAM_CAMERA_NAME                        // parameter number for GetParameterData to get camera name
 
 
-#undef  CAM_FIRMWARE_MEMINFO                    // Use 'GetMemInfo' (dryos) or 'memPartInfoGet'/'memPartFindMax' (vxworks)
-                                                // function in firmware to get free memory details
-                                                // GetMemInfo should be found correctly by the gensig/finsig signature
-                                                // finder for all dryos based cameras.
+#undef  CAM_FIRMWARE_MEMINFO                     // Use 'GetMemInfo' (dryos) or 'memPartInfoGet'/'memPartFindMax' (vxworks)
+                                                 // function in firmware to get free memory details
+                                                 // GetMemInfo should be found correctly by the gensig/finsig signature
+                                                 // finder for all dryos based cameras.
 
-#undef CAM_NO_MEMPARTINFO                      // VXWORKS camera does not have memPartInfoGet, fall back to memPartFindMax
+#undef CAM_NO_MEMPARTINFO                        // VXWORKS camera does not have memPartInfoGet, fall back to memPartFindMax
 
 
-#undef CAM_DRIVE_MODE_FROM_TIMER_MODE           // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
-                                                // Used to enabled bracketing in custom timer, required on many recent cameras
-                                                // see http://chdk.setepontos.com/index.php/topic,3994.405.html
+#undef CAM_DRIVE_MODE_FROM_TIMER_MODE            // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
+                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
+                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-#undef CAM_AV_OVERRIDE_IRIS_FIX					// for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
+#undef CAM_AV_OVERRIDE_IRIS_FIX                  // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
 
-#undef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE        // For cameras with 'low light' mode that does now work with raw define this
+#undef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE         // For cameras with 'low light' mode that does now work with raw define this
 
 //----------------------------------------------------------
 // Override Default values for Camera if necessary
