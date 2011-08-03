@@ -64,6 +64,8 @@
 
     #define CAM_QUALITY_OVERRIDE        1           // enable 'super fine' override, OK
 
+    #define CAM_DETECT_SCREEN_ERASE     1           // ToDo: CHDK OSD flicker more often, OSD redrawn is more reliable
+
     // ToDo
     #define CAM_COLORMATRIX1                               \
       640019, 1000000, -220031, 1000000, -96241, 1000000,  \
