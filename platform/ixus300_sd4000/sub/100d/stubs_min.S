@@ -40,11 +40,14 @@ DEF(enabled_refresh_physical_screen, 0x92CC)    // ROM:FFA1339C or ROM:FFA13570,
 // ROM:FFAC96C0                 BX      LR
 DEF(FlashParamsTable, 0xFFC00624)   // referenced at ROM:FFAC96B8
 
+// ToDo: check if correct, in playback CHDK OSD does not hide if function is active
 // ROM:FF890234, in function StartRecModeMenu() or eventproc_StartRecModeMenu()
-DEF(canon_menu_active, 0x3040)   // 0x303C + 4 ?!!
+//DEF(canon_menu_active, 0x303C)    // ROM:FF890234 0x303C
+DEF(canon_menu_active, 0x3040)    // ROM:FF890234 0x303C + ROM:FF890238 4
 
-// ROM:FF8A3280, in taskcreate_DSITask()
-DEF(canon_shoot_menu_active, 0x3D550)   // ?!?
+// ToDo: check if correct
+// if canon_shoot_menu_active is wrong enable CAM_SHOW_OSD_IN_SHOOT_MENU as a workaround to display CHDK OSD in record mode
+DEF(canon_shoot_menu_active, 0x7B5D)    // ROM:FF9ABD94 0x7B5C + ROM:FF9ABD98 1
 
 // search for string "PressRightButton"
 DEF(levent_table, 0xFFB9F59C)

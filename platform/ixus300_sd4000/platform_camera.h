@@ -47,7 +47,7 @@
     #define DNG_SUPPORT                 1
     #define CAM_HAS_JOGDIAL             1
     #define CAM_FEATURE_FEATHER         1
-    #define CAM_SHOW_OSD_IN_SHOOT_MENU  1        // enables CHDK OSD in record mode
+    //#define CAM_SHOW_OSD_IN_SHOOT_MENU  1         // not required anymore, workaround to force CHDK to display OSD in record mode while canon_shoot_menu_active was wrong
     #define CAM_MULTIPART               1        // ToDo: test if its working
     #define CAM_DATE_FOLDER_NAMING      1
     //#define CAM_DRAW_EXPOSITION         1      // not required because Canon Firmware does always show it on Shutter half press
