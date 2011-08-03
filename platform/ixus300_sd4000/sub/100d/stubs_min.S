@@ -38,7 +38,7 @@ DEF(enabled_refresh_physical_screen, 0x92CC)    // ROM:FFA1339C or ROM:FFA13570,
 // ROM:FFAC96B8                 LDR     R1, =FlashParamsTable
 // ROM:FFAC96BC                 LDR     R0, [R1,R0,LSL#2]
 // ROM:FFAC96C0                 BX      LR
-DEF(FlashParamsTable, 0xFFC00624)   // referenced at ROM:FFAC96B8
+DEF(FlashParamsTable, 0xFFC00624)    // referenced at ROM:FFAC96B8
 
 // ToDo: check if correct, in playback CHDK OSD does not hide if function menu is active
 // ROM:FF890234, in function StartRecModeMenu() or eventproc_StartRecModeMenu()
@@ -53,19 +53,19 @@ DEF(canon_shoot_menu_active, 0x7B5D)    // ROM:FF9ABD94 0x7B5C + ROM:FF9ABD98 1
 DEF(levent_table, 0xFFB9F59C)
 
 // ROM:FF96B418 or ROM:FF96A780 or ROM:FF96B0F8, found in task_MovieRecord()
-DEF(movie_status, 0x6A14)   // 0x69D8 + 0x3C, OK
+DEF(movie_status, 0x6A14)    // 0x69D8 + 0x3C, OK
 
 // ROM:FF99D340
-DEF(recreview_hold, 0x780E)   // 0x780C + 2 ?!?
+DEF(recreview_hold, 0x780E)    // 0x780C + 2 ?!?
 
 // ROM:FF965978
-DEF(zoom_busy, 0x6908)  // 0x68EC + 0x1C ?!?
+DEF(zoom_busy, 0x6908)    // 0x68EC + 0x1C ?!?
 
 // ROM:FF961C50
-DEF(focus_busy, 0x67F0) //  0x67E8 + 0x8 ?!?
+DEF(focus_busy, 0x67F0)    // 0x67E8 + 0x8 ?!?
 
 // ROM:FFACC8B4, search for "ZoomCon_EnterCaptModeChange"
-DEF(zoom_status, 0x315B)   // ?!?
+DEF(zoom_status, 0x315B)    // ?!?
 
 // ROM:FFA114FC, called by RefreshPhysicalScreen()
 DEF(full_screen_refresh, 0x926C)
@@ -74,6 +74,6 @@ DEF(full_screen_refresh, 0x926C)
 DEF(some_flag_for_af_scan, 0x6DD8)
 
 
-// --- ToDo
+// --- ToDo: required ?
 DEF(some_f_for_dng, 0xDEAD)          // ??? TODO NOT FOUND!
 DEF(second_ext_for_dng, 0xDEAD)      // ??? TODO NOT FOUND!
