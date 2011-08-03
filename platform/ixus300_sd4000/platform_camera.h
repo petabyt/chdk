@@ -20,24 +20,25 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define CAM_PROPSET                 3        // ToDo
+    #define CAM_PROPSET                 3           // ToDo: check PropSet 4 & 5
     #define CAM_DRYOS                   1
-    #define CAM_DRYOS_2_3_R39           1        // ROM:FFB5E1C0, actually its DRYOS version 2.3, release #0043
+    #define CAM_DRYOS_2_3_R39           1           // ROM:FFB5E1C0, actually its DRYOS version 2.3, release #0043
 
-    #undef  CAM_BITMAP_PALETTE                   // shut up compiler
-    //#define CAM_BITMAP_PALETTE          8        // canon palette does not contain all colors anymore like on vxworks and palette is different in playback/record modus
-    #define CAM_BITMAP_PALETTE          5        // ToDo
+    #undef  CAM_BITMAP_PALETTE                      // shut up compiler
+    // ToDo: canon palette does not contain all colors anymore like on vxworks and palette is different in playback/record mode
+    //#define CAM_BITMAP_PALETTE          8
+    #define CAM_BITMAP_PALETTE          5           // ToDo
 
-    #undef  CAM_UNCACHED_BIT                     // shut up compiler
-    #define CAM_UNCACHED_BIT            0x40000000   // ROM:FF88A248 via ExMem.FreeCacheable()
+    #undef  CAM_UNCACHED_BIT                        // shut up compiler
+    #define CAM_UNCACHED_BIT            0x40000000  // ROM:FF88A248 via ExMem.FreeCacheable()
 
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_SYNCH
     #define CAM_HAS_ND_FILTER           1
     #define CAM_HAS_IRIS_DIAPHRAGM      1
-    //#undef  CAM_HAS_MANUAL_FOCUS                  // ToDo: test if its working
+    //#undef  CAM_HAS_MANUAL_FOCUS                  // ToDo: working ?
     //#undef  CAM_CAN_SD_OVERRIDE                   // ToDo: looks like always cause ASSERT Error "FocusLensController.c Line 714" on CaptSeqTask
-    //#undef  CAM_USE_ZOOM_FOR_MF                   // ToDo: test if its working
+    //#undef  CAM_USE_ZOOM_FOR_MF                   // ToDo: working ?
     #define CAM_HAS_USER_TV_MODES       1
     //#define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO    // canon firmware allow optical zoom while recording movie
@@ -48,17 +49,20 @@
     #define CAM_HAS_JOGDIAL             1
     #define CAM_FEATURE_FEATHER         1
     //#define CAM_SHOW_OSD_IN_SHOOT_MENU  1         // not required anymore, workaround to force CHDK to display OSD in record mode while canon_shoot_menu_active was wrong
-    #define CAM_MULTIPART               1        // ToDo: test if its working
+    #define CAM_MULTIPART               1           // ToDo: working ?
     #define CAM_DATE_FOLDER_NAMING      1
-    //#define CAM_DRAW_EXPOSITION         1      // not required because Canon Firmware does always show it on Shutter half press
-    //#define CAM_ADJUSTABLE_ALT_BUTTON   1      // ToDo
+    //#define CAM_DRAW_EXPOSITION         1         // not required because Canon Firmware does always show it on Shutter half press
+    //#define CAM_ADJUSTABLE_ALT_BUTTON   1         // ToDo: let user choose different key combo if possible
 
-    #define  CAM_CHDK_PTP               1
+    #define CAM_CHDK_PTP                1           // OK
 
-    #define PARAM_CAMERA_NAME           4        // parameter number for GetParameterData to get camera name
+    #define PARAM_CAMERA_NAME           4           // OK
 
-    // colors are messed up in DNG if not correct
-    #define cam_CFAPattern 0x02010100            // Red  Green  Green  Blue, OK
+    #define cam_CFAPattern 0x02010100               // RAW/DNG: Red  Green  Green  Blue, OK
+
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE          // ToDo: working ?
+
+    #define CAM_QUALITY_OVERRIDE        1           // enable 'super fine' override, OK
 
     // ToDo
     #define CAM_COLORMATRIX1                               \
@@ -66,34 +70,34 @@
      -77419,  1000000, 639766,  1000000,  44009, 1000000,  \
       17965,  1000000, 78396,   1000000, 231868, 1000000
 
-    #define cam_CalibrationIlluminant1  1        // ToDo: Daylight ?
+    #define cam_CalibrationIlluminant1  1           // ToDo: Daylight ?
 
-    #define CAM_RAW_ROWPIX              3816     // ROM:FFB28EEC
-    #define CAM_RAW_ROWS                2784     // ROM:FFB28EF4
+    #define CAM_RAW_ROWPIX              3816        // ROM:FFB28EEC
+    #define CAM_RAW_ROWS                2784        // ROM:FFB28EF4
 
-    #define CAM_JPEG_WIDTH              3648     // JPEG Exif data or ROM:FFB28EFC
-    #define CAM_JPEG_HEIGHT             2736     // JPEG Exif data or ROM:FFB28F04
+    #define CAM_JPEG_WIDTH              3648        // JPEG Exif data or ROM:FFB28EFC
+    #define CAM_JPEG_HEIGHT             2736        // JPEG Exif data or ROM:FFB28F04
 
     // http://chdk.setepontos.com/index.php?topic=6122.0
     // use exiftool -activearea="24 120 2764 3784" to change values till DNG fit
     // use even numbers!
 
-    // without Dark Frame
-    #define CAM_ACTIVE_AREA_X1          120      // x offset (right)
-    #define CAM_ACTIVE_AREA_Y1          24       // y offset (down)
+    // RAW/DNG without Dark Frame
+    #define CAM_ACTIVE_AREA_X1          120         // x offset (right)
+    #define CAM_ACTIVE_AREA_Y1          24          // y offset (down)
     #define CAM_ACTIVE_AREA_X2          3784
     #define CAM_ACTIVE_AREA_Y2          2764
 
     /*
-    // with Dark Frame
-    #define CAM_ACTIVE_AREA_X1          92       // x offset (right)
-    #define CAM_ACTIVE_AREA_Y1          4        // y offset (down)
+    // RAW/DNG with Dark Frame
+    #define CAM_ACTIVE_AREA_X1          92          // x offset (right)
+    #define CAM_ACTIVE_AREA_Y1          4           // y offset (down)
     #define CAM_ACTIVE_AREA_X2          3812
     #define CAM_ACTIVE_AREA_Y2          2784
     */
 
     /*
-    // Test values to messure correct "crop" Values
+    // Test values to messure correct buffer "crop" Values
     #define CAM_ACTIVE_AREA_X1          0
     #define CAM_ACTIVE_AREA_Y1          0
     #define CAM_ACTIVE_AREA_X2          3816
@@ -107,12 +111,12 @@
     #undef  CAM_BLACK_LEVEL
     #define CAM_BLACK_LEVEL             127
 
-    #define PARAM_CAMERA_NAME           4    // parameter number (index) for GetParameterData to get Camera Name
+    #define PARAM_CAMERA_NAME           4           // parameter number (index) for GetParameterData to get Camera Name
     #define DNG_EXT_FROM                ".CR2"
 
-    // everthing below is ToDo !!!!!!!!!!!!!!!!
+    // --- everthing below is ToDo !!! -------------------------------------------------------------------------------------------------------------------
 
-    //#define CAM_HAS_VARIABLE_ASPECT     1        // ?!? like SX1
+    //#define CAM_HAS_VARIABLE_ASPECT     1           // ToDo: SD4000 do switch between 16:9 and 4:3
 
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION  1    // camera uses the modified graphics primitives to map screens an viewports to buffers more sized
@@ -151,9 +155,3 @@
     #define ASPECT_GAMES_XCORRECTION(x)   ( ((x)<<1) )
     #undef ASPECT_GAMES_YCORRECTION
     #define ASPECT_GAMES_YCORRECTION(y)   ( (y) )  //none
-
-    #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
-                                                // Used to enabled bracketing in custom timer, required on many recent cameras
-                                                // see http://chdk.setepontos.com/index.php/topic,3994.405.html
-
-    #define CAM_QUALITY_OVERRIDE 1 // enable 'super fine' override

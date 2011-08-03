@@ -90,6 +90,7 @@ To enter CHDK ALT mode press LEFT + UP on JogDial (Camera has no special button 
   * All functions seems to work
 * create badpixel for DNG without script does work
 * Quality Override "super fine" does work (bigger filesize, less JPG artifacts, correct EXIF)
+* "Make card bootable" does work
 
 
 --- Developer Stuff -------------------------------------------------
