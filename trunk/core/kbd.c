@@ -319,7 +319,7 @@ long kbd_process()
                 nTxzoom=0;
                 nReczoom=0;
                 nTxvideo=0;
-                debug_led(0);
+//              debug_led(0);
             }
             if (mplay && (kbd_is_key_pressed(KEY_LEFT) || kbd_is_key_pressed(KEY_RIGHT))) {
                 nPlyname=KEY_LEFT;
@@ -333,9 +333,9 @@ long kbd_process()
                 nTxvideo++;
                 if(nTxvideo<50) {
                     kbd_key_release_all();
-                    debug_led(1);
+//                  debug_led(1);
                 } else {
-                    debug_led(0);
+//                  debug_led(0);
                     return 0;
                 }
                 return 1;
@@ -360,9 +360,9 @@ long kbd_process()
                 }
                 if(nTxzoom<50) {
                     kbd_key_release_all();
-                    debug_led(1);
+//                  debug_led(1);
                 } else {
-                    debug_led(0);
+//                  debug_led(0);
                     return 0;
                 }
                 return 1;
@@ -373,7 +373,7 @@ long kbd_process()
                     if(nTxzoom>0) {
                         nTxzoom=0;
                         nReczoom=0;
-                        debug_led(0);
+//                      debug_led(0);
                     }
                     nCount2=0;
                 }
@@ -550,7 +550,7 @@ long kbd_process()
                     nSW=0;
                     nCa=0;
                     nTxvideo=0;
-                    debug_led(0);
+//                  debug_led(0);
                     return 1;
                 }
 
@@ -733,7 +733,7 @@ long kbd_process()
                     nSW=0;
                     nCa=0;
                     nTxvideo=0;
-                    debug_led(0);
+ //                 debug_led(0);
                     return 1;
                 }
 
@@ -861,7 +861,7 @@ long kbd_process()
                             nCount=0;
                             nWt=10;
 //                          lens_set_zoom_speed(100);
-                            debug_led(0);
+//                          debug_led(0);
                             return 1;
                         }
                         nSW=125;
