@@ -40,7 +40,7 @@ DEF(enabled_refresh_physical_screen, 0x92CC)    // ROM:FFA1339C or ROM:FFA13570,
 // ROM:FFAC96C0                 BX      LR
 DEF(FlashParamsTable, 0xFFC00624)   // referenced at ROM:FFAC96B8
 
-// ToDo: check if correct, in playback CHDK OSD does not hide if function is active
+// ToDo: check if correct, in playback CHDK OSD does not hide if function menu is active
 // ROM:FF890234, in function StartRecModeMenu() or eventproc_StartRecModeMenu()
 //DEF(canon_menu_active, 0x303C)    // ROM:FF890234 0x303C
 DEF(canon_menu_active, 0x3040)    // ROM:FF890234 0x303C + ROM:FF890238 4
