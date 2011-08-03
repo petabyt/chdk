@@ -10,7 +10,7 @@ NHSTUB(Lseek, 0xFF836ED4)                            // OK, same as lseek, like 
 NHSTUB(RefreshPhysicalScreen, 0xFFA12124)            // OK, search String "ScreenUnLock", like G11
 NHSTUB(ScreenLock, 0xFFA1356C)                       // search String "ScreenLock", G11 is different
 NHSTUB(ScreenUnLock, 0xFFA12124)                     // aka. RefreshPhysicalScreen, search String "ScreenUnLock", G11 is different
-NHSTUB(Remove, 0xFF836DEC)                           // OK!, like G11, SX200 is different but referens is same, llibtst.lua os.remove pass on file but fail on directory, wrong ?!?
+NHSTUB(Remove, 0xFF836DEC)                           // OK!, like G11, SX200 is different but reference is same, lua os.remove delete file but fail on directory, looks like other cameras behave the same, wrong ?!?
 NHSTUB(kbd_read_keys, 0xFF8347D4)                    // OK!!
 NHSTUB(openfastdir, 0xFFA95C90)                      // OK, AKA. opendir, looks simular to A720, like G11
 NHSTUB(readfastdir, 0xFFA95DE4)                      // maybe ok, looks simular to A720, G11 is different but referens is same
@@ -121,8 +121,10 @@ NHSTUB(SetFileTimeStamp, 0xFF837054)                 // maybe ok, like G11 and S
 //NHSTUB(SleepTask, 0xff83a0a0)                      // OK eventproc
 //NHSTUB(TakeSemaphore, 0xff839d68)                  // OK eventproc
 //NHSTUB(UnlockMainPower, 0xff895acc)                // OK eventproc
-//NHSTUB(UpdateMBROnFlash, 0xff813f98)               // WRONG
-//NHSTUB(UpdateMBROnFlash, 0xFF871CB0)               // sigfinder, OK!
+
+//NHSTUB(UpdateMBROnFlash, 0xFF871CB0)               // sigfinder, OK, "Make card bootable" does work (ROM:FFAB92B8 MakeScriptDisk -> ROM:FF871D5C aMakeScriptDisk -> ROM:FF871CB0 UpdateMBROnFlash)
+//NHSTUB(MakeSDCardBootable, 0xFF871D30)             // not used
+
 //NHSTUB(VbattGet, 0xff8330d8)                       // OK, eventproc
 //NHSTUB(_log, 0xffb5b348)
 //NHSTUB(_log10, 0xffb59fd4)
