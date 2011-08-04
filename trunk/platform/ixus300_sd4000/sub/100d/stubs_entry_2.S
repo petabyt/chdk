@@ -5,7 +5,7 @@
 // used to point non existing or not found functions to empty sub
 #define NULLSUB 0xFF810B1C
 
-// --- not found by sigfinder
+// --- not found by finsig
 NHSTUB(Lseek, 0xFF836ED4)                            // OK, same as lseek, like G11
 NHSTUB(RefreshPhysicalScreen, 0xFFA12124)            // OK, search String "ScreenUnLock", like G11
 NHSTUB(ScreenLock, 0xFFA1356C)                       // search String "ScreenLock", G11 is different
@@ -49,7 +49,7 @@ NHSTUB(WriteSDCard, 0xFF952494)                      // shutdown
 //NHSTUB(WriteSDCard, 0xFF95266C)                    // shutdown
 
 
-// --- NULLSTUBS (not found by sigfinder)
+// --- NULLSTUBS (not found by finsig)
 NHSTUB(UnsetZoomForMovie, NULLSUB)                // nullsub_1, does not exist since canon firmware allow Zoom for Movie
 NHSTUB(SetZoomActuatorSpeedPercent, NULLSUB)      // ToDo: nullsub_1
 
@@ -62,7 +62,7 @@ NHSTUB(kbd_pwr_off, NULLSUB)                      // nullsub_1, does not exist, 
 NHSTUB(kbd_pwr_on, NULLSUB)                       // nullsub_1, does not exist, like SD990
 
 
-// --- stubs_entry.S (sigfinder)
+// --- stubs_entry.S (finsig)
 // ROM:FF96CBFC register libc function
 //NHSTUB(AllocateMemory, 0xffab8cf0)                 // OK!! (malloc)
 //NHSTUB(AllocateMemory, 0xFF814100)                 // malloc, is the actual function, other are just jumps
@@ -71,7 +71,7 @@ NHSTUB(kbd_pwr_on, NULLSUB)                       // nullsub_1, does not exist, 
 //NHSTUB(CreateTask, 0xff81e83c)                     // OK!!, eventproc
 //NHSTUB(DeleteFile_Fut, 0xff836730)                 // OK!
 //NHSTUB(ExecuteEventProcedure, 0xFF88B9C0)          // cause shutdown, referens from FactoryMode Stuff and eventproc_export_ExecuteEventProcedure()
-//NHSTUB(ExecuteEventProcedure, 0xFF88B948)          // sigfinder, like SD990, OK
+//NHSTUB(ExecuteEventProcedure, 0xFF88B948)          // finsig, like SD990, OK
 //NHSTUB(ExitTask, 0xff81eacc)                       // OK!, eventproc
 //NHSTUB(Fclose_Fut, 0xff8368ac)                     // OK!, eventproc
 //NHSTUB(Feof_Fut, 0xff836a98)                       // OK!
@@ -80,15 +80,15 @@ NHSTUB(kbd_pwr_on, NULLSUB)                       // nullsub_1, does not exist, 
 //NHSTUB(Fopen_Fut, 0xff83686c)                      // OK!, eventproc
 //NHSTUB(Fread_Fut, 0xff836958)                      // OK!, eventproc
 //NHSTUB(FreeMemory, 0xffab8ce8)                     // OK!, eventproc
-//NHSTUB(FreeUncacheableMemory, 0xff83a45c)          // OK!!
+//NHSTUB(FreeUncacheableMemory, 0xff83a45c)          // OK!!, finsig2
 //NHSTUB(Fseek_Fut, 0xff836a4c)                      // OK!, eventproc
 //NHSTUB(Fwrite_Fut, 0xff8369ac)                     // OK!, eventproc
 //NHSTUB(GetBatteryTemperature, 0xff8652a0)          // OK
 //NHSTUB(GetCCDTemperature, 0xff86522c)              // OK
-//NHSTUB(GetDrive_ClusterSize, 0xff871e30)           // maybe ok, like D10
-//NHSTUB(GetDrive_TotalClusters, 0xff871e64)         // maybe ok
+//NHSTUB(GetDrive_ClusterSize, 0xff871e30)           // maybe ok, like D10, finsig2
+//NHSTUB(GetDrive_TotalClusters, 0xff871e64)         // maybe ok, finsig2
 //NHSTUB(GetFocusLensSubjectDistance, 0xff9629b8)    // maybe ok
-//NHSTUB(GetFocusLensSubjectDistanceFromLens, 0xff962d40) // maybe ok
+//NHSTUB(GetFocusLensSubjectDistanceFromLens, 0xff962d40) // maybe ok, finsig2
 //NHSTUB(GetOpticalTemperature, 0xff865314)          // maybe ok
 //NHSTUB(GetParameterData, 0xff9975f4)               // OK!, like SX210
 //NHSTUB(GetPropertyCase, 0xff88f660)                // OK!
@@ -98,22 +98,22 @@ NHSTUB(kbd_pwr_on, NULLSUB)                       // nullsub_1, does not exist, 
 NHSTUB(IsStrobeChargeCompleted, 0xFF8DA44C)          // like SX210
 //NHSTUB(LocalTime, 0xff88923c)                      // OK
 //NHSTUB(LockMainPower, 0xff895b78)                  // OK!
-//NHSTUB(MakeDirectory_Fut, 0xff8367a4)              // OK, like SD990
-//NHSTUB(MoveFocusLensToDistance, 0xffb228b0)
+//NHSTUB(MakeDirectory_Fut, 0xff8367a4)              // OK, like SD990, finsig2
+//NHSTUB(MoveFocusLensToDistance, 0xffb228b0)        // finsig2
 NHSTUB(MoveFocusLensToDistance, 0xFFB2289C)          // ?!?
 //NHSTUB(MoveZoomLensWithPoint, 0xffab6b64)          // maybe ok
 //NHSTUB(NewTaskShell, 0xff88f06c)                   // OK
-//NHSTUB(Open, 0xff86f13c)                           // sigfinder, WRONG ?
+//NHSTUB(Open, 0xff86f13c)                           // finsig, WRONG ?
 //NHSTUB(Open, 0xFF81A9E4)                           // open, don't cause shutdown
 //NHSTUB(Open, 0xFF836D4C)                           // eventproc, like SX210, cause shutdown
 //NHSTUB(PostLogicalEventForNotPowerType, 0xff893948) // OK!!, eventproc
 //NHSTUB(PostLogicalEventToUI, 0xff893994)           // OK!, eventproc
 //NHSTUB(Read, 0xff81ac7c)                           // OK!!
-//NHSTUB(RenameFile_Fut, 0xff836868)                 // sigfinder, WRONG!, does not point to function start
+//NHSTUB(RenameFile_Fut, 0xff836868)                 // finsig, WRONG!, does not point to function start, finsig2
 NHSTUB(RenameFile_Fut, 0xFF83669C)                   // OK, like SD990 and G11
 //NHSTUB(SetAutoShutdownTime, 0xff895bec)            // OK
 //NHSTUB(SetCurrentCaptureModeType, 0xff89e550)      // OK
-//NHSTUB(SetFileTimeStamp, 0xff9514c0)               // sigfinder, WRONG!, does not point to function start
+//NHSTUB(SetFileTimeStamp, 0xff9514c0)               // finsig, WRONG!, does not point to function start, finsig2
 NHSTUB(SetFileTimeStamp, 0xFF837054)                 // maybe ok, like G11 and SX210
 //NHSTUB(SetLogicalEventActive, 0xff8958b4)          // OK
 //NHSTUB(SetParameterData, 0xff997564)               // maybe ok
@@ -122,7 +122,7 @@ NHSTUB(SetFileTimeStamp, 0xFF837054)                 // maybe ok, like G11 and S
 //NHSTUB(TakeSemaphore, 0xff839d68)                  // OK eventproc
 //NHSTUB(UnlockMainPower, 0xff895acc)                // OK eventproc
 
-//NHSTUB(UpdateMBROnFlash, 0xFF871CB0)               // sigfinder, OK, "Make card bootable" does work (ROM:FFAB92B8 MakeScriptDisk -> ROM:FF871D5C aMakeScriptDisk -> ROM:FF871CB0 UpdateMBROnFlash)
+//NHSTUB(UpdateMBROnFlash, 0xFF871CB0)               // finsig, OK, "Make card bootable" does work (ROM:FFAB92B8 MakeScriptDisk -> ROM:FF871D5C aMakeScriptDisk -> ROM:FF871CB0 UpdateMBROnFlash), finsig2
 //NHSTUB(MakeSDCardBootable, 0xFF871D30)             // not used
 
 //NHSTUB(VbattGet, 0xff8330d8)                       // OK, eventproc
@@ -131,43 +131,43 @@ NHSTUB(SetFileTimeStamp, 0xFF837054)                 // maybe ok, like G11 and S
 //NHSTUB(_pow, 0xffb5a144)
 //NHSTUB(_sqrt, 0xffb5cf50)
 //NHSTUB(close, 0xff81aa94)                          // OK!!!, like D10
-//NHSTUB(closedir, 0xffa95e28)                       // does not point to function start
+//NHSTUB(closedir, 0xffa95e28)                       // does not point to function start, finsig2
 NHSTUB(closedir, 0xFFA95C40)                         // OK, like SX210
-//NHSTUB(closefastdir, 0xffa95e28)                   // sigfinder, WRONG!, does not point to function start
+//NHSTUB(closefastdir, 0xffa95e28)                   // finsig, WRONG!, does not point to function start, finsig2
 NHSTUB(closefastdir, 0xFFA95C40)                     // aka. closedir
 //NHSTUB(free, 0xff81415c)                           // OK!
 //NHSTUB(kbd_p1_f, 0xff83484c)                       // OK
 //NHSTUB(kbd_p1_f_cont, 0xff834858)                  // OK
 //NHSTUB(kbd_p2_f, 0xff8340d0)                       // maybe ok
 //NHSTUB(kbd_read_keys_r2, 0xff86122c)               // OK!
-//NHSTUB(lseek, 0xff836ee0)                          // sigfinder, WRONG!, does not point to function start
+//NHSTUB(lseek, 0xff836ee0)                          // finsig, WRONG!, does not point to function start
 NHSTUB(lseek, 0xFF836ED4)                            // OK, same as Lseek
 //NHSTUB(malloc, 0xff814100)                         // OK!, referens from AllocateUncacheableMemory, D10 is different
 //NHSTUB(memcmp, 0xff82066c)                         // OK!!, eventproc, like D10
 //NHSTUB(memcpy, 0xff83fae8)                         // OK!!, eventproc, like D10
 //NHSTUB(memset, 0xffa15ddc)                         // OK!, eventproc
-//NHSTUB(mkdir, 0xff837254)                          // OK!, like SX210 and G11
+//NHSTUB(mkdir, 0xff837254)                          // OK!, like SX210 and G11, finsig2
 //NHSTUB(mktime_ext, 0xff8ac9f0)                     // OK!, like SD990 and G11
 //NHSTUB(open, 0xff81a9e4)                           // OK!!!, like D10
-//NHSTUB(opendir, 0xffa95c90)                        // looks OK, AKA openfastdir, D10 is different
-//NHSTUB(rand, 0xff820774)                           // OK
+//NHSTUB(opendir, 0xffa95c90)                        // looks OK, AKA openfastdir, D10 is different, finsig2
+//NHSTUB(rand, 0xff820774)                           // OK, finsig2
 //NHSTUB(read, 0xff81ac7c)                           // OK!
-//NHSTUB(srand, 0xff820768)                          // OK
+//NHSTUB(srand, 0xff820768)                          // OK, finsig2
 //NHSTUB(stat, 0xff836f1c)                           // OK, like G11
-//NHSTUB(strcat, 0xff813f5c)                         // WRONG, does point to strncpy
+//NHSTUB(strcat, 0xff813f5c)                         // WRONG, does point to strncpy, finsig2
 NHSTUB(strcat, 0xFF8AC1AC)                           // OK!!, like G11 and D10
-//NHSTUB(strchr, 0xff813fe4)                         // OK!!, like D10
+//NHSTUB(strchr, 0xff813fe4)                         // OK!!, like D10, finsig2
 //NHSTUB(strcmp, 0xff820628)                         // OK
 //NHSTUB(strcpy, 0xff820610)                         // OK
 //NHSTUB(strftime, 0xff8ac3f8)                       // OK, like G11
 //NHSTUB(strlen, 0xff814030)                         // OK
 //NHSTUB(strncmp, 0xff813f98)                        // OK!, like D10
-//NHSTUB(strncpy, 0xff813f5c)                        // OK!
-//NHSTUB(strrchr, 0xff83fac0)                        // sigfinder, WRONG!
+//NHSTUB(strncpy, 0xff813f5c)                        // OK!, finsig2
+//NHSTUB(strrchr, 0xff83fac0)                        // finsig, WRONG!, finsig2
 NHSTUB(strrchr, 0xFF814008)                          // OK!!, like G11 and D10
 //NHSTUB(strtol, 0xff83fdc8)                         // OK
 //NHSTUB(strtolx, 0xff83fbcc)                        // OK
-//NHSTUB(time, 0xff88981c)                           // looks simular to A720
+//NHSTUB(time, 0xff88981c)                           // looks simular to A720, finsig2
 //NHSTUB(vsprintf, 0xff8205d4)                       // OK!
 //NHSTUB(write, 0xff81acdc)                          // OK, like SD990 and G11
 //NHSTUB(Write, 0xff836e48)                          // OK, eventproc, like SX210 and G11
@@ -188,15 +188,15 @@ NHSTUB(LockAndRefresh, 0xFFA13354)                   // SX20 102: ROM:FFA048E8, 
 // PTP stuff
 //NHSTUB(initialise_ptp_handlers_data, 0xFFA4E898)
 NHSTUB(get_ptp_handler, 0xFFA4EC7C)
-//NHSTUB(add_ptp_handler, 0xFFA4EABC)                // sigfinder address ok
+//NHSTUB(add_ptp_handler, 0xFFA4EABC)                // finsig address ok
 NHSTUB(remove_ptp_handler, 0xFFA4EBB0)
 NHSTUB(get_task_lists, 0xFF83544C)
 NHSTUB(get_task_info, 0xFF813A38)
 NHSTUB(PB2Rec, 0xFF898B40)                           // search String "AC:PB2Rec"
 NHSTUB(Rec2PB, 0xFF897590)                           // search String "AC:Rec2PB"
 //NHSTUB(set_control_event, 0xFF8955C4)              // via eventproc_export_IsControlEventActive (last call), levent_table contains control event id's (Logical Event Table)
-//NHSTUB(set_control_event, 0xff895504)              // sigfinder ok (ptpcam --chdk mode command does work)
-//NHSTUB(reboot_fw_update, 0xffa9b228)               // sigfinder address ok
+//NHSTUB(set_control_event, 0xff895504)              // finsig ok (ptpcam --chdk mode command does work)
+//NHSTUB(reboot_fw_update, 0xffa9b228)               // finsig address ok, finsig2
 
 
 NHSTUB(taskResume, 0xFF8955C4)                       // maybe
