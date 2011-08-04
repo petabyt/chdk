@@ -2422,43 +2422,58 @@ void gui_draw_debug_vals_osd() {
 	// end of check	
 #endif
 
+    // DEBUG: "Show misc. values"
+    // change ROW to fit values on screen in draw_txt_string(COLUMN, ROW, ...)
+    // uncomment gui_draw_debug_vals_osd() below if you want debug values always on top
     if (conf.debug_misc_vals_show) {
-        //        long v=get_file_counter();
-        //	sprintf(osd_buf, "1:%03d-%04d  ", (v>>18)&0x3FF, (v>>4)&0x3FFF);
-        //	sprintf(osd_buf, "1:%d, %08X  ", xxxx, eeee);
-        /*
-        extern long physw_status[3];
-        sprintf(osd_buf, "1:%8x  ", physw_status[0]);
-        draw_txt_string(28, 10, osd_buf, conf.osd_color);
-
-        sprintf(osd_buf, "2:%8x  ", physw_status[1]);
-        draw_txt_string(28, 11, osd_buf, conf.osd_color);
-
-        sprintf(osd_buf, "3:%8x  ", physw_status[2]);
-        draw_txt_string(28, 12, osd_buf, conf.osd_color);
-
-        //      sprintf(osd_buf, "4:%8x  ", vid_get_viewport_fb_d());
-        */
-        sprintf(osd_buf, "u:%8x  ", get_usb_power(1));
+        // show value of Memory Address selected with Memory Browser
+        sprintf(osd_buf, "MEM: %#8x", (void*) (*(int*)conf.mem_view_addr_init));    // show value in Hexadecimal integer
+        //sprintf(osd_buf, "MEM: %8u", (void*) (*(int*)conf.mem_view_addr_init));    // show value in Decimal integer
         draw_txt_string(28,  9, osd_buf, conf.osd_color);
 
-        sprintf(osd_buf, "1:%8x  ", (void*) (*(int*)conf.mem_view_addr_init));
+        // show Autofocus status (if AF is working)
+        extern volatile long focus_busy;
+        sprintf(osd_buf, "FB:  %8u", focus_busy);
         draw_txt_string(28, 10, osd_buf, conf.osd_color);
 
-    extern volatile long focus_busy;
-        sprintf(osd_buf, "f:%8x  ", focus_busy);
+        // show Zoom status (if Lens is moving)
+        extern volatile long zoom_busy;
+        sprintf(osd_buf, "ZB:  %8u", zoom_busy);
         draw_txt_string(28, 11, osd_buf, conf.osd_color);
 
-    extern volatile long zoom_busy;
-        sprintf(osd_buf, "z:%8x  ", zoom_busy);
+        // show USB-Power status to debug remote / sync
+        sprintf(osd_buf, "USB: %8u", get_usb_power(1));
         draw_txt_string(28, 12, osd_buf, conf.osd_color);
 
+        /*
         // some cameras missing zoom_status
-        #if 0
-        sprintf(osd_buf, "t:%8x  ", zoom_status);
+        sprintf(osd_buf, "ZS:  %#8x", zoom_status);
         draw_txt_string(28, 13, osd_buf, conf.osd_color);
-        #endif
+        */
 
+        /*
+        sprintf(osd_buf, "VP:  %#8x", vid_get_viewport_fb_d());
+        draw_txt_string(28, 14, osd_buf, conf.osd_color);
+        */
+
+        /*
+        // debug keymap, KEYS_MASKx, SD_READONLY_FLAG, USB_MASK
+        extern long physw_status[3];
+        sprintf(osd_buf, "PS1: %#8x", physw_status[0]);
+        draw_txt_string(28, 10, osd_buf, conf.osd_color);
+
+        sprintf(osd_buf, "PS2: %#8x", physw_status[1]);
+        draw_txt_string(28, 11, osd_buf, conf.osd_color);
+
+        sprintf(osd_buf, "PS3: %#8x", physw_status[2]);
+        draw_txt_string(28, 12, osd_buf, conf.osd_color);
+        */
+
+        /*
+        long v=get_file_counter();
+        sprintf(osd_buf, "1:%03d-%04d", (v>>18)&0x3FF, (v>>4)&0x3FFF);
+        sprintf(osd_buf, "1:%d, %08X", xxxx, eeee);
+        */
     }
     {
         static char sbuf[100];
@@ -2523,8 +2538,8 @@ void gui_draw_osd() {
     int need_restore = 0;
     m = mode_get();
 
-// uncomment if you want debug values always on top
-//	gui_draw_debug_vals_osd();
+// DEBUG: uncomment if you want debug values always on top
+//gui_draw_debug_vals_osd();
 
 #if CAM_SWIVEL_SCREEN
     if (conf.flashlight && (m&MODE_SCREEN_OPENED) && (m&MODE_SCREEN_ROTATED) && (gui_mode==GUI_MODE_NONE /* || gui_mode==GUI_MODE_ALT */)) {
