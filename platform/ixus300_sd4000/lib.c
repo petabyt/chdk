@@ -47,7 +47,7 @@ void debug_led(int state) {
 //ROM:FF997630                 BIC     R4, R4, #0x4000
 //ROM:FF997634                 CMP     R4, #0x94 <---
 int get_flash_params_count(void) {
-    return 148;     // 0x94 = 148
+    return 148;     // 0x94 = 148, finsig2
 }
 
 /*

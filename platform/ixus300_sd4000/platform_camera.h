@@ -30,7 +30,7 @@
     #define CAM_BITMAP_PALETTE          5           // ToDo
 
     #undef  CAM_UNCACHED_BIT                        // shut up compiler
-    #define CAM_UNCACHED_BIT            0x40000000  // ROM:FF88A248 via ExMem.FreeCacheable()
+    #define CAM_UNCACHED_BIT            0x40000000  // ROM:FF88A248 via ExMem.FreeCacheable(), finsig2
 
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_SYNCH
@@ -74,8 +74,8 @@
 
     #define cam_CalibrationIlluminant1  1           // ToDo: Daylight ?
 
-    #define CAM_RAW_ROWPIX              3816        // ROM:FFB28EEC
-    #define CAM_RAW_ROWS                2784        // ROM:FFB28EF4
+    #define CAM_RAW_ROWPIX              3816        // ROM:FFB28EEC or ROM:ff93c408, finsig2
+    #define CAM_RAW_ROWS                2784        // ROM:FFB28EF4 or ROM:ff93c414, finsig2
 
     #define CAM_JPEG_WIDTH              3648        // JPEG Exif data or ROM:FFB28EFC
     #define CAM_JPEG_HEIGHT             2736        // JPEG Exif data or ROM:FFB28F04
