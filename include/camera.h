@@ -34,7 +34,7 @@
 #define CAM_HAS_ZOOM_LEVER          1           // Camera has dedicated zoom buttons
 #undef  CAM_DRAW_EXPOSITION                     // Output expo-pair on screen (for cameras which (sometimes) don't do that)
 #define CAM_HAS_ERASE_BUTTON        1           // Camera has dedicated erase button
-#define CAM_HAS_IRIS_DIAPHRAGM      1           // Camera has real diaphragm mechanism
+#define CAM_HAS_IRIS_DIAPHRAGM      1           // Camera has real diaphragm mechanism (http://en.wikipedia.org/wiki/Diaphragm_%28optics%29)
 #undef  CAM_HAS_ND_FILTER                       // Camera has build-in ND filter
 #define CAM_CAN_SD_OVER_NOT_IN_MF   1           // Camera allows subject distance (focus) override when not in manual focus mode
 #define CAM_CAN_SD_OVERRIDE         1           // Camera allows to do subject distance override
@@ -122,7 +122,8 @@
 
 #undef  CAM_DATE_FOLDER_NAMING                  // Camera uses date for naming image folders
 
-#undef  CAM_STARTUP_CRASH_FILE_OPEN_FIX         // enable fix for camera crash at startup when opening the conf / font files
+#undef  CAM_STARTUP_CRASH_FILE_OPEN_FIX         // enable fix for camera intermittently crash at startup when opening the conf / font files
+                                                // Some cameras throw "ASSERT!! FsIoNotify.c Line xxx    Task name: SpyTask" in ROMLOG
                                                 // see http://chdk.setepontos.com/index.php?topic=6179.0
 
 // RAW & DNG related values
