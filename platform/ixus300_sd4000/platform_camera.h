@@ -34,8 +34,8 @@
 
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_SYNCH
-    #define CAM_HAS_ND_FILTER           1
-    #define CAM_HAS_IRIS_DIAPHRAGM      1
+    #define CAM_HAS_ND_FILTER           1           // ToDo: does camera have ND ?
+    #define CAM_HAS_IRIS_DIAPHRAGM      1           // OK
     //#undef  CAM_HAS_MANUAL_FOCUS                  // ToDo: working ?
     //#undef  CAM_CAN_SD_OVERRIDE                   // ToDo: looks like always cause ASSERT Error "FocusLensController.c Line 714" on CaptSeqTask
     //#undef  CAM_USE_ZOOM_FOR_MF                   // ToDo: working ?
@@ -65,6 +65,8 @@
     #define CAM_QUALITY_OVERRIDE        1           // enable 'super fine' override, OK
 
     #define CAM_DETECT_SCREEN_ERASE     1           // ToDo: CHDK OSD flicker more often, OSD redrawn is more reliable
+
+    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX   1     // cameras intermittently crashing on startup with "ASSERT!! FsIoNotify.c Line 457   Task name: SpyTask" in ROMLOG, ToDo: working ?
 
     // ToDo
     #define CAM_COLORMATRIX1                               \
