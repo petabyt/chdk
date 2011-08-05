@@ -1,4 +1,5 @@
-#!build time optional components - comment out the features you dont want to have in your build
+#!build time optional components - comment out the features you dont want to have in your build or copy this file to localbuildconf.inc and override settings there
+
 OPT_GAME_REVERSI=1
 OPT_GAME_SOKOBAN=1
 OPT_GAME_CONNECT4=1
