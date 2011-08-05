@@ -39,7 +39,8 @@
 #define COLOR_HISTO_B_PLAY  0xCC
 #define COLOR_HISTO_BG_PLAY 0x99
 #define COLOR_HISTO_RG_PLAY 0x66
-#elif CAM_BITMAP_PALETTE==2 // sd990
+
+#elif CAM_BITMAP_PALETTE==2    // sd990
 #define COLOR_TRANSPARENT   0x00
 #define COLOR_WHITE         0xD3
 #define COLOR_RED           0x64
@@ -71,7 +72,8 @@
 #define COLOR_HISTO_B_PLAY  0xCC
 #define COLOR_HISTO_BG_PLAY 0x99
 #define COLOR_HISTO_RG_PLAY 0x66
-#elif CAM_BITMAP_PALETTE==3 // sx200
+
+#elif CAM_BITMAP_PALETTE==3    // sx200
 #define COLOR_TRANSPARENT   0x00
 #define COLOR_WHITE         0x01
 #define COLOR_RED           0x2B
@@ -102,7 +104,8 @@
 #define COLOR_HISTO_B_PLAY  COLOR_HISTO_B
 #define COLOR_HISTO_BG_PLAY COLOR_BLUE_LT
 #define COLOR_HISTO_RG_PLAY COLOR_YELLOW
-#elif CAM_BITMAP_PALETTE==4 // g11
+
+#elif CAM_BITMAP_PALETTE==4    // g11
 #define COLOR_TRANSPARENT   0x00
 #define COLOR_WHITE         0x01
 #define COLOR_RED           0x2B
@@ -133,7 +136,8 @@
 #define COLOR_HISTO_B_PLAY  COLOR_HISTO_B
 #define COLOR_HISTO_BG_PLAY COLOR_BLUE_LT
 #define COLOR_HISTO_RG_PLAY COLOR_YELLOW
-#elif CAM_BITMAP_PALETTE==5 //(Based on sd990)
+
+#elif CAM_BITMAP_PALETTE==5    // Based on sd990
 #define COLOR_TRANSPARENT   0x00
 #define COLOR_WHITE         0xD3
 #define COLOR_RED           0x6A
@@ -163,7 +167,8 @@
 #define COLOR_HISTO_B_PLAY  COLOR_HISTO_B
 #define COLOR_HISTO_BG_PLAY COLOR_BLUE_LT
 #define COLOR_HISTO_RG_PLAY COLOR_YELLOW
-#elif CAM_BITMAP_PALETTE==6 //(sx20)
+
+#elif CAM_BITMAP_PALETTE==6    // sx20
 #define COLOR_TRANSPARENT   0x00
 #define COLOR_WHITE         0x01
 #define COLOR_RED           0x2B
@@ -193,7 +198,8 @@
 #define COLOR_HISTO_B_PLAY  COLOR_HISTO_B
 #define COLOR_HISTO_BG_PLAY COLOR_BLUE_LT
 #define COLOR_HISTO_RG_PLAY COLOR_YELLOW
-#elif CAM_BITMAP_PALETTE==7 //(sx30, g12)
+
+#elif CAM_BITMAP_PALETTE==7    // sx30, g12
 #define COLOR_TRANSPARENT   0x00
 #define COLOR_WHITE         0x01
 #define COLOR_RED           0x1e
@@ -209,14 +215,14 @@
 #define COLOR_SELECTED_FG   COLOR_BLACK
 #define COLOR_ALT_BG        COLOR_BG
 #define COLOR_SPLASH_RED    COLOR_RED
-#define COLOR_SPLASH_PINK   0x1e			// Orange
+#define COLOR_SPLASH_PINK   0x1e    // Orange
 #define COLOR_SPLASH_GREY   0x16
 #define COLOR_HISTO_R       0x66
 #define COLOR_HISTO_R_PLAY  0xA0
 #define COLOR_HISTO_B       0x61
 #define COLOR_HISTO_B_PLAY  0xA2
 #define COLOR_HISTO_G       0x5F
-#define COLOR_HISTO_G_PLAY	0xA1
+#define COLOR_HISTO_G_PLAY  0xA1
 #define COLOR_HISTO_BG      COLOR_BLUE_LT
 #define COLOR_HISTO_RG      COLOR_YELLOW
 #define COLOR_HISTO_RB      COLOR_RED
@@ -225,7 +231,8 @@
 #define COLOR_HISTO_RG_PLAY COLOR_YELLOW
 #undef SCREEN_COLOR
 #define SCREEN_COLOR            0x1D
-#elif CAM_BITMAP_PALETTE==8			// s95
+
+#elif CAM_BITMAP_PALETTE==8    // s95
 #define COLOR_TRANSPARENT   0x00
 #define COLOR_WHITE         0x01
 #define COLOR_RED           0x66
@@ -255,7 +262,8 @@
 #define COLOR_HISTO_B_PLAY  COLOR_HISTO_B
 #define COLOR_HISTO_BG_PLAY COLOR_BLUE_LT
 #define COLOR_HISTO_RG_PLAY COLOR_YELLOW
-#elif CAM_BITMAP_PALETTE==9 		// sx220
+
+#elif CAM_BITMAP_PALETTE==9    // sx220
 #define COLOR_TRANSPARENT   0x00
 #define COLOR_WHITE         0x01
 #define COLOR_RED           0x9f
@@ -273,23 +281,24 @@
 #define COLOR_SELECTED_FG   COLOR_BLACK
 #define COLOR_ALT_BG        COLOR_BG
 #define COLOR_SPLASH_RED    COLOR_RED
-#define COLOR_SPLASH_PINK   0x1e			// Orange
+#define COLOR_SPLASH_PINK   0x1e    // Orange
 #define COLOR_SPLASH_GREY   0x16
 #define COLOR_HISTO_R       0x6C
 #define COLOR_HISTO_R_PLAY  COLOR_RED
 #define COLOR_HISTO_B       0x6D
 #define COLOR_HISTO_B_PLAY  COLOR_BLUE
 #define COLOR_HISTO_G       0x90
-#define COLOR_HISTO_G_PLAY	COLOR_GREEN
-#define COLOR_HISTO_BG      0x52	//COLOR_BLUE_LT
-#define COLOR_HISTO_RG      0x51	//COLOR_YELLOW
-#define COLOR_HISTO_RB      0x3D	//COLOR_RED
+#define COLOR_HISTO_G_PLAY  COLOR_GREEN
+#define COLOR_HISTO_BG      0x52    // COLOR_BLUE_LT
+#define COLOR_HISTO_RG      0x51    // COLOR_YELLOW
+#define COLOR_HISTO_RB      0x3D    // COLOR_RED
 #define COLOR_HISTO_RB_PLAY COLOR_HISTO_RB
 #define COLOR_HISTO_BG_PLAY COLOR_BLUE_LT
 #define COLOR_HISTO_RG_PLAY COLOR_YELLOW
 #undef SCREEN_COLOR
 #define SCREEN_COLOR            0x1D
-#elif CAM_BITMAP_PALETTE==10 //(a1100)
+
+#elif CAM_BITMAP_PALETTE==10    // a1100
 #define COLOR_TRANSPARENT   0x00
 #define COLOR_WHITE         0x0A
 #define COLOR_RED           0x6B
@@ -322,6 +331,39 @@
 #define COLOR_HISTO_RG_PLAY 0x66
 #undef SCREEN_COLOR
 #define SCREEN_COLOR            0x1D
+
+#elif CAM_BITMAP_PALETTE==11    // sd4000
+// pallete changes almost completely depenting on mode and if canon menu is active or not
+// playback, playback with menu, photo record mode, photo record mode with menu, ...
+#define COLOR_TRANSPARENT   0x00    // always the same
+#define COLOR_WHITE         0x01    // always the same
+#define COLOR_RED           0x1E    // always the same, bright orange (red is only available in record more without menu)
+#define COLOR_GREY          0x16    // always the same
+#define COLOR_GREEN         0x9F    // playback only, without menu
+#define COLOR_BLUE_LT       0x0C    // playback: light brown
+#define COLOR_BLUE          0x12    // playback: dark brown (almost like sh.t)
+#define COLOR_YELLOW        0x90    // playback only, without menu
+#define COLOR_BLACK         0xFF    // always the same
+#define COLOR_BG            0x1D    // greyisch
+#define COLOR_FG            COLOR_WHITE
+#define COLOR_SELECTED_BG   COLOR_RED    // always the same, light grey
+#define COLOR_SELECTED_FG   COLOR_BLACK
+#define COLOR_ALT_BG        COLOR_BG
+#define COLOR_SPLASH_RED    COLOR_RED
+#define COLOR_SPLASH_PINK   COLOR_BLUE
+#define COLOR_SPLASH_GREY   0x16    // darker grey
+#define COLOR_HISTO_R       0x66    // record only, without menu
+#define COLOR_HISTO_R_PLAY  COLOR_RED
+#define COLOR_HISTO_B       0x3C
+#define COLOR_HISTO_B_PLAY  0x50    // playback without menu dont have blue at all, bright Orange
+#define COLOR_HISTO_G       0x6B
+#define COLOR_HISTO_G_PLAY  COLOR_GREEN
+#define COLOR_HISTO_BG      COLOR_BLUE_LT
+#define COLOR_HISTO_RG      COLOR_YELLOW
+#define COLOR_HISTO_RB      COLOR_RED
+#define COLOR_HISTO_RB_PLAY COLOR_HISTO_RB
+#define COLOR_HISTO_BG_PLAY COLOR_BLUE_LT
+#define COLOR_HISTO_RG_PLAY COLOR_YELLOW
 
 #else
 #error CAM_BITMAP_PALETTE not defined
