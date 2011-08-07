@@ -2,7 +2,7 @@
 #include "platform.h"
 #include "core.h"
 
-static long *nrflag = (long*)(0x8608+0x8); // in _sub_FF99555C__NRTable.c__0
+static long *nrflag = (long*)(0x8608+0x8); // in _sub_FF9955E0__NRTable.c__0
 #define NR_AUTO (0)							// have to explictly reset value back to 0 to enable auto
 
 #include "../../../generic/capt_seq.c"
@@ -572,7 +572,7 @@ void __attribute__((naked,noinline)) sub_FFAECD24_my(){
 }
 
 /*************************************************************/
-// @ FF8D081C (1.00n)
+// @ FF8D081C (1.00p)
 void __attribute__((naked,noinline)) exp_drv_task(){
 
  asm volatile(
@@ -1101,15 +1101,15 @@ void __attribute__((naked,noinline)) exp_drv_task(){
 "                SUB     R4, R0, #8 \n"
 "                LDR     R0, =0x57870 \n"
 "                ADD     R1, SP, #0x10 \n"
-"                BL      sub_FFB92564 \n"
+"                BL      sub_FFB92544 \n"
 "                LDR     R0, =0x5787C \n"
 "                MOV     R2, #0xC \n"
 "                ADD     R1, SP, #0x10 \n"
-"                BL      sub_FFB92564 \n"
+"                BL      sub_FFB92544 \n"
 "                LDR     R0, =0x57888 \n"
 "                MOV     R2, #0xC \n"
 "                MOV     R1, R4 \n"
-"                BL      sub_FFB92564 \n"
+"                BL      sub_FFB92544 \n"
 "                B       loc_FF8D0EA8 \n"
 
 "loc_FF8D0E2C: \n"
