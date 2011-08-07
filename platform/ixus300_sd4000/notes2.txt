@@ -8,12 +8,12 @@
 * Propset 3 (but some props are different)
 * OS: DRYOS version 2.3, release #0043
 * Iris type aperture (used with ND filter)
-* Port is based on A720 & SD990 & SX210 & G11 & D10
+* Port is based on A720 & SD990 & SX210 & G11 & D10 & SX30
 * Sensor: 10 MP, 12 Bit, RGGB Color Palette
 * UART Serial Connection to access Event Shell and DryOS Shell (http://chdk.wikia.com/wiki/SD4000#UART), 3.3V Voltage Level, 115200/8/N/1
-
 * udumper "NewDryOs" (CardTricks) does not support 2010 cameras
 * Canon Basic dumper works
+* 128MB RAM (0x80000000)
 
 
 --- Notes
