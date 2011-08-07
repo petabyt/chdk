@@ -173,7 +173,7 @@ static char sbuf[7];
             } while ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_TEXT || 
                      (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_SEPARATOR);
             int_incr = 1;
-            gui_menu_redraw=1;
+            if (gui_menu_redraw == 0) gui_menu_redraw=1;
 			}
             break;
         case JOGDIAL_RIGHT:
@@ -194,7 +194,7 @@ static char sbuf[7];
             } while ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_TEXT || 
                      (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_SEPARATOR);
             int_incr = 1;
-            gui_menu_redraw=1;
+            if (gui_menu_redraw == 0) gui_menu_redraw=1;
 			}
             break;
         case KEY_LEFT:
