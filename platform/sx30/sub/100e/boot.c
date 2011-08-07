@@ -638,6 +638,10 @@ void __attribute__((naked,noinline)) sub_FF876764_my() {
  );
 }
 
+// Pointer to stack location where jogdial task records previous and current
+// jogdial positions
+short *jog_position;
+
 // Firmware version @ FF865D08
 void __attribute__((naked,noinline)) JogDial_task_my() {
  asm volatile(
@@ -648,6 +652,11 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
 "                LDR     R6, =0xFFB97A38 \n"
 "                MOV     R0, #0 \n"
 "                ADD     R3, SP, #0x10 \n"
+
+// Save pointer for kbd.c routine
+" LDR R12, =jog_position \n"
+" STR R3, [R12] \n"
+
 "                ADD     R12, SP, #0x14 \n"
 "                ADD     R10, SP, #0x08 \n"
 "                MOV     R2, #0 \n"
