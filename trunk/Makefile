@@ -600,6 +600,7 @@ batch-zip-complete: version
 	mv $(topdir)bin/a495-100d-$(BUILD_NUMBER)-full.zip $(topdir)bin/a495-100d-$(BUILD_NUMBER)-full_BETA.zip
 	mv $(topdir)bin/a495-100e-$(BUILD_NUMBER)-full.zip $(topdir)bin/a495-100e-$(BUILD_NUMBER)-full_BETA.zip
 	mv $(topdir)bin/a495-100f-$(BUILD_NUMBER)-full.zip $(topdir)bin/a495-100f-$(BUILD_NUMBER)-full_BETA.zip
+	mv $(topdir)bin/ixus300_sd4000-100d-$(BUILD_NUMBER).zip $(topdir)bin/ixus300_sd4000-100d-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/ixus300_sd4000-100d-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus300_sd4000-100d-$(BUILD_NUMBER)-full_BETA.zip
 	mv $(topdir)bin/sx220hs-100a-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx220hs-100a-$(BUILD_NUMBER)-full_BETA.zip
 	mv $(topdir)bin/sx220hs-100a-$(BUILD_NUMBER).zip $(topdir)bin/sx220hs-100a-$(BUILD_NUMBER)_BETA.zip
