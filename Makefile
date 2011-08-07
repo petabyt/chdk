@@ -330,17 +330,17 @@ batch-zip: version
 	mv $(topdir)bin/$(VER)-d10-100b-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-d10-100b-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/$(VER)-ixus95_sd1200-100c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus95_sd1200-100c-$(BUILD_NUMBER)_BETA.zip
 	#mv $(topdir)bin/$(VER)-a430-100b-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a430-100b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-s95-100e-$(BUILD_NUMBER).zip $(topdir)bin/s95-100e-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-s95-100h-$(BUILD_NUMBER).zip $(topdir)bin/s95-100h-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-s95-100i-$(BUILD_NUMBER).zip $(topdir)bin/s95-100i-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-s95-100k-$(BUILD_NUMBER).zip $(topdir)bin/s95-100k-$(BUILD_NUMBER)_BETA.zip	
+	mv $(topdir)bin/$(VER)-s95-100e-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s95-100e-$(BUILD_NUMBER)_BETA.zip
+	mv $(topdir)bin/$(VER)-s95-100h-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s95-100h-$(BUILD_NUMBER)_BETA.zip
+	mv $(topdir)bin/$(VER)-s95-100i-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s95-100i-$(BUILD_NUMBER)_BETA.zip
+	mv $(topdir)bin/$(VER)-s95-100k-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s95-100k-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/$(VER)-ixus750_sd550-100h-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus750_sd550-100h-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-a490-100f-$(BUILD_NUMBER).zip $(topdir)bin/a490-100f-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-a495-100d-$(BUILD_NUMBER).zip $(topdir)bin/a495-100d-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-a495-100e-$(BUILD_NUMBER).zip $(topdir)bin/a495-100e-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-a495-100f-$(BUILD_NUMBER).zip $(topdir)bin/a495-100f-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-sx220hs-100a-$(BUILD_NUMBER).zip $(topdir)bin/sx220hs-100a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-sx220hs-101a-$(BUILD_NUMBER).zip $(topdir)bin/sx220hs-101a-$(BUILD_NUMBER)_BETA.zip
+	mv $(topdir)bin/$(VER)-a490-100f-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a490-100f-$(BUILD_NUMBER)_BETA.zip
+	mv $(topdir)bin/$(VER)-a495-100d-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a495-100d-$(BUILD_NUMBER)_BETA.zip
+	mv $(topdir)bin/$(VER)-a495-100e-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a495-100e-$(BUILD_NUMBER)_BETA.zip
+	mv $(topdir)bin/$(VER)-a495-100f-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a495-100f-$(BUILD_NUMBER)_BETA.zip
+	mv $(topdir)bin/$(VER)-sx220hs-100a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx220hs-100a-$(BUILD_NUMBER)_BETA.zip
+	mv $(topdir)bin/$(VER)-sx220hs-101a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx220hs-101a-$(BUILD_NUMBER)_BETA.zip
 	@echo "**** Done Copying duplicate Firmwares"
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
