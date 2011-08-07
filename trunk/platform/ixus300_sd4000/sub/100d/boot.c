@@ -189,11 +189,13 @@ void __attribute__((naked,noinline)) sub_FF811198_my() { //#fs
         "BL      sub_FFB59A1C\n"
         "MOV     R0, #0x53000\n"
         "STR     R0, [SP,#4]\n"
-
-        //"LDR     R0, =0x14B394\n"            // original
+#if defined(OPT_CHDK_IN_EXMEM)                 // use original heap offset since CHDK is loaded in high memory
+        "LDR     R0, =0x14B394\n"              // original
+                                               // ToDo: change address to put chdk into EXMEM
+#else                                          // otherwise use patched value
         "LDR     R0, =new_sa\n"                // +
         "LDR     R0, [R0]\n"                   // +
-
+#endif
         "LDR     R2, =0x379C00\n"
         "LDR     R1, =0x3724A8\n"
         "STR     R0, [SP,#8]\n"
