@@ -143,27 +143,3 @@ int get_IS_mode(void){
  _GetPropertyCase(229,&v,sizeof(v));
  return v;
 }
-
-char* shooting_get_tv_str()
-{
-    short int tvv;
-    long i;
-    _GetPropertyCase(PROPCASE_TV, &tvv, sizeof(tvv));
-    for (i=0;i<SS_SIZE;i++){
-        if (shutter_speeds_table[i].prop_id >= tvv)
-            return (char*)shutter_speeds_table[i].name;
-    }
-    return (void*)"?";
-}
-
-char* shooting_get_av_str()
-{
-    short int avv;
-    long i;
-    _GetPropertyCase(PROPCASE_AV, &avv, sizeof(avv));
-    for (i=0;i<AS_SIZE;i++){
-        if (aperture_sizes_table[i].prop_id == avv)
-            return (char*)aperture_sizes_table[i].name;
-    }
-    return (char*) "?";
-}
