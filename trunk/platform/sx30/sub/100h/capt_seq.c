@@ -80,6 +80,9 @@ asm volatile (
 
 // jump table entry 0
 "loc_FF88699C:\n"
+
+"		BL	shooting_expo_iso_override\n"  		    // added
+
 "		BL	sub_FF887084 \n"
 
 "		BL	shooting_expo_param_override\n"  		// added

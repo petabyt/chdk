@@ -150,7 +150,7 @@ void __attribute__((naked,noinline)) boot() {
                  "ORR     R1, R1, #1\n"
                  "STR     R1, [R2]\n"
 
-                 "LDR     R0, =0xFFC906C8\n"
+                 "LDR     R0, =0xFFC90980\n" 
                  "LDR     R1, =0x1900\n"
                  "LDR     R3, =0x108B8\n"
  "loc_FF81013C:\n"
@@ -169,6 +169,7 @@ void __attribute__((naked,noinline)) boot() {
     );
 }
 
+// @ FF810354
 void __attribute__((naked,noinline)) sub_FF810354_my() {
 
 	//http://chdk.setepontos.com/index.php/topic,4194.0.html
@@ -213,6 +214,7 @@ void __attribute__((naked,noinline)) sub_FF810354_my() {
      );
 }
 
+// @ FF811198
 void __attribute__((naked,noinline)) sub_FF811198_my() {
 
      asm volatile (
@@ -220,7 +222,7 @@ void __attribute__((naked,noinline)) sub_FF811198_my() {
                  "SUB     SP, SP, #0x74\n"
                  "MOV     R0, SP\n"
                  "MOV     R1, #0x74\n"
-                 "BL      sub_FFB924E8\n"
+                 "BL      sub_FFB927A0\n"	
                  "MOV     R0, #0x53000\n"
                  "STR     R0, [SP,#4]\n"
 				 
@@ -252,6 +254,7 @@ void __attribute__((naked,noinline)) sub_FF811198_my() {
      );
 }
 
+// @ FF815EE0
 void __attribute__((naked,noinline)) sub_FF815EE0_my() {
 
 	asm volatile (
@@ -315,11 +318,12 @@ void __attribute__((naked,noinline)) sub_FF815EE0_my() {
         );
 };
 
+// @ FF81FB54
 void __attribute__((naked,noinline)) taskcreate_Startup_my() {
 
 	asm volatile (
 		"STMFD	SP!, {R3,LR}\n"
-//		"BL		j_nullsub_234\n"
+//		"BL		j_nullsub_191\n"
 		"BL		sub_FF83C880\n"
 		"CMP	R0, #0\n"
 		"BNE	loc_FF81FB98\n"
@@ -340,7 +344,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() {
 		
 "loc_FF81FB98:\n"
 //		"BL		sub_FF834740\n"         // see begin of sub_FF810354_my()
-//		"BL		j_nullsub_235\n"
+//		"BL		j_nullsub_192\n"
 		"BL		sub_FF83AA94\n"
 		"LDR	R1, =0x3CE000\n"
 		"MOV	R0, #0\n"
@@ -356,6 +360,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() {
      );
 }
 
+// @ FF81FAF0
 void __attribute__((naked,noinline)) task_Startup_my() {
 
 	asm volatile (
@@ -363,7 +368,7 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 		"BL		sub_FF816594\n"	// taskcreate_ClockSave\n"
 		"BL		sub_FF835894\n"
 		"BL		sub_FF8339A4\n"
-//		"BL	j_nullsub_238\n"
+//		"BL	j_nullsub_195\n"
 		"BL		sub_FF83CAB0\n"
 //		"BL		sub_FF83C958\n" // start diskboot.bin
 		"BL		sub_FF83CC54\n"
@@ -381,6 +386,7 @@ void __attribute__((naked,noinline)) task_Startup_my() {
      );
 }
 
+// @ FF83461C
 void __attribute__((naked,noinline)) taskcreatePhySw_my() {
 	asm volatile (
 "                STMFD   SP!, {R3-R5,LR}\n"
@@ -413,27 +419,28 @@ void CreateTask_spytask() {
 }
 
  ///*----------------------------------------------------------------------
- // @ FF8A3B4C
+//@ FF8A3B50
 void __attribute__((naked,noinline)) init_file_modules_task() {
  asm volatile(
                  "STMFD   SP!, {R4-R6,LR}\n"
-                 "BL      sub_FF89A294\n"
+                 "BL      sub_FF89A298\n"
                  "LDR     R5, =0x5006\n"
                  "MOVS    R4, R0\n"
                  "MOVNE   R1, #0\n"
                  "MOVNE   R0, R5\n"
                  "BLNE    _PostLogicalEventToUI\n"
 
-				 //"BL      sub_FF89A2C0\n"
-                 "BL      sub_FF89A2C0_my\n"			// patched
+				 //"BL      sub_FF89A2C4\n"
+                 "BL      sub_FF89A2C4_my\n"			// patched
 
                  "BL      core_spytask_can_start\n"      // CHDK: Set "it's-safe-to-start" flag for spytask
 
-				 "B			sub_FF8A3B6C\n"	// Continue in firmware
+				 "B			sub_FF8A3B70\n"	// Continue in firmware
  );
 }
 
-void __attribute__((naked,noinline)) sub_FF89A2C0_my() {
+// @ FF89A2C4
+void __attribute__((naked,noinline)) sub_FF89A2C4_my() {
  asm volatile(
                  "STMFD   SP!, {R4,LR}\n"
 				 "MOV	  R0, #3\n"
@@ -441,10 +448,11 @@ void __attribute__((naked,noinline)) sub_FF89A2C0_my() {
                  //"BL      sub_FF876E1C\n"
                  "BL      sub_FF876E1C_my\n"    // patched
 
-				 "B		sub_FF89A2CC\n"	// Continue in firmware
+				 "B		sub_FF89A2D0\n"	// Continue in firmware
  );
 }
 
+// @ FF876E1C
 void __attribute__((naked,noinline)) sub_FF876E1C_my() {
  asm volatile(
 		"STMFD	SP!, {R4-R8,LR}\n"
@@ -476,6 +484,7 @@ void __attribute__((naked,noinline)) sub_FF876E1C_my() {
  );
 }
 
+// @ FF876A44
 void __attribute__((naked,noinline)) sub_FF876A44_my() {
  asm volatile(
 		"STMFD	SP!, {R4-R6,LR}\n"
@@ -496,6 +505,7 @@ void __attribute__((naked,noinline)) sub_FF876A44_my() {
  );
 }
 //------------------------------------------------------------------
+// @ FF876764
 void __attribute__((naked,noinline)) sub_FF876764_my() {
  asm volatile(
 		"STMFD	SP!, {R4-R10,LR}\n"
@@ -521,7 +531,7 @@ void __attribute__((naked,noinline)) sub_FF876764_my() {
 		"MOV	R2, #0\n"
 		"MOV	R1, #0x200\n"
 		"MOV	R0, #2\n"
-		"BL		sub_FF894344\n"
+		"BL		sub_FF894348\n" 
 		"MOVS	R4, R0\n"
 		"BNE	loc_FF8767D0\n"
 "loc_FF8767C8:\n"
@@ -537,7 +547,7 @@ void __attribute__((naked,noinline)) sub_FF876764_my() {
 		"CMP	R0, #1\n"
 		"BNE	loc_FF8767FC\n"
 		"MOV	R0, #2\n"
-		"BL		sub_FF894494\n"
+		"BL		sub_FF894498\n" 
 		"B		loc_FF8767C8\n"
 "loc_FF8767FC:\n"
 		"LDR	R1, [R5,#0x64]\n"
@@ -614,7 +624,7 @@ void __attribute__((naked,noinline)) sub_FF876764_my() {
 		"MOV	R4, R8\n"
 "loc_FF87688C:\n"
 		"MOV	R0, #2\n"
-		"BL		sub_FF894494\n"
+		"BL		sub_FF894498\n" 
 		"CMP	R4, #0\n"
 		"BNE	loc_FF8768C8\n"
 		"LDR	R1, [R5,#0x64]\n"
@@ -645,7 +655,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
 "                SUB     SP, SP, #0x1C \n"
 "                BL      sub_FF8660A0 \n"
 "                LDR     R1, =0x2588 \n"
-"                LDR     R6, =0xFFB97A38 \n"
+"                LDR     R6, =0xFFB97AF4 \n"
 "                MOV     R0, #0 \n"
 "                ADD     R3, SP, #0x10 \n"
 "                ADD     R12, SP, #0x14 \n"

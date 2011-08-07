@@ -675,10 +675,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
 "                BL      sub_FF83A4C8 \n"
 "                CMP     R0, #0 \n"
 "                LDRNE   R1, =0x262 \n"
-
-//"                ADRNE   R0, aRotaryencoder_ ; "RotaryEncoder.c" \n"
-"				LDRNE	R0,=0xFF865FC4 \n"
-
+"				 LDRNE   R0,=0xFF865FC4 \n" //aRotaryencoder_ ; "RotaryEncoder.c" \n"
 "                BLNE    _DebugAssert \n"
 "                LDR     R0, [SP] \n"
 "                AND     R4, R0, #0xFF \n"
@@ -693,10 +690,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
 "                BNE     loc_FF865D64 \n"
 "                CMP     R4, #0 \n"
 "                LDRNE   R1, =0x2ED \n"
-
-//"                ADRNE   R0, aRotaryencoder_ ; "RotaryEncoder.c" \n"
-"				LDRNE	R0,=0xFF865FC4 \n"
-
+"				 LDRNE   R0,=0xFF865FC4 \n" //aRotaryencoder_ ; "RotaryEncoder.c" \n"
 "                BLNE    _DebugAssert \n"
 "                RSB     R0, R4, R4,LSL#3 \n"
 "                LDR     R0, [R6,R0,LSL#2] \n"
@@ -838,9 +832,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
 "                LDR     R1, =0x2CF \n"
 
 "loc_FF865F64: \n"
-//"                ADR     R0, aRotaryencoder_ ; "RotaryEncoder.c" \n"
-"				LDR		R0,=0xFF865FC4 \n"
-
+"				 LDR     R0,=0xFF865FC4 \n" //aRotaryencoder_ ; "RotaryEncoder.c" \n"
 "                BL      _DebugAssert \n"
 
 "loc_FF865F6C: \n"
@@ -866,9 +858,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
 "                LDR     R1, =0x2D6 \n"
 
 "loc_FF865FB0: \n"
-//"                ADR     R0, aRotaryencoder_ ; "RotaryEncoder.c" \n"
-"				LDR		R0,=0xFF865FC4 \n"
-
+"				 LDR     R0,=0xFF865FC4 \n" //aRotaryencoder_ ; "RotaryEncoder.c" \n"
 "                BL      _DebugAssert \n"
 "                B       loc_FF865D64 \n"
 
@@ -880,10 +870,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
 "                LDR     R0, [R9,R4,LSL#2] \n"
 "                CMP     R0, #0 \n"
 "                MOVEQ   R1, #0x2E0 \n"
-
-//"                ADREQ   R0, aRotaryencoder_ ; "RotaryEncoder.c" \n"
-"				LDRNE	R0,=0xFF865FC4 \n"
-
+"				 LDREQ   R0,=0xFF865FC4 \n" //aRotaryencoder_ ; "RotaryEncoder.c" \n"
 "                BLEQ    _DebugAssert \n"
 "                RSB     R0, R4, R4,LSL#3 \n"
 "                ADD     R0, R6, R0,LSL#2 \n"
