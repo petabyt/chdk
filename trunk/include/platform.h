@@ -260,7 +260,9 @@ short shooting_get_flash_mode();
 
 /******************************************************************/
 int shooting_get_user_tv_id();
+#if defined(CAM_DRAW_EXPOSITION)
 char* shooting_get_tv_str();
+#endif
 short shooting_get_tv96_from_shutter_speed(float t);
 short shooting_get_tv96();
 void shooting_set_tv96(short v, short is_now);
@@ -282,7 +284,9 @@ short shooting_get_aperture_sizes_table_prop_id(short i);
 short shooting_get_max_aperture_sizes_table_prop_id();
 short shooting_get_aperture_from_av96(short av96);
 int shooting_get_user_av_id();
+#if defined(CAM_DRAW_EXPOSITION)
 char* shooting_get_av_str();
+#endif
 void shooting_set_user_av_by_id(int v);
 short shooting_get_av96();
 void shooting_set_av96(short v,short is_now);
