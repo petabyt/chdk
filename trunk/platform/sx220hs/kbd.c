@@ -25,7 +25,7 @@ extern void _GetKbdState(long*);
 #define DELAY_TIMEOUT 10000
 
 // override key and feather bits to avoid feather osd messing up chdk display in ALT mode
-#define KEYS_MASK0 (0x0007FC0F)     // sx220 physw_status[0] 7FC05
+#define KEYS_MASK0 (0x000FFC0F)     // sx220 physw_status[0]
 #define KEYS_MASK1 (0x00200000)
 #define KEYS_MASK2 (0x00002182)  	// sx220 physw_status[2]
 
@@ -39,8 +39,6 @@ extern void _GetKbdState(long*);
 #ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
 #endif
-
-#define KEY_SOFT_LEFT 987	//added just to disable soft_left in alt mode
 
 static KeyMap keymap[] = {
 
@@ -61,19 +59,23 @@ static KeyMap keymap[] = {
 	{ 0, KEY_ZOOM_IN  		 , 0x0000000C },
 	{ 0, KEY_ZOOM_IN2  		 , 0x0000000C },
 	{ 0, KEY_DISPLAY         , 0x00000800 },
-	{ 0, KEY_UP		         , 0x00001400 }, 
+	{ 0, KEY_UP		         , 0x00001000 }, 
 	{ 0, KEY_RIGHT		     , 0x00006000 },
 	{ 0, KEY_SET		     , 0x00010000 },
 	{ 0, KEY_PRINT		     , 0x00010800 },  //DISP+SET for ALT menu
-	{ 0, KEY_DOWN		     , 0x00028000 },
-	{ 0, KEY_MENU		     , 0x00040000 },	
-
-	{ 2, KEY_SHOOT_FULL		 , 0x00000002 },
-	{ 2, KEY_SOFT_LEFT	 	 , 0x00000080 },
+	{ 0, KEY_DOWN		     , 0x00020000 },
+	{ 0, KEY_MENU		     , 0x00040000 },
+	{ 0, KEY_VIDEO		     , 0x00080000 },	
+	{ 0, KEY_RIGHT_SOFT	     , 0x00002000 },
+	{ 0, KEY_UP_SOFT	     , 0x00000400 },
+	{ 0, KEY_DOWN_SOFT	     , 0x00008000 },	
+	
+	{ 2, KEY_LEFT_SOFT	 	 , 0x00000080 },
 	{ 2, KEY_LEFT			 , 0x00000100 },
 	{ 2, KEY_SHOOT_HALF		 , 0x00002000 },
+	{ 2, KEY_SHOOT_FULL		 , 0x00002002 },	
 
-	{ 1, KEY_VIDEO		     , 0x00200000 },	
+	{ 1, KEY_PLAYBACK	     , 0x00200000 },	
 
 	{ 0, 0, 0 }
 };
