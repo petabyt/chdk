@@ -20,7 +20,7 @@ unsigned long get_space_perc() {
 static void gui_space_draw_spacebar_horizontal() {
     coord x;
     register coord xx, yy;
-    
+
     xx = conf.space_hor_pos.x;
     yy = conf.space_hor_pos.y;
 
@@ -29,11 +29,9 @@ static void gui_space_draw_spacebar_horizontal() {
     int size = 0;
     if (conf.space_warn_type == 0) {
         cl = (perc<=conf.space_perc_warn)?conf.osd_color_warn:(conf.space_color);
-    }
-    if (conf.space_warn_type == 1) {
+    } else if (conf.space_warn_type == 1) {
         cl = (GetFreeCardSpaceKb()/1024<=conf.space_mb_warn)?conf.osd_color_warn:(conf.space_color);
-    }
-    if (conf.space_warn_type == 2) {
+    } else if (conf.space_warn_type == 2) {
         cl = conf.space_color;
     }
     // space icon / bar
@@ -43,14 +41,12 @@ static void gui_space_draw_spacebar_horizontal() {
         if (xx>(screen_width-size)) {
             xx = screen_width-size;
         }
-    }
-    if (conf.space_bar_size == 1) {
+    } else if (conf.space_bar_size == 1) {
         size = screen_width/2-4;
         if (xx>(screen_width-size)) {
             xx = screen_width-size;
         }
-    }
-    if (conf.space_bar_size == 2) {
+    } else if (conf.space_bar_size == 2) {
         size = screen_width-4;
         if (xx>(screen_width-size)) {
             xx = 0;
@@ -77,7 +73,7 @@ static void gui_space_draw_spacebar_horizontal() {
 static void gui_space_draw_spacebar_vertical() {
     coord y;
     register coord xx, yy;
-    
+
     xx = conf.space_ver_pos.x;
     yy = conf.space_ver_pos.y;
 
@@ -86,11 +82,9 @@ static void gui_space_draw_spacebar_vertical() {
     int size = 0;
     if (conf.space_warn_type == 0) {
         cl = (perc<=conf.space_perc_warn)?conf.osd_color_warn:(conf.space_color);
-    }
-    if (conf.space_warn_type == 1) {
+    } else if (conf.space_warn_type == 1) {
         cl = (GetFreeCardSpaceKb()/1024<=conf.space_mb_warn)?conf.osd_color_warn:(conf.space_color);
-    }
-    if (conf.space_warn_type == 2) {
+    } else if (conf.space_warn_type == 2) {
         cl = conf.space_color;
     }
 
@@ -101,14 +95,12 @@ static void gui_space_draw_spacebar_vertical() {
         if (yy>(screen_height-size)) {
             yy = screen_height-size;
         }
-    }
-    if (conf.space_bar_size == 1) {
+    } else if (conf.space_bar_size == 1) {
         size = screen_height/2-4;
         if (yy>(screen_height-size)) {
             yy = screen_height-size;
         }
-    }
-    if (conf.space_bar_size == 2) {
+    } else if (conf.space_bar_size == 2) {
         size = screen_height-4;
         if (yy>(screen_height-size)) {
             yy = 0;
@@ -134,7 +126,7 @@ static void gui_space_draw_spacebar_vertical() {
 static void gui_space_draw_icon() {
     coord x;
     register coord xx, yy;
-    
+
     xx = conf.space_icon_pos.x;
     yy = conf.space_icon_pos.y;
 
@@ -142,11 +134,9 @@ static void gui_space_draw_icon() {
     int perc = get_space_perc();
     if (conf.space_warn_type == 0) {
         cl = (perc<=conf.space_perc_warn)?conf.osd_color_warn:(conf.space_color);
-    }
-    if (conf.space_warn_type == 1) {
+    } else if (conf.space_warn_type == 1) {
         cl = (GetFreeCardSpaceKb()/1024<=conf.space_mb_warn)?conf.osd_color_warn:(conf.space_color);
-    }
-    if (conf.space_warn_type == 2) {
+    } else if (conf.space_warn_type == 2) {
         cl = conf.space_color;
     }
     int i;
@@ -192,11 +182,9 @@ static void gui_space_draw_percent() {
     color cl = conf.space_color;
     if (conf.space_warn_type == 0) {
         cl = (perc<=conf.space_perc_warn)?conf.osd_color_warn:(conf.space_color);
-    }
-    if (conf.space_warn_type == 1) {
+    } else if (conf.space_warn_type == 1) {
         cl = (GetFreeCardSpaceKb()/1024<=conf.space_mb_warn)?conf.osd_color_warn:(conf.space_color);
-    }
-    if (conf.space_warn_type == 2) {
+    } else if (conf.space_warn_type == 2) {
         cl = conf.space_color;
     }
     sprintf(osd_buf, "%3d%%", get_space_perc());
@@ -210,11 +198,9 @@ static void gui_space_draw_mb() {
     color cl = conf.space_color;
     if (conf.space_warn_type == 0) {
         cl = (perc<=conf.space_perc_warn)?conf.osd_color_warn:(conf.space_color);
-    }
-    if (conf.space_warn_type == 1) {
+    } else if (conf.space_warn_type == 1) {
         cl = (GetFreeCardSpaceKb()/1024<=conf.space_mb_warn)?conf.osd_color_warn:(conf.space_color);
-    }
-    if (conf.space_warn_type == 2) {
+    } else if (conf.space_warn_type == 2) {
         cl = conf.space_color;
     }
     unsigned int freemb=GetFreeCardSpaceKb()/1024;
@@ -237,8 +223,7 @@ void gui_space_draw_osd() {
     }
     if (conf.space_bar_show==1) {
         gui_space_draw_spacebar_horizontal();
-    }
-    if (conf.space_bar_show==2) {
+    } else if (conf.space_bar_show==2) {
         gui_space_draw_spacebar_vertical();
     }
 }
