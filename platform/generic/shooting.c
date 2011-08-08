@@ -1213,7 +1213,7 @@ void shooting_bracketing(void){
   short drive_mode=shooting_get_drive_mode();
   if (shooting_get_drive_mode()!=0)  {
      int m=mode_get()&MODE_SHOOTING_MASK;
-     if (m!=MODE_STITCH) {
+     if (m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE) {
        if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING) {
            bracketing.shoot_counter=0;
            bracketing.av96=0;
