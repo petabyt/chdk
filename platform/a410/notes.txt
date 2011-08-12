@@ -9,6 +9,11 @@ Camera depending notes:
 
 Changelog
 
+Beta 5, 2011-08-07
+- manual focus / subject distance override is now possible (disabled an assert that caused the shutdown)
+  note: this does not include af-scan in video (which would be too much work to fix)
+- movie time limit increase was tested, it's no longer "experimental"
+
 Beta 4, 2011-07-28
 - experimental change: movie time limit increased to 60 minutes / recording in 320x240, 640x480 modes
   tested in both modes, resulting files show no sign of corruption
