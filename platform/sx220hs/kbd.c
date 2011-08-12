@@ -108,7 +108,7 @@ void my_blinkk(void) {
 	}
 }
 
-
+// Set to 1 to disable jogdial events from being processed in firmware
 volatile int jogdial_stopped=0;
 
 long __attribute__((naked)) wrap_kbd_p1_f();
@@ -146,6 +146,22 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f() {
 	return 0;   // shut up the compiler
 }
 
+// copied from g12 and sx30, thx to philmoz
+// Pointer to stack location where jogdial task records previous and current
+// jogdial positions
+extern short* jog_position;
+
+void jogdial_control(int n)
+{
+    if (jogdial_stopped && !n)
+    {
+        // If re-enabling jogdial set the task code current & previous positions to the actual
+        // dial positions so that the change won't get processed by the firmware
+        jog_position[0] = jog_position[2] = (*(short*)0xC0240106);  // Rear dial
+    }
+    jogdial_stopped = n;
+}
+
 // like SX30 and g12
 void my_kbd_read_keys() {
 	
@@ -162,7 +178,7 @@ void my_kbd_read_keys() {
 		  physw_status[0] = kbd_new_state[0];
 		  physw_status[1] = kbd_new_state[1];
           physw_status[2] = kbd_new_state[2];
-		jogdial_stopped=0;
+		 jogdial_control(0);
     } else {
         // override keys
         physw_status[0] = (kbd_new_state[0] | KEYS_MASK0) & (~KEYS_MASK0 | kbd_mod_state[0]); 
@@ -170,11 +186,11 @@ void my_kbd_read_keys() {
         physw_status[2] = (kbd_new_state[2] | KEYS_MASK2) & (~KEYS_MASK2 | kbd_mod_state[2]);
         
 		if ((jogdial_stopped==0) && !state_kbd_script_run) {
-            jogdial_stopped=1;
+            jogdial_control(1);
             get_jogdial_direction();
         }
         else if (jogdial_stopped && state_kbd_script_run)
-            jogdial_stopped=0;
+            jogdial_control(0);
     }
 
     remote_key = (physw_status[2] & USB_MASK)==USB_MASK;

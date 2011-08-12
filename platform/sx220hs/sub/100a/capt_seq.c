@@ -6,7 +6,7 @@
 
 static long *nrflag = (long*)(0x89D4+0x8);  // sx220 FF190524 + 8 
 #define NR_AUTO (0)							// have to explictly reset value back to 0 to enable auto
-
+#define PAUSE_FOR_FILE_COUNTER 100          // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 
 #include "../../../generic/capt_seq.c"
 
@@ -158,9 +158,10 @@ void __attribute__((naked,noinline)) capt_seq_task() {
                  "B       loc_FF0778F0\n"
 
  "loc_FF077714:\n"
-                                        
+                  
+				 "BL	  shooting_expo_iso_override\n"	   // added
                  "BL      sub_FF077F04\n"
-				 "BL      shooting_expo_param_override\n"  // + patched                 
+				 "BL      shooting_expo_param_override\n"  // added                 
  				 "BL      sub_FF074BC4\n"
 				 
 				 "MOV     R0, #0\n"							// added
@@ -177,6 +178,7 @@ void __attribute__((naked,noinline)) capt_seq_task() {
                  "MOV     R0, R8\n"
 				 // "BL      sub_FF18D790\n"    // SX220
 				 "BL      sub_FF18D790_my\n"   // + patched
+				 "BL      capt_seq_hook_raw_here\n"     //added
 				 "MOV     R4, R0\n"
                  "MOV     R2, R8\n"
                  "MOV     R1, #1\n"
@@ -567,8 +569,8 @@ asm volatile(
 
  "loc_FF18D98C:\n"                           
                  "MOV     R0, R4\n"
-                 "BL      sub_FF3058A0_my\n"		//patched
-				 
+                 "BL      sub_FF3058A0\n"
+
  "loc_FF18D994:\n"                          
  
  			    "MOV     R7, R0\n"
@@ -585,150 +587,6 @@ asm volatile(
                  "LDMFD   SP!, {R3-R7,PC}\n"
 			);
 } 
-
-void __attribute__((naked,noinline)) sub_FF3058A0_my(  ) {
-asm volatile (
-"	STMFD	SP!, {R3-R7,LR} \n"                
-"	MOV	R4, R0 \n"                           
-"	BL	sub_FF18E4F0 \n"                      
-"	MVN	R1, #0 \n"                           
-"	BL	sub_FF0826F8 \n"                      
-"	LDR	R0, =0xFF18D1CC \n"                  
-"	MOV	R1, R4 \n"                           
-"	BL	sub_FF0B8C48 \n"                      
-"	MOV	R0, R4 \n"                           
-"	BL	sub_FF18D0C8 \n"                      
-"	MOV	R0, R4 \n"                           
-"	BL	sub_FF18D53C \n"                      
-"	MOV	R6, R0 \n"                           
-"	LDR	R1, =0xEF48 \n"                      
-"	MOV	R2, #4 \n"                           
-"	MOV	R0, #0x8A \n"                        
-"	BL	sub_FF08A944 \n"                      
-"	TST	R0, #1 \n"                           
-"	LDRNE	R1, =0x21E \n"                     
-"	LDRNE	R0, =0xFF305AB0 \n"                
-"	BLNE	sub_FF00EC88 \n"                    
-"	BL	sub_FF07AF50 \n"                      
-"	CMP	R6, #0xA \n"                         
-"	MOV	R5, #1 \n"                           
-"	MOV	R7, #0 \n"                           
-"	ADDCC	PC, PC, R6, LSL #2 \n"             
-"	B	loc_FF3059D0 \n"                       
-"	B	loc_FF3059D0 \n"                       
-"	B	loc_FF305934 \n"                       
-"	B	loc_FF305944 \n"                       
-"	B	loc_FF305960 \n"                       
-"	B	loc_FF305970 \n"                       
-"	B	loc_FF30599C \n"                       
-"	B	loc_FF3059D0 \n"                       
-"	B	loc_FF3059D0 \n"                       
-"	B	loc_FF3059D0 \n"                       
-"	B	loc_FF3059B4 \n"                       
-"loc_FF305934:\n"
-"	MOV	R0, #1 \n"                           
-"	BL	sub_FF0B8C78 \n"                      
-"	STRH	R7, [R4, #0x10] \n"                 
-"	B	loc_FF3059C4 \n"                       
-"loc_FF305944:\n"
-"	MOV	R0, #1 \n"                           
-"	BL	sub_FF0B8C78 \n"                      
-"	MOV	R0, R4 \n"                           
-"	STRH	R5, [R4, #0x10] \n"                 
-"	BL	sub_FF305688 \n"                      
-"loc_FF305958:\n"
-"	MOV	R5, R0 \n"                           
-"	B	loc_FF3059E0 \n"                       
-"loc_FF305960:\n"
-"	MOV	R0, #1 \n"                           
-"	BL	sub_FF0B8C78 \n"                      
-"	MOV	R0, #1 \n"                           
-"	B	loc_FF30597C \n"                       
-"loc_FF305970:\n"
-"	MOV	R0, #1 \n"                           
-"	BL	sub_FF0B8C78 \n"                      
-"	MOV	R0, #2 \n"                           
-"loc_FF30597C:\n"
-"	BL	sub_FF24C69C \n"                      
-"	MOV	R0, R4 \n"                           
-"	STRH	R5, [R4, #0x10] \n"                 
-"	BL	sub_FF305688 \n"                      
-"	MOV	R5, R0 \n"                           
-"	MOV	R0, #0 \n"                           
-"	BL	sub_FF24C69C \n"                      
-"	B	loc_FF3059E0 \n"                       
-"loc_FF30599C:\n"
-"	MOV	R0, #1 \n"                           
-"	BL	sub_FF0B8C78 \n"                      
-"	MOV	R0, R4 \n"                           
-"	STRH	R7, [R4, #0x10] \n"                 
-"	BL	sub_FF305750 \n"                      
-"	B	loc_FF305958 \n"                       
-"loc_FF3059B4:\n"
-"	MOV	R0, #0 \n"                           
-"	BL	sub_FF0B8C78 \n"                      
-"	MOV	R0, #4 \n"                           
-"	STRH	R0, [R4, #0x10] \n"                 
-"loc_FF3059C4:\n"
-"	MOV	R0, R4 \n"                           
-"	BL	sub_FF305608 \n"                      
-"	B	loc_FF305958 \n"                       
-"loc_FF3059D0:\n"
-"	MOV	R1, #0x264 \n"                       
-"	LDR	R0, =0xFF305AB0 \n"                  
-"	BL	sub_FF00EC88 \n"                      
-"	MOV	R5, #0x1D \n"                        
-"loc_FF3059E0:\n"
-"	TST	R5, #1 \n"                           
-"	MOVNE	R0, R5 \n"                         
-"	BNE	loc_FF305A84 \n"                     
-"	LDR	R5, =0xEF44 \n"                      
-"	LDR	R0, [R5] \n"                         
-"	CMP	R0, #0 \n"                           
-"	BNE	loc_FF305A10 \n"                     
-"	LDRH	R0, [R4, #0x10] \n"                 
-"	CMP	R0, #1 \n"                           
-"	CMPNE	R0, #3 \n"                         
-"	CMPNE	R0, #5 \n"                         
-"	BEQ	loc_FF305A24 \n"                     
-"loc_FF305A10:\n"
-"	LDR	R0, =0x3EB1C \n"                     
-"	LDRH	R0, [R0] \n"                        
-"	SUB	R1, R0, #0x4000 \n"                  
-"	SUBS	R1, R1, #0x20C \n"                  
-"	BLEQ	sub_FF0A14C8 \n"                    
-"loc_FF305A24:\n"
-"	MOV	R0, R4 \n"                           
-"	BL	sub_FF18D638 \n"                      
-"	MOV	R0, R4 \n"                           
-"	BL	sub_FF18D5D4 \n"                      
-"	BL      capt_seq_hook_raw_here\n"     //added
-"	LDR	R0, [R5] \n"                         
-"	CMP	R0, #0 \n"                           
-"	BNE	loc_FF305A54 \n"                     
-"	LDRH	R0, [R4, #0x10] \n"                 
-"	CMP	R0, #1 \n"                           
-"	CMPNE	R0, #3 \n"                         
-"	CMPNE	R0, #5 \n"                         
-"	BEQ	loc_FF305A80 \n"                     
-"loc_FF305A54:\n"
-"	BL	sub_FF18E4F0 \n"                      
-"	LDR	R4, =0x27E \n"                       
-"	LDR	R2, =0x3A98 \n"                      
-"	LDR	R3, =0xFF305AB0 \n"                  
-"	MOV	R1, #4 \n"                           
-"	STR	R4, [SP] \n"                         
-"	BL	sub_FF07DB68 \n"                      
-"	CMP	R0, #0 \n"                           
-"	MOVNE	R1, R4 \n"                         
-"	LDRNE	R0, =0xFF305AB0 \n"                
-"	BLNE	sub_FF00EC88 \n"                    
-"loc_FF305A80:\n"
-"	MOV	R0, #0 \n"                           
-"loc_FF305A84:\n"
-"	LDMFD	SP!, {R3-R7,PC} \n"                
-	);
-}
 
 ///////sx220 sub_FF0C3E54
 void __attribute__((naked,noinline)) exp_drv_task(){

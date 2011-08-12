@@ -459,6 +459,11 @@ void __attribute__((naked,noinline)) init_file_modules_task() {
  );
 }
 
+// copied like in g12 and sx30, thx to philmoz
+// Pointer to stack location where jogdial task records previous and current
+// jogdial positions
+short *jog_position;
+
 // In SX220 called RotaryEncoder FF05671C
 void __attribute__((naked,noinline)) JogDial_task_my() {
  asm volatile(
@@ -470,7 +475,11 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
                  "MOV     R0, #0\n"
                  "ADD     R10, SP, #8\n"
                  "ADD     R9, SP, #0xC\n"
-
+				 
+				 // Save pointer for kbd.c routine
+				 "LDR R2, =jog_position \n"
+				 "STR R9, [R2] \n"            
+				 
  "loc_FF05673C:\n"
                  "ADD     R2, SP, #0x14\n"
                  "MOV     R1, #0\n"
