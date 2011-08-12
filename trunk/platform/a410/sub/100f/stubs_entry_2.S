@@ -39,3 +39,5 @@ NHSTUB(apex2us, 0xFFC94108) //for extra long exposures
 NHSTUB(WriteSDCard, 0xFFC69824) //a bit unsure, found using the A610 port
 
 NHSTUB(SetScriptMode,0xFFD3799C) //
+NHSTUB(MFOn,0xffd24c18)
+NHSTUB(MFOff,0xffd24c48)

@@ -20,6 +20,9 @@ extern long _GetFocusLensCurrentPosition();
 extern long _GetFocusLensSubjectDistance();
 extern long _GetFocusLensSubjectDistanceFromLens();
 extern void _MoveFocusLensToDistance(short *dist);
+#if defined(CAMERA_a410)
+extern void MoveFocusLensToDistanceA410(short *dist);
+#endif
 extern void _PutInNdFilter();
 extern void _PutOutNdFilter();
 extern volatile long focus_busy;

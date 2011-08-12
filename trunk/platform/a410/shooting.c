@@ -71,7 +71,7 @@ const ShutterSpeed shutter_speeds_table[] = {
 
 const ISOTable iso_table[] = {
     {  0,    0, "Auto", -1},
-    {  1,   64,   "50", -1},
+    {  1,   50,   "50", -1},
     {  2,  100,  "100", -1},
     {  3,  200,  "200", -1},
 };
