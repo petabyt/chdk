@@ -19,6 +19,14 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
 {
  asm volatile("STMFD   SP!, {R0-R12,LR}\n");
 
+#ifdef PAUSE_FOR_FILE_COUNTER
+    // Some cameras need a slight delay for the file counter to be updated correctly
+    // before raw_savefile tries to get the file name & directory.
+    // Add '#define PAUSE_FOR_FILE_COUNTER 100' in the camera firmware capt_seq.c file.
+    // The value can be adjusted as needed for different cameras.
+    _SleepTask(PAUSE_FOR_FILE_COUNTER);
+#endif
+
     raw_save_stage = RAWDATA_AVAILABLE;
     core_rawdata_available();
     while (raw_save_stage != RAWDATA_SAVED){
