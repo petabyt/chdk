@@ -13,7 +13,7 @@ for v in $VERSIONS; do
         name=${line[0]}
         addr=${line[1]}
         length=${line[2]}
-	./gensig sig_ref_$2_${v}.bin ${rom_start} ${name}_${v} $addr ${length:-32}
+	./gensig_vxworks sig_ref_$2_${v}.bin ${rom_start} ${name}_${v} $addr ${length:-32}
     done
 	)
 done

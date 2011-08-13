@@ -48,3 +48,10 @@ NSTUB(SetZoomActuatorSpeedPercent, 0xffc00948)
 //NHSTUB(OpLog_WriteToSD, 			0xFFC5B878)
 //NSTUB(open, 						0xFFC09EC4)
 //NSTUB(close, 						0xFFC09F74)
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(rename                        ,0xffc13c30) // New address = 0xffc133b4
+NHSTUB(write                         ,0xffc0a1bc) // New address = 0xffc13c08

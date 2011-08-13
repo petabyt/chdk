@@ -67,3 +67,10 @@ NHSTUB(SetZoomActuatorSpeedPercent, 0xFFC00950) // NULLSUB
 // could not find
 NHSTUB(GetFocusLensSubjectDistance, 0xFFC00950) // NULLSUB
 NHSTUB(SetScriptMode, 0xFFC00950) //NULLSUB
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(rename                        ,0xffc13d10) // New address = 0xffc13494
+NHSTUB(strrchr                       ,0xffc6cad0) // New address = 0xffd64ff8
+NHSTUB(write                         ,0xffc09b44) // New address = 0xffc13ce8

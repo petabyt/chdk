@@ -55,3 +55,10 @@ NHSTUB(unknown_libname_96,          do_nothing)
 NHSTUB(j_unknown_libname_73,        do_nothing)
 
 NHSTUB(SetScriptMode,        0xFF8736DC) // "SetScriptMode" OK
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(rename                        ,0xff823e60) // New address = 0xff8235e4
+NHSTUB(write                         ,0xff81a0f4) // New address = 0xff823e38
