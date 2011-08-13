@@ -81,3 +81,10 @@ NHSTUB(utime,                  0xFF810948)
 NHSTUB(SetScriptMode,           0xFF875438) // "SetScriptMode"
 NHSTUB(PB2Rec, 0xFF87871C)
 NHSTUB(Rec2PB, 0xFF877120)
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(rename                        ,0xff823e74) // New address = 0xff8235f8
+NHSTUB(write                         ,0xff81a0f4) // New address = 0xff823e4c

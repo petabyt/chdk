@@ -73,3 +73,9 @@ NHSTUB(rename,							0xDEADC0DE)
 STUB(FF896B84)
 STUB(FF896AB4)
 STUB(FFA048E8)
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(write                         ,0xff81abd8) // New address = 0xff83530c

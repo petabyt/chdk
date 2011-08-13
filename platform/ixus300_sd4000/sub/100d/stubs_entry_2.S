@@ -207,3 +207,10 @@ NHSTUB(GetImageFolder, 0xFF94337C)                   // like S95 and SD4500, fun
 NHSTUB(exmem_alloc, 0xFF88A17C)                      // = ExMem.AllocCacheable ?, experimental alternate memory allocation http://chdk.setepontos.com/index.php?topic=5980.0
 
 NHSTUB(LEDDrive, 0xFF860C6C)                         // camera_set_led()
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(Open                          ,0xff86f13c) // New address = 0xff836d4c
+NHSTUB(write                         ,0xff81acdc) // New address = 0xff836e48

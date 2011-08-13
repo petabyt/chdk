@@ -44,3 +44,10 @@ NHSTUB(TurnOnMic, 0xFFC35CFC)
 NHSTUB(TurnOffMic, 0xFFC35D28)
 
 NHSTUB(exmem_alloc, 0xFFC5869C)
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(rename                        ,0xffc13c5c) // New address = 0xffc133e0
+NHSTUB(write                         ,0xffc0a1bc) // New address = 0xffc13c34

@@ -84,3 +84,10 @@ NHSTUB(strrchr, 0xff9b8750)  // via memset (strrchr is above it)
 // NHSTUB(time, 0xff86b83c)  // ok, via _sub_???_SystemTime.c__1
 NHSTUB(SetScriptMode, 0xFF878C68)  // string
 NHSTUB(Restart, 0xFF8293DC)
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(rename                        ,0xff823bc8) // New address = 0xff82334c
+NHSTUB(write                         ,0xff819aac) // New address = 0xff823ba0

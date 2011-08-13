@@ -48,3 +48,10 @@ NHSTUB(Mount_FileSystem, 0xFFC00954)
 NHSTUB(Unmount_FileSystem, 0xFFC00954)
 
 
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(rename                        ,0xffc13300) // New address = 0xffc12a84
+NHSTUB(write                         ,0xffc0a27c) // New address = 0xffc132d8

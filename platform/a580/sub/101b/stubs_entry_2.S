@@ -66,3 +66,10 @@ NHSTUB(taskResume,			 0xFFC00948)
 NHSTUB(taskSuspend,			 0xFFC00948)
 NHSTUB(EnterToCompensationEVF, 0xFFC15AA4)
 NHSTUB (DoAFLock,  0xFFC157B4)
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(rename                        ,0xffc13c50) // New address = 0xffc133d4
+NHSTUB(write                         ,0xffc0a1bc) // New address = 0xffc13c28

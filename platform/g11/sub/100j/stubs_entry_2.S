@@ -48,3 +48,9 @@ NHSTUB(rewinddir, 0xFF810B04)  // nullsub
 NHSTUB(Unmount_FileSystem, 0xFF810B04)  // nullsub
 NHSTUB(Mount_FileSystem, 0xFF810B04)  // nullsub
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFF810B04)  // nullsub
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(write                         ,0xff81abd8) // New address = 0xff835a40

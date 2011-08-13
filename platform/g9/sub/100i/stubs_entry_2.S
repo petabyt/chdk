@@ -23,3 +23,11 @@ NHSTUB(SetScriptMode, 0xFF872F78) // "SetScriptMode"
 NHSTUB(apex2us, 0xFF9BF0C4) // from sub_FF897408 via exp_drv_task
 NHSTUB(PB2Rec, 0xFF876664)
 NHSTUB(Rec2PB, 0xFF875024)
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(GetZoomLensCurrentPosition    ,0xff93ae1c) // New address = 0xffa3e680
+NHSTUB(rename                        ,0xff825600) // New address = 0xff824d40
+NHSTUB(write                         ,0xff81a3d8) // New address = 0xff8255d8

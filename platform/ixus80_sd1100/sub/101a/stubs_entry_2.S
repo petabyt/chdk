@@ -31,3 +31,10 @@ NHSTUB(DoAFLock, 0xff825c4c)
 NHSTUB(UnlockAF, 0xff825c90)
 NHSTUB(apex2us, 0xFF9AC134)
 NHSTUB(SetScriptMode, 0xFF873680)
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(rename                        ,0xff823f28) // New address = 0xff8236ac
+NHSTUB(write                         ,0xff81a1bc) // New address = 0xff823f00

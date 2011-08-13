@@ -99,3 +99,11 @@ NHSTUB(SetScriptMode, 0xFF86D050) //"SetScriptMode"
 
 NHSTUB(PB2Rec, 0xFF87058C)
 NHSTUB(Rec2PB, 0xFF86EF84)
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(GetZoomLensCurrentPosition    ,0xff92b200) // New address = 0xffa1abc8
+NHSTUB(rename                        ,0xff82509c) // New address = 0xff8247dc
+NHSTUB(write                         ,0xff81a3d8) // New address = 0xff825074

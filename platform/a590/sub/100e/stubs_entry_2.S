@@ -107,3 +107,10 @@ NHSTUB(UnlockAF, 0xffc15c1c)
 NHSTUB(apex2us, 0xFFD7DD6C)
 NHSTUB(WriteSDCard, 0xFFD01548)
 NHSTUB(SetScriptMode, 0xFFC61F08) // string
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(rename                        ,0xffc13c5c) // New address = 0xffc133e0
+NHSTUB(write                         ,0xffc0a1bc) // New address = 0xffc13c34

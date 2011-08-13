@@ -67,3 +67,10 @@ NHSTUB(Unmount_FileSystem, 0xFFC00B20)               // nullsub_1
 NHSTUB(rewinddir, 0xFFC00B20)                        // nullsub_1
 NHSTUB(kbd_pwr_on, 0xFFC00B20)
 NHSTUB(kbd_pwr_off, 0xFFC00B20)
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(Open                          ,0xffc4e5d8) // New address = 0xffc260a0
+NHSTUB(write                         ,0xffc0b368) // New address = 0xffc2619c
