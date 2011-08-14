@@ -47,6 +47,8 @@
 
 #define JOGDIAL_LEFT      100
 #define JOGDIAL_RIGHT     101
+#define FRONTDIAL_LEFT    102
+#define FRONTDIAL_RIGHT   103
 
 extern void gui_kbd_process();
 extern void gui_kbd_enter();
