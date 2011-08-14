@@ -15,8 +15,6 @@ static long kbd_prev_state[3];
 static long kbd_mod_state[3];
 
 static long last_kbd_key = 0;
-static long alt_mode_key_mask = 0x00000400;
-static int alt_mode_led=0;
 static int usb_power=0;
 static int remote_key, remote_count;
 static int shoot_counter=0;
@@ -88,7 +86,7 @@ int prev_usb_power,cur_usb_power;
  // ------ add by Masuji SUTO (end)   --------------
 
 asm volatile ("STMFD SP!, {R0-R11,LR}\n"); // store R0-R11 and LR in stack
-debug_led(1);
+//debug_led(1);
 tick = get_tick_count();
 tick2 = tick;
 static long usb_physw[3];
@@ -121,7 +119,7 @@ if (conf.synch_enable && conf.ricoh_ca1_mode && conf.remote_enable && (!shooting
 						prev_usb_power=cur_usb_power;
 						}
 					else{
-						if((int)get_tick_count()-tick2>1000) {debug_led(0);}
+						if((int)get_tick_count()-tick2>1000) {/*debug_led(0);*/}
 						}
 					}
 				else{
@@ -192,7 +190,7 @@ if (conf.synch_delay_enable && conf.synch_delay_value>0)       // if delay is sw
      }
   }
 
-debug_led(0);
+//debug_led(0);
 asm volatile ("LDMFD SP!, {R0-R11,LR}\n"); // restore R0-R11 and LR from stack
 }
 
@@ -234,6 +232,7 @@ volatile int jogdial_stopped=0;
 // Pointer to stack location where jogdial task records previous and current
 // jogdial positions
 extern short* jog_position;
+extern short rear_dial_position, front_dial_position;
 
 void jogdial_control(int n)
 {
@@ -241,8 +240,8 @@ void jogdial_control(int n)
     {
         // If re-enabling jogdial set the task code current & previous positions to the actual
         // dial positions so that the change won't get processed by the firmware
-        jog_position[0] = jog_position[2] = (*(short*)0xC0240106);  // Rear dial
-        jog_position[1] = jog_position[3] = (*(short*)0xC0240306);  // Front dial
+        jog_position[0] = jog_position[2] = rear_dial_position;   // Rear dial
+        jog_position[1] = jog_position[3] = front_dial_position;  // Front dial
     }
     jogdial_stopped = n;
 }
@@ -295,18 +294,6 @@ void my_kbd_read_keys()
 
 
 /****************/
-
-void kbd_set_alt_mode_key_mask(long key)
-{
-	int i;
-	for (i=0; keymap[i].hackkey; ++i) {
-		if (keymap[i].hackkey == key) {
-			alt_mode_key_mask = keymap[i].canonkey;
-			return;
-		}
-	}
-}
-
 
 void kbd_key_press(long key)
 {
@@ -426,21 +413,19 @@ int get_usb_power(int edge)
 	return x;
 }
 
-// ?? Not used ??
-//long kbd_use_zoom_as_mf() {
-// return 0;
-//}
+static short new_jogdial = 0, old_jogdial = 0, new_frontdial = 0, old_frontdial = 0;
 
-static int new_jogdial=0, old_jogdial=0;
+long get_jogdial_direction(void)
+{
+    old_jogdial = new_jogdial;
+    new_jogdial = rear_dial_position;
 
-int Get_JogDial(void){
- return (*(int*)0xC0240104)>>16;
-}
+    old_frontdial = new_frontdial;
+    new_frontdial = front_dial_position;
 
-long get_jogdial_direction(void) {
- old_jogdial=new_jogdial;
- new_jogdial=Get_JogDial();
- if (old_jogdial>new_jogdial) return JOGDIAL_LEFT;
- else if (old_jogdial<new_jogdial) return JOGDIAL_RIGHT;
- else return 0;
+    if      (old_jogdial > new_jogdial)     return JOGDIAL_LEFT;
+    else if (old_jogdial < new_jogdial)     return JOGDIAL_RIGHT;
+    else if (old_frontdial > new_frontdial) return FRONTDIAL_LEFT;
+    else if (old_frontdial < new_frontdial) return FRONTDIAL_RIGHT;
+    else                                    return 0;
 }

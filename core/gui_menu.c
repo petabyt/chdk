@@ -197,6 +197,7 @@ static char sbuf[7];
             if (gui_menu_redraw == 0) gui_menu_redraw=1;
 			}
             break;
+        case FRONTDIAL_LEFT:
         case KEY_LEFT:
             if (gui_menu_curr_item>=0) {
                 switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) {
@@ -283,6 +284,7 @@ static char sbuf[7];
                 gui_menu_back();
             }
             break;
+        case FRONTDIAL_RIGHT:
         case KEY_RIGHT:
             if (gui_menu_curr_item>=0) {
                 switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK){

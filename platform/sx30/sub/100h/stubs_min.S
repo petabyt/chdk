@@ -14,3 +14,5 @@ DEF(focus_busy,0x7A6C + 0x8)						// found by trial and error in the focus contr
 DEF(movie_status, 0x34E0 + 0x44)					// in FF8829D4 (comp s95)
 DEF(recreview_hold, 0x933C + 0xF0)					// in FF9C4900 (comp s95)
 DEF(zoom_status, 0xE7C4)							// sub_FFB035F0 (comp g12)
+
+DEF(rear_dial_position, 0xC0240106)

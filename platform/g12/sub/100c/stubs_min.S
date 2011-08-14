@@ -15,3 +15,6 @@ DEF(movie_status, 0x7290 + 0x44)					// in FF9860EC (comp s95)
 DEF(recreview_hold, 0x84C0 + 0xE0)					// in FF9C0694 (comp s95)
 DEF(some_flag_for_af_scan, 0x76B4)					// @FF98A808 (comp s95)
 DEF(zoom_status, 0xE590)							// sub_FFB215B4 (comp s95)
+
+DEF(rear_dial_position, 0xC0240106)
+DEF(front_dial_position, 0xC0240306)

@@ -14,3 +14,5 @@ DEF(focus_busy,0x7A6C + 0x8)
 DEF(movie_status, 0x34E0 + 0x44)
 DEF(recreview_hold, 0x933C + 0xF0)
 DEF(zoom_status, 0xE7C4)
+
+DEF(rear_dial_position, 0xC0240106)
