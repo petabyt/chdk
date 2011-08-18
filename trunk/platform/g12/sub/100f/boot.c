@@ -581,6 +581,7 @@ void __attribute__((naked,noinline)) sub_FF875E60_my() {
         "LDRB    R3, [R12, #0x1C2]\n"          // Partition type (FAT32 = 0xB)
         "CMP     R3, #0xB\n"                   // Is this a FAT32 partition?
         "CMPNE   R3, #0xC\n"                   // Not 0xB, is it 0xC (FAT32 LBA) then?
+        "CMPNE   R3, #0x7\n"                   // exFat?
         "BNE     dg_sd_fat32\n"                // No, it isn't. Loop again.
         "CMP     R2, #0x00\n"                  // It is, check the validity of the partition type
         "CMPNE   R2, #0x80\n"
