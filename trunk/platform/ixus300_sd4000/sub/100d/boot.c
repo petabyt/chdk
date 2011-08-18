@@ -14,16 +14,25 @@ extern volatile int jogdial_stopped;
 void JogDial_task_my(void);
 void boot();
 
-void taskHook(context_t **context) {    //#fs
+extern void task_CaptSeq();
+extern void task_InitFileModules();
+extern void task_RotaryEncoder();
+extern void task_MovieRecord();
+extern void task_ExpDrv();
+
+// almost the same as SX30 / G12
+
+void taskHook(context_t **context) {
     task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
 
-    //if(!_strcmp(tcb->name, "PhySw"))           tcb->entry = (void*)mykbd_task;    // cause crash with large scripts because we hook task without increased stack size
-    if(!_strcmp(tcb->name, "CaptSeqTask"))     tcb->entry = (void*)capt_seq_task;
-    if(!_strcmp(tcb->name, "InitFileModules")) tcb->entry = (void*)init_file_modules_task;
-    if(!_strcmp(tcb->name, "MovieRecord"))     tcb->entry = (void*)movie_record_task;   // ToDo: working?
-    if(!_strcmp(tcb->name, "ExpDrvTask"))      tcb->entry = (void*)exp_drv_task;
-    if(!_strcmp(tcb->name, "RotarySw"))        tcb->entry = (void*)JogDial_task_my;
-}    //#fe
+    // Replace firmware task addresses
+    // since we create our own PhySw Task (taskcreatePhySw_my), no need to hook it
+    if(tcb->entry == (void*)task_CaptSeq)           tcb->entry = (void*)capt_seq_task;
+    if(tcb->entry == (void*)task_InitFileModules)   tcb->entry = (void*)init_file_modules_task;
+    if(tcb->entry == (void*)task_RotaryEncoder)     tcb->entry = (void*)JogDial_task_my;
+    if(tcb->entry == (void*)task_MovieRecord)       tcb->entry = (void*)movie_record_task;
+    if(tcb->entry == (void*)task_ExpDrv)            tcb->entry = (void*)exp_drv_task;
+}
 
 void CreateTask_spytask() {    //#fs
     _CreateTask("SpyTask", 0x19, 0x2000, core_spytask, 0);

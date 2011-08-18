@@ -174,6 +174,14 @@ NHSTUB(strrchr, 0xFF814008)                          // OK!!, like G11 and D10
 //NHSTUB(Restart, 0xff83bbfc)                        // maybe OK, like G11
 
 
+# Addresses for firmware task handlers (used in taskHook)
+//DEF(task_CaptSeq,               0xFF87D2D8)        // OK, finsig2
+//DEF(task_InitFileModules,       0xFF8995E0)        // OK, finsig2
+//DEF(task_RotaryEncoder,         0xFF861B68)        // OK, finsig2
+//DEF(task_MovieRecord,           0xFF96BD30)        // OK, finsig2
+//DEF(task_ExpDrv,                0xFF8C25DC)        // OK, finsig2
+
+
 // DEBUG Stuff
 NHSTUB(GetLogToFile, 0xFF975780)                     // this is where Event Procedure does jump (native call does shutdown camera), like G11
 //NHSTUB(GetLogToFile, 0xFF975444)                   // directly points to function like A720
