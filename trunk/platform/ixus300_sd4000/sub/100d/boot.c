@@ -764,22 +764,12 @@ void __attribute__((naked,noinline)) sub_FF87134C_my() {    //#fs
         "BL      sub_FF88A11C\n"             // ExMemMan.c:0
         "B       loc_FF8713B0\n"
         "loc_FF8713E4:\n"
-       // "LDR     R1, [R5,#0x64]\n"
+        "LDR     R1, [R5,#0x64]\n"
         "MOV     R0, R9\n"
-        //"BLX     R1\n"
-        "BL      sub_mbr\n"
-
-        "sub_mbr:\n"
-        // FAT32 Partition support
-        "LDR     R1, =0x94AD0\n"                 // ROM:FF951C00 or ROM:FF951E78
-        "ADD     R0, R0, R0,LSL#3\n"
-        "ADD     R0, R1, R0,LSL#2\n"
-        "LDR     R0, [R0,#0x18]\n"
-        "BX      LR\n"
+        "BLX     R1\n"
 
         "MOV   R1, R4\n"                     // pointer to MBR in R1
         "BL    mbr_read_dryos\n"             // total sectors count in R0 before and after call
-        // requires "define CAM_MULTIPART 1", else you get undefined reference compiler error ;-)
 
         // Start of DataGhost's FAT32 autodetection code
         // Policy: If there is a partition which has type W95 FAT32, use the first one of those for image storage
@@ -800,6 +790,7 @@ void __attribute__((naked,noinline)) sub_FF87134C_my() {    //#fs
         "LDRB    R3, [R12, #0x1C2]\n"          // Partition type (FAT32 = 0xB)
         "CMP     R3, #0xB\n"                   // Is this a FAT32 partition?
         "CMPNE   R3, #0xC\n"                   // Not 0xB, is it 0xC (FAT32 LBA) then?
+        "CMPNE   R3, #0x7\n"                   // exFat?
         "BNE     dg_sd_fat32\n"                // No, it isn't. Loop again.
         "CMP     R2, #0x00\n"                  // It is, check the validity of the partition type
         "CMPNE   R2, #0x80\n"
@@ -816,7 +807,9 @@ void __attribute__((naked,noinline)) sub_FF87134C_my() {    //#fs
         "ORR     R1, R1, R3,LSL#16\n"
         "LDRB    R3, [R4,#0x1C7]\n"
         "LDRB    R2, [R4,#0x1BE]\n"
-        "LDRB    LR, [R4,#0x1FF]\n"
+
+        //"LDRB    LR, [R4,#0x1FF]\n"          // original
+
         "ORR     R1, R1, R3,LSL#8\n"
         "LDRB    R3, [R4,#0x1C6]\n"
         "CMP     R2, #0\n"
@@ -829,11 +822,10 @@ void __attribute__((naked,noinline)) sub_FF87134C_my() {    //#fs
         "ORR     R3, R3, R12,LSL#8\n"
         "LDRB    R12, [R4,#0x1CA]\n"
         "ORR     R3, R3, R12\n"
-
         //"LDRB    R12, [R4,#0x1FE]\n"       // original
+
         "LDRB    R12, [LR,#0x1FE]\n"         // + First MBR signature byte (0x55), LR is original offset.
         "LDRB    LR, [LR,#0x1FF]\n"          // + Last MBR signature byte (0xAA), LR is original offset.
-        "MOV     R4, #0\n"                   // ToDo: required ?
 
         "BNE     loc_FF871470\n"
         "CMP     R0, R1\n"
