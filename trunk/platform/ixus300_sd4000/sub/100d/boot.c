@@ -146,7 +146,7 @@ void __attribute__((naked,noinline)) sub_FF810354_my() {    //#fs
     //*(int*)0x19A0=(int)taskHook;               // maybe correct IRQ is 0x19A0 (ROM:FF816634) ?
 
     // Power Button detection (short press = playback mode, long press = record mode)
-    // replacement for sub_FF834580 for correct power-on
+    // replacement for ROM:FF834580 -> ROM:FF861134 for correct power-on
     *(int*)(0x24B8)= (*(int*)0xC0220110)&1 ? 0x400000 : 0x200000;    // ROM:FF861138, value 0x200000 and 0x400000 must be in reverse order, else detection is reversed too
 
     asm volatile (
@@ -182,7 +182,6 @@ void __attribute__((naked,noinline)) sub_FF810354_my() {    //#fs
 
         //"BL      sub_FF811198\n"           // original
         "BL      sub_FF811198_my\n"          // +
-        //"B       sub_FF811198_my\n"          // Todo: B instead of BL ?!?
 
         // ToDo: shouldn't we continue with original function ?!? Most other Port does not...
         //asm volatile ("B      sub_FF8103CC\n");
@@ -279,7 +278,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() { //#fs
         "BL      sub_FF83BCF0\n"
         "CMP     R0, #0\n"
         "BNE     loc_FF81FB34\n"
-        "BL      sub_FF835D6C\n"
+        "BL      sub_FF835D6C\n"               // IsNormalCameraMode()
         "CMP     R0, #0\n"
         "BEQ     loc_FF81FB34\n"
         "BL      sub_FF834574\n"
@@ -293,7 +292,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() { //#fs
         "loc_FF81FB30:\n"
         "B       loc_FF81FB30\n"
         "loc_FF81FB34:\n"
-        //"BL      sub_FF834580\n"           // + disabled for correct Power Button detection
+        //"BL      sub_FF834580\n"           // + disabled for correct Power Button detection, ROM:FF861134 is canon function
         //"BL      j_nullsub_214\n"
         "BL      sub_FF839F18\n"
         "LDR     R1, =0x3CE000\n"
@@ -301,7 +300,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() { //#fs
         "BL      sub_FF83A360\n"
         "BL      sub_FF83A10C\n"             // KerSys.c:548
         "MOV     R3, #0\n"
-        "STR     R3, [SP,#8-8]\n"
+        "STR     R3, [SP]\n"
 
         //"ADR     R3, =0xFF81FA8C\n"        // original: task_Startup()
         //"LDR     R3, =0xFF81FA8C\n"        // compiler does not like ADR
@@ -321,19 +320,18 @@ void __attribute__((naked,noinline)) task_Startup_my() { //#fs
         //"BL      sub_FF83BD30\n"           // j_nullsub_217
         "BL      sub_FF83BF1C\n"             // taskcreate_ADCScn()
 
-        "BL      CreateTask_spytask\n"       // +
-
         //"BL      sub_FF83BDC4\n"           // original: StartSdInit() -> StartDiskboot()
+
         "BL      sub_FF83C0C0\n"
         "BL      sub_FF8322E4\n"
         "BL      sub_FF83BF4C\n"             // taskcreate_WDT()
         "BL      sub_FF8396BC\n"             // ErrorStuff
         "BL      sub_FF83C0C4\n"             // taskcreate_?
 
-        //"BL      CreateTask_spytask\n"       // + slow startup
+        "BL      CreateTask_spytask\n"       // +
 
         //"BL      sub_FF834434\n"           // taskcreate_PhySw()
-        "BL      taskcreate_PhySw_my\n"      // +
+        "BL      taskcreate_PhySw_my\n"      // + (create our own PhySw Task instead of hooking firmware Task)
 
         "BL      sub_FF8379F8\n"             // task_ShootSeqTask()
         //"BL      task_ShootSeqTask_my\n"   // +
