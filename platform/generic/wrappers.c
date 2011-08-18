@@ -186,7 +186,7 @@ void lens_set_zoom_point(long newpt)
         newpt = zoom_points-1;
     }
 
-#if defined(CAMERA_sx30) || defined(CAMERA_g12)
+#if defined(CAMERA_sx30) || defined(CAMERA_g12) || defined(CAMERA_sx130is)
 	if (lens_get_zoom_point() != newpt)
 	{
 		// Get current digital zoom mode & state
@@ -202,7 +202,7 @@ void lens_set_zoom_point(long newpt)
 			_PT_MoveDigitalZoomToWide();
 		}
 
-  #if defined(CAMERA_sx30)
+  #if defined(CAMERA_sx30) || defined(CAMERA_sx130is)
 		// SX30 - _MoveZoomLensWithPoint crashes camera
 		// _PT_MoveOpticalZoomAt works, and updates PROPCASE_OPTICAL_ZOOM_POSITION; but doesn't wait for zoom to finish
 		extern void _PT_MoveOpticalZoomAt(long*);
