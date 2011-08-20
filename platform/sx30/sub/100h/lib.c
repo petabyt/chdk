@@ -3,10 +3,10 @@
 /*
 sensor size from code at sub_FFB59B8C = (4464*3276)*(12/8) = 0x14EB7E0 = 21936096
 
-@FFB59BCC = 0xea0 = 4464	// raw sensor size
-@FFB59BD4 = 0xae0 = 3276
-@FFB59BDC = 0xe40 = 4320	// cropped size ??
-@FFB59BE4 = 0xab0 = 3240
+@FFB59BCC = 0x1170 = 4464	// raw sensor size
+@FFB59BD4 = 0x0ccc = 3276
+@FFB59BDC = 0x10e0 = 4320	// cropped size ??
+@FFB59BE4 = 0x0ca8 = 3240
 */
 
 char *hook_raw_image_addr()
