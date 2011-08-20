@@ -253,6 +253,7 @@ void draw_vline(coord x, coord y, int len, color cl)
 }
 //-------------------------------------------------------------------
 
+// Local variables set up by draw_rectangle, and used in fill_rect
 static unsigned int xMin, yMin, xMax, yMax;
 
 static void draw_rectangle(coord x1, coord y1, coord x2, coord y2, color cl, int round) 
