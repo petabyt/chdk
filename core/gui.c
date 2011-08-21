@@ -1918,10 +1918,11 @@ void gui_redraw()
     static int show_md_grid=0;
 
 #ifdef CAM_DETECT_SCREEN_ERASE
-    if (!draw_test_guard())
+    if (!draw_test_guard() && gui_mode)     // Attempt to detect screen erase in <Alt> mode, redraw if needed
     {
         draw_set_guard();
         gui_menu_force_redraw();
+        gui_fselect_force_redraw();
     }
 #endif
 

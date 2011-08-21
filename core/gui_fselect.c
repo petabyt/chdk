@@ -70,6 +70,16 @@ static void (*fselect_on_select)(const char *fn);
 static char raw_operation;
 
 //-------------------------------------------------------------------
+// Called from other gui functions to force redraw of menu
+void gui_fselect_force_redraw()
+{
+    if (gui_get_mode() == GUI_MODE_FSELECT)
+    {
+        gui_fselect_redraw = 2;
+    }
+}
+
+//-------------------------------------------------------------------
 static void gui_fselect_free_data() {
     struct fitem  *ptr = head, *prev;
 
