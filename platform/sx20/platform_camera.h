@@ -61,49 +61,20 @@
 	// camera name
 	#define PARAM_CAMERA_NAME			4 // parameter number for GetParameterData
 	#undef  CAM_SENSOR_BITS_PER_PIXEL
-	#undef  CAM_WHITE_LEVEL
-	#undef  CAM_BLACK_LEVEL
 	#define CAM_SENSOR_BITS_PER_PIXEL	12
-	#define CAM_WHITE_LEVEL				((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
-	#define CAM_BLACK_LEVEL				127
 
 	#define CAM_EXT_TV_RANGE			1
 	#define CAM_QUALITY_OVERRIDE		1
 
-	// copied from the SX200 which has the same video buffer size
+	// Updated Aug 2011 to use X2 aspect ratio correction instead of 9/4
 	#undef CAM_USES_ASPECT_CORRECTION
-	#undef CAM_USES_ASPECT_YCORRECTION
 	#define CAM_USES_ASPECT_CORRECTION		1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
-	#define CAM_USES_ASPECT_YCORRECTION		0  //only uses mappings on x coordinate
-
-	#undef ASPECT_XCORRECTION
-	#define ASPECT_XCORRECTION(x)  ( ( ((x)<<3) + (x) )  >>2 )  //correction x*screen_buffer_width/screen_width = x*720/320 = x*9/4 = (x<<3 + x)>>2
-
-	#undef ASPECT_GRID_XCORRECTION
-	#define ASPECT_GRID_XCORRECTION(x)  ( ((x)<<3)/9  )  //grids are designed on a 360x240 basis and screen is 320x240, we need x*320/360=x*8/9
-	#undef ASPECT_GRID_YCORRECTION
-    #define ASPECT_GRID_YCORRECTION(y)  ( (y) )  //y correction for grids  made on a 360x240 As the buffer is 720x240 we have no correction here.
-
-	#undef ASPECT_VIEWPORT_XCORRECTION 
-	#define ASPECT_VIEWPORT_XCORRECTION(x) ASPECT_GRID_XCORRECTION(x) //viewport is 360x240 and screen 320x240, we need x*320/360=x*8/9, equal than grids, used by edgeoverlay
-	#undef ASPECT_VIEWPORT_YCORRECTION 
-	#define ASPECT_VIEWPORT_YCORRECTION(y) ( (y) )
-
-	//games mappings
-	#undef GAMES_SCREEN_WIDTH
-	#undef GAMES_SCREEN_HEIGHT
-	#define GAMES_SCREEN_WIDTH		360
-	#define GAMES_SCREEN_HEIGHT		240
-	#undef ASPECT_GAMES_XCORRECTION
-	// 720/360=2 same aspect than grids and viewport but another approach: there is a lot of corrections to do in game's code, and we decide to paint directly on display buffer wirh another resolution
-	// used by gui.c that configures the draw environment (trhough new draw_gui function) depending on gui_mode: we have then 360x240 for games (but deformed output:circles are not circles) and 320x240 for
-	// other modes in perfect aspect ratio 4/3: slightly better visualization: file menus more readable, ...
-	#define ASPECT_GAMES_XCORRECTION(x)   ( ((x)<<1) )
-	#undef ASPECT_GAMES_YCORRECTION
-	#define ASPECT_GAMES_YCORRECTION(y)   ( (y) )  //none
 
     #define CAM_ZEBRA_ASPECT_ADJUST 1
-    #define CAM_ZEBRA_NOBUF 1
+    
+#ifndef OPT_EXMEM_MALLOC
+    #define CAM_ZEBRA_NOBUF                 1
+#endif
 
 	#undef CAM_BITMAP_PALETTE
 	#define CAM_BITMAP_PALETTE		6
@@ -114,16 +85,18 @@
   
    #undef EDGE_HMARGIN
    #define EDGE_HMARGIN 28
-   #define CAM_CHDK_PTP 1
 
+    #define CAM_DATE_FOLDER_NAMING          0x100 //Value found in the last function, which is called in GetImageFolder. (first compare)
 	#define	CAM_STARTUP_CRASH_FILE_OPEN_FIX	1				// enable fix for camera crash at startup when opening the conf / font files
 															// see http://chdk.setepontos.com/index.php?topic=6179.0
 
-#define CAM_FIRMWARE_MEMINFO    1       // Use 'GetMemInfo' to get free memory size.
+    #define CAM_FIRMWARE_MEMINFO        1       // Use 'GetMemInfo' to get free memory size.
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
+
+    #define CAM_DETECT_SCREEN_ERASE     1       // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
 
 //----------------------------------------------------------
 

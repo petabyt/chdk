@@ -48,8 +48,8 @@ NHSTUB(RenameFile_Fut,					0xFF834B74) // doesn't look like SX10 but works
 NHSTUB(strrchr,							0xFF813FE4) // incorrectly detected
 NHSTUB(add_ptp_handler, 				0xFFA49320) 
 NHSTUB(Restart,							0xFF83A53C)
-NHSTUB(PB2Rec, 0xFF899E38)
-NHSTUB(Rec2PB, 0xFF8988A4)
+NHSTUB(PB2Rec,                          0xFF899E38)
+NHSTUB(Rec2PB,                          0xFF8988A4)
 NHSTUB(exmem_alloc,						0xFF889DCC)	// search for ExMem.AllocCacheable (from reyalp)
 
 # Might be wrong
@@ -75,9 +75,3 @@ NHSTUB(rename,							0xDEADC0DE)
 STUB(FF896BD4)
 STUB(FF896B04)
 STUB(FFA04AA4)
-
-
-// Added by finsig_dryos V2 to match old values found by finsig.
-// Values should be checked in firmware, if the new address in stubs_entry.S
-// is correct then delete the correspoding entry below.
-NHSTUB(write                         ,0xff81abd8) // New address = 0xff83530c
