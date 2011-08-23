@@ -48,13 +48,12 @@
     #define DNG_SUPPORT                 1
     #define cam_CFAPattern  0x02010100
   
-  //new colormatrix from vit40
-	#define CAM_COLORMATRIX1                               \
-    14458, 1000000, -5704, 1000000, -1562, 1000000, \
-     -2520,  1000000, 11470,  1000000, 1388,   1000000, \
-      -1336,   1000000, 2334,   1000000, 4387,  1000000
-
-    #define cam_CalibrationIlluminant1 17
+	#define CAM_COLORMATRIX1	\
+	544808, 1000000, -174047, 1000000, -80399, 1000000, \
+	-75055, 1000000, 440444, 1000000, 11367, 1000000, \
+	-5801, 1000000, 71589, 1000000, 118914, 1000000
+    
+	#define cam_CalibrationIlluminant1 1
    
     #define CAM_JPEG_WIDTH  4000
     #define CAM_JPEG_HEIGHT 3000
