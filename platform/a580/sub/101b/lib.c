@@ -17,7 +17,7 @@ char *hook_raw_image_addr()
 
 long hook_raw_size()
 {
-    return 0x9DCCE0; //OK
+    return 0x009e6fc4;		// Corrected! from 0x009dcce0 (from stubs_entry.S)
 }
 
 void *vid_get_viewport_live_fb()
@@ -36,12 +36,12 @@ void *vid_get_viewport_live_fb()
 
 void *vid_get_bitmap_fb()
 {
-    return (void*)0x10361000; //OK 0xFFCA719
+    return (void*)0x10361000;		// OK!
 }
 
 void *vid_get_viewport_fb()
 {
-    return (void*)0x10659E80; // 0xFFE364B0
+    return (void*)0x10659E80;		// OK!
 }
 
 void *vid_get_viewport_fb_d()
@@ -66,10 +66,9 @@ long vid_get_viewport_height()
 }
 char *camera_jpeg_count_str()
 {
-    return (char*)0x48AE0; // near a9999
+    return (char*)0x00048AE0;		// OK!
 }
 
 long vid_get_bitmap_buffer_width() { return 360; }
 
 long vid_get_bitmap_buffer_height() { return 240; }
-

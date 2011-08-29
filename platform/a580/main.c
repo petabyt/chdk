@@ -29,7 +29,7 @@ void startup()
 }
 
 
-static const int fl_tbl[] = {5800, 6700, 8000, 10000, 126000, 158000, 193000, 232000};
+static const int fl_tbl[] = {5800, 6700, 8000, 10000, 12600, 15800, 19300, 23200};
 #define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
 #define CF_EFL 60345 //OK
 
@@ -67,4 +67,3 @@ long get_vbatt_max()
 {
     return 2550;
 }
-
