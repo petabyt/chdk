@@ -129,17 +129,17 @@
 // RAW & DNG related values
 #define DNG_SUPPORT                 1           // Camera supports DNG format for saving of RAW images
 #define DEFAULT_RAW_EXT             1           // extension to use for raw (see raw_exts in conf.c)
-#undef  CAM_RAW_ROWPIX                          // Number of pixels in RAW row (physical size of the sensor)
-#undef  CAM_RAW_ROWS                            // Number of rows in RAW (physical size of the sensor)
-#undef  CAM_JPEG_WIDTH                          // Default crop size (width) stored in DNG (to match camera JPEG size)
-#undef  CAM_JPEG_HEIGHT                         // Default crop size (height) stored in DNG (to match camera JPEG size)
-#undef  CAM_ACTIVE_AREA_X1                      // Define usable area of the sensor
-#undef  CAM_ACTIVE_AREA_Y1                      // Define usable area of the sensor
-#undef  CAM_ACTIVE_AREA_X2                      // Define usable area of the sensor
-#undef  CAM_ACTIVE_AREA_Y2                      // Define usable area of the sensor
-#undef  cam_CFAPattern                          // Camera Bayer sensor data layout (DNG colors are messed up if not correct)
+#undef  CAM_RAW_ROWPIX                          // Number of pixels in RAW row (physical size of the sensor Note : as of July 2011, this value can be found in stub_entry.S for dryos cameras)
+#undef  CAM_RAW_ROWS                            // Number of rows in RAW (physical size of the sensor       Note : as of July 2011, this value can be found in stub_entry.S for dryos cameras)
+#undef  CAM_JPEG_WIDTH                          // Default crop size (width) stored in DNG (to match camera JPEG size. From dimensions of the largest size jpeg your camera produces)
+#undef  CAM_JPEG_HEIGHT                         // Default crop size (height) stored in DNG (to match camera JPEG size. From dimensions of the largest size jpeg your camera produces)
+#undef  CAM_ACTIVE_AREA_X1                      // Define usable area of the sensor - needs to be divisible by 4 - calibrate using a CHDK RAW image converted with rawconvert.exe (eg :rawconvert -12to8 -pgm -w=4480 -h=3348 photo.crw photo.pgm)
+#undef  CAM_ACTIVE_AREA_Y1                      // Define usable area of the sensor - needs to be divisible by 2 - "
+#undef  CAM_ACTIVE_AREA_X2                      // Define usable area of the sensor - needs to be divisible by 4 - "
+#undef  CAM_ACTIVE_AREA_Y2                      // Define usable area of the sensor - needs to be divisible by 2 = "
+#undef  cam_CFAPattern                          // Camera Bayer sensor data layout (DNG colors are messed up if not correct - should be either 0x01000201 = [Green Blue Red Green]  or 0x02010100 = [Red  Green  Green  Blue]
 #undef  CAM_COLORMATRIX1                        // DNG color profile matrix
-#undef  cam_CalibrationIlluminant1              // DNG color profile illuminant
+#undef  cam_CalibrationIlluminant1              // DNG color profile illuminant - set it to 17 for standard light A
 #undef  CAM_DNG_EXPOSURE_BIAS                   // Specify DNG exposure bias value (to override default of -0.5 in the dng.c code)
 #undef  DNG_EXT_FROM                            // Extension in the cameras known extensions to replace with .DNG to allow DNG
                                                 // files to be transfered over standard PTP. Only applicable to older cameras
