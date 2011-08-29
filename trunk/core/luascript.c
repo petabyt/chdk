@@ -361,10 +361,39 @@ static int luaCB_get_near_limit( lua_State* L )
   return 1;
 }
 
+/*
+val=get_prop(id)
+get propcase value identified by id
+the propcase is read as a short and sign extended to an int
+*/
 static int luaCB_get_prop( lua_State* L )
 {
   lua_pushnumber( L, shooting_get_prop( luaL_checknumber( L, 1 ) ) );
   return 1;
+}
+
+/*
+val=get_prop_str(prop_id,length)
+get the value of a propertycase as a string
+numeric values may be extracted using string.byte or or the binstr.lua module
+returns the value as a string, or false if the underlying propcase call returned non-zero
+*/
+static int luaCB_get_prop_str( lua_State* L ) {
+    void *buf;
+    unsigned size;
+    unsigned prop_id = luaL_checknumber( L, 1 );
+    size = luaL_checknumber( L, 2 );
+    buf = malloc(size);
+    if(!buf) {
+        return luaL_error( L, "malloc failed in luaCB_get_prop" );
+    }
+    if(get_property_case(prop_id,buf,size) == 0) {
+        lua_pushlstring( L, buf, size );
+    } else {
+        lua_pushboolean( L, 0);
+    }
+    free(buf);
+    return 1;
 }
 
 static int luaCB_get_raw_count( lua_State* L )
@@ -535,13 +564,34 @@ static int luaCB_set_nd_filter( lua_State* L )
   return 0;
 }
 
+/*
+set_prop(id,value)
+the value is treated as a short
+*/
 static int luaCB_set_prop( lua_State* L )
 {
-  int to, to1;
-  to = luaL_checknumber( L, 1 );
-  to1 = luaL_checknumber( L, 2 );
-  shooting_set_prop(to, to1);
+  shooting_set_prop(luaL_checknumber( L, 1 ), luaL_checknumber( L, 2 ));
   return 0;
+}
+
+/*
+status=set_prop_str(prop_id,value)
+set propertycase value as a string. Length is taken from the string
+numeric propcase values may be assembled by setting byte values using string.char or the binstr module
+status: boolean - true if the underlying propcase call returns 0, otherwise false
+*/
+static int luaCB_set_prop_str( lua_State *L ) {
+    int prop_id;
+    unsigned len;
+    const char *str;
+    prop_id = luaL_checknumber( L, 1 );
+    str = luaL_checklstring( L, 2, &len );
+    if(str && len > 0) {
+        lua_pushboolean( L, (set_property_case(prop_id,(void *)str,len) == 0));
+    } else {
+        return luaL_error( L, "invalid value");
+    }
+    return 1;
 }
 
 static int luaCB_set_raw_nr( lua_State* L )
@@ -1700,6 +1750,7 @@ static const luaL_Reg chdk_funcs[] = {
   FUNC(get_jpg_count)
   FUNC(get_near_limit)
   FUNC(get_prop)
+  FUNC(get_prop_str)
   FUNC(get_raw_count)
   FUNC(get_raw_nr)
   FUNC(get_raw)
@@ -1724,6 +1775,7 @@ static const luaL_Reg chdk_funcs[] = {
   FUNC(set_led)
   FUNC(set_nd_filter)
   FUNC(set_prop)
+  FUNC(set_prop_str)
   FUNC(set_raw_nr)
   FUNC(set_raw)
   FUNC(set_sv96)
