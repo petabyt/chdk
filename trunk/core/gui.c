@@ -65,7 +65,24 @@
 //------------------------------------------------------------------
 // #define KEY_NONE (KEY_DUMMY+1)
 
-#if !CAM_HAS_ERASE_BUTTON
+#if defined(CAMERA_a580) // Cam has not erase button AND Half press shoot button + Left sets AFL, + Up sets AEL!
+    //Alt mode
+    #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
+    #define SHORTCUT_MF_TOGGLE           KEY_UP
+    //Half press shoot button
+    #define SHORTCUT_TOGGLE_HISTO        KEY_DOWN
+    #define SHORTCUT_TOGGLE_ZEBRA        KEY_MENU
+    #define SHORTCUT_TOGGLE_OSD          KEY_RIGHT
+    #define SHORTCUT_DISABLE_OVERRIDES   KEY_DISPLAY
+    //Alt mode & Manual mode    
+    #define SHORTCUT_SET_INFINITY        KEY_DISPLAY
+    #define SHORTCUT_SET_HYPERFOCAL      KEY_DOWN
+    // For models without ZOOM_LEVER  (#if !CAM_HAS_ZOOM_LEVER)
+    // SHORTCUT_SET_INFINITY is not used
+    // KEY_DISPLAY is used for gui_subj_dist_override_koef_enum;
+    // KEY_LEFT/KEY_RIGHT is used for gui_subj_dist_override_value_enum (because of no separate ZOOM_IN/OUT)
+
+#elif !CAM_HAS_ERASE_BUTTON
 //Alt mode
  #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
  #define SHORTCUT_MF_TOGGLE           KEY_UP
@@ -1344,7 +1361,7 @@ const char* gui_alt_mode_button_enum(int change, int arg) {
 #elif defined(CAMERA_sx10) || defined(CAMERA_sx1) || defined(CAMERA_sx20) || defined(CAMERA_sx30)
     static const char* names[]={ "Shrtcut", "Flash", "Video"};
     static const int keys[]={ KEY_PRINT, KEY_FLASH, KEY_VIDEO };
-#elif defined(CAMERA_a570) || defined(CAMERA_a590) || defined(CAMERA_a720)
+#elif defined(CAMERA_a570) || defined(CAMERA_a580) || defined(CAMERA_a590) || defined(CAMERA_a720)
     static const char* names[]={ "Print", "Display"};
     static const int keys[] = {KEY_PRINT, KEY_DISPLAY};
 #elif defined(CAMERA_sx220hs)

@@ -10,6 +10,7 @@ typedef struct {
 	long canonkey;
 } KeyMap;
 
+
 static long kbd_new_state[3];
 static long kbd_prev_state[3];
 static long kbd_mod_state[3];
@@ -17,6 +18,7 @@ static KeyMap keymap[];
 static long last_kbd_key = 0;
 static int usb_power=0;
 static int remote_key, remote_count;
+static long alt_mode_key_mask = 0x00000800;
 static int shoot_counter=0;
 #define DELAY_TIMEOUT 10000
 
@@ -26,6 +28,10 @@ static int shoot_counter=0;
 
 #define NEW_SS (0x2000)
 #define SD_READONLY_FLAG (0x20000)
+
+#define SD_READONLY_IDX     2
+#define USB_FLAG            0x00040000
+#define USB_IDX             2
 
 #define USB_MASK (0x40000)
 
@@ -57,7 +63,7 @@ tick2 = tick;
 static long usb_physw[3];
 if (conf.synch_enable && conf.ricoh_ca1_mode && conf.remote_enable && (!shooting_get_drive_mode()|| (shooting_get_drive_mode()==1) || ((shooting_get_drive_mode()==2) && state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)))
 // if (conf.synch_enable && conf.ricoh_ca1_mode && conf.remote_enable)                                         // synch mode enable so wait for USB to disconnect
-  {
+ {
 // ------ add by Masuji SUTO (start) --------------
         nMode=0;
         usb_physw[2] = 0;                                             // makes sure USB bit is cleared.
@@ -238,6 +244,7 @@ void my_kbd_read_keys()
 	physw_status[0] = kbd_new_state[0];
 	physw_status[1] = kbd_new_state[1];
 	physw_status[2] = kbd_new_state[2];
+	physw_status[1] |= alt_mode_key_mask;
     } else {
 	// override keys
 	physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) |
@@ -267,7 +274,7 @@ void my_kbd_read_keys()
      }
     else physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;
 
-    _kbd_pwr_off();
+    _kbd_pwr_off();		// Not corrected! als in a590
 
 }
 
@@ -441,13 +448,14 @@ static KeyMap keymap[] = {
 	{ 2, KEY_RIGHT		, 0x00000040 },
 	{ 2, KEY_SET		, 0x00000100 },
 	{ 1, KEY_SHOOT_FULL	, 0xC0000000 },
+// not added to trunk yet
+//        { 1, KEY_SHOOT_FULL_ONLY, 0x80000000 },
 	{ 1, KEY_SHOOT_HALF	, 0x40000000 },
 	{ 2, KEY_ZOOM_IN	, 0x00000004 },
 	{ 2, KEY_ZOOM_OUT	, 0x00000008 },
 	{ 2, KEY_MENU		, 0x00000200 },
 	{ 2, KEY_DISPLAY	, 0x00000400 },
 	{ 2, KEY_PRINT		, 0x00000800 },
-//	{ 1, KEY_ERASE		, 0x00800000 }, // ??? WHAT???
 	{ 0, 0, 0 }
 };
 
@@ -463,3 +471,13 @@ void kbd_fetch_data(long *dst)
     dst[2] = *mmio2 & 0xffff;
 }
 
+void kbd_set_alt_mode_key_mask(long key)
+{
+	int i;
+	for (i=0; keymap[i].hackkey; ++i) {
+		if (keymap[i].hackkey == key) {
+			alt_mode_key_mask = keymap[i].canonkey;
+			return;
+		}
+	}
+}

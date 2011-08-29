@@ -1,6 +1,6 @@
-// Camera - A580 - platform_camera.h
+// Camera - a580 - platform_camera.h
 
-// This file contains the various settings values specific to the A580 camera.
+// This file contains the various settings values specific to the a580 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -20,51 +20,56 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-#define CAM_PROPSET                 2
-#define CAM_DRYOS                   1
+    #define CAM_PROPSET                     2
+    #define CAM_DRYOS                       1
 
-#define CAM_RAW_ROWPIX              3336   // for new 8 MP
-#define CAM_RAW_ROWS                2480   // for new 8 MP
+    #define CAM_RAW_ROWPIX                  3336   // for new 8 MP
+    #define CAM_RAW_ROWS                    2490   // for new 8 MP // Corrected! from 2480 (new value from stubs_entry.S)
 
-#define CAM_USE_ZOOM_FOR_MF         1
+    #undef  CAM_UNCACHED_BIT		// Added! from stubs_entry.S
+    #define CAM_UNCACHED_BIT  0x10000000		// Found @0xffc17e64 // Added! from stubs_entry.S
 
-#undef CAM_CAN_MUTE_MICROPHONE
-#define CAM_HAS_IRIS_DIAPHRAGM      1
-#undef  CAM_HAS_ND_FILTER
+    #undef CAM_USE_ZOOM_FOR_MF
+    #define CAM_MULTIPART                   1
+    #undef CAM_HAS_ERASE_BUTTON
+    #undef CAM_HAS_IRIS_DIAPHRAGM
+    #define CAM_HAS_ND_FILTER               1
+    #undef CAM_HAS_MANUAL_FOCUS
+    #undef CAM_HAS_USER_TV_MODES // Shutter speed  = TV, Aperture = AV
 
-#define CAM_HAS_MANUAL_FOCUS        1
+    // #undef CAM_CAN_SD_OVER_NOT_IN_MF
+    // #undef CAM_CAN_SD_OVERRIDE
 
-#define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
-//#define CAM_EV_IN_VIDEO             1      // not working on 101b!!!
-#define DNG_SUPPORT                 1
-// pattern
-#define cam_CFAPattern 0x01000201 // Green  Blue  Red  Green
-// color
-#define CAM_COLORMATRIX1                              \
- 726857, 1000000, -176454, 1000000, -124118, 1000000, \
- -71340, 1000000,  592001, 1000000,   75622, 1000000, \
-  63222, 1000000,   50547, 1000000,  219582, 1000000
+    #undef CAM_HAS_IS
+    #define CAM_CAN_MUTE_MICROPHONE         1
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
+    // #define CAM_EV_IN_VIDEO                 1      // not working on 101b!!!
+    #undef CAM_VIDEO_CONTROL		// Not working
 
-#define cam_CalibrationIlluminant1 1 // Daylight
-// cropping
-#define CAM_JPEG_WIDTH  3264
-#define CAM_JPEG_HEIGHT 2448
-#define CAM_ACTIVE_AREA_X1 12
-#define CAM_ACTIVE_AREA_Y1 10
-// note: the above contains some pixels which have valid data,
-// but are not at the same levels as the rest of the frame
-// the values below crop the "different" looking pixels.
-//#define CAM_ACTIVE_AREA_X1 16
-//#define CAM_ACTIVE_AREA_Y1 18
-#define CAM_ACTIVE_AREA_X2 3300
-#define CAM_ACTIVE_AREA_Y2 2480
+    // pattern
+    #define cam_CFAPattern                  0x01000201 // Green  Blue  Red  Green
+    // color
+    #define CAM_COLORMATRIX1                              \
+    726857, 1000000, -176454, 1000000, -124118, 1000000, \
+    -71340, 1000000,  592001, 1000000,   75622, 1000000, \
+    63222, 1000000,   50547, 1000000,  219582, 1000000
 
-// camera name
-#define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
+    #define cam_CalibrationIlluminant1      1 // Daylight
+    // cropping
+    #define CAM_JPEG_WIDTH                  3264
+    #define CAM_JPEG_HEIGHT                 2448
+    #define CAM_ACTIVE_AREA_X1              12
+    #define CAM_ACTIVE_AREA_Y1              10
+    // note: the above contains some pixels which have valid data,
+    // but are not at the same levels as the rest of the frame
+    // the values below crop the "different" looking pixels.
+    //#define CAM_ACTIVE_AREA_X1            16
+    //#define CAM_ACTIVE_AREA_Y1            18
+    #define CAM_ACTIVE_AREA_X2              3300
+    #define CAM_ACTIVE_AREA_Y2              2480
 
-#undef CAM_ADJUSTABLE_ALT_BUTTON
-#undef CAM_EXT_TV_RANGE
-//#define CAM_MULTIPART               1
-#undef CAM_MULTIPART
+    // camera name
+    #define PARAM_CAMERA_NAME               4 // parameter number for GetParameterData
+    #define CAM_EXT_TV_RANGE                1 // CHDK can make exposure time longer than 64s
 //----------------------------------------------------------
-
