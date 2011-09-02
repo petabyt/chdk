@@ -31,7 +31,8 @@ static int          gui_menu_top_item;
 static int          gui_menu_redraw;
 
 static int          count;
-static coord        x, y, w, num_lines;
+static int          x, y;
+static int          w, num_lines;
 static int          len_bool, len_int, len_enum, len_space, len_br1, len_br2, cl_rect;
 static int          int_incr, incr_modified;
 static unsigned char *item_color;
@@ -700,19 +701,31 @@ void gui_menu_draw() {
 
                 if (lang_str(curr_menu->menu[imenu].text)[0])
                     sprintf(tbuf," %s ",lang_str(curr_menu->menu[imenu].text));
+                else
+                    tbuf[0] = 0;
 
-                j = rbf_str_width(lang_str(curr_menu->menu[imenu].text));
-                xx += ((int)w - j - len_space*2) >> 1;
+                j = rbf_str_width(tbuf);
+                xx += ((w - j) >> 1);
 
-                draw_filled_rect(x+len_space, yy, xx-1, yy+rbf_font_height()/2-1, MAKE_COLOR(cl>>8, cl>>8));
-                draw_line(x+len_space, yy+rbf_font_height()/2, xx-1, yy+rbf_font_height()/2, cl);
-                draw_filled_rect(x+len_space, yy+rbf_font_height()/2+1, xx-1, yy+rbf_font_height()-1, MAKE_COLOR(cl>>8, cl>>8));
+                if (xx > (x + len_space))
+                {
+                    draw_filled_rect(x+len_space, yy, xx-1, yy+rbf_font_height()/2-1, MAKE_COLOR(cl>>8, cl>>8));
+                    draw_line(x+len_space, yy+rbf_font_height()/2, xx-1, yy+rbf_font_height()/2, cl);
+                    draw_filled_rect(x+len_space, yy+rbf_font_height()/2+1, xx-1, yy+rbf_font_height()-1, MAKE_COLOR(cl>>8, cl>>8));
+                }
+                else
+                {
+                    xx = x;
+                }
 
-                if (j) xx += rbf_draw_string(xx, yy, tbuf, cl);
+                if (j) xx += rbf_draw_clipped_string(xx, yy, tbuf, cl, 0, w);
 
-                draw_filled_rect(xx, yy, x+w-len_space-1, yy+rbf_font_height()/2-1, MAKE_COLOR(cl>>8, cl>>8));
-                draw_line(xx, yy+rbf_font_height()/2, x+w-1-len_space, yy+rbf_font_height()/2, cl);
-                draw_filled_rect(xx, yy+rbf_font_height()/2+1, x+w-len_space-1, yy+rbf_font_height()-1, MAKE_COLOR(cl>>8, cl>>8));
+                if (xx < (x+w-len_space))
+                {
+                    draw_filled_rect(xx, yy, x+w-len_space-1, yy+rbf_font_height()/2-1, MAKE_COLOR(cl>>8, cl>>8));
+                    draw_line(xx, yy+rbf_font_height()/2, x+w-1-len_space, yy+rbf_font_height()/2, cl);
+                    draw_filled_rect(xx, yy+rbf_font_height()/2+1, x+w-len_space-1, yy+rbf_font_height()-1, MAKE_COLOR(cl>>8, cl>>8));
+                }
 
                 rbf_draw_char(x+w-len_space, yy, ' ', cl);
                 break;
