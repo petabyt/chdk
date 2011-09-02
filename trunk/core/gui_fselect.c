@@ -1051,10 +1051,10 @@ void gui_fselect_kbd_process() {
                     sprintf(selected_file, "%s/%s", current_dir, selected->name);
                     gui_fselect_free_data();
                     gui_fselect_marked_free_data();
-                    gui_set_mode(gui_fselect_mode_old);
-                    draw_restore();
                     if (fselect_on_select) 
                         fselect_on_select(selected_file);
+                    gui_set_mode(gui_fselect_mode_old);
+                    draw_restore();
                 }
             }
             break;
@@ -1077,10 +1077,10 @@ void gui_fselect_kbd_process() {
         case KEY_MENU:
             gui_fselect_free_data();
             gui_fselect_marked_free_data();
-            gui_set_mode(gui_fselect_mode_old);
-            draw_restore();
             if (fselect_on_select) 
                 fselect_on_select(NULL);
+            gui_set_mode(gui_fselect_mode_old);
+            draw_restore();
             break;
     }
 }
