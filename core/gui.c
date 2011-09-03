@@ -2145,7 +2145,7 @@ void gui_kbd_process()
 #endif
 }
 #if !CAM_HAS_ERASE_BUTTON && CAM_CAN_SD_OVERRIDE
-                if (!shooting_get_common_focus_mode())
+                else if (!shooting_get_common_focus_mode())
 #else
 				else
 #endif
