@@ -1478,12 +1478,12 @@ static void set_console_layout(void)
   accept_cr();
 }
 /*---------------------------------------------------------------------------*/
-//static void set_console_autoredraw(void)
-//{
-//  accept(TOKENIZER_SET_CONSOLE_AUTOREDRAW);
-//  console_set_autoredraw(expr());
-//  accept_cr();
-//}
+static void set_console_autoredraw(void)
+{
+  accept(TOKENIZER_SET_CONSOLE_AUTOREDRAW);
+  console_set_autoredraw(expr());
+  accept_cr();
+}
 /*---------------------------------------------------------------------------*/
 static void console_redraw_statement(void)
 {
@@ -2191,6 +2191,12 @@ statement(void)
 
   case TOKENIZER_SET_CAPTURE_MODE_CANON:
       set_capture_mode_canon_statement();
+      break;
+  case TOKENIZER_SET_CONSOLE_LAYOUT:
+      set_console_layout();
+      break;
+  case TOKENIZER_SET_CONSOLE_AUTOREDRAW:
+      set_console_autoredraw();
       break;
   case TOKENIZER_CONSOLE_REDRAW:
       console_redraw_statement();
