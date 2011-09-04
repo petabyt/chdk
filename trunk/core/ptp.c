@@ -434,6 +434,8 @@ static int handle_ptp(
 
         if ( temp_data_kind != 1 )
         {
+          // send dummy data, otherwise error hoses connection
+          send_ptp_data(data,"\0",1);
           ptp.code = PTP_RC_GeneralError;
           break;
         }
@@ -441,6 +443,8 @@ static int handle_ptp(
         fn = (char *) malloc(temp_data_extra+1);
         if ( fn == NULL )
         {
+          // send dummy data, otherwise error hoses connection
+          send_ptp_data(data,"\0",1);
           free(temp_data.str);
           temp_data_kind = 0;
           ptp.code = PTP_RC_GeneralError;
@@ -455,6 +459,8 @@ static int handle_ptp(
         f = fopen(fn,"rb");
         if ( f == NULL )
         {
+          // send dummy data, otherwise error hoses connection
+          send_ptp_data(data,"\0",1);
           ptp.code = PTP_RC_GeneralError;
           free(fn);
           break;
@@ -468,6 +474,8 @@ static int handle_ptp(
         buf = (char *) malloc(buf_size);
         if ( buf == NULL )
         {
+          // send dummy data, otherwise error hoses connection
+          send_ptp_data(data,"\0",1);
           ptp.code = PTP_RC_GeneralError;
           break;
         }
