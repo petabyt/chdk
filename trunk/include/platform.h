@@ -228,6 +228,23 @@ int vid_get_viewport_row_offset();
 void vid_turn_off_updates();
 void vid_turn_on_updates();
 
+// PTP Live View functions
+// These functions return actual size/offset in pixels of the viewport and bitmap buffers
+extern int vid_get_viewport_xoffset_proper();           // X Offset (for variable image size)
+extern int vid_get_viewport_yoffset_proper();           // Y Offset (for variable image size)
+extern int vid_get_viewport_width_proper();             // Visible viewport width (for variable image size)
+extern int vid_get_viewport_height_proper();            // Visible viewport height (for variable image size)
+extern int vid_get_viewport_max_width();                // Max visible viewport width in pixels
+extern int vid_get_viewport_max_height();               // Max visible viewport height in pixels
+extern int vid_get_viewport_buffer_width_proper();      // Physical viewport buffer width in pixels
+extern int vid_get_palette_type();                      // Palette type (0 - 3)
+extern int vid_get_palette_size();                      // Palette size (in bytes)
+extern int vid_get_aspect_ratio();                      // LCD aspect ratio (0 = 4:3 or 1 = 16:9)
+
+extern void *vid_get_viewport_active_buffer();          // Return active live viewport memory address
+extern void *vid_get_bitmap_active_buffer();            // Return current active bitmap memory address
+extern void *vid_get_bitmap_active_palette();           // Return current palette memory address
+
 /******************************************************************/
 
 void *hook_raw_fptr();

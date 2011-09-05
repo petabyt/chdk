@@ -288,6 +288,7 @@ static int handle_ptp(
       break;
 
     case PTP_CHDK_CallFunction:
+      if ( (param2 & 0x1) == 0 )
       {
         int s;
         int *buf = (int *) malloc((10+1)*sizeof(int));
@@ -309,6 +310,10 @@ static int handle_ptp(
         ptp.param1 = ((int (*)(int,int,int,int,int,int,int,int,int,int)) buf[0])(buf[1],buf[2],buf[3],buf[4],buf[5],buf[6],buf[7],buf[8],buf[9],buf[10]);
 
         free(buf);
+        break;
+      } else { // if ( (param2 & 0x1) != 0 )
+        ptp.num_param = 1;
+        ptp.param1 = ((int (*)(ptp_data*,int,int)) param3)(data,param4,param5);
         break;
       }
 

@@ -1336,3 +1336,47 @@ void Restart(unsigned option) {
 }
 */
 
+// Default implementation of PTP live view functions.
+// Override as needed for camera specific variations (see G12/SX30/IXUS310/SX130IS for working examples)
+
+int __attribute__((weak)) vid_get_viewport_xoffset_proper()         { return 0; }
+int __attribute__((weak)) vid_get_viewport_yoffset_proper()         { return 0; }
+int __attribute__((weak)) vid_get_viewport_width_proper()           { return 720; }
+int __attribute__((weak)) vid_get_viewport_height_proper()          { return 240; }
+int __attribute__((weak)) vid_get_viewport_max_width()              { return 720; }
+int __attribute__((weak)) vid_get_viewport_max_height()             { return 240; }
+int __attribute__((weak)) vid_get_viewport_buffer_width_proper()    { return vid_get_viewport_max_width(); }
+int __attribute__((weak)) vid_get_palette_type()                    { return 0; }       // 0 = no palette into, 1 = 16 x 4 byte AYUV values, 
+                                                                                        // 2 = 16 x 4 byte AYUV (A = 0..3), 3 = 256 x 4 byte AYUV (A = 0..3)
+int __attribute__((weak)) vid_get_palette_size()                    { return 0; }
+int __attribute__((weak)) vid_get_aspect_ratio()                    { return 0; }       // 0 = 4:3, 1 = 16:9 LCD Aspect Ratio
+
+void __attribute__((weak)) *vid_get_bitmap_active_buffer()
+{
+  return vid_get_bitmap_fb();   // *** does not get the active buffer! (override if active buffer can be determined)
+}
+
+void __attribute__((weak)) *vid_get_bitmap_active_palette()
+{
+  return 0; // return no palette info unless overridden
+}
+
+// Get active viewport buffer address based on PLAY/REC mode.
+// Try to use 'live' buffer in REC mode if vid_get_viewport_live_fb is implemented
+void __attribute__((weak)) *vid_get_viewport_active_buffer()
+{
+  void *p;
+
+  if ( (mode_get()&MODE_MASK) == MODE_PLAY )
+  {
+    p = vid_get_viewport_fb_d();
+  } else {
+    p = vid_get_viewport_live_fb();
+    if ( !p )
+    {
+      p = vid_get_viewport_fb();
+    }
+  }
+  
+  return p;
+}
