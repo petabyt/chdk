@@ -69,7 +69,7 @@ long vid_get_bitmap_screen_height() { return 240; }
 long vid_get_bitmap_buffer_width() { return 960; }
 long vid_get_bitmap_buffer_height() { return 270; }
 
-int vid_get_viewport_buffer_width() { return 720; }	// G12 - buffer is twice as wide as viewport
+int vid_get_viewport_buffer_width() { return 720; }	// G12 - viewport is actually 480 high, CHDK not set up for this so we skip every 2nd row
 
 int vid_get_viewport_width()
 {
@@ -113,4 +113,28 @@ int vid_get_viewport_image_offset() {
 // returns the byte offset to skip at the end of a viewport buffer row to get to the next row.
 int vid_get_viewport_row_offset() {
 	return (vid_get_viewport_buffer_width() - vid_get_viewport_width()) * 3;
+}
+
+// Functions for PTP Live View system
+
+int vid_get_viewport_xoffset_proper()           { return vid_get_viewport_xoffset() * 2; }
+int vid_get_viewport_yoffset_proper()           { return vid_get_viewport_yoffset() * 2; }
+int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
+int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * 2; }
+int vid_get_viewport_max_height()               { return 480; }
+int vid_get_palette_type()                      { return 3; }
+int vid_get_palette_size()                      { return 256 * 4; }
+
+void *vid_get_bitmap_active_buffer()
+{
+    extern int active_bitmap_buffer;
+    extern char* bitmap_buffer[];
+    return bitmap_buffer[active_bitmap_buffer];
+}
+
+void *vid_get_bitmap_active_palette()
+{
+    extern int active_palette_buffer;
+    extern char* palette_buffer[];
+    return (palette_buffer[active_palette_buffer]+8);
 }

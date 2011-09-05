@@ -17,3 +17,8 @@ DEF(canon_shoot_menu_active                 ,0x00007d89) // Found @0xff9a95b8
 DEF(playrec_mode                            ,0x00002d64) // Found @0xff880638
 DEF(zoom_status                             ,0x0000ce70) // Found @0xffac4c14
 DEF(some_flag_for_af_scan                   ,0x00006f68) // Found @0xff96cc44
+
+DEF(active_bitmap_buffer, 0x9480)					// 0x9470+0x10 (1.01f sub_FFA0D54C -> FFA0D550 + FFA0D578)
+DEF(bitmap_buffer, 0x9488)							// FFA0D570 & FFA0D57C (1.01f)
+DEF(active_palette_buffer, 0x9460)					// sub_FFA093D0 (1.01f)
+DEF(palette_buffer, 0xB3A58)						// sub_FFA09748 (1.01f)

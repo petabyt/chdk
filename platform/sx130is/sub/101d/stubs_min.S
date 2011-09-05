@@ -417,3 +417,7 @@ ROM:FF9954CC                 B       loc_FF99566C
 
 DEF(full_screen_refresh, 0x9458)					// found in FFA09304
 
+DEF(active_bitmap_buffer, 0x9480)					// 0x9470+0x10 (1.01f sub_FFA0D54C -> FFA0D550 + FFA0D578)
+DEF(bitmap_buffer, 0x9488)							// FFA0D570 & FFA0D57C (1.01f)
+DEF(active_palette_buffer, 0x9460)					// sub_FFA093D0 (1.01f)
+DEF(palette_buffer, 0xB3A58)						// sub_FFA09748 (1.01f)

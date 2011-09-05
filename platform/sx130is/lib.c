@@ -1,6 +1,6 @@
 /*
 *********************
-SX20
+SX130IS
 ********************** 
 */
 
@@ -162,3 +162,24 @@ void JogDial_CCW(void){
  _PostLogicalEventForNotPowerType(0x875, 2);  // RotateJogDialLeft
 }
 
+
+#if defined(CAM_CHDK_PTP_LIVE_VIEW)
+// Functions for PTP Live View system
+
+int vid_get_palette_type()                      { return 3; }
+int vid_get_palette_size()                      { return 256 * 4; }
+
+void *vid_get_bitmap_active_buffer()
+{
+    extern int active_bitmap_buffer;
+    extern char* bitmap_buffer[];
+    return bitmap_buffer[active_bitmap_buffer];
+}
+
+void *vid_get_bitmap_active_palette()
+{
+    extern int active_palette_buffer;
+    extern char* palette_buffer[];
+    return (palette_buffer[active_palette_buffer]+8);
+}
+#endif
