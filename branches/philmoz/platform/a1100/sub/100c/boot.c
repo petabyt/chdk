@@ -133,7 +133,7 @@ void __attribute__((naked,noinline)) sub_FFC001A0_my() {
      *(int*)0x1934=(int)taskHook;
      *(int*)0x1938=(int)taskHook;
 	 
-     *(int*)(0x2230)= (*(int*)0xC0220134)&1 ?0x200000 : 0x100000; // replacement of sub_FFC3040C for correct power-on.
+     *(int*)(0x2234)= (*(int*)0xC0220134)&1 ?0x200000 : 0x100000; // replacement of sub_FFC3040C for correct power-on.
 
       
    asm volatile (

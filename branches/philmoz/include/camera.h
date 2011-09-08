@@ -21,6 +21,8 @@
 
 #undef  CAM_DRYOS                               // Camera is DryOS-based
 #undef  CAM_PROPSET                             // Camera's properties group (the generation)
+#undef  CAM_DRYOS_2_3_R39                       // Define for cameras with DryOS release R39 or greater
+#undef  CAM_DRYOS_2_3_R47                       // Define for cameras with DryOS release R47 or greater
 
 #undef  CAM_SWIVEL_SCREEN                       // Camera has rotated LCD screen
 #define CAM_USE_ZOOM_FOR_MF         1           // Zoom lever can be used for manual focus adjustments
@@ -32,7 +34,7 @@
 #define CAM_HAS_ZOOM_LEVER          1           // Camera has dedicated zoom buttons
 #undef  CAM_DRAW_EXPOSITION                     // Output expo-pair on screen (for cameras which (sometimes) don't do that)
 #define CAM_HAS_ERASE_BUTTON        1           // Camera has dedicated erase button
-#define CAM_HAS_IRIS_DIAPHRAGM      1           // Camera has real diaphragm mechanism
+#define CAM_HAS_IRIS_DIAPHRAGM      1           // Camera has real diaphragm mechanism (http://en.wikipedia.org/wiki/Diaphragm_%28optics%29)
 #undef  CAM_HAS_ND_FILTER                       // Camera has build-in ND filter
 #define CAM_CAN_SD_OVER_NOT_IN_MF   1           // Camera allows subject distance (focus) override when not in manual focus mode
 #define CAM_CAN_SD_OVERRIDE         1           // Camera allows to do subject distance override
@@ -51,8 +53,14 @@
 #define CAM_EMUL_KEYPRESS_DELAY     40          // Delay to interpret <alt>-button press as longpress
 #define CAM_EMUL_KEYPRESS_DURATION  5           // Length of keypress emulation
 
-#define CAM_MENU_BORDERWIDTH        30          // Related to screen layout somehow.
-                                                // TODO someone explain what this does, probably doesn't really belong here
+#define CAM_MENU_BORDERWIDTH        30          // Defines the width of the border on each side of the CHDK menu. The CHDK menu will have this
+                                                // many pixels left blank to the on each side. Should not be less than 10 to allow room for the
+                                                // scroll bar on the right.
+
+#undef  CAM_DETECT_SCREEN_ERASE                 // Define this to add 'guard' pixel to the screen bitmap to help detect if the firmware has erase the screen
+                                                // If the guard pixel changes the CHDK ALT menu is forced to redraw.
+                                                // Take care not to place CHDK OSD elements over the guard pixel.
+                                                // The guard pixel is the first pixel of the top row in the screen bitmap.
 
 #undef  CAM_AF_SCAN_DURING_VIDEO_RECORD         // CHDK can make single AF scan during video record
 #undef  CAM_HAS_VIDEO_BUTTON                    // Camera can take stills in video mode, and vice versa
@@ -99,8 +107,8 @@
 // end of section by nandoid
 
 #undef CAM_QUALITY_OVERRIDE                     // define this in platform_camera.h to enable 'Super Fine' JPEG compression mode
-												// used to allow super fine JPEG option on cameras where this has been removed
-												// from the Canon menu. Note: may not actually work on all cameras.
+                                                // used to allow super fine JPEG option on cameras where this has been removed
+                                                // from the Canon menu. Note: may not actually work on all cameras.
 
 #undef CAM_ZEBRA_ASPECT_ADJUST                  // zebra needs to account for real bitmap size being different from what lib.c reports
                                                 // also used by some cameras with normal bitmap layouts for memory saving ?
@@ -114,23 +122,24 @@
 
 #undef  CAM_DATE_FOLDER_NAMING                  // Camera uses date for naming image folders
 
-#undef  CAM_STARTUP_CRASH_FILE_OPEN_FIX         // enable fix for camera crash at startup when opening the conf / font files
+#undef  CAM_STARTUP_CRASH_FILE_OPEN_FIX         // enable fix for camera intermittently crash at startup when opening the conf / font files
+                                                // Some cameras throw "ASSERT!! FsIoNotify.c Line xxx    Task name: SpyTask" in ROMLOG
                                                 // see http://chdk.setepontos.com/index.php?topic=6179.0
 
 // RAW & DNG related values
 #define DNG_SUPPORT                 1           // Camera supports DNG format for saving of RAW images
 #define DEFAULT_RAW_EXT             1           // extension to use for raw (see raw_exts in conf.c)
-#undef  CAM_RAW_ROWPIX                          // Number of pixels in RAW row (physical size of the sensor)
-#undef  CAM_RAW_ROWS                            // Number of rows in RAW (physical size of the sensor)
-#undef  CAM_JPEG_WIDTH                          // Default crop size (width) stored in DNG (to match camera JPEG size)
-#undef  CAM_JPEG_HEIGHT                         // Default crop size (height) stored in DNG (to match camera JPEG size)
-#undef  CAM_ACTIVE_AREA_X1                      // Define usable area of the sensor
-#undef  CAM_ACTIVE_AREA_Y1                      // Define usable area of the sensor
-#undef  CAM_ACTIVE_AREA_X2                      // Define usable area of the sensor
-#undef  CAM_ACTIVE_AREA_Y2                      // Define usable area of the sensor
-#undef  cam_CFAPattern                          // Camera Bayer sensor data layout
+#undef  CAM_RAW_ROWPIX                          // Number of pixels in RAW row (physical size of the sensor Note : as of July 2011, this value can be found in stub_entry.S for dryos cameras)
+#undef  CAM_RAW_ROWS                            // Number of rows in RAW (physical size of the sensor       Note : as of July 2011, this value can be found in stub_entry.S for dryos cameras)
+#undef  CAM_JPEG_WIDTH                          // Default crop size (width) stored in DNG (to match camera JPEG size. From dimensions of the largest size jpeg your camera produces)
+#undef  CAM_JPEG_HEIGHT                         // Default crop size (height) stored in DNG (to match camera JPEG size. From dimensions of the largest size jpeg your camera produces)
+#undef  CAM_ACTIVE_AREA_X1                      // Define usable area of the sensor - needs to be divisible by 4 - calibrate using a CHDK RAW image converted with rawconvert.exe (eg :rawconvert -12to8 -pgm -w=4480 -h=3348 photo.crw photo.pgm)
+#undef  CAM_ACTIVE_AREA_Y1                      // Define usable area of the sensor - needs to be divisible by 2 - "
+#undef  CAM_ACTIVE_AREA_X2                      // Define usable area of the sensor - needs to be divisible by 4 - "
+#undef  CAM_ACTIVE_AREA_Y2                      // Define usable area of the sensor - needs to be divisible by 2 = "
+#undef  cam_CFAPattern                          // Camera Bayer sensor data layout (DNG colors are messed up if not correct - should be either 0x01000201 = [Green Blue Red Green]  or 0x02010100 = [Red  Green  Green  Blue]
 #undef  CAM_COLORMATRIX1                        // DNG color profile matrix
-#undef  cam_CalibrationIlluminant1              // DNG color profile illuminant
+#undef  cam_CalibrationIlluminant1              // DNG color profile illuminant - set it to 17 for standard light A
 #undef  CAM_DNG_EXPOSURE_BIAS                   // Specify DNG exposure bias value (to override default of -0.5 in the dng.c code)
 #undef  DNG_EXT_FROM                            // Extension in the cameras known extensions to replace with .DNG to allow DNG
                                                 // files to be transfered over standard PTP. Only applicable to older cameras
@@ -148,24 +157,24 @@
 #define ASPECT_GRID_XCORRECTION(x)    (x)        // Aspect ratio correction for grids. Grids are designed on a 360x240 logical screen size which matches the
 #define ASPECT_GRID_YCORRECTION(y)    (y)        // default CHDK logical screen size so no correction needed.
 
-#undef    PARAM_CAMERA_NAME                      // parameter number for GetParameterData to get camera name
+#undef  PARAM_CAMERA_NAME                        // parameter number for GetParameterData to get camera name
 
 
-#undef  CAM_FIRMWARE_MEMINFO                    // Use 'GetMemInfo' (dryos) or 'memPartInfoGet'/'memPartFindMax' (vxworks)
-                                                // function in firmware to get free memory details
-                                                // GetMemInfo should be found correctly by the gensig/finsig signature
-                                                // finder for all dryos based cameras.
+#undef  CAM_FIRMWARE_MEMINFO                     // Use 'GetMemInfo' (dryos) or 'memPartInfoGet'/'memPartFindMax' (vxworks)
+                                                 // function in firmware to get free memory details
+                                                 // GetMemInfo should be found correctly by the gensig/finsig signature
+                                                 // finder for all dryos based cameras.
 
-#undef CAM_NO_MEMPARTINFO                      // VXWORKS camera does not have memPartInfoGet, fall back to memPartFindMax
+#undef CAM_NO_MEMPARTINFO                        // VXWORKS camera does not have memPartInfoGet, fall back to memPartFindMax
 
 
-#undef CAM_DRIVE_MODE_FROM_TIMER_MODE           // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
-                                                // Used to enabled bracketing in custom timer, required on many recent cameras
-                                                // see http://chdk.setepontos.com/index.php/topic,3994.405.html
+#undef CAM_DRIVE_MODE_FROM_TIMER_MODE            // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
+                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
+                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-#undef CAM_AV_OVERRIDE_IRIS_FIX					// for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
+#undef CAM_AV_OVERRIDE_IRIS_FIX                  // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
 
-#undef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE        // For cameras with 'low light' mode that does now work with raw define this
+#undef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE         // For cameras with 'low light' mode that does now work with raw define this
 
 //----------------------------------------------------------
 // Override Default values for Camera if necessary

@@ -55,3 +55,10 @@ NHSTUB(nullsub_37,                  0xFF810948)
 NHSTUB(unknown_libname_80,          0xFF810948)
 NHSTUB(unknown_libname_96,          0xFF810948)
 NHSTUB(j_unknown_libname_73,        0xFF810948)
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(rename                        ,0xff823e64) // New address = 0xff8235e8
+NHSTUB(write                         ,0xff81a0f4) // New address = 0xff823e3c

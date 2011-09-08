@@ -1213,7 +1213,7 @@ void shooting_bracketing(void){
   short drive_mode=shooting_get_drive_mode();
   if (shooting_get_drive_mode()!=0)  {
      int m=mode_get()&MODE_SHOOTING_MASK;
-     if (m!=MODE_STITCH) {
+     if (m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE) {
        if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING) {
            bracketing.shoot_counter=0;
            bracketing.av96=0;
@@ -1473,6 +1473,35 @@ int /*__attribute__((weak))*/ mode_get(void) {
 
     return (mode);
 }
+
+// Only needed on VxWorks
+#if CAM_DRAW_EXPOSITION
+
+// compare PROPCASE_TV with shutter_speeds_table
+char* shooting_get_tv_str() {
+    short int tvv;
+    long i;
+    _GetPropertyCase(PROPCASE_TV, &tvv, sizeof(tvv));
+    for(i=0; i<SS_SIZE; i++) {
+        if(shutter_speeds_table[i].prop_id >= tvv)
+            return (char*)shutter_speeds_table[i].name;
+    }
+    return (void*)"?";
+}
+
+// compare PROPCASE_AV with aperture_sizes_table
+char* shooting_get_av_str() {
+    short int avv;
+    long i;
+    _GetPropertyCase(PROPCASE_AV, &avv, sizeof(avv));
+    for(i=0; i<AS_SIZE; i++) {
+        if(aperture_sizes_table[i].prop_id == avv)
+            return (char*)aperture_sizes_table[i].name;
+    }
+    return (char*) "?";
+}
+
+#endif
 
 /*
 char* shooting_get_iso_str() {

@@ -6,7 +6,7 @@
 
 static long *nrflag = (long*)(0x89D4+0x8);  // sx220 FF190524 + 8 
 #define NR_AUTO (0)							// have to explictly reset value back to 0 to enable auto
-
+#define PAUSE_FOR_FILE_COUNTER 100          // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 
 #include "../../../generic/capt_seq.c"
 
@@ -157,43 +157,20 @@ void __attribute__((naked,noinline)) capt_seq_task() {
  "loc_FF077710:\n"                            
                  "B       loc_FF0778F0\n"
 
- "loc_FF077714:\n"                            //
-                                        
+ "loc_FF077714:\n"
+                  
+				 "BL	  shooting_expo_iso_override\n"	   // added
                  "BL      sub_FF077F04\n"
-                 
-//Commented area copied from sx210
-// TESTING DOSNT DO BAD NEITHER GOOD  LIKE IN SD1200 but seems to dont work too!!!
-/*
-"    STMFD   SP!, {R1-R12,LR}\n"
-"    BL      captseq_hack_override_active\n" // returns 1 if tv or sv override in effect
-"    LDMFD   SP!, {R1-R12,LR}\n"
-"    STR     R0,[SP,#-4]!\n" // push return value
-"    BL      shooting_expo_param_override\n" // saves all regs
-
-"                BL      sub_FF87C4C0\n"
-
-"    LDR     R0,[SP],#4\n" // pop override hack
-"    CMP     R0, #1\n"
-"    MOVEQ   R0, #0\n"
-"    STREQ   R0, [R4,#0x24]\n"  // fixes overrides behavior at short shutter press
-*/				 
-
-
-				 "BL      shooting_expo_param_override\n"  // + patched                 
+				 "BL      shooting_expo_param_override\n"  // added                 
  				 "BL      sub_FF074BC4\n"
- 
- 
- //SX220 Funnel: 
- //  copied over from SX10 don't know if we need it yet
- //  this code added to avoid some incorrect behavior if overrides are used.
- //  but it can cause some unexpected side effects. In this case, remove this code!
- //              "MOV     R0, #0\n"
- //              "STR     R0, [R4,#0x24]\n"  // fixes overrides  behavior at short shutter press
- //  end of my code
+				 
+				 "MOV     R0, #0\n"							// added
+				 "STR     R0, [R5,#0x28]\n"					// added, fixes overrides  behavior at short shutter press (from SX30)
 
-				 "LDR     R0, [R5,#0x28]\n"
-                 "CMP     R0, #0\n"
-                 "BLNE    sub_FF18D9B4\n"
+//				 "LDR     R0, [R5,#0x28]\n"					// above two lines make this code redundant
+//				 "CMP     R0, #0\n"							// above two lines make this code redundant
+//				 "BLNE    sub_FF18D9B4\n"					// above two lines make this code redundant
+
                  "B       loc_FF0778F0\n"
 
  "loc_FF07772C:\n"                            
@@ -201,7 +178,7 @@ void __attribute__((naked,noinline)) capt_seq_task() {
                  "MOV     R0, R8\n"
 				 // "BL      sub_FF18D790\n"    // SX220
 				 "BL      sub_FF18D790_my\n"   // + patched
-				 "BL      capt_seq_hook_raw_here\n"     //added					 
+				 "BL      capt_seq_hook_raw_here\n"     //added
 				 "MOV     R4, R0\n"
                  "MOV     R2, R8\n"
                  "MOV     R1, #1\n"
@@ -593,7 +570,7 @@ asm volatile(
  "loc_FF18D98C:\n"                           
                  "MOV     R0, R4\n"
                  "BL      sub_FF3058A0\n"
-				 
+
  "loc_FF18D994:\n"                          
  
  			    "MOV     R7, R0\n"

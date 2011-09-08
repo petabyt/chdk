@@ -566,6 +566,7 @@ void __attribute__((naked,noinline)) sub_FF876764_my() {
         "LDRB    R3, [R12, #0x1C2]\n"          // Partition type (FAT32 = 0xB)
         "CMP     R3, #0xB\n"                   // Is this a FAT32 partition?
         "CMPNE   R3, #0xC\n"                   // Not 0xB, is it 0xC (FAT32 LBA) then?
+        "CMPNE   R3, #0x7\n"                   // exFat?
         "BNE     dg_sd_fat32\n"                // No, it isn't. Loop again.
         "CMP     R2, #0x00\n"                  // It is, check the validity of the partition type
         "CMPNE   R2, #0x80\n"
@@ -638,6 +639,10 @@ void __attribute__((naked,noinline)) sub_FF876764_my() {
  );
 }
 
+// Pointer to stack location where jogdial task records previous and current
+// jogdial positions
+short *jog_position;
+
 // Firmware version @ FF865D08
 void __attribute__((naked,noinline)) JogDial_task_my() {
  asm volatile(
@@ -648,6 +653,11 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
 "                LDR     R6, =0xFFB97A38 \n"
 "                MOV     R0, #0 \n"
 "                ADD     R3, SP, #0x10 \n"
+
+// Save pointer for kbd.c routine
+" LDR R12, =jog_position \n"
+" STR R3, [R12] \n"
+
 "                ADD     R12, SP, #0x14 \n"
 "                ADD     R10, SP, #0x08 \n"
 "                MOV     R2, #0 \n"
@@ -675,10 +685,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
 "                BL      sub_FF83A4C8 \n"
 "                CMP     R0, #0 \n"
 "                LDRNE   R1, =0x262 \n"
-
-//"                ADRNE   R0, aRotaryencoder_ ; "RotaryEncoder.c" \n"
-"				LDRNE	R0,=0xFF865FC4 \n"
-
+"				 LDRNE   R0,=0xFF865FC4 \n" //aRotaryencoder_ ; "RotaryEncoder.c" \n"
 "                BLNE    _DebugAssert \n"
 "                LDR     R0, [SP] \n"
 "                AND     R4, R0, #0xFF \n"
@@ -693,10 +700,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
 "                BNE     loc_FF865D64 \n"
 "                CMP     R4, #0 \n"
 "                LDRNE   R1, =0x2ED \n"
-
-//"                ADRNE   R0, aRotaryencoder_ ; "RotaryEncoder.c" \n"
-"				LDRNE	R0,=0xFF865FC4 \n"
-
+"				 LDRNE   R0,=0xFF865FC4 \n" //aRotaryencoder_ ; "RotaryEncoder.c" \n"
 "                BLNE    _DebugAssert \n"
 "                RSB     R0, R4, R4,LSL#3 \n"
 "                LDR     R0, [R6,R0,LSL#2] \n"
@@ -838,9 +842,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
 "                LDR     R1, =0x2CF \n"
 
 "loc_FF865F64: \n"
-//"                ADR     R0, aRotaryencoder_ ; "RotaryEncoder.c" \n"
-"				LDR		R0,=0xFF865FC4 \n"
-
+"				 LDR     R0,=0xFF865FC4 \n" //aRotaryencoder_ ; "RotaryEncoder.c" \n"
 "                BL      _DebugAssert \n"
 
 "loc_FF865F6C: \n"
@@ -866,9 +868,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
 "                LDR     R1, =0x2D6 \n"
 
 "loc_FF865FB0: \n"
-//"                ADR     R0, aRotaryencoder_ ; "RotaryEncoder.c" \n"
-"				LDR		R0,=0xFF865FC4 \n"
-
+"				 LDR     R0,=0xFF865FC4 \n" //aRotaryencoder_ ; "RotaryEncoder.c" \n"
 "                BL      _DebugAssert \n"
 "                B       loc_FF865D64 \n"
 
@@ -880,10 +880,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
 "                LDR     R0, [R9,R4,LSL#2] \n"
 "                CMP     R0, #0 \n"
 "                MOVEQ   R1, #0x2E0 \n"
-
-//"                ADREQ   R0, aRotaryencoder_ ; "RotaryEncoder.c" \n"
-"				LDRNE	R0,=0xFF865FC4 \n"
-
+"				 LDREQ   R0,=0xFF865FC4 \n" //aRotaryencoder_ ; "RotaryEncoder.c" \n"
 "                BLEQ    _DebugAssert \n"
 "                RSB     R0, R4, R4,LSL#3 \n"
 "                ADD     R0, R6, R0,LSL#2 \n"

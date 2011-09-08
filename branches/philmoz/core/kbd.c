@@ -47,7 +47,7 @@ static int nFirst=1;
 	defined(CAMERA_ixus75_sd750) || defined(CAMERA_a470) || defined(CAMERA_ixus90_sd790) || \
 	defined(CAMERA_ixus100_sd780) || defined(CAMERA_ixus120_sd940) || defined(CAMERA_a480) || \
 	defined(CAMERA_a495) || defined(CAMERA_a490) || defined(CAMERA_d10) || defined(CAMERA_ixus85_sd770) || \
-	defined(CAMERA_ixus95_sd1200) || defined(CAMERA_a580) || defined(CAMERA_ixus300_sd4000) || \
+	defined(CAMERA_ixus95_sd1200) || defined(CAMERA_ixus300_sd4000) || \
 	defined(CAMERA_a410)
 #define ZSTEP_TABLE_SIZE 7
 static int nTxtbl[]={0,1,2,3,4,5,6};    // remote zoom steps (we need a distinct number of steps, even if the camera zooms smoothly)
@@ -69,7 +69,7 @@ static int nTxtbl[]={0,18,43,55,76,93,113,124};
 #endif
 
 #if defined(CAMERA_a430) || defined(CAMERA_a460) || defined(CAMERA_a530) || defined (CAMERA_a540) || \
-	defined(CAMERA_a550) || defined(CAMERA_a560) || defined(CAMERA_a570) || defined(CAMERA_a590) || \
+	defined(CAMERA_a550) || defined(CAMERA_a560) || defined(CAMERA_a570) || defined(CAMERA_a580) || defined(CAMERA_a590) || \
 	defined(CAMERA_ixus860_sd870) || defined(CAMERA_ixus960_sd950) || defined(CAMERA_ixus80_sd1100) || \
 	defined(CAMERA_ixus970_sd890) || defined(CAMERA_ixus980_sd990) || defined(CAMERA_a1100)
 #define ZSTEP_TABLE_SIZE 8
@@ -319,7 +319,7 @@ long kbd_process()
                 nTxzoom=0;
                 nReczoom=0;
                 nTxvideo=0;
-                debug_led(0);
+//              debug_led(0);
             }
             if (mplay && (kbd_is_key_pressed(KEY_LEFT) || kbd_is_key_pressed(KEY_RIGHT))) {
                 nPlyname=KEY_LEFT;
@@ -333,9 +333,9 @@ long kbd_process()
                 nTxvideo++;
                 if(nTxvideo<50) {
                     kbd_key_release_all();
-                    debug_led(1);
+//                  debug_led(1);
                 } else {
-                    debug_led(0);
+//                  debug_led(0);
                     return 0;
                 }
                 return 1;
@@ -360,9 +360,9 @@ long kbd_process()
                 }
                 if(nTxzoom<50) {
                     kbd_key_release_all();
-                    debug_led(1);
+//                  debug_led(1);
                 } else {
-                    debug_led(0);
+//                  debug_led(0);
                     return 0;
                 }
                 return 1;
@@ -373,7 +373,7 @@ long kbd_process()
                     if(nTxzoom>0) {
                         nTxzoom=0;
                         nReczoom=0;
-                        debug_led(0);
+//                      debug_led(0);
                     }
                     nCount2=0;
                 }
@@ -550,7 +550,7 @@ long kbd_process()
                     nSW=0;
                     nCa=0;
                     nTxvideo=0;
-                    debug_led(0);
+//                  debug_led(0);
                     return 1;
                 }
 
@@ -733,7 +733,7 @@ long kbd_process()
                     nSW=0;
                     nCa=0;
                     nTxvideo=0;
-                    debug_led(0);
+ //                 debug_led(0);
                     return 1;
                 }
 
@@ -861,7 +861,7 @@ long kbd_process()
                             nCount=0;
                             nWt=10;
 //                          lens_set_zoom_speed(100);
-                            debug_led(0);
+//                          debug_led(0);
                             return 1;
                         }
                         nSW=125;

@@ -71,3 +71,9 @@ NHSTUB(UnsetZoomForMovie,  0xFF97FDD8)
   DEF(task_InitFileModules                    ,0xff894500) //107                                      
   DEF(task_MovieRecord                        ,0xff94af08) //107                                      
   DEF(task_RotaryEncoder                      ,0xff85afb0) //107                                      
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(write                         ,0xff81abd8) // New address = 0xff835498

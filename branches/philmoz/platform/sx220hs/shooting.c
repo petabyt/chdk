@@ -76,7 +76,6 @@ const ShutterSpeed shutter_speeds_table[] = {
 };
 
 const ISOTable iso_table[] = {
-	{ -1,   -1, "Auto", -1},
 	{  0,    0, "Auto", -1},
 	{  1,  100,  "100", -1},
 	{  2,  200,  "200", -1},
@@ -125,6 +124,23 @@ static const CapturemodeMap modemap[] = {
 
 #include "../generic/shooting.c"
 
+// Override ISO settings (need to do this before exposure calc for ISO as well as after)
+void __attribute__((naked,noinline)) shooting_expo_iso_override(void){
+ asm volatile("STMFD   SP!, {R0-R12,LR}\n");
+
+    if ((state_kbd_script_run) && (photo_param_put_off.sv96))
+    {
+        shooting_set_sv96(photo_param_put_off.sv96, SET_NOW);
+        // photo_param_put_off.sv96 is not reset here, it will be reset in next call to shooting_expo_param_override
+    }
+    else if ((conf.iso_override_value) && (conf.iso_override_koef) && !(conf.override_disable==1))
+        shooting_set_iso_real(shooting_get_iso_override_value(), SET_NOW);
+    else if (conf.autoiso_enable && shooting_get_flash_mode()/*NOT FOR FLASH AUTO MODE*/ && !(conf.override_disable==1 && conf.override_disable_all))
+        shooting_set_autoiso(shooting_get_iso_mode());
+
+ asm volatile("LDMFD   SP!, {R0-R12,PC}\n");
+}
+
 long get_file_next_counter() {
 	return get_file_counter();
 }
@@ -137,8 +153,13 @@ long get_target_file_num() {
 
     n = (n>>4)&0x3FFF;
 
-    //n+=22;
-	return n;
+    return n;
+}
+
+void get_target_dir_name(char *out)
+{	
+	extern void _GetImageFolder(char*,int,int,int);
+	_GetImageFolder(out,get_file_next_counter(),0x400,time(NULL));
 }
 
 long get_target_dir_num() {
@@ -147,29 +168,6 @@ long get_target_dir_num() {
 	n = get_file_next_counter();
 	n = (n>>18)&0x3FF;
 	return n;
-}
-
-void get_target_dir_name(char *out)
-{	
-	//getting the dir name directly from ram @0xBECA4. @FF159918
-	char str[14];
-	strncpy(str, (char*)((int*)(0xBECA4)), 14);
-	sprintf(out, "A%s", str);
-	
-	//SX220 crashes on GetImageFolder (Mounter.c assert)
-/*	extern void _GetImageFolder(char*,int,int,int);
-	out[0] = 'A';
-	_GetImageFolder(out+1,get_file_next_counter(),0x400,time(NULL));*/
-	
-	//this one worked only for monthly, not for daily
-/*	int month;
-	struct tm *ttm;
-	unsigned long t;
-	t = time(NULL);
-	ttm = localtime(&t);
-	month = ttm->tm_mon + 1;
-	sprintf(out, "A/DCIM/%03d___%02d", get_target_dir_num(), month);*/
-
 }
 
 int circle_of_confusion = 5;

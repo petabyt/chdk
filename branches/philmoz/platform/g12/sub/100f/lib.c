@@ -12,7 +12,7 @@ sensor size from code at sub_FFB787CC = (3744*2784)*(12/8) = 0xEE9200 = 15634944
 char *hook_raw_image_addr()
 {
 	// Appears to be two raw buffers (this returns active buffer)
-	// Addresses below found in table at FFBBAD50, ref at FF8843F4
+	// Addresses below found in table at FFBBAEF0, ref at FF8843F4
 	// used in _sub_FF8841BC__SsImgProcBuf.c__0 
 	// checks [0x2E88 + 0xc] --> defines which buffer is active
 
@@ -25,7 +25,7 @@ char *hook_raw_image_addr()
 char *hook_alt_raw_image_addr()
 {
 	// Appears to be two raw buffers (this returns inactive buffer)
-	// Addresses below found in table at FFBBAD50, ref at FF8843F4
+	// Addresses below found in table at FFBBAEF0, ref at FF8843F4
 	// used in _sub_FF8841BC__SsImgProcBuf.c__0 
 	// checks [0x2E88 + 0xc] --> defines which buffer is active
 

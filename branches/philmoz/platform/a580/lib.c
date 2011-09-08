@@ -1,4 +1,5 @@
 #include "platform.h"
+//#include "../generic/lib.c"
 
 void shutdown()
 {
@@ -31,5 +32,5 @@ void debug_led(int state)
 #define LED_AF 0xc0220080
 
 int get_flash_params_count(void){
- return 114;
+ return 115; //Corrected! from 114 (x73 = 115 form Stubs_Entry.S)
 }

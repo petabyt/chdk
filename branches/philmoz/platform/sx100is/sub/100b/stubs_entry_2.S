@@ -185,3 +185,10 @@ NHSTUB(WriteSDCard, 0xFFCFF4E8)
 NHSTUB(SetScriptMode, 0xFFC5F49C) // "SetScriptMode"
 NHSTUB(PB2Rec, 0xFFC62938)
 NHSTUB(Rec2PB, 0xFFC61564)
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(rename                        ,0xffc15120) // New address = 0xffc14860
+NHSTUB(write                         ,0xffc0a4a0) // New address = 0xffc150f8

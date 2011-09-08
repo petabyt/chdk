@@ -14,16 +14,25 @@ extern volatile int jogdial_stopped;
 void JogDial_task_my(void);
 void boot();
 
-void taskHook(context_t **context) {    //#fs
+extern void task_CaptSeq();
+extern void task_InitFileModules();
+extern void task_RotaryEncoder();
+extern void task_MovieRecord();
+extern void task_ExpDrv();
+
+// almost the same as SX30 / G12
+
+void taskHook(context_t **context) {
     task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
 
-    //if(!_strcmp(tcb->name, "PhySw"))           tcb->entry = (void*)mykbd_task;    // cause crash with large scripts because we hook task without increased stack size
-    if(!_strcmp(tcb->name, "CaptSeqTask"))     tcb->entry = (void*)capt_seq_task;
-    if(!_strcmp(tcb->name, "InitFileModules")) tcb->entry = (void*)init_file_modules_task;
-    if(!_strcmp(tcb->name, "MovieRecord"))     tcb->entry = (void*)movie_record_task;   // ToDo: working?
-    if(!_strcmp(tcb->name, "ExpDrvTask"))      tcb->entry = (void*)exp_drv_task;
-    if(!_strcmp(tcb->name, "RotarySw"))        tcb->entry = (void*)JogDial_task_my;
-}    //#fe
+    // Replace firmware task addresses
+    // since we create our own PhySw Task (taskcreatePhySw_my), no need to hook it
+    if(tcb->entry == (void*)task_CaptSeq)           tcb->entry = (void*)capt_seq_task;
+    if(tcb->entry == (void*)task_InitFileModules)   tcb->entry = (void*)init_file_modules_task;
+    if(tcb->entry == (void*)task_RotaryEncoder)     tcb->entry = (void*)JogDial_task_my;
+    if(tcb->entry == (void*)task_MovieRecord)       tcb->entry = (void*)movie_record_task;
+    if(tcb->entry == (void*)task_ExpDrv)            tcb->entry = (void*)exp_drv_task;
+}
 
 void CreateTask_spytask() {    //#fs
     _CreateTask("SpyTask", 0x19, 0x2000, core_spytask, 0);
@@ -137,7 +146,7 @@ void __attribute__((naked,noinline)) sub_FF810354_my() {    //#fs
     //*(int*)0x19A0=(int)taskHook;               // maybe correct IRQ is 0x19A0 (ROM:FF816634) ?
 
     // Power Button detection (short press = playback mode, long press = record mode)
-    // replacement for sub_FF834580 for correct power-on
+    // replacement for ROM:FF834580 -> ROM:FF861134 for correct power-on
     *(int*)(0x24B8)= (*(int*)0xC0220110)&1 ? 0x400000 : 0x200000;    // ROM:FF861138, value 0x200000 and 0x400000 must be in reverse order, else detection is reversed too
 
     asm volatile (
@@ -173,7 +182,6 @@ void __attribute__((naked,noinline)) sub_FF810354_my() {    //#fs
 
         //"BL      sub_FF811198\n"           // original
         "BL      sub_FF811198_my\n"          // +
-        //"B       sub_FF811198_my\n"          // Todo: B instead of BL ?!?
 
         // ToDo: shouldn't we continue with original function ?!? Most other Port does not...
         //asm volatile ("B      sub_FF8103CC\n");
@@ -189,11 +197,13 @@ void __attribute__((naked,noinline)) sub_FF811198_my() { //#fs
         "BL      sub_FFB59A1C\n"
         "MOV     R0, #0x53000\n"
         "STR     R0, [SP,#4]\n"
-
-        //"LDR     R0, =0x14B394\n"            // original
+#if defined(OPT_CHDK_IN_EXMEM)                 // use original heap offset since CHDK is loaded in high memory
+        "LDR     R0, =0x14B394\n"              // original
+                                               // ToDo: change address to put chdk into EXMEM
+#else                                          // otherwise use patched value
         "LDR     R0, =new_sa\n"                // +
         "LDR     R0, [R0]\n"                   // +
-
+#endif
         "LDR     R2, =0x379C00\n"
         "LDR     R1, =0x3724A8\n"
         "STR     R0, [SP,#8]\n"
@@ -268,7 +278,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() { //#fs
         "BL      sub_FF83BCF0\n"
         "CMP     R0, #0\n"
         "BNE     loc_FF81FB34\n"
-        "BL      sub_FF835D6C\n"
+        "BL      sub_FF835D6C\n"               // IsNormalCameraMode()
         "CMP     R0, #0\n"
         "BEQ     loc_FF81FB34\n"
         "BL      sub_FF834574\n"
@@ -282,7 +292,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() { //#fs
         "loc_FF81FB30:\n"
         "B       loc_FF81FB30\n"
         "loc_FF81FB34:\n"
-        //"BL      sub_FF834580\n"           // + disabled for correct Power Button detection
+        //"BL      sub_FF834580\n"           // + disabled for correct Power Button detection, ROM:FF861134 is canon function
         //"BL      j_nullsub_214\n"
         "BL      sub_FF839F18\n"
         "LDR     R1, =0x3CE000\n"
@@ -290,7 +300,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() { //#fs
         "BL      sub_FF83A360\n"
         "BL      sub_FF83A10C\n"             // KerSys.c:548
         "MOV     R3, #0\n"
-        "STR     R3, [SP,#8-8]\n"
+        "STR     R3, [SP]\n"
 
         //"ADR     R3, =0xFF81FA8C\n"        // original: task_Startup()
         //"LDR     R3, =0xFF81FA8C\n"        // compiler does not like ADR
@@ -310,19 +320,18 @@ void __attribute__((naked,noinline)) task_Startup_my() { //#fs
         //"BL      sub_FF83BD30\n"           // j_nullsub_217
         "BL      sub_FF83BF1C\n"             // taskcreate_ADCScn()
 
-        "BL      CreateTask_spytask\n"       // +
-
         //"BL      sub_FF83BDC4\n"           // original: StartSdInit() -> StartDiskboot()
+
         "BL      sub_FF83C0C0\n"
         "BL      sub_FF8322E4\n"
         "BL      sub_FF83BF4C\n"             // taskcreate_WDT()
         "BL      sub_FF8396BC\n"             // ErrorStuff
         "BL      sub_FF83C0C4\n"             // taskcreate_?
 
-        //"BL      CreateTask_spytask\n"       // + slow startup
+        "BL      CreateTask_spytask\n"       // +
 
         //"BL      sub_FF834434\n"           // taskcreate_PhySw()
-        "BL      taskcreate_PhySw_my\n"      // +
+        "BL      taskcreate_PhySw_my\n"      // + (create our own PhySw Task instead of hooking firmware Task)
 
         "BL      sub_FF8379F8\n"             // task_ShootSeqTask()
         //"BL      task_ShootSeqTask_my\n"   // +
@@ -755,22 +764,12 @@ void __attribute__((naked,noinline)) sub_FF87134C_my() {    //#fs
         "BL      sub_FF88A11C\n"             // ExMemMan.c:0
         "B       loc_FF8713B0\n"
         "loc_FF8713E4:\n"
-       // "LDR     R1, [R5,#0x64]\n"
+        "LDR     R1, [R5,#0x64]\n"
         "MOV     R0, R9\n"
-        //"BLX     R1\n"
-        "BL      sub_mbr\n"
-
-        "sub_mbr:\n"
-        // FAT32 Partition support
-        "LDR     R1, =0x94AD0\n"                 // ROM:FF951C00 or ROM:FF951E78
-        "ADD     R0, R0, R0,LSL#3\n"
-        "ADD     R0, R1, R0,LSL#2\n"
-        "LDR     R0, [R0,#0x18]\n"
-        "BX      LR\n"
+        "BLX     R1\n"
 
         "MOV   R1, R4\n"                     // pointer to MBR in R1
         "BL    mbr_read_dryos\n"             // total sectors count in R0 before and after call
-        // requires "define CAM_MULTIPART 1", else you get undefined reference compiler error ;-)
 
         // Start of DataGhost's FAT32 autodetection code
         // Policy: If there is a partition which has type W95 FAT32, use the first one of those for image storage
@@ -791,6 +790,7 @@ void __attribute__((naked,noinline)) sub_FF87134C_my() {    //#fs
         "LDRB    R3, [R12, #0x1C2]\n"          // Partition type (FAT32 = 0xB)
         "CMP     R3, #0xB\n"                   // Is this a FAT32 partition?
         "CMPNE   R3, #0xC\n"                   // Not 0xB, is it 0xC (FAT32 LBA) then?
+        "CMPNE   R3, #0x7\n"                   // exFat?
         "BNE     dg_sd_fat32\n"                // No, it isn't. Loop again.
         "CMP     R2, #0x00\n"                  // It is, check the validity of the partition type
         "CMPNE   R2, #0x80\n"
@@ -807,7 +807,9 @@ void __attribute__((naked,noinline)) sub_FF87134C_my() {    //#fs
         "ORR     R1, R1, R3,LSL#16\n"
         "LDRB    R3, [R4,#0x1C7]\n"
         "LDRB    R2, [R4,#0x1BE]\n"
-        "LDRB    LR, [R4,#0x1FF]\n"
+
+        //"LDRB    LR, [R4,#0x1FF]\n"          // original
+
         "ORR     R1, R1, R3,LSL#8\n"
         "LDRB    R3, [R4,#0x1C6]\n"
         "CMP     R2, #0\n"
@@ -820,11 +822,10 @@ void __attribute__((naked,noinline)) sub_FF87134C_my() {    //#fs
         "ORR     R3, R3, R12,LSL#8\n"
         "LDRB    R12, [R4,#0x1CA]\n"
         "ORR     R3, R3, R12\n"
-
         //"LDRB    R12, [R4,#0x1FE]\n"       // original
+
         "LDRB    R12, [LR,#0x1FE]\n"         // + First MBR signature byte (0x55), LR is original offset.
         "LDRB    LR, [LR,#0x1FF]\n"          // + Last MBR signature byte (0xAA), LR is original offset.
-        "MOV     R4, #0\n"                   // ToDo: required ?
 
         "BNE     loc_FF871470\n"
         "CMP     R0, R1\n"

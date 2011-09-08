@@ -41,3 +41,10 @@ NHSTUB(Unmount_FileSystem, 0xFF81093C)
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFF81093C)
 NHSTUB(rewinddir, 0xFF81093C)
 
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(rename                        ,0xff823b38) // New address = 0xff8232bc
+NHSTUB(write                         ,0xff819aac) // New address = 0xff823b10

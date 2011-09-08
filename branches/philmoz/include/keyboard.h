@@ -38,8 +38,17 @@
 #define	KEY_AE_LOCK		  31	// G12 AE/FE Lock button
 #define	KEY_METERING	  32	// G12 metering mode button
 
+//SX220
+#define KEY_PLAYBACK	  33
+#define KEY_LEFT_SOFT	  34	// jogdial keys have two steps
+#define KEY_RIGHT_SOFT	  35
+#define KEY_UP_SOFT		  36
+#define KEY_DOWN_SOFT	  37
+
 #define JOGDIAL_LEFT      100
 #define JOGDIAL_RIGHT     101
+#define FRONTDIAL_LEFT    102
+#define FRONTDIAL_RIGHT   103
 
 extern void gui_kbd_process();
 extern void gui_kbd_enter();

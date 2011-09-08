@@ -5,8 +5,8 @@
 #include "../../include/conf.h"
 
 //-------------------------------------------------------------------
-#define RBF_MAX_NAME       64
-
+#define RBF_MAX_NAME        64
+#define UBUFFER_SIZE        256 // Amount of uncached memory to allocate for file reading
 //-------------------------------------------------------------------
 static unsigned int RBF_HDR_MAGIC1 = 0x0DF00EE0;
 static unsigned int RBF_HDR_MAGIC2 = 0x00000003;
@@ -49,23 +49,22 @@ typedef struct _font {
 
     // Current size of the cTable data
     int cTableSize;
-    struct _font *uncached_font;      // address of font in uncached memory (for passing to ufree & read)
-    char *uncached_cTable;            // address of cTable in uncached memory (for passing to ufree & read)
+    int cTableSizeMax;                // max size of cTable (max size currently allocated)
 } font;
 
+static unsigned char *ubuffer = 0;                  // uncached memory buffer for reading font data from SD card
 static font *rbf_symbol_font = 0, *rbf_font = 0;
 static int rbf_codepage = FONT_CP_WIN; 
 
 //-------------------------------------------------------------------
 
 font *new_font() {
-    // allocate font from uncached memory
-    font *f = umalloc(sizeof(font));
+    // allocate font from cached memory
+    font *f = malloc(sizeof(font));
     if (f) {
-        memset(f,0,sizeof(font));      // wipe memory (use uncached address to avoid conflict with read & caching)
-        f->uncached_font = f;          // save uncached memory address
-        // return address in cached memory for faster font rendering
-        return (font*)((int)f & ~CAM_UNCACHED_BIT);
+        memset(f,0,sizeof(font));      // wipe memory
+        // return address in cached memory
+        return f;
     }
 
     // memory not allocated ! should probably do something else in this case ?
@@ -77,6 +76,9 @@ void init_fonts()
     // Allocate base font memory if needed
     if (rbf_font == 0) rbf_font = new_font();
     if (rbf_symbol_font == 0) rbf_symbol_font = new_font();
+
+    // allocate uncached memory buffer for reading
+    ubuffer = umalloc(UBUFFER_SIZE);
 }
 
 void alloc_cTable(font *f) {
@@ -93,21 +95,20 @@ void alloc_cTable(font *f) {
     // If existing data has been allocated then we are re-using the font data
     // See if it the existing cTable data is large enough to hold the new font data
     // If not free it so new memory will be allocated
-    if ((f->cTable != 0) && (f->cTableSize < (f->charCount*f->hdr.charSize))) {
-        ufree(f->uncached_cTable);    // free the memory using the uncached address
+    if ((f->cTable != 0) && (f->cTableSizeMax < (f->charCount*f->hdr.charSize))) {
+        free(f->cTable);              // free the memory
         f->cTable = 0;                // clear pointer so new memory is allocated
-        f->uncached_cTable = 0;
+        f->cTableSizeMax = 0;
     }
 
     // Allocated memory if needed
     if (f->cTable == 0 && !f->usingFont8x16) {
-        // Allocate memory from uncached pool
-        f->uncached_cTable = umalloc(f->charCount*f->hdr.charSize);
-        // Store cached memory address
-        f->cTable = (char*)((int)f->uncached_cTable & ~CAM_UNCACHED_BIT);
+        // Allocate memory from cached pool
+        f->cTable = malloc(f->charCount*f->hdr.charSize);
 
         // save size
         f->cTableSize = f->charCount*f->hdr.charSize;
+        if (f->cTableSizeMax == 0) f->cTableSizeMax = f->cTableSize;    // Save actual size allocated
     }
 }
 
@@ -145,8 +146,36 @@ char* rbf_font_char(font* f, int ch)
     return 0;
 }
 //-------------------------------------------------------------------
+// Read data from SD file using uncached buffer and copy to cached
+// font memory
+int font_read(int fd, unsigned char *dest, int len)
+{
+    // Return actual bytes read
+    int bytes_read = 0;
+
+    if (ubuffer)
+    {
+        // Read file in UBUFFER_SIZE blocks
+        while (len)
+        {
+            // Calc size of next block to read = min(UBUFFER_SIZE, len)
+            int to_read = UBUFFER_SIZE;
+            if (to_read > len) to_read = len;
+
+            // Read block and copy to dest
+            bytes_read += read(fd, ubuffer, to_read);
+            memcpy(dest, ubuffer, to_read);
+
+            // Increment dest pointer, decrement len left to read
+            dest += to_read;
+            len -= to_read;
+        }
+    }
+
+    return bytes_read;
+}
+//-------------------------------------------------------------------
 // Load from from file. If maxchar != 0 limit charLast (for symbols)
-// Note: pass the uncached font address to this function
 int rbf_font_load(char *file, font* f, int maxchar)
 {
     int i;
@@ -161,7 +190,7 @@ int rbf_font_load(char *file, font* f, int maxchar)
     int fd = open(file, O_RDONLY, 0777);
     if (fd >= 0) {
         // read header
-        i = read(fd, &f->hdr, sizeof(font_hdr));
+        i = font_read(fd, (unsigned char*)&f->hdr, sizeof(font_hdr));
 
         // check size read is correct and magic numbers are valid
         if ((i == sizeof(font_hdr)) && (f->hdr.magic1 == RBF_HDR_MAGIC1) && (f->hdr.magic2 == RBF_HDR_MAGIC2)) {
@@ -172,13 +201,13 @@ int rbf_font_load(char *file, font* f, int maxchar)
 
             alloc_cTable(f);
 
-            // read width table (using uncached memory address)
+            // read width table (using uncached buffer)
             lseek(fd, f->hdr._wmapAddr, SEEK_SET);
-            read(fd, &f->wTable[f->hdr.charFirst], f->charCount);
+            font_read(fd, (unsigned char*)&f->wTable[f->hdr.charFirst], f->charCount);
 
-            // read cTable data (using uncached memory address)
+            // read cTable data (using uncached buffer)
             lseek(fd, f->hdr._cmapAddr, SEEK_SET);
-            read(fd, f->uncached_cTable, f->charCount*f->hdr.charSize);
+            font_read(fd, (unsigned char*)f->cTable, f->charCount*f->hdr.charSize);
 
             close(fd);
 
@@ -197,7 +226,7 @@ int rbf_load(char *file) {
     // Allocate font if needed
     init_fonts();
     // Load font
-    return rbf_font_load(file, rbf_font->uncached_font, 0);
+    return rbf_font_load(file, rbf_font, 0);
 }
 
 //-------------------------------------------------------------------
@@ -206,7 +235,7 @@ int rbf_load_symbol(char *file) {
     // Allocate font if needed
     init_fonts();
     // Load font
-    return rbf_font_load(file, rbf_symbol_font->uncached_font, maxSymbols+32);
+    return rbf_font_load(file, rbf_symbol_font, maxSymbols+32);
 }
 
 //-------------------------------------------------------------------

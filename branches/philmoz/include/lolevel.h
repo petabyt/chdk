@@ -20,6 +20,9 @@ extern long _GetFocusLensCurrentPosition();
 extern long _GetFocusLensSubjectDistance();
 extern long _GetFocusLensSubjectDistanceFromLens();
 extern void _MoveFocusLensToDistance(short *dist);
+#if defined(CAMERA_a410)
+extern void MoveFocusLensToDistanceA410(short *dist);
+#endif
 extern void _PutInNdFilter();
 extern void _PutOutNdFilter();
 extern volatile long focus_busy;
@@ -58,7 +61,11 @@ long _ReceiveMessageQueue(void *msgq, long *dst, long unk1 /* maybe size? */);
 /* Canon stuff with nonoriginal naming */
 extern long _GetParameterData(long id, void *buf, long size);
 extern long _SetParameterData(long id, void *buf, long size);
+#ifdef  CAM_DRYOS_2_3_R47
+extern void _MakeSDCardBootable(int driveno);
+#else
 extern void _UpdateMBROnFlash(int driveno, long offset, char *str);
+#endif
 
 /* standart C library */
 //extern int _creat (const char *name, int flags);

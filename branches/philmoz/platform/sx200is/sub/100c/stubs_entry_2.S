@@ -299,3 +299,11 @@ NSTUB(eventproc_export_sscanf, 0xff9d74d4)
 
 
 
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(PB2Rec                        ,0xff87ee10) // New address = 0xff87d780
+NHSTUB(rename                        ,0xff823dc4) // New address = 0xff823548
+NHSTUB(write                         ,0xff819b44) // New address = 0xff823d9c

@@ -1,18 +1,56 @@
-notes from patch post http://chdk.setepontos.com/index.php?topic=650.msg64412#msg64412
+****************************************
 
-It doesn't seem to be very tested, but I've done a walk over CHDK User Manual and almost every function worked without problems:
+Camera depending notes: 
 
-Half Shutter + Left Toggle Zebra on/off: yes, but it turns OSD off too, and doesn't turn it on again (also, AFL appears)
-Half Shutter + Up Toggle Histogram on/off: turns it off, but no on (and sets AEL)
+- A580 uses Propset 2 of Properties (see http://tinyurl.com/6zbv9b)
+- dryos camera
+- A580 does have an ND Filter! 
+Mind this.
 
-These Manual Focus adjustments can also be achieved with shortcut keys. In <ALT> mode, using the LEFT / RIGHT keys to adjust the Value Factor and the Zoom lever to adjust the Subject Distance: doesn't work
+****************************************
 
-Enable Fast EV Switch: activates ISO/Continous mode, and the camera hanged once when playing with that
+NOTES:
+Half Shutter + Left - Sets AFL
+Half Shutter + Right - Toogle OSD on/off
+Half Shutter + Up - Sets AEL
+Half Shutter + Down - Toggle Histogram (Don't / Always / Shoot)
+Half Shutter + Menu - Toggle Zebra on/off
+Half Shutter + Display - Disable overrides
 
-Video: zoom during video doesn't works, neither does AF key
+In Alt:
+Display - Toogle RAW on/off
+Up - Toogle MF
 
-Curves: not tested
+In ALT + Manual mode:
+Display - Sets Infinity
+Down - Sets Hyperfocal
+-------
+Adjustable Alt button supported.
+-------
+User menu works.
+-------
+Extra long exposure feature supported.
+-------
+Firmware update from menu works! (With GCC compiler generated file YES, with fi2encdec generated filed NO!)
 
-Zoom values in OSD are wrong (40x?)
+platform/fi2.inc:
+ifeq ($(KEYSYS), d3enc)
+    FI2KEY=6F....71
+    FI2IV =53....3D
+endif
 
-Sokoban doesn't run
+PLEASE TEST:
+These Manual Focus adjustments can also be achieved with shortcut keys. 
+In <ALT> mode, using the LEFT / RIGHT keys to adjust the Value Factor and the Zoom lever to adjust the Subject Distance.
+Seems it works, please test!!!
+-------
+Curves: Seems it works, please test!!!
+-------
+SDHC multi-partition boot and swap supported. (Tested with 2GB SD (2MB  FAT12 and FAT32 the rest), can someone test it with a larger card 8GB, 16GB...)
+
+NOT WORKING:
+Enable Fast EV Switch: activates ISO/Continous mode
+!Workaround:
+http://chdk.setepontos.com/index.php/topic,2501.msg23321.html#msg23321
+-------
+Video: fast video control (on Left (Pause) camera hangs), disabled, not supported?

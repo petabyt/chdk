@@ -7,14 +7,22 @@
 #include "platform.h"
 
 const ApertureSize aperture_sizes_table[] = {
-    {  9, 273, "2.6" },
-    { 10, 285, "2.8" },
-    { 11, 304, "3.2" },
+    {  9, 267, "2.6" }, // without ND
+    { 10, 279, "2.8" },
+    { 11, 302, "3.2" },
     { 12, 337, "3.5" },
-    { 13, 372, "4.0" },
-    { 14, 409, "4.5" },
-    { 15, 448, "5.0" },
-    { 16, 480, "5.5" }
+    { 13, 383, "4.0" },
+    { 14, 437, "4.5" },
+    { 15, 503, "5.0" },
+    { 16, 565, "5.5" },
+    { 17, 675, "7.1 ND" }, // with ND
+    { 18, 705, "7.1 ND" },
+    { 19, 763, "8.0 ND" },
+    { 20, 850, "9.0 ND" },
+    { 21, 965, "10.0 ND" },
+    { 22, 1103, "11.0 ND" },
+    { 23, 1269, "13.0 ND" },
+    { 24, 1425, "14.0 ND" }
 };
 
 const ShutterSpeed shutter_speeds_table[] = {
@@ -67,14 +75,14 @@ const ShutterSpeed shutter_speeds_table[] = {
 };
 
 const ISOTable iso_table[] = {
-    { -1,    1,   "HI", -1},
-    {  0,    0, "Auto", -1},
-    {  1,   80,   "80", -1},
-    {  2,  100,  "100", -1},
-    {  3,  200,  "200", -1},
-    {  4,  400,  "400", -1},
-    {  5,  800,  "800", -1},
-    {  6, 1600, "1600", -1},
+    { -1,    1, "Auto HI", -1},
+    {  0,    0,    "Auto", -1},
+    {  1,   80,      "80", -1},
+    {  2,  100,     "100", -1},
+    {  3,  200,     "200", -1},
+    {  4,  400,     "400", -1},
+    {  5,  800,     "800", -1},
+    {  6, 1600,    "1600", -1},
 };
 
 /*
@@ -87,25 +95,29 @@ Shooting Modes
 	Indoor, Kids & Pets, Night Snapshot, Movie
 Movie: 640 x 480 (20 fps/20 fps LP), 320 x 240 (30 fps) available up to 4GB or 60 minutes, 160 x 120 (up to 3 minutes at 15 fps)
 
-canon mode list in FFE7CFFC 100c
+canon mode list in @FFE7CFFC in 100c
 */
-// 32774 - ?????? ????? ? ?????? ???????
 static const CapturemodeMap modemap[] = {
-    { MODE_AUTO,               32768 },//OK
-    { MODE_P,                  32772 },//OK
-    { MODE_VIDEO_STD,          2599  },//OK
-    { MODE_VIDEO_COMPACT,      2601  },//OK
-    { MODE_SCN_AQUARIUM,       16408 },//OK
-    { MODE_SCN_NIGHT_SCENE,    16398 },//OK
-    { MODE_SCN_FOLIAGE,        16403 },//OK
-    { MODE_SCN_SNOW,           16404 },//OK
-    { MODE_SCN_BEACH,          16405 },//OK
-    { MODE_SCN_FIREWORK,       16406 },//OK
-    { MODE_INDOOR,             32785 },//OK
-    { MODE_KIDS_PETS,          32784 },//OK
-    { MODE_NIGHT_SNAPSHOT,     32779 },//OK
-    { MODE_LANDSCAPE,          32780 },//OK
-    { MODE_PORTRAIT,           32781 },//OK
+    { MODE_P,                  32772 }, // OK!
+    { MODE_LONG_SHUTTER,       32774 }, // OK!
+    { MODE_AUTO,               32768 }, // OK!
+    { MODE_EASY,               33311 }, // OK!
+    { MODE_PORTRAIT,           32781 }, // OK!
+    { MODE_LANDSCAPE,          32780 }, // OK!
+    { MODE_NIGHT_SNAPSHOT,     32779 }, // OK!
+    { MODE_KIDS_PETS,          32784 }, // OK!
+    { MODE_INDOOR,             32785 }, // OK!
+
+    { MODE_SCN_NIGHT_SCENE,    16398 }, // OK!
+    { MODE_SCN_SUNSET,         16402 }, // OK!
+    { MODE_SCN_FOLIAGE,        16403 }, // OK!
+    { MODE_SCN_SNOW,           16404 }, // OK!
+    { MODE_SCN_BEACH,          16405 }, // OK!
+    { MODE_SCN_FIREWORK,       16406 }, // OK!
+    { MODE_SCN_AQUARIUM,       16408 }, // OK!
+
+    { MODE_VIDEO_STD,          2599  }, // OK!
+    { MODE_VIDEO_COMPACT,      2601  }, // OK!
 };
 
 #include "../generic/shooting.c"
@@ -131,4 +143,3 @@ long get_target_dir_num() {
 }
 
 int circle_of_confusion = 5;
-

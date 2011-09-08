@@ -14,3 +14,10 @@ DEF(focus_busy,0x7A6C + 0x8)						// found by trial and error in the focus contr
 DEF(movie_status, 0x34E0 + 0x44)					// in FF8829D4 (comp s95)
 DEF(recreview_hold, 0x933C + 0xF0)					// in FF9C4900 (comp s95)
 DEF(zoom_status, 0xE7C4)							// sub_FFB035F0 (comp g12)
+
+DEF(rear_dial_position, 0xC0240106)
+
+DEF(active_bitmap_buffer, 0xB1CC)					// 0xB1B8+0x14 (1.00h sub_FFA4A814 -> FFA4A818 + FFA4A868)
+DEF(bitmap_buffer, 0xB1D4)							// FFA4A864
+DEF(active_palette_buffer, 0xB1A0)					// sub_FFA468D4 (1.00h)
+DEF(palette_buffer, 0xCF9B4)						// sub_FFA46DC8 (1.00h)

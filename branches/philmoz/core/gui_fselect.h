@@ -6,6 +6,6 @@ extern void gui_fselect_init(int title, const char* dir, void (*on_select)(const
 extern char* gui_fselect_result();
 extern void gui_fselect_kbd_process();
 extern void gui_fselect_draw();
-
+extern void gui_fselect_force_redraw();
 //-------------------------------------------------------------------
 #endif

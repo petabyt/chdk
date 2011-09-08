@@ -71,7 +71,7 @@ const ShutterSpeed shutter_speeds_table[] = {
 
 const ISOTable iso_table[] = {
     {  0,    0, "Auto", -1},
-    {  1,   64,   "50", -1},
+    {  1,   50,   "50", -1},
     {  2,  100,  "100", -1},
     {  3,  200,  "200", -1},
 };
@@ -128,28 +128,3 @@ long get_target_dir_num() {
 }
 
 int circle_of_confusion = 5; //don't know
-
-char* shooting_get_tv_str()
-{
-    short int tvv;
-    long i;
-    _GetPropertyCase(PROPCASE_TV, &tvv, sizeof(tvv));
-    for (i=0;i<SS_SIZE;i++){
-      if (shutter_speeds_table[i].prop_id >= tvv)
-        return (char*)shutter_speeds_table[i].name;
-    }
-    return (void*)"?";
-}
-
-char* shooting_get_av_str()
-{
-    short int avv;
-    long i;
-    _GetPropertyCase(PROPCASE_AV, &avv, sizeof(avv));
-    for (i=0;i<AS_SIZE;i++){
-      if (aperture_sizes_table[i].prop_id == avv)
-        return (char*)aperture_sizes_table[i].name;
-    }
-    return (char*) "?";
-}
-

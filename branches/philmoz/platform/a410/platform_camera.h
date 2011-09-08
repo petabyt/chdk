@@ -32,8 +32,8 @@
 	#undef  CAM_HAS_IRIS_DIAPHRAGM
 	#define CAM_HAS_ND_FILTER				1
 	#undef  CAM_HAS_MANUAL_FOCUS
-	#undef  CAM_CAN_SD_OVER_NOT_IN_MF
-	#undef  CAM_CAN_SD_OVERRIDE // :( it's broken in the firmware
+	#define CAM_CAN_SD_OVER_NOT_IN_MF		1
+	#define CAM_CAN_SD_OVERRIDE			1 // :/ it's broken in firmware, but got worked around
 
 	#undef  CAM_HAS_USER_TV_MODES
 	#define CAM_SHOW_OSD_IN_SHOOT_MENU		1
@@ -41,7 +41,7 @@
 	#undef  CAM_CAN_MUTE_MICROPHONE
 
 	#define CAM_CHDK_HAS_EXT_VIDEO_MENU		1//
-	#undef  CAM_AF_SCAN_DURING_VIDEO_RECORD // :(
+	#undef  CAM_AF_SCAN_DURING_VIDEO_RECORD // :( too complex to fix
 	#define CAM_EV_IN_VIDEO				1 //but not very reliable...
 	// pattern
 	#define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
@@ -69,6 +69,7 @@
 	#define PARAM_CAMERA_NAME		3 // parameter number for GetParameterData
 	#undef  CAM_BRACKETING //no bracketing in fw
 	#define CAM_EXT_TV_RANGE		1
+	#define CAM_DETECT_SCREEN_ERASE		1
 //	#define CAM_NO_MEMPARTINFO		1
 //	#define CAM_MULTIPART			1
 //----------------------------------------------------------

@@ -228,6 +228,23 @@ int vid_get_viewport_row_offset();
 void vid_turn_off_updates();
 void vid_turn_on_updates();
 
+// PTP Live View functions
+// These functions return actual size/offset in pixels of the viewport and bitmap buffers
+extern int vid_get_viewport_xoffset_proper();           // X Offset (for variable image size)
+extern int vid_get_viewport_yoffset_proper();           // Y Offset (for variable image size)
+extern int vid_get_viewport_width_proper();             // Visible viewport width (for variable image size)
+extern int vid_get_viewport_height_proper();            // Visible viewport height (for variable image size)
+extern int vid_get_viewport_max_width();                // Max visible viewport width in pixels
+extern int vid_get_viewport_max_height();               // Max visible viewport height in pixels
+extern int vid_get_viewport_buffer_width_proper();      // Physical viewport buffer width in pixels
+extern int vid_get_palette_type();                      // Palette type (0 - 3)
+extern int vid_get_palette_size();                      // Palette size (in bytes)
+extern int vid_get_aspect_ratio();                      // LCD aspect ratio (0 = 4:3 or 1 = 16:9)
+
+extern void *vid_get_viewport_active_buffer();          // Return active live viewport memory address
+extern void *vid_get_bitmap_active_buffer();            // Return current active bitmap memory address
+extern void *vid_get_bitmap_active_palette();           // Return current palette memory address
+
 /******************************************************************/
 
 void *hook_raw_fptr();
@@ -260,7 +277,9 @@ short shooting_get_flash_mode();
 
 /******************************************************************/
 int shooting_get_user_tv_id();
+#if defined(CAM_DRAW_EXPOSITION)
 char* shooting_get_tv_str();
+#endif
 short shooting_get_tv96_from_shutter_speed(float t);
 short shooting_get_tv96();
 void shooting_set_tv96(short v, short is_now);
@@ -282,7 +301,9 @@ short shooting_get_aperture_sizes_table_prop_id(short i);
 short shooting_get_max_aperture_sizes_table_prop_id();
 short shooting_get_aperture_from_av96(short av96);
 int shooting_get_user_av_id();
+#if defined(CAM_DRAW_EXPOSITION)
 char* shooting_get_av_str();
+#endif
 void shooting_set_user_av_by_id(int v);
 short shooting_get_av96();
 void shooting_set_av96(short v,short is_now);

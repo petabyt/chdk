@@ -144,7 +144,15 @@ void remount_filesystem()
 
 void mark_filesystem_bootable()
 {
+#ifdef  CAM_DRYOS_2_3_R47
+    // DryOS release 47 (2011) no longer has the UpdateMBROnFlash function to write the master boot record on
+    // the SD card. Instead it has seperate functions for writing the 'BOOTDISK' and 'SCRIPT' signatures to
+    // the MBR. The firmware function also takes care of writing the bootdisk signature to the correct location
+    // for FAT32 formatted cards.
+    _MakeSDCardBootable(0);
+#else
     _UpdateMBROnFlash(0, 0x40, "BOOTDISK");
+#endif
 }
 
 void __attribute__((weak)) vid_bitmap_refresh()
@@ -178,7 +186,7 @@ void lens_set_zoom_point(long newpt)
         newpt = zoom_points-1;
     }
 
-#if defined(CAMERA_sx30) || defined(CAMERA_g12)
+#if defined(CAMERA_sx30) || defined(CAMERA_g12) || defined(CAMERA_sx130is)
 	if (lens_get_zoom_point() != newpt)
 	{
 		// Get current digital zoom mode & state
@@ -194,7 +202,7 @@ void lens_set_zoom_point(long newpt)
 			_PT_MoveDigitalZoomToWide();
 		}
 
-  #if defined(CAMERA_sx30)
+  #if defined(CAMERA_sx30) || defined(CAMERA_sx130is)
 		// SX30 - _MoveZoomLensWithPoint crashes camera
 		// _PT_MoveOpticalZoomAt works, and updates PROPCASE_OPTICAL_ZOOM_POSITION; but doesn't wait for zoom to finish
 		extern void _PT_MoveOpticalZoomAt(long*);
@@ -253,7 +261,11 @@ void lens_set_focus_pos(long newpos)
 	if (af_mode == 0)	// can only set focus distance when not in continuous AF mode
 #endif
 	{
+#if defined(CAMERA_a410) // need to disable a (false) assert here to make this function work 
+		MoveFocusLensToDistanceA410((short*)&newpos);
+#else
 		_MoveFocusLensToDistance((short*)&newpos);
+#endif
 		//while (focus_busy);
 		while ((shooting_is_flash_ready()!=1) || (focus_busy));
 		newpos = _GetFocusLensSubjectDistance();
@@ -1324,3 +1336,47 @@ void Restart(unsigned option) {
 }
 */
 
+// Default implementation of PTP live view functions.
+// Override as needed for camera specific variations (see G12/SX30/IXUS310/SX130IS for working examples)
+
+int __attribute__((weak)) vid_get_viewport_xoffset_proper()         { return 0; }
+int __attribute__((weak)) vid_get_viewport_yoffset_proper()         { return 0; }
+int __attribute__((weak)) vid_get_viewport_width_proper()           { return 720; }
+int __attribute__((weak)) vid_get_viewport_height_proper()          { return 240; }
+int __attribute__((weak)) vid_get_viewport_max_width()              { return 720; }
+int __attribute__((weak)) vid_get_viewport_max_height()             { return 240; }
+int __attribute__((weak)) vid_get_viewport_buffer_width_proper()    { return vid_get_viewport_max_width(); }
+int __attribute__((weak)) vid_get_palette_type()                    { return 0; }       // 0 = no palette into, 1 = 16 x 4 byte AYUV values, 
+                                                                                        // 2 = 16 x 4 byte AYUV (A = 0..3), 3 = 256 x 4 byte AYUV (A = 0..3)
+int __attribute__((weak)) vid_get_palette_size()                    { return 0; }
+int __attribute__((weak)) vid_get_aspect_ratio()                    { return 0; }       // 0 = 4:3, 1 = 16:9 LCD Aspect Ratio
+
+void __attribute__((weak)) *vid_get_bitmap_active_buffer()
+{
+  return vid_get_bitmap_fb();   // *** does not get the active buffer! (override if active buffer can be determined)
+}
+
+void __attribute__((weak)) *vid_get_bitmap_active_palette()
+{
+  return 0; // return no palette info unless overridden
+}
+
+// Get active viewport buffer address based on PLAY/REC mode.
+// Try to use 'live' buffer in REC mode if vid_get_viewport_live_fb is implemented
+void __attribute__((weak)) *vid_get_viewport_active_buffer()
+{
+  void *p;
+
+  if ( (mode_get()&MODE_MASK) == MODE_PLAY )
+  {
+    p = vid_get_viewport_fb_d();
+  } else {
+    p = vid_get_viewport_live_fb();
+    if ( !p )
+    {
+      p = vid_get_viewport_fb();
+    }
+  }
+  
+  return p;
+}

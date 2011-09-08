@@ -35,6 +35,7 @@ extern int rbf_draw_char(int x, int y, int ch, color cl);
 extern int rbf_draw_symbol(int x, int y, int ch, color cl);
 extern int rbf_draw_string(int x, int y, const char *str, color cl);
 extern int rbf_draw_string_c(int x, int y, const char *str, color cl1, int c, color cl2);
+extern int rbf_draw_clipped_string(int x, int y, const char *str, color cl, int l, int maxlen);
 extern int rbf_draw_string_len(int x, int y, int len, const char *str, color cl);
 extern int rbf_draw_string_right_len(int x, int y, int len, const char *str, color cl);
 extern int rbf_draw_string_center_len(int x, int y, int len, char symbol, const char *str, color cl);

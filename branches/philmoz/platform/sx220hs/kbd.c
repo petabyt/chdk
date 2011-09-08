@@ -25,7 +25,7 @@ extern void _GetKbdState(long*);
 #define DELAY_TIMEOUT 10000
 
 // override key and feather bits to avoid feather osd messing up chdk display in ALT mode
-#define KEYS_MASK0 (0x0007FC0F)     // sx220 physw_status[0] 7FC05
+#define KEYS_MASK0 (0x000FFC0F)     // sx220 physw_status[0]
 #define KEYS_MASK1 (0x00200000)
 #define KEYS_MASK2 (0x00002182)  	// sx220 physw_status[2]
 
@@ -39,8 +39,6 @@ extern void _GetKbdState(long*);
 #ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
 #endif
-
-#define KEY_SOFT_LEFT 987	//added just to disable soft_left in alt mode
 
 static KeyMap keymap[] = {
 
@@ -61,19 +59,23 @@ static KeyMap keymap[] = {
 	{ 0, KEY_ZOOM_IN  		 , 0x0000000C },
 	{ 0, KEY_ZOOM_IN2  		 , 0x0000000C },
 	{ 0, KEY_DISPLAY         , 0x00000800 },
-	{ 0, KEY_UP		         , 0x00001400 }, 
+	{ 0, KEY_UP		         , 0x00001000 }, 
 	{ 0, KEY_RIGHT		     , 0x00006000 },
 	{ 0, KEY_SET		     , 0x00010000 },
 	{ 0, KEY_PRINT		     , 0x00010800 },  //DISP+SET for ALT menu
-	{ 0, KEY_DOWN		     , 0x00028000 },
-	{ 0, KEY_MENU		     , 0x00040000 },	
-
-	{ 2, KEY_SHOOT_FULL		 , 0x00000002 },
-	{ 2, KEY_SOFT_LEFT	 	 , 0x00000080 },
+	{ 0, KEY_DOWN		     , 0x00020000 },
+	{ 0, KEY_MENU		     , 0x00040000 },
+	{ 0, KEY_VIDEO		     , 0x00080000 },	
+	{ 0, KEY_RIGHT_SOFT	     , 0x00002000 },
+	{ 0, KEY_UP_SOFT	     , 0x00000400 },
+	{ 0, KEY_DOWN_SOFT	     , 0x00008000 },	
+	
+	{ 2, KEY_LEFT_SOFT	 	 , 0x00000080 },
 	{ 2, KEY_LEFT			 , 0x00000100 },
 	{ 2, KEY_SHOOT_HALF		 , 0x00002000 },
+	{ 2, KEY_SHOOT_FULL		 , 0x00002002 },	
 
-	{ 1, KEY_VIDEO		     , 0x00200000 },	
+	{ 1, KEY_PLAYBACK	     , 0x00200000 },	
 
 	{ 0, 0, 0 }
 };
@@ -106,7 +108,7 @@ void my_blinkk(void) {
 	}
 }
 
-
+// Set to 1 to disable jogdial events from being processed in firmware
 volatile int jogdial_stopped=0;
 
 long __attribute__((naked)) wrap_kbd_p1_f();
@@ -144,6 +146,22 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f() {
 	return 0;   // shut up the compiler
 }
 
+// copied from g12 and sx30, thx to philmoz
+// Pointer to stack location where jogdial task records previous and current
+// jogdial positions
+extern short* jog_position;
+
+void jogdial_control(int n)
+{
+    if (jogdial_stopped && !n)
+    {
+        // If re-enabling jogdial set the task code current & previous positions to the actual
+        // dial positions so that the change won't get processed by the firmware
+        jog_position[0] = jog_position[2] = (*(short*)0xC0240106);  // Rear dial
+    }
+    jogdial_stopped = n;
+}
+
 // like SX30 and g12
 void my_kbd_read_keys() {
 	
@@ -160,7 +178,7 @@ void my_kbd_read_keys() {
 		  physw_status[0] = kbd_new_state[0];
 		  physw_status[1] = kbd_new_state[1];
           physw_status[2] = kbd_new_state[2];
-		jogdial_stopped=0;
+		 jogdial_control(0);
     } else {
         // override keys
         physw_status[0] = (kbd_new_state[0] | KEYS_MASK0) & (~KEYS_MASK0 | kbd_mod_state[0]); 
@@ -168,11 +186,11 @@ void my_kbd_read_keys() {
         physw_status[2] = (kbd_new_state[2] | KEYS_MASK2) & (~KEYS_MASK2 | kbd_mod_state[2]);
         
 		if ((jogdial_stopped==0) && !state_kbd_script_run) {
-            jogdial_stopped=1;
+            jogdial_control(1);
             get_jogdial_direction();
         }
         else if (jogdial_stopped && state_kbd_script_run)
-            jogdial_stopped=0;
+            jogdial_control(0);
     }
 
     remote_key = (physw_status[2] & USB_MASK)==USB_MASK;

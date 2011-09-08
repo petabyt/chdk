@@ -50,6 +50,9 @@ char *camera_jpeg_count_str()
 void *vid_get_bitmap_fb()
 {
 	return (void*)0x40471000; // DispCon_ShowBitmapColorBar 
+    // 0xa610 = 0 or 1, used as index into 0xa618
+    // 0xa618 = 0x40471000
+    // 0xa61c = 0x404b0480 = 0x40471000 + size
 }
 
 

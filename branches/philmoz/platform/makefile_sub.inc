@@ -39,12 +39,12 @@ else
 	        {printf("STUB(%s)\n",$$1)}' > stubs_auto.S
 endif
 
-stubs_entry.S: $(TARGET_PRIMARY) $(topdir)tools/signatures_$(PLATFORMOS).h $(topdir)tools/finsig$(EXE)
+stubs_entry.S: $(TARGET_PRIMARY) $(topdir)tools/signatures_$(PLATFORMOS).h $(topdir)tools/finsig_$(PLATFORMOS)$(EXE) stubs_entry_2.S stubs_min.S
 	@echo \-\> $@
 ifdef OPT_GEN_STUBS
 	rm -f stubs_entry.S.err
 	if [ -s $(TARGET_PRIMARY) ] ; then \
-	  $(topdir)tools/finsig $(TARGET_PRIMARY) $(ROMBASEADDR) > stubs_entry.S ; \
+	  $(topdir)tools/finsig_$(PLATFORMOS) $(TARGET_PRIMARY) $(ROMBASEADDR) > stubs_entry.S ; \
 	else \
 	  echo CAUTION! \'stubs_entry.S\' is not updated due to target firmware binary not found! ; \
 	  touch stubs_entry.S ; \

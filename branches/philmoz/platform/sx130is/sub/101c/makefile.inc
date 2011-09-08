@@ -22,7 +22,7 @@ RESTARTSTART=0x50000
 
 # Set up size variables for EXMEM
 EXMEM_HEAP_SKIP=0x2F7600	#(0x44000000-0x43D08A00) from sub_FF8885CC = size of video buffers in EXMEM area
-EXMEM_BUFFER_SIZE=0x200000	# Amount of EXMEM memory to allocate for CHDK = 42B
+EXMEM_BUFFER_SIZE=0x200000	# Amount of EXMEM memory to allocate for CHDK = 2MB
 
 # points to the start of the memory pool used by the firmware
 ifdef OPT_CHDK_IN_EXMEM

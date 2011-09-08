@@ -70,6 +70,16 @@ static void (*fselect_on_select)(const char *fn);
 static char raw_operation;
 
 //-------------------------------------------------------------------
+// Called from other gui functions to force redraw of menu
+void gui_fselect_force_redraw()
+{
+    if (gui_get_mode() == GUI_MODE_FSELECT)
+    {
+        gui_fselect_redraw = 2;
+    }
+}
+
+//-------------------------------------------------------------------
 static void gui_fselect_free_data() {
     struct fitem  *ptr = head, *prev;
 
@@ -1041,10 +1051,10 @@ void gui_fselect_kbd_process() {
                     sprintf(selected_file, "%s/%s", current_dir, selected->name);
                     gui_fselect_free_data();
                     gui_fselect_marked_free_data();
-                    gui_set_mode(gui_fselect_mode_old);
-                    draw_restore();
                     if (fselect_on_select) 
                         fselect_on_select(selected_file);
+                    gui_set_mode(gui_fselect_mode_old);
+                    draw_restore();
                 }
             }
             break;
@@ -1067,10 +1077,10 @@ void gui_fselect_kbd_process() {
         case KEY_MENU:
             gui_fselect_free_data();
             gui_fselect_marked_free_data();
-            gui_set_mode(gui_fselect_mode_old);
-            draw_restore();
             if (fselect_on_select) 
                 fselect_on_select(NULL);
+            gui_set_mode(gui_fselect_mode_old);
+            draw_restore();
             break;
     }
 }

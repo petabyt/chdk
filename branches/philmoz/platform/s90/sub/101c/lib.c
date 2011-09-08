@@ -108,7 +108,7 @@ char *camera_jpeg_count_str()
 
 long vid_get_bitmap_screen_width()
 {
-    return 320;
+    return 360;
 }
 
 long vid_get_bitmap_screen_height()

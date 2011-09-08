@@ -123,3 +123,9 @@ DEF(task_ExpDrv, 0xff8bfa94)
 DEF(task_InitFileModules, 0xff897938)
 DEF(task_MovieRecord, 0xff969bc8)
 DEF(task_RotaryEncoder, 0xff85fd80)
+
+
+// Added by finsig_dryos V2 to match old values found by finsig.
+// Values should be checked in firmware, if the new address in stubs_entry.S
+// is correct then delete the correspoding entry below.
+NHSTUB(write                         ,0xff81add4) // New address = 0xff836d8c
