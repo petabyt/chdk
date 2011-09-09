@@ -1,4 +1,4 @@
-//Conect4: Kettmeister, CHDKLover german forum (www.wirklemms.de)
+//Conect4: Kettmeister, CHDKLover german forum (forum.chdk-treff.de)
 #include "stdlib.h"
 #include "keyboard.h"
 #include "platform.h"
@@ -18,12 +18,12 @@
 #define BORDER_TOP	 RECT_SIZE
 #define FIELD_HEIGHT 7
 #define FIELD_WIDTH	 7
-#define P1_COLOR	 MAKE_COLOR(0x23,0x23)
-#define P2_COLOR	 MAKE_COLOR(0x16,0x16)
-#define BG_COLOR	 MAKE_COLOR(0xDE,0xDE)
-#define FIELD_COLOR	 MAKE_COLOR(0xAA,0xAA)//(füllfarbe,rand)
+#define P1_COLOR	 MAKE_COLOR(COLOR_HISTO_B_PLAY,COLOR_HISTO_B_PLAY)
+#define P2_COLOR	 MAKE_COLOR(COLOR_HISTO_G_PLAY,COLOR_HISTO_G_PLAY)
+#define BG_COLOR	 MAKE_COLOR(COLOR_GREY,COLOR_GREY)
+#define FIELD_COLOR	 MAKE_COLOR(COLOR_SPLASH_GREY,COLOR_SPLASH_GREY)//(füllfarbe,rand)
 #define TEXT_COLOR   MAKE_COLOR(BG_COLOR, COLOR_WHITE)
-#define INFO_COLOR   MAKE_COLOR(0xEF, 0xEF)
+#define INFO_COLOR   MAKE_COLOR(COLOR_SPLASH_GREY, COLOR_SPLASH_GREY)
 #define INFO_TEXT_COLOR   MAKE_COLOR(INFO_COLOR, COLOR_WHITE)
 
 char cursor_position,cur_player=1;
@@ -71,7 +71,7 @@ char ki_isBadColumn(int column){
 }
 
 char ki_3(char player) {
-  int i,j,a;
+  int i,j;
   //waagerecht und Diagonal (über Anstieg)
   for(i=0;i<=3;i++){		// column
     for(j=1;j<=6;j++){		//row 
@@ -105,7 +105,7 @@ char ki_3(char player) {
 }
 
 char ki_2(char player) {
-  int i,j,a;
+  int i,j;
   //waagerecht und Diagonal über Anstieg
   for(i=0;i<=3;i++){		//column
     for(j=1;j<=6;j++){		//row 
@@ -139,7 +139,6 @@ char ki_2(char player) {
 
 char ki_findColumn(char mode, char player) {							//player = 1|2
   char erg=0, cam=player, otherplayer, i, counter=0;
-  static char str[64];
   otherplayer=(player==1)?2:1;
   switch(mode) {
   case 'b':
@@ -153,13 +152,11 @@ char ki_findColumn(char mode, char player) {							//player = 1|2
                 if(!badColumns[i-1]) badColumns[i-1]=ki_findColumn('b',cam);
                 unset_stone(i);
               } else badColumns[i-1]=9;								//9=full
-//              sprintf(str,"%d %d %d %d %d %d %d",badColumns[0],badColumns[1],badColumns[2],badColumns[3],badColumns[4],badColumns[5],badColumns[6]);
-//              draw_txt_string(30, 3, str, TEXT_COLOR);
             }
           } else break;
           erg=ki_2(cam);												//ich2 (für passivere Methode vertauschen)
           if(!erg) erg=ki_2(otherplayer); else break;					//du2
-          if(!erg) erg=(!isFull(4)&&!ki_isBadColumn(4))?4:0; else break;	//mitte
+          if(!erg) erg=(!isFull(4)&&!ki_isBadColumn(4))?4:0; else break;//mitte
           if(!erg) do erg=(rand()%7)+1; while((isFull(erg)||erg==0||ki_isBadColumn(erg))&&counter++<100);	//zufall
           if(counter>100) for(i=1;i<=7;i++) if(!isFull(i)) erg=i;
           break;
