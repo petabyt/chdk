@@ -50,7 +50,8 @@ The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 #define PROPCASE_SUBJECT_DIST1                   249
 #define PROPCASE_SV_MARKET                       250
 #define PROPCASE_SV                              347     // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
-#define PROPCASE_TV                              265     // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
+#define PROPCASE_TV2                             265     // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
+#define PROPCASE_TV                              266     // Need to set this value for overrides to work correctly
 #define PROPCASE_USER_TV                         268
 #define PROPCASE_WB_ADJ                          273
 #define PROPCASE_ASPECT_RATIO                    300
