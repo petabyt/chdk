@@ -588,4 +588,9 @@ void exmem_malloc_init(void);
 void GetExMemInfo(cam_meminfo*);
 #endif
 
+#ifdef CAM_TOUCHSCREEN_UI
+extern unsigned short  touch_screen_x, touch_screen_y;
+extern int touch_screen_active;
+#endif
+
 #endif

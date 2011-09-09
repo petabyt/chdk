@@ -383,6 +383,7 @@ include $(topdir)buildconf.inc
 # you may also set your default camera here
 -include $(topdir)localbuildconf.inc
 include $(topdir)version.inc
+-include $(topdir)platform/$(PLATFORM)/platform_conf.inc
 include $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc
 
 # Used in gui_debug.c for controlling memory browser allowed address ranges

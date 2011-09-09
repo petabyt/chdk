@@ -1,0 +1,18 @@
+
+# Read list of camera directories under platform
+CAMS = $(shell ls platform)
+
+.PHONY: batch $(CAMS)
+
+# Batch build target - build everything found in platform directory
+# Should be called with $(ACTION) set to the desired target action (clean, firzipsub, or firzipsubcomplete)
+batch: $(CAMS)
+
+# Build target for each entry found in platform
+# If it's a directory, it's not called 'generic' and the directory doesn't contain a file called NO_AUTOBUILD
+# then use makefile.fw to build all the firmware versions for the camera
+# Pass the final target $(ACTION) to the next level
+$(CAMS):
+	if [ -d platform/$@ ] && [ $@ != "generic" ] && [ ! -e platform/$@/NO_AUTOBUILD ]; then \
+		$(MAKE) -f makefile.fw VER=$(VER) CAM=$@ ACTION=$(ACTION) all; \
+	fi

@@ -1,0 +1,16 @@
+
+# Read list of camera firmware directories under platform/$(CAM)/sub
+FW = $(shell ls platform/$(CAM)/sub)
+
+.PHONY:	all $(FW)
+
+# Batch build target - build all the firmware directories
+all: $(FW)
+
+# Build target for each entry found in platform/$(CAM)/sub
+# If it's a directory, and the directory doesn't contain a file called NO_AUTOBUILD
+# then use the main Makefile to build using the supplied $(ACTION)
+$(FW):
+	if [ -d platform/$(CAM)/sub/$@ ] && [ ! -e platform/$(CAM)/sub/$@/NO_AUTOBUILD ]; then \
+		$(MAKE) -s --no-print-directory PLATFORM=$(CAM) PLATFORMSUB=$@ NO_INC_BUILD=1 $(ACTION); \
+	fi

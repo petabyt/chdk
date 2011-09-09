@@ -113,6 +113,7 @@ enum {
     MODE_SCN_MONOCHROME    , // sx220
     MODE_SCN_WINK_SELF_TIMER, // sx30/g12 (Smart Shutter, Wink Self Timer mode)
     MODE_SCN_FACE_SELF_TIMER, // sx30/g12 (Smart Shutter, Face Self Timer mode)
+    MODE_VIDEO_SUPER_SLOW   ,   // IXUS 310 HS Super Slow Motion Movie
 };
 
 #endif

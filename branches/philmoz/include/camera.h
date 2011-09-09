@@ -62,6 +62,11 @@
                                                 // Take care not to place CHDK OSD elements over the guard pixel.
                                                 // The guard pixel is the first pixel of the top row in the screen bitmap.
 
+#undef  CAM_TOUCHSCREEN_UI                      // Define to enable touch screen U/I (e.g. IXUS 310 HS)
+#define CAM_TS_BUTTON_BORDER        0           // Define this to leave a border on each side of the OSD display for touch screen buttons.
+                                                // Used on the IXUS 310 to stop the OSD from overlapping the on screen buttons on each side
+#define CAM_DISP_ALT_TEXT           1           // Display the '<ALT>' message at the bottom of the screen in ALT mode (IXUS 310 changes button color instead)
+
 #undef  CAM_AF_SCAN_DURING_VIDEO_RECORD         // CHDK can make single AF scan during video record
 #undef  CAM_HAS_VIDEO_BUTTON                    // Camera can take stills in video mode, and vice versa
 #undef  CAM_EV_IN_VIDEO                         // CHDK can change exposure in video mode

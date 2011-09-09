@@ -582,6 +582,11 @@ static char* gui_lang_default = \
 "459 \"Create badpixel.bin\"\n"
 "460 \"You need to be in REC-mode\\nfor this operation.\"\n"
 "461 \"%s disabled in build\"\n"
+
+// Touch screen
+"462 \"Touchscreen overrides\"\n"
+"463 \"Video AE Controls\"\n"
+"464 \"<Alt> Shortcut Buttons\"\n"
 ;
 
 //-------------------------------------------------------------------

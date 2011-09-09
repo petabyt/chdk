@@ -4,15 +4,11 @@
 // Camera info:
 // DRYOS R39 (DRYOS version 2.3, release #0039)
 // Firmware Ver GM1.02B
-// Possible corrupt firmware dump - file size to small for start address 0xff810000
-//   file size = 4.0MB, should be 7.9MB
+// Canon PowerShot SX20 IS
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NSTUB(DoAFLock                              ,0xff836a9c) //102        *** != 0xff8796b4
-NSTUB(GetCurrentAvValue                       ,0xff95251c) //  1 96%
-NSTUB(GetFocusLensSubjectDistance             ,0xff950a10) //  1 81%
-NSTUB(MoveFocusLensToDistance                 ,0xffaff554) //  1 90%
 //NSTUB(SetFileTimeStamp                      ,0xff835508) //  3        *** != 0xff810b04
 //NSTUB(TurnOffBackLight                      ,0xff8a5ae0) //104        *** != 0xff89b6a4
 //NSTUB(UIFS_WriteFirmInfoToFile              ,0xff9799bc) //105        *** != 0xdeadc0de
@@ -23,7 +19,6 @@ NSTUB(MoveFocusLensToDistance                 ,0xffaff554) //  1 90%
 //NSTUB(openfastdir                           ,0xffa7d3e4) //  3        *** != 0xdeadc0de
 //NSTUB(readfastdir                           ,0xffa7d518) //  3        *** != 0xdeadc0de
 //NSTUB(rename                                ,0xff834b74) //  4        *** != 0xdeadc0de
-//NSTUB(write                                 ,0xff83530c) //101        *** != 0xff81abd8
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff89aa40 -> ff897290 -> ff98f024 -> ffaac758 -> ffbe85f8
@@ -43,6 +38,7 @@ NSTUB(MoveFocusLensToDistance                 ,0xffaff554) //  1 90%
 //DEF(some_flag_for_af_scan                   ,0x00007934) // Found @0xff95fb44
 
 // Values below go in 'lib.c':
+//void *vid_get_bitmap_fb()        { return (void*)0x403f1000; } // Found @0xff859684
 //void *vid_get_viewport_fb()      { return (void*)0x41020120; } // Found @0xffb0328c
 //char *camera_jpeg_count_str()    { return (char*)0x00072dfc; } // Found @0xff9f71ac
 //long hook_raw_size()             { return 0x011ca240; }        // Found @0xffb059f0
@@ -102,9 +98,11 @@ NSTUB(Fseek_Fut                               ,0xff834f24) //101
 NSTUB(Fwrite_Fut                              ,0xff834e84) //101
 //NSTUB(GetBatteryTemperature                 ,0xff862744) //102            == 0xff862744
 //NSTUB(GetCCDTemperature                     ,0xff8626d0) //102            == 0xff8626d0
+NSTUB(GetCurrentAvValue                       ,0xff95251c) //102
 NSTUB(GetDrive_ClusterSize                    ,0xff86f1c8) //  3
 NSTUB(GetDrive_FreeClusters                   ,0xff86f228) //  3
 NSTUB(GetDrive_TotalClusters                  ,0xff86f1fc) //  3
+NSTUB(GetFocusLensSubjectDistance             ,0xff950a10) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xff950e44) //  3
 NSTUB(GetImageFolder                          ,0xff933518) //106
 NSTUB(GetKbdState                             ,0xff85f11c) //109
@@ -122,6 +120,7 @@ NSTUB(LocalTime                               ,0xff888ebc) //  1
 //NSTUB(LockMainPower                         ,0xff896eac) //103            == 0xff896eac
 //NSTUB(Lseek                                 ,0xff835398) //101            == 0xff835398
 NSTUB(MakeDirectory_Fut                       ,0xff834c7c) //  1
+NSTUB(MoveFocusLensToDistance                 ,0xffaff554) //102
 NSTUB(MoveIrisWithAv                          ,0xffa96fec) //102
 NSTUB(MoveZoomLensWithPoint                   ,0xffa97714) //102
 //NSTUB(NewTaskShell                          ,0xff88eda0) //103            == 0xff88eda0
@@ -143,7 +142,7 @@ NSTUB(ReadFastDir                             ,0xffa7d518) //  3
 //NSTUB(Restart                               ,0xff83a53c) //106            == 0xff83a53c
 NSTUB(ScreenLock                              ,0xffa048e8) //  8
 NSTUB(ScreenUnlock                            ,0xffa0498c) //  8
-NSTUB(SetAE_ShutterSpeed                      ,0xffb02404) //  1
+NSTUB(SetAE_ShutterSpeed                      ,0xffb02404) //102
 //NSTUB(SetAutoShutdownTime                   ,0xff896f20) //103            == 0xff896f20
 //NSTUB(SetCurrentCaptureModeType             ,0xff89eb28) //101            == 0xff89eb28
 //NSTUB(SetLogicalEventActive                 ,0xff896bfc) //101            == 0xff896bfc
@@ -209,3 +208,4 @@ NSTUB(strtolx                                 ,0xff83e53c) //109
   DEF(task_RotaryEncoder                      ,0xff85f3cc) //107
 //NSTUB(time                                  ,0xff889434) //  2            == 0xff889434
 NSTUB(vsprintf                                ,0xff820340) //  1
+NSTUB(write                                   ,0xff83530c) //101

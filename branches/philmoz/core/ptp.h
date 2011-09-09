@@ -1,7 +1,7 @@
 #ifndef __CHDK_PTP_H
 #define __CHDK_PTP_H
 #define PTP_CHDK_VERSION_MAJOR 2  // increase only with backwards incompatible changes (and reset minor)
-#define PTP_CHDK_VERSION_MINOR 1  // increase with extensions of functionality
+#define PTP_CHDK_VERSION_MINOR 2  // increase with extensions of functionality
 /*
 protocol version history
 0.1 - initial proposal from mweerden, + luar
@@ -30,10 +30,7 @@ enum ptp_chdk_command {
   PTP_CHDK_SetMemory,       // param2 is address
                             // param3 is size (in bytes)
                             // data is new memory block
-  PTP_CHDK_CallFunction,    // param2 are flags: 0x1 means use rest of params for pointer and args to allow function to send back data
-                            // (return) data is either:
-                            //   - array of function pointer and (long) arguments if flag 0x1 is not set  (max: 10 args)
-                            //   - return data provided by called function if flag 0x1 is set
+  PTP_CHDK_CallFunction,    // data is array of function pointer and (long) arguments  (max: 10 args)
                             // return param1 is return value
   PTP_CHDK_TempData,        // data is data to be stored for later
                             // param2 is for the TD flags below
@@ -66,6 +63,13 @@ enum ptp_chdk_command {
                             // data length is handled by ptp data phase
                             // input messages do not have type or subtype, they are always a string destined for the script (similar to USER/string)
                             // output param1 is ptp_chdk_script_msg_status
+  PTP_CHDK_GetHandler,      // Get the function address of a custom handler.
+                            //   param2 = ID of custom handler to return
+                            //   output param1 = custom handler address (0 if not implemented
+  PTP_CHDK_CallHandler,     // Call a custom handler function
+                            //   param2 = handler address to call
+                            //   param3 & param4 = parameters to pass to handler function
+                            //   output param1 = return value from handler function
 };
 
 // data types as used by ReadScriptMessage
@@ -119,5 +123,10 @@ enum ptp_chdk_script_msg_status {
     PTP_CHDK_S_MSGSTATUS_NOTRUN, // no script is running
     PTP_CHDK_S_MSGSTATUS_QFULL,  // queue is full
     PTP_CHDK_S_MSGSTATUS_BADID,  // specified ID is not running
+};
+
+// function handler id
+enum ptp_chdk_handler_id {
+    PTP_CHDK_LIVE_VIEW_HANDLER_ID = 1,  // Live View handler
 };
 #endif // __CHDK_PTP_H
