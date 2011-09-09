@@ -17,11 +17,11 @@
 #define COMPUTER_ONLY           3
 
 
-#define FIELD_COLOR_WHITE       0xF3
-#define FIELD_COLOR_BLACK       0xFE
-#define MARKER_COLOR_WHITE      0x33
-#define MARKER_COLOR_BLACK      0xFF
-#define SELECTED_COLOR          0x9B
+#define FIELD_COLOR_WHITE       COLOR_YELLOW
+#define FIELD_COLOR_BLACK       COLOR_GREY
+#define MARKER_COLOR_WHITE      COLOR_WHITE
+#define MARKER_COLOR_BLACK      COLOR_BLACK
+#define SELECTED_COLOR          COLOR_RED
 
 
 //-------------------------------------------------------------------
@@ -29,7 +29,6 @@ typedef unsigned char uchar;
 
 //-------------------------------------------------------------------
 static uchar Field[8][8];
-static uchar Plr;
 static uchar CurrPlayer, Computer, InGame=0, NumPl1, NumPl2;
 
 static unsigned short field_size, field_x, field_y, cell_size;

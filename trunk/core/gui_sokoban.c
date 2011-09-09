@@ -17,10 +17,10 @@
 
 #define WALL_COLOR_1            COLOR_GREY
 #define WALL_COLOR_2            COLOR_BLACK
-#define BOX_COLOR_1             0x26
+#define BOX_COLOR_1             COLOR_RED
 #define BOX_COLOR_2             COLOR_BLACK
-#define BOX_COLOR_3             0x66
-#define PLACE_COLOR_1           0x99
+#define BOX_COLOR_3             COLOR_YELLOW
+#define PLACE_COLOR_1           COLOR_BLUE
 #define PLACE_COLOR_2           COLOR_BLACK
 #define PLAYER_COLOR_1          COLOR_GREEN
 #define PLAYER_COLOR_2          COLOR_BLACK
@@ -262,10 +262,9 @@ int gui_sokoban_init() {
      we could avoid this and malloc all the data structures
      unfortunately, gui_mode gets set all over the place */
     if(!num_levels) {
-        char *buf,*p,*p_start;
+        char *buf,*p;
         FILE *fd;    
         struct stat st;
-        int prev_index = 0;
 
         if (stat((char *)level_file_name,&st) != 0 || st.st_size==0) 
             return 0;
@@ -413,14 +412,15 @@ void gui_sokoban_draw() {
         draw_line(cell_size*FIELD_WIDTH, 0, cell_size*FIELD_WIDTH, screen_height-1, COLOR_WHITE);
         draw_line(cell_size*FIELD_WIDTH+1, 0, cell_size*FIELD_WIDTH+1, screen_height-1, COLOR_BLACK);
 
-        draw_filled_rect(cell_size*FIELD_WIDTH+2, 0, screen_width-1, 7, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+        //draw_filled_rect(cell_size*FIELD_WIDTH+2, 0, screen_width-1, 7, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+        draw_filled_rect(cell_size*FIELD_WIDTH+2, 0, screen_width-1, screen_height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
 
         sprintf(str, "%s: %-6d", lang_str(LANG_SOKOBAN_TEXT_LEVEL), conf.sokoban_level+1);
         draw_string(cell_size*FIELD_WIDTH+2, 8, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
         sprintf(str, "%s: %-6d", lang_str(LANG_SOKOBAN_TEXT_MOVES), moves);
         draw_string(cell_size*FIELD_WIDTH+2, 8+FONT_HEIGHT, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
-        draw_filled_rect(cell_size*FIELD_WIDTH+2, 8+FONT_HEIGHT*2, screen_width-1, screen_height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+        //draw_filled_rect(cell_size*FIELD_WIDTH+2, 8+FONT_HEIGHT*2, screen_width-1, screen_height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
 
         if (sokoban_finished()) {
             gui_mbox_init(LANG_SOKOBAN_MSG_FINISH_TITLE, LANG_SOKOBAN_MSG_FINISH_TEXT, MBOX_TEXT_CENTER, NULL);
