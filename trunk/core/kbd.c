@@ -107,7 +107,7 @@ static int nTxtbl[]={0,1,2,3,4,5,6,7,8,9};
 static int nTxtbl[]={0,16,32,62,78,102,125};
 #endif
 
-#if defined(CAMERA_g11) || defined(CAMERA_g12)
+#if defined(CAMERA_g10) || defined(CAMERA_g11) || defined(CAMERA_g12)
 #define ZSTEP_TABLE_SIZE 14
 static int nTxtbl[]={0,1,2,3,4,5,6,7,8,9,10,11,12,13};
 #endif
