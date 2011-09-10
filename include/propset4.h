@@ -56,4 +56,6 @@ The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 #define PROPCASE_WB_ADJ                          273
 #define PROPCASE_ASPECT_RATIO                    300
 
+#define PROPCASE_GPS							 359	//for sx230hs
+
 #endif
