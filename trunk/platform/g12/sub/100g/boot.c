@@ -150,7 +150,7 @@ void __attribute__((naked,noinline)) boot() {
                  "ORR     R1, R1, #1\n"
                  "STR     R1, [R2]\n"
 
-                 "LDR     R0, =0xFFCB1DC0\n"
+                 "LDR     R0, =0xFFCB1DB0\n"
                  "LDR     R1, =0x1900\n"
                  "LDR     R3, =0x10798\n"
  "loc_FF81013C:\n"
@@ -221,7 +221,7 @@ void __attribute__((naked,noinline)) sub_FF811198_my() {
                  "SUB     SP, SP, #0x74\n"
                  "MOV     R0, SP\n"
                  "MOV     R1, #0x74\n"
-                 "BL      sub_FFBB34C4\n"
+                 "BL      sub_FFBB34B0\n"
                  "MOV     R0, #0x53000\n"
                  "STR     R0, [SP,#4]\n"
 
@@ -321,7 +321,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() {
 
 	asm volatile (
 		"STMFD	SP!, {R3,LR}\n"
-//		"BL		j_nullsub_222\n"
+//		"BL		j_nullsub_191\n"
 		"BL		sub_FF83C81C\n"
 		"CMP	R0, #0\n"
 		"BNE	loc_FF81FB98\n"
@@ -342,7 +342,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() {
 		
 "loc_FF81FB98:\n"
 //		"BL		sub_FF834744\n"         // see begin of sub_FF810354_my()
-//		"BL		j_nullsub_223\n"
+//		"BL		j_nullsub_192\n"
 		"BL		sub_FF83AA2C\n"
 		"MOV     R0, #0x46 \n"
 		"BL      _SleepTask \n"
@@ -368,7 +368,7 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 		"BL		sub_FF816594\n"	// taskcreate_ClockSave\n"
 		"BL		sub_FF835898\n"
 		"BL		sub_FF8339AC\n"
-//		"BL	j_nullsub_227\n"
+//		"BL	j_nullsub_196\n"
 		"BL		sub_FF83CA4C\n"
 //		"BL		sub_FF83C8F4\n" // start diskboot.bin
 		"BL		sub_FF83CBF8\n"
@@ -668,7 +668,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
 "                SUB     SP, SP, #0x24 \n"
 "                BL      sub_FF865B84 \n"
 "                LDR     R1, =0x25E8 \n"
-"                LDR     R6, =0xFFBB9778 \n"
+"                LDR     R6, =0xFFBB9764 \n"
 "                MOV     R0, #0 \n"
 "                ADD     R3, SP, #0x18 \n"
 

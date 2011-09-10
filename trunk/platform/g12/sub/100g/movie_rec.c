@@ -112,7 +112,7 @@ void __attribute__((naked,noinline)) movie_record_task(){
 //"; jumptable entry 6 \n"
 "				LDR		R1, [R0,#0x18] \n"
 "				LDR		R0, [R0,#4] \n"
-"                BL      sub_FFB00134 \n"
+"                BL      sub_FFB00140 \n"
 "                B       loc_FF9871C4 \n"
 
 "loc_FF987198: \n"
