@@ -11,11 +11,10 @@ void  set_quality(int *x){ // -17 highest; +12 lowest
 
 //@sub_FF18D9CC
 void __attribute__((naked,noinline)) movie_record_task(){
-	
 	asm volatile(	
 //"sub_FF18D9CC"
 		"STMFD	SP!, {R2-R10,LR}\n"
-		"LDR	R6, =0xFF18C73C \n"// "nullsub_257\n"
+		"LDR	R6, =0xFF18C73C \n" // "nullsub_257\n"
 //PATCH BEGIN
 //		"LDR	R7, =sub_FF18D424\n"
 		"LDR	R7, =sub_FF18D424_my\n"
@@ -43,33 +42,33 @@ void __attribute__((naked,noinline)) movie_record_task(){
 		"CMP	R1, #0xD\n"
 		"ADDCC	PC, PC,	R1,LSL#2\n"
 		"B	loc_FF18DB28\n"
-"loc_FF18DA30:"
+//"loc_FF18DA30:"
 		"B	loc_FF18DAC8\n"
-"loc_FF18DA34:"
+//"loc_FF18DA34:"
 		"B	loc_FF18DAEC\n"
-"loc_FF18DA38:\n"
+//"loc_FF18DA38:\n"
 		"B	loc_FF18DAFC\n"
-"loc_FF18DA3C:\n"
+//"loc_FF18DA3C:\n"
 		"B	loc_FF18DB04\n"
-"loc_FF18DA40:\n"
+//"loc_FF18DA40:\n"
 		"B	loc_FF18DB0C\n"
-"loc_FF18DA44:\n"
+//"loc_FF18DA44:\n"
 		"B	loc_FF18DB14\n"
-"loc_FF18DA48:\n"
+//"loc_FF18DA48:\n"
 		"B	loc_FF18DAD0\n"
-"loc_FF18DA4C:\n"
+//"loc_FF18DA4C:\n"
 		"B	loc_FF18DB1C\n"
-"loc_FF18DA50:\n"
+//"loc_FF18DA50:\n"
 		"B	loc_FF18DADC\n"
-"loc_FF18DA54:\n"
+//"loc_FF18DA54:\n"
 		"B	loc_FF18DB28\n"
-"loc_FF18DA58:\n"
+//"loc_FF18DA58:\n"
 		"B	loc_FF18DB24\n"
-"loc_FF18DA5C:\n"
+//"loc_FF18DA5C:\n"
 		"B	loc_FF18DA94\n"
-"loc_FF18DA60:"
+//"loc_FF18DA60:\n"
 		"B	loc_FF18DA64\n"
-"loc_FF18DA64:"
+"loc_FF18DA64:\n"
 		"STR	R5, [R4,#0x40]\n"
 		"STR	R5, [R4,#0x30]\n"
 		"STR	R5, [R4,#0x34]\n"
@@ -92,15 +91,9 @@ void __attribute__((naked,noinline)) movie_record_task(){
 		"STR	R0, [R4,#0xC]\n"
 		"STR	R8, [R4,#0x44]\n"
 "loc_FF18DAB4:\n"
-//PATCH BEGIN
-//		"LDR	R2, =sub_FF18BD78\n"
 		"LDR	R2, =0xFF18BD78\n"
-//PATCH END
 		"LDR	R1, =0xC6A08\n"
-//PATCH BEGIN
-//		"LDR	R0, =sub_FF18BE8C\n"
 		"LDR	R0, =0xFF18BE8C\n"
-//PATCH END
 		"BL	sub_FF0453E0\n"
 		"B	loc_FF18DB28\n"
 "loc_FF18DAC8:\n"
@@ -140,10 +133,9 @@ void __attribute__((naked,noinline)) movie_record_task(){
 		"B	loc_FF18DB28\n"
 "loc_FF18DB24:\n"
 		"BL	sub_FF18E078\n"
-
 "loc_FF18DB28:\n"
 		"LDR	R1, [SP,#4]\n"
-		"LDR	R3, =0xFF18B7F0	\n"// " \n"""MovieRecorder.c\n""
+		"LDR	R3, =0xFF18B7F0	\n" // " \n"""MovieRecorder.c\n""
 		"STR	R5, [R1]\n"
 		"STR	R9, [SP]\n"
 		"LDR	R0, [R4,#0x28]\n"
@@ -156,7 +148,7 @@ void __attribute__((naked,noinline)) movie_record_task(){
 
 void __attribute__((naked,noinline)) sub_FF18D424_my(){
 	asm volatile(	
-//"sub_FF18D424				\n"// "DATA XREF: sub_FF18D9CC+8o\n"
+//"sub_FF18D424				\n"
 		"STMFD	SP!, {R4-R11,LR}\n"
 		"SUB	SP, SP,	#0x64\n"
 		"MOV	R9, #0\n"
@@ -186,14 +178,9 @@ void __attribute__((naked,noinline)) sub_FF18D424_my(){
 		"CMP	R0, #5\n"
 		"BEQ	loc_FF18D4CC\n"
 "loc_FF18D494:\n"
-//PATCH BEGIN
-//		"LDR	R2, =sub_FF18D2F8\n"
-//		"LDR	R1, =sub_FF18D35C\n"
-//		"LDR	R0, =sub_FF18D3C0\n"
 		"LDR	R2, =0xFF18D2F8\n"
 		"LDR	R1, =0xFF18D35C\n"
 		"LDR	R0, =0xFF18D3C0\n"
-//PATCH END
 		"MOV	R6, #1\n"
 		"ADD	R3, SP,	#0x34\n"
 		"BL	sub_FF0463EC\n"
@@ -233,7 +220,7 @@ void __attribute__((naked,noinline)) sub_FF18D424_my(){
 		"BL	sub_FF0463F0\n"
 		"LDR	R0, [R8,#0x18]\n"
 		"MOV	R1, #0x3E8\n"
-		"BL	sub_FF02B5A0	\n"// "TakeSemaphore\n"
+		"BL	sub_FF02B5A0 \n" // "TakeSemaphore\n"
 		"CMP	R0, #9\n"
 		"BNE	loc_FF18D948\n"
 		"MOV	R0, #0x90000\n"
@@ -276,10 +263,7 @@ void __attribute__((naked,noinline)) sub_FF18D424_my(){
 		"BL	sub_FF3B5FC4\n"
 		"LDR	R1, [R8,#0x84]\n"
 		"LDR	R2, [R8,#0x88]\n"
-//PATCH BEGIN TODO
-		//"MOV	R3, #0xFFFFFFFE\n"
-		"MVN	R3, #0x1\n"
-//PATCH END
+		"MVN	R3, #1\n"
 		"ADD	R0, SP,	#0x60\n"
 		"STMEA	SP, {R0-R3}\n"
 		"MOV	R3, #0\n"
@@ -292,13 +276,10 @@ void __attribute__((naked,noinline)) sub_FF18D424_my(){
 		"MOV	R1, #1\n"
 		"B	loc_FF18D8D8\n"	
 "loc_FF18D5F4:\n"
-		"BL		sub_FF18E150\n"   //loc to sub
+		"BL		sub_FF18E150\n"
 		"LDR	R2, [R8,#0x64]\n"
 		"ADD	R3, SP,	#0x5C\n"
-//PATCH BEGIN TODO
-		//"MOV	R1, #0xFFFFFFFE\n"
-		"MVN	R1, #0x1\n"
-//PATCH END
+		"MVN	R1, #1\n"
 		"MOV	R0, #0\n"
 		"ADD	R5, SP,	#0x1C\n"
 		"STMIA	R5, {R0-R3}\n"
@@ -320,7 +301,7 @@ void __attribute__((naked,noinline)) sub_FF18D424_my(){
 "loc_FF18D64C:\n"
 		"LDR	R0, [R8,#0x18]\n"
 		"LDR	R1, [R8,#0x60]\n"
-		"BL	sub_FF02B5A0	\n"// "TakeSemaphore\n"
+		"BL	sub_FF02B5A0 \n"// "TakeSemaphore\n"
 		"CMP	R0, #9\n"
 		"BEQ	loc_FF18D5EC\n"
 		"LDR	R0, [SP,#0x5C]\n"
@@ -341,7 +322,7 @@ void __attribute__((naked,noinline)) sub_FF18D424_my(){
 		"BL	sub_FF0463F8\n"
 		"BL	sub_FF046408\n"
 		"STR	R4, [R8,#0x44]\n"
-		"BL		sub_FF18E150\n"	//loc to sub
+		"BL		sub_FF18E150\n"	
 		"BL	sub_FF046464\n"
 		"STR	R10, [R8,#0x44]\n"
 		"B	loc_FF18D6BC\n"
@@ -377,10 +358,7 @@ void __attribute__((naked,noinline)) sub_FF18D424_my(){
 		"BL	sub_FF3B5FC4\n"
 		"LDR	R1, [R8,#0x84]\n"
 		"LDR	R2, [R8,#0x88]\n"
-//PATCH BEGINE TODO
-//		"MOV	R3, #0xFFFFFFFF\n"
 		"MVN	 R3, #0\n"
-//PATCH END
 		"ADD	R0, SP,	#0x60\n"
 		"STMEA	SP, {R0-R3}\n"
 		"LDR	R0, [SP,#0x58]\n"
@@ -393,10 +371,7 @@ void __attribute__((naked,noinline)) sub_FF18D424_my(){
 		"BL			sub_FF02B5A0	\n"// "TakeSemaphore\n"
 		"CMP	R0, #9\n"
 		"BEQ	loc_FF18D5EC\n"
-//PATCH BEGIN TODO
-		//"LDR	R0, =sub_FF18C818\n"
 		"LDR	R0, =0xFF18C818\n"
-//PATCH END
 		"MOV	R1, #0\n"
 		"BL	sub_FF2B6FD4\n"
 		"B	loc_FF18D7D0\n"
@@ -404,10 +379,7 @@ void __attribute__((naked,noinline)) sub_FF18D424_my(){
 		"LDR	R0, [R4,#0x20]\n"
 		"LDR	R2, [R8,#0x64]\n"
 		"ADD	R3, SP,	#0x5C\n"
-//PATCH BEGIN TODO
-		//"MOV	R1, #0xFFFFFFFF\n"
-		"MVN	R1, #0x0\n"
-//PATCH END
+		"MVN	R1, #0\n"
 		"ADD	R9, SP,	#0x1C\n"
 		"STMIA	R9, {R0-R3}\n"
 		"LDR	R3, [R4,#0x1C]\n"
@@ -430,7 +402,7 @@ void __attribute__((naked,noinline)) sub_FF18D424_my(){
 		"BL	sub_FF02B5A0	\n"// "TakeSemaphore\n"
 		"CMP	R0, #9\n"
 		"BEQ	loc_FF18D5EC\n"
-"loc_FF18D7D0:				\n"// "CODE XREF: sub_FF18D424+340j\n"
+"loc_FF18D7D0:\n"
 		"LDR	R0, [SP,#0x5C]\n"
 		"CMP	R0, #0\n"
 		"BNE	loc_FF18D66C\n"
@@ -529,13 +501,13 @@ void __attribute__((naked,noinline)) sub_FF18D424_my(){
 		"LDR	R1, [SP,#0x60]\n"
 		"BL	sub_FF307138\n"
 		"LDR	R0, [R8,#0x68]\n"
-		"LDR	R3, =0x8668\n"	//0x8668 - 0x4
+		"LDR	R3, =0x8668 \n"	//0x8668 - 0x4
 		"ADD	R1, R0,	#1\n"
 		"STR	R1, [R8,#0x68]\n"
 		"LDR	R0, [SP,#0x60]\n"
 		"SUB	R2, R3,	#4\n"
 		"BL	sub_FF303544\n"
-//PATCH BEGIN TODO REMOVE??
+//PATCH BEGIN
 		"LDR	R0, =0x8664\n"
 		"BL		set_quality\n"
 //PATCH END

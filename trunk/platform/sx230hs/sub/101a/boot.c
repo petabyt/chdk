@@ -130,13 +130,12 @@ void __attribute__((naked,noinline)) boot() {
 }
 
 //SX230:101a @ FF000358
-void __attribute__((naked,noinline)) sub_FF000358_my() { // ASM1989 -> In sx200 was:  sub_FF8101A0_my
+void __attribute__((naked,noinline)) sub_FF000358_my() {
    
    *(int*)0x1938=(int)taskHook;
-   *(int*)0x193C=(int)taskHook;   //SX220 funnel
+   *(int*)0x193C=(int)taskHook; 
 
 //Power-on FF00FCCC+FF056DB4 
-
 if ((*(int*) 0xC022012C) & 1)					// look at play switch
 		*(int*)(0x25E4) = 0x200000;					// not pressed - start in rec mode
 	else
@@ -186,8 +185,7 @@ if ((*(int*) 0xC022012C) & 1)					// look at play switch
                  "ANDEQ   R0, R0, R4,ROR R6\n"
 "loc_FF8103D0:\n"
                  "NOP\n"
-                 "LDR     PC, =0xFF00061C\n"
-  
+                 "LDR     PC, =0xFF00061C\n"  
 				);
 }
 
@@ -258,7 +256,6 @@ void __attribute__((naked,noinline)) sub_FF0011B0_my() {
 void __attribute__((naked,noinline)) sub_FF005EE0_my() {
      
 	 asm volatile (
-
                 "STMFD   SP!, {R4,LR}\n"
 				"BL      sub_FF000B28\n" 
 				"BL      sub_FF00A374\n" 
@@ -296,12 +293,8 @@ void __attribute__((naked,noinline)) sub_FF005EE0_my() {
         );
 };
 
-//inserted for SX230
-//TEST
 //SX230 @ FF00FD54
-void __attribute__((naked,noinline)) sub_FF00FD54_my()
-{
-//TEST
+void __attribute__((naked,noinline)) sub_FF00FD54_my(){
 	asm volatile (
 		"STMFD   SP!, {R3,LR}\n"
         "BL      sub_FF02B74C\n"
@@ -322,7 +315,6 @@ void __attribute__((naked,noinline)) sub_FF00FD54_my()
 
 
 //Added dSX230  from FF00FC6C 
-//TEST
 void __attribute__((naked,noinline)) taskcreate_Startup_my() {
 	asm volatile (
 		"STMFD   SP!, {R3-R9,LR}\n"
@@ -493,7 +485,6 @@ void __attribute__((naked,noinline)) init_file_modules_task() {
             "BLNE    sub_FF090CD4\n"
 //PATCH BEGIN //TODO
 			"BL      sub_FF08C7B8\n"
-//			"BL      sub_FF08C7B8_my\n"
 			"BL		 core_spytask_can_start\n"
 //PATCH END
 
@@ -677,10 +668,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
             "STRH    R1, [R0]\n"
             "LDR     R0, [R7,R4,LSL#2]\n"
             "BL      sub_FF02C130\n"
-//PATCH BEGIN
-//            "LDR     R2, =sub_FF057904\n"
 			"LDR     R2, =0xFF057904\n"
-//PATCH END
             "ORR     R3, R4, #0x300\n"
             "ADD     R1, R2, #0\n"
             "MOV     R0, #0x1F4\n"

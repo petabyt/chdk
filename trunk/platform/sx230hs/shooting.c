@@ -75,40 +75,7 @@ const ShutterSpeed shutter_speeds_table[] = {
 	{  35, 1120, "1/3200",  313 },
 };
 
-//sx220
-/*
 const ISOTable iso_table[] = {
-	{ -1, 1,   "HI", -1},
-	{  0, 0, "Auto", -1},
-	{  2, 10,  "10", -1},
-	{  3, 12,  "12", -1},
-	{  4, 16,  "16", -1},
-	{  5, 25,  "25", -1},
-	{  6, 32,  "32", -1},
-	{  7, 40,  "40", -1},
-	{  8, 50,  "50", -1},
-	{  9, 80,  "80", -1},
-	{  10, 100,  "100", -1},
-	{  11, 125,  "125", -1},
-	{  12, 200,  "200", -1},
-	{  13, 250,  "250", -1},
-	{  14, 320,  "320", -1},
-	{  15, 400,  "400", -1},
-	{  16, 640,  "640", -1},
-	{  17, 800,  "800", -1},
-	{  18, 1000,  "1000", -1},
-	{  19, 1600,  "1600", -1},
-	{  20, 2000,  "2000", -1},
-	{  21, 2500,  "2500", -1},
-	{  22, 3200,  "3200", -1},
-	{  23, 5000,  "5000", -1},
-	{  24, 6400,  "6400", -1},
-	{  25, 8000,  "8000", -1},
-	{  26, 12800,  "12800", -1},
-};
-*/
-const ISOTable iso_table[] = {
-	{ -1,   -1, "Auto", -1},
 	{  0,    0, "Auto", -1},
 	{  1,  100,  "100", -1},
 	{  2,  200,  "200", -1},
@@ -212,26 +179,6 @@ void get_target_dir_name(char *out)
 {
 	extern void _GetImageFolder(char*,int,int,int);
 	_GetImageFolder(out,get_file_next_counter(),0x400,time(NULL));
-	//getting the dir name directly from ram 
-	//LDR     R0, =0xBF220	 @FF15D460
-
-/*	char str[14];
-	strncpy(str, (char*)((int*)(0xBF220)), 14);
-	sprintf(out, "A%s", str);
-	
-	*/
-	//Dosnt seem to work in SX210 Dont know why?
-/*	extern void _GetImageFolder(char*,int,int,int);
-	out[0] = 'A';
-	_GetImageFolder(out+1,get_file_next_counter(),0x400,time(NULL));*/
-/*	int month;
-	struct tm *ttm;
-	unsigned long t;
-	t = time(NULL);
-	ttm = localtime(&t);
-	month = ttm->tm_mon + 1;
-	sprintf(out, "A/DCIM/%03d___%02d", get_target_dir_num(), month);
-*/
 }
 
 int circle_of_confusion = 5;

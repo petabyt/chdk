@@ -119,26 +119,6 @@ static void __attribute__((noinline)) mykbd_task_proceed() {
 
 // no stack manipulation needed here, since we create the task directly
 void __attribute__((naked,noinline)) mykbd_task() {
-	/*
-	register int i;
-	register long *newstack;
-
-
-#ifndef MALLOCD_STACK
-	newstack = (void*)kbd_stack;
-#else
-	newstack = malloc(NEW_SS);
-#endif
-
-	for (i=0;i<NEW_SS/4;i++)
-		newstack[i]=0xdededede;
-
-	asm volatile (
-		"MOV	SP, %0"
-		:: "r"(((char*)newstack)+NEW_SS)
-		: "memory"
-	);
-	*/
 	mykbd_task_proceed(); 
 
 // function can be modified to restore SP here...
@@ -404,7 +384,7 @@ void wait_until_remote_button_is_released(void) {
 
     asm volatile ("STMFD SP!, {R0-R11,LR}\n");   // store R0-R11 and LR in stack
 
-    // debug_led(1);
+    debug_led(1);
     tick = get_tick_count();
     tick2 = tick;
     static long usb_physw[3];
@@ -434,7 +414,7 @@ void wait_until_remote_button_is_released(void) {
                                 tick2 = get_tick_count();
                                 prev_usb_power=cur_usb_power;
                             } else {
-                                if((int)get_tick_count()-tick2>1000) {/*debug_led(0);*/}
+                                if((int)get_tick_count()-tick2>1000) {debug_led(0);}
                             }
                         } else {
                             if(prev_usb_power) {
@@ -487,7 +467,7 @@ void wait_until_remote_button_is_released(void) {
         }
     }
 
-    // debug_led(0);
+    debug_led(0);
     asm volatile ("LDMFD SP!, {R0-R11,LR}\n");   // restore R0-R11 and LR from stack
 }
 
