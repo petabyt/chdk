@@ -31,6 +31,8 @@ User menu works.
 -------
 Extra long exposure feature supported.
 -------
+EXMEM supported.
+-------
 Firmware update from menu works! (With GCC compiler generated file YES, with fi2encdec generated filed NO!)
 
 platform/fi2.inc:
@@ -40,9 +42,6 @@ ifeq ($(KEYSYS), d3enc)
 endif
 
 PLEASE TEST:
-These Manual Focus adjustments can also be achieved with shortcut keys. 
-In <ALT> mode, using the LEFT / RIGHT keys to adjust the Value Factor and the Zoom lever to adjust the Subject Distance.
-Seems it works, please test!!!
 -------
 Curves: Seems it works, please test!!!
 -------

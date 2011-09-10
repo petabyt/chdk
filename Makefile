@@ -167,6 +167,7 @@ batch-zip: version
 	$(MAKE) -s --no-print-directory PLATFORM=a560 PLATFORMSUB=100a NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
+	$(MAKE) -s --no-print-directory PLATFORM=a580 PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=a1100 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
@@ -377,6 +378,7 @@ batch-zip-complete: version
 	$(MAKE) -s --no-print-directory PLATFORM=a560 PLATFORMSUB=100a NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
+	$(MAKE) -s --no-print-directory PLATFORM=a580 PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=a1100 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
@@ -650,6 +652,7 @@ batch-clean:
 	$(MAKE) -s --no-print-directory PLATFORM=a560 PLATFORMSUB=100a NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=100e NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=101a NO_INC_BUILD=1 clean
+	$(MAKE) -s --no-print-directory PLATFORM=a580 PLATFORMSUB=101b NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=100e NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=101b NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=a1100 PLATFORMSUB=100c NO_INC_BUILD=1 clean
