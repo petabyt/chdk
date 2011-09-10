@@ -134,7 +134,6 @@ NSTUB(Restart                                 ,0xffc196a0) //106
 NSTUB(SetAE_ShutterSpeed                      ,0xffe3579c) //102
 NSTUB(SetAutoShutdownTime                     ,0xffc5c87c) //103
 NSTUB(SetCurrentCaptureModeType               ,0xffc62ac4) //101
-NSTUB(SetFileAttributes                       ,0xffc13ea8) //  1
 NSTUB(SetFileTimeStamp                        ,0xffc13e58) //  1
 NSTUB(SetLogicalEventActive                   ,0xffc5c5a4) //  1
 NSTUB(SetParameterData                        ,0xffd2cdc0) //101
@@ -182,6 +181,7 @@ NSTUB(openfastdir                             ,0xffdce7cc) //  1
 NSTUB(qsort                                   ,0xffd7133c) //  1
 NSTUB(rand                                    ,0xffc0da14) //  1
 NSTUB(read                                    ,0xffc0a15c) //101
+NSTUB(readfastdir                             ,0xffdce860) //  1
 NSTUB(reboot_fw_update                        ,0xffdd3134) //  5
 NSTUB(rename                                  ,0xffc133d4) //  1
 NSTUB(set_control_event                       ,0xffc5c2f8) //  1
