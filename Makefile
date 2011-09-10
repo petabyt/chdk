@@ -230,6 +230,9 @@ batch-zip: version
 	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsub
+	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=102a NO_INC_BUILD=1 firzipsub
+	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=103b NO_INC_BUILD=1 firzipsub
+	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=104a NO_INC_BUILD=1 firzipsub	
 	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=102c NO_INC_BUILD=1 firzipsub
@@ -445,6 +448,9 @@ batch-zip-complete: version
 	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsubcomplete
+	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=102a NO_INC_BUILD=1 firzipsubcomplete
+	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=103b NO_INC_BUILD=1 firzipsubcomplete
+	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=104a NO_INC_BUILD=1 firzipsubcomplete	
 	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=102c NO_INC_BUILD=1 firzipsubcomplete
@@ -722,6 +728,9 @@ batch-clean:
 	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100b NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100c NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100f NO_INC_BUILD=1 clean
+	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=102a NO_INC_BUILD=1 clean
+	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=103b NO_INC_BUILD=1 clean
+	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=104a NO_INC_BUILD=1 clean	
 	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=101b NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=102c NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=sx110is  PLATFORMSUB=100b NO_INC_BUILD=1 clean
