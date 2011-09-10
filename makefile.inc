@@ -391,6 +391,8 @@ PLATFORMSUB=103c
 #PLATFORM=sx230hs
 #PLATFORMSUB=101a
 
+#PLATFORM=sx230hs
+#PLATFORMSUB=101b
 
 MEMISOSIZE="(&_end-&_start)"
 # override this on the command line or in buildconf to use PRIMARY.BIN from a different tree

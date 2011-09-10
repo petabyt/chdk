@@ -30,28 +30,11 @@ void startup()
 // Focus length table in firmware @FFF4A3DC 
 #define NUM_FL 126		// 0 - 125, entries in firmware (3 words each entry, first is FL)
 extern int focus_len_table[NUM_FL*3];
-/*
-//zoom position is get_parameter_data(87)
-//TODO
-static const struct {
-	int zp, fl;
-} fl_tbl[] = {
-  {   0,   5000},
-  {  16,   6800},
-  {  32,   9100},
-  {  62,  16200},
-  {  78,  22300},
-  { 102,  35900},
-  { 125,  60000},
-};
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
-*/
 
 // Focal length range is 5.0 - 70,0 mm, 28 - 392 in 35-mm equivalent.
 // So, CF_EFL = 28/5.0*10000=56000 or392/70*10000=56000
 // divide by 10 to avoid overflow in get_effective_focal_length()
 #define CF_EFL  5600
-//TODO
 const int zoom_points = 126;
 
 //TODO
