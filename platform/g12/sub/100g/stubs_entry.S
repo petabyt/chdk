@@ -3,7 +3,7 @@
 
 // Camera info:
 // DRYOS R45 (DRYOS version 2.3, release #0045)
-// Firmware Ver GM1.00F
+// Firmware Ver GM1.00G
 // Canon PowerShot G12
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
@@ -12,48 +12,48 @@
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0xff810b1c
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff89fdf0 -> ff89c600 -> ff9bd794 -> ffb1ee38 -> ffc896f0
+// Firmware modemap table found @ff89fdf0 -> ff89c600 -> ff9bd794 -> ffb1ee44 -> ffc896dc
 // No problems found with modemap table.
 
 // Values below go in 'stubs_min.S':
 //DEF(physw_status                            ,0x00034474) // Found @0xff8349f4,          stubs_min = 0x00034474 (0x34474)
 //DEF(physw_run                               ,0x00001c3c) // Found @0xff8345f0,          stubs_min = 0x00001c3c (0x1C30+0xC)
-//DEF(levent_table                            ,0xffc0c030) // Found @0xffc0c030,          stubs_min = 0xffc0c030 (0xFFC0C030)
-//DEF(FlashParamsTable                        ,0xffc89900) // Found @0xffc89900,          stubs_min = 0xffc89900 (0xFFC89900)
+//DEF(levent_table                            ,0xffc0c01c) // Found @0xffc0c01c,          stubs_min = 0xffc0c01c (0xffc0c01c)
+//DEF(FlashParamsTable                        ,0xffc898ec) // Found @0xffc898ec,          stubs_min = 0xffc898ec (0xffc898ec)
 //DEF(movie_status                            ,0x000072d4) // Found @0xff986d88,          stubs_min = 0x000072d4 (0x7290+0x44)
 //DEF(full_screen_refresh                     ,0x0000a5dc) // Found @0xffa53cb4,          stubs_min = 0x0000a5dc (0xA5DC)
 //DEF(canon_menu_active                       ,0x00003214) // Found @0xff896098,          stubs_min = 0x00003214 (0x3210+4)
 //DEF(canon_shoot_menu_active                 ,0x00008afd) // Found @0xff9dc738,          stubs_min = 0x00008afd (0x8AFC+1)
 //DEF(playrec_mode                            ,0x00002f38) // Found @0xff8880f0,          stubs_min = 0x00002f38 (0x2F34+0x4)
-//DEF(zoom_status                             ,0x0000e590) // Found @0xffb22900,          stubs_min = 0x0000e590 (0xE590)
+//DEF(zoom_status                             ,0x0000e590) // Found @0xffb2290c,          stubs_min = 0x0000e590 (0xE590)
 //DEF(some_flag_for_af_scan                   ,0x000076b4) // Found @0xff98a814,          stubs_min = 0x000076b4 (0x76B4)
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40471000; } // Found @0xff85ea60
-//void *vid_get_viewport_fb()      { return (void*)0x40587700; } // Found @0xffb75718
+//void *vid_get_viewport_fb()      { return (void*)0x40587700; } // Found @0xffb75704
 //char *camera_jpeg_count_str()    { return (char*)0x000bb618; } // Found @0xffa43614
-//long hook_raw_size()             { return 0x00ee9200; }        // Found @0xffb78bd8
+//long hook_raw_size()             { return 0x00ee9200; }        // Found @0xffb78bc4
 //int get_flash_params_count(void) { return 0x9a; }              // Found @0xff9bed2c
 
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
-//#define SD_READONLY_FLAG    0x00020000 // Found @0xffbb95e8, levent 0x90a
+//#define SD_READONLY_FLAG    0x00020000 // Found @0xffbb95d4, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x04000000 // Found @0xffbb9618, levent 0x902
+//#define USB_FLAG            0x04000000 // Found @0xffbb9604, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 0, KEY_ZOOM_IN     ,0x00000020 }, // Found @0xffbb94f0, levent 0x02
-//    { 0, KEY_ZOOM_OUT    ,0x00000800 }, // Found @0xffbb9520, levent 0x03
-//    { 0, KEY_LEFT        ,0x00001000 }, // Found @0xffbb9528, levent 0x06
-//    { 0, KEY_SET         ,0x00002000 }, // Found @0xffbb9530, levent 0x08
-//    { 0, KEY_RIGHT       ,0x00004000 }, // Found @0xffbb9538, levent 0x07
-//    { 0, KEY_DOWN        ,0x00008000 }, // Found @0xffbb9540, levent 0x05
-//    { 0, KEY_UP          ,0x00010000 }, // Found @0xffbb9548, levent 0x04
-//    { 0, KEY_DISPLAY     ,0x00100000 }, // Found @0xffbb9560, levent 0x0a
-//    { 0, KEY_MENU        ,0x00200000 }, // Found @0xffbb9568, levent 0x09
-//    { 2, KEY_SHOOT_HALF  ,0x00000001 }, // Found @0xffbb95b8, levent 0x00
-//    { 2, KEY_SHOOT_FULL  ,0x00000003 }, // Found @0xffbb95c0, levent 0x01
+//    { 0, KEY_ZOOM_IN     ,0x00000020 }, // Found @0xffbb94dc, levent 0x02
+//    { 0, KEY_ZOOM_OUT    ,0x00000800 }, // Found @0xffbb950c, levent 0x03
+//    { 0, KEY_LEFT        ,0x00001000 }, // Found @0xffbb9514, levent 0x06
+//    { 0, KEY_SET         ,0x00002000 }, // Found @0xffbb951c, levent 0x08
+//    { 0, KEY_RIGHT       ,0x00004000 }, // Found @0xffbb9524, levent 0x07
+//    { 0, KEY_DOWN        ,0x00008000 }, // Found @0xffbb952c, levent 0x05
+//    { 0, KEY_UP          ,0x00010000 }, // Found @0xffbb9534, levent 0x04
+//    { 0, KEY_DISPLAY     ,0x00100000 }, // Found @0xffbb954c, levent 0x0a
+//    { 0, KEY_MENU        ,0x00200000 }, // Found @0xffbb9554, levent 0x09
+//    { 2, KEY_SHOOT_HALF  ,0x00000001 }, // Found @0xffbb95a4, levent 0x00
+//    { 2, KEY_SHOOT_FULL  ,0x00000003 }, // Found @0xffbb95ac, levent 0x01
 //    { 0, 0, 0 }
 //};
 
@@ -67,7 +67,7 @@
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
-NSTUB(AllocateMemory                          ,0xffb08e90) //101
+NSTUB(AllocateMemory                          ,0xffb08e9c) //101
 NSTUB(AllocateUncacheableMemory               ,0xff83af30) //112
 NSTUB(Close                                   ,0xff8370e0) //101
 NSTUB(CreateTask                              ,0xff81e8a0) //101
@@ -86,7 +86,7 @@ NSTUB(Fflush_Fut                              ,0xff836dfc) //  1
 NSTUB(Fgets_Fut                               ,0xff836d28) //  1
 NSTUB(Fopen_Fut                               ,0xff836b94) //101
 NSTUB(Fread_Fut                               ,0xff836c80) //101
-NSTUB(FreeMemory                              ,0xffb08e88) //101
+NSTUB(FreeMemory                              ,0xffb08e94) //101
 NSTUB(FreeUncacheableMemory                   ,0xff83af70) //112
 NSTUB(Fseek_Fut                               ,0xff836d74) //101
 NSTUB(Fwrite_Fut                              ,0xff836cd4) //101
@@ -104,7 +104,7 @@ NSTUB(GetMemInfo                              ,0xff81a264) //  3
 NSTUB(GetOpticalTemperature                   ,0xff868ff4) //102
 NSTUB(GetParameterData                        ,0xff9becf0) //101
 NSTUB(GetPropertyCase                         ,0xff8954f0) //102
-NSTUB(GetSystemTime                           ,0xffb08ee8) //101
+NSTUB(GetSystemTime                           ,0xffb08ef4) //101
 NSTUB(GetZoomLensCurrentPoint                 ,0xff9819e0) //102
 NSTUB(GetZoomLensCurrentPosition              ,0xffaf6880) //102
 NSTUB(GiveSemaphore                           ,0xff83a94c) //112
@@ -114,9 +114,9 @@ NSTUB(LocalTime                               ,0xff88f08c) //  1
 NSTUB(LockMainPower                           ,0xff89c204) //103
 NSTUB(Lseek                                   ,0xff8371fc) //101
 NSTUB(MakeDirectory_Fut                       ,0xff836acc) //  1
-NSTUB(MoveFocusLensToDistance                 ,0xffb72148) //102
-NSTUB(MoveIrisWithAv                          ,0xffb04a28) //102
-NSTUB(MoveZoomLensWithPoint                   ,0xffb051b8) //102
+NSTUB(MoveFocusLensToDistance                 ,0xffb72134) //102
+NSTUB(MoveIrisWithAv                          ,0xffb04a34) //102
+NSTUB(MoveZoomLensWithPoint                   ,0xffb051c4) //102
 NSTUB(NewTaskShell                            ,0xff894f0c) //103
 NSTUB(Open                                    ,0xff837074) //101
 NSTUB(PB2Rec                                  ,0xff89f18c) //104
@@ -125,8 +125,8 @@ NSTUB(PT_MoveOpticalZoomAt                    ,0xff87f598) //102
 NSTUB(PT_PlaySound                            ,0xff88a140) //  4
 NSTUB(PostLogicalEventForNotPowerType         ,0xff899b70) //103
 NSTUB(PostLogicalEventToUI                    ,0xff899bbc) //103
-NSTUB(PutInNdFilter                           ,0xffb0501c) //102
-NSTUB(PutOutNdFilter                          ,0xffb05040) //102
+NSTUB(PutInNdFilter                           ,0xffb05028) //102
+NSTUB(PutOutNdFilter                          ,0xffb0504c) //102
 NSTUB(Read                                    ,0xff81ad74) //101
 NSTUB(ReadFastDir                             ,0xffae2c20) //  4
 NSTUB(Rec2PB                                  ,0xff89f1cc) //104
@@ -136,7 +136,7 @@ NSTUB(RenameFile_Fut                          ,0xff8369c4) //  4
 NSTUB(Restart                                 ,0xff83c71c) //106
 NSTUB(ScreenLock                              ,0xff8b4c98) //  4
 NSTUB(ScreenUnlock                            ,0xff8b4cfc) //  3
-NSTUB(SetAE_ShutterSpeed                      ,0xffb74890) //102
+NSTUB(SetAE_ShutterSpeed                      ,0xffb7487c) //102
 NSTUB(SetAutoShutdownTime                     ,0xff89c278) //103
 NSTUB(SetCurrentCaptureModeType               ,0xff8a4d44) //101
 NSTUB(SetFileTimeStamp                        ,0xff83737c) //  4
@@ -156,10 +156,10 @@ NSTUB(UpdateMBROnFlash                        ,0xff8767c8) //  3
 NSTUB(VbattGet                                ,0xff833180) //103
 NSTUB(Write                                   ,0xff837170) //101
 NSTUB(WriteSDCard                             ,0xff96e820) //108
-NSTUB(_log                                    ,0xffbb4df0) //111
-NSTUB(_log10                                  ,0xffbb3a7c) //112
-NSTUB(_pow                                    ,0xffbb3bec) //114
-NSTUB(_sqrt                                   ,0xffbb69f8) //  1
+NSTUB(_log                                    ,0xffbb4ddc) //111
+NSTUB(_log10                                  ,0xffbb3a68) //112
+NSTUB(_pow                                    ,0xffbb3bd8) //114
+NSTUB(_sqrt                                   ,0xffbb69e4) //  1
 NSTUB(add_ptp_handler                         ,0xffa9d218) //  3
 NSTUB(apex2us                                 ,0xffa5c248) //  4
 NSTUB(close                                   ,0xff81ab8c) //  1
@@ -182,7 +182,7 @@ NSTUB(mktime_ext                              ,0xff8b5b6c) //  1
 NSTUB(open                                    ,0xff81aadc) //  1
 NSTUB(opendir                                 ,0xffae2acc) //  4
 NSTUB(openfastdir                             ,0xffae2acc) //  4
-NSTUB(qsort                                   ,0xffb5fbdc) //  4
+NSTUB(qsort                                   ,0xffb5fbc8) //  4
 NSTUB(rand                                    ,0xffa5b370) //  4
 NSTUB(read                                    ,0xff81ad74) //101
 NSTUB(readfastdir                             ,0xffae2c20) //  4

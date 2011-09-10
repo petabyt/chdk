@@ -471,11 +471,11 @@ asm volatile(
 "                CMP     R0, #0 \n"
 "                BNE     loc_FF98C678 \n"
 "                MOV     R0, R4 \n"
-"                BL      sub_FFB07058 \n"
+"                BL      sub_FFB07064 \n"
 "                TST     R0, #1 \n"
 "                BNE     locret_FF98C69C \n"
 "                MOV     R0, R4 \n"
-"                BL      sub_FFB07474 \n"
+"                BL      sub_FFB07480 \n"
 "                BL      sub_FF98CC78 \n"
 "                MOV     R6, #1 \n"
 "                MOV     R0, #2 \n"
@@ -507,8 +507,8 @@ asm volatile(
 
 "loc_FF98C668: \n"
 "                MOV     R0, R4 \n"
-//"                BL      sub_FFB07970 \n"			// main flash / shot XXX
-"                BL      sub_FFB07970_my \n"			// main flash / shot XXX
+//"                BL      sub_FFB0797C \n"			// main flash / shot XXX
+"                BL      sub_FFB0797C_my \n"			// main flash / shot XXX
 "                MOV     R6, R0 \n"
 "                B       loc_FF98C68C \n"
 
@@ -525,15 +525,15 @@ asm volatile(
 "                MOV     R1, R6 \n"
 "                MOV     R0, R4 \n"
 "                LDMFD   SP!, {R3-R7,LR} \n"
-"                B       sub_FFB07164 \n"
+"                B       sub_FFB07170 \n"
 
 "locret_FF98C69C: \n"
 "                LDMFD   SP!, {R3-R7,PC} \n"
 );
 }
 
-// @ FFB07970
-void __attribute__((naked,noinline)) sub_FFB07970_my(){
+// @ FFB0797C
+void __attribute__((naked,noinline)) sub_FFB0797C_my(){
  asm volatile(
 "                STMFD   SP!, {R2-R6,LR} \n"
 "                MOV     R5, R0 \n"
@@ -541,13 +541,13 @@ void __attribute__((naked,noinline)) sub_FFB07970_my(){
 //"                MOVL    R1, 0xFFFFFFFF \n"
 "				 MVN     R1, #0 \n"
 "                BL      sub_FF88D2B0 \n"
-"                LDR     R0, =0xFFB071D4 \n" //sub_FFB071D4
+"                LDR     R0, =0xFFB071E0 \n" //sub_FFB071E0
 "                MOV     R1, R5 \n"
 "                BL      sub_FF8C1CF0 \n"
 "                MOV     R0, R5 \n"
-"                BL      sub_FFB070EC \n"
+"                BL      sub_FFB070F8 \n"
 "                MOV     R0, R5 \n"
-"                BL      sub_FFB0755C \n"
+"                BL      sub_FFB07568 \n"
 "                MOV     R4, R0 \n"
 "                LDR     R1, =0xDE80 \n"
 "                MOV     R0, #0x8A \n"
@@ -556,60 +556,60 @@ void __attribute__((naked,noinline)) sub_FFB07970_my(){
 "                TST     R0, #1 \n"
 "                LDRNE   R1, =0x1F6 \n"
 //"                ADRNE   R0, aSsstandardcapt ; "SsStandardCaptureSeq.c" \n"
-"                LDRNE   R0, =0xFFB07AF8 \n"
+"                LDRNE   R0, =0xFFB07B04 \n"
 "                BLNE    _DebugAssert \n"
 "                BL      sub_FF885860 \n"
 "                MOV     R0, R4 \n"
 "                CMP     R0, #1 \n"
 "                MOV     R4, #0 \n"
-"                BEQ     loc_FFB07A10 \n"
+"                BEQ     loc_FFB07A1C \n"
 "                CMP     R0, #2 \n"
-"                BEQ     loc_FFB07A20 \n"
+"                BEQ     loc_FFB07A2C \n"
 "                CMP     R0, #3 \n"
-"                BEQ     loc_FFB07A44 \n"
+"                BEQ     loc_FFB07A50 \n"
 "                CMP     R0, #7 \n"
-"                BNE     sub_FFB07A60 \n"   // jump to firmware
+"                BNE     sub_FFB07A6C \n"   // jump to firmware
 "                MOV     R0, #0 \n"
 "                BL      sub_FF8C1D20 \n"
 "                MOV     R0, #4 \n"
 "                STR     R0, [SP,#0x4] \n"
 
-"loc_FFB07A00: \n"
+"loc_FFB07A0C: \n"
 "                ADD     R1, SP, #0x4 \n"
 "                MOV     R0, R5 \n"
-"                BL      sub_FFB077D4 \n"
-"                B       loc_FFB07A3C \n"
+"                BL      sub_FFB077E0 \n"
+"                B       loc_FFB07A48 \n"
 
-"loc_FFB07A10: \n"
+"loc_FFB07A1C: \n"
 "                MOV     R0, #1 \n"
 "                BL      sub_FF8C1D20 \n"
 "                STR     R4, [SP,#0x4] \n"
-"                B       loc_FFB07A00 \n"
+"                B       loc_FFB07A0C \n"
 
-"loc_FFB07A20: \n"
+"loc_FFB07A2C: \n"
 "                MOV     R0, #1 \n"
 "                BL      sub_FF8C1D20 \n"
 "                MOV     R0, #1 \n"
 "                STR     R0, [SP,#0x4] \n"
 "                MOV     R0, R5 \n"
 "                ADD     R1, SP, #0x4 \n"
-"                BL      sub_FFB07BCC \n"
+"                BL      sub_FFB07BD8 \n"
 
-"loc_FFB07A3C: \n"
+"loc_FFB07A48: \n"
 
 "		BL      capt_seq_hook_raw_here\n"      		// added (16/2/2011, moved here so that long exposures work)
 
 "                MOV     R6, R0 \n"
-"                B       sub_FFB07A6C \n"   // jump to firmware
+"                B       sub_FFB07A78 \n"   // jump to firmware
 
-"loc_FFB07A44: \n"
+"loc_FFB07A50: \n"
 "                MOV     R0, #1 \n"
 "                BL      sub_FF8C1D20 \n"
 "                ADD     R1, SP, #0x4 \n"
 "                MOV     R0, R5 \n"
 "                STR     R4, [SP,#0x4] \n"
-"                BL      sub_FFB07850 \n"
-"                B       loc_FFB07A3C \n"
+"                BL      sub_FFB0785C \n"
+"                B       loc_FFB07A48 \n"
 	 );
 }
 
@@ -1127,15 +1127,15 @@ void __attribute__((naked,noinline)) exp_drv_task(){
 "                SUB     R4, R0, #8 \n"
 "                LDR     R0, =0x58380 \n"
 "                ADD     R1, SP, #0x14 \n"
-"                BL      sub_FFBB3268 \n"
+"                BL      sub_FFBB3254 \n"
 "                LDR     R0, =0x5838C \n"
 "                MOV     R2, #0xC \n"
 "                ADD     R1, SP, #0x14 \n"
-"                BL      sub_FFBB3268 \n"
+"                BL      sub_FFBB3254 \n"
 "                LDR     R0, =0x58398 \n"
 "                MOV     R2, #0xC \n"
 "                MOV     R1, R4 \n"
-"                BL      sub_FFBB3268 \n"
+"                BL      sub_FFBB3254 \n"
 "                B       loc_FF8CC790 \n"
 
 "loc_FF8CC718: \n"
