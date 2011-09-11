@@ -207,7 +207,7 @@
 #define COLOR_GREEN         0x17
 #define COLOR_BLUE_LT       0x10
 #define COLOR_BLUE          0x14
-#define COLOR_YELLOW        0x16
+#define COLOR_YELLOW        0x60
 #define COLOR_BLACK         0xFF
 #define COLOR_BG            0x62
 #define COLOR_FG            COLOR_WHITE
@@ -228,7 +228,7 @@
 #define COLOR_HISTO_RB      COLOR_RED
 #define COLOR_HISTO_RB_PLAY COLOR_HISTO_RB
 #define COLOR_HISTO_BG_PLAY COLOR_BLUE_LT
-#define COLOR_HISTO_RG_PLAY COLOR_YELLOW
+#define COLOR_HISTO_RG_PLAY 0x80
 #undef SCREEN_COLOR
 #define SCREEN_COLOR            0x1D
 
@@ -373,7 +373,7 @@
 #define COLOR_GREEN         0x17
 #define COLOR_BLUE_LT       0x10
 #define COLOR_BLUE          0x14
-#define COLOR_YELLOW        0x16
+#define COLOR_YELLOW        0x74
 #define COLOR_BLACK         0xFF
 #define COLOR_BG            0x1b
 #define COLOR_FG            COLOR_WHITE
@@ -394,7 +394,7 @@
 #define COLOR_HISTO_RB      COLOR_RED
 #define COLOR_HISTO_RB_PLAY COLOR_HISTO_RB
 #define COLOR_HISTO_BG_PLAY COLOR_BLUE_LT
-#define COLOR_HISTO_RG_PLAY COLOR_YELLOW
+#define COLOR_HISTO_RG_PLAY 0x85
 #undef SCREEN_COLOR
 #define SCREEN_COLOR            0x1D
 

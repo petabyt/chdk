@@ -17,10 +17,10 @@
 
 #define WALL_COLOR_1            COLOR_GREY
 #define WALL_COLOR_2            COLOR_BLACK
-#define BOX_COLOR_1             0x26
+#define BOX_COLOR_1             COLOR_RED
 #define BOX_COLOR_2             COLOR_BLACK
-#define BOX_COLOR_3             0x66
-#define PLACE_COLOR_1           0x99
+#define BOX_COLOR_3             COLOR_YELLOW
+#define PLACE_COLOR_1           COLOR_BLUE
 #define PLACE_COLOR_2           COLOR_BLACK
 #define PLAYER_COLOR_1          COLOR_GREEN
 #define PLAYER_COLOR_2          COLOR_BLACK
@@ -47,6 +47,7 @@ static unsigned char level_length_list[MAX_LEVELS];
 static unsigned num_levels;
 
 static int need_redraw;
+static int need_redraw_all;
 static int  moves;
 static char field[FIELD_HEIGHT][FIELD_WIDTH];
 
@@ -215,7 +216,7 @@ static int sokoban_finished() {
 static void sokoban_next_level() {
     if (++conf.sokoban_level >= num_levels) conf.sokoban_level = 0;
     sokoban_set_level(conf.sokoban_level);
-    need_redraw = 1;
+    need_redraw_all = 1;
 }
 
 //-------------------------------------------------------------------
@@ -248,11 +249,11 @@ static int sokoban_move(int dx, int dy) {
 
 //-------------------------------------------------------------------
 static void sokoban_draw_box(int x, int y, color cl) {
-    draw_filled_rect(x*cell_size, y*cell_size, x*cell_size+cell_size-1, y*cell_size+cell_size-1, cl);
-    draw_line(x*cell_size+2, y*cell_size, x*cell_size+2, y*cell_size+cell_size-1, cl);
-    draw_line(x*cell_size+cell_size-1-2, y*cell_size, x*cell_size+cell_size-1-2, y*cell_size+cell_size-1, cl);
-    draw_line(x*cell_size+2, y*cell_size+2, x*cell_size+cell_size-1-2, y*cell_size+2, cl);
-    draw_line(x*cell_size+2, y*cell_size+cell_size-1-2, x*cell_size+cell_size-1-2, y*cell_size+cell_size-1-2, cl);
+    draw_filled_rect(CAM_TS_BUTTON_BORDER+x*cell_size, y*cell_size, CAM_TS_BUTTON_BORDER+x*cell_size+cell_size-1, y*cell_size+cell_size-1, cl);
+    draw_line(CAM_TS_BUTTON_BORDER+x*cell_size+2, y*cell_size, CAM_TS_BUTTON_BORDER+x*cell_size+2, y*cell_size+cell_size-1, cl);
+    draw_line(CAM_TS_BUTTON_BORDER+x*cell_size+cell_size-1-2, y*cell_size, CAM_TS_BUTTON_BORDER+x*cell_size+cell_size-1-2, y*cell_size+cell_size-1, cl);
+    draw_line(CAM_TS_BUTTON_BORDER+x*cell_size+2, y*cell_size+2, CAM_TS_BUTTON_BORDER+x*cell_size+cell_size-1-2, y*cell_size+2, cl);
+    draw_line(CAM_TS_BUTTON_BORDER+x*cell_size+2, y*cell_size+cell_size-1-2, CAM_TS_BUTTON_BORDER+x*cell_size+cell_size-1-2, y*cell_size+cell_size-1-2, cl);
 }
 
 //-------------------------------------------------------------------
@@ -262,10 +263,9 @@ int gui_sokoban_init() {
      we could avoid this and malloc all the data structures
      unfortunately, gui_mode gets set all over the place */
     if(!num_levels) {
-        char *buf,*p,*p_start;
+        char *buf,*p;
         FILE *fd;    
         struct stat st;
-        int prev_index = 0;
 
         if (stat((char *)level_file_name,&st) != 0 || st.st_size==0) 
             return 0;
@@ -321,7 +321,7 @@ int gui_sokoban_init() {
     if(!num_levels) {
         return 0;
     }
-    need_redraw = 1;
+    need_redraw_all = 1;
     return 1;
 }
 
@@ -363,7 +363,7 @@ void gui_sokoban_kbd_process() {
         case KEY_DISPLAY:
       #endif
             sokoban_set_level(conf.sokoban_level);
-            need_redraw = 1;
+            need_redraw_all = 1;
             break;
       #if CAM_HAS_ERASE_BUTTON
         case KEY_DISPLAY:
@@ -379,48 +379,52 @@ void gui_sokoban_draw() {
     int y, x;
     static char str[16];
 
+    if (need_redraw_all) {
+        draw_filled_rect(0, 0, screen_width-1, screen_height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+        need_redraw_all = 0;
+        need_redraw = 1;
+    }
+
     if (need_redraw) {
         need_redraw = 0;
         for (y=0; y<FIELD_HEIGHT; ++y) {
             for (x=0; x<FIELD_WIDTH; ++x) {
                 switch (field[y][x]) {
                     case MARKER_WALL:
-                        draw_filled_rect(x*cell_size, y*cell_size, x*cell_size+cell_size-1, y*cell_size+cell_size-1, MAKE_COLOR(WALL_COLOR_1, WALL_COLOR_2));
+                        draw_filled_rect(CAM_TS_BUTTON_BORDER+x*cell_size, y*cell_size, CAM_TS_BUTTON_BORDER+x*cell_size+cell_size-1, y*cell_size+cell_size-1, MAKE_COLOR(WALL_COLOR_1, WALL_COLOR_2));
                         break;
                     case MARKER_BOX:
                         sokoban_draw_box(x, y, MAKE_COLOR(BOX_COLOR_1, BOX_COLOR_2));
                         break;
                     case MARKER_PLACE:
-                        draw_filled_rect(x*cell_size, y*cell_size, x*cell_size+cell_size-1, y*cell_size+cell_size-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
-                        draw_filled_rect(x*cell_size+4, y*cell_size+4, x*cell_size+cell_size-1-4, y*cell_size+cell_size-1-4, MAKE_COLOR(PLACE_COLOR_1, PLACE_COLOR_2));
+                        draw_filled_rect(CAM_TS_BUTTON_BORDER+x*cell_size, y*cell_size, CAM_TS_BUTTON_BORDER+x*cell_size+cell_size-1, y*cell_size+cell_size-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+                        draw_filled_rect(CAM_TS_BUTTON_BORDER+x*cell_size+4, y*cell_size+4, CAM_TS_BUTTON_BORDER+x*cell_size+cell_size-1-4, y*cell_size+cell_size-1-4, MAKE_COLOR(PLACE_COLOR_1, PLACE_COLOR_2));
                         break;
                     case MARKER_BOX_PLACE:
                         sokoban_draw_box(x, y, MAKE_COLOR(BOX_COLOR_3, BOX_COLOR_2));
                         break;
                     case MARKER_PLAYER:
                     case MARKER_PLAYER_PLACE:
-                        draw_filled_rect(x*cell_size, y*cell_size, x*cell_size+cell_size-1, y*cell_size+cell_size-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
-                        draw_filled_ellipse(x*cell_size+(cell_size>>1)-1, y*cell_size+(cell_size>>1)-1, (cell_size>>1)-3, (cell_size>>1)-3, MAKE_COLOR(PLAYER_COLOR_1, PLAYER_COLOR_2));
+                        draw_filled_rect(CAM_TS_BUTTON_BORDER+x*cell_size, y*cell_size, CAM_TS_BUTTON_BORDER+x*cell_size+cell_size-1, y*cell_size+cell_size-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+                        draw_filled_ellipse(CAM_TS_BUTTON_BORDER+x*cell_size+(cell_size>>1)-1, y*cell_size+(cell_size>>1)-1, (cell_size>>1)-3, (cell_size>>1)-3, MAKE_COLOR(PLAYER_COLOR_1, PLAYER_COLOR_2));
                         break;
                     case MARKER_EMPTY:
                     default:
-                        draw_filled_rect(x*cell_size, y*cell_size, x*cell_size+cell_size-1, y*cell_size+cell_size-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+                        draw_filled_rect(CAM_TS_BUTTON_BORDER+x*cell_size, y*cell_size, CAM_TS_BUTTON_BORDER+x*cell_size+cell_size-1, y*cell_size+cell_size-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
                         break;
                 }
             }
         }
 
-        draw_line(cell_size*FIELD_WIDTH, 0, cell_size*FIELD_WIDTH, screen_height-1, COLOR_WHITE);
-        draw_line(cell_size*FIELD_WIDTH+1, 0, cell_size*FIELD_WIDTH+1, screen_height-1, COLOR_BLACK);
-
-        draw_filled_rect(cell_size*FIELD_WIDTH+2, 0, screen_width-1, 7, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+        draw_line(CAM_TS_BUTTON_BORDER+cell_size*FIELD_WIDTH, 0, CAM_TS_BUTTON_BORDER+cell_size*FIELD_WIDTH, screen_height-1, COLOR_WHITE);
+        draw_line(CAM_TS_BUTTON_BORDER+cell_size*FIELD_WIDTH+1, 0, CAM_TS_BUTTON_BORDER+cell_size*FIELD_WIDTH+1, screen_height-1, COLOR_BLACK);
 
         sprintf(str, "%s: %-6d", lang_str(LANG_SOKOBAN_TEXT_LEVEL), conf.sokoban_level+1);
-        draw_string(cell_size*FIELD_WIDTH+2, 8, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+        draw_string(CAM_TS_BUTTON_BORDER+cell_size*FIELD_WIDTH+2, 8, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
         sprintf(str, "%s: %-6d", lang_str(LANG_SOKOBAN_TEXT_MOVES), moves);
-        draw_string(cell_size*FIELD_WIDTH+2, 8+FONT_HEIGHT, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+        draw_string(CAM_TS_BUTTON_BORDER+cell_size*FIELD_WIDTH+2, 8+FONT_HEIGHT, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
-        draw_filled_rect(cell_size*FIELD_WIDTH+2, 8+FONT_HEIGHT*2, screen_width-1, screen_height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+        //draw_filled_rect(cell_size*FIELD_WIDTH+2, 8+FONT_HEIGHT*2, screen_width-1, screen_height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
 
         if (sokoban_finished()) {
             gui_mbox_init(LANG_SOKOBAN_MSG_FINISH_TITLE, LANG_SOKOBAN_MSG_FINISH_TEXT, MBOX_TEXT_CENTER, NULL);
@@ -429,6 +433,6 @@ void gui_sokoban_draw() {
     }
 
     sprintf(str, "Batt:%3d%%", get_batt_perc());
-    draw_txt_string(screen_width/FONT_WIDTH-2-9, screen_height/FONT_HEIGHT-1, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+    draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-9, screen_height/FONT_HEIGHT-1, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 }
 

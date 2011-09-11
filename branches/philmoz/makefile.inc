@@ -187,6 +187,9 @@ PLATFORMSUB=100a
 #PLATFORM=a550
 #PLATFORMSUB=100c
 
+#PLATFORM=a580
+#PLATFORMSUB=101b
+
 #PLATFORM=a590
 #PLATFORMSUB=100e
 
@@ -261,6 +264,15 @@ PLATFORMSUB=100a
 
 #PLATFORM=ixus980_sd990
 #PLATFORMSUB=101b
+
+#PLATFORM=g10
+#PLATFORMSUB=102a
+
+#PLATFORM=g10
+#PLATFORMSUB=103b
+
+#PLATFORM=g10
+#PLATFORMSUB=104a
 
 #PLATFORM=a1100
 #PLATFORMSUB=100c
@@ -343,6 +355,15 @@ PLATFORMSUB=103c
 #PLATFORM=g12
 #PLATFORMSUB=100f
 
+#PLATFORM=g12
+#PLATFORMSUB=100g
+
+#PLATFORM=ixus310_elph500hs
+#PLATFORMSUB=100a
+
+#PLATFORM=ixus310_elph500hs
+#PLATFORMSUB=101a
+
 #PLATFORM=a430
 #PLATFORMSUB=100b
 
@@ -373,6 +394,15 @@ PLATFORMSUB=103c
 #PLATFORM=sx220hs
 #PLATFORMSUB=101b
 
+#PLATFORM=sx230hs
+#PLATFORMSUB=100c
+
+#PLATFORM=sx230hs
+#PLATFORMSUB=101a
+
+#PLATFORM=sx230hs
+#PLATFORMSUB=101b
+
 MEMISOSIZE="(&_end-&_start)"
 # override this on the command line or in buildconf to use PRIMARY.BIN from a different tree
 # should be an absolute path
@@ -383,7 +413,6 @@ include $(topdir)buildconf.inc
 # you may also set your default camera here
 -include $(topdir)localbuildconf.inc
 include $(topdir)version.inc
--include $(topdir)platform/$(PLATFORM)/platform_conf.inc
 include $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc
 
 # Used in gui_debug.c for controlling memory browser allowed address ranges

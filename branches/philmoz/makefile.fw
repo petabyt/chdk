@@ -1,4 +1,10 @@
 
+# Define the list of camera/firmware vresions that are not included in the 'autobuild'
+# Entries here should be in the form CAMERA-FIRMWARE - e.g. g12-100c
+# Do exclude all firmware versions for a specific camera add the camera
+# to the list in makefile.cam
+SKIP_AUTOBUILD=""
+
 # Read list of camera firmware directories under platform/$(CAM)/sub
 FW = $(shell ls platform/$(CAM)/sub)
 
@@ -8,9 +14,8 @@ FW = $(shell ls platform/$(CAM)/sub)
 all: $(FW)
 
 # Build target for each entry found in platform/$(CAM)/sub
-# If it's a directory, and the directory doesn't contain a file called NO_AUTOBUILD
-# then use the main Makefile to build using the supplied $(ACTION)
+# If it's a directory then use the main Makefile to build using the supplied $(ACTION)
 $(FW):
-	if [ -d platform/$(CAM)/sub/$@ ] && [ ! -e platform/$(CAM)/sub/$@/NO_AUTOBUILD ]; then \
+	if [ -d platform/$(CAM)/sub/$@ ] && [ $(CAM)-$@ != "$(findstring $(CAM)-$@,$(SKIP_AUTOBUILD))" ]; then \
 		$(MAKE) -s --no-print-directory PLATFORM=$(CAM) PLATFORMSUB=$@ NO_INC_BUILD=1 $(ACTION); \
 	fi

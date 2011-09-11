@@ -597,6 +597,9 @@ void shooting_set_tv96_direct(short v, short is_now)
 if ((mode_get()&MODE_MASK) != MODE_PLAY){
    	if(is_now) {
 	   _SetPropertyCase(PROPCASE_TV, &v, sizeof(v));
+#ifdef PROPCASE_TV2
+       _SetPropertyCase(PROPCASE_TV2, &v, sizeof(v));   // Save override to property that will update JPEG header & Canon OSD
+#endif
    	}
    	else photo_param_put_off.tv96=v;
 }

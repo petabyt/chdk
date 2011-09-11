@@ -15,6 +15,22 @@ clean: clean-recursive
 
 distclean: distclean-recursive
 
+# Define the lists of cameras / firmware versions with a BETA status
+# This is a list of cameras for which ALL firmware versions are BETA
+BETA_CAMERA="sx1 a1100 a2000 ixus90_sd790 g11 s90 ixus100_sd780 ixus120_sd940 ixus200_sd980 ixus85_sd770 d10 ixus95_sd1200 a430 s95 a490 a495 ixus300_sd4000 sx220hs sx230hs sx130is ixus310_elph500hs"
+# If specific firmware version(s) for a camera are BETA; but others are not
+# then define the BETA versions here - e.g. g12-100c
+BETA_CAMERA_FW="ixus750_sd550-100h"
+
+# Set the BETA status for the current camera/firmware being built
+STATE=
+ifneq (,$(findstring $(PLATFORM),$(BETA_CAMERA)))
+	STATE=_BETA
+endif
+ifneq (,$(findstring $(PLATFORM)-$(PLATFORMSUB),$(BETA_CAMERA_FW)))
+	STATE=_BETA
+endif
+
 .PHONY: fir
 fir: version firsub
 
@@ -89,7 +105,7 @@ ifdef PLATFORMOS
     endif
   endif
 endif
-# if COPY_TO is defined the copy this camera/firmware version to the copied firmware version
+# if COPY_TO is defined then copy this camera/firmware version to the copied firmware version
 ifdef COPY_TO
 	cp $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/$(VER)-$(PLATFORM)-$(COPY_TO)-$(BUILD_NUMBER)$(STATE).zip
 endif
@@ -144,7 +160,7 @@ ifdef OPT_FI2
 endif
   endif
 endif
-# if COPY_TO is defined the copy this camera/firmware version to the copied firmware version
+# if COPY_TO is defined then copy this camera/firmware version to the copied firmware version
 ifdef COPY_TO
 	cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)bin/$(PLATFORM)-$(COPY_TO)-$(BUILD_NUMBER)-full$(STATE).zip
 	cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/$(PLATFORM)-$(COPY_TO)-$(BUILD_NUMBER)$(STATE).zip

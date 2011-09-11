@@ -50,6 +50,9 @@ struct dir_entry IFD0[]={
  {0x14A,  T_LONG,      1,  0}, //SubIFDs offset
  {0x8298, T_ASCII,     1,  0}, // Copyright
  {0x8769, T_LONG,      1,  0}, //EXIF_IFD offset
+#if defined(OPT_GPS)
+ {0x8825, T_LONG,      1,  0}, //GPS_IFD offset
+#endif
  {0x9216, T_BYTE,      4,  0x00000001},  // TIFF/EPStandardID: 1.0.0.0
  {0xC612, T_BYTE,      4,  0x00000101}, //DNGVersion: 1.1.0.0
  {0xC614, T_ASCII,     32, (int)cam_name}, //UniqueCameraModel. Filled at header generation.
@@ -110,6 +113,25 @@ struct dir_entry EXIF_IFD[]={
 };
 
 
+#if defined(OPT_GPS)
+struct dir_entry GPS_IFD[]={
+// {0x0000, T_BYTE,      4,  0x00000302}, //GPSVersionID: 2 3 0 0
+ {0x0001, T_ASCII,     2,  0}, //North or South Latitude "N\0" or "S\0"
+ {0x0002, T_RATIONAL,  3,  0}, //Latitude
+ {0x0003, T_ASCII,     2,  0}, //East or West Latitude "E\0" or "W\0"
+ {0x0004, T_RATIONAL,  3,  0}, //Longitude
+ {0x0005, T_ASCII,     2,  0}, //AltitudeRef
+ {0x0006, T_RATIONAL,  3,  0}, //Altitude
+ {0x0007, T_RATIONAL,  3,  0}, //TimeStamp
+ {0x0009, T_ASCII,     2,  0}, //Status
+// {0x000A, T_ASCII,     1,  0}, //MeasureMode
+ {0x0012, T_ASCII,     8,  0}, //MapDatum 7 + 1 pad byte
+ {0x001D, T_ASCII,    12,  0}, //DateStamp 11 + 1 pad byte
+ {0}
+};
+#endif
+
+
 int get_type_size(int type){
  switch(type){
   case T_BYTE:      return 1;
@@ -128,7 +150,11 @@ int get_type_size(int type){
  }
 }
 
+#if defined(OPT_GPS)
+struct {struct dir_entry* entry; int count;} IFD_LIST[]={{IFD0,0}, {IFD1,0}, {EXIF_IFD,0}, {GPS_IFD, 0}};
+#else
 struct {struct dir_entry* entry; int count;} IFD_LIST[]={{IFD0,0}, {IFD1,0}, {EXIF_IFD,0}};
+#endif
 
 #define IFDs (sizeof(IFD_LIST)/sizeof(IFD_LIST[0]))
 
@@ -149,6 +175,25 @@ void create_dng_header(struct t_data_for_exif* exif_data){
  int raw_offset;
 
  // filling EXIF fields
+  
+#if defined(OPT_GPS)
+typedef struct {
+    int latitudeRef;
+    int latitude[6];
+    int longitudeRef;
+    int longitude[6];
+    int heightRef;
+    int height[2];
+    int timeStamp[6];
+    short status;
+    char mapDatum[7];
+    char dateStamp[11];
+    char unknown2[260];
+} tGPS;
+tGPS gps;
+
+get_property_case(PROPCASE_GPS, &gps, sizeof(tGPS));
+#endif
 
  for (j=0;j<IFDs;j++) {
   for(i=0; IFD_LIST[j].entry[i].tag; i++) {
@@ -168,6 +213,18 @@ void create_dng_header(struct t_data_for_exif* exif_data){
      case 0x9207: IFD_LIST[j].entry[i].offset=get_metering_mode_for_exif(exif_data->metering_mode); break; // Metering mode
      case 0x9201: IFD_LIST[j].entry[i].offset=(int)get_shutter_speed_for_exif(exif_data->tv); break; // ShutterSpeedValue
      case 0x9202: IFD_LIST[j].entry[i].offset=(int)get_aperture_for_exif(exif_data->av); break; // ApertureValue
+#if defined(OPT_GPS)
+     case 0x0001: IFD_LIST[j].entry[i].offset=gps.latitudeRef; break;
+     case 0x0002: IFD_LIST[j].entry[i].offset=(int)&(gps.latitude); break;
+     case 0x0003: IFD_LIST[j].entry[i].offset=gps.longitudeRef; break;
+     case 0x0004: IFD_LIST[j].entry[i].offset=(int)&(gps.longitude); break;
+     case 0x0005: IFD_LIST[j].entry[i].offset=gps.heightRef; break;
+     case 0x0006: IFD_LIST[j].entry[i].offset=(int)&(gps.height); break;
+     case 0x0007: IFD_LIST[j].entry[i].offset=(int)&(gps.timeStamp); break;
+     case 0x0009: IFD_LIST[j].entry[i].offset=(int)gps.status; break;
+     case 0x0012: IFD_LIST[j].entry[i].offset=(int)&(gps.mapDatum); break;
+     case 0x001D: IFD_LIST[j].entry[i].offset=(int)&(gps.dateStamp); break;
+#endif
     }
   }
  }
@@ -203,6 +260,9 @@ void create_dng_header(struct t_data_for_exif* exif_data){
   extra_offset+=6+IFD_LIST[j].count*12; // IFD header+footer
   for(i=0; IFD_LIST[j].entry[i].tag; i++) {
    if (IFD_LIST[j].entry[i].tag==0x8769) IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+(IFD_LIST[0].count+IFD_LIST[1].count)*12+6+6;  // EXIF IFD offset
+#if defined(OPT_GPS)
+   if (IFD_LIST[j].entry[i].tag==0x8825) IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+(IFD_LIST[0].count+IFD_LIST[1].count+IFD_LIST[2].count)*12+6+6+6;  // GPS IFD offset
+#endif
    if (IFD_LIST[j].entry[i].tag==0x14A)  IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+IFD_LIST[0].count*12+6; // SubIFDs offset
    if (IFD_LIST[j].entry[i].tag==0x111)  {
     if (j==1) IFD_LIST[j].entry[i].offset=raw_offset+DNG_TH_WIDTH*DNG_TH_HEIGHT*3;  //StripOffsets for main image
