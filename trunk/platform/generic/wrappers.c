@@ -261,11 +261,7 @@ void lens_set_focus_pos(long newpos)
 	if (af_mode == 0)	// can only set focus distance when not in continuous AF mode
 #endif
 	{
-#if defined(CAMERA_a410) // need to disable a (false) assert here to make this function work 
-		MoveFocusLensToDistanceA410((short*)&newpos);
-#else
 		_MoveFocusLensToDistance((short*)&newpos);
-#endif
 		//while (focus_busy);
 		while ((shooting_is_flash_ready()!=1) || (focus_busy));
 		newpos = _GetFocusLensSubjectDistance();
