@@ -1,4 +1,8 @@
 
+# Define empty recipes for all the included makefiles (including this one)
+# This stops gmake from attempting to see if the makefiles need to be rebuilt
+makefile.cam: ;
+
 # Define the list of cameras that are not included in the 'autobuild'
 # If only a specific firmware for a version should be excluded define
 # this in makefile.fw

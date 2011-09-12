@@ -9,6 +9,16 @@ include makefile.inc
 
 SUBDIRS=tools lib platform core loader CHDK
 
+# Define empty recipes for all the included makefiles (including this one)
+# This stops gmake from attempting to see if the makefiles need to be rebuilt
+Makefile: ;
+makefile.inc: ;
+version.inc: ;
+buildconf.inc: ;
+localbuildconf.inc: ;
+$(topdir)/platform/fi2.inc: ;
+$(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc: ;
+
 all: all-recursive
 
 clean: clean-recursive
@@ -106,6 +116,8 @@ ifdef PLATFORMOS
   endif
 endif
 # if COPY_TO is defined then copy this camera/firmware version to the copied firmware version
+# Define COPY_TO in $(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc of the source
+# firmware version that needs to be copied to another firmware version
 ifdef COPY_TO
 	cp $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/$(VER)-$(PLATFORM)-$(COPY_TO)-$(BUILD_NUMBER)$(STATE).zip
 endif
@@ -161,6 +173,8 @@ endif
   endif
 endif
 # if COPY_TO is defined then copy this camera/firmware version to the copied firmware version
+# Define COPY_TO in $(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc of the source
+# firmware version that needs to be copied to another firmware version
 ifdef COPY_TO
 	cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)bin/$(PLATFORM)-$(COPY_TO)-$(BUILD_NUMBER)-full$(STATE).zip
 	cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/$(PLATFORM)-$(COPY_TO)-$(BUILD_NUMBER)$(STATE).zip
@@ -184,3 +198,11 @@ batch-zip-complete: version
 
 batch-clean:
 	$(MAKE) -f makefile.cam VER=$(VER) ACTION=clean batch
+
+
+.PHONY: camindex
+camindex:
+	@echo "$(PLATFORM),$(PLATFORMSUB),$(STATE),$(COPY_TO)"
+
+camindex.csv: Makefile makefile.cam makefile.fw
+	$(MAKE) -f makefile.cam VER=$(VER) ACTION=camindex batch > camindex.csv
