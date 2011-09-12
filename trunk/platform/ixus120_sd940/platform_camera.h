@@ -21,7 +21,9 @@
 // don't override them again in here.
 
 	#define CAM_DRYOS_2_3_R39			1  //stat is different, as well as some other functions
-	#define SYNCHABLE_REMOTE_NOT_ENABLED 1
+
+//	#define SYNCHABLE_REMOTE_NOT_ENABLED 1
+
     #define CAM_PROPSET                 3
     #define CAM_DRYOS                   1
 
