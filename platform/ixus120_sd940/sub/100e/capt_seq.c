@@ -100,8 +100,8 @@ asm volatile (
 "	BL	sub_FF872A98 \n"                      
 "	MOV	R0, R5 \n"   
 
-//"	BL	sub_FF9425F4 \n" 
-"	BL	sub_FF9425F4_my \n"    			// patched 
+//"	BL	sub_FF942410 \n" 
+"	BL	sub_FF942410_my \n"    			// patched 
                      
 "	TST	R0, #1 \n"                           
 "	STRNE	R9, [R6, #0x10] \n"                
@@ -279,9 +279,9 @@ asm volatile (
 
 
 /*----------------------------------------------------------------------
-	sub_FF9425F4_my()  - capt_seq_task()
+	sub_FF942410_my()  - capt_seq_task()
 -----------------------------------------------------------------------*/
-void __attribute__((naked,noinline)) sub_FF9425F4_my() {
+void __attribute__((naked,noinline)) sub_FF942410_my() {
 asm volatile (
 "	STMFD	SP!, {R0-R8,LR} \n"                
 "	MOV	R4, R0 \n"                           
@@ -332,24 +332,7 @@ asm volatile (
 "	BL      wait_until_remote_button_is_released\n"
 "	BL      capt_seq_hook_set_nr\n"
  
-"	LDR	R0, [R4, #0x1C] \n"                  
-"	CMP	R0, #0 \n"                           
-"	MOVNE	R0, #1 \n"                         
-"	STRNE	R0, [R5] \n"                       
-"	LDR	R0, [R5, #4] \n"                     
-"	BL	sub_FF90B7F8 \n"                      
-"	LDR	R0, [R5, #8] \n"                     
-"	BL	sub_FF8B9E48 \n"                      
-"	MOV	R0, #1 \n"                           
-"	BL	sub_FF8B9E54 \n"                      
-"	LDR	R0, =0xFF941E0C \n"                
-"	MOV	R1, R4 \n"                           
-"	BL	sub_FF8B9E24 \n"                      
-"	LDR	R0, [R5] \n"                         
-"	CMP	R0, #5 \n"                           
-"	ADDLS	PC, PC, R0, LSL #2 \n"    
-         
-"	B	sub_FF9425CC \n"   // go to the ROM                       
+"	B	sub_FF9424C0 \n"   // go back to the ROM                    
 	);
 }
 
@@ -408,12 +391,11 @@ asm volatile (
 "	MOV	R0, R4 \n"                           
 "	BL	sub_FF942328 \n"                      
 "	BL	sub_FF942DA0 \n"                      
-"	MOV	R0, R4 \n"   
-        
-// this patch causes a crash when shooting
-// it is unknown what the effect is of not calling this	(called elsewhere)	                 		
-"	BL	sub_FF9425F4 \n"     
-//"	BL	sub_FF9425F4_my \n"                      
+"	MOV	R0, R4 \n"     
+              		
+//"	BL	sub_FF942410 \n"     
+"	BL	sub_FF942410_my \n"       			// patched        
+            
 "	MOV	R5, R0 \n"  
 "	BL		capt_seq_hook_raw_here\n"  //----------->>                            
 "	B	loc_FF87344C \n"   

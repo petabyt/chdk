@@ -329,24 +329,7 @@ void __attribute__((naked,noinline)) sub_FF9425F4_my(){
 		"BL      wait_until_remote_button_is_released\n"
 		"BL      capt_seq_hook_set_nr\n"
 
-		"LDR	R0, [R4,#0x1C]\n"	
-		"CMP	R0, #0\n"			
-		"MOVNE	R0, #1\n"			
-		"STRNE	R0, [R5]\n"			
-		"LDR	R0, [R5,#4]\n"		
-		"BL		sub_FF90B870\n"		
-		"LDR	R0, [R5,#8]\n"		
-		"BL		sub_FF8B9EC0\n"		
-		"MOV	R0, #1\n"			
-		"BL		sub_FF8B9ECC\n"		//nullsub_50		
-		"LDR	R0, =0xFF941FF0\n"	
-		"MOV	R1, R4\n"			
-		"BL		sub_FF8B9E9C\n"		
-		"LDR	R0, [R5]\n"			
-		"CMP	R0, #5\n"			
-		"ADDLS	PC, PC,	R0,LSL#2\n"	
-		
-		"B		sub_FF9427B0\n"		//go to the ROM
+		"B		sub_FF9426A4\n"  	//go back to the ROM
  );
 }		
 	
@@ -407,10 +390,9 @@ void __attribute__((naked,noinline)) sub_FF9425F4_my(){
 		"BL		sub_FF942F84\n"
 		"MOV	R0, R4\n"
 		
-// this patch causes a crash when shooting
-// it is unknown what the effect is of not calling this	(called elsewhere)	
-		"BL		sub_FF9425F4 \n"		
-	//	"BL		sub_FF9425F4_my \n"	
+	//	"BL		sub_FF9425F4 \n"		
+		"BL		sub_FF9425F4_my \n"
+		
 		"MOV	R5, R0\n"
 		"BL     capt_seq_hook_raw_here\n"  //----------->>
 		"B		loc_FF8734A8\n"
