@@ -64,17 +64,20 @@ void gui_palette_kbd_process() {
 #define DISP_BOTTOM         (FONT_HEIGHT + BORDER_SIZE + CELL_SIZE * 16)
 
 void gui_palette_draw() {
-    unsigned int x, y;
+    unsigned int x, y, xl, xr;
     char f=0;
     color c;
     static char buf[64];
 
+    xl = CAM_TS_BUTTON_BORDER;
+    xr = screen_width - CAM_TS_BUTTON_BORDER;
+
     if (gui_palette_redraw)
     {
         // Draw top text line - current color + instructions
-        draw_string(screen_width-29*FONT_WIDTH, 0, "    Use \x18\x19\x1b\x1a to change color ", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_string(xr-29*FONT_WIDTH, 0, "    Use \x18\x19\x1b\x1a to change color ", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
         sprintf(buf, " %s: 0x%02hX    ", lang_str(LANG_PALETTE_TEXT_COLOR), (unsigned char)cl);
-        draw_txt_string(0, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_string(xl, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
         // Draw Palette color boxes
         c = COLOR_BLACK;
@@ -82,23 +85,23 @@ void gui_palette_draw() {
         {
             for (x=DISP_LEFT; x<DISP_RIGHT; x+=CELL_SIZE, c+=0x0100)
             {
-                draw_filled_rect(x, y, x+CELL_SIZE, y+CELL_SIZE, c);
+                draw_filled_rect(xl+x, y, xl+x+CELL_SIZE, y+CELL_SIZE, c);
             }
         }
 
         // Draw gray borders
-        draw_rect_thick(0, DISP_TOP-BORDER_SIZE, screen_width-1, screen_height-1, COLOR_GREY, BORDER_SIZE); // outer border
-        draw_filled_rect(DISP_RIGHT+1, DISP_TOP, DISP_RIGHT+BORDER_SIZE, DISP_BOTTOM, MAKE_COLOR(COLOR_GREY, COLOR_GREY)); //middle
+        draw_rect_thick(xl, DISP_TOP-BORDER_SIZE, xr-1, screen_height-1, COLOR_GREY, BORDER_SIZE); // outer border
+        draw_filled_rect(xl+DISP_RIGHT+1, DISP_TOP, xl+DISP_RIGHT+BORDER_SIZE, DISP_BOTTOM, MAKE_COLOR(COLOR_GREY, COLOR_GREY)); //middle
 
-        // Co-ordintate of selected color
+        // Co-ordinate of selected color
         y = DISP_TOP + ((cl>>4)&0x0F) * CELL_SIZE;
         x = DISP_LEFT + (cl&0x0F) * CELL_SIZE;
 
         // Highlight selected color
-        draw_filled_rect_thick(x-CELL_ZOOM, y-CELL_ZOOM, x+CELL_SIZE+CELL_ZOOM, y+CELL_SIZE+CELL_ZOOM, MAKE_COLOR(cl, COLOR_RED), 2);
+        draw_filled_rect_thick(xl+x-CELL_ZOOM, y-CELL_ZOOM, xl+x+CELL_SIZE+CELL_ZOOM, y+CELL_SIZE+CELL_ZOOM, MAKE_COLOR(cl, COLOR_RED), 2);
 
         // Fill 'sample' area with selected color
-        draw_filled_rect(DISP_RIGHT+BORDER_SIZE+1, DISP_TOP, screen_width-BORDER_SIZE-1, DISP_BOTTOM, MAKE_COLOR(cl, COLOR_WHITE));
+        draw_filled_rect(xl+DISP_RIGHT+BORDER_SIZE+1, DISP_TOP, xr-BORDER_SIZE-1, DISP_BOTTOM, MAKE_COLOR(cl, COLOR_WHITE));
 
         gui_palette_redraw = 0;
     }

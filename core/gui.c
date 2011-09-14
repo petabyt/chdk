@@ -203,7 +203,7 @@ static void gui_menuproc_reset_files(int arg);
 	static void gui_load_curve_selected(const char *fn);
 	static void gui_load_curve(int arg);
 #endif
-static const char* gui_histo_show_enum(int change, int arg);
+       const char* gui_histo_show_enum(int change, int arg);
 static const char* gui_histo_mode_enum(int change, int arg);
 static const char* gui_temp_mode_enum(int change, int arg);
 static const char* gui_histo_layout_enum(int change, int arg);
@@ -253,7 +253,7 @@ static const char* gui_tv_exposure_order_enum(int change, int arg);
 static const char* gui_av_exposure_order_enum(int change, int arg);
 static const char* gui_iso_exposure_order_enum(int change, int arg);
 */
-static const char* gui_nd_filter_state_enum(int change, int arg);
+       const char* gui_nd_filter_state_enum(int change, int arg);
 //static const char* gui_tv_enum(int change, int arg);
 const char* gui_user_menu_show_enum(int change, int arg);
 static const char* gui_hide_osd_enum(int change, int arg);
@@ -268,7 +268,7 @@ static const char* gui_space_warn_type_enum(int change, int arg);
 static const char* gui_bad_pixel_enum(int change, int arg);
 static const char* gui_video_af_key_enum(int change, int arg);
 static const char* gui_show_movie_time(int change, int arg);
-static const char* gui_override_disable_enum(int change, int arg);
+       const char* gui_override_disable_enum(int change, int arg);
 #ifdef OPT_CURVES
 	static const char* gui_conf_curve_enum(int change, int arg);
 #endif
@@ -766,6 +766,17 @@ static CMenuItem raw_state_submenu_items[] = {
 
 static CMenu raw_state_submenu = {0x24,LANG_MENU_OSD_RAW_STATE_PARAMS_TITLE, NULL, raw_state_submenu_items };
 
+#ifdef  CAM_TOUCHSCREEN_UI
+static const char* gui_touchscreen_disable_video_enum(int change, int arg);
+static const char* gui_touchscreen_disable_shortcuts_enum(int change, int arg);
+static CMenuItem touchscreen_submenu_items[] = {
+    {0x5f,LANG_MENU_TS_VIDEO_AE_DISABLE,     MENUITEM_ENUM,    (int*)gui_touchscreen_disable_video_enum },
+    {0x5f,LANG_MENU_TS_ALT_SHORTCUTS_DISABLE,MENUITEM_ENUM,    (int*)gui_touchscreen_disable_shortcuts_enum },
+    {0x51,LANG_MENU_BACK,                    MENUITEM_UP },
+    {0}
+};
+static CMenu touchscreen_submenu = {0x28,LANG_MENU_TOUCHSCREEN_VALUES, /*cb_values_menu_change*/ NULL, touchscreen_submenu_items };
+#endif
 
 static CMenuItem osd_submenu_items[] = {
     {0x5c,LANG_MENU_OSD_SHOW,                MENUITEM_BOOL,      &conf.show_osd },
@@ -790,6 +801,9 @@ static CMenuItem osd_submenu_items[] = {
     {0x59,LANG_MENU_OSD_SHOW_IN_REVIEW,      MENUITEM_BOOL,      &conf.show_osd_in_review},
 #ifndef OPTIONS_AUTOSAVE
     {0x5c,LANG_MENU_MAIN_SAVE_OPTIONS,       MENUITEM_PROC,      (int*)gui_menuproc_save },
+#endif
+#ifdef  CAM_TOUCHSCREEN_UI
+    {0x22,LANG_MENU_TOUCHSCREEN_VALUES,  	 MENUITEM_SUBMENU,   (int*)&touchscreen_submenu },
 #endif
     {0x51,LANG_MENU_BACK,                    MENUITEM_UP },
     {0}
@@ -1232,6 +1246,27 @@ const char* gui_sub_batch_prefix_enum(int change, int arg) {
 const char* gui_sub_batch_ext_enum(int change, int arg) {
 	return gui_change_simple_enum(&conf.sub_batch_ext,change,img_exts,NUM_IMG_EXTS);
 }
+
+//-------------------------------------------------------------------
+#ifdef  CAM_TOUCHSCREEN_UI
+
+const char* gui_on_off_enum(int change, int *conf_val)
+{
+    static const char* modes[]={ "Off", "On"};
+	return gui_change_simple_enum(conf_val,change,modes,sizeof(modes)/sizeof(modes[0]));
+}
+
+const char* gui_touchscreen_disable_video_enum(int change, int arg) {
+    static const char* modes[]={ "Enable", "Disable" };
+	return gui_change_simple_enum(&conf.touchscreen_disable_video_controls,change,modes,sizeof(modes)/sizeof(modes[0]));
+}
+
+const char* gui_touchscreen_disable_shortcuts_enum(int change, int arg) {
+    static const char* modes[]={ "Enable", "Disable" };
+	return gui_change_simple_enum(&conf.touchscreen_disable_shortcut_controls,change,modes,sizeof(modes)/sizeof(modes[0]));
+}
+
+#endif
 
 //-------------------------------------------------------------------
 const char* gui_raw_nr_enum(int change, int arg) {
@@ -1818,8 +1853,7 @@ static Conf old_conf;
 //-------------------------------------------------------------------
 void gui_init()
 {
-
-    gui_mode = GUI_MODE_NONE;
+    gui_set_mode(GUI_MODE_NONE);
     gui_restore = 0;
     gui_in_redraw = 0;
     if (conf.start_sound>0)
@@ -1880,6 +1914,11 @@ enum Gui_Mode gui_get_mode() {
 
 //-------------------------------------------------------------------
 void gui_set_mode(enum Gui_Mode mode) {
+#ifdef CAM_TOUCHSCREEN_UI
+    if (((gui_mode == 0) != (mode == 0)) ||                         // Change from GUI_MODE_NONE to any other or vice-versa
+        ((gui_mode > GUI_MODE_MENU) != (mode > GUI_MODE_MENU)))     // Switch in & out of menu mode
+        redraw_buttons = 1;
+#endif
     gui_mode = mode;
 }
 
@@ -1929,10 +1968,314 @@ static void gui_handle_splash(void) {
 }
 
 //-------------------------------------------------------------------
+#ifdef OPTIONS_AUTOSAVE
+
+static void conf_store_old_settings() {
+    old_conf=conf;
+}
+
+static int conf_save_new_settings_if_changed() {
+    if (memcmp(&old_conf, &conf, sizeof(Conf)) != 0) {
+		user_menu_save();
+        conf_save();
+        conf_store_old_settings();
+        return 1;
+    }
+    return 0;
+}
+
+#endif
+
+//-------------------------------------------------------------------
+void gui_chdk_draw()
+{
+    static int show_md_grid=0;
+
+    gui_draw_osd();
+
+#ifdef CAM_DISP_ALT_TEXT
+    draw_txt_string(20, 14, "<ALT>", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+#endif
+
+#ifdef OPT_SCRIPTING
+    if ((mode_get()&MODE_MASK) == MODE_REC)
+    {
+        draw_txt_string(0, 14, script_title, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        if (state_kbd_script_run) show_md_grid=5;
+        if (show_md_grid)
+        {
+            --show_md_grid;
+            md_draw_grid();
+        }
+    }
+#endif
+
+    console_draw();
+}
+
+//-------------------------------------------------------------------
+// Handler for Menu button press default - enter Menu mode
+void gui_default_kbd_process_menu_btn()
+{
+    gui_set_mode(GUI_MODE_MENU);
+    draw_restore();
+}
+
+// Change SD override factor, direction = 1 to increase, -1 to decrease
+// Only applies if camera has a Zoom lever
+#if CAM_HAS_ZOOM_LEVER
+static void sd_override_koef(int direction)
+{
+    gui_subj_dist_override_koef_enum(direction,0);
+#if !CAM_HAS_MANUAL_FOCUS
+    if (conf.subj_dist_override_koef==0) conf.subj_dist_override_koef=1;
+#endif
+    shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
+}
+#endif
+
+// Change SD override by factor amount, direction = 1 to increase (zoom in), -1 to decrease (zoom out)
+static void sd_override(int direction)
+{
+    gui_subj_dist_override_value_enum(direction,0);
+    shooting_set_focus(shooting_get_subject_distance_override_value(),SET_NOW);
+}
+
+// Main button processing for CHDK Alt mode (not in MENU mode)
+// This needs to be cleaned up, re-organised and commented !!!!
+void gui_chdk_kbd_process()
+{
+#if !CAM_HAS_ERASE_BUTTON && CAM_CAN_SD_OVERRIDE        // ALT RAW toggle kbd processing if camera has SD override but no erase button
+    if (kbd_is_key_clicked(SHORTCUT_TOGGLE_RAW))
+    {
+        if (conf.debug_shortcut_action > 0)
+        {
+#ifdef OPT_DEBUGGING
+            gui_debug_shortcut();
+#endif
+        }
+        // Check in manual focus mode
+        else if (!shooting_get_common_focus_mode())
+        {
+            // Not manual focus mode so just update RAW save setting
+            conf.save_raw = !conf.save_raw;
+            draw_restore();
+        }
+        else
+        {
+            // In manual focus mode so update shooting distance
+#if CAM_HAS_ZOOM_LEVER
+            conf.subj_dist_override_value=MAX_DIST;
+            shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
+#else
+            if (conf.subj_dist_override_koef==4)
+                gui_subj_dist_override_koef_enum(-3,0);
+            else
+                gui_subj_dist_override_koef_enum(1,0);
+#endif
+        }
+    }
+#else                                                   // ALT RAW toggle kbd processing if can't SD override or has erase button
+    if (kbd_is_key_clicked(SHORTCUT_TOGGLE_RAW))
+    {
+        if (conf.debug_shortcut_action > 0)
+        {
+#ifdef OPT_DEBUGGING
+            gui_debug_shortcut();
+#endif
+        }
+        else
+        {
+            // Change RAW save state
+            conf.save_raw = !conf.save_raw;
+            draw_restore();
+        }
+    }
+#endif
+#ifdef OPT_SCRIPTING                                    // ALT Set button processing if scripting enabled - open script menu
+    else if (kbd_is_key_clicked(KEY_SET))
+    {
+        gui_menu_init(&script_submenu);
+        gui_default_kbd_process_menu_btn();
+    }
+#endif
+#if CAM_CAN_SD_OVERRIDE                                 // ALT button processing if camera has SD override
+    else
+    {
+#if !CAM_HAS_MANUAL_FOCUS
+        if (kbd_is_key_clicked(SHORTCUT_MF_TOGGLE))     // Camera does not have manual focus
+        {
+            if (conf.subj_dist_override_koef>0)
+                conf.subj_dist_override_koef=0;
+            else conf.subj_dist_override_koef=1;
+            draw_restore();
+        }
+        else
+#endif
+        if (shooting_get_common_focus_mode())           // Check in manual focus mode
+        {
+#if CAM_HAS_ZOOM_LEVER                                  // Camera has zoom lever, use left & right to change factor,up to set infinity
+            if (kbd_is_key_clicked(KEY_RIGHT))
+            {
+                sd_override_koef(1);
+            }
+            else if (kbd_is_key_clicked(KEY_LEFT))
+            {
+                sd_override_koef(-1);
+            }
+            else if (kbd_is_key_clicked(SHORTCUT_SET_INFINITY))
+            {
+                conf.subj_dist_override_value=MAX_DIST;
+                shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
+            }
+            else
+#endif
+            if (kbd_is_key_clicked(SHORTCUT_SET_HYPERFOCAL))    // Set hyperfocal distance if down pressed
+            {
+                int m=mode_get()&MODE_SHOOTING_MASK;
+                if ((m==MODE_M) || (m==MODE_AV))
+                     conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance_f(shooting_get_aperture_from_av96(shooting_get_user_av96()),get_focal_length(lens_get_zoom_point()));
+                else conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance();
+                shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
+            }
+            else
+            {
+                switch (kbd_get_autoclicked_key())
+                {
+#if CAM_HAS_ZOOM_LEVER
+                case KEY_ZOOM_IN:
+#else
+                case KEY_RIGHT:
+#endif
+                    sd_override(1);
+                    break;
+#if CAM_HAS_ZOOM_LEVER
+                case KEY_ZOOM_OUT:
+#else
+                case KEY_LEFT:
+#endif
+                    sd_override(-1);
+                    break;
+                }
+            }
+        }
+    }
+#endif
+}
+
+//-------------------------------------------------------------------
+// Handler for Menu button press in CHDK Alt mode (not in Menu mode)
+// Enter main menu or user menu based on configuration
+void gui_chdk_kbd_process_menu_btn()
+{
+    if (conf.user_menu_as_root && (conf.user_menu_enable != 0)) {
+        if (kbd_is_key_pressed(KEY_SHOOT_HALF))
+            gui_menu_init(&root_menu);
+        else
+            gui_menu_init(&user_submenu);
+    }
+    else {
+        if ((conf.user_menu_enable != 0) && kbd_is_key_pressed(KEY_SHOOT_HALF))
+            gui_menu_init(&user_submenu);
+        else
+            gui_menu_init(&root_menu);
+    }
+    gui_default_kbd_process_menu_btn();
+}
+
+// Menu button handled for text reader
+#ifdef OPT_TEXTREADER
+void gui_read_kbd_process_menu_btn()
+{
+    gui_read_kbd_process();
+    gui_default_kbd_process_menu_btn();
+}
+#endif
+
+// Menu button handled for Menu mode
+void gui_menu_kbd_process_menu_btn()
+{
+#ifdef OPTIONS_AUTOSAVE
+    conf_save_new_settings_if_changed();
+#endif
+    if (gui_user_menu_flag)
+    {
+        gui_set_mode(GUI_MODE_MENU);
+        gui_user_menu_flag = 0;
+        gui_menu_init(&root_menu);
+    }
+    else
+        gui_set_mode(GUI_MODE_ALT);
+    draw_restore();
+}
+
+//-------------------------------------------------------------------
+// Structure to store gui redraw and kbd process handlers for each mode
+typedef struct
+{
+    void (*redraw)(void);                   // Called to redraw screen
+    void (*kbd_process)(void);              // Main button handler for mode
+    void (*kbd_process_menu_btn)(void);     // Menu button handler for mode
+} gui_handler;
+
+// GUI handler table (entries must be in the same order and have the same number of entries as Gui_Mode enum)
+gui_handler guiHandlers[] =
+{
+    /*GUI_MODE_NONE*/           { gui_draw_osd,         0,                          0 },
+    /*GUI_MODE_ALT*/            { gui_chdk_draw,        gui_chdk_kbd_process,       gui_chdk_kbd_process_menu_btn },
+    /*GUI_MODE_MENU*/           { gui_menu_draw,        gui_menu_kbd_process,       gui_menu_kbd_process_menu_btn },
+    /*GUI_MODE_PALETTE*/        { gui_palette_draw,     gui_palette_kbd_process,    gui_default_kbd_process_menu_btn },
+    /*GUI_MODE_MBOX*/           { gui_mbox_draw,        gui_mbox_kbd_process,       0 },
+#ifdef OPT_GAME_REVERSI
+    /*GUI_MODE_REVERSI*/        { gui_reversi_draw,     gui_reversi_kbd_process,    gui_default_kbd_process_menu_btn },
+#else
+                                { 0, 0, 0 },
+#endif
+#ifdef OPT_GAME_SOKOBAN
+    /*GUI_MODE_SOKOBAN*/        { gui_sokoban_draw,     gui_sokoban_kbd_process,    gui_default_kbd_process_menu_btn },
+#else
+                                { 0, 0, 0 },
+#endif
+#ifdef OPT_DEBUGGING
+    /*GUI_MODE_DEBUG*/          { gui_debug_draw,       gui_debug_kbd_process,      gui_default_kbd_process_menu_btn },
+#else
+                                { 0, 0, 0 },
+#endif
+    /*GUI_MODE_FSELECT*/        { gui_fselect_draw,     gui_fselect_kbd_process,    gui_fselect_kbd_process },
+#ifdef OPT_TEXTREADER
+    /*GUI_MODE_READ*/           { gui_read_draw,        gui_read_kbd_process,       gui_read_kbd_process_menu_btn },
+#else
+                                { 0, 0, 0 },
+#endif
+    /*GUI_MODE_OSD*/            { gui_osd_draw,         gui_osd_kbd_process,        gui_default_kbd_process_menu_btn },
+#ifdef OPT_CALENDAR
+    /*GUI_MODE_CALENDAR*/       { gui_calendar_draw,    gui_calendar_kbd_process,   gui_default_kbd_process_menu_btn },
+#else
+                                { 0, 0, 0 },
+#endif
+#ifdef OPT_DEBUGGING
+    /*GUI_MODE_BENCH*/          { gui_bench_draw,       gui_bench_kbd_process,      gui_default_kbd_process_menu_btn },
+#else
+                                { 0, 0, 0 },
+#endif
+    /*GUI_MODE_MPOPUP*/         { gui_mpopup_draw,      gui_mpopup_kbd_process,     0 },
+#ifdef OPT_GAME_CONNECT4
+    /*GUI_MODE_4WINS*/          { gui_4wins_draw,       gui_4wins_kbd_process,      gui_default_kbd_process_menu_btn },
+#else
+                                { 0, 0, 0 },
+#endif
+#ifdef OPT_GAME_MASTERMIND
+    /*GUI_MODE_MASTERMIND*/     { gui_mastermind_draw,  gui_mastermind_kbd_process, gui_default_kbd_process_menu_btn },
+#else
+                                { 0, 0, 0 },
+#endif
+};
+
+//-------------------------------------------------------------------
+// Main GUI redraw function, perform common initialisation then calls the redraw handler for the mode
 void gui_redraw()
 {
     enum Gui_Mode gui_mode_old;
-    static int show_md_grid=0;
 
 #ifdef CAM_DETECT_SCREEN_ERASE
     if (!draw_test_guard() && gui_mode)     // Attempt to detect screen erase in <Alt> mode, redraw if needed
@@ -1940,6 +2283,10 @@ void gui_redraw()
         draw_set_guard();
         gui_menu_force_redraw();
         gui_fselect_force_redraw();
+#ifdef CAM_TOUCHSCREEN_UI
+        extern int redraw_buttons;
+        redraw_buttons = 1;
+#endif
     }
 #endif
 
@@ -1948,98 +2295,24 @@ void gui_redraw()
     gui_in_redraw = 1;
     gui_mode_old = gui_mode;
 
-    #if CAM_USES_ASPECT_CORRECTION //nandoide sept-2009
+#if CAM_USES_ASPECT_CORRECTION //nandoide sept-2009
     //the different modes arises because games are designed on a 360x240 basis and are difficult to downscale to 320x240
     if (gui_mode == GUI_MODE_REVERSI || gui_mode == GUI_MODE_SOKOBAN || gui_mode == GUI_MODE_4WINS || gui_mode == GUI_MODE_MASTERMIND) {
       draw_set_environment(aspect_xcorrection_games_360, aspect_ycorrection_games_360, GAMES_SCREEN_WIDTH, GAMES_SCREEN_HEIGHT);
    } else { //default
-//      draw_set_environment(NULL, NULL, SCREENX, SCREENY);
       draw_set_environment(NULL, NULL, vid_get_bitmap_screen_width(), vid_get_bitmap_screen_height());
    }
-    #endif
-    switch (gui_mode) {
-        case GUI_MODE_MENU:
-            gui_menu_draw();
-//            draw_txt_string(20, 14, "<CNF>", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-            break;
-        case GUI_MODE_ALT:
-            gui_draw_osd();
-            draw_txt_string(20, 14, "<ALT>", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-#ifdef OPT_SCRIPTING
-            if ((mode_get()&MODE_MASK) == MODE_REC) {
-                draw_txt_string(0, 14, script_title, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-                if (state_kbd_script_run) show_md_grid=5;
-                if (show_md_grid) {
-                    --show_md_grid;
-                    md_draw_grid();
-                }
-            }
 #endif
-            console_draw();
-            break;
-        case GUI_MODE_NONE:
-            gui_draw_osd();
-            break;
-        case GUI_MODE_PALETTE:
-            gui_palette_draw();
-            break;
-        case GUI_MODE_MBOX:
-            gui_mbox_draw();
-            break;
-#ifdef OPT_GAME_REVERSI
-        case GUI_MODE_REVERSI:
-            gui_reversi_draw();
-            break;
-#endif
-#ifdef OPT_GAME_SOKOBAN
-        case GUI_MODE_SOKOBAN:
-            gui_sokoban_draw();
-            break;
-#endif
-#ifdef OPT_GAME_CONNECT4
-        case GUI_MODE_4WINS:
-            gui_4wins_draw();
-            break;
-#endif
-#ifdef OPT_GAME_MASTERMIND
-        case GUI_MODE_MASTERMIND:
-            gui_mastermind_draw();
-            break;
-#endif
-#ifdef OPT_DEBUGGING
-        case GUI_MODE_DEBUG:
-            gui_debug_draw();
-            break;
-#endif
-        case GUI_MODE_FSELECT:
-            gui_fselect_draw();
-            break;
-#ifdef OPT_TEXTREADER
-        case GUI_MODE_READ:
-            gui_read_draw();
-            break;
-#endif
-        case GUI_MODE_OSD:
-            gui_osd_draw();
-//            draw_txt_string(20, 14, "<OSD>", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-            break;
-#ifdef OPT_CALENDAR
-        case GUI_MODE_CALENDAR:
-            gui_calendar_draw();
-            break;
-#endif
-#ifdef OPT_DEBUGGING
-        case GUI_MODE_BENCH:
-            gui_bench_draw();
-            break;
-#endif
-        case GUI_MODE_MPOPUP:
-            gui_mpopup_draw();
-            break;
-        default:
-            break;
-    }
 
+#ifdef CAM_TOUCHSCREEN_UI
+    extern void virtual_buttons();
+    virtual_buttons();
+#endif
+
+    // Call redraw handler
+    if (guiHandlers[gui_mode].redraw) guiHandlers[gui_mode].redraw();
+
+    // Forced redraw if needed
     gui_in_redraw = 0;
     if ((gui_mode_old != gui_mode && (gui_mode_old != GUI_MODE_NONE && gui_mode_old != GUI_MODE_ALT) && (gui_mode != GUI_MODE_MBOX && gui_mode != GUI_MODE_MPOPUP)) || gui_restore) {
         if (gui_restore) gui_menu_force_redraw();
@@ -2049,258 +2322,19 @@ void gui_redraw()
     }
 }
 
-#ifdef OPTIONS_AUTOSAVE
 //-------------------------------------------------------------------
-static inline void conf_store_old_settings() {
-    old_conf=conf;
-}
-
-//-------------------------------------------------------------------
-static inline int conf_save_new_settings_if_changed() {
-    if (memcmp(&old_conf, &conf, sizeof(Conf)) != 0) {
-		user_menu_save();
-        conf_save();
-        conf_store_old_settings();
-        return 1;
-    }
-    return 0;
-}
-#endif
-
-
-//-------------------------------------------------------------------
+// Main kbd processing for GUI modes
 void gui_kbd_process()
 {
-    int clicked_key;
-
-    if (kbd_is_key_clicked(KEY_MENU)){
-        switch (gui_mode) {
-            case GUI_MODE_ALT:
-				if (conf.user_menu_as_root && (conf.user_menu_enable != 0)) {
-				if (kbd_is_key_pressed(KEY_SHOOT_HALF))
-					gui_menu_init(&root_menu);
-				else
-                gui_menu_init(&user_submenu);
-				}
-				else {
-				if ((conf.user_menu_enable != 0) && kbd_is_key_pressed(KEY_SHOOT_HALF))
-					gui_menu_init(&user_submenu);
-				else
-                gui_menu_init(&root_menu);
-				}
-                gui_mode = GUI_MODE_MENU;
-                draw_restore();
-                break;
-            case GUI_MODE_MENU:
-#ifdef OPTIONS_AUTOSAVE
-                conf_save_new_settings_if_changed();
-#endif
-				if (gui_user_menu_flag) {
-	                gui_mode = GUI_MODE_MENU;
-					gui_user_menu_flag = 0;
-					gui_menu_init(&root_menu);
-				}
-				else
-                gui_mode = GUI_MODE_ALT;
-                draw_restore();
-                break;
-            case GUI_MODE_PALETTE:
-            case GUI_MODE_REVERSI:
-            case GUI_MODE_SOKOBAN:
-            case GUI_MODE_4WINS:
-			case GUI_MODE_MASTERMIND:
-#ifdef OPT_DEBUGGING
-            case GUI_MODE_DEBUG:
-#endif
-            case GUI_MODE_OSD:
-#ifdef OPT_CALENDAR
-            case GUI_MODE_CALENDAR:
-#endif
-            case GUI_MODE_BENCH:
-                draw_restore();
-                gui_mode = GUI_MODE_MENU;
-                break;
-            case GUI_MODE_FSELECT:
-                gui_fselect_kbd_process();
-                break;
-#ifdef OPT_TEXTREADER
-            case GUI_MODE_READ:
-                gui_read_kbd_process();
-                draw_restore();
-                gui_mode = GUI_MODE_MENU;
-                break;
-#endif
-            default:
-                break;
-        }
+    // Call menu button handler if menu button pressed
+    if (kbd_is_key_clicked(KEY_MENU))
+    {
+        if (guiHandlers[gui_mode].kbd_process_menu_btn) guiHandlers[gui_mode].kbd_process_menu_btn();
         return;
     }
 
-    switch (gui_mode) {
-        case GUI_MODE_ALT:
-            if (kbd_is_key_clicked(SHORTCUT_TOGGLE_RAW)) {
-                if (conf.debug_shortcut_action > 0) {
-#ifdef OPT_DEBUGGING
-					gui_debug_shortcut();
-#endif
-}
-#if !CAM_HAS_ERASE_BUTTON && CAM_CAN_SD_OVERRIDE
-                else if (!shooting_get_common_focus_mode())
-#else
-				else
-#endif
-				   {conf.save_raw = !conf.save_raw;
-                    draw_restore();
-                   }
-#if !CAM_HAS_ERASE_BUTTON && CAM_CAN_SD_OVERRIDE
-				else {
-   #if CAM_HAS_ZOOM_LEVER
-               conf.subj_dist_override_value=MAX_DIST;
-               shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
-   #else
-               if (conf.subj_dist_override_koef==4)
-                  gui_subj_dist_override_koef_enum(-3,0);
-               else
-                  gui_subj_dist_override_koef_enum(1,0);
-   #endif
-				}
-#endif
-#ifdef OPT_SCRIPTING
-            } else if (kbd_is_key_clicked(KEY_SET)) {
-                gui_menu_init(&script_submenu);
-                gui_mode = GUI_MODE_MENU;
-                draw_restore();
-#endif
-            } else {
-#if !CAM_HAS_MANUAL_FOCUS && CAM_CAN_SD_OVERRIDE
-	          	if (kbd_is_key_clicked(SHORTCUT_MF_TOGGLE)) {
-			      if (conf.subj_dist_override_koef>0)
-				     conf.subj_dist_override_koef=0;
-			      else conf.subj_dist_override_koef=1;
-			      draw_restore();
-			     }
-                else if (shooting_get_common_focus_mode())
-#elif CAM_CAN_SD_OVERRIDE
-               if (shooting_get_common_focus_mode())
-#endif
-
-#if CAM_CAN_SD_OVERRIDE
-			  {
-  #if CAM_HAS_ZOOM_LEVER
-				if (kbd_is_key_clicked(KEY_RIGHT)) {
-				  gui_subj_dist_override_koef_enum(1,0);
-    #if !CAM_HAS_MANUAL_FOCUS
-                  if (conf.subj_dist_override_koef==0) conf.subj_dist_override_koef=1;
-    #endif
-                  shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
-				  }
-				else if (kbd_is_key_clicked(KEY_LEFT))
-				  {
-				  gui_subj_dist_override_koef_enum(-1,0);
-    #if !CAM_HAS_MANUAL_FOCUS
-                  if (conf.subj_dist_override_koef==0) conf.subj_dist_override_koef=1;
-    #endif
-                  shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
-				  }
-				else if (kbd_is_key_clicked(SHORTCUT_SET_INFINITY))
- 				  {
-				  conf.subj_dist_override_value=MAX_DIST;
-                  shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
-				  }
-				else
-  #endif
-				if (kbd_is_key_clicked(SHORTCUT_SET_HYPERFOCAL))
-				  {
-				  int m=mode_get()&MODE_SHOOTING_MASK;
-				  if ((m==MODE_M) || (m==MODE_AV))
-				    conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance_f(shooting_get_aperture_from_av96(shooting_get_user_av96()),get_focal_length(lens_get_zoom_point()));
-				  else conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance();
-                  shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
-				  }
-				else
-                  switch (kbd_get_autoclicked_key()) {
-  #if CAM_HAS_ZOOM_LEVER
-                    case KEY_ZOOM_IN:
-  #else
-                    case KEY_RIGHT:
-  #endif
-                        gui_subj_dist_override_value_enum(1,0);
-                        shooting_set_focus(shooting_get_subject_distance_override_value(),SET_NOW);
-                        break;
-  #if CAM_HAS_ZOOM_LEVER
-                    case KEY_ZOOM_OUT:
-  #else
-                    case KEY_LEFT:
-  #endif
-                        gui_subj_dist_override_value_enum(-1,0);
-                        shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
-                        break;
-            	  }
-              }
-#endif
-            }
-            break;
-    	case GUI_MODE_MENU:
-            gui_menu_kbd_process();
-            break;
-    	case GUI_MODE_PALETTE:
-            gui_palette_kbd_process();
-            break;
-    	case GUI_MODE_MBOX:
-            gui_mbox_kbd_process();
-            break;
-#ifdef OPT_GAME_REVERSI
-    	case GUI_MODE_REVERSI:
-            gui_reversi_kbd_process();
-            break;
-#endif
-#ifdef OPT_GAME_SOKOBAN
-    	case GUI_MODE_SOKOBAN:
-            gui_sokoban_kbd_process();
-            break;
-#endif
-#ifdef OPT_GAME_CONNECT4
-    	case GUI_MODE_4WINS:
-            gui_4wins_kbd_process();
-            break;
-#endif
-#ifdef OPT_GAME_MASTERMIND
-    	case GUI_MODE_MASTERMIND:
-            gui_mastermind_kbd_process();
-            break;
-#endif
-#ifdef OPT_DEBUGGING
-    	case GUI_MODE_DEBUG:
-            gui_debug_kbd_process();
-            break;
-#endif
-    	case GUI_MODE_FSELECT:
-            gui_fselect_kbd_process();
-            break;
-#ifdef OPT_TEXTREADER
-    	case GUI_MODE_READ:
-            gui_read_kbd_process();
-            break;
-#endif
-    	case GUI_MODE_OSD:
-            gui_osd_kbd_process();
-            break;
-#ifdef OPT_CALENDAR
-    	case GUI_MODE_CALENDAR:
-            gui_calendar_kbd_process();
-            break;
-#endif
-#ifdef OPT_DEBUGGING
-    	case GUI_MODE_BENCH:
-            gui_bench_kbd_process();
-            break;
-#endif
-        case GUI_MODE_MPOPUP:
-            gui_mpopup_kbd_process();
-             break;
-        default:
-            break;
-    }
+    // Call mode handler for other buttons
+    if (guiHandlers[gui_mode].kbd_process) guiHandlers[gui_mode].kbd_process();
 }
 
 //-------------------------------------------------------------------
@@ -2310,7 +2344,7 @@ void gui_kbd_enter()
 #ifdef OPTIONS_AUTOSAVE
     conf_store_old_settings();
 #endif
-    gui_mode = GUI_MODE_ALT;
+    gui_set_mode(GUI_MODE_ALT);
 
 	conf_update_prevent_shutdown();
 
@@ -2319,7 +2353,7 @@ void gui_kbd_enter()
 	gui_user_menu_flag = 0;
 	if (conf.user_menu_enable == 2) {
 		gui_menu_init(&user_submenu);
-		gui_mode = GUI_MODE_MENU;
+		gui_set_mode(GUI_MODE_MENU);
 		draw_restore();
 		gui_user_menu_flag = 1;
 	}
@@ -2341,7 +2375,7 @@ void gui_kbd_leave()
         rbf_load_from_8x16(current_font);
     rbf_set_codepage(FONT_CP_WIN);
     vid_turn_on_updates();
-    gui_mode = GUI_MODE_NONE;
+    gui_set_mode(GUI_MODE_NONE);
 
 	conf_update_prevent_shutdown();
 }
@@ -2380,27 +2414,30 @@ void other_kbd_process(){
 #endif
 
 #if CAM_EV_IN_VIDEO
- if ((movie_status==VIDEO_RECORD_IN_PROGRESS) && !kbd_is_key_pressed(KEY_SHOOT_HALF)){
-  #if CAM_HAS_ERASE_BUTTON
-  if (kbd_is_key_clicked(KEY_ERASE)){
-  #else
-  #if !defined (CAMERA_a480)
-  if (kbd_is_key_clicked(KEY_DISPLAY)){
-  #else
-  if (kbd_is_key_clicked(KEY_MENU)){
-  #endif
-  #endif
-   set_ev_video_avail(!get_ev_video_avail());
-  }
-  if (get_ev_video_avail()) {
-   if (kbd_is_key_clicked(KEY_LEFT)) {
-    set_ev_video(get_ev_video()-1);
-   }
-   if (kbd_is_key_clicked(KEY_RIGHT)){
-    set_ev_video(get_ev_video()+1);
-   }
-  }
- }
+    if ((movie_status==VIDEO_RECORD_IN_PROGRESS) && !kbd_is_key_pressed(KEY_SHOOT_HALF)){
+#if CAM_HAS_ERASE_BUTTON
+        if (kbd_is_key_clicked(KEY_ERASE)){
+#else
+#if !defined (CAMERA_a480)
+        if (kbd_is_key_clicked(KEY_DISPLAY)){
+#else
+        if (kbd_is_key_clicked(KEY_MENU)){
+#endif
+#endif
+            set_ev_video_avail(!get_ev_video_avail());
+#ifdef CAM_TOUCHSCREEN_UI
+            redraw_buttons = 1;
+#endif
+        }
+        if (get_ev_video_avail()) {
+            if (kbd_is_key_clicked(KEY_LEFT)) {
+                set_ev_video(get_ev_video()-1);
+            }
+            if (kbd_is_key_clicked(KEY_RIGHT)){
+                set_ev_video(get_ev_video()+1);
+            }
+        }
+    }
 #endif
 }
 
@@ -2408,36 +2445,40 @@ void gui_draw_debug_vals_osd() {
 #ifdef OPT_DEBUGGING
 
 #if defined(OPT_EXMEM_TESTING)
-	// If defined the exmem memory is allocated; but not used for CHDK.
-	// It is filled with a guard value (see wrappers.c) which is checked here
-    // Any corruption is reported, otherwise 'OK' is displayed on screen (along with the exmem memory start address).
-	extern void *exmem_start, *exmem_end;
-	// check exmem allocated memory for corruption
-	unsigned long* p = (unsigned long*)exmem_start;
-	unsigned long *f = 0, *l = 0;
-	long cnt = 0;
-	while (p < (unsigned long*)exmem_end)
-	{
-		if (p[0] != 0xDEADBEEF)
-		{
-			l = p;
-			if (f == 0) f = p;
-			cnt++;
-		}
-		p++;
-	}
-	if (cnt != 0)
-	{
-		sprintf(osd_buf, "s:%8x e:%8x", exmem_start, exmem_end);
-		draw_txt_string(2, 12, osd_buf, conf.osd_color);
-		sprintf(osd_buf, "f:%8x l:%8x c:%d", f, l, cnt);
-	}
-	else
-	{
-		sprintf(osd_buf, "OK 0x%x", exmem_start);
-	}
-	draw_txt_string(2, 13, osd_buf, conf.osd_color);
-	// end of check	
+    // Only do memory corruption testing if not recording video
+    if (!MODE_IS_VIDEO(mode_get()))
+    {
+	    // If defined the exmem memory is allocated; but not used for CHDK.
+	    // It is filled with a guard value (see wrappers.c) which is checked here
+        // Any corruption is reported, otherwise 'OK' is displayed on screen (along with the exmem memory start address).
+	    extern void *exmem_start, *exmem_end;
+	    // check exmem allocated memory for corruption
+	    unsigned long* p = (unsigned long*)exmem_start;
+	    unsigned long *f = 0, *l = 0;
+	    long cnt = 0;
+	    while (p < (unsigned long*)exmem_end)
+	    {
+		    if (p[0] != 0xDEADBEEF)
+		    {
+			    l = p;
+			    if (f == 0) f = p;
+			    cnt++;
+		    }
+		    p++;
+	    }
+	    if (cnt != 0)
+	    {
+		    sprintf(osd_buf, "s:%8x e:%8x", exmem_start, exmem_end);
+		    draw_txt_string(2, 12, osd_buf, conf.osd_color);
+		    sprintf(osd_buf, "f:%8x l:%8x c:%d", f, l, cnt);
+	    }
+	    else
+	    {
+		    sprintf(osd_buf, "OK 0x%x", exmem_start);
+	    }
+	    draw_txt_string(2, 13, osd_buf, conf.osd_color);
+	    // end of check	
+    }
 #endif
 
     // DEBUG: "Show misc. values"
@@ -2750,7 +2791,7 @@ void gui_menuproc_reset(int arg)
 void gui_draw_palette(int arg) {
     draw_restore();
     gui_palette_init(PALETTE_MODE_DEFAULT, 0x00, NULL);
-    gui_mode = GUI_MODE_PALETTE;
+    gui_set_mode(GUI_MODE_PALETTE);
 }
 
 //-------------------------------------------------------------------
@@ -2790,7 +2831,7 @@ void gui_draw_reversi(int arg) {
     #if CAM_USES_ASPECT_CORRECTION //nandoide sept-2009
       draw_set_environment(aspect_xcorrection_games_360, aspect_ycorrection_games_360, GAMES_SCREEN_WIDTH, GAMES_SCREEN_HEIGHT);
     #endif
-    gui_mode = GUI_MODE_REVERSI;
+    gui_set_mode(GUI_MODE_REVERSI);
     gui_reversi_init();
 }
 #endif
@@ -2807,7 +2848,7 @@ void gui_draw_sokoban(int arg) {
       draw_set_environment(aspect_xcorrection_games_360, aspect_ycorrection_games_360, GAMES_SCREEN_WIDTH, GAMES_SCREEN_HEIGHT);
     #endif
     if ( gui_sokoban_init() )
-        gui_mode = GUI_MODE_SOKOBAN;
+        gui_set_mode(GUI_MODE_SOKOBAN);
 }
 #endif
 //-------------------------------------------------------------------
@@ -2822,7 +2863,7 @@ void gui_draw_4wins(int arg) {
       draw_set_environment(aspect_xcorrection_games_360, aspect_ycorrection_games_360, GAMES_SCREEN_WIDTH, GAMES_SCREEN_HEIGHT);
     #endif
     if ( gui_4wins_init() )
-        gui_mode = GUI_MODE_4WINS;
+        gui_set_mode(GUI_MODE_4WINS);
 }
 #endif
 //-------------------------------------------------------------------
@@ -2837,7 +2878,7 @@ void gui_draw_mastermind(int arg) {
      draw_set_environment(aspect_xcorrection_games_360, aspect_ycorrection_games_360, GAMES_SCREEN_WIDTH, GAMES_SCREEN_HEIGHT);
     #endif
    if ( gui_mastermind_init() )
-        gui_mode = GUI_MODE_MASTERMIND;
+        gui_set_mode(GUI_MODE_MASTERMIND);
 }
 #endif
 //-------------------------------------------------------------------
@@ -2853,7 +2894,7 @@ void gui_draw_debug(int arg) {
 //-------------------------------------------------------------------
 #ifdef OPT_DEBUGGING
 void gui_draw_bench(int arg) {
-    gui_mode = GUI_MODE_BENCH;
+    gui_set_mode(GUI_MODE_BENCH);
     gui_bench_init();
 }
 #endif
@@ -2942,7 +2983,7 @@ void gui_grid_lines_load(int arg) {
 
 //-------------------------------------------------------------------
 void gui_draw_osd_le(int arg) {
-    gui_mode = GUI_MODE_OSD;
+    gui_set_mode(GUI_MODE_OSD);
     gui_osd_init();
 }
 
@@ -2953,7 +2994,7 @@ static void gui_draw_read_selected(const char *fn) {
         if (!rbf_load(conf.reader_rbf_file))
             rbf_load_from_8x16(current_font);
         rbf_set_codepage(conf.reader_codepage);
-        gui_mode = GUI_MODE_READ;
+        gui_set_mode(GUI_MODE_READ);
         gui_read_init(fn);
     }
 }
@@ -2990,6 +3031,7 @@ void gui_draw_read_last(int arg) {
 //-------------------------------------------------------------------
 void gui_menuproc_mkbootdisk(int arg) {
     mark_filesystem_bootable();
+    gui_mbox_init(LANG_INFORMATION, LANG_CONSOLE_TEXT_FINISHED, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 }
 
 #ifdef OPT_EDGEOVERLAY
@@ -3022,17 +3064,17 @@ void gui_menuproc_edge_load(int arg) {
 //-------------------------------------------------------------------
 #ifdef OPT_CALENDAR
 void gui_draw_calendar(int arg) {
-    gui_mode = GUI_MODE_CALENDAR;
+    gui_set_mode(GUI_MODE_CALENDAR);
     gui_calendar_init();
 }
 #endif
 //-------------------------------------------------------------------
+#ifdef OPT_TEXTREADER
 static void gui_draw_rbf_selected(const char *fn) {
     if (fn) {
         strcpy(conf.reader_rbf_file, fn);
     }
 }
-#ifdef OPT_TEXTREADER
 void gui_draw_load_rbf(int arg) {
     DIR   *d;
     char  *path="A/CHDK/FONTS";

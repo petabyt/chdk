@@ -62,7 +62,7 @@ static void gui_calendar_initial_draw() {
     int x, i;
 
     draw_filled_rect(0, 0, screen_width-1, screen_height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
-    draw_txt_string(1, 0, lang_str(LANG_CALENDAR_TODAY), MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+    draw_txt_string((CAM_TS_BUTTON_BORDER/FONT_WIDTH)+1, 0, lang_str(LANG_CALENDAR_TODAY), MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
     draw_rect(cal_x-3, cal_y-3, cal_x+cal_w+2, cal_y+cal_h+2, CALENDAR_COLOR);
     draw_filled_rect(cal_x-1, cal_y-1, cal_x+cal_w, cal_y+FONT_HEIGHT+8, TITLE_COLOR);
     draw_filled_rect(cal_x-1, cal_y+FONT_HEIGHT+8, cal_x+cal_w, cal_y+cal_h, CALENDAR_COLOR);
@@ -131,7 +131,7 @@ void gui_calendar_draw() {
     t = time(NULL);
     ttm = localtime(&t);
     sprintf(str, " %2u %s %04u  %2u:%02u:%02u   ", ttm->tm_mday, lang_str(months[ttm->tm_mon]), 1900+ttm->tm_year, ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
-    draw_txt_string(8, 0, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+    draw_txt_string((CAM_TS_BUTTON_BORDER/FONT_WIDTH)+8, 0, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
     if (need_redraw) {
         need_redraw = 0;

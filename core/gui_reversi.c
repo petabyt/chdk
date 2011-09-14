@@ -219,7 +219,7 @@ static void InitMainWindow() {
     InGame=0;
 
     field_size = (screen_height-2*FONT_HEIGHT-4)&0xFFF8;
-    field_x = FONT_WIDTH+8;
+    field_x = CAM_TS_BUTTON_BORDER+FONT_WIDTH+8;
     field_y = (screen_height-field_size)>>1;
     cell_size = field_size >> 3;
 
@@ -321,7 +321,7 @@ static void redraw() {
 
 //-------------------------------------------------------------------
 static void redrawstatus() {
-    uchar x=field_size+FONT_WIDTH*2+23, y = 25;
+    int x=CAM_TS_BUTTON_BORDER+field_size+FONT_WIDTH*2+23, y = 25;
     if (InGame) { 
         if (CurrPlayer==FIELD_PLAYER1) { 
             draw_string(x+1, y, lang_str(LANG_REVERSI_MOVE_WHITE), MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE)); 
@@ -409,7 +409,7 @@ void gui_reversi_draw() {
     }
 
     sprintf(buf, "Batt:%3d%%", get_batt_perc());
-    draw_txt_string(screen_width/FONT_WIDTH-2-9, screen_height/FONT_HEIGHT-1, buf, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+    draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-9, screen_height/FONT_HEIGHT-1, buf, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
     Timer();
 }

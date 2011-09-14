@@ -55,4 +55,8 @@ extern void gui_kbd_enter();
 extern void gui_kbd_leave();
 extern void other_kbd_process();
 
+#ifdef CAM_TOUCHSCREEN_UI
+extern int redraw_buttons;
+#endif
+
 #endif

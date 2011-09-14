@@ -277,6 +277,10 @@ typedef struct {
     int flash_video_override;
     int flash_manual_override;
     int flash_video_override_power;
+
+    // Overrides to disable touchscreen U/I components (IXUS 310)
+    int touchscreen_disable_video_controls;
+    int touchscreen_disable_shortcut_controls;
 } Conf;
 
 extern Conf conf;
