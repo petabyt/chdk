@@ -68,6 +68,7 @@ static int gui_fselect_redraw;
 static char *fselect_title;
 static void (*fselect_on_select)(const char *fn);
 static char raw_operation;
+static int set_key_redraw_mode;
 
 //-------------------------------------------------------------------
 // Called from other gui functions to force redraw of menu
@@ -199,6 +200,17 @@ static void gui_fselect_read_dir(const char* dir) {
 }
 
 //-------------------------------------------------------------------
+// Set flag to control how the erase/redraw happens when the set key
+// is pressed.
+// 0 - screen erase & mode restore done after call to fselect_on_select
+// 1 - screen erase & mode restore done before call to fselect_on_select
+// Needed for text reader to work correctly and to stop intermittent
+// crashes when selecting fonts (hack - whole gui/kbd system needs an overhaul).
+void gui_fselect_set_key_redraw(int n)
+{
+    set_key_redraw_mode = n;
+}
+
 void gui_fselect_init(int title, const char* dir, void (*on_select)(const char *fn)) {
     int i;
     
@@ -228,6 +240,7 @@ void gui_fselect_init(int title, const char* dir, void (*on_select)(const char *
     gui_fselect_mode_old = gui_get_mode();
     gui_fselect_redraw = 2;
     gui_set_mode(GUI_MODE_FSELECT);
+    gui_fselect_set_key_redraw(0);
 }
 
 //-------------------------------------------------------------------
@@ -972,6 +985,26 @@ static void fselect_mpopup_cb(unsigned int actn) {
 }
 
 //-------------------------------------------------------------------
+static void exit_fselect()
+{
+    gui_fselect_free_data();
+    gui_fselect_marked_free_data();
+    if (set_key_redraw_mode)
+    {
+        gui_set_mode(gui_fselect_mode_old);
+        draw_restore();
+    }
+    if (fselect_on_select) 
+    {
+        fselect_on_select(selected_file);
+    }
+    if (!set_key_redraw_mode)
+    {
+        gui_set_mode(gui_fselect_mode_old);
+        draw_restore();
+    }
+}
+
 void gui_fselect_kbd_process() {
     int i;
     
@@ -1049,12 +1082,7 @@ void gui_fselect_kbd_process() {
                     gui_fselect_redraw = 1;
                 } else  {
                     sprintf(selected_file, "%s/%s", current_dir, selected->name);
-                    gui_fselect_free_data();
-                    gui_fselect_marked_free_data();
-                    if (fselect_on_select) 
-                        fselect_on_select(selected_file);
-                    gui_set_mode(gui_fselect_mode_old);
-                    draw_restore();
+                    exit_fselect();
                 }
             }
             break;
@@ -1075,12 +1103,7 @@ void gui_fselect_kbd_process() {
             }
             break;
         case KEY_MENU:
-            gui_fselect_free_data();
-            gui_fselect_marked_free_data();
-            if (fselect_on_select) 
-                fselect_on_select(NULL);
-            gui_set_mode(gui_fselect_mode_old);
-            draw_restore();
+            exit_fselect();
             break;
     }
 }

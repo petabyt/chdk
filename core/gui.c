@@ -2969,6 +2969,8 @@ void gui_draw_read(int arg) {
         path="A";
     }
     gui_fselect_init(LANG_STR_SELECT_TEXT_FILE, path, gui_draw_read_selected);
+    void gui_fselect_set_key_redraw(int n);
+    gui_fselect_set_key_redraw(1);
 }
 
 //-------------------------------------------------------------------
