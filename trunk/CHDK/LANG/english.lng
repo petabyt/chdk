@@ -597,3 +597,6 @@
 459 "Create badpixel.bin"
 460 "You need to be in REC-mode\nfor this operation."
 461 "%s disabled in build"
+462 "Touchscreen overrides"
+463 "Video AE Controls"
+464 "<Alt> Shortcut Buttons"

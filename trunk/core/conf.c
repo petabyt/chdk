@@ -401,6 +401,10 @@ static const ConfInfo conf_info[] = {
 	CONF_INFO(241, conf.edge_overlay_filter,     CONF_DEF_VALUE, i:0, NULL),
 	CONF_INFO(242, conf.edge_overlay_show,     CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(243, conf.edge_overlay_pano_overlap,   CONF_DEF_VALUE, i:30, NULL),
+
+    // Touch screen U/I overrides
+    CONF_INFO(244, conf.touchscreen_disable_video_controls, CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO(245, conf.touchscreen_disable_shortcut_controls, CONF_DEF_VALUE, i:0, NULL),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 

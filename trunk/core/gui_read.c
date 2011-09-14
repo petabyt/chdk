@@ -25,7 +25,7 @@ static int pause;
 //-------------------------------------------------------------------
 static void gui_read_draw_batt() {
     sprintf(buffer, "Batt:%3d%%", get_batt_perc());
-    draw_txt_string(screen_width/FONT_WIDTH-2-1-1-9, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+    draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-1-1-9, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 }
 
 //-------------------------------------------------------------------
@@ -36,12 +36,12 @@ static void gui_read_draw_clock() {
     t = time(NULL);
     ttm = localtime(&t);
     sprintf(buffer, "%2u:%02u", ttm->tm_hour, ttm->tm_min);
-    draw_txt_string(screen_width/FONT_WIDTH-2-1-1-9-2-5, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+    draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-1-1-9-2-5, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 }
 
 //-------------------------------------------------------------------
 static void gui_read_draw_scroll_indicator() {
-    draw_txt_char(screen_width/FONT_WIDTH-2, 0, (conf.reader_autoscroll)?((pause)?'\x05':'\x04'):'\x03', MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title infoline
+    draw_txt_char((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2, 0, (conf.reader_autoscroll)?((pause)?'\x05':'\x04'):'\x03', MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title infoline
 }
 
 //-------------------------------------------------------------------
@@ -59,9 +59,9 @@ int gui_read_init(const char* file) {
     }
     pause = 0;
     read_to_draw = 1;
-    x=6; 
+    x=CAM_TS_BUTTON_BORDER+6; 
     y=FONT_HEIGHT;
-    w=screen_width-6-6-8;
+    w=screen_width-CAM_TS_BUTTON_BORDER*2-6-6-8;
     h=screen_height-y;
     last_time = get_tick_count();
     
@@ -166,7 +166,7 @@ void gui_read_draw() {
     
         sprintf(buffer, "(%3d%%) %d/%d  ", (read_file_size)?(conf.reader_pos*100/read_file_size):0, conf.reader_pos, read_file_size);
         buffer[screen_width/FONT_WIDTH]=0;
-        draw_txt_string(0, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title infoline
+        draw_txt_string((CAM_TS_BUTTON_BORDER/FONT_WIDTH), 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title infoline
 
         // scrollbar
         if (read_file_size) {

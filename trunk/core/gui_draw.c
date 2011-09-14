@@ -316,6 +316,16 @@ void draw_rect_shadow(coord x1, coord y1, coord x2, coord y2, color cl, int thic
 void draw_round_rect(coord x1, coord y1, coord x2, coord y2, color cl) { 
     draw_rectangle(x1,y1,x2,y2,cl&0xff,1);
 } 
+
+void draw_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness) { 
+    int i;
+    cl = cl & 0xff;
+    draw_rectangle(x1,y1,x2,y2,cl,1);
+    for (i=1; i<thickness; i++)
+    {
+        draw_rectangle(x1+i,y1+i,x2-i,y2-i,cl,0);
+    }
+} 
 //-------------------------------------------------------------------
 static void fill_rect(color cl) {
     register unsigned int x, y;
@@ -343,6 +353,11 @@ void draw_filled_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, in
 //-------------------------------------------------------------------
 void draw_filled_round_rect(coord x1, coord y1, coord x2, coord y2, color cl) { 
     draw_round_rect(x1, y1, x2, y2, cl); 
+    fill_rect(cl);
+} 
+
+void draw_filled_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness) { 
+    draw_round_rect_thick(x1, y1, x2, y2, cl, thickness); 
     fill_rect(cl);
 } 
 //-------------------------------------------------------------------
@@ -417,6 +432,10 @@ void draw_restore() {
 
 #ifdef CAM_DETECT_SCREEN_ERASE
     draw_set_guard();
+#ifdef CAM_TOUCHSCREEN_UI
+    extern int redraw_buttons;
+    redraw_buttons = 1;
+#endif
 #endif
 }
 

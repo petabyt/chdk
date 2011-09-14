@@ -116,7 +116,7 @@ static unsigned char gamma[256];
 void fill_gamma_buf(void) {
     int i;
     if (gamma[255]) return;
-#if defined(CAMERA_sx30) || defined(CAMERA_g12)
+#if defined(CAMERA_sx30) || defined(CAMERA_g12) || defined(CAMERA_ixus310_elph500hs)
     for (i=0; i<12; i++) gamma[i]=255*pow(i/255.0, 0.5);
     for (i=12; i<64; i++) gamma[i]=255*pow(i/255.0, 0.4);
     for (i=64; i<=255; i++) gamma[i]=255*pow(i/255.0, 0.25);

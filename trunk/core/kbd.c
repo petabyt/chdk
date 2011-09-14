@@ -91,7 +91,7 @@ static int nTxtbl[]={0,2,4,6,8,10,12,14};
 #define ZSTEP_TABLE_SIZE 8
 static int nTxtbl[]={0,2,4,6,8,10,12,13};
 #endif
-// ------ add by Masuji SUTO (end)   --------------
+
 #if defined(CAMERA_sx100is) || defined(CAMERA_sx110is)
 #define ZSTEP_TABLE_SIZE 8
 static int nTxtbl[]={0,3,6,9,13,16,20,23};
@@ -111,10 +111,17 @@ static int nTxtbl[]={0,16,32,62,78,102,125};
 #define ZSTEP_TABLE_SIZE 14
 static int nTxtbl[]={0,1,2,3,4,5,6,7,8,9,10,11,12,13};
 #endif
+
+#if defined(CAMERA_ixus310_elph500hs)
+#define ZSTEP_TABLE_SIZE 9
+static int nTxtbl[]={0,8,16,24,32,40,48,56,64};
+#endif
+
 #if defined(CAMERA_s90) || defined(CAMERA_s95)
 #define ZSTEP_TABLE_SIZE 10
 static int nTxtbl[]={0,1,2,3,4,5,6,7,8,9};
 #endif
+// ------ add by Masuji SUTO (end)   --------------
 
 #ifdef OPT_SCRIPTING
 // remote autostart
@@ -208,6 +215,15 @@ long kbd_process()
         kbd_key_release_all();
         return 1;
     }
+
+#ifdef CAM_TOUCHSCREEN_UI
+    extern int ts_process_touch();
+    if (ts_process_touch())
+    {
+        extern void draw_restore();
+        draw_restore();
+    }
+#endif
 
     // deals with the rest
     if (kbd_blocked && nRmt==0) {

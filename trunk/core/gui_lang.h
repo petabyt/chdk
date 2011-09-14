@@ -570,10 +570,15 @@
 #define LANG_MENU_EDGE_PANO_OVERLAP  458
 #define LANG_MENU_BADPIXEL_CREATE  459
 #define LANG_MSG_RECMODE_REQUIRED  460
-#define LANG_CONSOLE_SCRIPT_DISABLED_IN_BUILD  461
+#define LANG_CONSOLE_SCRIPT_DISABLED_IN_BUILD 461
+//-------------------------------------------------------------------
+// Touch screen
+#define LANG_MENU_TOUCHSCREEN_VALUES 	    462
+#define LANG_MENU_TS_VIDEO_AE_DISABLE       463
+#define LANG_MENU_TS_ALT_SHORTCUTS_DISABLE  464
 //-------------------------------------------------------------------
 
-#define GUI_LANG_ITEMS                  461
+#define GUI_LANG_ITEMS                  464
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
