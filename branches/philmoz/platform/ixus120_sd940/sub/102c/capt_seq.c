@@ -329,25 +329,7 @@ void __attribute__((naked,noinline)) sub_FF94242C_my()
 "		BL      wait_until_remote_button_is_released \n"	// added
 "		BL      capt_seq_hook_set_nr \n"					// added
 
-"		LDR	R0, [R4,#0x1C] \n"
-"		CMP	R0, #0 \n"
-"		MOVNE	R0, #1 \n"
-"		STRNE	R0, [R5] \n"
-"		LDR	R0, [R5,#4] \n"
-"		BL	sub_FF90B814 \n"
-"		LDR	R0, [R5,#8] \n"
-"		BL	sub_FF8B9E64 \n"
-"		MOV	R0, #1 \n"
-"		BL	sub_FF8B9E70 \n"			// nullsub_13
-"		LDR	R0, =0xFF941E28 \n"
-"		MOV	R1, R4 \n"
-"		BL	sub_FF8B9E40 \n"
-"		LDR	R0, [R5] \n"
-"		CMP	R0, #5 \n"
-"		ADDLS	PC, PC,	R0,LSL#2 \n"
-//"		B	loc_FF9425E8 \n"
-"		B	sub_FF9425E8 \n"
-
+"		B	sub_FF9424DC \n"
 	);
 }
 
@@ -407,10 +389,9 @@ void __attribute__((naked,noinline)) sub_FF873374_my()
 "		BL	sub_FF942DBC \n"
 "		MOV	R0, R4 \n"
 
-// this patch causes a crash when shooting
-// it is unknown what the effect is of not calling this
-"		BL	sub_FF94242C \n"
-//"		BL	sub_FF94242C_my \n"					// patched
+//"		BL	sub_FF94242C \n"
+"		BL	sub_FF94242C_my \n"					// patched
+
 "		MOV	R5, R0 \n"
 "		BL     capt_seq_hook_raw_here \n"		// added
 "		B	loc_FF87344C \n"

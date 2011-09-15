@@ -1,29 +1,9 @@
 topdir=./
 srcdir=./
 
-include makefile.inc
-
 #ifndef NO_INC_BUILD
 #BUILD_NUMBER := $(shell expr $(BUILD_NUMBER) + 1)
 #endif
-
-SUBDIRS=tools lib platform core loader CHDK
-
-# Define empty recipes for all the included makefiles (including this one)
-# This stops gmake from attempting to see if the makefiles need to be rebuilt
-Makefile: ;
-makefile.inc: ;
-version.inc: ;
-buildconf.inc: ;
-localbuildconf.inc: ;
-$(topdir)/platform/fi2.inc: ;
-$(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc: ;
-
-all: all-recursive
-
-clean: clean-recursive
-
-distclean: distclean-recursive
 
 # Define the lists of cameras / firmware versions with a BETA status
 # This is a list of cameras for which ALL firmware versions are BETA
@@ -40,6 +20,25 @@ endif
 ifneq (,$(findstring $(PLATFORM)-$(PLATFORMSUB),$(BETA_CAMERA_FW)))
 	STATE=_BETA
 endif
+
+# If processing 'camindex' target for CHDK-Shell then only need to load the
+# camera/firmware makefile.inc file, not the whole CHDK makefile hierarchy
+# this speeds up generation of the camindex.csv file
+ifdef FASTLOAD
+
+include $(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc
+
+else
+
+include makefile.inc
+
+SUBDIRS=tools lib platform core loader CHDK
+
+all: all-recursive
+
+clean: clean-recursive
+
+distclean: distclean-recursive
 
 .PHONY: fir
 fir: version firsub
@@ -199,10 +198,27 @@ batch-zip-complete: version
 batch-clean:
 	$(MAKE) -f makefile.cam VER=$(VER) ACTION=clean batch
 
+endif
 
+
+# Special targets for CHDK-Shell. These generate the camindex.csv file
+# used by CHDK-Shell to work out what cameras / firmware versions to include.
 .PHONY: camindex
 camindex:
 	@echo "$(PLATFORM),$(PLATFORMSUB),$(STATE),$(COPY_TO)"
-
+	
 camindex.csv: Makefile makefile.cam makefile.fw
-	$(MAKE) -f makefile.cam VER=$(VER) ACTION=camindex batch > camindex.csv
+	$(MAKE) -f makefile.cam VER=$(VER) FASTLOAD=1 ACTION=camindex batch > camindex.csv
+
+
+# Define empty recipes for all the included makefiles (including this one)
+# This stops gmake from attempting to see if the makefiles need to be rebuilt
+Makefile: ;
+makefile.inc: ;
+makefile.cam: ;
+makefile.fw: ;
+version.inc: ;
+buildconf.inc: ;
+localbuildconf.inc: ;
+$(topdir)/platform/fi2.inc: ;
+$(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc: ;

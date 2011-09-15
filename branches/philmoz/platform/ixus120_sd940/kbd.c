@@ -72,8 +72,6 @@ long __attribute__((naked)) wrap_kbd_p1_f() ;
 
 void wait_until_remote_button_is_released(void)
 {
-
-long x[3];
 int count1;
 int count2;
 int tick,tick2,tick3;
@@ -207,40 +205,7 @@ static void __attribute__((noinline)) mykbd_task_proceed()
 
 void __attribute__((naked,noinline)) mykbd_task()
 {
-#if 0
-    /* WARNING
-     * Stack pointer manipulation performed here!
-     * This means (but not limited to):
-     *	function arguments destroyed;
-     *	function CAN NOT return properly;
-     *	MUST NOT call or use stack variables before stack
-     *	is setup properly;
-     *
-     */
-
-	register int i;
-	register long *newstack;
-
-#ifndef MALLOCD_STACK
-	newstack = (void*)kbd_stack;
-#else
-	newstack = malloc(NEW_SS);
-#endif
-
-	for (i=0;i<NEW_SS/4;i++)
-		newstack[i]=0xdededede;
-
-	asm volatile (
-		"MOV	SP, %0"
-		:: "r"(((char*)newstack)+NEW_SS)
-		: "memory"
-	);
-#endif
-
 	mykbd_task_proceed();
-
-	/* function can be modified to restore SP here...
-	 */
 
 	_ExitTask();
 }
@@ -260,10 +225,6 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 }
 
 volatile int jogdial_stopped=0;
-void disable_SD_writeprotect()
-{
-	physw_status[SD_READONLY_REG] = physw_status[SD_READONLY_REG] & ~SD_READONLY_FLAG;
-}
 
 void my_kbd_read_keys()
 {
@@ -276,6 +237,10 @@ void my_kbd_read_keys()
 
 	_platformsub_kbd_fetch_data(kbd_new_state);
 
+	/* Get the rest of the buttons */
+	
+	_kbd_read_keys_r2(kbd_new_state);
+	
 	kbd_new_state[2] |=0x00008000;  /// disable the battery door switch
 
 	// support for short/long press of Display
@@ -294,7 +259,6 @@ void my_kbd_read_keys()
 
 		physw_status[0] |= alt_mode_key_mask;  /// disable the ALT mode button
 
-		physw_status[SD_READONLY_REG] = physw_status[SD_READONLY_REG] & ~SD_READONLY_FLAG;
 	}
 	else {
 		// override keys
@@ -307,11 +271,8 @@ void my_kbd_read_keys()
 			physw_status[0] &= ~alt_mode_key_mask;  // press the Display button
 		}
 	}
-
-	_kbd_read_keys_r2(physw_status);
-
-	physw_status[2] = physw_status[SD_READONLY_REG] & ~SD_READONLY_FLAG;
-
+	
+	
 	remote_key = (physw_status[2] & USB_MASK)==USB_MASK;
 	if (remote_key) {
 		remote_count += 1;
@@ -320,6 +281,7 @@ void my_kbd_read_keys()
 		usb_power = remote_count;
 		remote_count = 0;
 	}
+	
 
 	if (conf.remote_enable) {
 		physw_status[2] = physw_status[SD_READONLY_REG] & ~(SD_READONLY_FLAG | USB_MASK);
@@ -328,78 +290,7 @@ void my_kbd_read_keys()
 	}
 }
 
-#ifdef original_way_to_handle_display_key
 
-void my_kbd_read_keys()
-{
-	static int altDownTimer=0;
-	const int DISP_DOWN_TIME = 20;
-
-	static int isAlt=0, isDisplay=0;
-	static int altDownTimer=0;
-
-	kbd_prev_state[0] = kbd_new_state[0];
-	kbd_prev_state[1] = kbd_new_state[1];
-	kbd_prev_state[2] = kbd_new_state[2];
-
-	_platformsub_kbd_fetch_data(kbd_new_state);
-
-	kbd_new_state[2] |=0x00008000;  /// disable the battery door switch
-
-	// support for short/long press of Display
-	if (kbd_is_key_pressed(KEY_DISPLAY)) {			// Display held down
-		altDownTimer++;
-	}
-	if (altDownTimer > 50) {		// TODO - determine best threshold
-		isDisplay = 1;								// held down long enough for Display
-	}
-	else if (!kbd_is_key_pressed(KEY_DISPLAY)) {
-		if (altDownTimer > 0)
-			isAlt = 1;
-		altDownTimer = 0;
-	}
-
-	if (kbd_process() == 0) {
-		// leave it alone...
-		physw_status[0] = kbd_new_state[0];
-		physw_status[1] = kbd_new_state[1];
-		physw_status[2] = kbd_new_state[2];
-
-		physw_status[0] |= alt_mode_key_mask;  /// disable the ALT mode button
-
-		physw_status[SD_READONLY_REG] = physw_status[SD_READONLY_REG] & ~SD_READONLY_FLAG;
-	}
-	else {
-		// override keys
-
-		physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) |(kbd_mod_state[0] & KEYS_MASK0);
-		physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
-		physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) |(kbd_mod_state[2] & KEYS_MASK2);
-
-		if (isDisplay)
-			physw_status[0] &= ~alt_mode_key_mask;  /// press the Display button
-	}
-
-	_kbd_read_keys_r2(physw_status);
-
-	physw_status[2] = physw_status[SD_READONLY_REG] & ~SD_READONLY_FLAG;
-
-	remote_key = (physw_status[2] & USB_MASK)==USB_MASK;
-	if (remote_key) {
-		remote_count += 1;
-	}
-	else if (remote_count) {
-		usb_power = remote_count;
-		remote_count = 0;
-	}
-
-	if (conf.remote_enable) {
-		physw_status[2] = physw_status[SD_READONLY_REG] & ~(SD_READONLY_FLAG | USB_MASK);
-	} else {
-		physw_status[2] = physw_status[SD_READONLY_REG] & ~SD_READONLY_FLAG;
-	}
-}
-#endif
 
 
 void kbd_set_alt_mode_key_mask(long key)

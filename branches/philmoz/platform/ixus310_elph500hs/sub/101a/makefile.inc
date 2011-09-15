@@ -3,6 +3,10 @@ PLATFORMID=12837
 
 PLATFORMOS=dryos
 
+# Force EXMEM on for ixus310_elph500hs - not enough heap to work in low memory
+override OPT_EXMEM_MALLOC=1
+override OPT_CHDK_IN_EXMEM=1
+
 ROMBASEADDR=0xFF000000
 MAXRAMADDR=0x07FFFFFF
 

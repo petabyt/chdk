@@ -23,5 +23,5 @@ batch: $(CAMS)
 # Pass the final target $(ACTION) to the next level
 $(CAMS):
 	if [ -d platform/$@ ] && [ $@ != "generic" ] && [ $@ != "$(findstring $@,$(SKIP_AUTOBUILD))" ]; then \
-		$(MAKE) -f makefile.fw VER=$(VER) CAM=$@ ACTION=$(ACTION) all; \
+		$(MAKE) -f makefile.fw VER=$(VER) FASTLOAD=$(FASTLOAD) CAM=$@ ACTION=$(ACTION) all; \
 	fi

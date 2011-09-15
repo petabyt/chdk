@@ -354,6 +354,6 @@ void gui_4wins_kbd_process()
 void gui_4wins_draw() {
   static char str[16];
   sprintf(str, "%3d%%", get_batt_perc());
-  draw_txt_string(screen_width/FONT_WIDTH-2-13, screen_height/FONT_HEIGHT-2, str, INFO_TEXT_COLOR);
-  gui_osd_draw_clock(300,208,INFO_TEXT_COLOR);
+  draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-13, screen_height/FONT_HEIGHT-2, str, INFO_TEXT_COLOR);
+  gui_osd_draw_clock(CAM_TS_BUTTON_BORDER+290,208,INFO_TEXT_COLOR);
 }
