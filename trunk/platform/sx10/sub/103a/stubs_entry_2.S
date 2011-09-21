@@ -37,14 +37,7 @@ NHSTUB(Rec2PB, 0xFF882A00)
 
 NHSTUB(kbd_pwr_off, 0xFF81093C)
 NHSTUB(kbd_pwr_on, 0xFF81093C)
-NHSTUB(Mount_FileSystem, 0xFF81093C)
-NHSTUB(Unmount_FileSystem, 0xFF81093C)
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFF81093C)
-NHSTUB(rewinddir, 0xFF81093C)
-
-
-
-
 
 
 // Added by finsig_dryos V2 to match old values found by finsig.

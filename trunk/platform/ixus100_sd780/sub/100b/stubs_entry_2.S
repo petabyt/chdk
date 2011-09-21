@@ -7,9 +7,6 @@ NHSTUB(write,  0xff823d44)
 NHSTUB(TurnOffBackLight, 0xff8810a0)  // 0xff878dec   
 NHSTUB(VbattGet, 0xff820644)	// 0xff91b708   
 NHSTUB(vsprintf, 0xff81cba0)   
-NHSTUB(Mount_FileSystem, 0xff858bec)   
-NHSTUB(Unmount_FileSystem, 0xff858bec)   
-NHSTUB(rewinddir, 0xff858bec)   
 NHSTUB(SetZoomActuatorSpeedPercent, 0xff858bec)   
 NHSTUB(strchr, 0xff88779c)   
 NHSTUB(kbd_pwr_on, 0xff858bec)   

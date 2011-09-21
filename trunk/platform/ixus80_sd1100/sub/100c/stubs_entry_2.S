@@ -21,10 +21,7 @@ NHSTUB(TurnOnMic,do_nothing)
 
 // vx stuff
 // not found or used in dryos
-NHSTUB(rewinddir, do_nothing)
 NHSTUB(SetZoomActuatorSpeedPercent, do_nothing)
-NHSTUB(Unmount_FileSystem, do_nothing)
-NHSTUB(Mount_FileSystem, do_nothing)
 NHSTUB(taskUnlock, do_nothing)
 NHSTUB(taskLock, do_nothing)
 

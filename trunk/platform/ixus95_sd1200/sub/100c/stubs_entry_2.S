@@ -59,9 +59,6 @@ NHSTUB(kbd_pwr_off, 0xFFC00950) // SD1200 doesn't use
 NHSTUB(kbd_pwr_on, 0xFFC00950) // SD1200 doesn't use
 
 // Don't exist in dryos
-NHSTUB(Mount_FileSystem, 0xFFC00950) // NULLSUB
-NHSTUB(Unmount_FileSystem, 0xFFC00950) // NULLSUB
-NHSTUB(rewinddir, 0xFFC00950) // NULLSUB
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFFC00950) // NULLSUB
 
 // could not find

@@ -100,9 +100,6 @@ NHSTUB(UnlockAndRefresh,				0xFF8A8D90) // seems to work
 NHSTUB(LockAndRefresh,				    0xFF8A8DB4) // seems to work  
   
 // These don't exist/aren't found in dryos
-NHSTUB(Mount_FileSystem, NULL_STUB)
-NHSTUB(Unmount_FileSystem, NULL_STUB) 
-NHSTUB(rewinddir, NULL_STUB) 
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_STUB)
 
 // Not needed

@@ -101,7 +101,4 @@ NHSTUB(GetMemInfo, 0xff81a264)
 // could not find on s90 or s95 - ignore
 NHSTUB(kbd_pwr_on, NULL_STUB)
 NHSTUB(kbd_pwr_off, NULL_STUB)
-NHSTUB(rewinddir, NULL_STUB)
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_STUB)
-NHSTUB(Unmount_FileSystem, NULL_STUB)
-NHSTUB(Mount_FileSystem, NULL_STUB)

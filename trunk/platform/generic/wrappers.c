@@ -114,6 +114,12 @@ int task_id_list_get(int *idlist,int size)
 {
     return _taskIdListGet(idlist,size);
 }
+
+void remount_filesystem()
+{
+    _Unmount_FileSystem();
+    _Mount_FileSystem();
+}
 #endif
 
 long get_property_case(long id, void *buf, long bufsize)
@@ -134,12 +140,6 @@ long get_parameter_data(long id, void *buf, long bufsize)
 long set_parameter_data(long id, void *buf, long bufsize)
 {
     return _SetParameterData(id|0x4000, buf, bufsize);
-}
-
-void remount_filesystem()
-{
-    _Unmount_FileSystem();
-    _Mount_FileSystem();
 }
 
 void mark_filesystem_bootable()
@@ -424,12 +424,15 @@ int closedir(DIR *d) {
     return r;
 }
 
+/* not used
 void rewinddir(DIR *d) {
     if(!d) {
         return;
     }
     _rewinddir(d->dh);
 }
+*/
+
 #endif // dryos dir functions
 
 int stat(const char *name, struct stat *pStat) {

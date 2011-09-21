@@ -44,10 +44,7 @@ NHSTUB(apex2us,                     0xFF9AD5A8) // OK
 
 //Nullsubs
 #define do_nothing 0xFFA7D820
-NHSTUB(Mount_FileSystem,            do_nothing)
-NHSTUB(Unmount_FileSystem,          do_nothing)
 NHSTUB(SetZoomActuatorSpeedPercent, do_nothing)
-NHSTUB(rewinddir,                   do_nothing)
 NHSTUB(nullsub_35,                  do_nothing)
 NHSTUB(nullsub_37,                  do_nothing)
 NHSTUB(unknown_libname_80,          do_nothing)

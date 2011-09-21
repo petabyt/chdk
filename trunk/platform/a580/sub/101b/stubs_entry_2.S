@@ -5,10 +5,7 @@
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 
 // These don't exist/aren't found in dryos
-NHSTUB(Mount_FileSystem,            NULL_SUB)
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
-NHSTUB(Unmount_FileSystem,          NULL_SUB)
-NHSTUB(rewinddir,                   NULL_SUB)
 
 // Additional
 NHSTUB(GetCurrentTargetDistance,    0xFFD04C7C)

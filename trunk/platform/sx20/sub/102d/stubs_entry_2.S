@@ -57,10 +57,7 @@ NHSTUB(UnlockAF,						0xFF879714) // ? could be right
 NHSTUB(DoAFLock,						0xFF879704) // ? could be right
 
 #NULL
-NHSTUB(rewinddir,						0xFF810B04) // BX LR
 NHSTUB(SetZoomActuatorSpeedPercent,		0xFF810B04) // BX LR
-NHSTUB(Unmount_FileSystem,				0xFF810B04) // BX LR
-NHSTUB(Mount_FileSystem,				0xFF810B04) // BX LR
 NHSTUB(kbd_pwr_off,						0xFF810B04) // BX LR
 NHSTUB(kbd_pwr_on,						0xFF810B04) // BX LR
 NHSTUB(SetFileTimeStamp,				0xFF810B04) // # incorrect auto detect why can no one find this function!
