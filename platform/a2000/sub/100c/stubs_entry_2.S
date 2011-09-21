@@ -167,11 +167,6 @@ NHSTUB(PutOutNdFilter,									0xFFDED690) //
 // not found
 NHSTUB(SetZoomActuatorSpeedPercent,	0xFFC00940) // nullsub
 
-// Those aren't used or don't exist in DryOS
-NHSTUB(Unmount_FileSystem,					0xFFC00940)
-NHSTUB(Mount_FileSystem,						0xFFC00940)
-NHSTUB(rewinddir,										0xFFC00940)
-
 NHSTUB(SetScriptMode,										0xFFC5C77C) // string
 NHSTUB(Restart, 0xFFC189EC) 
 

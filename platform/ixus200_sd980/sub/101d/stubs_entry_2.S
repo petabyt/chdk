@@ -49,10 +49,7 @@ NHSTUB(ScreenLock, 0xff9f9a70)
 NHSTUB(ScreenUnlock, 0xff9f9a98)
    
 NHSTUB(kbd_pwr_on, 0xff810b04)   
-NHSTUB(Unmount_FileSystem, 0xff810b04)   
-NHSTUB(Mount_FileSystem, 0xff810b04)   
 NHSTUB(SetZoomActuatorSpeedPercent, 0xff810b04)   
-NHSTUB(rewinddir, 0xff810b04)
    
 NHSTUB(SetScriptMode, 0xff89079c)   
 NHSTUB(platformsub_kbd_fetch_data, 0xff85ae80)   

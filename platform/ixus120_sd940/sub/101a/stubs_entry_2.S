@@ -78,7 +78,4 @@ NHSTUB(GetImageFolder, 0xFF91901C) // function before 'GetCameraObjectTmpPath ER
 NHSTUB(kbd_pwr_on , NULLSUB)
 NHSTUB(kbd_pwr_off, NULLSUB)
 
-NHSTUB(rewinddir, NULLSUB)
 NHSTUB(SetZoomActuatorSpeedPercent, NULLSUB)
-NHSTUB(Unmount_FileSystem, NULLSUB)	
-NHSTUB(Mount_FileSystem, NULLSUB)

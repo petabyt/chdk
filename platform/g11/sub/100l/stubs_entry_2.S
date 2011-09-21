@@ -44,9 +44,6 @@ NHSTUB(PutOutNdFilter, 0xFFAA0BA4)
 
 // nullsubs
 NHSTUB(kbd_pwr_on, 0xFF810B04) // nullsub
-NHSTUB(rewinddir, 0xFF810B04)  // nullsub
-NHSTUB(Unmount_FileSystem, 0xFF810B04)  // nullsub
-NHSTUB(Mount_FileSystem, 0xFF810B04)  // nullsub
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFF810B04)  // nullsub
 
 

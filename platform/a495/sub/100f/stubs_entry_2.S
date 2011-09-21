@@ -64,8 +64,5 @@ NHSTUB(WriteSDCard, 0xffcfcbcc)  // 0xFFCFC9E8)		// fixed
 NHSTUB(GetImageFolder, 0xFFCF1478)	// function before 'GetCameraObjectTmpPath ERROR' string
 
 // --- Those aren't used or don't exist in DryOS (like A720 and other)
-NHSTUB(Mount_FileSystem, 0xFFC00B20)                 // nullsub_1
-NHSTUB(Unmount_FileSystem, 0xFFC00B20)               // nullsub_1
-NHSTUB(rewinddir, 0xFFC00B20)                        // nullsub_1
 NHSTUB(kbd_pwr_on, 0xFFC00B20)
 NHSTUB(kbd_pwr_off, 0xffc435e4)	// 0xFFC00B20)

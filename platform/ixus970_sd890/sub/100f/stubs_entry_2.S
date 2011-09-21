@@ -46,10 +46,7 @@ NHSTUB(PB2Rec, 0xFF878454)
 NHSTUB(Rec2PB, 0xFF876E58)
 
 //Nullsubs
-NHSTUB(Mount_FileSystem,            0xFF810948)
-NHSTUB(Unmount_FileSystem,          0xFF810948)
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFF810948)
-NHSTUB(rewinddir,                   0xFF810948)
 NHSTUB(nullsub_35,                  0xFF810948)
 NHSTUB(nullsub_37,                  0xFF810948)
 NHSTUB(unknown_libname_80,          0xFF810948)

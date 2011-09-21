@@ -55,9 +55,6 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULLSUB)      // ToDo: nullsub_1
 
 
 // --- Those aren't used or don't exist in DryOS (like A720 and other)
-NHSTUB(Mount_FileSystem, NULLSUB)                 // nullsub_1
-NHSTUB(Unmount_FileSystem, NULLSUB)               // nullsub_1
-NHSTUB(rewinddir, NULLSUB)                        // nullsub_1
 NHSTUB(kbd_pwr_off, NULLSUB)                      // nullsub_1, does not exist, like SD990
 NHSTUB(kbd_pwr_on, NULLSUB)                       // nullsub_1, does not exist, like SD990
 

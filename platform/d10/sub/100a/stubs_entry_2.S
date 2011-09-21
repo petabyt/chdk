@@ -37,9 +37,6 @@ NHSTUB(PB2Rec, 0xFF87AD90)
 NHSTUB(Rec2PB, 0xFF8797FC)
 
 // These don't exist/aren't found in dryos
-NHSTUB(Mount_FileSystem,NULLSUB) // NULLSUB
-NHSTUB(Unmount_FileSystem,NULLSUB) // NULLSUB
-NHSTUB(rewinddir,NULLSUB) // NULLSUB
 NHSTUB(SetZoomActuatorSpeedPercent,NULLSUB) // NULLSUB
 
 // useful for debugging with uart redirect or crash log

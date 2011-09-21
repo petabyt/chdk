@@ -42,10 +42,7 @@ NHSTUB(TurnOffMic, 0xFFC2CF34)
 //null subs
 
 NHSTUB(kbd_pwr_on, 0xFFC00954)
-NHSTUB(rewinddir, 0xFFC00954)
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFFC00954)
-NHSTUB(Mount_FileSystem, 0xFFC00954)
-NHSTUB(Unmount_FileSystem, 0xFFC00954)
 
 
 

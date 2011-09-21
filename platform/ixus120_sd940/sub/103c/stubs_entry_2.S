@@ -99,9 +99,6 @@ NHSTUB(UnlockMainPower, 0xff88aa10)				//	SD940 103c matched with SD90 101a & fi
 
 NHSTUB(kbd_pwr_on , NULLSUB)					//** not found in SD90 or SD940-102c
 NHSTUB(kbd_pwr_off, NULLSUB)					//** 0xff858e10 = best match: 51% in finsig
-NHSTUB(rewinddir, NULLSUB)						//** not found in SD90 or SD940-102c
 NHSTUB(SetZoomActuatorSpeedPercent, NULLSUB)	//** not found in SD90 or SD940-102c
-NHSTUB(Unmount_FileSystem, NULLSUB)				//** not found in SD90 or SD940-102c
-NHSTUB(Mount_FileSystem, NULLSUB)				//** not found in SD90 or SD940-102c
 
 NHSTUB(GetImageFolder, 0xFF919078)      // function before 'GetCameraObjectTmpPath ERROR' string

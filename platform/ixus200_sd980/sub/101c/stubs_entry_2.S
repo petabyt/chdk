@@ -55,10 +55,7 @@ NHSTUB(ScreenLock                            ,0xFF9F98B4) //--- --- **** stubs_e
 NHSTUB(ScreenUnlock                          ,0xFF9F98DC)
 
 NHSTUB(kbd_pwr_on,  0xFF810B04)
-NHSTUB(Unmount_FileSystem,  0xFF810B04)
-NHSTUB(Mount_FileSystem,  0xFF810B04)
 NHSTUB(SetZoomActuatorSpeedPercent,  0xFF810B04)
-NHSTUB(rewinddir,  0xFF810B04)
 
 NHSTUB(SetScriptMode, 0xFF810F4)
 NHSTUB(platformsub_kbd_fetch_data,  0xFF85AE80)

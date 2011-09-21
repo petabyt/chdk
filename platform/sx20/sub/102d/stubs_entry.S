@@ -19,7 +19,6 @@
 //NSTUB(openfastdir                           ,0xffa7d5a0) //  3        *** != 0xdeadc0de
 //NSTUB(readfastdir                           ,0xffa7d6d4) //  3        *** != 0xdeadc0de
 //NSTUB(rename                                ,0xff834b74) //  4        *** != 0xdeadc0de
-//NSTUB(write                                 ,0xff83530c) //101        *** != 0xff81abd8
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff89aa90 -> ff8972e0 -> ff98f1e0 -> ffaac914 -> ffbe87b4
@@ -209,3 +208,4 @@ NSTUB(strtolx                                 ,0xff83e53c) //109
   DEF(task_RotaryEncoder                      ,0xff85f3cc) //107
 //NSTUB(time                                  ,0xff889484) //  2            == 0xff889484
 NSTUB(vsprintf                                ,0xff820340) //  1
+NSTUB(write                                   ,0xff83530c) //101

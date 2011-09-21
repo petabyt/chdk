@@ -79,8 +79,5 @@ NHSTUB(time, 0xff87eae4)
 NHSTUB(UnlockMainPower, 0xff88a9b4)   
 NHSTUB(kbd_pwr_on , NULLSUB)
 NHSTUB(kbd_pwr_off, NULLSUB)
-NHSTUB(rewinddir, NULLSUB)
 NHSTUB(SetZoomActuatorSpeedPercent, NULLSUB)
-NHSTUB(Unmount_FileSystem, NULLSUB)	
-NHSTUB(Mount_FileSystem, NULLSUB)
 

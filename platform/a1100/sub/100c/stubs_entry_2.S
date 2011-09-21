@@ -23,11 +23,8 @@ NHSTUB(write,0xffc1398c)
 NHSTUB(GetKbdState,0xFFC30B28)
 NHSTUB(platformsub_kbd_fetch_data,0xFFC30B28)
 NHSTUB(LEDDrive,0xffc30088)
-NHSTUB(Unmount_FileSystem,0xFFC00950)//null
-NHSTUB(Mount_FileSystem,0xFFC00950)//null
 NHSTUB(DoAFLock,0xFFC14F40)
 NHSTUB(SetZoomActuatorSpeedPercent,0xFFC00950)//null
-NHSTUB(rewinddir,0xFFC00950)//null
 NHSTUB(UnlockAF,0xFFC14F78)
 NHSTUB(SetScriptMode,0xFFC5CAB4)
 NHSTUB(UnsetZoomForMovie,0xFFD226EC)

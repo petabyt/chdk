@@ -48,12 +48,6 @@ NHSTUB(Restart, 0xFFC190A0)
 NHSTUB(PB2Rec, 0xFFC65A2C)
 NHSTUB(Rec2PB, 0xFFC65A80)
 
-//do they really exists in dryos? --> point to nullsub
-NHSTUB(Mount_FileSystem, 0xFFC00940)
-NHSTUB(rewinddir, 0xFFC00940)
-NHSTUB(Unmount_FileSystem, 0xFFC00940)
-
-
 
 // Added by finsig_dryos V2 to match old values found by finsig.
 // Values should be checked in firmware, if the new address in stubs_entry.S

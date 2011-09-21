@@ -29,9 +29,6 @@ NHSTUB(MakeAFScan, 					0xFFDEEA08)       // was 0xFFC00948 (nullsub_1) OldGit 2
 NHSTUB(UnsetZoomForMovie, 0xffd3a34c)
 
 // NULLSUBS
-NHSTUB(Unmount_FileSystem, 0xffc00948)
-NHSTUB(Mount_FileSystem, 0xffc00948)
-NHSTUB(rewinddir, 0xffc00948)
 NHSTUB(SetZoomActuatorSpeedPercent, 0xffc00948)
 
 NHSTUB(DoAFLock, 0xffc15b04)

@@ -20,10 +20,7 @@ NHSTUB(apex2us, 0xFF9B943C)  // via capt_seq.c
 NHSTUB(WriteSDCard, 0xFF918854) // via _sub_FF85522C_Mounter.c__0, call after debug, then last LDR
 NHSTUB(UnlockAF, 0xFF825610)  // via aAfUnlock
 NHSTUB(DoAFLock, 0xFF8255D8)  // via aAfLock
-NHSTUB(rewinddir,NULL_SUB)
 NHSTUB(SetZoomActuatorSpeedPercent,NULL_SUB)
-NHSTUB(Mount_FileSystem,NULL_SUB)
-NHSTUB(Unmount_FileSystem,NULL_SUB)
 NHSTUB(platformsub_kbd_fetch_data, 0xFF846248)  // GetKbdState
 NHSTUB(UnsetZoomForMovie,0xFF96079C) // via aZoomcon_Unsetz (used ixus980 dump)
 //NHSTUB(PutInNdFilter,0xFFA9C1C4)   // function table

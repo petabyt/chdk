@@ -37,9 +37,6 @@ NHSTUB(PB2Rec, 0xFF880AC0)
 NHSTUB(Rec2PB, 0xFF87F458)
 
 // These don't exist/aren't found in dryos
-NHSTUB(Mount_FileSystem,0xFF81093C) // NULLSUB
-NHSTUB(Unmount_FileSystem,0xFF81093C) // NULLSUB
-NHSTUB(rewinddir,0xFF81093C) // NULLSUB
 NHSTUB(SetZoomActuatorSpeedPercent,0xFF81093C) // NULLSUB
 
 
