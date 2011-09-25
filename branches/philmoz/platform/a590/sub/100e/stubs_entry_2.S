@@ -55,11 +55,6 @@ NHSTUB(ExitFromCompensationEVF,		0xFFC15FA4)
 //NSTUB(taskSuspend,			 0xFFC00948)
 //NSTUB(taskUnlock,			 0xFFC00948)
 
-// NULLSUBS
-NHSTUB(Mount_FileSystem,			 0xFFC00948)
-NHSTUB(Unmount_FileSystem,		 0xFFC00948)
-NHSTUB(rewinddir,			 0xFFC00948)
-
 //NSTUB(CreatePhysicalVram,		 0xFFC00948)
 //NSTUB(CreateTaskStrict,			 0xFFC00948)
 //NSTUB(DisableDispatch,			 0xFFC00948)

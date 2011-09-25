@@ -98,6 +98,41 @@ static void gui_space_draw_icon() {
 
     space_color();
 
+#ifdef  CAM_USE_COLORED_ICONS
+    color cl1 = COLOR_GREEN;
+    color cl2 = COLOR_GREEN_DK;
+    if (((conf.space_warn_type == 0) && (perc <= conf.space_perc_warn)) ||
+        ((conf.space_warn_type == 1) && (GetFreeCardSpaceKb() <= conf.space_mb_warn*1024)))
+    {
+        cl1 = COLOR_RED;
+        cl2 = COLOR_RED_DK;
+    } 
+  
+    //icon
+    draw_hline(xx,    yy,    30,  COLOR_GREY_LT);
+    draw_vline(xx,    yy,    12,  COLOR_GREY_LT);
+    draw_vline(xx+31, yy,    18,  COLOR_GREY);
+    draw_line(xx+1,   yy+13, xx+5, yy+17, COLOR_GREY);
+    draw_hline(xx+6,  yy+18, 24,  COLOR_GREY);
+           
+    draw_filled_rect(xx+1,  yy+1,   xx+30,   yy+13,  MAKE_COLOR(COLOR_GREY_MED, COLOR_GREY_MED));
+    draw_filled_rect(xx+5,  yy+14,  xx+30,   yy+17,  MAKE_COLOR(COLOR_GREY_MED, COLOR_GREY_MED));
+    draw_filled_rect(xx+3,  yy+14,  xx+6,    yy+15,  MAKE_COLOR(COLOR_GREY_MED, COLOR_GREY_MED));
+    
+    draw_filled_rect(xx+2,  yy+2,   xx+6,    yy+4,   MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
+    draw_filled_rect(xx+2,  yy+6,   xx+6,    yy+7,   MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
+    draw_filled_rect(xx+2,  yy+9,   xx+6,    yy+10,  MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
+    draw_filled_rect(xx+2,  yy+12,  xx+6,    yy+13,  MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
+    draw_filled_rect(xx+5,  yy+15,  xx+9,    yy+16,  MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));   
+    
+    draw_hline(xx+8,  yy,    2, COLOR_TRANSPARENT);
+    draw_hline(xx+11, yy,    3, COLOR_GREY);
+    draw_hline(xx+11, yy+18, 2, COLOR_TRANSPARENT);
+
+    //fill icon
+    draw_rect(xx+9,         yy+4,   xx+28,   yy+13,  MAKE_COLOR(cl1, cl1));
+    draw_filled_rect(xx+27-(17*perc/100),      yy+5,       xx+27,     yy+12,   MAKE_COLOR(cl2, cl2));
+#else
 #define LE  23
 #define WI  15
 
@@ -130,6 +165,7 @@ static void gui_space_draw_icon() {
     }
     if (x>1) draw_hline(xx+2,      yy+WI-2,    x-2,     COLOR_BLACK);
     draw_hline(xx+x+1,             yy+WI-2,    LE-x-3,  MAKE_COLOR(cl, cl));
+#endif
 }
 
 //-------------------------------------------------------------------

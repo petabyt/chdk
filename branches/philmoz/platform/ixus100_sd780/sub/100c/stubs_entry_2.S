@@ -3,9 +3,6 @@
 NHSTUB(TurnOffBackLight,0xff8810a0)	//DispSwCon_TurnOffBackLight
 NHSTUB(VbattGet,0xff820644)		// sigfinder2
 NHSTUB(vsprintf,0xFF81CBA0)		//eventproc_export_CPrintf look for function called before error txt
-NHSTUB(Mount_FileSystem,0xFF858BEC)		//Do we fix? Not in Dryos?
-NHSTUB(Unmount_FileSystem,0xFF858BEC)		//Do we fix? Not in Dryos?
-NHSTUB(rewinddir,0xFF858BEC)			//Do we fix? Not in Dryos?
 NHSTUB(SetZoomActuatorSpeedPercent,0xFF858BEC)	//Do we fix? Not in Dryos?
 NHSTUB(strchr,0xFF88779C)			//search AND R2, R1, #0xFF then LDRB R1, [R0]
 NHSTUB(kbd_pwr_on,0xFF858BEC)			//Do we fix?

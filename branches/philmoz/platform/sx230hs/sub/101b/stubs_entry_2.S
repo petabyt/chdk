@@ -9,11 +9,8 @@ NHSTUB(kbd_pwr_off, 0xff000b24)
 NHSTUB(kbd_pwr_on, 0xff000b24)   
 
 // These don't exist/aren't found in dryos
-NHSTUB(Mount_FileSystem,            NULL_SUB)
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
-NHSTUB(Unmount_FileSystem,          NULL_SUB)
 NHSTUB(UnsetZoomForMovie,           NULL_SUB)
-NHSTUB(rewinddir,                   NULL_SUB)
 
 NHSTUB(LockAndRefresh, 0xff0ad294)   
 NHSTUB(MakeAFScan, 0xff191018)   

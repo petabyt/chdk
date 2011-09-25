@@ -33,10 +33,7 @@ NHSTUB(Rec2PB, 0xFF8871B8)
 
 NHSTUB(kbd_pwr_off, 0xFF81093C)
 NHSTUB(kbd_pwr_on, 0xFF81093C)
-NHSTUB(Mount_FileSystem, 0xFF81093C)
-NHSTUB(Unmount_FileSystem, 0xFF81093C)
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFF81093C)
-NHSTUB(rewinddir, 0xFF81093C)
 NHSTUB(SetScriptMode, 0xFF885290) // "SetScriptMode"
 
 

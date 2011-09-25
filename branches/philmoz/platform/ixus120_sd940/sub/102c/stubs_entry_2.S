@@ -86,10 +86,7 @@ NHSTUB(PutOutNdFilter, 0xFFA67C2C)
 NHSTUB(apex2us, 0xFF9D5394)
 
 // ignore
-NHSTUB(rewinddir,NULLSUB)
 NHSTUB(SetZoomActuatorSpeedPercent,NULLSUB)
-NHSTUB(Mount_FileSystem,NULLSUB)
-NHSTUB(Unmount_FileSystem,NULLSUB)
 
 // need to redo??
 NSTUB(MoveFocusLensToDistance, 0xffad10e4)

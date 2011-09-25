@@ -43,10 +43,7 @@ NHSTUB(PostLogicalEventForNotPowerType, 0xFF873274)
 NHSTUB(apex2us,                     0xFF9B2824)
 
 //Nullsubs
-NHSTUB(Mount_FileSystem,            0xFF810948)
-NHSTUB(Unmount_FileSystem,          0xFF810948)
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFF810948)
-NHSTUB(rewinddir,                   0xFF810948)
 NHSTUB(nullsub_35,                  0xFF810948)
 NHSTUB(nullsub_37,                  0xFF810948)
 NHSTUB(unknown_libname_80,          0xFF810948)

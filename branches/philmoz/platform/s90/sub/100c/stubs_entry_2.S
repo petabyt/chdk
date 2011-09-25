@@ -29,10 +29,7 @@ NHSTUB(ScreenUnlock,0xFFA0A134)
 //NOTFOUND - nullsub
 NHSTUB(kbd_pwr_off, 0xFF810B04)
 NHSTUB(kbd_pwr_on, 0xFF810B04)//cannot locate
-NHSTUB(rewinddir, 0xFF810B04)//cannot locate
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFF810B04)//cannot locate
-NHSTUB(Unmount_FileSystem, 0xFF810B04)//cannot locate
-NHSTUB(Mount_FileSystem, 0xFF810B04)//cannot locate
 
 NHSTUB(strrchr, 0xFF813FE4) // correction for sig.finder addr.
 NHSTUB(strncpy, 0xFF813F38) // sigfinder founds same addr. for strcat

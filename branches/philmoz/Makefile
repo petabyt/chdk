@@ -1,10 +1,6 @@
 topdir=./
 srcdir=./
 
-#ifndef NO_INC_BUILD
-#BUILD_NUMBER := $(shell expr $(BUILD_NUMBER) + 1)
-#endif
-
 # Define the lists of cameras / firmware versions with a BETA status
 # This is a list of cameras for which ALL firmware versions are BETA
 BETA_CAMERA="sx1 a1100 a2000 ixus90_sd790 g11 s90 ixus100_sd780 ixus120_sd940 ixus200_sd980 ixus85_sd770 d10 ixus95_sd1200 a430 s95 a490 a495 ixus300_sd4000 sx220hs sx230hs sx130is ixus310_elph500hs"
@@ -89,7 +85,6 @@ infoline:
 
 version: FORCE
 	echo "**** Build: $(BUILD_NUMBER)"
-#	echo "BUILD_NUMBER := $(BUILD_NUMBER)" > version.inc
 
 FORCE:
 

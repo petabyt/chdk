@@ -245,6 +245,10 @@ extern void *vid_get_viewport_active_buffer();          // Return active live vi
 extern void *vid_get_bitmap_active_buffer();            // Return current active bitmap memory address
 extern void *vid_get_bitmap_active_palette();           // Return current palette memory address
 
+#ifdef CAM_LOAD_CUSTOM_COLORS
+// Color palette function
+extern void load_chdk_palette();
+#endif
 /******************************************************************/
 
 void *hook_raw_fptr();

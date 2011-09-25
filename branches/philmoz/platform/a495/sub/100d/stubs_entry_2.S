@@ -53,9 +53,6 @@ NHSTUB(PutOutNdFilter, 0xFFDFACC8)
 NHSTUB(SetZoomActuatorSpeedPercent, 0xffc00b20)   
 NHSTUB(WriteSDCard,  0xffcfcb1c )  				// 0xffcfc938
 NHSTUB(GetImageFolder, 0xffcf1428)   
-NHSTUB(Mount_FileSystem, 0xffc00b20)   
-NHSTUB(Unmount_FileSystem, 0xffc00b20)   
-NHSTUB(rewinddir, 0xffc00b20)   
 NHSTUB(kbd_pwr_on, 0xffc00b20)   
 NHSTUB(kbd_pwr_off, 0xffc435e4)			// 2011JUN26 was 0xffc00b20)   
 
