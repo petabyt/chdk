@@ -285,8 +285,8 @@ static KeyMap keymap[] = {
     { 0, KEY_LEFT       , 0x00000008 },    // finsig2
     { 0, KEY_RIGHT      , 0x00000002 },    // finsig2
     { 1, KEY_SET        , 0x00000040 },    // finsig2
-    //{ 0, KEY_SHOOT_FULL , 0x00000800 },
     { 0, KEY_SHOOT_FULL , 0x00000900 },    // 0x00000800(KEY_SHOOT_FULL) + 0x00000100 (KEY_SHOOT_HALF), ToDo: still not shure if correct (related to problems with shoot_full?), finsig2
+    { 0, KEY_SHOOT_FULL_ONLY , 0x00000800 },
     { 0, KEY_SHOOT_HALF , 0x00000100 },    // finsig2
     { 1, KEY_ZOOM_IN    , 0x00000010 },    // finsig2
     { 1, KEY_ZOOM_OUT   , 0x00000020 },    // finsig2

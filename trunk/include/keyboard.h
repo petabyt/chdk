@@ -7,7 +7,7 @@
 #define KEY_RIGHT         4
 #define KEY_SET           5
 #define KEY_SHOOT_HALF    6
-#define KEY_SHOOT_FULL    7
+#define KEY_SHOOT_FULL    7     // includes KEY_SHOOT_HALF press/release. See also KEY_SHOOT_FULL_ONLY.
 #define KEY_ZOOM_IN       8
 #define KEY_ZOOM_OUT      9
 #define KEY_MENU          10
@@ -44,6 +44,8 @@
 #define KEY_RIGHT_SOFT	  35
 #define KEY_UP_SOFT		  36
 #define KEY_DOWN_SOFT	  37
+
+#define KEY_SHOOT_FULL_ONLY 38  // As KEY_SHOOT_FULL but press/release KEY_SHOOT_HALF is not included
 
 #define JOGDIAL_LEFT      100
 #define JOGDIAL_RIGHT     101

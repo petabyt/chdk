@@ -726,6 +726,7 @@ static const struct Keynames {
     { KEY_SET,          "set"        },
     { KEY_SHOOT_HALF,   "shoot_half" },
     { KEY_SHOOT_FULL,   "shoot_full" },
+    { KEY_SHOOT_FULL_ONLY,   "shoot_full_only" },
     { KEY_ZOOM_IN,      "zoom_in"    },
     { KEY_ZOOM_OUT,     "zoom_out"   },
     { KEY_MENU,         "menu"       },

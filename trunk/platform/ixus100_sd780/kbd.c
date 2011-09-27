@@ -800,6 +800,7 @@ static KeyMap keymap[] = {
 
 
 	{ 2, KEY_SHOOT_FULL	, 0x00001001 },
+    { 2, KEY_SHOOT_FULL_ONLY, 0x00001000 },
 	{ 2, KEY_SHOOT_HALF	, 0x00000001 },
 	{ 2, KEY_ZOOM_IN	, 0x00004000 },
 	{ 2, KEY_ZOOM_OUT	, 0x00002000 },

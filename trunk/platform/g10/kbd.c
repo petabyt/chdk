@@ -42,8 +42,9 @@ extern void _GetKbdState(long*);
 #define KEYS_MASK2 (0x00000000) 
 
 static KeyMap keymap[] = {
-    { 0, KEY_SHOOT_HALF  ,0x00000001 }, // Found @0xffb0f7b4, levent 0x00
     { 0, KEY_SHOOT_FULL  ,0x00000003 }, // Found @0xffb0f7c0, levent 0x01
+    { 0, KEY_SHOOT_FULL_ONLY, 0x00000002 },	 // http://chdk.setepontos.com/index.php?topic=1444.msg70223#msg70223
+    { 0, KEY_SHOOT_HALF  ,0x00000001 }, // Found @0xffb0f7b4, levent 0x00
 	
     { 1, KEY_ZOOM_OUT    ,0x00000008 }, // Found @0xffb0f82c, levent 0x03
     { 1, KEY_ZOOM_IN     ,0x00000010 }, // Found @0xffb0f838, levent 0x02

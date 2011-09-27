@@ -698,7 +698,8 @@ static KeyMap keymap[] = {
 	{ KEY_LEFT	, 0x00000080 },
 	{ KEY_RIGHT	, 0x00000100 },
 	{ KEY_SET	, 0x00000200 },
-	{ KEY_SHOOT_FULL, 0x00000006 }, // note 3 here!
+	{ KEY_SHOOT_FULL, 0x00000006 }, // note 6 here!
+    { KEY_SHOOT_FULL_ONLY, 0x00000004 },
 	{ KEY_SHOOT_HALF, 0x00000002 },
 	{ KEY_ZOOM_IN	, 0x00000008 },
 	{ KEY_ZOOM_OUT	, 0x00000010 },
