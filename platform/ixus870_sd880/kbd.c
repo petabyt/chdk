@@ -64,6 +64,7 @@ static KeyMap keymap[] = {
         // (note: key is in group i if it changes a bit in physw_status[i])
         // group, CHDK key      , mask
 	{ 2, KEY_SHOOT_FULL	, 0x00000003 },
+    { 2, KEY_SHOOT_FULL_ONLY, 0x00000002 },
 	{ 2, KEY_SHOOT_HALF	, 0x00000001 },
 
 	{ 2, KEY_UP		, 0x00000080 },

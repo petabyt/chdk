@@ -96,7 +96,8 @@ static KeyMap keymap[] = {
 //	{ 0, KEY_M_DISPLAY , 0x00000008 }, // Switch to display mode, not defined in CHDK (negative? Default 0, 1 when switching)
 //	{ 0, KEY_M_SHOOT   , 0x00000004 }, // Switch to shoot mode, not defined in CHDK (negative? Default 0, 1 when switching)
 //	{ 0, KEY_SHOOT_FULL, 0x00000002 }, // Listed for completeness, this is the 'single' key.
-	{ 0, KEY_SHOOT_FULL, 0x00000003 }, // This is SHOOT_FULL | SHOOT_HALF.
+	{ 0, KEY_SHOOT_FULL, 0x00000003 }, // This is SHOOT_FULL_ONLY | SHOOT_HALF.
+    { 0, KEY_SHOOT_FULL_ONLY, 0x00000002 }, 
 	{ 0, KEY_SHOOT_HALF, 0x00000001 }, 
 
 

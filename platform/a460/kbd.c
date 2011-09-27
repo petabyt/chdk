@@ -404,6 +404,7 @@ static KeyMap keymap[] = {
     { KEY_RIGHT     , 0x00000004 },
     { KEY_SET       , 0x00000100 },
     { KEY_SHOOT_FULL, 0x00000030 }, // note 3 here!
+    { KEY_SHOOT_FULL_ONLY, 0x00000020 },
     { KEY_SHOOT_HALF, 0x00000010 },
 //  { KEY_ZOOM_IN   , 0x00000001 }, // KEY_UP/KEY_ZOOM_IN
 //  { KEY_ZOOM_OUT  , 0x00000002 }, // KEY_DOWN/KEY_ZOOM_OUT/KEY_ERASE

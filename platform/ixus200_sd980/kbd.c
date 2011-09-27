@@ -54,6 +54,7 @@ static KeyMap keymap[] = {
 	 */
 
 	{ 2, KEY_SHOOT_FULL	, 0x00000300 },
+    { 2, KEY_SHOOT_FULL_ONLY, 0x00000200 },
 	{ 2, KEY_SHOOT_HALF	, 0x00000100 },
 
 	{ 2, KEY_UP			, 0x00000080 },
