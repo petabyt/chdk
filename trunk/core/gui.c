@@ -31,6 +31,7 @@
 #endif
 #include "gui_fselect.h"
 #include "gui_batt.h"
+#include "gui_usb.h"
 #include "gui_space.h"
 #include "gui_osd.h"
 #ifdef OPT_TEXTREADER
@@ -763,6 +764,7 @@ static CMenu touchscreen_submenu = {0x28,LANG_MENU_TOUCHSCREEN_VALUES, /*cb_valu
 
 static const char* gui_temp_mode_modes[] = { "Off", "Optical", "CCD", "Battery", "all" };
 static const char* gui_hide_osd_modes[] = { "Don't", "In Playback", "On Disp Press", "Both"};
+static const char* gui_show_usb_info_modes[] = { "Off", "Icon", "Text"};
 static CMenuItem osd_submenu_items[] = {
     MENU_ITEM(0x5c,LANG_MENU_OSD_SHOW,                MENUITEM_BOOL,      &conf.show_osd, 0 ),
     MENU_ENUM2(0x5c,LANG_MENU_OSD_HIDE_PLAYBACK,      &conf.hide_osd, gui_hide_osd_modes ),
@@ -775,6 +777,7 @@ static CMenuItem osd_submenu_items[] = {
     MENU_ITEM(0x5f,LANG_MENU_OSD_SHOW_STATES,         MENUITEM_BOOL,      &conf.show_state, 0 ),
     MENU_ENUM2(0x5f,LANG_MENU_OSD_SHOW_TEMP,         &conf.show_temp, gui_temp_mode_modes ),
     MENU_ITEM(0x59,LANG_MENU_OSD_TEMP_FAHRENHEIT,      MENUITEM_BOOL,      &conf.temperature_unit, 0 ),
+    MENU_ENUM2(0x71,LANG_MENU_USB_SHOW_INFO,         &conf.usb_info_enable, gui_show_usb_info_modes ),
     MENU_ITEM(0x72,LANG_MENU_OSD_LAYOUT_EDITOR,       MENUITEM_PROC,      gui_draw_osd_le, 0 ),
     MENU_ITEM(0x2f,LANG_MENU_OSD_GRID_PARAMS,         MENUITEM_SUBMENU,   &grid_submenu, 0 ),
     MENU_ITEM(0x22,LANG_MENU_OSD_VALUES,  	    	MENUITEM_SUBMENU,   &values_submenu, 0 ),
@@ -2514,6 +2517,7 @@ void gui_draw_osd() {
     if ((recreview_hold==0) &&  (!kbd_is_key_pressed(KEY_SHOOT_HALF) &&  (  ((m&MODE_MASK) == MODE_REC) || (!((m&MODE_MASK) == MODE_REC) &&  !((conf.hide_osd == 1) || (conf.hide_osd == 3)) )) && !(((conf.hide_osd == 2) || (conf.hide_osd == 3))&& (shooting_get_prop(PROPCASE_DISPLAY_MODE) == 1))))   {
         gui_batt_draw_osd();
         gui_space_draw_osd();
+        gui_usb_draw_osd();
         if (conf.fast_ev && !mode_video && (m&MODE_MASK) == MODE_REC ) gui_osd_draw_ev();
     }
 
