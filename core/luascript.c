@@ -1700,6 +1700,99 @@ static int luaCB_reboot( lua_State* L )
 	return 1;
 }
 
+static int luaCB_get_config_value( lua_State* L ) {
+    unsigned int argc = lua_gettop(L);
+    unsigned int id, i;
+    int ret = 1;
+    tConfigVal configVal;
+    
+    if( argc>=1 ) {
+        id = luaL_checknumber(L, 1);
+        switch( conf_getValue(id, &configVal) ) {
+            case CONF_VALUE:
+                lua_pushnumber(L, configVal.numb);
+            break;
+            case CONF_INT_PTR:
+                lua_createtable(L, 0, configVal.numb);
+                for( i=0; i<configVal.numb; i++ ) {
+                    lua_pushinteger(L, configVal.pInt[i]);
+                    lua_rawseti(L, -2, i+1);  //t[i+1]=configVal.pInt[i]
+                }
+            break;
+            case CONF_CHAR_PTR:
+                lua_pushstring(L, configVal.str);
+            break;
+            case CONF_OSD_POS_PTR:
+                lua_pushnumber(L, configVal.pos.x);
+                lua_pushnumber(L, configVal.pos.y); ret++;
+            break;
+            default:
+                if( argc>=2) { //Default
+                    ret = argc-1;
+                } else {
+                    lua_pushnil(L);
+                }
+            break;
+        }
+    } else {
+        lua_pushnil(L);
+    }
+    return ret;
+}
+
+static int luaCB_set_config_value( lua_State* L ) {
+    unsigned int argc = lua_gettop(L);
+    unsigned int id, i, j;
+    tConfigVal configVal = {0,0,0,0};  //initialize isXXX
+    
+    if( argc>=2 ) {
+        id = luaL_checknumber(L, 1);
+        for( i=2; i<=argc; i++) {
+            switch( lua_type(L, i) ) {
+                case LUA_TNUMBER:
+                    if( !configVal.isNumb ) {
+                        configVal.numb = luaL_checknumber(L, i);
+                        configVal.isNumb++;
+                    }
+                    switch( configVal.isPos ) {
+                        case 0: configVal.pos.x = luaL_checknumber(L, i); configVal.isPos++; break;
+                        case 1: configVal.pos.y = luaL_checknumber(L, i); configVal.isPos++; break;
+                    }
+                break;
+                case LUA_TSTRING:
+                    if( !configVal.isStr ) {
+                        configVal.str = (char*)luaL_checkstring(L, i);
+                        configVal.isStr++;
+                    }
+                break;
+                case LUA_TTABLE:
+                    if( !configVal.isPInt ) {
+                        configVal.numb = lua_objlen(L, i);
+                        if( configVal.pInt ) {
+                            free(configVal.pInt);
+                            configVal.pInt = NULL;
+                        }
+                        configVal.pInt = malloc(configVal.numb*sizeof(int));
+                        if( configVal.pInt ) {
+                            for( j=1; j<=configVal.numb; j++) {
+                                lua_rawgeti(L, i, j);
+                                configVal.pInt[j-1] = lua_tointeger(L, -1);
+                                lua_pop(L, 1);
+                            }
+                        }
+                        configVal.isPInt++;
+                    }
+                break;
+            }
+        }
+        lua_pushboolean(L, conf_setValue(id, configVal));
+        if( configVal.pInt ) {
+            free(configVal.pInt);
+            configVal.pInt = NULL;
+        }
+    } else lua_pushboolean(L, 0);
+    return 1;
+}
 #ifdef CAM_CHDK_PTP
 /*
 msg = read_usb_msg([timeout])
@@ -2006,6 +2099,8 @@ static const luaL_Reg chdk_funcs[] = {
    FUNC(call_func_ptr)
 #endif
    FUNC(reboot)
+   FUNC(get_config_value)
+   FUNC(set_config_value)
 #ifdef CAM_CHDK_PTP
    FUNC(read_usb_msg)
    FUNC(write_usb_msg)

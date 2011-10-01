@@ -147,6 +147,7 @@ static const struct keyword_token keywords[] = {
   {"get_zoom_steps",          TOKENIZER_GET_ZOOM_STEPS},
   {"get_zoom",                TOKENIZER_GET_ZOOM},
   {"get_exp_count",           TOKENIZER_GET_EXP_COUNT},
+  {"get_config_value",        TOKENIZER_GET_CONFIG_VALUE},
 
 
 
@@ -186,6 +187,7 @@ static const struct keyword_token keywords[] = {
   {"set_zoom_rel",            TOKENIZER_SET_ZOOM_REL},
   {"set_zoom",                TOKENIZER_SET_ZOOM},
   {"set_record",              TOKENIZER_SET_RECORD},
+  {"set_config_value",        TOKENIZER_SET_CONFIG_VALUE},
   
   
   {"wait_click",              TOKENIZER_WAIT_CLICK},
