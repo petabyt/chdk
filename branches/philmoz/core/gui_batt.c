@@ -69,7 +69,7 @@ static void gui_batt_draw_icon () {
 //-------------------------------------------------------------------
 static void gui_batt_draw_charge() {
     int perc = get_batt_perc();
-    color cl = (perc<=10)?conf.osd_color_warn:conf.osd_color;
+    color cl = (perc<=20)?conf.osd_color_warn:conf.osd_color;
     sprintf(osd_buf, "%3d%%", perc);
     osd_buf[5]=0;
     draw_string(conf.batt_txt_pos.x, conf.batt_txt_pos.y, osd_buf, cl);

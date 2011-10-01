@@ -144,7 +144,7 @@ void load_chdk_palette()
 {
     extern int active_palette_buffer;
     // Only load for the standard record and playback palettes
-    if ((active_palette_buffer == 0) || (active_palette_buffer == 4))
+    if ((active_palette_buffer == 0) || (active_palette_buffer == 4) || (active_palette_buffer == 6))
     {
         int *pal = (int*)vid_get_bitmap_active_palette();
         if (pal[CHDK_COLOR_BASE+0] != 0x33ADF62)

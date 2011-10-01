@@ -2297,6 +2297,8 @@ void gui_redraw()
         draw_set_guard();
         gui_menu_force_redraw();
         gui_fselect_force_redraw();
+        extern void console_force_redraw();
+        console_force_redraw();
 #ifdef CAM_TOUCHSCREEN_UI
         extern int redraw_buttons;
         redraw_buttons = 1;
