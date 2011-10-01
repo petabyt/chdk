@@ -281,8 +281,9 @@ static KeyMap keymap[] = {
 //  { 1, TOUCH_SCREEN       , 0x00000008 },  // Touch screen panel
     { 1, KEY_ZOOM_IN        , 0x00001000 },  // Found @0xff3d144c, levent 0x02
     { 1, KEY_ZOOM_OUT       , 0x00008000 },  // Found @0xff3d1454, levent 0x03
-    { 2, KEY_SHOOT_HALF     , 0x00000200 },  // Found @0xff3d1464, levent 0x00
     { 2, KEY_SHOOT_FULL     , 0x00000a00 },  // Found @0xff3d146c, levent 0x01
+    { 2, KEY_SHOOT_FULL_ONLY, 0x00000800 },	 // http://chdk.setepontos.com/index.php?topic=1444.msg70223#msg70223
+    { 2, KEY_SHOOT_HALF     , 0x00000200 },  // Found @0xff3d1464, levent 0x00
 
     { 3, KEY_PRINT          , 0x00000001, LB(0,1), 0, "CHDK",  0,    GUI_MODE_NONE,      100, MODE_REC|MODE_PLAY|MODE_VID }, // virtual touch screen key
 

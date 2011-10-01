@@ -10,6 +10,7 @@
 #include "gui_draw.h"
 #include "gui_lang.h"
 #include "gui_batt.h"
+#include "gui_usb.h"
 #include "gui_space.h"
 #include "gui_grid.h"
 #include "gui_osd.h"
@@ -40,6 +41,7 @@ static OSD_elem osd[]={
 #if CAM_EV_IN_VIDEO
     {LANG_OSD_LAYOUT_EDITOR_EV_VIDEO,         &conf.ev_video_pos,     {70,24}},
 #endif
+    {LANG_OSD_LAYOUT_EDITOR_USB_INFO,   &conf.usb_info_pos,    {31, 14}},  
     {0}
 };
 static int osd_to_draw;
@@ -118,6 +120,7 @@ void gui_osd_draw() {
       #if CAM_EV_IN_VIDEO
         gui_osd_draw_ev_video(1);
       #endif
+        gui_usb_draw_osd();
         for (i=1; i<=2; ++i) {
             draw_rect((osd[curr_item].pos->x>=i)?osd[curr_item].pos->x-i:0, (osd[curr_item].pos->y>=i)?osd[curr_item].pos->y-i:0, 
                       osd[curr_item].pos->x+osd[curr_item].size.x+i-1, osd[curr_item].pos->y+osd[curr_item].size.y+i-1,

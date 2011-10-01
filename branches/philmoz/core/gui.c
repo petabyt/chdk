@@ -31,6 +31,7 @@
 #endif
 #include "gui_fselect.h"
 #include "gui_batt.h"
+#include "gui_usb.h"
 #include "gui_space.h"
 #include "gui_osd.h"
 #ifdef OPT_TEXTREADER
@@ -290,6 +291,8 @@ static void gui_load_script_default(int arg);
 static const char* gui_script_autostart_enum(int change, int arg);
 static const char* gui_script_param_set_enum(int change, int arg);
 #endif
+
+static const char* gui_show_usb_info_enum(int change, int arg);
 
 void rinit();
 
@@ -790,6 +793,7 @@ static CMenuItem osd_submenu_items[] = {
     {0x5f,LANG_MENU_OSD_SHOW_STATES,         MENUITEM_BOOL,      &conf.show_state },
     {0x5f,LANG_MENU_OSD_SHOW_TEMP,         MENUITEM_ENUM,      (int*)gui_temp_mode_enum },
     {0x59,LANG_MENU_OSD_TEMP_FAHRENHEIT,      MENUITEM_BOOL,      &conf.temperature_unit},
+    {0x71,LANG_MENU_USB_SHOW_INFO,              MENUITEM_ENUM,          (int*)gui_show_usb_info_enum },
     {0x72,LANG_MENU_OSD_LAYOUT_EDITOR,       MENUITEM_PROC,      (int*)gui_draw_osd_le },
     {0x2f,LANG_MENU_OSD_GRID_PARAMS,         MENUITEM_SUBMENU,   (int*)&grid_submenu },
     {0x22,LANG_MENU_OSD_VALUES,  	    	MENUITEM_SUBMENU,   (int*)&values_submenu },
@@ -1082,6 +1086,15 @@ static void gui_enum_value_change(int *value, int change, unsigned num_items) {
 static const char* gui_change_simple_enum(int* value, int change, const char** items, unsigned num_items) {
 	gui_enum_value_change(value, change, num_items);
     return items[*value];
+}
+
+//-------------------------------------------------------------------
+const char* gui_show_usb_info_enum(int change, int arg) {
+    static const char* modes[]={ "Off", "Icon", "Text"};
+
+    gui_enum_value_change(&conf.usb_info_enable,change,sizeof(modes)/sizeof(modes[0]));
+
+    return modes[conf.usb_info_enable];
 }
 
 //-------------------------------------------------------------------
@@ -1994,7 +2007,8 @@ void gui_chdk_draw()
     gui_draw_osd();
 
 #ifdef CAM_DISP_ALT_TEXT
-    draw_txt_string(20, 14, "<ALT>", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+ // draw_txt_string(20, 14, "<ALT>", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+    draw_txt_string(20, 14, "<ALT>", MAKE_COLOR(COLOR_RED, COLOR_WHITE));
 #endif
 
 #ifdef OPT_SCRIPTING
@@ -2720,6 +2734,7 @@ void gui_draw_osd() {
     if ((recreview_hold==0) &&  (!kbd_is_key_pressed(KEY_SHOOT_HALF) &&  (  ((m&MODE_MASK) == MODE_REC) || (!((m&MODE_MASK) == MODE_REC) &&  !((conf.hide_osd == 1) || (conf.hide_osd == 3)) )) && !(((conf.hide_osd == 2) || (conf.hide_osd == 3))&& (shooting_get_prop(PROPCASE_DISPLAY_MODE) == 1))))   {
         gui_batt_draw_osd();
         gui_space_draw_osd();
+        gui_usb_draw_osd();
         if (conf.fast_ev && !mode_video && (m&MODE_MASK) == MODE_REC ) gui_osd_draw_ev();
     }
 
