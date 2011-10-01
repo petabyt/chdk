@@ -5,10 +5,26 @@
 #include "script.h"
 
 #define USER_MENU_ITEMS 14
+#define CONF_STR_LEN        100
+
+#define CONF_EMPTY          0
+#define CONF_VALUE          1
+#define CONF_VALUE_PTR      2
+#define CONF_INT_PTR        3
+#define CONF_CHAR_PTR       4
+#define CONF_OSD_POS_PTR    5
 
 typedef struct {
     unsigned short  x, y;
 } OSD_pos;
+
+typedef struct {
+    int isNumb, isStr, isPInt, isPos;
+    int numb;
+    char* str;
+    int* pInt;
+    OSD_pos pos;
+} tConfigVal;
 
 typedef struct {
     int save_raw;
@@ -314,6 +330,8 @@ extern void conf_load_defaults();
 extern int shutter_int;
 extern void conf_change_dng(void);
 extern void conf_update_prevent_shutdown(void);
+extern int conf_getValue(unsigned short id, tConfigVal* configVal);
+extern int conf_setValue(unsigned short id, tConfigVal configVal);
 
 // reyalp: putting these in conf, since the conf values are lookups for them
 // prefixes and extentions available for raw images (index with conf.raw_prefix etc)

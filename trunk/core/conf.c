@@ -669,6 +669,125 @@ void conf_restore() {
 }
 
 //-------------------------------------------------------------------
+int conf_getValue(unsigned short id, tConfigVal* configVal) {
+    unsigned short i;
+    int ret = CONF_EMPTY;
+    OSD_pos* pos;
+    
+    if( id==0 ) {
+        configVal->numb = 0;
+        for( i=0; i<CONF_NUM; ++i ) if( configVal->numb<conf_info[i].id ) configVal->numb = conf_info[i].id;
+        ret = CONF_VALUE;
+    } else {
+        for( i=0; i<CONF_NUM; ++i ) {
+            if( conf_info[i].id==id ) {
+                switch( conf_info[i].type ) {
+                    case CONF_VALUE:
+                    case CONF_VALUE_PTR:
+                        switch( conf_info[i].size ) {
+                            case sizeof(int):
+                                configVal->numb = *(int*)conf_info[i].var;
+                                ret = CONF_VALUE;
+                            break;
+                            case sizeof(short):
+                                configVal->numb = *(short*)conf_info[i].var;
+                                ret = CONF_VALUE;
+                            break;
+                            case sizeof(char):
+                                configVal->numb = *(char*)conf_info[i].var;
+                                ret = CONF_VALUE;
+                            break;
+                        }
+                    break;
+                    case CONF_INT_PTR:
+                        configVal->numb = conf_info[i].size/sizeof(int);
+                        configVal->pInt = (int*)conf_info[i].var;
+                        ret = CONF_INT_PTR;
+                    break;
+                    case CONF_CHAR_PTR:
+                        configVal->str = conf_info[i].var;
+                        ret = CONF_CHAR_PTR;
+                    break;
+                    case CONF_OSD_POS_PTR:
+                        pos = (OSD_pos*)conf_info[i].var;
+                        configVal->pos.x = pos->x;
+                        configVal->pos.y = pos->y;
+                        ret = CONF_OSD_POS_PTR;
+                    break;
+                }
+                break;
+            }
+        }
+    }
+    return ret;
+}
+
+//-------------------------------------------------------------------
+int conf_setValue(unsigned short id, tConfigVal configVal) {
+    unsigned short i;
+    int ret = CONF_EMPTY, len, len2;
+    OSD_pos* pos;
+    
+    for( i=0; i<CONF_NUM; ++i ) {
+        if( conf_info[i].id==id ) {
+            switch( conf_info[i].type ) {
+                case CONF_VALUE:
+                case CONF_VALUE_PTR:
+                    if( configVal.isNumb ) {
+                        switch( conf_info[i].size ) {
+                            case sizeof(int):
+                                *(int*)conf_info[i].var = (int)configVal.numb;
+                                ret = CONF_VALUE;
+                            break;
+                            case sizeof(short):
+                                *(short*)conf_info[i].var = (short)configVal.numb;
+                                ret = CONF_VALUE;
+                            break;
+                            case sizeof(char):
+                                *(char*)conf_info[i].var = (char)configVal.numb;
+                                ret = CONF_VALUE;
+                            break;
+                        }
+                    }
+                break;
+                case CONF_INT_PTR:
+                    if( configVal.isPInt ) {
+                        len = conf_info[i].size;
+                        len2 = configVal.numb*sizeof(int);
+                        if( len2<len ) len = len2;
+                        memcpy(conf_info[i].var, configVal.pInt, len);
+                        ret = CONF_INT_PTR;
+                    }
+                break;
+                case CONF_CHAR_PTR:
+                    if( configVal.isStr ) {
+                        len = strlen(configVal.str);
+                        if( len>0 && len<CONF_STR_LEN) {
+                            strncpy(conf_info[i].var, configVal.str ,len+1);
+                        }
+                        ret = CONF_CHAR_PTR;
+                    }
+                break;
+                case CONF_OSD_POS_PTR:
+                    if( configVal.isPos ) {
+                        pos = (OSD_pos*)conf_info[i].var;
+                        pos->x = configVal.pos.x;
+                        pos->y = configVal.pos.y;
+                        ret = CONF_OSD_POS_PTR;
+                    }
+                break;
+            }
+            break;
+        }
+    }
+    if( ret!=CONF_EMPTY ) {
+     //   if (conf_info[i].func) {
+     //      conf_info[i].func();
+     //   }
+        conf_save();
+    }
+    return ret;
+}
 // Common code extracted from raw.c (raw_savefile) and gui_osd.c (gui_osd_draw_raw_info)
 // returns 0 if RAW save is disabled due to mode settings, etc, return 1 if RAW save OK
 int is_raw_enabled()
