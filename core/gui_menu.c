@@ -259,7 +259,15 @@ static void update_enum_value(int direction)
         else if (kbd_is_key_pressed(KEY_ZOOM_IN)) c=6;
         else if (kbd_is_key_pressed(KEY_ZOOM_OUT)) c=3;
         else c=1;
-        ((const char* (*)(int change, int arg))(curr_menu->menu[gui_menu_curr_item].value))(c*direction, curr_menu->menu[gui_menu_curr_item].arg);
+        if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_ENUM)
+        {
+            ((const char* (*)(int change, int arg))(curr_menu->menu[gui_menu_curr_item].value))(c*direction, curr_menu->menu[gui_menu_curr_item].arg);
+        }
+        else
+        {
+            extern const char* gui_change_enum2(const CMenuItem *menu_item, int change);
+            gui_change_enum2(&curr_menu->menu[gui_menu_curr_item], c*direction);
+        }
     }
 
     // force menu redraw
@@ -422,6 +430,7 @@ void gui_menu_kbd_process() {
                         update_bool_value();
                         break;
                     case MENUITEM_ENUM:
+                    case MENUITEM_ENUM2:
                         update_enum_value(-1);
                         break;
                     case MENUITEM_UP:
@@ -443,6 +452,7 @@ void gui_menu_kbd_process() {
                         update_bool_value();
                         break;
                     case MENUITEM_ENUM:
+                    case MENUITEM_ENUM2:
                         update_enum_value(1);
                         break;
                     case MENUITEM_SUBMENU:
@@ -491,6 +501,7 @@ void gui_menu_kbd_process() {
                         gui_menu_redraw=2;
                         break;
                     case MENUITEM_ENUM:
+                    case MENUITEM_ENUM2:
                         update_enum_value(1);
                         gui_menu_redraw=1;
                         break;
@@ -740,6 +751,14 @@ void gui_menu_draw() {
             case MENUITEM_ENUM:
                 if (curr_menu->menu[imenu].value)
                     ch = ((const char* (*)(int change, int arg))(curr_menu->menu[imenu].value))(0, curr_menu->menu[imenu].arg);
+                gui_menu_draw_value(ch, len_enum);
+                break;
+            case MENUITEM_ENUM2:
+                if (curr_menu->menu[imenu].value)
+                {
+                    extern const char* gui_change_enum2(const CMenuItem *menu_item, int change);
+                    ch = gui_change_enum2(&curr_menu->menu[imenu], 0);
+                }
                 gui_menu_draw_value(ch, len_enum);
                 break;
             }
