@@ -56,7 +56,7 @@ const char *video_bitrate_strings[VIDEO_BITRATE_STEPS]={ "0.25x", "0.5x","0.75x"
 //-------------------------------------------------------------------
 static int def_ubasic_vars[SCRIPT_NUM_PARAMS] = {0};
 static int def_batt_volts_max, def_batt_volts_min;
-static OSD_pos def_histo_pos, def_dof_pos, def_batt_icon_pos, def_space_icon_pos, def_space_hor_pos, def_space_ver_pos, def_batt_txt_pos, def_space_txt_pos, 
+static OSD_pos def_histo_pos, def_dof_pos, def_batt_icon_pos, def_usb_info_pos, def_space_icon_pos, def_space_hor_pos, def_space_ver_pos, def_batt_txt_pos, def_space_txt_pos, 
                def_mode_state_pos, def_mode_raw_pos, def_mode_video_pos, def_mode_ev_pos, def_values_pos, def_clock_pos, def_ev_video_pos, def_temp_pos;
 static int def_user_menu_vars[USER_MENU_ITEMS] = {0};
 
@@ -405,7 +405,12 @@ static const ConfInfo conf_info[] = {
     // Touch screen U/I overrides
     CONF_INFO(244, conf.touchscreen_disable_video_controls, CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(245, conf.touchscreen_disable_shortcut_controls, CONF_DEF_VALUE, i:0, NULL),
-    };
+
+	// USB Icon enable & position
+    CONF_INFO(246, conf.usb_info_enable, CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO(247, conf.usb_info_pos,    CONF_DEF_PTR,  ptr:&def_usb_info_pos, NULL),
+
+   };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
 // Since only a few of the ConfInfo entries have a 'func' it saves space to not store the function addresses in the ConfInfo struct
@@ -522,6 +527,8 @@ static void conf_init_defaults() {
     def_batt_icon_pos.y = 0;
     def_batt_txt_pos.x=178;
     def_batt_txt_pos.y=1*FONT_HEIGHT;
+    def_usb_info_pos.x = 95;
+    def_usb_info_pos.y = 0;
     def_space_icon_pos.x = vid_get_bitmap_screen_width()-100;
     def_space_icon_pos.y = 0;
     def_space_ver_pos.x = vid_get_bitmap_screen_width()-7;

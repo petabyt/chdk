@@ -74,7 +74,7 @@ endif
 OBJS=entry.o nothumb.o main.o gui_draw.o gui_menu.o gui_palette.o gui_mbox.o \
      gui_fselect.o gui.o kbd.o action_stack.o conf.o \
      histogram.o gui_batt.o gui_space.o gui_osd.o raw.o \
-     gui_lang.o gui_mpopup.o gui_grid.o raw_merge.o \
+     gui_usb.o gui_lang.o gui_mpopup.o gui_grid.o raw_merge.o \
      levent.o shot_histogram.o dng.o bitvector.o console.o $(OPT_OBJS)
 
 gui.o: FORCE

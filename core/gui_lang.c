@@ -587,6 +587,10 @@ static char* gui_lang_default = \
 "462 \"Touchscreen overrides\"\n"
 "463 \"Video AE Controls\"\n"
 "464 \"<Alt> Shortcut Buttons\"\n"
+
+// USB Remote icon
+"465 \"USB Remote\"\n"
+"466 \"Show USB Remote Status\"\n"
 ;
 
 //-------------------------------------------------------------------

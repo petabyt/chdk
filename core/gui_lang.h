@@ -576,9 +576,13 @@
 #define LANG_MENU_TOUCHSCREEN_VALUES 	    462
 #define LANG_MENU_TS_VIDEO_AE_DISABLE       463
 #define LANG_MENU_TS_ALT_SHORTCUTS_DISABLE  464
+
+// USB remote icon
+#define LANG_OSD_LAYOUT_EDITOR_USB_INFO         465
+#define LANG_MENU_USB_SHOW_INFO                 466
 //-------------------------------------------------------------------
 
-#define GUI_LANG_ITEMS                  464
+#define GUI_LANG_ITEMS                  466
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

@@ -125,6 +125,7 @@ typedef struct {
     OSD_pos mode_ev_pos;
     OSD_pos temp_pos;
     OSD_pos ev_video_pos;
+    OSD_pos usb_info_pos;
 
     color histo_color;
     color histo_color2;    // markers/border
@@ -297,6 +298,9 @@ typedef struct {
     // Overrides to disable touchscreen U/I components (IXUS 310)
     int touchscreen_disable_video_controls;
     int touchscreen_disable_shortcut_controls;
+
+	// Enable USB icon
+    int usb_info_enable; 
 } Conf;
 
 extern Conf conf;
