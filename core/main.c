@@ -167,6 +167,11 @@ void core_spytask() {
 #endif
 
     while (1) {
+
+#ifdef  CAM_LOAD_CUSTOM_COLORS
+        load_chdk_palette();
+#endif
+
         if (raw_data_available) {
             raw_need_postprocess = raw_savefile();
             hook_raw_save_complete();

@@ -181,6 +181,13 @@
 
 #undef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE         // For cameras with 'low light' mode that does now work with raw define this
 
+#undef CAM_LOAD_CUSTOM_COLORS                   // Define to enable loading CHDK custom colors into the camera color palette
+                                                // requires load_chdk_palette() and vid_get_bitmap_active_palette() to be defined
+                                                // correctly for the camera along with
+#undef CAM_USE_COLORED_ICONS                    // If the color palette contains enough shades of red, green, yellow and grey
+                                                // defined then enable this use the better icons (from CHDK-DE). See gui_batt.c
+                                                // and gui_space.c.
+
 //----------------------------------------------------------
 // Override Default values for Camera if necessary
 //----------------------------------------------------------
