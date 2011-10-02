@@ -84,7 +84,7 @@
     #define CAM_ZEBRA_NOBUF 1
 
 	#undef CAM_BITMAP_PALETTE
-	#define CAM_BITMAP_PALETTE		7
+	#define CAM_BITMAP_PALETTE		12
 
 	//zebra letterbox for saving memory
 	#undef ZEBRA_HMARGIN0
@@ -109,5 +109,9 @@
 	#define CAM_AV_OVERRIDE_IRIS_FIX	1				// for cameras that require _MoveIrisWithAv function to override Av in bracketing.
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1       // For cameras with 'low light' mode that does now work with raw define this
+
+    #define CAM_LOAD_CUSTOM_COLORS              1       // Enable loading CHDK colors into the camera palette memory/hardware
+    #define CHDK_COLOR_BASE                     0xB3    // Start color index for CHDK colors loaded into camera palette.
+    #define CAM_USE_COLORED_ICONS               1       // Enable using the CHDK-DE colored icons.
 
 //----------------------------------------------------------

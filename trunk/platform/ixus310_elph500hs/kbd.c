@@ -399,7 +399,7 @@ void virtual_buttons()
     if (((guiMode == 0) && kbd_is_key_pressed(KEY_SHOOT_HALF)) || !show_virtual_buttons()) return;
 
     // Check if border of CHDK button is corrupted, force redraw if so
-    if (!draw_test_pixel(0, 80, (guiMode)?COLOR_RED:COLOR_WHITE)) redraw_buttons = 1;
+    if (!draw_test_pixel(0, 80, (guiMode)?COLOR_GREEN:COLOR_WHITE)) redraw_buttons = 1;
 
     if (redraw_buttons)
     {
@@ -411,7 +411,7 @@ void virtual_buttons()
         //c1 = MAKE_COLOR((camMode&MODE_VID)?COLOR_TRANSPARENT:COLOR_BLACK, COLOR_WHITE);
         //c2 = MAKE_COLOR((camMode&MODE_VID)?COLOR_TRANSPARENT:COLOR_RED, (camMode&MODE_VID)?COLOR_RED:COLOR_WHITE);
         color c1 = MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE);
-        color c2 = MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED);
+        color c2 = MAKE_COLOR(COLOR_TRANSPARENT, COLOR_GREEN);
 
         for (i=0; keymap[i].hackkey; i++)
         {

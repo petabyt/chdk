@@ -97,39 +97,81 @@ static void gui_space_draw_icon() {
     yy = conf.space_icon_pos.y;
 
     space_color();
+    
+#if CAM_USE_COLORED_ICONS
+
+    draw_get_icon_colors();
+
+    color cl1 = icon_green[1];
+    color cl2 = icon_green[0];
+    if (((conf.space_warn_type == 0) && (perc <= conf.space_perc_warn)) ||
+        ((conf.space_warn_type == 1) && (GetFreeCardSpaceKb() <= conf.space_mb_warn*1024)))
+    {
+        cl1 = icon_red[1];
+        cl2 = icon_red[0];
+    } 
+  
+    //icon
+    draw_hline(xx,    yy,    30,  icon_grey[2]);
+    draw_vline(xx,    yy,    12,  icon_grey[2]);
+    draw_vline(xx+31, yy,    18,  icon_grey[0]);
+    draw_line(xx+1,   yy+13, xx+5, yy+17, icon_grey[0]);
+    draw_hline(xx+6,  yy+18, 24,  icon_grey[0]);
+           
+    draw_filled_rect(xx+1,  yy+1,   xx+30,   yy+13,  MAKE_COLOR(icon_grey[1], icon_grey[1]));
+    draw_filled_rect(xx+5,  yy+14,  xx+30,   yy+17,  MAKE_COLOR(icon_grey[1], icon_grey[1]));
+    draw_filled_rect(xx+3,  yy+14,  xx+6,    yy+15,  MAKE_COLOR(icon_grey[1], icon_grey[1]));
+    
+    draw_filled_rect(xx+2,  yy+2,   xx+6,    yy+4,   MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
+    draw_filled_rect(xx+2,  yy+6,   xx+6,    yy+7,   MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
+    draw_filled_rect(xx+2,  yy+9,   xx+6,    yy+10,  MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
+    draw_filled_rect(xx+2,  yy+12,  xx+6,    yy+13,  MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
+    draw_filled_rect(xx+5,  yy+15,  xx+9,    yy+16,  MAKE_COLOR(icon_yellow[0], icon_yellow[0]));   
+    
+    draw_hline(xx+8,  yy,    2, COLOR_TRANSPARENT);
+    draw_hline(xx+11, yy,    3, icon_grey[0]);
+    draw_hline(xx+11, yy+18, 2, COLOR_TRANSPARENT);
+
+    //fill icon
+    draw_rect(xx+9,         yy+4,   xx+28,   yy+13,  cl1);
+    draw_filled_rect(xx+27-(17*perc/100),      yy+5,       xx+27,     yy+12,   MAKE_COLOR(cl2, cl2));
+
+#else
 
 #define LE  23
 #define WI  15
 
     draw_hline(xx+5,     yy,      LE-5,     COLOR_BLACK);          // outer top
-    draw_hline(xx+6,     yy+1,    LE-7,     MAKE_COLOR(cl, cl));   // inner top
+    draw_hline(xx+6,     yy+1,    LE-7,     cl);                   // inner top
     draw_vline(xx,       yy+5,    WI-5,     COLOR_BLACK);          // outer left
-    draw_vline(xx+1,     yy+6,    WI-7,     MAKE_COLOR(cl, cl));   // inner left
+    draw_vline(xx+1,     yy+6,    WI-7,     cl);                   // inner left
     draw_hline(xx,       yy+WI,   LE,       COLOR_BLACK);          // outer bottom
-    draw_hline(xx+1,     yy+WI-1, LE-2,     MAKE_COLOR(cl, cl));   // inner bottom
+    draw_hline(xx+1,     yy+WI-1, LE-2,     cl);                   // inner bottom
     draw_vline(xx+LE,    yy,      WI,       COLOR_BLACK);          // outer right
-    draw_vline(xx+LE-1,  yy+1,    WI-2,     MAKE_COLOR(cl, cl));   // inner right
-    draw_line(xx+5,      yy,      xx,       yy+5,     COLOR_BLACK);          // edge
-    draw_line(xx+5,      yy+1,    xx+1,     yy+5,     MAKE_COLOR(cl, cl));   // edge
-    draw_line(xx+6,      yy+1,    xx+1,     yy+6,     MAKE_COLOR(cl, cl));   // edge
+    draw_vline(xx+LE-1,  yy+1,    WI-2,     cl);                   // inner right
+    draw_line(xx+5,      yy,      xx,       yy+5,  COLOR_BLACK);   // edge
+    draw_line(xx+5,      yy+1,    xx+1,     yy+5,  cl);            // edge
+    draw_line(xx+6,      yy+1,    xx+1,     yy+6,  cl);            // edge
 
     // memory fill
     x = LE - (perc*(LE-3)/100) - 2;
     if (x>5) draw_hline(xx+6,      yy+2,     x-6,     COLOR_BLACK);
-    if (x>2) draw_hline(xx+x+1,    yy+2,     LE-x-3,  MAKE_COLOR(cl, cl));
-    else     draw_hline(xx+4,      yy+2,     LE-6,    MAKE_COLOR(cl, cl));
-    for(i=3; i<7; i++) {                                                               //          /--------------|
-        if (x>7-i) draw_pixel(xx+8-i,     yy+i,     COLOR_BLACK);                      //        /  1st for loop  |
-        if (x>7-i) draw_pixel(xx+x,       yy+i,     COLOR_BLACK);                      //      /__________________|
-        draw_hline(xx+x+1, yy+i, LE-x-3, MAKE_COLOR(cl, cl));                          //     |                   |
-    }                                                                                  //     |     2nd for loop  |
-    for(i=7; i<WI-2; i++) {                                                            //     |                   |
-        if (x>1) draw_pixel(xx+2,         yy+i,     COLOR_BLACK);                      //     |-------------------|
-        if (x>1) draw_pixel(xx+x,         yy+i,     COLOR_BLACK);
-        draw_hline(xx+x+1, yy+i, LE-x-3, MAKE_COLOR(cl, cl));
+    if (x>2) draw_hline(xx+x+1,    yy+2,     LE-x-3,  cl);
+    else     draw_hline(xx+4,      yy+2,     LE-6,    cl);
+    for(i=3; i<7; i++) {                                                   //          /--------------|
+        if (x>7-i) draw_pixel(xx+8-i,     yy+i,     COLOR_BLACK);          //        /  1st for loop  |
+        if (x>7-i) draw_pixel(xx+x,       yy+i,     COLOR_BLACK);          //      /__________________|
+        draw_hline(xx+x+1, yy+i, LE-x-3, cl);                              //     |                   |
+    }                                                                      //     |     2nd for loop  |
+    for(i=7; i<WI-2; i++) {                                                //     |                   |
+        if (x>1) draw_pixel(xx+2, yy+i, COLOR_BLACK);                      //     |-------------------|
+        if (x>1) draw_pixel(xx+x, yy+i, COLOR_BLACK);
+        draw_hline(xx+x+1, yy+i, LE-x-3, cl);
     }
     if (x>1) draw_hline(xx+2,      yy+WI-2,    x-2,     COLOR_BLACK);
-    draw_hline(xx+x+1,             yy+WI-2,    LE-x-3,  MAKE_COLOR(cl, cl));
+    draw_hline(xx+x+1,             yy+WI-2,    LE-x-3,  cl);
+
+#endif
 }
 
 //-------------------------------------------------------------------
