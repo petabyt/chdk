@@ -265,6 +265,7 @@ batch-zip: version
 	$(MAKE) -s --no-print-directory PLATFORM=ixus200_sd980  PLATFORMSUB=101c NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=ixus200_sd980  PLATFORMSUB=101d NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=a480  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
+	$(MAKE) -s --no-print-directory PLATFORM=a490  PLATFORMSUB=100d NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=a490  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100d NO_INC_BUILD=1 firzipsub
 	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
@@ -349,6 +350,7 @@ batch-zip: version
 	mv $(topdir)bin/$(VER)-s95-100i-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s95-100i-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/$(VER)-s95-100k-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s95-100k-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/$(VER)-ixus750_sd550-100h-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus750_sd550-100h-$(BUILD_NUMBER)_BETA.zip
+	mv $(topdir)bin/$(VER)-a490-100d-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a490-100d-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/$(VER)-a490-100f-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a490-100f-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/$(VER)-a495-100d-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a495-100d-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/$(VER)-a495-100e-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a495-100e-$(BUILD_NUMBER)_BETA.zip
@@ -490,6 +492,7 @@ batch-zip-complete: version
 	$(MAKE) -s --no-print-directory PLATFORM=ixus200_sd980  PLATFORMSUB=101c NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=ixus200_sd980  PLATFORMSUB=101d NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=a480  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
+	$(MAKE) -s --no-print-directory PLATFORM=a490  PLATFORMSUB=100d NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=a490  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100d NO_INC_BUILD=1 firzipsubcomplete
 	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
@@ -626,10 +629,12 @@ batch-zip-complete: version
 	mv $(topdir)bin/s95-100k-$(BUILD_NUMBER).zip $(topdir)bin/s95-100k-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/ixus750_sd550-100h-$(BUILD_NUMBER).zip $(topdir)bin/ixus750_sd550-100h-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/ixus750_sd550-100h-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus750_sd550-100h-$(BUILD_NUMBER)-full_BETA.zip
+	mv $(topdir)bin/a490-100d-$(BUILD_NUMBER).zip $(topdir)bin/a490-100d-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/a490-100f-$(BUILD_NUMBER).zip $(topdir)bin/a490-100f-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/a495-100d-$(BUILD_NUMBER).zip $(topdir)bin/a495-100d-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/a495-100e-$(BUILD_NUMBER).zip $(topdir)bin/a495-100e-$(BUILD_NUMBER)_BETA.zip
 	mv $(topdir)bin/a495-100f-$(BUILD_NUMBER).zip $(topdir)bin/a495-100f-$(BUILD_NUMBER)_BETA.zip
+	mv $(topdir)bin/a490-100d-$(BUILD_NUMBER)-full.zip $(topdir)bin/a490-100d-$(BUILD_NUMBER)-full_BETA.zip
 	mv $(topdir)bin/a490-100f-$(BUILD_NUMBER)-full.zip $(topdir)bin/a490-100f-$(BUILD_NUMBER)-full_BETA.zip
 	mv $(topdir)bin/a495-100d-$(BUILD_NUMBER)-full.zip $(topdir)bin/a495-100d-$(BUILD_NUMBER)-full_BETA.zip
 	mv $(topdir)bin/a495-100e-$(BUILD_NUMBER)-full.zip $(topdir)bin/a495-100e-$(BUILD_NUMBER)-full_BETA.zip
@@ -779,6 +784,7 @@ batch-clean:
 	$(MAKE) -s --no-print-directory PLATFORM=ixus200_sd980  PLATFORMSUB=101c NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=ixus200_sd980  PLATFORMSUB=101d NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=a480  PLATFORMSUB=100b NO_INC_BUILD=1 clean
+	$(MAKE) -s --no-print-directory PLATFORM=a490  PLATFORMSUB=100d NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=a490  PLATFORMSUB=100f NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100d NO_INC_BUILD=1 clean
 	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100e NO_INC_BUILD=1 clean
