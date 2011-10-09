@@ -16,6 +16,8 @@
 #include "motion_detector.h"
 #include "ptp.h"
 #include "core.h"
+#include "gui_fselect.h"
+#include "gui_lang.h"
 
 #include "../lib/lua/lstate.h"  // for L->nCcalls, baseCcalls
 
@@ -760,6 +762,24 @@ static int luaCB_md_detect_motion( lua_State* L )
     return lua_yield(L, 0);
   else
     return luaL_error( L, "md_init_motion_detector failed" );
+}
+
+static void file_browser_selected(const char *fn) {
+    // Reconnect button input to script - will also signal action stack
+    // that file browser is finished and return last selected file
+    // to script caller
+    state_kbd_script_run = 1;
+}
+
+static int luaCB_file_browser( lua_State* L ) {
+    // Disconnect button input from script so buttons will work in file browser
+    state_kbd_script_run = 0;
+    // Push file browser action onto stack - will loop doing nothing until file browser exits
+    action_push(AS_FILE_BROWSER);
+    // Switch to file browser gui mode.
+    gui_fselect_init(LANG_STR_FILE_BROWSER, luaL_optstring( L, 1, NULL ), file_browser_selected);
+    // Yield the script so that the action stack will process the AS_FILE_BROWSER action
+    return lua_yield(L, 0);
 }
 
 static int luaCB_autostarted( lua_State* L )
@@ -2106,6 +2126,9 @@ static const luaL_Reg chdk_funcs[] = {
    FUNC(write_usb_msg)
 #endif
    FUNC(get_meminfo)
+
+   FUNC(file_browser)
+
   {NULL, NULL},
 };
 
