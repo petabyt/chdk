@@ -727,7 +727,7 @@ extern void draw_circle(coord x, coord y, const unsigned int r, color cl);
 extern void draw_ellipse(coord xc, coord yc, unsigned int a, unsigned int b, color cl);
 extern void draw_filled_ellipse(coord xc, coord yc, unsigned int a, unsigned int b, color cl);
     
-#if CAM_USE_COLORED_ICONS
+#if defined(CAM_USE_COLORED_ICONS)
 extern void draw_get_icon_colors();
 extern color icon_green[3], icon_red[3], icon_yellow[3], icon_grey[3];
 #endif

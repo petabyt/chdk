@@ -98,7 +98,7 @@ static void gui_space_draw_icon() {
 
     space_color();
     
-#if CAM_USE_COLORED_ICONS
+#if defined(CAM_USE_COLORED_ICONS)
 
     draw_get_icon_colors();
 
