@@ -69,8 +69,9 @@ static KeyMap keymap[] = {
 	{ 1, KEY_PLAYBACK	    , 0x00200000 },
 	{ 2, KEY_LEFT_SOFT		, 0x00000080 },
 	{ 2, KEY_LEFT			, 0x00000100 },
-	{ 2, KEY_SHOOT_HALF		, 0x00002000 },
 	{ 2, KEY_SHOOT_FULL		, 0x00002002 },
+	{ 2, KEY_SHOOT_FULL_ONLY, 0x00000002 },
+	{ 2, KEY_SHOOT_HALF		, 0x00002000 },
    	{ 0, 0, 0 }
 };
 

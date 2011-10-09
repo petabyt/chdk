@@ -3,7 +3,8 @@ srcdir=./
 
 # Define the lists of cameras / firmware versions with a BETA status
 # This is a list of cameras for which ALL firmware versions are BETA
-BETA_CAMERA="sx1 a1100 a2000 ixus90_sd790 g11 s90 ixus100_sd780 ixus120_sd940 ixus200_sd980 ixus85_sd770 d10 ixus95_sd1200 a430 s95 a490 a495 ixus300_sd4000 sx220hs sx230hs sx130is ixus310_elph500hs"
+BETA_CAMERA="sx1 a1100 a2000 ixus90_sd790 g11 s90 ixus100_sd780 ixus120_sd940 ixus200_sd980"
+BETA_CAMERA+=" ixus85_sd770 d10 ixus95_sd1200 a430 s95 a490 a495 ixus300_sd4000 sx220hs sx230hs sx130is ixus310_elph500hs"
 # If specific firmware version(s) for a camera are BETA; but others are not
 # then define the BETA versions here - e.g. g12-100c
 BETA_CAMERA_FW="ixus750_sd550-100h"
@@ -140,6 +141,9 @@ firzipsubcomplete: infoline clean firsub
 	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/*  > $(DEVNULL)
 	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/EXAM/* 	 > $(DEVNULL)
 	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/TEST/* 	 > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/4Pack/* 	 > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/4Pack/Lua/* 	 > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/4Pack/uBasic/* 	 > $(DEVNULL)
 	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/syscurves.CVF 	 > $(DEVNULL)
 	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)doc/changelog.txt  > $(DEVNULL)
 	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)doc/changelog.txt  > $(DEVNULL)
@@ -155,15 +159,13 @@ ifdef PLATFORMOS
 	rm -f $(topdir)bin/PS.FIR
   endif
   ifeq ($(PLATFORMOS),dryos)
-#	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)doc/readme.txt  > $(DEVNULL)
-#	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)doc/readme.txt  > $(DEVNULL)
-ifdef OPT_FI2
-  ifdef FI2KEY
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
-	rm -f $(topdir)bin/PS.FI2
-  endif
-endif
+    ifdef OPT_FI2
+      ifdef FI2KEY
+	    zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
+	    zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
+	    rm -f $(topdir)bin/PS.FI2
+      endif
+    endif
   endif
 endif
 # if COPY_TO is defined then copy this camera/firmware version to the copied firmware version

@@ -578,6 +578,9 @@ void draw_filled_ellipse(coord xc, coord yc, unsigned int a, unsigned int b, col
 }
 
 //-------------------------------------------------------------------
+    
+#if defined(CAM_USE_COLORED_ICONS)
+
 // Colors for icons
 // 3 shades for each color
 //  icon_xxx[0] = dark, icon_xxx[1] = medium, icon_xxx[2] = light
@@ -600,3 +603,5 @@ void draw_get_icon_colors()
         icon_grey[0]   = COLOR_ICON_PLY_GREY_DK;   icon_grey[1]   = COLOR_ICON_PLY_GREY;   icon_grey[2]   = COLOR_ICON_PLY_GREY_LT;
     }
 }
+
+#endif

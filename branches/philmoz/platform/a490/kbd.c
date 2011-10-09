@@ -40,7 +40,8 @@ static KeyMap keymap[] = {
     //{ 0, KEY_DISPLAY  , 0x00020000 }, // Playback
     { 0, KEY_PRINT      , 0x00020000 }, // Playback
 
-    { 2, KEY_SHOOT_FULL , 0x00000030 }, // ? 0x00000010(KEY_SHOOT_HALF) + 0x00000030 (KEY_SHOOT_FULL)
+    { 2, KEY_SHOOT_FULL , 0x00000030 }, // 0x00000010 (KEY_SHOOT_HALF) + 0x00000020 (KEY_SHOOT_FULL_ONLY)
+    { 2, KEY_SHOOT_FULL_ONLY, 0x00000020 },
     { 2, KEY_SHOOT_HALF , 0x00000010 },
     
     { 2, KEY_UP         , 0x00100000 },

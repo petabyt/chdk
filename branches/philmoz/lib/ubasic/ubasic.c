@@ -211,6 +211,7 @@ static int
 factor(void)
 {
   int r = 0;
+  tConfigVal configVal;
 
   DEBUG_PRINTF("factor: token %d\n", tokenizer_token());
   switch(tokenizer_token()) {
@@ -533,6 +534,12 @@ case TOKENIZER_IS_PRESSED:
         r = 0;
     else
         r = 1;
+    break;
+case TOKENIZER_GET_CONFIG_VALUE:
+    accept(TOKENIZER_GET_CONFIG_VALUE);
+    int var1 = expr();
+    int var2 = expr();
+    if( conf_getValue(var1, &configVal) == CONF_VALUE) r = configVal.numb; else r = var2;
     break;
   }
   default:
@@ -1686,6 +1693,21 @@ static void reboot_statement() {
 	}
 }
 
+static void set_config_value_statement()
+{
+    int id, value;
+    tConfigVal configVal = {0,0,0,0};
+    
+    accept(TOKENIZER_SET_CONFIG_VALUE);
+    id = expr();
+    value = expr();
+    if( conf_getValue(id, &configVal) == CONF_VALUE ) {
+        configVal.numb = value;
+        configVal.isNumb = 1;
+        conf_setValue(id, configVal);
+    }
+    accept_cr();
+}
 /*---------------------------------------------------------------------------*/
 
 static void wait_click_statement()
@@ -1711,6 +1733,22 @@ static void is_key_statement(void)
     accept_cr();
 }
 
+static void get_config_value_statement()
+{
+    int var, var1, var2;
+    tConfigVal configVal;
+    accept(TOKENIZER_GET_CONFIG_VALUE);
+    var = expr();
+    var1 = expr();
+    var2 = tokenizer_variable_num();
+    accept(TOKENIZER_VARIABLE);
+    if( conf_getValue(var, &configVal) == CONF_VALUE ) {
+        ubasic_set_variable(var2, configVal.numb);
+    } else {
+        ubasic_set_variable(var2, var1);
+    }
+    accept_cr();
+}
 static void on_off_statement(int token, void (*on)(void), void (*off)(void))
 {
   accept(token);
@@ -2204,6 +2242,16 @@ statement(void)
   case TOKENIZER_REBOOT:
       reboot_statement();
       break;
+
+ case TOKENIZER_GET_CONFIG_VALUE:
+    get_config_value_statement();
+
+    break;
+
+  case TOKENIZER_SET_CONFIG_VALUE:
+    set_config_value_statement();
+    break;
+	  
 
   default:
       DEBUG_PRINTF("ubasic.c: statement(): not implemented %d\n", token);

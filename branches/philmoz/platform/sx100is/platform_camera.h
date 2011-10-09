@@ -54,5 +54,7 @@
 
     #define DNG_EXT_FROM ".CR2"
     #define CAM_MULTIPART               1
+    #define CAM_EXT_TV_RANGE            1
+    #define CAM_DETECT_SCREEN_ERASE     1
 //----------------------------------------------------------
 

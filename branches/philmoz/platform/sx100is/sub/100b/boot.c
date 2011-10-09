@@ -30,6 +30,11 @@ void debug_my_blink()
 	while (counter--) { asm("nop\n nop\n"); };
 }*/
 
+void taskCreateHook(int *p) { //function taken from the ixus80 port, adapted of course
+ p-=16;
+ if (p[0]==0xffc98ee4)  p[0]=(int)exp_drv_task;
+} 
+
 //#define DEBUG_LED 0xC02200C4
 void boot() { //#fs
     long *canon_data_src = (void*)0xFFEBE418; 
@@ -54,6 +59,9 @@ void boot() { //#fs
 
     for(i=0;i<canon_bss_len/4;i++)
 	canon_bss_start[i]=0;
+
+    *(int*)0x1930=(int)taskCreateHook; //from ixus80 port
+    *(int*)0x1934=(int)taskCreateHook; //from ixus80 port (was taskCreateHook2...)
 
     *(int*)0x2578= (*(int*)0xC02200B8)&1 ? 0x100000: 0x200000;  // replacement of sub_FFC12E38
 

@@ -371,7 +371,7 @@
 
 #elif CAM_BITMAP_PALETTE==7
 
-// Used by :- G12, S95, SX130IS, SX30
+// Used by :- S95, SX130IS
 
 #define COLOR_WHITE         0x01
 #define COLOR_RED           0x1e
@@ -571,12 +571,12 @@
 
 #elif CAM_BITMAP_PALETTE==12
 
-// Used by :- IXUS310_ELPH500HS
+// Used by :- G12, SX30, IXUS310_ELPH500HS
 
 // Default Canon colors
 #define COLOR_WHITE         0x01
-#define COLOR_GREY          0x1a
-#define COLOR_GREY_MED      0x16
+#define COLOR_GREY_DK       0x1a
+#define COLOR_GREY          0x16
 #define COLOR_GREY_LT       0x0E
 #undef SCREEN_COLOR
 #define SCREEN_COLOR        0x1D
@@ -597,7 +597,7 @@
 #define COLOR_YELLOW_LT     (CHDK_COLOR_BASE+12)
 
 #define COLOR_CYAN          COLOR_BLUE_LT
-#define COLOR_BG            COLOR_GREY
+#define COLOR_BG            COLOR_GREY_DK
 #define COLOR_FG            COLOR_WHITE
 #define COLOR_SELECTED_BG   COLOR_GREY_LT
 #define COLOR_SELECTED_FG   COLOR_BLACK
@@ -605,7 +605,7 @@
 
 #define COLOR_SPLASH_RED    COLOR_RED_DK
 #define COLOR_SPLASH_PINK   COLOR_RED_LT
-#define COLOR_SPLASH_GREY   COLOR_GREY_MED
+#define COLOR_SPLASH_GREY   COLOR_GREY_LT
 
 #define COLOR_HISTO_R       COLOR_RED
 #define COLOR_HISTO_R_PLAY  COLOR_RED
@@ -633,8 +633,8 @@
 #define	COLOR_ICON_REC_YELLOW		COLOR_YELLOW
 #define	COLOR_ICON_REC_YELLOW_DK	COLOR_YELLOW_DK
 #define	COLOR_ICON_REC_YELLOW_LT	COLOR_YELLOW_LT
-#define	COLOR_ICON_REC_GREY			COLOR_GREY_MED
-#define	COLOR_ICON_REC_GREY_DK		COLOR_GREY
+#define	COLOR_ICON_REC_GREY			COLOR_GREY
+#define	COLOR_ICON_REC_GREY_DK		COLOR_GREY_DK
 #define	COLOR_ICON_REC_GREY_LT		COLOR_GREY_LT
 
 #else
@@ -726,9 +726,11 @@ extern void draw_fill(coord x, coord y, color cl_fill, color cl_bound);
 extern void draw_circle(coord x, coord y, const unsigned int r, color cl);
 extern void draw_ellipse(coord xc, coord yc, unsigned int a, unsigned int b, color cl);
 extern void draw_filled_ellipse(coord xc, coord yc, unsigned int a, unsigned int b, color cl);
-
+    
+#if defined(CAM_USE_COLORED_ICONS)
 extern void draw_get_icon_colors();
 extern color icon_green[3], icon_red[3], icon_yellow[3], icon_grey[3];
+#endif
 
 #if CAM_USES_ASPECT_CORRECTION //nandoide sept-2009
 void draw_set_aspect_xcorrection_proc(unsigned int (*xcorrection_proc)(unsigned int x));

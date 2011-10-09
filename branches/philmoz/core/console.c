@@ -223,12 +223,3 @@ void console_redraw()
 	console_draw();
 }
 
-// If the console is in use then redraw it (used when gui_redraw detects screen has been ereased)
-void console_force_redraw()
-{
-    if (console_is_inited())
-    {
-	    console_last_drawn = get_tick_count();
-    	console_draw();
-    }
-}

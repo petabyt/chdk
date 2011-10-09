@@ -13,6 +13,7 @@
 #define MENUITEM_ENUM           8
 #define MENUITEM_COLOR_BG       9
 #define MENUITEM_COLOR_FG       10
+#define MENUITEM_ENUM2          11
 
 #define MENUITEM_F_MASK         0x00f0
 #define MENUITEM_F_UNSIGNED     0x0010
@@ -30,8 +31,9 @@
 //-------------------------------------------------------------------
 typedef struct {
     char				symbol;
+    char                opt_len;
+    short               type;
     int                 text;
-    int                 type;
     int                 *value;
     int                 arg;
 } CMenuItem;
@@ -43,6 +45,10 @@ typedef struct {
     const CMenuItem     *menu;
 } CMenu;
 
+// Menu item constructor macros
+#define MENU_ITEM(sym, txt, typ, val, arg)  { (char)sym, 0, (short)typ, (int)txt, (int*)val, (int)arg }
+#define MENU_ENUM2(sym, txt, val, arg)      { (char)sym, sizeof(arg)/sizeof(arg[0]), MENUITEM_ENUM2, (int)txt, (int*)val, (int)arg }
+#define MENU_ENUM2a(sym, txt, val, arg, num){ (char)sym, (char)num, MENUITEM_ENUM2, (int)txt, (int*)val, (int)arg }
 
 //-------------------------------------------------------------------
 extern void gui_menu_init(CMenu *menu_ptr);

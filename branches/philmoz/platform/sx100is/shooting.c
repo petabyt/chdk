@@ -90,7 +90,7 @@ Shooting Modes
 Movie: 640 x 480 (30 fps/30 fps LP), 320 x 240 (30 fps) available up to 4GB or 60 minutes,
     160 x 120 (3 minutes at 15 fps)
 
-canon mode list FFE9E7EC in 100b
+canon mode list FFE9E7EC in 100b, ffe9e824 in 100c
 */
 static const CapturemodeMap modemap[] = {
 	{ MODE_AUTO,               32768 },
