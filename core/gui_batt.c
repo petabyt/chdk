@@ -45,7 +45,7 @@ static void gui_batt_draw_icon () {
 
     int perc = get_batt_perc();
 
-#if CAM_USE_COLORED_ICONS
+#if defined(CAM_USE_COLORED_ICONS)
 
     draw_get_icon_colors();
 

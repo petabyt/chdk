@@ -579,7 +579,7 @@ void draw_filled_ellipse(coord xc, coord yc, unsigned int a, unsigned int b, col
 
 //-------------------------------------------------------------------
     
-#if CAM_USE_COLORED_ICONS
+#if defined(CAM_USE_COLORED_ICONS)
 
 // Colors for icons
 // 3 shades for each color
