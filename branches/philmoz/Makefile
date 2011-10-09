@@ -1,32 +1,6 @@
 topdir=./
 srcdir=./
 
-# Define the lists of cameras / firmware versions with a BETA status
-# This is a list of cameras for which ALL firmware versions are BETA
-BETA_CAMERA="sx1 a1100 a2000 ixus90_sd790 g11 s90 ixus100_sd780 ixus120_sd940 ixus200_sd980"
-BETA_CAMERA+=" ixus85_sd770 d10 ixus95_sd1200 a430 s95 a490 a495 ixus300_sd4000 sx220hs sx230hs sx130is ixus310_elph500hs"
-# If specific firmware version(s) for a camera are BETA; but others are not
-# then define the BETA versions here - e.g. g12-100c
-BETA_CAMERA_FW="ixus750_sd550-100h"
-
-# Set the BETA status for the current camera/firmware being built
-STATE=
-ifneq (,$(findstring $(PLATFORM),$(BETA_CAMERA)))
-	STATE=_BETA
-endif
-ifneq (,$(findstring $(PLATFORM)-$(PLATFORMSUB),$(BETA_CAMERA_FW)))
-	STATE=_BETA
-endif
-
-# If processing 'camindex' target for CHDK-Shell then only need to load the
-# camera/firmware makefile.inc file, not the whole CHDK makefile hierarchy
-# this speeds up generation of the camindex.csv file
-ifdef FASTLOAD
-
-include $(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc
-
-else
-
 include makefile.inc
 
 SUBDIRS=tools lib platform core loader CHDK
@@ -178,42 +152,35 @@ endif
 	rm -f $(topdir)bin/DISKBOOT.BIN
 
 
+# define targets to batch build all cameras & firmware versions
+# list of cameras/firmware versions is in 'camera_list.csv'
+# each row in 'camera_list.csv' has 5 entries:
+# - camera (mandatory)         :- name of camera to build
+# - firmware (mandatory)       :- firmware version to build
+# - beta status (optional)     :- set to BETA for cameras still in beta status
+# - copy to (optional)         :- if this firmware version can also be used for another version on the same
+#                                 camera define the alternate firmware here. see COPY_TO comments above.
+# - skip auto build (optional) :- any value in this column will exclude the camera/firmware from the auto build
 batch-zip: version
-	$(MAKE) -f makefile.cam VER=$(VER) ACTION=firzipsub batch
+	sh auto_build.sh $(MAKE) firzipsub camera_list.csv
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
-
 
 batch-zip-complete: version
-	$(MAKE) -f makefile.cam VER=$(VER) ACTION=firzipsubcomplete batch
+	sh auto_build.sh $(MAKE) firzipsubcomplete camera_list.csv
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
 
-
 batch-clean:
-	$(MAKE) -f makefile.cam VER=$(VER) ACTION=clean batch
-
-endif
-
-
-# Special targets for CHDK-Shell. These generate the camindex.csv file
-# used by CHDK-Shell to work out what cameras / firmware versions to include.
-.PHONY: camindex
-camindex:
-	@echo "$(PLATFORM),$(PLATFORMSUB),$(STATE),$(COPY_TO)"
-	
-camindex.csv: Makefile makefile.cam makefile.fw
-	$(MAKE) -f makefile.cam VER=$(VER) FASTLOAD=1 ACTION=camindex batch > camindex.csv
+	sh auto_build.sh $(MAKE) clean camera_list.csv
 
 
 # Define empty recipes for all the included makefiles (including this one)
 # This stops gmake from attempting to see if the makefiles need to be rebuilt
 Makefile: ;
 makefile.inc: ;
-makefile.cam: ;
-makefile.fw: ;
 version.inc: ;
 buildconf.inc: ;
 localbuildconf.inc: ;
