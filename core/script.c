@@ -520,6 +520,24 @@ static int script_action_stack(long p)
             else
                 action_pop();
             break;
+        case AS_FILE_BROWSER:
+            // state_kbd_script_run is set to 0 when the file browser is started from a Lua script
+            // it is reset back to 1 when the file browser exits and control is returned back to
+            // the script
+            if (state_kbd_script_run)
+            {
+                action_pop();
+#ifdef OPT_LUA
+                if (L)
+                {
+                    // Last selected file is returned by this function in gui_fselect.c
+                    extern char* gui_fselect_result();
+                    // Send file name back to script caller
+                    lua_pushstring( Lt, gui_fselect_result() );
+                }
+#endif
+            }
+            break;
         case AS_MOTION_DETECTOR:
             if(md_detect_motion()==0)
             {
