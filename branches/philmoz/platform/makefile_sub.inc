@@ -72,3 +72,8 @@ $(TARGET_PRIMARY):
 	touch $(TARGET_PRIMARY)
 
 include $(topdir)bottom.inc
+
+
+# Define empty recipes for all the included makefiles (including this one)
+# This stops gmake from attempting to see if the makefiles need to be rebuilt
+$(topdir)platform/makefile_sub.inc: ;

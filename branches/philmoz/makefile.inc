@@ -9,16 +9,13 @@ include $(topdir)buildconf.inc
 # and to avoid getting accidentally included in svn diffs
 # you may also set your default camera here
 -include $(topdir)localbuildconf.inc
-
-ifndef PLATFORM
-$(error PLATFORM has not been defined. Specify the PLATFORM to build on the command line or in localbuildconf.inc)
-endif
-ifndef PLATFORMSUB
-$(error PLATFORMSUB has not been defined. Specify the PLATFORMSUB to build on the command line or in localbuildconf.inc)
-endif
-
 include $(topdir)version.inc
-include $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc
+
+ifdef PLATFORM
+  ifdef PLATFORMSUB
+    include $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc
+  endif
+endif
 
 # Used in gui_debug.c for controlling memory browser allowed address ranges
 # override in platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc to set camera specific value
@@ -222,8 +219,13 @@ ifndef SKIPBUILDRULES
 
 endif
 
+.PHONY: all
 all: all-recursive
+
+.PHONY: clean
 clean: clean-recursive
+
+.PHONY: distclean
 distclean: distclean-recursive
 
 .dep:
@@ -242,6 +244,12 @@ distclean-recursive:
 	done
 
 all-recursive:
+ifndef PLATFORM
+	$(error PLATFORM has not been defined. Specify the PLATFORM to build on the command line or in localbuildconf.inc)
+endif
+ifndef PLATFORMSUB
+	$(error PLATFORMSUB has not been defined. Specify the PLATFORMSUB to build on the command line or in localbuildconf.inc)
+endif
 	@for i in $(SUBDIRS); do \
 		echo \>\> Entering to $(FOLDER)$$i; \
 		$(MAKE) -C $$i FOLDER="$(FOLDER)$$i/" || exit 1; \
@@ -258,3 +266,14 @@ depend-recursive:
 ifdef SILENT
 .SILENT:
 endif
+
+
+# Define empty recipes for all the included makefiles (including this one)
+# This stops gmake from attempting to see if the makefiles need to be rebuilt
+Makefile: ;
+$(topdir)makefile.inc: ;
+$(topdir)buildconf.inc: ;
+$(topdir)localbuildconf.inc: ;
+$(topdir)version.inc: ;
+$(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc: ;
+$(topdir)platform/fi2.inc: ;

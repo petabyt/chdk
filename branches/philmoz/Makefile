@@ -5,12 +5,6 @@ include makefile.inc
 
 SUBDIRS=tools lib platform core loader CHDK
 
-all: all-recursive
-
-clean: clean-recursive
-
-distclean: distclean-recursive
-
 .PHONY: fir
 fir: version firsub
 
@@ -117,7 +111,8 @@ firzipsubcomplete: infoline clean firsub
 	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/TEST/* 	 > $(DEVNULL)
 	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/4Pack/* 	 > $(DEVNULL)
 	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/4Pack/Lua/* 	 > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/4Pack/uBasic/* 	 > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/4Pack/uBasic/* > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/EDITOR/* 	 > $(DEVNULL)
 	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/syscurves.CVF 	 > $(DEVNULL)
 	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)doc/changelog.txt  > $(DEVNULL)
 	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)doc/changelog.txt  > $(DEVNULL)
@@ -175,14 +170,3 @@ batch-zip-complete: version
 
 batch-clean:
 	sh auto_build.sh $(MAKE) clean camera_list.csv
-
-
-# Define empty recipes for all the included makefiles (including this one)
-# This stops gmake from attempting to see if the makefiles need to be rebuilt
-Makefile: ;
-makefile.inc: ;
-version.inc: ;
-buildconf.inc: ;
-localbuildconf.inc: ;
-$(topdir)/platform/fi2.inc: ;
-$(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc: ;
