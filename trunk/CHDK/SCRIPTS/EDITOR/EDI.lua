@@ -11,23 +11,76 @@
 --@default a 0
 --]]
 --[[
-    Version:    2.3
+    Version:    2.4
     Author:     Pawel Tokarz aka Outslider
     License:    GPL 3+; see: http://www.gnu.org/licenses/gpl-3.0.html
                 in order to use with GPL<3: You can also use it with GPL<3 software.
     
     Changelog for 2.x series:
-    - File browser is now merged with an editor
+    - file_browser() - new CDHK function used instead of lua browser
+    - 'menu', 'display' and 'shoot_half' buttons might be changed now (by setting global variables)
+    - small cleaning the code
 
     More info you can find on CHDK Forum http://chdk.setepontos.com/index.php?topic=6465.0
     
     additionally: the biggest file I successfully opened on SX130IS had 916 kB. Opening 962 kB file failed. Other cameras has different size of free memory, nevertheless opening average scripts as 5-10 kb shouldn't cause any problems.
-    
 --]]
 
---require "filebrws"
+-- CHECK GIVEN PARAMETERS --
+if y<5 then y=5 end
+if x<10 then x=10 end
+--maximal x and y belong to the user
 
---*****This part is simply taken from FILEBRWS.LUA script******--
+if n>2 then
+    print("Newline setting incorrect")
+    print("Using Unix style [\\n]")
+    print("Press any key...")
+    wait_click(60000)
+    n=2
+    end
+if n<1 then
+    print("Newline setting incorrect")
+    print("Using Windows style [\\r\\n]")
+    print("Press any key...")
+    wait_click(60000)
+    n=1
+    end
+
+if n==1 then CR="\r" end
+if n==2 then CR="" end
+-- /CHECK GIVEN PARAMETERS --
+
+-- CONFIGURATION --
+CONSOLE_HEIGHT=y
+CONSOLE_WIDTH=x
+PATH="A/CHDK/SCRIPTS"  --where to open file_browser()?
+EXIT=false
+SAVED='S'              --is file saved?
+MODE="MOVE"
+WRITE_SUBMODE=1
+JUMPS={1,4,10,20}
+JUMP=1
+POS_X=0
+POS_Y=1
+SHIFT_Y=0
+SHIFT_X=0
+LETTER_NR=1
+WRITE_KEY=0
+EDI_VERSION="2.4"
+--which key does what?
+FILE_MENU_BUTTON="menu"
+INSERT_MENU_BUTTON="display"
+CHANGE_SUBMODE_BUTTON="shoot_half"
+KEYMAP={{{"a","b","c","d","e","f"},{"g","h","i","j","k","l"},{"m","n","o","p","q","r","s"},{"t","u","v","w","x","y","z"}},{{"A","B","C","D","E","F"},{"G","H","I","J","K","L"},{"M","N","O","P","Q","R","S"},{"T","U","V","W","X","Y","Z"}},{{"1","2","3"},{"4","5","6"},{"7","8","9"},{"0","+","-","*","/","="}}}
+ERASE_AS_SPACE={true,false,true} --when ERASE_AS_SPACE[WRITE_SUBMODE]==true then ERASE works as a space, otherwise - as a backspace.
+INSERT_MAP={{"newline"},{"(",")","[","]","{","}"},{"<",">",",","'",":",";"},{"_","+","-","/","\\","="},{"@","!","?","#","\"","."},{"~","&","*","|","^","`"},{"ASCII code"}}
+FUNCTION_MAP={{"print","shoot"},{"is_key","if"},{"then","end"},{"sleep","wait_click"},{"function","@title"},{"@param","@default"},{"--[[","--]]"}}
+FILE_MENU={{"Save"},{"Save and exit"},{"Exit (no save!)"},{"Clear whole file"},{"About EDI"}}
+TOPBAR="EDI - Text editor"
+STATUSBAR="statbar"
+FILENAME=""
+-- /CONFIGURATION --
+
 function get_input()
     KEYS_TABLE={"left","up","right","down","set","shoot_half","shoot_full","menu","display","erase","zoom_in","zoom_out"}
     REPEATABLE_KEYS_TABLE={"left","up","right","down","zoom_out","zoom_in"}
@@ -48,219 +101,32 @@ function get_input()
         end
     end
 
-function init_env()
-    PATH={"A/"}
-    set_console_layout(1,1,40,CONSOLE_HEIGHT)
-    set_console_autoredraw(0)
-    end
-    
-function pwd()
-    out=""
-    levels=table.getn(PATH)
-    for li=1,levels do
-        if li==1 then out=PATH[1] end
-        if li==2 then out=out..PATH[2] end
-        if li>2 then out=out.."/"..PATH[li] end
-        end
-    return out
-    end
-
-function is_dir(dir)
-    stat=os.stat(dir)
-    if stat~=nil then
-        out=stat["is_dir"]
-        end
-    if stat==nil then
-        out=false
-        end
-    return out
-    end
-
-function is_file(file)
-    stat=os.stat(file)
-    out=stat["is_file"]
-    return out
-    end
-    
-function file_mtime(file)
-    stat=os.stat(file)
-    out=stat["mtime"]
-    return out
-    end
-
-function file_size(file,string)
-    stat=os.stat(file)
-    out=stat["size"]
-    if string=="h" then
-        if out<=1024 then out={out,"B"}
-        elseif out>1024 and out<=1024*1024 then out={out/1024,"kB"}
-        elseif out>1024*1024 and out<=1024*1024*1024 then out={out/1024/1024,"MB"}
-        elseif out>1024*1024*1024 then out={out/1024/1024/1024,"GB"} end
-        end
-    return out
-    end
-
-function cd(dir)
-        old_path={}
-        for li=1,table.getn(PATH) do old_path[li]=PATH[li] end
-        if dir==".." then PATH[table.getn(PATH)]=nil
-        elseif dir~="." then PATH[table.getn(PATH)+1]=dir
-            end
-        print("old_path: ",old_path[table.getn(old_path)])
-        if is_dir(pwd())==false then print("cd failed"); PATH={}; for li=1,table.getn(old_path) do PATH[li]=old_path[li] end; return false end
-    end
-
-function ls(dir)
-    if is_dir(dir) then
-        out=os.listdir(dir, true)
-        end
-    return out
-    end
-
 function mk_bar(text,width)
     return(string.sub(string.sub("------------------------ ",26-(width-string.len(text))/2,25)..text..string.sub(" ------------------------",1,(width-string.len(text))/2),1,width-1))
     end
 
-function browser(height)
-    DEBBUG=""   --For additional parameters displayed in STATBAR
-    CONSOLE_HEIGHT=height
-    if CONSOLE_HEIGHT<5 then CONSOLE_HEIGHT=5 end
-    init_env()
-    browser_pos=1
-    shift=0
-    ls_dir=ls(pwd())
-    first_file_nr=1
-    TOPBAR="Select a file"
-    STATBAR=pwd()..DEBBUG
-    repeat
-        STATBAR=pwd()..DEBBUG
-        if browser_pos>table.getn(ls_dir) then browser_pos=first_file_nr end
-        if browser_pos<first_file_nr then browser_pos=table.getn(ls_dir) end
-        if browser_pos>CONSOLE_HEIGHT-4+shift then shift=browser_pos-CONSOLE_HEIGHT+4 end
-        if browser_pos<=shift then shift=browser_pos-1 end
-        --[[ commented since causes problems
-        if ls_dir[1]=="." and browser_pos==1 and shift==0 then
-            browser_pos=2
-            shift=1
+function load_file()
+    file=file_browser(PATH)
+    for li=0,string.len(file) do
+        char=string.sub(file,string.len(file)-li,string.len(file)-li)
+        if char~="/" then
+            FILENAME=char..FILENAME
+            else break
             end
-        -]]
-        print(mk_bar(TOPBAR,40))
-        for line=1, CONSOLE_HEIGHT-3 do
-            if ls_dir[line+shift]==nil then print("")
-                else
-                if table.getn(PATH)==1 then file=pwd()..ls_dir[line+shift] else file=pwd().."/"..ls_dir[line+shift] end
-                if is_dir(file) then append="/"; file_descr="< Dir > " end
-                if is_file(file) then append=""; size=file_size(file, "h"); file_descr=string.sub("   ",string.len(size[1]),3)..size[1].." "..size[2]..string.sub("  ",string.len(size[2]),2) end
-                name=ls_dir[line+shift]..append
-                if browser_pos~=line+shift then print("\6 "..name..string.sub("            \6 ",string.len(name),14)..file_descr.."\6") end
-                if browser_pos==line+shift then print("\4 "..name..string.sub("\183\183\183\183\183\183\183\183\183\183\183\183\17 ",string.len(name),14)..file_descr.."\6") end
-                end
-            end
-        print(mk_bar(STATBAR,40))
-        input=get_input()
-        if input=="up" then browser_pos=browser_pos-1 end
-        if input=="down" then browser_pos=browser_pos+1 end
-        if input=="set" then
-            if table.getn(PATH)==1 then selected_file=pwd()..ls_dir[browser_pos] else selected_file=pwd().."/"..ls_dir[browser_pos] end
-            if is_dir(selected_file) then
-                cd(ls_dir[browser_pos])
-                ls_dir=ls(pwd())
-                if table.getn(PATH)==1 then first_file_nr=1 else first_file_nr=2 end
-                browser_pos=first_file_nr
-                shift=0
-                STATBAR=pwd()..DEBBUG
-                end
-            if is_file(selected_file) then
-                return selected_file
-                end
-            end
-        until false
-    end
-
---*****The end of the file browser******--
-
-
-
-if y<5 then y=5 end
-if x<10 then x=10 end
---maximal x and y belong to the user
-
-CONSOLE_HEIGHT=y
-CONSOLE_WIDTH=x
-set_console_layout(1,1,CONSOLE_WIDTH,CONSOLE_HEIGHT)
-EXIT=false
-SAVED='S'           --is file saved?
-MODE="MOVE"
-WRITE_SUBMODE=1
-JUMPS={1,4,10,20}
-JUMP=1
-POS_X=0
-POS_Y=1
-SHIFT_Y=0
-SHIFT_X=0
-LETTER_NR=1
-WRITE_KEY=0
-EDI_VERSION="2.3"
-
---button configuration doesn't work
-FILE_MENU_BUTTON="menu"
-INSERT_MENU_BUTTON="display"
-CHANGE_SUBMODE_BUTTON="shoot_half"
-
-KEYMAP={{{"a","b","c","d","e","f"},{"g","h","i","j","k","l"},{"m","n","o","p","q","r","s"},{"t","u","v","w","x","y","z"}},{{"A","B","C","D","E","F"},{"G","H","I","J","K","L"},{"M","N","O","P","Q","R","S"},{"T","U","V","W","X","Y","Z"}},{{"1","2","3"},{"4","5","6"},{"7","8","9"},{"0","+","-","*","/","="}}}
-ERASE_AS_SPACE={true,false,true} --when ERASE_AS_SPACE[WRITE_SUBMODE]==true then ERASE works as a space, otherwise - as a backspace.
-INSERT_MAP={{"newline"},{"(",")","[","]","{","}"},{"<",">",",","'",":",";"},{"_","+","-","/","\\","="},{"@","!","?","#","\"","."},{"~","&","*","|","^","`"},{"ASCII code"}}
-FUNCTION_MAP={{"print","shoot"},{"is_key","if"},{"then","end"},{"sleep","wait_click"},{"function","@title"},{"@param","@default"}}
-FILE_MENU={{"Save"},{"Save and exit"},{"Exit (no save!)"},{"Clear whole file"},{"About EDI"}}
-TOPBAR="EDI - Text editor"
-STATUSBAR="statbar"
-
-if n>2 then
-    print("Newline setting incorrect")
-    print("Using Unix style [\\n]")
-    print("Press any key...")
-    wait_click(60000)
-    n=2
-    end
-if n<1 then
-    print("Newline setting incorrect")
-    print("Using Windows style [\\r\\n]")
-    print("Press any key...")
-    wait_click(60000)
-    n=1
-    end
-
-if n==1 then CR="\r" end
-if n==2 then CR="" end
-
-file=browser(CONSOLE_HEIGHT)
-if not is_file(file) then EXIT=true end
-
-FILENAME=""
-
-for li=0,string.len(file) do
-    char=string.sub(file,string.len(file)-li,string.len(file)-li)
-    if char~="/" then
-        FILENAME=char..FILENAME
-        else break
         end
+    --lets try to load this file--
+    file_h=io.open(file,"r")
+    print("take file content by lines")
+    FILE_CONTENT={}
+    line=1
+    repeat
+        FILE_CONTENT[line]=file_h:read("*line")
+        FILE_LINESN=line-1
+        line=line+1
+        until FILE_CONTENT[line-1]==nil
+    file_h:close()    
+    print(FILE_LINESN)
     end
-
---since file browser could set console layout other, than we like:
-set_console_layout(1,1,CONSOLE_WIDTH,CONSOLE_HEIGHT)
-
---lets try to load this file--
-file_h=io.open(file,"r")
-print("take file content by lines")
-FILE_CONTENT={}
-line=1
-repeat
-    FILE_CONTENT[line]=file_h:read("*line")
-    FILE_LINESN=line-1
-    line=line+1
-    until FILE_CONTENT[line-1]==nil
-file_h:close()    
-print(FILE_LINESN)
 
 function edi_draw()
     if POS_Y>CONSOLE_HEIGHT-4+SHIFT_Y then SHIFT_Y=POS_Y-CONSOLE_HEIGHT+4 end
@@ -324,9 +190,9 @@ function edi_move()
         if POS_X<0 and POS_Y>1 then POS_Y=POS_Y-1; POS_X=string.len(FILE_CONTENT[POS_Y])
         elseif POS_X<0 and POS_Y==1 then POS_Y=FILE_LINESN; POS_X=string.len(FILE_CONTENT[POS_Y]) end
         end
-    if input=="shoot_half" then JUMP=JUMP+1 end
+    if input==CHANGE_SUBMODE_BUTTON then JUMP=JUMP+1 end
     if JUMP>table.getn(JUMPS) then JUMP=1 end
-    if input=="menu" then
+    if input==FILE_MENU_BUTTON then
         todo=menu(FILE_MENU,CONSOLE_WIDTH,CONSOLE_HEIGHT,"File menu",16)
         if todo=="Save" then save() end
         if todo=="Save and exit" then save();exit() end
@@ -347,11 +213,11 @@ function edi_write()
         end
     write_mode_descript=write_mode_descript.."\6"
     STATUSBAR=write_mode_descript
-    TOPBAR="EDI - Text editor - ["..SAVED.."]"
+    TOPBAR="EDI \6 "..FILENAME.." ["..SAVED.."] "
     insertion=""
     edi_draw()
     input=get_input()
-    if input=="shoot_half" then
+    if input==CHANGE_SUBMODE_BUTTON then
         WRITE_SUBMODE=WRITE_SUBMODE+1
         WRITE_KEY=0
         if WRITE_SUBMODE>table.getn(KEYMAP) then WRITE_SUBMODE=1 end
@@ -389,7 +255,7 @@ function edi_write()
     if input=="set" and WRITE_KEY==0 then MODE="MOVE"
         elseif input=="set" and WRITE_KEY~=0 then WRITE_KEY=0; insertion=""
         end
-    if input=="display" then
+    if input==INSERT_MENU_BUTTON then
         WRITE_KEY=0; insertion=""; SAVED="!"
         insertion=menu(INSERT_MAP,CONSOLE_WIDTH,CONSOLE_HEIGHT,"Insert a special char")
         if insertion==nil then insertion=menu(FUNCTION_MAP,CONSOLE_WIDTH,CONSOLE_HEIGHT,"Insert a function",10) end
@@ -407,7 +273,7 @@ function edi_write()
             end        
         if insertion=="ASCII code" then insertion=insert_ascii() end
         end
-    if input=="menu" then
+    if input==FILE_MENU_BUTTON then
         WRITE_KEY=0; insertion=""
         todo=menu(FILE_MENU,CONSOLE_WIDTH,CONSOLE_HEIGHT,"File menu")
         if todo=="Save" then save() end
@@ -506,7 +372,7 @@ function menu(tab,width,height,header,item_width)
         if input=="left" then menu_pos_x=menu_pos_x-1 end
         if input=="right" then menu_pos_x=menu_pos_x+1 end
         if input=="set" then exit_menu=true; return tab[menu_pos_y][menu_pos_x] end
-        if input=="display" or input=="menu" then exit_menu=true; return nil end
+        if input==INSERT_MENU_BUTTON or input==FILE_MENU_BUTTON then exit_menu=true; return nil end
         until exit_menu==true
     end
 
@@ -568,27 +434,25 @@ function about()
     print("   ")
     print(mk_bar("ABOUT EDI",CONSOLE_WIDTH))
     print("   ")
-    print("   EDI - simple text editor")
-    print("         for CHDK project")
+    print("  EDI - text editor for CHDK")
     print("   ")
-    print("   Version:     "..EDI_VERSION)
-    print("   Author:      Pawel Tokarz")
-    print("   Suggestions: waterwingz,")
-    print("                truhli_fredy")
+    print("  Version: "..EDI_VERSION)
+    print("  Author:  Pawel Tokarz")
+    print("  Thanks:  waterwingz, truhli_fredy,")
+    print("           philmoz, reyalp")
     print("   ")
-    print("   More info in README.TXT file")
+    print("  More info in README.TXT file")
     print("")
     print(mk_bar("PRESS MENU",CONSOLE_WIDTH))
-    for line=1,CONSOLE_HEIGHT-17 do print("") end
+    for line=1,CONSOLE_HEIGHT-16 do print("") end
     exit_about=false
     repeat
         input=get_input()
-        if input=="menu" then exit_about=true end
+        if input==FILE_MENU_BUTTON then exit_about=true end
         until(exit_about==true)
 --    ans=menu({{"OK"}},CONSOLE_WIDTH,CONSOLE_HEIGHT-5,"EDI - version: "..EDI_VERSION,5)
 --    if ans=="YES" then FILE_CONTENT={""}; FILE_LINESN=1; POS_X=0; POS_Y=1; SAVED="!" end
     end
-    
 
 function main_loop()
     insertion=""
@@ -597,7 +461,9 @@ function main_loop()
         if MODE=="WRITE" then edi_write() end
         until EXIT==true
     end
-    
+
+set_console_layout(1,1,CONSOLE_WIDTH,CONSOLE_HEIGHT)
 set_console_autoredraw(0)
+load_file()
 main_loop()
 
