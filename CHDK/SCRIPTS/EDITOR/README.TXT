@@ -5,6 +5,10 @@ EDI - README.TXT
 0. ABOUT
 
     This is readme for EDI - Text editor written in Lua for CHDK. It's designed to give your camera possibility to edit text files (especially scripts) directly on camera.
+    
+    **** ATTENTION! ****
+    EDI 2.4 requires file_browser() function which is aviable since changeset 1359! If you have an obsolete CHDK version you'll need to use older EDI version (2.3 for example)
+    
 
     WARNING!
 
@@ -28,10 +32,8 @@ EDI - README.TXT
     
     2.2 Select a file - filebrowser
     
-    Once you run the script you'll see a file browser. You have to chose a file you want to edit. Just navigate using UP/DOWN and SET buttons as in normal CHDK filebrowser. The selected file is indicated by small triangle on the left. If you selected a directory pressing SET will take you inside it. Special directory ".." moves you into the parent directory. If you press SET button with file selected this file will be opened.
+    Once you run the script you'll see a file browser. You have to chose a file you want to edit. Just navigate using UP/DOWN and SET buttons as in normal CHDK filebrowser. If you selected a directory pressing SET will take you inside it. Special directory ".." moves you into the parent directory. If you press SET button with file selected this file will be opened.
     
-    /*Note for scripts writers: filebowser part in thie script is usefull filebrowser that could be used in other scripts if needed. Feel free to use it.*/
-
 
     
     2.3 EDI
