@@ -61,10 +61,6 @@
 	#define CAM_QUALITY_OVERRIDE 1	
 	#undef   CAM_SENSOR_BITS_PER_PIXEL
 	#define  CAM_SENSOR_BITS_PER_PIXEL   12
-	#undef   CAM_WHITE_LEVEL
-	#define  CAM_WHITE_LEVEL             ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
-	#undef   CAM_BLACK_LEVEL
-	#define  CAM_BLACK_LEVEL             127
 
 	// pattern
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
@@ -91,37 +87,7 @@
 
 	// aspect correction
     #undef CAM_USES_ASPECT_CORRECTION
-    #undef CAM_USES_ASPECT_YCORRECTION
     #define CAM_USES_ASPECT_CORRECTION		1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
-    #define CAM_USES_ASPECT_YCORRECTION		0  //only uses mappings on x coordinate
-
-    #undef ASPECT_XCORRECTION
-    #define ASPECT_XCORRECTION(x)   ( ((x)<<1) )
-
-    // Note color palette affects grids!
-    #undef ASPECT_GRID_XCORRECTION
-    #define ASPECT_GRID_XCORRECTION(x)   ( (x) )
-
-    #undef ASPECT_GRID_YCORRECTION
-    #define ASPECT_GRID_YCORRECTION(y)  ( (y) )
-
-    #undef ASPECT_VIEWPORT_XCORRECTION 
-    #define ASPECT_VIEWPORT_XCORRECTION(x) ASPECT_GRID_XCORRECTION(x)
-    #undef ASPECT_VIEWPORT_YCORRECTION 
-    #define ASPECT_VIEWPORT_YCORRECTION(y) ( (y) )
-
-	//games mappings
-	#undef GAMES_SCREEN_WIDTH
-	#undef GAMES_SCREEN_HEIGHT
-	#define GAMES_SCREEN_WIDTH		360
-	#define GAMES_SCREEN_HEIGHT		240
-	#undef ASPECT_GAMES_XCORRECTION
-	// 720/360=2 same aspect than grids and viewport but another approach: there is a lot of corrections to do in game's code, and we decide to paint directly on display buffer wirh another resolution
-	// used by gui.c that configures the draw environment (trhough new draw_gui function) depending on gui_mode: we have then 360x240 for games (but deformed output:circles are not circles) and 320x240 for
-	// other modes in perfect aspect ratio 4/3: slightly better visualization: file menus more readable, ...
-	#define ASPECT_GAMES_XCORRECTION(x)   ( ((x)<<1) )
-	#undef ASPECT_GAMES_YCORRECTION
-	#define ASPECT_GAMES_YCORRECTION(y)   ( (y) )  //none
 
     #define CAM_ZEBRA_ASPECT_ADJUST 1
 	// camera has very little free memory
