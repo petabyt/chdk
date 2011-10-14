@@ -71,7 +71,7 @@ void *vid_get_viewport_fb_d()
 long vid_get_bitmap_screen_width()
 {
 //    return SCREENX;  // -------------------------------------yes, the buffer is greater, and de 
-	return 320;
+	return 360;
 }
 
 long vid_get_bitmap_screen_height()
