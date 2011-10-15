@@ -8,21 +8,15 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(DoAFLock                              ,0xff8382e4) //102        *** != 0xff87a910
 //NSTUB(GetDrive_FreeClusters                 ,0xff8344a8) //  3        *** != 0xff871e90
 // ALT: NSTUB(GetDrive_FreeClusters, 0xff871e90) // 4 9/0
 //NSTUB(GetImageFolder                        ,0xff94345c) //106        *** != 0xff94337c
-//NSTUB(MoveFocusLensToDistance               ,0xffb228b0) //102        *** != 0xffb2289c
-//NSTUB(Open                                  ,0xff836d4c) //101        *** != 0xff86f13c
 //NSTUB(PutInNdFilter                         ,0xffab69c8) //102        *** != 0xffb2056c
 //NSTUB(PutOutNdFilter                        ,0xffab69ec) //102        *** != 0xffb205a4
 //NSTUB(ScreenLock                            ,0xffa13354) //  3        *** != 0xffa1356c
 //NSTUB(SetScriptMode                         ,0xff895904) //101        *** != 0xff810f6c
-//NSTUB(UnlockAF                              ,0xff83831c) //102        *** != 0xff87a920
 //NSTUB(kbd_pwr_off                           ,0xff861a14) //  2 60%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
-//NSTUB(rename                                ,0xff83669c) //  4        *** != 0xff836e94
-//NSTUB(write                                 ,0xff836e48) //101        *** != 0xff81acdc
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff899754 -> ff895f74 -> ff996578 -> ffac969c -> ffc0041c
@@ -91,6 +85,7 @@ NSTUB(Close                                   ,0xff836db8) //101
 NSTUB(CreateTask                              ,0xff81e83c) //101
 NSTUB(DebugAssert                             ,0xff81eb14) //111
 NSTUB(DeleteFile_Fut                          ,0xff836730) //112
+NSTUB(DoAFLock                                ,0xff8382e4) //102
 //NSTUB(EnterToCompensationEVF                ,0xff8383e4) //104            == 0xff8383e4
 NSTUB(ExecuteEventProcedure                   ,0xff88b948) //  1
 //NSTUB(ExitFromCompensationEVF               ,0xff838428) //104            == 0xff838428
@@ -129,9 +124,11 @@ NSTUB(LocalTime                               ,0xff88923c) //  1
 NSTUB(LockMainPower                           ,0xff895b78) //103
 //NSTUB(Lseek                                 ,0xff836ed4) //101            == 0xff836ed4
 NSTUB(MakeDirectory_Fut                       ,0xff8367a4) //  1
+NSTUB(MoveFocusLensToDistance                 ,0xffb228b0) //102
 NSTUB(MoveIrisWithAv                          ,0xffab6408) //102
 NSTUB(MoveZoomLensWithPoint                   ,0xffab6b64) //102
 NSTUB(NewTaskShell                            ,0xff88f06c) //103
+NSTUB(Open                                    ,0xff836d4c) //101
 //NSTUB(PB2Rec                                ,0xff898b40) //104            == 0xff898b40
 NSTUB(PT_MoveDigitalZoomToWide                ,0xff87a8c0) //102
 NSTUB(PT_MoveOpticalZoomAt                    ,0xff87a898) //102
@@ -158,6 +155,7 @@ NSTUB(TakeSemaphore                           ,0xff839d68) //101
 //NSTUB(TurnOffBackLight                      ,0xff8a4980) //104            == 0xff8a4980
 //NSTUB(TurnOnBackLight                       ,0xff8a4968) //104            == 0xff8a4968
 //NSTUB(UIFS_WriteFirmInfoToFile              ,0xff984ab4) //103            == 0xff984ab4
+NSTUB(UnlockAF                                ,0xff83831c) //102
 NSTUB(UnlockMainPower                         ,0xff895acc) //103
 NSTUB(UpdateMBROnFlash                        ,0xff871cb0) //  3
 NSTUB(VbattGet                                ,0xff8330d8) //103
@@ -194,6 +192,7 @@ NSTUB(rand                                    ,0xff820774) //  1
 NSTUB(read                                    ,0xff81ac7c) //101
 //NSTUB(readfastdir                           ,0xffa95de4) //  4            == 0xffa95de4
 NSTUB(reboot_fw_update                        ,0xffa9b228) //  1
+NSTUB(rename                                  ,0xff83669c) //  4
 NSTUB(set_control_event                       ,0xff895504) //111
 NSTUB(srand                                   ,0xff820768) //  1
 NSTUB(stat                                    ,0xff836f1c) //  3
@@ -216,3 +215,4 @@ NSTUB(strtolx                                 ,0xff83fbcc) //109
   DEF(task_RotaryEncoder                      ,0xff861b68) //107
 NSTUB(time                                    ,0xff88981c) //  2
 NSTUB(vsprintf                                ,0xff8205d4) //  4
+NSTUB(write                                   ,0xff836e48) //101
