@@ -9,12 +9,6 @@ include makefile.inc
 
 SUBDIRS=tools lib platform core loader CHDK
 
-all: all-recursive
-
-clean: clean-recursive
-
-distclean: distclean-recursive
-
 fir: version firsub
 
 firsub: all
@@ -30,9 +24,7 @@ endif
 ifdef PLATFORMOS
   ifeq ($(PLATFORMOS),vxworks)
 	@echo \-\> PS.FIR
-	$(PAKWIF) $(topdir)bin/PS.FIR \
-	      $(topdir)bin/main.bin\
-	    $(PLATFORMID) 0x01000101
+	$(PAKWIF) $(topdir)bin/PS.FIR $(topdir)bin/main.bin $(PLATFORMID) 0x01000101
   endif
   ifeq ($(PLATFORMOS),dryos)
 ifdef OPT_FI2
@@ -54,6 +46,7 @@ else
 endif
 	@echo "**** Firmware creation completed successfully"
 
+.PHONY: upload
 upload: fir
 	@echo Uploading...
 	cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB).FIR $(topdir)bin/PS.FIR
@@ -62,10 +55,11 @@ upload: fir
 infoline:
 	@echo "**** GCC $(GCC_VERSION) : BUILDING CHDK-$(VER), #$(BUILD_NUMBER) FOR $(PLATFORM)-$(PLATFORMSUB)"
 
+.PHONY: version
 version: FORCE
 	echo "**** Build: $(BUILD_NUMBER)"
-#	echo "BUILD_NUMBER := $(BUILD_NUMBER)" > version.inc
 
+.PHONY: FORCE
 FORCE:
 
 firzip: version firzipsub
