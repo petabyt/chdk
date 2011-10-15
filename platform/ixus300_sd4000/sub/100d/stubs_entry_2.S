@@ -18,16 +18,16 @@ NHSTUB(ReadFastDir, 0xFFA95DE4)                      // aka. readfastdir
 NHSTUB(UIFS_WriteFirmInfoToFile, 0xFF984AB4)         // OK!, eventproc
 //NHSTUB(SetScriptMode, 0xFF895904)                  // eventproc
 NHSTUB(SetScriptMode, 0xFF810F6C)                    // OK!, like SX210 and G11
-//NHSTUB(UnlockAF, 0xFF83831C)                         // OK!, like SX210 and G11
-NHSTUB(UnlockAF, 0xFF87A920)                         // PT_UnlockAF, like D10
-//NHSTUB(DoAFLock, 0xFF8382E4)                         // OK!, like SX210 and G11
-NHSTUB(DoAFLock, 0xFF87A910)                         // PT_DoAFLock, like D10
+//NHSTUB(UnlockAF, 0xFF83831C)                         // OK!, like SX210 and G11, finsig2
+//NHSTUB(UnlockAF, 0xFF87A920)                         // PT_UnlockAF, like D10
+//NHSTUB(DoAFLock, 0xFF8382E4)                         // OK!, like SX210 and G11, finsig2
+//NHSTUB(DoAFLock, 0xFF87A910)                         // PT_DoAFLock, like D10
 
 NHSTUB(GiveSemaphore, 0xFF839E38)                    // OK!!, eventproc, like G11
 NHSTUB(GetDrive_FreeClusters, 0xFF871E90)            // OK!, like SX210 and G11, UI does show free space
 NHSTUB(PT_PlaySound, 0xFF8840B8)                     // OK!, like SX210 and G11, plays sound on CHDK startup
-//NHSTUB(rename, 0xFF83669C)                         // maybe OK, like SX210
-NHSTUB(rename, 0xFF836E94)                           // maybe OK, like G11
+//NHSTUB(rename, 0xFF83669C)                         // maybe OK, like SX210, finsig2
+//NHSTUB(rename, 0xFF836E94)                           // maybe OK, like G11
 NHSTUB(qsort, 0xFFB0B1F8)                            // maybe OK, like SX210, G11 and D10 are different but referens is same
 NHSTUB(EnterToCompensationEVF, 0xFF8383E4)           // OK, like SX210 and G11
 NHSTUB(ExitFromCompensationEVF, 0xFF838428)          // OK, like SX210 and G11
@@ -97,7 +97,7 @@ NHSTUB(IsStrobeChargeCompleted, 0xFF8DA44C)          // like SX210
 //NHSTUB(LockMainPower, 0xff895b78)                  // OK!
 //NHSTUB(MakeDirectory_Fut, 0xff8367a4)              // OK, like SD990, finsig2
 //NHSTUB(MoveFocusLensToDistance, 0xffb228b0)        // finsig2
-NHSTUB(MoveFocusLensToDistance, 0xFFB2289C)          // ?!?
+//NHSTUB(MoveFocusLensToDistance, 0xFFB2289C)        // ?!?
 //NHSTUB(MoveZoomLensWithPoint, 0xffab6b64)          // maybe ok
 //NHSTUB(NewTaskShell, 0xff88f06c)                   // OK
 //NHSTUB(Open, 0xff86f13c)                           // finsig, WRONG ?
@@ -212,10 +212,3 @@ NHSTUB(GetImageFolder, 0xFF94337C)                   // like S95 and SD4500, fun
 NHSTUB(exmem_alloc, 0xFF88A17C)                      // = ExMem.AllocCacheable ?, experimental alternate memory allocation http://chdk.setepontos.com/index.php?topic=5980.0
 
 NHSTUB(LEDDrive, 0xFF860C6C)                         // camera_set_led()
-
-
-// Added by finsig_dryos V2 to match old values found by finsig.
-// Values should be checked in firmware, if the new address in stubs_entry.S
-// is correct then delete the correspoding entry below.
-NHSTUB(Open                          ,0xff86f13c) // New address = 0xff836d4c
-NHSTUB(write                         ,0xff81acdc) // New address = 0xff836e48
