@@ -22,47 +22,6 @@ void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl)) {
     draw_pixel_proc = (pixel_proc)?pixel_proc:draw_pixel_std;
 }
 
-#if CAM_USES_ASPECT_CORRECTION //nandoide sept-2009 
-
-unsigned int (*aspect_xcorrection_proc)(unsigned int x);
-unsigned int (*aspect_ycorrection_proc)(unsigned int y);
-
-//-------------------------------------------------------------------
-unsigned int aspect_xcorrection_std(unsigned int x) {
-   return (ASPECT_XCORRECTION(x));
-}
-//-------------------------------------------------------------------
-static unsigned int aspect_ycorrection_std(unsigned int y) {
-   return (ASPECT_YCORRECTION(y));
-}
-//-------------------------------------------------------------------
-unsigned int aspect_xcorrection_games_360(unsigned int x) {
-   return (ASPECT_GAMES_XCORRECTION(x));
-}
-//-------------------------------------------------------------------
-unsigned int aspect_ycorrection_games_360(unsigned int y) {
-   return (ASPECT_GAMES_YCORRECTION(y));
-}
-//-------------------------------------------------------------------
-void draw_set_aspect_xcorrection_proc(unsigned int (*xcorrection_proc)(unsigned int x)) {
-   aspect_xcorrection_proc = (xcorrection_proc)?xcorrection_proc:aspect_xcorrection_std;
-}
-//-------------------------------------------------------------------
-void draw_set_aspect_ycorrection_proc(unsigned int (*ycorrection_proc)(unsigned int y)) {
-   aspect_ycorrection_proc = (ycorrection_proc)?ycorrection_proc:aspect_ycorrection_std;
-}
-//-------------------------------------------------------------------
-void draw_set_environment(unsigned int (*xcorrection_proc)(unsigned int x), 
-                                       unsigned int (*ycorrection_proc)(unsigned int y),
-                                       int screenx, int screeny ) {
-   screen_width=screenx;
-   screen_height=screeny;
-   draw_set_aspect_xcorrection_proc(xcorrection_proc);
-   draw_set_aspect_ycorrection_proc(ycorrection_proc);
-}
-
-#endif
-
 //-------------------------------------------------------------------
 #ifdef CAM_DETECT_SCREEN_ERASE
 
@@ -85,13 +44,8 @@ int draw_test_guard()
 int draw_test_pixel(coord x, coord y, color c)
 {
     if (x >= screen_width || y >= screen_height) return 0;
-#if CAM_USES_ASPECT_CORRECTION
-    return (frame_buffer[0][y * screen_buffer_width + aspect_xcorrection_proc(x)] == c) &&
-           (frame_buffer[1][y * screen_buffer_width + aspect_xcorrection_proc(x)] == c);
-#else
-    return (frame_buffer[0][y * screen_buffer_width + x] == c) &&
-           (frame_buffer[1][y * screen_buffer_width + x] == c);
-#endif
+    return (frame_buffer[0][y * screen_buffer_width + ASPECT_XCORRECTION(x)] == c) &&
+           (frame_buffer[1][y * screen_buffer_width + ASPECT_XCORRECTION(x)] == c);
 }
 
 #endif
@@ -109,100 +63,29 @@ void draw_init() {
     frame_buffer[0] = vid_get_bitmap_fb();
     frame_buffer[1] = frame_buffer[0] + screen_buffer_size;
     draw_set_draw_proc(NULL);
-    #if CAM_USES_ASPECT_CORRECTION
-      draw_set_aspect_xcorrection_proc(NULL);
-      draw_set_aspect_ycorrection_proc(NULL);
-    #endif
 
 #ifdef CAM_DETECT_SCREEN_ERASE
     draw_set_guard();
 #endif
 }
 
-#if CAM_USES_ASPECT_CORRECTION
-
-// nandoide: sept-2009: draw_pixel_xarray draws a horizontal line at height y, from xi to xf
-// includes a correction of aspect ratio on x from buffer to screen
-// can be used to optimize computations (offset calculus) in other primitives (rectangles, and so on...) and compensate tne increase in computation time 
-// of aspect ratio correction.
-// sx200is:
-//    we have a 720x240 efective memory buffer (in a 960x270 physical memory buffer) and a screen of 320x240 (!) 
-//   the drawing primitives work on screen coordinates (the other approach, less modular it's to paint on buffer coordinates, deforming on x direction, I think it would be harder to live with it
-//   and requires a full bunch of changes of the actual software).
-//   then we do paint a x coordinate transformed in buffer by a factor 720/320=9/4 and then we do correct (deform) x  to x*9/4 previously to save it on buffer
-// other:
-//     the default mapping is x=x (NOTE: I think important to check that on every model, and necessary in newer models. it seems to me very strange screen sizes of 360x240 for 4/3 and 480/240 for 16/9 (SX1S).
-
-void draw_pixel_xarray(coord y, coord xi, coord xf, color cl) {
-    if (xi >= screen_width || y >= screen_height) return;
-    else {
-        unsigned int offsetx, offsetxf, offsetxi, offsety;
-        offsety=aspect_ycorrection_proc(y) * screen_buffer_width;
-        offsetxi = aspect_xcorrection_proc(xi);
-        xf++;
-        offsetxf= (xf >= screen_width) ? screen_buffer_width - 1 :  aspect_xcorrection_proc(xf);
-        for (offsetx=offsetxi; offsetx<=offsetxf-1; offsetx++) {
-           draw_pixel_proc(offsety+offsetx, cl);
-        }
-    }
-}
-
-#if  CAM_USES_ASPECT_YCORRECTION
-//generalization for cases than we need to correct both coordinates: symetric algorithm
-void draw_pixel_rectanglearray(coord yi, coord yf, coord xi, coord xf, color cl) {
-    if (xi >= screen_width || yi >= screen_height) return;
-    else {
-        unsigned int offsetx, offsetxf, offsetxi, offsety, offsetyf, offsetyi, offset;
-        offsetyi = aspect_ycorrection_proc(yi);
-        yf++;
-        offsetyf= (yf >= screen_height) ? screen_buffer_height - 1 :  aspect_ycorrection_proc(yf);
-        offsetxi = aspect_xcorrection_proc(xi);
-        xf++;
-        offsetxf= (xf >= screen_width) ? screen_buffer_width - 1 :  aspect_xcorrection_proc(xf);
-        for (offsety=offsetyi; offsety<=offsetyf-1; offsety++) {
-          offset=offsety*screen_buffer_width;
-          for (offsetx=offsetxi; offsetx<=offsetxf-1; offsetx++) {
-             draw_pixel_proc(offset+offsetx, cl);
-          }
-        }
-    }
-}
-#endif
-
-// nandoide sept-2009: draw_pixel version that calls draw_pixel_xarray for calculations. It's necessary to paint more than a pixel. In other case we got holes due
-// to the nature of discrete drawing algoritms and the aspect-ratio correction.
-// so, we need paint a horizontal line from the point coordinate to the next point (x to x+1)
-// it's a brute force algorithm and it's possible that we have aliasing problems ... 
-// but the display seems OK on sx200is ( good!) , due perhaps to the fact that the system makes a final reverse (bilinear?) resize 720 -> 320, to display the buffer data.
-
-void draw_pixel(coord x, coord y, color cl) {
-  #if  CAM_USES_ASPECT_YCORRECTION
-    draw_pixel_rectanglearray(y, y, x, x, cl);
-  #else
-    draw_pixel_xarray(y, x, x, cl);
-  #endif
-}
-
-color draw_get_pixel(coord x, coord y) {
-    if (x >= screen_width || y >= screen_height) return 0;
-    return frame_buffer[0][y * screen_buffer_width + aspect_xcorrection_proc(x) ];
-}
-#else
 //-------------------------------------------------------------------
 void draw_pixel(coord x, coord y, color cl) {
     if (x >= screen_width || y >= screen_height) return;
     else {
-        register unsigned int offset = y * screen_buffer_width + x;
-        draw_pixel_proc(offset, cl);
+        register unsigned int offset = y * screen_buffer_width + ASPECT_XCORRECTION(x);
+        draw_pixel_proc(offset,   cl);
+#if CAM_USES_ASPECT_CORRECTION
+        draw_pixel_proc(offset+1, cl);  // Draw second pixel if screen scaling is needed
+#endif
    }
 }
 
 //-------------------------------------------------------------------
 color draw_get_pixel(coord x, coord y) {
     if (x >= screen_width || y >= screen_height) return 0;
-    return frame_buffer[0][y * screen_buffer_width + x];
+    return frame_buffer[0][y * screen_buffer_width + ASPECT_XCORRECTION(x) ];
 }
-#endif
 
 //-------------------------------------------------------------------
 #define swap(v1, v2)   {v1^=v2; v2^=v1; v1^=v2;}
@@ -236,20 +119,22 @@ void draw_line(coord x1, coord y1, coord x2, coord y2, color cl) {
 //-------------------------------------------------------------------
 void draw_hline(coord x, coord y, int len, color cl)
 {
-    #if CAM_USES_ASPECT_CORRECTION &&  !CAM_USES_ASPECT_YCORRECTION
-      draw_pixel_xarray(y, x, x+len, cl);
-    #else
-      for (; len>=0; len--, x++) {
-          draw_pixel(x, y, cl);
-      }
-    #endif
+    if (x >= screen_width || y >= screen_height) return;
+    if (x < 0) { len += x; x = 0; }
+    if ((x + len) > screen_width) len = screen_width - x;
+    register unsigned int offset = y * screen_buffer_width + ASPECT_XCORRECTION(x);
+    len = ASPECT_XCORRECTION(len);      // Scale the line length if needed
+    for (; len>=0; len--, offset++)
+        draw_pixel_proc(offset, cl);
 }
 
 void draw_vline(coord x, coord y, int len, color cl)
 {
-    for (; len>=0; len--, y++) {
+    if ((x < 0) || (x >= screen_width) || (y >= screen_height)) return;
+    if (y < 0) { len += y; y = 0; }
+    if ((y + len) > screen_height) len = screen_height - y;
+    for (; len>=0; len--, y++)
       draw_pixel(x, y, cl);
-    }
 }
 //-------------------------------------------------------------------
 
@@ -275,19 +160,14 @@ static void draw_rectangle(coord x1, coord y1, coord x2, coord y2, color cl, int
     if (yMax>=screen_height) yMax=screen_height-1;
     if (yMin>=screen_height) yMin=screen_height-1;
 
-    for (y=yMin+(round<<1); y<=yMax-(round<<1); ++y) {
+    for (y=yMin+(round<<1); y<=yMax-(round<<1); ++y)
+    {
       draw_pixel(xMin, y, cl);
       draw_pixel(xMax, y, cl);
     }
-    #if CAM_USES_ASPECT_CORRECTION &&  !CAM_USES_ASPECT_YCORRECTION
-      draw_pixel_xarray(yMin, xMin+1+round, xMax-1-round, cl);
-      draw_pixel_xarray(yMax, xMin+1+round, xMax-1-round, cl);
-    #else
-      for (x=xMin+1+round; x<=xMax-1-round; ++x) {
-          draw_pixel(x, yMin, cl);
-          draw_pixel(x, yMax, cl);
-      }
-    #endif
+
+    draw_hline(xMin+1+round, yMin, (xMax-1-round) - (xMin+1+round) + 1, cl);
+    draw_hline(xMin+1+round, yMax, (xMax-1-round) - (xMin+1+round) + 1, cl);
 }
 
 //-------------------------------------------------------------------
@@ -330,14 +210,10 @@ void draw_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int
 static void fill_rect(color cl) {
     register unsigned int x, y;
 
-    for (y=yMin+1; y<=yMax-1; ++y) {
-      #if CAM_USES_ASPECT_CORRECTION &&  !CAM_USES_ASPECT_YCORRECTION
-        draw_pixel_xarray(y, xMin+1, xMax-1, cl>>8);
-      #else  
-        for (x=xMin+1; x<=xMax-1; ++x) {
-          draw_pixel(x, y, cl>>8);
-        }
-      #endif
+    cl = cl >> 8;
+    for (y=yMin+1; y<=yMax-1; ++y)
+    {
+        draw_hline(xMin+1, y, (xMax-1) - (xMin+1) + 1, cl);
     }
 }
 //-------------------------------------------------------------------

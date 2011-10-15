@@ -35,19 +35,9 @@ static int viewport_yoffset;	// used when image size != viewport size (e.g. wide
 
 static void get_viewport_size()
 {
-    // since screen_height is used in the drawing downwards, we should use it
-    // here too to calculate the buffer we need...
-
-#if defined(CAM_USES_ASPECT_CORRECTION)
-    //nandoide sept-2009 get the viewport dimensions, not the screen dimensions, on sx200is they aren't the same.
     viewport_height = vid_get_viewport_height()-EDGE_HMARGIN*2; //don't trace bottom lines
     viewport_width = vid_get_viewport_width();
     viewport_byte_width = vid_get_viewport_buffer_width() * 3;
-#else
-    viewport_height = screen_height;//vid_get_viewport_height();
-    viewport_width = screen_width;
-    viewport_byte_width = screen_width * 3;
-#endif
 
 	viewport_xoffset = vid_get_viewport_xoffset();
 	viewport_yoffset = vid_get_viewport_yoffset();
@@ -517,7 +507,7 @@ static int draw_edge_overlay()
                     // Draw a pixel to the screen wherever we detected an edge.
                     // If there is no edge based on the newest data, but there is one painted on the screen
                     // from previous calls, delete it from the screen.
-                    const int aspect_correct_x_off = ASPECT_VIEWPORT_XCORRECTION(x_off);
+                    const int aspect_correct_x_off = x_off;
                     const int bEdge = bv_get(edgebuf, y_edgebuf + x);
                     const int bDraw = bEdge || (draw_get_pixel(aspect_correct_x_off, y_off) == conf.edge_overlay_color);
                     const color cl = bEdge ? conf.edge_overlay_color : 0;
@@ -545,7 +535,7 @@ static int draw_edge_overlay()
         {
             for (x = x_min_c; x < x_max_c; ++x)
             {
-                const int aspect_correct_x = ASPECT_VIEWPORT_XCORRECTION(x);
+                const int aspect_correct_x = x;
                 if (draw_get_pixel(aspect_correct_x, y) == cl)  // if there is an edge drawn on the screen but there is no edge there based on the newest data, delete it from the screen
                     draw_pixel(aspect_correct_x, y, 0 );
             }
@@ -563,7 +553,7 @@ static int draw_edge_overlay()
         {
             for (x = x_min; x < x_max; ++x)
             {
-                const int aspect_correct_x = ASPECT_VIEWPORT_XCORRECTION(x);
+                const int aspect_correct_x = x;
                 if (draw_get_pixel(aspect_correct_x, y) == cl)  // if there is an edge drawn on the screen but there is no edge there based on the newest data, delete it from the screen
                     draw_pixel(aspect_correct_x, y, 0 );
             }

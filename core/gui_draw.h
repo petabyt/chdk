@@ -732,15 +732,5 @@ extern void draw_get_icon_colors();
 extern color icon_green[3], icon_red[3], icon_yellow[3], icon_grey[3];
 #endif
 
-#if CAM_USES_ASPECT_CORRECTION //nandoide sept-2009
-void draw_set_aspect_xcorrection_proc(unsigned int (*xcorrection_proc)(unsigned int x));
-void draw_set_aspect_ycorrection_proc(unsigned int (*ycorrection_proc)(unsigned int y));
-unsigned int aspect_xcorrection_games_360(unsigned int x);
-unsigned int aspect_ycorrection_games_360(unsigned int y);
-void draw_set_environment(unsigned int (*xcorrection_proc)(unsigned int x),
-                                       unsigned int (*ycorrection_proc)(unsigned int y),
-                                       int screenx, int screeny );
-#endif
-
 //-------------------------------------------------------------------
 #endif

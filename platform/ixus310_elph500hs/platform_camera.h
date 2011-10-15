@@ -78,8 +78,6 @@
 
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION  1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
-    #undef GAMES_SCREEN_WIDTH
-    #define GAMES_SCREEN_WIDTH          480     // Logical screen width for games
 
     #undef EDGE_HMARGIN
     #define EDGE_HMARGIN                2
