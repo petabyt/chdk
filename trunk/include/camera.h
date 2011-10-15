@@ -95,18 +95,13 @@
 // zebra adjust buffer height: show use at sx200is: needed for save memory space
 #define ZEBRA_HMARGIN0              0
 
-// aspect corrections
-#define CAM_USES_ASPECT_CORRECTION  0           // if true, camera uses a modified graphics primitives to draw with exact display aspect-ratio.
-                                                // Could slow the graphics output (but not perceived on sx200is), but adds rectangle drawing optimizations to compensate.
-                                                // To extend to other cameras see sx200is camera.h comments in  and comments on core gui_draw.c
-#define CAM_USES_ASPECT_YCORRECTION 0
-
-// menu, alt (default)
-#define ASPECT_XCORRECTION(x)  ( ((x)<<1) )     // see comments on 200is
-#define ASPECT_YCORRECTION(y)  ( (y) )          // no correction the same for coordinate y. I think there are no cameras actually needing both corrections.
-// viewport, defaults used if there is no aspect correction
-#define ASPECT_VIEWPORT_XCORRECTION(x) ( (x) )  // see comments on 200is
-#define ASPECT_VIEWPORT_YCORRECTION(y) ( (y) )  // no correction
+// Older cameras had a screen/bitmap buffer that was 360 pixels wide (or 480 for wide screen models)
+// CHDK was built around this 360 pixel wide display model
+// Newer cameras have a 720 pixel wide bitmap (960 for wide screen cameras)
+// To accomadate this the CHDK co-ordinate system assumes a 360/480 wide buffer and the
+// pixel drawing routines draw every pixel twice to scale the image up to the actual buffer size
+// Define CAM_USES_ASPECT_CORRECTION with a value of 1 to enable this scaled display
+#define CAM_USES_ASPECT_CORRECTION  0
 
 #define EDGE_HMARGIN                0           // define sup and inf screen margins on edge overlay without overlay.  Necessary to save memory buffer space. sx200is needs values other than 0
 // end of section by nandoid
@@ -152,16 +147,6 @@
                                                 // IXUS 310 HS bad pixels tend to be grouped into vertical lines of 1-4 pixels
                                                 // This reduces the file size by approx 45%
 
-// Games definitions
-#define GAMES_SCREEN_WIDTH            360        // Logical screen width for games
-#define GAMES_SCREEN_HEIGHT            240       // Logical screen height for games
-#define ASPECT_GAMES_XCORRECTION(x)    ((x)<<1)  // Aspect ratio correction for games. Default for games is 360x240 logical screen. Physical camera screen is
-#define ASPECT_GAMES_YCORRECTION(y)    (y)       // 720x240 so x*2 needed for X axis correction, no correction for Y.
-
-// Grid definitions
-#define ASPECT_GRID_XCORRECTION(x)    (x)        // Aspect ratio correction for grids. Grids are designed on a 360x240 logical screen size which matches the
-#define ASPECT_GRID_YCORRECTION(y)    (y)        // default CHDK logical screen size so no correction needed.
-
 #undef  PARAM_CAMERA_NAME                        // parameter number for GetParameterData to get camera name
 
 
@@ -199,6 +184,13 @@
 // END of Camera-dependent settings
 //==========================================================
 
+// For newer cameras where the screen bitmap is double the width we need to scale
+// the CHDK horizontal (X) co-ordinates
+#if CAM_USES_ASPECT_CORRECTION
+#define ASPECT_XCORRECTION(x)   ((x)<<1)    // See comments for CAM_USES_ASPECT_CORRECTION above
+#else
+#define ASPECT_XCORRECTION(x)   (x)         // See comments for CAM_USES_ASPECT_CORRECTION above
+#endif
 
 // curves only work in 10bpp for now
 #if CAM_SENSOR_BITS_PER_PIXEL != 10
