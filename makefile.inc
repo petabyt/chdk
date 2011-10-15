@@ -432,7 +432,7 @@ PLFLAGS+=-DROMBASEADDR=0xFFC00000
 endif
 
 ifdef OPT_FI2
-include $(topdir)/platform/fi2.inc
+include $(topdir)platform/fi2.inc
 endif
 
 SILENT=SILENT
@@ -594,6 +594,7 @@ endif
 
 ##########################################################################
 
+.PHONY: default
 default: all
 
 ifndef SKIPBUILDRULES
@@ -620,8 +621,13 @@ ifndef SKIPBUILDRULES
 
 endif
 
+.PHONY: all
 all: all-recursive
+
+.PHONY: clean
 clean: clean-recursive
+
+.PHONY: distclean
 distclean: distclean-recursive
 
 .dep:
@@ -656,3 +662,23 @@ depend-recursive:
 ifdef SILENT
 .SILENT:
 endif
+
+
+# Define empty recipes for source files (including the makefiles)
+# to prevent make from trying implicit rules to create them. Speeds up build process
+Makefile: ;
+makefile: ;
+$(topdir)makefile.inc: ;
+$(topdir)buildconf.inc: ;
+$(topdir)localbuildconf.inc: ;
+$(topdir)version.inc: ;
+$(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc: ;
+$(topdir)platform/fi2.inc: ;
+*.c: ;
+*.txt: ;
+*.sh: ;
+reversebytes.S: ;
+callfunc.S: ;
+setjmp.S: ;
+stubs_min.S: ;
+stubs_entry_2.S: ;
