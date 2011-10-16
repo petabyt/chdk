@@ -3,12 +3,9 @@ srcdir=./
 
 include makefile.inc
 
-#ifndef NO_INC_BUILD
-#BUILD_NUMBER := $(shell expr $(BUILD_NUMBER) + 1)
-#endif
-
 SUBDIRS=tools lib platform core loader CHDK
 
+.PHONY: fir
 fir: version firsub
 
 firsub: all
@@ -53,7 +50,7 @@ upload: fir
 	/home/vitalyb/Projects/ch/libptp2-1.1.0/src/ptpcam -u -m 0xbf01 --filename $(topdir)bin/PS.FIR
 
 infoline:
-	@echo "**** GCC $(GCC_VERSION) : BUILDING CHDK-$(VER), #$(BUILD_NUMBER) FOR $(PLATFORM)-$(PLATFORMSUB)"
+	@echo "**** GCC $(GCC_VERSION) : BUILDING CHDK-$(VER), #$(BUILD_NUMBER)$(STATE) FOR $(PLATFORM)-$(PLATFORMSUB)"
 
 .PHONY: version
 version: FORCE
@@ -65,749 +62,113 @@ FORCE:
 firzip: version firzipsub
 
 firzipsub: infoline clean firsub
-	@echo \-\> $(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER).zip
-	rm -f $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER).zip
+	@echo \-\> $(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip
+	rm -f $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip
 	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER) date:`date -R`" | \
-	    zip -9jz $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
+	    zip -9jz $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
 ifdef PLATFORMOS
   ifeq ($(PLATFORMOS),vxworks)
-	zip -9j $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER).zip $(topdir)bin/PS.FIR > $(DEVNULL)
+	zip -9j $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/PS.FIR > $(DEVNULL)
 	rm -f $(topdir)bin/PS.FIR
   endif
   ifeq ($(PLATFORMOS),dryos)
-  ifdef OPT_FI2
-  ifdef FI2KEY
-	zip -9j $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
-	rm -f $(topdir)bin/PS.FI2
+    ifdef OPT_FI2
+      ifdef FI2KEY
+	    zip -9j $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
+	    rm -f $(topdir)bin/PS.FI2
+      endif
+    endif
   endif
-  endif
-  endif
+endif
+# if COPY_TO is defined then copy this camera/firmware version to the copied firmware version
+# Define COPY_TO in $(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc of the source
+# firmware version that needs to be copied to another firmware version
+ifdef COPY_TO
+	cp $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/$(VER)-$(PLATFORM)-$(COPY_TO)-$(BUILD_NUMBER)$(STATE).zip
 endif
 	rm -f $(topdir)bin/DISKBOOT.BIN
 
 
 firzipsubcomplete: infoline clean firsub
-	@echo \-\> $(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip
-	rm -f $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip
-	@echo \-\> $(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER).zip
-	rm -f $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER).zip
-	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER) date:`date -R`" | \
-	zip -9jz $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
-	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER) date:`date -R`" | \
-	zip -9jz $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/SYMBOLS/*  > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/BOOKS/*  > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/CURVES/*  > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/DATA/*  > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/FONTS/*  > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/GAMES/*   > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/GRIDS/* > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/LANG/*   > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/LUALIB/*   > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/LUALIB/GEN/*   > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/SCRIPTS/*  > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/SCRIPTS/EXAM/* 	 > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/SCRIPTS/TEST/* 	 > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/SCRIPTS/4Pack/* 	 > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/SCRIPTS/4Pack/Lua/* 	 > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/SCRIPTS/4Pack/uBasic/* > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/SCRIPTS/EDITOR/* 	 > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)CHDK/syscurves.CVF 	 > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)doc/changelog.txt  > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER).zip $(topdir)doc/changelog.txt  > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)tools/vers.req  > $(DEVNULL)
+	@echo \-\> $(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip
+	rm -f $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip
+	@echo \-\> $(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip
+	rm -f $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip
+	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER)$(STATE) date:`date -R`" | \
+	zip -9jz $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
+	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER)$(STATE) date:`date -R`" | \
+	zip -9jz $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SYMBOLS/*  > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/BOOKS/*  > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/CURVES/*  > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/DATA/*  > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/FONTS/*  > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/GAMES/*   > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/GRIDS/* > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/LANG/*   > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/LUALIB/*   > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/LUALIB/GEN/*   > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/*  > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/EXAM/* 	 > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/TEST/* 	 > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/4Pack/* 	 > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/4Pack/Lua/* 	 > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/4Pack/uBasic/* > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/SCRIPTS/EDITOR/* 	 > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/syscurves.CVF 	 > $(DEVNULL)
+	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)doc/changelog.txt  > $(DEVNULL)
+	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)doc/changelog.txt  > $(DEVNULL)
+	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)tools/vers.req  > $(DEVNULL)
 	cat $(topdir)doc/1_intro.txt  $(topdir)platform/$(PLATFORM)/notes.txt $(topdir)doc/2_installation.txt $(topdir)doc/3_faq.txt $(topdir)doc/4_urls.txt $(topdir)doc/5_gpl.txt $(topdir)doc/6_ubasic_copyright.txt > $(topdir)doc/readme.txt
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)doc/readme.txt  > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER).zip $(topdir)doc/readme.txt  > $(DEVNULL)
+	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)doc/readme.txt  > $(DEVNULL)
+	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)doc/readme.txt  > $(DEVNULL)
 
 ifdef PLATFORMOS
   ifeq ($(PLATFORMOS),vxworks)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)bin/PS.FIR > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER).zip $(topdir)bin/PS.FIR > $(DEVNULL)
+	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)bin/PS.FIR > $(DEVNULL)
+	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/PS.FIR > $(DEVNULL)
 	rm -f $(topdir)bin/PS.FIR
   endif
   ifeq ($(PLATFORMOS),dryos)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)doc/readme.txt  > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER).zip $(topdir)doc/readme.txt  > $(DEVNULL)
-ifdef OPT_FI2
-  ifdef FI2KEY
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full.zip $(topdir)bin/PS.FI2 > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
-	rm -f $(topdir)bin/PS.FI2
+    ifdef OPT_FI2
+      ifdef FI2KEY
+	    zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
+	    zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
+	    rm -f $(topdir)bin/PS.FI2
+      endif
+    endif
   endif
 endif
-  endif
+# if COPY_TO is defined then copy this camera/firmware version to the copied firmware version
+# Define COPY_TO in $(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc of the source
+# firmware version that needs to be copied to another firmware version
+ifdef COPY_TO
+	cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)bin/$(PLATFORM)-$(COPY_TO)-$(BUILD_NUMBER)-full$(STATE).zip
+	cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/$(PLATFORM)-$(COPY_TO)-$(BUILD_NUMBER)$(STATE).zip
 endif
 	rm -f $(topdir)bin/DISKBOOT.BIN
 
 
+# define targets to batch build all cameras & firmware versions
+# list of cameras/firmware versions is in 'camera_list.csv'
+# each row in 'camera_list.csv' has 5 entries:
+# - camera (mandatory)         :- name of camera to build
+# - firmware (mandatory)       :- firmware version to build
+# - beta status (optional)     :- set to BETA for cameras still in beta status
+# - copy to (optional)         :- if this firmware version can also be used for another version on the same
+#                                 camera define the alternate firmware here. see COPY_TO comments above.
+# - skip auto build (optional) :- any value in this column will exclude the camera/firmware from the auto build
 batch-zip: version
-	$(MAKE) -s --no-print-directory PLATFORM=a610 PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a610 PLATFORMSUB=100f NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a620 PLATFORMSUB=100f NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a630 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a640 PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a700 PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a710 PLATFORMSUB=100a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=s2is PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=s2is PLATFORMSUB=100f NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=s2is PLATFORMSUB=100g NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=s3is PLATFORMSUB=100a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g7   PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g7   PLATFORMSUB=100g NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g7   PLATFORMSUB=100i NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g7   PLATFORMSUB=100j NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g9   PLATFORMSUB=100d NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g9   PLATFORMSUB=100g NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g9   PLATFORMSUB=100i NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a530 PLATFORMSUB=100a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a540 PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a560 PLATFORMSUB=100a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a580 PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a1100 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a2000 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	#$(MAKE) -s --no-print-directory PLATFORM=s80  PLATFORMSUB=100g NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus700_sd500   PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus700_sd500   PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus800_sd700   PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus800_sd700   PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus850_sd800   PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus860_sd870   PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus870_sd880   PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus870_sd880   PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus870_sd880   PLATFORMSUB=102b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus950_sd850   PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus980_sd990   PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus980_sd990   PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus40_sd300    PLATFORMSUB=100k NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus40_sd300    PLATFORMSUB=100j NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus50_sd400    PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus50_sd400    PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus55_sd450    PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus55_sd450    PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus55_sd450    PLATFORMSUB=100d NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus65_sd630    PLATFORMSUB=100a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus70_sd1000   PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus70_sd1000   PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus70_sd1000   PLATFORMSUB=102a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus75_sd750   PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus75_sd750   PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus75_sd750   PLATFORMSUB=102a NO_INC_BUILD=1 firzipsub
-	#$(MAKE) -s --no-print-directory PLATFORM=ixusW_sd430     PLATFORMSUB=110a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a720 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a650 PLATFORMSUB=100d NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a450 PLATFORMSUB=100d NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a460 PLATFORMSUB=100d NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a550 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=s5is PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=s5is PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=tx1  PLATFORMSUB=100g NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=tx1  PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx100is  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx100is  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus750_sd550  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus750_sd550  PLATFORMSUB=100g NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus750_sd550  PLATFORMSUB=100h NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus60_sd600  PLATFORMSUB=100a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus60_sd600  PLATFORMSUB=100d NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus960_sd950  PLATFORMSUB=100d NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus80_sd1100  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus80_sd1100  PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixusizoom_sd30  PLATFORMSUB=100g NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx10 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx10 PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx10 PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx10 PLATFORMSUB=102b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx10 PLATFORMSUB=103a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx1 PLATFORMSUB=200h NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx1 PLATFORMSUB=201a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=102a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=103b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=104a NO_INC_BUILD=1 firzipsub	
-	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=102c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx110is  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101d NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101f NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx200is  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=100a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx230hs  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx230hs  PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx230hs  PLATFORMSUB=101b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus90_sd790  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus90_sd790  PLATFORMSUB=100d NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g11  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g11  PLATFORMSUB=100j NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g11  PLATFORMSUB=100l NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus100_sd780  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus100_sd780  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=102c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=103b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=103c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus200_sd980  PLATFORMSUB=101c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus200_sd980  PLATFORMSUB=101d NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a480  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a490  PLATFORMSUB=100d NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a490  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100d NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=s90  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=s90  PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=s90  PLATFORMSUB=101c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx20 PLATFORMSUB=102b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx20 PLATFORMSUB=102d NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus85_sd770 PLATFORMSUB=100a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=d10 PLATFORMSUB=100a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus95_sd1200  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	#$(MAKE) -s --no-print-directory PLATFORM=a430 PLATFORMSUB=100b NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus900_sd900  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g12  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g12  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g12  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=g12  PLATFORMSUB=100g NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx30 PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx30 PLATFORMSUB=100h NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx30 PLATFORMSUB=100l NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx30 PLATFORMSUB=100n NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=sx30 PLATFORMSUB=100p NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=s95  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=s95  PLATFORMSUB=100h NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=s95  PLATFORMSUB=100i NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=s95  PLATFORMSUB=100k NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus300_sd4000 PLATFORMSUB=100d NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus310_elph500hs PLATFORMSUB=100a NO_INC_BUILD=1 firzipsub
-	$(MAKE) -s --no-print-directory PLATFORM=ixus310_elph500hs PLATFORMSUB=101a NO_INC_BUILD=1 firzipsub
-	@echo "**** All firmwares created successfully"
-	@echo "**** Copying duplicate Firmwares"
-	cp $(topdir)bin/$(VER)-a610-100e-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a610-100d-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-s2is-100g-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s2is-100i-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-ixus800_sd700-101b-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus800_sd700-101a-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-ixus850_sd800-100e-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus850_sd800-100d-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-ixus70_sd1000-101b-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus70_sd1000-101a-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-ixus75_sd750-101a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus75_sd750-101b-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-ixus80_sd1100-101a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus80_sd1100-101b-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-ixus970_sd890-100c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus970_sd890-100d-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-g9-100g-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-g9-100f-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-g9-100i-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-g9-100h-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-a470-101b-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a470-101a-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-sx200is-100c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx200is-100d-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-ixus960_sd950-100d-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus960_sd950-100c-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-ixus90_sd790-100d-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus90_sd790-100e-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-g11-100j-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-g11-100k-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-s90-101c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s90-101b-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-d10-100a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-d10-100b-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/$(VER)-sx30-100l-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx30-100m-$(BUILD_NUMBER).zip
-	mv $(topdir)bin/$(VER)-sx1-200h-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx1-200h-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-sx1-201a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx1-201a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-a1100-100c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a1100-100c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-a2000-100c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a2000-100c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus90_sd790-100c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus90_sd790-100c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus90_sd790-100d-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus90_sd790-100d-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus90_sd790-100e-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus90_sd790-100e-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-g11-100f-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-g11-100f-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-g11-100j-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-g11-100j-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-g11-100k-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-g11-100k-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-g11-100l-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-g11-100l-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-s90-100c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s90-100c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-s90-101a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s90-101a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-s90-101b-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s90-101b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-s90-101c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s90-101c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus100_sd780-100b-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus100_sd780-100b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus100_sd780-100c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus100_sd780-100c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus120_sd940-100e-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus120_sd940-100e-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus120_sd940-101a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus120_sd940-101a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus120_sd940-102c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus120_sd940-102c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus120_sd940-103b-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus120_sd940-103b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus120_sd940-103c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus120_sd940-103c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus200_sd980-101c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus200_sd980-101c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus200_sd980-101d-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus200_sd980-101d-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus85_sd770-100a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus85_sd770-100a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-d10-100a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-d10-100a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-d10-100b-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-d10-100b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus95_sd1200-100c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus95_sd1200-100c-$(BUILD_NUMBER)_BETA.zip
-	#mv $(topdir)bin/$(VER)-a430-100b-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a430-100b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-s95-100e-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s95-100e-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-s95-100h-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s95-100h-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-s95-100i-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s95-100i-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-s95-100k-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-s95-100k-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus750_sd550-100h-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus750_sd550-100h-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-a490-100d-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a490-100d-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-a490-100f-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a490-100f-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-a495-100d-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a495-100d-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-a495-100e-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a495-100e-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-a495-100f-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-a495-100f-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus300_sd4000-100d-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus300_sd4000-100d-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-sx220hs-100a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx220hs-100a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-sx220hs-101a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx220hs-101a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-sx220hs-101b-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx220hs-101b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-sx230hs-100c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx230hs-100c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-sx230hs-101a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx230hs-101a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-sx230hs-101b-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx230hs-101b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-sx130is-101c-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx130is-101c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-sx130is-101d-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx130is-101d-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-sx130is-101f-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-sx130is-101f-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus310_elph500hs-100a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus310_elph500hs-100a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/$(VER)-ixus310_elph500hs-101a-$(BUILD_NUMBER).zip $(topdir)bin/$(VER)-ixus310_elph500hs-101a-$(BUILD_NUMBER)_BETA.zip
-	@echo "**** Done Copying duplicate Firmwares"
+	sh tools/auto_build.sh $(MAKE) firzipsub camera_list.csv
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
-
 
 batch-zip-complete: version
-	$(MAKE) -s --no-print-directory PLATFORM=a610 PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a610 PLATFORMSUB=100f NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a620 PLATFORMSUB=100f NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a630 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a640 PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a700 PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a710 PLATFORMSUB=100a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=s2is PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=s2is PLATFORMSUB=100f NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=s2is PLATFORMSUB=100g NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=s3is PLATFORMSUB=100a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g7   PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g7   PLATFORMSUB=100g NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g7   PLATFORMSUB=100i NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g7   PLATFORMSUB=100j NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g9   PLATFORMSUB=100d NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g9   PLATFORMSUB=100g NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g9   PLATFORMSUB=100i NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a530 PLATFORMSUB=100a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a540 PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a560 PLATFORMSUB=100a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a580 PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a1100 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a2000 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	#$(MAKE) -s --no-print-directory PLATFORM=s80  PLATFORMSUB=100g NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus700_sd500   PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus700_sd500   PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus800_sd700   PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus800_sd700   PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus850_sd800   PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus860_sd870   PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus870_sd880   PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus870_sd880   PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus870_sd880   PLATFORMSUB=102b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus950_sd850   PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus980_sd990   PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus980_sd990   PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus40_sd300    PLATFORMSUB=100k NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus40_sd300    PLATFORMSUB=100j NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus50_sd400    PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus50_sd400    PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus55_sd450    PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus55_sd450    PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus55_sd450    PLATFORMSUB=100d NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus65_sd630    PLATFORMSUB=100a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus70_sd1000   PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus70_sd1000   PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus70_sd1000   PLATFORMSUB=102a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus75_sd750   PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus75_sd750   PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus75_sd750   PLATFORMSUB=102a NO_INC_BUILD=1 firzipsubcomplete
-	#$(MAKE) -s --no-print-directory PLATFORM=ixusW_sd430     PLATFORMSUB=110a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a720 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a650 PLATFORMSUB=100d NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a450 PLATFORMSUB=100d NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a460 PLATFORMSUB=100d NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a550 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=s5is PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=s5is PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=tx1  PLATFORMSUB=100g NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=tx1  PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx100is  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx100is  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus750_sd550  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus750_sd550  PLATFORMSUB=100g NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus750_sd550  PLATFORMSUB=100h NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus60_sd600  PLATFORMSUB=100a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus60_sd600  PLATFORMSUB=100d NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus960_sd950  PLATFORMSUB=100d NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus80_sd1100  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus80_sd1100  PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixusizoom_sd30  PLATFORMSUB=100g NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx10 PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx10 PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx10 PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx10 PLATFORMSUB=102b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx10 PLATFORMSUB=103a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx1 PLATFORMSUB=200h NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx1 PLATFORMSUB=201a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=102a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=103b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=104a NO_INC_BUILD=1 firzipsubcomplete	
-	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=102c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx110is  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101d NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101f NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx200is  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=100a NO_INC_BUILD=1 firzipsubcomplete	
-	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete	
-	$(MAKE) -s --no-print-directory PLATFORM=sx230hs  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete	
-	$(MAKE) -s --no-print-directory PLATFORM=sx230hs  PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx230hs  PLATFORMSUB=101b NO_INC_BUILD=1 firzipsubcomplete	
-	$(MAKE) -s --no-print-directory PLATFORM=ixus90_sd790  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus90_sd790  PLATFORMSUB=100d NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g11  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g11  PLATFORMSUB=100j NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g11  PLATFORMSUB=100l NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus100_sd780  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus100_sd780  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=102c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=103b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=103c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus200_sd980  PLATFORMSUB=101c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus200_sd980  PLATFORMSUB=101d NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a480  PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a490  PLATFORMSUB=100d NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a490  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100d NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=s90  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=s90  PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=s90  PLATFORMSUB=101c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx20 PLATFORMSUB=102b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx20 PLATFORMSUB=102d NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus85_sd770 PLATFORMSUB=100a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=d10 PLATFORMSUB=100a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus95_sd1200  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	#$(MAKE) -s --no-print-directory PLATFORM=a430 PLATFORMSUB=100b NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus900_sd900  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g12  PLATFORMSUB=100c NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g12  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g12  PLATFORMSUB=100f NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=g12  PLATFORMSUB=100g NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx30  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx30  PLATFORMSUB=100h NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx30  PLATFORMSUB=100l NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx30  PLATFORMSUB=100n NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=sx30  PLATFORMSUB=100p NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=s95  PLATFORMSUB=100e NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=s95  PLATFORMSUB=100h NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=s95  PLATFORMSUB=100i NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=s95  PLATFORMSUB=100k NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus300_sd4000 PLATFORMSUB=100d NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus310_elph500hs PLATFORMSUB=100a NO_INC_BUILD=1 firzipsubcomplete
-	$(MAKE) -s --no-print-directory PLATFORM=ixus310_elph500hs PLATFORMSUB=101a NO_INC_BUILD=1 firzipsubcomplete
-	@echo "**** All zipfiles including firmwares and extra stuff created successfully"
-	@echo "**** Copying duplicate Firmwares"
-	cp $(topdir)bin/a610-100e-$(BUILD_NUMBER)-full.zip $(topdir)bin/a610-100d-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/a610-100e-$(BUILD_NUMBER).zip $(topdir)bin/a610-100d-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/s2is-100g-$(BUILD_NUMBER)-full.zip $(topdir)bin/s2is-100i-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/s2is-100g-$(BUILD_NUMBER).zip $(topdir)bin/s2is-100i-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/ixus800_sd700-101b-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus800_sd700-101a-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/ixus800_sd700-101b-$(BUILD_NUMBER).zip $(topdir)bin/ixus800_sd700-101a-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/ixus850_sd800-100e-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus850_sd800-100d-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/ixus850_sd800-100e-$(BUILD_NUMBER).zip $(topdir)bin/ixus850_sd800-100d-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/ixus70_sd1000-101b-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus70_sd1000-101a-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/ixus70_sd1000-101b-$(BUILD_NUMBER).zip $(topdir)bin/ixus70_sd1000-101a-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/ixus75_sd750-101a-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus75_sd750-101b-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/ixus75_sd750-101a-$(BUILD_NUMBER).zip $(topdir)bin/ixus75_sd750-101b-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/ixus80_sd1100-101a-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus80_sd1100-101b-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/ixus80_sd1100-101a-$(BUILD_NUMBER).zip $(topdir)bin/ixus80_sd1100-101b-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/ixus970_sd890-100c-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus970_sd890-100d-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/ixus970_sd890-100c-$(BUILD_NUMBER).zip $(topdir)bin/ixus970_sd890-100d-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/g9-100g-$(BUILD_NUMBER)-full.zip $(topdir)bin/g9-100f-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/g9-100g-$(BUILD_NUMBER).zip $(topdir)bin/g9-100f-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/g9-100i-$(BUILD_NUMBER)-full.zip $(topdir)bin/g9-100h-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/g9-100i-$(BUILD_NUMBER).zip $(topdir)bin/g9-100h-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/a470-101b-$(BUILD_NUMBER)-full.zip $(topdir)bin/a470-101a-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/a470-101b-$(BUILD_NUMBER).zip $(topdir)bin/a470-101a-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/sx200is-100c-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx200is-100d-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/sx200is-100c-$(BUILD_NUMBER).zip $(topdir)bin/sx200is-100d-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/ixus960_sd950-100d-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus960_sd950-100c-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/ixus960_sd950-100d-$(BUILD_NUMBER).zip $(topdir)bin/ixus960_sd950-100c-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/ixus90_sd790-100d-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus90_sd790-100e-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/ixus90_sd790-100d-$(BUILD_NUMBER).zip $(topdir)bin/ixus90_sd790-100e-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/g11-100j-$(BUILD_NUMBER)-full.zip $(topdir)bin/g11-100k-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/g11-100j-$(BUILD_NUMBER).zip $(topdir)bin/g11-100k-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/s90-101c-$(BUILD_NUMBER).zip $(topdir)bin/s90-101b-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/s90-101c-$(BUILD_NUMBER)-full.zip $(topdir)bin/s90-101b-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/d10-100a-$(BUILD_NUMBER).zip $(topdir)bin/d10-100b-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/d10-100a-$(BUILD_NUMBER)-full.zip $(topdir)bin/d10-100b-$(BUILD_NUMBER)-full.zip
-	cp $(topdir)bin/sx30-100l-$(BUILD_NUMBER).zip $(topdir)bin/sx30-100m-$(BUILD_NUMBER).zip
-	cp $(topdir)bin/sx30-100l-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx30-100m-$(BUILD_NUMBER)-full.zip
-	mv $(topdir)bin/sx1-200h-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx1-200h-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/sx1-200h-$(BUILD_NUMBER).zip $(topdir)bin/sx1-200h-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/sx1-201a-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx1-201a-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/sx1-201a-$(BUILD_NUMBER).zip $(topdir)bin/sx1-201a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/a1100-100c-$(BUILD_NUMBER)-full.zip $(topdir)bin/a1100-100c-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/a1100-100c-$(BUILD_NUMBER).zip $(topdir)bin/a1100-100c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/a2000-100c-$(BUILD_NUMBER)-full.zip $(topdir)bin/a2000-100c-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/a2000-100c-$(BUILD_NUMBER).zip $(topdir)bin/a2000-100c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus90_sd790-100c-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus90_sd790-100c-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus90_sd790-100c-$(BUILD_NUMBER).zip $(topdir)bin/ixus90_sd790-100c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus90_sd790-100d-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus90_sd790-100d-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus90_sd790-100d-$(BUILD_NUMBER).zip $(topdir)bin/ixus90_sd790-100d-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus90_sd790-100e-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus90_sd790-100e-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus90_sd790-100e-$(BUILD_NUMBER).zip $(topdir)bin/ixus90_sd790-100e-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/g11-100f-$(BUILD_NUMBER)-full.zip $(topdir)bin/g11-100f-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/g11-100f-$(BUILD_NUMBER).zip $(topdir)bin/g11-100f-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/g11-100j-$(BUILD_NUMBER)-full.zip $(topdir)bin/g11-100j-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/g11-100j-$(BUILD_NUMBER).zip $(topdir)bin/g11-100j-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/g11-100k-$(BUILD_NUMBER)-full.zip $(topdir)bin/g11-100k-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/g11-100k-$(BUILD_NUMBER).zip $(topdir)bin/g11-100k-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/g11-100l-$(BUILD_NUMBER)-full.zip $(topdir)bin/g11-100l-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/g11-100l-$(BUILD_NUMBER).zip $(topdir)bin/g11-100l-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus100_sd780-100b-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus100_sd780-100b-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus100_sd780-100b-$(BUILD_NUMBER).zip $(topdir)bin/ixus100_sd780-100b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus100_sd780-100c-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus100_sd780-100c-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus100_sd780-100c-$(BUILD_NUMBER).zip $(topdir)bin/ixus100_sd780-100c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus120_sd940-100e-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus120_sd940-100e-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus120_sd940-100e-$(BUILD_NUMBER).zip $(topdir)bin/ixus120_sd940-100e-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus120_sd940-101a-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus120_sd940-101a-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus120_sd940-101a-$(BUILD_NUMBER).zip $(topdir)bin/ixus120_sd940-101a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus120_sd940-102c-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus120_sd940-102c-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus120_sd940-102c-$(BUILD_NUMBER).zip $(topdir)bin/ixus120_sd940-102c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus120_sd940-103b-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus120_sd940-103b-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus120_sd940-103b-$(BUILD_NUMBER).zip $(topdir)bin/ixus120_sd940-103b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus120_sd940-103c-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus120_sd940-103c-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus120_sd940-103c-$(BUILD_NUMBER).zip $(topdir)bin/ixus120_sd940-103c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus200_sd980-101c-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus200_sd980-101c-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus200_sd980-101c-$(BUILD_NUMBER).zip $(topdir)bin/ixus200_sd980-101c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus200_sd980-101d-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus200_sd980-101d-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus200_sd980-101d-$(BUILD_NUMBER).zip $(topdir)bin/ixus200_sd980-101d-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/s90-100c-$(BUILD_NUMBER)-full.zip $(topdir)bin/s90-100c-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/s90-100c-$(BUILD_NUMBER).zip $(topdir)bin/s90-100c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/s90-101a-$(BUILD_NUMBER)-full.zip $(topdir)bin/s90-101a-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/s90-101a-$(BUILD_NUMBER).zip $(topdir)bin/s90-101a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/s90-101b-$(BUILD_NUMBER)-full.zip $(topdir)bin/s90-101b-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/s90-101b-$(BUILD_NUMBER).zip $(topdir)bin/s90-101b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/s90-101c-$(BUILD_NUMBER)-full.zip $(topdir)bin/s90-101c-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/s90-101c-$(BUILD_NUMBER).zip $(topdir)bin/s90-101c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus85_sd770-100a-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus85_sd770-100a-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus85_sd770-100a-$(BUILD_NUMBER).zip $(topdir)bin/ixus85_sd770-100a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/d10-100a-$(BUILD_NUMBER)-full.zip $(topdir)bin/d10-100a-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/d10-100a-$(BUILD_NUMBER).zip $(topdir)bin/d10-100a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/d10-100b-$(BUILD_NUMBER)-full.zip $(topdir)bin/d10-100b-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/d10-100b-$(BUILD_NUMBER).zip $(topdir)bin/d10-100b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus95_sd1200-100c-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus95_sd1200-100c-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus95_sd1200-100c-$(BUILD_NUMBER).zip $(topdir)bin/ixus95_sd1200-100c-$(BUILD_NUMBER)_BETA.zip
-	#mv $(topdir)bin/a430-100b-$(BUILD_NUMBER)-full.zip $(topdir)bin/a430-100b-$(BUILD_NUMBER)-full_BETA.zip
-	#mv $(topdir)bin/a430-100b-$(BUILD_NUMBER).zip $(topdir)bin/a430-100b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/s95-100e-$(BUILD_NUMBER)-full.zip $(topdir)bin/s95-100e-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/s95-100e-$(BUILD_NUMBER).zip $(topdir)bin/s95-100e-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/s95-100h-$(BUILD_NUMBER)-full.zip $(topdir)bin/s95-100h-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/s95-100h-$(BUILD_NUMBER).zip $(topdir)bin/s95-100h-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/s95-100i-$(BUILD_NUMBER)-full.zip $(topdir)bin/s95-100i-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/s95-100i-$(BUILD_NUMBER).zip $(topdir)bin/s95-100i-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/s95-100k-$(BUILD_NUMBER)-full.zip $(topdir)bin/s95-100k-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/s95-100k-$(BUILD_NUMBER).zip $(topdir)bin/s95-100k-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus750_sd550-100h-$(BUILD_NUMBER).zip $(topdir)bin/ixus750_sd550-100h-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus750_sd550-100h-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus750_sd550-100h-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/a490-100d-$(BUILD_NUMBER).zip $(topdir)bin/a490-100d-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/a490-100f-$(BUILD_NUMBER).zip $(topdir)bin/a490-100f-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/a495-100d-$(BUILD_NUMBER).zip $(topdir)bin/a495-100d-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/a495-100e-$(BUILD_NUMBER).zip $(topdir)bin/a495-100e-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/a495-100f-$(BUILD_NUMBER).zip $(topdir)bin/a495-100f-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/a490-100d-$(BUILD_NUMBER)-full.zip $(topdir)bin/a490-100d-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/a490-100f-$(BUILD_NUMBER)-full.zip $(topdir)bin/a490-100f-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/a495-100d-$(BUILD_NUMBER)-full.zip $(topdir)bin/a495-100d-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/a495-100e-$(BUILD_NUMBER)-full.zip $(topdir)bin/a495-100e-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/a495-100f-$(BUILD_NUMBER)-full.zip $(topdir)bin/a495-100f-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus300_sd4000-100d-$(BUILD_NUMBER).zip $(topdir)bin/ixus300_sd4000-100d-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus300_sd4000-100d-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus300_sd4000-100d-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/sx220hs-100a-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx220hs-100a-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/sx220hs-100a-$(BUILD_NUMBER).zip $(topdir)bin/sx220hs-100a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/sx220hs-101a-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx220hs-101a-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/sx220hs-101a-$(BUILD_NUMBER).zip $(topdir)bin/sx220hs-101a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/sx220hs-101b-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx220hs-101b-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/sx220hs-101b-$(BUILD_NUMBER).zip $(topdir)bin/sx220hs-101b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/sx230hs-100c-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx230hs-100c-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/sx230hs-100c-$(BUILD_NUMBER).zip $(topdir)bin/sx230hs-100c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/sx230hs-101a-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx230hs-101a-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/sx230hs-101a-$(BUILD_NUMBER).zip $(topdir)bin/sx230hs-101a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/sx230hs-101b-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx230hs-101b-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/sx230hs-101b-$(BUILD_NUMBER).zip $(topdir)bin/sx230hs-101b-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/sx130is-101c-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx130is-101c-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/sx130is-101c-$(BUILD_NUMBER).zip $(topdir)bin/sx130is-101c-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/sx130is-101d-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx130is-101d-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/sx130is-101d-$(BUILD_NUMBER).zip $(topdir)bin/sx130is-101d-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/sx130is-101f-$(BUILD_NUMBER)-full.zip $(topdir)bin/sx130is-101f-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/sx130is-101f-$(BUILD_NUMBER).zip $(topdir)bin/sx130is-101f-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus310_elph500hs-100a-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus310_elph500hs-100a-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus310_elph500hs-100a-$(BUILD_NUMBER).zip $(topdir)bin/ixus310_elph500hs-100a-$(BUILD_NUMBER)_BETA.zip
-	mv $(topdir)bin/ixus310_elph500hs-101a-$(BUILD_NUMBER)-full.zip $(topdir)bin/ixus310_elph500hs-101a-$(BUILD_NUMBER)-full_BETA.zip
-	mv $(topdir)bin/ixus310_elph500hs-101a-$(BUILD_NUMBER).zip $(topdir)bin/ixus310_elph500hs-101a-$(BUILD_NUMBER)_BETA.zip
-	@echo "**** Done Copying duplicate Firmwares"
+	sh tools/auto_build.sh $(MAKE) firzipsubcomplete camera_list.csv
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
 
-
 batch-clean:
-	$(MAKE) -s --no-print-directory PLATFORM=a610 PLATFORMSUB=100e NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a610 PLATFORMSUB=100f NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a620 PLATFORMSUB=100f NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a630 PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a640 PLATFORMSUB=100b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a700 PLATFORMSUB=100b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a710 PLATFORMSUB=100a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=s2is PLATFORMSUB=100e NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=s2is PLATFORMSUB=100f NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=s2is PLATFORMSUB=100g NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=s3is PLATFORMSUB=100a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g7   PLATFORMSUB=100e NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g7   PLATFORMSUB=100g NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g7   PLATFORMSUB=100i NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g7   PLATFORMSUB=100j NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g9   PLATFORMSUB=100d NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g9   PLATFORMSUB=100g NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g9   PLATFORMSUB=100i NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a530 PLATFORMSUB=100a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a540 PLATFORMSUB=100b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a560 PLATFORMSUB=100a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=100e NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a570 PLATFORMSUB=101a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a580 PLATFORMSUB=101b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=100e NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a590 PLATFORMSUB=101b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a1100 PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a2000 PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	#$(MAKE) -s --no-print-directory PLATFORM=s80  PLATFORMSUB=100g NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus700_sd500   PLATFORMSUB=101a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus700_sd500   PLATFORMSUB=101b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus800_sd700   PLATFORMSUB=101b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus800_sd700   PLATFORMSUB=100b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus850_sd800   PLATFORMSUB=100e NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus860_sd870   PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus870_sd880   PLATFORMSUB=100e NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus870_sd880   PLATFORMSUB=101a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus870_sd880   PLATFORMSUB=102b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus950_sd850   PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus980_sd990   PLATFORMSUB=100e NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus980_sd990   PLATFORMSUB=101b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus40_sd300    PLATFORMSUB=100k NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus40_sd300    PLATFORMSUB=100j NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus50_sd400    PLATFORMSUB=101a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus50_sd400    PLATFORMSUB=101b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus55_sd450    PLATFORMSUB=100b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus55_sd450    PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus55_sd450    PLATFORMSUB=100d NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus65_sd630    PLATFORMSUB=100a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus70_sd1000   PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus70_sd1000   PLATFORMSUB=101b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus70_sd1000   PLATFORMSUB=102a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus75_sd750   PLATFORMSUB=100b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus75_sd750   PLATFORMSUB=101a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus75_sd750   PLATFORMSUB=102a NO_INC_BUILD=1 clean
-	#$(MAKE) -s --no-print-directory PLATFORM=ixusW_sd430     PLATFORMSUB=110a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a720 PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a650 PLATFORMSUB=100d NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a450 PLATFORMSUB=100d NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a460 PLATFORMSUB=100d NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a550 PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=s5is PLATFORMSUB=101a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=s5is PLATFORMSUB=101b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=tx1  PLATFORMSUB=100g NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=tx1  PLATFORMSUB=101b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx100is  PLATFORMSUB=100b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx100is  PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus750_sd550  PLATFORMSUB=100f NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus750_sd550  PLATFORMSUB=100g NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus750_sd550  PLATFORMSUB=100h NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus60_sd600  PLATFORMSUB=100a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus60_sd600  PLATFORMSUB=100d NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus960_sd950  PLATFORMSUB=100d NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus80_sd1100  PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus80_sd1100  PLATFORMSUB=101a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixusizoom_sd30  PLATFORMSUB=100g NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx10 PLATFORMSUB=101a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx10 PLATFORMSUB=102b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx1 PLATFORMSUB=200h NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx1 PLATFORMSUB=201a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus970_sd890  PLATFORMSUB=100f NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=102a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=103b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g10  PLATFORMSUB=104a NO_INC_BUILD=1 clean	
-	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=101b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a470  PLATFORMSUB=102c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx110is  PLATFORMSUB=100b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101d NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx130is  PLATFORMSUB=101f NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx200is  PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=100a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=101a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx220hs  PLATFORMSUB=101b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx230hs  PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx230hs  PLATFORMSUB=101a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx230hs  PLATFORMSUB=101b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus90_sd790  PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus90_sd790  PLATFORMSUB=100d NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g11  PLATFORMSUB=100f NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g11  PLATFORMSUB=100j NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g11  PLATFORMSUB=100l NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus100_sd780  PLATFORMSUB=100b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus100_sd780  PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=100e NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=101a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=102c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=103b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus120_sd940  PLATFORMSUB=103c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus200_sd980  PLATFORMSUB=101c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus200_sd980  PLATFORMSUB=101d NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a480  PLATFORMSUB=100b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a490  PLATFORMSUB=100d NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a490  PLATFORMSUB=100f NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100d NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100e NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=a495  PLATFORMSUB=100f NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=s90  PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=s90  PLATFORMSUB=101a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=s90  PLATFORMSUB=101c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx20 PLATFORMSUB=102b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx20 PLATFORMSUB=102d NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus85_sd770 PLATFORMSUB=100a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=d10 PLATFORMSUB=100a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus95_sd1200 PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	#$(MAKE) -s --no-print-directory PLATFORM=a430 PLATFORMSUB=100b NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus900_sd900  PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g12 PLATFORMSUB=100c NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g12 PLATFORMSUB=100e NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g12 PLATFORMSUB=100f NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=g12 PLATFORMSUB=100g NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx30 PLATFORMSUB=100e NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx30 PLATFORMSUB=100h NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx30 PLATFORMSUB=100l NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx30 PLATFORMSUB=100n NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=sx30 PLATFORMSUB=100p NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=s95  PLATFORMSUB=100e NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=s95  PLATFORMSUB=100h NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=s95  PLATFORMSUB=100i NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=s95  PLATFORMSUB=100k NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus300_sd4000  PLATFORMSUB=100d NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus310_elph500hs PLATFORMSUB=100a NO_INC_BUILD=1 clean
-	$(MAKE) -s --no-print-directory PLATFORM=ixus310_elph500hs PLATFORMSUB=101a NO_INC_BUILD=1 clean
-	.PHONY: fir upload
+	sh tools/auto_build.sh $(MAKE) clean camera_list.csv
