@@ -103,6 +103,8 @@
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 												
 	#define CAM_DETECT_SCREEN_ERASE 1			// http://chdk.setepontos.com/index.php?topic=6705.msg71062#msg71062	
-											
+					
+   #define CAM_USE_COLORED_ICONS  1       // Enable using the CHDK-DE colored icons.
+					
    //----------------------------------------------------------
 
