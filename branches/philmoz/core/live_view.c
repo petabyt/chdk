@@ -22,11 +22,7 @@ static int live_view_core_info(ptp_data *data)
     details.vp_max_width        = vid_get_viewport_max_width();
     details.vp_max_height       = vid_get_viewport_max_height();
     details.vp_buffer_width     = vid_get_viewport_buffer_width_proper();
-#if CAM_USES_ASPECT_CORRECTION
     details.bm_max_width        = ASPECT_XCORRECTION(vid_get_bitmap_screen_width());
-#else
-    details.bm_max_width        = vid_get_bitmap_screen_width();
-#endif
     details.bm_max_height       = vid_get_bitmap_screen_height();
     details.bm_buffer_width     = vid_get_bitmap_buffer_width();
     details.lcd_aspect_ratio    = vid_get_aspect_ratio();

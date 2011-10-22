@@ -27,5 +27,3 @@ NEED_ENCODED_DISKBOOT=2
 # type of FI2 encoding
 KEYSYS=d4
 
-#Possible firmware versions that are created from this one as copies
-COPY_TO=100b

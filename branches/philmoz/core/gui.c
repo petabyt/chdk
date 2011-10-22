@@ -1791,7 +1791,8 @@ void gui_chdk_draw()
     gui_draw_osd();
 
 #ifdef CAM_DISP_ALT_TEXT
-    draw_txt_string(20, 14, "<ALT>", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+ // draw_txt_string(20, 14, "<ALT>", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+    draw_txt_string(20, 14, "<ALT>", MAKE_COLOR(COLOR_RED, COLOR_WHITE));
 #endif
 
 #ifdef OPT_SCRIPTING
@@ -2092,15 +2093,6 @@ void gui_redraw()
     gui_in_redraw = 1;
     gui_mode_old = gui_mode;
 
-#if CAM_USES_ASPECT_CORRECTION //nandoide sept-2009
-    //the different modes arises because games are designed on a 360x240 basis and are difficult to downscale to 320x240
-    if (gui_mode == GUI_MODE_REVERSI || gui_mode == GUI_MODE_SOKOBAN || gui_mode == GUI_MODE_4WINS || gui_mode == GUI_MODE_MASTERMIND) {
-      draw_set_environment(aspect_xcorrection_games_360, aspect_ycorrection_games_360, GAMES_SCREEN_WIDTH, GAMES_SCREEN_HEIGHT);
-   } else { //default
-      draw_set_environment(NULL, NULL, vid_get_bitmap_screen_width(), vid_get_bitmap_screen_height());
-   }
-#endif
-
 #ifdef CAM_TOUCHSCREEN_UI
     extern void virtual_buttons();
     virtual_buttons();
@@ -2200,7 +2192,7 @@ void other_kbd_process(){
      get_property_case(PROPCASE_DIGITAL_ZOOM_STATE, &x, sizeof(x));
      if (x) {
       get_property_case(PROPCASE_DIGITAL_ZOOM_POSITION, &x, sizeof(x));
-#if defined (CAMERA_s90) || defined (CAMERA_s95) || defined (CAMERA_g12)
+#if defined (CAMERA_s90) || defined (CAMERA_s95) || defined (CAMERA_g12) || defined (CAMERA_a3000)
 	  if (x==0) zoom_status=ZOOM_OPTICAL_MAX; //ERR99: No zoom back from digital to optical zoom possible if set to medium
 #else
 	  if (x==0) zoom_status=ZOOM_OPTICAL_MEDIUM;
@@ -2626,9 +2618,6 @@ void gui_draw_reversi(int arg) {
         return;
     }
 
-    #if CAM_USES_ASPECT_CORRECTION //nandoide sept-2009
-      draw_set_environment(aspect_xcorrection_games_360, aspect_ycorrection_games_360, GAMES_SCREEN_WIDTH, GAMES_SCREEN_HEIGHT);
-    #endif
     gui_set_mode(GUI_MODE_REVERSI);
     gui_reversi_init();
 }
@@ -2642,9 +2631,6 @@ void gui_draw_sokoban(int arg) {
                       MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
         return;
     }
-    #if CAM_USES_ASPECT_CORRECTION //nandoide sept-2009
-      draw_set_environment(aspect_xcorrection_games_360, aspect_ycorrection_games_360, GAMES_SCREEN_WIDTH, GAMES_SCREEN_HEIGHT);
-    #endif
     if ( gui_sokoban_init() )
         gui_set_mode(GUI_MODE_SOKOBAN);
 }
@@ -2657,9 +2643,6 @@ void gui_draw_4wins(int arg) {
                       MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
         return;
     }
-    #if CAM_USES_ASPECT_CORRECTION //nandoide sept-2009
-      draw_set_environment(aspect_xcorrection_games_360, aspect_ycorrection_games_360, GAMES_SCREEN_WIDTH, GAMES_SCREEN_HEIGHT);
-    #endif
     if ( gui_4wins_init() )
         gui_set_mode(GUI_MODE_4WINS);
 }
@@ -2672,10 +2655,7 @@ void gui_draw_mastermind(int arg) {
                       MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
         return;
     }
-    #if CAM_USES_ASPECT_CORRECTION //nandoide sept-2009
-     draw_set_environment(aspect_xcorrection_games_360, aspect_ycorrection_games_360, GAMES_SCREEN_WIDTH, GAMES_SCREEN_HEIGHT);
-    #endif
-   if ( gui_mastermind_init() )
+    if ( gui_mastermind_init() )
         gui_set_mode(GUI_MODE_MASTERMIND);
 }
 #endif

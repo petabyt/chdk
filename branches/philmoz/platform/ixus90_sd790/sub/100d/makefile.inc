@@ -15,6 +15,3 @@ PLFLAGS+=-DRESTARTSTART=$(RESTARTSTART)
 NEED_ENCODED_DISKBOOT=1
 
 KEYSYS=d3enc
-
-#Possible firmware versions that are created from this one as copies
-COPY_TO=100e

@@ -110,7 +110,7 @@ ROM:FFA010FC 03 00 00 EA                             B       loc_FFA01110    ; B
 
 long vid_get_bitmap_screen_width()
 {
-    return 320;
+    return 360;
 }
 
 long vid_get_bitmap_screen_height()

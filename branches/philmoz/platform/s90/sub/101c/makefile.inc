@@ -13,6 +13,3 @@ PLFLAGS=-DMEMBASEADDR=$(MEMBASEADDR) -DMEMISOSTART=$(MEMISOSTART) -DMEMISOSIZE=$
 PLFLAGS+=-DRESTARTSTART=$(RESTARTSTART)
 
 KEYSYS=d4
-
-#Possible firmware versions that are created from this one as copies
-COPY_TO=101b

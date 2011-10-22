@@ -74,6 +74,6 @@ $(TARGET_PRIMARY):
 include $(topdir)bottom.inc
 
 
-# Define empty recipes for all the included makefiles (including this one)
-# This stops gmake from attempting to see if the makefiles need to be rebuilt
+# Define empty recipes for source files (including the makefiles)
+# to prevent make from trying implicit rules to create them. Speeds up build process
 $(topdir)platform/makefile_sub.inc: ;

@@ -72,33 +72,10 @@
 
     #define CAM_HAS_VARIABLE_ASPECT 1
     #undef CAM_USES_ASPECT_CORRECTION
-    #undef CAM_USES_ASPECT_YCORRECTION
     #define CAM_USES_ASPECT_CORRECTION  1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
-    #define CAM_USES_ASPECT_YCORRECTION  0  //only uses mappings on x coordinate
 
-    #undef ASPECT_XCORRECTION
-	#define ASPECT_XCORRECTION(x)  (((x)<<1))   //correction x*screen_buffer_width/screen_width = x*960/480 = x*2/1
-	#undef ASPECT_GRID_XCORRECTION
-	#define ASPECT_GRID_XCORRECTION(x)  ( (x)+60  )  //+ shift the grid 60 pixels right for 16:9 displays
-	#undef ASPECT_GRID_YCORRECTION
-	#define ASPECT_GRID_YCORRECTION(y)  ( (y) )
-
-	#undef ASPECT_VIEWPORT_XCORRECTION
-	#define ASPECT_VIEWPORT_XCORRECTION(x) ( (x)  )
-	#undef ASPECT_VIEWPORT_YCORRECTION
-    #define ASPECT_VIEWPORT_YCORRECTION(y) ( (y) )
-	
     #undef EDGE_HMARGIN
     #define EDGE_HMARGIN 10
-
-    #undef GAMES_SCREEN_WIDTH
-    #undef GAMES_SCREEN_HEIGHT
-    #define GAMES_SCREEN_WIDTH 360
-    #define GAMES_SCREEN_HEIGHT 240
-    #undef ASPECT_GAMES_XCORRECTION
-    #define ASPECT_GAMES_XCORRECTION(x)   ( ((x)<<1) )
-    #undef ASPECT_GAMES_YCORRECTION
-    #define ASPECT_GAMES_YCORRECTION(y)   ( (y) )
 
     #undef ZEBRA_HMARGIN0
     #define ZEBRA_HMARGIN0  30

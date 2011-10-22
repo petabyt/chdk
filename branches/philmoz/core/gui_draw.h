@@ -211,6 +211,33 @@
 	#define	COLOR_ICON_PLY_GREY_DK		COLOR_ICON_REC_GREY_DK
 	#define	COLOR_ICON_PLY_GREY_LT		COLOR_ICON_REC_GREY_LT
 #endif
+#if defined (CAMERA_ixus120_sd940)
+	#define	COLOR_ICON_REC_RED			0xE7
+	#define	COLOR_ICON_REC_RED_DK		0xEA
+	#define	COLOR_ICON_REC_RED_LT		0xE3
+	#define	COLOR_ICON_REC_GREEN		0x7F
+	#define	COLOR_ICON_REC_GREEN_DK		0x86
+	#define	COLOR_ICON_REC_GREEN_LT		0x78
+	#define	COLOR_ICON_REC_YELLOW		0x92
+	#define	COLOR_ICON_REC_YELLOW_DK	0x87
+	#define	COLOR_ICON_REC_YELLOW_LT	0xA9
+	#define	COLOR_ICON_REC_GREY			COLOR_GREY
+	#define	COLOR_ICON_REC_GREY_DK		0x1A
+	#define	COLOR_ICON_REC_GREY_LT		0x11
+	
+	#define	COLOR_ICON_PLY_RED			0x15
+	#define	COLOR_ICON_PLY_RED_DK		0x1E
+	#define	COLOR_ICON_PLY_RED_LT		0x2c
+	#define	COLOR_ICON_PLY_GREEN		0x9E
+	#define	COLOR_ICON_PLY_GREEN_DK		0x9E
+	#define	COLOR_ICON_PLY_GREEN_LT		0x9E
+	#define	COLOR_ICON_PLY_YELLOW		0xCC
+	#define	COLOR_ICON_PLY_YELLOW_DK	0xCD
+	#define	COLOR_ICON_PLY_YELLOW_LT	0xCB
+	#define	COLOR_ICON_PLY_GREY			COLOR_GREY
+	#define	COLOR_ICON_PLY_GREY_DK		0x1A
+	#define	COLOR_ICON_PLY_GREY_LT		0x11
+#endif
 
 #elif CAM_BITMAP_PALETTE==4
 
@@ -637,6 +664,41 @@
 #define	COLOR_ICON_REC_GREY_DK		COLOR_GREY_DK
 #define	COLOR_ICON_REC_GREY_LT		COLOR_GREY_LT
 
+#elif CAM_BITMAP_PALETTE==13
+
+// Used by :- A3000IS
+
+#define COLOR_TRANSPARENT   0x00
+#define COLOR_WHITE         0x01
+#define COLOR_RED           0x22
+#define COLOR_GREY          0xF3
+#define COLOR_GREEN         0xcF
+#define COLOR_BLUE_LT       0x61
+#define COLOR_BLUE          0xE7
+#define COLOR_YELLOW        0xDD
+#define COLOR_BLACK         0xFF
+#define COLOR_BG            0x0F
+#define COLOR_FG            COLOR_WHITE
+#define COLOR_SELECTED_BG   COLOR_RED
+#define COLOR_SELECTED_FG   COLOR_GREY
+#define COLOR_ALT_BG        0xf0
+#define COLOR_SPLASH_RED    COLOR_RED
+#define COLOR_SPLASH_PINK   0x4E
+#define COLOR_SPLASH_GREY   0x6F
+// colors for blended histo
+#define COLOR_HISTO_R       COLOR_RED
+#define COLOR_HISTO_R_PLAY  COLOR_RED
+#define COLOR_HISTO_B       COLOR_BLUE
+#define COLOR_HISTO_G       COLOR_GREEN
+#define COLOR_HISTO_G_PLAY  COLOR_GREEN
+#define COLOR_HISTO_BG      COLOR_BLUE_LT
+#define COLOR_HISTO_RG      COLOR_YELLOW
+#define COLOR_HISTO_RB      COLOR_RED
+#define COLOR_HISTO_RB_PLAY COLOR_HISTO_RB
+#define COLOR_HISTO_B_PLAY  COLOR_HISTO_B
+#define COLOR_HISTO_BG_PLAY COLOR_BLUE_LT
+#define COLOR_HISTO_RG_PLAY COLOR_YELLOW
+
 #else
 #error CAM_BITMAP_PALETTE not defined
 #endif
@@ -730,16 +792,6 @@ extern void draw_filled_ellipse(coord xc, coord yc, unsigned int a, unsigned int
 #if defined(CAM_USE_COLORED_ICONS)
 extern void draw_get_icon_colors();
 extern color icon_green[3], icon_red[3], icon_yellow[3], icon_grey[3];
-#endif
-
-#if CAM_USES_ASPECT_CORRECTION //nandoide sept-2009
-void draw_set_aspect_xcorrection_proc(unsigned int (*xcorrection_proc)(unsigned int x));
-void draw_set_aspect_ycorrection_proc(unsigned int (*ycorrection_proc)(unsigned int y));
-unsigned int aspect_xcorrection_games_360(unsigned int x);
-unsigned int aspect_ycorrection_games_360(unsigned int y);
-void draw_set_environment(unsigned int (*xcorrection_proc)(unsigned int x),
-                                       unsigned int (*ycorrection_proc)(unsigned int y),
-                                       int screenx, int screeny );
 #endif
 
 //-------------------------------------------------------------------

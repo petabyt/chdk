@@ -25,8 +25,12 @@ static int shoot_counter=0;
 #define KEYS_MASK1 (0x00000FF0)     // physw_status[1], override 0xF0 (keys) + 0xF00 (feather)
 #define KEYS_MASK2 (0x00000000)     // physw_status[2]
 //static long alt_mode_key_mask = 0x00000000;   // we use two Keys, no need to override
-#define SD_READONLY_FLAG (0x20000)  // SD-Card Lock Status (locked / unlocked)
-#define USB_MASK (0x80000)          // USB-Power (triggered around 3,5V)
+
+#define SD_READONLY_FLAG    (0x00020000)    // SD-Card Lock Status (locked / unlocked)
+#define SD_READONLY_IDX     2
+
+#define USB_MASK            (0x00080000)    // USB-Power (triggered around 3,5V)
+#define USB_IDX             2
 
 volatile int jogdial_stopped=0;
 

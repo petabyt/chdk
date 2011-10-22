@@ -15,5 +15,3 @@ PLFLAGS+=-DRESTARTSTART=$(RESTARTSTART)
 NEED_ENCODED_DISKBOOT=2
 KEYSYS=d4
 
-#Possible firmware versions that are created from this one as copies
-COPY_TO=100d
