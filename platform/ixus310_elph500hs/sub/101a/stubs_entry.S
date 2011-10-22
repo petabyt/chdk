@@ -182,7 +182,7 @@ NSTUB(rand                                    ,0xff24d118) //  6
 NSTUB(read                                    ,0xff00ad58) //101
 NSTUB(readfastdir                             ,0xff2e4530) //  6
 NSTUB(rename                                  ,0xff026f14) //  6
-NSTUB(set_control_event                       ,0xff08ce6c) //  6
+NSTUB(set_control_event                       ,0xff08ce6c) //111
 NSTUB(srand                                   ,0xff24d10c) //  6
 NSTUB(stat                                    ,0xff0278f4) //  3
 NSTUB(strcat                                  ,0xff0a5738) //  1
