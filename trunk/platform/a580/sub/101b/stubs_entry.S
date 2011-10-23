@@ -2,9 +2,11 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R23 (DRYOS version 2.3, release #0023)
-// Firmware Ver GM1.01B
-// Canon PowerShot A580
+//   DRYOS R23 (DRYOS version 2.3, release #0023)
+//   Firmware Ver GM1.01B
+//   Canon PowerShot A580
+//   PLATFORMID = 12663 (0x3177)
+//   MAXRAMADDR = 0x01ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

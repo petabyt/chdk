@@ -2,9 +2,11 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R45 (DRYOS version 2.3, release #0045)
-// Firmware Ver GM1.00D
-// Canon IXUS 1000HS
+//   DRYOS R45 (DRYOS version 2.3, release #0045)
+//   Firmware Ver GM1.00D
+//   Canon IXUS 1000HS
+//   PLATFORMID = 12792 (0x31f8)
+//   MAXRAMADDR = 0x07ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

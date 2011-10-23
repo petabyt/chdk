@@ -472,6 +472,8 @@ typedef struct {
     int         size;
     BufRange    *br, *last;
 	int			dryos_ver;
+    int         pid;
+    int         maxram;
 	char		cam[100];
 } firmware;
 
@@ -735,55 +737,93 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 	int k = find_str(fw, "DRYOS version 2.3, release #");
 	if (k == -1)
 	{
-		bprintf("// Can't find DRYOS version !!!\n\n");
+		bprintf("//   Can't find DRYOS version !!!\n\n");
 	}
 	else
 	{
 		fw->dryos_ver = atoi(((char*)&fw->buf[k])+28);
-		bprintf("// DRYOS R%d (%s)\n",fw->dryos_ver,(char*)&fw->buf[k]);
+        if (fw->dryos_ver > 49)
+    		bprintf("//   DRYOS R%d (%s) *** New DRYOS Version - please update finsig_dryos.c ***\n",fw->dryos_ver,(char*)&fw->buf[k]);
+        else
+    		bprintf("//   DRYOS R%d (%s)\n",fw->dryos_ver,(char*)&fw->buf[k]);
 	}
 	
 	// Get firmware version info
 	k = find_str(fw, "Firmware Ver ");
 	if (k == -1)
 	{
-		bprintf("// Can't find firmware version !!!\n\n");
+		bprintf("//   Can't find firmware version !!!\n\n");
 	}
 	else
 	{
-		bprintf("// %s",(char*)&fw->buf[k]);
+		bprintf("//   %s",(char*)&fw->buf[k]);
 		bprintf("\n");
 	}
 
-	// Get camera name
+	// Get camera name & platformid
 	int fsize = -((int)fw->base)/4;
 	int cam_idx = 0;
+    int pid_idx = 0;
 	switch (fw->dryos_ver)
 	{
 	case 20:
 	case 23:
 	case 31:
-	case 39: cam_idx = (0xFFFE0110 - fw->base) / 4; break;
+	case 39: 
+        cam_idx = (0xFFFE0110 - fw->base) / 4; 
+        pid_idx = (0xFFFE0130 - fw->base) / 4; 
+        break;
 	case 43:
-	case 45: cam_idx = (0xFFFE00D0 - fw->base) / 4; break;
-	case 47: cam_idx = (((fw->base==0xFF000000)?0xFFF40170:0xFFFE0170) - fw->base) / 4; break;
+	case 45: 
+        cam_idx = (0xFFFE00D0 - fw->base) / 4; 
+        pid_idx = (0xFFFE0130 - fw->base) / 4; 
+        break;
+	case 47: 
+        cam_idx = (((fw->base==0xFF000000)?0xFFF40170:0xFFFE0170) - fw->base) / 4; 
+        pid_idx = (((fw->base==0xFF000000)?0xFFF40040:0xFFFE0040) - fw->base) / 4; 
+        break;
+	case 49: 
+        cam_idx = (((fw->base==0xFF000000)?0xFFF40190:0xFFFE0170) - fw->base) / 4; 
+        pid_idx = (((fw->base==0xFF000000)?0xFFF40040:0xFFFE0040) - fw->base) / 4; 
+        break;
 	}
 	
 	strcpy(fw->cam,"Unknown");
 	if (cam_idx >= fw->size)
 	{
-		bprintf("// Possible corrupt firmware dump - file size to small for start address 0x%08x\n",fw->base);
-		bprintf("//   file size = %.1fMB, should be %.1fMB\n", ((double)fw->size*4.0)/(1024.0*1024.0),((double)fsize*4.0)/(1024.0*1024.0));
+		bprintf("//   Possible corrupt firmware dump - file size to small for start address 0x%08x\n",fw->base);
+		bprintf("//     file size = %.1fMB, should be %.1fMB\n", ((double)fw->size*4.0)/(1024.0*1024.0),((double)fsize*4.0)/(1024.0*1024.0));
 	}
 	else if ((cam_idx < fw->size) && (strncmp((char*)&fw->buf[cam_idx],"Canon ",6) == 0))
 	{
 		strcpy(fw->cam,(char*)&fw->buf[cam_idx]);
-		bprintf("// %s\n",fw->cam);
+		bprintf("//   %s\n",fw->cam);
 	}
 	else
 	{
-		bprintf("// Could not find Camera name - possible corrupt firmware dump\n");
+		bprintf("//   Could not find Camera name - possible corrupt firmware dump\n");
 	}
+
+    if ((pid_idx > 0) && (pid_idx < fw->size))
+    {
+        fw->pid = fw->buf[pid_idx] & 0xFFFF;
+		bprintf("//   PLATFORMID = %d (0x%04x)\n",fw->pid,fw->pid);
+    }
+    else fw->pid = 0;
+
+    // Calc MAXRAMADDR
+    if (((fw->buf[0x10] & 0xFFFFFF00) == 0xE3A00000) && (fw->buf[0x11] == 0xEE060F12))
+    {
+        fw->maxram = (1 << (((fw->buf[0x10] & 0x3E) >> 1) + 1)) - 1;
+    }
+    else if (((fw->buf[0x14] & 0xFFFFFF00) == 0xE3A00000) && (fw->buf[0x15] == 0xEE060F12))
+    {
+        fw->maxram = (1 << (((fw->buf[0x14] & 0x3E) >> 1) + 1)) - 1;
+    }
+    else fw->maxram = 0;
+
+    if (fw->maxram != 0)
+		bprintf("//   MAXRAMADDR = 0x%08x\n",fw->maxram);
 
 	bprintf("\n");
 }

@@ -2,9 +2,11 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R20 (DRYOS version 2.3, release #0020)
-// Firmware Ver GM1.01B
-// Canon PowerShot S5 IS
+//   DRYOS R20 (DRYOS version 2.3, release #0020)
+//   Firmware Ver GM1.01B
+//   Canon PowerShot S5 IS
+//   PLATFORMID = 12616 (0x3148)
+//   MAXRAMADDR = 0x03ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

@@ -2,9 +2,11 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R23 (DRYOS version 2.3, release #0023)
-// Firmware Ver GM1.00D
-// Canon PowerShot A650 IS
+//   DRYOS R23 (DRYOS version 2.3, release #0023)
+//   Firmware Ver GM1.00D
+//   Canon PowerShot A650 IS
+//   PLATFORMID = 12635 (0x315b)
+//   MAXRAMADDR = 0x03ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
