@@ -2,9 +2,11 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R45 (DRYOS version 2.3, release #0045)
-// Firmware Ver GM1.01F
-// Canon PowerShot SX130 IS
+//   DRYOS R45 (DRYOS version 2.3, release #0045)
+//   Firmware Ver GM1.01F
+//   Canon PowerShot SX130 IS
+//   PLATFORMID = 12817 (0x3211)
+//   MAXRAMADDR = 0x03ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

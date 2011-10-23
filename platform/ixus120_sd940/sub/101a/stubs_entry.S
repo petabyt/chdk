@@ -2,9 +2,11 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R39 (DRYOS version 2.3, release #0039)
-// Firmware Ver GM1.01A
-// Canon DIGITAL IXUS 120 IS
+//   DRYOS R39 (DRYOS version 2.3, release #0039)
+//   Firmware Ver GM1.01A
+//   Canon DIGITAL IXUS 120 IS
+//   PLATFORMID = 12774 (0x31e6)
+//   MAXRAMADDR = 0x03ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

@@ -2,9 +2,11 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R23 (DRYOS version 2.3, release #0023)
-// Firmware Ver GM1.00G
-// Canon PowerShot G9
+//   DRYOS R23 (DRYOS version 2.3, release #0023)
+//   Firmware Ver GM1.00G
+//   Canon PowerShot G9
+//   PLATFORMID = 12634 (0x315a)
+//   MAXRAMADDR = 0x03ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

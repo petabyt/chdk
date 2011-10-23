@@ -2,9 +2,11 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R47 (DRYOS version 2.3, release #0047)
-// Firmware Ver GM1.00C
-// Canon PowerShot SX230 HS
+//   DRYOS R47 (DRYOS version 2.3, release #0047)
+//   Firmware Ver GM1.00C
+//   Canon PowerShot SX230 HS
+//   PLATFORMID = 12840 (0x3228)
+//   MAXRAMADDR = 0x07ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

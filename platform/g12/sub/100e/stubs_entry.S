@@ -2,9 +2,11 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R45 (DRYOS version 2.3, release #0045)
-// Firmware Ver GM1.00E
-// Canon PowerShot G12
+//   DRYOS R45 (DRYOS version 2.3, release #0045)
+//   Firmware Ver GM1.00E
+//   Canon PowerShot G12
+//   PLATFORMID = 12815 (0x320f)
+//   MAXRAMADDR = 0x07ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

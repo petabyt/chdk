@@ -2,9 +2,11 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R23 (DRYOS version 2.3, release #0023)
-// Firmware Ver GM1.02C
-// Canon PowerShot A470
+//   DRYOS R23 (DRYOS version 2.3, release #0023)
+//   Firmware Ver GM1.02C
+//   Canon PowerShot A470
+//   PLATFORMID = 12666 (0x317a)
+//   MAXRAMADDR = 0x01ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
