@@ -6,6 +6,11 @@
 #include "keyboard.h"
 #include "../../core/gui_draw.h"
 
+// Uncomment this line to enable 'PLAY' and 'OFF' buttons in the CHDK OSD
+// Can be used to switch in/out of playback mode and power off the camera
+// (For 'nekut' whose camera has a broken playback button - http://chdk.setepontos.com/index.php?topic=6634.msg75039#msg75039)
+//#define   TS_PLAY_POWER_HACK  1
+
 typedef struct {
 	short grp;
 	short hackkey;
@@ -71,6 +76,8 @@ extern void _GetKbdState(long*);
 #define TS_KEY_TOGGLE_AV_UP 211
 #define TS_KEY_TOGGLE_SV_DN 212
 #define TS_KEY_TOGGLE_SV_UP 213
+#define TS_KEY_PLAYBACK     214
+#define TS_KEY_POWER        215
 
 #define TS_UP_DN_BUTTON     300
 #define TS_PG_DN            301
@@ -276,6 +283,23 @@ const char* ts_pg_up(int change, int arg)
     return debug_pg;
 }
 
+#if defined(TS_PLAY_POWER_HACK)
+static int playbutton_hack;
+static const char* simulate_playback_press(int change, int arg)
+{
+    void levent_set_play(void);
+    if (change) levent_set_play();
+    return 0;
+}
+
+static const char* simulate_power_press(int change, int arg)
+{
+    void camera_shutdown_in_a_second(void);
+    if (change) camera_shutdown_in_a_second();
+    return 0;
+}
+#endif
+
 static KeyMap keymap[] = {
 
 //  { 1, TOUCH_SCREEN       , 0x00000008 },  // Touch screen panel
@@ -312,6 +336,10 @@ static KeyMap keymap[] = {
     { 3, TS_KEY_TOGGLE_HISTO, 0x00001000, RB(2,2), 1, "Hist",  0, GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, &conf.show_histo, gui_histo_show_enum, &conf.touchscreen_disable_shortcut_controls },
     { 3, TS_KEY_TOGGLE_EDGE , 0x00002000, RB(2,3), 1, "Edge",  0, GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, &conf.edge_overlay_enable, gui_on_off_enum, &conf.touchscreen_disable_shortcut_controls },
 
+#if defined(TS_PLAY_POWER_HACK)
+    { 3, TS_KEY_PLAYBACK    , 0x00400000, LB(1,0), 0, "PLAY",  0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, &playbutton_hack, simulate_playback_press, 0 },
+    { 3, TS_KEY_POWER       , 0x00800000, LB(3,0), 0, "OFF",   0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, &playbutton_hack, simulate_power_press, 0 },
+#endif
 #ifdef OPT_DEBUGGING
     { 3, KEY_DISPLAY        , 0x00000008, LB(0,4), 0, "Debug", 0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY },
 #endif
