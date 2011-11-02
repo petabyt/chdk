@@ -5,8 +5,12 @@
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
 //   Firmware Ver GM1.01B
 //   Canon PowerShot A580
-//   PLATFORMID = 12663 (0x3177)
+
+// Values for makefile.inc
+//   PLATFORMID = 12663 (0x3177) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
+//   KEYSYS = d3enc              // Found @ 0xffff1ac0
+//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff1aa0
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

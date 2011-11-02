@@ -5,8 +5,12 @@
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
 //   Firmware Ver GM1.00C
 //   Canon PowerShot A720 IS
-//   PLATFORMID = 12637 (0x315d)
+
+// Values for makefile.inc
+//   PLATFORMID = 12637 (0x315d) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
+//   KEYSYS = d3                 // Found @ 0xffff1aa4
+//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff1a84
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

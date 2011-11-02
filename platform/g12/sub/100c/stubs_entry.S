@@ -5,8 +5,12 @@
 //   DRYOS R45 (DRYOS version 2.3, release #0045)
 //   Firmware Ver GM1.00C
 //   Canon PowerShot G12
-//   PLATFORMID = 12815 (0x320f)
+
+// Values for makefile.inc
+//   PLATFORMID = 12815 (0x320f) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
+//   KEYSYS = d4b                // Found @ 0xffff36ac
+//   NEED_ENCODED_DISKBOOT = 5   // Found @ 0xffff36bc
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

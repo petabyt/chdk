@@ -5,8 +5,12 @@
 //   DRYOS R43 (DRYOS version 2.3, release #0043)
 //   Firmware Ver GM1.00B
 //   Canon PowerShot A3000 IS
-//   PLATFORMID = 12786 (0x31f2)
+
+// Values for makefile.inc
+//   PLATFORMID = 12786 (0x31f2) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
+//   KEYSYS = d4a                // Found @ 0xffff1aac
+//   NEED_ENCODED_DISKBOOT = 4   // Found @ 0xffff1abc
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

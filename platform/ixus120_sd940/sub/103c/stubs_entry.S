@@ -5,8 +5,12 @@
 //   DRYOS R39 (DRYOS version 2.3, release #0039)
 //   Firmware Ver GM1.03C
 //   Canon PowerShot SD940 IS
-//   PLATFORMID = 12774 (0x31e6)
+
+// Values for makefile.inc
+//   PLATFORMID = 12774 (0x31e6) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
+//   KEYSYS = d4                 // Found @ 0xffff3564
+//   NEED_ENCODED_DISKBOOT = 3   // Found @ 0xffff3574
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

@@ -5,8 +5,12 @@
 //   DRYOS R20 (DRYOS version 2.3, release #0020)
 //   Firmware Ver GM1.01A
 //   Canon PowerShot S5 IS
-//   PLATFORMID = 12616 (0x3148)
+
+// Values for makefile.inc
+//   PLATFORMID = 12616 (0x3148) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
+//   KEYSYS = d3                 // Found @ 0xffff31c8
+//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff31a8
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

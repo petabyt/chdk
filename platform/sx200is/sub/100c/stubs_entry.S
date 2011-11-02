@@ -5,7 +5,10 @@
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
 //   Firmware Ver GM1.00C
 //   Possible corrupt firmware dump - file size to small for start address 0xff810000
-//     file size = 4.0MB, should be 7.9MB
+//     file size = 4.00MB, should be 7.94MB
+//   Could not find Camera name - possible corrupt firmware dump
+
+// Values for makefile.inc
 //   MAXRAMADDR = 0x03ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'

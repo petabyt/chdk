@@ -5,8 +5,12 @@
 //   DRYOS R45 (DRYOS version 2.3, release #0045)
 //   Firmware Ver GM1.01C
 //   Canon PowerShot SX130 IS
-//   PLATFORMID = 12817 (0x3211)
+
+// Values for makefile.inc
+//   PLATFORMID = 12817 (0x3211) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
+//   KEYSYS = d4b                // Found @ 0xffff3618
+//   NEED_ENCODED_DISKBOOT = 5   // Found @ 0xffff3628
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

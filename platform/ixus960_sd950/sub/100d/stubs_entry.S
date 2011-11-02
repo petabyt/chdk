@@ -5,8 +5,12 @@
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
 //   Firmware Ver GM1.00D
 //   Canon DIGITAL IXUS 960 IS
-//   PLATFORMID = 12639 (0x315f)
+
+// Values for makefile.inc
+//   PLATFORMID = 12639 (0x315f) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
+//   KEYSYS = d3                 // Found @ 0xffff31c8
+//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff31a8
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

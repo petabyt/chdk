@@ -5,8 +5,12 @@
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
 //   Firmware Ver GM1.00C
 //   Canon DIGITAL IXUS 860 IS
-//   PLATFORMID = 12640 (0x3160)
+
+// Values for makefile.inc
+//   PLATFORMID = 12640 (0x3160) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
+//   KEYSYS = d3                 // Found @ 0xffff3184
+//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff3164
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
