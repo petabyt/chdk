@@ -5,7 +5,9 @@
 //   DRYOS R39 (DRYOS version 2.3, release #0039)
 //   Firmware Ver GM1.00C
 //   Could not find Camera name - possible corrupt firmware dump
-//   PLATFORMID = 0 (0x0000)
+
+// Values for makefile.inc
+//   PLATFORMID = 0 (0x0000) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'

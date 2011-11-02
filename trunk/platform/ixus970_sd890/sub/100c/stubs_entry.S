@@ -5,8 +5,12 @@
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
 //   Firmware Ver GM1.00C
 //   Canon DIGITAL IXUS 970 IS
-//   PLATFORMID = 12659 (0x3173)
+
+// Values for makefile.inc
+//   PLATFORMID = 12659 (0x3173) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
+//   KEYSYS = d3enc              // Found @ 0xffff33e0
+//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff33c0
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

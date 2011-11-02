@@ -5,8 +5,12 @@
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
 //   Firmware Ver GM1.03A
 //   Canon PowerShot SX10 IS
-//   PLATFORMID = 12685 (0x318d)
+
+// Values for makefile.inc
+//   PLATFORMID = 12685 (0x318d) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
+//   KEYSYS = d4                 // Found @ 0xffff3570
+//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff3580
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

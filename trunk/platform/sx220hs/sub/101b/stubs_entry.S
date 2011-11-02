@@ -2,9 +2,15 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R47 (DRYOS version 2.3, release #0047)
-// Firmware Ver GM1.01B
-// Canon PowerShot SX220 HS
+//   DRYOS R47 (DRYOS version 2.3, release #0047)
+//   Firmware Ver GM1.01B
+//   Canon PowerShot SX220 HS
+
+// Values for makefile.inc
+//   PLATFORMID = 12844 (0x322c) // Found @ 0xfff40040
+//   MAXRAMADDR = 0x07ffffff
+//   KEYSYS = d4c                // Found @ 0xffff3610
+//   NEED_ENCODED_DISKBOOT = 6   // Found @ 0xffff3620
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

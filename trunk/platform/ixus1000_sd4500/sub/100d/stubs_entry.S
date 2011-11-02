@@ -5,8 +5,12 @@
 //   DRYOS R45 (DRYOS version 2.3, release #0045)
 //   Firmware Ver GM1.00D
 //   Canon IXUS 1000HS
-//   PLATFORMID = 12792 (0x31f8)
+
+// Values for makefile.inc
+//   PLATFORMID = 12792 (0x31f8) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
+//   KEYSYS = d4b                // Found @ 0xffff3624
+//   NEED_ENCODED_DISKBOOT = 5   // Found @ 0xffff3634
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

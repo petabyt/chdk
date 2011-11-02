@@ -5,8 +5,12 @@
 //   DRYOS R47 (DRYOS version 2.3, release #0047)
 //   Firmware Ver GM1.00A
 //   Canon IXUS 310 HS
-//   PLATFORMID = 12837 (0x3225)
+
+// Values for makefile.inc
+//   PLATFORMID = 12837 (0x3225) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x07ffffff
+//   KEYSYS = d4c                // Found @ 0xffff3610
+//   NEED_ENCODED_DISKBOOT = 6   // Found @ 0xffff3620
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

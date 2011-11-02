@@ -5,8 +5,12 @@
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
 //   Firmware Ver GM1.00C
 //   Canon PowerShot A1100 IS
-//   PLATFORMID = 12739 (0x31c3)
+
+// Values for makefile.inc
+//   PLATFORMID = 12739 (0x31c3) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
+//   KEYSYS = d4                 // Found @ 0xffff1d04
+//   NEED_ENCODED_DISKBOOT = 2   // Found @ 0xffff1d14
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

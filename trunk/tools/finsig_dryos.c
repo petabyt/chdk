@@ -6,6 +6,8 @@
 #include <time.h>
 #include <stdarg.h>
 
+#include "dancingbits.h"
+
 //------------------------------------------------------------------------------------------------------------
 
 // For testing - define to compare new values against old values in stubs_entry.S.orig
@@ -719,7 +721,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
     fw->base = strtoul(base_addr, NULL, 0);
 
     fseek(f,0,SEEK_END);
-    fw->size=ftell(f)/4;
+    fw->size = (ftell(f)+3)/4;
     fseek(f,0,SEEK_SET);
 
     // Max sig size if 32, add extra space at end of buffer and fill with 0xFFFFFFFF
@@ -787,14 +789,15 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
         pid_idx = (((fw->base==0xFF000000)?0xFFF40040:0xFFFE0040) - fw->base) / 4; 
         break;
 	}
-	
-	strcpy(fw->cam,"Unknown");
-	if (cam_idx >= fw->size)
+
+    if (fsize > (fw->size + 256))
 	{
 		bprintf("//   Possible corrupt firmware dump - file size to small for start address 0x%08x\n",fw->base);
-		bprintf("//     file size = %.1fMB, should be %.1fMB\n", ((double)fw->size*4.0)/(1024.0*1024.0),((double)fsize*4.0)/(1024.0*1024.0));
+		bprintf("//     file size = %.2fMB, should be %.2fMB\n", ((double)fw->size*4.0)/(1024.0*1024.0),((double)fsize*4.0)/(1024.0*1024.0));
 	}
-	else if ((cam_idx < fw->size) && (strncmp((char*)&fw->buf[cam_idx],"Canon ",6) == 0))
+	
+	strcpy(fw->cam,"Unknown");
+	if ((cam_idx < fw->size) && (strncmp((char*)&fw->buf[cam_idx],"Canon ",6) == 0))
 	{
 		strcpy(fw->cam,(char*)&fw->buf[cam_idx]);
 		bprintf("//   %s\n",fw->cam);
@@ -804,10 +807,12 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 		bprintf("//   Could not find Camera name - possible corrupt firmware dump\n");
 	}
 
+	bprintf("\n// Values for makefile.inc\n");
+
     if ((pid_idx > 0) && (pid_idx < fw->size))
     {
         fw->pid = fw->buf[pid_idx] & 0xFFFF;
-		bprintf("//   PLATFORMID = %d (0x%04x)\n",fw->pid,fw->pid);
+		bprintf("//   PLATFORMID = %d (0x%04x) // Found @ 0x%08x\n",fw->pid,fw->pid,idx2adr(fw,pid_idx));
     }
     else fw->pid = 0;
 
@@ -824,6 +829,69 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 
     if (fw->maxram != 0)
 		bprintf("//   MAXRAMADDR = 0x%08x\n",fw->maxram);
+
+    uint32_t ofst = adr2idx(fw,0xFFFF0000);    // Offset of area to find dancing bits
+    if ((ofst < fw->size) && (fw->buf[ofst] == 0xEA000001) && isLDR_PC(fw,ofst+1))
+    {
+        // Get KEYSYS value
+        ofst = adr2idx(fw,fw->buf[LDR2idx(fw,ofst+1)]);     // Address of firmware encryption key
+        if (ofst < fw->size)
+        {
+            char *ksys = "? Not found, possible new firmware encryption key.";
+            switch (fw->buf[ofst])
+            {
+            case 0x70726964:    ksys = "d3   "; break;
+            case 0x646C726F:    ksys = "d3enc"; break;
+            case 0x774D450B:    ksys = "d4   "; break;
+            case 0x80751A95:    ksys = "d4a  "; break;
+            case 0x76894368:    ksys = "d4b  "; break;
+            case 0x50838EF7:    ksys = "d4c  "; break;
+            }
+            bprintf("//   KEYSYS = %s              // Found @ 0x%08x\n",ksys,idx2adr(fw,ofst));
+        }
+
+        // Get NEED_ENCODED_DISKBOOT value
+        ofst = ofst + 4; // Address of dancing bits data (try after firmware key)
+        if (ofst < fw->size)
+        {
+            int fnd = 0, i, j;
+            for (i=0; i<VITALY && !fnd; i++)
+            {
+                fnd = i+1;
+                for (j=0; j<8 && fnd; j++)
+                {
+                    if ((fw->buf[ofst+j] & 0xFF) != _chr_[i][j])
+                    {
+                        fnd = 0;
+                    }
+                }
+            }
+            if (!fnd)
+            {
+                // Try before firmware key
+                ofst = ofst - 12;
+                for (i=0; i<VITALY && !fnd; i++)
+                {
+                    fnd = i+1;
+                    for (j=0; j<8 && fnd; j++)
+                    {
+                        if ((fw->buf[ofst+j] & 0xFF) != _chr_[i][j])
+                        {
+                            fnd = 0;
+                        }
+                    }
+                }
+            }
+            if (fnd)
+            {
+        		bprintf("//   NEED_ENCODED_DISKBOOT = %d   // Found @ 0x%08x\n",fnd,idx2adr(fw,ofst));
+            }
+            else
+            {
+        		bprintf("//   NEED_ENCODED_DISKBOOT = ? Not found, possible new 'dancing bits' entry needed. // Found @ 0x%08x\n",idx2adr(fw,ofst));
+            }
+        }
+    }
 
 	bprintf("\n");
 }
