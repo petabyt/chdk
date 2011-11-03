@@ -1238,12 +1238,15 @@ const char* gui_alt_mode_button_enum(int change, int arg) {
 #if defined(CAMERA_s2is) || defined(CAMERA_s3is) || defined(CAMERA_s5is)
     static const char* names[]={ "Shrtcut", "Flash", "Timer", "ISO", "Video" };
     static const int keys[]={ KEY_PRINT, KEY_FLASH, KEY_TIMER, KEY_ISO, KEY_VIDEO };
-#elif defined(CAMERA_g7)
+#elif defined(CAMERA_g7) || defined(CAMERA_g9)
     static const char* names[]={ "Print", "FE"};
     static const int keys[]={ KEY_PRINT, KEY_MICROPHONE };
-#elif defined(CAMERA_g9)
-    static const char* names[]={ "Print", "FE"};
-    static const int keys[]={ KEY_PRINT,  KEY_MICROPHONE };
+#elif defined(CAMERA_g10) || defined(CAMERA_g12)  
+    static const char* names[]={ "Print", "Disp",  "AE Lock", "Jump" };
+    static const int keys[]={ KEY_PRINT, KEY_DISPLAY, KEY_AE_LOCK, KEY_METERING};
+#elif defined(CAMERA_g11)
+    static const char* names[]={ "Print", "Disp",  "AE Lock", "Jump" };
+    static const int keys[]={ KEY_PRINT, KEY_DISPLAY, KEY_MICROPHONE, KEY_METERING};	
 #elif defined(CAMERA_a650)
     static const char* names[]={ "Print", "ISO"};
     static const int keys[]={ KEY_PRINT, KEY_ISO };
