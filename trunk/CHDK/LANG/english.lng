@@ -6,14 +6,6 @@
   
   1 "Main Menu"
 
-//  2 "RAW Parameters ->"
-//  3 "OSD Parameters ->"
-//  4 "Histogram Parameters ->"
-//  5 "Zebra Parameters ->"
-//  6 "Scripting Parameters ->"
-//  7 "Visual Settings ->"
-//  8 "Miscellaneous Stuff ->"
-//  9 "Debug Parameters ->"
   2 "RAW Parameters"
   3 "OSD Parameters"
   4 "Histogram Parameters"
@@ -25,7 +17,6 @@
  10 "Reset Options to Default..."
  11 "Save Options Now..."
 
-// 12 "<- Back"
  12 "Back"
 
 
@@ -47,7 +38,6 @@
  25 "Show DOF Calculator"
  26 "Show Clock"
  27 "OSD Layout Editor"
-// 28 "Battery ->"
  28 "Battery"
 
 
@@ -105,8 +95,6 @@
 
  68 "File Browser"
  69 "Calendar"
-// 70 "Text File Reader ->"
-// 71 "Games ->"
  70 "Text File Reader"
  71 "Games"
  72 "Flashlight"
@@ -120,17 +108,15 @@
 
  79 "Debug"
 
-// 80 "Show PropCases"
  80 "Debug data display"
- 81 "PropCase Page"
+ 81 "PropCase/ParamsData Page"
  82 "Show Misc. Values"
  83 "Memory Browser"
-// 84 "Dump RAM on ALT +/- Press"
  84 "ALT +/- debug action"
  85 "Make Card Bootable..."
 
 
-86 "Battery showing settings"
+ 86 "Battery showing settings"
 
  87 "Battery MAX Voltage (mV)"
  88 "Battery MIN Voltage (mV)"
@@ -287,7 +273,6 @@
 200 "Show Grid Lines"
 201 "Load Grid from File..."
 202 "Grid Lines"
-//203 "Grid ->"
 203 "Grid"
 204 "Select Grid File"
 205 "Current Grid"
@@ -299,7 +284,6 @@
 209 "Fill Color"
 
 210 "DOF Calculator"
-//211 "DOF Calculator ->"
 211 "DOF Calculator"
 212 "Canon Subj. Dist. as Near Limit" 
 213 "Use EXIF Subj. Dist. (PC65)"
@@ -311,7 +295,6 @@
 
 
 219 "Miscellaneous Values"
-//220 "Miscellaneous Values ->"
 220 "Miscellaneous Values"
 221 "Show in Review Mode"	
 222 "Show Zoom"		
@@ -327,7 +310,6 @@
 232 "Show Scene Luminance"
 
 233 "Video Parameters"
-//234 "Video Parameters ->"
 234 "Video Parameters"
 235 "Video Mode"
 236 "Video Bitrate"
@@ -335,7 +317,6 @@
 
 
 238 "Extra Photo Operations"
-//239 "Extra Photo Operations ->"
 239 "Extra Photo Operations"
 240 "Override Shutter Speed Value"
 241 "    Value Factor"
@@ -346,7 +327,6 @@
 246 "    Value Factor (mm)"
 
 247 "Bracketing in Continuous Mode"
-//248 "Bracketing in Continuous Mode ->"
 248 "Bracketing in Continuous Mode"
 249 "TV Bracketing Value"
 250 "AV Bracketing Value"
@@ -360,7 +340,6 @@
 257 "Enable Remote"
 
 258 "Exposure Control (No Flash)"
-//259 "Exposure Control (No Flash) ->"
 259 "Exposure Control (No Flash)"
 260 "Recalc Exposure"
 261 "TV Exposure Recalc Order"
@@ -379,7 +358,6 @@
 271 "Not enough memory card space:\n%dM required, %dM available."
 
 272 "Show OSD in Review Mode"
-//273 "Show Parameter Data"
 273 "Task List start"
 
 274 "Subject distance from lens"
@@ -417,7 +395,6 @@
 298 "Shutterspeed enum type"
 299 "User Menu Enable"
 300 "User Menu"
-301 " "
 
 302 " Adapter Lens Scale, 100=1x"
 303 "Show Space Bar"
@@ -428,7 +405,6 @@
 308 "Warning Unit"
 309 "  Warning threshold"
 310 "Enable Optical Zoom"
-//311 "Clock ->"
 311 "Clock"
 312 "Clock Settings"
 313 "Clock format"
@@ -437,15 +413,12 @@
 316 "@Shutter halfpress show"
 
 317 "Raw showing settings"
-//318 "Raw ->"
 318 "Raw"
 
 319 "Filespace showing settings"
-//320 "Filespace ->"
 320 "Filespace"
 
 321 "Custom Auto ISO"
-//322 "Custom Auto ISO ->"
 322 "Custom Auto ISO"
 323 "Enable Custom Auto ISO"
 324 "Minimal Shutter speed"
@@ -496,7 +469,6 @@
 364 "Symbol Background Color"
 
 365 "Custom curves"
-//"366 "Custom curves ->"
 366 "Custom curves"
 367 "Load curve profile..."
 368 "Enable curve"
@@ -591,6 +563,8 @@
 451 "reset files"
 452 "restart camera..."
 453 "Force manual flash"
+454 "Quality override"
+455 "Restart Lua on error"
 456 "Filter edges"
 457 "Always show"
 458 "   Pano overlap (%)"
