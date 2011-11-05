@@ -4,13 +4,13 @@ SKIPBUILDRULES=1
 
 include $(topdir)makefile.inc
 
-OBJS=pakwif.o finsig_$(PLATFORMOS).o gensig_$(PLATFORMOS).o dumpchk.o dancingbits.o rawconvert.o dumputil.o find_levent.o find_eventproc.o yuvconvert.o font_8x16_pack.o
+OBJS=pakwif.o finsig_$(PLATFORMOS).o gensig_$(PLATFORMOS).o dumpchk.o dancingbits.o rawconvert.o dumputil.o find_levent.o find_eventproc.o yuvconvert.o font_8x16_pack.o makelang.o
 
 ifdef OPT_FI2
   SUBDIRS=packfi2
 endif
 
-all: pakwif$(EXE) finsig_$(PLATFORMOS)$(EXE) dancingbits$(EXE) font_8x16_pack$(EXE)
+all: pakwif$(EXE) finsig_$(PLATFORMOS)$(EXE) dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE)
 
 # not needed by batch builds, not built by default
 extras: rawconvert$(EXE) yuvconvert$(EXE) find_levent$(EXE) find_eventproc$(EXE) dumpchk$(EXE)
@@ -61,6 +61,10 @@ find_eventproc$(EXE): find_eventproc.o dumputil.o
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
 font_8x16_pack$(EXE): font_8x16_pack.o
+	@echo $^ \-\> $@
+	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
+
+makelang$(EXE): makelang.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
