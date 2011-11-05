@@ -421,13 +421,20 @@ void script_print_screen_end()
 
 void script_print_screen_statement(int val)
 {
+  // Negative values for 'val' parameter will append to log file,
+  // positive values will truncate the log file
+  int flag_trunc = O_TRUNC;
+
   print_screen_p = val;
   if (val) {
     if (print_screen_d>=0) close(print_screen_d);
-    if (val<0) val = -val;
+    if (val<0) {
+       flag_trunc = 0;
+       val = -val;
+    }
     while (val > 9999) val -= 10000;
     sprintf(print_screen_file, "A/CHDK/LOGS/LOG_%04d.TXT", val);
-    print_screen_d = open(print_screen_file, O_WRONLY|O_CREAT|O_TRUNC, 0777);
+    print_screen_d = open(print_screen_file, O_WRONLY|O_CREAT|flag_trunc, 0777);
   }
 }
 

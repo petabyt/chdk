@@ -146,6 +146,12 @@ void console_draw()
 
 void console_add_line(const char *str)
 {
+	// Set console_autoredraw to -1 to stop script print statements from being displayed on screen
+	// Can be used to send script output to a file (using print_screen function); but not have it displayed
+	// on the LCD.
+    if (console_autoredraw == -1)
+	return;
+
     console_ensure_inited();
 
     console_start_line();
