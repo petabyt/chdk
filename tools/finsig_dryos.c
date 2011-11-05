@@ -3024,7 +3024,7 @@ void find_stubs_min(firmware *fw)
 
 //------------------------------------------------------------------------------------------------------------
 
-void print_kval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev, const char *name)
+void print_kval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev, const char *name, char *sfx)
 {
 	int tidx = adr2idx(fw,tadr);
 	int k, kval = 0;
@@ -3040,7 +3040,7 @@ void print_kval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev, co
 	if (kval > 0)
 	{
 		char fn[100], rn[100];
-		strcpy(fn,name); strcat(fn,"_FLAG");
+		strcpy(fn,name); strcat(fn,sfx);
 		strcpy(rn,name); strcat(rn,"_IDX");
 		
 		int r = (kval >> 5) & 7;
@@ -3109,6 +3109,17 @@ int kinfo_compare(const kinfo *p1, const kinfo *p2)
 	{
 		return -1;
     }
+	if (p1->ev <= 1)	// output shutter entries in reverse order
+	{
+		if (p1->bits > p2->bits)
+		{
+			return -1;
+		}
+		else if (p1->bits < p2->bits)
+		{
+			return 1;
+		}
+	}
     if (p1->bits > p2->bits)
 	{
         return 1;
@@ -3130,7 +3141,7 @@ void print_kmvals()
 	int k;
 	for (k=0; k<kcount; k++)
 	{
-		bprintf("//    { %d, %-16s,0x%08x }, // Found @0x%08x, levent 0x%02x\n",key_info[k].reg,key_info[k].nm,key_info[k].bits,key_info[k].fadr,key_info[k].ev);
+		bprintf("//    { %d, %-20s,0x%08x }, // Found @0x%08x, levent 0x%02x\n",key_info[k].reg,key_info[k].nm,key_info[k].bits,key_info[k].fadr,key_info[k].ev);
 	}
 	
 	bprintf("//    { 0, 0, 0 }\n//};\n");
@@ -3215,17 +3226,18 @@ void find_key_vals(firmware *fw)
         if (fw->dryos_ver == 49)
         {
             // Event ID's have changed in DryOS R49 **********
-    		print_kval(fw,tadr,tsiz,tlen,0x20A,"SD_READONLY");
-	    	print_kval(fw,tadr,tsiz,tlen,0x202,"USB");
+    		print_kval(fw,tadr,tsiz,tlen,0x20A,"SD_READONLY","_FLAG");
+	    	print_kval(fw,tadr,tsiz,tlen,0x202,"USB","_MASK");
         }
         else
         {
-    		print_kval(fw,tadr,tsiz,tlen,0x90A,"SD_READONLY");
-	    	print_kval(fw,tadr,tsiz,tlen,0x902,"USB");
+    		print_kval(fw,tadr,tsiz,tlen,0x90A,"SD_READONLY","_FLAG");
+	    	print_kval(fw,tadr,tsiz,tlen,0x902,"USB","_MASK");
         }
 				
 		uint32_t key_half = add_kmval(fw,tadr,tsiz,tlen,0,"KEY_SHOOT_HALF",0);
 		add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL",key_half);
+		add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL_ONLY",0);
 		add_kmval(fw,tadr,tsiz,tlen,2,"KEY_ZOOM_IN",0);
 		add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_OUT",0);
 		add_kmval(fw,tadr,tsiz,tlen,4,"KEY_UP",0);
