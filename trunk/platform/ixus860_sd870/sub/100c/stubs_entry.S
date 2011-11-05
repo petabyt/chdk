@@ -51,17 +51,18 @@
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffa8fd64, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x00040000 // Found @0xffa8fd70, levent 0x902
+//#define USB_MASK            0x00040000 // Found @0xffa8fd70, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 2, KEY_SHOOT_HALF  ,0x00000001 }, // Found @0xffa8fcbc, levent 0x00
-//    { 2, KEY_SHOOT_FULL  ,0x00000003 }, // Found @0xffa8fcc8, levent 0x01
-//    { 2, KEY_ZOOM_IN     ,0x00000004 }, // Found @0xffa8fcd4, levent 0x02
-//    { 2, KEY_ZOOM_OUT    ,0x00000008 }, // Found @0xffa8fce0, levent 0x03
-//    { 2, KEY_DISPLAY     ,0x00000200 }, // Found @0xffa8fd28, levent 0x0a
-//    { 2, KEY_MENU        ,0x00000400 }, // Found @0xffa8fd34, levent 0x09
+//    { 2, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffa8fcc8, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffa8fcc8, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffa8fcbc, levent 0x00
+//    { 2, KEY_ZOOM_IN         ,0x00000004 }, // Found @0xffa8fcd4, levent 0x02
+//    { 2, KEY_ZOOM_OUT        ,0x00000008 }, // Found @0xffa8fce0, levent 0x03
+//    { 2, KEY_DISPLAY         ,0x00000200 }, // Found @0xffa8fd28, levent 0x0a
+//    { 2, KEY_MENU            ,0x00000400 }, // Found @0xffa8fd34, levent 0x09
 //    { 0, 0, 0 }
 //};
 

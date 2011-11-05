@@ -44,22 +44,23 @@
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffba53fc, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x04000000 // Found @0xffba5424, levent 0x902
+//#define USB_MASK            0x04000000 // Found @0xffba5424, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 1, KEY_ZOOM_IN     ,0x00000010 }, // Found @0xffba5364, levent 0x02
-//    { 1, KEY_ZOOM_OUT    ,0x00000020 }, // Found @0xffba536c, levent 0x03
-//    { 1, KEY_LEFT        ,0x00000100 }, // Found @0xffba5384, levent 0x06
-//    { 1, KEY_RIGHT       ,0x00000200 }, // Found @0xffba538c, levent 0x07
-//    { 1, KEY_DOWN        ,0x00000400 }, // Found @0xffba5394, levent 0x05
-//    { 1, KEY_DISPLAY     ,0x00001000 }, // Found @0xffba53a4, levent 0x0a
-//    { 1, KEY_MENU        ,0x00002000 }, // Found @0xffba53ac, levent 0x09
-//    { 1, KEY_UP          ,0x00004000 }, // Found @0xffba53b4, levent 0x04
-//    { 1, KEY_SET         ,0x00008000 }, // Found @0xffba53bc, levent 0x08
-//    { 2, KEY_SHOOT_HALF  ,0x00000100 }, // Found @0xffba53c4, levent 0x00
-//    { 2, KEY_SHOOT_FULL  ,0x00000300 }, // Found @0xffba53cc, levent 0x01
+//    { 1, KEY_ZOOM_IN         ,0x00000010 }, // Found @0xffba5364, levent 0x02
+//    { 1, KEY_ZOOM_OUT        ,0x00000020 }, // Found @0xffba536c, levent 0x03
+//    { 1, KEY_LEFT            ,0x00000100 }, // Found @0xffba5384, levent 0x06
+//    { 1, KEY_RIGHT           ,0x00000200 }, // Found @0xffba538c, levent 0x07
+//    { 1, KEY_DOWN            ,0x00000400 }, // Found @0xffba5394, levent 0x05
+//    { 1, KEY_DISPLAY         ,0x00001000 }, // Found @0xffba53a4, levent 0x0a
+//    { 1, KEY_MENU            ,0x00002000 }, // Found @0xffba53ac, levent 0x09
+//    { 1, KEY_UP              ,0x00004000 }, // Found @0xffba53b4, levent 0x04
+//    { 1, KEY_SET             ,0x00008000 }, // Found @0xffba53bc, levent 0x08
+//    { 2, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffba53cc, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xffba53cc, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffba53c4, levent 0x00
 //    { 0, 0, 0 }
 //};
 

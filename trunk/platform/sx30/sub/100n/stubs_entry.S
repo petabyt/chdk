@@ -44,20 +44,21 @@
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffb97c38, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x04000000 // Found @0xffb97c68, levent 0x902
+//#define USB_MASK            0x04000000 // Found @0xffb97c68, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 0, KEY_UP          ,0x00000400 }, // Found @0xffb97b70, levent 0x04
-//    { 0, KEY_DOWN        ,0x00000800 }, // Found @0xffb97b78, levent 0x05
-//    { 0, KEY_LEFT        ,0x00001000 }, // Found @0xffb97b80, levent 0x06
-//    { 0, KEY_RIGHT       ,0x00002000 }, // Found @0xffb97b88, levent 0x07
-//    { 0, KEY_SET         ,0x00004000 }, // Found @0xffb97b90, levent 0x08
-//    { 0, KEY_DISPLAY     ,0x00020000 }, // Found @0xffb97ba8, levent 0x0a
-//    { 0, KEY_MENU        ,0x00040000 }, // Found @0xffb97bb0, levent 0x09
-//    { 2, KEY_SHOOT_HALF  ,0x00000100 }, // Found @0xffb97c08, levent 0x00
-//    { 2, KEY_SHOOT_FULL  ,0x00000300 }, // Found @0xffb97c10, levent 0x01
+//    { 0, KEY_UP              ,0x00000400 }, // Found @0xffb97b70, levent 0x04
+//    { 0, KEY_DOWN            ,0x00000800 }, // Found @0xffb97b78, levent 0x05
+//    { 0, KEY_LEFT            ,0x00001000 }, // Found @0xffb97b80, levent 0x06
+//    { 0, KEY_RIGHT           ,0x00002000 }, // Found @0xffb97b88, levent 0x07
+//    { 0, KEY_SET             ,0x00004000 }, // Found @0xffb97b90, levent 0x08
+//    { 0, KEY_DISPLAY         ,0x00020000 }, // Found @0xffb97ba8, levent 0x0a
+//    { 0, KEY_MENU            ,0x00040000 }, // Found @0xffb97bb0, levent 0x09
+//    { 2, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffb97c10, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xffb97c10, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffb97c08, levent 0x00
 //    { 0, 0, 0 }
 //};
 

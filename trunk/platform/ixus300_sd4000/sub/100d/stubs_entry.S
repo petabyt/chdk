@@ -57,21 +57,22 @@
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffb5f77c, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x00080000 // Found @0xffb5f784, levent 0x902
+//#define USB_MASK            0x00080000 // Found @0xffb5f784, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 0, KEY_DOWN        ,0x00000001 }, // Found @0xffb5f6bc, levent 0x05
-//    { 0, KEY_RIGHT       ,0x00000002 }, // Found @0xffb5f6c4, levent 0x07
-//    { 0, KEY_UP          ,0x00000004 }, // Found @0xffb5f6cc, levent 0x04
-//    { 0, KEY_LEFT        ,0x00000008 }, // Found @0xffb5f6d4, levent 0x06
-//    { 0, KEY_SHOOT_HALF  ,0x00000100 }, // Found @0xffb5f6e4, levent 0x00
-//    { 0, KEY_SHOOT_FULL  ,0x00000900 }, // Found @0xffb5f6ec, levent 0x01
-//    { 1, KEY_ZOOM_IN     ,0x00000010 }, // Found @0xffb5f734, levent 0x02
-//    { 1, KEY_ZOOM_OUT    ,0x00000020 }, // Found @0xffb5f73c, levent 0x03
-//    { 1, KEY_SET         ,0x00000040 }, // Found @0xffb5f744, levent 0x08
-//    { 1, KEY_MENU        ,0x00000080 }, // Found @0xffb5f74c, levent 0x09
+//    { 0, KEY_SHOOT_FULL      ,0x00000900 }, // Found @0xffb5f6ec, levent 0x01
+//    { 0, KEY_SHOOT_FULL_ONLY ,0x00000800 }, // Found @0xffb5f6ec, levent 0x01
+//    { 0, KEY_DOWN            ,0x00000001 }, // Found @0xffb5f6bc, levent 0x05
+//    { 0, KEY_RIGHT           ,0x00000002 }, // Found @0xffb5f6c4, levent 0x07
+//    { 0, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffb5f6e4, levent 0x00
+//    { 0, KEY_UP              ,0x00000004 }, // Found @0xffb5f6cc, levent 0x04
+//    { 0, KEY_LEFT            ,0x00000008 }, // Found @0xffb5f6d4, levent 0x06
+//    { 1, KEY_ZOOM_IN         ,0x00000010 }, // Found @0xffb5f734, levent 0x02
+//    { 1, KEY_ZOOM_OUT        ,0x00000020 }, // Found @0xffb5f73c, levent 0x03
+//    { 1, KEY_SET             ,0x00000040 }, // Found @0xffb5f744, levent 0x08
+//    { 1, KEY_MENU            ,0x00000080 }, // Found @0xffb5f74c, levent 0x09
 //    { 0, 0, 0 }
 //};
 

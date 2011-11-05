@@ -84,19 +84,20 @@ NSTUB(kbd_pwr_off                             ,0xff8634d0) //  2 60%
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffb8d548, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x00080000 // Found @0xffb8d558, levent 0x902
+//#define USB_MASK            0x00080000 // Found @0xffb8d558, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 1, KEY_UP          ,0x00000400 }, // Found @0xffb8d4c0, levent 0x04
-//    { 1, KEY_RIGHT       ,0x00000800 }, // Found @0xffb8d4c8, levent 0x07
-//    { 1, KEY_SET         ,0x00001000 }, // Found @0xffb8d4d0, levent 0x08
-//    { 1, KEY_LEFT        ,0x00008000 }, // Found @0xffb8d4e8, levent 0x06
-//    { 1, KEY_MENU        ,0x00010000 }, // Found @0xffb8d4f0, levent 0x09
-//    { 1, KEY_DOWN        ,0x00020000 }, // Found @0xffb8d4f8, levent 0x05
-//    { 2, KEY_SHOOT_HALF  ,0x00002000 }, // Found @0xffb8d530, levent 0x00
-//    { 2, KEY_SHOOT_FULL  ,0x00002002 }, // Found @0xffb8d518, levent 0x01
+//    { 1, KEY_UP              ,0x00000400 }, // Found @0xffb8d4c0, levent 0x04
+//    { 1, KEY_RIGHT           ,0x00000800 }, // Found @0xffb8d4c8, levent 0x07
+//    { 1, KEY_SET             ,0x00001000 }, // Found @0xffb8d4d0, levent 0x08
+//    { 1, KEY_LEFT            ,0x00008000 }, // Found @0xffb8d4e8, levent 0x06
+//    { 1, KEY_MENU            ,0x00010000 }, // Found @0xffb8d4f0, levent 0x09
+//    { 1, KEY_DOWN            ,0x00020000 }, // Found @0xffb8d4f8, levent 0x05
+//    { 2, KEY_SHOOT_FULL      ,0x00002002 }, // Found @0xffb8d518, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00002000 }, // Found @0xffb8d530, levent 0x00
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb8d518, levent 0x01
 //    { 0, 0, 0 }
 //};
 

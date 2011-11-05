@@ -46,15 +46,16 @@ NSTUB(kbd_pwr_off                             ,0xff0560cc) //  2 60%
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xff3d14ac, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x04000000 // Found @0xff3d14cc, levent 0x902
+//#define USB_MASK            0x04000000 // Found @0xff3d14cc, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 1, KEY_ZOOM_IN     ,0x00001000 }, // Found @0xff3d1464, levent 0x02
-//    { 1, KEY_ZOOM_OUT    ,0x00008000 }, // Found @0xff3d146c, levent 0x03
-//    { 2, KEY_SHOOT_HALF  ,0x00000200 }, // Found @0xff3d147c, levent 0x00
-//    { 2, KEY_SHOOT_FULL  ,0x00000a00 }, // Found @0xff3d1484, levent 0x01
+//    { 1, KEY_ZOOM_IN         ,0x00001000 }, // Found @0xff3d1464, levent 0x02
+//    { 1, KEY_ZOOM_OUT        ,0x00008000 }, // Found @0xff3d146c, levent 0x03
+//    { 2, KEY_SHOOT_FULL      ,0x00000a00 }, // Found @0xff3d1484, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000800 }, // Found @0xff3d1484, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000200 }, // Found @0xff3d147c, levent 0x00
 //    { 0, 0, 0 }
 //};
 
