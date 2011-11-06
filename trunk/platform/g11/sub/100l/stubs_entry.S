@@ -34,7 +34,7 @@ NSTUB(kbd_pwr_off                             ,0xff86043c) //  2 64%
 //DEF(full_screen_refresh                     ,0x00009840) // Found @0xffa0ee98
 //DEF(canon_menu_active                       ,0x0000303c) // Found @0xff88e2cc,          stubs_min = 0x0000303c (0x3038+0x4)
 //DEF(canon_shoot_menu_active                 ,0x00008259) // Found @0xff9afaf4,          stubs_min = 0x00008259 (0x8258+0x1)
-//DEF(playrec_mode                            ,0x00002d64) // Found @0xff88059c,          stubs_min = 0x00002d64 (0x2D60+0x4)
+//DEF(playrec_mode                            ,0x00002d64) // Found @0xff8805a8,          stubs_min = 0x00002d64 (0x2D60+0x4)
 //DEF(zoom_status                             ,0x0000c868) // Found @0xffab7924,          stubs_min = 0x0000c868 (0xC868)
 //DEF(some_flag_for_af_scan                   ,0x000072b4) // Found @0xff9660f0,          stubs_min = 0x000072b4 (0x72B4)
 

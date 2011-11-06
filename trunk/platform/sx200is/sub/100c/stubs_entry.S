@@ -32,7 +32,7 @@
 //DEF(movie_status                            ,0x000065c0) // Found @0xff937fd0,          stubs_min = 0x000065c0 (0x6588+0x38)
 //DEF(canon_menu_active                       ,0x00002f10) // Found @0xff874e3c,          stubs_min = 0x00002f10 (0x2F0C+4)
 //DEF(canon_shoot_menu_active                 ,0x0000786d) // Found @0xff97761c,          stubs_min = 0x0000786d (0x786C+1)
-//DEF(playrec_mode                            ,0x00002c70) // Found @0xff868014,          stubs_min = 0x00002c70 (0x2C6C+0x4)
+//DEF(playrec_mode                            ,0x00002c70) // Found @0xff868020,          stubs_min = 0x00002c70 (0x2C6C+0x4)
 //DEF(zoom_status                             ,0x0000b850) // Found @0xffa775d0,          stubs_min = 0x0000b850 (0xb850)
 //DEF(some_flag_for_af_scan                   ,0x00006af8) // Found @0xff93b340,          stubs_min = 0x00006af8 (0x6AF8)
 

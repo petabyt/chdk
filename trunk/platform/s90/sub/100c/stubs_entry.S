@@ -40,7 +40,7 @@ NSTUB(SetPropertyCase                         ,0xff88c960) //  1 96%
 //DEF(FlashParamsTable                        ,0xffbefb70) // Found @0xffbefb70,          stubs_min = 0xffbefb70 (0xFFBEFB70)
 //DEF(movie_status                            ,0x00007ae8) // Found @0xff961448,          stubs_min = 0x00007ae8 (0x7ab0+0x38)
 //DEF(full_screen_refresh                     ,0x0000a36c) // Found @0xffa07d74
-//DEF(playrec_mode                            ,0x00002d64) // Found @0xff87f9e8,          stubs_min = 0x00002d64 (0x2d60+0x4)
+//DEF(playrec_mode                            ,0x00002d64) // Found @0xff87f9f4,          stubs_min = 0x00002d64 (0x2d60+0x4)
 //DEF(zoom_status                             ,0x00008aa4) // Found @0xff99bb20,          stubs_min = 0x00008aa4 (0x8AA4)
 //DEF(some_flag_for_af_scan                   ,0x00007ff4) // Found @0xff9644d8,          stubs_min = 0x00007ff4 (0x7FF4)
 

@@ -57,7 +57,7 @@
 //DEF(full_screen_refresh                     ,0x0001b2dc) // Found @0xff9f76d8
 //DEF(canon_menu_active                       ,0x00002ec8) // Found @0xff889754,          stubs_min = 0x00002ec8 (0x2EC4+4)
 //DEF(canon_shoot_menu_active                 ,0x00007b09) // Found @0xff98db68,          stubs_min = 0x00007b09 (0x7B08+1)
-//DEF(playrec_mode                            ,0x00002bfc) // Found @0xff87bc20,          stubs_min = 0x00002bfc (0x2BF8+0x4)
+//DEF(playrec_mode                            ,0x00002bfc) // Found @0xff87bc2c,          stubs_min = 0x00002bfc (0x2BF8+0x4)
 //DEF(zoom_status                             ,0x0001e3d4) // Found @0xffaade98,          stubs_min = 0x0001e3d4 (0x1E3D4)
 //DEF(some_flag_for_af_scan                   ,0x00006cd4) // Found @0xff94ddf8,          stubs_min = 0x00006cd4 (0x6CD4)
 
