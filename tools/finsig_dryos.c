@@ -1208,7 +1208,7 @@ string_sig string_sigs[] = {
 	
 	//																	 R20   R23   R31   R39   R43   R45   R47   R49
 	{ 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,						0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54 },
-	{ 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1, 	0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x38 },
+	{ 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1, 	0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x34 },
 	{ 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1, 			0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38, 0x38 },
 	{ 12, "free", "free", 1,											0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30, 0x30 },
 	{ 12, "malloc", "malloc", 0x01000003,								0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C },
@@ -2910,28 +2910,45 @@ void find_stubs_min(firmware *fw)
 	}
 	
 	// Find 'playrec_mode'
-	for (k=0; k<fw->size; k++)
+	int found_playrec_mode = 0;
+	k = find_str_ref(fw, "AFFChg");
+	if ((k >= 0) && isBL(fw,k+6))
 	{
-		if (((fw->buf[k]    & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
-			((fw->buf[k+1]  & 0xFFFFF000) == 0xE5810000) &&	// STR R0, [R1, #n]
-		    ((fw->buf[k+3]  & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
-			((fw->buf[k+4]  & 0xFFFFF000) == 0xE5900000) &&	// LDR R0, [R0, #n]
-		    ((fw->buf[k+6]  & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
-		    ((fw->buf[k+9]  & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
-		    ((fw->buf[k+12] & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
-		    ((fw->buf[k+15] & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
-		    ((fw->buf[k+18] & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
-			(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+3)]) &&
-			(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+6)]) &&
-			(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+9)]) &&
-			(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+12)]) &&
-			(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+15)]) &&
-			(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+18)]))
+		k = idxFollowBranch(fw, k+6, 0x01000001);
+		if (isLDR_PC(fw,k) && isLDR(fw,k+1))
 		{
 			uint32_t base = fw->buf[LDR2idx(fw,k)];
 			uint32_t ofst = fw->buf[k+1] & 0x00000FFF;
 			print_stubs_min(fw,"playrec_mode",base+ofst,idx2adr(fw,k));
-			//break;
+			found_playrec_mode = 1;
+		}
+	}
+	if (!found_playrec_mode)
+	{
+		for (k=0; k<fw->size; k++)
+		{
+			if (((fw->buf[k]    & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
+				((fw->buf[k+1]  & 0xFFFFF000) == 0xE5810000) &&	// STR R0, [R1, #n]
+				((fw->buf[k+3]  & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
+				((fw->buf[k+4]  & 0xFFFFF000) == 0xE5900000) &&	// LDR R0, [R0, #n]
+				((fw->buf[k+6]  & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
+				((fw->buf[k+9]  & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
+				((fw->buf[k+12] & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
+				((fw->buf[k+15] & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
+				((fw->buf[k+18] & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
+				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+3)]) &&
+				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+6)]) &&
+				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+9)]) &&
+				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+12)]) &&
+				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+15)]) &&
+				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+18)]))
+			{
+				uint32_t base = fw->buf[LDR2idx(fw,k)];
+				uint32_t ofst = fw->buf[k+1] & 0x00000FFF;
+				print_stubs_min(fw,"playrec_mode",base+ofst,idx2adr(fw,k));
+				found_playrec_mode = 1;
+				//break;
+			}
 		}
 	}
 	
