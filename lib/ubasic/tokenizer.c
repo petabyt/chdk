@@ -280,6 +280,9 @@ get_next_token(void)
   if(*ptr == 0) {
     return TOKENIZER_ENDOFINPUT;
   }
+
+  // UnknStatement should have size, otherwise hanging-up in ubasic.c possible for some cases
+  nextptr = ptr + 1;	
   
   if(isdigit(*ptr)) {
     for(i = 0; i < (MAX_NUMLEN+1); ++i) {
@@ -346,7 +349,6 @@ get_next_token(void)
     return TOKENIZER_VARIABLE;
   }
 
-  
   return TOKENIZER_ERROR;
 }
 /*---------------------------------------------------------------------------*/
