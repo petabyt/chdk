@@ -15,27 +15,36 @@
 #define MENUITEM_COLOR_FG       10
 #define MENUITEM_ENUM2          11
 
+// Flags, which describe limits of F_INT value
 #define MENUITEM_F_MASK         0x00f0
 #define MENUITEM_F_UNSIGNED     0x0010
 #define MENUITEM_F_MIN          0x0020
 #define MENUITEM_F_MAX          0x0040
 #define MENUITEM_F_MINMAX       0x0060
 
+// Value, which specify specific kind of argument
 #define MENUITEM_ARG_MASK       0x0f00
+    // menuitem.arg contain incrementor value
 #define MENUITEM_ARG_INC        0x0100
+    // menuitem.arg contain (int*) to incrementor
 #define MENUITEM_ARG_ADDR_INC   0x0200
+    // menuitem.arg contain ptr to callback function
 #define MENUITEM_ARG_CALLBACK   0x0300
 
 #define MENU_MINMAX(min, max)   (((max)<<16)|(min))
 
 //-------------------------------------------------------------------
 typedef struct {
-    char				symbol;
-    char                opt_len;
-    short               type;
-    int                 text;
-    int                 *value;
-    int                 arg;
+    char                symbol;     // menuitem icon symbol
+    char                opt_len;    // ENUM2 num of elements 
+    short               type;       // MENUITEM_MASKS
+    int                 text;       // Text
+    int                 *value;     // pointer to binded variable
+                                    //   exceptions: _PROC = pointer to processing func
+                                    //               _ENUM = pointer to processing func
+    int                 arg;        // additional argument
+                                    //     by default type is controled by _ARG_MASK and by _F_MINMAX
+                                    //     for ENUM2 - pointer to string list
 } CMenuItem;
 
 typedef struct {

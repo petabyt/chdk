@@ -42,10 +42,13 @@
 #define MARKED_BUF_SIZE         0x10000
 
 //-------------------------------------------------------------------
-static char current_dir[100], selected_file[100];
+static char current_dir[100];       // Path for title
+static char marked_dir[100];        // Path for progress box
+static char selected_file[100];     // This full path to current file. So it is return value
 static char buf[100];
-static char marked_dir[100];
-static enum Gui_Mode    gui_fselect_mode_old;
+static enum Gui_Mode    gui_fselect_mode_old; // stored previous gui_mode
+
+// basic element of file list
 struct fitem {
     unsigned int    n;
     char            *name;
@@ -55,20 +58,28 @@ struct fitem {
     unsigned char   marked;
     struct fitem    *prev, *next;
 };
-static struct fitem *head=NULL, *top, *selected;
-static unsigned int count, max_dir_len;
-static struct fitem *marked_head=NULL;
-static unsigned int marked_count;
-static char marked_operation;
+static struct fitem *head=NULL;     // head of list<fitem>:  holder of current directory list
+static struct fitem *top;           // ptr to first displayed file (top on the screen)
+static struct fitem *selected;      // ptr to current file (file on cursor)
+static unsigned int count;          // cur_dir_file_list.size()
+static unsigned int max_dir_len;    // just NAME_SIZE+SIZE_SIZE+SPACING
+
+static struct fitem *marked_head=NULL;  // head of list<fitem>:  holder of selected files list (keep independent filelist). made by Cut/Copy
+static unsigned int marked_count;       // marked_file_list.size()
+static char marked_operation;           // info for paste: MARKED_OP_NONE, MARKED_OP_CUT, MARKED_OP_COPY
+
+
 static coord main_x, main_y, main_w, main_h; //main browser window coord (without BORDERs)
 static coord head_x, head_y, head_w, head_h; //header window coord
 static coord body_x, body_y, body_w, body_h; //main body window coord
 static coord foot_x, foot_y, foot_w, foot_h; //footer window coord 
-static int gui_fselect_redraw;
-static char *fselect_title;
+
+static int gui_fselect_redraw;  // flag request fselect redraw: 0-no, 1-only filelist, 2-whole_redraw(incl.border)
+static char *fselect_title;     // Title of fselect window (could be different: Choose Text, Choose Script, etc)
+
 static void (*fselect_on_select)(const char *fn);
-static char raw_operation;
-static int set_key_redraw_mode;
+static char raw_operation;      // info for process_raw_files() RAW_OPERATION_AVERAGE, RAW_OPERATION_SUM, 
+static int set_key_redraw_mode; // dirty hack: screen erase & mode restore done after(0) or before(1) call to fselect_on_select
 
 //-------------------------------------------------------------------
 // Called from other gui functions to force redraw of menu
@@ -131,10 +142,10 @@ static void gui_fselect_read_dir(const char* dir) {
 
     gui_fselect_free_data();
 #ifdef CAM_DRYOS_2_3_R39
-	if(dir[0]=='A' && dir[1]==0)
-		d = opendir("A/");
-	else
-		d = opendir(dir);
+    if(dir[0]=='A' && dir[1]==0)
+        d = opendir("A/");
+    else
+        d = opendir(dir);
 #else
     d = opendir(dir);
 #endif
@@ -578,12 +589,12 @@ static void fselect_goto_prev(int step) {
             top=top->prev;
         if (selected->prev) 
             selected=selected->prev;
-		else
-		if (step == 1)
-		{
-			for(; selected->next; selected=selected->next);
-			for (i=0, top=selected; i<BODY_LINES-1 && top->prev; ++i, top=top->prev);
-		}
+        else
+        if (step == 1)
+        {
+            for(; selected->next; selected=selected->next);
+            for (i=0, top=selected; i<BODY_LINES-1 && top->prev; ++i, top=top->prev);
+        }
     }
 }
 
@@ -598,12 +609,12 @@ static void fselect_goto_next(int step) {
             top=top->next;
         if (selected->next) 
             selected=selected->next;
-		else
-		if (step == 1)
-		{
-			for(; top->prev; top = top->prev);
-			selected = top;
-		}
+        else
+        if (step == 1)
+	    {
+            for(; top->prev; top = top->prev);
+            selected = top;
+        }
     }
 }
 
@@ -841,10 +852,10 @@ static void fselect_subtract_cb(unsigned int btn) {
             sprintf(raw_subtract_from,"%s/%s",current_dir,ptr->name);
             sprintf(raw_subtract_dest,"%s/%s%s",current_dir,img_prefixes[conf.sub_batch_prefix],ptr->name+4);
             strcpy(raw_subtract_dest + strlen(raw_subtract_dest) - 4,img_exts[conf.sub_batch_ext]);
-			// don't let users attempt to write one of the files being read
-			if( strcmp(raw_subtract_dest,raw_subtract_from) != 0 && strcmp(raw_subtract_dest,raw_subtract_sub) != 0) {
+            // don't let users attempt to write one of the files being read
+            if( strcmp(raw_subtract_dest,raw_subtract_from) != 0 && strcmp(raw_subtract_dest,raw_subtract_sub) != 0) {
                 raw_subtract(raw_subtract_from,raw_subtract_sub,raw_subtract_dest);
-			}
+            }
         }
     }
     free(raw_subtract_from);
@@ -957,26 +968,26 @@ static void fselect_mpopup_cb(unsigned int actn) {
             break;
         case MPOPUP_CANCEL:
             break;
-	case MPOPUP_RAW_AVERAGE:
-	    raw_operation=RAW_OPERATION_AVERAGE;
+    case MPOPUP_RAW_AVERAGE:
+        raw_operation=RAW_OPERATION_AVERAGE;
             process_raw_files();
             break;
         case MPOPUP_RAW_ADD:
             raw_operation=RAW_OPERATION_SUM;
             process_raw_files();
             break;
-		case MPOPUP_RAW_DEVELOP:
+        case MPOPUP_RAW_DEVELOP:
             sprintf(buf, "%s/%s", current_dir, selected->name);
             gui_mbox_init((int)"", LANG_RAW_DEVELOP_MESSAGE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
             raw_prepare_develop(buf);
-		break;
+        break;
         case MPOPUP_SUBTRACT:
         {
             setup_batch_subtract();
             break;
         }
 #if DNG_SUPPORT
-	case MPOPUP_DNG_TO_CRW:
+    case MPOPUP_DNG_TO_CRW:
             process_dng_to_raw_files();
             break;
 #endif
@@ -1012,7 +1023,7 @@ void gui_fselect_kbd_process() {
         case JOGDIAL_LEFT:
         case KEY_UP:
             if (selected) {
-				if (kbd_is_key_pressed(KEY_SHOOT_HALF)) fselect_goto_prev(4);
+                if (kbd_is_key_pressed(KEY_SHOOT_HALF)) fselect_goto_prev(4);
                 else fselect_goto_prev(1);
                 gui_fselect_redraw = 1;
             }
@@ -1021,7 +1032,7 @@ void gui_fselect_kbd_process() {
         case JOGDIAL_RIGHT:
             if (selected) {
                 if (kbd_is_key_pressed(KEY_SHOOT_HALF)) fselect_goto_next(4);
-				else fselect_goto_next(1);
+                else fselect_goto_next(1);
                 gui_fselect_redraw = 1;
             }
             break;
@@ -1046,9 +1057,11 @@ void gui_fselect_kbd_process() {
             break;
         case KEY_LEFT:
             if (selected && selected->attr != 0xFF) {
-                i=MPOPUP_CUT|MPOPUP_COPY|MPOPUP_SELINV|MPOPUP_RAW_ADD|MPOPUP_RAW_AVERAGE;
+                i=MPOPUP_CUT|MPOPUP_COPY|MPOPUP_SELINV;
                 if (fselect_marked_count() > 0) {
                     i |= MPOPUP_DELETE;
+                    if ( fselect_marked_count()>1 )
+                        i |=MPOPUP_RAW_ADD|MPOPUP_RAW_AVERAGE;
                     // doesn't make sense to subtract from itself!
                     if( selected->marked == 0 && fselect_real_marked_count() > 0)
                         i |= MPOPUP_SUBTRACT;

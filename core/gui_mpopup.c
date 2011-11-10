@@ -8,6 +8,7 @@
 #include "gui_lang.h"
 #include "gui_mpopup.h"
 
+// Simple popup menu. No title, no separators, only processing items
 
 //-------------------------------------------------------------------
 static enum Gui_Mode            gui_mpopup_mode_old;
@@ -34,9 +35,12 @@ static struct {
 
 #define ACTIONSNUM              (sizeof(actions)/sizeof(actions[0]))
 #define MAX_ACTIONS             10
-static int                      mpopup_actions[MAX_ACTIONS], mpopup_actions_num, mpopup_actions_active;
-static coord                    mpopup_actions_x, mpopup_actions_y;
-static unsigned int             mpopup_actions_w;
+
+static int                      mpopup_actions[MAX_ACTIONS];    // Content of raised popupmenu
+static int                      mpopup_actions_num;             // Num of items in raised popupmenu
+static int                      mpopup_actions_active;          // Idx of current item (cursor)
+static coord                    mpopup_actions_x, mpopup_actions_y;    // top-left coord of window
+static unsigned int             mpopup_actions_w;               // width of window
 static void (*mpopup_on_select)(unsigned int btn);
 
 //-------------------------------------------------------------------
@@ -123,6 +127,7 @@ void gui_mpopup_kbd_process() {
         else mpopup_actions_active = 0;
         gui_mpopup_draw_actions();
         break;
+    case KEY_MENU:
     case KEY_LEFT:
         kbd_reset_autoclicked_key();
         gui_set_mode(gui_mpopup_mode_old);
