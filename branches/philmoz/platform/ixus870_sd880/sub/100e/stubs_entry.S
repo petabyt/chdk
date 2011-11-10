@@ -2,10 +2,14 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R31 (DRYOS version 2.3, release #0031)
-// Firmware Ver GM1.00E
-// Possible corrupt firmware dump - file size to small for start address 0xff810000
-//   file size = 4.0MB, should be 7.9MB
+//   DRYOS R31 (DRYOS version 2.3, release #0031)
+//   Firmware Ver GM1.00E
+//   Possible corrupt firmware dump - file size to small for start address 0xff810000
+//     file size = 4.00MB, should be 7.94MB
+//   Could not find Camera name - possible corrupt firmware dump
+
+// Values for makefile.inc
+//   MAXRAMADDR = 0x03ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -41,22 +45,23 @@
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffad7024, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x00040000 // Found @0xffad7030, levent 0x902
+//#define USB_MASK            0x00040000 // Found @0xffad7030, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 2, KEY_SHOOT_HALF  ,0x00000001 }, // Found @0xffad6f7c, levent 0x00
-//    { 2, KEY_SHOOT_FULL  ,0x00000003 }, // Found @0xffad6f88, levent 0x01
-//    { 2, KEY_ZOOM_IN     ,0x00000004 }, // Found @0xffad6f94, levent 0x02
-//    { 2, KEY_ZOOM_OUT    ,0x00000008 }, // Found @0xffad6fa0, levent 0x03
-//    { 2, KEY_LEFT        ,0x00000010 }, // Found @0xffad6fac, levent 0x06
-//    { 2, KEY_RIGHT       ,0x00000020 }, // Found @0xffad6fb8, levent 0x07
-//    { 2, KEY_DOWN        ,0x00000040 }, // Found @0xffad6fc4, levent 0x05
-//    { 2, KEY_UP          ,0x00000080 }, // Found @0xffad6fd0, levent 0x04
-//    { 2, KEY_SET         ,0x00000100 }, // Found @0xffad6fdc, levent 0x08
-//    { 2, KEY_DISPLAY     ,0x00000200 }, // Found @0xffad6fe8, levent 0x0a
-//    { 2, KEY_MENU        ,0x00000400 }, // Found @0xffad6ff4, levent 0x09
+//    { 2, KEY_ZOOM_IN         ,0x00000004 }, // Found @0xffad6f94, levent 0x02
+//    { 2, KEY_ZOOM_OUT        ,0x00000008 }, // Found @0xffad6fa0, levent 0x03
+//    { 2, KEY_LEFT            ,0x00000010 }, // Found @0xffad6fac, levent 0x06
+//    { 2, KEY_RIGHT           ,0x00000020 }, // Found @0xffad6fb8, levent 0x07
+//    { 2, KEY_DOWN            ,0x00000040 }, // Found @0xffad6fc4, levent 0x05
+//    { 2, KEY_UP              ,0x00000080 }, // Found @0xffad6fd0, levent 0x04
+//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffad6fdc, levent 0x08
+//    { 2, KEY_DISPLAY         ,0x00000200 }, // Found @0xffad6fe8, levent 0x0a
+//    { 2, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffad6f88, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffad6f88, levent 0x01
+//    { 2, KEY_MENU            ,0x00000400 }, // Found @0xffad6ff4, levent 0x09
+//    { 2, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffad6f7c, levent 0x00
 //    { 0, 0, 0 }
 //};
 

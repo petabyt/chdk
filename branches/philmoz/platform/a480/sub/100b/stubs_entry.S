@@ -2,9 +2,15 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R31 (DRYOS version 2.3, release #0031)
-// Firmware Ver GM1.00B
-// Canon PowerShot A480
+//   DRYOS R31 (DRYOS version 2.3, release #0031)
+//   Firmware Ver GM1.00B
+//   Canon PowerShot A480
+
+// Values for makefile.inc
+//   PLATFORMID = 12735 (0x31bf) // Found @ 0xfffe0130
+//   MAXRAMADDR = 0x01ffffff
+//   KEYSYS = d4                 // Found @ 0xffff1a44
+//   NEED_ENCODED_DISKBOOT = 2   // Found @ 0xffff1a54
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -30,7 +36,7 @@ NSTUB(kbd_pwr_off                             ,0xffc2c8c4) //  2 64%
 //DEF(movie_status                            ,0x00005700) // Found @0xffce5478,          stubs_min = 0x00005700 (0x56C8+0x38)
 //DEF(canon_menu_active                       ,0x00002a00) // Found @0xffc52450,          stubs_min = 0x00002a00 (0x29FC+4)
 //DEF(canon_shoot_menu_active                 ,0x00006861) // Found @0xffd16804, ** != ** stubs_min = 0xffc00414 (0xFFC00414)
-//DEF(playrec_mode                            ,0x00002798) // Found @0xffc46ef8,          stubs_min = 0x00002798 (0x2794+0x4)
+//DEF(playrec_mode                            ,0x00002798) // Found @0xffc46f04,          stubs_min = 0x00002798 (0x2794+0x4)
 //DEF(zoom_status                             ,0x0000a2d4) // Found @0xffdcf93c,          stubs_min = 0x0000a2d4 (0xA2D4)
 //DEF(some_flag_for_af_scan                   ,0x00005bbc) // Found @0xffce7b58,          stubs_min = 0x00005bbc (0x5BBC)
 
@@ -44,21 +50,22 @@ NSTUB(kbd_pwr_off                             ,0xffc2c8c4) //  2 64%
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00040000 // Found @0xffe34fec, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x00080000 // Found @0xffe34ff8, levent 0x902
+//#define USB_MASK            0x00080000 // Found @0xffe34ff8, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 2, KEY_UP          ,0x00000001 }, // Found @0xffe34f50, levent 0x04
-//    { 2, KEY_DOWN        ,0x00000002 }, // Found @0xffe34f5c, levent 0x05
-//    { 2, KEY_RIGHT       ,0x00000004 }, // Found @0xffe34f68, levent 0x07
-//    { 2, KEY_LEFT        ,0x00000008 }, // Found @0xffe34f74, levent 0x06
-//    { 2, KEY_SHOOT_HALF  ,0x00000010 }, // Found @0xffe34f80, levent 0x00
-//    { 2, KEY_SHOOT_FULL  ,0x00000030 }, // Found @0xffe34f8c, levent 0x01
-//    { 2, KEY_ZOOM_OUT    ,0x00000040 }, // Found @0xffe34f98, levent 0x03
-//    { 2, KEY_ZOOM_IN     ,0x00000080 }, // Found @0xffe34fa4, levent 0x02
-//    { 2, KEY_SET         ,0x00000100 }, // Found @0xffe34fb0, levent 0x08
-//    { 2, KEY_MENU        ,0x00000400 }, // Found @0xffe34fbc, levent 0x09
+//    { 2, KEY_MENU            ,0x00000400 }, // Found @0xffe34fbc, levent 0x09
+//    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe34f8c, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe34f8c, levent 0x01
+//    { 2, KEY_UP              ,0x00000001 }, // Found @0xffe34f50, levent 0x04
+//    { 2, KEY_DOWN            ,0x00000002 }, // Found @0xffe34f5c, levent 0x05
+//    { 2, KEY_RIGHT           ,0x00000004 }, // Found @0xffe34f68, levent 0x07
+//    { 2, KEY_LEFT            ,0x00000008 }, // Found @0xffe34f74, levent 0x06
+//    { 2, KEY_ZOOM_OUT        ,0x00000040 }, // Found @0xffe34f98, levent 0x03
+//    { 2, KEY_ZOOM_IN         ,0x00000080 }, // Found @0xffe34fa4, levent 0x02
+//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe34fb0, levent 0x08
+//    { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xffe34f80, levent 0x00
 //    { 0, 0, 0 }
 //};
 

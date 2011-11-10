@@ -2,9 +2,15 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R47 (DRYOS version 2.3, release #0047)
-// Firmware Ver GM1.01A
-// Canon IXUS 310 HS
+//   DRYOS R47 (DRYOS version 2.3, release #0047)
+//   Firmware Ver GM1.01A
+//   Canon IXUS 310 HS
+
+// Values for makefile.inc
+//   PLATFORMID = 12837 (0x3225) // Found @ 0xfff40040
+//   MAXRAMADDR = 0x07ffffff
+//   KEYSYS = d4c                // Found @ 0xffff3610
+//   NEED_ENCODED_DISKBOOT = 6   // Found @ 0xffff3620
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -25,8 +31,7 @@ NSTUB(kbd_pwr_off                             ,0xff0560cc) //  2 60%
 //DEF(full_screen_refresh                     ,0x0000a424) // Found @0xff244a14,          stubs_min = 0x0000a424 (0x0000a424)
 //DEF(canon_menu_active                       ,0x000032f8) // Found @0xff0887f4,          stubs_min = 0x000032f8 (0x000032f8)
 //DEF(canon_shoot_menu_active                 ,0x000087c9) // Found @0xff1c867c,          stubs_min = 0x000087c9 (0x000087c9)
-//DEF(playrec_mode                            ,0x00003030) // Found @0xff07abe8,          stubs_min = 0x00003030 (0x00003030)
-//DEF(playrec_mode                            ,0x0001100c) // Found @0xff3c82f4, ** != ** stubs_min = 0x00003030 (0x00003030)
+//DEF(playrec_mode                            ,0x00003030) // Found @0xff07abf4,          stubs_min = 0x00003030 (0x00003030)
 //DEF(zoom_status                             ,0x0000e7c0) // Found @0xff32448c,          stubs_min = 0x0000e7c0 (0x0000e7c0)
 //DEF(some_flag_for_af_scan                   ,0x000074e0) // Found @0xff183040,          stubs_min = 0x000074e0 (0x000074e0)
 
@@ -40,15 +45,16 @@ NSTUB(kbd_pwr_off                             ,0xff0560cc) //  2 60%
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xff3d14ac, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x04000000 // Found @0xff3d14cc, levent 0x902
+//#define USB_MASK            0x04000000 // Found @0xff3d14cc, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 1, KEY_ZOOM_IN     ,0x00001000 }, // Found @0xff3d1464, levent 0x02
-//    { 1, KEY_ZOOM_OUT    ,0x00008000 }, // Found @0xff3d146c, levent 0x03
-//    { 2, KEY_SHOOT_HALF  ,0x00000200 }, // Found @0xff3d147c, levent 0x00
-//    { 2, KEY_SHOOT_FULL  ,0x00000a00 }, // Found @0xff3d1484, levent 0x01
+//    { 1, KEY_ZOOM_IN         ,0x00001000 }, // Found @0xff3d1464, levent 0x02
+//    { 1, KEY_ZOOM_OUT        ,0x00008000 }, // Found @0xff3d146c, levent 0x03
+//    { 2, KEY_SHOOT_FULL      ,0x00000a00 }, // Found @0xff3d1484, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000800 }, // Found @0xff3d1484, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000200 }, // Found @0xff3d147c, levent 0x00
 //    { 0, 0, 0 }
 //};
 
@@ -182,7 +188,7 @@ NSTUB(rand                                    ,0xff24d118) //  6
 NSTUB(read                                    ,0xff00ad58) //101
 NSTUB(readfastdir                             ,0xff2e4530) //  6
 NSTUB(rename                                  ,0xff026f14) //  6
-NSTUB(set_control_event                       ,0xff08ce6c) //  6
+NSTUB(set_control_event                       ,0xff08ce6c) //111
 NSTUB(srand                                   ,0xff24d10c) //  6
 NSTUB(stat                                    ,0xff0278f4) //  3
 NSTUB(strcat                                  ,0xff0a5738) //  1

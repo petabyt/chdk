@@ -1,18 +1,26 @@
 #include "stdlib.h"
 #include "lang.h"
 
+static char* preparsed_lang_default_start=0;
+static char* preparsed_lang_default_end=0;            // @this is for correct detection which is in heap
+
 //-------------------------------------------------------------------
 
-static char **strings = NULL;
-static int count = 0;
+static char** strings = NULL;        // string list (allocated at heap or mapped from gui_lang.c);
+static int count = 0;                // current maximal string id (init at lang_init with GUI_LANG_ITEMS)
 
 //-------------------------------------------------------------------
 void lang_init(int num) {
     int i;
+    char* str;
 
     if (strings) {
-       for (i=0; i<count; ++i)
-           if (strings[i]) free(strings[i]);
+       for (i=0; i<count; ++i) {
+           str=strings[i];
+           if ( str && ( str<preparsed_lang_default_start || str>preparsed_lang_default_end ) )
+               free(str);
+    }
+
        free(strings);
        count = 0;
     }
@@ -26,13 +34,17 @@ void lang_init(int num) {
 
 }
 
+// add to string list string "str" with id "num"
 //-------------------------------------------------------------------
 static void lang_add_string(int num, const char *str) {
     int f=0;
     char *p;
 
     if (strings && num<count) {
-       if (strings[num]) free(strings[num]);
+    p = strings[num];
+       if ( p && ( p<preparsed_lang_default_start || p>preparsed_lang_default_end ) )
+           free( p );
+
        p = strings[num] = malloc(strlen(str)+1);
        if (p) {
            for (; *str; ++str) {
@@ -53,26 +65,30 @@ static void lang_add_string(int num, const char *str) {
     }
 }
 
+// Parsing of loaded .lng file
+// buf - source array (content of file.lng )
 //-------------------------------------------------------------------
-void lang_load_from_mem(char *buf) {
+void lang_parse_from_mem(char *buf) {
     char *p, *s, *e;
     int i;
-    
+
     e = buf-1;
     while(e) {
         p = e+1;
-        while (*p && (*p=='\r' || *p=='\n')) ++p;
-        i = strtol(p, &e, 0);
+        while (*p && (*p=='\r' || *p=='\n')) ++p; //skip empty lines
+        i = strtol(p, &e, 0/*autodetect base oct-dec-hex*/);    // convert "*p" to long "i" and return pointer beyond to e
         if (e!=p) {
             p = e;
-            e = strpbrk(p, "\r\n");
+            e = strpbrk(p, "\r\n");        //break string with zero on \r|\n
             if (e) *e=0;
-            while (*p && *p!='\"') ++p;
+
+            while (*p && *p!='\"') ++p;    // cut string from "" if it exists
             if (*p) ++p;
             s = p;
             while (*p && (*p!='\"' || *(p-1)=='\\')) ++p;
             *p=0;
-            lang_add_string(i, s);
+
+            lang_add_string(i, s);        // add string
         } else { //skip invalid line
             e = strpbrk(p, "\r\n");
             if (e) *e=0;
@@ -80,8 +96,31 @@ void lang_load_from_mem(char *buf) {
     }
 }
 
+// This function have to be called before any other string load
 //-------------------------------------------------------------------
-void lang_load_from_file(const char *filename) {
+void lang_map_preparsed_from_mem( char* gui_lang_default, int num )
+{
+    int i;
+    char *p = gui_lang_default;
+
+    preparsed_lang_default_start = p;
+    lang_init( num );
+    for ( i = 1; i<=num; i++ )
+    {
+        strings[i]=p;
+        while (*p) p++;
+        p++;
+    }
+
+    preparsed_lang_default_end = p;
+}
+
+
+// Universal file processor
+// Load file, process by callback, unalloc/close file
+//-------------------------------------------------------------------
+void load_from_file(const char *filename, callback_process_file callback)
+{
     int f, size;
     static struct stat st;
     char *buf;
@@ -94,13 +133,18 @@ void lang_load_from_file(const char *filename) {
             if (buf) {
                 size = read(f, buf, size);
                 buf[size]=0;
-                lang_load_from_mem(buf);
+                callback(buf);
                 ufree(buf);
             }
         }
         close(f);
     }
 }
+
+void lang_load_from_file(const char *filename) {
+    load_from_file( filename, lang_parse_from_mem );
+}
+
 
 //-------------------------------------------------------------------
 char* lang_str(int str) {

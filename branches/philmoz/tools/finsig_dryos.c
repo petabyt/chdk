@@ -6,6 +6,8 @@
 #include <time.h>
 #include <stdarg.h>
 
+#include "dancingbits.h"
+
 //------------------------------------------------------------------------------------------------------------
 
 // For testing - define to compare new values against old values in stubs_entry.S.orig
@@ -472,6 +474,8 @@ typedef struct {
     int         size;
     BufRange    *br, *last;
 	int			dryos_ver;
+    int         pid;
+    int         maxram;
 	char		cam[100];
 } firmware;
 
@@ -717,7 +721,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
     fw->base = strtoul(base_addr, NULL, 0);
 
     fseek(f,0,SEEK_END);
-    fw->size=ftell(f)/4;
+    fw->size = (ftell(f)+3)/4;
     fseek(f,0,SEEK_SET);
 
     // Max sig size if 32, add extra space at end of buffer and fill with 0xFFFFFFFF
@@ -735,55 +739,159 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 	int k = find_str(fw, "DRYOS version 2.3, release #");
 	if (k == -1)
 	{
-		bprintf("// Can't find DRYOS version !!!\n\n");
+		bprintf("//   Can't find DRYOS version !!!\n\n");
 	}
 	else
 	{
 		fw->dryos_ver = atoi(((char*)&fw->buf[k])+28);
-		bprintf("// DRYOS R%d (%s)\n",fw->dryos_ver,(char*)&fw->buf[k]);
+        if (fw->dryos_ver > 49)
+    		bprintf("//   DRYOS R%d (%s) *** New DRYOS Version - please update finsig_dryos.c ***\n",fw->dryos_ver,(char*)&fw->buf[k]);
+        else
+    		bprintf("//   DRYOS R%d (%s)\n",fw->dryos_ver,(char*)&fw->buf[k]);
 	}
 	
 	// Get firmware version info
 	k = find_str(fw, "Firmware Ver ");
 	if (k == -1)
 	{
-		bprintf("// Can't find firmware version !!!\n\n");
+		bprintf("//   Can't find firmware version !!!\n\n");
 	}
 	else
 	{
-		bprintf("// %s",(char*)&fw->buf[k]);
+		bprintf("//   %s",(char*)&fw->buf[k]);
 		bprintf("\n");
 	}
 
-	// Get camera name
+	// Get camera name & platformid
 	int fsize = -((int)fw->base)/4;
 	int cam_idx = 0;
+    int pid_idx = 0;
 	switch (fw->dryos_ver)
 	{
 	case 20:
 	case 23:
 	case 31:
-	case 39: cam_idx = (0xFFFE0110 - fw->base) / 4; break;
+	case 39: 
+        cam_idx = (0xFFFE0110 - fw->base) / 4; 
+        pid_idx = (0xFFFE0130 - fw->base) / 4; 
+        break;
 	case 43:
-	case 45: cam_idx = (0xFFFE00D0 - fw->base) / 4; break;
-	case 47: cam_idx = (((fw->base==0xFF000000)?0xFFF40170:0xFFFE0170) - fw->base) / 4; break;
+	case 45: 
+        cam_idx = (0xFFFE00D0 - fw->base) / 4; 
+        pid_idx = (0xFFFE0130 - fw->base) / 4; 
+        break;
+	case 47: 
+        cam_idx = (((fw->base==0xFF000000)?0xFFF40170:0xFFFE0170) - fw->base) / 4; 
+        pid_idx = (((fw->base==0xFF000000)?0xFFF40040:0xFFFE0040) - fw->base) / 4; 
+        break;
+	case 49: 
+        cam_idx = (((fw->base==0xFF000000)?0xFFF40190:0xFFFE0170) - fw->base) / 4; 
+        pid_idx = (((fw->base==0xFF000000)?0xFFF40040:0xFFFE0040) - fw->base) / 4; 
+        break;
+	}
+
+    if (fsize > (fw->size + 256))
+	{
+		bprintf("//   Possible corrupt firmware dump - file size to small for start address 0x%08x\n",fw->base);
+		bprintf("//     file size = %.2fMB, should be %.2fMB\n", ((double)fw->size*4.0)/(1024.0*1024.0),((double)fsize*4.0)/(1024.0*1024.0));
 	}
 	
 	strcpy(fw->cam,"Unknown");
-	if (cam_idx >= fw->size)
-	{
-		bprintf("// Possible corrupt firmware dump - file size to small for start address 0x%08x\n",fw->base);
-		bprintf("//   file size = %.1fMB, should be %.1fMB\n", ((double)fw->size*4.0)/(1024.0*1024.0),((double)fsize*4.0)/(1024.0*1024.0));
-	}
-	else if ((cam_idx < fw->size) && (strncmp((char*)&fw->buf[cam_idx],"Canon ",6) == 0))
+	if ((cam_idx < fw->size) && (strncmp((char*)&fw->buf[cam_idx],"Canon ",6) == 0))
 	{
 		strcpy(fw->cam,(char*)&fw->buf[cam_idx]);
-		bprintf("// %s\n",fw->cam);
+		bprintf("//   %s\n",fw->cam);
 	}
 	else
 	{
-		bprintf("// Could not find Camera name - possible corrupt firmware dump\n");
+		bprintf("//   Could not find Camera name - possible corrupt firmware dump\n");
 	}
+
+	bprintf("\n// Values for makefile.inc\n");
+
+    if ((pid_idx > 0) && (pid_idx < fw->size))
+    {
+        fw->pid = fw->buf[pid_idx] & 0xFFFF;
+		bprintf("//   PLATFORMID = %d (0x%04x) // Found @ 0x%08x\n",fw->pid,fw->pid,idx2adr(fw,pid_idx));
+    }
+    else fw->pid = 0;
+
+    // Calc MAXRAMADDR
+    if (((fw->buf[0x10] & 0xFFFFFF00) == 0xE3A00000) && (fw->buf[0x11] == 0xEE060F12))
+    {
+        fw->maxram = (1 << (((fw->buf[0x10] & 0x3E) >> 1) + 1)) - 1;
+    }
+    else if (((fw->buf[0x14] & 0xFFFFFF00) == 0xE3A00000) && (fw->buf[0x15] == 0xEE060F12))
+    {
+        fw->maxram = (1 << (((fw->buf[0x14] & 0x3E) >> 1) + 1)) - 1;
+    }
+    else fw->maxram = 0;
+
+    if (fw->maxram != 0)
+		bprintf("//   MAXRAMADDR = 0x%08x\n",fw->maxram);
+
+    uint32_t ofst = adr2idx(fw,0xFFFF0000);    // Offset of area to find dancing bits
+    if ((ofst < fw->size) && (fw->buf[ofst] == 0xEA000001) && isLDR_PC(fw,ofst+1))
+    {
+        // Get KEYSYS value
+        ofst = adr2idx(fw,fw->buf[LDR2idx(fw,ofst+1)]);     // Address of firmware encryption key
+        if (ofst < fw->size)
+        {
+            char *ksys = "? Not found, possible new firmware encryption key.";
+            switch (fw->buf[ofst])
+            {
+            case 0x70726964:    ksys = "d3   "; break;
+            case 0x646C726F:    ksys = "d3enc"; break;
+            case 0x774D450B:    ksys = "d4   "; break;
+            case 0x80751A95:    ksys = "d4a  "; break;
+            case 0x76894368:    ksys = "d4b  "; break;
+            case 0x50838EF7:    ksys = "d4c  "; break;
+            }
+            bprintf("//   KEYSYS = %s              // Found @ 0x%08x\n",ksys,idx2adr(fw,ofst));
+        }
+
+        // Get NEED_ENCODED_DISKBOOT value
+        ofst = ofst + 4; // Address of dancing bits data (try after firmware key)
+        if (ofst < fw->size)
+        {
+            int fnd = 0, i, j;
+            for (i=0; i<VITALY && !fnd; i++)
+            {
+                fnd = i+1;
+                for (j=0; j<8 && fnd; j++)
+                {
+                    if ((fw->buf[ofst+j] & 0xFF) != _chr_[i][j])
+                    {
+                        fnd = 0;
+                    }
+                }
+            }
+            if (!fnd)
+            {
+                // Try before firmware key
+                ofst = ofst - 12;
+                for (i=0; i<VITALY && !fnd; i++)
+                {
+                    fnd = i+1;
+                    for (j=0; j<8 && fnd; j++)
+                    {
+                        if ((fw->buf[ofst+j] & 0xFF) != _chr_[i][j])
+                        {
+                            fnd = 0;
+                        }
+                    }
+                }
+            }
+            if (fnd)
+            {
+        		bprintf("//   NEED_ENCODED_DISKBOOT = %d   // Found @ 0x%08x\n",fnd,idx2adr(fw,ofst));
+            }
+            else
+            {
+        		bprintf("//   NEED_ENCODED_DISKBOOT = ? Not found, possible new 'dancing bits' entry needed. // Found @ 0x%08x\n",idx2adr(fw,ofst));
+            }
+        }
+    }
 
 	bprintf("\n");
 }
@@ -924,6 +1032,7 @@ typedef struct {
 	int		dryos43_offset;
 	int		dryos45_offset;
 	int		dryos47_offset;
+	int		dryos49_offset;
 } string_sig;
 
 #if defined(PLATFORMOS_dryos)
@@ -1072,11 +1181,11 @@ string_sig string_sigs[] = {
 	
 	{ 8, "WriteSDCard", "Mounter.c", 0 }, 
 	
-	//																	 R20   R23   R31   R39   R43   R45   R47
-	{ 9, "kbd_p1_f", "task_PhySw", 0x01000001,							   5,    5,    5,    5,    5,    5,    5 },
-	{ 9, "kbd_p2_f", "task_PhySw", 0xf1000001,							   7,    7,    7,    7,    7,    7,    7 },
-	{ 9, "kbd_read_keys", "kbd_p1_f", 0x01000001,						   2,    2,    2,    2,    2,    2,    2 },
-	{ 9, "kbd_p1_f_cont", "kbd_p1_f", 0,								   3,    3,    3,    3,    3,    3,    3 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49
+	{ 9, "kbd_p1_f", "task_PhySw", 0x01000001,							   5,    5,    5,    5,    5,    5,    5,    5 },
+	{ 9, "kbd_p2_f", "task_PhySw", 0xf1000001,							   7,    7,    7,    7,    7,    7,    7,    7 },
+	{ 9, "kbd_read_keys", "kbd_p1_f", 0x01000001,						   2,    2,    2,    2,    2,    2,    2,    2 },
+	{ 9, "kbd_p1_f_cont", "kbd_p1_f", 0,								   3,    3,    3,    3,    3,    3,    3,    3 },
 	{ 9, "kbd_read_keys_r2", "kbd_read_keys", 0x0100000C },
 	{ 9, "GetKbdState", "kbd_read_keys", 0x01000009 },
 	{ 9, "GetKbdState", "kbd_read_keys", 0x0100000A },
@@ -1090,24 +1199,24 @@ string_sig string_sigs[] = {
 	{ 10, "task_RotaryEncoder", "RotaryEncoder", 1 },
 	{ 10, "task_RotaryEncoder", "RotarySw", 1 },
 
-	//																	 R20   R23   R31   R39   R43   R45   R47
-	{ 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,				   5,    5,    5,    5,    5,    5,    5 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  14,   14,   14,   14,   14,   14,   14 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  15,   15,   15,   15,   15,   15,   15 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  20,   20,   20,   20,   20,   20,   20 },
-	{ 11, "_log", (char*)log_test, 0x01000001,							   1,    1,    1,    1,    1,    1,    1 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49
+	{ 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,				   5,    5,    5,    5,    5,    5,    5,    5 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  14,   14,   14,   14,   14,   14,   14,   14 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  15,   15,   15,   15,   15,   15,   15,   15 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  20,   20,   20,   20,   20,   20,   19,   20 },
+	{ 11, "_log", (char*)log_test, 0x01000001,							   1,    1,    1,    1,    1,    1,    1,    1 },
 	
-	//																	 R20   R23   R31   R39   R43   R45   R47
-	{ 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,						0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54 },
-	{ 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1, 	0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34 },
-	{ 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1, 			0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38 },
-	{ 12, "free", "free", 1,											0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30 },
-	{ 12, "malloc", "malloc", 0x01000003,								0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C },
-	{ 12, "TakeSemaphore", "TakeSemaphore", 1,							0x14, 0x14, 0x14, 0x14, 0x14, 0x1C, 0x1C },
-	{ 12, "GiveSemaphore", "GiveSemaphore", 1,							0x18, 0x18, 0x18, 0x18, 0x18, 0x20, 0x20 },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x278,0x27C,0x000,0x000,0x000,0x000 },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x000,0x2C4,0x000,0x000,0x000,0x000 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49
+	{ 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,						0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54 },
+	{ 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1, 	0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x34 },
+	{ 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1, 			0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38, 0x38 },
+	{ 12, "free", "free", 1,											0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30, 0x30 },
+	{ 12, "malloc", "malloc", 0x01000003,								0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C },
+	{ 12, "TakeSemaphore", "TakeSemaphore", 1,							0x14, 0x14, 0x14, 0x14, 0x14, 0x1C, 0x1C, 0x1C },
+	{ 12, "GiveSemaphore", "GiveSemaphore", 1,							0x18, 0x18, 0x18, 0x18, 0x18, 0x20, 0x20, 0x20 },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000 },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x000,0x2C4,0x000,0x000,0x000,0x000,0x000 },
 	
 	{ 13, "strftime", "Sunday", 1 },
 	
@@ -1143,6 +1252,7 @@ int dryos_offset(firmware *fw, string_sig *sig)
 	case 43:	return sig->dryos43_offset;
 	case 45:	return sig->dryos45_offset;
 	case 47:	return sig->dryos47_offset;
+	case 49:	return sig->dryos49_offset;
 	}
 	return 0;
 }
@@ -2800,28 +2910,45 @@ void find_stubs_min(firmware *fw)
 	}
 	
 	// Find 'playrec_mode'
-	for (k=0; k<fw->size; k++)
+	int found_playrec_mode = 0;
+	k = find_str_ref(fw, "AFFChg");
+	if ((k >= 0) && isBL(fw,k+6))
 	{
-		if (((fw->buf[k]    & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
-			((fw->buf[k+1]  & 0xFFFFF000) == 0xE5810000) &&	// STR R0, [R1, #n]
-		    ((fw->buf[k+3]  & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
-			((fw->buf[k+4]  & 0xFFFFF000) == 0xE5900000) &&	// LDR R0, [R0, #n]
-		    ((fw->buf[k+6]  & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
-		    ((fw->buf[k+9]  & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
-		    ((fw->buf[k+12] & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
-		    ((fw->buf[k+15] & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
-		    ((fw->buf[k+18] & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
-			(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+3)]) &&
-			(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+6)]) &&
-			(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+9)]) &&
-			(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+12)]) &&
-			(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+15)]) &&
-			(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+18)]))
+		k = idxFollowBranch(fw, k+6, 0x01000001);
+		if (isLDR_PC(fw,k) && isLDR(fw,k+1))
 		{
 			uint32_t base = fw->buf[LDR2idx(fw,k)];
 			uint32_t ofst = fw->buf[k+1] & 0x00000FFF;
 			print_stubs_min(fw,"playrec_mode",base+ofst,idx2adr(fw,k));
-			//break;
+			found_playrec_mode = 1;
+		}
+	}
+	if (!found_playrec_mode)
+	{
+		for (k=0; k<fw->size; k++)
+		{
+			if (((fw->buf[k]    & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
+				((fw->buf[k+1]  & 0xFFFFF000) == 0xE5810000) &&	// STR R0, [R1, #n]
+				((fw->buf[k+3]  & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
+				((fw->buf[k+4]  & 0xFFFFF000) == 0xE5900000) &&	// LDR R0, [R0, #n]
+				((fw->buf[k+6]  & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
+				((fw->buf[k+9]  & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
+				((fw->buf[k+12] & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
+				((fw->buf[k+15] & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
+				((fw->buf[k+18] & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
+				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+3)]) &&
+				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+6)]) &&
+				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+9)]) &&
+				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+12)]) &&
+				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+15)]) &&
+				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+18)]))
+			{
+				uint32_t base = fw->buf[LDR2idx(fw,k)];
+				uint32_t ofst = fw->buf[k+1] & 0x00000FFF;
+				print_stubs_min(fw,"playrec_mode",base+ofst,idx2adr(fw,k));
+				found_playrec_mode = 1;
+				//break;
+			}
 		}
 	}
 	
@@ -2914,7 +3041,7 @@ void find_stubs_min(firmware *fw)
 
 //------------------------------------------------------------------------------------------------------------
 
-void print_kval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev, const char *name)
+void print_kval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev, const char *name, char *sfx)
 {
 	int tidx = adr2idx(fw,tadr);
 	int k, kval = 0;
@@ -2930,7 +3057,7 @@ void print_kval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev, co
 	if (kval > 0)
 	{
 		char fn[100], rn[100];
-		strcpy(fn,name); strcat(fn,"_FLAG");
+		strcpy(fn,name); strcat(fn,sfx);
 		strcpy(rn,name); strcat(rn,"_IDX");
 		
 		int r = (kval >> 5) & 7;
@@ -2999,6 +3126,17 @@ int kinfo_compare(const kinfo *p1, const kinfo *p2)
 	{
 		return -1;
     }
+	if (p1->ev <= 1)	// output shutter entries in reverse order
+	{
+		if (p1->bits > p2->bits)
+		{
+			return -1;
+		}
+		else if (p1->bits < p2->bits)
+		{
+			return 1;
+		}
+	}
     if (p1->bits > p2->bits)
 	{
         return 1;
@@ -3020,7 +3158,7 @@ void print_kmvals()
 	int k;
 	for (k=0; k<kcount; k++)
 	{
-		bprintf("//    { %d, %-16s,0x%08x }, // Found @0x%08x, levent 0x%02x\n",key_info[k].reg,key_info[k].nm,key_info[k].bits,key_info[k].fadr,key_info[k].ev);
+		bprintf("//    { %d, %-20s,0x%08x }, // Found @0x%08x, levent 0x%02x\n",key_info[k].reg,key_info[k].nm,key_info[k].bits,key_info[k].fadr,key_info[k].ev);
 	}
 	
 	bprintf("//    { 0, 0, 0 }\n//};\n");
@@ -3102,11 +3240,21 @@ void find_key_vals(firmware *fw)
 		if (tlen > 50*tsiz) tlen = 50*tsiz;
 		
 		bprintf("// Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).\n");
-		print_kval(fw,tadr,tsiz,tlen,0x90A,"SD_READONLY");
-		print_kval(fw,tadr,tsiz,tlen,0x902,"USB");
+        if (fw->dryos_ver == 49)
+        {
+            // Event ID's have changed in DryOS R49 **********
+    		print_kval(fw,tadr,tsiz,tlen,0x20A,"SD_READONLY","_FLAG");
+	    	print_kval(fw,tadr,tsiz,tlen,0x202,"USB","_MASK");
+        }
+        else
+        {
+    		print_kval(fw,tadr,tsiz,tlen,0x90A,"SD_READONLY","_FLAG");
+	    	print_kval(fw,tadr,tsiz,tlen,0x902,"USB","_MASK");
+        }
 				
 		uint32_t key_half = add_kmval(fw,tadr,tsiz,tlen,0,"KEY_SHOOT_HALF",0);
 		add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL",key_half);
+		add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL_ONLY",0);
 		add_kmval(fw,tadr,tsiz,tlen,2,"KEY_ZOOM_IN",0);
 		add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_OUT",0);
 		add_kmval(fw,tadr,tsiz,tlen,4,"KEY_UP",0);

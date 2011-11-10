@@ -2,9 +2,15 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R23 (DRYOS version 2.3, release #0023)
-// Firmware Ver GM1.00D
-// Canon DIGITAL IXUS 960 IS
+//   DRYOS R23 (DRYOS version 2.3, release #0023)
+//   Firmware Ver GM1.00D
+//   Canon DIGITAL IXUS 960 IS
+
+// Values for makefile.inc
+//   PLATFORMID = 12639 (0x315f) // Found @ 0xfffe0130
+//   MAXRAMADDR = 0x03ffffff
+//   KEYSYS = d3                 // Found @ 0xffff31c8
+//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff31a8
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -46,17 +52,18 @@
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffa95924, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x00040000 // Found @0xffa95930, levent 0x902
+//#define USB_MASK            0x00040000 // Found @0xffa95930, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 2, KEY_SHOOT_HALF  ,0x00000001 }, // Found @0xffa9587c, levent 0x00
-//    { 2, KEY_SHOOT_FULL  ,0x00000003 }, // Found @0xffa95888, levent 0x01
-//    { 2, KEY_ZOOM_IN     ,0x00000004 }, // Found @0xffa95894, levent 0x02
-//    { 2, KEY_ZOOM_OUT    ,0x00000008 }, // Found @0xffa958a0, levent 0x03
-//    { 2, KEY_DISPLAY     ,0x00000200 }, // Found @0xffa958e8, levent 0x0a
-//    { 2, KEY_MENU        ,0x00000400 }, // Found @0xffa958f4, levent 0x09
+//    { 2, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffa95888, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffa95888, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffa9587c, levent 0x00
+//    { 2, KEY_ZOOM_IN         ,0x00000004 }, // Found @0xffa95894, levent 0x02
+//    { 2, KEY_ZOOM_OUT        ,0x00000008 }, // Found @0xffa958a0, levent 0x03
+//    { 2, KEY_DISPLAY         ,0x00000200 }, // Found @0xffa958e8, levent 0x0a
+//    { 2, KEY_MENU            ,0x00000400 }, // Found @0xffa958f4, levent 0x09
 //    { 0, 0, 0 }
 //};
 

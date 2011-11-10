@@ -2,9 +2,15 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R39 (DRYOS version 2.3, release #0039)
-// Firmware Ver GM1.01A
-// Canon DIGITAL IXUS 120 IS
+//   DRYOS R39 (DRYOS version 2.3, release #0039)
+//   Firmware Ver GM1.01A
+//   Canon DIGITAL IXUS 120 IS
+
+// Values for makefile.inc
+//   PLATFORMID = 12774 (0x31e6) // Found @ 0xfffe0130
+//   MAXRAMADDR = 0x03ffffff
+//   KEYSYS = d4                 // Found @ 0xffff3564
+//   NEED_ENCODED_DISKBOOT = 3   // Found @ 0xffff3574
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -25,7 +31,7 @@
 //DEF(full_screen_refresh                     ,0x00008bb0) // Found @0xff9cf9d4
 //DEF(canon_menu_active                       ,0x00002d48) // Found @0xff8854d4,          stubs_min = 0x00002d48 (0x2D44+4)
 //DEF(canon_shoot_menu_active                 ,0x00007751) // Found @0xff97b9b4,          stubs_min = 0x00007751 (0x7750+1)
-//DEF(playrec_mode                            ,0x00002a7c) // Found @0xff877ae4,          stubs_min = 0x00002a7c (0x2A78+0x4)
+//DEF(playrec_mode                            ,0x00002a7c) // Found @0xff877af0,          stubs_min = 0x00002a7c (0x2A78+0x4)
 //DEF(zoom_status                             ,0x0000b9dc) // Found @0xffa78278,          stubs_min = 0x0000b9dc (0xB9DC)
 //DEF(some_flag_for_af_scan                   ,0x0000673c) // Found @0xff940350,          stubs_min = 0x0000673c (0x673C)
 
@@ -39,22 +45,23 @@
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffb0c754, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x00080000 // Found @0xffb0c76c, levent 0x902
+//#define USB_MASK            0x00080000 // Found @0xffb0c76c, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 0, KEY_SET         ,0x00000004 }, // Found @0xffb0c694, levent 0x08
-//    { 0, KEY_DISPLAY     ,0x00000008 }, // Found @0xffb0c6a0, levent 0x0a
-//    { 2, KEY_MENU        ,0x00000001 }, // Found @0xffb0c6b8, levent 0x09
-//    { 2, KEY_ZOOM_IN     ,0x00000004 }, // Found @0xffb0c6c4, levent 0x02
-//    { 2, KEY_ZOOM_OUT    ,0x00000008 }, // Found @0xffb0c6d0, levent 0x03
-//    { 2, KEY_LEFT        ,0x00000010 }, // Found @0xffb0c6dc, levent 0x06
-//    { 2, KEY_RIGHT       ,0x00000020 }, // Found @0xffb0c6e8, levent 0x07
-//    { 2, KEY_DOWN        ,0x00000040 }, // Found @0xffb0c6f4, levent 0x05
-//    { 2, KEY_UP          ,0x00000080 }, // Found @0xffb0c700, levent 0x04
-//    { 2, KEY_SHOOT_HALF  ,0x00000100 }, // Found @0xffb0c70c, levent 0x00
-//    { 2, KEY_SHOOT_FULL  ,0x00000300 }, // Found @0xffb0c718, levent 0x01
+//    { 0, KEY_SET             ,0x00000004 }, // Found @0xffb0c694, levent 0x08
+//    { 0, KEY_DISPLAY         ,0x00000008 }, // Found @0xffb0c6a0, levent 0x0a
+//    { 2, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffb0c718, levent 0x01
+//    { 2, KEY_MENU            ,0x00000001 }, // Found @0xffb0c6b8, levent 0x09
+//    { 2, KEY_ZOOM_IN         ,0x00000004 }, // Found @0xffb0c6c4, levent 0x02
+//    { 2, KEY_ZOOM_OUT        ,0x00000008 }, // Found @0xffb0c6d0, levent 0x03
+//    { 2, KEY_LEFT            ,0x00000010 }, // Found @0xffb0c6dc, levent 0x06
+//    { 2, KEY_RIGHT           ,0x00000020 }, // Found @0xffb0c6e8, levent 0x07
+//    { 2, KEY_DOWN            ,0x00000040 }, // Found @0xffb0c6f4, levent 0x05
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xffb0c718, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffb0c70c, levent 0x00
+//    { 2, KEY_UP              ,0x00000080 }, // Found @0xffb0c700, levent 0x04
 //    { 0, 0, 0 }
 //};
 

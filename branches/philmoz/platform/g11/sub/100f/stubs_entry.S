@@ -2,9 +2,15 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R39 (DRYOS version 2.3, release #0039)
-// Firmware Ver GM1.00F
-// Canon PowerShot G11
+//   DRYOS R39 (DRYOS version 2.3, release #0039)
+//   Firmware Ver GM1.00F
+//   Canon PowerShot G11
+
+// Values for makefile.inc
+//   PLATFORMID = 12767 (0x31df) // Found @ 0xfffe0130
+//   MAXRAMADDR = 0x03ffffff
+//   KEYSYS = d4                 // Found @ 0xffff35a8
+//   NEED_ENCODED_DISKBOOT = 3   // Found @ 0xffff35b8
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -27,7 +33,7 @@ NSTUB(kbd_pwr_off                             ,0xff8603ec) //  2 64%
 //DEF(full_screen_refresh                     ,0x00009840) // Found @0xffa0ec68
 //DEF(canon_menu_active                       ,0x0000303c) // Found @0xff88e1ac,          stubs_min = 0x0000303c (0x3038+0x4)
 //DEF(canon_shoot_menu_active                 ,0x00008259) // Found @0xff9af8c4,          stubs_min = 0x00008259 (0x8258+0x1)
-//DEF(playrec_mode                            ,0x00002d64) // Found @0xff88047c,          stubs_min = 0x00002d64 (0x2D60+0x4)
+//DEF(playrec_mode                            ,0x00002d64) // Found @0xff880488,          stubs_min = 0x00002d64 (0x2D60+0x4)
 //DEF(zoom_status                             ,0x0000c868) // Found @0xffab7664,          stubs_min = 0x0000c868 (0xC868)
 //DEF(some_flag_for_af_scan                   ,0x000072b4) // Found @0xff965e50,          stubs_min = 0x000072b4 (0x72B4)
 
@@ -41,22 +47,23 @@ NSTUB(kbd_pwr_off                             ,0xff8603ec) //  2 64%
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffb474ec, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x00100000 // Found @0xffb47510, levent 0x902
+//#define USB_MASK            0x00100000 // Found @0xffb47510, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 0, KEY_ZOOM_OUT    ,0x00000008 }, // Found @0xffb47378, levent 0x03
-//    { 0, KEY_ZOOM_IN     ,0x00000010 }, // Found @0xffb47384, levent 0x02
-//    { 0, KEY_LEFT        ,0x00000400 }, // Found @0xffb473cc, levent 0x06
-//    { 0, KEY_SET         ,0x00000800 }, // Found @0xffb473d8, levent 0x08
-//    { 0, KEY_RIGHT       ,0x00001000 }, // Found @0xffb473e4, levent 0x07
-//    { 0, KEY_DOWN        ,0x00002000 }, // Found @0xffb473f0, levent 0x05
-//    { 0, KEY_UP          ,0x00004000 }, // Found @0xffb473fc, levent 0x04
-//    { 0, KEY_DISPLAY     ,0x00020000 }, // Found @0xffb47420, levent 0x0a
-//    { 0, KEY_MENU        ,0x00040000 }, // Found @0xffb4742c, levent 0x09
-//    { 2, KEY_SHOOT_HALF  ,0x00000001 }, // Found @0xffb474a4, levent 0x00
-//    { 2, KEY_SHOOT_FULL  ,0x00000003 }, // Found @0xffb474b0, levent 0x01
+//    { 0, KEY_ZOOM_OUT        ,0x00000008 }, // Found @0xffb47378, levent 0x03
+//    { 0, KEY_ZOOM_IN         ,0x00000010 }, // Found @0xffb47384, levent 0x02
+//    { 0, KEY_LEFT            ,0x00000400 }, // Found @0xffb473cc, levent 0x06
+//    { 0, KEY_SET             ,0x00000800 }, // Found @0xffb473d8, levent 0x08
+//    { 0, KEY_RIGHT           ,0x00001000 }, // Found @0xffb473e4, levent 0x07
+//    { 0, KEY_DOWN            ,0x00002000 }, // Found @0xffb473f0, levent 0x05
+//    { 0, KEY_UP              ,0x00004000 }, // Found @0xffb473fc, levent 0x04
+//    { 0, KEY_DISPLAY         ,0x00020000 }, // Found @0xffb47420, levent 0x0a
+//    { 0, KEY_MENU            ,0x00040000 }, // Found @0xffb4742c, levent 0x09
+//    { 2, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffb474b0, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb474b0, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffb474a4, levent 0x00
 //    { 0, 0, 0 }
 //};
 

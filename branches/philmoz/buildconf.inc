@@ -46,3 +46,9 @@ OPT_GEN_STUBS=1
 #!OPT_SYMBOLS=1
 # for people who won't use lang files at all / not done yet
 #!OPT_LANGUAGEINTERFACE=1
+
+# Override the value below to compile a different default language into
+# the core CHDK code. This will save memory by not loading both english and the
+# desired language.
+# Set the value to the language file name without extension - e.g. OPT_DEFAULT_LANG=russian
+#OPT_DEFAULT_LANG=

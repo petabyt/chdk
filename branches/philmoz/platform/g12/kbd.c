@@ -10,9 +10,9 @@ typedef struct {
 	long canonkey;
 } KeyMap;
 
-static long kbd_new_state[3];
-static long kbd_prev_state[3];
-static long kbd_mod_state[3];
+static long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static long last_kbd_key = 0;
 static int usb_power=0;
@@ -295,6 +295,10 @@ void my_kbd_read_keys()
 
 
 /****************/
+
+void kbd_set_alt_mode_key_mask(long key)
+{
+}
 
 void kbd_key_press(long key)
 {

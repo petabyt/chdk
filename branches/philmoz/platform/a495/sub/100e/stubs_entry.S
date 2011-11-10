@@ -2,9 +2,15 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R43 (DRYOS version 2.3, release #0043)
-// Firmware Ver GM1.00E
-// Canon PowerShot A495
+//   DRYOS R43 (DRYOS version 2.3, release #0043)
+//   Firmware Ver GM1.00E
+//   Canon PowerShot A495
+
+// Values for makefile.inc
+//   PLATFORMID = 12783 (0x31ef) // Found @ 0xfffe0130
+//   MAXRAMADDR = 0x01ffffff
+//   KEYSYS = d4a                // Found @ 0xffff1a2c
+//   NEED_ENCODED_DISKBOOT = 4   // Found @ 0xffff1a3c
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -39,7 +45,7 @@
 //DEF(full_screen_refresh                     ,0x00007370) // Found @0xffd7aa20,          stubs_min = 0x00007370 (0x7370)
 //DEF(canon_menu_active                       ,0x00002a3c) // Found @0xffc6a11c,          stubs_min = 0x00002a3c (0x2A38+4)
 //DEF(canon_shoot_menu_active                 ,0x000065b5) // Found @0xffd40144,          stubs_min = 0x000065b5 (0x000065b5)
-//DEF(playrec_mode                            ,0x00002798) // Found @0xffc5d8f4,          stubs_min = 0x00002798 (0x2794+0x4)
+//DEF(playrec_mode                            ,0x00002798) // Found @0xffc5d900,          stubs_min = 0x00002798 (0x2794+0x4)
 //DEF(zoom_status                             ,0x00009648) // Found @0xffe0d9ec,          stubs_min = 0x00009648 (0x00009648)
 //DEF(some_flag_for_af_scan                   ,0x00005848) // Found @0xffd0f144,          stubs_min = 0x00005848 (0x5848)
 
@@ -53,21 +59,22 @@
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00040000 // Found @0xffe84fec, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x00080000 // Found @0xffe84ff8, levent 0x902
+//#define USB_MASK            0x00080000 // Found @0xffe84ff8, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 2, KEY_RIGHT       ,0x00000004 }, // Found @0xffe84f8c, levent 0x07
-//    { 2, KEY_SHOOT_HALF  ,0x00000010 }, // Found @0xffe84f98, levent 0x00
-//    { 2, KEY_SHOOT_FULL  ,0x00000030 }, // Found @0xffe84fa4, levent 0x01
-//    { 2, KEY_ZOOM_OUT    ,0x00000040 }, // Found @0xffe84fb0, levent 0x03
-//    { 2, KEY_ZOOM_IN     ,0x00000080 }, // Found @0xffe84fbc, levent 0x02
-//    { 2, KEY_SET         ,0x00000100 }, // Found @0xffe84fc8, levent 0x08
-//    { 2, KEY_UP          ,0x00100000 }, // Found @0xffe85004, levent 0x04
-//    { 2, KEY_DOWN        ,0x00200000 }, // Found @0xffe85010, levent 0x05
-//    { 2, KEY_LEFT        ,0x00400000 }, // Found @0xffe8501c, levent 0x06
-//    { 2, KEY_MENU        ,0x01000000 }, // Found @0xffe85034, levent 0x09
+//    { 2, KEY_RIGHT           ,0x00000004 }, // Found @0xffe84f8c, levent 0x07
+//    { 2, KEY_ZOOM_OUT        ,0x00000040 }, // Found @0xffe84fb0, levent 0x03
+//    { 2, KEY_ZOOM_IN         ,0x00000080 }, // Found @0xffe84fbc, levent 0x02
+//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe84fc8, levent 0x08
+//    { 2, KEY_UP              ,0x00100000 }, // Found @0xffe85004, levent 0x04
+//    { 2, KEY_DOWN            ,0x00200000 }, // Found @0xffe85010, levent 0x05
+//    { 2, KEY_LEFT            ,0x00400000 }, // Found @0xffe8501c, levent 0x06
+//    { 2, KEY_MENU            ,0x01000000 }, // Found @0xffe85034, levent 0x09
+//    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe84fa4, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe84fa4, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xffe84f98, levent 0x00
 //    { 0, 0, 0 }
 //};
 

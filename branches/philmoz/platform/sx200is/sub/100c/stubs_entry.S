@@ -2,10 +2,14 @@
 #include "stubs_asm.h"
 
 // Camera info:
-// DRYOS R31 (DRYOS version 2.3, release #0031)
-// Firmware Ver GM1.00C
-// Possible corrupt firmware dump - file size to small for start address 0xff810000
-//   file size = 4.0MB, should be 7.9MB
+//   DRYOS R31 (DRYOS version 2.3, release #0031)
+//   Firmware Ver GM1.00C
+//   Possible corrupt firmware dump - file size to small for start address 0xff810000
+//     file size = 4.00MB, should be 7.94MB
+//   Could not find Camera name - possible corrupt firmware dump
+
+// Values for makefile.inc
+//   MAXRAMADDR = 0x03ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -28,7 +32,7 @@
 //DEF(movie_status                            ,0x000065c0) // Found @0xff937fd0,          stubs_min = 0x000065c0 (0x6588+0x38)
 //DEF(canon_menu_active                       ,0x00002f10) // Found @0xff874e3c,          stubs_min = 0x00002f10 (0x2F0C+4)
 //DEF(canon_shoot_menu_active                 ,0x0000786d) // Found @0xff97761c,          stubs_min = 0x0000786d (0x786C+1)
-//DEF(playrec_mode                            ,0x00002c70) // Found @0xff868014,          stubs_min = 0x00002c70 (0x2C6C+0x4)
+//DEF(playrec_mode                            ,0x00002c70) // Found @0xff868020,          stubs_min = 0x00002c70 (0x2C6C+0x4)
 //DEF(zoom_status                             ,0x0000b850) // Found @0xffa775d0,          stubs_min = 0x0000b850 (0xb850)
 //DEF(some_flag_for_af_scan                   ,0x00006af8) // Found @0xff93b340,          stubs_min = 0x00006af8 (0x6AF8)
 
@@ -42,20 +46,21 @@
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffafe514, levent 0x90a
 //#define SD_READONLY_IDX     2
-//#define USB_FLAG            0x00200000 // Found @0xffafe544, levent 0x902
+//#define USB_MASK            0x00200000 // Found @0xffafe544, levent 0x902
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 0, KEY_SHOOT_HALF  ,0x00000100 }, // Found @0xffafe40c, levent 0x00
-//    { 0, KEY_SHOOT_FULL  ,0x00000300 }, // Found @0xffafe418, levent 0x01
-//    { 1, KEY_UP          ,0x00000100 }, // Found @0xffafe4a8, levent 0x04
-//    { 1, KEY_LEFT        ,0x00000200 }, // Found @0xffafe4b4, levent 0x06
-//    { 1, KEY_SET         ,0x00000400 }, // Found @0xffafe4c0, levent 0x08
-//    { 1, KEY_MENU        ,0x00000800 }, // Found @0xffafe4cc, levent 0x09
-//    { 1, KEY_DOWN        ,0x00001000 }, // Found @0xffafe4d8, levent 0x05
-//    { 1, KEY_RIGHT       ,0x00002000 }, // Found @0xffafe4e4, levent 0x07
-//    { 1, KEY_DISPLAY     ,0x00008000 }, // Found @0xffafe4fc, levent 0x0a
+//    { 0, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffafe418, levent 0x01
+//    { 0, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xffafe418, levent 0x01
+//    { 0, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffafe40c, levent 0x00
+//    { 1, KEY_UP              ,0x00000100 }, // Found @0xffafe4a8, levent 0x04
+//    { 1, KEY_LEFT            ,0x00000200 }, // Found @0xffafe4b4, levent 0x06
+//    { 1, KEY_SET             ,0x00000400 }, // Found @0xffafe4c0, levent 0x08
+//    { 1, KEY_MENU            ,0x00000800 }, // Found @0xffafe4cc, levent 0x09
+//    { 1, KEY_DOWN            ,0x00001000 }, // Found @0xffafe4d8, levent 0x05
+//    { 1, KEY_RIGHT           ,0x00002000 }, // Found @0xffafe4e4, levent 0x07
+//    { 1, KEY_DISPLAY         ,0x00008000 }, // Found @0xffafe4fc, levent 0x0a
 //    { 0, 0, 0 }
 //};
 
