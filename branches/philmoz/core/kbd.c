@@ -58,7 +58,7 @@ static int nTxtbl[]={0,1,2,3,4,5,6};    // remote zoom steps (we need a distinct
 static int nTxtbl[]={0,11,25,41,64,86,105,128};
 #endif
 
-#if defined(CAMERA_sx30)
+#if defined(CAMERA_sx30) || defined(CAMERA_sx40hs)
 #define ZSTEP_TABLE_SIZE 11
 static int nTxtbl[]={0,20,40,60,80,100,120,140,160,180,200};
 #endif

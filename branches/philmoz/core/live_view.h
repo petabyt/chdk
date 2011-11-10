@@ -42,6 +42,8 @@ typedef struct {
     int palette_buffer_size;    // Size of palette data sent (in bytes)
 } lv_vid_info;
 
+#ifdef CAM_CHDK_PTP
 extern int live_view_data_handler(ptp_data *data, int flags, int arg2);
+#endif
 
 #endif // __LIVE_VIEW_H

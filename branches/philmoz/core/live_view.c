@@ -5,6 +5,8 @@
 #include "core.h"
 #include "live_view.h"
 
+#ifdef CAM_CHDK_PTP
+
 // PTP Live View functions
 
 // Function used to send core live view info back to client
@@ -113,3 +115,5 @@ int live_view_data_handler(ptp_data *data, int flags, int arg2)
 
     return 0;
 }
+
+#endif
