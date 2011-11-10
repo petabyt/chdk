@@ -63,6 +63,8 @@ long vid_get_bitmap_screen_height() { return 240; }
 long vid_get_bitmap_buffer_width() { return 960; }
 long vid_get_bitmap_buffer_height() { return 270; }
 
+int vid_get_viewport_buffer_width() { return 360; }
+
 int vid_get_viewport_width()
 {
 	// viewport width table for each image size
@@ -101,9 +103,17 @@ int vid_get_viewport_image_offset() {
 	return (vid_get_viewport_yoffset() * vid_get_viewport_buffer_width() + vid_get_viewport_xoffset()) * 3;
 }
 
+// viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
+// returns the byte offset to skip at the end of a viewport buffer row to get to the next row.
+int vid_get_viewport_row_offset() {
+	return (vid_get_viewport_buffer_width() - vid_get_viewport_width()) * 3;
+}
+
 // Functions for PTP Live View system
 
+int vid_get_viewport_xoffset_proper()           { return vid_get_viewport_xoffset() * 2; }
 int vid_get_viewport_yoffset_proper()           { return vid_get_viewport_yoffset(); }
+int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
 int vid_get_viewport_height_proper()            { return vid_get_viewport_height(); }
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }

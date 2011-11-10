@@ -186,7 +186,7 @@ void lens_set_zoom_point(long newpt)
         newpt = zoom_points-1;
     }
 
-#if defined(CAMERA_sx30) || defined(CAMERA_g12) || defined(CAMERA_sx130is)
+#if defined(CAMERA_sx30) || defined(CAMERA_sx40hs) || defined(CAMERA_g12) || defined(CAMERA_sx130is)
 	if (lens_get_zoom_point() != newpt)
 	{
 		// Get current digital zoom mode & state
