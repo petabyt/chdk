@@ -985,7 +985,7 @@ static void fselect_mpopup_cb(unsigned int actn) {
 }
 
 //-------------------------------------------------------------------
-static void exit_fselect()
+static void exit_fselect(char* file)
 {
     gui_fselect_free_data();
     gui_fselect_marked_free_data();
@@ -996,7 +996,7 @@ static void exit_fselect()
     }
     if (fselect_on_select) 
     {
-        fselect_on_select(selected_file);
+        fselect_on_select(file);
     }
     if (!set_key_redraw_mode)
     {
@@ -1082,7 +1082,7 @@ void gui_fselect_kbd_process() {
                     gui_fselect_redraw = 1;
                 } else  {
                     sprintf(selected_file, "%s/%s", current_dir, selected->name);
-                    exit_fselect();
+                    exit_fselect(selected_file);
                 }
             }
             break;
@@ -1103,7 +1103,8 @@ void gui_fselect_kbd_process() {
             }
             break;
         case KEY_MENU:
-            exit_fselect();
+            // just free resource. callback called with NULL ptr
+            exit_fselect(0);
             break;
     }
 }
