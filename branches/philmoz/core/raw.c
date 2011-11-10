@@ -454,17 +454,18 @@ void load_bad_pixels_list(const char* filename) {
 
 #if DNG_SUPPORT
 short* binary_list=NULL;
-int binary_count=0;
+int binary_count=-1;
 
 void load_bad_pixels_list_b(char* filename) {
     struct stat st;
     long filesize;
     void* ptr;
     FILE *fd;
-    binary_count=0;
+    binary_count=-1;
     if (stat(filename,&st)!=0) return;
     filesize=st.st_size;
-    if ((filesize==0) || (filesize%(2*sizeof(short))!=0)) return;
+    if (filesize%(2*sizeof(short)) != 0) return;
+	if (filesize == 0) { binary_count = 0; return; }	// Allow empty badpixel.bin file
     ptr=malloc(filesize);
     if (!ptr) return;
     fd=fopen(filename, "rb");
@@ -480,7 +481,7 @@ void load_bad_pixels_list_b(char* filename) {
 void unload_bad_pixels_list_b(void) {
     if (binary_list) free(binary_list);
     binary_list=NULL;
-    binary_count=0;
+    binary_count=-1;
 }
 
 void patch_bad_pixels_b(void) {
@@ -510,7 +511,7 @@ void unpatch_bad_pixels_b(void) {
 }
 */
 int badpixel_list_loaded_b(void) {
-    return binary_count;
+	return (binary_count >= 0) ? 1 : 0;
 }
 
 // -----------------------------------------------
