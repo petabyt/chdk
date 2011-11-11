@@ -169,7 +169,6 @@ long get_target_file_num() {
 void get_target_dir_name(char *out)
 {
 	extern void _GetImageFolder(char*,int,int,int);
-	//out[0] = 'A';
 	_GetImageFolder(out,get_file_next_counter(),0x400,time(NULL));
 }
 #else

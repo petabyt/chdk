@@ -29,12 +29,15 @@ void shutdown()
 	while(1);
 }
 
-#define LED_PR 0xC0220130	// Power LED
+#define LED_PR 0xC022C30C	// Power LED (@FF15B178 & @FF15B1CC)
 
-// TODO = this uses power LED, need to disable later (so power LED doesn't flicker)
 void debug_led(int state)
 {
- //*(int*)LED_PR=state ? 0x46 : 0x44;
+	// using power LED, which defaults to on
+	// for debugging turn LED off if state is 1 and on for state = 0
+	// leaves LED on at end of debugging
+    volatile long *p = (void*)LED_PR;
+    *p = (*p & 0xFFFFFFCF) | ((state) ? 0x00 : 0x20);
 }
 
 // SX40 has two 'lights' - Power LED, and AF assist lamp

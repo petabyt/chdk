@@ -21,7 +21,7 @@ void __attribute__((noreturn)) my_restart()
     copy_and_restart((void*)MEMISOSTART, (char*)blob_chdk_core, blob_chdk_core_size);
 }
 
-#define LED_PR 0xC022C000   // SX40HS @ 0xFF15B1F0
+#define LED_PR 0xC022C30C   // SX40HS @ 0xFF15B1F0
 
 
 static void __attribute__((noreturn)) shutdown()
@@ -35,7 +35,7 @@ static void __attribute__((noreturn)) shutdown()
          "MSR     CPSR_cf, R1\n"
          :::"r1","r0");
         
-    *p = 0x44;  // led off.
+    *p = *p & 0xFFFFFFCF;  // led off.
 
     while(1);
 }

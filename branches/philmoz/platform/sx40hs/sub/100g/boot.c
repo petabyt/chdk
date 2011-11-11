@@ -17,13 +17,14 @@ void JogDial_task_my(void);
 //	asm volatile (
 //"                STMFD   SP!, {R0-R5,LR}\n"
 //);
+//	volatile long *p=(void*)0xC022C30C;
 //	int i, j;
 //	for (j=0; j<n; j++)
 //	{
-//		*((volatile int *) 0xC0220130) = 0x46; // Turn on LED
+//		*p = (*p & 0xFFFFFFCF) | 0x20; // Turn on LED
 //		for (i=0; i<0x200000; i++) { asm volatile ( "nop\n" ); }
 //
-//		*((volatile int *) 0xC0220130) = 0x44; // Turn off LED
+//		*p = (*p & 0xFFFFFFCF);		 // Turn on LED
 //		for (i=0; i<0x200000; i++) { asm volatile ( "nop\n" ); }
 //	}
 //	for (i=0; i<0x900000; i++) { asm volatile ( "nop\n" ); }
@@ -49,23 +50,6 @@ void taskHook(context_t **context)
 	if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;
 	if(tcb->entry == (void*)task_ExpDrv)			tcb->entry = (void*)exp_drv_task;
 }
-
-/*---------------------------------------------------------------------
-  Memory Map:
-	0001900     MEMBASEADDR             start of data - used for initialized vars
-	00108B7                             end of inited data
-	00108B8                             start of bss - used for zeroed/uninited vars
-	018124B                             end of bss
-	018124C     MEMISOSTART             start of our data / bss
-
-	0400000                             raw buffers
-	8000000                             end of raw buffers
-
-	C0xxxxxx                            I/O
-
-	FF810000    ROMBASEADDR             start of rom
-	FFFFFFFF                            end of rom
-----------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------
 	boot()
