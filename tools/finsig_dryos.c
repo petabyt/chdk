@@ -2422,7 +2422,7 @@ void find_modemap(firmware *fw)
 								k = 0;
 								while ((*p != 0xFFFF) && (k < 50))
 								{
-									if ((*p < 8000) || (*p > 8999))
+									if (((fw->dryos_ver < 49) && ((*p < 8000) || (*p > 8999))) || ((fw->dryos_ver == 49) && ((*p < 4000) || (*p > 4999))))
 									{
 										osig *m = find_sig_val(modemap, *p);
 										if (!m)
