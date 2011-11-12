@@ -1302,9 +1302,9 @@ int __attribute__((weak)) switch_mode_usb(int mode)
 #ifdef CAM_CHDK_PTP
     if ( mode == 0 ) {
         _Rec2PB();
-        _set_control_event(0x80000902); // 0x10A5 ConnectUSBCable
+        _set_control_event(0x80000000|CAM_USB_EVENTID); // ConnectUSBCable 0x10A5 (0x10B3 in DryOS R49)
     } else if ( mode == 1 ) {
-        _set_control_event(0x902); // 0x10A6 DisconnectUSBCable
+        _set_control_event(CAM_USB_EVENTID); // DisconnectUSBCable 0x10A6 (0x10B4 in DryOS R49)
         _PB2Rec();
     } else return 0;
     return 1;

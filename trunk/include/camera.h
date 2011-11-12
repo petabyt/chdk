@@ -183,6 +183,8 @@
                                                 // defined then enable this use the better icons (from CHDK-DE). See gui_batt.c
                                                 // and gui_space.c.
 
+#define CAM_USB_EVENTID         0x902           // Levent ID for USB control. Changed to 0x202 in DryOS R49 so needs to be overridable.
+
 //----------------------------------------------------------
 // Override Default values for Camera if necessary
 //----------------------------------------------------------
