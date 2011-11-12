@@ -41,10 +41,10 @@ NHSTUB(kbd_p1_f_cont,               0xFF024E34)
 NSTUB(AllocateUncacheableMemory               ,0xFF02BE60)
 
 //Fixed errors in compiler
-STUB(FF057C98)
-STUB(FF18D0EC)
-STUB(FF0578F0)
-STUB(FF00FD34)
+//STUB(FF057C98)
+//STUB(FF18D0EC)
+//STUB(FF0578F0)
+//STUB(FF00FD34)
 STUB(FF057EBC)
 
 //movierec.c

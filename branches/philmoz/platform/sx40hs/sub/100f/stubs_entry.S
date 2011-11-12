@@ -5,12 +5,15 @@
 //   DRYOS R49 (DRYOS version 2.3, release #0049)
 //   Firmware Ver GM1.00F
 //   Canon PowerShot SX40 HS
-//   PLATFORMID = 12856 (0x3238)
+
+// Values for makefile.inc
+//   PLATFORMID = 12856 (0x3238) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff
+//   KEYSYS = d4c                // Found @ 0xffff3b48
+//   NEED_ENCODED_DISKBOOT = 7   // Found @ 0xffff3b58
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(AllocateUncacheableMemory             ,0xff02bea0) //112        *** != 0xff02be60
 //NSTUB(FreeUncacheableMemory                 ,0xff02bea0) //112        *** != 0x00000000
 //NSTUB(_log                                  ,0xff430340) //111        *** != 0x00000000
 //NSTUB(_log10                                ,0xff430880) //112        *** != 0x00000000
@@ -21,20 +24,7 @@ NSTUB(reboot_fw_update                        ,0xff33ee24) //  6 96%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff09bd3c -> ff0985bc -> ff2047c4 -> ff36a8ec -> ff607d14
-// Mode 16937 in firmware but not in current modemap
-// Mode 16939 in firmware but not in current modemap
-// Mode  2629 in firmware but not in current modemap
-// Mode  4152 in firmware but not in current modemap
-// Mode  4153 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_VIDEO_STD            2622
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_SWAP       8735
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_ACCENT     8734
-// Current modemap entry not found in firmware - MODE_SCN_POSTER_EFFECT    8744
-// Current modemap entry not found in firmware - MODE_SCN_SUPER_VIVID      8743
-// Current modemap entry not found in firmware - MODE_SCN_MONOCHROME       8755
-// Current modemap entry not found in firmware - MODE_SCN_TOY_CAMERA       8752
-// Current modemap entry not found in firmware - MODE_SCN_MINIATURE        8749
-// Current modemap entry not found in firmware - MODE_SCN_FISHEYE          8748
+// No problems found with modemap table.
 
 // Values below go in 'stubs_min.S':
 //DEF(physw_status                            ,0x00037548) // Found @0xff024dd8,          stubs_min = 0x00037548 (0x00037548)
@@ -45,6 +35,7 @@ NSTUB(reboot_fw_update                        ,0xff33ee24) //  6 96%
 //DEF(full_screen_refresh                     ,0x0000c2d8) // Found @0xff2917e4,          stubs_min = 0x0000c2d8 (0x0000c2d8)
 //DEF(canon_menu_active                       ,0x000034f0) // Found @0xff091b6c,          stubs_min = 0x000034f0 (0x34EC+4)
 //DEF(canon_shoot_menu_active                 ,0x0000ab6d) // Found @0xff22a708,          stubs_min = 0x0000ab6d (0x0000ab6d)
+//DEF(playrec_mode                            ,0x00003214) // Found @0xff083504,          stubs_min = 0x00003214 (0x00003214)
 //DEF(zoom_status                             ,0x000111f8) // Found @0xff36e6dc,          stubs_min = 0x000111f8 (0x000111f8)
 
 // Values below go in 'lib.c':
@@ -57,20 +48,21 @@ NSTUB(reboot_fw_update                        ,0xff33ee24) //  6 96%
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00000002 // Found @0xff434b6c, levent 0x20a
 //#define SD_READONLY_IDX     1
-//#define USB_FLAG            0x40000000 // Found @0xff434be4, levent 0x202
+//#define USB_MASK            0x40000000 // Found @0xff434be4, levent 0x202
 //#define USB_IDX             2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 0, KEY_UP          ,0x00000400 }, // Found @0xff434aec, levent 0x04
-//    { 0, KEY_DOWN        ,0x00000800 }, // Found @0xff434af4, levent 0x05
-//    { 0, KEY_LEFT        ,0x00001000 }, // Found @0xff434afc, levent 0x06
-//    { 0, KEY_RIGHT       ,0x00002000 }, // Found @0xff434b04, levent 0x07
-//    { 0, KEY_SET         ,0x00004000 }, // Found @0xff434b0c, levent 0x08
-//    { 0, KEY_DISPLAY     ,0x00020000 }, // Found @0xff434b24, levent 0x0a
-//    { 0, KEY_MENU        ,0x00040000 }, // Found @0xff434b2c, levent 0x09
-//    { 2, KEY_SHOOT_HALF  ,0x00004000 }, // Found @0xff434ba4, levent 0x00
-//    { 2, KEY_SHOOT_FULL  ,0x0000c000 }, // Found @0xff434bac, levent 0x01
+//    { 0, KEY_UP              ,0x00000400 }, // Found @0xff434aec, levent 0x04
+//    { 0, KEY_DOWN            ,0x00000800 }, // Found @0xff434af4, levent 0x05
+//    { 0, KEY_LEFT            ,0x00001000 }, // Found @0xff434afc, levent 0x06
+//    { 0, KEY_RIGHT           ,0x00002000 }, // Found @0xff434b04, levent 0x07
+//    { 0, KEY_SET             ,0x00004000 }, // Found @0xff434b0c, levent 0x08
+//    { 0, KEY_DISPLAY         ,0x00020000 }, // Found @0xff434b24, levent 0x0a
+//    { 0, KEY_MENU            ,0x00040000 }, // Found @0xff434b2c, levent 0x09
+//    { 2, KEY_SHOOT_FULL      ,0x0000c000 }, // Found @0xff434bac, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00008000 }, // Found @0xff434bac, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00004000 }, // Found @0xff434ba4, levent 0x00
 //    { 0, 0, 0 }
 //};
 
@@ -86,6 +78,7 @@ NSTUB(reboot_fw_update                        ,0xff33ee24) //  6 96%
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
 NSTUB(AllocateMemory                          ,0xff359768) //101
+//NSTUB(AllocateUncacheableMemory             ,0xff02be60) //112            == 0xff02be60
 NSTUB(Close                                   ,0xff0275e4) //101
 NSTUB(CreateTask                              ,0xff00eaf0) //101
 NSTUB(DebugAssert                             ,0xff00edc8) //111

@@ -120,6 +120,8 @@ void __attribute__((naked,noinline)) capt_seq_task(){
 	        "BL      sub_FF07CD70\n"
 			"BL      shooting_expo_param_override\n"    //+->
 	        "BL      sub_FF0795B8\n"
+	        
+	        
 	        //"LDR     R0, [R4,#0x28]\n"
 	        //"CMP     R0, #0\n"
 	        //"BLNE    sub_FF1D57C4\n"
@@ -1119,8 +1121,7 @@ void __attribute__((naked,noinline)) sub_FF0C8980_my(){
 	);
 }
 
-void __attribute__((naked,noinline)) sub_FF0B76AC_my(){ //SX40
-
+void __attribute__((naked,noinline)) sub_FF0B76AC_my(){ 
 	asm volatile(
 	        "STMFD   SP!, {R4-R6,LR}\n"
 	        "LDR     R5, =0x4898\n"
@@ -1138,8 +1139,8 @@ void __attribute__((naked,noinline)) sub_FF0B76AC_my(){ //SX40
 	        "STRH    R4, [R5,#2]\n"
 	        "BLEQ    sub_FF00EDC8\n"
 	        "MOV     R0, R4\n"
-	        "BL      sub_FF297C28\n"
-			"BL      apex2us\n"
+	        //"BL      sub_FF297C28\n"
+			"BL      apex2us\n" // +++
 	        "MOV     R4, R0\n"
 	        "BL      sub_FF12CD1C\n"
 	        "MOV     R0, R4\n"

@@ -153,13 +153,11 @@ void __attribute__((naked,noinline)) sub_FF000364_my() {
    *(int*)0x193C=(int)taskHook;
 
 
-
-#if 0
- if ((*(int*) 0xC022F000+0x28) & 1) //@FF00FE24
-		*(int*)(0x2628+0x8) = 0x200000;  //"PhySwConfig.c" SX40 FF0571D4
+ if ( (*(int*)0xC022F48C & 0x800000) )
+		*(int*)(0x2628+0x8) = 0x200000;  // Playmode "PhySwConfig.c" SX40 FF0571D4
 	else
-		*(int*)(0x2628+0x8) = 0x100000;
-#endif
+		*(int*)(0x2628+0x8) = 0x100000; // Shootingmode
+
    asm volatile (
 "loc_FF000364:\n"
         "LDR     R0, =0xFF0003DC\n"
@@ -358,7 +356,7 @@ void __attribute__((naked,noinline)) sub_FF00FDB8_my() {
         "MOV     R2, R7\n"
         "MOV     R1, R5\n"
         "MOV     R0, R4\n"
-        "BL      sub_FF024B18\n"
+        //"BL      sub_FF024B18\n" // StartUp mode detection
         "BL      sub_FF024B14\n"
         "BL      sub_FF02B6BC\n"
         "LDR     R1, =0x5CE000\n"
