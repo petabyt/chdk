@@ -11,6 +11,9 @@
 const int cam_DefaultCropSize[]={CAM_JPEG_WIDTH, CAM_JPEG_HEIGHT};    // jpeg size
 const int cam_ActiveArea[]={CAM_ACTIVE_AREA_Y1, CAM_ACTIVE_AREA_X1, CAM_ACTIVE_AREA_Y2, CAM_ACTIVE_AREA_X2};
 const int cam_DefaultCropOrigin[]={CAM_DEFAULT_CROP_ORIGIN_W,CAM_DEFAULT_CROP_ORIGIN_H};
+#if defined(CAM_DNG_LENS_INFO)
+const int cam_lensinfo[] = CAM_DNG_LENS_INFO;
+#endif
 #if defined(CAM_DNG_EXPOSURE_BIAS)
 const int cam_BaselineExposure[]={CAM_DNG_EXPOSURE_BIAS};
 #else
@@ -63,6 +66,9 @@ struct dir_entry IFD0[]={
  {0xC62B, T_RATIONAL,  1,  (int)cam_BaselineNoise},
  {0xC62C, T_RATIONAL,  1,  (int)cam_BaselineSharpness},
  {0xC62E, T_RATIONAL,  1,  (int)cam_LinearResponseLimit},
+#if defined(CAM_DNG_LENS_INFO)
+ {0xC630, T_RATIONAL,  4,  (int)cam_lensinfo},
+#endif
  {0xC65A, T_SHORT,     1,  cam_CalibrationIlluminant1}, 
  {0}
 };
