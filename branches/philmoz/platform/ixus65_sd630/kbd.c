@@ -356,3 +356,9 @@ static KeyMap keymap[] = {
 	{ KEY_DUMMY	, 0x00001000 },
 	{ 0, 0 }
 };
+
+
+void kbd_set_alt_mode_key_mask(long key)
+{
+	return;
+}

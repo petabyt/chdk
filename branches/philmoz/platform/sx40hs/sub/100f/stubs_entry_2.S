@@ -2,7 +2,7 @@
 #define NULL_SUB 0xFF161ED8
 
 // Override stubs_entry.S
-NHSTUB(Restart,						0xFF02D6A0) // SX40
+
 NHSTUB(SetFileAttributes, 			NULL_SUB)
 NHSTUB(kbd_pwr_off,					NULL_SUB)
 NHSTUB(kbd_pwr_on,					NULL_SUB)
@@ -29,22 +29,11 @@ NHSTUB(ufree, 						0xFF02BEA0)
 NHSTUB(GetLogToFile,                0xFF1D9B04)
 NHSTUB(EraseLogSector,              0xFF1D9B40)
 
-NHSTUB(FreeUncacheableMemory,                   NULL_SUB)
-NHSTUB(_log,                       NULL_SUB)
-NHSTUB(_log10,                   NULL_SUB)
-NHSTUB(free,                       NULL_SUB)
 
-// Signature finder detected this functions wrong, so here are the corrections:
-NHSTUB(malloc,                      0xFF00420C)
-NHSTUB(kbd_p1_f_cont,               0xFF024E34)
 
-NSTUB(AllocateUncacheableMemory               ,0xFF02BE60)
 
 //Fixed errors in compiler
-//STUB(FF057C98)
-//STUB(FF18D0EC)
-//STUB(FF0578F0)
-//STUB(FF00FD34)
+
 STUB(FF057EBC)
 
 //movierec.c
@@ -57,4 +46,3 @@ STUB(FF077E68)
 STUB(FF077ECC)
 STUB(FF075A1C)
 STUB(FF0759C0)
-

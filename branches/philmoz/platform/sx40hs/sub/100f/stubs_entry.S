@@ -14,10 +14,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(FreeUncacheableMemory                 ,0xff02bea0) //112        *** != 0x00000000
-//NSTUB(_log                                  ,0xff430340) //111        *** != 0x00000000
-//NSTUB(_log10                                ,0xff430880) //112        *** != 0x00000000
-//NSTUB(free                                  ,0xff004264) //112        *** != 0x00000000
 // ERROR: kbd_pwr_off is not found.                        //--- ---    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 NSTUB(reboot_fw_update                        ,0xff33ee24) //  6 96%
@@ -78,7 +74,7 @@ NSTUB(reboot_fw_update                        ,0xff33ee24) //  6 96%
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
 NSTUB(AllocateMemory                          ,0xff359768) //101
-//NSTUB(AllocateUncacheableMemory             ,0xff02be60) //112            == 0xff02be60
+NSTUB(AllocateUncacheableMemory               ,0xff02be60) //112
 NSTUB(Close                                   ,0xff0275e4) //101
 NSTUB(CreateTask                              ,0xff00eaf0) //101
 NSTUB(DebugAssert                             ,0xff00edc8) //111
@@ -97,6 +93,7 @@ NSTUB(Fgets_Fut                               ,0xff0271cc) //  6
 NSTUB(Fopen_Fut                               ,0xff027038) //101
 NSTUB(Fread_Fut                               ,0xff027124) //101
 NSTUB(FreeMemory                              ,0xff359760) //101
+NSTUB(FreeUncacheableMemory                   ,0xff02bea0) //112
 NSTUB(Fseek_Fut                               ,0xff027218) //101
 NSTUB(Fwrite_Fut                              ,0xff027178) //101
 NSTUB(GetBatteryTemperature                   ,0xff05bbe8) //102
@@ -143,7 +140,7 @@ NSTUB(Rec2PB                                  ,0xff099b1c) //104
 NSTUB(RefreshPhysicalScreen                   ,0xff0b1a24) //104
 NSTUB(Remove                                  ,0xff027758) //  6
 NSTUB(RenameFile_Fut                          ,0xff026e68) //  6
-//NSTUB(Restart                               ,0xff02d6a0) //106            == 0xff02d6a0
+NSTUB(Restart                                 ,0xff02d6a0) //106
 NSTUB(ScreenLock                              ,0xff0b2c50) //  4
 NSTUB(ScreenUnlock                            ,0xff0b2cb4) //  3
 NSTUB(SetAE_ShutterSpeed                      ,0xff3dfcb4) //102
@@ -164,6 +161,8 @@ NSTUB(UnlockMainPower                         ,0xff098108) //103
 NSTUB(VbattGet                                ,0xff022364) //101
 NSTUB(Write                                   ,0xff027638) //101
 NSTUB(WriteSDCard                             ,0xff1ab470) //108
+NSTUB(_log                                    ,0xff430340) //111
+NSTUB(_log10                                  ,0xff430880) //112
 NSTUB(_pow                                    ,0xff4309f8) //114
 NSTUB(_sqrt                                   ,0xff43261c) //  6
 NSTUB(add_ptp_handler                         ,0xff2dfff4) //  6
@@ -172,13 +171,14 @@ NSTUB(close                                   ,0xff00abd0) //  6
 NSTUB(closedir                                ,0xff33952c) //  4
 NSTUB(err_init_task                           ,0xff00602c) //  4
 NSTUB(exmem_alloc                             ,0xff08b988) //101
+NSTUB(free                                    ,0xff004264) //112
 NSTUB(kbd_p1_f                                ,0xff024e28) //109
-//NSTUB(kbd_p1_f_cont                         ,0xff024e34) //109            == 0xff024e34
+NSTUB(kbd_p1_f_cont                           ,0xff024e34) //109
 NSTUB(kbd_p2_f                                ,0xff024600) //109
 NSTUB(kbd_read_keys                           ,0xff024dd8) //109
 NSTUB(kbd_read_keys_r2                        ,0xff05730c) //109
 NSTUB(lseek                                   ,0xff027800) //101
-//NSTUB(malloc                                ,0xff00420c) //112            == 0xff00420c
+NSTUB(malloc                                  ,0xff00420c) //112
 NSTUB(memcmp                                  ,0xff010a48) //101
 NSTUB(memcpy                                  ,0xff03169c) //101
 NSTUB(memset                                  ,0xff295c60) //101

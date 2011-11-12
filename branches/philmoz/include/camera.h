@@ -147,6 +147,16 @@
                                                 // IXUS 310 HS bad pixels tend to be grouped into vertical lines of 1-4 pixels
                                                 // This reduces the file size by approx 45%
 
+#undef  CAM_DNG_LENS_INFO                       // Define this to include camera lens information in DNG files
+                                                // Value should be an array of 4 DNG 'RATIONAL' values specifying
+                                                //   - min focal length in mm
+                                                //   - max focal length in mm
+                                                //   - max aperture at min focal length
+                                                //   - max aperture at max focal length
+                                                // E.G - SX30 = { 43,10, 1505,10, 27,10, 58,10 }
+                                                //            = 4.3 - 150.5mm, f/2.7 - f.5.8
+                                                // Each pair of integers is one 'RATIONAL' value (numerator,denominator)
+
 #undef  PARAM_CAMERA_NAME                        // parameter number for GetParameterData to get camera name
 
 
@@ -173,7 +183,7 @@
                                                 // defined then enable this use the better icons (from CHDK-DE). See gui_batt.c
                                                 // and gui_space.c.
 
-#define	CAM_USB_EVENTID			0x902			// Levent ID for USB control. Changed to 0x202 in DryOS R49 so needs to be overridable.
+#define CAM_USB_EVENTID         0x902           // Levent ID for USB control. Changed to 0x202 in DryOS R49 so needs to be overridable.
 
 //----------------------------------------------------------
 // Override Default values for Camera if necessary

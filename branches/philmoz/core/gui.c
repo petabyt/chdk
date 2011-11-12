@@ -1247,6 +1247,9 @@ const char* gui_alt_mode_button_enum(int change, int arg) {
 #elif defined(CAMERA_g11)
     static const char* names[]={ "Print", "Disp",  "AE Lock", "Jump" };
     static const int keys[]={ KEY_PRINT, KEY_DISPLAY, KEY_MICROPHONE, KEY_METERING};	
+#elif defined(CAMERA_ixus65_sd630)
+    static const char* names[]={ "Print", "Disp"};
+    static const int keys[]={ KEY_PRINT, KEY_DISPLAY };
 #elif defined(CAMERA_a650)
     static const char* names[]={ "Print", "ISO"};
     static const int keys[]={ KEY_PRINT, KEY_ISO };
