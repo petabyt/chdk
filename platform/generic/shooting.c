@@ -299,7 +299,11 @@ short shooting_get_iso_market_base()
  //return iso_market_base;
   if (iso_market_base==0) {
       if (ISO_MIN_VALUE==50) iso_market_base=50;
+#if defined(CAMERA_sx40hs)
+      else iso_market_base=200;
+#else
       else iso_market_base=100;
+#endif
      }
   return iso_market_base;
 }
