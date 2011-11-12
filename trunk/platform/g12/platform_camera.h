@@ -74,14 +74,9 @@
 
 	#define	CAM_DNG_EXPOSURE_BIAS		0,1		// Specify DNG exposure bias value to 0 (to override default of -0.5 in the dng.c code)
 
-	//need fixing *****************************************************
+    #define	CAM_DNG_LENS_INFO           { 61,10, 305,10, 28,10, 45,10 }	// See comments in camera.h
+
     #define cam_CalibrationIlluminant1	17		// Standard Light A
-/*
-    #define CAM_COLORMATRIX1                               \
-      14134, 100000, -5576, 100000, -1527, 100000, \
-      -1991, 100000, 10719, 100000,  1273, 100000, \
-      -1158, 100000,  1929, 100000,  3581, 100000
-*/
     // From dcraw
     #define CAM_COLORMATRIX1                       \
       13244, 10000, -5501, 10000, -1248, 10000, \
