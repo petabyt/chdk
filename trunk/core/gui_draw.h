@@ -625,7 +625,7 @@
 
 #elif CAM_BITMAP_PALETTE==12
 
-// Used by :- G12, SX30, IXUS310_ELPH500HS
+// Used by :- G12, SX30, SX40HS, IXUS310_ELPH500HS
 
 // Default Canon colors
 #define COLOR_WHITE         0x01
