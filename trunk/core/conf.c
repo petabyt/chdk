@@ -810,6 +810,12 @@ int is_raw_enabled()
 #ifdef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE
         (shooting_get_prop(PROPCASE_RESOLUTION)==7) ||                                      // True if shooting resolution is 'low light'
 #endif
+#if defined(CAM_DISABLE_RAW_IN_HQ_BURST)
+        (m == MODE_SCN_HIGHSPEED_BURST) ||                                                  // True if HQ Burst mode (SX40HS corrupts JPEG images if RAW enabled in this mode)
+#endif
+#if defined(CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN)
+        (m == MODE_NIGHT_SCENE) ||                                                          // True if HandHeld Night Scene (SX40HS corrupts JPEG images if RAW enabled in this mode)
+#endif
         (shooting_get_prop(PROPCASE_RESOLUTION)==5) ||                                      // True if shooting resolution is ??? (what is mode 5)
         ((m==MODE_SPORTS) && conf.save_raw_in_sports) ||                                    // True if sports mode and save_raw_in_sports is disabled
         ((m==MODE_AUTO) && conf.save_raw_in_auto) ||                                        // True if auto mode and save_raw_in_auto is disabled

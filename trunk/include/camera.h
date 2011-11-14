@@ -174,7 +174,9 @@
 
 #undef CAM_AV_OVERRIDE_IRIS_FIX                  // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
 
-#undef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE         // For cameras with 'low light' mode that does now work with raw define this
+#undef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE         // For cameras with 'low light' mode that does not work with raw define this
+#undef CAM_DISABLE_RAW_IN_HQ_BURST               // For cameras with 'HQ Burst' mode that does not work with raw define this
+#undef CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN     // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
 
 #undef CAM_LOAD_CUSTOM_COLORS                   // Define to enable loading CHDK custom colors into the camera color palette
                                                 // requires load_chdk_palette() and vid_get_bitmap_active_palette() to be defined
