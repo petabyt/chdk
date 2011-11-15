@@ -62,12 +62,9 @@
     #define CAM_ACTIVE_AREA_Y2          2764     // XXX
 
     #undef CAM_SENSOR_BITS_PER_PIXEL
-    #undef CAM_WHITE_LEVEL
-    #undef CAM_BLACK_LEVEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
-    #define CAM_WHITE_LEVEL             ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1) // XXX
-    #define CAM_BLACK_LEVEL             127 // XXX
 
+    #define CAM_DNG_LENS_INFO               { 50,10, 200,10, 28,10, 58,10 } // See comments in camera.h
     #define cam_CFAPattern              0x02010100 // Red  Green  Green  Blue
     #define CAM_COLORMATRIX1                               \
       827547, 1000000, -290458, 1000000, -126086, 1000000, \

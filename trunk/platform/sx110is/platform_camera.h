@@ -46,12 +46,12 @@
     #undef  CAM_USE_ZOOM_FOR_MF
 	#undef CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
-	#undef CAM_WHITE_LEVEL
-    #define CAM_WHITE_LEVEL             ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
 	// black level set to 128 per reports on the forum
     #undef  CAM_BLACK_LEVEL
     #define CAM_BLACK_LEVEL             128
     #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
+
+    #define CAM_DNG_LENS_INFO               { 60,10, 600,10, 28,10, 43,10 } // See comments in camera.h
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
       #define cam_CalibrationIlluminant1 1 // Daylight
       #define CAM_JPEG_WIDTH  3456 

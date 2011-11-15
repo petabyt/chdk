@@ -43,6 +43,9 @@
 	#define CAM_CHDK_HAS_EXT_VIDEO_MENU		1//
 	#undef  CAM_AF_SCAN_DURING_VIDEO_RECORD // :( too complex to fix
 	#define CAM_EV_IN_VIDEO				1 //but not very reliable...
+    
+    #define CAM_DNG_LENS_INFO               { 54,10, 173,10, 28,10, 51,10 } // See comments in camera.h
+    
 	// pattern
 	#define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
 	// color

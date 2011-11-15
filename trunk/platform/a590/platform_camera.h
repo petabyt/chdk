@@ -37,6 +37,8 @@
 
 #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
 //#define CAM_EV_IN_VIDEO             1      // not working on 101b!!!
+
+    #define CAM_DNG_LENS_INFO               { 58,10, 232,10, 26,10, 55,10 } // See comments in camera.h
 // pattern
 #define cam_CFAPattern 0x01000201 // Green  Blue  Red  Green 
 // color                                                      

@@ -35,6 +35,8 @@
     #define CAM_SHOW_OSD_IN_SHOOT_MENU  1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 2
 
+    #define CAM_DNG_LENS_INFO               { 58,10, 232,10, 28,10, 55,10 } // See comments in camera.h
+
  // Warning! DNG4PS2 has both ixus800 and sd700 support with different CFA patterns and color matrices. 
  // Used settings for IXUS800
 

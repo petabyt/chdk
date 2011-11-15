@@ -39,6 +39,8 @@
 //    #define CAM_CONSOLE_LOG_ENABLED     1  //100a won't compile if this is defined ("undefined reference to `_iosDevFind'")
     #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
     #undef  CAM_HAS_IS
+
+    #define CAM_DNG_LENS_INFO               { 58,10, 174,10, 28,10, 49,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
     // color

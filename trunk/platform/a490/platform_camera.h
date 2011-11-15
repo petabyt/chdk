@@ -48,6 +48,7 @@
     #undef CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              8
 
+    #define CAM_DNG_LENS_INFO               { 66,10, 216,10, 30,10, 58,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern                  0x02010100 // Red  Green  Green  Blue
     // color
@@ -69,11 +70,7 @@
     // camera name
     #define PARAM_CAMERA_NAME               4   // parameter number for GetParameterData to get camera name
     #undef  CAM_SENSOR_BITS_PER_PIXEL
-    #undef  CAM_WHITE_LEVEL
-    #undef  CAM_BLACK_LEVEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
-    #define CAM_WHITE_LEVEL                 ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
-    #define CAM_BLACK_LEVEL                 127
 
 	#define CAM_STARTUP_CRASH_FILE_OPEN_FIX    1     // enable workaround for camera crash at startup when opening the conf / font files
                                                     // see http://chdk.setepontos.com/index.php?topic=6179.0

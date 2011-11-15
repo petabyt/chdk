@@ -41,6 +41,8 @@
 	#undef  CAM_UNCACHED_BIT			// shut up compiler
 	#define CAM_UNCACHED_BIT			0x40000000
 
+
+    #define CAM_DNG_LENS_INFO               { 50,10, 100,10, 28,10, 57,10 } // See comments in camera.h
 	// pattern
 	#define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
 	// color

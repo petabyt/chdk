@@ -34,6 +34,7 @@
     #define CAM_EV_IN_VIDEO             1
     #define CAM_EXT_TV_RANGE            1
 
+    #define CAM_DNG_LENS_INFO               { 73,10, 292,10, 28,10, 41,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
     // color

@@ -43,11 +43,9 @@
     // ixus870_sd880 which should have same sensor..
     ////////////////////////////////
     #undef CAM_SENSOR_BITS_PER_PIXEL
-    #undef CAM_WHITE_LEVEL
-    #undef CAM_BLACK_LEVEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
-    #define CAM_WHITE_LEVEL             ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
-    #define CAM_BLACK_LEVEL             127
+
+    #define CAM_DNG_LENS_INFO               { 64,10, 384,10, 32,10, 59,10 } // See comments in camera.h
 
     #define cam_CFAPattern              0x02010100 // Red  Green  Green  Blue
     #define CAM_COLORMATRIX1                               \

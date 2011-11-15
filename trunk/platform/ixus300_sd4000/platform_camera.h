@@ -46,7 +46,6 @@
     //#define CAM_EV_IN_VIDEO             1
     #define CAM_VIDEO_CONTROL           1
     #define CAM_VIDEO_QUALITY_ONLY      1           // ToDo: Video Bitrate override cause crash
-    #define DNG_SUPPORT                 1
     #define CAM_HAS_JOGDIAL             1
     #define CAM_FEATURE_FEATHER         1
     //#define CAM_SHOW_OSD_IN_SHOOT_MENU  1         // not required anymore, workaround to force CHDK to display OSD in record mode while canon_shoot_menu_active was wrong
@@ -58,6 +57,8 @@
     #define CAM_CHDK_PTP                1           // OK
 
     #define PARAM_CAMERA_NAME           4           // OK
+
+    #define CAM_DNG_LENS_INFO               { 49,10, 186,10, 20,10, 53,10 } // See comments in camera.h
 
     #define cam_CFAPattern 0x02010100               // RAW/DNG: Red  Green  Green  Blue, OK
 

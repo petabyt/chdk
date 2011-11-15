@@ -68,6 +68,7 @@
     #undef CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
 
+    #define CAM_DNG_LENS_INFO               { 59,10, 179,10, 32,10, 58,10 } // See comments in camera.h
     // pattern
     //RealRom:FFA99FB4                    ADR     R0, aObRG1G2BLdLdLd ; "\n  OB : (R, G1, G2, B) = (%ld, %ld, %ld"...
     #define cam_CFAPattern              0x02010100		// Red  Green  Green  Blue

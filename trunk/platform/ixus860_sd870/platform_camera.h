@@ -36,6 +36,8 @@
   	#define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
     #undef  CAM_CAN_MUTE_MICROPHONE
     #undef  CAM_VIDEO_CONTROL
+
+    #define CAM_DNG_LENS_INFO               { 46,10, 173,10, 28,10, 58,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern 0x01000201 // Green  Blue  Red  Green
     // color

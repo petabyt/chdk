@@ -31,17 +31,16 @@
     #define CAM_RAW_ROWS                2772
     #define CAM_JPEG_WIDTH  3648
     #define CAM_JPEG_HEIGHT 2736
-    #define DNG_SUPPORT                 1
+
     #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
 
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER           1
     #undef  CAM_SENSOR_BITS_PER_PIXEL
-    #undef  CAM_WHITE_LEVEL
-    #undef  CAM_BLACK_LEVEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
-    #define CAM_WHITE_LEVEL             ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1) //00000fff
-    #define CAM_BLACK_LEVEL             127
+
+    #define CAM_DNG_LENS_INFO               { 62,10, 248,10, 27,10, 56,10 } // See comments in camera.h
+
     #define cam_CFAPattern              0x01000201 // Green Blue Red Green
     #define CAM_COLORMATRIX1             \
       587459, 1000000, -200837, 1000000,  -96560, 1000000, \
