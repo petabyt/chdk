@@ -48,7 +48,7 @@
     #define CAM_HAS_ND_FILTER           1
     #define CAM_CAN_SD_OVERRIDE         1
 
-    #define DNG_SUPPORT                 1
+    #define CAM_DNG_LENS_INFO               { 50,10, 200,10, 28,10, 59,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
     // color

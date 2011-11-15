@@ -37,6 +37,7 @@
     #define CAM_SHOW_OSD_IN_SHOOT_MENU  1
     #define CAM_EXT_TV_RANGE            1
 
+    #define CAM_DNG_LENS_INFO               { 66,10, 330,10, 32,10, 57,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
 
@@ -60,11 +61,7 @@
 
     // 12 bit support
     #undef  CAM_SENSOR_BITS_PER_PIXEL
-    #undef  CAM_WHITE_LEVEL
-    #undef  CAM_BLACK_LEVEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
-    #define CAM_WHITE_LEVEL             ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
-    #define CAM_BLACK_LEVEL             127
     #define  CAM_CHDK_PTP               1 // include CHDK PTP support
 //----------------------------------------------------------
 

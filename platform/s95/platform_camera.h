@@ -60,7 +60,7 @@
     #undef EDGE_HMARGIN
     #define EDGE_HMARGIN 28
 
-    #define DNG_SUPPORT    1
+    #define CAM_DNG_LENS_INFO               { 60,10, 225,10, 20,10, 49,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
     // color

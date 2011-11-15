@@ -34,6 +34,8 @@
     #define CAM_SHOW_OSD_IN_SHOOT_MENU  1
     #undef  CAM_HAS_IS
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 2
+
+    #define CAM_DNG_LENS_INFO               { 58,10, 174,10, 28,10, 49,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
     // color

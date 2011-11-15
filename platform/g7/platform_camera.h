@@ -31,6 +31,8 @@
     #define CAM_HAS_ND_FILTER           1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_HAS_JOGDIAL             1
+
+    #define CAM_DNG_LENS_INFO               { 74,10, 444,10, 28,10, 48,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
     // color

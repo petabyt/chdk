@@ -45,7 +45,8 @@
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_UNCACHED_BIT  // shut up compiler
     #define CAM_UNCACHED_BIT    0x40000000
-    #define DNG_SUPPORT                 1
+
+    #define CAM_DNG_LENS_INFO               { 50,10, 700,10, 31,10, 59,10 } // See comments in camera.h
     #define cam_CFAPattern  0x02010100
   
 	#define CAM_COLORMATRIX1	\

@@ -38,6 +38,8 @@
 	#define CAM_CAN_MUTE_MICROPHONE			1
 	#define CAM_AF_SCAN_DURING_VIDEO_RECORD	1
 	#define CAM_EV_IN_VIDEO					1
+
+    #define CAM_DNG_LENS_INFO               { 54,10, 216,10, 28,10, 58,10 } // See comments in camera.h
 	// pattern
 	#define cam_CFAPattern 0x01000201  // Green Blue Red Green
 	// color

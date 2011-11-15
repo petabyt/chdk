@@ -37,6 +37,8 @@
     #undef  CAM_HAS_IS
     #define CAM_MULTIPART              1 
     #undef CAM_SYNCH 
+
+    #define CAM_DNG_LENS_INFO               { 77,10, 231,10, 28,10, 49,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
     // color

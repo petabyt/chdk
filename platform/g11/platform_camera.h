@@ -63,6 +63,7 @@
     #undef EDGE_HMARGIN 
     #define EDGE_HMARGIN 28
 
+    #define CAM_DNG_LENS_INFO               { 61,10, 305,10, 28,10, 45,10 } // See comments in camera.h
 	/**** From SX200IS, ok for G11 ?*/
     // pattern
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue

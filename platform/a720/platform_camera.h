@@ -35,6 +35,7 @@
 // disabled for now, see http://chdk.setepontos.com/index.php?topic=6182.0
 //    #define CAM_EXT_TV_RANGE            1
 
+    #define CAM_DNG_LENS_INFO               { 58,10, 348,10, 28,10, 48,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern 0x01000201 // Green  Blue  Red  Green
     // color

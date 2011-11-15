@@ -52,8 +52,8 @@
 
     #undef  CAM_UNCACHED_BIT  // shut up compiler
     #define CAM_UNCACHED_BIT    0x40000000
-    #define DNG_SUPPORT                 1
 
+    #define CAM_DNG_LENS_INFO               { 63,10, 630,10, 34,10, 56,10 } // See comments in camera.h
     //#define cam_CFAPattern 0x01020001 // Green  red  blue  Green
 	#define cam_CFAPattern 0x01000201 // Green blue  red   Green
 	
@@ -84,11 +84,7 @@
     // camera name
     #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
-    #undef  CAM_WHITE_LEVEL
-    #undef  CAM_BLACK_LEVEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
-    #define CAM_WHITE_LEVEL             ((1<<CAM_SENSOR_BITS_PER_PIXEL)-16)
-    #define CAM_BLACK_LEVEL             110
 
     #define CAM_EXT_TV_RANGE            1
 

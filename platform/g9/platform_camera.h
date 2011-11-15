@@ -39,6 +39,8 @@
 	// camera name
 	#define PARAM_CAMERA_NAME					4	// parameter number for GetParameterData
 
+
+    #define CAM_DNG_LENS_INFO               { 74,10, 444,10, 28,10, 48,10 } // See comments in camera.h
 	// pattern
 	#define cam_CFAPattern						0x02010100	// Red  Green  Green  Blue
 	// color (alternativ: http://lclevy.free.fr/cr2/)

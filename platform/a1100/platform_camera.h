@@ -48,14 +48,13 @@
 	
     #define CAM_QUALITY_OVERRIDE            1
 
-    #define DNG_SUPPORT                     1
-
     // color
     #undef CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              10
 
-    // pattern
+    #define CAM_DNG_LENS_INFO               { 62,10, 248,10, 27,10, 56,10 } // See comments in camera.h
 
+    // pattern
     #define cam_CFAPattern                  0x01000201  // GBRG               
     #define CAM_COLORMATRIX1                               \
      793137,  1000000, -271722, 1000000, -113158, 1000000, \

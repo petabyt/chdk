@@ -68,6 +68,8 @@
     #undef CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
 
+    #define CAM_DNG_LENS_INFO               { 62,10, 186,10, 28,10, 49,10 } // See comments in camera.h
+
 	#define cam_CFAPattern 0x01000201 // Green  Blue  Red  Green 
 
     #define CAM_COLORMATRIX1                               \

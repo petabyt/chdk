@@ -32,6 +32,8 @@
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define  CAM_HAS_VIDEO_BUTTON       1
+
+    #define CAM_DNG_LENS_INFO               { 60,10, 720,10, 27,10, 35,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
     // color

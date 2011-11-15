@@ -40,6 +40,8 @@
 	#undef CAM_VIDEO_CONTROL
 	#define CAM_EXT_TV_RANGE            1          // CHDK can make exposure time longer than 64s
 
+
+    #define CAM_DNG_LENS_INFO               { 62,10, 186,10, 28,10, 49,10 } // See comments in camera.h
 	// pattern
 	#define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
 	// color
@@ -60,10 +62,6 @@
 	// camera name
 	#define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
 	#undef  CAM_SENSOR_BITS_PER_PIXEL
-	#undef  CAM_WHITE_LEVEL
-	#undef  CAM_BLACK_LEVEL
 	#define CAM_SENSOR_BITS_PER_PIXEL   12
-	#define CAM_WHITE_LEVEL             ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
-	#define CAM_BLACK_LEVEL             127
 //----------------------------------------------------------
 

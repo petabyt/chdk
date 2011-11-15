@@ -53,7 +53,8 @@
     #undef  CAM_USE_ZOOM_FOR_MF
 	#undef  CAM_UNCACHED_BIT  
     #define CAM_UNCACHED_BIT    0x40000000  // Found @0xff02bcc0
-    #define DNG_SUPPORT                 1
+
+    #define CAM_DNG_LENS_INFO               { 50,10, 700,10, 31,10, 59,10 } // See comments in camera.h
 	#define cam_CFAPattern  	0x02010100   //Green  Blue  Red  Green 
 	
 	#define CAM_COLORMATRIX1        \
@@ -107,11 +108,4 @@
 //TODO    #define CAM_MULTIPART               1
 //TODO  	#define CAM_BRACKETING				1
 
-/* TODO	
-	#undef  CAM_WHITE_LEVEL
-    #undef  CAM_BLACK_LEVEL
-    
-    #define CAM_WHITE_LEVEL             ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
-    #define CAM_BLACK_LEVEL             127
-*/
 //TODO REMOVE #define CAM_DRIVE_MODE_FROM_TIMER_MODE
