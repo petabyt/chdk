@@ -532,7 +532,7 @@ int prev_usb_power,cur_usb_power;
  // ------ add by Masuji SUTO (end)   --------------
 
 asm volatile ("STMFD SP!, {R0-R11,LR}\n"); // store R0-R11 and LR in stack
-debug_led(1);
+//debug_led(1);
 tick = get_tick_count();
 tick2 = tick;
 static long usb_physw[3];
@@ -565,7 +565,7 @@ if (conf.synch_enable && conf.ricoh_ca1_mode && conf.remote_enable && (!shooting
 						prev_usb_power=cur_usb_power;
 						}
 					else{
-						if((int)get_tick_count()-tick2>1000) {debug_led(0);}
+						if((int)get_tick_count()-tick2>1000) {/*debug_led(0);*/}
 						}
 					}
 				else{
@@ -636,7 +636,7 @@ if (conf.synch_delay_enable && conf.synch_delay_value>0)       // if delay is sw
      }
   }
 
-debug_led(0);
+//debug_led(0);
 asm volatile ("LDMFD SP!, {R0-R11,LR}\n"); // restore R0-R11 and LR from stack
 }
 
