@@ -35,8 +35,8 @@ The build uses tools/gen_propset_lua.sed to generate propset2.lua from this file
 #define PROPCASE_EV_CORRECTION_1                 107
 #define PROPCASE_EV_CORRECTION_2                 207
 #define PROPCASE_ORIENTATION_SENSOR              219
-#define PROPCASE_DIGITAL_ZOOM_STATE              94
-#define PROPCASE_DIGITAL_ZOOM_POSITION           95
+#define PROPCASE_DIGITAL_ZOOM_STATE              94 //G10 Digital Zoom Mode/State 0 = Digital Zoom off, 1 = Digital Zoom on
+#define PROPCASE_DIGITAL_ZOOM_POSITION           95	//G10 Digital Zoom position 0 to 6 where 0=off,  6= full digital zoom
 #define PROPCASE_DISPLAY_MODE                    105
 #define PROPCASE_BRACKET_MODE                    29
 #define PROPCASE_FLASH_SYNC_CURTAIN              64
@@ -46,5 +46,8 @@ The build uses tools/gen_propset_lua.sed to generate propset2.lua from this file
 #define PROPCASE_TIMER_MODE                      223
 #define PROPCASE_OPTICAL_ZOOM_POSITION           195
 //#define PROPCASE_OPTICAL_ZOOM_POSITION         251    // not working sx200is
-
+#define	PROPCASE_AE_LOCK						 3		//G10 0 = AE not locked, 1 = AE locked
+#define	PROPCASE_AF_FRAME						 8		//G10 1 = FlexiZone, 2 = Face AiAF / Tracking AF
+#define	PROPCASE_CONTINUOUS_AF					 12		//G10 0 = Continuous AF off, 1 = Continuous AF on
+#define PROPCASE_DIGITAL_ZOOM_MODE               91		//G10 Digital Zoom Mode/State 0 = off/standard, 2 = 1.7x, 3 = 2.1x
 #endif
