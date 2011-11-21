@@ -186,7 +186,7 @@ void lens_set_zoom_point(long newpt)
         newpt = zoom_points-1;
     }
 
-#if defined(CAMERA_sx30) || defined(CAMERA_g12) || defined(CAMERA_sx130is)
+#if defined(CAMERA_sx30) || defined(CAMERA_g12) || defined(CAMERA_sx130is)|| defined(CAMERA_g10) 
 	if (lens_get_zoom_point() != newpt)
 	{
 		// Get current digital zoom mode & state
@@ -214,14 +214,14 @@ void lens_set_zoom_point(long newpt)
 		// have to sleep here, zoom_busy set in another task, without sleep this will hang
 		while (zoom_busy) msleep(10);
 
-		// g12 & sx30 only use this value for optical zoom
+		// g10,g12 & sx30 only use this value for optical zoom
 		zoom_status=ZOOM_OPTICAL_MAX;
 
-  #if defined(CAMERA_g12)
+  #if defined(CAMERA_g12)|| defined(CAMERA_g10) 
 	    _SetPropertyCase(PROPCASE_OPTICAL_ZOOM_POSITION, &newpt, sizeof(newpt));
   #endif
 	}
-#else	// !(CAMERA_g12 || CAMERA_sx30)
+#else	// !(CAMERA_g10 || CAMERA_g12 || CAMERA_sx30)
     _MoveZoomLensWithPoint((short*)&newpt);
 
   #if defined (CAMERA_s95)
@@ -240,7 +240,7 @@ void lens_set_zoom_point(long newpt)
     else if (newpt >= zoom_points) zoom_status=ZOOM_OPTICAL_MAX;
     else zoom_status=ZOOM_OPTICAL_MEDIUM;
     _SetPropertyCase(PROPCASE_OPTICAL_ZOOM_POSITION, &newpt, sizeof(newpt));
-#endif	// !(CAMERA_g12 || CAMERA_sx30)
+#endif	// !(CAMERA_g10 || CAMERA_g12 || CAMERA_sx30)
 }
 
 void lens_set_zoom_speed(long newspd)
@@ -255,7 +255,7 @@ void lens_set_zoom_speed(long newspd)
 
 void lens_set_focus_pos(long newpos)
 {
-#if defined(CAMERA_g12)	// G12 crashes if in Continuous AF mode and try to call _MoveFocusLensToDistance
+#if defined(CAMERA_g12) || defined(CAMERA_g10) 	// G12 & G10 crash if in Continuous AF mode and try to call _MoveFocusLensToDistance
 	int af_mode;
 	get_property_case(PROPCASE_CONTINUOUS_AF,&af_mode,sizeof(af_mode));
 	if (af_mode == 0)	// can only set focus distance when not in continuous AF mode
@@ -1080,7 +1080,7 @@ void MakeAFScan(void){
 #endif
  _MakeAFScan(&a, 3);
  some_flag_for_af_scan=save;
-#if defined(CAMERA_g12)
+#if defined(CAMERA_g12) || defined(CAMERA_g10)
  int ae_lock;
  get_property_case(PROPCASE_AE_LOCK,&ae_lock,sizeof(ae_lock));
  if (ae_lock == 0)						// AE not locked so ensure it is unlocked after re-focus
