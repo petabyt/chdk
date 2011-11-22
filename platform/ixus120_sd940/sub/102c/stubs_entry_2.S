@@ -7,7 +7,7 @@ NHSTUB(write, 0xff835444)							//** fixed 2011/06/25
 //>> 2011APR03  - changed to match 1.03B and 1.03C
 NHSTUB(TurnOffBackLight , 0xFF89764C)                // was 0xFF88F4C4
 NHSTUB(PT_PlaySound, 0xFF879708)                     // was 0xFF8708C8
-NHSTUB(SetScriptMode, 0xFF810F4C)	                 // was 0xFF88A82C
+NHSTUB(SetScriptMode, 0xff88a82c)	                 // was 0xFF88A82C then 0xFF810F4C - back to original courtesy of new sig finder
 NHSTUB(WriteSDCard, 0xff926660)	                     // updated 2011JUN09 was 0xff926478 was 0xFF8827A8
 NHSTUB(UnlockAF,0xFF8368B4)		                     // was 0xFF870994
 NHSTUB(DoAFLock, 0xFF83687C)	                     // was 0xFF870984

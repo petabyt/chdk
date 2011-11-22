@@ -18,7 +18,7 @@ NHSTUB(Remove , 0xFF8353E8)
 NHSTUB(rename , 0xff834cac)			//** changed 2011/06/25 - was 0xFF835490)
 NHSTUB(UIFS_WriteFirmInfoToFile , 0xFF95673C)
 NHSTUB(platformsub_kbd_fetch_data, 0xFF858DF8)
-NHSTUB(SetScriptMode, 0xFF810F4C)
+NHSTUB(SetScriptMode, 0xff88a82c)		// change from 0xFF810F4C for new sigfinder
 NHSTUB(LEDDrive, 0xFF8582F4)
 NHSTUB(apex2us, 0xFF9D5394)	
 NHSTUB(WriteSDCard, 0xFF926660)

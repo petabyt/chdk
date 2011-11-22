@@ -29,11 +29,11 @@ void startup()
 
 
 
-static const int fl_tbl[] = {4000, 5000, 6000, 7000, 8000, 9000, 11000, 13000,15000,18000,22000};
+static const int fl_tbl[] = {5000, 6000, 7000, 8000, 9500, 10900, 12800,15000,173000,20000};
 #define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
-// SD980 focal length range is 4 - 22 mm
-// So, CF_EFL = 22/4*10000=55000
-#define CF_EFL 55000
+// SD940 focal length range is 5 - 20 mm
+// So, CF_EFL = 15/5*10000=30000
+#define CF_EFL 30000
 
 const int zoom_points = NUM_FL;
 

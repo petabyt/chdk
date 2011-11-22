@@ -33,7 +33,7 @@ NHSTUB(UIFS_WriteFirmInfoToFile , 0xFF956748)	// SD940 103b matched with SD940 1
 
 NHSTUB(platformsub_kbd_fetch_data, 0xFF858DF8)	//SD940 103b matched with SD940 103c GetKbdState
 
-NHSTUB(SetScriptMode, 0xFF810F4C)				// SD940 103b matched with SD940 103c SetScriptMode
+NHSTUB(SetScriptMode, 0xff88a838)				// SD940 103b matched with SD940 103c SetScriptMode = 0xFF810F4C, changed for new sig finder
 NHSTUB(LEDDrive, 0xFF8582F4)					// SD940 103b matched with SD940 103c eventproc_export_LEDDrive
 NHSTUB(apex2us, 0xFF9D53A0)						// SD940 103b matched with SD940 103c FF9D555C v similar looking routine
 NHSTUB(WriteSDCard, 0xFF92666C)					// SD940 103b matched with SD940 103c FF926538 v similar looking routine

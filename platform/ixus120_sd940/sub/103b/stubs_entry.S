@@ -14,7 +14,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(SetScriptMode                         ,0xff88a838) //101        *** != 0xff810f4c
 //NSTUB(kbd_pwr_off                           ,0xff858e10) //  2 64%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
@@ -151,6 +150,7 @@ NSTUB(SetAE_ShutterSpeed                      ,0xffad38dc) //102
 //NSTUB(SetLogicalEventActive                 ,0xff88a7e8) //101            == 0xff88a7e8
 //NSTUB(SetParameterData                      ,0xff96b344) //101            == 0xff96b344
 //NSTUB(SetPropertyCase                       ,0xff884858) //102            == 0xff884858
+//NSTUB(SetScriptMode                         ,0xff88a838) //101            == 0xff88a838
 //NSTUB(SleepTask                             ,0xff83851c) //101            == 0xff83851c
 //NSTUB(TakeSemaphore                         ,0xff8381e4) //101            == 0xff8381e4
 //NSTUB(TurnOffBackLight                      ,0xff897658) //104            == 0xff897658
