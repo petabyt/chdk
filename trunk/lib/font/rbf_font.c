@@ -418,8 +418,8 @@ int rbf_draw_string_right_len(int x, int y, int len, const char *str, color cl) 
 }
 
 //-------------------------------------------------------------------
-int rbf_draw_string_center_len(int x, int y, int len, char symbol, const char *str, color cl) { 
-    int l=0, strLen=0, i;
+int rbf_draw_menu_header(int x, int y, int len, char symbol, const char *str, color cl) { 
+    int l=0, strLen=0, i, ll, lr;
     const char *s=str; 
 
     // If symbol to be added to string determing the width of the symbol + space
@@ -432,7 +432,8 @@ int rbf_draw_string_center_len(int x, int y, int len, char symbol, const char *s
     l = rbf_str_clipped_width(str, l, len);
 
     // Calculate padding required on left and right side
-    l = (len-l)/2; 
+    ll = 4;
+    lr = len-l-ll; 
 
     int right = x+len-1, bottom = y+rbf_font_height()-1;
 
@@ -445,21 +446,21 @@ int rbf_draw_string_center_len(int x, int y, int len, char symbol, const char *s
         }
         else {
             // Rest of empty space is just filled with rectangles
-            draw_filled_rect(x+i,     y, x+l-1,    bottom, MAKE_COLOR(cl>>8, cl>>8));    // left side
-            draw_filled_rect(right-l, y, right-i,  bottom, MAKE_COLOR(cl>>8, cl>>8));    // right side
+            draw_filled_rect(x+i,      y, x+ll-1,   bottom, MAKE_COLOR(cl>>8, cl>>8));    // left side
+            draw_filled_rect(right-lr, y, right-i,  bottom, MAKE_COLOR(cl>>8, cl>>8));    // right side
         }
     }
 
     // Draw symbol and space if required
     if (symbol!=0x0 && conf.menu_symbol_enable && rbf_font_height()>=rbf_symbol_height()) {
-      l += rbf_draw_symbol(x+l, y, symbol, cl);
-      l += rbf_draw_char(x+l, y, ' ', cl);
+      ll += rbf_draw_symbol(x+ll, y, symbol, cl);
+      ll += rbf_draw_char(x+ll, y, ' ', cl);
     }
 
     // Draw chars
-    l = rbf_draw_clipped_string(x, y, str, cl, l, len);
+    ll = rbf_draw_clipped_string(x, y, str, cl, ll, len);
 
-    return l;
+    return ll;
 } 
 
 //-------------------------------------------------------------------

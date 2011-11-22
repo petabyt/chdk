@@ -32,7 +32,7 @@ static int          gui_menu_redraw;
 
 static int          count;
 static int          x, y;
-static int          w, num_lines;
+static int          w, wplus, num_lines;
 static int          len_bool, len_int, len_enum, len_space, len_br1, len_br2, cl_rect;
 static int          int_incr, incr_modified;
 static unsigned char *item_color;
@@ -121,24 +121,43 @@ static void gui_menu_back() {
 // Helper functions for gui_menu_kbd_process
 //  common code blocks extracted to try and make it easier to understand
 
+// Display the increment value for int items
+static void gui_menu_disp_incr()
+{
+    static char sbuf[7];
+    extern int rbf_str_clipped_width(const char *str, int l, int maxlen);
+
+    int max = rbf_str_clipped_width("±10K",0,100);
+
+    if (int_incr >= 1000)
+    {
+        sprintf(sbuf, "±%dK",int_incr/1000);
+    }
+    else
+    {
+        sprintf(sbuf, "±%d",int_incr);
+    }
+    rbf_draw_string_len(x+w+wplus-2-max,y-rbf_font_height(),max,sbuf,conf.menu_title_color);
+}
+
 // If updating an 'int' value check if other buttons are also pressed, and set increment accordingly
 // E.G. if ZOOM_OUT is held then RIGHT pressed the 'int' value will be incremented by 10, ZOOM_IN + RIGHT increment by 100
 static void get_int_incr_from_button()
 {
     if (kbd_is_key_pressed(KEY_ZOOM_OUT))
     {
+        incr_modified=int_incr;
         int_incr=10;
-        incr_modified=1;
     }
     if (kbd_is_key_pressed(KEY_ZOOM_IN))
     {
+        incr_modified=int_incr;
         int_incr=100;
-        incr_modified=1;
     }
     if (kbd_is_key_pressed(KEY_SHOOT_HALF))
     {
+        incr_modified=int_incr;
         int_incr=1000;
-        incr_modified=1;
     }
 }
 
@@ -226,9 +245,9 @@ static void update_int_value(int direction)
     // reset int_incr if necessary
     if (incr_modified)
     {
-        int_incr=1;
-        incr_modified=0;
-        draw_string(FONT_WIDTH*2,0,"    ", MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT));
+        int_incr = incr_modified;
+        incr_modified = 0;
+        gui_menu_disp_incr();
     }
 
     // force menu redraw
@@ -255,10 +274,10 @@ static void update_enum_value(int direction)
     if (curr_menu->menu[gui_menu_curr_item].value)
     {
         int c;
-        if (kbd_is_key_pressed(KEY_SHOOT_HALF)) c=3;
-        else if (kbd_is_key_pressed(KEY_ZOOM_IN)) c=6;
-        else if (kbd_is_key_pressed(KEY_ZOOM_OUT)) c=3;
-        else c=1;
+        if (kbd_is_key_pressed(KEY_SHOOT_HALF))    c = 3;
+        else if (kbd_is_key_pressed(KEY_ZOOM_IN))  c = 6;
+        else if (kbd_is_key_pressed(KEY_ZOOM_OUT)) c = 3;
+        else c = int_incr;
         if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_ENUM)
         {
             ((const char* (*)(int change, int arg))(curr_menu->menu[gui_menu_curr_item].value))(c*direction, curr_menu->menu[gui_menu_curr_item].arg);
@@ -354,6 +373,7 @@ static void gui_menu_updown(int increment)
 
         // Reset amount to increment integer values by
         int_incr = 1;
+        gui_menu_disp_incr();
 
         // Redraw menu if needed
         if (gui_menu_redraw == 0) gui_menu_redraw=1;
@@ -363,7 +383,6 @@ static void gui_menu_updown(int increment)
 //-------------------------------------------------------------------
 // Process button presses when in GUI_MODE_MENU mode
 void gui_menu_kbd_process() {
-    static char sbuf[7];
 
     switch (kbd_get_autoclicked_key() | get_jogdial_direction()) {
 #if CAM_HAS_ERASE_BUTTON
@@ -528,9 +547,7 @@ void gui_menu_kbd_process() {
                 if (int_incr >= 10){
                     int_incr /= 10;
                 }
-                sprintf(sbuf, "±%d",int_incr);
-                draw_string(FONT_WIDTH*2,0,"    ", MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT));
-                draw_string(0,0,sbuf,MAKE_COLOR(COLOR_SELECTED_BG, COLOR_SELECTED_FG));
+                gui_menu_disp_incr();
             }
             break;
 
@@ -552,8 +569,7 @@ void gui_menu_kbd_process() {
                 if (int_incr <= 1000){
                     int_incr *= 10;
                 }
-                sprintf(sbuf, "±%d",int_incr);
-                draw_string(0,0,sbuf,MAKE_COLOR(COLOR_SELECTED_BG, COLOR_SELECTED_FG));
+                gui_menu_disp_incr();
             }
             break;
 
@@ -572,11 +588,7 @@ void gui_menu_kbd_process() {
                 else {
                     int_incr = 1;
                 }
-                sprintf(sbuf, "±%d",int_incr);
-                if (int_incr == 1) {
-                    draw_string(FONT_WIDTH*2,0,"    ", MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT));
-                }
-                draw_string(0,0,sbuf,MAKE_COLOR(COLOR_SELECTED_BG, COLOR_SELECTED_FG));
+                gui_menu_disp_incr();
                 break;
             }
 #endif
@@ -587,19 +599,19 @@ void gui_menu_kbd_process() {
 // Draw menu scroll bar if needed, and title bar
 void gui_menu_draw_initial() { 
     color cl=conf.menu_title_color>>8; 
-    unsigned char wplus=0; 
 
     count = gui_menu_rows();
 
     if (count > num_lines)
     {
         y = ((screen_height-(num_lines-1)*rbf_font_height())>>1);
-        wplus=8; 
+        wplus = 8; 
         // scrollbar background 
         draw_filled_rect((x+w), y, (x+w)+wplus, y+num_lines*rbf_font_height()-1, MAKE_COLOR((conf.menu_color>>8)&0xFF, (conf.menu_color>>8)&0xFF)); 
     }
     else
     {
+        wplus = 0;
         if (conf.menu_center)
         {
             y = (screen_height-(count-1)*rbf_font_height())>>1; 
@@ -610,7 +622,8 @@ void gui_menu_draw_initial() {
         }
     }
 
-    rbf_draw_string_center_len(x, y-rbf_font_height(), w+wplus, (conf.menu_symbol_enable)?curr_menu->symbol:0, lang_str(curr_menu->title), conf.menu_title_color);
+    rbf_draw_menu_header(x, y-rbf_font_height(), w+wplus, (conf.menu_symbol_enable)?curr_menu->symbol:0, lang_str(curr_menu->title), conf.menu_title_color);
+    gui_menu_disp_incr();
 }
 
 //-------------------------------------------------------------------
