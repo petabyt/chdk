@@ -31,7 +31,7 @@ NHSTUB(UIFS_WriteFirmInfoToFile , 0xFF956904)	// SD940 103c matched with SD90 10
 
 //** subs not in signatures_dryos.h
 
-NHSTUB(SetScriptMode, 0xFF810F4C)				// SD940 103c matched with SD90 101a
+NHSTUB(SetScriptMode, 0xff88a888)				// SD940 103c matched with SD90 101a as 0xFF810F4C - changed for new sigfinder
 NHSTUB(LEDDrive, 0xFF8582F4)					// SD940 103c matched with SD90 101a
 NHSTUB(apex2us, 0xFF9D555C)						// SD940 103c matched with SD90 101a
 NHSTUB(WriteSDCard, 0xff926720)					// updated 2011JUN09 SD940 103c matched with SD90 101a
