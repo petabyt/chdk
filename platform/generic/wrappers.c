@@ -255,10 +255,10 @@ void lens_set_zoom_speed(long newspd)
 
 void lens_set_focus_pos(long newpos)
 {
-#if defined(CAMERA_g12) || defined(CAMERA_g10) 	// G12 & G10 crash if in Continuous AF mode and try to call _MoveFocusLensToDistance
+#if defined(CAMERA_g12) || defined(CAMERA_g10) 	// G12 & G10 crash if in Continuous AF mode, and not MF, and try to call _MoveFocusLensToDistance
 	int af_mode;
 	get_property_case(PROPCASE_CONTINUOUS_AF,&af_mode,sizeof(af_mode));
-	if (af_mode == 0)	// can only set focus distance when not in continuous AF mode
+	if ((af_mode == 0) || (shooting_get_focus_mode() == 1))	// can only set focus distance when MF mode or not in continuous AF mode
 #endif
 	{
 		_MoveFocusLensToDistance((short*)&newpos);

@@ -459,7 +459,7 @@ void CreateTask_spytask() {
 }
 
 ///*----------------------------------------------------------------------
-// @ FF8A3B4C
+// @ 0xff09bbb0
 void __attribute__((naked,noinline)) init_file_modules_task() {
  asm volatile(
                  "STMFD   SP!, {R4-R6,LR}\n"
