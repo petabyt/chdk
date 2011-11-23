@@ -115,6 +115,15 @@ static void gui_menu_back() {
         gui_menu_set_curr_menu(gui_menu_stack[gui_menu_stack_ptr].menu, gui_menu_stack[gui_menu_stack_ptr].toppos, gui_menu_stack[gui_menu_stack_ptr].curpos);
         gui_menu_erase_and_redraw();
     }
+    else
+    {
+        // 'Back' selected; but no menu to go back to
+        // Occurs when script menu opened using 'Func/Set' button
+        // Return to normal <ALT> mode.
+        gui_set_mode(GUI_MODE_ALT);
+        kbd_reset_autoclicked_key();    // Need this to stop 'Func/Set' registering twice???
+        draw_restore();
+    }
 }
 
 //-------------------------------------------------------------------
