@@ -128,7 +128,7 @@
 //NSTUB(LockMainPower                         ,0xff091884) //103            == 0xff091884
 //NSTUB(Lseek                                 ,0xff0272a0) //101            == 0xff0272a0
 //NSTUB(MakeDirectory_Fut                     ,0xff026a10) //  6            == 0xff026a10
-//NSTUB(MakeSDCardBootable                    ,0xff06b04c) //  6            == 0xff06b04c
+//NSTUB(MakeSDCardBootable                    ,0xff06b04c) //105            == 0xff06b04c
 //NSTUB(MoveFocusLensToDistance               ,0xff36e188) //102            == 0xff36e188
 //NSTUB(MoveIrisWithAv                        ,0xff303638) //102            == 0xff303638
 //NSTUB(MoveZoomLensWithPoint                 ,0xff303dfc) //102            == 0xff303dfc

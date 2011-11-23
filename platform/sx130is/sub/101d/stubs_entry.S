@@ -160,7 +160,7 @@ NSTUB(SetAE_ShutterSpeed                      ,0xffb0c094) //102
 //NSTUB(TurnOnBackLight                       ,0xff8a056c) //104            == 0xff8a056c
 //NSTUB(UIFS_WriteFirmInfoToFile              ,0xff98420c) //101            == 0xff98420c
 //NSTUB(UnlockMainPower                       ,0xff893f40) //103            == 0xff893f40
-//NSTUB(UpdateMBROnFlash                      ,0xff870838) //  3            == 0xff870838
+//NSTUB(UpdateMBROnFlash                      ,0xff870838) //105            == 0xff870838
 //NSTUB(VbattGet                              ,0xff832fb4) //103            == 0xff832fb4
 NSTUB(Write                                   ,0xff836d8c) //101
 //NSTUB(WriteSDCard                           ,0xff950268) //108            == 0xff950268

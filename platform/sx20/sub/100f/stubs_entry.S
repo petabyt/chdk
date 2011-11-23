@@ -158,7 +158,7 @@ NSTUB(SleepTask                               ,0xff838a6c) //101
 NSTUB(TakeSemaphore                           ,0xff838734) //101
 NSTUB(TurnOnBackLight                         ,0xff8a5ac8) //104
 NSTUB(UnlockMainPower                         ,0xff896e00) //103
-NSTUB(UpdateMBROnFlash                        ,0xff86f048) //  3
+NSTUB(UpdateMBROnFlash                        ,0xff86f048) //105
 NSTUB(Write                                   ,0xff83530c) //101
 NSTUB(WriteSDCard                             ,0xff940bac) //108
 NSTUB(_log                                    ,0xffb37c90) //111

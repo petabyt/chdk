@@ -154,7 +154,7 @@ NSTUB(TurnOnBackLight                         ,0xffc676dc) //104
 //NSTUB(UnlockAF                              ,0xffc16d7c) //103            == 0xffc16d7c
 //NSTUB(UnlockMainPower                       ,0xffc5bec0) //103            == 0xffc5bec0
 //NSTUB(UnsetZoomForMovie                     ,0xffd22418) //104            == 0xffd22418
-//NSTUB(UpdateMBROnFlash                      ,0xffc3f28c) //  1            == 0xffc3f28c
+//NSTUB(UpdateMBROnFlash                      ,0xffc3f28c) //105            == 0xffc3f28c
 //NSTUB(VbattGet                              ,0xffc119a8) //101            == 0xffc119a8
 //NSTUB(Write                                 ,0xffc150d8) //101            == 0xffc150d8
 //NSTUB(WriteSDCard                           ,0xffcf51b0) //108            == 0xffcf51b0

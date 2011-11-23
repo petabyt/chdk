@@ -154,7 +154,7 @@ NSTUB(TurnOnBackLight                         ,0xff88f26c) //104
 NSTUB(UIFS_WriteFirmInfoToFile                ,0xff963734) //103
 //NSTUB(UnlockAF                              ,0xff82589c) //102            == 0xff82589c
 NSTUB(UnlockMainPower                         ,0xff880ebc) //103
-NSTUB(UpdateMBROnFlash                        ,0xff85acd0) //  1
+NSTUB(UpdateMBROnFlash                        ,0xff85acd0) //105
 //NSTUB(VbattGet                              ,0xff82046c) //103            == 0xff82046c
 NSTUB(Write                                   ,0xff823b10) //101
 //NSTUB(WriteSDCard                           ,0xff92a99c) //108            == 0xff92a99c

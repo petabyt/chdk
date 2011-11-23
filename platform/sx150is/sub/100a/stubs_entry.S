@@ -121,7 +121,7 @@ NSTUB(LocalTime                               ,0xff88e6c8) //  6
 NSTUB(LockMainPower                           ,0xff89bb38) //103
 NSTUB(Lseek                                   ,0xff836fac) //101
 NSTUB(MakeDirectory_Fut                       ,0xff83671c) //  6
-NSTUB(MakeSDCardBootable                      ,0xff876cb0) //  6
+NSTUB(MakeSDCardBootable                      ,0xff876cb0) //105
 NSTUB(MoveFocusLensToDistance                 ,0xffb494c8) //102
 NSTUB(MoveIrisWithAv                          ,0xffae167c) //102
 NSTUB(MoveZoomLensWithPoint                   ,0xffae1ebc) //102

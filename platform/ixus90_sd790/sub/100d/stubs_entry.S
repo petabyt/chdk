@@ -153,7 +153,7 @@ NSTUB(UIFS_WriteFirmInfoToFile                ,0xff950de8) //103
 //NSTUB(UnlockAF                              ,0xff825bdc) //102            == 0xff825bdc
 NSTUB(UnlockMainPower                         ,0xff87565c) //103
 //NSTUB(UnsetZoomForMovie                     ,0xff962c8c) //104            == 0xff962c8c
-NSTUB(UpdateMBROnFlash                        ,0xff84f340) //  1
+NSTUB(UpdateMBROnFlash                        ,0xff84f340) //105
 NSTUB(VbattGet                                ,0xff82072c) //103
 NSTUB(Write                                   ,0xff823e4c) //101
 //NSTUB(WriteSDCard                           ,0xff922a68) //108            == 0xff922a68
