@@ -1167,6 +1167,9 @@ string_sig string_sigs[] = {
 	{ 4, "ExpCtrlTool_StartContiAE", "StartContiAE", 10 },
 
     { 5, "UIFS_WriteFirmInfoToFile", "UIFS_WriteFirmInfoToFile", 1 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49
+	{ 5, "UpdateMBROnFlash", "MakeBootDisk", 0x01000003,				  11,   11,   11,   11,   11,   11,    1,    1 },
+	{ 5, "MakeSDCardBootable", "MakeBootDisk", 0x01000003,				   1,    1,    1,    1,    1,    1,    8,    8 },
 
     { 6, "Restart", "Bye", 0 },
 	{ 6, "GetImageFolder", "GetCameraObjectTmpPath ERROR[ID:%lx] [TRY:%lx]\n", 0 },
@@ -1517,7 +1520,7 @@ int find_strsig4(firmware *fw, string_sig *sig, int k)
 
 // Sig pattern:
 //		Load Func Address	-	LDR	Rx, =func
-//		Load String Address	-	ADR	Rx, "func"
+//		Load String Address	-	xDR	Rx, "func"  (LDR or ADR)
 //		Branch				-	BL
 //				...
 //		String				-	DCB	"func"
@@ -1535,12 +1538,16 @@ int find_strsig5(firmware *fw, string_sig *sig, int k)
 			uint32_t sadr = idx2adr(fw,j);        // string address
 			int j1;
 			uint32_t *p1;
-			for (p1 = p-3, j1 = j-3; j1 >= 0; j1--, p1--)
+			for (p1 = fw->buf, j1 = 0; j1 < fw->size - nlen/4; j1++, p1++)
 			{
-				if (((p1[1] & 0xFE0F0000) == 0xE20F0000) && // ADR ?
+				if ((((p1[1] & 0xFE0F0000) == 0xE20F0000) || ((p1[1] & 0xFE1F0000) == 0xE41F0000)) && // LDR or ADR ?
 					((p1[2] & 0xFE000000) == 0xEA000000))   // B or BL ?
 				{
-					uint32_t padr = ADR2adr(fw,j1+1);
+					uint32_t padr;
+					if ((p1[1] & 0xFE1F0000) == 0xE41F0000) // LDR ?
+                        padr = fw->buf[LDR2idx(fw,j1+1)];
+					else
+                        padr = ADR2adr(fw,j1+1);
 					if (padr == sadr)
 					{
 						int j2 = j1;
@@ -1570,6 +1577,13 @@ int find_strsig5(firmware *fw, string_sig *sig, int k)
 							uint32_t fadr = fw->buf[LDR2idx(fw,j2)];
 							if (sig->offset > 1) fadr = followBranch(fw, fadr, 1);
 							fadr = followBranch2(fw, fadr, sig->offset);
+                            int ofst = dryos_offset(fw,sig);
+                            if (ofst != 0)
+                            {
+                                uint32_t fadr2 = followBranch(fw, fadr, ofst);
+                                if (fadr == fadr2) return 0;
+                                fadr = fadr2;
+                            }
 							//fprintf(stderr,"%s %08x\n",curr_name,fadr);
 							addMatch(fadr,32,0,k,105);
 							return 1;

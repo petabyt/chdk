@@ -100,7 +100,7 @@
  // KEY_DISPLAY is used for gui_subj_dist_override_koef_enum;
  // KEY_LEFT/KEY_RIGHT is used for gui_subj_dist_override_value_enum (because of no separate ZOOM_IN/OUT)
 
-#elif defined(CAMERA_g7) || defined(CAMERA_sx10) || defined(CAMERA_sx1) || defined(CAMERA_sx20) || defined(CAMERA_sx30) || defined(CAMERA_sx40hs)
+#elif defined(CAMERA_g7) || defined(CAMERA_sx10) || defined(CAMERA_sx1) || defined(CAMERA_sx120is) || defined(CAMERA_sx20) || defined(CAMERA_sx30) || defined(CAMERA_sx40hs)
 //Alt mode
  #define SHORTCUT_TOGGLE_RAW          KEY_ERASE
 //Half press shoot button

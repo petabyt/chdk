@@ -166,7 +166,7 @@ NSTUB(TakeSemaphore                           ,0xffc16bd4) //101
 NSTUB(UIFS_WriteFirmInfoToFile                ,0xffd0d51c) //103
 NSTUB(UnlockMainPower                         ,0xffc5db24) //103
 //NSTUB(UnsetZoomForMovie                     ,0xffd21b70) //104            == 0xffd21b70
-//NSTUB(UpdateMBROnFlash                      ,0xffc3f674) //  3            == 0xffc3f674
+//NSTUB(UpdateMBROnFlash                      ,0xffc3f674) //105            == 0xffc3f674
 //NSTUB(VbattGet                              ,0xffc10644) //103            == 0xffc10644
 NSTUB(Write                                   ,0xffc13ce8) //101
 NSTUB(_log                                    ,0xffe61ec0) //111

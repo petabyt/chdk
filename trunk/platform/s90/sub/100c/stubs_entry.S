@@ -155,7 +155,7 @@ NSTUB(TakeSemaphore                           ,0xff838718) //101
 //NSTUB(UnlockAF                              ,0xff836bd0) //  4            == 0xff836bd0
 NSTUB(UnlockMainPower                         ,0xff8945d0) //103
 //NSTUB(UnsetZoomForMovie                     ,0xff8a0eb4) //104            == 0xff8a0eb4
-NSTUB(UpdateMBROnFlash                        ,0xff86e200) //  3
+NSTUB(UpdateMBROnFlash                        ,0xff86e200) //105
 NSTUB(VbattGet                                ,0xff831e04) //103
 NSTUB(Write                                   ,0xff8354a4) //101
 //NSTUB(WriteSDCard                           ,0xff94a55c) //108            == 0xff94a55c

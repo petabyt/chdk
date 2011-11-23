@@ -159,7 +159,7 @@ NSTUB(SetAE_ShutterSpeed                      ,0xffb60d14) //102
 //NSTUB(UnlockAF                              ,0xff8388d8) //102            == 0xff8388d8
 //NSTUB(UnlockMainPower                       ,0xff89cfcc) //103            == 0xff89cfcc
 //NSTUB(UnsetZoomForMovie                     ,0xff8ab114) //104            == 0xff8ab114
-NSTUB(UpdateMBROnFlash                        ,0xff876848) //  3
+NSTUB(UpdateMBROnFlash                        ,0xff876848) //105
 //NSTUB(VbattGet                              ,0xff833188) //103            == 0xff833188
 NSTUB(Write                                   ,0xff8370c0) //101
 //NSTUB(WriteSDCard                           ,0xff96dd64) //108            == 0xff96dd64

@@ -160,7 +160,7 @@ NSTUB(SetParameterData                        ,0xff9904c0) //101
 //NSTUB(TakeSemaphore                         ,0xff838734) //101            == 0xff838734
 //NSTUB(TurnOnBackLight                       ,0xff8a5ac8) //104            == 0xff8a5ac8
 //NSTUB(UnlockMainPower                       ,0xff896e00) //103            == 0xff896e00
-NSTUB(UpdateMBROnFlash                        ,0xff86f048) //  3
+NSTUB(UpdateMBROnFlash                        ,0xff86f048) //105
 NSTUB(Write                                   ,0xff83530c) //101
 //NSTUB(WriteSDCard                           ,0xff940b80) //108            == 0xff940b80
 NSTUB(_log                                    ,0xffb37d1c) //111

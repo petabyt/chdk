@@ -164,7 +164,7 @@ NSTUB(TakeSemaphore                           ,0xff839d68) //101
 //NSTUB(UIFS_WriteFirmInfoToFile              ,0xff984ab4) //103            == 0xff984ab4
 NSTUB(UnlockAF                                ,0xff83831c) //102
 NSTUB(UnlockMainPower                         ,0xff895acc) //103
-NSTUB(UpdateMBROnFlash                        ,0xff871cb0) //  3
+NSTUB(UpdateMBROnFlash                        ,0xff871cb0) //105
 NSTUB(VbattGet                                ,0xff8330d8) //103
 NSTUB(Write                                   ,0xff836e48) //101
 //NSTUB(WriteSDCard                           ,0xff952494) //108            == 0xff952494
