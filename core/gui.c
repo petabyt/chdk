@@ -1142,18 +1142,7 @@ static void gui_load_script_selected(const char *fn) {
 }
 
 void gui_load_script(int arg) {
-    DIR   *d;
-    char  *path="A/CHDK/SCRIPTS";
-
-    // if exists "A/CHDK/SCRIPTS" go into
-    d=opendir(path);
-    if (d) {
-        closedir(d);
-    } else {
-        path="A";
-    }
-
-    gui_fselect_init(LANG_STR_SELECT_SCRIPT_FILE, path, gui_load_script_selected);
+    gui_fselect_init(LANG_STR_SELECT_SCRIPT_FILE, conf.script_file, "A/CHDK/SCRIPTS", gui_load_script_selected);
 }
 
 void gui_load_script_default(int arg) {
@@ -1339,7 +1328,7 @@ const char* gui_tv_override_value_enum(int change, int arg) {
     "2048","1625","1290","1024","812","645","512","406","322","256","203","161","128","101","80",
 		"64","50.8", "40.3", "32", "25.4","20","16", "12.7", "10","8", "6.3","5","4","3.2", "2.5","2", "1.6", "1.3", "1", "0.8", "0.6", "0.5", "0.4", "0.3", "1/4", "1/5", "1/6", "1/8", "1/10", "1/13", "1/15", "1/20", "1/25", "1/30", "1/40", "1/50", "1/60", "1/80", "1/100", "1/125", "1/160", "1/200", "1/250", "1/320", "1/400", "1/500", "1/640","1/800", "1/1000", "1/1250", "1/1600","1/2000","1/2500","1/3200","1/4000", "1/5000", "1/6400", "1/8000", "1/10000", "1/12500", "1/16000", "1/20000", "1/25000", "1/32000", "1/40000", "1/50000", "1/64000","1/80000", "1/100k"};
 		*/
-    static char *buf;
+    static char buf[4];
 
 	// XXX This array above is redundant with platform/generic/shooting.c, this should be avoided!
     conf.tv_override_value+=change;
@@ -1357,8 +1346,6 @@ const char* gui_tv_override_value_enum(int change, int arg) {
           conf.tv_override_value=100;
         }
        else if (conf.tv_override_value>100)  conf.tv_override_value=0;
-       if(!buf) buf=malloc(4);
-       if(!buf) return "";
        sprintf(buf, "%d",  conf.tv_override_value);
        return buf;
       }
@@ -1531,7 +1518,7 @@ void raw_fselect_cb(const char * filename){
 //-------------------------------------------------------------------
 void gui_raw_develop(int arg){
  int m=mode_get();
- gui_fselect_init(LANG_RAW_DEVELOP_SELECT_FILE, "A/DCIM", raw_fselect_cb);
+ gui_fselect_init(LANG_RAW_DEVELOP_SELECT_FILE, "A/DCIM", "A", raw_fselect_cb);
 }
 
 //-------------------------------------------------------------------
@@ -1695,18 +1682,7 @@ static void gui_load_curve_selected(const char *fn) {
 
 //-------------------------------------------------------------------
 void gui_load_curve(int arg) {
-    DIR   *d;
-    char  *path = CURVE_DIR;
-
-    // if exists CURVE_DIR go into
-    d=opendir(path);
-    if (d) {
-        closedir(d);
-    } else {
-        path="A";
-    }
-
-    gui_fselect_init(LANG_STR_SELECT_CURVE_FILE, path, gui_load_curve_selected);
+    gui_fselect_init(LANG_STR_SELECT_CURVE_FILE, conf.curve_file, CURVE_DIR, gui_load_curve_selected);
 }
 
 #endif
@@ -2061,7 +2037,7 @@ gui_handler guiHandlers[] =
 #else
                                 { 0, 0, 0 },
 #endif
-    /*GUI_MODE_MPOPUP*/         { gui_mpopup_draw,      gui_mpopup_kbd_process,     0 },
+    /*GUI_MODE_MPOPUP*/         { gui_mpopup_draw,      gui_mpopup_kbd_process,     gui_mpopup_kbd_process },
 #ifdef OPT_GAME_CONNECT4
     /*GUI_MODE_4WINS*/          { gui_4wins_draw,       gui_4wins_kbd_process,      gui_default_kbd_process_menu_btn },
 #else
@@ -2741,7 +2717,7 @@ void gui_draw_splash(char* logo, int logo_size) {
 
 //-------------------------------------------------------------------
 void gui_draw_fselect(int arg) {
-    gui_fselect_init(LANG_STR_FILE_BROWSER, "A", NULL);
+    gui_fselect_init(LANG_STR_FILE_BROWSER, "A", "A", NULL);
 }
 
 //-------------------------------------------------------------------
@@ -2750,18 +2726,7 @@ static void gui_grid_lines_load_selected(const char *fn) {
         grid_lines_load(fn);
 }
 void gui_grid_lines_load(int arg) {
-    DIR   *d;
-    char  *path="A/CHDK/GRIDS";
-
-    // if exists "A/CHDK/GRIDS" go into
-    d=opendir(path);
-    if (d) {
-        closedir(d);
-    } else {
-        path="A";
-    }
-
-    gui_fselect_init(LANG_STR_SELECT_GRID_FILE, path, gui_grid_lines_load_selected);
+    gui_fselect_init(LANG_STR_SELECT_GRID_FILE, conf.grid_lines_file, "A/CHDK/GRIDS", gui_grid_lines_load_selected);
 }
 
 //-------------------------------------------------------------------
@@ -2781,29 +2746,16 @@ static void gui_draw_read_selected(const char *fn) {
         gui_read_init(fn);
     }
 }
-void gui_draw_read(int arg) {
-    DIR   *d;
-    char  *path="A/CHDK/BOOKS";
 
-    // if exists "A/CHDK/BOOKS" go into
-    d=opendir(path);
-    if (d) {
-        closedir(d);
-    } else {
-        path="A";
-    }
-    gui_fselect_init(LANG_STR_SELECT_TEXT_FILE, path, gui_draw_read_selected);
+void gui_draw_read(int arg) {
+    gui_fselect_init(LANG_STR_SELECT_TEXT_FILE, conf.reader_file, "A/CHDK/BOOKS", gui_draw_read_selected);
     void gui_fselect_set_key_redraw(int n);
     gui_fselect_set_key_redraw(1);
 }
 
-//-------------------------------------------------------------------
 void gui_draw_read_last(int arg) {
-    int fd;
-
-    fd = open(conf.reader_file, O_RDONLY, 0777);
-    if (fd >= 0) {
-        close(fd);
+    struct stat st;
+    if (stat(conf.reader_file,&st) == 0) {
         gui_draw_read_selected(conf.reader_file);
     } else {
         gui_draw_read(arg);
@@ -2828,19 +2780,7 @@ void gui_menuproc_edge_save(int arg) {
 }
 
 void gui_menuproc_edge_load(int arg) {
-    DIR   *d;
-    char  *path = EDGE_SAVE_DIR;
-    const char* fn;
-
-    // if exists, go into
-    d=opendir(path);
-    if (d) {
-        closedir(d);
-    } else {
-        path="A";
-    }
-
-    gui_fselect_init(LANG_MENU_EDGE_LOAD, path, gui_load_edge_selected);
+    gui_fselect_init(LANG_MENU_EDGE_LOAD, EDGE_SAVE_DIR, EDGE_SAVE_DIR, gui_load_edge_selected);
 }
 #endif
 
@@ -2859,18 +2799,7 @@ static void gui_draw_rbf_selected(const char *fn) {
     }
 }
 void gui_draw_load_rbf(int arg) {
-    DIR   *d;
-    char  *path="A/CHDK/FONTS";
-
-    // if exists "A/CHDK/FONTS" go into
-    d=opendir(path);
-    if (d) {
-        closedir(d);
-    } else {
-        path="A";
-    }
-
-    gui_fselect_init(LANG_STR_SELECT_FONT_FILE, path, gui_draw_rbf_selected);
+    gui_fselect_init(LANG_STR_SELECT_FONT_FILE, conf.reader_rbf_file, "A/CHDK/FONTS", gui_draw_rbf_selected);
 }
 #endif
 //-------------------------------------------------------------------
@@ -2884,18 +2813,7 @@ static void gui_draw_menu_rbf_selected(const char *fn) {
     }
 }
 void gui_draw_load_menu_rbf(int arg) {
-    DIR   *d;
-    char  *path="A/CHDK/FONTS";
-
-    // if exists "A/CHDK/FONTS" go into
-    d=opendir(path);
-    if (d) {
-        closedir(d);
-    } else {
-        path="A";
-    }
-
-    gui_fselect_init(LANG_STR_SELECT_FONT_FILE, path, gui_draw_menu_rbf_selected);
+    gui_fselect_init(LANG_STR_SELECT_FONT_FILE, conf.menu_rbf_file, "A/CHDK/FONTS", gui_draw_menu_rbf_selected);
 }
 
 //-------------------------------------------------------------------
@@ -2907,18 +2825,7 @@ static void gui_draw_symbol_rbf_selected(const char *fn) {
     }
 }
 void gui_draw_load_symbol_rbf(int arg) {
-    DIR   *d;
-    char  *path="A/CHDK/SYMBOLS";
-
-    // if exists "A/CHDK/FONTS" go into
-    d=opendir(path);
-    if (d) {
-        closedir(d);
-    } else {
-        path="A";
-    }
-
-    gui_fselect_init(LANG_STR_SELECT_SYMBOL_FILE, path, gui_draw_symbol_rbf_selected);
+    gui_fselect_init(LANG_STR_SELECT_SYMBOL_FILE, conf.menu_symbol_rbf_file, "A/CHDK/SYMBOLS", gui_draw_symbol_rbf_selected);
 }
 
 //-------------------------------------------------------------------
@@ -2930,18 +2837,7 @@ static void gui_draw_lang_selected(const char *fn) {
     }
 }
 void gui_draw_load_lang(int arg) {
-    DIR   *d;
-    char  *path="A/CHDK/LANG";
-
-    // if exists "A/CHDK/LANG" go into
-    d=opendir(path);
-    if (d) {
-        closedir(d);
-    } else {
-        path="A";
-    }
-
-    gui_fselect_init(LANG_STR_SELECT_LANG_FILE, path, gui_draw_lang_selected);
+    gui_fselect_init(LANG_STR_SELECT_LANG_FILE, conf.lang_file, "A/CHDK/LANG", gui_draw_lang_selected);
 }
 
 int find_mnu(CMenu *curr_menu, int mnu, int count)
