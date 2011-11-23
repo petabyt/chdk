@@ -82,6 +82,44 @@ static char raw_operation;      // info for process_raw_files() RAW_OPERATION_AV
 static int set_key_redraw_mode; // dirty hack: screen erase & mode restore done after(0) or before(1) call to fselect_on_select
 
 //-------------------------------------------------------------------
+static void fselect_goto_prev(int step) {
+    register int j, i;
+
+    for (j=0; j<step; ++j) {
+        if (selected->prev==top && top->prev) 
+            top=top->prev;
+        if (selected->prev) 
+            selected=selected->prev;
+        else
+        if (step == 1)
+        {
+            for(; selected->next; selected=selected->next);
+            for (i=0, top=selected; i<BODY_LINES-1 && top->prev; ++i, top=top->prev);
+        }
+    }
+}
+
+//-------------------------------------------------------------------
+static void fselect_goto_next(int step) {
+    register int j, i;
+    struct fitem  *ptr;
+
+    for (j=0; j<step; ++j) {
+        for (i=0, ptr=top; i<BODY_LINES-1 && ptr; ++i, ptr=ptr->next);
+        if (i==BODY_LINES-1 && ptr && ptr->prev==selected && ptr->next)
+            top=top->next;
+        if (selected->next) 
+            selected=selected->next;
+        else
+        if (step == 1)
+        {
+            for(; top->prev; top = top->prev);
+            selected = top;
+        }
+    }
+}
+
+//-------------------------------------------------------------------
 // Called from other gui functions to force redraw of menu
 void gui_fselect_force_redraw()
 {
@@ -222,7 +260,51 @@ void gui_fselect_set_key_redraw(int n)
     set_key_redraw_mode = n;
 }
 
-void gui_fselect_init(int title, const char* dir, void (*on_select)(const char *fn)) {
+//-------------------------------------------------------------------
+// Attempt to set startup directory (and file) based on input 'dir'
+// Note: 'dir' may be a directory name or a file name (including path)
+// Returns 1 if valid directory/file found, 0 otherwise
+int gui_fselect_find_start_dir(const char* dir)
+{
+    selected_file[0] = 0;
+    strcpy(current_dir, dir);
+
+    // Make sure there is something left to check
+    while (strlen(current_dir) > 0)
+    {
+        struct stat st;
+        // check if input 'dir' exists
+        if (stat(current_dir,&st) == 0)     
+        {
+            // exists - check if it is a directory or file
+            if (st.st_attrib & DOS_ATTR_DIRECTORY)
+            {
+                // Directory and exists so all good
+                return 1;
+            }
+            else
+            {
+                // 'dir' is a file, extract filename to 'selected_file' and remove from 'current_dir'
+                char *p = strrchr(current_dir,'/');
+                strcpy(selected_file, p+1);
+                *p = 0;
+                return 1;
+            }
+        }
+        else
+        {
+            // could not find 'dir' - try one level up
+            char *p = strrchr(current_dir,'/');
+            if (p) *p = 0;
+            else return 0;
+        }
+    }
+
+    return 0;
+}
+
+//-------------------------------------------------------------------
+void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, void (*on_select)(const char *fn)) {
     int i;
     
     int chars_width = NAME_FONT_SIZE + SIZE_FONT_SIZE + TIME_FONT_SIZE;
@@ -241,11 +323,32 @@ void gui_fselect_init(int title, const char* dir, void (*on_select)(const char *
     foot_h = FOOT_FONT_LINES;
     
     fselect_title = lang_str(title);
-    strcpy(current_dir, dir);
+
+    // Try and set start directory, and optionally selected file, from inputs
+    if (!gui_fselect_find_start_dir(prev_dir)) 
+        if (!gui_fselect_find_start_dir(default_dir))
+            gui_fselect_find_start_dir("A");
+
     max_dir_len = NAME_SIZE + SIZE_SIZE + SPACING;
     gui_fselect_read_dir(current_dir);
     top = selected = head;
-    selected_file[0] = 0;
+
+    // Find selected file if it exists in list
+    if (selected_file[0])
+    {
+        struct fitem *p = head;
+        while (p)
+        {
+            if (strcmp(p->name,selected_file) == 0)
+            {
+                break;
+            }
+            p = p->next;
+            fselect_goto_next(1);
+        }
+        if (!p) selected_file[0] = 0;
+    }
+
     fselect_on_select = on_select;
     marked_operation = MARKED_OP_NONE;
     gui_fselect_mode_old = gui_get_mode();
@@ -578,44 +681,6 @@ static void fselect_delete_folder_cb(unsigned int btn) {
         gui_fselect_read_dir(current_dir);
     }
     gui_fselect_redraw = 2;
-}
-
-//-------------------------------------------------------------------
-static void fselect_goto_prev(int step) {
-    register int j, i;
-
-    for (j=0; j<step; ++j) {
-        if (selected->prev==top && top->prev) 
-            top=top->prev;
-        if (selected->prev) 
-            selected=selected->prev;
-        else
-        if (step == 1)
-        {
-            for(; selected->next; selected=selected->next);
-            for (i=0, top=selected; i<BODY_LINES-1 && top->prev; ++i, top=top->prev);
-        }
-    }
-}
-
-//-------------------------------------------------------------------
-static void fselect_goto_next(int step) {
-    register int j, i;
-    struct fitem  *ptr;
-
-    for (j=0; j<step; ++j) {
-        for (i=0, ptr=top; i<BODY_LINES-1 && ptr; ++i, ptr=ptr->next);
-        if (i==BODY_LINES-1 && ptr && ptr->prev==selected && ptr->next)
-            top=top->next;
-        if (selected->next) 
-            selected=selected->next;
-        else
-        if (step == 1)
-	    {
-            for(; top->prev; top = top->prev);
-            selected = top;
-        }
-    }
 }
 
 //-------------------------------------------------------------------

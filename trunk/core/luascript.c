@@ -777,7 +777,7 @@ static int luaCB_file_browser( lua_State* L ) {
     // Push file browser action onto stack - will loop doing nothing until file browser exits
     action_push(AS_FILE_BROWSER);
     // Switch to file browser gui mode. Path can be supplied in call or defaults to "A" (root directory).
-    gui_fselect_init(LANG_STR_FILE_BROWSER, luaL_optstring( L, 1, "A" ), file_browser_selected);
+    gui_fselect_init(LANG_STR_FILE_BROWSER, luaL_optstring( L, 1, "A" ), "A", file_browser_selected);
     // Yield the script so that the action stack will process the AS_FILE_BROWSER action
     return lua_yield(L, 0);
 }
