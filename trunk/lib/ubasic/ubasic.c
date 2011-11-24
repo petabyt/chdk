@@ -119,6 +119,21 @@ static void line_statement(void);
 static void statement(void);
 static int relation(void);
 
+/*
+ubasic scheduling controls
+ubasic returns control to kbd_task as soon as either of the following is is exceeded
+defaults is 1 ubasic line per kbd_task cycle, mimicing old behavior
+*/
+#define YIELD_MAX_LINES_DEFAULT 1
+#define YIELD_MAX_MS_DEFAULT 10
+// maximum number lines before yielding (labels, blank lines and REMs excluded)
+static unsigned yield_max_lines;
+// maximum number of ticks before yielding
+static unsigned yield_max_ms;
+// set flag to immediately transfer execution flow to main CHDK to process external action
+// TODO a better approach to this might be to check if AS_RUN is on top of the action_stack
+static int flag_yield;
+
 int ubasic_error;
 const char *ubasic_errstrings[UBASIC_E_ENDMARK] =
 {
@@ -154,10 +169,13 @@ void
 ubasic_init(const char *program)
 {
   program_ptr = program;
+  flag_yield = 0;
   for_stack_ptr = gosub_stack_ptr = while_stack_ptr = do_stack_ptr = if_stack_ptr = select_stack_ptr = 0;
   tokenizer_init(program);
   ended = 0;
   ubasic_error = UBASIC_E_NONE;
+  yield_max_lines = YIELD_MAX_LINES_DEFAULT;
+  yield_max_ms = YIELD_MAX_MS_DEFAULT;
 }
 /*---------------------------------------------------------------------------*/
 // read a key name and return key id, 
@@ -297,6 +315,7 @@ case TOKENIZER_IS_PRESSED:
     srand((int)shooting_get_bv96()+(unsigned short)stat_get_vbatt()+get_tick_count());
     // wtf
     action_push_delay(rand()%10);
+    flag_yield=1;
     r = min + rand()%(max-min+1);
   break;
   case TOKENIZER_GET_MOVIE_STATUS:
@@ -1422,8 +1441,10 @@ click_statement(void)
   int k;
   accept(TOKENIZER_CLICK);
   k = ubasic_get_key_arg();
-  if (k > 0)
+  if (k > 0) {
     action_push_click(k);
+    flag_yield=1;
+  }
 
   DEBUG_PRINTF("End of click\n");
   accept_cr();
@@ -1435,8 +1456,10 @@ press_statement(void)
   int k;
   accept(TOKENIZER_PRESS);
   k = ubasic_get_key_arg();
-  if (k > 0)
+  if (k > 0) {
     action_push_press(k);
+    flag_yield=1;
+  }
   DEBUG_PRINTF("End of press\n");
   accept_cr();
 }
@@ -1447,8 +1470,10 @@ release_statement(void)
   int k;
   accept(TOKENIZER_RELEASE);
   k = ubasic_get_key_arg();
-  if (k > 0)
+  if (k > 0) {
     action_push_release(k);
+    flag_yield=1;
+  }
   DEBUG_PRINTF("End of release\n");
   accept_cr();
 }
@@ -1460,6 +1485,7 @@ sleep_statement(void)
   accept(TOKENIZER_SLEEP);
   val = expr();
   action_push_delay(val);
+  flag_yield=1;
   DEBUG_PRINTF("End of sleep\n");
   accept_cr();
 }
@@ -1469,6 +1495,7 @@ shoot_statement(void)
 {
   accept(TOKENIZER_SHOOT);
   action_push(AS_SHOOT);
+  flag_yield=1;
   DEBUG_PRINTF("End of shoot\n");
   accept_cr();
 }
@@ -1708,6 +1735,20 @@ static void set_config_value_statement()
     }
     accept_cr();
 }
+
+static void set_yield_lines_statement()
+{
+    accept(TOKENIZER_SET_YIELD_LINES);
+    yield_max_lines = expr();
+    accept_cr();
+}
+
+static void set_yield_ms_statement()
+{
+    accept(TOKENIZER_SET_YIELD_MS);
+    yield_max_ms = expr();
+    accept_cr();
+}
 /*---------------------------------------------------------------------------*/
 
 static void wait_click_statement()
@@ -1719,6 +1760,7 @@ static void wait_click_statement()
         timeout = expr();
     }
     action_wait_for_click(timeout);
+    flag_yield=1;
     accept_cr();
 }
 
@@ -1894,6 +1936,7 @@ static void md_detect_motion_statement()
 			clipping_region_column2, clipping_region_row2,
 			parameters, pixels_step, msecs_before_trigger
 	);
+    flag_yield=1;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2251,6 +2294,12 @@ statement(void)
   case TOKENIZER_SET_CONFIG_VALUE:
     set_config_value_statement();
     break;
+  case TOKENIZER_SET_YIELD_LINES:
+    set_yield_lines_statement();
+    break;
+  case TOKENIZER_SET_YIELD_MS:
+    set_yield_ms_statement();
+    break;
 	  
 
   default:
@@ -2295,6 +2344,9 @@ line_statement(void)
     else if ( r == TOKENIZER_REM ) {
       rem_statement();
     }
+    else {
+      break;
+    }
   } while(--count);
   statement();
   return;
@@ -2304,12 +2356,25 @@ line_statement(void)
 void
 ubasic_run(void)
 {
-  if(tokenizer_finished()) {
+ unsigned start_tick = get_tick_count();
+ unsigned lines = 0;
+ flag_yield = 0;
+
+ do
+ {
+  if( ubasic_finished() ) {
     DEBUG_PRINTF("uBASIC program finished\n");
     return;
   }
 
   line_statement();
+
+  // Return control to CHDK only if external processing required  
+  if ( flag_yield )
+    return;
+
+  lines++;
+ } while (lines < yield_max_lines && get_tick_count() - start_tick < yield_max_ms);
 }
 /*---------------------------------------------------------------------------*/
 int
