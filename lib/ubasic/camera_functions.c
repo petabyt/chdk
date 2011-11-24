@@ -9,6 +9,7 @@ int state_kbd_script_run=1;
 int zoom_points = 3;
 #define MODE_REC                0x0100
 #define AS_SHOOT 1
+#define CONF_VALUE 2
 int script_keyid_by_name(const char *s) {
 	return 1;
 }
@@ -570,13 +571,16 @@ int shooting_mode_chdk2canon(int chdkmode)
 		return 0;
 	return 1;
 }
-int get_config_value(int id, int v)
-{
-    printf("*** get config value %d def: %d ***\n",id, v);
+
+int conf_getValue(unsigned short id, int* configVal) {
+    printf("*** get config value %d ***\n",id);
+    *configVal = 1;
+    return CONF_VALUE;
 }
-void set_config_value(int id, int v)
-{
-    printf("*** set config value %d %d ***\n",id, v);
+
+int conf_setValue(unsigned short id, int configVal) {
+    printf("*** set config value %d %d***\n",id, configVal);
+    return CONF_VALUE;
 }
 
 void reboot(const char *filename) 
@@ -584,4 +588,9 @@ void reboot(const char *filename)
     printf("*** reboot %s ***\n",filename?filename:"NULL");
 }
 
+int mode_is_video()
+{
+    printf("*** mode_is_video ***\n");
+    return 0;
+}
 #endif
