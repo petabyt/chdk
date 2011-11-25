@@ -25,18 +25,9 @@ char *hook_alt_raw_image_addr()
 }
 
 
-void *vid_get_bitmap_fb()        { return (void*)0x40685000; } // Found @0xff0515dc
-void *vid_get_viewport_fb()      { return (void*)0x407dab80; } // Found @0xff3e0b38 (buffer table @FF43457C)
 char *camera_jpeg_count_str()    { return (char*)0x000df0e8; } // Found @0xff285438
 long hook_raw_size()             { return 0x01247a60; }        // Found @0xff3e393c
 
-
-void *vid_get_viewport_live_fb()
-{
-    extern char active_viewport_buffer;
-    extern void* viewport_buffers[];
-    return viewport_buffers[(active_viewport_buffer-1)&3];
-}
 
 void *vid_get_viewport_fb_d()
 {
