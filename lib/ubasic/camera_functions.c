@@ -450,9 +450,9 @@ int get_exposure_counter(void)
 }
 
 
-int script_key_is_pressed(const char *v) 
+int script_key_is_pressed( int keyid )
 {
-    printf("*** script_key_is_pressed %s ***\n", v);
+    printf("*** script_key_is_pressed %d ***\n", keyid);
 	return 0;
 }
 
@@ -588,9 +588,9 @@ void reboot(const char *filename)
     printf("*** reboot %s ***\n",filename?filename:"NULL");
 }
 
-int mode_is_video()
+int mode_is_video(int m)
 {
-    printf("*** mode_is_video ***\n");
+printf("*** mode is video %d ***\n",m);
     return 0;
 }
 #endif
