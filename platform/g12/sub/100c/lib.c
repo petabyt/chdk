@@ -47,27 +47,6 @@ char *camera_jpeg_count_str()
 }
 
 
-void *vid_get_bitmap_fb()
-{
-	return (void*)0x40471000; // DispCon_ShowBitmapColorBar 
-    // 0xa610 = 0 or 1, used as index into 0xa618
-    // 0xa618 = 0x40471000
-    // 0xa61c = 0x404b0480 = 0x40471000 + size
-}
-
-
-void *vid_get_viewport_live_fb()
-{
-	return (void*)(*(int*)(0x21F8));	// Found by searching RAM locations that referenced 0x40587700 (viewport buffer)
-										// and also changed to the other buffer addresses over time. Then used each here
-										// and selected value that gave the fastest Motion Detect response using http://dataghost.com/chdk/md_meter.html.
-}
-
-void *vid_get_viewport_fb()
-{
-    return (void *)0x40587700; // search on VRAM Address
-}
-
 void *vid_get_viewport_fb_d()
 {
 	return (void*)(*(int*)(0x2C10+0x58)); // @FF8781AC & FF8781E4 (comp S95)

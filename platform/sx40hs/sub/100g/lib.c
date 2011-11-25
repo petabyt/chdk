@@ -25,19 +25,9 @@ char *hook_alt_raw_image_addr()
 }
 
 
-void *vid_get_bitmap_fb()        { return (void*)0x40685000; } // Found @0xff0515dc
-void *vid_get_viewport_fb()      { return (void*)0x407dab80; } // Found @0xff3e0b38 (buffer table @FF43457C)
 char *camera_jpeg_count_str()    { return (char*)0x000df0e8; } // Found @0xff285438
 long hook_raw_size()             { return 0x01247a60; }        // Found @0xff3e393c
 
-
-void *vid_get_viewport_live_fb()
-{
-    // Found by searching RAM locations that referenced 0x407dab80 (viewport buffer)
-    // and also changed to the other buffer addresses over time. Then used each here
-	// and selected value that gave the fastest Motion Detect response using http://dataghost.com/chdk/md_meter.html.
-	return (void*)(*(int*)(0x217c));
-}
 
 void *vid_get_viewport_fb_d()
 {
