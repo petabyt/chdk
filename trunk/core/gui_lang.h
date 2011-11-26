@@ -580,9 +580,16 @@
 // USB remote icon
 #define LANG_OSD_LAYOUT_EDITOR_USB_INFO         465
 #define LANG_MENU_USB_SHOW_INFO                 466
+
+// Save ROM crash log messages
+#define LANG_SAVE_ROMLOG            467
+#define LANG_SAVE_ROMLOG_INIT_ERROR 468
+#define LANG_SAVE_ROMLOG_FAIL       469
+#define LANG_SAVE_ROMLOG_OK         470
+
 //-------------------------------------------------------------------
 
-#define GUI_LANG_ITEMS                  466
+#define GUI_LANG_ITEMS                  470
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
