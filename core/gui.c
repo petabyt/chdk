@@ -28,6 +28,7 @@
 #include "console.h"
 #ifdef OPT_DEBUGGING
 #include "gui_debug.h"
+#include "gui_bench.h"
 #endif
 #include "gui_fselect.h"
 #include "gui_batt.h"
@@ -39,9 +40,6 @@
 #endif
 #ifdef OPT_CALENDAR
 	#include "gui_calendar.h"
-#endif
-#ifdef OPT_DEBUGGING
-#include "gui_bench.h"
 #endif
 #include "gui_grid.h"
 #include "histogram.h"
@@ -168,6 +166,10 @@ static void gui_draw_mastermind(int arg);
 #ifdef OPT_DEBUGGING
 	static void gui_draw_debug(int arg);
 	static void gui_draw_bench(int arg);
+    void gui_compare_props(int arg);
+    static void gui_menuproc_break_card(int arg);
+	static void gui_debug_shortcut(void);
+	static void save_romlog(int arg);
 #endif
 static void gui_draw_fselect(int arg);
 static void gui_draw_osd_le(int arg);
@@ -185,18 +187,12 @@ static void gui_draw_calendar(int arg);
 #endif
 static void gui_draw_load_lang(int arg);
 static void gui_menuproc_mkbootdisk(int arg);
-#ifdef OPT_DEBUGGING
-void gui_compare_props(int arg);
-#endif
 #ifndef OPTIONS_AUTOSAVE
 static void gui_menuproc_save(int arg);
 #endif
 static void gui_menuproc_reset(int arg);
 static void gui_grid_lines_load(int arg);
 static void gui_raw_develop(int arg);
-#ifdef OPT_DEBUGGING
-static void gui_menuproc_break_card(int arg);
-#endif
 static void gui_menuproc_swap_partitions(int arg);
 static void gui_menuproc_reset_files(int arg);
 #ifdef OPT_CURVES
@@ -231,9 +227,6 @@ static const char* gui_bad_pixel_enum(int change, int arg);
 static const char* gui_video_af_key_enum(int change, int arg);
 #ifdef OPT_CURVES
 	static const char* gui_conf_curve_enum(int change, int arg);
-#endif
-#ifdef OPT_DEBUGGING
-	static void gui_debug_shortcut(void);
 #endif
 
 #ifdef OPT_EDGEOVERLAY
@@ -390,8 +383,9 @@ static CMenuItem debug_submenu_items[] = {
     MENU_ITEM(0x5c,LANG_MENU_LUA_RESTART,             MENUITEM_BOOL,          &conf.debug_lua_restart_on_error, 0 ),
 #endif
 #if CAM_MULTIPART
-    MENU_ITEM(0x33,LANG_MENU_DEBUG_CREATE_MULTIPART , MENUITEM_PROC, 	    	gui_menuproc_break_card, 0 ),
+    MENU_ITEM(0x33,LANG_MENU_DEBUG_CREATE_MULTIPART , MENUITEM_PROC, 	      gui_menuproc_break_card, 0 ),
 #endif
+    MENU_ITEM(0x2a,LANG_SAVE_ROMLOG,                  MENUITEM_PROC,          save_romlog, 0 ),
     MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
     {0}
 };
@@ -2649,9 +2643,8 @@ void gui_draw_debug(int arg) {
 //    gui_debug_init(malloc(16));
     gui_debug_init((void*)conf.mem_view_addr_init);
 }
-#endif
+
 //-------------------------------------------------------------------
-#ifdef OPT_DEBUGGING
 void gui_draw_bench(int arg) {
     gui_set_mode(GUI_MODE_BENCH);
     gui_bench_init();
@@ -2929,6 +2922,40 @@ void gui_compare_props(int arg)
 			}
 		}
 	}
+}
+
+// Save camera romlog to A/ROMLOG.LOG file
+void save_romlog(int arg)
+{
+    extern unsigned _ExecuteEventProcedure(const char *name,...);
+
+    struct stat st;
+    if (stat("A/ROMLOG.LOG",&st)    == 0) remove("A/ROMLOG.LOG");
+    if (stat("A/RomLogErr.txt",&st) == 0) remove("A/RomLogErr.txt");
+
+    unsigned args[3];
+    args[0] = (unsigned)"SystemEventInit";
+    if (call_func_ptr(_ExecuteEventProcedure,args,1) == -1)
+    {
+        args[0] = (unsigned)"System.Create";
+        if (call_func_ptr(_ExecuteEventProcedure,args,1) == -1)
+        {
+            gui_mbox_init(LANG_ERROR, LANG_SAVE_ROMLOG_INIT_ERROR, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+            return;
+        }
+    }
+
+    args[0] = (unsigned)"GetLogToFile";
+    args[1] = (unsigned)"A/ROMLOG.LOG";
+    args[2] = 1;
+    if (call_func_ptr(_ExecuteEventProcedure,args,3) == -1)
+    {
+        gui_mbox_init(LANG_ERROR, LANG_SAVE_ROMLOG_FAIL, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+    }
+    else
+    {
+        gui_mbox_init(LANG_INFORMATION, LANG_SAVE_ROMLOG_OK, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+    }
 }
 
 #endif

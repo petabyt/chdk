@@ -576,3 +576,8 @@
 464 "<Alt> Shortcut Buttons"
 465 "USB Remote"
 466 "Show USB Remote Status"
+
+467 "Save ROM crash log"
+468 "ERROR: SystemEventInit and System.Create failed"
+469 "ROM crash log could not be saved"
+470 "ROM crash log saved to ROMLOG.LOG"
