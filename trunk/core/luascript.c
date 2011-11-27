@@ -17,6 +17,7 @@
 #include "ptp.h"
 #include "core.h"
 #include "gui_fselect.h"
+#include "lang.h"
 #include "gui_lang.h"
 
 #include "../lib/lua/lstate.h"  // for L->nCcalls, baseCcalls
@@ -25,7 +26,14 @@ lua_State* L;
 lua_State* Lt;
 
 static int lua_script_is_ptp;
-
+static int run_first_resume; // 1 first 'resume', 0 = resuming from yield
+static int run_start_tick; // tick count at start of this kbd_task iteration
+static int run_hook_count; // number of calls to the count hook this kbd_task iteration
+#define YIELD_CHECK_COUNT 100 // check for yield every N vm instructions
+#define YIELD_MAX_COUNT_DEFAULT 25 // 25 checks = 2500 vm instructions
+#define YIELD_MAX_MS_DEFAULT 10
+static unsigned yield_max_count;
+static unsigned yield_max_ms;
 static int yield_hook_enabled;
 
 static void lua_script_disable_yield_hook(void) {
@@ -123,7 +131,10 @@ void lua_script_reset()
 
 static void lua_count_hook(lua_State *L, lua_Debug *ar)
 {
-  if( L->nCcalls <= L->baseCcalls && yield_hook_enabled )
+  run_hook_count++;
+  if( L->nCcalls > L->baseCcalls || !yield_hook_enabled )
+    return;
+  if(run_hook_count >= yield_max_count || get_tick_count() - run_start_tick >= yield_max_ms)
     lua_yield( L, 0 );
 }
 
@@ -190,9 +201,42 @@ int lua_script_start( char const* script, int ptp )
     lua_script_error(Lt,0);
     return 0;
   }
-  lua_sethook(Lt, lua_count_hook, LUA_MASKCOUNT, 1000 );
+  lua_sethook(Lt, lua_count_hook, LUA_MASKCOUNT, YIELD_CHECK_COUNT );
   lua_script_enable_yield_hook();
+  run_first_resume = 1;
+  yield_max_count = YIELD_MAX_COUNT_DEFAULT;
+  yield_max_ms = YIELD_MAX_MS_DEFAULT;
   return 1;
+}
+
+// run a timeslice of lua script
+void lua_script_run(void)
+{
+    int Lres;
+    int top;
+    if (run_first_resume) {
+        run_first_resume = 0;
+        top = 0;
+    } else {
+        top = lua_gettop(Lt);
+    }
+    run_start_tick = get_tick_count();
+    run_hook_count = 0;
+    Lres = lua_resume( Lt, top );
+
+    if (Lres == LUA_YIELD) {
+        // yielded
+        return;
+    } else if(Lres != 0) {
+        lua_script_error(Lt,1);
+        return;
+    } else {
+        // finished normally, add ptp result
+        lua_script_finish(Lt);
+        script_console_add_line(lang_str(LANG_CONSOLE_TEXT_FINISHED));
+        action_pop();
+        script_end();
+    }
 }
 
 // run the "restore" function at the end of a script
@@ -1961,6 +2005,20 @@ static int luaCB_get_meminfo( lua_State* L ) {
     return 1;
 }
 
+/*
+set scheduling parameters
+old_max_count,old_max_ms=set_yield(max_count,max_ms)
+*/
+static int luaCB_set_yield( lua_State* L )
+{
+  lua_pushnumber(L,yield_max_count);
+  lua_pushnumber(L,yield_max_ms);
+  yield_max_count = luaL_optnumber(L,1,YIELD_MAX_COUNT_DEFAULT);
+  yield_max_ms = luaL_optnumber(L,2,YIELD_MAX_MS_DEFAULT);
+  return 2;
+}
+
+
 static void register_func( lua_State* L, const char *name, void *func) {
   lua_pushcfunction( L, func );
   lua_setglobal( L, name );
@@ -2128,6 +2186,8 @@ static const luaL_Reg chdk_funcs[] = {
    FUNC(get_meminfo)
 
    FUNC(file_browser)
+
+   FUNC(set_yield)
 
   {NULL, NULL},
 };

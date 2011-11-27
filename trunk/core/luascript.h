@@ -4,7 +4,8 @@
 #include "lua.h"
 
 void lua_script_reset();
-int lua_script_start( char const* script,int is_ptp );
+int lua_script_start( char const* script,int is_ptp ); // initialize and load script
+void lua_script_run( void ); // run script timeslice
 void lua_script_error( lua_State* L,int runtime );
 void lua_script_finish( lua_State* L );
 extern void register_lua_funcs( lua_State* L );
