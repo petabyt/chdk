@@ -82,10 +82,6 @@ static char script_params_update[SCRIPT_NUM_PARAMS];
 static int script_loaded_params[SCRIPT_NUM_PARAMS];
 static long running_script_stack_name = -1;
 
-#ifdef OPT_LUA
-static int state_lua_kbd_first_call_to_resume;	// AUJ
-#endif
-
 //-------------------------------------------------------------------
 static void process_title(const char *title) {
     register const char *ptr = title;
@@ -475,34 +471,11 @@ void script_wait_and_end(void)
 
 static void process_script()
 {   // Note: This function is called from an action stack for AS_SCRIPT_RUN.
-    
-    long t;
-    int Lres;
 
     if (state_kbd_script_run != 3) {
 #ifdef OPT_LUA
         if( L ) {
-            int top;
-            if (state_lua_kbd_first_call_to_resume) {
-                state_lua_kbd_first_call_to_resume = 0;
-                top = 0;
-            } else {
-                top = lua_gettop(Lt);
-            }
-            Lres = lua_resume( Lt, top );
-
-            if (Lres != LUA_YIELD && Lres != 0) {
-                lua_script_error(Lt,1);
-                return;
-            }
-
-            if (Lres != LUA_YIELD) {
-                // add ptp result
-                lua_script_finish(Lt);
-                script_console_add_line(lang_str(LANG_CONSOLE_TEXT_FINISHED));
-                action_pop();
-                script_end();
-            }    
+            lua_script_run();
         } else
 #endif
         {
@@ -681,7 +654,6 @@ long script_start_gui( int autostart )
                 lua_settable( L, LUA_GLOBALSINDEX );
             }
         }
-        state_lua_kbd_first_call_to_resume = 1;
 #else
         char msg[64];
         sprintf(msg,lang_str(LANG_CONSOLE_SCRIPT_DISABLED_IN_BUILD),"Lua");
@@ -715,7 +687,6 @@ long script_start_gui( int autostart )
 long script_start_ptp( char *script )
 {
   if (!lua_script_start(script,1)) return -1;
-  state_lua_kbd_first_call_to_resume = 1;
   state_kbd_script_run = 1;
   kbd_set_block(1);
   auto_started = 0;
