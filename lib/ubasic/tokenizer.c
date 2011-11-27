@@ -188,9 +188,7 @@ static const struct keyword_token keywords[] = {
   {"set_zoom",                TOKENIZER_SET_ZOOM},
   {"set_record",              TOKENIZER_SET_RECORD},
   {"set_config_value",        TOKENIZER_SET_CONFIG_VALUE},
-  {"set_yield_lines",         TOKENIZER_SET_YIELD_LINES},
-  {"set_yield_ms",            TOKENIZER_SET_YIELD_MS},
-  
+  {"set_yield",               TOKENIZER_SET_YIELD},
   
   {"wait_click",              TOKENIZER_WAIT_CLICK},
   {"is_pressed",              TOKENIZER_IS_PRESSED},
