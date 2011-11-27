@@ -1736,19 +1736,16 @@ static void set_config_value_statement()
     accept_cr();
 }
 
-static void set_yield_lines_statement()
+static void set_yield_statement()
 {
-    accept(TOKENIZER_SET_YIELD_LINES);
-    yield_max_lines = expr();
+    accept(TOKENIZER_SET_YIELD);
+    int val = expr();
+    yield_max_lines = val?val:YIELD_MAX_LINES_DEFAULT;
+    val = expr();
+    yield_max_ms = val?val:YIELD_MAX_MS_DEFAULT;
     accept_cr();
 }
 
-static void set_yield_ms_statement()
-{
-    accept(TOKENIZER_SET_YIELD_MS);
-    yield_max_ms = expr();
-    accept_cr();
-}
 /*---------------------------------------------------------------------------*/
 
 static void wait_click_statement()
@@ -2294,13 +2291,9 @@ statement(void)
   case TOKENIZER_SET_CONFIG_VALUE:
     set_config_value_statement();
     break;
-  case TOKENIZER_SET_YIELD_LINES:
-    set_yield_lines_statement();
+  case TOKENIZER_SET_YIELD:
+    set_yield_statement();
     break;
-  case TOKENIZER_SET_YIELD_MS:
-    set_yield_ms_statement();
-    break;
-	  
 
   default:
       DEBUG_PRINTF("ubasic.c: statement(): not implemented %d\n", token);
