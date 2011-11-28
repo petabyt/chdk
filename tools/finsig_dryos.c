@@ -587,7 +587,7 @@ int idxFollowBranch(firmware *fw, int fidx, int offset)
 		uint32_t msk = ~(offset & 0xFF000000);
         fidx += ((offset & 0x00FFFFFF) - 1);
         uint32_t inst = fw->buf[fidx];
-        if ((inst & (0xFF000000&msk)) == (0xEA000000&msk))    // Branch (not BL)?
+        if ((inst & (0xFF000000&msk)) == (0xEA000000&msk))    // Branch (B or BL depending on msk)
         {
             int o = inst & 0x00FFFFFF;
             if (o & 0x00800000) o |= 0xFF000000;
@@ -605,7 +605,7 @@ uint32_t followBranch(firmware *fw, uint32_t fadr, int offset)
         uint32_t fidx = adr2idx(fw,fadr);  // function index
         fidx += ((offset & 0x00FFFFFF) - 1);
         uint32_t inst = fw->buf[fidx];
-        if ((inst & (0xFF000000&msk)) == (0xEA000000&msk))    // Branch (not BL)?
+        if ((inst & (0xFF000000&msk)) == (0xEA000000&msk))    // Branch (B or BL depending on msk)
         {
             int o = inst & 0x00FFFFFF;
             if (o & 0x00800000) o |= 0xFF000000;
@@ -678,6 +678,11 @@ uint32_t LDR2idx(firmware *fw, int offset)  // decode LDR instruction at offset 
 	return adr2idx(fw,LDR2adr(fw,offset));
 }
 
+uint32_t LDR2val(firmware *fw, int offset)  // decode LDR instruction at offset and return firmware value stored at the address
+{
+	return fw->buf[adr2idx(fw,LDR2adr(fw,offset))];
+}
+
 int isLDR_PC(firmware *fw, int offset)
 {
 	return ((fw->buf[offset] & 0xFE1F0000) == 0xE41F0000);
@@ -706,6 +711,11 @@ int isSTR(firmware *fw, int offset)
 int isBL(firmware *fw, int offset)
 {
 	return ((fw->buf[offset] & 0xFF000000) == 0xEB000000);	// BL
+}
+
+int isB(firmware *fw, int offset)
+{
+	return ((fw->buf[offset] & 0xFF000000) == 0xEA000000);	// B
 }
 
 void load_firmware(firmware *fw, char *filename, char *base_addr)
@@ -831,10 +841,10 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 		bprintf("//   MAXRAMADDR = 0x%08x\n",fw->maxram);
 
     uint32_t ofst = adr2idx(fw,0xFFFF0000);    // Offset of area to find dancing bits
-    if ((ofst < fw->size) && (fw->buf[ofst] == 0xEA000001) && isLDR_PC(fw,ofst+1))
+    if ((ofst < fw->size) && isB(fw,ofst) && isLDR_PC(fw,ofst+1))
     {
         // Get KEYSYS value
-        ofst = adr2idx(fw,fw->buf[LDR2idx(fw,ofst+1)]);     // Address of firmware encryption key
+        ofst = adr2idx(fw,LDR2val(fw,ofst+1));     // Address of firmware encryption key
         if (ofst < fw->size)
         {
             char *ksys = "? Not found, possible new firmware encryption key.";
@@ -1545,7 +1555,7 @@ int find_strsig5(firmware *fw, string_sig *sig, int k)
 				{
 					uint32_t padr;
 					if ((p1[1] & 0xFE1F0000) == 0xE41F0000) // LDR ?
-                        padr = fw->buf[LDR2idx(fw,j1+1)];
+                        padr = LDR2val(fw,j1+1);
 					else
                         padr = ADR2adr(fw,j1+1);
 					if (padr == sadr)
@@ -1574,7 +1584,7 @@ int find_strsig5(firmware *fw, string_sig *sig, int k)
 						}
 						if (found)
 						{
-							uint32_t fadr = fw->buf[LDR2idx(fw,j2)];
+							uint32_t fadr = LDR2val(fw,j2);
 							if (sig->offset > 1) fadr = followBranch(fw, fadr, 1);
 							fadr = followBranch2(fw, fadr, sig->offset);
                             int ofst = dryos_offset(fw,sig);
@@ -1932,7 +1942,7 @@ int find_strsig12(firmware *fw, string_sig *sig, int k)
 				if (((fw->buf[idx+1] & 0xFFFFF000) == 0xE5801000) && // STR R1,[R0,nnn]
 				    ((fw->buf[idx+1] & 0x00000FFF) == ofst))
 				{
-					uint32_t fadr = fw->buf[LDR2idx(fw,idx)];
+					uint32_t fadr = LDR2val(fw,idx);
 					uint32_t bfadr = followBranch2(fw,fadr,sig->offset);
 					if ((sig->offset <= 1) || ((bfadr != fadr) && ((fw->buf[adr2idx(fw,fadr)] & 0xFFFF0000) == 0xE92D0000)))
 					{
@@ -1941,7 +1951,7 @@ int find_strsig12(firmware *fw, string_sig *sig, int k)
 						return 1;
 					}
 				}
-				else if ((fw->buf[idx] & 0xFF000000) == 0xEA000000)	// B
+				else if (isB(fw,idx))	// B
 				{
 					idx = adr2idx(fw,followBranch(fw,idx2adr(fw,idx),1)) - 1;
 				}
@@ -2430,7 +2440,7 @@ void find_modemap(firmware *fw)
 							bprintf("%08x -> ",idx2adr(fw,k));
 							if (isLDR_PC(fw,k))
 							{
-								k = adr2idx(fw,fw->buf[LDR2idx(fw,k)]);
+								k = adr2idx(fw,LDR2val(fw,k));
 								bprintf("%08x\n",idx2adr(fw,k));
 								uint16_t *p = (uint16_t*)(&fw->buf[k]);
 								k = 0;
@@ -2508,6 +2518,34 @@ void find_platform_vals(firmware *fw)
 	k = find_str_ref(fw, "\r[%ld] AdjDrvType[%02ld] -> DrvType[%02");
 	if (k >= 0)
 	{
+        // Width
+		for (k1 = k-1; k1 >= k-20; k1--)
+		{
+			if ((fw->buf[k1] & 0x0FFF0FFF) == 0x058D0034)			// STRxx Rn, [SP,#0x34]
+			{
+				if ((fw->buf[k1-1] & 0x0FFF0000) == 0x03A00000)		// MOVxx Rn, #YYY
+				{
+					raw_width = ALUop2(fw, k1-1);
+					kw = k1-1;
+				}
+				else if ((fw->buf[k1-2] & 0x0FFF0000) == 0x03A00000)// MOVxx Rn, #YYY
+				{
+					raw_width = ALUop2(fw, k1-2);
+					kw = k1-2;
+				}
+				else if (isLDR_PC_cond(fw,k1-1))
+				{
+					raw_width = LDR2val(fw,k1-1);
+					kw = k1-1;
+				}
+				else if (isLDR_PC_cond(fw,k1-2))
+				{
+					raw_width = LDR2val(fw,k1-2);
+					kw = k1-2;
+				}
+			}
+        }
+        // Height
 		for (k1 = k-1; k1 >= k-20; k1--)
 		{
 			if ((fw->buf[k1] & 0x0FFF0FFF) == 0x058D0030)			// STRxx Rn, [SP,#0x30]
@@ -2524,36 +2562,18 @@ void find_platform_vals(firmware *fw)
 				}
 				else if (isLDR_PC_cond(fw,k1-1))
 				{
-					raw_height = fw->buf[LDR2idx(fw,k1-1)];
+					raw_height = LDR2val(fw,k1-1);
 					kh = k1-1;
 				}
 				else if (isLDR_PC_cond(fw,k1-2))
 				{
-					raw_height = fw->buf[LDR2idx(fw,k1-2)];
+					raw_height = LDR2val(fw,k1-2);
 					kh = k1-2;
 				}
-			}
-			if ((fw->buf[k1] & 0x0FFF0FFF) == 0x058D0034)			// STRxx Rn, [SP,#0x34]
-			{
-				if ((fw->buf[k1-1] & 0x0FFF0000) == 0x03A00000)		// MOVxx Rn, #YYY
+				if ((fw->buf[k1-1] & 0x0FFF0000) == 0x02400000)		// SUBxx Rn, #YYY
 				{
-					raw_width = ALUop2(fw, k1-1);
-					kw = k1-1;
-				}
-				else if ((fw->buf[k1-2] & 0x0FFF0000) == 0x03A00000)// MOVxx Rn, #YYY
-				{
-					raw_width = ALUop2(fw, k1-2);
-					kw = k1-2;
-				}
-				else if (isLDR_PC_cond(fw,k1-1))
-				{
-					raw_width = fw->buf[LDR2idx(fw,k1-1)];
-					kw = k1-1;
-				}
-				else if (isLDR_PC_cond(fw,k1-2))
-				{
-					raw_width = fw->buf[LDR2idx(fw,k1-2)];
-					kw = k1-2;
+					raw_height = raw_width - ALUop2(fw, k1-1);
+					kh = k1-1;
 				}
 			}
 		}
@@ -2575,7 +2595,7 @@ void find_platform_vals(firmware *fw)
 				else
 				if (isLDR_PC(fw,k1) && ((fw->buf[k1]& 0x0000F000) == 0x00002000))	// LDR R2, =nnn
 				{
-					raw_width = fw->buf[LDR2idx(fw,k1)];
+					raw_width = LDR2val(fw,k1);
 					kw = k1;
 				}
 			}
@@ -2590,7 +2610,7 @@ void find_platform_vals(firmware *fw)
 				else
 				if (isLDR_PC(fw,k1) && ((fw->buf[k1]& 0x0000F000) == 0x00003000))	// LDR R3, =nnn
 				{
-					raw_height = fw->buf[LDR2idx(fw,k1)];
+					raw_height = LDR2val(fw,k1);
 					kh = k1;
 				}
 				else
@@ -2607,10 +2627,18 @@ void find_platform_vals(firmware *fw)
 	{
 		bprintf("//#define CAM_RAW_ROWPIX    %d // Found @0x%08x\n",raw_width,idx2adr(fw,kw));
 	}
+    else
+    {
+		bprintf("//#define CAM_RAW_ROWPIX    *** Not Found ***\n");
+    }
 	if (raw_height != 0)
 	{
 		bprintf("//#define CAM_RAW_ROWS      %d // Found @0x%08x\n",raw_height,idx2adr(fw,kh));
 	}
+    else
+    {
+		bprintf("//#define CAM_RAW_ROWS      *** Not Found ***\n");
+    }
 
 	// Find 'CAM_UNCACHED_BIT'
 	k = get_saved_sig(fw, "FreeUncacheableMemory");
@@ -2652,18 +2680,18 @@ void find_lib_vals(firmware *fw)
 		
 		for (k=idx+1; k<idx+30; k++)
 		{
-			if (((fw->buf[k-1] & 0xFF000000) == 0xEB000000)	&& // BL
-			    (isLDR_PC(fw,k)))
+			if (isBL(fw,k-1) && // BL
+			    isLDR_PC(fw,k))
 			{
-				uint32_t v1 = fw->buf[LDR2idx(fw,k)];
+				uint32_t v1 = LDR2val(fw,k);
 				bprintf("//void *vid_get_bitmap_fb()        { return (void*)0x%08x; } // Found @0x%08x\n",v1,idx2adr(fw,k));
 				break;
 			}
 			else
-			if (((fw->buf[k-1] & 0xFF000000) == 0xEB000000)	&& // BL
+			if (isBL(fw,k-1) && // BL
 			    (isLDR_PC(fw,k+1)))
 			{
-				uint32_t v1 = fw->buf[LDR2idx(fw,k+1)];
+				uint32_t v1 = LDR2val(fw,k+1);
 				bprintf("//void *vid_get_bitmap_fb()        { return (void*)0x%08x; } // Found @0x%08x\n",v1,idx2adr(fw,k));
 				break;
 			}
@@ -2678,8 +2706,8 @@ void find_lib_vals(firmware *fw)
 		{
 			if (isLDR(fw,k1) && isLDR(fw,k1+1))
 			{
-				uint32_t v1 = fw->buf[LDR2idx(fw,k1)];
-				uint32_t v2 = fw->buf[LDR2idx(fw,k1+1)];
+				uint32_t v1 = LDR2val(fw,k1);
+				uint32_t v2 = LDR2val(fw,k1+1);
 				if (v2 > v1) v1 = v2;
 				bprintf("//void *vid_get_viewport_fb()      { return (void*)0x%08x; } // Found @0x%08x\n",v1,idx2adr(fw,k1));
 			}
@@ -2690,9 +2718,9 @@ void find_lib_vals(firmware *fw)
 	k = find_str_ref(fw, "9999");
 	if (k >= 0)
 	{
-		if (isLDR(fw,k-1) && ((fw->buf[k+1] & 0xFF000000) == 0xEB000000))
+		if (isLDR(fw,k-1) && isBL(fw,k+1))
 		{
-			uint32_t v1 = fw->buf[LDR2idx(fw,k-1)];
+			uint32_t v1 = LDR2val(fw,k-1);
 			bprintf("//char *camera_jpeg_count_str()    { return (char*)0x%08x; } // Found @0x%08x\n",v1,idx2adr(fw,k-1));
 		}
 	}
@@ -2703,7 +2731,7 @@ void find_lib_vals(firmware *fw)
 	{
 		if (isLDR(fw,k-1))
 		{
-			craw_bufsize = fw->buf[LDR2idx(fw,k-1)];
+			craw_bufsize = LDR2val(fw,k-1);
 			bprintf("//long hook_raw_size()             { return 0x%08x; }        // Found @0x%08x\n",craw_bufsize,idx2adr(fw,k-1));
 		}
 	}
@@ -2771,7 +2799,7 @@ void find_stubs_min(firmware *fw)
 		{
 			if (isLDR_PC(fw,idx+k))
 			{
-				print_stubs_min(fw,"physw_status",fw->buf[LDR2idx(fw,idx+k)],idx2adr(fw,idx+k));
+				print_stubs_min(fw,"physw_status",LDR2val(fw,idx+k),idx2adr(fw,idx+k));
 				//break;
 			}
 		}
@@ -2788,7 +2816,7 @@ void find_stubs_min(firmware *fw)
 		{
 			if (isLDR_PC(fw,idx+k))
 			{
-				uint32_t base = fw->buf[LDR2idx(fw,idx+k)];
+				uint32_t base = LDR2val(fw,idx+k);
 				uint32_t fadr = followBranch(fw, idx2adr(fw,idx+k+1), 1);
 				uint32_t ofst = fw->buf[adr2idx(fw,fadr)] & 0x00000FFF;
 				print_stubs_min(fw,"physw_run",base+ofst,idx2adr(fw,idx+k));
@@ -2833,9 +2861,9 @@ void find_stubs_min(firmware *fw)
 			isSTR(fw, k+2) &&								// STR R1, [R0,N]
 			(fw->buf[k+3] == 0xE3A01003) &&					// MOV R1, 3
 			isSTR(fw, k+4) &&								// STR R1, [R0,ofst]
-			(fw->buf[LDR2idx(fw,k)] < fw->base))
+			(LDR2val(fw,k) < fw->base))
 		{
-			uint32_t base = fw->buf[LDR2idx(fw,k)];
+			uint32_t base = LDR2val(fw,k);
 			uint32_t ofst = fw->buf[k+4] & 0x00000FFF;
 			print_stubs_min(fw,"movie_status",base+ofst,idx2adr(fw,k));
 			//break;
@@ -2846,9 +2874,9 @@ void find_stubs_min(firmware *fw)
 			isSTR(fw, k+2) &&								// STR R1, [R0,N]
 			(fw->buf[k+3] == 0xE3A01003) &&					// MOV R1, 3
 			isSTR(fw, k+4) &&								// STR R1, [R0,ofst]
-			(fw->buf[LDR2idx(fw,k+1)] < fw->base))
+			(LDR2val(fw,k+1) < fw->base))
 		{
-			uint32_t base = fw->buf[LDR2idx(fw,k+1)];
+			uint32_t base = LDR2val(fw,k+1);
 			uint32_t ofst = fw->buf[k+4] & 0x00000FFF;
 			print_stubs_min(fw,"movie_status",base+ofst,idx2adr(fw,k));
 			//break;
@@ -2864,7 +2892,7 @@ void find_stubs_min(firmware *fw)
 			(fw->buf[k+3] == 0xE5C01000) &&					// STRB R1, [R0]
 			(fw->buf[k+4] == 0xE12FFF1E))					// BX LR
 		{
-			uint32_t base = fw->buf[LDR2idx(fw,k)];
+			uint32_t base = LDR2val(fw,k);
 			print_stubs_min(fw,"full_screen_refresh",base,idx2adr(fw,k));
 			//break;
 		}
@@ -2881,7 +2909,7 @@ void find_stubs_min(firmware *fw)
 		{
 			if (isLDR_PC(fw,idx+k))
 			{
-				uint32_t base = fw->buf[LDR2idx(fw,idx+k)];
+				uint32_t base = LDR2val(fw,idx+k);
 				for (k1=k+1; k1<k+5; k1++)
 				{
 					if (isLDR(fw,idx+k1))
@@ -2902,9 +2930,9 @@ void find_stubs_min(firmware *fw)
 			((fw->buf[k+1] & 0xFFFFF000) == 0xE5D10000) &&	// LDRB R0, [R1, #n]
 			(fw->buf[k+2] == 0xE2800001) &&					// ADD R0, R0, #1
 			((fw->buf[k+3] & 0xFFFFF000) == 0xE5C10000) &&	// STRB R0, [R1, #n]
-			((fw->buf[k+4] & 0xFF000000) == 0xEA000000))	// B
+			(isB(fw,k+4)))	                                // B
 		{
-			uint32_t base = fw->buf[LDR2idx(fw,k)];
+			uint32_t base = LDR2val(fw,k);
 			uint32_t ofst = fw->buf[k+1] & 0x00000FFF;
 			print_stubs_min(fw,"canon_shoot_menu_active",base+ofst,idx2adr(fw,k));
 			//break;
@@ -2914,9 +2942,9 @@ void find_stubs_min(firmware *fw)
 			((fw->buf[k+1] & 0xFFFFF000) == 0xE5D01000) &&	// LDRB R1, [R0, #n]
 			(fw->buf[k+2] == 0xE2811001) &&					// ADD R1, R1, #1
 			((fw->buf[k+3] & 0xFFFFF000) == 0xE5C01000) &&	// STRB R1, [R0, #n]
-			((fw->buf[k+4] & 0xFF000000) == 0xEA000000))	// B
+			(isB(fw,k+4)))	                                // B
 		{
-			uint32_t base = fw->buf[LDR2idx(fw,k)];
+			uint32_t base = LDR2val(fw,k);
 			uint32_t ofst = fw->buf[k+1] & 0x00000FFF;
 			print_stubs_min(fw,"canon_shoot_menu_active",base+ofst,idx2adr(fw,k));
 			//break;
@@ -2931,7 +2959,7 @@ void find_stubs_min(firmware *fw)
 		k = idxFollowBranch(fw, k+6, 0x01000001);
 		if (isLDR_PC(fw,k) && isLDR(fw,k+1))
 		{
-			uint32_t base = fw->buf[LDR2idx(fw,k)];
+			uint32_t base = LDR2val(fw,k);
 			uint32_t ofst = fw->buf[k+1] & 0x00000FFF;
 			print_stubs_min(fw,"playrec_mode",base+ofst,idx2adr(fw,k));
 			found_playrec_mode = 1;
@@ -2950,14 +2978,14 @@ void find_stubs_min(firmware *fw)
 				((fw->buf[k+12] & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
 				((fw->buf[k+15] & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
 				((fw->buf[k+18] & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
-				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+3)]) &&
-				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+6)]) &&
-				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+9)]) &&
-				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+12)]) &&
-				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+15)]) &&
-				(fw->buf[LDR2idx(fw,k)] == fw->buf[LDR2idx(fw,k+18)]))
+				(LDR2val(fw,k) == LDR2val(fw,k+3)) &&
+				(LDR2val(fw,k) == LDR2val(fw,k+6)) &&
+				(LDR2val(fw,k) == LDR2val(fw,k+9)) &&
+				(LDR2val(fw,k) == LDR2val(fw,k+12)) &&
+				(LDR2val(fw,k) == LDR2val(fw,k+15)) &&
+				(LDR2val(fw,k) == LDR2val(fw,k+18)))
 			{
-				uint32_t base = fw->buf[LDR2idx(fw,k)];
+				uint32_t base = LDR2val(fw,k);
 				uint32_t ofst = fw->buf[k+1] & 0x00000FFF;
 				print_stubs_min(fw,"playrec_mode",base+ofst,idx2adr(fw,k));
 				found_playrec_mode = 1;
@@ -2981,7 +3009,7 @@ void find_stubs_min(firmware *fw)
 			{
 				if ((fw->buf[k1] & 0xFF1FF000) == ldr_inst)
 				{
-					uint32_t base = fw->buf[LDR2idx(fw,k1)];
+					uint32_t base = LDR2val(fw,k1);
 					print_stubs_min(fw,"zoom_status",base+ofst,idx2adr(fw,k));
 					found_zoom_status = 1;
 					break;
@@ -3000,7 +3028,7 @@ void find_stubs_min(firmware *fw)
 				(fw->buf[k+3] == 0x13A00001) &&					// MOVNE R0, #1
 				(fw->buf[k+4] == 0xE12FFF1E))					// BX LR
 			{
-				uint32_t base = fw->buf[LDR2idx(fw,k)];
+				uint32_t base = LDR2val(fw,k);
 				print_stubs_min(fw,"zoom_status",base,idx2adr(fw,k));
 				found_zoom_status = 1;
 				//break;
@@ -3017,7 +3045,7 @@ void find_stubs_min(firmware *fw)
 			{
 				if (isLDR_PC(fw,k+k1))
 				{
-					uint32_t base = fw->buf[LDR2idx(fw,k+k1)];
+					uint32_t base = LDR2val(fw,k+k1);
 					print_stubs_min(fw,"zoom_status",base+0x20,idx2adr(fw,k+k1));
 					found_zoom_status = 1;
 					break;
@@ -3029,14 +3057,14 @@ void find_stubs_min(firmware *fw)
 	// Find 'some_flag_for_af_scan'
 	for (k=0; k<fw->size; k++)
 	{
-		if (((fw->buf[k]    & 0xFF000000) == 0xEA000000) &&	// B loc
-			((fw->buf[k+1]  & 0xFF000000) == 0xEA000000) &&	// B loc
-			((fw->buf[k+2]  & 0xFF000000) == 0xEA000000) &&	// B loc
-			((fw->buf[k+3]  & 0xFF000000) == 0xEA000000) &&	// B loc
-			((fw->buf[k+4]  & 0xFF000000) == 0xEA000000) &&	// B loc
-			((fw->buf[k+5]  & 0xFF000000) == 0xEA000000) &&	// B loc
-			((fw->buf[k+6]  & 0xFF000000) == 0xEA000000) &&	// B loc
-			((fw->buf[k+7]  & 0xFF000000) == 0xEA000000) &&	// B loc
+		if (isB(fw,k)   &&  // B loc
+			isB(fw,k+1) &&  // B loc
+			isB(fw,k+2) &&  // B loc
+			isB(fw,k+3) &&  // B loc
+			isB(fw,k+4) &&  // B loc
+			isB(fw,k+5) &&  // B loc
+			isB(fw,k+6) &&  // B loc
+			isB(fw,k+7) &&  // B loc
 			(followBranch(fw,idx2adr(fw,k),1) != followBranch(fw,idx2adr(fw,k+1),1)) &&
 			(followBranch(fw,idx2adr(fw,k),1) == followBranch(fw,idx2adr(fw,k+2),1)) &&
 			(followBranch(fw,idx2adr(fw,k),1) == followBranch(fw,idx2adr(fw,k+3),1)) &&
@@ -3046,7 +3074,7 @@ void find_stubs_min(firmware *fw)
 			(followBranch(fw,idx2adr(fw,k),1) == followBranch(fw,idx2adr(fw,k+7),1)) &&
 			(isLDR_PC(fw,adr2idx(fw,followBranch(fw,idx2adr(fw,k),1)))))	// LDR R0, =base
 		{
-			uint32_t base = fw->buf[LDR2idx(fw,adr2idx(fw,followBranch(fw,idx2adr(fw,k),1)))];
+			uint32_t base = LDR2val(fw,adr2idx(fw,followBranch(fw,idx2adr(fw,k),1)));
 			print_stubs_min(fw,"some_flag_for_af_scan",base,followBranch(fw,idx2adr(fw,k),1));
 			//break;
 		}
@@ -3192,13 +3220,13 @@ void find_key_vals(firmware *fw)
 	{
 		uint32_t fadr = saved_sigs[k].val;
 		k = adr2idx(fw,fadr);
-		if ((fw->buf[k+1] & 0xFF000000) == 0xEA000000)	// B
+		if (isB(fw,k+1))	// B
 		{
 			fadr = followBranch(fw,fadr+4,1);
 			k1 = adr2idx(fw,fadr);
 			if (isLDR_PC(fw,k1))
 			{
-				tadr = fw->buf[LDR2idx(fw,k1)];
+				tadr = LDR2val(fw,k1);
 			}
 		}
 	}
@@ -3209,13 +3237,13 @@ void find_key_vals(firmware *fw)
 		{
 			for (k1=k-1; k1>k-5; k1--)
 			{
-				if ((fw->buf[k1] & 0xFF000000) == 0xEB000000)	// BL
+				if (isBL(fw,k1))	// BL
 				{
 					uint32_t fadr = followBranch(fw,idx2adr(fw,k1),0x01000001);
 					int k2 = adr2idx(fw,fadr);
 					if (isLDR_PC(fw,k2))
 					{
-						tadr = fw->buf[LDR2idx(fw,k2)];
+						tadr = LDR2val(fw,k2);
 					}
 				}
 			}
@@ -3231,7 +3259,7 @@ void find_key_vals(firmware *fw)
 		{
 			if (isLDR_PC(fw,k))
 			{
-				uint32_t adr = fw->buf[LDR2idx(fw,k)];
+				uint32_t adr = LDR2val(fw,k);
 				if ((adr > tadr) && (adr < madr))
 				{
 					madr = adr;
