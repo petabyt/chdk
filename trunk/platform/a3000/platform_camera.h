@@ -49,10 +49,10 @@
 
     #define cam_CalibrationIlluminant1  17
 
-    #define CAM_ACTIVE_AREA_X1 8 
-    #define CAM_ACTIVE_AREA_Y1 8 
-    #define CAM_ACTIVE_AREA_X2 3616
-    #define CAM_ACTIVE_AREA_Y2 2736
+    #define CAM_ACTIVE_AREA_X1 0 
+    #define CAM_ACTIVE_AREA_Y1 0 
+    #define CAM_ACTIVE_AREA_X2 3700
+    #define CAM_ACTIVE_AREA_Y2 2772
 
 	 #undef CAM_BITMAP_PALETTE
 	 #define CAM_BITMAP_PALETTE		13
