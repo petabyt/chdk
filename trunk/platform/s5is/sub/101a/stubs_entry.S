@@ -72,6 +72,8 @@
 
 // Values below go in 'platform_camera.h':
 //#define CAM_DRYOS         1
+//#define CAM_RAW_ROWPIX    *** Not Found ***
+//#define CAM_RAW_ROWS      *** Not Found ***
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x10000000 // Found @0xff82add8
 

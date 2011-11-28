@@ -78,6 +78,7 @@ NSTUB(kbd_pwr_on                              ,0xffc44560) //  2 82%
 //#define CAM_DRYOS         1
 //#define CAM_DRYOS_2_3_R39 1 // Defined for cameras with DryOS version R39 or higher
 //#define CAM_RAW_ROWPIX    3720 // Found @0xffcee63c
+//#define CAM_RAW_ROWS      2772 // Found @0xffcee648
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x10000000 // Found @0xffc296f0
 
