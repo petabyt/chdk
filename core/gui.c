@@ -1248,6 +1248,9 @@ const char* gui_alt_mode_button_enum(int change, int arg) {
 #elif defined(CAMERA_sx220hs) || defined(CAMERA_sx230hs)
     static const char* names[]={ "Disp+Set", "Display", "Playback", "Video"};
     static const int keys[] = {KEY_PRINT, KEY_DISPLAY, KEY_PLAYBACK, KEY_VIDEO};
+#elif defined(CAMERA_ixus220_elph300hs)
+    static const char* names[]={ "Video", "Display", "Playback", "Video"};
+    static const int keys[] = {KEY_PRINT, KEY_DISPLAY, KEY_PLAYBACK, KEY_VIDEO};
 #else
     #error camera alt-buttons not defined
 #endif
