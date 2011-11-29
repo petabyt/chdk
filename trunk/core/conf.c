@@ -54,7 +54,8 @@ const char* img_exts[NUM_IMG_EXTS]={ ".JPG", ".CRW", ".CR2", ".THM", ".WAV"/*, "
 const char *video_bitrate_strings[VIDEO_BITRATE_STEPS]={ "0.25x", "0.5x","0.75x", "1x", "1.25x", "1.5x", "1.75x", "2x", "2.5x", "3x"};
 
 //-------------------------------------------------------------------
-static int def_ubasic_vars[SCRIPT_NUM_PARAMS] = {0};
+static int def_script_vars[SCRIPT_NUM_PARAMS] = {0};    // default value of script parameters - zero array
+
 static int def_batt_volts_max, def_batt_volts_min;
 static OSD_pos def_histo_pos, def_dof_pos, def_batt_icon_pos, def_usb_info_pos, def_space_icon_pos, def_space_hor_pos, def_space_ver_pos, def_batt_txt_pos, def_space_txt_pos, 
                def_mode_state_pos, def_mode_raw_pos, def_mode_video_pos, def_mode_ev_pos, def_values_pos, def_clock_pos, def_ev_video_pos, def_temp_pos;
@@ -149,7 +150,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(  2, conf.save_raw,               CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(  3, conf.script_shoot_delay,     CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(  4, conf.show_histo,             CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(  5, conf.ubasic_vars,            CONF_DEF_PTR,   ptr:&def_ubasic_vars, NULL),
+    CONF_INFO(  5, conf.script_vars,            CONF_DEF_PTR,   ptr:&def_script_vars, NULL),
     CONF_INFO(  6, conf.script_param_set,       CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(  7, conf.show_dof,               CONF_DEF_VALUE, i:DOF_DONT_SHOW, NULL),
     CONF_INFO(  8, conf.batt_volts_max,         CONF_DEF_PTR,   ptr:&def_batt_volts_max, NULL),
