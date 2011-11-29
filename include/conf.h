@@ -56,7 +56,7 @@ typedef struct {
     int show_osd_in_review;
     int script_shoot_delay;
     int show_histo;
-    int ubasic_vars[SCRIPT_NUM_PARAMS];
+    int script_vars[SCRIPT_NUM_PARAMS];
     char script_file[100];
 
     int show_dof;

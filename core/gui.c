@@ -1120,7 +1120,7 @@ void gui_update_script_submenu() {
             script_submenu_items[p].symbol=0x0;
             script_submenu_items[p].text=(int)script_params[script_param_order[i]-1];
             script_submenu_items[p].type=MENUITEM_INT;
-            script_submenu_items[p].value=&conf.ubasic_vars[script_param_order[i]-1];
+            script_submenu_items[p].value=&conf.script_vars[script_param_order[i]-1];
             ++p;
         }
     }
