@@ -14,9 +14,9 @@ DEF(zoom_busy, 0x84A0 + 0x1C)             // FF1821EC+FF182224
 DEF(canon_menu_active, 0x00003210) // Found @0xff896910
 DEF(recreview_hold, 0x93D4 + 0xF0)        // FF1B6640
 DEF(playrec_mode, 0x00002f38) // Found @0xff888774
-DEF(levent_table,0xffbeb208) // Found @0xffbeb208
+DEF(levent_table,0xffbeb230) // Found @0xffbeb230
 DEF(full_screen_refresh, 0x00009d00) // Found @0xffa32dfc
-DEF(FlashParamsTable,0xffc4f080) // Found @0xffc4f080
+DEF(FlashParamsTable,0xffc4f0a8) // Found @0xffc4f0a8
 DEF(some_flag_for_af_scan, 0x000071cc) // Found @0xff989240
 DEF(led_table, 0x258C + 0x04)             // FF0557C4
 DEF(canon_shoot_menu_active, 0x000083d9) // Found @0xff9c8c1c

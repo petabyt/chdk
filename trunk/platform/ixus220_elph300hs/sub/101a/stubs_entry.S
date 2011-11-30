@@ -73,8 +73,8 @@
 // Values below go in 'stubs_min.S':
 //DEF(physw_status                            ,0x0003418c) // Found @0xff834e18,          stubs_min = 0x0003418c (0x0003418c)
 //DEF(physw_run                               ,0x00001c3c) // Found @0xff8349bc,          stubs_min = 0x00001c3c (0x00001c3c)
-//DEF(levent_table                            ,0xffbeb220) // Found @0xffbeb220, ** != ** stubs_min = 0xffbeb208 (0xffbeb208)
-//DEF(FlashParamsTable                        ,0xffc4f098) // Found @0xffc4f098, ** != ** stubs_min = 0xffc4f080 (0xffc4f080)
+//DEF(levent_table                            ,0xffbeb220) // Found @0xffbeb220,          stubs_min = 0xffbeb220 (0xffbeb220)
+//DEF(FlashParamsTable                        ,0xffc4f098) // Found @0xffc4f098,          stubs_min = 0xffc4f098 (0xffc4f098)
 //DEF(movie_status                            ,0x00006dcc) // Found @0xff984bd0,          stubs_min = 0x00006dcc (0x00006dcc)
 //DEF(full_screen_refresh                     ,0x00009d00) // Found @0xffa32dfc,          stubs_min = 0x00009d00 (0x00009d00)
 //DEF(canon_menu_active                       ,0x00003210) // Found @0xff896910,          stubs_min = 0x00003210 (0x00003210)
