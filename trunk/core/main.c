@@ -35,14 +35,9 @@ void dump_memory() {
     sprintf(fn, "A/DCIM/100CANON/CRW_%04d.JPG", cnt++);
     fd = open(fn, O_WRONLY|O_CREAT, 0777);
     if (fd) {
-#ifdef CAMERA_ixus65_sd630    // Zero is not readable on ixus65!
-        write(fd, (int*)0xFFFF0000, 4);
-        write(fd, (int*)4, 0x1900-4);
-#else
-        write(fd, (void*)0, 0x1900);
-#endif
-        // TODO actual memory size is larger than 32 MB on many cameras!
-        write(fd, (void*)0x1900, 32*1024*1024-0x1900);
+        long val0 = *((long*)(0|CAM_UNCACHED_BIT));
+        write(fd, &val0, 4);
+        write(fd, (void*)4, MAXRAMADDR-3);   // MAXRAMADDR is last valid RAM location
         close(fd);
     }
     vid_bitmap_refresh();
