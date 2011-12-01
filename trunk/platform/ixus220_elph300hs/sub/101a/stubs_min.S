@@ -4,7 +4,7 @@
 DEF(enabled_refresh_physical_screen,0x53C4+0x14) //changed to fix error when displaying menu, was 0x20 FF0A99C0 
 
 //added beta2
-DEF(focus_len_table, 0xFFF4A3DC)		  // search for 70000 (longest focus length in micrometers) & 5000 (shortest length)
+DEF(focus_len_table, 0xfffea288)		  // search for 21500 (longest focus length in micrometers) & 4300 (shortest length)
 
 //not touched
 DEF(physw_status, 0x0003418c) // Found @0xff834e18

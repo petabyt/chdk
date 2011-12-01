@@ -28,16 +28,16 @@ void startup()
 	boot();
 }
 
-// Focus length table in firmware @FFF4A3DC  //sx220. like in g12 and sx30
-#define NUM_FL 126		// 0 - 125, entries in firmware (3 words each entry, first is FL)
+// Focus length table in firmware @0xfffea288
+#define NUM_FL 60		// 0 - 59, entries in firmware (3 words each entry, first is FL)
 extern int focus_len_table[NUM_FL*3];
 
 
-// Focal length range is 5.0 - 70,0 mm, 28 - 392 in 35-mm equivalent.
-// So, CF_EFL = 28/5.0*10000=56000 or392/70*10000=56000
+// Focal length range is 4.3 - 21.5 mm, 24 - 120 in 35-mm equivalent.
+// So, CF_EFL = 21.5/4.3*10000=50000 or 120/24*10000=50000
 // divide by 10 to avoid overflow in get_effective_focal_length()
-#define CF_EFL  5600
-const int zoom_points = 126;
+#define CF_EFL  5000
+const int zoom_points = 60;
 
 int get_effective_focal_length(int zp) {
 	return (CF_EFL*get_focal_length(zp))/1000;

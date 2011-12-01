@@ -87,5 +87,7 @@
     #define CAM_QUALITY_OVERRIDE 1
     	
 	#define  CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
-	
+
+	#undef CAM_HAS_IRIS_DIAPHRAGM 	
+	#undef CAM_HAS_MANUAL_FOCUS
 //----------------------------------------------------------
