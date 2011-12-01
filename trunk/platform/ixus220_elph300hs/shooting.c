@@ -86,41 +86,42 @@ const ISOTable iso_table[] = {
 	{  6, 3200, "3200", -1},
 };
 
+// modemap, values have been verified for IXUS220HS on 1.00c/1.01a/1.01c
+// http://chdk.setepontos.com/index.php?topic=6341.msg76892#msg76892
 static const CapturemodeMap modemap[] = {
-	{ MODE_AUTO,           	        32768  },
-	{ MODE_P,               	    32772  },
-	{ MODE_TV,                 		32771  },
-	{ MODE_AV,                 		32770  },
-	{ MODE_M,                  		32769  },
-	{ MODE_EASY,               		33314  },
-	{ MODE_PORTRAIT,           		32783  },
-	{ MODE_LANDSCAPE,          		32782  },
-	{ MODE_VIDEO_SPEED, 			 2626  },	//MODE_VIDEO_SUPER_SLOW_MOTION
-	{ MODE_VIDEO_STD,          		 2621  },
-	{ MODE_KIDS_PETS,          		32786  },
-	{ MODE_SCN_UNDERWATER,       	16409  },
-	{ MODE_SCN_LOWLIGHT, 	      	16417  },
-	{ MODE_SCN_BEACH,       		16407  },
-	{ MODE_SCN_FOLIAGE,       		16405  },
-	{ MODE_SCN_SNOW,       			16406  },	
-	{ MODE_SCN_FIREWORK,      	 	16408  },	
-	{ MODE_SCN_COLOR_ACCENT,    	 8733  },
-	{ MODE_SCN_COLOR_SWAP,    		 8734  },	
-	{ MODE_STITCH,				    16908  },	//MODE_SCN_STITCH_ASSIST	
-	{ MODE_SCN_SMART_SHUTTER,       16937  },
-	{ MODE_SCN_POSTER_EFFECT,   	 8743  },
-	{ MODE_SCN_FISHEYE,  	     	 8747  },
-	{ MODE_SCN_MINIATURE,   	  	 8748  },
-	{ MODE_SCN_SUPER_VIVID,   	 	 8742  },
-	{ MODE_SCN_NIGHT_SCENE, 		16941  },	//MODE_SCN_HANDHELD_NIGHTSCENE
-	{ MODE_VIDEO_IFRAME_MOVIE, 		 2628  },
-	{ MODE_VIDEO_MOVIE_DIGEST,     	33333  },
-	{ MODE_SCN_HIGHSPEED_BURST,     16904  },
-	{ MODE_SCN_BEST_IMAGE,       	16905  },
-	{ MODE_SCN_TOY_CAMERA,  	  	 8751  },
-	{ MODE_SCN_MONOCHROME,  	  	 8754  },
-	{ MODE_SCN_WINK_SELF_TIMER,		16938  },
-    { MODE_SCN_FACE_SELF_TIMER,		16936  },
+    { MODE_AUTO,                32768 },
+    { MODE_P,                   32772 },
+
+    { MODE_PORTRAIT,            32783 },
+    { MODE_KIDS_PETS,           32786 },
+    { MODE_SCN_SMART_SHUTTER,   33321 },
+    { MODE_SCN_HIGHSPEED_BURST, 33288 },
+    { MODE_SCN_BEST_IMAGE,      33289 },
+    { MODE_NIGHT_SCENE,         33325 },
+    { MODE_LOWLIGHT,            32801 },
+    { MODE_SCN_FISHEYE,         33323 },
+    { MODE_SCN_MINIATURE,       33324 },
+    { MODE_SCN_TOY_CAMERA,      33327 },
+    { MODE_SCN_MONOCHROME,      33330 },
+    { MODE_SCN_SUPER_VIVID,     33318 },
+    { MODE_SCN_POSTER_EFFECT,   33319 },
+    { MODE_COLOR_ACCENT,        33309 },
+    { MODE_COLOR_SWAP,          33310 },
+    { MODE_SCN_BEACH,           32791 },
+    { MODE_SCN_UNDERWATER,      32793 },
+    { MODE_SCN_FOLIAGE,         32789 },
+    { MODE_SCN_SNOW,            32790 },
+    { MODE_SCN_SNOW,            32774 },	
+    { MODE_SCN_STITCH,          33292 },
+	
+    { MODE_VIDEO_MOVIE_DIGEST,  33333 },
+    { MODE_VIDEO_SUPER_SLOW,     2626 },
+	
+    // cannot be called directly from Canon options but probably needed
+    { MODE_SCN_FACE_SELF_TIMER, 33320 },
+    { MODE_SCN_WINK_SELF_TIMER, 33322 },
+    { MODE_SCN_FIREWORK,        32792 },
+
 };
 
 #include "../generic/shooting.c"

@@ -125,7 +125,7 @@ static const CapturemodeMap modemap[] = {
     { MODE_SCN_MONOCHROME,      33330 },
     { MODE_SCN_SUPER_VIVID,     33318 },
     { MODE_SCN_POSTER_EFFECT,   33319 },
-    { MODE_SCN_POSTER_EFFECT,   33309 },
+    { MODE_COLOR_ACCENT,        33309 },
     { MODE_COLOR_SWAP,          33310 },
     { MODE_SCN_BEACH,           32791 },
     { MODE_SCN_FOLIAGE,         32789 },
