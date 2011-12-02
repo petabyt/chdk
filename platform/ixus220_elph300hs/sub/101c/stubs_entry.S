@@ -19,58 +19,9 @@
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff89e7f8 -> ff89b194 -> ff9b139c -> ffb04210 -> ffc4ee68
-// Mode 32774 in firmware but not in current modemap
-// Mode 33292 in firmware but not in current modemap
-// Mode 33324 in firmware but not in current modemap
-// Mode 33323 in firmware but not in current modemap
-// Mode 33327 in firmware but not in current modemap
-// Mode 33309 in firmware but not in current modemap
-// Mode 33310 in firmware but not in current modemap
-// Mode 32801 in firmware but not in current modemap
-// Mode 32789 in firmware but not in current modemap
-// Mode 33330 in firmware but not in current modemap
-// Mode 33320 in firmware but not in current modemap
-// Mode 33322 in firmware but not in current modemap
-// Mode 33321 in firmware but not in current modemap
-// Mode 33288 in firmware but not in current modemap
-// Mode 33289 in firmware but not in current modemap
-// Mode 33325 in firmware but not in current modemap
-// Mode 33318 in firmware but not in current modemap
-// Mode 33319 in firmware but not in current modemap
-// Mode 32790 in firmware but not in current modemap
-// Mode 32791 in firmware but not in current modemap
-// Mode 32793 in firmware but not in current modemap
-// Mode 32792 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_SCN_FACE_SELF_TIMER 16936
-// Current modemap entry not found in firmware - MODE_SCN_WINK_SELF_TIMER 16938
-// Current modemap entry not found in firmware - MODE_SCN_MONOCHROME       8754
-// Current modemap entry not found in firmware - MODE_SCN_TOY_CAMERA       8751
-// Current modemap entry not found in firmware - MODE_SCN_BEST_IMAGE      16905
-// Current modemap entry not found in firmware - MODE_SCN_HIGHSPEED_BURST 16904
-// Current modemap entry not found in firmware - MODE_VIDEO_IFRAME_MOVIE   2628
-// Current modemap entry not found in firmware - MODE_SCN_NIGHT_SCENE     16941
-// Current modemap entry not found in firmware - MODE_SCN_SUPER_VIVID      8742
-// Current modemap entry not found in firmware - MODE_SCN_MINIATURE        8748
-// Current modemap entry not found in firmware - MODE_SCN_FISHEYE          8747
-// Current modemap entry not found in firmware - MODE_SCN_POSTER_EFFECT    8743
-// Current modemap entry not found in firmware - MODE_SCN_SMART_SHUTTER   16937
-// Current modemap entry not found in firmware - MODE_STITCH              16908
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_SWAP       8734
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_ACCENT     8733
-// Current modemap entry not found in firmware - MODE_SCN_FIREWORK        16408
-// Current modemap entry not found in firmware - MODE_SCN_SNOW            16406
-// Current modemap entry not found in firmware - MODE_SCN_FOLIAGE         16405
-// Current modemap entry not found in firmware - MODE_SCN_BEACH           16407
-// Current modemap entry not found in firmware - MODE_SCN_LOWLIGHT        16417
-// Current modemap entry not found in firmware - MODE_SCN_UNDERWATER      16409
-// Current modemap entry not found in firmware - MODE_VIDEO_STD            2621
-// Current modemap entry not found in firmware - MODE_LANDSCAPE           32782
-// Current modemap entry not found in firmware - MODE_EASY                33314
-// Current modemap entry not found in firmware - MODE_M                   32769
-// Current modemap entry not found in firmware - MODE_AV                  32770
-// Current modemap entry not found in firmware - MODE_TV                  32771
+// No problems found with modemap table.
 
-// Values below go in 'stubs_min.S':
+// Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x0003418c) // Found @0xff834e18,          stubs_min = 0x0003418c (0x0003418c)
 //DEF(physw_run                               ,0x00001c3c) // Found @0xff8349bc,          stubs_min = 0x00001c3c (0x00001c3c)
 //DEF(levent_table                            ,0xffbeb230) // Found @0xffbeb230,          stubs_min = 0xffbeb230 (0xffbeb230)
@@ -120,6 +71,9 @@
 //#define CAM_RAW_ROWS      3060 // Found @0xff952bc0
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff83c0f0
+
+// Misc stuff
+DEF(ctypes, 0xffba0112)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

@@ -21,18 +21,18 @@
 // Firmware modemap table found @ff8a3cc0 -> ff8a068c -> ff9c1084 -> ffb00c50 -> ffc67898
 // No problems found with modemap table.
 
-// Values below go in 'stubs_min.S':
-//DEF(physw_status                            ,0x00034594) // Found @0xff8349f0,          stubs_min = 0x00034594 (0x34594)
-//DEF(physw_run                               ,0x00001c3c) // Found @0xff8345ec,          stubs_min = 0x00001c3c (0x1C30+0xC)
-//DEF(levent_table                            ,0xffc0e7d0) // Found @0xffc0e7d0,          stubs_min = 0xffc0e7d0 (0xFFC0E7D0)
-//DEF(FlashParamsTable                        ,0xffc67a9c) // Found @0xffc67a9c,          stubs_min = 0xffc67a9c (0xFFC67A9C)
-//DEF(movie_status                            ,0x00003524) // Found @0xff882fc8,          stubs_min = 0x00003524 (0x34E0+0x44)
-//DEF(full_screen_refresh                     ,0x0000b198) // Found @0xffa4689c,          stubs_min = 0x0000b198 (0xB198)
-//DEF(canon_menu_active                       ,0x00003a2c) // Found @0xff89a56c,          stubs_min = 0x00003a2c (0x3A28+4)
-//DEF(canon_shoot_menu_active                 ,0x00009901) // Found @0xff9de8f0,          stubs_min = 0x00009901 (0x9900+1)
-//DEF(playrec_mode                            ,0x00003758) // Found @0xff88c718,          stubs_min = 0x00003758 (0x3754+0x4)
-//DEF(zoom_status                             ,0x0000e7c4) // Found @0xffb046d4,          stubs_min = 0x0000e7c4 (0xE7C4)
-//DEF(some_flag_for_af_scan                   ,0x000085cc) // Found @0xff990fec
+// Values below can be overridden in 'stubs_min.S':
+DEF(physw_status                            ,0x00034594) // Found @0xff8349f0
+DEF(physw_run                               ,0x00001c3c) // Found @0xff8345ec
+DEF(levent_table                            ,0xffc0e7d0) // Found @0xffc0e7d0
+DEF(FlashParamsTable                        ,0xffc67a9c) // Found @0xffc67a9c
+DEF(movie_status                            ,0x00003524) // Found @0xff882fc8
+DEF(full_screen_refresh                     ,0x0000b198) // Found @0xffa4689c
+DEF(canon_menu_active                       ,0x00003a2c) // Found @0xff89a56c
+DEF(canon_shoot_menu_active                 ,0x00009901) // Found @0xff9de8f0
+DEF(playrec_mode                            ,0x00003758) // Found @0xff88c718
+DEF(zoom_status                             ,0x0000e7c4) // Found @0xffb046d4
+DEF(some_flag_for_af_scan                   ,0x000085cc) // Found @0xff990fec
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40471000; } // Found @0xff85ed30
@@ -69,6 +69,9 @@
 //#define CAM_RAW_ROWS      3276 // Found @0xff957840
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff83afdc
+
+// Misc stuff
+DEF(ctypes, 0xffb96102)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

@@ -26,7 +26,7 @@
 // Mode  2598 in firmware but not in current modemap
 // Mode  2603 in firmware but not in current modemap
 
-// Values below go in 'stubs_min.S':
+// Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x00010370) // Found @0xff821efc,          stubs_min = 0x00010370 (0x10370)
 //DEF(physw_run                               ,0x00001c00) // Found @0xff821b98,          stubs_min = 0x00001c00 (0x1c00)
 //DEF(levent_table                            ,0xffacac68) // Found @0xffacac68,          stubs_min = 0xffacac68 (0xFFACAC68)
@@ -36,7 +36,7 @@
 //DEF(canon_shoot_menu_active                 ,0x00009e2d) // Found @0xff969e40,          stubs_min = 0x00009e2d (0x9e2d)
 //DEF(playrec_mode                            ,0x00005534) // Found @0xff860ee8,          stubs_min = 0x00005534 (0x5534)
 //DEF(zoom_status                             ,0x0000d1cc) // Found @0xffa38f20,          stubs_min = 0x0000d1cc (0xd1cc)
-//DEF(some_flag_for_af_scan                   ,0x0000cf50) // Found @0xffa24140
+DEF(some_flag_for_af_scan                   ,0x0000cf50) // Found @0xffa24140
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x10361000; } // Found @0xff83e91c
@@ -74,6 +74,9 @@
 //#define CAM_RAW_ROWS      2480 // Found @0xffa79644
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x10000000 // Found @0xff82866c
+
+// Misc stuff
+DEF(ctypes, 0xffaa858a)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

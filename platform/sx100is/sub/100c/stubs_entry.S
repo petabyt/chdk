@@ -27,7 +27,7 @@
 // Mode  2598 in firmware but not in current modemap
 // Current modemap entry not found in firmware - MODE_INDOOR              32785
 
-// Values below go in 'stubs_min.S':
+// Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x00010c1c) // Found @0xffc130f4,          stubs_min = 0x00010c1c (0x10C1C)
 //DEF(physw_run                               ,0x00001ca4) // Found @0xffc12da0,          stubs_min = 0x00001ca4 (0x1CA4)
 //DEF(levent_table                            ,0xffe7cb64) // Found @0xffe7cb64,          stubs_min = 0xffe7cb64 (0xFFE7CB64)
@@ -75,6 +75,9 @@
 //#define CAM_RAW_ROWS      2480 // Found @0xffdbddc8
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x10000000 // Found @0xffc19e6c
+
+// Misc stuff
+DEF(ctypes, 0xffe5a4b2)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

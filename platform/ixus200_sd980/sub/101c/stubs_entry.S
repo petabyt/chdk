@@ -49,13 +49,13 @@
 // Current modemap entry not found in firmware - MODE_AV                  32770
 // Current modemap entry not found in firmware - MODE_TV                  32771
 
-// Values below go in 'stubs_min.S':
+// Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x00044558) // Found @0xff8335a8,          stubs_min = 0x00044558 (0x44558)
 //DEF(physw_run                               ,0x00001c44) // Found @0xff833200,          stubs_min = 0x00001c44 (0x1C38+0x0C)
 //DEF(levent_table                            ,0xffb7a2a0) // Found @0xffb7a2a0,          stubs_min = 0xffb7a2a0 (0xFFB7A2A0)
 //DEF(FlashParamsTable                        ,0xffbdab94) // Found @0xffbdab94,          stubs_min = 0xffbdab94 (0xFFBDAB94)
 //DEF(movie_status                            ,0x000067e0) // Found @0xff94ac20, ** != ** stubs_min = 0x00005430 (0x53F8+0x38)
-//DEF(full_screen_refresh                     ,0x0001b2dc) // Found @0xff9f751c
+DEF(full_screen_refresh                     ,0x0001b2dc) // Found @0xff9f751c
 //DEF(canon_menu_active                       ,0x00002ec8) // Found @0xff889704,          stubs_min = 0x00002ec8 (0x2EC4+4)
 //DEF(canon_shoot_menu_active                 ,0x00007b09) // Found @0xff98d9ac,          stubs_min = 0x00007b09 (0x7B08+1)
 //DEF(playrec_mode                            ,0x00002bfc) // Found @0xff87bbdc,          stubs_min = 0x00002bfc (0x2BF8+0x4)
@@ -98,6 +98,9 @@
 //#define CAM_RAW_ROWS      3048 // Found @0xff91bfc4
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff838a1c
+
+// Misc stuff
+DEF(ctypes, 0xffb3eb3e)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

@@ -23,7 +23,7 @@
 // Firmware modemap table found @ff884c68 -> ff8813f8 -> ff973f14 -> ffa79ab4 -> ffb744e0
 // Current modemap entry not found in firmware - MODE_VIDEO_STD            3622
 
-// Values below go in 'stubs_min.S':
+// Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x00011ec4) // Found @0xff821b14,          stubs_min = 0x00011ec4 (0x11EC4)
 //DEF(physw_run                               ,0x00001c30) // Found @0xff821788,          stubs_min = 0x00001c30 (0x1C24+0x0C)
 //DEF(levent_table                            ,0xffb4ae24) // Found @0xffb4ae24,          stubs_min = 0xffb4ae24 (0xFFB4AE24)
@@ -33,7 +33,7 @@
 //DEF(canon_shoot_menu_active                 ,0x0000ac29) // Found @0xff98cbc4,          stubs_min = 0x0000ac29 (0xAC28+1)
 //DEF(playrec_mode                            ,0x00005640) // Found @0xff86d2b8,          stubs_min = 0x00005640 (0x563C+0x4)
 //DEF(zoom_status                             ,0x0000e3ec) // Found @0xffa7b780,          stubs_min = 0x0000e3ec (0xE3EC)
-//DEF(some_flag_for_af_scan                   ,0x00009b58) // Found @0xff94a35c
+DEF(some_flag_for_af_scan                   ,0x00009b58) // Found @0xff94a35c
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x403b1000; } // Found @0xff846c28
@@ -69,6 +69,9 @@
 //#define CAM_RAW_ROWS      2772 // Found @0xffaca2a4
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff828010
+
+// Misc stuff
+DEF(ctypes, 0xffb047c2)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

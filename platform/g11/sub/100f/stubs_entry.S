@@ -24,13 +24,13 @@ NSTUB(kbd_pwr_off                             ,0xff8603ec) //  2 64%
 // Firmware modemap table found @ff899018 -> ff895658 -> ff995248 -> ffab4778 -> ffbe6f0c
 // No problems found with modemap table.
 
-// Values below go in 'stubs_min.S':
+// Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x00032578) // Found @0xff833554,          stubs_min = 0x00032578 (0x32578)
 //DEF(physw_run                               ,0x00001c44) // Found @0xff8331c4,          stubs_min = 0x00001c44 (0x1c44)
 //DEF(levent_table                            ,0xffb95d20) // Found @0xffb95d20,          stubs_min = 0xffb95d20 (0xFFB95D20)
 //DEF(FlashParamsTable                        ,0xffbe7100) // Found @0xffbe7100,          stubs_min = 0xffbe7100 (0xFFBE7100)
 //DEF(movie_status                            ,0x00006d90) // Found @0xff9627d8,          stubs_min = 0x00006d90 (0x6D58+0x38)
-//DEF(full_screen_refresh                     ,0x00009840) // Found @0xffa0ec68
+DEF(full_screen_refresh                     ,0x00009840) // Found @0xffa0ec68
 //DEF(canon_menu_active                       ,0x0000303c) // Found @0xff88e1ac,          stubs_min = 0x0000303c (0x3038+0x4)
 //DEF(canon_shoot_menu_active                 ,0x00008259) // Found @0xff9af8c4,          stubs_min = 0x00008259 (0x8258+0x1)
 //DEF(playrec_mode                            ,0x00002d64) // Found @0xff880488,          stubs_min = 0x00002d64 (0x2D60+0x4)
@@ -74,6 +74,9 @@ NSTUB(kbd_pwr_off                             ,0xff8603ec) //  2 64%
 //#define CAM_RAW_ROWS      2784 // Found @0xff9356ec
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff839430
+
+// Misc stuff
+DEF(ctypes, 0xffb402c6)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

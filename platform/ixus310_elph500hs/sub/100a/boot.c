@@ -52,17 +52,17 @@ void taskHook(context_t **context)
 /*---------------------------------------------------------------------
   Memory Map:
 	0001900     MEMBASEADDR             start of data - used for initialized vars
-	0010797                             end of inited data
-	0010798                             start of bss - used for zeroed/uninited vars
-	016E81F                             end of bss
-	016E820     MEMISOSTART             start of our data / bss
+	0011057                             end of inited data
+	0011058                             start of bss - used for zeroed/uninited vars
+	018B833                             end of bss
+	018B834     MEMISOSTART             start of our data / bss
 
 	0400000                             raw buffers
 	8000000                             end of raw buffers
 
 	C0xxxxxx                            I/O
 
-	FF810000    ROMBASEADDR             start of rom
+	FF000000    ROMBASEADDR             start of rom
 	FFFFFFFF                            end of rom
 ----------------------------------------------------------------------*/
 
@@ -152,17 +152,17 @@ void __attribute__((naked,noinline)) boot() {
                  "LDR     R0, =0xFF50C000\n"
                  "LDR     R1, =0x1900\n"
                  "LDR     R3, =0x11058\n"
- "loc_FF81013C:\n"
+ "loc_FF00013C:\n"
                  "CMP     R1, R3\n"
                  "LDRCC   R2, [R0],#4\n"
                  "STRCC   R2, [R1],#4\n"
-                 "BCC     loc_FF81013C\n"
+                 "BCC     loc_FF00013C\n"
                  "LDR     R1, =0x18B834\n"
                  "MOV     R2, #0\n"
- "loc_FF810154:\n"
+ "loc_FF000154:\n"
                  "CMP     R3, R1\n"
                  "STRCC   R2, [R3],#4\n"
-                 "BCC     loc_FF810154\n"
+                 "BCC     loc_FF000154\n"
 				
                  "B       sub_FF000358_my" // -->
     );

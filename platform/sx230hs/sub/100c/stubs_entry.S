@@ -31,7 +31,7 @@
 // Current modemap entry not found in firmware - MODE_SCN_COLOR_SWAP       8734
 // Current modemap entry not found in firmware - MODE_SCN_COLOR_ACCENT     8733
 
-// Values below go in 'stubs_min.S':
+// Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x000358e8) // Found @0xff024d10,          stubs_min = 0x000358e8 (0x000358e8)
 //DEF(physw_run                               ,0x00001c44) // Found @0xff0248a4,          stubs_min = 0x00001c44 (0x00001c44)
 //DEF(levent_table                            ,0xff42121c) // Found @0xff42121c,          stubs_min = 0xff42121c (0xff42121c)
@@ -80,6 +80,9 @@
 //#define CAM_RAW_ROWS      3060 // Found @0xff156320
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff02bcb8
+
+// Misc stuff
+DEF(ctypes, 0xff3ba346)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

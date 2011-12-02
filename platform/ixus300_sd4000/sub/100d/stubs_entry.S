@@ -34,7 +34,7 @@
 // Mode 33288 in firmware but not in current modemap
 // Mode 33289 in firmware but not in current modemap
 
-// Values below go in 'stubs_min.S':
+// Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x00032e94) // Found @0xff8347d4,          stubs_min = 0x00032e94 (0x32E94)
 //DEF(physw_run                               ,0x00001c34) // Found @0xff834404,          stubs_min = 0x00001c34 (0x1C34)
 //DEF(levent_table                            ,0xffb9f59c) // Found @0xffb9f59c,          stubs_min = 0xffb9f59c (0xFFB9F59C)
@@ -83,6 +83,9 @@
 //#define CAM_RAW_ROWS      2784 // Found @0xff93c414
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff83a460
+
+// Misc stuff
+DEF(ctypes, 0xffb5e23a)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

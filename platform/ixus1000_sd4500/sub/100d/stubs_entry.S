@@ -61,7 +61,7 @@ NSTUB(kbd_pwr_off                             ,0xff8634d0) //  2 60%
 // Current modemap entry not found in firmware - MODE_AV                  32770
 // Current modemap entry not found in firmware - MODE_TV                  32771
 
-// Values below go in 'stubs_min.S':
+// Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x00034408) // Found @0xff834b8c,          stubs_min = 0x00034408 (0x34408)
 //DEF(physw_run                               ,0x00001c40) // Found @0xff834758,          stubs_min = 0x00001c40 (0x1C34+0x0C)
 //DEF(levent_table                            ,0xffbcdb64) // Found @0xffbcdb64,          stubs_min = 0xffbcdb64 (0xFFBCDB64)
@@ -108,6 +108,9 @@ NSTUB(kbd_pwr_off                             ,0xff8634d0) //  2 60%
 //#define CAM_RAW_ROWS      2784 // Found @0xff94b4d0
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff83b934
+
+// Misc stuff
+DEF(ctypes, 0xffb8bd6a)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

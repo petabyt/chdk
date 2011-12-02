@@ -21,7 +21,7 @@ NSTUB(kbd_pwr_on                              ,0xffc318fc) //  2 86%
 // Firmware modemap table found @ffc60014 -> ffc5cbf0 -> ffd2bdd4 -> ffdf11e0 -> ffe9ed50
 // No problems found with modemap table.
 
-// Values below go in 'stubs_min.S':
+// Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x0000ebdc) // Found @0xffc11c24,          stubs_min = 0x0000ebdc (0x0EBDC)
 //DEF(physw_run                               ,0x00001bf0) // Found @0xffc118c0,          stubs_min = 0x00001bf0 (0x1BF0)
 //DEF(levent_table                            ,0xffe7fb40) // Found @0xffe7fb40,          stubs_min = 0xffe7fb40 (0xFFE7fB40)
@@ -69,6 +69,9 @@ NSTUB(kbd_pwr_on                              ,0xffc318fc) //  2 86%
 //#define CAM_RAW_ROWS      2490 // Found @0xffe2ff80
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x10000000 // Found @0xffc17e64
+
+// Misc stuff
+DEF(ctypes, 0xffe5c21e)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

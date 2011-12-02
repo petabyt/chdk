@@ -39,7 +39,7 @@
 // Current modemap entry not found in firmware - MODE_SCN_NIGHT_SCENE     16395
 // Current modemap entry not found in firmware - MODE_VIDEO_STD            2598
 
-// Values below go in 'stubs_min.S':
+// Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x0002e754) // Found @0xffc23b2c,          stubs_min = 0x0002e754 (0x2E754)
 //DEF(physw_run                               ,0x00001bf0) // Found @0xffc23790,          stubs_min = 0x00001bf0 (0x1BE4+0x0C)
 //DEF(levent_table                            ,0xffe9fe64) // Found @0xffe9fe64, ** != ** stubs_min = 0xffe9fe78 (0xFFE9FE78)
@@ -88,6 +88,9 @@
 //#define CAM_RAW_ROWS      2772 // Found @0xffcea054
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x10000000 // Found @0xffc29320
+
+// Misc stuff
+DEF(ctypes, 0xffe81956)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

@@ -22,17 +22,17 @@ NSTUB(reboot_fw_update                        ,0xff33ee24) //  6 96%
 // Firmware modemap table found @ff09bd3c -> ff0985bc -> ff2047c4 -> ff36a8ec -> ff607d14
 // No problems found with modemap table.
 
-// Values below go in 'stubs_min.S':
-//DEF(physw_status                            ,0x00037548) // Found @0xff024dd8,          stubs_min = 0x00037548 (0x00037548)
-//DEF(physw_run                               ,0x00001c10) // Found @0xff024968,          stubs_min = 0x00001c10 (0x00001c10)
-//DEF(levent_table                            ,0xff593a0c) // Found @0xff593a0c,          stubs_min = 0xff593a0c (0xff593a0c)
-//DEF(FlashParamsTable                        ,0xff607f74) // Found @0xff607f74,          stubs_min = 0xff607f74 (0xff607f74)
+// Values below can be overridden in 'stubs_min.S':
+DEF(physw_status                            ,0x00037548) // Found @0xff024dd8
+DEF(physw_run                               ,0x00001c10) // Found @0xff024968
+DEF(levent_table                            ,0xff593a0c) // Found @0xff593a0c
+DEF(FlashParamsTable                        ,0xff607f74) // Found @0xff607f74
 //DEF(movie_status                            ,0x00002f1c) // Found @0xff0772a8,          stubs_min = 0x00002f1c (0x2ED8+0x44)
-//DEF(full_screen_refresh                     ,0x0000c2d8) // Found @0xff2917e4,          stubs_min = 0x0000c2d8 (0x0000c2d8)
-//DEF(canon_menu_active                       ,0x000034f0) // Found @0xff091b6c,          stubs_min = 0x000034f0 (0x34EC+4)
-//DEF(canon_shoot_menu_active                 ,0x0000ab6d) // Found @0xff22a708,          stubs_min = 0x0000ab6d (0x0000ab6d)
-//DEF(playrec_mode                            ,0x00003214) // Found @0xff083504,          stubs_min = 0x00003214 (0x00003214)
-//DEF(zoom_status                             ,0x000111f8) // Found @0xff36e6dc,          stubs_min = 0x000111f8 (0x000111f8)
+DEF(full_screen_refresh                     ,0x0000c2d8) // Found @0xff2917e4
+DEF(canon_menu_active                       ,0x000034f0) // Found @0xff091b6c
+DEF(canon_shoot_menu_active                 ,0x0000ab6d) // Found @0xff22a708
+DEF(playrec_mode                            ,0x00003214) // Found @0xff083504
+DEF(zoom_status                             ,0x000111f8) // Found @0xff36e6dc
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40685000; } // Found @0xff0515dc
@@ -70,6 +70,9 @@ NSTUB(reboot_fw_update                        ,0xff33ee24) //  6 96%
 //#define CAM_RAW_ROWS      3060 // Found @0xff18e05c
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff02bea8
+
+// Misc stuff
+DEF(ctypes, 0xff43381a)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
