@@ -65,47 +65,38 @@ long vid_get_bitmap_screen_height() { return 240; }
 long vid_get_bitmap_buffer_width() { return 960; }
 long vid_get_bitmap_buffer_height() { return 270; }
 
-int vid_get_viewport_buffer_width() { return 960; }
-
-
+int vid_get_viewport_buffer_width() { return 360; }
 
 int vid_get_viewport_width()
 {
 	// viewport width table for each image size
 	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	//static long vp_w[4] = { 360, 480, 360, 272 };
-	//return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-	//taken from SX30 camera
-	return 360;
+	static long vp_w[5] = { 360, 360, 360, 272 };
+	return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
 int vid_get_viewport_xoffset()
 {
 	// viewport width offset table for each image size
 	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	//static long vp_w[4] = { 60, 0, 36, 104 };				// should all be even values for edge overlay
-	//return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-	return 0;
+	static long vp_w[5] = { 0, 0, 0, 44 };				// should all be even values for edge overlay
+	return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
 long vid_get_viewport_height()
 {
 	// viewport height table for each image size
 	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	//static long vp_h[4] = { 240, 240, 240, 240 };
-	//return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-	//taken from SX30 camera
-	return 240;
+	static long vp_h[5] = { 240, 180, 214, 240 };
+	return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
 int vid_get_viewport_yoffset()
 {
 	// viewport height offset table for each image size
 	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	//static long vp_h[4] = { 0, 0, 0, 0 };
-	//return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-	//taken from SX30 camera
-	return 0;
+	static long vp_h[5] = { 0, 30, 13, 0 };
+	return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
 // viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
