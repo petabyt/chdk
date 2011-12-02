@@ -31,5 +31,5 @@ long hook_raw_size()             { return 0x01247a60; }        // Found @0xff3e3
 
 void *vid_get_viewport_fb_d()
 {
-	return (void*)(*(int*)(0x2CA0+0x58)); // @FF06B08C & FF06B0C4
+	return (void*)(*(int*)(0x2CA0+0x58)); // @FF06BFAC & FF06BFE4
 }

@@ -2763,9 +2763,9 @@ void find_lib_vals(firmware *fw)
 void print_stubs_min(firmware *fw, const char *name, uint32_t fadr, uint32_t atadr)
 {
 	osig *o = find_sig(stubs_min,name);
-	bprintf("//DEF(%-40s,0x%08x) // Found @0x%08x",name,fadr,atadr);
 	if (o)
 	{
+    	bprintf("//DEF(%-40s,0x%08x) // Found @0x%08x",name,fadr,atadr);
 		if (fadr != o->val)
 		{
 			bprintf(", ** != ** stubs_min = 0x%08x (%s)",o->val,o->sval);
@@ -2775,6 +2775,10 @@ void print_stubs_min(firmware *fw, const char *name, uint32_t fadr, uint32_t ata
 			bprintf(",          stubs_min = 0x%08x (%s)",o->val,o->sval);
 		}
 	}
+    else
+    {
+    	bprintf("DEF(%-40s,0x%08x) // Found @0x%08x",name,fadr,atadr);
+    }
 	bprintf("\n");
 }
 
@@ -2786,7 +2790,7 @@ void find_stubs_min(firmware *fw)
 	out_hdr = 1;
 	add_blankline();
 
-	bprintf("// Values below go in 'stubs_min.S':\n");
+	bprintf("// Values below can be overridden in 'stubs_min.S':\n");
 
 	// Find 'physw_status'
 	k = get_saved_sig(fw, "kbd_read_keys");
@@ -3079,6 +3083,45 @@ void find_stubs_min(firmware *fw)
 			//break;
 		}
 	}
+}
+
+//------------------------------------------------------------------------------------------------------------
+
+// Search for things that go in 'stubs_min.S'
+void find_other_vals(firmware *fw)
+{
+	out_hdr = 1;
+	add_blankline();
+
+	bprintf("// Misc stuff\n");
+
+    unsigned char ctypes[] = 
+    { 
+        0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x60, 0x60, 0x60, 0x60, 0x60, 0x20, 0x20,
+        0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
+        0x48, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
+        0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
+        0x10, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0x10, 0x10, 0x10, 0x10, 0x10,
+        0x10, 0x82, 0x82, 0x82, 0x82, 0x82, 0x82, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0x10, 0x10, 0x10, 0x10, 0x20
+    };
+
+    unsigned char *p = (unsigned char*)fw->buf;
+    int i, found = 0;
+    for (i=0; i<fw->size*4-sizeof(ctypes); i++, p++)
+    {
+        if (memcmp(p,ctypes,sizeof(ctypes)) == 0)
+        {
+            bprintf("DEF(ctypes, 0x%08x)\n", fw->base + i);
+            found = 1;
+            break;
+        }
+    }
+    if (!found)
+    {
+        bprintf("//DEF(ctypes, *** Not Found ***)\n");
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -3392,6 +3435,7 @@ int main(int argc, char **argv)
 	find_lib_vals(&fw);
 	find_key_vals(&fw);
 	find_platform_vals(&fw);
+    find_other_vals(&fw);
 
     fprintf(stderr,"Time to generate stubs %.2f seconds\n",(double)(t2-t1)/(double)CLOCKS_PER_SEC);
 	

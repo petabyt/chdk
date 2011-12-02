@@ -23,7 +23,7 @@
 // Firmware modemap table found @ff87caf4 -> ff8792b0 -> ff9596f0 -> ffa4b9a4 -> ffb2d2ec
 // No problems found with modemap table.
 
-// Values below go in 'stubs_min.S':
+// Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x00011078) // Found @0xff821ba4,          stubs_min = 0x00011078 (0x11078)
 //DEF(physw_run                               ,0x00001c28) // Found @0xff821818,          stubs_min = 0x00001c28 (0x1C1C+0x0C)
 //DEF(levent_table                            ,0xffb07260) // Found @0xffb07260,          stubs_min = 0xffb07260 (0xFFB07260)
@@ -71,6 +71,9 @@
 //#define CAM_RAW_ROWS      2772 // Found @0xffa9ac78
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff827bac
+
+// Misc stuff
+DEF(ctypes, 0xffad5eca)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

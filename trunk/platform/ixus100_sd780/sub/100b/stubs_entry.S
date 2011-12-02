@@ -34,7 +34,7 @@
 // Current modemap entry not found in firmware - MODE_VIDEO_SPEED          2598
 // Current modemap entry not found in firmware - MODE_VIDEO_STD            2597
 
-// Values below go in 'stubs_min.S':
+// Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x0000e238) // Found @0xff821dcc,          stubs_min = 0x0000e238 (0xE238)
 //DEF(physw_run                               ,0x00001c34) // Found @0xff821a40,          stubs_min = 0x00001c34 (0x1C34)
 //DEF(levent_table                            ,0xffb009d4) // Found @0xffb009d4,          stubs_min = 0xffb009d4 (0xffb009d4)
@@ -82,6 +82,9 @@
 //#define CAM_RAW_ROWS      3048 // Found @0xff8e6188
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff82748c
+
+// Misc stuff
+DEF(ctypes, 0xffacc2ce)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
