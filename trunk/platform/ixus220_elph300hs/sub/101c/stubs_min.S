@@ -9,8 +9,8 @@ DEF(focus_len_table, 0xfffea288)		  // search for 21500 (longest focus length in
 //not touched
 DEF(physw_status, 0x0003418c) // Found @0xff834e18
 DEF(physw_run, 0x00001c3c) // Found @0xff8349bc
-DEF(focus_busy, 0x8330 + 8)               // FF17C5DC+FF17C604
-DEF(zoom_busy, 0x84A0 + 0x1C)             // FF1821EC+FF182224
+DEF(focus_busy, 0x00006b68)
+DEF(zoom_busy, 0x00006cf4)
 DEF(canon_menu_active, 0x00003210) // Found @0xff896910
 DEF(recreview_hold, 0x93D4 + 0xF0)        // FF1B6640
 DEF(playrec_mode, 0x00002f38) // Found @0xff888774
