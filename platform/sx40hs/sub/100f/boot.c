@@ -26,27 +26,27 @@ void taskHook(context_t **context) {
 	if(tcb->entry == (void*)task_ExpDrv)			tcb->entry = (void*)exp_drv_task;
 }
 
-#define LED_PR 0xC022C30C   // SX40HS @ 0xFF15B1F0
-void __attribute__((noreturn)) blink(int cnt)
-{
-	volatile long *p=(void*)LED_PR;
-	int i;
+//#define LED_PR 0xC022C30C   // SX40HS @ 0xFF15B1F0
+//void __attribute__((noreturn)) blink(int cnt)
+//{
+//	volatile long *p=(void*)LED_PR;
+//	int i;
+//
+//	for(;cnt>0;cnt--){
+//		p[0]=p[0]&(0xCF);
+//
+//		for(i=0;i<0x200000;i++){
+//			asm ("nop\n");
+//			asm ("nop\n");
+//		}
+//		p[0]=(p[0]&(0xCF))|0x20;
+//		for(i=0;i<0x200000;i++){
+//			asm ("nop\n");
+//			asm ("nop\n");
+//		}
+//	}
+//}
 
-	for(;cnt>0;cnt--){
-		p[0]=p[0]&(0xCF);
-
-		for(i=0;i<0x200000;i++){
-			asm ("nop\n");
-			asm ("nop\n");
-		}
-		p[0]=(p[0]&(0xCF))|0x20;
-		for(i=0;i<0x200000;i++){
-			asm ("nop\n");
-			asm ("nop\n");
-		}
-	}
-
-}
 void __attribute__((naked,noinline)) boot() {
 
     asm volatile (

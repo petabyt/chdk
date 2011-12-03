@@ -34,6 +34,13 @@ NSTUB(kbd_pwr_on                              ,0xffc35678) //  2 86%
 //DEF(playrec_mode                            ,0x00005538) // Found @0xffc52108,          stubs_min = 0x00005538 (0x5534+4)
 //DEF(zoom_status                             ,0x0000bfbc) // Found @0xffe00164,          stubs_min = 0x0000bfbc (0xBFBC)
 //DEF(some_flag_for_af_scan                   ,0x0000bd3c) // Found @0xffdee828,          stubs_min = 0x0000bd3c (0xBD3C)
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 3 int value(s), the first is the zoom focus length.
+// there are 8 entries in the table - set NUM_FL to 8
+DEF(focus_len_table                         ,0xfffe29ac) // Found @0xfffe29ac
+//DEF(zoom_busy                               ,0x00008050) // Found @0xffd0f95c,          stubs_min = 0x00008050 (0x8050)
+//DEF(focus_busy                              ,0x00007f4c) // Found @0xffd0a804, ** != ** stubs_min = 0x00009d50 (0x9D50)
+//DEF(recreview_hold                          ,0x00005d34) // Found @0xffc6a6e4, ** != ** stubs_min = 0x000093ec (0x93ec)
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x10361000; } // Found @0xffc31338

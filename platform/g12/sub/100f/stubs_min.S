@@ -1,10 +1,6 @@
 #include "stubs_asm.h"
 
 // Found manually
-DEF(focus_len_table, 0xFFFE2A80)					// search for 30500 (longest focus length in micrometers) & 6100 (shortest length)
-DEF(zoom_busy, 0x71d4 + 0x14)						// (comp 1.00c)
-DEF(focus_busy,0x70B8 + 0x8)						// (comp 1.00c)
-DEF(recreview_hold, 0x84C0 + 0xE0)					// in FF9C06A0 (comp 1.00c)
 
 DEF(rear_dial_position, 0xC0240106)
 DEF(front_dial_position, 0xC0240306)

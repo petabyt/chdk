@@ -1,10 +1,6 @@
 #include "stubs_asm.h"
 
 // Found manually
-DEF(focus_len_table, 0xFFFEA5CC)					// ok (comp 1.00h)
-DEF(zoom_busy, 0x342c + 0x1c)						// ok (comp 1.00h)
-DEF(focus_busy,0x7A6C + 0x8)						// ok (comp 1.00h)
-DEF(recreview_hold, 0x933C + 0xF0)					// ok (comp 1.00h)
 
 DEF(rear_dial_position, 0xC0240106)
 

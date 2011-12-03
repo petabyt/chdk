@@ -1,10 +1,6 @@
 #include "stubs_asm.h"
 
 // Found manually
-DEF(focus_len_table, 0xFFFE2A80)
-DEF(zoom_busy, 0x71d4 + 0x14)
-DEF(focus_busy,0x70B8 + 0x8)
-DEF(recreview_hold, 0x84C0 + 0xE0)
 
 DEF(rear_dial_position, 0xC0240106)
 DEF(front_dial_position, 0xC0240306)

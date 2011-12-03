@@ -1,10 +1,6 @@
 #include "stubs_asm.h"
 
 // Found manually
-DEF(zoom_busy, 0x6FE4 + 0x1C)						// sub_FF179AF8 (FF179AFC & FF179B34)
-DEF(focus_busy,0x6E68 + 0x8)						// sub_FF173D0C (FF173D10 & FF173D2C)
-DEF(recreview_hold, 0x8324 + 0xDC)					// in FF1B210C (comp sx220hs)
-DEF(focus_len_table, 0xFFF4A30C)					// search for 18800 (longest focus length in micrometers) & 4300 (shortest length)
 
 DEF(canon_play_menu_active                  ,0x0000e784)
 

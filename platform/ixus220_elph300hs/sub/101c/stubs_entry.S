@@ -33,6 +33,9 @@ NSTUB(kbd_pwr_off                             ,0xff865570) //  2 60%
 //DEF(playrec_mode                            ,0x00002f38) // Found @0xff888774,          stubs_min = 0x00002f38 (0x00002f38)
 //DEF(zoom_status                             ,0x0000ded8) // Found @0xffb078cc,          stubs_min = 0x0000ded8 (0x0000ded8)
 //DEF(some_flag_for_af_scan                   ,0x000071cc) // Found @0xff989240,          stubs_min = 0x000071cc (0x000071cc)
+//DEF(zoom_busy                               ,0x00006cf4) // Found @0xff97fd74,          stubs_min = 0x00006cf4 (0x00006cf4)
+//DEF(focus_busy                              ,0x00006b68) // Found @0xff97af60,          stubs_min = 0x00006b68 (0x00006b68)
+//DEF(recreview_hold                          ,0x00003828) // Found @0xff8a6510, ** != ** stubs_min = 0x000094c4 (0x93D4+0xF0)
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40471000; } // Found @0xff85fd1c
