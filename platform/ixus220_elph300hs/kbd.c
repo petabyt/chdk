@@ -13,7 +13,7 @@
 	line 35: alt_mode_key_mask = 0x00004000
 	line 62: { 2, KEY_PRINT		     ,0x00004000 },  //KEY_VIDEO for ALT menu
 	
-	In line 257 special handling of KEY_VIDEO is defined:
+	In line 255 special handling of KEY_VIDEO is defined:
 	Short Press of KEY_VIDEO toggles <ALT> mode
 	Long Press of KEY_VIDEO executes original Canon functionality
 	
@@ -234,8 +234,6 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 
 	 return 0; // shut up the compiler
 }
-
-volatile int jogdial_stopped=0;
 
 void my_kbd_read_keys()
 {
