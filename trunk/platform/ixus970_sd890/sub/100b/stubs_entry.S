@@ -35,6 +35,13 @@
 //DEF(playrec_mode                            ,0x0000555c) // Found @0xff861170,          stubs_min = 0x0000555c (0x5558+0x4)
 //DEF(zoom_status                             ,0x0000d4a4) // Found @0xffa406c8,          stubs_min = 0x0000d4a4 (0xD4A4)
 //DEF(some_flag_for_af_scan                   ,0x0000d228) // Found @0xffa2b598,          stubs_min = 0x0000d228 (0xD228)
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 3 int value(s), the first is the zoom focus length.
+// there are 12 entries in the table - set NUM_FL to 12
+DEF(focus_len_table                         ,0xfffe297c) // Found @0xfffe297c
+//DEF(zoom_busy                               ,0x00008aa0) // Found @0xff932a88,          stubs_min = 0x00008aa0 (0x8A8C+0x14)
+//DEF(focus_busy                              ,0x0000898c) // Found @0xff92e134,          stubs_min = 0x0000898c (0x8984+0x8)
+//DEF(recreview_hold                          ,0x00006188) // Found @0xff87eb90, ** != ** stubs_min = 0x00009d98 (0x9CEC+0xAC)
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x10361000; } // Found @0xff83e8a0

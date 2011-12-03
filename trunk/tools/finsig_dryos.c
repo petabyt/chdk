@@ -330,6 +330,45 @@ void load_modemap()
     }
 }
 
+int min_focus_len = 0;
+int max_focus_len = 0;
+
+void load_platform()
+{
+    FILE *f = fopen("../../platform_camera.h", "rb");
+
+    if (f == NULL) return;
+
+    char line[500];
+    char val[12];
+    char div[12];
+    int v, d;
+    char *s;
+
+    while (read_line(f,line))
+    {
+		s = strstr(line, "CAM_DNG_LENS_INFO");
+		if (s != 0)
+		{
+			char *c = strstr(line, "//");
+			if ((c == 0) || (c > s))
+			{
+                s = strstr(line,"{")+1;
+				s = get_str(s,val);
+				s = get_str(s,div);
+                v = atoi(val);
+                d = atoi(div);
+                min_focus_len = (v * 1000) / d;
+				s = get_str(s,val);
+				s = get_str(s,div);
+                v = atoi(val);
+                d = atoi(div);
+                max_focus_len = (v * 1000) / d;
+			}
+		}
+    }
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Signature match handling
@@ -693,6 +732,11 @@ int isLDR_PC_cond(firmware *fw, int offset)
 	return ((fw->buf[offset] & 0x0E1F0000) == 0x041F0000);
 }
 
+int isADR_PC(firmware *fw, int offset)
+{
+	return ((fw->buf[offset] & 0xFE0F0000) == 0xE20F0000);
+}
+
 int isSTR_PC(firmware *fw, int offset)
 {
 	return ((fw->buf[offset] & 0xFE1F0000) == 0xE40F0000);
@@ -929,6 +973,8 @@ sig_stuff saved_sigs[] = {
 	{ "DispCon_ShowBitmapColorBar", 0 },
 	{ "FreeUncacheableMemory", 0 },
 	{ "GetParameterData", 0 },
+	{ "ResetZoomLens", 0 },
+	{ "ResetFocusLens", 0 },
 	
 	{ 0, 0 }
 };
@@ -1047,9 +1093,17 @@ typedef struct {
 
 #if defined(PLATFORMOS_dryos)
 #include "signatures_dryos.h"
+
+FuncsList   func_list2[] =
+{
+    { "ResetZoomLens", 0, 0 },
+    { "ResetFocusLens", 0, 0 },
+};
+
 uint32_t log_test[] = {
 	0x1526E50E, 0x3FDBCB7B, 0
 };
+
 string_sig string_sigs[] = {
 	{ 1, "AllocateMemory", "AllocateMemory", 1 },
     { 1, "Close", "Close", 1 },
@@ -1132,6 +1186,8 @@ string_sig string_sigs[] = {
 	{ 2, "GetSDProtect", "GetSDProtect", 1 },
 	{ 2, "DispCon_ShowBitmapColorBar", "DispCon_ShowBitmapColorBar", 1 },
 	{ 2, "SetAE_ShutterSpeed", "SetAE_ShutterSpeed", 1 },
+    { 2, "ResetZoomLens", "ResetZoomLens", 1 },
+    { 2, "ResetFocusLens", "ResetFocusLens", 1 },
 	
 	{ 3, "AllocateMemory", "AllocateMemory", 1 },
 	{ 3, "FreeMemory", "FreeMemory", 1 },
@@ -1290,6 +1346,8 @@ char *optional[] = {
 	"task_PhySw",
 	"MakeSDCardBootable",
 	"LEDDrive",
+    "ResetZoomLens",
+    "ResetFocusLens",
 	0
 };
 
@@ -2248,6 +2306,43 @@ int find_matches(firmware *fw, int k)
 	return k;
 }
 
+int find_matches2(firmware *fw, int k)
+{
+    const char *curr_name;
+	int i;
+	
+	int found_ev = 0;
+	int tried_ev = 0;
+
+	count = 0;
+    curr_name = func_list2[k].name;
+
+	for (i = 0; string_sigs[i].ev_name != 0 && !found_ev; i++)
+	{
+		if (strcmp(curr_name, string_sigs[i].name) == 0)
+		{
+			tried_ev = 1;
+			if (find_strsig(fw, &string_sigs[i], k))
+			{
+				found_ev = 1;
+				break;
+			}
+		}
+	}
+
+	if (count > 1)
+	{
+		qsort(matches, count, sizeof(Match), (void*)match_compare);
+    }
+
+	if (count > 0)
+	{
+		save_sig(curr_name, matches->ptr);	
+	}
+		
+	return k;
+}
+
 void print_results(const char *curr_name)
 {
 	int i;
@@ -3083,6 +3178,144 @@ void find_stubs_min(firmware *fw)
 			//break;
 		}
 	}
+
+    // focus_len_table
+    if (min_focus_len != 0)
+    {
+        int found = 0, pos = 0, len = 0, size = 0;
+    	for (k=0; k<fw->size; k++)
+	    {
+            if (fw->buf[k] == min_focus_len)
+            {
+                int mul = 1;
+                if (fw->buf[k+1] == 100) mul = 3;
+                for (k1 = k + mul; (k1 < fw->size) && (fw->buf[k1] > fw->buf[k1-mul]) && (fw->buf[k1] != max_focus_len); k1 += mul) ;
+                if (fw->buf[k1] == max_focus_len)
+                {
+                    found++;
+                    pos = k;
+                    len = ((k1 - k) / mul) + 1;
+                    size = mul;
+                }
+            }
+        }
+        if (found == 1)
+        {
+            bprintf("// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).\n");
+            if (size == 1)
+                bprintf("// each entry contains 1 int value, which is the the zoom focus length.\n",size);
+            else
+                bprintf("// each entry contains %d int value(s), the first is the zoom focus length.\n",size);
+            bprintf("// there are %d entries in the table - set NUM_FL to %d\n",len,len);
+			print_stubs_min(fw,"focus_len_table",idx2adr(fw,pos),idx2adr(fw,pos));
+        }
+    }
+	
+	// Find 'zoom_busy'
+	k = get_saved_sig(fw, "ResetZoomLens");
+	if (k >= 0)
+	{
+		uint32_t fadr = saved_sigs[k].val;
+		int idx = adr2idx(fw, fadr);
+		
+		for (k=idx; k<idx+5; k++)
+		{
+            if (isBL(fw,k))
+            {
+                int idx1 = idxFollowBranch(fw,k,0x01000001);
+                for (k1=idx1; k1<idx1+50; k1++)
+                {
+                    if ((fw->buf[k1] & 0xFFFF0000) == 0xE8BD0000)   // LDMFD
+                    {
+                        fadr = 0;
+                        if (isADR_PC(fw,k1+1))
+                        {
+                            fadr = ADR2adr(fw,k1+1);
+                        }
+                        else if (isADR_PC(fw,k1+2))
+                        {
+                            fadr = ADR2adr(fw,k1+2);
+                        }
+                        else if (isADR_PC(fw,k1-3))
+                        {
+                            fadr = ADR2adr(fw,k1-3);
+                        }
+                        else if (isLDR_PC(fw,k1+1))
+                        {
+                            fadr = LDR2val(fw,k1+1);
+                        }
+                        else if (isLDR_PC(fw,k1+2))
+                        {
+                            fadr = LDR2val(fw,k1+2);
+                        }
+                        if (fadr != 0)
+                        {
+                            int idx2 = adr2idx(fw,fadr);
+                            if (isLDR_PC(fw,idx2+1) && isLDR(fw,idx2+2))
+                            {
+                                int base = LDR2val(fw,idx2+1);
+                                int ofst = fw->buf[idx2+2] & 0xFFF;
+                       			print_stubs_min(fw,"zoom_busy",base+ofst-4,fadr);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+	
+	// Find 'focus_busy'
+	k = get_saved_sig(fw, "ResetFocusLens");
+	if (k >= 0)
+	{
+		uint32_t fadr = saved_sigs[k].val;
+		int idx = adr2idx(fw, fadr);
+		
+		for (k=idx; k<idx+25; k++)
+		{
+            if ((fw->buf[k] & 0xFFFF0000) == 0xE8BD0000)   // LDMFD
+            {
+                k1 = 0;
+                if (isBL(fw,k-2))
+                {
+                    k1 = idxFollowBranch(fw,k-2,0x01000001);
+                }
+                if (isBL(fw,k-1))
+                {
+                    k1 = idxFollowBranch(fw,k-1,0x01000001);
+                }
+                if (k1 != 0)
+                {
+                    if (isLDR_PC(fw,k1+1) && isLDR(fw,k1+3))
+                    {
+                        int base = LDR2val(fw,k1+1);
+                        int ofst = fw->buf[k1+3] & 0xFFF;
+                       	print_stubs_min(fw,"focus_busy",base+ofst-4,idx2adr(fw,k1));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+	
+	// Find 'recreview_hold'
+	k = find_str_ref(fw, "ShootCon_NotifyStartReviewHold");
+	if (k >= 0)
+	{
+        for (k1=k; k1<k+20; k1++)
+        {
+            if (isLDR_PC(fw,k1) && ((fw->buf[k1+1] & 0xFFFF0FFF) == 0xE3A00001) && isSTR(fw,k1+2) &&
+                ((fw->buf[k1+1] & 0x0000F000) == (fw->buf[k1+2] & 0x0000F000)) &&
+                ((fw->buf[k1] & 0x0000F000) == ((fw->buf[k1+2] & 0x000F0000) >> 4)))
+            {
+                uint32_t base = LDR2val(fw,k1);
+                int ofst = fw->buf[k1+2] & 0x00000FFF;
+                print_stubs_min(fw,"recreview_hold",base+ofst,idx2adr(fw,k1));
+                break;
+            }
+        }
+	}
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -3381,6 +3614,7 @@ int main(int argc, char **argv)
     //print_stubs(stubs_min);
 	load_modemap();
     //print_stubs(modemap);
+    load_platform();
 	
     bprintf("// !!! THIS FILE IS GENERATED. DO NOT EDIT. !!!\n");
     bprintf("#include \"stubs_asm.h\"\n\n");
@@ -3426,6 +3660,17 @@ int main(int argc, char **argv)
 				ret = 1;
 			}
         }
+    }
+
+    for (k = 0; func_list2[k].name; k++){
+
+        count = 0;
+        curr_name = func_list2[k].name;
+
+		k = find_matches2(&fw, k);
+
+        //if ((fw.dryos_ver >= find_min_ver(curr_name)) && (fw.dryos_ver <= find_max_ver(curr_name)))
+		//	print_results(curr_name);
     }
 
     clock_t t2 = clock();

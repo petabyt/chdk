@@ -33,6 +33,9 @@
 //DEF(playrec_mode                            ,0x0000555c) // Found @0xff8613c4,          stubs_min = 0x0000555c (0x5558+0x4)
 //DEF(zoom_status                             ,0x0000d474) // Found @0xffa3f45c,          stubs_min = 0x0000d474 (0xD474)
 //DEF(some_flag_for_af_scan                   ,0x0000d1f8) // Found @0xffa2a32c,          stubs_min = 0x0000d1f8 (0xD1F8)
+//DEF(zoom_busy                               ,0x00008a88) // Found @0xff932810,          stubs_min = 0x00008a88 (0x8A74+0x14)
+//DEF(focus_busy                              ,0x00008994) // Found @0xff92e3bc,          stubs_min = 0x00008994 (0x898C+0x8)
+//DEF(recreview_hold                          ,0x000061a4) // Found @0xff87ee14, ** != ** stubs_min = 0x00009da4 (0x9CF8+0xAC)
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x10361000; } // Found @0xff83e9ac

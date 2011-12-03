@@ -1,10 +1,6 @@
 #include "stubs_asm.h"
 
 // Found manually
-DEF(focus_len_table, 0xFFFEA5CC)					// search for 150500 (longest focus length in micrometers) & 4300 (shortest length)
-DEF(zoom_busy, 0x342c + 0x1c)						// found by trial and error in the zoom lens controller code
-DEF(focus_busy,0x7A6C + 0x8)						// found by trial and error in the focus controller code
-DEF(recreview_hold, 0x933C + 0xF0)					// in FF9C4900 (comp s95)
 
 DEF(rear_dial_position, 0xC0240106)
 

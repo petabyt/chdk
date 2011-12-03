@@ -27,12 +27,19 @@ DEF(physw_status                            ,0x00037548) // Found @0xff024dd8
 DEF(physw_run                               ,0x00001c10) // Found @0xff024968
 DEF(levent_table                            ,0xff593a0c) // Found @0xff593a0c
 DEF(FlashParamsTable                        ,0xff607f74) // Found @0xff607f74
-//DEF(movie_status                            ,0x00002f1c) // Found @0xff0772a8,          stubs_min = 0x00002f1c (0x2ED8+0x44)
+DEF(movie_status                            ,0x00002f1c) // Found @0xff0772a8
 DEF(full_screen_refresh                     ,0x0000c2d8) // Found @0xff2917e4
 DEF(canon_menu_active                       ,0x000034f0) // Found @0xff091b6c
 DEF(canon_shoot_menu_active                 ,0x0000ab6d) // Found @0xff22a708
 DEF(playrec_mode                            ,0x00003214) // Found @0xff083504
 DEF(zoom_status                             ,0x000111f8) // Found @0xff36e6dc
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 1 int value, which is the the zoom focus length.
+// there are 201 entries in the table - set NUM_FL to 201
+DEF(focus_len_table                         ,0xfff4a7b4) // Found @0xfff4a7b4
+DEF(zoom_busy                               ,0x00002e2c) // Found @0xff071c6c
+DEF(focus_busy                              ,0x00008d08) // Found @0xff1bbe84
+DEF(recreview_hold                          ,0x000041e4) // Found @0xff0a443c
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40685000; } // Found @0xff0515dc
