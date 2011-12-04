@@ -813,6 +813,9 @@ static void file_browser_selected(const char *fn) {
     // that file browser is finished and return last selected file
     // to script caller
     state_kbd_script_run = 1;
+    // Clear the Func/Set key so that when the script exits, pressing
+    // the Func/Set key again will enter the Script menu, not the File Browser
+    kbd_reset_autoclicked_key();
 }
 
 static int luaCB_file_browser( lua_State* L ) {
