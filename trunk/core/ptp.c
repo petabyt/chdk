@@ -229,9 +229,13 @@ static int handle_ptp(
   ptp.trans_id = trans_id;
   ptp.num_param = 0;
   
-  // TODO calling this on every PTP command is not good,
+  // TODO 
+  // calling this on every PTP command is not good on cameras without CAM_FIRMWARE_MEMINFO
   // since it figures out free memory by repeatedly malloc'ing!
-  buf_size=core_get_free_memory()>>1;
+  // using half of available memory may be undesirable in some cases as well
+  buf_size=(core_get_free_memory()>>1);
+  // make sure size is an integer number of words (avoid some possible issues with multiple receive calls)
+  buf_size &= 0xFFFFFFFC;
 
   // handle command
   switch ( param1 )
