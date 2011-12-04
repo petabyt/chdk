@@ -25,6 +25,7 @@
 	
     #define CAM_PROPSET                		2
 
+    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_HAS_ND_FILTER           	1
  

@@ -40,6 +40,7 @@
 	#undef  CAM_USE_ZOOM_FOR_MF
 	#undef  CAM_UNCACHED_BIT			// shut up compiler
 	#define CAM_UNCACHED_BIT			0x40000000
+	#define CAM_SHOW_OSD_IN_SHOOT_MENU  1
     #define CAM_DETECT_SCREEN_ERASE     1       // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
 
 	#undef DEFAULT_RAW_EXT
