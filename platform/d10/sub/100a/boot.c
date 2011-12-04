@@ -16,14 +16,19 @@ void CreateTask_spytask();
 void boot();
 void task_CaptSeqTask_my();
 
+extern void task_CaptSeq();
+extern void task_InitFileModules();
+extern void task_MovieRecord();
+//extern void task_ExpDrv();
+
 void taskHook(context_t **context) { 
  task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
 
 // physw is done directly to avoid wasting stack space
 // if(!_strcmp(tcb->name, "PhySw"))           tcb->entry = (void*)mykbd_task; 
- if(!_strcmp(tcb->name, "CaptSeqTask"))     tcb->entry = (void*)task_CaptSeqTask_my; 
- if(!_strcmp(tcb->name, "InitFileModules")) tcb->entry = (void*)init_file_modules_task;
- if(!_strcmp(tcb->name, "MovieRecord"))     tcb->entry = (void*)movie_record_task;
+ if(tcb->entry == task_CaptSeq)         tcb->entry = (void*)task_CaptSeqTask_my; 
+ if(tcb->entry == task_InitFileModules) tcb->entry = (void*)init_file_modules_task;
+ if(tcb->entry == task_MovieRecord)     tcb->entry = (void*)movie_record_task;
 // not implemented yet
 // if(!_strcmp(tcb->name, "ExpDrvTask"))      tcb->entry = (void*)exp_drv_task;
 }
