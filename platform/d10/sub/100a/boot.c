@@ -19,7 +19,7 @@ void task_CaptSeqTask_my();
 extern void task_CaptSeq();
 extern void task_InitFileModules();
 extern void task_MovieRecord();
-//extern void task_ExpDrv();
+extern void task_ExpDrv();
 
 void taskHook(context_t **context) { 
  task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
@@ -29,8 +29,7 @@ void taskHook(context_t **context) {
  if(tcb->entry == task_CaptSeq)         tcb->entry = (void*)task_CaptSeqTask_my; 
  if(tcb->entry == task_InitFileModules) tcb->entry = (void*)init_file_modules_task;
  if(tcb->entry == task_MovieRecord)     tcb->entry = (void*)movie_record_task;
-// not implemented yet
-// if(!_strcmp(tcb->name, "ExpDrvTask"))      tcb->entry = (void*)exp_drv_task;
+ if(tcb->entry == task_ExpDrv)          tcb->entry = (void*)exp_drv_task;
 }
 
 #define DEBUG_LED ((unsigned volatile *)0xC0220130) // RED

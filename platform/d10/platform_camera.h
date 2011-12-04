@@ -55,7 +55,7 @@
     #define CAM_VIDEO_QUALITY_ONLY      1
 
 
-//    #define CAM_EXT_TV_RANGE            1
+    #define CAM_EXT_TV_RANGE            1
 
     #undef CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT            0x40000000
