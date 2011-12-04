@@ -37,6 +37,13 @@ void init_chdk_ptp()
   ExitTask();
 }
 
+/*
+WARNING: it appears that on some vxworks cameras,
+if a call to recv_ptp_data doesn't end on a word (4 byte) boundery,
+subsequent calls will return corrupt data
+the final call not ending on a word boundery is OK.
+see http://chdk.setepontos.com/index.php?topic=6730.msg76760#msg76760
+*/
 static int recv_ptp_data(ptp_data *data, char *buf, int size)
   // repeated calls per transaction are ok
 {
@@ -380,57 +387,45 @@ static int handle_ptp(
 
     case PTP_CHDK_UploadFile:
       {
-        FILE *f;
-        int s,r,fn_len;
-        char *buf, *fn;
-
-        s = data->get_data_size(data->handle);
-
-        recv_ptp_data(data,(char *) &fn_len,4);
-        s -= 4;
-
-        fn = (char *) malloc(fn_len+1);
-        if ( fn == NULL )
-        {
-          ptp.code = PTP_RC_GeneralError;
-          break;
+        FILE *f=NULL;
+        char *buf=NULL, *fn=NULL;
+        unsigned data_size,fn_len,chunk_size;
+        data_size = data->get_data_size(data->handle);
+        while ( data_size > 0 ) {
+            chunk_size = (data_size > buf_size) ? buf_size:data_size;
+            // first time through
+            // allocate buffer, parse out the file name and open file
+            if(!buf) {
+                buf=malloc(chunk_size);
+                if(!buf) {
+                    ptp.code = PTP_RC_GeneralError;
+                    break;
+                }
+                recv_ptp_data(data,buf,chunk_size);
+                fn_len = *(unsigned *)buf;
+                fn = malloc(fn_len);
+                if(!fn) {
+                    ptp.code = PTP_RC_GeneralError;
+                    break;
+                }
+                memcpy(fn,buf+4,fn_len);
+                fn[fn_len] = 0;
+                f = fopen(fn,"wb");
+                free(fn);
+                if(!f) {
+                    ptp.code = PTP_RC_GeneralError;
+                    break;
+                }
+                fwrite(buf+4+fn_len,1,chunk_size - 4 - fn_len,f);
+            } else {
+                recv_ptp_data(data,buf,chunk_size);
+                fwrite(buf,1,chunk_size,f);
+            }
+            data_size -= chunk_size;
         }
-        fn[fn_len] = '\0';
-
-        recv_ptp_data(data,fn,fn_len);
-        s -= fn_len;
-
-        f = fopen(fn,"wb");
-        if ( f == NULL )
-        {
-          ptp.code = PTP_RC_GeneralError;
-          free(fn);
-          break;
+        if(f) {
+            fclose(f);
         }
-        free(fn);
-
-        buf = (char *) malloc(buf_size);
-        if ( buf == NULL )
-        {
-          ptp.code = PTP_RC_GeneralError;
-          break;
-        }
-        while ( s > 0 )
-        {
-          if ( s >= buf_size )
-          {
-            recv_ptp_data(data,buf,buf_size);
-            fwrite(buf,1,buf_size,f);
-            s -= buf_size;
-          } else {
-            recv_ptp_data(data,buf,s);
-            fwrite(buf,1,s,f);
-            s = 0;
-          }
-        }
-
-        fclose(f);
-
         free(buf);
         break;
       }
