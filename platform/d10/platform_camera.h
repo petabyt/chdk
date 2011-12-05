@@ -44,6 +44,7 @@
     #undef 	CAM_HAS_USER_TV_MODES
     #define CAM_SHOW_OSD_IN_SHOOT_MENU            1
     #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO  1
+    #define CAM_DETECT_SCREEN_ERASE               1
 // TODO this doesn't seem to be working
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD       1
     #define CAM_CHDK_HAS_EXT_VIDEO_MENU   1 // In CHDK for this camera realized adjustable video compression
@@ -67,6 +68,8 @@
     #define CAM_QUALITY_OVERRIDE 1
     #undef CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
+
+    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
     #define CAM_DNG_LENS_INFO               { 62,10, 186,10, 28,10, 49,10 } // See comments in camera.h
 
