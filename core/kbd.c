@@ -179,7 +179,7 @@ long kbd_process()
         mvideo=MODE_IS_VIDEO(mmode);
     }
     // deals with alt-mode switch and delay emulation
-    if (key_pressed) {
+    if (key_pressed && !nRmt) {
         if (kbd_is_key_pressed(conf.alt_mode_button)
                 || ((key_pressed >= CAM_EMUL_KEYPRESS_DELAY)
                 && (key_pressed < CAM_EMUL_KEYPRESS_DELAY+CAM_EMUL_KEYPRESS_DURATION))) {

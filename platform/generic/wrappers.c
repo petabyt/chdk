@@ -144,10 +144,6 @@ long lens_get_zoom_point()
 
 void lens_set_zoom_point(long newpt)
 {
-#if defined (CAMERA_s95)
-	long startTime;
-#endif
-
     if (newpt < 0) {
         newpt = 0;
     } else if (newpt >= zoom_points) {
@@ -192,17 +188,9 @@ void lens_set_zoom_point(long newpt)
 #else	// !(CAMERA_g10 || CAMERA_g12 || CAMERA_sx30)
     _MoveZoomLensWithPoint((short*)&newpt);
 
-  #if defined (CAMERA_s95)
-	// this will hang sometimes on s95 when zoom_busy gets stuck as a 1
-	// we add a timeout as a work-around for this problem
-	startTime = get_tick_count();
-	while (get_tick_count() < (startTime + 2000)) {
-		if (!zoom_busy)
-			break;
-	}
-  #else	// !CAMERA_s95
-	while (zoom_busy) ;
-  #endif // !CAMERA_s95
+    // tight loop here hangs some cameras (the task that clears zoom_busy
+    // is starved; seen at least on S95 and IXUS 220), so stick in a sleep
+    while (zoom_busy) msleep(10);
 
     if (newpt==0) zoom_status=ZOOM_OPTICAL_MIN;
     else if (newpt >= zoom_points) zoom_status=ZOOM_OPTICAL_MAX;

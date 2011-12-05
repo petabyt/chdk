@@ -37,6 +37,7 @@
     #define CAM_RAW_ROWS                3060 // actual size from fw 12754080pix at FF375484 -> 19131120/12*8
 	#define CAM_HAS_ND_FILTER		1
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
+    #define CAM_CAN_SD_OVER_IN_AF_LOCK 1
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON			1
     #define CAM_VIDEO_QUALITY_ONLY          1
