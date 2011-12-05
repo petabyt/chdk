@@ -759,6 +759,10 @@ short shooting_can_focus()
 {
  int m=mode_get()&MODE_SHOOTING_MASK;
 #if !CAM_CAN_SD_OVER_NOT_IN_MF && CAM_CAN_SD_OVERRIDE
+ #if CAM_CAN_SD_OVER_IN_AF_LOCK
+  if (shooting_get_prop(PROPCASE_AF_LOCK))
+    return 1;
+ #endif
   return (shooting_get_focus_mode() || MODE_IS_VIDEO(m));
 #elif !CAM_CAN_SD_OVERRIDE
   return MODE_IS_VIDEO(m);

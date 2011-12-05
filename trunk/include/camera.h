@@ -37,6 +37,7 @@
 #define CAM_HAS_IRIS_DIAPHRAGM      1           // Camera has real diaphragm mechanism (http://en.wikipedia.org/wiki/Diaphragm_%28optics%29)
 #undef  CAM_HAS_ND_FILTER                       // Camera has build-in ND filter
 #define CAM_CAN_SD_OVER_NOT_IN_MF   1           // Camera allows subject distance (focus) override when not in manual focus mode
+#undef  CAM_CAN_SD_OVER_IN_AF_LOCK              // Camera allows subject distance (focus) override when in AF Lock mode
 #define CAM_CAN_SD_OVERRIDE         1           // Camera allows to do subject distance override
 #define CAM_HAS_MANUAL_FOCUS        1           // Camera has manual focus mode
 #define CAM_HAS_USER_TV_MODES       1           // Camera has tv-priority or manual modes with ability to set tv value

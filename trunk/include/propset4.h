@@ -7,6 +7,7 @@ WARNING:
 The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 */
 
+#define PROPCASE_AF_LOCK                         11		// 0 = AF not locked, 1 = AF locked
 #define PROPCASE_FLASH_SYNC_CURTAIN              64
 #define PROPCASE_SUBJECT_DIST2                   65
 #define PROPCASE_AV2                             22     // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
