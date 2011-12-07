@@ -1098,6 +1098,7 @@ FuncsList   func_list2[] =
 {
     { "ResetZoomLens", 0, 0 },
     { "ResetFocusLens", 0, 0 },
+    { 0, 0, 0}
 };
 
 uint32_t log_test[] = {
