@@ -2117,8 +2117,11 @@ void gui_kbd_enter()
 
     vid_turn_off_updates();
 
+    // If user menu set to start automatically when <ALT> mode entered
+    // then enter user menu mode, unless a script was paused by exiting
+    // <ALT> mode when the script was running.
 	gui_user_menu_flag = 0;
-	if (conf.user_menu_enable == 2) {
+	if ((conf.user_menu_enable == 2) && !state_kbd_script_run) {
 		gui_menu_init(&user_submenu);
 		gui_set_mode(GUI_MODE_MENU);
 		draw_restore();
