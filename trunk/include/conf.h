@@ -8,10 +8,16 @@
 #define CONF_STR_LEN        100
 
 #define CONF_EMPTY          0
-#define CONF_VALUE          1
+// regular char-int-short value
+#define CONF_VALUE			1
+#define CONF_DEF_VALUE      1
+// pointer to value
 #define CONF_VALUE_PTR      2
+// pointer to array of int
 #define CONF_INT_PTR        3
+// pointer to the string
 #define CONF_CHAR_PTR       4
+// pointer to the OSD_pos
 #define CONF_OSD_POS_PTR    5
 
 typedef struct {
