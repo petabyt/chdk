@@ -204,6 +204,9 @@ get_property_case(PROPCASE_GPS, &gps, sizeof(tGPS));
  for (j=0;j<IFDs;j++) {
   for(i=0; IFD_LIST[j].entry[i].tag; i++) {
     switch (IFD_LIST[j].entry[i].tag) {
+	 // For camera name string make sure the 'count' in the IFD header is correct for the string
+     case 0x110 :                                                                                       // CameraName
+     case 0xC614: IFD_LIST[j].entry[i].count = strlen((char*)IFD_LIST[j].entry[i].offset) + 1; break;   // UniqueCameraModel
      case 0x132 :
      case 0x9003: IFD_LIST[j].entry[i].offset=(int)get_date_for_exif(exif_data->time); break; //DateTimeOriginal
      case 0x8827: IFD_LIST[j].entry[i].offset=exif_data->iso; break;//ISOSpeedRatings
