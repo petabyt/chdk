@@ -97,7 +97,7 @@ main.elf: $(OBJS) $(topdir)platform/$(PLATFORM)/libplatform.a \
           $(topdir)lib/lua/liblua.a \
           $(topdir)lib/armutil/libarmutil.a
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^  $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^  $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 	( $(NM) $@ | grep ' U ' > $@.syms ) && echo "error: unresolved symbols in $@ (see $@.syms)" && exit 1 || exit 0
 
 	$(SIZE) $@ | tee $(topdir)size.txt
