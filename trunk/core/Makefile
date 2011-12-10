@@ -117,7 +117,7 @@ gui_lang.o: gui_lang.c gui_lang.h gui_lang_str.h
 ifdef OPT_DEFAULT_LANG
 gui_lang_str.h: $(topdir)tools/makelang$(EXE) $(topdir)CHDK/LANG/english.lng $(topdir)CHDK/LANG/$(OPT_DEFAULT_LANG).lng
 	@echo $< \-\> $@
-	$(topdir)tools/makelang.exe $(topdir)CHDK/LANG/english.lng $(topdir)CHDK/LANG/$(OPT_DEFAULT_LANG).lng > gui_lang_str.h
+	$(topdir)tools/makelang$(EXE) $(topdir)CHDK/LANG/english.lng $(topdir)CHDK/LANG/$(OPT_DEFAULT_LANG).lng > gui_lang_str.h
 else
 gui_lang_str.h: $(topdir)tools/makelang$(EXE) $(topdir)CHDK/LANG/english.lng
 	@echo $< \-\> $@
