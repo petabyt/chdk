@@ -266,7 +266,7 @@ long kbd_process()
 		// Start or stop a script if the shutter button pressed
 		// Note: this is blocked if CHDK is in the file selector. prevents problems
 		//       when the file selector is called from a script.
-        if (kbd_is_key_pressed(KEY_SHOOT_FULL) && (gui_get_mode() != GUI_MODE_FSELECT)) {
+        if (kbd_is_key_pressed(KEY_SHOOT_FULL) && (gui_get_mode() != GUI_MODE_FSELECT) && (gui_get_mode() != GUI_MODE_MPOPUP)) {
             key_pressed = 100;
             if (!state_kbd_script_run) {
                 script_start_gui(0);
