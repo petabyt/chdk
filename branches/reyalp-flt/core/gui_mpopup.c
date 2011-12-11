@@ -12,7 +12,7 @@
 
 extern int module_idx;
 
-gui_handler GUI_MODE_MPOPUP = 
+gui_handler GUI_MODE_MPOPUP_MODULE = 
     /*GUI_MODE_MPOPUP*/         { gui_mpopup_draw,      gui_mpopup_kbd_process,     gui_mpopup_kbd_process, GUI_MODE_FLAG_NORESTORE_ON_SWITCH, GUI_MODE_MAGICNUM };
 
 // Simple popup menu. No title, no separators, only processing items
@@ -53,7 +53,7 @@ void gui_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags
     gui_mpopup_mode_old = gui_get_mode();
     mpopup_to_draw = 1;
     mpopup_on_select = on_select;
-    gui_set_mode((unsigned int)&GUI_MODE_MPOPUP);
+    gui_set_mode((unsigned int)&GUI_MODE_MPOPUP_MODULE);
 }
 
 //-------------------------------------------------------------------
@@ -108,9 +108,10 @@ void gui_mpopup_draw(int enforce_redraw) {
 //-------------------------------------------------------------------
 void exit_mpopup(int action)
 {
-        gui_set_mode(gui_mpopup_mode_old);
-        if (mpopup_on_select) 
-            mpopup_on_select(actions[mpopup_actions[action]].flag);
+    gui_set_mode(gui_mpopup_mode_old);
+    if (mpopup_on_select) 
+        mpopup_on_select(action);
+	mpopup_on_select=0;
 }
 
 //-------------------------------------------------------------------
@@ -136,7 +137,7 @@ void gui_mpopup_kbd_process() {
         break;
     case KEY_SET:
         kbd_reset_autoclicked_key();
-		exit_mpopup(mpopup_actions_active);		
+		exit_mpopup(actions[mpopup_actions[mpopup_actions_active]].flag);		
 		module_async_unload(module_idx);
         break;
     }
@@ -172,6 +173,10 @@ int _module_loader( void** chdk_export_list )
   if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
 
+  // Try to bind to generic gui mode alias
+  if (!gui_bind_mode( GUI_MODE_MPOPUP, &GUI_MODE_MPOPUP_MODULE))
+     return 1;
+
   return 0;
 }
 
@@ -183,9 +188,14 @@ int _module_loader( void** chdk_export_list )
 //---------------------------------------------------------
 int _module_unloader()
 {
-	exit_mpopup(MPOPUP_CANCEL);		
+    if (mpopup_on_select) 
+        mpopup_on_select(MPOPUP_CANCEL);
 
-	GUI_MODE_MPOPUP.magicnum = 0;	//sanity clean to prevent accidentaly assign/restore guimode to unloaded module 
+	//sanity clean to prevent accidentaly assign/restore guimode to unloaded module 
+	GUI_MODE_MPOPUP_MODULE.magicnum = 0;
+
+	// unbind generic alias
+	gui_bind_mode( GUI_MODE_MPOPUP, 0 );
 
     return 0;
 }

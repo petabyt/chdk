@@ -13,7 +13,7 @@
 #include "module_load.h"
 void gui_module_menu_kbd_process();
 
-gui_handler GUI_MODE_PALETTE = 
+gui_handler GUI_MODE_PALETTE_MODULE = 
     /*GUI_MODE_PALETTE*/        { gui_palette_draw,     gui_palette_kbd_process,    gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
 
 //-------------------------------------------------------------------
@@ -29,7 +29,7 @@ void gui_palette_init(int mode, color st_color, void (*on_select)(color clr)) {
     palette_mode = mode;
     palette_on_select = on_select;
     gui_palette_redraw = 1;
-	gui_set_mode((unsigned int)&GUI_MODE_PALETTE);
+	gui_set_mode((unsigned int)&GUI_MODE_PALETTE_MODULE);
 }
 
 //-------------------------------------------------------------------
@@ -150,6 +150,10 @@ int _module_loader( void** chdk_export_list )
   if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
 
+  // Try to bind to generic gui mode alias
+  if (!gui_bind_mode( GUI_MODE_PALETTE, &GUI_MODE_PALETTE_MODULE))
+	return 1;
+
   return 0;
 }
 
@@ -161,7 +165,11 @@ int _module_loader( void** chdk_export_list )
 //---------------------------------------------------------
 int _module_unloader()
 {
-  GUI_MODE_PALETTE.magicnum = 0;	//sanity clean to prevent accidentaly assign/restore guimode to unloaded module 
+  //sanity clean to prevent accidentaly assign/restore guimode to unloaded module 
+  GUI_MODE_PALETTE_MODULE.magicnum = 0;
+
+  // unbind generic alias
+  gui_bind_mode( GUI_MODE_PALETTE, 0);
 
   return 0;
 }

@@ -1690,14 +1690,38 @@ void gui_load_curve(int arg) {
 }
 
 #endif
+
+
+// Small hack: use understandable name to reused data member
+#define binded_gui_mode_ptr kbd_process
+
 //-------------------------------------------------------------------
 gui_mode_t gui_get_mode() {
+    if ( gui_mode >= GUI_MODE_COUNT )
+	{
+		int mode;
+		for (mode=0;mode<GUI_MODE_COUNT;mode++)
+		{
+			if ( (guiHandlers[mode].flags & GUI_MODE_FLAG_ALIAS) && 
+					guiHandlers[mode].binded_gui_mode_ptr == (void*)gui_mode ) 
+				return mode;
+		}
+	}
     return gui_mode;
 }
 
 //-------------------------------------------------------------------
 void gui_set_mode(gui_mode_t mode) 
 {
+	if ( gui_mode == mode )
+		return;
+
+	if (  mode < GUI_MODE_COUNT && 
+		  (guiHandlers[mode].flags & GUI_MODE_FLAG_ALIAS) ) 
+	{
+		mode = (unsigned int)guiHandlers[mode].binded_gui_mode_ptr; 
+	}
+
 	// Sanity check for case module pointer - is this really gui_handler
     if ( mode >= GUI_MODE_COUNT && ((gui_handler*)mode)->magicnum != GUI_MODE_MAGICNUM ) {
 		// If sanity failed (module is unload) - set to default mode
@@ -1713,6 +1737,32 @@ void gui_set_mode(gui_mode_t mode)
 #endif
     gui_mode = mode;
 }
+
+//-------------------------------------------------------------------
+// PURPOSE: bind module struct to 
+// RETUN: 0 - fail, 1 - ok
+int gui_bind_mode(int core_mode, gui_handler* handler) {
+
+	// sanity checks
+    if ( core_mode >= GUI_MODE_COUNT ||
+		(guiHandlers[core_mode].flags & GUI_MODE_FLAG_ALIAS)==0
+	   )
+		return 0;
+
+	if ( handler && handler->magicnum != GUI_MODE_MAGICNUM )
+		return 0;
+
+	// check is this module is already binded (loaded with different name)
+	gui_handler* bind_gui_handler = (gui_handler*)guiHandlers[core_mode].binded_gui_mode_ptr;
+	if ( bind_gui_handler && bind_gui_handler->magicnum == GUI_MODE_MAGICNUM )
+		return 0;
+
+	guiHandlers[core_mode].binded_gui_mode_ptr = (void*)handler;
+	return 1;
+}
+
+#undef binded_gui_mode_ptr
+
 
 //-------------------------------------------------------------------
 void gui_force_restore() {
@@ -1994,14 +2044,18 @@ void gui_menu_kbd_process_menu_btn()
 
 //-------------------------------------------------------------------
 // GUI handler table (entries must be in the same order and have the same number of entries as Gui_Mode enum)
-gui_handler guiHandlers[] =
+gui_handler guiHandlers[GUI_MODE_COUNT] =
 {
     /*GUI_MODE_NONE*/           { gui_draw_osd,         0,                          0,								0,									GUI_MODE_MAGICNUM },
     /*GUI_MODE_ALT*/            { gui_chdk_draw,        gui_chdk_kbd_process,       gui_chdk_kbd_process_menu_btn,	0,									GUI_MODE_MAGICNUM },        	
     /*GUI_MODE_MENU*/           { gui_menu_draw,        gui_menu_kbd_process,       gui_menu_kbd_process_menu_btn,	0,									GUI_MODE_MAGICNUM },
+    /*GUI_MODE_ALIAS_PALETTE*/  { 0,     				0,    						0, 								GUI_MODE_FLAG_ALIAS,				GUI_MODE_MAGICNUM },
     /*GUI_MODE_MBOX*/           { gui_mbox_draw,        gui_mbox_kbd_process,       0,								GUI_MODE_FLAG_NORESTORE_ON_SWITCH,	GUI_MODE_MAGICNUM },
+    /*GUI_MODE_ALIAS_FSELECT*/  { 0,     				0,    						0, 								GUI_MODE_FLAG_ALIAS,				GUI_MODE_MAGICNUM },
     /*GUI_MODE_OSD*/            { gui_osd_draw,         gui_osd_kbd_process,        gui_default_kbd_process_menu_btn, 0,								 GUI_MODE_MAGICNUM },		// THIS IS OSD LAYOUT EDITOR
+    /*GUI_MODE_ALIAS_MPOPUP*/   { 0,     				0,    						0, 								GUI_MODE_FLAG_ALIAS,				GUI_MODE_MAGICNUM },
 };
+
 
 //-------------------------------------------------------------------
 // Main GUI redraw function, perform common initialisation then calls the redraw handler for the mode

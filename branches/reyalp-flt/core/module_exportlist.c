@@ -208,6 +208,8 @@ void* CHDK_EXPORT_LIST[] = {
 			TurnOffBackLight,
 			mkdir,
 
+			gui_bind_mode,
+
 			0
 };
 

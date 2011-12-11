@@ -181,7 +181,7 @@ int raw_savefile() {
         }
 #ifdef OPT_CURVES
         if (conf.curve_enable) {
-  			if (module_curve_load())
+  			if (module_curves_load())
 				curve_apply();
 		}
 #endif
@@ -300,7 +300,7 @@ int raw_savefile() {
 
 #ifdef OPT_CURVES
     if (conf.curve_enable) {
-  		if (module_curve_load())
+  		if (module_curves_load())
 			curve_apply();
 	}
 #endif

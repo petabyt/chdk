@@ -267,7 +267,7 @@ static int luaCB_set_curve_state( lua_State* L )
 {
   int value;
   value=luaL_checknumber( L, 1 );
-  if (module_curve_load())
+  if (module_curves_load())
     return luaL_argerror(L,1,"fail to load curves module");
   curve_set_mode(value);
   return 0;
