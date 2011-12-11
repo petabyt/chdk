@@ -403,7 +403,7 @@ static int handle_ptp(
                 }
                 recv_ptp_data(data,buf,chunk_size);
                 fn_len = *(unsigned *)buf;
-                fn = malloc(fn_len);
+                fn = malloc(fn_len+1);
                 if(!fn) {
                     ptp.code = PTP_RC_GeneralError;
                     break;
