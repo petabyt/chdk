@@ -9,10 +9,23 @@
 #include "gui_mbox.h"
 #include "gui_mpopup.h"
 #include "gui_fselect.h"
-#include "raw_merge.h"
+#include "modules.h"
 #include "raw.h"
 #include "conf.h"
 #include "dng.h"
+
+#include "module_load.h"
+
+gui_handler GUI_MODE_FSELECT = 
+    /*GUI_MODE_FSELECT*/        { gui_fselect_draw,     gui_fselect_kbd_process,    gui_fselect_kbd_process,		0,	GUI_MODE_MAGICNUM };
+
+extern int module_idx;
+
+int *conf_sub_batch_prefix;
+int *conf_sub_batch_ext;
+
+struct librawop_sym* librawop_p;
+
 
 //-------------------------------------------------------------------
 #define HEAD_LINES              1
@@ -46,7 +59,7 @@ static char current_dir[100];       // Path for title
 static char marked_dir[100];        // Path for progress box
 static char selected_file[100];     // This full path to current file. So it is return value
 static char buf[100];
-static enum Gui_Mode    gui_fselect_mode_old; // stored previous gui_mode
+static gui_mode_t gui_fselect_mode_old; // stored previous gui_mode
 
 // basic element of file list
 struct fitem {
@@ -80,6 +93,38 @@ static char *fselect_title;     // Title of fselect window (could be different: 
 static void (*fselect_on_select)(const char *fn);
 static char raw_operation;      // info for process_raw_files() RAW_OPERATION_AVERAGE, RAW_OPERATION_SUM, 
 static int set_key_redraw_mode; // dirty hack: screen erase & mode restore done after(0) or before(1) call to fselect_on_select
+
+// FSelector POPUP
+#define MPOPUP_CUT              0x0001
+#define MPOPUP_COPY             0x0002
+#define MPOPUP_PASTE            0x0004
+#define MPOPUP_DELETE           0x0008
+#define MPOPUP_SELINV           0x0010
+#define MPOPUP_RAW_ADD		0x0020
+#define MPOPUP_RAW_AVERAGE	0x0040
+#define MPOPUP_PURGE            0x0080
+#define MPOPUP_SUBTRACT         0x0100
+#define MPOPUP_RAW_DEVELOP      0x0200
+#define MPOPUP_DNG_TO_CRW       0x0400
+#define MPOPUP_EDITOR           0x0800
+#define MPOPUP_CHDK_REPLACE     0x1000
+
+static struct mpopup_item popup[]= {
+        { MPOPUP_CUT,           LANG_POPUP_CUT    },
+        { MPOPUP_COPY,          LANG_POPUP_COPY   },
+        { MPOPUP_PASTE,         LANG_POPUP_PASTE  },
+        { MPOPUP_DELETE,        LANG_POPUP_DELETE },
+        { MPOPUP_SELINV,        LANG_POPUP_SELINV },
+        { MPOPUP_RAW_ADD,       LANG_POPUP_RAW_SUM},
+        { MPOPUP_RAW_AVERAGE,   LANG_POPUP_RAW_AVERAGE },
+        { MPOPUP_RAW_DEVELOP,   LANG_MENU_RAW_DEVELOP },
+        { MPOPUP_PURGE,         LANG_POPUP_PURGE  },
+        { MPOPUP_SUBTRACT,      LANG_POPUP_SUB_FROM_MARKED  },
+        { MPOPUP_DNG_TO_CRW,    (int)"DNG -> CHDK RAW"},
+        { MPOPUP_EDITOR,        (int)"Edit" },
+        { MPOPUP_CHDK_REPLACE,  (int)"Set this CHDK" },
+        { 0,					0 },
+};
 
 //-------------------------------------------------------------------
 static void fselect_goto_prev(int step) {
@@ -116,16 +161,6 @@ static void fselect_goto_next(int step) {
             for(; top->prev; top = top->prev);
             selected = top;
         }
-    }
-}
-
-//-------------------------------------------------------------------
-// Called from other gui functions to force redraw of menu
-void gui_fselect_force_redraw()
-{
-    if (gui_get_mode() == GUI_MODE_FSELECT)
-    {
-        gui_fselect_redraw = 2;
     }
 }
 
@@ -304,7 +339,8 @@ int gui_fselect_find_start_dir(const char* dir)
 }
 
 //-------------------------------------------------------------------
-void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, void (*on_select)(const char *fn)) {
+void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, void (*on_select)(const char *fn)) 
+{
     int i;
     
     int chars_width = NAME_FONT_SIZE + SIZE_FONT_SIZE + TIME_FONT_SIZE;
@@ -353,7 +389,7 @@ void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, 
     marked_operation = MARKED_OP_NONE;
     gui_fselect_mode_old = gui_get_mode();
     gui_fselect_redraw = 2;
-    gui_set_mode(GUI_MODE_FSELECT);
+    gui_set_mode((unsigned int)&GUI_MODE_FSELECT);
     gui_fselect_set_key_redraw(0);
 }
 
@@ -380,7 +416,7 @@ void gui_fselect_draw_initial() {
 }
 
 //-------------------------------------------------------------------
-void gui_fselect_draw() {
+void gui_fselect_draw(int enforce_redraw) {
     int i, j, off_name_x, off_size_x, off_time_x, off_body_x, off_body_y;
     struct fitem  *ptr;
     char buf[100];
@@ -388,6 +424,9 @@ void gui_fselect_draw() {
     unsigned long sum_size;
     color cl_markered = ((mode_get()&MODE_MASK) == MODE_REC)?COLOR_YELLOW:0x66;
     color cl_marked, cl_selected;
+
+	if ( enforce_redraw )
+		gui_fselect_redraw = 2;
 
     if (gui_fselect_redraw) {
         if (gui_fselect_redraw == 2)
@@ -873,6 +912,37 @@ static void fselect_marked_delete_cb(unsigned int btn) {
 }
 
 //-------------------------------------------------------------------
+static void fselect_chdk_replace_cb(unsigned int btn) {
+    int ss, sd = 0, fsrc, fdst, i=0;
+    register int *buf;
+    unsigned char fend;
+    static struct utimbuf t;
+
+    if (btn != MBOX_BTN_YES) return;
+
+    buf = umalloc(MARKED_BUF_SIZE);
+    sprintf(selected_file, "%s/%s", current_dir, selected->name);
+    fsrc = open(selected_file, O_RDONLY, 0777);
+    if (fsrc>=0) {
+	    strcpy(selected_file,"A/DISKBOOT.BIN");
+            fdst = open(selected_file, O_WRONLY|O_CREAT|O_TRUNC, 0777);
+            if (fdst>=0) {
+                do {
+                    ss=read(fsrc, buf, MARKED_BUF_SIZE);
+                    if (ss>0) sd=write(fdst, buf, ss);
+                } while (ss>0 && ss==sd);
+                close(fdst);
+                t.actime = t.modtime = selected->mtime;
+                utime(selected_file, &t);
+    		//shutdown();
+                        gui_browser_progress_show("Please reboot",100);
+            }
+        if (fsrc>=0) close(fsrc);
+    }
+    ufree(buf);
+}
+
+//-------------------------------------------------------------------
 static void fselect_marked_inverse_selection() {
     struct fitem  *ptr;
     
@@ -886,13 +956,18 @@ static void fselect_marked_inverse_selection() {
 //-------------------------------------------------------------------
 void process_raw_files(void){
  struct fitem *ptr;
- if ((fselect_marked_count()>1) && raw_merge_start(raw_operation)) {
+
+ librawop_p=module_rawop_load();
+ if (!librawop_p)
+  	return;		//exit if fail
+
+ if ((fselect_marked_count()>1) && librawop_p->raw_merge_start(raw_operation)) {
    for (ptr=head; ptr; ptr=ptr->next)
      if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY)) {
        sprintf(selected_file, "%s/%s", current_dir, ptr->name);
-       raw_merge_add_file(selected_file);
+       librawop_p->raw_merge_add_file(selected_file);
       }
-  raw_merge_end();
+  librawop_p->raw_merge_end();
   gui_fselect_read_dir(current_dir);
  }
 }
@@ -903,6 +978,10 @@ static void fselect_subtract_cb(unsigned int btn) {
     char *raw_subtract_sub;
     char *raw_subtract_dest;
     if (btn != MBOX_BTN_YES) return;
+
+	librawop_p=module_rawop_load();
+ 	if (!librawop_p)
+  		return;		//exit if fail
 
     if(!(raw_subtract_from = malloc(300))) //3x full path
         return;
@@ -915,11 +994,11 @@ static void fselect_subtract_cb(unsigned int btn) {
             ptr->size == hook_raw_size() &&
             (strcmp(ptr->name,selected->name)) != 0) {
             sprintf(raw_subtract_from,"%s/%s",current_dir,ptr->name);
-            sprintf(raw_subtract_dest,"%s/%s%s",current_dir,img_prefixes[conf.sub_batch_prefix],ptr->name+4);
-            strcpy(raw_subtract_dest + strlen(raw_subtract_dest) - 4,img_exts[conf.sub_batch_ext]);
+            sprintf(raw_subtract_dest,"%s/%s%s",current_dir,img_prefixes[*conf_sub_batch_prefix],ptr->name+4);
+            strcpy(raw_subtract_dest + strlen(raw_subtract_dest) - 4,img_exts[*conf_sub_batch_ext]);
             // don't let users attempt to write one of the files being read
             if( strcmp(raw_subtract_dest,raw_subtract_from) != 0 && strcmp(raw_subtract_dest,raw_subtract_sub) != 0) {
-                raw_subtract(raw_subtract_from,raw_subtract_sub,raw_subtract_dest);
+                librawop_p->raw_subtract(raw_subtract_from,raw_subtract_sub,raw_subtract_dest);
             }
         }
     }
@@ -1046,6 +1125,13 @@ static void fselect_mpopup_cb(unsigned int actn) {
             gui_mbox_init((int)"", LANG_RAW_DEVELOP_MESSAGE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
             raw_prepare_develop(buf);
         break;
+        case MPOPUP_CHDK_REPLACE:
+            gui_mbox_init((int)"Replacing CHDK", (int)"Do you want to replace current CHDK with this file",
+                          MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_chdk_replace_cb);
+            break;
+        case MPOPUP_EDITOR:
+            gui_mbox_init((int)"Editor", (int)"edit", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+            break;
         case MPOPUP_SUBTRACT:
         {
             setup_batch_subtract();
@@ -1061,10 +1147,20 @@ static void fselect_mpopup_cb(unsigned int actn) {
 }
 
 //-------------------------------------------------------------------
-static void exit_fselect(char* file)
+void finalize_fselect()
 {
     gui_fselect_free_data();
     gui_fselect_marked_free_data();
+ 	module_rawop_unload();
+}
+
+static void exit_fselect(char* file)
+{
+/*DOPEN(0);    
+DLOG_INT("gui_fselect_exit()\n",0);
+DCLOSE;*/
+	finalize_fselect();
+
     if (set_key_redraw_mode)
     {
         gui_set_mode(gui_fselect_mode_old);
@@ -1073,6 +1169,8 @@ static void exit_fselect(char* file)
     if (fselect_on_select) 
     {
         fselect_on_select(file);
+        // if called mode will return control to filemanager - we need to redraw it
+        gui_fselect_redraw = 2;
     }
     if (!set_key_redraw_mode)
     {
@@ -1143,7 +1241,11 @@ void gui_fselect_kbd_process() {
                 if((fselect_marked_count()>1)||(selected->size > hook_raw_size()))
                     i |= MPOPUP_DNG_TO_CRW;
 #endif
-                gui_mpopup_init(i, fselect_mpopup_cb);
+
+		if (selected->name[9] == 'B' && selected->name[10] == 'I' && selected->name[11] == 'N') //If item is DCIM folder
+                    i |= MPOPUP_CHDK_REPLACE;
+
+                module_mpopup_init( popup, i, fselect_mpopup_cb, 0);
             }
             break;
         case KEY_SET:
@@ -1160,7 +1262,30 @@ void gui_fselect_kbd_process() {
                     gui_fselect_redraw = 1;
                 } else  {
                     sprintf(selected_file, "%s/%s", current_dir, selected->name);
+					
+					char *ext = strchr(selected->name,'.');
+                    if ( ext && (ext[1]|0x20)=='f' && (ext[2]|0x20)=='l' && (ext[3]|0x20)=='t') {
+    					if (!fselect_on_select) {
+
+						  /* //This decrease visual lag before module start, but cost memory fragment
+							flag_after=0;
+   							if ( module_find(name) < 0 ) {
+								if ( !module_load( selected_file, 0 ) )
+									break;
+								flag_after=2;
+							}
+
+						  */
+
+                    		exit_fselect(0);
+    						module_run(selected_file, 0, 0,0, UNLOAD_IF_ERR);
+
+							break;
+						}
+					}
+
                     exit_fselect(selected_file);
+					module_async_unload(module_idx);
                 }
             }
             break;
@@ -1183,8 +1308,86 @@ void gui_fselect_kbd_process() {
         case KEY_MENU:
             // just free resource. callback called with NULL ptr
             exit_fselect(0);
+			module_async_unload(module_idx);
             break;
     }
 }
 
-//-------------------------------------------------------------------
+
+
+// =========  MODULE INIT =================
+#include "module_load.h"
+int module_idx=-1;
+
+/***************** BEGIN OF AUXILARY PART *********************
+  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+ **************************************************************/
+
+int _chdk_required_ver = 1;		// minimal required chdk build. 0-no limitation
+int _chdk_required_platfid = 0;		// platform-specific module. 0-no limitation
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)0
+		};
+
+
+//---------------------------------------------------------
+// PURPOSE:   Bind module symbols with chdk. 
+//		Required function
+// PARAMETERS: pointer to chdk list of export
+// RETURN VALUE: 1 error, 0 ok
+//---------------------------------------------------------
+int _module_loader( void** chdk_export_list )
+{
+  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+     return 1;
+
+  tConfigVal configVal;
+  CONF_BIND_INT(209, conf_sub_batch_prefix);
+  CONF_BIND_INT(210, conf_sub_batch_ext);
+
+  return 0;
+}
+
+
+
+//---------------------------------------------------------
+// PURPOSE: Finalize module operations (close allocs, etc)
+// RETURN VALUE: 0-ok, 1-fail
+//---------------------------------------------------------
+int _module_unloader()
+{
+	finalize_fselect();
+
+	GUI_MODE_FSELECT.magicnum = 0;	//sanity clean to prevent accidentaly assign/restore guimode to unloaded module 
+
+    return 0;
+}
+
+
+//---------------------------------------------------------
+// PURPOSE: Default action for simple modules (direct run)
+// NOTE: Please comment this function if no default action and this library module
+//---------------------------------------------------------
+int _module_run(int moduleidx, int argn, int* arguments)
+{
+  module_idx=moduleidx;
+
+  if ( argn!=5) {
+	module_async_unload(moduleidx);
+    return 1;
+  }
+
+  // Autounloading is unsafe because it should exists to catch finalization of mpopup
+  module_set_flags(module_idx, MODULE_FLAG_DISABLE_AUTOUNLOAD);
+
+  gui_fselect_init( arguments[0], (const char*) arguments[1], (const char*) arguments[2], (void*)arguments[3]);
+  gui_fselect_set_key_redraw(arguments[4]);
+  
+
+  return 0;
+}
+
+
+/*************** END OF AUXILARY PART *******************/

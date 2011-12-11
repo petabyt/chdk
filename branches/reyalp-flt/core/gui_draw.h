@@ -3,6 +3,8 @@
 
 #include	"camera.h"		// ensure the camera defintion is loaded
 
+#include "gui.h"	// for color, coord definitions
+
 //-------------------------------------------------------------------
 
 // Moved from gui_bench.c, gui_debug.c, gui_calendar.c, gui_reversi.c & gui_sokoban.c so it can be overridden

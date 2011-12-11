@@ -80,6 +80,9 @@ firzipsub: infoline clean firsub
         endif
       endif
     endif
+	rm -f $(topdir)CHDK/MODULES/*
+	cp $(topdir)core/modules/*.flt $(topdir)CHDK/MODULES
+	zip -9 $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)CHDK/MODULES/*
 	# if COPY_TO is defined then copy this camera/firmware version to the copied firmware version
 	# Define COPY_TO in $(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc of the source
 	# firmware version that needs to be copied to another firmware version
@@ -92,6 +95,8 @@ firzipsub: infoline clean firsub
 		)
     endif
 	rm -f $(topdir)bin/DISKBOOT.BIN
+	rm -f $(topdir)CHDK/MODULES/*
+	rm -f $(topdir)core/modules/*.flt
 
 
 firzipsubcomplete: infoline clean firsub
@@ -127,6 +132,12 @@ firzipsubcomplete: infoline clean firsub
 	cat $(topdir)doc/1_intro.txt  $(topdir)platform/$(PLATFORM)/notes.txt $(topdir)doc/2_installation.txt $(topdir)doc/3_faq.txt $(topdir)doc/4_urls.txt $(topdir)doc/5_gpl.txt $(topdir)doc/6_ubasic_copyright.txt > $(topdir)doc/readme.txt
 	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)doc/readme.txt  > $(DEVNULL)
 	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)doc/readme.txt  > $(DEVNULL)
+	rm -f $(topdir)CHDK/MODULES/*
+	cp $(topdir)core/modules/*.flt $(topdir)CHDK/MODULES
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/MODULES/*  > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)CHDK/MODULES/*  > $(DEVNULL)
+	rm -f $(topdir)CHDK/MODULES/*
+	rm -f $(topdir)core/modules/*.flt
 
     ifdef PLATFORMOS
       ifeq ($(PLATFORMOS),vxworks)

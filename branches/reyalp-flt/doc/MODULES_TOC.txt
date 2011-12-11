@@ -1,0 +1,23 @@
+TUTORIAL:
+
+Changes of GUI infrastructure
+How to make simple GUI module
+How to make dynamic library
+What if elf2flt say "unresolved symbol"
+What if elf2flt say "only ABS32 could be imported"
+What if I need defines from CHDK
+ a) simple way - make platform dependencies
+		this is only way if #if used in module
+ b) platform independent way
+Notes:
+-how to unload. when do not unload
+-access to conf.
+-how to load dll in module (rawop in fselect)
+
+What need to pay attention:
+- sanity clear of gui magic num on unload
+- keep communications variable in core chdk (to prevent point to unloaded module)
+- make unload sequence if need to free allocated resource
+- unload shared dynamic libraries: 
+	a) lock by "semaphore" owning flags - unload if noone more own
+    b) be sure that no interrupted calls which will call and then just check load every time

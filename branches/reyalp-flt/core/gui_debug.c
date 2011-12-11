@@ -7,6 +7,13 @@
 #include "gui_debug.h"
 #include "conf.h"
 
+#include "module_load.h"
+
+extern void gui_module_menu_kbd_process();
+int *conf_mem_view_addr_init;
+
+gui_handler GUI_MODE_DEBUG = 
+    /*GUI_MODE_DEBUG*/          { gui_debug_draw,       gui_debug_kbd_process,      gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
 
 //-------------------------------------------------------------------
 static void *addr;
@@ -22,7 +29,7 @@ void gui_debug_init(void *st_addr) {
     debug_to_draw = 1;
     debug_cont_update = 1;
     step = 4;
-    gui_set_mode(GUI_MODE_DEBUG);
+    gui_set_mode((unsigned int)&GUI_MODE_DEBUG);
 }
 
 //-------------------------------------------------------------------
@@ -55,7 +62,7 @@ static void gui_debug_draw_values(const coord y, void* addr) {
 }
 
 //-------------------------------------------------------------------
-void gui_debug_draw() {
+void gui_debug_draw(int enforce_redraw) {
     switch (debug_to_draw) {
         case 1:
             draw_filled_rect(0, 0, screen_width-1, screen_height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
@@ -86,7 +93,7 @@ void gui_debug_draw() {
             draw_txt_string(44, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
             gui_debug_draw_values(2, addr);
             gui_debug_draw_values(8, *((void**)addr));
-            conf.mem_view_addr_init = (long)addr;
+            *conf_mem_view_addr_init = (long)addr;
 
             if (debug_cont_update==0) debug_to_draw = 0;
             break;
@@ -141,3 +148,78 @@ void gui_debug_kbd_process() {
 }
 
 //-------------------------------------------------------------------
+
+extern int module_idx;
+void gui_module_menu_kbd_process() {
+	gui_default_kbd_process_menu_btn();
+  	module_async_unload(module_idx);
+}
+
+
+// =========  MODULE INIT =================
+#include "module_load.h"
+int module_idx=-1;
+
+/***************** BEGIN OF AUXILARY PART *********************
+  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+ **************************************************************/
+
+int _chdk_required_ver = 1;			// minimal required chdk build. 0-no limitation
+int _chdk_required_platfid = 0;		// platform-specific module. 0-no limitation
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)0
+		};
+
+
+//---------------------------------------------------------
+// PURPOSE:   Bind module symbols with chdk. 
+//		Required function
+// PARAMETERS: pointer to chdk list of export
+// RETURN VALUE: 1 error, 0 ok
+//---------------------------------------------------------
+int _module_loader( void** chdk_export_list )
+{
+  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+     return 1;
+
+  tConfigVal configVal;
+  CONF_BIND_INT(195, conf_mem_view_addr_init);
+
+  return 0;
+}
+
+
+
+//---------------------------------------------------------
+// PURPOSE: Finalize module operations (close allocs, etc)
+// RETURN VALUE: 0-ok, 1-fail
+//---------------------------------------------------------
+int _module_unloader()
+{
+  return 0;
+}
+
+
+//---------------------------------------------------------
+// PURPOSE: Default action for simple modules (direct run)
+// NOTE: Please comment this function if no default action and this library module
+//---------------------------------------------------------
+int _module_run(int moduleidx, int argn, int* arguments)
+{
+  module_idx=moduleidx;
+
+  if ( argn!=1) {
+	module_async_unload(moduleidx);
+    return 1;
+  }
+
+  void* adr=(char*)arguments[0];
+  gui_debug_init(adr);
+
+  return 0;
+}
+
+
+/*************** END OF AUXILARY PART *******************/

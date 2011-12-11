@@ -1,6 +1,5 @@
 #include "platform.h"
 
-#ifdef OPT_EDGEOVERLAY
 #include "edgeoverlay.h"
 #include "conf.h"
 #include "keyboard.h"
@@ -12,6 +11,16 @@
 #define EDGE_FILE_PREFIX "EDG_"
 #define EDGE_FILE_FORMAT EDGE_FILE_PREFIX "%04d.edg"
 #define EDGE_SLICES     2
+
+int* conf_edge_overlay_filter;
+color* conf_osd_color;
+int* conf_edge_overlay_zoom;
+int* conf_edge_overlay_thresh;
+color* conf_edge_overlay_color;
+int* conf_edge_overlay_pano;
+int* conf_edge_overlay_pano_overlap;
+int* conf_edge_overlay_show;
+int* conf_edge_overlay_play;
 
 typedef enum _edge_fsm_state
 {
@@ -53,7 +62,7 @@ static void ensure_allocate_imagebuffer()
         if (edgebuf != NULL)
             memset(edgebuf->ptr, 0, edgebuf->ptrLen);
     }
-    if (conf.edge_overlay_filter && (smbuf == NULL))
+    if (*conf_edge_overlay_filter && (smbuf == NULL))
     {
         smbuf = (unsigned char*)malloc(viewport_byte_width*3);
         if (smbuf != NULL)
@@ -61,7 +70,7 @@ static void ensure_allocate_imagebuffer()
         else
         {
             // Disable filtering if we do not have enough memory for it
-            conf.edge_overlay_filter = 0;
+            *conf_edge_overlay_filter = 0;
         }
     }
 }
@@ -132,7 +141,7 @@ void save_edge_overlay(void)
 
     if( !is_buffer_ready() )
     {
-        draw_string(0, 0, "No overlay to save.", conf.osd_color);
+        draw_string(0, 0, "No overlay to save.", *conf_osd_color);
         return;
     }
 
@@ -167,7 +176,7 @@ void save_edge_overlay(void)
         t.actime = t.modtime = time(NULL);
         utime(fn, &t);
         sprintf(msg, "Saved as %s",fn);
-        draw_string(0, 0, msg, conf.osd_color);
+        draw_string(0, 0, msg, *conf_osd_color);
     }
     closedir(d);
 }
@@ -189,7 +198,7 @@ void load_edge_overlay(const char* fn)
         if( (ret == 1) && (ret2 == 1) )
         {
             fsm_state = EDGE_FROZEN;    // switch to "edge overlay frozen"-mode
-            if (conf.edge_overlay_zoom)
+            if (*conf_edge_overlay_zoom)
             {
                 shooting_set_zoom(zoom);
             }
@@ -297,7 +306,7 @@ static int calc_edge_overlay()
     int compressed_slice = edgebuf->ptrLen / EDGE_SLICES;
     memset(edgebuf->ptr + slice*compressed_slice, 0, compressed_slice);
 
-    if (conf.edge_overlay_filter)
+    if (*conf_edge_overlay_filter)
     {
         // Prefill smbuf with three lines of avergae-filtered data.
         // This looks much more complex then it actually is.
@@ -319,7 +328,7 @@ static int calc_edge_overlay()
     {
         shutter_fullpress |= kbd_is_key_pressed(KEY_SHOOT_FULL);
 
-        if (conf.edge_overlay_filter)
+        if (*conf_edge_overlay_filter)
         {
             // We need to shift up our smbuf one line,
             // and fill in the last line (which now empty)
@@ -371,7 +380,7 @@ static int calc_edge_overlay()
             if  (conv2 < 0)     // abs()
                 conv2 = -conv2;
 
-            if (conv1 + conv2 > conf.edge_overlay_thresh)
+            if (conv1 + conv2 > *conf_edge_overlay_thresh)
             {
                 bv_set(edgebuf, (y-viewport_yoffset-EDGE_HMARGIN)*viewport_width + xdiv3, 1);
             }
@@ -401,7 +410,7 @@ static int calc_edge_overlay()
             if  (conv2 < 0)     // abs()
                 conv2 = -conv2;
 
-            if (conv1 + conv2 > conf.edge_overlay_thresh)
+            if (conv1 + conv2 > *conf_edge_overlay_thresh)
             {
                 bv_set(edgebuf, (y-viewport_yoffset-EDGE_HMARGIN)*viewport_width + xdiv3+1, 1);
             }
@@ -415,7 +424,7 @@ static int calc_edge_overlay()
 //  this code is not needed, but if you want that additional quality and do not
 //  care so much about performance, you can enable it.
 //
-//    if (conf.edge_overlay_filter)
+//    if (*conf_edge_overlay_filter)
 //    {
 //        // Here we do basic filtering on the detected edges.
 //        // If a pixel is marked as edge but just a few of its
@@ -450,7 +459,7 @@ static int calc_edge_overlay()
 //                            bv_get(edgebuf, (y+1)*viewport_width + (x)) +
 //                            bv_get(edgebuf, (y+1)*viewport_width + (x+1));
 //
-//                        if (!conf.edge_overlay_show)
+//                        if (!*conf_edge_overlay_show)
 //                        {
 //                            if (sum >= 5)    // if we have at least 5 neighboring edges
 //                                bv_set(bv_tmp, y*viewport_width + x, 1);   // keep the edge
@@ -478,7 +487,7 @@ static int draw_edge_overlay()
     int x, y;
     int x_off, y_off;
 
-    const color cl = conf.edge_overlay_color;
+    const color cl = *conf_edge_overlay_color;
     const int y_slice_min = viewport_yoffset+EDGE_HMARGIN+ slice   *slice_height;
     const int y_slice_max = viewport_yoffset+EDGE_HMARGIN+(slice+1)*slice_height;
     const int y_min = viewport_yoffset+EDGE_HMARGIN;
@@ -509,8 +518,8 @@ static int draw_edge_overlay()
                     // from previous calls, delete it from the screen.
                     const int aspect_correct_x_off = x_off;
                     const int bEdge = bv_get(edgebuf, y_edgebuf + x);
-                    const int bDraw = bEdge || (draw_get_pixel(aspect_correct_x_off, y_off) == conf.edge_overlay_color);
-                    const color cl = bEdge ? conf.edge_overlay_color : 0;
+                    const int bDraw = bEdge || (draw_get_pixel(aspect_correct_x_off, y_off) == *conf_edge_overlay_color);
+                    const color cl = bEdge ? *conf_edge_overlay_color : 0;
                     if (bEdge || bDraw)
                         draw_pixel(aspect_correct_x_off, y_off, cl);
                     
@@ -568,23 +577,23 @@ static void set_offset_from_overlap()
     const int y_max = viewport_height;
     const int x_max = (viewport_width - 2);
 
-    switch(conf.edge_overlay_pano)
+    switch(*conf_edge_overlay_pano)
     {
     case 0:     // pano off
         xoffset = 0;
         yoffset = 0;
         break;
     case 1:     // pano from left to right
-        xoffset = -x_max*(100-conf.edge_overlay_pano_overlap)/100;
+        xoffset = -x_max*(100-*conf_edge_overlay_pano_overlap)/100;
         break;
     case 2:     // pano from top to bottom
-        yoffset = -y_max*(100-conf.edge_overlay_pano_overlap)/100;
+        yoffset = -y_max*(100-*conf_edge_overlay_pano_overlap)/100;
         break;
     case 3:     // pano from right to left
-        xoffset = x_max*(100-conf.edge_overlay_pano_overlap)/100;
+        xoffset = x_max*(100-*conf_edge_overlay_pano_overlap)/100;
         break;
     case 4:     // pano from bottom to top
-        yoffset = y_max*(100-conf.edge_overlay_pano_overlap)/100;
+        yoffset = y_max*(100-*conf_edge_overlay_pano_overlap)/100;
         break;
     case 5:     // free mode
     default:
@@ -593,6 +602,7 @@ static void set_offset_from_overlap()
         break;
     }
 }
+
 
 
 // Main edge overlay function.
@@ -604,7 +614,6 @@ static void set_offset_from_overlap()
 // (dynamically decompressing it) using draw_edge_overlay().
 void edge_overlay()
 {
-
     // Was the shutter fully pressed the last time we ran?
     // We use this to make sure that the user has released
     // the button before processing the next FullPress event.
@@ -622,9 +631,9 @@ void edge_overlay()
     int bFullPress = kbd_is_key_pressed(KEY_SHOOT_FULL);
     const int bHalfPress = kbd_is_key_pressed(KEY_SHOOT_HALF);
     const int bPlayMode = (mode_get() & MODE_MASK) == MODE_PLAY;
-    const int bPanoramaMode = (conf.edge_overlay_pano != 0);
-    const int bNeedHalfPress = (conf.edge_overlay_show != 1);
-    const int bDisplayInPlay = (conf.edge_overlay_play == 1);
+    const int bPanoramaMode = (*conf_edge_overlay_pano != 0);
+    const int bNeedHalfPress = (*conf_edge_overlay_show != 1);
+    const int bDisplayInPlay = (*conf_edge_overlay_play == 1);
     const int bGuiModeNone = (gui_get_mode() == GUI_MODE_NONE);
     const int bGuiModeAlt = (gui_get_mode() == GUI_MODE_ALT);
     const int bCanDisplay = (
@@ -707,7 +716,7 @@ void edge_overlay()
             // We try to detect button presses during the lengthy
             // calculations.
             bFullPress |= draw_edge_overlay();
-            draw_string(0, 0, "Frozen", conf.osd_color);
+            draw_string(0, 0, "Frozen", *conf_osd_color);
         }
 
         // In event of a FullPress, we either capture a new
@@ -740,5 +749,74 @@ void edge_overlay()
 
 }   // function
 
-#endif
+
+
+
+
+// =========  MODULE INIT =================
+
+#include "module_load.h"
+int module_idx=-1;
+
+/***************** BEGIN OF AUXILARY PART *********************
+  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+ **************************************************************/
+
+int _chdk_required_ver = 1;		// minimal required chdk build. 0-no limitation
+int _chdk_required_platfid = 0;		// platform-specific module. 0-no limitation
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)5,
+
+			edge_overlay,
+			save_edge_overlay,
+			load_edge_overlay
+		};
+
+
+//---------------------------------------------------------
+// PURPOSE:   Bind module symbols with chdk. 
+//		Required function
+// PARAMETERS: pointer to chdk list of export
+// RETURN VALUE: 1 error, 0 ok
+//---------------------------------------------------------
+int _module_loader( void** chdk_export_list )
+{
+  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+     return 1;
+
+  tConfigVal configVal;
+  CONF_BIND_INT(188, conf_edge_overlay_thresh);
+  CONF_BIND_COLOR(189, conf_edge_overlay_color);
+  CONF_BIND_INT(222, conf_edge_overlay_play);
+  CONF_BIND_INT(223, conf_edge_overlay_pano);
+  CONF_BIND_INT(224, conf_edge_overlay_zoom);
+  CONF_BIND_INT(241, conf_edge_overlay_filter);
+  CONF_BIND_INT(242, conf_edge_overlay_show);
+  CONF_BIND_INT(243, conf_edge_overlay_pano_overlap);
+  CONF_BIND_COLOR( 28, conf_osd_color);
+
+  return 0;
+}
+
+
+
+//---------------------------------------------------------
+// PURPOSE: Finalize module operations (close allocs, etc)
+// RETURN VALUE: 0-ok, 1-fail
+//---------------------------------------------------------
+int _module_unloader()
+{
+	// This could be happens only if on-load mistake
+	// CHDK never unload this library (but load only if needed)
+	// Reason: edve_overlay allocate different bufs which should be kept
+	//		because even if we turn off edgeovr we could turn on back and
+	//		should get same content.
+  return 0;
+}
+
+
+
+/*************** END OF AUXILARY PART *******************/
 

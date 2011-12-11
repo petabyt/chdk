@@ -10,6 +10,13 @@
 #include "gui_mbox.h"
 #include "gui_reversi.h"
 
+#include "module_load.h"
+void gui_module_menu_kbd_process();
+
+gui_handler GUI_MODE_REVERSI = 
+    /*GUI_MODE_REVERSI*/        { gui_reversi_draw,     gui_reversi_kbd_process,    gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+
+
 //-------------------------------------------------------------------
 #define FIELD_EMPTY             0
 #define FIELD_PLAYER1           1
@@ -343,10 +350,12 @@ static void redrawstatus() {
 }
 
 //-------------------------------------------------------------------
-void gui_reversi_init() {
+int basic_module_init() {
+    gui_set_mode((unsigned int)&GUI_MODE_REVERSI);
     InitMainWindow();
     NewGame();
     need_redraw_all = 1;
+	return 1;
 }
 
 //-------------------------------------------------------------------
@@ -396,7 +405,7 @@ void gui_reversi_kbd_process() {
 }
 
 //-------------------------------------------------------------------
-void gui_reversi_draw() {
+void gui_reversi_draw(int enforce_redraw) {
     if (need_redraw_all) {
         need_redraw_all = 0;
         DrawMainWindow();
@@ -414,3 +423,9 @@ void gui_reversi_draw() {
     Timer();
 }
 
+
+extern int module_idx;
+void gui_module_menu_kbd_process() {
+	gui_default_kbd_process_menu_btn();
+  	module_async_unload(module_idx);
+}

@@ -13,6 +13,13 @@
 #include "gui_mbox.h"
 #include "gui_4wins.h"
 
+#include "module_load.h"
+void gui_module_menu_kbd_process();
+
+gui_handler GUI_MODE_4WINS = 
+    /*GUI_MODE_4WINS*/          { gui_4wins_draw,       gui_4wins_kbd_process,      gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+
+
 #define BORDER		 20
 #define XBORDER		 (CAM_TS_BUTTON_BORDER+BORDER)
 #define RECT_SIZE	 30
@@ -330,8 +337,16 @@ int gui_4wins_init()
 	draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-4, screen_height/FONT_HEIGHT-9, str, MAKE_COLOR(INFO_COLOR, P2_COLOR));
 	draw_mode();
 	if(cur_player==2&&!mode_rival) set();
+
+    gui_set_mode((unsigned int)&GUI_MODE_4WINS);
+
 	return 1;
 }
+
+int basic_module_init() {
+  return gui_4wins_init();
+}
+
 //-------------------------------------------------------------------
 void gui_4wins_kbd_process() 
 {
@@ -351,9 +366,15 @@ void gui_4wins_kbd_process()
 	}
 }
 //-------------------------------------------------------------------
-void gui_4wins_draw() {
+void gui_4wins_draw(int enforce_redraw) {
   static char str[16];
   sprintf(str, "%3d%%", get_batt_perc());
   draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-13, screen_height/FONT_HEIGHT-2, str, INFO_TEXT_COLOR);
   gui_osd_draw_clock(CAM_TS_BUTTON_BORDER+290,208,INFO_TEXT_COLOR);
+}
+
+extern int module_idx;
+void gui_module_menu_kbd_process() {
+	gui_default_kbd_process_menu_btn();
+  	module_async_unload(module_idx);
 }

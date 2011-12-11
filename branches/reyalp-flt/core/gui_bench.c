@@ -8,6 +8,14 @@
 #include "gui_draw.h"
 #include "gui_bench.h"
 
+#include "module_load.h"
+void gui_bench_draw_callback(int enforce_redraw);
+void gui_bench_menu_kbd_process();
+
+gui_handler GUI_MODE_BENCH = 
+    /*GUI_MODE_BENCH*/          { gui_bench_draw_callback,   gui_bench_kbd_process,      gui_bench_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+
+
 //-------------------------------------------------------------------
 static struct {
     int screen_input_bps;
@@ -98,6 +106,11 @@ void gui_bench_draw() {
             break;
     }
 }
+
+void gui_bench_draw_callback(int enforce_redraw) {
+	gui_bench_draw();
+}
+
 
 //-------------------------------------------------------------------
 static void gui_bench_run() {
@@ -228,3 +241,15 @@ void gui_bench_kbd_process() {
 
 //-------------------------------------------------------------------
 
+int basic_module_init() {
+	gui_bench_init();
+    gui_set_mode( (unsigned int)&GUI_MODE_BENCH );
+	return 1;
+}
+
+extern int module_idx;
+
+void gui_bench_menu_kbd_process() {
+	gui_default_kbd_process_menu_btn();
+  	module_async_unload(module_idx);
+}

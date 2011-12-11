@@ -7,8 +7,12 @@
 #include "histogram.h"
 #include "raw.h"
 #ifdef OPT_EDGEOVERLAY
-    #include "edgeoverlay.h"
+    #include "modules.h"
 #endif
+
+#include "module_load.h"
+#include "gui_draw.h"
+
 static int raw_need_postprocess;
 static volatile int spytask_can_start;
 
@@ -141,6 +145,7 @@ void core_spytask() {
     mkdir("A/CHDK/SCRIPTS");
     mkdir("A/CHDK/LANG");
     mkdir("A/CHDK/BOOKS");
+    mkdir("A/CHDK/MODULES");
     mkdir("A/CHDK/GRIDS");
 #ifdef OPT_CURVES
     mkdir("A/CHDK/CURVES");
@@ -179,8 +184,21 @@ void core_spytask() {
                 gui_redraw();
 
             histogram_process();
+
+
 #ifdef OPT_EDGEOVERLAY
-            if(conf.edge_overlay_thresh && conf.edge_overlay_enable) edge_overlay();
+            if(conf.edge_overlay_thresh && conf.edge_overlay_enable) {
+
+				// We need to skip first tick because stability
+				static int skip_counter=1;
+				
+				if (skip_counter>0) {
+					skip_counter--;
+				}
+				else if (module_edgeovr_load()) {
+					edge_overlay();
+				}
+			}
 #endif
         }
 
@@ -188,6 +206,9 @@ void core_spytask() {
             state_shooting_progress = SHOOTING_PROGRESS_DONE;
             if (raw_need_postprocess) raw_postprocess();
         }
+
+		// Process async module unload requests
+		module_tick_unloader();
 
         msleep(20);
     }

@@ -11,6 +11,13 @@
 #include "gui_mbox.h"
 #include "gui_mastermind.h"
 
+#include "module_load.h"
+void gui_module_menu_kbd_process();
+
+gui_handler GUI_MODE_MASTERMIND = 
+    /*GUI_MODE_MASTERMIND*/     { gui_mastermind_draw,  gui_mastermind_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+
+
 #define BORDER		 		20
 #define RECT_SIZE	 		10
 #define COLOR_LIGHT_GRAY 	MAKE_COLOR(COLOR_SPLASH_GREY,COLOR_SPLASH_GREY)
@@ -132,8 +139,10 @@ int gui_mastermind_init() {
 
 	for(i=0;i<4;i++) curr_color[i]=99;
 	
+    gui_set_mode((unsigned int)&GUI_MODE_MASTERMIND);
 	return 1;
 }
+
 //-------------------------------------------------------------------
 static void draw_box(color border)
 {
@@ -216,7 +225,7 @@ void gui_mastermind_kbd_process() {
     }
 }
 //-------------------------------------------------------------------
-void gui_mastermind_draw() {
+void gui_mastermind_draw(int enforce_redraw) {
 	unsigned long t;
     static struct tm *ttm;
 
@@ -226,4 +235,15 @@ void gui_mastermind_draw() {
     ttm = localtime(&t);
     sprintf(buf, "Time: %2u:%02u  Batt:%3d%%", ttm->tm_hour, ttm->tm_min, get_batt_perc());
     draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-1-1-9-2-5-4, screen_height/FONT_HEIGHT-1, buf, TEXT_COLOR);
+}
+
+
+int basic_module_init() {
+	return gui_mastermind_init(); 
+}
+
+extern int module_idx;
+void gui_module_menu_kbd_process() {
+	gui_default_kbd_process_menu_btn();
+  	module_async_unload(module_idx);
 }

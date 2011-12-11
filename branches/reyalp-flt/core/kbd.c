@@ -12,6 +12,9 @@
 #include "lang.h"
 #include "gui_lang.h"
 
+#include "module_load.h"
+#include "gui.h"
+
 long kbd_last_clicked;
 int state_kbd_script_run;
 int kbd_blocked;
@@ -171,6 +174,15 @@ long kbd_process()
     unsigned int nCrzpos,i;
     unsigned int drmode = 0;
 
+#if defined(CAMERA_s95)
+		extern volatile int kbd_KEY_RING_FUNC;
+	    if (kbd_KEY_RING_FUNC && gui_get_mode()!=GUI_MODE_NONE) {
+			if (module_find("modinsp.flt")<0)
+			  module_run("modinsp.flt", 0, 0,0, UNLOAD_IF_ERR);
+		}
+#endif
+
+
     if(conf.ricoh_ca1_mode && conf.remote_enable) {
         drmode = shooting_get_drive_mode();
         mmode = mode_get();
@@ -266,7 +278,8 @@ long kbd_process()
 		// Start or stop a script if the shutter button pressed
 		// Note: this is blocked if CHDK is in the file selector. prevents problems
 		//       when the file selector is called from a script.
-        if (kbd_is_key_pressed(KEY_SHOOT_FULL) && (gui_get_mode() != GUI_MODE_FSELECT) && (gui_get_mode() != GUI_MODE_MPOPUP)) {
+        // TODO selelect and popup checks temp disabled for module work
+        if (kbd_is_key_pressed(KEY_SHOOT_FULL)/* && (gui_get_mode() != GUI_MODE_FSELECT) && (gui_get_mode() != GUI_MODE_MPOPUP)*/) {
             key_pressed = 100;
             if (!state_kbd_script_run) {
                 script_start_gui(0);
