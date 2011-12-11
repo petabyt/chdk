@@ -43,71 +43,71 @@ all: exportlist ../flt.h \
 
 calend.elf: simple_module.o ../gui_calendar.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 benchm.elf: simple_module.o ../gui_bench.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 4wins.elf: simple_module.o ../gui_4wins.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 mastmind.elf: simple_module.o ../gui_mastermind.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 reversi.elf: simple_module.o ../gui_reversi.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 tetris.elf: ../gui_tetris.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 snake.elf: ../gui_snake.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 sokoban.elf: ../gui_sokoban.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 memview.elf:  ../gui_debug.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 palette.elf:  ../gui_palette.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 mpopup.elf:  ../gui_mpopup.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 txtread.elf: ../gui_read.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 edgeovr.elf: ../edgeoverlay.o $(OBJ_ISDIGIT)
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 curves.elf: ../curves.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 modinsp.elf: module_inspector.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 _rawop10.elf: raw_merge10.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 _rawop12.elf: raw_merge12.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 raw_merge10.o: ../raw_merge.c
 	@echo $< \-\> $@
@@ -119,11 +119,11 @@ raw_merge12.o: ../raw_merge.c
 
 #lua.elf: lib_edgeoverlay.o ../luascript.o $(topdir)lib/lua/liblua.a
 #	@echo \-\> $@
-#	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+#	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 fselect.elf: ../gui_fselect.o ../nothumb.o
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ --start-group $^ $(LDLIBS) --end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 ../nothumb.o: ../nothumb.c
 	@echo $< \-\> $@

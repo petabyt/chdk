@@ -1,7 +1,7 @@
 /*
  * Service library of elf2flt 
  *
- * 	(c)2011	Sergey Taranenko aka @tsv
+ * 	(c)2011	Sergey Taranenko aka tsvstar
  *
  */
 #include <stdio.h>

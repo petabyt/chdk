@@ -3,7 +3,7 @@
  *
  *  Target is modified BINARY FLAT
  *
- * 	(c)2011	Sergey Taranenko aka @tsv
+ * 	(c)2011	Sergey Taranenko aka tsvstar
  *
  */
 

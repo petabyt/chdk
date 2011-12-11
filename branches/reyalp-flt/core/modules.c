@@ -1,7 +1,7 @@
 /*
  *   CHDK-FLAT Module System.  
  *
- *   (c)2011 Sergey Taranenko aka @tsv 
+ *   (c)2011 Sergey Taranenko aka tsvstar
  *
  *   Specific "shortcuts", dynamic libraries binding
  */

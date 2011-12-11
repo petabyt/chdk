@@ -1,7 +1,7 @@
 /*
  *   CHDK-FLAT Module System.  
  *
- *   (c)2011 Sergey Taranenko aka @tsv 
+ *   (c)2011 Sergey Taranenko aka tsvstar
  *
  *   This is main file of module processing system. Module load/unload/service functions
  */

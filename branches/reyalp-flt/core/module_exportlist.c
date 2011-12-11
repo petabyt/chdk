@@ -1,7 +1,7 @@
 /*
  *   THIS FILE IS FOR DECLARATION/LISTING OF EXPORTED TO MODULES SYMBOLS
  *
- *    CHDK-FLAT Module System.  Sergey Taranenko(@tsv)
+ *    CHDK-FLAT Module System.  Sergey Taranenko aka tsvstar
  */
 
 #include "module_exportlist.h"
