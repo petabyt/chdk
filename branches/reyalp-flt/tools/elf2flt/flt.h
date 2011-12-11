@@ -22,7 +22,12 @@ struct flat_hdr {
     char magic[4];          // "CFLA"
     union {
     	uint32_t rev;          			/* version (as above) */
-		void*    runtime_bind_callback; // while loaded: callback to chdk binder function 
+// ensure this is only a pointer on the target, not on (possibly 64 bit) hosts
+#ifdef HDK_VERSION
+        void * runtime_bind_callback; // while loaded: callback to chdk binder function 
+#else
+        uint32_t runtime_bind_callback; // while loaded: callback to chdk binder function 
+#endif
     };
     uint32_t entry;        /* Offset of first executable instruction
                               with text segment from beginning of file */
