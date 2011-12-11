@@ -1,15 +1,14 @@
 #ifndef __ELF_H__
 #define __ELF_H__
-
+#include <stdint.h>
 
 #define EI_NIDENT 16
 
-
-typedef unsigned long  elf32_word;
-typedef   signed long  elf32_sword;
-typedef unsigned short elf32_half;
-typedef unsigned long  elf32_off;
-typedef unsigned long  elf32_addr;
+typedef uint32_t elf32_word;
+typedef int32_t  elf32_sword;
+typedef uint16_t elf32_half;
+typedef uint32_t elf32_off;
+typedef uint32_t elf32_addr;
 
 struct elf32_ehdr {
   unsigned char e_ident[EI_NIDENT];    /* ident bytes */
