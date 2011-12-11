@@ -427,6 +427,9 @@ static int handle_ptp(
             fclose(f);
         }
         free(buf);
+        if(data_size > 0 && ptp.code != PTP_RC_OK) {
+            flush_recv_ptp_data(data,data_size);
+        }
         break;
       }
       
