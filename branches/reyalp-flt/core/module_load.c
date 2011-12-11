@@ -329,7 +329,7 @@ int module_load( char* name, _module_loader_t callback)
 
    // store runtime params
    flat_module_name_make(modules[idx]->modulename, name);
-   modules[idx]->runtime_bind_callback = callback;     //@tsv reuse unneeded entry to store valuable
+   modules[idx]->runtime_bind_callback = (uint32_t) callback;     //@tsv reuse unneeded entry to store valuable
 
    int bind_err=0;
    if ( flat._module_exportlist ) { 

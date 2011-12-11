@@ -2,7 +2,6 @@
 #define __FLT_H__
 
 typedef unsigned short uint16_t;
-
 typedef short int16_t;
 typedef unsigned int uint32_t;
 typedef int int32_t;
@@ -22,12 +21,7 @@ struct flat_hdr {
     char magic[4];          // "CFLA"
     union {
     	uint32_t rev;          			/* version (as above) */
-// ensure this is only a pointer on the target, not on (possibly 64 bit) hosts
-#ifdef HDK_VERSION
-        void * runtime_bind_callback; // while loaded: callback to chdk binder function 
-#else
         uint32_t runtime_bind_callback; // while loaded: callback to chdk binder function 
-#endif
     };
     uint32_t entry;        /* Offset of first executable instruction
                               with text segment from beginning of file */
