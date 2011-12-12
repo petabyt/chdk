@@ -129,17 +129,20 @@ void console_draw()
     long t = get_tick_count();
     if (t <= console_last_drawn + CONSOLE_HIDE_TIMEOUT)
     {
+        int y = (console_y + console_max_lines - console_num_lines) * FONT_HEIGHT;
+        int x = console_x * FONT_WIDTH + CAM_TS_BUTTON_BORDER;
+
         for(c = 0; c < console_num_lines; ++c)
         {
             i = console_line_index(console_line_start + c);
             l = strlen(console_buf[i]);
             
-            draw_txt_string(console_x, console_y + console_max_lines - console_num_lines + c,
-                            console_buf[i], MAKE_COLOR(COLOR_BG, COLOR_FG));
+            draw_string(x, y + c * FONT_HEIGHT, console_buf[i], MAKE_COLOR(COLOR_BG, COLOR_FG));
 
-            for (; l < console_line_length; ++l)
-                draw_txt_char(console_x + l, console_y + console_max_lines - console_num_lines + c,
-                              ' ', MAKE_COLOR(COLOR_BG, COLOR_FG));
+            if (l < console_line_length)
+                draw_filled_rect(x + l * FONT_WIDTH, y + c * FONT_HEIGHT,
+                                 x + console_line_length * FONT_WIDTH, y + c * FONT_HEIGHT + FONT_HEIGHT,
+                                 MAKE_COLOR(COLOR_BG, COLOR_BG));
         }
     }
 }
