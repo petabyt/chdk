@@ -14,17 +14,24 @@ CFLAGS+=$(CTHUMB) -mlong-calls
 # warning: library order matters!
 LDLIBS= -lgcc
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(topdir)tools/link-boot.ld
-LDOPTS+=-Wl,-N,-Ttext,$(MEMISOSTART) -r -d
+LDOPTS+=-Wl,-N,-Ttext,$(MEMISOSTART) -r -Wl,-d
 
 OBJS=../gui_calendar.o ../gui_bench.o ../gui_4wins.o ../gui_mastermind.o ../gui_reversi.o \
-	 ../gui_sokoban.o ../gui_read.o ../edgeoverlay.o ../gui_debug.o ../gui_palette.o \
-	 ../curves.o ../gui_fselect.o ../nothumb.o ../gui_mpopup.o ../gui_tetris.o ../gui_snake.o
+	 ../gui_sokoban.o ../gui_read.o ../gui_debug.o  ../gui_tetris.o ../gui_snake.o
+
+OPT_OBJS=
+OPT_FLT=
+ifdef OPT_GENERIC_MODULES
+CFLAGS+=-DOPT_GENERIC_MODULES
+OPT_OBJS+= ../gui_fselect.o ../nothumb.o ../gui_mpopup.o ../curves.o ../edgeoverlay.o ../gui_palette.o
+OPT_FLT+= fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt
+endif
+
 
 
 all: exportlist ../flt.h \
 		benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop10.flt _rawop12.flt \
-		edgeovr.flt txtread.flt memview.flt palette.flt modinsp.flt curves.flt fselect.flt mpopup.flt \
-		tetris.flt snake.flt
+		txtread.flt memview.flt modinsp.flt tetris.flt snake.flt $(OPT_FLT)
 
 %.o: %.c
 	@echo $< \-\> $@
