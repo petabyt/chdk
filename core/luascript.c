@@ -19,6 +19,7 @@
 #include "gui_fselect.h"
 #include "lang.h"
 #include "gui_lang.h"
+#include "gui_draw.h"
 
 #include "../lib/lua/lstate.h"  // for L->nCcalls, baseCcalls
 
@@ -827,6 +828,149 @@ static int luaCB_file_browser( lua_State* L ) {
     gui_fselect_init(LANG_STR_FILE_BROWSER, luaL_optstring( L, 1, "A" ), "A", file_browser_selected);
     // Yield the script so that the action stack will process the AS_FILE_BROWSER action
     return lua_yield(L, 0);
+}
+
+unsigned char script_colors[][2]  = {
+
+#ifdef CAM_USE_COLORED_ICONS
+                                        {COLOR_TRANSPARENT,         COLOR_TRANSPARENT},         //  1   trans
+                                        {COLOR_BLACK,               COLOR_BLACK},               //  2   black
+                                        {COLOR_WHITE,               COLOR_WHITE},               //  3   white
+                                        
+                                        {COLOR_ICON_PLY_RED,        COLOR_ICON_REC_RED},        //  4   red
+                                        {COLOR_ICON_PLY_RED_DK,     COLOR_ICON_REC_RED_DK},     //  5   red_dark
+                                        {COLOR_ICON_PLY_RED_LT,     COLOR_ICON_REC_RED_LT},     //  6   red_light
+                                        {COLOR_ICON_PLY_GREEN,      COLOR_ICON_REC_GREEN},      //  7   green
+                                        {COLOR_ICON_PLY_GREEN_DK,   COLOR_ICON_REC_GREEN_DK},   //  8   green_dark
+                                        {COLOR_ICON_PLY_GREEN_LT,   COLOR_ICON_REC_GREEN_LT},   //  9   green_light
+                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  10  blue
+                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  11  blue_dark   - placeholder
+                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  12  blue_light  - placeholder
+
+                                        {COLOR_ICON_PLY_GREY,       COLOR_ICON_REC_GREY},       //  13  grey
+                                        {COLOR_ICON_PLY_GREY_DK,    COLOR_ICON_REC_GREY_DK},    //  14  grey_dark
+                                        {COLOR_ICON_PLY_GREY_LT,    COLOR_ICON_REC_GREY_LT},    //  15  grey_light
+
+                                        {COLOR_ICON_PLY_YELLOW,     COLOR_ICON_REC_YELLOW},     //  16  yellow
+                                        {COLOR_ICON_PLY_YELLOW_DK,  COLOR_ICON_REC_YELLOW_DK},  //  17  yellow_dark
+                                        {COLOR_ICON_PLY_YELLOW_LT,  COLOR_ICON_REC_YELLOW_LT}   //  18  yellow_light
+#else
+                                        {COLOR_TRANSPARENT,         COLOR_TRANSPARENT},         //  1   trans
+                                        {COLOR_BLACK,               COLOR_BLACK},               //  2   black
+                                        {COLOR_WHITE,               COLOR_WHITE},               //  3   white
+                                        
+                                        {COLOR_HISTO_R_PLAY,        COLOR_HISTO_R},             //  4   red
+                                        {COLOR_HISTO_R_PLAY,        COLOR_HISTO_R},             //  5   red_dark    - placeholder
+                                        {COLOR_HISTO_R_PLAY,        COLOR_HISTO_R},             //  6   red_light   - placeholder
+                                        {COLOR_HISTO_G_PLAY,        COLOR_HISTO_G},             //  7   green
+                                        {COLOR_HISTO_G_PLAY,        COLOR_HISTO_G},             //  8   green_dark  - placeholder
+                                        {COLOR_HISTO_G_PLAY,        COLOR_HISTO_G},             //  9   green_light - placeholder
+                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  10  blue
+                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  11  blue_dark   - placeholder
+                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  12  blue_light  - placeholder
+
+                                        {COLOR_BLACK,               COLOR_BLACK},			    //  13  grey        - placeholder (there's no universal grey)
+                                        {COLOR_BLACK,               COLOR_BLACK},			    //  14  grey_dark   - placeholder (there's no universal grey)
+                                        {COLOR_WHITE,               COLOR_WHITE},               //  15  grey_light  - placeholder (there's no universal grey)
+
+                                        {COLOR_WHITE,               COLOR_WHITE},               //  16  yellow      - placeholder
+                                        {COLOR_WHITE,               COLOR_WHITE},               //  17  yellow_dark - placeholder
+                                        {COLOR_WHITE,               COLOR_WHITE}                //  18  yellow_light- placeholder
+#endif
+                                    };
+
+static int get_color(int cl) {
+    char out=0;                     //defaults to 0 if any wrong number
+
+    if (cl<256)
+        out=cl;
+    else {
+        if (cl-256<sizeof(script_colors)) {
+            if((mode_get()&MODE_MASK) == MODE_REC)
+                out=script_colors[cl-256][1];
+            else
+                out=script_colors[cl-256][0];
+        }
+    }
+    return out;
+}
+
+static int luaCB_draw_pixel( lua_State* L ) {
+  coord x1=luaL_checknumber(L,1);
+  coord y1=luaL_checknumber(L,2);
+  color cl=get_color(luaL_checknumber(L,3));
+  draw_pixel(x1,y1,cl);
+  return 1;
+}
+
+static int luaCB_draw_line( lua_State* L ) {
+  coord x1=luaL_checknumber(L,1);
+  coord y1=luaL_checknumber(L,2);
+  coord x2=luaL_checknumber(L,3);
+  coord y2=luaL_checknumber(L,4);
+  color cl=get_color(luaL_checknumber(L,5));
+  draw_line(x1,y1,x2,y2,cl);
+  return 1;
+}
+
+static int luaCB_draw_rect( lua_State* L ) {
+  coord x1=luaL_checknumber(L,1);
+  coord y1=luaL_checknumber(L,2);
+  coord x2=luaL_checknumber(L,3);
+  coord y2=luaL_checknumber(L,4);
+  color cl=get_color(luaL_checknumber(L,5));
+  int   th=luaL_optnumber(L,6,1);
+  draw_rect_thick(x1,y1,x2,y2,cl,th);
+  return 1;
+}
+
+static int luaCB_draw_rect_filled( lua_State* L ) {
+  coord x1 =luaL_checknumber(L,1);
+  coord y1 =luaL_checknumber(L,2);
+  coord x2 =luaL_checknumber(L,3);
+  coord y2 =luaL_checknumber(L,4);
+  color clf=get_color(luaL_checknumber(L,5));
+  color clb=get_color(luaL_checknumber(L,6));
+  int   th =luaL_optnumber(L,7,1);
+  clf=256*clb+clf;
+  draw_filled_rect_thick(x1,y1,x2,y2,clf,th);
+  return 1;
+}
+
+static int luaCB_draw_ellipse( lua_State* L ) {
+  coord x1=luaL_checknumber(L,1);
+  coord y1=luaL_checknumber(L,2);
+  coord a=luaL_checknumber(L,3);
+  coord b=luaL_checknumber(L,4);
+  color cl=get_color(luaL_checknumber(L,5));
+  draw_ellipse(x1,y1,a,b,cl);
+  return 1;
+}
+
+static int luaCB_draw_ellipse_filled( lua_State* L ) {
+  coord x1=luaL_checknumber(L,1);
+  coord y1=luaL_checknumber(L,2);
+  coord a=luaL_checknumber(L,3);
+  coord b=luaL_checknumber(L,4);
+  color cl=256*get_color(luaL_checknumber(L,5));
+  draw_filled_ellipse(x1,y1,a,b,cl);
+  return 1;
+}
+
+static int luaCB_draw_string( lua_State* L ) {
+  coord x1=luaL_checknumber(L,1);
+  coord y1=luaL_checknumber(L,2);
+  const char *t = luaL_checkstring( L, 3 );
+  color clf=get_color(luaL_checknumber(L,4));
+  color clb=get_color(luaL_checknumber(L,5));
+  clf=256*clb+clf;
+  draw_string(x1,y1,t,clf);
+  return 1;
+}
+
+static int luaCB_draw_clear( lua_State* L ) {
+  draw_restore();
+  return 1;
 }
 
 static int luaCB_autostarted( lua_State* L )
@@ -2189,6 +2333,15 @@ static const luaL_Reg chdk_funcs[] = {
    FUNC(get_meminfo)
 
    FUNC(file_browser)
+   
+   FUNC(draw_pixel)
+   FUNC(draw_line)
+   FUNC(draw_rect)
+   FUNC(draw_rect_filled)
+   FUNC(draw_ellipse)
+   FUNC(draw_ellipse_filled)
+   FUNC(draw_clear)
+   FUNC(draw_string)
 
    FUNC(set_yield)
 
