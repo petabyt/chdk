@@ -12,7 +12,7 @@
 #define ELFFLT_NO_TEXT             4
 #define ELFFLT_SYMBOL_NOT_FOUND    5
 #define ELFFLT_SEGMENT_NOT_FOUND   6
-#define ELFFLT_NO_STARTPOINT       7
+#define ELFFLT_NO_MODULEINFO       7
 #define ELFFLT_UNHANDLED_RELOC     8
 #define ELFFLT_OUTOF_RANGE         9
 #define ELFFLT_INPUT_ERROR         10

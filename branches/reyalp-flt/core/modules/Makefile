@@ -19,14 +19,10 @@ LDOPTS+=-Wl,-N,-Ttext,$(MEMISOSTART) -r -Wl,-d
 OBJS=../gui_calendar.o ../gui_bench.o ../gui_4wins.o ../gui_mastermind.o ../gui_reversi.o \
 	 ../gui_sokoban.o ../gui_read.o ../gui_debug.o  ../gui_tetris.o ../gui_snake.o
 
-OPT_OBJS=
-OPT_FLT=
-ifdef OPT_GENERIC_MODULES
-CFLAGS+=-DOPT_GENERIC_MODULES
-OPT_OBJS+= ../gui_fselect.o ../nothumb.o ../gui_mpopup.o ../curves.o ../edgeoverlay.o ../gui_palette.o
-OPT_FLT+= fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt
-endif
 
+CFLAGS+=-DOPT_GENERIC_MODULES
+OPT_OBJS= ../gui_fselect.o ../nothumb.o ../gui_mpopup.o ../curves.o ../edgeoverlay.o ../gui_palette.o
+OPT_FLT= fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt
 
 
 all: exportlist ../flt.h \
@@ -137,7 +133,7 @@ fselect.elf: ../gui_fselect.o ../nothumb.o
 	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
 
 clean:
-	rm -f *.o *.elf.syms *.elf $(OBJS)
+	rm -f *.o *.elf.syms *.elf $(OBJS) $(OPT_OBJS)
 
 distclean: clean
 #	rm -f *.flt

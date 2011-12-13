@@ -293,12 +293,6 @@ int module_load( char* name, _module_loader_t callback)
    if  ( flat.rev!=FLAT_VERSION || memcmp( flat.magic, FLAT_MAGIC_NUMBER, 4) )
       return moduleload_error("bad magicnum", 0);
 
-   if  ( flat.chdk_min_version > CHDK_BUILD_NUM )
-      return moduleload_error("require CHDK%d", flat.chdk_min_version);
-
-   if  ( flat.chdk_req_platfid && flat.chdk_req_platfid != PLATFORMID )
-      return moduleload_error("require platfid %d", flat.chdk_req_platfid);
-
    size_flat = flat.bss_end+1;
 
    flat_buf = malloc( size_flat );
@@ -312,6 +306,32 @@ int module_load( char* name, _module_loader_t callback)
 
    b_close(-1);	// filebuf not needed below
 
+
+   // Module info checks
+
+   struct ModuleInfo* _module_info = 0;
+   if ( flat._module_info )    
+   { 
+	 _module_info = (struct ModuleInfo* ) ((unsigned int)flat_buf+flat._module_info);
+
+	 if  ( _module_info->magicnum != MODULEINFO_V1_MAGICNUM ||
+		   _module_info->sizeof_struct != sizeof(struct ModuleInfo) )
+       return moduleload_error("Malformed module info", 0 );
+
+	 if  ( _module_info->chdk_required_branch &&
+		   _module_info->chdk_required_branch != CURRENT_CHDK_BRANCH )
+       return moduleload_error("require different CHDK branch",0 );
+
+	 if  ( _module_info->chdk_required_ver > CHDK_BUILD_NUM)
+       return moduleload_error("require CHDK%d", _module_info->chdk_required_ver);
+
+     if  ( _module_info->chdk_required_platfid && 
+		   _module_info->chdk_required_platfid != PLATFORMID )
+       return moduleload_error("require platfid %d", _module_info->chdk_required_platfid);
+   }
+
+   // Make relocations
+
    if ( !module_do_action( "reloc", flat.reloc_start, flat.reloc_count, module_do_relocations ) )
 	  return -1;
    if ( !module_do_action( "export", flat.import_start, flat.import_count, module_do_imports ) )
@@ -320,12 +340,14 @@ int module_load( char* name, _module_loader_t callback)
    b_close( module_fd );
    module_fd = -1;
 
+   // Module is valid. Finalize binding
+
    modules[idx] = (struct flat_hdr* )flat_buf;
 
+   modules[idx]->_module_info = (uint32_t) _module_info;
    if ( flat._module_loader )    { modules[idx]->_module_loader += (unsigned int)flat_buf; }
    if ( flat._module_unloader )  { modules[idx]->_module_unloader += (unsigned int)flat_buf; }
    if ( flat._module_run )       { modules[idx]->_module_run += (unsigned int)flat_buf; }
-
 
    // store runtime params
    flat_module_name_make(modules[idx]->modulename, name);

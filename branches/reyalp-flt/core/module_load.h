@@ -3,6 +3,10 @@
 
 #include "gui.h"
 #include "gui_draw.h"
+#include "flt.h"
+
+// This is main CHDK trunk
+#define CURRENT_CHDK_BRANCH 1
 
 #define EXPORTLIST_MAGIC_NUMBER  0x43215678
 

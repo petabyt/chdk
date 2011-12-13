@@ -58,9 +58,7 @@ int main( int argc, char **argv )
 			 break;
 	}
 	if ( *build )
-		build_num=1459;
-	
-	fprintf(out_h,"#define CHDK_BUILD_NUM %d\n\n",build_num);
+		fprintf(out_h,"#define CHDK_BUILD_NUM %d\n",build_num);
 
 	num_lines=0;
 

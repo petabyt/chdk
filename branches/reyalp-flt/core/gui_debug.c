@@ -164,9 +164,6 @@ int module_idx=-1;
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-int _chdk_required_ver = 1;			// minimal required chdk build. 0-no limitation
-int _chdk_required_platfid = 0;		// platform-specific module. 0-no limitation
-
 void* MODULE_EXPORT_LIST[] = {
 	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
 	/* 1 */	(void*)0
@@ -210,16 +207,35 @@ int _module_run(int moduleidx, int argn, int* arguments)
 {
   module_idx=moduleidx;
 
-  if ( argn!=1) {
+  void* adr;
+
+  if ( argn== 0 )
+    adr =(char*)(*conf_mem_view_addr_init);
+  else if ( argn ==1)
+    adr = (char*)arguments[0]; 
+  else {
 	module_async_unload(moduleidx);
     return 1;
   }
 
-  void* adr=(char*)arguments[0];
   gui_debug_init(adr);
 
   return 0;
 }
 
+
+/******************** Module Information structure ******************/
+#include "gui_lang.h"
+
+struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
+									sizeof(struct ModuleInfo),
+
+									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+									0,							// flag
+									-LANG_MENU_DEBUG_MEMORY_BROWSER,	// Module name
+									1, 0,						// Module version
+									(int32_t)"Simple memory content browser"
+								 };
 
 /*************** END OF AUXILARY PART *******************/

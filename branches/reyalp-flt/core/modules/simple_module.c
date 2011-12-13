@@ -12,9 +12,6 @@ int module_idx=-1;
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-int _chdk_required_ver = 1;		// minimal required chdk build. 0-no limitation
-int _chdk_required_platfid = 0;		// platform-specific module. 0-no limitation
-
 void* MODULE_EXPORT_LIST[] = {
 	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
 	/* 1 */	(void*)0

@@ -762,9 +762,6 @@ int module_idx=-1;
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-int _chdk_required_ver = 1;		// minimal required chdk build. 0-no limitation
-int _chdk_required_platfid = 0;		// platform-specific module. 0-no limitation
-
 void* MODULE_EXPORT_LIST[] = {
 	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
 	/* 1 */	(void*)5,
@@ -816,6 +813,18 @@ int _module_unloader()
   return 0;
 }
 
+/******************** Module Information structure ******************/
+
+struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
+									sizeof(struct ModuleInfo),
+
+									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+									MODULEINFO_FLAG_SYSTEM,		// flag
+									(int32_t)"Edge Overalay (dll)",// Module name
+									1, 0,						// Module version
+									(int32_t)"Implementation one of core modes"
+								 };
 
 
 /*************** END OF AUXILARY PART *******************/

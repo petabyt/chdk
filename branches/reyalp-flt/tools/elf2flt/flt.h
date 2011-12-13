@@ -9,7 +9,7 @@ typedef int int32_t;
 
 //================= CFLT format header =====================
 
-#define	FLAT_VERSION	    0x00000004L
+#define	FLAT_VERSION	    0x00000005L
 #define FLAT_MAGIC_NUMBER   "CFLAT"
 
 /*
@@ -34,18 +34,23 @@ struct flat_hdr {
 
     /* (It is assumed that data_end through bss_end forms the bss segment.) */
 
-    //uint32_t stack_size;   /* BFLAT - Size of stack, in bytes */
+    //uint32_t stack_size;   // BFLAT - Size of stack, in bytes
 
-    uint16_t chdk_min_version;  // @tsv: CFLAT specific
-    uint16_t chdk_req_platfid;	// @tsv: CFLAT specific 0 - if no restriction
+	// CFLAT_v4
+    //uint16_t chdk_min_version;  // @tsv: CFLAT specific
+    //uint16_t chdk_req_platfid;	// @tsv: CFLAT specific 0 - if no restriction
+
+	// v5
+	uint32_t _module_info;		// Offset ModuleInfo from beginning file
+
 
     uint32_t reloc_start;  /* Offset of relocation records from beginning
                               of file */
-    uint32_t reloc_count;  /* Number of relocation records */
+    uint32_t reloc_count;  // Number of relocation records
 
     //uint32_t flags;         // BFLAT
-    //uint32_t build_date;   /* When the program/library was built */ 
-    //uint32_t filler[5];    /* Reservered, set to zero */
+    //uint32_t build_date;   // When the program/library was built
+    //uint32_t filler[5];    // Reservered, set to zero
 
     int32_t _module_loader;       // CFLAT: offsets specific symbols from beginning file 
     int32_t _module_unloader;       
@@ -61,5 +66,38 @@ struct flat_hdr {
     };
 };
 
-#endif /* __ELFLOADER_ARCH_H__ */
+
+
+//================= Module information structure =====================
+
+
+#define MODULEINFO_V1_MAGICNUM  0x023703e5
+
+#define ANY_CHDK_BRANCH		0
+#define REQUIRE_CHDK_MAIN   1
+#define REQUIRE_CHDK_DE		2
+#define REQUIRE_CHDK_SDM	3
+#define REQUIRE_CHDK_PRIVATEBUILD	4
+
+#define ANY_PLATFORM_ALLOWED	0
+
+// This is system module (hide in Module list)
+#define MODULEINFO_FLAG_SYSTEM	1
+
+struct ModuleInfo 
+{
+	uint32_t magicnum;
+	uint32_t sizeof_struct;
+	uint16_t chdk_required_branch;
+	uint16_t chdk_required_ver;
+	uint32_t chdk_required_platfid;
+	uint32_t flags;
+
+	int32_t moduleName;			// pointer to string with module name or -LANG_ID
+	uint16_t major_ver, minor_ver;
+	int32_t ModuleInfo;
+};
+
+
+#endif /* __FLT_H__ */
 

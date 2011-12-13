@@ -253,3 +253,16 @@ void gui_bench_menu_kbd_process() {
 	gui_default_kbd_process_menu_btn();
   	module_async_unload(module_idx);
 }
+
+/******************** Module Information structure ******************/
+
+struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
+									sizeof(struct ModuleInfo),
+
+									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+									0,							// flag
+									-LANG_MENU_DEBUG_BENCHMARK,	// Module name
+									1, 0,						// Module version
+									(int32_t) "Test camera low level perfomance"
+								 };

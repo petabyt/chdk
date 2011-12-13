@@ -270,6 +270,26 @@ void print_offs(char *prefix, int offs)
     printf("%s 0x%x (%s+0x%x)\n",prefix, offs,sect,offs-secoffs);
 }
 
+
+char* get_flat_string( int32_t offs )
+{
+   static char buf[200];
+
+    if  ( offs <0 )
+	{
+		sprintf(buf," LANGID %d",-offs);
+		return buf;
+	}
+
+    if  ( offs >flat->data_end || offs<=flat->data_start )
+	  return "";
+
+	strncpy( buf, flat_buf+offs, sizeof(buf)-1);
+	buf[sizeof(buf)-1]=0;
+	return buf;
+}
+
+
 // Aligning up to int32 bound
 static int
 align4(int size)
@@ -622,24 +642,28 @@ elfloader_load(char* filename, char* fltfile)
   if ( FLAG_VERBOSE )
    	  printf(">>elf2flt: lookup entry symbols\n");
   flat->_module_loader = find_symbol_inflat("_module_loader", &text );
-/*  if ( flat->_module_loader <=0 ) {
-    PRINTF("No or invalid section of _module_loader(). It have to be exist as executable function.\n");
-    return ELFFLT_NO_STARTPOINT;
-  }*/
   flat->_module_unloader = find_symbol_inflat("_module_unloader", &text );
   flat->_module_run = find_symbol_inflat("_module_run", &text );
   flat->_module_exportlist = find_symbol_inflat("MODULE_EXPORT_LIST", 0 );
 
-  flat->chdk_min_version =0;
-  flat->chdk_req_platfid =0;
+  //
+  flat->_module_info = find_symbol_inflat("_module_info", &data );
+  if ( flat->_module_info <=0 ) {
+    PRINTERR(stderr, "No or invalid section of _module_info. This symbol should be initialized as ModuleInfo structure.\n");
+    return ELFFLT_NO_MODULEINFO;
+  }
 
-  int ptr = find_symbol_inflat("_chdk_required_ver", 0 );
-  if ( ptr > 0 )
-    flat->chdk_min_version = *(uint32_t*)(flat_buf+ptr);
-
-  ptr = find_symbol_inflat("_chdk_required_platfid", 0 );
-  if ( ptr > 0 )
-    flat->chdk_req_platfid = *(uint32_t*)(flat_buf+ptr);
+  struct ModuleInfo* _module_info = (struct ModuleInfo*) (flat_buf + flat->_module_info);
+  if ( _module_info->magicnum != MODULEINFO_V1_MAGICNUM ) 
+  {
+    PRINTERR(stderr, "Wrong _module_info->magicnum value. Please check correct filling of this structure\n");
+    return ELFFLT_NO_MODULEINFO;
+  }
+  if ( _module_info->sizeof_struct != sizeof(struct ModuleInfo) ) 
+  {
+    PRINTERR(stderr, "Wrong _module_info->sizeof_struct value. Please check correct filling of this structure\n");
+    return ELFFLT_NO_MODULEINFO;
+  }
 
   if ( FLAG_DUMP_FLT_HEADERS ) {
 	printf("\nFLT Headers:\n");
@@ -649,13 +673,31 @@ elfloader_load(char* filename, char* fltfile)
 	printf("->bss_end      0x%x (size %d)\n", flat->bss_end, flat->bss_end - flat->data_end );
 	printf("->reloc_start  0x%x (size %d)\n", flat->reloc_start, flat->reloc_count*4 );
 	printf("->import_start 0x%x (size %d)\n", flat->import_start, flat->import_count*4 );
-	printf("->chdk_min_ver 0x%x\n", flat->chdk_min_version);
-	printf("->chdk_platfid 0x%x\n", flat->chdk_req_platfid);
 
 	print_offs("\n.._module_loader()   =", flat->_module_loader);
 	print_offs(".._module_unloader() = ", flat->_module_unloader);
 	print_offs(".._module_run()      = ", flat->_module_run);
 	print_offs("..MODULE_EXPORT_LIST = ", flat->_module_exportlist);
+
+	printf("\nModule info:\n");
+	printf("->Module Name: %s\n", get_flat_string(_module_info->moduleName) );
+	printf("->Module Ver: %d.%d\n", _module_info->major_ver, _module_info->minor_ver );
+
+	char* branches_str[] = {"any branch","CHDK", "CHDK_DE", "CHDK_SDM", "PRIVATEBUILD"};
+	int branch = (_module_info->chdk_required_branch>REQUIRE_CHDK_PRIVATEBUILD) ? 
+						REQUIRE_CHDK_PRIVATEBUILD : _module_info->chdk_required_branch;
+	printf("->Require: %s-build%d. ", branches_str[branch], _module_info->chdk_required_ver );
+	if ( _module_info->chdk_required_platfid == 0 )
+	  	printf("Any platform.\n");
+	else
+	  	printf(" Platform #%d only.\n", _module_info->chdk_required_platfid );
+	if ( _module_info->flags ) {
+		printf("->Flags:");
+		if ( _module_info->flags & MODULEINFO_FLAG_SYSTEM )
+			printf(" SYSTEM ");
+	    printf("\n");
+	}
+	printf("->Module Info: %s\n", get_flat_string(_module_info->ModuleInfo) );
   }
 
   if ( FLAG_DUMP_FLAT ) {
