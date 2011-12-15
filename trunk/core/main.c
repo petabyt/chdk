@@ -174,10 +174,14 @@ void core_spytask() {
             continue;
         }
 
-        if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING) {
+        if ((state_shooting_progress != SHOOTING_PROGRESS_PROCESSING) || recreview_hold)
+		{
             if (((cnt++) & 3) == 0)
                 gui_redraw();
-
+		}
+		
+        if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
+        {	
             histogram_process();
 #ifdef OPT_EDGEOVERLAY
             if(conf.edge_overlay_thresh && conf.edge_overlay_enable) edge_overlay();
@@ -189,6 +193,11 @@ void core_spytask() {
             if (raw_need_postprocess) raw_postprocess();
         }
 
+#ifdef DEBUG_PRINT_TO_LCD
+		char osd_buf[30];
+		sprintf(osd_buf, "%d", cnt );	// modify cnt to what you want to display
+		draw_txt_string(2, 2, osd_buf, conf.osd_color);
+#endif	
         msleep(20);
     }
 }
