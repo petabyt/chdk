@@ -2163,7 +2163,6 @@ void find_str_sig_matches(firmware *fw, const char *curr_name)
 	int i;
 	
 	int found_ev = 0;
-	int tried_ev = 0;
 
 	count = 0;
 
@@ -2171,7 +2170,6 @@ void find_str_sig_matches(firmware *fw, const char *curr_name)
 	{
 		if (strcmp(curr_name, string_sigs[i].name) == 0)
 		{
-			tried_ev = 1;
 			if (find_strsig(fw, &string_sigs[i], -1))
 			{
 				found_ev = 1;
@@ -2202,7 +2200,6 @@ int find_matches(firmware *fw, int k)
     int fail, success;
 	
 	int found_ev = 0;
-	int tried_ev = 0;
 
 	count = 0;
     curr_name = func_list[k].name;
@@ -2214,7 +2211,6 @@ int find_matches(firmware *fw, int k)
 		{
 			if (strcmp(curr_name, string_sigs[i].name) == 0)
 			{
-				tried_ev = 1;
 				if (find_strsig(fw, &string_sigs[i], k))
 				{
 					found_ev = 1;
@@ -2313,7 +2309,6 @@ int find_matches2(firmware *fw, int k)
 	int i;
 	
 	int found_ev = 0;
-	int tried_ev = 0;
 
 	count = 0;
     curr_name = func_list2[k].name;
@@ -2322,7 +2317,6 @@ int find_matches2(firmware *fw, int k)
 	{
 		if (strcmp(curr_name, string_sigs[i].name) == 0)
 		{
-			tried_ev = 1;
 			if (find_strsig(fw, &string_sigs[i], k))
 			{
 				found_ev = 1;
