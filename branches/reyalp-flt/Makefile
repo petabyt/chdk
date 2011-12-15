@@ -10,6 +10,7 @@ fir: version firsub
 
 firsub: all
 	mkdir -p  $(topdir)bin
+	mkdir -p  $(topdir)CHDK/MODULES
 	cp $(topdir)loader/$(PLATFORM)/main.bin  $(topdir)bin/main.bin
 ifndef NOZERO100K
 ifeq ($(OSTYPE),Windows)

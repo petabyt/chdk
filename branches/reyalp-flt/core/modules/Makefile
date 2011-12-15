@@ -133,7 +133,7 @@ fselect.elf: ../gui_fselect.o ../nothumb.o
 	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
 
 clean:
-	rm -f *.o *.elf.syms *.elf $(OBJS) $(OPT_OBJS)
+	rm -f *.o *.elf.syms *.elf *.flt $(OBJS) $(OPT_OBJS)
 
 distclean: clean
 #	rm -f *.flt

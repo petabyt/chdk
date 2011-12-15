@@ -27,5 +27,6 @@ LUALIB/GEN/modelist.lua:  $(topdir)include/modelist.h
 
 clean:
 	rm -f $(GENLUA)
+	rm -f MODULES/*.flt
 
 include $(topdir)bottom.inc

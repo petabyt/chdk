@@ -95,7 +95,7 @@ struct ModuleInfo
 
 	int32_t moduleName;			// pointer to string with module name or -LANG_ID
 	uint16_t major_ver, minor_ver;
-	int32_t ModuleInfo;
+	int32_t description;		// pointer to string with module description
 };
 
 

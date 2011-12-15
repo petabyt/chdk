@@ -108,7 +108,7 @@ static void flat_module_path_make( char* tgt, char* name )
 	if ( name[0]=='A' && name[1]=='/')
    		strcpy(tgt,name);
 	else
-   sprintf(tgt,"A/CHDK/MODULES/%s",name);
+   sprintf(tgt,"%s/%s",MODULES_PATH,name);
 }
 
 //-----------------------------------------------

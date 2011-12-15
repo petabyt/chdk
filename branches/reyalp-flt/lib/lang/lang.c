@@ -68,9 +68,12 @@ static void lang_add_string(int num, const char *str) {
 // Parsing of loaded .lng file
 // buf - source array (content of file.lng )
 //-------------------------------------------------------------------
-void lang_parse_from_mem(char *buf) {
+int lang_parse_from_mem(char *buf, int size) {
     char *p, *s, *e;
     int i;
+
+	if  ( size <= 0 )
+	  return 0;
 
     e = buf-1;
     while(e) {
@@ -94,6 +97,7 @@ void lang_parse_from_mem(char *buf) {
             if (e) *e=0;
         }
     }
+	return 1;
 }
 
 // This function have to be called before any other string load
@@ -115,30 +119,41 @@ void lang_map_preparsed_from_mem( char* gui_lang_default, int num )
     preparsed_lang_default_end = p;
 }
 
-
+// PURPOSE:
 // Universal file processor
 // Load file, process by callback, unalloc/close file
+// RETURN:
+//	 Transfer return value from callback
+// NOTE:
+//	 Call callback even if fail to load/malloc (size=-1 if no file, size=0 if empty) 
 //-------------------------------------------------------------------
-void load_from_file(const char *filename, callback_process_file callback)
+int load_from_file(const char *filename, callback_process_file callback)
 {
     int f, size;
     static struct stat st;
     char *buf;
 
+	buf = 0;
+    size = -1;
+
     f = open(filename, O_RDONLY, 0777);
-    if (f>=0) {
+    if (f>=0)
         size = (stat((char*)filename, &st)==0)?st.st_size:0;
-        if (size) {
+    if (size>0 )
             buf = umalloc(size+1);
             if (buf) {
                 size = read(f, buf, size);
                 buf[size]=0;
-                callback(buf);
+	}
+
+	size = callback( buf, size);
+
+	if ( buf )
                 ufree(buf);
-            }
-        }
+    if (f>=0)
         close(f);
-    }
+
+	return size;
 }
 
 void lang_load_from_file(const char *filename) {

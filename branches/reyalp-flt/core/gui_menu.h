@@ -49,7 +49,7 @@ typedef struct {
 
 typedef struct {
     char                symbol;
-    short               title;
+    int                 title;
     void                (*on_change)(unsigned int item);
     const CMenuItem     *menu;
 } CMenu;

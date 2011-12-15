@@ -158,7 +158,7 @@ int main(int argc, char **argv)
 				printf(" SYSTEM ");
 		    printf("\n");
 		}
-		printf("->Module Info: %s\n", get_flat_string(_module_info->ModuleInfo) );
+		printf("->Module Info: %s\n", get_flat_string(_module_info->description) );
 	}
 		
 		

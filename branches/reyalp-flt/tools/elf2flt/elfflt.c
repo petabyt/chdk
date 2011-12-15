@@ -697,7 +697,7 @@ elfloader_load(char* filename, char* fltfile)
 			printf(" SYSTEM ");
 	    printf("\n");
 	}
-	printf("->Module Info: %s\n", get_flat_string(_module_info->ModuleInfo) );
+	printf("->Module Info: %s\n", get_flat_string(_module_info->description) );
   }
 
   if ( FLAG_DUMP_FLAT ) {
