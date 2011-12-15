@@ -27,7 +27,7 @@ OPT_FLT= fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt
 
 all: exportlist ../flt.h \
 		benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop10.flt _rawop12.flt \
-		txtread.flt memview.flt modinsp.flt tetris.flt snake.flt $(OPT_FLT)
+		txtread.flt memview.flt modinsp.flt tetris.flt snake.flt modmenu.flt $(OPT_FLT)
 
 %.o: %.c
 	@echo $< \-\> $@
@@ -52,15 +52,15 @@ benchm.elf: simple_module.o ../gui_bench.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
-4wins.elf: simple_module.o ../gui_4wins.o
+4wins.elf: simple_game.o ../gui_4wins.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
-mastmind.elf: simple_module.o ../gui_mastermind.o
+mastmind.elf: simple_game.o ../gui_mastermind.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
-reversi.elf: simple_module.o ../gui_reversi.o
+reversi.elf: simple_game.o ../gui_reversi.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
@@ -101,6 +101,10 @@ curves.elf: ../curves.o
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 modinsp.elf: module_inspector.o
+	@echo \-\> $@
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+
+modmenu.elf: module_menu.o ../nothumb.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 

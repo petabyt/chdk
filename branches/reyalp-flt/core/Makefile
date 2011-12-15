@@ -17,22 +17,6 @@ all: main.bin
 CFLAGS+=-DTHIS_IS_CHDK_CORE
 
 OPT_OBJS=
-ifdef OPT_GAME_REVERSI
-CFLAGS+=-DOPT_GAME_REVERSI
-#OPT_OBJS+=gui_reversi.o
-endif
-ifdef OPT_GAME_SOKOBAN
-CFLAGS+=-DOPT_GAME_SOKOBAN
-#OPT_OBJS+=gui_sokoban.o
-endif
-ifdef OPT_GAME_CONNECT4
-CFLAGS+=-DOPT_GAME_CONNECT4
-#OPT_OBJS+=gui_4wins.o
-endif
-ifdef OPT_GAME_MASTERMIND
-CFLAGS+=-DOPT_GAME_MASTERMIND
-#OPT_OBJS+=gui_mastermind.o
-endif
 ifdef OPT_CURVES
 CFLAGS+=-DOPT_CURVES
 #OPT_OBJS+=curves.o
@@ -40,10 +24,6 @@ endif
 ifdef OPT_TEXTREADER
 CFLAGS+=-DOPT_TEXTREADER
 #OPT_OBJS+=gui_read.o 
-endif
-ifdef OPT_CALENDAR
-CFLAGS+=-DOPT_CALENDAR
-#OPT_OBJS+=gui_calendar.o 
 endif
 ifdef OPT_DEBUGGING
 # global in root makefile.inc

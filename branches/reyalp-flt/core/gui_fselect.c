@@ -1156,9 +1156,6 @@ void finalize_fselect()
 
 static void exit_fselect(char* file)
 {
-/*DOPEN(0);    
-DLOG_INT("gui_fselect_exit()\n",0);
-DCLOSE;*/
 	finalize_fselect();
 
     if (set_key_redraw_mode)
@@ -1179,6 +1176,7 @@ DCLOSE;*/
     }
 }
 
+//-------------------------------------------------------------------
 void gui_fselect_kbd_process() {
     int i;
     
@@ -1266,17 +1264,6 @@ void gui_fselect_kbd_process() {
 					char *ext = strchr(selected->name,'.');
                     if ( ext && (ext[1]|0x20)=='f' && (ext[2]|0x20)=='l' && (ext[3]|0x20)=='t') {
     					if (!fselect_on_select) {
-
-						  /* //This decrease visual lag before module start, but cost memory fragment
-							flag_after=0;
-   							if ( module_find(name) < 0 ) {
-								if ( !module_load( selected_file, 0 ) )
-									break;
-								flag_after=2;
-							}
-
-						  */
-
                     		exit_fselect(0);
     						module_run(selected_file, 0, 0,0, UNLOAD_IF_ERR);
 
@@ -1379,7 +1366,7 @@ int _module_run(int moduleidx, int argn, int* arguments)
 {
   module_idx=moduleidx;
 
-  if ( argn!=5) {
+  if ( argn!=0 && argn!=5 ) {
 	module_async_unload(moduleidx);
     return 1;
   }
@@ -1387,9 +1374,12 @@ int _module_run(int moduleidx, int argn, int* arguments)
   // Autounloading is unsafe because it should exists to catch finalization of mpopup
   module_set_flags(module_idx, MODULE_FLAG_DISABLE_AUTOUNLOAD);
 
+  if ( argn == 5 ) {
   gui_fselect_init( arguments[0], (const char*) arguments[1], (const char*) arguments[2], (void*)arguments[3]);
   gui_fselect_set_key_redraw(arguments[4]);
-  
+  }
+  else
+    gui_fselect_init(LANG_STR_FILE_BROWSER, "A", "A", NULL);
 
   return 0;
 }
@@ -1402,7 +1392,7 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 
 									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
 									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									MODULEINFO_FLAG_SYSTEM,		// flag
+									0,							// flag
 									-LANG_MENU_MISC_FILE_BROWSER,	// Module name
 									1, 0,						// Module version
 									0

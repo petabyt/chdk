@@ -77,4 +77,6 @@ extern int gui_bind_mode(int core_mode, gui_handler* handler);
 extern void gui_update_script_submenu();
 #endif
 
+extern void gui_menu_run_fltmodule(int arg);
+
 #endif

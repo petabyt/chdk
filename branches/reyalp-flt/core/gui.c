@@ -13,22 +13,9 @@
 #include "gui_palette.h"
 #include "gui_mbox.h"
 #include "gui_mpopup.h"
-#ifdef OPT_GAME_REVERSI
-#include "gui_reversi.h"
-#endif
-#ifdef OPT_GAME_SOKOBAN
-#include "gui_sokoban.h"
-#endif
-#ifdef OPT_GAME_CONNECT4
-#include "gui_4wins.h"
-#endif
-#ifdef OPT_GAME_MASTERMIND
-#include "gui_mastermind.h"
-#endif
 #include "console.h"
 #ifdef OPT_DEBUGGING
 #include "gui_debug.h"
-#include "gui_bench.h"
 #endif
 #include "gui_fselect.h"
 #include "gui_batt.h"
@@ -37,9 +24,6 @@
 #include "gui_osd.h"
 #ifdef OPT_TEXTREADER
 	#include "gui_read.h"
-#endif
-#ifdef OPT_CALENDAR
-	#include "gui_calendar.h"
 #endif
 #include "gui_grid.h"
 #include "histogram.h"
@@ -160,19 +144,13 @@ void user_menu_restore();
 //-------------------------------------------------------------------
 static void gui_show_build_info(int arg);
 static void gui_show_memory_info(int arg);
-static void gui_draw_palette(int arg);
-static void gui_draw_reversi(int arg);
-static void gui_draw_sokoban(int arg);
-static void gui_draw_4wins(int arg);
-static void gui_draw_mastermind(int arg);
+static void	gui_modules_menu_load();
+
 #ifdef OPT_DEBUGGING
-	static void gui_draw_debug(int arg);
-	static void gui_draw_bench(int arg);
     void gui_compare_props(int arg);
     static void gui_menuproc_break_card(int arg);
 	static void gui_debug_shortcut(void);
 	static void save_romlog(int arg);
-	static void gui_draw_modinspector(int arg);
 #endif
 static void gui_draw_fselect(int arg);
 static void gui_draw_osd_le(int arg);
@@ -319,24 +297,6 @@ static CMenuItem script_submenu_items[sizeof(script_submenu_items_top)/sizeof(sc
 static CMenu script_submenu = {0x27,LANG_MENU_SCRIPT_TITLE, NULL, script_submenu_items };
 #endif
 
-static CMenuItem games_submenu_items[] = {
-#ifdef OPT_GAME_REVERSI
-    MENU_ITEM(0x38,LANG_MENU_GAMES_REVERSI,           MENUITEM_PROC,  gui_draw_reversi, 0 ),
-#endif
-#ifdef OPT_GAME_SOKOBAN
-    MENU_ITEM(0x38,LANG_MENU_GAMES_SOKOBAN,           MENUITEM_PROC,  gui_draw_sokoban, 0 ),
-#endif
-#ifdef OPT_GAME_CONNECT4
-    MENU_ITEM(0x38,LANG_MENU_GAMES_CONNECT4,             MENUITEM_PROC,  gui_draw_4wins, 0 ),
-#endif
-#ifdef OPT_GAME_MASTERMIND
-    MENU_ITEM(0x38,LANG_MENU_GAMES_MASTERMIND,           MENUITEM_PROC,  gui_draw_mastermind, 0 ),
-#endif
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
-    {0}
-};
-static CMenu games_submenu = {0x38,LANG_MENU_GAMES_TITLE, NULL, games_submenu_items };
-
 static const char* gui_autoiso_shutter_modes[] = { "Auto", "1/8s", "1/15s", "1/30s", "1/60s", "1/125s", "1/250s", "1/500s", "1/1000s"};
 static CMenuItem autoiso_submenu_items[] = {
     MENU_ITEM(0x5c,LANG_MENU_AUTOISO_ENABLED,          MENUITEM_BOOL,	&conf.autoiso_enable, 0),
@@ -378,9 +338,6 @@ static CMenuItem debug_submenu_items[] = {
     MENU_ITEM(0x2a,LANG_MENU_DEBUG_PROPCASE_PAGE,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &conf.debug_propcase_page, MENU_MINMAX(0, 128) ),
     MENU_ITEM(0x2a,LANG_MENU_DEBUG_TASKLIST_START,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &debug_tasklist_start, MENU_MINMAX(0, 63) ),
     MENU_ITEM(0x5c,LANG_MENU_DEBUG_SHOW_MISC_VALS,    MENUITEM_BOOL,          &conf.debug_misc_vals_show, 0 ),
-    MENU_ITEM(0x2a,LANG_MENU_DEBUG_MEMORY_BROWSER,    MENUITEM_PROC,          gui_draw_debug, 0 ),
-    MENU_ITEM(0x2a,(int)"Module Inspector",			  MENUITEM_PROC,          gui_draw_modinspector, 0 ),
-    MENU_ITEM(0x2a,LANG_MENU_DEBUG_BENCHMARK,         MENUITEM_PROC,          gui_draw_bench, 0 ),
     MENU_ENUM2(0x5c,LANG_MENU_DEBUG_SHORTCUT_ACTION,  &conf.debug_shortcut_action, gui_debug_shortcut_modes ),
     MENU_ITEM(0x5c,LANG_MENU_RAW_TIMER,               MENUITEM_BOOL,          &conf.raw_timer, 0 ),
 #ifdef OPT_LUA
@@ -399,14 +356,9 @@ static CMenu debug_submenu = {0x2a,LANG_MENU_DEBUG_TITLE, NULL, debug_submenu_it
 
 static CMenuItem misc_submenu_items[] = {
     MENU_ITEM(0x35,LANG_MENU_MISC_FILE_BROWSER,       MENUITEM_PROC,    gui_draw_fselect, 0 ),
-#ifdef OPT_CALENDAR
-    MENU_ITEM(0x36,LANG_MENU_MISC_CALENDAR,           MENUITEM_PROC,    gui_draw_calendar, 0 ),
-#endif
+    MENU_ITEM(0x65,(int)"Modules",            		  MENUITEM_TEXT,    0, 0 ),
 #ifdef OPT_TEXTREADER
     MENU_ITEM(0x37,LANG_MENU_MISC_TEXT_READER,        MENUITEM_SUBMENU, &reader_submenu, 0 ),
-#endif
-#if defined (OPT_GAME_REVERSI) || (OPT_GAME_SOKOBAN || (OPT_GAME_CONNECT4) || OPT_GAME_MASTERMIND)
-    MENU_ITEM(0x38,LANG_MENU_MISC_GAMES,              MENUITEM_SUBMENU, &games_submenu, 0 ),
 #endif
 #if CAM_SWIVEL_SCREEN
     MENU_ITEM(0x28,LANG_MENU_MISC_FLASHLIGHT,         MENUITEM_BOOL,    &conf.flashlight, 0 ),
@@ -420,7 +372,6 @@ static CMenuItem misc_submenu_items[] = {
     MENU_ITEM(0x22,LANG_MENU_MISC_ALT_BUTTON,         MENUITEM_ENUM,    gui_alt_mode_button_enum, 0 ),
 #endif
     MENU_ITEM(0x5d,LANG_MENU_MISC_DISABLE_LCD_OFF,    MENUITEM_ENUM,    gui_alt_power_enum, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_MISC_PALETTE,            MENUITEM_PROC,    gui_draw_palette, 0 ),
     MENU_ITEM(0x80,LANG_MENU_MISC_BUILD_INFO,         MENUITEM_PROC,    gui_show_build_info, 0 ),
     MENU_ITEM(0x80,LANG_MENU_MISC_MEMORY_INFO,        MENUITEM_PROC,    gui_show_memory_info, 0 ),
     MENU_ITEM(0x33,LANG_MENU_DEBUG_MAKE_BOOTABLE,     MENUITEM_PROC,    gui_menuproc_mkbootdisk, 0 ),
@@ -1655,6 +1606,8 @@ void gui_init()
     	play_sound(4);
     }
     gui_splash = (conf.splash_show)?SPLASH_TIME:0;
+
+	gui_modules_menu_load();
     user_menu_restore();
     gui_lang_init();
     draw_init();
@@ -1671,6 +1624,18 @@ void gui_init()
 // reyalp - need to do this in capt_seq
 //		if (conf.zoom_override) shooting_set_zoom(conf.zoom_override_value);
 #endif
+}
+
+
+//-------------------------------------------------------------------
+void gui_modules_menu_load(int arg){
+
+	misc_submenu_items[1].type=MENUITEM_TEXT;
+
+	unsigned int argv[] ={	(unsigned int)MODULES_PATH,
+							(unsigned int)(&misc_submenu_items[1])
+						 };
+	module_run("modmenu.flt", 0, 2,argv, UNLOAD_IF_ERR );
 }
 
 //-------------------------------------------------------------------
@@ -2592,11 +2557,6 @@ void gui_menuproc_reset(int arg)
 }
 
 //-------------------------------------------------------------------
-void gui_draw_palette(int arg) {
-    module_palette_run(PALETTE_MODE_DEFAULT, 0x00, NULL);
-}
-
-//-------------------------------------------------------------------
 void gui_show_build_info(int arg) {
     static char buf[192];
     static char comp[64];
@@ -2622,77 +2582,11 @@ void gui_show_memory_info(int arg) {
 }
 
 //-------------------------------------------------------------------
-#ifdef OPT_GAME_REVERSI
-void gui_draw_reversi(int arg) {
-    if ((mode_get()&MODE_MASK) != MODE_PLAY) {
-        gui_mbox_init(LANG_MSG_INFO_TITLE, LANG_MSG_SWITCH_TO_PLAY_MODE,
-                      MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
-        return;
-    }
-
-    module_run("reversi.flt", 0, 0,0, UNLOAD_IF_ERR);
-}
-#endif
-
-//-------------------------------------------------------------------
-#ifdef OPT_GAME_SOKOBAN
-void gui_draw_sokoban(int arg) {
-    if ((mode_get()&MODE_MASK) != MODE_PLAY) {
-        gui_mbox_init(LANG_MSG_INFO_TITLE, LANG_MSG_SWITCH_TO_PLAY_MODE,
-                      MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
-        return;
-    }
-
-    module_run("sokoban.flt", 0, 0,0, UNLOAD_IF_ERR);
-}
-#endif
-//-------------------------------------------------------------------
-#ifdef OPT_GAME_CONNECT4
-void gui_draw_4wins(int arg) {
-    if ((mode_get()&MODE_MASK) != MODE_PLAY) {
-        gui_mbox_init(LANG_MSG_INFO_TITLE, LANG_MSG_SWITCH_TO_PLAY_MODE,
-                      MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
-        return;
-    }
-
-    module_run("4wins.flt", 0, 0,0, UNLOAD_IF_ERR);
-}
-#endif
-//-------------------------------------------------------------------
-#ifdef OPT_GAME_MASTERMIND
-void gui_draw_mastermind(int arg) {
-    if ((mode_get()&MODE_MASK) != MODE_PLAY) {
-        gui_mbox_init(LANG_MSG_INFO_TITLE, LANG_MSG_SWITCH_TO_PLAY_MODE,
-                      MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
-        return;
-    }
-    module_run("mastmind.flt", 0, 0,0, UNLOAD_IF_ERR);
-}
-#endif
-//-------------------------------------------------------------------
-#ifdef OPT_DEBUGGING
-void gui_draw_debug(int arg) {
-//    gui_debug_init(0x2510);
-//    gui_debug_init(0x127E0);
-//    gui_debug_init(0x7F5B8);
-//    gui_debug_init(malloc(16));
-//    gui_debug_init((void*)conf.mem_view_addr_init);
-
-	unsigned int argv[] ={ (unsigned int)conf.mem_view_addr_init };
-    module_run("memview.flt", 0, 1,argv, UNLOAD_IF_ERR);
-}
-
-void gui_draw_modinspector(int arg) {
-    module_run("modinsp.flt", 0, 0,0, UNLOAD_IF_ERR);
+void gui_menu_run_fltmodule(int arg) {
+    module_run((char*)arg, 0, 0,0, UNLOAD_IF_ERR);
 }
 
 //-------------------------------------------------------------------
-void gui_draw_bench(int arg) {
-    module_run("benchm.flt", 0, 0,0, UNLOAD_IF_ERR);
-}
-#endif
-//-------------------------------------------------------------------
-
 void gui_draw_splash(char* logo, int logo_size) {
     coord w, h, x, y;
     static const char *text[] = {
@@ -2820,12 +2714,6 @@ void gui_menuproc_edge_load(int arg) {
 }
 #endif
 
-//-------------------------------------------------------------------
-#ifdef OPT_CALENDAR
-void gui_draw_calendar(int arg) {
-	module_run("calend.flt", 0, 0,0, UNLOAD_IF_ERR);
-}
-#endif
 //-------------------------------------------------------------------
 #ifdef OPT_TEXTREADER
 static void gui_draw_rbf_selected(const char *fn) {
