@@ -96,7 +96,7 @@ static int get_hexstring( void *dst, const char *str, int len )
 static int fi2enc( char *infname, char *outfname, uint32_t *key, uint32_t *iv , uint32_t pid)
 {
 	unsigned long i;
-	size_t hdrsize, flen;
+	size_t flen;
 	uint32_t cs;
 	FILE *fi, *fo;
 	fi2_hdr_t hdr;
@@ -115,7 +115,6 @@ static int fi2enc( char *infname, char *outfname, uint32_t *key, uint32_t *iv , 
 		return -1;
 	}
 	aes128_expandkey( exkey, key );
-	hdrsize = 0;
 	cs = 0;
 	memset(&hdr, 0, sizeof (hdr));
 	memset(&fi2rec, 0, sizeof (fi2rec));
@@ -124,7 +123,6 @@ static int fi2enc( char *infname, char *outfname, uint32_t *key, uint32_t *iv , 
         hdr.id=0x01010000;
         hdr.ch=0;
         hdr.unk2=1;
-	hdrsize = 32;
 	fi2rec.addr=0;
 	fi2rec.fboot = 1;
 	if ( !(fi = fopen(infname, "rb")) ){
