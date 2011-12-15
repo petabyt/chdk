@@ -70,7 +70,10 @@
     #define CAM_ACTIVE_AREA_X2 4056
     #define CAM_ACTIVE_AREA_Y2 3038
     // camera name
-    #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
+    #define PARAM_CAMERA_NAME 4 	// parameter number for GetParameterData
+	#define PARAM_DISPLAY_MODE1	57	// param number for LCD display mode when camera in playback
+	#define PARAM_DISPLAY_MODE2	58	// param number for LCD display mode when camera in record view hold mode	
+	
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
 

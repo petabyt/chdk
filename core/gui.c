@@ -2352,8 +2352,60 @@ void gui_draw_debug_vals_osd() {
     }
 #endif
 }
+
 //-------------------------------------------------------------------
-//extern int xxxx, eeee;
+// int osd_visible( uint playmode )  		// playmode = m&MODE_MASK from gui_draw_osd()
+// 											// hide_osd =  0=Don't, 1=In Playback, 2=On Disp Press, 3=Both
+//-------------------------------------------------------------------
+int osd_visible(unsigned int playmode)		
+{
+	if ( conf.hide_osd == 0 ) return(1) ;
+	
+	if( !kbd_is_key_pressed(KEY_SHOOT_HALF))
+	{	
+		if (playmode == MODE_REC)
+		{	
+			if ( conf.hide_osd < 2 ) return( 1 ) ;
+			
+#if defined(PARAM_DISPLAY_MODE1) && defined(PARAM_DISPLAY_MODE2)
+
+			short disp_key_mode ;
+			if (recreview_hold==0)
+			{	
+				if ( shooting_get_prop(PROPCASE_DISPLAY_MODE) == 0) return( 1 );			
+			}
+			else
+			{
+				if (conf.show_osd_in_review )
+				{
+					get_parameter_data(PARAM_DISPLAY_MODE2, &disp_key_mode, 2);		
+					if (disp_key_mode == 0 ) return( 1 ) ;
+				}
+			}
+		}
+		else
+		{
+			if (conf.hide_osd == 2 ) 
+			{	
+				short disp_key_mode ;
+
+				get_parameter_data(PARAM_DISPLAY_MODE1, &disp_key_mode, 2);
+				if (disp_key_mode == 1 ) return( 1 ) ;
+			}
+		}
+	}
+#else
+			if ( shooting_get_prop(PROPCASE_DISPLAY_MODE) == 0) return( 1 );
+		}
+	}
+#endif		
+
+	return( 0 ) ;
+	
+}
+
+//-------------------------------------------------------------------
+// void gui_draw_osd()
 //-------------------------------------------------------------------
 void gui_draw_osd() {
     unsigned int m, /*n = 0,*/ mode_photo, mode_video;
@@ -2486,28 +2538,22 @@ void gui_draw_osd() {
 		   gui_osd_draw_values(0);
     }
 
-
-    if ((recreview_hold==0) &&  (!kbd_is_key_pressed(KEY_SHOOT_HALF) &&  (  ((m&MODE_MASK) == MODE_REC) || (!((m&MODE_MASK) == MODE_REC) &&  !((conf.hide_osd == 1) || (conf.hide_osd == 3)) )) && !(((conf.hide_osd == 2) || (conf.hide_osd == 3))&& (shooting_get_prop(PROPCASE_DISPLAY_MODE) == 1))))   {
+    if ( osd_visible(m&MODE_MASK) )  
+    {
         gui_batt_draw_osd();
         gui_space_draw_osd();
         gui_usb_draw_osd();
+        if(conf.show_temp>0) gui_osd_draw_temp();
         if (conf.fast_ev && !mode_video && (m&MODE_MASK) == MODE_REC ) gui_osd_draw_ev();
     }
 
-    if ((conf.show_clock) && (recreview_hold==0) &&  ((!kbd_is_key_pressed(KEY_SHOOT_HALF) &&  (  ((m&MODE_MASK) == MODE_REC) || (!((m&MODE_MASK) == MODE_REC) &&  !((conf.hide_osd == 1) || (conf.hide_osd == 3)) )) && !(((conf.hide_osd == 2) || (conf.hide_osd == 3))&& (shooting_get_prop(PROPCASE_DISPLAY_MODE) == 1)))|| (conf.clock_halfpress==0) )) {
-        gui_osd_draw_clock(0,0,0);
-    }
-    else if ((conf.show_clock) && (recreview_hold==0) &&  kbd_is_key_pressed(KEY_SHOOT_HALF) && conf.clock_halfpress==1) {
-        gui_osd_draw_seconds();
-    }
+    if ( conf.show_clock )
+	{
+		if ( osd_visible(m&MODE_MASK) || ( kbd_is_key_pressed(KEY_SHOOT_HALF) && conf.clock_halfpress==0) ) gui_osd_draw_clock(0,0,0);
+		else if ( kbd_is_key_pressed(KEY_SHOOT_HALF) && conf.clock_halfpress==1 ) gui_osd_draw_seconds();
+	}
 
-    if ((conf.show_temp>0) && (recreview_hold==0) &&  ((!kbd_is_key_pressed(KEY_SHOOT_HALF) &&  (  ((m&MODE_MASK) == MODE_REC) || (!((m&MODE_MASK) == MODE_REC) &&  !((conf.hide_osd == 1) || (conf.hide_osd == 3)) )) && !(((conf.hide_osd == 2) || (conf.hide_osd == 3))&& (shooting_get_prop(PROPCASE_DISPLAY_MODE) == 1)) )|| (conf.clock_halfpress==0) )) {
-        gui_osd_draw_temp();
-    }
-    if (conf.show_movie_time > 0 && (mode_video || movie_status > 1)) {
-        gui_osd_draw_movie_time_left();
-    }
-
+    if ( conf.show_movie_time > 0 && (mode_video || movie_status > 1)) gui_osd_draw_movie_time_left();
 #if CAM_DRAW_EXPOSITION
     if (gui_mode==GUI_MODE_NONE && kbd_is_key_pressed(KEY_SHOOT_HALF) && ((m&MODE_MASK)==MODE_REC) && ((m&MODE_SHOOTING_MASK))!=MODE_VIDEO_STD && (m&MODE_SHOOTING_MASK)!=MODE_VIDEO_COMPACT) {
      strcpy(osd_buf,shooting_get_tv_str());
