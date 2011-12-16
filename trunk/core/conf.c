@@ -566,6 +566,7 @@ void conf_load_defaults() {
                 memcpy(conf_info[i].var, &(conf_info[i].i), conf_info[i].size);
                 break;
             case CONF_INT_PTR:
+            case CONF_VALUE_PTR:
             case CONF_OSD_POS_PTR:
             case CONF_CHAR_PTR:
                 memcpy(conf_info[i].var, conf_info[i].ptr, conf_info[i].size);
