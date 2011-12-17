@@ -368,7 +368,7 @@ void patch_bad_pixel(unsigned int x,unsigned  int y) {
     int i,j;
     int val;
     if ((x>=2) && (x<CAM_RAW_ROWPIX-2) && (y>=2) && (y<CAM_RAW_ROWS-2)) {
-        if ((conf.bad_pixel_removal==1) || conf.dng_raw) {  // interpolation or DNG saving
+        if ((conf.bad_pixel_removal==1) || (conf.save_raw && conf.dng_raw)) {  // interpolation or DNG saving
             for (i=-2; i<=2; i+=2)
                 for (j=-2; j<=2; j+=2)
                     if ((i!=0) && (j!=0)) {
