@@ -12,6 +12,7 @@
 #include "stdlib.h"
 #include "conf.h"
 #include "gui_draw.h"
+#include "dng.h"
 
 /************* DYNAMIC LIBRARY RAWOPERATION ******/
 
@@ -241,4 +242,11 @@ void module_fselect_init(int title, const char* prev_dir, const char* default_di
 	module_fselect_init_w_mode(title, prev_dir, default_dir, on_select, 0/*key_redraw_mode*/);
 }
 
+/************* OTHER MODULES ******/
 
+void module_convert_dng_to_chdk_raw(char* fn)
+{
+#if DNG_SUPPORT
+	convert_dng_to_chdk_raw(fn);
+#endif
+}

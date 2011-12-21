@@ -121,9 +121,9 @@ static int load_module_info(char* fn)
 //---------------------------------------------------------
 CMenu* scan_directory(const char* dir) {
 
-    DIR           *d;
-    struct dirent *de;
-    static struct stat   st;
+    STD_DIR           *d;
+    struct STD_dirent *de;
+    static struct STD_stat   st;
 
 	char curdir[100];
 	strcpy( curdir, dir);
@@ -138,11 +138,11 @@ CMenu* scan_directory(const char* dir) {
 	//		second exact check and filling each elements
 	for ( iter=1; iter<=2; iter++ )
 	{
-	    d = opendir(curdir);
+	    d = safe_opendir(curdir);
     	if (!d) return 0;
 
 		count = 0;
-	    for( de = readdir(d); de; de = readdir(d) ) {
+	    for( de = safe_readdir(d); de; de = safe_readdir(d) ) {
 
             if (de->d_name[0] == 0xE5 /* deleted entry */ )
 				continue;
@@ -154,7 +154,7 @@ CMenu* scan_directory(const char* dir) {
 				continue;
 
            	sprintf(buf, "%s/%s", curdir, de->d_name);
-	        if (stat(buf, &st)!=0) 
+	        if (safe_stat(buf, &st)!=0) 
 				continue;
 			
 			if ( st.st_attrib != DOS_ATTR_DIRECTORY &&
@@ -212,12 +212,12 @@ CMenu* scan_directory(const char* dir) {
 			count++;
 		}
 
-		closedir(d);
+		safe_closedir(d);
 
 		// Iteration#1 final: allocate menuitems
 		if (iter==1) {
 
-			if ( count==0 )	{ closedir(d); return 0;}
+			if ( count==0 )	{ safe_closedir(d); return 0;}
 
 			len = sizeof(CMenu) + sizeof(CMenuItem)*(count+2);
 			mmenu=malloc( len );

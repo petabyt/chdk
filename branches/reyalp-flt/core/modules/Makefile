@@ -14,7 +14,7 @@ CFLAGS+=$(CTHUMB) -mlong-calls
 # warning: library order matters!
 LDLIBS= -lgcc
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(topdir)tools/link-boot.ld
-LDOPTS+=-Wl,-N,-Ttext,$(MEMISOSTART) -r -Wl,-d
+LDOPTS+=-Wl,-N,-Ttext,0x0016ee30 -r -Wl,-d
 
 OBJS=../gui_calendar.o ../gui_bench.o ../gui_4wins.o ../gui_mastermind.o ../gui_reversi.o \
 	 ../gui_sokoban.o ../gui_read.o ../gui_debug.o  ../gui_tetris.o ../gui_snake.o

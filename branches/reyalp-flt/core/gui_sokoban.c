@@ -274,9 +274,9 @@ int gui_sokoban_init() {
     if(!num_levels) {
         char *buf,*p;
         FILE *fd;    
-        struct stat st;
+        struct STD_stat st;
 
-        if (stat((char *)level_file_name,&st) != 0 || st.st_size==0) 
+        if (safe_stat((char *)level_file_name,&st) != 0 || st.st_size==0) 
             return 0;
 
         fd=fopen(level_file_name,"rb");
@@ -368,20 +368,11 @@ void gui_sokoban_kbd_process() {
             sokoban_redo();
             need_redraw = 1;
             break;
-      #if CAM_HAS_ERASE_BUTTON
         case KEY_ERASE:
-      #else
         case KEY_DISPLAY:
-      #endif
             sokoban_set_level(*conf_sokoban_level);
             need_redraw_all = 1;
             break;
-      #if CAM_HAS_ERASE_BUTTON
-        case KEY_DISPLAY:
-            gui_mbox_init(LANG_MBOX_ABOUT_TITLE, (int)"SOKOBAN\n(c) GrAnd, 2007", MBOX_TEXT_CENTER, NULL);
-            need_redraw = 1;
-            break;
-     #endif
     }
 }
 

@@ -249,7 +249,7 @@ void draw_mode()
 	if (mode_rival==1)
 		draw_txt_string(x, 4, lang_str(LANG_CONNECT4_HUMAN), TEXT_COLOR);
 	else
-		draw_txt_string(x, 4, PLATFORM, TEXT_COLOR);
+		draw_txt_string(x, 4, "cam", TEXT_COLOR);
 }
 //-------------------------------------------------------------------
 void change_mode()

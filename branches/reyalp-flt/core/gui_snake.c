@@ -319,11 +319,8 @@ void gui_snake_kbd_process() {
              
              
             break;
-      #if CAM_HAS_ERASE_BUTTON
         case KEY_ERASE:
-      #else
         case KEY_DISPLAY:
-      #endif
             break;
     }
 }

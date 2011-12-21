@@ -64,14 +64,14 @@ static void gui_read_draw_scroll_indicator() {
 
 //-------------------------------------------------------------------
 int gui_read_init(const char* file) {
-    static struct stat   st;
-    read_file = open(file, O_RDONLY, 0777);
+    static struct STD_stat   st;
+    read_file = safe_open(file, O_RDONLY, 0777);
     if (strcmp(file, conf_reader_file)!=0) {
         *conf_reader_pos = 0;
         strcpy(conf_reader_file, file);
     }
     read_on_screen = 0;
-    read_file_size = (read_file>=0 && stat((char*)file, &st)==0)?st.st_size:0;
+    read_file_size = (read_file>=0 && safe_stat((char*)file, &st)==0)?st.st_size:0;
     if (read_file_size<=*conf_reader_pos) {
         *conf_reader_pos = 0;
     }

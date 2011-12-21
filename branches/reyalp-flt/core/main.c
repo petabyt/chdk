@@ -216,6 +216,10 @@ void core_spytask() {
 		sprintf(osd_buf, "%d", cnt );	// modify cnt to what you want to display
 		draw_txt_string(2, 2, osd_buf, conf.osd_color);
 #endif	
+
+		// Process async module unload requests
+		module_tick_unloader();
+
         msleep(20);
     }
 }

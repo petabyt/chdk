@@ -119,11 +119,8 @@ void gui_calendar_kbd_process() {
             }
             need_redraw = 1;
             break;
-      #if CAM_HAS_ERASE_BUTTON
         case KEY_ERASE:
-      #else
         case KEY_DISPLAY:
-      #endif
             calendar_goto_today();
             need_redraw = 1;
             break;

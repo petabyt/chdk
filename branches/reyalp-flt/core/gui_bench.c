@@ -170,7 +170,7 @@ static void gui_bench_run() {
         bench_to_draw = 2;
     }
 
-    x = open("A/BENCH.TMP", O_WRONLY|O_CREAT, 0777);
+    x = safe_open("A/BENCH.TMP", O_WRONLY|STD_O_CREAT, 0777);
     if (x>=0) {
         bench.disk_write_raw_bps = 0;
         gui_bench_draw();
@@ -182,7 +182,7 @@ static void gui_bench_run() {
         bench_to_draw = 2;
     }
 
-    x = open("A/BENCH.TMP", O_WRONLY|O_CREAT, 0777);
+    x = safe_open("A/BENCH.TMP", O_WRONLY|STD_O_CREAT, 0777);
     if (x>=0) {
         bench.disk_write_mem_bps = 0;
         gui_bench_draw();
@@ -195,7 +195,7 @@ static void gui_bench_run() {
     }
 
     if (buf) {
-        x = open("A/BENCH.TMP", O_WRONLY|O_CREAT, 0777);
+        x = safe_open("A/BENCH.TMP", O_WRONLY|STD_O_CREAT, 0777);
         if (x>=0) {
             bench.disk_write_buf_bps = 0;
             gui_bench_draw();
@@ -209,7 +209,7 @@ static void gui_bench_run() {
             bench_to_draw = 2;
         }
 
-        x = open("A/BENCH.TMP", O_RDONLY, 0777);
+        x = safe_open("A/BENCH.TMP", O_RDONLY, 0777);
         if (x>=0) {
             bench.disk_read_buf_bps = 0;
             gui_bench_draw();

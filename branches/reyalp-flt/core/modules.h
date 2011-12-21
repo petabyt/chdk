@@ -37,4 +37,9 @@ void module_fselect_init_w_mode(int title, const char* prev_dir, const char* def
 void module_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode);
 
 
+
+//--------------------------
+void module_convert_dng_to_chdk_raw(char* fn);
+
+
 #endif

@@ -27,7 +27,7 @@ gui_handler GUI_MODE_MASTERMIND =
 int curr_x;
 int curr_y;
 int answer[4];
-char colors[6] = { COLOR_HISTO_R_PLAY, COLOR_HISTO_G_PLAY, COLOR_HISTO_B_PLAY, COLOR_YELLOW, COLOR_WHITE, COLOR_BLACK };
+char colors[6];
 int curr_color[4];
 int GameGo;
 static char buf[128];
@@ -239,6 +239,13 @@ void gui_mastermind_draw(int enforce_redraw) {
 
 
 int basic_module_init() {
+	colors[0] = COLOR_HISTO_R_PLAY;
+	colors[1] = COLOR_HISTO_G_PLAY;
+	colors[2] = COLOR_HISTO_B_PLAY;
+	colors[3] = COLOR_YELLOW;
+	colors[4] = COLOR_WHITE;
+	colors[5] = COLOR_BLACK;
+
 	return gui_mastermind_init(); 
 }
 

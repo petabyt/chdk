@@ -31,9 +31,9 @@ void unload_bad_pixels_list_b(void);
 void patch_bad_pixels_b(void);
 void unpatch_bad_pixels_b(void);
 int badpixel_list_loaded_b(void);
-char* get_raw_image_addr(void);
 void create_badpixel_bin();
 #endif
+char* get_raw_image_addr(void);
 
 //-------------------------------------------------------------------
 #endif

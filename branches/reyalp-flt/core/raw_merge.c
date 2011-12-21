@@ -55,12 +55,12 @@ int raw_subtract(const char *from, const char *sub, const char *dest) {
 
     static struct utimbuf t;
 
-    struct stat st;
+    struct STD_stat st;
 
-    if (stat((char *)from,&st) != 0 || st.st_size!=hook_raw_size()) 
+    if (safe_stat((char *)from,&st) != 0 || st.st_size!=hook_raw_size()) 
         return 0;
 
-    if (stat((char *)sub,&st) != 0 || st.st_size!=hook_raw_size()) 
+    if (safe_stat((char *)sub,&st) != 0 || st.st_size!=hook_raw_size()) 
         return 0;
 
      if( (baccum=malloc(RAW_CHDK_ROWLEN)) &&
@@ -211,12 +211,12 @@ int raw_merge_start(int action){
 void raw_merge_add_file(const char * filename) {
   int  t,src,i,j,nrow;
   FILE *fbrawin=NULL,*fbrawout,*fcraw;
-  struct stat st;
+  struct STD_stat st;
 
   if (!filename)
     return;
 
-  stat(filename,&st);
+  safe_stat(filename,&st);
   if (st.st_size!=hook_raw_size())
     return;
 

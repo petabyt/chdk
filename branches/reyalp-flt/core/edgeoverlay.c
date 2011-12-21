@@ -6,6 +6,8 @@
 #include "stdlib.h"
 #include "gui_draw.h"
 #include "bitvector.h"
+#include "module_exportlist.h"
+
 
 // the way we save edge overlays on their own...
 #define EDGE_FILE_PREFIX "EDG_"
@@ -131,11 +133,11 @@ void save_edge_overlay(void)
     char fn[64];
     char msg[64];
     FILE *fd;
-    DIR* d;
+    STD_DIR* d;
     int fnum = 0;
     int fr = 0;
     int zoom = 0;
-    struct dirent* de;
+    struct STD_dirent* de;
     static struct utimbuf t;
     // nothing to save? then dont save
 
@@ -148,13 +150,13 @@ void save_edge_overlay(void)
     zoom = shooting_get_zoom();
 
     // first figure out the most appropriate filename to use
-    d = opendir(EDGE_SAVE_DIR);
+    d = safe_opendir(EDGE_SAVE_DIR);
     if( ! d )
     {
         return;
     }
 
-    while( (de = readdir(d)) )
+    while( (de = safe_readdir(d)) )
     {
         fr = get_edge_file_num(de->d_name);
         if( fr > fnum )
@@ -178,7 +180,7 @@ void save_edge_overlay(void)
         sprintf(msg, "Saved as %s",fn);
         draw_string(0, 0, msg, *conf_osd_color);
     }
-    closedir(d);
+    safe_closedir(d);
 }
 
 // load the edge overlay from a file

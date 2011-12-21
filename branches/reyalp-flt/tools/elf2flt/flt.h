@@ -89,7 +89,7 @@ struct ModuleInfo
 	uint32_t magicnum;
 	uint32_t sizeof_struct;
 	uint16_t chdk_required_branch;
-	uint16_t chdk_required_ver;
+	uint32_t chdk_required_ver;
 	uint32_t chdk_required_platfid;
 	uint32_t flags;
 

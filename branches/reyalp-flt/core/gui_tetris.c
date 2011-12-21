@@ -120,8 +120,8 @@ StcGame *game;
 long mkdir_if_not_exist(const char *dirname) 
 {
     // Check if directory exists and create it if it does not.
-    struct stat st;
-    if (stat(dirname,&st) != 0) return mkdir(dirname);
+    struct STD_stat st;
+    if (safe_stat(dirname,&st) != 0) return mkdir(dirname);
     return 0;   // Success
 }
 
