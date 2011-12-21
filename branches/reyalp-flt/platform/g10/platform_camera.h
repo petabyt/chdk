@@ -63,6 +63,8 @@
     #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
 	
     #define PARAM_CAMERA_NAME 				4 			// parameter number for GetParameterData
+	#define PARAM_DISPLAY_MODE1				57			// param number for LCD display mode when camera in playback
+	#define PARAM_DISPLAY_MODE2				58			// param number for LCD display mode when camera in record view hold mode
 	
     #undef CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE				2

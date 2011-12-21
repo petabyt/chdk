@@ -4,6 +4,9 @@
 static char* preparsed_lang_default_start=0;
 static char* preparsed_lang_default_end=0;            // @this is for correct detection which is in heap
 
+// This is threshold to determine is this id in .lng or just string
+#define MAX_LANGID 0x1000
+
 //-------------------------------------------------------------------
 
 static char** strings = NULL;        // string list (allocated at heap or mapped from gui_lang.c);
@@ -163,9 +166,24 @@ void lang_load_from_file(const char *filename) {
 
 //-------------------------------------------------------------------
 char* lang_str(int str) {
-    if (str && str<0x1000) {
+    if (str && str<MAX_LANGID) {
         return (strings && str<count && strings[str])?strings[str]:"";
     } else { // not ID, just char*
         return (char*)str;
     }
+}
+
+//-------------------------------------------------------------------
+unsigned lang_strhash31(int langid)
+{
+    if ( langid<MAX_LANGID ) 
+		return langid;
+
+	unsigned char* str = (unsigned char*)langid;
+	unsigned hash=0;
+	for ( ; *str; str++ )
+		hash = *str ^ (hash<<6) ^ (hash>>25);
+	if ( langid<MAX_LANGID )
+		hash |= (1<<31);
+	return hash;
 }

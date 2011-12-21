@@ -24,9 +24,6 @@
     #define CAM_DRYOS                   1
     #define CAM_DRYOS_2_3_R39			1
 
-    #define CAM_RAW_ROWPIX              3744
-    #define CAM_RAW_ROWS                2784
-
 	#define CAM_SWIVEL_SCREEN			1
 
     #undef  CAM_EMUL_KEYPRESS_DURATION
@@ -46,7 +43,7 @@
     #define CAM_EXT_TV_RANGE            1
 	#define CAM_QUALITY_OVERRIDE 1
     #undef CAM_UNCACHED_BIT
-    #define CAM_UNCACHED_BIT            0x40000000  // S90 @FF8875FC(via ExMem.FreeCacheable)
+    #define CAM_UNCACHED_BIT                0x40000000
 	#define CAM_SHOW_OSD_IN_SHOOT_MENU  1
     #define CAM_DETECT_SCREEN_ERASE     1       // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
 
@@ -58,6 +55,8 @@
 
     // camera name
     #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
+    #define PARAM_DISPLAY_MODE1             59  // param number for LCD display mode when camera in playback
+    #define PARAM_DISPLAY_MODE2             62  // param number for LCD display mode when camera in record view hold mode
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
 
@@ -84,7 +83,9 @@
       -1508, 10000,  9858, 10000,  1935, 10000, \
        -270, 10000,  1083, 10000,  4366, 10000
 
-    // cropping
+    // Sensor size, DNG image size & cropping
+    #define CAM_RAW_ROWPIX                  3744
+    #define CAM_RAW_ROWS                    2784
     #define CAM_JPEG_WIDTH  3684
     #define CAM_JPEG_HEIGHT 2760
     #define CAM_ACTIVE_AREA_X1 52
@@ -105,7 +106,7 @@
 
     #define CAM_FIRMWARE_MEMINFO        1       // Use 'GetMemInfo' to get free memory size.
 
-    #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 	

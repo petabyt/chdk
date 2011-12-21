@@ -6,7 +6,9 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-char* load_from_file(const char* filename);
+extern char* load_from_file(const char* filename);
+extern void cut_export_token( char* sym );
+char* find_last_token(char* sym );
 
 int num_lines=0;
 
@@ -51,24 +53,29 @@ int main( int argc, char **argv )
 
 	// Separate CHDK build num
 	char* build = BUILD_NUMBER;
+	char* e;
     int build_num=0;
+	int mult=10000;
     for ( ; *build; build++) {
-        build_num = strtol(build, NULL, 0/*autodetect base oct-dec-hex*/);	
-		if ( build_num>100 )
-			 break;
+		if ( *build<'0' || *build>'9') continue;
+        build_num += mult*strtol(build, &e, 0/*autodetect base oct-dec-hex*/);
+		if ( mult==1 ) break;
+		build=e;
+		mult/=100;
 	}
 	if ( *build )
-		fprintf(out_h,"#define CHDK_BUILD_NUM %d\n",build_num);
+		fprintf(out_h,"#define CHDK_BUILD_NUM %d\n\n",build_num);
 
 	num_lines=0;
 
-    char* cur, *cursym;
+    char* cur, *cursym, *symbol;
 
     cur = file1;
 
     const char* exp_def_tag="/* EXPORTED_DEFINES_";
 	int flag_section_defines = 0;
 
+	fprintf(out_h,"#ifndef THIS_IS_CHDK_CORE\n");
     for(; *cur && *cur!='{'; cur++) {
 
 		if ( !strncmp(cur,exp_def_tag,strlen(exp_def_tag)) )
@@ -88,11 +95,16 @@ int main( int argc, char **argv )
 			if ( *cur=='=' ) {
 				*cur=0;
 				cur++;
+				cut_export_token(cursym);
+				symbol = find_last_token(cursym);
+				fprintf(out_h,"#undef %s\n",symbol);
 				fprintf(out_h,"extern %s;\n",cursym);
     			for(; *cur && *cur!=10; cur++);		//goto eol
 			}
 		}
     }
+
+	fprintf(out_h,"#endif\n");
 
 	fprintf(out_h,"\n\n");
 	fprintf(out_h,"\n//Section: ids of exported symbols\n");
@@ -122,12 +134,13 @@ int main( int argc, char **argv )
 			cur++);
 
 		if (cursym!=cur) {
-			char symbol[33];
+			char symbol[53];
 			int size=cur-cursym;
 
-			if ( size>32) {size=32;}
+			if ( size>52) {size=52;}
 			memcpy(symbol,cursym,size);
 			symbol[size]=0;
+			cut_export_token(symbol);
 
 			if (num_lines>=2) {
 				fprintf(out_txt,"%s\x0a",symbol);
@@ -181,4 +194,33 @@ char* load_from_file(const char *filename)
         close(f);
     }
     return buf;
+}
+
+void cut_export_token( char* sym )
+{
+	const char* token="_EXPORTEDSYM_";
+	int sizetoken = strlen(token);
+	char* src, *fin;
+
+	fin=sym+strlen(sym)-sizetoken;
+	for(;sym<=fin;sym++) {
+		if (!memcmp(sym,token,sizetoken)) {
+			for (src=sym+strlen(token); *src; src++,sym++)
+				*sym=*src;
+			*sym=0;
+			return;
+		}
+	}
+}
+
+char* find_last_token(char* sym )
+{
+	char* token=sym;
+
+	for (;*sym;sym++)
+	{
+		if ( *sym==' ' && sym[1]>' ')
+		 token=sym+1;
+	}
+	return token;
 }

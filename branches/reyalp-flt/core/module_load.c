@@ -9,6 +9,7 @@
 #include "stdlib.h"
 #include "console.h"
 #include "gui.h"
+#include "platform.h"
 
 #include "flt.h"
 #include "module_load.h"
@@ -19,8 +20,7 @@
 //**    TEMPORARY FROM .H FILES   **
 //********************************************************/
 
-#include "module_exportlist.c"
-
+extern void* CHDK_EXPORT_LIST[];
 
 #define MAX_NUM_LOADED_MODULES 10
 #define BUFFER_FOR_READ_SIZE   4096
@@ -168,10 +168,14 @@ static int module_do_imports( struct flat_hdr* flat, uint32_t* relocbuf )
 	{
 		ptr = (uint32_t*)(buf+*relocbuf);
 	  //@tsv todo: if (*relocbuf>=flat->reloc_start) error_out_of_bound
+		// No such symbol to import
 		if ( *ptr<2 || *ptr>EXPORTLIST_LAST_IDX )
 			return 0;
 
-		*ptr = /*0xFFFFFFFE &*/ (uint32_t) CHDK_EXPORT_LIST[*ptr];
+		*ptr = (uint32_t) CHDK_EXPORT_LIST[*ptr];
+		// Empty symbol - module could only if import such symbol manually
+		if ( *ptr==0 )
+			return 0;
 		relocbuf++;
 	}  
     return 1;
@@ -323,7 +327,7 @@ int module_load( char* name, _module_loader_t callback)
        return moduleload_error("require different CHDK branch",0 );
 
 	 if  ( _module_info->chdk_required_ver > CHDK_BUILD_NUM)
-       return moduleload_error("require CHDK%d", _module_info->chdk_required_ver);
+       return moduleload_error("require CHDK%05d", _module_info->chdk_required_ver);
 
      if  ( _module_info->chdk_required_platfid && 
 		   _module_info->chdk_required_platfid != PLATFORMID )

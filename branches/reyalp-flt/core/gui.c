@@ -2350,8 +2350,60 @@ void gui_draw_debug_vals_osd() {
     }
 #endif
 }
+
 //-------------------------------------------------------------------
-//extern int xxxx, eeee;
+// int osd_visible( uint playmode )  		// playmode = m&MODE_MASK from gui_draw_osd()
+// 											// hide_osd =  0=Don't, 1=In Playback, 2=On Disp Press, 3=Both
+//-------------------------------------------------------------------
+int osd_visible(unsigned int playmode)		
+{
+	if ( conf.hide_osd == 0 ) return(1) ;
+	
+	if( !kbd_is_key_pressed(KEY_SHOOT_HALF))
+	{	
+		if (playmode == MODE_REC)
+		{	
+			if ( conf.hide_osd < 2 ) return( 1 ) ;
+			
+#if defined(PARAM_DISPLAY_MODE1) && defined(PARAM_DISPLAY_MODE2)
+
+			short disp_key_mode ;
+			if (recreview_hold==0)
+			{	
+				if ( shooting_get_prop(PROPCASE_DISPLAY_MODE) == 0) return( 1 );			
+			}
+			else
+			{
+				if (conf.show_osd_in_review )
+				{
+					get_parameter_data(PARAM_DISPLAY_MODE2, &disp_key_mode, 2);		
+					if (disp_key_mode == 0 ) return( 1 ) ;
+				}
+			}
+		}
+		else
+		{
+			if (conf.hide_osd == 2 ) 
+			{	
+				short disp_key_mode ;
+
+				get_parameter_data(PARAM_DISPLAY_MODE1, &disp_key_mode, 2);
+				if (disp_key_mode == 1 ) return( 1 ) ;
+			}
+		}
+	}
+#else
+			if ( shooting_get_prop(PROPCASE_DISPLAY_MODE) == 0) return( 1 );
+		}
+	}
+#endif		
+
+	return( 0 ) ;
+	
+}
+
+//-------------------------------------------------------------------
+// void gui_draw_osd()
 //-------------------------------------------------------------------
 void gui_draw_osd() {
     unsigned int m, /*n = 0,*/ mode_photo, mode_video;
@@ -2484,28 +2536,22 @@ void gui_draw_osd() {
 		   gui_osd_draw_values(0);
     }
 
-
-    if ((recreview_hold==0) &&  (!kbd_is_key_pressed(KEY_SHOOT_HALF) &&  (  ((m&MODE_MASK) == MODE_REC) || (!((m&MODE_MASK) == MODE_REC) &&  !((conf.hide_osd == 1) || (conf.hide_osd == 3)) )) && !(((conf.hide_osd == 2) || (conf.hide_osd == 3))&& (shooting_get_prop(PROPCASE_DISPLAY_MODE) == 1))))   {
+    if ( osd_visible(m&MODE_MASK) )  
+    {
         gui_batt_draw_osd();
         gui_space_draw_osd();
         gui_usb_draw_osd();
+        if(conf.show_temp>0) gui_osd_draw_temp();
         if (conf.fast_ev && !mode_video && (m&MODE_MASK) == MODE_REC ) gui_osd_draw_ev();
     }
 
-    if ((conf.show_clock) && (recreview_hold==0) &&  ((!kbd_is_key_pressed(KEY_SHOOT_HALF) &&  (  ((m&MODE_MASK) == MODE_REC) || (!((m&MODE_MASK) == MODE_REC) &&  !((conf.hide_osd == 1) || (conf.hide_osd == 3)) )) && !(((conf.hide_osd == 2) || (conf.hide_osd == 3))&& (shooting_get_prop(PROPCASE_DISPLAY_MODE) == 1)))|| (conf.clock_halfpress==0) )) {
-        gui_osd_draw_clock(0,0,0);
-    }
-    else if ((conf.show_clock) && (recreview_hold==0) &&  kbd_is_key_pressed(KEY_SHOOT_HALF) && conf.clock_halfpress==1) {
-        gui_osd_draw_seconds();
-    }
-
-    if ((conf.show_temp>0) && (recreview_hold==0) &&  ((!kbd_is_key_pressed(KEY_SHOOT_HALF) &&  (  ((m&MODE_MASK) == MODE_REC) || (!((m&MODE_MASK) == MODE_REC) &&  !((conf.hide_osd == 1) || (conf.hide_osd == 3)) )) && !(((conf.hide_osd == 2) || (conf.hide_osd == 3))&& (shooting_get_prop(PROPCASE_DISPLAY_MODE) == 1)) )|| (conf.clock_halfpress==0) )) {
-        gui_osd_draw_temp();
-    }
-    if (conf.show_movie_time > 0 && (mode_video || movie_status > 1)) {
-        gui_osd_draw_movie_time_left();
+    if ( conf.show_clock )
+	{
+		if ( osd_visible(m&MODE_MASK) || ( kbd_is_key_pressed(KEY_SHOOT_HALF) && conf.clock_halfpress==0) ) gui_osd_draw_clock(0,0,0);
+		else if ( kbd_is_key_pressed(KEY_SHOOT_HALF) && conf.clock_halfpress==1 ) gui_osd_draw_seconds();
     }
 
+    if ( conf.show_movie_time > 0 && (mode_video || movie_status > 1)) gui_osd_draw_movie_time_left();
 #if CAM_DRAW_EXPOSITION
     if (gui_mode==GUI_MODE_NONE && kbd_is_key_pressed(KEY_SHOOT_HALF) && ((m&MODE_MASK)==MODE_REC) && ((m&MODE_SHOOTING_MASK))!=MODE_VIDEO_STD && (m&MODE_SHOOTING_MASK)!=MODE_VIDEO_COMPACT) {
      strcpy(osd_buf,shooting_get_tv_str());
@@ -2763,19 +2809,25 @@ void gui_draw_load_lang(int arg) {
     module_fselect_init(LANG_STR_SELECT_LANG_FILE, conf.lang_file, "A/CHDK/LANG", gui_draw_lang_selected);
 }
 
-int find_mnu(CMenu *curr_menu, int mnu, int count)
+CMenuItem* find_mnu(CMenu *curr_menu, int itemid )
 {
 	int gui_menu_curr_item;
+	CMenuItem* rv=0;
+
+	if ( itemid==0 )
+		return 0;		
 
 	gui_menu_curr_item = 0;
 	while(curr_menu->menu[gui_menu_curr_item].text) {
-		if (curr_menu->menu[gui_menu_curr_item].text == mnu){
-			user_submenu_items[count] = curr_menu->menu[gui_menu_curr_item];
-			return 1;
+		if ( lang_strhash31(curr_menu->menu[gui_menu_curr_item].text) == itemid){
+			return (CMenuItem*) &(curr_menu->menu[gui_menu_curr_item]);
 		}
 		if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_SUBMENU)
-			if (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU)
-				if (find_mnu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), mnu, count)) return 1;
+			if (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU) {
+				rv = find_mnu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), itemid);
+				if ( rv )
+					return rv;
+			}
 		gui_menu_curr_item++;
 	}
 	return 0;
@@ -2788,18 +2840,22 @@ void user_menu_save() {
 		 * First entry in user_submenu_items is reserved for the "Main Menu"
  		 * conf.user_menu_vars only traks/saves the real user entries.
  		 */
- 		conf.user_menu_vars[x] = user_submenu_items[x+1].text;
+ 		conf.user_menu_vars[x] = lang_strhash31(user_submenu_items[x+1].text);
 	}
 }
 
 void user_menu_restore() {
-     int x;
+    int x;
+	CMenuItem* item=0;
+
  	for (x=0; x<USER_MENU_ITEMS; x++) {
  		/*
  		 * First entry in user_submenu_items is reserved for the "Main Menu"
  		 * conf.user_menu_vars only traks/saves the real user entries.
  		 */
- 		find_mnu(&root_menu, conf.user_menu_vars[x], x+1);
+ 		 item = find_mnu(&root_menu, conf.user_menu_vars[x]);
+		 if ( item )
+			user_submenu_items[x+1] = *item;
  	}
 }
 

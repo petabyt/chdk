@@ -14,14 +14,15 @@
 #include "gui_draw.h"
 #include "gui_batt.h"
 #include "gui_osd.h"
-#include "conf.h"
 #include "gui_mbox.h"
-#include "raw.h"
 #include "gui_mpopup.h"
+#include "conf.h"
+#include "raw.h"
 #include "bitvector.h"
 #include "font.h"
 
 #include "modules.h"
+#include "module_load.h"
 #include "raw.h"
 #include "dng.h"
 
