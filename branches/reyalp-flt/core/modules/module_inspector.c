@@ -8,7 +8,7 @@
 int module_idx=-1;
 
 extern int basic_module_init();
-void* _getmeminfo=0;
+void (*_getmeminfo)(void*) = 0;
 
 /***************** BEGIN OF AUXILARY PART *********************
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
@@ -174,11 +174,9 @@ void gui_module_draw()
 		// Simple platform-dependend part [not always GetMemInfo exits]
 		if (_getmeminfo) {
 
-			extern void GetMemInfo(cam_meminfo*);
-
 	    	cam_meminfo meminfo;
 			memset(&meminfo,sizeof(meminfo),0);
-    		GetMemInfo(&meminfo);
+    		_getmeminfo(&meminfo);
 
 			char txt[50];
 		    sprintf(txt,"MEM: %08x-%08x: %dbytes",meminfo.start_address, meminfo.end_address, meminfo.total_size);
