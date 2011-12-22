@@ -396,10 +396,10 @@ int md_detect_motion(void){
 #endif
 
 	vp_h = vid_get_viewport_height();
-	vp_w = vid_get_viewport_buffer_width();
+	vp_w = vid_get_viewport_byte_width() * vid_get_viewport_yscale();
 	img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
 
-	x_step=vid_get_viewport_width()/motion_detector->columns;
+	x_step=(vid_get_viewport_width()*3)/motion_detector->columns;
 	y_step=vp_h/motion_detector->rows;
 
 	for (idx=0, row=0; row < motion_detector->rows; row++)
@@ -430,7 +430,7 @@ int md_detect_motion(void){
 				x_end=(col+1)*x_step;
 				y_end=(row+1)*y_step*vp_w;
 				for(y=row*y_step*vp_w; y<y_end; y+=motion_detector->pixels_step*vp_w){
-					for(x=col*x_step; x<x_end; x+=motion_detector->pixels_step){
+					for(x=col*x_step; x<x_end; x+=motion_detector->pixels_step*3){
 
 						// ARRAY of UYVYYY values
 						// 6 bytes - 4 pixels
@@ -438,31 +438,31 @@ int md_detect_motion(void){
 						switch(motion_detector->pixel_measure_mode){
 						default:
 						case MD_MEASURE_MODE_Y:
-							val = img[(y+x)*3 + 1];				//Y
+							val = img[y + x + 1];				//Y
 							break;
 						case MD_MEASURE_MODE_U:
-							val = img[(y+(x&0xFFFFFFFE))*3];		//U
+							val = img[y + (x&0xFFFFFFFE)];		//U
 							break;
 						case MD_MEASURE_MODE_V:
-							val = img[(y+(x&0xFFFFFFFE))*3 + 2];	//V
+							val = img[y + (x&0xFFFFFFFE) + 2];	//V
 							break;
 
 						case MD_MEASURE_MODE_R:
-							cy=img[(y+x)*3 + 1];
-							cv=img[(y+(x&0xFFFFFFFE))*3 + 2];
+							cy=img[y + x + 1];
+							cv=img[y + (x&0xFFFFFFFE) + 2];
 							val = clip(((cy<<12)           + cv*5743 + 2048)>>12); // R
 							break;
 
 						case MD_MEASURE_MODE_G:
-							cy=img[(y+x)*3 + 1];
-							cu=img[(y+(x&0xFFFFFFFE))*3];
-							cv=img[(y+(x&0xFFFFFFFE))*3 + 2];
+							cy=img[y + x + 1];
+							cu=img[y + (x&0xFFFFFFFE)];
+							cv=img[y + (x&0xFFFFFFFE) + 2];
 							val = clip(((cy<<12) - cu*1411 - cv*2925 + 2048)>>12); // G
 							break;
 
 						case MD_MEASURE_MODE_B:
-							cy=img[(y+x)*3 + 1];
-							cu=img[(y+(x&0xFFFFFFFE))*3];
+							cy=img[y + x + 1];
+							cu=img[y + (x&0xFFFFFFFE)];
 							val = clip(((cy<<12) + cu*7258           + 2048)>>12); // B
 							break;
 						}

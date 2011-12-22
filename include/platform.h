@@ -214,19 +214,26 @@ long vid_get_bitmap_screen_width();
 long vid_get_bitmap_screen_height();
 long vid_get_bitmap_buffer_width();
 long vid_get_bitmap_buffer_height();
+
 void *vid_get_viewport_fb();
 void *vid_get_viewport_fb_d();
 void *vid_get_viewport_live_fb();
+
 void vid_bitmap_refresh();
-long vid_get_viewport_height();
-int vid_get_viewport_width();
-int vid_get_viewport_buffer_width();
-int vid_get_viewport_xoffset();
-int vid_get_viewport_yoffset();
-int vid_get_viewport_image_offset();
-int vid_get_viewport_row_offset();
 void vid_turn_off_updates();
 void vid_turn_on_updates();
+
+// These define the viewport dimensions both physically and in terms of the CHDK co-ordinate system
+// CHDK works in a 360x240 screen dimension / co-ordinate system
+extern long vid_get_viewport_height();          // Viewport height in CHDK screen pixels 
+extern int vid_get_viewport_width();            // Viewport width in CHDK screen pixels
+extern int vid_get_viewport_xoffset();          // X offset of viewport edge relative to LCD screen (in CHDK screen pixels)
+extern int vid_get_viewport_yoffset();          // Y offset of viewport top relative to LCD screen (in CHDK screen pixels)
+extern int vid_get_viewport_byte_width();       // Physical width of viewport row in bytes
+extern int vid_get_viewport_yscale();           // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+extern int vid_get_viewport_image_offset();     // Byte offset from start of viewport memory to first displayed pixel
+extern int vid_get_viewport_row_offset();       // Difference between physical width of viewport and displayed width (in bytes)
+
 
 // PTP Live View functions
 // These functions return actual size/offset in pixels of the viewport and bitmap buffers
@@ -485,7 +492,7 @@ void set_ev_video(int);
 // new version to support DNG double buffer
 void reverse_bytes_order2(char* from, char* to, int count);
 // convert old version calls to new version (to minimise code changes)
-#define	reverse_bytes_order(start, count)	reverse_bytes_order2(start,start,count)
+#define reverse_bytes_order(start, count) reverse_bytes_order2(start,start,count)
 void save_ext_for_dng(void);
 void change_ext_to_dng(void);
 void change_ext_to_default(void);

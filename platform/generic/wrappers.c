@@ -1165,9 +1165,14 @@ int __attribute__((weak)) vid_get_viewport_width() {
 	return vid_get_bitmap_screen_width();
 }
 
-// same as viewport width for most cameras, override in platform/sub/lib.c as needed
-int __attribute__((weak)) vid_get_viewport_buffer_width() {
-	return vid_get_viewport_width();
+// Physical width of viewport row in bytes
+int __attribute__((weak)) vid_get_viewport_byte_width() {
+	return 720 * 6 / 4;     // For most cameras viewport is 720 pixels wide, each group of 4 pixels uses 6 bytes (UYVYYY)
+}
+
+// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+int __attribute__((weak)) vid_get_viewport_yscale() {
+	return 1;               // For most cameras viewport is 240 pixels high
 }
 
 // viewport x offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
@@ -1183,15 +1188,15 @@ int __attribute__((weak)) vid_get_viewport_yoffset() {
 // viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
 // returns the byte offset into the viewport buffer where the image pixels start (to skip any black borders)
 // see G12 port for sample implementation
-int __attribute__((weak)) vid_get_viewport_image_offset() {
-	return 0;
+int vid_get_viewport_image_offset() {
+	return (vid_get_viewport_yoffset() * vid_get_viewport_byte_width() * vid_get_viewport_yscale()) + (vid_get_viewport_xoffset() * 3);
 }
 
 // viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
 // returns the byte offset to skip at the end of a viewport buffer row to get to the next row.
 // see G12 port for sample implementation
-int __attribute__((weak)) vid_get_viewport_row_offset() {
-	return 0;
+int vid_get_viewport_row_offset() {
+	return (vid_get_viewport_byte_width() * vid_get_viewport_yscale()) - (vid_get_viewport_width() * 3);
 }
 
 // for cameras with two (or more?) RAW buffers this can be used to speed up DNG creation by

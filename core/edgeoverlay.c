@@ -28,6 +28,7 @@ static int slice = 0;           // the current slice of the frame we are calcula
 static int slice_height;        // the height of a single slice
 
 static int viewport_byte_width; // width in bytes of one viewport line ??
+static int viewport_yscale;     // Y multiplier (for cameras with 480 pixel high viewports)
 static int viewport_height;     // height of visible / used area of viewport
 static int viewport_width;      // width of visible / used area of viewport (in 3 byte units)
 static int viewport_xoffset;	// used when image size != viewport size (e.g. wide screen image on 4:3 LCD)
@@ -37,7 +38,8 @@ static void get_viewport_size()
 {
     viewport_height = vid_get_viewport_height()-EDGE_HMARGIN*2; //don't trace bottom lines
     viewport_width = vid_get_viewport_width();
-    viewport_byte_width = vid_get_viewport_buffer_width() * 3;
+    viewport_byte_width = vid_get_viewport_byte_width();
+    viewport_yscale = vid_get_viewport_yscale();
 
 	viewport_xoffset = vid_get_viewport_xoffset();
 	viewport_yoffset = vid_get_viewport_yoffset();
@@ -201,8 +203,8 @@ static void average_filter_row(const unsigned char* ptrh1,  // previous row
                                unsigned char* smptr,        // write results here
                                int x, int x_max)
 {
-    const unsigned char* ptrh2 = ptrh1 + viewport_byte_width;  // current row
-    const unsigned char* ptrh3 = ptrh2 + viewport_byte_width;  // next row
+    const unsigned char* ptrh2 = ptrh1 + viewport_byte_width*viewport_yscale;  // current row
+    const unsigned char* ptrh3 = ptrh2 + viewport_byte_width*viewport_yscale;  // next row
 
     for (; x<x_max; x+=6)
     {
@@ -308,7 +310,7 @@ static int calc_edge_overlay()
         {
             shutter_fullpress |= kbd_is_key_pressed(KEY_SHOOT_FULL);
 
-            ptrh1 = img + (y_min+y-1) * viewport_byte_width;
+            ptrh1 = img + (y_min+y-1) * viewport_byte_width*viewport_yscale;
             smptr = smbuf + (y+1) * viewport_byte_width;
 
             average_filter_row(ptrh1, smptr, x_min, x_max);
@@ -331,7 +333,7 @@ static int calc_edge_overlay()
             memcpy(smbuf, smbuf+viewport_byte_width, viewport_byte_width*2);
 
             // Filter new line
-            ptrh1 = img + y * viewport_byte_width;
+            ptrh1 = img + y * viewport_byte_width*viewport_yscale;
             smptr = smbuf + 2 * viewport_byte_width;
             average_filter_row(ptrh1, smptr, x_min, x_max);
 
@@ -339,10 +341,10 @@ static int calc_edge_overlay()
         }
         else
         {
-            ptrh1 = img + (y-1) * viewport_byte_width;
+            ptrh1 = img + (y-1) * viewport_byte_width*viewport_yscale;
         }
-        ptrh2 = ptrh1 + viewport_byte_width;
-        ptrh3 = ptrh2 + viewport_byte_width;
+        ptrh2 = ptrh1 + viewport_byte_width*viewport_yscale;
+        ptrh3 = ptrh2 + viewport_byte_width*viewport_yscale;
 
         // Now we do sobel on the current line
 

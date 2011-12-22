@@ -95,7 +95,10 @@ long vid_get_bitmap_screen_height() { return 240; }
 long vid_get_bitmap_buffer_width() { return 960; }
 long vid_get_bitmap_buffer_height() { return 270; }
 
-int vid_get_viewport_buffer_width() { return 720; }	// G12 - viewport is actually 480 high, CHDK not set up for this so we skip every 2nd row
+// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+int vid_get_viewport_yscale() {
+	return 2;               // G12 viewport is 480 pixels high
+}
 
 int vid_get_viewport_width()
 {
@@ -127,18 +130,6 @@ int vid_get_viewport_yoffset()
 	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
 	static long vp_h[5] = { 0, 30, 13, 0, 0 };
 	return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-}
-
-// viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
-// returns the byte offset into the viewport buffer where the image pixels start (to skip any black borders)
-int vid_get_viewport_image_offset() {
-	return (vid_get_viewport_yoffset() * vid_get_viewport_buffer_width() + vid_get_viewport_xoffset()) * 3;
-}
-
-// viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
-// returns the byte offset to skip at the end of a viewport buffer row to get to the next row.
-int vid_get_viewport_row_offset() {
-	return (vid_get_viewport_buffer_width() - vid_get_viewport_width()) * 3;
 }
 
 // Functions for PTP Live View system

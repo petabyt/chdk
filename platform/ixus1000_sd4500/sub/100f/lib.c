@@ -161,13 +161,34 @@ long vid_get_bitmap_screen_height()
 	return 240;
 }
 
+// begin 16:9 support
+
+// Physical width of viewport row in bytes
+int vid_get_viewport_byte_width() {
+	return 960 * 6 / 4;     // IXUS 1000 - wide screen LCD is 960 pixels wide, each group of 4 pixels uses 6 bytes (UYVYYY)
+}
 
 int vid_get_viewport_width()
 {
-    //return ((mode_get()&MODE_MASK) == MODE_VIDEO_STD ||(mode_get()&MODE_MASK) == MODE_PLAY)?480:320;
-    return 480; // as in sd980
-    //return 360;                                               // stays at 360 as IN SD990
+    extern int kbd_debug1;
+    //kbd_debug1 = mode_get();
+    if (movie_status > 1){return 480;}
+    if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1 )	// on 16:9 shoot mode its 1.switch to video is 100
+		return 480; 
+    else
+       return 360; 
 }
+
+int vid_get_viewport_xoffset()
+{
+    if (movie_status > 1){return 0;}
+	if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1  || ((mode_get()&MODE_MASK)== 100 ))	
+	   return 0;
+	else
+       return 60;
+}
+
+// end 16:9 support
 
 long vid_get_viewport_height()
 {

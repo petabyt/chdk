@@ -80,7 +80,7 @@ void histogram_process()
 	    	  img = vid_get_viewport_fb();
 		    }
 			img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
-            viewport_size = vid_get_viewport_height() * vid_get_viewport_buffer_width();
+            viewport_size = vid_get_viewport_height() * vid_get_viewport_byte_width() * vid_get_viewport_yscale();
             for (c=0; c<5; ++c) {
                 for (i=0; i<HISTO_WIDTH; ++i) {
                     histogram_proc[c][i]=0;
@@ -95,7 +95,7 @@ void histogram_process()
         case 2:
         case 3:
 			x = 0;	// count how many blocks we have done on the current row (to skip unused buffer space at end of each row)
-            for (i=(histogram_stage-1)*6; i<viewport_size*3; i+=HISTO_STEP_SIZE*6) {
+            for (i=(histogram_stage-1)*6; i<viewport_size; i+=HISTO_STEP_SIZE*6) {
                 y = img[i+1];
                 u = *(signed char*)(&img[i]);
                 if (u&0x00000080) u|=0xFFFFFF00;
