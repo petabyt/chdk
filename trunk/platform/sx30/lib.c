@@ -91,8 +91,6 @@ long vid_get_bitmap_screen_height() { return 240; }
 long vid_get_bitmap_buffer_width() { return 960; }
 long vid_get_bitmap_buffer_height() { return 270; }
 
-int vid_get_viewport_width() { return 360; }
-
 long vid_get_viewport_height()
 {
 	if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)	// Wide screen top & bottom 30 pixels not used in viewport
@@ -105,12 +103,6 @@ int vid_get_viewport_yoffset()
 	if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)	// Wide screen top & bottom 30 pixels not used in viewport
 		return 30;
 	return 0;
-}
-
-// viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
-// returns the byte offset into the viewport buffer where the image pixels start (to skip any black borders)
-int vid_get_viewport_image_offset() {
-	return (vid_get_viewport_yoffset() * vid_get_viewport_buffer_width()) * 3;
 }
 
 // Functions for PTP Live View system

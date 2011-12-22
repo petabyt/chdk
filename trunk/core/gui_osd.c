@@ -397,7 +397,8 @@ int gui_osd_draw_zebra(int show) {
     static int need_restore=0;
     int viewport_height;
     int viewport_width; 
-    int viewport_buffer_width; // for when viewport memory buffer is wider than viewport
+    int viewport_image_offset;  // for when viewport memory buffer is wider than viewport
+    int viewport_row_offset;    // for when viewport memory buffer is wider than viewport
     int viewport_xoffset;	// used when image size != viewport size
     int viewport_yoffset;	// used when image size != viewport size
     int mrec = ((mode_get()&MODE_MASK) == MODE_REC);
@@ -443,7 +444,8 @@ int gui_osd_draw_zebra(int show) {
     }
     viewport_height = vid_get_viewport_height();
     viewport_width = vid_get_viewport_width(); 
-    viewport_buffer_width = vid_get_viewport_buffer_width(); 
+    viewport_image_offset = vid_get_viewport_image_offset(); 
+    viewport_row_offset = vid_get_viewport_row_offset(); 
 	viewport_xoffset = vid_get_viewport_xoffset();
 	viewport_yoffset = vid_get_viewport_yoffset();
     switch (conf.zebra_mode) {
@@ -476,7 +478,7 @@ int gui_osd_draw_zebra(int show) {
         int step_x, step_v, sy, sx;
         over = 255-conf.zebra_over;
             if (conf.zebra_multichannel) {step_x=2; step_v=6;} else {step_x=1; step_v=3;}
-            for (y=viewport_yoffset, v=(viewport_yoffset*viewport_buffer_width+viewport_xoffset)*3; y<viewport_yoffset+viewport_height; ++y) {
+            for (y=viewport_yoffset, v=viewport_image_offset; y<viewport_yoffset+viewport_height; ++y) {
                 sy=y*screen_buffer_width;
                 sx=viewport_xoffset;
 				if (viewport_xoffset > 0) { // clear left & right areas of buffer if image width if smaller than viewport
@@ -515,7 +517,7 @@ int gui_osd_draw_zebra(int show) {
                     }
 				}
 				// adjust for cases where buffer is wider than viewport (e.g. on G12)
-				v += ((viewport_buffer_width - viewport_width) * 3);
+				v += viewport_row_offset;
             }
         if (!zebra_drawn) f=0;
     }

@@ -65,8 +65,15 @@ long vid_get_bitmap_screen_height() { return 240; }
 long vid_get_bitmap_buffer_width() { return 960; }
 long vid_get_bitmap_buffer_height() { return 270; }
 
-int vid_get_viewport_buffer_width() { return 960; }
+// Physical width of viewport row in bytes
+int vid_get_viewport_byte_width() {
+	return 960 * 6 / 4;     // SX230HS - wide screen LCD is 960 pixels wide, each group of 4 pixels uses 6 bytes (UYVYYY)
+}
 
+// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+int vid_get_viewport_yscale() {
+	return 2;               // SX230HS viewport is 480 pixels high
+}
 
 
 int vid_get_viewport_width()
@@ -85,30 +92,4 @@ int vid_get_viewport_xoffset()
 	return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
-long vid_get_viewport_height()
-{
-	// viewport height table for each image size
-	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	static long vp_h[4] = { 240, 240, 240, 240 };
-	return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-}
-
-int vid_get_viewport_yoffset()
-{
-	// viewport height offset table for each image size
-	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	static long vp_h[4] = { 0, 0, 0, 0 };
-	return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-}
-
-// viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
-// returns the byte offset into the viewport buffer where the image pixels start (to skip any black borders)
-int vid_get_viewport_image_offset() {
-	return (vid_get_viewport_yoffset() * vid_get_viewport_buffer_width() + vid_get_viewport_xoffset()) * 3;
-}
-
-// viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
-// returns the byte offset to skip at the end of a viewport buffer row to get to the next row.
-int vid_get_viewport_row_offset() {
-	return (vid_get_viewport_buffer_width() - vid_get_viewport_width()) * 3;
-}
+long vid_get_viewport_height(){ return 240; }
