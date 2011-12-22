@@ -116,6 +116,8 @@
 #define COLOR_HISTO_B_PLAY  0xCC
 #define COLOR_HISTO_BG_PLAY 0x99
 #define COLOR_HISTO_RG_PLAY 0x66
+#undef SCREEN_COLOR
+#define SCREEN_COLOR        0x15	// try for a dark color in both record and play mode
 
 // Icon colors
 // 3 shades of Red, Green, Yellow and Grey
