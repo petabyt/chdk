@@ -5,6 +5,7 @@
 #include "font.h"
 #include "camera.h"
 #include "raw.h"
+#include "dng.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
 #include "gui_grid.h"

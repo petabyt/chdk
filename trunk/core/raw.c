@@ -3,15 +3,7 @@
 #include "stdlib.h"
 #include "raw.h"
 #include "console.h"
-#if DNG_SUPPORT
-    #include "dng.h"
-    #include "math.h"
-    #include "keyboard.h"
-    #include "action_stack.h"
-    #include "gui_draw.h"
-    #include "gui_mbox.h"
-    #include "gui_lang.h"
-#endif
+#include "dng.h"
 #ifdef OPT_CURVES
     #include "curves.h"
 #endif
@@ -22,9 +14,6 @@
 //#define RAW_TMP_FILENAME        "HDK_RAW.TMP"
 #define RAW_TARGET_FILENAME     "%s%04d%s"
 #define RAW_BRACKETING_FILENAME "%s%04d_%02d%s" 
-
-#define PATH_BADPIXEL_BIN "A/CHDK/badpixel.bin"
-#define PATH_BAD_TMP_BIN "A/CHDK/bad_tmp.bin"
 
 //-------------------------------------------------------------------
 static char fn[64];
@@ -54,101 +43,6 @@ char* get_alt_raw_image_addr(void) {    // return inactive buffer for cameras wi
     if (!conf.raw_cache) return hook_alt_raw_image_addr();
     else return (char*) ((int)hook_alt_raw_image_addr()&~CAM_UNCACHED_BIT);
 }
-
-//-------------------------------------------------------------------
-
-#if DNG_SUPPORT
-#define INIT_BADPIXEL_COUNT -1
-#define INIT_BADPIXEL_FILE -2
-
-int init_badpixel_bin_flag; // contants above to count/create file, > 0 num bad pixel
-int raw_init_badpixel_bin() {
-    int count;
-    unsigned short c[2];
-    FILE*f;
-    if(init_badpixel_bin_flag == INIT_BADPIXEL_FILE) {
-        f=fopen(PATH_BAD_TMP_BIN,"w+b");
-    } else if (init_badpixel_bin_flag == INIT_BADPIXEL_COUNT) {
-        f=NULL;
-    } else {
-        return 0;
-    }
-    count = 0;
-#ifdef DNG_VERT_RLE_BADPIXELS
-    for (c[0]=CAM_ACTIVE_AREA_X1; c[0]<CAM_ACTIVE_AREA_X2; c[0]++)
-    {
-        for (c[1]=CAM_ACTIVE_AREA_Y1; c[1]<CAM_ACTIVE_AREA_Y2; c[1]++)
-        {
-            if (get_raw_pixel(c[0],c[1])==0)
-            {
-                unsigned short l;
-                for (l=0; l<7; l++) if (get_raw_pixel(c[0],c[1]+l+1)!=0) break;
-                c[1] = c[1] | (l << 13);
-                if (f) fwrite(c, 1, 4, f);
-                c[1] = (c[1] & 0x1FFF) + l;
-                count = count + l + 1;
-            }
-        }
-    }
-#else
-    for (c[1]=CAM_ACTIVE_AREA_Y1; c[1]<CAM_ACTIVE_AREA_Y2; c[1]++) 
-    {
-        for (c[0]=CAM_ACTIVE_AREA_X1; c[0]<CAM_ACTIVE_AREA_X2; c[0]++) 
-        {
-            if (get_raw_pixel(c[0],c[1])==0) 
-            {
-                if (f) fwrite(c, 1, 4, f);
-                count++;
-            }
-        }
-    }
-#endif
-    if (f) fclose(f);
-    init_badpixel_bin_flag = count;
-    state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
-    return 1;
-}
-
-unsigned short get_raw_pixel(unsigned int x,unsigned  int y);
-
-static unsigned char gamma[256];
-
-void fill_gamma_buf(void) {
-    int i;
-    if (gamma[255]) return;
-#if defined(CAMERA_sx30) || defined(CAMERA_sx40hs) || defined(CAMERA_g12) || defined(CAMERA_ixus310_elph500hs)
-    for (i=0; i<12; i++) gamma[i]=255*pow(i/255.0, 0.5);
-    for (i=12; i<64; i++) gamma[i]=255*pow(i/255.0, 0.4);
-    for (i=64; i<=255; i++) gamma[i]=255*pow(i/255.0, 0.25);
-#else
-    for (i=0; i<=255; i++) gamma[i]=255*pow(i/255.0, 0.5);
-#endif
-}
-
-void create_thumbnail(char* buf) {
-    unsigned int i, j, x, y;
-    unsigned char r, g, b;
-    for (i=0; i<DNG_TH_HEIGHT; i++)
-        for (j=0; j<DNG_TH_WIDTH; j++) {
-            x=CAM_ACTIVE_AREA_X1+((CAM_ACTIVE_AREA_X2-CAM_ACTIVE_AREA_X1)*j)/DNG_TH_WIDTH;
-            y=CAM_ACTIVE_AREA_Y1+((CAM_ACTIVE_AREA_Y2-CAM_ACTIVE_AREA_Y1)*i)/DNG_TH_HEIGHT;
-#if cam_CFAPattern==0x02010100    // Red  Green  Green  Blue
-            r=gamma[get_raw_pixel((x/2)*2,(y/2)*2)>>(CAM_SENSOR_BITS_PER_PIXEL-8)]; // red pixel
-            g=gamma[6*(get_raw_pixel((x/2)*2+1,(y/2)*2)>>(CAM_SENSOR_BITS_PER_PIXEL-8))/10]; // green pixel
-            b=gamma[get_raw_pixel((x/2)*2+1,(y/2)*2+1)>>(CAM_SENSOR_BITS_PER_PIXEL-8)]; //blue pixel
-#elif cam_CFAPattern==0x01000201 // Green  Blue  Red  Green
-            r=gamma[get_raw_pixel((x/2)*2,(y/2)*2+1)>>(CAM_SENSOR_BITS_PER_PIXEL-8)]; // red pixel
-            g=gamma[6*(get_raw_pixel((x/2)*2,(y/2)*2)>>(CAM_SENSOR_BITS_PER_PIXEL-8))/10]; // green pixel
-            b=gamma[get_raw_pixel((x/2)*2+1,(y/2)*2)>>(CAM_SENSOR_BITS_PER_PIXEL-8)]; //blue pixel
-#else 
-    #error please define new pattern here
-#endif
-            *buf++=r; *buf++=g; *buf++=b;
-        }
-}
-#else // no DNG_SUPPORT
-    static inline int __attribute__((always_inline)) raw_init_badpixel_bin(void) {return 0;}
-#endif
 //-------------------------------------------------------------------
 
 int raw_savefile() {
@@ -157,9 +51,7 @@ int raw_savefile() {
     static struct utimbuf t;
     static int br_counter; 
 #if DNG_SUPPORT
-    struct t_data_for_exif* exif_data = NULL;
-    char *thumbnail_buf = NULL;
-    if (conf.dng_raw) exif_data=capture_data_for_exif();
+    if (conf.dng_raw) capture_data_for_exif();
 #endif    
     if (state_kbd_script_run && shot_histogram_isenabled()) build_shot_histogram();
 
@@ -167,10 +59,12 @@ int raw_savefile() {
     char* rawadr = get_raw_image_addr();
     char* altrawadr = get_alt_raw_image_addr();
 
+#if DNG_SUPPORT
     // count/save badpixels if requested
     if(raw_init_badpixel_bin()) {
         return 0;
     }
+#endif    
 
     if (develop_raw) {
         started();
@@ -247,16 +141,9 @@ int raw_savefile() {
 #if DNG_SUPPORT
             if (conf.dng_raw)
             {
-                fill_gamma_buf();
-                create_dng_header(exif_data);
-                thumbnail_buf = malloc(DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
-                if (get_dng_header() && thumbnail_buf) {
-                    patch_bad_pixels_b();
-                    create_thumbnail(thumbnail_buf);
-                    write(fd, get_dng_header(), get_dng_header_size());
-                    write(fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
-                    reverse_bytes_order2(rawadr, altrawadr, hook_raw_size());
-                }
+                create_dng_header();
+                write_dng_header(fd);
+                reverse_bytes_order2(rawadr, altrawadr, hook_raw_size());
                 // Write alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
                 write(fd, (char*)(((unsigned long)altrawadr)|CAM_UNCACHED_BIT), hook_raw_size());
             }
@@ -268,14 +155,11 @@ int raw_savefile() {
             close(fd);
             utime(fn, &t);
 
-            if (conf.dng_raw) {
-                if (get_dng_header() && thumbnail_buf) {
-                    if (rawadr == altrawadr)    // If only one RAW buffer then we have to swap the bytes back
-                        reverse_bytes_order2(rawadr, altrawadr, hook_raw_size());
-                    //unpatch_bad_pixels_b();
-                }
-                if (get_dng_header()) free_dng_header();
-                if (thumbnail_buf) free(thumbnail_buf);
+            if (conf.dng_raw)
+            {
+                if (rawadr == altrawadr)    // If only one RAW buffer then we have to swap the bytes back
+                    reverse_bytes_order2(rawadr, altrawadr, hook_raw_size());
+                free_dng_header();
             }
 #else
             // Write active RAW buffer
@@ -451,146 +335,3 @@ void load_bad_pixels_list(const char* filename) {
     }
 
 }
-
-#if DNG_SUPPORT
-short* binary_list=NULL;
-int binary_count=-1;
-
-void load_bad_pixels_list_b(char* filename) {
-    struct stat st;
-    long filesize;
-    void* ptr;
-    FILE *fd;
-    binary_count=-1;
-    if (stat(filename,&st)!=0) return;
-    filesize=st.st_size;
-    if (filesize%(2*sizeof(short)) != 0) return;
-	if (filesize == 0) { binary_count = 0; return; }	// Allow empty badpixel.bin file
-    ptr=malloc(filesize);
-    if (!ptr) return;
-    fd=fopen(filename, "rb");
-    if (fd) {
-        fread(ptr,1, filesize,fd);
-        fclose(fd);
-        binary_list=ptr;
-        binary_count=filesize/(2*sizeof(short));
-    }
-    else free(ptr);
-}
-
-void unload_bad_pixels_list_b(void) {
-    if (binary_list) free(binary_list);
-    binary_list=NULL;
-    binary_count=-1;
-}
-
-void patch_bad_pixels_b(void) {
-    int i;
-    short* ptr=binary_list;
-#ifdef DNG_VERT_RLE_BADPIXELS
-    short y, cnt;
-    for (i=0; i<binary_count; i++, ptr+=2)
-    {
-        y = ptr[1] & 0x1FFF;
-        cnt = (ptr[1] >> 13) & 7;
-        for (; cnt>=0; cnt--, y++)
-            if (get_raw_pixel(ptr[0], y)==0)
-                patch_bad_pixel(ptr[0], y);
-    }
-#else
-    for (i=0; i<binary_count; i++, ptr+=2)
-        if (get_raw_pixel(ptr[0], ptr[1])==0)
-            patch_bad_pixel(ptr[0], ptr[1]);
-#endif
-}
-/*
-void unpatch_bad_pixels_b(void) {
-    int i;
-    short* ptr=binary_list;
-    for (i=0; i<binary_count; i++, ptr+=2) set_raw_pixel(ptr[0], ptr[1], 0);
-}
-*/
-int badpixel_list_loaded_b(void) {
-	return (binary_count >= 0) ? 1 : 0;
-}
-
-// -----------------------------------------------
-
-enum BadpixelFSM {
-    BADPIX_START,
-    BADPIX_S1,
-    BADPIX_S2
-};
-
-int badpixel_task_stack(long p) {
-    static unsigned int badpix_cnt1;
-
-    switch(p) {
-        case BADPIX_START:
-            action_pop();
-
-            console_clear();
-            console_add_line("Wait please... ");
-            console_add_line("This takes a few seconds,");
-            console_add_line("don't panic!");
-
-            init_badpixel_bin_flag = INIT_BADPIXEL_COUNT;
-
-            shooting_set_tv96_direct(96, SET_LATER);
-            action_push(BADPIX_S1);
-            action_push(AS_SHOOT);
-            action_push_delay(3000);
-            break;
-        case BADPIX_S1:
-            action_pop();
-
-            badpix_cnt1 = init_badpixel_bin_flag;
-            init_badpixel_bin_flag = INIT_BADPIXEL_FILE;
-            shooting_set_tv96_direct(96, SET_LATER);
-
-            action_push(BADPIX_S2);
-            action_push(AS_SHOOT);
-            break;
-        case BADPIX_S2:
-            action_pop();
-
-            console_clear();
-            if (badpix_cnt1 == init_badpixel_bin_flag) {
-                // TODO script asked confirmation first
-                // should sanity check bad pixel count at least,
-                // wrong buffer address could make badpixel bigger than available mem
-                char msg[32];
-                console_add_line("badpixel.bin created.");
-                sprintf(msg, "Bad pixel count: %d", badpix_cnt1);
-                console_add_line(msg);
-                remove(PATH_BADPIXEL_BIN);
-                rename(PATH_BAD_TMP_BIN,PATH_BADPIXEL_BIN);
-            } else {
-                console_add_line("badpixel.bin failed.");
-                console_add_line("Please try again.");
-            }
-            init_badpixel_bin_flag = 0;
-            remove(PATH_BAD_TMP_BIN);
-
-            action_push_delay(3000);
-            break;
-        default:
-            action_stack_standard(p);
-            break;
-    }
-
-    return 1;
-}
-
-
-void create_badpixel_bin() {
-    if (!(mode_get() & MODE_REC)) {
-        gui_mbox_init(LANG_ERROR, LANG_MSG_RECMODE_REQUIRED, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-        return;
-    }
-
-    gui_set_mode(GUI_MODE_ALT);
-    action_stack_create(&badpixel_task_stack, BADPIX_START);
-}
-
-#endif
