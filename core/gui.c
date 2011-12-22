@@ -45,6 +45,7 @@
 #include "histogram.h"
 #include "motion_detector.h"
 #include "raw.h"
+#include "dng.h"
 #ifdef OPT_CURVES
 	#include "curves.h"
 #endif

@@ -5,8 +5,42 @@
 #include "stdlib.h"
 #include "string.h"
 #include "platform.h"
+#include "conf.h"
 #include "math.h"
+#include "console.h"
 #include "dng.h"
+#include "raw.h"
+#include "action_stack.h"
+#include "gui_mbox.h"
+#include "gui_lang.h"
+
+//thumbnail
+#define DNG_TH_WIDTH 128
+#define DNG_TH_HEIGHT 96
+// higly recommended that DNG_TH_WIDTH*DNG_TH_HEIGHT would be divisible by 512
+
+struct dir_entry{unsigned short tag; unsigned short type; unsigned int count; unsigned int offset;};
+
+#define T_BYTE 1
+#define T_ASCII 2
+#define T_SHORT 3
+#define T_LONG 4
+#define T_RATIONAL 5
+#define T_SBYTE 6
+#define T_UNDEFINED 7
+#define T_SSHORT 8
+#define T_SLONG 9
+#define T_SRATIONAL 10
+#define T_FLOAT 11
+#define T_DOUBLE 12
+
+#define CAM_DEFAULT_CROP_ORIGIN_W ((CAM_ACTIVE_AREA_X2-CAM_ACTIVE_AREA_X1-CAM_JPEG_WIDTH )/2)
+#define CAM_DEFAULT_CROP_ORIGIN_H ((CAM_ACTIVE_AREA_Y2-CAM_ACTIVE_AREA_Y1-CAM_JPEG_HEIGHT)/2)
+
+unsigned short get_exp_program_for_exif(int exp_program);
+unsigned short get_orientation_for_exif(short orientation);
+unsigned short get_flash_mode_for_exif(short mode, short fired);
+unsigned short get_metering_mode_for_exif(short metering_mode);
 
 const int cam_DefaultCropSize[]={CAM_JPEG_WIDTH, CAM_JPEG_HEIGHT};    // jpeg size
 const int cam_ActiveArea[]={CAM_ACTIVE_AREA_Y1, CAM_ACTIVE_AREA_X1, CAM_ACTIVE_AREA_Y2, CAM_ACTIVE_AREA_X2};
@@ -84,7 +118,7 @@ struct dir_entry IFD1[]={
  {0x111,  T_LONG,      1,  0}, //StripOffsets: Offset
  {0x115,  T_SHORT,     1,  1}, // SamplesPerPixel: 1
  {0x116,  T_SHORT,     1,  CAM_RAW_ROWS}, //RowsPerStrip
- {0x117,  T_LONG,      1,  CAM_RAW_ROWPIX*CAM_RAW_ROWS*CAM_SENSOR_BITS_PER_PIXEL/8}, // StripByteCounts = CHDK RAW size
+ {0x117,  T_LONG,      1,  CAM_RAW_ROWS*RAW_ROWLEN}, // StripByteCounts = CHDK RAW size
  {0x11A,  T_RATIONAL,  1,  (int)cam_Resolution}, // XResolution
  {0x11B,  T_RATIONAL,  1,  (int)cam_Resolution}, // YResolution
  {0x11C,  T_SHORT,     1,  1}, // PlanarConfiguration: 1
@@ -100,21 +134,30 @@ struct dir_entry IFD1[]={
 };
 
 
+static int cam_shutter[2]       = { 0, 1000000 };       // Shutter speed
+static int cam_aperture[2]      = { 0, 10 };            // Aperture
+static char cam_datetime[20]    = "";                   // DateTimeOriginal
+static int cam_apex_shutter[2]  = { 0, 96 };            // Shutter speed in APEX units
+static int cam_apex_aperture[2] = { 0, 96 };            // Aperture in APEX units
+static int cam_exp_bias[2]      = { 0, 96 };
+static int cam_max_av[2]        = { 0, 96 };
+static int cam_focal_length[2]  = { 0, 1000 };
+
 struct dir_entry EXIF_IFD[]={
- {0x829A, T_RATIONAL,  1,  0}, //ExposureTime
- {0x829D, T_RATIONAL,  1,  0}, //FNumber
- {0x8822, T_SHORT,     1,  0}, //ExposureProgram
- {0x8827, T_SHORT,     1,  0}, //ISOSpeedRatings
- {0x9000, T_UNDEFINED, 4,  0x31323230}, // ExifVersion: 2.21
- {0x9003, T_ASCII,     20, 0}, // DateTimeOriginal
- {0x9201, T_SRATIONAL, 1,  0}, // ShutterSpeedValue
- {0x9202, T_RATIONAL,  1,  0}, // ApertureValue
- {0x9204, T_SRATIONAL, 1,  0}, // ExposureBias
- {0x9205, T_RATIONAL,  1,  0}, //MaxApertureValue
- {0x9207, T_SHORT,     1,  0}, // Metering mode
- {0x9209, T_SHORT,     1,  0}, // Flash mode
- {0x920A, T_RATIONAL,  1,  0}, //FocalLength
- {0xA405, T_SHORT,     1,  0}, //FocalLengthIn35mmFilm
+ {0x829A, T_RATIONAL,  1,  (int)cam_shutter},           // Shutter speed
+ {0x829D, T_RATIONAL,  1,  (int)cam_aperture},          // Aperture
+ {0x8822, T_SHORT,     1,  0},                          // ExposureProgram
+ {0x8827, T_SHORT,     1,  0},                          // ISOSpeedRatings
+ {0x9000, T_UNDEFINED, 4,  0x31323230},                 // ExifVersion: 2.21
+ {0x9003, T_ASCII,     20, (int)cam_datetime},          // DateTimeOriginal
+ {0x9201, T_SRATIONAL, 1,  (int)cam_apex_shutter},      // ShutterSpeedValue (APEX units)
+ {0x9202, T_RATIONAL,  1,  (int)cam_apex_aperture},     // ApertureValue (APEX units)
+ {0x9204, T_SRATIONAL, 1,  (int)cam_exp_bias},          // ExposureBias
+ {0x9205, T_RATIONAL,  1,  (int)cam_max_av},            // MaxApertureValue
+ {0x9207, T_SHORT,     1,  0},                          // Metering mode
+ {0x9209, T_SHORT,     1,  0},                          // Flash mode
+ {0x920A, T_RATIONAL,  1,  (int)cam_focal_length},      // FocalLength
+ {0xA405, T_SHORT,     1,  0},                          // FocalLengthIn35mmFilm
  {0}
 };
 
@@ -166,15 +209,30 @@ struct {struct dir_entry* entry; int count;} IFD_LIST[]={{IFD0,0}, {IFD1,0}, {EX
 
 #define TIFF_HDR_SIZE (8)
 
-char* tmp_buf;
-int tmp_buf_size;
-int tmp_buf_offset;
-void add_to_buf(void* var, int size){
- memcpy(tmp_buf+tmp_buf_offset,var,size);
- tmp_buf_offset+=size;
+char* dng_header_buf;
+int dng_header_buf_size;
+int dng_header_buf_offset;
+char *thumbnail_buf;
+
+void add_to_buf(void* var, int size)
+{
+ memcpy(dng_header_buf+dng_header_buf_offset,var,size);
+ dng_header_buf_offset+=size;
 }
- 
-void create_dng_header(struct t_data_for_exif* exif_data){
+
+struct t_data_for_exif{
+ short iso;
+ int exp_program;
+ int effective_focal_length;
+ short orientation;
+ short flash_mode;
+ short flash_fired;
+ short metering_mode;
+};
+
+static struct t_data_for_exif exif_data;
+
+void create_dng_header(){
  int var;
  int i,j;
  int extra_offset;
@@ -208,20 +266,12 @@ get_property_case(PROPCASE_GPS, &gps, sizeof(tGPS));
      case 0x110 :                                                                                       // CameraName
      case 0xC614: IFD_LIST[j].entry[i].count = strlen((char*)IFD_LIST[j].entry[i].offset) + 1; break;   // UniqueCameraModel
      case 0x132 :
-     case 0x9003: IFD_LIST[j].entry[i].offset=(int)get_date_for_exif(exif_data->time); break; //DateTimeOriginal
-     case 0x8827: IFD_LIST[j].entry[i].offset=exif_data->iso; break;//ISOSpeedRatings
-     case 0x829D: IFD_LIST[j].entry[i].offset=(int)get_av_for_exif(exif_data->av); break; //FNumber
-     case 0x829A: IFD_LIST[j].entry[i].offset=(int)get_tv_for_exif(exif_data->tv); break; //ExposureTime
-     case 0x9205: IFD_LIST[j].entry[i].offset=(int)get_max_av_for_exif(exif_data->max_av); break; //MaxApertureValue
-     case 0x9204: IFD_LIST[j].entry[i].offset=(int)get_exp_bias_for_exif(exif_data->exp_bias); break; //ExposureBias
-     case 0x8822: IFD_LIST[j].entry[i].offset=get_exp_program_for_exif(exif_data->exp_program); break;//ExposureProgram
-     case 0x920A: IFD_LIST[j].entry[i].offset=(int)get_focal_length_for_exif(exif_data->focal_length); break; //FocalLength
-     case 0xA405: IFD_LIST[j].entry[i].offset=exif_data->effective_focal_length/1000; break; ////FocalLengthIn35mmFilm
-     case 0x0112: IFD_LIST[j].entry[i].offset=get_orientation_for_exif(exif_data->orientation); break; //Orientation
-     case 0x9209: IFD_LIST[j].entry[i].offset=get_flash_mode_for_exif(exif_data->flash_mode, exif_data->flash_fired); break; //Flash mode
-     case 0x9207: IFD_LIST[j].entry[i].offset=get_metering_mode_for_exif(exif_data->metering_mode); break; // Metering mode
-     case 0x9201: IFD_LIST[j].entry[i].offset=(int)get_shutter_speed_for_exif(exif_data->tv); break; // ShutterSpeedValue
-     case 0x9202: IFD_LIST[j].entry[i].offset=(int)get_aperture_for_exif(exif_data->av); break; // ApertureValue
+     case 0x8827: IFD_LIST[j].entry[i].offset=exif_data.iso; break;//ISOSpeedRatings
+     case 0x8822: IFD_LIST[j].entry[i].offset=get_exp_program_for_exif(exif_data.exp_program); break;//ExposureProgram
+     case 0xA405: IFD_LIST[j].entry[i].offset=exif_data.effective_focal_length/1000; break; ////FocalLengthIn35mmFilm
+     case 0x0112: IFD_LIST[j].entry[i].offset=get_orientation_for_exif(exif_data.orientation); break; //Orientation
+     case 0x9209: IFD_LIST[j].entry[i].offset=get_flash_mode_for_exif(exif_data.flash_mode, exif_data.flash_fired); break; //Flash mode
+     case 0x9207: IFD_LIST[j].entry[i].offset=get_metering_mode_for_exif(exif_data.metering_mode); break; // Metering mode
 #if defined(OPT_GPS)
      case 0x0001: IFD_LIST[j].entry[i].offset=gps.latitudeRef; break;
      case 0x0002: IFD_LIST[j].entry[i].offset=(int)&(gps.latitude); break;
@@ -256,10 +306,19 @@ get_property_case(PROPCASE_GPS, &gps, sizeof(tGPS));
 
  // creating buffer for writing data
  raw_offset=(raw_offset/512+1)*512; // exlusively for CHDK fast file writing
- tmp_buf_size=raw_offset;
- tmp_buf=umalloc(raw_offset);
- tmp_buf_offset=0;
- if (!tmp_buf) return;
+ dng_header_buf_size=raw_offset;
+ dng_header_buf=umalloc(raw_offset);
+ dng_header_buf_offset=0;
+ if (!dng_header_buf) return;
+
+ // create buffer for thumbnail
+ thumbnail_buf = malloc(DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
+ if (!thumbnail_buf)
+ {
+     ufree(dng_header_buf);
+     dng_header_buf = 0;
+     return;
+ }
 
  //  writing  offsets for EXIF IFD and RAW data and calculating offset for extra data
 
@@ -326,69 +385,23 @@ get_property_case(PROPCASE_GPS, &gps, sizeof(tGPS));
   }
  }
 
-
  // writing zeros to tail of dng header (just for fun)
- for (i=tmp_buf_offset; i<tmp_buf_size; i++) tmp_buf[i]=0;
-
+ for (i=dng_header_buf_offset; i<dng_header_buf_size; i++) dng_header_buf[i]=0;
 }
 
-void free_dng_header(void){
- ufree(tmp_buf);
- tmp_buf=NULL;
+void free_dng_header(void)
+{
+    if (dng_header_buf)
+    {
+        ufree(dng_header_buf);
+        dng_header_buf=NULL;
+    }
+    if (thumbnail_buf)
+    {
+        free(thumbnail_buf);
+        thumbnail_buf = 0;
+    }
 }
-
-char* get_dng_header(void){
- return tmp_buf;
-}
-
-int get_dng_header_size(void){
- return tmp_buf_size;
-}
-
-char *get_date_for_exif(unsigned long time){
- static char buf[20];
- struct tm *ttm;
- ttm = localtime(&time);
- sprintf(buf, "%04d:%02d:%02d %02d:%02d:%02d", ttm->tm_year+1900, ttm->tm_mon+1, ttm->tm_mday, ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
- return buf;
-}
-
-unsigned int* get_av_for_exif(short av){
- static unsigned int fnumber[2]={0,10};
- fnumber[0]=10*pow(2,av/192.0);
- return fnumber;
-}
-
-int* get_tv_for_exif(short tv){
- static int exp_time[2]={0,1000000};
- exp_time[0]=1000000*pow(2,-tv/96.0);
- return exp_time;
-}
-
-unsigned int* get_max_av_for_exif(short max_av){
- static unsigned int mav[2]={0,96};
- mav[0]=max_av;
- return mav;
-}
-
-int* get_exp_bias_for_exif(short exp_bias){
- static int bias[2]={0,96};
- bias[0]=exp_bias;
- return bias;
-}
-
-int* get_shutter_speed_for_exif(short tv){
- static int speed[2]={0,96};
- speed[0]=tv;
- return speed;
-}
-
-int* get_aperture_for_exif(short av){
- static int aperture[2]={0,96};
- aperture[0]=av;
- return aperture;
-}
-
 
 unsigned short get_exp_program_for_exif(int exp_program){
  switch(exp_program){
@@ -398,12 +411,6 @@ unsigned short get_exp_program_for_exif(int exp_program){
   case MODE_TV: return 4;
   default: return 0;
  }
-}
-
-unsigned int* get_focal_length_for_exif(int focal_length){
- static unsigned int fl[2]={0,1000};
- fl[0]=focal_length;
- return fl;
 }
 
 unsigned short get_orientation_for_exif(short orientation){
@@ -435,31 +442,55 @@ unsigned short get_metering_mode_for_exif(short metering_mode){
  }
 }
 
-struct t_data_for_exif* capture_data_for_exif(void){
- static struct t_data_for_exif data;
+void capture_data_for_exif(void)
+{
+ short short_prop_val;
+ unsigned long datetime;
+ struct tm *ttm;
  extern volatile long shutter_open_time; // defined in platform/generic/capt_seq.c
  int wb[3];
- data.iso=shooting_get_iso_market();
- get_property_case(PROPCASE_TV, &data.tv, sizeof(data.tv));
- if (shutter_open_time) { data.time=shutter_open_time+pow(2,-data.tv/96.0); shutter_open_time=0;} // shutter closing time
- else  data.time=time(NULL);
- get_property_case(PROPCASE_AV, &data.av, sizeof(data.av));
- get_property_case(PROPCASE_MIN_AV, &data.max_av, sizeof(data.max_av));
- get_property_case(PROPCASE_EV_CORRECTION_2, &data.exp_bias, sizeof(data.exp_bias));
- data.exp_program=mode_get() & MODE_SHOOTING_MASK;
- data.focal_length=get_focal_length(shooting_get_zoom());
- data.effective_focal_length=get_effective_focal_length(shooting_get_zoom());
- get_property_case(PROPCASE_ORIENTATION_SENSOR, &data.orientation, sizeof(data.orientation));
+
+ exif_data.iso=shooting_get_iso_market();
+
+ // Shutter speed tags
+ get_property_case(PROPCASE_TV, &short_prop_val, sizeof(short_prop_val));
+ cam_shutter[0]      = 1000000 * pow(2,-short_prop_val / 96.0);
+ cam_apex_shutter[0] = short_prop_val;
+
+ // Date & time tag (note - uses shutter speed from 'short_prop_val' code above)
+ if (shutter_open_time) { datetime = shutter_open_time+pow(2,-short_prop_val/96.0); shutter_open_time=0;} // shutter closing time
+ else  datetime = time(NULL);
+ ttm = localtime(&datetime);
+ sprintf(cam_datetime, "%04d:%02d:%02d %02d:%02d:%02d", ttm->tm_year+1900, ttm->tm_mon+1, ttm->tm_mday, ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
+
+ get_property_case(PROPCASE_AV, &short_prop_val, sizeof(short_prop_val));
+ cam_aperture[0]      = 10 * pow(2,short_prop_val / 192.0);
+ cam_apex_aperture[0] = short_prop_val;
+
+ get_property_case(PROPCASE_MIN_AV, &short_prop_val, sizeof(short_prop_val));
+ cam_max_av[0] = short_prop_val;
+
+ get_property_case(PROPCASE_EV_CORRECTION_2, &short_prop_val, sizeof(short_prop_val));
+ cam_exp_bias[0] = short_prop_val;
+
+ exif_data.exp_program=mode_get() & MODE_SHOOTING_MASK;
+
+ cam_focal_length[0] = get_focal_length(shooting_get_zoom());
+ exif_data.effective_focal_length = get_effective_focal_length(shooting_get_zoom());
+
+ get_property_case(PROPCASE_ORIENTATION_SENSOR, &exif_data.orientation, sizeof(exif_data.orientation));
  get_parameter_data(PARAM_CAMERA_NAME, &cam_name, sizeof(cam_name));
- get_property_case(PROPCASE_FLASH_MODE, &data.flash_mode, sizeof(data.flash_mode));
- get_property_case(PROPCASE_FLASH_FIRE, &data.flash_fired, sizeof(data.flash_fired));
- get_property_case(PROPCASE_METERING_MODE, &data.metering_mode, sizeof(data.metering_mode));
+ get_property_case(PROPCASE_FLASH_MODE, &exif_data.flash_mode, sizeof(exif_data.flash_mode));
+ get_property_case(PROPCASE_FLASH_FIRE, &exif_data.flash_fired, sizeof(exif_data.flash_fired));
+ get_property_case(PROPCASE_METERING_MODE, &exif_data.metering_mode, sizeof(exif_data.metering_mode));
+
  get_property_case(PROPCASE_WB_ADJ, &wb, sizeof(wb));  
  cam_AsShotNeutral[1]=wb[1];
  cam_AsShotNeutral[3]=wb[0];
  cam_AsShotNeutral[5]=wb[2];
- return &data;
 }
+
+//-------------------------------------------------------------------
 
 void convert_dng_to_chdk_raw(char* fn){
  #define BUF_SIZE (32768)
@@ -500,6 +531,255 @@ void convert_dng_to_chdk_raw(char* fn){
  free(buf);
  finished();
  }  //if (buf)
+}
+
+//-------------------------------------------------------------------
+// Functions for creating DNG thumbnail image
+
+static unsigned char gamma[256];
+
+void fill_gamma_buf(void) {
+    int i;
+    if (gamma[255]) return;
+#if defined(CAMERA_sx30) || defined(CAMERA_sx40hs) || defined(CAMERA_g12) || defined(CAMERA_ixus310_elph500hs)
+    for (i=0; i<12; i++) gamma[i]=255*pow(i/255.0, 0.5);
+    for (i=12; i<64; i++) gamma[i]=255*pow(i/255.0, 0.4);
+    for (i=64; i<=255; i++) gamma[i]=255*pow(i/255.0, 0.25);
+#else
+    for (i=0; i<=255; i++) gamma[i]=255*pow(i/255.0, 0.5);
+#endif
+}
+
+void create_thumbnail() {
+    register unsigned int i, j, x, y;
+    register char *buf = thumbnail_buf;
+
+    for (i=0; i<DNG_TH_HEIGHT; i++)
+        for (j=0; j<DNG_TH_WIDTH; j++)
+        {
+            x = (CAM_ACTIVE_AREA_X1+((CAM_ACTIVE_AREA_X2-CAM_ACTIVE_AREA_X1)*j)/DNG_TH_WIDTH) & 0xFFFFFFFE;
+            y = (CAM_ACTIVE_AREA_Y1+((CAM_ACTIVE_AREA_Y2-CAM_ACTIVE_AREA_Y1)*i)/DNG_TH_HEIGHT) & 0xFFFFFFFE;
+
+#if cam_CFAPattern==0x02010100    // Red  Green  Green  Blue
+            *buf++ = gamma[get_raw_pixel(x,y)>>(CAM_SENSOR_BITS_PER_PIXEL-8)];           // red pixel
+            *buf++ = gamma[6*(get_raw_pixel(x+1,y)>>(CAM_SENSOR_BITS_PER_PIXEL-8))/10];  // green pixel
+            *buf++ = gamma[get_raw_pixel(x+1,y+1)>>(CAM_SENSOR_BITS_PER_PIXEL-8)];       // blue pixel
+#elif cam_CFAPattern==0x01000201 // Green  Blue  Red  Green
+            *buf++ = gamma[get_raw_pixel(x,y+1)>>(CAM_SENSOR_BITS_PER_PIXEL-8)];         // red pixel
+            *buf++ = gamma[6*(get_raw_pixel(x,y)>>(CAM_SENSOR_BITS_PER_PIXEL-8))/10];    // green pixel
+            *buf++ = gamma[get_raw_pixel(x+1,y)>>(CAM_SENSOR_BITS_PER_PIXEL-8)];         // blue pixel
+#else 
+    #error please define new pattern here
+#endif
+        }
+}
+
+//-------------------------------------------------------------------
+// Functions for handling DNG bad pixel file creation and bad pixel
+// removal from images.
+
+#define INIT_BADPIXEL_COUNT -1
+#define INIT_BADPIXEL_FILE -2
+
+#define PATH_BADPIXEL_BIN "A/CHDK/badpixel.bin"
+#define PATH_BAD_TMP_BIN "A/CHDK/bad_tmp.bin"
+
+int init_badpixel_bin_flag; // contants above to count/create file, > 0 num bad pixel
+
+int raw_init_badpixel_bin() {
+    int count;
+    unsigned short c[2];
+    FILE*f;
+    if(init_badpixel_bin_flag == INIT_BADPIXEL_FILE) {
+        f=fopen(PATH_BAD_TMP_BIN,"w+b");
+    } else if (init_badpixel_bin_flag == INIT_BADPIXEL_COUNT) {
+        f=NULL;
+    } else {
+        return 0;
+    }
+    count = 0;
+#ifdef DNG_VERT_RLE_BADPIXELS
+    for (c[0]=CAM_ACTIVE_AREA_X1; c[0]<CAM_ACTIVE_AREA_X2; c[0]++)
+    {
+        for (c[1]=CAM_ACTIVE_AREA_Y1; c[1]<CAM_ACTIVE_AREA_Y2; c[1]++)
+        {
+            if (get_raw_pixel(c[0],c[1])==0)
+            {
+                unsigned short l;
+                for (l=0; l<7; l++) if (get_raw_pixel(c[0],c[1]+l+1)!=0) break;
+                c[1] = c[1] | (l << 13);
+                if (f) fwrite(c, 1, 4, f);
+                c[1] = (c[1] & 0x1FFF) + l;
+                count = count + l + 1;
+            }
+        }
+    }
+#else
+    for (c[1]=CAM_ACTIVE_AREA_Y1; c[1]<CAM_ACTIVE_AREA_Y2; c[1]++) 
+    {
+        for (c[0]=CAM_ACTIVE_AREA_X1; c[0]<CAM_ACTIVE_AREA_X2; c[0]++) 
+        {
+            if (get_raw_pixel(c[0],c[1])==0) 
+            {
+                if (f) fwrite(c, 1, 4, f);
+                count++;
+            }
+        }
+    }
+#endif
+    if (f) fclose(f);
+    init_badpixel_bin_flag = count;
+    state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
+    return 1;
+}
+
+short* binary_list=NULL;
+int binary_count=-1;
+
+void load_bad_pixels_list_b(char* filename) {
+    struct stat st;
+    long filesize;
+    void* ptr;
+    FILE *fd;
+    binary_count=-1;
+    if (stat(filename,&st)!=0) return;
+    filesize=st.st_size;
+    if (filesize%(2*sizeof(short)) != 0) return;
+	if (filesize == 0) { binary_count = 0; return; }	// Allow empty badpixel.bin file
+    ptr=malloc(filesize);
+    if (!ptr) return;
+    fd=fopen(filename, "rb");
+    if (fd) {
+        fread(ptr,1, filesize,fd);
+        fclose(fd);
+        binary_list=ptr;
+        binary_count=filesize/(2*sizeof(short));
+    }
+    else free(ptr);
+}
+
+void unload_bad_pixels_list_b(void) {
+    if (binary_list) free(binary_list);
+    binary_list=NULL;
+    binary_count=-1;
+}
+
+void patch_bad_pixels_b(void) {
+    int i;
+    short* ptr=binary_list;
+#ifdef DNG_VERT_RLE_BADPIXELS
+    short y, cnt;
+    for (i=0; i<binary_count; i++, ptr+=2)
+    {
+        y = ptr[1] & 0x1FFF;
+        cnt = (ptr[1] >> 13) & 7;
+        for (; cnt>=0; cnt--, y++)
+            if (get_raw_pixel(ptr[0], y)==0)
+                patch_bad_pixel(ptr[0], y);
+    }
+#else
+    for (i=0; i<binary_count; i++, ptr+=2)
+        if (get_raw_pixel(ptr[0], ptr[1])==0)
+            patch_bad_pixel(ptr[0], ptr[1]);
+#endif
+}
+
+int badpixel_list_loaded_b(void) {
+	return (binary_count >= 0) ? 1 : 0;
+}
+
+// -----------------------------------------------
+
+enum BadpixelFSM {
+    BADPIX_START,
+    BADPIX_S1,
+    BADPIX_S2
+};
+
+int badpixel_task_stack(long p) {
+    static unsigned int badpix_cnt1;
+
+    switch(p) {
+        case BADPIX_START:
+            action_pop();
+
+            console_clear();
+            console_add_line("Wait please... ");
+            console_add_line("This takes a few seconds,");
+            console_add_line("don't panic!");
+
+            init_badpixel_bin_flag = INIT_BADPIXEL_COUNT;
+
+            shooting_set_tv96_direct(96, SET_LATER);
+            action_push(BADPIX_S1);
+            action_push(AS_SHOOT);
+            action_push_delay(3000);
+            break;
+        case BADPIX_S1:
+            action_pop();
+
+            badpix_cnt1 = init_badpixel_bin_flag;
+            init_badpixel_bin_flag = INIT_BADPIXEL_FILE;
+            shooting_set_tv96_direct(96, SET_LATER);
+
+            action_push(BADPIX_S2);
+            action_push(AS_SHOOT);
+            break;
+        case BADPIX_S2:
+            action_pop();
+
+            console_clear();
+            if (badpix_cnt1 == init_badpixel_bin_flag) {
+                // TODO script asked confirmation first
+                // should sanity check bad pixel count at least,
+                // wrong buffer address could make badpixel bigger than available mem
+                char msg[32];
+                console_add_line("badpixel.bin created.");
+                sprintf(msg, "Bad pixel count: %d", badpix_cnt1);
+                console_add_line(msg);
+                remove(PATH_BADPIXEL_BIN);
+                rename(PATH_BAD_TMP_BIN,PATH_BADPIXEL_BIN);
+            } else {
+                console_add_line("badpixel.bin failed.");
+                console_add_line("Please try again.");
+            }
+            init_badpixel_bin_flag = 0;
+            remove(PATH_BAD_TMP_BIN);
+
+            action_push_delay(3000);
+            break;
+        default:
+            action_stack_standard(p);
+            break;
+    }
+
+    return 1;
+}
+
+
+void create_badpixel_bin() {
+    if (!(mode_get() & MODE_REC)) {
+        gui_mbox_init(LANG_ERROR, LANG_MSG_RECMODE_REQUIRED, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+        return;
+    }
+
+    gui_set_mode(GUI_MODE_ALT);
+    action_stack_create(&badpixel_task_stack, BADPIX_START);
+}
+
+//-------------------------------------------------------------------
+// Write DNG header and thumbnail to file
+
+void write_dng_header(int fd)
+{
+    if (dng_header_buf)
+    {
+        fill_gamma_buf();
+        patch_bad_pixels_b();
+        create_thumbnail();
+        write(fd, dng_header_buf, dng_header_buf_size);
+        write(fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
+    }
 }
 
 #endif //DNG_SUPPORT
