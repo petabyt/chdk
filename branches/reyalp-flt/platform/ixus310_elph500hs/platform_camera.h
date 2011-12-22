@@ -45,9 +45,6 @@
 	#undef  CAM_VIDEO_CONTROL
 	#define CAM_VIDEO_QUALITY_ONLY		1
     #define CAM_EXT_TV_RANGE            1
-    //#define CAM_EV_IN_VIDEO             1
-	//#define CAM_SHOW_OSD_IN_SHOOT_MENU  1
-    //#define CAM_QUALITY_OVERRIDE    1
 
     #define CAM_HAS_ND_FILTER           1
 
@@ -70,6 +67,8 @@
 
     // camera name
     #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
+    #define PARAM_DISPLAY_MODE1             60 // param number for LCD display mode when camera in playback
+    #define PARAM_DISPLAY_MODE2             64  // param number for LCD display mode when camera in record view hold mode
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
 
@@ -89,15 +88,6 @@
 
     #define	CAM_DNG_LENS_INFO           { 43,10, 188,10, 20,10, 58,10 }	// See comments in camera.h
 
-	//need fixing *****************************************************
-/*
-    #define cam_CalibrationIlluminant1	17		// Standard Light A
-    //colormatrix from sx220hs
-	#define CAM_COLORMATRIX1 \
-    14458, 10000, -5704, 10000, -1562, 10000, \
-    -2520, 10000, 11470, 10000,  1388, 10000, \
-    -1336, 10000,  2334, 10000,  4387, 10000
-*/
 	#define cam_CalibrationIlluminant1  1
 	#define CAM_COLORMATRIX1	\
 	544808, 100000, -174047, 100000, -80399, 100000, \
@@ -117,7 +107,7 @@
 
     #define CAM_FIRMWARE_MEMINFO        1       // Use 'GetMemInfo' to get free memory size.
 
-    #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 

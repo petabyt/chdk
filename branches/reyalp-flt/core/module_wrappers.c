@@ -15,8 +15,8 @@
 int safe_open (const char *name, int flags, int mode )
 {
 	int real_flags = flags & ~(STD_O_TRUNC|STD_O_CREAT);
-	if ( flags & STD_O_TRUNC ) real_flags = O_TRUNC;
-	if ( flags & STD_O_CREAT ) real_flags = O_CREAT;
+	if ( flags & STD_O_TRUNC ) real_flags |= O_TRUNC;
+	if ( flags & STD_O_CREAT ) real_flags |= O_CREAT;
 	return open( name, real_flags, mode);
 }
 
@@ -94,6 +94,7 @@ struct STD_dirent* safe_readdir (STD_DIR* dir)
 #if !CAM_DRYOS
 	memset( &(dir->de), 0, sizeof(dir->de));
 #else
+	dir->de.unk1 = de->unk1;
 	dir->de.attrib = de->attrib;
 	dir->de.size  = de->size;
 	dir->de.time1 = de->time1;

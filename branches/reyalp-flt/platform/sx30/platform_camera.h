@@ -24,9 +24,6 @@
 	#define CAM_DRYOS					1
 	#define CAM_DRYOS_2_3_R39			1
 
-	#define CAM_RAW_ROWPIX				4464
-	#define CAM_RAW_ROWS				3276
-
 	#define CAM_SWIVEL_SCREEN			1
 	#define CAM_ADJUSTABLE_ALT_BUTTON	1
 	#undef  CAM_CAN_SD_OVER_NOT_IN_MF
@@ -38,7 +35,7 @@
 	#define CAM_MULTIPART				1
 	#define CAM_HAS_JOGDIAL				1
 	#undef  CAM_USE_ZOOM_FOR_MF
-	#undef  CAM_UNCACHED_BIT			// shut up compiler
+    #undef  CAM_UNCACHED_BIT
 	#define CAM_UNCACHED_BIT			0x40000000
 	#define CAM_SHOW_OSD_IN_SHOOT_MENU  1
     #define CAM_DETECT_SCREEN_ERASE     1       // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
@@ -63,7 +60,9 @@
 	  -200195, 1000000,   961551, 1000000,  238645, 1000000, \
 	   -16441, 1000000,   142319, 1000000,  375979, 1000000
 
-	// cropping
+    // Sensor size, DNG image size & cropping
+    #define CAM_RAW_ROWPIX                  4464
+    #define CAM_RAW_ROWS                    3276
 	#define CAM_JPEG_WIDTH				4368
 	#define CAM_JPEG_HEIGHT				3254
 	#define CAM_ACTIVE_AREA_X1			24
@@ -73,6 +72,8 @@
 
 	// camera name
 	#define PARAM_CAMERA_NAME			4 // parameter number for GetParameterData
+    #define PARAM_DISPLAY_MODE1             59  // param number for LCD display mode when camera in playback
+    #define PARAM_DISPLAY_MODE2             62  // param number for LCD display mode when camera in record view hold mode
 	#undef  CAM_SENSOR_BITS_PER_PIXEL
 	#define CAM_SENSOR_BITS_PER_PIXEL	12
 
@@ -105,7 +106,7 @@
 
     #define CAM_FIRMWARE_MEMINFO        1       // Use 'GetMemInfo' to get free memory size.
 
-    #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 	

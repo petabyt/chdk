@@ -26,7 +26,7 @@ struct	STD_stat
 
 // Universal struct of directory entry
 struct STD_dirent {
-    char            d_name[13];
+    char            d_name[100];
     unsigned long	unk1;
     unsigned char 	attrib;
     unsigned long 	size;

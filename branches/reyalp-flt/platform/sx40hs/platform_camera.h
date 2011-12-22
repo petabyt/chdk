@@ -25,8 +25,6 @@
 	#define CAM_DRYOS_2_3_R39			1
     #define CAM_DRYOS_2_3_R47			1
 
-	#define CAM_RAW_ROWPIX				4176 // Found @0xff18e050
-	#define CAM_RAW_ROWS				3060 // Found @0xff18e05c
 	#undef  CAM_UNCACHED_BIT
 	#define CAM_UNCACHED_BIT			0x40000000 // Found @0xff02bea8
 
@@ -66,7 +64,9 @@
 	-75055, 100000,  440444, 100000,  11367, 100000, \
 	 -5801, 100000,   71589, 100000, 118914, 100000
 
-	// cropping
+    // Sensor size, DNG image size & cropping
+    #define CAM_RAW_ROWPIX                  4176 // Found @0xff18e050
+    #define CAM_RAW_ROWS                    3060 // Found @0xff18e05c
 	#define CAM_JPEG_WIDTH				4072
 	#define CAM_JPEG_HEIGHT				3044
 	#define CAM_ACTIVE_AREA_X1			96
@@ -76,6 +76,8 @@
 
 	// camera name
 	#define PARAM_CAMERA_NAME			4 // parameter number for GetParameterData
+    #define PARAM_DISPLAY_MODE1             59  // param number for LCD display mode when camera in playback
+    #define PARAM_DISPLAY_MODE2             62  // param number for LCD display mode when camera in record view hold mode
 	#undef  CAM_SENSOR_BITS_PER_PIXEL
 	#define CAM_SENSOR_BITS_PER_PIXEL	12
 
@@ -104,11 +106,11 @@
 	#define	CAM_STARTUP_CRASH_FILE_OPEN_FIX	1				// enable fix for camera crash at startup when opening the conf / font files
 															// see http://chdk.setepontos.com/index.php?topic=6179.0
 
-//    #define CAM_KEY_CLICK_DELAY         150 // Does SX40 need extra delay for clicks ???
+    #define CAM_KEY_CLICK_DELAY             150 // SX40 needs extra delay for clicks
 
     #define CAM_FIRMWARE_MEMINFO        1       // Use 'GetMemInfo' to get free memory size.
 
-    #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 	
