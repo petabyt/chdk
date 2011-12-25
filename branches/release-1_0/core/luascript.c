@@ -1650,9 +1650,9 @@ static int luaCB_switch_mode_usb( lua_State* L )
   return switch_mode_usb(mode);
 }
  
-#ifdef CAM_CHDK_PTP
-// PTP Live View functions
-
+//#ifdef CAM_CHDK_PTP
+#if 0
+// PTP Live View functions - not implemented in 1.0
 // Function used to get viewport, bitmap and palette data via PTP
 // Address of this function sent back to client program which then
 // calls this with options to determine what to transfer
@@ -2316,7 +2316,7 @@ static const luaL_Reg chdk_funcs[] = {
    FUNC(set_record)
    FUNC(switch_mode_usb)
 #ifdef CAM_CHDK_PTP
-   FUNC(get_video_details)
+//   FUNC(get_video_details)
 #endif
 
 #ifdef OPT_LUA_CALL_NATIVE
