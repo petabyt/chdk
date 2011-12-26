@@ -3,10 +3,8 @@
 #include "stdlib.h"
 #include "raw.h"
 #include "console.h"
-#include "dng.h"
-#ifdef OPT_CURVES
-    #include "modules.h"
-#endif
+#include "math.h"
+#include "modules.h"
 #include "shot_histogram.h"
 
 //-------------------------------------------------------------------
@@ -51,7 +49,10 @@ int raw_savefile() {
     static struct utimbuf t;
     static int br_counter; 
 #if DNG_SUPPORT
-    if (conf.dng_raw) capture_data_for_exif();
+    if (conf.dng_raw) {                             
+		if ( module_dng_load(LIBDNG_OWNED_BY_RAW) )
+			libdng.capture_data_for_exif();
+	}
 #endif    
     if (state_kbd_script_run && shot_histogram_isenabled()) build_shot_histogram();
 
@@ -61,7 +62,8 @@ int raw_savefile() {
 
 #if DNG_SUPPORT
     // count/save badpixels if requested
-    if(raw_init_badpixel_bin()) {
+    if( libdng.raw_init_badpixel_bin && 
+		libdng.raw_init_badpixel_bin()) {
         return 0;
     }
 #endif    
@@ -144,11 +146,9 @@ int raw_savefile() {
 #if DNG_SUPPORT
             if (conf.dng_raw)
             {
-                create_dng_header();
-                write_dng_header(fd);
-                reverse_bytes_order2(rawadr, altrawadr, hook_raw_size());
-                // Write alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
-                write(fd, (char*)(((unsigned long)altrawadr)|CAM_UNCACHED_BIT), hook_raw_size());
+				if ( module_dng_load(LIBDNG_OWNED_BY_RAW) ) {
+					libdng.write_dng(fd, rawadr, altrawadr, CAM_UNCACHED_BIT );
+}
             }
             else 
             {
@@ -157,13 +157,6 @@ int raw_savefile() {
             }
             close(fd);
             utime(fn, &t);
-
-            if (conf.dng_raw)
-            {
-                if (rawadr == altrawadr)    // If only one RAW buffer then we have to swap the bytes back
-                    reverse_bytes_order2(rawadr, altrawadr, hook_raw_size());
-                free_dng_header();
-            }
 #else
             // Write active RAW buffer
             write(fd, (char*)(((unsigned long)rawadr)|CAM_UNCACHED_BIT), hook_raw_size());
@@ -285,10 +278,15 @@ void patch_bad_pixels(void) {
     }
 }
 
-void make_pixel_list(char * ptr) {
+#define PIXELS_BUF_SIZE 8192
+int make_pixel_list(char * ptr, int size) {
     int x,y;
     struct point *pixel;
     char *endptr;
+	
+	if ( size <=0 ) return 0;
+	if ( size >PIXELS_BUF_SIZE ) ptr[PIXELS_BUF_SIZE]=0;
+
     while(*ptr) {
         while (*ptr==' ' || *ptr=='\t') ++ptr;    // whitespaces
         x=strtol(ptr, &endptr, 0);
@@ -314,30 +312,22 @@ void make_pixel_list(char * ptr) {
         while (*ptr && *ptr!='\n') ++ptr;    // unless end of line
         if (*ptr) ++ptr;
     }
+	return 0;
 }
 
-#define PIXELS_BUF_SIZE 8192
-void load_bad_pixels_list(const char* filename) {
-    char *buf;
-    int fd;
+int pow_calc( int mult, int x, int x_div, int y, int y_div)
+{
+	return pow_calc_2( mult, x, x_div, y, y_div);
+}
 
-    if (filename) {
-        buf = umalloc(PIXELS_BUF_SIZE);
-        if (!buf) return;
+int pow_calc_2( int mult, int x, int x_div, double y, int y_div)
+{
+	double x1 = x;
+	if ( x_div != 1 ) { x1=x1/x_div;}
+	if ( y_div != 1 ) { y=y/y_div;}
 
-        fd = open(filename, O_RDONLY, 0777);
-        if (fd>=0) {
-            int rcnt = read(fd, buf, PIXELS_BUF_SIZE);
-            if (rcnt > 0) {
-                if (rcnt == PIXELS_BUF_SIZE) 
-                buf[PIXELS_BUF_SIZE-1] = 0;
+	if ( mult==1 )
+		return pow( x1, y );
                 else
-                buf[rcnt] = 0;
-            }
-            close(fd);
-        }
-        make_pixel_list(buf);    
-        ufree(buf);
-    }
-
+		return mult	* pow( x1, y );
 }

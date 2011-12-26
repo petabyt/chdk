@@ -29,6 +29,7 @@ int (*raw_subtract)(const char *from, const char *sub, const char *dest);
  #error define set_raw_pixel for sensor bit depth
 #endif
 
+// This is to minimize sharing sym to use this lib in other modules
 struct librawop_sym librawop;
 
 static int bind_module_rawop( void** export_list )
@@ -242,11 +243,101 @@ void module_fselect_init(int title, const char* prev_dir, const char* default_di
 	module_fselect_init_w_mode(title, prev_dir, default_dir, on_select, 0/*key_redraw_mode*/);
 }
 
-/************* OTHER MODULES ******/
 
-void module_convert_dng_to_chdk_raw(char* fn)
+
+/************* MODULE DNG ******/
+
+#define MODULE_NAME_DNG "_dng.flt"
+
+// This is to keep module in memory while it required by anyone
+static int module_dng_semaphore;
+
+struct libdng_sym libdng;
+
+#if DNG_SUPPORT
+static int bind_module_dng( void** export_list )
+{
+	  // Unbind
+	if ( !export_list ) {
+		memset(&libdng, 0, sizeof(libdng));
+    	return 0;
+  	}
+
+	// Bind
+	if ( (unsigned int)export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+	     return 1;
+  	if ( (unsigned int)export_list[1] < 9 )
+    	 return 1;
+
+	libdng.size = ((int)export_list[1])-2;
+	libdng.create_badpixel_bin=export_list[2];
+	libdng.raw_init_badpixel_bin=export_list[3];
+	libdng.capture_data_for_exif=export_list[4];
+	libdng.load_bad_pixels_list_b=export_list[5];
+	libdng.badpixel_list_loaded_b=export_list[6];
+
+	libdng.convert_dng_to_chdk_raw=export_list[7];
+	libdng.write_dng=export_list[8];
+	return 0;
+}
+#endif
+
+void module_dng_unload(int owner)
 {
 #if DNG_SUPPORT
-	convert_dng_to_chdk_raw(fn);
+	if (libdng.create_badpixel_bin==0)
+    	return;
+
+  	module_dng_semaphore&=~owner;
+	if (module_dng_semaphore)
+		return;
+
+	module_unload(MODULE_NAME_DNG);  
+#endif
+}
+
+
+// Return: 0-fail, otherwise - bind list
+struct libdng_sym* module_dng_load(int owner)
+{
+#if DNG_SUPPORT
+  static int module_idx=-1;
+
+  module_dng_semaphore|=owner;
+  if (libdng.create_badpixel_bin)
+     return &libdng;
+
+  module_idx=module_load(MODULE_NAME_DNG, bind_module_dng );
+  if ( module_idx<0 ) {
+	 module_unload(MODULE_NAME_DNG);  
+  	 module_dng_semaphore=0;
+  }
+  else {
+	 // This module could be unloaded only manualy (because store badpixel)
+	 module_set_flags(module_idx, MODULE_FLAG_DISABLE_AUTOUNLOAD);
+  }
+
+  return (libdng.create_badpixel_bin)?&libdng:0 ;
+#else
+  return 0;
+#endif
+}
+
+// Make convertion or check operation exsitsing
+// Parameter: fn = filename or 0 to just check is operation possible
+// Return: 0-fail, 1-ok
+//--------------------------------------------------------
+int module_convert_dng_to_chdk_raw(char* fn)
+{
+#if DNG_SUPPORT
+	if ( fn==0 )
+		return module_check_is_exist(MODULE_NAME_DNG);
+	if ( !module_dng_load(LIBDNG_OWNED_BY_CONVERT) )
+		return 0;
+	libdng.convert_dng_to_chdk_raw(fn);
+	module_dng_unload(LIBDNG_OWNED_BY_CONVERT);
+	return 1;
+#else
+	return 0;
 #endif
 }

@@ -5,7 +5,7 @@
 #include "font.h"
 #include "camera.h"
 #include "raw.h"
-#include "dng.h"
+#include "modules.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
 #include "gui_grid.h"
@@ -487,10 +487,15 @@ static void conf_change_video_bitrate() {
 void conf_change_dng(void){
 #if DNG_SUPPORT
  if (conf.dng_raw) {
-  if (!badpixel_list_loaded_b()) load_bad_pixels_list_b("A/CHDK/badpixel.bin");
-  if (!badpixel_list_loaded_b()) conf.dng_raw=0;
+	if ( !module_dng_load(LIBDNG_OWNED_BY_RAW) )
+		return;
+	if (!libdng.badpixel_list_loaded_b()) libdng.load_bad_pixels_list_b("A/CHDK/badpixel.bin");
+ 	if (!libdng.badpixel_list_loaded_b()) conf.dng_raw=0;
  }
- else unload_bad_pixels_list_b();
+ else if ( libdng.load_bad_pixels_list_b ) {
+	libdng.load_bad_pixels_list_b(0);        //unload badpixel.bin
+ 	module_dng_unload(LIBDNG_OWNED_BY_RAW);
+ }
 #endif
 }
 

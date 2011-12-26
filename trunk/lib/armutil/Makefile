@@ -2,16 +2,19 @@ topdir=../../
 
 include $(topdir)makefile.inc
 
-OBJS = reversebytes.o callfunc.o reboot.o
+OBJS = callfunc.o reboot.o
 
-all: libarmutil.a
+OBJS_ALL = $(OBJS)
+OBJS_ALL += reversebytes.o 
+
+all: libarmutil.a reversebytes.o 
 
 libarmutil.a: $(OBJS)
 
 clean:
-	rm -f $(OBJS) libarmutil.a
+	rm -f $(OBJS_ALL) libarmutil.a
 
 distclean: clean
-	rm -f $(OBJS:.o=.d)
+	rm -f $(OBJS_ALL:.o=.d)
 
 include $(topdir)bottom.inc

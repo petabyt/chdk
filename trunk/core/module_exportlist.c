@@ -26,10 +26,14 @@
 #include "modules.h"
 #include "module_load.h"
 #include "raw.h"
+#include "action_stack.h"
+#include "console.h"
 
 
 extern int fselect_sort_nothumb(const void* v1, const void* v2);
 extern short shooting_get_ev_correction1();
+
+extern long shutter_open_time; // defined in platform/generic/capt_seq.c
 
 
 // ATTENTION: DO NOT USE BRACES OR OWN /**/-STYLE COMMENTS ANYWHERE IN THIS FILE TO AVOID AUTO PARSING MISTAKES
@@ -294,6 +298,27 @@ void* CHDK_EXPORT_LIST[] = {
 			// profile.flt
 			find_mnu,
 			lang_strhash31,
+
+			action_stack_create,
+			action_pop,
+			action_push,
+			action_push_delay,
+			action_stack_standard,
+			console_clear,
+			console_add_line,
+			shooting_set_tv96_direct,
+			shooting_get_iso_market,
+			get_focal_length,
+			get_effective_focal_length,
+			get_parameter_data,
+			get_property_case,
+			&shutter_open_time,
+			get_raw_pixel,
+			&state_shooting_progress,
+			patch_bad_pixel,
+			
+			pow_calc,
+			pow_calc_2,
 
 			0
 };

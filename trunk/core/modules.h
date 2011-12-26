@@ -37,9 +37,20 @@ void module_fselect_init_w_mode(int title, const char* prev_dir, const char* def
 void module_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode);
 
 
-
+// MODULE "DNG"
 //--------------------------
-void module_convert_dng_to_chdk_raw(char* fn);
+#include "dng.h"
+
+// values of semaphore
+#define LIBDNG_OWNED_BY_RAW 			0x1
+#define LIBDNG_OWNED_BY_CONVERT 		0x2
+#define LIBDNG_OWNED_BY_CREATEBADPIXEL	0x4
+
+struct libdng_sym* module_dng_load(int owner);		// 0fail, addr-ok
+void module_dng_unload(int owner);
+
+int module_convert_dng_to_chdk_raw(char* fn);		// Return: 0-fail, 1-ok
+
 
 
 #endif
