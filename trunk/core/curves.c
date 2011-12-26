@@ -3,9 +3,14 @@
 #include "stdlib.h"
 #include "raw.h"
 
-#ifdef OPT_CURVES
+//#ifdef OPT_CURVES
+#if 1
 
+#include "module_exportlist.h"
 #include "curves.h"
+
+char *conf_curve_file;
+int *conf_curve_enable;
 
 /*
 	Expands curves features
@@ -100,14 +105,14 @@ static int curve_load_data(const char *name,CURVE_TYPE curve_type) {
 }
 
 void curve_set_mode(int value) {
-	if((value>=0) && (value<=4)) conf.curve_enable=value;
+	if((value>=0) && (value<=4)) *conf_curve_enable=value;
 	curve_init_mode();
 }
 
 void curve_init_mode() {
-	switch(conf.curve_enable) {
+	switch(*conf_curve_enable) {
 		case 1: // custom - ensure alloc and load conf.curve_file
-			curve_load_data(conf.curve_file,CURVE_CUSTOM);
+			curve_load_data(conf_curve_file,CURVE_CUSTOM);
 		break;
 		case 2: // system - ensure alloc and load syscurve
 		case 3:
@@ -115,7 +120,7 @@ void curve_init_mode() {
 			curve_load_data("A/CHDK/SYSCURVES.CVF",CURVE_SYSTEM);
 		break;
 		default:
-			conf.curve_enable = 0;
+			*conf_curve_enable = 0;
 		case 0: // disabled - free
 			curve_free_data();
 	}
@@ -140,9 +145,9 @@ void curveRGB_apply() {
 	
 	
 	// Loop through picture rows
-	for (i=CAM_RAW_ROWS; i;i-=2){
+	for (i=CAM_CHDK_RAW_ROWS; i;i-=2){
 		// Loop through picture columns 
-		for (j=CAM_RAW_ROWPIX; j; j-=8, src+=10){
+		for (j=CAM_CHDK_RAW_ROWPIX; j; j-=8, src+=10){
 			pixVal0=((0x3fc&(((unsigned short)(src[1]))<<2)) | (src[0] >> 6));
 			pixVal1=((0x3f0&(((unsigned short)(src[0]))<<4)) | (src[3] >> 4));
 				pixVal0 = curve0[pixVal0];
@@ -173,7 +178,7 @@ void curveRGB_apply() {
             *(src+9) = (unsigned char) ((pixVal2<<2)|(pixVal0>>8)); // 6,7 =>(2,0)
             *(src+8) = (unsigned char) ((pixVal0)); //7 (=>0)		}
 		}
-		for (j=CAM_RAW_ROWPIX;j; j-=8, src+=10){
+		for (j=CAM_CHDK_RAW_ROWPIX;j; j-=8, src+=10){
 			pixVal0=((0x3fc&(((unsigned short)(src[1]))<<2)) | (src[0] >> 6));
 			pixVal1=((0x3f0&(((unsigned short)(src[0]))<<4)) | (src[3] >> 4));
 				pixVal0 = curve2[pixVal0];
@@ -236,9 +241,9 @@ void curveL_apply(unsigned sys_index) {
 	src = (unsigned char *) get_raw_image_addr();	
 	
 	// Loop through picture rows
-	for (i=CAM_RAW_ROWS; i;i-=2){
+	for (i=CAM_CHDK_RAW_ROWS; i;i-=2){
 		// Loop through picture columns 
-		for (j=CAM_RAW_ROWPIX; j; j-=8, src+=10){
+		for (j=CAM_CHDK_RAW_ROWPIX; j; j-=8, src+=10){
 			pixVal0=((0x3fc&(((unsigned short)(src[1]))<<2)) | (src[0] >> 6));
 			pixVal1=((0x3f0&(((unsigned short)(src[0]))<<4)) | (src[3] >> 4));
 			if (pixVal1) {
@@ -301,7 +306,7 @@ void curveL_apply(unsigned sys_index) {
             *(src+9) = (unsigned char) ((pixVal2<<2)|(pixVal0>>8)); // 6,7 =>(2,0)
             *(src+8) = (unsigned char) ((pixVal0)); //7 (=>0)
 		}
-		for (j=CAM_RAW_ROWPIX;j; j-=8, src+=10){
+		for (j=CAM_CHDK_RAW_ROWPIX;j; j-=8, src+=10){
 			pixVal0=((0x3fc&(((unsigned short)(src[1]))<<2)) | (src[0] >> 6));
 			pixVal1=((0x3f0&(((unsigned short)(src[0]))<<4)) | (src[3] >> 4));
 			if (pixVal0) {
@@ -370,7 +375,7 @@ void curveL_apply(unsigned sys_index) {
 void curve_apply() {
 	short EVbias = shooting_get_ev_correction1();
 
-	switch(conf.curve_enable) {
+	switch(*conf_curve_enable) {
 		case 0:
 			break;
 		case 1:		// Custom
@@ -384,7 +389,7 @@ void curve_apply() {
 			break;
 		case 2:
 		case 3: // +1EV,  +2EV
-			if (current_curve_type == CURVE_SYSTEM) curveL_apply( conf.curve_enable & 1 );
+			if (current_curve_type == CURVE_SYSTEM) curveL_apply( *conf_curve_enable & 1 );
 			break;
 		case 4:		// Auto DR
 
@@ -399,5 +404,81 @@ void curve_apply() {
 	}
 	
 }
+
+// =========  MODULE INIT =================
+
+#include "module_load.h"
+
+
+int module_idx=-1;
+
+/***************** BEGIN OF AUXILARY PART *********************
+  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+ **************************************************************/
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)5,
+
+			curve_set_mode,
+			curve_init_mode,
+			curve_apply,
+		};
+
+
+//---------------------------------------------------------
+// PURPOSE:   Bind module symbols with chdk. 
+//		Required function
+// PARAMETERS: pointer to chdk list of export
+// RETURN VALUE: 1 error, 0 ok
+//---------------------------------------------------------
+int _module_loader( void** chdk_export_list )
+{
+  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+     return 1;
+
+  // Safe bind of conf.
+  tConfigVal configVal;
+  CONF_BIND_STR(185, conf_curve_file);
+  CONF_BIND_INT(186, conf_curve_enable );
+
+  // Startup initialize
+  curve_init_mode();
+
+  return 0;
+}
+
+
+
+//---------------------------------------------------------
+// PURPOSE: Finalize module operations (close allocs, etc)
+// RETURN VALUE: 0-ok, 1-fail
+//---------------------------------------------------------
+int _module_unloader()
+{
+	// This could be happens only if on-load mistake
+	// CHDK never unload this library (but load only if needed)
+	// Reason: a) curve_set_mode by LUA is not stored anywhere
+	//		   b) perfomance reason - to avoid load on each raw_processing
+  return 0;
+}
+
+
+/******************** Module Information structure ******************/
+
+struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
+									sizeof(struct ModuleInfo),
+
+									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+									MODULEINFO_FLAG_SYSTEM,		// flag
+									(int32_t)"Curves (dll)",	// Module name
+									1, 0,						// Module version
+									(int32_t)"Apply curves to shots. Only 10bit sensor version"
+								 };
+
+
+/*************** END OF AUXILARY PART *******************/
+
 
 #endif

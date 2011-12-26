@@ -302,6 +302,7 @@ void draw_clear() {
     memset(frame_buffer[0], COLOR_TRANSPARENT, screen_buffer_size*2);
 }
 
+// Restore CANON_OSD
 //-------------------------------------------------------------------
 void draw_restore() {
     vid_bitmap_refresh();

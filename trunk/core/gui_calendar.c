@@ -9,6 +9,12 @@
 #include "gui_lang.h"
 #include "gui_calendar.h"
 
+#include "module_load.h"
+void gui_calendar_menu_kbd_process();
+
+gui_handler GUI_MODE_CALENDAR = 
+    /*GUI_MODE_CALENDAR*/       { gui_calendar_draw,    gui_calendar_kbd_process,   gui_calendar_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+
 //-------------------------------------------------------------------
 #define TITLE_COLOR             (MAKE_COLOR(COLOR_BLACK, COLOR_WHITE))
 #define CALENDAR_COLOR          (MAKE_COLOR(COLOR_GREY, COLOR_WHITE))
@@ -74,7 +80,10 @@ static void gui_calendar_initial_draw() {
 }
 
 //-------------------------------------------------------------------
-void gui_calendar_init() {
+int basic_module_init() {
+
+    gui_set_mode( (unsigned int)&GUI_MODE_CALENDAR );
+
     calendar_goto_today();
     cal_w = FONT_WIDTH*4*7;
     cal_h = 4+FONT_HEIGHT+4+4+FONT_HEIGHT+4+(FONT_HEIGHT+4)*6;
@@ -82,6 +91,7 @@ void gui_calendar_init() {
     cal_y = FONT_HEIGHT+(screen_height-FONT_HEIGHT-cal_h)/2;
     gui_calendar_initial_draw();
     need_redraw = 1;
+	return 1;
 }
 
 //-------------------------------------------------------------------
@@ -109,11 +119,8 @@ void gui_calendar_kbd_process() {
             }
             need_redraw = 1;
             break;
-      #if CAM_HAS_ERASE_BUTTON
         case KEY_ERASE:
-      #else
         case KEY_DISPLAY:
-      #endif
             calendar_goto_today();
             need_redraw = 1;
             break;
@@ -121,7 +128,7 @@ void gui_calendar_kbd_process() {
 }
 
 //-------------------------------------------------------------------
-void gui_calendar_draw() {
+void gui_calendar_draw(int enforce_redraw) {
     int x, y;
     static char str[32];
     int w, d, i;
@@ -172,3 +179,22 @@ void gui_calendar_draw() {
     }
 }
 
+extern int module_idx;
+
+void gui_calendar_menu_kbd_process() {
+	gui_default_kbd_process_menu_btn();
+  	module_async_unload(module_idx);
+}
+
+/******************** Module Information structure ******************/
+
+struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
+									sizeof(struct ModuleInfo),
+
+									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+									0,							// flag
+									-LANG_MENU_MISC_CALENDAR,	// Module name
+									1, 0,						// Module version
+									0
+								 };

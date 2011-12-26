@@ -7,6 +7,8 @@
 #include "gui_lang.h"
 #include "lang.h"
 #include "conf.h"
+#include "module_exportlist.h"
+
 #define TEMP_FILE_NAME   "A/raw16.tmp"
 #define TEMP_FILE_NAME_1 "A/raw16_1.tmp"
 
@@ -34,9 +36,9 @@ static int raw_subtract_values(int from, int sub) {
 
  int result;
  if ((from==0) || (sub==0)) return 0; // bad pixel
- result = from - sub + CAM_BLACK_LEVEL;
- if (result<CAM_BLACK_LEVEL) result=CAM_BLACK_LEVEL;
- if (result>CAM_WHITE_LEVEL) result=CAM_WHITE_LEVEL;
+ result = from - sub + CAM_CHDK_BLACK_LEVEL;
+ if (result<CAM_CHDK_BLACK_LEVEL) result=CAM_CHDK_BLACK_LEVEL;
+ if (result>CAM_CHDK_WHITE_LEVEL) result=CAM_CHDK_WHITE_LEVEL;
  return result;
 
 }
@@ -53,29 +55,29 @@ int raw_subtract(const char *from, const char *sub, const char *dest) {
 
     static struct utimbuf t;
 
-    struct stat st;
+    struct STD_stat st;
 
-    if (stat((char *)from,&st) != 0 || st.st_size!=hook_raw_size()) 
+    if (safe_stat((char *)from,&st) != 0 || st.st_size!=hook_raw_size()) 
         return 0;
 
-    if (stat((char *)sub,&st) != 0 || st.st_size!=hook_raw_size()) 
+    if (safe_stat((char *)sub,&st) != 0 || st.st_size!=hook_raw_size()) 
         return 0;
 
-     if( (baccum=malloc(RAW_ROWLEN)) &&
-        (bsub=malloc(RAW_ROWLEN)) &&
+     if( (baccum=malloc(RAW_CHDK_ROWLEN)) &&
+        (bsub=malloc(RAW_CHDK_ROWLEN)) &&
         (ffrom=fopen(from, "rb")) &&
         (fsub=fopen(sub, "rb")) &&
         (fdest=fopen(dest, "wb")) &&
         avail > req)
     {
         started();
-        for (j = 0; j < CAM_RAW_ROWS; j++) {
-            fread(baccum,1, RAW_ROWLEN,ffrom);
-            fread(bsub,1, RAW_ROWLEN,fsub);
+        for (j = 0; j < CAM_CHDK_RAW_ROWS; j++) {
+            fread(baccum,1, RAW_CHDK_ROWLEN,ffrom);
+            fread(bsub,1, RAW_CHDK_ROWLEN,fsub);
 
-#if CAM_SENSOR_BITS_PER_PIXEL==10
+#if CAM_MODULE_SENSOR_BITS_PER_PIXEL==10
 
-            for(i = 0;i<RAW_ROWLEN; i+=10) {
+            for(i = 0;i<RAW_CHDK_ROWLEN; i+=10) {
                 s =((0x3fc&(((unsigned short)bsub[i+1])<<2)) | (bsub[i+0] >> 6));
                 d =((0x3fc&(((unsigned short)baccum[i+1])<<2)) | (baccum[i+0] >> 6));
                 d = raw_subtract_values(d,s);
@@ -128,9 +130,9 @@ int raw_subtract(const char *from, const char *sub, const char *dest) {
                 baccum[i+9]=(baccum[i+9]&0xFC)|(d>>8);
             }
 
-#elif CAM_SENSOR_BITS_PER_PIXEL==12
+#elif CAM_MODULE_SENSOR_BITS_PER_PIXEL==12
 
-            for(i = 0;i<RAW_ROWLEN; i+=6) {
+            for(i = 0;i<RAW_CHDK_ROWLEN; i+=6) {
 
                 s=((0xFF0&(((unsigned short)bsub[i+1])<<4))   | (bsub[i+0] >> 4));
                 d=((0xFF0&(((unsigned short)baccum[i+1])<<4)) | (baccum[i+0] >> 4));
@@ -161,9 +163,9 @@ int raw_subtract(const char *from, const char *sub, const char *dest) {
  #error define set_raw_pixel for sensor bit depth
 #endif
 
-            fwrite(baccum,1,RAW_ROWLEN,fdest);
+            fwrite(baccum,1,RAW_CHDK_ROWLEN,fdest);
             if ( (j & 0x1F) == 0 ) {
-                gui_browser_progress_show((char *)dest, j*100/CAM_RAW_ROWS);
+                gui_browser_progress_show((char *)dest, j*100/CAM_CHDK_RAW_ROWS);
             }
         }
         gui_browser_progress_show((char *)dest, 100);
@@ -186,7 +188,7 @@ int raw_subtract(const char *from, const char *sub, const char *dest) {
 
 int raw_merge_start(int action){
   unsigned int req, avail;
-  req=((CAM_RAW_ROWPIX*CAM_RAW_ROWS)>>18)+1;
+  req=((CAM_CHDK_RAW_ROWPIX*CAM_CHDK_RAW_ROWS)>>18)+1;
   avail=GetFreeCardSpaceKb()>>10;
   if (avail<req) {
     sprintf(namebuf,lang_str(LANG_AVERAGE_NO_CARD_SPACE),req,avail);
@@ -195,10 +197,10 @@ int raw_merge_start(int action){
   }
   raw_action=action;
   raw_count=0;
-  row=malloc(CAM_RAW_ROWPIX*sizeof(unsigned short));
+  row=malloc(CAM_CHDK_RAW_ROWPIX*sizeof(unsigned short));
   if (!row)
     return 0;
-  rawrow=malloc(RAW_ROWLEN);
+  rawrow=malloc(RAW_CHDK_ROWLEN);
   if (!rawrow) {
     free(row);
     return 0;
@@ -209,12 +211,12 @@ int raw_merge_start(int action){
 void raw_merge_add_file(const char * filename) {
   int  t,src,i,j,nrow;
   FILE *fbrawin=NULL,*fbrawout,*fcraw;
-  struct stat st;
+  struct STD_stat st;
 
   if (!filename)
     return;
 
-  stat(filename,&st);
+  safe_stat(filename,&st);
   if (st.st_size!=hook_raw_size())
     return;
 
@@ -227,18 +229,18 @@ void raw_merge_add_file(const char * filename) {
     if (!raw_count || fbrawin){
       fbrawout=fopen(TEMP_FILE_NAME_1,"w+b");
       if (fbrawout){
-        fread(rawrow, 1, RAW_ROWLEN, fcraw);
+        fread(rawrow, 1, RAW_CHDK_ROWLEN, fcraw);
         if (raw_count) 
-          fread(row, 1, CAM_RAW_ROWPIX*sizeof(unsigned short), fbrawin); 
+          fread(row, 1, CAM_CHDK_RAW_ROWPIX*sizeof(unsigned short), fbrawin); 
         else
-          for (i=0;i<CAM_RAW_ROWPIX;i++)
+          for (i=0;i<CAM_CHDK_RAW_ROWPIX;i++)
             row[i]=0;
 
-        for (nrow=0,j=0;nrow<CAM_RAW_ROWS;nrow++,j++){
+        for (nrow=0,j=0;nrow<CAM_CHDK_RAW_ROWS;nrow++,j++){
 
-#if CAM_SENSOR_BITS_PER_PIXEL==10
+#if CAM_MODULE_SENSOR_BITS_PER_PIXEL==10
 
-          for (i=0,src=0; i<CAM_RAW_ROWPIX; i+=8, src+=10){
+          for (i=0,src=0; i<CAM_CHDK_RAW_ROWPIX; i+=8, src+=10){
             row[i+0]+=((0x3fc&(((unsigned short)rawrow[src+1])<<2)) | (rawrow[src+0] >> 6));
             row[i+1]+=((0x3f0&(((unsigned short)rawrow[src+0])<<4)) | (rawrow[src+3] >> 4));
             row[i+2]+=((0x3c0&(((unsigned short)rawrow[src+3])<<6)) | (rawrow[src+2] >> 2));
@@ -249,9 +251,9 @@ void raw_merge_add_file(const char * filename) {
             row[i+7]+=((0x300&(((unsigned short)rawrow[src+9])<<8)) | (rawrow[src+8])); 
           }
 
-#elif CAM_SENSOR_BITS_PER_PIXEL==12
+#elif CAM_MODULE_SENSOR_BITS_PER_PIXEL==12
 
-          for (i=0,src=0; i<CAM_RAW_ROWPIX; i+=4, src+=6){
+          for (i=0,src=0; i<CAM_CHDK_RAW_ROWPIX; i+=4, src+=6){
             row[i+0]+=((0xFF0&(((unsigned short)rawrow[src+1])<<4)) | (rawrow[src+0] >> 4));
             row[i+1]+=((0xF00&(((unsigned short)rawrow[src+0])<<8)) | (rawrow[src+3]     ));
             row[i+2]+=((0xFF0&(((unsigned short)rawrow[src+2])<<4)) | (rawrow[src+5] >> 4));
@@ -262,16 +264,16 @@ void raw_merge_add_file(const char * filename) {
  #error define set_raw_pixel for sensor bit depth
 #endif
 
-          fwrite(row, 1, CAM_RAW_ROWPIX*sizeof(unsigned short), fbrawout);
+          fwrite(row, 1, CAM_CHDK_RAW_ROWPIX*sizeof(unsigned short), fbrawout);
           if (raw_count)
-            fread(row, 1, CAM_RAW_ROWPIX*sizeof(unsigned short), fbrawin);
+            fread(row, 1, CAM_CHDK_RAW_ROWPIX*sizeof(unsigned short), fbrawin);
           else
-            for (i=0;i<CAM_RAW_ROWPIX;i++)
+            for (i=0;i<CAM_CHDK_RAW_ROWPIX;i++)
               row[i]=0;
-          fread(rawrow, 1, RAW_ROWLEN, fcraw);
-          if (j>=CAM_RAW_ROWS/10) {
-            j-=CAM_RAW_ROWS/10;
-            gui_browser_progress_show(filename, nrow*100/CAM_RAW_ROWS);
+          fread(rawrow, 1, RAW_CHDK_ROWLEN, fcraw);
+          if (j>=CAM_CHDK_RAW_ROWS/10) {
+            j-=CAM_CHDK_RAW_ROWS/10;
+            gui_browser_progress_show(filename, nrow*100/CAM_CHDK_RAW_ROWS);
           }
         }
         raw_count++;
@@ -306,22 +308,22 @@ void raw_merge_end(void) {
   if (fbraw) {
     fcraw=fopen(namebuf,"w+b");
     if (fcraw) {
-      fread(row, 1, CAM_RAW_ROWPIX*sizeof(unsigned short), fbraw);
-      for (nrow=0,j=0;nrow<CAM_RAW_ROWS;nrow++,j++) {
-        for (i=0;i<CAM_RAW_ROWPIX;i++) {
+      fread(row, 1, CAM_CHDK_RAW_ROWPIX*sizeof(unsigned short), fbraw);
+      for (nrow=0,j=0;nrow<CAM_CHDK_RAW_ROWS;nrow++,j++) {
+        for (i=0;i<CAM_CHDK_RAW_ROWPIX;i++) {
           if (raw_action==RAW_OPERATION_AVERAGE)
             row[i]/=raw_count;
           else {
-            if (row[i]>CAM_BLACK_LEVEL*(raw_count-1))
-              row[i]-=CAM_BLACK_LEVEL*(raw_count-1);
+            if (row[i]>CAM_CHDK_BLACK_LEVEL*(raw_count-1))
+              row[i]-=CAM_CHDK_BLACK_LEVEL*(raw_count-1);
             else
               row[i]=0;
-            if (row[i]>CAM_WHITE_LEVEL)
-              row[i]=CAM_WHITE_LEVEL;
+            if (row[i]>CAM_CHDK_WHITE_LEVEL)
+              row[i]=CAM_CHDK_WHITE_LEVEL;
           }
         }
-#if CAM_SENSOR_BITS_PER_PIXEL==10
-        for (i=0,src=0;i<CAM_RAW_ROWPIX;i+=8,src+=10) {
+#if CAM_MODULE_SENSOR_BITS_PER_PIXEL==10
+        for (i=0,src=0;i<CAM_CHDK_RAW_ROWPIX;i+=8,src+=10) {
           rawrow[src+0]=(row[i+0]<<6)|(row[i+1]>>4);
           rawrow[src+1]=(row[i+0]>>2);
           rawrow[src+2]=(row[i+2]<<2)|(row[i+3]>>8);
@@ -333,8 +335,8 @@ void raw_merge_end(void) {
           rawrow[src+8]=(row[i+7]);
           rawrow[src+9]=(row[i+6]<<2)|(row[i+7]>>8);
         }
-#elif CAM_SENSOR_BITS_PER_PIXEL==12
-        for (i=0,src=0; i<CAM_RAW_ROWPIX; i+=4, src+=6){
+#elif CAM_MODULE_SENSOR_BITS_PER_PIXEL==12
+        for (i=0,src=0; i<CAM_CHDK_RAW_ROWPIX; i+=4, src+=6){
           rawrow[src+0]=(row[i+0]<<4)|(row[i+1]>>8);
           rawrow[src+1]=(row[i+0]>>4);
           rawrow[src+2]=(row[i+2]>>4);
@@ -346,11 +348,11 @@ void raw_merge_end(void) {
  #error define set_raw_pixel for sensor bit depth
 #endif
 
-        fwrite(rawrow, 1, RAW_ROWLEN, fcraw);
-        fread(row, 1, CAM_RAW_ROWPIX*sizeof(unsigned short), fbraw);
-        if (j>=CAM_RAW_ROWS/5) {
-          j-=CAM_RAW_ROWS/5;
-          gui_browser_progress_show(namebuf, nrow*100/CAM_RAW_ROWS);
+        fwrite(rawrow, 1, RAW_CHDK_ROWLEN, fcraw);
+        fread(row, 1, CAM_CHDK_RAW_ROWPIX*sizeof(unsigned short), fbraw);
+        if (j>=CAM_CHDK_RAW_ROWS/5) {
+          j-=CAM_CHDK_RAW_ROWS/5;
+          gui_browser_progress_show(namebuf, nrow*100/CAM_CHDK_RAW_ROWS);
         }
       }
       fclose(fcraw);
@@ -367,3 +369,72 @@ void raw_merge_end(void) {
   free(row);
 }
 
+
+// =========  MODULE INIT =================
+#include "module_load.h"
+int module_idx=-1;
+
+/***************** BEGIN OF AUXILARY PART *********************
+  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+ **************************************************************/
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)6,
+
+			raw_merge_start,
+			raw_merge_add_file,
+			raw_merge_end,
+			raw_subtract
+		};
+
+
+//---------------------------------------------------------
+// PURPOSE:   Bind module symbols with chdk. 
+//		Required function
+// PARAMETERS: pointer to chdk list of export
+// RETURN VALUE: 1 error, 0 ok
+//---------------------------------------------------------
+int _module_loader( void** chdk_export_list )
+{
+  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+     return 1;
+
+  return 0;
+}
+
+
+
+//---------------------------------------------------------
+// PURPOSE: Finalize module operations (close allocs, etc)
+// RETURN VALUE: 0-ok, 1-fail
+//---------------------------------------------------------
+int _module_unloader()
+{
+  return 0;
+}
+
+
+/******************** Module Information structure ******************/
+
+struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
+									sizeof(struct ModuleInfo),
+
+									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+									MODULEINFO_FLAG_SYSTEM,		// flag
+#if CAM_MODULE_SENSOR_BITS_PER_PIXEL==10
+									(int32_t)"RAW operations-10bpp(dll)",// Module name
+#else
+									(int32_t)"RAW operations-12bpp(dll)",// Module name
+#endif
+									1, 0,						// Module version
+#if CAM_MODULE_SENSOR_BITS_PER_PIXEL==10
+									(int32_t)"Implementation of RAW operations\n(Avg, Sum, Sub) for 10bit sensor"
+#else
+									(int32_t)"Implementation of RAW operations\n(Avg, Sum, Sub) for 12bit sensor"
+#endif
+								 };
+
+
+/*************** END OF AUXILARY PART *******************/

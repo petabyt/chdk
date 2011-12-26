@@ -11,6 +11,13 @@
 #include "gui_mbox.h"
 #include "gui_mastermind.h"
 
+#include "module_load.h"
+void gui_module_menu_kbd_process();
+
+gui_handler GUI_MODE_MASTERMIND = 
+    /*GUI_MODE_MASTERMIND*/     { gui_mastermind_draw,  gui_mastermind_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+
+
 #define BORDER		 		20
 #define RECT_SIZE	 		10
 #define COLOR_LIGHT_GRAY 	MAKE_COLOR(COLOR_SPLASH_GREY,COLOR_SPLASH_GREY)
@@ -20,7 +27,7 @@
 int curr_x;
 int curr_y;
 int answer[4];
-char colors[6] = { COLOR_HISTO_R_PLAY, COLOR_HISTO_G_PLAY, COLOR_HISTO_B_PLAY, COLOR_YELLOW, COLOR_WHITE, COLOR_BLACK };
+char colors[6];
 int curr_color[4];
 int GameGo;
 static char buf[128];
@@ -132,8 +139,10 @@ int gui_mastermind_init() {
 
 	for(i=0;i<4;i++) curr_color[i]=99;
 	
+    gui_set_mode((unsigned int)&GUI_MODE_MASTERMIND);
 	return 1;
 }
+
 //-------------------------------------------------------------------
 static void draw_box(color border)
 {
@@ -216,7 +225,7 @@ void gui_mastermind_kbd_process() {
     }
 }
 //-------------------------------------------------------------------
-void gui_mastermind_draw() {
+void gui_mastermind_draw(int enforce_redraw) {
 	unsigned long t;
     static struct tm *ttm;
 
@@ -227,3 +236,34 @@ void gui_mastermind_draw() {
     sprintf(buf, "Time: %2u:%02u  Batt:%3d%%", ttm->tm_hour, ttm->tm_min, get_batt_perc());
     draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-1-1-9-2-5-4, screen_height/FONT_HEIGHT-1, buf, TEXT_COLOR);
 }
+
+
+int basic_module_init() {
+	colors[0] = COLOR_HISTO_R_PLAY;
+	colors[1] = COLOR_HISTO_G_PLAY;
+	colors[2] = COLOR_HISTO_B_PLAY;
+	colors[3] = COLOR_YELLOW;
+	colors[4] = COLOR_WHITE;
+	colors[5] = COLOR_BLACK;
+
+	return gui_mastermind_init(); 
+}
+
+extern int module_idx;
+void gui_module_menu_kbd_process() {
+	gui_default_kbd_process_menu_btn();
+  	module_async_unload(module_idx);
+}
+
+/******************** Module Information structure ******************/
+
+struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
+									sizeof(struct ModuleInfo),
+
+									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+									0,							// flag
+									-LANG_MENU_GAMES_MASTERMIND,// Module name
+									1, 0,						// Module version
+									(int32_t)"Game"
+								 };

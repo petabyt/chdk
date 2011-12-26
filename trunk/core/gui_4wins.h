@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------
 extern int gui_4wins_init();
 extern void gui_4wins_kbd_process();
-extern void gui_4wins_draw();
+extern void gui_4wins_draw(int enforce_redraw);
 
 //-------------------------------------------------------------------
 #endif

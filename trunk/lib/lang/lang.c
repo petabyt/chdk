@@ -4,6 +4,9 @@
 static char* preparsed_lang_default_start=0;
 static char* preparsed_lang_default_end=0;            // @this is for correct detection which is in heap
 
+// This is threshold to determine is this id in .lng or just string
+#define MAX_LANGID 0x1000
+
 //-------------------------------------------------------------------
 
 static char** strings = NULL;        // string list (allocated at heap or mapped from gui_lang.c);
@@ -68,9 +71,12 @@ static void lang_add_string(int num, const char *str) {
 // Parsing of loaded .lng file
 // buf - source array (content of file.lng )
 //-------------------------------------------------------------------
-void lang_parse_from_mem(char *buf) {
+int lang_parse_from_mem(char *buf, int size) {
     char *p, *s, *e;
     int i;
+
+	if  ( size <= 0 )
+	  return 0;
 
     e = buf-1;
     while(e) {
@@ -94,6 +100,7 @@ void lang_parse_from_mem(char *buf) {
             if (e) *e=0;
         }
     }
+	return 1;
 }
 
 // This function have to be called before any other string load
@@ -115,30 +122,41 @@ void lang_map_preparsed_from_mem( char* gui_lang_default, int num )
     preparsed_lang_default_end = p;
 }
 
-
+// PURPOSE:
 // Universal file processor
 // Load file, process by callback, unalloc/close file
+// RETURN:
+//	 Transfer return value from callback
+// NOTE:
+//	 Call callback even if fail to load/malloc (size=-1 if no file, size=0 if empty) 
 //-------------------------------------------------------------------
-void load_from_file(const char *filename, callback_process_file callback)
+int load_from_file(const char *filename, callback_process_file callback)
 {
     int f, size;
     static struct stat st;
     char *buf;
 
+	buf = 0;
+    size = -1;
+
     f = open(filename, O_RDONLY, 0777);
-    if (f>=0) {
+    if (f>=0)
         size = (stat((char*)filename, &st)==0)?st.st_size:0;
-        if (size) {
+    if (size>0 )
             buf = umalloc(size+1);
             if (buf) {
                 size = read(f, buf, size);
                 buf[size]=0;
-                callback(buf);
+	}
+
+	size = callback( buf, size);
+
+	if ( buf )
                 ufree(buf);
-            }
-        }
+    if (f>=0)
         close(f);
-    }
+
+	return size;
 }
 
 void lang_load_from_file(const char *filename) {
@@ -148,9 +166,24 @@ void lang_load_from_file(const char *filename) {
 
 //-------------------------------------------------------------------
 char* lang_str(int str) {
-    if (str && str<0x1000) {
+    if (str && str<MAX_LANGID) {
         return (strings && str<count && strings[str])?strings[str]:"";
     } else { // not ID, just char*
         return (char*)str;
     }
+}
+
+//-------------------------------------------------------------------
+unsigned lang_strhash31(int langid)
+{
+    if ( langid<MAX_LANGID ) 
+		return langid;
+
+	unsigned char* str = (unsigned char*)langid;
+	unsigned hash=0;
+	for ( ; *str; str++ )
+		hash = *str ^ (hash<<6) ^ (hash>>25);
+	if ( langid<MAX_LANGID )
+		hash |= (1<<31);
+	return hash;
 }

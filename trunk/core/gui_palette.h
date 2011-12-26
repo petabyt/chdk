@@ -11,7 +11,7 @@
 //-------------------------------------------------------------------
 extern void gui_palette_init(int mode, color st_color, void (*on_select)(color clr));
 extern void gui_palette_kbd_process();
-extern void gui_palette_draw();
+extern void gui_palette_draw(int enforce_redraw);
 
 //-------------------------------------------------------------------
 #endif

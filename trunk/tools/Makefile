@@ -3,6 +3,7 @@ topdir=../
 SKIPBUILDRULES=1
 
 include $(topdir)makefile.inc
+include $(topdir)version.inc
 
 OBJS=pakwif.o finsig_$(PLATFORMOS).o gensig_$(PLATFORMOS).o dumpchk.o dancingbits.o rawconvert.o dumputil.o find_levent.o find_eventproc.o yuvconvert.o font_8x16_pack.o makelang.o
 
@@ -10,19 +11,26 @@ ifdef OPT_FI2
   SUBDIRS=packfi2
 endif
 
-all: pakwif$(EXE) finsig_$(PLATFORMOS)$(EXE) dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE)
+SUBDIRS+=elf2flt
+
+
+all: makeexport$(EXE) pakwif$(EXE) finsig_$(PLATFORMOS)$(EXE) dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE)
 
 # not needed by batch builds, not built by default
 extras: rawconvert$(EXE) yuvconvert$(EXE) find_levent$(EXE) find_eventproc$(EXE) dumpchk$(EXE)
 
 %.o: %.c
 	@echo $< \-\> $@
-	$(HOSTCC) $(HOSTCFLAGS) -DPLATFORMOS_$(PLATFORMOS) -c -o $@ $<
+	$(HOSTCC) $(HOSTCFLAGS) -DPLATFORMOS_$(PLATFORMOS) -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -c -o $@ $<
 
 .dep/%.d: %.c .dep
 	$(HOSTCC) $(HOSTCFLAGS) -MM $< > $@.$$$$; \
 	    sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	    rm -f $@.$$$$
+
+makeexport$(EXE): makeexport.o
+	@echo $< \-\> $@
+	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
 pakwif$(EXE): pakwif.o
 	@echo $< \-\> $@
@@ -69,7 +77,7 @@ makelang$(EXE): makelang.o
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
 clean:
-	rm -f pakwif$(EXE) $(OBJS)
+	rm -f pakwif$(EXE) $(OBJS) makeexport.o
 #	if [ -s sig_ref_vxworks_1.bin ] && [ -s sig_ref_vxworks_2.bin ] && [ -s sig_ref_vxworks_3.bin ] ; then \
 #	  rm -f signatures_vxworks.h ; \
 #	fi

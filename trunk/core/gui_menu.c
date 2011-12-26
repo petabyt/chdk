@@ -7,7 +7,7 @@
 #include "lang.h"
 #include "gui.h"
 #include "gui_draw.h"
-#include "gui_palette.h"
+#include "modules.h"
 #include "gui_menu.h"
 #include "gui_lang.h"
 
@@ -76,16 +76,6 @@ int gui_menu_rows()
     // Count the numer of rows in current menu
     for(n = 0; curr_menu->menu[n].text; n++);
     return n;
-}
-
-//-------------------------------------------------------------------
-// Called from other gui functions to force redraw of menu
-void gui_menu_force_redraw()
-{
-    if (gui_get_mode() == GUI_MODE_MENU)
-    {
-        gui_menu_redraw = 2;
-    }
 }
 
 //-------------------------------------------------------------------
@@ -522,10 +512,8 @@ void gui_menu_kbd_process() {
                         break;
                     case MENUITEM_COLOR_FG:
                     case MENUITEM_COLOR_BG:
-                        draw_restore();
                         item_color=((unsigned char*)(curr_menu->menu[gui_menu_curr_item].value)) + (((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_COLOR_BG)?1:0);
-                        gui_palette_init(PALETTE_MODE_SELECT, (*item_color)&0xFF, gui_menu_color_selected);
-                        gui_set_mode(GUI_MODE_PALETTE);
+                        module_palette_run(PALETTE_MODE_SELECT, (*item_color)&0xFF, gui_menu_color_selected);
                         gui_menu_redraw=2;
                         break;
                     case MENUITEM_ENUM:
@@ -679,10 +667,13 @@ static void gui_menu_draw_text(char *str, int num_symbols)
 }
 
 //-------------------------------------------------------------------
-void gui_menu_draw() {
+void gui_menu_draw(int enforce_redraw) {
     static char tbuf[64];
     int i, j;
     const char *ch = "";
+
+	if ( enforce_redraw )
+		gui_menu_redraw = 2;
 
     if (gui_menu_redraw)
     {
