@@ -6,7 +6,6 @@
 #include "string.h"
 #include "platform.h"
 #include "conf.h"
-#include "math.h"
 #include "console.h"
 #include "dng.h"
 #include "raw.h"
@@ -454,17 +453,17 @@ void capture_data_for_exif(void)
 
  // Shutter speed tags
  get_property_case(PROPCASE_TV, &short_prop_val, sizeof(short_prop_val));
- cam_shutter[0]      = 1000000 * pow(2,-short_prop_val / 96.0);
+ cam_shutter[0]      = pow_calc( 1000000, 2, 1, -short_prop_val, 96);
  cam_apex_shutter[0] = short_prop_val;
 
  // Date & time tag (note - uses shutter speed from 'short_prop_val' code above)
- if (shutter_open_time) { datetime = shutter_open_time+pow(2,-short_prop_val/96.0); shutter_open_time=0;} // shutter closing time
+ if (shutter_open_time) { datetime = shutter_open_time + pow_calc(1, 2, 1, -short_prop_val, 96); shutter_open_time=0;} // shutter closing time
  else  datetime = time(NULL);
  ttm = localtime(&datetime);
  sprintf(cam_datetime, "%04d:%02d:%02d %02d:%02d:%02d", ttm->tm_year+1900, ttm->tm_mon+1, ttm->tm_mday, ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
 
  get_property_case(PROPCASE_AV, &short_prop_val, sizeof(short_prop_val));
- cam_aperture[0]      = 10 * pow(2,short_prop_val / 192.0);
+ cam_aperture[0]      = pow_calc( 10, 2, 1, short_prop_val, 192);
  cam_apex_aperture[0] = short_prop_val;
 
  get_property_case(PROPCASE_MIN_AV, &short_prop_val, sizeof(short_prop_val));
@@ -497,10 +496,10 @@ void convert_dng_to_chdk_raw(char* fn){
  FILE *dng, *raw;
  int *buf;
  int i;
- struct stat st;
+ struct STD_stat st;
  struct utimbuf t;
 
- if (stat(fn, &st) != 0 || st.st_size<=hook_raw_size())  return;
+ if (safe_stat(fn, &st) != 0 || st.st_size<=hook_raw_size())  return;
  buf=malloc(BUF_SIZE);
  if (buf){
   started();
@@ -542,16 +541,16 @@ void fill_gamma_buf(void) {
     int i;
     if (gamma[255]) return;
 #if defined(CAMERA_sx30) || defined(CAMERA_sx40hs) || defined(CAMERA_g12) || defined(CAMERA_ixus310_elph500hs)
-    for (i=0; i<12; i++) gamma[i]=255*pow(i/255.0, 0.5);
-    for (i=12; i<64; i++) gamma[i]=255*pow(i/255.0, 0.4);
-    for (i=64; i<=255; i++) gamma[i]=255*pow(i/255.0, 0.25);
+    for (i=0; i<12; i++) gamma[i]=pow_calc_2(255, i, 255, 0.5, 1);
+    for (i=12; i<64; i++) gamma[i]=pow_calc_2(255, i, 255, 0.4, 1);
+    for (i=64; i<=255; i++) gamma[i]=pow_calc_2(255, i, 255, 0.25, 1);
 #else
-    for (i=0; i<=255; i++) gamma[i]=255*pow(i/255.0, 0.5);
+    for (i=0; i<=255; i++) gamma[i]=pow_calc_2(255, i, 255, 0.5, 1);
 #endif
 }
 
 void create_thumbnail() {
-    register unsigned int i, j, x, y;
+    register int i, j, x, y;
     register char *buf = thumbnail_buf;
 
     for (i=0; i<DNG_TH_HEIGHT; i++)
@@ -637,12 +636,16 @@ short* binary_list=NULL;
 int binary_count=-1;
 
 void load_bad_pixels_list_b(char* filename) {
-    struct stat st;
+    struct STD_stat st;
     long filesize;
     void* ptr;
     FILE *fd;
+
+	if ( filename==0 )
+	 { unload_bad_pixels_list_b(); return; }
+
     binary_count=-1;
-    if (stat(filename,&st)!=0) return;
+    if (safe_stat(filename,&st)!=0) return;
     filesize=st.st_size;
     if (filesize%(2*sizeof(short)) != 0) return;
 	if (filesize == 0) { binary_count = 0; return; }	// Allow empty badpixel.bin file
@@ -782,4 +785,101 @@ void write_dng_header(int fd)
     }
 }
 
+//-------------------------------------------------------------------
+void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit) 
+{
+	create_dng_header();
+    write_dng_header(fd);
+
+    reverse_bytes_order2(rawadr, altrawadr, hook_raw_size());
+
+    // Write alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
+    write(fd, (char*)(((unsigned long)altrawadr)|uncachedbit), hook_raw_size());
+
+    if (rawadr == altrawadr)    // If only one RAW buffer then we have to swap the bytes back
+    	reverse_bytes_order2(rawadr, altrawadr, hook_raw_size());
+
+    free_dng_header();
+}
+
+/*********** BEGIN OF AUXILARY PART **********************/
+
+#include "module_load.h"
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)9,
+
+			create_badpixel_bin,
+			raw_init_badpixel_bin,
+			capture_data_for_exif,
+			load_bad_pixels_list_b,
+			badpixel_list_loaded_b,
+
+			convert_dng_to_chdk_raw,
+			write_dng,
+		};
+
+int _module_loader( void** chdk_export_list )
+{
+  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+     return 1;
+
+  return 0;
+}
+
+
+//---------------------------------------------------------
+// PURPOSE: Finalize module operations (close allocs, etc)
+// RETURN VALUE: 0-ok, 1-fail
+//---------------------------------------------------------
+int _module_unloader()
+{
+
+	unload_bad_pixels_list_b();
+    free_dng_header();
+    return 0;
+}
+
+
+#else
+
+/*********** NO DNG SUPPORTED BY CAMERA - EMPTY MODULE **********/
+
+#include "module_load.h"
+
+int _module_loader( void** chdk_export_list )
+{
+	// error bind - DNG is not supported and module is empty
+	return 1;
+}
+
+
+//---------------------------------------------------------
+// PURPOSE: Finalize module operations (close allocs, etc)
+// RETURN VALUE: 0-ok, 1-fail
+//---------------------------------------------------------
+int _module_unloader()
+{
+  return 0;
+}
+
+
 #endif //DNG_SUPPORT
+
+
+/******************** Module Information structure ******************/
+
+struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
+									sizeof(struct ModuleInfo),
+
+									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+									PLATFORMID,					// Specify platform dependency
+									MODULEINFO_FLAG_SYSTEM,		// flag
+									(int32_t)"DNG (dll)",	// Module name
+									1, 0,						// Module version
+									(int32_t)"Processing of DNG"
+								 };
+
+
+/*************** END OF AUXILARY PART *******************/

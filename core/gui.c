@@ -999,7 +999,10 @@ void cb_change_dng(){
 }
 
 void gui_menuproc_badpixel_create(int arg) {
-    create_badpixel_bin();
+	// After this action module will not be unloaded until reboot 
+	// because not clear when it finished
+	if ( module_dng_load(LIBDNG_OWNED_BY_CREATEBADPIXEL) )
+    	libdng.create_badpixel_bin();
 }
 #endif
 
@@ -1615,8 +1618,8 @@ void gui_init()
 
     exposition_thresh = screen_size/500;
     voltage_step = (conf.batt_step_25)?25:1;
-    load_bad_pixels_list("A/CHDK/badpixel");
-    load_bad_pixels_list("A/CHDK/badpixel.txt");
+    load_from_file( "A/CHDK/badpixel", make_pixel_list );
+    load_from_file( "A/CHDK/badpixel.txt", make_pixel_list );
 #ifdef OPT_CURVES
 	// initialize curves, loading files if required by current mode
 	//curve_init_mode();	// @tsv it will be initialize on first load
