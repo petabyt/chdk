@@ -198,6 +198,9 @@ static int moduleload_error(char* text, int value)
   if ( reloc_buf )
       ufree(reloc_buf);   
 
+  //extern int console_is_inited();
+  extern volatile int chdk_started_flag;
+  if ( chdk_started_flag ) {
   char fmt[50];
   strcpy(fmt,"Fail to load %s: ");
   strcpy(fmt+17,text);
@@ -207,6 +210,8 @@ static int moduleload_error(char* text, int value)
 
   console_clear();
   console_add_line(buf);
+	  msleep(1000);
+  }
 
   return -1;
 }
@@ -457,7 +462,7 @@ int module_check_is_exist(char* name)
    if ( module_fd >0 )
      close (module_fd);
 
-   return (module_fd>=0);
+   return (module_fd>=0)?1:0;
 }
 
 //-----------------------------------------------

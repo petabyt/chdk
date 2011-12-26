@@ -38,6 +38,7 @@ struct STD_dirent {
 
 // This is directory handler.
 typedef struct {
+	int magicnum;		// to safe second try to close
 	void* dh;
     struct STD_dirent de;
 } STD_DIR;
