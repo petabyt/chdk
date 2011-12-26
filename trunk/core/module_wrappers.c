@@ -39,6 +39,7 @@ int safe_stat (const char *name, struct STD_stat *pStat)
   return rv;
 }
 
+#define MAGICNUM_OPENDIR 0xf8bd35de
 
 //-------------------------------------------------------
 STD_DIR* safe_opendir (const char* name)
@@ -55,6 +56,7 @@ STD_DIR* safe_opendir (const char* name)
 	}
 
 	memset( std, 0, sizeof(STD_DIR));
+	std->magicnum = MAGICNUM_OPENDIR;
 	std->dh = dh;
 
 	return std;
@@ -66,7 +68,9 @@ int safe_closedir (STD_DIR* dir)
 	int rv;
 
 	if ( dir==0 ) return 0;
+	if ( dir->magicnum!=MAGICNUM_OPENDIR ) return 0;
 	rv = closedir( dir->dh );
+	dir->magicnum=0;
 	free( dir );
 	return rv;
 }
@@ -87,6 +91,7 @@ struct STD_dirent* safe_readdir (STD_DIR* dir)
     struct dirent* de;
 
 	if ( dir==0 ) return 0;
+	if ( dir->magicnum!=MAGICNUM_OPENDIR ) return 0;
 	de = readdir( dir->dh );
 
 	if ( de==0 ) return 0;
