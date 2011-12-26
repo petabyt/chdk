@@ -3,6 +3,13 @@
 
 #include	"camera.h"		// ensure the camera defintion is loaded
 
+#include "gui.h"	// for color, coord definitions
+
+
+// Common colors that are the same in all palettes
+#define COLOR_TRANSPARENT   0x00
+#define COLOR_BLACK         0xFF
+
 //-------------------------------------------------------------------
 
 // Moved from gui_bench.c, gui_debug.c, gui_calendar.c, gui_reversi.c & gui_sokoban.c so it can be overridden
@@ -10,10 +17,6 @@
 #define SCREEN_COLOR        0xF7
 
 //-------------------------------------------------------------------
-
-// Common colors that are the same in all palettes
-#define COLOR_TRANSPARENT   0x00
-#define COLOR_BLACK         0xFF
 
 //-------------------------------------------------------------------
 

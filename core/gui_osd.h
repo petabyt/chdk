@@ -35,7 +35,7 @@
 //-------------------------------------------------------------------
 extern void gui_osd_init();
 extern void gui_osd_kbd_process();
-extern void gui_osd_draw();
+extern void gui_osd_draw(int enforce_redraw);
 
 extern void gui_osd_draw_histo();
 extern void gui_osd_draw_dof();

@@ -9,7 +9,7 @@
 #include "shot_histogram.h"
 #include "stdlib.h"
 #include "raw.h"
-#include "raw_merge.h"
+#include "modules.h"
 #include "levent.h"
 #include "console.h"
 #include "action_stack.h"
@@ -126,6 +126,7 @@ void lua_script_error_ptp(int runtime, const char *err) {
 
 void lua_script_reset()
 {
+  module_rawop_unload();
   lua_close( L );
   L = 0;
 }
@@ -267,6 +268,8 @@ static int luaCB_set_curve_state( lua_State* L )
 {
   int value;
   value=luaL_checknumber( L, 1 );
+  if (module_curves_load())
+    return luaL_argerror(L,1,"fail to load curves module");
   curve_set_mode(value);
   return 0;
 }
@@ -817,6 +820,9 @@ static void file_browser_selected(const char *fn) {
     // Clear the Func/Set key so that when the script exits, pressing
     // the Func/Set key again will enter the Script menu, not the File Browser
     kbd_reset_autoclicked_key();
+
+	lua_pushstring( Lt, (fn && fn[0])? fn : NULL );
+
 }
 
 static int luaCB_file_browser( lua_State* L ) {
@@ -825,7 +831,7 @@ static int luaCB_file_browser( lua_State* L ) {
     // Push file browser action onto stack - will loop doing nothing until file browser exits
     action_push(AS_FILE_BROWSER);
     // Switch to file browser gui mode. Path can be supplied in call or defaults to "A" (root directory).
-    gui_fselect_init(LANG_STR_FILE_BROWSER, luaL_optstring( L, 1, "A" ), "A", file_browser_selected);
+    module_fselect_init(LANG_STR_FILE_BROWSER, luaL_optstring( L, 1, "A" ), "A", file_browser_selected);
     // Yield the script so that the action stack will process the AS_FILE_BROWSER action
     return lua_yield(L, 0);
 }
@@ -1380,8 +1386,10 @@ static int luaCB_set_raw_develop( lua_State* L )
 static int luaCB_raw_merge_start( lua_State* L )
 {
   int op = luaL_checknumber(L,1);
+  if (!module_rawop_load())
+    return luaL_argerror(L,1,"fail to load raw merge module");
   if (op == RAW_OPERATION_SUM || op == RAW_OPERATION_AVERAGE) {
-    raw_merge_start(op);
+    librawop.raw_merge_start(op);
   }
   else {
     return luaL_argerror(L,1,"invalid raw merge op");
@@ -1392,13 +1400,17 @@ static int luaCB_raw_merge_start( lua_State* L )
 // TODO sanity check file ?
 static int luaCB_raw_merge_add_file( lua_State* L )
 {
-  raw_merge_add_file(luaL_checkstring( L, 1 ));
+  if (!module_rawop_load())
+    return luaL_argerror(L,1,"fail to load raw merge module");
+  librawop.raw_merge_add_file(luaL_checkstring( L, 1 ));
   return 0;
 }
 
 static int luaCB_raw_merge_end( lua_State* L )
 {
-  raw_merge_end();
+  if (!module_rawop_load())
+    return luaL_argerror(L,1,"fail to load raw merge module");
+  librawop.raw_merge_end();
   return 0;
 }
 

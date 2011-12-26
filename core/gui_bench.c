@@ -8,6 +8,14 @@
 #include "gui_draw.h"
 #include "gui_bench.h"
 
+#include "module_load.h"
+void gui_bench_draw_callback(int enforce_redraw);
+void gui_bench_menu_kbd_process();
+
+gui_handler GUI_MODE_BENCH = 
+    /*GUI_MODE_BENCH*/          { gui_bench_draw_callback,   gui_bench_kbd_process,      gui_bench_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+
+
 //-------------------------------------------------------------------
 static struct {
     int screen_input_bps;
@@ -99,6 +107,11 @@ void gui_bench_draw() {
     }
 }
 
+void gui_bench_draw_callback(int enforce_redraw) {
+	gui_bench_draw();
+}
+
+
 //-------------------------------------------------------------------
 static void gui_bench_run() {
     register long t;
@@ -157,7 +170,7 @@ static void gui_bench_run() {
         bench_to_draw = 2;
     }
 
-    x = open("A/BENCH.TMP", O_WRONLY|O_CREAT, 0777);
+    x = safe_open("A/BENCH.TMP", O_WRONLY|STD_O_CREAT, 0777);
     if (x>=0) {
         bench.disk_write_raw_bps = 0;
         gui_bench_draw();
@@ -169,7 +182,7 @@ static void gui_bench_run() {
         bench_to_draw = 2;
     }
 
-    x = open("A/BENCH.TMP", O_WRONLY|O_CREAT, 0777);
+    x = safe_open("A/BENCH.TMP", O_WRONLY|STD_O_CREAT, 0777);
     if (x>=0) {
         bench.disk_write_mem_bps = 0;
         gui_bench_draw();
@@ -182,7 +195,7 @@ static void gui_bench_run() {
     }
 
     if (buf) {
-        x = open("A/BENCH.TMP", O_WRONLY|O_CREAT, 0777);
+        x = safe_open("A/BENCH.TMP", O_WRONLY|STD_O_CREAT, 0777);
         if (x>=0) {
             bench.disk_write_buf_bps = 0;
             gui_bench_draw();
@@ -196,7 +209,7 @@ static void gui_bench_run() {
             bench_to_draw = 2;
         }
 
-        x = open("A/BENCH.TMP", O_RDONLY, 0777);
+        x = safe_open("A/BENCH.TMP", O_RDONLY, 0777);
         if (x>=0) {
             bench.disk_read_buf_bps = 0;
             gui_bench_draw();
@@ -228,3 +241,28 @@ void gui_bench_kbd_process() {
 
 //-------------------------------------------------------------------
 
+int basic_module_init() {
+	gui_bench_init();
+    gui_set_mode( (unsigned int)&GUI_MODE_BENCH );
+	return 1;
+}
+
+extern int module_idx;
+
+void gui_bench_menu_kbd_process() {
+	gui_default_kbd_process_menu_btn();
+  	module_async_unload(module_idx);
+}
+
+/******************** Module Information structure ******************/
+
+struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
+									sizeof(struct ModuleInfo),
+
+									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+									0,							// flag
+									-LANG_MENU_DEBUG_BENCHMARK,	// Module name
+									1, 0,						// Module version
+									(int32_t) "Test camera low level perfomance"
+								 };

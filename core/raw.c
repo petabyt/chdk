@@ -5,7 +5,7 @@
 #include "console.h"
 #include "dng.h"
 #ifdef OPT_CURVES
-    #include "curves.h"
+    #include "modules.h"
 #endif
 #include "shot_histogram.h"
 
@@ -74,7 +74,10 @@ int raw_savefile() {
             close(fd);
         }
 #ifdef OPT_CURVES
-        if (conf.curve_enable) curve_apply();
+        if (conf.curve_enable) {
+  			if (module_curves_load())
+				curve_apply();
+		}
 #endif
         finished();
         develop_raw=0;
@@ -180,7 +183,10 @@ int raw_savefile() {
     }
 
 #ifdef OPT_CURVES
-    if (conf.curve_enable) curve_apply();
+    if (conf.curve_enable) {
+  		if (module_curves_load())
+			curve_apply();
+	}
 #endif
     return ret;
 }

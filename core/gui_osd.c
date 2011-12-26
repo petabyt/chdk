@@ -104,7 +104,7 @@ void gui_osd_init() {
 }
 
 //-------------------------------------------------------------------
-void gui_osd_draw() {
+void gui_osd_draw(int enforce_redraw) {
     if (osd_to_draw) {
         int i;
         draw_restore();

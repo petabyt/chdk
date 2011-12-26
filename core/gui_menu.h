@@ -49,7 +49,7 @@ typedef struct {
 
 typedef struct {
     char                symbol;
-    short               title;
+    int                 title;
     void                (*on_change)(unsigned int item);
     const CMenuItem     *menu;
 } CMenu;
@@ -62,8 +62,12 @@ typedef struct {
 //-------------------------------------------------------------------
 extern void gui_menu_init(CMenu *menu_ptr);
 extern void gui_menu_kbd_process();
-extern void gui_menu_draw();
+extern void gui_menu_draw(int enforce_redraw);
 extern void mod_user_menu(CMenuItem curr_menu_item, int* gui_menu_add_item, int mod);
 extern void gui_menu_force_redraw();
 //-------------------------------------------------------------------
+
+// declared in gui.c
+extern CMenuItem* find_mnu(CMenu *curr_menu, int item);
+
 #endif

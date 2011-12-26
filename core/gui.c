@@ -13,22 +13,9 @@
 #include "gui_palette.h"
 #include "gui_mbox.h"
 #include "gui_mpopup.h"
-#ifdef OPT_GAME_REVERSI
-#include "gui_reversi.h"
-#endif
-#ifdef OPT_GAME_SOKOBAN
-#include "gui_sokoban.h"
-#endif
-#ifdef OPT_GAME_CONNECT4
-#include "gui_4wins.h"
-#endif
-#ifdef OPT_GAME_MASTERMIND
-#include "gui_mastermind.h"
-#endif
 #include "console.h"
 #ifdef OPT_DEBUGGING
 #include "gui_debug.h"
-#include "gui_bench.h"
 #endif
 #include "gui_fselect.h"
 #include "gui_batt.h"
@@ -37,9 +24,6 @@
 #include "gui_osd.h"
 #ifdef OPT_TEXTREADER
 	#include "gui_read.h"
-#endif
-#ifdef OPT_CALENDAR
-	#include "gui_calendar.h"
 #endif
 #include "gui_grid.h"
 #include "histogram.h"
@@ -50,12 +34,14 @@
 	#include "curves.h"
 #endif
 #ifdef OPT_EDGEOVERLAY
-	#include "edgeoverlay.h"
+	#include "modules.h"
 #endif
 #ifdef OPT_SCRIPTING
     #include "script.h"
     int script_params_has_changed=0;
 #endif
+#include "module_load.h"
+
 //-------------------------------------------------------------------
 
 #define OPTIONS_AUTOSAVE
@@ -159,14 +145,9 @@ void user_menu_restore();
 //-------------------------------------------------------------------
 static void gui_show_build_info(int arg);
 static void gui_show_memory_info(int arg);
-static void gui_draw_palette(int arg);
-static void gui_draw_reversi(int arg);
-static void gui_draw_sokoban(int arg);
-static void gui_draw_4wins(int arg);
-static void gui_draw_mastermind(int arg);
+static void	gui_modules_menu_load();
+
 #ifdef OPT_DEBUGGING
-	static void gui_draw_debug(int arg);
-	static void gui_draw_bench(int arg);
     void gui_compare_props(int arg);
     static void gui_menuproc_break_card(int arg);
 	static void gui_debug_shortcut(void);
@@ -317,24 +298,6 @@ static CMenuItem script_submenu_items[sizeof(script_submenu_items_top)/sizeof(sc
 static CMenu script_submenu = {0x27,LANG_MENU_SCRIPT_TITLE, NULL, script_submenu_items };
 #endif
 
-static CMenuItem games_submenu_items[] = {
-#ifdef OPT_GAME_REVERSI
-    MENU_ITEM(0x38,LANG_MENU_GAMES_REVERSI,           MENUITEM_PROC,  gui_draw_reversi, 0 ),
-#endif
-#ifdef OPT_GAME_SOKOBAN
-    MENU_ITEM(0x38,LANG_MENU_GAMES_SOKOBAN,           MENUITEM_PROC,  gui_draw_sokoban, 0 ),
-#endif
-#ifdef OPT_GAME_CONNECT4
-    MENU_ITEM(0x38,LANG_MENU_GAMES_CONNECT4,             MENUITEM_PROC,  gui_draw_4wins, 0 ),
-#endif
-#ifdef OPT_GAME_MASTERMIND
-    MENU_ITEM(0x38,LANG_MENU_GAMES_MASTERMIND,           MENUITEM_PROC,  gui_draw_mastermind, 0 ),
-#endif
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
-    {0}
-};
-static CMenu games_submenu = {0x38,LANG_MENU_GAMES_TITLE, NULL, games_submenu_items };
-
 static const char* gui_autoiso_shutter_modes[] = { "Auto", "1/8s", "1/15s", "1/30s", "1/60s", "1/125s", "1/250s", "1/500s", "1/1000s"};
 static CMenuItem autoiso_submenu_items[] = {
     MENU_ITEM(0x5c,LANG_MENU_AUTOISO_ENABLED,          MENUITEM_BOOL,	&conf.autoiso_enable, 0),
@@ -376,8 +339,6 @@ static CMenuItem debug_submenu_items[] = {
     MENU_ITEM(0x2a,LANG_MENU_DEBUG_PROPCASE_PAGE,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &conf.debug_propcase_page, MENU_MINMAX(0, 128) ),
     MENU_ITEM(0x2a,LANG_MENU_DEBUG_TASKLIST_START,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &debug_tasklist_start, MENU_MINMAX(0, 63) ),
     MENU_ITEM(0x5c,LANG_MENU_DEBUG_SHOW_MISC_VALS,    MENUITEM_BOOL,          &conf.debug_misc_vals_show, 0 ),
-    MENU_ITEM(0x2a,LANG_MENU_DEBUG_MEMORY_BROWSER,    MENUITEM_PROC,          gui_draw_debug, 0 ),
-    MENU_ITEM(0x2a,LANG_MENU_DEBUG_BENCHMARK,         MENUITEM_PROC,          gui_draw_bench, 0 ),
     MENU_ENUM2(0x5c,LANG_MENU_DEBUG_SHORTCUT_ACTION,  &conf.debug_shortcut_action, gui_debug_shortcut_modes ),
     MENU_ITEM(0x5c,LANG_MENU_RAW_TIMER,               MENUITEM_BOOL,          &conf.raw_timer, 0 ),
 #ifdef OPT_LUA
@@ -396,14 +357,9 @@ static CMenu debug_submenu = {0x2a,LANG_MENU_DEBUG_TITLE, NULL, debug_submenu_it
 
 static CMenuItem misc_submenu_items[] = {
     MENU_ITEM(0x35,LANG_MENU_MISC_FILE_BROWSER,       MENUITEM_PROC,    gui_draw_fselect, 0 ),
-#ifdef OPT_CALENDAR
-    MENU_ITEM(0x36,LANG_MENU_MISC_CALENDAR,           MENUITEM_PROC,    gui_draw_calendar, 0 ),
-#endif
+    MENU_ITEM(0x65,(int)"Modules",            		  MENUITEM_TEXT,    0, 0 ),
 #ifdef OPT_TEXTREADER
     MENU_ITEM(0x37,LANG_MENU_MISC_TEXT_READER,        MENUITEM_SUBMENU, &reader_submenu, 0 ),
-#endif
-#if defined (OPT_GAME_REVERSI) || (OPT_GAME_SOKOBAN || (OPT_GAME_CONNECT4) || OPT_GAME_MASTERMIND)
-    MENU_ITEM(0x38,LANG_MENU_MISC_GAMES,              MENUITEM_SUBMENU, &games_submenu, 0 ),
 #endif
 #if CAM_SWIVEL_SCREEN
     MENU_ITEM(0x28,LANG_MENU_MISC_FLASHLIGHT,         MENUITEM_BOOL,    &conf.flashlight, 0 ),
@@ -417,7 +373,6 @@ static CMenuItem misc_submenu_items[] = {
     MENU_ITEM(0x22,LANG_MENU_MISC_ALT_BUTTON,         MENUITEM_ENUM,    gui_alt_mode_button_enum, 0 ),
 #endif
     MENU_ITEM(0x5d,LANG_MENU_MISC_DISABLE_LCD_OFF,    MENUITEM_ENUM,    gui_alt_power_enum, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_MISC_PALETTE,            MENUITEM_PROC,    gui_draw_palette, 0 ),
     MENU_ITEM(0x80,LANG_MENU_MISC_BUILD_INFO,         MENUITEM_PROC,    gui_show_build_info, 0 ),
     MENU_ITEM(0x80,LANG_MENU_MISC_MEMORY_INFO,        MENUITEM_PROC,    gui_show_memory_info, 0 ),
     MENU_ITEM(0x33,LANG_MENU_DEBUG_MAKE_BOOTABLE,     MENUITEM_PROC,    gui_menuproc_mkbootdisk, 0 ),
@@ -1084,7 +1039,7 @@ const char* gui_conf_curve_enum(int change, int arg) {
 
     gui_enum_value_change(&conf.curve_enable,change,sizeof(modes)/sizeof(modes[0]));
 
-	if(change)
+	if(change && curve_init_mode)
 		curve_init_mode();
     return modes[conf.curve_enable];
 }
@@ -1137,7 +1092,7 @@ static void gui_load_script_selected(const char *fn) {
 }
 
 void gui_load_script(int arg) {
-    gui_fselect_init(LANG_STR_SELECT_SCRIPT_FILE, conf.script_file, "A/CHDK/SCRIPTS", gui_load_script_selected);
+    module_fselect_init(LANG_STR_SELECT_SCRIPT_FILE, conf.script_file, "A/CHDK/SCRIPTS", gui_load_script_selected);
 }
 
 void gui_load_script_default(int arg) {
@@ -1516,7 +1471,7 @@ void raw_fselect_cb(const char * filename){
 //-------------------------------------------------------------------
 void gui_raw_develop(int arg){
  int m=mode_get();
- gui_fselect_init(LANG_RAW_DEVELOP_SELECT_FILE, "A/DCIM", "A", raw_fselect_cb);
+ module_fselect_init(LANG_RAW_DEVELOP_SELECT_FILE, "A/DCIM", "A", raw_fselect_cb);
 }
 
 //-------------------------------------------------------------------
@@ -1629,7 +1584,8 @@ static void gui_menuproc_swap_partitions(int arg){
 #endif
 
 //-------------------------------------------------------------------
-static volatile enum Gui_Mode gui_mode;
+static volatile gui_mode_t gui_mode;	// current gui mode. if <GUI_MODE_LASTIDX - idx in guiHandlers (core modes), otherwise pointer to gui_handler object (module modes)
+
 static volatile int gui_restore;
 static volatile int gui_in_redraw;
 static int gui_splash, gui_splash_mode;
@@ -1637,6 +1593,8 @@ static char osd_buf[32];
 #ifdef OPTIONS_AUTOSAVE
 static Conf old_conf;
 #endif
+
+extern gui_handler guiHandlers[];
 
 //-------------------------------------------------------------------
 void gui_init()
@@ -1649,6 +1607,8 @@ void gui_init()
     	play_sound(4);
     }
     gui_splash = (conf.splash_show)?SPLASH_TIME:0;
+
+	gui_modules_menu_load();
     user_menu_restore();
     gui_lang_init();
     draw_init();
@@ -1659,12 +1619,24 @@ void gui_init()
     load_bad_pixels_list("A/CHDK/badpixel.txt");
 #ifdef OPT_CURVES
 	// initialize curves, loading files if required by current mode
-	curve_init_mode();
+	//curve_init_mode();	// @tsv it will be initialize on first load
 #endif
 #if ZOOM_OVERRIDE
 // reyalp - need to do this in capt_seq
 //		if (conf.zoom_override) shooting_set_zoom(conf.zoom_override_value);
 #endif
+}
+
+
+//-------------------------------------------------------------------
+void gui_modules_menu_load(int arg){
+
+	misc_submenu_items[1].type=MENUITEM_TEXT;
+
+	unsigned int argv[] ={	(unsigned int)MODULES_PATH,
+							(unsigned int)(&misc_submenu_items[1])
+						 };
+	module_run("modmenu.flt", 0, 2,argv, UNLOAD_IF_ERR );
 }
 
 //-------------------------------------------------------------------
@@ -1673,24 +1645,57 @@ static void gui_load_curve_selected(const char *fn) {
 	if (fn) {
 		// TODO we could sanity check here, but curve_set_type should fail gracefullish
 		strcpy(conf.curve_file,fn);
-		if(conf.curve_enable == 1)
+		if(conf.curve_enable == 1 && curve_init_mode)
 			curve_init_mode();
 	}
 }
 
 //-------------------------------------------------------------------
 void gui_load_curve(int arg) {
-    gui_fselect_init(LANG_STR_SELECT_CURVE_FILE, conf.curve_file, CURVE_DIR, gui_load_curve_selected);
+    module_fselect_init(LANG_STR_SELECT_CURVE_FILE, conf.curve_file, CURVE_DIR, gui_load_curve_selected);
 }
 
 #endif
+
+
+// Small hack: use understandable name to reused data member
+#define binded_gui_mode_ptr kbd_process
+
 //-------------------------------------------------------------------
-enum Gui_Mode gui_get_mode() {
+gui_mode_t gui_get_mode() {
+    if ( gui_mode >= GUI_MODE_COUNT )
+	{
+		int mode;
+		for (mode=0;mode<GUI_MODE_COUNT;mode++)
+		{
+			if ( (guiHandlers[mode].flags & GUI_MODE_FLAG_ALIAS) && 
+					guiHandlers[mode].binded_gui_mode_ptr == (void*)gui_mode ) 
+				return mode;
+		}
+	}
     return gui_mode;
 }
 
 //-------------------------------------------------------------------
-void gui_set_mode(enum Gui_Mode mode) {
+void gui_set_mode(gui_mode_t mode) 
+{
+	if ( gui_mode == mode )
+		return;
+
+	if (  mode < GUI_MODE_COUNT && 
+		  (guiHandlers[mode].flags & GUI_MODE_FLAG_ALIAS) ) 
+	{
+		mode = (unsigned int)guiHandlers[mode].binded_gui_mode_ptr; 
+	}
+
+	// Sanity check for case module pointer - is this really gui_handler
+    if ( mode >= GUI_MODE_COUNT && ((gui_handler*)mode)->magicnum != GUI_MODE_MAGICNUM ) {
+		// If sanity failed (module is unload) - set to default mode
+    	gui_mode = GUI_MODE_NONE;
+		draw_restore();
+		return;
+	}
+	
 #ifdef CAM_TOUCHSCREEN_UI
     if (((gui_mode == 0) != (mode == 0)) ||                         // Change from GUI_MODE_NONE to any other or vice-versa
         ((gui_mode > GUI_MODE_MENU) != (mode > GUI_MODE_MENU)))     // Switch in & out of menu mode
@@ -1698,6 +1703,32 @@ void gui_set_mode(enum Gui_Mode mode) {
 #endif
     gui_mode = mode;
 }
+
+//-------------------------------------------------------------------
+// PURPOSE: bind module struct to 
+// RETUN: 0 - fail, 1 - ok
+int gui_bind_mode(int core_mode, gui_handler* handler) {
+
+	// sanity checks
+    if ( core_mode >= GUI_MODE_COUNT ||
+		(guiHandlers[core_mode].flags & GUI_MODE_FLAG_ALIAS)==0
+	   )
+		return 0;
+
+	if ( handler && handler->magicnum != GUI_MODE_MAGICNUM )
+		return 0;
+
+	// check is this module is already binded (loaded with different name)
+	gui_handler* bind_gui_handler = (gui_handler*)guiHandlers[core_mode].binded_gui_mode_ptr;
+	if ( bind_gui_handler && bind_gui_handler->magicnum == GUI_MODE_MAGICNUM )
+		return 0;
+
+	guiHandlers[core_mode].binded_gui_mode_ptr = (void*)handler;
+	return 1;
+}
+
+#undef binded_gui_mode_ptr
+
 
 //-------------------------------------------------------------------
 void gui_force_restore() {
@@ -1960,15 +1991,6 @@ void gui_chdk_kbd_process_menu_btn()
     gui_default_kbd_process_menu_btn();
 }
 
-// Menu button handled for text reader
-#ifdef OPT_TEXTREADER
-void gui_read_kbd_process_menu_btn()
-{
-    gui_read_kbd_process();
-    gui_default_kbd_process_menu_btn();
-}
-#endif
-
 // Menu button handled for Menu mode
 void gui_menu_kbd_process_menu_btn()
 {
@@ -1987,79 +2009,37 @@ void gui_menu_kbd_process_menu_btn()
 }
 
 //-------------------------------------------------------------------
-// Structure to store gui redraw and kbd process handlers for each mode
-typedef struct
-{
-    void (*redraw)(void);                   // Called to redraw screen
-    void (*kbd_process)(void);              // Main button handler for mode
-    void (*kbd_process_menu_btn)(void);     // Menu button handler for mode
-} gui_handler;
-
 // GUI handler table (entries must be in the same order and have the same number of entries as Gui_Mode enum)
-gui_handler guiHandlers[] =
+gui_handler guiHandlers[GUI_MODE_COUNT] =
 {
-    /*GUI_MODE_NONE*/           { gui_draw_osd,         0,                          0 },
-    /*GUI_MODE_ALT*/            { gui_chdk_draw,        gui_chdk_kbd_process,       gui_chdk_kbd_process_menu_btn },
-    /*GUI_MODE_MENU*/           { gui_menu_draw,        gui_menu_kbd_process,       gui_menu_kbd_process_menu_btn },
-    /*GUI_MODE_PALETTE*/        { gui_palette_draw,     gui_palette_kbd_process,    gui_default_kbd_process_menu_btn },
-    /*GUI_MODE_MBOX*/           { gui_mbox_draw,        gui_mbox_kbd_process,       0 },
-#ifdef OPT_GAME_REVERSI
-    /*GUI_MODE_REVERSI*/        { gui_reversi_draw,     gui_reversi_kbd_process,    gui_default_kbd_process_menu_btn },
-#else
-                                { 0, 0, 0 },
-#endif
-#ifdef OPT_GAME_SOKOBAN
-    /*GUI_MODE_SOKOBAN*/        { gui_sokoban_draw,     gui_sokoban_kbd_process,    gui_default_kbd_process_menu_btn },
-#else
-                                { 0, 0, 0 },
-#endif
-#ifdef OPT_DEBUGGING
-    /*GUI_MODE_DEBUG*/          { gui_debug_draw,       gui_debug_kbd_process,      gui_default_kbd_process_menu_btn },
-#else
-                                { 0, 0, 0 },
-#endif
-    /*GUI_MODE_FSELECT*/        { gui_fselect_draw,     gui_fselect_kbd_process,    gui_fselect_kbd_process },
-#ifdef OPT_TEXTREADER
-    /*GUI_MODE_READ*/           { gui_read_draw,        gui_read_kbd_process,       gui_read_kbd_process_menu_btn },
-#else
-                                { 0, 0, 0 },
-#endif
-    /*GUI_MODE_OSD*/            { gui_osd_draw,         gui_osd_kbd_process,        gui_default_kbd_process_menu_btn },
-#ifdef OPT_CALENDAR
-    /*GUI_MODE_CALENDAR*/       { gui_calendar_draw,    gui_calendar_kbd_process,   gui_default_kbd_process_menu_btn },
-#else
-                                { 0, 0, 0 },
-#endif
-#ifdef OPT_DEBUGGING
-    /*GUI_MODE_BENCH*/          { gui_bench_draw,       gui_bench_kbd_process,      gui_default_kbd_process_menu_btn },
-#else
-                                { 0, 0, 0 },
-#endif
-    /*GUI_MODE_MPOPUP*/         { gui_mpopup_draw,      gui_mpopup_kbd_process,     gui_mpopup_kbd_process },
-#ifdef OPT_GAME_CONNECT4
-    /*GUI_MODE_4WINS*/          { gui_4wins_draw,       gui_4wins_kbd_process,      gui_default_kbd_process_menu_btn },
-#else
-                                { 0, 0, 0 },
-#endif
-#ifdef OPT_GAME_MASTERMIND
-    /*GUI_MODE_MASTERMIND*/     { gui_mastermind_draw,  gui_mastermind_kbd_process, gui_default_kbd_process_menu_btn },
-#else
-                                { 0, 0, 0 },
-#endif
+    /*GUI_MODE_NONE*/           { gui_draw_osd,         0,                          0,								0,									GUI_MODE_MAGICNUM },
+    /*GUI_MODE_ALT*/            { gui_chdk_draw,        gui_chdk_kbd_process,       gui_chdk_kbd_process_menu_btn,	0,									GUI_MODE_MAGICNUM },        	
+    /*GUI_MODE_MENU*/           { gui_menu_draw,        gui_menu_kbd_process,       gui_menu_kbd_process_menu_btn,	0,									GUI_MODE_MAGICNUM },
+    /*GUI_MODE_ALIAS_PALETTE*/  { 0,     				0,    						0, 								GUI_MODE_FLAG_ALIAS,				GUI_MODE_MAGICNUM },
+    /*GUI_MODE_MBOX*/           { gui_mbox_draw,        gui_mbox_kbd_process,       0,								GUI_MODE_FLAG_NORESTORE_ON_SWITCH,	GUI_MODE_MAGICNUM },
+    /*GUI_MODE_ALIAS_FSELECT*/  { 0,     				0,    						0, 								GUI_MODE_FLAG_ALIAS,				GUI_MODE_MAGICNUM },
+    /*GUI_MODE_OSD*/            { gui_osd_draw,         gui_osd_kbd_process,        gui_default_kbd_process_menu_btn, 0,								 GUI_MODE_MAGICNUM },		// THIS IS OSD LAYOUT EDITOR
+    /*GUI_MODE_ALIAS_MPOPUP*/   { 0,     				0,    						0, 								GUI_MODE_FLAG_ALIAS,				GUI_MODE_MAGICNUM },
 };
+
 
 //-------------------------------------------------------------------
 // Main GUI redraw function, perform common initialisation then calls the redraw handler for the mode
 void gui_redraw()
 {
-    enum Gui_Mode gui_mode_old;
+    static gui_mode_t gui_mode_prev_tick = GUI_MODE_NONE;
+    gui_mode_t gui_mode_old;
+
+    static int flag_gui_enforce_redraw = 0;
 
 #ifdef CAM_DETECT_SCREEN_ERASE
     if (!draw_test_guard() && gui_mode)     // Attempt to detect screen erase in <Alt> mode, redraw if needed
     {
         draw_set_guard();
-        gui_menu_force_redraw();
-        gui_fselect_force_redraw();
+
+		flag_gui_enforce_redraw |= GUI_REDRAWFLAG_ERASEGUARD;
+        //gui_menu_force_redraw();
+        //gui_fselect_force_redraw();	//@tsv
 #ifdef CAM_TOUCHSCREEN_UI
         extern int redraw_buttons;
         redraw_buttons = 1;
@@ -2078,31 +2058,48 @@ void gui_redraw()
 #endif
 
     // Call redraw handler
-    if (guiHandlers[gui_mode].redraw) guiHandlers[gui_mode].redraw();
+	gui_handler* cur_gui_handler = (gui_mode<GUI_MODE_COUNT)? (&guiHandlers[gui_mode]) : (gui_handler*)gui_mode;
+    if (cur_gui_handler->redraw) cur_gui_handler->redraw(flag_gui_enforce_redraw);
+	flag_gui_enforce_redraw=0;
 
     // Forced redraw if needed
     gui_in_redraw = 0;
-    if ((gui_mode_old != gui_mode && (gui_mode_old != GUI_MODE_NONE && gui_mode_old != GUI_MODE_ALT) && (gui_mode != GUI_MODE_MBOX && gui_mode != GUI_MODE_MPOPUP)) || gui_restore) {
-        if (gui_restore) gui_menu_force_redraw();
+	cur_gui_handler = (gui_mode<GUI_MODE_COUNT)? (&guiHandlers[gui_mode]) : (gui_handler*)gui_mode;
+    if ((gui_mode_old != gui_mode 
+			&& (gui_mode_old != GUI_MODE_NONE && gui_mode_old != GUI_MODE_ALT) 
+			&& !(cur_gui_handler->flags & GUI_MODE_FLAG_NORESTORE_ON_SWITCH)) 
+	    || gui_restore ) 
+	{
+
+        if (gui_restore)
+			flag_gui_enforce_redraw |= GUI_REDRAWFLAG_DRAW_RESTORED;
         gui_restore = 0;
-        if (gui_mode != GUI_MODE_REVERSI && gui_mode != GUI_MODE_SOKOBAN && gui_mode != GUI_MODE_4WINS && gui_mode != GUI_MODE_MASTERMIND)
+
+        if ( !( cur_gui_handler->flags & GUI_MODE_FLAG_NODRAWRESTORE) )
             draw_restore();
     }
+
+	if ( gui_mode_prev_tick != gui_mode ) {
+		flag_gui_enforce_redraw |= GUI_REDRAWFLAG_MODE_WAS_CHANGED;
+		gui_mode_prev_tick = gui_mode;
+	}
 }
 
 //-------------------------------------------------------------------
 // Main kbd processing for GUI modes
 void gui_kbd_process()
 {
+	gui_handler* cur_gui_handler = (gui_mode<GUI_MODE_COUNT)? (&guiHandlers[gui_mode]) : (gui_handler*)gui_mode;	
+
     // Call menu button handler if menu button pressed
     if (kbd_is_key_clicked(KEY_MENU))
     {
-        if (guiHandlers[gui_mode].kbd_process_menu_btn) guiHandlers[gui_mode].kbd_process_menu_btn();
+        if (cur_gui_handler->kbd_process_menu_btn) cur_gui_handler->kbd_process_menu_btn();
         return;
     }
 
     // Call mode handler for other buttons
-    if (guiHandlers[gui_mode].kbd_process) guiHandlers[gui_mode].kbd_process();
+    if (cur_gui_handler->kbd_process) cur_gui_handler->kbd_process();
 }
 
 //-------------------------------------------------------------------
@@ -2142,11 +2139,12 @@ void gui_kbd_leave()
     ubasic_error = UBASIC_E_NONE;
 #endif
     draw_restore();
-    if (gui_mode == GUI_MODE_READ && !rbf_load(conf.menu_rbf_file))
-        rbf_load_from_8x16(current_font);
     rbf_set_codepage(FONT_CP_WIN);
     vid_turn_on_updates();
     gui_set_mode(GUI_MODE_NONE);
+
+	// Unload all modules which are marked as safe to unload
+	module_async_unload_allrunned(0);
 
 	conf_update_prevent_shutdown();
 }
@@ -2606,13 +2604,6 @@ void gui_menuproc_reset(int arg)
 }
 
 //-------------------------------------------------------------------
-void gui_draw_palette(int arg) {
-    draw_restore();
-    gui_palette_init(PALETTE_MODE_DEFAULT, 0x00, NULL);
-    gui_set_mode(GUI_MODE_PALETTE);
-}
-
-//-------------------------------------------------------------------
 void gui_show_build_info(int arg) {
     static char buf[192];
     static char comp[64];
@@ -2638,73 +2629,11 @@ void gui_show_memory_info(int arg) {
 }
 
 //-------------------------------------------------------------------
-#ifdef OPT_GAME_REVERSI
-void gui_draw_reversi(int arg) {
-    if ((mode_get()&MODE_MASK) != MODE_PLAY) {
-        gui_mbox_init(LANG_MSG_INFO_TITLE, LANG_MSG_SWITCH_TO_PLAY_MODE,
-                      MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
-        return;
-    }
-
-    gui_set_mode(GUI_MODE_REVERSI);
-    gui_reversi_init();
-}
-#endif
-
-//-------------------------------------------------------------------
-#ifdef OPT_GAME_SOKOBAN
-void gui_draw_sokoban(int arg) {
-    if ((mode_get()&MODE_MASK) != MODE_PLAY) {
-        gui_mbox_init(LANG_MSG_INFO_TITLE, LANG_MSG_SWITCH_TO_PLAY_MODE,
-                      MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
-        return;
-    }
-    if ( gui_sokoban_init() )
-        gui_set_mode(GUI_MODE_SOKOBAN);
-}
-#endif
-//-------------------------------------------------------------------
-#ifdef OPT_GAME_CONNECT4
-void gui_draw_4wins(int arg) {
-    if ((mode_get()&MODE_MASK) != MODE_PLAY) {
-        gui_mbox_init(LANG_MSG_INFO_TITLE, LANG_MSG_SWITCH_TO_PLAY_MODE,
-                      MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
-        return;
-    }
-    if ( gui_4wins_init() )
-        gui_set_mode(GUI_MODE_4WINS);
-}
-#endif
-//-------------------------------------------------------------------
-#ifdef OPT_GAME_MASTERMIND
-void gui_draw_mastermind(int arg) {
-    if ((mode_get()&MODE_MASK) != MODE_PLAY) {
-        gui_mbox_init(LANG_MSG_INFO_TITLE, LANG_MSG_SWITCH_TO_PLAY_MODE,
-                      MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
-        return;
-    }
-    if ( gui_mastermind_init() )
-        gui_set_mode(GUI_MODE_MASTERMIND);
-}
-#endif
-//-------------------------------------------------------------------
-#ifdef OPT_DEBUGGING
-void gui_draw_debug(int arg) {
-//    gui_debug_init(0x2510);
-//    gui_debug_init(0x127E0);
-//    gui_debug_init(0x7F5B8);
-//    gui_debug_init(malloc(16));
-    gui_debug_init((void*)conf.mem_view_addr_init);
+void gui_menu_run_fltmodule(int arg) {
+    module_run((char*)arg, 0, 0,0, UNLOAD_IF_ERR);
 }
 
 //-------------------------------------------------------------------
-void gui_draw_bench(int arg) {
-    gui_set_mode(GUI_MODE_BENCH);
-    gui_bench_init();
-}
-#endif
-//-------------------------------------------------------------------
-
 void gui_draw_splash(char* logo, int logo_size) {
     coord w, h, x, y;
     static const char *text[] = {
@@ -2763,7 +2692,7 @@ void gui_draw_splash(char* logo, int logo_size) {
 
 //-------------------------------------------------------------------
 void gui_draw_fselect(int arg) {
-    gui_fselect_init(LANG_STR_FILE_BROWSER, "A", "A", NULL);
+    module_fselect_init(LANG_STR_FILE_BROWSER, "A", "A", NULL);
 }
 
 //-------------------------------------------------------------------
@@ -2772,7 +2701,7 @@ static void gui_grid_lines_load_selected(const char *fn) {
         grid_lines_load(fn);
 }
 void gui_grid_lines_load(int arg) {
-    gui_fselect_init(LANG_STR_SELECT_GRID_FILE, conf.grid_lines_file, "A/CHDK/GRIDS", gui_grid_lines_load_selected);
+    module_fselect_init(LANG_STR_SELECT_GRID_FILE, conf.grid_lines_file, "A/CHDK/GRIDS", gui_grid_lines_load_selected);
 }
 
 //-------------------------------------------------------------------
@@ -2788,15 +2717,16 @@ static void gui_draw_read_selected(const char *fn) {
         if (!rbf_load(conf.reader_rbf_file))
             rbf_load_from_8x16(current_font);
         rbf_set_codepage(conf.reader_codepage);
-        gui_set_mode(GUI_MODE_READ);
-        gui_read_init(fn);
+
+		unsigned int argv[] ={ (unsigned int)fn };
+		module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR);
     }
 }
 
 void gui_draw_read(int arg) {
-    gui_fselect_init(LANG_STR_SELECT_TEXT_FILE, conf.reader_file, "A/CHDK/BOOKS", gui_draw_read_selected);
+    module_fselect_init_w_mode(LANG_STR_SELECT_TEXT_FILE, conf.reader_file, "A/CHDK/BOOKS", gui_draw_read_selected, 1);
     void gui_fselect_set_key_redraw(int n);
-    gui_fselect_set_key_redraw(1);
+    //gui_fselect_set_key_redraw(1);	@tsv
 }
 
 void gui_draw_read_last(int arg) {
@@ -2817,26 +2747,20 @@ void gui_menuproc_mkbootdisk(int arg) {
 
 #ifdef OPT_EDGEOVERLAY
 static void gui_load_edge_selected( const char* fn ) {
-    if( fn )
-	load_edge_overlay(fn);
+    if( fn && module_edgeovr_load())
+		load_edge_overlay(fn);
 }
 
 void gui_menuproc_edge_save(int arg) {
-    save_edge_overlay();
+	if ( module_edgeovr_load() )
+    	save_edge_overlay();
 }
 
 void gui_menuproc_edge_load(int arg) {
-    gui_fselect_init(LANG_MENU_EDGE_LOAD, EDGE_SAVE_DIR, EDGE_SAVE_DIR, gui_load_edge_selected);
+    module_fselect_init(LANG_MENU_EDGE_LOAD, EDGE_SAVE_DIR, EDGE_SAVE_DIR, gui_load_edge_selected);
 }
 #endif
 
-//-------------------------------------------------------------------
-#ifdef OPT_CALENDAR
-void gui_draw_calendar(int arg) {
-    gui_set_mode(GUI_MODE_CALENDAR);
-    gui_calendar_init();
-}
-#endif
 //-------------------------------------------------------------------
 #ifdef OPT_TEXTREADER
 static void gui_draw_rbf_selected(const char *fn) {
@@ -2845,7 +2769,7 @@ static void gui_draw_rbf_selected(const char *fn) {
     }
 }
 void gui_draw_load_rbf(int arg) {
-    gui_fselect_init(LANG_STR_SELECT_FONT_FILE, conf.reader_rbf_file, "A/CHDK/FONTS", gui_draw_rbf_selected);
+    module_fselect_init(LANG_STR_SELECT_FONT_FILE, conf.reader_rbf_file, "A/CHDK/FONTS", gui_draw_rbf_selected);
 }
 #endif
 //-------------------------------------------------------------------
@@ -2859,7 +2783,7 @@ static void gui_draw_menu_rbf_selected(const char *fn) {
     }
 }
 void gui_draw_load_menu_rbf(int arg) {
-    gui_fselect_init(LANG_STR_SELECT_FONT_FILE, conf.menu_rbf_file, "A/CHDK/FONTS", gui_draw_menu_rbf_selected);
+    module_fselect_init(LANG_STR_SELECT_FONT_FILE, conf.menu_rbf_file, "A/CHDK/FONTS", gui_draw_menu_rbf_selected);
 }
 
 //-------------------------------------------------------------------
@@ -2871,7 +2795,7 @@ static void gui_draw_symbol_rbf_selected(const char *fn) {
     }
 }
 void gui_draw_load_symbol_rbf(int arg) {
-    gui_fselect_init(LANG_STR_SELECT_SYMBOL_FILE, conf.menu_symbol_rbf_file, "A/CHDK/SYMBOLS", gui_draw_symbol_rbf_selected);
+    module_fselect_init(LANG_STR_SELECT_SYMBOL_FILE, conf.menu_symbol_rbf_file, "A/CHDK/SYMBOLS", gui_draw_symbol_rbf_selected);
 }
 
 //-------------------------------------------------------------------
@@ -2883,22 +2807,28 @@ static void gui_draw_lang_selected(const char *fn) {
     }
 }
 void gui_draw_load_lang(int arg) {
-    gui_fselect_init(LANG_STR_SELECT_LANG_FILE, conf.lang_file, "A/CHDK/LANG", gui_draw_lang_selected);
+    module_fselect_init(LANG_STR_SELECT_LANG_FILE, conf.lang_file, "A/CHDK/LANG", gui_draw_lang_selected);
 }
 
-int find_mnu(CMenu *curr_menu, int mnu, int count)
+CMenuItem* find_mnu(CMenu *curr_menu, int itemid )
 {
 	int gui_menu_curr_item;
+	CMenuItem* rv=0;
+
+	if ( itemid==0 )
+		return 0;		
 
 	gui_menu_curr_item = 0;
 	while(curr_menu->menu[gui_menu_curr_item].text) {
-		if (curr_menu->menu[gui_menu_curr_item].text == mnu){
-			user_submenu_items[count] = curr_menu->menu[gui_menu_curr_item];
-			return 1;
+		if ( lang_strhash31(curr_menu->menu[gui_menu_curr_item].text) == itemid){
+			return (CMenuItem*) &(curr_menu->menu[gui_menu_curr_item]);
 		}
 		if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_SUBMENU)
-			if (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU)
-				if (find_mnu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), mnu, count)) return 1;
+			if (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU) {
+				rv = find_mnu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), itemid);
+				if ( rv )
+					return rv;
+			}
 		gui_menu_curr_item++;
 	}
 	return 0;
@@ -2911,18 +2841,22 @@ void user_menu_save() {
 		 * First entry in user_submenu_items is reserved for the "Main Menu"
  		 * conf.user_menu_vars only traks/saves the real user entries.
  		 */
- 		conf.user_menu_vars[x] = user_submenu_items[x+1].text;
+ 		conf.user_menu_vars[x] = lang_strhash31(user_submenu_items[x+1].text);
 	}
 }
 
 void user_menu_restore() {
-     int x;
+    int x;
+	CMenuItem* item=0;
+
  	for (x=0; x<USER_MENU_ITEMS; x++) {
  		/*
  		 * First entry in user_submenu_items is reserved for the "Main Menu"
  		 * conf.user_menu_vars only traks/saves the real user entries.
  		 */
- 		find_mnu(&root_menu, conf.user_menu_vars[x], x+1);
+ 		 item = find_mnu(&root_menu, conf.user_menu_vars[x]);
+		 if ( item )
+			user_submenu_items[x+1] = *item;
  	}
 }
 

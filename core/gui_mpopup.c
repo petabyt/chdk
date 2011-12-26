@@ -8,33 +8,22 @@
 #include "gui_lang.h"
 #include "gui_mpopup.h"
 
+#include "module_load.h"
+
+extern int module_idx;
+
+gui_handler GUI_MODE_MPOPUP_MODULE = 
+    /*GUI_MODE_MPOPUP*/         { gui_mpopup_draw,      gui_mpopup_kbd_process,     gui_mpopup_kbd_process, GUI_MODE_FLAG_NORESTORE_ON_SWITCH, GUI_MODE_MAGICNUM };
+
 // Simple popup menu. No title, no separators, only processing items
 
 //-------------------------------------------------------------------
-static enum Gui_Mode            gui_mpopup_mode_old;
+static gui_mode_t          gui_mpopup_mode_old;
 static char                     mpopup_to_draw;
 
-static struct {
-        unsigned int            flag;
-        int                     text;
-} actions[] = {
-        { MPOPUP_CUT,           LANG_POPUP_CUT    },
-        { MPOPUP_COPY,          LANG_POPUP_COPY   },
-        { MPOPUP_PASTE,         LANG_POPUP_PASTE  },
-        { MPOPUP_DELETE,        LANG_POPUP_DELETE },
-        { MPOPUP_SELINV,        LANG_POPUP_SELINV },
-        { MPOPUP_RAW_ADD,       LANG_POPUP_RAW_SUM},
-        { MPOPUP_RAW_AVERAGE,   LANG_POPUP_RAW_AVERAGE },
-        { MPOPUP_RAW_DEVELOP,   LANG_MENU_RAW_DEVELOP },
-        { MPOPUP_PURGE,         LANG_POPUP_PURGE  },
-        { MPOPUP_SUBTRACT,      LANG_POPUP_SUB_FROM_MARKED  },
-#if DNG_SUPPORT
-        { MPOPUP_DNG_TO_CRW,    (int)"DNG -> CHDK RAW"},
-#endif
-};
-
-#define ACTIONSNUM              (sizeof(actions)/sizeof(actions[0]))
 #define MAX_ACTIONS             10
+
+struct mpopup_item* actions;
 
 static int                      mpopup_actions[MAX_ACTIONS];    // Content of raised popupmenu
 static int                      mpopup_actions_num;             // Num of items in raised popupmenu
@@ -44,23 +33,27 @@ static unsigned int             mpopup_actions_w;               // width of wind
 static void (*mpopup_on_select)(unsigned int btn);
 
 //-------------------------------------------------------------------
-void gui_mpopup_init(const unsigned int flags, void (*on_select)(unsigned int actn)) {
+void gui_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode) 
+{
     int i;
 
     mpopup_actions_num = 0;
-    for (i=0; i<ACTIONSNUM && mpopup_actions_num<MAX_ACTIONS; ++i) {
+    actions = popup_actions;
+    for (i=0; actions[i].flag && mpopup_actions_num<MAX_ACTIONS; ++i) {
         if (flags & MPOPUP_MASK & actions[i].flag)
             mpopup_actions[mpopup_actions_num++] = i;
     }
-    if (mpopup_actions_num == 0)
+    if (mpopup_actions_num == 0) {
         on_select(MPOPUP_CANCEL);
+		return;
+	}
 
     mpopup_actions_active = 0;
 
     gui_mpopup_mode_old = gui_get_mode();
     mpopup_to_draw = 1;
     mpopup_on_select = on_select;
-    gui_set_mode(GUI_MODE_MPOPUP);
+    gui_set_mode((unsigned int)&GUI_MODE_MPOPUP_MODULE);
 }
 
 //-------------------------------------------------------------------
@@ -84,7 +77,7 @@ static void gui_mpopup_draw_actions() {
 }
 
 //-------------------------------------------------------------------
-void gui_mpopup_draw() {
+void gui_mpopup_draw(int enforce_redraw) {
     if (mpopup_to_draw) {
         int i;
         coord x=0, y=0;
@@ -113,6 +106,15 @@ void gui_mpopup_draw() {
 }
 
 //-------------------------------------------------------------------
+void exit_mpopup(int action)
+{
+    gui_set_mode(gui_mpopup_mode_old);
+    if (mpopup_on_select) 
+        mpopup_on_select(action);
+	mpopup_on_select=0;
+}
+
+//-------------------------------------------------------------------
 void gui_mpopup_kbd_process() {
     switch (kbd_get_clicked_key() | get_jogdial_direction()) {
     case JOGDIAL_LEFT:
@@ -130,28 +132,108 @@ void gui_mpopup_kbd_process() {
     case KEY_MENU:
     case KEY_LEFT:
         kbd_reset_autoclicked_key();
-        gui_set_mode(gui_mpopup_mode_old);
-        if (mpopup_on_select) 
-            mpopup_on_select(MPOPUP_CANCEL);
+		exit_mpopup(MPOPUP_CANCEL);		
+		module_async_unload(module_idx);
         break;
     case KEY_SET:
         kbd_reset_autoclicked_key();
-        gui_set_mode(gui_mpopup_mode_old);
-        if (mpopup_on_select) 
-            mpopup_on_select(actions[mpopup_actions[mpopup_actions_active]].flag);
+		exit_mpopup(actions[mpopup_actions[mpopup_actions_active]].flag);		
+		module_async_unload(module_idx);
         break;
     }
 }
 
 //-------------------------------------------------------------------
-void gui_browser_progress_show(const char* msg, const unsigned int perc) {
-    coord x=60, y=100;
-    unsigned int w=240, h=40, len;
 
-    draw_rect_shadow(x+1, y+1, x+w+1, y+h+1, COLOR_BLACK, 3); //shadow
-    draw_filled_rect(x, y, x+w, y+h, MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); // main box
-    len = strlen(msg);
-    draw_string(x+((w-len*FONT_WIDTH)>>1), y+2, msg, MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); //title text
-    draw_filled_rect(x+10, y+4+FONT_HEIGHT, x+w-10, y+h-10, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); // progress rect
-    draw_filled_rect(x+11, y+5+FONT_HEIGHT, x+11+(w-22)*perc/100, y+h-11, MAKE_COLOR(COLOR_RED, COLOR_RED)); // progress bar
+// =========  MODULE INIT =================
+
+int module_idx=-1;
+
+/***************** BEGIN OF AUXILARY PART *********************
+  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+ **************************************************************/
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)0
+		};
+
+
+//---------------------------------------------------------
+// PURPOSE:   Bind module symbols with chdk. 
+//		Required function
+// PARAMETERS: pointer to chdk list of export
+// RETURN VALUE: 1 error, 0 ok
+//---------------------------------------------------------
+int _module_loader( void** chdk_export_list )
+{
+  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+     return 1;
+
+  // Try to bind to generic gui mode alias
+  if (!gui_bind_mode( GUI_MODE_MPOPUP, &GUI_MODE_MPOPUP_MODULE))
+     return 1;
+
+  return 0;
 }
+
+
+
+//---------------------------------------------------------
+// PURPOSE: Finalize module operations (close allocs, etc)
+// RETURN VALUE: 0-ok, 1-fail
+//---------------------------------------------------------
+int _module_unloader()
+{
+    if (mpopup_on_select) 
+        mpopup_on_select(MPOPUP_CANCEL);
+
+	//sanity clean to prevent accidentaly assign/restore guimode to unloaded module 
+	GUI_MODE_MPOPUP_MODULE.magicnum = 0;
+
+	// unbind generic alias
+	gui_bind_mode( GUI_MODE_MPOPUP, 0 );
+
+    return 0;
+}
+
+
+//---------------------------------------------------------
+// PURPOSE: Default action for simple modules (direct run)
+// NOTE: Please comment this function if no default action and this library module
+//---------------------------------------------------------
+int _module_run(int moduleidx, int argn, int* arguments)
+{
+  module_idx=moduleidx;
+
+  if ( argn!=4) {
+	module_async_unload(moduleidx);
+    return 1;
+  }
+
+  // Currently only old (0) mode is supported
+  // This is for load error if newer version is required
+  if (arguments[3]!=0)
+		return 1;
+
+  gui_mpopup_init( (struct mpopup_item*)arguments[0], (const unsigned int)arguments[1], (void*) arguments[2], arguments[3]);
+  
+
+  return 0;
+}
+
+
+/******************** Module Information structure ******************/
+
+struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
+									sizeof(struct ModuleInfo),
+
+									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+									MODULEINFO_FLAG_SYSTEM,		// flag
+									(int32_t)"Popup menu module",		// Module name
+									1, 0,						// Module version
+									0
+								 };
+
+/*************** END OF AUXILARY PART *******************/

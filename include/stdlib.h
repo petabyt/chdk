@@ -13,6 +13,10 @@
 #define O_WRONLY        1
 #define O_RDWR          2
 
+#ifndef THIS_IS_CHDK_CORE
+#include "stdlib_unified.h"
+#endif
+
 
 #if !CAM_DRYOS
 
@@ -85,7 +89,7 @@ struct	stat
 };
 #endif//CAM_DRYOS_2_3_R39
 
-#endif
+#endif //CAM_DRYOS
 
 extern int rand(void);
 extern void* srand(unsigned int seed);

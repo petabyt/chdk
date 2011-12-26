@@ -1,12 +1,7 @@
 #!build time optional components - comment out the features you dont want to have in your build or copy this file to localbuildconf.inc and override settings there
 
-OPT_GAME_REVERSI=1
-OPT_GAME_SOKOBAN=1
-OPT_GAME_CONNECT4=1
-OPT_GAME_MASTERMIND=1
 OPT_CURVES=1
 OPT_TEXTREADER=1
-OPT_CALENDAR=1
 OPT_DEBUGGING=1
 OPT_EDGEOVERLAY=1
 # experimental PTP/USB interface. Enabled/disabled for individual cameras in camera.h

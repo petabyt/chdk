@@ -11,6 +11,15 @@
 #include "gui_mbox.h"
 #include "gui_sokoban.h"
 
+#include "module_load.h"
+void gui_module_menu_kbd_process();
+
+int *conf_sokoban_level;
+
+gui_handler GUI_MODE_SOKOBAN = 
+    /*GUI_MODE_SOKOBAN*/        { gui_sokoban_draw,     gui_sokoban_kbd_process,    gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+
+
 //-------------------------------------------------------------------
 #define FIELD_WIDTH             15
 #define FIELD_HEIGHT            15
@@ -196,7 +205,7 @@ static void sokoban_set_level(int lvl) {
     }
     
     free(buf);
-    conf.sokoban_level = lvl;
+    *conf_sokoban_level = lvl;
     moves = 0;
     sokoban_undo_reset();
 }
@@ -214,8 +223,8 @@ static int sokoban_finished() {
 
 //-------------------------------------------------------------------
 static void sokoban_next_level() {
-    if (++conf.sokoban_level >= num_levels) conf.sokoban_level = 0;
-    sokoban_set_level(conf.sokoban_level);
+    if (++*conf_sokoban_level >= num_levels) *conf_sokoban_level = 0;
+    sokoban_set_level(*conf_sokoban_level);
     need_redraw_all = 1;
 }
 
@@ -265,9 +274,9 @@ int gui_sokoban_init() {
     if(!num_levels) {
         char *buf,*p;
         FILE *fd;    
-        struct stat st;
+        struct STD_stat st;
 
-        if (stat((char *)level_file_name,&st) != 0 || st.st_size==0) 
+        if (safe_stat((char *)level_file_name,&st) != 0 || st.st_size==0) 
             return 0;
 
         fd=fopen(level_file_name,"rb");
@@ -312,16 +321,18 @@ int gui_sokoban_init() {
     if(!num_levels) {
         return 0;
     }
-    else if(conf.sokoban_level >= num_levels) {
-        conf.sokoban_level = 0;
+    else if(*conf_sokoban_level >= num_levels) {
+        *conf_sokoban_level = 0;
     }
     cell_size = screen_height/FIELD_HEIGHT;
-    sokoban_set_level(conf.sokoban_level);
+    sokoban_set_level(*conf_sokoban_level);
 	// if the file is no longer readable, set_level will set this
     if(!num_levels) {
         return 0;
     }
     need_redraw_all = 1;
+
+    gui_set_mode((unsigned int)&GUI_MODE_SOKOBAN);
     return 1;
 }
 
@@ -357,25 +368,16 @@ void gui_sokoban_kbd_process() {
             sokoban_redo();
             need_redraw = 1;
             break;
-      #if CAM_HAS_ERASE_BUTTON
         case KEY_ERASE:
-      #else
         case KEY_DISPLAY:
-      #endif
-            sokoban_set_level(conf.sokoban_level);
+            sokoban_set_level(*conf_sokoban_level);
             need_redraw_all = 1;
             break;
-      #if CAM_HAS_ERASE_BUTTON
-        case KEY_DISPLAY:
-            gui_mbox_init(LANG_MBOX_ABOUT_TITLE, (int)"SOKOBAN\n(c) GrAnd, 2007", MBOX_TEXT_CENTER, NULL);
-            need_redraw = 1;
-            break;
-     #endif
     }
 }
 
 //-------------------------------------------------------------------
-void gui_sokoban_draw() {
+void gui_sokoban_draw(int enforce_redraw) {
     int y, x;
     static char str[16];
 
@@ -419,7 +421,7 @@ void gui_sokoban_draw() {
         draw_line(CAM_TS_BUTTON_BORDER+cell_size*FIELD_WIDTH, 0, CAM_TS_BUTTON_BORDER+cell_size*FIELD_WIDTH, screen_height-1, COLOR_WHITE);
         draw_line(CAM_TS_BUTTON_BORDER+cell_size*FIELD_WIDTH+1, 0, CAM_TS_BUTTON_BORDER+cell_size*FIELD_WIDTH+1, screen_height-1, COLOR_BLACK);
 
-        sprintf(str, "%s: %-6d", lang_str(LANG_SOKOBAN_TEXT_LEVEL), conf.sokoban_level+1);
+        sprintf(str, "%s: %-6d", lang_str(LANG_SOKOBAN_TEXT_LEVEL), *conf_sokoban_level+1);
         draw_string(CAM_TS_BUTTON_BORDER+cell_size*FIELD_WIDTH+2, 8, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
         sprintf(str, "%s: %-6d", lang_str(LANG_SOKOBAN_TEXT_MOVES), moves);
         draw_string(CAM_TS_BUTTON_BORDER+cell_size*FIELD_WIDTH+2, 8+FONT_HEIGHT, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
@@ -436,3 +438,85 @@ void gui_sokoban_draw() {
     draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-9, screen_height/FONT_HEIGHT-1, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 }
 
+
+extern int module_idx;
+void gui_module_menu_kbd_process() {
+	gui_default_kbd_process_menu_btn();
+  	module_async_unload(module_idx);
+}
+
+
+// =========  MODULE INIT =================
+#include "module_load.h"
+int module_idx=-1;
+
+/***************** BEGIN OF AUXILARY PART *********************
+  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+ **************************************************************/
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)0
+		};
+
+
+//---------------------------------------------------------
+// PURPOSE:   Bind module symbols with chdk. 
+//		Required function
+// PARAMETERS: pointer to chdk list of export
+// RETURN VALUE: 1 error, 0 ok
+//---------------------------------------------------------
+int _module_loader( void** chdk_export_list )
+{
+  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+     return 1;
+
+  // Safe bind of conf.
+  tConfigVal configVal;
+  CONF_BIND_INT(40, conf_sokoban_level );
+
+  return 0;
+}
+
+
+
+//---------------------------------------------------------
+// PURPOSE: Finalize module operations (close allocs, etc)
+// RETURN VALUE: 0-ok, 1-fail
+//---------------------------------------------------------
+int _module_unloader()
+{
+  return 0;
+}
+
+
+//---------------------------------------------------------
+// PURPOSE: Default action for simple modules (direct run)
+// NOTE: Please comment this function if no default action and this library module
+//---------------------------------------------------------
+int _module_run(int moduleidx, int argn, int* arguments)
+{
+  module_idx=moduleidx;
+
+  int rv = gui_sokoban_init();
+  if ( ! rv )
+	module_async_unload(moduleidx);		// fail to init - "unload me"
+
+  return 0;
+}
+
+
+/******************** Module Information structure ******************/
+
+struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
+									sizeof(struct ModuleInfo),
+
+									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+									0,							// flag
+									-LANG_MENU_GAMES_SOKOBAN,	// Module name
+									1, 0,						// Module version
+									(int32_t)"Game"
+								 };
+
+/*************** END OF AUXILARY PART *******************/

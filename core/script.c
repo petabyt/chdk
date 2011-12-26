@@ -592,7 +592,7 @@ static int script_action_stack(long p)
                     // Last selected file is returned by this function in gui_fselect.c
                     extern char* gui_fselect_result();
                     // Send file name back to script caller
-                    lua_pushstring( Lt, gui_fselect_result() );
+                  ////  lua_pushstring( Lt, gui_fselect_result() );
                 }
 #endif
             }

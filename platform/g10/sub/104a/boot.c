@@ -19,8 +19,6 @@ void CreateTask_spytask();
 extern volatile int jogdial_stopped;
 void JogDial_task_my(void);
 
-enum Gui_Mode gui_get_mode() ;
-
 void __attribute__((naked,noinline)) task_blinker() {
 
 int pwr_led_count = 0 ;

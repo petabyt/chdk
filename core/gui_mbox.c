@@ -10,7 +10,7 @@
 
 
 //-------------------------------------------------------------------
-static enum Gui_Mode 	gui_mbox_mode_old;
+static gui_mode_t	gui_mbox_mode_old;
 static const char*	mbox_title;
 static const char* 	mbox_msg;
 static char 		mbox_to_draw;
@@ -85,7 +85,7 @@ static void gui_mbox_draw_buttons() {
 }
 
 //-------------------------------------------------------------------
-void gui_mbox_draw() {
+void gui_mbox_draw(int enforce_redraw) {
     if (mbox_to_draw) {
         char c[MAX_LINES][MAX_WIDTH+1];
         const char *p=mbox_msg;
@@ -171,3 +171,15 @@ void gui_mbox_kbd_process() {
 }
 
 //-------------------------------------------------------------------
+
+void gui_browser_progress_show(const char* msg, const unsigned int perc) {
+    coord x=60, y=100;
+    unsigned int w=240, h=40, len;
+
+    draw_rect_shadow(x+1, y+1, x+w+1, y+h+1, COLOR_BLACK, 3); //shadow
+    draw_filled_rect(x, y, x+w, y+h, MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); // main box
+    len = strlen(msg);
+    draw_string(x+((w-len*FONT_WIDTH)>>1), y+2, msg, MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); //title text
+    draw_filled_rect(x+10, y+4+FONT_HEIGHT, x+w-10, y+h-10, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); // progress rect
+    draw_filled_rect(x+11, y+5+FONT_HEIGHT, x+11+(w-22)*perc/100, y+h-11, MAKE_COLOR(COLOR_RED, COLOR_RED)); // progress bar
+}

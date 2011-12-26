@@ -223,6 +223,8 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 }
 
 
+volatile int kbd_KEY_RING_FUNC;
+
 void my_kbd_read_keys()
 {
 	static long i=0;
@@ -232,6 +234,8 @@ void my_kbd_read_keys()
 	kbd_prev_state[2] = kbd_new_state[2];
 
 	_GetKbdState(kbd_new_state);
+kbd_KEY_RING_FUNC = !(kbd_new_state[2]&0x4000);
+
 
 	if (kbd_process() == 0) {
 		// leave it alone...
