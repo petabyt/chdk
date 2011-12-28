@@ -21,7 +21,7 @@ gui_handler GUI_MODE_4WINS =
 
 
 #define BORDER		 20
-#define XBORDER		 (CAM_TS_BUTTON_BORDER+BORDER)
+#define XBORDER		 (camera_info.ts_button_border+BORDER)
 #define RECT_SIZE	 30
 #define BORDER_TOP	 RECT_SIZE
 #define FIELD_HEIGHT 7
@@ -179,7 +179,7 @@ void draw_txt_message(char* text) {
     l=strlen(text);
     w=l*FONT_WIDTH+10;
 
-    x = (screen_width-CAM_TS_BUTTON_BORDER-w)>>1; y = ((screen_height)>>1);
+    x = (screen_width-camera_info.ts_button_border-w)>>1; y = ((screen_height)>>1);
     draw_filled_round_rect(x, y, x+w, y+FONT_HEIGHT+6, MAKE_COLOR(COLOR_RED, COLOR_RED));
     draw_string(x+((w-strlen(text)*FONT_WIDTH)>>1), y+4, text, cl);
 }
@@ -244,7 +244,7 @@ void win() {
 //-------------------------------------------------------------------
 void draw_mode()
 {
-    int x = (CAM_TS_BUTTON_BORDER/FONT_WIDTH) + 30;
+    int x = (camera_info.ts_button_border/FONT_WIDTH) + 30;
 	draw_txt_string(x, 4, "            ", TEXT_COLOR);
 	if (mode_rival==1)
 		draw_txt_string(x, 4, lang_str(LANG_CONNECT4_HUMAN), TEXT_COLOR);
@@ -310,9 +310,9 @@ int gui_4wins_init()
 	
 	draw_filled_rect(0, 0, screen_width, screen_height, BG_COLOR);		// draw backgraund
 	draw_filled_rect(XBORDER, BORDER+BORDER_TOP, XBORDER+(7*RECT_SIZE), BORDER+(6*RECT_SIZE)+BORDER_TOP, FIELD_COLOR);
-	draw_filled_round_rect(CAM_TS_BUTTON_BORDER+240, 90, CAM_TS_BUTTON_BORDER+360-BORDER, 240-10, INFO_COLOR);
-    draw_txt_string((CAM_TS_BUTTON_BORDER/FONT_WIDTH)+12, 0, lang_str(LANG_MENU_GAMES_CONNECT4), TEXT_COLOR);
-    draw_line(CAM_TS_BUTTON_BORDER,15,CAM_TS_BUTTON_BORDER+360,15,COLOR_SPLASH_GREY);
+	draw_filled_round_rect(camera_info.ts_button_border+240, 90, camera_info.ts_button_border+360-BORDER, 240-10, INFO_COLOR);
+    draw_txt_string((camera_info.ts_button_border/FONT_WIDTH)+12, 0, lang_str(LANG_MENU_GAMES_CONNECT4), TEXT_COLOR);
+    draw_line(camera_info.ts_button_border,15,camera_info.ts_button_border+360,15,COLOR_SPLASH_GREY);
 
 	for(i=0;i<7;i++)
 	{
@@ -328,13 +328,13 @@ int gui_4wins_init()
 	}
 
 	move_cursor(0);
-	draw_txt_string((CAM_TS_BUTTON_BORDER/FONT_WIDTH)+30, 3, lang_str(LANG_CONNECT4_RIVAL), TEXT_COLOR);
+	draw_txt_string((camera_info.ts_button_border/FONT_WIDTH)+30, 3, lang_str(LANG_CONNECT4_RIVAL), TEXT_COLOR);
     sprintf(str, "%d",count_win[0]);
-	draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-10, screen_height/FONT_HEIGHT-9, str, MAKE_COLOR(INFO_COLOR, P1_COLOR));
+	draw_txt_string((screen_width-camera_info.ts_button_border)/FONT_WIDTH-2-10, screen_height/FONT_HEIGHT-9, str, MAKE_COLOR(INFO_COLOR, P1_COLOR));
     sprintf(str, ":");
-	draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-7, screen_height/FONT_HEIGHT-9, str, INFO_TEXT_COLOR);
+	draw_txt_string((screen_width-camera_info.ts_button_border)/FONT_WIDTH-2-7, screen_height/FONT_HEIGHT-9, str, INFO_TEXT_COLOR);
     sprintf(str, "%d",count_win[1]);
-	draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-4, screen_height/FONT_HEIGHT-9, str, MAKE_COLOR(INFO_COLOR, P2_COLOR));
+	draw_txt_string((screen_width-camera_info.ts_button_border)/FONT_WIDTH-2-4, screen_height/FONT_HEIGHT-9, str, MAKE_COLOR(INFO_COLOR, P2_COLOR));
 	draw_mode();
 	if(cur_player==2&&!mode_rival) set();
 
@@ -369,8 +369,8 @@ void gui_4wins_kbd_process()
 void gui_4wins_draw(int enforce_redraw) {
   static char str[16];
   sprintf(str, "%3d%%", get_batt_perc());
-  draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-13, screen_height/FONT_HEIGHT-2, str, INFO_TEXT_COLOR);
-  gui_osd_draw_clock(CAM_TS_BUTTON_BORDER+290,208,INFO_TEXT_COLOR);
+  draw_txt_string((screen_width-camera_info.ts_button_border)/FONT_WIDTH-2-13, screen_height/FONT_HEIGHT-2, str, INFO_TEXT_COLOR);
+  gui_osd_draw_clock(camera_info.ts_button_border+290,208,INFO_TEXT_COLOR);
 }
 
 extern int module_idx;

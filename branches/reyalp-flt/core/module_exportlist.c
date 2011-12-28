@@ -26,10 +26,14 @@
 #include "modules.h"
 #include "module_load.h"
 #include "raw.h"
+#include "action_stack.h"
+#include "console.h"
 
 
 extern int fselect_sort_nothumb(const void* v1, const void* v2);
 extern short shooting_get_ev_correction1();
+
+extern long shutter_open_time; // defined in platform/generic/capt_seq.c
 
 
 // ATTENTION: DO NOT USE BRACES OR OWN /**/-STYLE COMMENTS ANYWHERE IN THIS FILE TO AVOID AUTO PARSING MISTAKES
@@ -47,13 +51,6 @@ extern short shooting_get_ev_correction1();
 // 	  1. PLEASE DO NOT CHANGE START AND FINAL COMMENTS TO CORRECT AUTOPARSING
 
 /* EXPORTED_DEFINES_BEGIN */
-
-int CAM_CHDK_BLACK_LEVEL = CAM_BLACK_LEVEL;
-int CAM_CHDK_WHITE_LEVEL = CAM_WHITE_LEVEL;
-int CAM_CHDK_RAW_ROWS    = CAM_RAW_ROWS   ;
-int CAM_CHDK_RAW_ROWPIX  = CAM_RAW_ROWPIX ;
-int RAW_CHDK_ROWLEN      = RAW_ROWLEN     ;
-
 
 char SCREEN__EXPORTEDSYM_COLOR        = SCREEN_COLOR		;
 char COLOR__EXPORTEDSYM_WHITE         = COLOR_WHITE         ;
@@ -83,9 +80,6 @@ char COLOR__EXPORTEDSYM_HISTO_RB_PLAY = COLOR_HISTO_RB_PLAY ;
 char COLOR__EXPORTEDSYM_HISTO_B_PLAY  = COLOR_HISTO_B_PLAY  ;
 char COLOR__EXPORTEDSYM_HISTO_BG_PLAY = COLOR_HISTO_BG_PLAY ;
 char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
-
-short EDGE__EXPORTEDSYM_HMARGIN = EDGE_HMARGIN;
-short CAM__EXPORTEDSYM_TS_BUTTON_BORDER = CAM_TS_BUTTON_BORDER;
 
 
 /* EXPORTED_DEFINES_END */
@@ -169,20 +163,16 @@ void* CHDK_EXPORT_LIST[] = {
 			gui_mbox_init,
 
 			// for rawop.flt
-            &CAM_CHDK_BLACK_LEVEL,
-            &CAM_CHDK_WHITE_LEVEL,
-            &CAM_CHDK_RAW_ROWS,
-            &CAM_CHDK_RAW_ROWPIX,
-            &RAW_CHDK_ROWLEN,
             GetFreeCardSpaceKb,
             debug_led,
             gui_browser_progress_show,
         
         	// for edgeovr.flt
 			vid_get_viewport_width,
-			vid_get_viewport_buffer_width,
+            vid_get_viewport_byte_width,
             vid_get_viewport_xoffset,
             vid_get_viewport_yoffset,
+            vid_get_viewport_yscale,
             vid_get_viewport_fb_d,
             kbd_is_key_pressed,
             bv_create,
@@ -286,13 +276,31 @@ void* CHDK_EXPORT_LIST[] = {
 			&COLOR__EXPORTEDSYM_HISTO_BG_PLAY,
 			&COLOR__EXPORTEDSYM_HISTO_RG_PLAY,
 
-			// some common required sym
-			&EDGE__EXPORTEDSYM_HMARGIN,
-			&CAM__EXPORTEDSYM_TS_BUTTON_BORDER,
-
 			// profile.flt
 			find_mnu,
 			lang_strhash31,
 
+			action_stack_create,
+			action_pop,
+			action_push,
+			action_push_delay,
+			action_stack_standard,
+			console_clear,
+			console_add_line,
+			shooting_set_tv96_direct,
+			shooting_get_iso_market,
+			get_focal_length,
+			get_effective_focal_length,
+			get_parameter_data,
+			get_property_case,
+			&shutter_open_time,
+			get_raw_pixel,
+			&state_shooting_progress,
+			patch_bad_pixel,
+			
+			pow_calc,
+			pow_calc_2,
+
+            &camera_info,
 			0
 };

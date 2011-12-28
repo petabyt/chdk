@@ -78,8 +78,8 @@ void gui_palette_draw(int enforce_redraw) {
     color c;
     static char buf[64];
 
-    xl = CAM_TS_BUTTON_BORDER;
-    xr = screen_width - CAM_TS_BUTTON_BORDER;
+    xl = camera_info.ts_button_border;
+    xr = screen_width - camera_info.ts_button_border;
 
     if (gui_palette_redraw)
     {

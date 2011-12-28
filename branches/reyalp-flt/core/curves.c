@@ -145,9 +145,9 @@ void curveRGB_apply() {
 	
 	
 	// Loop through picture rows
-	for (i=CAM_CHDK_RAW_ROWS; i;i-=2){
+	for (i=camera_info.raw_rows; i;i-=2){
 		// Loop through picture columns 
-		for (j=CAM_CHDK_RAW_ROWPIX; j; j-=8, src+=10){
+		for (j=camera_info.raw_rows; j; j-=8, src+=10){
 			pixVal0=((0x3fc&(((unsigned short)(src[1]))<<2)) | (src[0] >> 6));
 			pixVal1=((0x3f0&(((unsigned short)(src[0]))<<4)) | (src[3] >> 4));
 				pixVal0 = curve0[pixVal0];
@@ -178,7 +178,7 @@ void curveRGB_apply() {
             *(src+9) = (unsigned char) ((pixVal2<<2)|(pixVal0>>8)); // 6,7 =>(2,0)
             *(src+8) = (unsigned char) ((pixVal0)); //7 (=>0)		}
 		}
-		for (j=CAM_CHDK_RAW_ROWPIX;j; j-=8, src+=10){
+		for (j=camera_info.raw_rows;j; j-=8, src+=10){
 			pixVal0=((0x3fc&(((unsigned short)(src[1]))<<2)) | (src[0] >> 6));
 			pixVal1=((0x3f0&(((unsigned short)(src[0]))<<4)) | (src[3] >> 4));
 				pixVal0 = curve2[pixVal0];
@@ -241,9 +241,9 @@ void curveL_apply(unsigned sys_index) {
 	src = (unsigned char *) get_raw_image_addr();	
 	
 	// Loop through picture rows
-	for (i=CAM_CHDK_RAW_ROWS; i;i-=2){
+	for (i=camera_info.raw_rows; i;i-=2){
 		// Loop through picture columns 
-		for (j=CAM_CHDK_RAW_ROWPIX; j; j-=8, src+=10){
+		for (j=camera_info.raw_rows; j; j-=8, src+=10){
 			pixVal0=((0x3fc&(((unsigned short)(src[1]))<<2)) | (src[0] >> 6));
 			pixVal1=((0x3f0&(((unsigned short)(src[0]))<<4)) | (src[3] >> 4));
 			if (pixVal1) {
@@ -306,7 +306,7 @@ void curveL_apply(unsigned sys_index) {
             *(src+9) = (unsigned char) ((pixVal2<<2)|(pixVal0>>8)); // 6,7 =>(2,0)
             *(src+8) = (unsigned char) ((pixVal0)); //7 (=>0)
 		}
-		for (j=CAM_CHDK_RAW_ROWPIX;j; j-=8, src+=10){
+		for (j=camera_info.raw_rows;j; j-=8, src+=10){
 			pixVal0=((0x3fc&(((unsigned short)(src[1]))<<2)) | (src[0] >> 6));
 			pixVal1=((0x3f0&(((unsigned short)(src[0]))<<4)) | (src[3] >> 4));
 			if (pixVal0) {

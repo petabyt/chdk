@@ -15,10 +15,6 @@
 #define RAW_EXT_WAV             4
 
 //-------------------------------------------------------------------
-
-#define RAW_ROWLEN ((CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL)/8)
-
-//-------------------------------------------------------------------
 extern int raw_savefile();
 extern void raw_postprocess();
 extern void raw_prepare_develop(const char* filename);

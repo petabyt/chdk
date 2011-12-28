@@ -157,15 +157,15 @@ void platformRenderGame(StcGame *gameInstance){
         for (i = 0; i < 4; ++i) {
             for (j = 0; j < 4; ++j) {
                 if (game->nextBlock.cells[i][j] != EMPTY_CELL) {
-                    draw_filled_rect(CAM_TS_BUTTON_BORDER+PREVIEW_X + (TILE_SIZE * i),
+                    draw_filled_rect(camera_info.ts_button_border+PREVIEW_X + (TILE_SIZE * i),
                             PREVIEW_Y + (TILE_SIZE * j),
-                            CAM_TS_BUTTON_BORDER+PREVIEW_X + (TILE_SIZE * i)+TILE_SIZE-1,
+                            camera_info.ts_button_border+PREVIEW_X + (TILE_SIZE * i)+TILE_SIZE-1,
                             PREVIEW_Y + (TILE_SIZE * j)+TILE_SIZE-1,
                              MAKE_COLOR(game->nextBlock.cells[i][j], game->nextBlock.cells[i][j]));
                 }else{
-                    draw_filled_rect(CAM_TS_BUTTON_BORDER+PREVIEW_X + (TILE_SIZE * i),
+                    draw_filled_rect(camera_info.ts_button_border+PREVIEW_X + (TILE_SIZE * i),
                             PREVIEW_Y + (TILE_SIZE * j),
-                            CAM_TS_BUTTON_BORDER+PREVIEW_X + (TILE_SIZE * i)+TILE_SIZE-1,
+                            camera_info.ts_button_border+PREVIEW_X + (TILE_SIZE * i)+TILE_SIZE-1,
                             PREVIEW_Y + (TILE_SIZE * j)+TILE_SIZE-1,
                             TETRIS_COLOR_BG);
                 }
@@ -193,21 +193,21 @@ void platformRenderGame(StcGame *gameInstance){
     for (i = 0; i < BOARD_WIDTH; ++i) {
         for (j = 0; j < BOARD_HEIGHT; ++j){
                     if(tmp[i][j] != EMPTY_CELL){
-                    draw_filled_rect(CAM_TS_BUTTON_BORDER+BOARD_X + (TILE_SIZE * i),
+                    draw_filled_rect(camera_info.ts_button_border+BOARD_X + (TILE_SIZE * i),
                             BOARD_Y + (TILE_SIZE * j),
-                            CAM_TS_BUTTON_BORDER+BOARD_X + (TILE_SIZE * i)+TILE_SIZE-1,
+                            camera_info.ts_button_border+BOARD_X + (TILE_SIZE * i)+TILE_SIZE-1,
                             BOARD_Y + (TILE_SIZE * j)+TILE_SIZE-1,
                              MAKE_COLOR(tmp[i][j], tmp[i][j]));
                     }else if(tmp2[i][j] != EMPTY_CELL){
-                    draw_filled_rect(CAM_TS_BUTTON_BORDER+BOARD_X + (TILE_SIZE * i),
+                    draw_filled_rect(camera_info.ts_button_border+BOARD_X + (TILE_SIZE * i),
                             BOARD_Y + (TILE_SIZE * j),
-                            CAM_TS_BUTTON_BORDER+BOARD_X + (TILE_SIZE * i)+TILE_SIZE-1,
+                            camera_info.ts_button_border+BOARD_X + (TILE_SIZE * i)+TILE_SIZE-1,
                             BOARD_Y + (TILE_SIZE * j)+TILE_SIZE-1,
                              MAKE_COLOR(tmp2[i][j], tmp2[i][j]));
                     }else{
-                    draw_filled_rect(CAM_TS_BUTTON_BORDER+BOARD_X + (TILE_SIZE * i),
+                    draw_filled_rect(camera_info.ts_button_border+BOARD_X + (TILE_SIZE * i),
                             BOARD_Y + (TILE_SIZE * j),
-                            CAM_TS_BUTTON_BORDER+BOARD_X + (TILE_SIZE * i)+TILE_SIZE-1,
+                            camera_info.ts_button_border+BOARD_X + (TILE_SIZE * i)+TILE_SIZE-1,
                             BOARD_Y + (TILE_SIZE * j)+TILE_SIZE-1,
                              TETRIS_COLOR_BOARD);
                     }
@@ -218,23 +218,23 @@ void platformRenderGame(StcGame *gameInstance){
     unsigned long t;
     static struct tm *ttm;
       sprintf(str_buf,"High:    %5d",game->stats.high);
-      draw_string(CAM_TS_BUTTON_BORDER+150,35,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+      draw_string(camera_info.ts_button_border+150,35,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
       sprintf(str_buf,"Points:  %5d",game->stats.score);
-      draw_string(CAM_TS_BUTTON_BORDER+150,55,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+      draw_string(camera_info.ts_button_border+150,55,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
       sprintf(str_buf,"Lines:   %5d",game->stats.lines);
-      draw_string(CAM_TS_BUTTON_BORDER+150,75,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+      draw_string(camera_info.ts_button_border+150,75,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
       sprintf(str_buf,"Level:   %5d",game->stats.level);
-      draw_string(CAM_TS_BUTTON_BORDER+150,95,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+      draw_string(camera_info.ts_button_border+150,95,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
      sprintf(str_buf,"UP  -> Pause");
-     draw_string(CAM_TS_BUTTON_BORDER+150,135,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+     draw_string(camera_info.ts_button_border+150,135,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
      sprintf(str_buf,"SET -> Rotate");
-     draw_string(CAM_TS_BUTTON_BORDER+150,155,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+     draw_string(camera_info.ts_button_border+150,155,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
      t = time(NULL);
       ttm = localtime(&t);
       sprintf(str_buf,"Time:    %2u:%02u", ttm->tm_hour, ttm->tm_min);
-     draw_string(CAM_TS_BUTTON_BORDER+150,195,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+     draw_string(camera_info.ts_button_border+150,195,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
      sprintf(str_buf,"Batt:     %3d%%", get_batt_perc());
-     draw_string(CAM_TS_BUTTON_BORDER+150,215,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+     draw_string(camera_info.ts_button_border+150,215,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
 }
 
 /* Return the current system time in milliseconds */
@@ -664,8 +664,8 @@ void gameUpdate(StcGame *game) {
 }
 
 void gui_tetris_init(){
-    draw_filled_rect(CAM_TS_BUTTON_BORDER+0,0,screen_width-CAM_TS_BUTTON_BORDER,screen_height, TETRIS_COLOR_BG);
-    draw_rect(CAM_TS_BUTTON_BORDER+BOARD_X-1,BOARD_Y-1,CAM_TS_BUTTON_BORDER+BOARD_WIDTH*TILE_SIZE+10,BOARD_HEIGHT*TILE_SIZE+10, COLOR_BLACK);
+    draw_filled_rect(camera_info.ts_button_border+0,0,screen_width-camera_info.ts_button_border,screen_height, TETRIS_COLOR_BG);
+    draw_rect(camera_info.ts_button_border+BOARD_X-1,BOARD_Y-1,camera_info.ts_button_border+BOARD_WIDTH*TILE_SIZE+10,BOARD_HEIGHT*TILE_SIZE+10, COLOR_BLACK);
     game = createGame();
     gameInit(game);
   

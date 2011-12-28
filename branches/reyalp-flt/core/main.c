@@ -13,6 +13,41 @@
 #include "module_load.h"
 #include "gui_draw.h"
 
+//==========================================================
+// Data Structure to store camera specific information
+// Used by modules to ensure module code is platform independent
+
+_cam_info camera_info = { 
+    CAM_SENSOR_BITS_PER_PIXEL, 
+    CAM_BLACK_LEVEL, CAM_WHITE_LEVEL,
+    CAM_RAW_ROWS, CAM_RAW_ROWPIX, (CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL)/8, CAM_RAW_ROWS * ((CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL)/8),
+    {{
+        (CAM_ACTIVE_AREA_X2-CAM_ACTIVE_AREA_X1-CAM_JPEG_WIDTH)/2, (CAM_ACTIVE_AREA_Y2-CAM_ACTIVE_AREA_Y1-CAM_JPEG_HEIGHT)/2,
+        CAM_JPEG_WIDTH, CAM_JPEG_HEIGHT
+    }},
+    { { CAM_ACTIVE_AREA_Y1, CAM_ACTIVE_AREA_X1, CAM_ACTIVE_AREA_Y2, CAM_ACTIVE_AREA_X2 } }, 
+#if defined(CAM_DNG_LENS_INFO)
+    CAM_DNG_LENS_INFO,
+#else
+    { 0, 0, 0, 0, 0, 0, 0, 0 },
+#endif
+#if defined(CAM_DNG_EXPOSURE_BIAS)
+    { CAM_DNG_EXPOSURE_BIAS },
+#else
+    { -1 , 2 },
+#endif
+    { CAM_COLORMATRIX1 },
+    cam_CFAPattern, cam_CalibrationIlluminant1,
+#if defined(OPT_GPS)
+    1,
+#else
+    0,
+#endif
+    EDGE_HMARGIN, CAM_TS_BUTTON_BORDER,
+};
+
+//==========================================================
+
 volatile int chdk_started_flag=0;
 
 static int raw_need_postprocess;
@@ -190,8 +225,6 @@ void core_spytask() {
         if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
         {	
             histogram_process();
-
-
 
 
 #ifdef OPT_EDGEOVERLAY
