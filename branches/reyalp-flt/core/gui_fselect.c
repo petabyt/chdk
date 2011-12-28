@@ -1035,7 +1035,6 @@ static void setup_batch_subtract(void) {
                   MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_subtract_cb);
 }
 //-------------------------------------------------------------------
-//#if DNG_SUPPORT
 void process_dng_to_raw_files(void){
  struct fitem *ptr;
  int i=0;
@@ -1057,7 +1056,6 @@ void process_dng_to_raw_files(void){
  }
   gui_fselect_read_dir(current_dir);
 }
-//#endif
 
 //-------------------------------------------------------------------
 static void fselect_mpopup_cb(unsigned int actn) {
@@ -1139,11 +1137,9 @@ static void fselect_mpopup_cb(unsigned int actn) {
             setup_batch_subtract();
             break;
         }
-//#if DNG_SUPPORT
     case MPOPUP_DNG_TO_CRW:
             process_dng_to_raw_files();
             break;
-//#endif
     }
     gui_fselect_redraw = 2;
 }
@@ -1237,10 +1233,10 @@ void gui_fselect_kbd_process() {
                     i |= MPOPUP_PURGE;//Display PURGE RAW function in popup menu
                 if(selected->size == hook_raw_size())
                     i |= MPOPUP_RAW_DEVELOP;
-//#if DNG_SUPPORT
+
+				if ( module_convert_dng_to_chdk_raw(0) )	// if dng module exist
                 if((fselect_marked_count()>1)||(selected->size > hook_raw_size()))
                     i |= MPOPUP_DNG_TO_CRW;
-//#endif
 
 		if (selected->name[9] == 'B' && selected->name[10] == 'I' && selected->name[11] == 'N') //If item is DCIM folder
                     i |= MPOPUP_CHDK_REPLACE;

@@ -13,6 +13,8 @@
 #include "module_load.h"
 #include "gui_draw.h"
 
+volatile int chdk_started_flag=0;
+
 static int raw_need_postprocess;
 static volatile int spytask_can_start;
 
@@ -184,10 +186,12 @@ void core_spytask() {
             if (((cnt++) & 3) == 0)
                 gui_redraw();
 		}
-
+		
         if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
         {	
             histogram_process();
+
+
 
 
 #ifdef OPT_EDGEOVERLAY
@@ -221,6 +225,7 @@ void core_spytask() {
 		module_tick_unloader();
 
         msleep(20);
+		chdk_started_flag=1;
     }
 }
 

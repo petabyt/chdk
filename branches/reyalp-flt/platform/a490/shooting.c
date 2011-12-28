@@ -94,7 +94,7 @@ static const CapturemodeMap modemap[] = {
     { MODE_SCN_SUNSET,         16404  },
     { MODE_SCN_FIREWORK,       16408  },
     { MODE_SCN_LONG_SHUTTER,   16390  },
- };
+};
 
 #include "../generic/shooting.c"
 

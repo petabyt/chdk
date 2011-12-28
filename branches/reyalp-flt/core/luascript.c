@@ -2345,6 +2345,15 @@ static const luaL_Reg chdk_funcs[] = {
    FUNC(get_meminfo)
 
    FUNC(file_browser)
+   
+   FUNC(draw_pixel)
+   FUNC(draw_line)
+   FUNC(draw_rect)
+   FUNC(draw_rect_filled)
+   FUNC(draw_ellipse)
+   FUNC(draw_ellipse_filled)
+   FUNC(draw_clear)
+   FUNC(draw_string)
 
    FUNC(draw_pixel)
    FUNC(draw_line)

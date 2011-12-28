@@ -121,7 +121,10 @@ long vid_get_bitmap_screen_height()
 
 // begin 16:9 support
 
-int vid_get_viewport_buffer_width() { return 480; }
+// Physical width of viewport row in bytes
+int vid_get_viewport_byte_width() {
+	return 960 * 6 / 4;     // IXUS 1000 - wide screen LCD is 960 pixels wide, each group of 4 pixels uses 6 bytes (UYVYYY)
+}
 
 int vid_get_viewport_width()
 {
@@ -143,17 +146,6 @@ int vid_get_viewport_xoffset()
        return 60;
 }
 
-int vid_get_viewport_image_offset() {
-	return (vid_get_viewport_yoffset() * vid_get_viewport_buffer_width() + vid_get_viewport_xoffset()) * 3;
-}
- 
-
-int vid_get_viewport_row_offset() {
-	return (vid_get_viewport_buffer_width() - vid_get_viewport_width()) * 3;
-} 
-
-
- 
 // end 16:9 support
 
 long vid_get_viewport_height()

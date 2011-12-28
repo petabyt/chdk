@@ -183,7 +183,7 @@ unsigned lang_strhash31(int langid)
 	unsigned hash=0;
 	for ( ; *str; str++ )
 		hash = *str ^ (hash<<6) ^ (hash>>25);
-	if ( langid<MAX_LANGID )
+	if ( hash<MAX_LANGID )
 		hash |= (1<<31);
 	return hash;
 }

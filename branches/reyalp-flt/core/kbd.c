@@ -174,6 +174,7 @@ long kbd_process()
     unsigned int nCrzpos,i;
     unsigned int drmode = 0;
 
+/*
 #if defined(CAMERA_s95)
 		extern volatile int kbd_KEY_RING_FUNC;
 	    if (kbd_KEY_RING_FUNC && gui_get_mode()!=GUI_MODE_NONE) {
@@ -181,7 +182,7 @@ long kbd_process()
 			  module_run("modinsp.flt", 0, 0,0, UNLOAD_IF_ERR);
 		}
 #endif
-
+*/
 
     if(conf.ricoh_ca1_mode && conf.remote_enable) {
         drmode = shooting_get_drive_mode();
