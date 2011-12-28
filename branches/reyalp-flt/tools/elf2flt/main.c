@@ -23,7 +23,7 @@ int main(int argc, char **argv)
     if ( argc < 3 )
     {
         printf("elfflt.exe filename.elf filename.flt [-vefrhsS] [-iIMPORTFILE.TXT]\n");
-		printf("  -iPATH/TO/exportlist.txt for list of imported symbols");
+		printf("  -iPATH/TO/exportlist.txt for list of imported symbols\n");
 		printf("  -e dump elf\n  -S show elf sections\n  -f dump flat\n  -r show relocations\n  -h show flat headers\n  -s dump elf symbols\n  -v verbose");
         return 1;
     }
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 		  case 'h': FLAG_DUMP_FLT_HEADERS = 1; break;
 		  case 'f': FLAG_DUMP_FLAT = 1; break;
 		  case 'v': FLAG_VERBOSE = 1; break;
-		  case 'i': filename_import = argv[i]+2; 
+		  case 'i': filename_import = argv[i]+2; break; 
 		}
     }
 

@@ -160,7 +160,7 @@ void gui_module_draw()
 			namebuf[11]=0;
 
 			char txt[50];
-		    sprintf(txt,"%02d: %-12s %08x - %d bytes", idx, namebuf, (unsigned)flat, flat->bss_end);
+		    sprintf(txt,"%02d: %-12s %08x - %d bytes", idx, namebuf, (unsigned)flat, flat->reloc_start);
         	draw_txt_string(0, 3+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 			showidx++;
 		}

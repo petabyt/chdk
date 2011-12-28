@@ -32,7 +32,7 @@ void dump_section(char* name, unsigned char *ptr, int size )
 }
 
 static 
-void print_offs(char *prefix, int offs)
+void print_offs(char *prefix, int offs,char* postfix)
 {
     int secoffs = 0;
     char* sect="unkn";
@@ -44,11 +44,11 @@ void print_offs(char *prefix, int offs)
     
     if ( offs >=flat->entry && offs<flat->data_start )
        { sect="text"; secoffs=flat->entry;}
-    else if  ( offs >=flat->data_start && offs<=flat->data_end )
+    else if  ( offs >=flat->data_start && offs<flat->bss_start )
        { sect="data"; secoffs=flat->data_start;}
-    else if  ( offs >flat->data_end && offs<=flat->bss_end )
-       { sect="bss"; secoffs=flat->data_end+1;}         
-    printf("%s 0x%x (%s+0x%x)\n",prefix, offs,sect,offs-secoffs);
+    else if  ( offs >=flat->bss_start && offs<flat->reloc_start )
+       { sect="bss"; secoffs=flat->bss_start;}         
+    printf("%s 0x%x (%s+0x%x)%s",prefix, offs,sect,offs-secoffs,postfix);
 }
 
 char* get_flat_string( int32_t offs )
@@ -61,13 +61,32 @@ char* get_flat_string( int32_t offs )
 		return buf;
 	}
 
-    if  ( offs >flat->data_end || offs<=flat->data_start )
+    if  ( offs >=flat->bss_start || offs<flat->data_start )
 	  return "";
 
 	strncpy( buf, flat_buf+offs, sizeof(buf)-1);
 	buf[sizeof(buf)-1]=0;
 	return buf;
 }
+
+// Return symbol name by its idx
+char* get_import_symbol_inflat( unsigned symidx )
+{
+	char* cur= flat_buf+flat->symbols_start;
+	char* end= flat_buf+flat->file_size;
+	int idx=0;
+
+	for( ; idx<symidx && cur<end; idx++) {
+      for (;*cur; cur++);
+	  cur++;
+	}
+
+	if (cur==end)
+	 return "";
+
+	return cur;
+}
+
 
 int main(int argc, char **argv)
 {
@@ -112,17 +131,23 @@ int main(int argc, char **argv)
 		printf("Bad FLAT revision! It is %d while should be %d\n", flat->rev, FLAT_VERSION);
 	}
 
-	printf("->entry(.text) 0x%x (size %d)\n", flat->entry, flat->data_start - flat->entry );
-	printf("->data_start   0x%x (size %d)\n", flat->data_start,  flat->data_end - flat->data_start + 1 );
-	printf("->data_end     0x%x\n", flat->data_end );
-	printf("->bss_end      0x%x (size %d)\n", flat->bss_end, flat->bss_end - flat->data_end );
-	printf("->reloc_start  0x%x (size %d)\n", flat->reloc_start, flat->reloc_count*4 );
-	printf("->import_start 0x%x (size %d)\n", flat->import_start, flat->import_count*4 );
+	int flat_reloc_count;
+	flat_reloc_count = (flat->import_start-flat->reloc_start)/sizeof(reloc_record_t);
+	int flat_import_count;
+	flat_import_count = (flat->file_size-flat->import_start)/sizeof(import_record_t);
 
-	print_offs("\n.._module_loader()   =", flat->_module_loader);
-	print_offs(".._module_unloader() = ", flat->_module_unloader);
-	print_offs(".._module_run()      = ", flat->_module_run);
-	print_offs("..MODULE_EXPORT_LIST = ", flat->_module_exportlist);
+
+	printf("->entry(.text) 0x%x (size %d)\n", flat->entry, flat->data_start - flat->entry );
+	printf("->data_start   0x%x (size %d)\n", flat->data_start,  flat->bss_start - flat->data_start );
+	printf("->bss_start    0x%x (size %d)\n", flat->bss_start, flat->reloc_start - flat->bss_start );
+	printf("->reloc_start  0x%x (size %d)\n", flat->reloc_start, flat->import_start - flat->reloc_start );
+	printf("->import_start 0x%x (size %d)\n", flat->import_start, flat->symbols_start - flat->import_start );
+	printf("->symbol_start 0x%x (size %d)\n", flat->symbols_start, flat->file_size - flat->symbols_start );
+
+	print_offs("\n.._module_loader()   =", flat->_module_loader,"\n");
+	print_offs(".._module_unloader() = ", flat->_module_unloader,"\n");
+	print_offs(".._module_run()      = ", flat->_module_run,"\n");
+	print_offs("..MODULE_EXPORT_LIST = ", flat->_module_exportlist,"\n");
 
 
 	if ( flat->rev == FLAT_VERSION )
@@ -167,17 +192,22 @@ int main(int argc, char **argv)
 
     dump_section( "FLT_header", flat_buf, sizeof(struct flat_hdr) );
     dump_section( "FLT_text", flat_buf+flat->entry, flat->data_start-flat->entry );
-    dump_section( "FLT_data", flat_buf+flat->data_start, flat->data_end-flat->data_start+1);
-    dump_section( "FLT_bss",  flat_buf+flat->data_end+1, flat->bss_end-flat->data_end );
+    dump_section( "FLT_data", flat_buf+flat->data_start, flat->bss_start-flat->data_start);
+    dump_section( "FLT_bss",  flat_buf+flat->bss_start, flat->reloc_start-flat->bss_start );
 
 	int i;
     printf("\nDump relocations 0x%x:\n",flat->reloc_start);
-    for( i = 0; i< flat->reloc_count; i++)
-        print_offs("Offs: ",*(int*)(flat_buf+flat->reloc_start+i*4));
+    for( i = 0; i< flat_reloc_count; i++)
+        print_offs("Offs: ",*(int*)(flat_buf+flat->reloc_start+i*sizeof(reloc_record_t)),"\n");
 
     printf("\nDump imports 0x%x:\n",flat->import_start);
-    for( i = 0; i< flat->import_count; i++)
-        print_offs("Offs: ",*(int*)(flat_buf+flat->import_start+i*4));
+    for( i = 0; i< flat_import_count; i++) {
+		import_record_t* record= (import_record_t*)(flat_buf+flat->import_start+i*sizeof(import_record_t));
+		int addend= *(int*)(flat_buf+record->offs);
+
+        print_offs("Offs: ",record->offs,"");
+		printf(" - sym_%d[%s] +0x%x\n", record->importidx, get_import_symbol_inflat(record->importidx), addend);
+	}
 
 	return 0;
 

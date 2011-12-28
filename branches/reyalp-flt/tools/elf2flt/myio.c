@@ -82,11 +82,11 @@ char* b_get_buf()
 
 static char* import_buf=0;
 static int import_counts=0;
+static int importfilesize=0;
 
 int load_import(char* importfile)
 {
 	int fd;
-	int importfilesize;
 	static char buf[10];
 
 	import_counts=0;
@@ -180,7 +180,25 @@ int find_import_symbol(char* sym)
 	return 0;
 }
 
+// Return symbol name by its idx
+char* get_import_symbol( unsigned symidx )
+{
+	symidx-=2;					//skip export_magicnum, export_size in begining
+	if (symidx>=import_counts)
+		return "";
 
+	char* cur=import_buf;
+	int idx=0;
+
+	for(;idx<symidx;idx++) {
+      for (;*cur; cur++);
+	  cur++;
+	}
+
+	return cur;
+}
+
+//==========================================
 void raise_error()
 {
   static int flag =0;
