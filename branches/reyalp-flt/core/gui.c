@@ -154,7 +154,6 @@ static void	gui_modules_menu_load();
 	static void save_romlog(int arg);
 #endif
 static void gui_draw_fselect(int arg);
-static void gui_draw_osd_le(int arg);
 #ifdef OPT_TEXTREADER
 static void gui_draw_read(int arg);
 static void gui_draw_read_last(int arg);
@@ -1587,7 +1586,7 @@ static void gui_menuproc_swap_partitions(int arg){
 #endif
 
 //-------------------------------------------------------------------
-static volatile gui_mode_t gui_mode;	// current gui mode. if <GUI_MODE_LASTIDX - idx in guiHandlers (core modes), otherwise pointer to gui_handler object (module modes)
+static gui_handler *gui_mode;	// current gui mode. pointer to gui_handler structure
 
 static volatile int gui_restore;
 static volatile int gui_in_redraw;
@@ -1597,12 +1596,10 @@ static char osd_buf[32];
 static Conf old_conf;
 #endif
 
-extern gui_handler guiHandlers[];
-
 //-------------------------------------------------------------------
 void gui_init()
 {
-    gui_set_mode(GUI_MODE_NONE);
+    gui_set_mode(&defaultGuiHandler);
     gui_restore = 0;
     gui_in_redraw = 0;
     if (conf.start_sound>0)
@@ -1661,77 +1658,35 @@ void gui_load_curve(int arg) {
 #endif
 
 
-// Small hack: use understandable name to reused data member
-#define binded_gui_mode_ptr kbd_process
+//-------------------------------------------------------------------
+gui_mode_t gui_get_mode() { return ((gui_handler*)gui_mode)->mode; }
 
 //-------------------------------------------------------------------
-gui_mode_t gui_get_mode() {
-    if ( gui_mode >= GUI_MODE_COUNT )
-	{
-		int mode;
-		for (mode=0;mode<GUI_MODE_COUNT;mode++)
-		{
-			if ( (guiHandlers[mode].flags & GUI_MODE_FLAG_ALIAS) && 
-					guiHandlers[mode].binded_gui_mode_ptr == (void*)gui_mode ) 
-				return mode;
-		}
-	}
-    return gui_mode;
-}
-
-//-------------------------------------------------------------------
-void gui_set_mode(gui_mode_t mode) 
+// Set new GUI mode, returns old mode
+gui_handler* gui_set_mode(gui_handler *mode) 
 {
 	if ( gui_mode == mode )
-		return;
-
-	if (  mode < GUI_MODE_COUNT && 
-		  (guiHandlers[mode].flags & GUI_MODE_FLAG_ALIAS) ) 
-	{
-		mode = (unsigned int)guiHandlers[mode].binded_gui_mode_ptr; 
-	}
+		return gui_mode;
 
 	// Sanity check for case module pointer - is this really gui_handler
-    if ( mode >= GUI_MODE_COUNT && ((gui_handler*)mode)->magicnum != GUI_MODE_MAGICNUM ) {
+    if ( mode->magicnum != GUI_MODE_MAGICNUM ) {
 		// If sanity failed (module is unload) - set to default mode
-    	gui_mode = GUI_MODE_NONE;
+    	gui_mode = &defaultGuiHandler;
 		draw_restore();
-		return;
+		return gui_mode;
 	}
 	
 #ifdef CAM_TOUCHSCREEN_UI
-    if (((gui_mode == 0) != (mode == 0)) ||                         // Change from GUI_MODE_NONE to any other or vice-versa
-        ((gui_mode > GUI_MODE_MENU) != (mode > GUI_MODE_MENU)))     // Switch in & out of menu mode
+    if (((gui_mode->mode == GUI_MODE_NONE) != (mode->mode == GUI_MODE_NONE)) ||    // Change from GUI_MODE_NONE to any other or vice-versa
+        ((gui_mode->mode > GUI_MODE_MENU)  != (mode->mode > GUI_MODE_MENU)))       // Switch in & out of menu mode
         redraw_buttons = 1;
 #endif
+
+    gui_handler *old_mode = gui_mode;
     gui_mode = mode;
+
+    return old_mode;
 }
-
-//-------------------------------------------------------------------
-// PURPOSE: bind module struct to 
-// RETUN: 0 - fail, 1 - ok
-int gui_bind_mode(int core_mode, gui_handler* handler) {
-
-	// sanity checks
-    if ( core_mode >= GUI_MODE_COUNT ||
-		(guiHandlers[core_mode].flags & GUI_MODE_FLAG_ALIAS)==0
-	   )
-		return 0;
-
-	if ( handler && handler->magicnum != GUI_MODE_MAGICNUM )
-		return 0;
-
-	// check is this module is already binded (loaded with different name)
-	gui_handler* bind_gui_handler = (gui_handler*)guiHandlers[core_mode].binded_gui_mode_ptr;
-	if ( bind_gui_handler && bind_gui_handler->magicnum == GUI_MODE_MAGICNUM )
-		return 0;
-
-	guiHandlers[core_mode].binded_gui_mode_ptr = (void*)handler;
-	return 1;
-}
-
-#undef binded_gui_mode_ptr
-
 
 //-------------------------------------------------------------------
 void gui_force_restore() {
@@ -1767,7 +1722,7 @@ static void gui_handle_splash(void) {
         if (gui_splash>(SPLASH_TIME-4)) {
             gui_draw_splash(logo,logo_size);
            //	conf.show_osd = 0;
-        } else if (gui_splash==1 && (mode_get()&MODE_MASK) == gui_splash_mode && (gui_mode==GUI_MODE_NONE || gui_mode==GUI_MODE_ALT)) {
+        } else if (gui_splash==1 && (mode_get()&MODE_MASK) == gui_splash_mode && (gui_get_mode()==GUI_MODE_NONE || gui_get_mode()==GUI_MODE_ALT)) {
             draw_restore();
            // conf.show_osd = 1; //had to uncomment in order to fix a bug with disappearing osd...
         }
@@ -1805,7 +1760,7 @@ void gui_chdk_draw()
     gui_draw_osd();
 
 #ifdef CAM_DISP_ALT_TEXT
-    draw_txt_string(20, 14, "<ALT>", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+    draw_txt_string(20, 14, "<ALT>", MAKE_COLOR(COLOR_RED, COLOR_WHITE));
 #endif
 
 #ifdef OPT_SCRIPTING
@@ -1828,7 +1783,7 @@ void gui_chdk_draw()
 // Handler for Menu button press default - enter Menu mode
 void gui_default_kbd_process_menu_btn()
 {
-    gui_set_mode(GUI_MODE_MENU);
+    gui_set_mode(&menuGuiHandler);
     draw_restore();
 }
 
@@ -2002,29 +1957,20 @@ void gui_menu_kbd_process_menu_btn()
 #endif
     if (gui_user_menu_flag)
     {
-        gui_set_mode(GUI_MODE_MENU);
+        gui_set_mode(&menuGuiHandler);
         gui_user_menu_flag = 0;
         gui_menu_init(&root_menu);
     }
     else
-        gui_set_mode(GUI_MODE_ALT);
+        gui_set_mode(&altGuiHandler);
     draw_restore();
 }
 
 //-------------------------------------------------------------------
-// GUI handler table (entries must be in the same order and have the same number of entries as Gui_Mode enum)
-gui_handler guiHandlers[GUI_MODE_COUNT] =
-{
-    /*GUI_MODE_NONE*/           { gui_draw_osd,         0,                          0,								0,									GUI_MODE_MAGICNUM },
-    /*GUI_MODE_ALT*/            { gui_chdk_draw,        gui_chdk_kbd_process,       gui_chdk_kbd_process_menu_btn,	0,									GUI_MODE_MAGICNUM },        	
-    /*GUI_MODE_MENU*/           { gui_menu_draw,        gui_menu_kbd_process,       gui_menu_kbd_process_menu_btn,	0,									GUI_MODE_MAGICNUM },
-    /*GUI_MODE_ALIAS_PALETTE*/  { 0,     				0,    						0, 								GUI_MODE_FLAG_ALIAS,				GUI_MODE_MAGICNUM },
-    /*GUI_MODE_MBOX*/           { gui_mbox_draw,        gui_mbox_kbd_process,       0,								GUI_MODE_FLAG_NORESTORE_ON_SWITCH,	GUI_MODE_MAGICNUM },
-    /*GUI_MODE_ALIAS_FSELECT*/  { 0,     				0,    						0, 								GUI_MODE_FLAG_ALIAS,				GUI_MODE_MAGICNUM },
-    /*GUI_MODE_OSD*/            { gui_osd_draw,         gui_osd_kbd_process,        gui_default_kbd_process_menu_btn, 0,								 GUI_MODE_MAGICNUM },		// THIS IS OSD LAYOUT EDITOR
-    /*GUI_MODE_ALIAS_MPOPUP*/   { 0,     				0,    						0, 								GUI_MODE_FLAG_ALIAS,				GUI_MODE_MAGICNUM },
-};
-
+// GUI handlers
+gui_handler defaultGuiHandler = { GUI_MODE_NONE,    gui_draw_osd,   0,                      0,                                0,                                    GUI_MODE_MAGICNUM };
+gui_handler altGuiHandler =     { GUI_MODE_ALT,     gui_chdk_draw,  gui_chdk_kbd_process,   gui_chdk_kbd_process_menu_btn,    0,                                    GUI_MODE_MAGICNUM };            
+gui_handler menuGuiHandler =    { GUI_MODE_MENU,    gui_menu_draw,  gui_menu_kbd_process,   gui_menu_kbd_process_menu_btn,    0,                                    GUI_MODE_MAGICNUM };
 
 //-------------------------------------------------------------------
 // Main GUI redraw function, perform common initialisation then calls the redraw handler for the mode
@@ -2036,11 +1982,11 @@ void gui_redraw()
     static int flag_gui_enforce_redraw = 0;
 
 #ifdef CAM_DETECT_SCREEN_ERASE
-    if (!draw_test_guard() && gui_mode)     // Attempt to detect screen erase in <Alt> mode, redraw if needed
+    if (!draw_test_guard() && gui_get_mode())     // Attempt to detect screen erase in <Alt> mode, redraw if needed
     {
         draw_set_guard();
 
-		flag_gui_enforce_redraw |= GUI_REDRAWFLAG_ERASEGUARD;
+        flag_gui_enforce_redraw |= GUI_REDRAWFLAG_ERASEGUARD;
         //gui_menu_force_redraw();
         //gui_fselect_force_redraw();	//@tsv
 #ifdef CAM_TOUCHSCREEN_UI
@@ -2053,7 +1999,7 @@ void gui_redraw()
 	gui_handle_splash();
 
     gui_in_redraw = 1;
-    gui_mode_old = gui_mode;
+    gui_mode_old = gui_get_mode();
 
 #ifdef CAM_TOUCHSCREEN_UI
     extern void virtual_buttons();
@@ -2061,30 +2007,27 @@ void gui_redraw()
 #endif
 
     // Call redraw handler
-	gui_handler* cur_gui_handler = (gui_mode<GUI_MODE_COUNT)? (&guiHandlers[gui_mode]) : (gui_handler*)gui_mode;
-    if (cur_gui_handler->redraw) cur_gui_handler->redraw(flag_gui_enforce_redraw);
+    if (gui_mode->redraw) gui_mode->redraw(flag_gui_enforce_redraw);
 	flag_gui_enforce_redraw=0;
 
     // Forced redraw if needed
     gui_in_redraw = 0;
-	cur_gui_handler = (gui_mode<GUI_MODE_COUNT)? (&guiHandlers[gui_mode]) : (gui_handler*)gui_mode;
-    if ((gui_mode_old != gui_mode 
+    if ((gui_mode_old != gui_get_mode() 
 			&& (gui_mode_old != GUI_MODE_NONE && gui_mode_old != GUI_MODE_ALT) 
-			&& !(cur_gui_handler->flags & GUI_MODE_FLAG_NORESTORE_ON_SWITCH)) 
+			&& !(gui_mode->flags & GUI_MODE_FLAG_NORESTORE_ON_SWITCH)) 
 	    || gui_restore ) 
 	{
-
         if (gui_restore)
 			flag_gui_enforce_redraw |= GUI_REDRAWFLAG_DRAW_RESTORED;
         gui_restore = 0;
 
-        if ( !( cur_gui_handler->flags & GUI_MODE_FLAG_NODRAWRESTORE) )
+        if ( !( gui_mode->flags & GUI_MODE_FLAG_NODRAWRESTORE) )
             draw_restore();
     }
 
-	if ( gui_mode_prev_tick != gui_mode ) {
+	if ( gui_mode_prev_tick != gui_get_mode() ) {
 		flag_gui_enforce_redraw |= GUI_REDRAWFLAG_MODE_WAS_CHANGED;
-		gui_mode_prev_tick = gui_mode;
+		gui_mode_prev_tick = gui_get_mode();
 	}
 }
 
@@ -2092,17 +2035,15 @@ void gui_redraw()
 // Main kbd processing for GUI modes
 void gui_kbd_process()
 {
-	gui_handler* cur_gui_handler = (gui_mode<GUI_MODE_COUNT)? (&guiHandlers[gui_mode]) : (gui_handler*)gui_mode;	
-
     // Call menu button handler if menu button pressed
     if (kbd_is_key_clicked(KEY_MENU))
     {
-        if (cur_gui_handler->kbd_process_menu_btn) cur_gui_handler->kbd_process_menu_btn();
+        if (gui_mode->kbd_process_menu_btn) gui_mode->kbd_process_menu_btn();
         return;
     }
 
     // Call mode handler for other buttons
-    if (cur_gui_handler->kbd_process) cur_gui_handler->kbd_process();
+    if (gui_mode->kbd_process) gui_mode->kbd_process();
 }
 
 //-------------------------------------------------------------------
@@ -2112,7 +2053,7 @@ void gui_kbd_enter()
 #ifdef OPTIONS_AUTOSAVE
     conf_store_old_settings();
 #endif
-    gui_set_mode(GUI_MODE_ALT);
+    gui_set_mode(&altGuiHandler);
 
 	conf_update_prevent_shutdown();
 
@@ -2124,7 +2065,7 @@ void gui_kbd_enter()
 	gui_user_menu_flag = 0;
 	if ((conf.user_menu_enable == 2) && !state_kbd_script_run) {
 		gui_menu_init(&user_submenu);
-		gui_set_mode(GUI_MODE_MENU);
+		gui_set_mode(&menuGuiHandler);
 		draw_restore();
 		gui_user_menu_flag = 1;
 	}
@@ -2144,7 +2085,7 @@ void gui_kbd_leave()
     draw_restore();
     rbf_set_codepage(FONT_CP_WIN);
     vid_turn_on_updates();
-    gui_set_mode(GUI_MODE_NONE);
+    gui_set_mode(&defaultGuiHandler);
 
 	// Unload all modules which are marked as safe to unload
 	module_async_unload_allrunned(0);
@@ -2425,12 +2366,12 @@ void gui_draw_osd() {
 //gui_draw_debug_vals_osd();
 
 #if CAM_SWIVEL_SCREEN
-    if (conf.flashlight && (m&MODE_SCREEN_OPENED) && (m&MODE_SCREEN_ROTATED) && (gui_mode==GUI_MODE_NONE /* || gui_mode==GUI_MODE_ALT */)) {
+    if (conf.flashlight && (m&MODE_SCREEN_OPENED) && (m&MODE_SCREEN_ROTATED) && (gui_get_mode()==GUI_MODE_NONE /* || gui_get_mode()==GUI_MODE_ALT */)) {
         draw_filled_rect(0, 0, screen_width-1, screen_height-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE));
         flashlight = 1;
     }
     if (flashlight) {
-        if ((!((m&MODE_SCREEN_OPENED) && (m&MODE_SCREEN_ROTATED))) || (gui_mode!=GUI_MODE_NONE /* && gui_mode!=GUI_MODE_ALT */)) {
+        if ((!((m&MODE_SCREEN_OPENED) && (m&MODE_SCREEN_ROTATED))) || (gui_get_mode()!=GUI_MODE_NONE /* && gui_get_mode()!=GUI_MODE_ALT */)) {
             flashlight = 0;
 			need_restore = 1;
         } else {
@@ -2497,7 +2438,7 @@ void gui_draw_osd() {
     if (half_disp_press)
 		return;
 
-	if (gui_osd_draw_zebra(conf.zebra_draw && gui_mode==GUI_MODE_NONE &&
+	if (gui_osd_draw_zebra(conf.zebra_draw && gui_get_mode()==GUI_MODE_NONE &&
 							kbd_is_key_pressed(KEY_SHOOT_HALF) && mode_photo &&
 							!state_kbd_script_run)) {// no zebra when script running, to save mem
 		return; // if zebra drawn, we're done
@@ -2509,7 +2450,7 @@ void gui_draw_osd() {
 #endif
 
 
-    if ((gui_mode==GUI_MODE_NONE || gui_mode==GUI_MODE_ALT) && (
+    if ((gui_get_mode()==GUI_MODE_NONE || gui_get_mode()==GUI_MODE_ALT) && (
      (kbd_is_key_pressed(KEY_SHOOT_HALF) && ((conf.show_histo==SHOW_HALF)/* || (m&MODE_MASK) == MODE_PLAY*/)) ||
      ((conf.show_histo==SHOW_ALWAYS)  &&  !((m&MODE_MASK) == MODE_PLAY) && (recreview_hold==0))
     ) &&
@@ -2521,7 +2462,7 @@ void gui_draw_osd() {
         if (conf.show_grid_lines) {
             gui_grid_draw_osd(1);
         }
-        if ((gui_mode==GUI_MODE_NONE || gui_mode==GUI_MODE_ALT) && (((kbd_is_key_pressed(KEY_SHOOT_HALF) || (state_kbd_script_run) || (shooting_get_common_focus_mode())) && (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH )) || ((mode_video || movie_status > 1) && conf.show_values_in_video) )) {
+        if ((gui_get_mode()==GUI_MODE_NONE || gui_get_mode()==GUI_MODE_ALT) && (((kbd_is_key_pressed(KEY_SHOOT_HALF) || (state_kbd_script_run) || (shooting_get_common_focus_mode())) && (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH )) || ((mode_video || movie_status > 1) && conf.show_values_in_video) )) {
 
            if (conf.show_dof!=DOF_DONT_SHOW) gui_osd_calc_dof();
 
@@ -2557,7 +2498,7 @@ void gui_draw_osd() {
 
     if ( conf.show_movie_time > 0 && (mode_video || movie_status > 1)) gui_osd_draw_movie_time_left();
 #if CAM_DRAW_EXPOSITION
-    if (gui_mode==GUI_MODE_NONE && kbd_is_key_pressed(KEY_SHOOT_HALF) && ((m&MODE_MASK)==MODE_REC) && ((m&MODE_SHOOTING_MASK))!=MODE_VIDEO_STD && (m&MODE_SHOOTING_MASK)!=MODE_VIDEO_COMPACT) {
+    if (gui_get_mode()==GUI_MODE_NONE && kbd_is_key_pressed(KEY_SHOOT_HALF) && ((m&MODE_MASK)==MODE_REC) && ((m&MODE_SHOOTING_MASK))!=MODE_VIDEO_STD && (m&MODE_SHOOTING_MASK)!=MODE_VIDEO_COMPACT) {
      strcpy(osd_buf,shooting_get_tv_str());
      strcat(osd_buf,"\"  F");
      strcat(osd_buf,shooting_get_av_str());
@@ -2705,12 +2646,6 @@ static void gui_grid_lines_load_selected(const char *fn) {
 }
 void gui_grid_lines_load(int arg) {
     module_fselect_init(LANG_STR_SELECT_GRID_FILE, conf.grid_lines_file, "A/CHDK/GRIDS", gui_grid_lines_load_selected);
-}
-
-//-------------------------------------------------------------------
-void gui_draw_osd_le(int arg) {
-    gui_set_mode(GUI_MODE_OSD);
-    gui_osd_init();
 }
 
 //-------------------------------------------------------------------

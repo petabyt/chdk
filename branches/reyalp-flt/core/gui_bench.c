@@ -13,7 +13,7 @@ void gui_bench_draw_callback(int enforce_redraw);
 void gui_bench_menu_kbd_process();
 
 gui_handler GUI_MODE_BENCH = 
-    /*GUI_MODE_BENCH*/          { gui_bench_draw_callback,   gui_bench_kbd_process,      gui_bench_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_BENCH*/  { GUI_MODE_MODULE,   gui_bench_draw_callback,   gui_bench_kbd_process,      gui_bench_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
 
 
 //-------------------------------------------------------------------
@@ -243,7 +243,7 @@ void gui_bench_kbd_process() {
 
 int basic_module_init() {
 	gui_bench_init();
-    gui_set_mode( (unsigned int)&GUI_MODE_BENCH );
+    gui_set_mode(&GUI_MODE_BENCH);
 	return 1;
 }
 

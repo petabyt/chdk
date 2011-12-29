@@ -110,7 +110,7 @@ static void gui_menu_back() {
         // 'Back' selected; but no menu to go back to
         // Occurs when script menu opened using 'Func/Set' button
         // Return to normal <ALT> mode.
-        gui_set_mode(GUI_MODE_ALT);
+        gui_set_mode(&altGuiHandler);
         kbd_reset_autoclicked_key();    // Need this to stop 'Func/Set' registering twice???
         draw_restore();
     }

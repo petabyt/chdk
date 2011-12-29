@@ -713,7 +713,7 @@ void create_badpixel_bin() {
         return;
     }
 
-    gui_set_mode(GUI_MODE_ALT);
+    gui_set_mode(&altGuiHandler);
     action_stack_create(&badpixel_task_stack, BADPIX_START);
 }
 

@@ -789,6 +789,8 @@ extern int draw_test_pixel(coord x, coord y, color c);
 
 extern color draw_get_pixel(coord x, coord y);
 
+extern void draw_pixel(coord x, coord y, color cl);
+
 extern void draw_line(coord x1, coord y1, coord x2, coord y2, color cl);
 extern void draw_hline(coord x, coord y, int len, color cl);
 extern void draw_vline(coord x, coord y, int len, color cl);

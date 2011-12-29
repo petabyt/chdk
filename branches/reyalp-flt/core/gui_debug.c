@@ -13,7 +13,7 @@ extern void gui_module_menu_kbd_process();
 int *conf_mem_view_addr_init;
 
 gui_handler GUI_MODE_DEBUG = 
-    /*GUI_MODE_DEBUG*/          { gui_debug_draw,       gui_debug_kbd_process,      gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_DEBUG*/  { GUI_MODE_MODULE,   gui_debug_draw,       gui_debug_kbd_process,      gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
 
 //-------------------------------------------------------------------
 static void *addr;
@@ -29,7 +29,7 @@ void gui_debug_init(void *st_addr) {
     debug_to_draw = 1;
     debug_cont_update = 1;
     step = 4;
-    gui_set_mode((unsigned int)&GUI_MODE_DEBUG);
+    gui_set_mode(&GUI_MODE_DEBUG);
 }
 
 //-------------------------------------------------------------------

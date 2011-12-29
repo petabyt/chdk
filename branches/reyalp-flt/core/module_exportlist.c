@@ -235,8 +235,6 @@ void* CHDK_EXPORT_LIST[] = {
 			TurnOffBackLight,
 			mkdir,
 
-			gui_bind_mode,
-
 			// modlist.flt
 			load_from_file,
 			rbf_draw_string_len,
@@ -302,5 +300,6 @@ void* CHDK_EXPORT_LIST[] = {
 			pow_calc_2,
 
             &camera_info,
+            &altGuiHandler,
 			0
 };

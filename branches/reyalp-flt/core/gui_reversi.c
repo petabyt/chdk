@@ -11,10 +11,13 @@
 #include "gui_reversi.h"
 
 #include "module_load.h"
+
 void gui_module_menu_kbd_process();
+void gui_reversi_kbd_process();
+void gui_reversi_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_REVERSI = 
-    /*GUI_MODE_REVERSI*/        { gui_reversi_draw,     gui_reversi_kbd_process,    gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_REVERSI*/    { GUI_MODE_MODULE,   gui_reversi_draw,     gui_reversi_kbd_process,    gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
 
 
 //-------------------------------------------------------------------
@@ -351,7 +354,7 @@ static void redrawstatus() {
 
 //-------------------------------------------------------------------
 int basic_module_init() {
-    gui_set_mode((unsigned int)&GUI_MODE_REVERSI);
+    gui_set_mode(&GUI_MODE_REVERSI);
     InitMainWindow();
     NewGame();
     need_redraw_all = 1;

@@ -14,10 +14,13 @@
 #include "gui_4wins.h"
 
 #include "module_load.h"
+
 void gui_module_menu_kbd_process();
+void gui_4wins_kbd_process();
+void gui_4wins_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_4WINS = 
-    /*GUI_MODE_4WINS*/          { gui_4wins_draw,       gui_4wins_kbd_process,      gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_4WINS*/  { GUI_MODE_MODULE,  gui_4wins_draw,       gui_4wins_kbd_process,      gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
 
 
 #define BORDER		 20
@@ -338,7 +341,7 @@ int gui_4wins_init()
 	draw_mode();
 	if(cur_player==2&&!mode_rival) set();
 
-    gui_set_mode((unsigned int)&GUI_MODE_4WINS);
+    gui_set_mode(&GUI_MODE_4WINS);
 
 	return 1;
 }

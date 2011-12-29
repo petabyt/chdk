@@ -93,19 +93,16 @@ void gui_module_kbd_process();
 void gui_module_draw();
 
 gui_handler GUI_MODE_MODULE_INSPECTOR = 
-    /*GUI_MODE_MODULE_INSPECTOR*/          { gui_module_draw,       gui_module_kbd_process,      gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_MODULE_INSPECTOR*/   { GUI_MODE_MODULE,   gui_module_draw,       gui_module_kbd_process,      gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
 
 
 int modinspect_redraw;
-int modinspect_old_guimode;
+gui_handler *modinspect_old_guimode;
 
 static void modinspect_unload_cb(unsigned int btn) {
     if (btn==MBOX_BTN_YES) {
 		module_async_unload_allrunned(0);
-		if (modinspect_old_guimode<GUI_MODE_COUNT)
-			gui_set_mode(modinspect_old_guimode);	// if core gui - return to it
-		else
-			gui_default_kbd_process_menu_btn();		// if not - return to menu
+        gui_set_mode(modinspect_old_guimode);	// if core gui - return to it
     }
     modinspect_redraw=2;
 }
@@ -127,8 +124,7 @@ void gui_module_kbd_process() {
 
 int basic_module_init() {
 	modinspect_redraw=2;
-	modinspect_old_guimode=gui_get_mode();
-    gui_set_mode( (unsigned int)&GUI_MODE_MODULE_INSPECTOR );
+    modinspect_old_guimode = gui_set_mode(&GUI_MODE_MODULE_INSPECTOR);
 	return 1;
 }
 

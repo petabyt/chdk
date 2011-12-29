@@ -10,10 +10,13 @@
 #include "gui_calendar.h"
 
 #include "module_load.h"
+
 void gui_calendar_menu_kbd_process();
+void gui_calendar_kbd_process();
+void gui_calendar_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_CALENDAR = 
-    /*GUI_MODE_CALENDAR*/       { gui_calendar_draw,    gui_calendar_kbd_process,   gui_calendar_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_CALENDAR*/   { GUI_MODE_MODULE,   gui_calendar_draw,    gui_calendar_kbd_process,   gui_calendar_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
 
 //-------------------------------------------------------------------
 #define TITLE_COLOR             (MAKE_COLOR(COLOR_BLACK, COLOR_WHITE))
@@ -82,7 +85,7 @@ static void gui_calendar_initial_draw() {
 //-------------------------------------------------------------------
 int basic_module_init() {
 
-    gui_set_mode( (unsigned int)&GUI_MODE_CALENDAR );
+    gui_set_mode(&GUI_MODE_CALENDAR);
 
     calendar_goto_today();
     cal_w = FONT_WIDTH*4*7;

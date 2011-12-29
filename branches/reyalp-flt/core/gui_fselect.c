@@ -16,8 +16,11 @@
 
 #include "module_load.h"
 
+void gui_fselect_kbd_process();
+void gui_fselect_draw(int enforce_redraw);
+
 gui_handler GUI_MODE_FSELECT_MODULE = 
-    /*GUI_MODE_FSELECT*/        { gui_fselect_draw,     gui_fselect_kbd_process,    gui_fselect_kbd_process,		0,	GUI_MODE_MAGICNUM };
+    /*GUI_MODE_FSELECT*/    { GUI_MODE_FSELECT, gui_fselect_draw,     gui_fselect_kbd_process,    gui_fselect_kbd_process,		0,	GUI_MODE_MAGICNUM };
 
 extern int module_idx;
 
@@ -59,7 +62,7 @@ static char current_dir[100];       // Path for title
 static char marked_dir[100];        // Path for progress box
 static char selected_file[100];     // This full path to current file. So it is return value
 static char buf[100];
-static gui_mode_t gui_fselect_mode_old; // stored previous gui_mode
+static gui_handler *gui_fselect_mode_old; // stored previous gui_mode
 
 // basic element of file list
 struct fitem {
@@ -389,9 +392,8 @@ void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, 
 
     fselect_on_select = on_select;
     marked_operation = MARKED_OP_NONE;
-    gui_fselect_mode_old = gui_get_mode();
     gui_fselect_redraw = 2;
-    gui_set_mode((unsigned int)&GUI_MODE_FSELECT_MODULE);
+    gui_fselect_mode_old = gui_set_mode(&GUI_MODE_FSELECT_MODULE);
     gui_fselect_set_key_redraw(0);
 }
 
@@ -1326,10 +1328,6 @@ int _module_loader( void** chdk_export_list )
   CONF_BIND_INT(209, conf_sub_batch_prefix);
   CONF_BIND_INT(210, conf_sub_batch_ext);
 
-  // Try to bind to generic gui mode alias
-  if (!gui_bind_mode( GUI_MODE_FSELECT, &GUI_MODE_FSELECT_MODULE))
-	return 1;
-
   return 0;
 }
 
@@ -1345,9 +1343,6 @@ int _module_unloader()
 
 	//sanity clean to prevent accidentaly assign/restore guimode to unloaded module 
 	GUI_MODE_FSELECT_MODULE.magicnum = 0;
-
-    // Unbind generic alias
-	gui_bind_mode( GUI_MODE_FSELECT, 0);
 
     return 0;
 }

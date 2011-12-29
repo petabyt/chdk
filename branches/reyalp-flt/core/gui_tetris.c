@@ -16,7 +16,7 @@ void gui_tetris_kbd_process();
 void gui_tetris_draw();
 
 gui_handler GUI_MODE_TETRIS = 
-    /*GUI_MODE_TETRIS*/          { gui_tetris_draw,       gui_tetris_kbd_process,      gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_TETRIS*/ { GUI_MODE_MODULE,   gui_tetris_draw,       gui_tetris_kbd_process,      gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
 
 
 #define BOARD_WIDTH     (10)
@@ -782,7 +782,7 @@ int _module_run(int moduleidx, int argn, int* arguments)
 {
   module_idx=moduleidx;
 
-  gui_set_mode ((unsigned int)&GUI_MODE_TETRIS);
+  gui_set_mode(&GUI_MODE_TETRIS);
   gui_tetris_init();
 
   return 0;

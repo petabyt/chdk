@@ -13,6 +13,9 @@
 #include "module_load.h"
 
 extern void gui_read_kbd_process_menu_btn();
+void gui_read_kbd_process();
+void gui_read_draw(int enforce_redraw);
+void gui_read_kbd_leave();
 
 int *conf_reader_autoscroll;
 int *conf_reader_autoscroll_delay;
@@ -23,7 +26,7 @@ char *conf_reader_file;
 char *conf_menu_rbf_file;
 
 gui_handler GUI_MODE_READ = 
-    /*GUI_MODE_READ*/           { gui_read_draw,        gui_read_kbd_process,       gui_read_kbd_process_menu_btn,	0,	GUI_MODE_MAGICNUM };
+    /*GUI_MODE_READ*/   { GUI_MODE_MODULE,   gui_read_draw,        gui_read_kbd_process,       gui_read_kbd_process_menu_btn,	0,	GUI_MODE_MAGICNUM };
 
 //-------------------------------------------------------------------
 static int read_file;
@@ -84,7 +87,7 @@ int gui_read_init(const char* file) {
     last_time = get_tick_count();
     
 	reader_is_active=1;    
-    gui_set_mode((unsigned int)&GUI_MODE_READ);
+    gui_set_mode(&GUI_MODE_READ);
 
     draw_filled_rect(0, 0, screen_width-1, y-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
     draw_filled_rect(0, y, screen_width-1, screen_height-1, MAKE_COLOR((*conf_reader_color>>8)&0xFF, (*conf_reader_color>>8)&0xFF));

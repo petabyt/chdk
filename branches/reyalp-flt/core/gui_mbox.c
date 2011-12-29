@@ -10,7 +10,12 @@
 
 
 //-------------------------------------------------------------------
-static gui_mode_t	gui_mbox_mode_old;
+void gui_mbox_draw(int enforce_redraw);
+void gui_mbox_kbd_process();
+
+static gui_handler mboxGuiHandler =    { GUI_MODE_MBOX,    gui_mbox_draw,  gui_mbox_kbd_process,   0,   GUI_MODE_FLAG_NORESTORE_ON_SWITCH,    GUI_MODE_MAGICNUM };
+
+static gui_handler	*gui_mbox_mode_old;
 static const char*	mbox_title;
 static const char* 	mbox_msg;
 static char 		mbox_to_draw;
@@ -55,13 +60,12 @@ void gui_mbox_init(int title, int msg, const unsigned int flags, void (*on_selec
         default: mbox_button_active = 0; break;
     }
 
-    gui_mbox_mode_old = gui_get_mode();
     mbox_title = lang_str(title);
     mbox_msg = lang_str(msg);
     mbox_to_draw = 1;
     mbox_flags = flags;
     mbox_on_select = on_select;
-    gui_set_mode(GUI_MODE_MBOX);
+    gui_mbox_mode_old = gui_set_mode(&mboxGuiHandler);
 }
 
 //-------------------------------------------------------------------

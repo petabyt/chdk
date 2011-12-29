@@ -3,8 +3,6 @@
 
 //-------------------------------------------------------------------
 extern void gui_calendar_init();
-extern void gui_calendar_kbd_process();
-extern void gui_calendar_draw(int enforce_redraw);
 
 //-------------------------------------------------------------------
 #endif

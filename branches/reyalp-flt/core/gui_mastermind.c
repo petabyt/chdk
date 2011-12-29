@@ -12,10 +12,13 @@
 #include "gui_mastermind.h"
 
 #include "module_load.h"
+
 void gui_module_menu_kbd_process();
+void gui_mastermind_kbd_process();
+void gui_mastermind_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_MASTERMIND = 
-    /*GUI_MODE_MASTERMIND*/     { gui_mastermind_draw,  gui_mastermind_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_MASTERMIND*/ { GUI_MODE_MODULE,   gui_mastermind_draw,  gui_mastermind_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
 
 
 #define BORDER		 		20
@@ -139,7 +142,7 @@ int gui_mastermind_init() {
 
 	for(i=0;i<4;i++) curr_color[i]=99;
 	
-    gui_set_mode((unsigned int)&GUI_MODE_MASTERMIND);
+    gui_set_mode(&GUI_MODE_MASTERMIND);
 	return 1;
 }
 

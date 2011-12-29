@@ -12,12 +12,15 @@
 #include "gui_sokoban.h"
 
 #include "module_load.h"
+
 void gui_module_menu_kbd_process();
+void gui_sokoban_kbd_process();
+void gui_sokoban_draw(int enforce_redraw);
 
 int *conf_sokoban_level;
 
 gui_handler GUI_MODE_SOKOBAN = 
-    /*GUI_MODE_SOKOBAN*/        { gui_sokoban_draw,     gui_sokoban_kbd_process,    gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_SOKOBAN*/    { GUI_MODE_MODULE,   gui_sokoban_draw,     gui_sokoban_kbd_process,    gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
 
 
 //-------------------------------------------------------------------
@@ -332,7 +335,7 @@ int gui_sokoban_init() {
     }
     need_redraw_all = 1;
 
-    gui_set_mode((unsigned int)&GUI_MODE_SOKOBAN);
+    gui_set_mode(&GUI_MODE_SOKOBAN);
     return 1;
 }
 

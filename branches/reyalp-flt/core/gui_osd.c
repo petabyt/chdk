@@ -16,6 +16,12 @@
 #include "gui_osd.h"
 
 //-------------------------------------------------------------------
+void gui_osd_kbd_process();
+void gui_osd_draw(int enforce_redraw);
+
+gui_handler layoutGuiHandler =  { GUI_MODE_OSD,     gui_osd_draw,   gui_osd_kbd_process,    gui_default_kbd_process_menu_btn, 0,                                    GUI_MODE_MAGICNUM };    // THIS IS OSD LAYOUT EDITOR
+
+//-------------------------------------------------------------------
 typedef struct {
     int     title;
     OSD_pos *pos;
@@ -101,6 +107,12 @@ void gui_osd_init() {
     curr_item = 0;
     step = 10;
     draw_restore();
+}
+
+//-------------------------------------------------------------------
+void gui_draw_osd_le(int arg) {
+    gui_set_mode(&layoutGuiHandler);
+    gui_osd_init();
 }
 
 //-------------------------------------------------------------------
