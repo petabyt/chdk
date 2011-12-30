@@ -766,13 +766,21 @@ int module_idx=-1;
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)5,
+struct libedgeovr_sym libedgeovr = {
+			MAKE_API_VERSION(1,0),		// apiver: increase major if incomplatible changes made in module, 
+										// increase minor if compatible changes made(including extending this struct)
 
 			edge_overlay,
 			save_edge_overlay,
 			load_edge_overlay
+		};
+
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)3,
+
+			&libedgeovr
 		};
 
 
@@ -786,6 +794,10 @@ int _module_loader( void** chdk_export_list )
 {
   if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
+
+  if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
+	 return 1;
+
 
   tConfigVal configVal;
   CONF_BIND_INT(188, conf_edge_overlay_thresh);

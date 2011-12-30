@@ -18,6 +18,8 @@
 // Used by modules to ensure module code is platform independent
 
 _cam_sensor camera_sensor = { 
+    MAKE_API_VERSION(1,0),
+
     CAM_SENSOR_BITS_PER_PIXEL, 
     CAM_BLACK_LEVEL, CAM_WHITE_LEVEL,
     CAM_RAW_ROWS, CAM_RAW_ROWPIX, (CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL)/8, CAM_RAW_ROWS * ((CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL)/8),
@@ -62,6 +64,8 @@ _cam_screen camera_screen =
 
 _cam_info camera_info =
 {
+    MAKE_API_VERSION(1,0),
+
     {
 #if defined(PARAM_CAMERA_NAME)
     PARAM_CAMERA_NAME,
@@ -274,7 +278,7 @@ void core_spytask() {
 					skip_counter--;
 				}
 				else if (module_edgeovr_load()) {
-					edge_overlay();
+					libedgeovr->edge_overlay();
 				}
 			}
 #endif

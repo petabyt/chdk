@@ -5,7 +5,7 @@
 
 // This is to minimize export list to different modules
 struct libdng_sym {
-	int  size;                             // simple guard to detect changing list of exported by library symbols
+	int  version;
 	void (*create_badpixel_bin)();
 	int  (*raw_init_badpixel_bin)();
 	void (*capture_data_for_exif)(void);
@@ -20,7 +20,7 @@ struct libdng_sym {
 #ifdef THIS_IS_CHDK_CORE
 
 	// This section is for CHDK core
-	extern struct libdng_sym libdng;
+	extern struct libdng_sym* libdng;
 #else
 	
 	extern void create_badpixel_bin();

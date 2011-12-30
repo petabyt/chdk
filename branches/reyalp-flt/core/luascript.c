@@ -20,6 +20,7 @@
 #include "lang.h"
 #include "gui_lang.h"
 #include "gui_draw.h"
+#include "module_load.h"
 
 #include "../lib/lua/lstate.h"  // for L->nCcalls, baseCcalls
 
@@ -268,9 +269,11 @@ static int luaCB_set_curve_state( lua_State* L )
 {
   int value;
   value=luaL_checknumber( L, 1 );
-  if (module_curves_load())
-    return luaL_argerror(L,1,"fail to load curves module");
-  curve_set_mode(value);
+
+  conf.curve_enable = value;
+  if ( libcurves && libcurves->curve_init_mode)
+		libcurves->curve_init_mode();
+
   return 0;
 }
 #endif
@@ -1388,8 +1391,10 @@ static int luaCB_raw_merge_start( lua_State* L )
   int op = luaL_checknumber(L,1);
   if (!module_rawop_load())
     return luaL_argerror(L,1,"fail to load raw merge module");
-  if (op == RAW_OPERATION_SUM || op == RAW_OPERATION_AVERAGE) {
-    librawop.raw_merge_start(op);
+
+  if ( API_VERSION_MATCH_REQUIREMENT( librawop->version, 1, 0 ) &&
+       (op == RAW_OPERATION_SUM || op == RAW_OPERATION_AVERAGE) ) {
+    librawop->raw_merge_start(op);
   }
   else {
     return luaL_argerror(L,1,"invalid raw merge op");
@@ -1402,7 +1407,7 @@ static int luaCB_raw_merge_add_file( lua_State* L )
 {
   if (!module_rawop_load())
     return luaL_argerror(L,1,"fail to load raw merge module");
-  librawop.raw_merge_add_file(luaL_checkstring( L, 1 ));
+  librawop->raw_merge_add_file(luaL_checkstring( L, 1 ));
   return 0;
 }
 
@@ -1410,7 +1415,7 @@ static int luaCB_raw_merge_end( lua_State* L )
 {
   if (!module_rawop_load())
     return luaL_argerror(L,1,"fail to load raw merge module");
-  librawop.raw_merge_end();
+  librawop->raw_merge_end();
   return 0;
 }
 

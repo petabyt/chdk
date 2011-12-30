@@ -964,6 +964,8 @@ void process_raw_files(void){
  librawop_p=module_rawop_load();
  if (!librawop_p)
   	return;		//exit if fail
+  if ( !API_VERSION_MATCH_REQUIREMENT( librawop_p->version, 1, 0 ) )
+    return;
 
  if ((fselect_marked_count()>1) && librawop_p->raw_merge_start(raw_operation)) {
    for (ptr=head; ptr; ptr=ptr->next)
@@ -986,6 +988,8 @@ static void fselect_subtract_cb(unsigned int btn) {
 	librawop_p=module_rawop_load();
  	if (!librawop_p)
   		return;		//exit if fail
+ 	if ( !API_VERSION_MATCH_REQUIREMENT( librawop_p->version, 1, 0 ) )
+  		return;
 
     if(!(raw_subtract_from = malloc(300))) //3x full path
         return;
@@ -1323,6 +1327,9 @@ int _module_loader( void** chdk_export_list )
 {
   if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
+
+  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
+	  return 1;
 
   tConfigVal configVal;
   CONF_BIND_INT(209, conf_sub_batch_prefix);

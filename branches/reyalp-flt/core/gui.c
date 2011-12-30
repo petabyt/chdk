@@ -47,6 +47,12 @@
 #define OPTIONS_AUTOSAVE
 #define SPLASH_TIME               20
 
+struct gui_common_api_ver gui_version = {
+		MAKE_API_VERSION(1,0),			// ver of common api: gui_mode, mbox, this structure
+		MAKE_API_VERSION(1,0)			// ver of menu structure
+};
+
+
 //shortcuts
 //------------------------------------------------------------------
 // #define KEY_NONE (KEY_DUMMY+1)
@@ -1001,7 +1007,7 @@ void gui_menuproc_badpixel_create(int arg) {
 	// After this action module will not be unloaded until reboot 
 	// because not clear when it finished
 	if ( module_dng_load(LIBDNG_OWNED_BY_CREATEBADPIXEL) )
-    	libdng.create_badpixel_bin();
+    	libdng->create_badpixel_bin();
 }
 #endif
 
@@ -1041,8 +1047,8 @@ const char* gui_conf_curve_enum(int change, int arg) {
 
     gui_enum_value_change(&conf.curve_enable,change,sizeof(modes)/sizeof(modes[0]));
 
-	if(change && curve_init_mode)
-		curve_init_mode();
+	if(change && libcurves && libcurves->curve_init_mode)
+		libcurves->curve_init_mode();
     return modes[conf.curve_enable];
 }
 #endif
@@ -1645,8 +1651,8 @@ static void gui_load_curve_selected(const char *fn) {
 	if (fn) {
 		// TODO we could sanity check here, but curve_set_type should fail gracefullish
 		strcpy(conf.curve_file,fn);
-		if(conf.curve_enable == 1 && curve_init_mode)
-			curve_init_mode();
+		if(conf.curve_enable == 1 && libcurves && libcurves->curve_init_mode)
+			libcurves->curve_init_mode();
 	}
 }
 
@@ -2686,12 +2692,12 @@ void gui_menuproc_mkbootdisk(int arg) {
 #ifdef OPT_EDGEOVERLAY
 static void gui_load_edge_selected( const char* fn ) {
     if( fn && module_edgeovr_load())
-		load_edge_overlay(fn);
+		libedgeovr->load_edge_overlay(fn);
 }
 
 void gui_menuproc_edge_save(int arg) {
 	if ( module_edgeovr_load() )
-    	save_edge_overlay();
+    	libedgeovr->save_edge_overlay();
 }
 
 void gui_menuproc_edge_load(int arg) {

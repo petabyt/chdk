@@ -77,4 +77,13 @@ extern void gui_update_script_submenu();
 
 extern void gui_menu_run_fltmodule(int arg);
 
+//----------------------------
+struct gui_common_api_ver {
+		unsigned int common_api;		// common gui version: gui_mode handling, mbox, this structure
+		unsigned int menu_api;		// cmenu structure version
+	};
+
+// Defined in gui.c
+extern struct gui_common_api_ver gui_version;
+
 #endif

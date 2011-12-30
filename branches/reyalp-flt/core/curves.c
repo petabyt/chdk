@@ -104,11 +104,6 @@ static int curve_load_data(const char *name,CURVE_TYPE curve_type) {
 	return 1;
 }
 
-void curve_set_mode(int value) {
-	if((value>=0) && (value<=4)) *conf_curve_enable=value;
-	curve_init_mode();
-}
-
 void curve_init_mode() {
 	switch(*conf_curve_enable) {
 		case 1: // custom - ensure alloc and load conf.curve_file
@@ -410,6 +405,13 @@ void curve_apply() {
 #include "module_load.h"
 
 
+struct libcurves_sym libcurves = {
+			MAKE_API_VERSION(1,0),		// apiver: increase major if incomplatible changes made in module, 
+										// increase minor if compatible changes made(including extending this struct)
+			curve_init_mode,
+			curve_apply
+};
+
 int module_idx=-1;
 
 /***************** BEGIN OF AUXILARY PART *********************
@@ -418,11 +420,8 @@ int module_idx=-1;
 
 void* MODULE_EXPORT_LIST[] = {
 	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)5,
-
-			curve_set_mode,
-			curve_init_mode,
-			curve_apply,
+	/* 1 */	(void*)3,
+			&libcurves
 		};
 
 
@@ -436,6 +435,9 @@ int _module_loader( void** chdk_export_list )
 {
   if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
+
+  if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
+	 return 1;
 
   // Safe bind of conf.
   tConfigVal configVal;
@@ -458,8 +460,7 @@ int _module_unloader()
 {
 	// This could be happens only if on-load mistake
 	// CHDK never unload this library (but load only if needed)
-	// Reason: a) curve_set_mode by LUA is not stored anywhere
-	//		   b) perfomance reason - to avoid load on each raw_processing
+	// Reason: perfomance reason - to avoid load on each raw_processing
   return 0;
 }
 

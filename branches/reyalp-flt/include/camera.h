@@ -222,6 +222,8 @@
 // Used by modules to ensure module code is platform independent
 
 typedef struct {
+	int api_version;			// version of this structure
+
     int bits_per_pixel;
     int black_level;
     int white_level;
@@ -255,6 +257,7 @@ typedef struct {
 
 extern _cam_sensor camera_sensor;
 
+// if this struct changed, please change gui_version.common_api 
 typedef struct 
 {
     unsigned int    width, height, size;                        // Size of bitmap screen in CHDK co-ordinates
@@ -266,6 +269,8 @@ extern _cam_screen camera_screen;
 
 typedef struct
 {
+	int api_version;			// version of this structure
+
     struct
     {
         int camera_name;

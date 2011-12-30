@@ -300,5 +300,6 @@ void* CHDK_EXPORT_LIST[] = {
             &camera_screen,
             &camera_sensor,
             &altGuiHandler,
+            &gui_version,
 			0
 };

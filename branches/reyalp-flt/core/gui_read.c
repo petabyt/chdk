@@ -266,12 +266,12 @@ void gui_read_kbd_leave()
 		return;
 
     reader_is_active = 0;
-            if (!rbf_load(conf_menu_rbf_file))
-                rbf_load_from_8x16(current_font);
-            rbf_set_codepage(FONT_CP_WIN);
+    if (!rbf_load(conf_menu_rbf_file))
+        rbf_load_from_8x16(current_font);
+    rbf_set_codepage(FONT_CP_WIN);
 	if (read_file >= 0) {
-                close(read_file);
-                read_file=-1;
+    	close(read_file);
+	    read_file=-1;
     }
 }
 
@@ -299,6 +299,8 @@ int _module_loader( void** chdk_export_list )
 {
   if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
+  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
+	  return 1;
 
   tConfigVal configVal;
   CONF_BIND_COLOR( 31, conf_reader_color          );

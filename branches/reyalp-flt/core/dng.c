@@ -748,9 +748,9 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
 
 #include "module_load.h"
 
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)9,
+struct libdng_sym libdng = {
+			MAKE_API_VERSION(1,0),		// apiver: increase major if incomplatible changes made in module, 
+										// increase minor if compatible changes made(including extending this struct)
 
 			create_badpixel_bin,
 			raw_init_badpixel_bin,
@@ -759,13 +759,28 @@ void* MODULE_EXPORT_LIST[] = {
 			badpixel_list_loaded_b,
 
 			convert_dng_to_chdk_raw,
-			write_dng,
+			write_dng
 		};
 
+
+//-------------------------------------------
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)3,
+
+			&libdng
+		};
+
+//--------------------------------------------
 int _module_loader( void** chdk_export_list )
 {
   if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
+
+  if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
+	 return 1;
+  if ( !API_VERSION_MATCH_REQUIREMENT( camera_info.api_version, 1, 0 ) )
+	 return 1;
 
   return 0;
 }
