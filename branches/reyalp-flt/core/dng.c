@@ -228,8 +228,8 @@ void create_dng_header(){
 
  // filling EXIF fields
 
- if (camera_sensor.gps_propcase)
-    get_property_case(camera_sensor.gps_propcase, &gps_data, sizeof(tGPS));
+ if (camera_info.props.gps)
+    get_property_case(camera_info.props.gps, &gps_data, sizeof(tGPS));
  else
     memset(&gps_data, 0, sizeof(tGPS));
 
@@ -423,7 +423,7 @@ void capture_data_for_exif(void)
  exif_data.iso=shooting_get_iso_market();
 
  // Shutter speed tags
- get_property_case(PROPCASE_TV, &short_prop_val, sizeof(short_prop_val));
+ get_property_case(camera_info.props.tv, &short_prop_val, sizeof(short_prop_val));
  cam_shutter[0]      = pow_calc( 1000000, 2, 1, -short_prop_val, 96);
  cam_apex_shutter[0] = short_prop_val;
 
@@ -433,14 +433,14 @@ void capture_data_for_exif(void)
  ttm = localtime(&datetime);
  sprintf(cam_datetime, "%04d:%02d:%02d %02d:%02d:%02d", ttm->tm_year+1900, ttm->tm_mon+1, ttm->tm_mday, ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
 
- get_property_case(PROPCASE_AV, &short_prop_val, sizeof(short_prop_val));
+ get_property_case(camera_info.props.av, &short_prop_val, sizeof(short_prop_val));
  cam_aperture[0]      = pow_calc( 10, 2, 1, short_prop_val, 192);
  cam_apex_aperture[0] = short_prop_val;
 
- get_property_case(PROPCASE_MIN_AV, &short_prop_val, sizeof(short_prop_val));
+ get_property_case(camera_info.props.min_av, &short_prop_val, sizeof(short_prop_val));
  cam_max_av[0] = short_prop_val;
 
- get_property_case(PROPCASE_EV_CORRECTION_2, &short_prop_val, sizeof(short_prop_val));
+ get_property_case(camera_info.props.ev_correction_2, &short_prop_val, sizeof(short_prop_val));
  cam_exp_bias[0] = short_prop_val;
 
  exif_data.exp_program=mode_get() & MODE_SHOOTING_MASK;
@@ -448,13 +448,13 @@ void capture_data_for_exif(void)
  cam_focal_length[0] = get_focal_length(shooting_get_zoom());
  exif_data.effective_focal_length = get_effective_focal_length(shooting_get_zoom()) / 1000;
 
- get_property_case(PROPCASE_ORIENTATION_SENSOR, &exif_data.orientation, sizeof(exif_data.orientation));
- get_parameter_data(PARAM_CAMERA_NAME, &cam_name, sizeof(cam_name));
- get_property_case(PROPCASE_FLASH_MODE, &exif_data.flash_mode, sizeof(exif_data.flash_mode));
- get_property_case(PROPCASE_FLASH_FIRE, &exif_data.flash_fired, sizeof(exif_data.flash_fired));
- get_property_case(PROPCASE_METERING_MODE, &exif_data.metering_mode, sizeof(exif_data.metering_mode));
+ get_property_case(camera_info.props.orientation_sensor, &exif_data.orientation, sizeof(exif_data.orientation));
+ get_parameter_data(camera_info.params.camera_name, &cam_name, sizeof(cam_name));
+ get_property_case(camera_info.props.flash_mode, &exif_data.flash_mode, sizeof(exif_data.flash_mode));
+ get_property_case(camera_info.props.flash_fire, &exif_data.flash_fired, sizeof(exif_data.flash_fired));
+ get_property_case(camera_info.props.metering_mode, &exif_data.metering_mode, sizeof(exif_data.metering_mode));
 
- get_property_case(PROPCASE_WB_ADJ, &wb, sizeof(wb));  
+ get_property_case(camera_info.props.wb_adj, &wb, sizeof(wb));  
  cam_AsShotNeutral[1]=wb[1];
  cam_AsShotNeutral[3]=wb[0];
  cam_AsShotNeutral[5]=wb[2];

@@ -296,6 +296,7 @@ void* CHDK_EXPORT_LIST[] = {
 			pow_calc,
 			pow_calc_2,
 
+            &camera_info,
             &camera_screen,
             &camera_sensor,
             &altGuiHandler,

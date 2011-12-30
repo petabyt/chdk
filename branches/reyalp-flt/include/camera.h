@@ -251,7 +251,6 @@ typedef struct {
     int exposure_bias[2];       // DNG Exposure Bias
     int color_matrix1[18];      // DNG Color Matrix
     int cfa_pattern, calibration_illuminant1;
-    int gps_propcase;
 } _cam_sensor;
 
 extern _cam_sensor camera_sensor;
@@ -264,6 +263,29 @@ typedef struct
 } _cam_screen;
 
 extern _cam_screen camera_screen;
+
+typedef struct
+{
+    struct
+    {
+        int camera_name;
+    } params;
+    struct
+    {
+        int gps;
+        int orientation_sensor;
+        int tv;
+        int av;
+        int min_av;
+        int ev_correction_2;
+        int flash_mode;
+        int flash_fire;
+        int metering_mode;
+        int wb_adj;
+    } props;
+} _cam_info;
+
+extern _cam_info camera_info;
 
 //==========================================================
 
