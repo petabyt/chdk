@@ -46,7 +46,19 @@ static void gui_menu_set_curr_menu(CMenu *menu_ptr, int top_item, int curr_item)
 
 //-------------------------------------------------------------------
 void gui_menu_init(CMenu *menu_ptr) {
+
+    static char first_call=1;
+
     if (menu_ptr) {
+		if ( first_call ) {
+			extern void gui_modules_menu_load();
+			extern void user_menu_restore();
+
+			gui_modules_menu_load();
+    		user_menu_restore();
+			first_call=0;
+		}
+
         if (conf.menu_select_first_entry)
             gui_menu_set_curr_menu(menu_ptr, 0, 0);
         else 

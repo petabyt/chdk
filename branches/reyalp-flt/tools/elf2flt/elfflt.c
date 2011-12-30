@@ -52,6 +52,7 @@ import_record_t* flat_import_buf; // point to begining of import table in memory
 import_record_t* flat_import_cur; // ptr to current import value (for write_import)
 
 char* flag_sym_display=0;  // buffer of flags. [symidx]=0 not_showed_yet, 1 already_shown
+int flag_unsafe_sym=0;      // =1 if one of imported symbol is from stoplist
 
 /*---------------------------------------------------------------------------*/
 static
@@ -197,6 +198,8 @@ relocate_section( struct relevant_section* base_sect)
           rv = ELFFLT_SYMBOL_NOT_FOUND;
 		  continue;
       }
+      if ( stoplist_check(name) )
+	      { flag_unsafe_sym=1; }
 
       ret = apply_import( base_sect, &rela, importidx, &s, relidx);
       if (ret != ELFFLT_OK) return ret;
@@ -626,6 +629,8 @@ elfloader_load(char* filename, char* fltfile)
   // _div0_arm hack
   add_div0_arm();
 
+  flag_unsafe_sym = 0;
+
   // Do relocations
   ret = relocate_section( &text);
   if(ret != ELFFLT_OK)
@@ -636,6 +641,9 @@ elfloader_load(char* filename, char* fltfile)
   ret = relocate_section( &data);
   if(ret != ELFFLT_OK)
       return ret;
+
+  if ( flag_unsafe_sym )
+      return ELFFLT_UNSAFE_SYMBOL;
 
   flat->import_start = flat->reloc_start+flat_reloc_count*sizeof(reloc_record_t);
 

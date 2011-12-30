@@ -17,6 +17,7 @@
 #define ELFFLT_OUTOF_RANGE         9
 #define ELFFLT_INPUT_ERROR         10
 #define ELFFLT_OUTPUT_ERROR        11
+#define ELFFLT_UNSAFE_SYMBOL       12
 
 
 /**

@@ -151,7 +151,7 @@ void user_menu_restore();
 //-------------------------------------------------------------------
 static void gui_show_build_info(int arg);
 static void gui_show_memory_info(int arg);
-static void	gui_modules_menu_load();
+void	gui_modules_menu_load();
 
 #ifdef OPT_DEBUGGING
     void gui_compare_props(int arg);
@@ -1614,8 +1614,6 @@ void gui_init()
     }
     gui_splash = (conf.splash_show)?SPLASH_TIME:0;
 
-	gui_modules_menu_load();
-    user_menu_restore();
     gui_lang_init();
     draw_init();
 
