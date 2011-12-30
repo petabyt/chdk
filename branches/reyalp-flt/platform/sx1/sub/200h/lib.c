@@ -33,19 +33,6 @@ void *vid_get_viewport_fb_d()
 	return (void*)(*(int*)(0x53C8+0x58)); 
 }
 
-//got from FF903960: Width 960
-//got from FF90395C: Height 270
-
-long vid_get_bitmap_screen_width()
-{
-	return 480;
-}
-
-long vid_get_bitmap_screen_height()
-{
-	return 240;
-}
-
 // default is same as bitmap
 /*
 int vid_get_viewport_width()
@@ -62,7 +49,3 @@ char *camera_jpeg_count_str()
 {
 	return (char*)0x5CED4;
 }
-
-
-long vid_get_bitmap_buffer_width() { return 480; }
-long vid_get_bitmap_buffer_height() { return 270; }

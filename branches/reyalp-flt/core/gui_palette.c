@@ -81,8 +81,8 @@ void gui_palette_draw(int enforce_redraw) {
     color c;
     static char buf[64];
 
-    xl = camera_info.ts_button_border;
-    xr = screen_width - camera_info.ts_button_border;
+    xl = camera_screen.ts_button_border;
+    xr = camera_screen.width - camera_screen.ts_button_border;
 
     if (gui_palette_redraw)
     {
@@ -102,7 +102,7 @@ void gui_palette_draw(int enforce_redraw) {
         }
 
         // Draw gray borders
-        draw_rect_thick(xl, DISP_TOP-BORDER_SIZE, xr-1, screen_height-1, COLOR_GREY, BORDER_SIZE); // outer border
+        draw_rect_thick(xl, DISP_TOP-BORDER_SIZE, xr-1, camera_screen.height-1, COLOR_GREY, BORDER_SIZE); // outer border
         draw_filled_rect(xl+DISP_RIGHT+1, DISP_TOP, xl+DISP_RIGHT+BORDER_SIZE, DISP_BOTTOM, MAKE_COLOR(COLOR_GREY, COLOR_GREY)); //middle
 
         // Co-ordinate of selected color

@@ -54,9 +54,9 @@ void gui_menu_init(CMenu *menu_ptr) {
         gui_menu_stack_ptr = 0;
     }
 
-    num_lines = screen_height/rbf_font_height()-1;
+    num_lines = camera_screen.height/rbf_font_height()-1;
     x = CAM_MENU_BORDERWIDTH;
-    w = screen_width-x-x;
+    w = camera_screen.width-x-x;
     len_bool = rbf_str_width("\x95");
     len_int = rbf_str_width("99999");
     len_enum = rbf_str_width("WUBfS3a");
@@ -601,7 +601,7 @@ void gui_menu_draw_initial() {
 
     if (count > num_lines)
     {
-        y = ((screen_height-(num_lines-1)*rbf_font_height())>>1);
+        y = ((camera_screen.height-(num_lines-1)*rbf_font_height())>>1);
         wplus = 8; 
         // scrollbar background 
         draw_filled_rect((x+w), y, (x+w)+wplus, y+num_lines*rbf_font_height()-1, MAKE_COLOR((conf.menu_color>>8)&0xFF, (conf.menu_color>>8)&0xFF)); 
@@ -611,11 +611,11 @@ void gui_menu_draw_initial() {
         wplus = 0;
         if (conf.menu_center)
         {
-            y = (screen_height-(count-1)*rbf_font_height())>>1; 
+            y = (camera_screen.height-(count-1)*rbf_font_height())>>1; 
         }
         else
         {
-            y = ((screen_height-(num_lines-1)*rbf_font_height())>>1);  
+            y = ((camera_screen.height-(num_lines-1)*rbf_font_height())>>1);  
         }
     }
 

@@ -774,10 +774,6 @@
 #define FONT_HEIGHT         16
 
 //-------------------------------------------------------------------
-extern unsigned int         screen_width, screen_height, screen_size;
-extern unsigned int         screen_buffer_width, screen_buffer_height, screen_buffer_size;
-
-//-------------------------------------------------------------------
 extern void draw_init();
 extern void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl));
 

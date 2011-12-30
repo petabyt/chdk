@@ -30,17 +30,6 @@ void *vid_get_viewport_fb_d()
 	return (void*)(*(int*)(0x2A30+0x58)); // sub_FF8718D0
 }
 
-
-long vid_get_bitmap_screen_width() 
-{ 
-	return 360;
-}
-
-long vid_get_bitmap_screen_height()
-{
-	return 240;
-}
-
 int vid_get_viewport_width()
 {
     return 360;                                               // stays at 360 as IN SD990
@@ -55,7 +44,3 @@ char *camera_jpeg_count_str()
 {
 	return (char*)0x72DFC; // loc_FF9F71A0
 }
-
-long vid_get_bitmap_buffer_width() { return 960; }
-
-long vid_get_bitmap_buffer_height() { return 270; }

@@ -40,13 +40,6 @@ void *vid_get_viewport_fb_d()
 	return (void*)(*(int*)(0x28F0+0x58));
 }
 
-
-long vid_get_bitmap_screen_width()   { return 480; }
-long vid_get_bitmap_screen_height()  { return 240; }
-long vid_get_bitmap_buffer_width()   { return 960; }
-long vid_get_bitmap_buffer_height()  { return 270; }
-
-
 long vid_get_viewport_height()       { return 240; }
 
 // Physical width of viewport row in bytes

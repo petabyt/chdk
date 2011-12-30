@@ -1613,7 +1613,7 @@ void gui_init()
     gui_lang_init();
     draw_init();
 
-    exposition_thresh = screen_size/500;
+    exposition_thresh = camera_screen.size/500;
     voltage_step = (conf.batt_step_25)?25:1;
     load_from_file( "A/CHDK/badpixel", make_pixel_list );
     load_from_file( "A/CHDK/badpixel.txt", make_pixel_list );
@@ -2367,7 +2367,7 @@ void gui_draw_osd() {
 
 #if CAM_SWIVEL_SCREEN
     if (conf.flashlight && (m&MODE_SCREEN_OPENED) && (m&MODE_SCREEN_ROTATED) && (gui_get_mode()==GUI_MODE_NONE /* || gui_get_mode()==GUI_MODE_ALT */)) {
-        draw_filled_rect(0, 0, screen_width-1, screen_height-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE));
+        draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE));
         flashlight = 1;
     }
     if (flashlight) {
@@ -2597,7 +2597,7 @@ void gui_draw_splash(char* logo, int logo_size) {
     }
     w=w*FONT_WIDTH+10;
 
-    x = (screen_width-w)>>1; y = ((screen_height-h)>>1) + 20;
+    x = (camera_screen.width-w)>>1; y = ((camera_screen.height-h)>>1) + 20;
     draw_filled_round_rect(x, y, x+w, y+h, MAKE_COLOR(COLOR_RED, COLOR_RED));
     for (i=0; i<sizeof(text)/sizeof(text[0]); ++i) {
         draw_string(x+((w-strlen(text[i])*FONT_WIDTH)>>1), y+i*FONT_HEIGHT+4, text[i], cl);
@@ -2606,8 +2606,8 @@ void gui_draw_splash(char* logo, int logo_size) {
       int pos;
       int mx=0;
       int my=0;
-      int offset_x = (screen_width-150)>>1;
-      int offset_y = ((screen_height-84)>>1) - 42;
+      int offset_x = (camera_screen.width-150)>>1;
+      int offset_y = ((camera_screen.height-84)>>1) - 42;
       const color color_lookup[8] = {COLOR_BLACK,
 	  								COLOR_SPLASH_RED/*0x2E redish*/,
 									COLOR_RED,

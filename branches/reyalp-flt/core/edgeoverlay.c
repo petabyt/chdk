@@ -47,7 +47,7 @@ static int viewport_yoffset;	// used when image size != viewport size (e.g. wide
 
 static void get_viewport_size()
 {
-    viewport_height = vid_get_viewport_height()-camera_info.edge_hmargin*2; //don't trace bottom lines
+    viewport_height = vid_get_viewport_height()-camera_screen.edge_hmargin*2; //don't trace bottom lines
     viewport_width = vid_get_viewport_width();
     viewport_byte_width = vid_get_viewport_byte_width();
     viewport_yscale = vid_get_viewport_yscale();
@@ -289,8 +289,8 @@ static int calc_edge_overlay()
     int x, y, xdiv3;
     int conv1, conv2;
 
-    const int y_min = viewport_yoffset + camera_info.edge_hmargin+ slice   *slice_height;
-    const int y_max = viewport_yoffset + camera_info.edge_hmargin+(slice+1)*slice_height;
+    const int y_min = viewport_yoffset + camera_screen.edge_hmargin+ slice   *slice_height;
+    const int y_max = viewport_yoffset + camera_screen.edge_hmargin+(slice+1)*slice_height;
     const int x_min = viewport_xoffset*3 + 6;
     const int x_max = (viewport_width + viewport_xoffset - 2) * 3;
 
@@ -386,7 +386,7 @@ static int calc_edge_overlay()
 
             if (conv1 + conv2 > *conf_edge_overlay_thresh)
             {
-                bv_set(edgebuf, (y-viewport_yoffset-camera_info.edge_hmargin)*viewport_width + xdiv3, 1);
+                bv_set(edgebuf, (y-viewport_yoffset-camera_screen.edge_hmargin)*viewport_width + xdiv3, 1);
             }
 
             // Do it once again for the next 'pixel'
@@ -416,7 +416,7 @@ static int calc_edge_overlay()
 
             if (conv1 + conv2 > *conf_edge_overlay_thresh)
             {
-                bv_set(edgebuf, (y-viewport_yoffset-camera_info.edge_hmargin)*viewport_width + xdiv3+1, 1);
+                bv_set(edgebuf, (y-viewport_yoffset-camera_screen.edge_hmargin)*viewport_width + xdiv3+1, 1);
             }
         }   // for x
     }   // for y
@@ -492,10 +492,10 @@ static int draw_edge_overlay()
     int x_off, y_off;
 
     const color cl = *conf_edge_overlay_color;
-    const int y_slice_min = viewport_yoffset+camera_info.edge_hmargin+ slice   *slice_height;
-    const int y_slice_max = viewport_yoffset+camera_info.edge_hmargin+(slice+1)*slice_height;
-    const int y_min = viewport_yoffset+camera_info.edge_hmargin;
-    const int y_max = viewport_yoffset+camera_info.edge_hmargin+viewport_height;
+    const int y_slice_min = viewport_yoffset+camera_screen.edge_hmargin+ slice   *slice_height;
+    const int y_slice_max = viewport_yoffset+camera_screen.edge_hmargin+(slice+1)*slice_height;
+    const int y_min = viewport_yoffset+camera_screen.edge_hmargin;
+    const int y_max = viewport_yoffset+camera_screen.edge_hmargin+viewport_height;
     const int x_min = viewport_xoffset+2;
     const int x_max = (viewport_width + viewport_xoffset - 2);
 

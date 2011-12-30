@@ -51,17 +51,6 @@ void *vid_get_viewport_fb_d()
 	return (void*)(*(int*)(0x501C+0x58)); 
 }
 
-
-long vid_get_bitmap_screen_width()
-{
-	return 360;
-}
-
-long vid_get_bitmap_screen_height()
-{
-	return 240;
-}
-
 long vid_get_viewport_height()
 {
 	return 240;
@@ -72,8 +61,3 @@ char *camera_jpeg_count_str()
   // 0xFF9AD200 (directly above use of "9999")
 	return (char*)0x4A980;
 }
-
-
-long vid_get_bitmap_buffer_width() { return 360; }
-
-long vid_get_bitmap_buffer_height() { return 240; }

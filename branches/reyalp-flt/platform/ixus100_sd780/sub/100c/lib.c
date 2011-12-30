@@ -65,21 +65,6 @@ void *vid_get_viewport_fb_d()
     return (void*)(*(int*)(0x26F4 + 0x58));
 }
 
-
-//SD780 - 720px real screen width
-long vid_get_bitmap_screen_width()
-{
-    return 360; // half of real for aspect correction
-    //720
-}
-
-//SD780 - 240px real screen height
-long vid_get_bitmap_screen_height()
-{
-    return 240;
-    //240
-}
-
 //VERIFY_SD780 - - Check resolutions again.
 int vid_get_viewport_width()
 {
@@ -98,9 +83,3 @@ char *camera_jpeg_count_str()
 {
     return (char *)0x33110;
 }
-
-//VERIFY_SD780
-long vid_get_bitmap_buffer_width() { return 960; } // _sub_FF8EA47C__BmpDDev_c__134...
-                                                   // or maybe not, some 360x240 cams have this too ?
-//VERIFY_SD780
-long vid_get_bitmap_buffer_height() { return 270; }

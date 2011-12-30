@@ -49,11 +49,11 @@ static void spacebar_outer(OSD_pos pos, int w, int h)
     height = h;
 
     // Clamp co-ordinates to keep bar on screen
-    if (xx > (screen_width-width-4)) {
-        xx = screen_width-width-4;
+    if (xx > (camera_screen.width-width-4)) {
+        xx = camera_screen.width-width-4;
     }
-    if (yy > (screen_height-height-4)) {
-        yy = screen_height-height-4;
+    if (yy > (camera_screen.height-height-4)) {
+        yy = camera_screen.height-height-4;
     }
 
     draw_rect(xx, yy, xx+width+3, yy+height+3, COLOR_BLACK);     // Outer black rectangle
@@ -64,7 +64,7 @@ static void gui_space_draw_spacebar_horizontal() {
     coord x;
 
     // Setup and draw outer shape
-    spacebar_outer(conf.space_hor_pos, (screen_width / (4 >> conf.space_bar_size)) - 4, conf.space_bar_width);
+    spacebar_outer(conf.space_hor_pos, (camera_screen.width / (4 >> conf.space_bar_size)) - 4, conf.space_bar_width);
 
     // space bar fill
     x = width - ((perc*width)/100);
@@ -78,7 +78,7 @@ static void gui_space_draw_spacebar_vertical() {
     coord y;
 
     // Setup and draw outer shape
-    spacebar_outer(conf.space_ver_pos, conf.space_bar_width, (screen_height / (4 >> conf.space_bar_size)) - 4);
+    spacebar_outer(conf.space_ver_pos, conf.space_bar_width, (camera_screen.height / (4 >> conf.space_bar_size)) - 4);
 
     // space bar fill
     y = height - ((perc*height)/100);

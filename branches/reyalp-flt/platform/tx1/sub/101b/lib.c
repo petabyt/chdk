@@ -36,22 +36,10 @@ void *vid_get_viewport_fb_d() // found on aImageplayer_c, 0xFFAD0968
     return (void*)(*(int*)0x8D628); 
 }
 
-long vid_get_bitmap_screen_width()
-{
-    return 360;
-}
-
-long vid_get_bitmap_screen_height()
-{
-    return 240;
-}
-
-
 long vid_get_viewport_height()
 {
     return 240;
 }
- 
 
 void *vid_get_viewport_live_fb()
 {
@@ -62,8 +50,3 @@ char *camera_jpeg_count_str()
 {
     return (char*)0x12988;
 }
- 
-long vid_get_bitmap_buffer_width() { return 480; }
-
-long vid_get_bitmap_buffer_height() { return 271; }
-

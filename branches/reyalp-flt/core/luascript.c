@@ -1716,7 +1716,7 @@ static int handle_video_transfer(ptp_data *data, int flags, int arg2)
     if ( flags & 0x4 ) // bitmap buffer
     {
         vid_info.bm_buffer_start = total_size;
-        vid_info.bm_buffer_size = vid_get_bitmap_buffer_width()*vid_get_bitmap_screen_height();
+        vid_info.bm_buffer_size = camera_screen.buffer_width*camera_screen.height;
         total_size += vid_info.bm_buffer_size;
     }
 
@@ -1774,12 +1774,12 @@ static int luaCB_get_video_details( lua_State* L )
     details.vp_max_height = vid_get_viewport_max_height();
     details.vp_buffer_width = vid_get_viewport_buffer_width_proper();
 #if CAM_USES_ASPECT_CORRECTION
-    details.bm_max_width = ASPECT_XCORRECTION(vid_get_bitmap_screen_width());
+    details.bm_max_width = ASPECT_XCORRECTION(camera_screen.width);
 #else
-    details.bm_max_width = vid_get_bitmap_screen_width();
+    details.bm_max_width = camera_screen.width;
 #endif
-    details.bm_max_height = vid_get_bitmap_screen_height();
-    details.bm_buffer_width = vid_get_bitmap_buffer_width();
+    details.bm_max_height = camera_screen.height;
+    details.bm_buffer_width = camera_screen.buffer_width;
     details.lcd_aspect_ratio = vid_get_aspect_ratio();
 
     // Send data back to client

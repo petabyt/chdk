@@ -38,13 +38,7 @@ void *vid_get_viewport_fb_d()
 	return (void*)(*(int*)(0x2540+0x54)); // sub_FFC528C0 / sub_FFC53554?
 }
 
-long vid_get_bitmap_screen_width() { return 360; }
-long vid_get_bitmap_screen_height() { return 240; }
-
 long vid_get_viewport_height() { return 240; }
-
-long vid_get_bitmap_buffer_width() { return 360; }
-long vid_get_bitmap_buffer_height() { return 240; }
 
 char *camera_jpeg_count_str()
 {

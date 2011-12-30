@@ -17,7 +17,7 @@
 // Data Structure to store camera specific information
 // Used by modules to ensure module code is platform independent
 
-_cam_info camera_info = { 
+_cam_sensor camera_sensor = { 
     CAM_SENSOR_BITS_PER_PIXEL, 
     CAM_BLACK_LEVEL, CAM_WHITE_LEVEL,
     CAM_RAW_ROWS, CAM_RAW_ROWPIX, (CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL)/8, CAM_RAW_ROWS * ((CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL)/8),
@@ -39,10 +39,16 @@ _cam_info camera_info = {
     { CAM_COLORMATRIX1 },
     cam_CFAPattern, cam_CalibrationIlluminant1,
 #if defined(OPT_GPS)
-    1,
+    PROPCASE_GPS,
 #else
     0,
 #endif
+};
+
+_cam_screen camera_screen =
+{
+    CAM_SCREEN_WIDTH, CAM_SCREEN_HEIGHT, CAM_SCREEN_WIDTH * CAM_SCREEN_HEIGHT,
+    CAM_BITMAP_WIDTH, CAM_BITMAP_HEIGHT, CAM_BITMAP_WIDTH * CAM_BITMAP_HEIGHT,
     EDGE_HMARGIN, CAM_TS_BUTTON_BORDER,
 };
 

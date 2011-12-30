@@ -8,8 +8,6 @@
 
 //-------------------------------------------------------------------
 static char*    frame_buffer[2];
-unsigned int    screen_width=0, screen_height=0, screen_size=0;
-unsigned int    screen_buffer_width=0, screen_buffer_height=0, screen_buffer_size=0;
 void            (*draw_pixel_proc)(unsigned int offset, color cl);
 
 //-------------------------------------------------------------------
@@ -43,9 +41,9 @@ int draw_test_guard()
 // Test a pixel value in both frame buffers, returns 0 if either doesn't match or co-ords out of range
 int draw_test_pixel(coord x, coord y, color c)
 {
-    if (x >= screen_width || y >= screen_height) return 0;
-    return (frame_buffer[0][y * screen_buffer_width + ASPECT_XCORRECTION(x)] == c) &&
-           (frame_buffer[1][y * screen_buffer_width + ASPECT_XCORRECTION(x)] == c);
+    if (x >= camera_screen.width || y >= camera_screen.height) return 0;
+    return (frame_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)] == c) &&
+           (frame_buffer[1][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)] == c);
 }
 
 #endif
@@ -54,14 +52,8 @@ int draw_test_pixel(coord x, coord y, color c)
 void draw_init() {
     register int i;
 
-    screen_width = vid_get_bitmap_screen_width();
-    screen_height  = vid_get_bitmap_screen_height();
-    screen_size = screen_width * screen_height;
-    screen_buffer_width = vid_get_bitmap_buffer_width();
-    screen_buffer_height = vid_get_bitmap_buffer_height();
-    screen_buffer_size = screen_buffer_width * screen_buffer_height;
     frame_buffer[0] = vid_get_bitmap_fb();
-    frame_buffer[1] = frame_buffer[0] + screen_buffer_size;
+    frame_buffer[1] = frame_buffer[0] + camera_screen.buffer_size;
     draw_set_draw_proc(NULL);
 
 #ifdef CAM_DETECT_SCREEN_ERASE
@@ -71,9 +63,9 @@ void draw_init() {
 
 //-------------------------------------------------------------------
 void draw_pixel(coord x, coord y, color cl) {
-    if (x >= screen_width || y >= screen_height) return;
+    if (x >= camera_screen.width || y >= camera_screen.height) return;
     else {
-        register unsigned int offset = y * screen_buffer_width + ASPECT_XCORRECTION(x);
+        register unsigned int offset = y * camera_screen.buffer_width + ASPECT_XCORRECTION(x);
         draw_pixel_proc(offset,   cl);
 #if CAM_USES_ASPECT_CORRECTION
         draw_pixel_proc(offset+1, cl);  // Draw second pixel if screen scaling is needed
@@ -83,8 +75,8 @@ void draw_pixel(coord x, coord y, color cl) {
 
 //-------------------------------------------------------------------
 color draw_get_pixel(coord x, coord y) {
-    if (x >= screen_width || y >= screen_height) return 0;
-    return frame_buffer[0][y * screen_buffer_width + ASPECT_XCORRECTION(x) ];
+    if (x >= camera_screen.width || y >= camera_screen.height) return 0;
+    return frame_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x) ];
 }
 
 //-------------------------------------------------------------------
@@ -119,10 +111,10 @@ void draw_line(coord x1, coord y1, coord x2, coord y2, color cl) {
 //-------------------------------------------------------------------
 void draw_hline(coord x, coord y, int len, color cl)
 {
-    if (x >= screen_width || y >= screen_height) return;
+    if (x >= camera_screen.width || y >= camera_screen.height) return;
     if (x < 0) { len += x; x = 0; }
-    if ((x + len) > screen_width) len = screen_width - x;
-    register unsigned int offset = y * screen_buffer_width + ASPECT_XCORRECTION(x);
+    if ((x + len) > camera_screen.width) len = camera_screen.width - x;
+    register unsigned int offset = y * camera_screen.buffer_width + ASPECT_XCORRECTION(x);
     len = ASPECT_XCORRECTION(len);      // Scale the line length if needed
     for (; len>=0; len--, offset++)
         draw_pixel_proc(offset, cl);
@@ -130,9 +122,9 @@ void draw_hline(coord x, coord y, int len, color cl)
 
 void draw_vline(coord x, coord y, int len, color cl)
 {
-    if ((x < 0) || (x >= screen_width) || (y >= screen_height)) return;
+    if ((x < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return;
     if (y < 0) { len += y; y = 0; }
-    if ((y + len) > screen_height) len = screen_height - y;
+    if ((y + len) > camera_screen.height) len = camera_screen.height - y;
     for (; len>=0; len--, y++)
       draw_pixel(x, y, cl);
 }
@@ -155,10 +147,10 @@ static void draw_rectangle(coord x1, coord y1, coord x2, coord y2, color cl, int
     } else {
     	yMin=y1; yMax=y2;
     }
-    if (xMax>=screen_width) xMax=screen_width-1;
-    if (xMin>=screen_width) xMin=screen_width-1;
-    if (yMax>=screen_height) yMax=screen_height-1;
-    if (yMin>=screen_height) yMin=screen_height-1;
+    if (xMax>=camera_screen.width) xMax=camera_screen.width-1;
+    if (xMin>=camera_screen.width) xMin=camera_screen.width-1;
+    if (yMax>=camera_screen.height) yMax=camera_screen.height-1;
+    if (yMin>=camera_screen.height) yMin=camera_screen.height-1;
 
     for (y=yMin+(round<<1); y<=yMax-(round<<1); ++y)
     {
@@ -259,7 +251,7 @@ void draw_string(coord x, coord y, const char *s, color cl) {
 	    draw_char(x, y, *s, cl);
 	    s++;
 	    x+=FONT_WIDTH;
-	    if ((x>=screen_width) && (*s))
+	    if ((x>=camera_screen.width) && (*s))
         {
 	        draw_char(x-FONT_WIDTH,y, '>', cl);
 	        break;
@@ -299,7 +291,7 @@ void draw_txt_char(coord col, coord row, const char ch, color cl) {
 
 //-------------------------------------------------------------------
 void draw_clear() {
-    memset(frame_buffer[0], COLOR_TRANSPARENT, screen_buffer_size*2);
+    memset(frame_buffer[0], COLOR_TRANSPARENT, camera_screen.buffer_size*2);
 }
 
 // Restore CANON_OSD

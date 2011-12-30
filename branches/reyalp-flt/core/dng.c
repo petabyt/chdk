@@ -86,41 +86,41 @@ struct dir_entry IFD0[]={
  {0x9216, T_BYTE,       4,  0x00000001},                        // TIFF/EPStandardID: 1.0.0.0
  {0xC612, T_BYTE,       4,  0x00000101},                        //DNGVersion: 1.1.0.0
  {0xC614, T_ASCII,      32, (int)cam_name},                     //UniqueCameraModel. Filled at header generation.
- {0xC621, T_SRATIONAL,  9,  (int)&camera_info.color_matrix1},
+ {0xC621, T_SRATIONAL,  9,  (int)&camera_sensor.color_matrix1},
  {0xC627, T_RATIONAL,   3,  (int)cam_AnalogBalance},
  {0xC628, T_RATIONAL,   3,  (int)cam_AsShotNeutral},
- {0xC62A, T_SRATIONAL,  1,  (int)&camera_info.exposure_bias},
+ {0xC62A, T_SRATIONAL,  1,  (int)&camera_sensor.exposure_bias},
  {0xC62B, T_RATIONAL,   1,  (int)cam_BaselineNoise},
  {0xC62C, T_RATIONAL,   1,  (int)cam_BaselineSharpness},
  {0xC62E, T_RATIONAL,   1,  (int)cam_LinearResponseLimit},
- {0xC630, T_RATIONAL,   4,  (int)&camera_info.lens_info},
- {0xC65A, T_SHORT|T_PTR,1,  (int)&camera_info.calibration_illuminant1}, 
+ {0xC630, T_RATIONAL,   4,  (int)&camera_sensor.lens_info},
+ {0xC65A, T_SHORT|T_PTR,1,  (int)&camera_sensor.calibration_illuminant1}, 
  {0}
 };
 
                                                                                       
 struct dir_entry IFD1[]={
  {0xFE,   T_LONG,       1,  0},                                 // NewSubFileType: Main Image
- {0x100,  T_LONG|T_PTR, 1,  (int)&camera_info.raw_rowpix},      // ImageWidth
- {0x101,  T_LONG|T_PTR, 1,  (int)&camera_info.raw_rows},        // ImageLength
- {0x102,  T_SHORT|T_PTR,1,  (int)&camera_info.bits_per_pixel},  // BitsPerSample
+ {0x100,  T_LONG|T_PTR, 1,  (int)&camera_sensor.raw_rowpix},      // ImageWidth
+ {0x101,  T_LONG|T_PTR, 1,  (int)&camera_sensor.raw_rows},        // ImageLength
+ {0x102,  T_SHORT|T_PTR,1,  (int)&camera_sensor.bits_per_pixel},  // BitsPerSample
  {0x103,  T_SHORT,      1,  1},                                 // Compression: Uncompressed
  {0x106,  T_SHORT,      1,  0x8023},                            //PhotometricInterpretation: CFA
  {0x111,  T_LONG,       1,  0},                                 //StripOffsets: Offset
  {0x115,  T_SHORT,      1,  1},                                 // SamplesPerPixel: 1
- {0x116,  T_SHORT|T_PTR,1,  (int)&camera_info.raw_rows},        //RowsPerStrip
- {0x117,  T_LONG|T_PTR, 1,  (int)&camera_info.raw_size},        // StripByteCounts = CHDK RAW size
+ {0x116,  T_SHORT|T_PTR,1,  (int)&camera_sensor.raw_rows},        //RowsPerStrip
+ {0x117,  T_LONG|T_PTR, 1,  (int)&camera_sensor.raw_size},        // StripByteCounts = CHDK RAW size
  {0x11A,  T_RATIONAL,   1,  (int)cam_Resolution},               // XResolution
  {0x11B,  T_RATIONAL,   1,  (int)cam_Resolution},               // YResolution
  {0x11C,  T_SHORT,      1,  1},                                 // PlanarConfiguration: 1
  {0x128,  T_SHORT,      1,  2},                                 // ResolutionUnit: inch
  {0x828D, T_SHORT,      2,  0x00020002},                        // CFARepeatPatternDim: Rows = 2, Cols = 2
- {0x828E, T_BYTE|T_PTR, 4,  (int)&camera_info.cfa_pattern},
- {0xC61A, T_LONG|T_PTR, 1,  (int)&camera_info.black_level},     // BlackLevel
- {0xC61D, T_LONG|T_PTR, 1,  (int)&camera_info.white_level},     // WhiteLevel
- {0xC61F, T_LONG,       2,  (int)&camera_info.crop.origin},
- {0xC620, T_LONG,       2,  (int)&camera_info.crop.size},
- {0xC68D, T_LONG,       4,  (int)&camera_info.dng_active_area},
+ {0x828E, T_BYTE|T_PTR, 4,  (int)&camera_sensor.cfa_pattern},
+ {0xC61A, T_LONG|T_PTR, 1,  (int)&camera_sensor.black_level},     // BlackLevel
+ {0xC61D, T_LONG|T_PTR, 1,  (int)&camera_sensor.white_level},     // WhiteLevel
+ {0xC61F, T_LONG,       2,  (int)&camera_sensor.crop.origin},
+ {0xC620, T_LONG,       2,  (int)&camera_sensor.crop.size},
+ {0xC68D, T_LONG,       4,  (int)&camera_sensor.dng_active_area},
  {0}
 };
 
@@ -228,10 +228,10 @@ void create_dng_header(){
 
  // filling EXIF fields
 
- if (camera_info.has_gps)
-    get_property_case(PROPCASE_GPS, &gps_data, sizeof(tGPS));
+ if (camera_sensor.gps_propcase)
+    get_property_case(camera_sensor.gps_propcase, &gps_data, sizeof(tGPS));
  else
-     memset(&gps_data, 0, sizeof(tGPS));
+    memset(&gps_data, 0, sizeof(tGPS));
 
  for (j=0;j<IFDs;j++) {
   for(i=0; IFD_LIST[j].entry[i].tag; i++) {
@@ -470,7 +470,7 @@ void convert_dng_to_chdk_raw(char* fn){
  struct STD_stat st;
  struct utimbuf t;
 
- if (safe_stat(fn, &st) != 0 || st.st_size<=camera_info.raw_size)  return;
+ if (safe_stat(fn, &st) != 0 || st.st_size<=camera_sensor.raw_size)  return;
  buf=malloc(BUF_SIZE);
  if (buf){
   started();
@@ -482,15 +482,15 @@ void convert_dng_to_chdk_raw(char* fn){
     if (strncmp(fn+i,"CR",2)==0) strcpy(fn+i,"WAV"); else strcpy(fn+i,"CRW");
     raw=fopen(fn,"w+b");
     if (raw){
-     fseek(dng, st.st_size-camera_info.raw_size, SEEK_SET); // SEEK_END is not working?
-     for (i=0; i<camera_info.raw_size/BUF_SIZE; i++) {
+     fseek(dng, st.st_size-camera_sensor.raw_size, SEEK_SET); // SEEK_END is not working?
+     for (i=0; i<camera_sensor.raw_size/BUF_SIZE; i++) {
       fread(buf, 1, BUF_SIZE, dng);
       reverse_bytes_order((char*)buf, BUF_SIZE);
       fwrite(buf, 1, BUF_SIZE, raw);
      }
-     fread(buf, 1, camera_info.raw_size%BUF_SIZE, dng);
-     reverse_bytes_order((char*)buf, camera_info.raw_size%BUF_SIZE);
-     fwrite(buf, 1, camera_info.raw_size%BUF_SIZE, raw);
+     fread(buf, 1, camera_sensor.raw_size%BUF_SIZE, dng);
+     reverse_bytes_order((char*)buf, camera_sensor.raw_size%BUF_SIZE);
+     fwrite(buf, 1, camera_sensor.raw_size%BUF_SIZE, raw);
      fclose(raw);
      t.actime = t.modtime = time(NULL);
      utime(fn, &t);
@@ -519,20 +519,20 @@ void fill_gamma_buf(void) {
 void create_thumbnail() {
     register int i, j, x, y, yadj;
     register char *buf = thumbnail_buf;
-    register int shift = camera_info.bits_per_pixel - 8;
+    register int shift = camera_sensor.bits_per_pixel - 8;
 
     // Two patterns are:
     //    R G         G B
     //    G B   and   R G
     // for the second pattern yadj shifts the thumbnail row down one line
     // essentially making the patterns the same
-    yadj = (camera_info.cfa_pattern == 0x01000201) ? 1 : 0;
+    yadj = (camera_sensor.cfa_pattern == 0x01000201) ? 1 : 0;
 
     for (i=0; i<DNG_TH_HEIGHT; i++)
         for (j=0; j<DNG_TH_WIDTH; j++)
         {
-            x = (camera_info.jpeg.x + (camera_info.jpeg.width * j) / DNG_TH_WIDTH) & 0xFFFFFFFE;
-            y = ((camera_info.jpeg.y + (camera_info.jpeg.height * i) / DNG_TH_HEIGHT) & 0xFFFFFFFE) + yadj;
+            x = (camera_sensor.jpeg.x + (camera_sensor.jpeg.width * j) / DNG_TH_WIDTH) & 0xFFFFFFFE;
+            y = ((camera_sensor.jpeg.y + (camera_sensor.jpeg.height * i) / DNG_TH_HEIGHT) & 0xFFFFFFFE) + yadj;
 
             *buf++ = gamma[get_raw_pixel(x,y)>>shift];           // red pixel
             *buf++ = gamma[6*(get_raw_pixel(x+1,y)>>shift)/10];  // green pixel
@@ -564,9 +564,9 @@ int raw_init_badpixel_bin() {
         return 0;
     }
     count = 0;
-    for (c[0]=camera_info.active_area.x1; c[0]<camera_info.active_area.x2; c[0]++)
+    for (c[0]=camera_sensor.active_area.x1; c[0]<camera_sensor.active_area.x2; c[0]++)
     {
-        for (c[1]=camera_info.active_area.y1; c[1]<camera_info.active_area.y2; c[1]++)
+        for (c[1]=camera_sensor.active_area.y1; c[1]<camera_sensor.active_area.y2; c[1]++)
         {
             if (get_raw_pixel(c[0],c[1])==0)
             {
@@ -732,13 +732,13 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
         write(fd, dng_header_buf, dng_header_buf_size);
         write(fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
 
-        reverse_bytes_order2(rawadr, altrawadr, camera_info.raw_size);
+        reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
 
         // Write alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
-        write(fd, (char*)(((unsigned long)altrawadr)|uncachedbit), camera_info.raw_size);
+        write(fd, (char*)(((unsigned long)altrawadr)|uncachedbit), camera_sensor.raw_size);
 
         if (rawadr == altrawadr)    // If only one RAW buffer then we have to swap the bytes back
-    	    reverse_bytes_order2(rawadr, altrawadr, camera_info.raw_size);
+    	    reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
 
         free_dng_header();
     }

@@ -56,17 +56,6 @@ void *vid_get_viewport_fb_d()
     return (void*)(*(int*)(0x2904+0x58));	// 0x2904 at FFC46988; 0x58 at FFC471EC
 }
 
-
-long vid_get_bitmap_screen_width()
-{
-    return 320;     //720? 
-}
-
-long vid_get_bitmap_screen_height()
-{
-    return 240;
-}
-
 int vid_get_viewport_width()
 {
     return 360;
@@ -82,10 +71,6 @@ char *camera_jpeg_count_str()
 // Found at ROM:FFD83ECC and ROM:FFD83D88 - search for "ShotsTime.c" and "9999"
     return (void*)0x52C6C;
 }
-
-long vid_get_bitmap_buffer_width() { return 720 /*360*/; } //720? FFCC6FAC
-
-long vid_get_bitmap_buffer_height() { return 240; } //2check
 
 
 /*

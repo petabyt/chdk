@@ -103,6 +103,10 @@
 // pixel drawing routines draw every pixel twice to scale the image up to the actual buffer size
 // Define CAM_USES_ASPECT_CORRECTION with a value of 1 to enable this scaled display
 #define CAM_USES_ASPECT_CORRECTION  0
+#define CAM_SCREEN_WIDTH            360         // Width of bitmap screen in CHDK co-ordinates (360 or 480)
+#define CAM_SCREEN_HEIGHT           240         // Height of bitmap screen in CHDK co-ordinates (always 240 on all cameras so far)
+#define CAM_BITMAP_WIDTH            360         // Actual width of bitmap screen in bytes (may be larger than displayed area)
+#define CAM_BITMAP_HEIGHT           240         // Actual height of bitmap screen in rows (240 or 270)
 
 #define EDGE_HMARGIN                0           // define sup and inf screen margins on edge overlay without overlay.  Necessary to save memory buffer space. sx200is needs values other than 0
 // end of section by nandoid
@@ -247,11 +251,19 @@ typedef struct {
     int exposure_bias[2];       // DNG Exposure Bias
     int color_matrix1[18];      // DNG Color Matrix
     int cfa_pattern, calibration_illuminant1;
-    int has_gps;
-    int edge_hmargin, ts_button_border;
-} _cam_info;
+    int gps_propcase;
+} _cam_sensor;
 
-extern _cam_info camera_info;
+extern _cam_sensor camera_sensor;
+
+typedef struct 
+{
+    unsigned int    width, height, size;                        // Size of bitmap screen in CHDK co-ordinates
+    unsigned int    buffer_width, buffer_height, buffer_size;   // Physical size of bitmap screen
+    int             edge_hmargin, ts_button_border;             // margin and touch-screen adjustment values
+} _cam_screen;
+
+extern _cam_screen camera_screen;
 
 //==========================================================
 

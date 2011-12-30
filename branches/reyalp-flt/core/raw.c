@@ -191,7 +191,7 @@ void raw_postprocess() {
 //-------------------------------------------------------------------
 
 void set_raw_pixel(unsigned int x, unsigned int y, unsigned short value) {
-    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*camera_info.raw_rowlen+(x/8)*camera_info.bits_per_pixel;
+    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*camera_sensor.raw_rowlen+(x/8)*camera_sensor.bits_per_pixel;
 #if CAM_SENSOR_BITS_PER_PIXEL==10
     switch (x%8) {
         case 0: addr[0]=(addr[0]&0x3F)|(value<<6); addr[1]=value>>2;                  break;
@@ -217,7 +217,7 @@ void set_raw_pixel(unsigned int x, unsigned int y, unsigned short value) {
 
 //-------------------------------------------------------------------
 unsigned short get_raw_pixel(unsigned int x,unsigned  int y) {
-    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*camera_info.raw_rowlen+(x/8)*camera_info.bits_per_pixel;
+    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*camera_sensor.raw_rowlen+(x/8)*camera_sensor.bits_per_pixel;
 #if CAM_SENSOR_BITS_PER_PIXEL==10
     switch (x%8) {
         case 0: return ((0x3fc&(((unsigned short)addr[1])<<2)) | (addr[0] >> 6));
@@ -248,7 +248,7 @@ void patch_bad_pixel(unsigned int x,unsigned  int y) {
     int nzero=0;
     int i,j;
     int val;
-    if ((x>=2) && (x<camera_info.raw_rowpix-2) && (y>=2) && (y<camera_info.raw_rows-2)) {
+    if ((x>=2) && (x<camera_sensor.raw_rowpix-2) && (y>=2) && (y<camera_sensor.raw_rows-2)) {
         if ((conf.bad_pixel_removal==1) || (conf.save_raw && conf.dng_raw)) {  // interpolation or DNG saving
             for (i=-2; i<=2; i+=2)
                 for (j=-2; j<=2; j+=2)

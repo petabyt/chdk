@@ -148,9 +148,6 @@ void* CHDK_EXPORT_LIST[] = {
             gui_set_mode,
 			gui_default_kbd_process_menu_btn,
 
-            &screen_width,
-            &screen_height,
-            &screen_buffer_size,
             vid_get_viewport_fb,
             vid_get_viewport_height,
             vid_get_bitmap_fb,
@@ -299,7 +296,8 @@ void* CHDK_EXPORT_LIST[] = {
 			pow_calc,
 			pow_calc_2,
 
-            &camera_info,
+            &camera_screen,
+            &camera_sensor,
             &altGuiHandler,
 			0
 };

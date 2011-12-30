@@ -216,16 +216,6 @@ ROM:FF9FF43C ; -----------------------------------------------------------------
  return (char*)0x000ba380;
 }
 
-long vid_get_bitmap_screen_width()
-{
-    return 360;    
-}
-
-long vid_get_bitmap_screen_height()
-{
-    return 240;
-}
-
 int vid_get_viewport_width()
 {
     return 360;
@@ -235,12 +225,6 @@ long vid_get_viewport_height()
 {
     return 240;
 }
-
-
-long vid_get_bitmap_buffer_width() { return 720; } 
-
-long vid_get_bitmap_buffer_height() { return 240; } 
-
 
 
 //Copied from S95 section  END

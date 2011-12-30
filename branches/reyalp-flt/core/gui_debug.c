@@ -66,7 +66,7 @@ static void gui_debug_draw_values(const coord y, void* addr) {
 void gui_debug_draw(int enforce_redraw) {
     switch (debug_to_draw) {
         case 1:
-            draw_filled_rect(0, 0, screen_width-1, screen_height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+            draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
             draw_txt_string(1, 0, "Address:", MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
             draw_txt_string(22, 0, "Incr:", MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
             draw_txt_string(39,0,  "Auto:", MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));

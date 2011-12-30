@@ -351,8 +351,8 @@ void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, 
     int chars_width = NAME_FONT_SIZE + SIZE_FONT_SIZE + TIME_FONT_SIZE;
     main_w = SPACING/*N*/+SPACING+TAB_DIVIDER+SPACING/*S*/+SPACING+TAB_DIVIDER+SPACING/*T*/+SPACING+SCROLLBAR+chars_width;
     main_h = HEAD_FONT_LINES + TAB_DIVIDER + BODY_FONT_LINES + TAB_DIVIDER + FOOT_FONT_LINES;
-    main_x = (screen_width - main_w) >> 1;
-    main_y = (screen_height - main_h) >> 1;
+    main_x = (camera_screen.width - main_w) >> 1;
+    main_y = (camera_screen.height - main_h) >> 1;
     
     head_x = body_x = foot_x = main_x;
     head_w = body_w = foot_w = main_w;    

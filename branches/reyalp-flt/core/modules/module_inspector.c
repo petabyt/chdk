@@ -141,7 +141,7 @@ void gui_module_draw()
 
     if (modinspect_redraw) {
 
-    	draw_filled_rect(0, 0, screen_width-1, screen_height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+    	draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
         draw_txt_string(5, 0,  "*** Module Inspector ***", MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
         draw_txt_string(0, 2,  "Idx Name         Addr       Size", MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 

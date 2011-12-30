@@ -294,7 +294,7 @@ static void snake_start(){
 
 
 static void game_over(){
-    draw_filled_rect(0,0,screen_width,screen_height, COLOR_WHITE);
+    draw_filled_rect(0,0,camera_screen.width,camera_screen.height, COLOR_WHITE);
     sprintf(str_buf,"Points: %d",points);
     draw_string(0,0,str_buf, MAKE_COLOR(COLOR_WHITE, COLOR_BLUE));
     msleep(3000);
@@ -422,7 +422,7 @@ void gui_snake_draw() {
 }
 
 int gui_snake_init() {
-    draw_filled_rect(0,0,screen_width,screen_height, COLOR_WHITE);
+    draw_filled_rect(0,0,camera_screen.width,camera_screen.height, COLOR_WHITE);
     snake_start();
 	gui_set_mode(&GUI_MODE_SNAKE);
     return 1;
