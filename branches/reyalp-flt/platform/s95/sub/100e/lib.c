@@ -75,16 +75,3 @@ char *camera_jpeg_count_str()
 {
     return (char*) 0xBBC9C;						// @FFA3ACC4 - ok
 }
-
-
-int vid_get_viewport_width()
-{
-	return 720;
-}
-
-
-long vid_get_viewport_height()
-{
-   return 240;
-
-}
