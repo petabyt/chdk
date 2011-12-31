@@ -62,7 +62,8 @@ int raw_savefile() {
 
 #if DNG_SUPPORT
     // count/save badpixels if requested
-    if( libdng->raw_init_badpixel_bin && 
+    if( libdng &&
+		libdng->raw_init_badpixel_bin && 
 		libdng->raw_init_badpixel_bin()) {
         return 0;
     }
@@ -146,9 +147,8 @@ int raw_savefile() {
 #if DNG_SUPPORT
             if (conf.dng_raw)
             {
-				if ( module_dng_load(LIBDNG_OWNED_BY_RAW) ) {
+				if ( module_dng_load(LIBDNG_OWNED_BY_RAW) )
 					libdng->write_dng(fd, rawadr, altrawadr, CAM_UNCACHED_BIT );
-}
             }
             else 
             {
