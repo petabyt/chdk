@@ -73,7 +73,7 @@ void JogDial_CCW(void){
 
 int vid_get_viewport_width()
 {
-	return 720 ;   //  G10
+	return 360 ;   //  G10
 }
 
 long vid_get_viewport_height()
@@ -81,3 +81,7 @@ long vid_get_viewport_height()
    return 240;    //  G10
 }
 
+// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+int vid_get_viewport_yscale() {
+	return 2;               // G10 viewport is 480 pixels high
+}

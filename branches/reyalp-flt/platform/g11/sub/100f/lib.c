@@ -86,14 +86,3 @@ char *camera_jpeg_count_str()
 {
     return (char*)0x97234;// G11 OK /* Search for a9999 ; "9999" */
 }
-
-int vid_get_viewport_width()
-{
-	return 720;
-}
-
-long vid_get_viewport_height()
-{
-   return 240;
-
-}

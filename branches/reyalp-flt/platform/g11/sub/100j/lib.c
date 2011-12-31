@@ -106,14 +106,3 @@ ROM:FFA010FC 03 00 00 EA                             B       loc_FFA01110    ; B
 */
 
 }
-
-int vid_get_viewport_width()
-{
-	return 720;
-}
-
-long vid_get_viewport_height()
-{
-   return 240;
-
-}
