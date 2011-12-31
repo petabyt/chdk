@@ -98,17 +98,6 @@ long vid_get_bitmap_screen_height()
 	return 240;
 }
 
-int vid_get_viewport_width()
-{
-	return 720;
-}
-
-long vid_get_viewport_height()
-{
-   return 240;
-
-}
-
 long vid_get_bitmap_buffer_width() { return 960; } 
 
 long vid_get_bitmap_buffer_height() { return 270; }

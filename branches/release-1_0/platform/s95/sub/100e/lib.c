@@ -89,19 +89,6 @@ long vid_get_bitmap_screen_height()
 }
 
 
-int vid_get_viewport_width()
-{
-	return 720;
-}
-
-
-long vid_get_viewport_height()
-{
-   return 240;
-
-}
-
-
 // used when drawing to lcd
 long vid_get_bitmap_buffer_width()
 {
