@@ -85,6 +85,7 @@ _cam_info camera_info =
     PROPCASE_FLASH_MODE, PROPCASE_FLASH_FIRE, 
     PROPCASE_METERING_MODE, PROPCASE_WB_ADJ,
     },
+    ROMBASEADDR, MAXRAMADDR,
 };
 
 //==========================================================

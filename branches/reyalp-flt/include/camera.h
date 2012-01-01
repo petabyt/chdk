@@ -288,6 +288,7 @@ typedef struct
         int metering_mode;
         int wb_adj;
     } props;
+    int rombaseaddr, maxramaddr;
 } _cam_info;
 
 extern _cam_info camera_info;

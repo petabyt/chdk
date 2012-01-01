@@ -20,7 +20,7 @@ static void *addr;
 static char debug_to_draw;
 static char debug_cont_update;
 static char buf[32];
-static long dummy=0;
+static char *bad_address = "Invalid Address               ";
 static unsigned int step;
 
 //-------------------------------------------------------------------
@@ -36,30 +36,38 @@ void gui_debug_init(void *st_addr) {
 static void gui_debug_draw_values(const coord y, void* addr) {
     int i;
 
-	// non-significant check. remove to platform independency
-    // if (!(addr<=(void*)MAXRAMADDR || addr>=(void*)ROMBASEADDR)) { addr = &dummy; };
+    if ((addr<=(void*)camera_info.maxramaddr || addr>=(void*)camera_info.rombaseaddr))
+    {
+        sprintf(buf, "0x%08X (%10u)", *((unsigned int*)addr), *((unsigned int*)addr));
+        draw_txt_string(10, y, buf, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
-    sprintf(buf, "0x%08X (%10u)", *((unsigned int*)addr), *((unsigned int*)addr));
-    draw_txt_string(10, y, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        sprintf(buf, "0x%04X     (     %5hu)", *((unsigned short*)addr), *((unsigned short*)addr));
+        draw_txt_string(10, y+1, buf, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
-    sprintf(buf, "0x%04X (%5hu)", *((unsigned short*)addr), *((unsigned short*)addr));
-    draw_txt_string(10, y+1, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        sprintf(buf, "0x%02X       (       %3hu)", *((unsigned char*)addr), *((unsigned char*)addr));
+        draw_txt_string(10, y+2, buf, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
-    sprintf(buf, "0x%02X (%3hu)", *((unsigned char*)addr), *((unsigned char*)addr));
-    draw_txt_string(10, y+2, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        //sprintf(buf, "0x%lf", *((double*)addr));
+        //draw_txt_string(10, y+3, buf, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
-    //sprintf(buf, "0x%lf", *((double*)addr));
-    //draw_txt_string(10, y+3, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-
-    for (i=0; i<30; ++i) {
-        if (*((char*)(addr+i))) buf[i]=*((char*)(addr+i));
-        else break;
+        for (i=0; i<30; ++i) {
+            if (*((char*)(addr+i))) buf[i]=*((char*)(addr+i));
+            else break;
+        }
+        while (i<30) {
+            buf[i++]=' ';
+        }
+        buf[i]=0;
+        draw_txt_string(10, y+4, buf, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
     }
-    while (i<30) {
-        buf[i++]=' ';
+    else
+    {
+        draw_txt_string(10, y, bad_address, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+        draw_txt_string(10, y+1, bad_address, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+        draw_txt_string(10, y+2, bad_address, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+        //draw_txt_string(10, y+3, bad_address, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+        draw_txt_string(10, y+4, bad_address, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
     }
-    buf[i]=0;
-    draw_txt_string(10, y+4, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 }
 
 //-------------------------------------------------------------------
@@ -87,13 +95,16 @@ void gui_debug_draw(int enforce_redraw) {
             break;
         case 2:
             sprintf(buf, "0x%08X", addr);
-            draw_txt_string(10, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_txt_string(10, 0, buf, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
             sprintf(buf, "0x%08X", step);
-            draw_txt_string(28, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_txt_string(28, 0, buf, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
             sprintf(buf,"%0d",debug_cont_update);
-            draw_txt_string(44, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_txt_string(44, 0, buf, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
             gui_debug_draw_values(2, addr);
-            gui_debug_draw_values(8, *((void**)addr));
+            if ((addr<=(void*)camera_info.maxramaddr || addr>=(void*)camera_info.rombaseaddr))
+                gui_debug_draw_values(8, *((void**)addr));
+            else
+                gui_debug_draw_values(8, addr);
             *conf_mem_view_addr_init = (long)addr;
 
             if (debug_cont_update==0) debug_to_draw = 0;
@@ -184,6 +195,8 @@ int _module_loader( void** chdk_export_list )
 
   if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
 	  return 1;
+  if ( !API_VERSION_MATCH_REQUIREMENT( camera_info.api_version, 1, 0 ) )
+	 return 1;
 
   tConfigVal configVal;
   CONF_BIND_INT(195, conf_mem_view_addr_init);
