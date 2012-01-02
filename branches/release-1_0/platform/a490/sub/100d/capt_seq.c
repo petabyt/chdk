@@ -9,21 +9,6 @@ static long *nrflag = (long*)0x57F8;	// ??? ROM:FFD10DA8 "ShutterSoundTask"
 
 // ROM:FFC5914C task_CaptSeqTask()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void __attribute__((naked,noinline)) capt_seq_task() {
 	asm volatile (
 			"STMFD   SP!, {R3-R7,LR}\n"
@@ -227,9 +212,7 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 	);
 }
 
-
 //** was sub_FFC5950C_my in f, now @ 0xFFC594BC
-
 void __attribute__((naked,noinline)) sub_FFC594BC_my(){ //
 	asm volatile(
 			"STMFD	SP!, {R3-R5,LR} \n"                
@@ -244,7 +227,7 @@ void __attribute__((naked,noinline)) sub_FFC594BC_my(){ //
 			"BL	sub_FFD0F918 \n"                      
 			"CMP	R0, #0 \n"                           
 			"MOV	R0, R4 \n"                           
-			"BEQ	loc_FFC594BC \n"                     
+			"BEQ	loc_FFC5950C \n"                     
 			"BL	sub_FFD0F9A4 \n"                      
 			"TST	R0, #1 \n"                           
 			"MOVNE	R2, R4 \n"                         
@@ -252,7 +235,7 @@ void __attribute__((naked,noinline)) sub_FFC594BC_my(){ //
 			"MOVNE	R1, #1 \n"                         
 			"BNE	sub_FFC5785C \n"                     
 			"B	loc_FFC59510 \n"                       
-"loc_FFC594BC:\n"
+"loc_FFC5950C:\n"
 			"BL	sub_FFD0F968 \n"                      
 "loc_FFC59510:\n"
 			"MOV	R0, #0 \n"                           
@@ -345,7 +328,7 @@ void __attribute__((naked,noinline)) sub_FFD10CE4_my(){ //
 			"BL	sub_FFD11E3C \n"                      
 			"BL      wait_until_remote_button_is_released\n"     // +
 			"BL      capt_seq_hook_set_nr\n"                     // +
-			"B       sub_FFD10E48\n"                             // continue function in firmware			                   
+			"B       sub_FFD10D98\n"                             // continue function in firmware			                   
 	);
 }
 /*************************************************************/
