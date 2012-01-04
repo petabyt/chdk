@@ -332,7 +332,7 @@ static void mx_dump_memory(void *img){
 		sprintf(fn, "A/MD/%04d.FB", cnt );
 		fd = open(fn, O_WRONLY|O_CREAT, 0777);
 		if (fd) {
-	    write(fd, img, screen_width*vid_get_viewport_height()*3);
+	    write(fd, img, camera_screen.width*vid_get_viewport_height()*3);
 	    close(fd);
 		}
   vid_bitmap_refresh();
@@ -561,8 +561,8 @@ void md_draw_grid(){
 	xoffset = vid_get_viewport_xoffset();	// used when image size != viewport size
 	yoffset = vid_get_viewport_yoffset();	// used when image size != viewport size
 
-	x_step=(screen_width-xoffset*2)/motion_detector->columns;
-	y_step=(screen_height-yoffset*2)/motion_detector->rows;
+	x_step=(camera_screen.width-xoffset*2)/motion_detector->columns;
+	y_step=(camera_screen.height-yoffset*2)/motion_detector->rows;
 #if 0
 	row_start=1;
 	row_stop=motion_detector->rows;
@@ -574,15 +574,15 @@ void md_draw_grid(){
 	}
 	if(motion_detector->clipping_region_mode==0 || motion_detector->clipping_region_mode==2){
 		for(col=col_start;col<col_stop;col++){
-			draw_line(col*x_step,0,col*x_step,screen_height, COLOR_GREEN);
+			draw_line(col*x_step,0,col*x_step,camera_screen.height, COLOR_GREEN);
 		}
 		for(row=row_start;row<row_stop;row++){
-			draw_line(0,row*y_step,screen_width,row*y_step, COLOR_GREEN);
+			draw_line(0,row*y_step,camera_screen.width,row*y_step, COLOR_GREEN);
 		}
 	} else if(motion_detector->clipping_region_mode==1){
 		for(col=1;col<motion_detector->columns;col++){
 			if(col<){
-				draw_line(col*x_step,0,col*x_step,screen_height, COLOR_GREEN);
+				draw_line(col*x_step,0,col*x_step,camera_screen.height, COLOR_GREEN);
 			}
 		}
 	}

@@ -43,17 +43,6 @@ void *vid_get_viewport_fb_d()
     return (void*)(*(int*)(0x4ECC + 0x54));   // found at ROM:FFC40CD0 and ROM:FFC46554
 }
 
-
-long vid_get_bitmap_screen_width()
-{
-	return 360;
-}
-
-long vid_get_bitmap_screen_height()
-{
-	return 240;
-}
-
 long vid_get_viewport_height()
 {
 	return 240;
@@ -63,10 +52,3 @@ char *camera_jpeg_count_str()
 {
 	return (char*)0x45100;
 }
-
-
-long vid_get_bitmap_buffer_width() { return 360; }
-
-long vid_get_bitmap_buffer_height() { return 240; }
-
-//int zoom_status = 0;

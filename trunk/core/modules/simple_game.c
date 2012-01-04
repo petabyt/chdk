@@ -32,6 +32,9 @@ int _module_loader( void** chdk_export_list )
   if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
 
+  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
+	  return 1;
+
   return 0;
 }
 

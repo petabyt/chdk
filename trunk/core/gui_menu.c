@@ -46,7 +46,19 @@ static void gui_menu_set_curr_menu(CMenu *menu_ptr, int top_item, int curr_item)
 
 //-------------------------------------------------------------------
 void gui_menu_init(CMenu *menu_ptr) {
+
+    static char first_call=1;
+
     if (menu_ptr) {
+		if ( first_call ) {
+			extern void gui_modules_menu_load();
+			extern void user_menu_restore();
+
+			gui_modules_menu_load();
+    		user_menu_restore();
+			first_call=0;
+		}
+
         if (conf.menu_select_first_entry)
             gui_menu_set_curr_menu(menu_ptr, 0, 0);
         else 
@@ -54,9 +66,9 @@ void gui_menu_init(CMenu *menu_ptr) {
         gui_menu_stack_ptr = 0;
     }
 
-    num_lines = screen_height/rbf_font_height()-1;
+    num_lines = camera_screen.height/rbf_font_height()-1;
     x = CAM_MENU_BORDERWIDTH;
-    w = screen_width-x-x;
+    w = camera_screen.width-x-x;
     len_bool = rbf_str_width("\x95");
     len_int = rbf_str_width("99999");
     len_enum = rbf_str_width("WUBfS3a");
@@ -110,7 +122,7 @@ static void gui_menu_back() {
         // 'Back' selected; but no menu to go back to
         // Occurs when script menu opened using 'Func/Set' button
         // Return to normal <ALT> mode.
-        gui_set_mode(GUI_MODE_ALT);
+        gui_set_mode(&altGuiHandler);
         kbd_reset_autoclicked_key();    // Need this to stop 'Func/Set' registering twice???
         draw_restore();
     }
@@ -601,7 +613,7 @@ void gui_menu_draw_initial() {
 
     if (count > num_lines)
     {
-        y = ((screen_height-(num_lines-1)*rbf_font_height())>>1);
+        y = ((camera_screen.height-(num_lines-1)*rbf_font_height())>>1);
         wplus = 8; 
         // scrollbar background 
         draw_filled_rect((x+w), y, (x+w)+wplus, y+num_lines*rbf_font_height()-1, MAKE_COLOR((conf.menu_color>>8)&0xFF, (conf.menu_color>>8)&0xFF)); 
@@ -611,11 +623,11 @@ void gui_menu_draw_initial() {
         wplus = 0;
         if (conf.menu_center)
         {
-            y = (screen_height-(count-1)*rbf_font_height())>>1; 
+            y = (camera_screen.height-(count-1)*rbf_font_height())>>1; 
         }
         else
         {
-            y = ((screen_height-(num_lines-1)*rbf_font_height())>>1);  
+            y = ((camera_screen.height-(num_lines-1)*rbf_font_height())>>1);  
         }
     }
 

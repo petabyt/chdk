@@ -6,17 +6,18 @@ typedef unsigned short    color;
 
 #define MAKE_COLOR(bg, fg)    ((color)((((char)(bg))<<8)|((char)(fg))))
 
-// Don't delete or re-order entries unless guiHandlers (gui.c) table is updated to match 
+// Module ID's for specific modules that we need to be able to detect
+// use GUI_MODE_MODULE for generic module modes (e.g.games)
 enum Gui_Mode_ {
     GUI_MODE_NONE = 0,
     GUI_MODE_ALT,
     GUI_MODE_MENU,
-    GUI_MODE_PALETTE,
     GUI_MODE_MBOX,
-    GUI_MODE_FSELECT,
     GUI_MODE_OSD,
+    GUI_MODE_PALETTE,
+    GUI_MODE_FSELECT,
     GUI_MODE_MPOPUP,
-	GUI_MODE_COUNT
+    GUI_MODE_MODULE,    // generic module
 };
 
 
@@ -39,13 +40,13 @@ typedef unsigned int gui_mode_t;
 // Structure to store gui redraw and kbd process handlers for each mode
 typedef struct
 {
+    // Gui_Mode enum value
+    int mode;
+
 	// Called to redraw screen. Argument is GUI_REDRAWFLAG_* set
     void (*redraw)(int);
 
 	// Main button handler for mode
-	// Note: this pointer reused as gui_handler* for 
-	//    GUI_MODE_FLAG_ALIAS entries
-	// Do not use union because warning on initializer
     void (*kbd_process)(void);
 
 	// Menu button handler for mode
@@ -57,20 +58,17 @@ typedef struct
 	unsigned int magicnum;
 } gui_handler;
 
-
+extern gui_handler defaultGuiHandler;
+extern gui_handler altGuiHandler;
+extern gui_handler menuGuiHandler;
 
 void gui_default_kbd_process_menu_btn();
 
 extern void gui_redraw();
 extern void gui_force_restore();
 
-extern void draw_pixel(coord x, coord y, color cl);
-
 extern gui_mode_t gui_get_mode();
-extern void gui_set_mode(gui_mode_t mode);
-
-extern int gui_bind_mode(int core_mode, gui_handler* handler);
-
+extern gui_handler* gui_set_mode(gui_handler *mode);
 
 
 #ifdef OPT_SCRIPTING
@@ -78,5 +76,14 @@ extern void gui_update_script_submenu();
 #endif
 
 extern void gui_menu_run_fltmodule(int arg);
+
+//----------------------------
+struct gui_common_api_ver {
+		unsigned int common_api;		// common gui version: gui_mode handling, mbox, this structure
+		unsigned int menu_api;		// cmenu structure version
+	};
+
+// Defined in gui.c
+extern struct gui_common_api_ver gui_version;
 
 #endif

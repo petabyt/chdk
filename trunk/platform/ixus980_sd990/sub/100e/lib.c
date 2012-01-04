@@ -63,18 +63,6 @@ void *vid_get_viewport_fb_d()
     return (void*)(*(int*)(0x5210 + 0x54));  // sub_FF85BE10, similar callers to a720, ref string "HFILYUV"
 }
 
-
-long vid_get_bitmap_screen_width()
-{
-//    return 720;
-    return 360; // real is 720, lie for aspect correction
-}
-
-long vid_get_bitmap_screen_height()
-{
-    return 240;
-}
-
 long vid_get_viewport_height()
 {
     return 240;
@@ -89,10 +77,3 @@ char *camera_jpeg_count_str()
 {
     return (char *)0x4AF18; // search on "9999"
 }
-
-long vid_get_bitmap_buffer_width() { return 720; } // _sub_FF8EA47C__BmpDDev_c__134... 
-                                                   // or maybe not, some 360x240 cams have this too ?
-
-long vid_get_bitmap_buffer_height() { return 240; }
-
-

@@ -16,6 +16,12 @@
 #include "gui_osd.h"
 
 //-------------------------------------------------------------------
+void gui_osd_kbd_process();
+void gui_osd_draw(int enforce_redraw);
+
+gui_handler layoutGuiHandler =  { GUI_MODE_OSD,     gui_osd_draw,   gui_osd_kbd_process,    gui_default_kbd_process_menu_btn, 0,                                    GUI_MODE_MAGICNUM };    // THIS IS OSD LAYOUT EDITOR
+
+//-------------------------------------------------------------------
 typedef struct {
     int     title;
     OSD_pos *pos;
@@ -104,6 +110,12 @@ void gui_osd_init() {
 }
 
 //-------------------------------------------------------------------
+void gui_draw_osd_le(int arg) {
+    gui_set_mode(&layoutGuiHandler);
+    gui_osd_init();
+}
+
+//-------------------------------------------------------------------
 void gui_osd_draw(int enforce_redraw) {
     if (osd_to_draw) {
         int i;
@@ -127,7 +139,7 @@ void gui_osd_draw(int enforce_redraw) {
                       COLOR_GREEN);
         }
         sprintf(osd_buf, " %s:  x:%d y:%d s:%d ", lang_str(osd[curr_item].title), osd[curr_item].pos->x, osd[curr_item].pos->y, step);
-        draw_string(0, (osd[curr_item].pos->x<strlen(osd_buf)*FONT_WIDTH+4 && osd[curr_item].pos->y<FONT_HEIGHT+4)?screen_height-FONT_HEIGHT:0,
+        draw_string(0, (osd[curr_item].pos->x<strlen(osd_buf)*FONT_WIDTH+4 && osd[curr_item].pos->y<FONT_HEIGHT+4)?camera_screen.height-FONT_HEIGHT:0,
                     osd_buf, MAKE_COLOR(COLOR_RED, COLOR_WHITE));
         osd_to_draw = 0;
     }
@@ -143,11 +155,11 @@ void gui_osd_kbd_process() {
         }
         break;
     case KEY_RIGHT:
-        if (osd[curr_item].pos->x < screen_width-osd[curr_item].size.x) {
-            osd[curr_item].pos->x+=(screen_width-osd[curr_item].size.x-osd[curr_item].pos->x>step)?step:screen_width-osd[curr_item].size.x-osd[curr_item].pos->x;
+        if (osd[curr_item].pos->x < camera_screen.width-osd[curr_item].size.x) {
+            osd[curr_item].pos->x+=(camera_screen.width-osd[curr_item].size.x-osd[curr_item].pos->x>step)?step:camera_screen.width-osd[curr_item].size.x-osd[curr_item].pos->x;
             osd_to_draw = 1;
         } else
-            osd[curr_item].pos->x = screen_width-osd[curr_item].size.x;
+            osd[curr_item].pos->x = camera_screen.width-osd[curr_item].size.x;
         break;
     case KEY_UP:
         if (osd[curr_item].pos->y > 0) {
@@ -156,11 +168,11 @@ void gui_osd_kbd_process() {
         }
         break;
     case KEY_DOWN:
-        if (osd[curr_item].pos->y < screen_height-osd[curr_item].size.y) {
-            osd[curr_item].pos->y+=(screen_height-osd[curr_item].size.y-osd[curr_item].pos->y>step)?step:screen_height-osd[curr_item].size.y-osd[curr_item].pos->y;
+        if (osd[curr_item].pos->y < camera_screen.height-osd[curr_item].size.y) {
+            osd[curr_item].pos->y+=(camera_screen.height-osd[curr_item].size.y-osd[curr_item].pos->y>step)?step:camera_screen.height-osd[curr_item].size.y-osd[curr_item].pos->y;
             osd_to_draw = 1;
         } else
-            osd[curr_item].pos->y = screen_height-osd[curr_item].size.y;
+            osd[curr_item].pos->y = camera_screen.height-osd[curr_item].size.y;
         break;
     case KEY_SET:
         ++curr_item;
@@ -254,28 +266,28 @@ static int gui_osd_zebra_init(int show) {
     {
       timer = 0;
 	  #if defined (CAM_ZEBRA_NOBUF)
-        buffer_size=screen_buffer_size-ZEBRA_HMARGIN0*screen_buffer_width;
+        buffer_size=camera_screen.buffer_size-ZEBRA_HMARGIN0*camera_screen.buffer_width;
         buf=vid_get_bitmap_fb();
 	  #elif defined (CAM_ZEBRA_ASPECT_ADJUST)
-        buffer_size=screen_buffer_size-ZEBRA_HMARGIN0*screen_buffer_width;
+        buffer_size=camera_screen.buffer_size-ZEBRA_HMARGIN0*camera_screen.buffer_width;
         buf = malloc(buffer_size);
         //~ if (!buf) draw_txt_string(0, 14, "Warn: No space to allocate zebra buffer: restart camera", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
         if (!buf)
           buf=vid_get_bitmap_fb(); //without new buffer: directly into screen buffer: we got some flickering in OSD and histogram but it's usable
         //~ msleep(50);
       #else
-        buf = malloc(screen_buffer_size);
+        buf = malloc(camera_screen.buffer_size);
       #endif
             scr_buf = vid_get_bitmap_fb();
 #if ZEBRA_CANONOSD_BORDER_RESTORE
-            cur_buf_top = malloc(screen_buffer_width * ZFIX_TOP); 
-            cur_buf_bot = malloc(screen_buffer_width * ZFIX_BOTTOM); 
+            cur_buf_top = malloc(camera_screen.buffer_width * ZFIX_TOP); 
+            cur_buf_bot = malloc(camera_screen.buffer_width * ZFIX_BOTTOM); 
 #if defined (CAM_ZEBRA_ASPECT_ADJUST)
-            if (cur_buf_top) memset(cur_buf_top,0,screen_buffer_width * ZFIX_TOP);
-            if (cur_buf_bot) memset(cur_buf_bot,0,screen_buffer_width * ZFIX_BOTTOM);
+            if (cur_buf_top) memset(cur_buf_top,0,camera_screen.buffer_width * ZFIX_TOP);
+            if (cur_buf_bot) memset(cur_buf_bot,0,camera_screen.buffer_width * ZFIX_BOTTOM);
 #endif
 #else
-            cur_buf = malloc(screen_buffer_size);
+            cur_buf = malloc(camera_screen.buffer_size);
 #endif      
 			// cleanup and disable zebra if any mallocs failed
 			if(!buf || 
@@ -290,7 +302,7 @@ static int gui_osd_zebra_init(int show) {
 			}
 #if CAM_HAS_VARIABLE_ASPECT
 			else // in variable aspect, the borders would never be cleared
-				memset(buf,0,screen_buffer_size);
+				memset(buf,0,camera_screen.buffer_size);
 #endif
         }
     }
@@ -316,8 +328,8 @@ static void draw_pixel_buffered(unsigned int offset, color cl) {
 
 //-------------------------------------------------------------------
 int draw_guard_pixel() {
-    unsigned char* buffer1 = vid_get_bitmap_fb()+screen_buffer_size/2;
-    unsigned char* buffer2 = buffer1+screen_buffer_size;
+    unsigned char* buffer1 = vid_get_bitmap_fb()+camera_screen.buffer_size/2;
+    unsigned char* buffer2 = buffer1+camera_screen.buffer_size;
     int has_disappeared=0;
 
     if(*buffer1!=COLOR_GREEN) has_disappeared=1;
@@ -331,10 +343,10 @@ int draw_guard_pixel() {
 unsigned char get_cur_buf(unsigned int idx) {
     unsigned int a;
     
-    a=screen_buffer_size - screen_buffer_width * ZFIX_BOTTOM;
+    a=camera_screen.buffer_size - camera_screen.buffer_width * ZFIX_BOTTOM;
     
-    if (idx < screen_buffer_width * ZFIX_TOP) return(cur_buf_top[idx]);
-    if (idx >= a && idx < screen_buffer_size) return(cur_buf_bot[idx - a]);
+    if (idx < camera_screen.buffer_width * ZFIX_TOP) return(cur_buf_top[idx]);
+    if (idx >= a && idx < camera_screen.buffer_size) return(cur_buf_bot[idx - a]);
     return (COLOR_TRANSPARENT);
 }
 #endif
@@ -472,14 +484,14 @@ int gui_osd_draw_zebra(int show) {
     // if not in no-zebra phase of blink mode zebra, draw zebra to buf[]
     if (f) {
 		if (viewport_yoffset > 0) { // clear top & bottom areas of buffer if image height if smaller than viewport
-			memset(buf, COLOR_TRANSPARENT, viewport_yoffset*screen_buffer_width);
-			memset(buf+(viewport_yoffset+viewport_height)*screen_buffer_width, COLOR_TRANSPARENT, viewport_yoffset*screen_buffer_width);
+			memset(buf, COLOR_TRANSPARENT, viewport_yoffset*camera_screen.buffer_width);
+			memset(buf+(viewport_yoffset+viewport_height)*camera_screen.buffer_width, COLOR_TRANSPARENT, viewport_yoffset*camera_screen.buffer_width);
 		}
         int step_x, step_v, sy, sx;
         over = 255-conf.zebra_over;
             if (conf.zebra_multichannel) {step_x=2; step_v=6;} else {step_x=1; step_v=3;}
             for (y=viewport_yoffset, v=viewport_image_offset; y<viewport_yoffset+viewport_height; ++y) {
-                sy=y*screen_buffer_width;
+                sy=y*camera_screen.buffer_width;
                 sx=viewport_xoffset;
 				if (viewport_xoffset > 0) { // clear left & right areas of buffer if image width if smaller than viewport
 					memset(buf+sy, COLOR_TRANSPARENT, sx*2);
@@ -531,14 +543,14 @@ int gui_osd_draw_zebra(int show) {
                 if (mrec) { // REC mode
 //~ #if ZEBRA_CANONOSD_BORDER_RESTORE
                     //~ // copy rescued Canon OSD to buf[] top/bottom parts and fill center with transparent color:
-                    //~ memcpy(buf, cur_buf_top, screen_buffer_width * ZFIX_TOP);
-                    //~ memcpy(buf + screen_buffer_size - screen_buffer_width * ZFIX_BOTTOM, cur_buf_bot, screen_buffer_width * ZFIX_BOTTOM);
-                    //~ for (s = screen_buffer_width*ZFIX_TOP; s < screen_buffer_size-screen_buffer_width*ZFIX_BOTTOM; s++) {
+                    //~ memcpy(buf, cur_buf_top, camera_screen.buffer_width * ZFIX_TOP);
+                    //~ memcpy(buf + camera_screen.buffer_size - camera_screen.buffer_width * ZFIX_BOTTOM, cur_buf_bot, camera_screen.buffer_width * ZFIX_BOTTOM);
+                    //~ for (s = camera_screen.buffer_width*ZFIX_TOP; s < camera_screen.buffer_size-camera_screen.buffer_width*ZFIX_BOTTOM; s++) {
                         //~ buf[s]=COLOR_TRANSPARENT;
                     //~ }
 //~ #else
                     //~ // copy from a complete Canon OSD rescue screen dump
-                    //~ memcpy(buf, cur_buf, screen_buffer_size); 
+                    //~ memcpy(buf, cur_buf, camera_screen.buffer_size); 
 //~ #endif
                 } else { // Not REC mode
                     // No Canon OSD restore, fill buf[] with transparent color:
@@ -550,7 +562,7 @@ int gui_osd_draw_zebra(int show) {
                 
                 if (buf!=scr_buf)
                   memcpy(scr_buf, buf, buffer_size);
-                  memcpy(scr_buf+screen_buffer_size, buf, buffer_size);
+                  memcpy(scr_buf+camera_screen.buffer_size, buf, buffer_size);
             }
             need_restore=0;
         }
@@ -562,7 +574,7 @@ int gui_osd_draw_zebra(int show) {
         // copy buf[] to both display buffers   
         if (buf!=scr_buf)
             memcpy(scr_buf, buf, buffer_size);
-            memcpy(scr_buf+screen_buffer_size, buf, buffer_size);
+            memcpy(scr_buf+camera_screen.buffer_size, buf, buffer_size);
 
         need_restore=1;
         return 1;
@@ -596,8 +608,8 @@ int gui_osd_draw_zebra(int show) {
     if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 0) // standard requires x-shift to overlay drawing
     {
         bWide = 0;
-        //aspOffset = (screen_width - (screen_width * 12 / 16)) / 2; // = actual calculation, simplified below
-        aspOffset = screen_width / 8; // half of the difference in width between equal height 16:9 and 4:3 screens, = black bar width
+        //aspOffset = (camera_screen.width - (camera_screen.width * 12 / 16)) / 2; // = actual calculation, simplified below
+        aspOffset = camera_screen.width / 8; // half of the difference in width between equal height 16:9 and 4:3 screens, = black bar width
     }
 #endif
 	
@@ -619,17 +631,17 @@ int gui_osd_draw_zebra(int show) {
 #if ZEBRA_CANONOSD_BORDER_RESTORE
         // rescue Canon OSD from scr_buf to cur_buf_top and _bot:
         if (n==1) {
-            memcpy(cur_buf_top, scr_buf, screen_buffer_width*ZFIX_TOP);
-            memcpy(cur_buf_bot, scr_buf + screen_buffer_size - screen_buffer_width*ZFIX_BOTTOM, screen_buffer_width*ZFIX_BOTTOM);
+            memcpy(cur_buf_top, scr_buf, camera_screen.buffer_width*ZFIX_TOP);
+            memcpy(cur_buf_bot, scr_buf + camera_screen.buffer_size - camera_screen.buffer_width*ZFIX_BOTTOM, camera_screen.buffer_width*ZFIX_BOTTOM);
         }
         else {
-            memcpy(cur_buf_top, scr_buf + screen_buffer_size, screen_buffer_width*ZFIX_TOP);
-            memcpy(cur_buf_bot, scr_buf + 2*screen_buffer_size - screen_buffer_width*ZFIX_BOTTOM, screen_buffer_width*ZFIX_BOTTOM);
+            memcpy(cur_buf_top, scr_buf + camera_screen.buffer_size, camera_screen.buffer_width*ZFIX_TOP);
+            memcpy(cur_buf_bot, scr_buf + 2*camera_screen.buffer_size - camera_screen.buffer_width*ZFIX_BOTTOM, camera_screen.buffer_width*ZFIX_BOTTOM);
         }
 #else
         // rescue Canon OSD from cur_buf
-        if(n==1) memcpy(cur_buf, scr_buf, screen_buffer_size);
-        else memcpy(cur_buf, scr_buf+screen_buffer_size, screen_buffer_size);
+        if(n==1) memcpy(cur_buf, scr_buf, camera_screen.buffer_size);
+        else memcpy(cur_buf, scr_buf+camera_screen.buffer_size, camera_screen.buffer_size);
 #endif
     }
     ++timer;
@@ -673,11 +685,11 @@ int gui_osd_draw_zebra(int show) {
             if (conf.zebra_multichannel) {step_x=2; step_v=6;} else {step_x=1; step_v=3;}
             s = aspOffset;
             for (y=1, v=0; y<=viewport_height; ++y) {
-                for (x=0; x<screen_width; x+=step_x, s+=step_x, v+=step_v) {
+                for (x=0; x<camera_screen.width; x+=step_x, s+=step_x, v+=step_v) {
                     register int yy, uu, vv;
                     int sel;
 										
-                    if (!bWide && (x + aspOffset >= screen_width - aspOffset)) continue; // do not draw "outside screen" 
+                    if (!bWide && (x + aspOffset >= camera_screen.width - aspOffset)) continue; // do not draw "outside screen" 
 										
                     yy = img_buf[v+1];
                     if (conf.zebra_multichannel) {
@@ -705,10 +717,10 @@ int gui_osd_draw_zebra(int show) {
 #endif
                     }
                 }
-                s+=screen_buffer_width-screen_width;
-                if (y*screen_height/viewport_height == (s+screen_buffer_width)/screen_buffer_width) {
-                    memcpy(buf+s, buf+s-screen_buffer_width, screen_buffer_width);
-                    s+=screen_buffer_width;
+                s+=camera_screen.buffer_width-camera_screen.width;
+                if (y*camera_screen.height/viewport_height == (s+camera_screen.buffer_width)/camera_screen.buffer_width) {
+                    memcpy(buf+s, buf+s-camera_screen.buffer_width, camera_screen.buffer_width);
+                    s+=camera_screen.buffer_width;
                 }
             }
         if (!zebra_drawn) f=0;
@@ -723,24 +735,24 @@ int gui_osd_draw_zebra(int show) {
                 if (mrec) { // REC mode
 #if ZEBRA_CANONOSD_BORDER_RESTORE
                     // copy rescued Canon OSD to buf[] top/bottom parts and fill center with transparent color:
-                    memcpy(buf, cur_buf_top, screen_buffer_width * ZFIX_TOP);
-                    memcpy(buf + screen_buffer_size - screen_buffer_width * ZFIX_BOTTOM, cur_buf_bot, screen_buffer_width * ZFIX_BOTTOM);
-                    for (s = screen_buffer_width*ZFIX_TOP; s < screen_buffer_size-screen_buffer_width*ZFIX_BOTTOM; s++) {
+                    memcpy(buf, cur_buf_top, camera_screen.buffer_width * ZFIX_TOP);
+                    memcpy(buf + camera_screen.buffer_size - camera_screen.buffer_width * ZFIX_BOTTOM, cur_buf_bot, camera_screen.buffer_width * ZFIX_BOTTOM);
+                    for (s = camera_screen.buffer_width*ZFIX_TOP; s < camera_screen.buffer_size-camera_screen.buffer_width*ZFIX_BOTTOM; s++) {
                         buf[s]=COLOR_TRANSPARENT;
                     }
 #else
                     // copy from a complete Canon OSD rescue screen dump
-                    memcpy(buf, cur_buf, screen_buffer_size); 
+                    memcpy(buf, cur_buf, camera_screen.buffer_size); 
 #endif
                 } else { // Not REC mode
                     // No Canon OSD restore, fill buf[] with transparent color:
-                    memset(buf, COLOR_TRANSPARENT, screen_buffer_size);
+                    memset(buf, COLOR_TRANSPARENT, camera_screen.buffer_size);
                 }
                 // draw CHDK osd and histogram to buf[] (if enabled in config)
                 gui_osd_draw_zebra_osd();
                 // copy buf[] to both display buffers
-                memcpy(scr_buf, buf, screen_buffer_size);
-                memcpy(scr_buf+screen_buffer_size, buf, screen_buffer_size);
+                memcpy(scr_buf, buf, camera_screen.buffer_size);
+                memcpy(scr_buf+camera_screen.buffer_size, buf, camera_screen.buffer_size);
             }
             need_restore=0;
         }
@@ -750,8 +762,8 @@ int gui_osd_draw_zebra(int show) {
         // draw CHDK osd and histogram to buf[] over zebra (if enabled in config)            
         gui_osd_draw_zebra_osd();
         // copy buf[] to both display buffers          
-        memcpy(scr_buf, buf, screen_buffer_size);
-        memcpy(scr_buf+screen_buffer_size, buf, screen_buffer_size);
+        memcpy(scr_buf, buf, camera_screen.buffer_size);
+        memcpy(scr_buf+camera_screen.buffer_size, buf, camera_screen.buffer_size);
 
         need_restore=1;
         return 1;
@@ -1153,7 +1165,7 @@ void gui_osd_draw_state() {
 #endif    
     if ((conf.autoiso_enable && shooting_get_iso_mode()<=0 && !(m==MODE_M || m==MODE_TV) && shooting_get_flash_mode() && (!(conf.override_disable==1 && conf.override_disable_all))) || gui_mode==GUI_MODE_OSD)  
 	    gui_print_osd_state_string_chr("AUTOISO:", ((conf.autoiso_enable==1)?"ON":"OFF"));
-    if ((conf.subj_dist_override_value && conf.subj_dist_override_koef && shooting_can_focus() && !(conf.override_disable==1)) || ((gui_mode==GUI_MODE_ALT) && shooting_get_common_focus_mode())	|| gui_mode==GUI_MODE_OSD)   {
+    if ((conf.subj_dist_override_value && conf.subj_dist_override_koef && shooting_can_focus() && !(conf.override_disable==1)) || ((gui_get_mode()==GUI_MODE_ALT) && shooting_get_common_focus_mode())	|| gui_mode==GUI_MODE_OSD)   {
     	gui_print_osd_state_string_int("SD:",shooting_get_subject_distance_override_value());
         if (gui_mode==GUI_MODE_ALT)  
 		  gui_print_osd_state_string_int("FACTOR:",shooting_get_subject_distance_override_koef());   	

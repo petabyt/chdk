@@ -13,13 +13,13 @@ void module_rawop_unload();
 //--------------------------
 #include "edgeoverlay.h"
 
-int module_edgeovr_load();						// 0fail, 1ok
+struct libedgeovr_sym* module_edgeovr_load();	// 0fail, addr-ok
 
 // MODULE "CURVES"
 //--------------------------
 #include "curves.h"
 
-int module_curves_load();						// 0fail, 1ok
+struct libcurves_sym* module_curves_load();		// 0fail, addr-ok
 
 // MODULE "PALETTE"
 //--------------------------

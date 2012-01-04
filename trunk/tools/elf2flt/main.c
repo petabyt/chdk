@@ -23,7 +23,8 @@ int main(int argc, char **argv)
     if ( argc < 3 )
     {
         printf("elfflt.exe filename.elf filename.flt [-vefrhsS] [-iIMPORTFILE.TXT]\n");
-		printf("  -iPATH/TO/exportlist.txt for list of imported symbols");
+		printf("  -iPATH/TO/exportlist.txt for list of imported symbols\n");
+		printf("  -!PATH/TO/stoplist.txt for list of unsafe symbols\n");
 		printf("  -e dump elf\n  -S show elf sections\n  -f dump flat\n  -r show relocations\n  -h show flat headers\n  -s dump elf symbols\n  -v verbose");
         return 1;
     }
@@ -32,6 +33,7 @@ int main(int argc, char **argv)
     filename_flt = argv[2];
 
 	char* filename_import =0;
+	char* filename_stoplist =0;
 
 	int i;
 	for(i=3;i<argc;i++)
@@ -46,7 +48,8 @@ int main(int argc, char **argv)
 		  case 'h': FLAG_DUMP_FLT_HEADERS = 1; break;
 		  case 'f': FLAG_DUMP_FLAT = 1; break;
 		  case 'v': FLAG_VERBOSE = 1; break;
-		  case 'i': filename_import = argv[i]+2; 
+		  case 'i': filename_import = argv[i]+2; break; 
+		  case '!': filename_stoplist = argv[i]+2; break;
 		}
     }
 
@@ -61,6 +64,7 @@ int main(int argc, char **argv)
     }
 
 	load_import(filename_import);
+	load_stoplist(filename_stoplist);
       
     int err = elfloader_load(filename_elf, filename_flt);
 

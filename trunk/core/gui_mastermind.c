@@ -12,10 +12,13 @@
 #include "gui_mastermind.h"
 
 #include "module_load.h"
+
 void gui_module_menu_kbd_process();
+void gui_mastermind_kbd_process();
+void gui_mastermind_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_MASTERMIND = 
-    /*GUI_MODE_MASTERMIND*/     { gui_mastermind_draw,  gui_mastermind_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_MASTERMIND*/ { GUI_MODE_MODULE,   gui_mastermind_draw,  gui_mastermind_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
 
 
 #define BORDER		 		20
@@ -34,7 +37,7 @@ static char buf[128];
 
 static void guess_box(int pos, color col)
 {
-	draw_filled_rect(CAM_TS_BUTTON_BORDER+100+(pos*10), BORDER+(2*curr_y*10)+2+2*curr_y, CAM_TS_BUTTON_BORDER+100+(pos*10)+6, BORDER+(2*curr_y*10)+8+2*curr_y , MAKE_COLOR(col,col));
+	draw_filled_rect(camera_screen.ts_button_border+100+(pos*10), BORDER+(2*curr_y*10)+2+2*curr_y, camera_screen.ts_button_border+100+(pos*10)+6, BORDER+(2*curr_y*10)+8+2*curr_y , MAKE_COLOR(col,col));
 }
 
 char WinQuary(){
@@ -83,7 +86,7 @@ char CanNext(){
 	else if (curr_color[0]==curr_color[1] || curr_color[0]==curr_color[2] || curr_color[0]==curr_color[3] ||
 		     curr_color[1]==curr_color[2] || curr_color[1]==curr_color[3] || curr_color[2]==curr_color[3])
     {
-		draw_string(CAM_TS_BUTTON_BORDER+167, 130, lang_str(LANG_MENU_GAMES_DCOLOR), TEXT_COLOR);
+		draw_string(camera_screen.ts_button_border+167, 130, lang_str(LANG_MENU_GAMES_DCOLOR), TEXT_COLOR);
 		return 0;
 	}
 	return 1;
@@ -112,34 +115,34 @@ int gui_mastermind_init() {
 	curr_x=0;
 	curr_y=7;
 	
-	draw_filled_rect( 0, 0, screen_width-1, screen_height-1, BG_COLOR);
+	draw_filled_rect( 0, 0, camera_screen.width-1, camera_screen.height-1, BG_COLOR);
 
 	for (i=0;i<4;i++)
 		for (j=0;j<8;j++)
-			draw_filled_rect(CAM_TS_BUTTON_BORDER+BORDER+(2*i*10), BORDER+(2*j*10)+2*j, CAM_TS_BUTTON_BORDER+BORDER+(2*i*10)+10, BORDER+(2*j*10)+2*j+10 , COLOR_LIGHT_GRAY);
+			draw_filled_rect(camera_screen.ts_button_border+BORDER+(2*i*10), BORDER+(2*j*10)+2*j, camera_screen.ts_button_border+BORDER+(2*i*10)+10, BORDER+(2*j*10)+2*j+10 , COLOR_LIGHT_GRAY);
 
-	draw_filled_rect(CAM_TS_BUTTON_BORDER+10, BORDER+(2*j*10)+2*j, CAM_TS_BUTTON_BORDER+150,BORDER+(2*j*10)+2*j+1, MAKE_COLOR(BG_COLOR,COLOR_WHITE));
-	draw_filled_rect(CAM_TS_BUTTON_BORDER+148, 10, CAM_TS_BUTTON_BORDER+149,230, MAKE_COLOR(BG_COLOR,COLOR_WHITE));
-	draw_filled_rect(CAM_TS_BUTTON_BORDER+151, 10, CAM_TS_BUTTON_BORDER+152,230, MAKE_COLOR(BG_COLOR,COLOR_WHITE));
+	draw_filled_rect(camera_screen.ts_button_border+10, BORDER+(2*j*10)+2*j, camera_screen.ts_button_border+150,BORDER+(2*j*10)+2*j+1, MAKE_COLOR(BG_COLOR,COLOR_WHITE));
+	draw_filled_rect(camera_screen.ts_button_border+148, 10, camera_screen.ts_button_border+149,230, MAKE_COLOR(BG_COLOR,COLOR_WHITE));
+	draw_filled_rect(camera_screen.ts_button_border+151, 10, camera_screen.ts_button_border+152,230, MAKE_COLOR(BG_COLOR,COLOR_WHITE));
 	
 	for (i=0; i<6;i++)
-		draw_filled_rect(CAM_TS_BUTTON_BORDER+BORDER+(2*(i+7)*10)+20, 40, CAM_TS_BUTTON_BORDER+BORDER+(2*(i+7)*10)+35,55, MAKE_COLOR(colors[i],colors[i]));
+		draw_filled_rect(camera_screen.ts_button_border+BORDER+(2*(i+7)*10)+20, 40, camera_screen.ts_button_border+BORDER+(2*(i+7)*10)+35,55, MAKE_COLOR(colors[i],colors[i]));
 		
-	draw_filled_rect(CAM_TS_BUTTON_BORDER+BORDER+(2*7*10)+20, 65, CAM_TS_BUTTON_BORDER+BORDER+(2*7*10)+35,80, MAKE_COLOR(COLOR_BLACK,COLOR_BLACK));
-	draw_string(CAM_TS_BUTTON_BORDER+BORDER+(2*7*10)+50, 65 , lang_str(LANG_MENU_GAMES_RIGHT_PLACE), TEXT_COLOR);
+	draw_filled_rect(camera_screen.ts_button_border+BORDER+(2*7*10)+20, 65, camera_screen.ts_button_border+BORDER+(2*7*10)+35,80, MAKE_COLOR(COLOR_BLACK,COLOR_BLACK));
+	draw_string(camera_screen.ts_button_border+BORDER+(2*7*10)+50, 65 , lang_str(LANG_MENU_GAMES_RIGHT_PLACE), TEXT_COLOR);
 	
-	draw_filled_rect(CAM_TS_BUTTON_BORDER+BORDER+(2*7*10)+20, 90, CAM_TS_BUTTON_BORDER+BORDER+(2*7*10)+35,105, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE));
-	draw_string(CAM_TS_BUTTON_BORDER+BORDER+(2*7*10)+50, 90 , lang_str(LANG_MENU_GAMES_C_IN_ANSWER), TEXT_COLOR);
+	draw_filled_rect(camera_screen.ts_button_border+BORDER+(2*7*10)+20, 90, camera_screen.ts_button_border+BORDER+(2*7*10)+35,105, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE));
+	draw_string(camera_screen.ts_button_border+BORDER+(2*7*10)+50, 90 , lang_str(LANG_MENU_GAMES_C_IN_ANSWER), TEXT_COLOR);
 					
-	draw_string(CAM_TS_BUTTON_BORDER+173, 20 , lang_str(LANG_MENU_GAMES_AC_COLORS), TEXT_COLOR);
+	draw_string(camera_screen.ts_button_border+173, 20 , lang_str(LANG_MENU_GAMES_AC_COLORS), TEXT_COLOR);
 		
-	draw_string(CAM_TS_BUTTON_BORDER+167, 200 , lang_str(LANG_MENU_GAMES_CURSOR1), TEXT_COLOR);
-	draw_string(CAM_TS_BUTTON_BORDER+167, 185 , lang_str(LANG_MENU_GAMES_CURSOR2), TEXT_COLOR);
-	draw_string(CAM_TS_BUTTON_BORDER+167, 170 , lang_str(LANG_MENU_GAMES_CURSOR3), TEXT_COLOR);
+	draw_string(camera_screen.ts_button_border+167, 200 , lang_str(LANG_MENU_GAMES_CURSOR1), TEXT_COLOR);
+	draw_string(camera_screen.ts_button_border+167, 185 , lang_str(LANG_MENU_GAMES_CURSOR2), TEXT_COLOR);
+	draw_string(camera_screen.ts_button_border+167, 170 , lang_str(LANG_MENU_GAMES_CURSOR3), TEXT_COLOR);
 
 	for(i=0;i<4;i++) curr_color[i]=99;
 	
-    gui_set_mode((unsigned int)&GUI_MODE_MASTERMIND);
+    gui_set_mode(&GUI_MODE_MASTERMIND);
 	return 1;
 }
 
@@ -147,15 +150,15 @@ int gui_mastermind_init() {
 static void draw_box(color border)
 {
     if (curr_color[curr_x] == 99) curr_color[curr_x] = 0;
-    draw_filled_rect(CAM_TS_BUTTON_BORDER+BORDER+(2*curr_x*10), BORDER+(2*curr_y*10)+2*curr_y, CAM_TS_BUTTON_BORDER+BORDER+(2*curr_x*10)+10, BORDER+(2*curr_y*10)+2*curr_y+10 , MAKE_COLOR(colors[curr_color[curr_x]],border));
+    draw_filled_rect(camera_screen.ts_button_border+BORDER+(2*curr_x*10), BORDER+(2*curr_y*10)+2*curr_y, camera_screen.ts_button_border+BORDER+(2*curr_x*10)+10, BORDER+(2*curr_y*10)+2*curr_y+10 , MAKE_COLOR(colors[curr_color[curr_x]],border));
 }
 
 static void end_game(int msg)
 {
     int i;
-    draw_string(CAM_TS_BUTTON_BORDER+198, 130 , lang_str(msg), TEXT_COLOR);
+    draw_string(camera_screen.ts_button_border+198, 130 , lang_str(msg), TEXT_COLOR);
 	for (i=0; i<4;i++)
-	    draw_filled_rect(CAM_TS_BUTTON_BORDER+BORDER+(2*i*10), 213, CAM_TS_BUTTON_BORDER+BORDER+(2*i*10)+10,223,  MAKE_COLOR(colors[answer[i]],colors[answer[i]]));
+	    draw_filled_rect(camera_screen.ts_button_border+BORDER+(2*i*10), 213, camera_screen.ts_button_border+BORDER+(2*i*10)+10,223,  MAKE_COLOR(colors[answer[i]],colors[answer[i]]));
 }
 
 static void chg_box(int inc_box, int inc_val)
@@ -177,7 +180,7 @@ void gui_mastermind_kbd_process() {
     {
         if (GameGo == 1)
         {
-            draw_string(CAM_TS_BUTTON_BORDER+167, 130 , "                       ", TEXT_COLOR);
+            draw_string(camera_screen.ts_button_border+167, 130 , "                       ", TEXT_COLOR);
 	        switch (kbd_get_autoclicked_key()) 
 	        {
 		        case KEY_SET:
@@ -229,12 +232,12 @@ void gui_mastermind_draw(int enforce_redraw) {
 	unsigned long t;
     static struct tm *ttm;
 
-    draw_txt_string(CAM_TS_BUTTON_BORDER/FONT_WIDTH+15, 0, lang_str(LANG_MENU_GAMES_MASTERMIND), MAKE_COLOR(BG_COLOR, COLOR_WHITE));
+    draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH+15, 0, lang_str(LANG_MENU_GAMES_MASTERMIND), MAKE_COLOR(BG_COLOR, COLOR_WHITE));
 
     t = time(NULL);
     ttm = localtime(&t);
     sprintf(buf, "Time: %2u:%02u  Batt:%3d%%", ttm->tm_hour, ttm->tm_min, get_batt_perc());
-    draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-1-1-9-2-5-4, screen_height/FONT_HEIGHT-1, buf, TEXT_COLOR);
+    draw_txt_string((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2-1-1-9-2-5-4, camera_screen.height/FONT_HEIGHT-1, buf, TEXT_COLOR);
 }
 
 

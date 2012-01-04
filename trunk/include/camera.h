@@ -103,6 +103,10 @@
 // pixel drawing routines draw every pixel twice to scale the image up to the actual buffer size
 // Define CAM_USES_ASPECT_CORRECTION with a value of 1 to enable this scaled display
 #define CAM_USES_ASPECT_CORRECTION  0
+#define CAM_SCREEN_WIDTH            360         // Width of bitmap screen in CHDK co-ordinates (360 or 480)
+#define CAM_SCREEN_HEIGHT           240         // Height of bitmap screen in CHDK co-ordinates (always 240 on all cameras so far)
+#define CAM_BITMAP_WIDTH            360         // Actual width of bitmap screen in bytes (may be larger than displayed area)
+#define CAM_BITMAP_HEIGHT           240         // Actual height of bitmap screen in rows (240 or 270)
 
 #define EDGE_HMARGIN                0           // define sup and inf screen margins on edge overlay without overlay.  Necessary to save memory buffer space. sx200is needs values other than 0
 // end of section by nandoid
@@ -144,9 +148,6 @@
 #undef  CAM_DNG_EXPOSURE_BIAS                   // Specify DNG exposure bias value (to override default of -0.5 in the dng.c code)
 #undef  DNG_EXT_FROM                            // Extension in the cameras known extensions to replace with .DNG to allow DNG
                                                 // files to be transfered over standard PTP. Only applicable to older cameras
-#undef  DNG_VERT_RLE_BADPIXELS                  // Enable vertical run length compression of badpixel data for DNG
-                                                // IXUS 310 HS bad pixels tend to be grouped into vertical lines of 1-4 pixels
-                                                // This reduces the file size by approx 45%
 
 #undef  CAM_DNG_LENS_INFO                       // Define this to include camera lens information in DNG files
                                                 // Value should be an array of 4 DNG 'RATIONAL' values specifying
@@ -215,5 +216,83 @@
 #ifndef OPT_PTP
 #undef CAM_CHDK_PTP
 #endif
+
+//==========================================================
+// Data Structure to store camera specific information
+// Used by modules to ensure module code is platform independent
+
+typedef struct {
+	int api_version;			// version of this structure
+
+    int bits_per_pixel;
+    int black_level;
+    int white_level;
+    int raw_rows, raw_rowpix, raw_rowlen, raw_size;
+    union                       // DNG JPEG info
+    {
+        struct
+        {
+            int x, y;           // DNG JPEG top left corner
+            int width, height;  // DNG JPEG size
+        } jpeg;
+        struct
+        {
+            int origin[2];
+            int size[2];
+        } crop;
+    };
+    union                       // DNG active sensor area (Y1, X1, Y2, X2)
+    {
+        struct
+        {
+            int y1, x1, y2, x2;
+        } active_area;
+        int dng_active_area[4];
+    };
+    int lens_info[8];           // DNG Lens Info
+    int exposure_bias[2];       // DNG Exposure Bias
+    int color_matrix1[18];      // DNG Color Matrix
+    int cfa_pattern, calibration_illuminant1;
+} _cam_sensor;
+
+extern _cam_sensor camera_sensor;
+
+// if this struct changed, please change gui_version.common_api 
+typedef struct 
+{
+    unsigned int    width, height, size;                        // Size of bitmap screen in CHDK co-ordinates
+    unsigned int    buffer_width, buffer_height, buffer_size;   // Physical size of bitmap screen
+    int             edge_hmargin, ts_button_border;             // margin and touch-screen adjustment values
+} _cam_screen;
+
+extern _cam_screen camera_screen;
+
+typedef struct
+{
+	int api_version;			// version of this structure
+
+    struct
+    {
+        int camera_name;
+    } params;
+    struct
+    {
+        int gps;
+        int orientation_sensor;
+        int tv;
+        int av;
+        int min_av;
+        int ev_correction_2;
+        int flash_mode;
+        int flash_fire;
+        int metering_mode;
+        int wb_adj;
+    } props;
+    int rombaseaddr, maxramaddr;
+} _cam_info;
+
+extern _cam_info camera_info;
+
+//==========================================================
 
 #endif /* CAMERA_H */

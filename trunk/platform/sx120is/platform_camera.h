@@ -66,6 +66,8 @@
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1
+    #undef CAM_BITMAP_WIDTH
+    #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
 
     #define CAM_ZEBRA_ASPECT_ADJUST         1
 

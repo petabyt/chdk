@@ -51,7 +51,7 @@ int raw_savefile() {
 #if DNG_SUPPORT
     if (conf.dng_raw) {                             
 		if ( module_dng_load(LIBDNG_OWNED_BY_RAW) )
-			libdng.capture_data_for_exif();
+			libdng->capture_data_for_exif();
 	}
 #endif    
     if (state_kbd_script_run && shot_histogram_isenabled()) build_shot_histogram();
@@ -62,8 +62,9 @@ int raw_savefile() {
 
 #if DNG_SUPPORT
     // count/save badpixels if requested
-    if( libdng.raw_init_badpixel_bin && 
-		libdng.raw_init_badpixel_bin()) {
+    if( libdng &&
+		libdng->raw_init_badpixel_bin && 
+		libdng->raw_init_badpixel_bin()) {
         return 0;
     }
 #endif    
@@ -78,7 +79,7 @@ int raw_savefile() {
 #ifdef OPT_CURVES
         if (conf.curve_enable) {
   			if (module_curves_load())
-				curve_apply();
+				libcurves->curve_apply();
 		}
 #endif
         finished();
@@ -146,9 +147,8 @@ int raw_savefile() {
 #if DNG_SUPPORT
             if (conf.dng_raw)
             {
-				if ( module_dng_load(LIBDNG_OWNED_BY_RAW) ) {
-					libdng.write_dng(fd, rawadr, altrawadr, CAM_UNCACHED_BIT );
-}
+				if ( module_dng_load(LIBDNG_OWNED_BY_RAW) )
+					libdng->write_dng(fd, rawadr, altrawadr, CAM_UNCACHED_BIT );
             }
             else 
             {
@@ -178,7 +178,7 @@ int raw_savefile() {
 #ifdef OPT_CURVES
     if (conf.curve_enable) {
   		if (module_curves_load())
-			curve_apply();
+			libcurves->curve_apply();
 	}
 #endif
     return ret;
@@ -191,8 +191,8 @@ void raw_postprocess() {
 //-------------------------------------------------------------------
 
 void set_raw_pixel(unsigned int x, unsigned int y, unsigned short value) {
+    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*camera_sensor.raw_rowlen+(x/8)*camera_sensor.bits_per_pixel;
 #if CAM_SENSOR_BITS_PER_PIXEL==10
-    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*RAW_ROWLEN+(x/8)*CAM_SENSOR_BITS_PER_PIXEL;
     switch (x%8) {
         case 0: addr[0]=(addr[0]&0x3F)|(value<<6); addr[1]=value>>2;                  break;
         case 1: addr[0]=(addr[0]&0xC0)|(value>>4); addr[3]=(addr[3]&0x0F)|(value<<4); break;
@@ -204,7 +204,6 @@ void set_raw_pixel(unsigned int x, unsigned int y, unsigned short value) {
         case 7: addr[8]=value;                     addr[9]=(addr[9]&0xFC)|(value>>8); break;
     }
 #elif CAM_SENSOR_BITS_PER_PIXEL==12
-    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*RAW_ROWLEN+(x/4)*6;
     switch (x%4) {
         case 0: addr[0] = (addr[0]&0x0F) | (unsigned char)(value << 4);  addr[1] = (unsigned char)(value >> 4);  break;
         case 1: addr[0] = (addr[0]&0xF0) | (unsigned char)(value >> 8);  addr[3] = (unsigned char)value;         break;
@@ -218,8 +217,8 @@ void set_raw_pixel(unsigned int x, unsigned int y, unsigned short value) {
 
 //-------------------------------------------------------------------
 unsigned short get_raw_pixel(unsigned int x,unsigned  int y) {
+    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*camera_sensor.raw_rowlen+(x/8)*camera_sensor.bits_per_pixel;
 #if CAM_SENSOR_BITS_PER_PIXEL==10
-    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*RAW_ROWLEN+(x/8)*CAM_SENSOR_BITS_PER_PIXEL;
     switch (x%8) {
         case 0: return ((0x3fc&(((unsigned short)addr[1])<<2)) | (addr[0] >> 6));
         case 1: return ((0x3f0&(((unsigned short)addr[0])<<4)) | (addr[3] >> 4));
@@ -231,7 +230,6 @@ unsigned short get_raw_pixel(unsigned int x,unsigned  int y) {
         case 7: return ((0x300&(((unsigned short)addr[9])<<8)) | (addr[8]));
     }
 #elif CAM_SENSOR_BITS_PER_PIXEL==12
-    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*RAW_ROWLEN+(x/4)*6;
     switch (x%4) {
         case 0: return ((unsigned short)(addr[1]) << 4) | (addr[0] >> 4);
         case 1: return ((unsigned short)(addr[0] & 0x0F) << 8) | (addr[3]);
@@ -250,7 +248,7 @@ void patch_bad_pixel(unsigned int x,unsigned  int y) {
     int nzero=0;
     int i,j;
     int val;
-    if ((x>=2) && (x<CAM_RAW_ROWPIX-2) && (y>=2) && (y<CAM_RAW_ROWS-2)) {
+    if ((x>=2) && (x<camera_sensor.raw_rowpix-2) && (y>=2) && (y<camera_sensor.raw_rows-2)) {
         if ((conf.bad_pixel_removal==1) || (conf.save_raw && conf.dng_raw)) {  // interpolation or DNG saving
             for (i=-2; i<=2; i+=2)
                 for (j=-2; j<=2; j+=2)

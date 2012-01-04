@@ -138,45 +138,48 @@ int module_find(char * name )
 
 //-----------------------------------------------
 
-typedef int (*module_action_t)( struct flat_hdr* flat, uint32_t* relocbuf );
+typedef int (*module_action_t)( struct flat_hdr* flat, void* relocbuf, uint32_t count );
 
-static int module_do_relocations( struct flat_hdr* flat, uint32_t* relocbuf )
+static int module_do_relocations( struct flat_hdr* flat, void* relocbuf, uint32_t reloc_count )
 {
    int i;
    unsigned int offs;
    unsigned char* buf = (unsigned char*)flat;
 
-   for ( i=0; i < flat->reloc_count; i++ )
+   for ( i=0; i < reloc_count; i++ )
    {
-      offs = *relocbuf;
-      relocbuf++;
+      offs = *(uint32_t*)relocbuf;
+      relocbuf = ((uint32_t*)relocbuf)+1;
 	  //@tsv todo: if (offs>=flat->reloc_start) error_out_of_bound
       *(uint32_t*)(buf+offs) += (uint32_t)buf;
    }  
    return 1;
 }
 
-static int module_do_imports( struct flat_hdr* flat, uint32_t* relocbuf )
+static int module_do_imports( struct flat_hdr* flat, void* relocbuf, uint32_t import_count )
 {
 	int i;
-	unsigned int offs;
+	uint32_t importidx;
 	uint32_t* ptr;
 	unsigned char* buf = (unsigned char*)flat;
    
 
-	for ( i=0; i < flat->import_count; i++ )
+	for ( i=0; i < import_count; i++ )
 	{
-		ptr = (uint32_t*)(buf+*relocbuf);
+		ptr = (uint32_t*)( buf + ((import_record_t*)relocbuf)->offs );
+		importidx = ((import_record_t*)relocbuf)->importidx;
+
 	  //@tsv todo: if (*relocbuf>=flat->reloc_start) error_out_of_bound
 		// No such symbol to import
-		if ( *ptr<2 || *ptr>EXPORTLIST_LAST_IDX )
+		if ( importidx<2 || importidx>EXPORTLIST_LAST_IDX )
 			return 0;
 
-		*ptr = (uint32_t) CHDK_EXPORT_LIST[*ptr];
 		// Empty symbol - module could only if import such symbol manually
-		if ( *ptr==0 )
+		if ( CHDK_EXPORT_LIST[importidx]==0 )
 			return 0;
-		relocbuf++;
+
+		*ptr += (uint32_t)CHDK_EXPORT_LIST[importidx];
+        relocbuf = ((import_record_t*)relocbuf)+1;
 	}  
     return 1;
 }
@@ -219,23 +222,22 @@ static int moduleload_error(char* text, int value)
 
 //-----------------------------------------------
 // return: 0 if error, otherwise ok
-static int module_do_action( char* actionname, uint32_t offset, uint32_t count, module_action_t func )
+static int module_do_action( char* actionname, uint32_t offset, uint32_t count, uint32_t segment_size, module_action_t func )
 {
    if ( !count ) 
 		return 1;
 
-   int size_reloc = count * sizeof(uint32_t);
-   reloc_buf = umalloc( size_reloc );
+   reloc_buf = umalloc( segment_size );
    if ( !reloc_buf )
        	return (int)moduleload_error("malloc",0);   
 
    if ( offset != lseek(module_fd, offset, SEEK_SET) )
        	return (int)moduleload_error("action %s",(int)actionname);
-   if ( size_reloc != read(module_fd, reloc_buf, size_reloc) )
+   if ( segment_size != read(module_fd, reloc_buf, segment_size) )
        	return (int)moduleload_error("action %s", (int)actionname);
 
    // make relocations
-   if ( !func( (struct flat_hdr*) flat_buf, (uint32_t*)reloc_buf ) )  
+   if ( !func( (struct flat_hdr*) flat_buf, (uint32_t*)reloc_buf, count ) )  
        	return (int)moduleload_error("bad import symbol",0);
 
    ufree(reloc_buf); reloc_buf=0;
@@ -302,7 +304,7 @@ int module_load( char* name, _module_loader_t callback)
    if  ( flat.rev!=FLAT_VERSION || memcmp( flat.magic, FLAT_MAGIC_NUMBER, 4) )
       return moduleload_error("bad magicnum", 0);
 
-   size_flat = flat.bss_end+1;
+   size_flat = flat.reloc_start;
 
    flat_buf = malloc( size_flat );
    if ( !flat_buf ) 
@@ -341,9 +343,14 @@ int module_load( char* name, _module_loader_t callback)
 
    // Make relocations
 
-   if ( !module_do_action( "reloc", flat.reloc_start, flat.reloc_count, module_do_relocations ) )
+   int reloc_size = flat.import_start - flat.reloc_start;
+   int reloc_count = reloc_size/sizeof(reloc_record_t);
+   if ( !module_do_action( "reloc", flat.reloc_start, reloc_count, reloc_size, module_do_relocations ) )
 	  return -1;
-   if ( !module_do_action( "export", flat.import_start, flat.import_count, module_do_imports ) )
+
+   int import_size = flat.file_size - flat.import_start;
+   int import_count = import_size/sizeof(import_record_t);
+   if ( !module_do_action( "export", flat.import_start, import_count, import_size, module_do_imports ) )
 	  return -1;
 
    b_close( module_fd );

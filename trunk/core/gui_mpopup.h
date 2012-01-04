@@ -12,8 +12,6 @@ struct mpopup_item {
 
 //-------------------------------------------------------------------
 extern void gui_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode);
-extern void gui_mpopup_kbd_process();
-extern void gui_mpopup_draw(int enforce_redraw);
 
 //-------------------------------------------------------------------
 #endif

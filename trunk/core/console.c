@@ -130,7 +130,7 @@ void console_draw()
     if (t <= console_last_drawn + CONSOLE_HIDE_TIMEOUT)
     {
         int y = (console_y + console_max_lines - console_num_lines) * FONT_HEIGHT;
-        int x = console_x * FONT_WIDTH + CAM_TS_BUTTON_BORDER;
+        int x = console_x * FONT_WIDTH + camera_screen.ts_button_border;
 
         for(c = 0; c < console_num_lines; ++c)
         {

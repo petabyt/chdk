@@ -31,6 +31,9 @@ int _module_loader( void** chdk_export_list )
   if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
 
+  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
+	  return 1;
+
   _getmeminfo = chdk_export_list[MODULESYM_GETMEMINFO];
 
   return 0;
@@ -93,19 +96,16 @@ void gui_module_kbd_process();
 void gui_module_draw();
 
 gui_handler GUI_MODE_MODULE_INSPECTOR = 
-    /*GUI_MODE_MODULE_INSPECTOR*/          { gui_module_draw,       gui_module_kbd_process,      gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_MODULE_INSPECTOR*/   { GUI_MODE_MODULE,   gui_module_draw,       gui_module_kbd_process,      gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
 
 
 int modinspect_redraw;
-int modinspect_old_guimode;
+gui_handler *modinspect_old_guimode;
 
 static void modinspect_unload_cb(unsigned int btn) {
     if (btn==MBOX_BTN_YES) {
 		module_async_unload_allrunned(0);
-		if (modinspect_old_guimode<GUI_MODE_COUNT)
-			gui_set_mode(modinspect_old_guimode);	// if core gui - return to it
-		else
-			gui_default_kbd_process_menu_btn();		// if not - return to menu
+        gui_set_mode(modinspect_old_guimode);	// if core gui - return to it
     }
     modinspect_redraw=2;
 }
@@ -127,8 +127,7 @@ void gui_module_kbd_process() {
 
 int basic_module_init() {
 	modinspect_redraw=2;
-	modinspect_old_guimode=gui_get_mode();
-    gui_set_mode( (unsigned int)&GUI_MODE_MODULE_INSPECTOR );
+    modinspect_old_guimode = gui_set_mode(&GUI_MODE_MODULE_INSPECTOR);
 	return 1;
 }
 
@@ -145,7 +144,7 @@ void gui_module_draw()
 
     if (modinspect_redraw) {
 
-    	draw_filled_rect(0, 0, screen_width-1, screen_height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+    	draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
         draw_txt_string(5, 0,  "*** Module Inspector ***", MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
         draw_txt_string(0, 2,  "Idx Name         Addr       Size", MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
@@ -160,7 +159,7 @@ void gui_module_draw()
 			namebuf[11]=0;
 
 			char txt[50];
-		    sprintf(txt,"%02d: %-12s %08x - %d bytes", idx, namebuf, (unsigned)flat, flat->bss_end);
+		    sprintf(txt,"%02d: %-12s %08x - %d bytes", idx, namebuf, (unsigned)flat, flat->reloc_start);
         	draw_txt_string(0, 3+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 			showidx++;
 		}

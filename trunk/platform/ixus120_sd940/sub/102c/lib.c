@@ -55,21 +55,6 @@ void *vid_get_viewport_fb_d()
 	return (void*)(*(int*)(0x2790+0x58));  //  @FF869DEC  @FF869E24
 }
 
-
-long vid_get_bitmap_screen_width()
-{
-    //return 320;
-
-    return 360;
-}
-
-
-long vid_get_bitmap_screen_height()
-{
-    return 240;
-}
-
-
 long vid_get_viewport_height()
 {
     return 240;
@@ -84,17 +69,4 @@ int vid_get_viewport_width()
 char *camera_jpeg_count_str()
 {
     return (char *) 0x700B0; // search on "9999"
-}
-
-long vid_get_bitmap_buffer_width()
-{
-	return 960;
-}
-
-
-long vid_get_bitmap_buffer_height()
-{
-	//return 240;
-
-	return 270;
 }

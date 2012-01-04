@@ -77,6 +77,12 @@
 
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1   //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
+    #undef CAM_SCREEN_WIDTH
+    #undef CAM_BITMAP_WIDTH
+    #undef CAM_BITMAP_HEIGHT
+    #define CAM_SCREEN_WIDTH                480 // Width of bitmap screen in CHDK co-ordinates
+    #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
+    #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
 
     #undef EDGE_HMARGIN
     #define EDGE_HMARGIN                    2
@@ -114,8 +120,6 @@
     #define CAM_AV_OVERRIDE_IRIS_FIX        1   // for cameras that require _MoveIrisWithAv function to override Av in bracketing.
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE 1       // For cameras with 'low light' mode that does now work with raw define this
-
-    #define DNG_VERT_RLE_BADPIXELS          1   // Enable vertical run length compression of bad pixels, reduces badpixel.bin file size by approx 45%
 
     #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                 0xA2    // Start color index for CHDK colors loaded into camera palette.

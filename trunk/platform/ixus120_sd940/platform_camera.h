@@ -74,6 +74,9 @@
 	#define PARAM_DISPLAY_MODE1	57	// param number for LCD display mode when camera in playback
 	#define PARAM_DISPLAY_MODE2	58	// param number for LCD display mode when camera in record view hold mode	
 	
+	#define PARAM_DISPLAY_MODE1	57	// param number for LCD display mode when camera in playback
+	#define PARAM_DISPLAY_MODE2	58	// param number for LCD display mode when camera in record view hold mode	
+	
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
 
@@ -83,6 +86,10 @@
 
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION  1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
+    #undef CAM_BITMAP_WIDTH
+    #undef CAM_BITMAP_HEIGHT
+    #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
+    #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
 
     #undef EDGE_HMARGIN
     #define EDGE_HMARGIN 20

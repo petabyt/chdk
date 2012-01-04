@@ -18,6 +18,10 @@ int b_seek_read(unsigned int offset, char *buf, int len);
 
 int load_import(char* importfile);
 int find_import_symbol(char* sym);
+char* get_import_symbol( unsigned symidx );
+
+int load_stoplist(char* importfile);
+int stoplist_check(char *sym);	//1 - found in stoplist, 0- not found
 
 extern int FLAG_DUMP_SOURCE;
 extern int FLAG_DUMP_SYMBOLS;

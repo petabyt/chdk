@@ -54,18 +54,18 @@ void build_shot_histogram()
  short p;
  memset(shot_histogram,0,SHOT_HISTOGRAM_SIZE);
  
- marginstep= (CAM_RAW_ROWPIX - 2 * SHOT_HISTOGRAM_MARGIN)/10;
+ marginstep= (camera_sensor.raw_rowpix - 2 * SHOT_HISTOGRAM_MARGIN)/10;
 
  // In future, support definition of a sort of "spot metering" 
  x0 = SHOT_HISTOGRAM_MARGIN + shot_margin_left * marginstep;
- x1 = CAM_RAW_ROWPIX - SHOT_HISTOGRAM_MARGIN - shot_margin_right * marginstep;
+ x1 = camera_sensor.raw_rowpix - SHOT_HISTOGRAM_MARGIN - shot_margin_right * marginstep;
  y0 = SHOT_HISTOGRAM_MARGIN + shot_margin_top * marginstep;
- y1 = CAM_RAW_ROWS - SHOT_HISTOGRAM_MARGIN - shot_margin_bottom * marginstep;
+ y1 = camera_sensor.raw_rows - SHOT_HISTOGRAM_MARGIN - shot_margin_bottom * marginstep;
 
  //x0 = SHOT_HISTOGRAM_MARGIN ;
- //x1 = CAM_RAW_ROWPIX - SHOT_HISTOGRAM_MARGIN ;
+ //x1 = camera_sensor.raw_rowpix - SHOT_HISTOGRAM_MARGIN ;
  //y0 = SHOT_HISTOGRAM_MARGIN;
- //y1 = CAM_RAW_ROWS - SHOT_HISTOGRAM_MARGIN;
+ //y1 = camera_sensor.raw_rows - SHOT_HISTOGRAM_MARGIN;
 
  
  // just read one pixel out of SHOT_HISTOGRAM_STEP, one line out of SHOT_HISTOGRAM_STEP 

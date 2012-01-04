@@ -89,6 +89,8 @@
 	// aspect correction
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION		1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
+    #undef CAM_BITMAP_WIDTH
+    #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
 
     #define CAM_ZEBRA_ASPECT_ADJUST 1
 	// camera has very little free memory

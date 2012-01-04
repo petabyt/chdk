@@ -13,6 +13,9 @@
 #include "module_load.h"
 
 extern void gui_read_kbd_process_menu_btn();
+void gui_read_kbd_process();
+void gui_read_draw(int enforce_redraw);
+void gui_read_kbd_leave();
 
 int *conf_reader_autoscroll;
 int *conf_reader_autoscroll_delay;
@@ -23,7 +26,7 @@ char *conf_reader_file;
 char *conf_menu_rbf_file;
 
 gui_handler GUI_MODE_READ = 
-    /*GUI_MODE_READ*/           { gui_read_draw,        gui_read_kbd_process,       gui_read_kbd_process_menu_btn,	0,	GUI_MODE_MAGICNUM };
+    /*GUI_MODE_READ*/   { GUI_MODE_MODULE,   gui_read_draw,        gui_read_kbd_process,       gui_read_kbd_process_menu_btn,	0,	GUI_MODE_MAGICNUM };
 
 //-------------------------------------------------------------------
 static int read_file;
@@ -43,7 +46,7 @@ static int reader_is_active;	// Flag raised when reader is succesfully runned
 //-------------------------------------------------------------------
 static void gui_read_draw_batt() {
     sprintf(buffer, "Batt:%3d%%", get_batt_perc());
-    draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-1-1-9, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+    draw_txt_string((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2-1-1-9, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 }
 
 //-------------------------------------------------------------------
@@ -54,12 +57,12 @@ static void gui_read_draw_clock() {
     t = time(NULL);
     ttm = localtime(&t);
     sprintf(buffer, "%2u:%02u", ttm->tm_hour, ttm->tm_min);
-    draw_txt_string((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2-1-1-9-2-5, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+    draw_txt_string((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2-1-1-9-2-5, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 }
 
 //-------------------------------------------------------------------
 static void gui_read_draw_scroll_indicator() {
-    draw_txt_char((screen_width-CAM_TS_BUTTON_BORDER)/FONT_WIDTH-2, 0, (*conf_reader_autoscroll)?((pause)?'\x05':'\x04'):'\x03', MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title infoline
+    draw_txt_char((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2, 0, (*conf_reader_autoscroll)?((pause)?'\x05':'\x04'):'\x03', MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title infoline
 }
 
 //-------------------------------------------------------------------
@@ -77,17 +80,17 @@ int gui_read_init(const char* file) {
     }
     pause = 0;
     read_to_draw = 1;
-    x=CAM_TS_BUTTON_BORDER+6; 
+    x=camera_screen.ts_button_border+6; 
     y=FONT_HEIGHT;
-    w=screen_width-CAM_TS_BUTTON_BORDER*2-6-6-8;
-    h=screen_height-y;
+    w=camera_screen.width-camera_screen.ts_button_border*2-6-6-8;
+    h=camera_screen.height-y;
     last_time = get_tick_count();
     
 	reader_is_active=1;    
-    gui_set_mode((unsigned int)&GUI_MODE_READ);
+    gui_set_mode(&GUI_MODE_READ);
 
-    draw_filled_rect(0, 0, screen_width-1, y-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
-    draw_filled_rect(0, y, screen_width-1, screen_height-1, MAKE_COLOR((*conf_reader_color>>8)&0xFF, (*conf_reader_color>>8)&0xFF));
+    draw_filled_rect(0, 0, camera_screen.width-1, y-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
+    draw_filled_rect(0, y, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR((*conf_reader_color>>8)&0xFF, (*conf_reader_color>>8)&0xFF));
 
     gui_read_draw_scroll_indicator();
     gui_read_draw_batt();
@@ -186,8 +189,8 @@ void gui_read_draw(int enforce_redraw) {
         }
     
         sprintf(buffer, "(%3d%%) %d/%d  ", (read_file_size)?(*conf_reader_pos*100/read_file_size):0, *conf_reader_pos, read_file_size);
-        buffer[screen_width/FONT_WIDTH]=0;
-        draw_txt_string((CAM_TS_BUTTON_BORDER/FONT_WIDTH), 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title infoline
+        buffer[camera_screen.width/FONT_WIDTH]=0;
+        draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH), 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title infoline
 
         // scrollbar
         if (read_file_size) {
@@ -263,12 +266,12 @@ void gui_read_kbd_leave()
 		return;
 
     reader_is_active = 0;
-            if (!rbf_load(conf_menu_rbf_file))
-                rbf_load_from_8x16(current_font);
-            rbf_set_codepage(FONT_CP_WIN);
+    if (!rbf_load(conf_menu_rbf_file))
+        rbf_load_from_8x16(current_font);
+    rbf_set_codepage(FONT_CP_WIN);
 	if (read_file >= 0) {
-                close(read_file);
-                read_file=-1;
+    	close(read_file);
+	    read_file=-1;
     }
 }
 
@@ -296,6 +299,8 @@ int _module_loader( void** chdk_export_list )
 {
   if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
+  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
+	  return 1;
 
   tConfigVal configVal;
   CONF_BIND_COLOR( 31, conf_reader_color          );

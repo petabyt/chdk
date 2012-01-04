@@ -142,7 +142,7 @@ static void bv_expand(bit_vector_t* bm, unsigned char* dst, int len, color* look
                 elem |= (1 << k);
         }
         dst[i] = lookup[elem];
-        dst[i+screen_buffer_size] = lookup[elem];
+        dst[i+camera_screen.buffer_size] = lookup[elem];
     }
 }
 */

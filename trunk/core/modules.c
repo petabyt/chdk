@@ -16,11 +16,6 @@
 
 /************* DYNAMIC LIBRARY RAWOPERATION ******/
 
-int (*raw_merge_start)(int action);
-void (*raw_merge_add_file)(const char * filename);
-void (*raw_merge_end)(void);
-int (*raw_subtract)(const char *from, const char *sub, const char *dest); 
-
 #if CAM_SENSOR_BITS_PER_PIXEL==10
 #define MODULE_NAME_RAWOP "_rawop10.flt"
 #elif CAM_SENSOR_BITS_PER_PIXEL==12
@@ -30,35 +25,40 @@ int (*raw_subtract)(const char *from, const char *sub, const char *dest);
 #endif
 
 // This is to minimize sharing sym to use this lib in other modules
-struct librawop_sym librawop;
+struct librawop_sym* librawop;
 
 static int bind_module_rawop( void** export_list )
 {
 	  // Unbind
 	if ( !export_list ) {
-		librawop.raw_merge_start =0;
-		librawop.raw_merge_add_file =0;
-		librawop.raw_merge_end =0;
-		librawop.raw_subtract =0;
+		librawop=0;
     	return 0;
   	}
 
 	// Bind
 	if ( (unsigned int)export_list[0] != EXPORTLIST_MAGIC_NUMBER )
 	     return 1;
-  	if ( (unsigned int)export_list[1] <6 )
+  	if ( (unsigned int)export_list[1] <3 )
     	 return 1;
 
-	librawop.raw_merge_start = export_list[2];
-	librawop.raw_merge_add_file = export_list[3];
-	librawop.raw_merge_end = export_list[4];
-	librawop.raw_subtract = export_list[5];
+	librawop = export_list[2];
+
+	if ( !librawop )
+    	 return 1;
+
+    /* NO API VERSION CHECK HERE - EACH MODULE CHECK THIS AGAINST ITS REQUIREMENT
+	if ( !API_VERSION_MATCH_REQUIREMENT( librawop->version, 1, 0 ) ) {
+		librawop=0;
+		return 1;
+	}
+    */
+
 	return 0;
 }
 
 void module_rawop_unload()
 {
-	if (librawop.raw_merge_start==0)
+	if (librawop==0)
     	return;
 
 	module_unload(MODULE_NAME_RAWOP);  
@@ -70,16 +70,14 @@ struct librawop_sym* module_rawop_load()
 {
   static int module_idx=-1;
 
-  if (librawop.raw_merge_start)
-     return &librawop;
+  if (librawop)
+     return librawop;
 
   module_idx=module_load(MODULE_NAME_RAWOP, bind_module_rawop );
-  if ( module_idx<0 ) {
+  if ( module_idx<0 )
 	 module_unload(MODULE_NAME_RAWOP);  
-  }
 
-
-  return (librawop.raw_merge_start)?&librawop:0 ;
+  return librawop;
 }
 
 
@@ -88,37 +86,38 @@ struct librawop_sym* module_rawop_load()
 
 #define MODULE_NAME_EDGEOVR "edgeovr.flt"
 
-void (*edge_overlay)();
-void (*save_edge_overlay)(void);
-void (*load_edge_overlay)( const char* );
+struct libedgeovr_sym* libedgeovr;
 
 static int bind_module_edgeovr( void** export_list )
 {
 	  // Unbind
 	if ( !export_list ) {
-		edge_overlay =0;
-		save_edge_overlay =0;
-		load_edge_overlay =0;
+		libedgeovr =0;
     	return 0;
   	}
 
 	// Bind
 	if ( (unsigned int)export_list[0] != EXPORTLIST_MAGIC_NUMBER )
 	     return 1;
-  	if ( (unsigned int)export_list[1] <5 )
+  	if ( (unsigned int)export_list[1] <3 )
     	 return 1;
 
-	edge_overlay = export_list[2];
-	save_edge_overlay = export_list[3];
-	load_edge_overlay = export_list[4];
+	libedgeovr = export_list[2];
+	if ( !libedgeovr )
+    	 return 1;
+	if ( !API_VERSION_MATCH_REQUIREMENT( libedgeovr->version, 1, 0 ) ) {
+		libedgeovr=0;
+		return 1;
+	}
+
 	return 0;
 }
 
 // Return: 0-fail, 1-ok
-int module_edgeovr_load()
+struct libedgeovr_sym* module_edgeovr_load()
 {
-  if (edge_overlay)
-     return 1;
+  if (libedgeovr)
+     return libedgeovr;
 
   // This flag is because edgeovr called each tick
   //   If module loading failed, then do not try to load it until reboot
@@ -140,48 +139,51 @@ int module_edgeovr_load()
 	}
   }
 
-  return (edge_overlay==0)?0:1;
+  return libedgeovr;
 }
 
+
+// edgeovr module will never unload to keep its picture
+// void module_edgeovr_unload() {}
 
 
 /************* DYNAMIC LIBRARY CURVES ******/
 
 #define MODULE_NAME_CURVES "curves.flt"
 
-void (*curve_set_mode)();
-void (*curve_init_mode)();
-void (*curve_apply)();
-
+struct libcurves_sym* libcurves;
 
 static int bind_module_curves( void** export_list )
 {
 	  // Unbind
 	if ( !export_list ) {
-		curve_set_mode =0;
-		curve_init_mode =0;
-		curve_apply =0;
+		libcurves=0;
     	return 0;
   	}
 
 	// Bind
 	if ( (unsigned int)export_list[0] != EXPORTLIST_MAGIC_NUMBER )
 	     return 1;
-  	if ( (unsigned int)export_list[1] <5 )
+  	if ( (unsigned int)export_list[1] <3 )
     	 return 1;
 
-	curve_set_mode = export_list[2];
-	curve_init_mode = export_list[3];
-	curve_apply = export_list[4];
+	libcurves = export_list[2];
+
+	if ( !libcurves )
+    	 return 1;
+	if ( !API_VERSION_MATCH_REQUIREMENT( libcurves->version, 1, 0 ) ) {
+		librawop=0;
+		return 1;
+	}
+
 	return 0;
 }
 
-// Return: 0-fail, 1-ok
-int module_curves_load()
+// Return: 0-fail, addr-ok
+struct libcurves_sym* module_curves_load()
 {
-
-  if (curve_apply)
-     return 1;
+  if (libcurves)
+     return libcurves;
 
   static int module_idx=-1;
 
@@ -197,7 +199,7 @@ int module_curves_load()
 	// curve_init_mode();
   }
 
-  return (curve_apply==0)?0:1;
+  return libcurves;
 }
 
 
@@ -252,32 +254,32 @@ void module_fselect_init(int title, const char* prev_dir, const char* default_di
 // This is to keep module in memory while it required by anyone
 static int module_dng_semaphore;
 
-struct libdng_sym libdng;
+struct libdng_sym* libdng;
 
 #if DNG_SUPPORT
 static int bind_module_dng( void** export_list )
 {
 	  // Unbind
 	if ( !export_list ) {
-		memset(&libdng, 0, sizeof(libdng));
+		libdng=0;
     	return 0;
   	}
 
 	// Bind
 	if ( (unsigned int)export_list[0] != EXPORTLIST_MAGIC_NUMBER )
 	     return 1;
-  	if ( (unsigned int)export_list[1] < 9 )
+  	if ( (unsigned int)export_list[1] < 3 )
     	 return 1;
 
-	libdng.size = ((int)export_list[1])-2;
-	libdng.create_badpixel_bin=export_list[2];
-	libdng.raw_init_badpixel_bin=export_list[3];
-	libdng.capture_data_for_exif=export_list[4];
-	libdng.load_bad_pixels_list_b=export_list[5];
-	libdng.badpixel_list_loaded_b=export_list[6];
+	libdng = export_list[2];
+  	if ( libdng==0 )
+    	 return 1;
 
-	libdng.convert_dng_to_chdk_raw=export_list[7];
-	libdng.write_dng=export_list[8];
+	if ( !API_VERSION_MATCH_REQUIREMENT( libdng->version, 1, 0 ) ) {
+		libdng=0;		
+		return 1;
+	}
+
 	return 0;
 }
 #endif
@@ -285,7 +287,7 @@ static int bind_module_dng( void** export_list )
 void module_dng_unload(int owner)
 {
 #if DNG_SUPPORT
-	if (libdng.create_badpixel_bin==0)
+	if (libdng==0)
     	return;
 
   	module_dng_semaphore&=~owner;
@@ -304,8 +306,8 @@ struct libdng_sym* module_dng_load(int owner)
   static int module_idx=-1;
 
   module_dng_semaphore|=owner;
-  if (libdng.create_badpixel_bin)
-     return &libdng;
+  if (libdng)
+     return libdng;
 
   module_idx=module_load(MODULE_NAME_DNG, bind_module_dng );
   if ( module_idx<0 ) {
@@ -317,7 +319,7 @@ struct libdng_sym* module_dng_load(int owner)
 	 module_set_flags(module_idx, MODULE_FLAG_DISABLE_AUTOUNLOAD);
   }
 
-  return (libdng.create_badpixel_bin)?&libdng:0 ;
+  return libdng;
 #else
   return 0;
 #endif
@@ -334,7 +336,7 @@ int module_convert_dng_to_chdk_raw(char* fn)
 		return module_check_is_exist(MODULE_NAME_DNG);
 	if ( !module_dng_load(LIBDNG_OWNED_BY_CONVERT) )
 		return 0;
-	libdng.convert_dng_to_chdk_raw(fn);
+	libdng->convert_dng_to_chdk_raw(fn);
 	module_dng_unload(LIBDNG_OWNED_BY_CONVERT);
 	return 1;
 #else

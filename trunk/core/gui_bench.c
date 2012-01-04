@@ -13,7 +13,7 @@ void gui_bench_draw_callback(int enforce_redraw);
 void gui_bench_menu_kbd_process();
 
 gui_handler GUI_MODE_BENCH = 
-    /*GUI_MODE_BENCH*/          { gui_bench_draw_callback,   gui_bench_kbd_process,      gui_bench_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_BENCH*/  { GUI_MODE_MODULE,   gui_bench_draw_callback,   gui_bench_kbd_process,      gui_bench_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
 
 
 //-------------------------------------------------------------------
@@ -69,7 +69,7 @@ static void gui_bench_draw_results(int pos, int value) {
 void gui_bench_draw() {
     switch (bench_to_draw) {
         case 1:
-            draw_filled_rect(0, 0, screen_width-1, screen_height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+            draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
             draw_txt_string(1, 0,  lang_str(LANG_BENCH_TITLE), MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
             draw_txt_string(1, 2,  lang_str(LANG_BENCH_SCREEN),       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
@@ -88,8 +88,8 @@ void gui_bench_draw() {
             
             /* no break here */
         case 2:
-            gui_bench_draw_results_screen(3, bench.screen_output_bps, screen_buffer_size);
-            gui_bench_draw_results_screen(4, bench.screen_input_bps, screen_width * vid_get_viewport_height() * 3);
+            gui_bench_draw_results_screen(3, bench.screen_output_bps, camera_screen.buffer_size);
+            gui_bench_draw_results_screen(4, bench.screen_input_bps, camera_screen.width * vid_get_viewport_height() * 3);
 
             gui_bench_draw_results(7, bench.memory_write_bps);
             gui_bench_draw_results(8, bench.memory_read_bps);
@@ -126,7 +126,7 @@ static void gui_bench_run() {
     bench.screen_output_bps = 0;
     gui_bench_draw();
     scr = vid_get_bitmap_fb();
-    s = screen_buffer_size;
+    s = camera_screen.buffer_size;
     t = get_tick_count();
     for (c=0; c<64; ++c)
         for (i=0; i<s; ++i)
@@ -138,7 +138,7 @@ static void gui_bench_run() {
     bench.screen_input_bps = 0;
     gui_bench_draw();
     scr = vid_get_viewport_fb();
-    s = screen_width * vid_get_viewport_height() * 3;
+    s = camera_screen.width * vid_get_viewport_height() * 3;
     t = get_tick_count();
     for (n=0; n<64; ++n)
         for (i=0; i<s; ++i)
@@ -243,7 +243,7 @@ void gui_bench_kbd_process() {
 
 int basic_module_init() {
 	gui_bench_init();
-    gui_set_mode( (unsigned int)&GUI_MODE_BENCH );
+    gui_set_mode(&GUI_MODE_BENCH);
 	return 1;
 }
 

@@ -17,7 +17,7 @@ void gui_snake_kbd_process();
 void gui_snake_draw();
 
 gui_handler GUI_MODE_SNAKE = 
-    /*GUI_MODE_SNAKE*/        { gui_snake_draw,     gui_snake_kbd_process,    gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_SNAKE*/  { GUI_MODE_MODULE,   gui_snake_draw,     gui_snake_kbd_process,    gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
 
 
 //-------------------------------------------------------------------
@@ -294,7 +294,7 @@ static void snake_start(){
 
 
 static void game_over(){
-    draw_filled_rect(0,0,screen_width,screen_height, COLOR_WHITE);
+    draw_filled_rect(0,0,camera_screen.width,camera_screen.height, COLOR_WHITE);
     sprintf(str_buf,"Points: %d",points);
     draw_string(0,0,str_buf, MAKE_COLOR(COLOR_WHITE, COLOR_BLUE));
     msleep(3000);
@@ -422,9 +422,9 @@ void gui_snake_draw() {
 }
 
 int gui_snake_init() {
-    draw_filled_rect(0,0,screen_width,screen_height, COLOR_WHITE);
+    draw_filled_rect(0,0,camera_screen.width,camera_screen.height, COLOR_WHITE);
     snake_start();
-	gui_set_mode((unsigned int)&GUI_MODE_SNAKE);
+	gui_set_mode(&GUI_MODE_SNAKE);
     return 1;
 }
 
@@ -459,6 +459,8 @@ int _module_loader( void** chdk_export_list )
 {
   if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
+  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
+	  return 1;
 
   return 0;
 }

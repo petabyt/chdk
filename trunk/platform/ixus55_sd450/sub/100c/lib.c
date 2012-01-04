@@ -44,16 +44,6 @@ void *vid_get_viewport_fb_d()
     return (void*)(*(int*)0x7BAD8); // found on aImageplayer_c
 }
 
-long vid_get_bitmap_screen_width()
-{
-    return 360;
-}
-
-long vid_get_bitmap_screen_height()
-{
-    return 240;
-}
-
 long vid_get_viewport_height()
 {
      return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:230;
@@ -68,10 +58,6 @@ char *camera_jpeg_count_str()
 {
     return (char*)0x9B58;
 }
-
-long vid_get_bitmap_buffer_width() { return 360; }
-
-long vid_get_bitmap_buffer_height() { return 240; }
 
 void _EnterToCompensationEVF() {} // Dummy function. To be removed after stub is found. See stubs_entry_2.S.
 void _ExitFromCompensationEVF() {} // Dummy function. To be removed after stub is found. See stubs_entry_2.S.

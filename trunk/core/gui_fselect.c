@@ -16,8 +16,11 @@
 
 #include "module_load.h"
 
+void gui_fselect_kbd_process();
+void gui_fselect_draw(int enforce_redraw);
+
 gui_handler GUI_MODE_FSELECT_MODULE = 
-    /*GUI_MODE_FSELECT*/        { gui_fselect_draw,     gui_fselect_kbd_process,    gui_fselect_kbd_process,		0,	GUI_MODE_MAGICNUM };
+    /*GUI_MODE_FSELECT*/    { GUI_MODE_FSELECT, gui_fselect_draw,     gui_fselect_kbd_process,    gui_fselect_kbd_process,		0,	GUI_MODE_MAGICNUM };
 
 extern int module_idx;
 
@@ -59,7 +62,7 @@ static char current_dir[100];       // Path for title
 static char marked_dir[100];        // Path for progress box
 static char selected_file[100];     // This full path to current file. So it is return value
 static char buf[100];
-static gui_mode_t gui_fselect_mode_old; // stored previous gui_mode
+static gui_handler *gui_fselect_mode_old; // stored previous gui_mode
 
 // basic element of file list
 struct fitem {
@@ -348,8 +351,8 @@ void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, 
     int chars_width = NAME_FONT_SIZE + SIZE_FONT_SIZE + TIME_FONT_SIZE;
     main_w = SPACING/*N*/+SPACING+TAB_DIVIDER+SPACING/*S*/+SPACING+TAB_DIVIDER+SPACING/*T*/+SPACING+SCROLLBAR+chars_width;
     main_h = HEAD_FONT_LINES + TAB_DIVIDER + BODY_FONT_LINES + TAB_DIVIDER + FOOT_FONT_LINES;
-    main_x = (screen_width - main_w) >> 1;
-    main_y = (screen_height - main_h) >> 1;
+    main_x = (camera_screen.width - main_w) >> 1;
+    main_y = (camera_screen.height - main_h) >> 1;
     
     head_x = body_x = foot_x = main_x;
     head_w = body_w = foot_w = main_w;    
@@ -389,9 +392,8 @@ void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, 
 
     fselect_on_select = on_select;
     marked_operation = MARKED_OP_NONE;
-    gui_fselect_mode_old = gui_get_mode();
     gui_fselect_redraw = 2;
-    gui_set_mode((unsigned int)&GUI_MODE_FSELECT_MODULE);
+    gui_fselect_mode_old = gui_set_mode(&GUI_MODE_FSELECT_MODULE);
     gui_fselect_set_key_redraw(0);
 }
 
@@ -962,6 +964,8 @@ void process_raw_files(void){
  librawop_p=module_rawop_load();
  if (!librawop_p)
   	return;		//exit if fail
+  if ( !API_VERSION_MATCH_REQUIREMENT( librawop_p->version, 1, 0 ) )
+    return;
 
  if ((fselect_marked_count()>1) && librawop_p->raw_merge_start(raw_operation)) {
    for (ptr=head; ptr; ptr=ptr->next)
@@ -984,6 +988,8 @@ static void fselect_subtract_cb(unsigned int btn) {
 	librawop_p=module_rawop_load();
  	if (!librawop_p)
   		return;		//exit if fail
+ 	if ( !API_VERSION_MATCH_REQUIREMENT( librawop_p->version, 1, 0 ) )
+  		return;
 
     if(!(raw_subtract_from = malloc(300))) //3x full path
         return;
@@ -1322,13 +1328,12 @@ int _module_loader( void** chdk_export_list )
   if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
 
+  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
+	  return 1;
+
   tConfigVal configVal;
   CONF_BIND_INT(209, conf_sub_batch_prefix);
   CONF_BIND_INT(210, conf_sub_batch_ext);
-
-  // Try to bind to generic gui mode alias
-  if (!gui_bind_mode( GUI_MODE_FSELECT, &GUI_MODE_FSELECT_MODULE))
-	return 1;
 
   return 0;
 }
@@ -1345,9 +1350,6 @@ int _module_unloader()
 
 	//sanity clean to prevent accidentaly assign/restore guimode to unloaded module 
 	GUI_MODE_FSELECT_MODULE.magicnum = 0;
-
-    // Unbind generic alias
-	gui_bind_mode( GUI_MODE_FSELECT, 0);
 
     return 0;
 }
