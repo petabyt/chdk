@@ -65,9 +65,11 @@
      #define CAM_EXT_TV_RANGE                            1
      #define CAM_QUALITY_OVERRIDE                        1
  
-     // copied from the SX200 which has the same video buffer size
-     #undef CAM_USES_ASPECT_CORRECTION
-     #define CAM_USES_ASPECT_CORRECTION                  1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
+    // copied from the SX200 which has the same video buffer size
+    #undef CAM_USES_ASPECT_CORRECTION
+    #define CAM_USES_ASPECT_CORRECTION      1 	//camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
+    #undef CAM_BITMAP_WIDTH
+    #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
  
      #define CAM_ZEBRA_ASPECT_ADJUST                     1
      #define CAM_ZEBRA_NOBUF                             1

@@ -51,20 +51,6 @@ void *vid_get_viewport_fb_d()
 	return (void*)(*(int*)(0x2620+0x54));    // found at FFC52DD8 and  (0x48 at FFC52DE0)
 }
 
-// found at FFCD5A04                 height 240
-// found at FFCD5A00               	 width 720
-
-long vid_get_bitmap_screen_width()
-{
-	return 360;
-}
-
-long vid_get_bitmap_screen_height()
-{
-	return 240;
-}
-
-
 int vid_get_viewport_width()
 {
     return 360;                                               
@@ -79,7 +65,3 @@ char *camera_jpeg_count_str()
 {
  return (void*)0x75120;    // found at FFD7BD90 search string: a9999
 }
-
-long vid_get_bitmap_buffer_width() { return 360; }
-long vid_get_bitmap_buffer_height() { return 240; }
-

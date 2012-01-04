@@ -79,11 +79,6 @@ void *vid_get_bitmap_fb()
     return bitmap_buffer[0];
 }
 
-long vid_get_bitmap_screen_width() { return 480; }
-long vid_get_bitmap_screen_height() { return 240; }
-long vid_get_bitmap_buffer_width() { return 960; }
-long vid_get_bitmap_buffer_height() { return 270; }
-
 // Physical width of viewport row in bytes
 int vid_get_viewport_byte_width() {
 	return 960 * 6 / 4;     // IXUS 310 - wide screen LCD is 960 pixels wide, each group of 4 pixels uses 6 bytes (UYVYYY)

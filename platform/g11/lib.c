@@ -48,3 +48,20 @@ void vid_bitmap_refresh()
 	 _ScreenUnlock();
 }
 
+// Viewport and Bitmap values that shouldn't change across firmware versions.
+// Values that may change are in lib.c for each firmware version.
+
+int vid_get_viewport_width()
+{
+	return 360;
+}
+
+long vid_get_viewport_height()
+{
+   return 240;
+}
+
+// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+int vid_get_viewport_yscale() {
+	return 2;               // G11 viewport is 480 pixels high
+}

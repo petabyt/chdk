@@ -64,24 +64,6 @@ void *vid_get_viewport_fb_d()
 }
 
 
-
-// found at FF8E5F40                 LDR     R1, =0x10E   - height 270
-// found at FF8E5F44                 MOV     R0, #0x3C0   - width 960
-
-long vid_get_bitmap_screen_width()
-{
-//    return SCREENX;  // -------------------------------------yes, the buffer is greater, and de 
-	return 360;
-}
-
-long vid_get_bitmap_screen_height()
-{
-//    return SCREENY;  // ---- yes, the buffer is also greater, 
-                     //   seems a 16/9 buffer (i.e. 480x270) but duplicating pixels at x : (480x2)x270
-	return 240;
-}
-
-
 int vid_get_viewport_width()
 {
     return 360;                                               // stays at 360 as IN SD990
@@ -96,8 +78,3 @@ char *camera_jpeg_count_str()
 {
  return (void*)0x5408C;                                      // found at FF9C1F28
 }
-
-long vid_get_bitmap_buffer_width() { return 960; }
-
-long vid_get_bitmap_buffer_height() { return 270; }
-

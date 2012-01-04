@@ -50,16 +50,6 @@ void *vid_get_viewport_fb_d()
     return (void*)(*(int*)0x94408); // 0x94550 (find on "TerminateLowLevelConsole_3" )0x94408 (find on "ImagePlayer.c") 0x4D398 (find on "WBTblAdj.c")
 }
 
-long vid_get_bitmap_screen_width()
-{
-    return 360;
-}
-
-long vid_get_bitmap_screen_height()
-{
-    return 240;
-}
-
 long vid_get_viewport_height()
 {
     return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:230;
@@ -68,8 +58,3 @@ char *camera_jpeg_count_str()
 {
     return (char*)0x12298;
 }
-
-long vid_get_bitmap_buffer_width() { return 360; }
-
-long vid_get_bitmap_buffer_height() { return 240; }
-

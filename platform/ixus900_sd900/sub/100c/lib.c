@@ -162,14 +162,6 @@ void *vid_get_viewport_fb_d() {   // picture buffer (play mode)
     return (void*)(*(int*)0x74028);   // ROM:FF95C354
 }
 
-long vid_get_bitmap_screen_width() {
-    return 360;
-}
-
-long vid_get_bitmap_screen_height() {
-    return 240;
-}
-
 long vid_get_viewport_height() {
     return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:230;
 }
@@ -199,12 +191,4 @@ ROM:FFAA7164                 B       loc_FFAA7178
 ***********/
 char *camera_jpeg_count_str() {
     return (char*)0x818C8;   // ROM:FFAA714C
-}
-
-long vid_get_bitmap_buffer_width() {
-    return 360;
-}
-
-long vid_get_bitmap_buffer_height() {
-    return 240;
 }

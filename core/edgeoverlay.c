@@ -47,7 +47,7 @@ static int viewport_yoffset;	// used when image size != viewport size (e.g. wide
 
 static void get_viewport_size()
 {
-    viewport_height = vid_get_viewport_height()-EDGE_HMARGIN*2; //don't trace bottom lines
+    viewport_height = vid_get_viewport_height()-camera_screen.edge_hmargin*2; //don't trace bottom lines
     viewport_width = vid_get_viewport_width();
     viewport_byte_width = vid_get_viewport_byte_width();
     viewport_yscale = vid_get_viewport_yscale();
@@ -289,8 +289,8 @@ static int calc_edge_overlay()
     int x, y, xdiv3;
     int conv1, conv2;
 
-    const int y_min = viewport_yoffset + EDGE_HMARGIN+ slice   *slice_height;
-    const int y_max = viewport_yoffset + EDGE_HMARGIN+(slice+1)*slice_height;
+    const int y_min = viewport_yoffset + camera_screen.edge_hmargin+ slice   *slice_height;
+    const int y_max = viewport_yoffset + camera_screen.edge_hmargin+(slice+1)*slice_height;
     const int x_min = viewport_xoffset*3 + 6;
     const int x_max = (viewport_width + viewport_xoffset - 2) * 3;
 
@@ -386,7 +386,7 @@ static int calc_edge_overlay()
 
             if (conv1 + conv2 > *conf_edge_overlay_thresh)
             {
-                bv_set(edgebuf, (y-viewport_yoffset-EDGE_HMARGIN)*viewport_width + xdiv3, 1);
+                bv_set(edgebuf, (y-viewport_yoffset-camera_screen.edge_hmargin)*viewport_width + xdiv3, 1);
             }
 
             // Do it once again for the next 'pixel'
@@ -416,7 +416,7 @@ static int calc_edge_overlay()
 
             if (conv1 + conv2 > *conf_edge_overlay_thresh)
             {
-                bv_set(edgebuf, (y-viewport_yoffset-EDGE_HMARGIN)*viewport_width + xdiv3+1, 1);
+                bv_set(edgebuf, (y-viewport_yoffset-camera_screen.edge_hmargin)*viewport_width + xdiv3+1, 1);
             }
         }   // for x
     }   // for y
@@ -492,10 +492,10 @@ static int draw_edge_overlay()
     int x_off, y_off;
 
     const color cl = *conf_edge_overlay_color;
-    const int y_slice_min = viewport_yoffset+EDGE_HMARGIN+ slice   *slice_height;
-    const int y_slice_max = viewport_yoffset+EDGE_HMARGIN+(slice+1)*slice_height;
-    const int y_min = viewport_yoffset+EDGE_HMARGIN;
-    const int y_max = viewport_yoffset+EDGE_HMARGIN+viewport_height;
+    const int y_slice_min = viewport_yoffset+camera_screen.edge_hmargin+ slice   *slice_height;
+    const int y_slice_max = viewport_yoffset+camera_screen.edge_hmargin+(slice+1)*slice_height;
+    const int y_min = viewport_yoffset+camera_screen.edge_hmargin;
+    const int y_max = viewport_yoffset+camera_screen.edge_hmargin+viewport_height;
     const int x_min = viewport_xoffset+2;
     const int x_max = (viewport_width + viewport_xoffset - 2);
 
@@ -766,13 +766,21 @@ int module_idx=-1;
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)5,
+struct libedgeovr_sym libedgeovr = {
+			MAKE_API_VERSION(1,0),		// apiver: increase major if incomplatible changes made in module, 
+										// increase minor if compatible changes made(including extending this struct)
 
 			edge_overlay,
 			save_edge_overlay,
 			load_edge_overlay
+		};
+
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)3,
+
+			&libedgeovr
 		};
 
 
@@ -786,6 +794,10 @@ int _module_loader( void** chdk_export_list )
 {
   if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
+
+  if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
+	 return 1;
+
 
   tConfigVal configVal;
   CONF_BIND_INT(188, conf_edge_overlay_thresh);

@@ -210,10 +210,6 @@ long get_jogdial_direction(void);
 
 long vid_is_bitmap_shown();
 void *vid_get_bitmap_fb();
-long vid_get_bitmap_screen_width();
-long vid_get_bitmap_screen_height();
-long vid_get_bitmap_buffer_width();
-long vid_get_bitmap_buffer_height();
 
 void *vid_get_viewport_fb();
 void *vid_get_viewport_fb_d();

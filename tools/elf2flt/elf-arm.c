@@ -67,7 +67,7 @@ int apply_realloc( struct relevant_section* base_sect,
                printf("=== flt%p(reloc+%x: %x): [%x]=0x%x\n",flat_reloc_cur, (char*)flat_reloc_cur-(char*)flat_reloc, (char*)flat_reloc_cur-flat_buf, locoffset, *(uint32_t*)loc);
       		*flat_reloc_cur = locoffset;
       		flat_reloc_cur++;
-            flat->reloc_count++;
+            flat_reloc_count++;
     	}
     	break;
 
@@ -232,16 +232,16 @@ int apply_import( struct relevant_section* base_sect,
   switch(type) {
     case R_ARM_ABS32:
     	{
-            *(uint32_t*)loc = importidx;
+      		flat_import_cur->offs = locoffset;
+      		flat_import_cur->importidx = importidx;
 
         	if ( FLAG_DUMP_RELOC )
-				printf( "R_ARM_ABS32: %p(%s+0x%x=%x): import_value=%d (sym:%s) %d\n", 
+				printf( "R_ARM_ABS32: %p(%s+0x%x=%x): import_value=%d (sym:%s)+0x%x %d\n", 
 					(char*)base_sect->base_addr+rela->r_offset,  base_sect->name, rela->r_offset, locoffset,
-					 importidx, symname, flat->import_count
+					 importidx, symname, *(uint32_t*)loc, flat_import_count
 						);
-      		*flat_import_cur = locoffset;
       		flat_import_cur++;
-            flat->import_count++;
+            flat_import_count++;
     	}
       	break;
 

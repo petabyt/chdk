@@ -155,37 +155,6 @@ void camera_set_led(int led, int state, int bright) {
 // Viewport and Bitmap values that shouldn't change across firmware versions.
 // Values that may change are in lib.c for each firmware version.
 
-// ROM:FF9013D8 0x2D0 = 720 ?!?
-// SD990 ROM:FF83CFC8 ?!?
-long vid_get_bitmap_screen_width() {
-    //return 320;
-    //return 360;
-    return 480;
-    //return 720;
-    //return 960;
-}
-
-long vid_get_bitmap_screen_height() {
-    return 240;
-    //return 270;
-    //return 360;
-}
-
-// if buffer width was to small, CHDK Logo was shown as distorted "row" on Display
-long vid_get_bitmap_buffer_width() {
-    //return 360;
-    //return 480;
-    //return 720;
-    return 960;    // working
-}
-
-long vid_get_bitmap_buffer_height() {
-    //return 240;
-    return 270;
-    //return 360;
-    //return 480;
-}
-
 /*
 int vid_get_viewport_width() {
     //return 360;    // viewport is still 360, even though live view is 720 (from SD990)

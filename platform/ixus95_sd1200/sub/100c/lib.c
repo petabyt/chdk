@@ -83,18 +83,6 @@ void *vid_get_viewport_fb_d()
     return (void*)(*(int*)(0x2658 + 0x54));
 }
 
-
-// note real width is 720, report 360 for aspect adjustment
-long vid_get_bitmap_screen_width()
-{
-    return 360;
-}
-
-long vid_get_bitmap_screen_height()
-{
-    return 240;
-}
-
 int vid_get_viewport_width()
 {
     return 360;
@@ -110,12 +98,3 @@ char *camera_jpeg_count_str()
 {
     return (char *)0x2F1D4;  //SD1200 from 0xFFD57DC0
 }
-
-/* SD1200:
- * FFCADBF4                 MOV     R0, #0x2D0 ; 0x2D0 == 720
- * FFCADBF8                 MOV     R1, #0xF0  ;  0xF0 == 240
-*/
-
-long vid_get_bitmap_buffer_width() { return 720; }
-long vid_get_bitmap_buffer_height() { return 240; }
-

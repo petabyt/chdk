@@ -10,7 +10,12 @@
 
 
 //-------------------------------------------------------------------
-static gui_mode_t	gui_mbox_mode_old;
+void gui_mbox_draw(int enforce_redraw);
+void gui_mbox_kbd_process();
+
+static gui_handler mboxGuiHandler =    { GUI_MODE_MBOX,    gui_mbox_draw,  gui_mbox_kbd_process,   0,   GUI_MODE_FLAG_NORESTORE_ON_SWITCH,    GUI_MODE_MAGICNUM };
+
+static gui_handler	*gui_mbox_mode_old;
 static const char*	mbox_title;
 static const char* 	mbox_msg;
 static char 		mbox_to_draw;
@@ -55,13 +60,12 @@ void gui_mbox_init(int title, int msg, const unsigned int flags, void (*on_selec
         default: mbox_button_active = 0; break;
     }
 
-    gui_mbox_mode_old = gui_get_mode();
     mbox_title = lang_str(title);
     mbox_msg = lang_str(msg);
     mbox_to_draw = 1;
     mbox_flags = flags;
     mbox_on_select = on_select;
-    gui_set_mode(GUI_MODE_MBOX);
+    gui_mbox_mode_old = gui_set_mode(&mboxGuiHandler);
 }
 
 //-------------------------------------------------------------------
@@ -114,8 +118,8 @@ void gui_mbox_draw(int enforce_redraw) {
         if (bw+BUTTON_SEP>w*FONT_WIDTH) 
             w=(bw+BUTTON_SEP)/FONT_WIDTH+1;
     
-        x = (vid_get_bitmap_screen_width() - w * FONT_WIDTH) >> 1;
-        y = (vid_get_bitmap_screen_height() - (h+2) * FONT_HEIGHT) >> 1;
+        x = (camera_screen.width - w * FONT_WIDTH) >> 1;
+        y = (camera_screen.height - (h+2) * FONT_HEIGHT) >> 1;
         draw_rect_shadow(x-3, y-3, x+w*FONT_WIDTH+5, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+8, COLOR_BLACK, 3); //shadow
         draw_filled_rect_thick(x-4, y-4, x+w*FONT_WIDTH+4, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+7, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), 3); // main box
         draw_filled_rect(x-2, y-2, x+w*FONT_WIDTH+2, y+FONT_HEIGHT+2, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title

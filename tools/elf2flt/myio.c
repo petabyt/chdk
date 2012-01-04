@@ -82,11 +82,11 @@ char* b_get_buf()
 
 static char* import_buf=0;
 static int import_counts=0;
+static int importfilesize=0;
 
 int load_import(char* importfile)
 {
 	int fd;
-	int importfilesize;
 	static char buf[10];
 
 	import_counts=0;
@@ -180,7 +180,137 @@ int find_import_symbol(char* sym)
 	return 0;
 }
 
+// Return symbol name by its idx
+char* get_import_symbol( unsigned symidx )
+{
+	symidx-=2;					//skip export_magicnum, export_size in begining
+	if (symidx>=import_counts)
+		return "";
 
+	char* cur=import_buf;
+	int idx=0;
+
+	for(;idx<symidx;idx++) {
+      for (;*cur; cur++);
+	  cur++;
+	}
+
+	return cur;
+}
+
+
+//==========================================
+
+struct StopListRecord {
+	char* symbol;
+	char* warning;
+	void* next;	
+};
+
+
+char *stoplist_buf=0;
+struct StopListRecord* stoplisthead=0;
+
+
+int load_stoplist(char* stopfile)
+{
+	if ( !stopfile )
+	  return 0;
+
+	int fd=open(stopfile, O_RDONLY|O_BINARY, 0777);
+
+    if ( fd <=0 ) {
+		PRINTERR(stderr,"No stoplist file '%s' found\n",stopfile);
+		return 0;
+	}
+    int stoplistfilesize = lseek(fd,0,SEEK_END);
+	if ( FLAG_VERBOSE )
+    	printf("Stoplist file '%s' size=%d\n",stopfile, stoplistfilesize);
+
+    stoplist_buf=malloc(stoplistfilesize+1);    
+    if (!stoplist_buf) return 0;
+
+    int now=0, loaded =0; 
+ 	if (lseek(fd, 0, SEEK_SET) != 0) return 0;
+	do
+	{ 
+      now = read(fd, stoplist_buf+loaded, stoplistfilesize-loaded);
+      loaded+=now;
+    } while (loaded<stoplistfilesize && now);
+
+	stoplist_buf[loaded]=0;
+	close(fd);
+       
+    if ( loaded != stoplistfilesize )
+      return -loaded;
+
+    // Parse
+    struct StopListRecord record;
+	char* sym=0, *finsym=0;
+    char* cur=stoplist_buf;
+
+    for ( ; cur<(stoplist_buf+stoplistfilesize); ) {
+		for(;*cur==' '; cur++);	// skip spaces
+
+		sym=cur;
+		for(;*cur && *cur!=9 && *cur!=' ' && *cur!=0x0a; cur++);
+		if ( cur==sym ) {
+			for(;*cur && *cur!=10; cur++);
+			if ( *cur==10) {cur++;}
+			continue;
+		}
+
+		record.symbol = sym;	
+		record.warning = "Error: unsafe symbol used. Please check stoplist";
+		finsym=cur;
+		for(;*cur && *cur!=9 && *cur!=0x0a; cur++);	// find \t
+
+		if ( *cur==0 ) break;
+		if ( *cur==9 ) {
+			cur++;
+			record.warning=cur;
+		}
+		
+		for(;*cur && *cur!=10; cur++);		// find eol
+		if ( *cur==0x0a && cur>stoplist_buf && *(cur-1)==0x0d)
+			*(cur-1)=0;
+
+		if (cur==record.warning)
+			record.warning = "Error: unsafe symbol used. Please check stoplist";
+
+		record.next=stoplisthead;
+		stoplisthead = malloc (sizeof(struct StopListRecord));
+		memcpy( stoplisthead, &record, sizeof(struct StopListRecord));
+
+		if ( *cur!=0 ) { *cur=0; cur++;}
+		*finsym = 0;
+
+		if ( FLAG_VERBOSE )
+			printf("Stop record: %s => %s\n",record.symbol, record.warning);
+	}
+
+	return loaded;
+}
+
+//return: 1 - found in stoplist, 0 - not found
+int stoplist_check(char *sym)
+{
+	struct StopListRecord *cur;
+  
+	for ( cur = stoplisthead; cur; cur = cur->next ) {
+		if ( !cur->symbol )
+			continue;
+		if ( !strcmp( sym, cur->symbol) ) {
+			PRINTERR(stderr,"%s\n",cur->warning);
+			cur->symbol = 0;  // mark that this symbol is already warned
+			return 1;
+		}
+	}
+	return 0;
+}
+
+
+//==========================================
 void raise_error()
 {
   static int flag =0;

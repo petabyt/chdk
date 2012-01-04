@@ -10,10 +10,13 @@
 #include "gui_calendar.h"
 
 #include "module_load.h"
+
 void gui_calendar_menu_kbd_process();
+void gui_calendar_kbd_process();
+void gui_calendar_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_CALENDAR = 
-    /*GUI_MODE_CALENDAR*/       { gui_calendar_draw,    gui_calendar_kbd_process,   gui_calendar_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_CALENDAR*/   { GUI_MODE_MODULE,   gui_calendar_draw,    gui_calendar_kbd_process,   gui_calendar_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
 
 //-------------------------------------------------------------------
 #define TITLE_COLOR             (MAKE_COLOR(COLOR_BLACK, COLOR_WHITE))
@@ -67,8 +70,8 @@ static int calendar_day_of_week(int day /*1-31*/, int month /*1-12*/, int year) 
 static void gui_calendar_initial_draw() {
     int x, i;
 
-    draw_filled_rect(0, 0, screen_width-1, screen_height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
-    draw_txt_string((CAM_TS_BUTTON_BORDER/FONT_WIDTH)+1, 0, lang_str(LANG_CALENDAR_TODAY), MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+    draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+    draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+1, 0, lang_str(LANG_CALENDAR_TODAY), MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
     draw_rect(cal_x-3, cal_y-3, cal_x+cal_w+2, cal_y+cal_h+2, CALENDAR_COLOR);
     draw_filled_rect(cal_x-1, cal_y-1, cal_x+cal_w, cal_y+FONT_HEIGHT+8, TITLE_COLOR);
     draw_filled_rect(cal_x-1, cal_y+FONT_HEIGHT+8, cal_x+cal_w, cal_y+cal_h, CALENDAR_COLOR);
@@ -82,13 +85,13 @@ static void gui_calendar_initial_draw() {
 //-------------------------------------------------------------------
 int basic_module_init() {
 
-    gui_set_mode( (unsigned int)&GUI_MODE_CALENDAR );
+    gui_set_mode(&GUI_MODE_CALENDAR);
 
     calendar_goto_today();
     cal_w = FONT_WIDTH*4*7;
     cal_h = 4+FONT_HEIGHT+4+4+FONT_HEIGHT+4+(FONT_HEIGHT+4)*6;
-    cal_x = (screen_width-cal_w)/2;
-    cal_y = FONT_HEIGHT+(screen_height-FONT_HEIGHT-cal_h)/2;
+    cal_x = (camera_screen.width-cal_w)/2;
+    cal_y = FONT_HEIGHT+(camera_screen.height-FONT_HEIGHT-cal_h)/2;
     gui_calendar_initial_draw();
     need_redraw = 1;
 	return 1;
@@ -138,7 +141,7 @@ void gui_calendar_draw(int enforce_redraw) {
     t = time(NULL);
     ttm = localtime(&t);
     sprintf(str, " %2u %s %04u  %2u:%02u:%02u   ", ttm->tm_mday, lang_str(months[ttm->tm_mon]), 1900+ttm->tm_year, ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
-    draw_txt_string((CAM_TS_BUTTON_BORDER/FONT_WIDTH)+8, 0, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+    draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+8, 0, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
     if (need_redraw) {
         need_redraw = 0;

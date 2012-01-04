@@ -138,28 +138,6 @@ void *vid_get_viewport_fb_d()
 	return (void*)(*(int*)(0x3230+0x58));                  // found at FF877D10  (0x58 atFF877D48)
 }
 
-//ASM1989
-// found at FF9263F0                 LDR     R1, =0x10E     - height 270
-// found at FF9263F4                MOV     R0, #0x3C0   - width 960
-
-long vid_get_bitmap_screen_width()
-{
-//    return SCREENX;  // -------------------------------------yes, the buffer is greater, and de
-//	return 320;
-
-
-	//return ((mode_get()&MODE_MASK) == MODE_VIDEO_STD ||(mode_get()&MODE_MASK) == MODE_PLAY)?480:320;
-	return 480; // as in sd980
-
-
-}
-
-long vid_get_bitmap_screen_height()
-{
-//    return SCREENY;  // ---- yes, the buffer is also greater,
-                     //   seems a 16/9 buffer (i.e. 480x270) but duplicating pixels at x : (480x2)x270
-	return 240;
-}
 
 // begin 16:9 support
 
@@ -200,8 +178,3 @@ char *camera_jpeg_count_str()
 {
  return (void*)0xB7E00;                                      // found at FFA23818
 }
-
-long vid_get_bitmap_buffer_width() { return 960; }
-
-long vid_get_bitmap_buffer_height() { return 270; }
-

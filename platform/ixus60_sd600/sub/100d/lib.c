@@ -49,16 +49,6 @@ void *vid_get_viewport_fb_d()
                              // a literal stab in the dark
 }
 
-long vid_get_bitmap_screen_width()
-{
-    return 360;
-}
-
-long vid_get_bitmap_screen_height()
-{
-    return 240;
-}
-
 long vid_get_viewport_height()
 {
     return 240;
@@ -68,10 +58,6 @@ char *camera_jpeg_count_str()
 {
     return (char*)0x10B80;      // TODO, was marked for fixing in sd630??
 }
-
-long vid_get_bitmap_buffer_width() { return 360; }
-
-long vid_get_bitmap_buffer_height() { return 240; }
 
 void _EnterToCompensationEVF() {} // Dummy function. To be removed after stub is found. See stubs_entry_2.S.
 void _ExitFromCompensationEVF() {} // Dummy function. To be removed after stub is found. See stubs_entry_2.S.

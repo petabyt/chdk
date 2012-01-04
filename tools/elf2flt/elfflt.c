@@ -42,13 +42,17 @@ unsigned int /*short*/ strtaboff = 0, strtabsize;
 
 char* flat_buf;         // point to buffer of flat file
 struct flat_hdr* flat;  // point to flat_buf, but casted to header
-uint32_t* flat_reloc;   // point to begining of relocation table
-uint32_t* flat_reloc_cur; // ptr to current reloc value (for write_allocate)
 
-uint32_t* flat_import_buf; // point to begining of import table
-uint32_t* flat_import_cur; // ptr to current import value (for write_import)
+uint32_t flat_reloc_count;
+reloc_record_t* flat_reloc;   // point to begining of relocation table in memory
+reloc_record_t* flat_reloc_cur; // ptr to current reloc value (for write_allocate)
+
+uint32_t flat_import_count;
+import_record_t* flat_import_buf; // point to begining of import table in memory
+import_record_t* flat_import_cur; // ptr to current import value (for write_import)
 
 char* flag_sym_display=0;  // buffer of flags. [symidx]=0 not_showed_yet, 1 already_shown
+int flag_unsafe_sym=0;      // =1 if one of imported symbol is from stoplist
 
 /*---------------------------------------------------------------------------*/
 static
@@ -194,6 +198,8 @@ relocate_section( struct relevant_section* base_sect)
           rv = ELFFLT_SYMBOL_NOT_FOUND;
 		  continue;
       }
+      if ( stoplist_check(name) )
+	      { flag_unsafe_sym=1; }
 
       ret = apply_import( base_sect, &rela, importidx, &s, relidx);
       if (ret != ELFFLT_OK) return ret;
@@ -251,23 +257,23 @@ void dump_section(char* name, unsigned char *ptr, int size )
 }
 
 static 
-void print_offs(char *prefix, int offs)
+void print_offs(char *prefix, int offs, char* postfix)
 {
     int secoffs = 0;
     char* sect="unkn";
     
     if ( !offs ) {
-        printf("%s 0x0\n",prefix);
+        printf("%s 0x0 %s",prefix, postfix);
         return;
     }
     
     if ( offs >=flat->entry && offs<flat->data_start )
        { sect="text"; secoffs=flat->entry;}
-    else if  ( offs >=flat->data_start && offs<=flat->data_end )
+    else if  ( offs >=flat->data_start && offs<flat->bss_start )
        { sect="data"; secoffs=flat->data_start;}
-    else if  ( offs >flat->data_end && offs<=flat->bss_end )
-       { sect="bss"; secoffs=flat->data_end+1;}         
-    printf("%s 0x%x (%s+0x%x)\n",prefix, offs,sect,offs-secoffs);
+    else if  ( offs >=flat->bss_start && offs<flat->reloc_start )
+       { sect="bss"; secoffs=flat->bss_start;}         
+    printf("%s 0x%x (%s+0x%x)%s",prefix, offs,sect,offs-secoffs,postfix);
 }
 
 
@@ -281,7 +287,7 @@ char* get_flat_string( int32_t offs )
 		return buf;
 	}
 
-    if  ( offs >flat->data_end || offs<=flat->data_start )
+    if  ( offs >=flat->bss_start || offs<flat->data_start )
 	  return "";
 
 	strncpy( buf, flat_buf+offs, sizeof(buf)-1);
@@ -565,7 +571,9 @@ elfloader_load(char* filename, char* fltfile)
   if ( !flat_buf) { PRINTERR(stderr, "fail to malloc flat buf\n"); return ELFFLT_OUTPUT_ERROR;}
   memset(flat_buf, 0, flatmainsize+flatrelocsize);
   
-  flat_import_buf=malloc( flatrelocsize );      		//import is subset of full reloc list, so this size is enough
+  //import is subset of full reloc list, so same count is enough
+  // but apply multiplier to take into account difference between sizeofs
+  flat_import_buf=malloc( flatrelocsize* sizeof(import_record_t)/sizeof(reloc_record_t) );      		
   if ( !flat_import_buf) { PRINTERR(stderr, "fail to malloc flat import buf\n"); return ELFFLT_OUTPUT_ERROR;}
   memset(flat_import_buf, 0, flatrelocsize);
 
@@ -598,20 +606,19 @@ elfloader_load(char* filename, char* fltfile)
   DEBUGPRINTF("result=%x\n",  flatmainsize);
 
   // Initialize flat headers
-  memcpy(flat->magic, FLAT_MAGIC_NUMBER, 4);       // Set magic (CHDK_FLAT)
+  memcpy(flat->magic, FLAT_MAGIC_NUMBER, sizeof(flat->magic));       // Set magic (CHDK_FLAT)
   flat->rev = FLAT_VERSION;
   flat->entry = text.flat_offset;
   flat->data_start = rodata.flat_offset;
-  flat->data_end = bss.flat_offset-1;  
-  flat->bss_end = flatmainsize-1;
+  flat->bss_start = bss.flat_offset;  
   flat->reloc_start = flatmainsize;
-  flat->reloc_count = 0;
+  flat_reloc_count = 0;
 
   //@tsv - this is for debug purpose only
-  flat->filler = data.flat_offset;
+  flat->filler1 = data.flat_offset;
 
   flat->import_start = 0;
-  flat->import_count = 0;
+  flat_import_count = 0;
 
   
   flat_reloc = (int*)(flat_buf+flatmainsize);  
@@ -621,6 +628,8 @@ elfloader_load(char* filename, char* fltfile)
 
   // _div0_arm hack
   add_div0_arm();
+
+  flag_unsafe_sym = 0;
 
   // Do relocations
   ret = relocate_section( &text);
@@ -633,9 +642,10 @@ elfloader_load(char* filename, char* fltfile)
   if(ret != ELFFLT_OK)
       return ret;
 
-  flat->import_start = flat->reloc_start+flat->reloc_count*sizeof(uint32_t);
+  if ( flag_unsafe_sym )
+      return ELFFLT_UNSAFE_SYMBOL;
 
-
+  flat->import_start = flat->reloc_start+flat_reloc_count*sizeof(reloc_record_t);
 
   // Init offsets to the entry symbols
                   
@@ -665,19 +675,26 @@ elfloader_load(char* filename, char* fltfile)
     return ELFFLT_NO_MODULEINFO;
   }
 
+  // Prepare symbol list
+  flat->symbols_start = flat->import_start+flat_import_count*sizeof(import_record_t);
+  int flat_symtablesize=0;
+  flat->file_size = flat->symbols_start + flat_symtablesize;
+
+
+
   if ( FLAG_DUMP_FLT_HEADERS ) {
 	printf("\nFLT Headers:\n");
 	printf("->entry        0x%x (size %d)\n", flat->entry, flat->data_start - flat->entry );
-	printf("->data_start   0x%x (size %d)\n", flat->data_start,  flat->data_end - flat->data_start + 1 );
-	printf("->data_end     0x%x\n", flat->data_end );
-	printf("->bss_end      0x%x (size %d)\n", flat->bss_end, flat->bss_end - flat->data_end );
-	printf("->reloc_start  0x%x (size %d)\n", flat->reloc_start, flat->reloc_count*4 );
-	printf("->import_start 0x%x (size %d)\n", flat->import_start, flat->import_count*4 );
+	printf("->data_start   0x%x (size %d)\n", flat->data_start,  flat->bss_start - flat->data_start );
+	printf("->bss_start    0x%x (size %d)\n", flat->bss_start,   flat->reloc_start - flat->bss_start );
+	printf("->reloc_start  0x%x (size %d)\n", flat->reloc_start, flat_reloc_count*sizeof(reloc_record_t) );
+	printf("->import_start 0x%x (size %d %d)\n", flat->import_start, flat->symbols_start-flat->import_start, flat_import_count*sizeof(import_record_t) );
+	printf("->symbol_start 0x%x (size %d)\n", flat->symbols_start, flat_symtablesize );
 
-	print_offs("\n.._module_loader()   =", flat->_module_loader);
-	print_offs(".._module_unloader() = ", flat->_module_unloader);
-	print_offs(".._module_run()      = ", flat->_module_run);
-	print_offs("..MODULE_EXPORT_LIST = ", flat->_module_exportlist);
+	print_offs("\n.._module_loader()   =", flat->_module_loader,"\n");
+	print_offs(".._module_unloader() = ", flat->_module_unloader,"\n");
+	print_offs(".._module_run()      = ", flat->_module_run,"\n");
+	print_offs("..MODULE_EXPORT_LIST = ", flat->_module_exportlist,"\n");
 
 	printf("\nModule info:\n");
 	printf("->Module Name: %s\n", get_flat_string(_module_info->moduleName) );
@@ -703,30 +720,32 @@ elfloader_load(char* filename, char* fltfile)
   if ( FLAG_DUMP_FLAT ) {
     dump_section( "FLT_header", flat_buf, sizeof(struct flat_hdr) );
     dump_section( "FLT_text", flat_buf+flat->entry, flat->data_start-flat->entry );
-    dump_section( "FLT_data", flat_buf+flat->data_start, flat->data_end-flat->data_start+1);
-    dump_section( "FLT_bss",  flat_buf+flat->data_end+1, flat->bss_end-flat->data_end );
+    dump_section( "FLT_data", flat_buf+flat->data_start, flat->bss_start-flat->data_start);
+    dump_section( "FLT_bss",  flat_buf+flat->bss_start, flat->reloc_start-flat->bss_start );
 
     printf("\nDump relocations:\n");
-    for( i = 0; i< flat->reloc_count; i++)
+    for( i = 0; i< flat_reloc_count; i++)
     {
-        print_offs("Offs: ",*(int*)(flat_buf+flat->reloc_start+i*4));
+        print_offs("Offs: ",*(int*)(flat_buf+flat->reloc_start+i*sizeof(reloc_record_t)), "\n");
     }
 
     printf("\nDump imports:\n");
-    for( i = 0; i< flat->import_count; i++)
+    for( i = 0; i< flat_import_count; i++)
     {
-		int offs=*(flat_import_buf+i);
-        print_offs("Offs: ",offs);
+		import_record_t* import=&flat_import_buf[i];
+        print_offs("Offs: ",import->offs,"");
+		int addend = *(uint32_t*)(flat_buf+import->offs);
+		printf(" = sym_%d[%s]+0x%x\n",import->importidx,get_import_symbol(import->importidx),addend);
     }
   }
 
-  int filesize = flat->import_start + flat->import_count*sizeof(uint32_t);
+  int filesize = flat->file_size;
 
   printf("\n\nOutput file %s (size=%d bytes)\n",fltfile,filesize);
 
   int output_fd = open(fltfile,O_WRONLY|O_CREAT|O_TRUNC|O_BINARY,0777);
   write(output_fd, flat_buf, flat->import_start);
-  write(output_fd, flat_import_buf, flat->import_count*sizeof(uint32_t));
+  write(output_fd, flat_import_buf, flat_import_count*sizeof(import_record_t));
   close(output_fd);
 
   return ELFFLT_OK;

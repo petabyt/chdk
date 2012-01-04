@@ -90,11 +90,6 @@ void *vid_get_bitmap_fb()
     return bitmap_buffer[0];
 }
 
-long vid_get_bitmap_screen_width() { return 360; }
-long vid_get_bitmap_screen_height() { return 240; }
-long vid_get_bitmap_buffer_width() { return 960; }
-long vid_get_bitmap_buffer_height() { return 270; }
-
 // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
 int vid_get_viewport_yscale() {
 	return 2;               // G12 viewport is 480 pixels high

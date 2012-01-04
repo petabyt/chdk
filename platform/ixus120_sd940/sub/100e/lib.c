@@ -1,16 +1,6 @@
 // IXUS120-SD940 fw 1.00e
 
 #include "platform.h"
-	
-long vid_get_bitmap_screen_width()		
-{		
-	return 360 ;				// SD940 103c ?  360  103b:  seems to use same number.
-}		
-		
-long vid_get_bitmap_screen_height()		
-{		
-	return 240;					// SD940 103c 103b:  seems to use same number.
-}		
 		
 int vid_get_viewport_width()
 {
@@ -20,16 +10,6 @@ int vid_get_viewport_width()
 long vid_get_viewport_height()		
 {		
 	return 240;					// SD940 103c 103b:  seems to use same number.
-}		
-
-long vid_get_bitmap_buffer_width()	
-{		
-	return 960;					// SD940 103c 103b:  seems to use same number.
-}		
-	
-long vid_get_bitmap_buffer_height()		
-{		
-	return 270;					// SD940 103c 103b:  seems to use same number.
 }		
 		
 char *camera_jpeg_count_str()		

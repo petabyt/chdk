@@ -42,7 +42,7 @@ all: exportlist ../flt.h \
 	@echo \-\> $@
 #	arm-elf-objdump.exe -d -r -x $< >$<.dumpobj
 #	$(topdir)/tools/elf2flt/elf2flt$(EXE) $< $@ -e -f -h -r -s -iexportlist.txt >$@.dump
-	$(topdir)/tools/elf2flt/elf2flt$(EXE) $< $@ -iexportlist.txt > $(DEVNULL)
+	$(topdir)/tools/elf2flt/elf2flt$(EXE) $< $@ -iexportlist.txt -!$(topdir)/tools/elf2flt/stoplist.txt > $(DEVNULL)
 
 calend.elf: simple_module.o ../gui_calendar.o
 	@echo \-\> $@

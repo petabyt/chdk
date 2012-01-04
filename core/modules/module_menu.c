@@ -296,6 +296,9 @@ int _module_loader( void** chdk_export_list )
 	if ( chdk_export_list[MODULESYM_GUI_MENU_RUN_FLTMODULE] == 0)
 		return 1;
 
+    if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.menu_api, 1, 0 ) )
+	  return 1;
+
 	return 0;
 }
 

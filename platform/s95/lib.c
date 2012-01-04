@@ -59,3 +59,20 @@ void shutdown_soft()
 {
    _PostLogicalEventForNotPowerType(0x1005,0);
 }
+
+
+int vid_get_viewport_width()
+{
+	return 360;
+}
+
+long vid_get_viewport_height()
+{
+   return 240;
+
+}
+
+// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+int vid_get_viewport_yscale() {
+	return 2;               // S95 viewport is 480 pixels high
+}

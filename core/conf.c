@@ -489,11 +489,11 @@ void conf_change_dng(void){
  if (conf.dng_raw) {
 	if ( !module_dng_load(LIBDNG_OWNED_BY_RAW) )
 		return;
-	if (!libdng.badpixel_list_loaded_b()) libdng.load_bad_pixels_list_b("A/CHDK/badpixel.bin");
- 	if (!libdng.badpixel_list_loaded_b()) conf.dng_raw=0;
+	if (!libdng->badpixel_list_loaded_b()) libdng->load_bad_pixels_list_b("A/CHDK/badpixel.bin");
+ 	if (!libdng->badpixel_list_loaded_b()) conf.dng_raw=0;
  }
- else if ( libdng.load_bad_pixels_list_b ) {
-	libdng.load_bad_pixels_list_b(0);        //unload badpixel.bin
+ else if ( libdng && libdng->load_bad_pixels_list_b ) {
+	libdng->load_bad_pixels_list_b(0);        //unload badpixel.bin
  	module_dng_unload(LIBDNG_OWNED_BY_RAW);
  }
 #endif
@@ -526,7 +526,7 @@ static void conf_init_defaults() {
     def_batt_volts_max = get_vbatt_max();
     def_batt_volts_min = get_vbatt_min();
     def_histo_pos.x = 45;
-    def_histo_pos.y = vid_get_bitmap_screen_height()-HISTO_HEIGHT-40;
+    def_histo_pos.y = camera_screen.height-HISTO_HEIGHT-40;
     def_dof_pos.x = 90;
     def_dof_pos.y = 45;
     def_batt_icon_pos.x = 178;
@@ -535,27 +535,27 @@ static void conf_init_defaults() {
     def_batt_txt_pos.y=1*FONT_HEIGHT;
     def_usb_info_pos.x = 95;
     def_usb_info_pos.y = 0;
-    def_space_icon_pos.x = vid_get_bitmap_screen_width()-100;
+    def_space_icon_pos.x = camera_screen.width-100;
     def_space_icon_pos.y = 0;
-    def_space_ver_pos.x = vid_get_bitmap_screen_width()-7;
+    def_space_ver_pos.x = camera_screen.width-7;
     def_space_ver_pos.y = 0;
     def_space_hor_pos.x = 0;
-    def_space_hor_pos.y = vid_get_bitmap_screen_height()-7;
+    def_space_hor_pos.y = camera_screen.height-7;
     def_space_txt_pos.x=128;
     def_space_txt_pos.y=0;
     def_mode_state_pos.x=35;
     def_mode_state_pos.y=0;
-    def_mode_raw_pos.x=vid_get_bitmap_screen_width()-7*FONT_WIDTH-2;
-    def_mode_raw_pos.y=vid_get_bitmap_screen_height()-3*FONT_HEIGHT-2;
-    def_mode_video_pos.x=vid_get_bitmap_screen_width()-25*FONT_WIDTH-2;
-    def_mode_video_pos.y=vid_get_bitmap_screen_height()-6*FONT_HEIGHT-2;
-    def_mode_ev_pos.x=vid_get_bitmap_screen_width()-40*FONT_WIDTH-2;
-    def_mode_ev_pos.y=vid_get_bitmap_screen_height()-8*FONT_HEIGHT-2;
-    def_values_pos.x=vid_get_bitmap_screen_width()-9*FONT_WIDTH;
+    def_mode_raw_pos.x=camera_screen.width-7*FONT_WIDTH-2;
+    def_mode_raw_pos.y=camera_screen.height-3*FONT_HEIGHT-2;
+    def_mode_video_pos.x=camera_screen.width-25*FONT_WIDTH-2;
+    def_mode_video_pos.y=camera_screen.height-6*FONT_HEIGHT-2;
+    def_mode_ev_pos.x=camera_screen.width-40*FONT_WIDTH-2;
+    def_mode_ev_pos.y=camera_screen.height-8*FONT_HEIGHT-2;
+    def_values_pos.x=camera_screen.width-9*FONT_WIDTH;
     def_values_pos.y=30;
-    def_clock_pos.x=vid_get_bitmap_screen_width()-5*FONT_WIDTH-2;
+    def_clock_pos.x=camera_screen.width-5*FONT_WIDTH-2;
     def_clock_pos.y=0;
-    def_temp_pos.x=vid_get_bitmap_screen_width()-9*FONT_WIDTH-2;
+    def_temp_pos.x=camera_screen.width-9*FONT_WIDTH-2;
     def_temp_pos.y=1*FONT_HEIGHT;
     def_ev_video_pos.x=18;
     def_ev_video_pos.y=80;

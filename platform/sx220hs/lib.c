@@ -59,12 +59,6 @@ void JogDial_CCW(void){
 // Viewport and Bitmap values that shouldn't change across firmware versions.
 // Values that may change are in lib.c for each firmware version.
 
-long vid_get_bitmap_screen_width() { return 480; }
-long vid_get_bitmap_screen_height() { return 240; }
-
-long vid_get_bitmap_buffer_width() { return 960; }
-long vid_get_bitmap_buffer_height() { return 270; }
-
 // Physical width of viewport row in bytes
 int vid_get_viewport_byte_width() {
 	return 960 * 6 / 4;     // SX220HS - wide screen LCD is 960 pixels wide, each group of 4 pixels uses 6 bytes (UYVYYY)

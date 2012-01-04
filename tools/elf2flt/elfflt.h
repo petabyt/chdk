@@ -17,6 +17,7 @@
 #define ELFFLT_OUTOF_RANGE         9
 #define ELFFLT_INPUT_ERROR         10
 #define ELFFLT_OUTPUT_ERROR        11
+#define ELFFLT_UNSAFE_SYMBOL       12
 
 
 /**
@@ -43,10 +44,14 @@ extern struct relevant_section bss, data, rodata, text;
 
 extern char* flat_buf;
 extern struct flat_hdr* flat;
-extern uint32_t *flat_reloc;
-extern uint32_t *flat_reloc_cur;
-extern uint32_t* flat_import_buf; // point to begining of import table
-extern uint32_t* flat_import_cur; // ptr to current import value (for write_import)
+
+extern uint32_t flat_reloc_count;
+extern reloc_record_t *flat_reloc;
+extern reloc_record_t *flat_reloc_cur;
+
+extern uint32_t flat_import_count;
+extern import_record_t* flat_import_buf; // point to begining of import table in memory
+extern import_record_t* flat_import_cur; // ptr to current import value (for write_import)
 
 extern unsigned int strtaboff;
 extern unsigned int symtaboff;

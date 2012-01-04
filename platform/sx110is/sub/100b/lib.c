@@ -37,17 +37,6 @@ void *vid_get_viewport_fb_d()
     return (void*)(*(int*)0x5114);   //0x50C0 + 0x54, 0x50C0 found at 0xFFC45E78 and look at 0xffc46568/0xFFC46594
 }
 
-
-long vid_get_bitmap_screen_width()
-{
-    return 360;
-}
-
-long vid_get_bitmap_screen_height()
-{
-    return 240;
-}
-
 long vid_get_viewport_height()
 {
     return 240;
@@ -57,10 +46,6 @@ char *camera_jpeg_count_str()
 	// Found at ROM:FFD84BC0	
  return (void*)0x45E58;
 }
-
-long vid_get_bitmap_buffer_width() { return 360; }
-
-long vid_get_bitmap_buffer_height() { return 240; }
 
 /*
 GetBatteryTemperature usually will get back temperature of battery compartment/batteries. GetBatteryTemperature is implemented in Canon's firmware for SX110is.

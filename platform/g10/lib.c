@@ -71,15 +71,9 @@ void JogDial_CCW(void){
 // Viewport and Bitmap values that shouldn't change across firmware versions.
 // Values that may change are in lib.c for each firmware version.
 
-long vid_get_bitmap_screen_width() { return 360; }  //  G10 use 320 for 9/4 mode, 360 otherwise
-long vid_get_bitmap_screen_height() { return 240; } //  G10
-
-long vid_get_bitmap_buffer_width() { return 720; }	//  G10 1.00h @ 0xFF8F2FB4
-long vid_get_bitmap_buffer_height() { return 240; } //  G10 1.00h @ 0xFF8F2FB8
-
 int vid_get_viewport_width()
 {
-	return 720 ;   //  G10
+	return 360 ;   //  G10
 }
 
 long vid_get_viewport_height()
@@ -87,3 +81,7 @@ long vid_get_viewport_height()
    return 240;    //  G10
 }
 
+// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+int vid_get_viewport_yscale() {
+	return 2;               // G10 viewport is 480 pixels high
+}

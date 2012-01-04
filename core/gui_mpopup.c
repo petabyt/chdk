@@ -12,13 +12,16 @@
 
 extern int module_idx;
 
+void gui_mpopup_kbd_process();
+void gui_mpopup_draw(int enforce_redraw);
+
 gui_handler GUI_MODE_MPOPUP_MODULE = 
-    /*GUI_MODE_MPOPUP*/         { gui_mpopup_draw,      gui_mpopup_kbd_process,     gui_mpopup_kbd_process, GUI_MODE_FLAG_NORESTORE_ON_SWITCH, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_MPOPUP*/ { GUI_MODE_MPOPUP,  gui_mpopup_draw,      gui_mpopup_kbd_process,     gui_mpopup_kbd_process, GUI_MODE_FLAG_NORESTORE_ON_SWITCH, GUI_MODE_MAGICNUM };
 
 // Simple popup menu. No title, no separators, only processing items
 
 //-------------------------------------------------------------------
-static gui_mode_t          gui_mpopup_mode_old;
+static gui_handler              *gui_mpopup_mode_old;
 static char                     mpopup_to_draw;
 
 #define MAX_ACTIONS             10
@@ -50,10 +53,9 @@ void gui_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags
 
     mpopup_actions_active = 0;
 
-    gui_mpopup_mode_old = gui_get_mode();
     mpopup_to_draw = 1;
     mpopup_on_select = on_select;
-    gui_set_mode((unsigned int)&GUI_MODE_MPOPUP_MODULE);
+    gui_mpopup_mode_old = gui_set_mode(&GUI_MODE_MPOPUP_MODULE);
 }
 
 //-------------------------------------------------------------------
@@ -170,9 +172,8 @@ int _module_loader( void** chdk_export_list )
   if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
 
-  // Try to bind to generic gui mode alias
-  if (!gui_bind_mode( GUI_MODE_MPOPUP, &GUI_MODE_MPOPUP_MODULE))
-     return 1;
+  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
+	  return 1;
 
   return 0;
 }
@@ -190,9 +191,6 @@ int _module_unloader()
 
 	//sanity clean to prevent accidentaly assign/restore guimode to unloaded module 
 	GUI_MODE_MPOPUP_MODULE.magicnum = 0;
-
-	// unbind generic alias
-	gui_bind_mode( GUI_MODE_MPOPUP, 0 );
 
     return 0;
 }

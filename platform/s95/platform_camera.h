@@ -52,6 +52,10 @@
 
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION  1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
+    #undef CAM_BITMAP_WIDTH
+    #undef CAM_BITMAP_HEIGHT
+    #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
+    #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
 
 
     #undef CAM_BITMAP_PALETTE

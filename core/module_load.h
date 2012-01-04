@@ -59,5 +59,11 @@ void module_tick_unloader();
 #define CONF_BIND_COLOR(idConf,var)  if ( conf_getValue(idConf, &configVal) == CONF_VALUE ) {	var = (color*)configVal.pInt; } else { return 1;}
 #define CONF_BIND_STR(idConf,var)  if ( conf_getValue(idConf, &configVal) == CONF_CHAR_PTR ) {	var = (char*)configVal.str; } else { return 1;}
 
+// API versions check
+//---------------------------
+#define MAKE_CHDKVER(major,minor,last) (major*10000+minor*100+last)
+#define MAKE_API_VERSION(major,minor) ((major<<16)+minor)
+#define API_VERSION_MATCH_REQUIREMENT( api_ver, req_major, req_minor ) ((api_ver>>16)==req_major && (api_ver&0xffff)>=req_minor)
+
 
 #endif /* __MODULE_LOAD_H__ */

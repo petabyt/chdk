@@ -1162,7 +1162,7 @@ void SetScriptMode(unsigned mode) {
 // TODO this belongs lib.c, but not all cameras include it
 // same as bitmap width for most cameras, override in platform/sub/lib.c as needed
 int __attribute__((weak)) vid_get_viewport_width() {
-	return vid_get_bitmap_screen_width();
+	return camera_screen.width;
 }
 
 // Physical width of viewport row in bytes

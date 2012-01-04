@@ -9,9 +9,51 @@ typedef int int32_t;
 
 //================= CFLT format header =====================
 
-#define	FLAT_VERSION	    0x00000005L
+/*
+	Structure of CFLAT v6 file:
+	- flat_hdr
+	- .text		[start from flt_hdr.entry]
+    - .rodata	[start from flt_hdr.data_start]
+    - .data
+	- .bss		[start from flt_hdr.bss_start]
+    - reloc_list [start from flt_hdr.reloc_start]
+		* this is just array of offsets in flat
+    - import_list  [start from flt_hdr.import_start]
+		* this is array of import_record_t
+    - symbol_list  [start from flt_hdr.symbols_start. till file_size]
+        * plain list of zero-terminated strings
+		* symbol idx are same as in used exportlist.txt
+	    * unused by module symbols are present in list but empty
+        * 2 and more continuous empty names could be squeezed to (0x80|num_of_empty_names)
+		* This table is not used in module loader now. 
+		  No impact to loaded size of module. This extension just for debug purpose and possible future usage
+*/
+
+
+#define	FLAT_VERSION	    0x00000006L
 #define FLAT_MAGIC_NUMBER   "CFLAT"
 
+
+// Structures of relocation and importing
+//---------------------------------------
+
+// Rules how relocations works:
+//  Relocation:
+//  	*(flat_base+reloc[i]) += flat_base;
+//  Import:
+//    symidx = import[i].importidx
+//	  *(flat_base+import[i].offs) += chdk_export_table[sym_idx]
+
+
+typedef unsigned int reloc_record_t;
+typedef struct {
+		uint32_t offs;			// offset of changed record from begin of flat
+		uint32_t importidx;     // index of symbol in chdk_export_table
+	} import_record_t;
+
+
+
+//================= FLAT Header structure ==============
 /*
  * To make everything easier to port and manage cross platform
  * development,  all fields are in network byte order.
@@ -23,34 +65,19 @@ struct flat_hdr {
     	uint32_t rev;          			/* version (as above) */
         uint32_t runtime_bind_callback; // while loaded: callback to chdk binder function 
     };
-    uint32_t entry;        /* Offset of first executable instruction
-                              with text segment from beginning of file */
-    uint32_t data_start;   /* Offset of data segment from beginning of
-                              file */
-    uint32_t data_end;     /* Offset of end of data segment from beginning
-                              of file */
-    uint32_t bss_end;      /* Offset of end of bss segment from beginning
-                              of file */
+    uint32_t entry;        // Offset of start .text segment
+    uint32_t data_start;   // Offset of data segment from beginning of file
+    uint32_t bss_start;    // Offset of bss segment from beginning of file
 
     /* (It is assumed that data_end through bss_end forms the bss segment.) */
-
-    //uint32_t stack_size;   // BFLAT - Size of stack, in bytes
-
-	// CFLAT_v4
-    //uint16_t chdk_min_version;  // @tsv: CFLAT specific
-    //uint16_t chdk_req_platfid;	// @tsv: CFLAT specific 0 - if no restriction
 
 	// v5
 	uint32_t _module_info;		// Offset ModuleInfo from beginning file
 
 
-    uint32_t reloc_start;  /* Offset of relocation records from beginning
-                              of file */
-    uint32_t reloc_count;  // Number of relocation records
-
-    //uint32_t flags;         // BFLAT
-    //uint32_t build_date;   // When the program/library was built
-    //uint32_t filler[5];    // Reservered, set to zero
+    uint32_t reloc_start;		// Offset of relocation records from beginning of file
+    uint32_t import_start;		// Offset of import section
+	uint32_t symbols_start;     // offset of symbol table list
 
     int32_t _module_loader;       // CFLAT: offsets specific symbols from beginning file 
     int32_t _module_unloader;       
@@ -59,9 +86,9 @@ struct flat_hdr {
     union {       
         char     modulename[12];   // while loaded: module identification
         struct {
-				uint32_t import_start; // offset of import section and count of records
-				uint32_t import_count;
-				uint32_t filler;  
+				uint32_t file_size;	   // size of file (and this is last byte of symbol table+1)
+				uint32_t filler1;  
+				uint32_t filler2;  
 			   };
     };
 };
