@@ -32,6 +32,10 @@ NSTUB(kbd_pwr_off                             ,0xff8652c4) //  2 60%
 //DEF(canon_shoot_menu_active                 ,0x00008109) // Found @0xff9cec20,          stubs_min = 0x00008109 (0x00008109)
 //DEF(playrec_mode                            ,0x00002eb8) // Found @0xff8877d0,          stubs_min = 0x00002eb8 (0x00002eb8)
 //DEF(zoom_status                             ,0x0000d520) // Found @0xffafaf48,          stubs_min = 0x0000d520 (0x0000d520)
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 2 int value(s), the first is the zoom focus length.
+// there are 128 entries in the table - set NUM_FL to 128
+DEF(focus_len_table                         ,0xfffeabd8) // Found @0xfffeabd8
 //DEF(zoom_busy                               ,0x00006dcc) // Found @0xff98138c,          stubs_min = 0x00006dcc (0x6DB0+0x1C)
 //DEF(focus_busy                              ,0x00006c5c) // Found @0xff97b73c,          stubs_min = 0x00006c5c (0x6C54+8)
 //DEF(recreview_hold                          ,0x00003b7c) // Found @0xff8a6484, ** != ** stubs_min = 0x00007e08 (0x7DE0+0x28)

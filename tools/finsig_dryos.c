@@ -841,6 +841,8 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 	case 49: 
         cam_idx = (((fw->base==0xFF000000)?0xFFF40190:0xFFFE0170) - fw->base) / 4; 
         pid_idx = (((fw->base==0xFF000000)?0xFFF40040:0xFFFE0040) - fw->base) / 4; 
+        if ((cam_idx < fw->size) && (strncmp((char*)&fw->buf[cam_idx],"Canon ",6) != 0))
+            cam_idx = (((fw->base==0xFF000000)?0xFFF40170:0xFFFE0170) - fw->base) / 4; 
         break;
 	}
 
@@ -3183,7 +3185,8 @@ void find_stubs_min(firmware *fw)
             if (fw->buf[k] == min_focus_len)
             {
                 int mul = 1;
-                if (fw->buf[k+1] == 100) mul = 3;
+                if ((fw->buf[k+1] == 100) && (fw->buf[k+2] == 0)) mul = 3;
+                if ((fw->buf[k+1] == 100) && (fw->buf[k+2] != 0)) mul = 2;
                 for (k1 = k + mul; (k1 < fw->size) && (fw->buf[k1] > fw->buf[k1-mul]) && (fw->buf[k1] != max_focus_len); k1 += mul) ;
                 if (fw->buf[k1] == max_focus_len)
                 {
