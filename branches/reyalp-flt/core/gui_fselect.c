@@ -24,9 +24,6 @@ gui_handler GUI_MODE_FSELECT_MODULE =
 
 extern int module_idx;
 
-int *conf_sub_batch_prefix;
-int *conf_sub_batch_ext;
-
 struct librawop_sym* librawop_p;
 
 
@@ -395,14 +392,6 @@ void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, 
     gui_fselect_redraw = 2;
     gui_fselect_mode_old = gui_set_mode(&GUI_MODE_FSELECT_MODULE);
     gui_fselect_set_key_redraw(0);
-}
-
-//-------------------------------------------------------------------
-char* gui_fselect_result() {
-    if (selected_file[0])
-        return selected_file;
-    else
-        return NULL;
 }
 
 //-------------------------------------------------------------------
@@ -1002,8 +991,8 @@ static void fselect_subtract_cb(unsigned int btn) {
             ptr->size == hook_raw_size() &&
             (strcmp(ptr->name,selected->name)) != 0) {
             sprintf(raw_subtract_from,"%s/%s",current_dir,ptr->name);
-            sprintf(raw_subtract_dest,"%s/%s%s",current_dir,img_prefixes[*conf_sub_batch_prefix],ptr->name+4);
-            strcpy(raw_subtract_dest + strlen(raw_subtract_dest) - 4,img_exts[*conf_sub_batch_ext]);
+            sprintf(raw_subtract_dest,"%s/%s%s",current_dir,img_prefixes[conf.sub_batch_prefix],ptr->name+4);
+            strcpy(raw_subtract_dest + strlen(raw_subtract_dest) - 4,img_exts[conf.sub_batch_ext]);
             // don't let users attempt to write one of the files being read
             if( strcmp(raw_subtract_dest,raw_subtract_from) != 0 && strcmp(raw_subtract_dest,raw_subtract_sub) != 0) {
                 librawop_p->raw_subtract(raw_subtract_from,raw_subtract_sub,raw_subtract_dest);
@@ -1330,10 +1319,8 @@ int _module_loader( void** chdk_export_list )
 
   if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
 	  return 1;
-
-  tConfigVal configVal;
-  CONF_BIND_INT(209, conf_sub_batch_prefix);
-  CONF_BIND_INT(210, conf_sub_batch_ext);
+  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 1, 0 ) )
+	 return 1;
 
   return 0;
 }
@@ -1389,7 +1376,7 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 
 									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
 									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
+									MODULEINFO_FLAG_SYSTEM,		// flag
 									-LANG_MENU_MISC_FILE_BROWSER,	// Module name
 									1, 0,						// Module version
 									0

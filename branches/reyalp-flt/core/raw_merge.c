@@ -379,7 +379,7 @@ int module_idx=-1;
  **************************************************************/
 
 struct librawop_sym librawop = {
-			MAKE_API_VERSION(1,0),		// apiver: increase major if incomplatible changes made in module, 
+			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
 										// increase minor if compatible changes made(including extending this struct)
 			raw_merge_start,
 			raw_merge_add_file,
@@ -390,7 +390,7 @@ struct librawop_sym librawop = {
 
 void* MODULE_EXPORT_LIST[] = {
 	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)3,
+	/* 1 */	(void*)1,
 		
 			&librawop
 		};

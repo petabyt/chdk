@@ -81,7 +81,6 @@ static unsigned char module_unload_request[MAX_NUM_LOADED_MODULES];
 // =1- if correspondend module ask to unload it on exit from main menu
 static unsigned char module_flags[MAX_NUM_LOADED_MODULES]; 
 
-
 //-----------------------------------------------
 // Cut module name to 11 sym + make it uppercase
 //-----------------------------------------------
@@ -276,6 +275,8 @@ int module_load( char* name, _module_loader_t callback)
    if ( idx>=0 ) {
 	  // reset possible unload request
 	  module_unload_request[idx]=0;
+      if ( callback )
+          callback( (void**) modules[idx]->_module_exportlist );
       return idx;
    }
 
@@ -431,12 +432,9 @@ int module_run(char* name, _module_loader_t callback, int argn, void* args, enum
 
 
 //-----------------------------------------------
-void module_unload(char* name)
+void module_unload_idx(int idx)
 {
-   int idx;
    _module_loader_t callback;
-
-   idx = module_find(name);
 
    if ( idx>=0 ) {
         // Make finalization module
@@ -456,6 +454,10 @@ void module_unload(char* name)
    }
 }
 
+void module_unload(char* name)
+{
+    module_unload_idx(module_find(name));
+}
 
 //-----------------------------------------------
 // Return: 0 no such module exist, !=0 found

@@ -95,7 +95,7 @@ void gui_palette_draw(int enforce_redraw) {
         c = COLOR_BLACK;
         for (y=DISP_TOP; y<DISP_BOTTOM; y+=CELL_SIZE)
         {
-            for (x=DISP_LEFT; x<DISP_RIGHT; x+=CELL_SIZE, c+=0x0100)
+            for (x=DISP_LEFT; x<DISP_RIGHT; x+=CELL_SIZE, c+=MAKE_COLOR(1,0))
             {
                 draw_filled_rect(xl+x, y, xl+x+CELL_SIZE, y+CELL_SIZE, c);
             }
@@ -184,7 +184,7 @@ int _module_run(int moduleidx, int argn, int* arguments)
   }
 
   if ( argn==3 )
-  gui_palette_init( arguments[0], (color)arguments[1], (void*)arguments[2]);
+    gui_palette_init( arguments[0], (color)arguments[1], (void*)arguments[2]);
   else
   	gui_palette_init( PALETTE_MODE_DEFAULT, 0x00, NULL );
 
@@ -198,7 +198,7 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 
 									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
 									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
+									MODULEINFO_FLAG_SYSTEM,		// flag
 									(int32_t)"Palette",					// Module name
 									1, 0,						// Module version
 									0

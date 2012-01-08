@@ -6,7 +6,11 @@
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_grid.h"
+#include "gui_menu.h"
+#include "gui_lang.h"
 
+#include "modules.h"
+#include "module_exportlist.h"
 
 //-------------------------------------------------------------------
 #define GRID_BUF_SIZE               0x1000
@@ -142,7 +146,7 @@ void grid_lines_load(const char *fn) {
         if (!buf) return;
 
         grid = grid_default;
-        fd = open(fn, O_RDONLY, 0777);
+        fd = safe_open(fn, O_RDONLY, 0777);
         if (fd>=0) {
             int rcnt = read(fd, buf, GRID_BUF_SIZE);
             if (rcnt > 0) {
@@ -194,3 +198,113 @@ void gui_grid_draw_osd(int force) {
 }
 
 //-------------------------------------------------------------------
+
+static void gui_grid_lines_load_selected(const char *fn) {
+    if (fn)
+        grid_lines_load(fn);
+}
+void gui_grid_lines_load(int arg) {
+    module_fselect_init(LANG_STR_SELECT_GRID_FILE, conf.grid_lines_file, "A/CHDK/GRIDS", gui_grid_lines_load_selected);
+}
+
+static CMenuItem grid_submenu_items[] = {
+    MENU_ITEM(0x2f,LANG_MENU_SHOW_GRID,         MENUITEM_BOOL,		&conf.show_grid_lines, 0 ),
+    MENU_ITEM(0x35,LANG_MENU_GRID_LOAD,         MENUITEM_PROC,		gui_grid_lines_load, 0 ),
+    MENU_ITEM(0x0,LANG_MENU_GRID_CURRENT,       MENUITEM_SEPARATOR, 0, 0 ),
+    MENU_ITEM(0x0,(int)grid_title,              MENUITEM_TEXT,      0, 0 ),
+    MENU_ITEM(0x0,(int)"",                      MENUITEM_SEPARATOR, 0, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_GRID_FORCE_COLOR,  MENUITEM_BOOL,      &conf.grid_force_color, 0 ),
+    MENU_ITEM(0x65,LANG_MENU_GRID_COLOR_LINE,   MENUITEM_COLOR_FG,  &conf.grid_color, 0 ),
+    MENU_ITEM(0x65,LANG_MENU_GRID_COLOR_FILL,   MENUITEM_COLOR_BG,  &conf.grid_color, 0 ),
+    MENU_ITEM(0x51,LANG_MENU_BACK,              MENUITEM_UP, 0, 0 ),
+    {0}
+};
+static CMenu grid_submenu = {0x2f,LANG_MENU_GRID_TITLE, NULL, grid_submenu_items };
+
+// =========  MODULE INIT =================
+
+#include "module_load.h"
+
+
+struct libgrids_sym libgrids = {
+			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
+										// increase minor if compatible changes made(including extending this struct)
+			gui_grid_draw_osd
+};
+
+int module_idx=-1;
+
+/***************** BEGIN OF AUXILARY PART *********************
+  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+ **************************************************************/
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)1,
+			&libgrids
+		};
+
+
+//---------------------------------------------------------
+// PURPOSE:   Bind module symbols with chdk. 
+//		Required function
+// PARAMETERS: pointer to chdk list of export
+// RETURN VALUE: 1 error, 0 ok
+//---------------------------------------------------------
+int _module_loader( void** chdk_export_list )
+{
+  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+     return 1;
+
+  if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
+	 return 1;
+  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 1, 0 ) )
+	 return 1;
+
+  grid_lines_load(conf.grid_lines_file);
+
+  return 0;
+}
+
+
+
+//---------------------------------------------------------
+// PURPOSE: Finalize module operations (close allocs, etc)
+// RETURN VALUE: 0-ok, 1-fail
+//---------------------------------------------------------
+int _module_unloader()
+{
+    grid_lines_free_data();
+    return 0;
+}
+
+
+//---------------------------------------------------------
+// PURPOSE: Default action for simple modules (direct run)
+// NOTE: Please comment this function if no default action and this library module
+//---------------------------------------------------------
+int _module_run(int moduleidx, int argn, int* arguments)
+{
+  module_idx=moduleidx;
+
+  gui_activate_sub_menu(&grid_submenu, module_idx);
+
+  return 0;
+}
+
+
+/******************** Module Information structure ******************/
+
+struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
+									sizeof(struct ModuleInfo),
+
+									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+									MODULEINFO_FLAG_SYSTEM,		// flag
+									(int32_t)"Grids (dll)",	    // Module name
+									1, 0,						// Module version
+									(int32_t)"Grid Display"
+								 };
+
+
+/*************** END OF AUXILARY PART *******************/

@@ -9,6 +9,7 @@ int module_idx=-1;
 
 extern int basic_module_init();
 void (*_getmeminfo)(void*) = 0;
+void (*_getexmeminfo)(void*) = 0;
 
 /***************** BEGIN OF AUXILARY PART *********************
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
@@ -35,6 +36,7 @@ int _module_loader( void** chdk_export_list )
 	  return 1;
 
   _getmeminfo = chdk_export_list[MODULESYM_GETMEMINFO];
+  _getexmeminfo = chdk_export_list[MODULESYM_GETEXMEMINFO];
 
   return 0;
 }
@@ -70,7 +72,7 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 
 									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
 									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
+									MODULEINFO_FLAG_SYSTEM,		// flag
 									(int32_t)"Module Inspector",// Module name
 									1, 0,						// Module version
 									(int32_t)"Show list of loaded modules"
@@ -138,6 +140,17 @@ void gui_module_menu_kbd_process() {
   	module_async_unload(module_idx);
 }
 
+static void gui_mem_info(char *typ, cam_meminfo *meminfo, int showidx)
+{
+    char txt[50];
+    sprintf(txt,"%-5s: %08x-%08x: %d",typ,meminfo->start_address, meminfo->end_address, meminfo->total_size);
+    draw_txt_string(0, 5+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+	sprintf(txt,"alloc: now=%d(%d) max=%d", meminfo->allocated_size, meminfo->allocated_count, meminfo->allocated_peak);
+    draw_txt_string(0, 6+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+	sprintf(txt,"free:  now=%d(%d) max=%d", meminfo->free_size, meminfo->free_block_count, meminfo->free_block_max_size);
+    draw_txt_string(0, 7+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+}
+
 void gui_module_draw()
 {
     int idx, showidx;
@@ -171,19 +184,22 @@ void gui_module_draw()
         draw_txt_string(1, 4+showidx,  "SET-redraw, DISP-unload_all, MENU-exit",       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
 		// Simple platform-dependend part [not always GetMemInfo exits]
+    	cam_meminfo meminfo;
 		if (_getmeminfo) {
 
-	    	cam_meminfo meminfo;
 			memset(&meminfo,sizeof(meminfo),0);
     		_getmeminfo(&meminfo);
 
-			char txt[50];
-		    sprintf(txt,"MEM: %08x-%08x: %dbytes",meminfo.start_address, meminfo.end_address, meminfo.total_size);
-        	draw_txt_string(0, 5+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
-		    sprintf(txt,"alloc: now=%d(%d) max=%d", meminfo.allocated_size, meminfo.allocated_count, meminfo.allocated_peak);
-        	draw_txt_string(0, 6+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
-		    sprintf(txt,"free:  now=%d(%d) max=%d", meminfo.free_size, meminfo.free_block_count, meminfo.free_block_max_size);
-        	draw_txt_string(0, 7+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+            gui_mem_info("MEM", &meminfo, showidx);
+
+            showidx += 3;
+		}
+		if (_getexmeminfo) {
+
+			memset(&meminfo,sizeof(meminfo),0);
+    		_getexmeminfo(&meminfo);
+
+            gui_mem_info("EXMEM", &meminfo, showidx);
 		}
 	}
 

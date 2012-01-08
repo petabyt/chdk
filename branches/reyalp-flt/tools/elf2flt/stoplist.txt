@@ -3,4 +3,3 @@ opendir	Module use opendir(), which is platform-dependend. Please use safe_*dir(
 readdir	Module use readdir(), which is platform-dependend. Please use safe_*dir() family from "stdlib_unified.h"
 closedir	 Module use closedir(), which is platform-dependend. Please use safe_*dir() family from "stdlib_unified.h"
 stat	Module use stat(), which is platform-dependend. Please use safe_stat() from "stdlib_unified.h"
-conf	Module use "conf" variable, which is version-depenend. Please use CONF_BIND_* macros from "module_load.h" to bind each member separately

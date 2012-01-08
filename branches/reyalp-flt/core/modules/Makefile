@@ -21,8 +21,8 @@ OBJS=../gui_calendar.o ../gui_bench.o ../gui_4wins.o ../gui_mastermind.o ../gui_
 
 
 CFLAGS+=-DOPT_GENERIC_MODULES
-OPT_OBJS= ../gui_fselect.o ../nothumb.o ../gui_mpopup.o ../curves.o ../edgeoverlay.o ../gui_palette.o
-OPT_FLT= fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt
+OPT_OBJS= ../gui_fselect.o ../nothumb.o ../gui_mpopup.o ../curves.o ../edgeoverlay.o ../bitvector.o ../gui_palette.o ../gui_grid.o ../motion_detector.o ../zebra.o
+OPT_FLT= fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt
 
 
 all: exportlist ../flt.h \
@@ -92,11 +92,23 @@ txtread.elf: ../gui_read.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
-edgeovr.elf: ../edgeoverlay.o $(OBJ_ISDIGIT)
+edgeovr.elf: ../edgeoverlay.o ../bitvector.o $(OBJ_ISDIGIT)
+	@echo \-\> $@
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+
+zebra.elf: ../zebra.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 curves.elf: ../curves.o
+	@echo \-\> $@
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+
+mdetect.elf: ../motion_detector.o
+	@echo \-\> $@
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+
+grids.elf: ../gui_grid.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 

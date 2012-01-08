@@ -33,6 +33,8 @@ typedef struct {
 } tConfigVal;
 
 typedef struct {
+	int api_version;			// version of this structure
+
     int save_raw;
     int save_raw_in_video;
     int save_raw_in_sports;

@@ -17,13 +17,17 @@ all: main.bin
 CFLAGS+=-DTHIS_IS_CHDK_CORE
 
 OPT_OBJS=
+ifdef OPT_GAMES
+CFLAGS+=-DOPT_GAMES
+endif
 ifdef OPT_CURVES
 CFLAGS+=-DOPT_CURVES
-#OPT_OBJS+=curves.o
 endif
 ifdef OPT_TEXTREADER
 CFLAGS+=-DOPT_TEXTREADER
-#OPT_OBJS+=gui_read.o 
+endif
+ifdef OPT_CALENDAR
+CFLAGS+=-DOPT_CALENDAR
 endif
 ifdef OPT_DEBUGGING
 # global in root makefile.inc
@@ -38,7 +42,7 @@ ifdef OPT_MD_DEBUG
 CFLAGS+=-DOPT_MD_DEBUG
 endif 
 ifdef OPT_SCRIPTING
-OPT_OBJS+=motion_detector.o script.o
+OPT_OBJS+=script.o
 endif 
 ifdef OPT_LUA
 OPT_OBJS+=luascript.o 
@@ -59,8 +63,8 @@ endif
 OBJS=entry.o main.o gui_draw.o gui_menu.o gui_mbox.o \
      gui.o kbd.o action_stack.o conf.o module_wrappers.o module_exportlist.o \
      histogram.o gui_batt.o gui_space.o gui_osd.o raw.o \
-     gui_usb.o gui_lang.o gui_grid.o modules.o module_load.o\
-     levent.o shot_histogram.o bitvector.o console.o $(OPT_OBJS)
+     gui_usb.o gui_lang.o modules.o module_load.o\
+     levent.o shot_histogram.o console.o $(OPT_OBJS)
 
 gui.o: FORCE
 

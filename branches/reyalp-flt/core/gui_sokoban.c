@@ -9,15 +9,12 @@
 #include "gui_lang.h"
 #include "gui_batt.h"
 #include "gui_mbox.h"
-#include "gui_sokoban.h"
 
 #include "module_load.h"
 
 void gui_module_menu_kbd_process();
 void gui_sokoban_kbd_process();
 void gui_sokoban_draw(int enforce_redraw);
-
-int *conf_sokoban_level;
 
 gui_handler GUI_MODE_SOKOBAN = 
     /*GUI_MODE_SOKOBAN*/    { GUI_MODE_MODULE,   gui_sokoban_draw,     gui_sokoban_kbd_process,    gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
@@ -208,7 +205,7 @@ static void sokoban_set_level(int lvl) {
     }
     
     free(buf);
-    *conf_sokoban_level = lvl;
+    conf.sokoban_level = lvl;
     moves = 0;
     sokoban_undo_reset();
 }
@@ -226,8 +223,8 @@ static int sokoban_finished() {
 
 //-------------------------------------------------------------------
 static void sokoban_next_level() {
-    if (++*conf_sokoban_level >= num_levels) *conf_sokoban_level = 0;
-    sokoban_set_level(*conf_sokoban_level);
+    if (++conf.sokoban_level >= num_levels) conf.sokoban_level = 0;
+    sokoban_set_level(conf.sokoban_level);
     need_redraw_all = 1;
 }
 
@@ -324,11 +321,11 @@ int gui_sokoban_init() {
     if(!num_levels) {
         return 0;
     }
-    else if(*conf_sokoban_level >= num_levels) {
-        *conf_sokoban_level = 0;
+    else if(conf.sokoban_level >= num_levels) {
+        conf.sokoban_level = 0;
     }
     cell_size = camera_screen.height/FIELD_HEIGHT;
-    sokoban_set_level(*conf_sokoban_level);
+    sokoban_set_level(conf.sokoban_level);
 	// if the file is no longer readable, set_level will set this
     if(!num_levels) {
         return 0;
@@ -373,7 +370,7 @@ void gui_sokoban_kbd_process() {
             break;
         case KEY_ERASE:
         case KEY_DISPLAY:
-            sokoban_set_level(*conf_sokoban_level);
+            sokoban_set_level(conf.sokoban_level);
             need_redraw_all = 1;
             break;
     }
@@ -424,7 +421,7 @@ void gui_sokoban_draw(int enforce_redraw) {
         draw_line(camera_screen.ts_button_border+cell_size*FIELD_WIDTH, 0, camera_screen.ts_button_border+cell_size*FIELD_WIDTH, camera_screen.height-1, COLOR_WHITE);
         draw_line(camera_screen.ts_button_border+cell_size*FIELD_WIDTH+1, 0, camera_screen.ts_button_border+cell_size*FIELD_WIDTH+1, camera_screen.height-1, COLOR_BLACK);
 
-        sprintf(str, "%s: %-6d", lang_str(LANG_SOKOBAN_TEXT_LEVEL), *conf_sokoban_level+1);
+        sprintf(str, "%s: %-6d", lang_str(LANG_SOKOBAN_TEXT_LEVEL), conf.sokoban_level+1);
         draw_string(camera_screen.ts_button_border+cell_size*FIELD_WIDTH+2, 8, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
         sprintf(str, "%s: %-6d", lang_str(LANG_SOKOBAN_TEXT_MOVES), moves);
         draw_string(camera_screen.ts_button_border+cell_size*FIELD_WIDTH+2, 8+FONT_HEIGHT, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
@@ -475,10 +472,8 @@ int _module_loader( void** chdk_export_list )
      return 1;
   if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
 	  return 1;
-
-  // Safe bind of conf.
-  tConfigVal configVal;
-  CONF_BIND_INT(40, conf_sokoban_level );
+  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 1, 0 ) )
+	 return 1;
 
   return 0;
 }
@@ -518,7 +513,7 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 
 									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
 									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
+									MODULEINFO_FLAG_SYSTEM,		// flag
 									-LANG_MENU_GAMES_SOKOBAN,	// Module name
 									1, 0,						// Module version
 									(int32_t)"Game"

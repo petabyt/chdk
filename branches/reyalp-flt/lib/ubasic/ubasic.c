@@ -56,7 +56,7 @@
 #include "stdlib.h"
 #include "levent.h"
 #include "console.h"
-#include "../../core/motion_detector.h"
+#include "../../core/modules.h"
 #endif
 #include "../../core/action_stack.h"
 #include "tokenizer.h"
@@ -1817,7 +1817,10 @@ static void md_get_cell_diff_statement()
     var = tokenizer_variable_num();
     accept(TOKENIZER_VARIABLE);
 
-    ubasic_set_variable(var, md_get_cell_diff(col,row));
+    if (module_mdetect_load())
+        ubasic_set_variable(var, libmotiondetect->md_get_cell_diff(col,row));
+    else
+        ubasic_set_variable(var, 0);
     accept_cr();
 }
 
@@ -1925,14 +1928,15 @@ static void md_detect_motion_statement()
 //		sprintf(buf,"clip %d [%d,%d][%d,%d]", clipping_region_mode, clipping_region_column1, clipping_region_row1, clipping_region_column2,clipping_region_row2);
 //		script_console_add_line(buf);
 
-	md_init_motion_detector(
+    if (module_mdetect_load())
+        libmotiondetect->md_init_motion_detector(
 			columns, rows, pixel_measure_mode, detection_timeout,
 			measure_interval, threshold, draw_grid,
 			clipping_region_mode,
 			clipping_region_column1, clipping_region_row1,
 			clipping_region_column2, clipping_region_row2,
 			parameters, pixels_step, msecs_before_trigger
-	);
+    	);
     flag_yield=1;
 }
 

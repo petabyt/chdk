@@ -11,8 +11,6 @@
 struct libedgeovr_sym {
 	int  version;
 	void (*edge_overlay)();
-	void (*save_edge_overlay)(void);
-	void (*load_edge_overlay)( const char* );
 };
 
 
@@ -20,11 +18,10 @@ struct libedgeovr_sym {
 #ifdef THIS_IS_CHDK_CORE
 	// This section is for CHDK core
 	extern struct libedgeovr_sym* libedgeovr;
+    extern struct libedgeovr_sym* module_edgeovr_load();	// 0fail, addr-ok
 #else
 	// This section is for module
-void edge_overlay();
-void save_edge_overlay(void);
-void load_edge_overlay( const char* );
+    void edge_overlay();
 #endif
 
 #endif

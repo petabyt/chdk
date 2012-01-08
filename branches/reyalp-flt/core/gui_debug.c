@@ -10,7 +10,6 @@
 #include "module_load.h"
 
 extern void gui_module_menu_kbd_process();
-int *conf_mem_view_addr_init;
 
 gui_handler GUI_MODE_DEBUG = 
     /*GUI_MODE_DEBUG*/  { GUI_MODE_MODULE,   gui_debug_draw,       gui_debug_kbd_process,      gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
@@ -105,7 +104,7 @@ void gui_debug_draw(int enforce_redraw) {
                 gui_debug_draw_values(8, *((void**)addr));
             else
                 gui_debug_draw_values(8, addr);
-            *conf_mem_view_addr_init = (long)addr;
+            conf.mem_view_addr_init = (long)addr;
 
             if (debug_cont_update==0) debug_to_draw = 0;
             break;
@@ -197,9 +196,8 @@ int _module_loader( void** chdk_export_list )
 	  return 1;
   if ( !API_VERSION_MATCH_REQUIREMENT( camera_info.api_version, 1, 0 ) )
 	 return 1;
-
-  tConfigVal configVal;
-  CONF_BIND_INT(195, conf_mem_view_addr_init);
+  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 1, 0 ) )
+	 return 1;
 
   return 0;
 }
@@ -227,7 +225,7 @@ int _module_run(int moduleidx, int argn, int* arguments)
   void* adr;
 
   if ( argn== 0 )
-    adr =(char*)(*conf_mem_view_addr_init);
+    adr =(char*)(conf.mem_view_addr_init);
   else if ( argn ==1)
     adr = (char*)arguments[0]; 
   else {
@@ -249,7 +247,7 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 
 									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
 									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
+									MODULEINFO_FLAG_SYSTEM,		// flag
 									-LANG_MENU_DEBUG_MEMORY_BROWSER,	// Module name
 									1, 0,						// Module version
 									(int32_t)"Simple memory content browser"

@@ -13,7 +13,6 @@
 #include "levent.h"
 #include "console.h"
 #include "action_stack.h"
-#include "motion_detector.h"
 #include "ptp.h"
 #include "core.h"
 #include "gui_fselect.h"
@@ -778,9 +777,11 @@ static int luaCB_wheel_left( lua_State* L )
 
 static int luaCB_md_get_cell_diff( lua_State* L )
 {
-  lua_pushnumber( L, md_get_cell_diff(luaL_checknumber(L,1),
-				      luaL_checknumber(L,2)));
-  return 1;
+    if (module_mdetect_load())
+        lua_pushnumber( L, libmotiondetect->md_get_cell_diff(luaL_checknumber(L,1), luaL_checknumber(L,2)));
+    else
+        lua_pushnumber( L, 0 );
+    return 1;
 }
 
 static int luaCB_md_detect_motion( lua_State* L )
@@ -802,7 +803,7 @@ static int luaCB_md_detect_motion( lua_State* L )
   int parameters = (luaL_optnumber(L,14,1));
   int pixels_step = (luaL_optnumber(L,15,6));
   int msecs_before_trigger = (luaL_optnumber(L,16,0));
-  if(md_init_motion_detector(
+  if (module_mdetect_load() && libmotiondetect->md_init_motion_detector(
     columns, rows, pixel_measure_mode, detection_timeout, 
     measure_interval, threshold, draw_grid,
     clipping_region_mode,
@@ -824,8 +825,8 @@ static void file_browser_selected(const char *fn) {
     // the Func/Set key again will enter the Script menu, not the File Browser
     kbd_reset_autoclicked_key();
 
+    // Push selected file as script return value
 	lua_pushstring( Lt, (fn && fn[0])? fn : NULL );
-
 }
 
 static int luaCB_file_browser( lua_State* L ) {

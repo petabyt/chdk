@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "raw.h"
 #include "modules.h"
+#include "module_load.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
 #include "gui_grid.h"
@@ -37,7 +38,7 @@ typedef struct {
 } ConfInfo;
 
 //-------------------------------------------------------------------
-Conf conf;
+Conf conf = { MAKE_API_VERSION(1,0) };
 
 int state_shooting_progress = SHOOTING_PROGRESS_NONE;
 int state_save_raw_nth_only;
@@ -68,7 +69,6 @@ static void conf_change_font_cp();
 static void conf_change_menu_rbf_file();
 static void conf_change_menu_symbol_rbf_file();
 static void conf_change_alt_mode_button();
-static void conf_change_grid_file();
 static void conf_change_video_bitrate();
 static void conf_change_dng_ext();
 
@@ -147,7 +147,7 @@ void clear_values()
 static const ConfInfo conf_info[] = {
 /* !!! Do NOT change ID for items defined already! Append a new one at the end! !!! */
     CONF_INFO(  1, conf.show_osd,               CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(  2, conf.save_raw,               CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO(  2, conf.save_raw,               CONF_DEF_VALUE, i:0, conf_change_dng),
     CONF_INFO(  3, conf.script_shoot_delay,     CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(  4, conf.show_histo,             CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(  5, conf.script_vars,            CONF_INT_PTR,   ptr:&def_script_vars, NULL),
@@ -215,7 +215,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO( 66, conf.menu_rbf_file,          CONF_CHAR_PTR,   ptr:"", conf_change_menu_rbf_file),
     CONF_INFO( 67, conf.alt_prevent_shutdown,   CONF_DEF_VALUE, i:ALT_PREVENT_SHUTDOWN_ALT, conf_update_prevent_shutdown),
     CONF_INFO( 68, conf.show_grid_lines,        CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 69, conf.grid_lines_file,        CONF_CHAR_PTR,   ptr:"", conf_change_grid_file),
+    CONF_INFO( 69, conf.grid_lines_file,        CONF_CHAR_PTR,   ptr:"", NULL),
     CONF_INFO( 70, conf.raw_nr,                 CONF_DEF_VALUE, i:NOISE_REDUCTION_AUTO_CANON, NULL),
     CONF_INFO( 71, conf.grid_force_color,       CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO( 72, conf.grid_color,             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
@@ -425,10 +425,10 @@ void conf_info_func(unsigned short id)
     case  65: conf_change_font_cp(); break;
     case  66: conf_change_menu_rbf_file(); break;
     case  67: conf_update_prevent_shutdown(); break;
-    case  69: conf_change_grid_file(); break;
     case 101: conf_change_video_bitrate(); break;
     case 183: conf_change_menu_symbol_rbf_file(); break;
     case 194: conf_change_script_file(); break;
+    case 2:
     case 226: conf_change_dng(); break;
     case 235: conf_change_dng_ext(); break;
     }
@@ -476,17 +476,13 @@ static void conf_change_alt_mode_button() {
 #endif
 }
 
-static void conf_change_grid_file() {
-    grid_lines_load(conf.grid_lines_file);
-}
-
 static void conf_change_video_bitrate() {
     shooting_video_bitrate_change(conf.video_bitrate);
  }
 
 void conf_change_dng(void){
 #if DNG_SUPPORT
- if (conf.dng_raw) {
+ if (conf.save_raw && conf.dng_raw) {
 	if ( !module_dng_load(LIBDNG_OWNED_BY_RAW) )
 		return;
 	if (!libdng->badpixel_list_loaded_b()) libdng->load_bad_pixels_list_b("A/CHDK/badpixel.bin");
@@ -667,9 +663,6 @@ void conf_restore() {
                 if (offs + size <= rcnt) {
                    memcpy(conf_info[i].var, buf+offs, size);
                    conf_info_func(conf_info[i].id);
-                   //if (conf_info[i].func) {
-                   //    conf_info[i].func();
-                   //}
                 }
                 offs += size;
                 break;
