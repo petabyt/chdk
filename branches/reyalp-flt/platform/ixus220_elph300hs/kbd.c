@@ -50,7 +50,7 @@ extern void _GetKbdState(long*);
 #define SD_READONLY_REG 2
 
 #define USB_REG 2
-#define USB_MASK (0x00080000)
+#define USB_MASK (0x04000000)
 
 #ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
