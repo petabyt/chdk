@@ -72,7 +72,7 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 
 									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
 									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									MODULEINFO_FLAG_SYSTEM,		// flag
+									0,							// flag
 									(int32_t)"Module Inspector",// Module name
 									1, 0,						// Module version
 									(int32_t)"Show list of loaded modules"
