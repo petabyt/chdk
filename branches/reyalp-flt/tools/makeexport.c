@@ -178,8 +178,12 @@ int main( int argc, char **argv )
 		//printf("%x [%c]\n",cur-file1,*cur);
 		if ( *cur=='}') {break;}
 
+        int is_address = 0;
 	    if (*cur=='&')
+        {
+            is_address = 1;
 			for(cur++; *cur==9 || *cur==' '; cur++);
+        }
 
 		cursym=cur;
 		for(; (*cur>='A' && *cur<='Z') || 
@@ -195,7 +199,9 @@ int main( int argc, char **argv )
 			if ( size>255) {size=255;}
 			memcpy(symbol,cursym,size);
 			symbol[size]=0;
-            strcpy(full_symbol,symbol);
+            full_symbol[0] = 0;
+            if (is_address) strcpy(full_symbol,"&");
+            strcat(full_symbol,symbol);
 			cut_export_token(symbol);
 
 			if (num_lines>=2) {
@@ -222,7 +228,7 @@ int main( int argc, char **argv )
     int n;
     for (n=0; n<hash_idx; n++)
     {
-        fprintf(out_hash,"{ 0x%08x, &%s },\n",hash_vals[n].hash,hash_vals[n].symbol);
+        fprintf(out_hash,"{ 0x%08x, %s },\n",hash_vals[n].hash,hash_vals[n].symbol);
     }
 
 	if (num_lines>=1)
