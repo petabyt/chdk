@@ -587,9 +587,13 @@
 #define LANG_SAVE_ROMLOG_FAIL       469
 #define LANG_SAVE_ROMLOG_OK         470
 
+
+#define LANG_STR_SELECT_CHARMAP_FILE  471
+#define LANG_MENU_VIS_CHARMAP 472
+
 //-------------------------------------------------------------------
 
-#define GUI_LANG_ITEMS                  470
+#define GUI_LANG_ITEMS                  472
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

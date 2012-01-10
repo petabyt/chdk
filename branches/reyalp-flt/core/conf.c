@@ -411,6 +411,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(246, conf.usb_info_enable, CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(247, conf.usb_info_pos,    CONF_OSD_POS_PTR,  ptr:&def_usb_info_pos, NULL),
 
+    CONF_INFO(248, conf.charmap_file,        CONF_CHAR_PTR,   ptr:"", NULL),
    };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 

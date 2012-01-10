@@ -41,4 +41,9 @@
 //--------------------------
 #include "dng.h"
 
+// MODULE "TBOX"
+//--------------------------
+int module_tbox_get_version();
+void module_tbox_run( int title, int msg, char* defaultvalue, unsigned int maxsize, void (*on_select)(char* newstr));
+
 #endif

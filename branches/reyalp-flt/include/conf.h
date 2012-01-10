@@ -309,6 +309,8 @@ typedef struct {
 
 	// Enable USB icon
     int usb_info_enable; 
+
+    char charmap_file[100];
 } Conf;
 
 extern Conf conf;

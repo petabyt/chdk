@@ -187,7 +187,7 @@ void gui_module_draw()
     	cam_meminfo meminfo;
 		if (_getmeminfo) {
 
-			memset(&meminfo,sizeof(meminfo),0);
+			memset(&meminfo,0,sizeof(meminfo));
     		_getmeminfo(&meminfo);
 
             gui_mem_info("MEM", &meminfo, showidx);
