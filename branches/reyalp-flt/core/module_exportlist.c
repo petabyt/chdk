@@ -21,7 +21,6 @@
 #include "gui_mpopup.h"
 #include "conf.h"
 #include "raw.h"
-#include "bitvector.h"
 #include "font.h"
 
 #include "modules.h"
@@ -38,7 +37,6 @@ extern long shutter_open_time; // defined in platform/generic/capt_seq.c
 
 
 // ATTENTION: DO NOT USE BRACES OR OWN /**/-STYLE COMMENTS ANYWHERE IN THIS FILE TO AVOID AUTO PARSING MISTAKES
-
 
 
 // ** SECTION 1: DEFINE UNDECLARED EXPORTED ITEMS
@@ -93,6 +91,8 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 //    2. VARIABLE conf SHOULDN'T EXIST IN THE LIST TO KEEP ISOLATION. USE set|get_chdk_conf|get_chdk_conf_ptr INSTEAD
 //	STOPLIST: conf, open, opendir, closedir, rewinddir, readdir, stat
 
+#if 0
+
 void* CHDK_EXPORT_LIST[] = {
             (void*)EXPORTLIST_MAGIC_NUMBER,
             (void*)EXPORTLIST_LAST_IDX,
@@ -109,6 +109,7 @@ void* CHDK_EXPORT_LIST[] = {
             module_fselect_init,
             module_fselect_init_w_mode,
             module_grids_load,
+            module_find_symbol_address,
 
             &altGuiHandler,
             &camera_info,
@@ -320,6 +321,12 @@ void* CHDK_EXPORT_LIST[] = {
 			&COLOR__EXPORTEDSYM_HISTO_B_PLAY ,
 			&COLOR__EXPORTEDSYM_HISTO_BG_PLAY,
 			&COLOR__EXPORTEDSYM_HISTO_RG_PLAY,
+};
 
-            0
+#endif
+
+sym_hash symbol_hash_table[] =
+{
+    { EXPORTLIST_MAGIC_NUMBER, (void*)EXPORTLIST_LAST_IDX },
+#include "module_hashlist.h"
 };

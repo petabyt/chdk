@@ -272,20 +272,6 @@ static CMenuItem script_submenu_items[sizeof(script_submenu_items_top)/sizeof(sc
 static CMenu script_submenu = {0x27,LANG_MENU_SCRIPT_TITLE, NULL, script_submenu_items };
 #endif
 
-#if defined (OPT_GAMES)
-static CMenuItem games_submenu_items[] = {
-    MENU_ITEM(0x38,LANG_MENU_GAMES_REVERSI,           MENUITEM_PROC,  gui_menu_run_fltmodule, "reversi.flt" ),
-    MENU_ITEM(0x38,LANG_MENU_GAMES_SOKOBAN,           MENUITEM_PROC,  gui_menu_run_fltmodule, "sokoban.flt" ),
-    MENU_ITEM(0x38,LANG_MENU_GAMES_CONNECT4,          MENUITEM_PROC,  gui_menu_run_fltmodule, "4wins.flt" ),
-    MENU_ITEM(0x38,LANG_MENU_GAMES_MASTERMIND,        MENUITEM_PROC,  gui_menu_run_fltmodule, "mastmind.flt" ),
-    MENU_ITEM(0x38,"Snake" ,                          MENUITEM_PROC,  gui_menu_run_fltmodule, "snake.flt" ),
-    MENU_ITEM(0x38,"Tetris",                          MENUITEM_PROC,  gui_menu_run_fltmodule, "tetris.flt" ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
-    {0}
-};
-static CMenu games_submenu = {0x38,LANG_MENU_GAMES_TITLE, NULL, games_submenu_items };
-#endif
-
 static const char* gui_autoiso_shutter_modes[] = { "Auto", "1/8s", "1/15s", "1/30s", "1/60s", "1/125s", "1/250s", "1/500s", "1/1000s"};
 static CMenuItem autoiso_submenu_items[] = {
     MENU_ITEM(0x5c,LANG_MENU_AUTOISO_ENABLED,          MENUITEM_BOOL,	&conf.autoiso_enable, 0),
@@ -339,7 +325,7 @@ static CMenuItem misc_submenu_items[] = {
     MENU_ITEM(0x37,LANG_MENU_MISC_TEXT_READER,        MENUITEM_SUBMENU_PROC, gui_menu_run_fltmodule, "txtread.flt" ),
 #endif
 #if defined (OPT_GAMES)
-    MENU_ITEM(0x38,LANG_MENU_MISC_GAMES,              MENUITEM_SUBMENU, &games_submenu, 0 ),
+    MENU_ITEM(0x38,LANG_MENU_MISC_GAMES,              MENUITEM_SUBMENU_PROC, gui_menu_run_fltmodule, "gamemenu.flt" ),
 #endif
 #if CAM_SWIVEL_SCREEN
     MENU_ITEM(0x28,LANG_MENU_MISC_FLASHLIGHT,         MENUITEM_BOOL,    &conf.flashlight, 0 ),

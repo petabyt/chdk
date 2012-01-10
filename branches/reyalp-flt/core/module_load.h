@@ -14,12 +14,24 @@
 #define MODULES_PATH "A/CHDK/MODULES"
 
 
+// Struct for symbol hash table entries
+typedef struct
+{
+    uint32_t    hash;
+    void        *address;
+} sym_hash;
+
+// Hashed Symbol table for exported symbols
+extern sym_hash symbol_hash_table[];
+
+
 // Base typedefs
 //-------------------
 
 #define EXPORTLIST_MAGIC_NUMBER  0x43215678
 
-typedef int (*_module_loader_t)( void** chdk_export_list );
+typedef int (*_module_bind_t)( void** chdk_export_list );
+typedef int (*_module_loader_t)( unsigned int* chdk_export_list );
 typedef int (*_module_unloader_t)();
 typedef int (*_module_run_t)(int moduleidx, int argn, int* arguments);
 
@@ -36,10 +48,11 @@ enum ModuleUnloadMode
 
 int module_check_is_exist(char* name);
 int module_find(char * name );
-int module_load( char* name, _module_loader_t callback);
-int module_run(char* name, _module_loader_t callback, int argn, void* args, enum ModuleUnloadMode unload_after);
+int module_load( char* name, _module_bind_t callback);
+int module_run(char* name, _module_bind_t callback, int argn, void* args, enum ModuleUnloadMode unload_after);
 void module_unload(char* name);
 void module_unload_idx(int module_idx);
+void* module_find_symbol_address(uint32_t importid);
 
 // Flag for modules which couldn't be safely autounloaded (lua, basic,..)
 #define MODULE_FLAG_DISABLE_AUTOUNLOAD 1

@@ -80,9 +80,24 @@ char* b_get_buf()
 }
 
 
+#define MAX_SYM 2048
+
 static char* import_buf=0;
+static char* import_syms[MAX_SYM];
+static unsigned int import_hash[MAX_SYM];
 static int import_counts=0;
 static int importfilesize=0;
+
+unsigned int hash(unsigned char *str)
+{
+    unsigned int hash = 5381;
+    int c;
+
+    while ((c = *str++) != 0)
+        hash = ((hash << 5) + hash) ^ c; /* hash * 33 xor c */
+
+    return hash;
+}
 
 int load_import(char* importfile)
 {
@@ -123,6 +138,7 @@ int load_import(char* importfile)
 
 	// Parse and check
 	char* p=import_buf;
+    char* s=p;
 	for (;*p;p++) {
 		if (*p==13) {
 			PRINTERR(stderr,"Import file should have unix EOL format\n");
@@ -131,8 +147,11 @@ int load_import(char* importfile)
 		}
 
 		if (*p==10) {
-			import_counts++;
 			*p=0;
+            import_syms[import_counts] = s;
+            import_hash[import_counts] = hash(s);
+			import_counts++;
+            s = p + 1;
 			continue;
 		}
 		
@@ -151,7 +170,6 @@ int load_import(char* importfile)
 	return loaded;
 }
 
-
 // Return: 0=not_found, >=2 - import_sym_idx
 int find_import_symbol(char* sym)
 {
@@ -167,15 +185,11 @@ int find_import_symbol(char* sym)
 	if ( !strncmp( sym, prefix, prefixsize ) )
 	 { sym+=prefixsize; }
 
-	char* cur=import_buf;
 	int idx=0;
 
 	for(;idx<import_counts;idx++) {
-	  if (!strcmp(sym,cur))
-		return (idx+2);
-
-      for (;*cur; cur++);
-	  cur++;
+	  if (strcmp(sym,import_syms[idx]) == 0)
+		return (import_hash[idx]);
 	}
 	return 0;
 }
@@ -183,19 +197,14 @@ int find_import_symbol(char* sym)
 // Return symbol name by its idx
 char* get_import_symbol( unsigned symidx )
 {
-	symidx-=2;					//skip export_magicnum, export_size in begining
-	if (symidx>=import_counts)
-		return "";
-
-	char* cur=import_buf;
 	int idx=0;
 
 	for(;idx<symidx;idx++) {
-      for (;*cur; cur++);
-	  cur++;
+      if (import_hash[idx] == symidx)
+          return import_syms[idx];
 	}
 
-	return cur;
+	return "";
 }
 
 

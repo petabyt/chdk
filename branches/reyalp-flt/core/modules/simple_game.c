@@ -27,9 +27,9 @@ void* MODULE_EXPORT_LIST[] = {
 // PARAMETERS: pointer to chdk list of export
 // RETURN VALUE: 1 error, 0 ok
 //---------------------------------------------------------
-int _module_loader( void** chdk_export_list )
+int _module_loader( unsigned int* chdk_export_list )
 {
-  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
 
   if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
@@ -57,7 +57,6 @@ int _module_unloader()
 int _module_run(int moduleidx, int argn, int* arguments)
 {
   module_idx=moduleidx;
-
 
   int rv = 0;
   if ((mode_get()&MODE_MASK) != MODE_PLAY) {

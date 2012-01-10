@@ -20,8 +20,6 @@
 //**    TEMPORARY FROM .H FILES   **
 //********************************************************/
 
-extern void* CHDK_EXPORT_LIST[];
-
 #define MAX_NUM_LOADED_MODULES 10
 #define BUFFER_FOR_READ_SIZE   4096
 
@@ -155,10 +153,28 @@ static int module_do_relocations( struct flat_hdr* flat, void* relocbuf, uint32_
    return 1;
 }
 
+// Find symbol address in array from hash id
+void* module_find_symbol_address(uint32_t importid)
+{
+    // binary search (first entry is magic number & entry count)
+    int min = 1, max = EXPORTLIST_LAST_IDX-1;
+    do
+    {
+        int mid = (min + max) >> 1;
+        if (importid == symbol_hash_table[mid].hash)
+            return symbol_hash_table[mid].address;
+        else if (importid > symbol_hash_table[mid].hash)
+            min = mid + 1;
+        else
+            max = mid - 1;
+    } while (min <= max);
+    return 0;
+}
+
 static int module_do_imports( struct flat_hdr* flat, void* relocbuf, uint32_t import_count )
 {
 	int i;
-	uint32_t importidx;
+	void* importaddress;
 	uint32_t* ptr;
 	unsigned char* buf = (unsigned char*)flat;
    
@@ -166,18 +182,20 @@ static int module_do_imports( struct flat_hdr* flat, void* relocbuf, uint32_t im
 	for ( i=0; i < import_count; i++ )
 	{
 		ptr = (uint32_t*)( buf + ((import_record_t*)relocbuf)->offs );
-		importidx = ((import_record_t*)relocbuf)->importidx;
+		importaddress = module_find_symbol_address(((import_record_t*)relocbuf)->importidx);
 
-	  //@tsv todo: if (*relocbuf>=flat->reloc_start) error_out_of_bound
-		// No such symbol to import
-		if ( importidx<2 || importidx>EXPORTLIST_LAST_IDX )
-			return 0;
+        if (importaddress == 0) return 0;
 
-		// Empty symbol - module could only if import such symbol manually
-		if ( CHDK_EXPORT_LIST[importidx]==0 )
-			return 0;
+	 // //@tsv todo: if (*relocbuf>=flat->reloc_start) error_out_of_bound
+		//// No such symbol to import
+		//if ( importidx<2 || importidx>EXPORTLIST_LAST_IDX )
+		//	return 0;
 
-		*ptr += (uint32_t)CHDK_EXPORT_LIST[importidx];
+		//// Empty symbol - module could only if import such symbol manually
+		//if ( CHDK_EXPORT_LIST[importidx]==0 )
+		//	return 0;
+
+		*ptr += (int)importaddress;  //(uint32_t)CHDK_EXPORT_LIST[importidx];
         relocbuf = ((import_record_t*)relocbuf)+1;
 	}  
     return 1;
@@ -254,7 +272,7 @@ static int module_do_action( char* actionname, uint32_t offset, uint32_t count, 
 //         Optional ( NULL - do not bind )
 // RETURN:    -1 - failed, >=0 =idx of module
 //-----------------------------------------------
-int module_load( char* name, _module_loader_t callback)
+int module_load( char* name, _module_bind_t callback)
 {
    int idx;
 
@@ -381,8 +399,8 @@ int module_load( char* name, _module_loader_t callback)
    }
 
    if ( modules[idx]->_module_loader ) {
-		uint32_t x = ((_module_loader_t) modules[idx]->_module_loader )(CHDK_EXPORT_LIST);
-        bind_err = bind_err || x; //( (_module_loader_t) modules[idx]->_module_loader )(CHDK_EXPORT_LIST));
+		uint32_t x = ((_module_loader_t) modules[idx]->_module_loader )((unsigned int*)&symbol_hash_table[0]);
+        bind_err = bind_err || x;
    }
 
    if ( bind_err )
@@ -402,7 +420,7 @@ int module_load( char* name, _module_loader_t callback)
 //							   2 - unload always
 // RETURN VALUE: passed from module. -1 if something was failed
 //-----------------------------------------------
-int module_run(char* name, _module_loader_t callback, int argn, void* args, enum ModuleUnloadMode unload_after)
+int module_run(char* name, _module_bind_t callback, int argn, void* args, enum ModuleUnloadMode unload_after)
 {
    int rv = -1;
    int loadflag=0;
