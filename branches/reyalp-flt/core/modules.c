@@ -364,43 +364,6 @@ static int module_tbox_charmap_preprocess()
 	return ver;
 }
 
-
-char* load_file( char* name, int* rv_size )
-{
-	int fd;
-	int size = -1;
-	char* buf;
-
-    if ( strlen(name) ) {
-		struct stat st;
-    	if ( stat(name,&st) == 0 )
-		 	 size = st.st_size;
-    }
-
-	if ( rv_size )
-		*rv_size = size;
-
-	if ( size<=0 )
-    	return 0;
-
-	fd = open( name, O_RDONLY, 0777 );
-	if ( fd <=0 )
-    	return 0;
-
-	buf = umalloc(size+1);
-	if ( buf==0 ) {
-		close(fd);
-		return 0;
-	}
-    
-    size = read(fd, buf, size );
- 	buf[size+1]=0;
-
-	if ( rv_size )
-  		*rv_size = size;
-	return buf;
-}
-
 // Check version and existance and tbox api version
 // return: 0 if no module exists at all, otherwise version of API of current tbox module
 //-----------------------------------------------------

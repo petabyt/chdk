@@ -589,11 +589,17 @@
 
 
 #define LANG_STR_SELECT_CHARMAP_FILE  471
-#define LANG_MENU_VIS_CHARMAP 472
+#define LANG_MENU_VIS_CHARMAP		472
+#define LANG_POPUP_MORE				473
+#define LANG_POPUP_MKDIR			474
+#define LANG_POPUP_RENAME			475
+#define LANG_PROMPT_MKDIR			476
+#define LANG_PROMPT_RENAME			477
+
 
 //-------------------------------------------------------------------
 
-#define GUI_LANG_ITEMS                  472
+#define GUI_LANG_ITEMS                  477
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

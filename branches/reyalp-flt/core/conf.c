@@ -38,7 +38,7 @@ typedef struct {
 } ConfInfo;
 
 //-------------------------------------------------------------------
-Conf conf = { MAKE_API_VERSION(1,0) };
+Conf conf = { MAKE_API_VERSION(1,1) };
 
 int state_shooting_progress = SHOOTING_PROGRESS_NONE;
 int state_save_raw_nth_only;

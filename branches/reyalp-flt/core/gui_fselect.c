@@ -146,9 +146,9 @@ static struct mpopup_item popup_rawop[]= {
 #define MPOPUP_RENAME 0x0004
 
 static struct mpopup_item popup_more[]= {
-        { MPOPUP_MKDIR,         (int)"Make dir" },
+        { MPOPUP_MKDIR,         LANG_POPUP_MKDIR },
         { MPOPUP_RMDIR,   		(int)"Remove dir" },
-        { MPOPUP_RENAME,   		(int)"Rename" },
+        { MPOPUP_RENAME,   		LANG_POPUP_RENAME },
         { 0,					0 },
 };
 
@@ -1110,7 +1110,6 @@ static void mkdir_cb(char* name)
 		sprintf(selected_file,"%s/%s",current_dir,name);
 		mkdir(selected_file);		
 		gui_fselect_read_dir(current_dir);
-		gui_mbox_init((int)"Create", (int)name, MBOX_FUNC_RESTORE|MBOX_TEXT_LEFT, NULL);
 	    gui_fselect_redraw = 2;
 	}
 }
@@ -1123,7 +1122,6 @@ static void rename_cb(char* name)
 		sprintf(newname,"%s/%s",current_dir,name);
 		rename(selected_file,newname);
 		gui_fselect_read_dir(current_dir);
-		gui_mbox_init((int)"Rename to", (int)name, MBOX_FUNC_RESTORE|MBOX_TEXT_LEFT, NULL);
 	    gui_fselect_redraw = 2;
 	}
 }
@@ -1132,16 +1130,14 @@ static void fselect_mpopup_more_cb(unsigned int actn) {
 
     switch (actn) {
 	    case MPOPUP_MKDIR:
-			module_tbox_run( (int)"Mkdir", (int)"Enter name of directory:", "", 15, mkdir_cb);
+			module_tbox_run( LANG_POPUP_MKDIR, LANG_PROMPT_MKDIR, "", 15, mkdir_cb);
             break;
         case MPOPUP_RMDIR:
-			 gui_mbox_init((int)"Error", (int)"Not implemented yet", MBOX_FUNC_RESTORE|MBOX_TEXT_LEFT, NULL);
+			 gui_mbox_init( LANG_ERROR, (int)"Not implemented yet", MBOX_FUNC_RESTORE|MBOX_TEXT_LEFT, NULL);
             break;
         case MPOPUP_RENAME:
-			module_tbox_run( (int)"Rename", (int)"Enter new name of file:", selected->name, 15, rename_cb);
+			module_tbox_run( LANG_POPUP_RENAME, LANG_PROMPT_RENAME, selected->name, 15, rename_cb);
             break;
-		default:
-			 gui_mbox_init((int)"Error", (int)"Unknown value", MBOX_FUNC_RESTORE|MBOX_TEXT_LEFT, NULL);
 	}
     gui_fselect_redraw = 2;
 }

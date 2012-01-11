@@ -32,6 +32,9 @@ typedef struct {
     OSD_pos pos;
 } tConfigVal;
 
+// Please try do not change existed structure, because this will broke modules compatibility
+// If add field to the end of structure minor api version should be increased.
+// If any other change (remove something, change order, add not to the end, change meaning), major api version should be increased
 typedef struct {
 	int api_version;			// version of this structure
 

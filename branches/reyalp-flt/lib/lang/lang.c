@@ -123,6 +123,49 @@ void lang_map_preparsed_from_mem( char* gui_lang_default, int num )
 }
 
 // PURPOSE:
+// Universal file loader: alloc space and load file
+// RETURN:
+//  pointer to loaded file (0 if fail) and loaded size 
+//			into rv_size (-1 if file not exists)
+//-------------------------------------------------------------------
+char* load_file( const char* name, int* rv_size )
+{
+	int fd;
+	int size = -1;
+	char* buf;
+
+    if ( strlen(name) ) {
+		struct stat st;
+    	if ( stat(name,&st) == 0 )
+		 	 size = st.st_size;
+    }
+
+	if ( rv_size )
+		*rv_size = size;
+
+	if ( size<=0 )
+    	return 0;
+
+	fd = open( name, O_RDONLY, 0777 );
+	if ( fd <=0 )
+    	return 0;
+
+	buf = umalloc(size+1);
+	if ( buf==0 ) {
+		close(fd);
+		return 0;
+	}
+    
+    size = read(fd, buf, size );
+ 	buf[size+1]=0;
+
+	if ( rv_size )
+  		*rv_size = size;
+	return buf;
+}
+
+
+// PURPOSE:
 // Universal file processor
 // Load file, process by callback, unalloc/close file
 // RETURN:
@@ -132,33 +175,19 @@ void lang_map_preparsed_from_mem( char* gui_lang_default, int num )
 //-------------------------------------------------------------------
 int load_from_file(const char *filename, callback_process_file callback)
 {
-    int f, size;
-    static struct stat st;
-    char *buf;
+    int size;
 
-	buf = 0;
-    size = -1;
+    char *buf = load_file( filename, &size);
 
-    f = open(filename, O_RDONLY, 0777);
-    if (f>=0)
-        size = (stat((char*)filename, &st)==0)?st.st_size:0;
-    if (size>0 )
-            buf = umalloc(size+1);
-            if (buf) {
-                size = read(f, buf, size);
-                buf[size]=0;
-	}
-
-	size = callback( buf, size);
+	size = callback( buf, size );
 
 	if ( buf )
-                ufree(buf);
-    if (f>=0)
-        close(f);
+		ufree(buf);
 
 	return size;
 }
 
+//-------------------------------------------------------------------
 void lang_load_from_file(const char *filename) {
     load_from_file( filename, lang_parse_from_mem );
 }

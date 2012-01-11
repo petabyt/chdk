@@ -216,7 +216,7 @@ void gui_tbox_draw(int enforce_redraw)
                 if (maxlen < MAX_TEXT_WIDTH)
                     w=maxlen+2; // text length
                 else
-                    w=MAX_TEXT_WIDTH+2;
+					w=((MAX_TEXT_WIDTH+2)>w)?MAX_TEXT_WIDTH+2:w;
             }
             h += 2;
 
