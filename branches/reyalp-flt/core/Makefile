@@ -105,7 +105,7 @@ module_load.o: module_load.c module_load.h module_exportlist.c module_exportlist
 
 module_exportlist.h: $(topdir)tools/makeexport$(EXE) module_exportlist.c
 	@echo $< \-\> $@
-	$(topdir)tools/makeexport$(EXE) module_exportlist.c module_exportlist.h modules/exportlist.txt
+	$(topdir)tools/makeexport$(EXE) module_exportlist.c module_exportlist.h modules/exportlist.txt module_hashlist.h
 
 flt.h: $(topdir)tools/elf2flt/flt.h
 	@echo $< \-\> $@

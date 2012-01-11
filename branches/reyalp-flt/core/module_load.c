@@ -157,7 +157,7 @@ static int module_do_relocations( struct flat_hdr* flat, void* relocbuf, uint32_
 void* module_find_symbol_address(uint32_t importid)
 {
     // binary search (first entry is magic number & entry count)
-    int min = 1, max = EXPORTLIST_LAST_IDX-1;
+    int min = 1, max = EXPORTLIST_LAST_IDX;
     do
     {
         int mid = (min + max) >> 1;
@@ -185,15 +185,6 @@ static int module_do_imports( struct flat_hdr* flat, void* relocbuf, uint32_t im
 		importaddress = module_find_symbol_address(((import_record_t*)relocbuf)->importidx);
 
         if (importaddress == 0) return 0;
-
-	 // //@tsv todo: if (*relocbuf>=flat->reloc_start) error_out_of_bound
-		//// No such symbol to import
-		//if ( importidx<2 || importidx>EXPORTLIST_LAST_IDX )
-		//	return 0;
-
-		//// Empty symbol - module could only if import such symbol manually
-		//if ( CHDK_EXPORT_LIST[importidx]==0 )
-		//	return 0;
 
 		*ptr += (int)importaddress;  //(uint32_t)CHDK_EXPORT_LIST[importidx];
         relocbuf = ((import_record_t*)relocbuf)+1;

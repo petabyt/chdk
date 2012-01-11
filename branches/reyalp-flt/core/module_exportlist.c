@@ -41,13 +41,6 @@ extern long shutter_open_time; // defined in platform/generic/capt_seq.c
 
 // ** SECTION 1: DEFINE UNDECLARED EXPORTED ITEMS
 
-#ifndef CAM_FIRMWARE_MEMINFO
-#define GetMemInfo 0
-#endif
-#if !defined(OPT_EXMEM_MALLOC)
-#define GetExMemInfo 0
-#endif
-
 
 // ** SECTION 2: IMPLEMENTATION OF EXPORTED #define VALUES
 // 	  1. PLEASE DO NOT CHANGE START AND FINAL COMMENTS TO CORRECT AUTOPARSING
@@ -83,20 +76,18 @@ char COLOR__EXPORTEDSYM_HISTO_B_PLAY  = COLOR_HISTO_B_PLAY  ;
 char COLOR__EXPORTEDSYM_HISTO_BG_PLAY = COLOR_HISTO_BG_PLAY ;
 char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 
-
 /* EXPORTED_DEFINES_END */
 
+
 // ** SECTION 3: LIST OF EXPORTED SYMBOLS (pointer to function/variable)
-//    1. DO NOT CHANGE ORDER AND DO NOT DELETE EXISTED ENTRIES
-//    2. VARIABLE conf SHOULDN'T EXIST IN THE LIST TO KEEP ISOLATION. USE set|get_chdk_conf|get_chdk_conf_ptr INSTEAD
-//	STOPLIST: conf, open, opendir, closedir, rewinddir, readdir, stat
+//	STOPLIST: open, opendir, closedir, rewinddir, readdir, stat
+
+// This section is parsed by the makeexport.c program to generate the
+// symbol hash table loaded later (from module_hashlist.h)
+// Symbols to be exported should be on seperate lines, blank lines and '//' style comments are allowed
 
 #if 0
-
-void* CHDK_EXPORT_LIST[] = {
-            (void*)EXPORTLIST_MAGIC_NUMBER,
-            (void*)EXPORTLIST_LAST_IDX,
-
+{
 			module_async_unload,
 			module_set_flags,
 			module_run,
@@ -324,10 +315,13 @@ void* CHDK_EXPORT_LIST[] = {
 
 			module_tbox_get_version,
 			module_tbox_run,
-};
 
+            config_save,
+            config_restore,
+}
 #endif
 
+// Symbol hash table for resolving exported symbol references
 sym_hash symbol_hash_table[] =
 {
     { EXPORTLIST_MAGIC_NUMBER, (void*)EXPORTLIST_LAST_IDX },

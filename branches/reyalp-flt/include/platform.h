@@ -586,13 +586,12 @@ typedef struct {
     int free_block_count;
 } cam_meminfo;
 
-#if defined(CAM_FIRMWARE_MEMINFO)
+// Always included for module_inspector
 extern void GetMemInfo(cam_meminfo*);
-#endif
+extern int GetExMemInfo(cam_meminfo*);
 
 #ifdef OPT_EXMEM_MALLOC
-void exmem_malloc_init(void);
-void GetExMemInfo(cam_meminfo*);
+extern void exmem_malloc_init(void);
 #endif
 
 #ifdef CAM_TOUCHSCREEN_UI

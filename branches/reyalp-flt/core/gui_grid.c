@@ -13,6 +13,23 @@
 #include "module_exportlist.h"
 
 //-------------------------------------------------------------------
+
+typedef struct
+{
+    color grid_color;
+    char grid_lines_file[100];
+    int grid_force_color;
+} GridConf;
+
+GridConf gconf;
+
+static ConfInfo conf_info[] = {
+    CONF_INFO( 1, gconf.grid_color,             CONF_DEF_VALUE, cl:0, NULL),
+    CONF_INFO( 2, gconf.grid_lines_file,        CONF_CHAR_PTR,   ptr:"", NULL),
+    CONF_INFO( 3, gconf.grid_force_color,       CONF_DEF_VALUE, i:0, NULL),
+};
+
+//-------------------------------------------------------------------
 #define GRID_BUF_SIZE               0x1000
 #define GRID_REDRAW_INTERVAL        4
 
@@ -157,9 +174,9 @@ void grid_lines_load(const char *fn) {
                 grid = buf;
             }
             close(fd);
-            strcpy(conf.grid_lines_file, fn);
+            strcpy(gconf.grid_lines_file, fn);
         } else {
-            conf.grid_lines_file[0] = 0;
+            gconf.grid_lines_file[0] = 0;
         }
 
         grid_lines_free_data();
@@ -177,19 +194,19 @@ void gui_grid_draw_osd(int force) {
         for (ptr=head; ptr; ptr=ptr->next) {
             switch (ptr->type) {
                 case GRID_ELEM_LINE:
-                    draw_line(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (conf.grid_force_color)?conf.grid_color:ptr->clf);
+                    draw_line(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (gconf.grid_force_color)?gconf.grid_color:ptr->clf);
                     break;
                 case GRID_ELEM_RECT:
-                    draw_rect(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (conf.grid_force_color)?conf.grid_color:ptr->clf);
+                    draw_rect(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (gconf.grid_force_color)?gconf.grid_color:ptr->clf);
                     break;
                 case GRID_ELEM_FILLED_RECT:
-                    draw_filled_rect(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (conf.grid_force_color)?conf.grid_color:MAKE_COLOR(ptr->clb, ptr->clf));
+                    draw_filled_rect(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (gconf.grid_force_color)?gconf.grid_color:MAKE_COLOR(ptr->clb, ptr->clf));
                     break;
                 case GRID_ELEM_ELLIPSE:
-                    draw_ellipse(ptr->x0, ptr->y0, (unsigned int)(ptr->x1), (unsigned int)(ptr->y1), (conf.grid_force_color)?conf.grid_color:ptr->clf);
+                    draw_ellipse(ptr->x0, ptr->y0, (unsigned int)(ptr->x1), (unsigned int)(ptr->y1), (gconf.grid_force_color)?gconf.grid_color:ptr->clf);
                     break;
                 case GRID_ELEM_FILLED_ELLIPSE:
-                    draw_filled_ellipse(ptr->x0, ptr->y0, (unsigned int)(ptr->x1), (unsigned int)(ptr->y1), (conf.grid_force_color)?conf.grid_color:MAKE_COLOR(ptr->clf, 0));
+                    draw_filled_ellipse(ptr->x0, ptr->y0, (unsigned int)(ptr->x1), (unsigned int)(ptr->y1), (gconf.grid_force_color)?gconf.grid_color:MAKE_COLOR(ptr->clf, 0));
                     break;
             }
         }
@@ -204,7 +221,7 @@ static void gui_grid_lines_load_selected(const char *fn) {
         grid_lines_load(fn);
 }
 void gui_grid_lines_load(int arg) {
-    module_fselect_init(LANG_STR_SELECT_GRID_FILE, conf.grid_lines_file, "A/CHDK/GRIDS", gui_grid_lines_load_selected);
+    module_fselect_init(LANG_STR_SELECT_GRID_FILE, gconf.grid_lines_file, "A/CHDK/GRIDS", gui_grid_lines_load_selected);
 }
 
 static CMenuItem grid_submenu_items[] = {
@@ -213,9 +230,9 @@ static CMenuItem grid_submenu_items[] = {
     MENU_ITEM(0x0,LANG_MENU_GRID_CURRENT,       MENUITEM_SEPARATOR, 0, 0 ),
     MENU_ITEM(0x0,(int)grid_title,              MENUITEM_TEXT,      0, 0 ),
     MENU_ITEM(0x0,(int)"",                      MENUITEM_SEPARATOR, 0, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_GRID_FORCE_COLOR,  MENUITEM_BOOL,      &conf.grid_force_color, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_GRID_COLOR_LINE,   MENUITEM_COLOR_FG,  &conf.grid_color, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_GRID_COLOR_FILL,   MENUITEM_COLOR_BG,  &conf.grid_color, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_GRID_FORCE_COLOR,  MENUITEM_BOOL,      &gconf.grid_force_color, 0 ),
+    MENU_ITEM(0x65,LANG_MENU_GRID_COLOR_LINE,   MENUITEM_COLOR_FG,  &gconf.grid_color, 0 ),
+    MENU_ITEM(0x65,LANG_MENU_GRID_COLOR_FILL,   MENUITEM_COLOR_BG,  &gconf.grid_color, 0 ),
     MENU_ITEM(0x51,LANG_MENU_BACK,              MENUITEM_UP, 0, 0 ),
     {0}
 };
@@ -258,10 +275,13 @@ int _module_loader( unsigned int* chdk_export_list )
 
   if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
 	 return 1;
-  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 1, 0 ) )
+  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 2, 0 ) )
 	 return 1;
 
-  grid_lines_load(conf.grid_lines_file);
+  conf_info[0].cl = MAKE_COLOR(COLOR_BG, COLOR_FG);
+  config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/grids.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0, 0);
+
+  grid_lines_load(gconf.grid_lines_file);
 
   return 0;
 }
@@ -274,6 +294,7 @@ int _module_loader( unsigned int* chdk_export_list )
 //---------------------------------------------------------
 int _module_unloader()
 {
+    config_save(&conf_info[0], "A/CHDK/MODULES/CFG/grids.cfg", sizeof(conf_info)/sizeof(conf_info[0]));
     grid_lines_free_data();
     return 0;
 }

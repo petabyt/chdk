@@ -83,21 +83,10 @@ char* b_get_buf()
 #define MAX_SYM 2048
 
 static char* import_buf=0;
-static char* import_syms[MAX_SYM];
-static unsigned int import_hash[MAX_SYM];
-static int import_counts=0;
+static char* import_syms[MAX_SYM];          // Symbol names in input file
+static unsigned int import_hash[MAX_SYM];   // Symbol hash values in input file
+static int import_counts=0;                 // # of symbols found
 static int importfilesize=0;
-
-unsigned int hash(unsigned char *str)
-{
-    unsigned int hash = 5381;
-    int c;
-
-    while ((c = *str++) != 0)
-        hash = ((hash << 5) + hash) ^ c; /* hash * 33 xor c */
-
-    return hash;
-}
 
 int load_import(char* importfile)
 {
@@ -136,7 +125,8 @@ int load_import(char* importfile)
     if ( loaded != importfilesize )
       return -loaded;
 
-	// Parse and check
+    // Input file contains symbol hash value (in hex), a space and then the symbol name
+	// Parse the input file and build the symbol / hash table
 	char* p=import_buf;
     char* s=p;
 	for (;*p;p++) {
@@ -148,29 +138,30 @@ int load_import(char* importfile)
 
 		if (*p==10) {
 			*p=0;
-            import_syms[import_counts] = s;
-            import_hash[import_counts] = hash(s);
+            unsigned int h;
+            sscanf(s,"%x ",&h);
+            import_syms[import_counts] = s+9;
+            import_hash[import_counts] = h;
 			import_counts++;
             s = p + 1;
 			continue;
 		}
 		
-		if (!((*p>='A' && *p<='Z') || 
-			  (*p>='a' && *p<='z') || 
-			  (*p>='0' && *p<='9') || 
-			  *p=='_' ))
-		{
-			PRINTERR(stderr,"Found '%c' sym. Import file should contain only symbol names. No spaces or other sym allowed\n",*p);
-			break;
-		}
-
+		//if (!((*p>='A' && *p<='Z') || 
+		//	  (*p>='a' && *p<='z') || 
+		//	  (*p>='0' && *p<='9') || 
+		//	  *p=='_' ))
+		//{
+		//	PRINTERR(stderr,"Found '%c' sym. Import file should contain only symbol names. No spaces or other sym allowed\n",*p);
+		//	break;
+		//}
 	}
 	if ( FLAG_VERBOSE )
 		printf("Import file has %d entries\n",import_counts);
 	return loaded;
 }
 
-// Return: 0=not_found, >=2 - import_sym_idx
+// Return: 0=not_found, otherwise return has value of symbol name
 int find_import_symbol(char* sym)
 {
   static const char prefix[] = "__imported_";
@@ -194,7 +185,7 @@ int find_import_symbol(char* sym)
 	return 0;
 }
 
-// Return symbol name by its idx
+// Return symbol name by its hash value
 char* get_import_symbol( unsigned symidx )
 {
 	int idx=0;

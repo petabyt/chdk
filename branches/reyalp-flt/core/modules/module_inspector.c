@@ -8,8 +8,6 @@
 int module_idx=-1;
 
 extern int basic_module_init();
-void (*_getmeminfo)(void*) = 0;
-void (*_getexmeminfo)(void*) = 0;
 
 /***************** BEGIN OF AUXILARY PART *********************
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
@@ -34,9 +32,6 @@ int _module_loader( unsigned int* chdk_export_list )
 
   if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
 	  return 1;
-
-  _getmeminfo = module_find_symbol_address(MODULESYM_GETMEMINFO);
-  _getexmeminfo = module_find_symbol_address(MODULESYM_GETEXMEMINFO);
 
   return 0;
 }
@@ -183,22 +178,19 @@ void gui_module_draw()
 
         draw_txt_string(1, 4+showidx,  "SET-redraw, DISP-unload_all, MENU-exit",       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
-		// Simple platform-dependend part [not always GetMemInfo exits]
     	cam_meminfo meminfo;
-		if (_getmeminfo) {
 
-			memset(&meminfo,0,sizeof(meminfo));
-    		_getmeminfo(&meminfo);
+        // Display Canon heap memory info
+        // amount of data displayed may vary depending on GetMemInfo implementation
+        memset(&meminfo,0,sizeof(meminfo));
+        GetMemInfo(&meminfo);
+        gui_mem_info("MEM", &meminfo, showidx);
+        showidx += 3;
 
-            gui_mem_info("MEM", &meminfo, showidx);
-
-            showidx += 3;
-		}
-		if (_getexmeminfo) {
-
-			memset(&meminfo,sizeof(meminfo),0);
-    		_getexmeminfo(&meminfo);
-
+        // Display EXMEM memory info (only if enabled)
+        memset(&meminfo,0,sizeof(meminfo));
+        if (GetExMemInfo(&meminfo))
+        {
             gui_mem_info("EXMEM", &meminfo, showidx);
 		}
 	}

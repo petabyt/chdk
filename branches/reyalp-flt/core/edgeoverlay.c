@@ -12,6 +12,32 @@
 #include "modules.h"
 #include "module_exportlist.h"
 
+//-------------------------------------------------------------------
+
+typedef struct
+{
+    color edge_overlay_color;
+    int edge_overlay_filter;
+    int edge_overlay_zoom;    // shall zoom be set when *edg file is loaded?
+    int edge_overlay_pano;    // whether a full press changes back to live mode
+    int edge_overlay_pano_overlap;    // overlap in % in pano mode
+    int edge_overlay_show;    // whether to show overlay even when no button is pressed
+    int edge_overlay_play;    // whether edge overlay is switched on also for play mode
+} EdgeConf;
+
+EdgeConf econf;
+
+static ConfInfo conf_info[] = {
+    CONF_INFO( 1, econf.edge_overlay_color,     CONF_DEF_VALUE, cl:0, NULL),
+    CONF_INFO( 2, econf.edge_overlay_play,    CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO( 3, econf.edge_overlay_pano,              CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO( 4, econf.edge_overlay_zoom,                CONF_DEF_VALUE, i:1, NULL),
+	CONF_INFO( 5, econf.edge_overlay_filter,     CONF_DEF_VALUE, i:0, NULL),
+	CONF_INFO( 6, econf.edge_overlay_show,     CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO( 7, econf.edge_overlay_pano_overlap,   CONF_DEF_VALUE, i:30, NULL),
+};
+
+//-------------------------------------------------------------------
 
 // the way we save edge overlays on their own...
 #define EDGE_FILE_PREFIX "EDG_"
@@ -60,7 +86,7 @@ static void ensure_allocate_imagebuffer()
         if (edgebuf != NULL)
             memset(edgebuf->ptr, 0, edgebuf->ptrLen);
     }
-    if (conf.edge_overlay_filter && (smbuf == NULL))
+    if (econf.edge_overlay_filter && (smbuf == NULL))
     {
         smbuf = (unsigned char*)malloc(viewport_byte_width*3);
         if (smbuf != NULL)
@@ -68,7 +94,7 @@ static void ensure_allocate_imagebuffer()
         else
         {
             // Disable filtering if we do not have enough memory for it
-            conf.edge_overlay_filter = 0;
+            econf.edge_overlay_filter = 0;
         }
     }
 }
@@ -196,7 +222,7 @@ void load_edge_overlay(const char* fn)
         if( (ret == 1) && (ret2 == 1) )
         {
             fsm_state = EDGE_FROZEN;    // switch to "edge overlay frozen"-mode
-            if (conf.edge_overlay_zoom)
+            if (econf.edge_overlay_zoom)
             {
                 shooting_set_zoom(zoom);
             }
@@ -304,7 +330,7 @@ static int calc_edge_overlay()
     int compressed_slice = edgebuf->ptrLen / EDGE_SLICES;
     memset(edgebuf->ptr + slice*compressed_slice, 0, compressed_slice);
 
-    if (conf.edge_overlay_filter)
+    if (econf.edge_overlay_filter)
     {
         // Prefill smbuf with three lines of avergae-filtered data.
         // This looks much more complex then it actually is.
@@ -326,7 +352,7 @@ static int calc_edge_overlay()
     {
         shutter_fullpress |= kbd_is_key_pressed(KEY_SHOOT_FULL);
 
-        if (conf.edge_overlay_filter)
+        if (econf.edge_overlay_filter)
         {
             // We need to shift up our smbuf one line,
             // and fill in the last line (which now empty)
@@ -422,7 +448,7 @@ static int calc_edge_overlay()
 //  this code is not needed, but if you want that additional quality and do not
 //  care so much about performance, you can enable it.
 //
-//    if (conf.edge_overlay_filter)
+//    if (econf.edge_overlay_filter)
 //    {
 //        // Here we do basic filtering on the detected edges.
 //        // If a pixel is marked as edge but just a few of its
@@ -457,7 +483,7 @@ static int calc_edge_overlay()
 //                            bv_get(edgebuf, (y+1)*viewport_width + (x)) +
 //                            bv_get(edgebuf, (y+1)*viewport_width + (x+1));
 //
-//                        if (!conf.edge_overlay_show)
+//                        if (!econf.edge_overlay_show)
 //                        {
 //                            if (sum >= 5)    // if we have at least 5 neighboring edges
 //                                bv_set(bv_tmp, y*viewport_width + x, 1);   // keep the edge
@@ -485,7 +511,7 @@ static int draw_edge_overlay()
     int x, y;
     int x_off, y_off;
 
-    const color cl = conf.edge_overlay_color;
+    const color cl = econf.edge_overlay_color;
     const int y_slice_min = viewport_yoffset+camera_screen.edge_hmargin+ slice   *slice_height;
     const int y_slice_max = viewport_yoffset+camera_screen.edge_hmargin+(slice+1)*slice_height;
     const int y_min = viewport_yoffset+camera_screen.edge_hmargin;
@@ -516,8 +542,8 @@ static int draw_edge_overlay()
                     // from previous calls, delete it from the screen.
                     const int aspect_correct_x_off = x_off;
                     const int bEdge = bv_get(edgebuf, y_edgebuf + x);
-                    const int bDraw = bEdge || (draw_get_pixel(aspect_correct_x_off, y_off) == conf.edge_overlay_color);
-                    const color cl = bEdge ? conf.edge_overlay_color : 0;
+                    const int bDraw = bEdge || (draw_get_pixel(aspect_correct_x_off, y_off) == econf.edge_overlay_color);
+                    const color cl = bEdge ? econf.edge_overlay_color : 0;
                     if (bEdge || bDraw)
                         draw_pixel(aspect_correct_x_off, y_off, cl);
                     
@@ -575,23 +601,23 @@ static void set_offset_from_overlap()
     const int y_max = viewport_height;
     const int x_max = (viewport_width - 2);
 
-    switch(conf.edge_overlay_pano)
+    switch(econf.edge_overlay_pano)
     {
     case 0:     // pano off
         xoffset = 0;
         yoffset = 0;
         break;
     case 1:     // pano from left to right
-        xoffset = -x_max*(100-conf.edge_overlay_pano_overlap)/100;
+        xoffset = -x_max*(100-econf.edge_overlay_pano_overlap)/100;
         break;
     case 2:     // pano from top to bottom
-        yoffset = -y_max*(100-conf.edge_overlay_pano_overlap)/100;
+        yoffset = -y_max*(100-econf.edge_overlay_pano_overlap)/100;
         break;
     case 3:     // pano from right to left
-        xoffset = x_max*(100-conf.edge_overlay_pano_overlap)/100;
+        xoffset = x_max*(100-econf.edge_overlay_pano_overlap)/100;
         break;
     case 4:     // pano from bottom to top
-        yoffset = y_max*(100-conf.edge_overlay_pano_overlap)/100;
+        yoffset = y_max*(100-econf.edge_overlay_pano_overlap)/100;
         break;
     case 5:     // free mode
     default:
@@ -629,9 +655,9 @@ void edge_overlay()
     int bFullPress = kbd_is_key_pressed(KEY_SHOOT_FULL);
     const int bHalfPress = kbd_is_key_pressed(KEY_SHOOT_HALF);
     const int bPlayMode = (mode_get() & MODE_MASK) == MODE_PLAY;
-    const int bPanoramaMode = (conf.edge_overlay_pano != 0);
-    const int bNeedHalfPress = (conf.edge_overlay_show != 1);
-    const int bDisplayInPlay = (conf.edge_overlay_play == 1);
+    const int bPanoramaMode = (econf.edge_overlay_pano != 0);
+    const int bNeedHalfPress = (econf.edge_overlay_show != 1);
+    const int bDisplayInPlay = (econf.edge_overlay_play == 1);
     const int bGuiModeNone = (gui_get_mode() == GUI_MODE_NONE);
     const int bGuiModeAlt = (gui_get_mode() == GUI_MODE_ALT);
     const int bCanDisplay = (
@@ -765,15 +791,15 @@ void gui_menuproc_edge_load(int arg) {
 static const char* gui_edge_pano_modes[] = { "Off", "Right", "Down", "Left", "Up", "Free"};
 static CMenuItem edge_overlay_submenu_items[] = {
     MENU_ITEM(0x5c,LANG_MENU_EDGE_OVERLAY_ENABLE,   MENUITEM_BOOL,              &conf.edge_overlay_enable, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_EDGE_FILTER,           MENUITEM_BOOL,              &conf.edge_overlay_filter, 0 ),
-    MENU_ENUM2(0x5f,LANG_MENU_EDGE_PANO,            &conf.edge_overlay_pano,    gui_edge_pano_modes ),
-    MENU_ITEM(0x5e,LANG_MENU_EDGE_PANO_OVERLAP,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.edge_overlay_pano_overlap, MENU_MINMAX(0, 100) ),
-    MENU_ITEM(0x5c,LANG_MENU_EDGE_SHOW,             MENUITEM_BOOL,              &conf.edge_overlay_show, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_EDGE_FILTER,           MENUITEM_BOOL,              &econf.edge_overlay_filter, 0 ),
+    MENU_ENUM2(0x5f,LANG_MENU_EDGE_PANO,            &econf.edge_overlay_pano,    gui_edge_pano_modes ),
+    MENU_ITEM(0x5e,LANG_MENU_EDGE_PANO_OVERLAP,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &econf.edge_overlay_pano_overlap, MENU_MINMAX(0, 100) ),
+    MENU_ITEM(0x5c,LANG_MENU_EDGE_SHOW,             MENUITEM_BOOL,              &econf.edge_overlay_show, 0 ),
     MENU_ITEM(0x5e,LANG_MENU_EDGE_OVERLAY_TRESH,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.edge_overlay_thresh, MENU_MINMAX(0, 255) ),
-    MENU_ITEM(0x65,LANG_MENU_EDGE_OVERLAY_COLOR,    MENUITEM_COLOR_FG,          &conf.edge_overlay_color, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_EDGE_PLAY,			    MENUITEM_BOOL,		        &conf.edge_overlay_play, 0 ), //does not work on cams like s-series, which dont have a real "hardware" play/rec switch, need a workaround, probably another button
+    MENU_ITEM(0x65,LANG_MENU_EDGE_OVERLAY_COLOR,    MENUITEM_COLOR_FG,          &econf.edge_overlay_color, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_EDGE_PLAY,			    MENUITEM_BOOL,		        &econf.edge_overlay_play, 0 ), //does not work on cams like s-series, which dont have a real "hardware" play/rec switch, need a workaround, probably another button
     MENU_ITEM(0x33,LANG_MENU_EDGE_SAVE,			    MENUITEM_PROC,		        gui_menuproc_edge_save, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_EDGE_ZOOM,             MENUITEM_BOOL,              &conf.edge_overlay_zoom, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_EDGE_ZOOM,             MENUITEM_BOOL,              &econf.edge_overlay_zoom, 0 ),
     MENU_ITEM(0x33,LANG_MENU_EDGE_LOAD,			    MENUITEM_PROC,		        gui_menuproc_edge_load, 0 ),
     MENU_ITEM(0x51,LANG_MENU_BACK,                  MENUITEM_UP, 0, 0 ),
     {0}
@@ -819,8 +845,11 @@ int _module_loader( unsigned int* chdk_export_list )
 
   if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
 	 return 1;
-  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 1, 0 ) )
+  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 2, 0 ) )
 	 return 1;
+
+  conf_info[0].cl = MAKE_COLOR(0, COLOR_BLUE);
+  config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/edgeovr.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0, 0);
 
   return 0;
 }
@@ -837,7 +866,9 @@ int _module_unloader()
 	// Reason: edve_overlay allocate different bufs which should be kept
 	//		because even if we turn off edgeovr we could turn on back and
 	//		should get same content.
-  return 0;
+    config_save(&conf_info[0], "A/CHDK/MODULES/CFG/edgeovr.cfg", sizeof(conf_info)/sizeof(conf_info[0]));
+    reset_edge_overlay();
+    return 0;
 }
 
 
@@ -849,7 +880,7 @@ int _module_run(int moduleidx, int argn, int* arguments)
 {
   module_idx=moduleidx;
 
-  gui_activate_sub_menu(&edge_overlay_submenu, -1);
+  gui_activate_sub_menu(&edge_overlay_submenu, module_idx);
 
   return 0;
 }

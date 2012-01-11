@@ -33,7 +33,7 @@ void add_hash(unsigned int val, char *sym)
         {
             hash_vals[i].count++;
             fprintf(stderr,"Hash collision for 0x%08x (%s and %s)\n",val, sym, hash_vals[i].symbol);
-            return;
+            exit(-3);
         }
     }
 
@@ -62,6 +62,7 @@ unsigned int hash(unsigned char *str)
     unsigned int hash = 5381;
     int c;
 
+    // djb2 hash algorithm (Dan Bernstein - http://cr.yp.to/djb.html)
     while ((c = *str++) != 0)
         hash = ((hash << 5) + hash) ^ c; /* hash * 33 xor c */
 
@@ -204,17 +205,15 @@ int main( int argc, char **argv )
             strcat(full_symbol,symbol);
 			cut_export_token(symbol);
 
-			if (num_lines>=2) {
-                unsigned int hash_val = hash(symbol);
-                add_hash(hash_val,full_symbol);
-				fprintf(out_txt,"%s\x0a",symbol);
-				for(; size>=0; size--)
-				{
-					if ( symbol[size]>='a' && symbol[size]<='z')
-						symbol[size]-=0x20;
-				}
-				fprintf(out_h,"#define MODULESYM_%-32s 0x%08x\n",symbol,hash_val);
+            unsigned int hash_val = hash(symbol);
+            add_hash(hash_val,full_symbol);
+            fprintf(out_txt,"%08x %s\n",hash_val,symbol);
+			for(; size>=0; size--)
+			{
+				if ( symbol[size]>='a' && symbol[size]<='z')
+					symbol[size]-=0x20;
 			}
+			fprintf(out_h,"#define MODULESYM_%-32s 0x%08x\n",symbol,hash_val);
 
 			num_lines++;
 		}
@@ -225,6 +224,7 @@ int main( int argc, char **argv )
     }
 
     sort_hash();
+    fprintf(out_hash,"// This is an automatically generated file. DO NOT EDIT!\n");
     int n;
     for (n=0; n<hash_idx; n++)
     {
@@ -232,9 +232,9 @@ int main( int argc, char **argv )
     }
 
 	if (num_lines>=1)
-		fprintf(out_h,"\n#define EXPORTLIST_LAST_IDX %d\n\n",num_lines-1);
+		fprintf(out_h,"\n#define EXPORTLIST_LAST_IDX %d\n\n",num_lines);
 	else {
-		fprintf(out_h,"#error Malformed export list. Only %d valid records\n\n",num_lines+2);
+		fprintf(out_h,"#error Malformed export list. Only %d valid records\n\n",num_lines);
 		exit(-2);
 	}
 	fprintf(out_h,"#endif\n");

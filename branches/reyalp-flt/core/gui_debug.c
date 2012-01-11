@@ -196,7 +196,7 @@ int _module_loader( unsigned int* chdk_export_list )
 	  return 1;
   if ( !API_VERSION_MATCH_REQUIREMENT( camera_info.api_version, 1, 0 ) )
 	 return 1;
-  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 1, 0 ) )
+  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 2, 0 ) )
 	 return 1;
 
   return 0;

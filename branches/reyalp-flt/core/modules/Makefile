@@ -27,7 +27,7 @@ OPT_FLT= fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mde
 
 all: exportlist ../flt.h \
 		_dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop10.flt _rawop12.flt \
-		txtread.flt memview.flt modinsp.flt tetris.flt snake.flt gamemenu.flt modmenu.flt  _tbox.flt $(OPT_FLT)
+		txtread.flt memview.flt modinsp.flt tetris.flt snake.flt gamemenu.flt modmenu.flt _tbox.flt $(OPT_FLT)
 
 %.o: %.c
 	@echo $< \-\> $@
@@ -51,7 +51,6 @@ calend.elf: simple_module.o ../gui_calendar.o
 _tbox.elf: ../gui_tbox.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
-
 
 benchm.elf: simple_module.o ../gui_bench.o
 	@echo \-\> $@
@@ -77,7 +76,7 @@ snake.elf: simple_game.o ../gui_snake.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
-sokoban.elf: simple_game.o ../gui_sokoban.o
+sokoban.elf: ../gui_sokoban.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 

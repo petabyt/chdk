@@ -591,8 +591,8 @@ static CMenuItem visual_submenu_items[] = {
     MENU_ITEM(0x65,LANG_MENU_VIS_HISTO_BKG,           MENUITEM_COLOR_BG,  &conf.histo_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_HISTO_BORDER,        MENUITEM_COLOR_FG,  &conf.histo_color2, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_HISTO_MARKERS,       MENUITEM_COLOR_BG,  &conf.histo_color2, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_VIS_ZEBRA_UNDER,         MENUITEM_COLOR_BG,  &conf.zebra_color, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_VIS_ZEBRA_OVER,          MENUITEM_COLOR_FG,  &conf.zebra_color, 0 ),
+    //MENU_ITEM(0x65,LANG_MENU_VIS_ZEBRA_UNDER,         MENUITEM_COLOR_BG,  &conf.zebra_color, 0 ),         // moved to zebra menu
+    //MENU_ITEM(0x65,LANG_MENU_VIS_ZEBRA_OVER,          MENUITEM_COLOR_FG,  &conf.zebra_color, 0 ),         // moved to zebra menu
     MENU_ITEM(0x65,LANG_MENU_VIS_BATT_ICON,           MENUITEM_COLOR_FG,  &conf.batt_icon_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_SPACE_ICON,          MENUITEM_COLOR_FG,  &conf.space_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_SPACE_ICON_BKG,      MENUITEM_COLOR_BG,  &conf.space_color, 0 ),
@@ -604,8 +604,8 @@ static CMenuItem visual_submenu_items[] = {
     MENU_ITEM(0x65,LANG_MENU_VIS_MENU_CURSOR_BKG,     MENUITEM_COLOR_BG,  &conf.menu_cursor_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_MENU_SYMBOL_TEXT,    MENUITEM_COLOR_FG,  &conf.menu_symbol_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_MENU_SYMBOL_BKG,     MENUITEM_COLOR_BG,  &conf.menu_symbol_color, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_VIS_READER_TEXT,         MENUITEM_COLOR_FG,  &conf.reader_color, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_VIS_READER_BKG,          MENUITEM_COLOR_BG,  &conf.reader_color, 0 ),
+    //MENU_ITEM(0x65,LANG_MENU_VIS_READER_TEXT,         MENUITEM_COLOR_FG,  &conf.reader_color, 0 ),        // moved to text reader menu
+    //MENU_ITEM(0x65,LANG_MENU_VIS_READER_BKG,          MENUITEM_COLOR_BG,  &conf.reader_color, 0 ),        // moved to text reader menu
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_OVERRIDE,         MENUITEM_COLOR_FG,  &conf.osd_color_override, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_OVERRIDE_BKG,     MENUITEM_COLOR_BG,  &conf.osd_color_override, 0 ),
     MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),

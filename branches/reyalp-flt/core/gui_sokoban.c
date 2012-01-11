@@ -12,13 +12,25 @@
 
 #include "module_load.h"
 
+//-------------------------------------------------------------------
+
+typedef struct
+{
+    int sokoban_level;
+} SokobanConf;
+
+SokobanConf sconf;
+
+static const ConfInfo conf_info[] = {
+    CONF_INFO( 1, sconf.sokoban_level,          CONF_DEF_VALUE, i:0, NULL),
+};
+
 void gui_module_menu_kbd_process();
 void gui_sokoban_kbd_process();
 void gui_sokoban_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_SOKOBAN = 
     /*GUI_MODE_SOKOBAN*/    { GUI_MODE_MODULE,   gui_sokoban_draw,     gui_sokoban_kbd_process,    gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
-
 
 //-------------------------------------------------------------------
 #define FIELD_WIDTH             15
@@ -205,7 +217,7 @@ static void sokoban_set_level(int lvl) {
     }
     
     free(buf);
-    conf.sokoban_level = lvl;
+    sconf.sokoban_level = lvl;
     moves = 0;
     sokoban_undo_reset();
 }
@@ -223,8 +235,8 @@ static int sokoban_finished() {
 
 //-------------------------------------------------------------------
 static void sokoban_next_level() {
-    if (++conf.sokoban_level >= num_levels) conf.sokoban_level = 0;
-    sokoban_set_level(conf.sokoban_level);
+    if (++sconf.sokoban_level >= num_levels) sconf.sokoban_level = 0;
+    sokoban_set_level(sconf.sokoban_level);
     need_redraw_all = 1;
 }
 
@@ -321,11 +333,11 @@ int gui_sokoban_init() {
     if(!num_levels) {
         return 0;
     }
-    else if(conf.sokoban_level >= num_levels) {
-        conf.sokoban_level = 0;
+    else if(sconf.sokoban_level >= num_levels) {
+        sconf.sokoban_level = 0;
     }
     cell_size = camera_screen.height/FIELD_HEIGHT;
-    sokoban_set_level(conf.sokoban_level);
+    sokoban_set_level(sconf.sokoban_level);
 	// if the file is no longer readable, set_level will set this
     if(!num_levels) {
         return 0;
@@ -334,10 +346,6 @@ int gui_sokoban_init() {
 
     gui_set_mode(&GUI_MODE_SOKOBAN);
     return 1;
-}
-
-int basic_module_init() {
-  return gui_sokoban_init();
 }
 
 //-------------------------------------------------------------------
@@ -374,7 +382,7 @@ void gui_sokoban_kbd_process() {
             break;
         case KEY_ERASE:
         case KEY_DISPLAY:
-            sokoban_set_level(conf.sokoban_level);
+            sokoban_set_level(sconf.sokoban_level);
             need_redraw_all = 1;
             break;
     }
@@ -425,7 +433,7 @@ void gui_sokoban_draw(int enforce_redraw) {
         draw_line(camera_screen.ts_button_border+cell_size*FIELD_WIDTH, 0, camera_screen.ts_button_border+cell_size*FIELD_WIDTH, camera_screen.height-1, COLOR_WHITE);
         draw_line(camera_screen.ts_button_border+cell_size*FIELD_WIDTH+1, 0, camera_screen.ts_button_border+cell_size*FIELD_WIDTH+1, camera_screen.height-1, COLOR_BLACK);
 
-        sprintf(str, "%s: %-6d", lang_str(LANG_SOKOBAN_TEXT_LEVEL), conf.sokoban_level+1);
+        sprintf(str, "%s: %-6d", lang_str(LANG_SOKOBAN_TEXT_LEVEL), sconf.sokoban_level+1);
         draw_string(camera_screen.ts_button_border+cell_size*FIELD_WIDTH+2, 8, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
         sprintf(str, "%s: %-6d", lang_str(LANG_SOKOBAN_TEXT_MOVES), moves);
         draw_string(camera_screen.ts_button_border+cell_size*FIELD_WIDTH+2, 8+FONT_HEIGHT, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
@@ -447,6 +455,73 @@ extern int module_idx;
 void gui_module_menu_kbd_process() {
 	gui_default_kbd_process_menu_btn();
   	module_async_unload(module_idx);
+}
+
+
+// =========  MODULE INIT =================
+
+int module_idx=-1;
+
+/***************** BEGIN OF AUXILARY PART *********************
+  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+ **************************************************************/
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)0
+		};
+
+
+//---------------------------------------------------------
+// PURPOSE:   Bind module symbols with chdk. 
+//		Required function
+// PARAMETERS: pointer to chdk list of export
+// RETURN VALUE: 1 error, 0 ok
+//---------------------------------------------------------
+int _module_loader( unsigned int* chdk_export_list )
+{
+  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+     return 1;
+
+  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
+	  return 1;
+
+  config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/sokoban.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0, 0);
+
+  return 0;
+}
+
+
+//---------------------------------------------------------
+// PURPOSE: Finalize module operations (close allocs, etc)
+// RETURN VALUE: 0-ok, 1-fail
+//---------------------------------------------------------
+int _module_unloader()
+{
+    config_save(&conf_info[0], "A/CHDK/MODULES/CFG/sokoban.cfg", sizeof(conf_info)/sizeof(conf_info[0]));
+    return 0;
+}
+
+
+//---------------------------------------------------------
+// PURPOSE: Default action for simple modules (direct run)
+// NOTE: Please comment this function if no default action and this library module
+//---------------------------------------------------------
+int _module_run(int moduleidx, int argn, int* arguments)
+{
+  module_idx=moduleidx;
+
+  int rv = 0;
+  if ((mode_get()&MODE_MASK) != MODE_PLAY) {
+      gui_mbox_init(LANG_MSG_INFO_TITLE, LANG_MSG_SWITCH_TO_PLAY_MODE,
+                    MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, 0);
+  } else {
+	rv = gui_sokoban_init();
+  }
+  if ( ! rv )
+	module_async_unload(moduleidx);		// fail to init - "unload me"
+
+  return 0;
 }
 
 

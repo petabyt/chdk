@@ -1415,7 +1415,7 @@ int _module_loader( unsigned int* chdk_export_list )
 
   if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
 	  return 1;
-  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 1, 0 ) )
+  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 2, 0 ) )
 	 return 1;
 
   return 0;
