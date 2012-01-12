@@ -656,15 +656,9 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
         offs += sizeof(short);
 
         for (i=0; i<conf_num; ++i) {
-            if (confinfo[i].id==id && ((confinfo[i].size==size) || ((confinfo[i].size == 4) && (size == 2)))) {
+            if (confinfo[i].id==id && confinfo[i].size==size) {
                 if (offs + size <= rcnt) {
                    memcpy(confinfo[i].var, buf+offs, size);
-                   if (size == 2)
-                   {
-                       // Fix color value
-                       int *p = (int*)confinfo[i].var;
-                       *p = (((*p >> 8) & 0xFF) << 16) | (*p &0xFF);
-                   }
                    if (info_func) info_func(confinfo[i].id);
                 }
                 offs += size;
