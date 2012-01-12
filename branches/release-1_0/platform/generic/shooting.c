@@ -937,6 +937,9 @@ if ((mode_get()&MODE_MASK) != MODE_PLAY)
 	{
     dist = shooting_get_focus();
     lens_set_zoom_point(v);
+#if defined(CAM_NEED_SET_ZOOM_DELAY)
+    msleep(CAM_NEED_SET_ZOOM_DELAY);
+#endif
     shooting_set_focus(dist, SET_NOW);
   }
 }
