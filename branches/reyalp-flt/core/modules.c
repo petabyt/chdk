@@ -287,7 +287,7 @@ struct libdng_sym* module_dng_load(int owner)
 #if DNG_SUPPORT
     module_dng_semaphore |= owner;
 
-    module_load_generic((void**)&libdng, MODULE_NAME_DNG, bind_module_dng, 0);
+    module_load_generic((void**)&libdng, MODULE_NAME_DNG, bind_module_dng, MODULE_FLAG_DISABLE_AUTOUNLOAD);
 
     if (libdng == 0)
         module_dng_semaphore=0;
