@@ -27,8 +27,9 @@ void startup()
 	boot();
 }
 
-// Focus length table in firmware @FFF4A3DC 
+// WARNING WARNING WARNING - following stuff is copy/paste garbage from another port INCLUDING THE COMMENTS - reyalp
 #define NUM_FL 126		// 0 - 125, entries in firmware (3 words each entry, first is FL)
+// Focus length table in firmware @FFF4A3DC  - reyalp not really, this is a LIE!
 extern int focus_len_table[NUM_FL*3];
 
 // Focal length range is 5.0 - 70,0 mm, 28 - 392 in 35-mm equivalent.
