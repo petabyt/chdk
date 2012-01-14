@@ -1,18 +1,18 @@
-************************************
-SX230 HS Notes
+A3300 notes
 
-To enter CHDK <Alt> mode use the DISP+SET button.
+WARNING WARNING WARNING
 
-Support for dual partition is not available.
+This is an *incomplete* alpha port, done by an person with limited programming experience. It has known issues, and likely many unknown issues.
 
-Shortcut Keys
- In Alt mode
- TOGGLE RAW                DISPLAY Key
- In Half press shoot Mode  
- TOGGLE HISTO              DOWN Key
- TOGGLE ZEBRA              MENU Key
- TOGGLE OSD                RIGHT Key
- TOGGLE DISABLE OVERRIDES  LEFT Key
+If you are an experienced programmer with this camera, you may want to start from scratch rather than trying to fix this port.
+Most of the comments are probably copy/pasted from other ports, DO NOT TRUST THEM.
 
+If you are an end user and somehow obtained a build of this, you should proceed with caution and assume that things will be broken.
 
+porting thread http://chdk.setepontos.com/index.php?topic=6972.0
 
+TOTALLY INCOMPLETE LIST OF OF KNOWN ISSUES:
+modemap in shooting.c is wrong (see stubs_entry.S)
+zoom step / focus table etc stuff in main.c is wrong (copy/paste from some totally different camera)
+lib.c get_flash_params_count likely wrong
+platform_camera.h values are likely wrong

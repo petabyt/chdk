@@ -85,6 +85,7 @@ const ISOTable iso_table[] = {
 	{  6, 3200, "3200", -1},
 };
 
+// WARNING WARNING WARNING the following is copy/pasted from another camera and wrong
 /*
 http://www.usa.canon.com/cusa/support/consumer/digital_cameras/other_powershot/powershot_sx230_is#Specifications
 Shooting Modes
