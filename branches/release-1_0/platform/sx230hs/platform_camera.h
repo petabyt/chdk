@@ -20,7 +20,7 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define OPT_GPS                         1
+    #define CAM_HAS_GPS                     1
 
     #define CAM_DRYOS_2_3_R47               1
     #define CAM_DETECT_SCREEN_ERASE         1

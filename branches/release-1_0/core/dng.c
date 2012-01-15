@@ -13,6 +13,9 @@
 #include "action_stack.h"
 #include "gui_mbox.h"
 #include "gui_lang.h"
+#if defined(CAM_HAS_GPS)
+    #include "gps.h"
+#endif 
 
 //thumbnail
 #define DNG_TH_WIDTH 128
@@ -21,6 +24,7 @@
 
 struct dir_entry{unsigned short tag; unsigned short type; unsigned int count; unsigned int offset;};
 
+#define T_END 0
 #define T_BYTE 1
 #define T_ASCII 2
 #define T_SHORT 3
@@ -87,7 +91,7 @@ struct dir_entry IFD0[]={
  {0x14A,  T_LONG,      1,  0}, //SubIFDs offset
  {0x8298, T_ASCII,     1,  0}, // Copyright
  {0x8769, T_LONG,      1,  0}, //EXIF_IFD offset
-#if defined(OPT_GPS)
+#if defined(CAM_HAS_GPS)
  {0x8825, T_LONG,      1,  0}, //GPS_IFD offset
 #endif
  {0x9216, T_BYTE,      4,  0x00000001},  // TIFF/EPStandardID: 1.0.0.0
@@ -104,7 +108,7 @@ struct dir_entry IFD0[]={
  {0xC630, T_RATIONAL,  4,  (int)cam_lensinfo},
 #endif
  {0xC65A, T_SHORT,     1,  cam_CalibrationIlluminant1}, 
- {0}
+ {0, T_END}
 };
 
                                                                                       
@@ -130,7 +134,7 @@ struct dir_entry IFD1[]={
  {0xC61F, T_LONG,      2,  (int)cam_DefaultCropOrigin},
  {0xC620, T_LONG,      2,  (int)cam_DefaultCropSize},
  {0xC68D, T_LONG,      4,  (int)cam_ActiveArea},
- {0}
+ {0, T_END}
 };
 
 
@@ -158,13 +162,13 @@ struct dir_entry EXIF_IFD[]={
  {0x9209, T_SHORT,     1,  0},                          // Flash mode
  {0x920A, T_RATIONAL,  1,  (int)cam_focal_length},      // FocalLength
  {0xA405, T_SHORT,     1,  0},                          // FocalLengthIn35mmFilm
- {0}
+ {0, T_END}
 };
 
 
-#if defined(OPT_GPS)
+#if defined(CAM_HAS_GPS)
 struct dir_entry GPS_IFD[]={
-// {0x0000, T_BYTE,      4,  0x00000302}, //GPSVersionID: 2 3 0 0
+ {0x0000, T_BYTE,      4,  0x00000302}, //GPSVersionID: 2 3 0 0
  {0x0001, T_ASCII,     2,  0}, //North or South Latitude "N\0" or "S\0"
  {0x0002, T_RATIONAL,  3,  0}, //Latitude
  {0x0003, T_ASCII,     2,  0}, //East or West Latitude "E\0" or "W\0"
@@ -174,9 +178,9 @@ struct dir_entry GPS_IFD[]={
  {0x0007, T_RATIONAL,  3,  0}, //TimeStamp
  {0x0009, T_ASCII,     2,  0}, //Status
 // {0x000A, T_ASCII,     1,  0}, //MeasureMode
- {0x0012, T_ASCII,     8,  0}, //MapDatum 7 + 1 pad byte
- {0x001D, T_ASCII,    12,  0}, //DateStamp 11 + 1 pad byte
- {0}
+ {0x0012, T_ASCII,     7,  0}, //MapDatum 7 + 1 pad byte
+ {0x001D, T_ASCII,    11,  0}, //DateStamp 11 + 1 pad byte
+ {0, T_END}
 };
 #endif
 
@@ -199,7 +203,7 @@ int get_type_size(int type){
  }
 }
 
-#if defined(OPT_GPS)
+#if defined(CAM_HAS_GPS)
 struct {struct dir_entry* entry; int count;} IFD_LIST[]={{IFD0,0}, {IFD1,0}, {EXIF_IFD,0}, {GPS_IFD, 0}};
 #else
 struct {struct dir_entry* entry; int count;} IFD_LIST[]={{IFD0,0}, {IFD1,0}, {EXIF_IFD,0}};
@@ -240,29 +244,15 @@ void create_dng_header(){
 
  // filling EXIF fields
   
-#if defined(OPT_GPS)
-typedef struct {
-    int latitudeRef;
-    int latitude[6];
-    int longitudeRef;
-    int longitude[6];
-    int heightRef;
-    int height[2];
-    int timeStamp[6];
-    short status;
-    char mapDatum[7];
-    char dateStamp[11];
-    char unknown2[260];
-} tGPS;
-tGPS gps;
-
-get_property_case(PROPCASE_GPS, &gps, sizeof(tGPS));
+#if defined(CAM_HAS_GPS)
+    tGPS gps; 
+    gps_getData(&gps); 
 #endif
 
  for (j=0;j<IFDs;j++) {
-  for(i=0; IFD_LIST[j].entry[i].tag; i++) {
+  for(i=0; IFD_LIST[j].entry[i].type; i++) {
     switch (IFD_LIST[j].entry[i].tag) {
-	 // For camera name string make sure the 'count' in the IFD header is correct for the string
+    // For camera name string make sure the 'count' in the IFD header is correct for the string
      case 0x110 :                                                                                       // CameraName
      case 0xC614: IFD_LIST[j].entry[i].count = strlen((char*)IFD_LIST[j].entry[i].offset) + 1; break;   // UniqueCameraModel
      case 0x132 :
@@ -272,7 +262,7 @@ get_property_case(PROPCASE_GPS, &gps, sizeof(tGPS));
      case 0x0112: IFD_LIST[j].entry[i].offset=get_orientation_for_exif(exif_data.orientation); break; //Orientation
      case 0x9209: IFD_LIST[j].entry[i].offset=get_flash_mode_for_exif(exif_data.flash_mode, exif_data.flash_fired); break; //Flash mode
      case 0x9207: IFD_LIST[j].entry[i].offset=get_metering_mode_for_exif(exif_data.metering_mode); break; // Metering mode
-#if defined(OPT_GPS)
+#if defined(CAM_HAS_GPS)
      case 0x0001: IFD_LIST[j].entry[i].offset=gps.latitudeRef; break;
      case 0x0002: IFD_LIST[j].entry[i].offset=(int)&(gps.latitude); break;
      case 0x0003: IFD_LIST[j].entry[i].offset=gps.longitudeRef; break;
@@ -295,7 +285,7 @@ get_property_case(PROPCASE_GPS, &gps, sizeof(tGPS));
  for (j=0;j<IFDs;j++) {
   IFD_LIST[j].count=0;
   raw_offset+=6; // IFD header+footer
-  for(i=0; IFD_LIST[j].entry[i].tag; i++) {
+  for(i=0; IFD_LIST[j].entry[i].type; i++) {
    int size_ext;
    IFD_LIST[j].count++;
    raw_offset+=12; // IFD directory size
@@ -326,9 +316,9 @@ get_property_case(PROPCASE_GPS, &gps, sizeof(tGPS));
 
  for (j=0;j<IFDs;j++) {
   extra_offset+=6+IFD_LIST[j].count*12; // IFD header+footer
-  for(i=0; IFD_LIST[j].entry[i].tag; i++) {
+  for(i=0; IFD_LIST[j].entry[i].type; i++) {
    if (IFD_LIST[j].entry[i].tag==0x8769) IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+(IFD_LIST[0].count+IFD_LIST[1].count)*12+6+6;  // EXIF IFD offset
-#if defined(OPT_GPS)
+#if defined(CAM_HAS_GPS)
    if (IFD_LIST[j].entry[i].tag==0x8825) IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+(IFD_LIST[0].count+IFD_LIST[1].count+IFD_LIST[2].count)*12+6+6+6;  // GPS IFD offset
 #endif
    if (IFD_LIST[j].entry[i].tag==0x14A)  IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+IFD_LIST[0].count*12+6; // SubIFDs offset
@@ -355,7 +345,7 @@ get_property_case(PROPCASE_GPS, &gps, sizeof(tGPS));
   int size_ext;
   var=IFD_LIST[j].count;
   add_to_buf(&var, sizeof(short));
-  for(i=0; IFD_LIST[j].entry[i].tag; i++) {
+  for(i=0; IFD_LIST[j].entry[i].type; i++) {
    add_to_buf(&IFD_LIST[j].entry[i].tag, sizeof(short));
    add_to_buf(&IFD_LIST[j].entry[i].type, sizeof(short));
    add_to_buf(&IFD_LIST[j].entry[i].count, sizeof(int));
@@ -376,7 +366,7 @@ get_property_case(PROPCASE_GPS, &gps, sizeof(tGPS));
  for (j=0;j<IFDs;j++) {
   int size_ext;
   char zero=0;
-  for(i=0; IFD_LIST[j].entry[i].tag; i++) {
+  for(i=0; IFD_LIST[j].entry[i].type; i++) {
    size_ext=get_type_size(IFD_LIST[j].entry[i].type)*IFD_LIST[j].entry[i].count;
    if (size_ext>4){
     add_to_buf((void*)IFD_LIST[j].entry[i].offset, size_ext);
