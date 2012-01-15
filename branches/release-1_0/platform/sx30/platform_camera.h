@@ -118,7 +118,11 @@
     #define CHDK_COLOR_BASE                 0xB3    // Start color index for CHDK colors loaded into camera palette.
     #define CAM_USE_COLORED_ICONS           1       // Enable using the CHDK-DE colored icons.
 
-    #define CAM_NEED_SET_ZOOM_DELAY         250     // SX30 needs a short delay after setting the zoom before resetting focus in shooting_set_zoom()
+    #define CAM_NEED_SET_ZOOM_DELAY         300     // SX30 needs a short delay after setting the zoom before resetting focus in shooting_set_zoom()
 
+    #undef CAMERA_MIN_DIST
+    #define CAMERA_MIN_DIST                 95      // Override min subject distance
+    #undef CAMERA_MAX_DIST
+    #define CAMERA_MAX_DIST                 9090910 // Override max subject distance
 
 //----------------------------------------------------------

@@ -121,5 +121,10 @@
     #define CHDK_COLOR_BASE                 0xA2    // Start color index for CHDK colors loaded into camera palette.
     #define CAM_USE_COLORED_ICONS           1       // Enable using the CHDK-DE colored icons.
 
+    #undef CAMERA_MIN_DIST
+    #define CAMERA_MIN_DIST                 71      // Override min subject distance
+    #undef CAMERA_MAX_DIST
+    #define CAMERA_MAX_DIST                 125392  // Override max subject distance
+
 //----------------------------------------------------------
 
