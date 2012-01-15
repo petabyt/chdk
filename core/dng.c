@@ -10,6 +10,7 @@
 #include "action_stack.h"
 #include "gui_mbox.h"
 #include "gui_lang.h"
+#include "gps.h"
 
 //thumbnail
 #define DNG_TH_WIDTH 128
@@ -18,6 +19,7 @@
 
 struct dir_entry{unsigned short tag; unsigned short type; unsigned int count; unsigned int offset;};
 
+#define T_END       0
 #define T_BYTE      1
 #define T_ASCII     2
 #define T_SHORT     3
@@ -95,7 +97,7 @@ struct dir_entry IFD0[]={
  {0xC62E, T_RATIONAL,   1,  (int)cam_LinearResponseLimit},
  {0xC630, T_RATIONAL,   4,  (int)&camera_sensor.lens_info},
  {0xC65A, T_SHORT|T_PTR,1,  (int)&camera_sensor.calibration_illuminant1}, 
- {0}
+ {0, T_END}
 };
 
                                                                                       
@@ -121,7 +123,7 @@ struct dir_entry IFD1[]={
  {0xC61F, T_LONG,       2,  (int)&camera_sensor.crop.origin},
  {0xC620, T_LONG,       2,  (int)&camera_sensor.crop.size},
  {0xC68D, T_LONG,       4,  (int)&camera_sensor.dng_active_area},
- {0}
+ {0, T_END}
 };
 
 
@@ -149,27 +151,13 @@ struct dir_entry EXIF_IFD[]={
  {0x9209, T_SHORT,      1,  0},                         // Flash mode
  {0x920A, T_RATIONAL,   1,  (int)cam_focal_length},     // FocalLength
  {0xA405, T_SHORT|T_PTR,1,  (int)&exif_data.effective_focal_length},    // FocalLengthIn35mmFilm
- {0}
+ {0, T_END}
 };
 
-  
-typedef struct {
-    char    latitudeRef[4];
-    int     latitude[6];
-    char    longitudeRef[4];
-    int     longitude[6];
-    char    heightRef[4];
-    int     height[2];
-    int     timeStamp[6];
-    char    status[4];
-    char    mapDatum[8];
-    char    dateStamp[12];
-    char    unknown2[260];
-} tGPS;
 tGPS gps_data;
 
 struct dir_entry GPS_IFD[]={
-//{0x0000, T_BYTE,              4,  0x00000302},                    //GPSVersionID: 2 3 0 0
+  {0x0000, T_BYTE,              4,  0x00000302},                    //GPSVersionID: 2 3 0 0
   {0x0001, T_ASCII,             2,  (int)gps_data.latitudeRef},     //North or South Latitude "N\0" or "S\0"
   {0x0002, T_RATIONAL,          3,  (int)gps_data.latitude},        //Latitude
   {0x0003, T_ASCII,             2,  (int)gps_data.longitudeRef},    //East or West Latitude "E\0" or "W\0"
@@ -181,7 +169,7 @@ struct dir_entry GPS_IFD[]={
 //{0x000A, T_ASCII,             1,  0},                             //MeasureMode
   {0x0012, T_ASCII,             7,  (int)gps_data.mapDatum},        //MapDatum 7 + 1 pad byte
   {0x001D, T_ASCII,             11, (int)gps_data.dateStamp},       //DateStamp 11 + 1 pad byte
-  {0}
+  {0, T_END}
 };
 
 
@@ -228,15 +216,12 @@ void create_dng_header(){
 
  // filling EXIF fields
 
- if (camera_info.props.gps)
-    get_property_case(camera_info.props.gps, &gps_data, sizeof(tGPS));
- else
-    memset(&gps_data, 0, sizeof(tGPS));
+ gps_getData(&gps_data); 
 
  for (j=0;j<IFDs;j++) {
-  for(i=0; IFD_LIST[j].entry[i].tag; i++) {
+  for(i=0; IFD_LIST[j].entry[i].type; i++) {
     switch (IFD_LIST[j].entry[i].tag) {
-	 // For camera name string make sure the 'count' in the IFD header is correct for the string
+     // For camera name string make sure the 'count' in the IFD header is correct for the string
      case 0x110 :                                                                                       // CameraName
      case 0xC614: IFD_LIST[j].entry[i].count = strlen((char*)IFD_LIST[j].entry[i].offset) + 1; break;   // UniqueCameraModel
      case 0x132 :
@@ -255,7 +240,7 @@ void create_dng_header(){
  for (j=0;j<IFDs;j++) {
   IFD_LIST[j].count=0;
   raw_offset+=6; // IFD header+footer
-  for(i=0; IFD_LIST[j].entry[i].tag; i++) {
+  for(i=0; IFD_LIST[j].entry[i].type; i++) {
    int size_ext;
    IFD_LIST[j].count++;
    raw_offset+=12; // IFD directory size
@@ -286,7 +271,7 @@ void create_dng_header(){
 
  for (j=0;j<IFDs;j++) {
   extra_offset+=6+IFD_LIST[j].count*12; // IFD header+footer
-  for(i=0; IFD_LIST[j].entry[i].tag; i++) {
+  for(i=0; IFD_LIST[j].entry[i].type; i++) {
    if (IFD_LIST[j].entry[i].tag==0x8769) IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+(IFD_LIST[0].count+IFD_LIST[1].count)*12+6+6;  // EXIF IFD offset
    if (IFD_LIST[j].entry[i].tag==0x8825) IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+(IFD_LIST[0].count+IFD_LIST[1].count+IFD_LIST[2].count)*12+6+6+6;  // GPS IFD offset
    if (IFD_LIST[j].entry[i].tag==0x14A)  IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+IFD_LIST[0].count*12+6; // SubIFDs offset
@@ -313,7 +298,7 @@ void create_dng_header(){
   int size_ext;
   var=IFD_LIST[j].count;
   add_to_buf(&var, sizeof(short));
-  for(i=0; IFD_LIST[j].entry[i].tag; i++) {
+  for(i=0; IFD_LIST[j].entry[i].type; i++) {
     add_to_buf(&IFD_LIST[j].entry[i].tag, sizeof(short));
     unsigned short t = IFD_LIST[j].entry[i].type & 0xFF;
     add_to_buf(&t, sizeof(short));
@@ -346,7 +331,7 @@ void create_dng_header(){
  for (j=0;j<IFDs;j++) {
   int size_ext;
   char zero=0;
-  for(i=0; IFD_LIST[j].entry[i].tag; i++) {
+  for(i=0; IFD_LIST[j].entry[i].type; i++) {
    size_ext=get_type_size(IFD_LIST[j].entry[i].type)*IFD_LIST[j].entry[i].count;
    if (size_ext>4){
     add_to_buf((void*)IFD_LIST[j].entry[i].offset, size_ext);
