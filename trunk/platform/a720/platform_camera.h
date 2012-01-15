@@ -20,43 +20,44 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define CAM_PROPSET                 2
-    #define CAM_DRYOS                   1
+    #define CAM_PROPSET                     2
+    #define CAM_DRYOS                       1
 
-    #define CAM_RAW_ROWPIX              3336   // for new 8 MP
-    #define CAM_RAW_ROWS                2480   // for new 8 MP
+    #define CAM_RAW_ROWPIX                  3336   // for new 8 MP
+    #define CAM_RAW_ROWS                    2480   // for new 8 MP
 
-    #define CAM_MULTIPART               1
-    #define CAM_ADJUSTABLE_ALT_BUTTON   1
-    #define CAM_CAN_MUTE_MICROPHONE     1
+    #define CAM_MULTIPART                   1
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
-    #define CAM_EV_IN_VIDEO             1
+    #define CAM_EV_IN_VIDEO                 1
     #undef  CAM_VIDEO_CONTROL
-// disabled for now, see http://chdk.setepontos.com/index.php?topic=6182.0
-//    #define CAM_EXT_TV_RANGE            1
+
+//    #define CAM_EXT_TV_RANGE                1   // disabled for now, see http://chdk.setepontos.com/index.php?topic=6182.0
 
     #define CAM_DNG_LENS_INFO               { 58,10, 348,10, 28,10, 48,10 } // See comments in camera.h
     // pattern
-    #define cam_CFAPattern 0x01000201 // Green  Blue  Red  Green
+    #define cam_CFAPattern                  0x01000201  // Green  Blue  Red  Green
     // color
     #define CAM_COLORMATRIX1                               \
       640019, 1000000, -220031, 1000000, -96241, 1000000,  \
      -77419,  1000000, 639766,  1000000,  44009, 1000000,  \
       17965,  1000000, 78396,   1000000, 231868, 1000000
     
-    #define cam_CalibrationIlluminant1 1 // Daylight
+    #define cam_CalibrationIlluminant1      1   // Daylight
     // cropping
-    #define CAM_JPEG_WIDTH  3264
-    #define CAM_JPEG_HEIGHT 2448
-    #define CAM_ACTIVE_AREA_X1 10
-    #define CAM_ACTIVE_AREA_Y1 8
-    #define CAM_ACTIVE_AREA_X2 3302
-    #define CAM_ACTIVE_AREA_Y2 2474
+    #define CAM_JPEG_WIDTH                  3264
+    #define CAM_JPEG_HEIGHT                 2448
+    #define CAM_ACTIVE_AREA_X1              10
+    #define CAM_ACTIVE_AREA_Y1              8
+    #define CAM_ACTIVE_AREA_X2              3302
+    #define CAM_ACTIVE_AREA_Y2              2474
     // camera name
-    #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
+    #define PARAM_CAMERA_NAME               4   // parameter number for GetParameterData
 
-    #define DNG_EXT_FROM ".CR2"
-    #define  CAM_CHDK_PTP               1 // include CHDK PTP support
+    #define DNG_EXT_FROM                    ".CR2"
+
+    #define CAM_USE_COLORED_ICONS           1   // Enable using the CHDK-DE colored icons.
 	
 	#define REMOTE_SYNC_STATUS_LED 	0xc02200C4		// specifies an LED that turns on while camera waits for USB remote to sync
 	

@@ -578,3 +578,16 @@
 458 "   Pano-Überlappung (%)"
 459 "badpixel.bin erstellen"
 460 "REC-Modus erforderlich."
+461 "%s ist nicht verfügbar!"
+
+462 "Touchscreen-Overrides"
+463 "Video-AE-Kontrolle"
+464 "<Alt>-Shortcut-Tasten"
+
+465 "USB-Info"
+466 "USB-Info-Anzeige"
+
+467 "ROM-Crash-Log speichern"
+468 "FEHLER: SystemEventInit und System.Create gescheitert"
+469 "ROM-Crash-Log konnte nicht gespeichert werden."
+470 "ROM-Crash-Log in A/ROMLOG.LOG gespeichert."

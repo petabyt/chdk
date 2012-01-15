@@ -509,7 +509,7 @@
 #define COLOR_BLUE_LT       0x96
 #define COLOR_BLUE          0xa1
 #define COLOR_YELLOW        0x92
-#define COLOR_BG            0x62
+#define COLOR_BG            0x4B
 #define COLOR_FG            COLOR_WHITE
 #define COLOR_SELECTED_BG   0x0e
 #define COLOR_SELECTED_FG   COLOR_BLACK
