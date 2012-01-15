@@ -80,7 +80,7 @@ static void get_viewport_size()
 
 static void ensure_allocate_imagebuffer()
 {
-    if(edgebuf == NULL)
+    if (edgebuf == NULL)
     {
         edgebuf = bv_create(viewport_height * viewport_width, 1);
         if (edgebuf != NULL)
@@ -116,6 +116,9 @@ static void reset_edge_overlay()
 
     fsm_state = EDGE_LIVE;
     slice = 0;
+
+    // Clean up state saved in core CHDK
+    module_save_edge(edgebuf, fsm_state);
 }
 
 static int is_buffer_ready()
@@ -851,6 +854,8 @@ int _module_loader( unsigned int* chdk_export_list )
   conf_info[0].cl = MAKE_COLOR(0, COLOR_BLUE);
   config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/edgeovr.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0, 0);
 
+  module_restore_edge((void**)&edgebuf, (int*)&fsm_state);
+
   return 0;
 }
 
@@ -861,13 +866,21 @@ int _module_loader( unsigned int* chdk_export_list )
 //---------------------------------------------------------
 int _module_unloader()
 {
-	// This could be happens only if on-load mistake
-	// CHDK never unload this library (but load only if needed)
-	// Reason: edve_overlay allocate different bufs which should be kept
-	//		because even if we turn off edgeovr we could turn on back and
-	//		should get same content.
+    // Save state info
+    module_save_edge(edgebuf, fsm_state);
+
+    // Module can be unloaded when menu exits
+    // Edge overlay state is store in core CHDK and will
+    // be restored when module reloads
     config_save(&conf_info[0], "A/CHDK/MODULES/CFG/edgeovr.cfg", sizeof(conf_info)/sizeof(conf_info[0]));
-    reset_edge_overlay();
+
+    // Free filter buffer
+    if (smbuf != NULL)
+    {
+        free(smbuf);
+        smbuf = NULL;
+    }
+
     return 0;
 }
 

@@ -101,6 +101,8 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
             module_fselect_init_w_mode,
             module_grids_load,
             module_find_symbol_address,
+            module_restore_edge,
+            module_save_edge,
 
             &altGuiHandler,
             &camera_info,
