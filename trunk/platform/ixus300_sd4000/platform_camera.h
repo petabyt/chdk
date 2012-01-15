@@ -132,3 +132,6 @@
     // Not required
     //#undef EDGE_HMARGIN
     //#define EDGE_HMARGIN 10    // 10 fits video mode of sx210
+	
+//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+	

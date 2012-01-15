@@ -95,4 +95,7 @@
 
 	#undef CAM_HAS_IRIS_DIAPHRAGM 	
 	#undef CAM_HAS_MANUAL_FOCUS
+	
+	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// specifies an LED that turns on while camera waits for USB remote to sync
+	
 //----------------------------------------------------------

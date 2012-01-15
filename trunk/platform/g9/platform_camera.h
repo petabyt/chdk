@@ -58,9 +58,8 @@
 	#define CAM_ACTIVE_AREA_Y1					14
 	#define CAM_ACTIVE_AREA_X2					4076
 	#define CAM_ACTIVE_AREA_Y2					3030
+	
+	#define REMOTE_SYNC_STATUS_LED 	0xC022006C		// specifies an LED that turns on while camera waits for USB remote to sync
+	
 //----------------------------------------------------------
 
-
-//==========================================================
-// A-series
-//==========================================================

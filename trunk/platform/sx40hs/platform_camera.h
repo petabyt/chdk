@@ -130,5 +130,7 @@
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                 0x202   // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
-    
+ 
+//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+ 
 //----------------------------------------------------------

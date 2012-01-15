@@ -57,7 +57,6 @@
     #define  CAM_CHDK_PTP               1 // include CHDK PTP support
 //----------------------------------------------------------
 
+//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 
-//==========================================================
-// TX-Series
-//==========================================================
+
