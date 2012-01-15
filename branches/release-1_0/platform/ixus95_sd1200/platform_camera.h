@@ -93,7 +93,6 @@
     #define CAM_ZEBRA_ASPECT_ADJUST 1
 	// camera has very little free memory
     #define CAM_ZEBRA_NOBUF 1
-    #define  CAM_CHDK_PTP               1 // include CHDK PTP support
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras

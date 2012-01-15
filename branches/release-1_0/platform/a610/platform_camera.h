@@ -55,6 +55,5 @@
     #define PARAM_CAMERA_NAME 3 // parameter number for GetParameterData
 
     #define DNG_EXT_FROM ".DPS"
-    #define  CAM_CHDK_PTP               1 // include CHDK PTP support
 //----------------------------------------------------------
 

@@ -54,8 +54,6 @@
     //#define CAM_DRAW_EXPOSITION         1         // not required because Canon Firmware does always show it on Shutter half press
     //#define CAM_ADJUSTABLE_ALT_BUTTON   1         // ToDo: let user choose different key combo if possible
 
-    #define CAM_CHDK_PTP                1           // OK
-
     #define PARAM_CAMERA_NAME           4           // OK
 
     #define CAM_DNG_LENS_INFO               { 49,10, 186,10, 20,10, 53,10 } // See comments in camera.h

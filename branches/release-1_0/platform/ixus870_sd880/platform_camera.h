@@ -38,7 +38,6 @@
     #define CAM_MULTIPART               1
     #define CAM_REMOTE                  1
     #define CAM_SYNCH                   1
-    #define CAM_CHDK_PTP                1
     #undef CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT            0x40000000  // 0xFF874198 (via ExMem.FreeCacheable
     #define PARAM_CAMERA_NAME           4 // parameter number for GetParameterData

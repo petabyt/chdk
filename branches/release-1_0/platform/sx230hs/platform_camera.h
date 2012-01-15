@@ -98,6 +98,4 @@
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
-    #define  CAM_CHDK_PTP                   1   // include CHDK PTP support
-
     #define CAM_USE_COLORED_ICONS           1   // Enable using the CHDK-DE colored icons.
