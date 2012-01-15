@@ -101,5 +101,7 @@
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 												
 	#define CAM_DETECT_SCREEN_ERASE 1			// http://chdk.setepontos.com/index.php?topic=6705.msg71062#msg71062													
-    
+  
+	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// specifies an LED that turns on while camera waits for USB remote to sync
+  
 //----------------------------------------------------------

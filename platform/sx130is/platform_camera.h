@@ -104,6 +104,7 @@
 
     #define CAM_USE_COLORED_ICONS       1
 
+	#define REMOTE_SYNC_STATUS_LED 	0xC0220014		// specifies an LED that turns on while camera waits for USB remote to sync
 
  //----------------------------------------------------------
  

@@ -87,5 +87,8 @@
     #undef  CAM_FEATURE_FEATHER             // XXX
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_VIDEO_CONTROL               // XXX
+	
+	#define REMOTE_SYNC_STATUS_LED 	0xC02200D4		// specifies an LED that turns on while camera waits for USB remote to sync
+	
 //----------------------------------------------------------
 

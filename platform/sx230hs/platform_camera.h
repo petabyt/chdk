@@ -109,6 +109,7 @@
 	#undef  CAM_CHDK_PTP
 	#define CAM_CHDK_PTP				1			//SX220 added
 	
+	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// specifies an LED that turns on while camera waits for USB remote to sync
 	
 //TODO	#define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 0   
 //TODO    #define CAM_MULTIPART               1

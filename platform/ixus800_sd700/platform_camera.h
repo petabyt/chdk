@@ -59,5 +59,8 @@
     // camera name
     #define PARAM_CAMERA_NAME 3 // parameter number for GetParameterData
     #define DNG_EXT_FROM ".DPS"
+	
+//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+	
 //----------------------------------------------------------
 

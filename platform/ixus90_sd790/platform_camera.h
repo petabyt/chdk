@@ -62,5 +62,8 @@
     #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
+	
+	#define REMOTE_SYNC_STATUS_LED 	0xc0220130		// specifies an LED that turns on while camera waits for USB remote to sync
+	
 //----------------------------------------------------------
 

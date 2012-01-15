@@ -79,5 +79,8 @@
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
     #define CAM_DATE_FOLDER_NAMING          0x100 //Value found in the last function, which is called in GetImageFolder. (first compare)
+
+//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+	
 //----------------------------------------------------------
 

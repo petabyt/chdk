@@ -57,6 +57,7 @@
       #define CAM_JPEG_WIDTH  3456 
       #define CAM_JPEG_HEIGHT 2592
      
-     
+   //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+  
   //----------------------------------------------------------
   

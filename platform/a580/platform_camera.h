@@ -73,4 +73,7 @@
     // camera name
     #define PARAM_CAMERA_NAME               4 // parameter number for GetParameterData
     #define CAM_EXT_TV_RANGE                1 // CHDK can make exposure time longer than 64s
+	
+	#define REMOTE_SYNC_STATUS_LED 	0xc02200C4		// specifies an LED that turns on while camera waits for USB remote to sync
+	
 //----------------------------------------------------------

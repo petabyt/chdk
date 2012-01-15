@@ -57,5 +57,8 @@
 
     #define DNG_EXT_FROM ".CR2"
     #define  CAM_CHDK_PTP               1 // include CHDK PTP support
+	
+	#define REMOTE_SYNC_STATUS_LED 	0xc02200C4		// specifies an LED that turns on while camera waits for USB remote to sync
+	
 //----------------------------------------------------------
 

@@ -122,5 +122,7 @@
     #define CHDK_COLOR_BASE                 0xB3    // Start color index for CHDK colors loaded into camera palette.
     #define CAM_USE_COLORED_ICONS           1       // Enable using the CHDK-DE colored icons.
 
+//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+
 //----------------------------------------------------------
 
