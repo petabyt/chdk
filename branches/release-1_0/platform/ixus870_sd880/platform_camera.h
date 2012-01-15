@@ -29,7 +29,6 @@
     #define CAM_BRACKETING              1   // XXX 
     #define CAM_CAN_SD_OVER_NOT_IN_MF   1
     #define CAM_CAN_SD_OVERRIDE         1
-    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
     #define CAM_EXT_TV_RANGE            1
     #define CAM_HAS_IS                  1
     #define CAM_HAS_JOGDIAL             1

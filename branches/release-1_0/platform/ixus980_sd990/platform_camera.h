@@ -44,7 +44,6 @@
     #define CAM_HAS_JOGDIAL             1
 //    #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_VIDEO_QUALITY_ONLY          1  
-    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
 	#undef CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
 

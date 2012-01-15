@@ -33,7 +33,6 @@
     #undef CAM_HAS_MANUAL_FOCUS
     #define CAM_MULTIPART               1
     #define CAM_HAS_JOGDIAL             1
-    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU  1
     #define CAM_EXT_TV_RANGE            1
 

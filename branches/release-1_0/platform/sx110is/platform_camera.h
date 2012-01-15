@@ -38,7 +38,6 @@
     #define CAM_SHOW_OSD_IN_SHOOT_MENU  1
     #define CAM_REAR_CURTAIN            1
     #define CAM_ADJUSTABLE_ALT_BUTTON   1
-    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1 
     #undef  CAM_VIDEO_CONTROL
     #define CAM_MULTIPART               1

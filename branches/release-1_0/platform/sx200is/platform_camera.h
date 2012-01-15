@@ -27,8 +27,6 @@
     #define CAM_RAW_ROWS                3048 //  "     "    "    "    "  
     
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
-    #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
-    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
 
     #define CAM_VIDEO_QUALITY_ONLY          1  
 

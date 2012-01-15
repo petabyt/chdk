@@ -35,7 +35,6 @@
     #define CAM_HAS_ND_FILTER           1
     #undef CAM_HAS_USER_TV_MODES
     #define CAM_SHOW_OSD_IN_SHOOT_MENU  1
-    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
     #define CAM_HAS_JOGDIAL             1
     #undef CAM_VIDEO_CONTROL
     #define CAM_EXT_TV_RANGE            1          // CHDK can make exposure time longer than 64s
