@@ -181,7 +181,7 @@ void lens_set_zoom_point(long newpt)
 		// g10,g12 & sx30 only use this value for optical zoom
 		zoom_status=ZOOM_OPTICAL_MAX;
 
-  #if defined(CAMERA_g12)|| defined(CAMERA_g10) 
+  #if defined(CAMERA_g12)|| defined(CAMERA_g10)
 	    _SetPropertyCase(PROPCASE_OPTICAL_ZOOM_POSITION, &newpt, sizeof(newpt));
   #endif
 	}
@@ -211,9 +211,9 @@ void lens_set_zoom_speed(long newspd)
 
 void lens_set_focus_pos(long newpos)
 {
-	_MoveFocusLensToDistance((short*)&newpos);
-	//while (focus_busy);
-	while ((shooting_is_flash_ready()!=1) || (focus_busy));
+    if (newpos >= MAX_DIST) newpos = INFINITY_DIST; // Set to infinity value that will work on all cameras
+    _MoveFocusLensToDistance((short*)&newpos);
+	while ((shooting_is_flash_ready()!=1) || (focus_busy)) msleep(10);
 	newpos = _GetFocusLensSubjectDistance();
 	_SetPropertyCase(PROPCASE_SUBJECT_DIST1, &newpos, sizeof(newpos));
 	_SetPropertyCase(PROPCASE_SUBJECT_DIST2, &newpos, sizeof(newpos));

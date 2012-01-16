@@ -182,8 +182,8 @@ static const char* gui_zoom_override_enum(int change, int arg);
 static const char* gui_tv_override_koef_enum(int change, int arg);
 static const char* gui_tv_override_value_enum(int change, int arg);
 static const char* gui_tv_enum_type_enum(int change, int arg);
-static const char* gui_subj_dist_override_value_enum(int change, int arg);
-static const char* gui_subj_dist_override_koef_enum(int change, int arg);
+const char* gui_subj_dist_override_value_enum(int change, int arg);
+const char* gui_subj_dist_override_koef_enum(int change, int arg);
 /*
 static const char* gui_tv_exposure_order_enum(int change, int arg);
 static const char* gui_av_exposure_order_enum(int change, int arg);
@@ -231,7 +231,7 @@ static int debug_display_direction=1;
 
 const char* gui_USB_switch_types[] = { "None","OnePush", "TwoPush", "CA-1", "P Width", "P Count" };
 const char* gui_USB_control_modes[] = { "None", "Normal", "Quick", "Burst", "Bracket","Zoom", "Video","gWIRE","Script" }; 
-
+  
 
 static CMenuItem remote_submenu_items[] = {
     MENU_ITEM(0x71,LANG_MENU_REMOTE_ENABLE,            MENUITEM_BOOL,   &conf.remote_enable, 0),
@@ -1213,20 +1213,49 @@ const char* gui_tv_enum_type_enum(int change, int arg) {
 }
 
 const char* gui_subj_dist_override_value_enum(int change, int arg) {
-	static const int koef[] = {0, 1,10,100,1000};
-    static char buf[8];
-    conf.subj_dist_override_value+=(change*koef[conf.subj_dist_override_koef]);
-    if (conf.subj_dist_override_value<0)
-        conf.subj_dist_override_value=MAX_DIST;
-    else if (conf.subj_dist_override_value>MAX_DIST)
-        conf.subj_dist_override_value=0;
-    sprintf(buf, "%d", (int)conf.subj_dist_override_value);
+	int koef = shooting_get_subject_distance_override_koef();
+    static char buf[9];
+    if (koef == -1)
+    {
+        // If 'Infinity' selected in the 'koef' setting then set SD to the infinity value
+        // technically the same as MAX_DIST when it's sent to the firmware function 
+        // in the camera; but used here to alter the CHDK OSD display.
+        conf.subj_dist_override_value = INFINITY_DIST;
+    }
+    else
+    {
+        // Increment / decrement the SD value, wrapping around from MIN_DIST to MAX_DIST
+        conf.subj_dist_override_value += (change*koef);
+        if (conf.subj_dist_override_value < MIN_DIST)
+            conf.subj_dist_override_value = MAX_DIST;
+        else if (conf.subj_dist_override_value > MAX_DIST)
+            conf.subj_dist_override_value = MIN_DIST;
+    }
+    if (conf.subj_dist_override_value == INFINITY_DIST)
+        strcpy(buf,"Inf.");
+    else
+        sprintf(buf, "%d", (int)conf.subj_dist_override_value);
     return buf;
 }
 
 
 const char* gui_subj_dist_override_koef_enum(int change, int arg) {
-	return gui_change_simple_enum(&conf.subj_dist_override_koef,change,gui_override_koef_modes,sizeof(gui_override_koef_modes)/sizeof(gui_override_koef_modes[0]));
+    // Define the adjustment factor values for the subject distance override
+#if MAX_DIST > 1000000      // Superzoom - e.g. SX30, SX40
+    static const char* modes[] = { "Off", "1", "10", "100", "1000", "10K", "100K", "1M", "Inf." };
+#elif MAX_DIST > 100000     // G12, IXUS310
+    static const char* modes[] = { "Off", "1", "10", "100", "1000", "10K", "100K", "Inf." };
+#else                       // Original values (MAX_DIST = 65535)
+    static const char* modes[] = { "Off", "1", "10", "100", "1000" };
+#endif
+	const char *rv = gui_change_simple_enum(&conf.subj_dist_override_koef,change,modes,sizeof(modes)/sizeof(modes[0]));
+    // If we've selected 'Infinity' focus then set the SD override value
+    // Otherwise if we had previously selected 'Infinity' then reset back to MAX_DIST
+    if (shooting_get_subject_distance_override_koef() == -1)
+        conf.subj_dist_override_value = INFINITY_DIST;
+    else if (conf.subj_dist_override_value == INFINITY_DIST)
+        conf.subj_dist_override_value = MAX_DIST;
+    return rv;
 }
 
 /*
@@ -1664,7 +1693,7 @@ static void sd_override_koef(int direction)
 {
     gui_subj_dist_override_koef_enum(direction,0);
 #if !CAM_HAS_MANUAL_FOCUS
-    if (conf.subj_dist_override_koef==0) conf.subj_dist_override_koef=1;
+    if (conf.subj_dist_override_koef==0) gui_subj_dist_override_koef_enum(direction,0);
 #endif
     shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
 }
@@ -1704,10 +1733,7 @@ void gui_chdk_kbd_process()
             conf.subj_dist_override_value=MAX_DIST;
             shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
 #else
-            if (conf.subj_dist_override_koef==4)
-                gui_subj_dist_override_koef_enum(-3,0);
-            else
-                gui_subj_dist_override_koef_enum(1,0);
+            gui_subj_dist_override_koef_enum(1,0);
 #endif
         }
     }

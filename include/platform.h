@@ -32,8 +32,10 @@ extern int mode_is_video(int);
     #error unknown camera processor
 #endif
 
-#define MAX_DIST 65535
-#define MAX_DIST_HYPER_FOCAL 999999
+#define MIN_DIST                CAMERA_MIN_DIST     // Defined in camera.h (can be overridden in platform_camera.h)
+#define MAX_DIST                CAMERA_MAX_DIST     // Defined in camera.h (can be overridden in platform_camera.h)
+#define INFINITY_DIST           0xFFFFFFFF          // Value to send to firmware to select 'infinity' focus
+#define MAX_DIST_HYPER_FOCAL    999999
 
 //********************
 //char * get_debug();

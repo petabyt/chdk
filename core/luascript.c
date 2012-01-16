@@ -580,7 +580,7 @@ static int luaCB_set_focus( lua_State* L )
     if (shooting_get_focus_mode() || (mode_video)) shooting_set_focus(to, SET_NOW);
     else shooting_set_focus(to, SET_LATER);
 #else
-    if (mode_video) shooting_set_focus(to, SET_NOW);
+    if (shooting_get_common_focus_mode() || mode_video) shooting_set_focus(to, SET_NOW);
     else shooting_set_focus(to, SET_LATER);    
 #endif    
   return 0;

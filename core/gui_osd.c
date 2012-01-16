@@ -600,9 +600,11 @@ void gui_osd_draw_state() {
     if ((conf.autoiso_enable && shooting_get_iso_mode()<=0 && !(m==MODE_M || m==MODE_TV) && shooting_get_flash_mode() && (!(conf.override_disable==1 && conf.override_disable_all))) || gui_mode==GUI_MODE_OSD)  
 	    gui_print_osd_state_string_chr("AUTOISO:", ((conf.autoiso_enable==1)?"ON":"OFF"));
     if ((conf.subj_dist_override_value && conf.subj_dist_override_koef && shooting_can_focus() && !(conf.override_disable==1)) || ((gui_get_mode()==GUI_MODE_ALT) && shooting_get_common_focus_mode())	|| gui_mode==GUI_MODE_OSD)   {
-    	gui_print_osd_state_string_int("SD:",shooting_get_subject_distance_override_value());
+        extern const char* gui_subj_dist_override_value_enum(int change, int arg);
+        extern const char* gui_subj_dist_override_koef_enum(int change, int arg);
+    	gui_print_osd_state_string_chr("SD:",gui_subj_dist_override_value_enum(0,0));
         if (gui_mode==GUI_MODE_ALT)  
-		  gui_print_osd_state_string_int("FACTOR:",shooting_get_subject_distance_override_koef());   	
+		  gui_print_osd_state_string_chr("FACTOR:",gui_subj_dist_override_koef_enum(0,0));
       }
     if ((conf.iso_override_value && conf.iso_override_koef && !(conf.override_disable==1))	 || gui_mode==GUI_MODE_OSD)
     	gui_print_osd_state_string_int("ISO:", shooting_get_iso_override_value());

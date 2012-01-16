@@ -123,5 +123,12 @@
     #define CAM_USE_COLORED_ICONS           1       // Enable using the CHDK-DE colored icons.
 
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
-	
+
+    #define CAM_NEED_SET_ZOOM_DELAY         300     // SX30 needs a short delay after setting the zoom before resetting focus in shooting_set_zoom()
+
+    #undef CAMERA_MIN_DIST
+    #define CAMERA_MIN_DIST                 95      // Override min subject distance
+    #undef CAMERA_MAX_DIST
+    #define CAMERA_MAX_DIST                 9090910 // Override max subject distance
+
 //----------------------------------------------------------
