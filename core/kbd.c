@@ -105,7 +105,7 @@ static int nTxtbl[]={0,3,6,9,13,16,20,23};
 static int nTxtbl[]={0,1,2,3,4,5,6,7,8,9};
 #endif
 
-#if defined(CAMERA_sx200is) || defined(CAMERA_sx130is) || defined(CAMERA_sx150is) || defined(CAMERA_sx220hs) || defined(CAMERA_sx230hs) || defined(CAMERA_ixus220_elph300hs)
+#if defined(CAMERA_sx200is) || defined(CAMERA_sx130is) || defined(CAMERA_sx150is) || defined(CAMERA_sx220hs) || defined(CAMERA_sx230hs) || defined(CAMERA_ixus220_elph300hs) || defined(CAMERA_ixus230_elph310hs)
 #define ZSTEP_TABLE_SIZE 7
 static int nTxtbl[]={0,16,32,62,78,102,125};
 #endif
