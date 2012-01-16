@@ -28,12 +28,10 @@ void startup()
 }
 
 int screen_opened(void) {
-//	mode |= (physw_status[1] & 0x01000000)?0:MODE_SCREEN_OPENED;
-	return !(physw_status[1] & 0x02000000);
+	return (physw_status[1] & 0x02000000);
 }
 
 int screen_rotated(void) {
-//	mode |= (physw_status[1] & 0x00080000)?0:MODE_SCREEN_ROTATED;
 	return !(physw_status[1] & 0x00800000);
 }
 
