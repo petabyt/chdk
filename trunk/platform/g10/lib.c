@@ -28,9 +28,11 @@ void shutdown()    // G10 sub_FF829EC8
 // 0xC02200D0  G10 ISO select dial LED
 // 0xC02200D4  G10 direct print button LED
 // 0xC02200D8  G10 exposure compensation dial LED
-// 0xC02200DCG10 power LED
-
-#define LED_PR 	0xC02200DC	// G10 power Indicator
+// 0xC02200DC  G10 power LED
+// 0xC0220130  G10 Upper Indicator Orange (looks yellow if both upper indicators lit)
+// 0xC0220134  G10 Upper Indicator Green
+// 0xC0220138  G10 Lower Indicator Yellow
+#define LED_PR 	0xC02200D4	//  G10 direct print button LED
 
 void debug_led(int state)
 {

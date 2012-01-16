@@ -1,4 +1,5 @@
 // generic capt_seq fuctions
+#include "asmsafe.h"
 
 #define RAWDATA_AVAILABLE (1)
 #define RAWDATA_SAVED (2)
@@ -34,6 +35,16 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
     }
 
  asm volatile("LDMFD   SP!, {R0-R12,PC}\n");
+}
+
+// wrapper function to store status on stack as this routine is called from assembly code in capt_seq_task()
+
+void __attribute__((naked,noinline)) wait_until_remote_button_is_released(  ) 
+{ 
+asm volatile (
+ASM_SAFE("BL _wait_until_remote_button_is_released\n")
+ "	BX      LR \n"
+	) ;
 }
 
 

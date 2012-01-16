@@ -254,18 +254,25 @@ extern const char _start,_end;
 static int debug_tasklist_start;
 static int debug_display_direction=1;
 #endif
-// Menu definition
+
 //-------------------------------------------------------------------
+// Menu definitions 
+//-------------------------------------------------------------------
+
+const char* gui_USB_switch_types[] = { "None","OnePush", "TwoPush", "CA-1", "P Width", "P Count" };
+const char* gui_USB_control_modes[] = { "None", "Normal", "Quick", "Burst", "Bracket","Zoom", "Video","gWIRE","Script" }; 
+
+
 static CMenuItem remote_submenu_items[] = {
-    MENU_ITEM(0x71,LANG_MENU_REMOTE_ENABLE,            MENUITEM_BOOL,                    &conf.remote_enable, 0),
-    MENU_ITEM(0x0,LANG_MENU_SYNCHABLE_REMOTE,          MENUITEM_SEPARATOR, 0, 0 ),
-    MENU_ITEM(0x71,LANG_MENU_SYNCHABLE_REMOTE_ENABLE,  MENUITEM_BOOL,                    &conf.ricoh_ca1_mode, 0),
-    MENU_ITEM(0x5c,LANG_MENU_SYNCH_ENABLE,             MENUITEM_BOOL,                    &conf.synch_enable, 0),
+    MENU_ITEM(0x71,LANG_MENU_REMOTE_ENABLE,            MENUITEM_BOOL,   &conf.remote_enable, 0),
+    MENU_ENUM2(0x5f,LANG_MENU_REMOTE_DEVICE,  	&conf.remote_switch_type, gui_USB_switch_types ),
+    MENU_ENUM2(0x5f,LANG_MENU_REMOTE_LOGIC,  	&conf.remote_control_mode, gui_USB_control_modes ),	
+    MENU_ITEM(0x0, LANG_MENU_REMOTE_OPTIONS,         MENUITEM_SEPARATOR, 0, 0 ), 
+	MENU_ITEM(0x5c,LANG_MENU_SYNCH_ENABLE,             MENUITEM_BOOL,                    &conf.synch_enable, 0),
     MENU_ITEM(0x5c,LANG_MENU_SYNCH_DELAY_ENABLE,       MENUITEM_BOOL,                    &conf.synch_delay_enable, 0),
-    MENU_ITEM(0x5c,LANG_MENU_SYNCH_DELAY_VALUE,        MENUITEM_INT|MENUITEM_F_UNSIGNED, &conf.synch_delay_value, 0),
-    MENU_ITEM(0x5c,LANG_MENU_SYNCH_DELAY_COARSE_VALUE, MENUITEM_INT|MENUITEM_F_UNSIGNED, &conf.synch_delay_coarse_value, 0),
-    MENU_ITEM(0x5c,LANG_MENU_REMOTE_ZOOM_ENABLE,       MENUITEM_BOOL,                    &conf.remote_zoom_enable, 0),
-    MENU_ITEM(0x5f,LANG_MENU_REMOTE_ZOOM_TIMEOUT,      MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.zoom_timeout, MENU_MINMAX(2,10)),
+    MENU_ITEM(0x5e,LANG_MENU_SYNCH_DELAY_VALUE,        MENUITEM_INT|MENUITEM_F_UNSIGNED, &conf.synch_delay_value, 0),
+//  MENU_ITEM(0x5e,LANG_MENU_SYNCH_DELAY_COARSE_VALUE, MENUITEM_INT|MENUITEM_F_UNSIGNED, &conf.synch_delay_coarse_value, 0),
+//  MENU_ITEM(0x5e,LANG_MENU_REMOTE_ZOOM_TIMEOUT,      MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.zoom_timeout, MENU_MINMAX(2,10)),
     MENU_ITEM(0x51,LANG_MENU_BACK,                     MENUITEM_UP, 0, 0),
     {0}
 };

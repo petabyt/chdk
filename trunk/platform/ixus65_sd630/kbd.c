@@ -2,7 +2,9 @@
 #include "platform.h"
 #include "core.h"
 #include "keyboard.h"
+#include "conf.h"
 #include "stdlib.h"
+#include "lolevel.h"
 
 #define KEY_MASK 0x17FF
 
@@ -14,20 +16,32 @@ typedef struct {
     long canonkey;
 } KeyMap;
 
-long kbd_new_state[3];
-long kbd_prev_state[3];
+long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 long kbd_mod_state = KEY_MASK;
 long debug_kbd_state_diff;
 
 static KeyMap keymap[];
 static long last_kbd_key = 0;
-static int usb_power=0;
-static int remote_key=0;
-static int remote_count=0;
 
 #ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
 #endif
+
+#define USB_MASK 0x40 	// ?? incomplete port - probably wrong
+#define USB_IDX  2		 // ?? incomplete port - probably wrong
+
+extern void usb_remote_key( int ) ;
+int get_usb_bit() 
+{
+	return 0 ;
+/*	
+	long usb_physw[3];
+	usb_physw[USB_IDX] = 0;
+	_kbd_read_keys_r2(usb_physw);
+	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
+*/
+}
 
 long __attribute__((naked)) wrap_kbd_p1_f() ;
 
@@ -325,15 +339,6 @@ long kbd_use_zoom_as_mf() {
     return 0;
 }
 
-int get_usb_power(int edge)
-{
-	int x;
-
-	if (edge) return remote_key;
-	x = usb_power;
-	usb_power = 0;
-	return x;
-}
 
 static KeyMap keymap[] = {
     /* tiny bug: key order matters. see kbd_get_pressed_key()

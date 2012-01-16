@@ -13,14 +13,13 @@ typedef struct {
 } KeyMap;
 
 
-static long kbd_new_state[3];
-static long kbd_prev_state[3];
-static long kbd_mod_state[3];
+long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+
 static KeyMap keymap[];
 static long last_kbd_key = 0;
 static long alt_mode_key_mask = 0x00000800;
-static int usb_power=0;
-static int remote_key, remote_count;
 
 #define KEYS_MASK0 (0x00000000)
 #define KEYS_MASK1 (0x00000000)
@@ -31,7 +30,16 @@ static int remote_key, remote_count;
 
 #define FEATURE_FEATHER 0
 #define USB_MASK (0x40000)
-#define USB_REG 2
+#define USB_IDX  2
+
+extern void usb_remote_key( int ) ;
+int get_usb_bit() 
+{
+	long usb_physw[3];
+	usb_physw[USB_IDX] = 0;
+	_kbd_read_keys_r2(usb_physw);
+	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
+}
 
 #ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
@@ -158,40 +166,17 @@ void my_kbd_read_keys()
 
     _kbd_read_keys_r2(physw_status);
 
-//    physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;
+	usb_remote_key(physw_status[USB_IDX]) ;
 
-
-    remote_key = (physw_status[2] & USB_MASK)==USB_MASK;
-
-    if (conf.remote_enable) {
-      remote_key = (physw_status[2] & USB_MASK)==USB_MASK;
-      if (remote_key)  remote_count += 1;
-      else if (remote_count) {
-         usb_power = remote_count;
-         remote_count = 0;
-      }
-      physw_status[2] = physw_status[2] & ~(SD_READONLY_FLAG | USB_MASK);
-     }
-    else physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;
+	if (conf.remote_enable) {
+		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
+	} else {
+		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
+	}
 
     _kbd_pwr_off();
 
 }
-
-
-int get_usb_power(int edge)
-{
-	int x;
-
-	if (edge) return remote_key;
-	x = usb_power;
-	usb_power = 0;
-	return x;
-        return 0;
-}
-
-/****************/
-
 
 void kbd_key_press(long key)
 {
