@@ -80,8 +80,12 @@ char* b_get_buf()
 }
 
 
+#define MAX_SYM 2048
+
 static char* import_buf=0;
-static int import_counts=0;
+static char* import_syms[MAX_SYM];          // Symbol names in input file
+static unsigned int import_hash[MAX_SYM];   // Symbol hash values in input file
+static int import_counts=0;                 // # of symbols found
 static int importfilesize=0;
 
 int load_import(char* importfile)
@@ -121,8 +125,10 @@ int load_import(char* importfile)
     if ( loaded != importfilesize )
       return -loaded;
 
-	// Parse and check
+    // Input file contains symbol hash value (in hex), a space and then the symbol name
+	// Parse the input file and build the symbol / hash table
 	char* p=import_buf;
+    char* s=p;
 	for (;*p;p++) {
 		if (*p==13) {
 			PRINTERR(stderr,"Import file should have unix EOL format\n");
@@ -131,28 +137,31 @@ int load_import(char* importfile)
 		}
 
 		if (*p==10) {
-			import_counts++;
 			*p=0;
+            unsigned int h;
+            sscanf(s,"%x ",&h);
+            import_syms[import_counts] = s+9;
+            import_hash[import_counts] = h;
+			import_counts++;
+            s = p + 1;
 			continue;
 		}
 		
-		if (!((*p>='A' && *p<='Z') || 
-			  (*p>='a' && *p<='z') || 
-			  (*p>='0' && *p<='9') || 
-			  *p=='_' ))
-		{
-			PRINTERR(stderr,"Found '%c' sym. Import file should contain only symbol names. No spaces or other sym allowed\n",*p);
-			break;
-		}
-
+		//if (!((*p>='A' && *p<='Z') || 
+		//	  (*p>='a' && *p<='z') || 
+		//	  (*p>='0' && *p<='9') || 
+		//	  *p=='_' ))
+		//{
+		//	PRINTERR(stderr,"Found '%c' sym. Import file should contain only symbol names. No spaces or other sym allowed\n",*p);
+		//	break;
+		//}
 	}
 	if ( FLAG_VERBOSE )
 		printf("Import file has %d entries\n",import_counts);
 	return loaded;
 }
 
-
-// Return: 0=not_found, >=2 - import_sym_idx
+// Return: 0=not_found, otherwise return has value of symbol name
 int find_import_symbol(char* sym)
 {
   static const char prefix[] = "__imported_";
@@ -167,35 +176,26 @@ int find_import_symbol(char* sym)
 	if ( !strncmp( sym, prefix, prefixsize ) )
 	 { sym+=prefixsize; }
 
-	char* cur=import_buf;
 	int idx=0;
 
 	for(;idx<import_counts;idx++) {
-	  if (!strcmp(sym,cur))
-		return (idx+2);
-
-      for (;*cur; cur++);
-	  cur++;
+	  if (strcmp(sym,import_syms[idx]) == 0)
+		return (import_hash[idx]);
 	}
 	return 0;
 }
 
-// Return symbol name by its idx
+// Return symbol name by its hash value
 char* get_import_symbol( unsigned symidx )
 {
-	symidx-=2;					//skip export_magicnum, export_size in begining
-	if (symidx>=import_counts)
-		return "";
-
-	char* cur=import_buf;
 	int idx=0;
 
 	for(;idx<symidx;idx++) {
-      for (;*cur; cur++);
-	  cur++;
+      if (import_hash[idx] == symidx)
+          return import_syms[idx];
 	}
 
-	return cur;
+	return "";
 }
 
 

@@ -12,6 +12,10 @@
 
 extern int module_idx;
 
+/*
+	History:	1.1 - make possible call next mpopup in callback [multilevel mpopups]
+*/
+
 void gui_mpopup_kbd_process();
 void gui_mpopup_draw(int enforce_redraw);
 
@@ -33,7 +37,9 @@ static int                      mpopup_actions_num;             // Num of items 
 static int                      mpopup_actions_active;          // Idx of current item (cursor)
 static coord                    mpopup_actions_x, mpopup_actions_y;    // top-left coord of window
 static unsigned int             mpopup_actions_w;               // width of window
-static void (*mpopup_on_select)(unsigned int btn);
+
+typedef void (*mpopup_on_select_t)(unsigned int btn);
+static mpopup_on_select_t mpopup_on_select;
 
 //-------------------------------------------------------------------
 void gui_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode) 
@@ -111,9 +117,12 @@ void gui_mpopup_draw(int enforce_redraw) {
 void exit_mpopup(int action)
 {
     gui_set_mode(gui_mpopup_mode_old);
-    if (mpopup_on_select) 
-        mpopup_on_select(action);
+
+	mpopup_on_select_t on_select = mpopup_on_select;	// this could be reinited in callback
+
 	mpopup_on_select=0;
+    if (on_select) 
+        on_select(action);
 }
 
 //-------------------------------------------------------------------
@@ -135,11 +144,13 @@ void gui_mpopup_kbd_process() {
     case KEY_LEFT:
         kbd_reset_autoclicked_key();
 		exit_mpopup(MPOPUP_CANCEL);		
+		if ( mpopup_on_select==0 )		// exit if not re-inited
 		module_async_unload(module_idx);
         break;
     case KEY_SET:
         kbd_reset_autoclicked_key();
 		exit_mpopup(actions[mpopup_actions[mpopup_actions_active]].flag);		
+		if ( mpopup_on_select==0 )		// exit if not re-inited
 		module_async_unload(module_idx);
         break;
     }
@@ -167,9 +178,9 @@ void* MODULE_EXPORT_LIST[] = {
 // PARAMETERS: pointer to chdk list of export
 // RETURN VALUE: 1 error, 0 ok
 //---------------------------------------------------------
-int _module_loader( void** chdk_export_list )
+int _module_loader( unsigned int* chdk_export_list )
 {
-  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
 
   if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
@@ -230,7 +241,7 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 									MODULEINFO_FLAG_SYSTEM,		// flag
 									(int32_t)"Popup menu module",		// Module name
-									1, 0,						// Module version
+									1, 1,						// Module version
 									0
 								 };
 

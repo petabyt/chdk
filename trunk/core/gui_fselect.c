@@ -16,6 +16,10 @@
 
 #include "module_load.h"
 
+/*
+	HISTORY:	1.1 - added tbox usage [CHDK 1.1.1 required]
+*/
+
 void gui_fselect_kbd_process();
 void gui_fselect_draw(int enforce_redraw);
 
@@ -23,9 +27,6 @@ gui_handler GUI_MODE_FSELECT_MODULE =
     /*GUI_MODE_FSELECT*/    { GUI_MODE_FSELECT, gui_fselect_draw,     gui_fselect_kbd_process,    gui_fselect_kbd_process,		0,	GUI_MODE_MAGICNUM };
 
 extern int module_idx;
-
-int *conf_sub_batch_prefix;
-int *conf_sub_batch_ext;
 
 struct librawop_sym* librawop_p;
 
@@ -103,14 +104,13 @@ static int set_key_redraw_mode; // dirty hack: screen erase & mode restore done 
 #define MPOPUP_PASTE            0x0004
 #define MPOPUP_DELETE           0x0008
 #define MPOPUP_SELINV           0x0010
-#define MPOPUP_RAW_ADD		0x0020
-#define MPOPUP_RAW_AVERAGE	0x0040
 #define MPOPUP_PURGE            0x0080
-#define MPOPUP_SUBTRACT         0x0100
-#define MPOPUP_RAW_DEVELOP      0x0200
-#define MPOPUP_DNG_TO_CRW       0x0400
 #define MPOPUP_EDITOR           0x0800
 #define MPOPUP_CHDK_REPLACE     0x1000
+
+#define MPOPUP_RAWOPS			0x0020
+#define MPOPUP_MORE				0x0040
+
 
 static struct mpopup_item popup[]= {
         { MPOPUP_CUT,           LANG_POPUP_CUT    },
@@ -118,14 +118,37 @@ static struct mpopup_item popup[]= {
         { MPOPUP_PASTE,         LANG_POPUP_PASTE  },
         { MPOPUP_DELETE,        LANG_POPUP_DELETE },
         { MPOPUP_SELINV,        LANG_POPUP_SELINV },
+        { MPOPUP_PURGE,         LANG_POPUP_PURGE  },
+        { MPOPUP_EDITOR,        (int)"Edit" },
+        { MPOPUP_CHDK_REPLACE,  (int)"Set this CHDK" },
+        { MPOPUP_RAWOPS,		(int)"Raw ops ->" },
+        { MPOPUP_MORE,			(int)"More -> " },
+        { 0,					0 },
+};
+
+#define MPOPUP_RAW_ADD			0x0020
+#define MPOPUP_RAW_AVERAGE		0x0040
+#define MPOPUP_SUBTRACT         0x0100
+#define MPOPUP_RAW_DEVELOP      0x0200
+#define MPOPUP_DNG_TO_CRW       0x0400
+
+static struct mpopup_item popup_rawop[]= {
         { MPOPUP_RAW_ADD,       LANG_POPUP_RAW_SUM},
         { MPOPUP_RAW_AVERAGE,   LANG_POPUP_RAW_AVERAGE },
         { MPOPUP_RAW_DEVELOP,   LANG_MENU_RAW_DEVELOP },
-        { MPOPUP_PURGE,         LANG_POPUP_PURGE  },
         { MPOPUP_SUBTRACT,      LANG_POPUP_SUB_FROM_MARKED  },
         { MPOPUP_DNG_TO_CRW,    (int)"DNG -> CHDK RAW"},
-        { MPOPUP_EDITOR,        (int)"Edit" },
-        { MPOPUP_CHDK_REPLACE,  (int)"Set this CHDK" },
+        { 0,					0 },
+};
+
+#define MPOPUP_MKDIR  0x0001
+#define MPOPUP_RMDIR  0x0002
+#define MPOPUP_RENAME 0x0004
+
+static struct mpopup_item popup_more[]= {
+        { MPOPUP_MKDIR,         LANG_POPUP_MKDIR },
+        { MPOPUP_RMDIR,   		(int)"Remove dir" },
+        { MPOPUP_RENAME,   		LANG_POPUP_RENAME },
         { 0,					0 },
 };
 
@@ -395,14 +418,6 @@ void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, 
     gui_fselect_redraw = 2;
     gui_fselect_mode_old = gui_set_mode(&GUI_MODE_FSELECT_MODULE);
     gui_fselect_set_key_redraw(0);
-}
-
-//-------------------------------------------------------------------
-char* gui_fselect_result() {
-    if (selected_file[0])
-        return selected_file;
-    else
-        return NULL;
 }
 
 //-------------------------------------------------------------------
@@ -1002,8 +1017,8 @@ static void fselect_subtract_cb(unsigned int btn) {
             ptr->size == hook_raw_size() &&
             (strcmp(ptr->name,selected->name)) != 0) {
             sprintf(raw_subtract_from,"%s/%s",current_dir,ptr->name);
-            sprintf(raw_subtract_dest,"%s/%s%s",current_dir,img_prefixes[*conf_sub_batch_prefix],ptr->name+4);
-            strcpy(raw_subtract_dest + strlen(raw_subtract_dest) - 4,img_exts[*conf_sub_batch_ext]);
+            sprintf(raw_subtract_dest,"%s/%s%s",current_dir,img_prefixes[conf.sub_batch_prefix],ptr->name+4);
+            strcpy(raw_subtract_dest + strlen(raw_subtract_dest) - 4,img_exts[conf.sub_batch_ext]);
             // don't let users attempt to write one of the files being read
             if( strcmp(raw_subtract_dest,raw_subtract_from) != 0 && strcmp(raw_subtract_dest,raw_subtract_sub) != 0) {
                 librawop_p->raw_subtract(raw_subtract_from,raw_subtract_sub,raw_subtract_dest);
@@ -1063,6 +1078,73 @@ void process_dng_to_raw_files(void){
   gui_fselect_read_dir(current_dir);
 }
 
+
+
+static void fselect_mpopup_rawop_cb(unsigned int actn) {
+    switch (actn) {
+	    case MPOPUP_RAW_AVERAGE:
+    	    raw_operation=RAW_OPERATION_AVERAGE;
+            process_raw_files();
+            break;
+        case MPOPUP_RAW_ADD:
+            raw_operation=RAW_OPERATION_SUM;
+            process_raw_files();
+            break;
+        case MPOPUP_RAW_DEVELOP:
+            sprintf(buf, "%s/%s", current_dir, selected->name);
+            gui_mbox_init((int)"", LANG_RAW_DEVELOP_MESSAGE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+            raw_prepare_develop(buf);
+        break;
+        case MPOPUP_SUBTRACT:
+            setup_batch_subtract();
+            break;
+	    case MPOPUP_DNG_TO_CRW:
+            process_dng_to_raw_files();
+            break;
+	}
+}
+
+static void mkdir_cb(char* name)
+{
+	if (name) {
+		sprintf(selected_file,"%s/%s",current_dir,name);
+		mkdir(selected_file);		
+		gui_fselect_read_dir(current_dir);
+	    gui_fselect_redraw = 2;
+	}
+}
+
+static void rename_cb(char* name)
+{
+	if (name) {
+		char newname[100];
+        sprintf(selected_file, "%s/%s", current_dir, selected->name);
+		sprintf(newname,"%s/%s",current_dir,name);
+		rename(selected_file,newname);
+		gui_fselect_read_dir(current_dir);
+	    gui_fselect_redraw = 2;
+	}
+}
+
+static void fselect_mpopup_more_cb(unsigned int actn) {
+
+    switch (actn) {
+	    case MPOPUP_MKDIR:
+			module_tbox_run( LANG_POPUP_MKDIR, LANG_PROMPT_MKDIR, "", 15, mkdir_cb);
+            break;
+        case MPOPUP_RMDIR:
+			 gui_mbox_init( LANG_ERROR, (int)"Not implemented yet", MBOX_FUNC_RESTORE|MBOX_TEXT_LEFT, NULL);
+            break;
+        case MPOPUP_RENAME:
+			module_tbox_run( LANG_POPUP_RENAME, LANG_PROMPT_RENAME, selected->name, 15, rename_cb);
+            break;
+	}
+    gui_fselect_redraw = 2;
+}
+
+static int mpopup_rawop_flag;
+static int mpopup_more_flag;
+
 //-------------------------------------------------------------------
 static void fselect_mpopup_cb(unsigned int actn) {
     switch (actn) {
@@ -1118,33 +1200,21 @@ static void fselect_mpopup_cb(unsigned int actn) {
             break;
         case MPOPUP_CANCEL:
             break;
-    case MPOPUP_RAW_AVERAGE:
-        raw_operation=RAW_OPERATION_AVERAGE;
-            process_raw_files();
+
+		case MPOPUP_RAWOPS:
+            module_mpopup_init( popup_rawop, mpopup_rawop_flag, fselect_mpopup_rawop_cb, 0);
             break;
-        case MPOPUP_RAW_ADD:
-            raw_operation=RAW_OPERATION_SUM;
-            process_raw_files();
-            break;
-        case MPOPUP_RAW_DEVELOP:
-            sprintf(buf, "%s/%s", current_dir, selected->name);
-            gui_mbox_init((int)"", LANG_RAW_DEVELOP_MESSAGE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-            raw_prepare_develop(buf);
+
+		case MPOPUP_MORE:			
+            module_mpopup_init( popup_more, mpopup_more_flag, fselect_mpopup_more_cb, 0);
         break;
+
         case MPOPUP_CHDK_REPLACE:
             gui_mbox_init((int)"Replacing CHDK", (int)"Do you want to replace current CHDK with this file",
                           MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_chdk_replace_cb);
             break;
         case MPOPUP_EDITOR:
             gui_mbox_init((int)"Editor", (int)"edit", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-            break;
-        case MPOPUP_SUBTRACT:
-        {
-            setup_batch_subtract();
-            break;
-        }
-    case MPOPUP_DNG_TO_CRW:
-            process_dng_to_raw_files();
             break;
     }
     gui_fselect_redraw = 2;
@@ -1223,14 +1293,19 @@ void gui_fselect_kbd_process() {
         case KEY_LEFT:
             if (selected && selected->attr != 0xFF) {
                 i=MPOPUP_CUT|MPOPUP_COPY|MPOPUP_SELINV;
+				mpopup_rawop_flag=0;
                 if (fselect_marked_count() > 0) {
                     i |= MPOPUP_DELETE;
                     if ( fselect_marked_count()>1 )
-                        i |=MPOPUP_RAW_ADD|MPOPUP_RAW_AVERAGE;
+                        mpopup_rawop_flag |=MPOPUP_RAW_ADD|MPOPUP_RAW_AVERAGE;
                     // doesn't make sense to subtract from itself!
                     if( selected->marked == 0 && fselect_real_marked_count() > 0)
-                        i |= MPOPUP_SUBTRACT;
+                        mpopup_rawop_flag |= MPOPUP_SUBTRACT;
                 }
+
+				if ( API_VERSION_MATCH_REQUIREMENT( module_tbox_get_version(), 1, 0 ) ) 
+						i |= MPOPUP_MORE;
+
                 if (marked_operation == MARKED_OP_CUT || marked_operation == MARKED_OP_COPY)
                     i |= MPOPUP_PASTE;
                 if (!(selected->attr & DOS_ATTR_DIRECTORY) || !(selected->name[0] == '.' && selected->name[1] == '.' && selected->name[2] == 0) ||//If item is not a folder or UpDir
@@ -1238,14 +1313,24 @@ void gui_fselect_kbd_process() {
                      (selected->name[3] == 'C'))//If item is a DCIM sub folder
                     i |= MPOPUP_PURGE;//Display PURGE RAW function in popup menu
                 if(selected->size == hook_raw_size())
-                    i |= MPOPUP_RAW_DEVELOP;
+                    mpopup_rawop_flag |= MPOPUP_RAW_DEVELOP;
 
 				if ( module_convert_dng_to_chdk_raw(0) )	// if dng module exist
                 if((fselect_marked_count()>1)||(selected->size > hook_raw_size()))
-                    i |= MPOPUP_DNG_TO_CRW;
+    	                mpopup_rawop_flag |= MPOPUP_DNG_TO_CRW;
 
 		if (selected->name[9] == 'B' && selected->name[10] == 'I' && selected->name[11] == 'N') //If item is DCIM folder
                     i |= MPOPUP_CHDK_REPLACE;
+
+				if ( mpopup_rawop_flag )
+					i |= MPOPUP_RAWOPS;
+
+
+				mpopup_more_flag = MPOPUP_MKDIR;
+				if (selected->attr & DOS_ATTR_DIRECTORY)
+            		mpopup_more_flag |=MPOPUP_RMDIR;
+                if ( !(selected->name[0] == '.' && selected->name[1] == '.' && selected->name[2] == 0) ) //If item is not UpDir
+            		mpopup_more_flag |=MPOPUP_RENAME;
 
                 module_mpopup_init( popup, i, fselect_mpopup_cb, 0);
             }
@@ -1323,17 +1408,15 @@ void* MODULE_EXPORT_LIST[] = {
 // PARAMETERS: pointer to chdk list of export
 // RETURN VALUE: 1 error, 0 ok
 //---------------------------------------------------------
-int _module_loader( void** chdk_export_list )
+int _module_loader( unsigned int* chdk_export_list )
 {
-  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
 
   if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
 	  return 1;
-
-  tConfigVal configVal;
-  CONF_BIND_INT(209, conf_sub_batch_prefix);
-  CONF_BIND_INT(210, conf_sub_batch_ext);
+  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 2, 0 ) )
+	 return 1;
 
   return 0;
 }
@@ -1391,7 +1474,7 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 									0,							// flag
 									-LANG_MENU_MISC_FILE_BROWSER,	// Module name
-									1, 0,						// Module version
+									1, 1,						// Module version
 									0
 								 };
 

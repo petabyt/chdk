@@ -9,7 +9,7 @@
 #define PALETTE_MODE_SELECT     1
 
 //-------------------------------------------------------------------
-extern void gui_palette_init(int mode, color st_color, void (*on_select)(color clr));
+extern void module_palette_run(int mode, color st_color, void (*on_select)(color clr));
 
 //-------------------------------------------------------------------
 #endif

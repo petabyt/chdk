@@ -691,7 +691,7 @@ void free(void *p) {
 
 // Use suba functions to fill meminfo structure to match firmware GetMemInfo function
 
-void GetExMemInfo(cam_meminfo *camera_meminfo)
+int GetExMemInfo(cam_meminfo *camera_meminfo)
 {
 	extern void suba_getmeminfo(void*, int*, int*, int*, int*, int*, int*);
 
@@ -701,6 +701,8 @@ void GetExMemInfo(cam_meminfo *camera_meminfo)
     suba_getmeminfo(exmem_heap,
                     &camera_meminfo->allocated_size, &camera_meminfo->allocated_peak, &camera_meminfo->allocated_count,
                     &camera_meminfo->free_size, &camera_meminfo->free_block_max_size, &camera_meminfo->free_block_count);
+
+    return 1;   // return success
 }
 // regular malloc
 #else
@@ -710,6 +712,12 @@ void *malloc(long size) {
 
 void free(void *p) {
     return _free(p);
+}
+
+// Include this for the module_inspector module to simplify symbol export logic
+int GetExMemInfo(cam_meminfo *camera_meminfo)
+{
+    return 0;   // return failure (not implemented)
 }
 #endif
 
@@ -746,12 +754,12 @@ void *memchr(const void *s, int c, int n) {
 #endif
 }
  
+void GetMemInfo(cam_meminfo *camera_meminfo)
+{
 #if defined(CAM_FIRMWARE_MEMINFO)
 
 // Use firmware GetMemInfo function to retrieve info about Canon heap memory allocation
 
-void GetMemInfo(cam_meminfo *camera_meminfo)
-{
 #if defined(CAM_DRYOS)
     // Prior to dryos R39 GetMemInfo returns 9 values, after R39 it returns 10 (all but 1 are used in each case)
     int fw_info[10];
@@ -799,9 +807,49 @@ extern int sys_mempart_id;
     camera_meminfo->allocated_count = fw_info[4];
 #endif
 #endif
+
+#else   //!defined(CAM_FIRMWARE_MEMINFO)
+    // -1 for invalid
+    memset(camera_meminfo,0xFF,sizeof(cam_meminfo));
+
+    // Calculate largest free block size
+	int size, l_size, d;
+    char* ptr;
+
+    size = 16;
+    while (1) {
+        ptr= malloc(size);
+        if (ptr) {
+            free(ptr);
+            size <<= 1;
+        } else
+            break;
+    }
+
+    l_size = size;
+    size >>= 1;
+    d=1024;
+    while (d) {
+        ptr = malloc(size);
+        if (ptr) {
+            free(ptr);
+            d = l_size-size;
+            if (d<0) d=-d;
+            l_size = size;
+            size += d>>1;
+        } else {
+            d = size-l_size;
+            if (d<0) d=-d;
+            l_size = size;
+            size -= d>>1;
+        }
+        
+    }
+
+    camera_meminfo->free_block_max_size = size-1;
+#endif
 }
 
-#endif
 
 //----------------------------------------------------------------------------
 

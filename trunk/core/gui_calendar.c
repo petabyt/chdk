@@ -76,7 +76,7 @@ static void gui_calendar_initial_draw() {
     draw_filled_rect(cal_x-1, cal_y-1, cal_x+cal_w, cal_y+FONT_HEIGHT+8, TITLE_COLOR);
     draw_filled_rect(cal_x-1, cal_y+FONT_HEIGHT+8, cal_x+cal_w, cal_y+cal_h, CALENDAR_COLOR);
 
-    draw_filled_rect(cal_x+cal_w-FONT_WIDTH*4*2, cal_y+FONT_HEIGHT+8+1, cal_x+cal_w-1, cal_y+cal_h-1, MAKE_COLOR(((WEEKEND_COLOR)>>8), ((WEEKEND_COLOR)>>8)));
+    draw_filled_rect(cal_x+cal_w-FONT_WIDTH*4*2, cal_y+FONT_HEIGHT+8+1, cal_x+cal_w-1, cal_y+cal_h-1, MAKE_COLOR(BG_COLOR(WEEKEND_COLOR), BG_COLOR(WEEKEND_COLOR)));
     for (x=cal_x+FONT_WIDTH/2, i=0; i<7; x+=FONT_WIDTH*4, ++i) {
         draw_string(x, cal_y+4+FONT_HEIGHT+4+4, lang_str(days[i]), (i<5)?CALENDAR_COLOR:WEEKEND_COLOR);
     }
@@ -149,7 +149,7 @@ void gui_calendar_draw(int enforce_redraw) {
         i = strlen(lang_str(months[cal_month]));
         x = cal_x + (cal_w-FONT_WIDTH*2-FONT_WIDTH*4-FONT_WIDTH*2-i*FONT_WIDTH)/2;
         y = cal_y + 4;
-        draw_filled_rect(cal_x+FONT_WIDTH, y, cal_x+cal_w-FONT_WIDTH-FONT_WIDTH*4-FONT_WIDTH, y+FONT_HEIGHT, MAKE_COLOR(((TITLE_COLOR)>>8), ((TITLE_COLOR)>>8)));
+        draw_filled_rect(cal_x+FONT_WIDTH, y, cal_x+cal_w-FONT_WIDTH-FONT_WIDTH*4-FONT_WIDTH, y+FONT_HEIGHT, MAKE_COLOR(BG_COLOR(TITLE_COLOR), BG_COLOR(TITLE_COLOR)));
         draw_string(x+FONT_WIDTH, y, lang_str(months[cal_month]), TITLE_COLOR);
         
         sprintf(str, "%04d", cal_year);

@@ -8,7 +8,6 @@
 int module_idx=-1;
 
 extern int basic_module_init();
-void (*_getmeminfo)(void*) = 0;
 
 /***************** BEGIN OF AUXILARY PART *********************
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
@@ -26,15 +25,13 @@ void* MODULE_EXPORT_LIST[] = {
 // PARAMETERS: pointer to chdk list of export
 // RETURN VALUE: 1 error, 0 ok
 //---------------------------------------------------------
-int _module_loader( void** chdk_export_list )
+int _module_loader( unsigned int* chdk_export_list )
 {
-  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
 
   if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
 	  return 1;
-
-  _getmeminfo = chdk_export_list[MODULESYM_GETMEMINFO];
 
   return 0;
 }
@@ -138,6 +135,17 @@ void gui_module_menu_kbd_process() {
   	module_async_unload(module_idx);
 }
 
+static void gui_mem_info(char *typ, cam_meminfo *meminfo, int showidx)
+{
+    char txt[50];
+    sprintf(txt,"%-5s: %08x-%08x: %d",typ,meminfo->start_address, meminfo->end_address, meminfo->total_size);
+    draw_txt_string(0, 5+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+	sprintf(txt,"alloc: now=%d(%d) max=%d", meminfo->allocated_size, meminfo->allocated_count, meminfo->allocated_peak);
+    draw_txt_string(0, 6+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+	sprintf(txt,"free:  now=%d(%d) max=%d", meminfo->free_size, meminfo->free_block_count, meminfo->free_block_max_size);
+    draw_txt_string(0, 7+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+}
+
 void gui_module_draw()
 {
     int idx, showidx;
@@ -170,20 +178,20 @@ void gui_module_draw()
 
         draw_txt_string(1, 4+showidx,  "SET-redraw, DISP-unload_all, MENU-exit",       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
-		// Simple platform-dependend part [not always GetMemInfo exits]
-		if (_getmeminfo) {
+    	cam_meminfo meminfo;
 
-	    	cam_meminfo meminfo;
-			memset(&meminfo,sizeof(meminfo),0);
-    		_getmeminfo(&meminfo);
+        // Display Canon heap memory info
+        // amount of data displayed may vary depending on GetMemInfo implementation
+        memset(&meminfo,0,sizeof(meminfo));
+        GetMemInfo(&meminfo);
+        gui_mem_info("MEM", &meminfo, showidx);
+        showidx += 3;
 
-			char txt[50];
-		    sprintf(txt,"MEM: %08x-%08x: %dbytes",meminfo.start_address, meminfo.end_address, meminfo.total_size);
-        	draw_txt_string(0, 5+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
-		    sprintf(txt,"alloc: now=%d(%d) max=%d", meminfo.allocated_size, meminfo.allocated_count, meminfo.allocated_peak);
-        	draw_txt_string(0, 6+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
-		    sprintf(txt,"free:  now=%d(%d) max=%d", meminfo.free_size, meminfo.free_block_count, meminfo.free_block_max_size);
-        	draw_txt_string(0, 7+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+        // Display EXMEM memory info (only if enabled)
+        memset(&meminfo,0,sizeof(meminfo));
+        if (GetExMemInfo(&meminfo))
+        {
+            gui_mem_info("EXMEM", &meminfo, showidx);
 		}
 	}
 

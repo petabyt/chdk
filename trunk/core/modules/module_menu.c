@@ -287,13 +287,13 @@ void* MODULE_EXPORT_LIST[] = {
 // PARAMETERS: pointer to chdk list of export
 // RETURN VALUE: 1 error, 0 ok
 //---------------------------------------------------------
-int _module_loader( void** chdk_export_list )
+int _module_loader( unsigned int* chdk_export_list )
 {
-	if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+	if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
     	return 1;
 
 	// If "gui_menu_run_fltmodule" is 0, then menu system is changed
-	if ( chdk_export_list[MODULESYM_GUI_MENU_RUN_FLTMODULE] == 0)
+	if ( module_find_symbol_address(MODULESYM_GUI_MENU_RUN_FLTMODULE) == 0)
 		return 1;
 
     if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.menu_api, 1, 0 ) )

@@ -2,15 +2,12 @@
 #include "conf.h"
 #include "stdlib.h"
 #include "raw.h"
+#include "gui_menu.h"
+#include "gui_lang.h"
 
-//#ifdef OPT_CURVES
-#if 1
-
+#include "modules.h"
 #include "module_exportlist.h"
 #include "curves.h"
-
-char *conf_curve_file;
-int *conf_curve_enable;
 
 /*
 	Expands curves features
@@ -105,9 +102,9 @@ static int curve_load_data(const char *name,CURVE_TYPE curve_type) {
 }
 
 void curve_init_mode() {
-	switch(*conf_curve_enable) {
+	switch(conf.curve_enable) {
 		case 1: // custom - ensure alloc and load conf.curve_file
-			curve_load_data(conf_curve_file,CURVE_CUSTOM);
+			curve_load_data(conf.curve_file,CURVE_CUSTOM);
 		break;
 		case 2: // system - ensure alloc and load syscurve
 		case 3:
@@ -115,7 +112,7 @@ void curve_init_mode() {
 			curve_load_data("A/CHDK/SYSCURVES.CVF",CURVE_SYSTEM);
 		break;
 		default:
-			*conf_curve_enable = 0;
+			conf.curve_enable = 0;
 		case 0: // disabled - free
 			curve_free_data();
 	}
@@ -370,7 +367,7 @@ void curveL_apply(unsigned sys_index) {
 void curve_apply() {
 	short EVbias = shooting_get_ev_correction1();
 
-	switch(*conf_curve_enable) {
+	switch(conf.curve_enable) {
 		case 0:
 			break;
 		case 1:		// Custom
@@ -384,7 +381,7 @@ void curve_apply() {
 			break;
 		case 2:
 		case 3: // +1EV,  +2EV
-			if (current_curve_type == CURVE_SYSTEM) curveL_apply( *conf_curve_enable & 1 );
+			if (current_curve_type == CURVE_SYSTEM) curveL_apply( conf.curve_enable & 1 );
 			break;
 		case 4:		// Auto DR
 
@@ -400,13 +397,46 @@ void curve_apply() {
 	
 }
 
+
+//-------------------------------------------------------------------
+const char* gui_conf_curve_enum(int change, int arg) {
+    static const char* modes[]={ "None", "Custom", "+1EV", "+2EV", "Auto DR" };
+
+    gui_enum_value_change(&conf.curve_enable,change,sizeof(modes)/sizeof(modes[0]));
+
+	if (change)
+		curve_init_mode();
+    return modes[conf.curve_enable];
+}
+
+static void gui_load_curve_selected(const char *fn) {
+	if (fn) {
+		// TODO we could sanity check here, but curve_set_type should fail gracefullish
+		strcpy(conf.curve_file,fn);
+		if (conf.curve_enable == 1)
+			curve_init_mode();
+	}
+}
+
+void gui_load_curve(int arg) {
+    module_fselect_init(LANG_STR_SELECT_CURVE_FILE, conf.curve_file, CURVE_DIR, gui_load_curve_selected);
+}
+
+static CMenuItem curve_submenu_items[] = {
+    MENU_ITEM(0x5f,LANG_MENU_CURVE_ENABLE,        MENUITEM_ENUM,      gui_conf_curve_enum, 0 ),
+    MENU_ITEM(0x35,LANG_MENU_CURVE_LOAD,          MENUITEM_PROC,      gui_load_curve, 0 ),
+    MENU_ITEM(0x51,LANG_MENU_BACK,                MENUITEM_UP, 0, 0 ),
+    {0}
+};
+static CMenu curve_submenu = {0x85,LANG_MENU_CURVE_PARAM_TITLE, NULL, curve_submenu_items };
+
 // =========  MODULE INIT =================
 
 #include "module_load.h"
 
 
 struct libcurves_sym libcurves = {
-			MAKE_API_VERSION(1,0),		// apiver: increase major if incomplatible changes made in module, 
+			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
 										// increase minor if compatible changes made(including extending this struct)
 			curve_init_mode,
 			curve_apply
@@ -420,7 +450,7 @@ int module_idx=-1;
 
 void* MODULE_EXPORT_LIST[] = {
 	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)3,
+	/* 1 */	(void*)1,
 			&libcurves
 		};
 
@@ -431,18 +461,15 @@ void* MODULE_EXPORT_LIST[] = {
 // PARAMETERS: pointer to chdk list of export
 // RETURN VALUE: 1 error, 0 ok
 //---------------------------------------------------------
-int _module_loader( void** chdk_export_list )
+int _module_loader( unsigned int* chdk_export_list )
 {
-  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
 
   if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
 	 return 1;
-
-  // Safe bind of conf.
-  tConfigVal configVal;
-  CONF_BIND_STR(185, conf_curve_file);
-  CONF_BIND_INT(186, conf_curve_enable );
+  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 2, 0 ) )
+	 return 1;
 
   // Startup initialize
   curve_init_mode();
@@ -465,6 +492,20 @@ int _module_unloader()
 }
 
 
+//---------------------------------------------------------
+// PURPOSE: Default action for simple modules (direct run)
+// NOTE: Please comment this function if no default action and this library module
+//---------------------------------------------------------
+int _module_run(int moduleidx, int argn, int* arguments)
+{
+  module_idx=moduleidx;
+
+  gui_activate_sub_menu(&curve_submenu, module_idx);
+
+  return 0;
+}
+
+
 /******************** Module Information structure ******************/
 
 struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
@@ -480,6 +521,3 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 
 
 /*************** END OF AUXILARY PART *******************/
-
-
-#endif

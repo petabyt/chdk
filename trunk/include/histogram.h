@@ -13,13 +13,6 @@
 #define HISTO_RGB                   3
 #define HISTO_Y                     4
 
-#define ZEBRA_MODE_BLINKED_1        0
-#define ZEBRA_MODE_BLINKED_2        1
-#define ZEBRA_MODE_BLINKED_3        2
-#define ZEBRA_MODE_SOLID            3
-#define ZEBRA_MODE_ZEBRA_1          4
-#define ZEBRA_MODE_ZEBRA_2          5
-
 void histogram_process();
 void histogram_stop();
 void histogram_restart();

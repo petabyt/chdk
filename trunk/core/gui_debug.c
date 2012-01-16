@@ -10,7 +10,6 @@
 #include "module_load.h"
 
 extern void gui_module_menu_kbd_process();
-int *conf_mem_view_addr_init;
 
 gui_handler GUI_MODE_DEBUG = 
     /*GUI_MODE_DEBUG*/  { GUI_MODE_MODULE,   gui_debug_draw,       gui_debug_kbd_process,      gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
@@ -105,7 +104,7 @@ void gui_debug_draw(int enforce_redraw) {
                 gui_debug_draw_values(8, *((void**)addr));
             else
                 gui_debug_draw_values(8, addr);
-            *conf_mem_view_addr_init = (long)addr;
+            conf.mem_view_addr_init = (long)addr;
 
             if (debug_cont_update==0) debug_to_draw = 0;
             break;
@@ -188,18 +187,17 @@ void* MODULE_EXPORT_LIST[] = {
 // PARAMETERS: pointer to chdk list of export
 // RETURN VALUE: 1 error, 0 ok
 //---------------------------------------------------------
-int _module_loader( void** chdk_export_list )
+int _module_loader( unsigned int* chdk_export_list )
 {
-  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
 
   if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
 	  return 1;
   if ( !API_VERSION_MATCH_REQUIREMENT( camera_info.api_version, 1, 0 ) )
 	 return 1;
-
-  tConfigVal configVal;
-  CONF_BIND_INT(195, conf_mem_view_addr_init);
+  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 2, 0 ) )
+	 return 1;
 
   return 0;
 }
@@ -227,7 +225,7 @@ int _module_run(int moduleidx, int argn, int* arguments)
   void* adr;
 
   if ( argn== 0 )
-    adr =(char*)(*conf_mem_view_addr_init);
+    adr =(char*)(conf.mem_view_addr_init);
   else if ( argn ==1)
     adr = (char*)arguments[0]; 
   else {

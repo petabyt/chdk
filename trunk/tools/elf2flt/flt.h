@@ -30,7 +30,7 @@ typedef int int32_t;
 */
 
 
-#define	FLAT_VERSION	    0x00000006L
+#define	FLAT_VERSION	    0x00000007L
 #define FLAT_MAGIC_NUMBER   "CFLAT"
 
 

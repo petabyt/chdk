@@ -95,7 +95,7 @@ void gui_palette_draw(int enforce_redraw) {
         c = COLOR_BLACK;
         for (y=DISP_TOP; y<DISP_BOTTOM; y+=CELL_SIZE)
         {
-            for (x=DISP_LEFT; x<DISP_RIGHT; x+=CELL_SIZE, c+=0x0100)
+            for (x=DISP_LEFT; x<DISP_RIGHT; x+=CELL_SIZE, c+=MAKE_COLOR(1,0))
             {
                 draw_filled_rect(xl+x, y, xl+x+CELL_SIZE, y+CELL_SIZE, c);
             }
@@ -145,9 +145,9 @@ void* MODULE_EXPORT_LIST[] = {
 // PARAMETERS: pointer to chdk list of export
 // RETURN VALUE: 1 error, 0 ok
 //---------------------------------------------------------
-int _module_loader( void** chdk_export_list )
+int _module_loader( unsigned int* chdk_export_list )
 {
-  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
      return 1;
   if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
 	  return 1;
@@ -184,7 +184,7 @@ int _module_run(int moduleidx, int argn, int* arguments)
   }
 
   if ( argn==3 )
-  gui_palette_init( arguments[0], (color)arguments[1], (void*)arguments[2]);
+    gui_palette_init( arguments[0], (color)arguments[1], (void*)arguments[2]);
   else
   	gui_palette_init( PALETTE_MODE_DEFAULT, 0x00, NULL );
 

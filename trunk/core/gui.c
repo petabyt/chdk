@@ -22,20 +22,11 @@
 #include "gui_usb.h"
 #include "gui_space.h"
 #include "gui_osd.h"
-#ifdef OPT_TEXTREADER
-	#include "gui_read.h"
-#endif
-#include "gui_grid.h"
 #include "histogram.h"
 #include "motion_detector.h"
 #include "raw.h"
 #include "dng.h"
-#ifdef OPT_CURVES
-	#include "curves.h"
-#endif
-#ifdef OPT_EDGEOVERLAY
-	#include "modules.h"
-#endif
+#include "modules.h"
 #ifdef OPT_SCRIPTING
     #include "script.h"
     int script_params_has_changed=0;
@@ -151,7 +142,7 @@ void user_menu_restore();
 //-------------------------------------------------------------------
 static void gui_show_build_info(int arg);
 static void gui_show_memory_info(int arg);
-void	gui_modules_menu_load();
+//void	gui_modules_menu_load();
 
 #ifdef OPT_DEBUGGING
     void gui_compare_props(int arg);
@@ -160,32 +151,21 @@ void	gui_modules_menu_load();
 	static void save_romlog(int arg);
 #endif
 static void gui_draw_fselect(int arg);
-#ifdef OPT_TEXTREADER
-static void gui_draw_read(int arg);
-static void gui_draw_read_last(int arg);
-#endif
 static void gui_draw_load_menu_rbf(int arg);
 static void gui_draw_load_symbol_rbf(int arg);		//AKA
-#ifdef OPT_TEXTREADER
-	static void gui_draw_load_rbf(int arg);
-#endif
 #ifdef OPT_CALENDAR
 static void gui_draw_calendar(int arg);
 #endif
+static void gui_load_charmap(int arg);
 static void gui_draw_load_lang(int arg);
 static void gui_menuproc_mkbootdisk(int arg);
 #ifndef OPTIONS_AUTOSAVE
 static void gui_menuproc_save(int arg);
 #endif
 static void gui_menuproc_reset(int arg);
-static void gui_grid_lines_load(int arg);
 static void gui_raw_develop(int arg);
 static void gui_menuproc_swap_partitions(int arg);
 static void gui_menuproc_reset_files(int arg);
-#ifdef OPT_CURVES
-	static void gui_load_curve_selected(const char *fn);
-	static void gui_load_curve(int arg);
-#endif
 static const char* gui_histo_mode_enum(int change, int arg);
 static const char* gui_histo_layout_enum(int change, int arg);
 static const char* gui_font_enum(int change, int arg);
@@ -212,14 +192,6 @@ static const char* gui_iso_exposure_order_enum(int change, int arg);
 const char* gui_user_menu_show_enum(int change, int arg);
 static const char* gui_bad_pixel_enum(int change, int arg);
 static const char* gui_video_af_key_enum(int change, int arg);
-#ifdef OPT_CURVES
-	static const char* gui_conf_curve_enum(int change, int arg);
-#endif
-
-#ifdef OPT_EDGEOVERLAY
-static void gui_menuproc_edge_save(int arg);
-static void gui_menuproc_edge_load(int arg);
-#endif
 
 #ifdef OPT_SCRIPTING
 static void gui_load_script(int arg);
@@ -237,8 +209,6 @@ static void cb_volts();
 static void cb_space_perc();
 static void cb_space_mb();
 static void cb_battery_menu_change(unsigned int item);
-static void cb_zebra_restore_screen();
-static void cb_zebra_restore_osd();
 #if DNG_SUPPORT
 static void cb_change_dng();
 void gui_menuproc_badpixel_create(int arg);
@@ -327,22 +297,6 @@ static CMenuItem autoiso_submenu_items[] = {
 static CMenu autoiso_submenu = {0x2d,LANG_MENU_AUTOISO_TITLE, NULL, autoiso_submenu_items };
 
 
-#ifdef OPT_TEXTREADER
-static const char* gui_reader_codepage_cps[] = { "Win1251", "DOS"};
-static CMenuItem reader_submenu_items[] = {
-    MENU_ITEM(0x35,LANG_MENU_READ_OPEN_NEW,           MENUITEM_PROC,    gui_draw_read, 0 ),
-    MENU_ITEM(0x35,LANG_MENU_READ_OPEN_LAST,          MENUITEM_PROC,    gui_draw_read_last, 0 ),
-    MENU_ITEM(0x35,LANG_MENU_READ_SELECT_FONT,        MENUITEM_PROC,    gui_draw_load_rbf, 0 ),
-    MENU_ENUM2(0x5f,LANG_MENU_READ_CODEPAGE,          &conf.reader_codepage, gui_reader_codepage_cps ),
-    MENU_ITEM(0x5c,LANG_MENU_READ_WORD_WRAP,          MENUITEM_BOOL,    &conf.reader_wrap_by_words, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_READ_AUTOSCROLL,         MENUITEM_BOOL,    &conf.reader_autoscroll, 0 ),
-    MENU_ITEM(0x5f,LANG_MENU_READ_AUTOSCROLL_DELAY,   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.reader_autoscroll_delay, MENU_MINMAX(0, 60) ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
-    {0}
-};
-static CMenu reader_submenu = {0x37,LANG_MENU_READ_TITLE, NULL, reader_submenu_items };
-#endif
-
 #ifdef OPT_DEBUGGING
 static const char* gui_debug_shortcut_modes[] = { "None", "DmpRAM", "Page", "CmpProps"};
 static const char* gui_debug_display_modes[] = { "None", "Props", "Params", "Tasks"};
@@ -351,6 +305,8 @@ static CMenuItem debug_submenu_items[] = {
     MENU_ITEM(0x2a,LANG_MENU_DEBUG_PROPCASE_PAGE,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &conf.debug_propcase_page, MENU_MINMAX(0, 128) ),
     MENU_ITEM(0x2a,LANG_MENU_DEBUG_TASKLIST_START,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &debug_tasklist_start, MENU_MINMAX(0, 63) ),
     MENU_ITEM(0x5c,LANG_MENU_DEBUG_SHOW_MISC_VALS,    MENUITEM_BOOL,          &conf.debug_misc_vals_show, 0 ),
+    MENU_ITEM(0x2a,LANG_MENU_DEBUG_MEMORY_BROWSER,    MENUITEM_PROC,          gui_menu_run_fltmodule, "memview.flt" ),
+    MENU_ITEM(0x2a,LANG_MENU_DEBUG_BENCHMARK,         MENUITEM_PROC,          gui_menu_run_fltmodule, "benchm.flt" ),
     MENU_ENUM2(0x5c,LANG_MENU_DEBUG_SHORTCUT_ACTION,  &conf.debug_shortcut_action, gui_debug_shortcut_modes ),
     MENU_ITEM(0x5c,LANG_MENU_RAW_TIMER,               MENUITEM_BOOL,          &conf.raw_timer, 0 ),
 #ifdef OPT_LUA
@@ -369,9 +325,15 @@ static CMenu debug_submenu = {0x2a,LANG_MENU_DEBUG_TITLE, NULL, debug_submenu_it
 
 static CMenuItem misc_submenu_items[] = {
     MENU_ITEM(0x35,LANG_MENU_MISC_FILE_BROWSER,       MENUITEM_PROC,    gui_draw_fselect, 0 ),
-    MENU_ITEM(0x65,(int)"Modules",            		  MENUITEM_TEXT,    0, 0 ),
+    MENU_ITEM(0x80,(int)"Module Inspector",           MENUITEM_PROC,    gui_menu_run_fltmodule, "modinsp.flt" ),
+#ifdef OPT_CALENDAR
+    MENU_ITEM(0x36,LANG_MENU_MISC_CALENDAR,           MENUITEM_PROC,    gui_menu_run_fltmodule, "calend.flt" ),
+#endif
 #ifdef OPT_TEXTREADER
-    MENU_ITEM(0x37,LANG_MENU_MISC_TEXT_READER,        MENUITEM_SUBMENU, &reader_submenu, 0 ),
+    MENU_ITEM(0x37,LANG_MENU_MISC_TEXT_READER,        MENUITEM_SUBMENU_PROC, gui_menu_run_fltmodule, "txtread.flt" ),
+#endif
+#if defined (OPT_GAMES)
+    MENU_ITEM(0x38,LANG_MENU_MISC_GAMES,              MENUITEM_SUBMENU_PROC, gui_menu_run_fltmodule, "gamemenu.flt" ),
 #endif
 #if CAM_SWIVEL_SCREEN
     MENU_ITEM(0x28,LANG_MENU_MISC_FLASHLIGHT,         MENUITEM_BOOL,    &conf.flashlight, 0 ),
@@ -385,6 +347,7 @@ static CMenuItem misc_submenu_items[] = {
     MENU_ITEM(0x22,LANG_MENU_MISC_ALT_BUTTON,         MENUITEM_ENUM,    gui_alt_mode_button_enum, 0 ),
 #endif
     MENU_ITEM(0x5d,LANG_MENU_MISC_DISABLE_LCD_OFF,    MENUITEM_ENUM,    gui_alt_power_enum, 0 ),
+    MENU_ITEM(0x65,LANG_MENU_MISC_PALETTE,            MENUITEM_PROC,    gui_menu_run_fltmodule, "palette.flt" ),
     MENU_ITEM(0x80,LANG_MENU_MISC_BUILD_INFO,         MENUITEM_PROC,    gui_show_build_info, 0 ),
     MENU_ITEM(0x80,LANG_MENU_MISC_MEMORY_INFO,        MENUITEM_PROC,    gui_show_memory_info, 0 ),
     MENU_ITEM(0x33,LANG_MENU_DEBUG_MAKE_BOOTABLE,     MENUITEM_PROC,    gui_menuproc_mkbootdisk, 0 ),
@@ -619,45 +582,12 @@ static CMenuItem operation_submenu_items[] = {
 };
 static CMenu operation_submenu = {0x21,LANG_MENU_OPERATION_PARAM_TITLE, NULL, operation_submenu_items };
 
-#ifdef OPT_EDGEOVERLAY
-static const char* gui_edge_pano_modes[] = { "Off", "Right", "Down", "Left", "Up", "Free"};
-static CMenuItem edge_overlay_submenu_items[] = {
-    MENU_ITEM(0x5c,LANG_MENU_EDGE_OVERLAY_ENABLE,     MENUITEM_BOOL,          &conf.edge_overlay_enable, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_EDGE_FILTER,     MENUITEM_BOOL,          &conf.edge_overlay_filter, 0 ),
-    MENU_ENUM2(0x5f,LANG_MENU_EDGE_PANO,    &conf.edge_overlay_pano, gui_edge_pano_modes ),
-    MENU_ITEM(0x5e,LANG_MENU_EDGE_PANO_OVERLAP,   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.edge_overlay_pano_overlap, MENU_MINMAX(0, 100) ),
-    MENU_ITEM(0x5c,LANG_MENU_EDGE_SHOW,     MENUITEM_BOOL,          &conf.edge_overlay_show, 0 ),
-    MENU_ITEM(0x5e,LANG_MENU_EDGE_OVERLAY_TRESH,      MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.edge_overlay_thresh, MENU_MINMAX(0, 255) ),
-    MENU_ITEM(0x65,LANG_MENU_EDGE_OVERLAY_COLOR,      MENUITEM_COLOR_FG,      &conf.edge_overlay_color, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_EDGE_PLAY,			MENUITEM_BOOL,		&conf.edge_overlay_play, 0 ), //does not work on cams like s-series, which dont have a real "hardware" play/rec switch, need a workaround, probably another button
-    MENU_ITEM(0x33,LANG_MENU_EDGE_SAVE,			MENUITEM_PROC,		gui_menuproc_edge_save, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_EDGE_ZOOM,     MENUITEM_BOOL,          &conf.edge_overlay_zoom, 0 ),
-    MENU_ITEM(0x33,LANG_MENU_EDGE_LOAD,			MENUITEM_PROC,		gui_menuproc_edge_load, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
-    {0}
-};
-static CMenu edge_overlay_submenu = {0x7f,LANG_MENU_EDGE_OVERLAY_TITLE, NULL, edge_overlay_submenu_items };
-#endif
-
-static CMenuItem grid_submenu_items[] = {
-    MENU_ITEM(0x2f,LANG_MENU_SHOW_GRID,               MENUITEM_BOOL,		&conf.show_grid_lines, 0 ),
-    MENU_ITEM(0x35,LANG_MENU_GRID_LOAD,               MENUITEM_PROC,		gui_grid_lines_load, 0 ),
-    MENU_ITEM(0x0,LANG_MENU_GRID_CURRENT,            MENUITEM_SEPARATOR, 0, 0 ),
-    MENU_ITEM(0x0,(int)grid_title,                   MENUITEM_TEXT, 0, 0 ),
-    MENU_ITEM(0x0,(int)"",                           MENUITEM_SEPARATOR, 0, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_GRID_FORCE_COLOR,        MENUITEM_BOOL,          &conf.grid_force_color, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_GRID_COLOR_LINE,         MENUITEM_COLOR_FG,      &conf.grid_color, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_GRID_COLOR_FILL,         MENUITEM_COLOR_BG,      &conf.grid_color, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
-    {0}
-};
-static CMenu grid_submenu = {0x2f,LANG_MENU_GRID_TITLE, NULL, grid_submenu_items };
-
 static CMenuItem visual_submenu_items[] = {
     MENU_ITEM(0x35,LANG_MENU_VIS_LANG,                MENUITEM_PROC,      gui_draw_load_lang, 0 ),
     MENU_ITEM(0x5f,LANG_MENU_VIS_OSD_FONT,            MENUITEM_ENUM,      gui_font_enum, 0 ),
     MENU_ITEM(0x35,LANG_MENU_VIS_MENU_FONT,           MENUITEM_PROC,      gui_draw_load_menu_rbf, 0 ),
     MENU_ITEM(0x35,LANG_MENU_VIS_MENU_SYMBOL_FONT,    MENUITEM_PROC,      gui_draw_load_symbol_rbf, 0 ),
+    MENU_ITEM(0x35,LANG_MENU_VIS_CHARMAP,             MENUITEM_PROC,      gui_load_charmap, 0 ),
     MENU_ITEM(0x80,LANG_MENU_RESET_FILES		 ,         MENUITEM_PROC, 	   gui_menuproc_reset_files, 0 ),
     MENU_ITEM(0x0,LANG_MENU_VIS_COLORS,              MENUITEM_SEPARATOR, 0, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_TEXT,            MENUITEM_COLOR_FG,  &conf.osd_color, 0 ),
@@ -668,8 +598,8 @@ static CMenuItem visual_submenu_items[] = {
     MENU_ITEM(0x65,LANG_MENU_VIS_HISTO_BKG,           MENUITEM_COLOR_BG,  &conf.histo_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_HISTO_BORDER,        MENUITEM_COLOR_FG,  &conf.histo_color2, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_HISTO_MARKERS,       MENUITEM_COLOR_BG,  &conf.histo_color2, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_VIS_ZEBRA_UNDER,         MENUITEM_COLOR_BG,  &conf.zebra_color, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_VIS_ZEBRA_OVER,          MENUITEM_COLOR_FG,  &conf.zebra_color, 0 ),
+    //MENU_ITEM(0x65,LANG_MENU_VIS_ZEBRA_UNDER,         MENUITEM_COLOR_BG,  &conf.zebra_color, 0 ),         // moved to zebra menu
+    //MENU_ITEM(0x65,LANG_MENU_VIS_ZEBRA_OVER,          MENUITEM_COLOR_FG,  &conf.zebra_color, 0 ),         // moved to zebra menu
     MENU_ITEM(0x65,LANG_MENU_VIS_BATT_ICON,           MENUITEM_COLOR_FG,  &conf.batt_icon_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_SPACE_ICON,          MENUITEM_COLOR_FG,  &conf.space_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_SPACE_ICON_BKG,      MENUITEM_COLOR_BG,  &conf.space_color, 0 ),
@@ -681,8 +611,8 @@ static CMenuItem visual_submenu_items[] = {
     MENU_ITEM(0x65,LANG_MENU_VIS_MENU_CURSOR_BKG,     MENUITEM_COLOR_BG,  &conf.menu_cursor_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_MENU_SYMBOL_TEXT,    MENUITEM_COLOR_FG,  &conf.menu_symbol_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_MENU_SYMBOL_BKG,     MENUITEM_COLOR_BG,  &conf.menu_symbol_color, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_VIS_READER_TEXT,         MENUITEM_COLOR_FG,  &conf.reader_color, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_VIS_READER_BKG,          MENUITEM_COLOR_BG,  &conf.reader_color, 0 ),
+    //MENU_ITEM(0x65,LANG_MENU_VIS_READER_TEXT,         MENUITEM_COLOR_FG,  &conf.reader_color, 0 ),        // moved to text reader menu
+    //MENU_ITEM(0x65,LANG_MENU_VIS_READER_BKG,          MENUITEM_COLOR_BG,  &conf.reader_color, 0 ),        // moved to text reader menu
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_OVERRIDE,         MENUITEM_COLOR_FG,  &conf.osd_color_override, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_OVERRIDE_BKG,     MENUITEM_COLOR_BG,  &conf.osd_color_override, 0 ),
     MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
@@ -741,7 +671,7 @@ static CMenuItem osd_submenu_items[] = {
     MENU_ITEM(0x59,LANG_MENU_OSD_TEMP_FAHRENHEIT,      MENUITEM_BOOL,      &conf.temperature_unit, 0 ),
     MENU_ENUM2(0x71,LANG_MENU_USB_SHOW_INFO,         &conf.usb_info_enable, gui_show_usb_info_modes ),
     MENU_ITEM(0x72,LANG_MENU_OSD_LAYOUT_EDITOR,       MENUITEM_PROC,      gui_draw_osd_le, 0 ),
-    MENU_ITEM(0x2f,LANG_MENU_OSD_GRID_PARAMS,         MENUITEM_SUBMENU,   &grid_submenu, 0 ),
+    MENU_ITEM(0x2f,LANG_MENU_OSD_GRID_PARAMS,         MENUITEM_SUBMENU_PROC, gui_menu_run_fltmodule, "grids.flt" ),
     MENU_ITEM(0x22,LANG_MENU_OSD_VALUES,  	    	MENUITEM_SUBMENU,   &values_submenu, 0 ),
     MENU_ITEM(0x31,LANG_MENU_OSD_DOF_CALC,            MENUITEM_SUBMENU,   &dof_submenu, 0 ),
     MENU_ITEM(0x24,LANG_MENU_OSD_RAW_STATE_PARAMS,    MENUITEM_SUBMENU,   &raw_state_submenu, 0 ),
@@ -798,7 +728,7 @@ static CMenu raw_exceptions_submenu = {0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS_
 
 static const char* gui_raw_nr_modes[] = { "Auto", "Off", "On"};
 static CMenuItem raw_submenu_items[] = {
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE,                MENUITEM_BOOL,      &conf.save_raw, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE,                MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.save_raw, (int)cb_change_dng ),
     MENU_ITEM(0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS,	 	MENUITEM_SUBMENU,   &raw_exceptions_submenu, 0 ),
     MENU_ENUM2(0x5f,LANG_MENU_RAW_NOISE_REDUCTION,    &conf.raw_nr, gui_raw_nr_modes ),
     MENU_ITEM(0x5c,LANG_MENU_RAW_FIRST_ONLY,          MENUITEM_BOOL,      &conf.raw_save_first_only, 0 ),
@@ -822,45 +752,18 @@ static CMenuItem raw_submenu_items[] = {
 };
 static CMenu raw_submenu = {0x24,LANG_MENU_RAW_TITLE, NULL, raw_submenu_items };
 
-
-static const char* gui_zebra_mode_modes[] = { "Blink 1", "Blink 2", "Blink 3", "Solid", "Zebra 1", "Zebra 2" };
-static const char* gui_zebra_draw_osd_modes[] = { "Nothing", "Histo", "OSD" };
-static CMenuItem zebra_submenu_items[] = {
-    MENU_ITEM(0x5c,LANG_MENU_ZEBRA_DRAW,              MENUITEM_BOOL,                            &conf.zebra_draw, 0 ),
-    MENU_ENUM2(0x5f,LANG_MENU_ZEBRA_MODE,             &conf.zebra_mode, gui_zebra_mode_modes ),
-    MENU_ITEM(0x58,LANG_MENU_ZEBRA_UNDER,             MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.zebra_under,   MENU_MINMAX(0, 32) ),
-    MENU_ITEM(0x57,LANG_MENU_ZEBRA_OVER,              MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.zebra_over,    MENU_MINMAX(0, 32) ),
-    MENU_ITEM(0x28,LANG_MENU_ZEBRA_RESTORE_SCREEN,    MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,      &conf.zebra_restore_screen,     (int)cb_zebra_restore_screen ),
-    MENU_ITEM(0x5c,LANG_MENU_ZEBRA_RESTORE_OSD,       MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,      &conf.zebra_restore_osd,        (int)cb_zebra_restore_osd ),
-    MENU_ENUM2(0x5f,LANG_MENU_ZEBRA_DRAW_OVER,        &conf.zebra_draw_osd, gui_zebra_draw_osd_modes ),
-    MENU_ITEM(0x5c,LANG_MENU_ZEBRA_MULTICHANNEL,      MENUITEM_BOOL,                            &conf.zebra_multichannel, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
-    {0}
-};
-static CMenu zebra_submenu = {0x26,LANG_MENU_ZEBRA_TITLE, NULL, zebra_submenu_items };
-
-#ifdef OPT_CURVES
-static CMenuItem curve_submenu_items[] = {
-    MENU_ITEM(0x5f,LANG_MENU_CURVE_ENABLE,        MENUITEM_ENUM,      gui_conf_curve_enum, 0 ),
-    MENU_ITEM(0x35,LANG_MENU_CURVE_LOAD,          MENUITEM_PROC,      gui_load_curve, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                MENUITEM_UP, 0, 0 ),
-    {0}
-};
-static CMenu curve_submenu = {0x85,LANG_MENU_CURVE_PARAM_TITLE, NULL, curve_submenu_items };
-#endif
-
 static CMenuItem root_menu_items[] = {
     MENU_ITEM(0x21,LANG_MENU_OPERATION_PARAM,         MENUITEM_SUBMENU,   &operation_submenu, 0 ),
     MENU_ITEM(0x23,LANG_MENU_VIDEO_PARAM,             MENUITEM_SUBMENU,   &video_submenu, 0 ),
     MENU_ITEM(0x24,LANG_MENU_MAIN_RAW_PARAM,          MENUITEM_SUBMENU,   &raw_submenu, 0 ),
 #ifdef OPT_EDGEOVERLAY
-    MENU_ITEM(0x7f,LANG_MENU_EDGE_OVERLAY,         MENUITEM_SUBMENU,   &edge_overlay_submenu, 0 ),
+    MENU_ITEM(0x7f,LANG_MENU_EDGE_OVERLAY,            MENUITEM_SUBMENU_PROC, gui_menu_run_fltmodule, "edgeovr.flt" ),
 #endif
 #ifdef OPT_CURVES
-    MENU_ITEM(0x85,LANG_MENU_CURVE_PARAM,             MENUITEM_SUBMENU,   &curve_submenu, 0 ),
+    MENU_ITEM(0x85,LANG_MENU_CURVE_PARAM,             MENUITEM_SUBMENU_PROC, gui_menu_run_fltmodule, "curves.flt" ),
 #endif
     MENU_ITEM(0x25,LANG_MENU_MAIN_HISTO_PARAM,        MENUITEM_SUBMENU,   &histo_submenu, 0 ),
-    MENU_ITEM(0x26,LANG_MENU_MAIN_ZEBRA_PARAM,        MENUITEM_SUBMENU,   &zebra_submenu, 0 ),
+    MENU_ITEM(0x26,LANG_MENU_MAIN_ZEBRA_PARAM,        MENUITEM_SUBMENU_PROC, gui_menu_run_fltmodule, "zebra.flt" ),
     MENU_ITEM(0x22,LANG_MENU_MAIN_OSD_PARAM,          MENUITEM_SUBMENU,   &osd_submenu, 0 ),
     MENU_ITEM(0x28,LANG_MENU_MAIN_VISUAL_PARAM,       MENUITEM_SUBMENU,   &visual_submenu, 0 ),
 #ifdef OPT_SCRIPTING
@@ -993,16 +896,6 @@ void cb_battery_menu_change(unsigned int item) {
     }
 }
 
-void cb_zebra_restore_screen() {
-    if (!conf.zebra_restore_screen)
-        conf.zebra_restore_osd = 0;
-}
-
-void cb_zebra_restore_osd() {
-    if (conf.zebra_restore_osd)
-        conf.zebra_restore_screen = 1;
-}
-
 #if DNG_SUPPORT
 void cb_change_dng(){
  int old=conf.dng_raw;
@@ -1029,7 +922,7 @@ common code for "enum" menu items that just take a list of string values and don
 would be better to have another menu item type that does this by default
 save memory by eliminating dupe code
 */
-static void gui_enum_value_change(int *value, int change, unsigned num_items) {
+void gui_enum_value_change(int *value, int change, unsigned num_items) {
     *value+=change;
     if (*value<0)
         *value = num_items-1;
@@ -1046,19 +939,6 @@ const char* gui_change_enum2(const CMenuItem *menu_item, int change)
 	gui_enum_value_change(menu_item->value, change, menu_item->opt_len);
     return items[*menu_item->value];
 }
-
-//-------------------------------------------------------------------
-#ifdef OPT_CURVES
-const char* gui_conf_curve_enum(int change, int arg) {
-    static const char* modes[]={ "None", "Custom", "+1EV", "+2EV", "Auto DR" };
-
-    gui_enum_value_change(&conf.curve_enable,change,sizeof(modes)/sizeof(modes[0]));
-
-	if(change && libcurves && libcurves->curve_init_mode)
-		libcurves->curve_init_mode();
-    return modes[conf.curve_enable];
-}
-#endif
 
 #ifdef OPT_SCRIPTING
 //-------------------------------------------------------------------
@@ -1495,6 +1375,7 @@ static void gui_menuproc_reset_files(int arg){
 conf.lang_file[0] = 0;
 conf.menu_symbol_rbf_file[0] = 0;
 conf.menu_rbf_file[0] = 0;
+conf.charmap_file[0] = 0;
 conf_save();
 gui_mbox_init(LANG_INFORMATION, LANG_MENU_RESTART_CAMERA, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 
@@ -1620,7 +1501,7 @@ void gui_init()
     	play_sound(4);
     }
     gui_splash = (conf.splash_show)?SPLASH_TIME:0;
-
+    user_menu_restore();
     gui_lang_init();
     draw_init();
 
@@ -1628,10 +1509,6 @@ void gui_init()
     voltage_step = (conf.batt_step_25)?25:1;
     load_from_file( "A/CHDK/badpixel", make_pixel_list );
     load_from_file( "A/CHDK/badpixel.txt", make_pixel_list );
-#ifdef OPT_CURVES
-	// initialize curves, loading files if required by current mode
-	//curve_init_mode();	// @tsv it will be initialize on first load
-#endif
 #if ZOOM_OVERRIDE
 // reyalp - need to do this in capt_seq
 //		if (conf.zoom_override) shooting_set_zoom(conf.zoom_override_value);
@@ -1640,34 +1517,15 @@ void gui_init()
 
 
 //-------------------------------------------------------------------
-void gui_modules_menu_load(int arg){
-
-	misc_submenu_items[1].type=MENUITEM_TEXT;
-
-	unsigned int argv[] ={	(unsigned int)MODULES_PATH,
-							(unsigned int)(&misc_submenu_items[1])
-						 };
-	module_run("modmenu.flt", 0, 2,argv, UNLOAD_IF_ERR );
-}
-
-//-------------------------------------------------------------------
-#ifdef OPT_CURVES
-static void gui_load_curve_selected(const char *fn) {
-	if (fn) {
-		// TODO we could sanity check here, but curve_set_type should fail gracefullish
-		strcpy(conf.curve_file,fn);
-		if(conf.curve_enable == 1 && libcurves && libcurves->curve_init_mode)
-			libcurves->curve_init_mode();
-	}
-}
-
-//-------------------------------------------------------------------
-void gui_load_curve(int arg) {
-    module_fselect_init(LANG_STR_SELECT_CURVE_FILE, conf.curve_file, CURVE_DIR, gui_load_curve_selected);
-}
-
-#endif
-
+//void gui_modules_menu_load(){
+//
+//	misc_submenu_items[1].type=MENUITEM_TEXT;
+//
+//	unsigned int argv[] ={	(unsigned int)MODULES_PATH,
+//							(unsigned int)(&misc_submenu_items[1])
+//						 };
+//	module_run("modmenu.flt", 0, 2,argv, UNLOAD_IF_ERR );
+//}
 
 //-------------------------------------------------------------------
 gui_mode_t gui_get_mode() { return ((gui_handler*)gui_mode)->mode; }
@@ -1782,7 +1640,8 @@ void gui_chdk_draw()
         if (show_md_grid)
         {
             --show_md_grid;
-            md_draw_grid();
+            if (module_mdetect_load())
+                libmotiondetect->md_draw_grid();
         }
     }
 #endif
@@ -1960,9 +1819,10 @@ void gui_chdk_kbd_process_menu_btn()
     gui_default_kbd_process_menu_btn();
 }
 
-// Menu button handled for Menu mode
+// Menu button handler for Menu mode
 void gui_menu_kbd_process_menu_btn()
 {
+    gui_menu_unload_module_menus();
 #ifdef OPTIONS_AUTOSAVE
     conf_save_new_settings_if_changed();
 #endif
@@ -1999,7 +1859,6 @@ void gui_redraw()
 
         flag_gui_enforce_redraw |= GUI_REDRAWFLAG_ERASEGUARD;
         //gui_menu_force_redraw();
-        //gui_fselect_force_redraw();	//@tsv
 #ifdef CAM_TOUCHSCREEN_UI
         extern int redraw_buttons;
         redraw_buttons = 1;
@@ -2098,7 +1957,8 @@ void gui_kbd_leave()
     vid_turn_on_updates();
     gui_set_mode(&defaultGuiHandler);
 
-	// Unload all modules which are marked as safe to unload
+	// Unload all modules which are marked as safe to unload, or loaded for menus
+    gui_menu_unload_module_menus();
 	module_async_unload_allrunned(0);
 
 	conf_update_prevent_shutdown();
@@ -2449,10 +2309,12 @@ void gui_draw_osd() {
     if (half_disp_press)
 		return;
 
-	if (gui_osd_draw_zebra(conf.zebra_draw && gui_get_mode()==GUI_MODE_NONE &&
+    if (conf.zebra_draw)
+        if (module_zebra_load())
+	        if (libzebra->gui_osd_draw_zebra(conf.zebra_draw && gui_get_mode()==GUI_MODE_NONE &&
 							kbd_is_key_pressed(KEY_SHOOT_HALF) && mode_photo &&
 							!state_kbd_script_run)) {// no zebra when script running, to save mem
-		return; // if zebra drawn, we're done
+		        return; // if zebra drawn, we're done
 	}
 #if !CAM_SHOW_OSD_IN_SHOOT_MENU
       if (!(conf.show_osd && (canon_menu_active==(int)&canon_menu_active-4) && (canon_shoot_menu_active==0)))  return;
@@ -2470,9 +2332,9 @@ void gui_draw_osd() {
     }
 
     if ((m&MODE_MASK) == MODE_REC && (recreview_hold==0 || conf.show_osd_in_review) ) {
-        if (conf.show_grid_lines) {
-            gui_grid_draw_osd(1);
-        }
+        if (conf.show_grid_lines)
+            if (module_grids_load())
+                libgrids->gui_grid_draw_osd(1);
         if ((gui_get_mode()==GUI_MODE_NONE || gui_get_mode()==GUI_MODE_ALT) && (((kbd_is_key_pressed(KEY_SHOOT_HALF) || (state_kbd_script_run) || (shooting_get_common_focus_mode())) && (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH )) || ((mode_video || movie_status > 1) && conf.show_values_in_video) )) {
 
            if (conf.show_dof!=DOF_DONT_SHOW) gui_osd_calc_dof();
@@ -2651,76 +2513,11 @@ void gui_draw_fselect(int arg) {
 }
 
 //-------------------------------------------------------------------
-static void gui_grid_lines_load_selected(const char *fn) {
-    if (fn)
-        grid_lines_load(fn);
-}
-void gui_grid_lines_load(int arg) {
-    module_fselect_init(LANG_STR_SELECT_GRID_FILE, conf.grid_lines_file, "A/CHDK/GRIDS", gui_grid_lines_load_selected);
-}
-
-//-------------------------------------------------------------------
-#ifdef OPT_TEXTREADER
-static void gui_draw_read_selected(const char *fn) {
-    if (fn) {
-        if (!rbf_load(conf.reader_rbf_file))
-            rbf_load_from_8x16(current_font);
-        rbf_set_codepage(conf.reader_codepage);
-
-		unsigned int argv[] ={ (unsigned int)fn };
-		module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR);
-    }
-}
-
-void gui_draw_read(int arg) {
-    module_fselect_init_w_mode(LANG_STR_SELECT_TEXT_FILE, conf.reader_file, "A/CHDK/BOOKS", gui_draw_read_selected, 1);
-    void gui_fselect_set_key_redraw(int n);
-    //gui_fselect_set_key_redraw(1);	@tsv
-}
-
-void gui_draw_read_last(int arg) {
-    struct stat st;
-    if (stat(conf.reader_file,&st) == 0) {
-        gui_draw_read_selected(conf.reader_file);
-    } else {
-        gui_draw_read(arg);
-    }
-}
-#endif
-
-//-------------------------------------------------------------------
 void gui_menuproc_mkbootdisk(int arg) {
     mark_filesystem_bootable();
     gui_mbox_init(LANG_INFORMATION, LANG_CONSOLE_TEXT_FINISHED, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 }
 
-#ifdef OPT_EDGEOVERLAY
-static void gui_load_edge_selected( const char* fn ) {
-    if( fn && module_edgeovr_load())
-		libedgeovr->load_edge_overlay(fn);
-}
-
-void gui_menuproc_edge_save(int arg) {
-	if ( module_edgeovr_load() )
-    	libedgeovr->save_edge_overlay();
-}
-
-void gui_menuproc_edge_load(int arg) {
-    module_fselect_init(LANG_MENU_EDGE_LOAD, EDGE_SAVE_DIR, EDGE_SAVE_DIR, gui_load_edge_selected);
-}
-#endif
-
-//-------------------------------------------------------------------
-#ifdef OPT_TEXTREADER
-static void gui_draw_rbf_selected(const char *fn) {
-    if (fn) {
-        strcpy(conf.reader_rbf_file, fn);
-    }
-}
-void gui_draw_load_rbf(int arg) {
-    module_fselect_init(LANG_STR_SELECT_FONT_FILE, conf.reader_rbf_file, "A/CHDK/FONTS", gui_draw_rbf_selected);
-}
-#endif
 //-------------------------------------------------------------------
 static void gui_draw_menu_rbf_selected(const char *fn) {
     if (fn) {
@@ -2757,6 +2554,14 @@ static void gui_draw_lang_selected(const char *fn) {
 }
 void gui_draw_load_lang(int arg) {
     module_fselect_init(LANG_STR_SELECT_LANG_FILE, conf.lang_file, "A/CHDK/LANG", gui_draw_lang_selected);
+}
+
+static void gui_charmap_selected(const char *fn) {
+    if (fn)
+        strcpy(conf.charmap_file, fn);
+}
+static void gui_load_charmap(int arg) {
+    module_fselect_init(LANG_STR_SELECT_CHARMAP_FILE, conf.charmap_file, "A/CHDK", gui_charmap_selected);
 }
 
 CMenuItem* find_mnu(CMenu *curr_menu, int itemid )

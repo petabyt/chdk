@@ -1,8 +1,6 @@
-
 /*
 
 Motion detection module
-
 
 Author: mx3 (Max Sagaydachny) . win1251 ( Максим Сагайдачный )
 Email: win.drivers@gmail.com
@@ -11,17 +9,11 @@ ICQ#: 125-985-663
 Country: Ukraine
 Sity: Kharkiv
 
-
 20070912 mx3: first version
 
 20070918 mx3: speed optimization, 
 
-
-
 */
-
-
-void dump_memory();
 
 #ifdef OPT_MD_DEBUG
 #define MD_REC_CALLS_CNT 2048
@@ -133,8 +125,11 @@ static int clip(int v) {
 // TODO add script interface, currently done when script ends
 void md_close_motion_detector()
 {
-	free(motion_detector);
-	motion_detector=NULL;
+    if (motion_detector)
+    {
+	    free(motion_detector);
+    	motion_detector=NULL;
+    }
 }
 
 
@@ -256,7 +251,7 @@ int md_init_motion_detector(
 }
 
 #ifdef OPT_MD_DEBUG
-void md_save_calls_history(){
+static void md_save_calls_history(){
 	char buf[200], fn[30];
 	char big[MD_INFO_BUF_SIZE];
 	int big_ln;
@@ -343,6 +338,11 @@ static void mx_dump_memory(void *img){
 #define md_save_calls_history()
 #define mx_dump_memory(x)
 #endif
+
+
+static int md_running(){
+	return motion_detector?motion_detector->running:0;
+}
 
 
 int md_detect_motion(void){
@@ -543,12 +543,6 @@ int md_get_cell_diff(int column, int row){
 }
 
 
-
-int md_running(){
-	return motion_detector?motion_detector->running:0;
-}
-
-
 void md_draw_grid(){
 	int x_step, y_step, col, row;
 	int xoffset, yoffset;
@@ -636,3 +630,91 @@ int md_get_result()
 {
     return motion_detector->return_value;
 }
+
+
+// =========  MODULE INIT =================
+
+#include "module_load.h"
+int module_idx=-1;
+
+/***************** BEGIN OF AUXILARY PART *********************
+  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+ **************************************************************/
+
+struct libmotiondetect_sym libmotiondetect = {
+			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
+										// increase minor if compatible changes made(including extending this struct)
+
+        md_close_motion_detector,
+        md_init_motion_detector,
+        md_detect_motion,
+        md_get_cell_diff,
+        md_draw_grid,
+        md_get_result
+	};
+
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)1,
+
+			&libmotiondetect
+		};
+
+
+//---------------------------------------------------------
+// PURPOSE:   Bind module symbols with chdk. 
+//		Required function
+// PARAMETERS: pointer to chdk list of export
+// RETURN VALUE: 1 error, 0 ok
+//---------------------------------------------------------
+int _module_loader( unsigned int* chdk_export_list )
+{
+  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+     return 1;
+
+  if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
+	 return 1;
+
+  return 0;
+}
+
+
+//---------------------------------------------------------
+// PURPOSE: Finalize module operations (close allocs, etc)
+// RETURN VALUE: 0-ok, 1-fail
+//---------------------------------------------------------
+int _module_unloader()
+{
+    md_close_motion_detector();
+    return 0;
+}
+
+
+//---------------------------------------------------------
+// PURPOSE: Default action for simple modules (direct run)
+// NOTE: Please comment this function if no default action and this library module
+//---------------------------------------------------------
+int _module_run(int moduleidx, int argn, int* arguments)
+{
+  module_idx=moduleidx;
+
+  return 0;
+}
+
+/******************** Module Information structure ******************/
+
+struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
+									sizeof(struct ModuleInfo),
+
+									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+									MODULEINFO_FLAG_SYSTEM,		// flag
+									(int32_t)"Motion Detect (dll)",// Module name
+									1, 0,						// Module version
+									(int32_t)"Motion Detect"
+								 };
+
+
+/*************** END OF AUXILARY PART *******************/
+

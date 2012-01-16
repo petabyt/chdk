@@ -593,9 +593,17 @@
 #define LANG_MENU_REMOTE_LOGIC  472
 #define LANG_MENU_REMOTE_OPTIONS 473
 
+#define LANG_STR_SELECT_CHARMAP_FILE  474
+#define LANG_MENU_VIS_CHARMAP		475
+#define LANG_POPUP_MORE				476
+#define LANG_POPUP_MKDIR			477
+#define LANG_POPUP_RENAME			478
+#define LANG_PROMPT_MKDIR			479
+#define LANG_PROMPT_RENAME			480
+
 //-------------------------------------------------------------------
 
-#define GUI_LANG_ITEMS                  473
+#define GUI_LANG_ITEMS                  480
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

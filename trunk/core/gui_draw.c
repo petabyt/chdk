@@ -202,7 +202,7 @@ void draw_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int
 static void fill_rect(color cl) {
     register unsigned int x, y;
 
-    cl = cl >> 8;
+    cl = BG_COLOR(cl);
     for (y=yMin+1; y<=yMax-1; ++y)
     {
         draw_hline(xMin+1, y, (xMax-1) - (xMin+1) + 1, cl);
@@ -239,7 +239,7 @@ void draw_char(coord x, coord y, const char ch, color cl) {
     {
 	    for (ii=0; ii<FONT_WIDTH; ii++)
         {
-            draw_pixel(x+ii ,y+i, (sym[i] & (0x80>>ii))? cl&0xff : cl>>8);
+            draw_pixel(x+ii ,y+i, (sym[i] & (0x80>>ii))? FG_COLOR(cl) : BG_COLOR(cl));
 	    }
     }
 }
@@ -391,7 +391,7 @@ void draw_filled_ellipse(coord xc, coord yc, unsigned int a, unsigned int b, col
     long dxt = 2*b2*x, dyt = -2*a2*y;
     long d2xt = 2*b2, d2yt = 2*a2;
     
-    color cl_fill = ((cl >> 8) & 0xff) | (cl & 0xff00);
+    color cl_fill = MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl));
 
     if (b == 0) {
         draw_filled_rect(xc-a, yc, (a<<1)+1, 1, cl_fill);
