@@ -279,13 +279,16 @@ void gui_tbox_draw(int enforce_redraw)
             // clean previous symbols line
 
             int pline = (line == 0)?lines:line-1;
-            offs = ((strlen(tbox_chars[0])-strlen(tbox_chars[pline]))>>1)*FONT_WIDTH;
+            offs=(camera_screen.width - strlen(tbox_chars[pline])*FONT_WIDTH)>>1;
+            //Don't try to do this as below. Just doesn't work properly!
+            //offs = ((strlen(tbox_chars[0])-strlen(tbox_chars[pline]))*FONT_WIDTH)>>1;
             for(i = 0; (tbox_chars[pline][i] != '\0'); i++)
-                draw_char(key_offset_x+offs+i*FONT_WIDTH, tbox_buttons_y, tbox_chars[pline][i], cl_greygrey);
+                draw_char(offs+i*FONT_WIDTH, tbox_buttons_y, tbox_chars[pline][i], cl_greygrey);
 
             // draw current symbols line
 
-            offs = ((strlen(tbox_chars[0])-strlen(tbox_chars[line]))>>1)*FONT_WIDTH;
+            offs=(camera_screen.width - strlen(tbox_chars[line])*FONT_WIDTH)>>1;
+            //offs = ((strlen(tbox_chars[0])-strlen(tbox_chars[line]))*FONT_WIDTH)>>1;
             for(i = 0; (tbox_chars[line][i] != '\0'); i++) {
                 ch = tbox_chars[line][i];
 
@@ -299,7 +302,7 @@ void gui_tbox_draw(int enforce_redraw)
                 if ( ch==SUBGROUP_SEPARATOR )    // replace separator to more visual obvious
                     ch=6;
 
-                draw_char(key_offset_x+offs+i*FONT_WIDTH, tbox_buttons_y, ch, cl);
+                draw_char(offs+i*FONT_WIDTH, tbox_buttons_y, ch, cl);
             }
         }
         gui_tbox_redraw = 0;
