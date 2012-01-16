@@ -49,6 +49,7 @@
     #define CAM_MENU_BORDERWIDTH			10
 
 	#define CAM_QUALITY_OVERRIDE 			1
+    #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_HAS_JOGDIAL             	1
     #undef  CAM_CONSOLE_LOG_ENABLED         			// Development: internal camera stdout -> A/stdout.txt
     #define CAM_BRACKETING             		1
@@ -59,7 +60,6 @@
 	#define CAM_UNCACHED_BIT  				0x40000000 	// G10 auto found @0xff828844	
   
 	#define CAM_SHOW_OSD_IN_SHOOT_MENU  	1
-    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
 	
     #define PARAM_CAMERA_NAME 				4 			// parameter number for GetParameterData
 	#define PARAM_DISPLAY_MODE1				57			// param number for LCD display mode when camera in playback
