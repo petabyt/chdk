@@ -189,6 +189,11 @@
 
 #define CAM_USB_EVENTID         0x902           // Levent ID for USB control. Changed to 0x202 in DryOS R49 so needs to be overridable.
 
+#undef CAM_NEED_SET_ZOOM_DELAY                  // Define to add a delay after setting the zoom position before resetting the focus position in shooting_set_zoom
+
+#define CAMERA_MIN_DIST         0               // Define min distance that can be set in _MoveFocusLensToDistance (allow override - e.g. G12 min dist = 1)
+#define CAMERA_MAX_DIST         65535           // Define max distance that can be set in _MoveFocusLensToDistance (allow override for superzooms - SX30/SX40)
+
 //----------------------------------------------------------
 // Override Default values for Camera if necessary
 //----------------------------------------------------------

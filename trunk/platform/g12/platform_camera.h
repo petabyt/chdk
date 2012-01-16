@@ -124,5 +124,10 @@
 
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 
+    #undef CAMERA_MIN_DIST
+    #define CAMERA_MIN_DIST                 68      // Override min subject distance
+    #undef CAMERA_MAX_DIST
+    #define CAMERA_MAX_DIST                 258065  // Override max subject distance
+
 //----------------------------------------------------------
 

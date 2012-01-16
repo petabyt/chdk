@@ -763,7 +763,7 @@ short shooting_can_focus()
   if (shooting_get_prop(PROPCASE_AF_LOCK))
     return 1;
  #endif
-  return (shooting_get_focus_mode() || MODE_IS_VIDEO(m));
+  return (shooting_get_common_focus_mode() || MODE_IS_VIDEO(m));
 #elif !CAM_CAN_SD_OVERRIDE
   return MODE_IS_VIDEO(m);
 #elif defined (CAMERA_ixus800_sd700)
@@ -937,6 +937,9 @@ if ((mode_get()&MODE_MASK) != MODE_PLAY)
 	{
     dist = shooting_get_focus();
     lens_set_zoom_point(v);
+#if defined(CAM_NEED_SET_ZOOM_DELAY)
+    msleep(CAM_NEED_SET_ZOOM_DELAY);
+#endif
     shooting_set_focus(dist, SET_NOW);
   }
 }
@@ -963,10 +966,10 @@ void shooting_set_focus(int v, short is_now) {
 if ((mode_get()&MODE_MASK) != MODE_PLAY){
 	if ((is_now) && shooting_can_focus()) {
 	  if (conf.dof_dist_from_lens) s+=shooting_get_lens_to_focal_plane_width();
-	  if ((!conf.dof_subj_dist_as_near_limit) && (s>0)) lens_set_focus_pos((s<MAX_DIST)?s:MAX_DIST);
+	  if (!conf.dof_subj_dist_as_near_limit) lens_set_focus_pos(s);
 	  else {
         int near=shooting_get_near_limit_f(s,shooting_get_min_real_aperture(),get_focal_length(lens_get_zoom_point()));
-        if (near>0) lens_set_focus_pos((near<MAX_DIST)?near:MAX_DIST);
+        if (near>0) lens_set_focus_pos(near);
 	  }
 	}
 	else photo_param_put_off.subj_dist=v;
@@ -1083,9 +1086,15 @@ int shooting_get_subject_distance_bracket_value()
 
 int shooting_get_subject_distance_override_koef()
 {
-  static const short koef[] = {0, 1,10,100,1000};
+    // Define the adjustment factor values for the subject distance override
+#if MAX_DIST > 1000000      // Superzoom - e.g. SX30, SX40
+  static const int koef[] = {0,1,10,100,1000,10000,100000,1000000,-1};
+#elif MAX_DIST > 100000     // G12, IXUS310
+  static const int koef[] = {0,1,10,100,1000,10000,100000,-1};
+#else                       // Original values (MAX_DIST = 65535)
+  static const int koef[] = {0,1,10,100,1000};
+#endif
   return koef[(conf.subj_dist_override_koef)];
-
 }
 
 void shooting_tv_bracketing(int when){
