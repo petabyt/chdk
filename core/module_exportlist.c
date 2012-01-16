@@ -231,6 +231,7 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 			mode_get,
             shooting_get_zoom,
             shooting_set_zoom,
+            shooting_get_prop,
 
 			// for txtread.flt
             current_font,

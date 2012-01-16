@@ -728,7 +728,11 @@ static CMenu raw_exceptions_submenu = {0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS_
 
 static const char* gui_raw_nr_modes[] = { "Auto", "Off", "On"};
 static CMenuItem raw_submenu_items[] = {
+#if DNG_SUPPORT
     MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE,                MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.save_raw, (int)cb_change_dng ),
+#else
+    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE,                MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.save_raw, 0 ),
+#endif
     MENU_ITEM(0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS,	 	MENUITEM_SUBMENU,   &raw_exceptions_submenu, 0 ),
     MENU_ENUM2(0x5f,LANG_MENU_RAW_NOISE_REDUCTION,    &conf.raw_nr, gui_raw_nr_modes ),
     MENU_ITEM(0x5c,LANG_MENU_RAW_FIRST_ONLY,          MENUITEM_BOOL,      &conf.raw_save_first_only, 0 ),
