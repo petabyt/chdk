@@ -17,17 +17,17 @@ LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(topdir)tools/link-boot.ld
 LDOPTS+=-Wl,-N,-Ttext,0x0016ee30 -r -Wl,-d
 
 OBJS=../gui_calendar.o ../gui_bench.o ../gui_4wins.o ../gui_mastermind.o ../gui_reversi.o \
-	 ../gui_sokoban.o ../gui_read.o ../gui_debug.o  ../gui_tetris.o ../gui_snake.o ../dng.o ../gps.o
+	 ../gui_sokoban.o ../gui_read.o ../gui_debug.o  ../gui_tetris.o ../gui_snake.o ../gui_games.o ../dng.o ../gps.o
 
 
 CFLAGS+=-DOPT_GENERIC_MODULES
-OPT_OBJS= ../gui_fselect.o ../nothumb.o ../gui_mpopup.o ../curves.o ../edgeoverlay.o ../gui_palette.o
-OPT_FLT= fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt
+OPT_OBJS= ../gui_fselect.o ../nothumb.o ../gui_mpopup.o ../curves.o ../edgeoverlay.o ../bitvector.o ../gui_palette.o ../gui_grid.o ../motion_detector.o ../zebra.o
+OPT_FLT= fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt
 
 
 all: exportlist ../flt.h \
 		_dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop10.flt _rawop12.flt \
-		txtread.flt memview.flt modinsp.flt tetris.flt snake.flt modmenu.flt $(OPT_FLT)
+		txtread.flt memview.flt modinsp.flt tetris.flt snake.flt gamemenu.flt modmenu.flt _tbox.flt $(OPT_FLT)
 
 %.o: %.c
 	@echo $< \-\> $@
@@ -48,6 +48,10 @@ calend.elf: simple_module.o ../gui_calendar.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
+_tbox.elf: ../gui_tbox.o
+	@echo \-\> $@
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+
 benchm.elf: simple_module.o ../gui_bench.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
@@ -64,15 +68,19 @@ reversi.elf: simple_game.o ../gui_reversi.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
-tetris.elf: ../gui_tetris.o
+tetris.elf: simple_game.o ../gui_tetris.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
-snake.elf: ../gui_snake.o
+snake.elf: simple_game.o ../gui_snake.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 sokoban.elf: ../gui_sokoban.o
+	@echo \-\> $@
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+
+gamemenu.elf: ../gui_games.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
@@ -92,11 +100,23 @@ txtread.elf: ../gui_read.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
-edgeovr.elf: ../edgeoverlay.o $(OBJ_ISDIGIT)
+edgeovr.elf: ../edgeoverlay.o ../bitvector.o $(OBJ_ISDIGIT)
+	@echo \-\> $@
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+
+zebra.elf: ../zebra.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 curves.elf: ../curves.o
+	@echo \-\> $@
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+
+mdetect.elf: ../motion_detector.o
+	@echo \-\> $@
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+
+grids.elf: ../gui_grid.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
@@ -148,7 +168,7 @@ distclean: clean
 
 exportlist:  ../module_exportlist.c
 	@echo $< \-\> $@
-	$(topdir)tools/makeexport$(EXE) ../module_exportlist.c ../module_exportlist.h exportlist.txt
+	$(topdir)tools/makeexport$(EXE) ../module_exportlist.c ../module_exportlist.h exportlist.txt ../module_hashlist.h
 
 ../flt.h: $(topdir)tools/elf2flt/flt.h
 	@echo $< \-\> $@

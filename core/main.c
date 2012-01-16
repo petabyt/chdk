@@ -127,54 +127,23 @@ void dump_memory() {
     finished();
 }
 
-int core_get_free_memory() {
+int core_get_free_memory()
+{
+    cam_meminfo camera_meminfo;
+
 #if defined(OPT_EXMEM_MALLOC) && !defined(OPT_EXMEM_TESTING)
 	// If using the exmem / suba memory allocation system then don't need
 	// to try allocating memory to find out how much is available
 	// Call function to scan free list for the largest free block available.
-    cam_meminfo camera_meminfo;
     GetExMemInfo(&camera_meminfo);
-    return camera_meminfo.free_block_max_size;
-#elif defined(CAM_FIRMWARE_MEMINFO)
-    // Call firmware function to fill memory info structure and return size of largest free block
-    cam_meminfo camera_meminfo;
-    GetMemInfo(&camera_meminfo);
-    return camera_meminfo.free_block_max_size;
 #else
-	int size, l_size, d;
-    char* ptr;
-
-    size = 16;
-    while (1) {
-        ptr= malloc(size);
-        if (ptr) {
-            free(ptr);
-            size <<= 1;
-        } else
-            break;
-    }
-
-    l_size = size;
-    size >>= 1;
-    d=1024;
-    while (d) {
-        ptr = malloc(size);
-        if (ptr) {
-            free(ptr);
-            d = l_size-size;
-            if (d<0) d=-d;
-            l_size = size;
-            size += d>>1;
-        } else {
-            d = size-l_size;
-            if (d<0) d=-d;
-            l_size = size;
-            size -= d>>1;
-        }
-        
-    }
-    return size-1;
+    // Call function to fill memory info structure and return size of largest free block
+    // If implemented this will use firmware function, otherwise it will calculate largest
+    // free block
+    GetMemInfo(&camera_meminfo);
 #endif
+
+    return camera_meminfo.free_block_max_size;
 }
 
 static volatile long raw_data_available;
@@ -225,6 +194,7 @@ void core_spytask() {
     mkdir("A/CHDK/LANG");
     mkdir("A/CHDK/BOOKS");
     mkdir("A/CHDK/MODULES");
+    mkdir("A/CHDK/MODULES/CFG");
     mkdir("A/CHDK/GRIDS");
 #ifdef OPT_CURVES
     mkdir("A/CHDK/CURVES");
@@ -270,7 +240,7 @@ void core_spytask() {
 
 
 #ifdef OPT_EDGEOVERLAY
-            if(conf.edge_overlay_thresh && conf.edge_overlay_enable) {
+            if(((gui_get_mode()==GUI_MODE_NONE) || (gui_get_mode()==GUI_MODE_ALT)) && conf.edge_overlay_thresh && conf.edge_overlay_enable) {
 
 				// We need to skip first tick because stability
 				static int skip_counter=1;

@@ -49,7 +49,7 @@ int raw_savefile() {
     static struct utimbuf t;
     static int br_counter; 
 #if DNG_SUPPORT
-    if (conf.dng_raw) {                             
+    if (conf.save_raw && conf.dng_raw && is_raw_enabled()) {                             
 		if ( module_dng_load(LIBDNG_OWNED_BY_RAW) )
 			libdng->capture_data_for_exif();
 	}

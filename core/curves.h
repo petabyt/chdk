@@ -15,6 +15,7 @@ struct libcurves_sym {
 #ifdef THIS_IS_CHDK_CORE
 	// This section is for CHDK core
 	extern struct libcurves_sym* libcurves;
+    extern struct libcurves_sym* module_curves_load();		// 0fail, addr-ok
 #else
 	// This section is for module
 	extern void curve_init_mode();

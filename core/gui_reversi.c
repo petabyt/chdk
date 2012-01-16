@@ -8,7 +8,6 @@
 #include "gui_lang.h"
 #include "gui_batt.h"
 #include "gui_mbox.h"
-#include "gui_reversi.h"
 
 #include "module_load.h"
 

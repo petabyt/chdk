@@ -14,6 +14,7 @@
 #define MENUITEM_COLOR_BG       9
 #define MENUITEM_COLOR_FG       10
 #define MENUITEM_ENUM2          11
+#define MENUITEM_SUBMENU_PROC   12
 
 // Flags, which describe limits of F_INT value
 #define MENUITEM_F_MASK         0x00f0
@@ -62,9 +63,12 @@ typedef struct {
 //-------------------------------------------------------------------
 extern void gui_menu_init(CMenu *menu_ptr);
 extern void gui_menu_kbd_process();
+extern void gui_menu_kbd_process_menu_btn();
 extern void gui_menu_draw(int enforce_redraw);
 extern void mod_user_menu(CMenuItem curr_menu_item, int* gui_menu_add_item, int mod);
 extern void gui_menu_force_redraw();
+extern void gui_activate_sub_menu(CMenu *sub_menu, int module_idx);
+extern void gui_menu_unload_module_menus();
 //-------------------------------------------------------------------
 
 // declared in gui.c

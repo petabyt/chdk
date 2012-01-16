@@ -4,6 +4,9 @@ include $(topdir)makefile.inc
 
 CFLAGS+=$(CTHUMB)
 
+# Core CHDK flag
+CFLAGS+=-DTHIS_IS_CHDK_CORE
+
 OBJS = camera_functions.o tokenizer.o ubasic.o
 
 all: libubasic.a

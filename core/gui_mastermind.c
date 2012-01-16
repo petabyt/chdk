@@ -9,7 +9,6 @@
 #include "gui_lang.h"
 #include "gui_batt.h"
 #include "gui_mbox.h"
-#include "gui_mastermind.h"
 
 #include "module_load.h"
 
@@ -24,8 +23,8 @@ gui_handler GUI_MODE_MASTERMIND =
 #define BORDER		 		20
 #define RECT_SIZE	 		10
 #define COLOR_LIGHT_GRAY 	MAKE_COLOR(COLOR_SPLASH_GREY,COLOR_SPLASH_GREY)
-#define BG_COLOR	 		MAKE_COLOR(COLOR_GREY,COLOR_GREY)
-#define TEXT_COLOR          MAKE_COLOR(BG_COLOR,COLOR_BLACK)
+#define BK_COLOR	 		MAKE_COLOR(COLOR_GREY,COLOR_GREY)
+#define TEXT_COLOR          MAKE_COLOR(COLOR_GREY,COLOR_BLACK)
 
 int curr_x;
 int curr_y;
@@ -115,15 +114,15 @@ int gui_mastermind_init() {
 	curr_x=0;
 	curr_y=7;
 	
-	draw_filled_rect( 0, 0, camera_screen.width-1, camera_screen.height-1, BG_COLOR);
+	draw_filled_rect( 0, 0, camera_screen.width-1, camera_screen.height-1, BK_COLOR);
 
 	for (i=0;i<4;i++)
 		for (j=0;j<8;j++)
 			draw_filled_rect(camera_screen.ts_button_border+BORDER+(2*i*10), BORDER+(2*j*10)+2*j, camera_screen.ts_button_border+BORDER+(2*i*10)+10, BORDER+(2*j*10)+2*j+10 , COLOR_LIGHT_GRAY);
 
-	draw_filled_rect(camera_screen.ts_button_border+10, BORDER+(2*j*10)+2*j, camera_screen.ts_button_border+150,BORDER+(2*j*10)+2*j+1, MAKE_COLOR(BG_COLOR,COLOR_WHITE));
-	draw_filled_rect(camera_screen.ts_button_border+148, 10, camera_screen.ts_button_border+149,230, MAKE_COLOR(BG_COLOR,COLOR_WHITE));
-	draw_filled_rect(camera_screen.ts_button_border+151, 10, camera_screen.ts_button_border+152,230, MAKE_COLOR(BG_COLOR,COLOR_WHITE));
+	draw_filled_rect(camera_screen.ts_button_border+10, BORDER+(2*j*10)+2*j, camera_screen.ts_button_border+150,BORDER+(2*j*10)+2*j+1, MAKE_COLOR(COLOR_GREY,COLOR_WHITE));
+	draw_filled_rect(camera_screen.ts_button_border+148, 10, camera_screen.ts_button_border+149,230, MAKE_COLOR(COLOR_GREY,COLOR_WHITE));
+	draw_filled_rect(camera_screen.ts_button_border+151, 10, camera_screen.ts_button_border+152,230, MAKE_COLOR(COLOR_GREY,COLOR_WHITE));
 	
 	for (i=0; i<6;i++)
 		draw_filled_rect(camera_screen.ts_button_border+BORDER+(2*(i+7)*10)+20, 40, camera_screen.ts_button_border+BORDER+(2*(i+7)*10)+35,55, MAKE_COLOR(colors[i],colors[i]));
@@ -232,7 +231,7 @@ void gui_mastermind_draw(int enforce_redraw) {
 	unsigned long t;
     static struct tm *ttm;
 
-    draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH+15, 0, lang_str(LANG_MENU_GAMES_MASTERMIND), MAKE_COLOR(BG_COLOR, COLOR_WHITE));
+    draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH+15, 0, lang_str(LANG_MENU_GAMES_MASTERMIND), MAKE_COLOR(COLOR_GREY, COLOR_WHITE));
 
     t = time(NULL);
     ttm = localtime(&t);

@@ -13,6 +13,54 @@
 #include "conf.h"
 #include "gui_draw.h"
 #include "dng.h"
+#include "lang.h"
+
+/************* GENERIC ******/
+
+static int bind_module_generic( void** export_list, void** lib, int count, int major, int minor )
+{
+    *lib = 0;
+
+	// Unbind
+	if ( !export_list ) {
+    	return 0;
+  	}
+
+	// Bind
+	if ( (unsigned int)export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+	     return 1;
+  	if ( (unsigned int)export_list[1] < count )
+    	 return 1;
+
+	*lib = (void*)export_list[2];
+
+	if ( !*lib )
+    	 return 1;
+	if ( (major > 0) && !API_VERSION_MATCH_REQUIREMENT( *((int*)(*lib)), major, minor ) ) {
+		*lib=0;
+		return 1;
+	}
+
+	return 0;
+}
+
+// Return: 0-fail, addr-ok
+static void* module_load_generic(void **lib, char *name, int (*callback)(void**), int flags)
+{
+    if (*lib == 0)
+    {
+        int module_idx = module_load(name, callback);
+        if ( module_idx < 0 )
+            module_unload(name);  
+        else
+        {
+            if (flags)
+    	 	    module_set_flags(module_idx, flags);
+        }
+    }
+
+    return *lib;
+}
 
 /************* DYNAMIC LIBRARY RAWOPERATION ******/
 
@@ -27,127 +75,112 @@
 // This is to minimize sharing sym to use this lib in other modules
 struct librawop_sym* librawop;
 
-static int bind_module_rawop( void** export_list )
-{
-	  // Unbind
-	if ( !export_list ) {
-		librawop=0;
-    	return 0;
-  	}
-
-	// Bind
-	if ( (unsigned int)export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-	     return 1;
-  	if ( (unsigned int)export_list[1] <3 )
-    	 return 1;
-
-	librawop = export_list[2];
-
-	if ( !librawop )
-    	 return 1;
-
-    /* NO API VERSION CHECK HERE - EACH MODULE CHECK THIS AGAINST ITS REQUIREMENT
-	if ( !API_VERSION_MATCH_REQUIREMENT( librawop->version, 1, 0 ) ) {
-		librawop=0;
-		return 1;
-	}
-    */
-
-	return 0;
-}
-
 void module_rawop_unload()
 {
-	if (librawop==0)
-    	return;
-
-	module_unload(MODULE_NAME_RAWOP);  
+	if (librawop)
+    {
+    	module_unload(MODULE_NAME_RAWOP);  
+        librawop = 0;
+    }
 }
 
+static int bind_module_rawop( void** export_list )
+{
+    return bind_module_generic(export_list, (void**)&librawop, 1, 0, 0);
+}
 
 // Return: 0-fail, otherwise - bind list
 struct librawop_sym* module_rawop_load()
 {
-  static int module_idx=-1;
-
-  if (librawop)
-     return librawop;
-
-  module_idx=module_load(MODULE_NAME_RAWOP, bind_module_rawop );
-  if ( module_idx<0 )
-	 module_unload(MODULE_NAME_RAWOP);  
-
-  return librawop;
+    return module_load_generic((void**)&librawop, MODULE_NAME_RAWOP, bind_module_rawop, 0);
 }
-
 
 
 /************* DYNAMIC LIBRARY EDGE OVERLAY ******/
 
+#ifdef OPT_EDGEOVERLAY
+
 #define MODULE_NAME_EDGEOVR "edgeovr.flt"
+
+// Storage and interface for edge overlay 'image' buffer.
+// This is so the previous overlay can survive if the module gets unloaded
+static void* saved_edgebuf = 0;
+static int saved_edgestate = 0;
+void module_restore_edge(void **buf, int *state) { *buf = saved_edgebuf; *state = saved_edgestate; }
+void module_save_edge(void* buf, int state)      { saved_edgebuf = buf; saved_edgestate = state; }
 
 struct libedgeovr_sym* libedgeovr;
 
 static int bind_module_edgeovr( void** export_list )
 {
-	  // Unbind
-	if ( !export_list ) {
-		libedgeovr =0;
-    	return 0;
-  	}
-
-	// Bind
-	if ( (unsigned int)export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-	     return 1;
-  	if ( (unsigned int)export_list[1] <3 )
-    	 return 1;
-
-	libedgeovr = export_list[2];
-	if ( !libedgeovr )
-    	 return 1;
-	if ( !API_VERSION_MATCH_REQUIREMENT( libedgeovr->version, 1, 0 ) ) {
-		libedgeovr=0;
-		return 1;
-	}
-
-	return 0;
+    return bind_module_generic(export_list, (void**)&libedgeovr, 1, 1, 0);
 }
 
 // Return: 0-fail, 1-ok
 struct libedgeovr_sym* module_edgeovr_load()
 {
-  if (libedgeovr)
-     return libedgeovr;
+    // This flag is because edgeovr called each tick
+    //   If module loading failed, then do not try to load it until reboot
+    //    (otherwise we will try to load module each tick)
+    static int flag_load_fail = 0;
 
-  // This flag is because edgeovr called each tick
-  //   If module loading failed, then do not try to load it until reboot
-  //    (otherwise we will try to load module each tick)
-  static int flag_load_fail = 0;
-  static int module_idx=-1;
+    if ( flag_load_fail==0 )
+    {
+        module_load_generic((void**)&libedgeovr, MODULE_NAME_EDGEOVR, bind_module_edgeovr, MODULE_FLAG_DISABLE_AUTOUNLOAD);
 
-  if ( flag_load_fail==0 )
-  {
-    module_idx=module_load(MODULE_NAME_EDGEOVR, bind_module_edgeovr );
-	if ( module_idx<0 ) {
-		flag_load_fail = 1;
-		module_unload(MODULE_NAME_EDGEOVR);  
-	}
-	else {
-		// This library never unloaded once it is loaded
-		// Reason - it should keep its data during whole session
-	 	module_set_flags(module_idx, MODULE_FLAG_DISABLE_AUTOUNLOAD);
-	}
-  }
+        if (libedgeovr == 0)
+    		flag_load_fail = 1;
+    }
 
-  return libedgeovr;
+    return libedgeovr;
 }
 
 
 // edgeovr module will never unload to keep its picture
 // void module_edgeovr_unload() {}
 
+#endif
+
+
+/************* DYNAMIC LIBRARY MOTION DETECT ******/
+
+#define MODULE_NAME_MDETECT "mdetect.flt"
+
+struct libmotiondetect_sym* libmotiondetect;
+
+static int bind_module_motiondetect( void** export_list )
+{
+    return bind_module_generic(export_list, (void**)&libmotiondetect, 1, 1, 0);
+}
+
+// Return: 0-fail, 1-ok
+struct libmotiondetect_sym* module_mdetect_load()
+{
+    return module_load_generic((void**)&libmotiondetect, MODULE_NAME_MDETECT, bind_module_motiondetect, MODULE_FLAG_DISABLE_AUTOUNLOAD);
+}
+
+
+/************* DYNAMIC LIBRARY ZEBRA ******/
+
+#define MODULE_NAME_ZEBRA "zebra.flt"
+
+struct libzebra_sym* libzebra;
+
+static int bind_module_zebra( void** export_list )
+{
+    return bind_module_generic(export_list, (void**)&libzebra, 1, 1, 0);
+}
+
+// Return: 0-fail, 1-ok
+struct libzebra_sym* module_zebra_load()
+{
+    return module_load_generic((void**)&libzebra, MODULE_NAME_ZEBRA, bind_module_zebra, MODULE_FLAG_DISABLE_AUTOUNLOAD);
+}
+
 
 /************* DYNAMIC LIBRARY CURVES ******/
+
+#if defined(OPT_CURVES)
 
 #define MODULE_NAME_CURVES "curves.flt"
 
@@ -155,51 +188,33 @@ struct libcurves_sym* libcurves;
 
 static int bind_module_curves( void** export_list )
 {
-	  // Unbind
-	if ( !export_list ) {
-		libcurves=0;
-    	return 0;
-  	}
-
-	// Bind
-	if ( (unsigned int)export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-	     return 1;
-  	if ( (unsigned int)export_list[1] <3 )
-    	 return 1;
-
-	libcurves = export_list[2];
-
-	if ( !libcurves )
-    	 return 1;
-	if ( !API_VERSION_MATCH_REQUIREMENT( libcurves->version, 1, 0 ) ) {
-		librawop=0;
-		return 1;
-	}
-
-	return 0;
+    return bind_module_generic(export_list, (void**)&libcurves, 1, 1, 0);
 }
 
 // Return: 0-fail, addr-ok
 struct libcurves_sym* module_curves_load()
 {
-  if (libcurves)
-     return libcurves;
+    return module_load_generic((void**)&libcurves, MODULE_NAME_CURVES, bind_module_curves, 0);
+}
 
-  static int module_idx=-1;
+#endif
 
-  module_idx=module_load(MODULE_NAME_CURVES, bind_module_curves );
-  if ( module_idx<0 )
-		module_unload(MODULE_NAME_CURVES);  
-  else {
-	// This library never unloaded once it is loaded
-	// Reason - changing mode mode from LUA stored inside module only
-	module_set_flags(module_idx, MODULE_FLAG_DISABLE_AUTOUNLOAD);
 
-	// Initialize - in module
-	// curve_init_mode();
-  }
+/************* DYNAMIC LIBRARY GRIDS ******/
 
-  return libcurves;
+#define MODULE_NAME_GRIDS "grids.flt"
+
+struct libgrids_sym* libgrids;
+
+static int bind_module_grids( void** export_list )
+{
+    return bind_module_generic(export_list, (void**)&libgrids, 1, 1, 0);
+}
+
+// Return: 0-fail, addr-ok
+struct libgrids_sym* module_grids_load()
+{
+    return module_load_generic((void**)&libgrids, MODULE_NAME_GRIDS, bind_module_grids, 0);
 }
 
 
@@ -245,8 +260,6 @@ void module_fselect_init(int title, const char* prev_dir, const char* default_di
 	module_fselect_init_w_mode(title, prev_dir, default_dir, on_select, 0/*key_redraw_mode*/);
 }
 
-
-
 /************* MODULE DNG ******/
 
 #define MODULE_NAME_DNG "_dng.flt"
@@ -256,41 +269,13 @@ static int module_dng_semaphore;
 
 struct libdng_sym* libdng;
 
-#if DNG_SUPPORT
-static int bind_module_dng( void** export_list )
-{
-	  // Unbind
-	if ( !export_list ) {
-		libdng=0;
-    	return 0;
-  	}
-
-	// Bind
-	if ( (unsigned int)export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-	     return 1;
-  	if ( (unsigned int)export_list[1] < 3 )
-    	 return 1;
-
-	libdng = export_list[2];
-  	if ( libdng==0 )
-    	 return 1;
-
-	if ( !API_VERSION_MATCH_REQUIREMENT( libdng->version, 1, 0 ) ) {
-		libdng=0;		
-		return 1;
-	}
-
-	return 0;
-}
-#endif
-
 void module_dng_unload(int owner)
 {
 #if DNG_SUPPORT
 	if (libdng==0)
     	return;
 
-  	module_dng_semaphore&=~owner;
+  	module_dng_semaphore &= ~owner;
 	if (module_dng_semaphore)
 		return;
 
@@ -298,30 +283,25 @@ void module_dng_unload(int owner)
 #endif
 }
 
+static int bind_module_dng( void** export_list )
+{
+    return bind_module_generic(export_list, (void**)&libdng, 1, 1, 0);
+}
 
 // Return: 0-fail, otherwise - bind list
 struct libdng_sym* module_dng_load(int owner)
 {
 #if DNG_SUPPORT
-  static int module_idx=-1;
+    module_dng_semaphore |= owner;
 
-  module_dng_semaphore|=owner;
-  if (libdng)
-     return libdng;
+    module_load_generic((void**)&libdng, MODULE_NAME_DNG, bind_module_dng, MODULE_FLAG_DISABLE_AUTOUNLOAD);
 
-  module_idx=module_load(MODULE_NAME_DNG, bind_module_dng );
-  if ( module_idx<0 ) {
-	 module_unload(MODULE_NAME_DNG);  
-  	 module_dng_semaphore=0;
-  }
-  else {
-	 // This module could be unloaded only manualy (because store badpixel)
-	 module_set_flags(module_idx, MODULE_FLAG_DISABLE_AUTOUNLOAD);
-  }
+    if (libdng == 0)
+        module_dng_semaphore=0;
 
-  return libdng;
+    return libdng;
 #else
-  return 0;
+    return 0;
 #endif
 }
 
@@ -342,4 +322,117 @@ int module_convert_dng_to_chdk_raw(char* fn)
 #else
 	return 0;
 #endif
+}
+
+
+/************* MODULE TBOX ******/
+
+static char* tbox_file_buffer = 0;
+static char* tbox_file_buffer_default = "_tbox.flt";
+static int   tbox_file_buffer_size = 0;
+static char* charmap_buffer = 0;
+static int   charmap_buffer_size = 0;
+
+// Auxilary function - Parse loaded keymap, ask module for its API version
+// Input values: tbox_file_buffer, tbox_file_buffer_size
+// Return value: 0-error, otherwise API version
+//-----------------------------------------------------
+static int module_tbox_charmap_preprocess() 
+{
+	charmap_buffer = 0;
+	charmap_buffer_size = 0;
+
+	//-- input checks
+	if ( tbox_file_buffer==0 || tbox_file_buffer_size<=0 )
+		return 0;
+
+	int i, ver;
+
+	//-- Parse: split to lines
+	for( i=0; i<tbox_file_buffer_size; i++ )
+	   if ( tbox_file_buffer[i] == 0x0d || tbox_file_buffer[i] == 0x0a)
+		  tbox_file_buffer[i]=0;
+
+	//-- First line is name of tbox module
+	i = strlen(tbox_file_buffer);		// size
+	if ( i==0 )
+		return 0;
+
+	// tbox "run scenario #1" - argc=1, argv=0 - mean "say your API version"
+   	ver = module_run(tbox_file_buffer, 0,  1,0, UNLOAD_ALWAYS );
+
+	// if mistake on load
+	if ( ver<=0 ) 
+		return 0;
+
+	charmap_buffer=tbox_file_buffer+i+1;
+	charmap_buffer_size= tbox_file_buffer_size - (i+1);
+
+	return ver;
+}
+
+// Check version and existance and tbox api version
+// return: 0 if no module exists at all, otherwise version of API of current tbox module
+//-----------------------------------------------------
+int module_tbox_get_version()
+{
+  static int last_loaded_tbox_hash = 0;
+  static int cur_tbox_api_version = 0;
+
+  // -- If keymap is loaded and not changed - return stored value
+
+  if ( lang_strhash31((int)conf.charmap_file) == last_loaded_tbox_hash )
+    return cur_tbox_api_version;
+
+  // -- Free resources
+
+  last_loaded_tbox_hash = 0;
+  if ( tbox_file_buffer && tbox_file_buffer!=tbox_file_buffer_default )
+    ufree( tbox_file_buffer );
+
+  // -- Try to load keymap file
+
+  tbox_file_buffer = load_file( conf.charmap_file, &tbox_file_buffer_size );
+
+  // Check is module available, otherwise try default one
+
+  cur_tbox_api_version = module_tbox_charmap_preprocess();
+
+
+  // if keymap wrong/module can't be loaded - try default
+  if ( cur_tbox_api_version==0 ) {
+	 if ( tbox_file_buffer )
+        ufree(tbox_file_buffer);
+
+	 tbox_file_buffer = tbox_file_buffer_default;
+	 tbox_file_buffer_size = strlen(tbox_file_buffer);
+  	 cur_tbox_api_version = module_tbox_charmap_preprocess();
+  }
+
+  if ( cur_tbox_api_version )
+	last_loaded_tbox_hash = lang_strhash31((int)conf.charmap_file);
+
+  return cur_tbox_api_version;
+}
+
+
+//-----------------------------------------------------
+void module_tbox_run( int title, int msg, char* defaultvalue, unsigned int maxsize, void (*on_select)(char* newstr))
+{
+	int ver = module_tbox_get_version();
+
+	if ( API_VERSION_MATCH_REQUIREMENT( ver, 1, 0 ) ) {
+
+		// Main "run scenario" - 7 argument, raise textbox
+		unsigned int argv[] = {	(int)charmap_buffer,
+								charmap_buffer_size,
+								title,
+								msg,
+								(unsigned int)defaultvalue,
+								maxsize,
+								(unsigned int)on_select,
+							 };
+	    module_run(tbox_file_buffer, 0,  sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR);
+		
+	}
 }

@@ -8,6 +8,7 @@
 #include "gui.h"
 #include "gui_draw.h"
 #include "modules.h"
+#include "module_load.h"
 #include "gui_menu.h"
 #include "gui_lang.h"
 
@@ -19,6 +20,7 @@ typedef struct {
     CMenu       *menu;
     int         curpos;
     int         toppos;
+    int         module_idx;
 } CMenuStacked;
 
 //-------------------------------------------------------------------
@@ -45,20 +47,22 @@ static void gui_menu_set_curr_menu(CMenu *menu_ptr, int top_item, int curr_item)
 }
 
 //-------------------------------------------------------------------
+// Unload any module based sub-menus
+void gui_menu_unload_module_menus()
+{
+    // Unload any module menus
+    while (gui_menu_stack_ptr > 0)
+    {
+        gui_menu_stack_ptr--;
+        if (gui_menu_stack[gui_menu_stack_ptr].module_idx >= 0)
+            module_unload_idx(gui_menu_stack[gui_menu_stack_ptr].module_idx);
+    }
+}
+
+//-------------------------------------------------------------------
 void gui_menu_init(CMenu *menu_ptr) {
 
-    static char first_call=1;
-
     if (menu_ptr) {
-		if ( first_call ) {
-			extern void gui_modules_menu_load();
-			extern void user_menu_restore();
-
-			gui_modules_menu_load();
-    		user_menu_restore();
-			first_call=0;
-		}
-
         if (conf.menu_select_first_entry)
             gui_menu_set_curr_menu(menu_ptr, 0, 0);
         else 
@@ -104,7 +108,7 @@ static void gui_menu_erase_and_redraw()
 // This is called when a new color is selected to update the menu / config value
 static void gui_menu_color_selected(color clr)
 {
-    *item_color = (unsigned char)(clr&0xFF);
+    *item_color = FG_COLOR(clr);
     gui_menu_erase_and_redraw();
 }
 
@@ -114,6 +118,8 @@ static void gui_menu_back() {
     if (gui_menu_stack_ptr > 0)
     {
         gui_menu_stack_ptr--;
+        if (gui_menu_stack[gui_menu_stack_ptr].module_idx >= 0)
+            module_unload_idx(gui_menu_stack[gui_menu_stack_ptr].module_idx);
         gui_menu_set_curr_menu(gui_menu_stack[gui_menu_stack_ptr].menu, gui_menu_stack[gui_menu_stack_ptr].toppos, gui_menu_stack[gui_menu_stack_ptr].curpos);
         gui_menu_erase_and_redraw();
     }
@@ -305,17 +311,18 @@ static void update_enum_value(int direction)
 }
 
 // Open a sub-menu
-static void select_sub_menu()
+void gui_activate_sub_menu(CMenu *sub_menu, int module_idx)
 {
     // push current menu on stack
     gui_menu_stack[gui_menu_stack_ptr].menu = curr_menu;
     gui_menu_stack[gui_menu_stack_ptr].curpos = gui_menu_curr_item;
     gui_menu_stack[gui_menu_stack_ptr].toppos = gui_menu_top_item;
+    gui_menu_stack[gui_menu_stack_ptr].module_idx = module_idx;
 
     // Select first item in menu, (or none)
     if (conf.menu_select_first_entry)
     {
-        gui_menu_set_curr_menu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), 0, 0);
+        gui_menu_set_curr_menu(sub_menu, 0, 0);
         if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_TEXT || (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_SEPARATOR)
         {
             //++gui_menu_top_item;
@@ -323,7 +330,7 @@ static void select_sub_menu()
         }
     }
     else 
-        gui_menu_set_curr_menu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), 0, -1);
+        gui_menu_set_curr_menu(sub_menu, 0, -1);
 
     gui_menu_stack_ptr++;
 
@@ -336,6 +343,12 @@ static void select_sub_menu()
 
     // Force full redraw
     gui_menu_erase_and_redraw();
+}
+
+// Open a sub-menu
+static void select_sub_menu()
+{
+    gui_activate_sub_menu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), -1);
 }
 
 // Move up / down in menu, adjusting scroll position if needed
@@ -504,6 +517,7 @@ void gui_menu_kbd_process() {
                     case MENUITEM_BOOL:
                         update_bool_value();
                         break;
+                    case MENUITEM_SUBMENU_PROC:
                     case MENUITEM_PROC:
                         if (curr_menu->menu[gui_menu_curr_item].value)
                         {
@@ -525,7 +539,7 @@ void gui_menu_kbd_process() {
                     case MENUITEM_COLOR_FG:
                     case MENUITEM_COLOR_BG:
                         item_color=((unsigned char*)(curr_menu->menu[gui_menu_curr_item].value)) + (((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_COLOR_BG)?1:0);
-                        module_palette_run(PALETTE_MODE_SELECT, (*item_color)&0xFF, gui_menu_color_selected);
+                        module_palette_run(PALETTE_MODE_SELECT, FG_COLOR(*item_color), gui_menu_color_selected);
                         gui_menu_redraw=2;
                         break;
                     case MENUITEM_ENUM:
@@ -607,7 +621,7 @@ void gui_menu_kbd_process() {
 //-------------------------------------------------------------------
 // Draw menu scroll bar if needed, and title bar
 void gui_menu_draw_initial() { 
-    color cl=conf.menu_title_color>>8; 
+    color cl = BG_COLOR(conf.menu_title_color);
 
     count = gui_menu_rows();
 
@@ -616,7 +630,7 @@ void gui_menu_draw_initial() {
         y = ((camera_screen.height-(num_lines-1)*rbf_font_height())>>1);
         wplus = 8; 
         // scrollbar background 
-        draw_filled_rect((x+w), y, (x+w)+wplus, y+num_lines*rbf_font_height()-1, MAKE_COLOR((conf.menu_color>>8)&0xFF, (conf.menu_color>>8)&0xFF)); 
+        draw_filled_rect((x+w), y, (x+w)+wplus, y+num_lines*rbf_font_height()-1, MAKE_COLOR(BG_COLOR(conf.menu_color), BG_COLOR(conf.menu_color))); 
     }
     else
     {
@@ -707,7 +721,7 @@ void gui_menu_draw(int enforce_redraw) {
             * without this mod, there is no way to ever make the symbol color match the color of the rest of text menu line
             * when the cursor highlights a line.
             */
-            cl_symbol = (gui_menu_curr_item==imenu)?MAKE_COLOR((cl>>8)&0xFF,(conf.menu_symbol_color)&0xFF):conf.menu_symbol_color; //color 8Bit=Hintergrund 8Bit=Vordergrund
+            cl_symbol = (gui_menu_curr_item==imenu)?MAKE_COLOR(BG_COLOR(cl),FG_COLOR(conf.menu_symbol_color)):conf.menu_symbol_color; //color 8Bit=Hintergrund 8Bit=Vordergrund
 
             xx = x;
 
@@ -720,6 +734,7 @@ void gui_menu_draw(int enforce_redraw) {
                 sprintf(tbuf, "%d", *(curr_menu->menu[imenu].value));
                 gui_menu_draw_value(tbuf, len_int);
                 break;
+            case MENUITEM_SUBMENU_PROC:
             case MENUITEM_SUBMENU:
                 sprintf(tbuf, "%s%s", lang_str(curr_menu->menu[imenu].text),(conf.menu_symbol_enable)?"":" ->");
                 gui_menu_draw_text(tbuf,2);
@@ -745,9 +760,9 @@ void gui_menu_draw(int enforce_redraw) {
 
                 if (xx > (x + len_space))
                 {
-                    draw_filled_rect(x+len_space, yy, xx-1, yy+rbf_font_height()/2-1, MAKE_COLOR(cl>>8, cl>>8));
+                    draw_filled_rect(x+len_space, yy, xx-1, yy+rbf_font_height()/2-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
                     draw_line(x+len_space, yy+rbf_font_height()/2, xx-1, yy+rbf_font_height()/2, cl);
-                    draw_filled_rect(x+len_space, yy+rbf_font_height()/2+1, xx-1, yy+rbf_font_height()-1, MAKE_COLOR(cl>>8, cl>>8));
+                    draw_filled_rect(x+len_space, yy+rbf_font_height()/2+1, xx-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
                 }
                 else
                 {
@@ -758,9 +773,9 @@ void gui_menu_draw(int enforce_redraw) {
 
                 if (xx < (x+w-len_space))
                 {
-                    draw_filled_rect(xx, yy, x+w-len_space-1, yy+rbf_font_height()/2-1, MAKE_COLOR(cl>>8, cl>>8));
+                    draw_filled_rect(xx, yy, x+w-len_space-1, yy+rbf_font_height()/2-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
                     draw_line(xx, yy+rbf_font_height()/2, x+w-1-len_space, yy+rbf_font_height()/2, cl);
-                    draw_filled_rect(xx, yy+rbf_font_height()/2+1, x+w-len_space-1, yy+rbf_font_height()-1, MAKE_COLOR(cl>>8, cl>>8));
+                    draw_filled_rect(xx, yy+rbf_font_height()/2+1, x+w-len_space-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
                 }
 
                 rbf_draw_char(x+w-len_space, yy, ' ', cl);
@@ -770,8 +785,8 @@ void gui_menu_draw(int enforce_redraw) {
                 gui_menu_draw_symbol(1);
                 xx+=rbf_draw_string_len(xx, yy, w-len_space-symbol_width, lang_str(curr_menu->menu[imenu].text), cl);
                 draw_filled_round_rect(x+w-1-cl_rect-2-len_space, yy+2, x+w-1-2-len_space, yy+rbf_font_height()-1-2, 
-                    MAKE_COLOR(((*(curr_menu->menu[imenu].value))>>(((curr_menu->menu[imenu].type & MENUITEM_MASK)==MENUITEM_COLOR_BG)?8:0))&0xFF, 
-                               ((*(curr_menu->menu[imenu].value))>>(((curr_menu->menu[imenu].type & MENUITEM_MASK)==MENUITEM_COLOR_BG)?8:0))&0xFF));
+                    MAKE_COLOR(((*(curr_menu->menu[imenu].value))>>(((curr_menu->menu[imenu].type & MENUITEM_MASK)==MENUITEM_COLOR_BG)?16:0))&0xFFFF, 
+                               ((*(curr_menu->menu[imenu].value))>>(((curr_menu->menu[imenu].type & MENUITEM_MASK)==MENUITEM_COLOR_BG)?16:0))&0xFFFF));
                 break;
             case MENUITEM_ENUM:
                 if (curr_menu->menu[imenu].value)

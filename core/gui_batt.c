@@ -69,7 +69,7 @@ static void gui_batt_draw_icon () {
 
 #else
 
-    color cl = (perc<=20)?conf.osd_color_warn:(conf.batt_icon_color&0xFF);
+    color cl = (perc<=20)?conf.osd_color_warn:FG_COLOR(conf.batt_icon_color);
 
     // battery icon
     draw_rect(xx+3-1,    yy+1,     xx+3+25+1, yy+1+10,  cl);

@@ -11,7 +11,7 @@ struct mpopup_item {
 };
 
 //-------------------------------------------------------------------
-extern void gui_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode);
+extern void module_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode);
 
 //-------------------------------------------------------------------
 #endif

@@ -5,6 +5,8 @@ typedef unsigned int      coord;
 typedef unsigned short    color;
 
 #define MAKE_COLOR(bg, fg)    ((color)((((char)(bg))<<8)|((char)(fg))))
+#define FG_COLOR(color)     ((unsigned char)(color & 0xFF))
+#define BG_COLOR(color)     ((unsigned char)(color >> 8))
 
 // Module ID's for specific modules that we need to be able to detect
 // use GUI_MODE_MODULE for generic module modes (e.g.games)
@@ -69,6 +71,8 @@ extern void gui_force_restore();
 
 extern gui_mode_t gui_get_mode();
 extern gui_handler* gui_set_mode(gui_handler *mode);
+
+extern void gui_enum_value_change(int *value, int change, unsigned num_items);
 
 
 #ifdef OPT_SCRIPTING

@@ -1,8 +1,6 @@
-
 /*
 
 Motion detection module
-
 
 Author: mx3 (Max Sagaydachny) . win1251 ( Максим Сагайдачный )
 Email: win.drivers@gmail.com
@@ -11,23 +9,17 @@ ICQ#: 125-985-663
 Country: Ukraine
 Sity: Kharkiv
 
-
 idea: mx3
 implementation: mx3
-
-
 
 purpose of the module:
  implement 2 uBASIC procedures
    md_detect_changes( columns [in], rows [in], pixel_measure_mode,  )
    md_get_cell_change ( col [in], row [in], val [out] )
 
-
 explanation:
 
  - for motion detection used array of YUV pixels which are used to display thumbnail picture on LCD
-
-
 
 declaration:
 
@@ -74,10 +66,7 @@ function md_detect_changes (
   clipping_region_column2, // input parameter.
   clipping_region_row2, // input parameter.
 	 // this is right bottom corner of clipping region
-
 )
-
-
 
 function md_get_cell_diff ( 
   col [in], // column of the cell we are requesting
@@ -85,10 +74,7 @@ function md_get_cell_diff (
   val [out] // value of difference between measurements
 )
 
-
 */
-
-
 
 #ifndef __MOTION_DETECTOR__
 #define __MOTION_DETECTOR__
@@ -98,8 +84,46 @@ function md_get_cell_diff (
 
 #define MOTION_DETECTOR_CELLS 1024
 
-void md_close_motion_detector();
-int md_init_motion_detector(
+struct libmotiondetect_sym {
+	int version;
+
+    void (*md_close_motion_detector)();
+    int (*md_init_motion_detector)(
+         int columns,
+         int rows,
+         int pixel_measure_mode,
+         int detection_timeout,
+         int measure_interval,
+         int threshold,
+         int draw_grid,
+         int clipping_region_mode,
+         int clipping_region_column1,
+         int clipping_region_row1,
+         int clipping_region_column2,
+         int clipping_region_row2,
+         int parameters,
+         int pixels_step,
+         int msecs_before_trigger
+    );
+
+    int (*md_detect_motion)(void);
+    int (*md_get_cell_diff)(int column, int row);
+    void (*md_draw_grid)();
+    int (*md_get_result)();
+};
+
+//-------------------------------------------------------------------
+// Defines of exported to chdk symbols
+#ifdef THIS_IS_CHDK_CORE
+	// This section is for CHDK core
+	extern struct libmotiondetect_sym* libmotiondetect;
+    extern struct libmotiondetect_sym* module_mdetect_load();		// 0fail, addr-ok
+#else
+	// This section is for module
+
+extern void md_close_motion_detector();
+
+extern int md_init_motion_detector(
 
  int columns, // input parameter. number of columns to split screen into
 
@@ -145,22 +169,12 @@ int md_init_motion_detector(
  int msecs_before_trigger
 );
 
+extern int md_detect_motion(void);
+extern int md_get_cell_diff(int column, int row);
+extern void md_draw_grid();
+extern int md_get_result();
 
-
-
-int md_detect_motion(void);
-
-
-int md_get_cell_diff(int column, int row);
-
-void md_init();
-
-//void md_detect_motion_statement();
-//void md_get_cell_diff_statement();
-
-int md_running();
-void md_draw_grid();
-int md_get_result();
+#endif
 
 #endif
 

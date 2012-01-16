@@ -8,7 +8,7 @@
 #include "script.h"
 #include "console.h"
 #include "action_stack.h"
-#include "motion_detector.h"
+#include "modules.h"
 #include "shot_histogram.h"
 #include "lang.h"
 #include "gui_lang.h"
@@ -586,33 +586,42 @@ static int script_action_stack(long p)
             if (state_kbd_script_run)
             {
                 action_pop();
-#ifdef OPT_LUA
-                if (L)
-                {
-                    // Last selected file is returned by this function in gui_fselect.c
-                    extern char* gui_fselect_result();
-                    // Send file name back to script caller
-                  ////  lua_pushstring( Lt, gui_fselect_result() );
-                }
-#endif
             }
             break;
         case AS_MOTION_DETECTOR:
-            if(md_detect_motion()==0)
+            if (module_mdetect_load())
+            {
+                if (libmotiondetect->md_detect_motion()==0)
+                {
+                    action_pop();
+#ifdef OPT_LUA
+                    if (L)
+                    {
+                        // We need to recover the motion detector's
+                        // result and push
+                        // it onto the thread's stack.
+                        lua_pushnumber( Lt, libmotiondetect->md_get_result() );
+                    } else
+#endif
+                    {
+#ifdef OPT_UBASIC
+                        ubasic_set_md_ret(libmotiondetect->md_get_result());
+#endif
+                    }
+                }
+            }
+            else
             {
                 action_pop();
 #ifdef OPT_LUA
                 if (L)
                 {
-                       // We need to recover the motion detector's
-                       // result and push
-                       // it onto the thread's stack.
-                       lua_pushnumber( Lt, md_get_result() );
+                    lua_pushnumber( Lt, 0 );
                 } else
 #endif
                 {
 #ifdef OPT_UBASIC
-                    ubasic_set_md_ret(md_get_result());
+                    ubasic_set_md_ret(0);
 #endif
                 }
             }
@@ -684,7 +693,8 @@ void script_end()
       ubasic_end();
 #endif
     }
-	md_close_motion_detector();
+    if (module_mdetect_load())
+        libmotiondetect->md_close_motion_detector();
 	shot_histogram_set(0);
     kbd_key_release_all();
     state_kbd_script_run = 0;

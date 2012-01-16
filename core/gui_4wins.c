@@ -11,7 +11,6 @@
 #include "gui_lang.h"
 #include "gui_batt.h"
 #include "gui_mbox.h"
-#include "gui_4wins.h"
 
 #include "module_load.h"
 
@@ -31,9 +30,9 @@ gui_handler GUI_MODE_4WINS =
 #define FIELD_WIDTH	 7
 #define P1_COLOR	 MAKE_COLOR(COLOR_HISTO_B_PLAY,COLOR_HISTO_B_PLAY)
 #define P2_COLOR	 MAKE_COLOR(COLOR_HISTO_G_PLAY,COLOR_HISTO_G_PLAY)
-#define BG_COLOR	 MAKE_COLOR(COLOR_GREY,COLOR_GREY)
+#define BK_COLOR	 MAKE_COLOR(COLOR_GREY,COLOR_GREY)
 #define FIELD_COLOR	 MAKE_COLOR(COLOR_SPLASH_GREY,COLOR_SPLASH_GREY)//(füllfarbe,rand)
-#define TEXT_COLOR   MAKE_COLOR(BG_COLOR, COLOR_WHITE)
+#define TEXT_COLOR   MAKE_COLOR(COLOR_GREY, COLOR_WHITE)
 #define INFO_COLOR   MAKE_COLOR(COLOR_SPLASH_GREY, COLOR_SPLASH_GREY)
 #define INFO_TEXT_COLOR   MAKE_COLOR(INFO_COLOR, COLOR_WHITE)
 
@@ -284,7 +283,7 @@ void set()
 //-------------------------------------------------------------------
 static void move_cursor(int in_x_pos)
 {
-	draw_filled_ellipse((XBORDER+((cursor_position)*RECT_SIZE))+15, BORDER+10, 10,10,BG_COLOR);
+	draw_filled_ellipse((XBORDER+((cursor_position)*RECT_SIZE))+15, BORDER+10, 10,10,BK_COLOR);
 	if(in_game)
 	{
 		if(cursor_position==0 && in_x_pos<0) 
@@ -311,7 +310,7 @@ int gui_4wins_init()
 	finished=in_game=0;
 	srand(time(NULL));
 	
-	draw_filled_rect(0, 0, camera_screen.width, camera_screen.height, BG_COLOR);		// draw backgraund
+	draw_filled_rect(0, 0, camera_screen.width, camera_screen.height, BK_COLOR);		// draw backgraund
 	draw_filled_rect(XBORDER, BORDER+BORDER_TOP, XBORDER+(7*RECT_SIZE), BORDER+(6*RECT_SIZE)+BORDER_TOP, FIELD_COLOR);
 	draw_filled_round_rect(camera_screen.ts_button_border+240, 90, camera_screen.ts_button_border+360-BORDER, 240-10, INFO_COLOR);
     draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+12, 0, lang_str(LANG_MENU_GAMES_CONNECT4), TEXT_COLOR);
@@ -322,7 +321,7 @@ int gui_4wins_init()
 		for(j=0;j<6;j++)
 		{
 			field[i][j+1]=0;
-			draw_filled_ellipse(XBORDER+(i*RECT_SIZE)+(RECT_SIZE/2), BORDER+(j*RECT_SIZE)+(RECT_SIZE/2)+BORDER_TOP, 10, 10, BG_COLOR);
+			draw_filled_ellipse(XBORDER+(i*RECT_SIZE)+(RECT_SIZE/2), BORDER+(j*RECT_SIZE)+(RECT_SIZE/2)+BORDER_TOP, 10, 10, BK_COLOR);
 		}
 	}
 	for(i=0;i<7;i++)

@@ -14,13 +14,13 @@
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_batt.h"
+#include "gui_space.h"
 #include "gui_menu.h"
 #include "gui_osd.h"
 #include "gui_mbox.h"
 #include "gui_mpopup.h"
 #include "conf.h"
 #include "raw.h"
-#include "bitvector.h"
 #include "font.h"
 
 #include "modules.h"
@@ -39,12 +39,7 @@ extern long shutter_open_time; // defined in platform/generic/capt_seq.c
 // ATTENTION: DO NOT USE BRACES OR OWN /**/-STYLE COMMENTS ANYWHERE IN THIS FILE TO AVOID AUTO PARSING MISTAKES
 
 
-
 // ** SECTION 1: DEFINE UNDECLARED EXPORTED ITEMS
-
-#ifndef CAM_FIRMWARE_MEMINFO
-#define GetMemInfo 0
-#endif
 
 
 // ** SECTION 2: IMPLEMENTATION OF EXPORTED #define VALUES
@@ -81,42 +76,64 @@ char COLOR__EXPORTEDSYM_HISTO_B_PLAY  = COLOR_HISTO_B_PLAY  ;
 char COLOR__EXPORTEDSYM_HISTO_BG_PLAY = COLOR_HISTO_BG_PLAY ;
 char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 
-
 /* EXPORTED_DEFINES_END */
 
-// ** SECTION 3: LIST OF EXPORTED SYMBOLS (pointer to function/variable)
-//    1. DO NOT CHANGE ORDER AND DO NOT DELETE EXISTED ENTRIES
-//    2. VARIABLE conf SHOULDN'T EXIST IN THE LIST TO KEEP ISOLATION. USE set|get_chdk_conf|get_chdk_conf_ptr INSTEAD
-//	STOPLIST: conf, open, opendir, closedir, rewinddir, readdir, stat
 
-void* CHDK_EXPORT_LIST[] = {
-            (void*)EXPORTLIST_MAGIC_NUMBER,
-            (void*)EXPORTLIST_LAST_IDX,
+// ** SECTION 3: LIST OF EXPORTED SYMBOLS (pointer to function/variable)
+//	STOPLIST: open, opendir, closedir, rewinddir, readdir, stat
+
+// This section is parsed by the makeexport.c program to generate the
+// symbol hash table loaded later (from module_hashlist.h)
+// Symbols to be exported should be on seperate lines, blank lines and '//' style comments are allowed
+
+#if 0
+{
 			module_async_unload,
 			module_set_flags,
-			conf_getValue,
 			module_run,
+			module_get_adr,
+			module_async_unload_allrunned,
+			module_rawop_load,
+            module_rawop_unload,
+            module_mpopup_init,
+			module_convert_dng_to_chdk_raw,
+            module_fselect_init,
+            module_fselect_init_w_mode,
+            module_grids_load,
+            module_find_symbol_address,
+            module_restore_edge,
+            module_save_edge,
+
+            &altGuiHandler,
+            &camera_info,
+            &camera_screen,
+            &camera_sensor,
+            &gui_version,
+            &conf,
 
             malloc,
             free,
             umalloc,
             ufree,
-            safe_open,
+
             write,
             lseek,
+            safe_open,
             close,
             read,
             remove,
             rename,
+            safe_stat,
+            safe_opendir,
+            safe_readdir,
+            safe_closedir,
+			mkdir,
+
             fopen,
             fclose,
             fseek,
             fread,
             fwrite,
-            safe_stat,
-            safe_opendir,
-            safe_readdir,
-            safe_closedir,
 
             get_tick_count,
 			time,
@@ -124,6 +141,8 @@ void* CHDK_EXPORT_LIST[] = {
 			localtime,
             rand,
 			srand,
+            qsort,
+			msleep,
 
             lang_str,
             sprintf,
@@ -133,7 +152,11 @@ void* CHDK_EXPORT_LIST[] = {
             strpbrk,
             strchr,
 			strcmp,
+            strtol,
+            strrchr,
+            strncpy,
             memcpy,
+            memset,
 
             draw_txt_string,
 			draw_string,
@@ -143,103 +166,124 @@ void* CHDK_EXPORT_LIST[] = {
 			draw_filled_round_rect,
 			draw_line,
 			draw_char,
+            draw_get_pixel,
+            draw_pixel,
+            draw_restore,
+            draw_txt_char,
+			draw_rect_thick,
+			draw_filled_rect_thick,
+            draw_rect_shadow,
+            draw_ellipse,
+            draw_clear,
+            draw_set_draw_proc,
 
             gui_get_mode,
             gui_set_mode,
 			gui_default_kbd_process_menu_btn,
-
-            vid_get_viewport_fb,
-            vid_get_viewport_height,
-            vid_get_bitmap_fb,
-            hook_raw_image_addr,
-            hook_raw_size,
-            kbd_get_autoclicked_key,
-
 			get_batt_perc,
 			gui_osd_draw_clock,
 			gui_mbox_init,
-
-			// for rawop.flt
-            GetFreeCardSpaceKb,
-            debug_led,
             gui_browser_progress_show,
-        
-        	// for edgeovr.flt
+            gui_activate_sub_menu,
+            gui_enum_value_change,
+			gui_force_restore,
+			gui_menu_run_fltmodule,
+
+            gui_osd_calc_dof,
+            gui_osd_draw_dof,
+            gui_batt_draw_osd,
+            gui_space_draw_osd,
+            gui_osd_draw_state,
+            gui_osd_draw_raw_info,
+            gui_osd_draw_values,
+            gui_osd_draw_temp,
+            gui_osd_draw_histo,
+
+            vid_get_bitmap_fb,
+            vid_get_viewport_fb,
+            vid_get_viewport_fb_d,
+            vid_get_viewport_live_fb,
+            vid_get_viewport_height,
 			vid_get_viewport_width,
             vid_get_viewport_byte_width,
             vid_get_viewport_xoffset,
             vid_get_viewport_yoffset,
+            vid_get_viewport_image_offset,
+            vid_get_viewport_row_offset,
             vid_get_viewport_yscale,
-            vid_get_viewport_fb_d,
+
+			get_raw_image_addr,
+            hook_raw_image_addr,
+            hook_raw_size,
+			raw_prepare_develop,
+
+            kbd_get_autoclicked_key,
             kbd_is_key_pressed,
-            bv_create,
-            bv_get,
-            bv_set,
-            bv_free,
-            draw_get_pixel,
-            draw_pixel,
-            draw_restore,
-            memset,
+            kbd_key_press,
+			kbd_get_clicked_key,
+			kbd_reset_autoclicked_key,
+            get_jogdial_direction,
+
+			// for rawop.flt
+            GetFreeCardSpaceKb,
+            debug_led,
+
 			mode_get,
             shooting_get_zoom,
             shooting_set_zoom,
 
 			// for txtread.flt
-            draw_txt_char,
+            current_font,
             rbf_char_width,
             rbf_font_height,
             rbf_draw_char,
             rbf_load,
-            current_font,
             rbf_load_from_8x16,
             rbf_set_codepage,
-            get_jogdial_direction,
-
-			// for palette.flt
-			draw_rect_thick,
-			draw_filled_rect_thick,
+			rbf_draw_string_len,
+			rbf_draw_menu_header,
 
 			// for modinsp.flt
-			module_get_adr,
-			module_async_unload_allrunned,
 			GetMemInfo,
+			GetExMemInfo,
 
 			// for fselect.flt
-			module_rawop_load,
-            module_rawop_unload,
-            module_mpopup_init,
-            qsort,
             img_prefixes,
             img_exts,
-            strrchr,
-            strncpy,
-			msleep,
             GetTotalCardSpaceKb,
-			module_convert_dng_to_chdk_raw,
-			raw_prepare_develop,
-
-			// curves.flt			
-			get_raw_image_addr,
-			shooting_get_ev_correction1,
-
-			// mpopup.flt			
-            draw_rect_shadow,
-			kbd_get_clicked_key,
-			kbd_reset_autoclicked_key,
 
 			// tetris.flt
 			TurnOnBackLight,
 			TurnOffBackLight,
-			mkdir,
-
-			// modlist.flt
-			load_from_file,
-			rbf_draw_string_len,
-			rbf_draw_menu_header,
-			gui_force_restore,
 
 			// modmenu.flt
-			gui_menu_run_fltmodule,
+			load_from_file,
+
+			action_stack_create,
+			action_pop,
+			action_push,
+			action_push_delay,
+            action_push_release,
+			action_stack_standard,
+			console_clear,
+			console_add_line,
+
+            shooting_set_tv96_direct,
+			shooting_get_iso_market,
+			shooting_get_ev_correction1,
+
+            get_focal_length,
+			get_effective_focal_length,
+			get_parameter_data,
+			get_property_case,
+
+            &shutter_open_time,
+			&state_shooting_progress,
+			get_raw_pixel,
+			patch_bad_pixel,
+			
+			pow_calc,
+			pow_calc_2,
 
 			// export palette
 			&SCREEN__EXPORTEDSYM_COLOR		 ,
@@ -271,35 +315,17 @@ void* CHDK_EXPORT_LIST[] = {
 			&COLOR__EXPORTEDSYM_HISTO_BG_PLAY,
 			&COLOR__EXPORTEDSYM_HISTO_RG_PLAY,
 
-			// profile.flt
-			find_mnu,
-			lang_strhash31,
+			module_tbox_get_version,
+			module_tbox_run,
 
-			action_stack_create,
-			action_pop,
-			action_push,
-			action_push_delay,
-			action_stack_standard,
-			console_clear,
-			console_add_line,
-			shooting_set_tv96_direct,
-			shooting_get_iso_market,
-			get_focal_length,
-			get_effective_focal_length,
-			get_parameter_data,
-			get_property_case,
-			&shutter_open_time,
-			get_raw_pixel,
-			&state_shooting_progress,
-			patch_bad_pixel,
-			
-			pow_calc,
-			pow_calc_2,
+            config_save,
+            config_restore,
+}
+#endif
 
-            &camera_info,
-            &camera_screen,
-            &camera_sensor,
-            &altGuiHandler,
-            &gui_version,
-			0
+// Symbol hash table for resolving exported symbol references
+sym_hash symbol_hash_table[] =
+{
+    { EXPORTLIST_MAGIC_NUMBER, (void*)EXPORTLIST_LAST_IDX },
+#include "module_hashlist.h"
 };

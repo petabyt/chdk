@@ -12,10 +12,6 @@
 #define OSD_HISTO_LAYOUT_BLEND          6
 #define OSD_HISTO_LAYOUT_BLEND_Y        7
 
-#define ZEBRA_DRAW_NONE                 0
-#define ZEBRA_DRAW_HISTO                1
-#define ZEBRA_DRAW_OSD                  2
-
 #define ZOOM_SHOW_X                     0
 #define ZOOM_SHOW_FL                    1
 #define ZOOM_SHOW_EFL                   2
