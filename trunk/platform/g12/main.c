@@ -28,7 +28,7 @@ void startup()
 }
 
 int screen_opened(void) {
-	return !(physw_status[0] & 0x80000000);
+	return (physw_status[0] & 0x80000000);
 }
 
 int screen_rotated(void) {
