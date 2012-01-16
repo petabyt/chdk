@@ -481,7 +481,7 @@
 #define LANG_MENU_SYNCH_ENABLE              378
 #define LANG_MENU_SYNCH_DELAY_ENABLE        379
 #define LANG_MENU_SYNCH_DELAY_VALUE         380
-#define LANG_MENU_SYNCH_DELAY_COARSE_VALUE  381
+#define LANG_MENU_SYNCH_DELAY_COARSE_VALUE  381		/* obsolete - no longer used */
 
 
 #define LANG_MENU_VIDEO_AF_KEY  382
@@ -508,6 +508,7 @@
 
 #define LANG_MENU_REMOTE_ZOOM_ENABLE  399
 #define LANG_MENU_REMOTE_ZOOM_TIMEOUT 400
+
 #define LANG_MENU_MISC_START_SOUND 401
 #define LANG_MENU_SUB_PREFIX     402
 #define LANG_MENU_SUB_EXTENSION  403
@@ -587,9 +588,14 @@
 #define LANG_SAVE_ROMLOG_FAIL       469
 #define LANG_SAVE_ROMLOG_OK         470
 
+// next gen USB remote
+#define LANG_MENU_REMOTE_DEVICE 471
+#define LANG_MENU_REMOTE_LOGIC  472
+#define LANG_MENU_REMOTE_OPTIONS 473
+
 //-------------------------------------------------------------------
 
-#define GUI_LANG_ITEMS                  470
+#define GUI_LANG_ITEMS                  473
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

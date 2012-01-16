@@ -1,0 +1,454 @@
+/*===================================================================================================
+    usb_remote.c
+
+		-	called every 10 mSec from kbd.c
+		-	when enabled via CHDK menu, monitors the state of USB power and takes action on a change
+		-	consists of :
+				- 	a user selectable driver module that watches the USB power state
+					and sets the state of a "virtual" remote switch
+				- 	a user selectable control module that translates the state of the
+					"virtual" remote switch to KEY_PRESS actions
+				-	[FUTURE] extends the script command get_usb_power() to return the current state of
+					the "virtual" remote switch, allowing scripts to easily work with all switch types
+				-	[FUTURE]  supplies a framework for adding support to read PWM devices (e.g. gentles) and
+					to perform control actions based on those signals (at some point somebody might even use
+					this to build a Arduino-type remote control keypad
+  ===================================================================================================*/
+
+#include "kbd.h"
+#include "stdlib.h"
+#include "platform.h"
+#include "core.h"
+#include "keyboard.h"
+#include "conf.h"
+#include "action_stack.h"
+#include "camera.h"
+#include "gui_draw.h"
+#include "usb_remote.h"
+
+
+extern int get_usb_bit() ;
+
+/*===================================================================================================
+    Variables
+  ===================================================================================================*/
+
+int sync_counter=0;
+int usb_sync_wait = 0 ;
+int usb_remote_active=0 ;
+int virtual_remote_pulse_count = 0 ;
+int virtual_remote_pulse_width = 0 ;
+int stime_stamp = 0 ;
+int usb_power=0;
+int remote_count, remote_space_count, remote_key;
+
+#define USB_BUFFER_SIZE 16
+int usb_buffer[USB_BUFFER_SIZE] ;
+int * usb_buffer_in = usb_buffer ;
+int * usb_buffer_out = usb_buffer ;
+
+
+enum SWITCH_TYPE	 switch_type = SW_NONE ;
+enum CONTROL_MODULE  control_module = RMT_NONE ;
+enum VIRTUAL_REMOTE_STATE  virtual_remote_state = REMOTE_RESET ;
+enum DRIVER_STATE  driver_state = SW_RESET;
+enum LOGIC_MODULE_STATE logic_module_state = LM_RESET;
+enum USB_STATE  usb_state = USB_POWER_OFF ;
+enum CAMERA_MODE  camera_mode = CAMERA_MODE_PLAYBACK ;
+
+/*===================================================================================================
+	Debug and error handling
+  ===================================================================================================*/
+
+
+ #ifdef USB_REMOTE_DEBUGGING
+
+#define NUMBER_OF_ERRORS 21
+
+ int debug_errors[NUMBER_OF_ERRORS] ;
+
+void debug_error(int err_num)
+{
+
+	if ( (err_num > 0) && (err_num <= NUMBER_OF_ERRORS ))
+	{
+		--err_num ;
+		if ( ++debug_errors[err_num] > 999 ) debug_errors[err_num]=0 ;
+	}
+} ;
+
+#else
+
+void debug_error(int err_num)
+{
+
+} ;
+
+#endif
+
+/*---------------------------------------------------------------------------------------------------------
+
+	kbd_synch_delay :
+		support the sync delay option of USB remote
+
+	Adds a fixed hard coded loop delay before releasing the shooting process in sync mode
+
+  ---------------------------------------------------------------------------------------------------------*/
+
+static int synch_delay_tick = 2800;		// default calibration value - not tuned for any camera
+
+
+void kbd_synch_delay(int delay_value)
+{
+    int count1;
+
+    for (count1=0;count1<delay_value;count1++) //wait delay_value * 0.1ms
+    {
+        asm volatile (
+        "mov r1, #0\n"
+        ".loop: \n\t"
+        "add r1, r1, #1\n\t"
+        "cmp r1, %0\n\t"
+        "blt .loop"
+        :
+        : "r" (synch_delay_tick)
+        : "r1" );
+
+    }
+}
+
+
+#undef CALIBRATE_SYNCH_DELAY			// Note : comment this out during testing to calibrate a camera's sync delay
+#define CALIBRATE_SYNCH_DELAY 1
+
+#ifdef CALIBRATE_SYNCH_DELAY
+
+#define KBD_CALIBRATE_TIME 100
+
+static int synch_delay_calib = 0;
+
+void kbd_calibrate_synch_delay()
+{
+    if (synch_delay_calib) return;
+    int t0 = get_tick_count();
+    kbd_synch_delay(10 * KBD_CALIBRATE_TIME);
+    int t = get_tick_count() - t0;
+
+    synch_delay_tick = synch_delay_tick * KBD_CALIBRATE_TIME / t;
+
+    if (synch_delay_tick < 100) synch_delay_tick = 2800; /*something went wrong */
+    if (synch_delay_tick > 100000) synch_delay_tick = 2800;
+
+    int fd;
+    char buf[64];
+    sprintf(buf, "%d %d ", synch_delay_tick, t);
+    fd = open("A/CALIB.TXT", O_WRONLY|O_CREAT, 0777);
+    if (fd>=0) {
+      write(fd, buf, strlen(buf));
+      close(fd);
+      }
+    synch_delay_calib = 1;
+}
+#endif
+
+/*---------------------------------------------------------------------------------------------------------
+
+	usb_remote_status_led :
+		Turn on a camera LED while the camera is waiting for a USB 1->0 transistion to terminate sync wait mode
+
+  ---------------------------------------------------------------------------------------------------------*/
+
+// #define REMOTE_SYNC_STATUS_LED 	0xC02200D4	// FIXME : need to generalize this - should be in platform_camera.h ?
+
+#ifdef REMOTE_SYNC_STATUS_LED
+
+	void usb_remote_status_led(int state)
+	{
+	  *(int*)REMOTE_SYNC_STATUS_LED=state ? 0x46 : 0x44;
+	}
+
+#else
+	void usb_remote_status_led(int state) {} ;
+#endif
+
+
+/*---------------------------------------------------------------------------------------------------------
+
+	wait_until_remote_button_is released()
+
+	- called from capt_seq.c after all focus, exposure and flash things have been setup
+	- if enabled,  waits for a USB 1->0 transition to allow accurate sync between cameras connected in parrallel
+
+  ---------------------------------------------------------------------------------------------------------*/
+
+
+void _wait_until_remote_button_is_released(void)
+{
+	int tick;
+	long x;
+
+	if (	( conf.remote_enable )				// menu : USB remote enabled - bracket everything in this function
+		&&	( conf.synch_enable  )				// menu : Sync enabled - tells us to wait for USB to disconnect
+		&&	( usb_sync_wait      ) )			// only sync when USB remote is active - don't trap normal shooting
+	{
+		usb_remote_status_led(1);				// indicate to user we are waiting for remote button to release - this happens every time the camera takes a picture
+		tick = get_tick_count();				// timestamp so we don't hang here forever if something goes wrong
+
+		// delay until USB state goes to "Off" or timeout
+
+		do { }  while( get_usb_bit() &&  ((int)get_tick_count()-tick < DELAY_TIMEOUT));
+
+		// add a sync calibration delay if requested
+
+		if ( conf.synch_delay_enable && conf.synch_delay_value>0 ) kbd_synch_delay( conf.synch_delay_value );
+
+		sync_counter++ ;
+		usb_sync_wait = 0 ;
+
+		usb_remote_status_led(0);		// alert the user that we are all done
+	}
+
+}
+
+/*---------------------------------------------------------------------------------------------------------
+
+	usb_remote_key()
+
+	- called from each camera's my_kbd_read_keys() routine with current mmmio containing USB bit
+	- monitors USB power state and stores in global variable remote_key
+	- captures the time of 0->1 and 1->0 transisitions and buffers them
+	- store most recent power on pulse width in global variable remote_count
+
+  ---------------------------------------------------------------------------------------------------------*/
+
+
+void usb_remote_key(int x)
+{
+	remote_key = get_usb_bit() ;
+
+	if (remote_key) remote_count++ ;									// track how long the USB power is on
+	else if(remote_space_count<3000) remote_space_count++ ;				// track how long the USB power is off
+
+	if (( remote_key == 0) && (remote_count > 0)  )						// insert power pulse width into the buffer
+	{
+		usb_power = remote_count;
+
+		if ( ++usb_buffer_in > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_in = usb_buffer ;
+		if ( usb_buffer_in == usb_buffer_out )
+		{
+			if ( ++usb_buffer_out > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_out = usb_buffer ;
+		}
+		*usb_buffer_in = remote_count ;
+		remote_count = 0;
+	}
+
+	if (( remote_key == 1) && (remote_space_count > 0)  )				// insert space pulse width into the buffer as a negative number
+	{
+		if ( ++usb_buffer_in > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_in = usb_buffer ;
+		if ( usb_buffer_in == usb_buffer_out )
+		{
+			if ( ++usb_buffer_out > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_out = usb_buffer ;
+		}
+		*usb_buffer_in = 0-remote_space_count ;
+		remote_space_count = 0 ;
+	}
+}
+
+/*---------------------------------------------------------------------------------------------------------
+
+	 get_usb_power()
+
+  ---------------------------------------------------------------------------------------------------------*/
+
+
+int get_usb_power(int mode)
+{
+	int x;
+
+	switch( mode)
+	{
+		case 0 :
+			x = usb_power;
+			usb_power = 0;
+			break ;
+
+		case 1 :
+			x=remote_key;
+			break ;
+
+		case 2 :
+			if ( usb_buffer_out == usb_buffer_in )
+			{
+				x = 0 ;
+			}
+			else
+			{
+				if ( ++usb_buffer_out > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_out = usb_buffer ;
+				x = *usb_buffer_out ;
+			}
+			break ;
+
+		default :
+			x=0 ;
+			break ;
+	}
+
+	return x;
+}
+
+
+
+
+
+extern void (*usb_driver[])(int ) ;
+extern void (*usb_control_module[])(int ) ;
+
+/*===================================================================================================
+
+   main USB remote processing routine - called every 10 mSec fronm kbd.c
+
+  ===================================================================================================*/
+
+extern void (*usb_driver[])(int ) ;
+extern void (*usb_module_play[])(int ) ;
+extern void (*usb_module_shoot[])(int ) ;
+extern void (*usb_module_video[])(int ) ;
+
+int handle_usb_remote()
+{
+	static int rmt_state = RMT_DISABLED ;
+	unsigned int m1 ;
+
+    if(conf.remote_enable)
+	{
+		if ( 	(rmt_state == RMT_DISABLED )					// reset everything on change from CHDK menu
+			|| ( switch_type != conf.remote_switch_type )
+			|| ( control_module != conf.remote_control_mode ) )
+		{
+			rmt_state = RMT_ENABLED ;
+			switch_type = conf.remote_switch_type ;
+			control_module = conf.remote_control_mode ;
+			virtual_remote_state = driver_state = logic_module_state = REMOTE_RESET ;
+		}
+
+		int m1=mode_get();
+		if ((m1&MODE_MASK) == MODE_PLAY) camera_mode = CAMERA_MODE_PLAYBACK ;
+		else camera_mode = MODE_IS_VIDEO(m1&MODE_SHOOTING_MASK) ? CAMERA_MODE_VIDEO : CAMERA_MODE_SHOOTING ;
+
+		(*usb_driver[switch_type])(get_usb_power(1)); 				// jump to driver state machine
+
+		switch( camera_mode )
+		{
+			case CAMERA_MODE_PLAYBACK :
+				(*usb_module_play[control_module])(camera_mode); 		// jump to control module state machine
+				break ;
+
+			case CAMERA_MODE_SHOOTING :
+				(*usb_module_shoot[control_module])(camera_mode); 		// jump to control module state machine
+				break ;
+
+			case CAMERA_MODE_VIDEO :
+				(*usb_module_video[control_module])(camera_mode); 		// jump to control module state machine
+				break ;
+
+			default :
+				break ;
+		}
+
+		usb_remote_active = ((logic_module_state  > 1) || (driver_state  > 1) || (virtual_remote_state  > 1) ) ? 1 : 0 ;
+
+
+			#ifdef USB_REMOTE_DEBUGGING
+					extern void draw_string(coord x, coord y, const char *s, color cl);
+					extern long physw_status[3] ;
+					extern int usb_buffer[] ;
+					extern int * usb_buffer_in ;
+					extern int * usb_buffer_out ;
+					extern const char* gui_USB_switch_types[] ;
+					extern const char* gui_USB_control_modes[];
+					extern EXPO_BRACKETING_VALUES bracketing;
+					char buf[64] ;
+					static int debug_print = 0 ;
+					int i, buff_pos,  *buff_ptr ;
+					// short tv=0;
+
+					if ( debug_print++ > 10000 ) debug_print = 0 ;
+
+					if ((debug_print%2) == 0)
+					{
+						switch( virtual_remote_state )
+						{
+							case  REMOTE_RESET :
+								sprintf(buf,"RESET      ") ;
+								break;
+
+							case  REMOTE_RELEASE :
+								sprintf(buf,"RELEASED  ") ;
+								break;
+
+							case  REMOTE_HALF_PRESS :
+								sprintf(buf,"HALF PRESS    ") ;
+								break;
+
+							case  REMOTE_FULL_PRESS :
+								sprintf(buf,"FULL PRESS    ") ;
+								break;
+
+							default :
+								sprintf(buf,"ERROR    ") ;
+								break;
+						}
+						draw_string(2,16,buf,MAKE_COLOR(COLOR_YELLOW,COLOR_RED));
+					}
+					else
+					{
+						sprintf(buf,"RMT=%d drv=%d lgc=%d  sync=%d  tmo=%d  ", usb_remote_active, driver_state, logic_module_state, usb_sync_wait, (stime_stamp?get_tick_count()-stime_stamp:0));
+						draw_string(2,48,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
+					}
+
+					if (((debug_print+25)%100) ==0 )
+					{
+						sprintf(buf,"switch=%s logic=%s sync=%s ", gui_USB_switch_types[switch_type], gui_USB_control_modes[control_module], conf.synch_enable?"yes":"no") ;
+						draw_string(2,32,buf,MAKE_COLOR(COLOR_YELLOW,COLOR_BLACK));
+						sprintf(buf,"sync count=%d, pulse count=%d width=%d  b=%d  ", sync_counter, virtual_remote_pulse_count, virtual_remote_pulse_width,  bracketing.shoot_counter);
+						draw_string(2,64,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
+						sprintf(buf,"physw=%d err=%d %d %d  ", physw_status[0]&0x03, debug_errors[0],  debug_errors[1],  debug_errors[2] );
+						draw_string(2,80,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
+						// sprintf(buf,"cfg=%d, tv96=%d b.tv96=%d b.dtv96=%d b.step=%d", conf.tv_override_value, shooting_get_tv96(), bracketing.tv96, bracketing.dtv96, bracketing.tv96_step );
+						// draw_string(2,96,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
+					}
+
+					if (((debug_print+75)%100) == 0 )
+					{
+						buff_ptr = usb_buffer_in ;
+						buff_pos = 0 ;
+
+						for ( i=0 ; i<16 ; i++ )
+						{
+							sprintf(&buf[buff_pos],"%d ", *buff_ptr) ;
+							buff_pos = strlen(buf) ;
+							if ( buff_pos > 45 )
+							{
+								buf[45] = 0 ;
+								i=17 ;
+							}
+							if ( buff_ptr-- == usb_buffer )  buff_ptr = &usb_buffer[15] ;
+						}
+						draw_string(2,112,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
+					}
+
+			#endif
+
+	}
+	else
+	{
+		if ( rmt_state != RMT_DISABLED )
+		{
+			rmt_state = RMT_DISABLED ;
+			virtual_remote_state = driver_state = logic_module_state = REMOTE_RESET ;
+		}
+		usb_remote_active = 0 ;
+	}
+
+    return usb_remote_active ;
+}

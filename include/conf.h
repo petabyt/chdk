@@ -288,7 +288,7 @@ typedef struct {
     int ricoh_ca1_mode;
     int synch_delay_enable;
     int synch_delay_value;
-    int synch_delay_coarse_value;
+    int synch_delay_coarse_value;		// obsolete - no longer used
     int remote_zoom_enable;
     int zoom_timeout;
 
@@ -307,6 +307,10 @@ typedef struct {
 
 	// Enable USB icon
     int usb_info_enable; 
+
+	// gen 2 USB remote
+	int remote_switch_type ;
+	int remote_control_mode ;
 } Conf;
 
 extern Conf conf;

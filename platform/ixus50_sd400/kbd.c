@@ -10,19 +10,29 @@ typedef struct {
 } KeyMap;
 
 
-static long kbd_new_state[3];
-static long kbd_prev_state[3];
-static long kbd_mod_state;
+long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_mod_state = 0xFFFFFFFF ;
+
 static KeyMap keymap[];
 static long last_kbd_key = 0;
-static int usb_power=0;
-static int remote_key, remote_count;
 
 #define NEW_SS (0x2000)
 #define SD_READONLY_FLAG (0x20000)
 
 #define USB_MASK 0x40 
-#define USB_REG 1
+#define USB_IDX 2
+extern int remote_key ;
+extern int remote_count ;
+extern int usb_power ;
+extern void usb_remote_key( int ) ;
+int get_usb_bit() 
+{
+	long usb_physw[3];
+	usb_physw[USB_IDX] = 0;
+	_kbd_read_keys_r2(usb_physw);
+	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
+}
 
 #ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
@@ -130,12 +140,6 @@ long my_kbd_read_keys(long x)
  kbd_new_state[1]=x & 0xFFFF;
  if (kbd_process() == 0) return x; else return (kbd_new_state[1]&~0x2FFE) | (kbd_mod_state & 0x2FFE);
 }
-
-
-
-
-/****************/
-
 
 void kbd_key_press(long key)
 {
@@ -262,15 +266,6 @@ int usb_power_status_override(int status){
  return status;
 }
 
-int get_usb_power(int edge)
-{
-	int x;
-
-	if (edge) return remote_key;
-	x = usb_power;
-	usb_power = 0;
-	return x;
-}
 
 static KeyMap keymap[] = {
     /* tiny bug: key order matters. see kbd_get_pressed_key()
@@ -293,4 +288,5 @@ static KeyMap keymap[] = {
 //        { KEY_DUMMY	, 0x10000000 },
 	{ 0, 0 }
 };
+
 

@@ -11,16 +11,25 @@ typedef struct {
 } KeyMap;
 
 
-static long kbd_new_state[3];
-static long kbd_prev_state[3];
-static long kbd_mod_state[3];
+long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+
 static KeyMap keymap[];
 static long last_kbd_key = 0;
-static int usb_power=0;
-static int remote_key, remote_count;
-#define USB_MASK (0x40000) 
-#define USB_REG 2
 
+
+#define USB_MASK (0x40000) 
+#define USB_IDX  2
+
+extern void usb_remote_key( int ) ;
+int get_usb_bit() 
+{
+	long usb_physw[3];
+	usb_physw[USB_IDX] = 0;
+	_kbd_read_keys_r2(usb_physw);
+	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
+}
 
 #define KEYS_MASK0 (0x00000000)
 #define KEYS_MASK1 (0xc0000000) // (0xc0800000)
@@ -129,44 +138,19 @@ void my_kbd_read_keys()
 
     _kbd_read_keys_r2(physw_status);
 
+	usb_remote_key(physw_status[USB_IDX]) ;
+
 	if (conf.remote_enable) {
-		remote_key = (physw_status[2] & USB_MASK)==USB_MASK;
-		if (remote_key) 
-			remote_count += 1;
-		else if (remote_count) {
-			usb_power = remote_count;
-			remote_count = 0;
-		}
-		physw_status[2] = physw_status[2] & ~(SD_READONLY_FLAG | USB_MASK);
+		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
+	} else {
+		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
 	}
-	else
-		physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;
 
 
     _kbd_pwr_off();
 
 }
 
-int get_usb_power(int edge)
-{
-	int x;
-
-	if (edge) return remote_key;
-	x = usb_power;
-	usb_power = 0;
-	return x;
-}
-
-/* void kbd_set_alt_mode_key_mask(long key)
-{
-    int i;
-    for (i=0; keymap[i].hackkey; ++i) {
-	if (keymap[i].hackkey == key) {
-	    alt_mode_key_mask = keymap[i].canonkey;
-	    return;
-	}
-    }
-} */
 
 void kbd_key_press(long key)
 {

@@ -12,17 +12,14 @@ typedef struct {
 } KeyMap;
 
 
-static long kbd_new_state[3];
-static long kbd_prev_state[3];
-static long kbd_mod_state[3];
+long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+
 static KeyMap keymap[];
 static long last_kbd_key = 0;
 static long alt_mode_key_mask = 0x00001000;  
 static long alt_mode_key_reg  = 1;     
-static int usb_power=0;
-static int remote_key, remote_count;
-static int shoot_counter=0;
-#define DELAY_TIMEOUT 10000
 
 #define KEYS_MASK0 (0xC0000000)
 #define KEYS_MASK1 (0x1F1F1018)
@@ -32,6 +29,17 @@ static int shoot_counter=0;
 #define SD_READONLY_FLAG (0x20000)
 
 #define USB_MASK (0x40000)
+#define USB_IDX  2
+
+extern void usb_remote_key( int ) ;
+int get_usb_bit() 
+{
+	long usb_physw[3];
+	usb_physw[USB_IDX] = 0;
+	_kbd_read_keys_r2(usb_physw);
+	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
+}
+
 
 #ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
@@ -40,128 +48,6 @@ static char kbd_stack[NEW_SS];
 void kbd_fetch_data(long*);
 
 long __attribute__((naked)) wrap_kbd_p1_f() ;
-
-void wait_until_remote_button_is_released(void)
-{
-int count1;
-int count2;
-int tick,tick2,tick3;
-int nSW;
-int prev_usb_power,cur_usb_power;
-
- // ------ add by Masuji SUTO (start) --------------
-    static int nMode;
- // ------ add by Masuji SUTO (end)   --------------
-
-asm volatile ("STMFD SP!, {R0-R11,LR}\n"); // store R0-R11 and LR in stack
-
-debug_led(1);
-tick = get_tick_count();
-tick2 = tick;
-static long usb_physw[3];
-if (conf.synch_enable && conf.ricoh_ca1_mode && conf.remote_enable && (!shooting_get_drive_mode()|| (shooting_get_drive_mode()==1) || ((shooting_get_drive_mode()==2) && state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)))                                     
-// if (conf.synch_enable && conf.ricoh_ca1_mode && conf.remote_enable)                                         // synch mode enable so wait for USB to disconnect
-  {
-// ------ add by Masuji SUTO (start) --------------
-        nMode=0;
-        usb_physw[2] = 0;                                             // makes sure USB bit is cleared.
-        _kbd_read_keys_r2(usb_physw);
-        if((usb_physw[2] & USB_MASK)==USB_MASK) nMode=1;
-// ------ add by Masuji SUTO (end)   --------------
-
-if(conf.ricoh_ca1_mode && conf.remote_enable)
-{
-	if(shooting_get_drive_mode() ==1 && state_shooting_progress == SHOOTING_PROGRESS_PROCESSING){			//continuous-shooting mode
-		if(conf.bracket_type>2){
-			if(shoot_counter<2) shutter_int=3;
-			shoot_counter--;
-			}
-		else{	
-		prev_usb_power=0;
-		nSW = 0;
-		do
-			{     
-            usb_physw[2] = 0;                                             // makes sure USB bit is cleared.
-           _kbd_read_keys_r2(usb_physw);
-			cur_usb_power = (usb_physw[2] & USB_MASK)==USB_MASK;
-			if(cur_usb_power){
-				if(!prev_usb_power){
-					tick2 = get_tick_count();
-					prev_usb_power=cur_usb_power;
-					}
-				else{
-					if((int)get_tick_count()-tick2>1000) {debug_led(0);}
-					}
-				}
-			else{
-				if(prev_usb_power){
-					tick3 = (int)get_tick_count()-tick2;
-					if(nSW==10) {
-						if(tick3>50) shutter_int=1;
-						nSW=20;
-						}
-					if(nSW==0 && tick3>0) {
-						if(tick3<50) {
-						nSW=10;
-						}
-					else{
-						if(tick3>1000) shutter_int=1;
-							nSW=20;
-						}
-					}
-					prev_usb_power=cur_usb_power;
-					}
-				}
-						
-			if((int)get_tick_count()-tick >= DELAY_TIMEOUT) {nSW=20;shutter_int=2;}
-			}
-		 while(nSW<20);
-		 }
-		} 		//continuous-shooting mode 
-	else{		// normal mode
-			shoot_counter=0;
-			if(conf.bracket_type>2){
-				shoot_counter=(conf.bracket_type-2)*2;
-				}
-   do
-         {     
-            usb_physw[2] = 0;                                             // makes sure USB bit is cleared.
-           _kbd_read_keys_r2(usb_physw);
-           }
- //  while(((usb_physw[2] & USB_MASK)==USB_MASK) && ((int)get_tick_count()-tick < DELAY_TIMEOUT));
-// ------ modif by Masuji SUTO (start) --------------
-        while(((((usb_physw[2] & USB_MASK)!=USB_MASK) && (nMode==0)) || (((usb_physw[2] & USB_MASK)==USB_MASK) && (nMode==1))) && ((int)get_tick_count()-tick < DELAY_TIMEOUT));
-// ------ modif by Masuji SUTO (end)   --------------
- 	}
- }
-
-else
-   {
-
-      do
-          {
-            usb_physw[2] = 0;                                             // makes sure USB bit is cleared.
-           _kbd_read_keys_r2(usb_physw);
-             
-           }
-        while((usb_physw[2]&USB_MASK) &&  ((int)get_tick_count()-tick < DELAY_TIMEOUT));
-    }
-
-  }
-
-if (conf.synch_delay_enable && conf.synch_delay_value>0)                                // if delay is switched on and greater than 0
-  {
-    for (count1=0;count1<conf.synch_delay_value+(conf.synch_delay_coarse_value*1000);count1++) // wait delay_value * 0.1ms
-    {
-      for (count2=0;count2<1400;count2++)            // delay approx. 0.1ms
-        {
-        }
-     }
-  }
-
-debug_led(0);
-asm volatile ("LDMFD SP!, {R0-R11,LR}\n"); // restore R0-R11 and LR from stack
-}
 
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
@@ -257,37 +143,18 @@ void my_kbd_read_keys()
 
     _kbd_read_keys_r2(physw_status);
 
-//    physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;
+	usb_remote_key(physw_status[USB_IDX]) ;
 
-
-    remote_key = (physw_status[2] & USB_MASK)==USB_MASK;
-      if (remote_key)  	  remote_count += 1;
-      else if (remote_count) {
-         usb_power = remote_count;
-         remote_count = 0;
-      }
-
-    if (conf.remote_enable) {
-      physw_status[2] = physw_status[2] & ~(SD_READONLY_FLAG | USB_MASK);
-     }
-    else 	physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;
-
+	if (conf.remote_enable) {
+		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
+	} else {
+		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
+	}
+	
     _kbd_pwr_off();
 	
 }
 
-
-int get_usb_power(int edge)
-{
-	int x;
-
-	if (edge) return remote_key;
-	x = usb_power;
-	usb_power = 0;
-	return x;
-}
-
-/****************/
 void kbd_set_alt_mode_key_mask(long key)
 {
     int i;
@@ -408,40 +275,7 @@ long kbd_get_autoclicked_key() {
 	
 }
 
-long kbd_use_zoom_as_mf() {/*  Незачем, в G7 есть колесо для этого
-    static long v;
-    static long zoom_key_pressed = 0;
-
-    if (kbd_is_key_pressed(KEY_ZOOM_IN) && (mode_get()&MODE_MASK) == MODE_REC) {
-        get_property_case(PROPCASE_FOCUS_MODE, &v, 4);
-        if (v) {
-            kbd_key_release_all();
-            kbd_key_press(KEY_RIGHT);
-            zoom_key_pressed = KEY_ZOOM_IN;
-            return 1;
-        }
-    } else {
-        if (zoom_key_pressed==KEY_ZOOM_IN) {
-            kbd_key_release(KEY_RIGHT);
-            zoom_key_pressed = 0;
-            return 1;
-        }
-    }
-    if (kbd_is_key_pressed(KEY_ZOOM_OUT) && (mode_get()&MODE_MASK) == MODE_REC) {
-        get_property_case(PROPCASE_FOCUS_MODE, &v, 4);
-        if (v) {
-            kbd_key_release_all();
-            kbd_key_press(KEY_LEFT);
-            zoom_key_pressed = KEY_ZOOM_OUT;
-            return 1;
-        }
-    } else {
-        if (zoom_key_pressed==KEY_ZOOM_OUT) {
-            kbd_key_release(KEY_LEFT);
-            zoom_key_pressed = 0;
-            return 1;
-        }
-    }*/
+long kbd_use_zoom_as_mf() {
     return 0;
 }
 
@@ -482,64 +316,3 @@ void kbd_fetch_data(long *dst)
     dst[2] = *mmio2 & 0xffff;
 }
 
-// KEYS_MASK0 (0xC0000000)
-// KEYS_MASK1 (0x3F1F1018)
-// KEYS_MASK2 (0x00000000)
-
-//	 1 - C2008000
-//0b0000 0000 0000 0000  1000 0000 0000 0000  - 0x00008000 	- ?
-//0b0000 0000 0000 0010  0000 0000 0000 0000  - KEY_PLAY		- MODE_REC  / MODE_PLAY
-//0b0000 0010 0000 0000  0000 0000 0000 0000  - 0x02000000	
-//0b0100 0000 0000 0000  0000 0000 0000  0000  - KEY_SHOOT_HALF
-//0b1100 0000 0000 0000  0000 0000 0000  0000  - KEY_SHOOT_FULL
-
-//	 2 - 1F1F1418
-//0b0000 0000 0000 0000  0000 0000 0000 0111    -ISO            000 - 100; 001 - 80; 010 - 200; 011 - HI; 100 - 800; 101-1600; 110 - 400; 111 - AUTO;
-//0b0000 0000 0000 0000  0000 0000 0000 1000  -KEY_ZOOM_OUT
-//0b0000 0000 0000 0000  0000 0000 0001  0000  -KEY_ZOOM_OUT
-//0b0000 0000 0000 0000  0000 0000 0010  0000  - 0x00000020	- ?
-//0b0000 0000 0000 0000  0000 0000 0100  0000  - 0x00000040	- ?
-//0b0000 0000 0000 0000  0000 0000 1000  0000  - 0x00000080	- ?
-//0b0000 0000 0000 0000  0000  1111   0000 0000 -ShotMode  0010 - C1; 0011 - C2; 0100 - Av; 0101 - Tv; 0110 - M; 0111 - P; 1100 - PANORAME; 1101-VIDEO; 1110 - SCN; 1111 - AUTO;   
-//0b0000 0000 0000 0000  0001 0000 0000  0000  - KEY_PRINT
-//0b0000 0000 0000 0000  0010 0000 0000  0000  - 0x00002000	- ?
-//0b0000 0000 0000 0000  0100 0000 0000  0000  - 0x00004000	- ?
-//0b0000 0000 0000 0000  1000 0000 0000  0000  - 0x00008000	- ?
-
-//0b0000 0000 0000 0001  0000 0000 0000  0000  - NOT KEY_LEFT
-//0b0000 0000 0000 0010  0000 0000 0000  0000  - NOT KEY_SET
-//0b0000 0000 0000 0100  0000 0000 0000  0000  - NOT KEY_RIGHT
-//0b0000 0000 0000 1000  0000 0000 0000  0000  - NOT KEY_DOWN
-//0b0000 0000 0001 0000  0000 0000 0000  0000  - NOT KEY_UP
-
-//0b0000 0000 0010 0000  0000 0000 0000  0000  - 0x00200000	- ?
-//0b0000 0000 0100 0000  0000 0000 0000  0000  - 0x00400000	- ?
-//0b0000 0000 1000 0000  0000 0000 0000  0000  - 0x00800000	- ?
-
-//0b0000 0001 0000 0000  0000 0000 0000  0000  - NOT KEY_ERASE
-//0b0000 0010 0000 0000  0000 0000 0000  0000  - NOT KEY_EXPO_CORR
-//0b0000 0100 0000 0000  0000 0000 0000  0000  - NOT KEY_DISPLAY
-//0b0000 1000 0000 0000  0000 0000 0000  0000  - NOT KEY_MENU
-//0b0001 0000 0000 0000  0000 0000 0000  0000  - NOT KEY_MICROPHONE
-
-//0b0010 0000 0000 0000  0000 0000 0000  0000  - 0x20000000	- ?`
-//0b0100 0000 0000 0000  0000 0000 0000  0000  - 0x40000000	- ?`
-//0b1000 0000 0000 0000  0000 0000 0000  0000  - 0x80000000	- ?`
-//	 3 -00020004
-//0b0000 0000 0000 0000  0000 0000 0000  0100  - 0x00000004	-? COVER BATTERY
-//0b0000 0000 0000 0010  0000 0000 0000  0000  - 0x00020000	-? COVER BATTERY
-//0b0000 0000 0000 0100  0000 0000 0000  0000  - USB_MASK = 0x00040000
-
-
-/*
-void kbd_set_alt_mode_key_mask(long key)
-{
-    int i;
-    for (i=0; keymap[i].hackkey; ++i) {
-	if (keymap[i].hackkey == key) {
-	    alt_mode_key_mask = keymap[i].canonkey;
-	    return;
-	}
-    }
-}
-*/

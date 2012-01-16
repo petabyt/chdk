@@ -57,7 +57,7 @@ static const char * expo_type[] = { "+/-", "-","+"};
 
 static PHOTO_PARAM photo_param_put_off;
 
-static EXPO_BRACKETING_VALUES bracketing;
+EXPO_BRACKETING_VALUES bracketing;
 
 //***********************
 /*
@@ -1088,7 +1088,7 @@ int shooting_get_subject_distance_override_koef()
 
 }
 
-void shooting_tv_bracketing(){
+void shooting_tv_bracketing(int when){
   short value, is_odd;
   int m=mode_get()&MODE_SHOOTING_MASK;
   if (bracketing.shoot_counter==0) { // first shoot
@@ -1114,10 +1114,12 @@ void shooting_tv_bracketing(){
    if ((!is_odd) || (conf.bracket_type>0)) bracketing.dtv96+=bracketing.tv96_step;
    if (((!is_odd) && (conf.bracket_type==0)) || (conf.bracket_type==1))  value=bracketing.tv96-bracketing.dtv96;
    else value=bracketing.tv96+bracketing.dtv96;
-   shooting_set_tv96_direct(value, SET_NOW);
+   
+   shooting_set_tv96_direct(value, when);
+
 }
 
-void shooting_av_bracketing(){
+void shooting_av_bracketing(int when){
     short value,is_odd;
 
     int m = mode_get()&MODE_SHOOTING_MASK;
@@ -1156,7 +1158,7 @@ void shooting_av_bracketing(){
 
     if (value != bracketing.av96)
     {
-        shooting_set_av96_direct(value, SET_NOW);
+        shooting_set_av96_direct(value, when);
 #ifdef CAM_AV_OVERRIDE_IRIS_FIX
         extern int _MoveIrisWithAv(short*);
         _MoveIrisWithAv(&value);
@@ -1165,7 +1167,7 @@ void shooting_av_bracketing(){
 }
 
 
-void shooting_iso_bracketing(){
+void shooting_iso_bracketing(int when){
  short value=0, is_odd;
  if (bracketing.shoot_counter==0) { // first shoot
     bracketing.shoot_counter=1;
@@ -1183,16 +1185,16 @@ void shooting_iso_bracketing(){
    if ((((!is_odd) && (conf.bracket_type==0)) || (conf.bracket_type==1)) && (bracketing.iso>bracketing.diso))
      {
      value=bracketing.iso-bracketing.diso;
-     shooting_set_iso_real(value, SET_NOW);
+     shooting_set_iso_real(value, when);
      }
    else if ((((is_odd) && (conf.bracket_type==0)) || (conf.bracket_type==2)) || (((!is_odd) && (conf.bracket_type==0)) && (bracketing.iso<=bracketing.diso)))
      {
      value=bracketing.iso+bracketing.diso;
-     shooting_set_iso_real(value, SET_NOW);
+     shooting_set_iso_real(value, when);
      }
 }
 
-void shooting_subject_distance_bracketing(){
+void shooting_subject_distance_bracketing(int when){
  short value=0, is_odd;
  if (bracketing.shoot_counter==0) { // first shoot
     bracketing.shoot_counter=1;
@@ -1209,23 +1211,17 @@ void shooting_subject_distance_bracketing(){
    if ((((!is_odd) && (conf.bracket_type==0)) || (conf.bracket_type==1)) && (bracketing.subj_dist>bracketing.dsubj_dist))
      {
      value=bracketing.subj_dist-bracketing.dsubj_dist;
-     shooting_set_focus(value, SET_NOW);
+     shooting_set_focus(value, when);
      }
    else if ((((is_odd) && (conf.bracket_type==0)) || (conf.bracket_type==2)) || (((!is_odd) && (conf.bracket_type==0)) && (bracketing.subj_dist<=bracketing.dsubj_dist)))
      {
      value=bracketing.subj_dist+bracketing.dsubj_dist;
-     shooting_set_focus(value, SET_NOW);
+     shooting_set_focus(value, when);
     }
 }
 
-
-void shooting_bracketing(void){
-
-  short drive_mode=shooting_get_drive_mode();
-  if (shooting_get_drive_mode()!=0)  {
-     int m=mode_get()&MODE_SHOOTING_MASK;
-     if (m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE) {
-       if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING) {
+void bracketing_reset()
+{
            bracketing.shoot_counter=0;
            bracketing.av96=0;
            bracketing.dav96=0;
@@ -1238,16 +1234,32 @@ void shooting_bracketing(void){
            bracketing.subj_dist=0;
            bracketing.dsubj_dist=0;
            bracketing.type=0;
-       }
-           if (conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))  shooting_tv_bracketing();
-    	      else if (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) shooting_av_bracketing();
-    	      else if ((conf.iso_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.iso_bracket_koef)) {
-			  shooting_iso_bracketing();
-   	       }
-    	      else if ((conf.subj_dist_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.subj_dist_bracket_koef)) shooting_subject_distance_bracketing();   	      else if ((conf.subj_dist_bracket_value) && (conf.subj_dist_bracket_koef)) shooting_subject_distance_bracketing();
-      }
-   }
 }
+
+void bracketing_step(int when)
+{
+   if (conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) shooting_tv_bracketing(when);
+   else if (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) shooting_av_bracketing(when);
+		else if ((conf.iso_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.iso_bracket_koef)) shooting_iso_bracketing(when);
+			 else if ((conf.subj_dist_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.subj_dist_bracket_koef)) shooting_subject_distance_bracketing(when);   	      
+				  else if ((conf.subj_dist_bracket_value) && (conf.subj_dist_bracket_koef)) shooting_subject_distance_bracketing(when) ;
+}
+
+void shooting_bracketing(void)
+{  
+	short drive_mode=shooting_get_drive_mode();
+	if (shooting_get_drive_mode()!=0)  
+	{
+		int m=mode_get()&MODE_SHOOTING_MASK;
+		if (m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE) 
+		{
+		   if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING) bracketing_reset() ;
+		   bracketing_step(SET_NOW) ;
+		}
+	}
+
+}
+
 
 #if CAM_REAR_CURTAIN
   void shooting_set_flash_sync_curtain(int curtain){
@@ -1280,6 +1292,8 @@ int captseq_hack_override_active() {
  return 0;
 }
 
+extern int usb_remote_active ;
+
 void __attribute__((naked,noinline)) shooting_expo_param_override(void){
  asm volatile("STMFD   SP!, {R0-R12,LR}\n");
 
@@ -1291,37 +1305,42 @@ void __attribute__((naked,noinline)) shooting_expo_param_override(void){
   last_drive_mode=drive_mode;
  }*/
  //int m=mode_get()&MODE_SHOOTING_MASK;
- if ((state_kbd_script_run) && (photo_param_put_off.tv96)) {
+  
+ if ( ((state_kbd_script_run) || (usb_remote_active)) && photo_param_put_off.tv96 ) {
   shooting_set_tv96_direct(photo_param_put_off.tv96, SET_NOW);
   photo_param_put_off.tv96=0;
  }
    else if (((conf.tv_enum_type) || (conf.tv_override_value)) && (conf.tv_override_koef) && !(conf.override_disable==1))
    {
-   if (conf.tv_enum_type)
-     shooting_set_tv96_direct(32*(conf.tv_override_value-(tv_override_zero_shift)),SET_NOW);
-   else
-    shooting_set_tv96_direct(shooting_get_tv96_from_shutter_speed(shooting_get_shutter_speed_override_value()), SET_NOW);
+	   if (conf.tv_enum_type)
+			shooting_set_tv96_direct(32*(conf.tv_override_value-(tv_override_zero_shift)),SET_NOW);
+	   else
+			shooting_set_tv96_direct(shooting_get_tv96_from_shutter_speed(shooting_get_shutter_speed_override_value()), SET_NOW);
    }
- if ((state_kbd_script_run) && (photo_param_put_off.sv96)) {
+   
+ if (((state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.sv96)) {
   shooting_set_sv96(photo_param_put_off.sv96, SET_NOW);
   photo_param_put_off.sv96=0;
   }
-else if ((conf.iso_override_value) && (conf.iso_override_koef) && !(conf.override_disable==1))
-  shooting_set_iso_real(shooting_get_iso_override_value(), SET_NOW);
- else if (conf.autoiso_enable && shooting_get_flash_mode()/*NOT FOR FLASH AUTO MODE*/ && !(conf.override_disable==1 && conf.override_disable_all))
-  shooting_set_autoiso(shooting_get_iso_mode());
- if ((state_kbd_script_run) && (photo_param_put_off.av96)) {
+	else if ((conf.iso_override_value) && (conf.iso_override_koef) && !(conf.override_disable==1))
+		shooting_set_iso_real(shooting_get_iso_override_value(), SET_NOW);
+		else if (conf.autoiso_enable && shooting_get_flash_mode()/*NOT FOR FLASH AUTO MODE*/ && !(conf.override_disable==1 && conf.override_disable_all))
+		shooting_set_autoiso(shooting_get_iso_mode());
+		
+ if (((state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.av96)) {
   shooting_set_av96_direct(photo_param_put_off.av96, SET_NOW);
   photo_param_put_off.av96=0;
   }
  else if (conf.av_override_value && !(conf.override_disable==1))
  shooting_set_av96_direct(shooting_get_av96_override_value(), SET_NOW);
- if ((state_kbd_script_run) && (photo_param_put_off.subj_dist)) {
+ 
+ if (((state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.subj_dist)) {
   shooting_set_focus(photo_param_put_off.subj_dist, SET_NOW);
   photo_param_put_off.subj_dist=0;
   }
   else if ((conf.subj_dist_override_value) && (conf.subj_dist_override_koef) && !(conf.override_disable==1))
    shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
+   
 #if CAM_HAS_ND_FILTER
  if ((state_kbd_script_run) && (photo_param_put_off.nd_filter)) {
    shooting_set_nd_filter_state(photo_param_put_off.nd_filter, SET_NOW);
@@ -1342,9 +1361,9 @@ else if ((conf.iso_override_value) && (conf.iso_override_koef) && !(conf.overrid
  // should only need to be set once if the users doesn't change back, but doing it here ensures it is set
  shooting_set_image_quality(conf.fast_image_quality);
 #endif
+
  asm volatile("LDMFD   SP!, {R0-R12,PC}\n");
 }
-
 void unlock_optical_zoom(void){
 
 #if CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO

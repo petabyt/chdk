@@ -13,6 +13,7 @@
 #include "stdlib.h"
 #include "script.h"
 
+
 //-------------------------------------------------------------------
 #define CONF_FILE  "A/CHDK/CCHDK.CFG"
 #define CONF_MAGICK_VALUE (0x33204741)
@@ -56,6 +57,7 @@ const char *video_bitrate_strings[VIDEO_BITRATE_STEPS]={ "0.25x", "0.5x","0.75x"
 //-------------------------------------------------------------------
 static int def_script_vars[SCRIPT_NUM_PARAMS] = {0};    // default value of script parameters - zero array
 
+
 static int def_batt_volts_max, def_batt_volts_min;
 static OSD_pos def_histo_pos, def_dof_pos, def_batt_icon_pos, def_usb_info_pos, def_space_icon_pos, def_space_hor_pos, def_space_ver_pos, def_batt_txt_pos, def_space_txt_pos, 
                def_mode_state_pos, def_mode_raw_pos, def_mode_video_pos, def_mode_ev_pos, def_values_pos, def_clock_pos, def_ev_video_pos, def_temp_pos;
@@ -88,17 +90,21 @@ int camera_get_script_autostart()
 	return auto_started;
 }
 
+
 void camera_set_script_autostart(int state)
 {	
 	// 1 = Autostarted
 	auto_started = state;
 }
 
+
 int camera_get_nr()
 {
 	// "Auto", "Off", "On"
     return conf.raw_nr;
 }
+
+
 
 
 void clear_values()
@@ -114,6 +120,7 @@ void clear_values()
     conf.platformid = PLATFORMID;
     conf.flash_video_override = 0;
 	}
+
 
 	if (conf.clear_override)
 	{
@@ -351,7 +358,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(190, conf.synch_enable,           CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(191, conf.synch_delay_enable,     CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(192, conf.synch_delay_value,      CONF_DEF_VALUE, i:100, NULL),
-    CONF_INFO(193, conf.synch_delay_coarse_value, CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO(193, conf.synch_delay_coarse_value, CONF_DEF_VALUE, i:0, NULL),		// obsolete - no longer used
     CONF_INFO(194, conf.script_file,            CONF_CHAR_PTR,   ptr:"", conf_change_script_file),
     CONF_INFO(195, conf.mem_view_addr_init,     CONF_DEF_VALUE, i:0x1000, NULL),
     CONF_INFO(196, conf.save_raw_in_sports,     CONF_DEF_VALUE, i:0, NULL),
@@ -411,6 +418,10 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(246, conf.usb_info_enable, CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(247, conf.usb_info_pos,    CONF_OSD_POS_PTR,  ptr:&def_usb_info_pos, NULL),
 
+	// new USB remote stuff
+	CONF_INFO(248, conf.remote_switch_type,  CONF_DEF_VALUE, i:0, NULL),
+	CONF_INFO(249, conf.remote_control_mode,  CONF_DEF_VALUE, i:0, NULL),
+
    };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
@@ -439,6 +450,7 @@ static void conf_change_histo_mode() {
     histogram_set_mode(conf.histo_mode);
 }
 
+
 static void conf_change_histo_layout() {
     if (conf.histo_layout==OSD_HISTO_LAYOUT_Y || conf.histo_layout==OSD_HISTO_LAYOUT_Y_argb) {
         histogram_set_main(HISTO_Y);
@@ -457,6 +469,7 @@ static void conf_change_script_file() {
     script_load(conf.script_file, 2);
 #endif
 }
+
 
 static void conf_change_menu_rbf_file() {
     if (!rbf_load(conf.menu_rbf_file))
@@ -561,6 +574,7 @@ static void conf_init_defaults() {
     def_ev_video_pos.y=80;
 
 }
+
 
 //-------------------------------------------------------------------
 void conf_load_defaults() {

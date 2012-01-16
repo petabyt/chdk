@@ -1,8 +1,10 @@
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
+#include "conf.h"
 #include "keyboard.h"
 #include "stdlib.h"
+#include "lolevel.h"
 
 #define KEY_MASK 0x17FF
 
@@ -14,16 +16,28 @@ typedef struct {
     long canonkey;
 } KeyMap;
 
-long kbd_new_state[3];
-long kbd_prev_state[3];
+long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 long kbd_mod_state = KEY_MASK;
 long debug_kbd_state_diff;
 
 static KeyMap keymap[];
 static long last_kbd_key = 0;
-static int usb_power=0;
-static int remote_key=0;
-static int remote_count=0;
+
+#define USB_MASK (0x40000)	// ?? incomplete port - probably wrong
+#define USB_IDX  2			// ?? incomplete port - probably wrong
+
+extern void usb_remote_key( int ) ;
+int get_usb_bit() 
+{
+	return 0 ;
+/*	
+	long usb_physw[3];
+	usb_physw[USB_IDX] = 0;
+	_kbd_read_keys_r2(usb_physw);
+	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
+*/
+}
 
 #ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
@@ -114,48 +128,16 @@ void hook_kbd_handle_keys()
     kbd_new_state[0] = physw_status[0];
     kbd_new_state[1] = physw_status[1];
     kbd_new_state[2] = physw_status[2];
-
+	
+#if CAM_FEATURE_FEATHER
     static int taskFeatherID = 0;
 
     if (taskFeatherID == 0) {
         taskFeatherID = taskNameToId("tFeather");
         printf("taskFeatherID:%x\n", taskFeatherID);
     }
-
-
-
-/*
-    int key_emu = 0;
-    int canonkey = 0;
-    int i;
-
-    if (IN(250, touch_keys_angle)) {
-        key_emu = KEY_RIGHT;
-    }
-    if (IN(450, touch_keys_angle)) {
-        key_emu = KEY_DOWN;
-    }
-    if (IN(675, touch_keys_angle)) {
-        key_emu = KEY_LEFT;
-    }
-    if (IN(870, touch_keys_angle)) {
-        key_emu = KEY_UP;
-    }
-    
-    if (key_emu != 0) {
-        for (i=0; keymap[i].hackkey; i++){
-            if (keymap[i].hackkey == key_emu) {
-                canonkey = keymap[i].canonkey;
-                break;;
-            }
-        }
-    }
-
-    if (canonkey != 0) {
-        kbd_new_state[2] = kbd_new_state[2] & ~canonkey;
-    }
-*/
-    
+ #endif  
+ 
     if (kbd_process() == 0){
         // leave it ...
 #if CAM_FEATURE_FEATHER
@@ -323,16 +305,6 @@ long kbd_use_zoom_as_mf() {
         }
     }
     return 0;
-}
-
-int get_usb_power(int edge)
-{
-	int x;
-
-	if (edge) return remote_key;
-	x = usb_power;
-	usb_power = 0;
-	return x;
 }
 
 static KeyMap keymap[] = {
