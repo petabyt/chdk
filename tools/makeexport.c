@@ -205,7 +205,7 @@ int main( int argc, char **argv )
             strcat(full_symbol,symbol);
 			cut_export_token(symbol);
 
-            unsigned int hash_val = hash(symbol);
+            unsigned int hash_val = hash((unsigned char*)symbol);
             add_hash(hash_val,full_symbol);
             fprintf(out_txt,"%08x %s\n",hash_val,symbol);
 			for(; size>=0; size--)

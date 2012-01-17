@@ -543,9 +543,9 @@ elfloader_load(char* filename, char* fltfile)
   b_seek_read(rodata.offset, rodata.address, rodata.size);
 
   if ( FLAG_DUMP_SOURCE ) {
-    dump_section( text.name, text.address, text.size );
-    dump_section( data.name, data.address, data.size );
-    dump_section( rodata.name, rodata.address, rodata.size );
+    dump_section( text.name, (unsigned char *)text.address, text.size );
+    dump_section( data.name, (unsigned char *)data.address, data.size );
+    dump_section( rodata.name, (unsigned char *)rodata.address, rodata.size );
   }
 
   if ( FLAG_DUMP_SYMBOLS ) {
@@ -621,7 +621,7 @@ elfloader_load(char* filename, char* fltfile)
   flat_import_count = 0;
 
   
-  flat_reloc = (int*)(flat_buf+flatmainsize);  
+  flat_reloc = (reloc_record_t*)(flat_buf+flatmainsize);  
   flat_reloc_cur = flat_reloc;
 
   flat_import_cur = flat_import_buf;
@@ -718,10 +718,10 @@ elfloader_load(char* filename, char* fltfile)
   }
 
   if ( FLAG_DUMP_FLAT ) {
-    dump_section( "FLT_header", flat_buf, sizeof(struct flat_hdr) );
-    dump_section( "FLT_text", flat_buf+flat->entry, flat->data_start-flat->entry );
-    dump_section( "FLT_data", flat_buf+flat->data_start, flat->bss_start-flat->data_start);
-    dump_section( "FLT_bss",  flat_buf+flat->bss_start, flat->reloc_start-flat->bss_start );
+    dump_section( "FLT_header", (unsigned char*)flat_buf, sizeof(struct flat_hdr) );
+    dump_section( "FLT_text", (unsigned char*)flat_buf+flat->entry, flat->data_start-flat->entry );
+    dump_section( "FLT_data", (unsigned char*)flat_buf+flat->data_start, flat->bss_start-flat->data_start);
+    dump_section( "FLT_bss",  (unsigned char*)flat_buf+flat->bss_start, flat->reloc_start-flat->bss_start );
 
     printf("\nDump relocations:\n");
     for( i = 0; i< flat_reloc_count; i++)

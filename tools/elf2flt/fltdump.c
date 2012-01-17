@@ -64,7 +64,7 @@ char* get_flat_string( int32_t offs )
     if  ( offs >=flat->bss_start || offs<flat->data_start )
 	  return "";
 
-	strncpy( buf, flat_buf+offs, sizeof(buf)-1);
+	strncpy( buf, (char*)flat_buf+offs, sizeof(buf)-1);
 	buf[sizeof(buf)-1]=0;
 	return buf;
 }
@@ -72,8 +72,8 @@ char* get_flat_string( int32_t offs )
 // Return symbol name by its idx
 char* get_import_symbol_inflat( unsigned symidx )
 {
-	char* cur= flat_buf+flat->symbols_start;
-	char* end= flat_buf+flat->file_size;
+	char* cur= (char*)flat_buf+flat->symbols_start;
+	char* end= (char*)flat_buf+flat->file_size;
 	int idx=0;
 
 	for( ; idx<symidx && cur<end; idx++) {
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
 
 
 	flat = (struct flat_hdr*) b_get_buf();
-	flat_buf = b_get_buf();
+	flat_buf = (unsigned char*)b_get_buf();
 
     char magic[5];          // "CFLA"
 	memcpy(magic,flat->magic,4);
