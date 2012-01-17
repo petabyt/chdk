@@ -404,7 +404,7 @@ static const ConfInfo conf_info[] = {
 	CONF_INFO(249, conf.remote_control_mode,  CONF_DEF_VALUE, i:0, NULL),
 
     // Text Box char map file
-    CONF_INFO(248, conf.charmap_file,        CONF_CHAR_PTR,   ptr:"", NULL),
+    CONF_INFO(250, conf.charmap_file,        CONF_CHAR_PTR,   ptr:"", NULL),
 
    };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
