@@ -122,7 +122,7 @@ static struct mpopup_item popup[]= {
         { MPOPUP_EDITOR,        (int)"Edit" },
         { MPOPUP_CHDK_REPLACE,  (int)"Set this CHDK" },
         { MPOPUP_RAWOPS,		(int)"Raw ops ->" },
-        { MPOPUP_MORE,			(int)"More -> " },
+        { MPOPUP_MORE,			LANG_POPUP_MORE },
         { 0,					0 },
 };
 
@@ -147,7 +147,7 @@ static struct mpopup_item popup_rawop[]= {
 
 static struct mpopup_item popup_more[]= {
         { MPOPUP_MKDIR,         LANG_POPUP_MKDIR },
-        { MPOPUP_RMDIR,   		(int)"Remove dir" },
+        { MPOPUP_RMDIR,   		LANG_POPUP_RMDIR },
         { MPOPUP_RENAME,   		LANG_POPUP_RENAME },
         { 0,					0 },
 };

@@ -600,10 +600,11 @@
 #define LANG_POPUP_RENAME			478
 #define LANG_PROMPT_MKDIR			479
 #define LANG_PROMPT_RENAME			480
+#define LANG_POPUP_RMDIR           481
 
 //-------------------------------------------------------------------
 
-#define GUI_LANG_ITEMS                  480
+#define GUI_LANG_ITEMS                  481
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
