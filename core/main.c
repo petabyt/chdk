@@ -60,6 +60,21 @@ _cam_screen camera_screen =
     CAM_SCREEN_WIDTH, CAM_SCREEN_HEIGHT, CAM_SCREEN_WIDTH * CAM_SCREEN_HEIGHT,
     CAM_BITMAP_WIDTH, CAM_BITMAP_HEIGHT, CAM_BITMAP_WIDTH * CAM_BITMAP_HEIGHT,
     EDGE_HMARGIN, CAM_TS_BUTTON_BORDER,
+#if defined(CAM_ZEBRA_NOBUF)
+    1,
+#else
+    0,
+#endif
+#if defined(CAM_ZEBRA_ASPECT_ADJUST)
+    1,
+#else
+    0,
+#endif
+#if defined(CAM_HAS_VARIABLE_ASPECT)
+    1,
+#else
+    0,
+#endif
 };
 
 _cam_info camera_info =
@@ -84,6 +99,12 @@ _cam_info camera_info =
     PROPCASE_EV_CORRECTION_2, 
     PROPCASE_FLASH_MODE, PROPCASE_FLASH_FIRE, 
     PROPCASE_METERING_MODE, PROPCASE_WB_ADJ,
+#if defined(PROPCASE_ASPECT_RATIO)
+    PROPCASE_ASPECT_RATIO,
+#else
+    0,
+#endif
+    PROPCASE_SHOOTING,
     },
     ROMBASEADDR, MAXRAMADDR,
 };

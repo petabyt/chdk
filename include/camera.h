@@ -90,12 +90,6 @@
 
 #define CAM_BITMAP_PALETTE          1           // which color set is used for this camera
 
-#undef CAM_HAS_VARIABLE_ASPECT                  // can switch between 16:9 and 4:3
-
-// by nandoide sept-2009
-// zebra adjust buffer height: show use at sx200is: needed for save memory space
-#define ZEBRA_HMARGIN0              0
-
 // Older cameras had a screen/bitmap buffer that was 360 pixels wide (or 480 for wide screen models)
 // CHDK was built around this 360 pixel wide display model
 // Newer cameras have a 720 pixel wide bitmap (960 for wide screen cameras)
@@ -117,7 +111,8 @@
 
 #undef CAM_ZEBRA_ASPECT_ADJUST                  // zebra needs to account for real bitmap size being different from what lib.c reports
                                                 // also used by some cameras with normal bitmap layouts for memory saving ?
-#undef CAM_ZEBRA_NOBUF                          // zebra draws directly on bitmap buffer. Requires above as well
+#undef CAM_ZEBRA_NOBUF                          // zebra draws directly on bitmap buffer.
+#undef CAM_HAS_VARIABLE_ASPECT                  // can switch between 16:9 and 4:3 (only used by zebra code)
 
 #undef CAM_DATE_FOLDER_NAMING                   // set if camera uses date based folder naming (Option "Create Folder" in Canon Menu) and get_target_dir_name is implemented
 
@@ -268,6 +263,8 @@ typedef struct
     unsigned int    width, height, size;                        // Size of bitmap screen in CHDK co-ordinates
     unsigned int    buffer_width, buffer_height, buffer_size;   // Physical size of bitmap screen
     int             edge_hmargin, ts_button_border;             // margin and touch-screen adjustment values
+    int             zebra_nobuf, zebra_aspect_adjust;           // zebra feature settings
+    int             has_variable_aspect;                        // zebra feature settings
 } _cam_screen;
 
 extern _cam_screen camera_screen;
@@ -292,6 +289,8 @@ typedef struct
         int flash_fire;
         int metering_mode;
         int wb_adj;
+        int aspect_ratio;
+        int shooting;
     } props;
     int rombaseaddr, maxramaddr;
 } _cam_info;

@@ -84,9 +84,6 @@
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                    10
 
-    #undef  ZEBRA_HMARGIN0
-    #define ZEBRA_HMARGIN0                  30
-
     #define CAM_ZEBRA_ASPECT_ADJUST         1
     #define CAM_ZEBRA_NOBUF                 1
 
