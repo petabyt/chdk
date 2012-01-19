@@ -369,9 +369,13 @@ int handle_usb_remote()
 					extern EXPO_BRACKETING_VALUES bracketing;
 					char buf[64] ;
 					static int debug_print = 0 ;
+					static int startup_delay = 0 ;
 					int i, buff_pos,  *buff_ptr ;
 					// short tv=0;
 
+				if ( startup_delay < 100 ) startup_delay++ ; 	// need to give things time to settle before using draw_string()
+				else
+				{
 					if ( debug_print++ > 10000 ) debug_print = 0 ;
 
 					if ((debug_print%2) == 0)
@@ -437,6 +441,7 @@ int handle_usb_remote()
 						draw_string(2,112,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
 					}
 
+				}
 			#endif
 
 	}
