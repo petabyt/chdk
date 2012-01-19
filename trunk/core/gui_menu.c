@@ -351,6 +351,21 @@ static void select_sub_menu()
     gui_activate_sub_menu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), -1);
 }
 
+// Call a function to process a menu item (may be a sub-menu loaded via a module)
+static void select_proc()
+{
+    if (curr_menu->menu[gui_menu_curr_item].value)
+    {
+        ((void (*)(int arg))(curr_menu->menu[gui_menu_curr_item].value))(curr_menu->menu[gui_menu_curr_item].arg);
+        if (curr_menu->on_change)
+        {
+            curr_menu->on_change(gui_menu_curr_item);
+        }
+        //gui_menu_set_curr_menu(curr_menu, 0, 0); // restore this if it causes problems
+        gui_menu_redraw=2;
+    }
+}
+
 // Move up / down in menu, adjusting scroll position if needed
 //   increment = -1 to move up, 1 to move down
 static void gui_menu_updown(int increment)
@@ -498,6 +513,9 @@ void gui_menu_kbd_process() {
                     case MENUITEM_ENUM2:
                         update_enum_value(1);
                         break;
+                    case MENUITEM_SUBMENU_PROC:
+                        select_proc();
+                        break;
                     case MENUITEM_SUBMENU:
                         select_sub_menu();
                         break;
@@ -519,16 +537,7 @@ void gui_menu_kbd_process() {
                         break;
                     case MENUITEM_SUBMENU_PROC:
                     case MENUITEM_PROC:
-                        if (curr_menu->menu[gui_menu_curr_item].value)
-                        {
-                            ((void (*)(int arg))(curr_menu->menu[gui_menu_curr_item].value))(curr_menu->menu[gui_menu_curr_item].arg);
-                            if (curr_menu->on_change)
-                            {
-                                curr_menu->on_change(gui_menu_curr_item);
-                            }
-                            //gui_menu_set_curr_menu(curr_menu, 0, 0); // restore this if it causes problems
-                            gui_menu_redraw=2;
-                        }
+                        select_proc();
                         break;
                     case MENUITEM_SUBMENU:
                         select_sub_menu();
