@@ -79,10 +79,6 @@
     #undef EDGE_HMARGIN 
     #define EDGE_HMARGIN 28
 
-    //zebra letterbox for saving memory
-    #undef ZEBRA_HMARGIN0
-    #define ZEBRA_HMARGIN0  30 //this 30 rows are not used by the display buffer is 720x240 effective, no 960x270, i.e. (270-240) reduction in widht possible but not done (more difficult to manage it and slower).
-
     #define CAM_QUALITY_OVERRIDE 1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_ZEBRA_ASPECT_ADJUST 1
