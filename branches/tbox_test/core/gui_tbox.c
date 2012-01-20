@@ -1,4 +1,4 @@
-ο»Ώ#include "stdlib.h"
+#include "stdlib.h"
 #include "keyboard.h"
 #include "platform.h"
 #include "core.h"
@@ -87,8 +87,8 @@ const char *tbox_chars_russian[] =
     {
         "ABCDEF|GKLHIJ|MNOPQRS|TUVWXYZ",
         "abcdef|ghijkl|mnopqrs|tuvwxyz",
-        "Γ€ΓΓ‚ΓƒΓ„Γ…Γ†|Γ‡ΓΓ‰ΓΓ‹ΓΓ|ΓΓΓΓ‘Γ’Γ“Γ”|Γ•Γ–Γ—ΓΓ™Γ›ΓΓΓΓ",
-        "Γ Γ΅ΓΆΓ£Γ¤Γ¥Γ¦|Γ§Γ¨Γ©ΓªΓ«Γ¬Γ­|Γ®Γ―Γ°Γ±Γ²Γ³Γ΄|ΓµΓ¶Γ·ΓΈΓΉΓ»ΓΌΓ½ΓΎΓΏ",
+        "ΐΑΒΓΔΕΖ|ΗΘΙΚΛΜΝ|ΞΟΠΡÒΣΤ|ΥΦΧΨΩΫάέήί",
+        "ΰαβγδεζ|ηθικλμν|ξοπρςστ|υφχψωϋόύώÿ",
         "123|456|789|0+-=",
         " .:,|;/\\|'\"*|#%&",
         0
