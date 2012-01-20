@@ -17,7 +17,6 @@
 #include "core.h"
 #include "keyboard.h"
 #include "conf.h"
-#include "action_stack.h"
 #include "camera.h"
 #include "usb_remote.h"
 
@@ -382,11 +381,7 @@ void usb_pwm_device(int usb_state)
   ---------------------------------------------------------------------------------------------------*/
 void usb_pulse_count_device(int usb_state)
 {
-	static int time_stamp = 0 ;
-	static int pulse_count, pulse_width  ;
-	int current_time ;
-
-	current_time = get_tick_count() ;
+	int pc ;
 
 	switch( driver_state )
 	{
@@ -395,46 +390,16 @@ void usb_pulse_count_device(int usb_state)
 			driver_state = SW_IDLE ;
 			break ;
 
-		case SW_IDLE :								// wait for USB power to be applied
-			if ( usb_state == USB_POWER_ON )
-			{
-				driver_state = SW_PRESS ;
-				time_stamp = current_time ;
-				pulse_count = 0 ;
-				virtual_remote_pulse_count = 0 ;
-			}
-			break ;
-
-		case SW_PRESS :								// wait for USB power to be removed and then test for minimum press pulse width
-			if ( usb_state == USB_POWER_OFF )
-			{
-				pulse_width = current_time - time_stamp	;
-				driver_state = SW_RELEASE ;
-				time_stamp = current_time ;
-				if ( pulse_width > CA1_MIN_FULLPRESS_TIME ) pulse_count++ ;  // ignore really short press or CA-1 half press and CA-1 cancel pulses
-			}
-			break ;
-
-		case SW_RELEASE :								// wait for USB power to be return or timeout with current pulse count
-			if ( usb_state == USB_POWER_ON )
-			{
-				driver_state = SW_PRESS ;
-				time_stamp = current_time ;
-			}
-			else
-			{
-				if (( current_time - time_stamp > pulse_width*4 ) && (current_time - time_stamp > 500 ))  	// time out after last press ?
-				{
-					driver_state = SW_IDLE ;
-					virtual_remote_pulse_count = pulse_count ;
-				}
-			}
+		case SW_IDLE :
+			pc = get_usb_power(3) ;
+			if ( pc != 0) virtual_remote_pulse_count  = pc ;
 			break ;
 
 		default :
 			debug_error(INVALID_STATE) ;
 			break ;
 	}
+
 } ;
 
  /*===================================================================================================

@@ -57,7 +57,67 @@ extern void debug_error(int ) ;
 
 
 /*---------------------------------------------------------------------------------------------------
-	Control Module :  Normal
+	Control Module :  Playback
+		- does right & left key presses in playback mode to allow scrolling through images in LCD
+		- most useful with stereo photography to allow sync'd review of multiple cameras
+  ---------------------------------------------------------------------------------------------------*/
+
+ void usb_playback_module(int switch_type)
+ {
+	static int time_stamp = 0 ;
+	static int direction = 0 ;		// 0 = left button,  1 = right button
+	int i, current_time ;
+
+	current_time = get_tick_count();
+
+	switch( logic_module_state )
+	{
+		case LM_RESET :
+			logic_module_state = LM_RELEASE ;
+			break ;
+
+		case LM_RELEASE :
+			i =  get_usb_power(3) ;
+			switch( i )
+			{
+				case PLAYBACK_REVERSE :
+					direction = direction ? 0 : 1 ;		 // fall through to next case
+				case PLAYBACK_NEXT :
+					if ( direction ) kbd_key_press(KEY_LEFT);
+					else  kbd_key_press(KEY_RIGHT);
+					logic_module_state = LM_KEY_PRESS ;
+					time_stamp = current_time ;
+					break ;
+			
+				case PLAYBACK_LEFT :
+					direction = 0 ;
+					break ;
+					
+				case PLAYBACK_RIGHT :
+					direction = 1 ;
+					break ;				
+
+				default :
+					break ;
+			}
+			break ;
+
+		case LM_KEY_PRESS :	
+			if( (current_time - time_stamp) > REMOTE_CLICK_TIME )
+			{
+				if ( direction ) kbd_key_release(KEY_LEFT);
+				else  kbd_key_release(KEY_RIGHT);			
+				logic_module_state = LM_RELEASE ;
+			}
+			break ;
+
+		default :
+			break ;
+	}
+}
+
+/*---------------------------------------------------------------------------------------------------
+	Control Module :  Shoot Normal
 		- module to activate camera's half press key on virtual half press and full press key on virtual full press
 		- implements sync as follows :
 			1) one press switch - starts a full shoot on half press so that sync happens on "full press"
@@ -65,7 +125,7 @@ extern void debug_error(int ) ;
 			3) CA-1 - does half press action, starts shoot on full press - sync happens at end of CA-1 150 mSec pulse
   ---------------------------------------------------------------------------------------------------*/
 
-void usb_control_module_normal(int cam_mode)
+void usb_shoot_module_normal(int cam_mode)
 {
 	static long usb_remote_stack_name = -1;
 
@@ -288,12 +348,12 @@ void usb_control_module_normal(int cam_mode)
 };
 
 /*---------------------------------------------------------------------------------------------------
-	Control Module :  Quick
+	Control Module :  Shoot Quick
 		- module to launch "shoot()" on leading edge of either virtual HALF_PRESS or FULL_PRESS
 		- does not support sync
   ---------------------------------------------------------------------------------------------------*/
 
- void usb_control_module_quick(int cam_mode)
+ void usb_shoot_module_quick(int cam_mode)
 {
 	static long usb_remote_stack_name = -1;
 
@@ -337,13 +397,13 @@ void usb_control_module_normal(int cam_mode)
 }
 
 /*---------------------------------------------------------------------------------------------------
-	Control Module :  Burst
+	Control Module :  Shoot Burst
 		- module to launch "shoot()" continuously while virtual HALF_PRESSED is true
 		- refocus & exposure set on each shot - another mode could be added to lock those on first shot
 		- virtual FULL_PRESS is ignored
   ---------------------------------------------------------------------------------------------------*/
 
-void usb_control_module_burst(int cam_mode)
+void usb_shoot_module_burst(int cam_mode)
 {
 	static long usb_remote_stack_name = -1;
 
@@ -387,7 +447,7 @@ void usb_control_module_burst(int cam_mode)
 }
 
 /*---------------------------------------------------------------------------------------------------
-	Control Module :  Zoom
+	Control Module :  Shoot Zoom
 		- module to allow zoom action to be synced between two camera
 		- works with Pulse Count input device
 			- 1 pulse  = zoom in
@@ -397,7 +457,7 @@ void usb_control_module_burst(int cam_mode)
 			- 5 pulses = zoom full out
   ---------------------------------------------------------------------------------------------------*/
 
-void usb_control_zoom(int cam_mode)
+void usb_shoot_module_zoom(int cam_mode)
 {
 	static long usb_remote_stack_name = -1;
 
@@ -452,7 +512,7 @@ void usb_control_zoom(int cam_mode)
 };
 
 /*---------------------------------------------------------------------------------------------------
-	Control Module :  Bracketing
+	Control Module :  Shoot Bracketing
 		- module to allow bracketing shots without using camera's timer or continuous modes
 		- focus & exposure on each half press - shoots on full press
 		- times out in 5 seconds after the last full press
@@ -460,7 +520,7 @@ void usb_control_zoom(int cam_mode)
 extern void bracketing_step() ;
 extern void bracketing_reset() ;
 
-void usb_control_bracketing(int cam_mode)
+void usb_shoot_module_bracketing(int cam_mode)
 {
 	int current_time ;
 
@@ -563,7 +623,7 @@ void usb_control_bracketing(int cam_mode)
 	Control Module :  Video
 		- starts video (with sync if selected) on press,  stops on next press
   ---------------------------------------------------------------------------------------------------*/
-void usb_video(int cam_mode)
+void usb_video_module_normal(int cam_mode)
 {
 
 	switch( logic_module_state )
@@ -670,7 +730,7 @@ void usb_video(int cam_mode)
 					to move a joystick from the up position to the down position without going through the middle position.
 
   ---------------------------------------------------------------------------------------------------*/
-void usb_gentWIRE(int cam_mode)
+void usb_shoot_gentWIRE(int cam_mode)
 {
 
 };
@@ -681,7 +741,7 @@ void usb_gentWIRE(int cam_mode)
 		- this mode converts virtual remote state so that script can access via wait_click and is_key
 		- does not press keys itself
   ---------------------------------------------------------------------------------------------------*/
-void usb_control_scripting(int cam_mode)
+void usb_shoot_scripting(int cam_mode)
 {
 
 };
@@ -699,16 +759,16 @@ void usb_null_module(int i) {  } ;						// module that does nothing - useful for
 
 void (*usb_module_play[NUM_USB_MODULES])(int) =
 	{
-				usb_null_module ,
-				usb_null_module ,
-				usb_null_module ,
-				usb_null_module ,
-				usb_null_module ,
-				usb_null_module ,
-				usb_null_module ,
-				usb_null_module ,
-				usb_null_module,
-				usb_null_module
+				usb_null_module ,				// [   None]
+				usb_playback_module ,			// [ Normal]
+				usb_playback_module ,			// [  Quick]
+				usb_playback_module ,			// [  Burst]
+				usb_playback_module ,			// [Bracket]
+				usb_playback_module ,			// [   Zoom]
+				usb_playback_module ,			// [  Video]
+				usb_playback_module ,			// [  gWIRE]
+				usb_playback_module ,			// [ Script]
+				usb_null_module					// --
 	};
 
 
@@ -716,16 +776,16 @@ void (*usb_module_play[NUM_USB_MODULES])(int) =
 
 void (*usb_module_shoot[NUM_USB_MODULES])(int) =
 	{
-				usb_null_module ,
-				usb_control_module_normal ,
-				usb_control_module_quick ,
-				usb_control_module_burst ,
-				usb_control_bracketing ,
-				usb_control_zoom ,
-				usb_null_module ,						// video mode only
-				usb_gentWIRE ,
-				usb_control_scripting,
-				usb_null_module
+				usb_null_module ,				// [   None]
+				usb_shoot_module_normal ,		// [ Normal]
+				usb_shoot_module_quick ,		// [  Quick]
+				usb_shoot_module_burst ,		// [  Burst]
+				usb_shoot_module_bracketing ,	// [Bracket]
+				usb_shoot_module_zoom ,			// [   Zoom]
+				usb_null_module ,				// [  Video]
+				usb_shoot_gentWIRE ,			// [  gWIRE]
+				usb_shoot_scripting,			// [ Script]
+				usb_null_module					// --
 	};
 
 
@@ -733,14 +793,14 @@ void (*usb_module_shoot[NUM_USB_MODULES])(int) =
 
 void (*usb_module_video[NUM_USB_MODULES])(int) =
 	{
-				usb_null_module ,
-				usb_null_module ,
-				usb_null_module ,
-				usb_null_module ,
-				usb_null_module ,
-				usb_null_module ,
-				usb_video ,
-				usb_null_module ,
-				usb_null_module,
-				usb_null_module
+				usb_null_module ,				// [   None]
+				usb_video_module_normal ,		// [ Normal]
+				usb_video_module_normal ,		// [  Quick]
+				usb_null_module ,				// [  Burst]
+				usb_null_module ,				// [Bracket]
+				usb_null_module ,				// [   Zoom]
+				usb_video_module_normal ,		// [  Video]
+				usb_null_module ,				// [  gWIRE]
+				usb_null_module ,				// [ Script]
+				usb_null_module 				// --
 		};
