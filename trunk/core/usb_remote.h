@@ -3,7 +3,7 @@
   ===================================================================================================*/
 
 #undef USB_REMOTE_DEBUGGING
-// #define USB_REMOTE_DEBUGGING 1
+//#define USB_REMOTE_DEBUGGING 1
 
 #define NUM_USB_INPUT_DRV 10
 #define NUM_USB_MODULES 10
@@ -65,7 +65,8 @@ enum  LOGIC_MODULE_STATE {								// remote control mode states
 	LM_FULL_PRESS,
 	LM_START_RECORD ,
 	LM_RECORDING ,
-	LM_STOP_RECORDING
+	LM_STOP_RECORDING ,
+	LM_KEY_PRESS
 } ;
 
 enum USB_STATE {								// values returned from get_usb_power(1)
@@ -87,6 +88,13 @@ enum  ZOOM_MODE {
 	ZOOM_FULL_IN
 } ;
 
+enum  PLAYBACK_MODE {    				// playback scroll through pix - looks at pulse counts so 0 = NOP
+	PLAYBACK_NEXT =1  ,	
+	PLAYBACK_REVERSE ,
+	PLAYBACK_LEFT ,
+	PLAYBACK_RIGHT
+} ;
+
 // USB remote processing status
 
 #define RMT_DISABLED 0
@@ -94,6 +102,7 @@ enum  ZOOM_MODE {
 
 // timing parameters
 
+#define REMOTE_CLICK_TIME 100
 #define DEBOUNCE_TIME 10
 #define MAX_PULSE_TIME 10000
 #define FULL_PRESS_PULSE_TIME 1000
