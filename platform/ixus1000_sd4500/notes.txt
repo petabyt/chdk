@@ -1,34 +1,18 @@
 ************************************
-SX200 IS Notes
+IXUS1000/SD4500 Notes
+This is an alpha port with some serious issues, but the porter(s) neglected to put anything here. Good luck!
 
-To enter CHDK <Alt> mode use the Print button.
+The following items appeared on the wiki
+--
+The video key press short switch the chdk alt mode. press long record video
 
-Custom Curves do not work with the SX200.
+chdk menu make card bootable does not work. Use a Program on your PC to make the Card bootable. Remember the 4 GB Limit of boot Partition. I suggest to use 2 4 gb Partitions so you need switch partitions only when 4gb is full when you want read data.
 
-The SX200 normally starts in Playback mode, 
-to switch to Record mode half press the Shutter button once. 
+Switch partitions chdk menu work. After that switch off and on the Camera
 
-To start directly in Record mode, 
-hold down the Power button ~ 2 seconds 
+This camera use a #define cam_CFAPattern 0x01020001 // Green red blue Green
 
-Support for dual partition is available, 
-so SDHC cards > 4GB can use autostart method. 
-
-Note that sound recording is always enabled in Video Record mode.
-
-AF in Video mode
-  To enable set "AF Key" (Set or Shutter) in the CHDK menu,
-  during video recording press the AF Key to make a single AF scan.
-
-
-Shortcut Keys
- In Alt mode
- TOGGLE RAW                DISPLAY Key
- In Half press shoot Mode  
- TOGGLE HISTO              DOWN Key
- TOGGLE ZEBRA              MENU Key
- TOGGLE OSD                RIGHT Key
- TOGGLE DISABLE OVERRIDES  LEFT Key
-
-
-
+bayer pattern. So only DNG RAW work. For cr2 need change the converter to support this pattern 
+--
+Other known issues
+* The modemap is wrong
