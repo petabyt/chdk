@@ -92,6 +92,7 @@ const ISOTable iso_table[] = {
    {  6, 3200, "3200", -1},
 };
 
+// TODO this needs to be updated for ixus1000
 /*
 http://www.usa.canon.com/cusa/support/consumer/digital_cameras/other_powershot/powershot_sx210_is#Specifications
 Shooting Modes
