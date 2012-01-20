@@ -473,14 +473,13 @@ void module_unload(char* name)
 //-----------------------------------------------
 int module_check_is_exist(char* name)
 {
-  char path[60];
-  flat_module_path_make(path, name);
+    char path[60];
+    flat_module_path_make(path, name);
 
-   module_fd = open( path, O_RDONLY, 0777 );
-   if ( module_fd >0 )
-     close (module_fd);
+    struct stat st;
+    if (stat(path,&st) != 0) return 0;  // file does not exist
 
-   return (module_fd>=0)?1:0;
+    return 1;
 }
 
 //-----------------------------------------------

@@ -317,9 +317,6 @@ typedef struct {
 	int remote_switch_type ;
 	int remote_control_mode ;
 
-    // Text Box char map file
-    char charmap_file[100];
-
 } Conf;
 
 extern Conf conf;

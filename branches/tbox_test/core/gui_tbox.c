@@ -7,10 +7,27 @@
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_lang.h"
+#include "gui_menu.h"
 #include "gui_mbox.h"
+#include "gui_tbox.h"
 
 #include "module_load.h"
 
+//-------------------------------------------------------------------
+// Zebra config settings
+
+typedef struct
+{
+    int char_map;
+} TextBoxConf;
+
+TextBoxConf tconf;
+
+static ConfInfo conf_info[] = {
+    CONF_INFO( 1, tconf.char_map,               CONF_DEF_VALUE, i:0, NULL),
+};
+
+//-------------------------------------------------------------------
 extern void gui_tbox_kbd_process();
 extern void gui_tbox_draw(int enforce_redraw);
 
@@ -52,21 +69,36 @@ static int          max_keyboard_lenght;
 
 #define MAX_MSG_LENGH           20  //max length of hardcoded messages (>navigate cursor<, text limit reached)
 
-typedef void (*tbox_on_select_t)(char* newstr);
+typedef void (*tbox_on_select_t)(const char* newstr);
 tbox_on_select_t tbox_on_select = 0;
 
 static coord    tbox_buttons_x, tbox_buttons_y;
 
-//
-const char *tbox_chars_default[] = {"ABCDEF|GHIJKL|MNOPQRS|TUVWXYZ",
-                            "abcdef|ghijkl|mnopqrs|tuvwxyz",
-                            "123|456|789|0+-=/",
-                            ".,:;?!|@#$%^&|()[]{}|<>\"'`~",
-                            0 };
+// Char maps
+const char *tbox_chars_default[] = 
+    {
+        "ABCDEF|GHIJKL|MNOPQRS|TUVWXYZ",
+        "abcdef|ghijkl|mnopqrs|tuvwxyz",
+        "123|456|789|0+-=/",
+        ".,:;?!|@#$%^&|()[]{}|<>\"'`~",
+        0
+    };
+const char *tbox_chars_russian[] =
+    {
+        "ABCDEF|GKLHIJ|MNOPQRS|TUVWXYZ",
+        "abcdef|ghijkl|mnopqrs|tuvwxyz",
+        "ÀÁÂÃÄÅÆ|ÇÈÉÊËÌÍ|ÎÏÐÑÒÓÔ|ÕÖ×ØÙÛÜÝÞß",
+        "àáâãäåæ|çèéêëìí|îïðñòóô|õö÷øùûüýþÿ",
+        "123|456|789|0+-=",
+        " .:,|;/\\|'\"*|#%&",
+        0
+    };
 
-const char *tbox_chars[MAX_CHARSET+1]; // current char map (array of string. separator of groups is '|')
-int lines = 0;                         // num of valid lines in tbox_chars
-int subgroup_offs[4];                  // offsets of subgroups in currently selected line of tbox_chars
+const char **charmaps[] = { tbox_chars_default, tbox_chars_russian };
+
+const char **tbox_chars;    // current char map (array of string. separator of groups is '|')
+int lines = 0;              // num of valid lines in tbox_chars
+int subgroup_offs[4];       // offsets of subgroups in currently selected line of tbox_chars
 
 
 int tbox_button_active, line;
@@ -80,32 +112,15 @@ int maxlen, offset;
 coord text_offset_x, text_offset_y, key_offset_x;
 
 //-------------------------------------------------------
-static void tbox_charmap_init( char* buffer, int buffer_size)
+static void tbox_charmap_init( const char** buffer )
 {
-  int i, size;
+  max_keyboard_lenght = 0;
+  tbox_chars = buffer;
 
-  lines=0;
-  memset( tbox_chars, 0, sizeof(tbox_chars) );
-
-  lines = 0;
-  for ( i=0; i<buffer_size && lines<MAX_CHARSET;)
+  for (lines=0; tbox_chars[lines] && lines<MAX_CHARSET; lines++)
   {
-     size = strlen(buffer+i);
-     if ( size > 0 )
-        tbox_chars[lines++]=(buffer+i);
-        if (max_keyboard_lenght<size) max_keyboard_lenght=size;
-     i+=size+1;
-  }
-
-  if ( lines>0 )
-    return;
-
-
-  for (lines=0;lines<MAX_CHARSET;lines++) {
-    tbox_chars[lines] = tbox_chars_default[lines];
-    if ( tbox_chars[lines]==0 )
-      break;
-    if (max_keyboard_lenght<strlen(tbox_chars[lines])) max_keyboard_lenght=strlen(tbox_chars[lines]);
+    if (max_keyboard_lenght < strlen(tbox_chars[lines])) 
+        max_keyboard_lenght = strlen(tbox_chars[lines]);
   }
 }
 
@@ -124,16 +139,18 @@ static void tbox_split_to_subgroups()
 }
 
 
+int textbox_init(int title, int msg, char* defaultstr, unsigned int maxsize, void (*on_select)(const char* newstr)) {
 
-void gui_tbox_init(int title, int msg, char* defaultstr, unsigned int maxsize, void (*on_select)(char* newstr)) {
     text = malloc(sizeof(char)*(maxsize+1));
     if ( text==0 ) {
         // fatal failure
         if (tbox_on_select)
             tbox_on_select(0);    // notify callback about exit as cancel
         module_async_unload(module_idx);
-        return;
+        return 0;
     }
+
+    tbox_charmap_init( charmaps[tconf.char_map] );
 
     memset(text, '\0', sizeof(char)*(maxsize+1));
 
@@ -145,7 +162,6 @@ void gui_tbox_init(int title, int msg, char* defaultstr, unsigned int maxsize, v
     tbox_title = lang_str(title);
     tbox_msg = lang_str(msg);
     tbox_on_select = on_select;
-    gui_tbox_mode_old = gui_set_mode( &GUI_MODE_TBOX );
 
     Mode = 'K';
     line = 0;
@@ -156,6 +172,9 @@ void gui_tbox_init(int title, int msg, char* defaultstr, unsigned int maxsize, v
     tbox_split_to_subgroups();
 
     gui_tbox_redraw = 2;
+    gui_tbox_mode_old = gui_set_mode( &GUI_MODE_TBOX );
+
+    return 1;
 }
 
 
@@ -520,6 +539,7 @@ void gui_tbox_kbd_process()
                          tbox_on_select(text); // ok
                     else {
                         free(text);
+                        text = 0;
                         tbox_on_select(0); // cancel
                     }
                     text=0;
@@ -535,22 +555,32 @@ void gui_tbox_kbd_process()
 }
 
 
-// DEBUG TEST CALLBACK
-void test_callback(char* txt )
-{
-    if ( txt==0 )    // cancel
-    {
-        gui_mbox_init(139, 139, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-    }
-    else        //ok
-    {
-        gui_mbox_init(138, (int)txt, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-        // should be free in real callback but here should be kept to correct mbox
-    }
-}
+//-------------------------------------------------------------------
+
+static const char* gui_text_box_charmap[] = { "Default", "Russian" };
+static CMenuItem zebra_submenu_items[] = {
+    MENU_ENUM2(0x5f,LANG_MENU_VIS_CHARMAP,              &tconf.char_map, gui_text_box_charmap ),
+    MENU_ITEM(0x51,LANG_MENU_BACK,                      MENUITEM_UP, 0, 0 ),
+    {0}
+};
+static CMenu textbox_submenu = {0x26,LANG_STR_TEXTBOX_SETTINGS, NULL, zebra_submenu_items };
 
 
 //==================================================
+
+struct libtextbox_sym libtextbox = {
+    MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
+							    // increase minor if compatible changes made(including extending this struct)
+    textbox_init,
+};
+
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)1,
+
+			&libtextbox
+		};
 
 
 //---------------------------------------------------------
@@ -567,11 +597,11 @@ int _module_loader( void** chdk_export_list )
   if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
       return 1;
 
+  config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/_tbox.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0, 0);
   cl_greygrey = MAKE_COLOR(COLOR_GREY, COLOR_GREY);
 
   return 0;
 }
-
 
 
 //---------------------------------------------------------
@@ -580,13 +610,14 @@ int _module_loader( void** chdk_export_list )
 //---------------------------------------------------------
 int _module_unloader()
 {
-    // clean allocated resource
-    if ( text!=0 ) {
-        free(text);
-        if (tbox_on_select)
-            tbox_on_select(0);    // notify callback about exit as cancel
-    }
+    config_save(&conf_info[0], "A/CHDK/MODULES/CFG/_tbox.cfg", sizeof(conf_info)/sizeof(conf_info[0]));
 
+    // clean allocated resource
+    if ( text!=0 )
+    {
+        free(text);
+        text = 0;
+    }
 
     //sanity clean to prevent accidentaly assign/restore guimode to unloaded module
     GUI_MODE_TBOX.magicnum = 0;
@@ -603,31 +634,7 @@ int _module_run(int moduleidx, int argn, int* arguments)
 {
   module_idx=moduleidx;
 
-
-  // DEBUG CASE
-  if ( argn==0 ) {
-      tbox_charmap_init( 0,0 );
-
-        gui_tbox_init( 137 /*title*/, 137 /*msg*/, (char*)NULL /*defaultstr*/,
-                 50 /*maxsize*/, test_callback /* on_select */);
-    return 0;
-
-  }
-
-  // "Run scenario #1" - no arguments request for keyboard API version
-  if ( argn!=7 || arguments==0 || arguments[6]==0)
-  {
-    module_async_unload(moduleidx);
-    return MAKE_API_VERSION(1,0);
-  }
-
-  // Autounloading is unsafe because it should exists to catch finalization of mpopup
-  //module_set_flags(module_idx, MODULE_FLAG_DISABLE_AUTOUNLOAD);
-
-  tbox_charmap_init( (char*)arguments[0] /*charmap_buffer*/, arguments[1] /*charmap_size*/);
-
-  gui_tbox_init( arguments[2] /*title*/, arguments[3] /*msg*/, (char*)arguments[4] /*defaultstr*/,
-                 arguments[5] /*maxsize*/, (tbox_on_select_t) arguments[6] /* on_select */);
+  gui_activate_sub_menu(&textbox_submenu, module_idx);
 
   return 0;
 }
@@ -638,10 +645,10 @@ int _module_run(int moduleidx, int argn, int* arguments)
 struct ModuleInfo _module_info = {    MODULEINFO_V1_MAGICNUM,
                                     sizeof(struct ModuleInfo),
 
-                                    ANY_CHDK_BRANCH, 0,            // Requirements of CHDK version
-                                    ANY_PLATFORM_ALLOWED,        // Specify platform dependency
-                                    0,    // MODULEINFO_FLAG_SYSTEM,            // flag
+                                    ANY_CHDK_BRANCH, 0,             // Requirements of CHDK version
+                                    ANY_PLATFORM_ALLOWED,           // Specify platform dependency
+                                    MODULEINFO_FLAG_SYSTEM,         // flag
                                     (int32_t)"Virtual keyboard",    // Module name
-                                    1, 0,                        // Module version
+                                    1, 0,                           // Module version
                                     0
                                  };
