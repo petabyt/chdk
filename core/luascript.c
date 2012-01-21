@@ -1006,8 +1006,7 @@ static int luaCB_set_autostart( lua_State* L )
 
 static int luaCB_get_usb_power( lua_State* L )
 {
-  if (luaL_optnumber( L, 1, 0 )) lua_pushnumber( L, get_usb_power(1) );
-  else lua_pushnumber( L, get_usb_power(0) );
+  lua_pushnumber( L, get_usb_power(luaL_optnumber( L, 1, 0 )) );
   return 1;
 }
 

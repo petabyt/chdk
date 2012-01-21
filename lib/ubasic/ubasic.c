@@ -297,7 +297,7 @@ case TOKENIZER_GET_SCRIPT_AUTOSTART:
     break;
 case TOKENIZER_GET_USB_POWER:
     accept(TOKENIZER_GET_USB_POWER);
-    r = get_usb_power(0);
+    r = get_usb_power( expr() );
     break;
 case TOKENIZER_GET_EXP_COUNT:
     accept(TOKENIZER_GET_EXP_COUNT);

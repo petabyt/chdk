@@ -62,7 +62,7 @@ extern void debug_error(int ) ;
 		- most useful with stereo photography to allow sync'd review of multiple cameras
   ---------------------------------------------------------------------------------------------------*/
 
- void usb_playback_module(int switch_type)
+ void usb_playback_module()
  {
 	static int time_stamp = 0 ;
 	static int direction = 0 ;		// 0 = left button,  1 = right button
@@ -125,7 +125,7 @@ extern void debug_error(int ) ;
 			3) CA-1 - does half press action, starts shoot on full press - sync happens at end of CA-1 150 mSec pulse
   ---------------------------------------------------------------------------------------------------*/
 
-void usb_shoot_module_normal(int cam_mode)
+void usb_shoot_module_normal()
 {
 	static long usb_remote_stack_name = -1;
 
@@ -353,7 +353,7 @@ void usb_shoot_module_normal(int cam_mode)
 		- does not support sync
   ---------------------------------------------------------------------------------------------------*/
 
- void usb_shoot_module_quick(int cam_mode)
+ void usb_shoot_module_quick()
 {
 	static long usb_remote_stack_name = -1;
 
@@ -403,7 +403,7 @@ void usb_shoot_module_normal(int cam_mode)
 		- virtual FULL_PRESS is ignored
   ---------------------------------------------------------------------------------------------------*/
 
-void usb_shoot_module_burst(int cam_mode)
+void usb_shoot_module_burst()
 {
 	static long usb_remote_stack_name = -1;
 
@@ -457,7 +457,7 @@ void usb_shoot_module_burst(int cam_mode)
 			- 5 pulses = zoom full out
   ---------------------------------------------------------------------------------------------------*/
 
-void usb_shoot_module_zoom(int cam_mode)
+void usb_shoot_module_zoom()
 {
 	static long usb_remote_stack_name = -1;
 
@@ -520,7 +520,7 @@ void usb_shoot_module_zoom(int cam_mode)
 extern void bracketing_step() ;
 extern void bracketing_reset() ;
 
-void usb_shoot_module_bracketing(int cam_mode)
+void usb_shoot_module_bracketing()
 {
 	int current_time ;
 
@@ -623,7 +623,7 @@ void usb_shoot_module_bracketing(int cam_mode)
 	Control Module :  Video
 		- starts video (with sync if selected) on press,  stops on next press
   ---------------------------------------------------------------------------------------------------*/
-void usb_video_module_normal(int cam_mode)
+void usb_video_module_normal()
 {
 
 	switch( logic_module_state )
@@ -713,38 +713,6 @@ void usb_video_module_normal(int cam_mode)
 
 };
 
-/*---------------------------------------------------------------------------------------------------
-	Control Module :  gentWIRE-USB2   ++ FUTURE ++
-		- interfaces with PWM input device module and a USB port connected to a gentWIRE-USB2 device
-		- the gentWIRE-USB2 lets you connect two servo channels to the USB port of a CHDK-enabled Canon camera.
-		- inputs from the gentWIRE-USB2 are as follows :
-			30 mS signal when joystick 1 is moved up
-			60mS signal when joystick 1 is centered
-			90mS signal when joystick 1 is moved down
-			120 mS signal when joystick 2 is moved up
-			150mS signal when joystick 2 is centered
-			180mS signal when joystick 2 is moved down
-		For example, an "up" movement of joystick 2 will return a value of 12 (or possibly 13 since it's not possible for the system to be exactly precise).
-
-		Important Note  : when assigning an action to the joystick middle position, bear in mind that it's not possible
-					to move a joystick from the up position to the down position without going through the middle position.
-
-  ---------------------------------------------------------------------------------------------------*/
-void usb_shoot_gentWIRE(int cam_mode)
-{
-
-};
-
-/*---------------------------------------------------------------------------------------------------
-	Control Module :  Script  ++ FUTURE ++
-		- currently CHDK scripts are disabled while a USB remote process is running
-		- this mode converts virtual remote state so that script can access via wait_click and is_key
-		- does not press keys itself
-  ---------------------------------------------------------------------------------------------------*/
-void usb_shoot_scripting(int cam_mode)
-{
-
-};
 
  /*===================================================================================================
 
@@ -757,7 +725,7 @@ void usb_null_module(int i) {  } ;						// module that does nothing - useful for
 
 // play mode jump table for control logic modules - must match gui_USB_control_modes[] in gui.c
 
-void (*usb_module_play[NUM_USB_MODULES])(int) =
+void (*usb_module_play[NUM_USB_MODULES])() =
 	{
 				usb_null_module ,				// [   None]
 				usb_playback_module ,			// [ Normal]
@@ -774,7 +742,7 @@ void (*usb_module_play[NUM_USB_MODULES])(int) =
 
 // shooting mode jump table for control logic modules - must match gui_USB_control_modes[] in gui.c
 
-void (*usb_module_shoot[NUM_USB_MODULES])(int) =
+void (*usb_module_shoot[NUM_USB_MODULES])() =
 	{
 				usb_null_module ,				// [   None]
 				usb_shoot_module_normal ,		// [ Normal]
@@ -783,15 +751,15 @@ void (*usb_module_shoot[NUM_USB_MODULES])(int) =
 				usb_shoot_module_bracketing ,	// [Bracket]
 				usb_shoot_module_zoom ,			// [   Zoom]
 				usb_null_module ,				// [  Video]
-				usb_shoot_gentWIRE ,			// [  gWIRE]
-				usb_shoot_scripting,			// [ Script]
+				usb_null_module,				// --
+				usb_null_module,				// --
 				usb_null_module					// --
 	};
 
 
 // video mode jump table for control logic modules - must match gui_USB_control_modes[] in gui.c
 
-void (*usb_module_video[NUM_USB_MODULES])(int) =
+void (*usb_module_video[NUM_USB_MODULES])() =
 	{
 				usb_null_module ,				// [   None]
 				usb_video_module_normal ,		// [ Normal]
@@ -800,7 +768,7 @@ void (*usb_module_video[NUM_USB_MODULES])(int) =
 				usb_null_module ,				// [Bracket]
 				usb_null_module ,				// [   Zoom]
 				usb_video_module_normal ,		// [  Video]
-				usb_null_module ,				// [  gWIRE]
-				usb_null_module ,				// [ Script]
+				usb_null_module ,				// --
+				usb_null_module ,				// --
 				usb_null_module 				// --
 		};
