@@ -159,8 +159,6 @@ void kbd_calibrate_synch_delay()
 
   ---------------------------------------------------------------------------------------------------------*/
 
-// #define REMOTE_SYNC_STATUS_LED 	0xC02200D4	// FIXME : need to generalize this - should be in platform_camera.h ?
-
 #ifdef REMOTE_SYNC_STATUS_LED
 
 	void usb_remote_status_led(int state)
@@ -315,23 +313,16 @@ int get_usb_power(int mode)
 	return x;
 }
 
-
-
-
-
-extern void (*usb_driver[])(int ) ;
-extern void (*usb_control_module[])(int ) ;
-
 /*===================================================================================================
 
    main USB remote processing routine - called every 10 mSec fronm kbd.c
 
   ===================================================================================================*/
 
-extern void (*usb_driver[])(int ) ;
-extern void (*usb_module_play[])(int ) ;
-extern void (*usb_module_shoot[])(int ) ;
-extern void (*usb_module_video[])(int ) ;
+extern void (*usb_driver[])( ) ;
+extern void (*usb_module_play[])( ) ;
+extern void (*usb_module_shoot[])( ) ;
+extern void (*usb_module_video[])( ) ;
 
 int handle_usb_remote()
 {
@@ -359,15 +350,15 @@ int handle_usb_remote()
 		switch( camera_mode )
 		{
 			case CAMERA_MODE_PLAYBACK :
-				(*usb_module_play[switch_type])(camera_mode); 		// jump to control module state machine
+				(*usb_module_play[switch_type])(); 		// jump to control module state machine
 				break ;
 
 			case CAMERA_MODE_SHOOTING :
-				(*usb_module_shoot[control_module])(camera_mode); 		// jump to control module state machine
+				(*usb_module_shoot[control_module])(); 		// jump to control module state machine
 				break ;
 
 			case CAMERA_MODE_VIDEO :
-				(*usb_module_video[control_module])(camera_mode); 		// jump to control module state machine
+				(*usb_module_video[control_module])(); 		// jump to control module state machine
 				break ;
 
 			default :
@@ -437,11 +428,8 @@ int handle_usb_remote()
 						draw_string(2,64,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
 						sprintf(buf,"physw=%d err=%d %d %d  ", physw_status[0]&0x03, debug_errors[0],  debug_errors[1],  debug_errors[2] );
 						draw_string(2,80,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
-
-				}
-
-					}
-
+					}	
+					
 					if (((debug_print+75)%100) == 0 )
 					{
 						buff_ptr = usb_buffer_in ;
@@ -463,7 +451,6 @@ int handle_usb_remote()
 
 				}
 			#endif
-
 	}
 	else
 	{

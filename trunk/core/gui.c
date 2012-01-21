@@ -230,7 +230,7 @@ static int debug_display_direction=1;
 //-------------------------------------------------------------------
 
 const char* gui_USB_switch_types[] = { "None","OnePush", "TwoPush", "CA-1", "P Width", "P Count" };
-const char* gui_USB_control_modes[] = { "None", "Normal", "Quick", "Burst", "Bracket","Zoom", "Video","gWIRE","Script" }; 
+const char* gui_USB_control_modes[] = { "None", "Normal", "Quick", "Burst", "Bracket","Zoom", "Video" }; 
   
 
 static CMenuItem remote_submenu_items[] = {
