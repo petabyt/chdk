@@ -13,7 +13,7 @@
 	Expands curves features
 	
 	RGB curves:  	ouput = curve[input]
-	L cruves: 		output = curve[L] *(input-black) + black
+	L curves: 		output = curve[L] *(input-black) + black
 	RGB curves and L curves are 4 colors curves
 	L curves contain multiplicator factor (value = multiplicator * 10^12)
 	
@@ -139,7 +139,7 @@ void curveRGB_apply() {
 	// Loop through picture rows
 	for (i=camera_sensor.raw_rows; i;i-=2){
 		// Loop through picture columns 
-		for (j=camera_sensor.raw_rows; j; j-=8, src+=10){
+		for (j=camera_sensor.raw_rowpix; j; j-=8, src+=10){
 			pixVal0=((0x3fc&(((unsigned short)(src[1]))<<2)) | (src[0] >> 6));
 			pixVal1=((0x3f0&(((unsigned short)(src[0]))<<4)) | (src[3] >> 4));
 				pixVal0 = curve0[pixVal0];
@@ -170,7 +170,7 @@ void curveRGB_apply() {
             *(src+9) = (unsigned char) ((pixVal2<<2)|(pixVal0>>8)); // 6,7 =>(2,0)
             *(src+8) = (unsigned char) ((pixVal0)); //7 (=>0)		}
 		}
-		for (j=camera_sensor.raw_rows;j; j-=8, src+=10){
+		for (j=camera_sensor.raw_rowpix;j; j-=8, src+=10){
 			pixVal0=((0x3fc&(((unsigned short)(src[1]))<<2)) | (src[0] >> 6));
 			pixVal1=((0x3f0&(((unsigned short)(src[0]))<<4)) | (src[3] >> 4));
 				pixVal0 = curve2[pixVal0];
@@ -235,7 +235,7 @@ void curveL_apply(unsigned sys_index) {
 	// Loop through picture rows
 	for (i=camera_sensor.raw_rows; i;i-=2){
 		// Loop through picture columns 
-		for (j=camera_sensor.raw_rows; j; j-=8, src+=10){
+		for (j=camera_sensor.raw_rowpix; j; j-=8, src+=10){
 			pixVal0=((0x3fc&(((unsigned short)(src[1]))<<2)) | (src[0] >> 6));
 			pixVal1=((0x3f0&(((unsigned short)(src[0]))<<4)) | (src[3] >> 4));
 			if (pixVal1) {
@@ -298,7 +298,7 @@ void curveL_apply(unsigned sys_index) {
             *(src+9) = (unsigned char) ((pixVal2<<2)|(pixVal0>>8)); // 6,7 =>(2,0)
             *(src+8) = (unsigned char) ((pixVal0)); //7 (=>0)
 		}
-		for (j=camera_sensor.raw_rows;j; j-=8, src+=10){
+		for (j=camera_sensor.raw_rowpix; j; j-=8, src+=10){
 			pixVal0=((0x3fc&(((unsigned short)(src[1]))<<2)) | (src[0] >> 6));
 			pixVal1=((0x3f0&(((unsigned short)(src[0]))<<4)) | (src[3] >> 4));
 			if (pixVal0) {
