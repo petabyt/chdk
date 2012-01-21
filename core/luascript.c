@@ -2129,12 +2129,7 @@ static int luaCB_get_meminfo( lua_State* L ) {
     cam_meminfo meminfo;
 
     if(strcmp(heapname,"system") == 0) {
-#if defined(CAM_FIRMWARE_MEMINFO)
         GetMemInfo(&meminfo);
-#else
-        memset(&meminfo,0xFF,sizeof(cam_meminfo));
-        meminfo.free_block_max_size = core_get_free_memory();
-#endif
     }
 #if defined(OPT_EXMEM_MALLOC) && !defined(OPT_EXMEM_TESTING)
     else if(strcmp(heapname,"exmem") == 0) {
