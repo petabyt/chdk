@@ -114,6 +114,17 @@ enum {
     MODE_SCN_WINK_SELF_TIMER, // sx30/g12 (Smart Shutter, Wink Self Timer mode)
     MODE_SCN_FACE_SELF_TIMER, // sx30/g12 (Smart Shutter, Face Self Timer mode)
     MODE_VIDEO_SUPER_SLOW   ,   // IXUS 310 HS Super Slow Motion Movie
+    MODE_SMART_SHUTTER      , // ixus1000_sd4500 - the following are not under SCN
+    MODE_HIGHSPEED_BURST    ,
+    MODE_BEST_IMAGE         ,
+    MODE_SUPER_VIVID        ,
+    MODE_POSTER_EFFECT      ,
+    MODE_FISHEYE            ,
+    MODE_MINIATURE          ,
+    MODE_BEACH              ,
+    MODE_FOLIAGE            ,
+    MODE_SNOW               ,
+    MODE_FIREWORK           , // ixus1000 end
 };
 
 #endif

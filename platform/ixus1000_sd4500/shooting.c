@@ -92,51 +92,39 @@ const ISOTable iso_table[] = {
    {  6, 3200, "3200", -1},
 };
 
-// TODO this needs to be updated for ixus1000
 /*
-http://www.usa.canon.com/cusa/support/consumer/digital_cameras/other_powershot/powershot_sx210_is#Specifications
+http://www.usa.canon.com/cusa/consumer/products/cameras/digital_cameras/powershot_sd4500_is#Specifications
 Shooting Modes
-    Auto, P, Av, Tv, M, Portrait, Landscape,
-    Special Scene
-        (Smart Shutter (Smile, Wink Self-timer, Face Detection Self-timer), Low Light, Color Accent, Color Swap, Fisheye Effect, Miniature Effect, Beach, Foliage, Snow, Fireworks, Stitch Assist),
-    Super Macro, Indoor, Kids & Pets, Night Snapshot, Movie
-Movie: High Definition: 1280 x 720 (30 fps);
-    Standard Definition: 640 x 480 (30 fps), 320 x 240 (30 fps)
+Auto, P, Portrait, Kids&Pets, Smart Shutter, High-speed Burst, Best Image Selection, Handheld Night Scene, Low Light, Super Vivid, Poster Effect, Color Accent, Color Swap, Fish-eye Effect, Miniature Effect, Beach, Foliage, Snow, Fireworks, Long Shutter, Stitch Assist, Movie
 
-canon mode list FFB6D0A4 in 100c
 */
 static const CapturemodeMap modemap[] = {
-	{ MODE_AUTO,               32768  },
-	{ MODE_P,                  32772  },
-	{ MODE_TV,                 32771  },
-	{ MODE_AV,                 32770  },
-	{ MODE_M,                  32769  },
-	{ MODE_EASY,               33314  }, // Changed in SX210
-	{ MODE_PORTRAIT,           32783  }, // Changed in SX210
-	{ MODE_NIGHT_SNAPSHOT,     32781  }, // Changed in SX210
-	{ MODE_LANDSCAPE,          32782  }, // Changed in SX210
-	{ MODE_VIDEO_COLOR_ACCENT, 2610   }, //??
-	{ MODE_VIDEO_COLOR_SWAP,   2611   }, //??
-	{ MODE_VIDEO_STD,          2612   },// Changed in SX210
-	{ MODE_KIDS_PETS,          32786  },// Changed in SX210
-	{ MODE_INDOOR,             32787  },// Changed in SX210
-
-
-//  	{ MODE_SCN_MINIATURE_EFFECT,         16940  },   //New in sx210 ???
-//  	{ MODE_SCN_FISH_EYE,         16939  },    //New in sx210 ???
-//  	{ MODE_SCN_LOW_LIGHT,         16417 },    //New in sx210 ???
-//  	{ MODE_SCN_SMART_SHUTTER,         33321 },    //New in sx210 ???
-//	{ MODE_SCN_SUNSET,         16402  },   //??
-//	{ MODE_SCN_NIGHT_SCENE,    16398  }, //??
-	{ MODE_SCN_FIREWORK,       16408  },// Changed in SX210
-	{ MODE_SCN_BEACH,          16407  },// Changed in SX210
-	{ MODE_SCN_AQUARIUM,       16939  },// ??? Is it fisheye?
-	{ MODE_SCN_FOLIAGE,        16405  },// Changed in SX210
-	{ MODE_SCN_SNOW,           16406  },// Changed in SX210
-	{ MODE_SCN_ISO_3200,       16417  }, //?? Is it lowlight
-	{ MODE_SCN_COLOR_ACCENT,   16925  }, // Changed in SX210?
-	{ MODE_SCN_COLOR_SWAP,     16926  }, // Changed in SX210
-	{ MODE_SCN_STITCH,         16908  }  // Changed in SX210
+	{ MODE_AUTO,                32768  },
+	{ MODE_P,                   32772  },
+	{ MODE_PORTRAIT,            32783  },
+	{ MODE_KIDS_PETS,           32786  },
+  	{ MODE_SMART_SHUTTER,       33321  },
+	{ MODE_HIGHSPEED_BURST,     33288  },
+	{ MODE_BEST_IMAGE,          33289  },
+	{ MODE_NIGHT_SCENE,         33325  }, // NOTE handheld night scene
+  	{ MODE_LOWLIGHT,            32801  },
+  	{ MODE_SUPER_VIVID,         33318  },
+  	{ MODE_POSTER_EFFECT,       33319  },
+  	{ MODE_COLOR_ACCENT,        33309  },
+  	{ MODE_COLOR_SWAP,          33310  },
+  	{ MODE_FISHEYE,             33323  },
+  	{ MODE_MINIATURE,           33324  },
+	{ MODE_BEACH,               32791  },
+	{ MODE_FOLIAGE,             32789  },
+	{ MODE_SNOW,                32790  },
+	{ MODE_FIREWORK,            32792  },
+	{ MODE_LONG_SHUTTER,        32774  },
+	{ MODE_STITCH,              33292  },
+	{ MODE_VIDEO_STD,           2614  },
+	{ MODE_VIDEO_SUPER_SLOW,    2619  },
+	{ MODE_VIDEO_MINIATURE,     2620  },
+	{ MODE_VIDEO_COLOR_ACCENT,  2612  },
+	{ MODE_VIDEO_COLOR_SWAP,    2613  },
 };
 
 #include "../generic/shooting.c"
