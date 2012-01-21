@@ -19,47 +19,8 @@ NSTUB(kbd_pwr_off                             ,0xff8634d0) //  2 60%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff8a0328 -> ff89cab4 -> ff9b0c78 -> ffaf48e0 -> ffc28d2c
-// Mode 32774 in firmware but not in current modemap
-// Mode 33292 in firmware but not in current modemap
-// Mode 33324 in firmware but not in current modemap
-// Mode 33323 in firmware but not in current modemap
-// Mode 33309 in firmware but not in current modemap
-// Mode 33310 in firmware but not in current modemap
-// Mode 33325 in firmware but not in current modemap
-// Mode 32801 in firmware but not in current modemap
-// Mode 33288 in firmware but not in current modemap
-// Mode 33289 in firmware but not in current modemap
-// Mode 32789 in firmware but not in current modemap
 // Mode 33320 in firmware but not in current modemap
 // Mode 33322 in firmware but not in current modemap
-// Mode 33321 in firmware but not in current modemap
-// Mode 33318 in firmware but not in current modemap
-// Mode 33319 in firmware but not in current modemap
-// Mode 32790 in firmware but not in current modemap
-// Mode 32791 in firmware but not in current modemap
-// Mode 32792 in firmware but not in current modemap
-// Mode  2613 in firmware but not in current modemap
-// Mode  2619 in firmware but not in current modemap
-// Mode  2620 in firmware but not in current modemap
-// Mode  2614 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_SCN_STITCH          16908
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_SWAP      16926
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_ACCENT    16925
-// Current modemap entry not found in firmware - MODE_SCN_ISO_3200        16417
-// Current modemap entry not found in firmware - MODE_SCN_SNOW            16406
-// Current modemap entry not found in firmware - MODE_SCN_FOLIAGE         16405
-// Current modemap entry not found in firmware - MODE_SCN_AQUARIUM        16939
-// Current modemap entry not found in firmware - MODE_SCN_BEACH           16407
-// Current modemap entry not found in firmware - MODE_SCN_FIREWORK        16408
-// Current modemap entry not found in firmware - MODE_INDOOR              32787
-// Current modemap entry not found in firmware - MODE_VIDEO_COLOR_SWAP     2611
-// Current modemap entry not found in firmware - MODE_VIDEO_COLOR_ACCENT   2610
-// Current modemap entry not found in firmware - MODE_LANDSCAPE           32782
-// Current modemap entry not found in firmware - MODE_NIGHT_SNAPSHOT      32781
-// Current modemap entry not found in firmware - MODE_EASY                33314
-// Current modemap entry not found in firmware - MODE_M                   32769
-// Current modemap entry not found in firmware - MODE_AV                  32770
-// Current modemap entry not found in firmware - MODE_TV                  32771
 
 // Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x00034408) // Found @0xff834b8c,          stubs_min = 0x00034408 (0x34408)
