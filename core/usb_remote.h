@@ -5,7 +5,7 @@
 #undef USB_REMOTE_DEBUGGING
 //#define USB_REMOTE_DEBUGGING 1
 
-#define NUM_USB_INPUT_DRV 10
+#define NUM_USB_INPUT_DRV 5
 #define NUM_USB_MODULES 10
 
 enum {
@@ -19,8 +19,7 @@ enum  SWITCH_TYPE {							// USB remote switch types
 	SW_NONE = 0 ,
 	SW_ONE_PRESS ,
 	SW_TWO_PRESS ,
-	SW_RICOH_CA1 ,
-	SW_PWN
+	SW_RICOH_CA1 
 }  ;
 
 enum CONTROL_MODULE {						// USB remote control modes
@@ -30,8 +29,7 @@ enum CONTROL_MODULE {						// USB remote control modes
 	RMT_AUTO_2 ,
 	RMT_CONTINUOUS ,
 	RMT_ZOOM ,
-	RMT_BRACKETING,
-	RMT_SCRIPT
+	RMT_BRACKETING
 } ;
 
 enum VIRTUAL_REMOTE_STATE {					// state of Virtual USB remote switch
@@ -69,7 +67,7 @@ enum  LOGIC_MODULE_STATE {								// remote control mode states
 	LM_KEY_PRESS
 } ;
 
-enum USB_STATE {								// values returned from get_usb_power(1)
+enum USB_STATE {								// values returned from get_usb_power(USB_STATE)
 	USB_POWER_OFF,
 	USB_POWER_ON
 } ;
@@ -93,6 +91,14 @@ enum  PLAYBACK_MODE {    				// playback scroll through pix - looks at pulse cou
 	PLAYBACK_REVERSE ,
 	PLAYBACK_LEFT ,
 	PLAYBACK_RIGHT
+} ;
+
+
+enum GET_USB_PWR {						// input parameter for get_usb_power() 
+	SINGLE_PULSE,
+	USB_STATE ,
+	BUFFERED_PULSE ,
+	PULSE_COUNT
 } ;
 
 // USB remote processing status

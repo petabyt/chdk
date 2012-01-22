@@ -26,11 +26,11 @@
 extern int sync_counter;
 extern int usb_sync_wait ;
 extern int usb_remote_active ;
-extern int virtual_remote_pulse_count ;
-extern int virtual_remote_pulse_width ;
 extern int stime_stamp ;
 extern int sync_counter;
 extern int usb_sync_wait ;
+
+extern int get_usb_power(int) ;
 
 extern enum SWITCH_TYPE	 switch_type ;
 extern enum CONTROL_MODULE  control_module  ;
@@ -77,7 +77,7 @@ extern void debug_error(int ) ;
 			break ;
 
 		case LM_RELEASE :
-			i =  get_usb_power(3) ;
+			i =  get_usb_power(PULSE_COUNT) ;
 			switch( i )
 			{
 				case PLAYBACK_REVERSE :
@@ -468,7 +468,7 @@ void usb_shoot_module_zoom()
 			break ;
 
 		case LM_RELEASE :
-			switch( virtual_remote_pulse_count )
+			switch( get_usb_power(PULSE_COUNT) )
 			{
 				case ZOOM_STEP_OUT :
 					shooting_set_zoom_rel(1) ;
@@ -506,9 +506,6 @@ void usb_shoot_module_zoom()
 		default :
 			break ;
 	}
-
-	virtual_remote_pulse_count =  0;
-
 };
 
 /*---------------------------------------------------------------------------------------------------
@@ -736,7 +733,7 @@ void (*usb_module_play[NUM_USB_MODULES])() =
 				usb_playback_module ,			// [  Video]
 				usb_playback_module ,			// [  gWIRE]
 				usb_playback_module ,			// [ Script]
-				usb_null_module					// --
+				usb_null_module					// <- insert new playback module here - update NUM_USB_MODULES if necessary
 	};
 
 
@@ -751,7 +748,7 @@ void (*usb_module_shoot[NUM_USB_MODULES])() =
 				usb_shoot_module_bracketing ,	// [Bracket]
 				usb_shoot_module_zoom ,			// [   Zoom]
 				usb_null_module ,				// [  Video]
-				usb_null_module,				// --
+				usb_null_module,				// <- insert new shoot module here - update NUM_USB_MODULES if necessary
 				usb_null_module,				// --
 				usb_null_module					// --
 	};
@@ -768,7 +765,7 @@ void (*usb_module_video[NUM_USB_MODULES])() =
 				usb_null_module ,				// [Bracket]
 				usb_null_module ,				// [   Zoom]
 				usb_video_module_normal ,		// [  Video]
-				usb_null_module ,				// --
+				usb_null_module ,				// <- insert new video module here - update NUM_USB_MODULES if necessary
 				usb_null_module ,				// --
 				usb_null_module 				// --
 		};

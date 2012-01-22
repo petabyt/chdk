@@ -297,7 +297,12 @@ case TOKENIZER_GET_SCRIPT_AUTOSTART:
     break;
 case TOKENIZER_GET_USB_POWER:
     accept(TOKENIZER_GET_USB_POWER);
-    r = get_usb_power( expr() );
+	int usbpwr = 0 ;
+	if (tokenizer_token() != TOKENIZER_CR &&
+        tokenizer_token() != TOKENIZER_ELSE ) {
+        usbpwr = expr();
+    }
+    r = get_usb_power(usbpwr);
     break;
 case TOKENIZER_GET_EXP_COUNT:
     accept(TOKENIZER_GET_EXP_COUNT);
