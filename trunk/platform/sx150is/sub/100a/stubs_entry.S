@@ -22,23 +22,23 @@ NSTUB(kbd_pwr_off                             ,0xff8652c4) //  2 60%
 // Mode 32818 in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(physw_status                            ,0x00033694) // Found @0xff834580,          stubs_min = 0x00033694 (0x00033694)
-//DEF(physw_run                               ,0x00001c30) // Found @0xff83412c,          stubs_min = 0x00001c30 (0x00001c30)
-//DEF(levent_table                            ,0xffbe99e8) // Found @0xffbe99e8,          stubs_min = 0xffbe99e8 (0xffbe99e8)
-//DEF(FlashParamsTable                        ,0xffc4e360) // Found @0xffc4e360,          stubs_min = 0xffc4e360 (0xffc4e360)
-//DEF(movie_status                            ,0x00006ec4) // Found @0xff985fb4,          stubs_min = 0x00006ec4 (0x00006ec4)
-//DEF(full_screen_refresh                     ,0x00009654) // Found @0xffa2a00c,          stubs_min = 0x00009654 (0x00009654)
-//DEF(canon_menu_active                       ,0x00003194) // Found @0xff8958f0,          stubs_min = 0x00003194 (0x00003194)
-//DEF(canon_shoot_menu_active                 ,0x00008109) // Found @0xff9cec20,          stubs_min = 0x00008109 (0x00008109)
-//DEF(playrec_mode                            ,0x00002eb8) // Found @0xff8877d0,          stubs_min = 0x00002eb8 (0x00002eb8)
-//DEF(zoom_status                             ,0x0000d520) // Found @0xffafaf48,          stubs_min = 0x0000d520 (0x0000d520)
+DEF(physw_status                            ,0x00033694) // Found @0xff834580
+DEF(physw_run                               ,0x00001c30) // Found @0xff83412c
+DEF(levent_table                            ,0xffbe99e8) // Found @0xffbe99e8
+DEF(FlashParamsTable                        ,0xffc4e360) // Found @0xffc4e360
+DEF(movie_status                            ,0x00006ec4) // Found @0xff985fb4
+DEF(full_screen_refresh                     ,0x00009654) // Found @0xffa2a00c
+DEF(canon_menu_active                       ,0x00003194) // Found @0xff8958f0
+DEF(canon_shoot_menu_active                 ,0x00008109) // Found @0xff9cec20
+DEF(playrec_mode                            ,0x00002eb8) // Found @0xff8877d0
+DEF(zoom_status                             ,0x0000d520) // Found @0xffafaf48
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 2 int value(s), the first is the zoom focus length.
 // there are 128 entries in the table - set NUM_FL to 128
 DEF(focus_len_table                         ,0xfffeabd8) // Found @0xfffeabd8
-//DEF(zoom_busy                               ,0x00006dcc) // Found @0xff98138c,          stubs_min = 0x00006dcc (0x6DB0+0x1C)
-//DEF(focus_busy                              ,0x00006c5c) // Found @0xff97b73c,          stubs_min = 0x00006c5c (0x6C54+8)
-//DEF(recreview_hold                          ,0x00003b7c) // Found @0xff8a6484, ** != ** stubs_min = 0x00007e08 (0x7DE0+0x28)
+DEF(zoom_busy                               ,0x00006dcc) // Found @0xff98138c
+DEF(focus_busy                              ,0x00006c5c) // Found @0xff97b73c
+DEF(recreview_hold                          ,0x00003b7c) // Found @0xff8a6484
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x403f1000; } // Found @0xff860d18
