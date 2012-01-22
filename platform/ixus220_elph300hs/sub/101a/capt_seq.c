@@ -896,7 +896,7 @@ void __attribute__((naked,noinline)) sub_FF8B84D0_my() {
 "                LDREQSH R4, [R5,#2] \n"
 "                CMN     R4, #0xC00 \n"
 "                MOVEQ   R1, #0x14C \n"
-"                LDRNE   R0, =0xFF8B8308 \n" //aShutter_c IXUS220 at FF8B8308
+"                LDREQ   R0, =0xFF8B8308 \n" //aShutter_c IXUS220 at FF8B8308
 "                STRH    R4, [R5,#2] \n"
 "                BLEQ    _DebugAssert \n"
 "                MOV     R0, R4 \n"
