@@ -98,16 +98,18 @@ struct librawop_sym* module_rawop_load()
 
 /************* DYNAMIC LIBRARY EDGE OVERLAY ******/
 
+// Storage and interface for edge overlay 'image' buffer.
+// This is so the previous overlay can survive if the module gets unloaded
+// (Need these for the module export list, even if OPT_EDGEOVERLAY is not defined).
+static void* saved_edgebuf = 0;
+static int saved_edgestate = 0;
+
+void module_restore_edge(void **buf, int *state) { *buf = saved_edgebuf; *state = saved_edgestate; }
+void module_save_edge(void* buf, int state)      { saved_edgebuf = buf; saved_edgestate = state; }
+
 #ifdef OPT_EDGEOVERLAY
 
 #define MODULE_NAME_EDGEOVR "edgeovr.flt"
-
-// Storage and interface for edge overlay 'image' buffer.
-// This is so the previous overlay can survive if the module gets unloaded
-static void* saved_edgebuf = 0;
-static int saved_edgestate = 0;
-void module_restore_edge(void **buf, int *state) { *buf = saved_edgebuf; *state = saved_edgestate; }
-void module_save_edge(void* buf, int state)      { saved_edgebuf = buf; saved_edgestate = state; }
 
 struct libedgeovr_sym* libedgeovr;
 
