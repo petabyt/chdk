@@ -118,6 +118,8 @@ void __attribute__((naked,noinline)) capt_seq_task()
 //"	BL	sub_FF98C47C \n"                      
 "	BL	sub_FF98C47C_my \n" // Patched ------------>
 
+"		BL	capt_seq_hook_raw_here \n"	// Added ---------->
+
 "	MOV	R7, R0 \n"                           
 "	MOV	R2, R4 \n"                           
 "	MOV	R1, #1 \n"                           
@@ -393,9 +395,9 @@ void __attribute__((naked,noinline)) sub_FF98C47C_my(){
 "	MOV	R0, #0 \n"                           
 "	STR	R0, [R4, #0xD8] \n"                  
 "	MOV	R0, R4 \n"                           
+
 //"	BL	sub_FFAE3934 \n"                      
 "		BL	sub_FFAE3934_my \n" // Patched ------------>
-"		BL	capt_seq_hook_raw_here \n"	// Added ---------->
 
 "loc_FF98C5C8:\n"
 "	LDMFD	SP!, {R3-R7,PC} \n"                
@@ -426,12 +428,11 @@ void __attribute__((naked,noinline)) sub_FFAE3934_my()
 "	BLNE	sub_FF81EDBC \n"                    
 "	BL	sub_FF884D50 \n"                      
 "	BL	sub_FF98C3AC \n"                      
-"	CMP	R7, #0xA \n"                         
 
 "		BL	wait_until_remote_button_is_released\n" // Added (not tested) -------->
 "		BL	capt_seq_hook_set_nr_my \n"	// Added ------------->
 
-"		B	sub_FFAE3988 \n"		// Return to firmware --------->
+"		B	sub_FFAE3984 \n"		// Return to firmware --------->
 
 	); 
 }
