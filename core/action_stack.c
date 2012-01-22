@@ -226,13 +226,6 @@ int action_stack_standard(long p)
             action_pop();
         }
         break;
-    case AS_PR_WAIT_SAVE:
-        state_shooting_progress = SHOOTING_PROGRESS_NONE;
-        state_expos_recalculated = 0;
-        histogram_stop();
-
-        action_pop();
-        break;
     case AS_WAIT_SAVE:
         if (state_shooting_progress == SHOOTING_PROGRESS_DONE)
             action_pop();
@@ -240,22 +233,6 @@ int action_stack_standard(long p)
     case AS_WAIT_FLASH:
         if (shooting_is_flash_ready())
             action_pop();
-        break;
-    case AS_WAIT_EXPHIST:
-        if (state_expos_recalculated)
-        {
-            state_expos_under = under_exposed;
-            state_expos_over = over_exposed;
-            action_pop();
-        }
-        break;
-    case AS_PR_WAIT_EXPHIST:
-        if (shooting_in_progress() || MODE_IS_VIDEO(mode_get()))
-        {
-            state_expos_recalculated = 0;
-            histogram_restart();
-            action_pop();
-        }
         break;
     case AS_WAIT_CLICK:
         if(action_process_delay(2) || (kbd_last_clicked = kbd_get_clicked_key()))
@@ -268,6 +245,8 @@ int action_stack_standard(long p)
         }
         break;
     case AS_SHOOT:
+        state_shooting_progress = SHOOTING_PROGRESS_NONE;
+
         // Initiate a shoot. Remember that stack program flow is reversed!
         action_pop();
         // XXX FIXME find out how to wait to jpeg save finished
@@ -281,12 +260,8 @@ int action_stack_standard(long p)
         action_push_press(KEY_SHOOT_FULL);
 
         action_push(AS_WAIT_FLASH);
-        action_push(AS_WAIT_EXPHIST);
-        action_push(AS_PR_WAIT_EXPHIST);
 
         action_push_press(KEY_SHOOT_HALF);
-
-        action_push(AS_PR_WAIT_SAVE);
     default:
         return 0;
     }

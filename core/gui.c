@@ -166,8 +166,6 @@ static void gui_menuproc_reset(int arg);
 static void gui_raw_develop(int arg);
 static void gui_menuproc_swap_partitions(int arg);
 static void gui_menuproc_reset_files(int arg);
-static const char* gui_histo_mode_enum(int change, int arg);
-static const char* gui_histo_layout_enum(int change, int arg);
 static const char* gui_font_enum(int change, int arg);
 
 #if CAM_ADJUSTABLE_ALT_BUTTON
@@ -692,10 +690,12 @@ static CMenuItem osd_submenu_items[] = {
 static CMenu osd_submenu = {0x22,LANG_MENU_OSD_TITLE, NULL, osd_submenu_items };
 
 static const char* gui_histo_show_modes[] = { "Don't", "Always", "Shoot" };
+static const char* gui_histo_view_modes[]={ "RGB", "Y", "RGB Y",  "R G B", "RGB all", "Y all", "Blend", "Blend Y"};
+static const char* gui_histo_transform_modes[]={ "Linear", "Log" };
 static CMenuItem histo_submenu_items[] = {
-    MENU_ENUM2(0x5f,LANG_MENU_HISTO_SHOW,             &conf.show_histo, gui_histo_show_modes ),
-    MENU_ITEM(0x6f,LANG_MENU_HISTO_LAYOUT,            MENUITEM_ENUM,      gui_histo_layout_enum, 0 ),
-    MENU_ITEM(0x5f,LANG_MENU_HISTO_MODE,              MENUITEM_ENUM,      gui_histo_mode_enum, 0 ),
+    MENU_ENUM2(0x5f,LANG_MENU_HISTO_SHOW,             &conf.show_histo,     gui_histo_show_modes ),
+    MENU_ENUM2(0x6f,LANG_MENU_HISTO_LAYOUT,           &conf.histo_layout,   gui_histo_view_modes ),
+    MENU_ENUM2(0x5f,LANG_MENU_HISTO_MODE,             &conf.histo_mode,     gui_histo_transform_modes ),
     MENU_ITEM(0x5c,LANG_MENU_HISTO_EXP,               MENUITEM_BOOL,       &conf.show_overexp, 0 ),
     MENU_ITEM(0x70,LANG_MENU_HISTO_IGNORE_PEAKS,      MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.histo_ignore_boundary,   MENU_MINMAX(0, 32) ),
     MENU_ITEM(0x5c,LANG_MENU_HISTO_MAGNIFY,           MENUITEM_BOOL,       &conf.histo_auto_ajust, 0 ),
@@ -1005,32 +1005,6 @@ void gui_load_script_default(int arg) {
 //-------------------------------------------------------------------
 const char* gui_override_disable_enum(int change, int arg) {
 	return gui_change_simple_enum(&conf.override_disable,change,gui_override_disable_modes,sizeof(gui_override_disable_modes)/sizeof(gui_override_disable_modes[0]));
-}
-
-//-------------------------------------------------------------------
-const char* gui_histo_mode_enum(int change, int arg) {
-    static const char* modes[]={ "Linear", "Log" };
-
-	gui_enum_value_change(&conf.histo_mode,change,sizeof(modes)/sizeof(modes[0]));
-
-    histogram_set_mode(conf.histo_mode);
-
-    return modes[conf.histo_mode];
-}
-
-//-------------------------------------------------------------------
-const char* gui_histo_layout_enum(int change, int arg) {
-    static const char* modes[]={ "RGB", "Y", "RGB Y",  "R G B", "RGB all", "Y all", "Blend", "Blend Y"};
-
-	gui_enum_value_change(&conf.histo_layout,change,sizeof(modes)/sizeof(modes[0]));
-
-    if (conf.histo_layout==OSD_HISTO_LAYOUT_Y || conf.histo_layout==OSD_HISTO_LAYOUT_Y_argb) {
-        histogram_set_main(HISTO_Y);
-    } else {
-        histogram_set_main(HISTO_RGB);
-    }
-
-    return modes[conf.histo_layout];
 }
 
 //-------------------------------------------------------------------
@@ -1538,7 +1512,6 @@ void gui_init()
     gui_lang_init();
     draw_init();
 
-    exposition_thresh = camera_screen.size/500;
     voltage_step = (conf.batt_step_25)?25:1;
     load_from_file( "A/CHDK/badpixel", make_pixel_list );
     load_from_file( "A/CHDK/badpixel.txt", make_pixel_list );
