@@ -25,8 +25,6 @@
   ===================================================================================================*/
 
 extern int usb_remote_active ;
-extern int virtual_remote_pulse_count ;
-extern int virtual_remote_pulse_width ;
 extern int stime_stamp ;
 extern int sync_counter;
 extern int usb_sync_wait ;
@@ -342,65 +340,6 @@ void usb_ricoh_ca1_switch(int usb_state)
 
 } ;
 
-/*---------------------------------------------------------------------------------------------------
-	Device Driver : pulse width modulation device
-		- gets the width of USB power pulses
-		- does not set virtual switch states
-		- hand shake mechanism with control modules is simply them clearing the report pulse width value
-		- might be useful for gentles modules or some custom microcontroller device
-  ---------------------------------------------------------------------------------------------------*/
-void usb_pwm_device(int usb_state)
-{
-	int pw ;
-
-	switch( driver_state )
-	{
-		case SW_RESET :
-			virtual_remote_state = REMOTE_RESET ;
-			driver_state = SW_IDLE ;
-			break ;
-
-		case SW_IDLE :
-			pw = get_usb_power(2) ;
-			if ( pw != 0) virtual_remote_pulse_width  = pw ;
-			break ;
-
-		default :
-			debug_error(INVALID_STATE) ;
-			break ;
-	}
-} ;
-
-/*---------------------------------------------------------------------------------------------------
-	Device Driver :  pulse counting device
-		- counts USB pulses (off-on-off)
-		- ignores short pulses less that 100 mSec ( CA-1 reset and half shoot pulses )
-		- does not set virtual switch states
-		- hand shake mechanism with control modules is simply them clearing the report pulse width value
-		- might be useful for gentles modules or some custom microcontroller device
-  ---------------------------------------------------------------------------------------------------*/
-void usb_pulse_count_device(int usb_state)
-{
-	int pc ;
-
-	switch( driver_state )
-	{
-		case SW_RESET :
-			virtual_remote_state = REMOTE_RESET ;
-			driver_state = SW_IDLE ;
-			break ;
-
-		case SW_IDLE :
-			pc = get_usb_power(3) ;
-			if ( pc != 0) virtual_remote_pulse_count  = pc ;
-			break ;
-
-		default :
-			debug_error(INVALID_STATE) ;
-			break ;
-	}
-
-} ;
 
  /*===================================================================================================
 
@@ -417,10 +356,5 @@ void (*usb_driver[NUM_USB_INPUT_DRV])(int) = 					 // jump table for input drive
 			usb_one_press_switch ,
 			usb_two_press_switch ,
 			usb_ricoh_ca1_switch ,
-			usb_pwm_device ,
-			usb_pulse_count_device ,
-			usb_null_driver ,
-			usb_null_driver ,
-			usb_null_driver ,
-			usb_null_driver
+			usb_null_driver										// <- insert new devices here - update NUM_USB_INPUT_DRV if necessary
 	};

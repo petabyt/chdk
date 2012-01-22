@@ -36,8 +36,6 @@ extern int get_usb_bit() ;
 int sync_counter=0;
 int usb_sync_wait = 0 ;
 int usb_remote_active=0 ;
-int virtual_remote_pulse_count = 0 ;
-int virtual_remote_pulse_width = 0 ;
 int stime_stamp = 0 ;
 int usb_power=0;
 int usb_count=0;
@@ -227,42 +225,45 @@ void usb_remote_key(int x)
 	
 	remote_key = get_usb_bit() ;
 
-	if (remote_key) remote_count++ ;									// track how long the USB power is on
-	else if(remote_space_count<3000) remote_space_count++ ;				// track how long the USB power is off
-	
-	if ( remote_space_count > 50 )									// pulse counting done if no activity for 500mSec
+	if(conf.remote_enable)
 	{
-		if( pulse_count > 0 )
-		{
-			usb_count = pulse_count ;
-			pulse_count = 0 ;
-		}
-	}
-
-	if (( remote_key == 0) && (remote_count > 0)  )												//  1 -> 0 transistion ?
-	{
-		if( remote_count > 10 )	pulse_count++ ;													// count pulses longer than 100 msec
-
-		usb_power = remote_count;																// transfer most recent pulse length to variable read by scripts
+		if (remote_key) remote_count++ ;									// track how long the USB power is on
+		else if(remote_space_count<3000) remote_space_count++ ;				// track how long the USB power is off
 		
-		if ( ++usb_buffer_in > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_in = usb_buffer ;	// insert power pulse width into the buffer
-		if ( usb_buffer_in == usb_buffer_out )
+		if ( remote_space_count > 50 )									// pulse counting done if no activity for 500mSec
 		{
-			if ( ++usb_buffer_out > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_out = usb_buffer ;
+			if( pulse_count > 0 )
+			{
+				usb_count = pulse_count ;
+				pulse_count = 0 ;
+			}
 		}
-		*usb_buffer_in = remote_count ;
-		remote_count = 0;
-	}
 
-	if (( remote_key == 1) && (remote_space_count > 0)  )										// 0 -> 1 transistion ?
-	{
-		if ( ++usb_buffer_in > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_in = usb_buffer ;	// insert space pulse width into the buffer as a negative number
-		if ( usb_buffer_in == usb_buffer_out )
+		if (( remote_key == 0) && (remote_count > 0)  )												//  1 -> 0 transistion ?
 		{
-			if ( ++usb_buffer_out > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_out = usb_buffer ;
+			if( remote_count > 10 )	pulse_count++ ;													// count pulses longer than 100 msec
+
+			usb_power = remote_count;																// transfer most recent pulse length to variable read by scripts
+			
+			if ( ++usb_buffer_in > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_in = usb_buffer ;	// insert power pulse width into the buffer
+			if ( usb_buffer_in == usb_buffer_out )
+			{
+				if ( ++usb_buffer_out > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_out = usb_buffer ;
+			}
+			*usb_buffer_in = remote_count ;
+			remote_count = 0;
 		}
-		*usb_buffer_in = 0-remote_space_count ;
-		remote_space_count = 0 ;
+
+		if (( remote_key == 1) && (remote_space_count > 0)  )										// 0 -> 1 transistion ?
+		{
+			if ( ++usb_buffer_in > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_in = usb_buffer ;	// insert space pulse width into the buffer as a negative number
+			if ( usb_buffer_in == usb_buffer_out )
+			{
+				if ( ++usb_buffer_out > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_out = usb_buffer ;
+			}
+			*usb_buffer_in = 0-remote_space_count ;
+			remote_space_count = 0 ;
+		}
 	}
 }
 
@@ -279,16 +280,16 @@ int get_usb_power(int mode)
 
 	switch( mode)
 	{
-		case 0 :
+		case SINGLE_PULSE :
 			x = usb_power;
 			usb_power = 0;
 			break ;
 
-		case 1 :
+		case USB_STATE :
 			x=remote_key;
 			break ;
 
-		case 2 :
+		case BUFFERED_PULSE :
 			if ( usb_buffer_out == usb_buffer_in )
 			{
 				x = 0 ;
@@ -300,7 +301,7 @@ int get_usb_power(int mode)
 			}
 			break ;
 
-		case 3 :
+		case PULSE_COUNT :
 			x = usb_count;
 			usb_count = 0;
 			break ;
@@ -345,7 +346,7 @@ int handle_usb_remote()
 		if ((m1&MODE_MASK) == MODE_PLAY) camera_mode = CAMERA_MODE_PLAYBACK ;
 		else camera_mode = MODE_IS_VIDEO(m1&MODE_SHOOTING_MASK) ? CAMERA_MODE_VIDEO : CAMERA_MODE_SHOOTING ;
 
-		(*usb_driver[switch_type])(get_usb_power(1)); 				// jump to driver state machine
+		(*usb_driver[switch_type])(get_usb_power(USB_STATE)); 				// jump to driver state machine
 
 		switch( camera_mode )
 		{
@@ -424,7 +425,7 @@ int handle_usb_remote()
 					{
 						sprintf(buf,"switch=%s logic=%s sync=%s ", gui_USB_switch_types[switch_type], gui_USB_control_modes[control_module], conf.synch_enable?"yes":"no") ;
 						draw_string(2,32,buf,MAKE_COLOR(COLOR_YELLOW,COLOR_BLACK));
-						sprintf(buf,"sync count=%d, pulse count=%d width=%d  b=%d  ", sync_counter, usb_count /*virtual_remote_pulse_count*/, virtual_remote_pulse_width,  bracketing.shoot_counter);
+						sprintf(buf,"sync count=%d, pulse count=%d width=%d  b=%d  ", sync_counter, usb_count, usb_power,   bracketing.shoot_counter);
 						draw_string(2,64,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
 						sprintf(buf,"physw=%d err=%d %d %d  ", physw_status[0]&0x03, debug_errors[0],  debug_errors[1],  debug_errors[2] );
 						draw_string(2,80,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
@@ -446,7 +447,7 @@ int handle_usb_remote()
 							}
 							if ( buff_ptr-- == usb_buffer )  buff_ptr = &usb_buffer[15] ;
 						}
-						draw_string(2,112,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
+						draw_string(2,96,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
 					}
 
 				}

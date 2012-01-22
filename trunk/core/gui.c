@@ -229,8 +229,8 @@ static int debug_display_direction=1;
 // Menu definitions 
 //-------------------------------------------------------------------
 
-const char* gui_USB_switch_types[] = { "None","OnePush", "TwoPush", "CA-1", "P Width", "P Count" };
-const char* gui_USB_control_modes[] = { "None", "Normal", "Quick", "Burst", "Bracket","Zoom", "Video" }; 
+const char* gui_USB_switch_types[] = { "None","OnePush", "TwoPush", "CA-1" };								// note : make sure # of entries less than NUM_USB_INPUT_DRV in usb_remote.c
+const char* gui_USB_control_modes[] = { "None", "Normal", "Quick", "Burst", "Bracket","Zoom", "Video" }; 	// note : make sure # of entries less than NUM_USB_MODULES in usb_remote.c
   
 
 static CMenuItem remote_submenu_items[] = {
