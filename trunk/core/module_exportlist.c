@@ -22,6 +22,7 @@
 #include "conf.h"
 #include "raw.h"
 #include "font.h"
+#include "histogram.h"
 
 #include "modules.h"
 #include "module_load.h"

@@ -256,9 +256,9 @@ void core_spytask() {
 		}
 		
         if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
-        {	
-            histogram_process();
-
+        {
+            if (conf.show_histo)
+                histogram_process();
 
 #ifdef OPT_EDGEOVERLAY
             if(((gui_get_mode()==GUI_MODE_NONE) || (gui_get_mode()==GUI_MODE_ALT)) && conf.edge_overlay_thresh && conf.edge_overlay_enable) {

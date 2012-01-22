@@ -24,9 +24,6 @@ Conf conf = { MAKE_API_VERSION(2,0) };
 
 int state_shooting_progress = SHOOTING_PROGRESS_NONE;
 int state_save_raw_nth_only;
-int state_expos_recalculated;
-int state_expos_under;
-int state_expos_over;
 int auto_started;
 
 // reyalp: putting these in conf, since the conf values are lookups for them
@@ -46,8 +43,6 @@ static OSD_pos def_histo_pos, def_dof_pos, def_batt_icon_pos, def_usb_info_pos, 
 static int def_user_menu_vars[USER_MENU_ITEMS] = {0};
 
 static void conf_change_script_file();
-static void conf_change_histo_mode();
-static void conf_change_histo_layout();
 static void conf_change_font_cp();
 static void conf_change_menu_rbf_file();
 static void conf_change_menu_symbol_rbf_file();
@@ -150,10 +145,10 @@ static const ConfInfo conf_info[] = {
     CONF_INFO( 14, conf.show_state,             CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO( 15, conf.show_values,            CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO( 16, conf.show_overexp,           CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 17, conf.histo_mode,             CONF_DEF_VALUE, i:HISTO_MODE_LINEAR, conf_change_histo_mode),
+    CONF_INFO( 17, conf.histo_mode,             CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO( 18, conf.histo_auto_ajust,       CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO( 19, conf.histo_ignore_boundary,  CONF_DEF_VALUE, i:4, NULL),
-    CONF_INFO( 20, conf.histo_layout,           CONF_DEF_VALUE, i:OSD_HISTO_LAYOUT_A, conf_change_histo_layout),
+    CONF_INFO( 20, conf.histo_layout,           CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO( 21, conf.histo_pos,              CONF_OSD_POS_PTR,   ptr:&def_histo_pos, NULL),
     CONF_INFO( 22, conf.dof_pos,                CONF_OSD_POS_PTR,   ptr:&def_dof_pos, NULL),
     CONF_INFO( 23, conf.batt_icon_pos,          CONF_OSD_POS_PTR,   ptr:&def_batt_icon_pos, NULL),
@@ -414,8 +409,6 @@ void conf_info_func(unsigned short id)
 {
     switch (id)
     {
-    case  17: conf_change_histo_mode(); break;
-    case  20: conf_change_histo_layout(); break;
     case  63: conf_change_alt_mode_button(); break;
     case  65: conf_change_font_cp(); break;
     case  66: conf_change_menu_rbf_file(); break;
@@ -430,18 +423,6 @@ void conf_info_func(unsigned short id)
 }
 
 //-------------------------------------------------------------------
-static void conf_change_histo_mode() {
-    histogram_set_mode(conf.histo_mode);
-}
-
-
-static void conf_change_histo_layout() {
-    if (conf.histo_layout==OSD_HISTO_LAYOUT_Y || conf.histo_layout==OSD_HISTO_LAYOUT_Y_argb) {
-        histogram_set_main(HISTO_Y);
-    } else {
-        histogram_set_main(HISTO_RGB);
-    }
-}
 
 static void conf_change_font_cp() {
     font_init();

@@ -9,6 +9,7 @@
 #include "gui_osd.h"
 #include "gui_batt.h"
 #include "gui_space.h"
+#include "histogram.h"
 
 #include "modules.h"
 #include "module_exportlist.h"

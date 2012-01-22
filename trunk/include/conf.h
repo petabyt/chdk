@@ -342,9 +342,6 @@ extern Conf conf;
 extern int state_kbd_script_run;
 extern int state_shooting_progress;
 extern int state_save_raw_nth_only;
-extern int state_expos_recalculated;
-extern int state_expos_under;
-extern int state_expos_over;
 
 extern void script_autostart();    // remote autostart
 extern void conf_save();
