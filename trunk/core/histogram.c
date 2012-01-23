@@ -38,6 +38,7 @@
 static unsigned char histogram[5][HISTO_WIDTH];             // RGBYG
 static unsigned int *histogram_proc[5] = { 0,0,0,0,0 };     // RGBYG
 static unsigned int histo_max[5], histo_max_center[5];      // RGBYG
+static float histo_max_center_invw[5];                      // RGBYG
 
 static long exposition_thresh = (CAM_SCREEN_WIDTH * CAM_SCREEN_HEIGHT) / 500;
 static long histo_magnification;
@@ -69,7 +70,6 @@ void histogram_process()
     register int x, i, hi;
     int y, v, u, c;
     float (*histogram_transform)(float);
-    float histo_max_center_invw[5];
     unsigned int histo_fill[5];
     int histo_main;
 
