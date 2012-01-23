@@ -49,17 +49,17 @@ static KeyMap keymap[] = {
 	// Order IS important. kbd_get_pressed_key will walk down this table  
 	// and take the first matching mask. Notice that KEY_SHOOT_HALF is  
 	// always pressed if KEY_SHOOT_FULL is. --MarcusSt
-	//{ 0, KEY_FLASH     , 0x80000000 },
-	{ 2, KEY_MENU      , 0x00002000 },
+    { 2, KEY_VIDEO     , 0x00000010 },
+    { 2, KEY_PLAYBACK  , 0x00000040 },
 	{ 2, KEY_UP        , 0x00000100 },
 	{ 2, KEY_DOWN      , 0x00000200 },
-	{ 2, KEY_LEFT      , 0x00000800 },
 	{ 2, KEY_RIGHT     , 0x00000400 },
+	{ 2, KEY_LEFT      , 0x00000800 },
 	{ 2, KEY_SET       , 0x00001000 },
-	// { 1, KEY_FACE      , 0x10000000 },
+	{ 2, KEY_MENU      , 0x00002000 },
 	{ 2, KEY_PRINT     , 0x00005000 }, // SET+DISP
-	//{ 2, KEY_ERASE     , 0x00008000 },
 	{ 2, KEY_DISPLAY   , 0x00004000 },
+	{ 2, KEY_ERASE     , 0x00008000 },
 	{ 1, KEY_ZOOM_IN   , 0x00004000 },
 	{ 1, KEY_ZOOM_OUT  , 0x00008000 },
 	{ 1, KEY_SHOOT_FULL, 0x00003000 },
