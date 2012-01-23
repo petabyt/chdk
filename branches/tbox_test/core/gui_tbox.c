@@ -138,8 +138,8 @@ int textbox_init(int title, int msg, const char* defaultstr, unsigned int maxsiz
     text = malloc(sizeof(char)*(maxsize+1));
     if ( text==0 ) {
         // fatal failure
-        if (tbox_on_select)
-            tbox_on_select(0);    // notify callback about exit as cancel
+        if (on_select)
+            on_select(0);    // notify callback about exit as cancel
         module_async_unload(module_idx);
         return 0;
     }
@@ -533,12 +533,11 @@ void gui_tbox_kbd_process()
                 draw_restore();
                 if (tbox_on_select) {
                     if (tbox_button_active == 0)
-                         tbox_on_select(text); // ok
+                        tbox_on_select(text); // ok
                     else {
-                        free(text);
-                        text = 0;
                         tbox_on_select(0); // cancel
                     }
+                    free(text);
                     text=0;
                 }
                   module_async_unload(module_idx);
@@ -613,6 +612,8 @@ int _module_unloader()
     if ( text!=0 )
     {
         free(text);
+        if (tbox_on_select)
+            tbox_on_select(0);    // notify callback about exit as cancel
         text = 0;
     }
 
