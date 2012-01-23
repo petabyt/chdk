@@ -11,9 +11,9 @@ typedef struct {
 } KeyMap;
 
 
-static long kbd_new_state[3];
-static long kbd_prev_state[3];
-static long kbd_mod_state[3];
+static long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static long last_kbd_key = 0;
 static int usb_power=0;
@@ -26,6 +26,18 @@ extern void _platformsub_kbd_fetch_data(long*);
 #define KEYS_MASK0 (0x00020000)
 #define KEYS_MASK1 (0x00000000)
 #define KEYS_MASK2 (0x017001f4)
+#define KEYS_INV2 (0x01700000)
+/*
+the 4 button states residing in the upper half of physw_status[2] seem to be inverted
+to handle these correctly, their value needs to be inverted:
+- when reading from physw_status[2] to the state variables
+- when writing to physw_status[2] from the state variables
+KEYS_INV2 should be used for that
+SD_READONLY_FLAG and USB_MASK are not affected by this
+
+when idle, physw_status[2] looks like: "000001000000000xxxxx000111110100"
+                         KEYS_MASK2 is "00000001011100000000000111110100"
+*/
 
 #define SD_READONLY_FLAG (0x40000)
 #define USB_MASK (0x80000)
@@ -40,7 +52,7 @@ static KeyMap keymap[] = {
     //{ 0, KEY_DISPLAY  , 0x00020000 }, // Playback
     { 0, KEY_PRINT      , 0x00020000 }, // Playback
 
-    { 2, KEY_SHOOT_FULL , 0x00000030 }, // 0x00000010 (KEY_SHOOT_HALF) + 0x00000030 (KEY_SHOOT_FULL_ONLY)
+    { 2, KEY_SHOOT_FULL , 0x00000030 }, // 0x00000010 (KEY_SHOOT_HALF) + 0x00000020 (KEY_SHOOT_FULL_ONLY)
     { 2, KEY_SHOOT_FULL_ONLY, 0x00000020 },
     { 2, KEY_SHOOT_HALF , 0x00000010 },
     
@@ -160,6 +172,12 @@ void wait_until_remote_button_is_released(void) {
 
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
+	/* Initialize our own kbd_new_state[] array with the
+	   current physical status. (inspired by the S90 port)
+	   */
+	kbd_new_state[0] = physw_status[0];
+	kbd_new_state[1] = physw_status[1];
+	kbd_new_state[2] = physw_status[2] ^ KEYS_INV2;
 	while (physw_run){
 		_SleepTask(10);
 		
@@ -222,7 +240,7 @@ void my_kbd_read_keys()
 	//_platformsub_kbd_fetch_data(kbd_new_state);
 	kbd_new_state[0] = physw_status[0];
 	kbd_new_state[1] = physw_status[1];
-	kbd_new_state[2] = physw_status[2];
+	kbd_new_state[2] = physw_status[2] ^ KEYS_INV2;
 	
 	if (kbd_process() == 0){
 		// leave it alone...
@@ -230,7 +248,7 @@ void my_kbd_read_keys()
         // override keys
         physw_status[0] = (kbd_new_state[0] | KEYS_MASK0) & (~KEYS_MASK0 | kbd_mod_state[0]);
         //physw_status[1] = (kbd_new_state[1] | KEYS_MASK1) & (~KEYS_MASK1 | kbd_mod_state[1]);
-        physw_status[2] = (kbd_new_state[2] | KEYS_MASK2) & (~KEYS_MASK2 | kbd_mod_state[2]);
+        physw_status[2] = ((kbd_new_state[2] | KEYS_MASK2) & (~KEYS_MASK2 | kbd_mod_state[2])) ^ KEYS_INV2;
 	}
 	
 	//_kbd_read_keys_r2(physw_status);
@@ -280,7 +298,7 @@ void kbd_key_release_all()
 {
 	kbd_mod_state[0] |= KEYS_MASK0;
 	kbd_mod_state[1] |= KEYS_MASK1;
-	kbd_mod_state[2] |= KEYS_MASK2 & ~0x01700000;
+	kbd_mod_state[2] |= KEYS_MASK2;
 }
 
 long kbd_is_key_pressed(long key)
@@ -288,12 +306,7 @@ long kbd_is_key_pressed(long key)
 	int i;
 	for (i=0;keymap[i].hackkey;i++){
 		if (keymap[i].hackkey == key){
-			switch (keymap[i].hackkey) {
-			case KEY_UP: case KEY_DOWN: case KEY_LEFT: case KEY_MENU:
-				return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 0:1;
-			default:
-				return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
-			}
+			return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
 		}
 	}
 	return 0;
