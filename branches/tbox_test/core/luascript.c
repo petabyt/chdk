@@ -848,8 +848,11 @@ static int luaCB_textbox( lua_State* L ) {
         // Push textbox action onto stack - will loop doing nothing until textbox exits
         action_push(AS_TEXTBOX);
         // Switch to textbox gui mode. Text box prompt should be passed as param.
-        module_tbox_load()->textbox_init((int)luaL_optstring( L, 1, "A" ), (int)luaL_optstring( L, 1, "A" ), "", 30, return_string_selected);
-    }
+        module_tbox_load()->textbox_init((int)luaL_optstring( L, 1, "Text box" ),   //title
+                                         (int)luaL_optstring( L, 2, "Enter text" ), //message
+                                         luaL_optstring( L, 3, ""  ),               //default string
+                                         luaL_optnumber( L, 4, 30),                 //max size of a text
+                                         return_string_selected);    }
     else
         return_string_selected(0);
 

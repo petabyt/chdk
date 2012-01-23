@@ -3,7 +3,7 @@
 
 struct libtextbox_sym {
 	int version;
-    int (*textbox_init)(int title, int msg, char* defaultstr, unsigned int maxsize, void (*on_select)(const char* newstr));
+    int (*textbox_init)(int title, int msg, const char* defaultstr, unsigned int maxsize, void (*on_select)(const char* newstr));
 };
 
 // Defines of exported to chdk symbols

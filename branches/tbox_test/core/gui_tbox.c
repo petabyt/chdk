@@ -48,7 +48,7 @@ static const char*  tbox_title;
 static const char*  tbox_msg;
 static char         cursor_to_draw;
 static int          cl_greygrey;
-static int          max_keyboard_lenght;
+static int          max_keyboard_length;
 // height of prompt
 #define MAX_LINES              6
 #define MAX_WIDTH              40
@@ -60,12 +60,10 @@ static int          max_keyboard_lenght;
 
 // max possible charsets
 #define MAX_CHARSET            10
-#define SUBGROUP_SEPARATOR     '|'
 
 #define MAX_TEXT_WIDTH         (MAX_WIDTH-2)
 
-#define RESET_CHAR             lastKey = '\0'; \
-                               curchar = -1;
+#define RESET_CHAR             lastKey = '\0'; curchar = -1; curgroup = -1;
 
 #define MAX_MSG_LENGH           20  //max length of hardcoded messages (>navigate cursor<, text limit reached)
 
@@ -74,35 +72,35 @@ tbox_on_select_t tbox_on_select = 0;
 
 static coord    tbox_buttons_x, tbox_buttons_y;
 
+typedef char    *cmap[][4];
+
 // Char maps
-const char *tbox_chars_default[] = 
+cmap tbox_chars_default = 
     {
-        "ABCDEF|GHIJKL|MNOPQRS|TUVWXYZ",
-        "abcdef|ghijkl|mnopqrs|tuvwxyz",
-        "123|456|789|0+-=/",
-        ".,:;?!|@#$%^&|()[]{}|<>\"'`~",
-        0
+        {"ABCDEF","GHIJKL","MNOPQRS","TUVWXYZ"},
+        {"abcdef","ghijkl","mnopqrs","tuvwxyz"},
+        {"123","456","789","0+-=/"},
+        {".,:;?!","@#$%^&","()[]{}","<>\"'`~"},
+        {0}
     };
-const char *tbox_chars_russian[] =
+cmap tbox_chars_russian =
     {
-        "ABCDEF|GKLHIJ|MNOPQRS|TUVWXYZ",
-        "abcdef|ghijkl|mnopqrs|tuvwxyz",
-        "ÀÁÂÃÄÅÆ|ÇÈÉÊËÌÍ|ÎÏĞÑÒÓÔ|ÕÖ×ØÙÛÜİŞß",
-        "àáâãäåæ|çèéêëìí|îïğñòóô|õö÷øùûüışÿ",
-        "123|456|789|0+-=",
-        " .:,|;/\\|'\"*|#%&",
-        0
+        {"ABCDEF","GKLHIJ","MNOPQRS","TUVWXYZ"},
+        {"abcdef","ghijkl","mnopqrs","tuvwxyz"},
+        {"ÀÁÂÃÄÅÆ","ÇÈÉÊËÌÍ","ÎÏĞÑÒÓÔ","ÕÖ×ØÙÛÜİŞß"},
+        {"àáâãäåæ","çèéêëìí","îïğñòóô","õö÷øùûüışÿ"},
+        {"123","456","789","0+-="},
+        {" .:,",";/\\","'\"*","#%&"},
+        {0}
     };
 
-const char **charmaps[] = { tbox_chars_default, tbox_chars_russian };
+cmap *charmaps[] = { &tbox_chars_default, &tbox_chars_russian };
 
-const char **tbox_chars;    // current char map (array of string. separator of groups is '|')
-int lines = 0;              // num of valid lines in tbox_chars
-int subgroup_offs[4];       // offsets of subgroups in currently selected line of tbox_chars
-
+int lines = 0;              // num of valid lines in active charmap
 
 int tbox_button_active, line;
 int curchar;     // idx of current entered char in current tmap
+int curgroup;
 int cursor;
 char lastKey;    // Last pressed key (Left, Right, Up, Down)
 char Mode;       // K=keyboard, T=textnavigate, B=button
@@ -112,34 +110,30 @@ int maxlen, offset;
 coord text_offset_x, text_offset_y, key_offset_x;
 
 //-------------------------------------------------------
-static void tbox_charmap_init( const char** buffer )
+static char *map_chars(int line, int group)
 {
-  max_keyboard_lenght = 0;
-  tbox_chars = buffer;
+    return (*charmaps[tconf.char_map])[line][group];
+}
 
-  for (lines=0; tbox_chars[lines] && lines<MAX_CHARSET; lines++)
+static int map_line_len(int n)
+{
+    return strlen(map_chars(n,0)) + strlen(map_chars(n,1)) + strlen(map_chars(n,2)) + strlen(map_chars(n,3)) + 3;
+}
+
+static void tbox_charmap_init()
+{
+  max_keyboard_length = 0;
+
+  for (lines=0; map_chars(lines,0) && lines<MAX_CHARSET; lines++)
   {
-    if (max_keyboard_lenght < strlen(tbox_chars[lines])) 
-        max_keyboard_lenght = strlen(tbox_chars[lines]);
+    int l = map_line_len(lines);
+    if (max_keyboard_length < l) 
+        max_keyboard_length = l;
   }
 }
 
 //-------------------------------------------------------
-static void tbox_split_to_subgroups()
-{
-    int idx,i;
-
-    memset(subgroup_offs, 0, sizeof(subgroup_offs));
-
-    idx=1;
-    for (i=0; tbox_chars[line][i] && idx<4; i++ ) {
-        if (tbox_chars[line][i]==SUBGROUP_SEPARATOR)
-          subgroup_offs[idx++]=i+1;
-    }
-}
-
-
-int textbox_init(int title, int msg, char* defaultstr, unsigned int maxsize, void (*on_select)(const char* newstr)) {
+int textbox_init(int title, int msg, const char* defaultstr, unsigned int maxsize, void (*on_select)(const char* newstr)) {
 
     text = malloc(sizeof(char)*(maxsize+1));
     if ( text==0 ) {
@@ -150,7 +144,7 @@ int textbox_init(int title, int msg, char* defaultstr, unsigned int maxsize, voi
         return 0;
     }
 
-    tbox_charmap_init( charmaps[tconf.char_map] );
+    tbox_charmap_init();
 
     memset(text, '\0', sizeof(char)*(maxsize+1));
 
@@ -169,7 +163,6 @@ int textbox_init(int title, int msg, char* defaultstr, unsigned int maxsize, voi
     cursor = -1;
     maxlen = maxsize;
     offset = 0;
-    tbox_split_to_subgroups();
 
     gui_tbox_redraw = 2;
     gui_tbox_mode_old = gui_set_mode( &GUI_MODE_TBOX );
@@ -227,8 +220,8 @@ void gui_tbox_draw(int enforce_redraw)
                 c[h++][l] = 0;
             if (bw+BUTTON_SEP>w*FONT_WIDTH)
                 w=(bw+BUTTON_SEP)/FONT_WIDTH+1;
-            if (w<max_keyboard_lenght)
-                w=max_keyboard_lenght; // keyboard length
+            if (w<max_keyboard_length)
+                w=max_keyboard_length; // keyboard length
             if (w<MAX_MSG_LENGH)
                 w=MAX_MSG_LENGH; // max message length
             if (w<maxlen) {
@@ -254,7 +247,7 @@ void gui_tbox_draw(int enforce_redraw)
 
             text_offset_x = x+((w-((maxlen<MAX_TEXT_WIDTH)?maxlen:MAX_TEXT_WIDTH))>>1)*FONT_WIDTH;
             text_offset_y = y+(h-2)*FONT_HEIGHT+SPACING_BELOW_TEXT;
-            key_offset_x = x+((w-strlen(tbox_chars[0]))>>1)*FONT_WIDTH;
+            key_offset_x = x+((w-map_line_len(0))>>1)*FONT_WIDTH;
 
             tbox_buttons_y = text_offset_y+FONT_HEIGHT+SPACING_BELOW_TEXT; // on place of symbol line
 
@@ -284,9 +277,9 @@ void gui_tbox_draw(int enforce_redraw)
         if ( Mode== 'T' )
         {
             //rect clears any previous message
-            draw_filled_rect(key_offset_x+((strlen(tbox_chars[0])-MAX_MSG_LENGH)>>1)*FONT_WIDTH, tbox_buttons_y, 
-                             key_offset_x+((strlen(tbox_chars[0])+MAX_MSG_LENGH)>>1)*FONT_WIDTH, tbox_buttons_y+FONT_HEIGHT, MAKE_COLOR(COLOR_GREY,COLOR_GREY));
-            draw_string(key_offset_x+((strlen(tbox_chars[0])-17)>>1)*FONT_WIDTH, tbox_buttons_y, ">navigate cursor<", MAKE_COLOR(COLOR_GREY, COLOR_WHITE));
+            draw_filled_rect(key_offset_x+((map_line_len(0)-MAX_MSG_LENGH)>>1)*FONT_WIDTH, tbox_buttons_y, 
+                             key_offset_x+((map_line_len(0)+MAX_MSG_LENGH)>>1)*FONT_WIDTH, tbox_buttons_y+FONT_HEIGHT, MAKE_COLOR(COLOR_GREY,COLOR_GREY));
+            draw_string(key_offset_x+((map_line_len(0)-17)>>1)*FONT_WIDTH, tbox_buttons_y, ">navigate cursor<", MAKE_COLOR(COLOR_GREY, COLOR_WHITE));
         }
         else if ( Mode == 'K' )
         {
@@ -298,40 +291,44 @@ void gui_tbox_draw(int enforce_redraw)
             // clean previous symbols line
 
             int pline = (line == 0)?lines:line-1;
-            offs=(camera_screen.width - strlen(tbox_chars[pline])*FONT_WIDTH)>>1;
-            //Don't try to do this as below. Just doesn't work properly!
-            //offs = ((strlen(tbox_chars[0])-strlen(tbox_chars[pline]))*FONT_WIDTH)>>1;
-            for(i = 0; (tbox_chars[pline][i] != '\0'); i++)
-                draw_char(offs+i*FONT_WIDTH, tbox_buttons_y, tbox_chars[pline][i], cl_greygrey);
+            offs=(camera_screen.width - map_line_len(pline)*FONT_WIDTH)>>1;
+            draw_filled_rect(offs, tbox_buttons_y, offs+map_line_len(pline)*FONT_WIDTH, tbox_buttons_y+FONT_HEIGHT, cl_greygrey);
 
             // draw current symbols line
 
-            offs=(camera_screen.width - strlen(tbox_chars[line])*FONT_WIDTH)>>1;
-            //offs = ((strlen(tbox_chars[0])-strlen(tbox_chars[line]))*FONT_WIDTH)>>1;
-            for(i = 0; (tbox_chars[line][i] != '\0'); i++) {
-                ch = tbox_chars[line][i];
+            offs=(camera_screen.width - map_line_len(line)*FONT_WIDTH)>>1;
+            int x, group;
+            for (x = offs, group = 0; group < 4; group++)
+            {
+                char *tstr = map_chars(line,group);
 
-                if ( i!=curchar )
-                    cl = MAKE_COLOR(COLOR_GREY, COLOR_WHITE);
-                else if ( tbox_chars[line][i]!=' ' )
-                    cl = MAKE_COLOR(COLOR_GREY, COLOR_RED);
-                else
-                    cl = MAKE_COLOR(COLOR_RED,COLOR_GREY);    // "space" is special color case (inverted)
+                for(i = 0; tstr[i] != '\0'; i++, x += FONT_WIDTH) {
+                    ch = tstr[i];
 
-                if ( ch==SUBGROUP_SEPARATOR )    // replace separator to more visual obvious
-                    ch=6;
+                    if ( (i != curchar) || (group != curgroup) )
+                        cl = MAKE_COLOR(COLOR_GREY, COLOR_WHITE);
+                    else if ( ch != ' ' )
+                        cl = MAKE_COLOR(COLOR_GREY, COLOR_RED);
+                    else
+                        cl = MAKE_COLOR(COLOR_RED,COLOR_GREY);    // "space" is special color case (inverted)
 
-                draw_char(offs+i*FONT_WIDTH, tbox_buttons_y, ch, cl);
+                    draw_char(x, tbox_buttons_y, ch, cl);
+                }
+                if (group < 3)
+                {
+                    draw_char(x, tbox_buttons_y, 6, MAKE_COLOR(COLOR_GREY, COLOR_WHITE));
+                    x += FONT_WIDTH;
+                }
             }
         }
         gui_tbox_redraw = 0;
     }
     if (text_limit_reached) {
-        // clean max_keyboard_lengt chars long field
+        // clean max_keyboard_length chars long field
         if (text_limit_reached%4 == 0)
-            draw_filled_rect(key_offset_x+((strlen(tbox_chars[0])-max_keyboard_lenght)>>1)*FONT_WIDTH, tbox_buttons_y, 
-                             key_offset_x+max_keyboard_lenght*FONT_WIDTH, tbox_buttons_y+FONT_HEIGHT, MAKE_COLOR(COLOR_GREY, COLOR_GREY));
-        draw_string(key_offset_x+((strlen(tbox_chars[0])-18)>>1)*FONT_WIDTH, tbox_buttons_y, "text limit reached", MAKE_COLOR(COLOR_GREY, COLOR_RED));
+            draw_filled_rect(key_offset_x+((map_line_len(0)-max_keyboard_length)>>1)*FONT_WIDTH, tbox_buttons_y, 
+                             key_offset_x+max_keyboard_length*FONT_WIDTH, tbox_buttons_y+FONT_HEIGHT, MAKE_COLOR(COLOR_GREY, COLOR_GREY));
+        draw_string(key_offset_x+((map_line_len(0)-18)>>1)*FONT_WIDTH, tbox_buttons_y, "text limit reached", MAKE_COLOR(COLOR_GREY, COLOR_RED));
         text_limit_reached--;
     }
     if (cursor_to_draw) {
@@ -394,10 +391,10 @@ static void tbox_keyboard_key(char curKey, int subgroup)
     }
     else if (lastKey == curKey) {
         curchar++;
-        if (tbox_chars[line][curchar] == SUBGROUP_SEPARATOR || tbox_chars[line][curchar]==0) {
-            curchar=subgroup_offs[subgroup];
-        }
-        text[cursor] = tbox_chars[line][curchar];
+        curgroup = subgroup;
+        char *tstr = map_chars(line,subgroup);
+        if (tstr[curchar] == 0) curchar = 0;
+        text[cursor] = tstr[curchar];
     }
     else if (curKey == 's') {
         if (strlen(text)<maxlen) {
@@ -416,13 +413,14 @@ static void tbox_keyboard_key(char curKey, int subgroup)
     }
     else {
         if (strlen(text)<maxlen) {
-            curchar = subgroup_offs[subgroup];
+            curchar = 0; curgroup = subgroup;
             if (cursor < (maxlen-1)) {
                 if (text[cursor+1] != '\0') tbox_move_text(1); //check wheter cursor is at the end of the string
                 tbox_move_cursor(1);
             }
             lastKey = curKey;
-            text[cursor] = tbox_chars[line][curchar];
+            char *tstr = map_chars(line,subgroup);
+            text[cursor] = tstr[curchar];
         }
         else { 
             text_limit_reached = 8;
@@ -439,7 +437,6 @@ void gui_tbox_kbd_process()
             case KEY_SHOOT_HALF:
                 line = (line+1)%lines;
                 RESET_CHAR
-                tbox_split_to_subgroups();
                 gui_tbox_redraw = 1;
                 break;
             case KEY_UP:
