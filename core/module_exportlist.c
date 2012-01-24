@@ -235,15 +235,10 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
             shooting_get_prop,
 
 			// for txtread.flt
-            current_font,
             rbf_char_width,
             rbf_font_height,
             rbf_draw_char,
-            rbf_load,
-            rbf_load_from_8x16,
-            rbf_set_codepage,
-			rbf_draw_string_len,
-			rbf_draw_menu_header,
+            rbf_load_from_file,
 
 			// for modinsp.flt
 			GetMemInfo,

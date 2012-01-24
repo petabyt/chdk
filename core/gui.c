@@ -1015,9 +1015,7 @@ const char* gui_font_enum(int change, int arg) {
 
     if (change != 0) {
         font_set(conf.font_cp);
-        if (!rbf_load(conf.menu_rbf_file))
-            rbf_load_from_8x16(current_font);
-        rbf_set_codepage(FONT_CP_WIN);
+        rbf_load_from_file(conf.menu_rbf_file, FONT_CP_WIN);
         gui_menu_init(NULL);
     }
 
@@ -2525,9 +2523,7 @@ void gui_menuproc_mkbootdisk(int arg) {
 static void gui_draw_menu_rbf_selected(const char *fn) {
     if (fn) {
         strcpy(conf.menu_rbf_file, fn);
-        if (!rbf_load(conf.menu_rbf_file))
-            rbf_load_from_8x16(current_font);
-        rbf_set_codepage(FONT_CP_WIN);
+        rbf_load_from_file(conf.menu_rbf_file, FONT_CP_WIN);
         gui_menu_init(NULL);
     }
 }

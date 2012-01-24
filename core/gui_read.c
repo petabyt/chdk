@@ -286,9 +286,7 @@ void gui_read_kbd_leave()
 		return;
 
     reader_is_active = 0;
-    if (!rbf_load(conf.menu_rbf_file))
-        rbf_load_from_8x16(current_font);
-    rbf_set_codepage(FONT_CP_WIN);
+    rbf_load_from_file(conf.menu_rbf_file, FONT_CP_WIN);
 	if (read_file >= 0) {
     	close(read_file);
 	    read_file=-1;
@@ -298,9 +296,7 @@ void gui_read_kbd_leave()
 //-------------------------------------------------------------------
 static void gui_draw_read_selected(const char *fn) {
     if (fn) {
-        if (!rbf_load(rconf.reader_rbf_file))
-            rbf_load_from_8x16(current_font);
-        rbf_set_codepage(rconf.reader_codepage);
+        rbf_load_from_file(rconf.reader_rbf_file, rconf.reader_codepage);
         gui_set_mode(&GUI_MODE_READ);
         gui_read_init(fn);
 

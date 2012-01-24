@@ -221,13 +221,6 @@ int rbf_font_load(char *file, font* f, int maxchar)
 
     return 0;
 }
-//-------------------------------------------------------------------
-int rbf_load(char *file) {
-    // Allocate font if needed
-    init_fonts();
-    // Load font
-    return rbf_font_load(file, rbf_font, 0);
-}
 
 //-------------------------------------------------------------------
 #define maxSymbols 128
@@ -239,23 +232,30 @@ int rbf_load_symbol(char *file) {
 }
 
 //-------------------------------------------------------------------
-void rbf_load_from_8x16(unsigned char font[256][16]) {
-
+// Attempt to load font from file and set codepage
+void rbf_load_from_file(char *file, int codepage)
+{
     // Allocate font if needed
     init_fonts();
+    // Load font, load default on failure
+    if (!rbf_font_load(file, rbf_font, 0))
+    {
+        // Reset back to built in font, file load failed
+        rbf_font->hdr.charSize  = 16;
+        rbf_font->hdr.height    = 16;
+        rbf_font->hdr.maxWidth  = 8;
+        rbf_font->hdr.charFirst = 0;
+        rbf_font->hdr.charLast  = 255;
 
-    rbf_font->hdr.charSize  = 16;
-    rbf_font->hdr.height    = 16;
-    rbf_font->hdr.maxWidth  = 8;
-    rbf_font->hdr.charFirst = 0;
-    rbf_font->hdr.charLast  = 255;
+        // This is only ever called to copy the 'current_font' data into the rbf_font
+        // Instead of doing this set the rbf_font flag so we call 'draw_char' directly (which uses current_font)
+        // This avoids allocating memory for a copy of something we already have
+        rbf_font->usingFont8x16 = 1;
 
-    // This is only ever called to copy the 'current_font' data into the rbf_font
-    // Instead of doing this set the rbf_font flag so we call 'draw_char' directly (which uses current_font)
-    // This avoids allocating memory for a copy of something we already have
-    rbf_font->usingFont8x16 = 1;
-
-    alloc_cTable(rbf_font);
+        alloc_cTable(rbf_font);
+    }
+    // Set codepage
+    rbf_set_codepage(codepage);
 }
 
 //-------------------------------------------------------------------
