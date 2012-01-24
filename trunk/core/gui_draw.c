@@ -229,19 +229,26 @@ void draw_filled_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color 
     fill_rect(cl);
 } 
 //-------------------------------------------------------------------
-void draw_char(coord x, coord y, const char ch, color cl) {
-    const unsigned char *sym = (unsigned char*)current_font + ((const unsigned char)ch)*FONT_HEIGHT;
+void draw_char(coord x, coord y, const char ch, color cl)
+{
+    FontData *f = (FontData*)get_current_font_data(ch);
+    const unsigned char *sym = (unsigned char*)f + sizeof(FontData) - f->offset;
     int i, ii;
 
-    // XXX optimize. probably use 4bit -> 32bit lookup table
-    // so 4(8) pixels were drawn at a time
-    for (i=0; i<FONT_HEIGHT; i++)
+    // First draw blank lines at top
+    for (i=0; i<f->offset; i++)
+        draw_hline(x, y+i, FONT_WIDTH, BG_COLOR(cl));
+    // Now draw character data
+    for (; i<f->offset+f->size; i++)
     {
 	    for (ii=0; ii<FONT_WIDTH; ii++)
         {
             draw_pixel(x+ii ,y+i, (sym[i] & (0x80>>ii))? FG_COLOR(cl) : BG_COLOR(cl));
 	    }
     }
+    // Last draw blank lines at bottom
+    for (; i<FONT_HEIGHT; i++)
+        draw_hline(x, y+i, FONT_WIDTH, BG_COLOR(cl));
 }
 
 //-------------------------------------------------------------------

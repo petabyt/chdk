@@ -693,7 +693,10 @@ void script_end()
       ubasic_end();
 #endif
     }
-    if (module_mdetect_load())
+    // If motion detect library loaded then shut down motion detector
+    // Don't call 'module_mdetect_load' here as we don't want to load
+    // the module, just see if it was already loaded.
+    if (libmotiondetect)
         libmotiondetect->md_close_motion_detector();
 	shot_histogram_set(0);
     kbd_key_release_all();

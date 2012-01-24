@@ -8,7 +8,7 @@ int main(int argc, char **argv)
     int i, j, offset, size;
     
     printf("// This is a compressed version of font_8x16_uni.h produced by the tools/font_8x16_pack program\n\n");
-    printf("typedef struct {\n\tunsigned char charcode[2];\n\tunsigned char offset;\n\tunsigned char size;\n} FontData;\n\n");
+    printf("// Format of each character is 'FontData' structure, followed by FontData.size bytes of character data.\n\n");
     printf("static unsigned char font_data[] = {\n");
 
     for (i=0; font_data[i].charcode != -1; i++)

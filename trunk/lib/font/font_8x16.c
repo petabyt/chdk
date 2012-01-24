@@ -7,7 +7,13 @@
 #define DEFAULT_SYMBOL          0xFFFD
 
 //-------------------------------------------------------------------
-unsigned char current_font[256][16];
+// Offsets to font character data stored in the font_data array
+unsigned short current_font[256];
+
+unsigned char *get_current_font_data(char ch)
+{
+    return font_data + current_font[(unsigned char)ch];
+}
 
 //-------------------------------------------------------------------
 static FontData* font_find_data (int charcode) {
@@ -28,7 +34,6 @@ static FontData* font_find_data (int charcode) {
 static void font_init_data(const unsigned short *src, int st, int num) {
     int i;
     FontData *f;
-    unsigned char *p;
 
     for (i=0; i<num; ++i) {
         f = font_find_data(src[i]);
@@ -36,9 +41,7 @@ static void font_init_data(const unsigned short *src, int st, int num) {
         {
             f = font_find_data(DEFAULT_SYMBOL);
         }
-        p = (unsigned char*)f + sizeof(FontData);
-        memset(current_font[st+i], 0, 16);
-        if (f->size > 0) memcpy(current_font[st+i]+f->offset, p, f->size);
+        current_font[st+i] = (short)((unsigned char*)f - font_data);
     }
 }
 

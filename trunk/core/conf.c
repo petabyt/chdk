@@ -437,9 +437,7 @@ static void conf_change_script_file() {
 
 
 static void conf_change_menu_rbf_file() {
-    if (!rbf_load(conf.menu_rbf_file))
-        rbf_load_from_8x16(current_font);
-    rbf_set_codepage(FONT_CP_WIN);
+    rbf_load_from_file(conf.menu_rbf_file, FONT_CP_WIN);
 }
 
 static void conf_change_menu_symbol_rbf_file() {
