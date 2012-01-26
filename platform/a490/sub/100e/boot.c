@@ -111,7 +111,7 @@ void __attribute__((naked,noinline)) boot() {
 			"LDR     R1, [R2]\n"
 			"ORR     R1, R1, #1\n"
 			"STR     R1, [R2]\n"
-			"LDR     R0, =0xFFEE6658\n"
+			"LDR     R0, =0xFFEE6708 \n"
 			"LDR     R1, =0x1900\n"
 			"LDR     R3, =0xAB04\n"
 "loc_FFC0013C:\n"
@@ -177,7 +177,7 @@ void __attribute__((naked,noinline)) sub_FFC0119C_my() {
 			"SUB     SP, SP, #0x74\n"
 			"MOV     R0, SP\n"
 			"MOV     R1, #0x74\n"
-			"BL      sub_FFE7E210\n"
+			"BL      sub_FFE7E2BC\n"
 			"MOV     R0, #0x53000\n"
 			"STR     R0, [SP,#4]\n"
 			//    "LDR     R0, =0x129140\n"			// -
@@ -196,29 +196,7 @@ void __attribute__((naked,noinline)) sub_FFC0119C_my() {
 			"STR     R0, [SP,#0x1C]\n"
 			"LDR     R0, =0x19B\n"
 			"LDR     R1, =sub_FFC05E5C_my\n"	//--------->
-			"STR     R0, [SP,#0x20]\n"
-			"MOV     R0, #0x96\n"
-			"STR     R0, [SP,#0x24]\n"
-			"MOV     R0, #0x78\n"
-			"STR     R0, [SP,#0x28]\n"
-			"MOV     R0, #0x64\n"
-			"STR     R0, [SP,#0x2C]\n"
-			"MOV     R0, #0\n"
-			"STR     R0, [SP,#0x30]\n"
-			"STR     R0, [SP,#0x34]\n"
-			"MOV     R0, #0x10\n"
-			"STR     R0, [SP,#0x5C]\n"
-			"MOV     R0, #0x800\n"
-			"STR     R0, [SP,#0x60]\n"
-			"MOV     R0, #0xA0\n"
-			"STR     R0, [SP,#0x64]\n"
-			"MOV     R0, #0x280\n"
-			"STR     R0, [SP,#0x68]\n"
-			"MOV     R0, SP\n"
-			"MOV     R2, #0\n"
-			"BL      sub_FFC03408\n"
-			"ADD     SP, SP, #0x74\n"
-			"LDR     PC, [SP],#4\n"
+			"B       sub_FFC011F0\n"            // continue in firmware
 	);
 }
 
@@ -288,12 +266,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() {
 			"MOV     R3, #0\n"
 			"STR     R3, [SP]\n"
 			"LDR     R3, =task_Startup_my\n"	//-------->
-			"MOV     R2, #0\n"
-			"MOV     R1, #0x19\n"
-			"LDR     R0, =0xFFC106D8\n"
-			"BL      sub_FFC0F1A8\n"
-			"MOV     R0, #0\n"
-			"LDMFD   SP!, {R12,PC}\n"
+            "B       sub_FFC106B8\n"            // Continue in firmware
 	);
 }
 // ROM:0xFFC105F8
@@ -313,17 +286,7 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 			"BL      CreateTask_spytask\n"	// +
 			//  "BL      sub_FFC237C0\n"		// original taskcreate_PhySw
 			"BL      taskcreate_PhySw_my\n"	// + ---------->
-			"BL      sub_FFC26CFC\n"
-			"BL      sub_FFC2AF8C\n"
-			//  "BL      nullsub_173\n"
-			"BL      sub_FFC22D48\n"
-			"BL      sub_FFC2A980\n"		// TaskCreate_bye
-			"BL      sub_FFC23220\n"
-			"BL      sub_FFC22CE8\n"
-			"BL      sub_FFC2B9B8\n"
-			"BL      sub_FFC22CC0\n"
-			"LDMFD   SP!, {R4,LR}\n"
-			"B       sub_FFC06128\n"
+            "B       sub_FFC10628\n"            // continue in firmware
 	);
 }
 
@@ -334,15 +297,13 @@ void __attribute__((naked,noinline)) taskcreate_PhySw_my() {
 			"LDR     R4, =0x1BE4\n"
 			"LDR     R0, [R4,#0x10]\n"
 			"CMP     R0, #0\n"
-			"BNE     loc_FFC237F4\n"
+			"BNE     sub_FFC237F4\n"    // continue in firmware
 			"MOV     R3, #0\n"
 			"STR     R3, [SP]\n"
 			"LDR     R3, =mykbd_task\n"		// Changed
 			//  "MOV     R2, #0x800\n"
 			"MOV     R2, #0x2000\n"			// + stack size for new task_PhySw so we don't have to do stack switch
 			"B       sub_FFC237E4\n"    // Continue code
-"loc_FFC237F4:\n"
-			"B       sub_FFC237F4\n"    // Continue code
 	);
 }
 /*******************************************************************/
@@ -359,12 +320,7 @@ void __attribute__((naked,noinline)) init_file_modules_task() {
 			"BLNE    sub_FFC6C5F8\n"
 			"BL      sub_FFC69D9C_my\n"			//------------->
 			"BL      core_spytask_can_start\n"	// + set "it's safe to start" flag for spytask
-			"CMP     R4, #0\n"
-			"MOVEQ   R0, R5\n"
-			"LDMEQFD SP!, {R4-R6,LR}\n"
-			"MOVEQ   R1, #0\n"
-			"BEQ     sub_FFC6C5F8\n"
-			"LDMFD   SP!, {R4-R6,PC}\n"
+            "B       sub_FFC704D4\n"            // continue in firmware
 	);
 }
 
@@ -373,21 +329,7 @@ void __attribute__((naked,noinline)) sub_FFC69D9C_my() {
 			"STMFD   SP!, {R4,LR}\n"
 			"MOV     R0, #3\n"
 			"BL      sub_FFC50E90_my\n"			//---------->
-			//  "BL      nullsub_67\n"
-			"LDR     R4, =0x2A30\n"
-			"LDR     R0, [R4,#4]\n"
-			"CMP     R0, #0\n"
-			"BNE     loc_FFC69DD4\n"
-			"BL      sub_FFC500D8\n"
-			"BL      sub_FFCF0368\n"
-			"BL      sub_FFC500D8\n"
-			"BL      sub_FFC4CB50\n"
-			"BL      sub_FFC4FFD8\n"
-			"BL      sub_FFCF03FC\n"
-"loc_FFC69DD4:\n"
-			"MOV     R0, #1\n"
-			"STR     R0, [R4]\n"
-			"LDMFD   SP!, {R4,PC}\n"
+            "B       sub_FFC69DA8\n"            // continue in firmware
 	);
 }
 
@@ -416,39 +358,7 @@ void __attribute__((naked,noinline)) sub_FFC50E90_my() {
 		"BL      sub_FFC50758\n"
 		"MOV     R0, R6\n"
 		"BL      sub_FFC50AB8_my\n"		//--------->
-		"MOV     R5, R0\n"
-		"MOV     R0, R6\n"
-		"BL      sub_FFC50CE8\n"
-		"LDR     R6, [R4,#0x3C]\n"
-		"AND     R7, R5, R0\n"
-		"CMP     R6, #0\n"
-		"LDR     R1, [R4,#0x38]\n"
-		"MOVEQ   R0, #0x80000001\n"
-		"MOV     R5, #0\n"
-		"BEQ     loc_FFC50F40\n"
-		"MOV     R0, R1\n"
-		"BL      sub_FFC50240\n"
-		"CMP     R0, #0\n"
-		"MOVNE   R5, #4\n"
-		"CMP     R6, #5\n"
-		"ORRNE   R0, R5, #1\n"
-		"BICEQ   R0, R5, #1\n"
-		"CMP     R7, #0\n"
-		"BICEQ   R0, R0, #2\n"
-		"ORREQ   R0, R0, #0x80000000\n"
-		"BICNE   R0, R0, #0x80000000\n"
-		"ORRNE   R0, R0, #2\n"
-"loc_FFC50F40:\n"
-		"CMP     R8, #7\n"
-		"STR     R0, [R4,#0x40]\n"
-		"LDMNEFD SP!, {R4-R8,PC}\n"
-		"MOV     R0, R8\n"
-		"BL      sub_FFC50E60\n"
-		"CMP     R0, #0\n"
-		"LDMEQFD SP!, {R4-R8,LR}\n"
-		"LDREQ   R0, =0xFFC50F8C\n"
-		"BEQ     sub_FFC01780\n"
-		"LDMFD   SP!, {R4-R8,PC}\n"
+        "B       sub_FFC50EE8\n"        // continue in firmware
 		);
 }
 
@@ -464,26 +374,8 @@ void __attribute__((naked,noinline)) sub_FFC50AB8_my() {
 			"LDMNEFD SP!, {R4-R6,PC}\n"
 			"LDR     R0, [R4,#0x38]\n"
 			"MOV     R1, R5\n"
-			"BL      sub_FFC507D8_my\n"  //--------->
-			"CMP     R0, #0\n"
-			"LDRNE   R0, [R4,#0x38]\n"
-			"MOVNE   R1, R5\n"
-			"BLNE    sub_FFC50974\n"
-			"LDR     R2, =0x32330\n"
-			"ADD     R1, R5, R5,LSL#4\n"
-			"LDR     R1, [R2,R1,LSL#2]\n"
-			"CMP     R1, #4\n"
-			"BEQ     loc_FFC50B18\n"
-			"CMP     R0, #0\n"
-			"LDMEQFD SP!, {R4-R6,PC}\n"
-			"MOV     R0, R5\n"
-			"BL      sub_FFC502D0\n"
-"loc_FFC50B18:\n"
-			"CMP     R0, #0\n"
-			"LDRNE   R1, [R4,#0x6C]\n"
-			"ORRNE   R1, R1, #2\n"
-			"STRNE   R1, [R4,#0x6C]\n"
-			"LDMFD   SP!, {R4-R6,PC}\n"
+			"BL      sub_FFC507D8_my\n"     //--------->
+            "B       sub_FFC50AE4\n"        // continue in firmware
 	);
 }
 
