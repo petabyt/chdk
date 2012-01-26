@@ -7,15 +7,20 @@
 
 const char * const new_sa = &_end;
 
-void taskHook(int *p){
+extern void task_CaptSeq();
+extern void task_InitFileModules();
+extern void task_MovieRecord();
+extern void task_ExpDrv();
 
-	p-=17;
+void taskHook(context_t **context)
+{
+	task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
 
-	if(p[0]==0xFFC239C8) p[0]=(int)mykbd_task;
-	if(p[0]==0xFFC5919C) p[0]=(int)capt_seq_task;
-	if(p[0]==0xFFC704B4) p[0]=(int)init_file_modules_task;
-	if(p[0]==0xFFD0C8F8) p[0]=(int)movie_record_task;
-	if(p[0]==0xFFC91388) p[0]=(int)exp_drv_task;
+	// Replace firmware task addresses with ours
+	if(tcb->entry == (void*)task_CaptSeq)			tcb->entry = (void*)capt_seq_task; 
+	if(tcb->entry == (void*)task_InitFileModules)	tcb->entry = (void*)init_file_modules_task;
+	if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;
+	if(tcb->entry == (void*)task_ExpDrv)			tcb->entry = (void*)exp_drv_task;
 }
 
 void CreateTask_spytask() {
@@ -191,29 +196,7 @@ void __attribute__((naked,noinline)) sub_FFC0119C_my() {
 			"STR     R0, [SP,#0x1C]\n"
 			"LDR     R0, =0x19B\n"
 			"LDR     R1, =sub_FFC05E5C_my\n"	//--------->
-			"STR     R0, [SP,#0x20]\n"
-			"MOV     R0, #0x96\n"
-			"STR     R0, [SP,#0x24]\n"
-			"MOV     R0, #0x78\n"
-			"STR     R0, [SP,#0x28]\n"
-			"MOV     R0, #0x64\n"
-			"STR     R0, [SP,#0x2C]\n"
-			"MOV     R0, #0\n"
-			"STR     R0, [SP,#0x30]\n"
-			"STR     R0, [SP,#0x34]\n"
-			"MOV     R0, #0x10\n"
-			"STR     R0, [SP,#0x5C]\n"
-			"MOV     R0, #0x800\n"
-			"STR     R0, [SP,#0x60]\n"
-			"MOV     R0, #0xA0\n"
-			"STR     R0, [SP,#0x64]\n"
-			"MOV     R0, #0x280\n"
-			"STR     R0, [SP,#0x68]\n"
-			"MOV     R0, SP\n"
-			"MOV     R2, #0\n"
-			"BL      sub_FFC03408\n"
-			"ADD     SP, SP, #0x74\n"
-			"LDR     PC, [SP],#4\n"
+            "B       sub_FFC011F0\n"            // continue in firmware
 	);
 }
 
@@ -283,12 +266,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() {
 			"MOV     R3, #0\n"
 			"STR     R3, [SP]\n"
 			"LDR     R3, =task_Startup_my\n"	//-------->
-			"MOV     R2, #0\n"
-			"MOV     R1, #0x19\n"
-			"LDR     R0, =0xFFC106D8\n"
-			"BL      sub_FFC0F1A8\n"
-			"MOV     R0, #0\n"
-			"LDMFD   SP!, {R12,PC}\n"
+            "B       sub_FFC106B8\n"            // continue in firmware
 	);
 }
 // ROM:0xFFC105F8
@@ -308,17 +286,7 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 			"BL      CreateTask_spytask\n"	// +
 			//  "BL      sub_FFC237C0\n"		// original taskcreate_PhySw
 			"BL      taskcreate_PhySw_my\n"	// + ---------->
-			"BL      sub_FFC26CFC\n"
-			"BL      sub_FFC2AF8C\n"
-			//  "BL      nullsub_173\n"
-			"BL      sub_FFC22D48\n"
-			"BL      sub_FFC2A980\n"		// TaskCreate_bye
-			"BL      sub_FFC23220\n"
-			"BL      sub_FFC22CE8\n"
-			"BL      sub_FFC2B9B8\n"
-			"BL      sub_FFC22CC0\n"
-			"LDMFD   SP!, {R4,LR}\n"
-			"B       sub_FFC06128\n"
+            "B       sub_FFC10628\n"            // continue in firmware
 	);
 }
 
@@ -329,15 +297,13 @@ void __attribute__((naked,noinline)) taskcreate_PhySw_my() {
 			"LDR     R4, =0x1BE4\n"
 			"LDR     R0, [R4,#0x10]\n"
 			"CMP     R0, #0\n"
-			"BNE     loc_FFC237F4\n"
+			"BNE     sub_FFC237F4\n"
 			"MOV     R3, #0\n"
 			"STR     R3, [SP]\n"
 			"LDR     R3, =mykbd_task\n"		// Changed
 			//  "MOV     R2, #0x800\n"
 			"MOV     R2, #0x2000\n"			// + stack size for new task_PhySw so we don't have to do stack switch
 			"B       sub_FFC237E4\n"    // Continue code
-"loc_FFC237F4:\n"
-			"B       sub_FFC237F4\n"    // Continue code
 	);
 }
 /*******************************************************************/
