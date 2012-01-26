@@ -322,8 +322,23 @@ long mkdir_if_not_exist(const char *dirname)
     return 0;   // Success
 }
 
-int remove(const char *name) {
-	return _DeleteFile_Fut(name);
+int remove(const char *name)
+{
+#ifdef CAM_DRYOS_2_3_R39
+    // For DryOS R39 and later need to check if 'name' is a file or directory
+    // and call appropriate delete function.
+    struct stat st;
+    if (stat(name,&st) == 0)
+    {
+        if (st.st_attrib & DOS_ATTR_DIRECTORY)
+        	return _DeleteDirectory_Fut(name);
+        else
+        	return _DeleteFile_Fut(name);
+    }
+    return -1;  // return fail - file / directory does not exist
+#else
+    return _DeleteFile_Fut(name);
+#endif
 }
 
 //----------------------------------------------------------------------------
@@ -542,36 +557,42 @@ unsigned long time(unsigned long *timer) {
 
 int utime(const char *file, struct utimbuf *newTimes) {
 #if !CAM_DRYOS
-  return _utime(file, newTimes);
+    return _utime(file, newTimes);
 #else
- int res=0;
- int fd;
- fd = _open(file, 0, 0);
+    int res=0;
+    int fd;
+    fd = _open(file, 0, 0);
 
 #ifdef CAM_DRYOS_2_3_R39
-   if (fd>=0) {
-       _close(fd);
-       res=_SetFileTimeStamp(file, ((int*)newTimes)[0] , ((int*)newTimes)[1]);
-   }
+    if (fd>=0) {
+        _close(fd);
+        res=_SetFileTimeStamp(file, newTimes->actime , newTimes->modtime);
+    }
 #else
-     if (fd>=0) {
-      res=_SetFileTimeStamp(fd, ((int*)newTimes)[0] , ((int*)newTimes)[1]);
-      _close(fd);
-     }
-     // return value compatibe with utime: ok=0 fail=-1
+    if (fd>=0) {
+        res=_SetFileTimeStamp(fd, newTimes->actime , newTimes->modtime);
+        _close(fd);
+    }
+    // return value compatibe with utime: ok=0 fail=-1
 #endif
-  return (res)?0:-1;
+    return (res)?0:-1;
 #endif
 }
 
-struct tm *localtime(const unsigned long *_tod) {
+struct tm *localtime(const time_t *_tod) {
 #if !CAM_DRYOS
     return _localtime(_tod);
 #else
-// for DRYOS cameras do something with this!  - sizeof(x[]) must be >= sizeof(struct tm) :  'static int x[9];'
-  static int x[9];
-  return _LocalTime(_tod, &x);
+    // for DRYOS cameras do something with this!  - sizeof(x[]) must be >= sizeof(struct tm) :  'static int x[9];'
+    static int x[9];
+    return _LocalTime(_tod, &x);
 #endif
+}
+
+struct tm *get_localtime()
+{
+    time_t t = time(NULL);
+    return localtime(&t);
 }
 
 long strftime(char *s, unsigned long maxsize, const char *format, const struct tm *timp) {

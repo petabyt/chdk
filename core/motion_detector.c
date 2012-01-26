@@ -256,8 +256,7 @@ static void md_save_calls_history(){
 	char big[MD_INFO_BUF_SIZE];
 	int big_ln;
 	int calls,i, ln, fd;
-  static struct utimbuf t;
-    unsigned long t2;
+    static struct utimbuf t;
     static struct tm *ttm;
 
 
@@ -271,9 +270,8 @@ static void md_save_calls_history(){
 	if( fd>=0) {
 		console_add_line("Writing info file...");
 		lseek(fd,0,SEEK_END);
-    t2 = time(NULL);
-    ttm = localtime(&t2);
-    big_ln=sprintf(big, 
+	    ttm = get_localtime();
+        big_ln=sprintf(big, 
 				"\r\n--- %04u-%02u-%02u  %02u:%02u:%02u\r\n"
 				"CHDK Ver: %s [ #%s ]\r\nBuild Date: %s %s\r\nCamera:  %s [ %s ]\r\n"
 				"[%dx%d], threshold: %d, interval: %d, pixels step: %d\r\n"

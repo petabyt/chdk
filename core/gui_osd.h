@@ -24,7 +24,7 @@ extern void gui_draw_osd_le(int arg);
 extern void gui_osd_draw_dof();
 extern void gui_osd_draw_state();
 extern void gui_osd_draw_raw_info();
-extern void gui_osd_draw_values();
+extern void gui_osd_draw_values(int showtype);
 extern void gui_osd_draw_clock(int x, int y, color cl);
 extern void gui_osd_draw_temp();
 extern void gui_osd_draw_seconds();

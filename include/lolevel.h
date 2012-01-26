@@ -49,11 +49,11 @@ extern void _taskResume(int taskId);
 extern int _errnoOfTaskGet(int tid);
 extern long _IsStrobeChargeCompleted();
 
-long _SetEventFlag(void *flag, long what);
-long _CheckAnyEventFlag(void *flag, long mask, long *res);
-long _GetEventFlagValue(void *flag, long *res);
+extern long _SetEventFlag(void *flag, long what);
+extern long _CheckAnyEventFlag(void *flag, long mask, long *res);
+extern long _GetEventFlagValue(void *flag, long *res);
 
-long _ReceiveMessageQueue(void *msgq, long *dst, long unk1 /* maybe size? */);
+extern long _ReceiveMessageQueue(void *msgq, long *dst, long unk1 /* maybe size? */);
 
 /* Canon stuff with nonoriginal naming */
 extern long _GetParameterData(long id, void *buf, long size);
@@ -92,6 +92,7 @@ extern char *_Fgets_Fut(char *buf, int n, long f);
 extern long _RenameFile_Fut(const char *oldname, const char *newname);
 extern long _DeleteFile_Fut(const char *name);
 extern long _MakeDirectory_Fut(const char *name,int unk);
+extern long _DeleteDirectory_Fut(const char *name);
 
 extern int _rename(const char *oldname, const char *newname);
 
@@ -156,7 +157,7 @@ extern void _kbd_pwr_off();
 extern void _kbd_read_keys_r2(void*p);
 extern long physw_status[3], physw_copy[3];
 
-void __attribute__((naked,noinline)) mykbd_task();
+extern void __attribute__((naked,noinline)) mykbd_task();
 extern void capt_seq_task();
 extern void movie_record_task();
 extern void init_file_modules_task();
@@ -186,7 +187,7 @@ extern void _UniqueLedOn(void *addr, long brightness);
 extern void _UniqueLedOff(void *addr);
 struct led_control {int led_num; int action; int brightness; int blink_count;};
 extern int _PostLEDMessage(struct led_control *);
-int _LEDDrive(int led, int action);
+extern int _LEDDrive(int led, int action);
 
 extern long _LockMainPower();
 extern long _UnlockMainPower();
@@ -225,15 +226,15 @@ extern double __sqrt(double x);
 
 /* time */
 extern int _utime(const char *file, void *newTimes);
-extern unsigned long _time(unsigned long *timer);
-extern void *_localtime(const unsigned long *_tod);
-extern void *_LocalTime(const unsigned long *_tod, void * t_m); // DRYOS
+extern unsigned long _time(/*time_t*/ unsigned long *timer);
+extern void *_localtime(const /*time_t*/ unsigned long *_tod);
+extern void *_LocalTime(const /*time_t*/ unsigned long *_tod, void * t_m); // DRYOS
 extern long _strftime(char *s, unsigned long maxsize, const char *format, const /*struct tm*/ void *timp);
 extern /*time_t*/ long _mktime(/*struct tm*/ void *timp); // VXWORKS
 extern /*time_t*/ long _mktime_ext(void *tim_extp); // DRYOS, doesn't take a struct tm *
 
 #ifdef CAM_DRYOS_2_3_R39
-int _SetFileTimeStamp(const char *file_path, int time1, int time2);
+extern int _SetFileTimeStamp(const char *file_path, int time1, int time2);
 #else
 extern int _SetFileTimeStamp(int fd, int time1, int time2);
 #endif
@@ -249,9 +250,10 @@ extern unsigned long _GetDrive_ClusterSize(int drive);
 extern unsigned long _GetDrive_TotalClusters(int drive);
 extern unsigned long _GetDrive_FreeClusters(int drive);
 extern int _WriteSDCard(unsigned int drive, unsigned int start_sect, unsigned int num_sect, void *buf);
+
 extern void _UnsetZoomForMovie(void);
-void _TurnOffMic(void);
-void _TurnOnMic(void);
+extern void _TurnOffMic(void);
+extern void _TurnOnMic(void);
 
 extern void _MakeAFScan(int*, int);
 extern void _ExpCtrlTool_StartContiAE(int, int);
@@ -284,10 +286,10 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
 
 // 7 calls functions and sets some MMIOs, but doesn't disable caches and actually restart
 // 3 skips one function call on some cameras, but does restart
-void _Restart(unsigned option);
+extern void _Restart(unsigned option);
 
 // boot an fir/fi2 file
-void _reboot_fw_update(const char* bootfile);
+extern void _reboot_fw_update(const char* bootfile);
 #ifdef CAM_CHDK_PTP
 extern int _add_ptp_handler(int, void*, int);
 extern void _set_control_event(int);

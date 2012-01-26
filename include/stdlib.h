@@ -269,7 +269,8 @@ struct tm
 
 typedef unsigned long time_t;
 
-extern struct tm * localtime(const unsigned long *_tod);
+extern struct tm * localtime(const time_t *_tod);
+extern struct tm * get_localtime();
 
 struct utimbuf {
     unsigned long actime;       /* set the access time */

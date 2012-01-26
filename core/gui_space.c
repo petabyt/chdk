@@ -186,8 +186,8 @@ static void gui_space_draw_percent() {
 static void gui_space_draw_mb() {
     space_color();
     unsigned int freemb=GetFreeCardSpaceKb()/1024;
-    if (freemb < 10000) sprintf(osd_buf, "%3d%M",freemb);
-    else sprintf(osd_buf, "%3d%G",freemb/1024);   // if 10 GiB or more free, print in GiB instead of MiB
+    if (freemb < 10000) sprintf(osd_buf, "%4dM",freemb);
+    else sprintf(osd_buf, "%4dG",freemb/1024);   // if 10 GiB or more free, print in GiB instead of MiB
     osd_buf[5]=0;
     draw_string(conf.space_txt_pos.x, conf.space_txt_pos.y, osd_buf, cl);
 }

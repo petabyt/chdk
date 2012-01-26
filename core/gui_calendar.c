@@ -35,11 +35,9 @@ static int days[] = {LANG_CALENDAR_MON, LANG_CALENDAR_TUE, LANG_CALENDAR_WED, LA
                      LANG_CALENDAR_FRI, LANG_CALENDAR_SAT, LANG_CALENDAR_SUN};
 //-------------------------------------------------------------------
 static void calendar_goto_today() {
-    unsigned long t;
     struct tm *ttm;
 
-    t = time(NULL);
-    ttm = localtime(&t);
+    ttm = get_localtime();
     cal_year = 1900+ttm->tm_year;
     cal_month = ttm->tm_mon;
 }
@@ -135,11 +133,9 @@ void gui_calendar_draw(int enforce_redraw) {
     int x, y;
     static char str[32];
     int w, d, i;
-    unsigned long t;
     static struct tm *ttm;
 
-    t = time(NULL);
-    ttm = localtime(&t);
+    ttm = get_localtime();
     sprintf(str, " %2u %s %04u  %2u:%02u:%02u   ", ttm->tm_mday, lang_str(months[ttm->tm_mon]), 1900+ttm->tm_year, ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
     draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+8, 0, str, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 

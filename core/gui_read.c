@@ -74,11 +74,9 @@ static void gui_read_draw_batt() {
 
 //-------------------------------------------------------------------
 static void gui_read_draw_clock() {
-    unsigned long t;
     static struct tm *ttm;
 
-    t = time(NULL);
-    ttm = localtime(&t);
+    ttm = get_localtime();
     sprintf(buffer, "%2u:%02u", ttm->tm_hour, ttm->tm_min);
     draw_txt_string((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2-1-1-9-2-5, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 }

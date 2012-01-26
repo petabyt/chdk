@@ -1196,9 +1196,8 @@ static int luaCB_get_temperature( lua_State* L )
 static int luaCB_get_time( lua_State* L )
 {
   int r = -1;
-  unsigned long t2 = time(NULL);
   static struct tm *ttm;
-  ttm = localtime(&t2);
+  ttm = get_localtime();
   const char *t = luaL_checkstring( L, 1 );
   if (strncmp("s", t, 1)==0) r = ( L, ttm->tm_sec );
   else if (strncmp("m", t, 1)==0) r = ( L, ttm->tm_min );

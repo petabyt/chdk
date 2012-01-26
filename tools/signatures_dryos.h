@@ -2960,6 +2960,30 @@ static FuncSig func_sig_MakeDirectory_Fut_1[] = {
 	{ -1, -1, -1 },
 };
 
+static FuncSig func_sig_DeleteDirectory_Fut_1[] = {
+	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4070
+	{   1, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE1A04000
+	{   2, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01001
+	{   3, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB0000CA
+	{   4, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05000
+	{   5, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
+	{   6, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB0000E8
+	{   7, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
+	{   8, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB0002B4
+	{   9, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
+	{  10, 0x11a04000, 0xfdfff000 }, // mov:6:0x13A04000
+	{  11, 0x0a000000, 0x0f000000 }, // b, bl:3:0x1A000002
+	{  12, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
+	{  13, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFDD5
+	{  14, 0xe00f4000, 0xf00ff000 }, // ldr:8:0xE59F44DC
+	{  15, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
+	{  16, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB0000C7
+	{  17, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
+	{  18, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD8070
+	/* 19/19 */
+	{ -1, -1, -1 },
+};
+
 static FuncSig func_sig_SetFileTimeStamp_1[] = {
 	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D401C
 	{   1, 0xe58d1000, 0xfdfff000 }, // str:4:0xE58D1004
@@ -7795,6 +7819,7 @@ FuncsList func_list[] = {
 	{ "CreateJumptable", func_sig_CreateJumptable_1, 1 },
 	{ "CreateTask", func_sig_CreateTask_1, 1 },
 	{ "DebugAssert", func_sig_DebugAssert_4, 4 },
+	{ "DeleteDirectory_Fut", func_sig_DeleteDirectory_Fut_1, 1 },
 	{ "DeleteFile_Fut", func_sig_DeleteFile_Fut_1, 1 },
 	{ "DoAFLock", func_sig_DoAFLock_4, 4 },
 	{ "EnterToCompensationEVF", func_sig_EnterToCompensationEVF_2, 2 },

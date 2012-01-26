@@ -93,6 +93,7 @@ NSTUB(AllocateUncacheableMemory               ,0xffc17174) //112
 //NSTUB(Close                                 ,0xffc13344) //101            == 0xffc13344
 //NSTUB(CreateTask                            ,0xffc0b8c0) //101            == 0xffc0b8c0
 NSTUB(DebugAssert                             ,0xffc0bd98) //111
+NSTUB(DeleteDirectory_Fut                     ,0xffc12cd4) //  1
 //NSTUB(DeleteFile_Fut                        ,0xffc12bf0) //112            == 0xffc12bf0
 //NSTUB(DoAFLock                              ,0xffc14d9c) //102            == 0xffc14d9c
 //NSTUB(EnterToCompensationEVF                ,0xffc14fec) //104            == 0xffc14fec
