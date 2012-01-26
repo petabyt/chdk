@@ -322,8 +322,23 @@ long mkdir_if_not_exist(const char *dirname)
     return 0;   // Success
 }
 
-int remove(const char *name) {
-	return _DeleteFile_Fut(name);
+int remove(const char *name)
+{
+#ifdef CAM_DRYOS_2_3_R39
+    // For DryOS R39 and later need to check if 'name' is a file or directory
+    // and call appropriate delete function.
+    struct stat st;
+    if (stat(name,&st) == 0)
+    {
+        if (st.st_attrib & DOS_ATTR_DIRECTORY)
+        	return _DeleteDirectory_Fut(name);
+        else
+        	return _DeleteFile_Fut(name);
+    }
+    return -1;  // return fail - file / directory does not exist
+#else
+    return _DeleteFile_Fut(name);
+#endif
 }
 
 //----------------------------------------------------------------------------

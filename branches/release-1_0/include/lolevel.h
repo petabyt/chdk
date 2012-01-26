@@ -92,6 +92,7 @@ extern char *_Fgets_Fut(char *buf, int n, long f);
 extern long _RenameFile_Fut(const char *oldname, const char *newname);
 extern long _DeleteFile_Fut(const char *name);
 extern long _MakeDirectory_Fut(const char *name,int unk);
+extern long _DeleteDirectory_Fut(const char *name);
 
 extern int _rename(const char *oldname, const char *newname);
 

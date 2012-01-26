@@ -103,6 +103,7 @@ NSTUB(AllocateMemory                          ,0xffded8e8) //101
 NSTUB(Close                                   ,0xffc13c3c) //101
 NSTUB(CreateTask                              ,0xffc0afac) //101
 NSTUB(DebugAssert                             ,0xffc0b284) //111
+NSTUB(DeleteDirectory_Fut                     ,0xffc135cc) //  1
 NSTUB(DeleteFile_Fut                          ,0xffc134e8) //112
 //NSTUB(EnterToCompensationEVF                ,0xffc15348) //104            == 0xffc15348
 NSTUB(ExecuteEventProcedure                   ,0xffc565a8) //  1

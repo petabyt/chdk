@@ -87,6 +87,7 @@ NSTUB(AllocateUncacheableMemory               ,0xffc17e28) //112
 NSTUB(Close                                   ,0xffc13b7c) //101
 NSTUB(CreateTask                              ,0xffc0b8e0) //101
 NSTUB(DebugAssert                             ,0xffc0bdb8) //111
+NSTUB(DeleteDirectory_Fut                     ,0xffc1350c) //  1
 NSTUB(DeleteFile_Fut                          ,0xffc13428) //112
 NSTUB(DoAFLock                                ,0xffc157b4) //102
 NSTUB(EnterToCompensationEVF                  ,0xffc15aa4) //104
