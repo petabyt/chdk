@@ -852,7 +852,8 @@ static int luaCB_textbox( lua_State* L ) {
                                          (int)luaL_optstring( L, 2, "Enter text" ), //message
                                          luaL_optstring( L, 3, ""  ),               //default string
                                          luaL_optnumber( L, 4, 30),                 //max size of a text
-                                         return_string_selected);    }
+                                         return_string_selected, 0);
+    }
     else
         return_string_selected(0);
 

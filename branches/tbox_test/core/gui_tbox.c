@@ -96,16 +96,17 @@ cmap tbox_chars_russian =
 
 cmap *charmaps[] = { &tbox_chars_default, &tbox_chars_russian };
 
-int lines = 0;              // num of valid lines in active charmap
+int lines = 0;                  // num of valid lines in active charmap
 
 int tbox_button_active, line;
-int curchar;     // idx of current entered char in current tmap
+int curchar;                    // idx of current entered char in current tmap
 int curgroup;
 int cursor;
-char lastKey;    // Last pressed key (Left, Right, Up, Down)
-char Mode;       // K=keyboard, T=textnavigate, B=button
+char lastKey;                   // Last pressed key (Left, Right, Up, Down)
+char Mode;                      // K=keyboard, T=textnavigate, B=button
 
-char *text = 0;  // Entered text
+char text_buf[MAX_TEXT_SIZE+1]; // Default buffer if not supplied by caller
+char *text = 0;                 // Entered text
 int maxlen, offset;
 coord text_offset_x, text_offset_y, key_offset_x;
 
@@ -133,15 +134,14 @@ static void tbox_charmap_init()
 }
 
 //-------------------------------------------------------
-int textbox_init(int title, int msg, const char* defaultstr, unsigned int maxsize, void (*on_select)(const char* newstr)) {
-
-    text = malloc(sizeof(char)*(maxsize+1));
-    if ( text==0 ) {
-        // fatal failure
-        if (on_select)
-            on_select(0);    // notify callback about exit as cancel
-        module_async_unload(module_idx);
-        return 0;
+int textbox_init(int title, int msg, const char* defaultstr, unsigned int maxsize, void (*on_select)(const char* newstr), char *input_buffer)
+{
+    if (input_buffer)
+        text = input_buffer;
+    else
+    {
+        if (maxsize > MAX_TEXT_SIZE) maxsize = MAX_TEXT_SIZE;
+        text = text_buf;
     }
 
     tbox_charmap_init();
@@ -537,7 +537,6 @@ void gui_tbox_kbd_process()
                     else {
                         tbox_on_select(0); // cancel
                     }
-                    free(text);
                     text=0;
                 }
                   module_async_unload(module_idx);
@@ -554,12 +553,12 @@ void gui_tbox_kbd_process()
 //-------------------------------------------------------------------
 
 static const char* gui_text_box_charmap[] = { "Default", "Russian" };
-static CMenuItem zebra_submenu_items[] = {
+static CMenuItem textbox_submenu_items[] = {
     MENU_ENUM2(0x5f,LANG_MENU_VIS_CHARMAP,              &tconf.char_map, gui_text_box_charmap ),
     MENU_ITEM(0x51,LANG_MENU_BACK,                      MENUITEM_UP, 0, 0 ),
     {0}
 };
-static CMenu textbox_submenu = {0x26,LANG_STR_TEXTBOX_SETTINGS, NULL, zebra_submenu_items };
+static CMenu textbox_submenu = {0x26,LANG_STR_TEXTBOX_SETTINGS, NULL, textbox_submenu_items };
 
 
 //==================================================
@@ -609,13 +608,8 @@ int _module_unloader()
     config_save(&conf_info[0], "A/CHDK/MODULES/CFG/_tbox.cfg", sizeof(conf_info)/sizeof(conf_info[0]));
 
     // clean allocated resource
-    if ( text!=0 )
-    {
-        free(text);
-        if (tbox_on_select)
-            tbox_on_select(0);    // notify callback about exit as cancel
-        text = 0;
-    }
+    if (tbox_on_select)
+        tbox_on_select(0);    // notify callback about exit as cancel
 
     //sanity clean to prevent accidentaly assign/restore guimode to unloaded module
     GUI_MODE_TBOX.magicnum = 0;

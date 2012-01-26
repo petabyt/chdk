@@ -1131,14 +1131,14 @@ static void fselect_mpopup_more_cb(unsigned int actn) {
     switch (actn) {
 	    case MPOPUP_MKDIR:
             if (module_tbox_load())
-                module_tbox_load()->textbox_init(LANG_POPUP_MKDIR, LANG_PROMPT_MKDIR, "", 15, mkdir_cb);
+                module_tbox_load()->textbox_init(LANG_POPUP_MKDIR, LANG_PROMPT_MKDIR, "", 15, mkdir_cb, 0);
             break;
         case MPOPUP_RMDIR:
 			 gui_mbox_init( LANG_ERROR, (int)"Not implemented yet", MBOX_FUNC_RESTORE|MBOX_TEXT_LEFT, NULL);
             break;
         case MPOPUP_RENAME:
             if (module_tbox_load())
-                module_tbox_load()->textbox_init(LANG_POPUP_RENAME, LANG_PROMPT_RENAME, selected->name, 15, rename_cb);
+                module_tbox_load()->textbox_init(LANG_POPUP_RENAME, LANG_PROMPT_RENAME, selected->name, 15, rename_cb, 0);
             break;
 	}
     gui_fselect_redraw = 2;
