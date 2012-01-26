@@ -835,10 +835,8 @@ if ((mode_get()&MODE_MASK) != MODE_PLAY){
 
 int shooting_get_day_seconds()
 {
-    unsigned long t;
     struct tm *ttm;
-    t = time(NULL);
-    ttm = localtime(&t);
+    ttm = get_localtime();
     return ttm->tm_hour * 3600 + ttm->tm_min * 60 + ttm->tm_sec;
 }
 

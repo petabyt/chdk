@@ -215,26 +215,24 @@ void platformRenderGame(StcGame *gameInstance){
     }
     /* output game info */
     char str_buf[100];
-    unsigned long t;
     static struct tm *ttm;
-      sprintf(str_buf,"High:    %5d",game->stats.high);
-      draw_string(camera_screen.ts_button_border+150,35,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
-      sprintf(str_buf,"Points:  %5d",game->stats.score);
-      draw_string(camera_screen.ts_button_border+150,55,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
-      sprintf(str_buf,"Lines:   %5d",game->stats.lines);
-      draw_string(camera_screen.ts_button_border+150,75,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
-      sprintf(str_buf,"Level:   %5d",game->stats.level);
-      draw_string(camera_screen.ts_button_border+150,95,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
-     sprintf(str_buf,"UP  -> Pause");
-     draw_string(camera_screen.ts_button_border+150,135,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
-     sprintf(str_buf,"SET -> Rotate");
-     draw_string(camera_screen.ts_button_border+150,155,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
-     t = time(NULL);
-      ttm = localtime(&t);
-      sprintf(str_buf,"Time:    %2u:%02u", ttm->tm_hour, ttm->tm_min);
-     draw_string(camera_screen.ts_button_border+150,195,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
-     sprintf(str_buf,"Batt:     %3d%%", get_batt_perc());
-     draw_string(camera_screen.ts_button_border+150,215,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    sprintf(str_buf,"High:    %5d",game->stats.high);
+    draw_string(camera_screen.ts_button_border+150,35,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    sprintf(str_buf,"Points:  %5d",game->stats.score);
+    draw_string(camera_screen.ts_button_border+150,55,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    sprintf(str_buf,"Lines:   %5d",game->stats.lines);
+    draw_string(camera_screen.ts_button_border+150,75,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    sprintf(str_buf,"Level:   %5d",game->stats.level);
+    draw_string(camera_screen.ts_button_border+150,95,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    sprintf(str_buf,"UP  -> Pause");
+    draw_string(camera_screen.ts_button_border+150,135,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    sprintf(str_buf,"SET -> Rotate");
+    draw_string(camera_screen.ts_button_border+150,155,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    ttm = get_localtime();
+    sprintf(str_buf,"Time:    %2u:%02u", ttm->tm_hour, ttm->tm_min);
+    draw_string(camera_screen.ts_button_border+150,195,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    sprintf(str_buf,"Batt:     %3d%%", get_batt_perc());
+    draw_string(camera_screen.ts_button_border+150,215,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
 }
 
 /* Return the current system time in milliseconds */

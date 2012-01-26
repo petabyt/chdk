@@ -245,7 +245,7 @@ static void gui_osd_draw_zebra_osd() {
                         gui_osd_draw_raw_info();
                     }
                     if (conf.show_values) {
-                        gui_osd_draw_values();
+                        gui_osd_draw_values(2);
                     }
                 }
                 gui_batt_draw_osd();

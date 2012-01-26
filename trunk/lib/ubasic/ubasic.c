@@ -519,18 +519,17 @@ case TOKENIZER_IS_PRESSED:
   }
     break;
   case TOKENIZER_GET_TIME: {
-    accept(TOKENIZER_GET_TIME);
-	 unsigned long t2 = time(NULL);
-    int tmode = expr();
-     static struct tm *ttm;
-     ttm = localtime(&t2);
-    if (tmode==0) r = ttm->tm_sec;
-    else if (tmode==1) r = ttm->tm_min;
-    else if (tmode==2) r = ttm->tm_hour;
-    else if (tmode==3) r = ttm->tm_mday;
-    else if (tmode==4) r = ttm->tm_mon+1;
-    else if (tmode==5) r = 1900+ttm->tm_year;
- break;
+      accept(TOKENIZER_GET_TIME);
+      int tmode = expr();
+      static struct tm *ttm;
+      ttm = get_localtime();
+      if (tmode==0) r = ttm->tm_sec;
+      else if (tmode==1) r = ttm->tm_min;
+      else if (tmode==2) r = ttm->tm_hour;
+      else if (tmode==3) r = ttm->tm_mday;
+      else if (tmode==4) r = ttm->tm_mon+1;
+      else if (tmode==5) r = 1900+ttm->tm_year;
+      break;
  }
  case TOKENIZER_GET_RAW:
     accept(TOKENIZER_GET_RAW);

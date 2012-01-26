@@ -400,7 +400,7 @@ unsigned short get_metering_mode_for_exif(short metering_mode){
 void capture_data_for_exif(void)
 {
  short short_prop_val;
- unsigned long datetime;
+ time_t datetime;
  struct tm *ttm;
  extern volatile long shutter_open_time; // defined in platform/generic/capt_seq.c
  int wb[3];

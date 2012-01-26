@@ -89,6 +89,7 @@ DEF(ctypes, 0xffe3ead6)
 //NSTUB(Close                                 ,0xffc1502c) //101            == 0xffc1502c
 //NSTUB(CreateTask                            ,0xffc0bbc0) //101            == 0xffc0bbc0
 NSTUB(DebugAssert                             ,0xffc0c098) //111
+NSTUB(DeleteDirectory_Fut                     ,0xffc14978) //  1
 NSTUB(DeleteFile_Fut                          ,0xffc14894) //112
 //NSTUB(DoAFLock                              ,0xffc16d2c) //103            == 0xffc16d2c
 //NSTUB(EnterToCompensationEVF                ,0xffc170a4) //104            == 0xffc170a4

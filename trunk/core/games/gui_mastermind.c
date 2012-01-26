@@ -228,13 +228,11 @@ void gui_mastermind_kbd_process() {
 }
 //-------------------------------------------------------------------
 void gui_mastermind_draw(int enforce_redraw) {
-	unsigned long t;
     static struct tm *ttm;
 
     draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH+15, 0, lang_str(LANG_MENU_GAMES_MASTERMIND), MAKE_COLOR(COLOR_GREY, COLOR_WHITE));
 
-    t = time(NULL);
-    ttm = localtime(&t);
+    ttm = get_localtime();
     sprintf(buf, "Time: %2u:%02u  Batt:%3d%%", ttm->tm_hour, ttm->tm_min, get_batt_perc());
     draw_txt_string((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2-1-1-9-2-5-4, camera_screen.height/FONT_HEIGHT-1, buf, TEXT_COLOR);
 }
