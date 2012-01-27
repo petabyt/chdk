@@ -14,7 +14,7 @@
 #include "module_load.h"
 
 //-------------------------------------------------------------------
-// Zebra config settings
+// Text Box config settings
 
 typedef struct
 {
@@ -41,8 +41,7 @@ static int gui_tbox_redraw;
 static char text_limit_reached;
 static int vkbd_txtfield_width=200;
 static int vkbd_txtfield_height=75;
-
-extern int module_idx;
+static unsigned int tbox_width; //width of the 'window'
 
 static const char*  tbox_title;
 static const char*  tbox_msg;
@@ -196,12 +195,12 @@ void gui_tbox_draw(int enforce_redraw)
             char c[MAX_LINES][MAX_WIDTH+1];        // PROMPT PARSED
             const char *p=tbox_msg;
             coord x=0, y=0;
-            unsigned int w, h=0, l=0, bw=(2*BUTTON_SIZE*FONT_WIDTH+BUTTON_SEP);
+            unsigned int h=0, l=0, bw=(2*BUTTON_SIZE*FONT_WIDTH+BUTTON_SEP);
 
             memset(c,0,sizeof(c));
 
-            w =strlen(tbox_title);
-            if (w > MAX_WIDTH) w = MAX_WIDTH;
+            tbox_width =strlen(tbox_title);
+            if (tbox_width > MAX_WIDTH) tbox_width = MAX_WIDTH;
             while (*p) {
                 if (*p == '\n') {
                     c[h++][l] = 0;
@@ -210,51 +209,50 @@ void gui_tbox_draw(int enforce_redraw)
                 } else {
                     if (l < MAX_WIDTH) {
                         c[h][l++]=*p;
-                        if (l > w) w = l;
+                        if (l > tbox_width) tbox_width = l;
                     }
                 }
                 ++p;
             }
-            w+=2;
+            tbox_width+=2;
             if (h<MAX_LINES)
                 c[h++][l] = 0;
-            if (bw+BUTTON_SEP>w*FONT_WIDTH)
-                w=(bw+BUTTON_SEP)/FONT_WIDTH+1;
-            if (w<max_keyboard_length)
-                w=max_keyboard_length; // keyboard length
-            if (w<MAX_MSG_LENGH)
-                w=MAX_MSG_LENGH; // max message length
-            if (w<maxlen) {
+            if (bw+BUTTON_SEP>tbox_width*FONT_WIDTH)
+                tbox_width=(bw+BUTTON_SEP)/FONT_WIDTH+1;
+            if (tbox_width<max_keyboard_length)
+                tbox_width=max_keyboard_length; // keyboard length
+            if (tbox_width<MAX_MSG_LENGH)
+                tbox_width=MAX_MSG_LENGH; // max message length
+            if (tbox_width<maxlen) {
                 if (maxlen < MAX_TEXT_WIDTH)
-                    w=maxlen+2; // text length
+                    tbox_width=maxlen+2; // text length
                 else
-					w=((MAX_TEXT_WIDTH+2)>w)?MAX_TEXT_WIDTH+2:w;
+					tbox_width=((MAX_TEXT_WIDTH+2)>tbox_width)?MAX_TEXT_WIDTH+2:tbox_width;
             }
             h += 2;
 
-            x = (camera_screen.width - w * FONT_WIDTH) >> 1;
-            y = (camera_screen.height - (h+2) * FONT_HEIGHT-SPACING_BELOW_TEXT) >> 1;
-            draw_rect_shadow(x-3, y-3, x+w*FONT_WIDTH+5, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+12, COLOR_BLACK, 3); //shadow
-            draw_filled_rect_thick(x-4, y-4, x+w*FONT_WIDTH+4, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+11, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), 3); // main box
-            draw_filled_rect(x-2, y-2, x+w*FONT_WIDTH+2, y+FONT_HEIGHT+2, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title
+            x = (camera_screen.width - tbox_width * FONT_WIDTH) >> 1;
+            y = (camera_screen.height - (h+4) * FONT_HEIGHT-SPACING_BELOW_TEXT) >> 1;
+            draw_rect_shadow(x-3, y-3, x+tbox_width*FONT_WIDTH+5, y+(h+4)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+12, COLOR_BLACK, 3); //shadow
+            draw_filled_rect_thick(x-4, y-4, x+tbox_width*FONT_WIDTH+4, y+(h+4)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+11, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), 3); // main box
+            draw_filled_rect(x-2, y-2, x+tbox_width*FONT_WIDTH+2, y+FONT_HEIGHT+2, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title
 
             l = strlen(tbox_title);
-            draw_string(x+((w-l)>>1)*FONT_WIDTH, y, tbox_title, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title text
+            draw_string(x+((tbox_width-l)>>1)*FONT_WIDTH, y, tbox_title, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title text
             y+=FONT_HEIGHT+2+SPACING_TITLE;
 
-            tbox_buttons_x = x+((w*FONT_WIDTH-bw)>>1);
-            //tbox_buttons_y = y+h*FONT_HEIGHT+SPACING_BTN;
+            tbox_buttons_x = x+((tbox_width*FONT_WIDTH-bw)>>1);
 
-            text_offset_x = x+((w-((maxlen<MAX_TEXT_WIDTH)?maxlen:MAX_TEXT_WIDTH))>>1)*FONT_WIDTH;
+            text_offset_x = x+((tbox_width-((maxlen<MAX_TEXT_WIDTH)?maxlen:MAX_TEXT_WIDTH))>>1)*FONT_WIDTH;
             text_offset_y = y+(h-2)*FONT_HEIGHT+SPACING_BELOW_TEXT;
-            key_offset_x = x+((w-map_line_len(0))>>1)*FONT_WIDTH;
+            key_offset_x = x+((tbox_width-map_line_len(0))>>1)*FONT_WIDTH;
 
             tbox_buttons_y = text_offset_y+FONT_HEIGHT+SPACING_BELOW_TEXT; // on place of symbol line
 
             // draw prompt
             while (h) {
                 l = strlen(c[--h]);
-                draw_string(x+(((w-l)>>1)*FONT_WIDTH), y+h*FONT_HEIGHT, c[h], MAKE_COLOR(COLOR_GREY, COLOR_WHITE));
+                draw_string(x+(((tbox_width-l)>>1)*FONT_WIDTH), y+h*FONT_HEIGHT, c[h], MAKE_COLOR(COLOR_GREY, COLOR_WHITE));
             }
 
             if ( Mode == 'B' )
@@ -291,16 +289,37 @@ void gui_tbox_draw(int enforce_redraw)
             // clean previous symbols line
 
             int pline = (line == 0)?lines:line-1;
-            offs=(camera_screen.width - map_line_len(pline)*FONT_WIDTH)>>1;
-            draw_filled_rect(offs, tbox_buttons_y, offs+map_line_len(pline)*FONT_WIDTH, tbox_buttons_y+FONT_HEIGHT, cl_greygrey);
+            offs=(camera_screen.width - tbox_width*FONT_WIDTH)>>1;
+            draw_filled_rect(offs, tbox_buttons_y, offs+(tbox_width-1)*FONT_WIDTH, tbox_buttons_y+3*FONT_HEIGHT, cl_greygrey);
 
             // draw current symbols line
-
-            offs=(camera_screen.width - map_line_len(line)*FONT_WIDTH)>>1;
             int x, group;
-            for (x = offs, group = 0; group < 4; group++)
+
+            for (group = 0; group < 4; group++)
             {
                 char *tstr = map_chars(line,group);
+
+                int y = tbox_buttons_y;
+                int l = strlen(tstr);
+
+                switch (group) {
+                    case 0:
+                        x=offs+(tbox_width*FONT_WIDTH/2)-(l+3)*FONT_WIDTH;
+                        y=tbox_buttons_y+FONT_HEIGHT;
+                        break;
+                    case 1:
+                        x=offs+((tbox_width-l)*FONT_WIDTH/2);
+                        y=tbox_buttons_y;
+                        break;
+                    case 2:
+                        x=offs+(tbox_width*FONT_WIDTH/2)+3*FONT_WIDTH;
+                        y=tbox_buttons_y+FONT_HEIGHT;
+                        break;
+                    case 3:
+                        x=offs+((tbox_width-l)*FONT_WIDTH/2);
+                        y=tbox_buttons_y+2*FONT_HEIGHT;
+                        break;
+                }
 
                 for(i = 0; tstr[i] != '\0'; i++, x += FONT_WIDTH) {
                     ch = tstr[i];
@@ -312,12 +331,7 @@ void gui_tbox_draw(int enforce_redraw)
                     else
                         cl = MAKE_COLOR(COLOR_RED,COLOR_GREY);    // "space" is special color case (inverted)
 
-                    draw_char(x, tbox_buttons_y, ch, cl);
-                }
-                if (group < 3)
-                {
-                    draw_char(x, tbox_buttons_y, 6, MAKE_COLOR(COLOR_GREY, COLOR_WHITE));
-                    x += FONT_WIDTH;
+                    draw_char(x, y, ch, cl);
                 }
             }
         }
@@ -533,13 +547,13 @@ void gui_tbox_kbd_process()
                 draw_restore();
                 if (tbox_on_select) {
                     if (tbox_button_active == 0)
-                        tbox_on_select(text); // ok
+                        tbox_on_select(text);   // ok
                     else {
-                        tbox_on_select(0); // cancel
+                        tbox_on_select(0);      // cancel
                     }
-                    text=0;
+                    tbox_on_select = 0;         // Prevent unloader from calling this function again
                 }
-                  module_async_unload(module_idx);
+                module_async_unload(module_idx);
                 break;
             case KEY_MENU:
                 Mode = 'K';
@@ -609,7 +623,10 @@ int _module_unloader()
 
     // clean allocated resource
     if (tbox_on_select)
-        tbox_on_select(0);    // notify callback about exit as cancel
+    {
+        tbox_on_select(0);      // notify callback about exit as cancel
+        tbox_on_select = 0;     // prevent calling twice in the (unlikely) event of the unload called twice
+    }
 
     //sanity clean to prevent accidentaly assign/restore guimode to unloaded module
     GUI_MODE_TBOX.magicnum = 0;
