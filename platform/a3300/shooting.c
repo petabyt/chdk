@@ -1,27 +1,17 @@
-#include "lolevel.h"
-#include "platform.h"
-#include "core.h"
-#include "conf.h"
-#include "keyboard.h"
-#include "stdlib.h"  
+#define PARAM_FILE_COUNTER      0x3B	// a3300is
+#define PARAM_EXPOSURE_COUNTER  0x02	// a3300is
+
 #include "platform.h"
 
-#define PARAM_FILE_COUNTER      0x3B    
-#define PARAM_EXPOSURE_COUNTER  0x02
-
-//No zoom 3.1 3.5 4.0 4.5 5.0 5.6 6.3 7.1 8.0
-//maz zoom 5.9 7.1 8.0
- 
 const ApertureSize aperture_sizes_table[] = {
-	{  9, 322, "3.1" },
-    { 10, 352, "3.5" },
-	{ 11, 384, "4.0" },
-	{ 12, 416, "4.5" },
-	{ 13, 448, "5.0" },
-	{ 14, 480, "5.6" },
-	{ 15, 512, "6.3" },
-	{ 16, 544, "7.1" },
-	{ 17, 576, "8.0" }
+	{  9, 293, "2.8" },
+	{ 10, 307, "3.2" },
+	{ 11, 344, "3.5" },
+	{ 12, 388, "4.0" },
+	{ 13, 413, "4.5" },
+	{ 14, 443, "5.0" },
+	{ 15, 476, "5.6" },
+	{ 16, 500, "5.9" },
 };
 
 const ShutterSpeed shutter_speeds_table[] = {
@@ -70,118 +60,100 @@ const ShutterSpeed shutter_speeds_table[] = {
 	{  30,  960, "1/1000", 1000 },
 	{  31,  992, "1/1250",  800 },
 	{  32, 1024, "1/1600",  625 },
-	{  33, 1056, "1/2000",  500 },
-	{  34, 1088, "1/2500",  400 },
-	{  35, 1120, "1/3200",  313 },
 };
 
 const ISOTable iso_table[] = {
 	{  0,    0, "Auto", -1},
-	{  1,  100,  "100", -1},
-	{  2,  200,  "200", -1},
-	{  3,  400,  "400", -1},
-	{  4,  800,  "800", -1},
-	{  5, 1600, "1600", -1},
-	{  6, 3200, "3200", -1},
+	{  1,   80,   "80", -1},
+	{  2,  100,  "100", -1},
+	{  3,  200,  "200", -1},
+	{  4,  400,  "400", -1},
+	{  5,  800,  "800", -1},
+	{  6, 1600,  "1600", -1},
+
 };
 
-// WARNING WARNING WARNING the following is copy/pasted from another camera and wrong
-/*
-http://www.usa.canon.com/cusa/support/consumer/digital_cameras/other_powershot/powershot_sx230_is#Specifications
-Shooting Modes
-	M, Av, Tv, P, Auto, Easy, Movie Digest, Portrait, Landscape, Kids & Pets, SCN, Creative Filter, Movie
-  
-Movie: High Definition: 1280 x 720 (30 fps);
-    Standard Definition: 640 x 480 (30 fps), 320 x 240 (30 fps)
-*/
-static const CapturemodeMap modemap[] = {
-	{ MODE_AUTO,           	        32768  },
-	{ MODE_P,               	    32772  },
-	{ MODE_TV,                 		32771  },
-	{ MODE_AV,                 		32770  },
-	{ MODE_M,                  		32769  },
-	{ MODE_EASY,               		33314  },
-	{ MODE_PORTRAIT,           		32783  },
-	{ MODE_LANDSCAPE,          		32782  },
-	{ MODE_VIDEO_SPEED, 			 2626  },	//MODE_VIDEO_SUPER_SLOW_MOTION
-	{ MODE_VIDEO_STD,          		 2621  },
-	{ MODE_KIDS_PETS,          		32786  },
-	{ MODE_SCN_UNDERWATER,       	16409  },
-	{ MODE_SCN_LOWLIGHT, 	      	16417  },
-	{ MODE_SCN_BEACH,       		16407  },
-	{ MODE_SCN_FOLIAGE,       		16405  },
-	{ MODE_SCN_SNOW,       			16406  },	
-	{ MODE_SCN_FIREWORK,      	 	16408  },	
-	{ MODE_SCN_COLOR_ACCENT,    	 8733  },
-	{ MODE_SCN_COLOR_SWAP,    		 8734  },	
-	{ MODE_STITCH,				    16908  },	//MODE_SCN_STITCH_ASSIST	
-	{ MODE_SCN_SMART_SHUTTER,       16937  },
-	{ MODE_SCN_POSTER_EFFECT,   	 8743  },
-	{ MODE_SCN_FISHEYE,  	     	 8747  },
-	{ MODE_SCN_MINIATURE,   	  	 8748  },
-	{ MODE_SCN_SUPER_VIVID,   	 	 8742  },
-	{ MODE_SCN_NIGHT_SCENE, 		16941  },	//MODE_SCN_HANDHELD_NIGHTSCENE
-	{ MODE_VIDEO_IFRAME_MOVIE, 		 2628  },
-	{ MODE_VIDEO_MOVIE_DIGEST,     	33333  },
-	{ MODE_SCN_HIGHSPEED_BURST,     16904  },
-	{ MODE_SCN_BEST_IMAGE,       	16905  },
-	{ MODE_SCN_TOY_CAMERA,  	  	 8751  },
-	{ MODE_SCN_MONOCHROME,  	  	 8754  },
-	{ MODE_SCN_WINK_SELF_TIMER,		16938  },
-   { MODE_SCN_FACE_SELF_TIMER,		16936  },
-};
+static struct {
+	int hackmode;
+	int canonmode;
+} modemap[] = {
+	{ MODE_P,					32772 },
+	{ MODE_LIVE,				33332 },
+	{ MODE_AUTO,				32768 },
+	{ MODE_EASY,				33314 },
+	{ MODE_SCN_PORTRAIT,		16399 },
+	{ MODE_SCN_LANDSCAPE,		16398 },
+	{ MODE_SCN_KIDS_PETS,		16402 },
+	{ MODE_SCN_SMART_SHUTTER,	16937 },
+	{ MODE_SCN_LOWLIGHT,		16417 },
+	{ MODE_SCN_BEACH,			16407 },
+	{ MODE_SCN_FOLIAGE,			16405 },
+	{ MODE_SCN_SNOW,			16406 },
+	{ MODE_SCN_FIREWORK,		16408 },
+	{ MODE_SCN_LONG_SHUTTER,	16390 },
+	{ MODE_SCN_FISHEYE,			8747 },	// not found in stub_entry.S - efect mode - fish eye    	a3300is
+	{ MODE_SCN_MINIATURE,		8748 },	// not found in stub_entry.S - efect mode - miniature		a3300is
+	{ MODE_SCN_TOY_CAMERA,		8751 },	// not found in stub_entry.S - efect mode - toy camera		a3300is
+	{ MODE_SCN_MONOCHROME,		8754 },	// not found in stub_entry.S - efect mode - monochrome		a3300is
+	{ MODE_SCN_SUPER_VIVID,		8742 },	// not found in stub_entry.S - efect mode - super vivid		a3300is
+	{ MODE_SCN_POSTER_EFFECT,	8743 },	// not found in stub_entry.S - efect mode - poster effect	a3300is
+   { MODE_SCN_FACE_SELF_TIMER, 16936 },
+   { MODE_SCN_WINK_SELF_TIMER,	16938 },
+	{ MODE_DISCREET,			32817 },
+	{ MODE_VIDEO_STD,			2621 },
+	{ MODE_VIDEO_MINIATURE,		2627 },
+
+} ;	
 
 #include "../generic/shooting.c"
 
-	// Override ISO settings (need to do this before exposure calc for ISO, as well as after) 
- 	
-	void __attribute__((naked,noinline)) shooting_expo_iso_override(void){ 
- 	
-		asm volatile("STMFD   SP!, {R0-R12,LR}\n"); 
- 		 
-		if ((state_kbd_script_run) && (photo_param_put_off.sv96)) 
-			{ 
-				shooting_set_sv96(photo_param_put_off.sv96, SET_NOW); 
-				// photo_param_put_off.sv96 is not reset here, it will be reset in next call to shooting_expo_param_override 
-			} 
-		else if ((conf.iso_override_value) && (conf.iso_override_koef) && !(conf.override_disable==1)) 
-				shooting_set_iso_real(shooting_get_iso_override_value(), SET_NOW); 
-		else if (conf.autoiso_enable && shooting_get_flash_mode()/*NOT FOR FLASH AUTO MODE*/ && !(conf.override_disable==1 && conf.override_disable_all)) 
-				shooting_set_autoiso(shooting_get_iso_mode()); 
- 		 
-		asm volatile("LDMFD   SP!, {R0-R12,PC}\n"); 
- 	} 
- 	
+// Override ISO settings (need to do this before exposure calc for ISO as well as after)
+void __attribute__((naked,noinline)) shooting_expo_iso_override(void) {
+	
+	asm volatile("STMFD   SP!, {R0-R12,LR}\n");
+	
+	if ((state_kbd_script_run) && (photo_param_put_off.sv96)) {
+		shooting_set_sv96(photo_param_put_off.sv96, SET_NOW);
+		// photo_param_put_off.sv96 is not reset here, it will be reset in next call to shooting_expo_param_override
+    }
+    else if ((conf.iso_override_value) && (conf.iso_override_koef) && !(conf.override_disable==1))
+		shooting_set_iso_real(shooting_get_iso_override_value(), SET_NOW);
+    else if (conf.autoiso_enable && shooting_get_flash_mode()/*NOT FOR FLASH AUTO MODE*/ && !(conf.override_disable==1 && conf.override_disable_all))
+		shooting_set_autoiso(shooting_get_iso_mode());
+
+	asm volatile("LDMFD   SP!, {R0-R12,PC}\n");
+}
+
 
 long get_file_next_counter() {
+	
 	return get_file_counter();
 }
 
 long get_target_file_num() {
+	
 	long n;
 
-
 	n = get_file_next_counter();
-
-    n = (n>>4)&0x3FFF;
-
+	n = (n>>4)&0x3FFF;
 	return n;
 }
 
+#if defined(CAM_DATE_FOLDER_NAMING)
+void get_target_dir_name(char *out) {
+	
+	extern void _GetImageFolder(char*,int,int,int);
+	_GetImageFolder(out,get_file_next_counter(),0x400,time(NULL));
+}
+#else
 long get_target_dir_num() {
+	
 	long n;
-
+	
 	n = get_file_next_counter();
 	n = (n>>18)&0x3FF;
 	return n;
 }
-
-
-void get_target_dir_name(char *out)
-{
-	extern void _GetImageFolder(char*,int,int,int);
-	_GetImageFolder(out,get_file_next_counter(),0x400,time(NULL));
-}
+#endif
 
 int circle_of_confusion = 5;
-

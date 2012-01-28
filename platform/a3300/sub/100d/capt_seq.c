@@ -254,8 +254,8 @@ asm volatile (
 "    MOV     R4, #1 \n" 
 "    MOV     R0, #2 \n" 
 "    BL      sub_FF88142C \n" 
-"	 BL		wait_until_remote_button_is_released \n"		// added
-"	 BL		capt_seq_hook_set_nr \n"						// added
+"	 BL		 wait_until_remote_button_is_released \n"		// added
+"	 BL		 capt_seq_hook_set_nr \n"						// added
 "    LDRH    R0, [R6] \n" 
 "    SUB     R1, R0, #0x8200 \n" 
 "    SUBS    R1, R1, #0x2D \n" 
@@ -277,7 +277,7 @@ asm volatile (
 "    STR     R0, [R5, #0xD4] \n" 
 "loc_FF96F008:\n"
 "    MOV     R0, R5 \n" 
-"    BL      sub_FFAB588C \n" 
+"    BL      sub_FFAB5898 \n" 
 "    MOV     R4, R0 \n" 
 "    B       loc_FF96F02C \n" 
 "loc_FF96F018:\n"
@@ -583,7 +583,7 @@ asm volatile (
 "    BL      sub_FF8BAEE4 \n" 
 "    B       loc_FF8BE984 \n" 
 "loc_FF8BE864:\n"
-"    BL      sub_FF8BB264_my \n" 	//patch
+"    BL      sub_FF8BB264_my \n"    //patch
 "    MOV     R8, #0 \n" 
 "    B       loc_FF8BE984 \n" 
 "loc_FF8BE870:\n"
@@ -705,15 +705,15 @@ asm volatile (
 "    SUB     R8, R0, #8 \n" 
 "    LDR     R0, =0x55794 \n" 
 "    ADD     R1, SP, #0x14 \n" 
-"    BL      sub_FFB58814 \n" 
+"    BL      sub_FFB58820 \n" 
 "    LDR     R0, =0x557A0 \n" 
 "    MOV     R2, #0xC \n" 
 "    ADD     R1, SP, #0x14 \n" 
-"    BL      sub_FFB58814 \n" 
+"    BL      sub_FFB58820 \n" 
 "    LDR     R0, =0x557AC \n" 
 "    MOV     R2, #0xC \n" 
 "    MOV     R1, R8 \n" 
-"    BL      sub_FFB58814 \n" 
+"    BL      sub_FFB58820 \n" 
 "    B       sub_FF8BEAA8 \n" 
 "loc_FF8BEA30:\n"
 "    LDR     R0, [R1] \n" 
@@ -812,7 +812,7 @@ asm volatile (
 "loc_FF8BB324:\n"
 "    STRH    R0, [R4, #0xC] \n" 
 "    LDRSH   R0, [R4, #6] \n" 
-"    BL      sub_FF8AC12C_my \n" 	//patch
+"    BL      sub_FF8AC12C_my \n" 		//patch
 "    LDRSH   R0, [R4, #8] \n" 
 "    MOV     R1, #1 \n" 
 "    BL      sub_FF8AC8E4 \n" 
