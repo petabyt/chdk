@@ -4,6 +4,8 @@
 
 #undef USB_REMOTE_DEBUGGING
 //#define USB_REMOTE_DEBUGGING 1
+#undef USB_REMOTE_RECORD 
+//#define USB_REMOTE_RECORD 1
 
 #define NUM_USB_INPUT_DRV 5
 #define NUM_USB_MODULES 10
@@ -53,7 +55,14 @@ enum DRIVER_STATE {								// state variable for drivers
 	SW_FULL_PRESS_RESET,
 	SW_PRESS ,
 	SW_RELEASE ,
-	SW_CANCEL
+	SW_CANCEL,
+
+	SW_CA1_1XX,
+	SW_CA1_10X,
+	SW_CA1_100,
+	SW_CA1_101,
+	SW_CA1_11
+
 } ;
 
 enum  LOGIC_MODULE_STATE {								// remote control mode states
@@ -98,7 +107,8 @@ enum GET_USB_PWR {						// input parameter for get_usb_power()
 	SINGLE_PULSE,
 	USB_STATE ,
 	BUFFERED_PULSE ,
-	PULSE_COUNT
+	PULSE_COUNT,
+	LM_PULSE_COUNT
 } ;
 
 // USB remote processing status

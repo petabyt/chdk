@@ -39,6 +39,7 @@ int usb_remote_active=0 ;
 int stime_stamp = 0 ;
 int usb_power=0;
 int usb_count=0;
+int logic_module_usb_count = 0 ;
 int remote_count, remote_space_count, remote_key;
 
 #define USB_BUFFER_SIZE 16
@@ -84,6 +85,70 @@ void debug_error(int err_num)
 } ;
 
 #endif
+
+#ifdef USB_REMOTE_RECORD
+
+struct debug_rec_remote_state {
+	long tick;
+	char usb;
+	char driver_state;
+	char virtual_remote_state;
+	char usb_count;
+	char logic_module_state;
+	char usb_sync_wait;
+	char usb_remote_active;
+};
+
+#define DEBUG_MAX_REC 8192
+
+
+struct debug_rec_remote_state *debug_rec_buf = NULL;
+
+static int debug_num_rec = 0;
+static int debug_num_rec_file = 0;
+
+static void debug_dump_rec()
+{
+	char fn[12];
+	int fd;
+	sprintf(fn, "A/RC%05d.DAT", debug_num_rec_file);
+	debug_num_rec_file++;
+
+	fd = open(fn, O_WRONLY|O_CREAT, 0777);
+	if (fd>=0) 
+	{
+		write(fd, debug_rec_buf, sizeof(struct debug_rec_remote_state) * debug_num_rec);
+		close(fd);
+	}
+	debug_num_rec = 0;
+}
+
+static void debug_add_rec()
+{
+	static int last_active = 0;
+	if (debug_num_rec >= DEBUG_MAX_REC) return;
+	if (!debug_rec_buf) debug_rec_buf = umalloc(sizeof(struct debug_rec_remote_state) * DEBUG_MAX_REC);
+	if (!debug_rec_buf) return;
+
+	debug_rec_buf[debug_num_rec].tick = get_tick_count();
+	debug_rec_buf[debug_num_rec].usb = remote_key;
+
+	debug_rec_buf[debug_num_rec].driver_state = driver_state;
+	debug_rec_buf[debug_num_rec].virtual_remote_state = virtual_remote_state;
+	debug_rec_buf[debug_num_rec].usb_count = usb_count;
+	debug_rec_buf[debug_num_rec].logic_module_state = logic_module_state;
+	debug_rec_buf[debug_num_rec].usb_sync_wait = usb_sync_wait;
+	debug_rec_buf[debug_num_rec].usb_remote_active = usb_remote_active;
+
+	debug_num_rec++;
+	if ((debug_num_rec >= DEBUG_MAX_REC) || 
+		(last_active && !usb_remote_active)) debug_dump_rec();
+
+	last_active = usb_remote_active;
+}
+ 
+#endif
+
 
 /*---------------------------------------------------------------------------------------------------------
 
@@ -230,11 +295,12 @@ void usb_remote_key(int x)
 		if (remote_key) remote_count++ ;									// track how long the USB power is on
 		else if(remote_space_count<3000) remote_space_count++ ;				// track how long the USB power is off
 		
-		if ( remote_space_count > 50 )									// pulse counting done if no activity for 500mSec
+		if ( remote_space_count > 50 )										// pulse counting done if no activity for 500mSec
 		{
 			if( pulse_count > 0 )
 			{
 				usb_count = pulse_count ;
+				logic_module_usb_count = pulse_count ;
 				pulse_count = 0 ;
 			}
 		}
@@ -305,6 +371,11 @@ int get_usb_power(int mode)
 			x = usb_count;
 			usb_count = 0;
 			break ;
+
+		case LM_PULSE_COUNT :
+			x = logic_module_usb_count;
+			logic_module_usb_count = 0;
+			break ;
 			
 		default :
 			x=0 ;
@@ -368,7 +439,10 @@ int handle_usb_remote()
 
 		usb_remote_active = ((logic_module_state  > 1) || (driver_state  > 1) || (virtual_remote_state  > 1) ) ? 1 : 0 ;
 
-
+		#ifdef USB_REMOTE_RECORD
+			debug_add_rec();
+		#endif
+		
 			#ifdef USB_REMOTE_DEBUGGING
 					extern void draw_string(coord x, coord y, const char *s, color cl);
 					extern long physw_status[3] ;

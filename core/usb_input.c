@@ -230,6 +230,20 @@ void usb_two_press_switch(int usb_state)
 		  and sets virtual switch state appropriately
   ---------------------------------------------------------------------------------------------------*/
 
+#define CA1_MAX_SHORT_PULSE_TIME 30
+#define CA1_MAX_GAP_TIME 50
+
+/*
+
+  |30|30|30| ms
+ _/~~\_____________   half-press   100
+
+ _/~~~~~~~~~~~~~~\_   full-press   111
+
+ _/~~\__/~~\_______   release      101
+
+*/
+
 void usb_ricoh_ca1_switch(int usb_state)
 {
 	static int time_stamp = 0 ;
@@ -244,91 +258,57 @@ void usb_ricoh_ca1_switch(int usb_state)
 			driver_state = SW_IDLE ;
 			break ;
 
-		case SW_IDLE :								// wait for USB power to be applied
-			virtual_remote_state = REMOTE_RELEASE ;
+		case SW_IDLE :											// wait for USB power to be applied
 			if ( usb_state == USB_POWER_ON )
 			{
-				driver_state = SW_POWER_CONNECT ;
+				driver_state = SW_CA1_1XX ;
 				time_stamp = current_time ;
 			}
 			break ;
-
-		case SW_POWER_CONNECT :					// wait for USB power to be removed and then test for half press pulse width
+			
+		case SW_CA1_1XX :										// decide between CA-1  30 mSec / 150 mSec pulse
 			if ( usb_state == USB_POWER_OFF )
 			{
-				if (( current_time - time_stamp > CA1_MIN_HALFPRESS_TIME )  && ( current_time - time_stamp < CA1_MAX_HALFPRESS_TIME )  )
-				{
-					driver_state = SW_SHORT_PRESS ;
-					time_stamp = current_time ;
-				}
-				else
-				{
-					driver_state = SW_IDLE ;
-				}
-			}
-			break ;
-
-		case SW_SHORT_PRESS :						// wait for USB power to be applied	again (cancel pulse) else that was a valid half press
-			if ( usb_state == USB_POWER_ON )
-			{
-				driver_state = SW_CANCEL_PULSE ;
+				driver_state = SW_CA1_10X ;
 				time_stamp = current_time ;
-			}
-			else
+			}	
+			else if ( current_time - time_stamp > CA1_MAX_SHORT_PULSE_TIME )
 			{
-				if ( current_time - time_stamp > CA1_MAX_HALFPRESS_TIME )
-				{
-					driver_state = SW_HALF_PRESS ;
-					virtual_remote_state = REMOTE_HALF_PRESS ;
-				}
+				driver_state = SW_CA1_11 ;						// we can set FULL_PRESS either here or wait for USB_POWER_OFF
+				virtual_remote_state = REMOTE_FULL_PRESS ;		// note : setting FULL_PRESS here means that we can use the end of the current 150 mSec pulse for synch
+			}			
+			break ;				
+		
+		case SW_CA1_10X :			
+			if ( usb_state == USB_POWER_ON) 					// is the CA-1 30 mSec pulse followed by another one ?
+			{
+				driver_state = SW_CA1_101 ;			
+			}	
+			else if ( current_time - time_stamp > CA1_MAX_GAP_TIME)	
+			{
+				driver_state = SW_CA1_100 ;
 			}
 			break ;
 
-		case SW_CANCEL_PULSE :					// absorb the 2nd cancel pulse - wait for USB power to go away
-			if ( usb_state == USB_POWER_OFF )
+		case SW_CA1_101 :										// CA-1 release
+			if ( usb_state == USB_POWER_OFF ) 					// wait for end of pulse
 			{
 				driver_state = SW_IDLE ;
-			}
-			break ;
-
-		case SW_HALF_PRESS :						// wait for USB power to be applied	again (full press or cancel pulse or timeout)
-			if ( usb_state == USB_POWER_ON )
-			{
-				driver_state = SW_FULL_PRESS ;
-				time_stamp = current_time ;
-			}
-			else
-			{
-				if ( current_time - time_stamp > CA1_FULL_WAIT_PRESS_TIMEOUT )	driver_state = SW_IDLE ;
-			}
-			break ;
-
-		case SW_FULL_PRESS :					// check pulse width when USB power removed - detect CA-1 full press 150 mSec pulse
-			if ( usb_state == USB_POWER_OFF )
-			{
-				if (( current_time - time_stamp > CA1_MIN_FULLPRESS_TIME )  && ( current_time - time_stamp < CA1_MAX_FULLPRESS_TIME ) )
-				{
-					driver_state = SW_FULL_PRESS_RESET ;
-					virtual_remote_state = REMOTE_FULL_PRESS ;
-					time_stamp = current_time ;
-				}
-				else	// short pulse seen ?
-				{
-					if (( current_time - time_stamp > CA1_MIN_HALFPRESS_TIME )  && ( current_time - time_stamp < CA1_MAX_HALFPRESS_TIME )  )
-					{
-						driver_state = SW_SHORT_PRESS ;
-						time_stamp = current_time ;
-					}
-					else driver_state = SW_IDLE ;
-				}
-			}
-			break ;
-
-		case SW_FULL_PRESS_RESET :					// reset full press active after a delay
-			if ( current_time - time_stamp > FULL_PRESS_PULSE_TIME )
-			{
 				virtual_remote_state = REMOTE_RELEASE ;
-				driver_state = SW_IDLE ;
+			}
+			break ;
+
+		case SW_CA1_100 :										// CA-1 half-press
+			driver_state = SW_IDLE ;
+			virtual_remote_state = REMOTE_HALF_PRESS ;
+			break ;
+
+		case SW_CA1_11 : 										// CA-1 full press
+		
+			if ( usb_state == USB_POWER_OFF ) 
+			{
+				driver_state = SW_IDLE ;						// this is always followed by the release pulse
+				virtual_remote_state = REMOTE_RELEASE ;			// so we can set the state already here
 			}
 			break ;
 
