@@ -30,17 +30,10 @@ int auto_started;
 // prefixes and extentions available for raw images (index with conf.raw_prefix etc)
 const char* img_prefixes[NUM_IMG_PREFIXES]={ "IMG_", "CRW_", "SND_" /*, "AUT_", "ETC_","SDR_", "MVI_", "MRK_"*/};
 const char* img_exts[NUM_IMG_EXTS]={ ".JPG", ".CRW", ".CR2", ".THM", ".WAV"/*, ".AVI", ".MRK"*/};
-// ugh
-const char *video_bitrate_strings[VIDEO_BITRATE_STEPS]={ "0.25x", "0.5x","0.75x", "1x", "1.25x", "1.5x", "1.75x", "2x", "2.5x", "3x"};
 
 //-------------------------------------------------------------------
-static int def_script_vars[SCRIPT_NUM_PARAMS] = {0};    // default value of script parameters - zero array
-
 
 static int def_batt_volts_max, def_batt_volts_min;
-static OSD_pos def_histo_pos, def_dof_pos, def_batt_icon_pos, def_usb_info_pos, def_space_icon_pos, def_space_hor_pos, def_space_ver_pos, def_batt_txt_pos, def_space_txt_pos, 
-               def_mode_state_pos, def_mode_raw_pos, def_mode_video_pos, def_mode_ev_pos, def_values_pos, def_clock_pos, def_ev_video_pos, def_temp_pos;
-static int def_user_menu_vars[USER_MENU_ITEMS] = {0};
 
 static void conf_change_script_file();
 static void conf_change_font_cp();
@@ -81,50 +74,47 @@ int camera_get_nr()
 }
 
 
-
-
 void clear_values()
 {	
-	if (conf.platformid != PLATFORMID) // the following config entries will be resetted if you switch the camera using the same cfg
-	{
-    conf.raw_cache = 0;
-    conf.zoom_override_value = 0;
-    conf.fast_ev = 0;
-    conf.fast_movie_control = 0;
-    conf.fast_movie_quality_control = 0;
-    conf.zoom_scale = 100;
-    conf.platformid = PLATFORMID;
-    conf.flash_video_override = 0;
-	}
+    if (conf.platformid != PLATFORMID) // the following config entries will be resetted if you switch the camera using the same cfg
+    {
+        conf.raw_cache = 0;
+        conf.zoom_override_value = 0;
+        conf.fast_ev = 0;
+        conf.fast_movie_control = 0;
+        conf.fast_movie_quality_control = 0;
+        conf.zoom_scale = 100;
+        conf.platformid = PLATFORMID;
+        conf.flash_video_override = 0;
+    }
 
-
-	if (conf.clear_override)
-	{
-	 conf.av_override_value=0;
-	 conf.tv_override_koef=0;
-	 conf.subj_dist_override_koef=0;
-	 conf.iso_override_koef=0;
-	 conf.nd_filter_state=0;
-	}
-	if (conf.clear_zoom_override)
-	{
-	conf.zoom_override = 0;
-	}
-	if (conf.clear_bracket)
-	{
-	 conf.av_bracket_value=0;
-	 conf.tv_bracket_value=0;
-	 conf.iso_bracket_koef=0;
-	 conf.subj_dist_bracket_koef=0;
-	}
-     if (conf.clear_video)
- 	{
-	 conf.video_mode = 0;
-	 conf.video_quality = VIDEO_DEFAULT_QUALITY;
-	 conf.video_bitrate = VIDEO_DEFAULT_BITRATE;
-	 shooting_video_bitrate_change(conf.video_bitrate);
- 	}
- 	//conf.edge_overlay_pano = 0; // reset it because otherwise this feature cant be used at startup (when buffer is empty) - needs workaround other than this!
+    if (conf.clear_override)
+    {
+        conf.av_override_value=0;
+        conf.tv_override_koef=0;
+        conf.subj_dist_override_koef=0;
+        conf.iso_override_koef=0;
+        conf.nd_filter_state=0;
+    }
+    if (conf.clear_zoom_override)
+    {
+        conf.zoom_override = 0;
+    }
+    if (conf.clear_bracket)
+    {
+        conf.av_bracket_value=0;
+        conf.tv_bracket_value=0;
+        conf.iso_bracket_koef=0;
+        conf.subj_dist_bracket_koef=0;
+    }
+    if (conf.clear_video)
+    {
+        conf.video_mode = 0;
+        conf.video_quality = VIDEO_DEFAULT_QUALITY;
+        conf.video_bitrate = VIDEO_DEFAULT_BITRATE;
+        shooting_video_bitrate_change(conf.video_bitrate);
+    }
+    //conf.edge_overlay_pano = 0; // reset it because otherwise this feature cant be used at startup (when buffer is empty) - needs workaround other than this!
 }
 
 static const ConfInfo conf_info[] = {
@@ -133,7 +123,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(  2, conf.save_raw,               CONF_DEF_VALUE, i:0, conf_change_dng),
     CONF_INFO(  3, conf.script_shoot_delay,     CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(  4, conf.show_histo,             CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(  5, conf.script_vars,            CONF_INT_PTR,   ptr:&def_script_vars, NULL),
+    CONF_INFO(  5, conf.script_vars,            CONF_INT_PTR,   i:0, NULL),
     CONF_INFO(  6, conf.script_param_set,       CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(  7, conf.show_dof,               CONF_DEF_VALUE, i:DOF_DONT_SHOW, NULL),
     CONF_INFO(  8, conf.batt_volts_max,         CONF_VALUE_PTR, ptr:&def_batt_volts_max, NULL),
@@ -149,48 +139,48 @@ static const ConfInfo conf_info[] = {
     CONF_INFO( 18, conf.histo_auto_ajust,       CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO( 19, conf.histo_ignore_boundary,  CONF_DEF_VALUE, i:4, NULL),
     CONF_INFO( 20, conf.histo_layout,           CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 21, conf.histo_pos,              CONF_OSD_POS_PTR,   ptr:&def_histo_pos, NULL),
-    CONF_INFO( 22, conf.dof_pos,                CONF_OSD_POS_PTR,   ptr:&def_dof_pos, NULL),
-    CONF_INFO( 23, conf.batt_icon_pos,          CONF_OSD_POS_PTR,   ptr:&def_batt_icon_pos, NULL),
-    CONF_INFO( 24, conf.batt_txt_pos,           CONF_OSD_POS_PTR,   ptr:&def_batt_txt_pos , NULL),
-    CONF_INFO( 25, conf.mode_state_pos,         CONF_OSD_POS_PTR,   ptr:&def_mode_state_pos , NULL),
-    CONF_INFO( 26, conf.values_pos,             CONF_OSD_POS_PTR,   ptr:&def_values_pos , NULL),
+    CONF_INFO2( 21, conf.histo_pos,             CONF_OSD_POS,   45,CAM_SCREEN_HEIGHT-HISTO_HEIGHT-40),
+    CONF_INFO2( 22, conf.dof_pos,               CONF_OSD_POS,   90,45),
+    CONF_INFO2( 23, conf.batt_icon_pos,         CONF_OSD_POS,   178,0),
+    CONF_INFO2( 24, conf.batt_txt_pos,          CONF_OSD_POS,   178,FONT_HEIGHT),
+    CONF_INFO2( 25, conf.mode_state_pos,        CONF_OSD_POS,   35,0),
+    CONF_INFO2( 26, conf.values_pos,            CONF_OSD_POS,   CAM_SCREEN_WIDTH-9*FONT_WIDTH,30),
     CONF_INFO( 27, conf.histo_color,            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_WHITE), NULL),
     CONF_INFO( 28, conf.osd_color,              CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
     CONF_INFO( 29, conf.batt_icon_color,        CONF_DEF_VALUE, cl:COLOR_WHITE, NULL),
     CONF_INFO( 30, conf.menu_color,             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
-    //CONF_INFO( 31, conf.reader_color,           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY, COLOR_WHITE), NULL),
+    //CONF_INFO( 31, conf.reader_color,           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY, COLOR_WHITE), NULL),    // moved to text reader module
     CONF_INFO( 32, conf.ricoh_ca1_mode,         CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO( 33, conf.flashlight,             CONF_DEF_VALUE, i:0, NULL),
-//    CONF_INFO( 34, conf.ns_enable_memdump,      CONF_DEF_VALUE, i:0, NULL),
+    //CONF_INFO( 34, conf.ns_enable_memdump,      CONF_DEF_VALUE, i:0, NULL),                                       // ?????
     CONF_INFO( 34, conf.debug_shortcut_action,  CONF_DEF_VALUE, i:0, NULL), // backwards compatible
     CONF_INFO( 35, conf.raw_in_dir,             CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO( 36, conf.raw_prefix,             CONF_DEF_VALUE, i:RAW_PREFIX_CRW, NULL),
     CONF_INFO( 37, conf.raw_ext,                CONF_DEF_VALUE, i:DEFAULT_RAW_EXT, NULL),
-    //CONF_INFO( 38, conf.reader_file,            CONF_CHAR_PTR,   ptr:"A/CHDK/BOOKS/README.TXT", NULL),
-    //CONF_INFO( 39, conf.reader_pos,             CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO( 40, conf.sokoban_level,          CONF_DEF_VALUE, i:0, NULL),
+    //CONF_INFO( 38, conf.reader_file,            CONF_CHAR_PTR,   ptr:"A/CHDK/BOOKS/README.TXT", NULL),            // moved to text reader module
+    //CONF_INFO( 39, conf.reader_pos,             CONF_DEF_VALUE, i:0, NULL),                                       // moved to text reader module
+    //CONF_INFO( 40, conf.sokoban_level,          CONF_DEF_VALUE, i:0, NULL),                                       // moved to sokoban module
     CONF_INFO( 41, conf.show_clock,             CONF_DEF_VALUE, i:2, NULL),
-    CONF_INFO( 42, conf.clock_pos,              CONF_OSD_POS_PTR,   ptr:&def_clock_pos , NULL),
-    //CONF_INFO( 43, conf.reader_autoscroll,      CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO( 44, conf.reader_autoscroll_delay,CONF_DEF_VALUE, i:5, NULL),
-    //CONF_INFO( 45, conf.reader_rbf_file,        CONF_CHAR_PTR,   ptr:"", NULL),
-    //CONF_INFO( 46, conf.reader_codepage,        CONF_DEF_VALUE, i:FONT_CP_WIN, NULL),
+    CONF_INFO2( 42, conf.clock_pos,             CONF_OSD_POS,   CAM_SCREEN_WIDTH-5*FONT_WIDTH-2,0),
+    //CONF_INFO( 43, conf.reader_autoscroll,      CONF_DEF_VALUE, i:0, NULL),                                       // moved to text reader module
+    //CONF_INFO( 44, conf.reader_autoscroll_delay,CONF_DEF_VALUE, i:5, NULL),                                       // moved to text reader module
+    //CONF_INFO( 45, conf.reader_rbf_file,        CONF_CHAR_PTR,   ptr:"", NULL),                                   // moved to text reader module
+    //CONF_INFO( 46, conf.reader_codepage,        CONF_DEF_VALUE, i:FONT_CP_WIN, NULL),                             // moved to text reader module
     CONF_INFO( 47, conf.splash_show,            CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO( 48, conf.histo_color2,           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_WHITE), NULL),
     CONF_INFO( 49, conf.zebra_draw,             CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO( 50, conf.zebra_mode,             CONF_DEF_VALUE, i:ZEBRA_MODE_BLINKED_2, NULL),
-    //CONF_INFO( 51, conf.zebra_restore_screen,   CONF_DEF_VALUE, i:1, NULL),
-    //CONF_INFO( 52, conf.zebra_restore_osd,      CONF_DEF_VALUE, i:1, NULL),
-    //CONF_INFO( 53, conf.zebra_over,             CONF_DEF_VALUE, i:1, NULL),
-    //CONF_INFO( 54, conf.zebra_under,            CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO( 55, conf.zebra_color,            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_RED), NULL),
-    //CONF_INFO( 56, conf.zebra_draw_osd,         CONF_DEF_VALUE, i:ZEBRA_DRAW_HISTO, NULL),
+    //CONF_INFO( 50, conf.zebra_mode,             CONF_DEF_VALUE, i:ZEBRA_MODE_BLINKED_2, NULL),                    // moved to zebra module
+    //CONF_INFO( 51, conf.zebra_restore_screen,   CONF_DEF_VALUE, i:1, NULL),                                       // moved to zebra module
+    //CONF_INFO( 52, conf.zebra_restore_osd,      CONF_DEF_VALUE, i:1, NULL),                                       // moved to zebra module
+    //CONF_INFO( 53, conf.zebra_over,             CONF_DEF_VALUE, i:1, NULL),                                       // moved to zebra module
+    //CONF_INFO( 54, conf.zebra_under,            CONF_DEF_VALUE, i:0, NULL),                                       // moved to zebra module
+    //CONF_INFO( 55, conf.zebra_color,            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_RED), NULL),       // moved to zebra module
+    //CONF_INFO( 56, conf.zebra_draw_osd,         CONF_DEF_VALUE, i:ZEBRA_DRAW_HISTO, NULL),                        // moved to zebra module
     CONF_INFO( 57, conf.user_menu_as_root,      CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO( 58, conf.zoom_value,             CONF_DEF_VALUE, i:ZOOM_SHOW_X, NULL),
     CONF_INFO( 59, conf.use_zoom_mf,            CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO( 60, conf.raw_save_first_only,    CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO( 61, conf.reader_wrap_by_words,   CONF_DEF_VALUE, i:1, NULL),
+    //CONF_INFO( 61, conf.reader_wrap_by_words,   CONF_DEF_VALUE, i:1, NULL),                                       // moved to text reader module
     CONF_INFO( 62, conf.menu_symbol_enable,     CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO( 63, conf.alt_mode_button,        CONF_DEF_VALUE, i:KEY_PRINT, conf_change_alt_mode_button),
     CONF_INFO( 64, conf.lang_file,              CONF_CHAR_PTR,   ptr:"", NULL),
@@ -198,10 +188,10 @@ static const ConfInfo conf_info[] = {
     CONF_INFO( 66, conf.menu_rbf_file,          CONF_CHAR_PTR,   ptr:"", conf_change_menu_rbf_file),
     CONF_INFO( 67, conf.alt_prevent_shutdown,   CONF_DEF_VALUE, i:ALT_PREVENT_SHUTDOWN_ALT, conf_update_prevent_shutdown),
     CONF_INFO( 68, conf.show_grid_lines,        CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO( 69, conf.grid_lines_file,        CONF_CHAR_PTR,   ptr:"", NULL),
+    //CONF_INFO( 69, conf.grid_lines_file,        CONF_CHAR_PTR,   ptr:"", NULL),                                   // moved to grid module
     CONF_INFO( 70, conf.raw_nr,                 CONF_DEF_VALUE, i:NOISE_REDUCTION_AUTO_CANON, NULL),
-    //CONF_INFO( 71, conf.grid_force_color,       CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO( 72, conf.grid_color,             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
+    //CONF_INFO( 71, conf.grid_force_color,       CONF_DEF_VALUE, i:0, NULL),                                       // moved to grid module
+    //CONF_INFO( 72, conf.grid_color,             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),         // moved to grid module
 
     CONF_INFO( 80, conf.dof_subj_dist_as_near_limit,CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO( 81, conf.dof_use_exif_subj_dist,     CONF_DEF_VALUE, i:0, NULL),
@@ -262,7 +252,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(125, conf.dof_dist_from_lens,     CONF_DEF_VALUE, i:0, NULL),
     
     CONF_INFO(126, conf.clear_bracket,          CONF_DEF_VALUE, i:1, NULL),
-    //CONF_INFO(127, conf.zebra_multichannel,     CONF_DEF_VALUE, i:0, NULL),
+    //CONF_INFO(127, conf.zebra_multichannel,     CONF_DEF_VALUE, i:0, NULL),                                       // moved to zebra module
 
     CONF_INFO(128, conf.nd_filter_state,        CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(129, conf.histo_show_ev_grid,     CONF_DEF_VALUE, i:0, NULL),
@@ -270,24 +260,24 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(130, conf.osd_color_warn,         CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_RED), NULL),
     CONF_INFO(131, conf.space_color,            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
     CONF_INFO(132, conf.space_icon_show,        CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(133, conf.space_icon_pos,         CONF_OSD_POS_PTR, ptr:&def_space_icon_pos, NULL),
+    CONF_INFO2(133, conf.space_icon_pos,        CONF_OSD_POS,   CAM_SCREEN_WIDTH-100,0),
     CONF_INFO(134, conf.space_perc_show,        CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(135, conf.space_mb_show,          CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(136, conf.space_txt_pos,          CONF_OSD_POS_PTR,   ptr:&def_space_txt_pos , NULL),
+    CONF_INFO2(136, conf.space_txt_pos,         CONF_OSD_POS,   128,0),
     CONF_INFO(137, conf.show_remaining_raw,     CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(138, conf.mode_raw_pos,           CONF_OSD_POS_PTR,   ptr:&def_mode_raw_pos , NULL),
+    CONF_INFO2(138, conf.mode_raw_pos,          CONF_OSD_POS,   CAM_SCREEN_WIDTH-7*FONT_WIDTH-2,CAM_SCREEN_HEIGHT-3*FONT_HEIGHT-2),
     CONF_INFO(139, conf.show_raw_state,         CONF_DEF_VALUE, i:1, NULL),
     
     CONF_INFO(140, conf.show_values_in_video,   CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(141, conf.tv_enum_type,           CONF_DEF_VALUE, i:1, NULL),
 
     CONF_INFO(142, conf.user_menu_enable,       CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(143, conf.user_menu_vars,         CONF_INT_PTR,   ptr:&def_user_menu_vars, NULL),
+    CONF_INFO(143, conf.user_menu_vars,         CONF_INT_PTR,   i:0, NULL),
     CONF_INFO(144, conf.zoom_scale,             CONF_DEF_VALUE, i:100, NULL), 
     CONF_INFO(145, conf.space_bar_show,         CONF_DEF_VALUE, i:1, NULL), 
     CONF_INFO(146, conf.space_bar_size,         CONF_DEF_VALUE, i:1, NULL), 
-    CONF_INFO(147, conf.space_ver_pos,          CONF_OSD_POS_PTR, ptr:&def_space_ver_pos, NULL),
-    CONF_INFO(148, conf.space_hor_pos,          CONF_OSD_POS_PTR, ptr:&def_space_hor_pos, NULL),   
+    CONF_INFO2(147, conf.space_ver_pos,         CONF_OSD_POS,   CAM_SCREEN_WIDTH-7,0),
+    CONF_INFO2(148, conf.space_hor_pos,         CONF_OSD_POS,   0,CAM_SCREEN_HEIGHT-7),   
     CONF_INFO(149, conf.space_bar_width,        CONF_DEF_VALUE, i:2, NULL), 
     CONF_INFO(150, conf.space_perc_warn,        CONF_DEF_VALUE, i:10, NULL),
     CONF_INFO(151, conf.space_mb_warn,          CONF_DEF_VALUE, i:20, NULL),
@@ -319,22 +309,22 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(175, conf.save_raw_in_video,      CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO(176, conf.show_movie_time,        CONF_DEF_VALUE, i:3, NULL),
     CONF_INFO(177, conf.show_movie_refresh,     CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(178, conf.mode_video_pos,         CONF_OSD_POS_PTR,   ptr:&def_mode_video_pos , NULL),
+    CONF_INFO2(178, conf.mode_video_pos,        CONF_OSD_POS,   CAM_SCREEN_WIDTH-25*FONT_WIDTH-2,CAM_SCREEN_HEIGHT-6*FONT_HEIGHT-2),
     CONF_INFO(179, conf.clear_video,            CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(180, conf.fast_ev,                CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(181, conf.fast_ev_step,           CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(182, conf.mode_ev_pos,            CONF_OSD_POS_PTR,   ptr:&def_mode_ev_pos , NULL),
-    CONF_INFO(183, conf.menu_symbol_rbf_file,   CONF_CHAR_PTR,   ptr:"A/CHDK/SYMBOLS/icon_10.rbf", conf_change_menu_symbol_rbf_file),
+    CONF_INFO2(182, conf.mode_ev_pos,           CONF_OSD_POS,   CAM_SCREEN_WIDTH-40*FONT_WIDTH-2,CAM_SCREEN_HEIGHT-8*FONT_HEIGHT-2),
+    CONF_INFO(183, conf.menu_symbol_rbf_file,   CONF_CHAR_PTR,   ptr:DEFAULT_SYMBOL_FILE, conf_change_menu_symbol_rbf_file),
     CONF_INFO(184, conf.menu_symbol_color,      CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
     CONF_INFO(185, conf.curve_file,             CONF_CHAR_PTR, ptr:"", NULL),
     CONF_INFO(186, conf.curve_enable,           CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(187, conf.edge_overlay_enable,    CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(188, conf.edge_overlay_thresh,    CONF_DEF_VALUE, i:60, NULL),
-    //CONF_INFO(189, conf.edge_overlay_color,     CONF_DEF_VALUE, cl:0x66, NULL),
+    //CONF_INFO(189, conf.edge_overlay_color,     CONF_DEF_VALUE, cl:0x66, NULL),                                   // moved to edge overlay module
     CONF_INFO(190, conf.synch_enable,           CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(191, conf.synch_delay_enable,     CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(192, conf.synch_delay_value,      CONF_DEF_VALUE, i:100, NULL),
-    CONF_INFO(193, conf.synch_delay_coarse_value, CONF_DEF_VALUE, i:0, NULL),		// obsolete - no longer used
+    //CONF_INFO(193, conf.synch_delay_coarse_value, CONF_DEF_VALUE, i:0, NULL),                                     // obsolete - no longer used
     CONF_INFO(194, conf.script_file,            CONF_CHAR_PTR,   ptr:"", conf_change_script_file),
     CONF_INFO(195, conf.mem_view_addr_init,     CONF_DEF_VALUE, i:0x1000, NULL),
     CONF_INFO(196, conf.save_raw_in_sports,     CONF_DEF_VALUE, i:0, NULL),
@@ -345,7 +335,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(201, conf.menu_select_first_entry, CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO(202, conf.fast_movie_control,     CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(203, conf.show_temp,              CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(204, conf.temp_pos,               CONF_OSD_POS_PTR,   ptr:&def_temp_pos , NULL),
+    CONF_INFO2(204, conf.temp_pos,              CONF_OSD_POS,   CAM_SCREEN_WIDTH-9*FONT_WIDTH-2,FONT_HEIGHT),
     CONF_INFO(205, conf.fast_movie_quality_control, CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO(206, conf.remote_zoom_enable,     CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(207, conf.zoom_timeout,           CONF_DEF_VALUE, i:5, NULL),
@@ -355,17 +345,17 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(211, conf.sub_in_dark_value,  CONF_DEF_VALUE, i:30, NULL), 
     CONF_INFO(212, conf.sub_out_dark_value,  CONF_DEF_VALUE, i:0, NULL), 
    	CONF_INFO(213, conf.debug_display,     CONF_DEF_VALUE, i:0, NULL),
-   	CONF_INFO(214, conf.script_param_save,     CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(215, conf.ev_video_pos,           CONF_OSD_POS_PTR,   ptr:&def_ev_video_pos, NULL),
+   	CONF_INFO(214, conf.script_param_save,      CONF_DEF_VALUE, i:1, NULL),
+    CONF_INFO2(215, conf.ev_video_pos,          CONF_OSD_POS,   18,80),
     CONF_INFO(216, conf.zoom_override_value,     CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(217, conf.zoom_override,      CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(218, conf.clear_zoom_override,         CONF_DEF_VALUE, i:1, NULL),			
     CONF_INFO(219, conf.bracketing_add_raw_suffix,         CONF_DEF_VALUE, i:0, NULL),			
     CONF_INFO(220, conf.temperature_unit,              CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(221, conf.clear_zoom_override,         CONF_DEF_VALUE, i:1, NULL),			
-    //CONF_INFO(222, conf.edge_overlay_play,    CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO(223, conf.edge_overlay_pano,              CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO(224, conf.edge_overlay_zoom,                CONF_DEF_VALUE, i:1, NULL),
+    //CONF_INFO(222, conf.edge_overlay_play,    CONF_DEF_VALUE, i:0, NULL),                                         // moved to edge overlay module
+    //CONF_INFO(223, conf.edge_overlay_pano,              CONF_DEF_VALUE, i:0, NULL),                               // moved to edge overlay module
+    //CONF_INFO(224, conf.edge_overlay_zoom,                CONF_DEF_VALUE, i:1, NULL),                             // moved to edge overlay module
     CONF_INFO(225, conf.raw_cache,              CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(226, conf.dng_raw,                CONF_DEF_VALUE, i:0, conf_change_dng),
     CONF_INFO(227, conf.flash_sync_curtain,     CONF_DEF_VALUE, i:0, NULL),
@@ -382,9 +372,9 @@ static const ConfInfo conf_info[] = {
 	CONF_INFO(238, conf.debug_lua_restart_on_error,     CONF_DEF_VALUE, i:0, NULL),
 	CONF_INFO(239, conf.debug_propcase_page,     CONF_DEF_VALUE, i:0, NULL),
 	CONF_INFO(240, conf.debug_misc_vals_show,     CONF_DEF_VALUE, i:0, NULL),
-	//CONF_INFO(241, conf.edge_overlay_filter,     CONF_DEF_VALUE, i:0, NULL),
-	//CONF_INFO(242, conf.edge_overlay_show,     CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO(243, conf.edge_overlay_pano_overlap,   CONF_DEF_VALUE, i:30, NULL),
+	//CONF_INFO(241, conf.edge_overlay_filter,     CONF_DEF_VALUE, i:0, NULL),                                      // moved to edge overlay module
+	//CONF_INFO(242, conf.edge_overlay_show,     CONF_DEF_VALUE, i:0, NULL),                                        // moved to edge overlay module
+    //CONF_INFO(243, conf.edge_overlay_pano_overlap,   CONF_DEF_VALUE, i:30, NULL),                                 // moved to edge overlay module
 
     // Touch screen U/I overrides
     CONF_INFO(244, conf.touchscreen_disable_video_controls, CONF_DEF_VALUE, i:0, NULL),
@@ -392,7 +382,7 @@ static const ConfInfo conf_info[] = {
 
 	// USB Icon enable & position
     CONF_INFO(246, conf.usb_info_enable, CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(247, conf.usb_info_pos,    CONF_OSD_POS_PTR,  ptr:&def_usb_info_pos, NULL),
+    CONF_INFO2(247, conf.usb_info_pos,          CONF_OSD_POS,   95,0),
 
 	// new USB remote stuff
 	CONF_INFO(248, conf.remote_switch_type,  CONF_DEF_VALUE, i:0, NULL),
@@ -494,43 +484,7 @@ static void conf_init_defaults() {
     // init some defaults values
     def_batt_volts_max = get_vbatt_max();
     def_batt_volts_min = get_vbatt_min();
-    def_histo_pos.x = 45;
-    def_histo_pos.y = camera_screen.height-HISTO_HEIGHT-40;
-    def_dof_pos.x = 90;
-    def_dof_pos.y = 45;
-    def_batt_icon_pos.x = 178;
-    def_batt_icon_pos.y = 0;
-    def_batt_txt_pos.x=178;
-    def_batt_txt_pos.y=1*FONT_HEIGHT;
-    def_usb_info_pos.x = 95;
-    def_usb_info_pos.y = 0;
-    def_space_icon_pos.x = camera_screen.width-100;
-    def_space_icon_pos.y = 0;
-    def_space_ver_pos.x = camera_screen.width-7;
-    def_space_ver_pos.y = 0;
-    def_space_hor_pos.x = 0;
-    def_space_hor_pos.y = camera_screen.height-7;
-    def_space_txt_pos.x=128;
-    def_space_txt_pos.y=0;
-    def_mode_state_pos.x=35;
-    def_mode_state_pos.y=0;
-    def_mode_raw_pos.x=camera_screen.width-7*FONT_WIDTH-2;
-    def_mode_raw_pos.y=camera_screen.height-3*FONT_HEIGHT-2;
-    def_mode_video_pos.x=camera_screen.width-25*FONT_WIDTH-2;
-    def_mode_video_pos.y=camera_screen.height-6*FONT_HEIGHT-2;
-    def_mode_ev_pos.x=camera_screen.width-40*FONT_WIDTH-2;
-    def_mode_ev_pos.y=camera_screen.height-8*FONT_HEIGHT-2;
-    def_values_pos.x=camera_screen.width-9*FONT_WIDTH;
-    def_values_pos.y=30;
-    def_clock_pos.x=camera_screen.width-5*FONT_WIDTH-2;
-    def_clock_pos.y=0;
-    def_temp_pos.x=camera_screen.width-9*FONT_WIDTH-2;
-    def_temp_pos.y=1*FONT_HEIGHT;
-    def_ev_video_pos.x=18;
-    def_ev_video_pos.y=80;
-
 }
-
 
 //-------------------------------------------------------------------
 void config_load_defaults(const ConfInfo *confinfo, int conf_num, void (*info_func)(unsigned short id))
@@ -539,12 +493,14 @@ void config_load_defaults(const ConfInfo *confinfo, int conf_num, void (*info_fu
 
     for (i=0; i<conf_num; ++i) {
         switch (confinfo[i].type) {
+            case CONF_OSD_POS:
             case CONF_DEF_VALUE:
                 memcpy(confinfo[i].var, &(confinfo[i].i), confinfo[i].size);
                 break;
             case CONF_INT_PTR:
+                memset(confinfo[i].var, 0, confinfo[i].size);
+                break;
             case CONF_VALUE_PTR:
-            case CONF_OSD_POS_PTR:
             case CONF_CHAR_PTR:
                 memcpy(confinfo[i].var, confinfo[i].ptr, confinfo[i].size);
                 break;
@@ -607,7 +563,7 @@ void conf_save()
 }
 
 //-------------------------------------------------------------------
-void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void (*init_defaults)(), void (*info_func)(unsigned short id))
+void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void (*info_func)(unsigned short id))
 {
     int fd, rcnt, i;
     unsigned short id, size;
@@ -615,7 +571,6 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
     int offs, old_ver;
     struct stat st;
 
-    if (init_defaults) init_defaults();
     config_load_defaults(confinfo, conf_num, info_func);
 
     if( stat(filename,&st) != 0 || st.st_size < sizeof(int))
@@ -656,13 +611,11 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
                    memcpy(confinfo[i].var, buf+offs, size);
                    if (info_func) info_func(confinfo[i].id);
                 }
-                offs += size;
                 break;
             }
         }
-        if (i == conf_num) { // unknown id, just skip data
-            offs += size;
-        }
+
+        offs += size;
     }
     ufree(buf);
     // clear any "clear on restart" values
@@ -671,7 +624,8 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
 
 void conf_restore()
 {
-    config_restore(&conf_info[0], CONF_FILE, CONF_NUM, conf_init_defaults, conf_info_func);
+    conf_init_defaults();
+    config_restore(&conf_info[0], CONF_FILE, CONF_NUM, conf_info_func);
 }
 
 //-------------------------------------------------------------------
@@ -715,11 +669,11 @@ int conf_getValue(unsigned short id, tConfigVal* configVal) {
                         configVal->str = conf_info[i].var;
                         ret = CONF_CHAR_PTR;
                     break;
-                    case CONF_OSD_POS_PTR:
+                    case CONF_OSD_POS:
                         pos = (OSD_pos*)conf_info[i].var;
                         configVal->pos.x = pos->x;
                         configVal->pos.y = pos->y;
-                        ret = CONF_OSD_POS_PTR;
+                        ret = CONF_OSD_POS;
                     	configVal->pInt = (int*)conf_info[i].var;
                     break;
                 }
@@ -776,12 +730,12 @@ int conf_setValue(unsigned short id, tConfigVal configVal) {
                         ret = CONF_CHAR_PTR;
                     }
                 break;
-                case CONF_OSD_POS_PTR:
+                case CONF_OSD_POS:
                     if( configVal.isPos ) {
                         pos = (OSD_pos*)conf_info[i].var;
                         pos->x = configVal.pos.x;
                         pos->y = configVal.pos.y;
-                        ret = CONF_OSD_POS_PTR;
+                        ret = CONF_OSD_POS;
                     }
                 break;
             }

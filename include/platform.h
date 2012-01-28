@@ -44,9 +44,6 @@ extern int mode_is_video(int);
 #define MODE_SCREEN_MASK        0x0C00
 #define MODE_SCREEN_OPENED      0x0400
 #define MODE_SCREEN_ROTATED     0x0800
-#define AS_SIZE (sizeof(aperture_sizes_table)/sizeof(aperture_sizes_table[0]))
-#define ASID_MIN (aperture_sizes_table[0].id)
-#define ASID_MAX (aperture_sizes_table[AS_SIZE-1].id)
 
 /* Keyboard repeat and initial delays */
 #define KBD_REPEAT_DELAY  140

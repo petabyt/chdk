@@ -74,6 +74,9 @@ extern gui_handler* gui_set_mode(gui_handler *mode);
 
 extern void gui_enum_value_change(int *value, int change, unsigned num_items);
 
+#if !CAM_VIDEO_QUALITY_ONLY
+extern const char* gui_video_bitrate_enum(int change, int arg);
+#endif
 
 #ifdef OPT_SCRIPTING
 extern void gui_update_script_submenu();

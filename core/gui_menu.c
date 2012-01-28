@@ -10,6 +10,7 @@
 #include "modules.h"
 #include "module_load.h"
 #include "gui_menu.h"
+#include "gui_user_menu.h"
 #include "gui_lang.h"
 
 //-------------------------------------------------------------------
@@ -435,13 +436,13 @@ void gui_menu_kbd_process() {
                     * Add new entry
                     * user menu is currently not visible so no redraw necessary
                     */
-                    mod_user_menu(curr_menu->menu[gui_menu_curr_item],&gui_menu_curr_item, 1);
+                    add_user_menu_item(curr_menu->menu[gui_menu_curr_item],&gui_menu_curr_item);
                 }
                 else {
                     /*
                     * Remove entry from menu
                     */
-                    mod_user_menu(curr_menu->menu[gui_menu_curr_item],&gui_menu_curr_item, 0);
+                    del_user_menu_item(&gui_menu_curr_item);
 
                     /*
                     * Check to see if the last visible entry was deleted and we need need
@@ -567,7 +568,7 @@ void gui_menu_kbd_process() {
             * if in user menu edit mode and viewing user menu
             */
             if( (conf.user_menu_enable == 3)  && (curr_menu->title == LANG_MENU_USER_MENU)) {
-                mod_user_menu(curr_menu->menu[gui_menu_curr_item],&gui_menu_curr_item, 2);
+                move_user_menu_item_up(&gui_menu_curr_item);
                 if(gui_menu_curr_item < gui_menu_top_item+1) {
                     if(gui_menu_curr_item)
                         gui_menu_top_item = gui_menu_curr_item-1;
@@ -589,7 +590,7 @@ void gui_menu_kbd_process() {
             * if in user menu edit mode and viewing user menu
             */
             if( (conf.user_menu_enable == 3)  && (curr_menu->title == LANG_MENU_USER_MENU)) {
-                mod_user_menu(curr_menu->menu[gui_menu_curr_item],&gui_menu_curr_item, 3);
+                move_user_menu_item_down(&gui_menu_curr_item);
                 if(gui_menu_curr_item > gui_menu_top_item + num_lines -2) {
                     if((gui_menu_curr_item < USER_MENU_ITEMS) && curr_menu->menu[gui_menu_curr_item +1].text)
                         gui_menu_top_item++;

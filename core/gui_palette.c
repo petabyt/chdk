@@ -9,7 +9,6 @@
 #include "gui_lang.h"
 #include "gui_palette.h"
 
-
 #include "module_load.h"
 
 void gui_module_menu_kbd_process();

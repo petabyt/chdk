@@ -229,10 +229,7 @@ long kbd_use_up_down_left_right_as_fast_switch() {
         if (conf.fast_movie_quality_control && key_pressed == 0) {
             if (conf.video_mode==0) {
 #if !CAM_VIDEO_QUALITY_ONLY
-                conf.video_bitrate+=1;
-                if (conf.video_bitrate>=VIDEO_BITRATE_STEPS)
-                    conf.video_bitrate=VIDEO_BITRATE_STEPS-1;
-                shooting_video_bitrate_change(conf.video_bitrate);
+                gui_video_bitrate_enum(1,0);
                 movie_reset = 1;
 #endif
             }

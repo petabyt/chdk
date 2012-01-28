@@ -10,6 +10,7 @@
 #include "gui_lang.h"
 #include "gui_draw.h"
 #include "gui_menu.h"
+#include "gui_user_menu.h"
 #include "gui_palette.h"
 #include "gui_mbox.h"
 #include "gui_mpopup.h"
@@ -136,8 +137,6 @@ static void gui_draw_osd();
 
 static void gui_draw_splash(char* logo, int logo_size);
 
-void user_menu_save();
-void user_menu_restore();
 // Menu procs
 //-------------------------------------------------------------------
 static void gui_show_build_info(int arg);
@@ -171,7 +170,6 @@ static const char* gui_font_enum(int change, int arg);
 static const char* gui_alt_mode_button_enum(int change, int arg);
 #endif
 static const char* gui_alt_power_enum(int change, int arg);
-static const char* gui_video_bitrate_enum(int change, int arg);
 static const char* gui_av_override_enum(int change, int arg);
 #if ZOOM_OVERRIDE
 static const char* gui_zoom_override_enum(int change, int arg);
@@ -218,7 +216,9 @@ static void cb_change_dng_usb_ext();
 extern const char _start,_end;
 
 #ifdef OPT_DEBUGGING
+#ifndef CAM_DRYOS
 static int debug_tasklist_start;
+#endif
 static int debug_display_direction=1;
 #endif
 
@@ -296,11 +296,17 @@ static CMenu autoiso_submenu = {0x2d,LANG_MENU_AUTOISO_TITLE, NULL, autoiso_subm
 
 #ifdef OPT_DEBUGGING
 static const char* gui_debug_shortcut_modes[] = { "None", "DmpRAM", "Page", "CmpProps"};
+#ifdef CAM_DRYOS
+static const char* gui_debug_display_modes[] = { "None", "Props", "Params" };
+#else
 static const char* gui_debug_display_modes[] = { "None", "Props", "Params", "Tasks"};
+#endif
 static CMenuItem debug_submenu_items[] = {
     MENU_ENUM2(0x5c,LANG_MENU_DEBUG_DISPLAY,          &conf.debug_display, gui_debug_display_modes ),
     MENU_ITEM(0x2a,LANG_MENU_DEBUG_PROPCASE_PAGE,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &conf.debug_propcase_page, MENU_MINMAX(0, 128) ),
+#ifndef CAM_DRYOS
     MENU_ITEM(0x2a,LANG_MENU_DEBUG_TASKLIST_START,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &debug_tasklist_start, MENU_MINMAX(0, 63) ),
+#endif
     MENU_ITEM(0x5c,LANG_MENU_DEBUG_SHOW_MISC_VALS,    MENUITEM_BOOL,          &conf.debug_misc_vals_show, 0 ),
     MENU_ITEM(0x2a,LANG_MENU_DEBUG_MEMORY_BROWSER,    MENUITEM_PROC,          gui_menu_run_fltmodule, "memview.flt" ),
     MENU_ITEM(0x2a,LANG_MENU_DEBUG_BENCHMARK,         MENUITEM_PROC,          gui_menu_run_fltmodule, "benchm.flt" ),
@@ -617,19 +623,6 @@ static CMenuItem visual_submenu_items[] = {
 };
 static CMenu visual_submenu = {0x28,LANG_MENU_VIS_TITLE, NULL, visual_submenu_items };
 
-/*
- * 1 extra entry for the "Main menu" and 1 for null when the menu is full with user selections
- * Compiler will zero init remaining portion of array so no there is no hidden relationship between
- * this structure and the value of USER_MENU_ITEMS. The value of USER_MENU_ITEMS can be anything you
- * wish and everything automagically works.
-*/
-
-static CMenuItem user_submenu_items[USER_MENU_ITEMS + 2] = {
-	MENU_ITEM(0x20,LANG_MENU_MAIN_TITLE,     MENUITEM_PROC,  rinit, 0 )
-};
-
-static CMenu user_submenu = {0x2e,LANG_MENU_USER_MENU, NULL, user_submenu_items };
-
 static CMenuItem raw_state_submenu_items[] = {
     MENU_ITEM(0x5c,LANG_MENU_OSD_SHOW_RAW_STATE,      MENUITEM_BOOL,      &conf.show_raw_state, 0 ),
     MENU_ITEM(0x5c,LANG_MENU_OSD_SHOW_REMAINING_RAW,  MENUITEM_BOOL,      &conf.show_remaining_raw, 0 ),
@@ -651,38 +644,40 @@ static CMenuItem touchscreen_submenu_items[] = {
 static CMenu touchscreen_submenu = {0x28,LANG_MENU_TOUCHSCREEN_VALUES, /*cb_values_menu_change*/ NULL, touchscreen_submenu_items };
 #endif
 
+extern  CMenu   user_submenu;
+
 static const char* gui_temp_mode_modes[] = { "Off", "Optical", "CCD", "Battery", "all" };
 static const char* gui_hide_osd_modes[] = { "Don't", "In Playback", "On Disp Press", "Both"};
 static const char* gui_show_usb_info_modes[] = { "Off", "Icon", "Text"};
 static CMenuItem osd_submenu_items[] = {
-    MENU_ITEM(0x5c,LANG_MENU_OSD_SHOW,                MENUITEM_BOOL,      &conf.show_osd, 0 ),
-    MENU_ENUM2(0x5c,LANG_MENU_OSD_HIDE_PLAYBACK,      &conf.hide_osd, gui_hide_osd_modes ),
-    MENU_ITEM(0x81,LANG_MENU_VIS_MENU_CENTER,         MENUITEM_BOOL,	    &conf.menu_center, 0 ),
-    MENU_ITEM(0x81,LANG_MENU_SELECT_FIRST_ENTRY,         MENUITEM_BOOL,	    &conf.menu_select_first_entry, 0 ),
-    MENU_ITEM(0x64,LANG_MENU_VIS_SYMBOL,             MENUITEM_BOOL,	    &conf.menu_symbol_enable, 0 ),
-    MENU_ITEM(0x2e,LANG_MENU_USER_MENU,  	    		MENUITEM_SUBMENU,   &user_submenu, 0 ),
-    MENU_ITEM(0x5f,LANG_MENU_USER_MENU_ENABLE,		MENUITEM_ENUM,      gui_user_menu_show_enum, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_USER_MENU_AS_ROOT,       MENUITEM_BOOL,      &conf.user_menu_as_root, 0 ),
-    MENU_ITEM(0x5f,LANG_MENU_OSD_SHOW_STATES,         MENUITEM_BOOL,      &conf.show_state, 0 ),
-    MENU_ENUM2(0x5f,LANG_MENU_OSD_SHOW_TEMP,         &conf.show_temp, gui_temp_mode_modes ),
-    MENU_ITEM(0x59,LANG_MENU_OSD_TEMP_FAHRENHEIT,      MENUITEM_BOOL,      &conf.temperature_unit, 0 ),
-    MENU_ENUM2(0x71,LANG_MENU_USB_SHOW_INFO,         &conf.usb_info_enable, gui_show_usb_info_modes ),
-    MENU_ITEM(0x72,LANG_MENU_OSD_LAYOUT_EDITOR,       MENUITEM_PROC,      gui_draw_osd_le, 0 ),
-    MENU_ITEM(0x2f,LANG_MENU_OSD_GRID_PARAMS,         MENUITEM_SUBMENU_PROC, gui_menu_run_fltmodule, "grids.flt" ),
-    MENU_ITEM(0x22,LANG_MENU_OSD_VALUES,  	    	MENUITEM_SUBMENU,   &values_submenu, 0 ),
-    MENU_ITEM(0x31,LANG_MENU_OSD_DOF_CALC,            MENUITEM_SUBMENU,   &dof_submenu, 0 ),
-    MENU_ITEM(0x24,LANG_MENU_OSD_RAW_STATE_PARAMS,    MENUITEM_SUBMENU,   &raw_state_submenu, 0 ),
-    MENU_ITEM(0x32,LANG_MENU_OSD_BATT_PARAMS,         MENUITEM_SUBMENU,   &battery_submenu, 0 ),
-    MENU_ITEM(0x33,LANG_MENU_OSD_SPACE_PARAMS,        MENUITEM_SUBMENU,   &space_submenu, 0 ),
-    MENU_ITEM(0x34,LANG_MENU_OSD_CLOCK_PARAMS,	 	MENUITEM_SUBMENU,   &clock_submenu, 0 ),
-    MENU_ITEM(0x59,LANG_MENU_OSD_SHOW_IN_REVIEW,      MENUITEM_BOOL,      &conf.show_osd_in_review, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_OSD_SHOW,              MENUITEM_BOOL,          &conf.show_osd, 0 ),
+    MENU_ENUM2(0x5c,LANG_MENU_OSD_HIDE_PLAYBACK,                            &conf.hide_osd, gui_hide_osd_modes ),
+    MENU_ITEM(0x81,LANG_MENU_VIS_MENU_CENTER,       MENUITEM_BOOL,	        &conf.menu_center, 0 ),
+    MENU_ITEM(0x81,LANG_MENU_SELECT_FIRST_ENTRY,    MENUITEM_BOOL,	        &conf.menu_select_first_entry, 0 ),
+    MENU_ITEM(0x64,LANG_MENU_VIS_SYMBOL,            MENUITEM_BOOL,	        &conf.menu_symbol_enable, 0 ),
+    MENU_ITEM(0x2e,LANG_MENU_USER_MENU,  	    	MENUITEM_SUBMENU,       &user_submenu, 0 ),
+    MENU_ITEM(0x5f,LANG_MENU_USER_MENU_ENABLE,		MENUITEM_ENUM,          gui_user_menu_show_enum, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_USER_MENU_AS_ROOT,     MENUITEM_BOOL,          &conf.user_menu_as_root, 0 ),
+    MENU_ITEM(0x5f,LANG_MENU_OSD_SHOW_STATES,       MENUITEM_BOOL,          &conf.show_state, 0 ),
+    MENU_ENUM2(0x5f,LANG_MENU_OSD_SHOW_TEMP,                                &conf.show_temp, gui_temp_mode_modes ),
+    MENU_ITEM(0x59,LANG_MENU_OSD_TEMP_FAHRENHEIT,   MENUITEM_BOOL,          &conf.temperature_unit, 0 ),
+    MENU_ENUM2(0x71,LANG_MENU_USB_SHOW_INFO,                                &conf.usb_info_enable, gui_show_usb_info_modes ),
+    MENU_ITEM(0x72,LANG_MENU_OSD_LAYOUT_EDITOR,     MENUITEM_PROC,          gui_menu_run_fltmodule, "_osd_le.flt" ),
+    MENU_ITEM(0x2f,LANG_MENU_OSD_GRID_PARAMS,       MENUITEM_SUBMENU_PROC,  gui_menu_run_fltmodule, "grids.flt" ),
+    MENU_ITEM(0x22,LANG_MENU_OSD_VALUES,  	    	MENUITEM_SUBMENU,       &values_submenu, 0 ),
+    MENU_ITEM(0x31,LANG_MENU_OSD_DOF_CALC,          MENUITEM_SUBMENU,       &dof_submenu, 0 ),
+    MENU_ITEM(0x24,LANG_MENU_OSD_RAW_STATE_PARAMS,  MENUITEM_SUBMENU,       &raw_state_submenu, 0 ),
+    MENU_ITEM(0x32,LANG_MENU_OSD_BATT_PARAMS,       MENUITEM_SUBMENU,       &battery_submenu, 0 ),
+    MENU_ITEM(0x33,LANG_MENU_OSD_SPACE_PARAMS,      MENUITEM_SUBMENU,       &space_submenu, 0 ),
+    MENU_ITEM(0x34,LANG_MENU_OSD_CLOCK_PARAMS,	 	MENUITEM_SUBMENU,       &clock_submenu, 0 ),
+    MENU_ITEM(0x59,LANG_MENU_OSD_SHOW_IN_REVIEW,    MENUITEM_BOOL,          &conf.show_osd_in_review, 0 ),
 #ifndef OPTIONS_AUTOSAVE
-    MENU_ITEM(0x5c,LANG_MENU_MAIN_SAVE_OPTIONS,       MENUITEM_PROC,      gui_menuproc_save, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_MAIN_SAVE_OPTIONS,     MENUITEM_PROC,          gui_menuproc_save, 0 ),
 #endif
 #ifdef  CAM_TOUCHSCREEN_UI
-    MENU_ITEM(0x22,LANG_MENU_TOUCHSCREEN_VALUES,  	 MENUITEM_SUBMENU,   &touchscreen_submenu, 0 ),
+    MENU_ITEM(0x22,LANG_MENU_TOUCHSCREEN_VALUES,  	MENUITEM_SUBMENU,       &touchscreen_submenu, 0 ),
 #endif
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
+    MENU_ITEM(0x51,LANG_MENU_BACK,                  MENUITEM_UP, 0, 0 ),
     {0}
 };
 
@@ -705,21 +700,21 @@ static CMenuItem histo_submenu_items[] = {
 static CMenu histo_submenu = {0x25,LANG_MENU_HISTO_TITLE, NULL, histo_submenu_items };
 
 static CMenuItem raw_exceptions_submenu_items[] = {
-    #if defined CAM_HAS_VIDEO_BUTTON
-     MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_VIDEO,                MENUITEM_BOOL,      &conf.save_raw_in_video, 0 ),
-    #endif
-    #if defined(CAMERA_s3is)
-    	MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_SPORTS,                MENUITEM_BOOL,      &conf.save_raw_in_sports, 0 ),
-    #endif
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_BURST,                MENUITEM_BOOL,      &conf.save_raw_in_burst, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_TIMER,                MENUITEM_BOOL,      &conf.save_raw_in_timer, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_EDGEOVERLAY,          MENUITEM_BOOL,      &conf.save_raw_in_edgeoverlay, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_AUTO,                 MENUITEM_BOOL,      &conf.save_raw_in_auto, 0 ),
-		#if CAM_BRACKETING
-    	MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_EV_BRACKETING,                MENUITEM_BOOL,      &conf.save_raw_in_ev_bracketing, 0 ),
-		#endif
-    MENU_ITEM(0x5c,LANG_MENU_RAW_WARN,                MENUITEM_BOOL,      &conf.raw_exceptions_warn, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                           MENUITEM_UP, 0, 0 ),
+#if defined CAM_HAS_VIDEO_BUTTON
+    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_VIDEO,         MENUITEM_BOOL,      &conf.save_raw_in_video, 0 ),
+#endif
+#if defined(CAMERA_s3is)
+    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_SPORTS,        MENUITEM_BOOL,      &conf.save_raw_in_sports, 0 ),
+#endif
+    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_BURST,         MENUITEM_BOOL,      &conf.save_raw_in_burst, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_TIMER,         MENUITEM_BOOL,      &conf.save_raw_in_timer, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_EDGEOVERLAY,   MENUITEM_BOOL,      &conf.save_raw_in_edgeoverlay, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_AUTO,          MENUITEM_BOOL,      &conf.save_raw_in_auto, 0 ),
+#if CAM_BRACKETING
+    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_EV_BRACKETING, MENUITEM_BOOL,      &conf.save_raw_in_ev_bracketing, 0 ),
+#endif
+    MENU_ITEM(0x5c,LANG_MENU_RAW_WARN,                  MENUITEM_BOOL,      &conf.raw_exceptions_warn, 0 ),
+    MENU_ITEM(0x51,LANG_MENU_BACK,                      MENUITEM_UP, 0, 0 ),
     {0}
 };
 static CMenu raw_exceptions_submenu = {0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS_TITLE, NULL, raw_exceptions_submenu_items };
@@ -779,87 +774,9 @@ static CMenuItem root_menu_items[] = {
     {0}
 };
 
-static CMenu root_menu = {0x20,LANG_MENU_MAIN_TITLE, NULL, root_menu_items };
+CMenu root_menu = {0x20,LANG_MENU_MAIN_TITLE, NULL, root_menu_items };
 
 static int gui_user_menu_flag;
-
-void rinit(){
-	// Erase screen if switching from user menu to main menu
-	// in case the user menu is larger than the main menu
-	// otherwise it leaves remnants of the user menu above and below
-	// the main menu.
-    draw_restore();
-	gui_menu_init(&root_menu);
-}
-
-//-------------------------------------------------------------------
-void
-mod_user_menu(CMenuItem curr_menu_item, int* cur_memnu_item_indx, int mod) {
-int i;
-CMenuItem tmp_menu_item;
-	switch(mod) {
-
-		case 0:
-			/*
-			 * Delete user menu entry by sliding all the lower valid/existing entries up.
-			 */
-
-			if (*cur_memnu_item_indx == 0) /* don't allow deleting "user menu" */
-				break;
- 			for(i = *cur_memnu_item_indx; user_submenu_items[i].text; i++) {
- 				user_submenu_items[i] = user_submenu_items[i+1];
- 			}
-
- 			/*
- 			 * there were no valid entries below this one, so
- 			 * the index pointer must be decremented.
- 			 */
- 			if(!user_submenu_items[*cur_memnu_item_indx].text)
- 				*cur_memnu_item_indx -= 1;
-
- 			break;
-
- 		case 1:
- 			/*
- 			 * Insert new Item at end of existing entries
- 			 */
- 			for(i = 1; i < USER_MENU_ITEMS + 1; i++) {
- 				if(!user_submenu_items[i].text) {
- 					user_submenu_items[i] = curr_menu_item;
- 					break;
-				}
- 			}
- 			break;
-
- 		case 2:
- 			/*
- 			 * Move entry up
- 			 */
-
- 			if((*cur_memnu_item_indx > 1)) {
- 				tmp_menu_item = user_submenu_items[*cur_memnu_item_indx -1];
- 				user_submenu_items[*cur_memnu_item_indx -1] = user_submenu_items[*cur_memnu_item_indx];
- 				user_submenu_items[*cur_memnu_item_indx] = tmp_menu_item;
- 				*cur_memnu_item_indx -=1;
- 			}
- 			break;
-
- 		case 3:
- 			/*
- 			 * Move entry down below next entry if next entry is not empty
- 			 */
- 			if (*cur_memnu_item_indx == 0) /* don't allow moving "user menu" */
- 				break;
- 			if((*cur_memnu_item_indx < (USER_MENU_ITEMS)) && (user_submenu_items[*cur_memnu_item_indx +1].text)) {
- 				tmp_menu_item = user_submenu_items[*cur_memnu_item_indx +1];
- 				user_submenu_items[*cur_memnu_item_indx + 1] = user_submenu_items[*cur_memnu_item_indx];
- 				user_submenu_items[*cur_memnu_item_indx] = tmp_menu_item;
- 				*cur_memnu_item_indx +=1;
- 			}
- 			break;
-
- 	}
-}
 
 //-------------------------------------------------------------------
 void cb_step_25() {
@@ -1113,33 +1030,32 @@ const char* gui_alt_power_enum(int change, int arg) {
 }
 
 //-------------------------------------------------------------------
+#if !CAM_VIDEO_QUALITY_ONLY
 const char* gui_video_bitrate_enum(int change, int arg) {
-	gui_enum_value_change(&conf.video_bitrate,change,VIDEO_BITRATE_STEPS);
+    static const char *modes[]={ "0.25x", "0.5x","0.75x", "1x", "1.25x", "1.5x", "1.75x", "2x", "2.5x", "3x"};
+	gui_enum_value_change(&conf.video_bitrate,change,sizeof(modes)/sizeof(modes[0]));
 
-    shooting_video_bitrate_change(conf.video_bitrate);
+    if (change)
+        shooting_video_bitrate_change(conf.video_bitrate);
 
-    return video_bitrate_strings[conf.video_bitrate];
+    return modes[conf.video_bitrate];
 }
 
+#endif
 
 //-------------------------------------------------------------------
 const char* gui_tv_override_koef_enum(int change, int arg) {
     static const char* modes[]={"Off", "1/100K", "1/10000", "1/1000","1/100","1/10", "1","10","100"};
 
-    conf.tv_override_koef+=change;
-   if (conf.tv_enum_type) {
-     if (conf.tv_override_koef<0)  conf.tv_override_koef=6;
-     else if (conf.tv_override_koef>6) conf.tv_override_koef=0;
-     else if (conf.tv_override_koef==1)	 conf.tv_override_koef=6;
-     else if (conf.tv_override_koef==5)	 conf.tv_override_koef=0;
-     else if (conf.tv_override_koef!=0 && conf.tv_override_koef!=6) conf.tv_override_koef=6;
-     }
-   else {
-    if (conf.tv_override_koef<0)
-        conf.tv_override_koef=sizeof(modes)/sizeof(modes[0])-1;
-    else if (conf.tv_override_koef>=(sizeof(modes)/sizeof(modes[0])))
-        conf.tv_override_koef=0;
+    if (conf.tv_enum_type && change)
+    {
+        if (conf.tv_override_koef == 6)
+            conf.tv_override_koef = 0;
+        else
+            conf.tv_override_koef = 6;
     }
+    else
+    	gui_enum_value_change(&conf.tv_override_koef,change,sizeof(modes)/sizeof(modes[0]));
 
     return modes[conf.tv_override_koef];
 }
@@ -1293,18 +1209,23 @@ const char* gui_iso_exposure_order_enum(int change, int arg) {
     return modes[conf.iso_exposure_order];
 }
 */
-const char* gui_av_override_enum(int change, int arg) {
+const char* gui_av_override_enum(int change, int arg)
+{
     static char buf[8];
-    short prop_id;
-    conf.av_override_value+=change;
+
+    conf.av_override_value += change;
+
     if (conf.av_override_value<0) conf.av_override_value=shooting_get_aperture_sizes_table_size()+6;
     else if (conf.av_override_value>shooting_get_aperture_sizes_table_size()+6) conf.av_override_value=0;
-    if (conf.av_override_value == 0)  return "Off";
-    else {
-     short prop_id=shooting_get_aperture_from_av96(shooting_get_av96_override_value());
-	 sprintf(buf, "%d.%02d", (int)prop_id/100, (int)prop_id%100 );
-	 return buf;
-	}
+
+    if (conf.av_override_value == 0)
+        return "Off";
+    else 
+    {
+        short prop_id=shooting_get_aperture_from_av96(shooting_get_av96_override_value());
+        sprintf(buf, "%d.%02d", (int)prop_id/100, (int)prop_id%100 );
+        return buf;
+    }
 }
 
 #if ZOOM_OVERRIDE
@@ -1375,21 +1296,21 @@ void gui_raw_develop(int arg){
 
 //-------------------------------------------------------------------
 
-static void gui_menuproc_reset_files(int arg){
-conf.lang_file[0] = 0;
-conf.menu_symbol_rbf_file[0] = 0;
-conf.menu_rbf_file[0] = 0;
-conf_save();
-gui_mbox_init(LANG_INFORMATION, LANG_MENU_RESTART_CAMERA, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-
+static void gui_menuproc_reset_files(int arg)
+{
+    conf.lang_file[0] = 0;
+    strcpy(conf.menu_symbol_rbf_file,DEFAULT_SYMBOL_FILE);
+    conf.menu_rbf_file[0] = 0;
+    conf_save();
+    gui_mbox_init(LANG_INFORMATION, LANG_MENU_RESTART_CAMERA, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 }
 
 //-------------------------------------------------------------------
 #ifdef OPT_DEBUGGING
+#ifndef CAM_DRYOS
 #define TASKLIST_MAX_LINES 12 // probably as much as will fit on screen
 #define TASKLIST_NUM_TASKS 64 // should be enough ?
 static void gui_debug_draw_tasklist(void) {
-#ifndef CAM_DRYOS
     int tasklist[TASKLIST_NUM_TASKS]; // max number of tasks we will look at
     char buf[40]; // a single line of the list
     int n_tasks,n_show_tasks,show_start;
@@ -1419,13 +1340,15 @@ static void gui_debug_draw_tasklist(void) {
         sprintf(buf,"%10s %8X",name,tasklist[show_start+i]);
         draw_string(64,16+16*i,buf, conf.osd_color);
     }
-#endif //CAM_DRYOS
 }
+#endif //CAM_DRYOS
 
 #define DEBUG_DISPLAY_NONE 0
 #define DEBUG_DISPLAY_PROPS 1
 #define DEBUG_DISPLAY_PARAMS 2
+#ifndef CAM_DRYOS
 #define DEBUG_DISPLAY_TASKS 3
+#endif
 
 static void gui_debug_shortcut(void) {
     static int lastcall = -1;
@@ -1440,12 +1363,15 @@ static void gui_debug_shortcut(void) {
             dump_memory();
         break;
         case 2:
+#ifndef CAM_DRYOS
             if(conf.debug_display == DEBUG_DISPLAY_TASKS) {
                 debug_tasklist_start += debug_display_direction*(TASKLIST_MAX_LINES-2); // a little intentional overlap
                 if(debug_tasklist_start >= TASKLIST_NUM_TASKS || debug_tasklist_start < 0)
                     debug_tasklist_start = 0;
             }
-            else if (conf.debug_display == DEBUG_DISPLAY_PROPS || conf.debug_display == DEBUG_DISPLAY_PARAMS) {
+            else
+#endif
+            if (conf.debug_display == DEBUG_DISPLAY_PROPS || conf.debug_display == DEBUG_DISPLAY_PARAMS) {
                 conf.debug_propcase_page += debug_display_direction*1;
                 if(conf.debug_propcase_page > 128 || conf.debug_propcase_page < 0)
                     conf.debug_propcase_page = 0;
@@ -1457,8 +1383,9 @@ static void gui_debug_shortcut(void) {
     }
 }
 
-//-------------------------------------------------------------------
 #endif
+
+//-------------------------------------------------------------------
 
 #if CAM_MULTIPART
 void card_break_proc(unsigned int btn){
@@ -1489,9 +1416,6 @@ static volatile int gui_restore;
 static volatile int gui_in_redraw;
 static int gui_splash, gui_splash_mode;
 static char osd_buf[32];
-#ifdef OPTIONS_AUTOSAVE
-static Conf old_conf;
-#endif
 
 //-------------------------------------------------------------------
 void gui_init()
@@ -1607,12 +1531,17 @@ static void gui_handle_splash(void) {
 //-------------------------------------------------------------------
 #ifdef OPTIONS_AUTOSAVE
 
-static void conf_store_old_settings() {
-    old_conf=conf;
+static Conf old_conf;
+
+static void conf_store_old_settings()
+{
+    old_conf = conf;
 }
 
-static int conf_save_new_settings_if_changed() {
-    if (memcmp(&old_conf, &conf, sizeof(Conf)) != 0) {
+static int conf_save_new_settings_if_changed()
+{
+    if (memcmp(&old_conf, &conf, sizeof(Conf)) != 0)
+    {
 		user_menu_save();
         conf_save();
         conf_store_old_settings();
@@ -2160,9 +2089,10 @@ void gui_draw_debug_vals_osd() {
         }
     }
 
-    if(conf.debug_display == DEBUG_DISPLAY_TASKS) {
+#ifndef CAM_DRYOS
+    if(conf.debug_display == DEBUG_DISPLAY_TASKS)
             gui_debug_draw_tasklist();
-    }
+#endif
 #endif
 }
 
@@ -2551,56 +2481,6 @@ static void gui_draw_lang_selected(const char *fn) {
 }
 void gui_draw_load_lang(int arg) {
     module_fselect_init(LANG_STR_SELECT_LANG_FILE, conf.lang_file, "A/CHDK/LANG", gui_draw_lang_selected);
-}
-
-CMenuItem* find_mnu(CMenu *curr_menu, int itemid )
-{
-	int gui_menu_curr_item;
-	CMenuItem* rv=0;
-
-	if ( itemid==0 )
-		return 0;		
-
-	gui_menu_curr_item = 0;
-	while(curr_menu->menu[gui_menu_curr_item].text) {
-		if ( lang_strhash31(curr_menu->menu[gui_menu_curr_item].text) == itemid){
-			return (CMenuItem*) &(curr_menu->menu[gui_menu_curr_item]);
-		}
-		if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_SUBMENU)
-			if (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU) {
-				rv = find_mnu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), itemid);
-				if ( rv )
-					return rv;
-			}
-		gui_menu_curr_item++;
-	}
-	return 0;
-}
-
-void user_menu_save() {
-    int x;
-	for (x=0; x<USER_MENU_ITEMS; x++) {
-		/*
-		 * First entry in user_submenu_items is reserved for the "Main Menu"
- 		 * conf.user_menu_vars only traks/saves the real user entries.
- 		 */
- 		conf.user_menu_vars[x] = lang_strhash31(user_submenu_items[x+1].text);
-	}
-}
-
-void user_menu_restore() {
-    int x;
-	CMenuItem* item=0;
-
- 	for (x=0; x<USER_MENU_ITEMS; x++) {
- 		/*
- 		 * First entry in user_submenu_items is reserved for the "Main Menu"
- 		 * conf.user_menu_vars only traks/saves the real user entries.
- 		 */
- 		 item = find_mnu(&root_menu, conf.user_menu_vars[x]);
-		 if ( item )
-			user_submenu_items[x+1] = *item;
- 	}
 }
 
 #ifdef OPT_DEBUGGING
