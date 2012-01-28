@@ -47,7 +47,6 @@ extern int _taskIdListGet(int *idlist,int max); // VxWorks only for now
 extern void _taskSuspend(int taskId);
 extern void _taskResume(int taskId);
 extern int _errnoOfTaskGet(int tid);
-extern long _IsStrobeChargeCompleted();
 
 extern long _SetEventFlag(void *flag, long what);
 extern long _CheckAnyEventFlag(void *flag, long mask, long *res);

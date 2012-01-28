@@ -1,166 +1,18 @@
-#include "camera.h"
 #include "stdlib.h"
 #include "keyboard.h"
 #include "platform.h"
-#include "histogram.h"
-#include "core.h"
 #include "lang.h"
 #include "conf.h"
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_lang.h"
-#include "gui_batt.h"
-#include "gui_usb.h"
-#include "gui_space.h"
-#include "gui_grid.h"
 #include "gui_osd.h"
-#include "modules.h"
 
 //-------------------------------------------------------------------
-void gui_osd_kbd_process();
-void gui_osd_draw(int enforce_redraw);
-
-gui_handler layoutGuiHandler =  { GUI_MODE_OSD, gui_osd_draw, gui_osd_kbd_process, gui_default_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };    // THIS IS OSD LAYOUT EDITOR
-
-//-------------------------------------------------------------------
-typedef struct {
-    int     title;
-    OSD_pos *pos;
-    OSD_pos size;
-} OSD_elem;
-
-static OSD_elem osd[]={
-    {LANG_OSD_LAYOUT_EDITOR_HISTO,      &conf.histo_pos,        {HISTO_WIDTH+2, HISTO_HEIGHT}   },
-    {LANG_OSD_LAYOUT_EDITOR_DOF_CALC,   &conf.dof_pos,          {23*FONT_WIDTH, 2*FONT_HEIGHT}  },
-    {LANG_OSD_LAYOUT_EDITOR_STATES,     &conf.mode_state_pos,   {12*FONT_WIDTH, 4*FONT_HEIGHT}  },
-    {LANG_OSD_LAYOUT_EDITOR_RAW,        &conf.mode_raw_pos,     {7*FONT_WIDTH, FONT_HEIGHT}     },
-    {LANG_OSD_LAYOUT_EDITOR_MISC,       &conf.values_pos,       {9*FONT_WIDTH, 9*FONT_HEIGHT}   },
-    {LANG_OSD_LAYOUT_EDITOR_BAT_ICON,   &conf.batt_icon_pos,    {28, 12}                        },
-    {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON, &conf.space_icon_pos,   {23, 15}                        },
-    {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON, &conf.space_ver_pos,    {3, 50}                         },
-    {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON, &conf.space_hor_pos,    {50, 3}                         },
-    {LANG_OSD_LAYOUT_EDITOR_BAT_TEXT,   &conf.batt_txt_pos,     {5*FONT_WIDTH, FONT_HEIGHT}     },
-    {LANG_OSD_LAYOUT_EDITOR_SPACE_TEXT, &conf.space_txt_pos,    {5*FONT_WIDTH, FONT_HEIGHT}     },
-    {LANG_OSD_LAYOUT_EDITOR_CLOCK,      &conf.clock_pos,        {5*FONT_WIDTH, FONT_HEIGHT}     },
-    {LANG_OSD_LAYOUT_EDITOR_TEMP,       &conf.temp_pos,         {9*FONT_WIDTH, FONT_HEIGHT}     },
-    {LANG_OSD_LAYOUT_EDITOR_VIDEO,      &conf.mode_video_pos,   {9*FONT_WIDTH, 4*FONT_HEIGHT}   },
-    {LANG_OSD_LAYOUT_EDITOR_EV,         &conf.mode_ev_pos,      {12*FONT_WIDTH, FONT_HEIGHT}    },
-#if CAM_EV_IN_VIDEO
-    {LANG_OSD_LAYOUT_EDITOR_EV_VIDEO,   &conf.ev_video_pos,     {70, 24}},
-#endif
-    {LANG_OSD_LAYOUT_EDITOR_USB_INFO,   &conf.usb_info_pos,     {31, 14}},  
-    {0}
-};
-static int osd_to_draw;
-static int curr_item;
 static char osd_buf[64];
-
-static int step;
 
 static DOF_TYPE dof;
 static EXPO_TYPE expo;
-
-#define OSD_STATE    0
-#define OSD_MISC     1
-
-unsigned char clip8(signed short x) { if (x<0) x=0; else if (x>255) x=255; return x; }
-
-//-------------------------------------------------------------------
-void gui_osd_init()
-{
-    osd_to_draw = 1;
-    curr_item = 0;
-    step = 10;
-    draw_restore();
-}
-
-//-------------------------------------------------------------------
-void gui_draw_osd_le(int arg)
-{
-    gui_set_mode(&layoutGuiHandler);
-    gui_osd_init();
-}
-
-//-------------------------------------------------------------------
-void gui_osd_draw(int enforce_redraw)
-{
-    if (osd_to_draw)
-    {
-        int i;
-        draw_restore();
-        gui_osd_draw_histo();
-        gui_osd_draw_dof();
-        gui_batt_draw_osd();
-        gui_space_draw_osd();
-        gui_osd_draw_state();
-        gui_osd_draw_raw_info();
-        gui_osd_draw_values(2);
-        gui_osd_draw_clock(0,0,0);
-        gui_osd_draw_temp();
-      #if CAM_EV_IN_VIDEO
-        gui_osd_draw_ev_video(1);
-      #endif
-        gui_usb_draw_osd();
-        for (i=1; i<=2; ++i)
-        {
-            draw_rect((osd[curr_item].pos->x>=i)?osd[curr_item].pos->x-i:0, (osd[curr_item].pos->y>=i)?osd[curr_item].pos->y-i:0, 
-                      osd[curr_item].pos->x+osd[curr_item].size.x+i-1, osd[curr_item].pos->y+osd[curr_item].size.y+i-1,
-                      COLOR_GREEN);
-        }
-        sprintf(osd_buf, " %s:  x:%d y:%d s:%d ", lang_str(osd[curr_item].title), osd[curr_item].pos->x, osd[curr_item].pos->y, step);
-        draw_string(0, (osd[curr_item].pos->x<strlen(osd_buf)*FONT_WIDTH+4 && osd[curr_item].pos->y<FONT_HEIGHT+4)?camera_screen.height-FONT_HEIGHT:0,
-                    osd_buf, MAKE_COLOR(COLOR_RED, COLOR_WHITE));
-        osd_to_draw = 0;
-    }
-}
-
-//-------------------------------------------------------------------
-void gui_osd_kbd_process()
-{
-    switch (kbd_get_autoclicked_key())
-    {
-    case KEY_LEFT:
-        if (osd[curr_item].pos->x > 0)
-        {
-            osd[curr_item].pos->x-=(osd[curr_item].pos->x>=step)?step:osd[curr_item].pos->x;
-            osd_to_draw = 1;
-        }
-        break;
-    case KEY_RIGHT:
-        if (osd[curr_item].pos->x < camera_screen.width-osd[curr_item].size.x)
-        {
-            osd[curr_item].pos->x+=(camera_screen.width-osd[curr_item].size.x-osd[curr_item].pos->x>step)?step:camera_screen.width-osd[curr_item].size.x-osd[curr_item].pos->x;
-            osd_to_draw = 1;
-        } else
-            osd[curr_item].pos->x = camera_screen.width-osd[curr_item].size.x;
-        break;
-    case KEY_UP:
-        if (osd[curr_item].pos->y > 0)
-        {
-            osd[curr_item].pos->y-=(osd[curr_item].pos->y>=step)?step:osd[curr_item].pos->y;
-            osd_to_draw = 1;
-        }
-        break;
-    case KEY_DOWN:
-        if (osd[curr_item].pos->y < camera_screen.height-osd[curr_item].size.y)
-        {
-            osd[curr_item].pos->y+=(camera_screen.height-osd[curr_item].size.y-osd[curr_item].pos->y>step)?step:camera_screen.height-osd[curr_item].size.y-osd[curr_item].pos->y;
-            osd_to_draw = 1;
-        } else
-            osd[curr_item].pos->y = camera_screen.height-osd[curr_item].size.y;
-        break;
-    case KEY_SET:
-        ++curr_item;
-        if (!osd[curr_item].pos) 
-            curr_item = 0;
-        osd_to_draw = 1;
-        break;
-    case KEY_DISPLAY:
-        step=(step==1)?10:1;
-        osd_to_draw = 1;
-        break;
-    }
-}
 
 //-------------------------------------------------------------------
 static void print_dist(char *buf, float dist, int max_dist)
@@ -179,20 +31,22 @@ static void print_dist(char *buf, float dist, int max_dist)
     }
 }
 
-static void sprintf_dist(char *buf, float dist)
+// Append scaled value display of 'dist' to 'osd_buf'
+static void sprintf_dist(float dist)
 {
-    print_dist(buf, dist, MAX_DIST);
+    print_dist(osd_buf+strlen(osd_buf), dist, MAX_DIST);
 }
 
-static void sprintf_dist_hyp(char *buf, float dist)
+// Append scaled value display of 'dist' to 'osd_buf'
+static void sprintf_dist_hyp(float dist)
 {
-    print_dist(buf, dist, MAX_DIST_HYPER_FOCAL);
+    print_dist(osd_buf+strlen(osd_buf), dist, MAX_DIST_HYPER_FOCAL);
 }
 
-static void sprintf_canon_values(char *buf, short dist) 
+static void sprintf_canon_values(short dist) 
 {
     short v=((dist<0)?-dist:dist);	
-    sprintf(buf, "%s%d.%02d", ((dist<0)?"-":""), v/96, v%96);
+    sprintf(osd_buf+strlen(osd_buf), "%s%d.%02d", ((dist<0)?"-":""), v/96, v%96);
 }
 
 
@@ -275,104 +129,82 @@ void gui_osd_calc_expo_param()
 
 void gui_osd_draw_dof()
 {
-    //gui_osd_calc_dof();
-    //strcpy(osd_buf, "");
-    draw_string(conf.dof_pos.x, conf.dof_pos.y, "S/R1/R2:", conf.osd_color);
-    sprintf_dist(osd_buf, dof.subject_distance);
-    int i=strlen(osd_buf);
-    osd_buf[i]='/';
-    sprintf_dist(osd_buf+i+1, dof.near_limit);
-    i=strlen(osd_buf);
-    osd_buf[i]='/';
-    sprintf_dist(osd_buf+i+1, dof.far_limit);
-    draw_string(conf.dof_pos.x+8*FONT_WIDTH, conf.dof_pos.y, osd_buf, conf.osd_color);
+    strcpy(osd_buf, "S/R1/R2:");
+    sprintf_dist(dof.subject_distance);
+    strcat(osd_buf,"/");
+    sprintf_dist(dof.near_limit);
+    strcat(osd_buf,"/");
+    sprintf_dist(dof.far_limit);
+    draw_string(conf.dof_pos.x, conf.dof_pos.y, osd_buf, conf.osd_color);
     
-	draw_string(conf.dof_pos.x, conf.dof_pos.y+FONT_HEIGHT, "DOF/HYP:", conf.osd_color);
-    sprintf_dist(osd_buf, dof.depth_of_field);
-    int j=strlen(osd_buf);
-    osd_buf[j]='/';
-    sprintf_dist_hyp(osd_buf+j+1, dof.hyperfocal_distance);
-    draw_string(conf.dof_pos.x+8*FONT_WIDTH, conf.dof_pos.y+FONT_HEIGHT, osd_buf, conf.osd_color);
+    strcpy(osd_buf, "DOF/HYP:");
+    sprintf_dist(dof.depth_of_field);
+    strcat(osd_buf,"/");
+    sprintf_dist_hyp(dof.hyperfocal_distance);
+    draw_string(conf.dof_pos.x, conf.dof_pos.y+FONT_HEIGHT, osd_buf, conf.osd_color);
 }
 
+//-------------------------------------------------------------------
 static short n, m; //string number
 
-void gui_print_osd_state_string_int(const char * title, int value)
+static void gui_print_osd_state_string()
 {
-    sprintf(osd_buf, "%s%-12d", title, value);
-    osd_buf[12]=0;  // limit length to 12 max
-    draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+n, osd_buf, conf.osd_color_override);
-    n+=FONT_HEIGHT;
-}
-
-void gui_print_osd_state_string_chr(const char *title, const char *value)
-{
-    sprintf(osd_buf, "%s%-12s", title, value);
-    osd_buf[12]=0;  // limit length to 12 max
-    draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+n, osd_buf, conf.osd_color_override);
-    n+=FONT_HEIGHT;
-}
-
-void gui_print_osd_state_string_float(const char * title, const char * fmt, int divisor, int value)
-{
-    strcpy(osd_buf, title);
-    sprintf(osd_buf+strlen(osd_buf), fmt, (int)(value/divisor), (int)(value%divisor));
     sprintf(osd_buf+strlen(osd_buf), "%12s", "");
     osd_buf[12]=0;  // limit length to 12 max
     draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+n, osd_buf, conf.osd_color_override);
     n+=FONT_HEIGHT;
 }
 
-void gui_print_osd_misc_string_int(const char * title, int value)
+void gui_print_osd_state_string_int(const char * title, int value)
 {
-    sprintf(osd_buf, "%s%-9d", title, value);
-    osd_buf[9]=0;  // limit length to 9 max
-    draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
-    m+=FONT_HEIGHT;
+    sprintf(osd_buf, "%s%d", title, value);
+    gui_print_osd_state_string();
 }
 
-/*
-void gui_print_osd_misc_string_float(const char * title, const char * fmt, int divisor, int value)
+void gui_print_osd_state_string_chr(const char *title, const char *value)
 {
-char s[16];	
-strcpy(osd_buf, title);
-sprintf(s, fmt, (int)(value/divisor), (int)(value%divisor));
-sprintf(osd_buf+strlen(osd_buf), "%6s", s);
-//osd_buf[8]=0;    	
-draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
-m+=FONT_HEIGHT;
+    sprintf(osd_buf, "%s%s", title, value);
+    gui_print_osd_state_string();
 }
-*/
 
-void gui_print_osd_misc_string_float(const char * title, const char * fmt, int divisor, int value)
+void gui_print_osd_state_string_float(const char * fmt, int divisor, int value)
 {
-    strcpy(osd_buf, title);
-    sprintf(osd_buf+strlen(osd_buf), fmt, (int)(value/divisor), (int)(value%divisor));
+    sprintf(osd_buf, fmt, (int)(value/divisor), (int)(value%divisor));
+    gui_print_osd_state_string();
+}
+
+static void gui_print_osd_misc_string()
+{
     sprintf(osd_buf+strlen(osd_buf), "%9s", "");
     osd_buf[9]=0;  // limit length to 9 max
     draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
     m+=FONT_HEIGHT;
 }
 
+void gui_print_osd_misc_string_int(const char * title, int value)
+{
+    sprintf(osd_buf, "%s%d", title, value);
+    gui_print_osd_misc_string();
+}
+
+void gui_print_osd_misc_string_float(const char * fmt, int divisor, int value)
+{
+    sprintf(osd_buf, fmt, (int)(value/divisor), (int)(value%divisor));
+    gui_print_osd_misc_string();
+}
 
 void gui_print_osd_misc_string_dist(const char * title, int value)
 {
     strcpy(osd_buf, title);
-    sprintf_dist(osd_buf+strlen(osd_buf), (float)value);
-    sprintf(osd_buf+strlen(osd_buf), "%9s", "");
-    osd_buf[9]=0;  // limit length to 9 max
-    draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
-    m+=FONT_HEIGHT;
+    sprintf_dist((float)value);
+    gui_print_osd_misc_string();
 }
 
 void gui_print_osd_misc_string_canon_values(const char * title, short value)
 {
     strcpy(osd_buf, title);
-    sprintf_canon_values(osd_buf+strlen(osd_buf), value);
-    sprintf(osd_buf+strlen(osd_buf), "%9s", "");
-    osd_buf[9]=0;  // limit length to 9 max
-    draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
-    m+=FONT_HEIGHT;
+    sprintf_canon_values(value);
+    gui_print_osd_misc_string();
 }
 
 //-------------------------------------------------------------------
@@ -414,7 +246,7 @@ void gui_osd_draw_state()
         if(kbd_is_key_pressed(KEY_SHOOT_HALF)) 
         { 
             t=(int)(shooting_get_shutter_speed_from_tv96(shooting_get_tv96())*100000);	
-            gui_print_osd_state_string_float("TV:", "%d.%05d ", 100000, t);
+            gui_print_osd_state_string_float("TV:%d.%05d", 100000, t);
         }
         else 
         {
@@ -423,12 +255,12 @@ void gui_osd_draw_state()
             else  
             {
                 t=(int)(shooting_get_shutter_speed_override_value()*100000);
-                gui_print_osd_state_string_float("TV:", "%d.%05d ", 100000, t);
+                gui_print_osd_state_string_float("TV:%d.%05d", 100000, t);
             }
         }
     }
     if ((conf.av_override_value && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD)  
-        gui_print_osd_state_string_float("AV:", "%d.%02d ", 100, shooting_get_aperture_from_av96(shooting_get_av96_override_value()));
+        gui_print_osd_state_string_float("AV:%d.%02d", 100, shooting_get_aperture_from_av96(shooting_get_av96_override_value()));
 #if CAM_HAS_ND_FILTER
     if ((conf.nd_filter_state && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD) 
         gui_print_osd_state_string_chr("NDFILTER:", ((conf.nd_filter_state==1)?"IN":"OUT"));
@@ -502,13 +334,11 @@ void gui_osd_draw_values(int showtype)
              sprintf(osd_buf, "Z:%d/%d.%dx%8s", zp, fl/10, fl%10, "");
              break;
         }
-        osd_buf[9]=0;
-        draw_string(conf.values_pos.x, conf.values_pos.y, osd_buf, conf.osd_color);
-        m+=FONT_HEIGHT;
+        gui_print_osd_misc_string();
     }
 
     if ((conf.values_show_real_aperture) && (showtype==1)) 
-        gui_print_osd_misc_string_float("Av :", "%d.%02d ", 100, shooting_get_real_aperture());
+        gui_print_osd_misc_string_float("Av :%d.%02d", 100, shooting_get_real_aperture());
     if ((conf.show_dof==DOF_SHOW_IN_MISC) && (showtype))
     { 
         //if (kbd_is_key_pressed(KEY_SHOOT_HALF) && (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH)) 	
@@ -532,7 +362,7 @@ void gui_osd_draw_values(int showtype)
         if (conf.values_show_ev_seted	) gui_print_osd_misc_string_canon_values("Evs:", expo.ev96_seted	);
         if (conf.values_show_overexposure) gui_print_osd_misc_string_canon_values("dE :", expo.dev96);
         if (conf.values_show_canon_overexposure	) gui_print_osd_misc_string_canon_values("dEc:", expo.dev96_canon);
-        if (conf.values_show_luminance) gui_print_osd_misc_string_float("B  :", "%d.%02d ", 100, expo.b);
+        if (conf.values_show_luminance) gui_print_osd_misc_string_float("B  :%d.%02d", 100, expo.b);
     }
 }
 
@@ -615,7 +445,7 @@ void gui_osd_draw_movie_time_left()
         if ((conf.video_mode == 0 && conf.fast_movie_quality_control==1) || conf.video_bitrate != VIDEO_DEFAULT_BITRATE)
         {
             // gui_print_osd_state_string_chr("Bitrate: ",video_bitrate_strings[conf.video_bitrate]);
-            sprintf(osd_buf, "Bit:%5s",video_bitrate_strings[conf.video_bitrate]);
+            sprintf(osd_buf, "Bit:%5s",gui_video_bitrate_enum(0,0));
             draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y+2*FONT_HEIGHT, osd_buf, conf.osd_color);
         }
 #endif
@@ -672,22 +502,21 @@ void gui_osd_draw_movie_time_left()
         {
             if (elapsed > 1)
             {
+                int time_yofst = 0;
                 if (conf.show_movie_time == 3)
                 {
-                    sprintf(osd_buf, "%04d KB/s", avg_use);
-                    draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y, osd_buf, conf.osd_color);
-                    sprintf(osd_buf, "-%02d:%02d:%02d", hour, min, sec);
-                    draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y+FONT_HEIGHT, osd_buf, conf.osd_color);
+                    // Both lines displayed so offset time value below bit rate
+                    time_yofst = FONT_HEIGHT;
                 }
-                if (conf.show_movie_time == 2)
+                if (conf.show_movie_time & 2)
                 {
                     sprintf(osd_buf, "%04d KB/s", avg_use);
                     draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y, osd_buf, conf.osd_color);
                 }
-                if (conf.show_movie_time == 1)
+                if (conf.show_movie_time & 1)
                 {
                     sprintf(osd_buf, "-%02d:%02d:%02d", hour, min, sec);
-                    draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y, osd_buf, conf.osd_color);
+                    draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y+time_yofst, osd_buf, conf.osd_color);
                 }
             }
 
@@ -734,9 +563,9 @@ void gui_osd_draw_temp() {
 }
 
 //-------------------------------------------------------------------
-#if CAM_EV_IN_VIDEO
 void gui_osd_draw_ev_video(int visible)
 {
+#if CAM_EV_IN_VIDEO
     int x0=conf.ev_video_pos.x, y0=conf.ev_video_pos.y;
     int i, deltax;
 
@@ -758,5 +587,5 @@ void gui_osd_draw_ev_video(int visible)
     draw_line(x0+33,y0+18,x0+33,y0+22,conf.osd_color);
     draw_line(x0+36,y0+18,x0+36,y0+22,conf.osd_color);
     draw_line(x0+37,y0+19,x0+37,y0+22,conf.osd_color);
-}
 #endif
+}

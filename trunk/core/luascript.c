@@ -1970,7 +1970,7 @@ static int luaCB_get_config_value( lua_State* L ) {
             case CONF_CHAR_PTR:
                 lua_pushstring(L, configVal.str);
             break;
-            case CONF_OSD_POS_PTR:
+            case CONF_OSD_POS:
                 lua_pushnumber(L, configVal.pos.x);
                 lua_pushnumber(L, configVal.pos.y); ret++;
             break;

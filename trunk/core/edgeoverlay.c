@@ -852,7 +852,7 @@ int _module_loader( unsigned int* chdk_export_list )
 	 return 1;
 
   conf_info[0].cl = MAKE_COLOR(0, COLOR_BLUE);
-  config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/edgeovr.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0, 0);
+  config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/edgeovr.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0);
 
   module_restore_edge((void**)&edgebuf, (int*)&fsm_state);
 

@@ -17,8 +17,11 @@
 #define CONF_INT_PTR        3
 // pointer to the string
 #define CONF_CHAR_PTR       4
-// pointer to the OSD_pos
-#define CONF_OSD_POS_PTR    5
+// OSD_pos
+#define CONF_OSD_POS        5
+
+// Name of default symbol file (for reset)
+#define DEFAULT_SYMBOL_FILE "A/CHDK/SYMBOLS/icon_10.rbf"
 
 typedef struct {
     unsigned short  x, y;
@@ -356,9 +359,6 @@ extern int conf_setValue(unsigned short id, tConfigVal configVal);
 #define NUM_IMG_EXTS 5    // .JPG .CRW .CR2 .THM .WAV (could add .AVI .MRK)
 extern const char* img_prefixes[NUM_IMG_PREFIXES];
 extern const char* img_exts[NUM_IMG_EXTS];
-// ugh, but various things need it
-#define VIDEO_BITRATE_STEPS 10
-extern const char *video_bitrate_strings[VIDEO_BITRATE_STEPS];
 
 extern int is_raw_enabled();
 
@@ -373,6 +373,7 @@ typedef struct {
         void            *ptr;
         int             i;
         color           cl;
+        OSD_pos         pos;
     };
     // Since only a few of the ConfInfo entries have a 'func' it saves space to not store the function addresses in the ConfInfo struct
     // handled in conf_info_func code
@@ -380,9 +381,10 @@ typedef struct {
 } ConfInfo;
 
 #define CONF_INFO(id, param, type, def, func) { id, sizeof( param ), type, &param, {def}/*, func*/ }
+#define CONF_INFO2(id, param, type, px, py)   { id, sizeof( param ), type, &param, {pos:{px,py}} }
 
 extern void config_save(const ConfInfo *conf_info, char *filename, int conf_num);
-extern void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void (*init_defaults)(), void (*info_func)(unsigned short id));
+extern void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void (*info_func)(unsigned short id));
 
 //-------------------------------------------------------------------
 

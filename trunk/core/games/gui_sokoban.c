@@ -486,7 +486,7 @@ int _module_loader( unsigned int* chdk_export_list )
   if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
 	  return 1;
 
-  config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/sokoban.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0, 0);
+  config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/sokoban.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0);
 
   return 0;
 }

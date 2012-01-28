@@ -65,13 +65,9 @@ extern void gui_menu_init(CMenu *menu_ptr);
 extern void gui_menu_kbd_process();
 extern void gui_menu_kbd_process_menu_btn();
 extern void gui_menu_draw(int enforce_redraw);
-extern void mod_user_menu(CMenuItem curr_menu_item, int* gui_menu_add_item, int mod);
 extern void gui_menu_force_redraw();
 extern void gui_activate_sub_menu(CMenu *sub_menu, int module_idx);
 extern void gui_menu_unload_module_menus();
 //-------------------------------------------------------------------
-
-// declared in gui.c
-extern CMenuItem* find_mnu(CMenu *curr_menu, int item);
 
 #endif

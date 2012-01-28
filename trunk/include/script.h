@@ -15,7 +15,6 @@
 #endif
 
 //-------------------------------------------------------------------
-extern const char *script_source_str;
 
 extern char script_title[36];
 extern char script_params[SCRIPT_NUM_PARAMS][28];
