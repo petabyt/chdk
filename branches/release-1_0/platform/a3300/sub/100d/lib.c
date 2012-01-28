@@ -2,13 +2,13 @@
 
 char *hook_raw_image_addr()   
 {
-		return (char*) 0x42075144;		//Found at FFB217F0	and had to manually adjust till image lined up a3300is
+		return (char*) 0x4207DB20;		//Found at FFB217F0 a3300is
 	
 }
 
 char *hook_alt_raw_image_addr() 
 {
-		return (char*) 0x42075144;		//Found at FFB217F0	and had to manually adjust till image lined up a3300is
+		return (char*) 0x4207DB20;		//Found at FFB217F0
 }
 
 long hook_raw_size()
