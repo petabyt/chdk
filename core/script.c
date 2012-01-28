@@ -579,6 +579,7 @@ static int script_action_stack(long p)
             else
                 action_pop();
             break;
+        case AS_TEXTBOX:
         case AS_FILE_BROWSER:
             // state_kbd_script_run is set to 0 when the file browser is started from a Lua script
             // it is reset back to 1 when the file browser exits and control is returned back to

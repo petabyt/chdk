@@ -16,7 +16,7 @@ LDLIBS= -lgcc
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(topdir)tools/link-boot.ld
 LDOPTS+=-Wl,-N,-Ttext,0x0016ee30 -r -Wl,-d
 
-OBJS=../gui_calendar.o ../gui_bench.o ../gui_read.o ../gui_debug.o ../dng.o ../gps.o \
+OBJS=../gui_calendar.o ../gui_bench.o ../gui_read.o ../gui_debug.o ../gui_tbox.o ../dng.o ../gps.o \
      ../gui_fselect.o ../nothumb.o ../gui_mpopup.o ../curves.o ../edgeoverlay.o \
      ../bitvector.o ../gui_palette.o ../gui_grid.o ../motion_detector.o ../zebra.o \
      ../games/gui_4wins.o ../games/gui_mastermind.o ../games/gui_reversi.o \

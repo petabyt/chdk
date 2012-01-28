@@ -19,6 +19,7 @@ enum STANDARD_ACTIONS
     AS_SCRIPT_READ_USB_MSG, // params: timeout
     AS_SCRIPT_WRITE_USB_MSG, // params: timeout, msg
     AS_FILE_BROWSER,
+    AS_TEXTBOX,
 };
 
 typedef int (*action_process)(long p);

@@ -313,8 +313,7 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 			&COLOR__EXPORTEDSYM_HISTO_BG_PLAY,
 			&COLOR__EXPORTEDSYM_HISTO_RG_PLAY,
 
-			module_tbox_get_version,
-			module_tbox_run,
+            module_tbox_load,
 
             config_save,
             config_restore,

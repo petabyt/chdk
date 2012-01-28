@@ -1119,7 +1119,7 @@ static void fselect_mpopup_rawop_cb(unsigned int actn) {
 	}
 }
 
-static void mkdir_cb(char* name)
+static void mkdir_cb(const char* name)
 {
 	if (name) {
 		sprintf(selected_file,"%s/%s",current_dir,name);
@@ -1129,7 +1129,7 @@ static void mkdir_cb(char* name)
 	}
 }
 
-static void rename_cb(char* name)
+static void rename_cb(const char* name)
 {
 	if (name) {
 		char newname[100];
@@ -1145,13 +1145,15 @@ static void fselect_mpopup_more_cb(unsigned int actn) {
 
     switch (actn) {
 	    case MPOPUP_MKDIR:
-			module_tbox_run( LANG_POPUP_MKDIR, LANG_PROMPT_MKDIR, "", 15, mkdir_cb);
+            if (module_tbox_load())
+                module_tbox_load()->textbox_init(LANG_POPUP_MKDIR, LANG_PROMPT_MKDIR, "", 15, mkdir_cb, 0);
             break;
         case MPOPUP_RMDIR:
             confirm_delete_directory();
             break;
         case MPOPUP_RENAME:
-			module_tbox_run( LANG_POPUP_RENAME, LANG_PROMPT_RENAME, selected->name, 15, rename_cb);
+            if (module_tbox_load())
+                module_tbox_load()->textbox_init(LANG_POPUP_RENAME, LANG_PROMPT_RENAME, selected->name, 15, rename_cb, 0);
             break;
 	}
     gui_fselect_redraw = 2;
@@ -1307,8 +1309,8 @@ void gui_fselect_kbd_process() {
             break;
         case KEY_LEFT:
             if (selected && selected->attr != 0xFF) {
-                i=MPOPUP_CUT|MPOPUP_COPY|MPOPUP_SELINV;
-				mpopup_rawop_flag=0;
+                i=MPOPUP_CUT|MPOPUP_COPY|MPOPUP_SELINV|MPOPUP_MORE;
+                mpopup_rawop_flag=0;
                 if (fselect_marked_count() > 0) {
                     i |= MPOPUP_DELETE;
                     if ( fselect_marked_count()>1 )
@@ -1318,34 +1320,31 @@ void gui_fselect_kbd_process() {
                         mpopup_rawop_flag |= MPOPUP_SUBTRACT;
                 }
 
-				if ( API_VERSION_MATCH_REQUIREMENT( module_tbox_get_version(), 1, 0 ) ) 
-						i |= MPOPUP_MORE;
-
                 if (marked_operation == MARKED_OP_CUT || marked_operation == MARKED_OP_COPY)
                     i |= MPOPUP_PASTE;
                 if (!(selected->attr & DOS_ATTR_DIRECTORY) || !(selected->name[0] == '.' && selected->name[1] == '.' && selected->name[2] == 0) ||//If item is not a folder or UpDir
-                     (selected->name[0] == 'D' && selected->name[1] == 'C' && selected->name[2] == 'I' && selected->name[3] == 'M') ||//If item is DCIM folder
-                     (selected->name[3] == 'C'))//If item is a DCIM sub folder
+                    (selected->name[0] == 'D' && selected->name[1] == 'C' && selected->name[2] == 'I' && selected->name[3] == 'M') ||//If item is DCIM folder
+                    (selected->name[3] == 'C'))//If item is a DCIM sub folder
                     i |= MPOPUP_PURGE;//Display PURGE RAW function in popup menu
                 if(selected->size == hook_raw_size())
                     mpopup_rawop_flag |= MPOPUP_RAW_DEVELOP;
 
-				if ( module_convert_dng_to_chdk_raw(0) )	// if dng module exist
-                if((fselect_marked_count()>1)||(selected->size > hook_raw_size()))
-    	                mpopup_rawop_flag |= MPOPUP_DNG_TO_CRW;
+                if ( module_convert_dng_to_chdk_raw(0) )	// if dng module exist
+                    if((fselect_marked_count()>1)||(selected->size > hook_raw_size()))
+                        mpopup_rawop_flag |= MPOPUP_DNG_TO_CRW;
 
-		if (selected->name[9] == 'B' && selected->name[10] == 'I' && selected->name[11] == 'N') //If item is DCIM folder
+                if (selected->name[9] == 'B' && selected->name[10] == 'I' && selected->name[11] == 'N') //If item is DCIM folder
                     i |= MPOPUP_CHDK_REPLACE;
 
-				if ( mpopup_rawop_flag )
-					i |= MPOPUP_RAWOPS;
+                if ( mpopup_rawop_flag )
+                    i |= MPOPUP_RAWOPS;
 
 
-				mpopup_more_flag = MPOPUP_MKDIR;
-				if (selected->attr & DOS_ATTR_DIRECTORY)
-            		mpopup_more_flag |=MPOPUP_RMDIR;
+                mpopup_more_flag = MPOPUP_MKDIR;
+                if (selected->attr & DOS_ATTR_DIRECTORY)
+                    mpopup_more_flag |=MPOPUP_RMDIR;
                 if ( !(selected->name[0] == '.' && selected->name[1] == '.' && selected->name[2] == 0) ) //If item is not UpDir
-            		mpopup_more_flag |=MPOPUP_RENAME;
+                    mpopup_more_flag |=MPOPUP_RENAME;
 
                 module_mpopup_init( popup, i, fselect_mpopup_cb, 0);
             }
@@ -1470,12 +1469,13 @@ int _module_run(int moduleidx, int argn, int* arguments)
   // Autounloading is unsafe because it should exists to catch finalization of mpopup
   module_set_flags(module_idx, MODULE_FLAG_DISABLE_AUTOUNLOAD);
 
-  if ( argn == 5 ) {
-  gui_fselect_init( arguments[0], (const char*) arguments[1], (const char*) arguments[2], (void*)arguments[3]);
-  gui_fselect_set_key_redraw(arguments[4]);
+  if ( argn == 5 )
+  {
+      gui_fselect_init( arguments[0], (const char*) arguments[1], (const char*) arguments[2], (void*)arguments[3]);
+      gui_fselect_set_key_redraw(arguments[4]);
   }
   else
-    gui_fselect_init(LANG_STR_FILE_BROWSER, "A", "A", NULL);
+      gui_fselect_init(LANG_STR_FILE_BROWSER, "A", "A", NULL);
 
   return 0;
 }
