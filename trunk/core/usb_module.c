@@ -28,7 +28,6 @@ extern int usb_sync_wait ;
 extern int usb_remote_active ;
 extern int stime_stamp ;
 extern int sync_counter;
-extern int usb_sync_wait ;
 
 extern int get_usb_power(int) ;
 
@@ -77,7 +76,7 @@ extern void debug_error(int ) ;
 			break ;
 
 		case LM_RELEASE :
-			i =  get_usb_power(PULSE_COUNT) ;
+			i =  get_usb_power(LM_PULSE_COUNT) ;
 			switch( i )
 			{
 				case PLAYBACK_REVERSE :
@@ -319,6 +318,7 @@ void usb_shoot_module_normal()
 
 							case SW_TWO_PRESS :
 							case SW_RICOH_CA1 :
+								usb_sync_wait = 0;
 								logic_module_state = LM_RELEASE ;
 								kbd_key_release(KEY_SHOOT_FULL);
 								kbd_key_release(KEY_SHOOT_HALF);
@@ -468,7 +468,7 @@ void usb_shoot_module_zoom()
 			break ;
 
 		case LM_RELEASE :
-			switch( get_usb_power(PULSE_COUNT) )
+			switch( get_usb_power(LM_PULSE_COUNT) )
 			{
 				case ZOOM_STEP_OUT :
 					shooting_set_zoom_rel(1) ;
