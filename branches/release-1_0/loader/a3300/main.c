@@ -23,7 +23,7 @@ void __attribute__((noreturn)) my_restart()
 
 }
 
-#define LED_PR 0xC02200F0   // -> ASM1989 08.24.2010 found at  FF91E080  in sx200 was FF8E73D0
+#define LED_PR 0xC02200F0
 
 
 static void __attribute__((noreturn)) shutdown()

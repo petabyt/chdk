@@ -103,7 +103,7 @@ asm volatile (
 "    LDR     R1, [R2] \n" 
 "    ORR     R1, R1, #1 \n" 
 "    STR     R1, [R2] \n" 
-"    LDR     R0, =0xFFC35320 \n" 
+"    LDR     R0, =0xFFC35330 \n" 
 "    LDR     R1, =0x1900 \n" 
 "    LDR     R3, =0xF0CC \n" 
 "loc_FF81013C:\n"
@@ -176,7 +176,7 @@ asm volatile (
 "    SUB     SP, SP, #0x74 \n" 
 "    MOV     R1, #0x74 \n" 
 "    MOV     R0, SP \n" 
-"    BL      sub_FFB58AE0 \n" 
+"    BL      sub_FFB58AEC \n" 
 "    MOV     R0, #0x53000 \n" 
 "    STR     R0, [SP, #4] \n" 
 #if defined(OPT_CHDK_IN_EXMEM)

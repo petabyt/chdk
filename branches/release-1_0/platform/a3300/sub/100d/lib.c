@@ -2,13 +2,13 @@
 
 char *hook_raw_image_addr()   
 {
-		return (char*) 0x4207DB20;		//Found at FFB217F0 a3300is
+		return (char*) 0x42075144;		//Found at FFB217F0	and had to manually adjust till image lined up a3300is
 	
 }
 
 char *hook_alt_raw_image_addr() 
 {
-		return (char*) 0x4207DB20;		//Found at FFB217F0
+		return (char*) 0x42075144;		//Found at FFB217F0	and had to manually adjust till image lined up a3300is
 }
 
 long hook_raw_size()
@@ -46,15 +46,9 @@ void *vid_get_viewport_fb()
 	return (void*)0x40546b80;       // Found @0xffb1e2ac   a3300is          
 }
 
-void vid_bitmap_refresh() {
-	
-	extern int full_screen_refresh;
-	extern void _ScreenUnlock();
-	extern void _ScreenLock();
+extern void draw_filled_rect( int, int, int, int, int );
 
-	full_screen_refresh |= 3;
-	_ScreenLock();
-	_ScreenUnlock();
+void vid_bitmap_refresh()
+{
+	draw_filled_rect(0, 0, 360, 240, 0x00) ;
 }
-
-

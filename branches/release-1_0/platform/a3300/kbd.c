@@ -13,21 +13,19 @@ typedef struct {
 static long kbd_new_state[3];
 static long kbd_prev_state[3];
 static long kbd_mod_state[3];
-static KeyMap keymap[];
 static long last_kbd_key = 0;
 static int usb_power=0;
 static int remote_key, remote_count;
 static int shoot_counter=0;
 static long alt_mode_key_mask = 0x00000030; // disp + set
-static int alt_mode_led=0;
 extern void _GetKbdState(long*);
 
 #define DELAY_TIMEOUT 10000
 
 // override key and feather bits to avoid feather osd messing up chdk display in ALT mode
-#define KEYS_MASK0 (0x00000000)     // physw_status[0] was 7FC05
+#define KEYS_MASK0 (0x00000000)
 #define KEYS_MASK1 (0x00000000)
-#define KEYS_MASK2 (0x0000F0BF)
+#define KEYS_MASK2 (0x0000F0BF)		//set to avoid canon menu being effected while in Alt mode
  
 #define LED_AF 0xC02200F4
 #define NEW_SS (0x2000)
@@ -70,31 +68,16 @@ void kbd_set_alt_mode_key_mask(long key)
 		}
 	}
 }
-/*void my_blinkk(void) {
-	int i;
-	while(1) {
-		*((volatile int *) 0xC02200FD) = 0x46; // Turn on LED
-		for (i=0; i<0x200000; i++) { asm volatile ( "nop\n" ); }
 
-		*((volatile int *) 0xC02200FD) = 0x44; // Turn off LED
-		for (i=0; i<0x200000; i++) { asm volatile ( "nop\n" ); }
-
-		*((volatile int *) 0xC02200FD) = 0x46; // Turn on LED
-		for (i=0; i<0x200000; i++) { asm volatile ( "nop\n" ); }
-
-		*((volatile int *) 0xC02200FD) = 0x44; // Turn off LED
-		for (i=0; i<0x900000; i++) { asm volatile ( "nop\n" ); }
-	}
-} */
 
 extern long __attribute__((naked)) wrap_kbd_p1_f() {
 	
-	//FF8346D4
+
 	asm volatile(
 		"STMFD	SP!, {R1-R7,LR} \n"
 		"MOV	R5, #0 \n"
 		//"BL		_kbd_read_keys \n"
-		"BL		my_kbd_read_keys \n"	// pached
+		"BL		my_kbd_read_keys \n"	// pacthed
 		"B		_kbd_p1_f_cont \n"
 	);
 	return 0; // shut up the compiler
@@ -104,7 +87,7 @@ extern long __attribute__((naked)) wrap_kbd_p1_f() {
 static void __attribute__((noinline)) mykbd_task_proceed() {
 	
 	while (physw_run) {
-        _SleepTask(*((int*)(0x1C30 +0x8))); //  @FF0248AC
+        _SleepTask(*((int*)(0x1C30 + 0x8))); //  @FF834160 + FF834168
 
 		if (wrap_kbd_p1_f() == 1) {   // autorepeat ?
         	_kbd_p2_f();
@@ -120,7 +103,7 @@ void __attribute__((naked,noinline)) mykbd_task() {
 	_ExitTask();
 }
 
-// like SX110
+
 void my_kbd_read_keys() {
 		
 
@@ -130,10 +113,6 @@ void my_kbd_read_keys() {
 
 	_GetKbdState( kbd_new_state );
 	_kbd_read_keys_r2( kbd_new_state);
-	
-//    kbd_new_state[0] = physw_status[0];  //sx220 changed from physw_status[0]
- //   kbd_new_state[2] = physw_status[2];
- //   kbd_new_state[3] = physw_status[3]; //sx220 added
 	
 
 	
@@ -161,7 +140,7 @@ void my_kbd_read_keys() {
 	
     if (conf.remote_enable) {
         physw_status[2] = physw_status[2] & ~(SD_READONLY_FLAG | USB_MASK);   // override USB and SD-Card Readonly Bits
-    }																		  //SX220 DONE.
+    }
    
     physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;   // override SD-Card Readonly Bit
 }
@@ -323,7 +302,7 @@ long kbd_get_autoclicked_key() {
     }
 #endif
 
-// called from capt_seq.c at sub_FF9686A8_my()
+// called from capt_seq.c at sub_FF96EF54_my()
 void wait_until_remote_button_is_released(void) {
     
 	int count1;
@@ -340,7 +319,7 @@ void wait_until_remote_button_is_released(void) {
     tick2 = tick;
     static long usb_physw[3];
     if (conf.synch_enable && conf.ricoh_ca1_mode && conf.remote_enable && (!shooting_get_drive_mode()|| (shooting_get_drive_mode()==1) || ((shooting_get_drive_mode()==2) && state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)))
-    //if (conf.synch_enable && conf.ricoh_ca1_mode && conf.remote_enable && (!shooting_get_drive_mode()|| ((shooting_get_drive_mode()==2) && state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)))   // synch mode enable so wait for USB to disconnect
+
     {
         // ------ add by Masuji SUTO (start) --------------
         nMode = 0;
@@ -399,7 +378,6 @@ void wait_until_remote_button_is_released(void) {
                     usb_physw[2] = 0;    // makes sure USB bit is cleared.
                     _kbd_read_keys_r2(usb_physw);
                 }
-                //while(((usb_physw[2] & USB_MASK)==USB_MASK) && ((int)get_tick_count()-tick < DELAY_TIMEOUT));
                 while (((((usb_physw[2] & USB_MASK)!=USB_MASK) && (nMode==0)) || (((usb_physw[2] & USB_MASK)==USB_MASK) && (nMode==1))) && ((int)get_tick_count()-tick < DELAY_TIMEOUT));
             }
         } else {
