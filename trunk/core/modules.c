@@ -329,112 +329,17 @@ int module_convert_dng_to_chdk_raw(char* fn)
 
 /************* MODULE TBOX ******/
 
-static char* tbox_file_buffer = 0;
-static char* tbox_file_buffer_default = "_tbox.flt";
-static int   tbox_file_buffer_size = 0;
-static char* charmap_buffer = 0;
-static int   charmap_buffer_size = 0;
+#define MODULE_NAME_TBOX "_tbox.flt"
 
-// Auxilary function - Parse loaded keymap, ask module for its API version
-// Input values: tbox_file_buffer, tbox_file_buffer_size
-// Return value: 0-error, otherwise API version
-//-----------------------------------------------------
-static int module_tbox_charmap_preprocess() 
+struct libtextbox_sym* libtextbox;
+
+static int bind_module_tbox( void** export_list )
 {
-	charmap_buffer = 0;
-	charmap_buffer_size = 0;
-
-	//-- input checks
-	if ( tbox_file_buffer==0 || tbox_file_buffer_size<=0 )
-		return 0;
-
-	int i, ver;
-
-	//-- Parse: split to lines
-	for( i=0; i<tbox_file_buffer_size; i++ )
-	   if ( tbox_file_buffer[i] == 0x0d || tbox_file_buffer[i] == 0x0a)
-		  tbox_file_buffer[i]=0;
-
-	//-- First line is name of tbox module
-	i = strlen(tbox_file_buffer);		// size
-	if ( i==0 )
-		return 0;
-
-	// tbox "run scenario #1" - argc=1, argv=0 - mean "say your API version"
-   	ver = module_run(tbox_file_buffer, 0,  1,0, UNLOAD_ALWAYS );
-
-	// if mistake on load
-	if ( ver<=0 ) 
-		return 0;
-
-	charmap_buffer=tbox_file_buffer+i+1;
-	charmap_buffer_size= tbox_file_buffer_size - (i+1);
-
-	return ver;
+    return bind_module_generic(export_list, (void**)&libtextbox, 1, 1, 0);
 }
 
-// Check version and existance and tbox api version
-// return: 0 if no module exists at all, otherwise version of API of current tbox module
-//-----------------------------------------------------
-int module_tbox_get_version()
+// Return: 0-fail, addr-ok
+struct libtextbox_sym* module_tbox_load()
 {
-  static int last_loaded_tbox_hash = 0;
-  static int cur_tbox_api_version = 0;
-
-  // -- If keymap is loaded and not changed - return stored value
-
-  if ( lang_strhash31((int)conf.charmap_file) == last_loaded_tbox_hash )
-    return cur_tbox_api_version;
-
-  // -- Free resources
-
-  last_loaded_tbox_hash = 0;
-  if ( tbox_file_buffer && tbox_file_buffer!=tbox_file_buffer_default )
-    ufree( tbox_file_buffer );
-
-  // -- Try to load keymap file
-
-  tbox_file_buffer = load_file( conf.charmap_file, &tbox_file_buffer_size );
-
-  // Check is module available, otherwise try default one
-
-  cur_tbox_api_version = module_tbox_charmap_preprocess();
-
-
-  // if keymap wrong/module can't be loaded - try default
-  if ( cur_tbox_api_version==0 ) {
-	 if ( tbox_file_buffer )
-        ufree(tbox_file_buffer);
-
-	 tbox_file_buffer = tbox_file_buffer_default;
-	 tbox_file_buffer_size = strlen(tbox_file_buffer);
-  	 cur_tbox_api_version = module_tbox_charmap_preprocess();
-  }
-
-  if ( cur_tbox_api_version )
-	last_loaded_tbox_hash = lang_strhash31((int)conf.charmap_file);
-
-  return cur_tbox_api_version;
-}
-
-
-//-----------------------------------------------------
-void module_tbox_run( int title, int msg, char* defaultvalue, unsigned int maxsize, void (*on_select)(char* newstr))
-{
-	int ver = module_tbox_get_version();
-
-	if ( API_VERSION_MATCH_REQUIREMENT( ver, 1, 0 ) ) {
-
-		// Main "run scenario" - 7 argument, raise textbox
-		unsigned int argv[] = {	(int)charmap_buffer,
-								charmap_buffer_size,
-								title,
-								msg,
-								(unsigned int)defaultvalue,
-								maxsize,
-								(unsigned int)on_select,
-							 };
-	    module_run(tbox_file_buffer, 0,  sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR);
-		
-	}
+    return module_load_generic((void**)&libtextbox, MODULE_NAME_TBOX, bind_module_tbox, 0);
 }

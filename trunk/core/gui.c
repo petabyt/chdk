@@ -156,7 +156,6 @@ static void gui_draw_load_symbol_rbf(int arg);		//AKA
 #ifdef OPT_CALENDAR
 static void gui_draw_calendar(int arg);
 #endif
-static void gui_load_charmap(int arg);
 static void gui_draw_load_lang(int arg);
 static void gui_menuproc_mkbootdisk(int arg);
 #ifndef OPTIONS_AUTOSAVE
@@ -585,9 +584,9 @@ static CMenuItem visual_submenu_items[] = {
     MENU_ITEM(0x5f,LANG_MENU_VIS_OSD_FONT,            MENUITEM_ENUM,      gui_font_enum, 0 ),
     MENU_ITEM(0x35,LANG_MENU_VIS_MENU_FONT,           MENUITEM_PROC,      gui_draw_load_menu_rbf, 0 ),
     MENU_ITEM(0x35,LANG_MENU_VIS_MENU_SYMBOL_FONT,    MENUITEM_PROC,      gui_draw_load_symbol_rbf, 0 ),
-    MENU_ITEM(0x35,LANG_MENU_VIS_CHARMAP,             MENUITEM_PROC,      gui_load_charmap, 0 ),
-    MENU_ITEM(0x80,LANG_MENU_RESET_FILES		 ,         MENUITEM_PROC, 	   gui_menuproc_reset_files, 0 ),
-    MENU_ITEM(0x0,LANG_MENU_VIS_COLORS,              MENUITEM_SEPARATOR, 0, 0 ),
+    MENU_ITEM(0x35,LANG_STR_TEXTBOX_SETTINGS,         MENUITEM_SUBMENU_PROC, gui_menu_run_fltmodule, "_tbox.flt" ),
+    MENU_ITEM(0x80,LANG_MENU_RESET_FILES,             MENUITEM_PROC, 	   gui_menuproc_reset_files, 0 ),
+    MENU_ITEM(0x0,LANG_MENU_VIS_COLORS,               MENUITEM_SEPARATOR, 0, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_TEXT,            MENUITEM_COLOR_FG,  &conf.osd_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_BKG,             MENUITEM_COLOR_BG,  &conf.osd_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_WARNING,         MENUITEM_COLOR_FG,  &conf.osd_color_warn, 0 ),
@@ -1380,7 +1379,6 @@ static void gui_menuproc_reset_files(int arg){
 conf.lang_file[0] = 0;
 conf.menu_symbol_rbf_file[0] = 0;
 conf.menu_rbf_file[0] = 0;
-conf.charmap_file[0] = 0;
 conf_save();
 gui_mbox_init(LANG_INFORMATION, LANG_MENU_RESTART_CAMERA, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 
@@ -2553,14 +2551,6 @@ static void gui_draw_lang_selected(const char *fn) {
 }
 void gui_draw_load_lang(int arg) {
     module_fselect_init(LANG_STR_SELECT_LANG_FILE, conf.lang_file, "A/CHDK/LANG", gui_draw_lang_selected);
-}
-
-static void gui_charmap_selected(const char *fn) {
-    if (fn)
-        strcpy(conf.charmap_file, fn);
-}
-static void gui_load_charmap(int arg) {
-    module_fselect_init(LANG_STR_SELECT_CHARMAP_FILE, conf.charmap_file, "A/CHDK", gui_charmap_selected);
 }
 
 CMenuItem* find_mnu(CMenu *curr_menu, int itemid )

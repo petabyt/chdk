@@ -816,17 +816,17 @@ static int luaCB_md_detect_motion( lua_State* L )
     return luaL_error( L, "md_init_motion_detector failed" );
 }
 
-static void file_browser_selected(const char *fn) {
+static void return_string_selected(const char *str) {
     // Reconnect button input to script - will also signal action stack
-    // that file browser is finished and return last selected file
+    // that file browser / textbox is finished and return last selected file
     // to script caller
     state_kbd_script_run = 1;
     // Clear the Func/Set key so that when the script exits, pressing
-    // the Func/Set key again will enter the Script menu, not the File Browser
+    // the Func/Set key again will enter the Script menu, not the File Browser / Textbox
     kbd_reset_autoclicked_key();
 
     // Push selected file as script return value
-	lua_pushstring( Lt, (fn && fn[0])? fn : NULL );
+	lua_pushstring( Lt, (str && str[0])? str : NULL );
 }
 
 static int luaCB_file_browser( lua_State* L ) {
@@ -835,8 +835,29 @@ static int luaCB_file_browser( lua_State* L ) {
     // Push file browser action onto stack - will loop doing nothing until file browser exits
     action_push(AS_FILE_BROWSER);
     // Switch to file browser gui mode. Path can be supplied in call or defaults to "A" (root directory).
-    module_fselect_init(LANG_STR_FILE_BROWSER, luaL_optstring( L, 1, "A" ), "A", file_browser_selected);
+    module_fselect_init(LANG_STR_FILE_BROWSER, luaL_optstring( L, 1, "A" ), "A", return_string_selected);
     // Yield the script so that the action stack will process the AS_FILE_BROWSER action
+    return lua_yield(L, 0);
+}
+
+static int luaCB_textbox( lua_State* L ) {
+    // Disconnect button input from script so buttons will work in the textbox
+    state_kbd_script_run = 0;
+    if (module_tbox_load())
+    {
+        // Push textbox action onto stack - will loop doing nothing until textbox exits
+        action_push(AS_TEXTBOX);
+        // Switch to textbox gui mode. Text box prompt should be passed as param.
+        module_tbox_load()->textbox_init((int)luaL_optstring( L, 1, "Text box" ),   //title
+                                         (int)luaL_optstring( L, 2, "Enter text" ), //message
+                                         luaL_optstring( L, 3, ""  ),               //default string
+                                         luaL_optnumber( L, 4, 30),                 //max size of a text
+                                         return_string_selected, 0);
+    }
+    else
+        return_string_selected(0);
+
+    // Yield the script so that the action stack will process the AS_TEXTBOX action
     return lua_yield(L, 0);
 }
 
@@ -2344,6 +2365,7 @@ static const luaL_Reg chdk_funcs[] = {
    FUNC(get_meminfo)
 
    FUNC(file_browser)
+   FUNC(textbox)
    
    FUNC(draw_pixel)
    FUNC(draw_line)
