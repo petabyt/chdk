@@ -31,9 +31,19 @@ void camera_set_led(int led, int state, int bright) {
 }
 
 int get_flash_params_count(void){
- return 0xA0;	//@FF1B94A8 in GetParameterData 
+ return 0xa0;	// Found @0xff994830  a3300is
 }
 
+long vid_get_viewport_height()
+{
+	return 240;
+}
+
+
+//Have to disable here and add to /sub for 100a 
+//cause 100d crashes when in shoot mode trying to access Alt menu.
+//Re-Added in /SUB/100a
+//---------------------------------------------------------------
 /*void vid_bitmap_refresh() {
 	
 	extern int full_screen_refresh;
@@ -44,12 +54,3 @@ int get_flash_params_count(void){
 	_ScreenLock();
 	_ScreenUnlock();
 }*/
-
-extern void draw_filled_rect( int, int, int, int, int );
-
-void vid_bitmap_refresh()
-{
-	draw_filled_rect(0, 0, CAM_BITMAP_WIDTH, CAM_BITMAP_HEIGHT, 0x00) ;
-}
-
-
