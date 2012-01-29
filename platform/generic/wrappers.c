@@ -566,11 +566,11 @@ int utime(const char *file, struct utimbuf *newTimes) {
 #ifdef CAM_DRYOS_2_3_R39
     if (fd>=0) {
         _close(fd);
-        res=_SetFileTimeStamp(file, newTimes->actime , newTimes->modtime);
+        res=_SetFileTimeStamp(file, newTimes->modtime, newTimes->actime);
     }
 #else
     if (fd>=0) {
-        res=_SetFileTimeStamp(fd, newTimes->actime , newTimes->modtime);
+        res=_SetFileTimeStamp(fd, newTimes->modtime, newTimes->actime);
         _close(fd);
     }
     // return value compatibe with utime: ok=0 fail=-1
