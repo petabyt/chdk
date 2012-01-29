@@ -349,10 +349,10 @@ static KeyMap keymap[] = {
 #endif
     { 3, KEY_DISPLAY	    , 0x00000008, LB(0,4), 0, "Back",  0,    GUI_MODE_MENU,      GUI_MODE_MENU, MODE_REC|MODE_PLAY },
 	{ 3, KEY_DISPLAY	    , 0x00000008, LB(0,4), 0, "Disp",  0,    GUI_MODE_MENU+1,    100,           MODE_REC|MODE_PLAY },
-    { 3, KEY_UP 		    , 0x00000010, RB(0,1), 0, "Up",    0,    GUI_MODE_ALT,       100,           MODE_REC|MODE_PLAY },
-	{ 3, KEY_LEFT		    , 0x00000020, RB(0,2), 0, "Left",  0,    GUI_MODE_ALT,       100,           MODE_REC|MODE_PLAY },
-    { 3, KEY_RIGHT		    , 0x00000040, RB(0,3), 0, "Right", 0,    GUI_MODE_ALT,       100,           MODE_REC|MODE_PLAY },
-	{ 3, KEY_DOWN		    , 0x00000080, RB(0,4), 0, "Down",  0,    GUI_MODE_ALT,       100,           MODE_REC|MODE_PLAY },
+    { 3, KEY_UP 		    , 0x00000010, RB(0,1), 0, "Up",    0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
+	{ 3, KEY_LEFT		    , 0x00000020, RB(0,2), 0, "Left",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
+    { 3, KEY_RIGHT		    , 0x00000040, RB(0,3), 0, "Right", 0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
+	{ 3, KEY_DOWN		    , 0x00000080, RB(0,4), 0, "Down",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
 
     { 3, KEY_UP 		    , 0x00000010, RB(0,0), 0, "Man",   "Focus",  GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, &conf.subj_dist_override_koef, 0, &conf.touchscreen_disable_shortcut_controls },
 	{ 3, KEY_DISPLAY	    , 0x00000008, RB(0,1), 0, "Inf.",  "Focus",  GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, 0, 0, &conf.touchscreen_disable_shortcut_controls },
