@@ -208,7 +208,7 @@ long kbd_get_pressed_key()
 	int i;
     for (i=0;keymap[i].hackkey;i++){
 	if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0){
-	    if (i!=7) return keymap[i].hackkey;
+	    return keymap[i].hackkey;
 	}
     }
     return 0;

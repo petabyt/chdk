@@ -2,7 +2,7 @@
 
 DEF(physw_status, 0x1007C) //Found for A470 (GPIOStatus)
 DEF(physw_run, 0x1BF0) //Found for A470 in task_PhySw, same as A590
-DEF(FlashParamsTable,  0xFFE961CC) // via GetReservedClusters_Fut_9
+DEF(FlashParamsTable,  0xffe8fc64) // 101b ok
 DEF(zoom_busy, 0x8050)  //0x803c+14 same as in a590
 DEF(focus_busy, 0x82B0) // 0x82A8+0x08 found in sub_FFD02310
 

@@ -14,6 +14,11 @@ void CreateTask_spytask();
 
 void boot();
 
+void taskCreateHook(int *p) { //function taken from the ixus80 port, adapted of course
+ p-=16;
+ if (p[0]==0xffc900b8)  p[0]=(int)exp_drv_task; //100e ok
+} 
+
 void boot() { //#fs
     long *canon_data_src = (void*)0xFFEAB38C; //found with "romdata start" string
     long *canon_data_dst = (void*)0x1900;
@@ -37,6 +42,9 @@ void boot() { //#fs
 
     for(i=0;i<canon_bss_len/4;i++)
 	canon_bss_start[i]=0;
+
+    *(int*)0x1930=(int)taskCreateHook; //from ixus80 port
+    *(int*)0x1934=(int)taskCreateHook; //from ixus80 port (was taskCreateHook2...)
 
 /*    asm volatile (
 	"MRC     p15, 0, R0,c1,c0\n"
