@@ -5,6 +5,9 @@
 static long *nrflag = (long*)0x60E8;
 
 #include "../../../generic/capt_seq.c"
+//please note: comments ending in question marks contain the original authors' work
+//since most of these functions is copied from the original fw, I corrected parts of the code,
+//where (in my opinion) it shouldn't differ from the original - srsa_4c
 
 void __attribute__((naked,noinline)) sub_FFD2C9B8_my(long p)
 {
@@ -25,9 +28,9 @@ void __attribute__((naked,noinline)) sub_FFD2C9B8_my(long p)
               "LDR     R3, =0x60EC\n"
               "LDR     R0, [R3]\n"
               "BL      sub_FFC8B090\n"
-            "BL      wait_until_remote_button_is_released\n"
-              "BL      capt_seq_hook_set_nr\n"
-              "B       sub_FFD2C9F4\n"
+            "BL      wait_until_remote_button_is_released\n" // +
+              "BL      capt_seq_hook_set_nr\n" // +
+              "B       sub_FFD2C9F4\n" //jump to the rest
   );
 }
 
@@ -72,7 +75,7 @@ void __attribute__((naked,noinline)) sub_FFD297A4_my(long p)
               "MOV     R0, R4\n"
 
               "BL      sub_FFD2C9B8_my\n"
-              "BL      capt_seq_hook_raw_here\n"
+              "BL      capt_seq_hook_raw_here\n"  // +
 
              // "BL      sub_FFD483A4\n"
 
@@ -210,11 +213,10 @@ void __attribute__((naked,noinline)) capt_seq_task()    //IDA task_CaptSeqTask
           "TST     R0, #1\n"
           "BEQ     loc_FFD29B9C\n"
           "MOV     R1, #0x28C\n"
-          "LDR     R0, =0xFFD2952C\n"
-          "ADD     R1, R1, #3\n"
+          "LDR     R0, =0xFFD29530\n" // =0xffd2952c ?
+          "ADD     R1, R1, #2\n" // #3 ?
           "BL      sub_FFC03AEC\n"
-          "BL      _ExitTask\n"
-          "BL      sub_FFC11620\n"
+          "BL      sub_FFC11620\n" // ExitTask
           "ADD     SP, SP, #4\n"
           "LDMFD   SP!, {R4,PC}\n"
   );
@@ -311,11 +313,11 @@ void __attribute__((naked,noinline)) exp_drv_task(){
 "                BNE     loc_FFCDEB50\n"
 "                LDR     R12, [SP]\n"
 "                MOV     R0, R5\n"
-"                LDR     R1, [R12,#0x40]\n"
+"                LDR     R1, [R12,#0x24]\n" //0x40 ?
 "                MOV     R2, R4\n"
-"                LDR     R3, [R12,#0x50]\n"
+"                LDR     R3, [R12,#0x34]\n" //0x50 ?
 "                MOV     LR, PC\n"
-"                LDR     PC, [R12,#0x4C]\n"
+"                LDR     PC, [R12,#0x30]\n" //0x4C ?
 "                B       loc_FFCDEB88\n"
 "loc_FFCDEB50:\n"
 "                CMP     R4, #6\n"
@@ -341,14 +343,14 @@ void __attribute__((naked,noinline)) exp_drv_task(){
 "                LDR     R12, [SP]\n"
 "                MOV     R2, R4\n"
 "                ADD     R0, R12, #4\n"
-"                LDR     R1, [R12,#0x40]\n"
-"                LDR     R3, [R12,#0x50]\n"
+"                LDR     R1, [R12,#0x24]\n" //0x40 ?
+"                LDR     R3, [R12,#0x34]\n" //0x50 ?
 "                MOV     LR, PC\n"
-"                LDR     PC, [R12,#0x4C]\n"
+"                LDR     PC, [R12,#0x30]\n" //0x4c ?
 "                B       loc_FFCDED9C\n"
 "loc_FFCDEBB8:\n"
-"                SUB     R3, R2, #0x17\n"
-"                BHI     loc_FFCDEC0C\n"
+"                CMP     R2, #0x17\n" //SUB     R3, R2, #0x17 ?
+"                BNE     loc_FFCDEC0C\n" //BHI     loc_FFCDEC0C ?
 "                LDR     R1, [R12,#0x24]\n"
 "                ADD     R1, R1, R1,LSL#1\n"
 "                ADD     R1, R12, R1,LSL#1\n"
@@ -364,7 +366,7 @@ void __attribute__((naked,noinline)) exp_drv_task(){
 "                LDR     R1, [R3,#0x24]\n"
 "                LDR     R2, [R3,#0x34]\n"
 "                MOV     LR, PC\n"
-"                LDR     PC, [R3,#0x4C]\n"
+"                LDR     PC, [R3,#0x30]\n" //0x4c ?
 "                LDR     R0, [SP]\n"
 "                BL      sub_FFCDD8BC\n"
 "                B       loc_FFCDED9C\n"
@@ -517,7 +519,7 @@ void __attribute__((naked,noinline)) exp_drv_task(){
 "                BL      sub_FFC100C4\n" //ReceiveMessageQueue
 "                LDR     R12, [SP]\n"
 "                LDR     R2, [R12]\n"
-"                CMP     R2, #0x20\n"
+"                CMP     R2, #0x1F\n" //0x20 ?
 "                BNE     loc_FFCDEA08\n"
 "                MOV     R0, R12\n"
 "                BL      sub_FFCDC724\n"

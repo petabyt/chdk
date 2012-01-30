@@ -32,7 +32,8 @@ extern void usb_remote_key( int ) ;
 #endif
 
 #if 	defined(CAMERA_a630) || defined(CAMERA_a640) || defined(CAMERA_a610)\
-	|| defined(CAMERA_a620) || defined(CAMERA_ixus800_sd700) || defined(CAMERA_a410)
+	|| defined(CAMERA_a620) || defined(CAMERA_ixus800_sd700) || defined(CAMERA_a410)\
+    || defined(CAMERA_a430)
 #define USB_MASK 0x8000000
 #define USB_IDX 1
 #endif
@@ -49,7 +50,8 @@ int get_usb_bit()
 	#if defined(CAMERA_a530) || defined(CAMERA_a540)
 		x = (long)*mmio2;
 	#elif 		defined(CAMERA_a610) || defined(CAMERA_a620) || defined(CAMERA_a630)\
-			|| defined(CAMERA_a640) ||	defined(CAMERA_ixus800_sd700) || defined(CAMERA_a410) 
+			|| defined(CAMERA_a640) ||	defined(CAMERA_ixus800_sd700) || defined(CAMERA_a410)\
+            || defined(CAMERA_a430)
 		x = (long)*mmio1;
 	#elif defined(CAMERA_a710) || defined(CAMERA_a700)
 		x = (long)*mmio0;
