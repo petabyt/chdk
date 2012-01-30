@@ -1,23 +1,26 @@
 #define PARAM_FILE_COUNTER      0x34
+#define PARAM_EXPOSURE_COUNTER  0x01
 
 #include "platform.h"
 
 const ApertureSize aperture_sizes_table[] = {
-    {  9, 292, "2.8" },
-    { 10, 303, "3.2" },
-    { 11, 320, "3.5" },
-    { 12, 342, "3.5" },
-    { 13, 367, "4.0" },
-    { 14, 395, "4.5" },
-    { 15, 427, "5.1" },
-    { 16, 571, "8.0 ND" },
-    { 17, 590, "9.0 ND" },
-    { 18, 610, "10.0 ND" },
-    { 19, 633, "10.0 ND" },
-    { 20, 660, "11.0 ND" },
-    { 21, 688, "13.0 ND" },
-    { 22, 722, "16.0 ND" },
-};
+    {  9, 288, "2.8" },
+    { 10, 302, "3.2" },
+    { 11, 318, "3.5" },
+    { 12, 339, "3.5" },
+    { 13, 363, "4.0" },
+    { 14, 390, "4.5" },
+    { 15, 420, "5.0" },
+    { 16, 457, "5.8" },
+    { 17, 449, "8.0 ND" },
+    { 18, 466, "9.0 ND" },
+    { 19, 485, "10.0 ND" },
+    { 20, 510, "10.0 ND" },
+    { 21, 536, "11.0 ND" },
+    { 22, 565, "13.0 ND" },
+    { 23, 597, "16.0 ND" },
+    { 24, 635, "18.0 ND" },
+};// from a460, second column updated (propcase 68)
 
 const ShutterSpeed shutter_speeds_table[] = {
     { -12, -384, "15", 15000000 },
@@ -70,7 +73,7 @@ const ShutterSpeed shutter_speeds_table[] = {
 
 const ISOTable iso_table[] = {
     {  0,    0, "Auto", -1},
-    {  1,   80,   "80", -1},
+    {  1,   64,   "64", -1},
     {  2,  100,  "100", -1},
     {  3,  200,  "200", -1},
     {  4,  400,  "400", -1},
@@ -78,43 +81,38 @@ const ISOTable iso_table[] = {
 
 /*
 http://www.usa.canon.com/cusa/support/consumer/digital_cameras/powershot_a_series/powershot_a430#Specifications
-Shooting Modes
-    Auto; Creative: P, Av, Tv, M; Image: Portrait, Landscape, Night Scene,
-    Special Scene 
-        (Foliage, Snow, Beach, Fireworks, Underwater, Indoor, Kids & Pets,
-        Night Snapshot, Color Accent, Color Swap),
-    My Colors, Stitch Assist, Movie
-Movie: 640 x 480 / 320 x 240 (30 fps/15 fps) available up to 1GB or 1 hour for each file size,
-    320 x 240 (1 min. at 60 fps), 160 x 120 (3 min. at 15 fps)
 canon mode list FFD588D4 in 100b
 */          
 static const CapturemodeMap modemap[] = {
-    { MODE_M,                  32769 },
+//    { MODE_M,                  32769 },
     { MODE_P,                  32772 },
     { MODE_AUTO,               32768 },
-    { MODE_PORTRAIT,           32781 },
-    { MODE_NIGHT_SCENE,        32782 }, // "night scene" on dial, different from "night snapshot" under "scene" below
-    { MODE_STITCH,             33290 },
-    { MODE_SCN_NIGHT_SNAPSHOT, 16395 }, // "night snapshot"
-    { MODE_SCN_KIDS_PETS,      16399 }, // "kids and pets"
-    { MODE_SCN_INDOOR,         16400 }, // "indoor"
-    { MODE_SCN_FOLIAGE,        16401 }, // "foliage"
-    { MODE_SCN_SNOW,           16402 }, // "snow"
-    { MODE_SCN_BEACH,          16403 }, // "beach"
-    { MODE_SCN_FIREWORK,       16404 }, // "fireworks"
-    { MODE_SCN_COLOR_ACCENT,   16920 }, // "color accent"
-    { MODE_SCN_COLOR_SWAP,     16921 }, // "color swap"
-    { MODE_VIDEO_STD,          2593  },
-    { MODE_VIDEO_SPEED,        2594  }, // "fast frame rate"
+    { MODE_PORTRAIT,           16396 },
+//    { MODE_NIGHT_SCENE,        32782 }, // "night scene" on dial, different from "night snapshot" under "scene" below
+    { MODE_STITCH,             33289 }, //
+    { MODE_SCN_NIGHT_SNAPSHOT, 16394 }, // "night snapshot"
+    { MODE_SCN_KIDS_PETS,      16398 }, // "kids and pets"
+    { MODE_SCN_INDOOR,         16399 }, // "indoor"
+    { MODE_SCN_FOLIAGE,        16400 }, // "foliage"
+    { MODE_SCN_SNOW,           16401 }, // "snow"
+    { MODE_SCN_BEACH,          16402 }, // "beach"
+    { MODE_SCN_FIREWORK,       16403 }, // "fireworks"
+    { MODE_SCN_COLOR_ACCENT,   33303 }, // "color accent"
+    { MODE_SCN_COLOR_SWAP,     33304 }, // "color swap"
+    { MODE_SUPER_MACRO,        33288 }, // 
+    { MODE_VIDEO_STD,          3613  }, //
+/*    { MODE_VIDEO_SPEED,        2594  }, // "fast frame rate"
     { MODE_VIDEO_COMPACT,      2595  }, // "compact"
     { MODE_VIDEO_COLOR_ACCENT, 2591  }, // "color accent"
     { MODE_VIDEO_COLOR_SWAP,   2592  }, // "color swap"
+*/
 };
 #include "../generic/shooting.c"
 
-long get_file_next_counter() {
-    return get_file_counter();
+long get_file_next_counter() { //looks like this hack is needed for old vxworks
+    return ((get_file_counter()>>4)+1)<<4;
 }
+
 
 long get_target_file_num() {
     long n;
