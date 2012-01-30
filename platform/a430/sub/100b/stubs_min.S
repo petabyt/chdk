@@ -14,6 +14,5 @@ DEF(zoom_status, 0x74B8) // ok
 DEF(some_f_for_dng, 0x8BE0) // found in 0xFFE11B8C
 DEF(some_flag_for_af_scan, 0x72BA0) // 0xFFD2A294
 DEF(levent_table, 0xFFD3547C)
-DEF(playrec_mode, 0x639C) // FFD32638
+DEF(playrec_mode, 0x638C) // @ffd32644
 DEF(sys_mempart_id, 0xD648) // memFindMax
-

@@ -21,13 +21,6 @@ long hook_raw_size()
     return 0x4FEED0;       // ?? "CRAW BUF","WBIntegPrm.c" -  1/3" 4 MPix -  (2272*1704*10/8=0x49D7C0)
 }
 
-/*
-void *vid_get_viewport_live_fb()
-{
-    return (void*)0;
-}
-*/
-
 void *vid_get_viewport_live_fb() // from a540
 {
        void **fb=(void **)0x5264; // 0xFFC8F1EC
@@ -53,7 +46,7 @@ void *vid_get_viewport_fb()
 
 void *vid_get_viewport_fb_d()
 {
-    return (void*)(*(int*)0x71964); // ?? (found in sub_FFD0F248)
+    return (void*)(*(int*)0x71AB0); // @ffd0f29c
 }
 
 long vid_get_viewport_height()

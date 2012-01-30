@@ -36,7 +36,7 @@
 	#define CAM_SHOW_OSD_IN_SHOOT_MENU		1
 	#undef  CAM_HAS_IS
 	#define CAM_CAN_MUTE_MICROPHONE			1
-	#define CAM_AF_SCAN_DURING_VIDEO_RECORD	1
+	#define CAM_AF_SCAN_DURING_VIDEO_RECORD	1 //crashes, when used in 640x480 mode
 	#define CAM_EV_IN_VIDEO					1
 
     #define CAM_DNG_LENS_INFO               { 54,10, 216,10, 28,10, 58,10 } // See comments in camera.h
@@ -48,7 +48,6 @@
      -215238,  1000000,  534902, 1000000,   60219, 1000000, \
       -96906,  1000000,  148194, 1000000,  191583, 1000000
 
-	#define CAM_CONSOLE_LOG_ENABLED			1
 	#define cam_CalibrationIlluminant1		1 // Daylight
 	// cropping
 	#define CAM_JPEG_WIDTH			2272
@@ -59,7 +58,4 @@
 	#define CAM_ACTIVE_AREA_Y2		1748
 	// camera name
 	#define PARAM_CAMERA_NAME		3 // parameter number for GetParameterData
-	#define CAM_BRACKETING			1
-//	#define CAM_MULTIPART			1
-
-	#define REMOTE_SYNC_STATUS_LED 	0xc0220084				// specifies an LED that turns on while camera waits for USB remote to sync
+	#define CAM_DETECT_SCREEN_ERASE		1
