@@ -29,7 +29,7 @@
 //DEF(physw_status                            ,0x0001007c) // Found @0xffc11c0c,          stubs_min = 0x0001007c (0x1007C)
 //DEF(physw_run                               ,0x00001bf0) // Found @0xffc118a8,          stubs_min = 0x00001bf0 (0x1BF0)
 //DEF(levent_table                            ,0xffe72ec4) // Found @0xffe72ec4,          stubs_min = 0xffe72ec4 (0xFFE72EC4)
-//DEF(FlashParamsTable                        ,0xffe8fc64) // Found @0xffe8fc64, ** != ** stubs_min = 0xffe961cc (0xFFE961CC)
+//DEF(FlashParamsTable                        ,0xffe8fc64) // Found @0xffe8fc64,          stubs_min = 0xffe8fc64 (0xffe8fc64)
 //DEF(movie_status                            ,0x000051d8) // Found @0xffc45174, ** != ** stubs_min = 0x00005200 (0x5200)
 //DEF(canon_menu_active                       ,0x00009014) // Found @0xffd1eec4,          stubs_min = 0x00009014 (0x9014)
 //DEF(canon_shoot_menu_active                 ,0x000097e1) // Found @0xffd37684, ** != ** stubs_min = 0x00009718 (0x9718)
