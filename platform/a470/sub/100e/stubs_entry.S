@@ -30,15 +30,15 @@
 //DEF(physw_run                               ,0x00001bf0) // Found @0xffc118a8,          stubs_min = 0x00001bf0 (0x1BF0)
 //DEF(levent_table                            ,0xffe72ec8) // Found @0xffe72ec8,          stubs_min = 0xffe72ec8 (0xFFE72EC8)
 //DEF(FlashParamsTable                        ,0xffe8fc68) // Found @0xffe8fc68,          stubs_min = 0xffe8fc68 (0xffe8fc68)
-//DEF(movie_status                            ,0x000051d8) // Found @0xffc45174, ** != ** stubs_min = 0x00005200 (0x5200)
+//DEF(movie_status                            ,0x000051d8) // Found @0xffc45174,          stubs_min = 0x000051d8 (0x51d8)
 //DEF(canon_menu_active                       ,0x00009014) // Found @0xffd1eec4,          stubs_min = 0x00009014 (0x9014)
-//DEF(canon_shoot_menu_active                 ,0x000097e1) // Found @0xffd37684, ** != ** stubs_min = 0x00009768 (0x9768)
+//DEF(canon_shoot_menu_active                 ,0x000097e1) // Found @0xffd37684,          stubs_min = 0x000097e1 (0x97e1)
 //DEF(playrec_mode                            ,0x00005348) // Found @0xffc4b760,          stubs_min = 0x00005348 (0x5344+4)
-//DEF(zoom_status                             ,0x0000d020) // Found @0xffde8948, ** != ** stubs_min = 0x0000d7c4 (0xD7C4)
-//DEF(some_flag_for_af_scan                   ,0x0000cd9c) // Found @0xffdd73a8, ** != ** stubs_min = 0x0000cdec (0xCDEC)
-//DEF(zoom_busy                               ,0x000083a4) // Found @0xffd05d3c, ** != ** stubs_min = 0x00008050 (0x8050)
+//DEF(zoom_status                             ,0x0000d020) // Found @0xffde8948,          stubs_min = 0x0000d020 (0xd020)
+//DEF(some_flag_for_af_scan                   ,0x0000cd9c) // Found @0xffdd73a8,          stubs_min = 0x0000cd9c (0xcd9c)
+//DEF(zoom_busy                               ,0x000083a4) // Found @0xffd05d3c,          stubs_min = 0x000083a4 (0x83a4)
 //DEF(focus_busy                              ,0x000082b0) // Found @0xffd018d0,          stubs_min = 0x000082b0 (0x82B0)
-//DEF(recreview_hold                          ,0x00005b3c) // Found @0xffc63e24, ** != ** stubs_min = 0x00009634 (0x9634)
+//DEF(recreview_hold                          ,0x00005b3c) // Found @0xffc63e24,          stubs_min = 0x00005b3c (0x5b3c)
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x10361000; } // Found @0xffc2cc48
