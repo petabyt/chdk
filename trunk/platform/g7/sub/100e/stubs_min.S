@@ -16,3 +16,4 @@ DEF(zoom_status, 0x83AC)
 DEF(some_f_for_dng, 0xA3A8)
 DEF(second_ext_for_dng, 0xA3CC)
 DEF(levent_table,0xFF9AE7D4)
+DEF(sys_mempart_id, 0xD9A0) // calloc
