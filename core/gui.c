@@ -1698,7 +1698,7 @@ void gui_chdk_kbd_process()
             {
                 int m=mode_get()&MODE_SHOOTING_MASK;
                 if ((m==MODE_M) || (m==MODE_AV))
-                     conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance_f(shooting_get_aperture_from_av96(shooting_get_user_av96()),get_focal_length(lens_get_zoom_point()));
+                     conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance_f(shooting_get_aperture_from_av96(shooting_get_user_av96()),get_focal_length(shooting_get_zoom()));
                 else conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance();
                 shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
             }
@@ -2115,7 +2115,7 @@ int osd_visible(unsigned int playmode)
 			short disp_key_mode ;
 			if (recreview_hold==0)
 			{	
-				if ( shooting_get_prop(PROPCASE_DISPLAY_MODE) == 0) return( 1 );			
+				if ( shooting_get_display_mode() == 0) return( 1 );			
 			}
 			else
 			{
@@ -2138,7 +2138,7 @@ int osd_visible(unsigned int playmode)
 		}
 	}
 #else
-			if ( shooting_get_prop(PROPCASE_DISPLAY_MODE) == 0) return( 1 );
+			if ( shooting_get_display_mode() == 0) return( 1 );
 		}
 	}
 #endif		

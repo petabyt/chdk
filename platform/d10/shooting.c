@@ -106,7 +106,7 @@ Shooting Modes
 canon mode list FFB32F18 in 100a
 
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_SCN_LONG_SHUTTER,   16390 },
     { MODE_P,                  32772 },
     { MODE_SCN_STITCH,         16906 }, // SCN, either direction

@@ -92,7 +92,7 @@ Movie resolutions: 640x480, 320x240, 160x120
 canon modelist @FF972440 in 101a
 */
 
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_SCN_DIGITAL_MACRO,   0 },
     { MODE_P,                   1 },
     { MODE_LONG_SHUTTER,        2 },

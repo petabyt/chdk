@@ -94,7 +94,7 @@ Movie: 1024 x 768 (15 fps), 640 x 480 (30 fps/30 fps LP), 640 x 480 (2 hours at 
 
 canon modelist in 100d 
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },
     { MODE_TV,                 32771 },

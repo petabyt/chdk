@@ -92,7 +92,7 @@ move resolutions
 NOTE assumed to be the same as a630, since they share the same manual
 and canon mode lists are identical
 */ 
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     // these are common on most cameras except very old vxworks that use 0-n, should be OK
     { MODE_M,                  32769 },
     { MODE_P,                  32772 },

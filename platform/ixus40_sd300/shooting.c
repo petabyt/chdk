@@ -93,7 +93,7 @@ canon mode list ???
 
 NOTE: mode override is not implemented on this camera
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_P,                   1 },
     { MODE_LONG_SHUTTER,        2 }, // guessed
     { MODE_AUTO,                3 },

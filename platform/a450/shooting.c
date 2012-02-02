@@ -89,7 +89,7 @@ Movie: 640 x 480 (10 fps) / 320 x 240 (30 fps) available up to 1GB or 1 hour for
 
 canon mode list FFEAB878 in 100d
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_LONG_SHUTTER,       32774 }, // confirmed on a460
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },

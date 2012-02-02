@@ -267,6 +267,29 @@ long t;
 #endif
 }
 
+#if CAM_HAS_ND_FILTER
+void PutInNdFilter()                { _PutInNdFilter(); }
+void PutOutNdFilter()               { _PutOutNdFilter(); }
+#endif
+
+long GetCurrentAvValue()            { return _GetCurrentAvValue(); }
+long IsStrobeChargeCompleted()      { return _IsStrobeChargeCompleted(); }
+void SetCurrentCaptureModeType()    { _SetCurrentCaptureModeType(); }
+
+#if CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
+void UnsetZoomForMovie()            { _UnsetZoomForMovie(); }
+#endif
+
+#ifdef CAM_AV_OVERRIDE_IRIS_FIX
+int MoveIrisWithAv(short *v)        { return _MoveIrisWithAv(v); }
+#endif
+
+#if CAM_EV_IN_VIDEO
+void ExpCtrlTool_StartContiAE(int v1, int v2)   { _ExpCtrlTool_StartContiAE(v1,v2); }
+void ExpCtrlTool_StopContiAE(int v1, int v2)    { _ExpCtrlTool_StopContiAE(v1, v2); }
+short SetAE_ShutterSpeed(short *tv)             { _SetAE_ShutterSpeed(tv); }
+#endif
+
 //----------------------------------------------------------------------------
 // I/O wrappers
 

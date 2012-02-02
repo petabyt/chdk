@@ -99,7 +99,7 @@ Smart Shutter Modes:
     Smile, Wink Self-timer, Face Self-Timer
 */
 // Corrected for SX150
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
 	{ MODE_AUTO,               32768  },
 	{ MODE_P,                  32772  },
 	{ MODE_TV,                 32771  },

@@ -94,7 +94,7 @@ Shooting Modes
 		Standard, Fast Frame Rate, Compact, My Colors. 
 Movie: 640x480, 320x240, 160x120
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_SCN_DIGITAL_MACRO,   0 },
     { MODE_P,                   1 },
     { MODE_LONG_SHUTTER,        2 }, // 1-15s

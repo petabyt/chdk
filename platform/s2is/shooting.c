@@ -85,7 +85,7 @@ Shooting Modes
 Movie: 640 x 480 (VGA Fine/VGA), 320 x 240 (QVGA)
 canon mode list FF983777 in 100e
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO,                5 },
     { MODE_P,                   1 },
     { MODE_TV,                  3 },

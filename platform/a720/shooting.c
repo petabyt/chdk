@@ -91,7 +91,7 @@ Movie: 640 x 480 (30 fps/30 fps LP), 320 x 240 (30 fps) available up to 4GB or 6
 
 canon mode list in FFE7CFFC 100c
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },
     { MODE_TV,                 32771 },

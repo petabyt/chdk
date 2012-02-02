@@ -303,7 +303,6 @@ void shooting_set_user_tv_by_id_rel(int v);
 const ShutterSpeed *shooting_get_tv_line();
 /******************************************************************/
 short shooting_get_aperture_sizes_table_size();
-short shooting_get_aperture_sizes_table_prop_id(short i);
 short shooting_get_max_aperture_sizes_table_prop_id();
 short shooting_get_aperture_from_av96(short av96);
 int shooting_get_user_av_id();
@@ -331,13 +330,16 @@ int shooting_get_prop(int id);
 /******************************************************************/
 extern int circle_of_confusion;
 /******************************************************************/
+extern short shooting_get_is_mode();
+extern short shooting_get_resolution();
+extern short shooting_get_display_mode();
+/******************************************************************/
 extern const int zoom_points;
 int shooting_get_zoom();
 void shooting_set_zoom(int v);
 void shooting_set_zoom_rel(int v);
 void shooting_set_zoom_speed(int v);
 /******************************************************************/
-int shooting_get_focus();
 void shooting_set_focus(int v, short is_now);
 short shooting_get_focus_mode();
 int shooting_get_hyperfocal_distance();
@@ -470,11 +472,29 @@ extern int zoom_status;
 void EnterToCompensationEVF(void);
 void ExitFromCompensationEVF(void);
 
+extern void PutInNdFilter();
+extern void PutOutNdFilter();
+extern long GetCurrentAvValue();
+extern long IsStrobeChargeCompleted();
+extern void SetCurrentCaptureModeType();
+#if CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
+extern void UnsetZoomForMovie();
+#endif
+#ifdef CAM_AV_OVERRIDE_IRIS_FIX
+extern int MoveIrisWithAv(short*);
+#endif
+#if CAM_EV_IN_VIDEO
+extern void ExpCtrlTool_StartContiAE(int, int);
+extern void ExpCtrlTool_StopContiAE(int, int);
+extern short SetAE_ShutterSpeed(short* tv);
+#endif
+
 void TurnOnBackLight(void);
 void TurnOffBackLight(void);
 
 void wait_until_remote_button_is_released(void);
 short shooting_get_ev_correction1();
+short shooting_get_ev_correction2();
 
 //image_quality_override
 void shooting_set_image_quality(int imq);

@@ -82,7 +82,7 @@ const ISOTable iso_table[] = {
 
 
 // G10 values inserted 
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
 	{ MODE_AUTO,               32768  },
 	{ MODE_P,                  32772  },	
 	{ MODE_TV,                 32771  },

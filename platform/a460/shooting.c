@@ -91,7 +91,7 @@ video resolutions
 
 canon mode list FFEAB860 in 100d
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_LONG_SHUTTER,       32774 },
     { MODE_SUPER_MACRO,        33289 },
 //    { MODE_STITCH,               33290 }, // reported as functional stitch assist in forum, not in official specs

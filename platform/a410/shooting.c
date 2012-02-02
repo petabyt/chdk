@@ -79,7 +79,7 @@ const ISOTable iso_table[] = {
 /*
 canon mode list ffd39b10 in a410 100f
 */          
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_P,                   0 },
     { MODE_AUTO,                4 },
     { MODE_PORTRAIT,            5 },

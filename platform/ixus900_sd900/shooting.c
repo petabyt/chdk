@@ -104,7 +104,7 @@ Shooting Modes:
 
 // PROPCASE 49
 // Mapping between camera mode and PROPCASE_SHOOTING_MODE
-static const CapturemodeMap modemap[] = {   // PROPCASE 0, check with CHDK debug menu option "Show Parameter Data 0"
+const CapturemodeMap modemap[] = {   // PROPCASE 0, check with CHDK debug menu option "Show Parameter Data 0"
     {MODE_AUTO,               32768},
     {MODE_M,                  33772},
     {MODE_DIGITAL_MACRO,      33288},

@@ -93,7 +93,7 @@ video resolutions
 canon mode list @FFEAED68 in 100e
 */
 // PROPCASE 49, verified by whim in http://chdk.setepontos.com/index.php/topic,3228.msg44199.html#msg44199
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
 // common modes
 	{ MODE_M,                  32769 },
 	{ MODE_TV,                 32771 },

@@ -92,7 +92,7 @@ video res
 
 canon mode list FFB74378 in 100c
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
 	{ MODE_AUTO,               32768  },
 	{ MODE_P,                  32772  },
 	{ MODE_TV,                 32771  },

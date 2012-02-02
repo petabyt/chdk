@@ -86,7 +86,7 @@ canon mode list FF95E37C in 100g
 */
 // TODO this is completely wrong, camera has no M, Tv, Av. Should have "long shutter"
 // valid mode 0-15, 0x10010-0x1012
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO,               6  },
     { MODE_P,                  1  },
     { MODE_TV,                 3  },

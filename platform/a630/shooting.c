@@ -89,7 +89,7 @@ Video resolutions
     640 x 480 / 320 x 240 (30 fps/15 fps) available up to 1GB or 1 hour for each file size,
     160 x 120 (3 min. at 15 fps)
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     // these are common on most cameras except very old vxworks that use 0-n, should be OK
     { MODE_M,                  32769 },
     { MODE_P,                  32772 },

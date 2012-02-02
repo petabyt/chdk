@@ -92,7 +92,7 @@ Movie: High Definition: 1920 x 1080 (30 fps);
 
 canon mode list FFBBB0CC in 200h
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
 	{ MODE_AUTO,               32768  },
 	{ MODE_P,                  32772  },
 	{ MODE_TV,                 32771  },

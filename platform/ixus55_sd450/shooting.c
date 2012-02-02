@@ -91,7 +91,7 @@ Shooting Modes
 Movie: 640 x 480/320 x 240 (30 fps/15 fps), 320 x 240 (1 min. at 60 fps), 160 x 120 (3 min. at 15 fps)
 canon mode list FF95FC68 in 100b
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_P,                   0 },
     { MODE_LONG_SHUTTER,        1 }, // guessed long shutter 
     { MODE_DIGITAL_MACRO,       2 },

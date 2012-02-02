@@ -109,7 +109,7 @@ Movie: H.264 - 1280 x 720 (30 fps), 640 x 480 (30 fps), 320 x 240 (30 fps) avail
 
 canon mode list FFB2D2EC in 100e
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
 		{ MODE_AUTO, 32768 },
 		{ MODE_P, 32772 },
 		{ MODE_VIDEO_STD, 2597 },

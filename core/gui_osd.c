@@ -61,7 +61,7 @@ void gui_osd_calc_dof()
 #else
     av=shooting_get_min_real_aperture();
 #endif
-    fl=get_focal_length(lens_get_zoom_point());	
+    fl=get_focal_length(shooting_get_zoom());	
     dof.far_limit=-1.0;
     dof.near_limit=-1.0;
     dof.depth_of_field=-1.0;
@@ -316,7 +316,7 @@ void gui_osd_draw_values(int showtype)
 
     if (conf.values_show_zoom)
     {
-        int fl, zp=lens_get_zoom_point(), fl1=get_focal_length(zp);     
+        int fl, zp=shooting_get_zoom(), fl1=get_focal_length(zp);     
         switch (conf.zoom_value)
         {
          case ZOOM_SHOW_FL:
@@ -528,7 +528,7 @@ void gui_osd_draw_movie_time_left()
 void gui_osd_draw_ev()
 {
     static char *s[6]={"   ", "1/6", "1/3", "1/2", "2/3", "5/6"};
-    short ev=shooting_get_prop(PROPCASE_EV_CORRECTION_1);
+    short ev=shooting_get_ev_correction1();
     if (ev/96 || (ev==0)) sprintf(osd_buf, "EV:  %d %s", abs(ev/96), s[abs(ev/16%6)]);
     else sprintf(osd_buf, "EV:  %s   ", s[abs(ev/16%6)]);
     if (ev>0) osd_buf[4]='+'; else if (ev<0) osd_buf[4]='-';

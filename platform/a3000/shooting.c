@@ -82,7 +82,7 @@ const ISOTable iso_table[] = {
     {  5,  1600,  "1600", -1}
 };        
 
-static const CapturemodeMap modemap[] = { // prop 49
+const CapturemodeMap modemap[] = { // prop 49
 	{ MODE_AUTO,               32768  },
 	{ MODE_P,                  32772  },
 	{ MODE_EASY,               33314  },

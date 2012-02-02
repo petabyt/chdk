@@ -73,7 +73,7 @@ const ISOTable iso_table[] = {
 
 };
 
-static struct {
+struct {
 	int hackmode;
 	int canonmode;
 } modemap[] = {

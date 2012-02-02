@@ -88,7 +88,7 @@ Movie: 640 x 480 / 320 x 240 (30 fps/15 fps) available up to 4GB or 60 minutes,
     320 x 240 (1 min. at 60 fps), 160 x 120 (3 min. at 15 fps)
 canon mode list FFED1124 in 100a
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_LONG_SHUTTER,       32774 }, // guessed
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },
