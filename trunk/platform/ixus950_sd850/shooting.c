@@ -102,7 +102,7 @@ Movie: 640 x 480 / 320 x 240 (30 fps/15 fps) available up to 4GB or 60 minutes p
 
 canon mode list FFB4B564 in 100c
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_LONG_SHUTTER,       32774 }, // guessed
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },

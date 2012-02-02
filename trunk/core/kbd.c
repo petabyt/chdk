@@ -186,8 +186,8 @@ long kbd_use_up_down_left_right_as_fast_switch() {
 #if !CAM_HAS_JOGDIAL
     if (kbd_is_key_pressed(KEY_UP) && ((m&MODE_SHOOTING_MASK) != MODE_M) && !mode_video) {
         if (conf.fast_ev && key_pressed == 0) {
-            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_prop(PROPCASE_EV_CORRECTION_1)+(conf.fast_ev_step+1)*16);
-            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_prop(PROPCASE_EV_CORRECTION_2)+(conf.fast_ev_step+1)*16);
+            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_ev_correction1()+(conf.fast_ev_step+1)*16);
+            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()+(conf.fast_ev_step+1)*16);
             EnterToCompensationEVF();
             key_pressed = KEY_UP;
 
@@ -199,8 +199,8 @@ long kbd_use_up_down_left_right_as_fast_switch() {
     if (kbd_is_key_pressed(KEY_DOWN) && ((m&MODE_SHOOTING_MASK) != MODE_M) && !mode_video) {
         if (conf.fast_ev && key_pressed == 0) {
             kbd_key_release_all();
-            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_prop(PROPCASE_EV_CORRECTION_1)-(conf.fast_ev_step+1)*16);
-            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_prop(PROPCASE_EV_CORRECTION_2)-(conf.fast_ev_step+1)*16);
+            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_ev_correction1()-(conf.fast_ev_step+1)*16);
+            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()-(conf.fast_ev_step+1)*16);
             key_pressed = KEY_DOWN;
             EnterToCompensationEVF();
             return 1;
@@ -211,14 +211,14 @@ long kbd_use_up_down_left_right_as_fast_switch() {
     jogdial=get_jogdial_direction();
 
     if (conf.fast_ev &&kbd_is_key_pressed(KEY_SHOOT_HALF) && (jogdial==JOGDIAL_RIGHT) && ((m&MODE_SHOOTING_MASK) != MODE_M) && !mode_video) {
-            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_prop(PROPCASE_EV_CORRECTION_1)+(conf.fast_ev_step+1)*16);
-            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_prop(PROPCASE_EV_CORRECTION_2)+(conf.fast_ev_step+1)*16);
+            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_ev_correction1()+(conf.fast_ev_step+1)*16);
+            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()+(conf.fast_ev_step+1)*16);
             EnterToCompensationEVF();
         }
 
     if (conf.fast_ev &&kbd_is_key_pressed(KEY_SHOOT_HALF) && (jogdial==JOGDIAL_LEFT) && ((m&MODE_SHOOTING_MASK) != MODE_M) && !mode_video) {
-            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_prop(PROPCASE_EV_CORRECTION_1)-(conf.fast_ev_step+1)*16);
-            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_prop(PROPCASE_EV_CORRECTION_2)-(conf.fast_ev_step+1)*16);
+            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_ev_correction1()-(conf.fast_ev_step+1)*16);
+            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()-(conf.fast_ev_step+1)*16);
             EnterToCompensationEVF();
         }
 

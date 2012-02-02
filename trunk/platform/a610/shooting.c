@@ -89,7 +89,7 @@ Shooting Modes
 Movie: 640 x 480/320 x 240 (30 fps/15 fps), 320 x 240 (1 min. at 60 fps), 160 x 120 (3 min. at 15 fps)
 canon mode list FFD49168 in 100e
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO,               6  },
     { MODE_P,                  1  },
     { MODE_TV,                 3  },

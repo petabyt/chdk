@@ -90,7 +90,7 @@ const ISOTable iso_table[] = {
 };          
 
 // PROPCACE 49
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO,               32768 },
     { MODE_M,                  32769 },
     { MODE_P,                  32772 },

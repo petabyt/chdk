@@ -86,7 +86,7 @@ Movie: 1024 x 768 (15 fps), 640 x 480 (30 fps/30 fps LP),
 canon mode list FFAD6DDC in 100d 
 */
 
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
 	{ MODE_LONG_SHUTTER,       32774 }, // guessed
 	{ MODE_AUTO,               32768 },
 	{ MODE_P,                  32772 },

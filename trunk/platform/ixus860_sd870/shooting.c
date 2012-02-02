@@ -95,7 +95,7 @@ video
 canon mode list @FFACFEF8 in 100c
 */
 // PROPCACE 49
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_LONG_SHUTTER,       32774 },
     { MODE_AUTO,               32768 }, 
     { MODE_P,                  32772 },

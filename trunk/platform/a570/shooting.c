@@ -91,7 +91,7 @@ Movie: 640 x 480 / 320 x 240 (30 fps/15 fps) available up to 4GB or 60 minutes,
 canon mode list FFEE5E94 in 100e
 */
 
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },
     { MODE_TV,                 32771 },

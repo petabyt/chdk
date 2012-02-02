@@ -94,7 +94,7 @@ Movie: 640 x 480 (10 fps) / 320 x 240 (20 fps) available up to 1GB or 1 hour for
 160 x 120 (3 min. at 15 fps)
 canon mode list FFD47FC4 in 100a
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },
     { MODE_M,                  32769 }, // NOTE this camera does not have an adjustable iris, but does have manual shutter

@@ -1096,31 +1096,31 @@ static int luaCB_get_drive_mode( lua_State* L )
 
 static int luaCB_get_focus_mode( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_prop(PROPCASE_FOCUS_MODE) );
+  lua_pushnumber( L, shooting_get_focus_mode() );
   return 1;
 }
 
 static int luaCB_get_flash_mode( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_prop(PROPCASE_FLASH_MODE) );
+  lua_pushnumber( L, shooting_get_flash_mode() );
   return 1;
 }
 
 static int luaCB_get_shooting( lua_State* L )
 {
-  lua_pushboolean( L, shooting_get_prop(PROPCASE_SHOOTING) );
+  lua_pushboolean( L, shooting_in_progress() );
   return 1;
 }
 
 static int luaCB_get_flash_ready( lua_State* L )
 {
-  lua_pushboolean( L, shooting_get_prop(PROPCASE_IS_FLASH_READY) );
+  lua_pushboolean( L, shooting_is_flash() );
   return 1;
 }
 
 static int luaCB_get_IS_mode( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_prop(PROPCASE_IS_MODE) );
+  lua_pushnumber( L, shooting_get_is_mode() );
   return 1;
 }
 
@@ -1160,7 +1160,7 @@ static int luaCB_get_propset( lua_State* L )
 
 static int luaCB_get_ev( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_prop(PROPCASE_EV_CORRECTION_1) );
+  lua_pushnumber( L, shooting_get_ev_correction1() );
   return 1;
 }
 

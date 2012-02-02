@@ -89,7 +89,7 @@ canon mode list in FFE8E628 100d
 NOTE: this is NOT CONFIRMED. Original contained errors!
 */
 
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },
     { MODE_TV,                 32771 },

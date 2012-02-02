@@ -87,7 +87,7 @@ Movie: 640 x 480 / 320 x 240 (30 fps/15 fps) available up to 1GB or 1 hour for e
     320 x 240 (1 min. at 60 fps), 160 x 120 (3 min. at 15 fps)
 canon mode list FFD588D4 in 100b
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_M,                  32769 },
     { MODE_AV,                 32770 },
     { MODE_TV,                 32771 },

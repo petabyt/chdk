@@ -91,7 +91,7 @@ video resolutions
 
 canon mode list FF9B62B0 in 100e
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },
     { MODE_TV,                 32771 },

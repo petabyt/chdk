@@ -92,7 +92,7 @@ Movie: 640 x 480/320 x 240 (30 fps/15 fps) available up to 1GB,
     320 x 240 (1 min. at 60 fps), 160 x 120 (3 min. at 15 fps)
 canon mode list FF960434 in 100f
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_P,                   0 }, // guessed!
     { MODE_LONG_SHUTTER,        1 }, // guessed!
     { MODE_DIGITAL_MACRO,       2 },

@@ -104,7 +104,7 @@ Shooting Modes
 Movie: 640 x 480 (30 fps), 320 x 240 (30 fps) available up to 4GB or 60 minutes per clip
 canon mode list FFB49820 in 100e
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO,               32768 }, 
     { MODE_M,                  32769 }, // unlike most other ixus/sd, this has a real M mode
     { MODE_P,                  32772 },

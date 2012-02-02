@@ -123,7 +123,7 @@ Movie: 640 x 480 (30 fps), 320 x 240 (30 fps) available up to 4GB or 60 minutes 
 
 canon mode list FFB2D2EC in 100e
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
 	{ MODE_VIDEO_STD,          2600   },
 	{ MODE_VIDEO_COLOR_ACCENT, 2598   },
 	{ MODE_VIDEO_COLOR_SWAP,   2599   },

@@ -337,35 +337,35 @@ case TOKENIZER_IS_PRESSED:
    break;
   case TOKENIZER_GET_FOCUS_MODE:
     accept(TOKENIZER_GET_FOCUS_MODE);
-    r = shooting_get_prop(PROPCASE_FOCUS_MODE);
+    r = shooting_get_focus_mode();
    break;
  	case TOKENIZER_GET_DISPLAY_MODE:
     accept(TOKENIZER_GET_DISPLAY_MODE);
-    r = shooting_get_prop(PROPCASE_DISPLAY_MODE);
+    r = shooting_get_display_mode();
    break;
   case TOKENIZER_GET_FLASH_MODE:
     accept(TOKENIZER_GET_FLASH_MODE);
-    r = shooting_get_prop(PROPCASE_FLASH_MODE);
+    r = shooting_get_flash_mode();
    break;
   case TOKENIZER_GET_SHOOTING:
     accept(TOKENIZER_GET_SHOOTING);
-    r = shooting_get_prop(PROPCASE_SHOOTING);
+    r = shooting_in_progress();
    break;
   case TOKENIZER_GET_FLASH_READY:
     accept(TOKENIZER_GET_FLASH_READY);
-    r = shooting_get_prop(PROPCASE_IS_FLASH_READY);
+    r = shooting_is_flash();
    break;
   case TOKENIZER_GET_IS_MODE:
     accept(TOKENIZER_GET_IS_MODE);
-    r = shooting_get_prop(PROPCASE_IS_MODE);
+    r = shooting_get_is_mode();
    break;
   case TOKENIZER_GET_EV:
     accept(TOKENIZER_GET_EV);
-    r = shooting_get_prop(PROPCASE_EV_CORRECTION_1);
+    r = shooting_get_ev_correction1();
    break;
   case TOKENIZER_GET_RESOLUTION:
     accept(TOKENIZER_GET_RESOLUTION);
-    r = shooting_get_prop(PROPCASE_RESOLUTION);
+    r = shooting_get_resolution();
    break;
   case TOKENIZER_GET_QUALITY:
     accept(TOKENIZER_GET_QUALITY);

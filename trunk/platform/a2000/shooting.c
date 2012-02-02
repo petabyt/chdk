@@ -114,7 +114,7 @@ Shooting Modes
 Movie: 640 x 480 (30 fps/30 fps LP), 320 x 240 (30 fps) available up to 4GB or 60 minutes per clip, 160 x 120 (15 fps) up to 3 minutes per clip
 canon mode list FFEB9B10 in 100c
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
   { MODE_LONG_SHUTTER,       32774 },  // not verified
   { MODE_VIDEO_STD,          2600  },
   { MODE_VIDEO_COMPACT,      2602  },

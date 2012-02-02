@@ -83,7 +83,7 @@ const ISOTable iso_table[] = {
 http://www.usa.canon.com/cusa/support/consumer/digital_cameras/powershot_a_series/powershot_a430#Specifications
 canon mode list FFD588D4 in 100b
 */          
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
 //    { MODE_M,                  32769 },
     { MODE_P,                  32772 },
     { MODE_AUTO,               32768 },

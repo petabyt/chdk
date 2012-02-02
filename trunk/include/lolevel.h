@@ -20,6 +20,9 @@ extern long _GetFocusLensCurrentPosition();
 extern long _GetFocusLensSubjectDistance();
 extern long _GetFocusLensSubjectDistanceFromLens();
 extern void _MoveFocusLensToDistance(short *dist);
+#ifdef CAM_AV_OVERRIDE_IRIS_FIX
+extern int _MoveIrisWithAv(short*);
+#endif
 extern void _PutInNdFilter();
 extern void _PutOutNdFilter();
 extern volatile long focus_busy;

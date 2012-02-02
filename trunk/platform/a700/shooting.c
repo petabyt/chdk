@@ -89,7 +89,7 @@ Video resolutions
 
 Canon implies there should be a My Colors mode, but all the modes in the list are accounted for.
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     // common modes, probably OK
     { MODE_M,                  32769 },
     { MODE_P,                  32772 },

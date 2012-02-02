@@ -64,7 +64,7 @@ OBJS=entry.o main.o gui_draw.o gui_menu.o gui_user_menu.o gui_mbox.o \
      gui.o kbd.o action_stack.o conf.o module_wrappers.o module_exportlist.o \
      histogram.o gui_batt.o gui_space.o gui_osd.o raw.o \
      gui_usb.o gui_lang.o modules.o module_load.o \
-     levent.o shot_histogram.o console.o \
+     levent.o shot_histogram.o console.o shooting.o \
      usb_input.o usb_module.o usb_remote.o $(OPT_OBJS)
 
 gui.o: FORCE

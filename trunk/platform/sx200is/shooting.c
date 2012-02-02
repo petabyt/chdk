@@ -90,7 +90,7 @@ Movie: High Definition: 1280 x 720 (30 fps);
 
 canon mode list FFB6D0A4 in 100c
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
 	{ MODE_AUTO,               32768  },
 	{ MODE_P,                  32772  },
 	{ MODE_TV,                 32771  },

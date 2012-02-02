@@ -92,7 +92,7 @@ Movie: 640 x 480 (30 fps/30 fps LP),
 
 canon mode list FFEDD5F4 in 100b
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
   { MODE_VIDEO_STD,          2600  },  //Verified
   { MODE_VIDEO_COMPACT,      2602  },  //Verified
   { MODE_SCN_AQUARIUM,       16408 },  //Verified

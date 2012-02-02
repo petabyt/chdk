@@ -90,7 +90,7 @@ video resolutions
 
 canon mode list @FFD4A024 in 100f
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO,               6  },
     { MODE_P,                  1  },
     { MODE_TV,                 3  },

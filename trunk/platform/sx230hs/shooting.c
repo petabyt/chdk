@@ -93,7 +93,7 @@ Shooting Modes
 Movie: High Definition: 1280 x 720 (30 fps);
     Standard Definition: 640 x 480 (30 fps), 320 x 240 (30 fps)
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO 				, 0x8000	},
     { MODE_P   					, 0x8004	}, // Called "camera manual" on many cameras without a true manual mode, only allows +/- Ev adjustment
     { MODE_TV					, 0x8003	},
@@ -130,26 +130,6 @@ static const CapturemodeMap modemap[] = {
 };
 
 #include "../generic/shooting.c"
-
-	// Override ISO settings (need to do this before exposure calc for ISO, as well as after) 
- 	
-	void __attribute__((naked,noinline)) shooting_expo_iso_override(void){ 
- 	
-		asm volatile("STMFD   SP!, {R0-R12,LR}\n"); 
- 		 
-		if ((state_kbd_script_run) && (photo_param_put_off.sv96)) 
-			{ 
-				shooting_set_sv96(photo_param_put_off.sv96, SET_NOW); 
-				// photo_param_put_off.sv96 is not reset here, it will be reset in next call to shooting_expo_param_override 
-			} 
-		else if ((conf.iso_override_value) && (conf.iso_override_koef) && !(conf.override_disable==1)) 
-				shooting_set_iso_real(shooting_get_iso_override_value(), SET_NOW); 
-		else if (conf.autoiso_enable && shooting_get_flash_mode()/*NOT FOR FLASH AUTO MODE*/ && !(conf.override_disable==1 && conf.override_disable_all)) 
-				shooting_set_autoiso(shooting_get_iso_mode()); 
- 		 
-		asm volatile("LDMFD   SP!, {R0-R12,PC}\n"); 
- 	} 
- 	
 
 long get_file_next_counter() {
 	return get_file_counter();

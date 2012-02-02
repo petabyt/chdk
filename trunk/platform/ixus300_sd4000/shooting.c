@@ -102,7 +102,7 @@ Movie: 1280 x 720(30 fps), 640 x 480 (30 fps/), 320 x 240 (30 fps), 320 x 240 (2
 // Mapping between camera mode and PROPCASE_SHOOTING_MODE (modelist.h)
 // finsig2 found 33324, 33323, 33320, 33322, 33321, 33288, 33289 in firmware but not in modemap
 // ROM:FFC0041C Table with Data Words
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },
     { MODE_TV,                 32771 },

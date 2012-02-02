@@ -97,7 +97,7 @@ Movie: 640 x 480 (20 fps/20 fps LP), 320 x 240 (30 fps) available up to 4GB or 6
     160 x 120 (up to 3 minutes at 15 fps)
 canon mode list FFE8FAB4 in 100e
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_LONG_SHUTTER,       32774 }, // guessed
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },

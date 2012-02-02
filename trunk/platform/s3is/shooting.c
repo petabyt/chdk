@@ -87,7 +87,7 @@ video resolutions
 640 x 480 (30 fps/15 fps) / 320 x 240 (60 fps/30 fps/15 fps) available up to 1GB or 1 hour for each file size
 canon mode list @FF98F378 in 100a
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_AUTO,                32768 },
     { MODE_P,                   32772 },
     { MODE_TV,                  32771 },

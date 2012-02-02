@@ -25,7 +25,7 @@
 	EV under exposure selected by user to avoid highlight burnout 
 	(using Zebra)
 	
-	External function added:  shooting_get_ev_correction1 (added in generic/shooting)
+	External function added:  shooting_get_ev_correction1 (added in core/shooting)
 	Modified gui.c for curve enable
 	
 	3/28/09: Fix black holes, and column skipping, use Green as luminance in Luminance curve

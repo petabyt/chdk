@@ -89,7 +89,7 @@ Movie: 1280 x 720/640 x 480 (30 fps/30 fps LP),
 
 canon mode list FFB68D28 in 100g
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
     { MODE_LONG_SHUTTER,       32774 }, // guessed
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },

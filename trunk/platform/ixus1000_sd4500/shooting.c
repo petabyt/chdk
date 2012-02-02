@@ -98,7 +98,7 @@ Shooting Modes
 Auto, P, Portrait, Kids&Pets, Smart Shutter, High-speed Burst, Best Image Selection, Handheld Night Scene, Low Light, Super Vivid, Poster Effect, Color Accent, Color Swap, Fish-eye Effect, Miniature Effect, Beach, Foliage, Snow, Fireworks, Long Shutter, Stitch Assist, Movie
 
 */
-static const CapturemodeMap modemap[] = {
+const CapturemodeMap modemap[] = {
 	{ MODE_AUTO,                32768  },
 	{ MODE_P,                   32772  },
 	{ MODE_PORTRAIT,            32783  },
