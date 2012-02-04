@@ -38,11 +38,12 @@ NSTUB(kbd_pwr_off                             ,0xff865570) //  2 60%
 //DEF(recreview_hold                          ,0x00003828) // Found @0xff8a6510, ** != ** stubs_min = 0x000094c4 (0x93D4+0xF0)
 
 // Values below go in 'lib.c':
-//void *vid_get_bitmap_fb()        { return (void*)0x40471000; } // Found @0xff85fd1c
-//void *vid_get_viewport_fb()      { return (void*)0x405c6b80; } // Found @0xffb5e134
-//char *camera_jpeg_count_str()    { return (char*)0x000babac; } // Found @0xffa2a298
-//long hook_raw_size()             { return 0x0123eaf0; }        // Found @0xffb6162c
-//int get_flash_params_count(void) { return 0xa0; }              // Found @0xff9b23d4
+//void *vid_get_bitmap_fb()        { return (void*)0x40471000; }             // Found @0xff85fd1c
+//void *vid_get_viewport_fb()      { return (void*)0x405c6b80; }             // Found @0xffb5e134
+//void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x2c08+0x58)); } // Found @0xff878880 & 0xff8788b8
+//char *camera_jpeg_count_str()    { return (char*)0x000babac; }             // Found @0xffa2a298
+//long hook_raw_size()             { return 0x0123eaf0; }                    // Found @0xffb6162c
+//int get_flash_params_count(void) { return 0xa0; }                          // Found @0xff9b23d4
 
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffba2bd0, levent 0x90a
@@ -77,6 +78,10 @@ NSTUB(kbd_pwr_off                             ,0xff865570) //  2 60%
 
 // Misc stuff
 DEF(ctypes, 0xffba0102)
+
+// For capt_seq.c
+//static long *nrflag = (long*)(0x7200+0x08);  // Found @ ff98da20 & ff98da84
+//#define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
