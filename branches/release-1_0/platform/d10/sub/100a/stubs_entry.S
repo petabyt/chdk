@@ -47,11 +47,12 @@ DEF(focus_len_table                         ,0xfffe2a8c) // Found @0xfffe2a8c
 //DEF(recreview_hold                          ,0x0000342c) // Found @0xff8819cc, ** != ** stubs_min = 0x00007174 (0x70B0+0xC4)
 
 // Values below go in 'lib.c':
-//void *vid_get_bitmap_fb()        { return (void*)0x403f1000; } // Found @0xff842dc8
-//void *vid_get_viewport_fb()      { return (void*)0x40a05158; } // Found @0xffa9c12c
-//char *camera_jpeg_count_str()    { return (char*)0x000525e4; } // Found @0xff9abbc0
-//long hook_raw_size()             { return 0x011e4ee0; }        // Found @0xffa9e694
-//int get_flash_params_count(void) { return 0x7a; }              // Found @0xff95a4fc
+//void *vid_get_bitmap_fb()        { return (void*)0x403f1000; }             // Found @0xff842dc8
+//void *vid_get_viewport_fb()      { return (void*)0x40a05158; }             // Found @0xffa9c12c
+//void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x2884+0x58)); } // Found @0xff8575b4 & 0xff8575f4
+//char *camera_jpeg_count_str()    { return (char*)0x000525e4; }             // Found @0xff9abbc0
+//long hook_raw_size()             { return 0x011e4ee0; }                    // Found @0xffa9e694
+//int get_flash_params_count(void) { return 0x7a; }                          // Found @0xff95a4fc
 
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffad634c, levent 0x90a
@@ -85,6 +86,9 @@ DEF(focus_len_table                         ,0xfffe2a8c) // Found @0xfffe2a8c
 
 // Misc stuff
 DEF(ctypes, 0xffad03aa)
+
+// For capt_seq.c
+//static long *nrflag = (long*)(0x64f0-0x08);  // Found @ ff9345d0 & ff9345ec
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

@@ -40,11 +40,12 @@ DEF(some_flag_for_af_scan                   ,0x0000a5e8) // Found @0xff95e58c
 //DEF(recreview_hold                          ,0x0000678c) // Found @0xff89020c, ** != ** stubs_min = 0x0000b400 (0xB31C+0xE4)
 
 // Values below go in 'lib.c':
-//void *vid_get_bitmap_fb()        { return (void*)0x40471000; } // Found @0xff84807c
-//void *vid_get_viewport_fb()      { return (void*)0x4133bb10; } // Found @0xffafc454
-//char *camera_jpeg_count_str()    { return (char*)0x0005ced4; } // Found @0xff9ed730
-//long hook_raw_size()             { return 0x01076d90; }        // Found @0xffafe94c
-//int get_flash_params_count(void) { return 0x79; }              // Found @0xff98d594
+//void *vid_get_bitmap_fb()        { return (void*)0x40471000; }             // Found @0xff84807c
+//void *vid_get_viewport_fb()      { return (void*)0x4133bb10; }             // Found @0xffafc454
+//void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x53c8+0x58)); } // Found @0xff85fbb0 & 0xff85fbdc
+//char *camera_jpeg_count_str()    { return (char*)0x0005ced4; }             // Found @0xff9ed730
+//long hook_raw_size()             { return 0x01076d90; }                    // Found @0xffafe94c
+//int get_flash_params_count(void) { return 0x79; }                          // Found @0xff98d594
 
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffb36734, levent 0x90a
@@ -76,6 +77,9 @@ DEF(some_flag_for_af_scan                   ,0x0000a5e8) // Found @0xff95e58c
 
 // Misc stuff
 DEF(ctypes, 0xffb2b0c6)
+
+// For capt_seq.c
+//static long *nrflag = (long*)(0xa5d0-0x04);  // Found @ ff960d5c & ff960d74
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
