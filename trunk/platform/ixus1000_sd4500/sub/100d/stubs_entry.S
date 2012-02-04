@@ -43,11 +43,12 @@ DEF(focus_len_table                         ,0xfffe9eac) // Found @0xfffe9eac
 //DEF(recreview_hold                          ,0x00004294) // Found @0xff8a8800, ** != ** stubs_min = 0x000087e0 (0x86F4+0xEC)
 
 // Values below go in 'lib.c':
-//void *vid_get_bitmap_fb()        { return (void*)0x40471000; } // Found @0xff85d384
-//void *vid_get_viewport_fb()      { return (void*)0x40587700; } // Found @0xffb4cb2c
-//char *camera_jpeg_count_str()    { return (char*)0x000b7e00; } // Found @0xffa23818
-//long hook_raw_size()             { return 0x00f32880; }        // Found @0xffb4fff4
-//int get_flash_params_count(void) { return 0x9a; }              // Found @0xff9b1cac
+//void *vid_get_bitmap_fb()        { return (void*)0x40471000; }             // Found @0xff85d384
+//void *vid_get_viewport_fb()      { return (void*)0x40587700; }             // Found @0xffb4cb2c
+//void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x3230+0x58)); } // Found @0xff877d10 & 0xff877d48
+//char *camera_jpeg_count_str()    { return (char*)0x000b7e00; }             // Found @0xffa23818
+//long hook_raw_size()             { return 0x00f32880; }                    // Found @0xffb4fff4
+//int get_flash_params_count(void) { return 0x9a; }                          // Found @0xff9b1cac
 
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffb8d548, levent 0x90a
@@ -80,6 +81,10 @@ DEF(focus_len_table                         ,0xfffe9eac) // Found @0xfffe9eac
 // Misc stuff
 DEF(ctypes, 0xffb8bd6a)
 
+// For capt_seq.c
+//static long *nrflag = (long*)(0x7ce8+0x08);  // Found @ ff98d71c & ff98d720
+//#define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto
+
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
 NSTUB(AllocateMemory                          ,0xffae5698) //101
@@ -87,6 +92,7 @@ NSTUB(AllocateUncacheableMemory               ,0xff83b8f0) //112
 NSTUB(Close                                   ,0xff838060) //101
 NSTUB(CreateTask                              ,0xff81e8a0) //101
 NSTUB(DebugAssert                             ,0xff81eb78) //111
+NSTUB(DeleteDirectory_Fut                     ,0xff837abc) //  1
 NSTUB(DeleteFile_Fut                          ,0xff8379d8) //112
 NSTUB(DoAFLock                                ,0xff839670) //102
 NSTUB(EnterToCompensationEVF                  ,0xff839770) //104
