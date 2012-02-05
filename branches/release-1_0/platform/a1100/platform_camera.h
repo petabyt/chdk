@@ -37,7 +37,7 @@
     #define CAM_REAR_CURTAIN                1
     #undef  DEFAULT_RAW_EXT 
     #define DEFAULT_RAW_EXT                 2  // use .CR2 
-    #define CAM_EXT_TV_RANGE                0
+    #undef CAM_EXT_TV_RANGE
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 0
     #define CAM_CAN_MUTE_MICROPHONE         0
     #define CAM_EV_IN_VIDEO                 0
