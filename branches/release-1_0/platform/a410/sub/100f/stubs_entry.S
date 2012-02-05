@@ -12,8 +12,13 @@ NSTUB(DeleteFile_Fut, 0xffc534fc)
 NSTUB(DisableDispatch, 0xffc120d4)
 // Best match: 51%
 NSTUB(DisplayImagePhysicalScreen, 0xffd093a8)
+NSTUB(DoAFLock, 0xffd24124)
 NSTUB(EnableDispatch, 0xffc12160)
+// Best match: 64%
+NSTUB(EnterToCompensationEVF, 0xffd25f98)
 NSTUB(ExecuteEventProcedure, 0xffc06a64)
+// Best match: 73%
+NSTUB(ExitFromCompensationEVF, 0xffd26098)
 NSTUB(ExitTask, 0xffc12724)
 NSTUB(Fclose_Fut, 0xffc5363c)
 NSTUB(Feof_Fut, 0xffc53850)
@@ -26,13 +31,25 @@ NSTUB(FreeMemory, 0xffc01b28)
 NSTUB(FreeUncacheableMemory, 0xffc047f8)
 NSTUB(Fseek_Fut, 0xffc53808)
 NSTUB(Fwrite_Fut, 0xffc53770)
+// Best match: 82%
+NSTUB(GetBatteryTemperature, 0xffc1cdf0)
+// Best match: 82%
+NSTUB(GetCCDTemperature, 0xffc1cddc)
 NSTUB(GetCurrentAvValue, 0xffe2e0bc)
 NSTUB(GetCurrentTargetDistance, 0xffe2e064)
+// Best match: 92%
+NSTUB(GetDrive_ClusterSize, 0xffc59df4)
+// Best match: 92%
+NSTUB(GetDrive_FreeClusters, 0xffc59e6c)
+// Best match: 92%
+NSTUB(GetDrive_TotalClusters, 0xffc59e30)
 // Best match: 90%
 NSTUB(GetFocusLensSubjectDistance, 0xffe217a0)
 // ALT: NSTUB(GetFocusLensSubjectDistance, 0xffe217a0) // 28/3
 // Best match: 52%
 NSTUB(GetFocusLensSubjectDistanceFromLens, 0xffe21d40)
+// Best match: 82%
+NSTUB(GetOpticalTemperature, 0xffc1cdc8)
 NSTUB(GetParameterData, 0xffd3e304)
 NSTUB(GetPropertyCase, 0xffc155d8)
 // Best match: 96%
@@ -47,6 +64,8 @@ NSTUB(GetZoomLensCurrentPosition, 0xffe12568)
 NSTUB(IsStrobeChargeCompleted, 0xffce3b80)
 // Best match: 96%
 NSTUB(LockMainPower, 0xffd39888)
+// Best match: 89%
+NSTUB(MakeAFScan, 0xffd285f8)
 NSTUB(MakeDirectory, 0xffc5a8f0)
 NSTUB(MakeDirectory_Fut, 0xffc53588)
 // Best match: 90%
@@ -57,6 +76,7 @@ NSTUB(MoveFocusLensToDistance, 0xffe2e2f4)
 NSTUB(MoveZoomLensWithPoint, 0xffe12434)
 // ALT: NSTUB(MoveZoomLensWithPoint, 0xffe12434) // 25/0
 NSTUB(Open, 0xffc5a5f0)
+NSTUB(PT_PlaySound, 0xffd31254)
 // Best match: 96%
 NSTUB(PhySw_testgpio, 0xffc18840)
 NSTUB(PostLogicalEventForNotPowerType, 0xffd3597c)
@@ -78,9 +98,12 @@ NSTUB(RefreshPhysicalScreen, 0xffd4e9f8)
 NSTUB(Remove, 0xffc5a638)
 NSTUB(RenameFile_Fut, 0xffc5347c)
 NSTUB(Restart, 0xffc13bb0)
+// Best match: 95%
+NSTUB(SetAE_ShutterSpeed, 0xffe313a8)
 // Best match: 96%
 NSTUB(SetAutoShutdownTime, 0xffd39780)
 NSTUB(SetCurrentCaptureModeType, 0xffd64fa4)
+NSTUB(SetFileAttributes, 0xffc5a804)
 // Best match: 87%
 NSTUB(SetLogicalEventActive, 0xffd37938)
 NSTUB(SetParameterData, 0xffd3e224)
@@ -90,6 +113,7 @@ NSTUB(SleepTask, 0xffc121c4)
 NSTUB(TakeSemaphore, 0xffc11b80)
 NSTUB(TurnOffBackLight, 0xffd7a150)
 NSTUB(TurnOnBackLight, 0xffd7a124)
+NSTUB(UnlockAF, 0xffd24164)
 // Best match: 96%
 NSTUB(UnlockMainPower, 0xffd3993c)
 NSTUB(Unmount_FileSystem, 0xffc599d4)
@@ -100,6 +124,9 @@ NSTUB(UpdateMBROnFlash, 0xffc59b2c)
 // Best match: 51%
 NSTUB(VbattGet, 0xffc1be54)
 NSTUB(Write, 0xffc5a6b8)
+// Best match: 93%
+NSTUB(WriteSDCard, 0xffc6964c)
+// ALT: NSTUB(WriteSDCard, 0xffc69824) // 29/2
 NSTUB(_log, 0xffe5f084)
 // ALT: NSTUB(_log, 0xffe5f084) // 27/0
 NSTUB(_log10, 0xffe5f72c)
@@ -110,13 +137,14 @@ NSTUB(_sqrt, 0xffe63f68)
 // ALT: NSTUB(_sqrt, 0xffe63f68) // 24/0
 // Best match: 96%
 NSTUB(add_ptp_handler, 0xffde1470)
+NSTUB(apex2us, 0xffc94108)
 NSTUB(chdir, 0xffe731c4)
 // ALT: NSTUB(chdir, 0xffe731c4) // 27/0
 NSTUB(close, 0xffe72b04)
 NSTUB(closedir, 0xffe6eaa4)
 NSTUB(errnoOfTaskGet, 0xffe6f270)
-// Best match: 90%
-NSTUB(exmem_alloc, 0xffc02720)
+// Best match: 92%
+NSTUB(exmem_alloc, 0xffc028b8)
 // ERROR: free is not found!
 NSTUB(ints_disable, 0xffc0e2a4)
 NSTUB(ints_enable, 0xffc0e2b0)
@@ -136,7 +164,13 @@ NSTUB(kbd_p1_f, 0xffc17610)
 NSTUB(kbd_p1_f_cont, 0xffc1761c)
 NSTUB(kbd_p2_f, 0xffc179ec)
 // Best match: 83%
-NSTUB(kbd_pwr_off, 0xffc18eec)
+NSTUB(kbd_pwr_off, 0xffc18b94)
+// ALT: NSTUB(kbd_pwr_off, 0xffc18bb0) // 5/1
+// ALT: NSTUB(kbd_pwr_off, 0xffc18c9c) // 5/1
+// ALT: NSTUB(kbd_pwr_off, 0xffc18cb8) // 5/1
+// ALT: NSTUB(kbd_pwr_off, 0xffc18d88) // 5/1
+// ALT: NSTUB(kbd_pwr_off, 0xffc18da4) // 5/1
+// ALT: NSTUB(kbd_pwr_off, 0xffc18eec) // 5/1
 // ALT: NSTUB(kbd_pwr_off, 0xffc18f08) // 5/1
 // ERROR: kbd_pwr_on is not found!
 NSTUB(kbd_read_keys_r2, 0xffc18304)

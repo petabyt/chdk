@@ -1,28 +1,25 @@
 #include "stubs_asm.h"
+#define NULL_SUB 0xFF966BC4
 
-NHSTUB(VbattGet, 0xFF82C150)
-NHSTUB(free, 0xFFB0EFDC)
-NHSTUB(kbd_pwr_on, 0xFF827ECC)
-NHSTUB(kbd_pwr_off, 0xFF827F0C)
-NHSTUB(GetCurrentAvValue, 0xFFAC4014)
+// Override stubs_entry.S
+NHSTUB(DoAFLock,                    0xff95b424)
+NHSTUB(EnterToCompensationEVF,      NULL_SUB)
+NHSTUB(ExitFromCompensationEVF,     NULL_SUB)
+NHSTUB(GetCurrentAvValue,           0xFFAC4014)
+NHSTUB(GetDrive_ClusterSize,        0xFF86ED94)
+NHSTUB(GetDrive_FreeClusters,       0xFF86EE0C)
+NHSTUB(GetDrive_TotalClusters,      0xFF86EDD0)
+NHSTUB(MakeAFScan,                  0xFF95FDEC)
+NHSTUB(UnlockAF,                    0xff95b468)
+NHSTUB(VbattGet,                    0xFF82C150)
+NHSTUB(free,                        0xFFB0EFDC)
+NHSTUB(kbd_pwr_off,                 0xFF827F0C)
+NHSTUB(kbd_pwr_on,                  0xFF827ECC)
 
-// null stubs
-NHSTUB(SetZoomActuatorSpeedPercent, 0xFF966BC4)
+// These don't exist
+NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 
-NHSTUB(GetDrive_ClusterSize, 0xFF86ED94)
-NHSTUB(GetDrive_TotalClusters, 0xFF86EDD0)
-NHSTUB(GetDrive_FreeClusters, 0xFF86EE0C)
-NHSTUB(ExpCtrlTool_StopContiAE,  0xFF903554) 
-NHSTUB(ExpCtrlTool_StartContiAE, 0xFF903524) 
-NHSTUB(MakeAFScan,  0xFF95FDEC) 
-NHSTUB(GetBatteryTemperature, 0xFF82D21C)
-NHSTUB(GetCCDTemperature, 0xFF82D208)
-NHSTUB(GetOpticalTemperature, 0xFF82D1F4)
-NHSTUB(PT_PlaySound, 0xFF969544)
-
-
-//NHSTUB(EnterToCompensationEVF, 0xFFFFFFFF) // Stub not found. When found, remove dummy function from lib.c.
-//NHSTUB(ExitFromCompensationEVF, 0xFFFFFFFF) // Stub not found. When found, remove dummy function from lib.c.
-NHSTUB(DoAFLock, 0xff95b424)
-NHSTUB(UnlockAF, 0xff95b468)
-NHSTUB(SetScriptMode,0xFF96FE64) // by find_eventproc name @ 0xFF998C60
+// Additional
+NHSTUB(ExpCtrlTool_StartContiAE,    0xFF903524)
+NHSTUB(ExpCtrlTool_StopContiAE,     0xFF903554)
+NHSTUB(SetScriptMode,               0xFF96FE64)

@@ -14,8 +14,9 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-// ERROR: kbd_pwr_off is not found.                        //--- ---    *** != 0xff057e44
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0xff057e44
+// ERROR: SetFileAttributes is not found.                  //--- ---    *** != 0x00000000
+// ERROR: kbd_pwr_off is not found.                        //--- ---    *** != 0x00000000
+// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 NSTUB(reboot_fw_update                        ,0xff33ede8) //  6 96%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
@@ -206,7 +207,6 @@ NSTUB(openfastdir                             ,0xff339540) //  6
 NSTUB(qsort                                   ,0xff3ae998) //  6
 NSTUB(rand                                    ,0xff295d60) //  6
 NSTUB(read                                    ,0xff00ad74) //101
-NSTUB(readfastdir                             ,0xff339694) //  6
 NSTUB(rename                                  ,0xff026e68) //  6
 NSTUB(set_control_event                       ,0xff097a6c) //111
 NSTUB(srand                                   ,0xff295d54) //  6

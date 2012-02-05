@@ -14,8 +14,9 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
+// ERROR: SetFileAttributes is not found.                  //--- ---    *** != 0x00000000
 NSTUB(kbd_pwr_off                             ,0xff057fc8) //  2 60%
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0xff000b20
+// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff0931a8 -> ff08fab8 -> ff1b3bac -> ff301224 -> ff457c78
@@ -41,11 +42,12 @@ DEF(focus_busy                              ,0x00006a40) // Found @0xff17aa94
 DEF(recreview_hold                          ,0x000038ec) // Found @0xff09a5d4
 
 // Values below go in 'lib.c':
-//void *vid_get_bitmap_fb()        { return (void*)0x40471000; } // Found @0xff053204
-//void *vid_get_viewport_fb()      { return (void*)0x405c6b80; } // Found @0xff365654
-//char *camera_jpeg_count_str()    { return (char*)0x000b9574; } // Found @0xff226398
-//long hook_raw_size()             { return 0x0123eaf0; }        // Found @0xff36849c
-//int get_flash_params_count(void) { return 0x9f; }              // Found @0xff1b4c5c
+//void *vid_get_bitmap_fb()        { return (void*)0x40471000; }             // Found @0xff053204
+//void *vid_get_viewport_fb()      { return (void*)0x405c6b80; }             // Found @0xff365654
+//void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x2c58+0x58)); } // Found @0xff06c234 & 0xff06c26c
+//char *camera_jpeg_count_str()    { return (char*)0x000b9574; }             // Found @0xff226398
+//long hook_raw_size()             { return 0x0123eaf0; }                    // Found @0xff36849c
+//int get_flash_params_count(void) { return 0x9f; }                          // Found @0xff1b4c5c
 
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xff3a8050, levent 0x20a
@@ -81,6 +83,10 @@ DEF(recreview_hold                          ,0x000038ec) // Found @0xff09a5d4
 // Misc stuff
 DEF(ctypes, 0xff3a6812)
 
+// For capt_seq.c
+//static long *nrflag = (long*)(0x9b44+0x00);  // Found @ ff23c248 & ff23c2d0
+//#define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto
+
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
 NSTUB(AllocateMemory                          ,0xff2efd34) //101
@@ -88,6 +94,7 @@ NSTUB(AllocateUncacheableMemory               ,0xff02be08) //112
 NSTUB(Close                                   ,0xff028024) //101
 NSTUB(CreateTask                              ,0xff00eae4) //101
 NSTUB(DebugAssert                             ,0xff00edbc) //111
+NSTUB(DeleteDirectory_Fut                     ,0xff027a20) //  1
 NSTUB(DeleteFile_Fut                          ,0xff02793c) //112
 NSTUB(DoAFLock                                ,0xff0298cc) //102
 NSTUB(EnterToCompensationEVF                  ,0xff029b2c) //104
@@ -200,7 +207,6 @@ NSTUB(openfastdir                             ,0xff2c9864) //  6
 NSTUB(qsort                                   ,0xff342dbc) //  6
 NSTUB(rand                                    ,0xff234274) //  6
 NSTUB(read                                    ,0xff00ad68) //101
-NSTUB(readfastdir                             ,0xff2c99b8) //  6
 NSTUB(reboot_fw_update                        ,0xff2ceef8) //  6
 NSTUB(rename                                  ,0xff0278a8) //  6
 NSTUB(set_control_event                       ,0xff08f0ec) //111

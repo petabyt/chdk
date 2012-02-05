@@ -11,8 +11,13 @@ NSTUB(DeleteFile_Fut, 0xffc5a398)
 NSTUB(DisableDispatch, 0xffc118e0)
 // Best match: 51%
 NSTUB(DisplayImagePhysicalScreen, 0xffd2da18)
+// Best match: 95%
+NSTUB(DoAFLock, 0xffd4fc44)
 NSTUB(EnableDispatch, 0xffc1196c)
+// Best match: 96%
+NSTUB(EnterToCompensationEVF, 0xffd4fd90)
 NSTUB(ExecuteEventProcedure, 0xffc0699c)
+NSTUB(ExitFromCompensationEVF, 0xffd5337c)
 NSTUB(ExitTask, 0xffc11e7c)
 NSTUB(Fclose_Fut, 0xffc5a4d8)
 NSTUB(Feof_Fut, 0xffc5a6ec)
@@ -24,14 +29,33 @@ NSTUB(FreeMemory, 0xffc01abc)
 NSTUB(FreeUncacheableMemory, 0xffc04b34)
 NSTUB(Fseek_Fut, 0xffc5a6a4)
 NSTUB(Fwrite_Fut, 0xffc5a60c)
+// Best match: 96%
+NSTUB(GetBatteryTemperature, 0xffc1d7a4)
+// Best match: 96%
+NSTUB(GetCCDTemperature, 0xffc1d790)
 NSTUB(GetCurrentAvValue, 0xffea6ffc)
 // ALT: NSTUB(GetCurrentAvValue, 0xffea70f4) // 13/0
 // ALT: NSTUB(GetCurrentAvValue, 0xffea9528) // 13/0
 NSTUB(GetCurrentTargetDistance, 0xffea94d0)
+// Best match: 76%
+NSTUB(GetDrive_ClusterSize, 0xffc60d88)
+// Best match: 72%
+NSTUB(GetDrive_FreeClusters, 0xffc60cd4)
+// ALT: NSTUB(GetDrive_FreeClusters, 0xffc60cd4) // 18/7
+// ALT: NSTUB(GetDrive_FreeClusters, 0xffc60d10) // 18/7
+// ALT: NSTUB(GetDrive_FreeClusters, 0xffc60d10) // 18/7
+// ALT: NSTUB(GetDrive_FreeClusters, 0xffc60d4c) // 18/7
+// ALT: NSTUB(GetDrive_FreeClusters, 0xffc60d4c) // 18/7
+// ALT: NSTUB(GetDrive_FreeClusters, 0xffc60d88) // 18/7
+// ALT: NSTUB(GetDrive_FreeClusters, 0xffc60d88) // 18/7
+// Best match: 92%
+NSTUB(GetDrive_TotalClusters, 0xffc60d10)
 // Best match: 96%
 NSTUB(GetFocusLensSubjectDistance, 0xffe9b4fc)
 // Best match: 57%
 NSTUB(GetFocusLensSubjectDistanceFromLens, 0xffe9bab0)
+// Best match: 96%
+NSTUB(GetOpticalTemperature, 0xffc1d77c)
 NSTUB(GetParameterData, 0xffd6d854)
 NSTUB(GetPropertyCase, 0xffc14de4)
 NSTUB(GetSystemTime, 0xffc04d38)
@@ -43,6 +67,8 @@ NSTUB(GetZoomLensCurrentPosition, 0xffe8793c)
 // ALT: NSTUB(GetZoomLensCurrentPosition, 0xffe8793c) // 27/2
 NSTUB(IsStrobeChargeCompleted, 0xffd08620)
 NSTUB(LockMainPower, 0xffd68070)
+// Best match: 79%
+NSTUB(MakeAFScan, 0xffd54358)
 NSTUB(MakeDirectory, 0xffc617fc)
 NSTUB(MakeDirectory_Fut, 0xffc5a424)
 // Best match: 90%
@@ -53,6 +79,7 @@ NSTUB(MoveFocusLensToDistance, 0xffea9770)
 NSTUB(MoveZoomLensWithPoint, 0xffe87808)
 // ALT: NSTUB(MoveZoomLensWithPoint, 0xffe87808) // 25/0
 NSTUB(Open, 0xffc614c0)
+NSTUB(PT_PlaySound, 0xffd5eee0)
 NSTUB(PhySw_testgpio, 0xffc18964)
 NSTUB(PostLogicalEventForNotPowerType, 0xffd63df0)
 NSTUB(PostLogicalEventToUI, 0xffd63e6c)
@@ -70,8 +97,11 @@ NSTUB(Remove, 0xffc61508)
 NSTUB(RenameFile_Fut, 0xffc5a318)
 // Best match: 96%
 NSTUB(Restart, 0xffc12fd4)
+// Best match: 95%
+NSTUB(SetAE_ShutterSpeed, 0xffeac3e0)
 NSTUB(SetAutoShutdownTime, 0xffd67f74)
 NSTUB(SetCurrentCaptureModeType, 0xffd964c8)
+NSTUB(SetFileAttributes, 0xffc61710)
 // Best match: 88%
 NSTUB(SetLogicalEventActive, 0xffd65bd8)
 NSTUB(SetParameterData, 0xffd6d774)
@@ -80,6 +110,8 @@ NSTUB(SleepTask, 0xffc119d0)
 NSTUB(TakeSemaphore, 0xffc114cc)
 NSTUB(TurnOffBackLight, 0xffdb63f4)
 NSTUB(TurnOnBackLight, 0xffdb63c4)
+// Best match: 91%
+NSTUB(UnlockAF, 0xffd4fc90)
 NSTUB(UnlockMainPower, 0xffd68108)
 NSTUB(Unmount_FileSystem, 0xffc608b4)
 // Best match: 89%
@@ -88,6 +120,7 @@ NSTUB(UpdateMBROnFlash, 0xffc60a08)
 // Best match: 96%
 NSTUB(VbattGet, 0xffc1c6d0)
 NSTUB(Write, 0xffc61588)
+NSTUB(WriteSDCard, 0xffc707ac)
 NSTUB(_log, 0xffee5cf0)
 // ALT: NSTUB(_log, 0xffee5cf0) // 27/0
 NSTUB(_log10, 0xffee2090)
@@ -98,6 +131,7 @@ NSTUB(_sqrt, 0xffee40ec)
 // ALT: NSTUB(_sqrt, 0xffee40ec) // 24/0
 // Best match: 96%
 NSTUB(add_ptp_handler, 0xffe5291c)
+NSTUB(apex2us, 0xffca4bf8)
 NSTUB(chdir, 0xffef08f8)
 // ALT: NSTUB(chdir, 0xffef08f8) // 27/0
 NSTUB(close, 0xffef0238)

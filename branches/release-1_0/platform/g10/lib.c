@@ -89,6 +89,5 @@ long vid_get_viewport_height()
 
 // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
 int vid_get_viewport_yscale() {
-	return 2;               // G12 viewport is 480 pixels high
+	return 2;               // G10 viewport is 480 pixels high
 }
-
