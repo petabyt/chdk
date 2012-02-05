@@ -14,27 +14,28 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
+// ERROR: SetFileAttributes is not found.                  //--- ---    *** != 0x00000000
 NSTUB(kbd_pwr_off                             ,0xff865570) //  2 60%
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0xff841798
+// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff89e7f8 -> ff89b194 -> ff9b139c -> ffb04244 -> ffc4eea0
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(physw_status                            ,0x0003418c) // Found @0xff834e18,          stubs_min = 0x0003418c (0x0003418c)
-//DEF(physw_run                               ,0x00001c3c) // Found @0xff8349bc,          stubs_min = 0x00001c3c (0x00001c3c)
-//DEF(levent_table                            ,0xffbeb268) // Found @0xffbeb268,          stubs_min = 0xffbeb268 (0xffbeb268)
-//DEF(FlashParamsTable                        ,0xffc4f0e0) // Found @0xffc4f0e0,          stubs_min = 0xffc4f0e0 (0xffc4f0e0)
-//DEF(movie_status                            ,0x00006dcc) // Found @0xff984bd0,          stubs_min = 0x00006dcc (0x00006dcc)
-//DEF(full_screen_refresh                     ,0x00009d00) // Found @0xffa32dfc,          stubs_min = 0x00009d00 (0x00009d00)
-//DEF(canon_menu_active                       ,0x00003210) // Found @0xff896910,          stubs_min = 0x00003210 (0x00003210)
-//DEF(canon_shoot_menu_active                 ,0x000083d9) // Found @0xff9c8c1c,          stubs_min = 0x000083d9 (0x000083d9)
-//DEF(playrec_mode                            ,0x00002f38) // Found @0xff888774,          stubs_min = 0x00002f38 (0x00002f38)
-//DEF(zoom_status                             ,0x0000ded8) // Found @0xffb07900,          stubs_min = 0x0000ded8 (0x0000ded8)
-//DEF(some_flag_for_af_scan                   ,0x000071cc) // Found @0xff989240,          stubs_min = 0x000071cc (0x000071cc)
-//DEF(zoom_busy                               ,0x00006cf4) // Found @0xff97fd74,          stubs_min = 0x00006cf4 (0x00006cf4)
-//DEF(focus_busy                              ,0x00006b68) // Found @0xff97af60,          stubs_min = 0x00006b68 (0x00006b68)
+DEF(physw_status                            ,0x0003418c) // Found @0xff834e18
+DEF(physw_run                               ,0x00001c3c) // Found @0xff8349bc
+DEF(levent_table                            ,0xffbeb268) // Found @0xffbeb268
+DEF(FlashParamsTable                        ,0xffc4f0e0) // Found @0xffc4f0e0
+DEF(movie_status                            ,0x00006dcc) // Found @0xff984bd0
+DEF(full_screen_refresh                     ,0x00009d00) // Found @0xffa32dfc
+DEF(canon_menu_active                       ,0x00003210) // Found @0xff896910
+DEF(canon_shoot_menu_active                 ,0x000083d9) // Found @0xff9c8c1c
+DEF(playrec_mode                            ,0x00002f38) // Found @0xff888774
+DEF(zoom_status                             ,0x0000ded8) // Found @0xffb07900
+DEF(some_flag_for_af_scan                   ,0x000071cc) // Found @0xff989240
+DEF(zoom_busy                               ,0x00006cf4) // Found @0xff97fd74
+DEF(focus_busy                              ,0x00006b68) // Found @0xff97af60
 //DEF(recreview_hold                          ,0x00003828) // Found @0xff8a6510, ** != ** stubs_min = 0x000094c4 (0x93D4+0xF0)
 
 // Values below go in 'lib.c':
@@ -203,7 +204,6 @@ NSTUB(openfastdir                             ,0xffaca168) //  6
 NSTUB(qsort                                   ,0xffb3d6cc) //  6
 NSTUB(rand                                    ,0xffa3a2cc) //  6
 NSTUB(read                                    ,0xff81ad58) //101
-NSTUB(readfastdir                             ,0xffaca2bc) //  6
 NSTUB(reboot_fw_update                        ,0xffacf758) //  6
 NSTUB(rename                                  ,0xff837c6c) //  6
 NSTUB(set_control_event                       ,0xff89a7b0) //111

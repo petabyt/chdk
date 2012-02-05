@@ -6,10 +6,10 @@
 #include "keyboard.h"
 #include "../../core/gui_draw.h"
 
-// Uncomment this line to enable 'PLAY' and 'OFF' buttons in the CHDK OSD
-// Can be used to switch in/out of playback mode and power off the camera
-// (For 'nekut' whose camera has a broken playback button - http://chdk.setepontos.com/index.php?topic=6634.msg75039#msg75039)
-//#define   TS_PLAY_POWER_HACK  1
+// Uncomment this line to enable 'PLAY' and 'OFF' buttons in the CHDK OSD 
+// Can be used to switch in/out of playback mode and power off the camera 
+// (For 'nekut' whose camera has a broken playback button - http://chdk.setepontos.com/index.php?topic=6634.msg75039#msg75039) 
+//#define   TS_PLAY_POWER_HACK  1 
 
 typedef struct {
 	short grp;
@@ -80,8 +80,8 @@ int get_usb_bit()
 #define TS_KEY_TOGGLE_AV_UP 211
 #define TS_KEY_TOGGLE_SV_DN 212
 #define TS_KEY_TOGGLE_SV_UP 213
-#define TS_KEY_PLAYBACK     214
-#define TS_KEY_POWER        215
+#define TS_KEY_PLAYBACK     214 
+#define TS_KEY_POWER        215 
 
 #define TS_UP_DN_BUTTON     300
 #define TS_PG_DN            301
@@ -287,21 +287,21 @@ const char* ts_pg_up(int change, int arg)
     return debug_pg;
 }
 
-#if defined(TS_PLAY_POWER_HACK)
-static int playbutton_hack;
-static const char* simulate_playback_press(int change, int arg)
-{
-    void levent_set_play(void);
-    if (change) levent_set_play();
-    return 0;
-}
-
-static const char* simulate_power_press(int change, int arg)
-{
-    void camera_shutdown_in_a_second(void);
-    if (change) camera_shutdown_in_a_second();
-    return 0;
-}
+#if defined(TS_PLAY_POWER_HACK) 
+static int playbutton_hack; 
+static const char* simulate_playback_press(int change, int arg) 
+{ 
+    void levent_set_play(void); 
+    if (change) levent_set_play(); 
+    return 0; 
+} 
+ 
+static const char* simulate_power_press(int change, int arg) 
+{ 
+    void camera_shutdown_in_a_second(void); 
+    if (change) camera_shutdown_in_a_second(); 
+    return 0; 
+} 
 #endif
 
 static KeyMap keymap[] = {
@@ -340,23 +340,23 @@ static KeyMap keymap[] = {
     { 3, TS_KEY_TOGGLE_HISTO, 0x00001000, RB(2,2), 1, "Hist",  0, GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, &conf.show_histo, gui_histo_show_enum, &conf.touchscreen_disable_shortcut_controls },
     { 3, TS_KEY_TOGGLE_EDGE , 0x00002000, RB(2,3), 1, "Edge",  0, GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, &conf.edge_overlay_enable, gui_on_off_enum, &conf.touchscreen_disable_shortcut_controls },
 
-#if defined(TS_PLAY_POWER_HACK)
-    { 3, TS_KEY_PLAYBACK    , 0x00400000, LB(1,0), 0, "PLAY",  0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, &playbutton_hack, simulate_playback_press, 0 },
-    { 3, TS_KEY_POWER       , 0x00800000, LB(3,0), 0, "OFF",   0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, &playbutton_hack, simulate_power_press, 0 },
+#if defined(TS_PLAY_POWER_HACK) 
+    { 3, TS_KEY_PLAYBACK    , 0x00400000, LB(1,0), 0, "PLAY",  0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, &playbutton_hack, simulate_playback_press, 0 }, 
+    { 3, TS_KEY_POWER       , 0x00800000, LB(3,0), 0, "OFF",   0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, &playbutton_hack, simulate_power_press, 0 }, 
 #endif
 #ifdef OPT_DEBUGGING
     { 3, KEY_DISPLAY        , 0x00000008, LB(0,4), 0, "Debug", 0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY },
 #endif
     { 3, KEY_DISPLAY	    , 0x00000008, LB(0,4), 0, "Back",  0,    GUI_MODE_MENU,      GUI_MODE_MENU, MODE_REC|MODE_PLAY },
-	{ 3, KEY_DISPLAY	    , 0x00000008, LB(0,4), 0, "Disp",  0,    GUI_MODE_MENU+1,    100,           MODE_REC|MODE_PLAY },
-    { 3, KEY_UP 		    , 0x00000010, RB(0,1), 0, "Up",    0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
-	{ 3, KEY_LEFT		    , 0x00000020, RB(0,2), 0, "Left",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
-    { 3, KEY_RIGHT		    , 0x00000040, RB(0,3), 0, "Right", 0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
-	{ 3, KEY_DOWN		    , 0x00000080, RB(0,4), 0, "Down",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
+    { 3, KEY_DISPLAY        , 0x00000008, LB(0,4), 0, "Disp",  0,    GUI_MODE_MENU+1,    100,           MODE_REC|MODE_PLAY },
+    { 3, KEY_UP             , 0x00000010, RB(0,1), 0, "Up",    0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
+    { 3, KEY_LEFT           , 0x00000020, RB(0,2), 0, "Left",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
+    { 3, KEY_RIGHT          , 0x00000040, RB(0,3), 0, "Right", 0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
+    { 3, KEY_DOWN           , 0x00000080, RB(0,4), 0, "Down",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
 
     { 3, KEY_UP 		    , 0x00000010, RB(0,0), 0, "Man",   "Focus",  GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, &conf.subj_dist_override_koef, 0, &conf.touchscreen_disable_shortcut_controls },
-	{ 3, KEY_DISPLAY	    , 0x00000008, RB(0,1), 0, "Inf.",  "Focus",  GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, 0, 0, &conf.touchscreen_disable_shortcut_controls },
-	{ 3, KEY_DOWN		    , 0x00000080, RB(0,2), 0, "Hyper", "Focus",  GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, 0, 0, &conf.touchscreen_disable_shortcut_controls },
+    { 3, KEY_DISPLAY        , 0x00000008, RB(0,1), 0, "Max",   "Dist",   GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, 0, 0, &conf.touchscreen_disable_shortcut_controls },
+    { 3, KEY_DOWN           , 0x00000080, RB(0,2), 0, "Hyper", "Dist",   GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, 0, 0, &conf.touchscreen_disable_shortcut_controls },
 	{ 3, KEY_LEFT		    , 0x00000020, RB(0,3), 0, "- Foc.","Factor", GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, 0, 0, &conf.touchscreen_disable_shortcut_controls },
     { 3, KEY_RIGHT		    , 0x00000040, RB(0,4), 0, "+ Foc.","Factor", GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, 0, 0, &conf.touchscreen_disable_shortcut_controls },
 

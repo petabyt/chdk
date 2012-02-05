@@ -1,9 +1,12 @@
 #include "stubs_asm.h"
+#define NULL_SUB 0xFF810B1C
 
-# Confirmed
-NHSTUB(MakeAFScan,						0xFF98AA10)	// ok (comp 1.00c)
+// Override stubs_entry.S
+NHSTUB(kbd_pwr_off,                 NULL_SUB)
+NHSTUB(kbd_pwr_on,                  NULL_SUB)
 
-# Missing
-NHSTUB(kbd_pwr_off,						0xFF810B1C)								// ??? not on sx20 or s95
-NHSTUB(kbd_pwr_on,						0xFF810B1C)								// ??? not on sx20 or s95
-NHSTUB(SetZoomActuatorSpeedPercent,		0xFF810B1C)
+// These don't exist
+NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
+
+// Additional
+NHSTUB(MakeAFScan,                  0xFF98AA10)

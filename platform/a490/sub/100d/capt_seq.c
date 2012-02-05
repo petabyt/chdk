@@ -8,7 +8,6 @@ static long *nrflag = (long*)0x57F8;	// ??? ROM:FFD10DA8 "ShutterSoundTask"
 #include "../../../generic/capt_seq.c"
 
 // ROM:FFC5914C task_CaptSeqTask()
-
 void __attribute__((naked,noinline)) capt_seq_task() {
 	asm volatile (
 			"STMFD   SP!, {R3-R7,LR}\n"

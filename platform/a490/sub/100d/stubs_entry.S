@@ -14,8 +14,16 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(kbd_pwr_off                           ,0xffc435ec) //  2 64%    *** != 0xffc00b20
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0xffc00b20
+//NSTUB(EnterToCompensationEVF                ,0xffc27608) //104        *** != 0xffc27604
+//NSTUB(GetBatteryTemperature                 ,0xffc45624) //102        *** != 0xffc00b20
+//NSTUB(GetDrive_FreeClusters                 ,0xffc23810) //  3        *** != 0xffc5131c
+// ALT: NSTUB(GetDrive_FreeClusters, 0xffc5131c) // 4 9/0
+//NSTUB(SetScriptMode                         ,0xffc6caf4) //101        *** != 0xffc00f70
+//NSTUB(TurnOffBackLight                      ,0xffc77d38) //104        *** != 0xffc77f4c
+//NSTUB(kbd_pwr_off                           ,0xffc435ec) //  2 64%    *** != 0x00000000
+// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
+//NSTUB(kbd_read_keys_r2                      ,0xffc42fb8) //109        *** != 0xffc42fb0
+//NSTUB(rename                                ,0xffc259f0) //  4        *** != 0xffc261e8
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffc705d8 -> ffc6d124 -> ffd2df78 -> ffe07c8c -> ffeca51c
@@ -95,7 +103,6 @@ NSTUB(DebugAssert                             ,0xffc0f680) //111
 NSTUB(DeleteDirectory_Fut                     ,0xffc25b68) //  1
 NSTUB(DeleteFile_Fut                          ,0xffc25a84) //112
 NSTUB(DoAFLock                                ,0xffc27558) //102
-NSTUB(EnterToCompensationEVF                  ,0xffc27608) //104
 NSTUB(ExecuteEventProcedure                   ,0xffc65748) //  1
 NSTUB(ExitFromCompensationEVF                 ,0xffc2764c) //104
 NSTUB(ExitTask                                ,0xffc0f438) //101
@@ -111,12 +118,9 @@ NSTUB(FreeMemory                              ,0xffdfa3a0) //101
 NSTUB(FreeUncacheableMemory                   ,0xffc2931c) //112
 NSTUB(Fseek_Fut                               ,0xffc25da0) //101
 NSTUB(Fwrite_Fut                              ,0xffc25d00) //101
-NSTUB(GetBatteryTemperature                   ,0xffc45624) //102
 NSTUB(GetCCDTemperature                       ,0xffc455b0) //102
 NSTUB(GetCurrentAvValue                       ,0xffd08708) //102
 NSTUB(GetDrive_ClusterSize                    ,0xffc512bc) //  4
-NSTUB(GetDrive_FreeClusters                   ,0xffc23810) //  3
-// ALT: NSTUB(GetDrive_FreeClusters, 0xffc5131c) // 4 9/0
 NSTUB(GetDrive_TotalClusters                  ,0xffc512f0) //  3
 NSTUB(GetFocusLensSubjectDistance             ,0xffd07a00) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xffd07e58) //  3
@@ -161,14 +165,13 @@ NSTUB(ScreenUnlock                            ,0xffd7afe0) //  7
 NSTUB(SetAE_ShutterSpeed                      ,0xffe52de0) //102
 NSTUB(SetAutoShutdownTime                     ,0xffc6cda0) //103
 NSTUB(SetCurrentCaptureModeType               ,0xffc730bc) //101
+NSTUB(SetFileAttributes                       ,0xffc26404) //  3
 NSTUB(SetFileTimeStamp                        ,0xffc263a8) //  4
 NSTUB(SetLogicalEventActive                   ,0xffc6caa4) //101
 NSTUB(SetParameterData                        ,0xffd2ef64) //101
 NSTUB(SetPropertyCase                         ,0xffc69324) //102
-NSTUB(SetScriptMode                           ,0xffc6caf4) //101
 NSTUB(SleepTask                               ,0xffc29160) //101
 NSTUB(TakeSemaphore                           ,0xffc0f034) //101
-NSTUB(TurnOffBackLight                        ,0xffc77d38) //104
 NSTUB(TurnOnBackLight                         ,0xffc77d20) //104
 NSTUB(UIFS_WriteFirmInfoToFile                ,0xffd1f768) //101
 NSTUB(UnlockAF                                ,0xffc27590) //102
@@ -193,7 +196,6 @@ NSTUB(kbd_p1_f                                ,0xffc23ba8) //109
 NSTUB(kbd_p1_f_cont                           ,0xffc23bb4) //109
 NSTUB(kbd_p2_f                                ,0xffc2345c) //109
 NSTUB(kbd_read_keys                           ,0xffc23b2c) //109
-NSTUB(kbd_read_keys_r2                        ,0xffc42fb8) //109
 NSTUB(lseek                                   ,0xffc26228) //101
 NSTUB(malloc                                  ,0xffc04104) //112
 NSTUB(memcmp                                  ,0xffc11318) //101
@@ -207,9 +209,7 @@ NSTUB(openfastdir                             ,0xffde8cec) //  4
 NSTUB(qsort                                   ,0xffe39368) //  4
 NSTUB(rand                                    ,0xffc11420) //  1
 NSTUB(read                                    ,0xffc0b308) //101
-NSTUB(readfastdir                             ,0xffde8e40) //  4
 NSTUB(reboot_fw_update                        ,0xffdea6b4) //  1
-NSTUB(rename                                  ,0xffc259f0) //  4
 NSTUB(set_control_event                       ,0xffc6c7c4) //111
 NSTUB(srand                                   ,0xffc11414) //  1
 NSTUB(stat                                    ,0xffc26270) //  3

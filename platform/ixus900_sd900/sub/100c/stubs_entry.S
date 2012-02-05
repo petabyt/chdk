@@ -12,8 +12,16 @@ NSTUB(DisableDispatch, 0xff8223b8)
 // Best match: 93%
 NSTUB(DisplayImagePhysicalScreen, 0xff959a60)
 // ALT: NSTUB(DisplayImagePhysicalScreen, 0xff959a60) // 29/2
+// Best match: 78%
+NSTUB(DoAFLock, 0xff98ee30)
 NSTUB(EnableDispatch, 0xff822444)
+// Best match: 90%
+NSTUB(EnterToCompensationEVF, 0xff98f004)
 NSTUB(ExecuteEventProcedure, 0xff816d3c)
+// Best match: 66%
+NSTUB(ExitFromCompensationEVF, 0xff992894)
+// ALT: NSTUB(ExitFromCompensationEVF, 0xff9928f0) // 20/10
+// ALT: NSTUB(ExitFromCompensationEVF, 0xff9929ac) // 20/10
 NSTUB(ExitTask, 0xff822954)
 NSTUB(Fclose_Fut, 0xff8745b8)
 NSTUB(Feof_Fut, 0xff8747b4)
@@ -25,13 +33,32 @@ NSTUB(FreeMemory, 0xff811abc)
 NSTUB(FreeUncacheableMemory, 0xff814ed4)
 NSTUB(Fseek_Fut, 0xff874768)
 NSTUB(Fwrite_Fut, 0xff8746c8)
+// Best match: 85%
+NSTUB(GetBatteryTemperature, 0xff82f584)
+// Best match: 86%
+NSTUB(GetCCDTemperature, 0xff82f570)
 NSTUB(GetCurrentAvValue, 0xffb0cf4c)
 // ALT: NSTUB(GetCurrentAvValue, 0xffb0f210) // 13/0
 NSTUB(GetCurrentTargetDistance, 0xffb0f1b8)
+// Best match: 76%
+NSTUB(GetDrive_ClusterSize, 0xff87ae24)
+// Best match: 72%
+NSTUB(GetDrive_FreeClusters, 0xff87ad70)
+// ALT: NSTUB(GetDrive_FreeClusters, 0xff87ad70) // 18/7
+// ALT: NSTUB(GetDrive_FreeClusters, 0xff87adac) // 18/7
+// ALT: NSTUB(GetDrive_FreeClusters, 0xff87adac) // 18/7
+// ALT: NSTUB(GetDrive_FreeClusters, 0xff87ade8) // 18/7
+// ALT: NSTUB(GetDrive_FreeClusters, 0xff87ade8) // 18/7
+// ALT: NSTUB(GetDrive_FreeClusters, 0xff87ae24) // 18/7
+// ALT: NSTUB(GetDrive_FreeClusters, 0xff87ae24) // 18/7
+// Best match: 92%
+NSTUB(GetDrive_TotalClusters, 0xff87adac)
 // Best match: 96%
 NSTUB(GetFocusLensSubjectDistance, 0xffb01594)
 // Best match: 57%
 NSTUB(GetFocusLensSubjectDistanceFromLens, 0xffb01b48)
+// Best match: 86%
+NSTUB(GetOpticalTemperature, 0xff82f55c)
 NSTUB(GetParameterData, 0xff9ad67c)
 // Best match: 92%
 NSTUB(GetPropertyCase, 0xff8258c8)
@@ -46,6 +73,8 @@ NSTUB(GetZoomLensCurrentPosition, 0xffaf1c78)
 // ALT: NSTUB(GetZoomLensCurrentPosition, 0xffaf1c78) // 27/2
 NSTUB(IsStrobeChargeCompleted, 0xff93033c)
 NSTUB(LockMainPower, 0xff9a8814)
+// Best match: 96%
+NSTUB(MakeAFScan, 0xff993be4)
 NSTUB(MakeDirectory, 0xff87b898)
 NSTUB(MakeDirectory_Fut, 0xff8744f8)
 // Best match: 90%
@@ -56,6 +85,7 @@ NSTUB(MoveFocusLensToDistance, 0xffb0f458)
 NSTUB(MoveZoomLensWithPoint, 0xffaf1b44)
 // ALT: NSTUB(MoveZoomLensWithPoint, 0xffaf1b44) // 25/0
 NSTUB(Open, 0xff87b55c)
+NSTUB(PT_PlaySound, 0xff99f320)
 // Best match: 96%
 NSTUB(PhySw_testgpio, 0xff8292c4)
 NSTUB(PostLogicalEventForNotPowerType, 0xff9a4230)
@@ -74,8 +104,11 @@ NSTUB(Remove, 0xff87b5a4)
 NSTUB(RenameFile_Fut, 0xff87439c)
 // Best match: 96%
 NSTUB(Restart, 0xff823ab4)
+// Best match: 95%
+NSTUB(SetAE_ShutterSpeed, 0xffb1212c)
 NSTUB(SetAutoShutdownTime, 0xff9a8718)
 NSTUB(SetCurrentCaptureModeType, 0xff9d9b48)
+NSTUB(SetFileAttributes, 0xff87b7ac)
 // Best match: 88%
 NSTUB(SetLogicalEventActive, 0xff9a632c)
 NSTUB(SetParameterData, 0xff9ad59c)
@@ -84,6 +117,8 @@ NSTUB(SleepTask, 0xff8224a8)
 NSTUB(TakeSemaphore, 0xff821fa4)
 NSTUB(TurnOffBackLight, 0xff9f5338)
 NSTUB(TurnOnBackLight, 0xff9f5308)
+// Best match: 78%
+NSTUB(UnlockAF, 0xff98f0bc)
 NSTUB(UnlockMainPower, 0xff9a88ac)
 NSTUB(Unmount_FileSystem, 0xff87a950)
 // Best match: 89%
@@ -92,6 +127,8 @@ NSTUB(UpdateMBROnFlash, 0xff87aaa4)
 // Best match: 96%
 NSTUB(VbattGet, 0xff82e420)
 NSTUB(Write, 0xff87b624)
+// Best match: 93%
+NSTUB(WriteSDCard, 0xff88a708)
 NSTUB(_log, 0xffb4cfc0)
 // ALT: NSTUB(_log, 0xffb4cfc0) // 27/0
 NSTUB(_log10, 0xffb49044)
@@ -102,6 +139,7 @@ NSTUB(_sqrt, 0xffb4b3bc)
 // ALT: NSTUB(_sqrt, 0xffb4b3bc) // 24/0
 // Best match: 96%
 NSTUB(add_ptp_handler, 0xffabc9c4)
+NSTUB(apex2us, 0xff8c6560)
 NSTUB(chdir, 0xffb5823c)
 // ALT: NSTUB(chdir, 0xffb5823c) // 27/0
 NSTUB(close, 0xffb57b7c)
@@ -128,13 +166,15 @@ NSTUB(kbd_p1_f_cont, 0xff827f64)
 NSTUB(kbd_p2_f, 0xff82833c)
 // Best match: 83%
 NSTUB(kbd_pwr_off, 0xff829280)
+// ALT: NSTUB(kbd_pwr_off, 0xff829280) // 5/1
+// ALT: NSTUB(kbd_pwr_off, 0xff82929c) // 5/1
 // ALT: NSTUB(kbd_pwr_off, 0xff82929c) // 5/1
 // ALT: NSTUB(kbd_pwr_off, 0xff82b484) // 5/1
 // ALT: NSTUB(kbd_pwr_off, 0xff82b4a0) // 5/1
 // Best match: 55%
 NSTUB(kbd_pwr_on, 0xff95b7c4)
 // ALT: NSTUB(kbd_pwr_on, 0xff95b7f0) // 5/4
-// ERROR: kbd_read_keys_r2 is not found!
+NSTUB(kbd_read_keys_r2, 0xff828d40)
 // Best match: 93%
 NSTUB(localtime, 0xffb537f8)
 NSTUB(lseek, 0xffb57cc0)

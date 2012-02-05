@@ -287,7 +287,7 @@ int MoveIrisWithAv(short *v)        { return _MoveIrisWithAv(v); }
 #if CAM_EV_IN_VIDEO
 void ExpCtrlTool_StartContiAE(int v1, int v2)   { _ExpCtrlTool_StartContiAE(v1,v2); }
 void ExpCtrlTool_StopContiAE(int v1, int v2)    { _ExpCtrlTool_StopContiAE(v1, v2); }
-short SetAE_ShutterSpeed(short *tv)             { _SetAE_ShutterSpeed(tv); }
+short SetAE_ShutterSpeed(short *tv)             { return _SetAE_ShutterSpeed(tv); }
 #endif
 
 //----------------------------------------------------------------------------

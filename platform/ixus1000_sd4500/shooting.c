@@ -96,35 +96,34 @@ const ISOTable iso_table[] = {
 http://www.usa.canon.com/cusa/consumer/products/cameras/digital_cameras/powershot_sd4500_is#Specifications
 Shooting Modes
 Auto, P, Portrait, Kids&Pets, Smart Shutter, High-speed Burst, Best Image Selection, Handheld Night Scene, Low Light, Super Vivid, Poster Effect, Color Accent, Color Swap, Fish-eye Effect, Miniature Effect, Beach, Foliage, Snow, Fireworks, Long Shutter, Stitch Assist, Movie
-
 */
 const CapturemodeMap modemap[] = {
-	{ MODE_AUTO,                32768  },
-	{ MODE_P,                   32772  },
-	{ MODE_PORTRAIT,            32783  },
-	{ MODE_KIDS_PETS,           32786  },
-  	{ MODE_SMART_SHUTTER,       33321  },
-	{ MODE_HIGHSPEED_BURST,     33288  },
-	{ MODE_BEST_IMAGE,          33289  },
-	{ MODE_NIGHT_SCENE,         33325  }, // NOTE handheld night scene
-  	{ MODE_LOWLIGHT,            32801  },
-  	{ MODE_SUPER_VIVID,         33318  },
-  	{ MODE_POSTER_EFFECT,       33319  },
-  	{ MODE_COLOR_ACCENT,        33309  },
-  	{ MODE_COLOR_SWAP,          33310  },
-  	{ MODE_FISHEYE,             33323  },
-  	{ MODE_MINIATURE,           33324  },
-	{ MODE_BEACH,               32791  },
-	{ MODE_FOLIAGE,             32789  },
-	{ MODE_SNOW,                32790  },
-	{ MODE_FIREWORK,            32792  },
-	{ MODE_LONG_SHUTTER,        32774  },
-	{ MODE_STITCH,              33292  },
-	{ MODE_VIDEO_STD,           2614  },
-	{ MODE_VIDEO_SUPER_SLOW,    2619  },
-	{ MODE_VIDEO_MINIATURE,     2620  },
-	{ MODE_VIDEO_COLOR_ACCENT,  2612  },
-	{ MODE_VIDEO_COLOR_SWAP,    2613  },
+    { MODE_AUTO,                32768  },
+    { MODE_P,                   32772  },
+    { MODE_PORTRAIT,            32783  },
+    { MODE_KIDS_PETS,           32786  },
+    { MODE_SMART_SHUTTER,       33321  },
+    { MODE_HIGHSPEED_BURST,     33288  },
+    { MODE_BEST_IMAGE,          33289  },
+    { MODE_NIGHT_SCENE,         33325  }, // NOTE handheld night scene
+    { MODE_LOWLIGHT,            32801  },
+    { MODE_SUPER_VIVID,         33318  },
+    { MODE_POSTER_EFFECT,       33319  },
+    { MODE_COLOR_ACCENT,        33309  },
+    { MODE_COLOR_SWAP,          33310  },
+    { MODE_FISHEYE,             33323  },
+    { MODE_MINIATURE,           33324  },
+    { MODE_BEACH,               32791  },
+    { MODE_FOLIAGE,             32789  },
+    { MODE_SNOW,                32790  },
+    { MODE_FIREWORK,            32792  },
+    { MODE_LONG_SHUTTER,        32774  },
+    { MODE_STITCH,              33292  },
+    { MODE_VIDEO_STD,           2614  },
+    { MODE_VIDEO_SUPER_SLOW,    2619  },
+    { MODE_VIDEO_MINIATURE,     2620  },
+    { MODE_VIDEO_COLOR_ACCENT,  2612  },
+    { MODE_VIDEO_COLOR_SWAP,    2613  },
 };
 
 #include "../generic/shooting.c"

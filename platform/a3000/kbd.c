@@ -28,18 +28,19 @@ static long alt_mode_key_reg  = 1;
 
 static KeyMap keymap[] = {
 //	{ grp,       hackkey, canonkey  }
-	{ 2, KEY_UP			, 0x00000010 },
-	{ 2, KEY_DOWN		, 0x00000020 },
-	{ 2, KEY_LEFT		, 0x00000080 },
-	{ 2, KEY_RIGHT		, 0x00000040 },
-	{ 2, KEY_SET		, 0x00000100 },
-	{ 2, KEY_SHOOT_FULL	, 0x00000003 },
-	{ 2, KEY_SHOOT_HALF	, 0x00000001 },
-	{ 2, KEY_ZOOM_IN	, 0x00000004 },
-	{ 2, KEY_ZOOM_OUT	, 0x00000008 },
-	{ 2, KEY_MENU		, 0x00000200 },
-	{ 2, KEY_DISPLAY	, 0x00000400 },
-	{ 2, KEY_PRINT		, 0x00000800 }, // Face Key
+	{ 2, KEY_UP				, 0x00000010 },
+	{ 2, KEY_DOWN			, 0x00000020 },
+	{ 2, KEY_LEFT			, 0x00000080 },
+	{ 2, KEY_RIGHT			, 0x00000040 },
+	{ 2, KEY_SET			, 0x00000100 },
+	{ 2, KEY_SHOOT_FULL		, 0x00000003 },
+	{ 2, KEY_SHOOT_FULL_ONLY, 0x00000002 },
+	{ 2, KEY_SHOOT_HALF		, 0x00000001 },
+	{ 2, KEY_ZOOM_IN		, 0x00000004 },
+	{ 2, KEY_ZOOM_OUT		, 0x00000008 },
+	{ 2, KEY_MENU			, 0x00000200 },
+	{ 2, KEY_DISPLAY		, 0x00000400 },
+	{ 2, KEY_PRINT			, 0x00000800 }, // Face Key
 	{ 0, 0, 0 }
 };
 

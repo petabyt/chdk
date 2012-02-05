@@ -29,19 +29,19 @@
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(physw_status                            ,0x00032444) // Found @0xff83341c,          stubs_min = 0x00032444 (0x32444)
-//DEF(physw_run                               ,0x00001c44) // Found @0xff83308c,          stubs_min = 0x00001c44 (0x1C38+0x0C)
+DEF(physw_status                            ,0x00032444) // Found @0xff83341c
+DEF(physw_run                               ,0x00001c44) // Found @0xff83308c
 //DEF(levent_table                            ,0xffba3160) // Found @0xffba3160, ** != ** stubs_min = 0xff98ceac (0xFF98CEAC)
 //DEF(FlashParamsTable                        ,0xffbe8754) // Found @0xffbe8754, ** != ** stubs_min = 0xffb7454c (0xFFB7454C)
-//DEF(movie_status                            ,0x00002c30) // Found @0xff878db0,          stubs_min = 0x00002c30 (0x2BF8+0x38)
-//DEF(full_screen_refresh                     ,0x00009cec) // Found @0xffa025cc,          stubs_min = 0x00009cec (0x9CEC)
-//DEF(canon_menu_active                       ,0x0000312c) // Found @0xff88fe90,          stubs_min = 0x0000312c (0x3128+4)
-//DEF(canon_shoot_menu_active                 ,0x00008839) // Found @0xff9aa038,          stubs_min = 0x00008839 (0x8838+1)
-//DEF(playrec_mode                            ,0x00002e58) // Found @0xff882228,          stubs_min = 0x00002e58 (0x2E54+0x4)
-//DEF(zoom_status                             ,0x0000c6b8) // Found @0xffaaf400,          stubs_min = 0x0000c6b8 (0xC6B8)
+DEF(movie_status                            ,0x00002c30) // Found @0xff878db0
+DEF(full_screen_refresh                     ,0x00009cec) // Found @0xffa025cc
+DEF(canon_menu_active                       ,0x0000312c) // Found @0xff88fe90
+DEF(canon_shoot_menu_active                 ,0x00008839) // Found @0xff9aa038
+DEF(playrec_mode                            ,0x00002e58) // Found @0xff882228
+DEF(zoom_status                             ,0x0000c6b8) // Found @0xffaaf400
 DEF(some_flag_for_af_scan                   ,0x0000792c) // Found @0xff95fb70
-//DEF(zoom_busy                               ,0x00006eb8) // Found @0xff955d6c,          stubs_min = 0x00006eb8 (0x6E9C+0x1C)
-//DEF(focus_busy                              ,0x00006d48) // Found @0xff94ff00,          stubs_min = 0x00006d48 (0x6D40+8)
+DEF(zoom_busy                               ,0x00006eb8) // Found @0xff955d6c
+DEF(focus_busy                              ,0x00006d48) // Found @0xff94ff00
 //DEF(recreview_hold                          ,0x00003d2c) // Found @0xff8a1b60, ** != ** stubs_min = 0x000083d0 (0x82D8+0xF8)
 
 // Values below go in 'lib.c':
@@ -161,6 +161,7 @@ NSTUB(ScreenUnlock                            ,0xffa0499c) //  8
 NSTUB(SetAE_ShutterSpeed                      ,0xffb02378) //102
 NSTUB(SetAutoShutdownTime                     ,0xff896f20) //103
 NSTUB(SetCurrentCaptureModeType               ,0xff89eb28) //101
+NSTUB(SetFileAttributes                       ,0xff83554c) //  3
 NSTUB(SetLogicalEventActive                   ,0xff896bfc) //101
 NSTUB(SetParameterData                        ,0xff9904ec) //101
 NSTUB(SetPropertyCase                         ,0xff88f1e0) //102
@@ -200,7 +201,6 @@ NSTUB(opendir                                 ,0xffa7d358) //  3
 NSTUB(qsort                                   ,0xffaeb414) //  1
 NSTUB(rand                                    ,0xff8204e0) //  1
 NSTUB(read                                    ,0xff81ab78) //101
-NSTUB(readfastdir                             ,0xffa7d48c) //  3
 NSTUB(reboot_fw_update                        ,0xffa8299c) //  1
 NSTUB(rename                                  ,0xff834b74) //  4
 NSTUB(set_control_event                       ,0xff896850) //111

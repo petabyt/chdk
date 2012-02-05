@@ -400,7 +400,7 @@ void __attribute__((naked,noinline)) taskcreatePhySw_my() {
                 "STR     R3, [SP]\n"
                 "LDR     R3, =mykbd_task\n"
                 "MOV     R2, #0x2000\n"
-				"B		 sub_FF0248F8\n"
+				"B		sub_FF0248F8\n"
 				 );
 }
 

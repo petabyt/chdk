@@ -20,6 +20,10 @@ wrappers.o: wrappers.c ../generic/wrappers.c
 
 libplatform.a: $(OBJS)
 
+distclean: distclean-recursive
+	rm -f $(OBJS:.o=.d) $(OBJS) libplatform.a
+
 clean: clean-recursive
 	rm -f $(OBJS) libplatform.a
 
+include $(topdir)bottom.inc

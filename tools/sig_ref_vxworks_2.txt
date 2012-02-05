@@ -36,7 +36,7 @@ UnlockMainPower 0xFFD70FE0
 MoveZoomLensWithPoint 0xFFE8F550
 MoveFocusLensToDistance 0xFFEB64D4
 GetFocusLensSubjectDistanceFromLens 0xffea34f0
-SetAutoShutdownTime 0xffd70e4c 
+SetAutoShutdownTime 0xffd70e4c
 PutInNdFilter 0xFFEB41D8
 PutOutNdFilter 0xFFEB4220
 TurnOnBackLight 0xffdbd720
@@ -44,3 +44,10 @@ TurnOffBackLight 0xffdbd750
 PostLogicalEventToUI 0xFFD6CD44
 PostLogicalEventForNotPowerType 0xFFD6CCC8
 exmem_alloc 0xFFC02834
+EnterToCompensationEVF 0xffd58f08
+ExitFromCompensationEVF 0xffd5c524
+MakeAFScan 0xFFD5D538
+UnlockAF 0xffd58e08
+WriteSDCard 0xFFC702A4
+DoAFLock 0xffd58dbc
+GetDrive_TotalClusters 0xffc607ec

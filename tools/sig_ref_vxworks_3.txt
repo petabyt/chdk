@@ -12,3 +12,22 @@ MakeDirectory_Fut 0xFFE421E0
 RenameFile_Fut 0xFFE42084
 Remove 0xFFE46B78
 SetLogicalEventActive 0xFFEDE6B0 22
+SetFileAttributes 0xFFE46D40
+Close 0xFFE46B58  
+DisplayImagePhysicalScreen 0xFFDDBEEC
+DoAFLock 0xffea4bdc
+EnterToCompensationEVF 0xffea4f84
+Mount_FileSystem 0xFFE45E7C
+Read 0xFFE46BEC 
+Write 0xFFE46BF8
+WriteSDCard 0xFFE58EEC
+free 0xFFCD9B84
+kbd_read_keys_r2 0xFFDE74F0
+ExitFromCompensationEVF 0xffea5008
+GetDrive_ClusterSize 0xFFE46344
+GetDrive_FreeClusters 0xFFE463BC
+GetDrive_TotalClusters 0xFFE46380
+PT_PlaySound 0xFFEB5340
+SetPropertyCase 0xFFC0BB5C
+UnlockAF 0xffea4c5c
+kbd_pwr_off 0xFFDE7BD4

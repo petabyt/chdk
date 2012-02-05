@@ -12,7 +12,6 @@ GetImageFolder 0xFF1598B8
 LocalTime 0xFF08446C
 PT_PlaySound 0xFF07F848
 ReadFastDir 0xFF2DD404
-readfastdir 0xFF2DD404
 RenameFile_Fut 0xFF026908
 rename 0xFF026908
 Remove 0xFF0271F8

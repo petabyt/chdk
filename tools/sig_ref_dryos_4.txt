@@ -8,7 +8,6 @@ GetFocusLensSubjectDistanceFromLens 0xff97e794 22
 closedir 0xFFAE2A70 20
 SetFileTimeStamp 0xFF83737C 23
 ReadFastDir 0xFFAE2C14 26
-readfastdir 0xFFAE2C14 26
 PT_PlaySound 0xFF88A140
 Remove 0xFF837114 14
 vsprintf 0xFF820640 15

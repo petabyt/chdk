@@ -35,11 +35,6 @@ void __attribute__((noreturn)) copy_and_restart(void *dst_void, const void *src_
 	
 //SX230 found at FF02D3D8
         asm volatile (
-                 	//SX220 found at FF02D058
-               //  "MRS     R0, CPSR\n"            //SX220 not present in dump
-               //  "BIC     R0, R0, #0x3F\n"
-               //  "ORR     R0, R0, #0xD3\n"
-               //  "MSR     CPSR, R0\n"
                  "LDR     R1, =0xC0200000\n"
                  "MVN     R0, #0\n"
                  "STR     R0, [R1,#0x10C]\n"
@@ -76,12 +71,11 @@ void __attribute__((noreturn)) copy_and_restart(void *dst_void, const void *src_
                  "LDR     R0, =0x12345678\n"
                  "MOV     R1, #0x80000000\n"
                  "STR     R0, [R1,#0xFFC]\n"
-           //    "LDR     R0, =0xFF000000\n"  		//SX220 was disabled previously
-                 "MOV     R0, %0\n"              // new jump-vector
+                 "MOV     R0, %0\n"
                  "LDMFD   SP!, {R4,LR}\n"
                  "BX      R0\n"
                  : : "r"(dst_void) : "memory","r0","r1","r2","r3","r4"
-            );
+		);
 	
         while(1);
 }

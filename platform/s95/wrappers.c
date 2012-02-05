@@ -1,8 +1,5 @@
 #include "../generic/wrappers.c"
 
-#define RAND_MAX 0x7fffffff
-
-
 long lens_get_focus_pos()
 {
 
@@ -19,4 +16,3 @@ long lens_get_target_distance()
 {
 	return _GetCurrentTargetDistance();
 }
-

@@ -14,6 +14,7 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
+// ERROR: SetFileAttributes is not found.                  //--- ---    *** != 0x00000000
 // ERROR: kbd_pwr_off is not found.                        //--- ---    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 NSTUB(reboot_fw_update                        ,0xff33ee24) //  6 96%
@@ -206,7 +207,6 @@ NSTUB(openfastdir                             ,0xff33957c) //  6
 NSTUB(qsort                                   ,0xff3ae9d4) //  6
 NSTUB(rand                                    ,0xff295d9c) //  6
 NSTUB(read                                    ,0xff00ad74) //101
-NSTUB(readfastdir                             ,0xff3396d0) //  6
 NSTUB(rename                                  ,0xff026e68) //  6
 NSTUB(set_control_event                       ,0xff097a94) //111
 NSTUB(srand                                   ,0xff295d90) //  6

@@ -52,10 +52,10 @@ void taskHook(context_t **context)
 /*---------------------------------------------------------------------
   Memory Map:
 	0001900     MEMBASEADDR             start of data - used for initialized vars
-	0011057                             end of inited data
-	0011058                             start of bss - used for zeroed/uninited vars
-	018B833                             end of bss
-	018B834     MEMISOSTART             start of our data / bss
+    0011057                             end of inited data 
+    0011058                             start of bss - used for zeroed/uninited vars 
+    018B833                             end of bss 
+    018B834     MEMISOSTART             start of our data / bss
 
 	0400000                             raw buffers
 	8000000                             end of raw buffers

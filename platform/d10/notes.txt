@@ -1,5 +1,5 @@
 Powershot D10
-Port for Canon firmware 100a also works on 100b
+Port for Canon firmware 100a also works on 100b 
 
 Camera information
 

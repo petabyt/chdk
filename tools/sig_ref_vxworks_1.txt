@@ -66,7 +66,7 @@ isdigit 0xFFEB1DA0
 isspace 0xFFEB1E18
 isupper 0xFFEB1E30
 islower 0xFFEB1DD0
-ispunct 0xFFEB1E00 
+ispunct 0xFFEB1E00
 isxdigit 0xFFEB1E48
 strncmp 0xFFEB5E50
 strtol 0xFFEB566C
@@ -116,8 +116,8 @@ Fseek_Fut 0xffc55d38
 Fwrite_Fut 0xffc55ca0
 SetAutoShutdownTime 0xffd48dd8
 PutInNdFilter 0xFFE71734
-PutOutNdFilter 0xFFE7177C 
-UnsetZoomForMovie 0xFFD81B80 
+PutOutNdFilter 0xFFE7177C
+UnsetZoomForMovie 0xFFD81B80
 Fgets_Fut 0xFFC55CF0 18
 Feof_Fut 0xFFC55D80 14
 Fflush_Fut 0xFFC55DB8
@@ -138,5 +138,21 @@ SetCurrentCaptureModeType 0xFFD76E1C 16
 strtoul 0xFFEB5814
 Restart 0xFFC12800
 add_ptp_handler 0xFFE222D0
+SetFileAttributes 0xFFC5C8C4
 memPartInfoGet 0xFFEBF2BC
-exmem_alloc 0xFFC02698
+exmem_alloc 0xFFC02830
+DoAFLock 0xffd33094
+GetBatteryTemperature 0xFFC1C488
+GetCCDTemperature 0xFFC1C474
+GetDrive_ClusterSize 0xFFC5BEE8
+GetDrive_FreeClusters 0xFFC5BF60
+GetDrive_TotalClusters 0xFFC5BF24
+GetOpticalTemperature 0xFFC1C460
+MakeAFScan 0xFFD377B0
+PT_PlaySound 0xFFD4074C
+SetAE_ShutterSpeed 0xFFE76A00
+UnlockAF 0xffd330d4
+WriteSDCard 0xFFC6AFD8
+apex2us 0xFFC987EC
+EnterToCompensationEVF 0xFFD34F38
+ExitFromCompensationEVF 0xFFD34F98

@@ -90,4 +90,3 @@ long get_vbatt_max()
 {
     return 8100;
 }
-

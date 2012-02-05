@@ -10,8 +10,13 @@ NSTUB(CreateTaskStrict, 0xff822670)
 NSTUB(DeleteFile_Fut, 0xff867afc)
 NSTUB(DisableDispatch, 0xff82132c)
 NSTUB(DisplayImagePhysicalScreen, 0xff9238fc)
+NSTUB(DoAFLock, 0xff94a558)
 NSTUB(EnableDispatch, 0xff8213b8)
+// Best match: 64%
+NSTUB(EnterToCompensationEVF, 0xff94c3ac)
 NSTUB(ExecuteEventProcedure, 0xff816ac8)
+// Best match: 73%
+NSTUB(ExitFromCompensationEVF, 0xff94c478)
 NSTUB(ExitTask, 0xff8218c8)
 NSTUB(Fclose_Fut, 0xff867c3c)
 NSTUB(Feof_Fut, 0xff867e50)
@@ -23,12 +28,24 @@ NSTUB(FreeMemory, 0xff811ad8)
 NSTUB(FreeUncacheableMemory, 0xff814be4)
 NSTUB(Fseek_Fut, 0xff867e08)
 NSTUB(Fwrite_Fut, 0xff867d70)
+// Best match: 82%
+NSTUB(GetBatteryTemperature, 0xff82c6d4)
+// Best match: 82%
+NSTUB(GetCCDTemperature, 0xff82c6c0)
 NSTUB(GetCurrentAvValue, 0xffa8ae0c)
 NSTUB(GetCurrentTargetDistance, 0xffa8adb4)
+// Best match: 92%
+NSTUB(GetDrive_ClusterSize, 0xff86de24)
+// Best match: 92%
+NSTUB(GetDrive_FreeClusters, 0xff86de9c)
+// Best match: 92%
+NSTUB(GetDrive_TotalClusters, 0xff86de60)
 // Best match: 96%
 NSTUB(GetFocusLensSubjectDistance, 0xffa7e174)
 // Best match: 92%
 NSTUB(GetFocusLensSubjectDistanceFromLens, 0xffa7e714)
+// Best match: 82%
+NSTUB(GetOpticalTemperature, 0xff82c6ac)
 NSTUB(GetParameterData, 0xff9647d0)
 NSTUB(GetPropertyCase, 0xff82447c)
 // Best match: 96%
@@ -43,6 +60,8 @@ NSTUB(GetZoomLensCurrentPosition, 0xffa6f028)
 NSTUB(IsStrobeChargeCompleted, 0xff8fe0c0)
 // Best match: 96%
 NSTUB(LockMainPower, 0xff95fc94)
+// Best match: 96%
+NSTUB(MakeAFScan, 0xff94e9ac)
 NSTUB(MakeDirectory, 0xff86e8ec)
 NSTUB(MakeDirectory_Fut, 0xff867b88)
 // Best match: 90%
@@ -53,6 +72,7 @@ NSTUB(MoveFocusLensToDistance, 0xffa8b044)
 NSTUB(MoveZoomLensWithPoint, 0xffa6eef4)
 // ALT: NSTUB(MoveZoomLensWithPoint, 0xffa6eef4) // 25/0
 NSTUB(Open, 0xff86e620)
+NSTUB(PT_PlaySound, 0xff957554)
 // Best match: 96%
 NSTUB(PhySw_testgpio, 0xff827800)
 NSTUB(PostLogicalEventForNotPowerType, 0xff95bcdc)
@@ -74,9 +94,12 @@ NSTUB(RefreshPhysicalScreen, 0xff975184)
 NSTUB(Remove, 0xff86e668)
 NSTUB(RenameFile_Fut, 0xff867a7c)
 NSTUB(Restart, 0xff822ab8)
+// Best match: 95%
+NSTUB(SetAE_ShutterSpeed, 0xffa8e0f8)
 // Best match: 96%
 NSTUB(SetAutoShutdownTime, 0xff95fb8c)
 NSTUB(SetCurrentCaptureModeType, 0xff98c398)
+NSTUB(SetFileAttributes, 0xff86e800)
 // Best match: 87%
 NSTUB(SetLogicalEventActive, 0xff95dd38)
 NSTUB(SetParameterData, 0xff9646f0)
@@ -85,6 +108,7 @@ NSTUB(SleepTask, 0xff82141c)
 NSTUB(TakeSemaphore, 0xff820f18)
 NSTUB(TurnOffBackLight, 0xff9a276c)
 NSTUB(TurnOnBackLight, 0xff9a2740)
+NSTUB(UnlockAF, 0xff94a598)
 // Best match: 96%
 NSTUB(UnlockMainPower, 0xff95fd48)
 NSTUB(Unmount_FileSystem, 0xff86da04)
@@ -93,6 +117,7 @@ NSTUB(UnsetZoomForMovie, 0xff996f1c)
 NSTUB(UpdateMBROnFlash, 0xff86db5c)
 // ERROR: VbattGet is not found!
 NSTUB(Write, 0xff86e6e8)
+NSTUB(WriteSDCard, 0xff87cf14)
 NSTUB(_log, 0xffac0360)
 // ALT: NSTUB(_log, 0xffac0360) // 27/0
 NSTUB(_log10, 0xffac0a08)
@@ -103,12 +128,13 @@ NSTUB(_sqrt, 0xffac5244)
 // ALT: NSTUB(_sqrt, 0xffac5244) // 24/0
 // Best match: 96%
 NSTUB(add_ptp_handler, 0xffa3d524)
+NSTUB(apex2us, 0xff8ab6fc)
 NSTUB(chdir, 0xffad44a0)
 // ALT: NSTUB(chdir, 0xffad44a0) // 27/0
 NSTUB(close, 0xffad3de0)
 NSTUB(closedir, 0xffacfd80)
 NSTUB(errnoOfTaskGet, 0xffad054c)
-NSTUB(exmem_alloc, 0xff812648)
+NSTUB(exmem_alloc, 0xff8127e0)
 // ERROR: free is not found!
 NSTUB(ints_disable, 0xff81d8a4)
 NSTUB(ints_enable, 0xff81d8b0)
@@ -129,7 +155,15 @@ NSTUB(kbd_p1_f_cont, 0xff826488)
 NSTUB(kbd_p2_f, 0xff826860)
 // Best match: 83%
 NSTUB(kbd_pwr_off, 0xff8277c8)
+// ALT: NSTUB(kbd_pwr_off, 0xff8277c8) // 5/1
 // ALT: NSTUB(kbd_pwr_off, 0xff8277e4) // 5/1
+// ALT: NSTUB(kbd_pwr_off, 0xff8277e4) // 5/1
+// ALT: NSTUB(kbd_pwr_off, 0xff828454) // 5/1
+// ALT: NSTUB(kbd_pwr_off, 0xff828470) // 5/1
+// ALT: NSTUB(kbd_pwr_off, 0xff82855c) // 5/1
+// ALT: NSTUB(kbd_pwr_off, 0xff828578) // 5/1
+// ALT: NSTUB(kbd_pwr_off, 0xff828648) // 5/1
+// ALT: NSTUB(kbd_pwr_off, 0xff828664) // 5/1
 // ALT: NSTUB(kbd_pwr_off, 0xff8287ac) // 5/1
 // ALT: NSTUB(kbd_pwr_off, 0xff8287c8) // 5/1
 // Best match: 55%

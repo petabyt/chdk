@@ -1,6 +1,6 @@
-// Camera - G12 - platform_camera.h
+// Camera - g12 - platform_camera.h
 
-// This file contains the various settings values specific to the G12 camera.
+// This file contains the various settings values specific to the g12 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -28,22 +28,23 @@
 
     #undef  CAM_EMUL_KEYPRESS_DURATION
     #define CAM_EMUL_KEYPRESS_DURATION      10
-    
+
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
-    
+
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_MULTIPART                   1
     #define CAM_HAS_JOGDIAL                 1
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #define CAM_HAS_ND_FILTER               1
+
     #define CAM_BRACKETING                  1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
     #define CAM_EXT_TV_RANGE                1
     #define CAM_QUALITY_OVERRIDE            1
-    #undef CAM_UNCACHED_BIT
-    #define CAM_UNCACHED_BIT                0x40000000
+    #undef  CAM_UNCACHED_BIT
+    #define CAM_UNCACHED_BIT                0x40000000  // S90 @FF8875FC(via ExMem.FreeCacheable)
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #define CAM_DETECT_SCREEN_ERASE         1   // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
 
@@ -51,7 +52,7 @@
     #define DEFAULT_RAW_EXT                 2   // use .CR2 
 
     #undef CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH            10
+    #define CAM_MENU_BORDERWIDTH	        10
 
     // camera name
     #define PARAM_CAMERA_NAME               4   // parameter number for GetParameterData
@@ -63,22 +64,22 @@
     #undef CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              12
 
-    #undef CAM_USES_ASPECT_CORRECTION
+    #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1   //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
     #undef CAM_BITMAP_WIDTH
     #undef CAM_BITMAP_HEIGHT
     #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
     #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
 
-    #undef EDGE_HMARGIN
+    #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                    2
 
     // bayer sensor pattern
-    #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
+    #define cam_CFAPattern                  0x02010100  // Red  Green  Green  Blue
 
-    #define CAM_DNG_EXPOSURE_BIAS           0,1 // Specify DNG exposure bias value to 0 (to override default of -0.5 in the dng.c code)
+    #define CAM_DNG_EXPOSURE_BIAS           0,1     // Specify DNG exposure bias value to 0 (to override default of -0.5 in the dng.c code)
 
-    #define CAM_DNG_LENS_INFO               { 61,10, 305,10, 28,10, 45,10 }    // See comments in camera.h
+    #define	CAM_DNG_LENS_INFO               { 61,10, 305,10, 28,10, 45,10 }	// See comments in camera.h
 
     #define cam_CalibrationIlluminant1      17  // Standard Light A
     // From dcraw

@@ -55,6 +55,3 @@ char *camera_jpeg_count_str()
 }
 
 int movie_status = 0;
-
-void _EnterToCompensationEVF() {} // Dummy function. To be removed after stub is found. See stubs_entry_2.S.
-void _ExitFromCompensationEVF() {} // Dummy function. To be removed after stub is found. See stubs_entry_2.S.
