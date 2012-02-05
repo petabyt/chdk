@@ -31,8 +31,7 @@
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_MANUAL_FOCUS
-    #undef  CAM_HAS_USER_TV_MODES          
-    #define CAM_HAS_IS                      1
+    #undef  CAM_HAS_USER_TV_MODES
     #define CAM_MULTIPART                   1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_REAR_CURTAIN                1
@@ -44,8 +43,8 @@
     #define CAM_EV_IN_VIDEO                 0
 
     #undef  CAM_UNCACHED_BIT
-	#define CAM_UNCACHED_BIT  0x40000000 // Found @0xffc16e84
-	
+    #define CAM_UNCACHED_BIT                0x40000000 // Found @0xffc16e84
+
     #define CAM_QUALITY_OVERRIDE            1
 
     // color
@@ -81,9 +80,9 @@
     #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
 
     #undef CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH	10
+    #define CAM_MENU_BORDERWIDTH            10
 
-	#define CAM_ZEBRA_ASPECT_ADJUST 1
+    #define CAM_ZEBRA_ASPECT_ADJUST         1
 
     #define CAM_FIRMWARE_MEMINFO    1       // Use 'GetMemInfo' to get free memory size.
 	

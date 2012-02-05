@@ -11,5 +11,8 @@ NHSTUB(RefreshPhysicalScreen, 0xff9dae68)   // same as ScreenUnlock based on SD9
 // nullsubs - not needed anymore
 
 NHSTUB(kbd_pwr_on, 0xFF81093C )
+NHSTUB(rewinddir, 0xFF81093C )
+NHSTUB(Unmount_FileSystem, 0xFF81093C )
+NHSTUB(Mount_FileSystem, 0xFF81093C )
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFF81093C )
 

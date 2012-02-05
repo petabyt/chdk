@@ -14,6 +14,7 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
+// ERROR: SetFileAttributes is not found.                  //--- ---    *** != 0x00000000
 //NSTUB(kbd_pwr_off                           ,0xff86031c) //  2 60%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
@@ -47,11 +48,12 @@ DEF(focus_busy                              ,0x000064d8) // Found @0xff960130
 DEF(recreview_hold                          ,0x00003534) // Found @0xff89af5c
 
 // Values below go in 'lib.c':
-//void *vid_get_bitmap_fb()        { return (void*)0x403f1000; } // Found @0xff85b880
-//void *vid_get_viewport_fb()      { return (void*)0x40546b80; } // Found @0xffb1e2ac
-//char *camera_jpeg_count_str()    { return (char*)0x000b40d4; } // Found @0xff9fd850
-//long hook_raw_size()             { return 0x01794300; }        // Found @0xffb21768
-//int get_flash_params_count(void) { return 0xa0; }              // Found @0xff994830
+//void *vid_get_bitmap_fb()        { return (void*)0x403f1000; }             // Found @0xff85b880
+//void *vid_get_viewport_fb()      { return (void*)0x40546b80; }             // Found @0xffb1e2ac
+//void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x29a0+0x58)); } // Found @0xff8713ec & 0xff871424
+//char *camera_jpeg_count_str()    { return (char*)0x000b40d4; }             // Found @0xff9fd850
+//long hook_raw_size()             { return 0x01794300; }                    // Found @0xffb21768
+//int get_flash_params_count(void) { return 0xa0; }                          // Found @0xff994830
 
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
 //#define SD_READONLY_FLAG    0x00020000 // Found @0xffb5dcbc, levent 0x90a
@@ -87,6 +89,10 @@ DEF(recreview_hold                          ,0x00003534) // Found @0xff89af5c
 
 // Misc stuff
 DEF(ctypes, 0xffb5c59a)
+
+// For capt_seq.c
+//static long *nrflag = (long*)(0x6b40+0x08);  // Found @ ff971604 & ff971648
+//#define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
@@ -209,7 +215,6 @@ NSTUB(openfastdir                             ,0xffa911e0) //  6
 NSTUB(qsort                                   ,0xffafd50c) //  6
 NSTUB(rand                                    ,0xffa0b19c) //  6
 NSTUB(read                                    ,0xff81ad58) //101
-NSTUB(readfastdir                             ,0xffa91334) //  6
 NSTUB(reboot_fw_update                        ,0xffa967d0) //  6
 NSTUB(rename                                  ,0xff836548) //  6
 NSTUB(set_control_event                       ,0xff8918a0) //111

@@ -20,58 +20,55 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-	////////////////////////////////
-	// Sure values
-	////////////////////////////////
-    #define CAM_PROPSET					3
-    #define CAM_DRYOS					1
-    #define CAM_DRYOS_2_3_R39			1
+    ////////////////////////////////
+    // Sure values
+    ////////////////////////////////
+    #define CAM_PROPSET                     3
+    #define CAM_DRYOS                       1
+    #define CAM_DRYOS_2_3_R39               1
 
-    #define CAM_RAW_ROWPIX              3720
-    #define CAM_RAW_ROWS                2772
-    #define CAM_JPEG_WIDTH  3648
-    #define CAM_JPEG_HEIGHT 2736
-
-    #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
+    #define CAM_RAW_ROWPIX                  3720
+    #define CAM_RAW_ROWS                    2772
+    #define CAM_JPEG_WIDTH                  3648
+    #define CAM_JPEG_HEIGHT                 2736
+    #define PARAM_CAMERA_NAME               4 // parameter number for GetParameterData
 
     #undef  CAM_HAS_IRIS_DIAPHRAGM
-    #define CAM_HAS_ND_FILTER           1
+    #define CAM_HAS_ND_FILTER               1
     #undef  CAM_SENSOR_BITS_PER_PIXEL
-    #define CAM_SENSOR_BITS_PER_PIXEL   12
+    #define CAM_SENSOR_BITS_PER_PIXEL       12
 
     #define CAM_DNG_LENS_INFO               { 62,10, 248,10, 27,10, 56,10 } // See comments in camera.h
 
-    #define cam_CFAPattern              0x01000201 // Green Blue Red Green
+    #define cam_CFAPattern                  0x01000201 // Green Blue Red Green
     #define CAM_COLORMATRIX1             \
       587459, 1000000, -200837, 1000000,  -96560, 1000000, \
       -64810, 1000000,  513113, 1000000,   42843, 1000000, \
        10036, 1000000,   78911, 1000000,  231962, 1000000
 
-    #define cam_CalibrationIlluminant1  17
+    #define cam_CalibrationIlluminant1      17
 
-    #define CAM_ACTIVE_AREA_X1 0 
-    #define CAM_ACTIVE_AREA_Y1 0 
-    #define CAM_ACTIVE_AREA_X2 3700
-    #define CAM_ACTIVE_AREA_Y2 2772
+    #define CAM_ACTIVE_AREA_X1              0
+    #define CAM_ACTIVE_AREA_Y1              0
+    #define CAM_ACTIVE_AREA_X2              3700
+    #define CAM_ACTIVE_AREA_Y2              2772
 
 	 #undef CAM_BITMAP_PALETTE
 	 #define CAM_BITMAP_PALETTE		13
 
-   #undef  CAM_HAS_MANUAL_FOCUS
-	 #define CAM_EXT_TV_RANGE            1
+    #undef  CAM_HAS_MANUAL_FOCUS
+    #define CAM_EXT_TV_RANGE                1
 
-	 #define CAM_QUALITY_OVERRIDE 1
-   #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
-   #define CAM_CHDK_PTP 1
+    #define CAM_QUALITY_OVERRIDE            1
+    #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
 
-   #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
-   #define CAM_STARTUP_CRASH_FILE_OPEN_FIX    1     // enable workaround for camera crash at startup when opening the conf / font files
-   #define CAM_DATE_FOLDER_NAMING                  // Camera uses date for naming image folders
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
+    #define CAM_DATE_FOLDER_NAMING          0x100   // Camera uses date for naming image folders
 // for the purposes of CHDK, the FACE button is treated as the erase button
 //    #undef  CAM_HAS_ERASE_BUTTON
+   #define CAM_STARTUP_CRASH_FILE_OPEN_FIX    1     // enable workaround for camera crash at startup when opening the conf / font files
 
 	#define REMOTE_SYNC_STATUS_LED 	0xC0220010		// specifies an LED that turns on while camera waits for USB remote to sync
-
 //----------------------------------------------------------
 
 

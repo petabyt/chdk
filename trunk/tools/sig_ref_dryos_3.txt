@@ -11,7 +11,6 @@ kbd_read_keys_r2 0xFF85A83C
 kbd_p2_f 0xFF832ECC
 qsort 0xFF9FC560 13
 ReadFastDir 0xFFA7E1E4
-readfastdir 0xFFA7E1E4
 stat 0xFF835560
 strlen 0xFF81400C
 strcpy 0xFF82038C
@@ -35,3 +34,4 @@ GetMemInfo 0xFF81A070
 SetFileTimeStamp 0xFF835694 17
 ScreenLock 0xFF9F98B4 10
 ScreenUnlock 0xFF9F98DC 9
+SetFileAttributes 0xFF8356D8

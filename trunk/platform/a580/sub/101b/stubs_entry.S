@@ -22,21 +22,21 @@ NSTUB(kbd_pwr_on                              ,0xffc318fc) //  2 86%
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(physw_status                            ,0x0000ebdc) // Found @0xffc11c24,          stubs_min = 0x0000ebdc (0x0EBDC)
-//DEF(physw_run                               ,0x00001bf0) // Found @0xffc118c0,          stubs_min = 0x00001bf0 (0x1BF0)
-//DEF(levent_table                            ,0xffe7fb40) // Found @0xffe7fb40,          stubs_min = 0xffe7fb40 (0xFFE7fB40)
-//DEF(FlashParamsTable                        ,0xffe9ef08) // Found @0xffe9ef08,          stubs_min = 0xffe9ef08 (0xFFE9EF08)
-//DEF(movie_status                            ,0x000051b0) // Found @0xffc46414,          stubs_min = 0x000051b0 (0x51B0)
-//DEF(canon_menu_active                       ,0x00008bdc) // Found @0xffd2170c,          stubs_min = 0x00008bdc (0x8BDC)
-//DEF(canon_shoot_menu_active                 ,0x000094b9) // Found @0xffd3a7e0,          stubs_min = 0x000094b9 (0x94B9)
-//DEF(playrec_mode                            ,0x00005320) // Found @0xffc4c9f4,          stubs_min = 0x00005320 (0x5320)
-//DEF(zoom_status                             ,0x0000ba7c) // Found @0xffdf29e0,          stubs_min = 0x0000ba7c (0xBA7C)
-//DEF(some_flag_for_af_scan                   ,0x0000b808) // Found @0xffde1ab8,          stubs_min = 0x0000b808 (0xB808)
+DEF(physw_status                            ,0x0000ebdc) // Found @0xffc11c24
+DEF(physw_run                               ,0x00001bf0) // Found @0xffc118c0
+DEF(levent_table                            ,0xffe7fb40) // Found @0xffe7fb40
+DEF(FlashParamsTable                        ,0xffe9ef08) // Found @0xffe9ef08
+DEF(movie_status                            ,0x000051b0) // Found @0xffc46414
+DEF(canon_menu_active                       ,0x00008bdc) // Found @0xffd2170c
+DEF(canon_shoot_menu_active                 ,0x000094b9) // Found @0xffd3a7e0
+DEF(playrec_mode                            ,0x00005320) // Found @0xffc4c9f4
+DEF(zoom_status                             ,0x0000ba7c) // Found @0xffdf29e0
+DEF(some_flag_for_af_scan                   ,0x0000b808) // Found @0xffde1ab8
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 3 int value(s), the first is the zoom focus length.
 // there are 8 entries in the table - set NUM_FL to 8
 DEF(focus_len_table                         ,0xfffe297c) // Found @0xfffe297c
-//DEF(zoom_busy                               ,0x00007f4c) // Found @0xffd085dc,          stubs_min = 0x00007f4c (0x7F4C)
+DEF(zoom_busy                               ,0x00007f4c) // Found @0xffd085dc
 //DEF(focus_busy                              ,0x00007e58) // Found @0xffd04170, ** != ** stubs_min = 0x00009d50 (0x9D50)
 //DEF(recreview_hold                          ,0x00005b14) // Found @0xffc64f18, ** != ** stubs_min = 0x0000abe8 (0xABE8)
 
@@ -156,6 +156,7 @@ NSTUB(Restart                                 ,0xffc196a0) //106
 NSTUB(SetAE_ShutterSpeed                      ,0xffe3579c) //102
 NSTUB(SetAutoShutdownTime                     ,0xffc5c87c) //103
 NSTUB(SetCurrentCaptureModeType               ,0xffc62ac4) //101
+NSTUB(SetFileAttributes                       ,0xffc13ea8) //  1
 NSTUB(SetFileTimeStamp                        ,0xffc13e58) //  1
 NSTUB(SetLogicalEventActive                   ,0xffc5c5a4) //  1
 NSTUB(SetParameterData                        ,0xffd2cdc0) //101
@@ -203,7 +204,6 @@ NSTUB(openfastdir                             ,0xffdce7cc) //  1
 NSTUB(qsort                                   ,0xffd7133c) //  1
 NSTUB(rand                                    ,0xffc0da14) //  1
 NSTUB(read                                    ,0xffc0a15c) //101
-NSTUB(readfastdir                             ,0xffdce860) //  1
 NSTUB(reboot_fw_update                        ,0xffdd3134) //  5
 NSTUB(rename                                  ,0xffc133d4) //  1
 NSTUB(set_control_event                       ,0xffc5c2f8) //  1

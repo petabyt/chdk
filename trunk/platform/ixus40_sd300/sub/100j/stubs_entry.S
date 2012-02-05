@@ -18,9 +18,13 @@ NSTUB(DeleteFile_Fut, 0xff8699b4)
 NSTUB(DisableDispatch, 0xff8234f4)
 // ALT: NSTUB(DisableDispatch, 0xfff14060) // 19/0
 // ERROR: DisplayImagePhysicalScreen is not found!
+// Best match: 52%
+NSTUB(DoAFLock, 0xff93e2c4)
 NSTUB(EnableDispatch, 0xff823580)
 // ALT: NSTUB(EnableDispatch, 0xfff140ec) // 22/0
+// ERROR: EnterToCompensationEVF is not found!
 // ERROR: ExecuteEventProcedure is not found!
+// ERROR: ExitFromCompensationEVF is not found!
 NSTUB(ExitTask, 0xff823b44)
 // ALT: NSTUB(ExitTask, 0xfff146b0) // 31/0
 NSTUB(Fclose_Fut, 0xff869af4)
@@ -38,10 +42,24 @@ NSTUB(Fseek_Fut, 0xff869cc0)
 // ALT: NSTUB(Fseek_Fut, 0xfff172e4) // 24/0
 NSTUB(Fwrite_Fut, 0xff869c28)
 // ALT: NSTUB(Fwrite_Fut, 0xfff1724c) // 26/0
+// ERROR: GetBatteryTemperature is not found!
+// ERROR: GetCCDTemperature is not found!
 NSTUB(GetCurrentAvValue, 0xffa6aeb0)
 NSTUB(GetCurrentTargetDistance, 0xffa6ae58)
+// ERROR: GetDrive_ClusterSize is not found!
+// ERROR: GetDrive_FreeClusters is not found!
+// ERROR: GetDrive_TotalClusters is not found!
 // ERROR: GetFocusLensSubjectDistance is not found!
 // ERROR: GetFocusLensSubjectDistanceFromLens is not found!
+// Best match: 51%
+NSTUB(GetOpticalTemperature, 0xffa488d8)
+// ALT: NSTUB(GetOpticalTemperature, 0xffa518ec) // 15/14
+// ALT: NSTUB(GetOpticalTemperature, 0xffa57c7c) // 15/14
+// ALT: NSTUB(GetOpticalTemperature, 0xffa57c90) // 15/14
+// ALT: NSTUB(GetOpticalTemperature, 0xffa57ca4) // 15/14
+// ALT: NSTUB(GetOpticalTemperature, 0xffa57cb8) // 15/14
+// ALT: NSTUB(GetOpticalTemperature, 0xffa57ccc) // 15/14
+// ALT: NSTUB(GetOpticalTemperature, 0xffa60dec) // 15/14
 // ERROR: GetParameterData is not found!
 // ERROR: GetPropertyCase is not found!
 // Best match: 96%
@@ -58,6 +76,7 @@ NSTUB(GetZoomLensCurrentPosition, 0xffa57ce0)
 // ERROR: IsStrobeChargeCompleted is not found!
 // Best match: 61%
 NSTUB(LockMainPower, 0xff9561a0)
+// ERROR: MakeAFScan is not found!
 // Best match: 70%
 NSTUB(MakeDirectory, 0xff8718c4)
 // ALT: NSTUB(MakeDirectory, 0xfff1bd30) // 22/9
@@ -70,6 +89,7 @@ NSTUB(MoveFocusLensToDistance, 0xffa6b0e8)
 NSTUB(MoveZoomLensWithPoint, 0xffa52078)
 // ALT: NSTUB(MoveZoomLensWithPoint, 0xffa52078) // 13/12
 // ERROR: Open is not found!
+// ERROR: PT_PlaySound is not found!
 // ERROR: PhySw_testgpio is not found!
 // Best match: 95%
 NSTUB(PostLogicalEventForNotPowerType, 0xff953a4c)
@@ -96,8 +116,13 @@ NSTUB(RenameFile_Fut, 0xff869934)
 // ALT: NSTUB(RenameFile_Fut, 0xfff16fd8) // 27/0
 // Best match: 80%
 NSTUB(Restart, 0xff824f50)
+// Best match: 95%
+NSTUB(SetAE_ShutterSpeed, 0xffa6d448)
 // ERROR: SetAutoShutdownTime is not found!
 // ERROR: SetCurrentCaptureModeType is not found!
+// Best match: 58%
+NSTUB(SetFileAttributes, 0xff8717e0)
+// ALT: NSTUB(SetFileAttributes, 0xfff1bc4c) // 17/12
 // Best match: 62%
 NSTUB(SetLogicalEventActive, 0xff955bbc)
 // ERROR: SetParameterData is not found!
@@ -110,6 +135,8 @@ NSTUB(TakeSemaphore, 0xff822f5c)
 // ALT: NSTUB(TakeSemaphore, 0xfff13ac8) // 31/0
 NSTUB(TurnOffBackLight, 0xff99e594)
 NSTUB(TurnOnBackLight, 0xff99e568)
+// Best match: 71%
+NSTUB(UnlockAF, 0xff93e304)
 // Best match: 65%
 NSTUB(UnlockMainPower, 0xff95625c)
 NSTUB(Unmount_FileSystem, 0xff870344)
@@ -119,6 +146,7 @@ NSTUB(Unmount_FileSystem, 0xff870344)
 NSTUB(UpdateMBROnFlash, 0xff8704d0)
 // ERROR: VbattGet is not found!
 // ERROR: Write is not found!
+// ERROR: WriteSDCard is not found!
 NSTUB(_log, 0xffaaebe0)
 // ALT: NSTUB(_log, 0xffaaebe0) // 27/0
 // ALT: NSTUB(_log, 0xfff404cc) // 27/0
@@ -137,6 +165,7 @@ NSTUB(_sqrt, 0xffab3ac4)
 // ALT: NSTUB(_sqrt, 0xfff45834) // 24/0
 // Best match: 96%
 NSTUB(add_ptp_handler, 0xffa13b10)
+NSTUB(apex2us, 0xff8aa1c4)
 NSTUB(chdir, 0xffac2f4c)
 // ALT: NSTUB(chdir, 0xffac2f4c) // 27/0
 // ALT: NSTUB(chdir, 0xfff56ffc) // 27/0
@@ -147,9 +176,9 @@ NSTUB(closedir, 0xffabe6c0)
 // ALT: NSTUB(closedir, 0xfff52770) // 26/0
 NSTUB(errnoOfTaskGet, 0xffabee8c)
 // ALT: NSTUB(errnoOfTaskGet, 0xfff52f3c) // 15/0
-// Best match: 90%
-NSTUB(exmem_alloc, 0xff813884)
-// ALT: NSTUB(exmem_alloc, 0xfff16334) // 28/3
+// Best match: 92%
+NSTUB(exmem_alloc, 0xff813a1c)
+// ALT: NSTUB(exmem_alloc, 0xfff164cc) // 23/2
 // ERROR: free is not found!
 NSTUB(ints_disable, 0xff81f438)
 // ALT: NSTUB(ints_disable, 0xfff0f3a4) // 15/0
@@ -182,8 +211,11 @@ NSTUB(isxdigit, 0xffab864c)
 // ERROR: kbd_p1_f is not found!
 // ERROR: kbd_p1_f_cont is not found!
 // ERROR: kbd_p2_f is not found!
+// WARNING: too many matches for kbd_pwr_off!
+// WARNING: too many matches for kbd_pwr_off!
 // Best match: 83%
-NSTUB(kbd_pwr_off, 0xffa41bf0)
+NSTUB(kbd_pwr_off, 0xffa417b0)
+// ALT: NSTUB(kbd_pwr_off, 0xffa41bf0) // 5/1
 // ALT: NSTUB(kbd_pwr_off, 0xffa41c0c) // 5/1
 // ALT: NSTUB(kbd_pwr_off, 0xfff30af0) // 5/1
 // ALT: NSTUB(kbd_pwr_off, 0xfff30b0c) // 5/1

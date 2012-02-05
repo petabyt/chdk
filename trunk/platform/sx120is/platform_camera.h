@@ -39,8 +39,6 @@
     #define CAM_UNCACHED_BIT                0x40000000
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
-    #undef  CAM_WHITE_LEVEL
-    #define CAM_WHITE_LEVEL                 ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
     #undef  CAM_BLACK_LEVEL
     #define CAM_BLACK_LEVEL                 128     // black level set to 128 per reports on the forum
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData

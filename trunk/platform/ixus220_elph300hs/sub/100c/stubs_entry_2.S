@@ -1,11 +1,11 @@
 #include "stubs_asm.h"
+#define NULL_SUB 0xFF841798
 
-// Addresses for firmware task handlers (used in taskHook)
+// Override stubs_entry.S
+NHSTUB(kbd_pwr_on,                  NULL_SUB)
+NHSTUB(SetFileAttributes,           NULL_SUB)
 
+// These don't exist
+NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 
-// Addresses for firmware functions
-
-
-// pointed to NULL -> changed to call a "BX LR" instruction
-NHSTUB(SetZoomActuatorSpeedPercent,		0xFF841798)
-NHSTUB(kbd_pwr_on,						0xFF841798)
+// Additional

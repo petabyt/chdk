@@ -14,8 +14,8 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(kbd_pwr_off                           ,0xff865b9c) //  2 60%    *** != 0xff810b1c
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0xff810b1c
+//NSTUB(kbd_pwr_off                           ,0xff865b9c) //  2 60%    *** != 0x00000000
+// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff8a3cc4 -> ff8a0690 -> ff9c12b8 -> ffb00eb4 -> ffc67afc
@@ -160,6 +160,7 @@ NSTUB(ScreenUnlock                            ,0xff8b93a8) //  3
 NSTUB(SetAE_ShutterSpeed                      ,0xffb55e00) //102
 NSTUB(SetAutoShutdownTime                     ,0xff8a0308) //103
 NSTUB(SetCurrentCaptureModeType               ,0xff8a922c) //101
+NSTUB(SetFileAttributes                       ,0xff8373d4) //  3
 NSTUB(SetFileTimeStamp                        ,0xff837378) //  4
 NSTUB(SetLogicalEventActive                   ,0xff89ffd0) //101
 NSTUB(SetParameterData                        ,0xff9c26ec) //101
@@ -205,7 +206,6 @@ NSTUB(openfastdir                             ,0xffacded8) //  4
 NSTUB(qsort                                   ,0xffb40804) //  4
 NSTUB(rand                                    ,0xffa4db2c) //  4
 NSTUB(read                                    ,0xff81ad74) //101
-NSTUB(readfastdir                             ,0xfface02c) //  4
 NSTUB(reboot_fw_update                        ,0xffad344c) //  4
 NSTUB(rename                                  ,0xff8369c0) //  4
 NSTUB(set_control_event                       ,0xff89fbc0) //111

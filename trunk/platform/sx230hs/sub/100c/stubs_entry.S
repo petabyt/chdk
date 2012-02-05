@@ -15,6 +15,7 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NSTUB(Restart                               ,0xff02d4cc) //106        *** != 0xff02d3d0
+// ERROR: SetFileAttributes is not found.                  //--- ---    *** != 0xff02da40
 //NSTUB(kbd_pwr_off                           ,0xff0577e4) //  2 60%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
@@ -32,23 +33,23 @@
 // Current modemap entry not found in firmware - MODE_SCN_COLOR_ACCENT     8733
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(physw_status                            ,0x000358e8) // Found @0xff024d10,          stubs_min = 0x000358e8 (0x000358e8)
-//DEF(physw_run                               ,0x00001c44) // Found @0xff0248a4,          stubs_min = 0x00001c44 (0x00001c44)
-//DEF(levent_table                            ,0xff42121c) // Found @0xff42121c,          stubs_min = 0xff42121c (0xff42121c)
-//DEF(FlashParamsTable                        ,0xff4956ec) // Found @0xff4956ec,          stubs_min = 0xff4956ec (0xff4956ec)
-//DEF(movie_status                            ,0x00008624) // Found @0xff18c580,          stubs_min = 0x00008624 (0x00008624)
-//DEF(full_screen_refresh                     ,0x0000b440) // Found @0xff244890,          stubs_min = 0x0000b440 (0x0000b440)
-//DEF(canon_menu_active                       ,0x000042d4) // Found @0xff08ca84,          stubs_min = 0x000042d4 (0x000042d4)
-//DEF(canon_shoot_menu_active                 ,0x00009995) // Found @0xff1d45b4,          stubs_min = 0x00009995 (0x00009995)
-//DEF(playrec_mode                            ,0x00004008) // Found @0xff07ed14,          stubs_min = 0x00004008 (0x00004008)
+DEF(physw_status                            ,0x000358e8) // Found @0xff024d10
+DEF(physw_run                               ,0x00001c44) // Found @0xff0248a4
+DEF(levent_table                            ,0xff42121c) // Found @0xff42121c
+DEF(FlashParamsTable                        ,0xff4956ec) // Found @0xff4956ec
+DEF(movie_status                            ,0x00008624) // Found @0xff18c580
+DEF(full_screen_refresh                     ,0x0000b440) // Found @0xff244890
+DEF(canon_menu_active                       ,0x000042d4) // Found @0xff08ca84
+DEF(canon_shoot_menu_active                 ,0x00009995) // Found @0xff1d45b4
+DEF(playrec_mode                            ,0x00004008) // Found @0xff07ed14
 //DEF(zoom_status                             ,0x0000f6bc) // Found @0xff326800, ** != ** stubs_min = 0x0000f69c (0x0000f69c)
-//DEF(some_flag_for_af_scan                   ,0x00008a28) // Found @0xff190c5c,          stubs_min = 0x00008a28 (0x00008a28)
+DEF(some_flag_for_af_scan                   ,0x00008a28) // Found @0xff190c5c
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 3 int value(s), the first is the zoom focus length.
 // there are 126 entries in the table - set NUM_FL to 126
-//DEF(focus_len_table                         ,0xfff4a3dc) // Found @0xfff4a3dc,          stubs_min = 0xfff4a3dc (0xFFF4A3DC)
-//DEF(zoom_busy                               ,0x00008548) // Found @0xff187708,          stubs_min = 0x00008548 (0x852C+0x1C)
-//DEF(focus_busy                              ,0x000083c4) // Found @0xff181c8c,          stubs_min = 0x000083c4 (0x83BC+8)
+DEF(focus_len_table                         ,0xfff4a3dc) // Found @0xfff4a3dc
+DEF(zoom_busy                               ,0x00008548) // Found @0xff187708
+DEF(focus_busy                              ,0x000083c4) // Found @0xff181c8c
 //DEF(recreview_hold                          ,0x00004e04) // Found @0xff0a00d8, ** != ** stubs_min = 0x0000956c (0x947C+0xF0)
 
 // Values below go in 'lib.c':
@@ -215,7 +216,6 @@ NSTUB(openfastdir                             ,0xff2e6e08) //  6
 NSTUB(qsort                                   ,0xff36386c) //  6
 NSTUB(rand                                    ,0xff24cf8c) //  6
 NSTUB(read                                    ,0xff00ad58) //101
-NSTUB(readfastdir                             ,0xff2e6f5c) //  6
 NSTUB(reboot_fw_update                        ,0xff2ec3f4) //  6
 NSTUB(rename                                  ,0xff026cd8) //  6
 NSTUB(set_control_event                       ,0xff092aac) //111
