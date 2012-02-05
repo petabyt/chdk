@@ -124,14 +124,14 @@ void vid_turn_on_updates() {
 // ROM:FFB9FA14 DCD 0x876
 // ROM:FFB9FA18 DCD 2
 void JogDial_CW(void) {
-    _PostLogicalEventForNotPowerType(0x876, 2);  // RotateJogDialRight at levent_table
+    _PostLogicalEventForNotPowerType(0x876, 1);  // RotateJogDialRight at levent_table
 }
 
 // ROM:FFB9FA1C DCD aRotatejogdialleft  ; "RotateJogDialLeft"
 // ROM:FFB9FA20 DCD 0x877
 // ROM:FFB9FA24 DCD 2
 void JogDial_CCW(void) {
-    _PostLogicalEventForNotPowerType(0x877, 2);  // RotateJogDialLeft at levent_table
+    _PostLogicalEventForNotPowerType(0x877, 1);  // RotateJogDialLeft at levent_table
 }
 
 // ToDo

@@ -1,4 +1,3 @@
-
 #include "platform.h"
 #include "lolevel.h"
 
@@ -13,6 +12,8 @@ void vid_bitmap_refresh()
  enabled_refresh_physical_screen=1;
  _RefreshPhysicalScreen(1);
 }
+
+
 void shutdown()
 {
 
@@ -21,6 +22,7 @@ ROM:FFC0CD8C                 LDR     R1, =0xC0220000
 ROM:FFC0CD90                 MOV     R0, #0x44
 ROM:FFC0CD94                 STR     R0, [R1,#0x54]
 ROM:FFC0CD98                 STR     R0, [R1,#0x4C]
+
 
 C0220000+54+4C=0xC02200A0
 
@@ -57,11 +59,11 @@ int get_flash_params_count(void){
 }
 
 void JogDial_CW(void){
- _PostLogicalEventForNotPowerType(0x874, 2);  // RotateJogDialRight
+ _PostLogicalEventForNotPowerType(0x874, 1);  // RotateJogDialRight
 }
 
 void JogDial_CCW(void){
- _PostLogicalEventForNotPowerType(0x875, 2);  // RotateJogDialLeft
+ _PostLogicalEventForNotPowerType(0x875, 1);  // RotateJogDialLeft
 }
 
 
