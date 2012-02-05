@@ -8,3 +8,9 @@ ND filter
 FL 6.2 – 24.8 mm (35–140 mm)
 
 version -> [func.set]+[down]
+
+Battery temperature is not available on this camera, always returns -99
+
+Optical zoom in video does not work
+
+Extra long exposures (>64 seconds) not implemented
