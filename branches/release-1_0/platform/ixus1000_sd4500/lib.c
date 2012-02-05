@@ -79,9 +79,9 @@ int get_flash_params_count(void){
 }
 
 void JogDial_CW(void){
- _PostLogicalEventForNotPowerType(0x877, 2);  // RotateJogDialRight  old 874
+ _PostLogicalEventForNotPowerType(0x877, 1);  // RotateJogDialRight  old 874
 }
 
 void JogDial_CCW(void){
- _PostLogicalEventForNotPowerType(0x876, 2);  // RotateJogDialLeft  old 875
+ _PostLogicalEventForNotPowerType(0x876, 1);  // RotateJogDialLeft  old 875
 }

@@ -72,11 +72,11 @@ void *vid_get_viewport_fb_d()
 
 /* ERR99: ToDO: Check if this is also ok for S90 (taken from SX200IS port) */
 void JogDial_CW(void){
- _PostLogicalEventForNotPowerType(0x874, 2);  // RotateJogDialRight
+ _PostLogicalEventForNotPowerType(0x874, 1);  // RotateJogDialRight
 }
 
 void JogDial_CCW(void){
- _PostLogicalEventForNotPowerType(0x875, 2);  // RotateJogDialLeft
+ _PostLogicalEventForNotPowerType(0x875, 1);  // RotateJogDialLeft
 }
 
 
