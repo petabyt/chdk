@@ -4,7 +4,8 @@
 
 void vid_bitmap_refresh()
 {
-	extern int full_screen_refresh;
+ 	extern int full_screen_refresh;
+
 	extern void _LockAndRefresh(); // wrapper function for screen lock
 	extern void _UnlockAndRefresh(); // wrapper function for screen unlock
 
@@ -48,11 +49,11 @@ int get_flash_params_count(void){
 }
 
 void JogDial_CW(void){
- _PostLogicalEventForNotPowerType(0x86E, 2);  // @FF416880 (100c)
+ _PostLogicalEventForNotPowerType(0x86E, 1);  // @FF416880 (100c)
 }
 
 void JogDial_CCW(void){
- _PostLogicalEventForNotPowerType(0x86F, 2);  // @FF41688C (100c)
+ _PostLogicalEventForNotPowerType(0x86F, 1);  // @FF41688C (100c)
 }
 
 
@@ -87,3 +88,4 @@ int vid_get_viewport_xoffset()
 }
 
 long vid_get_viewport_height(){ return 240; }
+

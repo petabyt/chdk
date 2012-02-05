@@ -48,11 +48,11 @@ int get_flash_params_count(void){
 }
 
 void JogDial_CW(void){
- _PostLogicalEventForNotPowerType(0x86E, 2);  // @FF416880
+ _PostLogicalEventForNotPowerType(0x86E, 1);  // @FF416880
 }
 
 void JogDial_CCW(void){
- _PostLogicalEventForNotPowerType(0x86F, 2);  // @FF41688C
+ _PostLogicalEventForNotPowerType(0x86F, 1);  // @FF41688C
 }
 
 
