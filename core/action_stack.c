@@ -51,7 +51,12 @@ long action_stack_create(action_process proc_func, long p)
     tmp[num_stacks] = (action_stack_t*)malloc(sizeof(action_stack_t));
     
     action_stack_t* stack = tmp[num_stacks];
-    stack->action_process = proc_func;
+    if(proc_func) {
+        stack->action_process = proc_func;
+    } else {
+        stack->action_process = action_stack_standard;
+    }
+
     stack->stack_ptr = 0;
     stack->comp_id = task_comp_id;
     stack->delay_target_ticks = 0;
@@ -183,9 +188,12 @@ int action_process_delay(int p)
     if (action_stacks[active_stack]->delay_target_ticks == 0)
     {
         /* setup timer */
-        long action = action_get_prev(p);
-        /* delay of -1 signals indefinite (actually 1 day) delay*/ 
-        action_stacks[active_stack]->delay_target_ticks = t+((action == -1)?86400000:action);
+        long delay = action_get_prev(p);
+        /* delay of -1 signals indefinite (actually 1 day) delay*/
+        if(delay == -1) {
+            delay = 86400000;
+        }
+        action_stacks[active_stack]->delay_target_ticks = t+delay;
         return 0;
     }
     if (action_stacks[active_stack]->delay_target_ticks <= t)
@@ -203,9 +211,7 @@ void action_clear_delay(void)
 // Defines some standard operations. Returns false if it could not process anything.
 // Can only be called from an action stack
 int action_stack_standard(long p)
-{        
-    long t;
-    
+{
     switch (p)
     {
     case AS_PRESS:
@@ -274,11 +280,7 @@ static void action_stack_process(int task_id)
     action_stack_t* stack = action_stacks[task_id];
     if (stack->stack_ptr > -1)
     {
-        long stack_arg = action_get_prev(1);
-        if (stack->action_process)
-            stack->action_process(stack_arg);
-        else
-            action_stack_standard(stack_arg);
+        stack->action_process(action_get_prev(1));
     }
     else
     {
@@ -288,12 +290,10 @@ static void action_stack_process(int task_id)
 
 void action_stack_process_all()
 {
-    int i;
-    for (i = num_stacks - 1; i >= 0; --i)
+    for (active_stack = num_stacks - 1; active_stack >= 0; --active_stack)
     {
-        active_stack = i;
-        action_stack_process(i);
+        action_stack_process(active_stack);
     }
-    
+
     active_stack = -1;
 }
