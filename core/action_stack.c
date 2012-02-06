@@ -250,6 +250,12 @@ int action_stack_standard(long p)
             action_pop();
         }
         break;
+    case AS_WAIT_SHOOTING_IN_PROGRESS:
+        if (shooting_in_progress() || MODE_IS_VIDEO(mode_get()))
+        {
+            action_pop();
+        }
+        break;
     case AS_SHOOT:
         state_shooting_progress = SHOOTING_PROGRESS_NONE;
 
@@ -266,6 +272,7 @@ int action_stack_standard(long p)
         action_push_press(KEY_SHOOT_FULL);
 
         action_push(AS_WAIT_FLASH);
+        action_push(AS_WAIT_SHOOTING_IN_PROGRESS);
 
         action_push_press(KEY_SHOOT_HALF);
     default:
