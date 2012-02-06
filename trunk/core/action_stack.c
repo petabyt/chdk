@@ -32,7 +32,7 @@ int action_stack_is_finished(long comp_id)
         if (action_stacks[i]->comp_id == comp_id)
             return 0;
     }
-    
+
     return 1;
 }
 
@@ -43,13 +43,13 @@ long action_stack_create(action_process proc_func, long p)
     // Cap the maximum number of action_stacks
     if (num_stacks == MAX_ACTION_STACKS)
         return -1;
-        
+
     // Initialize new action stack
     action_stack_t** tmp = (action_stack_t**)malloc(sizeof(action_stack_t*) * (num_stacks + 1));
     memcpy(tmp, action_stacks, sizeof(action_stack_t*) * num_stacks);
 
     tmp[num_stacks] = (action_stack_t*)malloc(sizeof(action_stack_t));
-    
+
     action_stack_t* stack = tmp[num_stacks];
     if(proc_func) {
         stack->action_process = proc_func;
@@ -60,16 +60,16 @@ long action_stack_create(action_process proc_func, long p)
     stack->stack_ptr = 0;
     stack->comp_id = task_comp_id;
     stack->delay_target_ticks = 0;
-    stack->stack[0] = p;    
+    stack->stack[0] = p;
 
     action_stack_t** old = action_stacks;
     action_stacks = tmp;
     ++num_stacks;
-    
+
     if (old != NULL)
         free(old);
-        
-    // Increment task_comp_id, handle wraparound, 
+
+    // Increment task_comp_id, handle wraparound,
     // and do not take values already in use
     do
     {
@@ -85,7 +85,7 @@ static void action_stack_finish(int task_id)
     action_stack_t** tmp = NULL;
     if (num_stacks > 1)
         tmp = (action_stack_t**)malloc(sizeof(action_stack_t*) * (num_stacks - 1));
-    
+
     int src_index, dst_index;
     for (src_index = 0, dst_index = 0; src_index < num_stacks; ++src_index)
     {
@@ -99,7 +99,7 @@ static void action_stack_finish(int task_id)
             free(action_stacks[src_index]);
         }
     }
-        
+
     action_stack_t** old = action_stacks;
     --num_stacks;
     action_stacks = tmp;
@@ -111,7 +111,7 @@ void action_pop()
 {
     if (active_stack == -1)
         return;
-    
+
     --(action_stacks[active_stack]->stack_ptr);
 }
 
@@ -144,9 +144,9 @@ void action_push_click(long key)
 {
 // WARNING stack program flow is reversed
     action_push_release(key);
-#if defined(CAM_KEY_CLICK_DELAY) // camera need delay for click 
-    action_push_delay(CAM_KEY_CLICK_DELAY); 
-#endif 
+#if defined(CAM_KEY_CLICK_DELAY) // camera need delay for click
+    action_push_delay(CAM_KEY_CLICK_DELAY);
+#endif
     action_push_press(key);
 }
 
@@ -164,7 +164,7 @@ void action_push(long p)
         return;
 
     action_stack_t* task = action_stacks[active_stack];
-    task->stack[++task->stack_ptr] = p;    
+    task->stack[++task->stack_ptr] = p;
 }
 
 // Can only be called from an action stack
@@ -243,7 +243,7 @@ int action_stack_standard(long p)
     case AS_WAIT_CLICK:
         if(action_process_delay(2) || (kbd_last_clicked = kbd_get_clicked_key()))
         {
-            if (!kbd_last_clicked) 
+            if (!kbd_last_clicked)
                 kbd_last_clicked=0xFFFF;
             action_clear_delay();
             action_pop();
@@ -271,7 +271,7 @@ int action_stack_standard(long p)
     default:
         return 0;
     }
-    
+
     return 1;
 }
 
