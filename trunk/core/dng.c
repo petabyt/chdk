@@ -556,7 +556,7 @@ int raw_init_badpixel_bin() {
             if (get_raw_pixel(c[0],c[1])==0)
             {
                 unsigned short l;
-                for (l=0; l<7; l++) if (get_raw_pixel(c[0],c[1]+l+1)!=0) break;
+                for (l=0; l<7 && (c[1]+l+1)<camera_sensor.active_area.y2; l++) if (get_raw_pixel(c[0],c[1]+l+1)!=0) break;
                 c[1] = c[1] | (l << 13);
                 if (f) fwrite(c, 1, 4, f);
                 c[1] = (c[1] & 0x1FFF) + l;
