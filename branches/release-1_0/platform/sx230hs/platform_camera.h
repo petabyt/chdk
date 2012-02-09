@@ -20,6 +20,8 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
+    #define OPT_GPS                         1
+
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1
     #define DNG_VERT_RLE_BADPIXELS          1
     #define CAM_AV_OVERRIDE_IRIS_FIX        1
