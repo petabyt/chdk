@@ -26,9 +26,6 @@
     #define CAM_RAW_ROWPIX                  3336   // for new 8 MP
     #define CAM_RAW_ROWS                    2490   // for new 8 MP // Corrected! from 2480 (new value from stubs_entry.S)
 
-    #undef  CAM_UNCACHED_BIT		// Added! from stubs_entry.S
-    #define CAM_UNCACHED_BIT  0x10000000		// Found @0xffc17e64 // Added! from stubs_entry.S
-
     #undef CAM_USE_ZOOM_FOR_MF
     #define CAM_MULTIPART                   1
     #undef CAM_HAS_ERASE_BUTTON
@@ -45,7 +42,7 @@
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     // #define CAM_EV_IN_VIDEO                 1      // not working on 101b!!!
-    #undef CAM_VIDEO_CONTROL		// Not working
+    #undef CAM_VIDEO_CONTROL                            // Not working
 
     #define CAM_DNG_LENS_INFO               { 58,10, 232,10, 26,10, 55,10 } // See comments in camera.h
     // pattern
@@ -54,7 +51,7 @@
     #define CAM_COLORMATRIX1                              \
     726857, 1000000, -176454, 1000000, -124118, 1000000, \
     -71340, 1000000,  592001, 1000000,   75622, 1000000, \
-    63222, 1000000,   50547, 1000000,  219582, 1000000
+     63222, 1000000,   50547, 1000000,  219582, 1000000
 
     #define cam_CalibrationIlluminant1      1 // Daylight
     // cropping

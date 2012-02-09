@@ -46,4 +46,3 @@ void camera_set_led(int led, int state, int bright)
 int get_flash_params_count(void){
  return 83;
 }
-

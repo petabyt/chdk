@@ -1,5 +1,6 @@
 #include "platform.h"
 
+
 char *hook_raw_image_addr()   
 {
 	if (*((int*)0x3F64) != 0)

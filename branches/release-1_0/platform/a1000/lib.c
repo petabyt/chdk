@@ -1,6 +1,5 @@
 #include "platform.h"
 #include "lolevel.h"
-//#include "../generic/lib.c"
 
 void shutdown()
 {

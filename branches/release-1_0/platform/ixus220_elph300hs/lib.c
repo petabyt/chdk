@@ -12,6 +12,7 @@ void vid_bitmap_refresh()
 	_ScreenUnlock();
 }
 
+
 void shutdown()
 {
 	volatile long *p = (void*)0xC022001C;
@@ -30,10 +31,14 @@ void shutdown()
 
 #define LED_PR 0xC0220130
 
+
 void debug_led(int state)
 {
  *(int*)LED_PR=state ? 0x46 : 0x44;
 }
+
+
+
 
 void camera_set_led(int led, int state, int bright) {
  static char led_table[2]={0,9};

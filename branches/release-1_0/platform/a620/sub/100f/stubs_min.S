@@ -16,3 +16,4 @@ DEF(some_f_for_dng, 0x9B4C)
 DEF(second_ext_for_dng, 0x9B70)
 DEF(levent_table,0xFFD4317C)
 DEF(playrec_mode,0x6F7C)
+DEF(sys_mempart_id,0xEC80) // calloc
