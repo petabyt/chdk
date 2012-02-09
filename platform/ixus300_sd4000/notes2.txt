@@ -71,9 +71,9 @@ Number   Name                       Location            String
 80       DeltraNd                   ROM:FF93F114        GetDeltaNdResult
 81
 82                                                      PrcssFil.c
-91                                                      SsZoomCtrl.c
+91                                                      PROPCASE_DIGITAL_ZOOM_MODE SsZoomCtrl.c
 93                                                      SsZoomCtrl.c
-94                                                      SsZoomCtrl.c
+94                                                      PROPCASE_DIGITAL_ZOOM_STATE SsZoomCtrl.c
 95       DigitalZoomPos             ROM:FF868A24        PROPCASE_DIGITAL_ZOOM_POSITION  WBFaceWin.c
 96
 102

@@ -63,7 +63,6 @@ To enter CHDK ALT mode press LEFT + UP on JogDial (Camera has no special button 
 
 --- ToDo ------------------------------------------------------------
 * Multi Partition Support (Autoboot CHDK with 2 Partitions on SD-Card)
-* Make bootable does not work (WriteSDCard address wrong?)
 * "Debug Parameters -> Create card with two partitions" does cause shutdown (WriteSDCard address wrong?)
 * tweak Color Palette (CAM_BITMAP_PALETTE), CHDK OSD Colors does not fit and are different in playback/record mode
 * Check Propcase, at least one Propcase has changed (maybe it time for propcase4.h)
