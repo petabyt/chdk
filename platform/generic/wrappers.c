@@ -10,16 +10,16 @@
 // Char Wrappers
 
 #if CAM_DRYOS
-#define _U	0x01    /* upper */
-#define _L	0x02    /* lower */
-#define _D	0x04    /* digit */
-#define _C	0x20    /* cntrl */
-#define _P	0x10    /* punct */
-#define _S	0x40    /* white space (space/lf/tab) */
-#define _X	0x80    /* hex digit */
-#define _SP	0x08    /* hard space (0x20) */
+#define _U      0x01    /* upper */ 
+#define _L      0x02    /* lower */ 
+#define _D      0x04    /* digit */ 
+#define _C      0x20    /* cntrl */ 
+#define _P      0x10    /* punct */ 
+#define _S      0x40    /* white space (space/lf/tab) */ 
+#define _X      0x80    /* hex digit */ 
+#define _SP     0x08    /* hard space (0x20) */ 
 static int _ctype(int c,int t) {
-    extern unsigned char ctypes[];  // Firmware ctypes table (in stubs_entry.S)
+    extern unsigned char ctypes[];  // Firmware ctypes table (in stubs_entry.S) 
     return ctypes[c&0xFF] & t;
 }
 
@@ -150,7 +150,13 @@ void lens_set_zoom_point(long newpt)
         newpt = zoom_points-1;
     }
 
-#if defined(CAMERA_sx30) || defined(CAMERA_g12) || defined(CAMERA_sx130is)|| defined(CAMERA_g10) 
+#if defined(CAMERA_sx30) || \
+    defined(CAMERA_g12) || \
+    defined(CAMERA_sx130is)|| \
+    defined(CAMERA_g10) || \
+    defined(CAMERA_sx220hs) || \
+    defined(CAMERA_sx230hs) || \
+    defined(CAMERA_ixus220_elph300hs)
 	if (lens_get_zoom_point() != newpt)
 	{
 		// Get current digital zoom mode & state
@@ -166,9 +172,15 @@ void lens_set_zoom_point(long newpt)
 			_PT_MoveDigitalZoomToWide();
 		}
 
-  #if defined(CAMERA_sx30) || defined(CAMERA_sx130is)
+  #if defined(CAMERA_sx30) || \
+    defined(CAMERA_sx130is) || \
+    defined(CAMERA_sx220hs) || \
+    defined(CAMERA_sx230hs) || \
+    defined(CAMERA_ixus220_elph300hs)
 		// SX30 - _MoveZoomLensWithPoint crashes camera
 		// _PT_MoveOpticalZoomAt works, and updates PROPCASE_OPTICAL_ZOOM_POSITION; but doesn't wait for zoom to finish
+        // IXUS220, SX220/230 - _MoveZoomLensWithPoint does not notify the JPEG engine of the new focal length,
+        //                      causing incorrect lens distortion fixes to be applied; _PT_MoveOpticalZoomAt works
 		extern void _PT_MoveOpticalZoomAt(long*);
 		_PT_MoveOpticalZoomAt(&newpt);
   #else
@@ -181,7 +193,7 @@ void lens_set_zoom_point(long newpt)
 		// g10,g12 & sx30 only use this value for optical zoom
 		zoom_status=ZOOM_OPTICAL_MAX;
 
-  #if defined(CAMERA_g12)|| defined(CAMERA_g10)
+  #if defined(CAMERA_g12)|| defined(CAMERA_g10) 
 	    _SetPropertyCase(PROPCASE_OPTICAL_ZOOM_POSITION, &newpt, sizeof(newpt));
   #endif
 	}
@@ -213,10 +225,10 @@ void lens_set_focus_pos(long newpos)
 {
     if (newpos >= MAX_DIST) newpos = INFINITY_DIST; // Set to infinity value that will work on all cameras
     _MoveFocusLensToDistance((short*)&newpos);
-	while ((shooting_is_flash_ready()!=1) || (focus_busy)) msleep(10);
-	newpos = _GetFocusLensSubjectDistance();
-	_SetPropertyCase(PROPCASE_SUBJECT_DIST1, &newpos, sizeof(newpos));
-	_SetPropertyCase(PROPCASE_SUBJECT_DIST2, &newpos, sizeof(newpos));
+    while ((shooting_is_flash_ready()!=1) || (focus_busy)) msleep(10);
+    newpos = _GetFocusLensSubjectDistance();
+    _SetPropertyCase(PROPCASE_SUBJECT_DIST1, &newpos, sizeof(newpos));
+    _SetPropertyCase(PROPCASE_SUBJECT_DIST2, &newpos, sizeof(newpos));
 }
 
 void play_sound(unsigned sound)
@@ -1380,6 +1392,20 @@ void Restart(unsigned option) {
 	_Restart(option);
 }
 */
+
+unsigned char SetFileAttributes(const char* fn, unsigned char attr)
+{
+    int fd;
+    unsigned char ret = -1;
+    
+    fd = open(fn, 0, 0);
+    if( fd ) {
+        _SetFileAttributes(fd, attr);
+        close(fd);
+        ret = attr;
+    }
+    return ret;
+}
 
 // Default implementation of PTP live view functions.
 // Override as needed for camera specific variations (see G12/SX30/IXUS310/SX130IS for working examples)

@@ -1,6 +1,6 @@
-// Camera - A720 - platform_camera.h
+// Camera - a720 - platform_camera.h
 
-// This file contains the various settings values specific to the A720 camera.
+// This file contains the various settings values specific to the a720 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -23,8 +23,8 @@
     #define CAM_PROPSET                     2
     #define CAM_DRYOS                       1
 
-    #define CAM_RAW_ROWPIX                  3336   // for new 8 MP
-    #define CAM_RAW_ROWS                    2480   // for new 8 MP
+    #define CAM_RAW_ROWPIX                  3336    // for new 8 MP
+    #define CAM_RAW_ROWS                    2480    // for new 8 MP
 
     #define CAM_MULTIPART                   1
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
@@ -32,19 +32,18 @@
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_EV_IN_VIDEO                 1
     #undef  CAM_VIDEO_CONTROL
-
-//    #define CAM_EXT_TV_RANGE                1   // disabled for now, see http://chdk.setepontos.com/index.php?topic=6182.0
+    //#define CAM_EXT_TV_RANGE                1 //disabled, because some trouble in video mode (http://forum.chdk-treff.de/viewtopic.php?f=12&t=2284, http://chdk.setepontos.com/index.php?topic=6182.0)
 
     #define CAM_DNG_LENS_INFO               { 58,10, 348,10, 28,10, 48,10 } // See comments in camera.h
     // pattern
-    #define cam_CFAPattern                  0x01000201  // Green  Blue  Red  Green
+    #define cam_CFAPattern                  0x01000201 // Green  Blue  Red  Green
     // color
     #define CAM_COLORMATRIX1                               \
-      640019, 1000000, -220031, 1000000, -96241, 1000000,  \
-     -77419,  1000000, 639766,  1000000,  44009, 1000000,  \
-      17965,  1000000, 78396,   1000000, 231868, 1000000
-    
-    #define cam_CalibrationIlluminant1      1   // Daylight
+     640019, 1000000, -220031, 1000000,  -96241, 1000000,  \
+     -77419, 1000000,  639766, 1000000,   44009, 1000000,  \
+      17965, 1000000,   78396, 1000000,  231868, 1000000
+
+    #define cam_CalibrationIlluminant1      1       // Daylight
     // cropping
     #define CAM_JPEG_WIDTH                  3264
     #define CAM_JPEG_HEIGHT                 2448
@@ -53,9 +52,14 @@
     #define CAM_ACTIVE_AREA_X2              3302
     #define CAM_ACTIVE_AREA_Y2              2474
     // camera name
-    #define PARAM_CAMERA_NAME               4   // parameter number for GetParameterData
+    #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
 
     #define DNG_EXT_FROM                    ".CR2"
+    
+    #undef  CAMERA_MIN_DIST
+    #define CAMERA_MIN_DIST                 59      // Override min subject distance
+    #undef  CAMERA_MAX_DIST
+    #define CAMERA_MAX_DIST                 58686   // Override max subject distance
 
     #define CAM_USE_COLORED_ICONS           1   // Enable using the CHDK-DE colored icons.
 	

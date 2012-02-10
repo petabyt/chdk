@@ -61,7 +61,7 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-    #undef CAM_BITMAP_PALETTE
+    #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              12
 
     #undef  CAM_USES_ASPECT_CORRECTION
@@ -81,12 +81,13 @@
 
     #define	CAM_DNG_LENS_INFO               { 61,10, 305,10, 28,10, 45,10 }	// See comments in camera.h
 
-    #define cam_CalibrationIlluminant1      17  // Standard Light A
     // From dcraw
-    #define CAM_COLORMATRIX1                       \
+    #define CAM_COLORMATRIX1                    \
       13244, 10000, -5501, 10000, -1248, 10000, \
       -1508, 10000,  9858, 10000,  1935, 10000, \
        -270, 10000,  1083, 10000,  4366, 10000
+
+    #define cam_CalibrationIlluminant1      17  // Standard Light A
 
     // Sensor size, DNG image size & cropping
     #define CAM_RAW_ROWPIX                  3744
@@ -99,32 +100,29 @@
     #define CAM_ACTIVE_AREA_Y2              (CAM_RAW_ROWS-12)
 
     #define CAM_ZEBRA_ASPECT_ADJUST         1
-    
-    #define CAM_DATE_FOLDER_NAMING          1
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1   // enable fix for camera crash at startup when opening the conf / font files
-                                                // see http://chdk.setepontos.com/index.php?topic=6179.0
+    #define CAM_DATE_FOLDER_NAMING          0x400 //Value found in the last function, which is called in GetImageFolder. (first compare)
+
+    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1   // enable fix for camera crash at startup when opening the conf / font files see http://chdk.setepontos.com/index.php?topic=6179.0
 
     #define CAM_FIRMWARE_MEMINFO            1   // Use 'GetMemInfo' to get free memory size.
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
-    
-    #define CAM_AV_OVERRIDE_IRIS_FIX        1   // for cameras that require _MoveIrisWithAv function to override Av in bracketing.
 
-    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1       // For cameras with 'low light' mode that does now work with raw define this
+    #define CAM_AV_OVERRIDE_IRIS_FIX        1   // for cameras that require _MoveIrisWithAv function to override Av.
 
-    #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                 0xB3    // Start color index for CHDK colors loaded into camera palette.
+    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1   // For cameras with 'low light' mode that does now work with raw define this
+
+    #define CAM_LOAD_CUSTOM_COLORS          1   // Enable loading CHDK colors into the camera palette memory/hardware
+    #define CHDK_COLOR_BASE                 0xB3// Start color index for CHDK colors loaded into camera palette.
     #define CAM_USE_COLORED_ICONS           1       // Enable using the CHDK-DE colored icons.
 
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 
-    #undef CAMERA_MIN_DIST
+    #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                 68      // Override min subject distance
-    #undef CAMERA_MAX_DIST
+    #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 258065  // Override max subject distance
-
 //----------------------------------------------------------
-

@@ -137,7 +137,6 @@ void deleteHook (void *pTcb)
 void startup()
 {
     long *bss = &link_bss_start;
-    long *ptr;
 
     // sanity check
     if ((long)&link_bss_end > (MEMISOSTART + MEMISOSIZE)){
@@ -152,6 +151,7 @@ void startup()
     // fill memory with this magic value so we could see what
     // parts of memory were or not used
 #if 0
+    long *ptr;
     for (ptr=(void*)MEMBASEADDR;((long)ptr)<MEMISOSTART;ptr+=4){
 	ptr[0]=0x55555555;
 	ptr[1]=0x55555555;

@@ -1,4 +1,5 @@
 #include "platform.h"
+
 void shutdown()
 {
 volatile long *p = (void*)0xc02200a0;

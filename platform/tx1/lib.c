@@ -57,8 +57,8 @@ void debug_led(int state)
         led_off(LED_BLUE);
 
 }
-void set_led(int led, int state)
 
+void set_led(int led, int state)
 {
     if (state)
         led_on(led, LED_BRIGHTNESS);
@@ -66,6 +66,7 @@ void set_led(int led, int state)
         led_off(led);
 
 }
+
 void camera_set_led(int led, int state, int bright)
 {
 	if (state) {
@@ -76,8 +77,6 @@ void camera_set_led(int led, int state, int bright)
         led_off(led);
 }
 
-
 int get_flash_params_count(void){
  return 111;
 }
-

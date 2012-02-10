@@ -21,7 +21,7 @@ void taskCreateHook(int *p) {
  p-=17;
 
 	if(p[0]==0xFF88E520) p[0]=(int)init_file_modules_task;	// 
-	if(p[0]==0xff872f84) p[0]=(int)capt_seq_task;  			// 
+	if(p[0]==0xFF872F84) p[0]=(int)capt_seq_task;  			// 
 	if(p[0]==0xFF8B2F58) p[0]=(int)exp_drv_task;			// 
 	if(p[0]==0xFF93D62C) p[0]=(int)movie_record_task;		// 
 }

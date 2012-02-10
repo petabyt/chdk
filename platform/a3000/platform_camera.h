@@ -53,8 +53,8 @@
     #define CAM_ACTIVE_AREA_X2              3700
     #define CAM_ACTIVE_AREA_Y2              2772
 
-	 #undef CAM_BITMAP_PALETTE
-	 #define CAM_BITMAP_PALETTE		13
+    #undef CAM_BITMAP_PALETTE
+    #define CAM_BITMAP_PALETTE              13
 
     #undef  CAM_HAS_MANUAL_FOCUS
     #define CAM_EXT_TV_RANGE                1
@@ -62,7 +62,7 @@
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
 
-    #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
     #define CAM_DATE_FOLDER_NAMING          0x100   // Camera uses date for naming image folders
 // for the purposes of CHDK, the FACE button is treated as the erase button
 //    #undef  CAM_HAS_ERASE_BUTTON

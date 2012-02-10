@@ -1,7 +1,6 @@
 #include "platform.h"
 #include "lolevel.h"
 
-
 void vid_bitmap_refresh()
 {
  	extern int full_screen_refresh;

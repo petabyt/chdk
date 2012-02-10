@@ -56,4 +56,3 @@ int _GetBatteryTemperature()
 {
       return -99;
 }
-

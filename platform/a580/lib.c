@@ -1,5 +1,4 @@
 #include "platform.h"
-//#include "../generic/lib.c"
 
 void shutdown()
 {

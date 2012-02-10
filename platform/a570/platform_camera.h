@@ -1,6 +1,6 @@
-// Camera - A570 - platform_camera.h
+// Camera - a570 - platform_camera.h
 
-// This file contains the various settings values specific to the A570 camera.
+// This file contains the various settings values specific to the a570 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -20,40 +20,40 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-	#define CAM_PROPSET                 2
+    #define CAM_PROPSET                     2
 
-	#define CAM_RAW_ROWPIX              3152	// for 7 MP
-	#define CAM_RAW_ROWS                2340	// for 7 MP
-	#define CAM_MULTIPART               1
-	#define CAM_CAN_MUTE_MICROPHONE     1
-	#define CAM_ADJUSTABLE_ALT_BUTTON   1
-	#define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
-	#define CAM_EV_IN_VIDEO             1
-	#define CAM_REAR_CURTAIN            1
+    #define CAM_RAW_ROWPIX                  3152    // for 7 MP
+    #define CAM_RAW_ROWS                    2340    // for 7 MP
+
+    #define CAM_MULTIPART                   1
+    #define CAM_CAN_MUTE_MICROPHONE         1
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
+    #define CAM_EV_IN_VIDEO                 1
 
     #define CAM_DNG_LENS_INFO               { 58,10, 232,10, 26,10, 55,10 } // See comments in camera.h
-	// pattern
-	#define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
-	// color
-	#define CAM_COLORMATRIX1                            \
-    528283, 1000000,-144259, 1000000, -85966, 1000000,  \
-    -202789, 1000000, 736563, 1000000, 73008, 1000000,  \
-    -27130,  1000000, 107702, 1000000, 264543, 1000000
+    #define CAM_REAR_CURTAIN                1
+    // pattern
+    #define cam_CFAPattern                  0x02010100 // Red  Green  Green  Blue
+    // color
+    #define CAM_COLORMATRIX1                              \
+     528283, 1000000, -144259, 1000000,  -85966, 1000000, \
+    -202789, 1000000,  736563, 1000000,   73008, 1000000, \
+     -27130, 1000000,  107702, 1000000,  264543, 1000000
 
-	#define cam_CalibrationIlluminant1 1 // Daylight
-	// cropping
-	#define CAM_JPEG_WIDTH  3072
-	#define CAM_JPEG_HEIGHT 2304
-	#define CAM_ACTIVE_AREA_X1 38
-	#define CAM_ACTIVE_AREA_Y1 14
-	#define CAM_ACTIVE_AREA_X2 3146
-	#define CAM_ACTIVE_AREA_Y2 2338
-	// camera name
-	#define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
+    #define cam_CalibrationIlluminant1      1       // Daylight
+    // cropping
+    #define CAM_JPEG_WIDTH                  3072
+    #define CAM_JPEG_HEIGHT                 2304
+    #define CAM_ACTIVE_AREA_X1              38
+    #define CAM_ACTIVE_AREA_Y1              14
+    #define CAM_ACTIVE_AREA_X2              3146
+    #define CAM_ACTIVE_AREA_Y2              2338
+    // camera name
+    #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
 
-	#define DNG_EXT_FROM ".DPS"
-	#define CAM_EXT_TV_RANGE            1
-        #define CAM_CHDK_PTP                1 // include CHDK PTP support
+    #define DNG_EXT_FROM                    ".DPS"
+    #define CAM_EXT_TV_RANGE                1
 
 	#define REMOTE_SYNC_STATUS_LED 	0xc02200C4		// specifies an LED that turns on while camera waits for USB remote to sync
 		
