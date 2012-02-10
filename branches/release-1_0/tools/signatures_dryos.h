@@ -7607,6 +7607,31 @@ static FuncSig func_sig_MakeSDCardBootable_6[] = {
 	{ -1, -1, -1 },
 };
 
+static FuncSig func_sig_SetFileAttributes_6[] = {
+	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4070
+	{   1, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05000
+	{   3, 0xe1a06000, 0xfdfff000 }, // mov:6:0xE1A06001
+	{   4, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE3A04000
+	{   5, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB01099D
+	{   6, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
+	{   7, 0x0a000000, 0x0f000000 }, // b, bl:3:0x0A00000A
+	{   8, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE1A01006
+	{   9, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
+	{  10, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB003370
+	{  11, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
+	{  12, 0x0a000000, 0x0f000000 }, // b, bl:3:0x1A000005
+	{  13, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
+	{  14, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB010282
+	{  15, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500001
+	{  16, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE1A04000
+	{  17, 0x01a00000, 0xfdfff000 }, // mov:6:0x01A00005
+	{  18, 0x0b000000, 0x0f000000 }, // b, bl:3:0x0B0101EE
+	{  19, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
+	{  20, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD8070
+	/* 20/21 */
+	{ -1, -1, -1 },
+};
+
 static FuncSig func_sig_PT_PlaySound_7[] = {
 	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4070
 	{   1, 0xe1100901, 0xfdffffff }, // tst:7:0xE3100901
@@ -7873,6 +7898,7 @@ FuncsList func_list[] = {
 	{ "SetCurrentCaptureModeType", func_sig_SetCurrentCaptureModeType_1, 1 },
 	{ "SetFileAttributes", func_sig_SetFileAttributes_1, 1 },
 	{ "SetFileAttributes", func_sig_SetFileAttributes_3, 3 },
+	{ "SetFileAttributes", func_sig_SetFileAttributes_6, 6 },
 	{ "SetFileTimeStamp", func_sig_SetFileTimeStamp_1, 1 },
 	{ "SetFileTimeStamp", func_sig_SetFileTimeStamp_3, 3 },
 	{ "SetFileTimeStamp", func_sig_SetFileTimeStamp_4, 4 },

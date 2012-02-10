@@ -2,7 +2,6 @@
 #define NULL_STUB 0xFF810B24
 
 // Override stubs_entry.S
-NHSTUB(SetFileAttributes,               NULL_STUB)
 NHSTUB(kbd_pwr_on,                      NULL_STUB)
 
 // These don't exist

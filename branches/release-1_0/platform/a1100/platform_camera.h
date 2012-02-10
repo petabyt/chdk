@@ -82,7 +82,6 @@
 
     #define CAM_ZEBRA_ASPECT_ADJUST         1
 
-    #define CAM_FIRMWARE_MEMINFO    1       // Use 'GetMemInfo' to get free memory size.
-
+    #define CAM_FIRMWARE_MEMINFO            1   // Use 'GetMemInfo' to get free memory size.
 //----------------------------------------------------------
 

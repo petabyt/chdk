@@ -67,12 +67,11 @@
     #define CAM_EXT_TV_RANGE                1
     #define CAM_MULTIPART                   1
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1       // enable fix for camera crash at startup when opening the conf / font files see http://chdk.setepontos.com/index.php?topic=6179.0
+    #define CAM_FIRMWARE_MEMINFO            1       // Use 'GetMemInfo' to get free memory size.
+
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                 100     // Override min subject distance
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 52855   // Override max subject distance
-
-#define CAM_FIRMWARE_MEMINFO    1       // Use 'GetMemInfo' to get free memory size.
-
 //----------------------------------------------------------
 

@@ -112,5 +112,5 @@
 
 #define CAM_USE_COLORED_ICONS           1       // Enable using the CHDK-DE colored icons.
 
-
+ #define CAM_HAS_CMOS                   1
 

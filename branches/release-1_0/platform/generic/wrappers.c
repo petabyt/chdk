@@ -1318,6 +1318,9 @@ void Restart(unsigned option) {
 
 unsigned char SetFileAttributes(const char* fn, unsigned char attr)
 {
+#ifdef CAM_DRYOS_2_3_R39
+    return _SetFileAttributes(fn, attr);
+#else
     int fd;
     unsigned char ret = -1;
     
@@ -1328,6 +1331,7 @@ unsigned char SetFileAttributes(const char* fn, unsigned char attr)
         ret = attr;
     }
     return ret;
+#endif
 }
 
 // Default implementation of PTP live view functions.
