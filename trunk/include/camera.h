@@ -120,8 +120,6 @@
 #define CAM_KEY_PRESS_DELAY         20          // delay after a press - TODO can we combine this with above ?
 #define CAM_KEY_RELEASE_DELAY       20          // delay after a release - TODO do we really need to wait after release ?
 
-#undef  CAM_DATE_FOLDER_NAMING                  // Camera uses date for naming image folders
-
 #undef  CAM_STARTUP_CRASH_FILE_OPEN_FIX         // enable fix for camera intermittently crash at startup when opening the conf / font files
                                                 // Some cameras throw "ASSERT!! FsIoNotify.c Line xxx    Task name: SpyTask" in ROMLOG
                                                 // see http://chdk.setepontos.com/index.php?topic=6179.0

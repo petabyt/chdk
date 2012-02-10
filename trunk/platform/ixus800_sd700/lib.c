@@ -35,4 +35,3 @@ void camera_set_led(int led, int state, int bright)
 {
 	debug_led(state);
 }
-

@@ -23,8 +23,8 @@
     #define CAM_PROPSET                                 4
     #define CAM_DRYOS                                   1
     #define CAM_DRYOS_2_3_R39                           1
-    #define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher 
- 
+    #define CAM_DRYOS_2_3_R47                           1 // Defined for cameras with DryOS version R47 or higher
+
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     //#define CAM_HAS_VIDEO_BUTTON                        0
@@ -36,8 +36,8 @@
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                            0x40000000
-    
-    #define CAM_DNG_LENS_INFO               { 50,10, 600,10, 34,10, 56,10 } // See comments in camera.h
+
+    #define CAM_DNG_LENS_INFO                           { 50,10, 600,10, 34,10, 56,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern                              0x01000201 // Green  Blue  Red  Green
     // color
@@ -61,46 +61,46 @@
     #define PARAM_CAMERA_NAME                           4 // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL                   12
- 
+
     #define CAM_EXT_TV_RANGE                            1
     #define CAM_QUALITY_OVERRIDE                        1
- 
+
     // copied from the SX200 which has the same video buffer size
     #undef CAM_USES_ASPECT_CORRECTION
-    #define CAM_USES_ASPECT_CORRECTION      1 	//camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
+    #define CAM_USES_ASPECT_CORRECTION                  1 //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
     #undef CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
  
     #define CAM_ZEBRA_ASPECT_ADJUST                     1
     #define CAM_ZEBRA_NOBUF                             1
- 
+
     #undef CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE                          7
- 
+
     //#undef EDGE_HMARGIN
-    //#define EDGE_HMARGIN                                28
+    //#define EDGE_HMARGIN                              28
 
     #define CAM_DATE_FOLDER_NAMING                      1
- 
+
     // Menu width like in g11 and s90
     #undef CAM_MENU_BORDERWIDTH
     #define CAM_MENU_BORDERWIDTH                        10
-    // CR2 accesible through USB 
+    // CR2 accesible through USB
     #undef DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                             2
 
-	#define	CAM_STARTUP_CRASH_FILE_OPEN_FIX	1				// enable fix for camera crash at startup when opening the conf / font files
-															// see http://chdk.setepontos.com/index.php?topic=6179.0
+    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX             1 // enable fix for camera crash at startup when opening the conf / font files
+                                                          // see http://chdk.setepontos.com/index.php?topic=6179.0
 
-    #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
-                                               // Used to enabled bracketing in custom timer, required on many recent cameras
-                                               // see http://chdk.setepontos.com/index.php/topic,3994.405.html
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE              1 // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
+                                                          // Used to enabled bracketing in custom timer, required on many recent cameras
+                                                          // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-	#define CAM_DETECT_SCREEN_ERASE     1       // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
+	#define CAM_DETECT_SCREEN_ERASE                     1 // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
 
-	#undef	CAM_USB_EVENTID
-	#define	CAM_USB_EVENTID				0x202			// Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
+    #undef  CAM_USB_EVENTID
+    #define CAM_USB_EVENTID                             0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
 
 	#define REMOTE_SYNC_STATUS_LED 	0xC0220014		// specifies an LED that turns on while camera waits for USB remote to sync
 	
- //----------------------------------------------------------
+//----------------------------------------------------------

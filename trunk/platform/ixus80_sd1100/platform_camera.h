@@ -1,6 +1,6 @@
-// Camera - IXUS80_SD1100 - platform_camera.h
+// Camera - ixus80_sd1100 - platform_camera.h
 
-// This file contains the various settings values specific to the IXUS80_SD1100 camera.
+// This file contains the various settings values specific to the ixus80_sd1100 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -20,46 +20,45 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define CAM_PROPSET                 2
-    #define CAM_DRYOS                   1
+    #define CAM_PROPSET                     2
+    #define CAM_DRYOS                       1
 
-    #define CAM_RAW_ROWPIX              3336   // for new 8 MP
-    #define CAM_RAW_ROWS                2480   // for new 8 MP
+    #define CAM_RAW_ROWPIX                  3336    // for new 8 MP
+    #define CAM_RAW_ROWS                    2480    // for new 8 MP
 
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_IRIS_DIAPHRAGM
-    #define CAM_HAS_ND_FILTER           1
+    #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES
-    #define CAM_SHOW_OSD_IN_SHOOT_MENU  1
-	// TODO / test
-	#undef  CAM_REMOTE
-	#define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
+    #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
+    // TODO / test
+    #undef  CAM_REMOTE
     #undef  CAM_CAN_MUTE_MICROPHONE
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 0
 
     #define CAM_DNG_LENS_INFO               { 62,10, 186,10, 28,10, 49,10 } // See comments in camera.h
     // pattern
-    #define cam_CFAPattern 0x01000201 // Green  Blue  Red  Green
+    #define cam_CFAPattern                  0x01000201 // Green  Blue  Red  Green
     // color
-    #define CAM_COLORMATRIX1                                \
-      893969,  1000000, -343107, 1000000, -119590, 1000000, \
-      -41350,  1000000, 581255,  1000000,  49523,  1000000, \
-       24221,  1000000, 47554,   1000000,  209996, 1000000
-    
-    #define cam_CalibrationIlluminant1 1 // Daylight
-    // cropping
-    #define CAM_JPEG_WIDTH  3264
-    #define CAM_JPEG_HEIGHT 2448
-    #define CAM_ACTIVE_AREA_X1 6
-    #define CAM_ACTIVE_AREA_Y1 6
-    #define CAM_ACTIVE_AREA_X2 3304
-    #define CAM_ACTIVE_AREA_Y2 2476
-    // camera name
-    #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
+    #define CAM_COLORMATRIX1                              \
+     893969, 1000000, -343107, 1000000, -119590, 1000000, \
+     -41350, 1000000,  581255, 1000000,   49523, 1000000, \
+      24221, 1000000,   47554, 1000000,  209996, 1000000
 
-    #define CAM_EXT_TV_RANGE            1
+    #define cam_CalibrationIlluminant1      1       // Daylight
+    // cropping
+    #define CAM_JPEG_WIDTH                  3264
+    #define CAM_JPEG_HEIGHT                 2448
+    #define CAM_ACTIVE_AREA_X1              6
+    #define CAM_ACTIVE_AREA_Y1              6
+    #define CAM_ACTIVE_AREA_X2              3304
+    #define CAM_ACTIVE_AREA_Y2              2476
+    // camera name
+    #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
+
+    #define CAM_EXT_TV_RANGE                1
 	
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 	

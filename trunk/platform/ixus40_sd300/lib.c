@@ -2,7 +2,6 @@
 #include "lolevel.h"
 #define PARAM_FILE_COUNTER      0x2E
 
-
 extern void _sub_FF821D04(long mem, long *data);
 extern long _GetPropertyCase_orig(long opt_id, void *buf, long bufsize);
 extern long _SetPropertyCase_orig(long opt_id, void *buf, long bufsize);

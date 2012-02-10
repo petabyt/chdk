@@ -618,4 +618,6 @@ extern unsigned short  touch_screen_x, touch_screen_y;
 extern int touch_screen_active;
 #endif
 
+unsigned char SetFileAttributes(const char* fn, unsigned char attr);
+
 #endif

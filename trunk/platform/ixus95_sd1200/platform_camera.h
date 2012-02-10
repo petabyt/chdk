@@ -1,6 +1,6 @@
-// Camera - IXUS95_SD1200 - platform_camera.h
+// Camera - ixus95_sd1200 - platform_camera.h
 
-// This file contains the various settings values specific to the IXUS95_SD1200 camera.
+// This file contains the various settings values specific to the ixus95_sd1200 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -20,87 +20,84 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-	#define CAM_PROPSET                  2 
-	#define CAM_DRYOS                    1
+    #define CAM_PROPSET                     2
+    #define CAM_DRYOS                       1
 
-	#define CAM_RAW_ROWPIX               3720
-	#define CAM_RAW_ROWS                 2772
+    #define CAM_RAW_ROWPIX                  3720
+    #define CAM_RAW_ROWS                    2772
 
-	#undef   CAM_HAS_ERASE_BUTTON
+    #undef  CAM_HAS_ERASE_BUTTON
 	#define  CAM_USE_ZOOM_FOR_MF         1
-	#define  CAM_MULTIPART               1
-	#undef   CAM_HAS_IRIS_DIAPHRAGM
-	#define  CAM_HAS_ND_FILTER           1
+    #define CAM_MULTIPART                   1
+    #undef  CAM_HAS_IRIS_DIAPHRAGM
+    #define CAM_HAS_ND_FILTER               1
 
-	#undef CAM_SYNCH
+    #undef  CAM_SYNCH
+
 
 	#define CAM_HAS_ZOOM_LEVER          1
 
 	#undef  CAM_HAS_MANUAL_FOCUS
 	#define  CAM_HAS_USER_TV_MODES		 1 
-	#define  CAM_SHOW_OSD_IN_SHOOT_MENU	 1
-	#define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO  1
-	//#define CAM_AF_SCAN_DURING_VIDEO_RECORD       1
+    #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
+    //#define CAM_AF_SCAN_DURING_VIDEO_RECORD 1     //TODO: change to define and find NSTUB
 	#undef CAM_AF_SCAN_DURING_VIDEO_RECORD		//TODO: change to define and find NSTUB    
 	#define  CAM_CHDK_HAS_EXT_VIDEO_MENU	 1
 
 	#define CAM_HAS_IS						 1
 	#undef CAM_HAS_JOGDIAL
 
-	#undef   CAM_VIDEO_CONTROL
-	#define  CAM_VIDEO_QUALITY_ONLY		 	1
+    #undef  CAM_VIDEO_CONTROL
+    #define CAM_VIDEO_QUALITY_ONLY          1
 
-	//#define CAM_EXT_TV_RANGE            1
+    //#define CAM_EXT_TV_RANGE              1
 
-	#undef   CAM_UNCACHED_BIT            // shut up compiler
-	#define  CAM_UNCACHED_BIT            0x40000000
+    #undef  CAM_UNCACHED_BIT                        // shut up compiler
+    #define CAM_UNCACHED_BIT                0x40000000
 
-	#undef   CAM_BITMAP_PALETTE
-	#define  CAM_BITMAP_PALETTE          2
+    #undef  CAM_BITMAP_PALETTE
+    #define CAM_BITMAP_PALETTE              2
 
-	#define CAM_QUALITY_OVERRIDE 1	
+    #define CAM_QUALITY_OVERRIDE            1
 	#undef   CAM_SENSOR_BITS_PER_PIXEL
 	#define  CAM_SENSOR_BITS_PER_PIXEL   12
 
     #define CAM_DNG_LENS_INFO               { 62,10, 186,10, 28,10, 49,10 } // See comments in camera.h
 	// pattern
-    #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
+    #define  cam_CFAPattern                 0x02010100      // Red  Green  Green  Blue
 
-	// color preliminary
-	// from para in forum
-	#define  CAM_COLORMATRIX1                             \
-    1484685, 1000000, -530958, 1000000, -208054, 1000000, \
-    143142, 1000000, 793552, 1000000, 83907, 1000000, \
-    146290, 1000000, -44679, 1000000, 430414, 1000000
+    // color preliminary
+    // from para in forum
+    #define  CAM_COLORMATRIX1                              \
+     1484685, 1000000, -530958, 1000000, -208054, 1000000, \
+      143142, 1000000,  793552, 1000000,   83907, 1000000, \
+      146290, 1000000,  -44679, 1000000,  430414, 1000000
 
-	#define  cam_CalibrationIlluminant1 1 // Daylight
+    #define  cam_CalibrationIlluminant1     1       // Daylight
 
-	// cropping 
-	#define  CAM_JPEG_WIDTH  3648
-	#define  CAM_JPEG_HEIGHT 2736
-	#define  CAM_ACTIVE_AREA_X1 8
-	#define  CAM_ACTIVE_AREA_Y1 12
-	#define  CAM_ACTIVE_AREA_X2 3692
-	#define  CAM_ACTIVE_AREA_Y2 2772
+    // cropping
+    #define  CAM_JPEG_WIDTH                 3648
+    #define  CAM_JPEG_HEIGHT                2736
+    #define  CAM_ACTIVE_AREA_X1             8
+    #define  CAM_ACTIVE_AREA_Y1             12
+    #define  CAM_ACTIVE_AREA_X2             3692
+    #define  CAM_ACTIVE_AREA_Y2             2772
 
-	// camera name
-	#define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
+    // camera name
+    #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
 
-	// aspect correction
     #undef CAM_USES_ASPECT_CORRECTION
-    #define CAM_USES_ASPECT_CORRECTION		1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
+    #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
     #undef CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
 
-    #define CAM_ZEBRA_ASPECT_ADJUST 1
-	// camera has very little free memory
-    #define CAM_ZEBRA_NOBUF 1
-    #define  CAM_CHDK_PTP               1 // include CHDK PTP support
+    #define CAM_ZEBRA_ASPECT_ADJUST         1
+    // camera has little free memory
+    #define CAM_ZEBRA_NOBUF                 1
 
-    #define CAM_DRIVE_MODE_FROM_TIMER_MODE      // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
-
 	#define REMOTE_SYNC_STATUS_LED 	0xC0220138		// specifies an LED that turns on while camera waits for USB remote to sync
 
 //----------------------------------------------------------

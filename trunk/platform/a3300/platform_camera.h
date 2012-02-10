@@ -43,19 +43,19 @@
 
     #define DNG_VERT_RLE_BADPIXELS          1
     #define CAM_DNG_LENS_INFO               { 50,10, 250,10, 28,10, 59,10 } // See comments in camera.h   a3300is
-	
+
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
-	
+
     #define cam_CFAPattern                  0x02010100  // Red  Green  Green  Blue
 
     #define CAM_COLORMATRIX1                             \
     827547, 1000000, -290458, 1000000, -126086, 1000000, \
     -12829, 1000000,  530507, 1000000,   50537, 1000000, \
       5181, 1000000,   48183, 1000000,  245014, 1000000
-	
+
     #define cam_CalibrationIlluminant1      1       // Daylight
-	
+
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
 
@@ -63,14 +63,14 @@
     #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
 
     #define CAM_QUALITY_OVERRIDE            1
-	
+
     #define CAM_ZEBRA_ASPECT_ADJUST         1
     #define CAM_ZEBRA_NOBUF                 1
-	
+
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
-   
+
     #define CAM_HAS_ND_FILTER               1
-	
+
     #define CAM_VIDEO_QUALITY_ONLY          1
 
 	#define	CAM_DETECT_SCREEN_ERASE		    1
@@ -85,8 +85,8 @@
     #undef  CAM_VIDEO_CONTROL
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 
-	#undef	CAM_BITMAP_PALETTE
-	#define	CAM_BITMAP_PALETTE	14
+    #undef  CAM_BITMAP_PALETTE
+    #define CAM_BITMAP_PALETTE              14
 
     #define CHDK_COLOR_BASE                 0x1D    // Start color index for CHDK colors loaded into camera palette.
     #define CAM_USE_COLORED_ICONS           1       // Enable using the CHDK-DE colored icons.

@@ -20,7 +20,6 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define CAM_DRYOS_2_3_R47               1
     #define CAM_DETECT_SCREEN_ERASE         1
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1
     #define DNG_VERT_RLE_BADPIXELS          1
@@ -30,31 +29,40 @@
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
     #define CAM_DRYOS_2_3_R39               1
+    #define CAM_DRYOS_2_3_R47               1
     #define CAM_PROPSET                     4
     #define CAM_DATE_FOLDER_NAMING          1
     #define CAM_DRYOS                       1
     #define CAM_RAW_ROWPIX                  4168
     #define CAM_RAW_ROWS                    3060 // actual size from fw 12754080pix at FF375484 -> 19131120/12*8
+
+    #define CAM_HAS_CMOS                    1
+
     #define CAM_HAS_ND_FILTER               1
+        
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
+
     #define CAM_HAS_VIDEO_BUTTON            1
     #define CAM_VIDEO_QUALITY_ONLY          1
+ 
     #undef  CAM_VIDEO_CONTROL
+
     #define CAM_HAS_JOGDIAL                 1
     #undef  CAM_USE_ZOOM_FOR_MF
-    #undef  CAM_UNCACHED_BIT                    // shut up compiler
+
+    #undef  CAM_UNCACHED_BIT  // shut up compiler
     #define CAM_UNCACHED_BIT                0x40000000
 
     #define CAM_DNG_LENS_INFO               { 50,10, 700,10, 31,10, 59,10 } // See comments in camera.h
     #define cam_CFAPattern                  0x02010100
-  
-    #define CAM_COLORMATRIX1                                \
-        544808, 1000000, -174047, 1000000, -80399, 1000000, \
-        -75055, 1000000,  440444, 1000000,  11367, 1000000, \
-         -5801, 1000000,   71589, 1000000, 118914, 1000000
-    
-    #define cam_CalibrationIlluminant1 1
+
+    #define CAM_COLORMATRIX1                            \
+    544808, 1000000, -174047, 1000000, -80399, 1000000, \
+    -75055, 1000000,  440444, 1000000,  11367, 1000000, \
+     -5801, 1000000,   71589, 1000000, 118914, 1000000
+
+    #define cam_CalibrationIlluminant1      17
    
     #define CAM_JPEG_WIDTH                  4000
     #define CAM_JPEG_HEIGHT                 3000
@@ -62,10 +70,13 @@
     #define CAM_ACTIVE_AREA_Y1              24
     #define CAM_ACTIVE_AREA_X2              4168
     #define CAM_ACTIVE_AREA_Y2              3060
-    #define PARAM_CAMERA_NAME               4   // parameter number for GetParameterData
+
+    #define PARAM_CAMERA_NAME               4 // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
+
     #define CAM_EXT_TV_RANGE                1
+    
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              9
     #undef  CAM_HAS_ERASE_BUTTON
@@ -87,9 +98,14 @@
     #define CAM_ZEBRA_ASPECT_ADJUST         1
     #define CAM_ZEBRA_NOBUF                 1
 
-    //#define CAM_QUALITY_OVERRIDE            1   // this feature doesn't work really, it produce not useable pictures. There is a EXMEM problem.
+    //#define CAM_QUALITY_OVERRIDE            1
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
+
+    #undef  CAMERA_MIN_DIST
+    #define CAMERA_MIN_DIST                 99      // Override min subject distance
+    #undef  CAMERA_MAX_DIST
+    #define CAMERA_MAX_DIST                 2000000 // Override max subject distance 1739131 //testscript=1098902
 
     #define CAM_USE_COLORED_ICONS           1   // Enable using the CHDK-DE colored icons.
 

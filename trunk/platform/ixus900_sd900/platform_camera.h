@@ -1,6 +1,6 @@
-// Camera - IXUS900_SD900 - platform_camera.h
+// Camera - ixus900_sd900 - platform_camera.h
 
-// This file contains the various settings values specific to the IXUS900_SD900 camera.
+// This file contains the various settings values specific to the ixus900_sd900 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -20,30 +20,30 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define CAM_PROPSET                 1   // ToDo: test if correct
+    #define CAM_PROPSET                     1       // ToDo: test if correct
 
-    #define CAM_RAW_ROWPIX              3672   // value from RAW file (3648px + 24px)
-    #define CAM_RAW_ROWS                2760   // value from RAW file (2736 + 24px)
+    #define CAM_RAW_ROWPIX                  3672    // value from RAW file (3648px + 24px)
+    #define CAM_RAW_ROWS                    2760    // value from RAW file (2736 + 24px)
 
     //#undef  CAM_USE_ZOOM_FOR_MF
-    #define CAM_DRAW_EXPOSITION         1   // ToDo: test if required
+    #define CAM_DRAW_EXPOSITION             1       // ToDo: test if required
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_IRIS_DIAPHRAGM
-    #define CAM_HAS_ND_FILTER           1
+    #define CAM_HAS_ND_FILTER               1
     //#undef  CAM_CAN_SD_OVER_NOT_IN_MF
     //#undef  CAM_CAN_SD_OVERRIDE
     #undef  CAM_HAS_IS
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES
-    #define CAM_SHOW_OSD_IN_SHOOT_MENU  1   // force CHDK OSD to show in record more
-    #define CAM_FEATURE_FEATHER         1
-    //#define CAM_CONSOLE_LOG_ENABLED     1   // ToDo: LOG stuff is disabled/removed
+    #define CAM_SHOW_OSD_IN_SHOOT_MENU      1       // force CHDK OSD to show in record more
+    #define CAM_FEATURE_FEATHER             1
+    //#define CAM_CONSOLE_LOG_ENABLED       1       // ToDo: LOG stuff is disabled/removed
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
-    #define CAM_MULTIPART               1
+    #define CAM_MULTIPART                   1
 
     #define CAM_DNG_LENS_INFO               { 77,10, 231,10, 28,10, 49,10 } // See comments in camera.h
     // pattern
-    #define cam_CFAPattern 0x02010100   // Red  Green  Green  Blue
+    #define cam_CFAPattern                  0x02010100   // Red  Green  Green  Blue
     // color (from G7)
     #define CAM_COLORMATRIX1                              \
       575419, 1000000,-185557, 1000000, -77898,  1000000, \
@@ -56,21 +56,21 @@
      -168772, 1000000,  661827, 1000000,   47392, 1000000, \
       -35846, 1000000,  107148, 1000000,  233705, 1000000
     */
-    #define cam_CalibrationIlluminant1 1   // ToDo: Daylight (first selectable Illuminant Calibration mode ?)
+    #define cam_CalibrationIlluminant1      1       // ToDo: Daylight (first selectable Illuminant Calibration mode ?)
 
     // cropping
-    #define CAM_JPEG_WIDTH  3648
-    #define CAM_JPEG_HEIGHT 2736
-    #define CAM_ACTIVE_AREA_X1 14   // ??? from G7, A640
-    #define CAM_ACTIVE_AREA_Y1 8   // ??? from G7, A640
-    //#define CAM_ACTIVE_AREA_X2 3672   // from RAW file
-    //#define CAM_ACTIVE_AREA_Y2 2760   // from RAW file
-    #define CAM_ACTIVE_AREA_X2 3682   // ??? from G7, A640, CAM_JPEG_WIDTH + 40
-    #define CAM_ACTIVE_AREA_Y2 2764   // ??? from G7, A640, CAM_JPEG_HEIGHT + 40
+    #define CAM_JPEG_WIDTH                  3648
+    #define CAM_JPEG_HEIGHT                 2736
+    #define CAM_ACTIVE_AREA_X1              14      // ??? from G7, A640
+    #define CAM_ACTIVE_AREA_Y1              8       // ??? from G7, A640
+    //#define CAM_ACTIVE_AREA_X2            3672    // from RAW file
+    //#define CAM_ACTIVE_AREA_Y2            2760    // from RAW file
+    #define CAM_ACTIVE_AREA_X2              3682    // ??? from G7, A640, CAM_JPEG_WIDTH + 40
+    #define CAM_ACTIVE_AREA_Y2              2764    // ??? from G7, A640, CAM_JPEG_HEIGHT + 40
     // camera name
-    #define PARAM_CAMERA_NAME 4   // camera param id of EXIF camera model
+    #define PARAM_CAMERA_NAME               4       // camera param id of EXIF camera model
 
-    #define DNG_EXT_TO   ".DPS"		// Should this be 'DNG_EXT_FROM' ???
+    #define DNG_EXT_FROM                    ".DPS"
 	
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 	
