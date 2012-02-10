@@ -35,7 +35,7 @@ stubs_entry.S: $(TARGET_PRIMARY) $(topdir)tools/signatures_$(PLATFORMOS).h $(top
 ifdef OPT_GEN_STUBS
 	rm -f stubs_entry.S.err
 	if [ -s $(TARGET_PRIMARY) ] ; then \
-	  $(topdir)tools/finsig_$(PLATFORMOS) $(TARGET_PRIMARY) $(ROMBASEADDR) > stubs_entry.S ; \
+	  $(topdir)tools/finsig_$(PLATFORMOS) $(TARGET_PRIMARY) $(ROMBASEADDR) stubs_entry.S ; \
 	else \
 	  echo CAUTION! \'stubs_entry.S\' is not updated due to target firmware binary not found! ; \
 	  touch stubs_entry.S ; \
