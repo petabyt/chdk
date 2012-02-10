@@ -29,3 +29,4 @@ reboot_fw_update 0xFF2E28A0
 time 0xFF084A48
 vsprintf 0xFF010858 15
 MakeSDCardBootable 0xFF06B04C
+SetFileAttributes 0xFF027488 21

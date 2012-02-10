@@ -84,10 +84,8 @@
 
     #define CAM_ZEBRA_ASPECT_ADJUST         1
 
-    #define CAM_FIRMWARE_MEMINFO    1       // Use 'GetMemInfo' to get free memory size.
+    #define CAM_FIRMWARE_MEMINFO            1   // Use 'GetMemInfo' to get free memory size.
 	
 	#define REMOTE_SYNC_STATUS_LED 	0xC02200CC		// specifies an LED that turns on while camera waits for USB remote to sync
-	
-
 //----------------------------------------------------------
 

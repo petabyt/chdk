@@ -2,7 +2,6 @@
 #define NULL_SUB 0xFF055974
 
 // Override stubs_entry.S
-NHSTUB(SetFileAttributes,				NULL_SUB)
 NHSTUB(kbd_pwr_on,						NULL_SUB)
 NHSTUB(reboot_fw_update,                0xff2e99cc)
 

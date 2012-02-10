@@ -14,7 +14,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-// ERROR: SetFileAttributes is not found.                  //--- ---    *** != 0x00000000
 //NSTUB(kbd_pwr_off                           ,0xff86031c) //  2 60%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
@@ -170,6 +169,7 @@ NSTUB(ScreenUnlock                            ,0xff8a6c8c) //  3
 NSTUB(SetAE_ShutterSpeed                      ,0xffb1d484) //102
 NSTUB(SetAutoShutdownTime                     ,0xff891ed8) //103
 NSTUB(SetCurrentCaptureModeType               ,0xff898be4) //101
+NSTUB(SetFileAttributes                       ,0xff8370c8) //  6
 NSTUB(SetFileTimeStamp                        ,0xff837050) //  6
 NSTUB(SetLogicalEventActive                   ,0xff891bdc) //101
 NSTUB(SetParameterData                        ,0xff994760) //101

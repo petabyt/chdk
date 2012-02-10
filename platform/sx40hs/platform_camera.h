@@ -106,11 +106,11 @@
 
     #define CAM_KEY_CLICK_DELAY                 150     // Does SX40 need extra delay for clicks ???
 
-    #define CAM_FIRMWARE_MEMINFO            1   // Use 'GetMemInfo' to get free memory size.
-
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1       // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                         // Used to enabled bracketing in custom timer, required on many recent cameras
                                                         // see http://chdk.setepontos.com/index.php/topic,3994.405.html
+
+    #define CAM_FIRMWARE_MEMINFO                1       // Use 'GetMemInfo' to get free memory size.
 
     #define CAM_AV_OVERRIDE_IRIS_FIX            1       // for cameras that require _MoveIrisWithAv function to override Av in bracketing.
 
