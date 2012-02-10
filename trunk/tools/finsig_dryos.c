@@ -21,6 +21,7 @@
 
 // Buffer output into header and body sections
 
+FILE    *out_fp;
 char	out_buf[32*1024] = "";
 int		out_len = 0;
 char	hdr_buf[32*1024] = "";
@@ -52,15 +53,20 @@ void add_blankline()
 void write_output()
 {
 	add_blankline();
-	printf("%s",hdr_buf);
-	printf("%s",out_buf);
+    if (out_fp)
+    {
+	    fprintf(out_fp,"%s",hdr_buf);
+    	fprintf(out_fp,"%s",out_buf);
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------
 
 void usage(char *err)
 {
-    printf("finsig <primary> <base> - Error = %s\n",err);
+    bprintf("finsig <primary> <base> <outputfilename> - Error = %s\n",err);
+    write_output();
+    fprintf(stderr,"finsig <primary> <base> <outputfilename> - Error = %s\n",err);
     exit(1);
 }
 
@@ -3790,8 +3796,11 @@ int main(int argc, char **argv)
 
     clock_t t1 = clock();
 
-    if (argc != 3)
+    if (argc != 4)
         usage("args");
+
+    out_fp = fopen(argv[3],"w");
+    if (out_fp == NULL) usage("failed to open outputfile");
 
     //load_ignore_list();
 
@@ -3873,10 +3882,12 @@ int main(int argc, char **argv)
 	find_platform_vals(&fw);
     find_other_vals(&fw);
 
-    fprintf(stderr,"Time to generate stubs %.2f seconds\n",(double)(t2-t1)/(double)CLOCKS_PER_SEC);
+    printf("Time to generate stubs %.2f seconds\n",(double)(t2-t1)/(double)CLOCKS_PER_SEC);
 	
 	write_output();
 	
+    fclose(out_fp);
+
     return ret;
 }
 

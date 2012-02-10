@@ -88,9 +88,12 @@ int match_compare(const Match *p1, const Match *p2)
             return 0;
 }
 
+FILE *out_fp;
+
 void usage()
 {
-    printf("finsig <primary> <base>\n");
+    if (out_fp) fprintf(out_fp,"finsig <primary> <base> <outputfilename>\n");
+    fprintf(stderr,"finsig <primary> <base> <outputfilename>\n");
     exit(1);
 }
 
@@ -111,8 +114,11 @@ int main(int argc, char **argv)
 
     clock_t t1 = clock();
 
-    if (argc != 3)
+    if (argc != 4)
         usage();
+
+    out_fp = fopen(argv[3],"w");
+    if (out_fp == NULL) usage();
 
     f = fopen(argv[1], "r+b");
 
@@ -121,8 +127,8 @@ int main(int argc, char **argv)
 
     base = strtoul(argv[2], NULL, 0);
 
-    printf("// !!! THIS FILE IS GENERATED. DO NOT EDIT. !!!\n");
-    printf("#include \"stubs_asm.h\"\n\n");
+    fprintf(out_fp,"// !!! THIS FILE IS GENERATED. DO NOT EDIT. !!!\n");
+    fprintf(out_fp,"#include \"stubs_asm.h\"\n\n");
 
     fseek(f,0,SEEK_END);
     size=ftell(f)/4;
@@ -205,7 +211,7 @@ int main(int argc, char **argv)
                         matches[count].fail = fail;
                         count ++;
                         if (count >= MAX_MATCHES){
-                            printf("// WARNING: too many matches for %s!\n", func_list[k].name);
+                            fprintf(out_fp,"// WARNING: too many matches for %s!\n", func_list[k].name);
                             break;
                         }
                     }
@@ -221,7 +227,7 @@ int main(int argc, char **argv)
 
         // find best match and report results
         if (count == 0){
-            printf("// ERROR: %s is not found!\n", curr_name);
+            fprintf(out_fp,"// ERROR: %s is not found!\n", curr_name);
             ret = 1;
         } else {
             if (count > 1){
@@ -229,19 +235,21 @@ int main(int argc, char **argv)
             }
 
             if (matches->fail > 0)
-                printf("// Best match: %d%%\n", matches->success*100/(matches->success+matches->fail));
+                fprintf(out_fp,"// Best match: %d%%\n", matches->success*100/(matches->success+matches->fail));
 
-            printf("NSTUB(%s, 0x%x)\n", curr_name, matches->ptr);
+            fprintf(out_fp,"NSTUB(%s, 0x%x)\n", curr_name, matches->ptr);
 
             for (i=1;i<count && matches[i].fail==matches[0].fail;i++){
-                printf("// ALT: NSTUB(%s, 0x%x) // %d/%d\n", curr_name, matches[i].ptr, matches[i].success, matches[i].fail);
+                fprintf(out_fp,"// ALT: NSTUB(%s, 0x%x) // %d/%d\n", curr_name, matches[i].ptr, matches[i].success, matches[i].fail);
             }
         }
     }
 
     clock_t t2 = clock();
 
-    fprintf(stderr,"Time to generate stubs %.2f seconds\n",(double)(t2-t1)/(double)CLOCKS_PER_SEC);
+    printf("Time to generate stubs %.2f seconds\n",(double)(t2-t1)/(double)CLOCKS_PER_SEC);
+
+    fclose(out_fp);
 
     return ret;
 }
