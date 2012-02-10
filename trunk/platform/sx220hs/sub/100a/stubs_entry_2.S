@@ -2,7 +2,6 @@
 #define NULL_SUB 0xFF02D4BC
 
 // Override stubs_entry.S
-NHSTUB(SetFileAttributes,           NULL_SUB)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
 NHSTUB(write,                       0xff00adb8)

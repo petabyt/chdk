@@ -3,7 +3,6 @@
 
 // Override stubs_entry.S
 
-NHSTUB(SetFileAttributes, 			NULL_SUB)
 NHSTUB(kbd_pwr_off,					NULL_SUB)
 NHSTUB(kbd_pwr_on,					NULL_SUB)
 

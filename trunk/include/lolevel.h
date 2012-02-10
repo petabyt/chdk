@@ -237,8 +237,10 @@ extern /*time_t*/ long _mktime_ext(void *tim_extp); // DRYOS, doesn't take a str
 
 #ifdef CAM_DRYOS_2_3_R39
 extern int _SetFileTimeStamp(const char *file_path, int time1, int time2);
+extern int _SetFileAttributes(const char *fn, int attr);
 #else
 extern int _SetFileTimeStamp(int fd, int time1, int time2);
+extern void _SetFileAttributes(int fd, int attr);
 #endif
 
 /* file */
@@ -311,7 +313,5 @@ extern void *_exmem_alloc(int pool_id,int size,int unk,int unk2);
 // used on a few cameras that don't have memPartInfoGet, see CAM_NO_MEMPARTINFO
 extern int _memPartFindMax(int mempart_id); 
 extern int _memPartInfoGet(int mempart_id,int *info);
-
-extern void _SetFileAttributes(int fd, int attr);
 
 #endif

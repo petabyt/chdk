@@ -99,11 +99,10 @@
 
     #define CAM_ZEBRA_ASPECT_ADJUST         1
 
-    #define CAM_FIRMWARE_MEMINFO    1       // Use 'GetMemInfo' to get free memory size.
-
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 	#define REMOTE_SYNC_STATUS_LED 	0xc0220134		// specifies an LED that turns on while camera waits for USB remote to sync
 
+    #define CAM_FIRMWARE_MEMINFO            1   // Use 'GetMemInfo' to get free memory size.
 //----------------------------------------------------------
