@@ -320,6 +320,8 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 
             config_save,
             config_restore,
+
+            dbg_printf,
 }
 #endif
 
