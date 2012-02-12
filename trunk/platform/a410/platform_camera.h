@@ -72,7 +72,6 @@
     #define PARAM_CAMERA_NAME               3 // parameter number for GetParameterData
 	#undef  CAM_BRACKETING //no bracketing in fw
     #define CAM_EXT_TV_RANGE                1
-	#define CAM_DETECT_SCREEN_ERASE		1
 //	#define CAM_NO_MEMPARTINFO		1
 //  #define CAM_MULTIPART                   1
 

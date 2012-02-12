@@ -44,7 +44,7 @@ extern int _CreateTask (const char *name, int prio, int stack_size /*?*/,
                         void *entry, long parm /*?*/);
 extern void _SleepTask(long msec);
 extern void __attribute__((noreturn)) _ExitTask();
-extern int _taskNameToId(char* taskName); // VxWorks only, task's name first letter must be 't', maximum 10 chars total
+extern int _taskNameToId(char* taskName); // VxWorks only, task's name first letter must be 't', maximum 10 chars total 
 extern const char *_taskName(int taskID); // VxWorks only for now
 extern int _taskIdListGet(int *idlist,int max); // VxWorks only for now
 extern void _taskSuspend(int taskId);
@@ -191,6 +191,7 @@ struct led_control {int led_num; int action; int brightness; int blink_count;};
 extern int _PostLEDMessage(struct led_control *);
 extern int _LEDDrive(int led, int action);
 
+
 extern long _LockMainPower();
 extern long _UnlockMainPower();
 extern void _SetAutoShutdownTime(int t);
@@ -198,9 +199,9 @@ extern void _SetAutoShutdownTime(int t);
 /*
 The following two functions post an event such as button press, switch change, cable connection change.
 event:
-  A number identifying the event. This number may vary between camera models.
+  A number identifying the event. This number may vary between camera models. 
   See levent.c and levent.h for methods to identify events by name.
-unk:
+unk: 
   Unknown value, usually 0 in canon code. For jogdial messages, this is number of clicks.
 return value:
   Unknown, possibly void.
@@ -208,7 +209,7 @@ return value:
 extern int  _PostLogicalEventForNotPowerType(int event, int unk);
 extern int  _PostLogicalEventToUI(int event, int unk);
 /*
-Used in the canon code to modify the generation or delivery of events. For example, Canon
+Used in the canon code to modify the generation or delivery of events. For example, Canon 
 mode override code sets 1 on the desired dial position, and zero on all others.
 event: as described above for PostLogicalEvent*
 state: if 1, the event will be generated/delivered as normal. If 0, the event is disabled/blocked.
@@ -284,7 +285,7 @@ extern int _apex2us(int);
 
 extern void _ScreenLock();
 extern void _SetCurrentCaptureModeType();
-extern unsigned _ExecuteEventProcedure(const char *name,...);
+extern unsigned _ExecuteEventProcedure(const char *name, ...);
 // known in CHDK as _RefreshPhysicalScreen
 //extern void _ScreenUnLock();
 

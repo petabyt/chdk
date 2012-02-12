@@ -73,8 +73,6 @@
 
     #define CAM_VIDEO_QUALITY_ONLY          1
 
-	#define	CAM_DETECT_SCREEN_ERASE		    1
-
     #define CAM_DATE_FOLDER_NAMING          1
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1

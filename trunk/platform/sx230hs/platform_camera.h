@@ -109,7 +109,6 @@
     
     #define CAM_HAS_GPS                     1
 
-	#define CAM_DETECT_SCREEN_ERASE			1
 
     #define CAM_USE_COLORED_ICONS           1   // Enable using the CHDK-DE colored icons.
 	

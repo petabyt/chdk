@@ -1,10 +1,10 @@
 #ifndef GUI_H
 #define GUI_H
 
-typedef unsigned int      coord;
-typedef unsigned short    color;
+typedef unsigned int    coord;
+typedef unsigned short  color;
 
-#define MAKE_COLOR(bg, fg)    ((color)((((char)(bg))<<8)|((char)(fg))))
+#define MAKE_COLOR(bg, fg)  ((color)((((char)(bg))<<8)|((char)(fg))))
 #define FG_COLOR(color)     ((unsigned char)(color & 0xFF))
 #define BG_COLOR(color)     ((unsigned char)(color >> 8))
 

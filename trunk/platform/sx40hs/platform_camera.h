@@ -41,7 +41,6 @@
     #define CAM_HAS_JOGDIAL                     1
     #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
-    #define CAM_DETECT_SCREEN_ERASE         	1   // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
 
     #undef DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                     2   // use .CR2 

@@ -4,7 +4,7 @@
 #include "gui.h"
 #include "script.h"
 
-#define USER_MENU_ITEMS 14
+#define USER_MENU_ITEMS     14
 #define CONF_STR_LEN        100
 
 #define CONF_EMPTY          0
@@ -53,9 +53,9 @@ typedef struct {
     int raw_in_dir;
     int raw_prefix;
     int raw_ext;
-    int raw_save_first_only;    //for series shooting
+    int raw_save_first_only; //for series shooting
     int raw_nr;
-    int sub_batch_prefix;    // output of batch subtracts
+    int sub_batch_prefix; // output of batch subtracts
     int sub_batch_ext;
     int sub_in_dark_value;    // values <= to this are not subtracted, i.e. the dark value of your darkframe
     int sub_out_dark_value;    // minimum value to output from subtract, i.e. dark value of your final image
@@ -142,7 +142,7 @@ typedef struct {
     OSD_pos usb_info_pos;
 
     color histo_color;
-    color histo_color2;    // markers/border
+    color histo_color2; // markers/border
     color osd_color;
     color osd_color_warn;
     color batt_icon_color;
@@ -186,7 +186,7 @@ typedef struct {
     int platformid;
 
     int use_zoom_mf;
-    long alt_mode_button;    // for S-series
+    long alt_mode_button; //for S-series
     int alt_prevent_shutdown;
 
     int show_grid_lines;
@@ -196,7 +196,7 @@ typedef struct {
     int video_mode;
     int video_quality;
     int video_bitrate;
-
+      
     int tv_bracket_value;
     int av_bracket_value;
     int iso_bracket_value;
@@ -214,9 +214,9 @@ typedef struct {
     int tv_override_koef;
     int tv_enum_type;
     int av_override_value;
-
+    
     int nd_filter_state;
-
+    
     int iso_override_value;
     int iso_override_koef;
     int zoom_override_value;
@@ -262,14 +262,14 @@ typedef struct {
     int values_show_canon_overexposure;
     int values_show_luminance;
 
-    int debug_shortcut_action;  // 0=none, 1=dump, 2=page display
-    int debug_display;          // 0=none, 1=props, 2=flash param, 3=tasks
+    int debug_shortcut_action;   // 0=none, 1=dump, 2=page display
+    int debug_display;           // 0=none, 1=props, 2=flash param, 3=tasks
     int debug_propcase_page;     // save propcase page
-    int debug_lua_restart_on_error;    // 0=no, 1=yes
+    int debug_lua_restart_on_error; // 0=no, 1=yes
     int debug_misc_vals_show;    // 0=no, 1=yes
 
-    int script_startup;    // remote autostart
-    int remote_enable;    // remote enable
+    int script_startup;          // remote autostart
+    int remote_enable;           // remote enable
     int user_menu_enable;
     int user_menu_vars[USER_MENU_ITEMS];
     int user_menu_as_root;
@@ -334,16 +334,19 @@ extern Conf conf;
 #define SHOOTING_PROGRESS_PROCESSING    2
 #define SHOOTING_PROGRESS_DONE          3
 
+
 // video quality defaults. Ideally, these should match the camera default settings
-#define VIDEO_DEFAULT_QUALITY   84    // ? where does 84 come from
+#define VIDEO_DEFAULT_QUALITY   84  // ? where does 84 come from
 #define VIDEO_MAX_QUALITY       99
-#define VIDEO_DEFAULT_BITRATE   3    // should be 1 for all cams
+#define VIDEO_DEFAULT_BITRATE   3   // should be 1 for all cams
+
+extern void user_menu_restore();
 
 extern int state_kbd_script_run;
 extern int state_shooting_progress;
 extern int state_save_raw_nth_only;
 
-extern void script_autostart();    // remote autostart
+extern void script_autostart();     // remote autostart
 extern void conf_save();
 extern void conf_restore();
 extern void conf_load_defaults();
@@ -355,8 +358,8 @@ extern int conf_setValue(unsigned short id, tConfigVal configVal);
 
 // reyalp: putting these in conf, since the conf values are lookups for them
 // prefixes and extentions available for raw images (index with conf.raw_prefix etc)
-#define NUM_IMG_PREFIXES 3    // IMG_ CRW_ SND_ (could add ETC_ SDR_ AUT_ MVI_ MRK_)
-#define NUM_IMG_EXTS 5    // .JPG .CRW .CR2 .THM .WAV (could add .AVI .MRK)
+#define NUM_IMG_PREFIXES 3  // IMG_ CRW_ SND_ (could add ETC_ SDR_ AUT_ MVI_ MRK_)
+#define NUM_IMG_EXTS 5      // .JPG .CRW .CR2 .THM .WAV (could add .AVI .MRK)
 extern const char* img_prefixes[NUM_IMG_PREFIXES];
 extern const char* img_exts[NUM_IMG_EXTS];
 
