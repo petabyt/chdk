@@ -1455,3 +1455,25 @@ void __attribute__((weak)) *vid_get_viewport_active_buffer()
   
   return p;
 }
+
+/*
+ debug logging function that can be sent to various places
+ body is ifdef'd inside the body to allow exporting to modules
+ eventproc version may require System.Create()/SystemEventInit first
+*/
+void dbg_printf(char *fmt,...) {
+#ifdef DEBUG_LOGGING
+    char s[256];
+    __builtin_va_list va;
+    __builtin_va_start(va, fmt);
+    _vsprintf(s, fmt, va);
+    __builtin_va_end(va);
+
+    // stdout - for use with uart redirection
+    _ExecuteEventProcedure("Printf",s);
+    // camera log - will show up in crash dumps, or in stdout on ShowCameraLog
+    // _LogPrintf(0x120,s);
+
+    // file TODO
+#endif
+}

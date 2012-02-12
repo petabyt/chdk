@@ -621,3 +621,16 @@ extern int touch_screen_active;
 unsigned char SetFileAttributes(const char* fn, unsigned char attr);
 
 #endif
+
+// debug logging function - see generic wrappers.c to adjust destination
+// WARNING fixed length buffer
+extern void dbg_printf(char *fmt,...);
+
+//#define DEBUG_LOGGING
+// debug with timestamp
+#ifdef DEBUG_LOGGING
+#define DBGPRINTF(fmt,args...) dbg_printf("%08d DBG:" fmt,get_tick_count(), ##args)
+#else
+#define DBGPRINTF(...)
+#endif
+
