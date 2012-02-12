@@ -449,13 +449,11 @@ int get_exposure_counter(void)
 	return 123;
 }
 
-
 int script_key_is_pressed( int keyid )
 {
     printf("*** script_key_is_pressed %d ***\n", keyid);
 	return 0;
 }
-
 
 int shot_histogram_get_range(int from, int to)
 {

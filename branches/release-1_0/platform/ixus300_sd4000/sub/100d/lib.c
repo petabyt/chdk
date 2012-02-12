@@ -62,7 +62,7 @@ ROM:FFB292D0    LDR     R1, =0xF32880   <---
 ROM:FFB292D4    ADR     R0, aCrawBuffSizeP ; "CRAW BUFF SIZE  %p"
 ***/
 long hook_raw_size() {
-    return 0xF32880;    // 15935616, finsig2
+    return 0xF32880;    // 15935616
 }
 
 // vid_* stuff is related to BmpDDev() stuff (ROM:FF919A78 and other) and LiveImage.c
@@ -109,7 +109,7 @@ void *vid_get_viewport_live_fb() {
 // ROM:FF919AD0    STR     R0, [R6]
 // ROM:FF919AD4    LDR     R0, =0x40471000 <---
 void *vid_get_bitmap_fb() {
-    return (void*)0x40471000;    // ROM:FF919AD4 or ROM:FFA347DC or ROM:FF85B154, finsig2
+    return (void*)0x40471000;    // ROM:FF919AD4 or ROM:FFA347DC or ROM:FF85B154
 }
 
 /*** Live picture buffer (shoot half-pressed)
@@ -120,18 +120,18 @@ ROM:FFB25ED8    LDR     R1, =0x40587700    <---
 ROM:FFB25EE8    ADR     R0, aVramAddressP ; "VRAM Address  : %p\r"
 ***/
 void *vid_get_viewport_fb() {
-    return (void*)0x40587700;    // ROM:FFB25ED8 or ROM:FFB25DFC, finsig2
+    return (void*)0x40587700;    // ROM:FFB25ED8 or ROM:FFB25DFC
 }
 
 // ?!?
 // possible future use
 void *vid_get_viewport_fb_d() {
-    return (void*)(*(int*)0x2AA4);    // ROM:FF874770 0x2A50 + 0x54, value changes between 0x404ef900 and 0x40f210a0 in playback, record ist always 0x40f210a0
+    return (void*)(*(int*)0x2AA4);    // ROM:FF874770 0x2A50 + 0x54
 }
 
 // search for String "9999" (IDA Name: a9999)
 // ROM:FFA04F80    LDR     R0, =0xA15B8    ; <---
 // ROM:FFA04F84    ADR     R1, a9999       ; "9999"
 char *camera_jpeg_count_str() {
-    return (char*)0xA15B8;    // finsig2
+    return (char*)0xA15B8;
 }

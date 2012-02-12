@@ -92,7 +92,6 @@ void debug_my_blink()
 #include "platform.h"
 #include "lolevel.h"
 
-
 /*
 void vid_bitmap_refresh()
 {

@@ -1,12 +1,12 @@
 #ifndef GUI_H
 #define GUI_H
 
-typedef unsigned int      coord;
-typedef unsigned short    color;
+typedef unsigned int    coord;
+typedef unsigned short  color;
 
-#define MAKE_COLOR(bg, fg)    ((color)((((char)(bg))<<8)|((char)(fg))))
+#define MAKE_COLOR(bg, fg)  ((color)((((char)(bg))<<8)|((char)(fg))))
 
-// Don't delete or re-order entries unless guiHandlers (gui.c) table is updated to match 
+// Don't delete or re-order entries unless guiHandlers (gui.c) table is updated to match
 enum Gui_Mode {
     GUI_MODE_NONE = 0,
     GUI_MODE_ALT,

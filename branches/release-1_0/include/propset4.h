@@ -7,7 +7,7 @@ WARNING:
 The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 */
 
-#define PROPCASE_AF_LOCK                         11		// 0 = AF not locked, 1 = AF locked
+#define PROPCASE_AF_LOCK                         11     // 0 = AF not locked, 1 = AF locked
 #define PROPCASE_FLASH_SYNC_CURTAIN              64
 #define PROPCASE_SUBJECT_DIST2                   65
 #define PROPCASE_AV2                             22     // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
@@ -17,8 +17,8 @@ The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 #define PROPCASE_BRACKET_MODE                    29
 #define PROPCASE_SHOOTING_MODE                   49
 #define PROPCASE_QUALITY                         57
-#define PROPCASE_DIGITAL_ZOOM_MODE               91		// Digital Zoom Mode/State 0 = off/standard, 2 = 1.7x, 3 = 2.1x
-#define PROPCASE_DIGITAL_ZOOM_STATE              94		// Digital Zoom Mode/State 0 = Digital Zoom off, 1 = Digital Zoom on
+#define PROPCASE_DIGITAL_ZOOM_MODE               91     // Digital Zoom Mode/State 0 = off/standard, 2 = 1.7x, 3 = 2.1x
+#define PROPCASE_DIGITAL_ZOOM_STATE              94     // Digital Zoom Mode/State 0 = Digital Zoom off, 1 = Digital Zoom on
 #define PROPCASE_DIGITAL_ZOOM_POSITION           95
 #define PROPCASE_DRIVE_MODE                      102
 #define PROPCASE_OVEREXPOSURE                    103
@@ -36,16 +36,16 @@ The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 #define PROPCASE_ISO_MODE                        149
 
 // SX30 & G12 values
-#define	PROPCASE_AE_LOCK						 3		// 0 = AE not locked, 1 = AE locked
-#define	PROPCASE_AF_FRAME						 8		// 1 = FlexiZone, 2 = Face AiAF / Tracking AF
-#define	PROPCASE_CONTINUOUS_AF					 12		// 0 = Continuous AF off, 1 = Continuous AF on
-#define	PROPCASE_SERVO_AF						 299	// 0 = Servo AF off, 1 = Servo AF on
+#define PROPCASE_AE_LOCK                         3       // 0 = AE not locked, 1 = AE locked
+#define PROPCASE_AF_FRAME                        8       // 1 = FlexiZone, 2 = Face AiAF / Tracking AF
+#define PROPCASE_CONTINUOUS_AF                   12      // 0 = Continuous AF off, 1 = Continuous AF on
+#define PROPCASE_SERVO_AF                        299     // 0 = Servo AF off, 1 = Servo AF on
 #define PROPCASE_METERING_MODE                   157
 #define PROPCASE_OPTICAL_ZOOM_POSITION           199
 #define PROPCASE_SHOOTING                        210
 #define PROPCASE_EV_CORRECTION_2                 211
 #define PROPCASE_IS_FLASH_READY                  212
-#define PROPCASE_RESOLUTION                      222    // 0 = L, 1 = M1, 2 = M2, 4 = S, 7 = Low Light (G12)
+#define PROPCASE_RESOLUTION                      222     // 0 = L, 1 = M1, 2 = M2, 4 = S, 7 = Low Light (G12)
 #define PROPCASE_ORIENTATION_SENSOR              223
 #define PROPCASE_TIMER_MODE                      227
 #define PROPCASE_SUBJECT_DIST1                   249

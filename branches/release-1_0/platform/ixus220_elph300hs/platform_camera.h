@@ -92,6 +92,4 @@
     #undef  CAM_HAS_MANUAL_FOCUS
 
     #define CAM_HAS_CMOS                    1
-
-	#define CAM_DETECT_SCREEN_ERASE			1
 //----------------------------------------------------------

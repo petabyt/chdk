@@ -94,9 +94,6 @@
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-	#define CAM_DETECT_SCREEN_ERASE     1       // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
-
-
     #define CAM_USE_COLORED_ICONS       1
 
  //----------------------------------------------------------

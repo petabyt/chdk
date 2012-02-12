@@ -22,27 +22,27 @@ struct context_t
 typedef struct context_t context_t;
 /******************************************************************************/
 // Task control block
-struct task_t
-{
-    unsigned int unknown1[13];
-    char *name;
-    unsigned int options;
-    unsigned int state;
-    unsigned int priority;
-    unsigned int unknown2[12];
-    void *entry;
-    void *stack_base;
-    void *stack_limit;
-    void *stack_end;
-    unsigned int error_num;
-    unsigned int exit_code;
-    unsigned int unknown3[7];
-    void *task_std_fp[3];           // pointers to FILE structures
-    unsigned int task_std_fd[3];    // std file descriptors
-    unsigned int unknown4[24];
+struct task_t {
+    unsigned int    unknown1[13];
+    char            *name;
+    unsigned int    options;
+    unsigned int    state;
+    unsigned int    priority;
+    unsigned int    unknown2[12];
+    void            *entry;
+    void            *stack_base;
+    void            *stack_limit;
+    void            *stack_end;
+    unsigned int    error_num;
+    unsigned int    exit_code;
+    unsigned int    unknown3[7];
+    void            *task_std_fp[3];    // pointers to FILE structures
+    unsigned int    task_std_fd[3];     // std file descriptors
+    unsigned int    unknown4[24];
     context_t context;
-    unsigned int unknown5[11];
+    unsigned int    unknown5[11];
 };
 typedef struct task_t task_t;
 /******************************************************************************/
+
 #endif

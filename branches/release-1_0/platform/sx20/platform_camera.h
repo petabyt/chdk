@@ -99,7 +99,4 @@
     #define CAMERA_MIN_DIST                 88      // Override min subject distance
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 66490   // Override max subject distance
-
-    #define CAM_DETECT_SCREEN_ERASE     1       // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
-
 //----------------------------------------------------------

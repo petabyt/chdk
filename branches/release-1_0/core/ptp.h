@@ -30,7 +30,7 @@ enum ptp_chdk_command {
   PTP_CHDK_SetMemory,       // param2 is address
                             // param3 is size (in bytes)
                             // data is new memory block
-  PTP_CHDK_CallFunction,    // data is array of function pointer and (long) arguments  (max: 10 args) 
+  PTP_CHDK_CallFunction,    // data is array of function pointer and (long) arguments  (max: 10 args)
                             // return param1 is return value
   PTP_CHDK_TempData,        // data is data to be stored for later
                             // param2 is for the TD flags below

@@ -68,4 +68,3 @@ do_call:
     MOV     SP, R4              // clean up stack
     LDMFD   SP!, {R4-R5,LR}
     BX      LR
-
