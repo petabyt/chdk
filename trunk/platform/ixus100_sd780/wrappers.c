@@ -22,5 +22,6 @@ long lens_get_target_distance()
 // a warning, but is not called anywhere - ultimA
 //long OpLog_Get(long i)
 //{
+//  extern int _OpLog_Get(int);
 //	return _OpLog_Get(i);
 //}

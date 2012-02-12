@@ -189,6 +189,7 @@ void cam_console_init()
 {
     DEV_HDR *DRV_struct;
 
+    extern DEV_HDR* _iosDevFind(char*, int);
     DRV_struct = _iosDevFind("/tyCo/0", 0);
 
     _tyWriteOrig = (void*)DRV_struct[DEV_HDR_WRITE_OFFSET];

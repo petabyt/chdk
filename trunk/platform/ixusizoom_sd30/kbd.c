@@ -128,7 +128,7 @@ void hook_kbd_handle_keys()
     kbd_new_state[2] = physw_status[2];
 
     static int taskFeatherID = 0;
-	extern int taskNameToId(char*);
+    
     if (taskFeatherID == 0) {
         taskFeatherID = _taskNameToId("tFeather");
         //printf("taskFeatherID:%x\n", taskFeatherID);
@@ -137,16 +137,16 @@ void hook_kbd_handle_keys()
     if (kbd_process() == 0){
         // leave it ...
 #if CAM_FEATURE_FEATHER
-        taskResume(taskFeatherID);
+        _taskResume(taskFeatherID);
 #endif
     } else {
         physw_status[2] = (physw_status[2] & (~KEY_MASK)) | (kbd_mod_state & KEY_MASK);
 #if CAM_FEATURE_FEATHER
-        taskSuspend(taskFeatherID);
+        _taskSuspend(taskFeatherID);
 
         // We still need this sema when simulating key presses
         if (kbd_mod_state != KEY_MASK) {
-            taskResume(taskFeatherID);
+            _taskResume(taskFeatherID);
         }
 
 #endif
