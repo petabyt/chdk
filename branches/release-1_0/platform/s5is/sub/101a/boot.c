@@ -1706,6 +1706,7 @@ unsigned long __attribute__((naked,noinline)) _time(unsigned long *timer) {
           "LDR     R0, [SP,#0x10-0x10]\n"
           "LDMFD   SP!, {R3-R5,PC}\n"
      );
+     return 0;  // stop compiler warning
 }
 
 
