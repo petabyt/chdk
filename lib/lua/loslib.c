@@ -297,7 +297,6 @@ static int os_stat (lua_State *L) {
 	// but leave them commented out for reference
 #ifndef CAM_DRYOS_2_3_R39
     setfield(L,"dev",st.st_dev);		/* device ID number */
-
 //    setfield(L,"ino",st.st_ino);		/* no inodes in fat, always -1 */
     setfield(L,"mode",st.st_mode);	/* file mode (see below) */
 #endif
@@ -310,7 +309,7 @@ static int os_stat (lua_State *L) {
 #endif
     setfield(L,"size",st.st_size);	/* size of file, in bytes */
 #ifndef CAM_DRYOS_2_3_R39
-	setfield(L,"atime",st.st_atime);	/* time of last access */
+    setfield(L,"atime",st.st_atime);	/* time of last access */
 #endif
     setfield(L,"mtime",st.st_mtime);	/* time of last modification */
     setfield(L,"ctime",st.st_ctime);	/* time of last change of file status */

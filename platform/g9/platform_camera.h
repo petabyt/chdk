@@ -31,7 +31,6 @@
     #define CAM_EMUL_KEYPRESS_DURATION  10
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_HAS_JOGDIAL                 1
-	// #define CAM_CONSOLE_LOG_ENABLED			1
     #define CAM_BRACKETING                  1
     #define CAM_MULTIPART                   1
     #define CAM_EXT_TV_RANGE                1

@@ -268,7 +268,7 @@ long get_jogdial_direction(void) {
     }
 }
 
-// Base values in playback
+// Base values in Play Mode
 // physw_status[0] = 0x800C91F      // 1
 // physw_status[1] = 0xFFE          // 2 (Mode Switch: Auto)
 // physw_status[2] = 0x400000       // 3
@@ -278,17 +278,17 @@ long get_jogdial_direction(void) {
 // physw_status[1] 0x2 Video Mode
 // physw_status[2] 0x20000 SD-Card READONLY
 static KeyMap keymap[] = {
-    { 0, KEY_UP         , 0x00000004 },    // finsig2
-    { 0, KEY_DOWN       , 0x00000001 },    // finsig2
-    { 0, KEY_LEFT       , 0x00000008 },    // finsig2
-    { 0, KEY_RIGHT      , 0x00000002 },    // finsig2
-    { 1, KEY_SET        , 0x00000040 },    // finsig2
-    { 0, KEY_SHOOT_FULL , 0x00000900 },    // 0x00000800(KEY_SHOOT_FULL) + 0x00000100 (KEY_SHOOT_HALF), ToDo: still not shure if correct (related to problems with shoot_full?), finsig2
-    { 0, KEY_SHOOT_FULL_ONLY , 0x00000800 },
-    { 0, KEY_SHOOT_HALF , 0x00000100 },    // finsig2
-    { 1, KEY_ZOOM_IN    , 0x00000010 },    // finsig2
-    { 1, KEY_ZOOM_OUT   , 0x00000020 },    // finsig2
-    { 1, KEY_MENU       , 0x00000080 },    // finsig2
+    { 0, KEY_UP         , 0x00000004 },
+    { 0, KEY_DOWN       , 0x00000001 },
+    { 0, KEY_LEFT       , 0x00000008 },
+    { 0, KEY_RIGHT      , 0x00000002 },
+    { 1, KEY_SET        , 0x00000040 },
+    { 0, KEY_SHOOT_FULL , 0x00000900 },   // 0x00000800 (KEY_SHOOT_FULL_ONLY) + 0x00000100 (KEY_SHOOT_HALF)
+    { 0, KEY_SHOOT_FULL_ONLY, 0x00000800 },
+    { 0, KEY_SHOOT_HALF , 0x00000100 },
+    { 1, KEY_ZOOM_IN    , 0x00000010 },
+    { 1, KEY_ZOOM_OUT   , 0x00000020 },
+    { 1, KEY_MENU       , 0x00000080 },
     { 0, KEY_PRINT      , 0x0000000C },   // ALT Key workaround: KEY_UP + KEY_LEFT (camera has no print key)
     { 0, 0, 0 }
 };

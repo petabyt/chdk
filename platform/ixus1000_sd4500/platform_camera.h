@@ -121,8 +121,6 @@
    #define CAM_QUALITY_OVERRIDE             1
    #define CAM_AF_SCAN_DURING_VIDEO_RECORD  1
 
-   #define CAM_DETECT_SCREEN_ERASE 1			     // http://chdk.setepontos.com/index.php?topic=6705.msg71062#msg71062	
-   
    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX  1     // enable workaround for camera crash at startup when opening the conf / font files
                                                     // see http://chdk.setepontos.com/index.php?topic=6179.0
    #define CAM_HAS_CMOS                     1

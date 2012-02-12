@@ -66,7 +66,7 @@
     #define CAM_TS_BUTTON_BORDER            60      // Define this to leave a border on each side of the palette display. Used on the IXUS 310 to
                                                 // stop the palette from overlapping the on screen buttons on each side
     #undef  CAM_DISP_ALT_TEXT                    // Turn off <ALT> at bottom of screen in Alt mode - changes button color instead
-    #define CAM_DETECT_SCREEN_ERASE         1   // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
+
     #define CAM_TOUCHSCREEN_UI              1       // Enable touch screen U/I
 
     // camera name

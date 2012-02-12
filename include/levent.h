@@ -3,16 +3,16 @@
 
 #define LEVENT_INVALID_INDEX 0xFFFFFFFF
 
-/* logical event definition */
+/* logical event definition*/
 typedef struct {
     char *name; /* name of event, may point to empty string */
     unsigned id; /* event id number used with canon event fuctions (post etc) */
     unsigned param; /* unknown 0-3 */
 } levent_def;
 /*
-table of event definitions in ROM,
-address can be found with tools/find_levent
-terminated by an event with a NULL (not empty string) name pointer.
+ table of event definitions in ROM,
+ address can be found with tools/find_levent
+ terminated by an event with a NULL (not empty string) name pointer.
 */
 extern levent_def levent_table[];
 
@@ -37,5 +37,4 @@ int levent_post_to_ui_by_name(const char *name);
 /* post press/unpress events for RecButton and PBButton */
 void levent_set_record(void);
 void levent_set_play(void);
-
 #endif

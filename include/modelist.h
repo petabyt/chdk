@@ -1,10 +1,9 @@
 #ifndef MODELIST_H
 #define MODELIST_H
-
 /*
 CHDK capture mode constants.
 WARNING: This file is used with gen_modelist_lua.sed to generate modelist.lua
-WARNING: These are used for platform independent script values.
+WARNING: These are used for platform independent script values. 
 Changing order or inserting new values will break script compatibility.
 ADD NEW VALUES AT THE END!
 
@@ -40,7 +39,7 @@ enum {
     MODE_TV                 ,
     MODE_AV                 ,
     MODE_M                  , // note, use only for true manual modes that allow direct control of Tv/Av
-    MODE_PORTRAIT           ,
+    MODE_PORTRAIT           , 
     MODE_NIGHT_SCENE        , // "night scene" mode. Note, this can be a dail position, or under the scene menu (SCN_NIGHT_SCENE).
     MODE_LANDSCAPE          ,
     MODE_VIDEO_STD          ,
@@ -97,23 +96,23 @@ enum {
     MODE_SCN_LONG_SHUTTER   , // only known on sx1, d10
     MODE_LOWLIGHT           , // g11
     MODE_SCN_NOSTALGIC      , // s90
-    MODE_SCN_SMART_SHUTTER    , // sx30/g12 (Smart Shutter, Smile detection mode)
-    MODE_SCN_LOWLIGHT        , // sx30
+    MODE_SCN_SMART_SHUTTER  , // sx30/g12 (Smart Shutter, Smile detection mode)
+    MODE_SCN_LOWLIGHT       , // sx30
     MODE_SCN_SUPER_VIVID    , // sx30
-    MODE_SCN_POSTER_EFFECT    , // sx30
+    MODE_SCN_POSTER_EFFECT  , // sx30
     MODE_SCN_FISHEYE        , // sx30
-    MODE_SCN_MINIATURE        , // sx30
+    MODE_SCN_MINIATURE      , // sx30
     MODE_SCN_HDR            , // g12 (HDR scene mode)
     MODE_VIDEO_MINIATURE    , // g12 (miniature effect video mode)
     MODE_VIDEO_IFRAME_MOVIE , // sx220
-    MODE_VIDEO_MOVIE_DIGEST    , // sx220 (the camera automatically record a short video clip (up to approximately 4 seconds) every time you shoot a still image.)
+    MODE_VIDEO_MOVIE_DIGEST , // sx220 (the camera automatically record a short video clip (up to approximately 4 seconds) every time you shoot 
     MODE_SCN_HIGHSPEED_BURST, // sx220
-    MODE_SCN_BEST_IMAGE        , // sx220
-    MODE_SCN_TOY_CAMERA    , // sx220
-    MODE_SCN_MONOCHROME    , // sx220
+    MODE_SCN_BEST_IMAGE     , // sx220
+    MODE_SCN_TOY_CAMERA     , // sx220
+    MODE_SCN_MONOCHROME     , // sx220
     MODE_SCN_WINK_SELF_TIMER, // sx30/g12 (Smart Shutter, Wink Self Timer mode)
     MODE_SCN_FACE_SELF_TIMER, // sx30/g12 (Smart Shutter, Face Self Timer mode)
-    MODE_VIDEO_SUPER_SLOW   ,   // IXUS 310 HS Super Slow Motion Movie
+    MODE_VIDEO_SUPER_SLOW   , // IXUS 310 HS Super Slow Motion Movie
     MODE_SMART_SHUTTER      , // ixus1000_sd4500 - the following are not under SCN
     MODE_HIGHSPEED_BURST    ,
     MODE_BEST_IMAGE         ,
@@ -126,7 +125,7 @@ enum {
     MODE_SNOW               ,
     MODE_FIREWORK           , // ixus1000 end
     MODE_LIVE               , // A3300is
-    MODE_DISCREET			 , // A3300is
+    MODE_DISCREET           , // A3300is
 };
 
 #endif

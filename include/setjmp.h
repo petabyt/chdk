@@ -15,7 +15,7 @@
  * onsstack,sigmask,sp,pc,npc,psr,g1,o0,wbcnt (sigcontext).
  * All else recovered by under/over(flow) handling.
  */
-#define	_JBLEN	13
+#define _JBLEN  13
 #endif
 
 #ifdef __BFIN__
@@ -27,10 +27,10 @@
 #ifdef __mc68000__
 /*
  * onsstack,sigmask,sp,pc,psl,d2-d7,a2-a6,
- * fp2-fp7	for 68881.
+ * fp2-fp7  for 68881.
  * All else recovered by under/over(flow) handling.
  */
-#define	_JBLEN	34
+#define _JBLEN  34
 #endif
 
 #if defined(__mc68hc11__) || defined(__mc68hc12__) || defined(__mc68hc1x__)
@@ -51,7 +51,7 @@
  * onsstack,sigmask,sp,pc,npc,psr,g1,o0,wbcnt (sigcontext).
  * All else recovered by under/over(flow) handling.
  */
-#define	_JBLEN	9
+#define _JBLEN  9
 #endif
 
 #if defined(__CYGWIN__) && !defined (_JBLEN)

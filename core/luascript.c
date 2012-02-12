@@ -133,10 +133,10 @@ void lua_script_reset()
 
 static void lua_count_hook(lua_State *L, lua_Debug *ar)
 {
-  run_hook_count++;
-  if( L->nCcalls > L->baseCcalls || !yield_hook_enabled )
+    run_hook_count++;
+    if( L->nCcalls > L->baseCcalls || !yield_hook_enabled )
     return;
-  if(run_hook_count >= yield_max_count || get_tick_count() - run_start_tick >= yield_max_ms)
+    if(run_hook_count >= yield_max_count || get_tick_count() - run_start_tick >= yield_max_ms)
     lua_yield( L, 0 );
 }
 
@@ -861,6 +861,7 @@ static int luaCB_textbox( lua_State* L ) {
     return lua_yield(L, 0);
 }
 
+// begin lua draw fuctions
 unsigned char script_colors[][2]  = {
 
 #ifdef CAM_USE_COLORED_ICONS
@@ -900,8 +901,8 @@ unsigned char script_colors[][2]  = {
                                         {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  11  blue_dark   - placeholder
                                         {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  12  blue_light  - placeholder
 
-                                        {COLOR_BLACK,               COLOR_BLACK},			    //  13  grey        - placeholder (there's no universal grey)
-                                        {COLOR_BLACK,               COLOR_BLACK},			    //  14  grey_dark   - placeholder (there's no universal grey)
+                                        {COLOR_BLACK,               COLOR_BLACK},               //  13  grey        - placeholder (there's no universal grey)
+                                        {COLOR_BLACK,               COLOR_BLACK},               //  14  grey_dark   - placeholder (there's no universal grey)
                                         {COLOR_WHITE,               COLOR_WHITE},               //  15  grey_light  - placeholder (there's no universal grey)
 
                                         {COLOR_WHITE,               COLOR_WHITE},               //  16  yellow      - placeholder
@@ -1003,6 +1004,7 @@ static int luaCB_draw_clear( lua_State* L ) {
   draw_restore();
   return 1;
 }
+// end lua draw functions
 
 static int luaCB_autostarted( lua_State* L )
 {
@@ -1067,7 +1069,6 @@ static int luaCB_get_movie_status( lua_State* L )
 
 static int luaCB_set_movie_status( lua_State* L )
 {
-  int to;
   switch(luaL_checknumber( L, 1 )) {
     case 1:
       if (movie_status == 4) {
@@ -1863,7 +1864,6 @@ result: R0 value after the call returns
 static int luaCB_call_func_ptr( lua_State* L)
 {
   unsigned *argbuf=NULL;
-  unsigned i;
   unsigned n_args = lua_gettop(L)-1;
   void *fptr;
 
@@ -1912,7 +1912,6 @@ static int luaCB_call_event_proc( lua_State* L )
 {
   const char *evpname;
   unsigned *argbuf;
-  unsigned i;
   unsigned n_args = lua_gettop(L);
 
   evpname=luaL_checkstring( L, 1 );
@@ -1944,8 +1943,8 @@ see lib/armutil/reboot.c for details
 */
 static int luaCB_reboot( lua_State* L )
 {
-	lua_pushboolean(L, reboot(luaL_optstring( L, 1, NULL )));
-	return 1;
+    lua_pushboolean(L, reboot(luaL_optstring( L, 1, NULL )));
+    return 1;
 }
 
 static int luaCB_get_config_value( lua_State* L ) {
@@ -2196,7 +2195,6 @@ static int luaCB_set_yield( lua_State* L )
   yield_max_ms = luaL_optnumber(L,2,YIELD_MAX_MS_DEFAULT);
   return 2;
 }
-
 
 static void register_func( lua_State* L, const char *name, void *func) {
   lua_pushcfunction( L, func );

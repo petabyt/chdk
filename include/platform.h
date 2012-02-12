@@ -24,72 +24,72 @@ extern int mode_is_video(int);
     #include "propset4.h"
 #elif CAM_PROPSET == 3
     #include "propset3.h"
-#elif CAM_PROPSET == 2    // most digic3 cameras
+#elif CAM_PROPSET == 2      // most digic3 cameras
     #include "propset2.h"
-#elif CAM_PROPSET == 1    // most digic2 cameras
+#elif CAM_PROPSET == 1      // most digic2 cameras
     #include "propset1.h"
 #else
     #error unknown camera processor
 #endif
 
-#define MIN_DIST                CAMERA_MIN_DIST     // Defined in camera.h (can be overridden in platform_camera.h)
-#define MAX_DIST                CAMERA_MAX_DIST     // Defined in camera.h (can be overridden in platform_camera.h)
-#define INFINITY_DIST           0xFFFFFFFF          // Value to send to firmware to select 'infinity' focus
-#define MAX_DIST_HYPER_FOCAL    999999
+#define MIN_DIST                    CAMERA_MIN_DIST     // Defined in camera.h (can be overridden in platform_camera.h)
+#define MAX_DIST                    CAMERA_MAX_DIST     // Defined in camera.h (can be overridden in platform_camera.h)
+#define INFINITY_DIST               0xFFFFFFFF          // Value to send to firmware to select 'infinity' focus
+#define MAX_DIST_HYPER_FOCAL        999999
 
 //********************
 //char * get_debug();
 //********************
 
-#define MODE_SCREEN_MASK        0x0C00
-#define MODE_SCREEN_OPENED      0x0400
-#define MODE_SCREEN_ROTATED     0x0800
+#define MODE_SCREEN_MASK            0x0C00
+#define MODE_SCREEN_OPENED          0x0400
+#define MODE_SCREEN_ROTATED         0x0800
 
 /* Keyboard repeat and initial delays */
 #define KBD_REPEAT_DELAY  140
 #define KBD_INITIAL_DELAY 300
 
-// Video recording current status constants, see movie_status variable
-#define VIDEO_RECORD_NEVER_STARTED    0
-#define VIDEO_RECORD_STOPPED          1
-#define VIDEO_RECORD_IN_PROGRESS      4
+// Video recording current status constants, see movie_status variable 
+#define VIDEO_RECORD_NEVER_STARTED  0  
+#define VIDEO_RECORD_STOPPED        1  
+#define VIDEO_RECORD_IN_PROGRESS    4
 
-//Optical & digital zoom status constants, see zoom_status variable
-#define ZOOM_OPTICAL_MIN              1
-#define ZOOM_OPTICAL_MAX              2
-#define ZOOM_OPTICAL_MEDIUM           3
-#define ZOOM_OPTICAL_IN               4
-#define ZOOM_OPTICAL_OUT              5
-#define ZOOM_OPTICAL_REACHED_MIN      7
+//Optical & digital zoom status constants, see zoom_status variable 
+#define ZOOM_OPTICAL_MIN            1
+#define ZOOM_OPTICAL_MAX            2
+#define ZOOM_OPTICAL_MEDIUM         3
+#define ZOOM_OPTICAL_IN             4
+#define ZOOM_OPTICAL_OUT            5
+#define ZOOM_OPTICAL_REACHED_MIN    7
 
-#define ZOOM_DIGITAL_MAX              9
-#define ZOOM_DIGITAL_MEDIUM           10
-#define ZOOM_DIGITAL_IN               11
-#define ZOOM_DIGITAL_OUT              12
-#define ZOOM_DIGITAL_REACHED_MAX      13
+#define ZOOM_DIGITAL_MAX            9
+#define ZOOM_DIGITAL_MEDIUM         10
+#define ZOOM_DIGITAL_IN             11
+#define ZOOM_DIGITAL_OUT            12
+#define ZOOM_DIGITAL_REACHED_MAX    13
 
 typedef struct {
-    unsigned short hackmode; // platform independent mode values from MODE_xxx enum
-    unsigned short canonmode; // PROPCASE_SHOOTING_MODE value
+    unsigned short hackmode;   // platform independent mode values from MODE_xxx enum
+    unsigned short canonmode;  // PROPCASE_SHOOTING_MODE value
 } CapturemodeMap;
 
 typedef struct {
-    short id; // hacks id
-    short prop_id; // Canons id
+    short id;       // hacks id
+    short prop_id;  // Canons id
     char name[8];
     short shutter_dfs_value; // shutter speed to use dark frame substraction
 } ISOTable;
 
 typedef struct {
-    short id; // hacks id
-    short prop_id; // Canons id
+    short id;       // hacks id
+    short prop_id;  // Canons id
     char name[8];
     long usec;
 } ShutterSpeed;
 
 typedef struct {
-    short id; // hacks id
-    short prop_id; // Canons id
+    short id;       // hacks id
+    short prop_id;  // Canons id
     char name[8];
 } ApertureSize;
 
@@ -119,6 +119,7 @@ typedef struct {
 #define SHOW_ALWAYS    1
 #define SHOW_HALF      2
 
+
 typedef struct {
     short av96;
     short tv96;
@@ -144,12 +145,12 @@ typedef struct {
     short sv96_market;
     short iso_market;
     short bv96_measured;
-    short bv96_seted;//Ev96_internal-Sv96
-    short ev96_seted; //Tv96+Av96
-    short ev96_measured; //Bv96+Sv96
-    short dev96;// Ev96_external-Ev96_internal
-    short dev96_canon;// Canon OverExposure
-    int b; //average scene luminance
+    short bv96_seted;       //Ev96_internal-Sv96
+    short ev96_seted;       //Tv96+Av96
+    short ev96_measured;    //Bv96+Sv96
+    short dev96;            // Ev96_external-Ev96_internal
+    short dev96_canon;      // Canon OverExposure
+    int b;                  //average scene luminance 
 } EXPO_TYPE;
 
 typedef struct {
@@ -182,10 +183,10 @@ long set_property_case(long id, void *buf, long bufsize);
 long get_file_counter();
 long get_exposure_counter();
 long get_file_next_counter();
-#if defined(CAM_DATE_FOLDER_NAMING)
-void get_target_dir_name(char*);
+#if defined(CAM_DATE_FOLDER_NAMING) 
+    void get_target_dir_name(char*);
 #else
-long get_target_dir_num();
+    long get_target_dir_num();
 #endif
 long get_target_file_num();
 
@@ -284,7 +285,7 @@ short shooting_get_flash_mode();
 /******************************************************************/
 int shooting_get_user_tv_id();
 #if defined(CAM_DRAW_EXPOSITION)
-char* shooting_get_tv_str();
+    char* shooting_get_tv_str();
 #endif
 short shooting_get_tv96_from_shutter_speed(float t);
 short shooting_get_tv96();
@@ -307,7 +308,7 @@ short shooting_get_max_aperture_sizes_table_prop_id();
 short shooting_get_aperture_from_av96(short av96);
 int shooting_get_user_av_id();
 #if defined(CAM_DRAW_EXPOSITION)
-char* shooting_get_av_str();
+    char* shooting_get_av_str();
 #endif
 void shooting_set_user_av_by_id(int v);
 short shooting_get_av96();
@@ -397,7 +398,7 @@ int shooting_set_mode_chdk(int mode);
 int shooting_set_mode_canon(int mode);
 
 // returns 0 if in play, nonzero if rec
-int rec_mode_active(void);
+int rec_mode_active(void); 
 
 // not used. Right now this is just to preserve code from earlier version of mode_get()
 // in case we want to check play/rec switch state in the future.
@@ -507,7 +508,7 @@ void set_ev_video(int);
 // new version to support DNG double buffer
 void reverse_bytes_order2(char* from, char* to, int count);
 // convert old version calls to new version (to minimise code changes)
-#define reverse_bytes_order(start, count) reverse_bytes_order2(start,start,count)
+#define reverse_bytes_order(start, count)   reverse_bytes_order2(start,start,count)
 void save_ext_for_dng(void);
 void change_ext_to_dng(void);
 void change_ext_to_default(void);
@@ -522,7 +523,6 @@ void  PostLogicalEventForNotPowerType(unsigned event, unsigned unk);
 void  PostLogicalEventToUI(unsigned event, unsigned unk);
 void  SetLogicalEventActive(unsigned event, unsigned state);
 void SetScriptMode(unsigned mode);
-
 /*
  call C function with argument list created at runtime.
  See lib/armutil/callfunc.S for documentation
@@ -537,7 +537,6 @@ int reboot(const char *bootfile);
 
 #define started() debug_led(1)
 #define finished() debug_led(0)
-
 
 #ifdef CAM_CHDK_PTP
 
@@ -610,7 +609,7 @@ extern void GetMemInfo(cam_meminfo*);
 extern int GetExMemInfo(cam_meminfo*);
 
 #ifdef OPT_EXMEM_MALLOC
-extern void exmem_malloc_init(void);
+    extern void exmem_malloc_init(void);
 #endif
 
 #ifdef CAM_TOUCHSCREEN_UI

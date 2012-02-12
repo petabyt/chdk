@@ -103,8 +103,8 @@
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1       // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                     // Used to enabled bracketing in custom timer, required on many recent cameras
                                                     // see http://chdk.setepontos.com/index.php/topic,3994.405.html
-	
-	#define CAM_DETECT_SCREEN_ERASE 1				// http://chdk.setepontos.com/index.php?topic=6705.msg71062#msg71062	
+
+    #define CAM_FIRMWARE_MEMINFO            1       // Use 'GetMemInfo' to get free memory size.
 
     #define CAM_USE_COLORED_ICONS               1       // Enable using the CHDK-DE colored icons.
 
