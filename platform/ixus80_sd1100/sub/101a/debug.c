@@ -43,6 +43,8 @@ void close_crash() {
 // see
 // OpLog.Get = OpLog.ReadFromROM, OpLog.WriteToSD
 //
+extern void _OpLog_WriteToSD(int);
+
 void assert_hook() {
 	asm volatile(
 		"stmdb sp!, {r0, r1} \n"

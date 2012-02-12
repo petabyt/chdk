@@ -205,6 +205,7 @@ void core_spytask() {
     gui_init();
 
 #if CAM_CONSOLE_LOG_ENABLED
+    extern void cam_console_init();
     cam_console_init();
 #endif
 

@@ -20,5 +20,6 @@ long lens_get_target_distance()
 //VERIFY_SD780 Only one arg?
 long OpLog_Get(long i)
 {
+    extern int _OpLog_Get(int);
 	return _OpLog_Get(i);
 }
