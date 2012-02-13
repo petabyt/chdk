@@ -8,11 +8,19 @@
 @default c 0
 @param d single: mode value
 @default d 0
+@param e mode change delay, ms
+@default e 10
 --]]
 action=a
 batchtype=b
 singletype=c
 reqmode=d
+
+function mode_change_delay()
+	if e ~= 0 then
+		sleep(e)
+	end
+end
 
 capmode=require("capmode")
 
@@ -156,8 +164,8 @@ function check_all_chdk()
 	for id,_ in ipairs(capmode.mode_to_name) do
 		if capmode.valid(id) or batchtype > 0 then
 			log_mode_change(id)
-			-- camera seems to handle mode change spam fine
-			--sleep(500)
+			-- some cameras require a delay
+			mode_change_delay()
 		end
 	end
 	log_mode_change(original_mode)
