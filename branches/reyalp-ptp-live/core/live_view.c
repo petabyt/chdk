@@ -39,7 +39,7 @@ static int live_view_core_info(ptp_data *data)
     // Send header structure (along with total size to be sent)
     data->send_data(data->handle,(char*)&details,sizeof(details),total_size,0,0,0);
 
-    return 0;
+    return total_size;
 }
 
 // Function used to get viewport, bitmap and palette data via PTP
@@ -119,7 +119,7 @@ int live_view_data_handler(ptp_data *data, int flags, int arg2)
         data->send_data(data->handle,vid_get_bitmap_active_palette(),vid_info.palette_buffer_size,0,0,0,0);
     }
 
-    return 0;
+    return total_size;
 }
 
 #endif
