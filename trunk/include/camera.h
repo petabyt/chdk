@@ -167,11 +167,12 @@
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-    #undef CAM_AV_OVERRIDE_IRIS_FIX             // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
+    #undef  CAM_AV_OVERRIDE_IRIS_FIX            // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
 
-    #undef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE    // For cameras with 'low light' mode that does not work with raw define this
-    #undef CAM_DISABLE_RAW_IN_HQ_BURST          // For cameras with 'HQ Burst' mode that does not work with raw define this
-    #undef CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
+    #undef  CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   // For cameras with 'low light' mode that does not work with raw define this
+    #undef  CAM_DISABLE_RAW_IN_HQ_BURST         // For cameras with 'HQ Burst' mode that does not work with raw define this
+    #undef  CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
+    #undef  CAM_ISO_LIMIT_IN_HQ_BURST           // Defines max ISO override value for HQ Burst mode (higher values crash camera)
     
     #undef  CAM_HAS_GPS                         // for cameras with GPS reseiver: includes the GPS coordinates in in DNG file
 
