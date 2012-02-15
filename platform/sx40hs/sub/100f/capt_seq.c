@@ -134,7 +134,6 @@ void __attribute__((naked,noinline)) capt_seq_task(){
 	        "LDR     R0, [R0,#0x10]\n"
 	        //"BL      sub_FF07C894\n"
 			"BL      sub_FF07C894_my\n"
-			"BL     capt_seq_hook_raw_here\n"   // +++->
 	        "B       loc_FF07C74C\n"
 	"loc_FF07C580:\n"
 	        "MOV     R0, #1\n"
@@ -339,6 +338,9 @@ void __attribute__((naked,noinline))  sub_FF07C894_my(){
 	        "MOV     R0, R5\n"
 	        //"BL      sub_FF1D557C\n"
 			"BL      sub_FF1D557C_my\n" // ----------->
+
+			"BL     capt_seq_hook_raw_here\n"   // +++->
+
 	        "MOV     R6, R0\n"
 	        "MOV     R2, R5\n"
 	        "MOV     R1, #1\n"

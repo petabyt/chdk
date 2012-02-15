@@ -286,7 +286,13 @@ const char * shooting_get_bracket_type()
 
 short shooting_get_iso_override_value()
 {
-    return conf.iso_override_value*koef[conf.iso_override_koef];
+    short iso = conf.iso_override_value*koef[conf.iso_override_koef];
+#ifdef CAM_ISO_LIMIT_IN_HQ_BURST
+    // Limit max ISO in HQ burst mode (also done in shooting_set_iso_real; but done here so OSD display value is correct)
+    if ((mode_get() & MODE_SHOOTING_MASK) == MODE_SCN_HIGHSPEED_BURST)
+        if (iso > CAM_ISO_LIMIT_IN_HQ_BURST) iso = CAM_ISO_LIMIT_IN_HQ_BURST;
+#endif
+    return iso;
 }
 
 short shooting_get_iso_bracket_value()
@@ -879,7 +885,14 @@ void shooting_set_iso_real(short iso, short is_now)
     if ((mode_get()&MODE_MASK) != MODE_PLAY)
     {
         if (iso>0)
+        {
+#ifdef CAM_ISO_LIMIT_IN_HQ_BURST
+            // Limit max ISO in HQ burst mode
+            if ((mode_get() & MODE_SHOOTING_MASK) == MODE_SCN_HIGHSPEED_BURST)
+                if (iso > CAM_ISO_LIMIT_IN_HQ_BURST) iso = CAM_ISO_LIMIT_IN_HQ_BURST;
+#endif
             shooting_set_sv96(shooting_get_sv96_from_iso(iso), is_now);
+        }
     }
 }
 
