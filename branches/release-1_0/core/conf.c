@@ -135,13 +135,16 @@ void clear_values()
 	 conf.subj_dist_bracket_koef=0;
 	}
      if (conf.clear_video)
- 	{
-	 conf.video_mode = 0;
-	 conf.video_quality = VIDEO_DEFAULT_QUALITY;
-	 conf.video_bitrate = VIDEO_DEFAULT_BITRATE;
-	 shooting_video_bitrate_change(conf.video_bitrate);
- 	}
- 	conf.edge_overlay_pano = 0; // reset it because otherwise this feature cant be used at startup (when buffer is empty) - needs workaround other than this!
+    {
+     conf.video_mode = 0;
+#if CAM_CHDK_HAS_EXT_VIDEO_TIME
+     conf.ext_video_time=0;
+#endif
+     conf.video_quality = VIDEO_DEFAULT_QUALITY;
+     conf.video_bitrate = VIDEO_DEFAULT_BITRATE;
+     shooting_video_bitrate_change(conf.video_bitrate);
+    }
+    conf.edge_overlay_pano = 0; // reset it because otherwise this feature cant be used at startup (when buffer is empty) - needs workaround other than this!
 }
 
 static const ConfInfo conf_info[] = {
@@ -677,6 +680,9 @@ void conf_restore() {
     ufree(buf);
     // clear any "clear on restart" values
     clear_values();
+#if CAM_CHDK_HAS_EXT_VIDEO_TIME
+    conf.ext_video_time=0;
+#endif
 }
 
 //-------------------------------------------------------------------

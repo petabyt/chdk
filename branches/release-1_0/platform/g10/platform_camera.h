@@ -51,11 +51,10 @@
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_HAS_JOGDIAL                 1
-    #undef  CAM_CONSOLE_LOG_ENABLED         			// Development: internal camera stdout -> A/stdout.txt
+
     #define CAM_BRACKETING                  1
     #define CAM_MULTIPART                   1
     #define CAM_EXT_TV_RANGE                1
-    #undef OPT_CURVES
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000  // G10 auto found @0xff828844
   
@@ -94,8 +93,6 @@
     #define CAM_ZEBRA_NOBUF                 1
     #undef ZEBRA_HMARGIN0
     #define ZEBRA_HMARGIN0                  30      //this 30 rows are not used by the display buffer is 720x240 effective, no 960x270, i.e. (270-240) reduction in widht possible but not done (more difficult to manage it and slower).
-	
-	#undef	CAM_DATE_FOLDER_NAMING					// not needed for G10
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1       // enable fix for camera crash at startup when opening the conf / font files
                                                     // see http://chdk.setepontos.com/index.php?topic=6179.0

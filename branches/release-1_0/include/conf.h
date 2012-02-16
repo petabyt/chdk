@@ -307,6 +307,7 @@ typedef struct {
 
 	// Enable USB icon
     int usb_info_enable; 
+    int ext_video_time;
 } Conf;
 
 extern Conf conf;

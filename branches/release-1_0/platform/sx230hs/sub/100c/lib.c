@@ -56,3 +56,24 @@ char *camera_jpeg_count_str()
 {
 	 return (void*)0xCE488;                                      
 }
+
+char *camera_jpeg_current_filename()
+{
+//	 return (void*)0xCA488;
+	 return (void*)0xCA818;
+}
+
+char * camera_jpeg_current_latitude()
+{
+	return (void*)0xCA890;
+}
+
+char * camera_jpeg_current_longitude()
+{
+	return (void*)0xCA8AC;
+}
+
+char * camera_jpeg_current_height()
+{
+	return (void*)0xCA668;
+}

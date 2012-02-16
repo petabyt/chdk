@@ -471,5 +471,3 @@ void wait_until_remote_button_is_released(void) {
     debug_led(0);
     asm volatile ("LDMFD SP!, {R0-R11,LR}\n");   // restore R0-R11 and LR from stack
 }
-
-
