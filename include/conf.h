@@ -320,6 +320,7 @@ typedef struct {
 	int remote_switch_type ;
 	int remote_control_mode ;
 
+    int ext_video_time;
 } Conf;
 
 extern Conf conf;

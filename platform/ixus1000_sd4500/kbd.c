@@ -309,7 +309,8 @@ long get_jogdial_direction(void) {
 static KeyMap keymap[] = {
 
    { 2, KEY_SHOOT_FULL   , 0x00002002 },  //
-        { 2, KEY_SHOOT_HALF   , 0x00002000 },  //  ok
+   { 2, KEY_SHOOT_FULL_ONLY, 0x00002001 },  //
+   { 2, KEY_SHOOT_HALF   , 0x00002000 },  //  ok
    { 1, KEY_UP               , 0x00000400 },  // ok
    { 1, KEY_DOWN           , 0x00020000 },  // ok
    { 1, KEY_LEFT           , 0x00008000 },  // ok

@@ -50,7 +50,6 @@
     #define CAM_CHDK_HAS_EXT_VIDEO_MENU   1 // In CHDK for this camera realized adjustable video compression
 
     #define CAM_HAS_IS                  1
-    #undef CAM_HAS_JOGDIAL
 
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1

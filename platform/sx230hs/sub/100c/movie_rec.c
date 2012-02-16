@@ -93,7 +93,9 @@ asm volatile (
                 "BL     sub_FF0453CC\n"
                 "B      loc_FF18D91C\n"
 "loc_FF18D8BC:\n"
-                "BL     sub_FF18CE08_my\n"
+//              "BL     sub_FF18CE08_my\n"
+                "BL     movie_time\n"
+"label_A:\n"
                 "B      loc_FF18D91C\n"
 "loc_FF18D8C4:\n"
                 "LDR    R1, [R4, #0xF0]\n"
@@ -136,6 +138,24 @@ asm volatile (
                 "BL     sub_FF02BAF4\n"
                 "B      loc_FF18D7E0\n"
     );
+}
+
+void __attribute__((naked,noinline)) movie_time(){
+if( (int)conf.ext_video_time == 1 )
+{
+asm volatile (
+                "BL     sub_FF18CE08_my\n"
+				"B		label_A\n"
+			 );
+}
+else
+{
+asm volatile (
+                "BL     sub_FF18CE08\n"
+				"B		label_A\n"
+			 );
+}
+
 }
 
 void __attribute__((naked,noinline)) sub_FF18CE08_my(){
@@ -413,7 +433,7 @@ asm volatile (
                 "LDR    R6, =0x1770\n"
                 "B      loc_FF305640\n"
 "loc_FF30565C:\n"
-//                "LDR    R6, =0x3A980\n"
+//              "LDR    R6, =0x3A980\n"
                 "LDR    R6, =0xFFFFFFFE\n"           //240fps video time limit 
                 "STR    R0, [R11, #0x12C]\n"
                 "MOV    R0, #0xF0\n"
@@ -460,7 +480,7 @@ asm volatile (
                 "BEQ    loc_FF305720\n"
                 "CMP    R0, #0x500\n"
                 "LDREQ  R0, =0x11DA50\n"
-//                "LDR    R1, =0x707\n"
+//              "LDR    R1, =0x707\n"
                 "LDR    R1, =0xFFE\n"                   //720p, 1080p video time limit 0xFFE(~68min)
                 "MOVEQ  R5, #4\n"
                 "STREQ  R0, [R11, #0xAC]\n"

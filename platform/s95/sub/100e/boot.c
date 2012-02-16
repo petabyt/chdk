@@ -5,11 +5,13 @@
 
 const char * const new_sa = &_end;
 
+
 // Forward declarations
 void CreateTask_PhySw();
 void CreateTask_spytask();
 extern volatile int jogdial_stopped;
 void JogDial_task_my(void);
+
 
 /*---------------------------------------------------------------------
   Memory Map:
@@ -30,7 +32,6 @@ void JogDial_task_my(void);
 	FF810000    ROMBASEADDR             start of rom
 	FFFFFFFF                            end of rom
 ----------------------------------------------------------------------*/
-
 
 
 /*----------------------------------------------------------------------

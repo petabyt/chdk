@@ -38,7 +38,6 @@
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_FEATURE_FEATHER             1
 
-    #define CAM_CONSOLE_LOG_ENABLED     1
     #undef  CAM_HAS_IS
     #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
 

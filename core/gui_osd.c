@@ -518,6 +518,12 @@ void gui_osd_draw_movie_time_left()
                     sprintf(osd_buf, "-%02d:%02d:%02d", hour, min, sec);
                     draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y+time_yofst, osd_buf, conf.osd_color);
                 }
+#if CAM_CHDK_HAS_EXT_VIDEO_TIME
+                if( (int)conf.ext_video_time == 1 )
+                {
+                    draw_txt_string(0, 13, lang_str(LANG_WARN_VIDEO_EXT_TIME), conf.osd_color_warn);
+                }		
+#endif
             }
 
             skipcalls = conf.show_movie_refresh*5;

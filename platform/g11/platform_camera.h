@@ -40,11 +40,9 @@
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_HAS_JOGDIAL                 1
-    #undef  CAM_CONSOLE_LOG_ENABLED         // Development: internal camera stdout -> A/stdout.txt
     #define CAM_BRACKETING                  1
     #define CAM_MULTIPART                   1
     #define CAM_EXT_TV_RANGE                1
-    #undef OPT_CURVES
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000  // G11 @FF888204(via ExMem.FreeCacheable)
 
@@ -72,7 +70,6 @@
     #define EDGE_HMARGIN                    20
 
     #define CAM_DNG_LENS_INFO               { 61,10, 305,10, 28,10, 45,10 } // See comments in camera.h
-	/**** From SX200IS, ok for G11 ?*/
     // pattern
     #define cam_CFAPattern                  0x02010100 // Red  Green  Green  Blue
     // color
@@ -83,15 +80,13 @@
     #define cam_CalibrationIlluminant1      17  // Standard Light A
 
     // cropping
-	//g11 values from Amit Talwar
     #define CAM_JPEG_WIDTH                  3648
     #define CAM_JPEG_HEIGHT                 2736
     #define CAM_ACTIVE_AREA_X1              16
     #define CAM_ACTIVE_AREA_Y1              8
     #define CAM_ACTIVE_AREA_X2              3692
     #define CAM_ACTIVE_AREA_Y2              2776
-	
-	/**** From SX200IS, ok for G11 END?*/
+
     #define CAM_ZEBRA_ASPECT_ADJUST         1
 
     #define CAM_DATE_FOLDER_NAMING          0x100 //Value found in the last function, which is called in GetImageFolder. (first compare)

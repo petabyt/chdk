@@ -37,8 +37,6 @@
     #undef  CAM_VIDEO_CONTROL
     #define CAM_EXT_TV_RANGE                1       // CHDK can make exposure time longer than 64s
 
-	#undef CAM_HAS_JOGDIAL
-
     #define CAM_DNG_LENS_INFO               { 62,10, 186,10, 28,10, 49,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern                  0x02010100 // Red  Green  Green  Blue
