@@ -597,6 +597,19 @@
 469 "ROM-Crash-Log konnte nicht gespeichert werden."
 470 "ROM-Crash-Log in A/ROMLOG.LOG gespeichert."
 
+471 "Schalter-Typ"
+472 "Kontrollart"
+473 "Optionen"
+
+474 "Text-Box-Einstellungen"
+475 "Auswahl Textbox Zeichensatz"
+476 "Mehr ->"
+477 "Erzeuge Verzeichnis"
+478 "Umbenennen"
+479 "Eingabe Verzeichnisname:"
+480 "Eingabe neuer Dateiname:"
+481 "Entferne Verzeichnis"
+
 482 "Aktuelle Benutzer-Kurve"
 483 "Tetris"
 484 "Zeige Partitions Nr."
