@@ -110,6 +110,9 @@ void clear_values()
     if (conf.clear_video)
     {
         conf.video_mode = 0;
+#if CAM_CHDK_HAS_EXT_VIDEO_TIME
+        conf.ext_video_time=0;
+#endif
         conf.video_quality = VIDEO_DEFAULT_QUALITY;
         conf.video_bitrate = VIDEO_DEFAULT_BITRATE;
         shooting_video_bitrate_change(conf.video_bitrate);
@@ -620,6 +623,9 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
     ufree(buf);
     // clear any "clear on restart" values
     clear_values();
+#if CAM_CHDK_HAS_EXT_VIDEO_TIME
+    conf.ext_video_time=0;
+#endif
 }
 
 void conf_restore()

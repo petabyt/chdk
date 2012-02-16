@@ -1,7 +1,7 @@
     .text
 
-#define DEF(n,a) \
-    .globl n; n = a
+#define DEF(name,addr) \
+    .globl name; name = addr
 
 #define NSTUB(name, addr)\
     .globl _##name ;\

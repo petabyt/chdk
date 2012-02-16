@@ -474,6 +474,9 @@ static CMenuItem video_submenu_items[] = {
       MENU_ITEM(0x5e,LANG_MENU_VIDEO_BITRATE,           MENUITEM_ENUM,    gui_video_bitrate_enum, 0 ),
 #endif
     MENU_ITEM(0x60,LANG_MENU_VIDEO_QUALITY,           MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.video_quality, MENU_MINMAX(1, 99) ),
+#if CAM_CHDK_HAS_EXT_VIDEO_TIME
+    MENU_ITEM   (0x5c,LANG_MENU_VIDEO_EXT_TIME,             MENUITEM_BOOL,          &conf.ext_video_time,               0 ),
+#endif
     MENU_ITEM(0x5c,LANG_MENU_CLEAR_VIDEO_VALUES,    MENUITEM_BOOL,    &conf.clear_video, 0 ),
 #endif
 #if CAM_VIDEO_CONTROL

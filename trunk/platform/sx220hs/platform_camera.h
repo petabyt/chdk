@@ -98,7 +98,8 @@
     #define CAM_ZEBRA_NOBUF                 1
 
     //#define CAM_QUALITY_OVERRIDE            1
-
+    #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
+    
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
     #undef  CAMERA_MIN_DIST

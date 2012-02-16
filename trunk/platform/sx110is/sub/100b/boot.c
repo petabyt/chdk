@@ -57,17 +57,6 @@ void CreateTask_spytask() {
 
 //jse
 
-//JS
-/* Boot method is still the old detour of original camera boot code as used since the first DryOS-ports...
-For some unknown reasons SX110 will not boot if CHDK starts with the original sequence at FFC0000C.
-If someone wants to check it: look at 
-"loc_FFC00154:\n"
-		"CMP 	R3, R1\n"
-		"STRCC 	R2, [R3],#4\n"
-		"BCC 	loc_FFC00154\n"
-
-		"B 	loc_FFC001A4_my\n"		// <------------------------------- changed
-*/
 void boot();
 
 void boot() { //#fs
