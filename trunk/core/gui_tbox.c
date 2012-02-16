@@ -83,6 +83,17 @@ cmap tbox_chars_default =
         {".,:;?!","@#$%^&","()[]{}","<>\"'`~"},
         {0}
     };
+
+cmap tbox_chars_german = 
+    {
+        {"ABCDEF","GHIJKL","MNOPQRS","TUVWXYZ"},
+        {"abcdef","ghijkl","mnopqrs","tuvwxyz"},
+        {"123","456","789","0+-=/"},
+        {".,:;?!","@#$%^&","()[]{}","<>\"'`~"},
+        {"ÄÖÜ","äöüß","€§µ","°²³"},
+        {0}
+    };
+
 cmap tbox_chars_russian =
     {
         {"ABCDEF","GKLHIJ","MNOPQRS","TUVWXYZ"},
@@ -94,7 +105,7 @@ cmap tbox_chars_russian =
         {0}
     };
 
-cmap *charmaps[] = { &tbox_chars_default, &tbox_chars_russian };
+cmap *charmaps[] = { &tbox_chars_default, &tbox_chars_german, &tbox_chars_russian };
 
 int lines = 0;                  // num of valid lines in active charmap
 
@@ -550,7 +561,7 @@ void gui_tbox_kbd_process()
 
 //-------------------------------------------------------------------
 
-static const char* gui_text_box_charmap[] = { "Default", "Russian" };
+static const char* gui_text_box_charmap[] = { "Default", "German", "Russian" };
 static CMenuItem textbox_submenu_items[] = {
     MENU_ENUM2(0x5f,LANG_MENU_VIS_CHARMAP,              &tconf.char_map, gui_text_box_charmap ),
     MENU_ITEM(0x51,LANG_MENU_BACK,                      MENUITEM_UP, 0, 0 ),
