@@ -452,7 +452,6 @@ void draw_filled_ellipse(coord xc, coord yc, unsigned int a, unsigned int b, col
         }
     }
 }
-
 //-------------------------------------------------------------------
     
 #if defined(CAM_USE_COLORED_ICONS)

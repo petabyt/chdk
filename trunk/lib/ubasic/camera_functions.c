@@ -360,6 +360,24 @@ short shooting_get_focus_mode()
     printf("*** shooting_get_focus_mode ***\n");
     return 0;
 }
+ 
+short shooting_get_focus_state()
+{
+    printf("*** shooting_get_focus_state ***\n");
+    return 0;
+}
+
+short shooting_get_focus_ok()
+{
+    printf("*** shooting_get_focus_ok ***\n");
+    return 0;
+}
+
+short shooting_get_min_stack_distance()
+{
+    printf("*** shooting_get_min_stack_distance ***\n");
+    return 77;
+}
 
 short shooting_get_iso_market()
 {

@@ -26,17 +26,11 @@ static int key_pressed;
 int shutter_int=0;
 extern int usb_remote_active ;
 
-#ifdef OPT_SCRIPTING
-// remote autostart
-void script_autostart()
+void enter_alt()
 {
     kbd_blocked = 1;
     gui_kbd_enter();
-    console_clear();
-    script_console_add_line("***Autostart***"); //lang_str(LANG_CONSOLE_TEXT_STARTED));
-    script_start_gui( 1 );
 }
-#endif
 
 void exit_alt()
 {
@@ -44,7 +38,18 @@ void exit_alt()
     gui_kbd_leave();
 }
 
-/*
+#ifdef OPT_SCRIPTING
+// remote autostart
+void script_autostart()
+{
+    enter_alt();
+    console_clear(); 
+    script_console_add_line("***Autostart***"); //lang_str(LANG_CONSOLE_TEXT_STARTED));
+    script_start_gui( 1 );
+}
+#endif
+
+/* 
     main kb processing
  */
 long kbd_process()
@@ -59,17 +64,17 @@ long kbd_process()
         if (kbd_is_key_pressed(conf.alt_mode_button)
                 || ((key_pressed >= CAM_EMUL_KEYPRESS_DELAY)
                 && (key_pressed < CAM_EMUL_KEYPRESS_DELAY+CAM_EMUL_KEYPRESS_DURATION))) {
-            if (key_pressed <= CAM_EMUL_KEYPRESS_DELAY+CAM_EMUL_KEYPRESS_DURATION)
+            if (key_pressed <= CAM_EMUL_KEYPRESS_DELAY+CAM_EMUL_KEYPRESS_DURATION) 
                 key_pressed++;
-            if (key_pressed == CAM_EMUL_KEYPRESS_DELAY)
+            if (key_pressed == CAM_EMUL_KEYPRESS_DELAY) 
                 kbd_key_press(conf.alt_mode_button);
-            else if (key_pressed == +CAM_EMUL_KEYPRESS_DELAY+CAM_EMUL_KEYPRESS_DURATION)
+            else if (key_pressed == +CAM_EMUL_KEYPRESS_DELAY+CAM_EMUL_KEYPRESS_DURATION) 
                 kbd_key_release(conf.alt_mode_button);
             return 1;
         } else if (kbd_get_pressed_key() == 0) {
             if (key_pressed != 100 && (key_pressed < CAM_EMUL_KEYPRESS_DELAY)) {
                 kbd_blocked = 1-kbd_blocked;
-                if (kbd_blocked)
+                if (kbd_blocked) 
                     gui_kbd_enter();
                 else
                     gui_kbd_leave();
@@ -79,16 +84,15 @@ long kbd_process()
         }
         return 1;
     }
-
+       
     // auto iso shift
-
-    if (kbd_is_key_pressed(KEY_SHOOT_HALF) && kbd_is_key_pressed(conf.alt_mode_button))
+    if (kbd_is_key_pressed(KEY_SHOOT_HALF) && kbd_is_key_pressed(conf.alt_mode_button)) 
         return 0;
 
     if (kbd_is_key_pressed(conf.alt_mode_button)) 
 	{
         key_pressed = 1;
-        kbd_key_release_all();
+        kbd_key_release_all();          
         return 1;
     }
 
@@ -122,7 +126,7 @@ long kbd_process()
 #ifdef OPT_LUA
             else if (L) {
                 state_kbd_script_run = 2;
-				lua_run_restore();
+                lua_run_restore();
                 script_console_add_line(lang_str(LANG_CONSOLE_TEXT_INTERRUPTED));
                 script_end();
             }
@@ -169,13 +173,13 @@ void kbd_set_block(int bEnableBlock) {
 
 long kbd_use_up_down_left_right_as_fast_switch() {
     static long key_pressed = 0; // ??? static masking a global
-    int m=mode_get();
+    int m=mode_get(); 
     int mode_video = MODE_IS_VIDEO(m) || (movie_status > 1);
     int ev_video=0;
     int jogdial;
 
 #if CAM_EV_IN_VIDEO
-    ev_video=get_ev_video_avail();
+    ev_video=get_ev_video_avail(); 
 #endif
 
     if (!(kbd_is_key_pressed(KEY_UP)) && !(kbd_is_key_pressed(KEY_DOWN))) key_pressed = 0;
@@ -190,11 +194,11 @@ long kbd_use_up_down_left_right_as_fast_switch() {
             shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()+(conf.fast_ev_step+1)*16);
             EnterToCompensationEVF();
             key_pressed = KEY_UP;
-
+                
             return 1;
         }
 
-    }
+    } 
 
     if (kbd_is_key_pressed(KEY_DOWN) && ((m&MODE_SHOOTING_MASK) != MODE_M) && !mode_video) {
         if (conf.fast_ev && key_pressed == 0) {
@@ -205,7 +209,7 @@ long kbd_use_up_down_left_right_as_fast_switch() {
             EnterToCompensationEVF();
             return 1;
         }
-    }
+    } 
 
 #else
     jogdial=get_jogdial_direction();
@@ -221,7 +225,7 @@ long kbd_use_up_down_left_right_as_fast_switch() {
             shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()-(conf.fast_ev_step+1)*16);
             EnterToCompensationEVF();
         }
-
+     
 
 #endif
 
@@ -232,21 +236,21 @@ long kbd_use_up_down_left_right_as_fast_switch() {
                 gui_video_bitrate_enum(1,0);
                 movie_reset = 1;
 #endif
-            }
+            }    
             else if (conf.video_mode==1) {
                 conf.video_quality+=1;
                 if (conf.video_quality>VIDEO_MAX_QUALITY)
                     conf.video_quality=VIDEO_MAX_QUALITY;
                 movie_reset = 1;
-            }
+            }              
             key_pressed = KEY_UP;
             return 1;
         }
-    }
-
+    } 
+    
     if (kbd_is_key_pressed(KEY_DOWN) && mode_video && movie_status == 4) {
         if (conf.fast_movie_quality_control && key_pressed == 0) {
-            if (conf.video_mode==0) {
+            if (conf.video_mode==0) {                
 #if !CAM_VIDEO_QUALITY_ONLY
                 conf.video_bitrate-=1;
                 if (conf.video_bitrate<0)
@@ -261,23 +265,23 @@ long kbd_use_up_down_left_right_as_fast_switch() {
                 if (conf.video_quality<1)
                     conf.video_quality=1;
                 movie_reset = 1;
-            }
+            }          
             key_pressed = KEY_DOWN;
             return 1;
         }
-    }
-
+    } 
+    
     if (kbd_is_key_pressed(KEY_LEFT) && mode_video && (movie_status == 4) && !ev_video) {
         if (conf.fast_movie_control && key_pressed == 0) {
             movie_status = VIDEO_RECORD_STOPPED;
             key_pressed = KEY_LEFT;
             return 1;
         }
-    }
+    } 
 	// reyalp - HACK for cams that can do video in any mode
 	// note that this means this will probably run whenever you press right
     if (kbd_is_key_pressed(KEY_RIGHT) &&
-#ifndef CAM_HAS_VIDEO_BUTTON
+#ifndef CAM_HAS_VIDEO_BUTTON 
             mode_video &&
 #endif
 	        (movie_status == 1) && !ev_video) {
@@ -288,7 +292,7 @@ long kbd_use_up_down_left_right_as_fast_switch() {
             key_pressed = KEY_RIGHT;
             return 1;
         }
-    }
+    } 
 
     return 0;
 }

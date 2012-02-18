@@ -81,6 +81,26 @@ int   shooting_get_exif_subject_dist()          { return shooting_get_prop_int(P
 int   shooting_is_flash()                       { return shooting_get_prop_int(PROPCASE_IS_FLASH_READY); }
 int   shooting_in_progress()                    { return shooting_get_prop_int(PROPCASE_SHOOTING); }
 
+short shooting_get_real_focus_mode()
+{
+    short f = shooting_get_focus_mode();
+    short m = shooting_get_prop(PROPCASE_REAL_FOCUS_MODE);
+    if (f==0 && m!=0) f=(m==1)?4:m;
+    return f;
+}
+
+short shooting_get_focus_state()
+{
+    if (shooting_get_focus_mode()==1) return -1;
+    int m = shooting_get_prop_int(PROPCASE_FOCUS_STATE);
+    return (short) m;
+}
+ 
+short shooting_get_focus_ok()
+{
+    return ((shooting_get_focus_state()!=0) && shooting_in_progress());
+}
+
 short shooting_get_user_tv96()
 {
 #if CAM_HAS_USER_TV_MODES

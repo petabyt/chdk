@@ -269,11 +269,31 @@ static int luaCB_set_curve_state( lua_State* L )
   int value;
   value=luaL_checknumber( L, 1 );
 
-  conf.curve_enable = value;
-  if ( libcurves && libcurves->curve_init_mode)
-		libcurves->curve_init_mode();
+  if ( libcurves && libcurves->curve_set_mode)
+		libcurves->curve_set_mode(value);
 
   return 0;
+}
+
+static int luaCB_get_curve_state( lua_State* L )
+{
+  lua_pushnumber(L,conf.curve_enable);
+  return 1;
+}
+
+static int luaCB_set_curve_file( lua_State* L )
+{
+  size_t l;
+  const char *s = luaL_checklstring(L, 1, &l);
+  if ( libcurves && libcurves->curve_set_file)
+		libcurves->curve_set_file(s);
+  return 0;
+}
+
+static int luaCB_get_curve_file( lua_State* L )
+{
+  lua_pushstring(L,conf.curve_file);
+  return 1;
 }
 #endif
 
@@ -320,7 +340,7 @@ static int luaCB_set_console_layout( lua_State* L )
 
 static int luaCB_set_console_autoredraw( lua_State* L )
 {
-  console_set_autoredraw(luaL_checknumber(L,1));
+  console_set_autoredraw(luaL_checknumber( L, 1 ));
   return 0;
 }
 
@@ -1033,6 +1053,12 @@ static int luaCB_get_usb_power( lua_State* L )
   return 1;
 }
 
+static int luaCB_enter_alt( lua_State* L )
+{
+  enter_alt();
+  return 0;
+}
+
 static int luaCB_exit_alt( lua_State* L )
 {
   exit_alt();
@@ -1097,7 +1123,19 @@ static int luaCB_get_drive_mode( lua_State* L )
 
 static int luaCB_get_focus_mode( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_focus_mode() );
+  lua_pushnumber( L, shooting_get_real_focus_mode() );
+  return 1;
+}
+
+static int luaCB_get_focus_state( lua_State* L )
+{
+  lua_pushnumber( L, shooting_get_focus_state() );
+  return 1;
+}
+
+static int luaCB_get_focus_ok( lua_State* L )
+{
+  lua_pushnumber( L, shooting_get_focus_ok() );
   return 1;
 }
 
@@ -1230,7 +1268,6 @@ static int luaCB_get_time( lua_State* L )
   lua_pushnumber( L, r );
   return 1;
 }
-
 /*
   val=peek(address[,size])
   return the value found at address in memory, or nil if address or size is invalid
@@ -2040,6 +2077,15 @@ static int luaCB_set_config_value( lua_State* L ) {
     } else lua_pushboolean(L, 0);
     return 1;
 }
+
+static int luaCB_set_file_attributes( lua_State* L ) {
+    unsigned int argc = lua_gettop(L);
+    if( argc>=2 ) {
+        lua_pushnumber(L, SetFileAttributes(luaL_checkstring(L, 1), luaL_checknumber(L, 2)));
+    }
+    return 1;
+}
+
 #ifdef CAM_CHDK_PTP
 /*
 msg = read_usb_msg([timeout])
@@ -2203,180 +2249,183 @@ static void register_func( lua_State* L, const char *name, void *func) {
 
 #define FUNC( X ) { #X,	luaCB_##X },
 static const luaL_Reg chdk_funcs[] = {
-  FUNC(shoot)
-  FUNC(sleep)
-  FUNC(cls)
-  FUNC(set_console_layout)
-  FUNC(set_console_autoredraw)
-  FUNC(console_redraw)
-  FUNC(get_av96)
-  FUNC(get_av96)
-  FUNC(get_bv96)
-  FUNC(get_day_seconds)
-  FUNC(get_disk_size)
+    FUNC(shoot)
+    FUNC(sleep)
+    FUNC(cls)
+    FUNC(set_console_layout)
+    FUNC(set_console_autoredraw)
+    FUNC(console_redraw)
+    FUNC(get_av96)
+    FUNC(get_bv96)
+    FUNC(get_day_seconds)
+    FUNC(get_disk_size)
   FUNC(get_dof)
   FUNC(get_far_limit)
-  FUNC(get_free_disk_space)
-  FUNC(get_focus)
-  FUNC(get_hyp_dist)
-  FUNC(get_iso_market)
-  FUNC(get_iso_mode)
-  FUNC(get_iso_real)
-  FUNC(get_jpg_count)
-  FUNC(get_near_limit)
-  FUNC(get_prop)
-  FUNC(get_prop_str)
-  FUNC(get_raw_count)
-  FUNC(get_raw_nr)
-  FUNC(get_raw)
-  FUNC(get_sv96)
-  FUNC(get_tick_count)
-  FUNC(get_tv96)
-  FUNC(get_user_av_id)
-  FUNC(get_user_av96)
-  FUNC(get_user_tv_id)
-  FUNC(get_user_tv96)
-  FUNC(get_vbatt)
-  FUNC(get_zoom)
-  FUNC(get_exp_count)
-  FUNC(get_flash_params_count)
-  FUNC(get_parameter_data)
+    FUNC(get_free_disk_space)
+    FUNC(get_focus)
+    FUNC(get_hyp_dist)
+    FUNC(get_iso_market)
+    FUNC(get_iso_mode)
+    FUNC(get_iso_real)
+    FUNC(get_jpg_count)
+    FUNC(get_near_limit)
+    FUNC(get_prop)
+    FUNC(get_prop_str)
+    FUNC(get_raw_count)
+    FUNC(get_raw_nr)
+    FUNC(get_raw)
+    FUNC(get_sv96)
+    FUNC(get_tick_count)
+    FUNC(get_tv96)
+    FUNC(get_user_av_id)
+    FUNC(get_user_av96)
+    FUNC(get_user_tv_id)
+    FUNC(get_user_tv96)
+    FUNC(get_vbatt)
+    FUNC(get_zoom)
+    FUNC(get_exp_count)
+    FUNC(get_flash_params_count)
+    FUNC(get_parameter_data)
 
-  FUNC(set_av96_direct)
-  FUNC(set_av96)
-  FUNC(set_focus)
-  FUNC(set_iso_mode)
-  FUNC(set_iso_real)
-  FUNC(set_led)
-  FUNC(set_nd_filter)
-  FUNC(set_prop)
-  FUNC(set_prop_str)
-  FUNC(set_raw_nr)
-  FUNC(set_raw)
-  FUNC(set_sv96)
-  FUNC(set_tv96_direct)
-  FUNC(set_tv96)
-  FUNC(set_user_av_by_id_rel)
-  FUNC(set_user_av_by_id)
-  FUNC(set_user_av96)
-  FUNC(set_user_tv_by_id_rel)
-  FUNC(set_user_tv_by_id)
-  FUNC(set_user_tv96)
-  FUNC(set_zoom_speed)
-  FUNC(set_zoom_rel)
-  FUNC(set_zoom)
+    FUNC(set_av96_direct)
+    FUNC(set_av96)
+    FUNC(set_focus)
+    FUNC(set_iso_mode)
+    FUNC(set_iso_real)
+    FUNC(set_led)
+    FUNC(set_nd_filter)
+    FUNC(set_prop)
+    FUNC(set_prop_str)
+    FUNC(set_raw_nr)
+    FUNC(set_raw)
+    FUNC(set_sv96)
+    FUNC(set_tv96_direct)
+    FUNC(set_tv96)
+    FUNC(set_user_av_by_id_rel)
+    FUNC(set_user_av_by_id)
+    FUNC(set_user_av96)
+    FUNC(set_user_tv_by_id_rel)
+    FUNC(set_user_tv_by_id)
+    FUNC(set_user_tv96)
+    FUNC(set_zoom_speed)
+    FUNC(set_zoom_rel)
+    FUNC(set_zoom)
 
-  FUNC(wait_click)
-  FUNC(is_pressed)
-  FUNC(is_key)
+    FUNC(wait_click)
+    FUNC(is_pressed)
+    FUNC(is_key)
 #ifdef CAM_HAS_JOGDIAL
-  FUNC(wheel_right)
-  FUNC(wheel_left)
+    FUNC(wheel_right)
+    FUNC(wheel_left)
 #endif
-  FUNC(md_get_cell_diff)
-  FUNC(md_detect_motion)
-  FUNC(autostarted)
-  FUNC(get_autostart)
-  FUNC(set_autostart)
-  FUNC(get_usb_power)
-  FUNC(exit_alt)
-  FUNC(shut_down)
-  FUNC(print_screen)
+    FUNC(md_get_cell_diff)
+    FUNC(md_detect_motion)
+    FUNC(autostarted)
+    FUNC(get_autostart)
+    FUNC(set_autostart)
+    FUNC(get_usb_power)
+    FUNC(enter_alt)
+    FUNC(exit_alt)
+    FUNC(shut_down)
+    FUNC(print_screen)
 
-  FUNC(get_focus_mode)
-  FUNC(get_propset)
-  FUNC(get_zoom_steps)
-  FUNC(get_drive_mode)
-  FUNC(get_flash_mode)
-  FUNC(get_shooting)
-  FUNC(get_flash_ready)
-  FUNC(get_IS_mode)
-  FUNC(set_ev)
-  FUNC(get_ev)
-  FUNC(get_orientation_sensor)
-  FUNC(get_nd_present)
-  FUNC(get_movie_status)
-  FUNC(set_movie_status)
-  
-  FUNC(get_histo_range)
-  FUNC(shot_histo_enable)
-  FUNC(play_sound)
-  FUNC(get_temperature)
-  FUNC(peek)
-  FUNC(poke)
-  FUNC(bitand)
-  FUNC(bitor)
-  FUNC(bitxor)
-  FUNC(bitshl)
-  FUNC(bitshri)
-  FUNC(bitshru)
-  FUNC(bitnot)
+    FUNC(get_focus_mode)
+    FUNC(get_focus_state)
+    FUNC(get_focus_ok)
+    FUNC(get_propset)
+    FUNC(get_zoom_steps)
+    FUNC(get_drive_mode)
+    FUNC(get_flash_mode)
+    FUNC(get_shooting)
+    FUNC(get_flash_ready)
+    FUNC(get_IS_mode)
+    FUNC(set_ev)
+    FUNC(get_ev)
+    FUNC(get_orientation_sensor)
+    FUNC(get_nd_present)
+    FUNC(get_movie_status)
+    FUNC(set_movie_status)
+ 
+    FUNC(get_histo_range)
+    FUNC(shot_histo_enable)
+    FUNC(play_sound)
+    FUNC(get_temperature)
+    FUNC(peek)
+    FUNC(poke)
+    FUNC(bitand)
+    FUNC(bitor)
+    FUNC(bitxor)
+    FUNC(bitshl)
+    FUNC(bitshri)
+    FUNC(bitshru)
+    FUNC(bitnot)
 
-  FUNC(get_time)
+    FUNC(get_time)
 
-  FUNC(get_buildinfo)
-  FUNC(get_mode)
-  
-  FUNC(set_raw_develop)
-  // NOTE these functions normally run in the spytask.
-  // called from lua they will run from kbd task instead
-  FUNC(raw_merge_start)
-  FUNC(raw_merge_add_file)
-  FUNC(raw_merge_end)
-  FUNC(set_backlight)
-   FUNC(set_aflock)
+    FUNC(get_buildinfo)
+    FUNC(get_mode)
+
+    FUNC(set_raw_develop)
+    // NOTE these functions normally run in the spytask.
+    // called from lua they will run from kbd task instead
+    FUNC(raw_merge_start)
+    FUNC(raw_merge_add_file)
+    FUNC(raw_merge_end)
+    FUNC(set_backlight)
+    FUNC(set_aflock)
 #ifdef OPT_CURVES
-   FUNC(set_curve_state)
+    FUNC(set_curve_state)
+    FUNC(get_curve_state)
+    FUNC(set_curve_file)
+    FUNC(get_curve_file)
 #endif
-// get levent definition by name or id, nil if not found
-   FUNC(get_levent_def)
-// get levent definition by index, nil if out of range
-   FUNC(get_levent_def_by_index)
-// get levent index from name or ID
-   FUNC(get_levent_index)
-   FUNC(post_levent_to_ui)
-   FUNC(post_levent_for_npt)
-   FUNC(set_levent_active)
-   FUNC(set_levent_script_mode)
+    // get levent definition by name or id, nil if not found
+    FUNC(get_levent_def)
+    // get levent definition by index, nil if out of range
+    FUNC(get_levent_def_by_index)
+    // get levent index from name or ID
+    FUNC(get_levent_index)
+    FUNC(post_levent_to_ui)
+    FUNC(post_levent_for_npt)
+    FUNC(set_levent_active)
+    FUNC(set_levent_script_mode)
 
-   FUNC(set_capture_mode)
-   FUNC(set_capture_mode_canon)
-   FUNC(is_capture_mode_valid)
+    FUNC(set_capture_mode)
+    FUNC(set_capture_mode_canon)
+    FUNC(is_capture_mode_valid)
 
-   FUNC(set_record)
-   FUNC(switch_mode_usb)
+    FUNC(set_record)
+
+    FUNC(switch_mode_usb)
 #ifdef CAM_CHDK_PTP
    FUNC(get_video_details)
 #endif
 
 #ifdef OPT_LUA_CALL_NATIVE
-   FUNC(call_event_proc)
-   FUNC(call_func_ptr)
+    FUNC(call_event_proc)
+    FUNC(call_func_ptr)
 #endif
-   FUNC(reboot)
-   FUNC(get_config_value)
-   FUNC(set_config_value)
+    FUNC(reboot)
+    FUNC(get_config_value)
+    FUNC(set_config_value)
+    FUNC(set_file_attributes)
+    FUNC(get_meminfo)
+    FUNC(file_browser)
+    FUNC(textbox)
+    FUNC(draw_pixel)
+    FUNC(draw_line)
+    FUNC(draw_rect)
+    FUNC(draw_rect_filled)
+    FUNC(draw_ellipse)
+    FUNC(draw_ellipse_filled)
+    FUNC(draw_clear)
+    FUNC(draw_string)
+    FUNC(set_yield)
 #ifdef CAM_CHDK_PTP
-   FUNC(read_usb_msg)
-   FUNC(write_usb_msg)
+    FUNC(read_usb_msg)
+    FUNC(write_usb_msg)
 #endif
-   FUNC(get_meminfo)
-
-   FUNC(file_browser)
-   FUNC(textbox)
-   
-   FUNC(draw_pixel)
-   FUNC(draw_line)
-   FUNC(draw_rect)
-   FUNC(draw_rect_filled)
-   FUNC(draw_ellipse)
-   FUNC(draw_ellipse_filled)
-   FUNC(draw_clear)
-   FUNC(draw_string)
-
-   FUNC(set_yield)
-
-  {NULL, NULL},
+    {NULL, NULL},
 };
 
 void register_lua_funcs( lua_State* L )
