@@ -40,25 +40,48 @@ int shutter_int=0;
 static int nFirst=1;
 #endif
 
-#if defined(CAMERA_a450) || defined(CAMERA_ixus50_sd400) || defined(CAMERA_ixusizoom_sd30) || \
-	defined(CAMERA_ixus40_sd300) || defined(CAMERA_ixus55_sd450) || defined(CAMERA_ixus60_sd600) || \
-	defined(CAMERA_ixus65_sd630) || defined(CAMERA_ixus70_sd1000) || defined(CAMERA_ixus700_sd500) || \
-	defined(CAMERA_ixus750_sd550) || defined(CAMERA_ixus850_sd800) || defined(CAMERA_ixus900_sd900) || \
-	defined(CAMERA_ixus75_sd750) || defined(CAMERA_a470) || defined(CAMERA_ixus90_sd790) || \
-	defined(CAMERA_ixus100_sd780) || defined(CAMERA_ixus120_sd940) || defined(CAMERA_a480) || \
-	defined(CAMERA_a495) || defined(CAMERA_a490) || defined(CAMERA_d10) || defined(CAMERA_ixus85_sd770) || \
-	defined(CAMERA_ixus95_sd1200) || defined(CAMERA_ixus300_sd4000) || \
-	defined(CAMERA_a410) || defined(CAMERA_ixus1000_sd4500)
+#if defined(CAMERA_a450) || \
+    defined(CAMERA_ixus50_sd400) || \
+    defined(CAMERA_ixusizoom_sd30) || \
+    defined(CAMERA_ixus40_sd300) || \
+    defined(CAMERA_ixus55_sd450) || \
+    defined(CAMERA_ixus60_sd600) || \
+    defined(CAMERA_ixus65_sd630) || \
+    defined(CAMERA_ixus70_sd1000) || \
+    defined(CAMERA_ixus700_sd500) || \
+    defined(CAMERA_ixus750_sd550) || \
+    defined(CAMERA_ixus850_sd800) || \
+    defined(CAMERA_ixus900_sd900) || \
+    defined(CAMERA_ixus75_sd750) || \
+    defined(CAMERA_a470) || \
+    defined(CAMERA_ixus90_sd790) || \
+    defined(CAMERA_ixus100_sd780) || \
+    defined(CAMERA_ixus120_sd940) || \
+    defined(CAMERA_a480) || \
+    defined(CAMERA_d10) || \
+    defined(CAMERA_ixus85_sd770) || \
+    defined(CAMERA_ixus95_sd1200) || \
+    defined(CAMERA_a495) || \
+    defined(CAMERA_a490) || \
+    defined(CAMERA_ixus300_sd4000) || \
+    defined(CAMERA_a410) || \
+    defined(CAMERA_ixus1000_sd4500)
 #define ZSTEP_TABLE_SIZE 7
 static int nTxtbl[]={0,1,2,3,4,5,6};    // remote zoom steps (we need a distinct number of steps, even if the camera zooms smoothly)
 #endif
 
-#if defined(CAMERA_s2is) || defined(CAMERA_s3is) || defined(CAMERA_s5is) || defined(CAMERA_sx10) || defined(CAMERA_sx1)  || defined(CAMERA_sx20)
+#if defined(CAMERA_s2is) || \
+    defined(CAMERA_s3is) || \
+    defined(CAMERA_s5is) || \
+    defined(CAMERA_sx10) || \
+    defined(CAMERA_sx1) || \
+    defined(CAMERA_sx20)
 #define ZSTEP_TABLE_SIZE 8
 static int nTxtbl[]={0,11,25,41,64,86,105,128};
 #endif
 
-#if defined(CAMERA_sx30) || defined(CAMERA_sx40hs)
+#if defined(CAMERA_sx30) || \
+    defined(CAMERA_sx40hs)
 #define ZSTEP_TABLE_SIZE 11
 static int nTxtbl[]={0,20,40,60,80,100,120,140,160,180,200};
 #endif
@@ -68,31 +91,56 @@ static int nTxtbl[]={0,20,40,60,80,100,120,140,160,180,200};
 static int nTxtbl[]={0,18,43,55,76,93,113,124};
 #endif
 
-#if defined(CAMERA_a430) || defined(CAMERA_a460) || defined(CAMERA_a530) || defined (CAMERA_a540) || \
-	defined(CAMERA_a550) || defined(CAMERA_a560) || defined(CAMERA_a570) || defined(CAMERA_a580) || defined(CAMERA_a590) || \
-	defined(CAMERA_ixus860_sd870) || defined(CAMERA_ixus960_sd950) || defined(CAMERA_ixus80_sd1100) || \
-	defined(CAMERA_ixus970_sd890) || defined(CAMERA_ixus980_sd990) || defined(CAMERA_a1100) || defined(CAMERA_a3000)|| defined(CAMERA_a3300)
+#if defined(CAMERA_a430) || \
+    defined(CAMERA_a460) || \
+    defined(CAMERA_a530) || \
+    defined (CAMERA_a540) || \
+    defined(CAMERA_a550) || \
+    defined(CAMERA_a560) || \
+    defined(CAMERA_a570) || \
+    defined(CAMERA_a580) || \
+    defined(CAMERA_a590) || \
+    defined(CAMERA_ixus860_sd870) || \
+    defined(CAMERA_ixus960_sd950) || \
+    defined(CAMERA_ixus80_sd1100) || \
+    defined(CAMERA_ixus970_sd890) || \
+    defined(CAMERA_ixus980_sd990) || \
+    defined(CAMERA_a1100) || \
+    defined(CAMERA_a3000) || \
+    defined(CAMERA_a3300)
 #define ZSTEP_TABLE_SIZE 8
 static int nTxtbl[]={0,1,2,3,4,5,6,7};
 #endif
 
-
-#if defined(CAMERA_a610) ||  defined(CAMERA_a620) || defined(CAMERA_a630) || defined(CAMERA_a640) || defined(CAMERA_ixus800_sd700) || defined(CAMERA_ixus950_sd850)
+#if defined(CAMERA_a610) || \
+    defined(CAMERA_a620) || \
+    defined(CAMERA_a630) || \
+    defined(CAMERA_a640) || \
+    defined(CAMERA_ixus800_sd700) || \
+    defined(CAMERA_ixus950_sd850)
 #define ZSTEP_TABLE_SIZE 9
 static int nTxtbl[]={0,1,2,3,4,5,6,7,8};
 #endif
 
-#if defined (CAMERA_a700) || defined(CAMERA_a710) || defined (CAMERA_a720) || defined (CAMERA_a1000) || defined (CAMERA_a2000)
+#if defined(CAMERA_a700) || \
+    defined(CAMERA_a710) || \
+    defined (CAMERA_a720) || \
+    defined (CAMERA_a1000) || \
+    defined (CAMERA_a2000) 
 #define ZSTEP_TABLE_SIZE 8
 static int nTxtbl[]={0,2,4,6,8,10,12,14};
 #endif
 
-#if defined(CAMERA_a650) || defined(CAMERA_g7) || defined(CAMERA_g9)
+#if defined(CAMERA_a650) || \
+    defined(CAMERA_g7) || \
+    defined(CAMERA_g9)
 #define ZSTEP_TABLE_SIZE 8
 static int nTxtbl[]={0,2,4,6,8,10,12,13};
 #endif
 
-#if defined(CAMERA_sx100is) || defined(CAMERA_sx110is) || defined(CAMERA_sx120is)
+#if defined(CAMERA_sx100is) || \
+    defined(CAMERA_sx110is) || \
+    defined(CAMERA_sx120is)
 #define ZSTEP_TABLE_SIZE 8
 static int nTxtbl[]={0,3,6,9,13,16,20,23};
 #endif
@@ -102,12 +150,20 @@ static int nTxtbl[]={0,3,6,9,13,16,20,23};
 static int nTxtbl[]={0,1,2,3,4,5,6,7,8,9};
 #endif
 
-#if defined(CAMERA_sx200is) || defined(CAMERA_sx130is) || defined(CAMERA_sx150is) || defined(CAMERA_sx220hs) || defined(CAMERA_sx230hs) || defined(CAMERA_ixus220_elph300hs) || defined(CAMERA_ixus230_elph310hs)
+#if defined(CAMERA_sx200is) || \
+    defined (CAMERA_sx130is) || \
+    defined(CAMERA_sx150is) || \
+    defined(CAMERA_sx220hs) || \
+    defined(CAMERA_sx230hs) || \
+    defined(CAMERA_ixus220_elph300hs) || \
+    defined(CAMERA_ixus230_elph310hs)
 #define ZSTEP_TABLE_SIZE 7
 static int nTxtbl[]={0,16,32,62,78,102,125};
 #endif
 
-#if defined(CAMERA_g10) || defined(CAMERA_g11) || defined(CAMERA_g12)
+#if defined(CAMERA_g10) || \
+    defined(CAMERA_g11) || \
+    defined(CAMERA_g12)
 #define ZSTEP_TABLE_SIZE 14
 static int nTxtbl[]={0,1,2,3,4,5,6,7,8,9,10,11,12,13};
 #endif
@@ -117,29 +173,35 @@ static int nTxtbl[]={0,1,2,3,4,5,6,7,8,9,10,11,12,13};
 static int nTxtbl[]={0,8,16,24,32,40,48,56,64};
 #endif
 
-#if defined(CAMERA_s90) || defined(CAMERA_s95)
+#if defined(CAMERA_s90) || \
+    defined(CAMERA_s95)
 #define ZSTEP_TABLE_SIZE 10
 static int nTxtbl[]={0,1,2,3,4,5,6,7,8,9};
 #endif
 // ------ add by Masuji SUTO (end)   --------------
 
-#ifdef OPT_SCRIPTING
-// remote autostart
-void script_autostart()
+void enter_alt()
 {
     kbd_blocked = 1;
     gui_kbd_enter();
-    console_clear();
-    script_console_add_line("***Autostart***"); //lang_str(LANG_CONSOLE_TEXT_STARTED));
-    script_start_gui( 1 );
 }
-#endif
 
 void exit_alt()
 {
     kbd_blocked = 0;
     gui_kbd_leave();
 }
+
+#ifdef OPT_SCRIPTING
+// remote autostart
+void script_autostart()
+{
+    enter_alt();
+    console_clear(); 
+    script_console_add_line("***Autostart***"); //lang_str(LANG_CONSOLE_TEXT_STARTED));
+    script_start_gui( 1 );
+}
+#endif
 
 // ------ add by Masuji SUTO (start) --------------
 void set_key_press(int nSet)
@@ -155,7 +217,7 @@ static int remoteHalfShutter=0, remoteFullShutter=0, remoteShooting=0, remoteCli
 #define REMOTE_MAX_CLICK_LENGTH	50
 /*-------------------- Alex scriptless remote additions end ---------------------*/
 
-/*
+/* 
     main kb processing
     this monster needs to be broken up and documented, remote stuff should go in it's own functions
 */
@@ -183,17 +245,17 @@ long kbd_process()
         if (kbd_is_key_pressed(conf.alt_mode_button)
                 || ((key_pressed >= CAM_EMUL_KEYPRESS_DELAY)
                 && (key_pressed < CAM_EMUL_KEYPRESS_DELAY+CAM_EMUL_KEYPRESS_DURATION))) {
-            if (key_pressed <= CAM_EMUL_KEYPRESS_DELAY+CAM_EMUL_KEYPRESS_DURATION)
+            if (key_pressed <= CAM_EMUL_KEYPRESS_DELAY+CAM_EMUL_KEYPRESS_DURATION) 
                 key_pressed++;
-            if (key_pressed == CAM_EMUL_KEYPRESS_DELAY)
+            if (key_pressed == CAM_EMUL_KEYPRESS_DELAY) 
                 kbd_key_press(conf.alt_mode_button);
-            else if (key_pressed == +CAM_EMUL_KEYPRESS_DELAY+CAM_EMUL_KEYPRESS_DURATION)
+            else if (key_pressed == +CAM_EMUL_KEYPRESS_DELAY+CAM_EMUL_KEYPRESS_DURATION) 
                 kbd_key_release(conf.alt_mode_button);
             return 1;
         } else if (kbd_get_pressed_key() == 0) {
             if (key_pressed != 100 && (key_pressed < CAM_EMUL_KEYPRESS_DELAY)) {
                 kbd_blocked = 1-kbd_blocked;
-                if (kbd_blocked)
+                if (kbd_blocked) 
                     gui_kbd_enter();
                 else
                     gui_kbd_leave();
@@ -203,16 +265,16 @@ long kbd_process()
         }
         return 1;
     }
-
+       
     // auto iso shift
-    if (kbd_is_key_pressed(KEY_SHOOT_HALF) && kbd_is_key_pressed(conf.alt_mode_button))
+    if (kbd_is_key_pressed(KEY_SHOOT_HALF) && kbd_is_key_pressed(conf.alt_mode_button)) 
         return 0;
 
     if (kbd_is_key_pressed(conf.alt_mode_button)) {
         if (conf.ricoh_ca1_mode && conf.remote_enable)
             conf.synch_enable=1;
         key_pressed = 1;
-        kbd_key_release_all();
+        kbd_key_release_all();          
         return 1;
     }
 
@@ -277,7 +339,7 @@ long kbd_process()
 #ifdef OPT_LUA
             else if (L) {
                 state_kbd_script_run = 2;
-				lua_run_restore();
+                lua_run_restore();
                 script_console_add_line(lang_str(LANG_CONSOLE_TEXT_INTERRUPTED));
                 script_end();
             }
@@ -311,14 +373,14 @@ long kbd_process()
                     nSW=1;
                     nWt=10;
                     kbd_key_release_all();
-                    kbd_key_press(KEY_SHOOT_HALF);
+                    kbd_key_press(KEY_SHOOT_HALF); 
                     soft_half_press = 1;
                     set_key_press(1);
                     return 1;
                 } else if(nSW==1) {
                     nSW=2;
                     nWt=10;
-                    kbd_key_release(KEY_SHOOT_HALF);
+                    kbd_key_release(KEY_SHOOT_HALF); 
                     soft_half_press = 0;
                     set_key_press(1);
                     return 1;
@@ -338,7 +400,7 @@ long kbd_process()
                 nTxzoom=0;
                 nReczoom=0;
                 nTxvideo=0;
-//              debug_led(0);
+//                debug_led(0);
             }
             if (mplay && (kbd_is_key_pressed(KEY_LEFT) || kbd_is_key_pressed(KEY_RIGHT))) {
                 nPlyname=KEY_LEFT;
@@ -352,9 +414,9 @@ long kbd_process()
                 nTxvideo++;
                 if(nTxvideo<50) {
                     kbd_key_release_all();
-//                  debug_led(1);
+//                    debug_led(1);
                 } else {
-//                  debug_led(0);
+//                    debug_led(0);
                     return 0;
                 }
                 return 1;
@@ -379,9 +441,9 @@ long kbd_process()
                 }
                 if(nTxzoom<50) {
                     kbd_key_release_all();
-//                  debug_led(1);
+//                    debug_led(1);
                 } else {
-//                  debug_led(0);
+//                    debug_led(0);
                     return 0;
                 }
                 return 1;
@@ -392,7 +454,7 @@ long kbd_process()
                     if(nTxzoom>0) {
                         nTxzoom=0;
                         nReczoom=0;
-//                      debug_led(0);
+//                        debug_led(0);
                     }
                     nCount2=0;
                 }
@@ -446,7 +508,7 @@ long kbd_process()
                     nSW=0;
                     nCa=0;
                     return 1;
-                }
+                }                                       
                 if(nSW==109) {
 //                  nSW=110;
                     nCER=0;
@@ -487,7 +549,7 @@ long kbd_process()
                     nSW=110;
                     nWt=2;
                     kbd_key_release_all();
-                    kbd_key_press(KEY_SHOOT_HALF);
+                    kbd_key_press(KEY_SHOOT_HALF); 
 //                  key_pressed = 1;
 //                  kbd_blocked = 1;
 //                  nRmt=1;
@@ -512,7 +574,7 @@ long kbd_process()
                             return 1;
                         }
                     }
-                    if(nReczoom==0 && ((nTxzname==KEY_ZOOM_IN && nCrzpos>=nTxtbl[nTxtblcr])
+                    if(nReczoom==0 && ((nTxzname==KEY_ZOOM_IN && nCrzpos>=nTxtbl[nTxtblcr]) 
                             || (nTxzname==KEY_ZOOM_OUT && nCrzpos<=nTxtbl[nTxtblcr]))) {
                         if(get_usb_power(1)) {
                             i=1;
@@ -541,7 +603,7 @@ long kbd_process()
                         return 1;
                     }
                     kbd_key_release_all();
-                    kbd_key_press(nTxzname);
+                    kbd_key_press(nTxzname); 
                     set_key_press(1);
                     nCER++;
                     return 1;
@@ -569,7 +631,7 @@ long kbd_process()
                     nSW=0;
                     nCa=0;
                     nTxvideo=0;
-//                  debug_led(0);
+//                    debug_led(0);
                     return 1;
                 }
 
@@ -614,7 +676,7 @@ long kbd_process()
                 }
                 if(nTxzoom>0 && nSW==120 && conf.remote_zoom_enable) {
                     nCrzpos=lens_get_zoom_point();
-                    if((nTxzname==KEY_ZOOM_IN && nCrzpos<=nTxtbl[nTxtblcr])
+                    if((nTxzname==KEY_ZOOM_IN && nCrzpos<=nTxtbl[nTxtblcr]) 
                             || (nTxzname==KEY_ZOOM_OUT && nCrzpos>=nTxtbl[nTxtblcr])) {
                         kbd_key_release_all();
                         set_key_press(0);
@@ -628,9 +690,9 @@ long kbd_process()
                     lens_set_zoom_speed(5);
                     kbd_key_release_all();
                     if(nTxzname==KEY_ZOOM_IN)
-                        kbd_key_press(KEY_ZOOM_OUT);
+                        kbd_key_press(KEY_ZOOM_OUT); 
                     else
-                        kbd_key_press(KEY_ZOOM_IN);
+                        kbd_key_press(KEY_ZOOM_IN); 
                     set_key_press(1);
                     return 1;
                 }
@@ -639,7 +701,7 @@ long kbd_process()
                     nSW=115;
                     nWt=2;
                     shutter_int=0;
-                    kbd_key_press(KEY_SHOOT_FULL);
+                    kbd_key_press(KEY_SHOOT_FULL); 
                     set_key_press(1);
 //                  kbd_blocked = 1;
 //                  nRmt=1;
@@ -653,7 +715,7 @@ long kbd_process()
                     }
                     nSW=116;
                     nWt=2;
-                    kbd_key_release(KEY_SHOOT_FULL);
+                    kbd_key_release(KEY_SHOOT_FULL); 
                     set_key_press(1);
                     soft_half_press = 0;
 //                  kbd_blocked = 1;
@@ -720,7 +782,7 @@ long kbd_process()
                     nSW=110;
                     nWt=2;
                     kbd_key_release_all();
-                    kbd_key_press(KEY_SHOOT_HALF);
+                    kbd_key_press(KEY_SHOOT_HALF); 
 //                  debug_led(1);
                     soft_half_press = 1;
                     set_key_press(1);
@@ -752,7 +814,7 @@ long kbd_process()
                     nSW=0;
                     nCa=0;
                     nTxvideo=0;
- //                 debug_led(0);
+//                    debug_led(0);
                     return 1;
                 }
 
@@ -806,7 +868,7 @@ long kbd_process()
                             return 1;
                         }
                     }
-                    if(nReczoom==0 && ((nTxzname==KEY_ZOOM_IN && nCrzpos>=nTxtbl[nTxtblcr])
+                    if(nReczoom==0 && ((nTxzname==KEY_ZOOM_IN && nCrzpos>=nTxtbl[nTxtblcr]) 
                                 || (nTxzname==KEY_ZOOM_OUT && nCrzpos<=nTxtbl[nTxtblcr]))) {
                         if(nCount==0) {
                             i=1;
@@ -835,7 +897,7 @@ long kbd_process()
                         return 1;
                     }
                     kbd_key_release_all();
-                    kbd_key_press(nTxzname);
+                    kbd_key_press(nTxzname); 
                     set_key_press(1);
                     nCER++;
                     return 1;
@@ -858,9 +920,9 @@ long kbd_process()
                     lens_set_zoom_speed(5);
                     kbd_key_release_all();
                     if(nTxzname==KEY_ZOOM_IN)
-                        kbd_key_press(KEY_ZOOM_OUT);
+                        kbd_key_press(KEY_ZOOM_OUT); 
                     else
-                        kbd_key_press(KEY_ZOOM_IN);
+                        kbd_key_press(KEY_ZOOM_IN); 
                     set_key_press(1);
                     return 1;
                 }
@@ -880,12 +942,12 @@ long kbd_process()
                             nCount=0;
                             nWt=10;
 //                          lens_set_zoom_speed(100);
-//                          debug_led(0);
+//                            debug_led(0);
                             return 1;
                         }
                         nSW=125;
                         nWt=10;
-                        kbd_key_release(KEY_SHOOT_HALF);
+                        kbd_key_release(KEY_SHOOT_HALF); 
                         soft_half_press = 0;
                         set_key_press(1);
 //                      kbd_blocked = 1;
@@ -902,7 +964,7 @@ long kbd_process()
                         nWt=2;
                         shutter_int=0;
 //                      debug_led(0);
-                        kbd_key_press(KEY_SHOOT_FULL);
+                        kbd_key_press(KEY_SHOOT_FULL); 
                         set_key_press(1);
 //                      kbd_blocked = 1;
 //                      nRmt=1;
@@ -960,11 +1022,11 @@ long kbd_process()
             return 1;
         }
 #endif // ifdef CAM_USE_ZOOM_FOR_MF
-        if ((conf.fast_ev || conf.fast_movie_control || conf.fast_movie_quality_control)
+        if ((conf.fast_ev || conf.fast_movie_control || conf.fast_movie_quality_control) 
                 && kbd_use_up_down_left_right_as_fast_switch()) {
             return 1;
         }
-        other_kbd_process(); // processed other keys in not <alt> mode
+        other_kbd_process(); // processed other keys in not <alt> mode 
     }
 
     return kbd_blocked;
@@ -980,13 +1042,13 @@ void kbd_set_block(int bEnableBlock) {
 
 long kbd_use_up_down_left_right_as_fast_switch() {
     static long key_pressed = 0; // ??? static masking a global
-    int m=mode_get();
+    int m=mode_get(); 
     int mode_video = MODE_IS_VIDEO(m) || (movie_status > 1);
     int ev_video=0;
     int jogdial;
 
 #if CAM_EV_IN_VIDEO
-    ev_video=get_ev_video_avail();
+    ev_video=get_ev_video_avail(); 
 #endif
 
     if (!(kbd_is_key_pressed(KEY_UP)) && !(kbd_is_key_pressed(KEY_DOWN))) key_pressed = 0;
@@ -1001,11 +1063,11 @@ long kbd_use_up_down_left_right_as_fast_switch() {
             shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_prop(PROPCASE_EV_CORRECTION_2)+(conf.fast_ev_step+1)*16);
             EnterToCompensationEVF();
             key_pressed = KEY_UP;
-
+                
             return 1;
         }
 
-    }
+    } 
 
     if (kbd_is_key_pressed(KEY_DOWN) && ((m&MODE_SHOOTING_MASK) != MODE_M) && !mode_video) {
         if (conf.fast_ev && key_pressed == 0) {
@@ -1016,7 +1078,7 @@ long kbd_use_up_down_left_right_as_fast_switch() {
             EnterToCompensationEVF();
             return 1;
         }
-    }
+    } 
 
 #else
     jogdial=get_jogdial_direction();
@@ -1032,7 +1094,7 @@ long kbd_use_up_down_left_right_as_fast_switch() {
             shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_prop(PROPCASE_EV_CORRECTION_2)-(conf.fast_ev_step+1)*16);
             EnterToCompensationEVF();
         }
-
+     
 
 #endif
 
@@ -1046,21 +1108,21 @@ long kbd_use_up_down_left_right_as_fast_switch() {
                 shooting_video_bitrate_change(conf.video_bitrate);
                 movie_reset = 1;
 #endif
-            }
+            }    
             else if (conf.video_mode==1) {
                 conf.video_quality+=1;
                 if (conf.video_quality>VIDEO_MAX_QUALITY)
                     conf.video_quality=VIDEO_MAX_QUALITY;
                 movie_reset = 1;
-            }
+            }              
             key_pressed = KEY_UP;
             return 1;
         }
-    }
-
+    } 
+    
     if (kbd_is_key_pressed(KEY_DOWN) && mode_video && movie_status == 4) {
         if (conf.fast_movie_quality_control && key_pressed == 0) {
-            if (conf.video_mode==0) {
+            if (conf.video_mode==0) {                
 #if !CAM_VIDEO_QUALITY_ONLY
                 conf.video_bitrate-=1;
                 if (conf.video_bitrate<0)
@@ -1075,23 +1137,23 @@ long kbd_use_up_down_left_right_as_fast_switch() {
                 if (conf.video_quality<1)
                     conf.video_quality=1;
                 movie_reset = 1;
-            }
+            }          
             key_pressed = KEY_DOWN;
             return 1;
         }
-    }
-
+    } 
+    
     if (kbd_is_key_pressed(KEY_LEFT) && mode_video && (movie_status == 4) && !ev_video) {
         if (conf.fast_movie_control && key_pressed == 0) {
             movie_status = VIDEO_RECORD_STOPPED;
             key_pressed = KEY_LEFT;
             return 1;
         }
-    }
+    } 
 	// reyalp - HACK for cams that can do video in any mode
 	// note that this means this will probably run whenever you press right
     if (kbd_is_key_pressed(KEY_RIGHT) &&
-#ifndef CAM_HAS_VIDEO_BUTTON
+#ifndef CAM_HAS_VIDEO_BUTTON 
             mode_video &&
 #endif
 	        (movie_status == 1) && !ev_video) {
@@ -1102,7 +1164,7 @@ long kbd_use_up_down_left_right_as_fast_switch() {
             key_pressed = KEY_RIGHT;
             return 1;
         }
-    }
+    } 
 
     return 0;
 }

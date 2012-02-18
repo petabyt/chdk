@@ -12,26 +12,32 @@
 static int raw_need_postprocess;
 static volatile int spytask_can_start;
 
-void core_hook_task_create(void *tcb) {
+void core_hook_task_create(void *tcb)
+{
 }
 
-void core_hook_task_delete(void *tcb) {
-    char *name = (char*)(*(long*)((char*)tcb+0x34));
-    if (strcmp(name,"tInitFileM")==0) core_spytask_can_start();
+void core_hook_task_delete(void *tcb)
+{
+char *name = (char*)(*(long*)((char*)tcb+0x34));
+ if (strcmp(name,"tInitFileM")==0) core_spytask_can_start();
 }
 
-long core_get_noise_reduction_value() {
+
+long core_get_noise_reduction_value()
+{
     return conf.raw_nr;
 }
 
-void dump_memory() {
+
+void dump_memory()
+{
     int fd;
     static int cnt=1;
     static char fn[32];
 
     started();
-    mkdir("A/DCIM");
-    mkdir("A/DCIM/100CANON");
+        mkdir("A/DCIM");
+        mkdir("A/DCIM/100CANON");
     sprintf(fn, "A/DCIM/100CANON/CRW_%04d.JPG", cnt++);
     fd = open(fn, O_WRONLY|O_CREAT, 0777);
     if (fd) {
@@ -46,9 +52,9 @@ void dump_memory() {
 
 int core_get_free_memory() {
 #if defined(OPT_EXMEM_MALLOC) && !defined(OPT_EXMEM_TESTING)
-	// If using the exmem / suba memory allocation system then don't need
-	// to try allocating memory to find out how much is available
-	// Call function to scan free list for the largest free block available.
+    // If using the exmem / suba memory allocation system then don't need
+    // to try allocating memory to find out how much is available
+    // Call function to scan free list for the largest free block available.
     cam_meminfo camera_meminfo;
     GetExMemInfo(&camera_meminfo);
     return camera_meminfo.free_block_max_size;
@@ -58,7 +64,7 @@ int core_get_free_memory() {
     GetMemInfo(&camera_meminfo);
     return camera_meminfo.free_block_max_size;
 #else
-	int size, l_size, d;
+    int size, l_size, d;
     char* ptr;
 
     size = 16;
@@ -96,8 +102,9 @@ int core_get_free_memory() {
 
 static volatile long raw_data_available;
 
-// called from another process
-void core_rawdata_available() {
+/* called from another process */
+void core_rawdata_available()
+{
     raw_data_available = 1;
 }
 
@@ -105,7 +112,8 @@ void core_spytask_can_start() {
     spytask_can_start = 1;
 }
 
-void core_spytask() {
+void core_spytask()
+{
     int cnt = 1;
     int i=0;
 
@@ -114,7 +122,7 @@ void core_spytask() {
     spytask_can_start=0;
 
 #ifdef OPT_EXMEM_MALLOC
-	exmem_malloc_init();
+    exmem_malloc_init();
 #endif
 
 #ifdef CAM_CHDK_PTP
@@ -154,7 +162,7 @@ void core_spytask() {
     auto_started = 0;
 
 #ifdef OPT_SCRIPTING
-    if (conf.script_startup==1) script_autostart();    // remote autostart
+    if (conf.script_startup==1) script_autostart();				// remote autostart
     if (conf.script_startup==2) {
         conf.script_startup=0;
         conf_save();
@@ -162,7 +170,7 @@ void core_spytask() {
     }
 #endif
 
-    while (1) {
+    while (1){
 
 #ifdef  CAM_LOAD_CUSTOM_COLORS
         load_chdk_palette();
@@ -195,10 +203,10 @@ void core_spytask() {
         }
 
 #ifdef DEBUG_PRINT_TO_LCD
-		char osd_buf[30];
-		sprintf(osd_buf, "%d", cnt );	// modify cnt to what you want to display
-		draw_txt_string(2, 2, osd_buf, conf.osd_color);
-#endif	
+        char osd_buf[30];
+        sprintf(osd_buf, "%d", cnt );	// modify cnt to what you want to display
+        draw_txt_string(2, 2, osd_buf, conf.osd_color);
+#endif
         msleep(20);
     }
 }

@@ -55,7 +55,6 @@ const char *video_bitrate_strings[VIDEO_BITRATE_STEPS]={ "0.25x", "0.5x","0.75x"
 
 //-------------------------------------------------------------------
 static int def_script_vars[SCRIPT_NUM_PARAMS] = {0};    // default value of script parameters - zero array
-
 static int def_batt_volts_max, def_batt_volts_min;
 static OSD_pos def_histo_pos, def_dof_pos, def_batt_icon_pos, def_usb_info_pos, def_space_icon_pos, def_space_hor_pos, def_space_ver_pos, def_batt_txt_pos, def_space_txt_pos, 
                def_mode_state_pos, def_mode_raw_pos, def_mode_video_pos, def_mode_ev_pos, def_values_pos, def_clock_pos, def_ev_video_pos, def_temp_pos;
@@ -79,32 +78,32 @@ void camera_set_raw(int mode)
 
 void camera_set_nr(int mode)
 {
-	// "Auto", "Off", "On"
+    // "Auto", "Off", "On"
     conf.raw_nr = mode;
 }
 int camera_get_script_autostart()
-{	
-	// 1 = Autostarted
-	return auto_started;
+{   
+    // 1 = Autostarted
+    return auto_started;
 }
 
 void camera_set_script_autostart(int state)
-{	
-	// 1 = Autostarted
-	auto_started = state;
+{   
+    // 1 = Autostarted
+    auto_started = state;
 }
 
 int camera_get_nr()
 {
-	// "Auto", "Off", "On"
+    // "Auto", "Off", "On"
     return conf.raw_nr;
 }
 
 
 void clear_values()
-{	
-	if (conf.platformid != PLATFORMID) // the following config entries will be resetted if you switch the camera using the same cfg
-	{
+{   
+    if (conf.platformid != PLATFORMID) // the following config entries will be resetted if you switch the camera using the same cfg
+    {
     conf.raw_cache = 0;
     conf.zoom_override_value = 0;
     conf.fast_ev = 0;
@@ -113,27 +112,27 @@ void clear_values()
     conf.zoom_scale = 100;
     conf.platformid = PLATFORMID;
     conf.flash_video_override = 0;
-	}
+    }
 
-	if (conf.clear_override)
-	{
-	 conf.av_override_value=0;
-	 conf.tv_override_koef=0;
-	 conf.subj_dist_override_koef=0;
-	 conf.iso_override_koef=0;
-	 conf.nd_filter_state=0;
-	}
-	if (conf.clear_zoom_override)
-	{
-	conf.zoom_override = 0;
-	}
-	if (conf.clear_bracket)
-	{
-	 conf.av_bracket_value=0;
-	 conf.tv_bracket_value=0;
-	 conf.iso_bracket_koef=0;
-	 conf.subj_dist_bracket_koef=0;
-	}
+    if (conf.clear_override)
+    {
+     conf.av_override_value=0;
+     conf.tv_override_koef=0;
+     conf.subj_dist_override_koef=0;
+     conf.iso_override_koef=0;
+     conf.nd_filter_state=0;
+    }
+    if (conf.clear_zoom_override)
+    {
+    conf.zoom_override = 0;
+    }
+    if (conf.clear_bracket)
+    {
+     conf.av_bracket_value=0;
+     conf.tv_bracket_value=0;
+     conf.iso_bracket_koef=0;
+     conf.subj_dist_bracket_koef=0;
+    }
      if (conf.clear_video)
     {
      conf.video_mode = 0;
@@ -468,7 +467,7 @@ static void conf_change_menu_rbf_file() {
 }
 
 static void conf_change_menu_symbol_rbf_file() {
-    if(!rbf_load_symbol(conf.menu_symbol_rbf_file)) conf.menu_symbol_enable=0;		//AKA
+    if(!rbf_load_symbol(conf.menu_symbol_rbf_file)) conf.menu_symbol_enable=0;      //AKA
 }
 
 static void conf_change_alt_mode_button() {
@@ -509,13 +508,13 @@ update the prevent display off/prevent shutdown based on current state
 doesn't really belong in conf but not clear where else it should go
 */
 void conf_update_prevent_shutdown(void) {
-	if(conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALWAYS 
-		|| (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT && gui_get_mode() != GUI_MODE_NONE)
-		|| (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT_SCRIPT && state_kbd_script_run)) {
+    if(conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALWAYS 
+        || (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT && gui_get_mode() != GUI_MODE_NONE)
+        || (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT_SCRIPT && state_kbd_script_run)) {
         disable_shutdown();
-	} else {
+    } else {
         enable_shutdown();
-	}
+    }
 }
 
 //-------------------------------------------------------------------
@@ -614,7 +613,7 @@ void conf_save() {
         write(fd, buf, p-buf);
         close(fd);
     }
-	ufree(buf);
+    ufree(buf);
 }
 
 //-------------------------------------------------------------------
@@ -807,6 +806,7 @@ int conf_setValue(unsigned short id, tConfigVal configVal) {
     }
     return ret;
 }
+//-------------------------------------------------------------------
 // Common code extracted from raw.c (raw_savefile) and gui_osd.c (gui_osd_draw_raw_info)
 // returns 0 if RAW save is disabled due to mode settings, etc, return 1 if RAW save OK
 int is_raw_enabled()

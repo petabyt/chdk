@@ -90,7 +90,7 @@ static void gui_batt_draw_icon () {
 }
 
 //-------------------------------------------------------------------
-static void gui_batt_draw_charge() {
+static void gui_batt_draw_charge(){
     int perc = get_batt_perc();
     color cl = (perc<=20)?conf.osd_color_warn:conf.osd_color;
     sprintf(osd_buf, "%3d%%", perc);
@@ -115,7 +115,7 @@ void gui_batt_draw_osd() {
     } else if (conf.batt_volts_show) {
         gui_batt_draw_volts();
     }
-
+    
     if (conf.batt_icon_show) {
         gui_batt_draw_icon();
     }

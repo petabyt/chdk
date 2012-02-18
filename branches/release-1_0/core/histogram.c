@@ -61,23 +61,23 @@ static int clip(int v) {
 }
 
 // Define how many viewport blocks to step in each loop iteration. Each block is 6 bytes (UYVYYY) or 4 image pixels
-#define	HISTO_STEP_SIZE	6
+#define HISTO_STEP_SIZE 6
 
 void histogram_process()
 {
     static unsigned char *img;
     int i, hi, c;
     int y, v, u;
-	static int x;
+    static int x;
     static int viewport_size;
     unsigned int histo_fill[5];
 
-	    switch (histogram_stage) {
+        switch (histogram_stage) {
         case 0:
             img=((mode_get()&MODE_MASK) == MODE_PLAY)?vid_get_viewport_fb_d():((kbd_is_key_pressed(KEY_SHOOT_HALF))?vid_get_viewport_fb():vid_get_viewport_live_fb());
-      	
-        	if (img==NULL){
-	    	  img = vid_get_viewport_fb();
+
+            if (img==NULL){
+                img = vid_get_viewport_fb();
 		    }
 			img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
             viewport_size = vid_get_viewport_height() * vid_get_viewport_byte_width() * vid_get_viewport_yscale();
@@ -111,14 +111,14 @@ void histogram_process()
                 hi = clip(((y<<12) + u*7258          + 2048)/4096)*HISTO_WIDTH/256; // B
                 ++histogram_proc[HISTO_B][hi];
 
-				// Handle case where viewport memory buffer is wider than the actual buffer.
-				x += HISTO_STEP_SIZE * 2;	// viewport width is measured in blocks of three bytes each even though the data is stored in six byte chunks !
-				if (x == vid_get_viewport_width())
-				{
-					i += vid_get_viewport_row_offset();
-					x = 0;
-				}
-			}
+                // Handle case where viewport memory buffer is wider than the actual buffer.
+                x += HISTO_STEP_SIZE * 2;   // viewport width is measured in blocks of three bytes each even though the data is stored in six byte chunks !
+                if (x == vid_get_viewport_width())
+                {
+                    i += vid_get_viewport_row_offset();
+                    x = 0;
+                }
+            }
 
             ++histogram_stage;
             break;

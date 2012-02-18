@@ -789,9 +789,9 @@ short shooting_get_common_focus_mode()
   return shooting_get_subject_distance_override_koef();
 #elif !CAM_CAN_SD_OVERRIDE
   return 0;
-#else
+#else 
   return shooting_get_focus_mode();
-#endif
+#endif 			  
 }
 
 short shooting_get_focus_mode()
@@ -801,6 +801,27 @@ short shooting_get_focus_mode()
   return m;
 }
 
+short shooting_get_real_focus_mode()
+{
+  short f=shooting_get_focus_mode();
+  short m;
+  _GetPropertyCase(PROPCASE_REAL_FOCUS_MODE, &m, sizeof(m));
+  if (f==0 && m!=0) f=(m==1)?4:m;
+  return f;
+}
+
+short shooting_get_focus_state()
+{
+  if (shooting_get_focus_mode()==1) return -1;
+  int m;
+  _GetPropertyCase(PROPCASE_FOCUS_STATE, &m, sizeof(m));
+  return (short) m;
+}
+ 
+short shooting_get_focus_ok()
+{
+  return ((shooting_get_focus_state()!=0) && shooting_in_progress());
+}
 
 /*
 short shooting_get_continuous_mode_shoot_count()
@@ -828,7 +849,7 @@ if ((mode_get()&MODE_MASK) != MODE_PLAY){
 		}
   }
 }
-#endif
+#endif	      
 }
 
 void shooting_set_user_av_by_id_rel(int v)
@@ -838,7 +859,7 @@ if ((mode_get()&MODE_MASK) != MODE_PLAY){
     int cv = shooting_get_user_av_id();
     shooting_set_user_av_by_id(cv+v);
 }
-#endif
+#endif    
 }
 
 
@@ -877,7 +898,7 @@ int shooting_in_progress()
 
 int shooting_is_flash()
 {
- int t = 0;
+ int t = 0;	
  _GetPropertyCase(PROPCASE_IS_FLASH_READY, &t,sizeof(&t));
  return t;
 }
@@ -943,12 +964,12 @@ int shooting_get_zoom() {
 void shooting_set_zoom(int v) {
     int dist;
 if ((mode_get()&MODE_MASK) != MODE_PLAY)
-	{
+    {
     dist = shooting_get_focus();
     lens_set_zoom_point(v);
-#if defined(CAM_NEED_SET_ZOOM_DELAY)
-    msleep(CAM_NEED_SET_ZOOM_DELAY);
-#endif
+#if defined(CAM_NEED_SET_ZOOM_DELAY) 
+    msleep(CAM_NEED_SET_ZOOM_DELAY); 
+#endif 
     shooting_set_focus(dist, SET_NOW);
   }
 }

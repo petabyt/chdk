@@ -6,6 +6,7 @@
 
 //-------------------------------------------------------------------
 extern void curve_set_mode();
+extern void curve_set_file();
 extern void curve_init_mode();
 extern void curve_apply();
 //-------------------------------------------------------------------

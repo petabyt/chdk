@@ -14,7 +14,7 @@
 #include "gui_mbox.h"
 #include "gui_lang.h"
 #if defined(CAM_HAS_GPS)
-    #include "gps.h"
+    #include "gps.h" 
 #endif 
 
 //thumbnail

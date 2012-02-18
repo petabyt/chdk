@@ -41,7 +41,7 @@ static OSD_elem osd[]={
 #if CAM_EV_IN_VIDEO
     {LANG_OSD_LAYOUT_EDITOR_EV_VIDEO,         &conf.ev_video_pos,     {70,24}},
 #endif
-    {LANG_OSD_LAYOUT_EDITOR_USB_INFO,   &conf.usb_info_pos,    {31, 14}},  
+    {LANG_OSD_LAYOUT_EDITOR_USB_INFO,   &conf.usb_info_pos,    {31, 14}                        },
     {0}
 };
 static int osd_to_draw;
@@ -56,21 +56,21 @@ static int step;
 
 #if defined (CAM_ZEBRA_NOBUF) && !defined(CAM_ZEBRA_ASPECT_ADJUST)
 // old sx20 #ifdefs were roughly equivalent of both
-	#error "defined (CAM_ZEBRA_NOBUF) && !defined(CAM_ZEBRA_ASPECT_ADJUST). Remove this if you've verified it will work!"
+    #error "defined (CAM_ZEBRA_NOBUF) && !defined(CAM_ZEBRA_ASPECT_ADJUST). Remove this if you've verified it will work!"
 #endif
 
 #ifdef CAM_ZEBRA_ASPECT_ADJUST
 // TODO should just not save anything at all instead of 1 px. Also, this shouldn't be tied to aspect correct
-  #define ZEBRA_CANONOSD_BORDER_RESTORE   1
-  #define ZFIX_TOP    1
-  #define ZFIX_BOTTOM 1
+    #define ZEBRA_CANONOSD_BORDER_RESTORE   1
+    #define ZFIX_TOP    1
+    #define ZFIX_BOTTOM 1
 #else
-// Width (in pixels) of half-shoot Canon OSD area of the screen buffer, for restore during 
+// Width (in pixels) of half-shoot Canon OSD area of the screen buffer, for restore during
 // Zebra draw, to limit RAM usage of zebra. Only these border areas are stored in RAM.
 // Only top and bottom are restored, not left&right.
-  #define ZEBRA_CANONOSD_BORDER_RESTORE   1
-  #define ZFIX_TOP    29
-  #define ZFIX_BOTTOM 30
+    #define ZEBRA_CANONOSD_BORDER_RESTORE   1
+    #define ZFIX_TOP    29
+    #define ZFIX_BOTTOM 30
 #endif
 
 static unsigned char *img_buf, *scr_buf;
@@ -122,7 +122,7 @@ void gui_osd_draw() {
       #endif
         gui_usb_draw_osd();
         for (i=1; i<=2; ++i) {
-            draw_rect((osd[curr_item].pos->x>=i)?osd[curr_item].pos->x-i:0, (osd[curr_item].pos->y>=i)?osd[curr_item].pos->y-i:0, 
+            draw_rect((osd[curr_item].pos->x>=i)?osd[curr_item].pos->x-i:0, (osd[curr_item].pos->y>=i)?osd[curr_item].pos->y-i:0,
                       osd[curr_item].pos->x+osd[curr_item].size.x+i-1, osd[curr_item].pos->y+osd[curr_item].size.y+i-1,
                       COLOR_GREEN);
         }
@@ -164,7 +164,7 @@ void gui_osd_kbd_process() {
         break;
     case KEY_SET:
         ++curr_item;
-        if (!osd[curr_item].pos) 
+        if (!osd[curr_item].pos)
             curr_item = 0;
         osd_to_draw = 1;
         break;
@@ -182,10 +182,10 @@ static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small) {
     coord w=HISTO_WIDTH, h=HISTO_HEIGHT;
 
     switch (hist) {
-        case HISTO_R: 
+        case HISTO_R:
             cl=((mode_get()&MODE_MASK) == MODE_REC)?COLOR_HISTO_R:COLOR_HISTO_R_PLAY;
             break;
-        case HISTO_G: 
+        case HISTO_G:
             cl=((mode_get()&MODE_MASK) == MODE_REC)?COLOR_HISTO_G:COLOR_HISTO_G_PLAY;
             break;
         case HISTO_B:
@@ -194,7 +194,7 @@ static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small) {
         case HISTO_RGB:
         case HISTO_Y:
         default:
-            cl=conf.histo_color; 
+            cl=conf.histo_color;
             break;
     }
 
@@ -220,7 +220,7 @@ static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small) {
                 draw_pixel(x+1+i, y+h-v, (v<=threshold)?cl_over:cl_bg);
         }
     }
-      
+
     draw_rect(x, y, x+1+w, y+h, conf.histo_color2&0xFF);
     //Vertical Lines
     if (conf.histo_show_ev_grid) for (i=1;i<=4;i++) draw_line(x+(1+w)*i/5, y, x+(1+w)*i/5, y+h, conf.histo_color2&0xFF);
@@ -230,87 +230,85 @@ static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small) {
 // free and NULL zebra buffers. free(NULL) is always OK.
 static void gui_osd_zebra_free() {
 #if !defined (CAM_ZEBRA_NOBUF)
-	free(buf);
+    free(buf);
 #endif
-	buf=NULL;
+    buf=NULL;
 #if ZEBRA_CANONOSD_BORDER_RESTORE
-	free(cur_buf_top);
-	cur_buf_top=NULL;
-	free(cur_buf_bot);
-	cur_buf_bot=NULL;
+    free(cur_buf_top);
+    cur_buf_top=NULL;
+    free(cur_buf_bot);
+    cur_buf_bot=NULL;
 #else
-	free(cur_buf);
-	cur_buf=NULL;
-#endif      
+    free(cur_buf);
+    cur_buf=NULL;
+#endif
 }
 // prepare zebra resources, or free them
 // returns 1 if zebra should be drawn
 static int gui_osd_zebra_init(int show) {
-	unsigned i;
-
   if(show)
   {
     if (!buf)
     {
       timer = 0;
-	  #if defined (CAM_ZEBRA_NOBUF)
-        buffer_size=screen_buffer_size-ZEBRA_HMARGIN0*screen_buffer_width;
-        buf=vid_get_bitmap_fb();
-	  #elif defined (CAM_ZEBRA_ASPECT_ADJUST)
-        buffer_size=screen_buffer_size-ZEBRA_HMARGIN0*screen_buffer_width;
-        buf = malloc(buffer_size);
-        //~ if (!buf) draw_txt_string(0, 14, "Warn: No space to allocate zebra buffer: restart camera", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-        if (!buf)
-          buf=vid_get_bitmap_fb(); //without new buffer: directly into screen buffer: we got some flickering in OSD and histogram but it's usable
-        //~ msleep(50);
-      #else
-        buf = malloc(screen_buffer_size);
-      #endif
+        #if defined (CAM_ZEBRA_NOBUF)
+            buffer_size=screen_buffer_size-ZEBRA_HMARGIN0*screen_buffer_width;
+            buf=vid_get_bitmap_fb();
+        #elif defined (CAM_ZEBRA_ASPECT_ADJUST)
+            buffer_size=screen_buffer_size-ZEBRA_HMARGIN0*screen_buffer_width;
+            buf = malloc(buffer_size);
+            //~ if (!buf) draw_txt_string(0, 14, "Warn: No space to allocate zebra buffer: restart camera", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+            if (!buf)
+            buf=vid_get_bitmap_fb(); //without new buffer: directly into screen buffer: we got some flickering in OSD and histogram but it's usable
+            //~ msleep(50);
+        #else
+            buf = malloc(screen_buffer_size);
+        #endif
             scr_buf = vid_get_bitmap_fb();
 #if ZEBRA_CANONOSD_BORDER_RESTORE
-            cur_buf_top = malloc(screen_buffer_width * ZFIX_TOP); 
-            cur_buf_bot = malloc(screen_buffer_width * ZFIX_BOTTOM); 
-#if defined (CAM_ZEBRA_ASPECT_ADJUST)
+            cur_buf_top = malloc(screen_buffer_width * ZFIX_TOP);
+            cur_buf_bot = malloc(screen_buffer_width * ZFIX_BOTTOM);
+    #if defined (CAM_ZEBRA_ASPECT_ADJUST)
             if (cur_buf_top) memset(cur_buf_top,0,screen_buffer_width * ZFIX_TOP);
             if (cur_buf_bot) memset(cur_buf_bot,0,screen_buffer_width * ZFIX_BOTTOM);
-#endif
+    #endif
 #else
             cur_buf = malloc(screen_buffer_size);
-#endif      
-			// cleanup and disable zebra if any mallocs failed
-			if(!buf || 
-#if ZEBRA_CANONOSD_BORDER_RESTORE
-				!cur_buf_top ||
-				!cur_buf_bot 
-#else
-				!cur_buf
 #endif
-				) {
-				gui_osd_zebra_free();
-			}
+            // cleanup and disable zebra if any mallocs failed
+            if(!buf ||
+#if ZEBRA_CANONOSD_BORDER_RESTORE
+                !cur_buf_top ||
+                !cur_buf_bot
+#else
+                !cur_buf
+#endif
+                ) {
+                gui_osd_zebra_free();
+            }
 #if CAM_HAS_VARIABLE_ASPECT
-			else // in variable aspect, the borders would never be cleared
-				memset(buf,0,screen_buffer_size);
+            else // in variable aspect, the borders would never be cleared
+                memset(buf,0,screen_buffer_size);
 #endif
         }
     }
     else {
-		if(buf) // if zebra was previously on, restore
-			draw_restore();
+        if(buf) // if zebra was previously on, restore
+            draw_restore();
 
-		gui_osd_zebra_free();
+        gui_osd_zebra_free();
     }
-	return (buf != NULL);
+    return (buf != NULL);
 }
 
 //-------------------------------------------------------------------
 static void draw_pixel_buffered(unsigned int offset, color cl) {
-// shouldn't this be checked on all cams ?
-   #if defined CAM_ZEBRA_ASPECT_ADJUST
-      if (offset < buffer_size)
-         buf[offset] = cl;
+    // shouldn't this be checked on all cams ?
+    #if defined CAM_ZEBRA_ASPECT_ADJUST
+        if (offset < buffer_size)
+            buf[offset] = cl;
    #else
-      buf[offset] = cl;
+        buf[offset] = cl;
    #endif
 }
 
@@ -330,9 +328,9 @@ int draw_guard_pixel() {
 #if ZEBRA_CANONOSD_BORDER_RESTORE
 unsigned char get_cur_buf(unsigned int idx) {
     unsigned int a;
-    
+
     a=screen_buffer_size - screen_buffer_width * ZFIX_BOTTOM;
-    
+
     if (idx < screen_buffer_width * ZFIX_TOP) return(cur_buf_top[idx]);
     if (idx >= a && idx < screen_buffer_size) return(cur_buf_bot[idx - a]);
     return (COLOR_TRANSPARENT);
@@ -388,9 +386,9 @@ static void gui_osd_draw_zebra_osd() {
 
 // reyalp - TODO this should be rewritten so there is one generic zebra func for all cameras
 #if defined(CAM_ZEBRA_ASPECT_ADJUST)
-//nandoide sept-2009 
+//nandoide sept-2009
 // viewport is 360x240 and screen buffer 960x270, we need to expand the x coordinate
-//reyalp - applies to other cameras where the real bitmap width is is different from what lib.c reports. Also used on some other cameras ...
+// reyalp - applies to other cameras where the real bitmap width is is different from what lib.c reports. Also used on some other cameras ...
 int gui_osd_draw_zebra(int show) {
     unsigned int v, s, x, y, f, over;
     color cl_under=conf.zebra_color>>8, cl_over=conf.zebra_color&0xFF;
@@ -413,7 +411,7 @@ int gui_osd_draw_zebra(int show) {
         (mrec)?COLOR_HISTO_RG:COLOR_HISTO_RG_PLAY,
         COLOR_BLACK
     };
-	
+
     if (!gui_osd_zebra_init(show))
         return 0;
 
@@ -456,35 +454,35 @@ int gui_osd_draw_zebra(int show) {
             f = 8;
             break;
         case ZEBRA_MODE_SOLID:
-            f = 1; 
+            f = 1;
             break;
         case ZEBRA_MODE_BLINKED_1:
-            f = timer&1; 
+            f = timer&1;
             break;
         case ZEBRA_MODE_BLINKED_3:
-            f = timer&4; 
+            f = timer&4;
             break;
         case ZEBRA_MODE_BLINKED_2:
         default:
-            f = timer&2; 
+            f = timer&2;
             break;
     }
     // if not in no-zebra phase of blink mode zebra, draw zebra to buf[]
     if (f) {
-		if (viewport_yoffset > 0) { // clear top & bottom areas of buffer if image height if smaller than viewport
-			memset(buf, COLOR_TRANSPARENT, viewport_yoffset*screen_buffer_width);
-			memset(buf+(viewport_yoffset+viewport_height)*screen_buffer_width, COLOR_TRANSPARENT, viewport_yoffset*screen_buffer_width);
-		}
+        if (viewport_yoffset > 0) { // clear top & bottom areas of buffer if image height if smaller than viewport
+            memset(buf, COLOR_TRANSPARENT, viewport_yoffset*screen_buffer_width);
+            memset(buf+(viewport_yoffset+viewport_height)*screen_buffer_width, COLOR_TRANSPARENT, viewport_yoffset*screen_buffer_width);
+        }
         int step_x, step_v, sy, sx;
         over = 255-conf.zebra_over;
             if (conf.zebra_multichannel) {step_x=2; step_v=6;} else {step_x=1; step_v=3;}
             for (y=viewport_yoffset, v=viewport_image_offset; y<viewport_yoffset+viewport_height; ++y) {
                 sy=y*screen_buffer_width;
                 sx=viewport_xoffset;
-				if (viewport_xoffset > 0) { // clear left & right areas of buffer if image width if smaller than viewport
-					memset(buf+sy, COLOR_TRANSPARENT, sx*2);
-					memset(buf+sy+(sx+viewport_width)*2, COLOR_TRANSPARENT, sx*2);
-				}
+                if (viewport_xoffset > 0) { // clear left & right areas of buffer if image width if smaller than viewport
+                    memset(buf+sy, COLOR_TRANSPARENT, sx*2);
+                    memset(buf+sy+(sx+viewport_width)*2, COLOR_TRANSPARENT, sx*2);
+                }
                 for (x=viewport_xoffset; x<viewport_xoffset+viewport_width; x+=step_x, sx+=step_x, v+=step_v) {
                     register int yy, uu, vv;
                     int sel;
@@ -505,9 +503,9 @@ int gui_osd_draw_zebra(int show) {
                     else if (((conf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || conf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f)) buf[s]=buf[s+1]=COLOR_TRANSPARENT;
                     else buf[s]=buf[s+1]=(yy>over)?cl_over:(yy<conf.zebra_under)?cl_under:COLOR_TRANSPARENT;
                     if (buf[s] != COLOR_TRANSPARENT && !zebra_drawn) zebra_drawn = 1;
-#if ZEBRA_CANONOSD_BORDER_RESTORE                        
-                        if(get_cur_buf(s)!=COLOR_TRANSPARENT) buf[s]=get_cur_buf(s); 
-                        if(conf.zebra_multichannel && get_cur_buf(s+1)!=COLOR_TRANSPARENT) buf[s+1]=get_cur_buf(s+1); 
+#if ZEBRA_CANONOSD_BORDER_RESTORE
+                        if(get_cur_buf(s)!=COLOR_TRANSPARENT) buf[s]=get_cur_buf(s);
+                        if(conf.zebra_multichannel && get_cur_buf(s+1)!=COLOR_TRANSPARENT) buf[s+1]=get_cur_buf(s+1);
 #else
                         if(cur_buf[s]!=COLOR_TRANSPARENT) buf[s]=cur_buf[s];
                         if(conf.zebra_multichannel && cur_buf[s+1]!=COLOR_TRANSPARENT) buf[s+1]=cur_buf[s+1];
@@ -538,7 +536,7 @@ int gui_osd_draw_zebra(int show) {
                     //~ }
 //~ #else
                     //~ // copy from a complete Canon OSD rescue screen dump
-                    //~ memcpy(buf, cur_buf, screen_buffer_size); 
+                    //~ memcpy(buf, cur_buf, screen_buffer_size);
 //~ #endif
                 } else { // Not REC mode
                     // No Canon OSD restore, fill buf[] with transparent color:
@@ -547,7 +545,7 @@ int gui_osd_draw_zebra(int show) {
                 // draw CHDK osd and histogram to buf[] (if enabled in config)
                 gui_osd_draw_zebra_osd();
                 // copy buf[] to both display buffers
-                
+
                 if (buf!=scr_buf)
                   memcpy(scr_buf, buf, buffer_size);
                   memcpy(scr_buf+screen_buffer_size, buf, buffer_size);
@@ -557,9 +555,9 @@ int gui_osd_draw_zebra(int show) {
         return !(conf.zebra_restore_screen && conf.zebra_restore_osd);
     // if zebra was drawn
     } else {
-        // draw CHDK osd and histogram to buf[] over zebra (if enabled in config)            
+        // draw CHDK osd and histogram to buf[] over zebra (if enabled in config)
         gui_osd_draw_zebra_osd();
-        // copy buf[] to both display buffers   
+        // copy buf[] to both display buffers
         if (buf!=scr_buf)
             memcpy(scr_buf, buf, buffer_size);
             memcpy(scr_buf+screen_buffer_size, buf, buffer_size);
@@ -588,7 +586,7 @@ int gui_osd_draw_zebra(int show) {
         (mrec)?COLOR_HISTO_RG:COLOR_HISTO_RG_PLAY,
         COLOR_BLACK
     };
-	
+
     unsigned bWide = 1; // if wide (16:9) or standard (4:3) aspect ratio (but 1 in cameras that only have 4:3)
     unsigned aspOffset = 0; // offset to add to x-coord (or buffer address) when drawing zebra
 
@@ -600,7 +598,7 @@ int gui_osd_draw_zebra(int show) {
         aspOffset = screen_width / 8; // half of the difference in width between equal height 16:9 and 4:3 screens, = black bar width
     }
 #endif
-	
+
     if (!gui_osd_zebra_init(show))
         return 0;
 
@@ -653,17 +651,17 @@ int gui_osd_draw_zebra(int show) {
             f = 8;
             break;
         case ZEBRA_MODE_SOLID:
-            f = 1; 
+            f = 1;
             break;
         case ZEBRA_MODE_BLINKED_1:
-            f = timer&1; 
+            f = timer&1;
             break;
         case ZEBRA_MODE_BLINKED_3:
-            f = timer&4; 
+            f = timer&4;
             break;
         case ZEBRA_MODE_BLINKED_2:
         default:
-            f = timer&2; 
+            f = timer&2;
             break;
     }
     // if not in no-zebra phase of blink mode zebra, draw zebra to buf[]
@@ -676,9 +674,9 @@ int gui_osd_draw_zebra(int show) {
                 for (x=0; x<screen_width; x+=step_x, s+=step_x, v+=step_v) {
                     register int yy, uu, vv;
                     int sel;
-										
-                    if (!bWide && (x + aspOffset >= screen_width - aspOffset)) continue; // do not draw "outside screen" 
-										
+
+                    if (!bWide && (x + aspOffset >= screen_width - aspOffset)) continue; // do not draw "outside screen"
+
                     yy = img_buf[v+1];
                     if (conf.zebra_multichannel) {
                         uu = (signed char)img_buf[v];
@@ -696,9 +694,9 @@ int gui_osd_draw_zebra(int show) {
                     if (buf[s] != COLOR_TRANSPARENT && !zebra_drawn) zebra_drawn = 1;
                     if (mrec) {
                         // draw Canon OSD to buf[] if in REC mode
-#if ZEBRA_CANONOSD_BORDER_RESTORE                        
-                        if(get_cur_buf(s)!=COLOR_TRANSPARENT) buf[s]=get_cur_buf(s); 
-                        if(conf.zebra_multichannel && get_cur_buf(s+1)!=COLOR_TRANSPARENT) buf[s+1]=get_cur_buf(s+1); 
+#if ZEBRA_CANONOSD_BORDER_RESTORE
+                        if(get_cur_buf(s)!=COLOR_TRANSPARENT) buf[s]=get_cur_buf(s);
+                        if(conf.zebra_multichannel && get_cur_buf(s+1)!=COLOR_TRANSPARENT) buf[s+1]=get_cur_buf(s+1);
 #else
                         if(cur_buf[s]!=COLOR_TRANSPARENT) buf[s]=cur_buf[s];
                         if(conf.zebra_multichannel && cur_buf[s+1]!=COLOR_TRANSPARENT) buf[s+1]=cur_buf[s+1];
@@ -730,7 +728,7 @@ int gui_osd_draw_zebra(int show) {
                     }
 #else
                     // copy from a complete Canon OSD rescue screen dump
-                    memcpy(buf, cur_buf, screen_buffer_size); 
+                    memcpy(buf, cur_buf, screen_buffer_size);
 #endif
                 } else { // Not REC mode
                     // No Canon OSD restore, fill buf[] with transparent color:
@@ -747,9 +745,9 @@ int gui_osd_draw_zebra(int show) {
         return !(conf.zebra_restore_screen && conf.zebra_restore_osd);
     // if zebra was drawn
     } else {
-        // draw CHDK osd and histogram to buf[] over zebra (if enabled in config)            
+        // draw CHDK osd and histogram to buf[] over zebra (if enabled in config)
         gui_osd_draw_zebra_osd();
-        // copy buf[] to both display buffers          
+        // copy buf[] to both display buffers
         memcpy(scr_buf, buf, screen_buffer_size);
         memcpy(scr_buf+screen_buffer_size, buf, screen_buffer_size);
 
@@ -892,9 +890,9 @@ static void sprintf_dist_hyp(char *buf, float dist) {
     }
 }
 
-static void sprintf_canon_values(char *buf, short dist) 
+static void sprintf_canon_values(char *buf, short dist)
 {
-short v=((dist<0)?-dist:dist);	
+short v=((dist<0)?-dist:dist);
 sprintf(buf, "%s%d.%02d", ((dist<0)?"-":""), v/96, v%96);
 }
 
@@ -961,7 +959,7 @@ void gui_osd_calc_dof() {
 }
 
 void gui_osd_calc_expo_param() {
-     
+
     expo.av96=shooting_get_av96();
     expo.tv96=shooting_get_tv96();
     expo.sv96=shooting_get_sv96();
@@ -1015,7 +1013,7 @@ void gui_print_osd_state_string_chr(const char *title, const char *value) {
   strcpy(osd_buf, title);
   sprintf(osd_buf+strlen(osd_buf), "%s", value);
   sprintf(osd_buf+strlen(osd_buf), "%12s", "");
-  osd_buf[12]=0;    	
+  osd_buf[12]=0;
   draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+n, osd_buf, conf.osd_color_override);
   n+=FONT_HEIGHT;
 }
@@ -1024,7 +1022,7 @@ void gui_print_osd_state_string_float(const char * title, const char * fmt, int 
   strcpy(osd_buf, title);
   sprintf(osd_buf+strlen(osd_buf), fmt, (int)(value/divisor), (int)(value%divisor));
   sprintf(osd_buf+strlen(osd_buf), "%12s", "");
-  osd_buf[12]=0;    	
+  osd_buf[12]=0;
   draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+n, osd_buf, conf.osd_color_override);
   n+=FONT_HEIGHT;
 }
@@ -1040,11 +1038,11 @@ void gui_print_osd_misc_string_int(const char * title, int value) {
 
 /*
 void gui_print_osd_misc_string_float(const char * title, const char * fmt, int divisor, int value) {
-  char s[16];	
+  char s[16];
   strcpy(osd_buf, title);
   sprintf(s, fmt, (int)(value/divisor), (int)(value%divisor));
   sprintf(osd_buf+strlen(osd_buf), "%6s", s);
-  //osd_buf[8]=0;    	
+  //osd_buf[8]=0;
   draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
   m+=FONT_HEIGHT;
 }
@@ -1110,54 +1108,54 @@ void gui_osd_draw_raw_info()
         }
         else
             draw_string(conf.mode_raw_pos.x, conf.mode_raw_pos.y, (conf.dng_raw)?"DNG":"RAW", conf.osd_color); 
-	}   
-	else if (conf.raw_exceptions_warn)
-	{
+    }   
+    else if (conf.raw_exceptions_warn)
+    {
         gui_print_osd_state_string_chr((conf.dng_raw)?"DNG Disabled":"RAW Disabled",""); 
-	}
+    }
 }
 //-------------------------------------------------------------------
 void gui_osd_draw_state() {
-    int a,  gui_mode=gui_get_mode(), m=(mode_get()&MODE_SHOOTING_MASK); 
-    long t; 
-    
+    int gui_mode=gui_get_mode(), m=(mode_get()&MODE_SHOOTING_MASK);
+    long t;
+
     n=0;
    ///////////////////////////
    //sprintf(osd_buf,"%s",get_debug());
    //draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+6*FONT_HEIGHT, osd_buf, conf.osd_color);
-   ////////////////////////////  
+   ////////////////////////////
 
-      
+
     if ((((conf.tv_enum_type) || (conf.tv_override_value)) && (conf.tv_override_koef)  && !(conf.override_disable==1)) || gui_mode==GUI_MODE_OSD){
-    	if(kbd_is_key_pressed(KEY_SHOOT_HALF)) 
-		 { 
-		  t=(int)(shooting_get_shutter_speed_from_tv96(shooting_get_tv96())*100000);	
+        if(kbd_is_key_pressed(KEY_SHOOT_HALF))
+         {
+          t=(int)(shooting_get_shutter_speed_from_tv96(shooting_get_tv96())*100000);
           gui_print_osd_state_string_float("TV:", "%d.%05d ", 100000, t);
          }
-    	else 
-		 {
-    	 if (conf.tv_enum_type) 
-		   gui_print_osd_state_string_chr("TV:",shooting_get_tv_override_value()); 
-         else  
+        else
+         {
+         if (conf.tv_enum_type)
+           gui_print_osd_state_string_chr("TV:",shooting_get_tv_override_value());
+         else
           {
-		  t=(int)(shooting_get_shutter_speed_override_value()*100000);
+          t=(int)(shooting_get_shutter_speed_override_value()*100000);
           gui_print_osd_state_string_float("TV:", "%d.%05d ", 100000, t);
           }
        }
     }
-    if ((conf.av_override_value && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD)  
-	   gui_print_osd_state_string_float("AV:", "%d.%02d ", 100, shooting_get_aperture_from_av96(shooting_get_av96_override_value()));
+    if ((conf.av_override_value && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD)
+       gui_print_osd_state_string_float("AV:", "%d.%02d ", 100, shooting_get_aperture_from_av96(shooting_get_av96_override_value()));
 #if CAM_HAS_ND_FILTER
-    if ((conf.nd_filter_state && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD) 
-	   gui_print_osd_state_string_chr("NDFILTER:", ((conf.nd_filter_state==1)?"IN":"OUT"));
-#endif    
-    if ((conf.autoiso_enable && shooting_get_iso_mode()<=0 && !(m==MODE_M || m==MODE_TV) && shooting_get_flash_mode() && (!(conf.override_disable==1 && conf.override_disable_all))) || gui_mode==GUI_MODE_OSD)  
-	    gui_print_osd_state_string_chr("AUTOISO:", ((conf.autoiso_enable==1)?"ON":"OFF"));
+    if ((conf.nd_filter_state && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD)
+       gui_print_osd_state_string_chr("NDFILTER:", ((conf.nd_filter_state==1)?"IN":"OUT"));
+#endif
+    if ((conf.autoiso_enable && shooting_get_iso_mode()<=0 && !(m==MODE_M || m==MODE_TV) && shooting_get_flash_mode() && (!(conf.override_disable==1 && conf.override_disable_all))) || gui_mode==GUI_MODE_OSD)
+        gui_print_osd_state_string_chr("AUTOISO:", ((conf.autoiso_enable==1)?"ON":"OFF"));
     if ((conf.subj_dist_override_value && conf.subj_dist_override_koef && shooting_can_focus() && !(conf.override_disable==1)) || ((gui_get_mode()==GUI_MODE_ALT) && shooting_get_common_focus_mode())	|| gui_mode==GUI_MODE_OSD)   {
         extern const char* gui_subj_dist_override_value_enum(int change, int arg);
         extern const char* gui_subj_dist_override_koef_enum(int change, int arg);
     	gui_print_osd_state_string_chr("SD:",gui_subj_dist_override_value_enum(0,0));
-        if (gui_mode==GUI_MODE_ALT)  
+        if (gui_mode==GUI_MODE_ALT)
 		  gui_print_osd_state_string_chr("FACTOR:",gui_subj_dist_override_koef_enum(0,0));
       }
     if ((conf.iso_override_value && conf.iso_override_koef && !(conf.override_disable==1))	 || gui_mode==GUI_MODE_OSD)
@@ -1165,17 +1163,17 @@ void gui_osd_draw_state() {
     if ((gui_mode==GUI_MODE_OSD) || (shooting_get_drive_mode())) {
     if ((conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) || (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))  || (conf.iso_bracket_value && conf.iso_bracket_koef && !(conf.override_disable==1 && conf.override_disable_all)) || ((conf.subj_dist_bracket_value) && (conf.subj_dist_bracket_koef) && (shooting_can_focus() && !(conf.override_disable==1 && conf.override_disable_all))))  
         gui_print_osd_state_string_chr("BRACKET:", shooting_get_bracket_type());
-      if (conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))  
-	    gui_print_osd_state_string_chr("TV:", shooting_get_tv_bracket_value());
-      else if  (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) 
-	    gui_print_osd_state_string_chr("AV:", shooting_get_av_bracket_value());
-      else if  (conf.iso_bracket_value && conf.iso_bracket_koef   && !(conf.override_disable==1 && conf.override_disable_all)) 
-	    gui_print_osd_state_string_int("ISO:", shooting_get_iso_bracket_value());
+      if (conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))
+        gui_print_osd_state_string_chr("TV:", shooting_get_tv_bracket_value());
+      else if  (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))
+        gui_print_osd_state_string_chr("AV:", shooting_get_av_bracket_value());
+      else if  (conf.iso_bracket_value && conf.iso_bracket_koef   && !(conf.override_disable==1 && conf.override_disable_all))
+        gui_print_osd_state_string_int("ISO:", shooting_get_iso_bracket_value());
       else if  ((conf.subj_dist_bracket_value  && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.subj_dist_bracket_koef) && (shooting_can_focus()))
         gui_print_osd_state_string_int("SD:",shooting_get_subject_distance_bracket_value());
      }
 #ifdef OPT_CURVES
-	if (conf.curve_enable || gui_mode==GUI_MODE_OSD) {
+    if (conf.curve_enable || gui_mode==GUI_MODE_OSD) {
         if (conf.curve_enable==1) gui_print_osd_state_string_chr("CURVES:", "CSTM");
         else if (conf.curve_enable==4) gui_print_osd_state_string_chr("CURVES:", "AUTO");
         else if (conf.curve_enable==3) gui_print_osd_state_string_chr("CURVES:", "+2EV");
@@ -1192,14 +1190,13 @@ void gui_osd_draw_state() {
 //-------------------------------------------------------------------
 void gui_osd_draw_values(int showtype) {
     int iso_mode=shooting_get_iso_mode();
-    float s=-1.0f;
-    
+
     m=0;
-    
+
     //gui_osd_calc_expo_param();
-    
+
     if (conf.values_show_zoom) {
-     int fl, zp=lens_get_zoom_point(), fl1=get_focal_length(zp);     
+     int fl, zp=lens_get_zoom_point(), fl1=get_focal_length(zp);
      switch (conf.zoom_value) {
          case ZOOM_SHOW_FL:
              sprintf(osd_buf, "Z:%d.%dmm%8s", fl1/1000, fl1%1000/100, "");
@@ -1238,16 +1235,16 @@ void gui_osd_draw_values(int showtype) {
           if (conf.values_show_real_iso) gui_print_osd_misc_string_int("I-R:", expo.iso);
           if (conf.values_show_market_iso) gui_print_osd_misc_string_int("I-M:", expo.iso_market);
       }
-      if (conf.values_show_bv_measured) gui_print_osd_misc_string_canon_values("Bvm:", expo.bv96_measured	);
-      if (conf.values_show_bv_seted) gui_print_osd_misc_string_canon_values("Bvs:", expo.bv96_seted	);
+      if (conf.values_show_bv_measured) gui_print_osd_misc_string_canon_values("Bvm:", expo.bv96_measured   );
+      if (conf.values_show_bv_seted) gui_print_osd_misc_string_canon_values("Bvs:", expo.bv96_seted );
       if (conf.values_show_ev_measured) gui_print_osd_misc_string_canon_values("Evm:", expo.ev96_measured);
-      if (conf.values_show_ev_seted	) gui_print_osd_misc_string_canon_values("Evs:", expo.ev96_seted	);
+      if (conf.values_show_ev_seted ) gui_print_osd_misc_string_canon_values("Evs:", expo.ev96_seted    );
       if (conf.values_show_overexposure) gui_print_osd_misc_string_canon_values("dE :", expo.dev96);
-      if (conf.values_show_canon_overexposure	) gui_print_osd_misc_string_canon_values("dEc:", expo.dev96_canon);
+      if (conf.values_show_canon_overexposure   ) gui_print_osd_misc_string_canon_values("dEc:", expo.dev96_canon);
       if (conf.values_show_luminance) gui_print_osd_misc_string_float("B  :", "%d.%02d ", 100, expo.b);
-	  
+
     }
-    
+
 }
 
 #define CLOCK_FORMAT_24 0
@@ -1270,55 +1267,55 @@ void gui_osd_draw_clock(int x, int y, color cl) {
     if (conf.clock_format == CLOCK_FORMAT_12) {
      switch(conf.clock_indicator)
       {
-    	case 1:
-    	    sprintf(pm, "P");
+        case 1:
+            sprintf(pm, "P");
             sprintf(am, "A");
             w = 1;
-    		break;
+            break;
         case 2:
-       	    sprintf(pm, ".");
+            sprintf(pm, ".");
             sprintf(am, " ");
             w = 1;
-    		break;
-       	default:
+            break;
+        default:
             sprintf(pm, " PM");
             sprintf(am, " AM");
             w = 3;
-    		break;
+            break;
       }
-     sprintf(curr,((hour>=12)?pm:am)); 
+     sprintf(curr,((hour>=12)?pm:am));
      if ((ttm->tm_hour)==00)  hour=12;
      else if ((ttm->tm_hour)>12)  hour=hour-12;
     }
     switch(conf.show_clock)
     {
       case CLOCK_WITHOUT_SEC:
-        if (conf.clock_format == CLOCK_FORMAT_24) 
-		  sprintf(osd_buf, "%2u:%02u", hour, ttm->tm_min);
-        else 
-		  sprintf(osd_buf, "%2u:%02u%s", hour, ttm->tm_min,curr);
-	    z=0;
-        break;  
+        if (conf.clock_format == CLOCK_FORMAT_24)
+          sprintf(osd_buf, "%2u:%02u", hour, ttm->tm_min);
+        else
+          sprintf(osd_buf, "%2u:%02u%s", hour, ttm->tm_min,curr);
+        z=0;
+        break;
       case CLOCK_WITH_SEC:
       default:
-         if (conf.clock_format == CLOCK_FORMAT_24)  
-		   sprintf(osd_buf, "%2u:%02u:%02u", hour, ttm->tm_min,ttm->tm_sec);
-         else  
-		   sprintf(osd_buf, "%2u:%02u:%02u%s", hour, ttm->tm_min,ttm->tm_sec,curr);
+         if (conf.clock_format == CLOCK_FORMAT_24)
+           sprintf(osd_buf, "%2u:%02u:%02u", hour, ttm->tm_min,ttm->tm_sec);
+         else
+           sprintf(osd_buf, "%2u:%02u:%02u%s", hour, ttm->tm_min,ttm->tm_sec,curr);
          z=3;
-         break;  
+         break;
     }
-    if ((conf.show_clock==CLOCK_WITH_SEC || (conf.clock_format==CLOCK_FORMAT_12)) && (conf.clock_pos.x>=(z+w)*FONT_WIDTH) ) 
+    if ((conf.show_clock==CLOCK_WITH_SEC || (conf.clock_format==CLOCK_FORMAT_12)) && (conf.clock_pos.x>=(z+w)*FONT_WIDTH) )
        draw_string((x)?x-(z+w)*FONT_WIDTH:conf.clock_pos.x-(z+w)*FONT_WIDTH, (y)?y:conf.clock_pos.y, osd_buf, (cl)?cl:conf.osd_color);
-	else 
-	   draw_string((x)?x:conf.clock_pos.x, (y)?y:conf.clock_pos.y, osd_buf, (cl)?cl:conf.osd_color);
+    else
+       draw_string((x)?x:conf.clock_pos.x, (y)?y:conf.clock_pos.y, osd_buf, (cl)?cl:conf.osd_color);
 }
 
 
 void gui_osd_draw_seconds() {
     unsigned long t;
     static struct tm *ttm;
- 
+
     t = time(NULL);
     ttm = localtime(&t);
     sprintf(osd_buf, "%02u", ttm->tm_sec);
@@ -1329,19 +1326,19 @@ void gui_osd_draw_seconds() {
     {
     draw_string(conf.clock_pos.x+(3*FONT_WIDTH), conf.clock_pos.y, osd_buf, conf.osd_color);
     }
-    
+
 
 }
 
 void gui_osd_draw_movie_time_left()  {
- 
+
 static int card_used, init_space, elapsed, avg_use, time_left;
 static long init_time;
 static int record_running = 0;
 static int init = 0;
 static unsigned int skipcalls = 1;
 unsigned int hour=0, min=0, sec=0;
-int mode_video = MODE_IS_VIDEO(m); 
+int mode_video = MODE_IS_VIDEO(m);
 
 
 #if CAM_CHDK_HAS_EXT_VIDEO_MENU
@@ -1357,26 +1354,26 @@ if (mode_video || movie_status > 1) {
 #endif
    if ((conf.video_mode == 1 && conf.fast_movie_quality_control==1) || conf.video_quality != VIDEO_DEFAULT_QUALITY) {
        // gui_print_osd_state_string_int("Quality: ",conf.video_quality);
-			 sprintf(osd_buf4, "Qual:%2i",conf.video_quality);
+             sprintf(osd_buf4, "Qual:%2i",conf.video_quality);
        draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y+3*FONT_HEIGHT, osd_buf4, conf.osd_color);
    }
    // everything else is for stills
-	 if(mode_video)
-	 return;
+     if(mode_video)
+     return;
     }
 #endif
 
 if (movie_reset == 1)
-	{
-		init = 0;
-		movie_reset = 0;
-	}
+    {
+        init = 0;
+        movie_reset = 0;
+    }
     if (movie_status > 1) record_running = 1;
-    else 
+    else
     {record_running = 0;
     init = 0;
     }
-    
+
     if (record_running == 1 && init == 0)
     {
     init = 1;
@@ -1385,7 +1382,7 @@ if (movie_reset == 1)
     }
     if (init == 1)
     {
-  
+
     card_used = init_space - GetFreeCardSpaceKb();
     elapsed = (int) ( get_tick_count() - init_time ) / 1000;
     avg_use = card_used / elapsed;  // running average Kb/sec
@@ -1399,8 +1396,8 @@ if (movie_reset == 1)
   sprintf(osd_buf, "Calc...");
    draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y, osd_buf, conf.osd_color);
     }
-    
-   if (--skipcalls ==0) { 
+
+   if (--skipcalls ==0) {
     if (elapsed>1)
      {
      if (conf.show_movie_time == 3){
@@ -1444,62 +1441,78 @@ void gui_osd_draw_ev() {
 
 
 void gui_osd_draw_temp() {
- 		if (conf.show_temp == 1)
- 			{
- 				if (conf.temperature_unit == 0)
- 						{
- 							sprintf(osd_buf," opt: %i°",get_optical_temp());
- 						}
- 				else
- 						{
- 							sprintf(osd_buf,"opt: %i°",(get_optical_temp()*18+320)/10);
- 						}
- 				draw_string(conf.temp_pos.x, conf.temp_pos.y, osd_buf, conf.osd_color);
- 			}
- 		if (conf.show_temp==2)
- 			{
- 				if (conf.temperature_unit == 0)
- 						{
- 							sprintf(osd_buf," ccd: %i°",get_ccd_temp());
- 						}
- 				else
- 						{
- 							sprintf(osd_buf,"ccd: %i°",(get_ccd_temp()*18+320)/10);
- 						}
- 				draw_string(conf.temp_pos.x, conf.temp_pos.y, osd_buf, conf.osd_color);
- 			}
- 		if (conf.show_temp==3)
- 			{
- 				if (conf.temperature_unit == 0)
- 						{
- 							sprintf(osd_buf," batt:%i°",get_battery_temp());
- 						}
- 				else
- 						{
- 							sprintf(osd_buf,"batt:%i°",(get_battery_temp()*18+320)/10);
- 						}
- 				draw_string(conf.temp_pos.x, conf.temp_pos.y, osd_buf, conf.osd_color);
- 			}
- 		if (conf.show_temp==4)
- 			{
-				if (conf.temperature_unit == 0)
- 					{ 				
- 						sprintf(osd_buf," opt: %i°",get_optical_temp());
- 						draw_string(conf.temp_pos.x, conf.temp_pos.y, osd_buf, conf.osd_color);
- 						sprintf(osd_buf," ccd: %i°",get_ccd_temp());
- 						draw_string(conf.temp_pos.x, conf.temp_pos.y+FONT_HEIGHT, osd_buf, conf.osd_color);
- 						sprintf(osd_buf," batt:%i°",get_battery_temp());
- 						draw_string(conf.temp_pos.x, conf.temp_pos.y+2*FONT_HEIGHT, osd_buf, conf.osd_color);
- 					}	
-    		else
-					{
- 						sprintf(osd_buf,"opt: %i°",(get_optical_temp()*18+320)/10);
- 						draw_string(conf.temp_pos.x, conf.temp_pos.y, osd_buf, conf.osd_color);
- 						sprintf(osd_buf,"ccd: %i°",(get_ccd_temp()*18+320)/10);
- 						draw_string(conf.temp_pos.x, conf.temp_pos.y+FONT_HEIGHT, osd_buf, conf.osd_color);
- 						sprintf(osd_buf,"batt:%i°",(get_battery_temp()*18+320)/10);
- 						draw_string(conf.temp_pos.x, conf.temp_pos.y+2*FONT_HEIGHT, osd_buf, conf.osd_color);
-					}    			
+        if (conf.show_temp == 1)
+            {
+                if (conf.temperature_unit == 0)
+                        {
+                            sprintf(osd_buf," opt: %i°",get_optical_temp());
+                        }
+                else
+                        {
+                            sprintf(osd_buf,"opt: %i°",(get_optical_temp()*18+320)/10);
+                        }
+                draw_string(conf.temp_pos.x, conf.temp_pos.y, osd_buf, conf.osd_color);
+            }
+        if (conf.show_temp==2)
+            {
+                if (conf.temperature_unit == 0)
+                        {
+                            #ifdef CAM_HAS_CMOS
+                                sprintf(osd_buf," CMOS: %i°", get_ccd_temp());
+                            #else
+                                sprintf(osd_buf," CCD: %i°", get_ccd_temp());
+                            #endif
+                        }
+                else
+                        {
+                            #ifdef CAM_HAS_CMOS
+                                sprintf(osd_buf,"CMOS: %i°",(get_ccd_temp()*18+320)/10);
+                            #else
+                                sprintf(osd_buf,"CCD: %i°",(get_ccd_temp()*18+320)/10);
+                            #endif
+                        }
+                draw_string(conf.temp_pos.x, conf.temp_pos.y, osd_buf, conf.osd_color);
+            }
+        if (conf.show_temp==3)
+            {
+                if (conf.temperature_unit == 0)
+                        {
+                            sprintf(osd_buf," batt: %i°",get_battery_temp());
+                        }
+                else
+                        {
+                            sprintf(osd_buf,"batt: %i°",(get_battery_temp()*18+320)/10);
+                        }
+                draw_string(conf.temp_pos.x, conf.temp_pos.y, osd_buf, conf.osd_color);
+            }
+        if (conf.show_temp==4)
+            {
+                if (conf.temperature_unit == 0)
+                    {
+                        sprintf(osd_buf," opt:  %i°",get_optical_temp());
+                        draw_string(conf.temp_pos.x, conf.temp_pos.y, osd_buf, conf.osd_color);
+                        #ifdef CAM_HAS_CMOS
+                            sprintf(osd_buf," CMOS: %i°",get_ccd_temp());
+                        #else
+                            sprintf(osd_buf," CCD: %i°",get_ccd_temp());
+                        #endif
+                        draw_string(conf.temp_pos.x, conf.temp_pos.y+FONT_HEIGHT, osd_buf, conf.osd_color);
+                        sprintf(osd_buf," batt: %i°",get_battery_temp());
+                        draw_string(conf.temp_pos.x, conf.temp_pos.y+2*FONT_HEIGHT, osd_buf, conf.osd_color);
+                    }
+            else
+                    {
+                        sprintf(osd_buf,"opt: %i°",(get_optical_temp()*18+320)/10);
+                        draw_string(conf.temp_pos.x, conf.temp_pos.y, osd_buf, conf.osd_color);
+                        #ifdef CAM_HAS_CMOS
+                            sprintf(osd_buf,"CMOS: %i°",(get_ccd_temp()*18+320)/10);
+                        #else
+                            sprintf(osd_buf,"CCD: %i°",(get_ccd_temp()*18+320)/10);
+                        #endif
+                        draw_string(conf.temp_pos.x, conf.temp_pos.y+FONT_HEIGHT, osd_buf, conf.osd_color);
+                        sprintf(osd_buf,"batt: %i°",(get_battery_temp()*18+320)/10);
+                        draw_string(conf.temp_pos.x, conf.temp_pos.y+2*FONT_HEIGHT, osd_buf, conf.osd_color);
+                    }
     }
 }
 
