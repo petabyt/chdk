@@ -195,17 +195,18 @@ static void gui_space_draw_mb() {
 //-------------------------------------------------------------------
 
 void gui_space_draw_osd() {
-    if (conf.space_icon_show) {
+    if (conf.space_icon_show)   {
         gui_space_draw_icon();
     }
-    if (conf.space_perc_show) {
+    if (conf.space_perc_show)  {
         gui_space_draw_percent();
     } else if (conf.space_mb_show) {
         gui_space_draw_mb();
     }
-    if (conf.space_bar_show==1) {
+  if (conf.space_bar_show==1)  {
         gui_space_draw_spacebar_horizontal();
-    } else if (conf.space_bar_show==2) {
+    }
+  if (conf.space_bar_show==2) {
         gui_space_draw_spacebar_vertical();
     }
 }

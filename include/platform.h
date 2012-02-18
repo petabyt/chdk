@@ -343,6 +343,9 @@ void shooting_set_zoom_speed(int v);
 /******************************************************************/
 void shooting_set_focus(int v, short is_now);
 short shooting_get_focus_mode();
+short shooting_get_real_focus_mode();
+short shooting_get_focus_state();
+short shooting_get_focus_ok();
 int shooting_get_hyperfocal_distance();
 int shooting_get_hyperfocal_distance_f(int av, int fl);
 int shooting_get_near_limit_of_acceptable_sharpness();
@@ -385,7 +388,6 @@ void shooting_video_bitrate_change(int v);
 extern int auto_started;
 void shooting_tv_bracketing();
 void shooting_av_bracketing();
-void shooting_iso_bracketing();
 /******************************************************************/
 // capture mode functions
 // return a CHDK mode enum for a PROPCASE_SHOOTING_MODE value, or 0 if not found
@@ -434,6 +436,7 @@ void camera_set_nr(int mode);
 int camera_get_nr();
 int camera_get_script_autostart();
 void camera_set_script_autostart();
+void enter_alt();
 void exit_alt();
 void camera_shutdown_in_a_second(void);
 

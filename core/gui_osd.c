@@ -222,11 +222,11 @@ void gui_osd_draw_raw_info()
         }
         else
             draw_string(conf.mode_raw_pos.x, conf.mode_raw_pos.y, (conf.dng_raw)?"DNG":"RAW", conf.osd_color); 
-	}   
-	else if (conf.raw_exceptions_warn)
-	{
+    }   
+    else if (conf.raw_exceptions_warn)
+    {
         gui_print_osd_state_string_chr((conf.dng_raw)?"DNG Disabled":"RAW Disabled",""); 
-	}
+    }
 }
 
 //-------------------------------------------------------------------
@@ -271,7 +271,7 @@ void gui_osd_draw_state()
         extern const char* gui_subj_dist_override_value_enum(int change, int arg);
         extern const char* gui_subj_dist_override_koef_enum(int change, int arg);
         gui_print_osd_state_string_chr("SD:",gui_subj_dist_override_value_enum(0,0));
-        if (gui_mode==GUI_MODE_ALT)  
+        if (gui_mode==GUI_MODE_ALT)
             gui_print_osd_state_string_chr("FACTOR:",gui_subj_dist_override_koef_enum(0,0));
     }
     if ((conf.iso_override_value && conf.iso_override_koef && !(conf.override_disable==1))	 || gui_mode==GUI_MODE_OSD)
@@ -308,7 +308,6 @@ void gui_osd_draw_state()
 void gui_osd_draw_values(int showtype)
 {
     int iso_mode=shooting_get_iso_mode();
-    float s=-1.0f;
 
     m=0;
 
@@ -469,7 +468,7 @@ void gui_osd_draw_movie_time_left()
 
     if (movie_status > 1)
         record_running = 1;
-    else 
+    else
     {
         record_running = 0;
         init = 0;
@@ -554,14 +553,22 @@ void gui_osd_draw_temp() {
     switch (conf.show_temp)
     {
     case 2:
-        draw_temp("ccd", get_ccd_temp(), 0);
+#ifdef CAM_HAS_CMOS
+        draw_temp("CMOS", get_ccd_temp(), 0);
+#else
+        draw_temp("CCD", get_ccd_temp(), 0);
+#endif
         break;
     case 3:
         draw_temp("bat", get_battery_temp(), 0);
         break;
     case 4:
         draw_temp("bat", get_battery_temp(), 2);
-        draw_temp("ccd", get_ccd_temp(), 1);
+#ifdef CAM_HAS_CMOS
+        draw_temp("CMOS", get_ccd_temp(), 1);
+#else
+        draw_temp("CCD", get_ccd_temp(), 1);
+#endif
     case 1:
         draw_temp("opt", get_optical_temp(), 0);
         break;

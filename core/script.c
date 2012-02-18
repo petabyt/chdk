@@ -465,7 +465,7 @@ void script_load(const char *fn, int saved_params) {
     }
     script_scan(conf.script_file, update_vars);
     if (saved_params)
-        load_params_values(conf.script_file, update_vars, (saved_params!=2));   
+        load_params_values(conf.script_file, update_vars, (saved_params!=2));
     gui_update_script_submenu();
 }
 
@@ -476,20 +476,20 @@ char print_screen_file[25];
 
 void script_print_screen_init()
 {
-  print_screen_p = 0;
-  if (print_screen_d >= 0) {
-    close(print_screen_d);
-    print_screen_d = -1;
-  }
+    print_screen_p = 0;
+    if (print_screen_d >= 0) {
+        close(print_screen_d);
+        print_screen_d = -1;
+    }
 }
 
 void script_print_screen_end()
 {
-  if (print_screen_d >= 0) {
-    close(print_screen_d);
-    print_screen_d = -1;
-    print_screen_p = 0;
-  }
+    if (print_screen_d >= 0) {
+        close(print_screen_d);
+        print_screen_d = -1;
+        print_screen_p = 0;
+    }
 }
 
 void script_print_screen_statement(int val)
@@ -508,7 +508,7 @@ void script_print_screen_statement(int val)
     while (val > 9999) val -= 10000;
     sprintf(print_screen_file, "A/CHDK/LOGS/LOG_%04d.TXT", val);
     print_screen_d = open(print_screen_file, O_WRONLY|O_CREAT|flag_trunc, 0777);
-    if (print_screen_d>=0) lseek(print_screen_d,0,SEEK_END);    
+    if (print_screen_d>=0) lseek(print_screen_d,0,SEEK_END);
   }
 }
 
@@ -528,7 +528,7 @@ static int is_lua( const char* script_file)
 {
   int len;
   char const* s;
-
+  
   s = script_file;
   len = strlen( s );
   return len >= 4 && ( s[len-1] == 'a' || s[len-1] == 'A' )
@@ -539,12 +539,12 @@ static int is_lua( const char* script_file)
 
 void script_wait_and_end(void)
 {
-	script_console_add_line("PRESS SHUTTER TO CLOSE");
+    script_console_add_line("PRESS SHUTTER TO CLOSE");
 
-	// We're not running any more, but we have scheduled stuff that
-	// needs to finish. So keep the script marked as running, but don't
-	// call any more scripting functions.
-	state_kbd_script_run = 3;	
+    // We're not running any more, but we have scheduled stuff that
+    // needs to finish. So keep the script marked as running, but don't
+    // call any more scripting functions.
+    state_kbd_script_run = 3;
 }
 
 static void process_script()
@@ -845,4 +845,3 @@ int script_keyid_by_name (const char *n)
         return keynames[i].keyid;
     return 0;
 }
-

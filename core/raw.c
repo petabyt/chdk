@@ -73,7 +73,7 @@ int raw_savefile() {
         started();
         fd = open(fn, O_RDONLY, 0777);
         if (fd>=0) {
-            read(fd, get_raw_image_addr(), hook_raw_size());
+            read(fd, rawadr, hook_raw_size());
             close(fd);
         }
 #ifdef OPT_CURVES

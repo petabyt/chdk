@@ -8,6 +8,8 @@ struct libcurves_sym {
 
 	void (*curve_init_mode)();
 	void (*curve_apply)();
+    void (*curve_set_mode)();
+    void (*curve_set_file)();
 };
 
 
@@ -18,11 +20,12 @@ struct libcurves_sym {
     extern struct libcurves_sym* module_curves_load();		// 0fail, addr-ok
 #else
 	// This section is for module
+    extern void curve_set_mode();
+    extern void curve_set_file();
 	extern void curve_init_mode();
 	extern void curve_apply();
 #endif
 
-//-------------------------------------------------------------------
 //-------------------------------------------------------------------
 
 #endif

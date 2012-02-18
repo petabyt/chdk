@@ -114,7 +114,10 @@ static const struct keyword_token keywords[] = {
   {"get_dof",                 TOKENIZER_GET_DOF},
   {"get_far_limit",           TOKENIZER_GET_FAR_LIMIT},
   {"get_free_disk_space",     TOKENIZER_GET_FREE_DISK_SPACE},
+  {"get_focal_length",        TOKENIZER_GET_FOCAL_LENGTH},
   {"get_focus_mode",          TOKENIZER_GET_FOCUS_MODE},
+  {"get_focus_ok",            TOKENIZER_GET_FOCUS_OK},
+  {"get_focus_state",         TOKENIZER_GET_FOCUS_STATE},
   {"get_focus",               TOKENIZER_GET_FOCUS},
   {"get_hyp_dist",            TOKENIZER_GET_HYPERFOCAL_DIST},
   {"get_iso_market",          TOKENIZER_GET_ISO_MARKET},
@@ -156,9 +159,9 @@ static const struct keyword_token keywords[] = {
   {"set_av_rel",              TOKENIZER_SET_USER_AV_BY_ID_REL}, //FOR COMPATIBILITY
   {"set_av96",                TOKENIZER_SET_AV96},
   {"set_av",                  TOKENIZER_SET_USER_AV_BY_ID}, //FOR COMPATIBILITY
-  {"set_backlight",           TOKENIZER_SET_BACKLIGHT},
   {"set_capture_mode_canon",  TOKENIZER_SET_CAPTURE_MODE_CANON},
   {"set_capture_mode",        TOKENIZER_SET_CAPTURE_MODE},
+  {"set_backlight",           TOKENIZER_SET_BACKLIGHT},
   {"set_focus",               TOKENIZER_SET_FOCUS},
   {"set_iso_mode",            TOKENIZER_SET_ISO_MODE},
   {"set_iso_real",            TOKENIZER_SET_ISO_REAL},
@@ -222,7 +225,7 @@ static const struct keyword_token keywords[] = {
   {"get_histo_range",         TOKENIZER_GET_HISTO_RANGE},
    {"shot_histo_enable",       TOKENIZER_SHOT_HISTO_ENABLE},
    {"set_aflock",            TOKENIZER_SET_AFLOCK},
-  {"is_capture_mode_valid",  TOKENIZER_IS_CAPTURE_MODE_VALID},
+  {"is_capture_mode_valid",  TOKENIZER_IS_CAPTURE_MODE_VALID}, 
   {"reboot",                 TOKENIZER_REBOOT},
   
   {"end",                     TOKENIZER_END},
@@ -280,9 +283,9 @@ get_next_token(void)
   if(*ptr == 0) {
     return TOKENIZER_ENDOFINPUT;
   }
-
-  // UnknStatement should have size, otherwise hanging-up in ubasic.c possible for some cases
-  nextptr = ptr + 1;	
+  
+    // UnknStatement should have size, otherwise hanging-up in ubasic.c possible for some cases 
+    nextptr = ptr + 1; 
   
   if(isdigit(*ptr)) {
     for(i = 0; i < (MAX_NUMLEN+1); ++i) {
@@ -349,6 +352,7 @@ get_next_token(void)
     return TOKENIZER_VARIABLE;
   }
 
+  
   return TOKENIZER_ERROR;
 }
 /*---------------------------------------------------------------------------*/

@@ -101,6 +101,26 @@ static int curve_load_data(const char *name,CURVE_TYPE curve_type) {
 	return 1;
 }
 
+void curve_set_mode(int value) {
+	if((value>=0) && (value<=4)) conf.curve_enable=value;
+	curve_init_mode();
+}
+
+void curve_set_file(const char *s) {
+    int l;
+	if(s) {
+        if(strncmp(s,"A/",2)==0) strncpy(conf.curve_file,s,99);
+        else {
+            l=strlen(CURVE_DIR);
+            strcpy(conf.curve_file,CURVE_DIR);
+            conf.curve_file[l]='/';
+            strncpy(&conf.curve_file[l+1],s,99-l-1);
+        }
+        conf.curve_file[99]=0x0;
+        curve_init_mode();
+   	}
+}
+
 void curve_init_mode() {
 	switch(conf.curve_enable) {
 		case 1: // custom - ensure alloc and load conf.curve_file
@@ -121,7 +141,7 @@ void curve_init_mode() {
 // TODO border pixels should not be hard coded
 void curveRGB_apply() {
 	int i,j;
-	unsigned short pixVal0, pixVal1, pixVal2, col;
+	unsigned short pixVal0, pixVal1, pixVal2;
 	unsigned char *src;
 
 	unsigned short *curve0 = curve_data;
@@ -207,7 +227,7 @@ void curveRGB_apply() {
 
 void curveL_apply(unsigned sys_index) {
 	int i,j;
-	unsigned short pixVal0, pixVal1, pixVal2, col;
+	unsigned short pixVal0, pixVal1, pixVal2;
 	unsigned char *src;
 	
 	unsigned short *curve0;
@@ -439,7 +459,9 @@ struct libcurves_sym libcurves = {
 			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
 										// increase minor if compatible changes made(including extending this struct)
 			curve_init_mode,
-			curve_apply
+			curve_apply,
+            curve_set_mode,
+            curve_set_file
 };
 
 int module_idx=-1;

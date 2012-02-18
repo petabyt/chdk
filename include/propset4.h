@@ -35,6 +35,10 @@ The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 #define PROPCASE_IS_MODE                         145
 #define PROPCASE_ISO_MODE                        149
 
+#define PROPCASE_REAL_FOCUS_MODE                 6       //??? WIKI|Propcase focus_mode
+#define PROPCASE_FOCUS_STATE                     18      //???
+#define PROPCASE_GPS                             359     // (CHDKLover, August 2011) - contains a 272 bytes long structure
+
 // SX30 & G12 values
 #define PROPCASE_AE_LOCK                         3       // 0 = AE not locked, 1 = AE locked
 #define PROPCASE_AF_FRAME                        8       // 1 = FlexiZone, 2 = Face AiAF / Tracking AF
@@ -56,7 +60,5 @@ The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 #define PROPCASE_USER_TV                         268
 #define PROPCASE_WB_ADJ                          273
 #define PROPCASE_ASPECT_RATIO                    300
-
-#define PROPCASE_GPS							 359	//for sx230hs
 
 #endif
