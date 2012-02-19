@@ -11,6 +11,7 @@
 #include "console.h"
 #include "lang.h"
 #include "gui_lang.h"
+#include "usb_remote.h"
 
 #include "module_load.h"
 #include "gui.h"
@@ -22,7 +23,7 @@ int kbd_blocked;
 static long delay_target_ticks;
 static int soft_half_press = 0;
 static int key_pressed;
-
+int remote_script_start_ready=0;
 int shutter_int=0;
 extern int usb_remote_active ;
 
@@ -110,12 +111,16 @@ long kbd_process()
     if ( kbd_blocked && !usb_remote_active ) 
 	{
 #ifdef OPT_SCRIPTING
-		// Start or stop a script if the shutter button pressed in <ALT> mode (kdb_blocked) or USB remote sequence running
+		// Start the current script if script_start is enabled, we are in <ALT> mode and there is a pulse longer than 100mSec on USB port
+        if (conf.remote_enable && !state_kbd_script_run && conf.remote_enable_scripts && get_usb_power(SINGLE_PULSE) > 5) remote_script_start_ready=1;
+
+		// Start or stop a script if the shutter button pressed in <ALT> mode (kdb_blocked) or USB remote sequence not running
 		// Note: this is blocked if CHDK is in the file selector. prevents problems
 		//       when the file selector is called from a script.
 		
-        if (kbd_is_key_pressed(KEY_SHOOT_FULL) && (gui_get_mode() != GUI_MODE_FSELECT) && (gui_get_mode() != GUI_MODE_MPOPUP)) 
+        if ((kbd_is_key_pressed(KEY_SHOOT_FULL) || remote_script_start_ready ) && (gui_get_mode() != GUI_MODE_FSELECT) && (gui_get_mode() != GUI_MODE_MPOPUP)) 
 		{
+            remote_script_start_ready=0;
             key_pressed = 100;
             if (!state_kbd_script_run) {
                 script_start_gui(0);

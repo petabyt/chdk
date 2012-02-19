@@ -669,3 +669,5 @@
 549 "Compensate if overexp>= x%"
 
 550 "To cancel [Press half]"
+
+551 "Enable script start"

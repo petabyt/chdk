@@ -321,6 +321,9 @@ typedef struct {
 	int remote_control_mode ;
 
     int ext_video_time;
+    
+    int remote_enable_scripts ;  // usb remote activates scripts in <ALT> mode
+    
 } Conf;
 
 extern Conf conf;
