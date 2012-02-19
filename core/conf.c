@@ -390,6 +390,8 @@ static const ConfInfo conf_info[] = {
 	CONF_INFO(248, conf.remote_switch_type,  CONF_DEF_VALUE, i:0, NULL),
 	CONF_INFO(249, conf.remote_control_mode,  CONF_DEF_VALUE, i:0, NULL),
 
+	CONF_INFO(250, conf.remote_enable_scripts, CONF_DEF_VALUE, i:0, NULL),
+
    };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 

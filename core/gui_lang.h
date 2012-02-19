@@ -672,9 +672,11 @@
 #define LANG_MENU_AUTOISO_OVEREXP_EV     		548
 #define LANG_MENU_AUTOISO_OVEREXP_THRES  		549
 
-#define LANG_MENU_GPS_t_18 						550	
-				
-#define GUI_LANG_ITEMS                          550
+#define LANG_MENU_GPS_t_18 						550
+
+#define LANG_MENU_SCRIPT_START_ENABLE			551
+
+#define GUI_LANG_ITEMS                          551
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
