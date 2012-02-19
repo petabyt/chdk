@@ -73,7 +73,7 @@
 #define CAM_SENSOR_BITS_PER_PIXEL   12 // Look into
 
 #undef CAM_BITMAP_PALETTE
-#define CAM_BITMAP_PALETTE          9
+#define CAM_BITMAP_PALETTE          10
 
 #undef EDGE_HMARGIN
 #define EDGE_HMARGIN                10 // Look into

@@ -12,7 +12,5 @@ long lens_get_focus_pos_from_lens()
 
 long lens_get_target_distance()
 {
-	 
-    //return _GetCurrentTargetDistance();
-	return 0;
+    return _GetCurrentTargetDistance();
 }

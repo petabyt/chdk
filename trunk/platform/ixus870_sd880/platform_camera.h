@@ -27,7 +27,6 @@
     #define CAM_RAW_ROWS                    2772
 
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
-    #define CAM_BITMAP_PALETTE          1
     #define CAM_BRACKETING                  1       // XXX
     #define CAM_CAN_SD_OVER_NOT_IN_MF   1
     #define CAM_CAN_SD_OVERRIDE         1

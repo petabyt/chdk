@@ -84,7 +84,7 @@
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              14
+    #define CAM_BITMAP_PALETTE              15
 
     #define CHDK_COLOR_BASE                 0x1D    // Start color index for CHDK colors loaded into camera palette.
     #define CAM_USE_COLORED_ICONS           1       // Enable using the CHDK-DE colored icons.
