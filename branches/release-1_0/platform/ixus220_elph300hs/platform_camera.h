@@ -66,7 +66,7 @@
     #define CAM_SENSOR_BITS_PER_PIXEL       12
     #define CAM_EXT_TV_RANGE                1
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              9
+    #define CAM_BITMAP_PALETTE              10
     #undef  CAM_HAS_ERASE_BUTTON
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 

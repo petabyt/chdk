@@ -90,7 +90,7 @@
     #define CAM_ZEBRA_NOBUF                     1
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              	12
+    #define CAM_BITMAP_PALETTE                  13
 
     //zebra letterbox for saving memory
     #undef  ZEBRA_HMARGIN0

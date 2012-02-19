@@ -14,10 +14,6 @@ long lens_get_focus_pos_from_lens()
 
 long lens_get_target_distance()
 {
-	 
-	//ERR99: TODO G11
-    //return _GetCurrentTargetDistance();
-	return 0;
+
+    return _GetCurrentTargetDistance();
 }
-
-

@@ -54,7 +54,7 @@
     #define CAM_ACTIVE_AREA_Y2              2772
 
     #undef CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              13
+    #define CAM_BITMAP_PALETTE              14
 
     #undef  CAM_HAS_MANUAL_FOCUS
     #define CAM_EXT_TV_RANGE                1

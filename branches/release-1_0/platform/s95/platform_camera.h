@@ -53,7 +53,7 @@
     #define CAM_USES_ASPECT_CORRECTION      1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              7
+    #define CAM_BITMAP_PALETTE              9
 
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                    28

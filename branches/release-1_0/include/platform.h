@@ -611,4 +611,12 @@ extern int touch_screen_active;
 
 unsigned char SetFileAttributes(const char* fn, unsigned char attr);
 
+#ifdef CAM_HAS_GPS
+    void GPS_UpdateData();
+	extern char * camera_jpeg_current_filename();
+	extern char * camera_jpeg_current_latitude();
+	extern char * camera_jpeg_current_longitude();
+	extern char * camera_jpeg_current_height();
+#endif
+
 #endif

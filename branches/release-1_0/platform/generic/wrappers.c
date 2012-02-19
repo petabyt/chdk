@@ -772,7 +772,7 @@ void *memchr(const void *s, int c, int n) {
 	return (void *)0;
 #endif
 }
- 
+
 #if defined(CAM_FIRMWARE_MEMINFO)
 
 // Use firmware GetMemInfo function to retrieve info about Canon heap memory allocation
