@@ -14,3 +14,10 @@ long lens_get_target_distance()
 {
 	return _GetCurrentTargetDistance();
 }
+
+#ifdef CAM_HAS_GPS
+void GPS_UpdateData() {
+    _GPS_UpdateData();
+}
+#endif
+

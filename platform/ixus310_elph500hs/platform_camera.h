@@ -77,7 +77,7 @@
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              12
+    #define CAM_BITMAP_PALETTE              13
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized

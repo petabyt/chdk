@@ -93,7 +93,7 @@
     #define CAM_ZEBRA_ASPECT_ADJUST             1
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              	12
+    #define CAM_BITMAP_PALETTE                  13
   
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN 2

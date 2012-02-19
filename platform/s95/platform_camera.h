@@ -57,7 +57,7 @@
     #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              7
+    #define CAM_BITMAP_PALETTE              9
 
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                    28

@@ -809,7 +809,7 @@ void *memchr(const void *s, int c, int n) {
 	return (void *)0;
 #endif
 }
- 
+
 void GetMemInfo(cam_meminfo *camera_meminfo)
 {
 #if defined(CAM_FIRMWARE_MEMINFO)
