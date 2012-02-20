@@ -90,8 +90,8 @@ int live_view_data_handler(ptp_data *data, int flags, int arg2)
         total_size += vid_info.bm_buffer_size;
     }
 
-    // Add palette detals if requested
-    if ( flags & LV_TFR_PALETTE ) // bitmap palette
+    // Add palette detals if requested and available
+    if ( flags & LV_TFR_PALETTE  && vid_get_palette_size() ) // bitmap palette
     {
         vid_info.palette_buffer_start = total_size;
         vid_info.palette_buffer_size = vid_get_palette_size();
@@ -114,7 +114,9 @@ int live_view_data_handler(ptp_data *data, int flags, int arg2)
     }
 
     // Send palette data if requested
-    if ( flags & LV_TFR_PALETTE )
+    // don't try to send zero sized palette data, since palette type is theoretically variable,
+    // doesn't make sense for clients to check before requesting
+    if ( (flags & LV_TFR_PALETTE) && vid_get_palette_size() )
     {
         data->send_data(data->handle,vid_get_bitmap_active_palette(),vid_info.palette_buffer_size,0,0,0,0);
     }
