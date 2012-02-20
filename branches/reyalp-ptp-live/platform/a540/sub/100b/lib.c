@@ -106,3 +106,11 @@ char *camera_jpeg_count_str()
 {
     return (char*)0x6E8D0 ; // from 700 added orig. 0x78688
 }
+
+// PTP display stuff
+int vid_get_palette_type() { return 1; }
+int vid_get_palette_size() { return 16*4; }
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)0x634E0; // GetPaletteFromPhysicalScreen
+}
