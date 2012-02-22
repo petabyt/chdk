@@ -77,6 +77,8 @@ int live_view_data_handler(ptp_data *data, int flags, int arg2)
     if ( flags & LV_TFR_VIEWPORT ) // live buffer
     {
         vid_info.vp_buffer_start = total_size;
+        // TODO viewport buffer height can vary, e.g. a540 in 640x480 video=528, normal 240
+        // but shouldn't send max size when not in use
         vid_info.vp_buffer_size = (vid_get_viewport_buffer_width_proper()*vid_get_viewport_max_height()*6)/4;
         total_size += vid_info.vp_buffer_size;
     }
