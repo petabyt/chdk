@@ -944,66 +944,63 @@ int i;
 CMenuItem tmp_menu_item;
     switch(mod) {
 
-		case 0:
-			/*
-			 * Delete user menu entry by sliding all the lower valid/existing entries up.
-			 */
+        case 0:
+            /*
+            * Delete user menu entry by sliding all the lower valid/existing entries up.
+            */
 
-			if (*cur_memnu_item_indx == 0) /* don't allow deleting "user menu" */
-				break;
- 			for(i = *cur_memnu_item_indx; user_submenu_items[i].text; i++) {
- 				user_submenu_items[i] = user_submenu_items[i+1];
- 			}
+            if (*cur_memnu_item_indx == 0) /* don't allow deleting "user menu" */
+                break;
+            for(i = *cur_memnu_item_indx; user_submenu_items[i].text; i++) {
+                user_submenu_items[i] = user_submenu_items[i+1];
+            }
+ 
+            /*
+            * there were no valid entries below this one, so
+            * the index pointer must be decremented.
+            */
+            if(!user_submenu_items[*cur_memnu_item_indx].text)
+                *cur_memnu_item_indx -= 1;
+            break;
+ 
+        case 1:
+            /*
+            * Insert new Item at end of existing entries
+            */
+            for(i = 1; i < USER_MENU_ITEMS + 1; i++) {
+                if(!user_submenu_items[i].text) {
+                    user_submenu_items[i] = curr_menu_item;
+                    break;
+                }
+            }
+            break;
+ 
+        case 2:
+            /*
+            * Move entry up
+            */
+            if((*cur_memnu_item_indx > 1)) {
+                tmp_menu_item = user_submenu_items[*cur_memnu_item_indx -1];
+                user_submenu_items[*cur_memnu_item_indx -1] = user_submenu_items[*cur_memnu_item_indx];
+                user_submenu_items[*cur_memnu_item_indx] = tmp_menu_item;
+                *cur_memnu_item_indx -=1;
+            }
+        break;
 
- 			/*
- 			 * there were no valid entries below this one, so
- 			 * the index pointer must be decremented.
- 			 */
- 			if(!user_submenu_items[*cur_memnu_item_indx].text)
- 				*cur_memnu_item_indx -= 1;
-
- 			break;
-
- 		case 1:
- 			/*
- 			 * Insert new Item at end of existing entries
- 			 */
- 			for(i = 1; i < USER_MENU_ITEMS + 1; i++) {
- 				if(!user_submenu_items[i].text) {
- 					user_submenu_items[i] = curr_menu_item;
- 					break;
-				}
- 			}
- 			break;
-
- 		case 2:
- 			/*
- 			 * Move entry up
- 			 */
-
- 			if((*cur_memnu_item_indx > 1)) {
- 				tmp_menu_item = user_submenu_items[*cur_memnu_item_indx -1];
- 				user_submenu_items[*cur_memnu_item_indx -1] = user_submenu_items[*cur_memnu_item_indx];
- 				user_submenu_items[*cur_memnu_item_indx] = tmp_menu_item;
- 				*cur_memnu_item_indx -=1;
- 			}
- 			break;
-
- 		case 3:
- 			/*
- 			 * Move entry down below next entry if next entry is not empty
- 			 */
- 			if (*cur_memnu_item_indx == 0) /* don't allow moving "user menu" */
- 				break;
- 			if((*cur_memnu_item_indx < (USER_MENU_ITEMS)) && (user_submenu_items[*cur_memnu_item_indx +1].text)) {
- 				tmp_menu_item = user_submenu_items[*cur_memnu_item_indx +1];
- 				user_submenu_items[*cur_memnu_item_indx + 1] = user_submenu_items[*cur_memnu_item_indx];
- 				user_submenu_items[*cur_memnu_item_indx] = tmp_menu_item;
- 				*cur_memnu_item_indx +=1;
- 			}
- 			break;
-
- 	}
+        case 3:
+            /*
+            * Move entry down below next entry if next entry is not empty
+            */
+            if (*cur_memnu_item_indx == 0) /* don't allow moving "user menu" */
+                break;
+            if((*cur_memnu_item_indx < (USER_MENU_ITEMS)) && (user_submenu_items[*cur_memnu_item_indx +1].text)) {
+                tmp_menu_item = user_submenu_items[*cur_memnu_item_indx +1];
+                user_submenu_items[*cur_memnu_item_indx + 1] = user_submenu_items[*cur_memnu_item_indx];
+                user_submenu_items[*cur_memnu_item_indx] = tmp_menu_item;
+                *cur_memnu_item_indx +=1;
+            }
+            break;
+    }
 }
 
 //-------------------------------------------------------------------
@@ -1911,7 +1908,7 @@ void gui_chdk_kbd_process()
             {
                 int m=mode_get()&MODE_SHOOTING_MASK;
                 if ((m==MODE_M) || (m==MODE_AV))
-                     conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance_f(shooting_get_aperture_from_av96(shooting_get_user_av96()),get_focal_length(lens_get_zoom_point()));
+                    conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance_1e3_f(shooting_get_aperture_from_av96(shooting_get_user_av96()),get_focal_length(lens_get_zoom_point()))/1000;
                 else conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance();
                 shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
             }
@@ -2527,17 +2524,17 @@ void gui_draw_osd() {
         if ((gui_mode==GUI_MODE_NONE || gui_mode==GUI_MODE_ALT) && (((kbd_is_key_pressed(KEY_SHOOT_HALF) || (state_kbd_script_run) || (shooting_get_common_focus_mode())) && (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH )) || ((mode_video || movie_status > 1) && conf.show_values_in_video) )) {
  
            if (conf.show_dof!=DOF_DONT_SHOW) gui_osd_calc_dof();
-
-           if (conf.show_dof==DOF_SHOW_IN_DOF) gui_osd_draw_dof();
-
-           if (conf.values_show_real_iso || conf.values_show_market_iso || conf.values_show_ev_seted || conf.values_show_ev_measured || conf.values_show_bv_measured || conf.values_show_bv_seted || conf.values_show_overexposure || conf.values_show_canon_overexposure || conf.values_show_luminance) gui_osd_calc_expo_param();
+           
+           if ((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX)) gui_osd_draw_dof();  
+           
+           if (conf.values_show_real_iso || conf.values_show_market_iso || conf.values_show_ev_seted || conf.values_show_ev_measured || conf.values_show_bv_measured || conf.values_show_bv_seted || conf.values_show_overexposure || conf.values_show_canon_overexposure || conf.values_show_luminance) gui_osd_calc_expo_param();           	           
         }
         if (conf.show_state) gui_osd_draw_state();
         if (conf.save_raw && conf.show_raw_state && !mode_video && (!kbd_is_key_pressed(KEY_SHOOT_HALF))) gui_osd_draw_raw_info();
-
-	    if ((conf.show_values==SHOW_ALWAYS && mode_photo) || ((mode_video || movie_status > 1)&& conf.show_values_in_video) || ((kbd_is_key_pressed(KEY_SHOOT_HALF) || (recreview_hold==1)) && (conf.show_values==SHOW_HALF)))
-		   gui_osd_draw_values(1);
-        else if  (shooting_get_common_focus_mode() && mode_photo && conf.show_values && !(conf.show_dof==DOF_SHOW_IN_DOF) )
+        
+        if ((conf.show_values==SHOW_ALWAYS && mode_photo) || ((mode_video || movie_status > 1)&& conf.show_values_in_video) || ((kbd_is_key_pressed(KEY_SHOOT_HALF) || (recreview_hold==1)) && (conf.show_values==SHOW_HALF)))
+            gui_osd_draw_values(1);
+        else if  (shooting_get_common_focus_mode() && mode_photo && conf.show_values && !((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX)))   
            gui_osd_draw_values(2);
         else if  (conf.show_values==SHOW_HALF)
             gui_osd_draw_values(0);   
