@@ -28,6 +28,10 @@ ifdef OPT_GAME_MASTERMIND
 CFLAGS+=-DOPT_GAME_MASTERMIND
 OPT_OBJS+=gui_mastermind.o
 endif
+ifdef OPT_GAME_TETRIS
+CFLAGS+=-DOPT_GAME_TETRIS
+OPT_OBJS+=gui_tetris.o
+endif
 ifdef OPT_CURVES
 CFLAGS+=-DOPT_CURVES
 OPT_OBJS+=curves.o
@@ -60,12 +64,12 @@ OPT_OBJS+=luascript.o
 endif 
 ifdef OPT_LUA_CALL_NATIVE
 CFLAGS+=-DOPT_LUA_CALL_NATIVE
-endif 
+endif
 ifdef OPT_PTP
 # in top level
 #CFLAGS+=-DOPT_PTP
 OPT_OBJS+=ptp.o 
-endif 
+endif
 ifdef OPT_EXMEM_MALLOC
 #CFLAGS+=-DOPT_EXMEM_MALLOC
 OPT_OBJS+=suba.o
@@ -73,9 +77,9 @@ endif
 
 OBJS=entry.o nothumb.o main.o gui_draw.o gui_menu.o gui_palette.o gui_mbox.o \
      gui_fselect.o gui.o kbd.o action_stack.o conf.o \
-     histogram.o gui_batt.o gui_space.o gui_osd.o raw.o \
-     gui_usb.o gui_lang.o gui_mpopup.o gui_grid.o raw_merge.o \
-     levent.o shot_histogram.o dng.o gps.o bitvector.o console.o $(OPT_OBJS)
+     histogram.o gui_batt.o gui_usb.o gui_space.o gui_osd.o raw.o \
+     gui_lang.o gui_mpopup.o gui_grid.o raw_merge.o \
+     levent.o shot_histogram.o dng.o bitvector.o console.o gps.o $(OPT_OBJS)
 
 gui.o: FORCE
 

@@ -1,6 +1,7 @@
 #include "platform.h"
 #include "stdlib.h"
 #include "levent.h"
+
 /* function dealing with "logical events"*/
 unsigned levent_index_for_name(const char *name)
 {

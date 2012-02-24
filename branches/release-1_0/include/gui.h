@@ -23,7 +23,8 @@ enum Gui_Mode {
     GUI_MODE_BENCH,
     GUI_MODE_MPOPUP,
     GUI_MODE_4WINS,
-    GUI_MODE_MASTERMIND
+    GUI_MODE_MASTERMIND,
+    GUI_MODE_TETRIS,
 };
 
 extern void gui_redraw();
