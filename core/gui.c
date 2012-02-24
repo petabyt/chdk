@@ -162,7 +162,7 @@ static void gui_menuproc_mkbootdisk(int arg);
 static void gui_menuproc_reset(int arg);
 static void gui_raw_develop(int arg);
 #if CAM_MULTIPART
-    static void gui_menuproc_swap_partitions(int arg);
+    static const char* gui_menuproc_swap_partitions_enum(int change, int arg);
 #endif
 static void gui_menuproc_reset_files(int arg);
 static const char* gui_font_enum(int change, int arg);
@@ -210,6 +210,10 @@ static void cb_battery_menu_change(unsigned int item);
 // for memory info, duplicated from lowlevel
 extern const char _start,_end;
 
+#if CAM_MULTIPART
+  char* partitions_enum=NULL;
+#endif
+
 #ifdef OPT_DEBUGGING
 #ifndef CAM_DRYOS
     static int debug_tasklist_start;
@@ -247,26 +251,22 @@ static CMenu remote_submenu = {0x86,LANG_MENU_REMOTE_PARAM_TITLE, NULL, remote_s
 #ifdef OPT_SCRIPTING
 static const char* gui_script_autostart_modes[]=            { "Off", "On", "Once"};
 static CMenuItem script_submenu_items_top[] = {
-    MENU_ITEM(0x35,LANG_MENU_SCRIPT_LOAD,             MENUITEM_PROC,                      gui_load_script, 0 ),
-    MENU_ITEM(0x5f,LANG_MENU_SCRIPT_DELAY,            MENUITEM_INT|MENUITEM_F_UNSIGNED,   &conf.script_shoot_delay, 0 ),
-	// remote autostart
-	MENU_ENUM2(0x5f,LANG_MENU_SCRIPT_AUTOSTART,		  &conf.script_startup, gui_script_autostart_modes ),
+    MENU_ITEM   (0x35,LANG_MENU_SCRIPT_LOAD,                MENUITEM_PROC,                      gui_load_script,            0 ),
+    MENU_ITEM   (0x5f,LANG_MENU_SCRIPT_DELAY,               MENUITEM_INT|MENUITEM_F_UNSIGNED,   &conf.script_shoot_delay,   0 ),
+    // remote autostart
+    MENU_ENUM2  (0x5f,LANG_MENU_SCRIPT_AUTOSTART,           &conf.script_startup,               gui_script_autostart_modes ),
 
 #if CAM_REMOTE
-    MENU_ITEM(0x86,LANG_MENU_REMOTE_PARAM,            MENUITEM_SUBMENU,   &remote_submenu, 0 ),
-	//MENU_ITEM(0x71,LANG_MENU_SCRIPT_REMOTE_ENABLE,	MENUITEM_BOOL,						&conf.remote_enable, 0),
+    MENU_ITEM   (0x86,LANG_MENU_REMOTE_PARAM,               MENUITEM_SUBMENU,                   &remote_submenu,            0 ),
 #endif
-    MENU_ITEM(0x5d,LANG_MENU_SCRIPT_DEFAULT_VAL,     MENUITEM_PROC,                      gui_load_script_default, 0 ),
-    MENU_ITEM(0x5e,LANG_MENU_SCRIPT_PARAM_SET,     MENUITEM_ENUM,                         gui_script_param_set_enum, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_SCRIPT_PARAM_SAVE,             MENUITEM_BOOL,                    &conf.script_param_save, 0 ),
-    MENU_ITEM(0x0,(int)script_title,                 MENUITEM_SEPARATOR, 0, 0 ),
-//    MENU_ITEM(0x0,LANG_MENU_SCRIPT_CURRENT,          MENUITEM_SEPARATOR, 0, 0 ),
-//    MENU_ITEM(0x0,(int)script_title,                 MENUITEM_TEXT, 0, 0 ),
-//    MENU_ITEM(0x0,LANG_MENU_SCRIPT_PARAMS,           MENUITEM_SEPARATOR, 0, 0)
+    MENU_ITEM   (0x5d,LANG_MENU_SCRIPT_DEFAULT_VAL,         MENUITEM_PROC,                      gui_load_script_default,    0 ),
+    MENU_ITEM   (0x5e,LANG_MENU_SCRIPT_PARAM_SET,           MENUITEM_ENUM,                      gui_script_param_set_enum,  0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_SCRIPT_PARAM_SAVE,          MENUITEM_BOOL,                      &conf.script_param_save,    0 ),
+    MENU_ITEM   (0x0 ,(int)script_title,                    MENUITEM_SEPARATOR,                 0,                          0 ),
 };
 
 static CMenuItem script_submenu_items_bottom[] = {
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                        0,                          0 ),
     {0}
 };
 
@@ -286,16 +286,19 @@ static const char* gui_overexp_ev_modes[]={ "Off", "-1/3 Ev", "-2/3 Ev", "-1 Ev"
 
 
 static CMenuItem autoiso_submenu_items[] = {
-    MENU_ITEM(0x5c,LANG_MENU_AUTOISO_ENABLED,          MENUITEM_BOOL,	&conf.autoiso_enable, 0),
-    MENU_ENUM2(0x5f,LANG_MENU_AUTOISO_MIN_SHUTTER,  &conf.autoiso_shutter, gui_autoiso_shutter_modes ),
-    MENU_ITEM(0x5f,LANG_MENU_AUTOISO_USER_FACTOR,   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_user_factor, MENU_MINMAX(1, 8) ),
+    MENU_ITEM   (0x5c,LANG_MENU_AUTOISO_ENABLED,            MENUITEM_BOOL,                                      &conf.autoiso_enable,       0 ),
+    MENU_ENUM2	(0x5f,LANG_MENU_AUTOISO_MIN_SHUTTER,  		&conf.autoiso_shutter, gui_autoiso_shutter_modes ),
+    MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_USER_FACTOR,        MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_user_factor,  	MENU_MINMAX(1, 8) ),
+
 #if CAM_HAS_IS
-    MENU_ITEM(0x5f,LANG_MENU_AUTOISO_IS_FACTOR,       MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_is_factor, MENU_MINMAX(1, 8) ),
+    MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_IS_FACTOR,          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_is_factor,    	MENU_MINMAX(1, 8) ),
 #endif
     MENU_ITEM(0x5f,LANG_MENU_AUTOISO_MAX_ISO_HI,      MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_max_iso_hi, MENU_MINMAX(20, 160) ),
     MENU_ITEM(0x5f,LANG_MENU_AUTOISO_MAX_ISO_AUTO, MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_max_iso_auto, MENU_MINMAX(10, 80) ),
     MENU_ITEM(0x5f,LANG_MENU_AUTOISO_MIN_ISO,           MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_min_iso, MENU_MINMAX(1, 20) ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
+
+
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,    0,                                                              0 ),
     {0}
 };
 static CMenu autoiso_submenu = {0x2d,LANG_MENU_AUTOISO_TITLE, NULL, autoiso_submenu_items };
@@ -309,24 +312,24 @@ static const char* gui_debug_display_modes[] =              { "None", "Props", "
 static const char* gui_debug_display_modes[] =              { "None", "Props", "Params", "Tasks"};
 #endif
 static CMenuItem debug_submenu_items[] = {
-    MENU_ENUM2(0x5c,LANG_MENU_DEBUG_DISPLAY,          &conf.debug_display, gui_debug_display_modes ),
-    MENU_ITEM(0x2a,LANG_MENU_DEBUG_PROPCASE_PAGE,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &conf.debug_propcase_page, MENU_MINMAX(0, 128) ),
+    MENU_ENUM2  (0x5c,LANG_MENU_DEBUG_DISPLAY,              &conf.debug_display,            gui_debug_display_modes ),
+    MENU_ITEM   (0x2a,LANG_MENU_DEBUG_PROPCASE_PAGE,        MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &conf.debug_propcase_page, MENU_MINMAX(0, 128) ),
 #ifndef CAM_DRYOS
-    MENU_ITEM(0x2a,LANG_MENU_DEBUG_TASKLIST_START,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &debug_tasklist_start, MENU_MINMAX(0, 63) ),
+    MENU_ITEM   (0x2a,LANG_MENU_DEBUG_TASKLIST_START,       MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &debug_tasklist_start, MENU_MINMAX(0, 63) ),
 #endif
-    MENU_ITEM(0x5c,LANG_MENU_DEBUG_SHOW_MISC_VALS,    MENUITEM_BOOL,          &conf.debug_misc_vals_show, 0 ),
-    MENU_ITEM(0x2a,LANG_MENU_DEBUG_MEMORY_BROWSER,    MENUITEM_PROC,          gui_menu_run_fltmodule, "memview.flt" ),
-    MENU_ITEM(0x2a,LANG_MENU_DEBUG_BENCHMARK,         MENUITEM_PROC,          gui_menu_run_fltmodule, "benchm.flt" ),
-    MENU_ENUM2(0x5c,LANG_MENU_DEBUG_SHORTCUT_ACTION,  &conf.debug_shortcut_action, gui_debug_shortcut_modes ),
-    MENU_ITEM(0x5c,LANG_MENU_RAW_TIMER,               MENUITEM_BOOL,          &conf.raw_timer, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_DEBUG_SHOW_MISC_VALS,       MENUITEM_BOOL,                  &conf.debug_misc_vals_show,         0 ),
+    MENU_ITEM   (0x2a,LANG_MENU_DEBUG_MEMORY_BROWSER,       MENUITEM_PROC,                  gui_menu_run_fltmodule,             "memview.flt" ),
+    MENU_ITEM   (0x2a,LANG_MENU_DEBUG_BENCHMARK,            MENUITEM_PROC,                  gui_menu_run_fltmodule,             "benchm.flt" ),
+    MENU_ENUM2  (0x5c,LANG_MENU_DEBUG_SHORTCUT_ACTION,      &conf.debug_shortcut_action,    gui_debug_shortcut_modes ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_TIMER,                  MENUITEM_BOOL,                  &conf.raw_timer,                    0 ),
 #ifdef OPT_LUA
-    MENU_ITEM(0x5c,LANG_MENU_LUA_RESTART,             MENUITEM_BOOL,          &conf.debug_lua_restart_on_error, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_LUA_RESTART,                MENUITEM_BOOL,                  &conf.debug_lua_restart_on_error,   0 ),
 #endif
 #if CAM_MULTIPART
-    MENU_ITEM(0x33,LANG_MENU_DEBUG_CREATE_MULTIPART , MENUITEM_PROC, 	      gui_menuproc_break_card, 0 ),
+    MENU_ITEM   (0x33,LANG_MENU_DEBUG_CREATE_MULTIPART ,    MENUITEM_PROC,                  gui_menuproc_break_card,            0 ),
 #endif
-    MENU_ITEM(0x2a,LANG_SAVE_ROMLOG,                  MENUITEM_PROC,          save_romlog, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
+    MENU_ITEM   (0x2a,LANG_SAVE_ROMLOG,                     MENUITEM_PROC,                  save_romlog,                        0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0,                                  0 ),
     {0}
 };
 static CMenu debug_submenu = {0x2a,LANG_MENU_DEBUG_TITLE, NULL, debug_submenu_items };
@@ -334,7 +337,7 @@ static CMenu debug_submenu = {0x2a,LANG_MENU_DEBUG_TITLE, NULL, debug_submenu_it
 
 
 static CMenuItem misc_submenu_items[] = {
-    MENU_ITEM(0x35,LANG_MENU_MISC_FILE_BROWSER,       MENUITEM_PROC,    gui_draw_fselect, 0 ),
+    MENU_ITEM   (0x35,LANG_MENU_MISC_FILE_BROWSER,          MENUITEM_PROC,                  gui_draw_fselect,                   0 ),
     MENU_ITEM(0x80,(int)"Module Inspector",           MENUITEM_PROC,    gui_menu_run_fltmodule, "modinsp.flt" ),
 #ifdef OPT_CALENDAR
     MENU_ITEM(0x36,LANG_MENU_MISC_CALENDAR,           MENUITEM_PROC,    gui_menu_run_fltmodule, "calend.flt" ),
@@ -346,15 +349,15 @@ static CMenuItem misc_submenu_items[] = {
     MENU_ITEM(0x38,LANG_MENU_MISC_GAMES,              MENUITEM_SUBMENU_PROC, gui_menu_run_fltmodule, "gamemenu.flt" ),
 #endif
 #if CAM_SWIVEL_SCREEN
-    MENU_ITEM(0x28,LANG_MENU_MISC_FLASHLIGHT,         MENUITEM_BOOL,    &conf.flashlight, 0 ),
+    MENU_ITEM   (0x28,LANG_MENU_MISC_FLASHLIGHT,            MENUITEM_BOOL,                  &conf.flashlight,                   0 ),
 #endif
-    MENU_ITEM(0x5c,LANG_MENU_MISC_SHOW_SPLASH,        MENUITEM_BOOL,    &conf.splash_show, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_MISC_START_SOUND,        MENUITEM_BOOL,    &conf.start_sound, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_MISC_SHOW_SPLASH,           MENUITEM_BOOL,                  &conf.splash_show,                  0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_MISC_START_SOUND,           MENUITEM_BOOL,                  &conf.start_sound,                  0 ),
 #if CAM_USE_ZOOM_FOR_MF
-    MENU_ITEM(0x59,LANG_MENU_MISC_ZOOM_FOR_MF,        MENUITEM_BOOL,    &conf.use_zoom_mf, 0 ),
+    MENU_ITEM   (0x59,LANG_MENU_MISC_ZOOM_FOR_MF,           MENUITEM_BOOL,                  &conf.use_zoom_mf,                  0 ),
 #endif
 #if CAM_ADJUSTABLE_ALT_BUTTON
-    MENU_ITEM(0x22,LANG_MENU_MISC_ALT_BUTTON,         MENUITEM_ENUM,    gui_alt_mode_button_enum, 0 ),
+    MENU_ITEM(0x22,LANG_MENU_MISC_ALT_BUTTON,               MENUITEM_ENUM,                  gui_alt_mode_button_enum,           0 ),
 #endif
     MENU_ITEM(0x5d,LANG_MENU_MISC_DISABLE_LCD_OFF,    MENUITEM_ENUM,    gui_alt_power_enum, 0 ),
     MENU_ITEM(0x65,LANG_MENU_MISC_PALETTE,            MENUITEM_PROC,    gui_menu_run_fltmodule, "palette.flt" ),
@@ -362,31 +365,31 @@ static CMenuItem misc_submenu_items[] = {
     MENU_ITEM(0x80,LANG_MENU_MISC_MEMORY_INFO,        MENUITEM_PROC,    gui_show_memory_info, 0 ),
     MENU_ITEM(0x33,LANG_MENU_DEBUG_MAKE_BOOTABLE,     MENUITEM_PROC,    gui_menuproc_mkbootdisk, 0 ),
 #if CAM_MULTIPART
-    MENU_ITEM(0x33,LANG_MENU_DEBUG_SWAP_PART,         MENUITEM_PROC, 	    	gui_menuproc_swap_partitions, 0 ),
+    MENU_ITEM   (0x33,LANG_MENU_DEBUG_SWAP_PART,            MENUITEM_ENUM,                  gui_menuproc_swap_partitions_enum,  0 ),
 #endif
-    MENU_ITEM(0x2b,LANG_MENU_MAIN_RESET_OPTIONS,      MENUITEM_PROC,      gui_menuproc_reset, 0 ),
+    MENU_ITEM   (0x2b,LANG_MENU_MAIN_RESET_OPTIONS,         MENUITEM_PROC,                  gui_menuproc_reset,                 0 ),
 #ifdef OPT_DEBUGGING
-    MENU_ITEM(0x2a,LANG_MENU_MAIN_DEBUG,              MENUITEM_SUBMENU,   &debug_submenu, 0 ),
+    MENU_ITEM   (0x2a,LANG_MENU_MAIN_DEBUG,                 MENUITEM_SUBMENU,               &debug_submenu,                     0 ),
 #endif
-    MENU_ITEM(0x86,LANG_MENU_REMOTE_PARAM,            MENUITEM_SUBMENU,   &remote_submenu, 0 ),
+    MENU_ITEM   (0x86,LANG_MENU_REMOTE_PARAM,               MENUITEM_SUBMENU,               &remote_submenu,                    0 ),
 #if defined (DNG_EXT_FROM)
-    MENU_ITEM(0x71,LANG_MENU_DNG_VIA_USB,             MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.dng_usb_ext , (int)cb_change_dng_usb_ext ),
+    MENU_ITEM   (0x71,LANG_MENU_DNG_VIA_USB,                MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.dng_usb_ext , (int)cb_change_dng_usb_ext ),
 #endif
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0,                                  0 ),
     {0},
 };
 static CMenu misc_submenu = {0x29,LANG_MENU_MISC_TITLE, NULL, misc_submenu_items };
 
 static int voltage_step;
 static CMenuItem battery_submenu_items[] = {
-    MENU_ITEM(0x66,LANG_MENU_BATT_VOLT_MAX,           MENUITEM_INT|MENUITEM_ARG_ADDR_INC,     &conf.batt_volts_max,   (int)&voltage_step ),
-    MENU_ITEM(0x67,LANG_MENU_BATT_VOLT_MIN,           MENUITEM_INT|MENUITEM_ARG_ADDR_INC,     &conf.batt_volts_min,   (int)&voltage_step ),
-    MENU_ITEM(0x68,LANG_MENU_BATT_STEP_25,            MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,    &conf.batt_step_25,     (int)cb_step_25 ),
-    MENU_ITEM(0x0,(int)"",                            MENUITEM_SEPARATOR, 0, 0 ),
-    MENU_ITEM(0x73,LANG_MENU_BATT_SHOW_PERCENT,       MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,    &conf.batt_perc_show,   (int)cb_perc ),
-    MENU_ITEM(0x73,LANG_MENU_BATT_SHOW_VOLTS,         MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,    &conf.batt_volts_show,  (int)cb_volts ),
-    MENU_ITEM(0x32,LANG_MENU_BATT_SHOW_ICON,          MENUITEM_BOOL,                          &conf.batt_icon_show, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
+    MENU_ITEM   (0x66,LANG_MENU_BATT_VOLT_MAX,              MENUITEM_INT|MENUITEM_ARG_ADDR_INC,     &conf.batt_volts_max,   (int)&voltage_step ),
+    MENU_ITEM   (0x67,LANG_MENU_BATT_VOLT_MIN,              MENUITEM_INT|MENUITEM_ARG_ADDR_INC,     &conf.batt_volts_min,   (int)&voltage_step ),
+    MENU_ITEM   (0x68,LANG_MENU_BATT_STEP_25,               MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,    &conf.batt_step_25,     (int)cb_step_25 ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                     0,                      0 ),
+    MENU_ITEM   (0x73,LANG_MENU_BATT_SHOW_PERCENT,          MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,    &conf.batt_perc_show,   (int)cb_perc ),
+    MENU_ITEM   (0x73,LANG_MENU_BATT_SHOW_VOLTS,            MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,    &conf.batt_volts_show,  (int)cb_volts ),
+    MENU_ITEM   (0x32,LANG_MENU_BATT_SHOW_ICON,             MENUITEM_BOOL,                          &conf.batt_icon_show,   0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                            0,                      0 ),
     {0}
 };
 static CMenu battery_submenu = {0x32,LANG_MENU_BATT_TITLE, cb_battery_menu_change, battery_submenu_items };
@@ -396,34 +399,34 @@ static const char* gui_space_bar_size_modes[] =             { "1/4", "1/2", "1"}
 static const char* gui_space_bar_width_modes[] =            { "1", "2", "3","4","5","6","7","8","9","10"};
 static const char* gui_space_warn_type_modes[] =            { "Percent", "MB", "Don't"};
 static CMenuItem space_submenu_items[] = {
-    MENU_ITEM(0x5c,LANG_MENU_SPACE_SHOW_ICON,         MENUITEM_BOOL,                          &conf.space_icon_show, 0 ),
-    MENU_ENUM2(0x69,LANG_MENU_SPACE_SHOW_BAR,     &conf.space_bar_show, gui_space_bar_modes ),
-    MENU_ENUM2(0x6a,LANG_MENU_SPACE_BAR_SIZE,     &conf.space_bar_size, gui_space_bar_size_modes ),
-    MENU_ENUM2(0x6b,LANG_MENU_SPACE_BAR_WIDTH,    &conf.space_bar_width, gui_space_bar_width_modes ),
-    MENU_ITEM(0x5c,LANG_MENU_SPACE_SHOW_PERCENT,      MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,    &conf.space_perc_show,   (int)cb_space_perc ),
-    MENU_ITEM(0x5c,LANG_MENU_SPACE_SHOW_MB,           MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,    &conf.space_mb_show,  (int)cb_space_mb ),
-    MENU_ENUM2(0x5f,LANG_MENU_SPACE_WARN_TYPE,    &conf.space_warn_type, gui_space_warn_type_modes ),
-    MENU_ITEM(0x58,LANG_MENU_SPACE_WARN_PERCENT,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &conf.space_perc_warn, MENU_MINMAX(1, 99) ),
-    MENU_ITEM(0x58,LANG_MENU_SPACE_WARN_MB,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &conf.space_mb_warn, MENU_MINMAX(1, 4000) ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_SPACE_SHOW_ICON,            MENUITEM_BOOL,          &conf.space_icon_show,  0 ),
+    MENU_ENUM2  (0x69,LANG_MENU_SPACE_SHOW_BAR,             &conf.space_bar_show,   gui_space_bar_modes ),
+    MENU_ENUM2  (0x6a,LANG_MENU_SPACE_BAR_SIZE,             &conf.space_bar_size,   gui_space_bar_size_modes ),
+    MENU_ENUM2  (0x6b,LANG_MENU_SPACE_BAR_WIDTH,            &conf.space_bar_width,  gui_space_bar_width_modes ),
+    MENU_ITEM   (0x5c,LANG_MENU_SPACE_SHOW_PERCENT,         MENUITEM_BOOL|MENUITEM_ARG_CALLBACK, &conf.space_perc_show, (int)cb_space_perc ),
+    MENU_ITEM   (0x5c,LANG_MENU_SPACE_SHOW_MB,              MENUITEM_BOOL|MENUITEM_ARG_CALLBACK, &conf.space_mb_show,   (int)cb_space_mb ),
+    MENU_ENUM2  (0x5f,LANG_MENU_SPACE_WARN_TYPE,            &conf.space_warn_type,  gui_space_warn_type_modes ),
+    MENU_ITEM   (0x58,LANG_MENU_SPACE_WARN_PERCENT,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &conf.space_perc_warn,    MENU_MINMAX(1, 99) ),
+    MENU_ITEM   (0x58,LANG_MENU_SPACE_WARN_MB,              MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &conf.space_mb_warn,      MENU_MINMAX(1, 4000) ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,            0,                      0 ),
     {0}
 };
 static CMenu space_submenu = {0x33,LANG_MENU_OSD_SPACE_PARAMS_TITLE, NULL, space_submenu_items};
 
 static const char* gui_dof_show_value_modes[] =             { "Don't", "Separate", "+Separate", "In Misc", "+In Misc" };
 static CMenuItem dof_submenu_items[] = {
-	  MENU_ENUM2(0x5f,LANG_MENU_OSD_SHOW_DOF_CALC,           &conf.show_dof, gui_dof_show_value_modes ),
-	  MENU_ITEM(0x5c,LANG_MENU_DOF_SUBJ_DIST_AS_NEAR_LIMIT,  MENUITEM_BOOL,      &conf.dof_subj_dist_as_near_limit, 0),
-	  MENU_ITEM(0x5c,LANG_MENU_DOF_USE_EXIF_SUBJ_DIST,       MENUITEM_BOOL,      &conf.dof_use_exif_subj_dist, 0),
-	  MENU_ITEM(0x5c,LANG_MENU_DOF_SUBJ_DIST_IN_MISC,        MENUITEM_BOOL,      &conf.dof_subj_dist_in_misc, 0),
-	  MENU_ITEM(0x5c,LANG_MENU_DOF_NEAR_LIMIT_IN_MISC,       MENUITEM_BOOL,      &conf.dof_near_limit_in_misc, 0),
-      MENU_ITEM(0x5c,LANG_MENU_DOF_FAR_LIMIT_IN_MISC,        MENUITEM_BOOL,			 &conf.dof_far_limit_in_misc, 0),
-      MENU_ITEM(0x5c,LANG_MENU_DOF_HYPERFOCAL_IN_MISC,       MENUITEM_BOOL,      &conf.dof_hyperfocal_in_misc, 0),
-      MENU_ITEM(0x5c,LANG_MENU_DOF_DEPTH_LIMIT_IN_MISC,      MENUITEM_BOOL,      &conf.dof_depth_in_misc, 0),
+    MENU_ENUM2  (0x5f,LANG_MENU_OSD_SHOW_DOF_CALC,          &conf.show_dof,     gui_dof_show_value_modes ),
+    MENU_ITEM   (0x5c,LANG_MENU_DOF_SUBJ_DIST_AS_NEAR_LIMIT,MENUITEM_BOOL,      &conf.dof_subj_dist_as_near_limit,  0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_DOF_USE_EXIF_SUBJ_DIST,     MENUITEM_BOOL,      &conf.dof_use_exif_subj_dist,       0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_DOF_SUBJ_DIST_IN_MISC,      MENUITEM_BOOL,      &conf.dof_subj_dist_in_misc,        0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_DOF_NEAR_LIMIT_IN_MISC,     MENUITEM_BOOL,      &conf.dof_near_limit_in_misc,       0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_DOF_FAR_LIMIT_IN_MISC,      MENUITEM_BOOL,      &conf.dof_far_limit_in_misc,        0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_DOF_HYPERFOCAL_IN_MISC,     MENUITEM_BOOL,      &conf.dof_hyperfocal_in_misc,       0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_DOF_DEPTH_LIMIT_IN_MISC,    MENUITEM_BOOL,      &conf.dof_depth_in_misc,            0 ),
 #if !CAM_DRYOS
       MENU_ITEM(0x5c,LANG_MENU_DOF_DIST_FROM_LENS,           MENUITEM_BOOL,      &conf.dof_dist_from_lens, 0),
 #endif
-	  MENU_ITEM(0x51,LANG_MENU_BACK,                    	   MENUITEM_UP, 0, 0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,        0,                                  0 ),
     {0}
 };
 static CMenu dof_submenu = {0x31,LANG_MENU_DOF_TITLE, /*cb_dof_menu_change*/ NULL, dof_submenu_items };
@@ -431,24 +434,23 @@ static CMenu dof_submenu = {0x31,LANG_MENU_DOF_TITLE, /*cb_dof_menu_change*/ NUL
 static const char* gui_zoom_value_modes[] =                 { "X", "FL", "EFL" };
 static const char* gui_show_values_modes[] =                { "Don't", "Always", "Shoot" };
 static CMenuItem values_submenu_items[] = {
-	  MENU_ENUM2(0x5f,LANG_MENU_OSD_SHOW_MISC_VALUES,          &conf.show_values, gui_show_values_modes ),
-	 // MENU_ITEM(0x43,LANG_MENU_VALUES_SHOW_IN_REVIEW,   MENUITEM_BOOL,      &conf.values_show_in_review, 0 ),
-	  MENU_ITEM(0x5c,LANG_MENU_SHOW_VALUES_IN_VIDEO,           MENUITEM_BOOL,      &conf.show_values_in_video, 0 ),
-	  MENU_ITEM(0x5c,LANG_MENU_VALUES_SHOW_ZOOM,               MENUITEM_BOOL,      &conf.values_show_zoom, 0 ),
-	  MENU_ENUM2(0x5f,LANG_MENU_OSD_ZOOM_VALUE,                &conf.zoom_value, gui_zoom_value_modes ),
-	  MENU_ITEM(0x60,LANG_MENU_OSD_ZOOM_SCALE,                 MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.zoom_scale,   MENU_MINMAX(0, 1000) ),
-      MENU_ITEM(0x62,LANG_MENU_VALUES_SHOW_REAL_APERTURE,      MENUITEM_BOOL,      &conf.values_show_real_aperture, 0 ),
-      MENU_ITEM(0x74,LANG_MENU_VALUES_SHOW_REAL_ISO,           MENUITEM_BOOL,      &conf.values_show_real_iso, 0 ),
-      MENU_ITEM(0x74,LANG_MENU_VALUES_SHOW_MARKET_ISO,         MENUITEM_BOOL,      &conf.values_show_market_iso, 0 ),
-  	  MENU_ITEM(0x2d,LANG_MENU_SHOW_ISO_ONLY_IN_AUTOISO_MODE,  MENUITEM_BOOL,	     &conf.values_show_iso_only_in_autoiso_mode, 0 ),
-      MENU_ITEM(0x5c,LANG_MENU_VALUES_SHOW_EV_SETED, 			 MENUITEM_BOOL,	     &conf.values_show_ev_seted, 0 ),
-      MENU_ITEM(0x5c,LANG_MENU_VALUES_SHOW_EV_MEASURED,        MENUITEM_BOOL,		 &conf.values_show_ev_measured, 0 ),
-      MENU_ITEM(0x5c,LANG_MENU_VALUES_SHOW_BV_SETED,			 MENUITEM_BOOL,	     &conf.values_show_bv_seted, 0 ),
-      MENU_ITEM(0x5c,LANG_MENU_VALUES_SHOW_BV_MEASURED,   	 MENUITEM_BOOL,	     &conf.values_show_bv_measured, 0 ),
-      MENU_ITEM(0x5c,LANG_MENU_VALUES_SHOW_OVEREXPOSURE,	     MENUITEM_BOOL,      &conf.values_show_overexposure, 0 ),
-      MENU_ITEM(0x5c,LANG_MENU_SHOW_CANON_OVEREXPOSURE,	     MENUITEM_BOOL,      &conf.values_show_canon_overexposure, 0 ),
-      MENU_ITEM(0x5c,LANG_MENU_VALUES_SHOW_LUMINANCE,  	     MENUITEM_BOOL,      &conf.values_show_luminance, 0 ),
-	  MENU_ITEM(0x51,LANG_MENU_BACK,                           MENUITEM_UP, 0, 0 ),
+    MENU_ENUM2  (0x5f,LANG_MENU_OSD_SHOW_MISC_VALUES,       &conf.show_values,  gui_show_values_modes ),
+    MENU_ITEM   (0x5c,LANG_MENU_SHOW_VALUES_IN_VIDEO,       MENUITEM_BOOL,      &conf.show_values_in_video,                 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_VALUES_SHOW_ZOOM,           MENUITEM_BOOL,      &conf.values_show_zoom,                     0 ),
+    MENU_ENUM2  (0x5f,LANG_MENU_OSD_ZOOM_VALUE,             &conf.zoom_value,   gui_zoom_value_modes ),
+    MENU_ITEM   (0x60,LANG_MENU_OSD_ZOOM_SCALE,             MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.zoom_scale,   MENU_MINMAX(0, 1000) ),
+    MENU_ITEM   (0x62,LANG_MENU_VALUES_SHOW_REAL_APERTURE,  MENUITEM_BOOL,      &conf.values_show_real_aperture,            0 ),
+    MENU_ITEM   (0x74,LANG_MENU_VALUES_SHOW_REAL_ISO,       MENUITEM_BOOL,      &conf.values_show_real_iso,                 0 ),
+    MENU_ITEM   (0x74,LANG_MENU_VALUES_SHOW_MARKET_ISO,     MENUITEM_BOOL,      &conf.values_show_market_iso,               0 ),
+    MENU_ITEM   (0x2d,LANG_MENU_SHOW_ISO_ONLY_IN_AUTOISO_MODE, MENUITEM_BOOL,   &conf.values_show_iso_only_in_autoiso_mode, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_VALUES_SHOW_EV_SETED,       MENUITEM_BOOL,      &conf.values_show_ev_seted,                 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_VALUES_SHOW_EV_MEASURED,    MENUITEM_BOOL,      &conf.values_show_ev_measured,              0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_VALUES_SHOW_BV_SETED,       MENUITEM_BOOL,      &conf.values_show_bv_seted,                 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_VALUES_SHOW_BV_MEASURED,    MENUITEM_BOOL,      &conf.values_show_bv_measured,              0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_VALUES_SHOW_OVEREXPOSURE,   MENUITEM_BOOL,      &conf.values_show_overexposure,             0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_SHOW_CANON_OVEREXPOSURE,    MENUITEM_BOOL,      &conf.values_show_canon_overexposure,       0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_VALUES_SHOW_LUMINANCE,      MENUITEM_BOOL,      &conf.values_show_luminance,                0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,        0,                                          0 ),
     {0}
 };
 static CMenu values_submenu = {0x28,LANG_MENU_OSD_VALUES_TITLE, /*cb_values_menu_change*/ NULL, values_submenu_items };
@@ -458,11 +460,11 @@ static const char* gui_clock_format_modes[] =               { "24h", "12h"};
 static const char* gui_clock_indicator_modes[] =            { "PM", "P", "."};
 static const char* gui_clock_halfpress_modes[] =            { "Full", "Seconds", "Don't"};
 static CMenuItem clock_submenu_items[] = {
-    MENU_ENUM2(0x5f,LANG_MENU_OSD_SHOW_CLOCK,           &conf.show_clock, gui_show_clock_modes ),
-    MENU_ENUM2(0x6d,LANG_MENU_OSD_CLOCK_FORMAT,         &conf.clock_format, gui_clock_format_modes ),
-    MENU_ENUM2(0x6c,LANG_MENU_OSD_CLOCK_INDICATOR,      &conf.clock_indicator, gui_clock_indicator_modes ),
-    MENU_ENUM2(0x6e,LANG_MENU_OSD_CLOCK_HALFPRESS,      &conf.clock_halfpress, gui_clock_halfpress_modes ),
-    MENU_ITEM(0x51,LANG_MENU_BACK, MENUITEM_UP, 0, 0 ),
+    MENU_ENUM2  (0x5f,LANG_MENU_OSD_SHOW_CLOCK,             &conf.show_clock,       gui_show_clock_modes ),
+    MENU_ENUM2  (0x6d,LANG_MENU_OSD_CLOCK_FORMAT,           &conf.clock_format,     gui_clock_format_modes ),
+    MENU_ENUM2  (0x6c,LANG_MENU_OSD_CLOCK_INDICATOR,        &conf.clock_indicator,  gui_clock_indicator_modes ),
+    MENU_ENUM2  (0x6e,LANG_MENU_OSD_CLOCK_HALFPRESS,        &conf.clock_halfpress,  gui_clock_halfpress_modes ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,            0,                              0 ),
     {0}
 };
 static CMenu clock_submenu = {0x34,LANG_MENU_OSD_CLOCK_PARAMS_TITLE, NULL, clock_submenu_items };
@@ -476,34 +478,34 @@ static const char* gui_show_movie_time_modes[] =            { "Don't", "hh:mm:ss
 #endif
 static CMenuItem video_submenu_items[] = {
 #if CAM_CHDK_HAS_EXT_VIDEO_MENU
-	MENU_ENUM2(0x23,LANG_MENU_VIDEO_MODE,             &conf.video_mode, gui_video_mode_modes ),
+    MENU_ENUM2  (0x23,LANG_MENU_VIDEO_MODE,                 &conf.video_mode,       gui_video_mode_modes ),
 #if !CAM_VIDEO_QUALITY_ONLY
-      MENU_ITEM(0x5e,LANG_MENU_VIDEO_BITRATE,           MENUITEM_ENUM,    gui_video_bitrate_enum, 0 ),
+    MENU_ITEM   (0x5e,LANG_MENU_VIDEO_BITRATE,              MENUITEM_ENUM,          gui_video_bitrate_enum,             0 ),
 #endif
-    MENU_ITEM(0x60,LANG_MENU_VIDEO_QUALITY,           MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.video_quality, MENU_MINMAX(1, 99) ),
+    MENU_ITEM   (0x60,LANG_MENU_VIDEO_QUALITY,              MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.video_quality, MENU_MINMAX(1, 99) ),
 #if CAM_CHDK_HAS_EXT_VIDEO_TIME
     MENU_ITEM   (0x5c,LANG_MENU_VIDEO_EXT_TIME,             MENUITEM_BOOL,          &conf.ext_video_time,               0 ),
 #endif
-    MENU_ITEM(0x5c,LANG_MENU_CLEAR_VIDEO_VALUES,    MENUITEM_BOOL,    &conf.clear_video, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_CLEAR_VIDEO_VALUES,         MENUITEM_BOOL,          &conf.clear_video,                  0 ),
 #endif
 #if CAM_VIDEO_CONTROL
-    MENU_ITEM(0x5c,LANG_MENU_FAST_SWITCH_VIDEO,   MENUITEM_BOOL,  &conf.fast_movie_control, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_FAST_SWITCH_VIDEO,          MENUITEM_BOOL,          &conf.fast_movie_control,           0 ),
 #endif
 #if CAM_CHDK_HAS_EXT_VIDEO_MENU
-    MENU_ITEM(0x5c,LANG_MENU_FAST_SWITCH_QUALITY_VIDEO,   MENUITEM_BOOL,  &conf.fast_movie_quality_control, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_FAST_SWITCH_QUALITY_VIDEO,  MENUITEM_BOOL,          &conf.fast_movie_quality_control,   0 ),
 #endif
 #if CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
-    MENU_ITEM(0x5c,LANG_MENU_OPTICAL_ZOOM_IN_VIDEO,   MENUITEM_BOOL,  &conf.unlock_optical_zoom_for_video, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_OPTICAL_ZOOM_IN_VIDEO,      MENUITEM_BOOL,          &conf.unlock_optical_zoom_for_video, 0 ),
 #endif
 #if CAM_CAN_MUTE_MICROPHONE
-    MENU_ITEM(0x83,LANG_MENU_MUTE_ON_ZOOM,   MENUITEM_BOOL,  &conf.mute_on_zoom, 0 ),
+    MENU_ITEM   (0x83,LANG_MENU_MUTE_ON_ZOOM,               MENUITEM_BOOL,          &conf.mute_on_zoom,                 0 ),
 #endif
 #if CAM_AF_SCAN_DURING_VIDEO_RECORD
-    MENU_ITEM(0x82,LANG_MENU_VIDEO_AF_KEY,   MENUITEM_ENUM,    gui_video_af_key_enum, 0 ),
+    MENU_ITEM   (0x82,LANG_MENU_VIDEO_AF_KEY,               MENUITEM_ENUM,          gui_video_af_key_enum,              0 ),
 #endif
-    MENU_ENUM2(0x5c,LANG_MENU_OSD_SHOW_VIDEO_TIME,         &conf.show_movie_time, gui_show_movie_time_modes ),
-    MENU_ITEM(0x60,LANG_MENU_OSD_SHOW_VIDEO_REFRESH,             MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.show_movie_refresh,   MENU_MINMAX(1, 20) ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
+    MENU_ENUM2  (0x5c,LANG_MENU_OSD_SHOW_VIDEO_TIME,        &conf.show_movie_time,  gui_show_movie_time_modes ),
+    MENU_ITEM   (0x60,LANG_MENU_OSD_SHOW_VIDEO_REFRESH,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.show_movie_refresh,   MENU_MINMAX(1, 20) ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,            0,                                  0 ),
     {0}
 };
 static CMenu video_submenu = {0x23,LANG_MENU_VIDEO_PARAM_TITLE, NULL, video_submenu_items };
@@ -512,36 +514,23 @@ static const char* gui_bracket_values_modes[] =             { "Off", "1/3 Ev","2
 static const char* gui_override_koef_modes[] =              { "Off", "1", "10", "100", "1000" };
 static const char* gui_bracket_type_modes[] =               { "+/-", "-","+"};
 static CMenuItem bracketing_in_continuous_submenu_items[] = {
-	  MENU_ENUM2(0x63,LANG_MENU_TV_BRACKET_VALUE,            &conf.tv_bracket_value, gui_bracket_values_modes ),
+    MENU_ENUM2  (0x63,LANG_MENU_TV_BRACKET_VALUE,           &conf.tv_bracket_value,         gui_bracket_values_modes ),
 #if CAM_HAS_IRIS_DIAPHRAGM
-	  MENU_ENUM2(0x62,LANG_MENU_AV_BRACKET_VALUE,            &conf.av_bracket_value, gui_bracket_values_modes ),
+    MENU_ENUM2  (0x62,LANG_MENU_AV_BRACKET_VALUE,           &conf.av_bracket_value,         gui_bracket_values_modes ),
 #endif
 #if CAM_CAN_SD_OVERRIDE
-	  MENU_ITEM(0x5e,LANG_MENU_SUBJ_DIST_BRACKET_VALUE,      MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.subj_dist_bracket_value, MENU_MINMAX(0, 100) ),
-	  MENU_ENUM2(0x5f,LANG_MENU_SUBJ_DIST_BRACKET_KOEF,      &conf.subj_dist_bracket_koef, gui_override_koef_modes ),
+    MENU_ITEM   (0x5e,LANG_MENU_SUBJ_DIST_BRACKET_VALUE,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,                 &conf.subj_dist_bracket_value, MENU_MINMAX(0, 100) ),
+    MENU_ENUM2  (0x5f,LANG_MENU_SUBJ_DIST_BRACKET_KOEF,     &conf.subj_dist_bracket_koef,   gui_override_koef_modes ),
 #endif
-	  MENU_ITEM(0x74,LANG_MENU_ISO_BRACKET_VALUE,            MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.iso_bracket_value, MENU_MINMAX(0, 100) ),
-	  MENU_ENUM2a(0x5f,LANG_MENU_ISO_BRACKET_KOEF,           &conf.iso_bracket_koef, gui_override_koef_modes, 4 ),
-	  MENU_ENUM2(0x60,LANG_MENU_BRACKET_TYPE,                &conf.bracket_type, gui_bracket_type_modes ),
-	  MENU_ITEM(0x5b,LANG_MENU_CLEAR_BRACKET_VALUES,        MENUITEM_BOOL,        &conf.clear_bracket, 0 ),
-     MENU_ITEM(0x5c,LANG_MENU_BRACKETING_ADD_RAW_SUFFIX,                MENUITEM_BOOL,      &conf.bracketing_add_raw_suffix, 0 ),
-      MENU_ITEM(0x51,LANG_MENU_BACK,                         MENUITEM_UP, 0, 0 ),
-      {0}
+    MENU_ITEM   (0x74,LANG_MENU_ISO_BRACKET_VALUE,          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,                 &conf.iso_bracket_value, MENU_MINMAX(0, 100) ),
+    MENU_ENUM2a (0x5f,LANG_MENU_ISO_BRACKET_KOEF,           &conf.iso_bracket_koef,         gui_override_koef_modes,            4 ),
+    MENU_ENUM2  (0x60,LANG_MENU_BRACKET_TYPE,               &conf.bracket_type,             gui_bracket_type_modes ),
+    MENU_ITEM   (0x5b,LANG_MENU_CLEAR_BRACKET_VALUES,       MENUITEM_BOOL,                  &conf.clear_bracket,                0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_BRACKETING_ADD_RAW_SUFFIX,  MENUITEM_BOOL,                  &conf.bracketing_add_raw_suffix,    0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0,                                  0 ),
+    {0}
 };
 static CMenu bracketing_in_continuous_submenu = {0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS_TITLE, NULL, bracketing_in_continuous_submenu_items };
-
-
-/*
-static CMenuItem exposure_submenu_items[] = {
-	  MENU_ITEM(0x59,LANG_MENU_RECALC_EXPOSURE,         MENUITEM_BOOL,    &conf.recalc_exposure, 0),
-	  MENU_ITEM(0x63,LANG_MENU_TV_EXPOSURE_ORDER,       MENUITEM_ENUM,    gui_tv_exposure_order_enum, 0),
-	  MENU_ITEM(0x62,LANG_MENU_AV_EXPOSURE_ORDER,       MENUITEM_ENUM,    gui_av_exposure_order_enum, 0),
-	  MENU_ITEM(0x74,LANG_MENU_ISO_EXPOSURE_ORDER,	   MENUITEM_ENUM,    gui_iso_exposure_order_enum, 0),
-	  MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
-      {0}
-};
-static CMenu exposure_submenu = {0x2a,LANG_MENU_EXPOSURE_TITLE, NULL, exposure_submenu_items };
-*/
 
 // "Extra Photo Operations" Menu
 static const char* gui_override_disable_modes[] =           { "Off", "On", "Disabled" };
@@ -549,48 +538,46 @@ static const char* gui_nd_filter_state_modes[] =            { "Off", "In", "Out"
 static const char* gui_fast_ev_step_modes[] =               { "1/6 Ev","1/3 Ev","1/2 Ev", "2/3 Ev","5/6 Ev","1 Ev","1 1/6 Ev","1 1/3 Ev","1 1/2 Ev", "1 2/3 Ev","1 5/6 Ev","2 Ev","2 1/6 Ev","2 1/3 Ev","2 1/2 Ev", "2 2/3 Ev","2 5/6 Ev","3 Ev","3 1/6 Ev","3 1/3 Ev","3 1/2 Ev", "3 2/3 Ev","3 5/6 Ev","4 Ev"};
 static const char* gui_fast_image_quality_modes[] =         { "sup.fine", "fine", "normal", "off" };
 static CMenuItem operation_submenu_items[] = {
-      MENU_ENUM2(0x5f,LANG_MENU_OVERRIDE_DISABLE,    &conf.override_disable, gui_override_disable_modes ),
-      MENU_ITEM(0x5c,LANG_MENU_OVERRIDE_DISABLE_ALL,     MENUITEM_BOOL,    &conf.override_disable_all, 0 ),
-	  MENU_ITEM(0x61,LANG_MENU_OVERRIDE_TV_VALUE,        MENUITEM_ENUM,    gui_tv_override_value_enum, 0 ),
-	  MENU_ITEM(0x5f,LANG_MENU_OVERRIDE_TV_KOEF,         MENUITEM_ENUM,    gui_tv_override_koef_enum, 0 ),
- 	  MENU_ITEM(0x59,LANG_MENU_TV_ENUM_TYPE,             MENUITEM_ENUM,    gui_tv_enum_type_enum, 0 ),
+    MENU_ENUM2  (0x5f,LANG_MENU_OVERRIDE_DISABLE,           &conf.override_disable, gui_override_disable_modes ),
+    MENU_ITEM   (0x5c,LANG_MENU_OVERRIDE_DISABLE_ALL,       MENUITEM_BOOL,      &conf.override_disable_all,         0 ),
+    MENU_ITEM   (0x61,LANG_MENU_OVERRIDE_TV_VALUE,          MENUITEM_ENUM,      gui_tv_override_value_enum,         0 ),
+    MENU_ITEM   (0x5f,LANG_MENU_OVERRIDE_TV_KOEF,           MENUITEM_ENUM,      gui_tv_override_koef_enum,          0 ),
+    MENU_ITEM   (0x59,LANG_MENU_TV_ENUM_TYPE,               MENUITEM_ENUM,      gui_tv_enum_type_enum,              0 ),
 #if CAM_HAS_IRIS_DIAPHRAGM
-	  MENU_ITEM(0x62,LANG_MENU_OVERRIDE_AV_VALUE,        MENUITEM_ENUM,    gui_av_override_enum, 0 ),
+    MENU_ITEM   (0x62,LANG_MENU_OVERRIDE_AV_VALUE,          MENUITEM_ENUM,      gui_av_override_enum,               0 ),
 #endif
 #if CAM_HAS_ND_FILTER
-      MENU_ENUM2(0x5f,LANG_MENU_OVERRIDE_ND_FILTER,      &conf.nd_filter_state, gui_nd_filter_state_modes ),
+    MENU_ENUM2  (0x5f,LANG_MENU_OVERRIDE_ND_FILTER,         &conf.nd_filter_state, gui_nd_filter_state_modes ),
 #endif
 #if CAM_CAN_SD_OVERRIDE
-      MENU_ITEM(0x5e,LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE, MENUITEM_ENUM,    gui_subj_dist_override_value_enum, 0 ),
-	  MENU_ITEM(0x5f,LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF,  MENUITEM_ENUM,    gui_subj_dist_override_koef_enum, 0 ),
+    MENU_ITEM   (0x5e,LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE,   MENUITEM_ENUM,      gui_subj_dist_override_value_enum,  0 ),
+    MENU_ITEM   (0x5f,LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF,    MENUITEM_ENUM,      gui_subj_dist_override_koef_enum,   0 ),
 #endif
-	  MENU_ITEM(0x74,LANG_MENU_OVERRIDE_ISO_VALUE,	   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.iso_override_value, MENU_MINMAX(0, 800) ),
-	  MENU_ENUM2a(0x5f,LANG_MENU_OVERRIDE_ISO_KOEF,       &conf.iso_override_koef, gui_override_koef_modes, 4 ),
+    MENU_ITEM   (0x74,LANG_MENU_OVERRIDE_ISO_VALUE,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,     &conf.iso_override_value, MENU_MINMAX(0, 800) ),
+    MENU_ENUM2a (0x5f,LANG_MENU_OVERRIDE_ISO_KOEF,          &conf.iso_override_koef, gui_override_koef_modes,       4 ),
 #if ZOOM_OVERRIDE
-    MENU_ITEM(0x5c,LANG_MENU_OVERRIDE_ZOOM,         MENUITEM_BOOL,    &conf.zoom_override, 0 ),
-    MENU_ITEM(0x5f,LANG_MENU_OVERRIDE_ZOOM_VALUE,	  MENUITEM_ENUM,    gui_zoom_override_enum, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_OVERRIDE_ZOOM,              MENUITEM_BOOL,      &conf.zoom_override,                0 ),
+    MENU_ITEM   (0x5f,LANG_MENU_OVERRIDE_ZOOM_VALUE,        MENUITEM_ENUM,      gui_zoom_override_enum,             0 ),
 
-	  MENU_ITEM(0x5c,LANG_MENU_CLEAR_ZOOM_OVERRIDE_VALUES,    MENUITEM_BOOL,    &conf.clear_zoom_override, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_CLEAR_ZOOM_OVERRIDE_VALUES, MENUITEM_BOOL,      &conf.clear_zoom_override,          0 ),
 #endif
-	  MENU_ITEM(0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS,	   MENUITEM_SUBMENU, &bracketing_in_continuous_submenu, 0 ),
-	  MENU_ITEM(0x2d,LANG_MENU_AUTOISO,                  MENUITEM_SUBMENU, &autoiso_submenu, 0 ),
-      //{LANG_MENU_EXPOSURE,               MENUITEM_SUBMENU, &exposure_submenu, 0 ),
-	  MENU_ITEM(0x5b,LANG_MENU_CLEAR_OVERRIDE_VALUES,    MENUITEM_BOOL,    &conf.clear_override, 0 ),
-
-      MENU_ITEM(0x5c,LANG_MENU_MISC_FAST_EV,         MENUITEM_BOOL,    &conf.fast_ev, 0 ),
-      MENU_ENUM2(0x5f,LANG_MENU_MISC_FAST_EV_STEP,   &conf.fast_ev_step, gui_fast_ev_step_modes ),
+    MENU_ITEM   (0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS,      MENUITEM_SUBMENU,   &bracketing_in_continuous_submenu,  0 ),
+    MENU_ITEM   (0x2d,LANG_MENU_AUTOISO,                    MENUITEM_SUBMENU,   &autoiso_submenu,                   0 ),
+    MENU_ITEM   (0x5b,LANG_MENU_CLEAR_OVERRIDE_VALUES,      MENUITEM_BOOL,      &conf.clear_override,               0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_MISC_FAST_EV,               MENUITEM_BOOL,      &conf.fast_ev,                      0 ),
+    MENU_ENUM2  (0x5f,LANG_MENU_MISC_FAST_EV_STEP,          &conf.fast_ev_step, gui_fast_ev_step_modes ),
 #if CAM_REAR_CURTAIN
-      MENU_ITEM(0x5c, LANG_MENU_REAR_CURTAIN, MENUITEM_BOOL, &conf.flash_sync_curtain, 0 ),
+    MENU_ITEM   (0x5c, LANG_MENU_REAR_CURTAIN,              MENUITEM_BOOL,      &conf.flash_sync_curtain,           0 ),
 #endif
- 	  MENU_ITEM(0x5c, LANG_MENU_FLASH_MANUAL_OVERRIDE, MENUITEM_BOOL,   &conf.flash_manual_override, 0 ),
-    MENU_ITEM(0x5f, LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER,      MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.flash_video_override_power, MENU_MINMAX(0, 2) ),
+    MENU_ITEM   (0x5c, LANG_MENU_FLASH_MANUAL_OVERRIDE,     MENUITEM_BOOL,      &conf.flash_manual_override,        0 ),
+    MENU_ITEM   (0x5f, LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER,MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.flash_video_override_power, MENU_MINMAX(0, 2) ),
 #if CAM_HAS_VIDEO_BUTTON
-    MENU_ITEM(0x5c, LANG_MENU_FLASH_VIDEO_OVERRIDE, MENUITEM_BOOL,   &conf.flash_video_override, 0 ),
+    MENU_ITEM   (0x5c, LANG_MENU_FLASH_VIDEO_OVERRIDE,      MENUITEM_BOOL,      &conf.flash_video_override,         0 ),
 #endif
 #if CAM_QUALITY_OVERRIDE
-    MENU_ENUM2(0x5c,LANG_MENU_MISC_IMAGE_QUALITY,   &conf.fast_image_quality, gui_fast_image_quality_modes ),
+    MENU_ENUM2  (0x5c,LANG_MENU_MISC_IMAGE_QUALITY,         &conf.fast_image_quality, gui_fast_image_quality_modes ),
 #endif
-    MENU_ITEM(0x51,LANG_MENU_BACK,                     MENUITEM_UP, 0, 0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,        0,                                  0 ),
     {0}
 };
 static CMenu operation_submenu = {0x21,LANG_MENU_OPERATION_PARAM_TITLE, NULL, operation_submenu_items };
@@ -634,10 +621,10 @@ static CMenuItem visual_submenu_items[] = {
 static CMenu visual_submenu = {0x28,LANG_MENU_VIS_TITLE, NULL, visual_submenu_items };
 
 static CMenuItem raw_state_submenu_items[] = {
-    MENU_ITEM(0x5c,LANG_MENU_OSD_SHOW_RAW_STATE,      MENUITEM_BOOL,      &conf.show_raw_state, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_OSD_SHOW_REMAINING_RAW,  MENUITEM_BOOL,      &conf.show_remaining_raw, 0 ),
-    MENU_ITEM(0x60,LANG_MENU_OSD_RAW_TRESHOLD,        MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.remaining_raw_treshold,   MENU_MINMAX(0, 200) ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_OSD_SHOW_RAW_STATE,         MENUITEM_BOOL,      &conf.show_raw_state,       0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_OSD_SHOW_REMAINING_RAW,     MENUITEM_BOOL,      &conf.show_remaining_raw,   0 ),
+    MENU_ITEM   (0x60,LANG_MENU_OSD_RAW_TRESHOLD,           MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.remaining_raw_treshold,   MENU_MINMAX(0, 200) ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,        0,                          0 ),
     {0}
 };
 
@@ -646,9 +633,9 @@ static CMenu raw_state_submenu = {0x24,LANG_MENU_OSD_RAW_STATE_PARAMS_TITLE, NUL
 #ifdef  CAM_TOUCHSCREEN_UI
 static const char* gui_touchscreen_disable_modes[]=         { "Enable", "Disable" };
 static CMenuItem touchscreen_submenu_items[] = {
-    MENU_ENUM2(0x5f,LANG_MENU_TS_VIDEO_AE_DISABLE,      &conf.touchscreen_disable_video_controls,    gui_touchscreen_disable_modes ),
-    MENU_ENUM2(0x5f,LANG_MENU_TS_ALT_SHORTCUTS_DISABLE, &conf.touchscreen_disable_shortcut_controls, gui_touchscreen_disable_modes ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
+    MENU_ENUM2  (0x5f,LANG_MENU_TS_VIDEO_AE_DISABLE,        &conf.touchscreen_disable_video_controls,    gui_touchscreen_disable_modes ),
+    MENU_ENUM2  (0x5f,LANG_MENU_TS_ALT_SHORTCUTS_DISABLE,   &conf.touchscreen_disable_shortcut_controls, gui_touchscreen_disable_modes ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,        0, 0 ),
     {0}
 };
 static CMenu touchscreen_submenu = {0x28,LANG_MENU_TOUCHSCREEN_VALUES, /*cb_values_menu_change*/ NULL, touchscreen_submenu_items };
@@ -686,12 +673,12 @@ static CMenuItem osd_submenu_items[] = {
     MENU_ITEM(0x34,LANG_MENU_OSD_CLOCK_PARAMS,	 	MENUITEM_SUBMENU,       &clock_submenu, 0 ),
     MENU_ITEM(0x59,LANG_MENU_OSD_SHOW_IN_REVIEW,    MENUITEM_BOOL,          &conf.show_osd_in_review, 0 ),
 #ifndef OPTIONS_AUTOSAVE
-    MENU_ITEM(0x5c,LANG_MENU_MAIN_SAVE_OPTIONS,     MENUITEM_PROC,          gui_menuproc_save, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_MAIN_SAVE_OPTIONS,          MENUITEM_PROC,      gui_menuproc_save,          0 ),
 #endif
 #ifdef  CAM_TOUCHSCREEN_UI
-    MENU_ITEM(0x22,LANG_MENU_TOUCHSCREEN_VALUES,  	MENUITEM_SUBMENU,       &touchscreen_submenu, 0 ),
+    MENU_ITEM   (0x22,LANG_MENU_TOUCHSCREEN_VALUES,         MENUITEM_SUBMENU,   &touchscreen_submenu,       0 ),
 #endif
-    MENU_ITEM(0x51,LANG_MENU_BACK,                  MENUITEM_UP, 0, 0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP, 0,                                 0 ),
     {0}
 };
 
@@ -715,20 +702,20 @@ static CMenu histo_submenu = {0x25,LANG_MENU_HISTO_TITLE, NULL, histo_submenu_it
 
 static CMenuItem raw_exceptions_submenu_items[] = {
 #if defined CAM_HAS_VIDEO_BUTTON
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_VIDEO,         MENUITEM_BOOL,      &conf.save_raw_in_video, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_VIDEO,          MENUITEM_BOOL,      &conf.save_raw_in_video,        0 ),
 #endif
 #if defined(CAMERA_s3is)
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_SPORTS,        MENUITEM_BOOL,      &conf.save_raw_in_sports, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_SPORTS,         MENUITEM_BOOL,      &conf.save_raw_in_sports,       0 ),
 #endif
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_BURST,         MENUITEM_BOOL,      &conf.save_raw_in_burst, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_TIMER,         MENUITEM_BOOL,      &conf.save_raw_in_timer, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_EDGEOVERLAY,   MENUITEM_BOOL,      &conf.save_raw_in_edgeoverlay, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_AUTO,          MENUITEM_BOOL,      &conf.save_raw_in_auto, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_BURST,          MENUITEM_BOOL,      &conf.save_raw_in_burst,        0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_TIMER,          MENUITEM_BOOL,      &conf.save_raw_in_timer,        0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_EDGEOVERLAY,    MENUITEM_BOOL,      &conf.save_raw_in_edgeoverlay,  0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_AUTO,           MENUITEM_BOOL,      &conf.save_raw_in_auto,         0 ),
 #if CAM_BRACKETING
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_EV_BRACKETING, MENUITEM_BOOL,      &conf.save_raw_in_ev_bracketing, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_EV_BRACKETING,  MENUITEM_BOOL,      &conf.save_raw_in_ev_bracketing, 0 ),
 #endif
-    MENU_ITEM(0x5c,LANG_MENU_RAW_WARN,                  MENUITEM_BOOL,      &conf.raw_exceptions_warn, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                      MENUITEM_UP, 0, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_WARN,                   MENUITEM_BOOL,      &conf.raw_exceptions_warn,      0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,        0,                              0 ),
     {0}
 };
 static CMenu raw_exceptions_submenu = {0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS_TITLE, NULL, raw_exceptions_submenu_items };
@@ -758,16 +745,16 @@ static CMenuItem raw_submenu_items[] = {
     MENU_ITEM(0x5c,LANG_MENU_RAW_DNG_EXT,             MENUITEM_BOOL,      &conf.raw_dng_ext, 0 ),
     MENU_ITEM(0x2a,LANG_MENU_BADPIXEL_CREATE,         MENUITEM_PROC,      gui_menuproc_badpixel_create, 0 ),
 #endif
-    MENU_ITEM(0x5c,LANG_MENU_RAW_CACHED,              MENUITEM_BOOL,      &conf.raw_cache, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_CACHED,                 MENUITEM_BOOL,      &conf.raw_cache,            0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,        0,                          0 ),
     {0}
 };
 static CMenu raw_submenu = {0x24,LANG_MENU_RAW_TITLE, NULL, raw_submenu_items };
 
 static CMenuItem root_menu_items[] = {
-    MENU_ITEM(0x21,LANG_MENU_OPERATION_PARAM,         MENUITEM_SUBMENU,   &operation_submenu, 0 ),
-    MENU_ITEM(0x23,LANG_MENU_VIDEO_PARAM,             MENUITEM_SUBMENU,   &video_submenu, 0 ),
-    MENU_ITEM(0x24,LANG_MENU_MAIN_RAW_PARAM,          MENUITEM_SUBMENU,   &raw_submenu, 0 ),
+    MENU_ITEM   (0x21,LANG_MENU_OPERATION_PARAM,            MENUITEM_SUBMENU,   &operation_submenu, 0 ),
+    MENU_ITEM   (0x23,LANG_MENU_VIDEO_PARAM,                MENUITEM_SUBMENU,   &video_submenu,     0 ),
+    MENU_ITEM   (0x24,LANG_MENU_MAIN_RAW_PARAM,             MENUITEM_SUBMENU,   &raw_submenu,       0 ),
 #ifdef OPT_EDGEOVERLAY
     MENU_ITEM(0x7f,LANG_MENU_EDGE_OVERLAY,            MENUITEM_SUBMENU_PROC, gui_menu_run_fltmodule, "edgeovr.flt" ),
 #endif
@@ -779,11 +766,12 @@ static CMenuItem root_menu_items[] = {
     MENU_ITEM(0x22,LANG_MENU_MAIN_OSD_PARAM,          MENUITEM_SUBMENU,   &osd_submenu, 0 ),
     MENU_ITEM(0x28,LANG_MENU_MAIN_VISUAL_PARAM,       MENUITEM_SUBMENU,   &visual_submenu, 0 ),
 #ifdef OPT_SCRIPTING
-    MENU_ITEM(0x27,LANG_MENU_MAIN_SCRIPT_PARAM,       MENUITEM_SUBMENU,   &script_submenu, 0 ),
+    MENU_ITEM   (0x27,LANG_MENU_MAIN_SCRIPT_PARAM,          MENUITEM_SUBMENU,   &script_submenu,    0 ),
 #endif
-    MENU_ITEM(0x29,LANG_MENU_MAIN_MISC,               MENUITEM_SUBMENU,   &misc_submenu, 0 ),
+    MENU_ITEM   (0x29,LANG_MENU_MAIN_MISC,                  MENUITEM_SUBMENU,   &misc_submenu,      0 ),
 #ifndef OPTIONS_AUTOSAVE
-    MENU_ITEM(0x33,LANG_MENU_MAIN_SAVE_OPTIONS,       MENUITEM_PROC,      gui_menuproc_save, 0 ),
+    MENU_ITEM   (0x33,LANG_MENU_MAIN_SAVE_OPTIONS,          MENUITEM_PROC,      gui_menuproc_save,  0 ),
+
 #endif
     {0}
 };
@@ -1349,14 +1337,35 @@ static void gui_debug_shortcut(void) {
   }
 #endif
 
-static void gui_menuproc_swap_partitions(int arg){
- if (get_part_count()<2) gui_mbox_init(LANG_ERROR, LANG_ONLY_ONE_PARTITION, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
- else
- 	{
- 		swap_partitions();
- 		gui_mbox_init(LANG_INFORMATION, LANG_SOKOBAN_MSG_FINISH_TITLE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
- 	}
-}
+  const char* gui_menuproc_swap_partitions_enum(int change, int arg)
+  {
+    int new_partition;
+    int partition_count = get_part_count();
+    char vBuf[16];
+    if(partitions_enum)
+    {
+      free(partitions_enum);
+      partitions_enum=NULL;
+    }
+    new_partition= get_active_partition()+change;
+    if( new_partition <=0)
+    {
+      new_partition = partition_count;
+    }
+    else if( new_partition > partition_count)
+    {
+      new_partition = 1;
+    }  
+    sprintf(vBuf,"%d/%d",new_partition, partition_count);
+    partitions_enum=malloc((strlen(vBuf)+1)*sizeof(char));
+    strcpy(partitions_enum,vBuf);
+
+    if(change != 0)
+    {
+      swap_partitions(new_partition);
+    }
+    return partitions_enum;
+  }
 #endif
 
 //-------------------------------------------------------------------

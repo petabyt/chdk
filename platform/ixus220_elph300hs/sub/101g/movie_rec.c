@@ -285,7 +285,7 @@ asm volatile(
 "       AND     R1, R0, #0xFF \n"
 "       LDR     R0, [R8] \n"
 "       SUB     R2, R3, #4 \n"
-"       BL      sub_FFAE4B08 \n"
+"       BL      sub_FFAE4C08 \n"
 "       LDRH    R0, [R6,#6] \n"
 "       CMP     R0, #2 \n"
 "       LDREQ   R0, =0xFF985138 \n"     //sub_FF17EEDC

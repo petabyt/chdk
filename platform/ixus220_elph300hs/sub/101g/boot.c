@@ -428,7 +428,7 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 				"MOV     R1, #0\n"
                 "BL      sub_FF835D3C\n"				 
 				"LDR     R0, =0xC0F1801C\n"
-				"MOV     R1, #1000\n"
+				"MOV     R1, #0x1000\n"
                 "BL      sub_FF835D3C\n"
 				"LDR     R0, =0xC0F18020\n"
 				"MOV     R1, #8\n"

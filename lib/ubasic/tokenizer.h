@@ -58,7 +58,6 @@ typedef enum {
   TOKENIZER_WEND,
   TOKENIZER_GOSUB,
   TOKENIZER_RETURN,
-  TOKENIZER_CALL,
   TOKENIZER_REM,
   TOKENIZER_END,
   TOKENIZER_CLS,
@@ -204,6 +203,7 @@ typedef enum {
   TOKENIZER_SET_CONFIG_VALUE,
   TOKENIZER_SET_YIELD,
   
+  TOKENIZER_SWAP_PARTITIONS
 } ubasic_token;
 
 void tokenizer_init(const char *program);

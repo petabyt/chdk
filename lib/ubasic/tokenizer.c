@@ -85,7 +85,6 @@ static const struct keyword_token keywords[] = {
   {"goto",                    TOKENIZER_GOTO},
   {"gosub",                   TOKENIZER_GOSUB},
   {"return",                  TOKENIZER_RETURN},
-  {"call",                    TOKENIZER_CALL},
   {"rem",                     TOKENIZER_REM},
   {"cls",                     TOKENIZER_CLS},
   {"print_screen",            TOKENIZER_PRINT_SCREEN},
@@ -151,10 +150,8 @@ static const struct keyword_token keywords[] = {
   {"get_zoom",                TOKENIZER_GET_ZOOM},
   {"get_exp_count",           TOKENIZER_GET_EXP_COUNT},
   {"get_config_value",        TOKENIZER_GET_CONFIG_VALUE},
-
-
-
-//SET  
+  {"swap_partitions",         TOKENIZER_SWAP_PARTITIONS},
+//SET
   {"set_av96_direct",         TOKENIZER_SET_AV96_DIRECT},
   {"set_av_rel",              TOKENIZER_SET_USER_AV_BY_ID_REL}, //FOR COMPATIBILITY
   {"set_av96",                TOKENIZER_SET_AV96},

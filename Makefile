@@ -8,15 +8,16 @@ SUBDIRS=tools lib platform core loader CHDK
 .PHONY: fir
 fir: version firsub
 
+
 firsub: all
 	mkdir -p  $(topdir)bin
 	mkdir -p  $(topdir)CHDK/MODULES
-	cp $(topdir)loader/$(PLATFORM)/main.bin  $(topdir)bin/main.bin
+	cp $(topdir)loader/$(PLATFORM)/main.bin $(topdir)bin/main.bin
 ifndef NOZERO100K
 ifeq ($(OSTYPE),Windows)
-	zero | dd bs=1k count=100 >>  $(topdir)bin/main.bin 2> $(DEVNULL)
+	zero | dd bs=1k count=100 >> $(topdir)bin/main.bin 2> $(DEVNULL)
 else
-	dd if=/dev/zero bs=1k count=100 >>  $(topdir)bin/main.bin 2> $(DEVNULL)
+	dd if=/dev/zero bs=1k count=100 >> $(topdir)bin/main.bin 2> $(DEVNULL)
 endif
 endif
 ifdef PLATFORMOS
@@ -28,7 +29,7 @@ ifdef PLATFORMOS
 ifdef OPT_FI2
   ifdef FI2KEY
 		@echo \-\> PS.FI2
-		$(PAKFI2)  $(topdir)bin/main.bin -p $(PLATFORMID) -key $(FI2KEY) -iv $(FI2IV)  $(topdir)bin/PS.FI2
+		$(PAKFI2)  $(topdir)bin/main.bin -p $(PLATFORMID) -key $(FI2KEY) -iv $(FI2IV) $(topdir)bin/PS.FI2
   else
 		@echo WARNING OPT_FI2 set but FI2KEY is not! please read platform/fi2.inc.txt
   endif
@@ -38,19 +39,21 @@ endif
 ifdef NEED_ENCODED_DISKBOOT
 	@echo dance \-\> DISKBOOT.BIN ver $(NEED_ENCODED_DISKBOOT)
 	$(ENCODE_DISKBOOT) $(topdir)bin/main.bin  $(topdir)bin/DISKBOOT.BIN $(NEED_ENCODED_DISKBOOT)
-	rm  $(topdir)bin/main.bin
+	rm $(topdir)bin/main.bin
 else
-	mv  $(topdir)bin/main.bin  $(topdir)bin/DISKBOOT.BIN
+	mv $(topdir)bin/main.bin  $(topdir)bin/DISKBOOT.BIN
 endif
 	rm -f $(topdir)CHDK/MODULES/*
 	cp $(topdir)core/modules/*.flt $(topdir)CHDK/MODULES
 	@echo "**** Firmware creation completed successfully"
+
 
 .PHONY: upload
 upload: fir
 	@echo Uploading...
 	cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB).FIR $(topdir)bin/PS.FIR
 	/home/vitalyb/Projects/ch/libptp2-1.1.0/src/ptpcam -u -m 0xbf01 --filename $(topdir)bin/PS.FIR
+
 
 infoline:
 	@echo "**** GCC $(GCC_VERSION) : BUILDING CHDK-$(VER), #$(BUILD_NUMBER)$(STATE) FOR $(PLATFORM)-$(PLATFORMSUB)"
@@ -59,16 +62,19 @@ infoline:
 version: FORCE
 	echo "**** Build: $(BUILD_NUMBER)"
 
+
 .PHONY: FORCE
 FORCE:
 
+
 firzip: version firzipsub
+
 
 firzipsub: infoline clean firsub
 	@echo \-\> $(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip
 	rm -f $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip
 	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER) date:`date -R`" | \
-	    zip -9jz $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
+		zip -9jz $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
     ifdef PLATFORMOS
       ifeq ($(PLATFORMOS),vxworks)
 		zip -9j $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/PS.FIR > $(DEVNULL)
@@ -161,7 +167,6 @@ firzipsubcomplete: infoline clean firsub
     endif
 	rm -f $(topdir)bin/DISKBOOT.BIN
 
-
 # define targets to batch build all cameras & firmware versions
 # list of cameras/firmware versions is in 'camera_list.csv'
 # each row in 'camera_list.csv' has 5 entries:
@@ -171,6 +176,7 @@ firzipsubcomplete: infoline clean firsub
 # - copy to (optional)         :- if this firmware version can also be used for another version on the same
 #                                 camera define the alternate firmware here. see COPY_TO comments above.
 # - skip auto build (optional) :- any value in this column will exclude the camera/firmware from the auto build
+
 batch-zip: version
 	sh tools/auto_build.sh $(MAKE) firzipsub camera_list.csv
 	@echo "**** Summary of memisosizes"

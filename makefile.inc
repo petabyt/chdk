@@ -50,10 +50,10 @@ export LC_ALL=C
 ifndef OSTYPE
   HOSTPLATFORM:=$(patsubst MINGW%,MINGW,$(shell uname -s))
   ifeq ($(HOSTPLATFORM),MINGW)
-	OSTYPE = Windows
-	EXE = .exe
-	SH = sh
-	DEVNULL = NUL
+    OSTYPE = Windows
+    EXE = .exe
+    SH = sh
+    DEVNULL = NUL
 	OLDSEPARATOR = \\\\
 	NEWSEPARATOR = /
 	SORT := $(dir $(shell which uniq.exe | sed 's_$(OLDSEPARATOR)_$(NEWSEPARATOR)_g'))/sort.exe
@@ -156,7 +156,7 @@ CFLAGS+=-DOPT_UBASIC
 OPT_SCRIPTING=1
 endif
 
-ifdef OPT_SCRIPTING
+ifdef OPT_SCRIPTING 
 CFLAGS+=-DOPT_SCRIPTING
 endif
 
@@ -210,13 +210,13 @@ ifndef SKIPBUILDRULES
 
 .dep/%.d: %.c .dep
 	$(CC) $(CFLAGS) -M $< > $@.$$$$; \
-		sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	rm -f $@.$$$$
+	    sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	    rm -f $@.$$$$
 
 .dep/%.d: %.S .dep
 	$(CC) $(CFLAGS) -M $< > $@.$$$$; \
-		sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-		rm -f $@.$$$$
+	    sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	    rm -f $@.$$$$
 
 endif
 
@@ -234,14 +234,14 @@ distclean: distclean-recursive
 
 clean-recursive:
 	@for i in $(SUBDIRS); do \
-		echo \>\> Cleaning in $(FOLDER)$$i; \
-		$(MAKE) -C $$i FOLDER="$(FOLDER)$$i/" clean || exit 1; \
+	    echo \>\> Cleaning in $(FOLDER)$$i; \
+	    $(MAKE) -C $$i FOLDER="$(FOLDER)$$i/" clean || exit 1; \
 	done
 
 distclean-recursive:
 	@for i in $(SUBDIRS); do \
-		echo \>\> Distcleaning in $(FOLDER)$$i; \
-		$(MAKE) -C $$i FOLDER="$(FOLDER)$$i/" distclean || exit 1; \
+	    echo \>\> Distcleaning in $(FOLDER)$$i; \
+	    $(MAKE) -C $$i FOLDER="$(FOLDER)$$i/" distclean || exit 1; \
 	done
 
 all-recursive:
@@ -252,16 +252,16 @@ ifndef PLATFORMSUB
 	$(error PLATFORMSUB has not been defined. Specify the PLATFORMSUB to build on the command line or in localbuildconf.inc)
 endif
 	@for i in $(SUBDIRS); do \
-		echo \>\> Entering to $(FOLDER)$$i; \
-		$(MAKE) -C $$i FOLDER="$(FOLDER)$$i/" || exit 1; \
-		echo \<\< Leaving $(FOLDER)$$i; \
+	    echo \>\> Entering to $(FOLDER)$$i; \
+	    $(MAKE) -C $$i FOLDER="$(FOLDER)$$i/" || exit 1; \
+	    echo \<\< Leaving $(FOLDER)$$i; \
 	done
 
 depend-recursive:
 	@for i in $(SUBDIRS); do \
-		echo \>\> Entering to $(FOLDER)$$i; \
-		$(MAKE) -C $$i FOLDER="$(FOLDER)$$i/" depend || exit 1; \
-		echo \<\< Leaving $(FOLDER)$$i; \
+	    echo \>\> Entering to $(FOLDER)$$i; \
+	    $(MAKE) -C $$i FOLDER="$(FOLDER)$$i/" depend || exit 1; \
+	    echo \<\< Leaving $(FOLDER)$$i; \
 	done
 
 ifdef SILENT
@@ -287,3 +287,4 @@ callfunc.S: ;
 setjmp.S: ;
 stubs_min.S: ;
 stubs_entry_2.S: ;
+
