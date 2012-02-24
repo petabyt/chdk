@@ -349,6 +349,37 @@ static int luaCB_console_redraw( lua_State* L )
   console_redraw();
   return 0;
 }
+
+#ifdef CAM_MULTIPART
+static int luaCB_get_partitionInfo( lua_State* L )
+{
+  lua_createtable(L, 0, 4);
+  SET_INT_FIELD("count",  get_part_count());
+  SET_INT_FIELD("active", get_active_partition());
+  SET_INT_FIELD("type",   get_part_type());
+  SET_INT_FIELD("size",   GetTotalCardSpaceKb()>>10);
+  return 1;
+}
+
+static int luaCB_swap_partitions( lua_State* L )
+{
+  int partNr;
+
+  if( lua_gettop(L)==1 )
+  {
+    partNr = luaL_checknumber(L, 1);
+  }
+  else
+  {
+    int partCount = get_part_count();
+    partNr = get_active_partition()+1;
+    if( partNr > partCount ) partNr = 1;
+  }
+  lua_pushboolean(L, swap_partitions(partNr));
+  return 1;
+}
+#endif
+
 static int luaCB_get_av96( lua_State* L )
 {
   lua_pushnumber( L, shooting_get_av96() );
@@ -2328,6 +2359,11 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(exit_alt)
     FUNC(shut_down)
     FUNC(print_screen)
+
+#ifdef CAM_MULTIPART
+    FUNC(get_partitionInfo)
+    FUNC(swap_partitions)
+#endif
 
     FUNC(get_focus_mode)
     FUNC(get_focus_state)

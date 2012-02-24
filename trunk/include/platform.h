@@ -462,8 +462,13 @@ unsigned int movie_reset;
 unsigned int GetFreeCardSpaceKb(void);
 unsigned int GetTotalCardSpaceKb(void);
 
-void swap_partitions(void);
+
+
+int swap_partitions(int new_partition);
+unsigned char get_active_partition(void);
+int get_part_type(void);
 int get_part_count(void);
+int is_partition_changed(void);
 void create_partitions(void);
 extern char * camera_jpeg_count_str();
 

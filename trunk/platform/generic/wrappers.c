@@ -1039,36 +1039,109 @@ int mbr_read_dryos(unsigned long drive_total_sectors, char* mbr_sector ){
 
 #endif
 
-int get_part_count(void){
- unsigned long part_start_sector, part_length;
- char part_status, part_type;
- int i;
- int count=0;
- if (is_mbr_loaded())
- {
-	 for (i=0; i<=1;i++){
-	  part_start_sector=(*(unsigned short*)(mbr_buf+i*16+0x1C8)<<16) | *(unsigned short*)(mbr_buf+i*16+0x1C6);
-	  part_length=(*(unsigned short*)(mbr_buf+i*16+0x1CC)<<16) | *(unsigned short*)(mbr_buf+i*16+0x1CA);
-	  part_status=mbr_buf[i*16+0x1BE];
-	  part_type=mbr_buf[0x1C2+i*16];
-	  if ( part_start_sector && part_length && part_type && ((part_status==0) || (part_status==0x80)) ) count++;
-	 }
- }
- return count;
+int get_part_count(void)
+{
+  unsigned long part_start_sector, part_length;
+  char part_status, part_type;
+  int i;
+  int count=0;
+  if (is_mbr_loaded())
+  {
+    for (i=0; i<=3;i++)
+    {
+      part_start_sector=(*(unsigned short*)(mbr_buf+i*16+0x1C8)<<16) | *(unsigned short*)(mbr_buf+i*16+0x1C6);
+      part_length=(*(unsigned short*)(mbr_buf+i*16+0x1CC)<<16) | *(unsigned short*)(mbr_buf+i*16+0x1CA);
+      part_status=mbr_buf[i*16+0x1BE];
+      part_type=mbr_buf[0x1C2+i*16];
+      if ( part_start_sector && part_length && part_type && ((part_status==0) || (part_status==0x80)) ) count++;
+    }
+  }
+  return count;
+}
+int get_part_type()
+{
+  int partType = 0x00;
+  if (is_mbr_loaded())
+  {
+    partType=mbr_buf[0x1C2+(get_active_partition()-1)*16];
+  }
+  return partType;
+} 
+
+static int boot_partition = 0;
+static int partition_changed = 0;
+int is_partition_changed()
+{
+  return partition_changed;
 }
 
-void swap_partitions(void){
-	if (is_mbr_loaded())
-	{
-	 int i;
-	 char c;
-	 for(i=0;i<16;i++){
-	  c=mbr_buf[i+0x1BE];
-	  mbr_buf[i+0x1BE]=mbr_buf[i+0x1CE];
-	  mbr_buf[i+0x1CE]=c;
-	 }
-	 _WriteSDCard(0,0,1,mbr_buf);
-	}
+int swap_partitions(int new_partition)
+{
+  if (is_mbr_loaded())
+  {
+    int i,j,p;
+    char c;
+    
+    int partition_count = get_part_count();
+    int active_partition = get_active_partition();
+    
+    if(!boot_partition)
+    {
+      boot_partition = active_partition;
+    }
+
+    // wrong input
+    if( new_partition > partition_count || new_partition <= 0 )
+    {
+      return 0;
+    }
+    partition_changed = (new_partition==boot_partition)?0:1;
+    
+    // rotate partitions till new_partition is found
+    for(j=0;j<partition_count;++j)
+    {
+      if(new_partition == get_active_partition())
+      {
+        break;
+      }
+      for(i=0;i<16;i++)
+      {
+        c=mbr_buf[i+0x1BE];
+        for(p=1; p<partition_count; ++p)
+        {
+          mbr_buf[i+(p-1)*16+0x1BE]=mbr_buf[i+p*16+0x1BE];
+        }
+        mbr_buf[i+(partition_count-1)*16+0x1BE]=c;
+      }
+    }
+    _WriteSDCard(0,0,1,mbr_buf);
+  }
+  return 1;
+}
+
+unsigned char get_active_partition(void)
+{
+  unsigned int  partition_start[4];
+  unsigned char partition_number = 1;
+  int partition_count = get_part_count();
+  int i;
+
+  for( i=0; i<partition_count; ++i )
+  {
+    int a = mbr_buf[0x01C6+(i)*16];
+    int b = mbr_buf[0x01C7+(i)*16];
+    int c = mbr_buf[0x01C8+(i)*16];
+    int d = mbr_buf[0x01C9+(i)*16];
+    partition_start[i] = (((((d<<8) +c)<<8) +b)<<8) +a;
+  }
+  for( i=1; i<partition_count; ++i )
+  {
+    if(partition_start[i]<partition_start[0])
+    {
+      ++partition_number;
+    }
+  }
+  return partition_number;
 }
 
 void create_partitions(void){

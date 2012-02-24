@@ -574,7 +574,13 @@ factor(void)
     int var2 = expr();
     if( conf_getValue(var1, &configVal) == CONF_VALUE) r = configVal.numb; else r = var2;
     break;
-
+#ifdef CAM_MULTIPART
+  case TOKENIZER_SWAP_PARTITIONS:
+    accept(TOKENIZER_SWAP_PARTITIONS);
+    int partNr = expr();
+    r = swap_partitions(partNr);
+    break;
+#endif
   default:
     r = varfactor();
     break;

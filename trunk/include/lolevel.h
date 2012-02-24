@@ -315,4 +315,8 @@ extern void *_exmem_alloc(int pool_id,int size,int unk,int unk2);
 extern int _memPartFindMax(int mempart_id); 
 extern int _memPartInfoGet(int mempart_id,int *info);
 
+#ifdef CAM_HAS_GPS
+extern void _GPS_UpdateData();
+#endif
+
 #endif
