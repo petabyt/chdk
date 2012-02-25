@@ -620,6 +620,12 @@ void usb_shoot_module_bracketing()
 	Control Module :  Video
 		- starts video (with sync if selected) on press,  stops on next press
   ---------------------------------------------------------------------------------------------------*/
+#ifdef  CAM_HAS_VIDEO_BUTTON   
+	#define USB_VIDEO_BUTTON KEY_VIDEO
+#else
+	#define USB_VIDEO_BUTTON KEY_SHOOT_FULL
+#endif	
+
 void usb_video_module_normal()
 {
 
@@ -637,7 +643,7 @@ void usb_video_module_normal()
 
 				case REMOTE_HALF_PRESS :
 				case REMOTE_FULL_PRESS:
-					kbd_key_press(KEY_SHOOT_FULL);
+					kbd_key_press(USB_VIDEO_BUTTON);
 					logic_module_state = LM_START_RECORD ;
 					break ;
 
@@ -652,7 +658,7 @@ void usb_video_module_normal()
 			{
 				case REMOTE_RELEASE :
 					logic_module_state = LM_RECORDING ;
-					kbd_key_release(KEY_SHOOT_FULL);
+					kbd_key_release(USB_VIDEO_BUTTON);
 					break ;
 
 				case REMOTE_HALF_PRESS :
@@ -673,7 +679,7 @@ void usb_video_module_normal()
 
 				case REMOTE_HALF_PRESS :
 				case REMOTE_FULL_PRESS:
-					kbd_key_press(KEY_SHOOT_FULL);
+					kbd_key_press(USB_VIDEO_BUTTON);
 					logic_module_state = LM_STOP_RECORDING ;
 					break ;
 
@@ -688,7 +694,7 @@ void usb_video_module_normal()
 			{
 				case REMOTE_RELEASE :
 					logic_module_state = LM_RELEASE ;
-					kbd_key_release(KEY_SHOOT_FULL);
+					kbd_key_release(USB_VIDEO_BUTTON);
 					break ;
 
 				case REMOTE_HALF_PRESS :
@@ -731,9 +737,9 @@ void (*usb_module_play[NUM_USB_MODULES])() =
 				usb_playback_module ,			// [Bracket]
 				usb_playback_module ,			// [   Zoom]
 				usb_playback_module ,			// [  Video]
-				usb_playback_module ,			// [  gWIRE]
-				usb_playback_module ,			// [ Script]
-				usb_null_module					// <- insert new playback module here - update NUM_USB_MODULES if necessary
+				usb_playback_module ,			// <- insert new playback module here - update NUM_USB_MODULES if necessary
+				usb_playback_module ,			//  --
+				usb_null_module					//  -- 
 	};
 
 
@@ -747,7 +753,7 @@ void (*usb_module_shoot[NUM_USB_MODULES])() =
 				usb_shoot_module_burst ,		// [  Burst]
 				usb_shoot_module_bracketing ,	// [Bracket]
 				usb_shoot_module_zoom ,			// [   Zoom]
-				usb_null_module ,				// [  Video]
+				usb_video_module_normal ,		// [  Video] note : cameras with video button come through here when filming
 				usb_null_module,				// <- insert new shoot module here - update NUM_USB_MODULES if necessary
 				usb_null_module,				// --
 				usb_null_module					// --
