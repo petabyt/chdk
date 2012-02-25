@@ -11,7 +11,9 @@ Sity: Kharkiv
 
 20070912 mx3: first version
 
-20070918 mx3: speed optimization, 
+20070918 mx3: speed optimization,
+
+20101201 CHDKLover: speed optimization
 
 */
 
@@ -33,12 +35,12 @@ Sity: Kharkiv
 
 enum {
 
-	MD_MEASURE_MODE_U=0,
-	MD_MEASURE_MODE_Y=1,
-	MD_MEASURE_MODE_V=2,
-	MD_MEASURE_MODE_R=3,
-	MD_MEASURE_MODE_G=4,
-	MD_MEASURE_MODE_B=5
+    MD_MEASURE_MODE_U=0,
+    MD_MEASURE_MODE_Y=1,
+    MD_MEASURE_MODE_V=2,
+    MD_MEASURE_MODE_R=3,
+    MD_MEASURE_MODE_G=4,
+    MD_MEASURE_MODE_B=5
 };
 
 enum {
@@ -49,9 +51,9 @@ enum {
 };
 
 enum {
-	MD_REGION_NONE=0,
-	MD_REGION_INCLUDE=1,
-	MD_REGION_EXCLUDE=2
+    MD_REGION_NONE=0,
+    MD_REGION_INCLUDE=1,
+    MD_REGION_EXCLUDE=2
 };
 
 
@@ -59,43 +61,43 @@ enum {
 
 
 struct motion_detector_s {
-	int *curr; // points to buff1 or buff2
-	int *prev; // points to buff2 or buff1
-	int buff1[MOTION_DETECTOR_CELLS];
-	int buff2[MOTION_DETECTOR_CELLS];
-	int points[MOTION_DETECTOR_CELLS];
+    int *curr; // points to buff1 or buff2
+    int *prev; // points to buff2 or buff1
+    int buff1[MOTION_DETECTOR_CELLS];
+    int buff2[MOTION_DETECTOR_CELLS];
+    int points[MOTION_DETECTOR_CELLS];
 
-	int columns;
-	int rows;
-	int threshold;
-	int pixel_measure_mode;
-	int timeout;
-	int measure_interval;
+    int columns;
+    int rows;
+    int threshold;
+    int pixel_measure_mode;
+    int timeout;
+    int measure_interval;
 
-	int last_measure_time;
-	int start_time;
+    int last_measure_time;
+    int start_time;
 
-	int running;
-	int detected_cells;
+    int running;
+    int detected_cells;
 
-	int draw_grid;
-	int clipping_region_mode;
-	int clipping_region_row1;
-	int clipping_region_column1;
-	int clipping_region_row2;
-	int clipping_region_column2;
+    int draw_grid;
+    int clipping_region_mode;
+    int clipping_region_row1;
+    int clipping_region_column1;
+    int clipping_region_row2;
+    int clipping_region_column2;
 
-	int previous_picture_is_ready;
+    int previous_picture_is_ready;
 
-	int return_value;
-	int parameters;
-	int pixels_step;
-	int msecs_before_trigger;
+    int return_value;
+    int parameters;
+    int pixels_step;
+    int msecs_before_trigger;
 
 // debug
 #ifdef OPT_MD_DEBUG
-	int comp_calls_cnt;
-	int comp_calls[MD_REC_CALLS_CNT];
+    int comp_calls_cnt;
+    int comp_calls[MD_REC_CALLS_CNT];
 #endif
 };
 
@@ -104,7 +106,7 @@ static struct motion_detector_s *motion_detector=NULL;
 static void md_kbd_sched_immediate_shoot(int no_release)
 {
     action_pop();// REMOVE MD ITEM
-  
+
     // stack operations are reversed!
     if (!no_release)  // only release shutter if allowed
     {
@@ -151,125 +153,125 @@ int md_init_motion_detector(
  int msecs_before_trigger
 ){
 
-	if(!motion_detector) {
-		motion_detector=malloc(sizeof(struct motion_detector_s));
-		if(!motion_detector)
-			return 0; // TODO make sure callers handle this
-	}
+    if(!motion_detector) {
+        motion_detector=malloc(sizeof(struct motion_detector_s));
+        if(!motion_detector)
+            return 0; // TODO make sure callers handle this
+    }
 #ifdef OPT_MD_DEBUG
-	motion_detector->comp_calls_cnt=0;
+    motion_detector->comp_calls_cnt=0;
 #endif
-	motion_detector->previous_picture_is_ready=0;
-	motion_detector->curr=motion_detector->buff1;
-	motion_detector->prev=motion_detector->buff2;
+    motion_detector->previous_picture_is_ready=0;
+    motion_detector->curr=motion_detector->buff1;
+    motion_detector->prev=motion_detector->buff2;
 
-	if(		pixel_measure_mode != MD_MEASURE_MODE_Y 
-		&&	pixel_measure_mode != MD_MEASURE_MODE_U
-		&&	pixel_measure_mode != MD_MEASURE_MODE_V
-		&&	pixel_measure_mode != MD_MEASURE_MODE_R
-		&&	pixel_measure_mode != MD_MEASURE_MODE_G
-		&&	pixel_measure_mode != MD_MEASURE_MODE_B
-		){
-		pixel_measure_mode = MD_MEASURE_MODE_Y;
-	}
-
-
-	if( columns<1 || rows<1 || columns * rows > MOTION_DETECTOR_CELLS ){
-		columns=3;
-		rows=3;
-	}
-
-	if(msecs_before_trigger<0){
-		msecs_before_trigger=0;
-	}
-
-	if (pixels_step<1){
-		pixels_step=1;
-	}
-
-	if(detection_timeout<0){
-		detection_timeout=0;
-	}
-
-	if(measure_interval<0) {
-		measure_interval=0;
-	}
-
-	if(threshold<0) {
-		threshold=0;
-	}
+    if(     pixel_measure_mode != MD_MEASURE_MODE_Y
+        &&  pixel_measure_mode != MD_MEASURE_MODE_U
+        &&  pixel_measure_mode != MD_MEASURE_MODE_V
+        &&  pixel_measure_mode != MD_MEASURE_MODE_R
+        &&  pixel_measure_mode != MD_MEASURE_MODE_G
+        &&  pixel_measure_mode != MD_MEASURE_MODE_B
+        ){
+        pixel_measure_mode = MD_MEASURE_MODE_Y;
+    }
 
 
-	motion_detector->msecs_before_trigger=msecs_before_trigger;
-	motion_detector->parameters = parameters;
-	motion_detector->pixels_step=pixels_step;
-	motion_detector->columns=columns;
-	motion_detector->rows=rows;
-	motion_detector->return_value=0;
-	
+    if( columns<1 || rows<1 || columns * rows > MOTION_DETECTOR_CELLS ){
+        columns=3;
+        rows=3;
+    }
 
-	motion_detector->pixel_measure_mode=pixel_measure_mode;
-	motion_detector->timeout=detection_timeout;
-	motion_detector->measure_interval=measure_interval;
-	motion_detector->threshold=threshold;
-	motion_detector->draw_grid=draw_grid;
+    if(msecs_before_trigger<0){
+        msecs_before_trigger=0;
+    }
+
+    if (pixels_step<1){
+        pixels_step=1;
+    }
+
+    if(detection_timeout<0){
+        detection_timeout=0;
+    }
+
+    if(measure_interval<0) {
+        measure_interval=0;
+    }
+
+    if(threshold<0) {
+        threshold=0;
+    }
 
 
-	if (clipping_region_column1>clipping_region_column2){
-		motion_detector->clipping_region_column2=clipping_region_column1;
-		motion_detector->clipping_region_column1=clipping_region_column2;
-	} else {
-		motion_detector->clipping_region_column2=clipping_region_column2;
-		motion_detector->clipping_region_column1=clipping_region_column1;
-	}
+    motion_detector->msecs_before_trigger=msecs_before_trigger;
+    motion_detector->parameters = parameters;
+    motion_detector->pixels_step=pixels_step;
+    motion_detector->columns=columns;
+    motion_detector->rows=rows;
+    motion_detector->return_value=0;
 
-	if (clipping_region_row1>clipping_region_row2){
-		motion_detector->clipping_region_row2=clipping_region_row1;
-		motion_detector->clipping_region_row1=clipping_region_row2;
-	} else {
-		motion_detector->clipping_region_row2=clipping_region_row2;
-		motion_detector->clipping_region_row1=clipping_region_row1;
-	}
 
-	if (clipping_region_mode!=MD_REGION_NONE && clipping_region_mode!=MD_REGION_INCLUDE && clipping_region_mode!=MD_REGION_EXCLUDE){
-		clipping_region_mode=MD_REGION_NONE;
-	}
-	motion_detector->clipping_region_mode=clipping_region_mode;
+    motion_detector->pixel_measure_mode=pixel_measure_mode;
+    motion_detector->timeout=detection_timeout;
+    motion_detector->measure_interval=measure_interval;
+    motion_detector->threshold=threshold;
+    motion_detector->draw_grid=draw_grid;
 
-	motion_detector->detected_cells=0;
-	motion_detector->previous_picture_is_ready=0;
-	motion_detector->start_time=get_tick_count();
 
-	motion_detector->last_measure_time = motion_detector->start_time - motion_detector->measure_interval;
+    if (clipping_region_column1>clipping_region_column2){
+        motion_detector->clipping_region_column2=clipping_region_column1;
+        motion_detector->clipping_region_column1=clipping_region_column2;
+    } else {
+        motion_detector->clipping_region_column2=clipping_region_column2;
+        motion_detector->clipping_region_column1=clipping_region_column1;
+    }
 
-	motion_detector->running=1;
+    if (clipping_region_row1>clipping_region_row2){
+        motion_detector->clipping_region_row2=clipping_region_row1;
+        motion_detector->clipping_region_row1=clipping_region_row2;
+    } else {
+        motion_detector->clipping_region_row2=clipping_region_row2;
+        motion_detector->clipping_region_row1=clipping_region_row1;
+    }
 
-	action_push(AS_MOTION_DETECTOR);
-	draw_clear();
+    if (clipping_region_mode!=MD_REGION_NONE && clipping_region_mode!=MD_REGION_INCLUDE && clipping_region_mode!=MD_REGION_EXCLUDE){
+        clipping_region_mode=MD_REGION_NONE;
+    }
+    motion_detector->clipping_region_mode=clipping_region_mode;
 
-	return 1;
+    motion_detector->detected_cells=0;
+    motion_detector->previous_picture_is_ready=0;
+    motion_detector->start_time=get_tick_count();
+
+    motion_detector->last_measure_time = motion_detector->start_time - motion_detector->measure_interval;
+
+    motion_detector->running=1;
+
+    action_push(AS_MOTION_DETECTOR);
+    draw_clear();
+
+    return 1;
 }
 
 #ifdef OPT_MD_DEBUG
 static void md_save_calls_history(){
-	char buf[200], fn[30];
-	char big[MD_INFO_BUF_SIZE];
-	int big_ln;
-	int calls,i, ln, fd;
+    char buf[200], fn[30];
+    char big[MD_INFO_BUF_SIZE];
+    int big_ln;
+    int calls,i, ln, fd;
     static struct utimbuf t;
     static struct tm *ttm;
 
 
-	if( (motion_detector->parameters & MD_MAKE_DEBUG_LOG_FILE) == 0 ){
-		return;
-	}
-	
+    if( (motion_detector->parameters & MD_MAKE_DEBUG_LOG_FILE) == 0 ){
+        return;
+    }
 
-	strcpy(fn,"A/MD_INFO.TXT");//,BUILD_NUMBER,motion_detector->pixels_step);
-	fd = open(fn, O_WRONLY|O_CREAT, 0777);
-	if( fd>=0) {
-		console_add_line("Writing info file...");
-		lseek(fd,0,SEEK_END);
+
+    strcpy(fn,"A/MD_INFO.TXT");//,BUILD_NUMBER,motion_detector->pixels_step);
+    fd = open(fn, O_WRONLY|O_CREAT, 0777);
+    if( fd>=0) {
+        console_add_line("Writing info file...");
+        lseek(fd,0,SEEK_END);
 	    ttm = get_localtime();
         big_ln=sprintf(big, 
 				"\r\n--- %04u-%02u-%02u  %02u:%02u:%02u\r\n"
@@ -285,41 +287,41 @@ static void md_save_calls_history(){
 				motion_detector->detected_cells
 		);
 
-		calls = ( motion_detector->comp_calls_cnt < MD_REC_CALLS_CNT) ?motion_detector->comp_calls_cnt: MD_REC_CALLS_CNT;
+        calls = ( motion_detector->comp_calls_cnt < MD_REC_CALLS_CNT) ?motion_detector->comp_calls_cnt: MD_REC_CALLS_CNT;
 
-		for(i=0;i<calls;i++){
-			ln=sprintf(buf,"[%d] - %d\r\n",i,motion_detector->comp_calls[i]);
-			if(big_ln+ln>MD_INFO_BUF_SIZE){
-	      write(fd,big,big_ln);
-				big_ln=0;
-			} 
-			memcpy(big+big_ln,buf,ln+1);
-			big_ln+=ln;
-		}
+        for(i=0;i<calls;i++){
+            ln=sprintf(buf,"[%d] - %d\r\n",i,motion_detector->comp_calls[i]);
+            if(big_ln+ln>MD_INFO_BUF_SIZE){
+          write(fd,big,big_ln);
+                big_ln=0;
+            }
+            memcpy(big+big_ln,buf,ln+1);
+            big_ln+=ln;
+        }
     write(fd,big,big_ln);
-		close(fd);
-	  t.actime = t.modtime = time(NULL);
+        close(fd);
+      t.actime = t.modtime = time(NULL);
     utime(fn, &t);
-	}
+    }
 }
 
 static void mx_dump_memory(void *img){
-	char fn[36];
-	int fd, i;
-	static int cnt=0;
+    char fn[36];
+    int fd, i;
+    static int cnt=0;
 
     started();
     mkdir("A/MD");
 
-		do {
-			cnt++;
-			sprintf(fn, "A/MD/%04d.FB", cnt);
-			fd = open(fn, O_RDONLY, 0777);
+        do {
+            cnt++;
+            sprintf(fn, "A/MD/%04d.FB", cnt);
+            fd = open(fn, O_RDONLY, 0777);
 
-			if(fd>=0){
-				close(fd);
-			}
-		} while(fd>=0);
+            if(fd>=0){
+                close(fd);
+            }
+        } while(fd>=0);
 
 
 		sprintf(fn, "A/MD/%04d.FB", cnt );
@@ -344,53 +346,53 @@ static int md_running(){
 
 
 int md_detect_motion(void){
-	int *tmp;
-	unsigned char * img;
+    int *tmp;
+    unsigned char * img;
     int vp_w, vp_h, idx, tmp2, tick, in_clipping_region, x_step, y_step, x_end, y_end;
-	int val;
+    int val;
     int cy,cv,cu;
 
-	register int col, row, x, y;
+    register int col, row, x, y;
 
-	if(!md_running()){ 
-		return 0;
-	}
+    if(!md_running()){
+        return 0;
+    }
 
-	tick=get_tick_count();
+    tick=get_tick_count();
 #ifdef OPT_MD_DEBUG
-	if(motion_detector->comp_calls_cnt < MD_REC_CALLS_CNT) {
-		motion_detector->comp_calls[motion_detector->comp_calls_cnt]=tick;
-	}
-	motion_detector->comp_calls_cnt++;
+    if(motion_detector->comp_calls_cnt < MD_REC_CALLS_CNT) {
+        motion_detector->comp_calls[motion_detector->comp_calls_cnt]=tick;
+    }
+    motion_detector->comp_calls_cnt++;
 #endif
 
-	if(motion_detector->start_time + motion_detector->timeout < tick ) {
-		md_save_calls_history();
-		motion_detector->running = 0;
-		return 0;
-	}
+    if(motion_detector->start_time + motion_detector->timeout < tick ) {
+        md_save_calls_history();
+        motion_detector->running = 0;
+        return 0;
+    }
 
-	if(motion_detector->last_measure_time + motion_detector->measure_interval > tick){
-		// wait for the next time
-		return 1;
-	}
+    if(motion_detector->last_measure_time + motion_detector->measure_interval > tick){
+        // wait for the next time
+        return 1;
+    }
 
-	motion_detector->last_measure_time=tick;
+    motion_detector->last_measure_time=tick;
 
 // swap pointers so we don't need to copy last data array into Previous one
-	tmp=motion_detector->curr;
-	motion_detector->curr=motion_detector->prev;
-	motion_detector->prev=tmp;
+    tmp=motion_detector->curr;
+    motion_detector->curr=motion_detector->prev;
+    motion_detector->prev=tmp;
 
-	 img = vid_get_viewport_live_fb();
-		if(img==NULL){
-			img = vid_get_viewport_fb();
+     img = vid_get_viewport_live_fb();
+        if(img==NULL){
+            img = vid_get_viewport_fb();
         }
 
 #ifdef OPT_MD_DEBUG
-	if(motion_detector->comp_calls_cnt==50 && (motion_detector->parameters & MD_MAKE_RAM_DUMP_FILE) != 0 ){
-		mx_dump_memory((char*)img);
-	}
+    if(motion_detector->comp_calls_cnt==50 && (motion_detector->parameters & MD_MAKE_RAM_DUMP_FILE) != 0 ){
+        mx_dump_memory((char*)img);
+    }
 #endif
 
 	vp_h = vid_get_viewport_height();
@@ -400,40 +402,40 @@ int md_detect_motion(void){
 	x_step=(vid_get_viewport_width()*3)/motion_detector->columns;
 	y_step=vp_h/motion_detector->rows;
 
-	for (idx=0, row=0; row < motion_detector->rows; row++)
-	{
-		for (col=0; col < motion_detector->columns; col++, idx++)
-		{
-			// clear cur and points, previously down in it's own loop
-			// might be able to avoid clearing all, since some are overwritten below
-			motion_detector->points[idx] = 0;
-			motion_detector->curr[idx] = 0;
+    for (idx=0, row=0; row < motion_detector->rows; row++)
+    {
+        for (col=0; col < motion_detector->columns; col++, idx++)
+        {
+            // clear cur and points, previously down in it's own loop
+            // might be able to avoid clearing all, since some are overwritten below
+            motion_detector->points[idx] = 0;
+            motion_detector->curr[idx] = 0;
 
-			in_clipping_region=0;
+            in_clipping_region=0;
 
-			if (col+1 >= motion_detector->clipping_region_column1 &&
-				col+1 <= motion_detector->clipping_region_column2 &&
-				row+1 >= motion_detector->clipping_region_row1 &&
-				row+1 <= motion_detector->clipping_region_row2)
-			{
-				in_clipping_region=1;
-			}
+            if (col+1 >= motion_detector->clipping_region_column1 &&
+                col+1 <= motion_detector->clipping_region_column2 &&
+                row+1 >= motion_detector->clipping_region_row1 &&
+                row+1 <= motion_detector->clipping_region_row2)
+            {
+                in_clipping_region=1;
+            }
 
-			if (
-				(motion_detector->clipping_region_mode==MD_REGION_NONE) ||
-				(motion_detector->clipping_region_mode==MD_REGION_EXCLUDE && in_clipping_region==0) ||
-				(motion_detector->clipping_region_mode==MD_REGION_INCLUDE && in_clipping_region==1)
-			   )
-			{
-				x_end=(col+1)*x_step;
+            if (
+                (motion_detector->clipping_region_mode==MD_REGION_NONE) ||
+                (motion_detector->clipping_region_mode==MD_REGION_EXCLUDE && in_clipping_region==0) ||
+                (motion_detector->clipping_region_mode==MD_REGION_INCLUDE && in_clipping_region==1)
+               )
+            {
+                x_end=(col+1)*x_step;
 				y_end=(row+1)*y_step*vp_w;
 				for(y=row*y_step*vp_w; y<y_end; y+=motion_detector->pixels_step*vp_w){
 					for(x=col*x_step; x<x_end; x+=motion_detector->pixels_step*3){
 
 						// ARRAY of UYVYYY values
-						// 6 bytes - 4 pixels
+                        // 6 bytes - 4 pixels
 
-						switch(motion_detector->pixel_measure_mode){
+                        switch(motion_detector->pixel_measure_mode){
 						default:
 						case MD_MEASURE_MODE_Y:
 							val = img[y + x + 1];				//Y
@@ -463,91 +465,91 @@ int md_detect_motion(void){
 							cu=img[y + (x&0xFFFFFFFE)];
 							val = clip(((cy<<12) + cu*7258           + 2048)>>12); // B
 							break;
-						}
+                        }
 
-						motion_detector->curr[ idx ] += val;
-						motion_detector->points[ idx ]++;
-					}
-				}
-			}
-		}
-	}
-	// << fill "curr" array
-
-
-	if(motion_detector->previous_picture_is_ready==0){
-		motion_detector->previous_picture_is_ready=1;
-		motion_detector->start_time=get_tick_count();
-		motion_detector->last_measure_time=motion_detector->start_time-motion_detector->measure_interval;
-		return 1;
-	}
+                        motion_detector->curr[ idx ] += val;
+                        motion_detector->points[ idx ]++;
+                    }
+                }
+            }
+        }
+    }
+    // << fill "curr" array
 
 
-	// >> compare arrays here
-	for (idx=0; idx < motion_detector->rows*motion_detector->columns; idx++)
-	{
-		tmp2=0;
-		if(motion_detector->points[idx]>0){
-			motion_detector->prev[idx] = (motion_detector->curr[idx]-motion_detector->prev[idx])/motion_detector->points[idx];
-			tmp2 = ( motion_detector->prev[idx] < 0 ) ? -motion_detector->prev[idx] : motion_detector->prev[idx] ;
-		}
-
-		if( tmp2 > motion_detector->threshold ){
-			if (motion_detector->start_time+motion_detector->msecs_before_trigger < tick){
-				motion_detector->detected_cells++;
-			}
-		}
-	}
-	// << compare arrays here
+    if(motion_detector->previous_picture_is_ready==0){
+        motion_detector->previous_picture_is_ready=1;
+        motion_detector->start_time=get_tick_count();
+        motion_detector->last_measure_time=motion_detector->start_time-motion_detector->measure_interval;
+        return 1;
+    }
 
 
-	if( motion_detector->detected_cells > 0 ){
-//		sprintf(buf,"-cells: %d", motion_detector->detected_cells);
-//		script_console_add_line(buf);
+    // >> compare arrays here
+    for (idx=0; idx < motion_detector->rows*motion_detector->columns; idx++)
+    {
+        tmp2=0;
+        if(motion_detector->points[idx]>0){
+            motion_detector->prev[idx] = (motion_detector->curr[idx]-motion_detector->prev[idx])/motion_detector->points[idx];
+            tmp2 = ( motion_detector->prev[idx] < 0 ) ? -motion_detector->prev[idx] : motion_detector->prev[idx] ;
+        }
 
-		if (motion_detector->start_time+motion_detector->msecs_before_trigger < tick){
-			motion_detector->running=0;
+        if( tmp2 > motion_detector->threshold ){
+            if (motion_detector->start_time+motion_detector->msecs_before_trigger < tick){
+                motion_detector->detected_cells++;
+            }
+        }
+    }
+    // << compare arrays here
+
+
+    if( motion_detector->detected_cells > 0 ){
+//      sprintf(buf,"-cells: %d", motion_detector->detected_cells);
+//      script_console_add_line(buf);
+
+        if (motion_detector->start_time+motion_detector->msecs_before_trigger < tick){
+            motion_detector->running=0;
             motion_detector->return_value = motion_detector->detected_cells;
-            
-//			md_save_calls_history();
-			if( ( motion_detector->parameters&MD_DO_IMMEDIATE_SHOOT ) !=0){
-				//make shoot
-				md_kbd_sched_immediate_shoot(motion_detector->parameters&MD_NO_SHUTTER_RELEASE_ON_SHOOT);
-			}
-			return 0;
-		}
-	}
+
+//          md_save_calls_history();
+            if( ( motion_detector->parameters&MD_DO_IMMEDIATE_SHOOT ) !=0){
+                //make shoot
+                md_kbd_sched_immediate_shoot(motion_detector->parameters&MD_NO_SHUTTER_RELEASE_ON_SHOOT);
+            }
+            return 0;
+        }
+    }
 
 
-	return 1;
+    return 1;
 }
 
 
 int md_get_cell_diff(int column, int row){
 
-	if(!motion_detector){
-		return 0;
-	}
-	if (column<1 || column > motion_detector->columns){
-		return 0;
-	}
+    if(!motion_detector){
+        return 0;
+    }
+    if (column<1 || column > motion_detector->columns){
+        return 0;
+    }
 
-	if (row<1 || row > motion_detector->rows ){
-		return 0;
-	}
-	
+    if (row<1 || row > motion_detector->rows ){
+        return 0;
+    }
 
-	return motion_detector->prev[ MD_XY2IDX(column-1,row-1) ];
+
+    return motion_detector->prev[ MD_XY2IDX(column-1,row-1) ];
 }
 
 
 void md_draw_grid(){
-	int x_step, y_step, col, row;
-	int xoffset, yoffset;
-	int do_draw_rect, i, tmp2, in_clipping_region, color, col_start, col_stop, row_start, row_stop;
+    int x_step, y_step, col, row;
+    int xoffset, yoffset;
+    int do_draw_rect, i, tmp2, in_clipping_region, color, col_start, col_stop, row_start, row_stop;
 
-	if(!md_running() || motion_detector->draw_grid==0){
-		return ;
+    if(!md_running() || motion_detector->draw_grid==0){
+        return ;
 	}
 
 	xoffset = vid_get_viewport_xoffset();	// used when image size != viewport size
@@ -580,47 +582,47 @@ void md_draw_grid(){
 	}
 #endif
 
-	for ( col=0, row=0; row < motion_detector->rows; ){
-		i=MD_XY2IDX(col,row);
-		tmp2 = ( motion_detector->prev[i] < 0 ) ? -motion_detector->prev[i] : motion_detector->prev[i] ;
+    for ( col=0, row=0; row < motion_detector->rows; ){
+        i=MD_XY2IDX(col,row);
+        tmp2 = ( motion_detector->prev[i] < 0 ) ? -motion_detector->prev[i] : motion_detector->prev[i] ;
 
-			in_clipping_region=0;
-			if ( col+1>=motion_detector->clipping_region_column1 
-				&& col+1<=motion_detector->clipping_region_column2
-				&& row+1>=motion_detector->clipping_region_row1
-				&& row+1<=motion_detector->clipping_region_row2
-				){
-					in_clipping_region=1;
-			}
+            in_clipping_region=0;
+            if ( col+1>=motion_detector->clipping_region_column1
+                && col+1<=motion_detector->clipping_region_column2
+                && row+1>=motion_detector->clipping_region_row1
+                && row+1<=motion_detector->clipping_region_row2
+                ){
+                    in_clipping_region=1;
+            }
 
-			do_draw_rect=0;
+            do_draw_rect=0;
 
-			if(motion_detector->clipping_region_mode==MD_REGION_EXCLUDE && in_clipping_region==0){
-				do_draw_rect=1;
-			}
+            if(motion_detector->clipping_region_mode==MD_REGION_EXCLUDE && in_clipping_region==0){
+                do_draw_rect=1;
+            }
 
-			if(motion_detector->clipping_region_mode==MD_REGION_INCLUDE && in_clipping_region==1){
-				do_draw_rect=1;
-			}
+            if(motion_detector->clipping_region_mode==MD_REGION_INCLUDE && in_clipping_region==1){
+                do_draw_rect=1;
+            }
 
-			if(motion_detector->clipping_region_mode==MD_REGION_NONE){
-				do_draw_rect=1;
-			}
+            if(motion_detector->clipping_region_mode==MD_REGION_NONE){
+                do_draw_rect=1;
+            }
 
-			if(do_draw_rect==1){
-				color=COLOR_GREEN;
-				if( tmp2 > motion_detector->threshold){
-					color=COLOR_RED;
-				}
-				draw_rect(xoffset+x_step*col+2,yoffset+y_step*row+2, xoffset+x_step*(col+1)-2, yoffset+y_step*(row+1)-2,color);
-			}
+            if(do_draw_rect==1){
+                color=COLOR_HISTO_G;
+                if( tmp2 > motion_detector->threshold){
+                    color=COLOR_RED;
+                }
+                draw_rect(xoffset+x_step*col+2,yoffset+y_step*row+2, xoffset+x_step*(col+1)-2, yoffset+y_step*(row+1)-2,color);
+            }
 
-			col++;
-			if( col >= motion_detector->columns ){
-				row++;
-				col=0;
-			}
-	}
+            col++;
+            if( col >= motion_detector->columns ){
+                row++;
+                col=0;
+            }
+    }
 
 }
 

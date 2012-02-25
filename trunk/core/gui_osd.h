@@ -9,7 +9,9 @@
 //ARM begin
 #define DOF_DONT_SHOW                   0
 #define DOF_SHOW_IN_DOF                 1
-#define DOF_SHOW_IN_MISC                2
+#define DOF_SHOW_IN_DOF_EX              2
+#define DOF_SHOW_IN_MISC                3
+#define DOF_SHOW_IN_MISC_EX             4
 //ARM End
 
 //-------------------------------------------------------------------

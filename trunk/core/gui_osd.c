@@ -11,14 +11,13 @@
 //-------------------------------------------------------------------
 static char osd_buf[64];
 
-static DOF_TYPE dof;
+DOF_TYPE dof_values;
 static EXPO_TYPE expo;
 
 //-------------------------------------------------------------------
-static void print_dist(char *buf, float dist, int max_dist)
-{
-    // length of printed string is always 4
-    if (dist<=0 || dist>=max_dist) {
+static void print_dist(char *buf, float dist, short is_hyp) {
+// length of printed string is always 4
+    if (dist<=0 || (!(is_hyp) && shooting_is_infinity_distance())) {
         sprintf(buf, " inf");
     } else if (dist<1000) {
         sprintf(buf, ".%03d", (int)dist);
@@ -32,82 +31,28 @@ static void print_dist(char *buf, float dist, int max_dist)
 }
 
 // Append scaled value display of 'dist' to 'osd_buf'
-static void sprintf_dist(float dist)
+static void sprintf_dist(char *buf, float dist)
 {
-    print_dist(osd_buf+strlen(osd_buf), dist, MAX_DIST);
+    print_dist(buf, dist, 0);
 }
 
 // Append scaled value display of 'dist' to 'osd_buf'
-static void sprintf_dist_hyp(float dist)
+static void sprintf_dist_hyp(char *buf, float dist)
 {
-    print_dist(osd_buf+strlen(osd_buf), dist, MAX_DIST_HYPER_FOCAL);
+    print_dist(buf, dist, 1);
 }
 
-static void sprintf_canon_values(short dist) 
+static void sprintf_canon_values(char *buf, short dist) 
 {
     short v=((dist<0)?-dist:dist);	
-    sprintf(osd_buf+strlen(osd_buf), "%s%d.%02d", ((dist<0)?"-":""), v/96, v%96);
+    sprintf(buf, "%s%d.%02d", ((dist<0)?"-":""), v/96, v%96);
 }
 
 
 //-------------------------------------------------------------------
 void gui_osd_calc_dof()
 {
-    float av, av_min, c_of_c, fl, v, v1, m;
-    //long lfpfl=lens_get_focus_pos_fl();
-
-#if CAM_HAS_IRIS_DIAPHRAGM
-    av=shooting_get_real_aperture();
-#else
-    av=shooting_get_min_real_aperture();
-#endif
-    fl=get_focal_length(shooting_get_zoom());	
-    dof.far_limit=-1.0;
-    dof.near_limit=-1.0;
-    dof.depth_of_field=-1.0;
-    dof.hyperfocal_distance=-1.0;
-    dof.subject_distance=-1.0;
-        
-    if ((av!=0) && (fl!=0)) {
-      if (conf.dof_subj_dist_as_near_limit) {
-      	v1=(fl*fl);
-      	dof.near_limit=shooting_get_canon_subject_distance();
-      	av_min=shooting_get_min_real_aperture();
-        c_of_c=circle_of_confusion*10;
-        if ((av_min!=0) && (c_of_c!=0)) dof.hyperfocal_distance=v1/(c_of_c*av_min);
-    		if ((dof.near_limit>0) && (dof.near_limit<MAX_DIST)) {
-    			v=(dof.hyperfocal_distance-dof.near_limit);
-    			m=(float)dof.hyperfocal_distance*(float)dof.near_limit;
-    			if ((v>0) && (m>0)) dof.subject_distance=m/v;  
-       		}
-        dof.hyperfocal_distance=v1/(c_of_c*av);
-        if ((dof.subject_distance>0) && (dof.subject_distance<MAX_DIST)) {
-          v = (dof.hyperfocal_distance-dof.subject_distance);
-          m=(float)dof.hyperfocal_distance*(float)dof.subject_distance;
-          if ((v>0) && (m>0))  dof.far_limit=m/v;
-          dof.depth_of_field=dof.far_limit-dof.near_limit;
-        }
-     }
-     else {	
-       dof.subject_distance=shooting_get_canon_subject_distance();	
-   	   dof.hyperfocal_distance=(fl*fl)/(10*circle_of_confusion*av);
-       if (dof.subject_distance>0 && dof.subject_distance<MAX_DIST) {
-       	  m = (float)dof.hyperfocal_distance*(float)dof.subject_distance;
-          v = (dof.hyperfocal_distance+dof.subject_distance);
-          if ((v>0) && (m>0))  dof.near_limit=m/v;
-          v = (dof.hyperfocal_distance-dof.subject_distance);
-          if ((v>0) && (m>0))  dof.far_limit=m/v;
-          dof.depth_of_field=dof.far_limit-dof.near_limit;    
-        }
-     }  
-    }
-    if (conf.dof_dist_from_lens) {
-      int h=shooting_get_lens_to_focal_plane_width();	
-      if (dof.subject_distance>0) dof.subject_distance-=h;
-      if (dof.far_limit>0) dof.far_limit-=h;
-      if (dof.near_limit>0) dof.near_limit-=h;
-      if (dof.hyperfocal_distance>0) dof.hyperfocal_distance-=h;
-    }
+    shooting_update_dof_values();
 }
 
 void gui_osd_calc_expo_param()
@@ -127,21 +72,38 @@ void gui_osd_calc_expo_param()
     expo.b=shooting_get_luminance();
 }
 
-void gui_osd_draw_dof()
+void gui_osd_draw_dof() 
 {
-    strcpy(osd_buf, "S/R1/R2:");
-    sprintf_dist(dof.subject_distance);
-    strcat(osd_buf,"/");
-    sprintf_dist(dof.near_limit);
-    strcat(osd_buf,"/");
-    sprintf_dist(dof.far_limit);
-    draw_string(conf.dof_pos.x, conf.dof_pos.y, osd_buf, conf.osd_color);
-    
-    strcpy(osd_buf, "DOF/HYP:");
-    sprintf_dist(dof.depth_of_field);
-    strcat(osd_buf,"/");
-    sprintf_dist_hyp(dof.hyperfocal_distance);
-    draw_string(conf.dof_pos.x, conf.dof_pos.y+FONT_HEIGHT, osd_buf, conf.osd_color);
+    color valid_col = (conf.osd_color & 0xff00) | COLOR_HISTO_G;
+    int i=8;
+    short f_ex = (conf.show_dof==DOF_SHOW_IN_DOF_EX);
+    draw_string(conf.dof_pos.x, conf.dof_pos.y, "S/NL/FL:", conf.osd_color);
+    sprintf_dist(osd_buf, (float)dof_values.subject_distance);
+    int j=strlen(osd_buf);
+    draw_string(conf.dof_pos.x+i*FONT_WIDTH, conf.dof_pos.y, osd_buf,
+      (f_ex && (dof_values.distance_valid || shooting_get_focus_mode()))?valid_col:conf.osd_color);
+    i=i+j;
+    draw_string(conf.dof_pos.x+i*FONT_WIDTH, conf.dof_pos.y, "/", conf.osd_color);
+    sprintf_dist(osd_buf, (float)dof_values.near_limit);
+    j=strlen(osd_buf);
+    draw_string(conf.dof_pos.x+(++i)*FONT_WIDTH, conf.dof_pos.y, osd_buf,
+      (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color);
+    i=i+j;
+    draw_string(conf.dof_pos.x+i*FONT_WIDTH, conf.dof_pos.y, "/", conf.osd_color);
+    sprintf_dist(osd_buf, (float)dof_values.far_limit);
+    draw_string(conf.dof_pos.x+(++i)*FONT_WIDTH, conf.dof_pos.y, osd_buf,
+      (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color);
+    i=8;
+      draw_string(conf.dof_pos.x, conf.dof_pos.y+FONT_HEIGHT, "DOF/HYP:", conf.osd_color);
+    sprintf_dist(osd_buf, (float)dof_values.depth_of_field);
+    j=strlen(osd_buf);
+    draw_string(conf.dof_pos.x+i*FONT_WIDTH, conf.dof_pos.y+FONT_HEIGHT, osd_buf,
+      (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color);
+    i=i+j;
+    draw_string(conf.dof_pos.x+i*FONT_WIDTH, conf.dof_pos.y+FONT_HEIGHT, "/", conf.osd_color);
+    sprintf_dist_hyp(osd_buf, (float)dof_values.hyperfocal_distance);
+    draw_string(conf.dof_pos.x+(++i)*FONT_WIDTH, conf.dof_pos.y+FONT_HEIGHT, osd_buf,
+      (f_ex && dof_values.hyperfocal_valid)?valid_col:conf.osd_color);
 }
 
 //-------------------------------------------------------------------
@@ -193,18 +155,31 @@ void gui_print_osd_misc_string_float(const char * fmt, int divisor, int value)
     gui_print_osd_misc_string();
 }
 
-void gui_print_osd_misc_string_dist(const char * title, int value)
-{
-    strcpy(osd_buf, title);
-    sprintf_dist((float)value);
-    gui_print_osd_misc_string();
-}
-
 void gui_print_osd_misc_string_canon_values(const char * title, short value)
 {
     strcpy(osd_buf, title);
-    sprintf_canon_values(value);
+    sprintf_canon_values(osd_buf+strlen(osd_buf), value);
     gui_print_osd_misc_string();
+}
+    
+void gui_print_osd_dof_string_dist(const char * title, int value, short use_good_color, short is_hyp) {
+  strcpy(osd_buf, title);
+  int i=strlen(osd_buf);
+  if (i<8) {
+    draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
+    if (is_hyp) {
+        sprintf_dist_hyp(osd_buf, (float)value);
+    } else {
+        sprintf_dist(osd_buf, (float)value);
+    }
+    sprintf(osd_buf+strlen(osd_buf), "%9s", "");
+    osd_buf[9-i]=0;
+    draw_string(conf.values_pos.x+i*FONT_WIDTH, conf.values_pos.y+m, osd_buf, use_good_color?((conf.osd_color & 0xff00) | COLOR_GREEN):conf.osd_color);
+  } else {
+    osd_buf[9]=0;
+    draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
+  }
+  m+=FONT_HEIGHT;
 }
 
 //-------------------------------------------------------------------
@@ -274,20 +249,20 @@ void gui_osd_draw_state()
         if (gui_mode==GUI_MODE_ALT)
             gui_print_osd_state_string_chr("FACTOR:",gui_subj_dist_override_koef_enum(0,0));
     }
-    if ((conf.iso_override_value && conf.iso_override_koef && !(conf.override_disable==1))	 || gui_mode==GUI_MODE_OSD)
+    if ((conf.iso_override_value && conf.iso_override_koef && !(conf.override_disable==1))   || gui_mode==GUI_MODE_OSD)
         gui_print_osd_state_string_int("ISO:", shooting_get_iso_override_value());
-    if ((gui_mode==GUI_MODE_OSD) || (shooting_get_drive_mode())) {
-        if ((conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) || (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))  || (conf.iso_bracket_value && conf.iso_bracket_koef && !(conf.override_disable==1 && conf.override_disable_all)) || ((conf.subj_dist_bracket_value) && (conf.subj_dist_bracket_koef) && (shooting_can_focus() && !(conf.override_disable==1 && conf.override_disable_all))))  
-            gui_print_osd_state_string_chr("BRACKET:", shooting_get_bracket_type());
-        if (conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))  
-            gui_print_osd_state_string_chr("TV:", shooting_get_tv_bracket_value());
-        else if  (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) 
-            gui_print_osd_state_string_chr("AV:", shooting_get_av_bracket_value());
-        else if  (conf.iso_bracket_value && conf.iso_bracket_koef   && !(conf.override_disable==1 && conf.override_disable_all)) 
-            gui_print_osd_state_string_int("ISO:", shooting_get_iso_bracket_value());
-        else if  ((conf.subj_dist_bracket_value  && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.subj_dist_bracket_koef) && (shooting_can_focus()))
-            gui_print_osd_state_string_int("SD:",shooting_get_subject_distance_bracket_value());
-    }
+    if ((gui_mode==GUI_MODE_OSD) || (shooting_get_drive_mode() && m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE)) {
+    if ((conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) || (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))  || (conf.iso_bracket_value && conf.iso_bracket_koef && !(conf.override_disable==1 && conf.override_disable_all)) || ((conf.subj_dist_bracket_value) && (conf.subj_dist_bracket_koef) && (shooting_can_focus() && !(conf.override_disable==1 && conf.override_disable_all))))
+        gui_print_osd_state_string_chr("BRACKET:", shooting_get_bracket_type());
+      if (conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))
+        gui_print_osd_state_string_chr("TV:", shooting_get_tv_bracket_value());
+      else if  (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))
+        gui_print_osd_state_string_chr("AV:", shooting_get_av_bracket_value());
+      else if  (conf.iso_bracket_value && conf.iso_bracket_koef   && !(conf.override_disable==1 && conf.override_disable_all))
+        gui_print_osd_state_string_int("ISO:", shooting_get_iso_bracket_value());
+      else if  ((conf.subj_dist_bracket_value  && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.subj_dist_bracket_koef) && (shooting_can_focus()))
+        gui_print_osd_state_string_int("SD:",shooting_get_subject_distance_bracket_value());
+     }
 #ifdef OPT_CURVES
     if (conf.curve_enable || gui_mode==GUI_MODE_OSD) {
         if (conf.curve_enable==1) gui_print_osd_state_string_chr("CURVES:", "CSTM");
@@ -336,17 +311,21 @@ void gui_osd_draw_values(int showtype)
         gui_print_osd_misc_string();
     }
 
-    if ((conf.values_show_real_aperture) && (showtype==1)) 
-        gui_print_osd_misc_string_float("Av :%d.%02d", 100, shooting_get_real_aperture());
-    if ((conf.show_dof==DOF_SHOW_IN_MISC) && (showtype))
-    { 
-        //if (kbd_is_key_pressed(KEY_SHOOT_HALF) && (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH)) 	
-        //gui_osd_calc_dof();
-        if (conf.dof_subj_dist_in_misc) gui_print_osd_misc_string_dist("SD :", dof.subject_distance);
-        if (conf.dof_near_limit_in_misc) gui_print_osd_misc_string_dist("NL :", dof.near_limit);
-        if (conf.dof_far_limit_in_misc) gui_print_osd_misc_string_dist("FL :", dof.far_limit);
-        if (conf.dof_depth_in_misc) gui_print_osd_misc_string_dist("DOF:", dof.depth_of_field);
-        if (conf.dof_hyperfocal_in_misc) gui_print_osd_misc_string_dist("HYP:", dof.hyperfocal_distance);
+    if ((conf.values_show_real_aperture) && (showtype==1))
+         gui_print_osd_misc_string_float("Av :%d.%02d ", 100, shooting_get_real_aperture());
+    short f_ex = (conf.show_dof==DOF_SHOW_IN_MISC_EX);
+    if (((conf.show_dof==DOF_SHOW_IN_MISC) && (showtype)) || f_ex) {
+      if (f_ex) gui_osd_calc_dof();
+      if (conf.dof_subj_dist_in_misc) gui_print_osd_dof_string_dist("SD :", dof_values.subject_distance,
+         f_ex && (dof_values.distance_valid || shooting_get_focus_mode()), 0);
+      if (conf.dof_near_limit_in_misc) gui_print_osd_dof_string_dist("NL :", dof_values.near_limit,
+         f_ex && dof_values.distance_valid, 0);
+      if (conf.dof_far_limit_in_misc) gui_print_osd_dof_string_dist("FL :", dof_values.far_limit,
+         f_ex && dof_values.distance_valid, 0);
+      if (conf.dof_depth_in_misc) gui_print_osd_dof_string_dist("DOF:", dof_values.depth_of_field,
+         f_ex && dof_values.distance_valid, 0);
+      if (conf.dof_hyperfocal_in_misc) gui_print_osd_dof_string_dist("HYP:", dof_values.hyperfocal_distance,
+         f_ex && dof_values.hyperfocal_valid, 1);
     }
     if (showtype==1)
     {

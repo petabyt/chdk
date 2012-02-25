@@ -71,7 +71,7 @@ typedef struct {
     int script_shoot_delay;
     int show_histo;
     int script_vars[SCRIPT_NUM_PARAMS];
-    char script_file[100];
+    char script_file[CONF_STR_LEN];
 
     int show_dof;
     int batt_volts_max;
@@ -160,12 +160,12 @@ typedef struct {
     color osd_color_override;
 
     int font_cp;
-    char menu_rbf_file[100];
-    char menu_symbol_rbf_file[100];
+    char menu_rbf_file[CONF_STR_LEN];
+    char menu_symbol_rbf_file[CONF_STR_LEN];
 
-    char lang_file[100];
+    char lang_file[CONF_STR_LEN];
 
-    //char reader_file[100];
+    //char reader_file[CONF_STR_LEN];
     //int  reader_pos;
     //int  reader_autoscroll;
     //int  reader_autoscroll_delay;
@@ -190,7 +190,7 @@ typedef struct {
     int alt_prevent_shutdown;
 
     int show_grid_lines;
-    //char grid_lines_file[100];
+    //char grid_lines_file[CONF_STR_LEN];
     //int grid_force_color;
 
     int video_mode;
@@ -278,8 +278,8 @@ typedef struct {
     int mute_on_zoom;
     int bad_pixel_removal;
     int video_af_key;
-
-    char curve_file[100];
+    
+    char curve_file[CONF_STR_LEN];
     int curve_enable;
 
     int edge_overlay_enable;
