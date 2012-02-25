@@ -103,6 +103,4 @@
     #define CAMERA_MIN_DIST                 99      // Override min subject distance
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 2000000 // Override max subject distance 1739131 //testscript=1098902
-
-    #define CAM_USE_COLORED_ICONS           1   // Enable using the CHDK-DE colored icons.
 //----------------------------------------------------------

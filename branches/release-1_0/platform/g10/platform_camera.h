@@ -102,7 +102,5 @@
                                                     // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
     #define CAM_FIRMWARE_MEMINFO            1       // Use 'GetMemInfo' to get free memory size.
-
-    #define CAM_USE_COLORED_ICONS               1       // Enable using the CHDK-DE colored icons.
 //----------------------------------------------------------
 

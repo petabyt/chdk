@@ -116,7 +116,6 @@
 
     #define CAM_LOAD_CUSTOM_COLORS          1   // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                 0xB3// Start color index for CHDK colors loaded into camera palette.
-    #define CAM_USE_COLORED_ICONS           1       // Enable using the CHDK-DE colored icons.
 
     #define CAM_NEED_SET_ZOOM_DELAY         300 // SX30 needs a short delay after setting the zoom before resetting focus in shooting_set_zoom()
 

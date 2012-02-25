@@ -97,8 +97,6 @@ static void gui_space_draw_icon() {
     yy = conf.space_icon_pos.y;
 
     space_color();
-    
-#if defined(CAM_USE_COLORED_ICONS)
 
     draw_get_icon_colors();
 
@@ -135,43 +133,6 @@ static void gui_space_draw_icon() {
     //fill icon
     draw_rect(xx+9,         yy+4,   xx+28,   yy+13,  cl1);
     draw_filled_rect(xx+27-(17*perc/100),      yy+5,       xx+27,     yy+12,   MAKE_COLOR(cl2, cl2));
-
-#else
-
-#define LE  23
-#define WI  15
-
-    draw_hline(xx+5,     yy,      LE-5,     COLOR_BLACK);          // outer top
-    draw_hline(xx+6,     yy+1,    LE-7,     cl);                   // inner top
-    draw_vline(xx,       yy+5,    WI-5,     COLOR_BLACK);          // outer left
-    draw_vline(xx+1,     yy+6,    WI-7,     cl);                   // inner left
-    draw_hline(xx,       yy+WI,   LE,       COLOR_BLACK);          // outer bottom
-    draw_hline(xx+1,     yy+WI-1, LE-2,     cl);                   // inner bottom
-    draw_vline(xx+LE,    yy,      WI,       COLOR_BLACK);          // outer right
-    draw_vline(xx+LE-1,  yy+1,    WI-2,     cl);                   // inner right
-    draw_line(xx+5,      yy,      xx,       yy+5,  COLOR_BLACK);   // edge
-    draw_line(xx+5,      yy+1,    xx+1,     yy+5,  cl);            // edge
-    draw_line(xx+6,      yy+1,    xx+1,     yy+6,  cl);            // edge
-
-    // memory fill
-    x = LE - (perc*(LE-3)/100) - 2;
-    if (x>5) draw_hline(xx+6,      yy+2,     x-6,     COLOR_BLACK);
-    if (x>2) draw_hline(xx+x+1,    yy+2,     LE-x-3,  cl);
-    else     draw_hline(xx+4,      yy+2,     LE-6,    cl);
-    for(i=3; i<7; i++) {                                                   //          /--------------|
-        if (x>7-i) draw_pixel(xx+8-i,     yy+i,     COLOR_BLACK);          //        /  1st for loop  |
-        if (x>7-i) draw_pixel(xx+x,       yy+i,     COLOR_BLACK);          //      /__________________|
-        draw_hline(xx+x+1, yy+i, LE-x-3, cl);                              //     |                   |
-    }                                                                      //     |     2nd for loop  |
-    for(i=7; i<WI-2; i++) {                                                //     |                   |
-        if (x>1) draw_pixel(xx+2, yy+i, COLOR_BLACK);                      //     |-------------------|
-        if (x>1) draw_pixel(xx+x, yy+i, COLOR_BLACK);
-        draw_hline(xx+x+1, yy+i, LE-x-3, cl);
-    }
-    if (x>1) draw_hline(xx+2,      yy+WI-2,    x-2,     COLOR_BLACK);
-    draw_hline(xx+x+1,             yy+WI-2,    LE-x-3,  cl);
-
-#endif
 }
 
 //-------------------------------------------------------------------
