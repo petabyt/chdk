@@ -25,37 +25,18 @@
     #define CAM_RAW_ROWPIX                  3152    // for 7 MP
     #define CAM_RAW_ROWS                    2340    // for 7 MP
 
-/*
     #undef  CAM_USE_ZOOM_FOR_MF
+    #undef  CAM_REMOTE
+    #define CAM_MULTIPART                   1
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
+    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
+    #undef  CAM_CAN_SD_OVERRIDE
     #undef  CAM_HAS_MANUAL_FOCUS
-    #undef  CAM_HAS_USER_TV_MODES
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
-
+    #define CAM_FEATURE_FEATHER             1
     #undef  CAM_HAS_IS
-    */
-    
-    #undef  CAM_SWIVEL_SCREEN               // Camera has rotated LCD screen
-    #undef CAM_USE_ZOOM_FOR_MF            // Zoom lever can be used for manual focus adjustments
-    #undef  CAM_ADJUSTABLE_ALT_BUTTON       // ALT-button can be set from menu
-    #undef CAM_REMOTE                     // Camera supports USB-remote
-    #define CAM_MULTIPART               1   // Camera supports SD-card multipartitioning 
-    #define CAM_HAS_ZOOM_LEVER          1   // Camera has dedicated zoom buttons
-    #undef  CAM_DRAW_EXPOSITION             // Output expo-pair on screen (for cameras which (sometimes) don't do that)
-    #undef CAM_HAS_ERASE_BUTTON           // Camera has dedicated erase button
-    #undef  CAM_HAS_IRIS_DIAPHRAGM
-    #define  CAM_HAS_ND_FILTER         1      // Camera has build-in ND filter
-    #undef CAM_CAN_SD_OVER_NOT_IN_MF      // Camera allows subject distance (focus) override when not in manual focus mode
-    #undef CAM_CAN_SD_OVERRIDE            // Camera allows to do subject distance override
-    #undef CAM_HAS_MANUAL_FOCUS           // Camera has manual focus mode
-    #define CAM_HAS_USER_TV_MODES       1   // Camera has tv-priority or manual modes with ability to set tv value
-    #define  CAM_SHOW_OSD_IN_SHOOT_MENU   1   // On some cameras Canon shoot menu has additional functionality and useful in this case to see CHDK OSD in this mode  
-    #define  CAM_FEATURE_FEATHER        1     // Cameras with "feather" or touch wheel.
-    #undef CAM_HAS_IS                     // Camera has image stabilizer
-
-//    #define  CAM_CONSOLE_LOG_ENABLED   1      // Development: internal camera stdout -> A/stdout.txt        
 
     #define CAM_DNG_LENS_INFO               { 58,10, 174,10, 28,10, 49,10 } // See comments in camera.h
     // pattern

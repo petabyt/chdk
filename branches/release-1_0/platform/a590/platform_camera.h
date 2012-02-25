@@ -26,15 +26,8 @@
     #define CAM_RAW_ROWPIX                  3336    // for new 8 MP
     #define CAM_RAW_ROWS                    2480    // for new 8 MP
 
-#define CAM_USE_ZOOM_FOR_MF         1
-
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
-#define CAM_HAS_IRIS_DIAPHRAGM      1
-#undef  CAM_HAS_ND_FILTER
-
-#define CAM_HAS_MANUAL_FOCUS        1
-
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     //#define CAM_EV_IN_VIDEO               1      // not working on 101b!!!
 
@@ -53,11 +46,7 @@
     #define CAM_JPEG_HEIGHT                 2448
     #define CAM_ACTIVE_AREA_X1              12
     #define CAM_ACTIVE_AREA_Y1              10
-// note: the above contains some pixels which have valid data, 
-// but are not at the same levels as the rest of the frame
-// the values below crop the "different" looking pixels.
-//#define CAM_ACTIVE_AREA_X1 16
-//#define CAM_ACTIVE_AREA_Y1 18
+
     #define CAM_ACTIVE_AREA_X2              3300
     #define CAM_ACTIVE_AREA_Y2              2480
 

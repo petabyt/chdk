@@ -28,9 +28,8 @@
     #define CAM_RAW_ROWPIX                  4080 // from calcs see 100C lib.c
     #define CAM_RAW_ROWS                    3048 //  "     "    "    "    "
 
-    #undef CAM_SWIVEL_SCREEN           
     #define CAM_ADJUSTABLE_ALT_BUTTON       0
-    #define CAM_CAN_SD_OVER_NOT_IN_MF	1
+
     #define CAM_HAS_VIDEO_BUTTON            1
     #define CAM_VIDEO_QUALITY_ONLY          1
     #define CAM_BRACKETING                  1
@@ -42,7 +41,6 @@
     #undef  CAM_UNCACHED_BIT  // shut up compiler
     #define CAM_UNCACHED_BIT                0x40000000
     #define CAM_HAS_ND_FILTER               1
-    #define CAM_CAN_SD_OVERRIDE         1
 
     #define CAM_DNG_LENS_INFO               { 43,10, 215,10, 28,10, 59,10 } // See comments in camera.h
     // pattern
