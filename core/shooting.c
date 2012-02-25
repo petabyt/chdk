@@ -38,6 +38,10 @@ static short sv96_base_tmp=0;
 // Storage for delayed shooting overrides
 PHOTO_PARAM photo_param_put_off;
 
+static short *min_av96_zoom_point_tbl = NULL;
+
+DOF_TYPE dof_values;
+
 //-------------------------------------------------------------------
 // Functions to access Canon properties
 
@@ -516,130 +520,187 @@ int shooting_get_lens_to_focal_plane_width()
     return (int)(lens_get_focus_pos()-lens_get_focus_pos_from_lens());
 }
 
-int shooting_get_hyperfocal_distance_()
-{
-    int av=shooting_get_real_aperture();
-    float fl=get_focal_length(shooting_get_zoom());
-    if ((av>0) && (fl>0))
-        return (fl*fl)/(float)(10*circle_of_confusion*av);
-    return (-1);
+short shooting_get_aperture_from_av96_1e3(short av96) {
+	if (av96) return (short)(pow(sqrt2, (((double)av96)/96.0))*1000.0 + 0.5);
+	else return -1;
 }
 
-int shooting_get_hyperfocal_distance()
+int shooting_get_hyperfocal_distance_1e3_f2(int av_1e3, int fl)
 {
-    int h=shooting_get_hyperfocal_distance_();
-    if ((h>0) && (conf.dof_dist_from_lens))
-        return (h-shooting_get_lens_to_focal_plane_width());
-    return h;
+  if ((av_1e3>0) && (fl>0) && (circle_of_confusion>0)) 
+    return (int)(((((double)fl*fl)/(av_1e3*circle_of_confusion)*1000)+fl)+0.5);
+  else return (-1);
 }
 
-int shooting_get_hyperfocal_distance_f(int av, int fl)
+int shooting_get_hyperfocal_distance_1e3_f(int av, int fl)
 {
-    if ((av>0) && (fl>0) && (circle_of_confusion>0))
-        return ((float)fl*(float)fl)/(float)(10*circle_of_confusion*av);
-    return -1;
+  if ((av>0) && (fl>0) && (circle_of_confusion>0)) 
+    return (int)(((((double)fl*fl)/(av*circle_of_confusion)*100)+fl)+0.5);
+  else return (-1);
+}
+
+int shooting_get_near_limit_f(int s, int av, int fl)
+{
+  if (shooting_is_infinity_distance()) return (-1);
+  int h_1e3 = shooting_get_hyperfocal_distance_1e3_f(av, fl);
+  double m = ((double)(h_1e3 - fl)+500)/1000*s;
+  int v = ((h_1e3 - 2*fl + 1000*s)+500)/1000;
+  if ((m>0) && (v>0)) return (int)((2*m/v+1)/2);
+  else return (-1);
+}
+
+int shooting_get_far_limit_f(int s, int av, int fl)
+{
+  if (shooting_is_infinity_distance()) return (-1);
+  int h_1e3 = shooting_get_hyperfocal_distance_1e3_f(av, fl);
+  double m = ((double)(h_1e3 - fl)+500)/1000*s;
+  int v = ((h_1e3 - 1000*s)+500)/1000;
+  if ((m>0) && (v>0)) return (int)((2*m/v+1)/2);
+  else return (-1); 
+}
+
+short shooting_is_infinity_distance()
+{
+  return (shooting_get_lens_to_focal_plane_width() == 0)?1:0;
 }
 
 int shooting_get_canon_subject_distance()
 {
-    if (conf.dof_use_exif_subj_dist)
-        return shooting_get_exif_subject_dist();
-    return lens_get_focus_pos();
+	if (conf.dof_use_exif_subj_dist) 
+	  return shooting_get_exif_subject_dist();
+	else
+	  return (lens_get_focus_pos_from_lens());
 }
 
 int shooting_get_subject_distance_()
 {
-    if (!conf.dof_subj_dist_as_near_limit)
-        return shooting_get_canon_subject_distance();
-    else
-    {
-        float h, v, m;
-        int fl=get_focal_length(shooting_get_zoom());
-        int near=shooting_get_canon_subject_distance();
-        float v1=(fl*fl);
-        int av_min=shooting_get_min_real_aperture();
-        int c_of_c=circle_of_confusion*10;
-        if ((av_min!=0) && (c_of_c!=0) && (v1))
-        {
-            h=v1/(float)(c_of_c*av_min);
-            if ((near>0) && (near<MAX_DIST))
-            {
-                v=(h-near);
-                m=h*(float)near;
-                if ((v>0) && (m>0))
-                    return m/v;
-            }
-        }
-        return -1;
+   if (!conf.dof_subj_dist_as_near_limit) return shooting_get_canon_subject_distance();
+   else return shooting_get_far_limit_f(shooting_get_canon_subject_distance(),
+                                         shooting_get_min_real_aperture(), 
+                                         get_focal_length(lens_get_zoom_point()));
+}
+
+void shooting_update_dof_values()
+{
+  int hyp, hyp_1e3, av_1e3, v, m;
+  int dist = shooting_get_subject_distance_();
+  int zoom_point = lens_get_zoom_point();
+  int fl = get_focal_length(zoom_point);
+  short f_focus_ok = shooting_get_focus_ok();
+  short f_hyp_calc = 0, f_dist_calc = 0;
+  short min_av96_zoom_point = min_av96_zoom_point_tbl[zoom_point];
+  short av96 = shooting_get_user_av96();
+  short curr_av96 = GetCurrentAvValue();
+  short prop_av96 = shooting_get_av96();
+  short min_av96;
+
+  if (!min_av96_zoom_point_tbl) {
+    min_av96_zoom_point_tbl = (short *) malloc(zoom_points * sizeof(short));
+    if (min_av96_zoom_point_tbl) {
+      memset(min_av96_zoom_point_tbl, 0, zoom_points * sizeof(short));
+      min_av96_zoom_point = 0;
     }
+  } else min_av96_zoom_point = min_av96_zoom_point_tbl[zoom_point]; 
+
+  if (min_av96_zoom_point==0 && shooting_in_progress()) { 
+    get_property_case(PROPCASE_MIN_AV, &min_av96, sizeof(min_av96));
+    min_av96_zoom_point_tbl[zoom_point] = min_av96;
+  }
+
+  m = mode_get()&MODE_SHOOTING_MASK;
+  if ((m==MODE_M || m==MODE_AV) && (av96>0) && !f_focus_ok) { 
+    if (av96 < min_av96_zoom_point) av96 = min_av96_zoom_point;
+  }
+  else av96 = (abs(curr_av96-prop_av96)<2)?prop_av96:curr_av96;
+
+  av_1e3 = shooting_get_aperture_from_av96_1e3(av96);
+  hyp_1e3 = dof_values.hyperfocal_distance_1e3;
+  hyp = dof_values.hyperfocal_distance;
+  
+  if (dof_values.aperture_value!=av_1e3 || dof_values.focal_length!=fl || (hyp_1e3<0)) { 
+    //calc new hyperfocal distance and min stack distance
+    f_hyp_calc = 1;
+    hyp_1e3 = -1;
+    hyp = -1;
+    dof_values.aperture_value = av_1e3;
+    dof_values.focal_length = fl;
+    hyp_1e3 = shooting_get_hyperfocal_distance_1e3_f2(av_1e3, fl);
+    if (hyp_1e3>0) {
+      hyp = (hyp_1e3+500)/1000;
+      dof_values.min_stack_distance = MAX_DIST;
+      v = ((hyp_1e3 - fl)/250 + 2 + 1)/2;
+      if (v>0) {
+        int m = ((fl*((fl - hyp_1e3)/1000 - 1)/500)/v + 1)/2;
+        int m2 = (int)((((double)hyp*(2*fl - hyp_1e3)/1000))/v + 0.5);
+        dof_values.min_stack_distance = sqrt(m*m - m2) - m;
+      }  
+    }
+  }
+
+  if ((dof_values.subject_distance!=dist || (dof_values.hyperfocal_distance_1e3!=hyp_1e3)) && (hyp_1e3>0)) {
+    //calc new NEAR, FAR, DOF values
+    f_dist_calc = 1;
+    dof_values.subject_distance = dist;
+    dof_values.near_limit = -1;
+    dof_values.far_limit = -1;
+    dof_values.depth_of_field = -1;
+    if ((av_1e3>0) && (fl>0) && (dist>0) && (shooting_is_infinity_distance()==0) && (hyp_1e3>0)) {
+      double m = ((double)(hyp_1e3 - fl)/1000 * dist) + 0.5;
+      if (conf.dof_subj_dist_as_near_limit) { 
+         dof_values.near_limit = dist;
+      } else {
+        int v = ((((hyp_1e3 - 2*fl + 1000*dist)/500) + 1)/2);
+   	    if (v>0) dof_values.near_limit = (int)(m/v);
+   	  }
+      int v = ((((hyp_1e3 - 1000*dist)/500) + 1)/2);
+      if (v>0) dof_values.far_limit = (int)(m/v);
+      if ((dof_values.near_limit>0) && (dof_values.far_limit>0)) {
+        dof_values.depth_of_field = dof_values.far_limit - dof_values.near_limit;
+      }
+    }
+  }
+  dof_values.hyperfocal_distance_1e3 = hyp_1e3;
+  dof_values.hyperfocal_distance = hyp; 
+  f_focus_ok = (f_focus_ok && shooting_get_focus_ok());
+  dof_values.hyperfocal_valid = (f_focus_ok || (dof_values.hyperfocal_valid && !f_hyp_calc));
+  dof_values.distance_valid = (f_focus_ok || (dof_values.distance_valid && !f_dist_calc)||(dof_values.hyperfocal_valid && shooting_get_focus_mode()));
+  return;
 }
 
 int shooting_get_subject_distance()
 {
-    int h=shooting_get_subject_distance_();
-    if ((h>0) && (conf.dof_dist_from_lens))
-        return (h-shooting_get_lens_to_focal_plane_width());
-    return h;
+  shooting_update_dof_values();
+  return dof_values.subject_distance;
 }
 
-int shooting_get_near_limit_of_acceptable_sharpness_()
+int shooting_get_hyperfocal_distance()
 {
-    int s=shooting_get_canon_subject_distance();
-    if (conf.dof_subj_dist_as_near_limit)
-        return s;
-    else
-    {
-        int h = shooting_get_hyperfocal_distance_();
-        float m = (float)h*(float)s;
-        int v = h+s;
-        if ((m>0) && (v>0))
-            return (m/v);
-        return -1;
-    }
+  shooting_update_dof_values();
+  return dof_values.hyperfocal_distance;
 }
 
 int shooting_get_near_limit_of_acceptable_sharpness()
 {
-    int h=shooting_get_near_limit_of_acceptable_sharpness_();
-    if ((h>0) && (conf.dof_dist_from_lens))
-        return (h-shooting_get_lens_to_focal_plane_width());
-    return h;
-}
-
-int shooting_get_near_limit_f(int s, int a, int fl)
-{
-    int h = shooting_get_hyperfocal_distance_f(a, fl);
-    float m = (float)h*(float)s;
-    int v = h+s;
-    if ((m>0) && (v>0))
-        return (m/v);
-    return -1;
-}
-
-int shooting_get_far_limit_of_acceptable_sharpness_()
-{
-    int s=shooting_get_subject_distance_(), h=shooting_get_hyperfocal_distance_();
-    int v = h-s;
-    float m = (float)h*(float)s;
-    if ((m>0) && (v>0))
-        return (m/v);
-    return -1;
+  shooting_update_dof_values();
+  return dof_values.near_limit;
 }
 
 int shooting_get_far_limit_of_acceptable_sharpness()
 {
-    int h=shooting_get_far_limit_of_acceptable_sharpness_();
-    if ((h>0) && (conf.dof_dist_from_lens))
-        return (h-shooting_get_lens_to_focal_plane_width());
-    return h;
+  shooting_update_dof_values();
+  return dof_values.far_limit;
 }
 
 int shooting_get_depth_of_field()
 {
-    int far=shooting_get_far_limit_of_acceptable_sharpness_(), near=shooting_get_near_limit_of_acceptable_sharpness_();
-    if ((far>0) && (near>0))
-        return far-near;
-    return -1;
+  shooting_update_dof_values();
+  return dof_values.depth_of_field;
+}
+
+int shooting_get_min_stack_distance()
+{
+  shooting_update_dof_values();
+  return dof_values.min_stack_distance;
 }
 
 short shooting_can_focus()

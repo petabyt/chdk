@@ -218,6 +218,7 @@ extern void _SetLogicalEventActive(unsigned event, unsigned state);
 /* Somehow related to the above. Normally 0, set to 1 for script mode */
 extern void _SetScriptMode(unsigned mode);
 
+
 /* math */
 extern int _rand(void);
 extern void* _srand(unsigned int seed);

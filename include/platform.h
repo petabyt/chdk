@@ -35,7 +35,6 @@ extern int mode_is_video(int);
 #define MIN_DIST                    CAMERA_MIN_DIST     // Defined in camera.h (can be overridden in platform_camera.h)
 #define MAX_DIST                    CAMERA_MAX_DIST     // Defined in camera.h (can be overridden in platform_camera.h)
 #define INFINITY_DIST               0xFFFFFFFF          // Value to send to firmware to select 'infinity' focus
-#define MAX_DIST_HYPER_FOCAL        999999
 
 //********************
 //char * get_debug();
@@ -129,13 +128,20 @@ typedef struct {
 } PHOTO_PARAM;
 
 typedef struct {
-    int    subject_distance;
-    int     near_limit;
-    int     far_limit;
-    int     hyperfocal_distance;
-    int     depth_of_field;
-    int     lens_to_focal_plane_width;
+    short hyperfocal_valid;
+    short distance_valid;
+    int   hyperfocal_distance_1e3;
+    int   aperture_value;
+    int   focal_length;
+    int   subject_distance;
+    int   near_limit;
+    int   far_limit;
+    int   hyperfocal_distance;
+    int   depth_of_field;
+    int   min_stack_distance;
 } DOF_TYPE;
+
+extern DOF_TYPE dof_values;
 
 typedef struct {
     short av96;
@@ -346,11 +352,13 @@ short shooting_get_focus_mode();
 short shooting_get_real_focus_mode();
 short shooting_get_focus_state();
 short shooting_get_focus_ok();
+void shooting_update_dof_values();
 int shooting_get_hyperfocal_distance();
-int shooting_get_hyperfocal_distance_f(int av, int fl);
+int shooting_get_hyperfocal_distance_1e3_f(int av, int fl);
 int shooting_get_near_limit_of_acceptable_sharpness();
 int shooting_get_far_limit_of_acceptable_sharpness();
 int shooting_get_depth_of_field();
+int shooting_get_min_stack_distance();
 int shooting_get_subject_distance();
 int shooting_get_subject_distance_override_value();
 int shooting_get_subject_distance_bracket_value();
@@ -359,6 +367,7 @@ int shooting_get_lens_to_focal_plane_width();
 short shooting_get_drive_mode();
 short shooting_can_focus();
 short shooting_get_common_focus_mode();
+short shooting_is_infinity_distance();
 /******************************************************************/
 int shooting_get_iso_mode();
 void shooting_set_iso_mode(int v);

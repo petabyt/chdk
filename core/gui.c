@@ -1658,7 +1658,7 @@ void gui_chdk_kbd_process()
             {
                 int m=mode_get()&MODE_SHOOTING_MASK;
                 if ((m==MODE_M) || (m==MODE_AV))
-                     conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance_f(shooting_get_aperture_from_av96(shooting_get_user_av96()),get_focal_length(shooting_get_zoom()));
+                    conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance_1e3_f(shooting_get_aperture_from_av96(shooting_get_user_av96()),get_focal_length(lens_get_zoom_point()))/1000;
                 else conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance();
                 shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
             }
@@ -2226,17 +2226,17 @@ void gui_draw_osd() {
         if ((gui_get_mode()==GUI_MODE_NONE || gui_get_mode()==GUI_MODE_ALT) && (((kbd_is_key_pressed(KEY_SHOOT_HALF) || (state_kbd_script_run) || (shooting_get_common_focus_mode())) && (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH )) || ((mode_video || movie_status > 1) && conf.show_values_in_video) )) {
  
            if (conf.show_dof!=DOF_DONT_SHOW) gui_osd_calc_dof();
-
-           if (conf.show_dof==DOF_SHOW_IN_DOF) gui_osd_draw_dof();
-
-           if (conf.values_show_real_iso || conf.values_show_market_iso || conf.values_show_ev_seted || conf.values_show_ev_measured || conf.values_show_bv_measured || conf.values_show_bv_seted || conf.values_show_overexposure || conf.values_show_canon_overexposure || conf.values_show_luminance) gui_osd_calc_expo_param();
+           
+           if ((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX)) gui_osd_draw_dof();  
+           
+           if (conf.values_show_real_iso || conf.values_show_market_iso || conf.values_show_ev_seted || conf.values_show_ev_measured || conf.values_show_bv_measured || conf.values_show_bv_seted || conf.values_show_overexposure || conf.values_show_canon_overexposure || conf.values_show_luminance) gui_osd_calc_expo_param();           	           
         }
         if (conf.show_state) gui_osd_draw_state();
         if (conf.save_raw && conf.show_raw_state && !mode_video && (!kbd_is_key_pressed(KEY_SHOOT_HALF))) gui_osd_draw_raw_info();
-
-	    if ((conf.show_values==SHOW_ALWAYS && mode_photo) || ((mode_video || movie_status > 1)&& conf.show_values_in_video) || ((kbd_is_key_pressed(KEY_SHOOT_HALF) || (recreview_hold==1)) && (conf.show_values==SHOW_HALF)))
-		   gui_osd_draw_values(1);
-        else if  (shooting_get_common_focus_mode() && mode_photo && conf.show_values && !(conf.show_dof==DOF_SHOW_IN_DOF) )
+        
+        if ((conf.show_values==SHOW_ALWAYS && mode_photo) || ((mode_video || movie_status > 1)&& conf.show_values_in_video) || ((kbd_is_key_pressed(KEY_SHOOT_HALF) || (recreview_hold==1)) && (conf.show_values==SHOW_HALF)))
+            gui_osd_draw_values(1);
+        else if  (shooting_get_common_focus_mode() && mode_photo && conf.show_values && !((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX)))   
            gui_osd_draw_values(2);
         else if  (conf.show_values==SHOW_HALF)
             gui_osd_draw_values(0);   

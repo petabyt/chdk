@@ -1,5 +1,6 @@
 // generic capt_seq fuctions
 #include "asmsafe.h"
+#include "conf.h"
 
 #define RAWDATA_AVAILABLE (1)
 #define RAWDATA_SAVED (2)
@@ -25,7 +26,10 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
     // before raw_savefile tries to get the file name & directory.
     // Add '#define PAUSE_FOR_FILE_COUNTER 100' in the camera firmware capt_seq.c file.
     // The value can be adjusted as needed for different cameras.
-    _SleepTask(PAUSE_FOR_FILE_COUNTER);
+    if (conf.save_raw && is_raw_enabled())  // Only delay if RAW enabled (prevents slowdown in HQ burst mode)
+    {
+        _SleepTask(PAUSE_FOR_FILE_COUNTER);
+    }
 #endif
 
     raw_save_stage = RAWDATA_AVAILABLE;
