@@ -27,24 +27,16 @@
     #define CAM_RAW_ROWS                    2772
 
     #undef  CAM_HAS_ERASE_BUTTON
-	#define  CAM_USE_ZOOM_FOR_MF         1
     #define CAM_MULTIPART                   1
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_MANUAL_FOCUS
-    #define  CAM_HAS_USER_TV_MODES		 1 
+    #undef  CAM_HAS_USER_TV_MODES
 
     #undef  CAM_SYNCH
 
-
-	#define CAM_HAS_ZOOM_LEVER          1
-
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     //#define CAM_AF_SCAN_DURING_VIDEO_RECORD 1     //TODO: change to define and find NSTUB
-	#undef CAM_AF_SCAN_DURING_VIDEO_RECORD		//TODO: change to define and find NSTUB    
-	#define  CAM_CHDK_HAS_EXT_VIDEO_MENU	 1
-
-	#define CAM_HAS_IS						 1
 
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1

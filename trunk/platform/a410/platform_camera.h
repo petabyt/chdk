@@ -32,16 +32,11 @@
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_MANUAL_FOCUS
-	#define CAM_CAN_SD_OVER_NOT_IN_MF		1
-	#define CAM_CAN_SD_OVERRIDE			1 // :/ it's broken in firmware, but got worked around
 
     #undef  CAM_HAS_USER_TV_MODES
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #undef  CAM_HAS_IS
-	#undef  CAM_CAN_MUTE_MICROPHONE
 
-	#define CAM_CHDK_HAS_EXT_VIDEO_MENU		1//
-	#undef  CAM_AF_SCAN_DURING_VIDEO_RECORD // :( too complex to fix
     #define CAM_EV_IN_VIDEO                 1 //but not very reliable...
     
     #define CAM_DNG_LENS_INFO               { 54,10, 173,10, 28,10, 51,10 } // See comments in camera.h
@@ -59,7 +54,7 @@
      270041, 1000000, -110546, 1000000,  -43914, 1000000,   \
     -121712, 1000000,  256251, 1000000,   12623, 1000000,   \
      -27956, 1000000,   36119, 1000000,  104654, 1000000
-	#undef  CAM_CONSOLE_LOG_ENABLED
+
     #define cam_CalibrationIlluminant1      1 // Daylight
     // cropping
     #define CAM_JPEG_WIDTH                  2048
@@ -70,9 +65,9 @@
     #define CAM_ACTIVE_AREA_Y2              1558
     // camera name
     #define PARAM_CAMERA_NAME               3 // parameter number for GetParameterData
-	#undef  CAM_BRACKETING //no bracketing in fw
+
     #define CAM_EXT_TV_RANGE                1
-//	#define CAM_NO_MEMPARTINFO		1
+
 //  #define CAM_MULTIPART                   1
 
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy				// specifies an LED that turns on while camera waits for USB remote to sync

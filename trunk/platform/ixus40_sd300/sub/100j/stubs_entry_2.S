@@ -67,4 +67,12 @@ NHSTUB(ShowAllTaskInfo,             0xFFA9E8BC)
 NHSTUB(ShowCameraLog,               0xFF81A1A8)
 NHSTUB(iosInit,                     0xFFAC3B3C)
 NHSTUB(semBCreate,                  0xFFACF158)
+
+// Manual stubs for asm code in platform/ixus40_sd400 directory
 NHSTUB(sub_FF821D04,                0xFF821D04)
+STUB(FF830AB4)
+STUB(FF830B1C)
+STUB(FF830C5C)
+STUB(FF830D10)
+STUB(FF83103C)
+STUB(FF8310C8)

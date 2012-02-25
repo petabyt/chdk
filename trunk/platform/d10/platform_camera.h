@@ -29,27 +29,19 @@
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_MULTIPART                   1
-
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
-
-    #define CAM_HAS_ZOOM_LEVER          1 // note, has zoom in/out buttons, not lever
-
 
     // TODO
     //  #define CAM_CAN_SD_OVER_NOT_IN_MF       1       // Camera allows subject distance (focus) override when not in manual focus mode
     //  #define CAM_CAN_SD_OVERRIDE             1       // Camera allows to do subject distance override
 
-    #define CAM_HAS_MANUAL_FOCUS		1
     // long shutter is acutally user TV, may work ?
     #undef  CAM_HAS_USER_TV_MODES
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
     // TODO this doesn't seem to be working
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
-    #define CAM_CHDK_HAS_EXT_VIDEO_MENU   1 // In CHDK for this camera realized adjustable video compression
-
-    #define CAM_HAS_IS                  1
 
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1

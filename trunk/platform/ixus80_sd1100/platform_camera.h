@@ -35,8 +35,6 @@
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     // TODO / test
     #undef  CAM_REMOTE
-    #undef  CAM_CAN_MUTE_MICROPHONE
-    #define CAM_AF_SCAN_DURING_VIDEO_RECORD 0
 
     #define CAM_DNG_LENS_INFO               { 62,10, 186,10, 28,10, 49,10 } // See comments in camera.h
     // pattern
