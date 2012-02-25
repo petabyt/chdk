@@ -24,15 +24,9 @@
     #define CAM_PROPSET                     3
     #define CAM_DRYOS                       1
 
-//	#define SYNCHABLE_REMOTE_NOT_ENABLED 1
-
     #define CAM_RAW_ROWPIX                  4080  //  12M 41044080 ?? // from calcs see 100C lib.c
     #define CAM_RAW_ROWS                    3048  //  "     "    "    "    "
-											
-    #undef CAM_SWIVEL_SCREEN
-    #undef CAM_ADJUSTABLE_ALT_BUTTON
-    #define CAM_CAN_SD_OVER_NOT_IN_MF	1
-    #undef CAM_HAS_VIDEO_BUTTON
+
     #define CAM_VIDEO_QUALITY_ONLY          1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_BRACKETING                  1
@@ -43,7 +37,6 @@
     #undef  CAM_UNCACHED_BIT  // shut up compiler
     #define CAM_UNCACHED_BIT                0x40000000
     #define CAM_HAS_ND_FILTER               1
-    #define CAM_CAN_SD_OVERRIDE         1
 
     #define CAM_DNG_LENS_INFO               { 50,10, 200,10, 28,10, 59,10 } // See comments in camera.h
     // pattern

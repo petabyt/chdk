@@ -92,4 +92,6 @@
     #define CAMERA_MIN_DIST                 58      // Override min subject distance
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 68447   // Override max subject distance
+
+    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 //----------------------------------------------------------

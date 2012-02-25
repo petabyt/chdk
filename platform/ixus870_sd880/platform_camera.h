@@ -28,25 +28,14 @@
 
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_BRACKETING                  1       // XXX
-    #define CAM_CAN_SD_OVER_NOT_IN_MF   1
-    #define CAM_CAN_SD_OVERRIDE         1
     #define CAM_EXT_TV_RANGE                1
-    #define CAM_HAS_IS                  1
     #define CAM_HAS_JOGDIAL                 1
-    #define CAM_HAS_ZOOM_LEVER          1
-    #define CAM_REMOTE                  1
-    #define CAM_SYNCH                   1
-
-    #undef  CAM_CAN_MUTE_MICROPHONE         // XXX
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES
     #define CAM_MULTIPART                   1
-    #undef  CAM_HAS_VIDEO_BUTTON            // XXX
-    #undef  CAM_EV_IN_VIDEO                 // XXX
-    #undef  CAM_REAR_CURTAIN 
 
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000 // 0xFF874198 (via ExMem.FreeCacheable
@@ -71,17 +60,10 @@
     #define cam_CalibrationIlluminant1      1       // Daylight       XXX
 
     // CHDK functionality
-    #define CAM_CHDK_HAS_EXT_VIDEO_MENU 1   // XXX
-    #define CAM_EMUL_KEYPRESS_DELAY     40
-    #define CAM_EMUL_KEYPRESS_DURATION  5
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #undef  DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                 2       // use .CR2
-    
-    #undef  CAM_ADJUSTABLE_ALT_BUTTON
-    #undef  CAM_CONSOLE_LOG_ENABLED 
-    #undef  CAM_DRAW_EXPOSITION             // XXX
-    #undef  CAM_FEATURE_FEATHER             // XXX
+
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_VIDEO_CONTROL                       // XXX
 

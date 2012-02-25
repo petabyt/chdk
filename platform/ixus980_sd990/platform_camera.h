@@ -31,10 +31,7 @@
     #define CAM_MULTIPART                   1
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
-    #define  CAM_HAS_MANUAL_FOCUS		1
-    #define  CAM_HAS_USER_TV_MODES		1 //include M/P ? needed to make Tv bracketing work
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
-    #define CAM_CHDK_HAS_EXT_VIDEO_MENU 1
     #undef  CAM_VIDEO_CONTROL
     #undef  CAM_UNCACHED_BIT                        // shut up compiler
     #define CAM_UNCACHED_BIT                0x40000000

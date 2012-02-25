@@ -26,11 +26,6 @@
     #define CAM_RAW_ROWS                    2136   // for 6 MP
 
     #undef  CAM_USE_ZOOM_FOR_MF
-    #define CAM_HAS_ERASE_BUTTON	1
-    #define CAM_HAS_IRIS_DIAPHRAGM	1
-    #undef  CAM_HAS_ND_FILTER
-    #define CAM_HAS_MANUAL_FOCUS	1
-    #undef  CAM_DRAW_EXPOSITION
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #undef  CAM_HAS_IS
     #define CAM_CAN_MUTE_MICROPHONE         1

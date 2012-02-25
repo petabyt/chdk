@@ -22,7 +22,7 @@ static int alt_mode_led=0;
 extern void _platformsub_kbd_fetch_data(long*);
 
 #define KEYS_MASK0 (0x00000300)
-#define KEYS_MASK1 (0x0000FFA0)
+#define KEYS_MASK1 (0x0000FFF0)
 #define KEYS_MASK2 (0x00000000)
 
 #define NEW_SS (0x2000)
@@ -45,23 +45,37 @@ static char kbd_stack[NEW_SS];
 
 
 static KeyMap keymap[] = {
-   //      KEY_ZOOM_IN_SLOW   , 0x00000040 },
-   //      KEY_ZOOM_OUT_SLOW 	, 0x00000010 },
+//         KEY_ZOOM_IN_SLOW   , 0x00000040 },
+//         KEY_ZOOM_OUT_SLOW  , 0x00000010 },
 
-	{ 0, KEY_SHOOT_FULL	, 0x00000300 },
+    { 0, KEY_SHOOT_FULL     , 0x00000300 },
     { 0, KEY_SHOOT_FULL_ONLY, 0x00000200 },
-	{ 0, KEY_SHOOT_HALF	, 0x00000100 },
-	{ 1, KEY_UP		      , 0x00000100 },
-	{ 1, KEY_DOWN		, 0x00001000 },
-	{ 1, KEY_LEFT		, 0x00000200 },
-	{ 1, KEY_RIGHT		, 0x00002000 },
-	{ 1, KEY_SET		, 0x00000400 },
-	{ 1, KEY_ZOOM_IN   	, 0x00000080 },
-	{ 1, KEY_ZOOM_OUT 	, 0x00000020 },
-	{ 1, KEY_MENU		, 0x00000800 },
-	{ 1, KEY_DISPLAY	      , 0x00008000 },
-	{ 1, KEY_PRINT		, 0x00004000 },
-     	{ 0, 0, 0 }
+    { 0, KEY_SHOOT_HALF     , 0x00000100 },
+
+    { 1, KEY_ZOOM_OUT       , 0x00000010 }, //method taken from the SX220 port
+    { 1, KEY_ZOOM_OUT1      , 0x00000010 },
+    { 1, KEY_ZOOM_OUT       , 0x00000020 },
+    { 1, KEY_ZOOM_OUT3      , 0x00000020 },
+    { 1, KEY_ZOOM_OUT       , 0x00000030 },
+    { 1, KEY_ZOOM_OUT2      , 0x00000030 },
+    { 1, KEY_ZOOM_IN        , 0x00000040 },
+    { 1, KEY_ZOOM_IN1       , 0x00000040 },
+    { 1, KEY_ZOOM_IN        , 0x00000080 },
+    { 1, KEY_ZOOM_IN3       , 0x00000080 },
+    { 1, KEY_ZOOM_IN        , 0x000000C0 },
+    { 1, KEY_ZOOM_IN2       , 0x000000C0 },
+
+    { 1, KEY_UP             , 0x00000100 },
+    { 1, KEY_DOWN           , 0x00001000 },
+    { 1, KEY_LEFT           , 0x00000200 },
+    { 1, KEY_RIGHT          , 0x00002000 },
+    { 1, KEY_SET            , 0x00000400 },
+//    { 1, KEY_ZOOM_IN        , 0x00000080 },
+//    { 1, KEY_ZOOM_OUT       , 0x00000020 },
+    { 1, KEY_MENU           , 0x00000800 },
+    { 1, KEY_DISPLAY        , 0x00008000 },
+    { 1, KEY_PRINT          , 0x00004000 },
+        { 0, 0, 0 }
 };
 
 
@@ -71,6 +85,9 @@ long __attribute__((naked)) wrap_kbd_p1_f() ;
 
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
+	kbd_new_state[0] = physw_status[0];
+	kbd_new_state[1] = physw_status[1];
+	kbd_new_state[2] = physw_status[2];
 	while (physw_run){
 		_SleepTask(10);
 		
