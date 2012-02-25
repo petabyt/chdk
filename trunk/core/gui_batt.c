@@ -45,8 +45,6 @@ static void gui_batt_draw_icon () {
 
     int perc = get_batt_perc();
 
-#if defined(CAM_USE_COLORED_ICONS)
-
     draw_get_icon_colors();
 
     // set bar color depending percent
@@ -66,27 +64,6 @@ static void gui_batt_draw_icon () {
     draw_filled_rect(xx+5,    yy+3,   xx+28-(25*perc/100),  yy+5,   MAKE_COLOR(icon_grey[2], icon_grey[2]));
     draw_filled_rect(xx+29-(25*perc/100),    yy+6,     xx+29,   yy+9,  MAKE_COLOR(cl2, cl2));
     draw_filled_rect(xx+29-(25*perc/100),    yy+3,     xx+29,   yy+5,  MAKE_COLOR(cl3, cl3));
-
-#else
-
-    color cl = (perc<=20)?conf.osd_color_warn:FG_COLOR(conf.batt_icon_color);
-
-    // battery icon
-    draw_rect(xx+3-1,    yy+1,     xx+3+25+1, yy+1+10,  cl);
-    draw_rect(xx+3-3,    yy+1+2,   xx+3-2,    yy+1+8,   cl);
-    draw_vline(xx+3-4,    yy+1+2-1, 8,   COLOR_BLACK);  // l
-    draw_hline(xx+3-2,    yy+1-1,   29,  COLOR_BLACK);  // t
-    draw_hline(xx+3-2,    yy+1+11,  29,  COLOR_BLACK);  // b
-    draw_vline(xx+3+25+2, yy+1-1,   11,  COLOR_BLACK);  // r
-
-    // battery fill
-    x = xx+3+1+25-(perc/4);
-    if (x<=xx+3) x=xx+3+1;
-    if (x>xx+3+25+1) x=xx+3+25+1;
-    draw_filled_rect(xx+3, yy+1+1, x-1, yy+1+9, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLACK));
-    draw_filled_rect(x, yy+1+1, xx+3+25, yy+1+9, MAKE_COLOR(cl, cl));
-
-#endif
 }
 
 //-------------------------------------------------------------------

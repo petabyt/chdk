@@ -915,7 +915,6 @@ static int luaCB_textbox( lua_State* L ) {
 // begin lua draw fuctions
 unsigned char script_colors[][2]  = {
 
-#ifdef CAM_USE_COLORED_ICONS
                                         {COLOR_TRANSPARENT,         COLOR_TRANSPARENT},         //  1   trans
                                         {COLOR_BLACK,               COLOR_BLACK},               //  2   black
                                         {COLOR_WHITE,               COLOR_WHITE},               //  3   white
@@ -937,29 +936,6 @@ unsigned char script_colors[][2]  = {
                                         {COLOR_ICON_PLY_YELLOW,     COLOR_ICON_REC_YELLOW},     //  16  yellow
                                         {COLOR_ICON_PLY_YELLOW_DK,  COLOR_ICON_REC_YELLOW_DK},  //  17  yellow_dark
                                         {COLOR_ICON_PLY_YELLOW_LT,  COLOR_ICON_REC_YELLOW_LT}   //  18  yellow_light
-#else
-                                        {COLOR_TRANSPARENT,         COLOR_TRANSPARENT},         //  1   trans
-                                        {COLOR_BLACK,               COLOR_BLACK},               //  2   black
-                                        {COLOR_WHITE,               COLOR_WHITE},               //  3   white
-                                        
-                                        {COLOR_HISTO_R_PLAY,        COLOR_HISTO_R},             //  4   red
-                                        {COLOR_HISTO_R_PLAY,        COLOR_HISTO_R},             //  5   red_dark    - placeholder
-                                        {COLOR_HISTO_R_PLAY,        COLOR_HISTO_R},             //  6   red_light   - placeholder
-                                        {COLOR_HISTO_G_PLAY,        COLOR_HISTO_G},             //  7   green
-                                        {COLOR_HISTO_G_PLAY,        COLOR_HISTO_G},             //  8   green_dark  - placeholder
-                                        {COLOR_HISTO_G_PLAY,        COLOR_HISTO_G},             //  9   green_light - placeholder
-                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  10  blue
-                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  11  blue_dark   - placeholder
-                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  12  blue_light  - placeholder
-
-                                        {COLOR_BLACK,               COLOR_BLACK},               //  13  grey        - placeholder (there's no universal grey)
-                                        {COLOR_BLACK,               COLOR_BLACK},               //  14  grey_dark   - placeholder (there's no universal grey)
-                                        {COLOR_WHITE,               COLOR_WHITE},               //  15  grey_light  - placeholder (there's no universal grey)
-
-                                        {COLOR_WHITE,               COLOR_WHITE},               //  16  yellow      - placeholder
-                                        {COLOR_WHITE,               COLOR_WHITE},               //  17  yellow_dark - placeholder
-                                        {COLOR_WHITE,               COLOR_WHITE}                //  18  yellow_light- placeholder
-#endif
                                     };
 
 static int get_color(int cl) {
