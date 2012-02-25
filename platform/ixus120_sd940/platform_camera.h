@@ -93,10 +93,5 @@
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-    #define CAM_USE_COLORED_ICONS  1       // Enable using the CHDK-DE colored icons.
-
 	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// specifies an LED that turns on while camera waits for USB remote to sync
-
-   
-   //----------------------------------------------------------
-
+//----------------------------------------------------------

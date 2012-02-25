@@ -60,8 +60,6 @@
     #define CAMERA_MIN_DIST                 59      // Override min subject distance
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 58686   // Override max subject distance
-
-    #define CAM_USE_COLORED_ICONS           1   // Enable using the CHDK-DE colored icons.
 	
 	#define REMOTE_SYNC_STATUS_LED 	0xc02200C4		// specifies an LED that turns on while camera waits for USB remote to sync
 	

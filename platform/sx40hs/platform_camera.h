@@ -120,7 +120,6 @@
 
     #define CAM_LOAD_CUSTOM_COLORS              1       // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                     0xA8    // Start color index for CHDK colors loaded into camera palette.
-    #define CAM_USE_COLORED_ICONS           	1       // Enable using the CHDK-DE colored icons.
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202   // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
