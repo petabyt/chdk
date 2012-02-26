@@ -593,10 +593,12 @@ int raw_init_badpixel_bin() {
     {
         for (c[1]=CAM_ACTIVE_AREA_Y1; c[1]<CAM_ACTIVE_AREA_Y2; c[1]++)
         {
-            if (get_raw_pixel(c[0],c[1])==0)
+            if (get_raw_pixel(c[0],c[1]) <= DNG_BADPIXEL_VALUE_LIMIT)
             {
                 unsigned short l;
-                for (l=0; l<7 && (c[1]+l+1)<CAM_ACTIVE_AREA_Y2; l++) if (get_raw_pixel(c[0],c[1]+l+1)!=0) break;
+                for (l=0; l<7 && (c[1]+l+1)<CAM_ACTIVE_AREA_Y2; l++) 
+                    if (get_raw_pixel(c[0],c[1]+l+1) > DNG_BADPIXEL_VALUE_LIMIT)
+                        break;
                 c[1] = c[1] | (l << 13);
                 if (f) fwrite(c, 1, 4, f);
                 c[1] = (c[1] & 0x1FFF) + l;
@@ -609,7 +611,7 @@ int raw_init_badpixel_bin() {
     {
         for (c[0]=CAM_ACTIVE_AREA_X1; c[0]<CAM_ACTIVE_AREA_X2; c[0]++) 
         {
-            if (get_raw_pixel(c[0],c[1])==0) 
+            if (get_raw_pixel(c[0],c[1]) <= DNG_BADPIXEL_VALUE_LIMIT) 
             {
                 if (f) fwrite(c, 1, 4, f);
                 count++;
@@ -664,12 +666,12 @@ void patch_bad_pixels_b(void) {
         y = ptr[1] & 0x1FFF;
         cnt = (ptr[1] >> 13) & 7;
         for (; cnt>=0; cnt--, y++)
-            if (get_raw_pixel(ptr[0], y)==0)
+            if (get_raw_pixel(ptr[0], y) <= DNG_BADPIXEL_VALUE_LIMIT)
                 patch_bad_pixel(ptr[0], y);
     }
 #else
     for (i=0; i<binary_count; i++, ptr+=2)
-        if (get_raw_pixel(ptr[0], ptr[1])==0)
+        if (get_raw_pixel(ptr[0], ptr[1]) <= DNG_BADPIXEL_VALUE_LIMIT)
             patch_bad_pixel(ptr[0], ptr[1]);
 #endif
 }
