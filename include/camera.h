@@ -128,6 +128,7 @@
     // RAW & DNG related values
     #define DNG_SUPPORT                     1   // Camera supports DNG format for saving of RAW images
     #define DEFAULT_RAW_EXT                 1   // extension to use for raw (see raw_exts in conf.c)
+    #define DNG_BADPIXEL_VALUE_LIMIT        0   // Max value of 'bad' pixel - this value or lower is considered a defective pixel on the sensor
     #undef  CAM_RAW_ROWPIX                      // Number of pixels in RAW row (physical size of the sensor Note : as of July 2011, this value can be found in stub_entry.S for dryos cameras)
     #undef  CAM_RAW_ROWS                        // Number of rows in RAW (physical size of the sensor       Note : as of July 2011, this value can be found in stub_entry.S for dryos cameras)
     #undef  CAM_JPEG_WIDTH                      // Default crop size (width) stored in DNG (to match camera JPEG size. From dimensions of the largest size jpeg your camera produces)
