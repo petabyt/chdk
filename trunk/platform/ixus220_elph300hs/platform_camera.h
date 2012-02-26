@@ -45,6 +45,9 @@
     #undef  CAM_UNCACHED_BIT                        // shut up compiler
     #define CAM_UNCACHED_BIT                0x40000000
 
+    #undef  DNG_BADPIXEL_VALUE_LIMIT
+    #define DNG_BADPIXEL_VALUE_LIMIT        16      // Camera sensor apparently has bad pixels with value > 0 & <=16
+
     #define CAM_DNG_LENS_INFO               { 50,10, 700,10, 31,10, 59,10 } // See comments in camera.h
     #define cam_CFAPattern  0x02010100
   
