@@ -61,3 +61,16 @@ char *camera_jpeg_count_str()
 {
     return (char*)0x49344; // same as 100e, found @ FFD727B0
 }
+
+// PTP display stuff
+int vid_get_palette_type() { return 1; }
+int vid_get_palette_size() { return 16*4; }
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)0x3D518; // GetPaletteFromPhysicalScreen
+}
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)0x761C); // DisplayPhysicalScreenWithYUVPalette
+}

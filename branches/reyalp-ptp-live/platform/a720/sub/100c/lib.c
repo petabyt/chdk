@@ -57,3 +57,16 @@ char *camera_jpeg_count_str()
 {
     return (char*)0x580CC;
 }
+
+// PTP display stuff
+int vid_get_palette_type() { return 1; }
+int vid_get_palette_size() { return 16*4; }
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)0x4183C; // GetPaletteFromPhysicalScreen
+}
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)0x93A0); // DisplayPhysicalScreenWithYUVPalette
+}
