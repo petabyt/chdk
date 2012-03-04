@@ -73,8 +73,9 @@ int live_view_data_handler(ptp_data *data, int flags, int arg2)
 
     total_size = sizeof(vid_info);
 
-    // Add viewport details if requested
-    if ( flags & LV_TFR_VIEWPORT ) // live buffer
+    void *vp = vid_get_viewport_active_buffer();
+    // Add viewport details if requested, and not null
+    if ( flags & LV_TFR_VIEWPORT && vp) // live buffer
     {
         vid_info.vp_buffer_start = total_size;
         // TODO viewport buffer height can vary, e.g. a540 in 640x480 video=528, normal 240
@@ -104,9 +105,9 @@ int live_view_data_handler(ptp_data *data, int flags, int arg2)
     data->send_data(data->handle,(char*)&vid_info,sizeof(vid_info),total_size,0,0,0);
 
     // Send viewport data if requested
-    if ( flags & LV_TFR_VIEWPORT )
+    if ( flags & LV_TFR_VIEWPORT && vp)
     {
-        data->send_data(data->handle,vid_get_viewport_active_buffer(),vid_info.vp_buffer_size,0,0,0,0);
+        data->send_data(data->handle,vp,vid_info.vp_buffer_size,0,0,0,0);
     }
 
     // Send bitmap data if requested
