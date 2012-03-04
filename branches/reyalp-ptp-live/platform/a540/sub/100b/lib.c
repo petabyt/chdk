@@ -48,7 +48,7 @@ void *vid_get_viewport_fb_d()
   int x=(*(int*)0x63AD0); // found in sub_FFD25770
 // if we start camera in PB mode with movie on display, this pointer will be NULL
 // _fb isn't valid data, but at least it doesn't crash
-  return (void*) (x ? x : vid_get_viewport_fb()) ;
+  return (void*) (x ? (void *)x : vid_get_viewport_fb()) ;
 }
 
 long vid_get_viewport_height()
@@ -56,6 +56,7 @@ long vid_get_viewport_height()
   return 240;
 // real height in rec mode can be obtained below
 // note: 240 normally, 160 in stitch, 264 in 320x240 video, 528 in 640x480 video
+// contiuously variable with digital zoom in video
 //    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x32C68+4); // GetVRAMVPixelsSize
 }
 
@@ -124,13 +125,16 @@ void *vid_get_bitmap_active_buffer()
 {
     return (void*)(*(int*)0x5ED0); // FFD23420 DisplayPhysicalScreenWithYUVPalette
 }
-/*
-int vid_get_viewport_max_height()               { return 576; } // in 640x480 movie mode
+#if 0
+int vid_get_viewport_max_height()               { return 528; } // in 640x480 movie mode
 // this returns actual width in rec mode
 // normally 704, effectively 352 at normal 1:2 PAR. In 640 video, doesn't change but has 1:1 PAR
 // actual width is also 704 in playback mode, but the variable returns 0
 // in 320 video 352, 1:1. In stitch 352, 1:2
-int vid_get_viewport_width_proper()             { return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:*(int*)0x32C68;}
-int vid_get_viewport_height_proper()            { return vid_get_viewport_height(); }
-*/
-
+int vid_get_viewport_width_proper() {
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:*(int*)0x32C68;
+}
+int vid_get_viewport_height_proper() {
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x32C68+4);
+}
+#endif

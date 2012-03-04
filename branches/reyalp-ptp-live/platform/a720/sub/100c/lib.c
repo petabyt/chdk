@@ -70,3 +70,18 @@ void *vid_get_bitmap_active_buffer()
 {
     return (void*)(*(int*)0x93A0); // DisplayPhysicalScreenWithYUVPalette
 }
+// TODO value of vid_getviewport_height_proper needs to be checked in play, rec, and the different video modes
+//int vid_get_viewport_max_height()               { return 240; }
+
+// values from chdkcam patch
+// commented for now, protocol changes needed to handle correctly
+// note, play mode may be 704, needs to be tested
+#if 0
+int vid_get_viewport_width_proper() { 
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:*(int*)0x21A0; // VRAM DataSize  -> sub_FFC2BBF8
+}
+int vid_get_viewport_height_proper() {
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x21A0+4); // VRAM DataSize -> sub_FFC2BC04
+}
+#endif
+
