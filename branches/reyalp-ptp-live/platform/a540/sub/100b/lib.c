@@ -46,9 +46,10 @@ void *vid_get_viewport_fb_d()
 {
 // from ewavr 
   int x=(*(int*)0x63AD0); // found in sub_FFD25770
+  return (void *)x;
 // if we start camera in PB mode with movie on display, this pointer will be NULL
 // _fb isn't valid data, but at least it doesn't crash
-  return (void*) (x ? (void *)x : vid_get_viewport_fb()) ;
+//  return (void*) (x ? (void *)x : vid_get_viewport_fb()) ;
 }
 
 long vid_get_viewport_height()
@@ -132,7 +133,7 @@ int vid_get_viewport_max_height()               { return 528; } // in 640x480 mo
 // actual width is also 704 in playback mode, but the variable returns 0
 // in 320 video 352, 1:1. In stitch 352, 1:2
 int vid_get_viewport_width_proper() {
-    return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:*(int*)0x32C68;
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?704:*(int*)0x32C68;
 }
 int vid_get_viewport_height_proper() {
     return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x32C68+4);
