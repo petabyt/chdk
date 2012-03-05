@@ -218,6 +218,7 @@ extern void _SetLogicalEventActive(unsigned event, unsigned state);
 /* Somehow related to the above. Normally 0, set to 1 for script mode */
 extern void _SetScriptMode(unsigned mode);
 
+
 /* math */
 extern int _rand(void);
 extern void* _srand(unsigned int seed);
@@ -314,5 +315,9 @@ extern void *_exmem_alloc(int pool_id,int size,int unk,int unk2);
 // used on a few cameras that don't have memPartInfoGet, see CAM_NO_MEMPARTINFO
 extern int _memPartFindMax(int mempart_id); 
 extern int _memPartInfoGet(int mempart_id,int *info);
+
+#ifdef CAM_HAS_GPS
+extern void _GPS_UpdateData();
+#endif
 
 #endif

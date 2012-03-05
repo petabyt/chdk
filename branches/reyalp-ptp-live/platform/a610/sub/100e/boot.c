@@ -97,13 +97,12 @@ void  h_usrKernelInit()
 	"MOV     R12, #0x800\n"
 	"LDR     R0, =h_usrRoot\n"
 	"MOV     R1, #0x4000\n"
-    );    
-//	"LDR     R2, =0xD0B70\n" // 0xA0B70 + 0x30000
-    asm volatile (
-        "LDR     R2, =new_sa\n"
-        "LDR     R2, [R2]\n"
-    );
-    asm volatile (
+#if defined(OPT_CHDK_IN_EXMEM)
+    "LDR     R2, =0xA0B70\n" // use original heap offset since CHDK is loaded in high memory
+#else
+    "LDR     R2, =new_sa\n"
+    "LDR     R2, [R2]\n"
+#endif
 	"STR     R12, [SP]\n"
 	"STR     R4, [SP,#4]\n"
 	"BL      sub_FFEC9DA8\n"

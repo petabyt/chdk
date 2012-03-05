@@ -77,7 +77,7 @@
     #define CAM_EXT_TV_RANGE                1
     
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              9
+    #define CAM_BITMAP_PALETTE              10
     #undef  CAM_HAS_ERASE_BUTTON
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
@@ -98,15 +98,14 @@
     #define CAM_ZEBRA_NOBUF                 1
 
     //#define CAM_QUALITY_OVERRIDE            1
-
+    #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
+    
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                 99      // Override min subject distance
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 2000000 // Override max subject distance 1739131 //testscript=1098902
-
-    #define CAM_USE_COLORED_ICONS           1   // Enable using the CHDK-DE colored icons.
 
 	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// specifies an LED that turns on while camera waits for USB remote to sync
 	

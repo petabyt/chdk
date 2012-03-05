@@ -20,8 +20,6 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define OPT_GPS                         1
-
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1
     #define DNG_VERT_RLE_BADPIXELS          1
     #define CAM_AV_OVERRIDE_IRIS_FIX        1
@@ -79,7 +77,7 @@
     #define CAM_EXT_TV_RANGE                1
     
     #undef CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              9
+    #define CAM_BITMAP_PALETTE              10
     #undef CAM_HAS_ERASE_BUTTON
     #define  CAM_SHOW_OSD_IN_SHOOT_MENU     1
 
@@ -108,9 +106,12 @@
     #define CAMERA_MIN_DIST                 99     // Override min subject distance
     
     #define CAM_HAS_GPS                     1
+	
+    #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
 
+    #define USE_REAL_AUTOISO                1
+    #define OVEREXP_COMPENSATE_OVERALL      1
 
-    #define CAM_USE_COLORED_ICONS           1   // Enable using the CHDK-DE colored icons.
 	
 	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// specifies an LED that turns on while camera waits for USB remote to sync
 //----------------------------------------------------------

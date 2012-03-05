@@ -1,7 +1,9 @@
 #!build time optional components - comment out the features you dont want to have in your build or copy this file to localbuildconf.inc and override settings there
 
+OPT_GAMES=1
 OPT_CURVES=1
 OPT_TEXTREADER=1
+OPT_CALENDAR=1
 OPT_DEBUGGING=1
 OPT_EDGEOVERLAY=1
 # experimental PTP/USB interface. Enabled/disabled for individual cameras in camera.h
@@ -13,7 +15,7 @@ OPT_LUA=1
 OPT_LUA_STRLIB=1
 OPT_LUA_IOLIB=1
 OPT_LUA_OSLIB=1
-#allow Lua to call arbitrary ROM functions and eventprocs
+# allow Lua to call arbitrary ROM functions and eventprocs
 # WARNING: This is DANGEROUS. e.g. call_event_proc("EraseSectorOfRom",...)
 # NOTE: the interface for this may change in the future, to support better support buffers etc
 #OPT_LUA_CALL_NATIVE=1

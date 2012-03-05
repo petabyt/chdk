@@ -73,7 +73,7 @@
 #define CAM_SENSOR_BITS_PER_PIXEL   12 // Look into
 
 #undef CAM_BITMAP_PALETTE
-#define CAM_BITMAP_PALETTE          9
+#define CAM_BITMAP_PALETTE          10
 
 #undef EDGE_HMARGIN
 #define EDGE_HMARGIN                10 // Look into
@@ -105,9 +105,6 @@
 #define PARAM_CAMERA_NAME           4 // parameter number for GetParameterData
 //#define DNG_VERT_RLE_BADPIXELS	    1 // verify
 #define CAM_DNG_LENS_INFO       { 50,10, 400,10, 30,10, 59,10 } // See comments in camera.h // 5.0 - 40.0
-
-
-#define CAM_USE_COLORED_ICONS           1       // Enable using the CHDK-DE colored icons.
 
 #define REMOTE_SYNC_STATUS_LED 	0xC0220130		// specifies an LED that turns on while camera waits for USB remote to sync
  #define CAM_HAS_CMOS                   1

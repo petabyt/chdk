@@ -35,7 +35,6 @@ extern int mode_is_video(int);
 #define MIN_DIST                    CAMERA_MIN_DIST     // Defined in camera.h (can be overridden in platform_camera.h)
 #define MAX_DIST                    CAMERA_MAX_DIST     // Defined in camera.h (can be overridden in platform_camera.h)
 #define INFINITY_DIST               0xFFFFFFFF          // Value to send to firmware to select 'infinity' focus
-#define MAX_DIST_HYPER_FOCAL        999999
 
 //********************
 //char * get_debug();
@@ -129,13 +128,20 @@ typedef struct {
 } PHOTO_PARAM;
 
 typedef struct {
-    int    subject_distance;
-    int     near_limit;
-    int     far_limit;
-    int     hyperfocal_distance;
-    int     depth_of_field;
-    int     lens_to_focal_plane_width;
+    short hyperfocal_valid;
+    short distance_valid;
+    int   hyperfocal_distance_1e3;
+    int   aperture_value;
+    int   focal_length;
+    int   subject_distance;
+    int   near_limit;
+    int   far_limit;
+    int   hyperfocal_distance;
+    int   depth_of_field;
+    int   min_stack_distance;
 } DOF_TYPE;
+
+extern DOF_TYPE dof_values;
 
 typedef struct {
     short av96;
@@ -343,11 +349,16 @@ void shooting_set_zoom_speed(int v);
 /******************************************************************/
 void shooting_set_focus(int v, short is_now);
 short shooting_get_focus_mode();
+short shooting_get_real_focus_mode();
+short shooting_get_focus_state();
+short shooting_get_focus_ok();
+void shooting_update_dof_values();
 int shooting_get_hyperfocal_distance();
-int shooting_get_hyperfocal_distance_f(int av, int fl);
+int shooting_get_hyperfocal_distance_1e3_f(int av, int fl);
 int shooting_get_near_limit_of_acceptable_sharpness();
 int shooting_get_far_limit_of_acceptable_sharpness();
 int shooting_get_depth_of_field();
+int shooting_get_min_stack_distance();
 int shooting_get_subject_distance();
 int shooting_get_subject_distance_override_value();
 int shooting_get_subject_distance_bracket_value();
@@ -356,6 +367,7 @@ int shooting_get_lens_to_focal_plane_width();
 short shooting_get_drive_mode();
 short shooting_can_focus();
 short shooting_get_common_focus_mode();
+short shooting_is_infinity_distance();
 /******************************************************************/
 int shooting_get_iso_mode();
 void shooting_set_iso_mode(int v);
@@ -385,7 +397,6 @@ void shooting_video_bitrate_change(int v);
 extern int auto_started;
 void shooting_tv_bracketing();
 void shooting_av_bracketing();
-void shooting_iso_bracketing();
 /******************************************************************/
 // capture mode functions
 // return a CHDK mode enum for a PROPCASE_SHOOTING_MODE value, or 0 if not found
@@ -434,6 +445,7 @@ void camera_set_nr(int mode);
 int camera_get_nr();
 int camera_get_script_autostart();
 void camera_set_script_autostart();
+void enter_alt();
 void exit_alt();
 void camera_shutdown_in_a_second(void);
 
@@ -459,8 +471,13 @@ unsigned int movie_reset;
 unsigned int GetFreeCardSpaceKb(void);
 unsigned int GetTotalCardSpaceKb(void);
 
-void swap_partitions(void);
+
+
+int swap_partitions(int new_partition);
+unsigned char get_active_partition(void);
+int get_part_type(void);
 int get_part_count(void);
+int is_partition_changed(void);
 void create_partitions(void);
 extern char * camera_jpeg_count_str();
 
@@ -619,6 +636,12 @@ extern int touch_screen_active;
 
 unsigned char SetFileAttributes(const char* fn, unsigned char attr);
 
+#ifdef CAM_HAS_GPS
+    void GPS_UpdateData();
+	extern char * camera_jpeg_current_filename();
+	extern char * camera_jpeg_current_latitude();
+	extern char * camera_jpeg_current_longitude();
+	extern char * camera_jpeg_current_height();
 #endif
 
 // debug logging function - see generic wrappers.c to adjust destination
@@ -631,5 +654,7 @@ extern void dbg_printf(char *fmt,...);
 #define DBGPRINTF(fmt,args...) dbg_printf("%08d DBG:" fmt,get_tick_count(), ##args)
 #else
 #define DBGPRINTF(...)
+#endif
+
 #endif
 

@@ -4,6 +4,7 @@
 
 static long *nrflag = (long*)(0xC3F8+0x0);  // in sub_FF29E03C @ FF29E26C & FF29E2F4
 #define NR_AUTO (0)							// have to explictly reset value back to 0 to enable auto
+#define PAUSE_FOR_FILE_COUNTER 150          // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 
 #include "../../../generic/capt_seq.c"
 
@@ -112,9 +113,8 @@ asm volatile (
 "       BL      capt_seq_hook_set_nr\n"           		// +++
 
 "		LDR     R0, [R0,#0x10]\n"
-"		BL      sub_FF07C894\n"
-
-"       BL      capt_seq_hook_raw_here\n"           	// +++
+//"       BL      sub_FF07C894\n"
+"		BL      sub_FF07C894_my\n"                      // Patched
 
 "		B	loc_FF07C74C \n"
 
@@ -365,6 +365,54 @@ asm volatile (
 "		STR	R6, [R5,#8] \n"
 "		B	loc_FF07C47C \n"
 	);
+}
+
+void __attribute__((naked,noinline)) sub_FF07C894_my()
+{
+ asm volatile(
+"                STMFD   SP!, {R4-R6,LR} \n"
+"                LDR     R4, =0x3F64C \n"
+"                MOV     R5, R0 \n"
+"                LDR     R0, [R4,#0x28] \n"
+"                CMP     R0, #0 \n"
+"                BNE     loc_FF07C8F0 \n"
+"                LDRH    R0, [R4] \n"
+"                SUB     R1, R0, #0x8200 \n"
+"                SUBS    R1, R1, #0x2F \n"
+"                SUBNE   R1, R0, #0x4200 \n"
+"                SUBNES  R1, R1, #0x2E \n"
+"                BLEQ    sub_FF07F06C \n"
+"                BL      sub_FF07ECB0 \n"
+"                MOV     R1, R5 \n"
+"                BL      sub_FF07ED08 \n"
+"                LDR     R0, =0x10F \n"
+"                MOV     R2, #4 \n"
+"                ADD     R1, R5, #0x68 \n"
+"                BL      sub_FF090F1C \n"
+"                MOV     R2, #4 \n"
+"                ADD     R1, R5, #0x6C \n"
+"                MOV     R0, #0x2C \n"
+"                BL      sub_FF090F1C \n"
+"loc_FF07C8F0: \n"
+"                MOV     R0, R5 \n"
+"                BL      sub_FF1D5578 \n"
+
+"       BL      capt_seq_hook_raw_here\n"           	// +++
+
+"                MOV     R6, R0 \n"
+"                MOV     R2, R5 \n"
+"                MOV     R1, #1 \n"
+"                BL      sub_FF07A07C \n"
+"                TST     R6, #1 \n"
+"                MOVEQ   R0, R5 \n"
+"                BLEQ    sub_FF1D4784 \n"
+"                LDR     R0, [R4,#0xCC] \n"
+"                CMP     R0, #2 \n"
+"                LDMNEFD SP!, {R4-R6,PC} \n"
+"                MOV     R0, R5 \n"
+"                LDMFD   SP!, {R4-R6,LR} \n"
+"                B       sub_FF07A460 \n"
+ );
 }
 
 /*************************************************************/

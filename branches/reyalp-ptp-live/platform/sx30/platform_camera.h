@@ -39,10 +39,10 @@
     #define CAM_UNCACHED_BIT                0x40000000
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
-    #undef DEFAULT_RAW_EXT
+    #undef  DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                 2   // use .CR2 
 
-    #undef CAM_MENU_BORDERWIDTH
+    #undef  CAM_MENU_BORDERWIDTH
     #define CAM_MENU_BORDERWIDTH            10
 
     // bayer sensor pattern
@@ -92,7 +92,7 @@
     #define CAM_ZEBRA_ASPECT_ADJUST         1
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              12
+    #define CAM_BITMAP_PALETTE              13
 
 
     #undef  EDGE_HMARGIN
@@ -116,7 +116,6 @@
 
     #define CAM_LOAD_CUSTOM_COLORS          1   // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                 0xB3// Start color index for CHDK colors loaded into camera palette.
-    #define CAM_USE_COLORED_ICONS           1       // Enable using the CHDK-DE colored icons.
 
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 

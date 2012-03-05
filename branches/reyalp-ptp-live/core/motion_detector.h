@@ -37,7 +37,7 @@ function md_detect_changes (
     // 5 for R, - (mx3)not sure if this mode required
     // 6 for G, - (mx3)not sure if this mode required
     // 7 for B - (mx3)not sure if this mode required
-
+	// 9 for face detection
 
   detection_timeout, // input parameter. number of millisecnds to abort detection. detected_cells_count will be 0 for timeout condition
 
@@ -137,7 +137,7 @@ extern int md_init_motion_detector(
     // 5 for R, - (mx3)not sure if this mode required
     // 6 for G, - (mx3)not sure if this mode required
     // 7 for B - (mx3)not sure if this mode required
-
+	// 9 for face detection
 
  int detection_timeout, // input parameter. number of millisecnds to abort detection. detected_cells_count will be 0 for timeout condition
 

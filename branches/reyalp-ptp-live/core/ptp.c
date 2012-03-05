@@ -1,10 +1,12 @@
 #include "camera.h"
 #ifdef CAM_CHDK_PTP
 #include "stddef.h"
+
 #include "platform.h"
 #include "stdlib.h"
 #include "ptp.h"
 #include "kbd.h"
+#include "core.h"
 
 #include "core.h"
 #include "live_view.h"
@@ -422,10 +424,11 @@ static int handle_ptp(
         if(f) {
             fclose(f);
         }
+
         free(buf);
-        if(data_size > 0 && ptp.code != PTP_RC_OK) {
-            flush_recv_ptp_data(data,data_size);
-        }
+        if(data_size > 0 && ptp.code != PTP_RC_OK) { 
+            flush_recv_ptp_data(data,data_size); 
+        } 
         break;
       }
       

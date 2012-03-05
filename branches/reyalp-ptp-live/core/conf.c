@@ -32,7 +32,6 @@ const char* img_prefixes[NUM_IMG_PREFIXES]={ "IMG_", "CRW_", "SND_" /*, "AUT_", 
 const char* img_exts[NUM_IMG_EXTS]={ ".JPG", ".CRW", ".CR2", ".THM", ".WAV"/*, ".AVI", ".MRK"*/};
 
 //-------------------------------------------------------------------
-
 static int def_batt_volts_max, def_batt_volts_min;
 
 static void conf_change_script_file();
@@ -50,26 +49,26 @@ void camera_set_raw(int mode)
 
 void camera_set_nr(int mode)
 {
-	// "Auto", "Off", "On"
+    // "Auto", "Off", "On"
     conf.raw_nr = mode;
 }
 int camera_get_script_autostart()
-{	
-	// 1 = Autostarted
-	return auto_started;
+{   
+    // 1 = Autostarted
+    return auto_started;
 }
 
 
 void camera_set_script_autostart(int state)
-{	
-	// 1 = Autostarted
-	auto_started = state;
+{   
+    // 1 = Autostarted
+    auto_started = state;
 }
 
 
 int camera_get_nr()
 {
-	// "Auto", "Off", "On"
+    // "Auto", "Off", "On"
     return conf.raw_nr;
 }
 
@@ -110,6 +109,9 @@ void clear_values()
     if (conf.clear_video)
     {
         conf.video_mode = 0;
+#if CAM_CHDK_HAS_EXT_VIDEO_TIME
+        conf.ext_video_time=0;
+#endif
         conf.video_quality = VIDEO_DEFAULT_QUALITY;
         conf.video_bitrate = VIDEO_DEFAULT_BITRATE;
         shooting_video_bitrate_change(conf.video_bitrate);
@@ -388,6 +390,8 @@ static const ConfInfo conf_info[] = {
 	CONF_INFO(248, conf.remote_switch_type,  CONF_DEF_VALUE, i:0, NULL),
 	CONF_INFO(249, conf.remote_control_mode,  CONF_DEF_VALUE, i:0, NULL),
 
+	CONF_INFO(250, conf.remote_enable_scripts, CONF_DEF_VALUE, i:0, NULL),
+
    };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
@@ -428,7 +432,7 @@ static void conf_change_menu_rbf_file() {
 }
 
 static void conf_change_menu_symbol_rbf_file() {
-    if(!rbf_load_symbol(conf.menu_symbol_rbf_file)) conf.menu_symbol_enable=0;		//AKA
+    if(!rbf_load_symbol(conf.menu_symbol_rbf_file)) conf.menu_symbol_enable=0;      //AKA
 }
 
 static void conf_change_alt_mode_button() {
@@ -470,13 +474,13 @@ update the prevent display off/prevent shutdown based on current state
 doesn't really belong in conf but not clear where else it should go
 */
 void conf_update_prevent_shutdown(void) {
-	if(conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALWAYS 
-		|| (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT && gui_get_mode() != GUI_MODE_NONE)
-		|| (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT_SCRIPT && state_kbd_script_run)) {
+    if(conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALWAYS 
+        || (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT && gui_get_mode() != GUI_MODE_NONE)
+        || (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT_SCRIPT && state_kbd_script_run)) {
         disable_shutdown();
-	} else {
+    } else {
         enable_shutdown();
-	}
+    }
 }
 
 //-------------------------------------------------------------------
@@ -554,7 +558,7 @@ void config_save(const ConfInfo *conf_info, char *filename, int conf_num)
         write(fd, buf, p-buf);
         close(fd);
     }
-	ufree(buf);
+    ufree(buf);
 }
 
 void conf_save()
@@ -620,6 +624,9 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
     ufree(buf);
     // clear any "clear on restart" values
     clear_values();
+#if CAM_CHDK_HAS_EXT_VIDEO_TIME
+    conf.ext_video_time=0;
+#endif
 }
 
 void conf_restore()

@@ -41,10 +41,12 @@
     #define CAM_HAS_VIDEO_BUTTON            1
     #define CAM_VIDEO_QUALITY_ONLY          1
     #undef  CAM_VIDEO_CONTROL
-    #undef  CAM_HAS_JOGDIAL             
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_UNCACHED_BIT                        // shut up compiler
     #define CAM_UNCACHED_BIT                0x40000000
+
+    #undef  DNG_BADPIXEL_VALUE_LIMIT
+    #define DNG_BADPIXEL_VALUE_LIMIT        16      // Camera sensor apparently has bad pixels with value > 0 & <=16
 
     #define CAM_DNG_LENS_INFO               { 50,10, 700,10, 31,10, 59,10 } // See comments in camera.h
     #define cam_CFAPattern  0x02010100
@@ -67,7 +69,7 @@
     #define CAM_SENSOR_BITS_PER_PIXEL       12
     #define CAM_EXT_TV_RANGE                1
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              9
+    #define CAM_BITMAP_PALETTE              10
     #undef  CAM_HAS_ERASE_BUTTON
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 

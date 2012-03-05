@@ -434,6 +434,7 @@ int handle_usb_remote()
 				break ;
 
 			default :
+				conf.remote_enable = 0 ;
 				break ;
 		}
 
@@ -497,7 +498,7 @@ int handle_usb_remote()
 
 					if (((debug_print+25)%100) ==0 )
 					{
-						sprintf(buf,"switch=%s logic=%s sync=%s ", gui_USB_switch_types[switch_type], gui_USB_control_modes[control_module], conf.synch_enable?"yes":"no") ;
+						sprintf(buf,"switch=%s logic=%s sync=%s mode=%d  ", gui_USB_switch_types[switch_type], gui_USB_control_modes[control_module], conf.synch_enable?"yes":"no", camera_mode) ;
 						draw_string(2,32,buf,MAKE_COLOR(COLOR_YELLOW,COLOR_BLACK));
 						sprintf(buf,"sync count=%d, pulse count=%d width=%d  b=%d  ", sync_counter, usb_count, usb_power,   bracketing.shoot_counter);
 						draw_string(2,64,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));

@@ -63,8 +63,8 @@
      -5801, 100000,   71589, 100000, 118914, 100000
 
     // Sensor size, DNG image size & cropping
-    #define CAM_RAW_ROWPIX                  	4176 	// Found @0xff18e050
-    #define CAM_RAW_ROWS                    	3060 	// Found @0xff18e05c
+    #define CAM_RAW_ROWPIX                      4176    // Found @0xff18e050
+    #define CAM_RAW_ROWS                        3060    // Found @0xff18e05c
     #define CAM_JPEG_WIDTH                      4072
     #define CAM_JPEG_HEIGHT                     3044
     #define CAM_ACTIVE_AREA_X1                  96
@@ -93,7 +93,7 @@
     #define CAM_ZEBRA_ASPECT_ADJUST             1
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              	12
+    #define CAM_BITMAP_PALETTE                  13
   
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN 2
@@ -116,10 +116,10 @@
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1       // For cameras with 'low light' mode that does not work with raw define this
     #define CAM_DISABLE_RAW_IN_HQ_BURST         1       // For cameras with 'HQ Burst' mode that does not work with raw define this
     #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN 1     // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
+    #define CAM_ISO_LIMIT_IN_HQ_BURST           930     // Defines max ISO override value for HQ Burst mode (higher values crash camera)
 
     #define CAM_LOAD_CUSTOM_COLORS              1       // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                     0xA8    // Start color index for CHDK colors loaded into camera palette.
-    #define CAM_USE_COLORED_ICONS           	1       // Enable using the CHDK-DE colored icons.
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202   // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.

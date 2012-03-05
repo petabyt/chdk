@@ -128,6 +128,7 @@
     // RAW & DNG related values
     #define DNG_SUPPORT                     1   // Camera supports DNG format for saving of RAW images
     #define DEFAULT_RAW_EXT                 1   // extension to use for raw (see raw_exts in conf.c)
+    #define DNG_BADPIXEL_VALUE_LIMIT        0   // Max value of 'bad' pixel - this value or lower is considered a defective pixel on the sensor
     #undef  CAM_RAW_ROWPIX                      // Number of pixels in RAW row (physical size of the sensor Note : as of July 2011, this value can be found in stub_entry.S for dryos cameras)
     #undef  CAM_RAW_ROWS                        // Number of rows in RAW (physical size of the sensor       Note : as of July 2011, this value can be found in stub_entry.S for dryos cameras)
     #undef  CAM_JPEG_WIDTH                      // Default crop size (width) stored in DNG (to match camera JPEG size. From dimensions of the largest size jpeg your camera produces)
@@ -167,11 +168,12 @@
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-    #undef CAM_AV_OVERRIDE_IRIS_FIX             // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
+    #undef  CAM_AV_OVERRIDE_IRIS_FIX            // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
 
-    #undef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE    // For cameras with 'low light' mode that does not work with raw define this
-    #undef CAM_DISABLE_RAW_IN_HQ_BURST          // For cameras with 'HQ Burst' mode that does not work with raw define this
-    #undef CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
+    #undef  CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   // For cameras with 'low light' mode that does not work with raw define this
+    #undef  CAM_DISABLE_RAW_IN_HQ_BURST         // For cameras with 'HQ Burst' mode that does not work with raw define this
+    #undef  CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
+    #undef  CAM_ISO_LIMIT_IN_HQ_BURST           // Defines max ISO override value for HQ Burst mode (higher values crash camera)
     
     #undef  CAM_HAS_GPS                         // for cameras with GPS reseiver: includes the GPS coordinates in in DNG file
 
@@ -180,9 +182,6 @@
     #undef  CAM_LOAD_CUSTOM_COLORS              // Define to enable loading CHDK custom colors into the camera color palette
                                                 // requires load_chdk_palette() and vid_get_bitmap_active_palette() to be defined
                                                 // correctly for the camera along with
-    #undef  CAM_USE_COLORED_ICONS               // If the color palette contains enough shades of red, green, yellow and grey
-                                                // defined then enable this use the better icons (from CHDK-DE). See gui_batt.c
-                                                // and gui_space.c.
 
     #define CAM_USB_EVENTID         0x902       // Levent ID for USB control. Changed to 0x202 in DryOS R49 so needs to be overridable.
 

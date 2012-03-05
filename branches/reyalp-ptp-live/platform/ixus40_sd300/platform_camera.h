@@ -25,7 +25,6 @@
     #define CAM_RAW_ROWPIX                  2400
     #define CAM_RAW_ROWS                    1766
 
-    #define CAM_USE_ZOOM_FOR_MF 1
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
@@ -34,7 +33,6 @@
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #undef  CAM_HAS_IS
-    #undef CAM_CONSOLE_LOG_ENABLED
 
     #define CAM_DNG_LENS_INFO               { 58,10, 174,10, 28,10, 49,10 } // See comments in camera.h
     // pattern
