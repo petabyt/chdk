@@ -56,3 +56,31 @@ char *camera_jpeg_count_str()
 {
     return (char *)0x525E4; // search on "9999" done
 }
+
+
+// PTP display stuff
+int vid_get_palette_type() { return 3; }
+int vid_get_palette_size() { return 256*4; }
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)*(unsigned int*)(0x5164+0x28);  // sub_FF8DE674, via sub_FF9B390C two refs to "Palette Class."
+}
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x5164+0x14)); //"Add: %p Width : %ld Hight : %ld", sub_FF8DE720
+}
+
+int vid_get_viewport_max_height() { return 240; }
+
+// commented for now, protocol changes needed to handle correctly, values look correct
+// both are 0 or last record value in playback mode
+#if 0
+// goes to 360 for stitch, 320x240 video, max digital zoom
+int vid_get_viewport_width_proper() { 
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:*(int*)0x20E4; // GetVRAMHPixelSize
+}
+// varies from 62 - 240 with digital zoom, 120 in stitch
+int vid_get_viewport_height_proper() {
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x20E4+4); // GetVRAMVPixelSize
+}
+#endif
