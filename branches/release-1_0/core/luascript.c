@@ -251,6 +251,8 @@ void lua_run_restore()
 	}
 }
 
+DOF_TYPE dof_values;
+
 // get key ID of key name at arg, throw error if invalid
 static int lua_get_key_arg( lua_State * L, int narg )
 {
@@ -399,15 +401,22 @@ static int luaCB_get_disk_size( lua_State* L )
   return 1;
 }
 
-static int luaCB_get_dof( lua_State* L )
+static int luaCB_get_dofinfo( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_depth_of_field() );
-  return 1;
-}
-
-static int luaCB_get_far_limit( lua_State* L )
-{
-  lua_pushnumber( L, shooting_get_far_limit_of_acceptable_sharpness() );
+  shooting_update_dof_values();
+  lua_createtable(L, 0, 12);
+  SET_BOOL_FIELD("hyp_valid", (dof_values.hyperfocal_valid!=0));
+  SET_BOOL_FIELD("focus_valid", (dof_values.distance_valid!=0));
+  SET_INT_FIELD("aperture", dof_values.aperture_value);
+  SET_INT_FIELD("coc", circle_of_confusion);
+  SET_INT_FIELD("focal_length", dof_values.focal_length);
+  SET_INT_FIELD("eff_focal_length", get_effective_focal_length(lens_get_zoom_point()));
+  SET_INT_FIELD("focus", dof_values.subject_distance);
+  SET_INT_FIELD("near", dof_values.near_limit);
+  SET_INT_FIELD("far", dof_values.far_limit);
+  SET_INT_FIELD("hyp_dist", dof_values.hyperfocal_distance);
+  SET_INT_FIELD("dof", dof_values.depth_of_field);
+  SET_INT_FIELD("min_stack_dist", dof_values.min_stack_distance);
   return 1;
 }
 
@@ -420,12 +429,6 @@ static int luaCB_get_free_disk_space( lua_State* L )
 static int luaCB_get_focus( lua_State* L )
 {
   lua_pushnumber( L, shooting_get_subject_distance() );
-  return 1;
-}
-
-static int luaCB_get_hyp_dist( lua_State* L )
-{
-  lua_pushnumber( L, shooting_get_hyperfocal_distance() );
   return 1;
 }
 
@@ -450,12 +453,6 @@ static int luaCB_get_iso_real( lua_State* L )
 static int luaCB_get_jpg_count( lua_State* L )
 {
   lua_pushnumber( L, GetJpgCount() );
-  return 1;
-}
-
-static int luaCB_get_near_limit( lua_State* L )
-{
-  lua_pushnumber( L, shooting_get_near_limit_of_acceptable_sharpness() );
   return 1;
 }
 
@@ -1390,11 +1387,12 @@ static void set_number_field(lua_State* L, const char *key, int val)
 
 static int luaCB_get_buildinfo( lua_State* L )
 {
-  lua_createtable(L, 0, 8);
+  lua_createtable(L, 0, 9);
   set_string_field( L,"platform", PLATFORM );
   set_string_field( L,"platsub", PLATFORMSUB );
   set_string_field( L,"version", HDK_VERSION );
   set_string_field( L,"build_number", BUILD_NUMBER );
+  set_string_field( L,"build_revision", BUILD_SVNREV );
   set_string_field( L,"build_date", __DATE__ );
   set_string_field( L,"build_time", __TIME__ );
 #ifndef CAM_DRYOS
@@ -1694,133 +1692,6 @@ static int luaCB_switch_mode_usb( lua_State* L )
 
   return switch_mode_usb(mode);
 }
- 
-//#ifdef CAM_CHDK_PTP
-#if 0
-// PTP Live View functions - not implemented in 1.0
-// Function used to get viewport, bitmap and palette data via PTP
-// Address of this function sent back to client program which then
-// calls this with options to determine what to transfer
-static int handle_video_transfer(ptp_data *data, int flags, int arg2)
-{
-    int total_size;             // Calculated total size of data to transfer to client
-
-    // Structure containing the info for the current live view frame
-    // This information may change across calls
-    struct {
-        int vp_xoffset;             // Viewport X offset in pixels (for cameras with variable image size)
-        int vp_yoffset;             // Viewpoer Y offset in pixels (for cameras with variable image size)
-        int vp_width;               // Actual viewport width in pixels (for cameras with variable image size)
-        int vp_height;              // Actual viewport height in pixels (for cameras with variable image size)
-        int vp_buffer_start;        // Offset in data transferred where the viewport data starts
-        int vp_buffer_size;         // Size of viewport data sent (in bytes)
-        int bm_buffer_start;        // Offset in data transferred where the bitmap data starts
-        int bm_buffer_size;         // Size of bitmap data sent (in bytes)
-        int palette_type;           // Camera palette type 
-                                    // (0 = no palette, 1 = 16 x 4 byte AYUV values, 2 = 16 x 4 byte AYUV values with A = 0..3, 3 = 256 x 4 byte AYUV values with A = 0..3)
-        int palette_buffer_start;   // Offset in data transferred where the palette data starts
-        int palette_buffer_size;    // Size of palette data sent (in bytes)
-    } vid_info;
-
-    // Populate the above structure with the current default details
-    vid_info.vp_xoffset = vid_get_viewport_xoffset_proper();
-    vid_info.vp_yoffset = vid_get_viewport_yoffset_proper();
-    vid_info.vp_width = vid_get_viewport_width_proper();
-    vid_info.vp_height = vid_get_viewport_height_proper();
-    vid_info.vp_buffer_start = 0;
-    vid_info.vp_buffer_size = 0;
-    vid_info.bm_buffer_start = 0;
-    vid_info.bm_buffer_size = 0;
-    vid_info.palette_type = vid_get_palette_type();
-    vid_info.palette_buffer_start = 0;
-    vid_info.palette_buffer_size = 0;
-
-    total_size = sizeof(vid_info);
-
-    // Add viewport details if requested
-    if ( flags & 0x1 ) // live buffer
-    {
-        vid_info.vp_buffer_start = total_size;
-        vid_info.vp_buffer_size = (vid_get_viewport_buffer_width_proper()*vid_get_viewport_max_height()*6)/4;
-        total_size += vid_info.vp_buffer_size;
-    }
-
-    // Add bitmap details if requested
-    if ( flags & 0x4 ) // bitmap buffer
-    {
-        vid_info.bm_buffer_start = total_size;
-        vid_info.bm_buffer_size = vid_get_bitmap_buffer_width()*vid_get_bitmap_screen_height();
-        total_size += vid_info.bm_buffer_size;
-    }
-
-    // Add palette detals if requested
-    if ( flags & 0x8 ) // bitmap palette
-    {
-        vid_info.palette_buffer_start = total_size;
-        vid_info.palette_buffer_size = vid_get_palette_size();
-        total_size += vid_info.palette_buffer_size;
-    }
-
-    // Send header structure (along with total size to be sent)
-    data->send_data(data->handle,(char*)&vid_info,sizeof(vid_info),total_size,0,0,0);
-
-    // Send viewport data if requested
-    if ( flags & 0x1 )
-    {
-        data->send_data(data->handle,vid_get_viewport_active_buffer(),vid_info.vp_buffer_size,0,0,0,0);
-    }
-
-    // Send bitmap data if requested
-    if ( flags & 0x4 )
-    {
-        data->send_data(data->handle,vid_get_bitmap_active_buffer(),vid_info.bm_buffer_size,0,0,0,0);
-    }
-
-    // Send palette data if requested
-    if ( flags & 0x8 )
-    {
-        data->send_data(data->handle,vid_get_bitmap_active_palette(),vid_info.palette_buffer_size,0,0,0,0);
-    }
-
-    return 0;
-}
-
-// Lua function to return base info for PTP live view, including address of above transfer function
-static int luaCB_get_video_details( lua_State* L )
-{
-    // Structure to popualate with live view details
-    // These details are static and only need to be retrieved once
-    struct {
-        int transfer_function;      // Address of transfer function above
-        int vp_max_width;           // Maximum viewport width (in pixels)
-        int vp_max_height;          // Maximum viewport height (in pixels)
-        int vp_buffer_width;        // Viewport buffer width in case buffer is wider than visible viewport (in pixels)
-        int bm_max_width;           // Maximum width of bitmap (in pixels)
-        int bm_max_height;          // Maximum height of bitmap (in pixels)
-        int bm_buffer_width;        // Bitmap buffer width in case buffer is wider than visible bitmap (in pixels)
-        int lcd_aspect_ratio;       // 0 = 4:3, 1 = 16:9
-    } details;
-
-    // Populate structure info
-    details.transfer_function = (int) handle_video_transfer;
-    details.vp_max_width = vid_get_viewport_max_width();
-    details.vp_max_height = vid_get_viewport_max_height();
-    details.vp_buffer_width = vid_get_viewport_buffer_width_proper();
-#if CAM_USES_ASPECT_CORRECTION
-    details.bm_max_width = ASPECT_XCORRECTION(vid_get_bitmap_screen_width());
-#else
-    details.bm_max_width = vid_get_bitmap_screen_width();
-#endif
-    details.bm_max_height = vid_get_bitmap_screen_height();
-    details.bm_buffer_width = vid_get_bitmap_buffer_width();
-    details.lcd_aspect_ratio = vid_get_aspect_ratio();
-
-    // Send data back to client
-    lua_pushlstring( L, (char *) &details, sizeof(details) );
-
-    return 1;
-}
-#endif
 
 /*
 pack the lua args into a buffer to pass to the native code calling functions 
@@ -2234,16 +2105,13 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_bv96)
     FUNC(get_day_seconds)
     FUNC(get_disk_size)
-  FUNC(get_dof)
-  FUNC(get_far_limit)
+    FUNC(get_dofinfo)
     FUNC(get_free_disk_space)
     FUNC(get_focus)
-    FUNC(get_hyp_dist)
     FUNC(get_iso_market)
     FUNC(get_iso_mode)
     FUNC(get_iso_real)
     FUNC(get_jpg_count)
-    FUNC(get_near_limit)
     FUNC(get_prop)
     FUNC(get_prop_str)
     FUNC(get_raw_count)
@@ -2377,9 +2245,6 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(set_record)
 
     FUNC(switch_mode_usb)
-#ifdef CAM_CHDK_PTP
-//   FUNC(get_video_details)
-#endif
 
 #ifdef OPT_LUA_CALL_NATIVE
     FUNC(call_event_proc)

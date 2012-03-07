@@ -5,6 +5,7 @@
 #include "math.h"
 #include "stdlib.h"
 #include "conf.h"
+#include "histogram.h"
 
 #define USE_FILE_COUNTER_FOR_EXP_COUNTING
 
@@ -693,9 +694,9 @@ if ((mode_get()&MODE_MASK) != MODE_PLAY){
 }
 }
 
-void shooting_set_shutter_speed(float t, short is_now)
+void shooting_set_shutter_speed(float t, short ev_correction, short is_now)
 {
-	if (t>0) shooting_set_tv96_direct((short) 96.0*log(1/t)/log_2, is_now);
+	if (t>0) shooting_set_tv96_direct( ((short) 96.0*log(1/t)/log_2) + ev_correction, is_now);
 }
 
 
@@ -1080,14 +1081,74 @@ void shooting_set_focus(int v, short is_now) {
     }
 }
 
+void shooting_calc_autoiso_coef( int min_shutter )
+{
+	if ( conf.autoiso2_min_shutter_numerator >= min_shutter ) {
+		conf.autoiso2_coef = 0.0;
+	}
+	else {
+		conf.autoiso2_coef = (float)(conf.autoiso2_max_iso_auto_real - conf.autoiso_max_iso_auto_real) / 
+				(float)( conf.autoiso2_min_shutter_numerator - min_shutter);
+	}
+}
+
+void shooting_recalc_conf_autoiso_values()
+{
+
+#ifndef USE_REAL_AUTOISO
+    // Initialize only once
+    static int iso_b = 0;   // real base iso
+    static int iso_m = 0;   // marketing base iso
+
+    // @tsv - marketing to real iso correspondance is quite linear so just got multiplier
+    // Base values are correct only when shoot is prepared, so calc multiplier right before first shoot
+    if ( !iso_m )
+    {
+        iso_b = 10 * shooting_get_iso_base();	// 10 - is additional multiplier from user_entered_value
+        iso_m = shooting_get_iso_market_base();
+
+    }
+
+    // check zero in to_market convertion numerator
+    if ( !iso_m )
+    iso_m = iso_m ? iso_m : 1;
+#else
+    // If real ISO in GUI, then just multiply by 10
+    static int iso_b = 10;
+    static int iso_m = 1;
+
+#endif
+
+    // Calculate realISO (real = market * iso_b / iso_m)
+    conf.autoiso_max_iso_hi_real    = conf.autoiso_max_iso_hi    * iso_b / iso_m;
+    conf.autoiso_max_iso_auto_real  = conf.autoiso_max_iso_auto  * iso_b / iso_m; 
+    conf.autoiso_min_iso_real	    = conf.autoiso_min_iso       * iso_b / iso_m;      
+    conf.autoiso2_max_iso_auto_real = conf.autoiso2_max_iso_auto * iso_b / iso_m;
+
+    // There are two exceptional situation: 
+    // 1. shutter_numerator2 should be < shutter_numerator1, otherwise exceptional situation 
+    // 2. autoiso2 <= autoiso1
+    if ( !conf.autoiso2_min_shutter_numerator ) {
+        conf.autoiso2_max_iso_auto_real = conf.autoiso_max_iso_auto_real;
+    }
+
+    // C2=( iso2_max_auto_real - iso_max_auto_real) / ( tv_num[autoiso2_shutter] - tv_numerator[autoiso_shutter])
+    shooting_calc_autoiso_coef( conf.autoiso_min_shutter_numerator );
+}
+
 void shooting_set_autoiso(int iso_mode) {
 	short max_iso;
+	if ( iso_mode<=0 && conf.autoiso_max_iso_auto_real==0) {
+		shooting_recalc_conf_autoiso_values();
+	}
 	switch (iso_mode) {
 		case -1: // ISO HI
-			max_iso = conf.autoiso_max_iso_hi*10;
+			//max_iso = conf.autoiso_max_iso_hi*10;
+			max_iso = conf.autoiso_max_iso_hi_real;
 			break;
 		case 0: // ISO AUTO
-			max_iso = conf.autoiso_max_iso_auto*10;
+			//max_iso = conf.autoiso_max_iso_auto*10;
+			max_iso = conf.autoiso_max_iso_auto_real;
 			break;
 		default:
 			return;
@@ -1095,33 +1156,70 @@ void shooting_set_autoiso(int iso_mode) {
 	int m=mode_get()&MODE_SHOOTING_MASK;
 	// TODO also long shutter ?
 	if (m==MODE_M || m==MODE_TV || m==MODE_STITCH) return; //Only operate outside of M and Tv
-	static const short shutter[]={0, 8, 15, 30, 60, 125, 250, 500, 1000};
-	float current_shutter = shooting_get_shutter_speed_from_tv96(shooting_get_tv96());
+	int ev_overexp = 0;
+	if ( conf.overexp_ev_enum )
+	{
+		// No shoot_histogram exist here because no future shot exist yet :)
+		live_histogram_process_quick();
 
-	short current_iso=shooting_get_iso_real();
-
-	short min_shutter = shutter[conf.autoiso_shutter];
-	if (min_shutter == 0)
-		{
-			short IS_factor = (shooting_get_is_mode()<=1)?conf.autoiso_is_factor:1;
-			min_shutter = get_focal_length(lens_get_zoom_point())*conf.autoiso_user_factor / (IS_factor*1000);
-	    	//min_shutter is NOT 1/Xs but optimized for the calculation.
+		// step 32 is 1/3ev for tv96
+		if ( live_histogram_get_range(255-conf.zebra_over,255) >= conf.overexp_threshold ) {
+			ev_overexp = conf.overexp_ev_enum << 5; 
 		}
+		live_histogram_end_process();
+	}
+
+#ifdef OVEREXP_COMPENSATE_OVERALL
+	float current_shutter = shooting_get_shutter_speed_from_tv96( shooting_get_tv96() + ev_overexp );
+#else
+	float current_shutter = shooting_get_shutter_speed_from_tv96(shooting_get_tv96());
+#endif
+	
+	short current_iso=shooting_get_iso_real();
+		
+	short min_shutter = conf.autoiso_min_shutter_numerator;
+	if (min_shutter == 0) {
+		short IS_factor = (shooting_get_is_mode()<=1)?conf.autoiso_is_factor:1;
+		min_shutter = get_focal_length(lens_get_zoom_point())*conf.autoiso_user_factor / (IS_factor*1000);
+		//min_shutter is NOT 1/Xs but optimized for the calculation.
+		if ( conf.autoiso2_min_shutter_numerator ) {
+			shooting_calc_autoiso_coef( min_shutter );
+		}
+	}
 
 	short target_iso = current_iso * min_shutter * current_shutter;
-	short min_iso = conf.autoiso_min_iso*10;
+	short min_iso = conf.autoiso_min_iso_real;
+	
+	if (target_iso > max_iso) {
+		ev_overexp=0;
 
-	if (target_iso > max_iso)
-		{ target_iso = max_iso; }
-	else if (target_iso < min_iso)
-		{ target_iso = min_iso; }
-
+		// AutoISO2 if
+		// 	it is turned on (C2!=0.0)
+		//	and it has valid iso2/shutter2 ( C2<0)
+		//       and non-IsoHI mode
+		if ( !iso_mode && conf.autoiso2_coef < 0.0 ) {
+			target_iso = (max_iso - min_shutter*conf.autoiso2_coef) / ( 1.0 - conf.autoiso2_coef  / (current_shutter * current_iso) );
+			if ( target_iso > conf.autoiso2_max_iso_auto_real ) {
+				target_iso = conf.autoiso2_max_iso_auto_real;
+			}
+		} else {
+			target_iso = max_iso;
+		}
+	} else if (target_iso < min_iso) {
+		target_iso = min_iso;
+	}
+	
 	float target_shutter = current_shutter *  current_iso / target_iso;
-
-	shooting_set_shutter_speed(target_shutter, SET_NOW);
-
-    shooting_set_iso_real(target_iso, SET_NOW);
-
+	
+#ifdef OVEREXP_COMPENSATE_OVERALL
+	shooting_set_shutter_speed(target_shutter, 0, SET_NOW);
+#else
+	// Daylight only (below autoiso_max) overexp compensation
+	shooting_set_shutter_speed(target_shutter, ev_overexp, SET_NOW);
+#endif
+	
+   	shooting_set_iso_real(target_iso, SET_NOW);
+	
 }
 
 void shooting_video_bitrate_change(int v){
@@ -1186,7 +1284,7 @@ const char * shooting_get_av_bracket_value()
 
 int shooting_get_subject_distance_override_value()
 {
-  return conf.subj_dist_override_value;
+  return (conf.subj_dist_override_value < shooting_get_lens_to_focal_plane_width()?0:(conf.subj_dist_override_value - shooting_get_lens_to_focal_plane_width()));
 }
 
 int shooting_get_subject_distance_bracket_value()
@@ -1339,33 +1437,30 @@ void shooting_subject_distance_bracketing(){
 
 
 void shooting_bracketing(void){
-
-  short drive_mode=shooting_get_drive_mode();
   if (shooting_get_drive_mode()!=0)  {
-     int m=mode_get()&MODE_SHOOTING_MASK;
-     if (m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE) {
-       if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING) {
-           bracketing.shoot_counter=0;
-           bracketing.av96=0;
-           bracketing.dav96=0;
-           bracketing.tv96=0;
-           bracketing.dtv96=0;
-           bracketing.sv96=0;
-           bracketing.dsv96=0;
-           bracketing.iso=0;
-           bracketing.diso=0;
-           bracketing.subj_dist=0;
-           bracketing.dsubj_dist=0;
-           bracketing.type=0;
-       }
-           if (conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))  shooting_tv_bracketing();
-    	      else if (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) shooting_av_bracketing();
-    	      else if ((conf.iso_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.iso_bracket_koef)) {
-			  shooting_iso_bracketing();
-   	       }
-    	      else if ((conf.subj_dist_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.subj_dist_bracket_koef)) shooting_subject_distance_bracketing();   	      else if ((conf.subj_dist_bracket_value) && (conf.subj_dist_bracket_koef)) shooting_subject_distance_bracketing();
+    int m=mode_get()&MODE_SHOOTING_MASK;
+    if (m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE) {
+      if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING) { 
+        bracketing.shoot_counter=0;
+        bracketing.av96=0;
+        bracketing.dav96=0;
+        bracketing.tv96=0;
+        bracketing.dtv96=0;
+        bracketing.sv96=0;
+        bracketing.dsv96=0;
+        bracketing.iso=0;
+        bracketing.diso=0;
+        bracketing.subj_dist=0;
+        bracketing.dsubj_dist=0;
+        bracketing.type=0;
       }
-   }
+      if (conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))  shooting_tv_bracketing(); 
+      else if (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) shooting_av_bracketing(); 
+      else if ((conf.iso_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.iso_bracket_koef)) shooting_iso_bracketing();
+      else if ((conf.subj_dist_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.subj_dist_bracket_koef)) shooting_subject_distance_bracketing();
+      else if ((conf.subj_dist_bracket_value) && (conf.subj_dist_bracket_koef)) shooting_subject_distance_bracketing();
+    }
+  }
 }
 
 #if CAM_REAR_CURTAIN

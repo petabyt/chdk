@@ -1,9 +1,12 @@
+#include "stdlib.h"
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
 #include "keyboard.h"
 #include "conf.h"
+#include "../../core/gui_draw.h"
 
+void keys_new();
 typedef struct {
     short grp;
     short hackkey;
@@ -21,6 +24,13 @@ static int shoot_counter=0;
 static long alt_mode_key_mask = 0x00010800; // disp + set
 static int alt_mode_led=0;
 extern void _GetKbdState(long*);
+
+#ifdef CAM_HAS_GPS
+extern int Taste_Funktion;
+extern int Taste_Taste;
+extern int Taste_Druck;
+extern int Taste_press;
+#endif
 
 #define DELAY_TIMEOUT 10000
 
@@ -43,36 +53,36 @@ static char kbd_stack[NEW_SS];
 
 static KeyMap keymap[] = {
 
-	{ 0, KEY_ZOOM_OUT     	, 0x00000001 }, 
-	{ 0, KEY_ZOOM_OUT1     	, 0x00000001 }, 
-	{ 0, KEY_ZOOM_OUT     	, 0x00000002 }, 
-	{ 0, KEY_ZOOM_OUT3 		, 0x00000002 }, 
-	{ 0, KEY_ZOOM_OUT     	, 0x00000003 }, 
-	{ 0, KEY_ZOOM_OUT2	 	, 0x00000003 },	
-	{ 0, KEY_ZOOM_IN  		, 0x00000004 },
-	{ 0, KEY_ZOOM_IN1       , 0x00000004 }, 
-	{ 0, KEY_ZOOM_IN 	 	, 0x00000008 },	
-	{ 0, KEY_ZOOM_IN3 	 	, 0x00000008 },
-	{ 0, KEY_ZOOM_IN  		, 0x0000000C },
-	{ 0, KEY_ZOOM_IN2  		, 0x0000000C },
-	{ 0, KEY_UP_SOFT        , 0x00000400 },   
-	{ 0, KEY_DISPLAY        , 0x00000800 },
-	{ 0, KEY_UP		        , 0x00001000 },		//1400
-	{ 0, KEY_RIGHT_SOFT	    , 0x00002000 },
-	{ 0, KEY_RIGHT		    , 0x00004000 },		//6000
-	{ 0, KEY_DOWN_SOFT	    , 0x00008000 },
-	{ 0, KEY_SET		    , 0x00010000 },
-	{ 0, KEY_PRINT		    , 0x00010800 },  	//DISP+SET for ALT menu
-	{ 0, KEY_DOWN		    , 0x00020000 },  	//28000
-	{ 0, KEY_MENU		    , 0x00040000 },	
-	{ 0, KEY_VIDEO			, 0x00080000 },		//200000	//TODO TESTING
-	{ 1, KEY_PLAYBACK	    , 0x00200000 },
-	{ 2, KEY_LEFT_SOFT		, 0x00000080 },
-	{ 2, KEY_LEFT			, 0x00000100 },
-	{ 2, KEY_SHOOT_FULL		, 0x00002002 },
-	{ 2, KEY_SHOOT_FULL_ONLY, 0x00000002 },
-	{ 2, KEY_SHOOT_HALF		, 0x00002000 },
-   	{ 0, 0, 0 }
+    { 0, KEY_ZOOM_OUT        , 0x00000001 },
+    { 0, KEY_ZOOM_OUT1       , 0x00000001 },
+    { 0, KEY_ZOOM_OUT        , 0x00000002 },
+    { 0, KEY_ZOOM_OUT3       , 0x00000002 },
+    { 0, KEY_ZOOM_OUT        , 0x00000003 },
+    { 0, KEY_ZOOM_OUT2       , 0x00000003 },
+    { 0, KEY_ZOOM_IN         , 0x00000004 },
+    { 0, KEY_ZOOM_IN1        , 0x00000004 },
+    { 0, KEY_ZOOM_IN         , 0x00000008 },
+    { 0, KEY_ZOOM_IN3        , 0x00000008 },
+    { 0, KEY_ZOOM_IN         , 0x0000000C },
+    { 0, KEY_ZOOM_IN2        , 0x0000000C },
+    { 0, KEY_UP_SOFT         , 0x00000400 },
+    { 0, KEY_DISPLAY         , 0x00000800 },
+    { 0, KEY_UP              , 0x00001000 },
+    { 0, KEY_RIGHT_SOFT      , 0x00002000 },
+    { 0, KEY_RIGHT           , 0x00006000 },
+    { 0, KEY_DOWN_SOFT       , 0x00008000 },
+    { 0, KEY_SET             , 0x00010000 },
+    { 0, KEY_PRINT           , 0x00010800 },  //DISP+SET for ALT menu
+    { 0, KEY_DOWN            , 0x00020000 },
+    { 0, KEY_MENU            , 0x00040000 },
+    { 0, KEY_VIDEO           , 0x00080000 },
+    { 1, KEY_PLAYBACK        , 0x00200000 },
+    { 2, KEY_LEFT_SOFT       , 0x00000080 },
+    { 2, KEY_LEFT            , 0x00000100 },
+    { 2, KEY_SHOOT_FULL      , 0x00002002 },
+    { 2, KEY_SHOOT_FULL_ONLY , 0x00000002 },
+    { 2, KEY_SHOOT_HALF      , 0x00002000 },
+    { 0, 0, 0 }
 };
 
 void kbd_set_alt_mode_key_mask(long key)
@@ -153,20 +163,31 @@ void my_kbd_read_keys() {
 
 	_GetKbdState( kbd_new_state );
 	_kbd_read_keys_r2( kbd_new_state);
-	
+
+#ifdef CAM_HAS_GPS
+	if (Taste_Funktion != 0)
+	{
+		if (Taste_Taste == kbd_get_pressed_key())
+		{
+			Taste_Druck=1;
+			kbd_key_release(Taste_Taste);
+			kbd_key_press(0);
+			Taste_Funktion=0;
+			Taste_Taste=0;
+			msleep(1000);
+			}
+	}
+#endif	
 //    kbd_new_state[0] = physw_status[0];  //sx220 changed from physw_status[0]
  //   kbd_new_state[2] = physw_status[2];
  //   kbd_new_state[3] = physw_status[3]; //sx220 added
-	
 
-	
     if (kbd_process() == 0) {
-        // we read keyboard state with _kbd_read_keys()
+	// we read keyboard state with _kbd_read_keys()
 		physw_status[0] = kbd_new_state[0];
 		physw_status[1] = kbd_new_state[1];
 		physw_status[2] = kbd_new_state[2];		
-		 jogdial_control(0);
-
+		jogdial_control(0);
     } else {
         // override keys
         physw_status[0] = (kbd_new_state[0] | KEYS_MASK0) & (~KEYS_MASK0 | kbd_mod_state[0]); 
@@ -178,9 +199,9 @@ void my_kbd_read_keys() {
             get_jogdial_direction();
         }
         else if (jogdial_stopped && state_kbd_script_run)
-		 jogdial_control(0);
+            jogdial_control(0);
     }
-	
+
     remote_key = (physw_status[2] & USB_MASK)==USB_MASK; 
     if (remote_key)
         remote_count += 1;
@@ -191,8 +212,8 @@ void my_kbd_read_keys() {
 	
     if (conf.remote_enable) {
         physw_status[2] = physw_status[2] & ~(SD_READONLY_FLAG | USB_MASK);   // override USB and SD-Card Readonly Bits
-    }																		  //SX220 DONE.
-   
+    }                                                                         //SX220 DONE.
+
     physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;   // override SD-Card Readonly Bit
 }
 
@@ -385,7 +406,7 @@ void wait_until_remote_button_is_released(void) {
 
     asm volatile ("STMFD SP!, {R0-R11,LR}\n");   // store R0-R11 and LR in stack
 
-    debug_led(1);
+//    debug_led(1);
     tick = get_tick_count();
     tick2 = tick;
     static long usb_physw[3];
@@ -414,8 +435,8 @@ void wait_until_remote_button_is_released(void) {
                             if(!prev_usb_power) {
                                 tick2 = get_tick_count();
                                 prev_usb_power=cur_usb_power;
-                            } else {
-                                if((int)get_tick_count()-tick2>1000) {debug_led(0);}
+//                            } else {
+//                                if((int)get_tick_count()-tick2>1000) {debug_led(0);}
                             }
                         } else {
                             if(prev_usb_power) {
@@ -468,6 +489,6 @@ void wait_until_remote_button_is_released(void) {
         }
     }
 
-    debug_led(0);
+    // debug_led(0);
     asm volatile ("LDMFD SP!, {R0-R11,LR}\n");   // restore R0-R11 and LR from stack
 }

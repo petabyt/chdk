@@ -20,60 +20,76 @@
 
 //-------------------------------------------------------------------
 
-const char *script_source_str=NULL;     // ptr to content of script
-char cfg_name[100] = "\0";              // buffer to make string "DATAPATH/scriptname.cfg"
-char cfg_set_name[100] = "\0";          // buffer to make string "DATAPATH/scriptname_PARAMSET"
+const char *script_source_str=NULL; // ptr to content of script
+char cfg_name[100] = "\0";          // buffer to make string "DATAPATH/scriptname.cfg"
+char cfg_set_name[100] = "\0";      // buffer to make string "DATAPATH/scriptname_PARAMSET"
 
-static const char *ubasic_script_default =
-#if 0
-    "@title Default script\n"
-    "@param a Shoot count\n"
-    "@default a 2\n"
-    "@param b Step\n"
-    "@default b 3\n"
-
-    "sleep 1000\n"
-
-    "if a<1 then let a=2\n"
-    "if b<1 then let b=3\n"
-
-    "for s=1 to a\n"
-      "shoot\n"
-      "for n=1 to b\n"
-        "click \"right\"\n"
-      "next n\n"
-    "next s\n"
-    "shoot\n"
-
-    "for n=1 to a*b\n"
-      "click \"left\"\n"
-    "next n\n"
-
-    "end\n";
-#else
+static const char *lua_script_default =
+    "--[[\n"
     "@title Default Script\n"
-    "@param a Times to Repeat\n"
-    "@default a 5\n"
-    "@param b Display Delay\n"
-    "@default b 3\n"
-
-    "if a<1 then let a=1\n"
-    "if b<1 then let b=1\n"
-
-    "for n=1 to a\n"
-        "if n>1 then print \"*****\"\n"
-        "print \"This is a default script.\"\n"
-        "sleep 1000\n"
-        "print \"Scripts run when shutter\"\n"
-        "sleep 1000\n"
-        "print \"is pressed in ALT mode.\"\n"
-        "sleep 1000\n"
-        "print \"Press shutter to exit.\"\n"
-        "sleep b*1000\n"
-    "next n\n"
-
+    "]]\n"
+    "chdk_def_lang=2\n"
+    "langs     = {}\n"
+    "langs[1]  = {[\"name\"]=\"ENGLISH\",  [\"font_cp\"]=0,  [\"hint\"]=\"CHDK language changed to english\"}\n"
+    "langs[2]  = {[\"name\"]=\"GERMAN\",   [\"font_cp\"]=2,  [\"hint\"]=\"CHDK Sprache auf deutsch geäert\"}\n"
+    "langs[13] = {[\"name\"]=\"RUSSIAN\",  [\"font_cp\"]=1,  [\"hint\"]=\"CHDK language changed to russian\"}\n"
+    
+    "function get_cam_language()\n"
+        "local l\n"
+        "if get_propset()==1 then\n"
+            "l=get_prop(196)/256\n"
+            "if l>7 then l=l+1 end\n"
+            "if l>22 then l=l+1 end\n"
+        "else\n"
+            "l=get_prop(61)/256\n"
+        "end\n"
+        "return l+1\n"
+    "end\n"
+    
+    "function get_chdk_language()\n"
+        "local l=0\n"
+        "local lf=get_config_value(64)\n"
+        "if lf==\"\" then\n"
+            "l=chdk_def_lang\n"
+        "else\n"
+            "for i,v in ipairs(langs) do\n"
+                "if string.find(lf, v[\"name\"]..\".LNG\")~=nil then\n"
+                    "l=i\n"
+                    "break\n"
+                "end\n"
+            "end\n"
+        "end\n"
+        "return l\n"
+    "end\n"
+    
+    "function file_exists(name)\n"
+         "local f=io.open(name,\"r\")\n"
+         "if f~=nil then io.close(f) return true else return false end\n"
+    "end\n"
+    
+    
+    "chdk_lang=get_chdk_language()\n"
+    "cam_lang=get_cam_language()\n"
+    
+    "if cam_lang~=chdk_lang then\n"
+        "if chdk_lang==0 or cam_lang==chdk_def_lang then\n"
+            "set_config_value(64,\"\")\n"
+            "set_config_value(65,langs[chdk_def_lang].font_cp)\n"
+            "print(langs[chdk_def_lang].hint)\n"
+        "elseif langs[cam_lang]~=nil then\n"
+            "if file_exists(\"A/CHDK/LANG/\"..langs[cam_lang].name..\".LNG\") then\n"
+                "set_config_value(64,\"A/CHDK/LANG/\"..langs[cam_lang].name..\".LNG\")\n"
+                "set_config_value(65,langs[cam_lang].font_cp)\n"
+                "print(langs[cam_lang].hint)\n"
+            "else\n"
+                "print(langs[cam_lang].name..\".LNG is missing\")\n"
+            "end\n"
+        "else\n"
+            "print(\"unknown language id (\"..cam_lang..\")\")\n"
+        "end\n"
+    "else\n"
+        "print(\";)\")\n"
     "end\n";
-#endif
 
 // ================ SCRIPT PARAMETERS ==========
 char script_title[36];                                      // Title of current script
@@ -400,10 +416,10 @@ void script_load(const char *fn, int saved_params) {
     
 //    save_params_values(0);
 
-    if(script_source_str && script_source_str != ubasic_script_default)
+    if(script_source_str && script_source_str != lua_script_default)
         free((void *)script_source_str);
 
-    script_source_str = ubasic_script_default;
+    script_source_str = lua_script_default;
     update_vars = (strcmp(fn, conf.script_file) != 0) || !saved_params || (saved_params == 2);  // update if new file
 
     if (!fn[0]) { // load internal script
@@ -437,7 +453,7 @@ void script_load(const char *fn, int saved_params) {
         int rcnt;
         char *buf;
 
-        buf = malloc(st.st_size+1);
+        buf = malloc(st.st_size+2);
         if(!buf) {
             fclose(fd);
             return;
@@ -447,7 +463,8 @@ void script_load(const char *fn, int saved_params) {
         // or compile for lua
         rcnt = fread(buf, 1, st.st_size,fd);
         if (rcnt > 0){
-            buf[rcnt] = 0;
+            buf[rcnt] = '\n';
+            buf[rcnt+1] = 0;
             script_source_str = buf;
             strcpy(conf.script_file, fn);
         }
@@ -531,10 +548,10 @@ static int is_lua( const char* script_file)
   
   s = script_file;
   len = strlen( s );
-  return len >= 4 && ( s[len-1] == 'a' || s[len-1] == 'A' )
+  return !s[0] || (len >= 4 && ( s[len-1] == 'a' || s[len-1] == 'A' )
     && ( s[len-2] == 'u' || s[len-2] == 'U' )
     && ( s[len-3] == 'l' || s[len-3] == 'L' )
-    && s[len-4] == '.';
+    && s[len-4] == '.');
 }
 
 void script_wait_and_end(void)

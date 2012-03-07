@@ -213,7 +213,7 @@ void set_key_press(int nSet)
 // ------ add by Masuji SUTO (end) --------------
 
 /*------------------- Alex scriptless remote additions start --------------------*/
-static int remoteHalfShutter=0, remoteFullShutter=0, remoteShooting=0, remoteClickTimer=0;
+static int remoteHalfShutter=0, remoteFullShutter=0, remoteShooting=0, remoteClickTimer=0, remote_script_start_ready=0;
 #define REMOTE_MAX_CLICK_LENGTH	50
 /*-------------------- Alex scriptless remote additions end ---------------------*/
 
@@ -325,10 +325,13 @@ long kbd_process()
         }
 /*-------------------- Alex scriptless remote additions end ---------------------*/
 #ifdef OPT_SCRIPTING
-		// Start or stop a script if the shutter button pressed
-		// Note: this is blocked if CHDK is in the file selector. prevents problems
-		//       when the file selector is called from a script.
-        if (kbd_is_key_pressed(KEY_SHOOT_FULL) && (gui_get_mode() != GUI_MODE_FSELECT) && (gui_get_mode() != GUI_MODE_MPOPUP)) {
+        if (conf.remote_enable && !state_kbd_script_run && get_usb_power(1)) remote_script_start_ready=1;
+        // Start or stop a script if the shutter button pressed, start a script if remote pressed
+        // Note: this is blocked if CHDK is in the file selector. prevents problems 
+        //       when the file selector is called from a script. 
+        if ((kbd_is_key_pressed(KEY_SHOOT_FULL) && (gui_get_mode() != GUI_MODE_FSELECT && (gui_get_mode() != GUI_MODE_MPOPUP))) || ((!get_usb_power(1) && remote_script_start_ready))) {
+            remote_script_start_ready=0;
+            get_usb_power(0);
             key_pressed = 100;
             if (!state_kbd_script_run) {
                 script_start_gui(0);

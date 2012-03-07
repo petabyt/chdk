@@ -9,7 +9,7 @@
 
 #define CONF_EMPTY          0
 // regular char-int-short value
-#define CONF_VALUE			1
+#define CONF_VALUE          1
 #define CONF_DEF_VALUE      1
 // pointer to value
 #define CONF_VALUE_PTR      2
@@ -49,8 +49,6 @@ typedef struct {
     int raw_nr;
     int sub_batch_prefix; // output of batch subtracts
     int sub_batch_ext;
-    int sub_in_dark_value;    // values <= to this are not subtracted, i.e. the dark value of your darkframe
-    int sub_out_dark_value;    // minimum value to output from subtract, i.e. dark value of your final image
     int raw_cache;
     int dng_raw;
     int raw_timer;
@@ -84,6 +82,7 @@ typedef struct {
     int clock_halfpress;
     int space_perc_show;
     int space_mb_show;
+    int show_partition_nr;
     int space_perc_warn;
     int space_mb_warn;
     int space_warn_type;
@@ -137,7 +136,7 @@ typedef struct {
     color histo_color2; // markers/border
     color osd_color;
     color osd_color_warn;
-    color batt_icon_color;
+//    color batt_icon_color;
     color space_color;
     color menu_color;
     color menu_title_color;
@@ -188,7 +187,7 @@ typedef struct {
     int video_mode;
     int video_quality;
     int video_bitrate;
-      
+
     int tv_bracket_value;
     int av_bracket_value;
     int iso_bracket_value;
@@ -206,30 +205,39 @@ typedef struct {
     int tv_override_koef;
     int tv_enum_type;
     int av_override_value;
-    
+
     int nd_filter_state;
-    
+
     int iso_override_value;
     int iso_override_koef;
-    int zoom_override_value;
-    int zoom_override;
+//    int zoom_override_value;
+//    int zoom_override;
     int subj_dist_override_value;
     int subj_dist_override_koef;
     int clear_override;
-    int clear_zoom_override;
+//    int clear_zoom_override;
 
     int autoiso_enable;
-    int autoiso_shutter;
+//  int autoiso_shutter;
+    int autoiso_shutter_enum;
     int autoiso_user_factor;
     int autoiso_is_factor;
     int autoiso_max_iso_hi;
     int autoiso_max_iso_auto;
     int autoiso_min_iso;
+    int autoiso2_shutter_enum;
+    int autoiso2_max_iso_auto;
+    //AutoISO2 precalced values
+    float autoiso2_coef;        // C2=( iso2_max_auto_real - iso_max_auto_real) / ( tv_num[autoiso_shutter] - tv_numerator[autoiso2_shutter])
+    int autoiso_max_iso_hi_real;    // converted from GUI (possible marketing) to real iso value
+    int autoiso_max_iso_auto_real;
+    int autoiso_min_iso_real;
+    int autoiso2_max_iso_auto_real;
+    int autoiso_min_shutter_numerator;  // converted from enum to numerator
+    int autoiso2_min_shutter_numerator;
 
-    int recalc_exposure;
-    int tv_exposure_order;
-    int av_exposure_order;
-    int iso_exposure_order;
+    int overexp_threshold;
+    int overexp_ev_enum;    // 0-off, 1=-1/3, ..
 
     int dof_subj_dist_as_near_limit;
     int dof_use_exif_subj_dist;
@@ -238,7 +246,7 @@ typedef struct {
     int dof_far_limit_in_misc;
     int dof_hyperfocal_in_misc;
     int dof_depth_in_misc;
-    int dof_dist_from_lens;
+//    int dof_dist_from_lens;
 
     int values_show_in_review;
     int values_show_zoom;
@@ -270,7 +278,7 @@ typedef struct {
     int mute_on_zoom;
     int bad_pixel_removal;
     int video_af_key;
-    
+
     char curve_file[CONF_STR_LEN];
     int curve_enable;
 
@@ -308,6 +316,41 @@ typedef struct {
 	// Enable USB icon
     int usb_info_enable; 
     int ext_video_time;
+#ifdef CAM_HAS_GPS
+    int gps_record;
+    int gps_navi_show;
+    int gps_navi_hide;
+    int gps_kompass_show;
+    int gps_kompass_hide;
+    int gps_coordinates_show;
+    int gps_height_show;
+    int gps_waypoint_save;
+    int gps_track_time;
+    int gps_wait_for_signal;
+    int gps_kompass_time;
+    int gps_navi_time;
+    int gps_wait_for_signal_time;
+    int gps_kompass_smooth;
+    int gps_batt;
+    int gps_countdown;
+    int gps_2D_3D_fix;
+    int gps_countdown_blink;
+    int gps_rec_play_set;
+    int gps_play_dark_set;
+    int gps_rec_play_time;
+    int gps_play_dark_time;
+    int gps_rec_play_set_1;
+    int gps_play_dark_set_1;
+    int gps_rec_play_time_1;
+    int gps_play_dark_time_1;
+    int gps_show_symbol;
+
+    int gps_batt_warn;
+    int gps_track_symbol;
+    int gps_test_timezone;
+    int gps_beep_warn;
+    int gps_on_off;
+#endif
 } Conf;
 
 extern Conf conf;

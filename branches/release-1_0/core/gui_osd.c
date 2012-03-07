@@ -14,6 +14,9 @@
 #include "gui_space.h"
 #include "gui_grid.h"
 #include "gui_osd.h"
+#ifdef OPT_EDGEOVERLAY
+    #include "edgeoverlay.h"
+#endif
 
 //-------------------------------------------------------------------
 typedef struct {
@@ -28,8 +31,8 @@ static OSD_elem osd[]={
     {LANG_OSD_LAYOUT_EDITOR_STATES,     &conf.mode_state_pos,   {12*FONT_WIDTH, 4*FONT_HEIGHT}   },
     {LANG_OSD_LAYOUT_EDITOR_RAW,     &conf.mode_raw_pos,   {7*FONT_WIDTH, FONT_HEIGHT}   },
     {LANG_OSD_LAYOUT_EDITOR_MISC,       &conf.values_pos,       {9*FONT_WIDTH, 9*FONT_HEIGHT}   },
-    {LANG_OSD_LAYOUT_EDITOR_BAT_ICON,   &conf.batt_icon_pos,    {28, 12}                        },
-    {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON,   &conf.space_icon_pos,    {23, 15}                        },
+    {LANG_OSD_LAYOUT_EDITOR_BAT_ICON,   &conf.batt_icon_pos,    {31, 12}                        },
+    {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON,   &conf.space_icon_pos,    {31, 19}                        },
     {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON,   &conf.space_ver_pos,    {3, 50}                        },
     {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON,   &conf.space_hor_pos,    {50, 3}                        },
     {LANG_OSD_LAYOUT_EDITOR_BAT_TEXT,   &conf.batt_txt_pos,     {5*FONT_WIDTH, FONT_HEIGHT}     },
@@ -79,7 +82,6 @@ static unsigned char *cur_buf_top, *cur_buf_bot;
 #else
 static unsigned char *cur_buf;
 #endif
-static int cur_buf_size;
 static int timer = 0;
 static unsigned char *buf = NULL;
 
@@ -364,6 +366,7 @@ static void gui_osd_draw_zebra_osd() {
                 }
                 gui_batt_draw_osd();
                 gui_space_draw_osd();
+                gui_usb_draw_osd();
                 if (conf.show_clock) {
                     gui_osd_draw_clock(0,0,0);
                 }
@@ -1155,6 +1158,22 @@ void gui_osd_draw_state() {
 #endif
     if (conf.override_disable == 1) gui_print_osd_state_string_chr("NO ", "OVERRIDES");
     if (conf.flash_manual_override) gui_print_osd_state_string_chr("Flash:", "Manual Override");
+#ifdef OPT_EDGEOVERLAY
+    // edgeoverlay state
+    if (conf.edge_overlay_enable || gui_mode==GUI_MODE_OSD) {
+        if (edge_state_draw==0) gui_print_osd_state_string_chr("EDGE:", "LIVE");
+        else if (edge_state_draw==1) gui_print_osd_state_string_chr("EDGE:", ((conf.edge_overlay_pano==0)?"FROZEN":"PANO"));
+    }
+#endif
+#ifdef CAM_QUALITY_OVERRIDE
+    // displaying the overriding picture quality if active
+    if (!(conf.fast_image_quality==3) || gui_mode==GUI_MODE_OSD) {
+        if (conf.fast_image_quality==0) gui_print_osd_state_string_chr("QUALI:", "super");
+        else if (conf.fast_image_quality==1) gui_print_osd_state_string_chr("QUALI:", "fine");
+        else if (conf.fast_image_quality==2) gui_print_osd_state_string_chr("QUALI:", "normal");
+    }
+#endif
+
 /*
  draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+n, get_debug(), conf.osd_color);
         n+=FONT_HEIGHT;*/

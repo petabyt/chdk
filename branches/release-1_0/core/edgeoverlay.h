@@ -8,6 +8,8 @@
 // if you change this, remember to change the mkdir in main too
 #define EDGE_SAVE_DIR "A/CHDK/EDGE"
 
+int edge_state_draw;
+
 void edge_overlay();
 void save_edge_overlay(void);
 void load_edge_overlay( const char* );

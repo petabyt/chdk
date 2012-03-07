@@ -1,4 +1,3 @@
-VER=CHDK
 
 MEMISOSIZE="(&_end-&_start)"
 # override this on the command line or in buildconf to use PRIMARY.BIN from a different tree
@@ -10,6 +9,7 @@ include $(topdir)buildconf.inc
 # you may also set your default camera here
 -include $(topdir)localbuildconf.inc
 include $(topdir)version.inc
+-include $(topdir)revision.inc
 
 ifdef PLATFORM
   ifdef PLATFORMSUB
@@ -132,11 +132,13 @@ endif
 CTHUMB=-mthumb
 CFLAGS+=-mthumb-interwork
 CFLAGS+=-I$(topdir)include -I$(topdir)platform/$(PLATFORM) $(PLFLAGS) $(CPPFLAGS)
-CFLAGS+=-DPLATFORM=\"$(PLATFORM)\" -DPLATFORMSUB=\"$(PLATFORMSUB)\" -DPLATFORMID=$(PLATFORMID) -DHDK_VERSION=\"$(VER)\" -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -DCAMERA_$(PLATFORM)=1
+CFLAGS+=-DPLATFORM=\"$(PLATFORM)\" -DPLATFORMSUB=\"$(PLATFORMSUB)\" -DPLATFORMID=$(PLATFORMID) -DHDK_VERSION=\"$(VER)\" -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -DBUILD_SVNREV=\"$(BUILD_SVNREV)\" -DCAMERA_$(PLATFORM)=1
 CFLAGS+=-Wall -Wno-unused -Wno-format
 LDFLAGS=-L$(topdir)lib/math -L$(topdir)lib/font
 LDFLAGS+=-L$(topdir)lib/libc -L$(topdir)lib/ubasic
 LDFLAGS+=-L$(topdir)platform/$(PLATFORM) -L$(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)
+
+CFLAGS+=-DVER_$(VER)
 
 ifdef OPT_DEBUGGING
 CFLAGS+=-DOPT_DEBUGGING
@@ -277,6 +279,7 @@ $(topdir)makefile.inc: ;
 $(topdir)buildconf.inc: ;
 $(topdir)localbuildconf.inc: ;
 $(topdir)version.inc: ;
+$(topdir)revision.inc: ;
 $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc: ;
 $(topdir)platform/fi2.inc: ;
 *.c: ;

@@ -26,6 +26,9 @@ void histogram_restart();
 extern void histogram_set_mode(unsigned int mode);
 extern void histogram_set_main(unsigned int main);
 
+void live_histogram_process_quick();
+void live_histogram_end_process();
+int live_histogram_get_range(int from, int to);
 extern unsigned char histogram[5][HISTO_WIDTH];
 extern long exposition_thresh;
 extern long under_exposed;

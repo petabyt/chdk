@@ -652,6 +652,7 @@ void edge_overlay()
     {
     case EDGE_LIVE:
     {
+        edge_state_draw=0;
         // In this state we assume no edge overlay in memory,
         // but we are ready to create one if the user presses wishes so.
 
@@ -688,6 +689,7 @@ void edge_overlay()
     }
     case EDGE_FROZEN:
     {
+        edge_state_draw=1;
         // We have a stored edge overlay in memory and we display
         // it on screen in 'frozen' mode.
 
@@ -709,7 +711,7 @@ void edge_overlay()
             // We try to detect button presses during the lengthy
             // calculations.
             bFullPress |= draw_edge_overlay();
-            draw_string(0, 0, "Frozen", conf.osd_color);
+            //draw_string(0, 0, "Frozen", conf.osd_color);
         }
 
         // In event of a FullPress, we either capture a new

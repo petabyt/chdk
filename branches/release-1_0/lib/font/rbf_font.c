@@ -432,7 +432,7 @@ int rbf_draw_menu_header(int x, int y, int len, char symbol, const char *str, co
     l = rbf_str_clipped_width(str, l, len);
 
     // Calculate padding required on left and right side
-    ll = 4;
+    ll = 8;
     lr = len-l-ll; 
 
     int right = x+len-1, bottom = y+rbf_font_height()-1;
