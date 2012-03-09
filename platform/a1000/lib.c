@@ -54,3 +54,10 @@ void camera_set_led(int led, int state, int bright) {
         led_c.blink_count=255; 
         _PostLEDMessage(&led_c); 
 } 
+
+void vid_bitmap_refresh() //as used in other models
+{
+        extern int enabled_refresh_physical_screen;
+        enabled_refresh_physical_screen=1;
+        _RefreshPhysicalScreen(1);
+}

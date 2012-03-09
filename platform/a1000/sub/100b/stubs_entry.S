@@ -14,8 +14,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(ExpCtrlTool_StopContiAE               ,0xffc1fbac) //104        *** != 0xffc1fabc
-//NSTUB(Lseek                                 ,0xffc13484) //101        *** != 0xffc1354c
 //NSTUB(PT_PlaySound                          ,0xffc48c7c) //102        *** != 0xffc48fbc
 //NSTUB(SetAE_ShutterSpeed                    ,0xffe42b88) //102        *** != 0xffe3de6c
 //NSTUB(kbd_pwr_off                           ,0xffc3163c) //  2 64%    *** != 0xffc3164c
@@ -33,10 +31,10 @@ NSTUB(kbd_pwr_on                              ,0xffc315fc) //  2 82%
 DEF(physw_status                            ,0x0000f3f8) // Found @0xffc113ec
 DEF(physw_run                               ,0x00001be4) // Found @0xffc11064
 DEF(levent_table                            ,0xffeab474) // Found @0xffeab474
-//DEF(FlashParamsTable                        ,0xffec9f7c) // Found @0xffec9f7c, ** != ** stubs_min = 0xffeca0bc (0xFFECA0BC)
-//DEF(movie_status                            ,0x000050a0) // Found @0xffc47cf8, ** != ** stubs_min = 0x000058a0 (0x5868+0x38)
+DEF(FlashParamsTable                        ,0xffec9f7c) // Found @0xffec9f7c
+DEF(movie_status                            ,0x000050a0) // Found @0xffc47cf8
 DEF(canon_menu_active                       ,0x00005480) // Found @0xffc59fb8
-//DEF(canon_shoot_menu_active                 ,0x00009735) // Found @0xffd3b670, ** != ** stubs_min = 0x0000c05d (0xC05D)
+DEF(canon_shoot_menu_active                 ,0x00009735) // Found @0xffd3b670
 DEF(playrec_mode                            ,0x00005228) // Found @0xffc4ec4c
 DEF(zoom_status                             ,0x0000c0a4) // Found @0xffdfc7b0
 DEF(some_flag_for_af_scan                   ,0x000085a8) // Found @0xffd0a65c
@@ -44,9 +42,9 @@ DEF(some_flag_for_af_scan                   ,0x000085a8) // Found @0xffd0a65c
 // each entry contains 3 int value(s), the first is the zoom focus length.
 // there are 8 entries in the table - set NUM_FL to 8
 DEF(focus_len_table                         ,0xfffe297c) // Found @0xfffe297c
-//DEF(zoom_busy                               ,0x00007fdc) // Found @0xffd03034, ** != ** stubs_min = 0x0000b4a4 (0xB4A4)
-//DEF(focus_busy                              ,0x00007ee4) // Found @0xffcfebb4, ** != ** stubs_min = 0x00007ee8 (0x7EE8)
-//DEF(recreview_hold                          ,0x000059e4) // Found @0xffc65b4c, ** != ** stubs_min = 0x000094c8 (0x94C8)
+DEF(zoom_busy                               ,0x00007fdc) // Found @0xffd03034
+DEF(focus_busy                              ,0x00007ee4) // Found @0xffcfebb4
+DEF(recreview_hold                          ,0x000059e4) // Found @0xffc65b4c
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x10361000; }             // Found @0xffc2ce78
@@ -107,6 +105,7 @@ NSTUB(ExecuteEventProcedure                   ,0xffc55764) //  1
 NSTUB(ExitFromCompensationEVF                 ,0xffc15030) //104
 NSTUB(ExitTask                                ,0xffc0bb50) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xffc1fa68) //104
+NSTUB(ExpCtrlTool_StopContiAE                 ,0xffc1fbac) //104
 NSTUB(Fclose_Fut                              ,0xffc12d6c) //101
 NSTUB(Feof_Fut                                ,0xffc12f58) //  1
 NSTUB(Fflush_Fut                              ,0xffc12f94) //  1
@@ -138,6 +137,7 @@ NSTUB(IsStrobeChargeCompleted                 ,0xffc8b28c) //102
 NSTUB(LEDDrive                                ,0xffc30c9c) //103
 NSTUB(LocalTime                               ,0xffc53768) //  1
 NSTUB(LockMainPower                           ,0xffc5cdd0) //103
+NSTUB(Lseek                                   ,0xffc13484) //101
 NSTUB(MakeDirectory_Fut                       ,0xffc12c64) //  1
 NSTUB(MoveFocusLensToDistance                 ,0xffe403bc) //102
 NSTUB(MoveIrisWithAv                          ,0xffdec64c) //102

@@ -58,10 +58,7 @@ void *vid_get_viewport_fb()
 
 void *vid_get_viewport_fb_d()
 {
-	//FF06C580 dword_FF06C580  DCD 0x3C70
-	//FF06D300                 STR     R12, [R5,#0x58
-	return (void*)(*(int*)(0x3C70+0x58));                  
-
+	return (void*)(*(int*)(0x2c08+0x58));
 }
 
 char *camera_jpeg_count_str()

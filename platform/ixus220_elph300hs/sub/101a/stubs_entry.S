@@ -35,7 +35,7 @@ DEF(zoom_status                             ,0x0000ded8) // Found @0xffb078b8
 DEF(some_flag_for_af_scan                   ,0x000071cc) // Found @0xff989240
 DEF(zoom_busy                               ,0x00006cf4) // Found @0xff97fd74
 DEF(focus_busy                              ,0x00006b68) // Found @0xff97af60
-//DEF(recreview_hold                          ,0x00003828) // Found @0xff8a6510, ** != ** stubs_min = 0x000094c4 (0x93D4+0xF0)
+//DEF(recreview_hold                          ,0x00003828) // Found @0xff8a6510,          stubs_min = 0x00003828 (0x00003828)
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40471000; }             // Found @0xff85fd1c

@@ -39,7 +39,7 @@ void *vid_get_viewport_fb()
 
 void *vid_get_viewport_fb_d()
 {
-	return (void*)(*(int*)0x4F30); // 0x4EE8 + 0x50 
+	return (void*)(*(int*)0x4f3c); // 0x4EE8 + 0x54 
 }
 
 long vid_get_bitmap_width()
