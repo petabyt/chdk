@@ -9,7 +9,7 @@
 #define NR_OFF (1)
 static long raw_save_stage;
 
-static long *nrflag = (long*)0x9F90;
+static long *nrflag = (long*)0x8594;
 #define RAWDATA_AVAILABLE (1)
 #define RAWDATA_SAVED (2)
 
