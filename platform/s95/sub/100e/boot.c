@@ -187,17 +187,10 @@ void __attribute__((naked,noinline)) sub_FF810354_my()
 	// fix for correct power-on
 	// must also comment out function in taskcreate_Startup_my
 
-/*
-	if ((*(int*) 0xC0220128) & 1)					// look at power switch
-		*(int*)(0x25E8) = 0x200000;					// not pressed - start in play mode
+	if ((*(int*) 0xC0220128) & 1)					// look at play switch
+		*(int*)(0x25E8) = 0x200000;					// start in play mode
 	else
-		*(int*)(0x25E8) = 0x100000;					// power pressed - start in rec mode
-*/
-
-	if ((*(int*) 0xC022012C) & 1)					// look at play switch
-		*(int*)(0x25E8) = 0x100000;					// not pressed - start in rec mode
-	else
-		*(int*)(0x25E8) = 0x200000;					// power pressed - start in play mode
+		*(int*)(0x25E8) = 0x100000;					// start in rec mode
 
 	asm volatile (
 "		LDR	R0, =0xFF8103CC \n"

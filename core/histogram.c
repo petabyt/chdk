@@ -11,6 +11,8 @@
 
 //-------------------------------------------------------------------
 
+#define HISTOGRAM_IDLE_STAGE        6
+
 // Indexes into the various arrays for calculating the histogram channels
 #define HISTO_R                     0       // Red channel
 #define HISTO_G                     1       // Green channel
@@ -62,6 +64,22 @@ static int clip(int v)
 static float identity(float x)      { return x; }
 static float logarithmic(float x)   { return log(x); }
 
+static void histogram_alloc()
+{
+    // Allocate arrays to store counts during processing
+    // Each possible value is counted so the array sizes are set to 256, then these are summed to
+    // convert down to desired width of 128.
+    // This is faster than scaling each value as it is counted
+    if (histogram_proc[0] == 0)
+    {
+        histogram_proc[0] = malloc(5 * 256 * sizeof(unsigned int));
+        histogram_proc[1] = histogram_proc[0] + 256;
+        histogram_proc[2] = histogram_proc[1] + 256;
+        histogram_proc[3] = histogram_proc[2] + 256;
+        histogram_proc[4] = histogram_proc[3] + 256;
+    }
+}
+
 void histogram_process()
 {
     static unsigned char *img;
@@ -91,18 +109,7 @@ void histogram_process()
     else
         histo_main = HISTO_RGB;
 
-    // Allocate arrays to store counts during processing
-    // Each possible value is counted so the array sizes are set to 256, then these are summed to
-    // convert down to desired width of 128.
-    // This is faster than scaling each value as it is counted
-    if (histogram_proc[0] == 0)
-    {
-        histogram_proc[0] = malloc(5 * 256 * sizeof(unsigned int));
-        histogram_proc[1] = histogram_proc[0] + 256;
-        histogram_proc[2] = histogram_proc[1] + 256;
-        histogram_proc[3] = histogram_proc[2] + 256;
-        histogram_proc[4] = histogram_proc[3] + 256;
-    }
+    histogram_alloc();
 
     // This function is called in the main spytask loop roughly every 20msec
     // To avoid hogging all the CPU it performs it's work in stages controlled by histogram-stage
@@ -393,4 +400,85 @@ void gui_osd_draw_histo() {
             draw_filled_rect(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, conf.histo_pos.x+8*FONT_WIDTH, conf.histo_pos.y-1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT));
         }
     }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// @tsv
+// Module below calculate live histogram in same way as OSD histogram
+// Difference from shot_histogram family is that live_histogram give answer before shot
+// Regular histogram_process cannot be used, because raw non-summarized 0.255 values required
+// This module is used in AutoISO2 mechanizm.
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+static int* live_histogram_proc;		// Buffer int[256] for histogram
+static int live_histogram_overall;		// Total num of pixels in histogram
+static int histogram_stored_stage = -1;		// Stored value of histogram_stage (-1 = not stored yet)
+
+void live_histogram_process_quick()
+{
+    static unsigned char *img;
+    int i, y, x, stage,viewport_size;
+
+    // Small hack: save space reuse common histogram buffer
+    // It should be big enough for int[256]. Currently it is int [5*128]
+    histogram_alloc();
+    live_histogram_proc = (int*)histogram_proc[0];
+
+    // Temporary turn off histogram to prevent data from destroying
+    if ( histogram_stored_stage >=0 )
+	    histogram_stored_stage = histogram_stage;
+    histogram_stage=HISTOGRAM_IDLE_STAGE;
+
+    img=((mode_get()&MODE_MASK) == MODE_PLAY)?vid_get_viewport_fb_d():((kbd_is_key_pressed(KEY_SHOOT_HALF))?vid_get_viewport_fb():vid_get_viewport_live_fb());
+    if (img==NULL){
+       img = vid_get_viewport_fb();
+    }
+
+    img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
+//    viewport_size = vid_get_viewport_height() * vid_get_viewport_buffer_width();
+    viewport_size = vid_get_viewport_height() * vid_get_viewport_byte_width() * vid_get_viewport_yscale();
+
+    memset( live_histogram_proc, 0, sizeof(int)*256);
+
+    x = 0;	// count how many blocks we have done on the current row (to skip unused buffer space at end of each row)
+
+    viewport_size = (viewport_size<<1) + viewport_size + 1;	// quick *3 and adjust to starting from idx 1
+
+    for (i=1; i<viewport_size; i+=HISTO_STEP_SIZE*6) {
+       y = img[i];
+       ++live_histogram_proc[y];
+
+       // Handle case where viewport memory buffer is wider than the actual buffer.
+       x += HISTO_STEP_SIZE * 2;	// viewport width is measured in blocks of three bytes each even though the data is stored in six byte chunks !
+       if (x == vid_get_viewport_width()) {
+           i += vid_get_viewport_row_offset();
+           x = 0;
+       }
+    }
+
+    live_histogram_overall=0;
+    for (i=0; i<256; ++i) 
+       live_histogram_overall += live_histogram_proc[i];
+    live_histogram_overall /= 100;
+}
+
+void live_histogram_end_process()
+{
+    // restart historgram after finish
+    histogram_stage= (histogram_stored_stage==HISTOGRAM_IDLE_STAGE) ? HISTOGRAM_IDLE_STAGE : 0;
+    histogram_stored_stage = -1;
+}
+
+int live_histogram_get_range(int from, int to)
+{
+  int rv;
+
+  if (from<0) from=0;
+  if (to>255) to=255;
+
+  rv=0;
+  for(;from<=to;from++)
+      rv+= live_histogram_proc[from];
+ 
+  return rv / live_histogram_overall;
 }

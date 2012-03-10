@@ -7,6 +7,9 @@
 #include "gui_draw.h"
 #include "gui_lang.h"
 #include "gui_osd.h"
+#ifdef OPT_EDGEOVERLAY
+    #include "edgeoverlay.h"
+#endif
 
 //-------------------------------------------------------------------
 static char osd_buf[64];
@@ -273,10 +276,25 @@ void gui_osd_draw_state()
 #endif
     if (conf.override_disable == 1) gui_print_osd_state_string_chr("NO ", "OVERRIDES");
     if (conf.flash_manual_override) gui_print_osd_state_string_chr("Flash:", "Manual Override");
-    /*
-    draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+n, get_debug(), conf.osd_color);
-    n+=FONT_HEIGHT;
-    */
+#ifdef OPT_EDGEOVERLAY
+    // edgeoverlay state
+    if (conf.edge_overlay_enable || gui_mode==GUI_MODE_OSD) {
+        if (edge_state_draw==0) gui_print_osd_state_string_chr("EDGE:", "LIVE");
+        else if (edge_state_draw==1) gui_print_osd_state_string_chr("EDGE:", ((conf.edge_overlay_pano==0)?"FROZEN":"PANO"));
+    }
+#endif
+#ifdef CAM_QUALITY_OVERRIDE
+    // displaying the overriding picture quality if active
+    if (!(conf.fast_image_quality==3) || gui_mode==GUI_MODE_OSD) {
+        if (conf.fast_image_quality==0) gui_print_osd_state_string_chr("QUALI:", "super");
+        else if (conf.fast_image_quality==1) gui_print_osd_state_string_chr("QUALI:", "fine");
+        else if (conf.fast_image_quality==2) gui_print_osd_state_string_chr("QUALI:", "normal");
+    }
+#endif
+
+/*
+ draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+n, get_debug(), conf.osd_color);
+        n+=FONT_HEIGHT;*/
 }
 
 //-------------------------------------------------------------------

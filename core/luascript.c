@@ -252,6 +252,8 @@ void lua_run_restore()
 	}
 }
 
+DOF_TYPE dof_values;
+
 // get key ID of key name at arg, throw error if invalid
 static int lua_get_key_arg( lua_State * L, int narg )
 {
@@ -404,15 +406,22 @@ static int luaCB_get_disk_size( lua_State* L )
   return 1;
 }
 
-static int luaCB_get_dof( lua_State* L )
+static int luaCB_get_dofinfo( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_depth_of_field() );
-  return 1;
-}
-
-static int luaCB_get_far_limit( lua_State* L )
-{
-  lua_pushnumber( L, shooting_get_far_limit_of_acceptable_sharpness() );
+  shooting_update_dof_values();
+  lua_createtable(L, 0, 12);
+  SET_BOOL_FIELD("hyp_valid", (dof_values.hyperfocal_valid!=0));
+  SET_BOOL_FIELD("focus_valid", (dof_values.distance_valid!=0));
+  SET_INT_FIELD("aperture", dof_values.aperture_value);
+  SET_INT_FIELD("coc", circle_of_confusion);
+  SET_INT_FIELD("focal_length", dof_values.focal_length);
+  SET_INT_FIELD("eff_focal_length", get_effective_focal_length(lens_get_zoom_point()));
+  SET_INT_FIELD("focus", dof_values.subject_distance);
+  SET_INT_FIELD("near", dof_values.near_limit);
+  SET_INT_FIELD("far", dof_values.far_limit);
+  SET_INT_FIELD("hyp_dist", dof_values.hyperfocal_distance);
+  SET_INT_FIELD("dof", dof_values.depth_of_field);
+  SET_INT_FIELD("min_stack_dist", dof_values.min_stack_distance);
   return 1;
 }
 
@@ -425,12 +434,6 @@ static int luaCB_get_free_disk_space( lua_State* L )
 static int luaCB_get_focus( lua_State* L )
 {
   lua_pushnumber( L, shooting_get_subject_distance() );
-  return 1;
-}
-
-static int luaCB_get_hyp_dist( lua_State* L )
-{
-  lua_pushnumber( L, shooting_get_hyperfocal_distance() );
   return 1;
 }
 
@@ -455,12 +458,6 @@ static int luaCB_get_iso_real( lua_State* L )
 static int luaCB_get_jpg_count( lua_State* L )
 {
   lua_pushnumber( L, GetJpgCount() );
-  return 1;
-}
-
-static int luaCB_get_near_limit( lua_State* L )
-{
-  lua_pushnumber( L, shooting_get_near_limit_of_acceptable_sharpness() );
   return 1;
 }
 
@@ -1419,11 +1416,12 @@ static void set_number_field(lua_State* L, const char *key, int val)
 
 static int luaCB_get_buildinfo( lua_State* L )
 {
-  lua_createtable(L, 0, 8);
+  lua_createtable(L, 0, 9);
   set_string_field( L,"platform", PLATFORM );
   set_string_field( L,"platsub", PLATFORMSUB );
   set_string_field( L,"version", HDK_VERSION );
   set_string_field( L,"build_number", BUILD_NUMBER );
+  set_string_field( L,"build_revision", BUILD_SVNREV );
   set_string_field( L,"build_date", __DATE__ );
   set_string_field( L,"build_time", __TIME__ );
 #ifndef CAM_DRYOS
@@ -2266,16 +2264,13 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_bv96)
     FUNC(get_day_seconds)
     FUNC(get_disk_size)
-  FUNC(get_dof)
-  FUNC(get_far_limit)
+    FUNC(get_dofinfo)
     FUNC(get_free_disk_space)
     FUNC(get_focus)
-    FUNC(get_hyp_dist)
     FUNC(get_iso_market)
     FUNC(get_iso_mode)
     FUNC(get_iso_real)
     FUNC(get_jpg_count)
-    FUNC(get_near_limit)
     FUNC(get_prop)
     FUNC(get_prop_str)
     FUNC(get_raw_count)

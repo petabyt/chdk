@@ -7,4 +7,8 @@
 extern void histogram_process();
 extern void gui_osd_draw_histo();
 
+void live_histogram_process_quick();
+void live_histogram_end_process();
+int live_histogram_get_range(int from, int to);
+
 #endif

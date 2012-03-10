@@ -89,9 +89,7 @@ static void gui_space_draw_spacebar_vertical() {
 }
 
 static void gui_space_draw_icon() {
-    coord x;
     register coord xx, yy;
-    int i;
 
     xx = conf.space_icon_pos.x;
     yy = conf.space_icon_pos.y;
@@ -100,57 +98,86 @@ static void gui_space_draw_icon() {
 
     draw_get_icon_colors();
 
-    color cl1 = icon_green[1];
-    color cl2 = icon_green[0];
+    color cl1 = icon_green[0];
+    color cl2 = icon_green[1];
     if (((conf.space_warn_type == 0) && (perc <= conf.space_perc_warn)) ||
         ((conf.space_warn_type == 1) && (GetFreeCardSpaceKb() <= conf.space_mb_warn*1024)))
     {
-        cl1 = icon_red[1];
-        cl2 = icon_red[0];
+    cl1 = icon_red[0];
+    cl2 = icon_red[1];
     } 
   
     //icon
     draw_hline(xx,    yy,    30,  icon_grey[2]);
     draw_vline(xx,    yy,    12,  icon_grey[2]);
-    draw_vline(xx+31, yy,    18,  icon_grey[0]);
-    draw_line(xx+1,   yy+13, xx+5, yy+17, icon_grey[0]);
-    draw_hline(xx+6,  yy+18, 24,  icon_grey[0]);
+    draw_vline(xx+31, yy,    18,  icon_grey[1]);
+    draw_line(xx+1,   yy+13, xx+5, yy+17, icon_grey[1]);
+    draw_hline(xx+6,  yy+18, 24,  icon_grey[1]);
            
-    draw_filled_rect(xx+1,  yy+1,   xx+30,   yy+13,  MAKE_COLOR(icon_grey[1], icon_grey[1]));
-    draw_filled_rect(xx+5,  yy+14,  xx+30,   yy+17,  MAKE_COLOR(icon_grey[1], icon_grey[1]));
-    draw_filled_rect(xx+3,  yy+14,  xx+6,    yy+15,  MAKE_COLOR(icon_grey[1], icon_grey[1]));
+    draw_filled_rect(xx+1,  yy+1,   xx+30,   yy+13,  MAKE_COLOR(icon_grey[0], icon_grey[0]));
+    draw_filled_rect(xx+5,  yy+14,  xx+30,   yy+17,  MAKE_COLOR(icon_grey[0], icon_grey[0]));
+    draw_filled_rect(xx+3,  yy+14,  xx+6,    yy+15,  MAKE_COLOR(icon_grey[0], icon_grey[0]));
     
     draw_filled_rect(xx+2,  yy+2,   xx+6,    yy+4,   MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
     draw_filled_rect(xx+2,  yy+6,   xx+6,    yy+7,   MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
     draw_filled_rect(xx+2,  yy+9,   xx+6,    yy+10,  MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
     draw_filled_rect(xx+2,  yy+12,  xx+6,    yy+13,  MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
-    draw_filled_rect(xx+5,  yy+15,  xx+9,    yy+16,  MAKE_COLOR(icon_yellow[0], icon_yellow[0]));   
+    draw_filled_rect(xx+5,  yy+15,  xx+9,    yy+16,  MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
     
     draw_hline(xx+8,  yy,    2, COLOR_TRANSPARENT);
-    draw_hline(xx+11, yy,    3, icon_grey[0]);
+    draw_hline(xx+11, yy,    3, COLOR_WHITE);
     draw_hline(xx+11, yy+18, 2, COLOR_TRANSPARENT);
 
     //fill icon
-    draw_rect(xx+9,         yy+4,   xx+28,   yy+13,  cl1);
-    draw_filled_rect(xx+27-(17*perc/100),      yy+5,       xx+27,     yy+12,   MAKE_COLOR(cl2, cl2));
+    draw_rect(xx+9,         yy+5,   xx+28,   yy+13,  cl1);
+    draw_filled_rect(xx+27-(17*perc/100),    yy+6,   xx+27,   yy+12,   MAKE_COLOR(cl2, cl2));
 }
 
 //-------------------------------------------------------------------
 static void gui_space_draw_percent() {
+    unsigned short offset = 0;
+
     space_color();
-    sprintf(osd_buf, "%3d%%", perc);
-    osd_buf[5]=0;
+#if CAM_MULTIPART
+    unsigned short partition_number = get_active_partition();
+    if((conf.show_partition_nr) && (get_part_count() > 1)) {
+        sprintf(osd_buf, "%1d:\0", partition_number);
+        offset=2;
+    }
+    if(is_partition_changed())
+    {
+        sprintf(osd_buf+offset, "???\0");
+    }
+    else
+#endif
+    {
+        sprintf(osd_buf+offset, "%3d%%\0", perc);
+    }
     draw_string(conf.space_txt_pos.x, conf.space_txt_pos.y, osd_buf, cl);
 }
 
 //-------------------------------------------------------------------
 static void gui_space_draw_mb() {
+    unsigned short offset = 0;
+    unsigned int freemb = GetFreeCardSpaceKb()/1024;
+
     space_color();
-    unsigned int freemb=GetFreeCardSpaceKb()/1024;
-    if (freemb < 10000) sprintf(osd_buf, "%4dM",freemb);
-    else sprintf(osd_buf, "%4dG",freemb/1024);   // if 10 GiB or more free, print in GiB instead of MiB
-    osd_buf[5]=0;
-    draw_string(conf.space_txt_pos.x, conf.space_txt_pos.y, osd_buf, cl);
+#if CAM_MULTIPART
+    unsigned short partition_number = get_active_partition();
+    if((conf.show_partition_nr) && (get_part_count() > 1)) {
+        sprintf(osd_buf, "%1d:\0", partition_number);
+        offset=2;
+    }
+    if(is_partition_changed())  {
+        sprintf(osd_buf+offset, "???\0");
+    }
+    else
+#endif
+    {
+        if (freemb < 10000) sprintf(osd_buf+offset, "%4d%M\0",freemb);
+        else sprintf(osd_buf+offset, "%4d%G\0",freemb/1024);   // if 10 GiB or more free, print in GiB instead of MiB
+        draw_string(conf.space_txt_pos.x, conf.space_txt_pos.y, osd_buf, cl);
+    }
 }
 
 //-------------------------------------------------------------------

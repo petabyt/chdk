@@ -2,7 +2,7 @@
 #define SCRIPT_H
 
 //-------------------------------------------------------------------
-#define SCRIPT_DEFAULT_FILENAME     "A/SCRIPT.BAS"
+#define SCRIPT_DEFAULT_FILENAME     "A/SCRIPT.LUA"
 #define SCRIPT_NUM_PARAMS           26
 #define SCRIPT_DATA_PATH            "A/CHDK/DATA/"
 

@@ -115,6 +115,9 @@ volatile int chdk_started_flag=0;
 
 static int raw_need_postprocess;
 static volatile int spytask_can_start;
+#ifdef CAM_HAS_GPS
+    extern void wegpunkt();
+#endif
 
 void core_hook_task_create(void *tcb)
 {
@@ -255,15 +258,18 @@ void core_spytask()
             raw_need_postprocess = raw_savefile();
             hook_raw_save_complete();
             raw_data_available = 0;
+#ifdef CAM_HAS_GPS
+            if( (int)conf.gps_waypoint_save == 1 ) wegpunkt();
+#endif
             continue;
         }
 
         if ((state_shooting_progress != SHOOTING_PROGRESS_PROCESSING) || recreview_hold)
-		{
+        {
             if (((cnt++) & 3) == 0)
                 gui_redraw();
-		}
-		
+        }
+
         if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
         {
             if (conf.show_histo)

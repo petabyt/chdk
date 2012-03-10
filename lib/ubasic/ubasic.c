@@ -568,6 +568,10 @@ factor(void)
     accept(TOKENIZER_GET_FOCAL_LENGTH);
     r = get_focal_length(lens_get_zoom_point());
     break;
+  case TOKENIZER_GET_MIN_STACK_DIST:
+    accept(TOKENIZER_GET_MIN_STACK_DIST);
+    r = shooting_get_min_stack_distance();
+    break;
   case TOKENIZER_GET_CONFIG_VALUE:
     accept(TOKENIZER_GET_CONFIG_VALUE);
     int var1 = expr();
@@ -868,7 +872,7 @@ if_statement(void)
       DEBUG_PRINTF("if_statement: result false\n");
 
       else_cntr=endif_cntr=0; // number of else/endif possible in current nesting
-      f_nt=f_sl=0; // f_nt nested then ?, f_fs flag single line
+      f_nt=f_sl=0; // f_nt flag for additional next token, f_fs flag single line
 
       while(((tokenizer_token() != TOKENIZER_ELSE &&  tokenizer_token() != TOKENIZER_ENDIF)
            || else_cntr || endif_cntr) && tokenizer_token() != TOKENIZER_ENDOFINPUT){

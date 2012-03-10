@@ -31,9 +31,10 @@
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
+    #undef  CAM_HAS_MANUAL_FOCUS
+    #undef  CAM_HAS_USER_TV_MODES
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_SD_OVERRIDE
-    #undef  CAM_HAS_MANUAL_FOCUS
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #define CAM_FEATURE_FEATHER             1
     #undef  CAM_HAS_IS

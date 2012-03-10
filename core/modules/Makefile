@@ -16,7 +16,7 @@ LDLIBS= -lgcc
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(topdir)tools/link-boot.ld
 LDOPTS+=-Wl,-N,-Ttext,0x0016ee30 -r -Wl,-d
 
-OBJS=../gui_calendar.o ../gui_bench.o ../gui_read.o ../gui_debug.o ../gui_tbox.o ../gui_osd_edit.o ../dng.o ../gps.o \
+OBJS=../gui_calendar.o ../gui_bench.o ../gui_read.o ../gui_debug.o ../gui_tbox.o ../gui_osd_edit.o ../dng.o \
      ../gui_fselect.o ../nothumb.o ../gui_mpopup.o ../curves.o ../edgeoverlay.o \
      ../bitvector.o ../gui_palette.o ../gui_grid.o ../motion_detector.o ../zebra.o \
      ../games/gui_4wins.o ../games/gui_mastermind.o ../games/gui_reversi.o \
@@ -128,7 +128,7 @@ modmenu.elf: module_menu.o ../nothumb.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
-_dng.elf: ../dng.o ../gps.o $(topdir)/lib/armutil/reversebytes.o
+_dng.elf: ../dng.o $(topdir)/lib/armutil/reversebytes.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 

@@ -30,7 +30,7 @@
 #include "raw.h"
 #include "action_stack.h"
 #include "console.h"
-
+#include "gps.h"
 
 extern int fselect_sort_nothumb(const void* v1, const void* v2);
 extern short shooting_get_ev_correction1();
@@ -322,6 +322,8 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
             config_restore,
 
             dbg_printf,
+
+            gps_getData,
 }
 #endif
 

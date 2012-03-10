@@ -1,18 +1,16 @@
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
-#include "stdlib.h"
-#include "gui.h"
-#include "../../../../core/gui_draw.h"
 
 const char * const new_sa = &_end;
 
 /* Ours stuff */
 extern long wrs_kernel_bss_start;
 extern long wrs_kernel_bss_end;
-int* aHookList[128];
+/*
+long aHookList[128];
 long aHookNum=0;
-
+*/
 
 // Forward declarations
 void CreateTask_spytask();
@@ -25,7 +23,7 @@ void boot();
 //}
 
 void taskCreateHook(int *p) {
-
+/*
 	int i;
 	int found=0;
 
@@ -49,6 +47,7 @@ void taskCreateHook(int *p) {
 		}
 
 	}
+*/
 	 p-=17;
 
 //VERIFY_SD780 - MORE?
@@ -132,7 +131,7 @@ void taskCreateHook2(int *p) {
 //Uncomment if (p[0]==0xFF881534)  p[0]=(int)init_file_modules_task;
  if (p[0]==0xFF877DD0) p[0]=(int)init_file_modules_task;
 }
-
+/*
 int dumpCF90_SD7802() {
 
 #define START_ADDRESS     0xCF00
@@ -141,15 +140,15 @@ int dumpCF90_SD7802() {
 char j[32];
 int jF;
 
-	long l;
+	void* l;
 	char filen[32];
 
-	l = _Fopen_Fut("A/0xCF90a.bin","ab");
-	_Fwrite_Fut((void*)(START_ADDRESS),1,FWSIZE,l);
+	l=(void*)_Fopen_Fut("A/0xCF90a.bin","ab");
+	_Fwrite_Fut(START_ADDRESS,1,FWSIZE,l);
 	_Fflush_Fut(l);
 	_Fclose_Fut(l);
-	l = _Fopen_Fut("A/0xCF90b.bin","ab");
-	_Fwrite_Fut((void*)(START_ADDRESS2),1,FWSIZE,l);
+	l=(void*)_Fopen_Fut("A/0xCF90b.bin","ab");
+	_Fwrite_Fut(START_ADDRESS2,1,FWSIZE,l);
 	_Fflush_Fut(l);
 	_Fclose_Fut(l);
 
@@ -201,7 +200,7 @@ _SleepTask(5000);
 void CreateTask_blinker() {
         _CreateTask("Blinker", 0x1, 0x200, task_blinker, 0);
 };
-
+*/
 
 void boot() { //#fs
     long *canon_data_src = (void*)0xFFB513B0;  	//From end of first function

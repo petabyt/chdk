@@ -67,10 +67,9 @@ static struct {
 
 //SD780 is [f/3.2 is 6mm] [f/3.5 7mm] [f/4.5 11mm] [f/5   15mm] [f/5.8 18mm]
 //SD780 is 5.9-17.9mm f/3.2-5.8 (35mm film equivalent: 33-100mm)
-//SD780 is CF_EFL = (33/6)*10000=55000 or (100/18)*10000=55555.
-static const int fl_tbl[] = {6000, 7000, 11000, 15000, 18000};
+static const int fl_tbl[] = {5900,7170,8740,10550,12490,14780,17900};
 #define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
-#define CF_EFL 55278 // split the difference
+#define CF_EFL 55932
 
 const int zoom_points = NUM_FL;
 

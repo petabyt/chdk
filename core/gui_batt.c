@@ -37,7 +37,6 @@ unsigned long get_batt_perc() {
 
 //-------------------------------------------------------------------
 static void gui_batt_draw_icon () {
-    coord x;
     register coord xx, yy;
     
     xx = conf.batt_icon_pos.x;
@@ -48,22 +47,20 @@ static void gui_batt_draw_icon () {
     draw_get_icon_colors();
 
     // set bar color depending percent
-    color cl1 = (perc>50) ? icon_green[0] : (perc<=20) ? icon_red[0] : icon_yellow[0];
-    color cl2 = (perc>50) ? icon_green[1] : (perc<=20) ? icon_red[1] : icon_yellow[1];
-    color cl3 = (perc>50) ? icon_green[2] : (perc<=20) ? icon_red[2] : icon_yellow[2];
+    color cl1 = (perc>50) ? icon_green[0] :(perc<=20) ? icon_red[0] : icon_yellow[0];
+    color cl2 = (perc>50) ? icon_green[1] :(perc<=20) ? icon_red[1] : icon_yellow[1];
+    color cl3 = (perc>50) ? icon_green[2] :(perc<=20) ? icon_red[2] : icon_yellow[2];
 
     // icon
-    draw_vline(xx, yy+5, 2, icon_grey[1]);
-    draw_filled_rect(xx+1, yy+4, xx+2, yy+8, MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
-    draw_rect(xx+3, yy, xx+31, yy+12, icon_grey[1]);
-    draw_hline(xx+4, yy+1,  26, icon_grey[2]);
-    draw_hline(xx+4, yy+11, 26, icon_grey[1]);
+    draw_round_rect(xx,     yy+3,   xx+3,   yy+9,   MAKE_COLOR(icon_grey[1],   icon_grey[1]));
+    draw_rect(xx+3,         yy,     xx+31,  yy+12,  MAKE_COLOR(icon_grey[1],   icon_grey[1]));
+    draw_filled_rect(xx+1,  yy+4,   xx+2,   yy+8,   MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
+    draw_filled_rect(xx+4,  yy+6,   xx+30,  yy+11,  MAKE_COLOR(icon_grey[0],   icon_grey[0]));
+    draw_filled_rect(xx+4,  yy+1,   xx+30,  yy+5,   MAKE_COLOR(icon_grey[2],   icon_grey[2]));
     // fill icon
-    draw_rect(xx+4,           yy+2,   xx+30,  yy+10,  cl1);
-    draw_filled_rect(xx+5,    yy+6,   xx+28-(25*perc/100),  yy+9,  MAKE_COLOR(icon_grey[1], icon_grey[1]));
-    draw_filled_rect(xx+5,    yy+3,   xx+28-(25*perc/100),  yy+5,   MAKE_COLOR(icon_grey[2], icon_grey[2]));
-    draw_filled_rect(xx+29-(25*perc/100),    yy+6,     xx+29,   yy+9,  MAKE_COLOR(cl2, cl2));
-    draw_filled_rect(xx+29-(25*perc/100),    yy+3,     xx+29,   yy+5,  MAKE_COLOR(cl3, cl3));
+    draw_rect(xx+4,         yy+2,   xx+30,  yy+10,  MAKE_COLOR(cl1, cl1));
+    draw_filled_rect(xx+29-(25*perc/100),   yy+6,  xx+29,   yy+9,  MAKE_COLOR(cl2, cl2));
+    draw_filled_rect(xx+29-(25*perc/100),   yy+3,  xx+29,   yy+5,  MAKE_COLOR(cl3, cl3));
 }
 
 //-------------------------------------------------------------------

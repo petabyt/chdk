@@ -124,6 +124,7 @@ static const struct keyword_token keywords[] = {
   {"get_iso_real",            TOKENIZER_GET_ISO_REAL},
   {"get_iso",                 TOKENIZER_GET_ISO_MODE}, //FOR COMPATIBILITY
   {"get_jpg_count",           TOKENIZER_GET_JPG_COUNT},
+  {"get_min_stack_dist",      TOKENIZER_GET_MIN_STACK_DIST},
   {"get_movie_status",        TOKENIZER_GET_MOVIE_STATUS},
   {"get_mode",				        TOKENIZER_GET_MODE},  // Returns 0 in recordmode, 1 in playmode
   {"get_near_limit",          TOKENIZER_GET_NEAR_LIMIT},
@@ -359,6 +360,7 @@ tokenizer_init(const char *program)
   ptr = program;
   current_line = 1;
   current_token = get_next_token();
+  while (current_token==TOKENIZER_CR && !tokenizer_finished()) tokenizer_next();
 }
 /*---------------------------------------------------------------------------*/
 int
