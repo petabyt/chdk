@@ -19,7 +19,7 @@ typedef struct
     color edge_overlay_color;
     int edge_overlay_filter;
     int edge_overlay_zoom;    // shall zoom be set when *edg file is loaded?
-    int edge_overlay_pano;    // whether a full press changes back to live mode
+    //int edge_overlay_pano;    // whether a full press changes back to live mode
     int edge_overlay_pano_overlap;    // overlap in % in pano mode
     int edge_overlay_show;    // whether to show overlay even when no button is pressed
     int edge_overlay_play;    // whether edge overlay is switched on also for play mode
@@ -28,13 +28,13 @@ typedef struct
 EdgeConf econf;
 
 static ConfInfo conf_info[] = {
-    CONF_INFO( 1, econf.edge_overlay_color,     CONF_DEF_VALUE, cl:0, NULL),
-    CONF_INFO( 2, econf.edge_overlay_play,    CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 3, econf.edge_overlay_pano,              CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 4, econf.edge_overlay_zoom,                CONF_DEF_VALUE, i:1, NULL),
-	CONF_INFO( 5, econf.edge_overlay_filter,     CONF_DEF_VALUE, i:0, NULL),
-	CONF_INFO( 6, econf.edge_overlay_show,     CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 7, econf.edge_overlay_pano_overlap,   CONF_DEF_VALUE, i:30, NULL),
+    CONF_INFO( 1, econf.edge_overlay_color,         CONF_DEF_VALUE, cl:0, NULL),
+    CONF_INFO( 2, econf.edge_overlay_play,          CONF_DEF_VALUE, i:0, NULL),
+    //CONF_INFO( 3, econf.edge_overlay_pano,           CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO( 4, econf.edge_overlay_zoom,          CONF_DEF_VALUE, i:1, NULL),
+	CONF_INFO( 5, econf.edge_overlay_filter,        CONF_DEF_VALUE, i:0, NULL),
+	CONF_INFO( 6, econf.edge_overlay_show,          CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO( 7, econf.edge_overlay_pano_overlap,  CONF_DEF_VALUE, i:30, NULL),
 };
 
 //-------------------------------------------------------------------
@@ -604,7 +604,7 @@ static void set_offset_from_overlap()
     const int y_max = viewport_height;
     const int x_max = (viewport_width - 2);
 
-    switch(econf.edge_overlay_pano)
+    switch(conf.edge_overlay_pano)
     {
     case 0:     // pano off
         xoffset = 0;
@@ -658,7 +658,7 @@ void edge_overlay()
     int bFullPress = kbd_is_key_pressed(KEY_SHOOT_FULL);
     const int bHalfPress = kbd_is_key_pressed(KEY_SHOOT_HALF);
     const int bPlayMode = (mode_get() & MODE_MASK) == MODE_PLAY;
-    const int bPanoramaMode = (econf.edge_overlay_pano != 0);
+    const int bPanoramaMode = (conf.edge_overlay_pano != 0);
     const int bNeedHalfPress = (econf.edge_overlay_show != 1);
     const int bDisplayInPlay = (econf.edge_overlay_play == 1);
     const int bGuiModeNone = (gui_get_mode() == GUI_MODE_NONE);
@@ -686,6 +686,7 @@ void edge_overlay()
     {
     case EDGE_LIVE:
     {
+        edge_state_draw=0;
         // In this state we assume no edge overlay in memory,
         // but we are ready to create one if the user presses wishes so.
 
@@ -722,6 +723,7 @@ void edge_overlay()
     }
     case EDGE_FROZEN:
     {
+        edge_state_draw=1;
         // We have a stored edge overlay in memory and we display
         // it on screen in 'frozen' mode.
 
@@ -743,7 +745,7 @@ void edge_overlay()
             // We try to detect button presses during the lengthy
             // calculations.
             bFullPress |= draw_edge_overlay();
-            draw_string(0, 0, "Frozen", conf.osd_color);
+            //draw_string(0, 0, "Frozen", conf.osd_color);
         }
 
         // In event of a FullPress, we either capture a new
@@ -795,7 +797,7 @@ static const char* gui_edge_pano_modes[] = { "Off", "Right", "Down", "Left", "Up
 static CMenuItem edge_overlay_submenu_items[] = {
     MENU_ITEM(0x5c,LANG_MENU_EDGE_OVERLAY_ENABLE,   MENUITEM_BOOL,              &conf.edge_overlay_enable, 0 ),
     MENU_ITEM(0x5c,LANG_MENU_EDGE_FILTER,           MENUITEM_BOOL,              &econf.edge_overlay_filter, 0 ),
-    MENU_ENUM2(0x5f,LANG_MENU_EDGE_PANO,            &econf.edge_overlay_pano,    gui_edge_pano_modes ),
+    MENU_ENUM2(0x5f,LANG_MENU_EDGE_PANO,            &conf.edge_overlay_pano,    gui_edge_pano_modes ),
     MENU_ITEM(0x5e,LANG_MENU_EDGE_PANO_OVERLAP,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &econf.edge_overlay_pano_overlap, MENU_MINMAX(0, 100) ),
     MENU_ITEM(0x5c,LANG_MENU_EDGE_SHOW,             MENUITEM_BOOL,              &econf.edge_overlay_show, 0 ),
     MENU_ITEM(0x5e,LANG_MENU_EDGE_OVERLAY_TRESH,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.edge_overlay_thresh, MENU_MINMAX(0, 255) ),
