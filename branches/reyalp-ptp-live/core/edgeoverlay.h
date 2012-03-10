@@ -13,6 +13,8 @@ struct libedgeovr_sym {
 	void (*edge_overlay)();
 };
 
+int edge_state_draw;
+
 // Defines of exported to chdk symbols
 #ifdef THIS_IS_CHDK_CORE
 	// This section is for CHDK core

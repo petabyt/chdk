@@ -1,13 +1,10 @@
 #!build time optional components - comment out the features you dont want to have in your build or copy this file to localbuildconf.inc and override settings there
-
 OPT_GAMES=1
 OPT_CURVES=1
 OPT_TEXTREADER=1
 OPT_CALENDAR=1
 OPT_DEBUGGING=1
 OPT_EDGEOVERLAY=1
-# experimental PTP/USB interface. Enabled/disabled for individual cameras in camera.h
-OPT_PTP=1
 
 # Scripting components
 OPT_UBASIC=1
@@ -30,8 +27,11 @@ OPT_LUA_OSLIB=1
 # set this to enable exmem corruption testing (see wrappers.c). (Don't set OPT_CHDK_IN_EXMEM with this !)
 #OPT_EXMEM_TESTING=1
 
+# experimental PTP/USB interface
+OPT_PTP=1
+
 #OPT_MD_DEBUG=1
-# require correct FI2 keys in platform/fi2.inc , see http://chdk.wikia.com/wiki/For_Developers/fi2offsets and http://chdk.setepontos.com/index.php/topic,2995.0.html
+# needs proper fi2.inc in platform/ !!! see http://chdk.setepontos.com/index.php/topic,2995.0.html
 #OPT_FI2=1
 # if enabled, compiler will produce a lot of warnings, maybe not always correct ones, see http://chdk.setepontos.com/index.php/topic,2509.msg32191.html#msg32191
 #OPT_WARNINGS=1
@@ -49,3 +49,6 @@ OPT_GEN_STUBS=1
 # desired language.
 # Set the value to the language file name without extension - e.g. OPT_DEFAULT_LANG=russian
 #OPT_DEFAULT_LANG=
+
+# Default svn revsion. Used when svnversion fail.
+DEF_SVN_REF=0

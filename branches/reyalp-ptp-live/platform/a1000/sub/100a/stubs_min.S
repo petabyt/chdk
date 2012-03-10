@@ -19,7 +19,7 @@ DEF(led_table,                          0x2290) // 0x270C + 4
 // ROM:FF9571C4   MOVNE   R1, #0xE0
 // ROM:FF9571C8   ADRNE   R0, aZoomlenscontro @ "ZoomLensController.c"
 // ROM:FF9571CC   BLNE    assert
-DEF(zoom_busy,                          0xB4A4) //0xB37C + 0x34
+//DEF(zoom_busy,                          0xB4A4) //0xB37C + 0x34
 
 // Found in sub_FF950718 (<- sub_FFA0D148 <- sub_FFA0D394 <- sub_FFA0D408
 //                                    <- MoveFocusLensToDistance (sub_FFA0D41C))
@@ -30,7 +30,7 @@ DEF(zoom_busy,                          0xB4A4) //0xB37C + 0x34
 // ROM:FF950778   MOVNE   R1, #0x90
 // ROM:FF95077C   ADRNE   R0, aFocuslenscontr @ "FocusLensController.c"
 // ROM:FF950780   BLNE    assert
-DEF(focus_busy, 0x7EE8) //0xB274 + 8 or 7fd4
+//DEF(focus_busy, 0x7EE8) //0xB274 + 8 or 7fd4
 
 // Same as previous variable, unusable. Originally found it by peeking through
 // memory and it looked suitable at first. This address along with 0xBE64
@@ -43,7 +43,7 @@ DEF(focus_busy, 0x7EE8) //0xB274 + 8 or 7fd4
 // ROM:FF982314   MOV     R0, #0
 // ROM:FF982318   STRB    R0, [R1]
 // ROM:FF98231C   STRB    R0, [R1,#1]
-DEF(canon_shoot_menu_active,            0xC05D) // 0xC05C + 1
+//DEF(canon_shoot_menu_active,            0xC05D) // 0xC05C + 1
 
 
 // Found in sub_FF9754AC. Again, ewavr found this one, he did supply one pointer
@@ -52,6 +52,7 @@ DEF(canon_shoot_menu_active,            0xC05D) // 0xC05C + 1
 // ROM:FF9754B0 008                 LDR     R1, =0xBD60
 // ROM:FF9754B4 008                 LDR     R12, =0x3007
 // ROM:FF9754B8 008                 LDR     R2, [R1,#0xCC]
-DEF(recreview_hold,                     0x94C8) // 0xBD60 + 0xCC
-DEF(movie_status,                       0x5868 + 0x38)
+//DEF(recreview_hold,                     0x94C8) // 0xBD60 + 0xCC
+//DEF(movie_status,                       0x5868 + 0x38)
 DEF(mode_magic,                         0x58D4)
+DEF(enabled_refresh_physical_screen,    0xA460 + 0x30)  // Found in sub_ffd7a36c

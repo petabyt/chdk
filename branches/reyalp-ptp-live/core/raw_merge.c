@@ -188,7 +188,7 @@ int raw_subtract(const char *from, const char *sub, const char *dest) {
 
 int raw_merge_start(int action){
   unsigned int req, avail;
-  req=((camera_sensor.raw_rows*camera_sensor.raw_rows)>>18)+1;
+  req=((camera_sensor.raw_rowpix*camera_sensor.raw_rows)>>18)+1;
   avail=GetFreeCardSpaceKb()>>10;
   if (avail<req) {
     sprintf(namebuf,lang_str(LANG_AVERAGE_NO_CARD_SPACE),req,avail);
@@ -197,7 +197,7 @@ int raw_merge_start(int action){
   }
   raw_action=action;
   raw_count=0;
-  row=malloc(camera_sensor.raw_rows*sizeof(unsigned short));
+  row=malloc(camera_sensor.raw_rowpix*sizeof(unsigned short));
   if (!row)
     return 0;
   rawrow=malloc(camera_sensor.raw_rowlen);
@@ -231,16 +231,16 @@ void raw_merge_add_file(const char * filename) {
       if (fbrawout){
         fread(rawrow, 1, camera_sensor.raw_rowlen, fcraw);
         if (raw_count) 
-          fread(row, 1, camera_sensor.raw_rows*sizeof(unsigned short), fbrawin); 
+          fread(row, 1, camera_sensor.raw_rowpix*sizeof(unsigned short), fbrawin); 
         else
-          for (i=0;i<camera_sensor.raw_rows;i++)
+          for (i=0;i<camera_sensor.raw_rowpix;i++)
             row[i]=0;
 
         for (nrow=0,j=0;nrow<camera_sensor.raw_rows;nrow++,j++){
 
 #if CAM_MODULE_SENSOR_BITS_PER_PIXEL==10
 
-          for (i=0,src=0; i<camera_sensor.raw_rows; i+=8, src+=10){
+          for (i=0,src=0; i<camera_sensor.raw_rowpix; i+=8, src+=10){
             row[i+0]+=((0x3fc&(((unsigned short)rawrow[src+1])<<2)) | (rawrow[src+0] >> 6));
             row[i+1]+=((0x3f0&(((unsigned short)rawrow[src+0])<<4)) | (rawrow[src+3] >> 4));
             row[i+2]+=((0x3c0&(((unsigned short)rawrow[src+3])<<6)) | (rawrow[src+2] >> 2));
@@ -253,7 +253,7 @@ void raw_merge_add_file(const char * filename) {
 
 #elif CAM_MODULE_SENSOR_BITS_PER_PIXEL==12
 
-          for (i=0,src=0; i<camera_sensor.raw_rows; i+=4, src+=6){
+          for (i=0,src=0; i<camera_sensor.raw_rowpix; i+=4, src+=6){
             row[i+0]+=((0xFF0&(((unsigned short)rawrow[src+1])<<4)) | (rawrow[src+0] >> 4));
             row[i+1]+=((0xF00&(((unsigned short)rawrow[src+0])<<8)) | (rawrow[src+3]     ));
             row[i+2]+=((0xFF0&(((unsigned short)rawrow[src+2])<<4)) | (rawrow[src+5] >> 4));
@@ -264,11 +264,11 @@ void raw_merge_add_file(const char * filename) {
  #error define set_raw_pixel for sensor bit depth
 #endif
 
-          fwrite(row, 1, camera_sensor.raw_rows*sizeof(unsigned short), fbrawout);
+          fwrite(row, 1, camera_sensor.raw_rowpix*sizeof(unsigned short), fbrawout);
           if (raw_count)
-            fread(row, 1, camera_sensor.raw_rows*sizeof(unsigned short), fbrawin);
+            fread(row, 1, camera_sensor.raw_rowpix*sizeof(unsigned short), fbrawin);
           else
-            for (i=0;i<camera_sensor.raw_rows;i++)
+            for (i=0;i<camera_sensor.raw_rowpix;i++)
               row[i]=0;
           fread(rawrow, 1, camera_sensor.raw_rowlen, fcraw);
           if (j>=camera_sensor.raw_rows/10) {
@@ -308,9 +308,9 @@ void raw_merge_end(void) {
   if (fbraw) {
     fcraw=fopen(namebuf,"w+b");
     if (fcraw) {
-      fread(row, 1, camera_sensor.raw_rows*sizeof(unsigned short), fbraw);
+      fread(row, 1, camera_sensor.raw_rowpix*sizeof(unsigned short), fbraw);
       for (nrow=0,j=0;nrow<camera_sensor.raw_rows;nrow++,j++) {
-        for (i=0;i<camera_sensor.raw_rows;i++) {
+        for (i=0;i<camera_sensor.raw_rowpix;i++) {
           if (raw_action==RAW_OPERATION_AVERAGE)
             row[i]/=raw_count;
           else {
@@ -323,7 +323,7 @@ void raw_merge_end(void) {
           }
         }
 #if CAM_MODULE_SENSOR_BITS_PER_PIXEL==10
-        for (i=0,src=0;i<camera_sensor.raw_rows;i+=8,src+=10) {
+        for (i=0,src=0;i<camera_sensor.raw_rowpix;i+=8,src+=10) {
           rawrow[src+0]=(row[i+0]<<6)|(row[i+1]>>4);
           rawrow[src+1]=(row[i+0]>>2);
           rawrow[src+2]=(row[i+2]<<2)|(row[i+3]>>8);
@@ -336,7 +336,7 @@ void raw_merge_end(void) {
           rawrow[src+9]=(row[i+6]<<2)|(row[i+7]>>8);
         }
 #elif CAM_MODULE_SENSOR_BITS_PER_PIXEL==12
-        for (i=0,src=0; i<camera_sensor.raw_rows; i+=4, src+=6){
+        for (i=0,src=0; i<camera_sensor.raw_rowpix; i+=4, src+=6){
           rawrow[src+0]=(row[i+0]<<4)|(row[i+1]>>8);
           rawrow[src+1]=(row[i+0]>>4);
           rawrow[src+2]=(row[i+2]>>4);
@@ -349,7 +349,7 @@ void raw_merge_end(void) {
 #endif
 
         fwrite(rawrow, 1, camera_sensor.raw_rowlen, fcraw);
-        fread(row, 1, camera_sensor.raw_rows*sizeof(unsigned short), fbraw);
+        fread(row, 1, camera_sensor.raw_rowpix*sizeof(unsigned short), fbraw);
         if (j>=camera_sensor.raw_rows/5) {
           j-=camera_sensor.raw_rows/5;
           gui_browser_progress_show(namebuf, nrow*100/camera_sensor.raw_rows);
