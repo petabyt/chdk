@@ -28,7 +28,11 @@ static const char *lua_script_default =
     "--[[\n"
     "@title Default Script\n"
     "]]\n"
+#if defined(VER_CHDK)
+    "chdk_def_lang=1\n"
+#else
     "chdk_def_lang=2\n"
+#endif
     "langs     = {}\n"
     "langs[1]  = {[\"name\"]=\"ENGLISH\",  [\"font_cp\"]=0,  [\"hint\"]=\"CHDK language changed to english\"}\n"
     "langs[2]  = {[\"name\"]=\"GERMAN\",   [\"font_cp\"]=2,  [\"hint\"]=\"CHDK Sprache auf deutsch geäert\"}\n"

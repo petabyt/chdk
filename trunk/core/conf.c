@@ -397,7 +397,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(244, conf.touchscreen_disable_video_controls,     CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(245, conf.touchscreen_disable_shortcut_controls,  CONF_DEF_VALUE, i:0, NULL),
 
-	// USB Icon enable & position
+    // USB Icon enable & position
     CONF_INFO(246, conf.usb_info_enable,            CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO2(247, conf.usb_info_pos,              CONF_OSD_POS,   95,0),
 
