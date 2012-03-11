@@ -153,6 +153,7 @@ static int nTxtbl[]={0,1,2,3,4,5,6,7,8,9};
 #if defined(CAMERA_sx200is) || \
     defined (CAMERA_sx130is) || \
     defined(CAMERA_sx150is) || \
+    defined(CAMERA_sx210is) || \
     defined(CAMERA_sx220hs) || \
     defined(CAMERA_sx230hs) || \
     defined(CAMERA_ixus220_elph300hs) || \
