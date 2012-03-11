@@ -1,0 +1,32 @@
+****************************************
+Camera depending notes: 
+* DryOS Camera R31
+
+****************************************
+Development notes:
+---
+1) This is an incomplete port. Porting thread was here when this was submitted :
+
+http://chdk.setepontos.com/index.php?topic=7433.msg81924#msg81924
+
+This version was back-ported for the stable-1_0 trunk.
+Changes from main trunk are :
+1) reverted platform/kbd.c to stable version (used D10 as prototype)
+2) added these functions to lib.c based on values in D10 port (may not work)
+	vid_get_bitmap_screen_width()
+	vid_get_bitmap_screen_height()
+	vid_get_bitmap_buffer_width() 
+	vid_get_bitmap_buffer_height()
+3) hacked A2100 into core/kbd.c for USB remote zoom code - like most cams this may not work 100%
+	
+****************************************
+
+Canon PowerShow A2100IS
+P-ID:31BE PAL-D
+
+Firmware Ver GM1.00A
+NoError
+
+Jan 5 2009 15:59:12
+
+Adj.Ver.005.009
