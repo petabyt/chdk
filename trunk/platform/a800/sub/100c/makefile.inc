@@ -1,5 +1,8 @@
-#PLATFORMID=0x3226  (0x31EF - a partir stubs_entry.S)
 PLATFORMID=12838
+
+# Force EXMEM on for a800 - not enough heap to work in low memory
+override OPT_EXMEM_MALLOC=1
+override OPT_CHDK_IN_EXMEM=1
 
 PLATFORMOS=dryos
 
