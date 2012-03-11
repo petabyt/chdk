@@ -125,7 +125,8 @@ enum {
     MODE_SNOW               ,
     MODE_FIREWORK           , // ixus1000 end
     MODE_LIVE               , // A3300is
-    MODE_DISCREET           , // A3300is
+    MODE_DISCREET			 , // A3300is
+    MODE_BLUR_REDUCTION     , // a800
 };
 
 #endif
