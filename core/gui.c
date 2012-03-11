@@ -2110,13 +2110,13 @@ void other_kbd_process(){
     #endif
         if (conf.unlock_optical_zoom_for_video && (movie_status==VIDEO_RECORD_IN_PROGRESS) &&  kbd_is_key_clicked(key)){
             short x;
-            get_property_case(PROPCASE_DIGITAL_ZOOM_STATE, &x, sizeof(x));
-            if (x) {
-                get_property_case(PROPCASE_DIGITAL_ZOOM_POSITION, &x, sizeof(x));
-    #if defined (CAMERA_s90) || defined (CAMERA_s95) || defined (CAMERA_g12) || defined (CAMERA_a3000)
-        if (x==0) zoom_status=ZOOM_OPTICAL_MAX; //ERR99: No zoom back from digital to optical zoom possible if set to medium
-    #else
-        if (x==0) zoom_status=ZOOM_OPTICAL_MEDIUM;
+     get_property_case(PROPCASE_DIGITAL_ZOOM_STATE, &x, sizeof(x));
+     if (x) {
+      get_property_case(PROPCASE_DIGITAL_ZOOM_POSITION, &x, sizeof(x));
+#if defined (CAMERA_s90) || defined (CAMERA_s95) || defined (CAMERA_g12) || defined (CAMERA_a3000) || defined (CAMERA_a800)
+	  if (x==0) zoom_status=ZOOM_OPTICAL_MAX; //ERR99: No zoom back from digital to optical zoom possible if set to medium
+#else
+	  if (x==0) zoom_status=ZOOM_OPTICAL_MEDIUM;
     #endif
 
             }
