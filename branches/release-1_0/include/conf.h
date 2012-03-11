@@ -313,9 +313,9 @@ typedef struct {
     int touchscreen_disable_video_controls;
     int touchscreen_disable_shortcut_controls;
 
-	// Enable USB icon
-    int usb_info_enable; 
-    int ext_video_time;
+    // Enable USB icon
+    int usb_info_enable;
+    int ext_video_time;     // save gps_track_time
 #ifdef CAM_HAS_GPS
     int gps_record;
     int gps_navi_show;

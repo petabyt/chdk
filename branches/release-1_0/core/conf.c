@@ -415,17 +415,17 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(237, conf.fast_image_quality,         CONF_DEF_VALUE,     i:3, NULL),
     CONF_INFO(238, conf.debug_lua_restart_on_error, CONF_DEF_VALUE,     i:0, NULL),
 #if defined(VER_CHDK)
-	CONF_INFO(239, conf.debug_propcase_page,     CONF_DEF_VALUE, i:0, NULL),
-	CONF_INFO(240, conf.debug_misc_vals_show,     CONF_DEF_VALUE, i:0, NULL),
-	CONF_INFO(241, conf.edge_overlay_filter,     CONF_DEF_VALUE, i:0, NULL),
-	CONF_INFO(242, conf.edge_overlay_show,     CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO(239, conf.debug_propcase_page,     CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO(240, conf.debug_misc_vals_show,     CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO(241, conf.edge_overlay_filter,     CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO(242, conf.edge_overlay_show,     CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(243, conf.edge_overlay_pano_overlap,   CONF_DEF_VALUE, i:30, NULL),
 
     // Touch screen U/I overrides
     CONF_INFO(244, conf.touchscreen_disable_video_controls, CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(245, conf.touchscreen_disable_shortcut_controls, CONF_DEF_VALUE, i:0, NULL),
 
-	// USB Icon enable & position
+    // USB Icon enable & position
     CONF_INFO(246, conf.usb_info_enable, CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(247, conf.usb_info_pos,    CONF_OSD_POS_PTR,  ptr:&def_usb_info_pos, NULL),
 

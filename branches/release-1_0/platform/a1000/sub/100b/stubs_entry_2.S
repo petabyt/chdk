@@ -2,8 +2,6 @@
 #define NULL_SUB 0xFFC00940
 
 // Override stubs_entry.S
-//NHSTUB(ExpCtrlTool_StopContiAE,     0xFFC1FABC)
-//NHSTUB(Lseek,                       0xffc1354c)
 NHSTUB(PT_PlaySound,                0xFFC48FBC)
 NHSTUB(SetAE_ShutterSpeed,          0xFFE3DE6C)
 NHSTUB(kbd_pwr_off,                 0xFFC3164C)
