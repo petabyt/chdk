@@ -87,3 +87,8 @@ long vid_get_viewport_height()
 int vid_get_viewport_yscale() {
 	return 2;               // G10 viewport is 480 pixels high
 }
+
+// looks like 256 byte from sub_FF8F3270
+int vid_get_palette_type() { return 3; }
+int vid_get_palette_size() { return 256*4; }
+

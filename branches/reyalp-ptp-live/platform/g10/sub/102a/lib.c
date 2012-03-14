@@ -73,3 +73,14 @@ void *vid_get_viewport_live_fb()			// G10 @ FF83A41C routine - match with IXUS98
     }
     return fb[buff];
 }
+
+// ptp
+void *vid_get_bitmap_active_palette() {
+    return (void *)*(unsigned int*)(0x8034+0x28);  // sub_FF8F3270, via sub_FF9D5264 two refs to "Palette Class."
+}
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x8034+0x14)); // sub_FF8F331C via "Add: %p Width : %ld Hight : %ld", 
+}
+
