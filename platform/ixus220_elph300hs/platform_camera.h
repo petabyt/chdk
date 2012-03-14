@@ -48,7 +48,7 @@
     #undef  DNG_BADPIXEL_VALUE_LIMIT
     #define DNG_BADPIXEL_VALUE_LIMIT        16      // Camera sensor apparently has bad pixels with value > 0 & <=16
 
-    #define CAM_DNG_LENS_INFO               { 50,10, 700,10, 31,10, 59,10 } // See comments in camera.h
+    #define CAM_DNG_LENS_INFO               { 43,10, 215,10, 27,10, 59,10 } // See comments in camera.h
     #define cam_CFAPattern  0x02010100
   
     #define CAM_COLORMATRIX1    \
@@ -60,10 +60,10 @@
    
     #define CAM_JPEG_WIDTH                  4000
     #define CAM_JPEG_HEIGHT                 3000
-    #define CAM_ACTIVE_AREA_X1              96
-    #define CAM_ACTIVE_AREA_Y1              24
-    #define CAM_ACTIVE_AREA_X2              4168
-    #define CAM_ACTIVE_AREA_Y2              3060
+    #define CAM_ACTIVE_AREA_X1              120
+    #define CAM_ACTIVE_AREA_Y1              36
+    #define CAM_ACTIVE_AREA_X2              4136
+    #define CAM_ACTIVE_AREA_Y2              3040
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
