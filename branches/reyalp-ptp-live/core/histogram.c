@@ -140,7 +140,7 @@ void histogram_process()
         case 1:
         case 2:
         case 3:
-            x = 0;	// count how many blocks we have done on the current row (to skip unused buffer space at end of each row)
+            x = 0;  // count how many blocks we have done on the current row (to skip unused buffer space at end of each row)
             for (i=(histogram_stage-1)*6; i<viewport_size; i+=HISTO_STEP_SIZE*6) {
                 y = img[i+1];
                 u = *(signed char*)(&img[i]);
