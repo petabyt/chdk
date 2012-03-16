@@ -65,6 +65,7 @@ static int nFirst=1;
     defined(CAMERA_a490) || \
     defined(CAMERA_ixus300_sd4000) || \
     defined(CAMERA_a410) || \
+    defined(CAMERA_a420) || \
     defined(CAMERA_ixus1000_sd4500)|| \
     defined(CAMERA_a800)
 #define ZSTEP_TABLE_SIZE 7
