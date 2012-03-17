@@ -41,7 +41,7 @@ static const struct {
   {  62,  16200},
   {  78,  22300},
   { 102,  35900},
-  { 125,  60000},
+  { 125,  70000},
 };
 #define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
 
