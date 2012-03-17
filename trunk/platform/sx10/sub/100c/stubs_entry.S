@@ -16,7 +16,6 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NSTUB(kbd_pwr_off                           ,0xff84b810) //  2 60%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
-//NSTUB(strrchr                               ,0xff9df428) //  1        *** != 0xff9df430
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff884bc0 -> ff881350 -> ff973e64 -> ffa79978 -> ffb74378
@@ -211,6 +210,7 @@ NSTUB(strftime                                ,0xff89bcf4) //  1
 NSTUB(strlen                                  ,0xff81cb80) //101
 NSTUB(strncmp                                 ,0xff89b8d0) //  1
 NSTUB(strncpy                                 ,0xff82db14) //  1
+NSTUB(strrchr                                 ,0xff9df428) //  1
 NSTUB(strtol                                  ,0xff82dd4c) //101
 NSTUB(strtolx                                 ,0xff82db50) //109
   DEF(task_CaptSeq                            ,0xff868b90) //107

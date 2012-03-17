@@ -4,7 +4,6 @@
 // Override stubs_entry.S
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
-NHSTUB(strrchr,                     0xFF9DF430)
 
 // These don't exist/aren't found in dryos
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
