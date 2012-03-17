@@ -15,7 +15,7 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NSTUB(kbd_pwr_off                             ,0xff861ed0) //  2 60%
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0xff810b1c
+// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff89b2a8 -> ff8979b0 -> ff99c92c -> ffad1940 -> ffc093b4
@@ -25,23 +25,23 @@ NSTUB(kbd_pwr_off                             ,0xff861ed0) //  2 60%
 // Mode 33321 in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(physw_status                            ,0x000336c4) // Found @0xff83466c,          stubs_min = 0x000336c4 (0x336C4)
-//DEF(physw_run                               ,0x00001c30) // Found @0xff8342c4,          stubs_min = 0x00001c30 (0x1C24+0x0C)
-//DEF(levent_table                            ,0xffbc1084) // Found @0xffbc1084,          stubs_min = 0xffbc1084 (0xFFBC1084)
-//DEF(FlashParamsTable                        ,0xffc095bc) // Found @0xffc095bc,          stubs_min = 0xffc095bc (0xFFC095BC)
-//DEF(movie_status                            ,0x0000720c) // Found @0xff96de58,          stubs_min = 0x0000720c (0x71D0+0x3C)
-//DEF(full_screen_refresh                     ,0x00009d08) // Found @0xffa1cf64,          stubs_min = 0x00009d08 (0x9D08)
-//DEF(canon_menu_active                       ,0x0000368c) // Found @0xff891c4c,          stubs_min = 0x0000368c (0x3688+4)
-//DEF(canon_shoot_menu_active                 ,0x00008511) // Found @0xff9b5a6c,          stubs_min = 0x00008511 (0x8510+1)
-//DEF(playrec_mode                            ,0x000033bc) // Found @0xff883e64,          stubs_min = 0x000033bc (0x33B8+0x4)
+DEF(physw_status                            ,0x000336c4) // Found @0xff83466c
+DEF(physw_run                               ,0x00001c30) // Found @0xff8342c4
+DEF(levent_table                            ,0xffbc1084) // Found @0xffbc1084
+DEF(FlashParamsTable                        ,0xffc095bc) // Found @0xffc095bc
+DEF(movie_status                            ,0x0000720c) // Found @0xff96de58
+DEF(full_screen_refresh                     ,0x00009d08) // Found @0xffa1cf64
+DEF(canon_menu_active                       ,0x0000368c) // Found @0xff891c4c
+DEF(canon_shoot_menu_active                 ,0x00008511) // Found @0xff9b5a6c
+DEF(playrec_mode                            ,0x000033bc) // Found @0xff883e64
 //DEF(zoom_status                             ,0x0000d544) // Found @0xffad4e40, ** != ** stubs_min = 0x0000d524 (0xD524)
-//DEF(some_flag_for_af_scan                   ,0x000075d8) // Found @0xff970d5c,          stubs_min = 0x000075d8 (0x75D8)
+DEF(some_flag_for_af_scan                   ,0x000075d8) // Found @0xff970d5c
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 3 int value(s), the first is the zoom focus length.
 // there are 126 entries in the table - set NUM_FL to 126
 DEF(focus_len_table                         ,0xfffea1cc) // Found @0xfffea1cc
-//DEF(zoom_busy                               ,0x00007140) // Found @0xff969464,          stubs_min = 0x00007140 (0x7124+0x1C)
-//DEF(focus_busy                              ,0x00006fc8) // Found @0xff9639d0,          stubs_min = 0x00006fc8 (0x6FC0+8)
+DEF(zoom_busy                               ,0x00007140) // Found @0xff969464
+DEF(focus_busy                              ,0x00006fc8) // Found @0xff9639d0
 //DEF(recreview_hold                          ,0x00004140) // Found @0xff8a3648, ** != ** stubs_min = 0x00008144 (0x804C+0xF8)
 
 // Values below go in 'lib.c':

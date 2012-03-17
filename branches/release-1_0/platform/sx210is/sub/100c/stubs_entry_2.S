@@ -1,17 +1,18 @@
 #include "stubs_asm.h"
+#define NULL_SUB 0xFF810B1C
 
-// not found so - pointed these at nullsub_1 as labelled in IDA -> FF810B1C    (This address is for sx210)
+// Override stubs_entry.S
+NHSTUB(kbd_pwr_on,                      NULL_SUB)
 
-NHSTUB(SetZoomActuatorSpeedPercent, 0xFF810B1C)   //  ???????????????????  
-NHSTUB(kbd_pwr_on, 0xFF810B1C)                    //  ???????????????????  
+// These don't exist
+NHSTUB(SetZoomActuatorSpeedPercent,     NULL_SUB)
 
-NHSTUB(UnlockAndRefresh, 0xFFA1EDDC)   // In sx20 102 : FFA0498C
-NHSTUB(LockAndRefresh, 0xFFA1ED98)    // In sx20 102 : FFA048E8
+// Additional
+NHSTUB(LockAndRefresh,                  0xFFA1ED98)
+NHSTUB(MakeAFScan,                      0xFF970F5C)
+NHSTUB(UnlockAndRefresh,                0xFFA1EDDC)
 
-NHSTUB(MakeAFScan, 0xFF970F5C)    // -> ASM1989 08.21.2010 Looks like, but needs confimation
-
-//Not deteted in Auto and needed
-
+// Fixed errors in compiler
 STUB(FFB5FA88)
 STUB(FF813404)
 STUB(FF810B20)
