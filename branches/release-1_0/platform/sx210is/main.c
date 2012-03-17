@@ -32,19 +32,10 @@ void startup()
 
 
 //zoom position is get_parameter_data(87)
-static const struct {
-	int zp, fl;
-} fl_tbl[] = {
-  {   0,   5000},
-  {  16,   6800},
-  {  32,   9100},
-  {  62,  16200},
-  {  78,  22300},
-  { 102,  35900},
-  { 125,  70000},
-};
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
 
+// Focus length table in firmware @ 0xfffea1cc
+#define NUM_FL 126		// 0 - 125, entries in firmware (3 words each entry, first is FL)
+extern int focus_len_table[NUM_FL*3];
 
 // Focal length range is 5.0 - 70,0 mm, 27.3 - 392 in 35-mm equivalent.
 // So, CF_EFL = 27.3/5.0*10000=54600 or392/70*10000=56000
@@ -52,33 +43,20 @@ static const struct {
 // add to base 56000 + 700 = 56700
 // divide by 10 to avoid overflow in get_effective_focal_length()
 #define CF_EFL  5670
-const int zoom_points = 126;
+const int zoom_points = NUM_FL;
 
 int get_effective_focal_length(int zp) {
 	return (CF_EFL*get_focal_length(zp))/1000;
 }
 
 int get_focal_length(int zp) {
-	int i;
-
-	if (zp<fl_tbl[0].zp)
-		return fl_tbl[0].fl;
-	else if (zp>fl_tbl[NUM_FL-1].zp)
-		return fl_tbl[NUM_FL-1].fl;
-	else
-		for (i=1; i<NUM_FL; ++i) {
-			if (zp==fl_tbl[i-1].zp)
-				return fl_tbl[i-1].fl;
-			else if (zp==fl_tbl[i].zp)
-				return fl_tbl[i].fl;
-			else if (zp<fl_tbl[i].zp)
-				return fl_tbl[i-1].fl+(zp-fl_tbl[i-1].zp)*(fl_tbl[i].fl-fl_tbl[i-1].fl)/(fl_tbl[i].zp-fl_tbl[i-1].zp);
-		}
-	return fl_tbl[NUM_FL-1].fl;
+	if (zp < 0) zp = 0;
+	else if (zp >= NUM_FL) zp = NUM_FL-1;
+	return focus_len_table[zp*3];
 }
 
 int get_zoom_x(int zp) {
-	return get_focal_length(zp)*10/fl_tbl[0].fl;
+	return get_focal_length(zp)*10/focus_len_table[0];
 }
 
 

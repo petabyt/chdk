@@ -56,6 +56,7 @@
     // color
     // seem good asm1989
 
+    #define	CAM_DNG_LENS_INFO               { 50,10, 700,10, 31,10, 59,10 }	// See comments in camera.h
 
     #define CAM_COLORMATRIX1                          \
 1026340, 1000000, -412992, 1000000, -158934, 1000000, \

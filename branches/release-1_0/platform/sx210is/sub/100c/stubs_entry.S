@@ -36,6 +36,10 @@ NSTUB(kbd_pwr_off                             ,0xff861ed0) //  2 60%
 //DEF(playrec_mode                            ,0x000033bc) // Found @0xff883e64,          stubs_min = 0x000033bc (0x33B8+0x4)
 //DEF(zoom_status                             ,0x0000d544) // Found @0xffad4e40, ** != ** stubs_min = 0x0000d524 (0xD524)
 //DEF(some_flag_for_af_scan                   ,0x000075d8) // Found @0xff970d5c,          stubs_min = 0x000075d8 (0x75D8)
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 3 int value(s), the first is the zoom focus length.
+// there are 126 entries in the table - set NUM_FL to 126
+DEF(focus_len_table                         ,0xfffea1cc) // Found @0xfffea1cc
 //DEF(zoom_busy                               ,0x00007140) // Found @0xff969464,          stubs_min = 0x00007140 (0x7124+0x1C)
 //DEF(focus_busy                              ,0x00006fc8) // Found @0xff9639d0,          stubs_min = 0x00006fc8 (0x6FC0+8)
 //DEF(recreview_hold                          ,0x00004140) // Found @0xff8a3648, ** != ** stubs_min = 0x00008144 (0x804C+0xF8)
