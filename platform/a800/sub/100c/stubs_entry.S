@@ -15,8 +15,7 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NSTUB(GetBatteryTemperature                 ,0xffc45dec) //102        *** != 0x00000000
-//NSTUB(SetFileAttributes                     ,0xffc26764) //  6        *** != 0x00000000
-//NSTUB(kbd_pwr_off                           ,0xffc43e84) //  2 60%        == 0xffc43e84
+NSTUB(kbd_pwr_off                             ,0xffc43e84) //  2 60%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 //NSTUB(mkdir                                 ,0xffc267f8) //  6 53%    *** != 0xffc267fc
 // ERROR: rand is not found.                               //--- ---    *** != 0x00000000
@@ -27,24 +26,24 @@
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(physw_status                            ,0x0002f048) // Found @0xffc23c3c,          stubs_min = 0x0002f048 (0x2f048)
-//DEF(physw_run                               ,0x00001bf8) // Found @0xffc237fc,          stubs_min = 0x00001bf8 (0x1BF8)
-//DEF(levent_table                            ,0xffeba314) // Found @0xffeba314,          stubs_min = 0xffeba314 (0xffeba314)
-//DEF(FlashParamsTable                        ,0xffeea13c) // Found @0xffeea13c,          stubs_min = 0xffeea13c (0xffeea13c)
-//DEF(movie_status                            ,0x000056b8) // Found @0xffd18138,          stubs_min = 0x000056b8 (0x56b8)
-//DEF(full_screen_refresh                     ,0x00007810) // Found @0xffd88cc8,          stubs_min = 0x00007810 (0x7810)
-//DEF(canon_menu_active                       ,0x00002a98) // Found @0xffc6c4e8,          stubs_min = 0x00002a98 (0x2A94+4)
-//DEF(canon_shoot_menu_active                 ,0x000068a9) // Found @0xffd4c494,          stubs_min = 0x000068a9 (0x000068a8+1)
-//DEF(playrec_mode                            ,0x000027e4) // Found @0xffc5f96c,          stubs_min = 0x000027e4 (0x27E0+0x4)
-//DEF(zoom_status                             ,0x0000a050) // Found @0xffe2a418,          stubs_min = 0x0000a050 (0x0000a050)
-//DEF(some_flag_for_af_scan                   ,0x00005a70) // Found @0xffd1b170,          stubs_min = 0x00005a70 (0x5a70)
+DEF(physw_status                            ,0x0002f048) // Found @0xffc23c3c
+DEF(physw_run                               ,0x00001bf8) // Found @0xffc237fc
+DEF(levent_table                            ,0xffeba314) // Found @0xffeba314
+DEF(FlashParamsTable                        ,0xffeea13c) // Found @0xffeea13c
+DEF(movie_status                            ,0x000056b8) // Found @0xffd18138
+DEF(full_screen_refresh                     ,0x00007810) // Found @0xffd88cc8
+DEF(canon_menu_active                       ,0x00002a98) // Found @0xffc6c4e8
+DEF(canon_shoot_menu_active                 ,0x000068a9) // Found @0xffd4c494
+DEF(playrec_mode                            ,0x000027e4) // Found @0xffc5f96c
+DEF(zoom_status                             ,0x0000a050) // Found @0xffe2a418
+DEF(some_flag_for_af_scan                   ,0x00005a70) // Found @0xffd1b170
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 3 int value(s), the first is the zoom focus length.
 // there are 7 entries in the table - set NUM_FL to 7
 DEF(focus_len_table                         ,0xfffe2ee8) // Found @0xfffe2ee8
-//DEF(zoom_busy                               ,0x0000560c) // Found @0xffd14e64,          stubs_min = 0x0000560c (0x55f8+0x14)
-//DEF(focus_busy                              ,0x0000551c) // Found @0xffd125c4,          stubs_min = 0x0000551c (0x5514+8)
-//DEF(recreview_hold                          ,0x000030d4) // Found @0xffc78de0,          stubs_min = 0x000030d4 (0x30d4)
+DEF(zoom_busy                               ,0x0000560c) // Found @0xffd14e64
+DEF(focus_busy                              ,0x0000551c) // Found @0xffd125c4
+DEF(recreview_hold                          ,0x000030d4) // Found @0xffc78de0
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x10361000; }             // Found @0xffc3fafc
@@ -167,6 +166,7 @@ NSTUB(ScreenUnlock                            ,0xffc812dc) //  3
 NSTUB(SetAE_ShutterSpeed                      ,0xffe6ed78) //102
 NSTUB(SetAutoShutdownTime                     ,0xffc70304) //103
 NSTUB(SetCurrentCaptureModeType               ,0xffc76628) //101
+NSTUB(SetFileAttributes                       ,0xffc26764) //  6
 NSTUB(SetFileTimeStamp                        ,0xffc266ec) //  6
 NSTUB(SetLogicalEventActive                   ,0xffc70008) //101
 NSTUB(SetParameterData                        ,0xffd3ae50) //101

@@ -36,7 +36,7 @@ DEF(some_flag_for_af_scan                   ,0x000071cc) // Found @0xff989240
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 3 int value(s), the first is the zoom focus length.
 // there are 64 entries in the table - set NUM_FL to 64
-//DEF(focus_len_table                         ,0xfffea288) // Found @0xfffea288,          stubs_min = 0xfffea288 (0xfffea288)
+DEF(focus_len_table                         ,0xfffea288) // Found @0xfffea288
 DEF(zoom_busy                               ,0x00006cf4) // Found @0xff97fd74
 DEF(focus_busy                              ,0x00006b68) // Found @0xff97af60
 DEF(recreview_hold                          ,0x00003828) // Found @0xff8a6510
