@@ -110,7 +110,6 @@ long vid_get_viewport_height(){ return 240; }
 // Functions for PTP Live View system
 
 int vid_get_viewport_xoffset_proper()           { return vid_get_viewport_xoffset() * 2; }
-int vid_get_viewport_yoffset_proper()           { return 480; }
 int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
 int vid_get_viewport_height_proper()            { return 480; }
 int vid_get_viewport_max_width()                { return 960; }
