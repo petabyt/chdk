@@ -137,7 +137,8 @@
     #undef  CAM_ACTIVE_AREA_Y1                  // Define usable area of the sensor - needs to be divisible by 2 - "
     #undef  CAM_ACTIVE_AREA_X2                  // Define usable area of the sensor - needs to be divisible by 4 - "
     #undef  CAM_ACTIVE_AREA_Y2                  // Define usable area of the sensor - needs to be divisible by 2 = "
-    #undef  cam_CFAPattern                      // Camera Bayer sensor data layout (DNG colors are messed up if not correct - should be either 0x01000201 = [Green Blue Red Green]  or 0x02010100 = [Red  Green  Green  Blue]
+    #undef  cam_CFAPattern                      // Camera Bayer sensor data layout (DNG colors are messed up if not correct)
+                                                //   should be 0x01000201 = [Green Blue Red Green], 0x02010100 = [Red Green Green Blue] or 0x01020001 = [Green Red Blue Green]
     #undef  CAM_COLORMATRIX1                    // DNG color profile matrix
     #undef  cam_CalibrationIlluminant1          // DNG color profile illuminant - set it to 17 for standard light A
     #undef  CAM_DNG_EXPOSURE_BIAS               // Specify DNG exposure bias value (to override default of -0.5 in the dng.c code)
