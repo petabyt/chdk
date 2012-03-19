@@ -55,7 +55,7 @@
 
     #define CAM_DNG_LENS_INFO               { 63,10, 630,10, 34,10, 56,10 } // See comments in camera.h
 
-    #define cam_CFAPattern                  0x01000201 // Green blue  red   Green
+    #define cam_CFAPattern                  0x01020001 // Green Red Blue Green (http://chdk.setepontos.com/index.php?board=29.0)
 
    #define CAM_COLORMATRIX1                           \
       14134, 1000000, -5576, 1000000, -1527, 1000000, \

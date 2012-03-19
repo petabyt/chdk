@@ -541,26 +541,29 @@ void fill_gamma_buf(void) {
 }
 
 void create_thumbnail() {
-    register unsigned int i, j, x, y;
+    register int i, j, x, y, yadj, xadj;
     register char *buf = thumbnail_buf;
+    register int shift = cam_CFAPattern - 8;
+
+    // The sensor bayer patterns are:
+    //  0x02010100  0x01000201  0x01020001
+    //      R G         G B         G R
+    //      G B         R G         B G
+    // for the second pattern yadj shifts the thumbnail row down one line
+    // for the third pattern xadj shifts the thumbnail row accross one pixel
+    // these make the patterns the same
+    yadj = (cam_CFAPattern == 0x01000201) ? 1 : 0;
+    xadj = (cam_CFAPattern == 0x01020001) ? 1 : 0;
 
     for (i=0; i<DNG_TH_HEIGHT; i++)
         for (j=0; j<DNG_TH_WIDTH; j++)
         {
-            x = (CAM_ACTIVE_AREA_X1+((CAM_ACTIVE_AREA_X2-CAM_ACTIVE_AREA_X1)*j)/DNG_TH_WIDTH) & 0xFFFFFFFE;
-            y = (CAM_ACTIVE_AREA_Y1+((CAM_ACTIVE_AREA_Y2-CAM_ACTIVE_AREA_Y1)*i)/DNG_TH_HEIGHT) & 0xFFFFFFFE;
+            x = ((CAM_ACTIVE_AREA_X1+((CAM_ACTIVE_AREA_X2-CAM_ACTIVE_AREA_X1)*j)/DNG_TH_WIDTH)  & 0xFFFFFFFE) + xadj;
+            y = ((CAM_ACTIVE_AREA_Y1+((CAM_ACTIVE_AREA_Y2-CAM_ACTIVE_AREA_Y1)*i)/DNG_TH_HEIGHT) & 0xFFFFFFFE) + yadj;
 
-#if cam_CFAPattern==0x02010100    // Red  Green  Green  Blue
-            *buf++ = gamma[get_raw_pixel(x,y)>>(CAM_SENSOR_BITS_PER_PIXEL-8)];           // red pixel
-            *buf++ = gamma[6*(get_raw_pixel(x+1,y)>>(CAM_SENSOR_BITS_PER_PIXEL-8))/10];  // green pixel
-            *buf++ = gamma[get_raw_pixel(x+1,y+1)>>(CAM_SENSOR_BITS_PER_PIXEL-8)];       // blue pixel
-#elif cam_CFAPattern==0x01000201 // Green  Blue  Red  Green
-            *buf++ = gamma[get_raw_pixel(x,y+1)>>(CAM_SENSOR_BITS_PER_PIXEL-8)];         // red pixel
-            *buf++ = gamma[6*(get_raw_pixel(x,y)>>(CAM_SENSOR_BITS_PER_PIXEL-8))/10];    // green pixel
-            *buf++ = gamma[get_raw_pixel(x+1,y)>>(CAM_SENSOR_BITS_PER_PIXEL-8)];         // blue pixel
-#else 
-    #error please define new pattern here
-#endif
+            *buf++ = gamma[get_raw_pixel(x,y)>>shift];           // red pixel
+            *buf++ = gamma[6*(get_raw_pixel(x+1,y)>>shift)/10];  // green pixel
+            *buf++ = gamma[get_raw_pixel(x+1,y+1)>>shift];       // blue pixel
         }
 }
 
