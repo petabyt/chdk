@@ -148,10 +148,10 @@ void __attribute__((naked,noinline)) sub_FF810358_my() {
 	// SX150 @FF864BEC
 	// fix for correct power-on
 	// must also comment out function in taskcreate_Startup_my
-	if ((*(int*) 0xC0220118) & 1)			// look at play switch
-		*(int*)(0x25A0) = 0x100000;		// start in play mode
-	else
+	if ((*(int*) 0xC0220114) & 1)			// look at power switch
 		*(int*)(0x25A0) = 0x200000;		// start in rec mode	
+	else
+		*(int*)(0x25A0) = 0x100000;		// start in play mode
 
 	asm volatile (
 	
