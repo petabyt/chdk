@@ -31,7 +31,7 @@ void __attribute__((naked,noinline)) movie_record_task()
 	//FF986A84
 	asm volatile (
 "	STMFD	SP!, {R2-R10,LR} \n"               
-//"	LDR	R6, =0xnullsub_152 \n"                  
+"	LDR	R6, =0xFF985FB0\n" //nullsub
 "	LDR	R7, =0xFF9864C0 \n"                  
 "	LDR	R4, =0x6E80 \n"                      
 "	LDR	R9, =0x6C7 \n"                       
