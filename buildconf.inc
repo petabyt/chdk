@@ -15,9 +15,7 @@ OPT_LUA_OSLIB=1
 # allow Lua to call arbitrary ROM functions and eventprocs
 # WARNING: This is DANGEROUS. e.g. call_event_proc("EraseSectorOfRom",...)
 # NOTE: the interface for this may change in the future, to support better support buffers etc
-ifeq ($(VER),CHDK-DE)
-OPT_LUA_CALL_NATIVE=1
-endif
+#OPT_LUA_CALL_NATIVE=1
 
 # experimental - allocate memory from alternate heap. Default 2MB from EXMEM_RAMDISK
 # See exmem_malloc_init in generic/wrappers.c
@@ -45,14 +43,14 @@ OPT_GEN_STUBS=1
 #!OPT_SYMBOLS=1
 # for people who won't use lang files at all / not done yet
 #!OPT_LANGUAGEINTERFACE=1
+# for CHDK-DE presets without OPT_DEFAULT_LANG
+#OPT_DE_VERSION=1
 
 # Override the value below to compile a different default language into
 # the core CHDK code. This will save memory by not loading both english and the
 # desired language.
 # Set the value to the language file name without extension - e.g. OPT_DEFAULT_LANG=russian
-ifeq ($(VER),CHDK-DE)
-OPT_DEFAULT_LANG=german
-endif
+#OPT_DEFAULT_LANG=
 
-# Default svn revsion. Used when svnversion fail.
+# Default svn revision. Used when svnversion fail.
 DEF_SVN_REF=0
