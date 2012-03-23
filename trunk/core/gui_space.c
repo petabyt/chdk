@@ -109,8 +109,8 @@ static void gui_space_draw_icon() {
   
     //icon
     draw_hline(xx,    yy,    30,  icon_grey[2]);
-    draw_vline(xx,    yy,    12,  icon_grey[2]);
-    draw_vline(xx+31, yy,    18,  icon_grey[1]);
+    draw_vline(xx,    yy,    13,  icon_grey[2]);
+    draw_vline(xx+31, yy,    19,  icon_grey[1]);
     draw_line(xx+1,   yy+13, xx+5, yy+17, icon_grey[1]);
     draw_hline(xx+6,  yy+18, 24,  icon_grey[1]);
            
