@@ -17,9 +17,13 @@ n=0
 o=2
 p=0
 
+do
+
 md_detect_motion a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p
 
 if( h > 0 ) then 
 	shoot 
 endif
+
+until (0)
 

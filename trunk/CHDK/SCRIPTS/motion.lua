@@ -18,10 +18,10 @@ m=0         --      last row
 n=0         -- optional parameters  (1=shoot immediate)
 o=2         -- pixel step
 p=0         -- triggering delay (msec) 
-
-zones = md_detect_motion( a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p)
-
-if( zones > 0 ) then 
-	shoot() 
-end
+repeat
+    zones = md_detect_motion( a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p)
+    if( zones > 0 ) then 
+        shoot() 
+    end
+until (false)
 
