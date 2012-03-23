@@ -10,6 +10,3 @@ Multiple partitions are NOT supported.
 ****************************************
 Development notes:
 ---
-Known issues
-* Crashes in movie mode
-* Always powers on in REC mode even if you start using the play button
