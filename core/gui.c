@@ -1227,6 +1227,9 @@ const char* gui_histo_show_enum(int change, int arg) {
     #elif defined(CAMERA_sx220hs) || defined(CAMERA_sx230hs)
         static const char* names[]={ "Disp+Set", "Display", "Playback", "Video"};
         static const int keys[] = {KEY_PRINT, KEY_DISPLAY, KEY_PLAYBACK, KEY_VIDEO};
+    #elif defined(CAMERA_sx150is)
+        static const char* names[]={ "Playback", "Video", "Display" };
+        static const int keys[] = {KEY_PRINT, KEY_VIDEO, KEY_DISPLAY};
     #elif defined(CAMERA_ixus220_elph300hs) || defined(CAMERA_ixus230_elph310hs)
         static const char* names[]={ "Video", "Display", "Playback", "Video"};
         static const int keys[] = {KEY_PRINT, KEY_DISPLAY, KEY_PLAYBACK, KEY_VIDEO};

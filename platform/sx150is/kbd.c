@@ -17,15 +17,13 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static KeyMap keymap[];
 static long last_kbd_key = 0;
-static long alt_mode_key_mask = 0x00005000;
-static long alt_mode_key_reg  = 2;
 
 volatile int jogdial_stopped=0;
 
 
 #define KEYS_MASK0 (0x00000000)
 #define KEYS_MASK1 (0x0000F000)
-#define KEYS_MASK2 (0x00007F00)
+#define KEYS_MASK2 (0x00007F50)
 
 #define SD_READONLY_FLAG    (0x20000) // Found @0xffb90df0, levent 0x20a
 #define SD_READONLY_IDX     2
@@ -50,14 +48,14 @@ static KeyMap keymap[] = {
 	// and take the first matching mask. Notice that KEY_SHOOT_HALF is  
 	// always pressed if KEY_SHOOT_FULL is. --MarcusSt
     { 2, KEY_VIDEO     , 0x00000010 },
-    { 2, KEY_PLAYBACK  , 0x00000040 },
+    { 2, KEY_PRINT     , 0x00000040 }, // playback
+    { 2, KEY_PLAYBACK  , 0x00000040 }, // alias so script can use it TODO not clear if wee need PRINT version
 	{ 2, KEY_UP        , 0x00000100 },
 	{ 2, KEY_DOWN      , 0x00000200 },
 	{ 2, KEY_RIGHT     , 0x00000400 },
 	{ 2, KEY_LEFT      , 0x00000800 },
 	{ 2, KEY_SET       , 0x00001000 },
 	{ 2, KEY_MENU      , 0x00002000 },
-	{ 2, KEY_PRINT     , 0x00005000 }, // SET+DISP
 	{ 2, KEY_DISPLAY   , 0x00004000 },
 	{ 2, KEY_ERASE     , 0x00008000 },
 	{ 1, KEY_ZOOM_IN   , 0x00004000 },
@@ -133,7 +131,6 @@ void my_kbd_read_keys()
 		physw_status[0] = kbd_new_state[0];
 		physw_status[1] = kbd_new_state[1];
 		physw_status[2] = kbd_new_state[2];
-		//physw_status[0] |= alt_mode_key_mask;
 		jogdial_stopped=0;
 	}
 	else {
@@ -161,16 +158,9 @@ void my_kbd_read_keys()
 
 }
 
+// NOP
 void kbd_set_alt_mode_key_mask(long key)
 {
-    int i;
-    for (i=0; keymap[i].hackkey; ++i) {
-	if (keymap[i].hackkey == key) {
-	    alt_mode_key_mask = keymap[i].canonkey;
-	    alt_mode_key_reg  = keymap[i].grp;
-	    return;
-	}
-    }
 }
 
 
