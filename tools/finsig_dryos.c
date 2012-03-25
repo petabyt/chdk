@@ -514,20 +514,31 @@ typedef struct bufrange {
 } BufRange;
 
 typedef struct {
-    uint32_t    *buf;
-    uint32_t    base;
-    int         size;
-    BufRange    *br, *last;
-	int			dryos_ver;
-    int         pid;
-    int         maxram;
-	char		cam[100];
+    uint32_t        *buf;
+    uint32_t        base;
+    int             size;
+    BufRange        *br, *last;
+	int			    dryos_ver;
+    int             pid;
+    int             maxram;
+	char		    cam[100];
+
+    // Alt copy of ROM in RAM (DryOS R50)
+    uint32_t        *buf2;
+    uint32_t        base2;
+    int             size2;
 } firmware;
 
 uint32_t fwval(firmware *fw, int i)
 {
     if ((i >= 0) && (i < fw->size))
         return fw->buf[i];
+    if (fw->dryos_ver == 50)
+    {
+        i = ((i * 4) + (fw->base - fw->base2)) / 4;
+        if ((i >= 0) && (i < fw->size2))
+            return fw->buf2[i];
+    }
     fprintf(stderr,"Invalid firmware offset %d.\n",i);
     bprintf("\nInvalid firmware offset %d. Possible corrupt firmware or incorrect start address.\n",i);
     write_output();
@@ -819,12 +830,12 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 	else
 	{
 		fw->dryos_ver = atoi(((char*)&fw->buf[k])+28);
-        if (fw->dryos_ver > 49)
+        if (fw->dryos_ver > 50)
     		bprintf("//   DRYOS R%d (%s) *** New DRYOS Version - please update finsig_dryos.c ***\n",fw->dryos_ver,(char*)&fw->buf[k]);
         else
     		bprintf("//   DRYOS R%d (%s)\n",fw->dryos_ver,(char*)&fw->buf[k]);
 	}
-	
+    
 	// Get firmware version info
 	k = find_str(fw, "Firmware Ver ");
 	if (k == -1)
@@ -837,7 +848,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 		bprintf("\n");
 	}
 
-	// Get camera name & platformid
+	// Get camera name & platformid     ***** UPDATE for new DryOS version *****
 	int fsize = -((int)fw->base)/4;
 	int cam_idx = 0;
     int pid_idx = 0;
@@ -860,6 +871,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
         pid_idx = (((fw->base==0xFF000000)?0xFFF40040:0xFFFE0040) - fw->base) / 4; 
         break;
 	case 49: 
+	case 50: 
         cam_idx = (((fw->base==0xFF000000)?0xFFF40190:0xFFFE0170) - fw->base) / 4; 
         pid_idx = (((fw->base==0xFF000000)?0xFFF40040:0xFFFE0040) - fw->base) / 4; 
         if ((cam_idx < fw->size) && (strncmp((char*)&fw->buf[cam_idx],"Canon ",6) != 0))
@@ -966,6 +978,36 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
             else
             {
         		bprintf("//   NEED_ENCODED_DISKBOOT = ? Not found, possible new 'dancing bits' entry needed. // Found @ 0x%08x\n",idx2adr(fw,ofst));
+            }
+        }
+    }
+	
+    // DryOS R50 copies a block of ROM to RAM and then uses that copy
+    // Need to allow for this in finding addresses
+    // Seen on SX260HS
+    if (fw->dryos_ver == 50)
+    {
+        fw->buf2 = 0;
+        fw->base2 = 0;
+        fw->size2 = 0;
+        
+        int i;
+        // Try and find ROM address copied, and location copied to
+        for (i=3; i<100; i++)
+        {
+            if (isLDR_PC(fw,i) && isLDR_PC(fw,i+1) && (isLDR_PC(fw,i+2)))
+            {
+                uint32_t fadr = LDR2val(fw,i);
+                uint32_t dadr = LDR2val(fw,i+1);
+                uint32_t eadr = LDR2val(fw,i+2);
+                if ((fadr > fw->base) && (dadr < fw->base))
+                {
+                    fw->buf2 = &fw->buf[adr2idx(fw,fadr)];
+                    fw->base2 = dadr;
+                    fw->size2 = (eadr - dadr) / 4;
+                    bprintf("\n// Note, ROM copied to RAM :- from 0x%08x, to 0x%08x, len %d words.\n",fadr,dadr,(eadr-dadr)/4);
+                    break;
+                }
             }
         }
     }
@@ -1105,7 +1147,7 @@ typedef struct {
     char    *name;
     char    *ev_name;
     int     offset;
-	int		dryos20_offset;
+	int		dryos20_offset;     // ***** UPDATE for new DryOS version *****
 	int		dryos23_offset;
 	int		dryos31_offset;
 	int		dryos39_offset;
@@ -1113,6 +1155,7 @@ typedef struct {
 	int		dryos45_offset;
 	int		dryos47_offset;
 	int		dryos49_offset;
+	int		dryos50_offset;
 } string_sig;
 
 #if defined(PLATFORMOS_dryos)
@@ -1261,9 +1304,12 @@ string_sig string_sigs[] = {
 	{ 4, "ExpCtrlTool_StartContiAE", "StartContiAE", 10 },
 
     { 5, "UIFS_WriteFirmInfoToFile", "UIFS_WriteFirmInfoToFile", 1 },
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49
-	{ 5, "UpdateMBROnFlash", "MakeBootDisk", 0x01000003,				  11,   11,   11,   11,   11,   11,    1,    1 },
-	{ 5, "MakeSDCardBootable", "MakeBootDisk", 0x01000003,				   1,    1,    1,    1,    1,    1,    8,    8 },
+    { 5, "CreateTask", "CreateTask", 1 },
+    { 5, "ExitTask", "ExitTask", 1 },
+    { 5, "SleepTask", "SleepTask", 1 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50
+	{ 5, "UpdateMBROnFlash", "MakeBootDisk", 0x01000003,				  11,   11,   11,   11,   11,   11,    1,    1,    1 },
+	{ 5, "MakeSDCardBootable", "MakeBootDisk", 0x01000003,				   1,    1,    1,    1,    1,    1,    8,    8,    8 },
 
     { 6, "Restart", "Bye", 0 },
 	{ 6, "GetImageFolder", "GetCameraObjectTmpPath ERROR[ID:%lx] [TRY:%lx]\n", 0 },
@@ -1278,11 +1324,11 @@ string_sig string_sigs[] = {
 	
 	{ 8, "WriteSDCard", "Mounter.c", 0 }, 
 	
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49
-	{ 9, "kbd_p1_f", "task_PhySw", 0x01000001,							   5,    5,    5,    5,    5,    5,    5,    5 },
-	{ 9, "kbd_p2_f", "task_PhySw", 0xf1000001,							   7,    7,    7,    7,    7,    7,    7,    7 },
-	{ 9, "kbd_read_keys", "kbd_p1_f", 0x01000001,						   2,    2,    2,    2,    2,    2,    2,    2 },
-	{ 9, "kbd_p1_f_cont", "kbd_p1_f", 0,								   3,    3,    3,    3,    3,    3,    3,    3 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50
+	{ 9, "kbd_p1_f", "task_PhySw", 0x01000001,							   5,    5,    5,    5,    5,    5,    5,    5,    5 },
+	{ 9, "kbd_p2_f", "task_PhySw", 0xf1000001,							   7,    7,    7,    7,    7,    7,    7,    7,    7 },
+	{ 9, "kbd_read_keys", "kbd_p1_f", 0x01000001,						   2,    2,    2,    2,    2,    2,    2,    2,    2 },
+	{ 9, "kbd_p1_f_cont", "kbd_p1_f", 0,								   3,    3,    3,    3,    3,    3,    3,    3,    3 },
 	{ 9, "kbd_read_keys_r2", "kbd_read_keys", 0x0100000C },
 	{ 9, "GetKbdState", "kbd_read_keys", 0x01000009 },
 	{ 9, "GetKbdState", "kbd_read_keys", 0x0100000A },
@@ -1296,24 +1342,24 @@ string_sig string_sigs[] = {
 	{ 10, "task_RotaryEncoder", "RotaryEncoder", 1 },
 	{ 10, "task_RotaryEncoder", "RotarySw", 1 },
 
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49
-	{ 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,				   5,    5,    5,    5,    5,    5,    5,    5 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  14,   14,   14,   14,   14,   14,   14,   14 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  15,   15,   15,   15,   15,   15,   15,   15 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  20,   20,   20,   20,   20,   20,   19,   20 },
-	{ 11, "_log", (char*)log_test, 0x01000001,							   1,    1,    1,    1,    1,    1,    1,    1 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50
+	{ 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,				   5,    5,    5,    5,    5,    5,    5,    5,    5 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  14,   14,   14,   14,   14,   14,   14,   14,   14 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  15,   15,   15,   15,   15,   15,   15,   15,   15 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  20,   20,   20,   20,   20,   20,   19,   20,   20 },
+	{ 11, "_log", (char*)log_test, 0x01000001,							   1,    1,    1,    1,    1,    1,    1,    1,    1 },
 	
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49
-	{ 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,						0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54 },
-	{ 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1, 	0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x34 },
-	{ 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1, 			0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38, 0x38 },
-	{ 12, "free", "free", 1,											0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30, 0x30 },
-	{ 12, "malloc", "malloc", 0x01000003,								0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C },
-	{ 12, "TakeSemaphore", "TakeSemaphore", 1,							0x14, 0x14, 0x14, 0x14, 0x14, 0x1C, 0x1C, 0x1C },
-	{ 12, "GiveSemaphore", "GiveSemaphore", 1,							0x18, 0x18, 0x18, 0x18, 0x18, 0x20, 0x20, 0x20 },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000 },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x000,0x2C4,0x000,0x000,0x000,0x000,0x000 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50
+	{ 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,						0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54, 0x00 },
+	{ 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1, 	0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x34, 0x4C },
+	{ 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1, 			0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38, 0x38, 0x50 },
+	{ 12, "free", "free", 1,											0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30, 0x30, 0x48 },
+	{ 12, "malloc", "malloc", 0x01000003,								0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C, 0x44 },
+	{ 12, "TakeSemaphore", "TakeSemaphore", 1,							0x14, 0x14, 0x14, 0x14, 0x14, 0x1C, 0x1C, 0x1C, 0x1C },
+	{ 12, "GiveSemaphore", "GiveSemaphore", 1,							0x18, 0x18, 0x18, 0x18, 0x18, 0x20, 0x20, 0x20, 0x20 },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C,0x354 },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000,0x000 },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x000,0x2C4,0x000,0x000,0x000,0x000,0x000,0x000 },
 	
 	{ 13, "strftime", "Sunday", 1 },
 	
@@ -1350,6 +1396,7 @@ int dryos_offset(firmware *fw, string_sig *sig)
 	case 45:	return sig->dryos45_offset;
 	case 47:	return sig->dryos47_offset;
 	case 49:	return sig->dryos49_offset;
+	case 50:	return sig->dryos50_offset;
 	}
 	return 0;
 }
@@ -2588,7 +2635,7 @@ void find_modemap(firmware *fw)
 								k = 0;
 								while ((*p != 0xFFFF) && (k < 50))
 								{
-									if (((fw->dryos_ver < 49) && ((*p < 8000) || (*p > 8999))) || ((fw->dryos_ver == 49) && ((*p < 4000) || (*p > 4999))))
+									if (((fw->dryos_ver < 49) && ((*p < 8000) || (*p > 8999))) || ((fw->dryos_ver >= 49) && ((*p < 4000) || (*p > 4999))))
 									{
 										osig *m = find_sig_val(modemap, *p);
 										if (!m)
@@ -3755,7 +3802,7 @@ void find_key_vals(firmware *fw)
 		if (tlen > 50*tsiz) tlen = 50*tsiz;
 		
 		bprintf("// Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).\n");
-        if (fw->dryos_ver == 49)
+        if (fw->dryos_ver >= 49)
         {
             // Event ID's have changed in DryOS R49 **********
     		print_kval(fw,tadr,tsiz,tlen,0x20A,"SD_READONLY","_FLAG");
