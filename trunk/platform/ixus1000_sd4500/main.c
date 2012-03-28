@@ -30,65 +30,34 @@ void startup()
 	boot();
 }
 
+// Focus length table in firmware @0xfffe9eac
+#define NUM_FL      101 // 0 - 100, entries in firmware
+#define NUM_DATA    3   // 3 words each entry, first is FL
+extern int focus_len_table[NUM_FL*NUM_DATA];
 
-//zoom position is get_parameter_data(87)
+// Conversion factor lens FL --> 35mm equiv
+// lens      35mm     CF
+// ----      ----     --
+// 6.3       36       ( 36/ 6.3) * 63 = 360  (min FL)
+// 63.0      360      (360/63.0) * 63 = 360  (max FL)
+#define CF_EFL      360
+#define	CF_EFL_DIV  63
 
-// Ixus 1000 576 =1
-static const struct {
-	int zp, fl;
-} fl_tbl[] = {
-  {   0,   6300},
-  {   5,  5*576+6300},
-  {   10, 10*576+6300},
-  {  20,  20*576+6300},
-  {  30,  30*576+6300},
-  {  40,  40*576+6300},
-  {  50,  50*576+6300},
-  {  60,  60*576+6300},
-  {  70,  70*576+6300},
-  {  80,  80*576+6300},
-  {  90,  90*576+6300},
-  { 100,  63000},
-};
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
-
-// Focal length range is 6.3 - 63,0 mm, 36.0 - 360 in 35-mm equivalent. for Ixus 1000 HS
-
-// Focal length range is 6.0 - 70,0 mm, 27.3 - 392 in 35-mm equivalent. for Sx210
-// So, CF_EFL = 27.3/5.0*10000=54600 or392/70*10000=56000
-// diff = 54600 - 54566.6 = 1400, split it 1400 / 2 = 700
-// add to base 56000 + 700 = 56700
-// divide by 10 to avoid overflow in get_effective_focal_length()
-#define CF_EFL  5714
-const int zoom_points = 100;
+const int zoom_points = NUM_FL;
 
 int get_effective_focal_length(int zp) {
-	return (CF_EFL*get_focal_length(zp))/1000;
+    return (CF_EFL*get_focal_length(zp))/CF_EFL_DIV;
 }
 
 int get_focal_length(int zp) {
-	int i;
-
-	if (zp<fl_tbl[0].zp)
-		return fl_tbl[0].fl;
-	else if (zp>fl_tbl[NUM_FL-1].zp)
-		return fl_tbl[NUM_FL-1].fl;
-	else
-		for (i=1; i<NUM_FL; ++i) {
-			if (zp==fl_tbl[i-1].zp)
-				return fl_tbl[i-1].fl;
-			else if (zp==fl_tbl[i].zp)
-				return fl_tbl[i].fl;
-			else if (zp<fl_tbl[i].zp)
-				return fl_tbl[i-1].fl+(zp-fl_tbl[i-1].zp)*(fl_tbl[i].fl-fl_tbl[i-1].fl)/(fl_tbl[i].zp-fl_tbl[i-1].zp);
-		}
-	return fl_tbl[NUM_FL-1].fl;
+    if (zp < 0) zp = 0;
+    else if (zp >= NUM_FL) zp = NUM_FL-1;
+    return focus_len_table[zp*NUM_DATA];
 }
 
 int get_zoom_x(int zp) {
-	return get_focal_length(zp)*10/fl_tbl[0].fl;
+    return get_focal_length(zp)*10/focus_len_table[0];
 }
-
 
 long get_vbatt_min()
 {

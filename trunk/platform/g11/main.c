@@ -25,61 +25,34 @@ void startup()
     boot();
 }
 
-//zoom position is get_parameter_data(87)
-static const struct {
-	int zp, fl;
-} fl_tbl[] = {
-  {   0,   6100},
-  {   1,   6800},
-  {   2,   7400},
-  {   3,   8100},
-  {   4,   8900},
-  {   5,   9800},
-  {   6,   10800},
-  {   7,   12100},
-  {   8,   13800},
-  {   9,   15700},
-  {  10,   18100},
-  {  11,   21500},
-  {  12,   25000},
-  {  13,   30500},
-};
+// Focus length table in firmware @0xfffe2a8c
+#define NUM_FL      14  // 0 - 13, entries in firmware
+#define NUM_DATA    3   // 3 words each entry, first is FL
+extern int focus_len_table[NUM_FL*NUM_DATA];
 
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
-// G11 focal lenght range 6.1 - 30.5 mm (35 mm equivalent: 27.8 - 139.1 mm)(1/1.7" Type CCD, Scale Factor To 35 mm Equivalent: 4.6)
-// 27,8/6,1*10000=45574
-// 139,1/30,5*10000=45607
-#define CF_EFL 45574
+// Conversion factor lens FL --> 35mm equiv
+// lens      35mm     CF
+// ----      ----     --
+// 6.1       28       ( 28/ 6.1) * 61 = 280  (min FL)
+// 30.5      140      (140/30.5) * 61 = 280  (max FL)
+#define CF_EFL      280
+#define	CF_EFL_DIV  61
 
 const int zoom_points = NUM_FL;
 
 int get_effective_focal_length(int zp) {
-    return (CF_EFL*get_focal_length(zp))/10000;
+    return (CF_EFL*get_focal_length(zp))/CF_EFL_DIV;
 }
 
 int get_focal_length(int zp) {
-	int i;
-
-	if (zp<fl_tbl[0].zp)
-		return fl_tbl[0].fl;
-	else if (zp>fl_tbl[NUM_FL-1].zp)
-		return fl_tbl[NUM_FL-1].fl;
-	else 
-		for (i=1; i<NUM_FL; ++i) {
-			if (zp==fl_tbl[i-1].zp) 
-				return fl_tbl[i-1].fl;
-			else if (zp==fl_tbl[i].zp) 
-				return fl_tbl[i].fl;
-			else if (zp<fl_tbl[i].zp)
-				return fl_tbl[i-1].fl+(zp-fl_tbl[i-1].zp)*(fl_tbl[i].fl-fl_tbl[i-1].fl)/(fl_tbl[i].zp-fl_tbl[i-1].zp);
-		}
-	return fl_tbl[NUM_FL-1].fl;
+    if (zp < 0) zp = 0;
+    else if (zp >= NUM_FL) zp = NUM_FL-1;
+    return focus_len_table[zp*NUM_DATA];
 }
 
 int get_zoom_x(int zp) {
-	return get_focal_length(zp)*10/fl_tbl[0].fl;
+    return get_focal_length(zp)*10/focus_len_table[0];
 }
-
 
 long get_vbatt_min()
 {

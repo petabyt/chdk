@@ -65,28 +65,33 @@ static struct {
 
 #define MODESCNT (sizeof(modemap)/sizeof(modemap[0]))
 
-//SD780 is [f/3.2 is 6mm] [f/3.5 7mm] [f/4.5 11mm] [f/5   15mm] [f/5.8 18mm]
-//SD780 is 5.9-17.9mm f/3.2-5.8 (35mm film equivalent: 33-100mm)
-static const int fl_tbl[] = {5900,7170,8740,10550,12490,14780,17900};
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
-#define CF_EFL 55932
+// Focus length table in firmware @0xfffe2a8c
+#define NUM_FL      7   // 0 - 6, entries in firmware
+#define NUM_DATA    3   // 3 words each entry, first is FL
+extern int focus_len_table[NUM_FL*NUM_DATA];
+
+// Conversion factor lens FL --> 35mm equiv
+// lens      35mm     CF
+// ----      ----     --
+// 5.9       33       ( 33/ 5.9) * 59 = 330  (min FL)
+// 17.9      100      (100/17.9) * 59 = 329.6  (max FL)
+#define CF_EFL      330
+#define	CF_EFL_DIV  59
 
 const int zoom_points = NUM_FL;
 
 int get_effective_focal_length(int zp) {
-    return (CF_EFL*get_focal_length(zp))/10000;
+    return (CF_EFL*get_focal_length(zp))/CF_EFL_DIV;
 }
 
 int get_focal_length(int zp) {
-    if (zp<0) return fl_tbl[0];
-    else if (zp>NUM_FL-1) return fl_tbl[NUM_FL-1];
-    else return fl_tbl[zp];
+    if (zp < 0) zp = 0;
+    else if (zp >= NUM_FL) zp = NUM_FL-1;
+    return focus_len_table[zp*NUM_DATA];
 }
 
 int get_zoom_x(int zp) {
-    if (zp<1) return 10;
-    else if (zp>NUM_FL-1) return fl_tbl[NUM_FL-1]*10/fl_tbl[0];
-    else return fl_tbl[zp]*10/fl_tbl[0];
+    return get_focal_length(zp)*10/focus_len_table[0];
 }
 
 /*

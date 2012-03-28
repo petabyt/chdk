@@ -25,38 +25,33 @@ void startup()
 	boot();
 }
 
+// Focus length table in firmware @0xfffe297c
+#define NUM_FL      12  // 0 - 11, entries in firmware
+#define NUM_DATA    3   // 3 words each entry, first is FL
+extern int focus_len_table[NUM_FL*NUM_DATA];
 
-static const int fl_tbl[] = {6600, 7800, 9000, 10300, 11900,13500, 15400, 17700, 20400, 23700, 28000, 33000};
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
-#define CF_EFL 56060
+// Conversion factor lens FL --> 35mm equiv
+// lens      35mm     CF
+// ----      ----     --
+// 6.6       37       ( 37/ 6.6) * 66 = 370  (min FL)
+// 33.0      185      (185/33.0) * 66 = 370  (max FL)
+#define CF_EFL      370
+#define	CF_EFL_DIV  66
 
 const int zoom_points = NUM_FL;
 
-int get_effective_focal_length(int zp)
-{
-	return (CF_EFL*get_focal_length(zp))/10000;
+int get_effective_focal_length(int zp) {
+    return (CF_EFL*get_focal_length(zp))/CF_EFL_DIV;
 }
 
-int get_focal_length(int zp)
-{
-	if (zp<0) {
-		return fl_tbl[0];
-	} else if (zp>NUM_FL-1) {
-		return fl_tbl[NUM_FL-1];
-	} else {
-		return fl_tbl[zp];
-	}
+int get_focal_length(int zp) {
+    if (zp < 0) zp = 0;
+    else if (zp >= NUM_FL) zp = NUM_FL-1;
+    return focus_len_table[zp*NUM_DATA];
 }
 
-int get_zoom_x(int zp)
-{
-	if (zp<1) {
-		return 10;
-	} else if (zp>NUM_FL-1) {
-		return fl_tbl[NUM_FL-1]*10/fl_tbl[0];
-	} else {
-		return fl_tbl[zp]*10/fl_tbl[0];
-	}
+int get_zoom_x(int zp) {
+    return get_focal_length(zp)*10/focus_len_table[0];
 }
 
 #if 0

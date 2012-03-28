@@ -29,31 +29,33 @@ void startup()
 }
 
 // Focus length table in firmware @0xfffea288
-#define NUM_FL 60		// 0 - 59, entries in firmware (3 words each entry, first is FL)
-extern int focus_len_table[NUM_FL*3];
+#define NUM_FL      64  // 0 - 63, entries in firmware
+#define NUM_DATA    3   // 3 words each entry, first is FL
+extern int focus_len_table[NUM_FL*NUM_DATA];
 
+// Conversion factor lens FL --> 35mm equiv
+// lens      35mm     CF
+// ----      ----     --
+// 4.3       24       ( 24/ 4.3) * 43 = 240  (min FL)
+// 21.5      120      (120/21.5) * 43 = 240  (max FL)
+#define CF_EFL      240
+#define	CF_EFL_DIV  43
 
-// Focal length range is 4.3 - 21.5 mm, 24 - 120 in 35-mm equivalent.
-// So, CF_EFL = 21.5/4.3*10000=50000 or 120/24*10000=50000
-// divide by 10 to avoid overflow in get_effective_focal_length()
-#define CF_EFL  5000
-const int zoom_points = 60;
+const int zoom_points = NUM_FL;
 
 int get_effective_focal_length(int zp) {
-	return (CF_EFL*get_focal_length(zp))/1000;
+    return (CF_EFL*get_focal_length(zp))/CF_EFL_DIV;
 }
 
 int get_focal_length(int zp) {
-	if (zp < 0) zp = 0;
-	else if (zp >= NUM_FL) zp = NUM_FL-1;
-	return focus_len_table[zp*3];
-	
+    if (zp < 0) zp = 0;
+    else if (zp >= NUM_FL) zp = NUM_FL-1;
+    return focus_len_table[zp*NUM_DATA];
 }
 
 int get_zoom_x(int zp) {
-	return get_focal_length(zp)*10/focus_len_table[0];
+    return get_focal_length(zp)*10/focus_len_table[0];
 }
-
 
 long get_vbatt_min()
 {
