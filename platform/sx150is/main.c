@@ -25,60 +25,34 @@ void startup()
     boot();
 }
 
+// Focus length table in firmware @0xfffeabd8
+#define NUM_FL      128 // 0 - 127, entries in firmware
+#define NUM_DATA    2   // 2 words each entry, first is FL
+extern int focus_len_table[NUM_FL*NUM_DATA];
 
-//zoom position is get_parameter_data(87)
-static const struct {
-	int zp, fl;
-} fl_tbl[] = {
-  {   0,    5000},
-  {   16,   8225},
-  {   32,   13080},
-  {   48,   20270},
-  {   64,   29150},
-  {   80,   38125},
-  {   96,   45750},
-  {   112,  51650},
-  {   127,  60000}
-};
+// Conversion factor lens FL --> 35mm equiv
+// lens      35mm     CF
+// ----      ----     --
+// 5.0       28       ( 28/ 5.0) * 50 = 280  (min FL)
+// 60.0      336      (336/60.0) * 50 = 280  (max FL)
+#define CF_EFL      280
+#define	CF_EFL_DIV  50
 
-
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
-
-// SX150 focal lenght range 5.0 - 60 mm (35 mm equivalent: 28 - 336 mm)(1/2.3" Type CCD, Scale Factor To 35 mm Equivalent: 5.6)
-// 28/5.0*100=560
-// 336/60*100=560
-#define CF_EFL 560
-
-const int zoom_points = 128;
+const int zoom_points = NUM_FL;
 
 int get_effective_focal_length(int zp) {
-    return (CF_EFL*get_focal_length(zp))/100;
+    return (CF_EFL*get_focal_length(zp))/CF_EFL_DIV;
 }
 
 int get_focal_length(int zp) {
-	int i;
-
-	if (zp<fl_tbl[0].zp)
-		return fl_tbl[0].fl;
-	else if (zp>fl_tbl[NUM_FL-1].zp)
-		return fl_tbl[NUM_FL-1].fl;
-	else {
-		for (i=1; i<NUM_FL; ++i) {
-			if (zp==fl_tbl[i-1].zp)
-				return fl_tbl[i-1].fl;
-			else if (zp==fl_tbl[i].zp)
-				return fl_tbl[i].fl;
-			else if (zp<fl_tbl[i].zp)
-				return fl_tbl[i-1].fl+(zp-fl_tbl[i-1].zp)*(fl_tbl[i].fl-fl_tbl[i-1].fl)/(fl_tbl[i].zp-fl_tbl[i-1].zp);
-		}
-	}
-	return fl_tbl[NUM_FL-1].fl;
+    if (zp < 0) zp = 0;
+    else if (zp >= NUM_FL) zp = NUM_FL-1;
+    return focus_len_table[zp*NUM_DATA];
 }
 
 int get_zoom_x(int zp) {
-	return get_focal_length(zp)*10/fl_tbl[0].fl;
+    return get_focal_length(zp)*10/focus_len_table[0];
 }
-
 
 long get_vbatt_min()
 {

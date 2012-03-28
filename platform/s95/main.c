@@ -25,61 +25,34 @@ void startup()
     boot();
 }
 
+// Focus length table in firmware @0xfffe2d2c
+#define NUM_FL      10  // 0 - 9, entries in firmware
+#define NUM_DATA    3   // 3 words each entry, first is FL
+extern int focus_len_table[NUM_FL*NUM_DATA];
 
-//zoom position is get_parameter_data(87)
-static const struct {
-	int zp, fl;
-} fl_tbl[] = {
-  {   0,   6000},
-  {   1,   6850},
-  {   2,   7490},
-  {   3,   8560},
-  {   4,   9640},
-  {   5,   10700},
-  {   6,   12850},
-  {   7,   14980},
-  {   8,   18190},
-  {   9,   22500},
-};
-
-
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
-// S90 focal lenght range 6.0 - 22.5 mm (35 mm equivalent: 28 - 105 mm)(1/1.7" Type CCD, Scale Factor To 35 mm Equivalent: 4.6)
-// 28/6,0*10000=46666
-// 105/22,5*10000=46666
-
-#define CF_EFL 46666
+// Conversion factor lens FL --> 35mm equiv
+// lens      35mm     CF
+// ----      ----     --
+// 6.0       28       ( 28/ 6.0) * 60 = 280  (min FL)
+// 22.5      105      (105/22.5) * 60 = 280  (max FL)
+#define CF_EFL      280
+#define	CF_EFL_DIV  60
 
 const int zoom_points = NUM_FL;
 
 int get_effective_focal_length(int zp) {
-    return (CF_EFL*get_focal_length(zp))/10000;
+    return (CF_EFL*get_focal_length(zp))/CF_EFL_DIV;
 }
 
 int get_focal_length(int zp) {
-	int i;
-
-	if (zp<fl_tbl[0].zp)
-		return fl_tbl[0].fl;
-	else if (zp>fl_tbl[NUM_FL-1].zp)
-		return fl_tbl[NUM_FL-1].fl;
-	else {
-		for (i=1; i<NUM_FL; ++i) {
-			if (zp==fl_tbl[i-1].zp)
-				return fl_tbl[i-1].fl;
-			else if (zp==fl_tbl[i].zp)
-				return fl_tbl[i].fl;
-			else if (zp<fl_tbl[i].zp)
-				return fl_tbl[i-1].fl+(zp-fl_tbl[i-1].zp)*(fl_tbl[i].fl-fl_tbl[i-1].fl)/(fl_tbl[i].zp-fl_tbl[i-1].zp);
-		}
-	}
-	return fl_tbl[NUM_FL-1].fl;
+    if (zp < 0) zp = 0;
+    else if (zp >= NUM_FL) zp = NUM_FL-1;
+    return focus_len_table[zp*NUM_DATA];
 }
 
 int get_zoom_x(int zp) {
-	return get_focal_length(zp)*10/fl_tbl[0].fl;
+    return get_focal_length(zp)*10/focus_len_table[0];
 }
-
 
 long get_vbatt_min()
 {
