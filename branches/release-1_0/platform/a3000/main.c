@@ -25,56 +25,34 @@ void startup()
     boot();
 }
 
-//zoom position is get_parameter_data(87)
-static const struct {
-	int zp, fl;
-} fl_tbl[] = {
-  {   0,   6200},
-  {   1,   7780},
-  {   2,   9410},
-  {   3,   11370},
-  {   4,   13790},
-  {   5,   16770},
-  {   6,   20180},
-  {   7,   24800},
-};
+// Focus length table in firmware @0xfffe29b0
+#define NUM_FL      8   // 0 - 7, entries in firmware
+#define NUM_DATA    3   // 3 words each entry, first is FL
+extern int focus_len_table[NUM_FL*NUM_DATA];
 
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
-// A3000IS focal lenght range 6.2 - 24.8 mm (35 mm equivalent: 34.8 - 139.4 mm)(1/2.3" (7.7mm, crop 5.62) Type CCD, Scale Factor To 35 mm Equivalent: 4.6)
-// 34.8/6.2*10000=56129
-// 139.4/24.8*10000=56210
-
-#define CF_EFL 56200
+// Conversion factor lens FL --> 35mm equiv
+// lens      35mm     CF
+// ----      ----     --
+// 6.2       35       ( 35/ 6.2) * 62 = 350  (min FL)
+// 24.8      140      (140/24.8) * 62 = 350  (max FL)
+#define CF_EFL      350
+#define	CF_EFL_DIV  62
 
 const int zoom_points = NUM_FL;
 
 int get_effective_focal_length(int zp) {
-    return (CF_EFL*get_focal_length(zp))/10000;
+    return (CF_EFL*get_focal_length(zp))/CF_EFL_DIV;
 }
 
 int get_focal_length(int zp) {
-	int i;
-
-	if (zp<fl_tbl[0].zp)
-		return fl_tbl[0].fl;
-	else if (zp>fl_tbl[NUM_FL-1].zp)
-		return fl_tbl[NUM_FL-1].fl;
-	else 
-		for (i=1; i<NUM_FL; ++i) {
-			if (zp==fl_tbl[i-1].zp) 
-				return fl_tbl[i-1].fl;
-			else if (zp==fl_tbl[i].zp) 
-				return fl_tbl[i].fl;
-			else if (zp<fl_tbl[i].zp)
-				return fl_tbl[i-1].fl+(zp-fl_tbl[i-1].zp)*(fl_tbl[i].fl-fl_tbl[i-1].fl)/(fl_tbl[i].zp-fl_tbl[i-1].zp);
-		}
-	return fl_tbl[NUM_FL-1].fl;
+    if (zp < 0) zp = 0;
+    else if (zp >= NUM_FL) zp = NUM_FL-1;
+    return focus_len_table[zp*NUM_DATA];
 }
 
 int get_zoom_x(int zp) {
-	return get_focal_length(zp)*10/fl_tbl[0].fl;
+    return get_focal_length(zp)*10/focus_len_table[0];
 }
-
 
 long get_vbatt_min()
 {
