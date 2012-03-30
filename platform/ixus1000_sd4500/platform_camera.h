@@ -36,6 +36,9 @@
     #define EXMEM_BUFFER_SIZE (1024*1024*2)        // desired amount of exmem memory to allocate
 
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
+    #define CAM_USE_ZOOM_FOR_MF             1
+    #define CAM_CAN_SD_OVER_IN_AF_LOCK      1
+    
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 
     //ASM1989 TESTING VIDEO HANG
