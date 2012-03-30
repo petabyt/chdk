@@ -56,6 +56,9 @@
 
     #define PARAM_CAMERA_NAME               4        // parameter number for GetParameterData to get camera name
 
+    #undef  DNG_BADPIXEL_VALUE_LIMIT
+    #define DNG_BADPIXEL_VALUE_LIMIT        16      // Camera sensor apparently has bad pixels with value > 0 & <=16
+
     #define CAM_DNG_LENS_INFO               { 49,10, 186,10, 20,10, 53,10 } // See comments in camera.h
 
     // colors are messed up in DNG if not correct
