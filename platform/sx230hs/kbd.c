@@ -19,8 +19,6 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static KeyMap keymap[];
 static long last_kbd_key = 0;
-;
-static long alt_mode_key_mask = 0x00010800; // disp + set
 static int alt_mode_led=0;
 extern void _GetKbdState(long*);
 
@@ -78,29 +76,27 @@ static KeyMap keymap[] = {
     { 0, KEY_RIGHT           , 0x00006000 },
     { 0, KEY_DOWN_SOFT       , 0x00008000 },
     { 0, KEY_SET             , 0x00010000 },
-    { 0, KEY_PRINT           , 0x00010800 },  //DISP+SET for ALT menu
     { 0, KEY_DOWN            , 0x00020000 },
     { 0, KEY_MENU            , 0x00040000 },
     { 0, KEY_VIDEO           , 0x00080000 },
+
+    { 1, KEY_PRINT           , 0x00200000 }, // playback = alt button
     { 1, KEY_PLAYBACK        , 0x00200000 },
+
     { 2, KEY_LEFT_SOFT       , 0x00000080 },
     { 2, KEY_LEFT            , 0x00000100 },
     { 2, KEY_SHOOT_FULL      , 0x00002002 },
     { 2, KEY_SHOOT_FULL_ONLY , 0x00000002 },
     { 2, KEY_SHOOT_HALF      , 0x00002000 },
+
     { 0, 0, 0 }
 };
 
+// NOP
 void kbd_set_alt_mode_key_mask(long key)
 {
-	int i;
-	for (i=0; keymap[i].hackkey; ++i) {
-		if (keymap[i].hackkey == key) {
-			alt_mode_key_mask = keymap[i].canonkey;
-			return;
-		}
-	}
 }
+
 void my_blinkk(void) {
 	int i;
 	while(1) {

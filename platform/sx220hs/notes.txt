@@ -1,7 +1,7 @@
 ************************************
 SX220 HS Notes
 
-To enter CHDK <Alt> mode use the DISP+SET button.
+To enter CHDK <Alt> mode use the playback button.
 
 Support for dual partition is not available.
 
