@@ -50,4 +50,6 @@ WARNING:
 #define PROPCASE_AF_FRAME                   8       //G10 1 = FlexiZone, 2 = Face AiAF / Tracking AF
 #define PROPCASE_CONTINUOUS_AF              12      //G10 0 = Continuous AF off, 1 = Continuous AF on
 #define PROPCASE_DIGITAL_ZOOM_MODE          91      //G10 Digital Zoom Mode/State 0 = off/standard, 2 = 1.7x, 3 = 2.1x
+#define PROPCASE_STITCH_DIRECTION           233     //D10 0=left>right, 1=right>left
+#define PROPCASE_STITCH_SEQUENCE            238     //D10 counts shots in stitch sequence, positive=left>right, negative=right>left
 #endif
