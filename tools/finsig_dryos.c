@@ -524,9 +524,10 @@ typedef struct {
 	char		    cam[100];
 
     // Alt copy of ROM in RAM (DryOS R50)
-    uint32_t        *buf2;
-    uint32_t        base2;
-    int             size2;
+    uint32_t        *buf2;          // pointer to loaded FW data that is copied
+    uint32_t        base2;          // RAM address copied to
+    uint32_t        base_copied;    // ROM address copued from
+    int             size2;          // Block size copied (in words)
 } firmware;
 
 uint32_t fwval(firmware *fw, int i)
@@ -1004,6 +1005,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
                 {
                     fw->buf2 = &fw->buf[adr2idx(fw,fadr)];
                     fw->base2 = dadr;
+                    fw->base_copied = fadr;
                     fw->size2 = (eadr - dadr) / 4;
                     bprintf("\n// Note, ROM copied to RAM :- from 0x%08x, to 0x%08x, len %d words.\n",fadr,dadr,(eadr-dadr)/4);
                     break;
@@ -1013,6 +1015,18 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
     }
 
 	bprintf("\n");
+}
+
+void fwAddMatch(firmware *fw, uint32_t fadr, int s, int f, int k, int sig)
+{
+    if ((fadr >= fw->base_copied) && (fadr < (fw->base_copied + fw->size2*4)))
+    {
+        addMatch(fadr - fw->base_copied + fw->base2,s,f,k,sig);
+    }
+    else
+    {
+        addMatch(fadr,s,f,k,sig);
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -1033,6 +1047,7 @@ sig_stuff saved_sigs[] = {
 	{ "CreateJumptable", 0 },
 	{ "strtol", 0 },
 	{ "LockAndRefresh", 0 },
+    { "ScreenLock", 0 },
 	{ "StartRecModeMenu", 0 },
 	{ "GetSDProtect", 0 },
 	{ "DispCon_ShowBitmapColorBar", 0 },
@@ -1041,6 +1056,8 @@ sig_stuff saved_sigs[] = {
 	{ "ResetZoomLens", 0 },
 	{ "ResetFocusLens", 0 },
 	{ "NR_GetDarkSubType", 0 },
+	{ "SavePaletteData", 0 },
+    { "GUISrv_StartGUISystem", 0 },
 	
 	{ 0, 0 }
 };
@@ -1166,6 +1183,8 @@ FuncsList   func_list2[] =
     { "ResetZoomLens", 0, 0 },
     { "ResetFocusLens", 0, 0 },
     { "NR_GetDarkSubType", 0, 0 },
+    { "SavePaletteData", 0, 0 },
+    { "GUISrv_StartGUISystem", 0, 0 },
     { 0, 0, 0}
 };
 
@@ -1226,6 +1245,7 @@ string_sig string_sigs[] = {
     { 1, "VbattGet", "VbattGet", 1 },
     { 1, "Write", "Write", 1 },
     { 1, "write", "Write", 1 },
+    { 1, "GUISrv_StartGUISystem", "GUISrv_StartGUISystem", 1 },
 
     { 2, "GetBatteryTemperature", "GetBatteryTemperature", 1 },
     { 2, "GetCCDTemperature", "GetCCDTemperature", 1 },
@@ -1259,6 +1279,7 @@ string_sig string_sigs[] = {
     { 2, "ResetFocusLens", "ResetFocusLens", 1 },
     { 2, "NR_GetDarkSubType", "NR_GetDarkSubType", 1 },
     { 2, "NR_GetDarkSubType", "NRTBL.GetDarkSubType", 1 },
+    { 2, "SavePaletteData", "SavePaletteData", 1 },
 	
 	{ 3, "AllocateMemory", "AllocateMemory", 1 },
 	{ 3, "FreeMemory", "FreeMemory", 1 },
@@ -1424,6 +1445,8 @@ char *optional[] = {
     "ResetZoomLens",
     "ResetFocusLens",
     "NR_GetDarkSubType",
+    "SavePaletteData",
+    "GUISrv_StartGUISystem",
 	0
 };
 
@@ -1503,7 +1526,7 @@ int find_strsig1(firmware *fw, string_sig *sig, int k)
 				if (sig->offset > 1) fadr = followBranch(fw, fadr, 1);
                 fadr = followBranch2(fw, fadr, sig->offset);
                 //fprintf(stderr,"%s %08x\n",curr_name,fadr);
-                addMatch(fadr,32,0,k,101);
+                fwAddMatch(fw,fadr,32,0,k,101);
                 return 1;
             }
         }
@@ -1540,7 +1563,7 @@ int find_strsig2(firmware *fw, string_sig *sig, int k)
 						if ((sig->offset <= 1) || (bfadr != fadr))
 						{
 							//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-							addMatch(bfadr,32,0,k,102);
+							fwAddMatch(fw,bfadr,32,0,k,102);
 							return 1;
 						}
                     }
@@ -1608,7 +1631,7 @@ int find_strsig3(firmware *fw, string_sig *sig, int k)
 							if (sig->offset > 1) fadr = followBranch(fw, fadr, 1);
 							fadr = followBranch2(fw, fadr, sig->offset);
 							//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-							addMatch(fadr,32,0,k,103);
+							fwAddMatch(fw,fadr,32,0,k,103);
 							return 1;
 						}
 					}
@@ -1651,7 +1674,7 @@ int find_strsig4(firmware *fw, string_sig *sig, int k)
 					{
 						uint32_t fadr = idx2adr(fw,j1);
 						//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-						addMatch(fadr,32,0,k,104);
+						fwAddMatch(fw,fadr,32,0,k,104);
 						return 1;
 					}
 				}
@@ -1729,7 +1752,7 @@ int find_strsig5(firmware *fw, string_sig *sig, int k)
                                 fadr = fadr2;
                             }
 							//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-							addMatch(fadr,32,0,k,105);
+							fwAddMatch(fw,fadr,32,0,k,105);
 							return 1;
 						}
 					}
@@ -1762,7 +1785,7 @@ int find_strsig6(firmware *fw, string_sig *sig, int k)
 				{
 					uint32_t fadr = idx2adr(fw,j1);
 					//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-					addMatch(fadr,32,0,k,106);
+					fwAddMatch(fw,fadr,32,0,k,106);
 					return 1;
 				}
 			}
@@ -1818,7 +1841,7 @@ int find_strsig7(firmware *fw, string_sig *sig, int k)
 						{
 							fadr = followBranch2(fw, fadr, sig->offset);
 							//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-							addMatch(fadr,32,0,k,107);
+							fwAddMatch(fw,fadr,32,0,k,107);
 							return 1;
 						}
 					}
@@ -1894,7 +1917,7 @@ int find_strsig8(firmware *fw, string_sig *sig, int k)
 								if (fadr >= fw->base)
 								{
 									//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-									addMatch(fadr,32,0,k,108);
+									fwAddMatch(fw,fadr,32,0,k,108);
 									return 1;
 								}
 							}
@@ -1925,7 +1948,7 @@ int find_strsig9(firmware *fw, string_sig *sig, int k)
 			if ((sig->offset == 0) || (fadr != saved_sigs[j].val+ofst*4))
 			{
 				//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-				addMatch(fadr,32,0,k,109);
+				fwAddMatch(fw,fadr,32,0,k,109);
 				return 1;
 			}
 		}
@@ -1980,7 +2003,7 @@ int find_strsig10(firmware *fw, string_sig *sig, int k)
 						{
 							fadr = followBranch2(fw, fw->buf[adr2idx(fw,fadr)], sig->offset);
 							//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-							addMatch(fadr,32,0,k,110);
+							fwAddMatch(fw,fadr,32,0,k,110);
 							return 1;
 						}
 					}
@@ -2041,7 +2064,7 @@ int find_strsig11(firmware *fw, string_sig *sig, int k)
 						if (found && ((sig->offset == 0) || (bfadr != fadr)))
 						{
 							//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-							addMatch(bfadr,32,0,k,111);
+							fwAddMatch(fw,bfadr,32,0,k,111);
 							return 1;
 						}
 					}
@@ -2081,7 +2104,7 @@ int find_strsig12(firmware *fw, string_sig *sig, int k)
 					if ((sig->offset <= 1) || ((bfadr != fadr) && ((fw->buf[adr2idx(fw,fadr)] & 0xFFFF0000) == 0xE92D0000)))
 					{
 						//fprintf(stderr,"%s %08x\n",curr_name,bfadr);
-						addMatch(bfadr,32,0,k,112);
+						fwAddMatch(fw,bfadr,32,0,k,112);
 						return 1;
 					}
 				}
@@ -2139,7 +2162,7 @@ int find_strsig13(firmware *fw, string_sig *sig, int k)
 								{
 									uint32_t fadr = idx2adr(fw,j3-sig->offset);
 									//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-									addMatch(fadr,32,0,k,113);
+									fwAddMatch(fw,fadr,32,0,k,113);
 									return 1;
 								}
 							}
@@ -2181,7 +2204,7 @@ int find_strsig14(firmware *fw, string_sig *sig, int k)
 					{
 						uint32_t fadr = followBranch(fw,idx2adr(fw,j1+2),0x01000001);
 						//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-						addMatch(fadr,32,0,k,114);
+						fwAddMatch(fw,fadr,32,0,k,114);
 						return 1;
 					}
 				}
@@ -2195,7 +2218,7 @@ int find_strsig14(firmware *fw, string_sig *sig, int k)
 					{
 						uint32_t fadr = followBranch(fw,idx2adr(fw,j1+3),0x01000001);
 						//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-						addMatch(fadr,32,0,k,114);
+						fwAddMatch(fw,fadr,32,0,k,114);
 						return 1;
 					}
 				}
@@ -2347,7 +2370,7 @@ int find_matches(firmware *fw, int k)
 						}
 					}
 					if (success > fail){
-						addMatch(idx2adr(fw,i+n->off),success,fail,k,func_list[k].ver);
+						fwAddMatch(fw,idx2adr(fw,i+n->off),success,fail,k,func_list[k].ver);
 						if (count >= MAX_MATCHES){
 							bprintf("// WARNING: too many matches for %s!\n", func_list[k].name);
 							break;
@@ -3014,7 +3037,7 @@ void print_stubs_min(firmware *fw, const char *name, uint32_t fadr, uint32_t ata
 // Search for things that go in 'stubs_min.S'
 void find_stubs_min(firmware *fw)
 {
-	int k,k1;
+	int k,k1,k2;
 	
 	out_hdr = 1;
 	add_blankline();
@@ -3451,6 +3474,83 @@ void find_stubs_min(firmware *fw)
             }
         }
 	}
+	
+	// Find 'palette buffer' info
+	k = get_saved_sig(fw, "SavePaletteData");
+	if (k >= 0)
+	{
+		uint32_t fadr = saved_sigs[k].val;
+		int idx = adr2idx(fw, fadr);
+		
+        if (isBL(fw,idx+13))
+        {
+            fadr = followBranch(fw, idx2adr(fw,idx+13), 0x01000001);
+            idx = adr2idx(fw, fadr);
+            if (isLDR(fw,idx) && isLDR(fw,idx+1) && isB(fw,idx+2))
+            {
+                uint32_t palette_control = LDR2val(fw,idx);
+                print_stubs_min(fw,"palette_control",palette_control,idx2adr(fw,idx));
+                int active_offset = fwval(fw,idx+1) & 0xFFF;
+                print_stubs_min(fw,"active_palette_buffer",palette_control+active_offset,idx2adr(fw,idx+1));
+                fadr = followBranch(fw,idx2adr(fw,idx+2),1);
+                idx = adr2idx(fw, fadr);
+                if (isLDR(fw,idx+17) && isLDR(fw,idx+18) && isLDR(fw,idx+12) && (LDR2val(fw,idx+12) == palette_control))
+                {
+                    int palette_buffer;
+                    if ((fwval(fw,idx+18) & 0x0000F000) == 0)
+                    {
+                        palette_buffer = LDR2val(fw,idx+17);
+                        print_stubs_min(fw,"palette_buffer",palette_buffer,idx2adr(fw,idx+17));
+                    }
+                    else
+                    {
+                        palette_buffer = LDR2val(fw,idx+18);
+                        print_stubs_min(fw,"palette_buffer",palette_buffer,idx2adr(fw,idx+18));
+                    }
+                }
+            }
+        }
+	}
+	
+	// Find 'bitmap buffer' info
+	k = get_saved_sig(fw, "GUISrv_StartGUISystem");
+	if (k >= 0)
+	{
+		uint32_t fadr = saved_sigs[k].val;
+		int idx = adr2idx(fw, fadr);
+
+        uint32_t screen_lock = get_saved_sig(fw, "ScreenLock");
+        if (screen_lock)
+        {
+            screen_lock = saved_sigs[screen_lock].val;
+            for (k=idx; k<idx+32; k++)
+            {
+                if (isBL(fw,k) && (followBranch(fw,idx2adr(fw,k),0x01000001) == screen_lock) && isBL(fw,k+2) && isBL(fw,k+3))
+                {
+                    fadr = followBranch2(fw,idx2adr(fw,k+3),0x01000001);
+                    k1 = adr2idx(fw,fadr);
+                    if (isLDR_PC(fw,k1+1))
+                    {
+                        int reg = (fwval(fw,k1+1) & 0x0000F000) >> 12;
+                        uint32_t adr = LDR2val(fw,k1+1);
+                        for (k2=k1; k2<k1+32; k2++)
+                        {
+                            if (isLDR_PC(fw,k2) && isLDR(fw,k2+1) && (((fwval(fw,k2+1) & 0x000F0000) >> 16) == reg))
+                            {
+                                uint32_t bitmap_buffer = LDR2val(fw,k2);
+                                if (bitmap_buffer == (adr + 0x1C))
+                                {
+                                    uint32_t active_bitmap_buffer = adr + (fwval(fw,k2+1) & 0xFFF);
+                                    print_stubs_min(fw,"bitmap_buffer",bitmap_buffer,idx2adr(fw,k2));
+                                    print_stubs_min(fw,"active_bitmap_buffer",active_bitmap_buffer,idx2adr(fw,k2+1));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------
