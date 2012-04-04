@@ -69,14 +69,14 @@ static KeyMap keymap[] = {
     { 0, KEY_DOWN            , 0x00020000 },
     { 0, KEY_MENU            , 0x00040000 },
     { 0, KEY_VIDEO           , 0x00080000 },
-    { 0, KEY_RIGHT_SOFT      , 0x00002000 },
-    { 0, KEY_UP_SOFT         , 0x00000400 },
-    { 0, KEY_DOWN_SOFT       , 0x00008000 },
+ //   { 0, KEY_RIGHT_SOFT      , 0x00002000 },	//soft keys commented out but still counted in the keymasks, seems to disable them like we want.
+ //   { 0, KEY_UP_SOFT         , 0x00000400 },	//if enabled can cause unintentional button presses in alt menu when rotating the jogdial really fast.
+ //   { 0, KEY_DOWN_SOFT       , 0x00008000 },
 
     { 1, KEY_PRINT           , 0x00200000 }, // playback = alt button
     { 1, KEY_PLAYBACK        , 0x00200000 },
 
-    { 2, KEY_LEFT_SOFT       , 0x00000080 },
+ //   { 2, KEY_LEFT_SOFT       , 0x00000080 },
     { 2, KEY_LEFT            , 0x00000100 },
     { 2, KEY_SHOOT_FULL      , 0x00002002 },
     { 2, KEY_SHOOT_FULL_ONLY , 0x00000002 },
