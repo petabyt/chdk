@@ -12,7 +12,12 @@ void            (*draw_pixel_proc)(unsigned int offset, color cl);
 
 //-------------------------------------------------------------------
 static void draw_pixel_std(unsigned int offset, color cl) {
-    frame_buffer[0][offset] = frame_buffer[1][offset] = cl & 0xff;
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY	
+	extern int active_bitmap_buffer;
+	frame_buffer[active_bitmap_buffer][offset] = cl & 0xff;
+#else
+	frame_buffer[0][offset] = frame_buffer[1][offset] = cl & 0xff;
+#endif
 }
 
 //-------------------------------------------------------------------
