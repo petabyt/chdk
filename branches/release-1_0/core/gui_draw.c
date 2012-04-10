@@ -129,7 +129,7 @@ void draw_hline(coord x, coord y, int len, color cl)
     if ((x + len) > screen_width) len = screen_width - x;
     register unsigned int offset = y * screen_buffer_width + ASPECT_XCORRECTION(x);
     len = ASPECT_XCORRECTION(len);      // Scale the line length if needed
-    for (; len>=0; len--, offset++)
+    for (; len>0; len--, offset++)
         draw_pixel_proc(offset, cl);
 }
 
@@ -138,7 +138,7 @@ void draw_vline(coord x, coord y, int len, color cl)
     if ((x < 0) || (x >= screen_width) || (y >= screen_height)) return;
     if (y < 0) { len += y; y = 0; }
     if ((y + len) > screen_height) len = screen_height - y;
-    for (; len>=0; len--, y++)
+    for (; len>0; len--, y++)
       draw_pixel(x, y, cl);
 }
 //-------------------------------------------------------------------
