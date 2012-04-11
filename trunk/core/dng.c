@@ -61,6 +61,75 @@ struct t_data_for_exif{
 
 static struct t_data_for_exif exif_data;
 
+#define BE(v)   ((v&0x000000FF)<<24)|((v&0x0000FF00)<<8)|((v&0x00FF0000)>>8)|((v&0xFF000000)>>24)   // Convert to big_endian
+
+static unsigned int badpixel_opcode[] =
+{
+    // *** all values must be in big endian order
+
+    BE(4),              // Count = 4
+
+    BE(4),              // FixBadPixelsConstant = 4
+    BE(0x01030000),     // DNG version = 1.3.0.0
+    BE(1),              // Flags = 1
+    BE(8),              // Opcode length = 8 bytes
+    BE(0),              // Constant = 0
+#if   cam_CFAPattern == 0x02010100
+    BE(0),              // BayerPhase = 0 (top left pixel is red)
+#elif cam_CFAPattern == 0x01020001
+    BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
+#elif cam_CFAPattern == 0x01000201
+    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
+#elif cam_CFAPattern == 0x00010102
+    BE(3),              // BayerPhase = 3 (top left pixel is blue)
+#endif
+
+    BE(4),              // FixBadPixelsConstant = 4
+    BE(0x01030000),     // DNG version = 1.3.0.0
+    BE(1),              // Flags = 1
+    BE(8),              // Opcode length = 8 bytes
+    BE(1),              // Constant = 1
+#if   cam_CFAPattern == 0x02010100
+    BE(0),              // BayerPhase = 0 (top left pixel is red)
+#elif cam_CFAPattern == 0x01020001
+    BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
+#elif cam_CFAPattern == 0x01000201
+    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
+#elif cam_CFAPattern == 0x00010102
+    BE(3),              // BayerPhase = 3 (top left pixel is blue)
+#endif
+
+    BE(4),              // FixBadPixelsConstant = 4
+    BE(0x01030000),     // DNG version = 1.3.0.0
+    BE(1),              // Flags = 1
+    BE(8),              // Opcode length = 8 bytes
+    BE(2),              // Constant = 2
+#if   cam_CFAPattern == 0x02010100
+    BE(0),              // BayerPhase = 0 (top left pixel is red)
+#elif cam_CFAPattern == 0x01020001
+    BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
+#elif cam_CFAPattern == 0x01000201
+    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
+#elif cam_CFAPattern == 0x00010102
+    BE(3),              // BayerPhase = 3 (top left pixel is blue)
+#endif
+
+    BE(4),              // FixBadPixelsConstant = 4
+    BE(0x01030000),     // DNG version = 1.3.0.0
+    BE(1),              // Flags = 1
+    BE(8),              // Opcode length = 8 bytes
+    BE(3),              // Constant = 3
+#if   cam_CFAPattern == 0x02010100
+    BE(0),              // BayerPhase = 0 (top left pixel is red)
+#elif cam_CFAPattern == 0x01020001
+    BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
+#elif cam_CFAPattern == 0x01000201
+    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
+#elif cam_CFAPattern == 0x00010102
+    BE(3),              // BayerPhase = 3 (top left pixel is blue)
+#endif
+};
+
 // warning: according to TIFF format specification, elements must be sorted by tag value in ascending order!
 
 struct dir_entry IFD0[]={
@@ -86,7 +155,7 @@ struct dir_entry IFD0[]={
  {0x8769, T_LONG,       1,  0},                                 //EXIF_IFD offset
  {0x8825, T_LONG,       1,  0},                                 //GPS_IFD offset
  {0x9216, T_BYTE,       4,  0x00000001},                        // TIFF/EPStandardID: 1.0.0.0
- {0xC612, T_BYTE,       4,  0x00000101},                        //DNGVersion: 1.1.0.0
+ {0xC612, T_BYTE,       4,  0x00000301},                        //DNGVersion: 1.3.0.0
  {0xC614, T_ASCII,      32, (int)cam_name},                     //UniqueCameraModel. Filled at header generation.
  {0xC621, T_SRATIONAL,  9,  (int)&camera_sensor.color_matrix1},
  {0xC627, T_RATIONAL,   3,  (int)cam_AnalogBalance},
@@ -123,6 +192,7 @@ struct dir_entry IFD1[]={
  {0xC61F, T_LONG,       2,  (int)&camera_sensor.crop.origin},
  {0xC620, T_LONG,       2,  (int)&camera_sensor.crop.size},
  {0xC68D, T_LONG,       4,  (int)&camera_sensor.dng_active_area},
+ {0xC740, T_UNDEFINED|T_PTR, sizeof(badpixel_opcode),  (int)&badpixel_opcode},
  {0, T_END}
 };
 
@@ -532,179 +602,180 @@ void create_thumbnail() {
 // Functions for handling DNG bad pixel file creation and bad pixel
 // removal from images.
 
-#define INIT_BADPIXEL_COUNT -1
-#define INIT_BADPIXEL_FILE -2
-
-#define PATH_BADPIXEL_BIN "A/CHDK/badpixel.bin"
-#define PATH_BAD_TMP_BIN "A/CHDK/bad_tmp.bin"
-
-int init_badpixel_bin_flag; // contants above to count/create file, > 0 num bad pixel
-
+//#define INIT_BADPIXEL_COUNT -1
+//#define INIT_BADPIXEL_FILE -2
+//
+//#define PATH_BADPIXEL_BIN "A/CHDK/badpixel.bin"
+//#define PATH_BAD_TMP_BIN "A/CHDK/bad_tmp.bin"
+//
+//int init_badpixel_bin_flag; // contants above to count/create file, > 0 num bad pixel
+//
 int raw_init_badpixel_bin() {
-    int count;
-    unsigned short c[2];
-    FILE*f;
-    if(init_badpixel_bin_flag == INIT_BADPIXEL_FILE) {
-        f=fopen(PATH_BAD_TMP_BIN,"w+b");
-    } else if (init_badpixel_bin_flag == INIT_BADPIXEL_COUNT) {
-        f=NULL;
-    } else {
-        return 0;
-    }
-    count = 0;
-    for (c[0]=camera_sensor.active_area.x1; c[0]<camera_sensor.active_area.x2; c[0]++)
-    {
-        for (c[1]=camera_sensor.active_area.y1; c[1]<camera_sensor.active_area.y2; c[1]++)
-        {
-            if (get_raw_pixel(c[0],c[1]) <= DNG_BADPIXEL_VALUE_LIMIT)
-            {
-                unsigned short l;
-                for (l=0; l<7 && (c[1]+l+1)<camera_sensor.active_area.y2; l++)
-                    if (get_raw_pixel(c[0],c[1]+l+1) > DNG_BADPIXEL_VALUE_LIMIT)
-                        break;
-                c[1] = c[1] | (l << 13);
-                if (f) fwrite(c, 1, 4, f);
-                c[1] = (c[1] & 0x1FFF) + l;
-                count = count + l + 1;
-            }
-        }
-    }
-    if (f) fclose(f);
-    init_badpixel_bin_flag = count;
-    state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
+//    int count;
+//    unsigned short c[2];
+//    FILE*f;
+//    if(init_badpixel_bin_flag == INIT_BADPIXEL_FILE) {
+//        f=fopen(PATH_BAD_TMP_BIN,"w+b");
+//    } else if (init_badpixel_bin_flag == INIT_BADPIXEL_COUNT) {
+//        f=NULL;
+//    } else {
+//        return 0;
+//    }
+//    count = 0;
+//    for (c[0]=camera_sensor.active_area.x1; c[0]<camera_sensor.active_area.x2; c[0]++)
+//    {
+//        for (c[1]=camera_sensor.active_area.y1; c[1]<camera_sensor.active_area.y2; c[1]++)
+//        {
+//            if (get_raw_pixel(c[0],c[1]) <= DNG_BADPIXEL_VALUE_LIMIT)
+//            {
+//                unsigned short l;
+//                for (l=0; l<7 && (c[1]+l+1)<camera_sensor.active_area.y2; l++)
+//                    if (get_raw_pixel(c[0],c[1]+l+1) > DNG_BADPIXEL_VALUE_LIMIT)
+//                        break;
+//                c[1] = c[1] | (l << 13);
+//                if (f) fwrite(c, 1, 4, f);
+//                c[1] = (c[1] & 0x1FFF) + l;
+//                count = count + l + 1;
+//            }
+//        }
+//    }
+//    if (f) fclose(f);
+//    init_badpixel_bin_flag = count;
+//    state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
     return 1;
 }
 
-short* binary_list=NULL;
-int binary_count=-1;
+//short* binary_list=NULL;
+//int binary_count=-1;
 
 void load_bad_pixels_list_b(char* filename) {
-    struct STD_stat st;
-    long filesize;
-    void* ptr;
-    FILE *fd;
+ //   struct STD_stat st;
+ //   long filesize;
+ //   void* ptr;
+ //   FILE *fd;
 
-	if ( filename==0 )
-	 { unload_bad_pixels_list_b(); return; }
+	//if ( filename==0 )
+	// { unload_bad_pixels_list_b(); return; }
 
-    binary_count=-1;
-    if (safe_stat(filename,&st)!=0) return;
-    filesize=st.st_size;
-    if (filesize%(2*sizeof(short)) != 0) return;
-	if (filesize == 0) { binary_count = 0; return; }	// Allow empty badpixel.bin file
-    ptr=malloc(filesize);
-    if (!ptr) return;
-    fd=fopen(filename, "rb");
-    if (fd) {
-        fread(ptr,1, filesize,fd);
-        fclose(fd);
-        binary_list=ptr;
-        binary_count=filesize/(2*sizeof(short));
-    }
-    else free(ptr);
+ //   binary_count=-1;
+ //   if (safe_stat(filename,&st)!=0) return;
+ //   filesize=st.st_size;
+ //   if (filesize%(2*sizeof(short)) != 0) return;
+	//if (filesize == 0) { binary_count = 0; return; }	// Allow empty badpixel.bin file
+ //   ptr=malloc(filesize);
+ //   if (!ptr) return;
+ //   fd=fopen(filename, "rb");
+ //   if (fd) {
+ //       fread(ptr,1, filesize,fd);
+ //       fclose(fd);
+ //       binary_list=ptr;
+ //       binary_count=filesize/(2*sizeof(short));
+ //   }
+ //   else free(ptr);
 }
 
 void unload_bad_pixels_list_b(void) {
-    if (binary_list) free(binary_list);
-    binary_list=NULL;
-    binary_count=-1;
+    //if (binary_list) free(binary_list);
+    //binary_list=NULL;
+    //binary_count=-1;
 }
 
 void patch_bad_pixels_b(void) {
-    int i;
-    short* ptr=binary_list;
-    short y, cnt;
-    for (i=0; i<binary_count; i++, ptr+=2)
-    {
-        y = ptr[1] & 0x1FFF;
-        cnt = (ptr[1] >> 13) & 7;
-        for (; cnt>=0; cnt--, y++)
-            if (get_raw_pixel(ptr[0], y) <= DNG_BADPIXEL_VALUE_LIMIT)
-                patch_bad_pixel(ptr[0], y);
-    }
+    //int i;
+    //short* ptr=binary_list;
+    //short y, cnt;
+    //for (i=0; i<binary_count; i++, ptr+=2)
+    //{
+    //    y = ptr[1] & 0x1FFF;
+    //    cnt = (ptr[1] >> 13) & 7;
+    //    for (; cnt>=0; cnt--, y++)
+    //        if (get_raw_pixel(ptr[0], y) <= DNG_BADPIXEL_VALUE_LIMIT)
+    //            patch_bad_pixel(ptr[0], y);
+    //}
 }
 
 int badpixel_list_loaded_b(void) {
-	return (binary_count >= 0) ? 1 : 0;
+//	return (binary_count >= 0) ? 1 : 0;
+    return 1;
 }
 
 // -----------------------------------------------
 
-enum BadpixelFSM {
-    BADPIX_START,
-    BADPIX_S1,
-    BADPIX_S2
-};
-
-int badpixel_task_stack(long p) {
-    static unsigned int badpix_cnt1;
-
-    switch(p) {
-        case BADPIX_START:
-            action_pop();
-
-            console_clear();
-            console_add_line("Wait please... ");
-            console_add_line("This takes a few seconds,");
-            console_add_line("don't panic!");
-
-            init_badpixel_bin_flag = INIT_BADPIXEL_COUNT;
-
-            shooting_set_tv96_direct(96, SET_LATER);
-            action_push(BADPIX_S1);
-            action_push(AS_SHOOT);
-            action_push_delay(3000);
-            break;
-        case BADPIX_S1:
-            action_pop();
-
-            badpix_cnt1 = init_badpixel_bin_flag;
-            init_badpixel_bin_flag = INIT_BADPIXEL_FILE;
-            shooting_set_tv96_direct(96, SET_LATER);
-
-            action_push(BADPIX_S2);
-            action_push(AS_SHOOT);
-            break;
-        case BADPIX_S2:
-            action_pop();
-
-            console_clear();
-            if (badpix_cnt1 == init_badpixel_bin_flag) {
-                // TODO script asked confirmation first
-                // should sanity check bad pixel count at least,
-                // wrong buffer address could make badpixel bigger than available mem
-                char msg[32];
-                console_add_line("badpixel.bin created.");
-                sprintf(msg, "Bad pixel count: %d", badpix_cnt1);
-                console_add_line(msg);
-                remove(PATH_BADPIXEL_BIN);
-                rename(PATH_BAD_TMP_BIN,PATH_BADPIXEL_BIN);
-            } else {
-                console_add_line("badpixel.bin failed.");
-                console_add_line("Please try again.");
-            }
-            init_badpixel_bin_flag = 0;
-            remove(PATH_BAD_TMP_BIN);
-
-            action_push_delay(3000);
-            break;
-        default:
-            action_stack_standard(p);
-            break;
-    }
-
-    return 1;
-}
+//enum BadpixelFSM {
+//    BADPIX_START,
+//    BADPIX_S1,
+//    BADPIX_S2
+//};
+//
+//int badpixel_task_stack(long p) {
+//    static unsigned int badpix_cnt1;
+//
+//    switch(p) {
+//        case BADPIX_START:
+//            action_pop();
+//
+//            console_clear();
+//            console_add_line("Wait please... ");
+//            console_add_line("This takes a few seconds,");
+//            console_add_line("don't panic!");
+//
+//            init_badpixel_bin_flag = INIT_BADPIXEL_COUNT;
+//
+//            shooting_set_tv96_direct(96, SET_LATER);
+//            action_push(BADPIX_S1);
+//            action_push(AS_SHOOT);
+//            action_push_delay(3000);
+//            break;
+//        case BADPIX_S1:
+//            action_pop();
+//
+//            badpix_cnt1 = init_badpixel_bin_flag;
+//            init_badpixel_bin_flag = INIT_BADPIXEL_FILE;
+//            shooting_set_tv96_direct(96, SET_LATER);
+//
+//            action_push(BADPIX_S2);
+//            action_push(AS_SHOOT);
+//            break;
+//        case BADPIX_S2:
+//            action_pop();
+//
+//            console_clear();
+//            if (badpix_cnt1 == init_badpixel_bin_flag) {
+//                // TODO script asked confirmation first
+//                // should sanity check bad pixel count at least,
+//                // wrong buffer address could make badpixel bigger than available mem
+//                char msg[32];
+//                console_add_line("badpixel.bin created.");
+//                sprintf(msg, "Bad pixel count: %d", badpix_cnt1);
+//                console_add_line(msg);
+//                remove(PATH_BADPIXEL_BIN);
+//                rename(PATH_BAD_TMP_BIN,PATH_BADPIXEL_BIN);
+//            } else {
+//                console_add_line("badpixel.bin failed.");
+//                console_add_line("Please try again.");
+//            }
+//            init_badpixel_bin_flag = 0;
+//            remove(PATH_BAD_TMP_BIN);
+//
+//            action_push_delay(3000);
+//            break;
+//        default:
+//            action_stack_standard(p);
+//            break;
+//    }
+//
+//    return 1;
+//}
 
 
 void create_badpixel_bin() {
-    if (!(mode_get() & MODE_REC)) {
-        gui_mbox_init(LANG_ERROR, LANG_MSG_RECMODE_REQUIRED, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-        return;
-    }
+    //if (!(mode_get() & MODE_REC)) {
+    //    gui_mbox_init(LANG_ERROR, LANG_MSG_RECMODE_REQUIRED, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+    //    return;
+    //}
 
-    gui_set_mode(&altGuiHandler);
-    action_stack_create(&badpixel_task_stack, BADPIX_START);
+    //gui_set_mode(&altGuiHandler);
+    //action_stack_create(&badpixel_task_stack, BADPIX_START);
 }
 
 //-------------------------------------------------------------------
@@ -717,7 +788,7 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
     if (dng_header_buf)
     {
         fill_gamma_buf();
-        patch_bad_pixels_b();
+        //patch_bad_pixels_b();
         create_thumbnail();
         write(fd, dng_header_buf, dng_header_buf_size);
         write(fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);

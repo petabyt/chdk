@@ -516,11 +516,11 @@ void conf_change_dng(void){
  if (conf.save_raw && conf.dng_raw) {
 	if ( !module_dng_load(LIBDNG_OWNED_BY_RAW) )
 		return;
-	if (!libdng->badpixel_list_loaded_b()) libdng->load_bad_pixels_list_b("A/CHDK/badpixel.bin");
- 	if (!libdng->badpixel_list_loaded_b()) conf.dng_raw=0;
+    //if (!libdng->badpixel_list_loaded_b()) libdng->load_bad_pixels_list_b("A/CHDK/badpixel.bin");
+    //if (!libdng->badpixel_list_loaded_b()) conf.dng_raw=0;
  }
  else if ( libdng && libdng->load_bad_pixels_list_b ) {
-	libdng->load_bad_pixels_list_b(0);        //unload badpixel.bin
+    //libdng->load_bad_pixels_list_b(0);        //unload badpixel.bin
  	module_dng_unload(LIBDNG_OWNED_BY_RAW);
  }
 #endif
