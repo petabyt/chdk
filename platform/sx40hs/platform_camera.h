@@ -132,4 +132,7 @@
     #define CAMERA_MIN_DIST                     95      // Override min subject distance
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                     9523810 // Override max subject distance
+
+    #define CAM_ZOOM_ASSIST_BUTTON_CONTROL      1       // Activate the menu option to allow disabling the zoom assist button
+
 //----------------------------------------------------------

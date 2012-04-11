@@ -196,6 +196,9 @@
 
 	#undef	DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY	// Draw pixels on active bitmap buffer only. Requires active_bitmap_buffer location in stubs_min.S or stubs_entry.S.
 	
+    #undef  CAM_ZOOM_ASSIST_BUTTON_CONTROL      // Activate menu option to enable/disable the zoom assist button on the SX30/SX40
+                                                // For other cameras, requires additional support code in kbd.c (see the SX30 or SX40 version)
+
 //----------------------------------------------------------
 // Overridden values for each camera
 //----------------------------------------------------------

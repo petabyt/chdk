@@ -676,7 +676,9 @@
 
 #define LANG_MENU_SCRIPT_START_ENABLE			551
 
-#define GUI_LANG_ITEMS                          551
+#define LANG_MENU_MISC_ZOOM_ASSIST              552
+
+#define GUI_LANG_ITEMS                          552
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
