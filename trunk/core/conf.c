@@ -374,7 +374,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(223, conf.edge_overlay_pano,          CONF_DEF_VALUE, i:0, NULL),
     //CONF_INFO(224, conf.edge_overlay_zoom,          CONF_DEF_VALUE, i:1, NULL),               // moved to edge overlay module
     CONF_INFO(225, conf.raw_cache,                  CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(226, conf.dng_raw,                    CONF_DEF_VALUE, i:0, conf_change_dng),
+    CONF_INFO(226, conf.dng_raw,                    CONF_DEF_VALUE, i:1, conf_change_dng),
     CONF_INFO(227, conf.flash_sync_curtain,         CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(228, conf.raw_timer,                  CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(229, conf.platformid,                 CONF_DEF_VALUE, i:PLATFORMID, NULL),
@@ -382,7 +382,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(231, conf.save_raw_in_auto,           CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(232, conf.flash_video_override,       CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(233, conf.flash_video_override_power, CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(234, conf.raw_dng_ext,                CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO(234, conf.raw_dng_ext,                CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO(235, conf.dng_usb_ext,                CONF_DEF_VALUE, i:0, conf_change_dng_ext),
     CONF_INFO(236, conf.flash_manual_override,      CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(237, conf.fast_image_quality,         CONF_DEF_VALUE, i:3, NULL),
@@ -457,6 +457,8 @@ static const ConfInfo conf_info[] = {
 #if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
     CONF_INFO(288, conf.zoom_assist_button_disable, CONF_DEF_VALUE,     i:0, NULL),
 #endif
+
+    CONF_INFO(289, conf.dng_badpix_removal,         CONF_DEF_VALUE,     i:0, conf_change_dng),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
@@ -475,7 +477,8 @@ void conf_info_func(unsigned short id)
     case 183: conf_change_menu_symbol_rbf_file(); break;
     case 194: conf_change_script_file(); break;
     case 2:
-    case 226: conf_change_dng(); break;
+    case 226: 
+    case 289: conf_change_dng(); break;
     case 235: conf_change_dng_ext(); break;
     case 284: conf_change_autoiso(); break;
     }
@@ -517,14 +520,14 @@ static void conf_change_video_bitrate() {
 
 void conf_change_dng(void){
 #if DNG_SUPPORT
- if (conf.save_raw && conf.dng_raw) {
+ if (conf.save_raw && conf.dng_raw && conf.dng_badpix_removal) {
 	if ( !module_dng_load(LIBDNG_OWNED_BY_RAW) )
-		return;
-    //if (!libdng->badpixel_list_loaded_b()) libdng->load_bad_pixels_list_b("A/CHDK/badpixel.bin");
-    //if (!libdng->badpixel_list_loaded_b()) conf.dng_raw=0;
+        return;
+    if (!libdng->badpixel_list_loaded_b()) libdng->load_bad_pixels_list_b("A/CHDK/badpixel.bin");
+    if (!libdng->badpixel_list_loaded_b()) conf.dng_badpix_removal=0;
  }
  else if ( libdng && libdng->load_bad_pixels_list_b ) {
-    //libdng->load_bad_pixels_list_b(0);        //unload badpixel.bin
+    libdng->load_bad_pixels_list_b(0);        //unload badpixel.bin
  	module_dng_unload(LIBDNG_OWNED_BY_RAW);
  }
 #endif

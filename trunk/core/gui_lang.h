@@ -678,7 +678,9 @@
 
 #define LANG_MENU_MISC_ZOOM_ASSIST              552
 
-#define GUI_LANG_ITEMS                          552
+#define LANG_MENU_DNG_BADPIX_REMOVE             553
+
+#define GUI_LANG_ITEMS                          553
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

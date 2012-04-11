@@ -48,6 +48,7 @@ const short cam_PreviewBitsPerSample[]  = {8,8,8};
 const char cam_chdk_ver[]               = HDK_VERSION" ver. "BUILD_NUMBER;
 const int cam_Resolution[]              = {180,1};
 int cam_AsShotNeutral[]                 = {1000,1000,1000,1000,1000,1000};
+static char cam_datetime[20]    = "";                   // DateTimeOriginal
 
 struct t_data_for_exif{
  short iso;
@@ -149,7 +150,7 @@ struct dir_entry IFD0[]={
  {0x117,  T_LONG,       1,  DNG_TH_WIDTH*DNG_TH_HEIGHT*3},      // StripByteCounts = preview size
  {0x11C,  T_SHORT,      1,  1},                                 // PlanarConfiguration: 1
  {0x131,  T_ASCII,      sizeof(cam_chdk_ver), (int)cam_chdk_ver},//Software
- {0x132,  T_ASCII,      20, 0},                                 // DateTime
+ {0x132,  T_ASCII,      20, (int)cam_datetime},                 // DateTime
  {0x14A,  T_LONG,       1,  0},                                 //SubIFDs offset
  {0x8298, T_ASCII,      1,  0},                                 // Copyright
  {0x8769, T_LONG,       1,  0},                                 //EXIF_IFD offset
@@ -199,7 +200,6 @@ struct dir_entry IFD1[]={
 
 static int cam_shutter[2]       = { 0, 1000000 };       // Shutter speed
 static int cam_aperture[2]      = { 0, 10 };            // Aperture
-static char cam_datetime[20]    = "";                   // DateTimeOriginal
 static int cam_apex_shutter[2]  = { 0, 96 };            // Shutter speed in APEX units
 static int cam_apex_aperture[2] = { 0, 96 };            // Aperture in APEX units
 static int cam_exp_bias[2]      = { 0, 96 };
@@ -228,14 +228,14 @@ tGPS gps_data;
 
 struct dir_entry GPS_IFD[]={
   {0x0000, T_BYTE,              4,  0x00000302},                    //GPSVersionID: 2 3 0 0
-  {0x0001, T_ASCII,             2,  (int)gps_data.latitudeRef},     //North or South Latitude "N\0" or "S\0"
+  {0x0001, T_ASCII|T_PTR,       2,  (int)gps_data.latitudeRef},     //North or South Latitude "N\0" or "S\0"
   {0x0002, T_RATIONAL,          3,  (int)gps_data.latitude},        //Latitude
-  {0x0003, T_ASCII,             2,  (int)gps_data.longitudeRef},    //East or West Latitude "E\0" or "W\0"
+  {0x0003, T_ASCII|T_PTR,       2,  (int)gps_data.longitudeRef},    //East or West Latitude "E\0" or "W\0"
   {0x0004, T_RATIONAL,          3,  (int)gps_data.longitude},       //Longitude
-  {0x0005, T_BYTE,              1,  (int)gps_data.heightRef},       //AltitudeRef
+  {0x0005, T_BYTE|T_PTR,        1,  (int)&gps_data.heightRef},      //AltitudeRef
   {0x0006, T_RATIONAL,          1,  (int)gps_data.height},          //Altitude
   {0x0007, T_RATIONAL,          3,  (int)gps_data.timeStamp},       //TimeStamp
-  {0x0009, T_ASCII,             2,  (int)gps_data.status},          //Status
+  {0x0009, T_ASCII|T_PTR,       2,  (int)gps_data.status},          //Status
 //{0x000A, T_ASCII,             1,  0},                             //MeasureMode
   {0x0012, T_ASCII,             7,  (int)gps_data.mapDatum},        //MapDatum 7 + 1 pad byte
   {0x001D, T_ASCII,             11, (int)gps_data.dateStamp},       //DateStamp 11 + 1 pad byte
@@ -294,7 +294,6 @@ void create_dng_header(){
      // For camera name string make sure the 'count' in the IFD header is correct for the string
      case 0x110 :                                                                                       // CameraName
      case 0xC614: IFD_LIST[j].entry[i].count = strlen((char*)IFD_LIST[j].entry[i].offset) + 1; break;   // UniqueCameraModel
-     case 0x132 :
      case 0x8822: IFD_LIST[j].entry[i].offset=get_exp_program_for_exif(exif_data.exp_program); break;//ExposureProgram
      case 0x0112: IFD_LIST[j].entry[i].offset=get_orientation_for_exif(exif_data.orientation); break; //Orientation
      case 0x9209: IFD_LIST[j].entry[i].offset=get_flash_mode_for_exif(exif_data.flash_mode, exif_data.flash_fired); break; //Flash mode
@@ -602,180 +601,179 @@ void create_thumbnail() {
 // Functions for handling DNG bad pixel file creation and bad pixel
 // removal from images.
 
-//#define INIT_BADPIXEL_COUNT -1
-//#define INIT_BADPIXEL_FILE -2
-//
-//#define PATH_BADPIXEL_BIN "A/CHDK/badpixel.bin"
-//#define PATH_BAD_TMP_BIN "A/CHDK/bad_tmp.bin"
-//
-//int init_badpixel_bin_flag; // contants above to count/create file, > 0 num bad pixel
-//
+#define INIT_BADPIXEL_COUNT -1
+#define INIT_BADPIXEL_FILE -2
+
+#define PATH_BADPIXEL_BIN "A/CHDK/badpixel.bin"
+#define PATH_BAD_TMP_BIN "A/CHDK/bad_tmp.bin"
+
+int init_badpixel_bin_flag; // contants above to count/create file, > 0 num bad pixel
+
 int raw_init_badpixel_bin() {
-//    int count;
-//    unsigned short c[2];
-//    FILE*f;
-//    if(init_badpixel_bin_flag == INIT_BADPIXEL_FILE) {
-//        f=fopen(PATH_BAD_TMP_BIN,"w+b");
-//    } else if (init_badpixel_bin_flag == INIT_BADPIXEL_COUNT) {
-//        f=NULL;
-//    } else {
-//        return 0;
-//    }
-//    count = 0;
-//    for (c[0]=camera_sensor.active_area.x1; c[0]<camera_sensor.active_area.x2; c[0]++)
-//    {
-//        for (c[1]=camera_sensor.active_area.y1; c[1]<camera_sensor.active_area.y2; c[1]++)
-//        {
-//            if (get_raw_pixel(c[0],c[1]) <= DNG_BADPIXEL_VALUE_LIMIT)
-//            {
-//                unsigned short l;
-//                for (l=0; l<7 && (c[1]+l+1)<camera_sensor.active_area.y2; l++)
-//                    if (get_raw_pixel(c[0],c[1]+l+1) > DNG_BADPIXEL_VALUE_LIMIT)
-//                        break;
-//                c[1] = c[1] | (l << 13);
-//                if (f) fwrite(c, 1, 4, f);
-//                c[1] = (c[1] & 0x1FFF) + l;
-//                count = count + l + 1;
-//            }
-//        }
-//    }
-//    if (f) fclose(f);
-//    init_badpixel_bin_flag = count;
-//    state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
+    int count;
+    unsigned short c[2];
+    FILE*f;
+    if(init_badpixel_bin_flag == INIT_BADPIXEL_FILE) {
+        f=fopen(PATH_BAD_TMP_BIN,"w+b");
+    } else if (init_badpixel_bin_flag == INIT_BADPIXEL_COUNT) {
+        f=NULL;
+    } else {
+        return 0;
+    }
+    count = 0;
+    for (c[0]=camera_sensor.active_area.x1; c[0]<camera_sensor.active_area.x2; c[0]++)
+    {
+        for (c[1]=camera_sensor.active_area.y1; c[1]<camera_sensor.active_area.y2; c[1]++)
+        {
+            if (get_raw_pixel(c[0],c[1]) <= DNG_BADPIXEL_VALUE_LIMIT)
+            {
+                unsigned short l;
+                for (l=0; l<7 && (c[1]+l+1)<camera_sensor.active_area.y2; l++)
+                    if (get_raw_pixel(c[0],c[1]+l+1) > DNG_BADPIXEL_VALUE_LIMIT)
+                        break;
+                c[1] = c[1] | (l << 13);
+                if (f) fwrite(c, 1, 4, f);
+                c[1] = (c[1] & 0x1FFF) + l;
+                count = count + l + 1;
+            }
+        }
+    }
+    if (f) fclose(f);
+    init_badpixel_bin_flag = count;
+    state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
     return 1;
 }
 
-//short* binary_list=NULL;
-//int binary_count=-1;
+short* binary_list=NULL;
+int binary_count=-1;
 
 void load_bad_pixels_list_b(char* filename) {
- //   struct STD_stat st;
- //   long filesize;
- //   void* ptr;
- //   FILE *fd;
+    struct STD_stat st;
+    long filesize;
+    void* ptr;
+    FILE *fd;
 
-	//if ( filename==0 )
-	// { unload_bad_pixels_list_b(); return; }
+	if ( filename==0 )
+	 { unload_bad_pixels_list_b(); return; }
 
- //   binary_count=-1;
- //   if (safe_stat(filename,&st)!=0) return;
- //   filesize=st.st_size;
- //   if (filesize%(2*sizeof(short)) != 0) return;
-	//if (filesize == 0) { binary_count = 0; return; }	// Allow empty badpixel.bin file
- //   ptr=malloc(filesize);
- //   if (!ptr) return;
- //   fd=fopen(filename, "rb");
- //   if (fd) {
- //       fread(ptr,1, filesize,fd);
- //       fclose(fd);
- //       binary_list=ptr;
- //       binary_count=filesize/(2*sizeof(short));
- //   }
- //   else free(ptr);
+    binary_count=-1;
+    if (safe_stat(filename,&st)!=0) return;
+    filesize=st.st_size;
+    if (filesize%(2*sizeof(short)) != 0) return;
+	if (filesize == 0) { binary_count = 0; return; }	// Allow empty badpixel.bin file
+    ptr=malloc(filesize);
+    if (!ptr) return;
+    fd=fopen(filename, "rb");
+    if (fd) {
+        fread(ptr,1, filesize,fd);
+        fclose(fd);
+        binary_list=ptr;
+        binary_count=filesize/(2*sizeof(short));
+    }
+    else free(ptr);
 }
 
 void unload_bad_pixels_list_b(void) {
-    //if (binary_list) free(binary_list);
-    //binary_list=NULL;
-    //binary_count=-1;
+    if (binary_list) free(binary_list);
+    binary_list=NULL;
+    binary_count=-1;
 }
 
 void patch_bad_pixels_b(void) {
-    //int i;
-    //short* ptr=binary_list;
-    //short y, cnt;
-    //for (i=0; i<binary_count; i++, ptr+=2)
-    //{
-    //    y = ptr[1] & 0x1FFF;
-    //    cnt = (ptr[1] >> 13) & 7;
-    //    for (; cnt>=0; cnt--, y++)
-    //        if (get_raw_pixel(ptr[0], y) <= DNG_BADPIXEL_VALUE_LIMIT)
-    //            patch_bad_pixel(ptr[0], y);
-    //}
+    int i;
+    short* ptr=binary_list;
+    short y, cnt;
+    for (i=0; i<binary_count; i++, ptr+=2)
+    {
+        y = ptr[1] & 0x1FFF;
+        cnt = (ptr[1] >> 13) & 7;
+        for (; cnt>=0; cnt--, y++)
+            if (get_raw_pixel(ptr[0], y) <= DNG_BADPIXEL_VALUE_LIMIT)
+                patch_bad_pixel(ptr[0], y);
+    }
 }
 
 int badpixel_list_loaded_b(void) {
-//	return (binary_count >= 0) ? 1 : 0;
-    return 1;
+	return (binary_count >= 0) ? 1 : 0;
 }
 
 // -----------------------------------------------
 
-//enum BadpixelFSM {
-//    BADPIX_START,
-//    BADPIX_S1,
-//    BADPIX_S2
-//};
-//
-//int badpixel_task_stack(long p) {
-//    static unsigned int badpix_cnt1;
-//
-//    switch(p) {
-//        case BADPIX_START:
-//            action_pop();
-//
-//            console_clear();
-//            console_add_line("Wait please... ");
-//            console_add_line("This takes a few seconds,");
-//            console_add_line("don't panic!");
-//
-//            init_badpixel_bin_flag = INIT_BADPIXEL_COUNT;
-//
-//            shooting_set_tv96_direct(96, SET_LATER);
-//            action_push(BADPIX_S1);
-//            action_push(AS_SHOOT);
-//            action_push_delay(3000);
-//            break;
-//        case BADPIX_S1:
-//            action_pop();
-//
-//            badpix_cnt1 = init_badpixel_bin_flag;
-//            init_badpixel_bin_flag = INIT_BADPIXEL_FILE;
-//            shooting_set_tv96_direct(96, SET_LATER);
-//
-//            action_push(BADPIX_S2);
-//            action_push(AS_SHOOT);
-//            break;
-//        case BADPIX_S2:
-//            action_pop();
-//
-//            console_clear();
-//            if (badpix_cnt1 == init_badpixel_bin_flag) {
-//                // TODO script asked confirmation first
-//                // should sanity check bad pixel count at least,
-//                // wrong buffer address could make badpixel bigger than available mem
-//                char msg[32];
-//                console_add_line("badpixel.bin created.");
-//                sprintf(msg, "Bad pixel count: %d", badpix_cnt1);
-//                console_add_line(msg);
-//                remove(PATH_BADPIXEL_BIN);
-//                rename(PATH_BAD_TMP_BIN,PATH_BADPIXEL_BIN);
-//            } else {
-//                console_add_line("badpixel.bin failed.");
-//                console_add_line("Please try again.");
-//            }
-//            init_badpixel_bin_flag = 0;
-//            remove(PATH_BAD_TMP_BIN);
-//
-//            action_push_delay(3000);
-//            break;
-//        default:
-//            action_stack_standard(p);
-//            break;
-//    }
-//
-//    return 1;
-//}
+enum BadpixelFSM {
+    BADPIX_START,
+    BADPIX_S1,
+    BADPIX_S2
+};
+
+int badpixel_task_stack(long p) {
+    static unsigned int badpix_cnt1;
+
+    switch(p) {
+        case BADPIX_START:
+            action_pop();
+
+            console_clear();
+            console_add_line("Wait please... ");
+            console_add_line("This takes a few seconds,");
+            console_add_line("don't panic!");
+
+            init_badpixel_bin_flag = INIT_BADPIXEL_COUNT;
+
+            shooting_set_tv96_direct(96, SET_LATER);
+            action_push(BADPIX_S1);
+            action_push(AS_SHOOT);
+            action_push_delay(3000);
+            break;
+        case BADPIX_S1:
+            action_pop();
+
+            badpix_cnt1 = init_badpixel_bin_flag;
+            init_badpixel_bin_flag = INIT_BADPIXEL_FILE;
+            shooting_set_tv96_direct(96, SET_LATER);
+
+            action_push(BADPIX_S2);
+            action_push(AS_SHOOT);
+            break;
+        case BADPIX_S2:
+            action_pop();
+
+            console_clear();
+            if (badpix_cnt1 == init_badpixel_bin_flag) {
+                // TODO script asked confirmation first
+                // should sanity check bad pixel count at least,
+                // wrong buffer address could make badpixel bigger than available mem
+                char msg[32];
+                console_add_line("badpixel.bin created.");
+                sprintf(msg, "Bad pixel count: %d", badpix_cnt1);
+                console_add_line(msg);
+                remove(PATH_BADPIXEL_BIN);
+                rename(PATH_BAD_TMP_BIN,PATH_BADPIXEL_BIN);
+            } else {
+                console_add_line("badpixel.bin failed.");
+                console_add_line("Please try again.");
+            }
+            init_badpixel_bin_flag = 0;
+            remove(PATH_BAD_TMP_BIN);
+
+            action_push_delay(3000);
+            break;
+        default:
+            action_stack_standard(p);
+            break;
+    }
+
+    return 1;
+}
 
 
 void create_badpixel_bin() {
-    //if (!(mode_get() & MODE_REC)) {
-    //    gui_mbox_init(LANG_ERROR, LANG_MSG_RECMODE_REQUIRED, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-    //    return;
-    //}
+    if (!(mode_get() & MODE_REC)) {
+        gui_mbox_init(LANG_ERROR, LANG_MSG_RECMODE_REQUIRED, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+        return;
+    }
 
-    //gui_set_mode(&altGuiHandler);
-    //action_stack_create(&badpixel_task_stack, BADPIX_START);
+    gui_set_mode(&altGuiHandler);
+    action_stack_create(&badpixel_task_stack, BADPIX_START);
 }
 
 //-------------------------------------------------------------------
@@ -788,7 +786,8 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
     if (dng_header_buf)
     {
         fill_gamma_buf();
-        //patch_bad_pixels_b();
+        if (conf.dng_badpix_removal)
+            patch_bad_pixels_b();
         create_thumbnail();
         write(fd, dng_header_buf, dng_header_buf_size);
         write(fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
@@ -853,7 +852,6 @@ int _module_loader( unsigned int* chdk_export_list )
 //---------------------------------------------------------
 int _module_unloader()
 {
-
 	unload_bad_pixels_list_b();
     free_dng_header();
     return 0;
