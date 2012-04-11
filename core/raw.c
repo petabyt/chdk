@@ -60,14 +60,14 @@ int raw_savefile() {
     char* rawadr = get_raw_image_addr();
     char* altrawadr = get_alt_raw_image_addr();
 
-//#if DNG_SUPPORT
-//    // count/save badpixels if requested
-//    if( libdng &&
-//		libdng->raw_init_badpixel_bin && 
-//		libdng->raw_init_badpixel_bin()) {
-//        return 0;
-//    }
-//#endif    
+#if DNG_SUPPORT
+    // count/save badpixels if requested
+    if( libdng &&
+		libdng->raw_init_badpixel_bin && 
+		libdng->raw_init_badpixel_bin()) {
+        return 0;
+    }
+#endif    
 
     if (develop_raw) {
         started();

@@ -435,7 +435,7 @@
 334 "Center Menu"
 335 "Mute during zooming"
 
-336 "Bad pixel removal"
+336 "Manual bad pixel removal"
 337 "Off"
 338 "Averag."
 339 "RAWconv"
@@ -673,3 +673,5 @@
 551 "Enable script start"
 
 552 "Disable Zoom Assist button"
+
+553 "DNG 1.0 bad pixel removal"
