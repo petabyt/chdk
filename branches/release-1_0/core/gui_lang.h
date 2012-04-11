@@ -659,8 +659,10 @@
 #define LANG_MENU_AUTOISO_OVEREXP_THRES  		538
 
 #define LANG_MENU_GPS_t_18 						539	
+
+#define LANG_MENU_MISC_ZOOM_ASSIST              540
 				
-#define GUI_LANG_ITEMS                          539
+#define GUI_LANG_ITEMS                          540
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

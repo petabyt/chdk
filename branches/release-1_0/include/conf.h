@@ -316,6 +316,11 @@ typedef struct {
     // Enable USB icon
     int usb_info_enable;
     int ext_video_time;     // save gps_track_time
+
+#if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
+    int zoom_assist_button_disable;    // used to disable the zoom assist button on SX30 & SX40 for people who keep accidentaly pressing it
+#endif
+
 #ifdef CAM_HAS_GPS
     int gps_record;
     int gps_navi_show;
