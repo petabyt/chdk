@@ -494,6 +494,9 @@ static CMenuItem misc_submenu_items[] = {
 #if CAM_ADJUSTABLE_ALT_BUTTON
     MENU_ITEM(0x22,LANG_MENU_MISC_ALT_BUTTON,               MENUITEM_ENUM,                  gui_alt_mode_button_enum,           0 ),
 #endif
+#if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
+    MENU_ITEM   (0x5c,LANG_MENU_MISC_ZOOM_ASSIST,           MENUITEM_BOOL,                  &conf.zoom_assist_button_disable,   0 ),
+#endif
     MENU_ITEM(0x5d,LANG_MENU_MISC_DISABLE_LCD_OFF,    MENUITEM_ENUM,    gui_alt_power_enum, 0 ),
     MENU_ITEM(0x65,LANG_MENU_MISC_PALETTE,            MENUITEM_PROC,    gui_menu_run_fltmodule, "palette.flt" ),
     MENU_ITEM(0x80,LANG_MENU_MISC_BUILD_INFO,         MENUITEM_PROC,    gui_show_build_info, 0 ),

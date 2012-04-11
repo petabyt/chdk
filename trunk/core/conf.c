@@ -453,6 +453,10 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(285, conf.autoiso2_over,              CONF_DEF_VALUE,     i:1, NULL),
     CONF_INFO(286, conf.overexp_threshold,          CONF_DEF_VALUE,     i:5, NULL),
     CONF_INFO(287, conf.overexp_ev_enum,            CONF_DEF_VALUE,     i:3, conf_change_autoiso),
+
+#if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
+    CONF_INFO(288, conf.zoom_assist_button_disable, CONF_DEF_VALUE,     i:0, NULL),
+#endif
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
