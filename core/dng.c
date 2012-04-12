@@ -68,7 +68,7 @@ static unsigned int badpixel_opcode[] =
 {
     // *** all values must be in big endian order
 
-    BE(4),              // Count = 4
+    BE(1),              // Count = 1
 
     BE(4),              // FixBadPixelsConstant = 4
     BE(0x01030000),     // DNG version = 1.3.0.0
@@ -76,59 +76,59 @@ static unsigned int badpixel_opcode[] =
     BE(8),              // Opcode length = 8 bytes
     BE(0),              // Constant = 0
 #if   cam_CFAPattern == 0x02010100
-    BE(0),              // BayerPhase = 0 (top left pixel is red)
-#elif cam_CFAPattern == 0x01020001
     BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
+#elif cam_CFAPattern == 0x01020001
+    BE(0),              // BayerPhase = 0 (top left pixel is red)
 #elif cam_CFAPattern == 0x01000201
-    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
-#elif cam_CFAPattern == 0x00010102
     BE(3),              // BayerPhase = 3 (top left pixel is blue)
+#elif cam_CFAPattern == 0x00010102
+    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
 #endif
 
-    BE(4),              // FixBadPixelsConstant = 4
-    BE(0x01030000),     // DNG version = 1.3.0.0
-    BE(1),              // Flags = 1
-    BE(8),              // Opcode length = 8 bytes
-    BE(1),              // Constant = 1
-#if   cam_CFAPattern == 0x02010100
-    BE(0),              // BayerPhase = 0 (top left pixel is red)
-#elif cam_CFAPattern == 0x01020001
-    BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
-#elif cam_CFAPattern == 0x01000201
-    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
-#elif cam_CFAPattern == 0x00010102
-    BE(3),              // BayerPhase = 3 (top left pixel is blue)
-#endif
-
-    BE(4),              // FixBadPixelsConstant = 4
-    BE(0x01030000),     // DNG version = 1.3.0.0
-    BE(1),              // Flags = 1
-    BE(8),              // Opcode length = 8 bytes
-    BE(2),              // Constant = 2
-#if   cam_CFAPattern == 0x02010100
-    BE(0),              // BayerPhase = 0 (top left pixel is red)
-#elif cam_CFAPattern == 0x01020001
-    BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
-#elif cam_CFAPattern == 0x01000201
-    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
-#elif cam_CFAPattern == 0x00010102
-    BE(3),              // BayerPhase = 3 (top left pixel is blue)
-#endif
-
-    BE(4),              // FixBadPixelsConstant = 4
-    BE(0x01030000),     // DNG version = 1.3.0.0
-    BE(1),              // Flags = 1
-    BE(8),              // Opcode length = 8 bytes
-    BE(3),              // Constant = 3
-#if   cam_CFAPattern == 0x02010100
-    BE(0),              // BayerPhase = 0 (top left pixel is red)
-#elif cam_CFAPattern == 0x01020001
-    BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
-#elif cam_CFAPattern == 0x01000201
-    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
-#elif cam_CFAPattern == 0x00010102
-    BE(3),              // BayerPhase = 3 (top left pixel is blue)
-#endif
+//    BE(4),              // FixBadPixelsConstant = 4
+//    BE(0x01030000),     // DNG version = 1.3.0.0
+//    BE(1),              // Flags = 1
+//    BE(8),              // Opcode length = 8 bytes
+//    BE(1),              // Constant = 1
+//#if   cam_CFAPattern == 0x02010100
+//    BE(0),              // BayerPhase = 0 (top left pixel is red)
+//#elif cam_CFAPattern == 0x01020001
+//    BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
+//#elif cam_CFAPattern == 0x01000201
+//    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
+//#elif cam_CFAPattern == 0x00010102
+//    BE(3),              // BayerPhase = 3 (top left pixel is blue)
+//#endif
+//
+//    BE(4),              // FixBadPixelsConstant = 4
+//    BE(0x01030000),     // DNG version = 1.3.0.0
+//    BE(1),              // Flags = 1
+//    BE(8),              // Opcode length = 8 bytes
+//    BE(2),              // Constant = 2
+//#if   cam_CFAPattern == 0x02010100
+//    BE(0),              // BayerPhase = 0 (top left pixel is red)
+//#elif cam_CFAPattern == 0x01020001
+//    BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
+//#elif cam_CFAPattern == 0x01000201
+//    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
+//#elif cam_CFAPattern == 0x00010102
+//    BE(3),              // BayerPhase = 3 (top left pixel is blue)
+//#endif
+//
+//    BE(4),              // FixBadPixelsConstant = 4
+//    BE(0x01030000),     // DNG version = 1.3.0.0
+//    BE(1),              // Flags = 1
+//    BE(8),              // Opcode length = 8 bytes
+//    BE(3),              // Constant = 3
+//#if   cam_CFAPattern == 0x02010100
+//    BE(0),              // BayerPhase = 0 (top left pixel is red)
+//#elif cam_CFAPattern == 0x01020001
+//    BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
+//#elif cam_CFAPattern == 0x01000201
+//    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
+//#elif cam_CFAPattern == 0x00010102
+//    BE(3),              // BayerPhase = 3 (top left pixel is blue)
+//#endif
 };
 
 // warning: according to TIFF format specification, elements must be sorted by tag value in ascending order!
