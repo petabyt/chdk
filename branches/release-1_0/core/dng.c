@@ -543,7 +543,7 @@ void fill_gamma_buf(void) {
 void create_thumbnail() {
     register int i, j, x, y, yadj, xadj;
     register char *buf = thumbnail_buf;
-    register int shift = cam_CFAPattern - 8;
+    register int shift = CAM_SENSOR_BITS_PER_PIXEL - 8;
 
     // The sensor bayer patterns are:
     //  0x02010100  0x01000201  0x01020001
