@@ -458,7 +458,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(288, conf.zoom_assist_button_disable, CONF_DEF_VALUE,     i:0, NULL),
 #endif
 
-    CONF_INFO(289, conf.dng_badpix_removal,         CONF_DEF_VALUE,     i:0, conf_change_dng),
+    CONF_INFO(289, conf.dng_version,                CONF_DEF_VALUE,     i:0, conf_change_dng),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
@@ -520,11 +520,11 @@ static void conf_change_video_bitrate() {
 
 void conf_change_dng(void){
 #if DNG_SUPPORT
- if (conf.save_raw && conf.dng_raw && conf.dng_badpix_removal) {
+ if (conf.save_raw && conf.dng_raw && conf.dng_version) {
 	if ( !module_dng_load(LIBDNG_OWNED_BY_RAW) )
         return;
     if (!libdng->badpixel_list_loaded_b()) libdng->load_bad_pixels_list_b("A/CHDK/badpixel.bin");
-    if (!libdng->badpixel_list_loaded_b()) conf.dng_badpix_removal=0;
+    if (!libdng->badpixel_list_loaded_b()) conf.dng_version=0;
  }
  else if ( libdng && libdng->load_bad_pixels_list_b ) {
     libdng->load_bad_pixels_list_b(0);        //unload badpixel.bin

@@ -59,7 +59,7 @@ typedef struct {
     int sub_batch_ext;
     int raw_cache;
     int dng_raw;
-    int dng_badpix_removal; // Force CHDK to do DNG bad pixel removal (requires creation of badpixel.bin)
+    int dng_version;    // User selectable DNG version (0=1.3, 1=1.1) - select 1.1 for CHDK to do bad pixel removal (requires creation of badpixel.bin)
     int raw_timer;
     int raw_dng_ext;
     int dng_usb_ext;

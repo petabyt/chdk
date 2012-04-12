@@ -236,6 +236,7 @@ static void cb_space_mb();
 static void cb_battery_menu_change(unsigned int item);
 #if DNG_SUPPORT
     static void cb_change_dng(); 
+    static const char* gui_dng_version(int change, int arg);
     void gui_menuproc_badpixel_create(int arg);
 #endif
 #if defined (DNG_EXT_FROM)
@@ -883,8 +884,7 @@ static CMenuItem raw_submenu_items[] = {
     MENU_ITEM   (0x0 ,(int)"DNG",                           MENUITEM_SEPARATOR,	0,							0 ),
     MENU_ITEM   (0x5c,LANG_MENU_DNG_FORMAT,                 MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.dng_raw , (int)cb_change_dng ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_DNG_EXT,                MENUITEM_BOOL,      &conf.raw_dng_ext, 0 ),
-    MENU_ITEM   (0x0 ,(int)"DNG 1.0",                       MENUITEM_SEPARATOR,	0,							0 ),
-    MENU_ITEM   (0x5c,LANG_MENU_DNG_BADPIX_REMOVE,          MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.dng_badpix_removal, (int)cb_change_dng ),
+    MENU_ITEM   (0x5f,LANG_MENU_DNG_VERSION,                MENUITEM_ENUM,      gui_dng_version, 0),
     MENU_ITEM   (0x2a,LANG_MENU_BADPIXEL_CREATE,            MENUITEM_PROC,      gui_menuproc_badpixel_create, 0 ),
 #endif
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,        0,                          0 ),
@@ -1042,11 +1042,21 @@ void cb_battery_menu_change(unsigned int item) {
 
 #if DNG_SUPPORT
 void cb_change_dng(){
-     int old=conf.dng_badpix_removal;
+     int old=conf.dng_version;
      conf_change_dng();
-     if ((old==1) && (conf.dng_badpix_removal==0)) gui_mbox_init(LANG_ERROR, LANG_CANNOT_OPEN_BADPIXEL_FILE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+     if ((old==1) && (conf.dng_version==0)) gui_mbox_init(LANG_ERROR, LANG_CANNOT_OPEN_BADPIXEL_FILE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 }
     
+const char* gui_dng_version(int change, int arg)
+{
+    static const char* modes[]={ "1.3", "1.1" };
+
+    gui_enum_value_change(&conf.dng_version,change,sizeof(modes)/sizeof(modes[0]));
+    cb_change_dng();
+
+    return modes[conf.dng_version];
+}
+
 void gui_menuproc_badpixel_create(int arg) {
 	// After this action module will not be unloaded until reboot 
 	// because not clear when it finished

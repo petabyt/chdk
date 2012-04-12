@@ -193,7 +193,7 @@ struct dir_entry IFD1[]={
  {0xC61F, T_LONG,       2,  (int)&camera_sensor.crop.origin},
  {0xC620, T_LONG,       2,  (int)&camera_sensor.crop.size},
  {0xC68D, T_LONG,       4,  (int)&camera_sensor.dng_active_area},
- {0xC740, T_UNDEFINED|T_PTR, sizeof(badpixel_opcode),  (int)&badpixel_opcode},
+ {0xC740, T_UNDEFINED|T_PTR, sizeof(badpixel_opcode),  (int)&badpixel_opcode},  // Note: should be the last entry!
  {0, T_END}
 };
 
@@ -283,6 +283,25 @@ void create_dng_header(){
  int i,j;
  int extra_offset;
  int raw_offset;
+
+ // Find entries for DNG version and bad pixel opcodes
+ for (i=0; IFD0[i].tag != 0xC612; i++);
+ for (j=0; (IFD1[j].type != 0) && (IFD1[j].tag != 0xC740); j++);
+ // Set version and opcodes
+ if (conf.dng_version)
+ {
+     // If CHDK is removing bad pixels then set DNG version to 1.1 and remove opcodes
+     IFD0[i].offset = BE(0x01010000);
+     IFD1[j].tag = 0;
+     IFD1[j].type = T_END;
+ }
+ else
+ {
+     // Set DNG version to 1.3 and add bad pixel opcodes
+     IFD0[i].offset = BE(0x01030000);
+     IFD1[j].tag = 0xC740;
+     IFD1[j].type = T_UNDEFINED|T_PTR;
+ }
 
  // filling EXIF fields
 
@@ -786,7 +805,7 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
     if (dng_header_buf)
     {
         fill_gamma_buf();
-        if (conf.dng_badpix_removal)
+        if (conf.dng_version)
             patch_bad_pixels_b();
         create_thumbnail();
         write(fd, dng_header_buf, dng_header_buf_size);
