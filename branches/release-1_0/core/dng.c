@@ -67,36 +67,37 @@ const short cam_PreviewBitsPerSample[]={8,8,8};
 const char cam_chdk_ver[]=HDK_VERSION" ver. "BUILD_NUMBER;
 const int cam_Resolution[]={180,1};
 int cam_AsShotNeutral[]={1000,1000,1000,1000,1000,1000};
+static char cam_datetime[20]    = "";                   // DateTimeOriginal
 
 // warning: according to TIFF format specification, elements must be sorted by tag value in ascending order!
 
 struct dir_entry IFD0[]={
- {0xFE,   T_LONG,      1,  1},       // NewSubFileType: Preview Image
- {0x100,  T_LONG,      1,  DNG_TH_WIDTH},   // ImageWidth
- {0x101,  T_LONG,      1,  DNG_TH_HEIGHT},   // ImageLength
- {0x102,  T_SHORT,     3,  (int)cam_PreviewBitsPerSample},   // BitsPerSample: 8,8,8
- {0x103,  T_SHORT,     1,  1},   // Compression: Uncompressed
- {0x106,  T_SHORT,     1,  2}, //PhotometricInterpretation: RGB
- {0x10E,  T_ASCII,     1,  0}, // ImageDescription
- {0x10F,  T_ASCII,     sizeof(CAM_MAKE),  (int)CAM_MAKE}, // Make
- {0x110,  T_ASCII,     32, (int)cam_name}, //Model: Filled at header generation.
- {0x111,  T_LONG,      1,  0}, //StripOffsets: Offset
- {0x112,  T_SHORT,     1,  1}, //Orientation: 1 - 0th row is top, 0th column is left
- {0x115,  T_SHORT,     1,  3}, // SamplesPerPixel: 3
- {0x116,  T_SHORT,     1,  DNG_TH_HEIGHT}, //RowsPerStrip
- {0x117,  T_LONG,      1,  DNG_TH_WIDTH*DNG_TH_HEIGHT*3}, // StripByteCounts = preview size
- {0x11C,  T_SHORT,     1,  1}, // PlanarConfiguration: 1
- {0x131,  T_ASCII,     sizeof(cam_chdk_ver),  (int)cam_chdk_ver}, //Software
- {0x132,  T_ASCII,     20, 0}, // DateTime
- {0x14A,  T_LONG,      1,  0}, //SubIFDs offset
- {0x8298, T_ASCII,     1,  0}, // Copyright
- {0x8769, T_LONG,      1,  0}, //EXIF_IFD offset
+ {0xFE,   T_LONG,      1,  1},                              // NewSubFileType: Preview Image
+ {0x100,  T_LONG,      1,  DNG_TH_WIDTH},                   // ImageWidth
+ {0x101,  T_LONG,      1,  DNG_TH_HEIGHT},                  // ImageLength
+ {0x102,  T_SHORT,     3,  (int)cam_PreviewBitsPerSample},  // BitsPerSample: 8,8,8
+ {0x103,  T_SHORT,     1,  1},                              // Compression: Uncompressed
+ {0x106,  T_SHORT,     1,  2},                              //PhotometricInterpretation: RGB
+ {0x10E,  T_ASCII,     1,  0},                              // ImageDescription
+ {0x10F,  T_ASCII,     sizeof(CAM_MAKE),  (int)CAM_MAKE},   // Make
+ {0x110,  T_ASCII,     32, (int)cam_name},                  //Model: Filled at header generation.
+ {0x111,  T_LONG,      1,  0},                              //StripOffsets: Offset
+ {0x112,  T_SHORT,     1,  1},                              //Orientation: 1 - 0th row is top, 0th column is left
+ {0x115,  T_SHORT,     1,  3},                              // SamplesPerPixel: 3
+ {0x116,  T_SHORT,     1,  DNG_TH_HEIGHT},                  //RowsPerStrip
+ {0x117,  T_LONG,      1,  DNG_TH_WIDTH*DNG_TH_HEIGHT*3},   // StripByteCounts = preview size
+ {0x11C,  T_SHORT,     1,  1},                              // PlanarConfiguration: 1
+ {0x131,  T_ASCII,     sizeof(cam_chdk_ver), (int)cam_chdk_ver}, //Software
+ {0x132,  T_ASCII,     20, (int)cam_datetime},              // DateTime
+ {0x14A,  T_LONG,      1,  0},                              //SubIFDs offset
+ {0x8298, T_ASCII,     1,  0},                              // Copyright
+ {0x8769, T_LONG,      1,  0},                              //EXIF_IFD offset
 #if defined(CAM_HAS_GPS)
- {0x8825, T_LONG,      1,  0}, //GPS_IFD offset
+ {0x8825, T_LONG,      1,  0},                              //GPS_IFD offset
 #endif
- {0x9216, T_BYTE,      4,  0x00000001},  // TIFF/EPStandardID: 1.0.0.0
- {0xC612, T_BYTE,      4,  0x00000101}, //DNGVersion: 1.1.0.0
- {0xC614, T_ASCII,     32, (int)cam_name}, //UniqueCameraModel. Filled at header generation.
+ {0x9216, T_BYTE,      4,  0x00000001},                     // TIFF/EPStandardID: 1.0.0.0
+ {0xC612, T_BYTE,      4,  0x00000101},                     //DNGVersion: 1.1.0.0
+ {0xC614, T_ASCII,     32, (int)cam_name},                  //UniqueCameraModel. Filled at header generation.
  {0xC621, T_SRATIONAL, 9,  (int)cam_ColorMatrix1},
  {0xC627, T_RATIONAL,  3,  (int)cam_AnalogBalance},
  {0xC628, T_RATIONAL,  3,  (int)cam_AsShotNeutral},
@@ -140,7 +141,6 @@ struct dir_entry IFD1[]={
 
 static int cam_shutter[2]       = { 0, 1000000 };       // Shutter speed
 static int cam_aperture[2]      = { 0, 10 };            // Aperture
-static char cam_datetime[20]    = "";                   // DateTimeOriginal
 static int cam_apex_shutter[2]  = { 0, 96 };            // Shutter speed in APEX units
 static int cam_apex_aperture[2] = { 0, 96 };            // Aperture in APEX units
 static int cam_exp_bias[2]      = { 0, 96 };
@@ -255,7 +255,6 @@ void create_dng_header(){
     // For camera name string make sure the 'count' in the IFD header is correct for the string
      case 0x110 :                                                                                       // CameraName
      case 0xC614: IFD_LIST[j].entry[i].count = strlen((char*)IFD_LIST[j].entry[i].offset) + 1; break;   // UniqueCameraModel
-     case 0x132 :
      case 0x8827: IFD_LIST[j].entry[i].offset=exif_data.iso; break;//ISOSpeedRatings
      case 0x8822: IFD_LIST[j].entry[i].offset=get_exp_program_for_exif(exif_data.exp_program); break;//ExposureProgram
      case 0xA405: IFD_LIST[j].entry[i].offset=exif_data.effective_focal_length/1000; break; ////FocalLengthIn35mmFilm
