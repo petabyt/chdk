@@ -84,54 +84,13 @@ static unsigned int badpixel_opcode[] =
 #elif cam_CFAPattern == 0x00010102
     BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
 #endif
-
-//    BE(4),              // FixBadPixelsConstant = 4
-//    BE(0x01030000),     // DNG version = 1.3.0.0
-//    BE(1),              // Flags = 1
-//    BE(8),              // Opcode length = 8 bytes
-//    BE(1),              // Constant = 1
-//#if   cam_CFAPattern == 0x02010100
-//    BE(0),              // BayerPhase = 0 (top left pixel is red)
-//#elif cam_CFAPattern == 0x01020001
-//    BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
-//#elif cam_CFAPattern == 0x01000201
-//    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
-//#elif cam_CFAPattern == 0x00010102
-//    BE(3),              // BayerPhase = 3 (top left pixel is blue)
-//#endif
-//
-//    BE(4),              // FixBadPixelsConstant = 4
-//    BE(0x01030000),     // DNG version = 1.3.0.0
-//    BE(1),              // Flags = 1
-//    BE(8),              // Opcode length = 8 bytes
-//    BE(2),              // Constant = 2
-//#if   cam_CFAPattern == 0x02010100
-//    BE(0),              // BayerPhase = 0 (top left pixel is red)
-//#elif cam_CFAPattern == 0x01020001
-//    BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
-//#elif cam_CFAPattern == 0x01000201
-//    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
-//#elif cam_CFAPattern == 0x00010102
-//    BE(3),              // BayerPhase = 3 (top left pixel is blue)
-//#endif
-//
-//    BE(4),              // FixBadPixelsConstant = 4
-//    BE(0x01030000),     // DNG version = 1.3.0.0
-//    BE(1),              // Flags = 1
-//    BE(8),              // Opcode length = 8 bytes
-//    BE(3),              // Constant = 3
-//#if   cam_CFAPattern == 0x02010100
-//    BE(0),              // BayerPhase = 0 (top left pixel is red)
-//#elif cam_CFAPattern == 0x01020001
-//    BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
-//#elif cam_CFAPattern == 0x01000201
-//    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
-//#elif cam_CFAPattern == 0x00010102
-//    BE(3),              // BayerPhase = 3 (top left pixel is blue)
-//#endif
 };
 
 // warning: according to TIFF format specification, elements must be sorted by tag value in ascending order!
+
+// Index of DNGVersion in IFD0 below.
+// *** warning - if entries are added or removed this should be updated ***
+#define DNG_VERSION_INDEX   22
 
 struct dir_entry IFD0[]={
  {0xFE,   T_LONG,       1,  1},                                 // NewSubFileType: Preview Image
@@ -170,6 +129,9 @@ struct dir_entry IFD0[]={
  {0, T_END}
 };
 
+// Index of the badpixel opcode entry in IFD1 below
+// *** warning - if entries are added or removed this should be updated ***
+#define BADPIXEL_OPCODE_INDEX   21
                                                                                       
 struct dir_entry IFD1[]={
  {0xFE,   T_LONG,       1,  0},                                 // NewSubFileType: Main Image
@@ -193,10 +155,9 @@ struct dir_entry IFD1[]={
  {0xC61F, T_LONG,       2,  (int)&camera_sensor.crop.origin},
  {0xC620, T_LONG,       2,  (int)&camera_sensor.crop.size},
  {0xC68D, T_LONG,       4,  (int)&camera_sensor.dng_active_area},
- {0xC740, T_UNDEFINED|T_PTR, sizeof(badpixel_opcode),  (int)&badpixel_opcode},  // Note: should be the last entry!
+ {0xC740, T_UNDEFINED|T_PTR, sizeof(badpixel_opcode),  (int)&badpixel_opcode},
  {0, T_END}
 };
-
 
 static int cam_shutter[2]       = { 0, 1000000 };       // Shutter speed
 static int cam_aperture[2]      = { 0, 10 };            // Aperture
@@ -261,6 +222,10 @@ int get_type_size(int type){
  }
 }
 
+// Index of the GPS IFD in IFD_LIST below
+// *** warning - if entries are added or removed this should be updated ***
+#define GPS_IFD_INDEX 3
+
 struct {struct dir_entry* entry; int count;} IFD_LIST[]={{IFD0,0}, {IFD1,0}, {EXIF_IFD,0}, {GPS_IFD, 0}};
 
 #define IFDs (sizeof(IFD_LIST)/sizeof(IFD_LIST[0]))
@@ -284,28 +249,34 @@ void create_dng_header(){
  int extra_offset;
  int raw_offset;
 
- // Find entries for DNG version and bad pixel opcodes
- for (i=0; IFD0[i].tag != 0xC612; i++);
- for (j=0; (IFD1[j].type != 0) && (IFD1[j].tag != 0xC740); j++);
  // Set version and opcodes
  if (conf.dng_version)
  {
      // If CHDK is removing bad pixels then set DNG version to 1.1 and remove opcodes
-     IFD0[i].offset = BE(0x01010000);
-     IFD1[j].tag = 0;
-     IFD1[j].type = T_END;
+     IFD0[DNG_VERSION_INDEX].offset = BE(0x01010000);
+     IFD1[BADPIXEL_OPCODE_INDEX].tag = 0;
+     IFD1[BADPIXEL_OPCODE_INDEX].type = T_END;
  }
  else
  {
      // Set DNG version to 1.3 and add bad pixel opcodes
-     IFD0[i].offset = BE(0x01030000);
-     IFD1[j].tag = 0xC740;
-     IFD1[j].type = T_UNDEFINED|T_PTR;
+     IFD0[DNG_VERSION_INDEX].offset = BE(0x01030000);
+     IFD1[BADPIXEL_OPCODE_INDEX].tag = 0xC740;
+     IFD1[BADPIXEL_OPCODE_INDEX].type = T_UNDEFINED|T_PTR;
  }
 
  // filling EXIF fields
 
- gps_getData(&gps_data); 
+ if (camera_info.props.gps)
+ {
+    // If camera has GPS get the GPS data
+    gps_getData(&gps_data); 
+ }
+ else
+ {
+    // If no GPS then remove the GPS data from the header
+    IFD_LIST[GPS_IFD_INDEX].entry = 0;
+ }
 
  for (j=0;j<IFDs;j++) {
   for(i=0; IFD_LIST[j].entry[i].type; i++) {
