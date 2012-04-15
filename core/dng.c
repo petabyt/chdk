@@ -222,13 +222,7 @@ int get_type_size(int type){
  }
 }
 
-// Index of the GPS IFD in IFD_LIST below
-// *** warning - if entries are added or removed this should be updated ***
-#define GPS_IFD_INDEX 3
-
-struct {struct dir_entry* entry; int count;} IFD_LIST[]={{IFD0,0}, {IFD1,0}, {EXIF_IFD,0}, {GPS_IFD, 0}};
-
-#define IFDs (sizeof(IFD_LIST)/sizeof(IFD_LIST[0]))
+struct {struct dir_entry* entry; int count;} IFD_LIST[]={{IFD0,0}, {IFD1,0}, {EXIF_IFD,0}, {GPS_IFD,0}};
 
 #define TIFF_HDR_SIZE (8)
 
@@ -267,6 +261,8 @@ void create_dng_header(){
 
  // filling EXIF fields
 
+ int IFDs = (sizeof(IFD_LIST)/sizeof(IFD_LIST[0]));
+
  if (camera_info.props.gps)
  {
     // If camera has GPS get the GPS data
@@ -275,7 +271,7 @@ void create_dng_header(){
  else
  {
     // If no GPS then remove the GPS data from the header
-    IFD_LIST[GPS_IFD_INDEX].entry = 0;
+    IFDs--;
  }
 
  for (j=0;j<IFDs;j++) {
@@ -331,12 +327,16 @@ void create_dng_header(){
  for (j=0;j<IFDs;j++) {
   extra_offset+=6+IFD_LIST[j].count*12; // IFD header+footer
   for(i=0; IFD_LIST[j].entry[i].type; i++) {
-   if (IFD_LIST[j].entry[i].tag==0x8769) IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+(IFD_LIST[0].count+IFD_LIST[1].count)*12+6+6;  // EXIF IFD offset
-   if (IFD_LIST[j].entry[i].tag==0x8825) IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+(IFD_LIST[0].count+IFD_LIST[1].count+IFD_LIST[2].count)*12+6+6+6;  // GPS IFD offset
-   if (IFD_LIST[j].entry[i].tag==0x14A)  IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+IFD_LIST[0].count*12+6; // SubIFDs offset
-   if (IFD_LIST[j].entry[i].tag==0x111)  {
-    if (j==1) IFD_LIST[j].entry[i].offset=raw_offset+DNG_TH_WIDTH*DNG_TH_HEIGHT*3;  //StripOffsets for main image
-    if (j==0) IFD_LIST[j].entry[i].offset=raw_offset;  //StripOffsets for thumbnail
+   if (IFD_LIST[j].entry[i].tag==0x8769)
+       IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+(IFD_LIST[0].count+IFD_LIST[1].count)*12+6+6;  // EXIF IFD offset
+   if (IFD_LIST[j].entry[i].tag==0x8825 && camera_info.props.gps) 
+       IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+(IFD_LIST[0].count+IFD_LIST[1].count+IFD_LIST[2].count)*12+6+6+6;  // GPS IFD offset
+   if (IFD_LIST[j].entry[i].tag==0x14A)  
+       IFD_LIST[j].entry[i].offset=TIFF_HDR_SIZE+IFD_LIST[0].count*12+6; // SubIFDs offset
+   if (IFD_LIST[j].entry[i].tag==0x111)
+   {
+       if (j==1) IFD_LIST[j].entry[i].offset=raw_offset+DNG_TH_WIDTH*DNG_TH_HEIGHT*3;  //StripOffsets for main image
+       if (j==0) IFD_LIST[j].entry[i].offset=raw_offset;  //StripOffsets for thumbnail
    }
   }
  }
