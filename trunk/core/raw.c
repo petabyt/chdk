@@ -211,6 +211,7 @@ void set_raw_pixel(unsigned int x, unsigned int y, unsigned short value) {
         case 2: addr[2] = (unsigned char)(value >> 4);  addr[5] = (addr[5]&0x0F) | (unsigned char)(value << 4);  break;
         case 3: addr[4] = (unsigned char)value; addr[5] = (addr[5]&0xF0) | (unsigned char)(value >> 8);  break;
     }
+#elif CAM_SENSOR_BITS_PER_PIXEL==14
 #else 
     #error define set_raw_pixel for sensor bit depth
 #endif
@@ -238,6 +239,8 @@ unsigned short get_raw_pixel(unsigned int x,unsigned  int y) {
         case 2: return ((unsigned short)(addr[2]) << 4) | (addr[5] >> 4);
         case 3: return ((unsigned short)(addr[5] & 0x0F) << 8) | (addr[4]);
     }
+#elif CAM_SENSOR_BITS_PER_PIXEL==14
+    return CAM_BLACK_LEVEL;
 #else 
     #error define get_raw_pixel for sensor bit depth
 #endif
