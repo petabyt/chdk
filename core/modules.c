@@ -68,6 +68,8 @@ static void* module_load_generic(void **lib, char *name, int (*callback)(void**)
 #define MODULE_NAME_RAWOP "_rawop10.flt"
 #elif CAM_SENSOR_BITS_PER_PIXEL==12
 #define MODULE_NAME_RAWOP "_rawop12.flt"
+#elif CAM_SENSOR_BITS_PER_PIXEL==14
+#define MODULE_NAME_RAWOP "_rawop14.flt"
 #else 
  #error define set_raw_pixel for sensor bit depth
 #endif

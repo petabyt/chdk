@@ -1,0 +1,13 @@
+****************************************
+Camera depending notes: 
+* DryOS Camera
+---
+Alpha CHDK for G1X.
+
+****************************************
+Development notes:
+---
+Known issues:
+    - Currently only firmware 1.00f is supported.
+    - Raw images can be saved as DNG; but DNG version 1.3 must be used (bad pixel creation will not work for DNG 1.1)
+    - CHDK native RAW image format will be 14 bits-per-pixel which nothing supports (not recommended for use)
