@@ -1074,7 +1074,8 @@ void shooting_set_focus(int v, short is_now) {
             if (conf.dof_subj_dist_as_near_limit) {
                 s=shooting_get_near_limit_f(v,shooting_get_min_real_aperture(),get_focal_length(lens_get_zoom_point()));
             }
-            if (!conf.dof_use_exif_subj_dist) s+=shooting_get_lens_to_focal_plane_width();
+            if (!conf.dof_use_exif_subj_dist && (s != INFINITY_DIST))
+                s+=shooting_get_lens_to_focal_plane_width();
             lens_set_focus_pos(s); 
         }
         else photo_param_put_off.subj_dist=v;
@@ -1284,7 +1285,10 @@ const char * shooting_get_av_bracket_value()
 
 int shooting_get_subject_distance_override_value()
 {
-  return (conf.subj_dist_override_value < shooting_get_lens_to_focal_plane_width()?0:(conf.subj_dist_override_value - shooting_get_lens_to_focal_plane_width()));
+    if (conf.subj_dist_override_value != INFINITY_DIST)
+        return (conf.subj_dist_override_value < shooting_get_lens_to_focal_plane_width()?0:(conf.subj_dist_override_value - shooting_get_lens_to_focal_plane_width()));
+    else
+        return INFINITY_DIST;
 }
 
 int shooting_get_subject_distance_bracket_value()
