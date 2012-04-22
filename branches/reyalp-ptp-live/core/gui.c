@@ -236,6 +236,7 @@ static void cb_space_mb();
 static void cb_battery_menu_change(unsigned int item);
 #if DNG_SUPPORT
     static void cb_change_dng(); 
+    static const char* gui_dng_version(int change, int arg);
     void gui_menuproc_badpixel_create(int arg);
 #endif
 #if defined (DNG_EXT_FROM)
@@ -493,6 +494,9 @@ static CMenuItem misc_submenu_items[] = {
 #endif
 #if CAM_ADJUSTABLE_ALT_BUTTON
     MENU_ITEM(0x22,LANG_MENU_MISC_ALT_BUTTON,               MENUITEM_ENUM,                  gui_alt_mode_button_enum,           0 ),
+#endif
+#if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
+    MENU_ITEM   (0x5c,LANG_MENU_MISC_ZOOM_ASSIST,           MENUITEM_BOOL,                  &conf.zoom_assist_button_disable,   0 ),
 #endif
     MENU_ITEM(0x5d,LANG_MENU_MISC_DISABLE_LCD_OFF,    MENUITEM_ENUM,    gui_alt_power_enum, 0 ),
     MENU_ITEM(0x65,LANG_MENU_MISC_PALETTE,            MENUITEM_PROC,    gui_menu_run_fltmodule, "palette.flt" ),
@@ -859,28 +863,30 @@ static CMenu raw_exceptions_submenu = {0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS_
 static const char* gui_raw_nr_modes[] =                     { "Auto", "Off", "On"};
 static CMenuItem raw_submenu_items[] = {
 #if DNG_SUPPORT
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE,                MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.save_raw, (int)cb_change_dng ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE,                   MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.save_raw, (int)cb_change_dng ),
 #else
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE,                MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.save_raw, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE,                   MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.save_raw, 0 ),
 #endif
-    MENU_ITEM(0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS,	 	MENUITEM_SUBMENU,   &raw_exceptions_submenu, 0 ),
-    MENU_ENUM2(0x5f,LANG_MENU_RAW_NOISE_REDUCTION,    &conf.raw_nr, gui_raw_nr_modes ),
-    MENU_ITEM(0x5c,LANG_MENU_RAW_FIRST_ONLY,          MENUITEM_BOOL,      &conf.raw_save_first_only, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_RAW_SAVE_IN_DIR,         MENUITEM_BOOL,      &conf.raw_in_dir, 0 ),
-    MENU_ENUM2a(0x5f,LANG_MENU_RAW_PREFIX,            &conf.raw_prefix, img_prefixes, NUM_IMG_PREFIXES ),
-    MENU_ENUM2a(0x5f,LANG_MENU_RAW_EXTENSION,         &conf.raw_ext, img_exts, NUM_IMG_EXTS ),
-    MENU_ENUM2a(0x5f,LANG_MENU_SUB_PREFIX,            &conf.sub_batch_prefix, img_prefixes, NUM_IMG_PREFIXES ),
-    MENU_ENUM2a(0x5f,LANG_MENU_SUB_EXTENSION,         &conf.sub_batch_ext, img_exts, NUM_IMG_EXTS ),
-//  MENU_ITEM(0x60,LANG_MENU_SUB_IN_DARK_VALUE,       MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.sub_in_dark_value, MENU_MINMAX(0, 1023) ),
-//  MENU_ITEM(0x60,LANG_MENU_SUB_OUT_DARK_VALUE,      MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.sub_out_dark_value, MENU_MINMAX(0, 1023) ),
-    MENU_ITEM(0x2a,LANG_MENU_RAW_DEVELOP,             MENUITEM_PROC,      gui_raw_develop, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_BAD_PIXEL_REMOVAL,       MENUITEM_ENUM,      gui_bad_pixel_enum, 0 ),
-#if DNG_SUPPORT
-    MENU_ITEM(0x5c,LANG_MENU_DNG_FORMAT,              MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.dng_raw , (int)cb_change_dng ),
-    MENU_ITEM(0x5c,LANG_MENU_RAW_DNG_EXT,             MENUITEM_BOOL,      &conf.raw_dng_ext, 0 ),
-    MENU_ITEM(0x2a,LANG_MENU_BADPIXEL_CREATE,         MENUITEM_PROC,      gui_menuproc_badpixel_create, 0 ),
-#endif
+    MENU_ITEM   (0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS,	MENUITEM_SUBMENU,   &raw_exceptions_submenu, 0 ),
+    MENU_ENUM2  (0x5f,LANG_MENU_RAW_NOISE_REDUCTION,        &conf.raw_nr, gui_raw_nr_modes ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_FIRST_ONLY,             MENUITEM_BOOL,      &conf.raw_save_first_only, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_DIR,            MENUITEM_BOOL,      &conf.raw_in_dir, 0 ),
+    MENU_ENUM2a (0x5f,LANG_MENU_RAW_PREFIX,                 &conf.raw_prefix, img_prefixes, NUM_IMG_PREFIXES ),
+    MENU_ENUM2a (0x5f,LANG_MENU_RAW_EXTENSION,              &conf.raw_ext, img_exts, NUM_IMG_EXTS ),
+    MENU_ENUM2a (0x5f,LANG_MENU_SUB_PREFIX,                 &conf.sub_batch_prefix, img_prefixes, NUM_IMG_PREFIXES ),
+    MENU_ENUM2a (0x5f,LANG_MENU_SUB_EXTENSION,              &conf.sub_batch_ext, img_exts, NUM_IMG_EXTS ),
+//  MENU_ITEM   (0x60,LANG_MENU_SUB_IN_DARK_VALUE,          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.sub_in_dark_value, MENU_MINMAX(0, 1023) ),
+//  MENU_ITEM   (0x60,LANG_MENU_SUB_OUT_DARK_VALUE,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.sub_out_dark_value, MENU_MINMAX(0, 1023) ),
+    MENU_ITEM   (0x2a,LANG_MENU_RAW_DEVELOP,                MENUITEM_PROC,      gui_raw_develop, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_BAD_PIXEL_REMOVAL,          MENUITEM_ENUM,      gui_bad_pixel_enum, 0 ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_CACHED,                 MENUITEM_BOOL,      &conf.raw_cache,            0 ),
+#if DNG_SUPPORT
+    MENU_ITEM   (0x0 ,(int)"DNG",                           MENUITEM_SEPARATOR,	0,							0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_DNG_FORMAT,                 MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.dng_raw , (int)cb_change_dng ),
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_DNG_EXT,                MENUITEM_BOOL,      &conf.raw_dng_ext, 0 ),
+    MENU_ITEM   (0x5f,LANG_MENU_DNG_VERSION,                MENUITEM_ENUM,      gui_dng_version, 0),
+    MENU_ITEM   (0x2a,LANG_MENU_BADPIXEL_CREATE,            MENUITEM_PROC,      gui_menuproc_badpixel_create, 0 ),
+#endif
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,        0,                          0 ),
     {0}
 };
@@ -1036,11 +1042,21 @@ void cb_battery_menu_change(unsigned int item) {
 
 #if DNG_SUPPORT
 void cb_change_dng(){
-     int old=conf.dng_raw;
+     int old=conf.dng_version;
      conf_change_dng();
-     if ((old==1) && (conf.dng_raw==0)) gui_mbox_init(LANG_ERROR, LANG_CANNOT_OPEN_BADPIXEL_FILE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+     if ((old==1) && (conf.dng_version==0)) gui_mbox_init(LANG_ERROR, LANG_CANNOT_OPEN_BADPIXEL_FILE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 }
     
+const char* gui_dng_version(int change, int arg)
+{
+    static const char* modes[]={ "1.3", "1.1" };
+
+    gui_enum_value_change(&conf.dng_version,change,sizeof(modes)/sizeof(modes[0]));
+    cb_change_dng();
+
+    return modes[conf.dng_version];
+}
+
 void gui_menuproc_badpixel_create(int arg) {
 	// After this action module will not be unloaded until reboot 
 	// because not clear when it finished
@@ -1224,9 +1240,9 @@ const char* gui_histo_show_enum(int change, int arg) {
     #elif defined(CAMERA_a570) || defined(CAMERA_a580) || defined(CAMERA_a590) || defined(CAMERA_a720) || defined(CAMERA_ixus65_sd630)
         static const char* names[]={ "Print", "Display"};
         static const int keys[] = {KEY_PRINT, KEY_DISPLAY};
-    #elif defined(CAMERA_sx220hs) || defined(CAMERA_sx230hs)
-        static const char* names[]={ "Disp+Set", "Display", "Playback", "Video"};
-        static const int keys[] = {KEY_PRINT, KEY_DISPLAY, KEY_PLAYBACK, KEY_VIDEO};
+    #elif defined(CAMERA_sx150is) || (CAMERA_sx220hs) || defined(CAMERA_sx230hs) || defined(CAMERA_s100)
+        static const char* names[]={ "Playback", "Video", "Display" };
+        static const int keys[] = {KEY_PRINT, KEY_VIDEO, KEY_DISPLAY};
     #elif defined(CAMERA_ixus220_elph300hs) || defined(CAMERA_ixus230_elph310hs)
         static const char* names[]={ "Video", "Display", "Playback", "Video"};
         static const int keys[] = {KEY_PRINT, KEY_DISPLAY, KEY_PLAYBACK, KEY_VIDEO};

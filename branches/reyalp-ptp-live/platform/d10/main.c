@@ -42,28 +42,35 @@ D10 from exif
 
 CF_EFL ~54800-56000
 */
-static const int fl_tbl[] = {6200, 7200, 8300, 9700, 11600, 14300, 18600};
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
-#define CF_EFL 55400
+
+// Focus length table in firmware @0xfffe2a8c
+#define NUM_FL      7   // 0 - 6, entries in firmware
+#define NUM_DATA    3   // 3 words each entry, first is FL
+extern int focus_len_table[NUM_FL*NUM_DATA];
+
+// Conversion factor lens FL --> 35mm equiv
+// lens      35mm     CF
+// ----      ----     --
+// 6.2       35       ( 35/ 6.2) * 62 = 350  (min FL)
+// 18.6      105      (105/18.6) * 62 = 350  (max FL)
+#define CF_EFL      350
+#define	CF_EFL_DIV  62
 
 const int zoom_points = NUM_FL;
 
 int get_effective_focal_length(int zp) {
-    return (CF_EFL*get_focal_length(zp))/10000;
+    return (CF_EFL*get_focal_length(zp))/CF_EFL_DIV;
 }
 
 int get_focal_length(int zp) {
-    if (zp<0) return fl_tbl[0];
-    else if (zp>NUM_FL-1) return fl_tbl[NUM_FL-1];
-    else return fl_tbl[zp];
+    if (zp < 0) zp = 0;
+    else if (zp >= NUM_FL) zp = NUM_FL-1;
+    return focus_len_table[zp*NUM_DATA];
 }
 
 int get_zoom_x(int zp) {
-    if (zp<1) return 10;
-    else if (zp>NUM_FL-1) return fl_tbl[NUM_FL-1]*10/fl_tbl[0];
-    else return fl_tbl[zp]*10/fl_tbl[0];
+    return get_focal_length(zp)*10/focus_len_table[0];
 }
-
 
 // uses NB-6L, similar specs to NB-5L, copied from sd990 below 
 // canon icon blinking at ~3.47, still running at <3.38

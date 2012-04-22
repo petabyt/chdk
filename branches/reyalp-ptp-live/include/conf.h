@@ -59,6 +59,7 @@ typedef struct {
     int sub_batch_ext;
     int raw_cache;
     int dng_raw;
+    int dng_version;    // User selectable DNG version (0=1.3, 1=1.1) - select 1.1 for CHDK to do bad pixel removal (requires creation of badpixel.bin)
     int raw_timer;
     int raw_dng_ext;
     int dng_usb_ext;
@@ -326,13 +327,17 @@ typedef struct {
     int usb_info_enable; 
 
 	// gen 2 USB remote
-	int remote_switch_type ;
-	int remote_control_mode ;
+	int remote_switch_type;
+	int remote_control_mode;
 
     int ext_video_time;
     
-    int remote_enable_scripts ;  // usb remote activates scripts in <ALT> mode
+    int remote_enable_scripts;  // usb remote activates scripts in <ALT> mode
     
+#if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
+    int zoom_assist_button_disable;    // used to disable the zoom assist button on SX30 & SX40 for people who keep accidentaly pressing it
+#endif
+
 #ifdef CAM_HAS_GPS
     int gps_record;
     int gps_navi_show;

@@ -173,6 +173,10 @@ void my_kbd_read_keys()
 		else if (jogdial_stopped && state_kbd_script_run) jogdial_control(0);
 	}
 
+    // Disable Zoom Assist button
+    if (conf.zoom_assist_button_disable)
+        physw_status[0] |= 0x00010000;
+
 	//_kbd_read_keys_r2(physw_status);
 
 	usb_remote_key(physw_status[USB_IDX]) ;

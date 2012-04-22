@@ -1,4 +1,3 @@
-include $(topdir)chdk_ver.inc
 
 MEMISOSIZE="(&_end-&_start)"
 # override this on the command line or in buildconf to use PRIMARY.BIN from a different tree
@@ -11,6 +10,15 @@ include $(topdir)buildconf.inc
 -include $(topdir)localbuildconf.inc
 include $(topdir)version.inc
 -include $(topdir)revision.inc
+
+ifndef OPT_DE_VERSION
+    VER=CHDK
+else
+    VER=CHDK_DE
+    ifndef OPT_DEFAULT_LANG
+        OPT_DEFAULT_LANG=german
+    endif
+endif
 
 ifdef PLATFORM
   ifdef PLATFORMSUB
@@ -139,7 +147,7 @@ LDFLAGS=-L$(topdir)lib/math -L$(topdir)lib/font
 LDFLAGS+=-L$(topdir)lib/libc -L$(topdir)lib/ubasic
 LDFLAGS+=-L$(topdir)platform/$(PLATFORM) -L$(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)
 
-ifeq ($(VER),CHDK)
+ifndef OPT_DE_VERSION
 CFLAGS+=-DVER_CHDK
 else
 CFLAGS+=-DVER_CHDK_DE

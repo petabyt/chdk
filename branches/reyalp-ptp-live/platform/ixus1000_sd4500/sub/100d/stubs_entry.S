@@ -41,6 +41,11 @@ DEF(focus_len_table                         ,0xfffe9eac) // Found @0xfffe9eac
 DEF(zoom_busy                               ,0x00007618) // Found @0xff97a34c
 DEF(focus_busy                              ,0x00007394) // Found @0xff972b30
 //DEF(recreview_hold                          ,0x00004294) // Found @0xff8a8800, ** != ** stubs_min = 0x000087e0 (0x86F4+0xEC)
+DEF(palette_control                         ,0x0000a338) // Found @0xffa2bd68
+DEF(active_palette_buffer                   ,0x0000a340) // Found @0xffa2bd6c
+DEF(palette_buffer                          ,0x000b84ac) // Found @0xffa2c2a0
+DEF(bitmap_buffer                           ,0x0000a374) // Found @0xffa30f50
+DEF(active_bitmap_buffer                    ,0x0000a36c) // Found @0xffa30f54
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40471000; }             // Found @0xff85d384
