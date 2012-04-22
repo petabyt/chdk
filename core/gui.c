@@ -2085,6 +2085,21 @@ void gui_kbd_enter()
 }
 
 //-------------------------------------------------------------------
+// Flag to tell SpyTask to unload GUI menu modules
+static int unload_gui_modules = 0;
+
+// Unload GUI menu modules in SpyTask
+void gui_kbd_unload_modules()
+{
+    if (unload_gui_modules)
+    {
+        // Unload all modules which are marked as safe to unload, or loaded for menus
+        gui_menu_unload_module_menus();
+        module_async_unload_allrunned(0);
+        unload_gui_modules = 0;
+    }
+}
+
 void gui_kbd_leave()
 {
     // XXX restore palette
@@ -2099,9 +2114,10 @@ void gui_kbd_leave()
     vid_turn_on_updates();
     gui_set_mode(&defaultGuiHandler);
 
-	// Unload all modules which are marked as safe to unload, or loaded for menus
-    gui_menu_unload_module_menus();
-	module_async_unload_allrunned(0);
+    // This is called from the keyboard task
+    // Flag any modules loaded via menus or gui to be unloaded in SpyTask
+    // Unloading them here can lead to conflicts and crashes
+    unload_gui_modules = 1;
 
 	conf_update_prevent_shutdown();
 }

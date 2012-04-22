@@ -240,7 +240,7 @@ void core_spytask()
     auto_started = 0;
 
 #ifdef OPT_SCRIPTING
-    if (conf.script_startup==1) script_autostart();				// remote autostart
+    if (conf.script_startup==1) script_autostart();             // remote autostart
     if (conf.script_startup==2) {
         conf.script_startup=0;
         conf_save();
@@ -248,13 +248,15 @@ void core_spytask()
     }
 #endif
 
-    while (1){
+    while (1)
+    {
 
 #ifdef  CAM_LOAD_CUSTOM_COLORS
         load_chdk_palette();
 #endif
 
-        if (raw_data_available) {
+        if (raw_data_available)
+        {
             raw_need_postprocess = raw_savefile();
             hook_raw_save_complete();
             raw_data_available = 0;
@@ -270,28 +272,35 @@ void core_spytask()
                 gui_redraw();
         }
 
+        // Unload any GUI menu modules
+        extern void gui_kbd_unload_modules();
+        gui_kbd_unload_modules();
+
         if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
         {
             if (conf.show_histo)
                 histogram_process();
 
 #ifdef OPT_EDGEOVERLAY
-            if(((gui_get_mode()==GUI_MODE_NONE) || (gui_get_mode()==GUI_MODE_ALT)) && conf.edge_overlay_thresh && conf.edge_overlay_enable) {
+            if(((gui_get_mode()==GUI_MODE_NONE) || (gui_get_mode()==GUI_MODE_ALT)) && conf.edge_overlay_thresh && conf.edge_overlay_enable)
+            {
+                // We need to skip first tick because stability
+                static int skip_counter=1;
 
-				// We need to skip first tick because stability
-				static int skip_counter=1;
-				
-				if (skip_counter>0) {
-					skip_counter--;
-				}
-				else if (module_edgeovr_load()) {
-					libedgeovr->edge_overlay();
-				}
-			}
+                if (skip_counter>0)
+                {
+                    skip_counter--;
+                }
+                else if (module_edgeovr_load())
+                {
+                    libedgeovr->edge_overlay();
+                }
+            }
 #endif
         }
 
-        if ((state_shooting_progress == SHOOTING_PROGRESS_PROCESSING) && (!shooting_in_progress())) {
+        if ((state_shooting_progress == SHOOTING_PROGRESS_PROCESSING) && (!shooting_in_progress()))
+        {
             state_shooting_progress = SHOOTING_PROGRESS_DONE;
             if (raw_need_postprocess) raw_postprocess();
         }
@@ -302,11 +311,11 @@ void core_spytask()
         draw_txt_string(2, 2, osd_buf, conf.osd_color);
 #endif
 
-		// Process async module unload requests
-		module_tick_unloader();
+        // Process async module unload requests
+        module_tick_unloader();
 
         msleep(20);
-		chdk_started_flag=1;
+        chdk_started_flag=1;
     }
 }
 
