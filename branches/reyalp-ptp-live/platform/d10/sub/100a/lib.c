@@ -74,7 +74,7 @@ int vid_get_viewport_max_height() { return 240; }
 
 // commented for now, protocol changes needed to handle correctly, values look correct
 // both are 0 or last record value in playback mode
-#if 0
+#if 1
 // goes to 360 for stitch, 320x240 video, max digital zoom
 int vid_get_viewport_width_proper() { 
     return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:*(int*)0x20E4; // GetVRAMHPixelSize
@@ -84,3 +84,41 @@ int vid_get_viewport_height_proper() {
     return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x20E4+4); // GetVRAMVPixelSize
 }
 #endif
+int vid_get_viewport_logical_height() {
+    // except for stitch, always full screen
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+        return 240;
+    }
+    return vid_get_viewport_height_proper();
+}
+int vid_get_viewport_logical_width() {
+    // except for stitch, always full screen
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+        return 720;
+    }
+    return vid_get_viewport_width_proper();
+}
+int vid_get_viewport_display_xoffset_proper() {
+    int val=0;
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+        short dir=0;
+        short seq=0;
+        get_property_case(PROPCASE_STITCH_DIRECTION,&dir,sizeof(dir));
+        get_property_case(PROPCASE_STITCH_SEQUENCE,&seq,sizeof(seq));
+        // overall stitch window is 3/4 screen width, centered
+        // live part is 1/2, so margin is either 1/8th or 3/8th
+        if(dir==0) {
+            val = seq?270:90;
+        } else {
+            val = seq?90:270;
+        }
+    }
+    return val;
+}
+int vid_get_viewport_display_yoffset_proper() {
+    int m = mode_get();
+    return ((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH)?60:0; // window is 120, centered in 240 screen
+}

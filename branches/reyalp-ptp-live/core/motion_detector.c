@@ -552,8 +552,8 @@ void md_draw_grid(){
         return ;
 	}
 
-	xoffset = vid_get_viewport_xoffset();	// used when image size != viewport size
-	yoffset = vid_get_viewport_yoffset();	// used when image size != viewport size
+	xoffset = vid_get_viewport_display_xoffset();	// used when image size != viewport size
+	yoffset = vid_get_viewport_display_yoffset();	// used when image size != viewport size
 
 	x_step=(camera_screen.width-xoffset*2)/motion_detector->columns;
 	y_step=(camera_screen.height-yoffset*2)/motion_detector->rows;

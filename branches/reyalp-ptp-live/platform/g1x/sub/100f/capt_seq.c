@@ -2,7 +2,7 @@
 #include "platform.h"
 #include "core.h"
 
-static long *nrflag = (long*)(0xC3F8+0x0);  // in sub_FF29E03C @ FF29E26C & FF29E2F4
+static long *nrflag = (long*)(0xCEAC+0x4);  // in sub_FF2A76A8 @ FF2A77DC & FF2A78E4
 #define NR_AUTO (0)							// have to explictly reset value back to 0 to enable auto
 #define PAUSE_FOR_FILE_COUNTER 150          // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 

@@ -72,6 +72,9 @@ enum ptp_chdk_command {
                             //   param2 = handler address to call
                             //   param3 & param4 = parameters to pass to handler function
                             //   output param1 = return value from handler function
+  PTP_CHDK_GetLiveData,     // TODO TEMP TEST
+                            //  param2 bitmask of data
+                            //  output param1 = total size of data
 };
 
 // data types as used by ReadScriptMessage

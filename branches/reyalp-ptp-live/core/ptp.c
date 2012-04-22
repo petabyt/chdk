@@ -640,6 +640,11 @@ static int handle_ptp(
         ptp.param1 = ((int (*)(ptp_data*,int,int)) param2)(data,param3,param4);
         break;
 
+    case PTP_CHDK_GetLiveData:
+        ptp.num_param = 1;
+        ptp.param1 = live_view_get_data(data,param2);
+        break;
+
     default:
       ptp.code = PTP_RC_ParameterNotSupported;
       break;

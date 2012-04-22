@@ -229,8 +229,10 @@ void vid_turn_on_updates();
 // CHDK works in a 360x240 screen dimension / co-ordinate system
 extern long vid_get_viewport_height();          // Viewport height in CHDK screen pixels 
 extern int vid_get_viewport_width();            // Viewport width in CHDK screen pixels
-extern int vid_get_viewport_xoffset();          // X offset of viewport edge relative to LCD screen (in CHDK screen pixels)
-extern int vid_get_viewport_yoffset();          // Y offset of viewport top relative to LCD screen (in CHDK screen pixels)
+extern int vid_get_viewport_xoffset();          // X offset of viewport edge relative to the viewport buffer (in CHDK screen pixels)
+extern int vid_get_viewport_yoffset();          // Y offset of viewport top relative to the viewport buffer (in CHDK screen pixels)
+extern int vid_get_viewport_display_xoffset();  // X offset of viewport edge relative to LCD screen (in CHDK screen pixels)
+extern int vid_get_viewport_display_yoffset();  // Y offset of viewport top relative to LCD screen (in CHDK screen pixels)
 extern int vid_get_viewport_byte_width();       // Physical width of viewport row in bytes
 extern int vid_get_viewport_yscale();           // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
 extern int vid_get_viewport_image_offset();     // Byte offset from start of viewport memory to first displayed pixel
@@ -241,10 +243,14 @@ extern int vid_get_viewport_row_offset();       // Difference between physical w
 // These functions return actual size/offset in pixels of the viewport and bitmap buffers
 extern int vid_get_viewport_xoffset_proper();           // X Offset (for variable image size)
 extern int vid_get_viewport_yoffset_proper();           // Y Offset (for variable image size)
+extern int vid_get_viewport_display_xoffset_proper();   // X Offset (for variable image size)
+extern int vid_get_viewport_display_yoffset_proper();   // Y Offset (for variable image size)
 extern int vid_get_viewport_width_proper();             // Visible viewport width (for variable image size)
 extern int vid_get_viewport_height_proper();            // Visible viewport height (for variable image size)
 extern int vid_get_viewport_max_width();                // Max visible viewport width in pixels
 extern int vid_get_viewport_max_height();               // Max visible viewport height in pixels
+extern int vid_get_viewport_logical_width();
+extern int vid_get_viewport_logical_height();
 extern int vid_get_viewport_buffer_width_proper();      // Physical viewport buffer width in pixels
 extern int vid_get_palette_type();                      // Palette type (0 - 3)
 extern int vid_get_palette_size();                      // Palette size (in bytes)

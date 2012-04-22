@@ -42,8 +42,57 @@ typedef struct {
     int palette_buffer_size;    // Size of palette data sent (in bytes)
 } lv_vid_info;
 
+enum lv_aspect_rato {
+    LV_ASPECT_4_3,
+    LV_ASPECT_16_9,
+};
+
+typedef struct {
+    /*
+    logical screen
+    descibes how big the buffer would be in pixels, if it exactly filled the physical screen
+    may be larger or smaller than the buffer data, due to letter boxing or unused data
+    using lcd_aspect_ratio, you can create a correct representation of the screen
+    */
+    int logical_width;  
+    int logical_height;
+    /*
+    buffer - describes the actual data sent
+    data size is always buffer_width*buffer_height*(buffer bpp implied by type)
+    offsets represent the position of the data on the logical screen,
+       > 0 for sub images (16:9 on a 4:3 screen, stitch window, etc)
+    */
+    int buffer_width;
+    // TODO will go away
+    int buffer_height;
+
+    int buffer_logical_xoffset;
+    int buffer_logical_yoffset;
+
+    /*
+    visible - describes data within the buffer which contains image data to be displayed
+    offsets are relative to buffer
+    width must be <= logical_width - buffer_logical_xoffset and width + xoffset must be <= buffer_width 
+    */
+    int visible_width;
+    int visible_height;
+    // TODO these will go away
+    int visible_buffer_xoffset;
+    int visible_buffer_yoffset;
+    int data_start;    // offset of data
+} lv_framebuffer_desc;
+
+typedef struct {
+    int lcd_aspect_ratio; // physical aspect ratio of LCD
+    int palette_type;
+    int palette_data_start;
+    lv_framebuffer_desc vp; // viewport
+    lv_framebuffer_desc bm; // bitmap
+} lv_data_header;
+
 #ifdef CAM_CHDK_PTP
 extern int live_view_data_handler(ptp_data *data, int flags, int arg2);
+extern int live_view_get_data(ptp_data *data, int flags);
 #endif
 
 #endif // __LIVE_VIEW_H

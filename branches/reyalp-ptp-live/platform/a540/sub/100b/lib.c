@@ -126,16 +126,79 @@ void *vid_get_bitmap_active_buffer()
 {
     return (void*)(*(int*)0x5ED0); // FFD23420 DisplayPhysicalScreenWithYUVPalette
 }
-#if 0
+#if 1
 int vid_get_viewport_max_height()               { return 528; } // in 640x480 movie mode
 // this returns actual width in rec mode
 // normally 704, effectively 352 at normal 1:2 PAR. In 640 video, doesn't change but has 1:1 PAR
 // actual width is also 704 in playback mode, but the variable returns 0
 // in 320 video 352, 1:1. In stitch 352, 1:2
 int vid_get_viewport_width_proper() {
+    // fake 1:1 mode
+    if((mode_get()&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
+        return 528;
+    }
     return ((mode_get()&MODE_MASK) == MODE_PLAY)?704:*(int*)0x32C68;
 }
 int vid_get_viewport_height_proper() {
+    // fake 16:9 mode
+    if((mode_get()&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
+        return 180; 
+    }
     return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x32C68+4);
 }
 #endif
+int vid_get_viewport_logical_height() {
+    // except for stitch, always full screen
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && ((m&MODE_SHOOTING_MASK) == MODE_STITCH || (m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE)) {
+        return 240;
+    }
+    return vid_get_viewport_height_proper();
+}
+int vid_get_viewport_logical_width() {
+    // except for stitch, always full screen
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && ((m&MODE_SHOOTING_MASK) == MODE_STITCH || (m&MODE_SHOOTING_MASK) == MODE_PORTRAIT)) {
+        return 704;
+    }
+    return vid_get_viewport_width_proper();
+}
+int vid_get_viewport_display_xoffset_proper() {
+    int val=0;
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_STITCH) {
+        short dir=0;
+        short seq=0;
+        get_property_case(PROPCASE_STITCH_DIRECTION,&dir,sizeof(dir));
+        get_property_case(PROPCASE_STITCH_SEQUENCE,&seq,sizeof(seq));
+        // overall stitch window is 3/4 screen width, centered
+        // live part is 1/2, so margin is either 1/8th or 3/8th
+        if(dir==0) {
+            val = seq?264:88;
+        } else {
+            val = seq?88:264;
+        }
+    } else if((m&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
+        val = 88;
+    }
+    return val;
+}
+int vid_get_viewport_xoffset() {
+    if((mode_get()&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
+       return 88;
+    }
+    return 0;
+}
+int vid_get_viewport_display_yoffset_proper() {
+    int m = mode_get();
+    if((m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
+       return 30;
+    }
+    return ((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_STITCH)?60:0; // window is 120, centered in 240 screen
+}
+int vid_get_viewport_yoffset() {
+    if((mode_get()&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
+       return 30;
+    }
+    return 0;
+}
