@@ -502,21 +502,24 @@ void fill_gamma_buf(void) {
 }
 
 void create_thumbnail() {
-    register int i, j, x, y, yadj;
+    register int i, j, x, y, yadj, xadj;
     register char *buf = thumbnail_buf;
     register int shift = camera_sensor.bits_per_pixel - 8;
 
-    // Two patterns are:
-    //    R G         G B
-    //    G B   and   R G
+    // The sensor bayer patterns are:
+    //  0x02010100  0x01000201  0x01020001
+    //      R G         G B         G R
+    //      G B         R G         B G
     // for the second pattern yadj shifts the thumbnail row down one line
-    // essentially making the patterns the same
+    // for the third pattern xadj shifts the thumbnail row accross one pixel
+    // these make the patterns the same
     yadj = (camera_sensor.cfa_pattern == 0x01000201) ? 1 : 0;
+    xadj = (camera_sensor.cfa_pattern == 0x01020001) ? 1 : 0;
 
     for (i=0; i<DNG_TH_HEIGHT; i++)
         for (j=0; j<DNG_TH_WIDTH; j++)
         {
-            x = (camera_sensor.jpeg.x + (camera_sensor.jpeg.width * j) / DNG_TH_WIDTH) & 0xFFFFFFFE;
+            x = ((camera_sensor.jpeg.x + (camera_sensor.jpeg.width  * j) / DNG_TH_WIDTH)  & 0xFFFFFFFE) + xadj;
             y = ((camera_sensor.jpeg.y + (camera_sensor.jpeg.height * i) / DNG_TH_HEIGHT) & 0xFFFFFFFE) + yadj;
 
             *buf++ = gamma[get_raw_pixel(x,y)>>shift];           // red pixel
