@@ -128,7 +128,7 @@
     #define CAM_HAS_CMOS                        1
 
     #undef  CAMERA_MIN_DIST
-    #define CAMERA_MIN_DIST                     95      // Override min subject distance
+    #define CAMERA_MIN_DIST                     275     // Override min subject distance
     #undef  CAMERA_MAX_DIST
-    #define CAMERA_MAX_DIST                     9523810 // Override max subject distance
+    #define CAMERA_MAX_DIST                     660067  // Override max subject distance
 //----------------------------------------------------------
