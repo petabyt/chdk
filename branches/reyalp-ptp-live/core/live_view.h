@@ -76,9 +76,7 @@ typedef struct {
     */
     int visible_width;
     int visible_height;
-    // TODO these will go away
-    int visible_buffer_xoffset;
-    int visible_buffer_yoffset;
+
     int data_start;    // offset of data
 } lv_framebuffer_desc;
 

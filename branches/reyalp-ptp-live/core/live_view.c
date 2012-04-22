@@ -145,10 +145,6 @@ int live_view_get_data(ptp_data *data, int flags) {
     lv.vp.visible_width = vid_get_viewport_width_proper();
     lv.vp.visible_height = vid_get_viewport_height_proper();
 
-    // TODO these will go away
-    lv.vp.visible_buffer_xoffset = 0;
-    lv.vp.visible_buffer_yoffset = 0;
-
     lv.bm.logical_width = ASPECT_XCORRECTION(camera_screen.width);
     lv.bm.logical_height = camera_screen.height;
 
@@ -161,10 +157,6 @@ int live_view_get_data(ptp_data *data, int flags) {
 
     lv.bm.visible_width = lv.bm.logical_width;
     lv.bm.visible_height = lv.bm.logical_height;
-    //
-    // TODO will go away
-    lv.bm.visible_buffer_xoffset = 0;
-    lv.bm.visible_buffer_yoffset = 0;
 
     lv.palette_type = vid_get_palette_type();
 
