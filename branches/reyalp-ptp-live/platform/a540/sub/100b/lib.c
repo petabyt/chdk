@@ -126,8 +126,10 @@ void *vid_get_bitmap_active_buffer()
 {
     return (void*)(*(int*)0x5ED0); // FFD23420 DisplayPhysicalScreenWithYUVPalette
 }
-#if 1
+
+// TODO - this should go away
 int vid_get_viewport_max_height()               { return 528; } // in 640x480 movie mode
+
 // this returns actual width in rec mode
 // normally 704, effectively 352 at normal 1:2 PAR. In 640 video, doesn't change but has 1:1 PAR
 // actual width is also 704 in playback mode, but the variable returns 0
@@ -146,7 +148,7 @@ int vid_get_viewport_height_proper() {
     }
     return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x32C68+4);
 }
-#endif
+
 int vid_get_viewport_logical_height() {
     // except for stitch, always full screen
     int m = mode_get();
@@ -185,7 +187,7 @@ int vid_get_viewport_display_xoffset_proper() {
 }
 int vid_get_viewport_xoffset() {
     if((mode_get()&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
-       return 88;
+       return 44;
     }
     return 0;
 }
