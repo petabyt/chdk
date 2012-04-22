@@ -623,23 +623,6 @@ static int handle_ptp(
     }
 #endif
 
-    case PTP_CHDK_GetHandler:
-// Define which handler function to return the address of
-        ptp.num_param = 1;
-        ptp.param1 = 0;
-        switch (param2)
-        {
-        case PTP_CHDK_LIVE_VIEW_HANDLER_ID:
-            ptp.param1 = (int) live_view_data_handler;
-            break;
-        }
-        break;
-
-    case PTP_CHDK_CallHandler:
-        ptp.num_param = 1;
-        ptp.param1 = ((int (*)(ptp_data*,int,int)) param2)(data,param3,param4);
-        break;
-
     case PTP_CHDK_GetLiveData:
         ptp.num_param = 1;
         ptp.param1 = live_view_get_data(data,param2);

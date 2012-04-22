@@ -65,14 +65,7 @@ enum ptp_chdk_command {
                             // data length is handled by ptp data phase
                             // input messages do not have type or subtype, they are always a string destined for the script (similar to USER/string)
                             // output param1 is ptp_chdk_script_msg_status
-  PTP_CHDK_GetHandler,      // Get the function address of a custom handler.
-                            //   param2 = ID of custom handler to return
-                            //   output param1 = custom handler address (0 if not implemented
-  PTP_CHDK_CallHandler,     // Call a custom handler function
-                            //   param2 = handler address to call
-                            //   param3 & param4 = parameters to pass to handler function
-                            //   output param1 = return value from handler function
-  PTP_CHDK_GetLiveData,     // TODO TEMP TEST
+  PTP_CHDK_GetLiveData,     // TODO not final
                             //  param2 bitmask of data
                             //  output param1 = total size of data
 };
@@ -128,10 +121,5 @@ enum ptp_chdk_script_msg_status {
     PTP_CHDK_S_MSGSTATUS_NOTRUN, // no script is running
     PTP_CHDK_S_MSGSTATUS_QFULL,  // queue is full
     PTP_CHDK_S_MSGSTATUS_BADID,  // specified ID is not running
-};
-
-// function handler id
-enum ptp_chdk_handler_id {
-    PTP_CHDK_LIVE_VIEW_HANDLER_ID = 1,  // Live View handler
 };
 #endif // __CHDK_PTP_H
