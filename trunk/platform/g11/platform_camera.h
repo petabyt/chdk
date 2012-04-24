@@ -87,6 +87,8 @@
     #define CAM_ACTIVE_AREA_X2              3692
     #define CAM_ACTIVE_AREA_Y2              2776
 
+    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
+
     #define CAM_ZEBRA_ASPECT_ADJUST         1
 
     #define CAM_DATE_FOLDER_NAMING          0x100 //Value found in the last function, which is called in GetImageFolder. (first compare)
