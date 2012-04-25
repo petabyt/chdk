@@ -1758,8 +1758,8 @@ static int handle_video_transfer(ptp_data *data, int flags, int arg2)
     } vid_info;
 
     // Populate the above structure with the current default details
-    vid_info.vp_xoffset = vid_get_viewport_xoffset_proper();
-    vid_info.vp_yoffset = vid_get_viewport_yoffset_proper();
+    vid_info.vp_xoffset = vid_get_viewport_display_xoffset_proper();
+    vid_info.vp_yoffset = vid_get_viewport_display_yoffset_proper();
     vid_info.vp_width = vid_get_viewport_width_proper();
     vid_info.vp_height = vid_get_viewport_height_proper();
     vid_info.vp_buffer_start = 0;

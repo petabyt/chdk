@@ -76,15 +76,8 @@ void *vid_get_bitmap_fb()
 
 
 // Live picture buffer (shoot half-pressed) //ASM1989 ixus1000
-//void *vid_get_viewport_fb()
-//{
-//	return (void*)0x40587700;                              // found by search for VRAM Address @FFB4CB2C
-//}
-
 void *vid_get_viewport_fb()
 {
-	if ((mode_get()&MODE_MASK) == MODE_REC)
-		return (void*)(0x40587700-vid_get_viewport_xoffset()*3);
 	return (void*)0x40587700;                              // found by search for VRAM Address @FFB4CB2C
 }
 
@@ -114,7 +107,7 @@ int vid_get_viewport_width()
        return 360; 
 }
 
-int vid_get_viewport_xoffset()
+int vid_get_viewport_display_xoffset()
 {
     if (movie_status > 1){return 0;}
 	if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1  || ((mode_get()&MODE_MASK)== 100 ))	

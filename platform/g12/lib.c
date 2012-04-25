@@ -76,6 +76,9 @@ void *vid_get_viewport_fb()
 
 void *vid_get_viewport_live_fb()
 {
+    if (MODE_IS_VIDEO(mode_get()))
+        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
+
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
     return viewport_buffers[(active_viewport_buffer-1)&3];
 }
@@ -97,40 +100,101 @@ int vid_get_viewport_yscale() {
 
 int vid_get_viewport_width()
 {
-	// viewport width table for each image size
-	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
-	static long vp_w[5] = { 360, 360, 360, 272, 216 };
-	return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
+    {
+        return 180;
+    }
+    else
+    {
+	    // viewport width table for each image size
+	    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
+	    static long vp_w[5] = { 360, 360, 360, 272, 216 };
+	    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
 }
 
 int vid_get_viewport_xoffset()
 {
-	// viewport width offset table for each image size
-	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
-	static long vp_w[5] = { 0, 0, 0, 44, 72 };				// should all be even values for edge overlay
-	return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
+    {
+        return 0;
+    }
+    else
+    {
+	    // viewport width offset table for each image size
+	    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
+	    static long vp_w[5] = { 0, 0, 0, 44, 72 };				// should all be even values for edge overlay
+	    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
+}
+
+int vid_get_viewport_display_xoffset()
+{
+    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
+    {
+        if (shooting_get_prop(PROPCASE_STITCH_DIRECTION) == 0)      // Direction check
+            if (shooting_get_prop(PROPCASE_STITCH_SEQUENCE) == 0)   // Shot already taken?
+                return 40;
+            else
+                return 140;
+        else
+            if (shooting_get_prop(PROPCASE_STITCH_SEQUENCE) == 0)   // Shot already taken?
+                return 140;
+            else
+                return 40;
+    }
+    else
+    {
+        return vid_get_viewport_xoffset();
+    }
 }
 
 long vid_get_viewport_height()
 {
-	// viewport height table for each image size
-	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
-	static long vp_h[5] = { 240, 180, 214, 240, 240 };
-	return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
+    {
+        return 120;
+    }
+    else
+    {
+	    // viewport height table for each image size
+	    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
+	    static long vp_h[5] = { 240, 180, 214, 240, 240 };
+	    return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
 }
 
 int vid_get_viewport_yoffset()
 {
-	// viewport height offset table for each image size
-	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
-	static long vp_h[5] = { 0, 30, 13, 0, 0 };
-	return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
+    {
+        return 0;
+    }
+    else
+    {
+	    // viewport height offset table for each image size
+	    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
+	    static long vp_h[5] = { 0, 30, 13, 0, 0 };
+	    return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
+}
+
+int vid_get_viewport_display_yoffset()
+{
+    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
+    {
+        return 72;
+    }
+    else
+    {
+        return vid_get_viewport_yoffset();
+    }
 }
 
 // Functions for PTP Live View system
 
-int vid_get_viewport_xoffset_proper()           { return vid_get_viewport_xoffset() * 2; }
-int vid_get_viewport_yoffset_proper()           { return vid_get_viewport_yoffset() * 2; }
+int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2; }
+int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() * 2; }
 int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
 int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * 2; }
 int vid_get_viewport_max_height()               { return 480; }

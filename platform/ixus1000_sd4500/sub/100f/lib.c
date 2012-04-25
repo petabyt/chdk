@@ -157,7 +157,7 @@ int vid_get_viewport_width()
        return 360; 
 }
 
-int vid_get_viewport_xoffset()
+int vid_get_viewport_display_xoffset()
 {
     if (movie_status > 1){return 0;}
 	if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1  || ((mode_get()&MODE_MASK)== 100 ))	

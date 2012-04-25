@@ -77,7 +77,7 @@ int vid_get_viewport_width()
 	return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
-int vid_get_viewport_xoffset()
+int vid_get_viewport_display_xoffset()
 {
 	// viewport width offset table for each image size
 	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1

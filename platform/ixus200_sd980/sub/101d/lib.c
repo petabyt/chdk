@@ -16,9 +16,6 @@ void *vid_get_viewport_live_fb()//found in sub_FF8E0788
     void **fb=(void **)0x5014;
     unsigned char buff = *((unsigned char*)0x4E5C);
     if (buff == 0) buff = 2;  else buff--;
-//    return fb[buff];
-	if ((mode_get()&MODE_MASK) == MODE_REC)
-		return (void*)(fb[buff]-vid_get_viewport_xoffset()*3);
 	return (void*)fb[buff];
 }
 
@@ -29,9 +26,6 @@ void *vid_get_bitmap_fb()
 
 void *vid_get_viewport_fb()
 {
-//	return (void*)0x408CB700;
-	if ((mode_get()&MODE_MASK) == MODE_REC)
-		return (void*)(0x408CB700-vid_get_viewport_xoffset()*3);
 	return (void*)0x408CB700;
 }
 
@@ -55,7 +49,7 @@ int vid_get_viewport_width()
         return 360;
 }
 
-int vid_get_viewport_xoffset()
+int vid_get_viewport_display_xoffset()
 {
 	if (shooting_get_prop(PROPCASE_RESOLUTION) == 8)	// widescreen (16:9) image size
 	   return 0;

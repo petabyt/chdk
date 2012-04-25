@@ -36,8 +36,6 @@ long hook_raw_size()
 
 void *vid_get_viewport_live_fb()
 {
-	if ((mode_get()&MODE_MASK) == MODE_REC)
-		return (void*)((void*)(*(int*)(0x2258))-vid_get_viewport_xoffset()*3);
 	return (void*)(void*)(*(int*)(0x2258));
 	
   	// Found by searching RAM locations that referenced 0x405D7980 (viewport buffer)
@@ -57,10 +55,6 @@ void *vid_get_bitmap_fb()
 void *vid_get_viewport_fb()
 {
 	//sx220 or 0x4052ED80 ff050c2c
-    		
-		if ((mode_get()&MODE_MASK) == MODE_REC)
-		return (void*)(0x405D7980-vid_get_viewport_xoffset()*3);   //return (void*)(0x405D7980-vid_get_viewport_xoffset()*3)
-	
 	return (void*)0x405D7980;  					                   // found by search for VRAM Address @FF371E8C(v100A)
 
 }

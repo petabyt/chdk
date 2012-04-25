@@ -1362,6 +1362,16 @@ int __attribute__((weak)) vid_get_viewport_yoffset() {
 	return 0;
 }
 
+// viewport display x offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
+int __attribute__((weak)) vid_get_viewport_display_xoffset() {
+	return vid_get_viewport_xoffset();
+}
+
+// viewport display y offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
+int __attribute__((weak)) vid_get_viewport_display_yoffset() {
+	return vid_get_viewport_yoffset();
+}
+
 // viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
 // returns the byte offset into the viewport buffer where the image pixels start (to skip any black borders)
 // see G12 port for sample implementation
@@ -1487,8 +1497,8 @@ unsigned char SetFileAttributes(const char* fn, unsigned char attr)
 // Default implementation of PTP live view functions.
 // Override as needed for camera specific variations (see G12/SX30/IXUS310/SX130IS for working examples)
 
-int __attribute__((weak)) vid_get_viewport_xoffset_proper()         { return 0; }
-int __attribute__((weak)) vid_get_viewport_yoffset_proper()         { return 0; }
+int __attribute__((weak)) vid_get_viewport_display_xoffset_proper() { return vid_get_viewport_display_xoffset(); }
+int __attribute__((weak)) vid_get_viewport_display_yoffset_proper() { return vid_get_viewport_display_yoffset(); }
 int __attribute__((weak)) vid_get_viewport_width_proper()           { return 720; }
 int __attribute__((weak)) vid_get_viewport_height_proper()          { return 240; }
 int __attribute__((weak)) vid_get_viewport_max_width()              { return 720; }
