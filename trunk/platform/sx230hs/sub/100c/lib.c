@@ -28,9 +28,6 @@ long hook_raw_size()
 
 void *vid_get_viewport_live_fb()
 {
-	if ((mode_get()&MODE_MASK) == MODE_REC)
-		return (void*)((void*)(*(int*)(0x225C))-vid_get_viewport_xoffset()*3);
-	
 	return (void*)(void*)(*(int*)(0x225C));
 }
 
@@ -41,9 +38,6 @@ void *vid_get_bitmap_fb()
 
 void *vid_get_viewport_fb()
 {	
-	if ((mode_get()&MODE_MASK) == MODE_REC)
-		return (void*)(0x405D7980-vid_get_viewport_xoffset()*3);  
-
 	return (void*)0x405D7980;                 
 }
 

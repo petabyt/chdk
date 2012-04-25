@@ -72,6 +72,9 @@ void *vid_get_viewport_fb()
 
 void *vid_get_viewport_live_fb()
 {
+    if (MODE_IS_VIDEO(mode_get()) || (movie_status==VIDEO_RECORD_IN_PROGRESS))
+        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
+
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
     return viewport_buffers[(active_viewport_buffer-1)&3];
 }
@@ -86,23 +89,76 @@ void *vid_get_bitmap_fb()
     return bitmap_buffer[0];
 }
 
+int vid_get_viewport_width()
+{
+    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
+    {
+        return 180;
+    }
+    else
+    {
+        return 360;
+    }
+}
+
+int vid_get_viewport_display_xoffset()
+{
+    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
+    {
+        if (shooting_get_prop(PROPCASE_STITCH_DIRECTION) == 0)      // Direction check
+            if (shooting_get_prop(PROPCASE_STITCH_SEQUENCE) == 0)   // Shot already taken?
+                return 40;
+            else
+                return 140;
+        else
+            if (shooting_get_prop(PROPCASE_STITCH_SEQUENCE) == 0)   // Shot already taken?
+                return 140;
+            else
+                return 40;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 long vid_get_viewport_height()
 {
-	if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)	// Wide screen top & bottom 30 pixels not used in viewport
+    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
+    {
+        return 120;
+    }
+    else if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)	// Wide screen top & bottom 30 pixels not used in viewport
 		return 180;
 	return 240;
 }
 
 int vid_get_viewport_yoffset()
 {
-	if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)	// Wide screen top & bottom 30 pixels not used in viewport
+    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
+    {
+        return 0;
+    }
+    else if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)	// Wide screen top & bottom 30 pixels not used in viewport
 		return 30;
 	return 0;
 }
 
+int vid_get_viewport_display_yoffset()
+{
+    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
+    {
+        return 72;
+    }
+    else
+    {
+        return vid_get_viewport_yoffset();
+    }
+}
+
 // Functions for PTP Live View system
 
-int vid_get_viewport_yoffset_proper()           { return vid_get_viewport_yoffset(); }
+int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2; }
 int vid_get_viewport_height_proper()            { return vid_get_viewport_height(); }
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }

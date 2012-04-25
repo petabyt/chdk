@@ -72,8 +72,8 @@ static void get_viewport_size()
     viewport_byte_width = vid_get_viewport_byte_width();
     viewport_yscale = vid_get_viewport_yscale();
 
-	viewport_xoffset = vid_get_viewport_xoffset();
-	viewport_yoffset = vid_get_viewport_yoffset();
+	viewport_xoffset = vid_get_viewport_display_xoffset();
+	viewport_yoffset = vid_get_viewport_display_yoffset();
 
     slice_height = viewport_height / EDGE_SLICES;
 }
@@ -312,10 +312,12 @@ static int calc_edge_overlay()
     int x, y, xdiv3;
     int conv1, conv2;
 
-    const int y_min = viewport_yoffset + camera_screen.edge_hmargin+ slice   *slice_height;
-    const int y_max = viewport_yoffset + camera_screen.edge_hmargin+(slice+1)*slice_height;
-    const int x_min = viewport_xoffset*3 + 6;
-    const int x_max = (viewport_width + viewport_xoffset - 2) * 3;
+    const int y_min = camera_screen.edge_hmargin+ slice   *slice_height;
+    const int y_max = camera_screen.edge_hmargin+(slice+1)*slice_height;
+    const int x_min = 6;
+    const int x_max = (viewport_width - 2) * 3;
+
+    img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
 
     xoffset = 0;
     yoffset = 0;
@@ -409,7 +411,7 @@ static int calc_edge_overlay()
 
             if (conv1 + conv2 > conf.edge_overlay_thresh)
             {
-                bv_set(edgebuf, (y-viewport_yoffset-camera_screen.edge_hmargin)*viewport_width + xdiv3, 1);
+                bv_set(edgebuf, (y-camera_screen.edge_hmargin)*viewport_width + xdiv3, 1);
             }
 
             // Do it once again for the next 'pixel'
@@ -439,7 +441,7 @@ static int calc_edge_overlay()
 
             if (conv1 + conv2 > conf.edge_overlay_thresh)
             {
-                bv_set(edgebuf, (y-viewport_yoffset-camera_screen.edge_hmargin)*viewport_width + xdiv3+1, 1);
+                bv_set(edgebuf, (y-camera_screen.edge_hmargin)*viewport_width + xdiv3+1, 1);
             }
         }   // for x
     }   // for y
@@ -515,12 +517,12 @@ static int draw_edge_overlay()
     int x_off, y_off;
 
     const color cl = econf.edge_overlay_color;
-    const int y_slice_min = viewport_yoffset+camera_screen.edge_hmargin+ slice   *slice_height;
-    const int y_slice_max = viewport_yoffset+camera_screen.edge_hmargin+(slice+1)*slice_height;
-    const int y_min = viewport_yoffset+camera_screen.edge_hmargin;
-    const int y_max = viewport_yoffset+camera_screen.edge_hmargin+viewport_height;
-    const int x_min = viewport_xoffset+2;
-    const int x_max = (viewport_width + viewport_xoffset - 2);
+    const int y_slice_min = camera_screen.edge_hmargin+ slice   *slice_height;
+    const int y_slice_max = camera_screen.edge_hmargin+(slice+1)*slice_height;
+    const int y_min = camera_screen.edge_hmargin;
+    const int y_max = camera_screen.edge_hmargin+viewport_height;
+    const int x_min = 2;
+    const int x_max = (viewport_width - 2);
 
     if( !is_buffer_ready() ) return 0;
 
@@ -543,12 +545,11 @@ static int draw_edge_overlay()
                     // Draw a pixel to the screen wherever we detected an edge.
                     // If there is no edge based on the newest data, but there is one painted on the screen
                     // from previous calls, delete it from the screen.
-                    const int aspect_correct_x_off = x_off;
                     const int bEdge = bv_get(edgebuf, y_edgebuf + x);
-                    const int bDraw = bEdge || (draw_get_pixel(aspect_correct_x_off, y_off) == econf.edge_overlay_color);
+                    const int bDraw = bEdge || (draw_get_pixel(x_off+viewport_xoffset, y_off+viewport_yoffset) == econf.edge_overlay_color);
                     const color cl = bEdge ? econf.edge_overlay_color : 0;
                     if (bEdge || bDraw)
-                        draw_pixel(aspect_correct_x_off, y_off, cl);
+                        draw_pixel(x_off+viewport_xoffset, y_off+viewport_yoffset, cl);
                     
                 }
             }   // for x
@@ -571,9 +572,9 @@ static int draw_edge_overlay()
         {
             for (x = x_min_c; x < x_max_c; ++x)
             {
-                const int aspect_correct_x = x;
-                if (draw_get_pixel(aspect_correct_x, y) == cl)  // if there is an edge drawn on the screen but there is no edge there based on the newest data, delete it from the screen
-                    draw_pixel(aspect_correct_x, y, 0 );
+                // if there is an edge drawn on the screen but there is no edge there based on the newest data, delete it from the screen
+                if (draw_get_pixel(x+viewport_xoffset, y+viewport_yoffset) == cl)
+                    draw_pixel(x+viewport_xoffset, y+viewport_yoffset, 0 );
             }
         }
     }
@@ -589,9 +590,9 @@ static int draw_edge_overlay()
         {
             for (x = x_min; x < x_max; ++x)
             {
-                const int aspect_correct_x = x;
-                if (draw_get_pixel(aspect_correct_x, y) == cl)  // if there is an edge drawn on the screen but there is no edge there based on the newest data, delete it from the screen
-                    draw_pixel(aspect_correct_x, y, 0 );
+                // if there is an edge drawn on the screen but there is no edge there based on the newest data, delete it from the screen
+                if (draw_get_pixel(x+viewport_xoffset, y+viewport_yoffset) == cl)
+                    draw_pixel(x+viewport_xoffset, y+viewport_yoffset, 0 );
             }
         }
     }
@@ -629,7 +630,6 @@ static void set_offset_from_overlap()
         break;
     }
 }
-
 
 
 // Main edge overlay function.

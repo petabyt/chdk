@@ -85,8 +85,8 @@
 // For newer cameras the code can handle any combination of LCD size
 // and image aspect ratio provided the vid_get_viewport_height(), 
 // vid_get_viewport_width(), vid_get_viewport_image_offset(),
-// vid_get_viewport_row_offset(), vid_get_viewport_xoffset(),
-// and vid_get_viewport_yoffset() functions have been correctly
+// vid_get_viewport_row_offset(), vid_get_viewport_display_xoffset(),
+// and vid_get_viewport_display_yoffset() functions have been correctly
 // implemented for the camera.
 
 // philmoz. Jan 2012.
@@ -303,8 +303,8 @@ static int draw_zebra_aspect_adjust(int mrec, unsigned int f, color *cls)
     viewport_width = vid_get_viewport_width(); 
     viewport_image_offset = vid_get_viewport_image_offset(); 
     viewport_row_offset = vid_get_viewport_row_offset(); 
-    viewport_xoffset = vid_get_viewport_xoffset();
-    viewport_yoffset = vid_get_viewport_yoffset();
+    viewport_xoffset = vid_get_viewport_display_xoffset();
+    viewport_yoffset = vid_get_viewport_display_yoffset();
 
     // if not in no-zebra phase of blink mode zebra, draw zebra to buf[]
     if (f) {

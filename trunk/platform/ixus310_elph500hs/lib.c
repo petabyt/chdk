@@ -59,14 +59,17 @@ void *vid_get_viewport_fb()
 {
     // Return first viewport buffer - for case when vid_get_viewport_live_fb not defined
     // Offset the return value because the viewport is left justified instead of centered on this camera
-    return viewport_buffers[0] - vid_get_viewport_xoffset()*3;
+    return viewport_buffers[0];
 }
 
 void *vid_get_viewport_live_fb()
 {
+    if (MODE_IS_VIDEO(mode_get()) || (movie_status==VIDEO_RECORD_IN_PROGRESS))
+        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
+
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
     // Offset the return value because the viewport is left justified instead of centered on this camera
-    return viewport_buffers[(active_viewport_buffer-1)&3] - vid_get_viewport_xoffset()*3;
+    return viewport_buffers[(active_viewport_buffer-1)&3];
 }
 
 // Defined in stubs_min.S
@@ -97,7 +100,7 @@ int vid_get_viewport_width()
 	return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
-int vid_get_viewport_xoffset()
+int vid_get_viewport_display_xoffset()
 {
 	// viewport width offset table for each image size
 	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
@@ -109,8 +112,8 @@ long vid_get_viewport_height(){ return 240; }
 
 // Functions for PTP Live View system
 
-int vid_get_viewport_xoffset_proper()           { return vid_get_viewport_xoffset() * 2; }
 int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
+int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2; }
 int vid_get_viewport_height_proper()            { return 480; }
 int vid_get_viewport_max_width()                { return 960; }
 int vid_get_viewport_max_height()               { return 480; }
