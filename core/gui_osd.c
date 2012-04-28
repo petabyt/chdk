@@ -433,7 +433,7 @@ void gui_osd_draw_movie_time_left()
     int mode_video = MODE_IS_VIDEO(m); 
 
 #if CAM_CHDK_HAS_EXT_VIDEO_MENU
-    if (mode_video || movie_status > 1)
+    if (mode_video || is_video_recording())
     {
         // if manual adjust, show the field item to be adjusted
         // if any value overriden, show the override value
@@ -463,7 +463,7 @@ void gui_osd_draw_movie_time_left()
         movie_reset = 0;
     }
 
-    if (movie_status > 1)
+    if (is_video_recording())
         record_running = 1;
     else
     {

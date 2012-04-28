@@ -19,6 +19,9 @@
 extern int mode_is_video(int);
 #define MODE_IS_VIDEO(m)    mode_is_video(m)
 
+// return whether video is actually being recorded
+extern int is_video_recording();
+
 /* propcase ID constants. These are in their own header files for easier sed processing */
 #if CAM_PROPSET == 4
     #include "propset4.h"

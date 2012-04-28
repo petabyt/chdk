@@ -2127,7 +2127,7 @@ void other_kbd_process(){
     int key;
 #if CAM_AF_SCAN_DURING_VIDEO_RECORD 
    
-    if (movie_status==VIDEO_RECORD_IN_PROGRESS) { 
+    if (is_video_recording()) { 
         if (kbd_is_key_clicked(conf.video_af_key)) MakeAFScan(); 
     } 
  
@@ -2140,7 +2140,7 @@ void other_kbd_process(){
     #else
         key=KEY_DOWN;
     #endif
-        if (conf.unlock_optical_zoom_for_video && (movie_status==VIDEO_RECORD_IN_PROGRESS) &&  kbd_is_key_clicked(key)){
+        if (conf.unlock_optical_zoom_for_video && is_video_recording() &&  kbd_is_key_clicked(key)){
             short x;
      get_property_case(PROPCASE_DIGITAL_ZOOM_STATE, &x, sizeof(x));
      if (x) {
@@ -2156,7 +2156,7 @@ void other_kbd_process(){
 #endif
 
 #if CAM_EV_IN_VIDEO
-    if ((movie_status==VIDEO_RECORD_IN_PROGRESS) && !kbd_is_key_pressed(KEY_SHOOT_HALF)){
+    if (is_video_recording() && !kbd_is_key_pressed(KEY_SHOOT_HALF)){
 #if CAM_HAS_ERASE_BUTTON
         if (kbd_is_key_clicked(KEY_ERASE)){
 #else
@@ -2513,7 +2513,7 @@ void gui_draw_osd() {
         if (conf.show_grid_lines)
             if (module_grids_load())
                 libgrids->gui_grid_draw_osd(1);
-        if ((gui_get_mode()==GUI_MODE_NONE || gui_get_mode()==GUI_MODE_ALT) && (((kbd_is_key_pressed(KEY_SHOOT_HALF) || (state_kbd_script_run) || (shooting_get_common_focus_mode())) && (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH )) || ((mode_video || movie_status > 1) && conf.show_values_in_video) )) {
+        if ((gui_get_mode()==GUI_MODE_NONE || gui_get_mode()==GUI_MODE_ALT) && (((kbd_is_key_pressed(KEY_SHOOT_HALF) || (state_kbd_script_run) || (shooting_get_common_focus_mode())) && (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH )) || ((mode_video || is_video_recording()) && conf.show_values_in_video) )) {
  
            if (conf.show_dof!=DOF_DONT_SHOW) gui_osd_calc_dof();
            
@@ -2524,7 +2524,7 @@ void gui_draw_osd() {
         if (conf.show_state) gui_osd_draw_state();
         if (conf.save_raw && conf.show_raw_state && !mode_video && (!kbd_is_key_pressed(KEY_SHOOT_HALF))) gui_osd_draw_raw_info();
         
-        if ((conf.show_values==SHOW_ALWAYS && mode_photo) || ((mode_video || movie_status > 1)&& conf.show_values_in_video) || ((kbd_is_key_pressed(KEY_SHOOT_HALF) || (recreview_hold==1)) && (conf.show_values==SHOW_HALF)))
+        if ((conf.show_values==SHOW_ALWAYS && mode_photo) || ((mode_video || is_video_recording())&& conf.show_values_in_video) || ((kbd_is_key_pressed(KEY_SHOOT_HALF) || (recreview_hold==1)) && (conf.show_values==SHOW_HALF)))
             gui_osd_draw_values(1);
         else if  (shooting_get_common_focus_mode() && mode_photo && conf.show_values && !((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX)))   
            gui_osd_draw_values(2);
@@ -2554,7 +2554,7 @@ void gui_draw_osd() {
         else if ( kbd_is_key_pressed(KEY_SHOOT_HALF) && conf.clock_halfpress==1 ) gui_osd_draw_seconds();
     }
 
-    if ( conf.show_movie_time > 0 && (mode_video || movie_status > 1)) gui_osd_draw_movie_time_left();
+    if ( conf.show_movie_time > 0 && (mode_video || is_video_recording())) gui_osd_draw_movie_time_left();
  
 #if CAM_DRAW_EXPOSITION
     if (gui_get_mode()==GUI_MODE_NONE && kbd_is_key_pressed(KEY_SHOOT_HALF) && ((m&MODE_MASK)==MODE_REC) && ((m&MODE_SHOOTING_MASK))!=MODE_VIDEO_STD && (m&MODE_SHOOTING_MASK)!=MODE_VIDEO_COMPACT) {
@@ -2566,7 +2566,7 @@ void gui_draw_osd() {
 #endif
 
 #if CAM_EV_IN_VIDEO
-    if (movie_status==VIDEO_RECORD_IN_PROGRESS) gui_osd_draw_ev_video(get_ev_video_avail());
+    if (is_video_recording()) gui_osd_draw_ev_video(get_ev_video_avail());
 #endif
 
     gui_draw_debug_vals_osd();

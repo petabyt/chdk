@@ -179,7 +179,7 @@ void kbd_set_block(int bEnableBlock) {
 long kbd_use_up_down_left_right_as_fast_switch() {
     static long key_pressed = 0; // ??? static masking a global
     int m=mode_get(); 
-    int mode_video = MODE_IS_VIDEO(m) || (movie_status > 1);
+    int mode_video = MODE_IS_VIDEO(m) || is_video_recording();
     int ev_video=0;
     int jogdial;
 
@@ -234,7 +234,7 @@ long kbd_use_up_down_left_right_as_fast_switch() {
 
 #endif
 
-    if (kbd_is_key_pressed(KEY_UP) && mode_video && movie_status == 4 ) {
+    if (kbd_is_key_pressed(KEY_UP) && mode_video && is_video_recording() ) {
         if (conf.fast_movie_quality_control && key_pressed == 0) {
             if (conf.video_mode==0) {
 #if !CAM_VIDEO_QUALITY_ONLY
@@ -253,7 +253,7 @@ long kbd_use_up_down_left_right_as_fast_switch() {
         }
     } 
     
-    if (kbd_is_key_pressed(KEY_DOWN) && mode_video && movie_status == 4) {
+    if (kbd_is_key_pressed(KEY_DOWN) && mode_video && is_video_recording()) {
         if (conf.fast_movie_quality_control && key_pressed == 0) {
             if (conf.video_mode==0) {                
 #if !CAM_VIDEO_QUALITY_ONLY
@@ -276,7 +276,7 @@ long kbd_use_up_down_left_right_as_fast_switch() {
         }
     } 
     
-    if (kbd_is_key_pressed(KEY_LEFT) && mode_video && (movie_status == 4) && !ev_video) {
+    if (kbd_is_key_pressed(KEY_LEFT) && mode_video && is_video_recording() && !ev_video) {
         if (conf.fast_movie_control && key_pressed == 0) {
             movie_status = VIDEO_RECORD_STOPPED;
             key_pressed = KEY_LEFT;
