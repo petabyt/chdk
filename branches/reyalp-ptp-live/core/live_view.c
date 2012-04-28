@@ -18,8 +18,6 @@ int live_view_get_data(ptp_data *data, int flags) {
     lv.vp.logical_height = vid_get_viewport_logical_height();
 
     lv.vp.buffer_width = vid_get_viewport_buffer_width_proper();
-    // TODO will go away, always the same as visible
-    lv.vp.buffer_height = vid_get_viewport_height_proper();
 
     // TODO
     lv.vp.buffer_logical_xoffset = vid_get_viewport_display_xoffset_proper();
@@ -32,8 +30,6 @@ int live_view_get_data(ptp_data *data, int flags) {
     lv.bm.logical_height = camera_screen.height;
 
     lv.bm.buffer_width = camera_screen.buffer_width;
-    // TODO will go away
-    lv.bm.buffer_height = camera_screen.height;
 
     lv.bm.buffer_logical_xoffset = 0;
     lv.bm.buffer_logical_yoffset = 0;
@@ -65,7 +61,7 @@ int live_view_get_data(ptp_data *data, int flags) {
     if ( flags & LV_TFR_BITMAP ) // bitmap buffer
     {
         lv.bm.data_start = total_size;
-        bm_size = camera_screen.buffer_width*camera_screen.buffer_height;
+        bm_size = lv.bm.buffer_width*lv.bm.visible_height;
         total_size += bm_size;
     }
 

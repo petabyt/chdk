@@ -2,7 +2,6 @@
 #define __LIVE_VIEW_H
 
 // Live View protocol version
-// TODO need to put this somewhere
 #define LIVE_VIEW_VERSION_MAJOR 2  // increase only with backwards incompatible changes (and reset minor)
 #define LIVE_VIEW_VERSION_MINOR 0  // increase with extensions of functionality
 
@@ -32,8 +31,6 @@ typedef struct {
        > 0 for sub images (16:9 on a 4:3 screen, stitch window, etc)
     */
     int buffer_width;
-    // TODO will go away
-    int buffer_height;
 
     int buffer_logical_xoffset;
     int buffer_logical_yoffset;
