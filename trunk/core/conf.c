@@ -844,7 +844,7 @@ int is_raw_enabled()
     //       variables should be named conf.disable_save_raw_in_XXX
 
     return !(   // Return false if any of these tests are true
-        ((movie_status > 1) && conf.save_raw_in_video) ||                                   // True is movie mode and save_raw_in_video is disabled
+        (is_video_recording() && conf.save_raw_in_video) ||                                 // True is movie mode and save_raw_in_video is disabled
 #ifdef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE
         (shooting_get_resolution()==7) ||                                                   // True if shooting resolution is 'low light'
 #endif

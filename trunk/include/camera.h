@@ -75,6 +75,7 @@
     #define CAM_VIDEO_CONTROL               1   // pause / unpause video recordings
     #undef  CAM_VIDEO_QUALITY_ONLY              // Override Video Bitrate is not supported
     #undef  CAM_CHDK_HAS_EXT_VIDEO_TIME         // Camera can override time limit of video record -> sx220/230
+    #undef  CAM_HAS_MOVIE_DIGEST_MODE           // The values in the 'movie_status' variable change if the camera has this mode (see is_video_recording())
 
     #define ZOOM_OVERRIDE                   0   // Shall zoom-override be used? default 0 becoz not implemented right now
 

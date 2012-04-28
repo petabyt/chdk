@@ -120,10 +120,11 @@
 
     #define CAM_AV_OVERRIDE_IRIS_FIX        1   // for cameras that require _MoveIrisWithAv function to override Av in bracketing.
 
-    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1       // For cameras with 'low light' mode that does now work with raw define this
+    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1   // For cameras with 'low light' mode that does now work with raw define this
+    #define CAM_HAS_MOVIE_DIGEST_MODE           1   // Changes the values in the 'movie_status' variable if the camera has this mode
 
-    #define CAM_LOAD_CUSTOM_COLORS          1   // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                 0xA2  // Start color index for CHDK colors loaded into camera palette.
+    #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
+    #define CHDK_COLOR_BASE                 0xA2    // Start color index for CHDK colors loaded into camera palette.
 
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 
