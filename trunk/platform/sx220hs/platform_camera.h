@@ -110,4 +110,5 @@
 	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// specifies an LED that turns on while camera waits for USB remote to sync
 	
 	#define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY	1
+	#define CAM_HAS_MOVIE_DIGEST_MODE       	1
 //----------------------------------------------------------
