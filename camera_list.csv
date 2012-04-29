@@ -70,6 +70,7 @@ ixus1000_sd4500,100f,BETA,,
 ixus1000_sd4500,102b,BETA,,
 ixus100_sd780,100b,BETA,,
 ixus100_sd780,100c,BETA,,
+ixus105_sd1300,100d,ALPHA,,SKIP_AUTOBUILD
 ixus120_sd940,100e,,,
 ixus120_sd940,101a,,,
 ixus120_sd940,102c,,,
