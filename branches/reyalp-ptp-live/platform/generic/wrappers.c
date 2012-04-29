@@ -1497,8 +1497,6 @@ unsigned char SetFileAttributes(const char* fn, unsigned char attr)
 // Default implementation of PTP live view functions.
 // Override as needed for camera specific variations (see G12/SX30/IXUS310/SX130IS for working examples)
 
-int __attribute__((weak)) vid_get_viewport_xoffset_proper()         { return vid_get_viewport_xoffset(); }
-int __attribute__((weak)) vid_get_viewport_yoffset_proper()         { return vid_get_viewport_yoffset(); }
 int __attribute__((weak)) vid_get_viewport_display_xoffset_proper() { return vid_get_viewport_display_xoffset(); }
 int __attribute__((weak)) vid_get_viewport_display_yoffset_proper() { return vid_get_viewport_display_yoffset(); }
 int __attribute__((weak)) vid_get_viewport_width_proper()           { return 720; }

@@ -241,8 +241,6 @@ extern int vid_get_viewport_row_offset();       // Difference between physical w
 
 // PTP Live View functions
 // These functions return actual size/offset in pixels of the viewport and bitmap buffers
-extern int vid_get_viewport_xoffset_proper();           // X Offset (for variable image size)
-extern int vid_get_viewport_yoffset_proper();           // Y Offset (for variable image size)
 extern int vid_get_viewport_display_xoffset_proper();   // X Offset (for variable image size)
 extern int vid_get_viewport_display_yoffset_proper();   // Y Offset (for variable image size)
 extern int vid_get_viewport_width_proper();             // Visible viewport width (for variable image size)

@@ -182,8 +182,6 @@ int vid_get_viewport_display_yoffset()
 }
 
 // Functions for PTP Live View system
-
-int vid_get_viewport_yoffset_proper()           { return vid_get_viewport_yoffset() * 2; }
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2; }
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() * 2; }
 int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }

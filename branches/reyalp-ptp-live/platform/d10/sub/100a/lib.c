@@ -72,9 +72,6 @@ void *vid_get_bitmap_active_buffer()
 
 int vid_get_viewport_max_height() { return 240; }
 
-// commented for now, protocol changes needed to handle correctly, values look correct
-// both are 0 or last record value in playback mode
-#if 1
 // goes to 360 for stitch, 320x240 video, max digital zoom
 int vid_get_viewport_width_proper() { 
     return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:*(int*)0x20E4; // GetVRAMHPixelSize
@@ -83,7 +80,7 @@ int vid_get_viewport_width_proper() {
 int vid_get_viewport_height_proper() {
     return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x20E4+4); // GetVRAMVPixelSize
 }
-#endif
+
 int vid_get_viewport_logical_height() {
     // except for stitch, always full screen
     int m = mode_get();
