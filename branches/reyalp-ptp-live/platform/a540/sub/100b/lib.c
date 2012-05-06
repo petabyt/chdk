@@ -52,13 +52,27 @@ void *vid_get_viewport_fb_d()
 //  return (void*) (x ? (void *)x : vid_get_viewport_fb()) ;
 }
 
-long vid_get_viewport_height()
-{
-  return 240;
-// real height in rec mode can be obtained below
-// note: 240 normally, 160 in stitch, 264 in 320x240 video, 528 in 640x480 video
-// contiuously variable with digital zoom in video
-//    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x32C68+4); // GetVRAMVPixelsSize
+int vid_get_viewport_width_proper() {
+    // fake 1:1 mode
+    if((mode_get()&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
+        return 528;
+    }
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?704:*(int*)0x32C68;
+}
+int vid_get_viewport_width() {
+    return vid_get_viewport_width_proper()/2;
+}
+
+int vid_get_viewport_height_proper() {
+    // fake 16:9 mode
+    if((mode_get()&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
+        return 180; 
+    }
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x32C68+4);
+}
+
+long vid_get_viewport_height() {
+    return vid_get_viewport_height_proper();
 }
 
 int review_fullscreen_mode(){ //from 710 added
@@ -128,26 +142,7 @@ void *vid_get_bitmap_active_buffer()
 }
 
 // TODO - this should go away
-int vid_get_viewport_max_height()               { return 528; } // in 640x480 movie mode
-
-// this returns actual width in rec mode
-// normally 704, effectively 352 at normal 1:2 PAR. In 640 video, doesn't change but has 1:1 PAR
-// actual width is also 704 in playback mode, but the variable returns 0
-// in 320 video 352, 1:1. In stitch 352, 1:2
-int vid_get_viewport_width_proper() {
-    // fake 1:1 mode
-    if((mode_get()&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
-        return 528;
-    }
-    return ((mode_get()&MODE_MASK) == MODE_PLAY)?704:*(int*)0x32C68;
-}
-int vid_get_viewport_height_proper() {
-    // fake 16:9 mode
-    if((mode_get()&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
-        return 180; 
-    }
-    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x32C68+4);
-}
+//int vid_get_viewport_max_height()               { return 528; } // in 640x480 movie mode
 
 int vid_get_viewport_logical_height() {
     // except for stitch, always full screen
@@ -165,7 +160,8 @@ int vid_get_viewport_logical_width() {
     }
     return vid_get_viewport_width_proper();
 }
-int vid_get_viewport_display_xoffset_proper() {
+
+int vid_get_viewport_display_xoffset() {
     int val=0;
     int m = mode_get();
     if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_STITCH) {
@@ -176,28 +172,31 @@ int vid_get_viewport_display_xoffset_proper() {
         // overall stitch window is 3/4 screen width, centered
         // live part is 1/2, so margin is either 1/8th or 3/8th
         if(dir==0) {
-            val = seq?264:88;
+            val = seq?132:44;
         } else {
-            val = seq?88:264;
+            val = seq?44:132;
         }
     } else if((m&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
-        val = 88;
+        val = 44;
     }
     return val;
 }
+
 int vid_get_viewport_xoffset() {
     if((mode_get()&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
        return 44;
     }
     return 0;
 }
-int vid_get_viewport_display_yoffset_proper() {
+
+int vid_get_viewport_display_yoffset() {
     int m = mode_get();
     if((m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
        return 30;
     }
     return ((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_STITCH)?60:0; // window is 120, centered in 240 screen
 }
+
 int vid_get_viewport_yoffset() {
     if((mode_get()&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
        return 30;
