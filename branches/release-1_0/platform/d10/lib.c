@@ -39,8 +39,24 @@ int get_flash_params_count(void){
  return 122; //  sub_FF95A4BC, similar to SD990
 }
 
-// TODO
+/*
+D10 has 3 led values
+0/0 - Upper indicator Green
+1/1 - Upper indicator Orange
+2/9 - AF
+10-11 appears to also drive AF, but using the same codepath as non AF leds (no assert on invalid)
+note, LEDDrive returns 3 on invalid params otherwise 0
+second param 0 = solid on, 1 = off, 2-7 blink patterns
+2: continuous ~1 blink/sec
+3: continuous fast blink
+4: continuous medium blink (2/sec ?) 
+5: burst of 3? fast blinks
+6: continuous slow blinks
+7: if led was off 1 very fast blink. depends on previous state
+8: no obvious effect, but returns 0 for AF
+>8: If used with AF ASSERT!! LEDDrv.c Line 215, otherwise returns 3
+*/
 void camera_set_led(int led, int state, int bright) {
+ static char led_table[]={0,1,9};
+ _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
-
-
