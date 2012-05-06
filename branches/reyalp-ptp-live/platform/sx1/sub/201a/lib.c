@@ -62,8 +62,8 @@ void *vid_get_bitmap_active_buffer()
 {
     return (void*)(*(int*)(0x8D10+0x0C)); //"Add: %p Width : %ld Hight : %ld", sub_FF903C80
 }
-// TODO value of vid_getviewport_height_proper needs to be checked in play, rec, and the different video modes
-//int vid_get_viewport_max_height()               { return 270; }
+// TODO value of vid_get_viewport_height_proper needs to be checked in play, rec, and the different video modes
+//int vid_get_viewport_fullscreen_height()               { return 270; }
 
 // values from chdkcam patch
 // commented for now, protocol changes needed to handle correctly

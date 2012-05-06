@@ -14,8 +14,8 @@ int live_view_get_data(ptp_data *data, int flags) {
 
     lv.lcd_aspect_ratio    = vid_get_aspect_ratio();
 
-    lv.vp.logical_width = vid_get_viewport_logical_width();
-    lv.vp.logical_height = vid_get_viewport_logical_height();
+    lv.vp.logical_width = vid_get_viewport_fullscreen_width();
+    lv.vp.logical_height = vid_get_viewport_fullscreen_height();
 
     lv.vp.buffer_width = vid_get_viewport_buffer_width_proper();
 

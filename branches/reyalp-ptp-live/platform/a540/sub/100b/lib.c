@@ -141,10 +141,7 @@ void *vid_get_bitmap_active_buffer()
     return (void*)(*(int*)0x5ED0); // FFD23420 DisplayPhysicalScreenWithYUVPalette
 }
 
-// TODO - this should go away
-//int vid_get_viewport_max_height()               { return 528; } // in 640x480 movie mode
-
-int vid_get_viewport_logical_height() {
+int vid_get_viewport_fullscreen_height() {
     // except for stitch, always full screen
     int m = mode_get();
     if((m&MODE_MASK) != MODE_PLAY && ((m&MODE_SHOOTING_MASK) == MODE_STITCH || (m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE)) {
@@ -152,7 +149,7 @@ int vid_get_viewport_logical_height() {
     }
     return vid_get_viewport_height_proper();
 }
-int vid_get_viewport_logical_width() {
+int vid_get_viewport_fullscreen_width() {
     // except for stitch, always full screen
     int m = mode_get();
     if((m&MODE_MASK) != MODE_PLAY && ((m&MODE_SHOOTING_MASK) == MODE_STITCH || (m&MODE_SHOOTING_MASK) == MODE_PORTRAIT)) {

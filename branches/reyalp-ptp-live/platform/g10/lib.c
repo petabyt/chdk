@@ -94,4 +94,4 @@ int vid_get_palette_size() { return 256*4; }
 
 // TODO actual value probably varies in some cases
 int vid_get_viewport_height_proper() { return 480; }
-int vid_get_viewport_max_height() { return 480; }
+int vid_get_viewport_fullscreen_height() { return 480; }

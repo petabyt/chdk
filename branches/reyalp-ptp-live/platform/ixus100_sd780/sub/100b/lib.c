@@ -97,7 +97,7 @@ void *vid_get_bitmap_active_buffer()
 
 // not verified
 // reyalp note - sub_FF8C9A74 indicates could be 960x270
-int vid_get_viewport_max_height() { return 240; }
+//int vid_get_viewport_fullscreen_height() { return 240; }
 
 // commented for now, protocol changes needed to handle correctly
 #if 0

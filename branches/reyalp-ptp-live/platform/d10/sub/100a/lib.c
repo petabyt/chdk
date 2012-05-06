@@ -70,8 +70,6 @@ void *vid_get_bitmap_active_buffer()
     return (void*)(*(int*)(0x5164+0x14)); //"Add: %p Width : %ld Hight : %ld", sub_FF8DE720
 }
 
-int vid_get_viewport_max_height() { return 240; }
-
 // goes to 360 for stitch, 320x240 video, max digital zoom
 int vid_get_viewport_width_proper() { 
     return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:*(int*)0x20E4; // GetVRAMHPixelSize
@@ -81,7 +79,7 @@ int vid_get_viewport_height_proper() {
     return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x20E4+4); // GetVRAMVPixelSize
 }
 
-int vid_get_viewport_logical_height() {
+int vid_get_viewport_fullscreen_height() {
     // except for stitch, always full screen
     int m = mode_get();
     if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
@@ -89,7 +87,7 @@ int vid_get_viewport_logical_height() {
     }
     return vid_get_viewport_height_proper();
 }
-int vid_get_viewport_logical_width() {
+int vid_get_viewport_fullscreen_width() {
     // except for stitch, always full screen
     int m = mode_get();
     if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
