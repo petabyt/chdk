@@ -2210,15 +2210,15 @@ void gui_draw_debug_vals_osd() {
         }
         if (cnt != 0)
         {
-            sprintf(osd_buf, "s:%8x e:%8x", exmem_start, exmem_end);
-            draw_txt_string(2, 12, osd_buf, conf.osd_color);
-            sprintf(osd_buf, "f:%8x l:%8x c:%d", f, l, cnt);
+            sprintf(buf, "s:%8x e:%8x", exmem_start, exmem_end);
+            draw_txt_string(2, 12, buf, conf.osd_color);
+            sprintf(buf, "f:%8x l:%8x c:%d", f, l, cnt);
         }
         else
         {
-            sprintf(osd_buf, "OK 0x%x", exmem_start);
+            sprintf(buf, "OK 0x%x", exmem_start);
         }
-        draw_txt_string(2, 13, osd_buf, conf.osd_color);
+        draw_txt_string(2, 13, buf, conf.osd_color);
         // end of check	
     }
 #endif
