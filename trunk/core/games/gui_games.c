@@ -17,6 +17,7 @@ static CMenuItem games_submenu_items[] = {
     MENU_ITEM(0x38,LANG_MENU_GAMES_MASTERMIND,        MENUITEM_PROC,  gui_menu_run_fltmodule, "mastmind.flt" ),
     MENU_ITEM(0x38,"Snake" ,                          MENUITEM_PROC,  gui_menu_run_fltmodule, "snake.flt" ),
     MENU_ITEM(0x38,"Tetris",                          MENUITEM_PROC,  gui_menu_run_fltmodule, "tetris.flt" ),
+	MENU_ITEM(0x38,"Sudoku",						  MENUITEM_PROC,  gui_menu_run_fltmodule, "sudoku.flt" ),
     MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
     {0}
 };
