@@ -1469,21 +1469,19 @@ static int luaCB_raw_merge_start( lua_State* L )
 
   if ( API_VERSION_MATCH_REQUIREMENT( librawop->version, 1, 0 ) &&
        (op == RAW_OPERATION_SUM || op == RAW_OPERATION_AVERAGE) ) {
-    librawop->raw_merge_start(op);
+    return librawop->raw_merge_start(op);   
   }
   else {
     return luaL_argerror(L,1,"invalid raw merge op");
   }
-  return 0;
 }
 
-// TODO sanity check file ?
+// TODO sanity check file ? Get it from C
 static int luaCB_raw_merge_add_file( lua_State* L )
 {
   if (!module_rawop_load())
     return luaL_argerror(L,1,"fail to load raw merge module");
-  librawop->raw_merge_add_file(luaL_checkstring( L, 1 ));
-  return 0;
+  return librawop->raw_merge_add_file(luaL_checkstring( L, 1 ));
 }
 
 static int luaCB_raw_merge_end( lua_State* L )

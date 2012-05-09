@@ -208,17 +208,17 @@ int raw_merge_start(int action){
   return 1;
 }
 
-void raw_merge_add_file(const char * filename) {
+int raw_merge_add_file(const char * filename) {
   int  t,src,i,j,nrow;
   FILE *fbrawin=NULL,*fbrawout,*fcraw;
   struct STD_stat st;
 
   if (!filename)
-    return;
+    return 0;
 
   safe_stat(filename,&st);
   if (st.st_size!=hook_raw_size())
-    return;
+    return 0;
 
   started();
 
@@ -288,6 +288,7 @@ void raw_merge_add_file(const char * filename) {
   remove(TEMP_FILE_NAME);
   rename(TEMP_FILE_NAME_1,TEMP_FILE_NAME);
   finished();
+  return 1;
 }
 
 void raw_merge_end(void) {
