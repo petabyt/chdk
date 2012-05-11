@@ -229,14 +229,13 @@ int raw_merge_add_file(const char * filename) {
     if (!raw_count || fbrawin){
       fbrawout=fopen(TEMP_FILE_NAME_1,"w+b");
       if (fbrawout){
-        fread(rawrow, 1, camera_sensor.raw_rowlen, fcraw);
-        if (raw_count) 
-          fread(row, 1, camera_sensor.raw_rowpix*sizeof(unsigned short), fbrawin); 
-        else
-          for (i=0;i<camera_sensor.raw_rowpix;i++)
-            row[i]=0;
-
         for (nrow=0,j=0;nrow<camera_sensor.raw_rows;nrow++,j++){
+          if (raw_count)
+            fread(row, 1, camera_sensor.raw_rowpix*sizeof(unsigned short), fbrawin);
+          else
+            for (i=0;i<camera_sensor.raw_rowpix;i++)
+              row[i]=0;
+          fread(rawrow, 1, camera_sensor.raw_rowlen, fcraw);
 
 #if CAM_MODULE_SENSOR_BITS_PER_PIXEL==10
 
@@ -265,12 +264,6 @@ int raw_merge_add_file(const char * filename) {
 #endif
 
           fwrite(row, 1, camera_sensor.raw_rowpix*sizeof(unsigned short), fbrawout);
-          if (raw_count)
-            fread(row, 1, camera_sensor.raw_rowpix*sizeof(unsigned short), fbrawin);
-          else
-            for (i=0;i<camera_sensor.raw_rowpix;i++)
-              row[i]=0;
-          fread(rawrow, 1, camera_sensor.raw_rowlen, fcraw);
           if (j>=camera_sensor.raw_rows/10) {
             j-=camera_sensor.raw_rows/10;
             gui_browser_progress_show(filename, nrow*100/camera_sensor.raw_rows);
@@ -295,9 +288,11 @@ void raw_merge_end(void) {
   int src,i,j,nrow;
   FILE *fbraw, *fcraw;
   static struct utimbuf t;
-  if (!raw_count)
+  if (!raw_count) {
+    free(rawrow);
+    free(row);
     return;
-
+  } 
   i=strlen(namebuf)-3;
   if (strncmp(namebuf+i,"CR",2)==0)
     strcpy(namebuf+i,"WAV");
@@ -309,19 +304,22 @@ void raw_merge_end(void) {
   if (fbraw) {
     fcraw=fopen(namebuf,"w+b");
     if (fcraw) {
-      fread(row, 1, camera_sensor.raw_rowpix*sizeof(unsigned short), fbraw);
       for (nrow=0,j=0;nrow<camera_sensor.raw_rows;nrow++,j++) {
-        for (i=0;i<camera_sensor.raw_rowpix;i++) {
-          if (raw_action==RAW_OPERATION_AVERAGE)
-            row[i]/=raw_count;
-          else {
-            if (row[i]>camera_sensor.black_level*(raw_count-1))
-              row[i]-=camera_sensor.black_level*(raw_count-1);
-            else
-              row[i]=0;
-            if (row[i]>camera_sensor.white_level)
-              row[i]=camera_sensor.white_level;
-          }
+        fread(row, 1, camera_sensor.raw_rowpix*sizeof(unsigned short), fbraw);
+
+        if (raw_count>1) {
+          for (i=0;i<camera_sensor.raw_rowpix;i++) {
+            if (raw_action==RAW_OPERATION_AVERAGE)
+              row[i]/=raw_count;
+            else {
+              if (row[i]>camera_sensor.black_level*(raw_count-1))
+                row[i]-=camera_sensor.black_level*(raw_count-1);
+              else
+                row[i]=0;
+              if (row[i]>camera_sensor.white_level)
+                row[i]=camera_sensor.white_level;
+            }
+          }  
         }
 #if CAM_MODULE_SENSOR_BITS_PER_PIXEL==10
         for (i=0,src=0;i<camera_sensor.raw_rowpix;i+=8,src+=10) {
@@ -350,7 +348,6 @@ void raw_merge_end(void) {
 #endif
 
         fwrite(rawrow, 1, camera_sensor.raw_rowlen, fcraw);
-        fread(row, 1, camera_sensor.raw_rowpix*sizeof(unsigned short), fbraw);
         if (j>=camera_sensor.raw_rows/5) {
           j-=camera_sensor.raw_rows/5;
           gui_browser_progress_show(namebuf, nrow*100/camera_sensor.raw_rows);
