@@ -31,7 +31,7 @@ gui_handler GUI_MODE_SUDOKU =
 
 //-------------------------------------------------------------------
 #define SUDOKU_BG_COLOR		MAKE_COLOR(COLOR_WHITE, COLOR_WHITE)
-#define MARKER_COLOR		0xFA //COLOR_BLUE appears black on my a570 1.01a
+#define MARKER_COLOR		COLOR_HISTO_G_PLAY // green for all cameras in play mode
 #define TEXT_COLOR			MAKE_COLOR(SUDOKU_BG_COLOR, COLOR_BLACK)
 #define MARKER_TEXT_COLOR 	MAKE_COLOR(MARKER_COLOR, COLOR_WHITE)
 
