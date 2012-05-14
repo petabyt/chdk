@@ -25,8 +25,9 @@
 void gui_module_menu_kbd_process();
 void gui_sudoku_kbd_process();
 void gui_sudoku_draw(int enforce_redraw);
+void exit_sudoku();
 
-gui_handler GUI_MODE_SUDOKU = 
+gui_handler GUI_MODE_SUDOKU =
     /*GUI_MODE_SUDOKU*/  { GUI_MODE_MODULE,  gui_sudoku_draw,       gui_sudoku_kbd_process,      gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
 
 //-------------------------------------------------------------------
@@ -45,9 +46,9 @@ gui_handler GUI_MODE_SUDOKU =
 #define MENU				4
 #define PAD					8
 
-#define START_NUMBERS		25	
+#define START_NUMBERS		25
 #define MAX_START_NUMBERS	32
-#define MENU_ELEMENTS		5
+#define MENU_ELEMENTS		8
 
 //this program uses a flag-format because it's necessary to save more than
 //one number in one array-Integer, f.e. for solving
@@ -66,6 +67,7 @@ int draw;	//with flags, for drawing
 int xPadStart, yPadStart, padLineDistance; //number pad X, Y and distance, for entering a number
 int xPosPad, yPosPad;
 
+struct STD_stat st;  //used for save games
 
 int field[9][9];
 
@@ -177,19 +179,22 @@ void set_pad_num(int number)
 		xPosPad=(number-1)%3;
 		yPosPad=(number-1)/3;
 	}
-}	
+}
 
 void draw_menu()
 {
 	int i;
 	static char str[16];
-	for (i=0; i<=4; i++)
+	for (i=0; i<MENU_ELEMENTS; i++)
 	{
 		if (i==0) sprintf(str, " Check sudoku ");
 		if (i==1) sprintf(str, " Solve sudoku ");
 		if (i==2) sprintf(str, " New sudoku ");
 		if (i==3) sprintf(str, " Enter sudoku ");
+		if (i==5) sprintf(str, " Exit ");
 		if (i==4) sprintf(str, " Info ");
+		if (i==6) sprintf(str, " Save and Exit ");
+		if (i==7) sprintf(str, " Del save game ");
 
 		if (menuPos==i && mode==MODE_MENU) draw_string(camera_screen.width-(FONT_WIDTH*15), FONT_HEIGHT*(i+1)+i*3, str, MARKER_TEXT_COLOR);
 		else draw_string(camera_screen.width-(FONT_WIDTH*15), FONT_HEIGHT*(i+1)+i*3, str, TEXT_COLOR);
@@ -837,6 +842,17 @@ void sudoku_menu_execute()
 		case 4:	//Info
 			gui_mbox_init((int)"Info", (int)("(c)Frank, 2012, V 0.5"), MBOX_TEXT_CENTER, NULL);
 			break;
+        case 5:
+            exit_sudoku(0); //exit without save
+            break;
+        case 6:
+            exit_sudoku(1); //save and exit
+            break;
+        case 7:
+            if (safe_stat("A/CHDK/GAMES/SUDOKU.SAV", &st)==0) {
+                remove("A/CHDK/GAMES/SUDOKU.SAV");
+            }
+            break;
 	}
 	mode=MODE_VIEW;
 }
@@ -859,6 +875,9 @@ void gui_sudoku_kbd_process()
 			break;
 		#if CAM_HAS_ERASE_BUTTON
 		case KEY_ERASE:
+		#else
+		case KEY_SHOOT_HALF:
+		#endif
 			if (mode & (MODE_VIEW | MODE_EDIT))
 			{
 				if (field[yPos][xPos]==0)user[yPos][xPos]=0;
@@ -872,7 +891,7 @@ void gui_sudoku_kbd_process()
 				draw|=FIELD;
 			}
 			break;
-		#endif
+
 		case KEY_DISPLAY:
 			if (sudoku_follows_rules(*user) & sudoku_finished(*user)) gui_mbox_init((int)"Congratulations!", (int)"You did it!", MBOX_TEXT_CENTER, NULL);
 			else if (sudoku_follows_rules(*user)) gui_mbox_init((int)"Info", (int)"Couldn't find a mistake", MBOX_TEXT_CENTER, NULL);
@@ -944,10 +963,11 @@ void gui_sudoku_kbd_process()
 		break;
 
 		case MODE_MENU:  //Keys in Menumode
-			if (key & (KEY_UP | KEY_DOWN))
+			key |= get_jogdial_direction();
+			if (key & (KEY_UP | KEY_DOWN | JOGDIAL_LEFT | JOGDIAL_RIGHT))
 			{
-				if (key==KEY_UP)menuPos--;
-				if (key==KEY_DOWN)menuPos++;
+				if (key==KEY_UP || key==JOGDIAL_LEFT)menuPos--;
+				if (key==KEY_DOWN || key==JOGDIAL_RIGHT)menuPos++;
 				menuPos=(menuPos+MENU_ELEMENTS)%MENU_ELEMENTS;
 				draw|=MENU;
 			}
@@ -979,19 +999,29 @@ int gui_sudoku_init()
 	mode=MODE_VIEW;
 	menuPos=0;
 	padLineDistance=fieldLineDistance;
-	xPadStart=camera_screen.width*2/3+10;
+	//xPadStart=camera_screen.width*2/3+10;
+	//xPadStart=camera_screen.width/2+10;
+	xPadStart=xFieldBorder*3+fieldLineLength;
 	yPadStart=xFieldBorder+padLineDistance*6;
 	xPosPad=1;
 	yPosPad=1;
-	for (x = 0; x < 9; x++) for (y = 0; y < 9; y++) 
+	for (x = 0; x < 9; x++) for (y = 0; y < 9; y++)
 	{
 		field[y][x] = 0;
 		user[y][x]=0;
 	}
 	draw|=BG;
 	gui_sudoku_draw(0);
-	sudoku_new();
-	memcpy(user, field, sizeof(user));	//copies field[][] in user[][]
+
+	if (safe_stat("A/CHDK/GAMES/SUDOKU.SAV", &st)==0) { //load last sudoku
+        int f = safe_open("A/CHDK/GAMES/SUDOKU.SAV", O_RDONLY, 0777);
+        read(f, user, sizeof(user));
+        read(f, field, sizeof(field));
+        close(f);
+	} else {
+        sudoku_new();
+        memcpy(user, field, sizeof(user));	//copies field[][] in user[][]
+	}
 	gui_mbox_init((int)"Congratulations!", (int)"Everything's correct!", MBOX_TEXT_CENTER, NULL);
 	draw|=FIELD;
 	gui_sudoku_draw(0);
@@ -1004,7 +1034,19 @@ int basic_module_init() {
 }
 extern int module_idx;
 void gui_module_menu_kbd_process() {
-	gui_default_kbd_process_menu_btn();
+	if (mode==MODE_VIEW)mode=MODE_MENU;
+    else mode=MODE_VIEW;
+    draw|=FIELD|MENU;
+}
+
+void exit_sudoku(int save) {
+    if (save!=0) {
+        save = safe_open("A/CHDK/GAMES/SUDOKU.SAV", O_WRONLY|STD_O_CREAT|STD_O_TRUNC, 0777);
+        write(save, user, sizeof(user));
+        write(save, field, sizeof(field));
+        close(save);
+    }
+    gui_default_kbd_process_menu_btn();
   	module_async_unload(module_idx);
 }
 
