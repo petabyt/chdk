@@ -6,13 +6,10 @@ adjustable, default is the play button. Hold for 1/2 second for original functio
 - This camera is able to boot from FAT32 cards when the appropriate BOOTDISK string is written
 
 CAMERA TODO/KNOWN ISSUES:
-- manual loading with "firm update" loading crashes (confirmed on 100d and 101a), so PS.FI2 is not included in the autobuild.
-- battery values min/max need to be checked
-- circle_of_confusion value needs to be checked
+- manual loading with "firm update" loading crashes (confirmed on 100d and 101a), so PS.FI2 is not included in the autobuild. (to be fixed soon http://chdk.setepontos.com/index.php?topic=7889.msg85060#msg85060)
 - various defines in platform_camera.h needs to be checked
 - value for SleepTask in kbd.c instead of hardcoded 10 (minor issue)
 - values for Jogdial events in lib.c 
 
 - 100d, 100e, 101a: movie override quality seems to be working but values might be wrong (stock Canon reaches 4MB/s, CHDK quality 99 2MB/s)
 - 100d, 100e, 101a: jogdial is untested and needs correct rear_dial_position address in stubs_min.S
-- 100d, 100e, 101a: address and values for custom power-on need to be checked in boot.c

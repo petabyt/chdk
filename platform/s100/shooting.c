@@ -167,4 +167,4 @@ long get_target_dir_num() {
 }
 #endif
 
-int circle_of_confusion = 5; //TODO:
+int circle_of_confusion = 6;
