@@ -7,6 +7,7 @@
 //   Canon PowerShot SX30 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 45
 //   PLATFORMID = 12816 (0x3210) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
 //   KEYSYS = d4b                // Found @ 0xffff3680

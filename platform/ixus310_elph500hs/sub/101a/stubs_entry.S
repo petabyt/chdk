@@ -7,6 +7,7 @@
 //   Canon IXUS 310 HS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 47
 //   PLATFORMID = 12837 (0x3225) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x07ffffff
 //   KEYSYS = d4c                // Found @ 0xffff3610

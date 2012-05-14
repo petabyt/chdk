@@ -7,6 +7,7 @@
 //   Canon DIGITAL IXUS 120 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 39
 //   PLATFORMID = 12774 (0x31e6) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d4                 // Found @ 0xffff3564

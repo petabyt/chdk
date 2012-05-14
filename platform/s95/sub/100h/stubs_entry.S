@@ -7,6 +7,7 @@
 //   Canon PowerShot S95
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 45
 //   PLATFORMID = 12818 (0x3212) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
 //   KEYSYS = d4b                // Found @ 0xffff3624

@@ -30,6 +30,7 @@ struct fi2_rec_s {
 	uint32_t	fmain;		// Main FW block flag
 	uint32_t	fboot;		// Bootloader block flag
 	uint32_t	uf2;		// unknown flag 2
+	uint32_t	uf3;		// unknown flag 3 (new in DryOS 50)
 } fi2_rec_s;
 
 // FI2 header (with size field)
@@ -93,7 +94,19 @@ static int get_hexstring( void *dst, const char *str, int len )
 	return 0;
 }
 
-static int fi2enc( char *infname, char *outfname, uint32_t *key, uint32_t *iv , uint32_t pid)
+static int fi2rec_size(uint32_t dryos_ver)
+{
+    // return the correct size to use for the block record
+    switch (dryos_ver)
+    {
+    case 50:
+    	return sizeof (fi2_rec_s);
+    default:
+    	return sizeof (fi2_rec_s) - 4; // exclude the new R50 extra value
+    }
+}
+
+static int fi2enc( char *infname, char *outfname, uint32_t *key, uint32_t *iv , uint32_t pid, uint32_t dryos_ver)
 {
 	unsigned long i;
 	size_t flen;
@@ -170,8 +183,9 @@ static int fi2enc( char *infname, char *outfname, uint32_t *key, uint32_t *iv , 
 	free( upkbuf ); upkbuf = NULL;
 	// process next block
 	// finalize header
-	i = 32 + sizeof (fi2rec);
+  	i = 32 + fi2rec_size(dryos_ver);
 	store32_be( &hdr.hlen_be, i - 4 );
+    i = align128(i);
 	hdr.nblk = 1;
 	hdr.datacs = cs;
 	buf = (unsigned char*)malloc( i );							// allocate buffer for encrypted header
@@ -179,8 +193,9 @@ static int fi2enc( char *infname, char *outfname, uint32_t *key, uint32_t *iv , 
 		printf( g_str_err_malloc, i );
 		return -1;
 	}
+    memset( buf, 0, i );
 	memcpy( buf, &hdr, 32 );
-	memcpy( buf+32, &fi2rec, sizeof(fi2rec));
+	memcpy( buf+32, &fi2rec, fi2rec_size(dryos_ver));
 	aes128_cbc_encrypt( buf, exkey, iv, i );
 
 	// ---------------------------- save results ------------------------------
@@ -216,6 +231,7 @@ int main( int argc, char **argv )
 	uint32_t *iv = NULL;
 	char *fni = NULL, *fno = NULL;
 	uint32_t pid=0;
+    uint32_t dryos_ver=0;
 
 	// parse command line
 	for( i = 1; i < argc; i++){
@@ -232,6 +248,11 @@ int main( int argc, char **argv )
 			else if( !strcmp( "p", _strlwr(argv[i]+1) ) ){						// opt: pid
 			        char *err=NULL;
 			        pid = strtoul(argv[++i], &err, 0);
+				if (*err) return -1;
+			}
+			else if( !strcmp( "pv", _strlwr(argv[i]+1) ) ){						// opt: dryos_ver
+			        char *err=NULL;
+			        dryos_ver = strtoul(argv[++i], &err, 0);
 				if (*err) return -1;
 			}
 			else {
@@ -252,7 +273,7 @@ int main( int argc, char **argv )
 		return -1;
 	}
 	for( i = 0; i < 4; i ++ )  key[i] = read32_be( key+i );
-        i = fi2enc( fni, fno, key, iv , pid);
+        i = fi2enc( fni, fno, key, iv , pid, dryos_ver);
 	if ( !i ) printf( "Done\n" );	else printf( "Failed!\n" );
 	return i;
 }

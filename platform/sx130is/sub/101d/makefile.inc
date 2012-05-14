@@ -42,3 +42,5 @@ KEYSYS=d4b
 #d4b key address 0x7E3618
 #d4b IV key address 0x3EDA0C
 #16 byte long starting from that point
+
+PLATFORMOSVER=45

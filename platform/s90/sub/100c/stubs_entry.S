@@ -7,6 +7,7 @@
 //   Could not find Camera name - possible corrupt firmware dump
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 39
 //   PLATFORMID = 0 (0x0000) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 

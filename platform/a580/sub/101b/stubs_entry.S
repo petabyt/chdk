@@ -7,6 +7,7 @@
 //   Canon PowerShot A580
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 23
 //   PLATFORMID = 12663 (0x3177) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   KEYSYS = d3enc              // Found @ 0xffff1ac0

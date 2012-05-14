@@ -7,6 +7,7 @@
 //   Canon PowerShot SD770 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 23
 //   PLATFORMID = 12661 (0x3175) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d3enc              // Found @ 0xffff33e0

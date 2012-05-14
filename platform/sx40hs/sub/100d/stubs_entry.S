@@ -7,6 +7,7 @@
 //   Canon PowerShot SX40 HS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 49
 //   PLATFORMID = 12856 (0x3238) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff
 //   KEYSYS = d4c                // Found @ 0xffff3b48

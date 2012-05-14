@@ -7,6 +7,7 @@
 //   Canon PowerShot SX110 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 31
 //   PLATFORMID = 12690 (0x3192) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d4                 // Found @ 0xffff1a08

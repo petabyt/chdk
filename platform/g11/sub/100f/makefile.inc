@@ -15,3 +15,5 @@ PLFLAGS+=-DRESTARTSTART=$(RESTARTSTART)
 # suppress FI2 since it doesn't work
 override OPT_FI2=
 KEYSYS=d4
+
+PLATFORMOSVER=39

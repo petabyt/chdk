@@ -7,6 +7,7 @@
 //   Canon PowerShot A2000 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 31
 //   PLATFORMID = 12689 (0x3191) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d4                 // Found @ 0xffff1a98

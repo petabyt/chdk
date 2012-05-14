@@ -7,6 +7,7 @@
 //   Canon PowerShot A650 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 23
 //   PLATFORMID = 12635 (0x315b) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d3                 // Found @ 0xffff1b20

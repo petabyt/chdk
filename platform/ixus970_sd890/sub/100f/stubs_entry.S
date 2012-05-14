@@ -7,6 +7,7 @@
 //   Canon PowerShot SD890 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 23
 //   PLATFORMID = 12659 (0x3173) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d3enc              // Found @ 0xffff33e0

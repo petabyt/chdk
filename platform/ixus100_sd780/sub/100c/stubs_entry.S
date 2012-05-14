@@ -7,6 +7,7 @@
 //   Canon PowerShot SD780 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 31
 //   PLATFORMID = 12738 (0x31c2) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d4                 // Found @ 0xffff3584

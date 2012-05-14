@@ -7,6 +7,7 @@
 //   Canon PowerShot G1 X
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 49
 //   PLATFORMID = 12851 (0x3233) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff
 //   KEYSYS = d4c                // Found @ 0xffff3bb0

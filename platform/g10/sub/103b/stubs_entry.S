@@ -7,6 +7,7 @@
 //   Canon PowerShot G10
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 31
 //   PLATFORMID = 12687 (0x318f) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
 //   KEYSYS = d4                 // Found @ 0xffff368c

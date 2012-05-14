@@ -7,6 +7,7 @@
 //   Canon PowerShot SD4500 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 45
 //   PLATFORMID = 12792 (0x31f8) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
 //   KEYSYS = d4b                // Found @ 0xffff3624

@@ -7,6 +7,7 @@
 //   Canon PowerShot SX120 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 39
 //   PLATFORMID = 12768 (0x31e0) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d4                 // Found @ 0xffff1d0c

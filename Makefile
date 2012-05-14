@@ -51,7 +51,7 @@ firsub: all
             ifdef OPT_FI2
                 ifdef FI2KEY
 					@echo \-\> PS.FI2
-					$(PAKFI2)  $(topdir)bin/main.bin -p $(PLATFORMID) -key $(FI2KEY) -iv $(FI2IV) $(topdir)bin/PS.FI2
+					$(PAKFI2) $(topdir)bin/main.bin -p $(PLATFORMID) -pv $(PLATFORMOSVER) -key $(FI2KEY) -iv $(FI2IV) $(topdir)bin/PS.FI2
                 else
 					@echo WARNING OPT_FI2 set but FI2KEY is not! please read platform/fi2.inc.txt
                 endif

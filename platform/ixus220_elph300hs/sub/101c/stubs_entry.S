@@ -7,6 +7,7 @@
 //   Canon PowerShot ELPH 300HS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 47
 //   PLATFORMID = 12841 (0x3229) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x07ffffff
 //   KEYSYS = d4c                // Found @ 0xffff3620

@@ -7,6 +7,7 @@
 //   Canon PowerShot ELPH 310 HS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 49
 //   PLATFORMID = 12855 (0x3237) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x07ffffff
 //   KEYSYS = d4c                // Found @ 0xffff360c

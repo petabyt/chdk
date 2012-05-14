@@ -7,6 +7,7 @@
 //   Canon PowerShot SX1 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 31
 //   PLATFORMID = 12693 (0x3195) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
 //   KEYSYS = d4                 // Found @ 0xffff3674
