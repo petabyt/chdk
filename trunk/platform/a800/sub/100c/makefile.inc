@@ -36,3 +36,5 @@ NEED_ENCODED_DISKBOOT=6
 
 # FIR (requires correct keys in platform/fi2.inc)
 KEYSYS=d4c
+
+PLATFORMOSVER=47

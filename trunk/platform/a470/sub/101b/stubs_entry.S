@@ -7,6 +7,7 @@
 //   Canon PowerShot A470
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 23
 //   PLATFORMID = 12666 (0x317a) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   KEYSYS = d3enc              // Found @ 0xffff1a98

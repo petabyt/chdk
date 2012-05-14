@@ -9,6 +9,7 @@
 //   Canon PowerShot SD880 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 31
 //   PLATFORMID = 12694 (0x3196) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 

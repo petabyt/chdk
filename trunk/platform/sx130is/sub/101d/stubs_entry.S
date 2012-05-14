@@ -7,6 +7,7 @@
 //   Canon PowerShot SX130 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 45
 //   PLATFORMID = 12817 (0x3211) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d4b                // Found @ 0xffff3618

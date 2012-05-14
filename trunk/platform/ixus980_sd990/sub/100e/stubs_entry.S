@@ -7,6 +7,7 @@
 //   Canon DIGITAL IXUS 980 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 31
 //   PLATFORMID = 12691 (0x3193) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
 //   KEYSYS = d4                 // Found @ 0xffff363c

@@ -7,6 +7,7 @@
 //   Canon PowerShot G12
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 45
 //   PLATFORMID = 12815 (0x320f) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
 //   KEYSYS = d4b                // Found @ 0xffff36ac

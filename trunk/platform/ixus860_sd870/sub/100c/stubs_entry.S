@@ -7,6 +7,7 @@
 //   Canon DIGITAL IXUS 860 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 23
 //   PLATFORMID = 12640 (0x3160) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   KEYSYS = d3                 // Found @ 0xffff3184

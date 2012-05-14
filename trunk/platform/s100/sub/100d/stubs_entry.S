@@ -7,6 +7,7 @@
 //   Canon PowerShot S100
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 49
 //   PLATFORMID = 12854 (0x3236) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff
 //   KEYSYS = d4c                // Found @ 0xffff3b28

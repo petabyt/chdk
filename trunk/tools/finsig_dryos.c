@@ -898,6 +898,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 	}
 
 	bprintf("\n// Values for makefile.inc\n");
+	bprintf("//   PLATFORMOSVER = %d\n",fw->dryos_ver);
 
     if ((pid_idx > 0) && (pid_idx < fw->size))
     {

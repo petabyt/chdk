@@ -7,6 +7,7 @@
 //   Canon PowerShot A490
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 43
 //   PLATFORMID = 12784 (0x31f0) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   KEYSYS = d4a                // Found @ 0xffff1a0c

@@ -7,6 +7,7 @@
 //   Canon PowerShot A3000 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 43
 //   PLATFORMID = 12786 (0x31f2) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   KEYSYS = d4a                // Found @ 0xffff1aac

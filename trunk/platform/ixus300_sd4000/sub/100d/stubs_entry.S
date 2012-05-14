@@ -7,6 +7,7 @@
 //   Canon IXUS 300 HS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 43
 //   PLATFORMID = 12791 (0x31f7) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
 //   KEYSYS = d4a                // Found @ 0xffff366c
