@@ -86,8 +86,9 @@ void gui_palette_draw(int enforce_redraw) {
     if (gui_palette_redraw)
     {
         // Draw top text line - current color + instructions
+        draw_filled_rect(xl, 0, xr, FONT_HEIGHT-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
         draw_string(xr-29*FONT_WIDTH, 0, "    Use \x18\x19\x1b\x1a to change color ", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-        sprintf(buf, " %s: 0x%02hX    ", lang_str(LANG_PALETTE_TEXT_COLOR), (unsigned char)cl);
+        sprintf(buf, " %s: 0x%02hX", lang_str(LANG_PALETTE_TEXT_COLOR), (unsigned char)cl);
         draw_string(xl, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
         // Draw Palette color boxes
