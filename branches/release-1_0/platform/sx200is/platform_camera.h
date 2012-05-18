@@ -71,7 +71,11 @@
     #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
 
     #undef  EDGE_HMARGIN
+#if defined(OPT_CHDK_IN_EXMEM)
+    #define EDGE_HMARGIN                    0
+#else
     #define EDGE_HMARGIN                    20
+#endif
 
     //zebra letterbox for saving memory
     #undef ZEBRA_HMARGIN0
