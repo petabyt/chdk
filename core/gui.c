@@ -1778,7 +1778,7 @@ void gui_chdk_draw()
 #endif
 
 #ifdef OPT_SCRIPTING
-    if ((mode_get()&MODE_MASK) == MODE_REC)
+    if ((mode_get()&MODE_MASK) == MODE_REC || (mode_get()&MODE_MASK) == MODE_PLAY)
     {
         draw_txt_string(0, 14, script_title, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
         if (state_kbd_script_run) show_md_grid=5;
