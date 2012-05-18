@@ -75,8 +75,11 @@
     #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
 
     #undef  EDGE_HMARGIN
+#if defined(OPT_CHDK_IN_EXMEM)
+    #define EDGE_HMARGIN                    0
+#else
     #define EDGE_HMARGIN                    20
-
+#endif
 
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1

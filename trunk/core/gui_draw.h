@@ -180,6 +180,11 @@
     #define COLOR_HISTO_B_PLAY          COLOR_HISTO_B
     #define COLOR_HISTO_BG_PLAY         COLOR_BLUE_LT
     #define COLOR_HISTO_RG_PLAY         COLOR_YELLOW
+    
+#if defined (CAMERA_sx200is)
+    #undef SCREEN_COLOR
+    #define SCREEN_COLOR                0x15    // try for a dark color in both record and play mode
+#endif
 
 // Icon colors
 // 3 shades of Red, Green, Yellow and Grey
