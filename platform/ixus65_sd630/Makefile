@@ -12,7 +12,8 @@ all: all-recursive libplatform.a
 OBJS=main.o lib.o wrappers.o kbd.o shooting.o
 # stubs_init.o
 
-kbd.o: kbd.c ../generic/kbd.c
+kbd.o: kbd.c
+# ../generic/kbd.c
 lib.o: lib.c
 main.o: main.c ../generic/main.c
 shooting.o: shooting.c ../generic/shooting.c
