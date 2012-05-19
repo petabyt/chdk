@@ -36,6 +36,7 @@ extern int fselect_sort_nothumb(const void* v1, const void* v2);
 extern short shooting_get_ev_correction1();
 
 extern long shutter_open_time; // defined in platform/generic/capt_seq.c
+extern long shutter_open_tick_count; // defined in platform/generic/capt_seq.c
 
 
 // ATTENTION: DO NOT USE BRACES OR OWN /**/-STYLE COMMENTS ANYWHERE IN THIS FILE TO AVOID AUTO PARSING MISTAKES
@@ -279,6 +280,7 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 			get_property_case,
 
             &shutter_open_time,
+            &shutter_open_tick_count,
 			&state_shooting_progress,
 			get_raw_pixel,
 			patch_bad_pixel,
