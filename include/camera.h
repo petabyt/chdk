@@ -304,6 +304,7 @@ typedef struct
         int shooting;
     } props;
     int rombaseaddr, maxramaddr;
+    int tick_count_offset;      // get_tick_count value at which the clock ticks over 1 second
 } _cam_info;
 
 extern _cam_info camera_info;

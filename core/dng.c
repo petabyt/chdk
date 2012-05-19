@@ -49,6 +49,7 @@ const char cam_chdk_ver[]               = HDK_VERSION" ver. "BUILD_NUMBER;
 const int cam_Resolution[]              = {180,1};
 static int cam_AsShotNeutral[]          = {1000,1000,1000,1000,1000,1000};
 static char cam_datetime[20]            = "";                   // DateTimeOriginal
+static char cam_subsectime[4]           = "";                   // DateTimeOriginal (milliseconds component)
 static int cam_shutter[2]               = { 0, 1000000 };       // Shutter speed
 static int cam_aperture[2]              = { 0, 10 };            // Aperture
 static int cam_apex_shutter[2]          = { 0, 96 };            // Shutter speed in APEX units
@@ -177,6 +178,8 @@ struct dir_entry ifd1[]={
 #define EXPOSURE_PROGRAM_INDEX      2       // tag 0x8822
 #define METERING_MODE_INDEX         10      // tag 0x9207
 #define FLASH_MODE_INDEX            11      // tag 0x9209
+#define SSTIME_INDEX                13      // tag 0x9290
+#define SSTIME_ORIG_INDEX           14      // tag 0x9291
 
 struct dir_entry exif_ifd[]={
     {0x829A, T_RATIONAL,   1,  (int)cam_shutter},          // Shutter speed
@@ -192,6 +195,8 @@ struct dir_entry exif_ifd[]={
     {0x9207, T_SHORT,      1,  0},                         // Metering mode
     {0x9209, T_SHORT,      1,  0},                         // Flash mode
     {0x920A, T_RATIONAL,   1,  (int)cam_focal_length},     // FocalLength
+    {0x9290, T_ASCII|T_PTR,4,  (int)cam_subsectime},       // DateTime milliseconds
+    {0x9291, T_ASCII|T_PTR,4,  (int)cam_subsectime},       // DateTimeOriginal milliseconds
     {0xA405, T_SHORT|T_PTR,1,  (int)&exif_data.effective_focal_length},    // FocalLengthIn35mmFilm
 };
 
@@ -311,6 +316,7 @@ void create_dng_header(){
     exif_ifd[EXPOSURE_PROGRAM_INDEX].offset = get_exp_program_for_exif(exif_data.exp_program);
     exif_ifd[METERING_MODE_INDEX].offset = get_metering_mode_for_exif(exif_data.metering_mode);
     exif_ifd[FLASH_MODE_INDEX].offset = get_flash_mode_for_exif(exif_data.flash_mode, exif_data.flash_fired);
+    exif_ifd[SSTIME_INDEX].count = exif_ifd[SSTIME_ORIG_INDEX].count = strlen(cam_subsectime)+1;
 
     // calculating offset of RAW data and count of entries for each IFD
     raw_offset=TIFF_HDR_SIZE;
@@ -490,8 +496,10 @@ void capture_data_for_exif(void)
 {
     short short_prop_val;
     time_t datetime;
+    long subsectime;
     struct tm *ttm;
-    extern volatile long shutter_open_time; // defined in platform/generic/capt_seq.c
+    extern volatile long shutter_open_time;         // defined in platform/generic/capt_seq.c
+    extern volatile long shutter_open_tick_count;   // defined in platform/generic/capt_seq.c
     int wb[3];
 
     exif_data.iso=shooting_get_iso_market();
@@ -502,10 +510,23 @@ void capture_data_for_exif(void)
     cam_apex_shutter[0] = short_prop_val;
 
     // Date & time tag (note - uses shutter speed from 'short_prop_val' code above)
-    if (shutter_open_time) { datetime = shutter_open_time + pow_calc(1, 2, 1, -short_prop_val, 96); shutter_open_time=0;} // shutter closing time
-    else  datetime = time(NULL);
+    if (shutter_open_time)
+    {
+        // milliseconds component of shutter_open_time
+        subsectime = (shutter_open_tick_count - camera_info.tick_count_offset) % 1000;
+        // shutter closing time
+        datetime = shutter_open_time + ((cam_shutter[0] + (subsectime * 1000)) / 1000000);
+        shutter_open_time=0;
+    }
+    else
+    {
+        datetime = time(NULL);
+        // milliseconds component of datetime
+        subsectime = (get_tick_count() - camera_info.tick_count_offset) % 1000;
+    }
     ttm = localtime(&datetime);
     sprintf(cam_datetime, "%04d:%02d:%02d %02d:%02d:%02d", ttm->tm_year+1900, ttm->tm_mon+1, ttm->tm_mday, ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
+    sprintf(cam_subsectime, "%02d", subsectime/10);     // camera tick count is only accurate to 10 msec intervals
 
     get_property_case(camera_info.props.av, &short_prop_val, sizeof(short_prop_val));
     cam_aperture[0]      = pow_calc( 10, 2, 1, short_prop_val, 192);

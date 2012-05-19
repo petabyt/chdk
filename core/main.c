@@ -248,6 +248,19 @@ void core_spytask()
     }
 #endif
 
+    // Calculate the value of get_tick_count() when the clock ticks over to the next second
+    // Used to calculate the SubSecondTime value when saving DNG files.
+    long t1, t2;
+    t2 = time(0);
+    do
+    {
+        t1 = t2;
+        camera_info.tick_count_offset = get_tick_count();
+        t2 = time(0);
+        msleep(10);
+    } while (t1 != t2);
+    camera_info.tick_count_offset = camera_info.tick_count_offset % 1000;
+
     while (1)
     {
 

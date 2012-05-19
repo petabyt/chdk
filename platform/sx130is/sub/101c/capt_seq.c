@@ -13,6 +13,7 @@ int capt_seq_hook_set_nr_my(int orig)
 {
  
 	shutter_open_time=_time((void*)0); 
+    shutter_open_tick_count = get_tick_count();
 
 	// Firmware also tests for 3 and 7, meaning unknown, so we don't touch them
 	if (orig!=NR_ON && orig!=NR_OFF)
