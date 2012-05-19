@@ -87,6 +87,21 @@ _cam_info camera_info =
 #else
     0,
 #endif
+#if defined(PARAM_OWNER_NAME)
+    PARAM_OWNER_NAME,
+#else
+    0,
+#endif
+#if defined(PARAM_ARTIST_NAME)
+    PARAM_ARTIST_NAME,
+#else
+    0,
+#endif
+#if defined(PARAM_COPYRIGHT)
+    PARAM_COPYRIGHT,
+#else
+    0,
+#endif
     },
     {
 #if defined(CAM_HAS_GPS)

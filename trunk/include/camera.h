@@ -157,6 +157,9 @@
                                                 // Each pair of integers is one 'RATIONAL' value (numerator,denominator)
 
     #undef  PARAM_CAMERA_NAME                   // parameter number for GetParameterData to get camera name
+    #undef  PARAM_OWNER_NAME                    // parameter number for GetParameterData to get owner name
+    #undef  PARAM_ARTIST_NAME                   // parameter number for GetParameterData to get artist name
+    #undef  PARAM_COPYRIGHT                     // parameter number for GetParameterData to get copyright
     #undef  PARAM_DISPLAY_MODE1                 // param number for LCD display mode when camera in playback
     #undef  PARAM_DISPLAY_MODE2                 // param number for LCD display mode when camera in record view hold mode
     #undef  CAM_FIRMWARE_MEMINFO                // Use 'GetMemInfo' (dryos) or 'memPartInfoGet'/'memPartFindMax' (vxworks)
@@ -287,6 +290,9 @@ typedef struct
     struct
     {
         int camera_name;
+        int owner_name;
+        int artist_name;
+        int copyright;
     } params;
     struct
     {
