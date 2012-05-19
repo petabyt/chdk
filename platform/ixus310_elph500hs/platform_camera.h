@@ -52,26 +52,27 @@
     #define CAM_HAS_CMOS                    1
     #define CAM_HAS_ND_FILTER               1
 
-    #undef  CAM_HAS_ERASE_BUTTON                    // No erase button
-    #undef  CAM_HAS_MANUAL_FOCUS                    // No manual focus mode
+    #undef  CAM_HAS_ERASE_BUTTON                // No erase button
+    #undef  CAM_HAS_MANUAL_FOCUS                // No manual focus mode
 
-    #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO     // Can already zoom in video, no need to unlock
+    #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO // Can already zoom in video, no need to unlock
 
     #undef  DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                 2   // use .CR2 
 
     #undef  CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH            70      // Need to leave this much border to avoid overlap with on screen buttons.
+    #define CAM_MENU_BORDERWIDTH            70  // Need to leave this much border to avoid overlap with on screen buttons.
     #undef  CAM_TS_BUTTON_BORDER
-    #define CAM_TS_BUTTON_BORDER            60      // Define this to leave a border on each side of the palette display. Used on the IXUS 310 to
+    #define CAM_TS_BUTTON_BORDER            60  // Define this to leave a border on each side of the palette display. Used on the IXUS 310 to
                                                 // stop the palette from overlapping the on screen buttons on each side
-    #undef  CAM_DISP_ALT_TEXT                    // Turn off <ALT> at bottom of screen in Alt mode - changes button color instead
+    #undef  CAM_DISP_ALT_TEXT                   // Turn off <ALT> at bottom of screen in Alt mode - changes button color instead
 
-    #define CAM_TOUCHSCREEN_UI              1       // Enable touch screen U/I
+    #define CAM_TOUCHSCREEN_UI              1   // Enable touch screen U/I
 
     // camera name
-    #define PARAM_CAMERA_NAME               4 // parameter number for GetParameterData
-    #define PARAM_DISPLAY_MODE1             60 // param number for LCD display mode when camera in playback
+    #define PARAM_CAMERA_NAME               4   // parameter number for GetParameterData - Camera Model name
+    #define PARAM_OWNER_NAME                7   // parameter number for GetParameterData - Owner name
+    #define PARAM_DISPLAY_MODE1             60  // param number for LCD display mode when camera in playback
     #define PARAM_DISPLAY_MODE2             64  // param number for LCD display mode when camera in record view hold mode
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12

@@ -73,7 +73,10 @@
     #define CAM_ACTIVE_AREA_Y2                  3364
 
     // camera name
-    #define PARAM_CAMERA_NAME                   4       // parameter number for GetParameterData
+    #define PARAM_CAMERA_NAME                   4       // parameter number for GetParameterData - Camera Model name
+    #define PARAM_OWNER_NAME                    7       // parameter number for GetParameterData - Owner name
+    #define PARAM_ARTIST_NAME                   157     // parameter number for GetParameterData - Artist name
+    #define PARAM_COPYRIGHT                     158     // parameter number for GetParameterData - Copyright
     #define PARAM_DISPLAY_MODE1                 59      // param number for LCD display mode when camera in playback
     #define PARAM_DISPLAY_MODE2                 62      // param number for LCD display mode when camera in record view hold mode
     #undef  CAM_SENSOR_BITS_PER_PIXEL
@@ -86,8 +89,8 @@
     #define CAM_USES_ASPECT_CORRECTION          1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
     #undef CAM_BITMAP_WIDTH
     #undef CAM_BITMAP_HEIGHT
-    #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
-    #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
+    #define CAM_BITMAP_WIDTH                    960     // Actual width of bitmap screen in bytes
+    #define CAM_BITMAP_HEIGHT                   270     // Actual height of bitmap screen in rows
 
     #define CAM_ZEBRA_ASPECT_ADJUST             1
 

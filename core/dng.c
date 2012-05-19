@@ -43,7 +43,9 @@ const int cam_BaselineNoise[]           = {1,1};
 const int cam_BaselineSharpness[]       = {4,3};
 const int cam_LinearResponseLimit[]     = {1,1};
 const int cam_AnalogBalance[]           = {1,1,1,1,1,1};
-const char cam_name[32];
+static char cam_name[32]                = "";
+static char artist_name[64]             = "";
+static char copyright[64]               = "";
 const short cam_PreviewBitsPerSample[]  = {8,8,8};
 const char cam_chdk_ver[]               = HDK_VERSION" ver. "BUILD_NUMBER;
 const int cam_Resolution[]              = {180,1};
@@ -101,11 +103,13 @@ static unsigned int badpixel_opcode[] =
 #define CAMERA_NAME_INDEX           8       // tag 0x110
 #define THUMB_DATA_INDEX            9       // tag 0x111
 #define ORIENTATION_INDEX           10      // tag 0x112
-#define SUBIFDS_INDEX               17      // tag 0x14A
-#define EXIF_IFD_INDEX              19      // tag 0x8769
-#define GPS_IFD_INDEX               20      // tag 0x8825
-#define DNG_VERSION_INDEX           22      // tag 0xC612
-#define UNIQUE_CAMERA_MODEL_INDEX   23      // tag 0xC614
+#define ARTIST_NAME_INDEX           17      // tag 0x13B
+#define SUBIFDS_INDEX               18      // tag 0x14A
+#define COPYRIGHT_INDEX             19      // tag 0x8298
+#define EXIF_IFD_INDEX              20      // tag 0x8769
+#define GPS_IFD_INDEX               21      // tag 0x8825
+#define DNG_VERSION_INDEX           23      // tag 0xC612
+#define UNIQUE_CAMERA_MODEL_INDEX   24      // tag 0xC614
 
 struct dir_entry ifd0[]={
     {0xFE,   T_LONG,       1,  1},                                 // NewSubFileType: Preview Image
@@ -125,8 +129,9 @@ struct dir_entry ifd0[]={
     {0x11C,  T_SHORT,      1,  1},                                 // PlanarConfiguration: 1
     {0x131,  T_ASCII,      sizeof(cam_chdk_ver), (int)cam_chdk_ver},//Software
     {0x132,  T_ASCII,      20, (int)cam_datetime},                 // DateTime
+    {0x13B,  T_ASCII|T_PTR,64, (int)artist_name},                  // Artist: Filled at header generation.
     {0x14A,  T_LONG,       1,  0},                                 // SubIFDs offset
-    {0x8298, T_ASCII,      1,  0},                                 // Copyright
+    {0x8298, T_ASCII|T_PTR,64, (int)copyright},                    // Copyright
     {0x8769, T_LONG,       1,  0},                                 // EXIF_IFD offset
     {0x8825, T_LONG,       1,  0},                                 // GPS_IFD offset
     {0x9216, T_BYTE,       4,  0x00000001},                        // TIFF/EPStandardID: 1.0.0.0
@@ -311,6 +316,8 @@ void create_dng_header(){
     // Fix the counts and offsets where needed
 
     ifd0[CAMERA_NAME_INDEX].count = ifd0[UNIQUE_CAMERA_MODEL_INDEX].count = strlen(cam_name) + 1;
+    ifd0[ARTIST_NAME_INDEX].count = strlen(artist_name) + 1;
+    ifd0[COPYRIGHT_INDEX].count = strlen(copyright) + 1;
     ifd0[ORIENTATION_INDEX].offset = get_orientation_for_exif(exif_data.orientation);
 
     exif_ifd[EXPOSURE_PROGRAM_INDEX].offset = get_exp_program_for_exif(exif_data.exp_program);
@@ -545,6 +552,9 @@ void capture_data_for_exif(void)
 
     get_property_case(camera_info.props.orientation_sensor, &exif_data.orientation, sizeof(exif_data.orientation));
     get_parameter_data(camera_info.params.camera_name, &cam_name, sizeof(cam_name));
+    if (camera_info.params.artist_name) get_parameter_data(camera_info.params.artist_name, &artist_name, sizeof(artist_name));
+    else if (camera_info.params.owner_name) get_parameter_data(camera_info.params.owner_name, &artist_name, 32);
+    if (camera_info.params.copyright) get_parameter_data(camera_info.params.copyright, &copyright, sizeof(copyright));
     get_property_case(camera_info.props.flash_mode, &exif_data.flash_mode, sizeof(exif_data.flash_mode));
     get_property_case(camera_info.props.flash_fire, &exif_data.flash_fired, sizeof(exif_data.flash_fired));
     get_property_case(camera_info.props.metering_mode, &exif_data.metering_mode, sizeof(exif_data.metering_mode));
