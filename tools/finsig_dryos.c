@@ -798,6 +798,7 @@ int isB(firmware *fw, int offset)
 void load_firmware(firmware *fw, char *filename, char *base_addr)
 {
     FILE *f = fopen(filename, "rb");
+    int k;
 
     if (f == NULL)
 	{
@@ -814,7 +815,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
     // Max sig size if 32, add extra space at end of buffer and fill with 0xFFFFFFFF
     // Allows sig matching past end of firmware without checking each time in the inner loop
     fw->buf = malloc((fw->size+32)*4);
-    fread(fw->buf, 4, fw->size, f);
+    k = fread(fw->buf, 4, fw->size, f);
     fclose(f);
 	
     memset(&fw->buf[fw->size],0xff,32*4);
@@ -823,7 +824,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 	
 	// Get DRYOS version
 	fw->dryos_ver = 0;
-	int k = find_str(fw, "DRYOS version 2.3, release #");
+	k = find_str(fw, "DRYOS version 2.3, release #");
 	if (k == -1)
 	{
 		bprintf("//   Can't find DRYOS version !!!\n\n");
@@ -1469,7 +1470,7 @@ void load_ignore_list()
         fseek(f,0,SEEK_SET);
 
         ignore_names = malloc(size+1);
-        fread(ignore_names, 1, size, f);
+        size = fread(ignore_names, 1, size, f);
         ignore_names[size] = 0;
 
         int save = 1;
@@ -2489,7 +2490,7 @@ void print_results(const char *curr_name)
 		int opt = is_in_list(curr_name,optional);
 		if (opt == 1) return;
 		char fmt[50] = "";
-		sprintf(fmt, "// ERROR: %%s is not found. %%%ds//--- --- ", 34-strlen(curr_name));
+		sprintf(fmt, "// ERROR: %%s is not found. %%%ds//--- --- ", (int)(34-strlen(curr_name)));
 		sprintf(line+strlen(line), fmt, curr_name, "");
 	}
 	else

@@ -137,7 +137,7 @@ int main(int argc, char **argv)
     // Max sig size if 32, add extra space at end of buffer and fill with 0xFFFFFFFF
     // Allows sig matching past end of firmware without checking each time in the inner loop
     buf=malloc((size+32)*4);
-    fread(buf, 4, size, f);
+    i = fread(buf, 4, size, f);
     fclose(f);
     memset(&buf[size],0xff,32*4);
 
