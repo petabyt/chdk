@@ -292,7 +292,7 @@ void dump_sig(uint32_t pos, int size, FILE *f)
     }
 
     fseek(f, pos, SEEK_SET);
-    fread(buf, 4, size, f);
+    i = fread(buf, 4, size, f);
 
     for (i=0;i<size;++i){
         tbuf[0]=0;

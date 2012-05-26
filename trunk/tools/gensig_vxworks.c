@@ -297,7 +297,7 @@ int main(int argc, char **argv)
     wcount = 0;
 
     fseek(f, pos, SEEK_SET);
-    fread(buf, 4, size, f);
+    i = fread(buf, 4, size, f);
 
     printf("static FuncSig func_sig_%s[] = {\n",proc_name);
 
