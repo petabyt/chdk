@@ -46,12 +46,52 @@ _cam_sensor camera_sensor = {
 #else
     { -1 , 2 },
 #endif
-#if defined(CAM_COLORMATRIX1)
-    { CAM_COLORMATRIX1 },
-    cam_CFAPattern, cam_CalibrationIlluminant1,
+#if defined(cam_CFAPattern)
+    cam_CFAPattern, 
 #else
+    0,
+#endif
+#if defined(CAM_COLORMATRIX1)
+    cam_CalibrationIlluminant1,
+    { CAM_COLORMATRIX1 },
+#else
+    0,
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-    0, 0,
+#endif
+#if defined(CAM_COLORMATRIX2)
+    cam_CalibrationIlluminant2,
+    { CAM_COLORMATRIX2 },
+#else
+    0,
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+#endif
+#if defined(CAM_CAMERACALIBRATION1)
+    1,
+    { CAM_CAMERACALIBRATION1 },
+#else
+    0,
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+#endif
+#if defined(CAM_CAMERACALIBRATION2)
+    1,
+    { CAM_CAMERACALIBRATION2 },
+#else
+    0,
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+#endif
+#if defined(CAM_FORWARDMATRIX1)
+    1,
+    { CAM_FORWARDMATRIX1 },
+#else
+    0,
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+#endif
+#if defined(CAM_FORWARDMATRIX2)
+    1,
+    { CAM_FORWARDMATRIX2 },
+#else
+    0,
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 #endif
 };
 
