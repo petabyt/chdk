@@ -193,11 +193,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO( 62, conf.menu_symbol_enable,     CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO( 63, conf.alt_mode_button,        CONF_DEF_VALUE, i:KEY_PRINT, conf_change_alt_mode_button),
     CONF_INFO( 64, conf.lang_file,              CONF_CHAR_PTR,   ptr:"", NULL),
-#if defined(VER_CHDK)
-    CONF_INFO( 65, conf.font_cp,                    CONF_DEF_VALUE,     i:FONT_CP_WIN_1251, conf_change_font_cp),
-#else   // CHDK-DE
     CONF_INFO( 65, conf.font_cp,                    CONF_DEF_VALUE,     i:FONT_CP_WIN_1252, conf_change_font_cp),
-#endif
     CONF_INFO( 66, conf.menu_rbf_file,          CONF_CHAR_PTR,   ptr:"", conf_change_menu_rbf_file),
     CONF_INFO( 67, conf.alt_prevent_shutdown,   CONF_DEF_VALUE, i:ALT_PREVENT_SHUTDOWN_ALT, conf_update_prevent_shutdown),
     CONF_INFO( 68, conf.show_grid_lines,        CONF_DEF_VALUE, i:0, NULL),
