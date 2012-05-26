@@ -103,6 +103,7 @@ static void modinspect_unload_cb(unsigned int btn) {
     if (btn==MBOX_BTN_YES) {
 		module_async_unload_allrunned(0);
         gui_set_mode(modinspect_old_guimode);	// if core gui - return to it
+        draw_restore();
     }
     modinspect_redraw=2;
 }
@@ -132,6 +133,7 @@ extern int module_idx;
 
 void gui_module_menu_kbd_process() {
 	gui_set_mode(modinspect_old_guimode);
+	draw_restore();
   	module_async_unload(module_idx);
 }
 
