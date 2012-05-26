@@ -51,16 +51,35 @@
     // bayer sensor pattern
     #define cam_CFAPattern                      0x02010100 // Red  Green  Green  Blue
 
-    #define CAM_DNG_EXPOSURE_BIAS               0,1     // Specify DNG exposure bias value to 0 (to override default of -0.5 in the dng.c code)
-
     #define CAM_DNG_LENS_INFO                   { 151,10, 604,10, 28,10, 58,10 }    // See comments in camera.h
 
-    //need fixing *****************************************************
-    #define cam_CalibrationIlluminant1  1
+    //From G1 X native RAW file as converted to DNG by Adobe convertor
+    #define cam_CalibrationIlluminant1          17      // Standard Light A
     #define CAM_COLORMATRIX1    \
-    544808, 100000, -174047, 100000, -80399, 100000, \
-    -75055, 100000,  440444, 100000,  11367, 100000, \
-     -5801, 100000,   71589, 100000, 118914, 100000
+      8138, 10000,  -2281, 10000,   -659, 10000, \
+     -3453, 10000,  11006, 10000,   2816, 10000, \
+      -297, 10000,   1118, 10000,   6471, 10000
+    #define cam_CalibrationIlluminant2          21      // D65
+    #define CAM_COLORMATRIX2    \
+      7378, 10000,  -1255, 10000,  -1043, 10000, \
+     -4088, 10000,  12251, 10000,   2048, 10000, \
+      -876, 10000,   1946, 10000,   5805, 10000
+    #define CAM_CAMERACALIBRATION1    \
+     10102, 10000,      0, 10000,      0, 10000, \
+         0, 10000,  10000, 10000,      0, 10000, \
+         0, 10000,  00000, 10000,  10233, 10000
+    #define CAM_CAMERACALIBRATION2    \
+     10102, 10000,      0, 10000,      0, 10000, \
+         0, 10000,  10000, 10000,      0, 10000, \
+         0, 10000,  00000, 10000,  10233, 10000
+    #define CAM_FORWARDMATRIX1    \
+      7310, 10000,    833, 10000,   1500, 10000, \
+      2013, 10000,   8875, 10000,   -888, 10000, \
+        34, 10000,  -4122, 10000,  12339, 10000
+    #define CAM_FORWARDMATRIX2    \
+      7010, 10000,   1653, 10000,    980, 10000, \
+      2351, 10000,   9551, 10000,  -1902, 10000, \
+       177, 10000,  -2144, 10000,  10218, 10000
 
     // Sensor size, DNG image size & cropping
     #define CAM_RAW_ROWPIX                      4496    // Found @0xff190c98

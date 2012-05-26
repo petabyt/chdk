@@ -142,6 +142,12 @@
                                                 //   should be 0x01000201 = [Green Blue Red Green], 0x02010100 = [Red Green Green Blue] or 0x01020001 = [Green Red Blue Green]
     #undef  CAM_COLORMATRIX1                    // DNG color profile matrix
     #undef  cam_CalibrationIlluminant1          // DNG color profile illuminant - set it to 17 for standard light A
+    #undef  CAM_COLORMATRIX2                    // DNG color profile matrix 2
+    #undef  cam_CalibrationIlluminant2          // DNG color profile illuminant 2 - set it to 21 for D65
+    #undef  CAM_CAMERACALIBRATION1              // DNG camera calibration matrix 1
+    #undef  CAM_CAMERACALIBRATION2              // DNG camera calibration matrix 2
+    #undef  CAM_FORWARDMATRIX1                  // DNG camera forward matrix 1
+    #undef  CAM_FORWARDMATRIX2                  // DNG camera forward matrix 2
     #undef  CAM_DNG_EXPOSURE_BIAS               // Specify DNG exposure bias value (to override default of -0.5 in the dng.c code)
     #undef  DNG_EXT_FROM                        // Extension in the cameras known extensions to replace with .DNG to allow DNG
                                                 // files to be transfered over standard PTP. Only applicable to older cameras
@@ -265,8 +271,19 @@ typedef struct {
     };
     int lens_info[8];           // DNG Lens Info
     int exposure_bias[2];       // DNG Exposure Bias
+    int cfa_pattern;
+    int calibration_illuminant1;
     int color_matrix1[18];      // DNG Color Matrix
-    int cfa_pattern, calibration_illuminant1;
+    int calibration_illuminant2;
+    int color_matrix2[18];      // DNG Color Matrix 2
+    int has_calibration1;
+    int camera_calibration1[18];// DNG Camera Calibration Matrix 1
+    int has_calibration2;
+    int camera_calibration2[18];// DNG Camera Calibration Matrix 2
+    int has_forwardmatrix1;
+    int forward_matrix1[18];    // DNG Camera Forward Matrix 1
+    int has_forwardmatrix2;
+    int forward_matrix2[18];    // DNG Camera Forward Matrix 1
 } _cam_sensor;
 
 extern _cam_sensor camera_sensor;

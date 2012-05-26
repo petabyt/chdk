@@ -109,7 +109,13 @@ static unsigned int badpixel_opcode[] =
 #define EXIF_IFD_INDEX              20      // tag 0x8769
 #define GPS_IFD_INDEX               21      // tag 0x8825
 #define DNG_VERSION_INDEX           23      // tag 0xC612
-#define UNIQUE_CAMERA_MODEL_INDEX   24      // tag 0xC614
+#define UNIQUE_CAMERA_MODEL_INDEX   25      // tag 0xC614
+#define COLOR_MATRIX2_INDEX         27      // tag 0xc622
+#define CALIBRATION1_INDEX          28      // tag 0xc623
+#define CALIBRATION2_INDEX          29      // tag 0xc624
+#define ILLUMINANT2_INDEX           38      // tag 0xc65b
+#define FORWARD_MATRIX1_INDEX       39      // tag 0xc714
+#define FORWARD_MATRIX2_INDEX       40      // tag 0xc715
 
 struct dir_entry ifd0[]={
     {0xFE,   T_LONG,       1,  1},                                 // NewSubFileType: Preview Image
@@ -136,8 +142,12 @@ struct dir_entry ifd0[]={
     {0x8825, T_LONG,       1,  0},                                 // GPS_IFD offset
     {0x9216, T_BYTE,       4,  0x00000001},                        // TIFF/EPStandardID: 1.0.0.0
     {0xC612, T_BYTE,       4,  0x00000301},                        // DNGVersion: 1.3.0.0
+    {0xC613, T_BYTE,       4,  0x00000101},                        // DNGBackwardVersion: 1.1.0.0
     {0xC614, T_ASCII,      32, (int)cam_name},                     // UniqueCameraModel. Filled at header generation.
     {0xC621, T_SRATIONAL,  9,  (int)&camera_sensor.color_matrix1},
+    {0xC622, T_SRATIONAL,  9,  (int)&camera_sensor.color_matrix2},
+    {0xC623, T_SRATIONAL,  9,  (int)&camera_sensor.camera_calibration1},
+    {0xC624, T_SRATIONAL,  9,  (int)&camera_sensor.camera_calibration2},
     {0xC627, T_RATIONAL,   3,  (int)cam_AnalogBalance},
     {0xC628, T_RATIONAL,   3,  (int)cam_AsShotNeutral},
     {0xC62A, T_SRATIONAL,  1,  (int)&camera_sensor.exposure_bias},
@@ -146,6 +156,9 @@ struct dir_entry ifd0[]={
     {0xC62E, T_RATIONAL,   1,  (int)cam_LinearResponseLimit},
     {0xC630, T_RATIONAL,   4,  (int)&camera_sensor.lens_info},
     {0xC65A, T_SHORT|T_PTR,1,  (int)&camera_sensor.calibration_illuminant1}, 
+    {0xC65B, T_SHORT|T_PTR,1,  (int)&camera_sensor.calibration_illuminant2}, 
+    {0xC714, T_SRATIONAL,  9,  (int)&camera_sensor.forward_matrix1},
+    {0xC715, T_SRATIONAL,  9,  (int)&camera_sensor.forward_matrix2},
 };
 
 // Index of specific entries in ifd1 below.
@@ -286,14 +299,12 @@ void create_dng_header(){
         // If CHDK is removing bad pixels then set DNG version to 1.1 and remove opcodes
         ifd0[DNG_VERSION_INDEX].offset = BE(0x01010000);
         ifd1[BADPIXEL_OPCODE_INDEX].type |= T_SKIP;
-        ifd_list[1].count = DIR_SIZE(ifd1) - 1;
     }
     else
     {
         // Set DNG version to 1.3 and add bad pixel opcodes
         ifd0[DNG_VERSION_INDEX].offset = BE(0x01030000);
         ifd1[BADPIXEL_OPCODE_INDEX].type &= ~T_SKIP;
-        ifd_list[1].count = DIR_SIZE(ifd1);
     }
 
     // filling EXIF fields
@@ -309,7 +320,6 @@ void create_dng_header(){
     {
         // If no GPS then remove the GPS data from the header - assumes gps_ifd is the last one in ifd_list
         ifd_count--;
-        ifd_list[0].count = DIR_SIZE(ifd0) - 1;     // Entry 0x8825 won't be saved so don't count it
         ifd0[GPS_IFD_INDEX].type |= T_SKIP;         // mark entry so it is skipped
     }
 
@@ -324,6 +334,30 @@ void create_dng_header(){
     exif_ifd[METERING_MODE_INDEX].offset = get_metering_mode_for_exif(exif_data.metering_mode);
     exif_ifd[FLASH_MODE_INDEX].offset = get_flash_mode_for_exif(exif_data.flash_mode, exif_data.flash_fired);
     exif_ifd[SSTIME_INDEX].count = exif_ifd[SSTIME_ORIG_INDEX].count = strlen(cam_subsectime)+1;
+
+    // Skip color matrix and calibration entries that aren't defined for the camera
+    if (camera_sensor.calibration_illuminant2 == 0)
+    {
+        ifd0[ILLUMINANT2_INDEX].type |= T_SKIP;
+        ifd0[COLOR_MATRIX2_INDEX].type |= T_SKIP;
+    }
+    if (camera_sensor.has_calibration1 == 0)    ifd0[CALIBRATION1_INDEX].type |= T_SKIP;
+    if (camera_sensor.has_calibration2 == 0)    ifd0[CALIBRATION2_INDEX].type |= T_SKIP;
+    if (camera_sensor.has_forwardmatrix1 == 0)  ifd0[FORWARD_MATRIX1_INDEX].type |= T_SKIP;
+    if (camera_sensor.has_forwardmatrix2 == 0)  ifd0[FORWARD_MATRIX2_INDEX].type |= T_SKIP;
+
+    // fixup up IFD count values, exclude skipped entries
+    for (j=0;j<ifd_count;j++)
+    {
+        ifd_list[j].count = 0;
+        for(i=0; i<ifd_list[j].entry_count; i++)
+        {
+            if ((ifd_list[j].entry[i].type & T_SKIP) == 0)  // Exclude skipped entries (e.g. GPS info if camera doesn't have GPS)
+            {
+                ifd_list[j].count++;
+            }
+        }
+    }
 
     // calculating offset of RAW data and count of entries for each IFD
     raw_offset=TIFF_HDR_SIZE;
@@ -646,8 +680,8 @@ void create_thumbnail()
     for (i=0; i<DNG_TH_HEIGHT; i++)
         for (j=0; j<DNG_TH_WIDTH; j++)
         {
-            x = ((camera_sensor.jpeg.x + (camera_sensor.jpeg.width  * j) / DNG_TH_WIDTH)  & 0xFFFFFFFE) + xadj;
-            y = ((camera_sensor.jpeg.y + (camera_sensor.jpeg.height * i) / DNG_TH_HEIGHT) & 0xFFFFFFFE) + yadj;
+            x = ((camera_sensor.active_area.x1 + camera_sensor.jpeg.x + (camera_sensor.jpeg.width  * j) / DNG_TH_WIDTH)  & 0xFFFFFFFE) + xadj;
+            y = ((camera_sensor.active_area.y1 + camera_sensor.jpeg.y + (camera_sensor.jpeg.height * i) / DNG_TH_HEIGHT) & 0xFFFFFFFE) + yadj;
 
             *buf++ = gamma[get_raw_pixel(x,y)>>shift];           // red pixel
             *buf++ = gamma[6*(get_raw_pixel(x+1,y)>>shift)/10];  // green pixel
