@@ -490,7 +490,7 @@ short shooting_get_iso_market_base()
     if (iso_market_base==0)
     {
         if (iso_table[1-iso_table[0].id].prop_id == 50) iso_market_base=50;
-#if defined(CAMERA_sx40hs)
+#if defined(CAMERA_sx40hs) || defined(CAMERA_g1x)
         else iso_market_base=200;
 #else
         else iso_market_base=100;
@@ -505,9 +505,19 @@ short shooting_get_iso_market()
     short iso_mode = shooting_get_canon_iso_mode();
     if ((iso_mode < 50) || (conf.iso_override_koef && conf.iso_override_value) || (conf.iso_bracket_koef && conf.iso_bracket_value))
     {
-        short iso_b = shooting_get_iso_base();
-        if (iso_b)
-            return (short)((shooting_get_iso_market_base()*shooting_get_iso_real())/iso_b);
+        // Original code
+        // short iso_b = shooting_get_iso_base();
+        // if (iso_b)
+        //     return (short)((shooting_get_iso_market_base()*shooting_get_iso_real())/iso_b);
+
+        // Above code translates to:
+        //      shooting_get_iso_market_base() * pow(2,((PROPCASE_SV+168)/96)) / pow(2,(((PROPCASE_SV-PROPCASE_DELTA_SV)+168)/96))
+        // code has rounding errors due to return values from pow() being cast to short before multiplication and division
+        // formula can be simplified to:
+        //      shooting_get_iso_market_base() * pow(2,(PROPCASE_DELTA_SV/96))
+        short dsv;
+        get_property_case(PROPCASE_DELTA_SV, &dsv, sizeof(dsv));
+        return (short)((double)shooting_get_iso_market_base() * pow(2, (double)dsv/96.0));
     }
     return iso_mode;
 }
