@@ -143,6 +143,7 @@ void *vid_get_bitmap_active_buffer()
 
 int vid_get_viewport_fullscreen_height() {
     // except for stitch, always full screen
+    // TODO mode may not update at exactly the same time as width and height variables for stitch
     int m = mode_get();
     if((m&MODE_MASK) != MODE_PLAY && ((m&MODE_SHOOTING_MASK) == MODE_STITCH || (m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE)) {
         return 240;
@@ -151,6 +152,7 @@ int vid_get_viewport_fullscreen_height() {
 }
 int vid_get_viewport_fullscreen_width() {
     // except for stitch, always full screen
+    // TODO mode may not update at exactly the same time as width and height variables for stitch
     int m = mode_get();
     if((m&MODE_MASK) != MODE_PLAY && ((m&MODE_SHOOTING_MASK) == MODE_STITCH || (m&MODE_SHOOTING_MASK) == MODE_PORTRAIT)) {
         return 704;
