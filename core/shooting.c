@@ -724,6 +724,8 @@ short shooting_can_focus()
 #if CAM_CAN_SD_OVER_IN_AF_LOCK
     if (shooting_get_prop(PROPCASE_AF_LOCK))
         return 1;
+#elif CAM_HAS_VIDEO_BUTTON
+	return shooting_get_common_focus_mode();
 #endif
     return (shooting_get_common_focus_mode() || MODE_IS_VIDEO(m));
 #elif !CAM_CAN_SD_OVERRIDE
