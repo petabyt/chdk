@@ -12,30 +12,30 @@ int live_view_get_data(ptp_data *data, int flags) {
     lv.version_major = LIVE_VIEW_VERSION_MAJOR;
     lv.version_minor = LIVE_VIEW_VERSION_MINOR;
 
-    lv.lcd_aspect_ratio    = vid_get_aspect_ratio();
-
-    lv.vp.logical_width = vid_get_viewport_fullscreen_width();
-    lv.vp.logical_height = vid_get_viewport_fullscreen_height();
+    lv.lcd_aspect_ratio = vid_get_aspect_ratio();
 
     lv.vp.buffer_width = vid_get_viewport_buffer_width_proper();
-
-    // TODO
-    lv.vp.buffer_logical_xoffset = vid_get_viewport_display_xoffset_proper();
-    lv.vp.buffer_logical_yoffset = vid_get_viewport_display_yoffset_proper();
 
     lv.vp.visible_width = vid_get_viewport_width_proper();
     lv.vp.visible_height = vid_get_viewport_height_proper();
 
-    lv.bm.logical_width = ASPECT_XCORRECTION(camera_screen.width);
-    lv.bm.logical_height = camera_screen.height;
+    lv.vp.margin_left = vid_get_viewport_display_xoffset_proper();
+    lv.vp.margin_top = vid_get_viewport_display_yoffset_proper();
+
+    // TODO returning margins from lib.c might be better
+    // can end up with negative if size and offset sources don't update at exactly the same time
+    lv.vp.margin_right = vid_get_viewport_fullscreen_width() - lv.vp.visible_width - lv.vp.margin_left;
+    lv.vp.margin_bot = vid_get_viewport_fullscreen_height() - lv.vp.visible_height - lv.vp.margin_top;
 
     lv.bm.buffer_width = camera_screen.buffer_width;
 
-    lv.bm.buffer_logical_xoffset = 0;
-    lv.bm.buffer_logical_yoffset = 0;
+    lv.bm.margin_left = 0;
+    lv.bm.margin_top = 0;
+    lv.bm.margin_right = 0;
+    lv.bm.margin_bot = 0;
 
-    lv.bm.visible_width = lv.bm.logical_width;
-    lv.bm.visible_height = lv.bm.logical_height;
+    lv.bm.visible_width = ASPECT_XCORRECTION(camera_screen.width);
+    lv.bm.visible_height = camera_screen.height;
 
     lv.palette_type = vid_get_palette_type();
 

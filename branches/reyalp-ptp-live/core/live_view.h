@@ -16,34 +16,34 @@ enum lv_aspect_rato {
 };
 
 typedef struct {
+    int data_start; // offset of data from start of live view header
     /*
-    logical screen
-    descibes how big the buffer would be in pixels, if it exactly filled the physical screen
-    may be larger or smaller than the buffer data, due to letter boxing or unused data
-    using lcd_aspect_ratio, you can create a correct representation of the screen
-    */
-    int logical_width;  
-    int logical_height;
-    /*
-    buffer - describes the actual data sent
-    data size is always buffer_width*buffer_height*(buffer bpp implied by type)
-    offsets represent the position of the data on the logical screen,
-       > 0 for sub images (16:9 on a 4:3 screen, stitch window, etc)
+    buffer width in pixels
+    data size is always buffer_width*visible_height*(buffer bpp implied by type)
     */
     int buffer_width;
-
-    int buffer_logical_xoffset;
-    int buffer_logical_yoffset;
-
     /*
-    visible - describes data within the buffer which contains image data to be displayed
-    offsets are relative to buffer
-    width must be <= logical_width - buffer_logical_xoffset and width + xoffset must be <= buffer_width 
+    visible size in pixels
+    describes data within the buffer which contains image data to be displayed
+    any offsets within buffer data are added before sending, so the top left
+    pixel is always the first first byte of data.
+    width must always be <= buffer_width
+    if buffer_width is > width, the additional data should be skipped
+    visible_height also defines the number of data rows
     */
     int visible_width;
     int visible_height;
 
-    int data_start;    // offset of data
+    /*
+    margins
+    pixels offsets needed to replicate display position on cameras screen
+    not used for any buffer offsets
+    */
+    int margin_left;
+    int margin_top;
+
+    int margin_right;
+    int margin_bot;
 } lv_framebuffer_desc;
 
 typedef struct {
