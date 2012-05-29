@@ -14,20 +14,6 @@
 #include "module_load.h"
 
 //-------------------------------------------------------------------
-// Tbox config settings
-
-typedef struct
-{
-    int char_map;
-} TextBoxConf;
-
-TextBoxConf tconf;
-
-static ConfInfo conf_info[] = {
-    CONF_INFO( 1, tconf.char_map,               CONF_DEF_VALUE, i:0, NULL),
-};
-
-//-------------------------------------------------------------------
 extern void gui_tbox_kbd_process();
 extern void gui_tbox_draw(int enforce_redraw);
 
@@ -124,7 +110,7 @@ coord text_offset_x, text_offset_y, key_offset_x;
 //-------------------------------------------------------
 static char *map_chars(int line, int group)
 {
-    return (*charmaps[tconf.char_map])[line][group];
+    return (*charmaps[conf.tbox_char_map])[line][group];
 }
 
 //-------------------------------------------------------
@@ -559,17 +545,6 @@ void gui_tbox_kbd_process()
 }
 
 
-//-------------------------------------------------------------------
-
-static const char* gui_text_box_charmap[] = { "Default", "German", "Russian" };
-static CMenuItem textbox_submenu_items[] = {
-    MENU_ENUM2(0x5f,LANG_MENU_VIS_CHARMAP,              &tconf.char_map, gui_text_box_charmap ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                      MENUITEM_UP, 0, 0 ),
-    {0}
-};
-static CMenu textbox_submenu = {0x26,LANG_STR_TEXTBOX_SETTINGS, NULL, textbox_submenu_items };
-
-
 //==================================================
 
 struct libtextbox_sym libtextbox = {
@@ -601,9 +576,6 @@ int _module_loader( void** chdk_export_list )
   if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
       return 1;
 
-  config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/_tbox.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0);
-  cl_greygrey = MAKE_COLOR(COLOR_GREY, COLOR_GREY);
-
   return 0;
 }
 
@@ -614,8 +586,6 @@ int _module_loader( void** chdk_export_list )
 //---------------------------------------------------------
 int _module_unloader()
 {
-    config_save(&conf_info[0], "A/CHDK/MODULES/CFG/_tbox.cfg", sizeof(conf_info)/sizeof(conf_info[0]));
-
     // clean allocated resource
     if (tbox_on_select)
     {
@@ -637,8 +607,6 @@ int _module_unloader()
 int _module_run(int moduleidx, int argn, int* arguments)
 {
   module_idx=moduleidx;
-
-  gui_activate_sub_menu(&textbox_submenu, module_idx);
 
   return 0;
 }

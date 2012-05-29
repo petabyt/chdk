@@ -13,23 +13,6 @@
 #include "module_exportlist.h"
 
 //-------------------------------------------------------------------
-
-typedef struct
-{
-    color grid_color;
-    char grid_lines_file[100];
-    int grid_force_color;
-} GridConf;
-
-GridConf gconf;
-
-static ConfInfo conf_info[] = {
-    CONF_INFO( 1, gconf.grid_color,             CONF_DEF_VALUE, cl:0, NULL),
-    CONF_INFO( 2, gconf.grid_lines_file,        CONF_CHAR_PTR,   ptr:"", NULL),
-    CONF_INFO( 3, gconf.grid_force_color,       CONF_DEF_VALUE, i:0, NULL),
-};
-
-//-------------------------------------------------------------------
 #define GRID_BUF_SIZE               0x1000
 #define GRID_REDRAW_INTERVAL        4
 
@@ -48,8 +31,6 @@ struct gline {
     color               clf, clb;
     struct gline        *next;
 };
-
-char grid_title[36];
 
 static int interval = GRID_REDRAW_INTERVAL;
 static struct gline *head=NULL, *top=NULL;
@@ -76,11 +57,11 @@ static void process_title(const char *title) {
     register int i=0;
 
     while (ptr[0]==' ' || ptr[0]=='\t') ++ptr; // whitespaces
-    while (i<(sizeof(grid_title)-1) && ptr[i] && ptr[i]!='\r' && ptr[i]!='\n') {
-        grid_title[i]=ptr[i];
+    while (i<(sizeof(conf.grid_title)-1) && ptr[i] && ptr[i]!='\r' && ptr[i]!='\n') {
+        conf.grid_title[i]=ptr[i];
         ++i;
     }
-    grid_title[i]=0;
+    conf.grid_title[i]=0;
 }
 
 //-------------------------------------------------------------------
@@ -121,8 +102,8 @@ static void parse_grid_file(const char *fn, const char *ptr) {
     char *c;
 
     c=strrchr(fn, '/');
-    strncpy(grid_title, (c)?c+1:fn, sizeof(grid_title));
-    grid_title[sizeof(grid_title)-1]=0;
+    strncpy(conf.grid_title, (c)?c+1:fn, sizeof(conf.grid_title));
+    conf.grid_title[sizeof(conf.grid_title)-1]=0;
 
     while (ptr[0]) {
         while (ptr[0]==' ' || ptr[0]=='\t') ++ptr; // whitespaces
@@ -153,7 +134,8 @@ static void parse_grid_file(const char *fn, const char *ptr) {
 }
 
 //-------------------------------------------------------------------
-void grid_lines_load(const char *fn) {
+void grid_lines_load(const char *fn)
+{
     char *buf;
     const char *grid;
     int fd;
@@ -174,9 +156,9 @@ void grid_lines_load(const char *fn) {
                 grid = buf;
             }
             close(fd);
-            strcpy(gconf.grid_lines_file, fn);
+            strcpy(conf.grid_lines_file, fn);
         } else {
-            gconf.grid_lines_file[0] = 0;
+            conf.grid_lines_file[0] = 0;
         }
 
         grid_lines_free_data();
@@ -194,49 +176,25 @@ void gui_grid_draw_osd(int force) {
         for (ptr=head; ptr; ptr=ptr->next) {
             switch (ptr->type) {
                 case GRID_ELEM_LINE:
-                    draw_line(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (gconf.grid_force_color)?gconf.grid_color:ptr->clf);
+                    draw_line(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (conf.grid_force_color)?conf.grid_color:ptr->clf);
                     break;
                 case GRID_ELEM_RECT:
-                    draw_rect(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (gconf.grid_force_color)?gconf.grid_color:ptr->clf);
+                    draw_rect(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (conf.grid_force_color)?conf.grid_color:ptr->clf);
                     break;
                 case GRID_ELEM_FILLED_RECT:
-                    draw_filled_rect(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (gconf.grid_force_color)?gconf.grid_color:MAKE_COLOR(ptr->clb, ptr->clf));
+                    draw_filled_rect(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (conf.grid_force_color)?conf.grid_color:MAKE_COLOR(ptr->clb, ptr->clf));
                     break;
                 case GRID_ELEM_ELLIPSE:
-                    draw_ellipse(ptr->x0, ptr->y0, (unsigned int)(ptr->x1), (unsigned int)(ptr->y1), (gconf.grid_force_color)?gconf.grid_color:ptr->clf);
+                    draw_ellipse(ptr->x0, ptr->y0, (unsigned int)(ptr->x1), (unsigned int)(ptr->y1), (conf.grid_force_color)?conf.grid_color:ptr->clf);
                     break;
                 case GRID_ELEM_FILLED_ELLIPSE:
-                    draw_filled_ellipse(ptr->x0, ptr->y0, (unsigned int)(ptr->x1), (unsigned int)(ptr->y1), (gconf.grid_force_color)?gconf.grid_color:MAKE_COLOR(ptr->clf, 0));
+                    draw_filled_ellipse(ptr->x0, ptr->y0, (unsigned int)(ptr->x1), (unsigned int)(ptr->y1), (conf.grid_force_color)?conf.grid_color:MAKE_COLOR(ptr->clf, 0));
                     break;
             }
         }
         interval = GRID_REDRAW_INTERVAL;
     }
 }
-
-//-------------------------------------------------------------------
-
-static void gui_grid_lines_load_selected(const char *fn) {
-    if (fn)
-        grid_lines_load(fn);
-}
-void gui_grid_lines_load(int arg) {
-    module_fselect_init(LANG_STR_SELECT_GRID_FILE, gconf.grid_lines_file, "A/CHDK/GRIDS", gui_grid_lines_load_selected);
-}
-
-static CMenuItem grid_submenu_items[] = {
-    MENU_ITEM(0x2f,LANG_MENU_SHOW_GRID,         MENUITEM_BOOL,		&conf.show_grid_lines, 0 ),
-    MENU_ITEM(0x35,LANG_MENU_GRID_LOAD,         MENUITEM_PROC,		gui_grid_lines_load, 0 ),
-    MENU_ITEM(0x0,LANG_MENU_GRID_CURRENT,       MENUITEM_SEPARATOR, 0, 0 ),
-    MENU_ITEM(0x0,(int)grid_title,              MENUITEM_TEXT,      0, 0 ),
-    MENU_ITEM(0x0,(int)"",                      MENUITEM_SEPARATOR, 0, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_GRID_FORCE_COLOR,  MENUITEM_BOOL,      &gconf.grid_force_color, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_GRID_COLOR_LINE,   MENUITEM_COLOR_FG,  &gconf.grid_color, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_GRID_COLOR_FILL,   MENUITEM_COLOR_BG,  &gconf.grid_color, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,              MENUITEM_UP, 0, 0 ),
-    {0}
-};
-static CMenu grid_submenu = {0x2f,LANG_MENU_GRID_TITLE, NULL, grid_submenu_items };
 
 // =========  MODULE INIT =================
 
@@ -246,7 +204,8 @@ static CMenu grid_submenu = {0x2f,LANG_MENU_GRID_TITLE, NULL, grid_submenu_items
 struct libgrids_sym libgrids = {
 			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
 										// increase minor if compatible changes made(including extending this struct)
-			gui_grid_draw_osd
+			gui_grid_draw_osd,
+            grid_lines_load
 };
 
 int module_idx=-1;
@@ -278,10 +237,7 @@ int _module_loader( unsigned int* chdk_export_list )
   if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 2, 0 ) )
 	 return 1;
 
-  conf_info[0].cl = MAKE_COLOR(COLOR_BG, COLOR_FG);
-  config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/grids.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0);
-
-  grid_lines_load(gconf.grid_lines_file);
+  grid_lines_load(conf.grid_lines_file);
 
   return 0;
 }
@@ -294,7 +250,6 @@ int _module_loader( unsigned int* chdk_export_list )
 //---------------------------------------------------------
 int _module_unloader()
 {
-    config_save(&conf_info[0], "A/CHDK/MODULES/CFG/grids.cfg", sizeof(conf_info)/sizeof(conf_info[0]));
     grid_lines_free_data();
     return 0;
 }
@@ -307,8 +262,6 @@ int _module_unloader()
 int _module_run(int moduleidx, int argn, int* arguments)
 {
   module_idx=moduleidx;
-
-  gui_activate_sub_menu(&grid_submenu, module_idx);
 
   return 0;
 }
