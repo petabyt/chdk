@@ -158,7 +158,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO( 28, conf.osd_color,              CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
 //    CONF_INFO( 29, conf.batt_icon_color,        CONF_DEF_VALUE, cl:COLOR_WHITE, NULL),
     CONF_INFO( 30, conf.menu_color,             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
-//    CONF_INFO( 31, conf.reader_color,           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY, COLOR_WHITE), NULL),    // moved to text reader module
+    CONF_INFO( 31, conf.reader_color,           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY, COLOR_WHITE), NULL),
     CONF_INFO( 32, conf.ricoh_ca1_mode,         CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO( 33, conf.flashlight,             CONF_DEF_VALUE, i:0, NULL),
     //CONF_INFO( 34, conf.ns_enable_memdump,      CONF_DEF_VALUE, i:0, NULL),                                       // ?????
@@ -166,30 +166,30 @@ static const ConfInfo conf_info[] = {
     CONF_INFO( 35, conf.raw_in_dir,             CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO( 36, conf.raw_prefix,             CONF_DEF_VALUE, i:RAW_PREFIX_CRW, NULL),
     CONF_INFO( 37, conf.raw_ext,                CONF_DEF_VALUE, i:DEFAULT_RAW_EXT, NULL),
-    //CONF_INFO( 38, conf.reader_file,            CONF_CHAR_PTR,   ptr:"A/CHDK/BOOKS/README.TXT", NULL),            // moved to text reader module
-    //CONF_INFO( 39, conf.reader_pos,             CONF_DEF_VALUE, i:0, NULL),                                       // moved to text reader module
+    CONF_INFO( 38, conf.reader_file,            CONF_CHAR_PTR,   ptr:"A/CHDK/BOOKS/README.TXT", NULL),
+    CONF_INFO( 39, conf.reader_pos,             CONF_DEF_VALUE, i:0, NULL),
     //CONF_INFO( 40, conf.sokoban_level,          CONF_DEF_VALUE, i:0, NULL),                                       // moved to sokoban module
     CONF_INFO( 41, conf.show_clock,             CONF_DEF_VALUE, i:2, NULL),
     CONF_INFO2( 42, conf.clock_pos,             CONF_OSD_POS,   CAM_SCREEN_WIDTH-5*FONT_WIDTH-2,0),
-    //CONF_INFO( 43, conf.reader_autoscroll,      CONF_DEF_VALUE, i:0, NULL),                                       // moved to text reader module
-    //CONF_INFO( 44, conf.reader_autoscroll_delay,CONF_DEF_VALUE, i:5, NULL),                                       // moved to text reader module
-    //CONF_INFO( 45, conf.reader_rbf_file,        CONF_CHAR_PTR,   ptr:"", NULL),                                   // moved to text reader module
-    //CONF_INFO( 46, conf.reader_codepage,        CONF_DEF_VALUE, i:FONT_CP_WIN, NULL),                             // moved to text reader module
+    CONF_INFO( 43, conf.reader_autoscroll,      CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO( 44, conf.reader_autoscroll_delay,CONF_DEF_VALUE, i:5, NULL),
+    CONF_INFO( 45, conf.reader_rbf_file,        CONF_CHAR_PTR,   ptr:"", NULL),
+    CONF_INFO( 46, conf.reader_codepage,        CONF_DEF_VALUE, i:FONT_CP_WIN, NULL),
     CONF_INFO( 47, conf.splash_show,            CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO( 48, conf.histo_color2,           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_WHITE), NULL),
     CONF_INFO( 49, conf.zebra_draw,             CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO( 50, conf.zebra_mode,             CONF_DEF_VALUE, i:ZEBRA_MODE_BLINKED_2, NULL),                    // moved to zebra module
-    //CONF_INFO( 51, conf.zebra_restore_screen,   CONF_DEF_VALUE, i:1, NULL),                                       // moved to zebra module
-    //CONF_INFO( 52, conf.zebra_restore_osd,      CONF_DEF_VALUE, i:1, NULL),                                       // moved to zebra module
-    //CONF_INFO( 53, conf.zebra_over,             CONF_DEF_VALUE, i:1, NULL),                                       // moved to zebra module
-    //CONF_INFO( 54, conf.zebra_under,            CONF_DEF_VALUE, i:0, NULL),                                       // moved to zebra module
-    //CONF_INFO( 55, conf.zebra_color,            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_RED), NULL),       // moved to zebra module
-    //CONF_INFO( 56, conf.zebra_draw_osd,         CONF_DEF_VALUE, i:ZEBRA_DRAW_HISTO, NULL),                        // moved to zebra module
+    CONF_INFO( 50, conf.zebra_mode,             CONF_DEF_VALUE, i:ZEBRA_MODE_BLINKED_2, NULL),
+    CONF_INFO( 51, conf.zebra_restore_screen,   CONF_DEF_VALUE, i:1, NULL),
+    CONF_INFO( 52, conf.zebra_restore_osd,      CONF_DEF_VALUE, i:1, NULL),
+    CONF_INFO( 53, conf.zebra_over,             CONF_DEF_VALUE, i:1, NULL),
+    CONF_INFO( 54, conf.zebra_under,            CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO( 55, conf.zebra_color,            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_RED), NULL),
+    CONF_INFO( 56, conf.zebra_draw_osd,         CONF_DEF_VALUE, i:ZEBRA_DRAW_HISTO, NULL),
     CONF_INFO( 57, conf.user_menu_as_root,      CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO( 58, conf.zoom_value,             CONF_DEF_VALUE, i:ZOOM_SHOW_X, NULL),
     CONF_INFO( 59, conf.use_zoom_mf,            CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO( 60, conf.raw_save_first_only,    CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO( 61, conf.reader_wrap_by_words,   CONF_DEF_VALUE, i:1, NULL),                                       // moved to text reader module
+    CONF_INFO( 61, conf.reader_wrap_by_words,   CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO( 62, conf.menu_symbol_enable,     CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO( 63, conf.alt_mode_button,        CONF_DEF_VALUE, i:KEY_PRINT, conf_change_alt_mode_button),
     CONF_INFO( 64, conf.lang_file,              CONF_CHAR_PTR,   ptr:"", NULL),
@@ -197,10 +197,10 @@ static const ConfInfo conf_info[] = {
     CONF_INFO( 66, conf.menu_rbf_file,          CONF_CHAR_PTR,   ptr:"", conf_change_menu_rbf_file),
     CONF_INFO( 67, conf.alt_prevent_shutdown,   CONF_DEF_VALUE, i:ALT_PREVENT_SHUTDOWN_ALT, conf_update_prevent_shutdown),
     CONF_INFO( 68, conf.show_grid_lines,        CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO( 69, conf.grid_lines_file,        CONF_CHAR_PTR,   ptr:"", NULL),                                   // moved to grid module
+    CONF_INFO( 69, conf.grid_lines_file,        CONF_CHAR_PTR,   ptr:"", NULL),
     CONF_INFO( 70, conf.raw_nr,                 CONF_DEF_VALUE, i:NOISE_REDUCTION_AUTO_CANON, NULL),
-    //CONF_INFO( 71, conf.grid_force_color,       CONF_DEF_VALUE, i:0, NULL),                                       // moved to grid module
-    //CONF_INFO( 72, conf.grid_color,             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),         // moved to grid module
+    CONF_INFO( 71, conf.grid_force_color,       CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO( 72, conf.grid_color,             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
 
     CONF_INFO( 80, conf.dof_subj_dist_as_near_limit,CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO( 81, conf.dof_use_exif_subj_dist,     CONF_DEF_VALUE,     i:0, NULL),
@@ -261,7 +261,7 @@ static const ConfInfo conf_info[] = {
 //    CONF_INFO(125, conf.dof_dist_from_lens,         CONF_DEF_VALUE,     i:0, NULL),
     
     CONF_INFO(126, conf.clear_bracket,              CONF_DEF_VALUE,     i:1, NULL),
-    //CONF_INFO(127, conf.zebra_multichannel,         CONF_DEF_VALUE,     i:0, NULL),                               // moved to zebra module
+    CONF_INFO(127, conf.zebra_multichannel,         CONF_DEF_VALUE,     i:0, NULL),
     
     CONF_INFO(128, conf.nd_filter_state,            CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(129, conf.histo_show_ev_grid,         CONF_DEF_VALUE,     i:0, NULL),
@@ -331,7 +331,7 @@ static const ConfInfo conf_info[] = {
 #endif
     CONF_INFO(187, conf.edge_overlay_enable,        CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(188, conf.edge_overlay_thresh,        CONF_DEF_VALUE, i:60, NULL),
-    //CONF_INFO(189, conf.edge_overlay_color,         CONF_DEF_VALUE, cl:0x66, NULL),                                   // moved to edge overlay module
+    CONF_INFO(189, conf.edge_overlay_color,         CONF_DEF_VALUE, cl:0x66, NULL),
     CONF_INFO(190, conf.synch_enable,               CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(191, conf.synch_delay_enable,         CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(192, conf.synch_delay_value,          CONF_DEF_VALUE, i:100, NULL),
@@ -366,9 +366,9 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(219, conf.bracketing_add_raw_suffix,  CONF_DEF_VALUE, i:0, NULL),			
     CONF_INFO(220, conf.temperature_unit,           CONF_DEF_VALUE, i:0, NULL),
 //    CONF_INFO(221, conf.clear_zoom_override,        CONF_DEF_VALUE, i:1, NULL),			
-    //CONF_INFO(222, conf.edge_overlay_play,          CONF_DEF_VALUE, i:0, NULL),               // moved to edge overlay module
+    CONF_INFO(222, conf.edge_overlay_play,          CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(223, conf.edge_overlay_pano,          CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO(224, conf.edge_overlay_zoom,          CONF_DEF_VALUE, i:1, NULL),               // moved to edge overlay module
+    CONF_INFO(224, conf.edge_overlay_zoom,          CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO(225, conf.raw_cache,                  CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(226, conf.dng_raw,                    CONF_DEF_VALUE, i:1, conf_change_dng),
     CONF_INFO(227, conf.flash_sync_curtain,         CONF_DEF_VALUE, i:0, NULL),
@@ -385,9 +385,9 @@ static const ConfInfo conf_info[] = {
 	CONF_INFO(238, conf.debug_lua_restart_on_error, CONF_DEF_VALUE, i:0, NULL),
 	CONF_INFO(239, conf.debug_propcase_page,        CONF_DEF_VALUE, i:0, NULL),
 	CONF_INFO(240, conf.debug_misc_vals_show,       CONF_DEF_VALUE, i:0, NULL),
-	//CONF_INFO(241, conf.edge_overlay_filter,        CONF_DEF_VALUE, i:0, NULL),               // moved to edge overlay module
-	//CONF_INFO(242, conf.edge_overlay_show,          CONF_DEF_VALUE, i:0, NULL),               // moved to edge overlay module
-    //CONF_INFO(243, conf.edge_overlay_pano_overlap,  CONF_DEF_VALUE, i:30, NULL),              // moved to edge overlay module
+	CONF_INFO(241, conf.edge_overlay_filter,        CONF_DEF_VALUE, i:0, NULL),
+	CONF_INFO(242, conf.edge_overlay_show,          CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO(243, conf.edge_overlay_pano_overlap,  CONF_DEF_VALUE, i:30, NULL),
 
     // Touch screen U/I overrides
     CONF_INFO(244, conf.touchscreen_disable_video_controls,     CONF_DEF_VALUE, i:0, NULL),
@@ -455,6 +455,7 @@ static const ConfInfo conf_info[] = {
 #endif
 
     CONF_INFO(289, conf.dng_version,                CONF_DEF_VALUE,     i:0, conf_change_dng),
+    CONF_INFO(290, conf.tbox_char_map,              CONF_DEF_VALUE,     i:0, NULL),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 

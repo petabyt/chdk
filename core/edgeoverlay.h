@@ -11,6 +11,8 @@
 struct libedgeovr_sym {
 	int  version;
 	void (*edge_overlay)();
+    void (*load_edge_overlay)(const char* fn);
+    void (*save_edge_overlay)(void);
 };
 
 int edge_state_draw;
@@ -23,6 +25,8 @@ int edge_state_draw;
 #else
 	// This section is for module
     extern void edge_overlay();
+    extern void load_edge_overlay(const char* fn);
+    extern void save_edge_overlay(void);
 #endif
 
 extern void module_restore_edge(void **buf, int *state);

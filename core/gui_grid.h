@@ -5,6 +5,7 @@ struct libgrids_sym {
 	int version;
 
     void (*gui_grid_draw_osd)(int force);
+    void (*grid_lines_load)(const char *fn);
 };
 
 //-------------------------------------------------------------------

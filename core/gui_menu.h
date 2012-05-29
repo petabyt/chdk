@@ -66,7 +66,6 @@ extern void gui_menu_kbd_process();
 extern void gui_menu_kbd_process_menu_btn();
 extern void gui_menu_draw(int enforce_redraw);
 extern void gui_menu_force_redraw();
-extern void gui_activate_sub_menu(CMenu *sub_menu, int module_idx);
 extern void gui_menu_unload_module_menus();
 //-------------------------------------------------------------------
 

@@ -92,34 +92,6 @@
 // philmoz. Jan 2012.
 
 //-------------------------------------------------------------------
-// Zebra config settings
-
-typedef struct
-{
-    color zebra_color;          // under/over colors
-    int zebra_mode;
-    int zebra_restore_screen;
-    int zebra_restore_osd;
-    int zebra_over;
-    int zebra_under;
-    int zebra_draw_osd;
-    int zebra_multichannel;
-} ZebraConf;
-
-ZebraConf zconf;
-
-static ConfInfo conf_info[] = {
-    CONF_INFO( 1, zconf.zebra_color,            CONF_DEF_VALUE, cl:0, NULL),
-    CONF_INFO( 2, zconf.zebra_mode,             CONF_DEF_VALUE, i:ZEBRA_MODE_BLINKED_2, NULL),
-    CONF_INFO( 3, zconf.zebra_restore_screen,   CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 4, zconf.zebra_restore_osd,      CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 5, zconf.zebra_over,             CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 6, zconf.zebra_under,            CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 7, zconf.zebra_draw_osd,         CONF_DEF_VALUE, i:ZEBRA_DRAW_HISTO, NULL),
-    CONF_INFO( 8, zconf.zebra_multichannel,     CONF_DEF_VALUE, i:0, NULL),
-};
-
-//-------------------------------------------------------------------
 
 // Height (in pixels) of half-shoot Canon OSD area of the screen buffer, for restore during 
 // Zebra draw, to limit RAM usage of zebra. Only these border areas are stored in RAM.
@@ -154,8 +126,8 @@ static void gui_osd_zebra_free()
 // returns 1 if zebra should be drawn
 static int gui_osd_zebra_init(int show)
 {
-    cl_under = BG_COLOR(zconf.zebra_color);
-    cl_over = FG_COLOR(zconf.zebra_color);
+    cl_under = BG_COLOR(conf.zebra_color);
+    cl_over = FG_COLOR(conf.zebra_color);
 
     if (show)
     {
@@ -224,7 +196,7 @@ int draw_guard_pixel() {
 
 //-------------------------------------------------------------------
 static void gui_osd_draw_zebra_osd() {
-    switch (zconf.zebra_draw_osd) {
+    switch (conf.zebra_draw_osd) {
         case ZEBRA_DRAW_NONE:
             break;
         case ZEBRA_DRAW_OSD:
@@ -313,8 +285,8 @@ static int draw_zebra_aspect_adjust(int mrec, unsigned int f, color *cls)
             memset(buf+(viewport_yoffset+viewport_height)*camera_screen.buffer_width, COLOR_TRANSPARENT, viewport_yoffset*camera_screen.buffer_width);
         }
         int step_x, step_v, sy, sx;
-        over = 255-zconf.zebra_over;
-        if (zconf.zebra_multichannel) {step_x=2; step_v=6;} else {step_x=1; step_v=3;}
+        over = 255-conf.zebra_over;
+        if (conf.zebra_multichannel) {step_x=2; step_v=6;} else {step_x=1; step_v=3;}
         for (y=viewport_yoffset, v=viewport_image_offset; y<viewport_yoffset+viewport_height; ++y) {
             sy = y*camera_screen.buffer_width;
             sx = viewport_xoffset;
@@ -327,13 +299,13 @@ static int draw_zebra_aspect_adjust(int mrec, unsigned int f, color *cls)
                 yy = img_buf[v+1];
                 s = sy + sx*2;
 
-                if (zconf.zebra_multichannel) {
+                if (conf.zebra_multichannel) {
                     register int uu, vv;
                     int sel;
                     uu = (signed char)img_buf[v];
                     vv = (signed char)img_buf[v+2];
                     sel=0;
-                    if (!((zconf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || zconf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f)) {
+                    if (!((conf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || conf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f)) {
                         if (clip8(((yy<<12) +           vv*5743 + 2048)>>12)>over) sel  = 4; // R
                         if (clip8(((yy<<12) - uu*1411 - vv*2925 + 2048)>>12)>over) sel |= 2; // G
                         if (clip8(((yy<<12) + uu*7258           + 2048)>>12)>over) sel |= 1; // B
@@ -341,10 +313,10 @@ static int draw_zebra_aspect_adjust(int mrec, unsigned int f, color *cls)
                     buf[s] = buf[s+1] = cls[sel];
                     buf[s+2] = buf[s+3] = cls[sel];
                 }
-                else if (((zconf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || zconf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f))
+                else if (((conf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || conf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f))
                     buf[s] = buf[s+1] = COLOR_TRANSPARENT;
                 else 
-                    buf[s] = buf[s+1] = (yy>over)?cl_over:(yy<zconf.zebra_under)?cl_under:COLOR_TRANSPARENT;
+                    buf[s] = buf[s+1] = (yy>over)?cl_over:(yy<conf.zebra_under)?cl_under:COLOR_TRANSPARENT;
 
                 if (buf[s] != COLOR_TRANSPARENT && !zebra_drawn) 
                     zebra_drawn = 1;
@@ -358,7 +330,7 @@ static int draw_zebra_aspect_adjust(int mrec, unsigned int f, color *cls)
     if (!f) {
         // if zebra was drawn during previous call of this function
         if (need_restore) {
-            if (zconf.zebra_restore_screen || zconf.zebra_restore_osd) {
+            if (conf.zebra_restore_screen || conf.zebra_restore_osd) {
                 draw_restore();
             } else {  // clear buf[] of zebra, only leave Canon OSD
                 if (!mrec) { // Not REC mode
@@ -369,7 +341,7 @@ static int draw_zebra_aspect_adjust(int mrec, unsigned int f, color *cls)
             }
             need_restore=0;
         }
-        return !(zconf.zebra_restore_screen && zconf.zebra_restore_osd);
+        return !(conf.zebra_restore_screen && conf.zebra_restore_osd);
         // if zebra was drawn
     } else {
         disp_zebra();
@@ -420,8 +392,8 @@ static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f, color *cls) {
     // if not in no-zebra phase of blink mode zebra, draw zebra to buf[]
     if (f) {
         int step_x, step_v;
-        over = 255-zconf.zebra_over;
-        if (zconf.zebra_multichannel) {step_x=2; step_v=6;} else {step_x=1; step_v=3;}
+        over = 255-conf.zebra_over;
+        if (conf.zebra_multichannel) {step_x=2; step_v=6;} else {step_x=1; step_v=3;}
         s = aspOffset;
         for (y=1, v=0; y<=viewport_height; ++y) {
             for (x=0; x<camera_screen.width; x+=step_x, s+=step_x, v+=step_v) {
@@ -431,24 +403,24 @@ static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f, color *cls) {
                 if (!bWide && (x + aspOffset >= camera_screen.width - aspOffset)) continue; // do not draw "outside screen" 
 
                 yy = img_buf[v+1];
-                if (zconf.zebra_multichannel) {
+                if (conf.zebra_multichannel) {
                     uu = (signed char)img_buf[v];
                     vv = (signed char)img_buf[v+2];
                     sel=0;
-                    if (!((zconf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || zconf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f)) {
+                    if (!((conf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || conf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f)) {
                         if (clip8(((yy<<12) +           vv*5743 + 2048)>>12)>over) sel  = 4; // R
                         if (clip8(((yy<<12) - uu*1411 - vv*2925 + 2048)>>12)>over) sel |= 2; // G
                         if (clip8(((yy<<12) + uu*7258           + 2048)>>12)>over) sel |= 1; // B
                     }
                     buf[s]=buf[s+1]=cls[sel];
                 }
-                else if (((zconf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || zconf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f)) buf[s]=COLOR_TRANSPARENT;
-                else buf[s]=(yy>over)?cl_over:(yy<zconf.zebra_under)?cl_under:COLOR_TRANSPARENT;
+                else if (((conf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || conf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f)) buf[s]=COLOR_TRANSPARENT;
+                else buf[s]=(yy>over)?cl_over:(yy<conf.zebra_under)?cl_under:COLOR_TRANSPARENT;
                 if (buf[s] != COLOR_TRANSPARENT && !zebra_drawn) zebra_drawn = 1;
                 if (mrec) {
                     // draw Canon OSD to buf[] if in REC mode
                     if(get_cur_buf(s)!=COLOR_TRANSPARENT) buf[s]=get_cur_buf(s); 
-                    if(zconf.zebra_multichannel && get_cur_buf(s+1)!=COLOR_TRANSPARENT) buf[s+1]=get_cur_buf(s+1); 
+                    if(conf.zebra_multichannel && get_cur_buf(s+1)!=COLOR_TRANSPARENT) buf[s+1]=get_cur_buf(s+1); 
                 }
             }
             s+=camera_screen.buffer_width-camera_screen.width;
@@ -463,7 +435,7 @@ static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f, color *cls) {
     if (!f) {
         // if zebra was drawn during previous call of this function
         if (need_restore) {
-            if (zconf.zebra_restore_screen || zconf.zebra_restore_osd) {
+            if (conf.zebra_restore_screen || conf.zebra_restore_osd) {
                 draw_restore();
             } else {  // clear buf[] of zebra, only leave Canon OSD
                 if (mrec) { // REC mode
@@ -481,7 +453,7 @@ static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f, color *cls) {
             }
             need_restore=0;
         }
-        return !(zconf.zebra_restore_screen && zconf.zebra_restore_osd);
+        return !(conf.zebra_restore_screen && conf.zebra_restore_osd);
         // if zebra was drawn
     } else {
         disp_zebra();
@@ -556,7 +528,7 @@ int gui_osd_draw_zebra(int show)
     }
     ++timer;
 
-    switch (zconf.zebra_mode)
+    switch (conf.zebra_mode)
     {
         case ZEBRA_MODE_ZEBRA_1:    f = 4;          break;
         case ZEBRA_MODE_ZEBRA_2:    f = 8;          break;
@@ -572,36 +544,6 @@ int gui_osd_draw_zebra(int show)
     else
         return draw_zebra_no_aspect_adjust(mrec,f,cls); // For older cameras with 360/480 pixel wide screen
 }
-
-//-------------------------------------------------------------------
-
-void cb_zebra_restore_screen() {
-    if (!zconf.zebra_restore_screen)
-        zconf.zebra_restore_osd = 0;
-}
-
-void cb_zebra_restore_osd() {
-    if (zconf.zebra_restore_osd)
-        zconf.zebra_restore_screen = 1;
-}
-
-static const char* gui_zebra_mode_modes[] = { "Blink 1", "Blink 2", "Blink 3", "Solid", "Zebra 1", "Zebra 2" };
-static const char* gui_zebra_draw_osd_modes[] = { "Nothing", "Histo", "OSD" };
-static CMenuItem zebra_submenu_items[] = {
-    MENU_ITEM(0x5c,LANG_MENU_ZEBRA_DRAW,              MENUITEM_BOOL,                            &conf.zebra_draw, 0 ),
-    MENU_ENUM2(0x5f,LANG_MENU_ZEBRA_MODE,             &zconf.zebra_mode, gui_zebra_mode_modes ),
-    MENU_ITEM(0x58,LANG_MENU_ZEBRA_UNDER,             MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &zconf.zebra_under,   MENU_MINMAX(0, 32) ),
-    MENU_ITEM(0x57,LANG_MENU_ZEBRA_OVER,              MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &zconf.zebra_over,    MENU_MINMAX(0, 32) ),
-    MENU_ITEM(0x28,LANG_MENU_ZEBRA_RESTORE_SCREEN,    MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,      &zconf.zebra_restore_screen,     cb_zebra_restore_screen ),
-    MENU_ITEM(0x5c,LANG_MENU_ZEBRA_RESTORE_OSD,       MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,      &zconf.zebra_restore_osd,        cb_zebra_restore_osd ),
-    MENU_ENUM2(0x5f,LANG_MENU_ZEBRA_DRAW_OVER,        &zconf.zebra_draw_osd, gui_zebra_draw_osd_modes ),
-    MENU_ITEM(0x5c,LANG_MENU_ZEBRA_MULTICHANNEL,      MENUITEM_BOOL,                            &zconf.zebra_multichannel, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_VIS_ZEBRA_UNDER,         MENUITEM_COLOR_BG,  &zconf.zebra_color, 0 ),
-    MENU_ITEM(0x65,LANG_MENU_VIS_ZEBRA_OVER,          MENUITEM_COLOR_FG,  &zconf.zebra_color, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
-    {0}
-};
-static CMenu zebra_submenu = {0x26,LANG_MENU_ZEBRA_TITLE, NULL, zebra_submenu_items };
 
 
 // =========  MODULE INIT =================
@@ -644,9 +586,6 @@ int _module_loader( unsigned int* chdk_export_list )
   if ( !API_VERSION_MATCH_REQUIREMENT( camera_info.api_version, 1, 0 ) )
 	 return 1;
 
-  conf_info[0].cl = MAKE_COLOR(COLOR_RED, COLOR_RED);
-  config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/zebra.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0);
-
   return 0;
 }
 
@@ -657,7 +596,6 @@ int _module_loader( unsigned int* chdk_export_list )
 //---------------------------------------------------------
 int _module_unloader()
 {
-    config_save(&conf_info[0], "A/CHDK/MODULES/CFG/zebra.cfg", sizeof(conf_info)/sizeof(conf_info[0]));
     gui_osd_zebra_free();
     return 0;
 }
@@ -670,8 +608,6 @@ int _module_unloader()
 int _module_run(int moduleidx, int argn, int* arguments)
 {
   module_idx=moduleidx;
-
-  gui_activate_sub_menu(&zebra_submenu, module_idx);
 
   return 0;
 }

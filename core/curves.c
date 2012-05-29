@@ -418,38 +418,6 @@ void curve_apply() {
 }
 
 
-//-------------------------------------------------------------------
-const char* gui_conf_curve_enum(int change, int arg) {
-    static const char* modes[]={ "None", "Custom", "+1EV", "+2EV", "Auto DR" };
-
-    gui_enum_value_change(&conf.curve_enable,change,sizeof(modes)/sizeof(modes[0]));
-
-	if (change)
-		curve_init_mode();
-    return modes[conf.curve_enable];
-}
-
-static void gui_load_curve_selected(const char *fn) {
-	if (fn) {
-		// TODO we could sanity check here, but curve_set_type should fail gracefullish
-		strcpy(conf.curve_file,fn);
-		if (conf.curve_enable == 1)
-			curve_init_mode();
-	}
-}
-
-void gui_load_curve(int arg) {
-    module_fselect_init(LANG_STR_SELECT_CURVE_FILE, conf.curve_file, CURVE_DIR, gui_load_curve_selected);
-}
-
-static CMenuItem curve_submenu_items[] = {
-    MENU_ITEM(0x5f,LANG_MENU_CURVE_ENABLE,        MENUITEM_ENUM,      gui_conf_curve_enum, 0 ),
-    MENU_ITEM(0x35,LANG_MENU_CURVE_LOAD,          MENUITEM_PROC,      gui_load_curve, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                MENUITEM_UP, 0, 0 ),
-    {0}
-};
-static CMenu curve_submenu = {0x85,LANG_MENU_CURVE_PARAM_TITLE, NULL, curve_submenu_items };
-
 // =========  MODULE INIT =================
 
 #include "module_load.h"
@@ -521,8 +489,6 @@ int _module_unloader()
 int _module_run(int moduleidx, int argn, int* arguments)
 {
   module_idx=moduleidx;
-
-  gui_activate_sub_menu(&curve_submenu, module_idx);
 
   return 0;
 }
