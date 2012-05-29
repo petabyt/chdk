@@ -7,94 +7,120 @@
 
 #ifdef CAM_CHDK_PTP
 
+/*
+send selected data for live view
+returns 0 on error, total size on success
+should only be called from ptp handler
+*/
 int live_view_get_data(ptp_data *data, int flags) {
-    lv_data_header lv;
-    lv.version_major = LIVE_VIEW_VERSION_MAJOR;
-    lv.version_minor = LIVE_VIEW_VERSION_MINOR;
+    int vp_size = 0,bm_size = 0,pal_size = 0;
+    lv_data_header *lv;
+    lv_framebuffer_desc *vp;
+    lv_framebuffer_desc *bm;
 
-    lv.lcd_aspect_ratio = vid_get_aspect_ratio();
+    // determine if we will send palette so it can go in one send
+    if ( flags & LV_TFR_PALETTE ) // bitmap palette
+    {
+        // if no palette, will be set to zero
+        pal_size = vid_get_palette_size();
+    }
+    
+    // one contiguous buffer to allow a single send call
+    int buf_size = sizeof(lv_data_header) + sizeof(lv_framebuffer_desc)*2 + pal_size;
+    void *buf = malloc(buf_size);
+    if(!buf) {
+        return 0;
+    }
+    lv = buf;
 
-    lv.vp.buffer_width = vid_get_viewport_buffer_width_proper();
+    lv->vp_desc_start = sizeof(lv_data_header);
+    lv->bm_desc_start = lv->vp_desc_start+sizeof(lv_framebuffer_desc);
 
-    lv.vp.visible_width = vid_get_viewport_width_proper();
-    lv.vp.visible_height = vid_get_viewport_height_proper();
+    vp = buf + lv->vp_desc_start;
+    bm = buf + lv->bm_desc_start;
 
-    lv.vp.margin_left = vid_get_viewport_display_xoffset_proper();
-    lv.vp.margin_top = vid_get_viewport_display_yoffset_proper();
+    lv->version_major = LIVE_VIEW_VERSION_MAJOR;
+    lv->version_minor = LIVE_VIEW_VERSION_MINOR;
+
+    lv->lcd_aspect_ratio = vid_get_aspect_ratio();
+
+    lv->palette_type = vid_get_palette_type();
+    lv->palette_data_start = 0;
+
+
+    vp->fb_type = LV_FB_YUV8;
+    vp->buffer_width = vid_get_viewport_buffer_width_proper();
+
+    vp->visible_width = vid_get_viewport_width_proper();
+    vp->visible_height = vid_get_viewport_height_proper();
+
+    vp->margin_left = vid_get_viewport_display_xoffset_proper();
+    vp->margin_top = vid_get_viewport_display_yoffset_proper();
 
     // TODO returning margins from lib.c might be better
     // can end up with negative if size and offset sources don't update at exactly the same time
-    lv.vp.margin_right = vid_get_viewport_fullscreen_width() - lv.vp.visible_width - lv.vp.margin_left;
-    lv.vp.margin_bot = vid_get_viewport_fullscreen_height() - lv.vp.visible_height - lv.vp.margin_top;
+    vp->margin_right = vid_get_viewport_fullscreen_width() - vp->visible_width - vp->margin_left;
+    vp->margin_bot = vid_get_viewport_fullscreen_height() - vp->visible_height - vp->margin_top;
 
-    lv.bm.buffer_width = camera_screen.buffer_width;
+    bm->fb_type = LV_FB_PAL8;
+    bm->buffer_width = camera_screen.buffer_width;
 
-    lv.bm.margin_left = 0;
-    lv.bm.margin_top = 0;
-    lv.bm.margin_right = 0;
-    lv.bm.margin_bot = 0;
+    bm->margin_left = 0;
+    bm->margin_top = 0;
+    bm->margin_right = 0;
+    bm->margin_bot = 0;
 
-    lv.bm.visible_width = ASPECT_XCORRECTION(camera_screen.width);
-    lv.bm.visible_height = camera_screen.height;
+    bm->visible_width = ASPECT_XCORRECTION(camera_screen.width);
+    bm->visible_height = camera_screen.height;
 
-    lv.palette_type = vid_get_palette_type();
 
-    lv.vp.data_start = 0;
-    lv.bm.data_start = 0;
-    lv.palette_data_start = 0;
+    vp->data_start = 0;
+    bm->data_start = 0;
 
-    int total_size = sizeof(lv);
-    int vp_size = 0,bm_size = 0,pal_size = 0;
+    int total_size = buf_size;
 
-    void *vp = vid_get_viewport_active_buffer();
+    void *vp_fb = vid_get_viewport_active_buffer();
     // Add viewport details if requested, and not null
-    if ( flags & LV_TFR_VIEWPORT && vp) // live buffer
+    if ( flags & LV_TFR_VIEWPORT && vp_fb) // live buffer
     {
-        lv.vp.data_start = total_size;
-        vp_size = (lv.vp.buffer_width*lv.vp.visible_height*6)/4;
+        vp->data_start = total_size;
+        vp_size = (vp->buffer_width*vp->visible_height*6)/4;
         total_size += vp_size;
         // offset to start of actual data
-        vp += vid_get_viewport_image_offset();
+        vp_fb += vid_get_viewport_image_offset();
     }
 
     // Add bitmap details if requested
     if ( flags & LV_TFR_BITMAP ) // bitmap buffer
     {
-        lv.bm.data_start = total_size;
-        bm_size = lv.bm.buffer_width*lv.bm.visible_height;
+        bm->data_start = total_size;
+        bm_size = bm->buffer_width*bm->visible_height;
         total_size += bm_size;
     }
 
     // Add palette detals if requested and available
-    if ( flags & LV_TFR_PALETTE && vid_get_palette_size() ) // bitmap palette
+    if ( pal_size ) // bitmap palette
     {
-        lv.palette_data_start = total_size;
-        total_size += vid_get_palette_size();
+        lv->palette_data_start = buf_size - pal_size;
+        memcpy(buf + lv->palette_data_start,vid_get_bitmap_active_palette(),pal_size);
     }
 
     // Send header structure (along with total size to be sent)
-    data->send_data(data->handle,(char*)&lv,sizeof(lv),total_size,0,0,0);
+    data->send_data(data->handle,(char*)buf,buf_size,total_size,0,0,0);
 
     // Send viewport data if requested
-    if ( flags & LV_TFR_VIEWPORT && vp_size)
+    if ( vp_size )
     {
-        data->send_data(data->handle,vp,vp_size,0,0,0,0);
+        data->send_data(data->handle,vp_fb,vp_size,0,0,0,0);
     }
 
     // Send bitmap data if requested
-    if ( flags & LV_TFR_BITMAP )
+    if ( bm_size )
     {
         data->send_data(data->handle,vid_get_bitmap_active_buffer(),bm_size,0,0,0,0);
     }
 
-    // Send palette data if requested
-    // don't try to send zero sized palette data, since palette type is theoretically variable,
-    // doesn't make sense for clients to check before requesting
-    if ( (flags & LV_TFR_PALETTE) && vid_get_palette_size() )
-    {
-        data->send_data(data->handle,vid_get_bitmap_active_palette(),vid_get_palette_size(),0,0,0,0);
-    }
-
+    free(buf);
     return total_size;
 }
 #endif

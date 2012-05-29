@@ -626,6 +626,11 @@ static int handle_ptp(
     case PTP_CHDK_GetLiveData:
         ptp.num_param = 1;
         ptp.param1 = live_view_get_data(data,param2);
+        if(!ptp.param1) {
+            ptp.code = PTP_RC_GeneralError;
+            // send dummy data, otherwise error hoses connection
+            send_ptp_data(data,"\0",1);
+        }
         break;
 
     default:

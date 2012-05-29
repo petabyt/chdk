@@ -15,11 +15,25 @@ enum lv_aspect_rato {
     LV_ASPECT_16_9,
 };
 
+/*
+Framebuffer types
+additional values will be added if new data formats appear
+*/
+enum lv_fb_type {
+    LV_FB_YUV8, // 8 bit per element UYVYYY, used for live view
+    LV_FB_PAL8, // 8 bit paletted, used for bitmap overlay. Note palette data and type sent separately
+};
+
+/*
+framebuffer data description
+NOTE YUV pixels widths are based on the number of Y elements
+*/
 typedef struct {
+    int fb_type; // framebuffer type - note future versions might use different structures depending on type
     int data_start; // offset of data from start of live view header
     /*
     buffer width in pixels
-    data size is always buffer_width*visible_height*(buffer bpp implied by type)
+    data size is always buffer_width*visible_height*(buffer bpp based on type)
     */
     int buffer_width;
     /*
@@ -47,14 +61,15 @@ typedef struct {
 } lv_framebuffer_desc;
 
 typedef struct {
-    // TODO not sure we want to put these in every frame
+    // live view sub-protocol version
     int version_major;
     int version_minor;
     int lcd_aspect_ratio; // physical aspect ratio of LCD
     int palette_type;
     int palette_data_start;
-    lv_framebuffer_desc vp; // viewport
-    lv_framebuffer_desc bm; // bitmap
+    // framebuffer descriptions are given as offsets, to allow expanding the structures in minor protocol changes
+    int vp_desc_start;
+    int bm_desc_start;
 } lv_data_header;
 
 #ifdef CAM_CHDK_PTP
