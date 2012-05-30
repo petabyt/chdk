@@ -37,6 +37,7 @@
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #define CAM_HAS_ND_FILTER               1
+    #define CAM_HAS_NATIVE_ND_FILTER        1   // Camera has built-in ND filter with Canon menu support for enable/disable
 
     #define CAM_BRACKETING                  1
     #undef  CAM_VIDEO_CONTROL

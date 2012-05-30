@@ -64,4 +64,6 @@ The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 #define PROPCASE_STITCH_DIRECTION                237     // 0=left>right, 1=right>left. Some cams have more
 #define PROPCASE_STITCH_SEQUENCE                 242     // counts shots in stitch sequence, positive=left>right, negative=right>left
 
+#define PROPCASE_ND_FILTER_STATE                 196     // 0 = out, 1 = in
+
 #endif
