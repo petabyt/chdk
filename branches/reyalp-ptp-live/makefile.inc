@@ -23,6 +23,9 @@ endif
 ifdef PLATFORM
   ifdef PLATFORMSUB
     include $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc
+    ifeq ($(PLATFORMOSVER),)
+      PLATFORMOSVER=0
+    endif
   endif
 endif
 

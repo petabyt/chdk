@@ -9,6 +9,7 @@
 //   Could not find Camera name - possible corrupt firmware dump
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 23
 //   MAXRAMADDR = 0x01ffffff
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'

@@ -490,7 +490,7 @@ short shooting_get_iso_market_base()
     if (iso_market_base==0)
     {
         if (iso_table[1-iso_table[0].id].prop_id == 50) iso_market_base=50;
-#if defined(CAMERA_sx40hs)
+#if defined(CAMERA_sx40hs) || defined(CAMERA_g1x)
         else iso_market_base=200;
 #else
         else iso_market_base=100;
@@ -505,9 +505,19 @@ short shooting_get_iso_market()
     short iso_mode = shooting_get_canon_iso_mode();
     if ((iso_mode < 50) || (conf.iso_override_koef && conf.iso_override_value) || (conf.iso_bracket_koef && conf.iso_bracket_value))
     {
-        short iso_b = shooting_get_iso_base();
-        if (iso_b)
-            return (short)((shooting_get_iso_market_base()*shooting_get_iso_real())/iso_b);
+        // Original code
+        // short iso_b = shooting_get_iso_base();
+        // if (iso_b)
+        //     return (short)((shooting_get_iso_market_base()*shooting_get_iso_real())/iso_b);
+
+        // Above code translates to:
+        //      shooting_get_iso_market_base() * pow(2,((PROPCASE_SV+168)/96)) / pow(2,(((PROPCASE_SV-PROPCASE_DELTA_SV)+168)/96))
+        // code has rounding errors due to return values from pow() being cast to short before multiplication and division
+        // formula can be simplified to:
+        //      shooting_get_iso_market_base() * pow(2,(PROPCASE_DELTA_SV/96))
+        short dsv;
+        get_property_case(PROPCASE_DELTA_SV, &dsv, sizeof(dsv));
+        return (short)((double)shooting_get_iso_market_base() * pow(2, (double)dsv/96.0));
     }
     return iso_mode;
 }
@@ -714,6 +724,8 @@ short shooting_can_focus()
 #if CAM_CAN_SD_OVER_IN_AF_LOCK
     if (shooting_get_prop(PROPCASE_AF_LOCK))
         return 1;
+#elif CAM_HAS_VIDEO_BUTTON
+	return shooting_get_common_focus_mode();
 #endif
     return (shooting_get_common_focus_mode() || MODE_IS_VIDEO(m));
 #elif !CAM_CAN_SD_OVERRIDE
@@ -1247,7 +1259,7 @@ void shooting_set_flash_sync_curtain(int curtain)
 void shooting_set_flash_video_override(int flash, int power)
 {
     int mode = 1;
-    if ((conf.flash_manual_override && conf.flash_video_override && (movie_status > 1)) || (conf.flash_manual_override && !conf.flash_video_override))
+    if ((conf.flash_manual_override && conf.flash_video_override && is_video_recording()) || (conf.flash_manual_override && !conf.flash_video_override))
     {
         set_property_case(PROPCASE_FLASH_ADJUST_MODE, &mode, sizeof(mode));
         set_property_case(PROPCASE_FLASH_FIRE, &flash, sizeof(flash));
@@ -1503,6 +1515,28 @@ int captseq_hack_override_active()
     if((conf.tv_enum_type || conf.tv_override_value) && conf.tv_override_koef)
         return 1;
     return 0;
+}
+
+// Return whether video is being recorded
+int is_video_recording()
+{
+#if defined(CAM_HAS_MOVIE_DIGEST_MODE)
+    // If camera has movie digest mode then movie_status values are different than previous models
+    // 'movie_status' values
+    //      0 - after startup
+    //      1 - movie recording stopped
+    //      4 - movie recording in progress, or in 'movie digest' scene mode
+    //      5 - movie recording stopping
+    //      6 - in video mode, not recording
+    return ((movie_status == VIDEO_RECORD_IN_PROGRESS) && ((mode_get() & MODE_SHOOTING_MASK) != MODE_VIDEO_MOVIE_DIGEST));
+#else
+    // 'movie_status' values
+    //      0 - after startup
+    //      1 - movie recording stopped
+    //      4 - movie recording in progress
+    //      5 - movie recording stopping
+    return (movie_status > 1);
+#endif
 }
 
 // Converted from MODE_IS_VIDEO macro (philmoz July 2011)

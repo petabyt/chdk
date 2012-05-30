@@ -38,12 +38,12 @@
     #define CAM_HAS_CMOS                    1
 
     #define CAM_HAS_ND_FILTER               1
-        
+
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON            1
     #define CAM_VIDEO_QUALITY_ONLY          1
- 
+
     #undef  CAM_VIDEO_CONTROL
    
     #define CAM_HAS_JOGDIAL                 1
@@ -54,17 +54,17 @@
 
     #define CAM_DNG_LENS_INFO               { 50,10, 700,10, 31,10, 59,10 } // See comments in camera.h
     #define cam_CFAPattern                  0x02010100
-  
+
     #define CAM_COLORMATRIX1                            \
     544808, 1000000, -174047, 1000000, -80399, 1000000, \
     -75055, 1000000,  440444, 1000000,  11367, 1000000, \
      -5801, 1000000,   71589, 1000000, 118914, 1000000
- 
+
     #define cam_CalibrationIlluminant1      17
-   
+
     #define CAM_JPEG_WIDTH                  4000
     #define CAM_JPEG_HEIGHT                 3000
-                                                
+
     #define CAM_ACTIVE_AREA_X1              96
     #define CAM_ACTIVE_AREA_Y1              24
     #define CAM_ACTIVE_AREA_X2              4168
@@ -104,14 +104,15 @@
 
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                 99     // Override min subject distance
-    
+
     #define CAM_HAS_GPS                     1
-	
+
     #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
 
     #define USE_REAL_AUTOISO                1
     #define OVEREXP_COMPENSATE_OVERALL      1
 
-	
-	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED          0xC0220130  // specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_HAS_MOVIE_DIGEST_MODE       1 
 //----------------------------------------------------------

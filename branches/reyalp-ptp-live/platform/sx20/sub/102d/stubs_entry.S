@@ -7,6 +7,7 @@
 //   Canon PowerShot SX20 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 39
 //   PLATFORMID = 12772 (0x31e4) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d4                 // Found @ 0xffff35a0

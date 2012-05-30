@@ -115,13 +115,13 @@ typedef struct {
     int histo_show_ev_grid;
 
     int zebra_draw;
-    //int zebra_mode;
-    //int zebra_restore_screen;
-    //int zebra_restore_osd;
-    //int zebra_over;
-    //int zebra_under;
-    //int zebra_draw_osd;
-    //int zebra_multichannel;
+    int zebra_mode;
+    int zebra_restore_screen;
+    int zebra_restore_osd;
+    int zebra_over;
+    int zebra_under;
+    int zebra_draw_osd;
+    int zebra_multichannel;
 
     OSD_pos histo_pos;
     OSD_pos dof_pos;
@@ -154,9 +154,9 @@ typedef struct {
     int menu_center;
     int menu_select_first_entry;
     int menu_symbol_enable;
-    //color reader_color;
-    //color zebra_color;    // under/over
-    //color grid_color;
+    color reader_color;
+    color zebra_color;    // under/over
+    color grid_color;
     color osd_color_override;
 
     int font_cp;
@@ -165,13 +165,13 @@ typedef struct {
 
     char lang_file[CONF_STR_LEN];
 
-    //char reader_file[CONF_STR_LEN];
-    //int  reader_pos;
-    //int  reader_autoscroll;
-    //int  reader_autoscroll_delay;
-    //char reader_rbf_file[100];
-    //int  reader_codepage;
-    //int  reader_wrap_by_words;
+    char reader_file[CONF_STR_LEN];
+    int  reader_pos;
+    int  reader_autoscroll;
+    int  reader_autoscroll_delay;
+    char reader_rbf_file[100];
+    int  reader_codepage;
+    int  reader_wrap_by_words;
 
     //int sokoban_level;
 
@@ -190,8 +190,9 @@ typedef struct {
     int alt_prevent_shutdown;
 
     int show_grid_lines;
-    //char grid_lines_file[CONF_STR_LEN];
-    //int grid_force_color;
+    char grid_lines_file[CONF_STR_LEN];
+    int grid_force_color;
+    char grid_title[36];
 
     int video_mode;
     int video_quality;
@@ -293,14 +294,14 @@ typedef struct {
     int curve_enable;
 
     int edge_overlay_enable;
-    //int edge_overlay_filter;
+    int edge_overlay_filter;
     int edge_overlay_thresh;
-    //int edge_overlay_zoom;    // shall zoom be set when *edg file is loaded?
+    int edge_overlay_zoom;    // shall zoom be set when *edg file is loaded?
     int edge_overlay_pano;    // whether a full press changes back to live mode
-    //int edge_overlay_pano_overlap;    // overlap in % in pano mode
-    //int edge_overlay_show;    // whether to show overlay even when no button is pressed
-    //int edge_overlay_play;    // whether edge overlay is switched on also for play mode
-    //color edge_overlay_color;
+    int edge_overlay_pano_overlap;    // overlap in % in pano mode
+    int edge_overlay_show;    // whether to show overlay even when no button is pressed
+    int edge_overlay_play;    // whether edge overlay is switched on also for play mode
+    color edge_overlay_color;
 
     int synch_enable;
     int ricoh_ca1_mode;
@@ -373,6 +374,8 @@ typedef struct {
     int gps_beep_warn;
     int gps_on_off;
 #endif
+
+    int tbox_char_map;      // Text input box language/char map
 } Conf;
 
 extern Conf conf;

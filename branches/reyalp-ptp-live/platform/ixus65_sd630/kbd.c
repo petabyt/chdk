@@ -28,19 +28,15 @@ static long last_kbd_key = 0;
 static char kbd_stack[NEW_SS];
 #endif
 
-#define USB_MASK 0x40 	// ?? incomplete port - probably wrong
-#define USB_IDX  2		 // ?? incomplete port - probably wrong
+#define USB_MASK 0x8000000
+#define USB_IDX  1
 
 extern void usb_remote_key( int ) ;
 int get_usb_bit() 
 {
-	return 0 ;
-/*	
-	long usb_physw[3];
-	usb_physw[USB_IDX] = 0;
-	_kbd_read_keys_r2(usb_physw);
-	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
-*/
+    register long usb_physw;
+    usb_physw = *(long*)0xc0220204; //can be read directly (the usb bit doesn't need kbd_power_on or so)
+    return(( usb_physw & USB_MASK)==USB_MASK);
 }
 
 long __attribute__((naked)) wrap_kbd_p1_f() ;
@@ -189,6 +185,11 @@ void hook_kbd_handle_keys()
 #endif
     }
 
+    usb_remote_key(kbd_new_state[USB_IDX]);
+    if (conf.remote_enable) {
+        physw_status[USB_IDX] = physw_status[USB_IDX] & ~USB_MASK;
+    }
+    
     // Drop SD readonly status
     physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;
 

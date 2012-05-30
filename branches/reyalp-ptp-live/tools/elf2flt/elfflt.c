@@ -744,8 +744,8 @@ elfloader_load(char* filename, char* fltfile)
   printf("\n\nOutput file %s (size=%d bytes)\n",fltfile,filesize);
 
   int output_fd = open(fltfile,O_WRONLY|O_CREAT|O_TRUNC|O_BINARY,0777);
-  write(output_fd, flat_buf, flat->import_start);
-  write(output_fd, flat_import_buf, flat_import_count*sizeof(import_record_t));
+  i = write(output_fd, flat_buf, flat->import_start);
+  i = write(output_fd, flat_import_buf, flat_import_count*sizeof(import_record_t));
   close(output_fd);
 
   return ELFFLT_OK;

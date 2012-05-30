@@ -73,7 +73,8 @@
     #define CAM_ACTIVE_AREA_Y2                  3060
 
     // camera name
-    #define PARAM_CAMERA_NAME                   4       // parameter number for GetParameterData
+    #define PARAM_CAMERA_NAME                   4       // parameter number for GetParameterData - Camera Model name
+    #define PARAM_OWNER_NAME                    7       // parameter number for GetParameterData - Owner name
     #define PARAM_DISPLAY_MODE1                 59      // param number for LCD display mode when camera in playback
     #define PARAM_DISPLAY_MODE2                 62      // param number for LCD display mode when camera in record view hold mode
     #undef  CAM_SENSOR_BITS_PER_PIXEL
@@ -117,6 +118,7 @@
     #define CAM_DISABLE_RAW_IN_HQ_BURST         1       // For cameras with 'HQ Burst' mode that does not work with raw define this
     #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN 1     // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
     #define CAM_ISO_LIMIT_IN_HQ_BURST           930     // Defines max ISO override value for HQ Burst mode (higher values crash camera)
+    #define CAM_HAS_MOVIE_DIGEST_MODE           1       // Changes the values in the 'movie_status' variable if the camera has this mode
 
     #define CAM_LOAD_CUSTOM_COLORS              1       // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                     0xA8    // Start color index for CHDK colors loaded into camera palette.

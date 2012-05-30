@@ -171,10 +171,8 @@ void __attribute__((naked,noinline)) sub_FF000364_my() {
 	//http://chdk.setepontos.com/index.php/topic,4194.0.html
 	*(int*)0x1938=(int)taskHook;
 	*(int*)0x193C=(int)taskHook; // need this for startup in Playback mode (otherwise init_file_modules_task doesn't hook properly)
-    
-	// TODO: check C022xxxx address and 0x800000 because it's always starting in PLAY mode
-    // replacement for correct power-on. see sub_FF024AF4 -> 0xFF05867C and/or SX40HS port
-	*(int*)(0x26E4) = (*(int*)0xC022F48C)&1 ? 0x200000 : 0x100000; 
+
+	*(int*)(0x26E0+0x4) = (*(int*)0xC022F48C)&4 ? 0x200000 : 0x100000;
 
 asm volatile (
 "    LDR     R0, =0xFF0003DC \n" 

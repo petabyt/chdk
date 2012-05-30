@@ -7,6 +7,7 @@
 //   Canon PowerShot A3300 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 47
 //   PLATFORMID = 12835 (0x3223) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d4c                // Found @ 0xffff3504

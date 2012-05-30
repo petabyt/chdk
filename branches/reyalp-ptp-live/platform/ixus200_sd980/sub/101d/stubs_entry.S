@@ -7,6 +7,7 @@
 //   Canon PowerShot SD980 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 39
 //   PLATFORMID = 12773 (0x31e5) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d4                 // Found @ 0xffff3564

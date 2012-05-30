@@ -46,12 +46,52 @@ _cam_sensor camera_sensor = {
 #else
     { -1 , 2 },
 #endif
-#if defined(CAM_COLORMATRIX1)
-    { CAM_COLORMATRIX1 },
-    cam_CFAPattern, cam_CalibrationIlluminant1,
+#if defined(cam_CFAPattern)
+    cam_CFAPattern, 
 #else
+    0,
+#endif
+#if defined(CAM_COLORMATRIX1)
+    cam_CalibrationIlluminant1,
+    { CAM_COLORMATRIX1 },
+#else
+    0,
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-    0, 0,
+#endif
+#if defined(CAM_COLORMATRIX2)
+    cam_CalibrationIlluminant2,
+    { CAM_COLORMATRIX2 },
+#else
+    0,
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+#endif
+#if defined(CAM_CAMERACALIBRATION1)
+    1,
+    { CAM_CAMERACALIBRATION1 },
+#else
+    0,
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+#endif
+#if defined(CAM_CAMERACALIBRATION2)
+    1,
+    { CAM_CAMERACALIBRATION2 },
+#else
+    0,
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+#endif
+#if defined(CAM_FORWARDMATRIX1)
+    1,
+    { CAM_FORWARDMATRIX1 },
+#else
+    0,
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+#endif
+#if defined(CAM_FORWARDMATRIX2)
+    1,
+    { CAM_FORWARDMATRIX2 },
+#else
+    0,
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 #endif
 };
 
@@ -84,6 +124,21 @@ _cam_info camera_info =
     {
 #if defined(PARAM_CAMERA_NAME)
     PARAM_CAMERA_NAME,
+#else
+    0,
+#endif
+#if defined(PARAM_OWNER_NAME)
+    PARAM_OWNER_NAME,
+#else
+    0,
+#endif
+#if defined(PARAM_ARTIST_NAME)
+    PARAM_ARTIST_NAME,
+#else
+    0,
+#endif
+#if defined(PARAM_COPYRIGHT)
+    PARAM_COPYRIGHT,
 #else
     0,
 #endif
@@ -247,6 +302,19 @@ void core_spytask()
         script_autostart();
     }
 #endif
+
+    // Calculate the value of get_tick_count() when the clock ticks over to the next second
+    // Used to calculate the SubSecondTime value when saving DNG files.
+    long t1, t2;
+    t2 = time(0);
+    do
+    {
+        t1 = t2;
+        camera_info.tick_count_offset = get_tick_count();
+        t2 = time(0);
+        msleep(10);
+    } while (t1 != t2);
+    camera_info.tick_count_offset = camera_info.tick_count_offset % 1000;
 
     while (1)
     {
