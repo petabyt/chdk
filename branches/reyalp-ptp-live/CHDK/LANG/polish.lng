@@ -150,7 +150,7 @@
 105 "Czy NA PEWNO przywrócic\nustawienia domyslne?"
 
 106 "*** Informacje o wersji ***"
-107 "Wersja CHDK: %s %s\nData:        %s\nCzas:        %s\nAparat:      %s\nWersja FW:   %s\nKompilator:  %s"
+107 "Wersja CHDK: %s %s\nPoprawka:    %s\nData:        %s\nCzas:        %s\nAparat:      %s\nWersja FW:   %s\nKompilator:  %s"
 
 108 "*** Informacje o pamieci ***"
 109 "Wolna pamiec: %d bajtów\nRozmiar CHDK: %d bajtów\nzaladowany z: 0x%X"
