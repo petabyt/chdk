@@ -1278,6 +1278,10 @@ void shooting_set_nd_filter_state(short v, short is_now)
                 PutInNdFilter();
             else if (v==2)
                 PutOutNdFilter();
+#if defined(CAM_HAS_NATIVE_ND_FILTER) && defined(PROPCASE_ND_FILTER_STATE)
+            int n = (v==1) ? 1 : 0;
+            set_property_case(PROPCASE_ND_FILTER_STATE, &n, sizeof(n));
+#endif
         }
         else
             photo_param_put_off.nd_filter=v;
@@ -1727,4 +1731,14 @@ void shooting_expo_iso_override_thumb(void)
         shooting_set_iso_real(shooting_get_iso_override_value(), SET_NOW);
     else if (conf.autoiso_enable && shooting_get_flash_mode()/*NOT FOR FLASH AUTO MODE*/ && !(conf.override_disable==1 && conf.override_disable_all))
         shooting_set_autoiso(shooting_get_iso_mode());
+
+#if defined(CAM_HAS_ND_FILTER) && defined(CAM_HAS_NATIVE_ND_FILTER)
+    if ((state_kbd_script_run) && (photo_param_put_off.nd_filter))
+    {
+        shooting_set_nd_filter_state(photo_param_put_off.nd_filter, SET_NOW);
+        //photo_param_put_off.nd_filter=0;
+    }
+    else if (conf.nd_filter_state && !(conf.override_disable==1))
+        shooting_set_nd_filter_state(conf.nd_filter_state, SET_NOW);
+#endif
 }
