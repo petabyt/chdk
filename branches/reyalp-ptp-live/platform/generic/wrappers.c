@@ -1500,7 +1500,7 @@ unsigned char SetFileAttributes(const char* fn, unsigned char attr)
 int __attribute__((weak)) vid_get_viewport_display_xoffset_proper() { return vid_get_viewport_display_xoffset()*2; }
 int __attribute__((weak)) vid_get_viewport_display_yoffset_proper() { return vid_get_viewport_display_yoffset(); }
 int __attribute__((weak)) vid_get_viewport_buffer_width_proper()    { return 720; }
-int __attribute__((weak)) vid_get_viewport_width_proper()           { return vid_get_viewport_buffer_width_proper(); }
+int __attribute__((weak)) vid_get_viewport_width_proper()           { return vid_get_viewport_width()*2; }
 int __attribute__((weak)) vid_get_viewport_height_proper()          { return 240; }
 int __attribute__((weak)) vid_get_viewport_fullscreen_height()         { return 240; }
 int __attribute__((weak)) vid_get_viewport_fullscreen_width()          { return vid_get_viewport_buffer_width_proper(); }
