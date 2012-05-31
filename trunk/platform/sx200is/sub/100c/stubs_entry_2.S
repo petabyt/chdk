@@ -18,6 +18,3 @@ NHSTUB(platformsub_kbd_fetch_data,  0xFF848340)
 
 // Palette
 NHSTUB(ScreenLock,                0xFF9D4F28)
-DEF(palette_buffer,                 0x15B5A0) // ref by 0x8D9C, sub_FF9CFC10
-DEF(active_palette_buffer,            0x8D8C) // sub_FF9CFE34
-DEF(palette_control,                  0x8D88) // sub_FF9CFE34
