@@ -29,6 +29,7 @@
     #define CAM_UNCACHED_BIT                    0x40000000 // Found @0xff02ac74
 
     #define CAM_HAS_ND_FILTER                   1
+    #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
     #define CAM_SWIVEL_SCREEN                   1
     //#define CAM_ADJUSTABLE_ALT_BUTTON           1
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
@@ -37,7 +38,6 @@
     #define CAM_VIDEO_QUALITY_ONLY              1
     #define CAM_BRACKETING                      1
     #undef  CAM_VIDEO_CONTROL
-    #define CAM_MULTIPART                       1
     #define CAM_HAS_JOGDIAL                     1
     #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
