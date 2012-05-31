@@ -150,7 +150,7 @@
 
 #elif CAM_BITMAP_PALETTE==3
 
-// Used by :- IXUS120_SD940, SX200IS
+// Used by :- IXUS120_SD940
 
     #define COLOR_WHITE                 0x01
     #define COLOR_RED                   0x2B
@@ -180,42 +180,11 @@
     #define COLOR_HISTO_B_PLAY          COLOR_HISTO_B
     #define COLOR_HISTO_BG_PLAY         COLOR_BLUE_LT
     #define COLOR_HISTO_RG_PLAY         COLOR_YELLOW
-    
-#if defined (CAMERA_sx200is)
-    #undef SCREEN_COLOR
-    #define SCREEN_COLOR                0x15    // try for a dark color in both record and play mode
-#endif
 
 // Icon colors
 // 3 shades of Red, Green, Yellow and Grey
 // Separate definitions for record and playback mode
 // to cater for cameras with variable palettes
-#if defined (CAMERA_sx200is)
-    #define COLOR_ICON_REC_RED          0x2C
-    #define COLOR_ICON_REC_RED_DK       0x2C
-    #define COLOR_ICON_REC_RED_LT       0x20
-    #define COLOR_ICON_REC_GREEN        0x68
-    #define COLOR_ICON_REC_GREEN_DK     0x68
-    #define COLOR_ICON_REC_GREEN_LT     0x60
-    #define COLOR_ICON_REC_YELLOW       0x8F
-    #define COLOR_ICON_REC_YELLOW_DK    0x93
-    #define COLOR_ICON_REC_YELLOW_LT    0x87
-    #define COLOR_ICON_REC_GREY         COLOR_GREY
-    #define COLOR_ICON_REC_GREY_DK      0x15
-    #define COLOR_ICON_REC_GREY_LT      0x10
-    #define COLOR_ICON_PLY_RED          COLOR_ICON_REC_RED
-    #define COLOR_ICON_PLY_RED_DK       COLOR_ICON_REC_RED_DK
-    #define COLOR_ICON_PLY_RED_LT       COLOR_ICON_REC_RED_LT
-    #define COLOR_ICON_PLY_GREEN        0xA0
-    #define COLOR_ICON_PLY_GREEN_DK     0xA0
-    #define COLOR_ICON_PLY_GREEN_LT     0xA0
-    #define COLOR_ICON_PLY_YELLOW       0x6A
-    #define COLOR_ICON_PLY_YELLOW_DK    0x6C
-    #define COLOR_ICON_PLY_YELLOW_LT    0x66
-    #define COLOR_ICON_PLY_GREY         COLOR_ICON_REC_GREY
-    #define COLOR_ICON_PLY_GREY_DK      COLOR_ICON_REC_GREY_DK
-    #define COLOR_ICON_PLY_GREY_LT      COLOR_ICON_REC_GREY_LT
-#endif
 #if defined (CAMERA_ixus120_sd940)
     #define COLOR_ICON_REC_RED          0xE7
     #define COLOR_ICON_REC_RED_DK       0xEA
@@ -667,7 +636,7 @@
 
 #elif CAM_BITMAP_PALETTE==13
 
-// Used by :- G12, SX30, SX40HS, IXUS310_ELPH500HS
+// Used by :- G12, SX30, SX40HS, IXUS310_ELPH500HS, SX200IS
 
     #define COLOR_WHITE                 0x01
     #define COLOR_GREY_DK               0x1a
