@@ -15,3 +15,6 @@ NHSTUB(TurnOnMic,                   NULL_SUB)
 NHSTUB(MakeAFScan,                  0xFF93B538)
 NHSTUB(PostLEDMessage,              0xFF847470)
 NHSTUB(platformsub_kbd_fetch_data,  0xFF848340)
+
+// Palette
+NHSTUB(ScreenLock,                0xFF9D4F28)
