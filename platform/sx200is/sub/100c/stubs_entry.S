@@ -4,13 +4,14 @@
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
 //   Firmware Ver GM1.00C
-//   Possible corrupt firmware dump - file size to small for start address 0xff810000
-//     file size = 4.00MB, should be 7.94MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon PowerShot SX200 IS
 
 // Values for makefile.inc
 //   PLATFORMOSVER = 31
+//   PLATFORMID = 12736 (0x31c0) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
+//   KEYSYS = d4                 // Found @ 0xffff356c
+//   NEED_ENCODED_DISKBOOT = 2   // Found @ 0xffff357c
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -33,6 +34,10 @@ DEF(canon_shoot_menu_active                 ,0x0000786d) // Found @0xff97761c
 DEF(playrec_mode                            ,0x00002c70) // Found @0xff868020
 DEF(zoom_status                             ,0x0000b850) // Found @0xffa775d0
 DEF(some_flag_for_af_scan                   ,0x00006af8) // Found @0xff93b340
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 3 int value(s), the first is the zoom focus length.
+// there are 126 entries in the table - set NUM_FL to 126
+DEF(focus_len_table                         ,0xfffe8538) // Found @0xfffe8538
 DEF(zoom_busy                               ,0x000064f0) // Found @0xff9342b4
 DEF(focus_busy                              ,0x000063f8) // Found @0xff92e97c
 //DEF(recreview_hold                          ,0x000038dc) // Found @0xff885a10, ** != ** stubs_min = 0x00007508 (0x7434+0xD4)
