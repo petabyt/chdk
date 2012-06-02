@@ -53,22 +53,31 @@ void *vid_get_viewport_fb_d()
 }
 
 int vid_get_viewport_width_proper() {
+    int m = mode_get();
+    if((m&MODE_MASK) == MODE_PLAY) {
+        return 704;
+    }
     // fake 1:1 mode
-    if((mode_get()&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
+    if((m&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
         return 528;
     }
-    return ((mode_get()&MODE_MASK) == MODE_PLAY)?704:*(int*)0x32C68;
+    return *(int*)0x32C68;
 }
 int vid_get_viewport_width() {
     return vid_get_viewport_width_proper()/2;
 }
 
 int vid_get_viewport_height_proper() {
+    int m = mode_get();
+    // TODO not correct if TV out connected
+    if((m&MODE_MASK) == MODE_PLAY) {
+        return 240;
+    }
     // fake 16:9 mode
-    if((mode_get()&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
+    if((m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
         return 180; 
     }
-    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x32C68+4);
+    return *(int*)(0x32C68+4);
 }
 
 long vid_get_viewport_height() {
@@ -161,9 +170,10 @@ int vid_get_viewport_fullscreen_width() {
 }
 
 int vid_get_viewport_display_xoffset() {
-    int val=0;
     int m = mode_get();
-    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_STITCH) {
+    if((m&MODE_MASK) == MODE_PLAY) {
+        return 0;
+    } else if((m&MODE_SHOOTING_MASK) == MODE_STITCH) {
         short dir=0;
         short seq=0;
         get_property_case(PROPCASE_STITCH_DIRECTION,&dir,sizeof(dir));
@@ -171,18 +181,19 @@ int vid_get_viewport_display_xoffset() {
         // overall stitch window is 3/4 screen width, centered
         // live part is 1/2, so margin is either 1/8th or 3/8th
         if(dir==0) {
-            val = seq?132:44;
+            return seq?132:44;
         } else {
-            val = seq?44:132;
+            return seq?44:132;
         }
     } else if((m&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
-        val = 44;
+        return 44;
     }
-    return val;
+    return 0;
 }
 
 int vid_get_viewport_xoffset() {
-    if((mode_get()&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
        return 44;
     }
     return 0;
@@ -190,14 +201,18 @@ int vid_get_viewport_xoffset() {
 
 int vid_get_viewport_display_yoffset() {
     int m = mode_get();
+    if((m&MODE_MASK) == MODE_PLAY) {
+        return 0;
+    }
     if((m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
        return 30;
     }
-    return ((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_STITCH)?60:0; // window is 120, centered in 240 screen
+    return ((m&MODE_SHOOTING_MASK) == MODE_STITCH)?60:0; // window is 120, centered in 240 screen
 }
 
 int vid_get_viewport_yoffset() {
-    if((mode_get()&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
        return 30;
     }
     return 0;
