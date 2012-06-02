@@ -611,7 +611,10 @@ static int script_action_stack(long p)
             }
             break;
         case AS_MOTION_DETECTOR:
-            if (module_mdetect_load())
+            // If motion detect module loaded then run the MD code
+            // Don't call module_mdetect_load here as it may cause the
+            // module to be re-loaded after the script is interrupted
+            if (libmotiondetect)
             {
                 if (libmotiondetect->md_detect_motion()==0)
                 {
@@ -716,10 +719,8 @@ void script_end()
 #endif
     }
     // If motion detect library loaded then shut down motion detector
-    // Don't call 'module_mdetect_load' here as we don't want to load
-    // the module, just see if it was already loaded.
-    if (libmotiondetect)
-        libmotiondetect->md_close_motion_detector();
+    module_mdetect_unload();
+
 	shot_histogram_set(0);
     kbd_key_release_all();
     state_kbd_script_run = 0;

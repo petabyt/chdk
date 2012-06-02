@@ -163,6 +163,15 @@ struct libmotiondetect_sym* module_mdetect_load()
     return module_load_generic((void**)&libmotiondetect, MODULE_NAME_MDETECT, bind_module_motiondetect, MODULE_FLAG_DISABLE_AUTOUNLOAD);
 }
 
+void module_mdetect_unload()
+{
+	if (libmotiondetect)
+    {
+    	module_unload(MODULE_NAME_MDETECT);  
+        libmotiondetect = 0;
+    }
+}
+
 
 /************* DYNAMIC LIBRARY ZEBRA ******/
 

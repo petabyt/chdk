@@ -118,6 +118,7 @@ struct libmotiondetect_sym {
 	// This section is for CHDK core
 	extern struct libmotiondetect_sym* libmotiondetect;
     extern struct libmotiondetect_sym* module_mdetect_load();		// 0fail, addr-ok
+    extern void module_mdetect_unload();
 #else
 	// This section is for module
 
