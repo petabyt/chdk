@@ -66,9 +66,10 @@ void JogDial_CCW(void){
 void *vid_get_bitmap_active_palette()
 {
     extern int active_palette_buffer;
-    extern char* palette_buffer[];
-    return (palette_buffer[active_palette_buffer]+0xC);
+    extern int** palette_buffer_ptr;
+    return (palette_buffer_ptr[active_palette_buffer]+0x3);
 }
+
 // Function to load CHDK custom colors into active Canon palette
 void load_chdk_palette()
 {
