@@ -1982,7 +1982,10 @@ void gui_chdk_draw()
         if (show_md_grid)
         {
             --show_md_grid;
-            if (module_mdetect_load())
+            // If motion detect library loaded then display the MD grid
+            // Don't call 'module_mdetect_load' here as we don't want to load
+            // the module, just see if it was already loaded.
+            if (libmotiondetect)
                 libmotiondetect->md_draw_grid();
         }
     }
