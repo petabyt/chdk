@@ -94,18 +94,32 @@ int vid_get_viewport_yscale() {
 
 int vid_get_viewport_width()
 {
-	// viewport width table for each image size
-	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	static long vp_w[5] = { 360, 480, 408, 272 };
-	return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+	if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 480;
+    }
+    else 
+    {
+        // viewport width table for each image size
+    	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+	    static long vp_w[5] = { 360, 480, 408, 272 };
+	    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
 }
 
 int vid_get_viewport_display_xoffset()
 {
-	// viewport width offset table for each image size
-	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	static long vp_w[5] = { 60, 0, 36, 104 };				// should all be even values for edge overlay
-	return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+	if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 0;
+    }
+    else 
+    {
+        // viewport width offset table for each image size
+	    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+	    static long vp_w[5] = { 60, 0, 36, 104 };				// should all be even values for edge overlay
+	    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
 }
 
 long vid_get_viewport_height(){ return 240; }

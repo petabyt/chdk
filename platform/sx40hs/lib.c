@@ -92,7 +92,11 @@ void *vid_get_bitmap_fb()
 
 int vid_get_viewport_width()
 {
-    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 360;
+    }
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
     {
         return 180;
     }
@@ -105,24 +109,33 @@ int vid_get_viewport_width()
     }
 }
 
+// viewport width offset table for each image size
+// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+static long vp_xo[5] = { 0, 0, 0, 44 };				// should all be even values for edge overlay
+
 int vid_get_viewport_xoffset()
 {
-    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 0;
+    }
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
     {
         return 0;
     }
     else
     {
-	    // viewport width offset table for each image size
-	    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	    static long vp_w[5] = { 0, 0, 0, 44 };				// should all be even values for edge overlay
-	    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+	    return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
     }
 }
 
 int vid_get_viewport_display_xoffset()
 {
-    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 0;
+    }
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
     {
         if (shooting_get_prop(PROPCASE_STITCH_DIRECTION) == 0)      // Direction check
             if (shooting_get_prop(PROPCASE_STITCH_SEQUENCE) == 0)   // Shot already taken?
@@ -137,13 +150,17 @@ int vid_get_viewport_display_xoffset()
     }
     else
     {
-        return vid_get_viewport_xoffset();
+	    return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
     }
 }
 
 long vid_get_viewport_height()
 {
-    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 240;
+    }
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
     {
         return 120;
     }
@@ -156,30 +173,39 @@ long vid_get_viewport_height()
     }
 }
 
+// viewport height offset table for each image size
+// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+static long vp_yo[5] = { 0, 30, 13, 0 };
+
 int vid_get_viewport_yoffset()
 {
-    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 0;
+    }
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
     {
         return 0;
     }
     else
     {
-	    // viewport height offset table for each image size
-	    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	    static long vp_h[5] = { 0, 30, 13, 0 };
-	    return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+	    return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
     }
 }
 
 int vid_get_viewport_display_yoffset()
 {
-    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 0;
+    }
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
     {
         return 72;
     }
     else
     {
-        return vid_get_viewport_yoffset();
+	    return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
     }
 }
 
