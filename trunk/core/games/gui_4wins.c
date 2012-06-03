@@ -332,11 +332,11 @@ int gui_4wins_init()
 	move_cursor(0);
 	draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+30, 3, lang_str(LANG_CONNECT4_RIVAL), TEXT_COLOR);
     sprintf(str, "%d",count_win[0]);
-	draw_txt_string((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2-10, camera_screen.height/FONT_HEIGHT-9, str, MAKE_COLOR(INFO_COLOR, P1_COLOR));
+	draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+34, camera_screen.height/FONT_HEIGHT-9, str, MAKE_COLOR(INFO_COLOR, P1_COLOR));
     sprintf(str, ":");
-	draw_txt_string((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2-7, camera_screen.height/FONT_HEIGHT-9, str, INFO_TEXT_COLOR);
+	draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+36, camera_screen.height/FONT_HEIGHT-9, str, INFO_TEXT_COLOR);
     sprintf(str, "%d",count_win[1]);
-	draw_txt_string((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2-4, camera_screen.height/FONT_HEIGHT-9, str, MAKE_COLOR(INFO_COLOR, P2_COLOR));
+	draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+38, camera_screen.height/FONT_HEIGHT-9, str, MAKE_COLOR(INFO_COLOR, P2_COLOR));
 	draw_mode();
 	if(cur_player==2&&!mode_rival) set();
 
@@ -370,9 +370,9 @@ void gui_4wins_kbd_process()
 //-------------------------------------------------------------------
 void gui_4wins_draw(int enforce_redraw) {
   static char str[16];
-  sprintf(str, "%3d%%", get_batt_perc());
-  draw_txt_string((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2-13, camera_screen.height/FONT_HEIGHT-2, str, INFO_TEXT_COLOR);
-  gui_osd_draw_clock(camera_screen.ts_button_border+290,208,INFO_TEXT_COLOR);
+  sprintf(str, "Batt: %3d%%", get_batt_perc());
+  draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+31, camera_screen.height/FONT_HEIGHT-2, str, INFO_TEXT_COLOR);
+  gui_osd_draw_clock(camera_screen.ts_button_border+35*FONT_WIDTH,208-FONT_HEIGHT,INFO_TEXT_COLOR);
 }
 
 extern int module_idx;
