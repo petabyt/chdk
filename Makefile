@@ -177,6 +177,12 @@ firzipsubcomplete: infoline clean firsub
     endif
 	rm -f $(topdir)bin/DISKBOOT.BIN
 
+print-missing-dump:
+	if [ ! -f $(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN ] ; then \
+		echo "missing primary for $(PLATFORM) $(PLATFORMSUB)" ; \
+	fi
+
+
 # define targets to batch build all cameras & firmware versions
 # list of cameras/firmware versions is in 'camera_list.csv'
 # each row in 'camera_list.csv' has 5 entries:
@@ -198,6 +204,11 @@ batch-zip-complete: version
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
+
+# make sure each enabled firmware/sub has a PRIMARY.BIN
+# Note this will not fail, just prints all the missing ones
+batch-print-missing-dumps:
+	sh tools/auto_build.sh $(MAKE) print-missing-dump camera_list.csv
 
 batch-clean:
 	sh tools/auto_build.sh $(MAKE) clean camera_list.csv
