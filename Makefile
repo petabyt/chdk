@@ -178,7 +178,7 @@ firzipsubcomplete: infoline clean firsub
 	rm -f $(topdir)bin/DISKBOOT.BIN
 
 print-missing-dump:
-	if [ ! -f $(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN ] ; then \
+	if [ ! -s $(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN ] ; then \
 		echo "missing primary for $(PLATFORM) $(PLATFORMSUB)" ; \
 	fi
 
