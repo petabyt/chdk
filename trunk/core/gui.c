@@ -1344,6 +1344,18 @@ void gui_update_script_submenu() {
             script_submenu_items[p].text=(int)script_params[script_param_order[i]-1];
             script_submenu_items[p].type=MENUITEM_INT;
             script_submenu_items[p].value=&conf.script_vars[script_param_order[i]-1];
+            if (script_range_values[script_param_order[i]-1] != 0)
+            {
+                if (script_range_values[script_param_order[i]-1] == MENU_MINMAX(0,1))
+                {
+                    script_submenu_items[p].type = MENUITEM_BOOL;
+                }
+                else
+                {
+                    script_submenu_items[p].type |= MENUITEM_F_MINMAX;
+                    script_submenu_items[p].arg = script_range_values[script_param_order[i]-1];
+                }
+            }
             ++p;
         }
     }
