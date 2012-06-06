@@ -4,6 +4,7 @@
 #include "core.h"
 #include "gui.h"
 #include "gui_draw.h"
+#include "gui_menu.h"
 #include "conf.h"
 #include "script.h"
 #include "console.h"
@@ -105,6 +106,7 @@ char script_title[36];                                      // Title of current 
 char script_params[SCRIPT_NUM_PARAMS][28];                  // Parameter title
 int script_param_order[SCRIPT_NUM_PARAMS];                  // Ordered as_in_script list of variables ( [idx] = id_of_var )
                                                             // to display in same order in script
+int script_range_values[SCRIPT_NUM_PARAMS];                 // Min/Max values for param validation
 static char script_params_update[SCRIPT_NUM_PARAMS];        // Flag is such parameter exist
 static int script_loaded_params[SCRIPT_NUM_PARAMS];         // Copy of original values of parameters 
                                                             // (detect are they changed or not)
@@ -112,11 +114,16 @@ static int script_loaded_params[SCRIPT_NUM_PARAMS];         // Copy of original 
 static long running_script_stack_name = -1;                 // ID of action_stack, which used to control script processing
 
 //-------------------------------------------------------------------
+
+const char* skip_whitespace(const char* p)  { while (*p==' ' || *p=='\t') p++; return p; }  // Skip past whitespace
+const char* skip_token(const char* p)       { while (*p!=' ' && *p!='\t') p++; return p; }  // Skip to next whitespace
+
+//-------------------------------------------------------------------
 static void process_title(const char *title) {
     register const char *ptr = title;
     register int i=0;
 
-    while (ptr[0]==' ' || ptr[0]=='\t') ++ptr; // whitespaces
+    ptr = skip_whitespace(ptr);
     while (i<(sizeof(script_title)-1) && ptr[i] && ptr[i]!='\r' && ptr[i]!='\n') {
         script_title[i]=ptr[i];
         ++i;
@@ -137,11 +144,10 @@ static int process_param(const char *param, int update) {
     register const char *ptr = param;
     register int n, i=0;
 
-    while (ptr[0]==' ' || ptr[0]=='\t') ++ptr; // whitespaces
+    ptr = skip_whitespace(ptr);
     if (ptr[0] && (ptr[0]>='a' && ptr[0]<='a'+SCRIPT_NUM_PARAMS) && (ptr[1]==' ' || ptr[1]=='\t')) {
         n=ptr[0]-'a';
-        ptr+=2;
-        while (ptr[0]==' ' || ptr[0]=='\t') ++ptr; // whitespaces
+        ptr = skip_whitespace(ptr+2);
         script_params_update[n] = 1;
         while (i<(sizeof(script_params[0])-1) && ptr[i] && ptr[i]!='\r' && ptr[i]!='\n') {
             if (update) { 
@@ -168,14 +174,38 @@ static void process_default(const char *param, char update) {
     register const char *ptr = param;
     register int n;
 
-    while (ptr[0]==' ' || ptr[0]=='\t') ++ptr; // whitespaces
+    ptr = skip_whitespace(ptr);
     if (ptr[0] && (ptr[0]>='a' && ptr[0]<='a'+SCRIPT_NUM_PARAMS) && (ptr[1]==' ' || ptr[1]=='\t')) {
         n=ptr[0]-'a';
-        ptr+=2;
+        ptr = skip_whitespace(ptr+2);
         if (!update || script_params_update[n])
         {
             conf.script_vars[n] = strtol(ptr, NULL, 0);
             script_loaded_params[n] = conf.script_vars[n];
+        }
+    } // ??? else produce error message
+}
+
+//-------------------------------------------------------------------
+// Process one entry "@range VAR MIN MAX"
+//      param = ptr right after descriptor (should point to var)
+//      update = 0 - get
+//               1 - only if updated
+//-------------------------------------------------------------------
+static void process_range(const char *param, char update) {
+    register const char *ptr = param;
+    register int n;
+
+    ptr = skip_whitespace(ptr);
+    if (ptr[0] && (ptr[0]>='a' && ptr[0]<='a'+SCRIPT_NUM_PARAMS) && (ptr[1]==' ' || ptr[1]=='\t')) {
+        n=ptr[0]-'a';
+        ptr = skip_whitespace(ptr+2);
+        if (!update || script_params_update[n])
+        {
+            short min = strtol(ptr,NULL,0);
+            ptr = skip_whitespace(skip_token(ptr));
+            short max = strtol(ptr,NULL,0);
+            script_range_values[n] = MENU_MINMAX(min,max);
         }
     } // ??? else produce error message
 }
@@ -200,10 +230,11 @@ static void script_scan(const char *fn, int update_vars) {
     for (i=0; i<SCRIPT_NUM_PARAMS; ++i) {
         script_params[i][0]=0;
         script_param_order[i]=0;
+        script_range_values[i] = 0;
     }
 
     while (ptr[0]) {
-        while (ptr[0]==' ' || ptr[0]=='\t') ++ptr; // whitespaces
+        ptr = skip_whitespace(ptr);
         if (ptr[0]=='@') {
             if (strncmp("@title", ptr, 6)==0) {
                 ptr+=6;
@@ -218,6 +249,9 @@ static void script_scan(const char *fn, int update_vars) {
             } else if (update_vars && strncmp("@default", ptr, 8)==0) {
                 ptr+=8;
                 process_default(ptr, 0);
+            } else if (update_vars && strncmp("@range", ptr, 6)==0) {
+                ptr+=6;
+                process_range(ptr, 0);
             }
         }
         while (ptr[0] && ptr[0]!='\n') ++ptr; // unless end of line
@@ -328,6 +362,9 @@ int load_params_values(const char *fn, int update_vars, int read_param_set)
             } else if (strncmp("@default", ptr, 8)==0) {
                 ptr+=8;
                 process_default(ptr, 1);
+            } else if (strncmp("@range", ptr, 6)==0) {
+                ptr+=6;
+                process_range(ptr, 1);
             }
         }
         while (ptr[0] && ptr[0]!='\n') ++ptr; // unless end of line
@@ -352,7 +389,7 @@ int load_params_values(const char *fn, int update_vars, int read_param_set)
 void save_params_values(int unconditional)
 {
     int i, n, fd, changed=0;
-    char *buf,*p;
+    char *buf;
     for(i = 0; i < SCRIPT_NUM_PARAMS; i++)
     {
         if (script_loaded_params[i] != conf.script_vars[i]) changed++;
@@ -374,7 +411,7 @@ void save_params_values(int unconditional)
     set_params_values_name(conf.script_file, conf.script_param_set);
 
     // max possible params * (param description + some extra for @default etc)
-    buf=umalloc(SCRIPT_NUM_PARAMS*(28 + 20));
+    buf=umalloc(256);
     if(!buf)
         return;
 
@@ -384,15 +421,16 @@ void save_params_values(int unconditional)
         return;
     }
     buf[0] = 0;
-    p=buf;
     for(n = 0; n < SCRIPT_NUM_PARAMS; ++n)
     {
         if (script_params[n][0] != 0)
         {
-            p+=sprintf(p,"@param %c %s\n@default %c %d\n",'a'+n,script_params[n],'a'+n,conf.script_vars[n]);
+            sprintf(buf,"@param %c %s\n@default %c %d\n",'a'+n,script_params[n],'a'+n,conf.script_vars[n]);
+            if (script_range_values[n] != 0)
+                sprintf(buf+strlen(buf),"@range %c %d %d\n",'a'+n,(short)(script_range_values[n]&0xFFFF),(short)(script_range_values[n]>>16));
+            write(fd, buf, strlen(buf));
         }
     }
-    write(fd, buf, strlen(buf));
     close(fd);
     ufree(buf);
 }

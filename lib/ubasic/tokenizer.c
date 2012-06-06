@@ -201,6 +201,7 @@ static const struct keyword_token keywords[] = {
   {"@title",                  TOKENIZER_REM},
   {"@param",                  TOKENIZER_REM},
   {"@default",                TOKENIZER_REM},
+  {"@range",                  TOKENIZER_REM},
 
   {"md_detect_motion",        TOKENIZER_MD_DETECT_MOTION},
   {"md_get_cell_diff",        TOKENIZER_MD_GET_CELL_DIFF},

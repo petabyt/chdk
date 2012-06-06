@@ -32,7 +32,7 @@
     // menuitem.arg contain ptr to callback function
 #define MENUITEM_ARG_CALLBACK   0x0300
 
-#define MENU_MINMAX(min, max)   (((max)<<16)|(min))
+#define MENU_MINMAX(min, max)   (((max)<<16)|(min&0xFFFF))
 
 //-------------------------------------------------------------------
 typedef struct {
