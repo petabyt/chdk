@@ -107,6 +107,9 @@ char script_params[SCRIPT_NUM_PARAMS][28];                  // Parameter title
 int script_param_order[SCRIPT_NUM_PARAMS];                  // Ordered as_in_script list of variables ( [idx] = id_of_var )
                                                             // to display in same order in script
 int script_range_values[SCRIPT_NUM_PARAMS];                 // Min/Max values for param validation
+const char **script_named_values[SCRIPT_NUM_PARAMS];        // Array of list values for named parameters
+int script_named_counts[SCRIPT_NUM_PARAMS];                 // Count of # of entries in each script_list_values array
+char *script_named_strings[SCRIPT_NUM_PARAMS];              // Base storage for named value string data
 static char script_params_update[SCRIPT_NUM_PARAMS];        // Flag is such parameter exist
 static int script_loaded_params[SCRIPT_NUM_PARAMS];         // Copy of original values of parameters 
                                                             // (detect are they changed or not)
@@ -116,7 +119,8 @@ static long running_script_stack_name = -1;                 // ID of action_stac
 //-------------------------------------------------------------------
 
 const char* skip_whitespace(const char* p)  { while (*p==' ' || *p=='\t') p++; return p; }  // Skip past whitespace
-const char* skip_token(const char* p)       { while (*p!=' ' && *p!='\t') p++; return p; }  // Skip to next whitespace
+const char* skip_token(const char* p)       { while (*p && *p!='\r' && *p!='\n' && *p!=' ' && *p!='\t') p++; return p; }  // Skip past current token value
+const char* skip_toeol(const char* p)       { while (*p!='\r' && *p!='\n') p++; return p; } // Skip to end of line
 
 //-------------------------------------------------------------------
 static void process_title(const char *title) {
@@ -140,7 +144,8 @@ static void process_title(const char *title) {
 //         script_params_update[VAR] 
 // RETURN VALUE: 0 if err, 1..26 = id of var
 //-------------------------------------------------------------------
-static int process_param(const char *param, int update) {
+static int process_param(const char *param, int update)
+{
     register const char *ptr = param;
     register int n, i=0;
 
@@ -170,7 +175,8 @@ static int process_param(const char *param, int update) {
 //      update = 0 - get
 //               1 - only if updated
 //-------------------------------------------------------------------
-static void process_default(const char *param, char update) {
+static void process_default(const char *param, char update)
+{
     register const char *ptr = param;
     register int n;
 
@@ -192,12 +198,14 @@ static void process_default(const char *param, char update) {
 //      update = 0 - get
 //               1 - only if updated
 //-------------------------------------------------------------------
-static void process_range(const char *param, char update) {
+static void process_range(const char *param, char update)
+{
     register const char *ptr = param;
     register int n;
 
     ptr = skip_whitespace(ptr);
-    if (ptr[0] && (ptr[0]>='a' && ptr[0]<='a'+SCRIPT_NUM_PARAMS) && (ptr[1]==' ' || ptr[1]=='\t')) {
+    if (ptr[0] && (ptr[0]>='a' && ptr[0]<='a'+SCRIPT_NUM_PARAMS) && (ptr[1]==' ' || ptr[1]=='\t'))
+    {
         n=ptr[0]-'a';
         ptr = skip_whitespace(ptr+2);
         if (!update || script_params_update[n])
@@ -206,6 +214,56 @@ static void process_range(const char *param, char update) {
             ptr = skip_whitespace(skip_token(ptr));
             short max = strtol(ptr,NULL,0);
             script_range_values[n] = MENU_MINMAX(min,max);
+        }
+    } // ??? else produce error message
+}
+
+//-------------------------------------------------------------------
+// Process one entry "@values VAR A B C D ..."
+//      param = ptr right after descriptor (should point to var)
+//      update = 0 - get
+//               1 - only if updated
+//-------------------------------------------------------------------
+static void process_values(const char *param, char update)
+{
+    register const char *ptr = param;
+    register int n;
+
+    ptr = skip_whitespace(ptr);
+    if (ptr[0] && (ptr[0]>='a' && ptr[0]<='a'+SCRIPT_NUM_PARAMS) && (ptr[1]==' ' || ptr[1]=='\t'))
+    {
+        n=ptr[0]-'a';
+        ptr = skip_whitespace(ptr+2);
+        if (!update || script_params_update[n])
+        {
+            int len = skip_toeol(ptr) - ptr;
+            script_named_strings[n] = malloc(len+1);
+            strncpy(script_named_strings[n], ptr, len);
+            script_named_strings[n][len] = 0;
+
+            const char *p = script_named_strings[n];
+            int cnt = 0;
+            while (*p)
+            {
+                p = skip_whitespace(skip_token(p));
+                cnt++;
+            }
+            script_named_counts[n] = cnt;
+            script_named_values[n] = malloc(cnt * sizeof(char*));
+
+            p = script_named_strings[n];
+            cnt = 0;
+            while (*p)
+            {
+                script_named_values[n][cnt] = p;
+                p = skip_token(p);
+                if (*p)
+                {
+                    *((char*)p) = 0;
+                    p = skip_whitespace(p+1);
+                }
+                cnt++;
+            }
         }
     } // ??? else produce error message
 }
@@ -231,6 +289,11 @@ static void script_scan(const char *fn, int update_vars) {
         script_params[i][0]=0;
         script_param_order[i]=0;
         script_range_values[i] = 0;
+        if (script_named_values[i]) free(script_named_values[i]);
+        script_named_values[i] = 0;
+        if (script_named_strings[i]) free(script_named_strings[i]);
+        script_named_strings[i] = 0;
+        script_named_counts[i] = 0;
     }
 
     while (ptr[0]) {
@@ -252,6 +315,9 @@ static void script_scan(const char *fn, int update_vars) {
             } else if (update_vars && strncmp("@range", ptr, 6)==0) {
                 ptr+=6;
                 process_range(ptr, 0);
+            } else if (update_vars && strncmp("@values", ptr, 7)==0) {
+                ptr+=7;
+                process_values(ptr, 0);
             }
         }
         while (ptr[0] && ptr[0]!='\n') ++ptr; // unless end of line
@@ -365,6 +431,9 @@ int load_params_values(const char *fn, int update_vars, int read_param_set)
             } else if (strncmp("@range", ptr, 6)==0) {
                 ptr+=6;
                 process_range(ptr, 1);
+            } else if (strncmp("@values", ptr, 7)==0) {
+                ptr+=7;
+                process_values(ptr, 0);
             }
         }
         while (ptr[0] && ptr[0]!='\n') ++ptr; // unless end of line
@@ -428,6 +497,13 @@ void save_params_values(int unconditional)
             sprintf(buf,"@param %c %s\n@default %c %d\n",'a'+n,script_params[n],'a'+n,conf.script_vars[n]);
             if (script_range_values[n] != 0)
                 sprintf(buf+strlen(buf),"@range %c %d %d\n",'a'+n,(short)(script_range_values[n]&0xFFFF),(short)(script_range_values[n]>>16));
+            if (script_named_counts[n] != 0)
+            {
+                sprintf(buf+strlen(buf),"@values %c",'a'+n);
+                for (i=0; i<script_named_counts[n]; i++)
+                    sprintf(buf+strlen(buf)," %s",script_named_values[n][i]);
+                strcat(buf,"\n");
+            }
             write(fd, buf, strlen(buf));
         }
     }
