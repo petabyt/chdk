@@ -196,6 +196,10 @@ alltools:
 	$(MAKE) -C tools PLATFORM=a610 PLATFORMSUB=100e clean all
 	$(MAKE) -C tools PLATFORM=a720 PLATFORMSUB=100c clean all
 
+# note assumes PLATFORMOS is always in same case!
+os-camera-list-entry:
+	echo $(PLATFORM),$(PLATFORMSUB),$(subst _,,$(STATE)),$(COPY_TO), >> camera_list_$(PLATFORMOS).csv
+
 # define targets to batch build all cameras & firmware versions
 # list of cameras/firmware versions is in 'camera_list.csv'
 # each row in 'camera_list.csv' has 5 entries:
@@ -217,6 +221,12 @@ batch-zip-complete: version alltools
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
+
+# note, this will not include cameras with SKIP_AUTOBUILD set
+os-camera-lists:
+	echo 'CAMERA,FIRMWARE,BETA_STATUS,COPY_TO,SKIP_AUTOBUILD' > camera_list_dryos.csv
+	echo 'CAMERA,FIRMWARE,BETA_STATUS,COPY_TO,SKIP_AUTOBUILD' > camera_list_vxworks.csv
+	sh tools/auto_build.sh $(MAKE) os-camera-list-entry $(CAMERA_LIST)
 
 # make sure each enabled firmware/sub has a PRIMARY.BIN
 # Note this will not fail, just prints all the missing ones
