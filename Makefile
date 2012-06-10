@@ -25,7 +25,12 @@ tmp:=$(shell echo "BUILD_SVNREV := $(BUILD_SVNREV)" > revision.inc)
 # CHDK folder for full package
 ZIPDIRS:=$(shell ls -R CHDK | grep CHDK/ | $(ESED) 's?:?/*?')
 
-SUBDIRS=tools lib platform core loader CHDK
+SUBDIRS=lib platform core loader CHDK
+
+# SKIP_TOOLS prevents re-building tools in root level make, to speed up batch builds
+ifndef SKIP_TOOLS
+SUBDIRS+=tools
+endif
 
 .PHONY: fir
 fir: version firsub
@@ -183,6 +188,11 @@ print-missing-dump:
 	fi
 
 
+# for batch builds, build tools for vx and dryos once, instead of once for every firmware
+alltools:
+	$(MAKE) -C tools PLATFORM=a610 PLATFORMSUB=100e clean all
+	$(MAKE) -C tools PLATFORM=a720 PLATFORMSUB=100c clean all
+
 # define targets to batch build all cameras & firmware versions
 # list of cameras/firmware versions is in 'camera_list.csv'
 # each row in 'camera_list.csv' has 5 entries:
@@ -193,14 +203,14 @@ print-missing-dump:
 #                                 camera define the alternate firmware here. see COPY_TO comments above.
 # - skip auto build (optional) :- any value in this column will exclude the camera/firmware from the auto build
 
-batch-zip: version
-	sh tools/auto_build.sh $(MAKE) firzipsub camera_list.csv
+batch-zip: version alltools
+	SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) firzipsub camera_list.csv
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
 
-batch-zip-complete: version
-	sh tools/auto_build.sh $(MAKE) firzipsubcomplete camera_list.csv
+batch-zip-complete: version alltools
+	SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) firzipsubcomplete camera_list.csv
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
