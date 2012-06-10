@@ -3,6 +3,9 @@ srcdir=./
 
 tmp:=$(shell echo "BUILD_SVNREV := $(DEF_SVN_REF)" > revision.inc)
 
+# can override on command line or *buildconf.inc for custom subsets
+CAMERA_LIST=camera_list.csv
+
 include makefile.inc
 
 BUILD_SVNREV:=$(shell svnversion -cn $(topdir) | $(ESED) 's/[0-9]*:([0-9]+)[MPS]*/\1/')
@@ -204,13 +207,13 @@ alltools:
 # - skip auto build (optional) :- any value in this column will exclude the camera/firmware from the auto build
 
 batch-zip: version alltools
-	SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) firzipsub camera_list.csv
+	SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) firzipsub $(CAMERA_LIST)
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
 
 batch-zip-complete: version alltools
-	SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) firzipsubcomplete camera_list.csv
+	SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) firzipsubcomplete $(CAMERA_LIST)
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
@@ -218,7 +221,7 @@ batch-zip-complete: version alltools
 # make sure each enabled firmware/sub has a PRIMARY.BIN
 # Note this will not fail, just prints all the missing ones
 batch-print-missing-dumps:
-	sh tools/auto_build.sh $(MAKE) print-missing-dump camera_list.csv
+	sh tools/auto_build.sh $(MAKE) print-missing-dump $(CAMERA_LIST)
 
 batch-clean:
-	sh tools/auto_build.sh $(MAKE) clean camera_list.csv
+	sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST)
