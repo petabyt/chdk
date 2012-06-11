@@ -3754,6 +3754,78 @@ static FuncSig func_sig_SetFileAttributes_1[] = {
 	{ -1, -1, -1 },
 };
 
+static FuncSig func_sig_GetVRAMHPixelsSize_1[] = {
+	{   0, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEAFA09A1
+	{   1, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEAFA09A3
+	{   2, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEAFA09D2
+	{   3, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D41F0
+	{   4, 0xe1a07000, 0xfdfff000 }, // mov:6:0xE1A07003
+	{   5, 0xe1a06000, 0xfdfff000 }, // mov:6:0xE1A06002
+	{   6, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05000
+	{   7, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE1A04001
+	{   8, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFA09D7
+	{   9, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500001
+	{  10, 0x11a00000, 0xfdfff000 }, // mov:6:0x13A00011
+	{  11, 0x18bd0000, 0xffff0000 }, // ldm:5:0x18BD81F0
+	{  12, 0xe1550000, 0xfdfff000 }, // cmp:7:0xE355001E
+	{  13, 0x0a000000, 0x0f000000 }, // b, bl:3:0x9A000003
+	{  14, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00007
+	{  16, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE3A00003
+	{  17, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD81F0
+	{  18, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02007
+	{  19, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE1A01006
+	{  20, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
+	{  21, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFA099E
+	{  22, 0xe00f1000, 0xf00ff000 }, // ldr:8:0xE59F1228
+	{  23, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE59F0220
+	{  24, 0xe5841000, 0xfdfff000 }, // str:4:0xE5841000
+	{  25, 0xe5840000, 0xfdfff000 }, // str:4:0xE5840004
+	{  26, 0xe00f0000, 0xf00ff000 }, // add:10:0xE28F0F95
+	{  27, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB000D24
+	{  28, 0xe5941000, 0xfdfff000 }, // ldr:4:0xE5941004
+	{  29, 0xe00f0000, 0xf00ff000 }, // add:10:0xE28F0F97
+	{  30, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB000D21
+	{  31, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE3A00000
+	/* 31/32 */
+	{ -1, -1, -1 },
+};
+
+static FuncSig func_sig_GetVRAMVPixelsSize_1[] = {
+	{   0, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEAFA09A3
+	{   1, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEAFA09D2
+	{   2, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D41F0
+	{   3, 0xe1a07000, 0xfdfff000 }, // mov:6:0xE1A07003
+	{   4, 0xe1a06000, 0xfdfff000 }, // mov:6:0xE1A06002
+	{   5, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05000
+	{   6, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE1A04001
+	{   7, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFA09D7
+	{   8, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500001
+	{   9, 0x11a00000, 0xfdfff000 }, // mov:6:0x13A00011
+	{  10, 0x18bd0000, 0xffff0000 }, // ldm:5:0x18BD81F0
+	{  11, 0xe1550000, 0xfdfff000 }, // cmp:7:0xE355001E
+	{  12, 0x0a000000, 0x0f000000 }, // b, bl:3:0x9A000003
+	{  13, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00007
+	{  15, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE3A00003
+	{  16, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD81F0
+	{  17, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02007
+	{  18, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE1A01006
+	{  19, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
+	{  20, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFA099E
+	{  21, 0xe00f1000, 0xf00ff000 }, // ldr:8:0xE59F1228
+	{  22, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE59F0220
+	{  23, 0xe5841000, 0xfdfff000 }, // str:4:0xE5841000
+	{  24, 0xe5840000, 0xfdfff000 }, // str:4:0xE5840004
+	{  25, 0xe00f0000, 0xf00ff000 }, // add:10:0xE28F0F95
+	{  26, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB000D24
+	{  27, 0xe5941000, 0xfdfff000 }, // ldr:4:0xE5941004
+	{  28, 0xe00f0000, 0xf00ff000 }, // add:10:0xE28F0F97
+	{  29, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB000D21
+	{  30, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE3A00000
+	{  31, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD81F0
+	/* 31/32 */
+	{ -1, -1, -1 },
+};
+
 static FuncSig func_sig_AllocateMemory_2[] = {
 	{   0, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE5900000
 	{   1, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEAF80561
@@ -7835,6 +7907,8 @@ FuncsList func_list[] = {
 	{ "GetPropertyCase", func_sig_GetPropertyCase_5, 5 },
 	{ "GetSystemTime", func_sig_GetSystemTime_1, 1 },
 	{ "GetSystemTime", func_sig_GetSystemTime_2, 2 },
+	{ "GetVRAMHPixelsSize", func_sig_GetVRAMHPixelsSize_1, 1 },
+	{ "GetVRAMVPixelsSize", func_sig_GetVRAMVPixelsSize_1, 1 },
 	{ "GetZoomLensCurrentPoint", func_sig_GetZoomLensCurrentPoint_1, 1 },
 	{ "GetZoomLensCurrentPosition", func_sig_GetZoomLensCurrentPosition_1, 1 },
 	{ "GetZoomLensCurrentPosition", func_sig_GetZoomLensCurrentPosition_2, 2 },

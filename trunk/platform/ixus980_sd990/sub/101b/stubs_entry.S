@@ -126,6 +126,8 @@ NSTUB(GetOpticalTemperature                   ,0xff84ceac) //102
 NSTUB(GetParameterData                        ,0xff962ab8) //101
 NSTUB(GetPropertyCase                         ,0xff876358) //102
 NSTUB(GetSystemTime                           ,0xffa49a98) //101
+NSTUB(GetVRAMHPixelsSize                      ,0xff83c2a8) //102
+NSTUB(GetVRAMVPixelsSize                      ,0xff83c2b4) //102
 NSTUB(GetZoomLensCurrentPoint                 ,0xff933afc) //102
 NSTUB(GetZoomLensCurrentPosition              ,0xffa4059c) //102
 NSTUB(GiveSemaphore                           ,0xff827958) //112

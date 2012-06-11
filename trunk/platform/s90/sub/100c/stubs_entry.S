@@ -18,6 +18,8 @@ NSTUB(GetCCDTemperature                       ,0xff86157c) //  2 62%
 NSTUB(GetCurrentAvValue                       ,0xff95a354) //  1 96%
 NSTUB(GetFocusLensSubjectDistance             ,0xff958928) //  1 93%
 //NSTUB(GetPropertyCase                       ,0xff88c960) //  5        *** != 0xff88ca64
+//NSTUB(GetVRAMHPixelsSize                    ,0xffafb0ec) //102        *** != 0xff84f110
+//NSTUB(GetVRAMVPixelsSize                    ,0xffaff288) //  1        *** != 0xff84f11c
 NSTUB(IsStrobeChargeCompleted                 ,0xff8d8710) //  1 96%
 NSTUB(MoveFocusLensToDistance                 ,0xffafbcf0) //  1 68%
 NSTUB(MoveZoomLensWithPoint                   ,0xffa9b1a8) //  1 71%

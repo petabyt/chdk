@@ -1282,6 +1282,8 @@ string_sig string_sigs[] = {
     { 2, "NR_GetDarkSubType", "NR_GetDarkSubType", 1 },
     { 2, "NR_GetDarkSubType", "NRTBL.GetDarkSubType", 1 },
     { 2, "SavePaletteData", "SavePaletteData", 1 },
+    { 2, "GetVRAMHPixelsSize", "GetVRAMHPixelsSize", 1 },
+    { 2, "GetVRAMVPixelsSize", "GetVRAMVPixelsSize", 1 },
 	
 	{ 3, "AllocateMemory", "AllocateMemory", 1 },
 	{ 3, "FreeMemory", "FreeMemory", 1 },
