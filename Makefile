@@ -32,7 +32,7 @@ SUBDIRS=lib platform core loader CHDK
 
 # SKIP_TOOLS prevents re-building tools in root level make, to speed up batch builds
 ifndef SKIP_TOOLS
-SUBDIRS+=tools
+SUBDIRS:=tools $(SUBDIRS)
 endif
 
 .PHONY: fir
