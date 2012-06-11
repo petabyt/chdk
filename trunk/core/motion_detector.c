@@ -29,6 +29,7 @@ Sity: Kharkiv
 
 #include "gui.h"
 #include "gui_draw.h"
+#include "module_exportlist.h"
 
 
 #define MD_XY2IDX(x,y) ((y)*motion_detector->columns+x)

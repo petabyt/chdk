@@ -93,6 +93,7 @@ _cam_sensor camera_sensor = {
     0,
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 #endif
+    DNG_BADPIXEL_VALUE_LIMIT,
 };
 
 _cam_screen camera_screen =
@@ -162,6 +163,8 @@ _cam_info camera_info =
     PROPCASE_SHOOTING,
     },
     ROMBASEADDR, MAXRAMADDR,
+    0,
+    HDK_VERSION" ver. "BUILD_NUMBER,
 };
 
 //==========================================================

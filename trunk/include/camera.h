@@ -285,6 +285,7 @@ typedef struct {
     int forward_matrix1[18];    // DNG Camera Forward Matrix 1
     int has_forwardmatrix2;
     int forward_matrix2[18];    // DNG Camera Forward Matrix 1
+    int dng_badpixel_value_limit;
 } _cam_sensor;
 
 extern _cam_sensor camera_sensor;
@@ -329,6 +330,7 @@ typedef struct
     } props;
     int rombaseaddr, maxramaddr;
     int tick_count_offset;      // get_tick_count value at which the clock ticks over 1 second
+    char* chdk_ver;
 } _cam_info;
 
 extern _cam_info camera_info;
