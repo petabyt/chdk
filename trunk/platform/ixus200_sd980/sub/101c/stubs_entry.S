@@ -15,7 +15,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(SetScriptMode                         ,0xff89074c) //101        *** != 0x0ff810f4
 NSTUB(kbd_pwr_off                             ,0xff85ae98) //  2 64%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
@@ -54,7 +53,7 @@ DEF(physw_status                            ,0x00044558) // Found @0xff8335a8
 DEF(physw_run                               ,0x00001c44) // Found @0xff833200
 DEF(levent_table                            ,0xffb7a2a0) // Found @0xffb7a2a0
 DEF(FlashParamsTable                        ,0xffbdab94) // Found @0xffbdab94
-//DEF(movie_status                            ,0x000067e0) // Found @0xff94ac20, ** != ** stubs_min = 0x00005430 (0x53F8+0x38)
+DEF(movie_status                            ,0x000067e0) // Found @0xff94ac20
 DEF(full_screen_refresh                     ,0x0001b2dc) // Found @0xff9f751c
 DEF(canon_menu_active                       ,0x00002ec8) // Found @0xff889704
 DEF(canon_shoot_menu_active                 ,0x00007b09) // Found @0xff98d9ac
@@ -67,7 +66,7 @@ DEF(some_flag_for_af_scan                   ,0x00006cd4) // Found @0xff94dc3c
 DEF(focus_len_table                         ,0xfffe2ac8) // Found @0xfffe2ac8
 DEF(zoom_busy                               ,0x0000670c) // Found @0xff946e00
 DEF(focus_busy                              ,0x00006608) // Found @0xff941f28
-//DEF(recreview_hold                          ,0x00003818) // Found @0xff89a778, ** != ** stubs_min = 0x000077c4 (0x76F4+0xD0)
+DEF(recreview_hold                          ,0x00003818) // Found @0xff89a778
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40431000; }             // Found @0xff853588
@@ -195,6 +194,7 @@ NSTUB(SetFileTimeStamp                        ,0xff835694) //  3
 NSTUB(SetLogicalEventActive                   ,0xff8906fc) //101
 NSTUB(SetParameterData                        ,0xff979a8c) //101
 NSTUB(SetPropertyCase                         ,0xff888a44) //102
+NSTUB(SetScriptMode                           ,0xff89074c) //101
 NSTUB(SleepTask                               ,0xff83865c) //101
 NSTUB(TakeSemaphore                           ,0xff838324) //101
 NSTUB(TurnOffBackLight                        ,0xff89e2b8) //104

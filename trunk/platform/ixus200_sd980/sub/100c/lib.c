@@ -10,12 +10,14 @@ long hook_raw_size()
 	return 0x11CA240;
 }
 
-
 void *vid_get_viewport_live_fb()//found in sub_FF8E0788
 {
     void **fb=(void **)0x5014;
     unsigned char buff = *((unsigned char*)0x4E5C);
     if (buff == 0) buff = 2;  else buff--;
+//    return fb[buff];
+	if ((mode_get()&MODE_MASK) == MODE_REC)
+		return (void*)(fb[buff]-vid_get_viewport_xoffset()*3);
 	return (void*)fb[buff];
 }
 
@@ -26,6 +28,9 @@ void *vid_get_bitmap_fb()
 
 void *vid_get_viewport_fb()
 {
+//	return (void*)0x408CB700;
+	if ((mode_get()&MODE_MASK) == MODE_REC)
+		return (void*)(0x408CB700-vid_get_viewport_xoffset()*3);
 	return (void*)0x408CB700;
 }
 
@@ -33,6 +38,13 @@ void *vid_get_viewport_fb_d()
 {
 	return (void*)(*(int*)(0x28F0+0x58));
 }
+
+
+long vid_get_bitmap_screen_width()   { return 480; }
+long vid_get_bitmap_screen_height()  { return 240; }
+long vid_get_bitmap_buffer_width()   { return 960; }
+long vid_get_bitmap_buffer_height()  { return 270; }
+
 
 long vid_get_viewport_height()       { return 240; }
 
@@ -49,7 +61,7 @@ int vid_get_viewport_width()
         return 360;
 }
 
-int vid_get_viewport_display_xoffset()
+int vid_get_viewport_xoffset()
 {
 	if (shooting_get_prop(PROPCASE_RESOLUTION) == 8)	// widescreen (16:9) image size
 	   return 0;
@@ -57,13 +69,10 @@ int vid_get_viewport_display_xoffset()
        return 60;
 }
 
-
-char *camera_jpeg_count_str()
-{
-//	return (char*)0x4C138;
-	return (char*)0x00084ca4;      // Found @0xff9e8aa8
+char *camera_jpeg_count_str()    
+{ 
+	return (char*)0x00084ca4;              // Found @0xff9e8aa8
 }
-
 
 //only for cameras with a touchscreen
 short get_touch_click_x()
