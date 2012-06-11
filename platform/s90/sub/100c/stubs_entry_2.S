@@ -18,3 +18,7 @@ NHSTUB(GetLogToFile,                0xFF96B2C0)
 NHSTUB(MakeAFScan,                  0xFF9646D4)
 NHSTUB(UnRegisterEvntProc,          0xFF888C68)
 NHSTUB(closefastdir,                0xFFA7D5D0)
+
+// these are overridden because we don't have a correct full dump for this cam
+NHSTUB(GetVRAMHPixelsSize,          0xFF84F110)
+NHSTUB(GetVRAMVPixelsSize,          0xFF84F11C)

@@ -126,6 +126,8 @@ NSTUB(GetOpticalTemperature                   ,0xff8505d4) //102
 NSTUB(GetParameterData                        ,0xff972f60) //101
 NSTUB(GetPropertyCase                         ,0xff87479c) //101
 NSTUB(GetSystemTime                           ,0xffa411a4) //  1
+NSTUB(GetVRAMHPixelsSize                      ,0xff841228) //102
+NSTUB(GetVRAMVPixelsSize                      ,0xff841234) //102
 NSTUB(GiveSemaphore                           ,0xff81b868) //112
 NSTUB(IsStrobeChargeCompleted                 ,0xff8db534) //102
 NSTUB(LocalTime                               ,0xff870604) //  1

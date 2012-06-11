@@ -127,6 +127,8 @@ NSTUB(GetMemInfo                              ,0xffc03c58) //  1
 NSTUB(GetParameterData                        ,0xffd2689c) //101
 NSTUB(GetPropertyCase                         ,0xffc5bcc0) //101
 NSTUB(GetSystemTime                           ,0xffdf2ffc) //  1
+NSTUB(GetVRAMHPixelsSize                      ,0xffc2cd38) //102
+NSTUB(GetVRAMVPixelsSize                      ,0xffc2cd44) //102
 NSTUB(GetZoomLensCurrentPoint                 ,0xffd0e3c8) //102
 NSTUB(GiveSemaphore                           ,0xffc0bb24) //112
 NSTUB(IsStrobeChargeCompleted                 ,0xffc9ef9c) //102
