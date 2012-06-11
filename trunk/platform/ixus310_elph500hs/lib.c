@@ -98,13 +98,8 @@ int vid_get_viewport_width()
     {
         return 480;
     }
-    else 
-    {
-        // viewport width table for each image size
-    	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	    static long vp_w[5] = { 360, 480, 408, 272 };
-	    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-    }
+    extern int _GetVRAMHPixelsSize();
+    return _GetVRAMHPixelsSize() >> 1;
 }
 
 int vid_get_viewport_display_xoffset()
