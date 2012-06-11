@@ -44,8 +44,9 @@ void camera_set_led(int led, int state, int bright) {
  _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
 
-int get_flash_params_count(void){
- return 120;
+int get_flash_params_count(void) 
+{ 
+	return 0x84;                           // Found @0xff979b5c
 }
 
 void JogDial_CW(void){

@@ -99,7 +99,11 @@ int vid_get_viewport_yscale() {
 
 int vid_get_viewport_width()
 {
-    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 360;
+    }
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
     {
         return 180;
     }
@@ -114,7 +118,11 @@ int vid_get_viewport_width()
 
 int vid_get_viewport_display_xoffset()
 {
-    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 0;
+    }
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
     {
         if (shooting_get_prop(PROPCASE_STITCH_DIRECTION) == 0)      // Direction check
             if (shooting_get_prop(PROPCASE_STITCH_SEQUENCE) == 0)   // Shot already taken?
@@ -138,7 +146,11 @@ int vid_get_viewport_display_xoffset()
 
 long vid_get_viewport_height()
 {
-    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 240;
+    }
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
     {
         return 120;
     }
@@ -153,7 +165,11 @@ long vid_get_viewport_height()
 
 int vid_get_viewport_yoffset()
 {
-    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 0;
+    }
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
     {
         return 0;
     }
@@ -168,7 +184,11 @@ int vid_get_viewport_yoffset()
 
 int vid_get_viewport_display_yoffset()
 {
-    if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 0;
+    }
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
     {
         return 72;
     }

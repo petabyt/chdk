@@ -3,6 +3,9 @@ srcdir=./
 
 tmp:=$(shell echo "BUILD_SVNREV := $(DEF_SVN_REF)" > revision.inc)
 
+# can override on command line or *buildconf.inc for custom subsets
+CAMERA_LIST=camera_list.csv
+
 include makefile.inc
 
 BUILD_SVNREV:=$(shell svnversion -cn $(topdir) | $(ESED) 's/[0-9]*:([0-9]+)[MPS]*/\1/')
@@ -25,7 +28,12 @@ tmp:=$(shell echo "BUILD_SVNREV := $(BUILD_SVNREV)" > revision.inc)
 # CHDK folder for full package
 ZIPDIRS:=$(shell ls -R CHDK | grep CHDK/ | $(ESED) 's?:?/*?')
 
-SUBDIRS=tools lib platform core loader CHDK
+SUBDIRS=lib platform core loader CHDK
+
+# SKIP_TOOLS prevents re-building tools in root level make, to speed up batch builds
+ifndef SKIP_TOOLS
+SUBDIRS:=tools $(SUBDIRS)
+endif
 
 .PHONY: fir
 fir: version firsub
@@ -177,6 +185,21 @@ firzipsubcomplete: infoline clean firsub
     endif
 	rm -f $(topdir)bin/DISKBOOT.BIN
 
+print-missing-dump:
+	if [ ! -s $(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN ] ; then \
+		echo "missing primary for $(PLATFORM) $(PLATFORMSUB)" ; \
+	fi
+
+
+# for batch builds, build tools for vx and dryos once, instead of once for every firmware
+alltools:
+	$(MAKE) -C tools PLATFORM=a610 PLATFORMSUB=100e clean all
+	$(MAKE) -C tools PLATFORM=a720 PLATFORMSUB=100c clean all
+
+# note assumes PLATFORMOS is always in same case!
+os-camera-list-entry:
+	echo $(PLATFORM),$(PLATFORMSUB),$(subst _,,$(STATE)),$(COPY_TO), >> camera_list_$(PLATFORMOS).csv
+
 # define targets to batch build all cameras & firmware versions
 # list of cameras/firmware versions is in 'camera_list.csv'
 # each row in 'camera_list.csv' has 5 entries:
@@ -187,17 +210,28 @@ firzipsubcomplete: infoline clean firsub
 #                                 camera define the alternate firmware here. see COPY_TO comments above.
 # - skip auto build (optional) :- any value in this column will exclude the camera/firmware from the auto build
 
-batch-zip: version
-	sh tools/auto_build.sh $(MAKE) firzipsub camera_list.csv
+batch-zip: version alltools
+	SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) firzipsub $(CAMERA_LIST)
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
 
-batch-zip-complete: version
-	sh tools/auto_build.sh $(MAKE) firzipsubcomplete camera_list.csv
+batch-zip-complete: version alltools
+	SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) firzipsubcomplete $(CAMERA_LIST)
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
+
+# note, this will not include cameras with SKIP_AUTOBUILD set
+os-camera-lists:
+	echo 'CAMERA,FIRMWARE,BETA_STATUS,COPY_TO,SKIP_AUTOBUILD' > camera_list_dryos.csv
+	echo 'CAMERA,FIRMWARE,BETA_STATUS,COPY_TO,SKIP_AUTOBUILD' > camera_list_vxworks.csv
+	sh tools/auto_build.sh $(MAKE) os-camera-list-entry $(CAMERA_LIST)
+
+# make sure each enabled firmware/sub has a PRIMARY.BIN
+# Note this will not fail, just prints all the missing ones
+batch-print-missing-dumps:
+	sh tools/auto_build.sh $(MAKE) print-missing-dump $(CAMERA_LIST)
 
 batch-clean:
-	sh tools/auto_build.sh $(MAKE) clean camera_list.csv
+	sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST)

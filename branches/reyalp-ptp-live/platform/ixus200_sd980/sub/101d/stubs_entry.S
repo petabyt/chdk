@@ -66,7 +66,7 @@ DEF(some_flag_for_af_scan                   ,0x00006cd4) // Found @0xff94ddf8
 DEF(focus_len_table                         ,0xfffe2ac8) // Found @0xfffe2ac8
 DEF(zoom_busy                               ,0x0000670c) // Found @0xff946fbc
 DEF(focus_busy                              ,0x00006608) // Found @0xff9420e4
-//DEF(recreview_hold                          ,0x00003818) // Found @0xff89a7c8, ** != ** stubs_min = 0x000077c4 (0x76F4+0xD0)
+DEF(recreview_hold                          ,0x00003818) // Found @0xff89a7c8
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40431000; }             // Found @0xff853588
@@ -153,6 +153,8 @@ NSTUB(GetOpticalTemperature                   ,0xff85e320) //102
 NSTUB(GetParameterData                        ,0xff979cd8) //101
 NSTUB(GetPropertyCase                         ,0xff888b98) //102
 NSTUB(GetSystemTime                           ,0xffa9efc4) //101
+NSTUB(GetVRAMHPixelsSize                      ,0xff8e1e64) //102
+NSTUB(GetVRAMVPixelsSize                      ,0xff8e1e70) //102
 NSTUB(GetZoomLensCurrentPoint                 ,0xff947330) //102
 NSTUB(GetZoomLensCurrentPosition              ,0xffa906b4) //102
 NSTUB(GiveSemaphore                           ,0xff8383f4) //112

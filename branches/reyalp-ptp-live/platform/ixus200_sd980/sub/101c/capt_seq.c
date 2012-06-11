@@ -3,7 +3,8 @@
 #include "core.h"
 #include "conf.h"
 
-static long *nrflag = (long*)0x6cb4;
+//static long *nrflag = (long*)0x6cb4;
+static long *nrflag = (long*)(0x6cb8-0x08);  // Found @ ff94ff04 & ff94ff20
 
 #include "../../../generic/capt_seq.c"
 

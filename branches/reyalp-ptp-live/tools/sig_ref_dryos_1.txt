@@ -118,3 +118,5 @@ ExpCtrlTool_StopContiAE 0xFFC23A2C 20
 ExpCtrlTool_StartContiAE 0xFFC23930 21
 SetAE_ShutterSpeed 0xFFDA87C0
 SetFileAttributes 0xFFC15358
+GetVRAMHPixelsSize 0xFFDA956C
+GetVRAMVPixelsSize 0xFFDA9570
