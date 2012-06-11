@@ -263,11 +263,13 @@ distclean-recursive:
 	done
 
 all-recursive:
+ifndef SKIPPLATFORMCHECK
 ifndef PLATFORM
 	$(error PLATFORM has not been defined. Specify the PLATFORM to build on the command line or in localbuildconf.inc)
 endif
 ifndef PLATFORMSUB
 	$(error PLATFORMSUB has not been defined. Specify the PLATFORMSUB to build on the command line or in localbuildconf.inc)
+endif
 endif
 	@for i in $(SUBDIRS); do \
 	    echo \>\> Entering to $(FOLDER)$$i; \

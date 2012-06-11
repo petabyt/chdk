@@ -1,6 +1,7 @@
 topdir=../
 
 SKIPBUILDRULES=1
+SKIPPLATFORMCHECK=1
 
 include $(topdir)makefile.inc
 include $(topdir)version.inc

@@ -119,7 +119,7 @@ firzipsub: infoline clean firsub
             endif
         endif
     endif
-	zip -9 $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)CHDK/MODULES/*
+	zip -9 $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)CHDK/MODULES/* > $(DEVNULL)
     # if COPY_TO is defined then copy this camera/firmware version to the copied firmware version
     # Define COPY_TO in $(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc of the source
     # firmware version that needs to be copied to another firmware version
@@ -193,8 +193,8 @@ print-missing-dump:
 
 # for batch builds, build tools for vx and dryos once, instead of once for every firmware
 alltools:
-	$(MAKE) -C tools PLATFORM=a610 PLATFORMSUB=100e clean all
-	$(MAKE) -C tools PLATFORM=a720 PLATFORMSUB=100c clean all
+	$(MAKE) -C tools PLATFORMOS=vxworks clean all
+	$(MAKE) -C tools PLATFORMOS=dryos clean all
 
 # note assumes PLATFORMOS is always in same case!
 os-camera-list-entry:
