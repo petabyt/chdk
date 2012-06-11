@@ -73,7 +73,8 @@ int vid_get_viewport_xoffset()
 
 char *camera_jpeg_count_str()
 {
-	return (char*)0x4C138;
+//	return (char*)0x4C138;
+	return (char*)0x00084ca4;      // Found @0xff9e8aa8
 }
 
 

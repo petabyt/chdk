@@ -10,7 +10,6 @@ long hook_raw_size()
 	return 0x11CA240;
 }
 
-
 void *vid_get_viewport_live_fb()//found in sub_FF8E0788
 {
     void **fb=(void **)0x5014;
@@ -70,13 +69,10 @@ int vid_get_viewport_xoffset()
        return 60;
 }
 
-
-char *camera_jpeg_count_str()
-{
-//	return (char*)0x4C138;
-	return (char*)0x00084ca4;
+char *camera_jpeg_count_str()    
+{ 
+	return (char*)0x00084ca4;              // Found @0xff9e8aa8
 }
-
 
 //only for cameras with a touchscreen
 short get_touch_click_x()
