@@ -21,3 +21,8 @@ NHSTUB(SetScriptMode,               0xFFD56460)
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFFE7D824) 
 NHSTUB(TurnOffMic,                  0xffc1e788)
 NHSTUB(TurnOnMic,                   0xffc1e74c)
+
+// record mode live viewport dimensions
+NHSTUB(GetVRAMHPixelsSize,0xFFE9E3A4)
+NHSTUB(GetVRAMVPixelsSize,0xFFE9E3B0)
+

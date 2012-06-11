@@ -52,6 +52,9 @@ void *vid_get_viewport_fb_d()
 //  return (void*) (x ? (void *)x : vid_get_viewport_fb()) ;
 }
 
+extern int _GetVRAMHPixelsSize();
+extern int _GetVRAMVPixelsSize();
+
 int vid_get_viewport_width_proper() {
     int m = mode_get();
     if((m&MODE_MASK) == MODE_PLAY) {
@@ -61,7 +64,7 @@ int vid_get_viewport_width_proper() {
     if((m&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
         return 528;
     }
-    return *(int*)0x32C68;
+    return _GetVRAMHPixelsSize();
 }
 int vid_get_viewport_width() {
     return vid_get_viewport_width_proper()/2;
@@ -77,7 +80,7 @@ int vid_get_viewport_height_proper() {
     if((m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
         return 180; 
     }
-    return *(int*)(0x32C68+4);
+    return _GetVRAMVPixelsSize();
 }
 
 long vid_get_viewport_height() {

@@ -53,20 +53,12 @@ void *vid_get_viewport_fb_d()
 	return (void*)(*(int*)(0x520C+0x4C));  //0x5258
 }
 
-long vid_get_viewport_height()
-{
-    return 240;
-}
 char *camera_jpeg_count_str()
 {
     return (char*)0x49344; // same as 100e, found @ FFD727B0
 }
 
 // PTP display stuff
-// TODO type reportedly wrong
-int vid_get_palette_type() { return 1; }
-int vid_get_palette_size() { return 16*4; }
-
 void *vid_get_bitmap_active_palette() {
     return (void *)0x3D518; // GetPaletteFromPhysicalScreen
 }
@@ -75,16 +67,3 @@ void *vid_get_bitmap_active_buffer()
 {
     return (void*)(*(int*)0x761C); // DisplayPhysicalScreenWithYUVPalette
 }
-
-// values from chdkcam patch
-// commented for now, protocol changes needed to handle correctly
-// note, play mode may be 704, needs to be tested
-#if 0
-int vid_get_viewport_width_proper() { 
-    return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:*(int*)0x2138; // VRAM DataSize  -> sub_FFC2A77C
-}
-int vid_get_viewport_height_proper() {
-     return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x2138+4); // VRAM DataSize -> sub_FFC2A78
-}
-#endif
-
