@@ -2,6 +2,7 @@
 #define NULL_SUB 0xFF810B04
 
 // Override stubs_entry.S
+NHSTUB(SetScriptMode,               0xff89074c)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
 
 // These don't exist

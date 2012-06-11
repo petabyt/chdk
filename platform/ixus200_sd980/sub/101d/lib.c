@@ -60,7 +60,8 @@ int vid_get_viewport_display_xoffset()
 
 char *camera_jpeg_count_str()
 {
-	return (char*)0x4C138;
+//	return (char*)0x4C138;
+	return (char*)0x00084ca4;
 }
 
 
