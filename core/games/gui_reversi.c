@@ -10,6 +10,7 @@
 #include "gui_mbox.h"
 
 #include "module_load.h"
+#include "module_exportlist.h"
 
 void gui_module_menu_kbd_process();
 void gui_reversi_kbd_process();

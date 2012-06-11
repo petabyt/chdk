@@ -12,6 +12,7 @@
 #include "gui_osd.h"
 
 #include "module_load.h"
+#include "module_exportlist.h"
 
 //-------------------------------------------------------------------
 typedef struct {
@@ -201,7 +202,7 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 									sizeof(struct ModuleInfo),
 
 									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+									PLATFORMID,		            // Specify platform dependency (uses CAM_EV_IN_VIDEO to create array)
 									MODULEINFO_FLAG_SYSTEM,     // flag
 									(int32_t)"OSD Editor",		// Module name
 									1, 0,						// Module version

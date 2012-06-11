@@ -21,6 +21,7 @@
 #include "gui_mbox.h"
 
 #include "module_load.h"
+#include "module_exportlist.h"
 
 void gui_module_menu_kbd_process();
 void gui_sudoku_kbd_process();
@@ -873,11 +874,8 @@ void gui_sudoku_kbd_process()
 			mode=MODE_VIEW;
 			draw|=FIELD|MENU;
 			break;
-		#if CAM_HAS_ERASE_BUTTON
 		case KEY_ERASE:
-		#else
 		case KEY_SHOOT_HALF:
-		#endif
 			if (mode & (MODE_VIEW | MODE_EDIT))
 			{
 				if (field[yPos][xPos]==0)user[yPos][xPos]=0;

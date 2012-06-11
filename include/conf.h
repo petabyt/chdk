@@ -38,6 +38,8 @@ typedef struct {
 // Please try do not change existed structure, because this will broke modules compatibility
 // If add field to the end of structure minor api version should be increased.
 // If any other change (remove something, change order, add not to the end, change meaning), major api version should be increased
+// Don't make any of the entries conditionally compiled in - this will change the offsets between cameras causing problems with
+// making the modules camera/platform independant
 typedef struct {
 	int api_version;			// version of this structure
 
@@ -296,20 +298,20 @@ typedef struct {
     int edge_overlay_enable;
     int edge_overlay_filter;
     int edge_overlay_thresh;
-    int edge_overlay_zoom;    // shall zoom be set when *edg file is loaded?
-    int edge_overlay_pano;    // whether a full press changes back to live mode
-    int edge_overlay_pano_overlap;    // overlap in % in pano mode
-    int edge_overlay_show;    // whether to show overlay even when no button is pressed
-    int edge_overlay_play;    // whether edge overlay is switched on also for play mode
+    int edge_overlay_zoom;              // shall zoom be set when *edg file is loaded?
+    int edge_overlay_pano;              // whether a full press changes back to live mode
+    int edge_overlay_pano_overlap;      // overlap in % in pano mode
+    int edge_overlay_show;              // whether to show overlay even when no button is pressed
+    int edge_overlay_play;              // whether edge overlay is switched on also for play mode
     color edge_overlay_color;
 
     int synch_enable;
     int ricoh_ca1_mode;
     int synch_delay_enable;
     int synch_delay_value;
-    int synch_delay_coarse_value;		// obsolete - no longer used
+    //int synch_delay_coarse_value;     // obsolete - no longer used
     int remote_zoom_enable;
-    int zoom_timeout;
+    //int zoom_timeout;                 // obsolete - no longer used
 
     int script_param_set;
     int script_param_save;
@@ -335,11 +337,8 @@ typedef struct {
     
     int remote_enable_scripts;  // usb remote activates scripts in <ALT> mode
     
-#if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
     int zoom_assist_button_disable;    // used to disable the zoom assist button on SX30 & SX40 for people who keep accidentaly pressing it
-#endif
 
-#ifdef CAM_HAS_GPS
     int gps_record;
     int gps_navi_show;
     int gps_navi_hide;
@@ -373,7 +372,6 @@ typedef struct {
     int gps_test_timezone;
     int gps_beep_warn;
     int gps_on_off;
-#endif
 
     int tbox_char_map;      // Text input box language/char map
 } Conf;

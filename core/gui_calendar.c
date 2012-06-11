@@ -10,6 +10,7 @@
 #include "gui_calendar.h"
 
 #include "module_load.h"
+#include "module_exportlist.h"
 
 void gui_calendar_menu_kbd_process();
 void gui_calendar_kbd_process();
