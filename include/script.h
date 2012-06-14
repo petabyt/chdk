@@ -19,7 +19,8 @@
 extern char script_title[36];
 extern char script_params[SCRIPT_NUM_PARAMS][28];
 extern int script_range_values[SCRIPT_NUM_PARAMS];
-extern int script_param_order[SCRIPT_NUM_PARAMS];
+extern short script_range_types[SCRIPT_NUM_PARAMS];
+extern short script_param_order[SCRIPT_NUM_PARAMS];
 extern const char **script_named_values[SCRIPT_NUM_PARAMS];
 extern int script_named_counts[SCRIPT_NUM_PARAMS];
 

@@ -104,9 +104,11 @@ char script_title[36];                                      // Title of current 
 // 2. Encoding scheme is: array[VAR-'a'] = value
 
 char script_params[SCRIPT_NUM_PARAMS][28];                  // Parameter title
-int script_param_order[SCRIPT_NUM_PARAMS];                  // Ordered as_in_script list of variables ( [idx] = id_of_var )
+short script_param_order[SCRIPT_NUM_PARAMS];                // Ordered as_in_script list of variables ( [idx] = id_of_var )
                                                             // to display in same order in script
 int script_range_values[SCRIPT_NUM_PARAMS];                 // Min/Max values for param validation
+short script_range_types[SCRIPT_NUM_PARAMS];                // Specifies if range values is signed (-9999-32767) or unsigned (0-65535)
+                                                            // Note: -9999 limit on negative values is due to current gui_menu code (and because menu only displays chars)
 const char **script_named_values[SCRIPT_NUM_PARAMS];        // Array of list values for named parameters
 int script_named_counts[SCRIPT_NUM_PARAMS];                 // Count of # of entries in each script_list_values array
 char *script_named_strings[SCRIPT_NUM_PARAMS];              // Base storage for named value string data
@@ -210,10 +212,16 @@ static void process_range(const char *param, char update)
         ptr = skip_whitespace(ptr+2);
         if (!update || script_params_update[n])
         {
-            short min = strtol(ptr,NULL,0);
+            int min = strtol(ptr,NULL,0);
             ptr = skip_whitespace(skip_token(ptr));
-            short max = strtol(ptr,NULL,0);
+            int max = strtol(ptr,NULL,0);
             script_range_values[n] = MENU_MINMAX(min,max);
+            if ((min == 0) && (max == 1))
+                script_range_types[n] = MENUITEM_BOOL;
+            else if ((min >= 0) && (max >= 0)) 
+                script_range_types[n] = MENUITEM_INT|MENUITEM_F_MINMAX|MENUITEM_F_UNSIGNED;
+            else
+                script_range_types[n] = MENUITEM_INT|MENUITEM_F_MINMAX;
         }
     } // ??? else produce error message
 }

@@ -1352,15 +1352,8 @@ void gui_update_script_submenu() {
 
             if (script_range_values[n] != 0)
             {
-                if (script_range_values[n] == MENU_MINMAX(0,1))
-                {
-                    script_submenu_items[p].type = MENUITEM_BOOL;
-                }
-                else
-                {
-                    script_submenu_items[p].type |= MENUITEM_F_MINMAX;
-                    script_submenu_items[p].arg = script_range_values[n];
-                }
+                script_submenu_items[p].type = script_range_types[n];
+                script_submenu_items[p].arg = script_range_values[n];
             }
             else if (script_named_counts[n] != 0)
             {
