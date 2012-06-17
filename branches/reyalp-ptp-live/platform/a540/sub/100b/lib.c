@@ -55,19 +55,31 @@ void *vid_get_viewport_fb_d()
 extern int _GetVRAMHPixelsSize();
 extern int _GetVRAMVPixelsSize();
 
+// for testing only, to simulate cameras with variable aspect
+// MODE_PORTRAIT uses 1:1 ( 528x240 ) and MODE_LANDSCAPE 16:9 (704x180)
+// no need to implement this on other cameras unless you are doing development
+//#define FAKE_ASPECT 1
+
 int vid_get_viewport_width_proper() {
     int m = mode_get();
     if((m&MODE_MASK) == MODE_PLAY) {
         return 704;
     }
+#ifdef FAKE_ASPECT
     // fake 1:1 mode
     if((m&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
         return 528;
     }
+#endif
+    // return hard coded width since mode doesn't update at the same time as GetVRAMHPixelsSize
+    if((m&MODE_SHOOTING_MASK) == MODE_STITCH) {
+        return 352;
+    }
     return _GetVRAMHPixelsSize();
 }
+
 int vid_get_viewport_width() {
-    return vid_get_viewport_width_proper()/2;
+    return vid_get_viewport_width_proper()>>1;
 }
 
 int vid_get_viewport_height_proper() {
@@ -76,9 +88,15 @@ int vid_get_viewport_height_proper() {
     if((m&MODE_MASK) == MODE_PLAY) {
         return 240;
     }
+#ifdef FAKE_ASPECT
     // fake 16:9 mode
     if((m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
         return 180; 
+    }
+#endif
+    // return hard coded width since mode doesn't update at the same time as GetVRAMHPixelsSize
+    if((m&MODE_SHOOTING_MASK) == MODE_STITCH) {
+        return 120; 
     }
     return _GetVRAMVPixelsSize();
 }
@@ -155,18 +173,24 @@ void *vid_get_bitmap_active_buffer()
 
 int vid_get_viewport_fullscreen_height() {
     // except for stitch, always full screen
-    // TODO mode may not update at exactly the same time as width and height variables for stitch
     int m = mode_get();
-    if((m&MODE_MASK) != MODE_PLAY && ((m&MODE_SHOOTING_MASK) == MODE_STITCH || (m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE)) {
+    if((m&MODE_MASK) != MODE_PLAY && ((m&MODE_SHOOTING_MASK) == MODE_STITCH
+#ifdef FAKE_ASPECT
+         || (m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE
+#endif
+         )) {
         return 240;
     }
     return vid_get_viewport_height_proper();
 }
 int vid_get_viewport_fullscreen_width() {
     // except for stitch, always full screen
-    // TODO mode may not update at exactly the same time as width and height variables for stitch
     int m = mode_get();
-    if((m&MODE_MASK) != MODE_PLAY && ((m&MODE_SHOOTING_MASK) == MODE_STITCH || (m&MODE_SHOOTING_MASK) == MODE_PORTRAIT)) {
+    if((m&MODE_MASK) != MODE_PLAY && ((m&MODE_SHOOTING_MASK) == MODE_STITCH
+#ifdef FAKE_ASPECT
+         || (m&MODE_SHOOTING_MASK) == MODE_PORTRAIT
+#endif
+    )) {
         return 704;
     }
     return vid_get_viewport_width_proper();
@@ -188,12 +212,15 @@ int vid_get_viewport_display_xoffset() {
         } else {
             return seq?44:132;
         }
+#ifdef FAKE_ASPECT
     } else if((m&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
         return 44;
+#endif
     }
     return 0;
 }
 
+#ifdef FAKE_ASPECT
 int vid_get_viewport_xoffset() {
     int m = mode_get();
     if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
@@ -201,18 +228,22 @@ int vid_get_viewport_xoffset() {
     }
     return 0;
 }
+#endif
 
 int vid_get_viewport_display_yoffset() {
     int m = mode_get();
     if((m&MODE_MASK) == MODE_PLAY) {
         return 0;
     }
+#ifdef FAKE_ASPECT
     if((m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
        return 30;
     }
+#endif
     return ((m&MODE_SHOOTING_MASK) == MODE_STITCH)?60:0; // window is 120, centered in 240 screen
 }
 
+#ifdef FAKE_ASPECT
 int vid_get_viewport_yoffset() {
     int m = mode_get();
     if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
@@ -220,3 +251,4 @@ int vid_get_viewport_yoffset() {
     }
     return 0;
 }
+#endif
