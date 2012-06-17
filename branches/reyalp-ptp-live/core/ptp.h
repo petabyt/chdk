@@ -8,7 +8,7 @@ protocol version history
 0.2 - Added ScriptStatus and ScriptSupport, based on work by ultimA
 1.0 - removed old script result code (luar), replace with message system
 2.0 - return PTP_CHDK_TYPE_TABLE for tables instead of TYPE_STRING, allow return of empty strings
-2.1 - eperimental live view, not formally released
+2.1 - experimental live view, not formally released
 2.2 - live view (work in progress)
 2.3 - live view (work in progress)
 */
@@ -66,9 +66,14 @@ enum ptp_chdk_command {
                             // data length is handled by ptp data phase
                             // input messages do not have type or subtype, they are always a string destined for the script (similar to USER/string)
                             // output param1 is ptp_chdk_script_msg_status
-  PTP_CHDK_GetLiveData,     // TODO not final
+  PTP_CHDK_GetDisplayData,  // Return camera display data
+                            // This is defined as separate sub protocol in live_view.h
+                            // Changes to the sub-protocol will always be considered a minor change to the main protocol
                             //  param2 bitmask of data
                             //  output param1 = total size of data
+                            //  return data is protocol information, frame buffer descriptions and selected display data
+                            //  Currently a data phase is always returned. Future versions may define other behavior 
+                            //  for values in currently unused parameters.
 };
 
 // data types as used by ReadScriptMessage

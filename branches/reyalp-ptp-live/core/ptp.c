@@ -623,7 +623,7 @@ static int handle_ptp(
     }
 #endif
 
-    case PTP_CHDK_GetLiveData:
+    case PTP_CHDK_GetDisplayData:
         ptp.num_param = 1;
         ptp.param1 = live_view_get_data(data,param2);
         if(!ptp.param1) {

@@ -1,9 +1,28 @@
 #ifndef __LIVE_VIEW_H
 #define __LIVE_VIEW_H
 
+/*
+Protocol notes:
+- Unless otherwise specified, all structure values are packed in camera native (little
+  endian) byte order
+- Frame buffer and palette data are in native camera formats
+  Some documentation may be found at http://chdk.wikia.com/wiki/Frame_buffers 
+- The frame buffer descriptions returned may not be correct depending on the
+  camera model and various camera settings (shooting mode, digital zoom, aspect ratio)
+  This may result in partial images, garbage in the "valid" area or incorrect position
+- In some cases, the requested data may not be available. If this happens, the framebuffer
+  or palette data offset will be zero. 
+- The frame buffer descriptions are returned regardless of whether the data is available
+*/
 // Live View protocol version
 #define LIVE_VIEW_VERSION_MAJOR 2  // increase only with backwards incompatible changes (and reset minor)
 #define LIVE_VIEW_VERSION_MINOR 0  // increase with extensions of functionality
+
+/*
+protocol version history
+< 2.0 - development versions
+*/
+
 
 // Control flags for determining which data block to transfer
 #define LV_TFR_VIEWPORT     0x01
