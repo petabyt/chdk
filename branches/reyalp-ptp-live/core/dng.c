@@ -1,5 +1,3 @@
-#include "camera.h"
-
 #include "stdlib.h"
 #include "string.h"
 #include "platform.h"
@@ -47,7 +45,6 @@ static char cam_name[32]                = "";
 static char artist_name[64]             = "";
 static char copyright[64]               = "";
 const short cam_PreviewBitsPerSample[]  = {8,8,8};
-const char cam_chdk_ver[]               = HDK_VERSION" ver. "BUILD_NUMBER;
 const int cam_Resolution[]              = {180,1};
 static int cam_AsShotNeutral[]          = {1000,1000,1000,1000,1000,1000};
 static char cam_datetime[20]            = "";                   // DateTimeOriginal
@@ -74,6 +71,8 @@ static struct t_data_for_exif exif_data;
 
 #define BE(v)   ((v&0x000000FF)<<24)|((v&0x0000FF00)<<8)|((v&0x00FF0000)>>8)|((v&0xFF000000)>>24)   // Convert to big_endian
 
+#define BADPIX_CFA_INDEX    6   // Index of CFAPattern value in badpixel_opcodes array
+
 static unsigned int badpixel_opcode[] =
 {
     // *** all values must be in big endian order
@@ -85,15 +84,7 @@ static unsigned int badpixel_opcode[] =
     BE(1),              // Flags = 1
     BE(8),              // Opcode length = 8 bytes
     BE(0),              // Constant = 0
-#if   cam_CFAPattern == 0x02010100
-    BE(1),              // BayerPhase = 1 (top left pixel is green in a green/red row)
-#elif cam_CFAPattern == 0x01020001
-    BE(0),              // BayerPhase = 0 (top left pixel is red)
-#elif cam_CFAPattern == 0x01000201
-    BE(3),              // BayerPhase = 3 (top left pixel is blue)
-#elif cam_CFAPattern == 0x00010102
-    BE(2),              // BayerPhase = 2 (top left pixel is green in a green/blue row)
-#endif
+    BE(0),              // CFAPattern (set in code below)
 };
 
 // warning: according to TIFF format specification, elements must be sorted by tag value in ascending order!
@@ -103,6 +94,7 @@ static unsigned int badpixel_opcode[] =
 #define CAMERA_NAME_INDEX           8       // tag 0x110
 #define THUMB_DATA_INDEX            9       // tag 0x111
 #define ORIENTATION_INDEX           10      // tag 0x112
+#define CHDK_VER_INDEX              15      // tag 0x131
 #define ARTIST_NAME_INDEX           17      // tag 0x13B
 #define SUBIFDS_INDEX               18      // tag 0x14A
 #define COPYRIGHT_INDEX             19      // tag 0x8298
@@ -133,7 +125,7 @@ struct dir_entry ifd0[]={
     {0x116,  T_SHORT,      1,  DNG_TH_HEIGHT},                     // RowsPerStrip
     {0x117,  T_LONG,       1,  DNG_TH_WIDTH*DNG_TH_HEIGHT*3},      // StripByteCounts = preview size
     {0x11C,  T_SHORT,      1,  1},                                 // PlanarConfiguration: 1
-    {0x131,  T_ASCII,      sizeof(cam_chdk_ver), (int)cam_chdk_ver},//Software
+    {0x131,  T_ASCII|T_PTR,32, 0},                                 // Software
     {0x132,  T_ASCII,      20, (int)cam_datetime},                 // DateTime
     {0x13B,  T_ASCII|T_PTR,64, (int)artist_name},                  // Artist: Filled at header generation.
     {0x14A,  T_LONG,       1,  0},                                 // SubIFDs offset
@@ -172,10 +164,10 @@ struct dir_entry ifd1[]={
     {0x101,  T_LONG|T_PTR, 1,  (int)&camera_sensor.raw_rows},      // ImageLength
     {0x102,  T_SHORT|T_PTR,1,  (int)&camera_sensor.bits_per_pixel},// BitsPerSample
     {0x103,  T_SHORT,      1,  1},                                 // Compression: Uncompressed
-    {0x106,  T_SHORT,      1,  0x8023},                            //PhotometricInterpretation: CFA
-    {0x111,  T_LONG,       1,  0},                                 //StripOffsets: Offset
+    {0x106,  T_SHORT,      1,  0x8023},                            // PhotometricInterpretation: CFA
+    {0x111,  T_LONG,       1,  0},                                 // StripOffsets: Offset
     {0x115,  T_SHORT,      1,  1},                                 // SamplesPerPixel: 1
-    {0x116,  T_SHORT|T_PTR,1,  (int)&camera_sensor.raw_rows},      //RowsPerStrip
+    {0x116,  T_SHORT|T_PTR,1,  (int)&camera_sensor.raw_rows},      // RowsPerStrip
     {0x117,  T_LONG|T_PTR, 1,  (int)&camera_sensor.raw_size},      // StripByteCounts = CHDK RAW size
     {0x11A,  T_RATIONAL,   1,  (int)cam_Resolution},               // XResolution
     {0x11B,  T_RATIONAL,   1,  (int)cam_Resolution},               // YResolution
@@ -305,6 +297,22 @@ void create_dng_header(){
         // Set DNG version to 1.3 and add bad pixel opcodes
         ifd0[DNG_VERSION_INDEX].offset = BE(0x01030000);
         ifd1[BADPIXEL_OPCODE_INDEX].type &= ~T_SKIP;
+        // Set CFAPattern value
+        switch (camera_sensor.cfa_pattern)
+        {
+        case 0x02010100:
+            badpixel_opcode[BADPIX_CFA_INDEX] = BE(1);              // BayerPhase = 1 (top left pixel is green in a green/red row)
+            break;
+        case 0x01020001:
+            badpixel_opcode[BADPIX_CFA_INDEX] = BE(0);              // BayerPhase = 0 (top left pixel is red)
+            break;
+        case 0x01000201:
+            badpixel_opcode[BADPIX_CFA_INDEX] = BE(3);              // BayerPhase = 3 (top left pixel is blue)
+            break;
+        case 0x00010102:
+            badpixel_opcode[BADPIX_CFA_INDEX] = BE(2);              // BayerPhase = 2 (top left pixel is green in a green/blue row)
+            break;
+        }
     }
 
     // filling EXIF fields
@@ -326,6 +334,8 @@ void create_dng_header(){
     // Fix the counts and offsets where needed
 
     ifd0[CAMERA_NAME_INDEX].count = ifd0[UNIQUE_CAMERA_MODEL_INDEX].count = strlen(cam_name) + 1;
+    ifd0[CHDK_VER_INDEX].offset = (int)camera_info.chdk_ver;
+    ifd0[CHDK_VER_INDEX].count = strlen(camera_info.chdk_ver) + 1;
     ifd0[ARTIST_NAME_INDEX].count = strlen(artist_name) + 1;
     ifd0[COPYRIGHT_INDEX].count = strlen(copyright) + 1;
     ifd0[ORIENTATION_INDEX].offset = get_orientation_for_exif(exif_data.orientation);
@@ -723,11 +733,11 @@ int raw_init_badpixel_bin()
     {
         for (c[1]=camera_sensor.active_area.y1; c[1]<camera_sensor.active_area.y2; c[1]++)
         {
-            if (get_raw_pixel(c[0],c[1]) <= DNG_BADPIXEL_VALUE_LIMIT)
+            if (get_raw_pixel(c[0],c[1]) <= camera_sensor.dng_badpixel_value_limit)
             {
                 unsigned short l;
                 for (l=0; l<7 && (c[1]+l+1)<camera_sensor.active_area.y2; l++)
-                    if (get_raw_pixel(c[0],c[1]+l+1) > DNG_BADPIXEL_VALUE_LIMIT)
+                    if (get_raw_pixel(c[0],c[1]+l+1) > camera_sensor.dng_badpixel_value_limit)
                         break;
                 c[1] = c[1] | (l << 13);
                 if (f) fwrite(c, 1, 4, f);
@@ -793,7 +803,7 @@ void patch_bad_pixels_b(void)
         y = ptr[1] & 0x1FFF;
         cnt = (ptr[1] >> 13) & 7;
         for (; cnt>=0; cnt--, y++)
-            if (get_raw_pixel(ptr[0], y) <= DNG_BADPIXEL_VALUE_LIMIT)
+            if (get_raw_pixel(ptr[0], y) <= camera_sensor.dng_badpixel_value_limit)
                 patch_bad_pixel(ptr[0], y);
     }
 }
@@ -976,7 +986,7 @@ struct ModuleInfo _module_info = {  MODULEINFO_V1_MAGICNUM,
     sizeof(struct ModuleInfo),
 
     ANY_CHDK_BRANCH, 0,         // Requirements of CHDK version
-    PLATFORMID,                 // Specify platform dependency
+    ANY_PLATFORM_ALLOWED,       // Specify platform dependency
     MODULEINFO_FLAG_SYSTEM,     // flag
     (int32_t)"DNG (dll)",       // Module name
     1, 0,                       // Module version

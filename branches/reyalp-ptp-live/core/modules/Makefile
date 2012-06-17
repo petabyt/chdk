@@ -40,7 +40,7 @@ all: exportlist ../flt.h $(FLTS)
 
 %.flt: %.elf
 	@echo \-\> $@
-#	arm-elf-objdump.exe -d -r -x $< >$<.dumpobj
+#	arm-elf-objdump$(EXE) -d -r -x $< >$<.dumpobj
 #	$(topdir)/tools/elf2flt/elf2flt$(EXE) $< $@ -e -f -h -r -s -iexportlist.txt -!$(topdir)/tools/elf2flt/stoplist.txt >$@.dump
 	$(topdir)/tools/elf2flt/elf2flt$(EXE) $< $@ -iexportlist.txt -!$(topdir)/tools/elf2flt/stoplist.txt > $(DEVNULL)
 

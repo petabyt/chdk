@@ -95,14 +95,8 @@ int vid_get_viewport_width()
     {
         return 360;
     }
-    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
-    {
-        return 180;
-    }
-    else
-    {
-        return 360;
-    }
+    extern int _GetVRAMHPixelsSize();
+    return _GetVRAMHPixelsSize() >> 1;
 }
 
 int vid_get_viewport_display_xoffset()
@@ -136,13 +130,8 @@ long vid_get_viewport_height()
     {
         return 240;
     }
-    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
-    {
-        return 120;
-    }
-    else if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)	// Wide screen top & bottom 30 pixels not used in viewport
-		return 180;
-	return 240;
+    extern int _GetVRAMVPixelsSize();
+    return _GetVRAMVPixelsSize();
 }
 
 int vid_get_viewport_yoffset()
