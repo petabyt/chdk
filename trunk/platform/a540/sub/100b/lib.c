@@ -2,18 +2,6 @@
 #include "keyboard.h"
 #include "stdlib.h"
 
-/*
-void *hook_raw_fptr()
-{
-    return (void*)0x34C50;
-}
-
-void *hook_raw_ret_addr()
-{
-    return (void*)0xFFCC7FF0;
-}
-*/
-
 char *hook_raw_image_addr()
 {
     return (char*)0x105B8AC0; // OK (find on ".crw")
@@ -24,13 +12,6 @@ long hook_raw_size()
 {
     return 0x75A8F0; // OK (find on ".crw")
 }
-
-/*
-void *vid_get_viewport_live_fb()
-{
-    return (void*)0;
-}
-*/
 
 void *vid_get_bitmap_fb()
 {
@@ -105,6 +86,8 @@ long vid_get_viewport_height() {
     return vid_get_viewport_height_proper();
 }
 
+// the following aren't used, kept for informational purposes
+#if 0
 int review_fullscreen_mode(){ //from 710 added
  char r;
  get_parameter_data(53, &r, 1);
@@ -137,10 +120,10 @@ int mf_slider_active() // from 710 added
 {
  return *(long*)0x6C8B0==0x100; // orig.0x798F0  found in "ControlSwitcher.c"
 }
+#endif
 
 void *vid_get_viewport_live_fb() // from 710 added
 {
-   // return (void*)0x10670ee0;
     void **fb=(void **)0x5288;
     unsigned char buff = *((unsigned char*)0x5298);
     if (buff == 0) {
