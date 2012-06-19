@@ -53,11 +53,17 @@ void *vid_get_viewport_fb_d()
 	return (void*)(*(int*)(0x520C+0x4C));  //0x5258
 }
 
-long vid_get_viewport_height()
-{
-    return 240;
-}
 char *camera_jpeg_count_str()
 {
     return (char*)0x49344; // same as 100e, found @ FFD727B0
+}
+
+// PTP display stuff
+void *vid_get_bitmap_active_palette() {
+    return (void *)0x3D518; // GetPaletteFromPhysicalScreen
+}
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)0x761C); // DisplayPhysicalScreenWithYUVPalette
 }

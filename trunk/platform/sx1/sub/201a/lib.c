@@ -49,3 +49,31 @@ char *camera_jpeg_count_str()
 {
 	return (char*)0x5CED4;
 }
+
+// PTP display stuff, untested, adapted from ewavr chdkcam patch
+// reyalp - type probably wrong, chdkcam patch suggests opposite order from a540 (e.g. vuya)
+int vid_get_palette_type() { return 2; }
+int vid_get_palette_size() { return 16*4; }
+
+void *vid_get_bitmap_active_palette() {
+    return *(unsigned int*)(0x8D10+0x20); // sub_FF903BBC
+}
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x8D10+0x0C)); //"Add: %p Width : %ld Hight : %ld", sub_FF903C80
+}
+// TODO value of vid_get_viewport_height_proper needs to be checked in play, rec, and the different video modes
+//int vid_get_viewport_fullscreen_height()               { return 270; }
+
+// values from chdkcam patch
+// commented for now, protocol changes needed to handle correctly
+// note, play mode may be 704, needs to be tested
+#if 0
+int vid_get_viewport_width_proper() { 
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?960:*(int*)0x22D0; // VRAM DataSize
+}
+int vid_get_viewport_height_proper() {
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x22D0+4); // VRAM DataSize
+}
+#endif
+

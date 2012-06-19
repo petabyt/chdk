@@ -53,7 +53,7 @@ endif
 ifdef OPT_PTP
 # in top level
 #CFLAGS+=-DOPT_PTP
-OPT_OBJS+=ptp.o 
+OPT_OBJS+=ptp.o live_view.o
 endif
 ifdef OPT_EXMEM_MALLOC
 #CFLAGS+=-DOPT_EXMEM_MALLOC

@@ -78,3 +78,26 @@ char *camera_jpeg_count_str()
 {
  return (void*)0x5408C;                                      // found at FF9C1F28
 }
+
+// PTP display stuff, untested, adapted from ewavr chdkcam patch
+// reyalp - type probably wrong, chdkcam patch suggests opposite order from a540 (e.g. vuya)
+int vid_get_palette_type() { return 2; }
+int vid_get_palette_size() { return 16*4; }
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x5744+0x14)); //"Add: %p Width : %ld Hight : %ld", FF8E62DC
+}
+
+// values from chdkcam patch
+// commented for now, protocol changes needed to handle correctly
+// note, play mode may be 704, needs to be tested
+#if 0
+int vid_get_viewport_width_proper() { 
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:*(int*)0x2150; // VRAM W DataSize
+}
+int vid_get_viewport_height_proper() {
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x2150+4); // VRAM H DataSize
+}
+#endif
+

@@ -45,12 +45,64 @@ void *vid_get_viewport_fb()
 void *vid_get_viewport_fb_d()
 {
 // from ewavr 
-	return (void*)(*(int*)0x63AD0); // found in sub_FFD25770
+  int x=(*(int*)0x63AD0); // found in sub_FFD25770
+  return (void *)x;
+// if we start camera in PB mode with movie on display, this pointer will be NULL
+// _fb isn't valid data, but at least it doesn't crash
+//  return (void*) (x ? (void *)x : vid_get_viewport_fb()) ;
 }
 
-long vid_get_viewport_height()
-{
-    return 240;
+extern int _GetVRAMHPixelsSize();
+extern int _GetVRAMVPixelsSize();
+
+// for testing only, to simulate cameras with variable aspect
+// MODE_PORTRAIT uses 1:1 ( 528x240 ) and MODE_LANDSCAPE 16:9 (704x180)
+// no need to implement this on other cameras unless you are doing development
+//#define FAKE_ASPECT 1
+
+int vid_get_viewport_width_proper() {
+    int m = mode_get();
+    if((m&MODE_MASK) == MODE_PLAY) {
+        return 704;
+    }
+#ifdef FAKE_ASPECT
+    // fake 1:1 mode
+    if((m&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
+        return 528;
+    }
+#endif
+    // return hard coded width since mode doesn't update at the same time as GetVRAMHPixelsSize
+    if((m&MODE_SHOOTING_MASK) == MODE_STITCH) {
+        return 352;
+    }
+    return _GetVRAMHPixelsSize();
+}
+
+int vid_get_viewport_width() {
+    return vid_get_viewport_width_proper()>>1;
+}
+
+int vid_get_viewport_height_proper() {
+    int m = mode_get();
+    // TODO not correct if TV out connected
+    if((m&MODE_MASK) == MODE_PLAY) {
+        return 240;
+    }
+#ifdef FAKE_ASPECT
+    // fake 16:9 mode
+    if((m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
+        return 180; 
+    }
+#endif
+    // return hard coded width since mode doesn't update at the same time as GetVRAMHPixelsSize
+    if((m&MODE_SHOOTING_MASK) == MODE_STITCH) {
+        return 120; 
+    }
+    return _GetVRAMVPixelsSize();
+}
+
+long vid_get_viewport_height() {
+    return vid_get_viewport_height_proper();
 }
 
 int review_fullscreen_mode(){ //from 710 added
@@ -64,7 +116,6 @@ int postreview_fullscreen_mode(){ //from 710 added
  get_parameter_data(54, &r, 1);
  return  r==0;
 }
-
 
 
 static int file_size_table[3][5]={{3110,2562,1666,1057,288},
@@ -106,3 +157,98 @@ char *camera_jpeg_count_str()
 {
     return (char*)0x6E8D0 ; // from 700 added orig. 0x78688
 }
+
+// PTP display stuff
+int vid_get_palette_type() { return 1; }
+int vid_get_palette_size() { return 16*4; }
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)0x634E0; // GetPaletteFromPhysicalScreen
+}
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)0x5ED0); // FFD23420 DisplayPhysicalScreenWithYUVPalette
+}
+
+int vid_get_viewport_fullscreen_height() {
+    // except for stitch, always full screen
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && ((m&MODE_SHOOTING_MASK) == MODE_STITCH
+#ifdef FAKE_ASPECT
+         || (m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE
+#endif
+         )) {
+        return 240;
+    }
+    return vid_get_viewport_height_proper();
+}
+int vid_get_viewport_fullscreen_width() {
+    // except for stitch, always full screen
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && ((m&MODE_SHOOTING_MASK) == MODE_STITCH
+#ifdef FAKE_ASPECT
+         || (m&MODE_SHOOTING_MASK) == MODE_PORTRAIT
+#endif
+    )) {
+        return 704;
+    }
+    return vid_get_viewport_width_proper();
+}
+
+int vid_get_viewport_display_xoffset() {
+    int m = mode_get();
+    if((m&MODE_MASK) == MODE_PLAY) {
+        return 0;
+    } else if((m&MODE_SHOOTING_MASK) == MODE_STITCH) {
+        short dir=0;
+        short seq=0;
+        get_property_case(PROPCASE_STITCH_DIRECTION,&dir,sizeof(dir));
+        get_property_case(PROPCASE_STITCH_SEQUENCE,&seq,sizeof(seq));
+        // overall stitch window is 3/4 screen width, centered
+        // live part is 1/2, so margin is either 1/8th or 3/8th
+        if(dir==0) {
+            return seq?132:44;
+        } else {
+            return seq?44:132;
+        }
+#ifdef FAKE_ASPECT
+    } else if((m&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
+        return 44;
+#endif
+    }
+    return 0;
+}
+
+#ifdef FAKE_ASPECT
+int vid_get_viewport_xoffset() {
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_PORTRAIT) {
+       return 44;
+    }
+    return 0;
+}
+#endif
+
+int vid_get_viewport_display_yoffset() {
+    int m = mode_get();
+    if((m&MODE_MASK) == MODE_PLAY) {
+        return 0;
+    }
+#ifdef FAKE_ASPECT
+    if((m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
+       return 30;
+    }
+#endif
+    return ((m&MODE_SHOOTING_MASK) == MODE_STITCH)?60:0; // window is 120, centered in 240 screen
+}
+
+#ifdef FAKE_ASPECT
+int vid_get_viewport_yoffset() {
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_LANDSCAPE) {
+       return 30;
+    }
+    return 0;
+}
+#endif

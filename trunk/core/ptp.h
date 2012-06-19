@@ -1,13 +1,16 @@
 #ifndef __CHDK_PTP_H
 #define __CHDK_PTP_H
 #define PTP_CHDK_VERSION_MAJOR 2  // increase only with backwards incompatible changes (and reset minor)
-#define PTP_CHDK_VERSION_MINOR 1  // increase with extensions of functionality
+#define PTP_CHDK_VERSION_MINOR 3  // increase with extensions of functionality
 /*
 protocol version history
 0.1 - initial proposal from mweerden, + luar
 0.2 - Added ScriptStatus and ScriptSupport, based on work by ultimA
 1.0 - removed old script result code (luar), replace with message system
 2.0 - return PTP_CHDK_TYPE_TABLE for tables instead of TYPE_STRING, allow return of empty strings
+2.1 - experimental live view, not formally released
+2.2 - live view (work in progress)
+2.3 - live view (work in progress)
 */
 
 #define PTP_OC_CHDK 0x9999
@@ -30,10 +33,7 @@ enum ptp_chdk_command {
   PTP_CHDK_SetMemory,       // param2 is address
                             // param3 is size (in bytes)
                             // data is new memory block
-  PTP_CHDK_CallFunction,    // param2 are flags: 0x1 means use rest of params for pointer and args to allow function to send back data
-                            // (return) data is either:
-                            //   - array of function pointer and (long) arguments if flag 0x1 is not set  (max: 10 args)
-                            //   - return data provided by called function if flag 0x1 is set
+  PTP_CHDK_CallFunction,    // data is array of function pointer and (long) arguments  (max: 10 args)
                             // return param1 is return value
   PTP_CHDK_TempData,        // data is data to be stored for later
                             // param2 is for the TD flags below
@@ -66,6 +66,14 @@ enum ptp_chdk_command {
                             // data length is handled by ptp data phase
                             // input messages do not have type or subtype, they are always a string destined for the script (similar to USER/string)
                             // output param1 is ptp_chdk_script_msg_status
+  PTP_CHDK_GetDisplayData,  // Return camera display data
+                            // This is defined as separate sub protocol in live_view.h
+                            // Changes to the sub-protocol will always be considered a minor change to the main protocol
+                            //  param2 bitmask of data
+                            //  output param1 = total size of data
+                            //  return data is protocol information, frame buffer descriptions and selected display data
+                            //  Currently a data phase is always returned. Future versions may define other behavior 
+                            //  for values in currently unused parameters.
 };
 
 // data types as used by ReadScriptMessage
