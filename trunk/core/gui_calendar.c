@@ -22,7 +22,7 @@ gui_handler GUI_MODE_CALENDAR =
 //-------------------------------------------------------------------
 #define TITLE_COLOR             (MAKE_COLOR(COLOR_BLACK, COLOR_WHITE))
 #define CALENDAR_COLOR          (MAKE_COLOR(COLOR_GREY, COLOR_WHITE))
-#define WEEKEND_COLOR           (MAKE_COLOR(0x6E, COLOR_RED))
+#define WEEKEND_COLOR           (MAKE_COLOR(COLOR_YELLOW, COLOR_RED))
 
 //-------------------------------------------------------------------
 static int need_redraw;

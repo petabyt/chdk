@@ -54,3 +54,43 @@ long vid_get_viewport_height()
 	_ScreenLock();
 	_ScreenUnlock();
 }*/
+
+void *vid_get_bitmap_active_palette() {
+	extern int active_palette_buffer;
+	extern char* palette_buffer[];
+	return (palette_buffer[active_palette_buffer]+8);
+}
+
+#ifdef CAM_LOAD_CUSTOM_COLORS
+// Function to load CHDK custom colors into active Canon palette
+void load_chdk_palette() {
+	
+	extern int active_palette_buffer;
+	// Only load for the standard record and playback palettes
+	if ((active_palette_buffer == 0) || (active_palette_buffer == 4))
+	{
+		int *pal = (int*)vid_get_bitmap_active_palette();
+		if (pal[CHDK_COLOR_BASE+1] != 0x326EA40)	  // see if CHDK palette already loaded -- if not, load it
+		{
+		//	pal[CHDK_COLOR_BASE+0]  = 0x33ADF62;  // Red -- We'll use Canon's red because otherwise during boot we get white behind splash
+			pal[CHDK_COLOR_BASE+1]  = 0x326EA40;  // Dark Red
+			pal[CHDK_COLOR_BASE+2]  = 0x34CD57F;  // Light Red
+			pal[CHDK_COLOR_BASE+3]  = 0x373BFAE;  // Green
+			pal[CHDK_COLOR_BASE+4]  = 0x34BD6CA;  // Dark Green
+			pal[CHDK_COLOR_BASE+5]  = 0x395AB95;  // Light Green
+			pal[CHDK_COLOR_BASE+6]  = 0x34766F0;  // Blue
+			pal[CHDK_COLOR_BASE+7]  = 0x31250F3;  // Dark Blue
+			pal[CHDK_COLOR_BASE+8]  = 0x37F408F;  // Cyan
+			pal[CHDK_COLOR_BASE+9]  = 0x3512D5B;  // Magenta
+			pal[CHDK_COLOR_BASE+10] = 0x3A9A917;  // Yellow
+			pal[CHDK_COLOR_BASE+11] = 0x3819137;  // Dark Yellow
+			pal[CHDK_COLOR_BASE+12] = 0x3DED115;  // Light Yellow
+			
+			extern char palette_control;
+			palette_control = 1;
+			vid_bitmap_refresh();
+        }
+    }
+}
+#endif
+

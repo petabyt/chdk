@@ -66,6 +66,20 @@ struct gui_common_api_ver gui_version = {
     // KEY_DISPLAY is used for gui_subj_dist_override_koef_enum;
     // KEY_LEFT/KEY_RIGHT is used for gui_subj_dist_override_value_enum (because of no separate ZOOM_IN/OUT)
 
+#elif defined(CAMERA_a3300)	// a3300 has no erase button, so make DISP button the toggle_raw and Alt +/- shortcuts.
+    //Alt mode
+    // NOTE both of these conflict with adjustable alt
+    #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
+    #define SHORTCUT_MF_TOGGLE           KEY_FACE
+    //Half press shoot button    
+    #define SHORTCUT_TOGGLE_HISTO        KEY_UP
+    #define SHORTCUT_TOGGLE_ZEBRA        KEY_DOWN
+    #define SHORTCUT_TOGGLE_OSD          KEY_RIGHT
+    #define SHORTCUT_DISABLE_OVERRIDES   KEY_LEFT
+    //Alt mode & Manual mode  
+    #define SHORTCUT_SET_INFINITY        KEY_UP
+    #define SHORTCUT_SET_HYPERFOCAL      KEY_DOWN
+
 #elif !CAM_HAS_ERASE_BUTTON
     //Alt mode
     #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
@@ -1447,6 +1461,9 @@ const char* gui_histo_show_enum(int change, int arg) {
     #elif defined(CAMERA_a650)
         static const char* names[]={ "Print", "ISO"};
         static const int keys[]={ KEY_PRINT, KEY_ISO };
+    #elif defined(CAMERA_a3300)
+        static const char* names[]={ "Print", "Face", "Disp"};
+        static const int keys[]={ KEY_PRINT, KEY_FACE, KEY_DISPLAY };
     #elif defined(CAMERA_sx100is) || defined(CAMERA_sx110is)
         static const char* names[]={ "Print", "Face"};
         static const int keys[]={ KEY_PRINT, KEY_FACE };
