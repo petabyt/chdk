@@ -30,6 +30,8 @@
     #define CAM_RAW_ROWPIX                  4704    // Found @0xFFB213A0   a3300is
     #define CAM_RAW_ROWS                    3504    // Found @0xFFB21398  a3300is
 
+    #define CAM_ADJUSTABLE_ALT_BUTTON 1
+
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000  // Found @0xff83a6a8   a3300is
 
@@ -84,6 +86,7 @@
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              15
+    #define CAM_BITMAP_PALETTE              15      // palette number reserved for A3300 in core/gui_draw.h
 
-    #define CHDK_COLOR_BASE                 0x1D    // Start color index for CHDK colors loaded into camera palette.
+    #define CHDK_COLOR_BASE                 0xE2    // Start color index for CHDK colors loaded into camera palette. Kosy chose a place Canon doesn't seem to use.
+    #define CAM_LOAD_CUSTOM_COLORS	    	  1       // Enable loading CHDK colors into the camera palette memory/hardware	

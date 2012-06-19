@@ -735,69 +735,88 @@
 
 // Used by :- A3300IS
 
-    #define COLOR_TRANS                 0x4C
-    #define COLOR_WHITE                 0x01
-    #define COLOR_RED                   0x6C
-    #define COLOR_GREY                  0x1D
-    #define COLOR_GREEN                 0x5A
-    #define COLOR_BLUE_LT               0x58
-    #define COLOR_BLUE                  0x6D
-    #define COLOR_YELLOW                0x51
-    #define COLOR_BG                    COLOR_TRANS
-    #define COLOR_FG                    COLOR_WHITE
-    #define COLOR_SELECTED_BG           COLOR_RED
-    #define COLOR_SELECTED_FG           COLOR_WHITE
-    #define COLOR_ALT_BG                COLOR_TRANS
-    #define COLOR_SPLASH_RED            COLOR_RED
-    #define COLOR_SPLASH_PINK           COLOR_YELLOW
-    #define COLOR_SPLASH_GREY           COLOR_GREY
-    #define COLOR_HISTO_R               COLOR_RED
-    #define COLOR_HISTO_R_PLAY          0x9F
-    #define COLOR_HISTO_B               COLOR_BLUE
-    #define COLOR_HISTO_G               COLOR_GREEN
-    #define COLOR_HISTO_G_PLAY          0xA0
-    #define COLOR_HISTO_BG              COLOR_BLUE_LT
-    #define COLOR_HISTO_RG              COLOR_YELLOW
-    #define COLOR_HISTO_RB              0x66
-    #define COLOR_HISTO_RB_PLAY         0x9F
-    #define COLOR_HISTO_B_PLAY          0xA1
-    #define COLOR_HISTO_BG_PLAY         0xA0
-    #define COLOR_HISTO_RG_PLAY         0x9F
-    #undef SCREEN_COLOR
-    #define SCREEN_COLOR                0x4C
+// Default Canon colors that are the same in record and play modes
+#define COLOR_WHITE         0x01
+#define COLOR_GREY_DK       0x1C  
+#define COLOR_GREY          0x10
+#define COLOR_GREY_LT       0x08
+#undef SCREEN_COLOR
+#define SCREEN_COLOR        0x1C
 
-    // Icon colors
-    // 3 shades of Red, Green, Yellow and Grey
-    // Separate definitions for record and playback mode
-    // to cater for cameras with variable palettes
-    #define COLOR_ICON_REC_RED          COLOR_RED
-    #define COLOR_ICON_REC_RED_DK       COLOR_RED
-    #define COLOR_ICON_REC_RED_LT       COLOR_RED
-    #define COLOR_ICON_REC_GREEN        0x90
-    #define COLOR_ICON_REC_GREEN_DK     COLOR_GREEN
-    #define COLOR_ICON_REC_GREEN_LT     0x50
-    #define COLOR_ICON_REC_YELLOW       0x6B
-    #define COLOR_ICON_REC_YELLOW_DK    COLOR_YELLOW
-    #define COLOR_ICON_REC_YELLOW_LT    0x6B
-    #define COLOR_ICON_REC_GREY         COLOR_GREY
-    #define COLOR_ICON_REC_GREY_DK      COLOR_GREY
-    #define COLOR_ICON_REC_GREY_LT      0x13
-    #define COLOR_ICON_PLY_RED          0x9F
-    #define COLOR_ICON_PLY_RED_DK       0x9F
-    #define COLOR_ICON_PLY_RED_LT       0x9F
-    #define COLOR_ICON_PLY_GREEN        0xA0
-    #define COLOR_ICON_PLY_GREEN_DK     0xA0
-    #define COLOR_ICON_PLY_GREEN_LT     0x9E
-    #define COLOR_ICON_PLY_YELLOW       0x92
-    #define COLOR_ICON_PLY_YELLOW_DK    0x92
-    #define COLOR_ICON_PLY_YELLOW_LT    0x90
-    #define COLOR_ICON_PLY_GREY         COLOR_ICON_REC_GREY
-    #define COLOR_ICON_PLY_GREY_DK      COLOR_ICON_REC_GREY_DK
-    #define COLOR_ICON_PLY_GREY_LT      COLOR_ICON_REC_GREY_LT
+#ifdef CHDK_COLOR_BASE
+    // CHDK colors loaded into these locations in the camera palette by load_chdk_palette()
+    #define COLOR_RED           0x1E  // use Canon's red else get white behind startup spalsh
+    #define COLOR_RED_DK        (CHDK_COLOR_BASE+1)
+    #define COLOR_RED_LT        (CHDK_COLOR_BASE+2)
+    #define COLOR_GREEN         (CHDK_COLOR_BASE+3)
+    #define COLOR_GREEN_DK      (CHDK_COLOR_BASE+4)
+    #define COLOR_GREEN_LT      (CHDK_COLOR_BASE+5)
+    #define COLOR_BLUE          (CHDK_COLOR_BASE+6)
+    #define COLOR_BLUE_DK       (CHDK_COLOR_BASE+7)
+    #define COLOR_BLUE_LT       (CHDK_COLOR_BASE+8)
+    #define COLOR_MAGENTA       (CHDK_COLOR_BASE+9)
+    #define COLOR_YELLOW        (CHDK_COLOR_BASE+10)
+    #define COLOR_YELLOW_DK     (CHDK_COLOR_BASE+11)
+    #define COLOR_YELLOW_LT     (CHDK_COLOR_BASE+12)
+#else
+    #define COLOR_RED_LT        0x1E
+    #define COLOR_RED           0x1E
+    #define COLOR_RED_DK        0x1E
+    #define COLOR_GREEN_LT      0x0E
+    #define COLOR_GREEN         0x0E
+    #define COLOR_GREEN_DK      0x0E
+    #define COLOR_BLUE_LT       0x14
+    #define COLOR_BLUE          0x14
+    #define COLOR_BLUE_DK       0x14
+    #define COLOR_YELLOW_LT     0x08
+    #define COLOR_YELLOW        0x08
+    #define COLOR_YELLOW_DK     0x08
+#endif	// CHDK_COLOR_BASE
+
+#define COLOR_BG            COLOR_GREY
+#define COLOR_FG            COLOR_WHITE
+#define COLOR_SELECTED_BG   COLOR_GREY_DK
+#define COLOR_SELECTED_FG   COLOR_WHITE
+#define COLOR_ALT_BG        COLOR_BG
+
+#define COLOR_SPLASH_RED    COLOR_RED
+#define COLOR_SPLASH_PINK   COLOR_RED
+#define COLOR_SPLASH_GREY   COLOR_GREY
+
+#define COLOR_HISTO_R       COLOR_RED
+#define COLOR_HISTO_R_PLAY  COLOR_RED
+#define COLOR_HISTO_B       COLOR_BLUE
+#define COLOR_HISTO_B_PLAY  COLOR_BLUE
+#define COLOR_HISTO_G       COLOR_GREEN
+#define COLOR_HISTO_G_PLAY  COLOR_GREEN
+#define COLOR_HISTO_BG      COLOR_BLUE
+#define COLOR_HISTO_BG_PLAY COLOR_BLUE
+#define COLOR_HISTO_RG      COLOR_YELLOW
+#define COLOR_HISTO_RG_PLAY COLOR_YELLOW
+#define COLOR_HISTO_RB      COLOR_RED
+#define COLOR_HISTO_RB_PLAY COLOR_RED
+
+// Icon colors
+// 3 shades of Red, Green, Yellow and Grey
+// Separate definitions for record and playback mode
+// to cater for cameras with variable palettes
+#define	COLOR_ICON_REC_RED		COLOR_RED
+#define	COLOR_ICON_REC_RED_DK		COLOR_RED_DK
+#define	COLOR_ICON_REC_RED_LT		COLOR_RED_LT
+#define	COLOR_ICON_REC_GREEN		COLOR_GREEN
+#define	COLOR_ICON_REC_GREEN_DK		COLOR_GREEN_DK
+#define	COLOR_ICON_REC_GREEN_LT		COLOR_GREEN_LT
+#define	COLOR_ICON_REC_YELLOW		COLOR_YELLOW
+#define	COLOR_ICON_REC_YELLOW_DK	COLOR_YELLOW_DK
+#define	COLOR_ICON_REC_YELLOW_LT	COLOR_YELLOW_LT
+#define	COLOR_ICON_REC_GREY		COLOR_GREY
+#define	COLOR_ICON_REC_GREY_DK		COLOR_GREY_DK
+#define	COLOR_ICON_REC_GREY_LT		COLOR_GREY_LT
+//
 
 #else
     #error CAM_BITMAP_PALETTE not defined
-#endif
+#endif	// CAM_BITMAP_PALETTE
 
 // Define default icon colors if not already defined above
 // 3 shades of Red, Green, Yellow and Grey
