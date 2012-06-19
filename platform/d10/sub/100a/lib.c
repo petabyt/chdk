@@ -56,3 +56,66 @@ char *camera_jpeg_count_str()
 {
     return (char *)0x525E4; // search on "9999" done
 }
+
+
+// PTP display stuff
+int vid_get_palette_type() { return 3; }
+int vid_get_palette_size() { return 256*4; }
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)*(unsigned int*)(0x5164+0x28);  // sub_FF8DE674, via sub_FF9B390C two refs to "Palette Class."
+}
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x5164+0x14)); //"Add: %p Width : %ld Hight : %ld", sub_FF8DE720
+}
+
+extern int _GetVRAMHPixelsSize();
+extern int _GetVRAMVPixelsSize();
+// normally 720, goes to 360 for stitch, 320x240 video, max digital zoom
+int vid_get_viewport_width_proper() { 
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:_GetVRAMHPixelsSize();
+}
+// varies from 62 - 240 with digital zoom, 120 in stitch
+int vid_get_viewport_height_proper() {
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:_GetVRAMVPixelsSize();
+}
+
+int vid_get_viewport_fullscreen_height() {
+    // except for stitch, always full screen
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+        return 240;
+    }
+    return vid_get_viewport_height_proper();
+}
+int vid_get_viewport_fullscreen_width() {
+    // except for stitch, always full screen
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+        return 720;
+    }
+    return vid_get_viewport_width_proper();
+}
+int vid_get_viewport_display_xoffset_proper() {
+    int val=0;
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+        short dir=0;
+        short seq=0;
+        get_property_case(PROPCASE_STITCH_DIRECTION,&dir,sizeof(dir));
+        get_property_case(PROPCASE_STITCH_SEQUENCE,&seq,sizeof(seq));
+        // overall stitch window is 3/4 screen width, centered
+        // live part is 1/2, so margin is either 1/8th or 3/8th
+        if(dir==0) {
+            val = seq?270:90;
+        } else {
+            val = seq?90:270;
+        }
+    }
+    return val;
+}
+int vid_get_viewport_display_yoffset_proper() {
+    int m = mode_get();
+    return ((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH)?60:0; // window is 120, centered in 240 screen
+}

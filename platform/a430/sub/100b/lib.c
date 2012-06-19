@@ -46,7 +46,8 @@ void *vid_get_viewport_fb()
 
 void *vid_get_viewport_fb_d()
 {
-    return (void*)(*(int*)0x71AB0); // @ffd0f29c
+    int x=(*(int*)0x71AB0); // @ffd0f29c
+    return (void*) (x ? x : vid_get_viewport_fb()) ;
 }
 
 long vid_get_viewport_height()
@@ -59,3 +60,15 @@ char *camera_jpeg_count_str()
 {
     return (char*)0x7C588;
 } 
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)0x5EAC); // sub_ffd0cae8 DisplayPhysicalScreenWithYUVPalette
+}
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)0x714a8; // found also in sub_ffd0cae8
+}
+
+int vid_get_palette_type() { return 1; }
+int vid_get_palette_size() { return 16*4; }

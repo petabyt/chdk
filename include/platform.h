@@ -248,8 +248,8 @@ extern int vid_get_viewport_display_xoffset_proper();   // X Offset (for variabl
 extern int vid_get_viewport_display_yoffset_proper();   // Y Offset (for variable image size)
 extern int vid_get_viewport_width_proper();             // Visible viewport width (for variable image size)
 extern int vid_get_viewport_height_proper();            // Visible viewport height (for variable image size)
-extern int vid_get_viewport_max_width();                // Max visible viewport width in pixels
-extern int vid_get_viewport_max_height();               // Max visible viewport height in pixels
+extern int vid_get_viewport_fullscreen_width();            // Width of screen in buffer pixels
+extern int vid_get_viewport_fullscreen_height();           // Height of screen in buffer pixels
 extern int vid_get_viewport_buffer_width_proper();      // Physical viewport buffer width in pixels
 extern int vid_get_palette_type();                      // Palette type (0 - 3)
 extern int vid_get_palette_size();                      // Palette size (in bytes)

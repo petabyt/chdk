@@ -83,3 +83,29 @@ char *camera_jpeg_count_str()
 {
     return (char *)0x33110;
 }
+// PTP display stuff - untested
+int vid_get_palette_type() { return 3; }
+int vid_get_palette_size() { return 256*4; } // sub_FF8C99C8, 0x400
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)*(unsigned int*)(0x4CB8+0x28);  // sub_FF8C99C8, via sub_FF996CB4 two refs to "Palette Class."
+}
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x4cb8+0x14)); //"Add: %p Width : %ld Hight : %ld", sub_FF8C9A74
+}
+
+// not verified
+// reyalp note - sub_FF8C9A74 indicates could be 960x270
+//int vid_get_viewport_fullscreen_height() { return 240; }
+
+// commented for now, protocol changes needed to handle correctly
+#if 0
+int vid_get_viewport_width_proper() { 
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:*(int*)0x43bc; // GetVRAMHPixelSize
+}
+int vid_get_viewport_height_proper() {
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?270:*(int*)(0x43bc+4); // GetVRAMVPixelSize
+}
+#endif
+

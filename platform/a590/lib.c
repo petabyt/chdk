@@ -35,3 +35,42 @@ void debug_led(int state)
 int get_flash_params_count(void){
  return 114;
 }
+
+long vid_get_viewport_height()
+{
+    return 240;
+}
+
+// PTP display stuff
+// TODO type may not be correct
+int vid_get_palette_type() { return 1; }
+int vid_get_palette_size() { return 16*4; }
+
+extern int _GetVRAMHPixelsSize();
+extern int _GetVRAMVPixelsSize();
+
+// assumed 720, might be 704 ?
+int vid_get_viewport_width_proper() { 
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:_GetVRAMHPixelsSize();
+}
+int vid_get_viewport_height_proper() {
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:_GetVRAMVPixelsSize();
+}
+
+int vid_get_viewport_fullscreen_height() {
+    // except for stitch, always full screen
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+        return 240;
+    }
+    return vid_get_viewport_height_proper();
+}
+int vid_get_viewport_fullscreen_width() {
+    // except for stitch, always full screen
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+        return 720;
+    }
+    return vid_get_viewport_width_proper();
+}
+

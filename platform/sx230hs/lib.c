@@ -60,6 +60,10 @@ void JogDial_CCW(void){
 // Viewport and Bitmap values that shouldn't change across firmware versions.
 // Values that may change are in lib.c for each firmware version.
 
+// Defined in stubs_min.S
+extern int active_bitmap_buffer;
+extern char* bitmap_buffer[];
+
 // Physical width of viewport row in bytes
 int vid_get_viewport_byte_width() {
 	return 960 * 6 / 4;     // SX230HS - wide screen LCD is 960 pixels wide, each group of 4 pixels uses 6 bytes (UYVYYY)
@@ -89,3 +93,22 @@ int vid_get_viewport_display_xoffset()
 
 long vid_get_viewport_height(){ return 240; }
 
+// Functions for PTP Live View system
+int vid_get_viewport_height_proper()            { return 480; }
+int vid_get_viewport_buffer_width_proper()                { return 960; }
+int vid_get_viewport_fullscreen_height()               { return 480; }
+int vid_get_palette_type()                      { return 3; }
+int vid_get_palette_size()                      { return 256 * 4; }
+int vid_get_aspect_ratio()                      { return 1; }
+
+void *vid_get_bitmap_active_buffer()
+{
+    return bitmap_buffer[active_bitmap_buffer];
+}
+
+void *vid_get_bitmap_active_palette()
+{
+    extern int active_palette_buffer;
+    extern char* palette_buffer[];
+    return (palette_buffer[active_palette_buffer]+8);
+}

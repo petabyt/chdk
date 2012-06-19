@@ -124,8 +124,8 @@ long vid_get_viewport_height(){ return 240; }
 int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2; }
 int vid_get_viewport_height_proper()            { return 480; }
-int vid_get_viewport_max_width()                { return 960; }
-int vid_get_viewport_max_height()               { return 480; }
+int vid_get_viewport_buffer_width_proper()      { return 960; }
+int vid_get_viewport_fullscreen_height()        { return 480; }
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
 int vid_get_aspect_ratio()                      { return 1; }
