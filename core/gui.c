@@ -798,6 +798,7 @@ static CMenu operation_submenu = {0x21,LANG_MENU_OPERATION_PARAM_TITLE, NULL, op
 
 //-------------------------------------------------------------------
 
+#ifdef OPT_EDGEOVERLAY
 static void gui_load_edge_selected( const char* fn )
 {
     if (fn)
@@ -815,7 +816,6 @@ void gui_menuproc_edge_load(int arg) {
     module_fselect_init(LANG_MENU_EDGE_LOAD, EDGE_SAVE_DIR, EDGE_SAVE_DIR, gui_load_edge_selected);
 }
 
-#ifdef OPT_EDGEOVERLAY
 static const char* gui_edge_pano_modes[] =                  { "Off", "Right", "Down", "Left", "Up", "Free" };
 static CMenuItem edge_overlay_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_EDGE_OVERLAY_ENABLE,        MENUITEM_BOOL,          &conf.edge_overlay_enable,  0 ),
