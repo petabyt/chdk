@@ -25,3 +25,5 @@ NHSTUB(SetZoomActuatorSpeedPercent, 0xFFAE83F8)
 NHSTUB(UniqueLedOff,                0xFF82DCA0)
 NHSTUB(UniqueLedOn,                 0xFF82DC3C)
 NHSTUB(platformsub_kbd_fetch_data,  0xFF8281C4)
+NHSTUB(GetVRAMHPixelsSize,0xFFB112AC) // by find_eventproc name @ 0xFFB74984
+NHSTUB(GetVRAMVPixelsSize,0xFFB112B8) // by find_eventproc name @ 0xFFB7498C

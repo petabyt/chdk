@@ -21,3 +21,5 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(ExpCtrlTool_StartContiAE,    0xFF96553C)
 NHSTUB(ExpCtrlTool_StopContiAE,     0xFF96556C)
 NHSTUB(SetScriptMode,               0xFFB34670)
+NHSTUB(GetVRAMHPixelsSize,0xFFA56C50) // by find_eventproc name @ 0xFFB8FD60
+NHSTUB(GetVRAMVPixelsSize,0xFFA56C5C) // by find_eventproc name @ 0xFFB8FD68

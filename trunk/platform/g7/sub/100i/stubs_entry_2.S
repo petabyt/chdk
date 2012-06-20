@@ -24,3 +24,5 @@ NHSTUB(SetScriptMode,               0xFF9B398C)
 NHSTUB(platformsub_kbd_fetch_data,  0xFF8293AC)
 
 NSTUB(taskNameToId,                 0xFFBAB77C)
+NHSTUB(GetVRAMHPixelsSize,0xFFB567E4) // by find_eventproc name @ 0xFFBBC010
+NHSTUB(GetVRAMVPixelsSize,0xFFB567F0) // by find_eventproc name @ 0xFFBBC018

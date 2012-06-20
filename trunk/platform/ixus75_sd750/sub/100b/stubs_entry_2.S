@@ -22,3 +22,5 @@ NHSTUB(SetScriptMode,               0xFFB401BC)
 NHSTUB(fprintf,                     0xff91f49c)
 NHSTUB(fputs,                       0xff91f5bc)
 NHSTUB(puts,                        0xFF9208B4)
+NHSTUB(GetVRAMHPixelsSize,0xFFA625E4) // by find_eventproc name @ 0xFFB9D31C
+NHSTUB(GetVRAMVPixelsSize,0xFFA625F0) // by find_eventproc name @ 0xFFB9D324
