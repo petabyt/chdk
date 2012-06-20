@@ -23,3 +23,5 @@ NHSTUB(kbd_read_keys,               0xFF826D30)
 
 NSTUB(printf,                       0xFFB07970)
 NSTUB(taskNameToId,                 0xFFB18DB0)
+NHSTUB(GetVRAMHPixelsSize,0xFFAC8268) // by find_eventproc name @ 0xFFB28578
+NHSTUB(GetVRAMVPixelsSize,0xFFAC8274) // by find_eventproc name @ 0xFFB28580

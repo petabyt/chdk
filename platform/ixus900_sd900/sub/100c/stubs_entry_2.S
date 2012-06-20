@@ -27,3 +27,5 @@ NHSTUB(kbd_read_keys,               0xFF828024)
 NHSTUB(ttyDrv_Start,                0xFF811874) // VxWorks console
 
 NSTUB(taskNameToId,                 0xFFB67700)
+NHSTUB(GetVRAMHPixelsSize,0xFFB1333C) // by find_eventproc name @ 0xFFB7770C
+NHSTUB(GetVRAMVPixelsSize,0xFFB13348) // by find_eventproc name @ 0xFFB77714

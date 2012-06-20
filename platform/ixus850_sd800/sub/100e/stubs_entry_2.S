@@ -21,3 +21,5 @@ NHSTUB(MFOn,                        0xFF996198)
 NHSTUB(Rename,                      0xFF87A4CC)
 NHSTUB(SetScriptMode,               0xFF9ABC48)
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFF8E68F4)
+NHSTUB(GetVRAMHPixelsSize,0xFFB19684) // by find_eventproc name @ 0xFFB7E12C
+NHSTUB(GetVRAMVPixelsSize,0xFFB19690) // by find_eventproc name @ 0xFFB7E134

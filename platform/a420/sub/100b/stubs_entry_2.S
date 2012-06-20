@@ -26,3 +26,5 @@ NHSTUB(ExpCtrlTool_StopContiAE,     0xFFCD84C8) //ok a420
 NHSTUB(MFOff,                       0xffd2369c)
 NHSTUB(MFOn,                        0xffd2366c)
 NHSTUB(SetScriptMode,               0xFFD36850) // ok a420
+NHSTUB(GetVRAMHPixelsSize,0xFFE62850) // by find_eventproc name @ 0xFFEBFFC0
+NHSTUB(GetVRAMVPixelsSize,0xFFE6285C) // by find_eventproc name @ 0xFFEBFFC8

@@ -22,3 +22,5 @@ NHSTUB(PostLEDMessage,              0xFFA4290C)
 NHSTUB(SetScriptMode,               0xFFB61474)
 NHSTUB(UniqueLedOff,                0xFFA42CB0)
 NHSTUB(UniqueLedOn,                 0xFFA42C08)
+NHSTUB(GetVRAMHPixelsSize,0xFFA6AC20) // by find_eventproc name @ 0xFFBC6460
+NHSTUB(GetVRAMVPixelsSize,0xFFA6AC2C) // by find_eventproc name @ 0xFFBC6468
