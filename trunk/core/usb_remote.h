@@ -108,7 +108,8 @@ enum GET_USB_PWR {						// input parameter for get_usb_power()
 	USB_STATE ,
 	BUFFERED_PULSE ,
 	PULSE_COUNT,
-	LM_PULSE_COUNT
+	LM_PULSE_COUNT,
+	CLEAR_USB_REGISTERS
 } ;
 
 // USB remote processing status

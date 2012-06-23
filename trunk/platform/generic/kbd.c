@@ -26,22 +26,22 @@ extern void usb_remote_key( int ) ;
 #define NEW_SS (0x2000)
 #define SD_READONLY_FLAG (0x20000)
 
+#if defined(CAMERA_a530) || defined(CAMERA_a540)
+#define USB_MASK 0x4000
+#define USB_IDX 2
+#endif
+
+
+#if defined(CAMERA_a630) || defined(CAMERA_a640) || defined(CAMERA_a610) || defined(CAMERA_a620) || defined(CAMERA_ixus800_sd700) || defined(CAMERA_ixus65_sd630) || defined(CAMERA_ixus850_sd800) || defined(CAMERA_ixus900_sd900) || defined (CAMERA_ixus70_sd1000) || defined (CAMERA_ixus950_sd850) || defined(CAMERA_a410) || defined(CAMERA_a430) || defined(CAMERA_a420)
+#define USB_MASK 0x8000000
+#define USB_IDX 1
+#endif
+
 #if defined(CAMERA_a710) || defined(CAMERA_a700)
 #define USB_MASK 0x08
 #define USB_IDX 0
 #endif
 
-#if 	defined(CAMERA_a630) || defined(CAMERA_a640) || defined(CAMERA_a610)\
-	|| defined(CAMERA_a620) || defined(CAMERA_ixus800_sd700) || defined(CAMERA_a410)\
-    || defined(CAMERA_a420) || defined(CAMERA_a430)
-#define USB_MASK 0x8000000
-#define USB_IDX 1
-#endif
-
-#if defined(CAMERA_a530) || defined(CAMERA_a540)
-#define USB_MASK 0x4000
-#define USB_IDX 2
-#endif
 
 int get_usb_bit() 
 {
@@ -147,6 +147,8 @@ void my_kbd_read_keys()
 	physw_status[0] = kbd_new_state[0];
 	physw_status[1] = kbd_new_state[1];
 	physw_status[2] = kbd_new_state[2];
+	physw_status[alt_mode_key_reg] |= alt_mode_key_mask;
+
     } else {
 	// override keys
 	physw_status[0] = kbd_new_state[0];
@@ -175,6 +177,16 @@ void my_kbd_read_keys()
 
 }
 
+void kbd_set_alt_mode_key_mask(long key)
+{
+    int i;
+    for (i=0; keymap[i].hackkey; ++i) {
+        if (keymap[i].hackkey == key) {
+            alt_mode_key_mask = keymap[i].canonkey;
+            return;
+        }
+    }
+}
 
 void kbd_key_press(long key)
 {
