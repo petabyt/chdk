@@ -304,6 +304,7 @@ typedef struct {
     int edge_overlay_show;              // whether to show overlay even when no button is pressed
     int edge_overlay_play;              // whether edge overlay is switched on also for play mode
     color edge_overlay_color;
+    int edge_state_draw;                // Current state of overlay (Live/Frozen/Pano) [not saved to config file]
 
     int synch_enable;
     int ricoh_ca1_mode;

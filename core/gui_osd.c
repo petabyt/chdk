@@ -279,8 +279,8 @@ void gui_osd_draw_state()
 #ifdef OPT_EDGEOVERLAY
     // edgeoverlay state
     if (conf.edge_overlay_enable || gui_mode==GUI_MODE_OSD) {
-        if (edge_state_draw==0) gui_print_osd_state_string_chr("EDGE:", "LIVE");
-        else if (edge_state_draw==1) gui_print_osd_state_string_chr("EDGE:", ((conf.edge_overlay_pano==0)?"FROZEN":"PANO"));
+        if (conf.edge_state_draw==0) gui_print_osd_state_string_chr("EDGE:", "LIVE");
+        else if (conf.edge_state_draw==1) gui_print_osd_state_string_chr("EDGE:", ((conf.edge_overlay_pano==0)?"FROZEN":"PANO"));
     }
 #endif
 #ifdef CAM_QUALITY_OVERRIDE
