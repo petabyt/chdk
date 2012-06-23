@@ -1,0 +1,66 @@
+#include "stubs_asm.h"
+
+// These stubs weren't found automagically
+NHSTUB(Lseek, 0xFFC26C70)
+NHSTUB(lseek, 0xFFC26C70)
+NHSTUB(apex2us, 0xffd8f4b8)
+NHSTUB(WriteSDCard, 0xffd074dc) // @ffc54f84
+NHSTUB(Open, 0xffc26ae8)
+NHSTUB(ScreenLock, 0xFFD8E40C)
+NHSTUB(ScreenUnlock, 0xFFD8D1B0)
+NHSTUB(strrchr, 0xffc04008)
+NHSTUB(strcat, 0xFFC841C8)                    // below EXPORT eventproc_export_atol
+NHSTUB(RefreshPhysicalScreen, 0xffd8e1ac)
+NHSTUB(GetDrive_FreeClusters, 0xffc55b78)
+NHSTUB(kbd_read_keys_r2, 0xffc47800)
+NHSTUB(platformsub_kbd_fetch_data, 0xffc47dec)
+NHSTUB(EnterToCompensationEVF, 0xffc28094)
+NHSTUB(ExitFromCompensationEVF, 0xffc280d4)
+NHSTUB(DoAFLock, 0xffc27fe0)                 // 'AFL'
+NHSTUB(UnlockAF, 0xffc28018)                 // 'AFUL'
+NHSTUB(MakeAFScan, 0xffd1e738)
+NHSTUB(SetScriptMode, 0xffc742cc)
+NHSTUB(ExpCtrlTool_StartContiAE, 0xffc35864)
+NHSTUB(ExpCtrlTool_StopContiAE,  0xffc3593c) 
+NHSTUB(add_ptp_handler, 0xffdd75e0)          // confirmed 105
+NHSTUB(readfastdir, 0xFFE09088)              // some way above aReadfdir_c
+NHSTUB(ReadFastDir, 0xFFE09088)
+NHSTUB(qsort, 0xFFE5BCD4)                    // long way below LDR R0,[R1,#unk_FFFFFFF8]!
+NHSTUB(closedir, 0xFFE08EE4)                 // above opendir
+NHSTUB(closefastdir, 0xFFE08EE4)             // above opendir
+NHSTUB(LEDDrive, 0xFFD1C3B0)                 // eventproc_export_LEDDrive
+NHSTUB(PT_PlaySound, 0xFFC65DA4)             // ;LOCATION: AudioHandle.c:500
+NHSTUB(TurnOffBackLight, 0xFFC7F83C)         // "TurnOnBackLight"
+NHSTUB(TurnOnBackLight,  0xFFC7F854)         // "TurnOffBackLight"
+NHSTUB(SetFileTimeStamp, 0xffc26df0)         // below EXPORT eventproc_export_Lseek
+NHSTUB(PutInNdFilter, 0xFFE18F4C)            // NdActuator.c
+NHSTUB(PutOutNdFilter, 0xFFE18F70)
+NHSTUB(GetImageFolder,	0xFF95E84C)	        // function before 'GetCameraObjectTmpPath ERROR' string
+// NULLSTUBS
+NHSTUB(Remove, 0xFFC00B1C)                   
+NHSTUB(rename, 0xFFC00B1C)
+NHSTUB(UIFS_WriteFirmInfoToFile, 0xFFC00B1C)
+NHSTUB(openfastdir, 0xFFCFBD88)
+
+
+
+// names taken from a480 (?)
+NHSTUB(UnsetZoomForMovie, 0xFFC00B1C)
+NHSTUB(SetAE_ShutterSpeed, 0xFFC00B1C)
+// new stubs (reboot support)
+NHSTUB(reboot_fw_update, 0xFFC00B1C)
+NHSTUB(Restart, 0xFFC00B1C)
+
+// NULL: These are set as null also in other cameras.
+NHSTUB(SetZoomActuatorSpeedPercent, 0xFFC00B1C)
+NHSTUB(kbd_pwr_on, 0xFFC00B1C)
+NHSTUB(kbd_pwr_off, 0xFFC00B1C)
+NHSTUB(rewinddir, 0xFFC00B1C)
+NHSTUB(Mount_FileSystem, 0xFFC00B1C)
+NHSTUB(Unmount_FileSystem, 0xFFC00B1C)
+NHSTUB(TurnOnMic, 0xFFC00B1C) 
+NHSTUB(TurnOffMic, 0xFFC00B1C)
+
+NHSTUB(RefreshUSBMode, 0xFFC3B4C4) // Above ADR     R0, aForceQuitPtpMo ; "Force Quit PTP Mode\r\n"
+NHSTUB(exmem_alloc, 0xFFC6B7D4) 	// allocate from given EXMEM pool
+                                    // follow immediate branch at ExMem.AllocCacheable and is function above
