@@ -1,7 +1,0 @@
-kbd_pwr_on
-kbd_pwr_off
-rename
-UIFS_WriteFirmInfoToFile
-readfastdir
-closefastdir
-openfastdir
