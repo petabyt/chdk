@@ -31,6 +31,7 @@
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 2
     #define CAM_EV_IN_VIDEO                 1
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1
 
     #define CAM_DNG_LENS_INFO               { 73,10, 292,10, 28,10, 41,10 } // See comments in camera.h
     // pattern

@@ -28,8 +28,8 @@
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_HAS_ZOOM_LEVER
     #define CAM_DRAW_EXPOSITION             1
-    #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_IRIS_DIAPHRAGM
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES

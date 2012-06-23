@@ -335,6 +335,20 @@ void usb_remote_key(int x)
 
 /*---------------------------------------------------------------------------------------------------------
 
+	 clear_usb_power()
+
+  ---------------------------------------------------------------------------------------------------------*/
+
+void clear_usb_power()
+{
+	usb_power = 0 ;
+	usb_count = 0 ;
+	logic_module_usb_count = 0;
+	usb_buffer_out = usb_buffer_in = usb_buffer ;
+}
+
+/*---------------------------------------------------------------------------------------------------------
+
 	 get_usb_power()
 
   ---------------------------------------------------------------------------------------------------------*/
@@ -342,7 +356,7 @@ void usb_remote_key(int x)
 
 int get_usb_power(int mode)
 {
-	int x;
+	int x = 0;
 
 	switch( mode)
 	{
@@ -356,11 +370,7 @@ int get_usb_power(int mode)
 			break ;
 
 		case BUFFERED_PULSE :
-			if ( usb_buffer_out == usb_buffer_in )
-			{
-				x = 0 ;
-			}
-			else
+			if ( usb_buffer_out != usb_buffer_in )
 			{
 				if ( ++usb_buffer_out > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_out = usb_buffer ;
 				x = *usb_buffer_out ;
@@ -376,9 +386,9 @@ int get_usb_power(int mode)
 			x = logic_module_usb_count;
 			logic_module_usb_count = 0;
 			break ;
-			
-		default :
-			x=0 ;
+
+		case CLEAR_USB_REGISTERS :
+			clear_usb_power() ;
 			break ;
 	}
 

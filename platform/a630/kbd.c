@@ -1,3 +1,9 @@
+
+#include <stdlib.h>
+
+static long alt_mode_key_mask = 0x00001000; // =  KEY_PRINT
+static long alt_mode_key_reg  = 2;
+
 #include "../generic/kbd.c"
 
 static KeyMap keymap[] = {

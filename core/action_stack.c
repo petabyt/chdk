@@ -8,6 +8,9 @@
 #include "histogram.h"
 #include "action_stack.h"
 
+extern int usb_sync_wait ;
+
+
 typedef struct _action_stack
 {
     int (*action_process)(long p);
@@ -212,10 +215,14 @@ void action_clear_delay(void)
 // Can only be called from an action stack
 int action_stack_standard(long p)
 {
+    long skey ;
+
     switch (p)
     {
     case AS_PRESS:
-        kbd_key_press(action_get_prev(2));
+        skey=action_get_prev(2) ;
+        if ((skey == KEY_SHOOT_FULL) &&  conf.remote_enable && conf.synch_enable ) usb_sync_wait = 1 ;
+        kbd_key_press(skey);
         action_pop();
         action_pop();
         break;

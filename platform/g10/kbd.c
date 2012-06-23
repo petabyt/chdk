@@ -16,7 +16,7 @@ static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static long last_kbd_key = 0;
-static long alt_mode_key_mask = 0x00000400;	// G10
+static long alt_mode_key_mask = 0x00000200;	// default to G10 Print Key
 
 extern void _GetKbdState(long*);
 extern void usb_remote_key( int ) ;
