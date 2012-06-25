@@ -661,7 +661,7 @@ void edge_overlay()
     {
     case EDGE_LIVE:
     {
-        edge_state_draw=0;
+        conf.edge_state_draw=0;
         // In this state we assume no edge overlay in memory,
         // but we are ready to create one if the user presses wishes so.
 
@@ -698,7 +698,7 @@ void edge_overlay()
     }
     case EDGE_FROZEN:
     {
-        edge_state_draw=1;
+        conf.edge_state_draw=1;
         // We have a stored edge overlay in memory and we display
         // it on screen in 'frozen' mode.
 

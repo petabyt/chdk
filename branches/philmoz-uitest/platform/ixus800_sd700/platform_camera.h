@@ -34,6 +34,7 @@
     #undef  CAM_HAS_USER_TV_MODES
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 2
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1
 
     #define CAM_DNG_LENS_INFO               { 58,10, 232,10, 28,10, 55,10 } // See comments in camera.h
 

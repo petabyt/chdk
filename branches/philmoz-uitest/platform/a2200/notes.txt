@@ -1,0 +1,33 @@
+****************************************
+Camera depending notes: 
+* DryOS Camera
+
+To enter CHDK <Alt> mode use the FACE button.
+
+To use FACE button, use long press.
+
+To put camera in Auto Focus Lock (AFL), half press SHUTTER + LEFT button combination.
+
+****************************************
+Development notes:
+
+Override Subj. Dist. only works if camera is put in AFL mode and then use a script to take the picture.
+
+Other overrides (eg. Shutter speed) might need AFL mode too, or at least wait untill Auto Focus finishes, or they might be ignored.
+
+Unlocking optical zoom in VIDEO mode has been disable, since it works only once and then freezes zoom controls.
+
+Version specific notes:
+
+* 100B & 100C:
+
+	To shoot images with lua over PTP, first put the camera in "mode 1" and back to "mode 0" before using it normaly or it might crash.
+	
+* 100D
+	
+	If compiled with PTP, using lua scripts on camera might crash it, BASIC scripts work fine. Lua over PTP also works fine.
+	
+	To shoot images with lua over PTP, first put the camera in "mode 1" and back to "mode 0" before using it normaly or it might crash.
+	
+	When CHDK boots up, OSD colors might be wrong, they change back to normal after first action (eg. taking a picture or changing camera modes).
+
