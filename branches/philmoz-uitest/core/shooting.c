@@ -5,6 +5,7 @@
 #include "stdlib.h"
 #include "conf.h"
 #include "histogram.h"
+#include "usb_remote.h"
 
 // Shooting function that don't need to be ARM code
 // ARM code shooting functions are in platform/generic/shooting.c
@@ -1652,8 +1653,6 @@ void set_ev_video(int x)
 
 //-------------------------------------------------------------------
 // Main exposure override function called from capt_seq_task()
-
-extern int usb_remote_active ;
 
 void shooting_expo_param_override_thumb(void)
 {

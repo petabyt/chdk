@@ -301,11 +301,6 @@ void draw_txt_char(coord col, coord row, const char ch, color cl) {
     draw_char(col*FONT_WIDTH, row*FONT_HEIGHT, ch, cl);
 }
 
-//-------------------------------------------------------------------
-void draw_clear() {
-    memset(frame_buffer[0], COLOR_TRANSPARENT, camera_screen.buffer_size*2);
-}
-
 // Restore CANON_OSD
 //-------------------------------------------------------------------
 void draw_restore() {
@@ -314,23 +309,10 @@ void draw_restore() {
 #ifdef CAM_DETECT_SCREEN_ERASE
     draw_set_guard();
 #ifdef CAM_TOUCHSCREEN_UI
-    extern int redraw_buttons;
     redraw_buttons = 1;
 #endif
 #endif
 }
-
-//-------------------------------------------------------------------
-//void draw_fill(coord x, coord y, color cl_fill, color cl_bound) {
-//   if (draw_get_pixel(x, y) != cl_bound && draw_get_pixel(x, y) != cl_fill) {
-//       draw_pixel(x, y, cl_fill);
-//
-//       draw_fill((x+1), y, cl_fill,cl_bound);
-//       draw_fill((x-1), y, cl_fill,cl_bound);
-//       draw_fill(x, (y+1), cl_fill,cl_bound);
-//       draw_fill(x, (y-1), cl_fill,cl_bound);
-//   }
-//}
 
 //-------------------------------------------------------------------
 void draw_circle(coord x, coord y, const unsigned int r, color cl) {

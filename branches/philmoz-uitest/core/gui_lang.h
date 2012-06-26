@@ -675,12 +675,14 @@
 #define LANG_MENU_GPS_t_18 						550
 
 #define LANG_MENU_SCRIPT_START_ENABLE			551
-
 #define LANG_MENU_MISC_ZOOM_ASSIST              552
-
 #define LANG_MENU_DNG_VERSION                   553
+#define LANG_MENU_OTHER_SETTINGS                554
+#define LANG_MENU_MENU_SETTINGS                 555
+#define LANG_MENU_SHOW_ALT_HELP                 556
+#define LANG_MENU_SHOW_ALT_HELP_DELAY           557
 
-#define GUI_LANG_ITEMS                          553
+#define GUI_LANG_ITEMS                          557
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

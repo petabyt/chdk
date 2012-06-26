@@ -21,10 +21,11 @@ typedef struct {
 extern int _CreateTask (const char *name, int prio, int stack_size /*?*/, void *entry, long parm /*?*/);
 void gps_getData(tGPS* gps);
 extern void GPS_UpdateData();
-void gps_get_data();
+void gps_startup();
 void anzeige_gps();
 void write_timezone();
 void write_home();
+extern void gps_navigate_home();
 void test_timezone();
 void gpx_bild_ohne_signal();
 void wegpunkt();

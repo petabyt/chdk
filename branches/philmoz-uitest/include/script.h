@@ -16,6 +16,8 @@
 
 //-------------------------------------------------------------------
 
+extern long kbd_last_clicked;
+
 extern char script_title[36];
 extern char script_params[SCRIPT_NUM_PARAMS][28];
 extern int script_range_values[SCRIPT_NUM_PARAMS];

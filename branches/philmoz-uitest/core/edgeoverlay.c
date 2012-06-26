@@ -84,7 +84,7 @@ static void reset_edge_overlay()
 
     if (edgebuf != NULL)
     {
-        draw_restore();     // Refresh display to restore Canon OSD
+        gui_set_need_restore();     // Refresh display to restore Canon OSD
         bv_free(edgebuf);
         edgebuf = NULL;
     }

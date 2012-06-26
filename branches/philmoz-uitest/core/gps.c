@@ -38,7 +38,8 @@ void gps_getData(tGPS* gps){
 extern int exit_gpx_record;
 extern int exit_gps_kompass;
 extern int exit_gps_navi;
-extern int exit_gps_data;
+
+int exit_gps_data=1;
 
 int Taste_Funktion=0;
 int Taste_Taste=0;
@@ -264,6 +265,15 @@ void gps_get_data(){
 	anzeige_symbol=0;
 	exit_gps_data=1;
 	ExitTask();
+}
+
+void gps_startup()
+{
+	if (((int)conf.gps_on_off ==1) && (exit_gps_data==1))
+    {
+	    _CreateTask("GPSDATA", 0x19, 0x400, gps_get_data, 0);
+		exit_gps_data=0;
+	}
 }
 
 void write_timezone(){

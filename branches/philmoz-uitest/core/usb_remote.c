@@ -182,8 +182,8 @@ void kbd_synch_delay(int delay_value)
 }
 
 
-#undef CALIBRATE_SYNCH_DELAY			// Note : comment this out during testing to calibrate a camera's sync delay
 #define CALIBRATE_SYNCH_DELAY 1
+#undef CALIBRATE_SYNCH_DELAY			// Note : comment this out during testing to calibrate a camera's sync delay
 
 #ifdef CALIBRATE_SYNCH_DELAY
 

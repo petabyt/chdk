@@ -20,11 +20,12 @@
 	HISTORY:	1.1 - added tbox usage [CHDK 1.1.1 required]
 */
 
-void gui_fselect_kbd_process();
+int gui_fselect_kbd_process();
+void gui_fselect_kbd_process_menu_btn();
 void gui_fselect_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_FSELECT_MODULE = 
-    /*GUI_MODE_FSELECT*/    { GUI_MODE_FSELECT, gui_fselect_draw,     gui_fselect_kbd_process,    gui_fselect_kbd_process,		0,	GUI_MODE_MAGICNUM };
+    /*GUI_MODE_FSELECT*/    { GUI_MODE_FSELECT, gui_fselect_draw, gui_fselect_kbd_process, gui_fselect_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
 
 extern int module_idx;
 
@@ -1252,7 +1253,6 @@ static void exit_fselect(char* file)
     if (set_key_redraw_mode)
     {
         gui_set_mode(gui_fselect_mode_old);
-        draw_restore();
     }
     if (fselect_on_select) 
     {
@@ -1263,12 +1263,12 @@ static void exit_fselect(char* file)
     if (!set_key_redraw_mode)
     {
         gui_set_mode(gui_fselect_mode_old);
-        draw_restore();
     }
 }
 
 //-------------------------------------------------------------------
-void gui_fselect_kbd_process() {
+int gui_fselect_kbd_process()
+{
     int i;
     
     switch (kbd_get_autoclicked_key() | get_jogdial_direction()) {
@@ -1393,14 +1393,16 @@ void gui_fselect_kbd_process() {
                 }
             }
             break;
-        case KEY_MENU:
-            // just free resource. callback called with NULL ptr
-            exit_fselect(0);
-			module_async_unload(module_idx);
-            break;
     }
+    return 0;
 }
 
+void gui_fselect_kbd_process_menu_btn()
+{
+    // just free resource. callback called with NULL ptr
+    exit_fselect(0);
+	module_async_unload(module_idx);
+}
 
 
 // =========  MODULE INIT =================

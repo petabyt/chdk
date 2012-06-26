@@ -15,11 +15,11 @@
 #include "module_load.h"
 
 void gui_module_menu_kbd_process();
-void gui_4wins_kbd_process();
+int gui_4wins_kbd_process();
 void gui_4wins_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_4WINS = 
-    /*GUI_MODE_4WINS*/  { GUI_MODE_MODULE,  gui_4wins_draw,       gui_4wins_kbd_process,      gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_4WINS*/  { GUI_MODE_MODULE, gui_4wins_draw, gui_4wins_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
 
 
 #define BORDER		 20
@@ -350,7 +350,7 @@ int basic_module_init() {
 }
 
 //-------------------------------------------------------------------
-void gui_4wins_kbd_process() 
+int gui_4wins_kbd_process() 
 {
 	switch (kbd_get_autoclicked_key()) 
 	{
@@ -366,6 +366,7 @@ void gui_4wins_kbd_process()
 				move_cursor(1);
 			break;
 	}
+    return 0;
 }
 //-------------------------------------------------------------------
 void gui_4wins_draw(int enforce_redraw) {

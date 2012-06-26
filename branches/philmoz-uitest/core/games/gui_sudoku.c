@@ -24,12 +24,12 @@
 #include "module_exportlist.h"
 
 void gui_module_menu_kbd_process();
-void gui_sudoku_kbd_process();
+int gui_sudoku_kbd_process();
 void gui_sudoku_draw(int enforce_redraw);
 void exit_sudoku();
 
 gui_handler GUI_MODE_SUDOKU =
-    /*GUI_MODE_SUDOKU*/  { GUI_MODE_MODULE,  gui_sudoku_draw,       gui_sudoku_kbd_process,      gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_SUDOKU*/  { GUI_MODE_MODULE, gui_sudoku_draw, gui_sudoku_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
 
 //-------------------------------------------------------------------
 #define SUDOKU_BG_COLOR		MAKE_COLOR(COLOR_WHITE, COLOR_WHITE)
@@ -859,7 +859,7 @@ void sudoku_menu_execute()
 }
 //-------------------------------------------------------------------
 //Which keys do what?
-void gui_sudoku_kbd_process()
+int gui_sudoku_kbd_process()
 {
 	int key=kbd_get_autoclicked_key();
 
@@ -982,6 +982,7 @@ void gui_sudoku_kbd_process()
 			}
 		break;
 	}
+    return 0;
 }
 //-------------------------------------------------------------------
 
