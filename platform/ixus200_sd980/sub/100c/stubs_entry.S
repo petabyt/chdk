@@ -7,6 +7,7 @@
 //   Canon DIGITAL IXUS 200 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 39
 //   PLATFORMID = 12773 (0x31e5) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d4                 // Found @ 0xffff3564
@@ -152,6 +153,8 @@ NSTUB(GetOpticalTemperature                   ,0xff85e320) //102
 NSTUB(GetParameterData                        ,0xff979b1c) //101
 NSTUB(GetPropertyCase                         ,0xff888b48) //102
 NSTUB(GetSystemTime                           ,0xffa9edf8) //101
+NSTUB(GetVRAMHPixelsSize                      ,0xff8e1e14) //102
+NSTUB(GetVRAMVPixelsSize                      ,0xff8e1e20) //102
 NSTUB(GetZoomLensCurrentPoint                 ,0xff947174) //102
 NSTUB(GetZoomLensCurrentPosition              ,0xffa904e8) //102
 NSTUB(GiveSemaphore                           ,0xff8383f4) //112
