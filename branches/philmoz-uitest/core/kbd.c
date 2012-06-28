@@ -30,9 +30,6 @@ void exit_alt()
 /* 
     main kb processing
  */
-#ifdef CAM_DISP_ALT_TEXT
-int kbd_any_key_pressed = 0;
-#endif
 
 int kbd_is_blocked()
 {
@@ -49,10 +46,6 @@ void kbd_set_block(int bEnableBlock)
 long kbd_process()
 {
     static int key_pressed;
-
-#ifdef CAM_DISP_ALT_TEXT
-    kbd_any_key_pressed = kbd_get_pressed_key();
-#endif
 
 	// Alternative keyboard mode stated/exited by pressing print key.
 	// While running Alt. mode shoot key will start a script execution.

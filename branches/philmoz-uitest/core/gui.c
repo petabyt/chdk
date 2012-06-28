@@ -1944,6 +1944,11 @@ gui_handler* gui_set_mode(gui_handler *mode)
     if ((old_mode->flags & (GUI_MODE_FLAG_NORESTORE_ON_SWITCH)) != 0)
         gui_set_need_redraw();
 
+#ifdef CAM_DISP_ALT_TEXT
+    if (gui_mode->mode == GUI_MODE_ALT)
+        gui_reset_alt_helper();
+#endif
+
     return old_mode;
 }
 
@@ -2107,15 +2112,18 @@ static void shortcut_text(int button, int func_str, const char *state)
 
 static int gui_helper_displayat = 0;
 
+void gui_reset_alt_helper()
+{
+    gui_helper_displayat = get_tick_count() + (conf.show_alt_helper_delay * 1000);
+}
+
 static void gui_draw_alt_helper()
 {
-    extern int kbd_any_key_pressed;
-
-    if ((kbd_any_key_pressed != 0) || (state_kbd_script_run != 0) || (console_displayed != 0))
+    if ((state_kbd_script_run != 0) || (console_displayed != 0))
     {
         if (gui_helper_displayat <= get_tick_count())
             gui_set_need_restore();
-        gui_helper_displayat = get_tick_count() + (conf.show_alt_helper_delay * 1000);
+        gui_reset_alt_helper();
     }
 
     if ((conf.show_alt_helper == 0) || (gui_helper_displayat > get_tick_count()))
@@ -2558,10 +2566,6 @@ void gui_activate_alt_mode()
 		    gui_set_mode(&menuGuiHandler);
 		    gui_user_menu_flag = 1;
 	    }
-
-#ifdef CAM_DISP_ALT_TEXT
-        gui_helper_displayat = get_tick_count() + (conf.show_alt_helper_delay * 1000);
-#endif
         break;
 
     case ALT_MODE_LEAVE:
