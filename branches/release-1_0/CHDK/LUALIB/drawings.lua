@@ -80,8 +80,8 @@ draw.get_params = function(n)
     local out={nil}
     if SCREEN_DRAWINGS[n][1] == "p" then out[1]="pixel" end
     if SCREEN_DRAWINGS[n][1] == "l" then out[1]="line" end
-    if SCREEN_DRAWINGS[n][1] == "r" then out[1]"rect" end
-    if SCREEN_DRAWINGS[n][1] == "rf" then out[1]"rectf" end
+    if SCREEN_DRAWINGS[n][1] == "r" then out[1]="rect" end
+    if SCREEN_DRAWINGS[n][1] == "rf" then out[1]="rectf" end
     if SCREEN_DRAWINGS[n][1] == "e" then out[1]="elps" end
     if SCREEN_DRAWINGS[n][1] == "ef" then out[1]="elpsf" end
     if SCREEN_DRAWINGS[n][1] == "s" then out[1]="string" end
