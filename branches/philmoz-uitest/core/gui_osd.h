@@ -21,6 +21,7 @@ extern void gui_osd_draw_raw_info();
 extern void gui_osd_draw_values(int showtype);
 extern void gui_osd_draw_clock(int x, int y, color cl);
 extern void gui_osd_draw_temp();
+extern void gui_draw_debug_vals_osd();
 
 extern void gui_draw_osd();
 extern void gui_kbd_shortcuts();

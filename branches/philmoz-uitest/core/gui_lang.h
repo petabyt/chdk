@@ -681,8 +681,9 @@
 #define LANG_MENU_MENU_SETTINGS                 555
 #define LANG_MENU_SHOW_ALT_HELP                 556
 #define LANG_MENU_SHOW_ALT_HELP_DELAY           557
+#define LANG_MENU_CHDK_SETTINGS                 558
 
-#define GUI_LANG_ITEMS                          557
+#define GUI_LANG_ITEMS                          558
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

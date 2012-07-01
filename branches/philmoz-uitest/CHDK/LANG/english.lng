@@ -7,7 +7,7 @@
   1 "Main Menu"
 
   2 "RAW Parameters"
-  3 "OSD Parameters"
+  3 "OSD Settings"
   4 "Histogram Parameters"
   5 "Zebra Parameters"
   6 "Scripting Parameters"
@@ -679,3 +679,4 @@
 555 "Menu Settings"
 556 "Show <ALT> Help Screen"
 557 "  Help Screen Delay"
+558 "CHDK Settings"

@@ -3,6 +3,7 @@
 #include "platform.h"
 #include "core.h"
 #include "gui.h"
+#include "gui_osd.h"
 #include "gui_draw.h"
 #include "gui_menu.h"
 #include "conf.h"
@@ -830,8 +831,6 @@ int script_is_running()
 
 //-------------------------------------------------------------------
 
-extern void gui_chdk_draw();
-
 #ifdef OPT_SCRIPTING
 static void interrupt_script()
 {
@@ -871,8 +870,30 @@ static int gui_script_kbd_process()
     return 0;
 }
 
+//-------------------------------------------------------------------
+void gui_script_draw()
+{
+    extern void gui_chdk_draw();
+    gui_chdk_draw();
+
+    if ((mode_get()&MODE_MASK) == MODE_REC || (mode_get()&MODE_MASK) == MODE_PLAY)
+    {
+        static int show_md_grid=0;
+        if (state_kbd_script_run) show_md_grid=5;
+        if (show_md_grid)
+        {
+            --show_md_grid;
+            // If motion detect library loaded then display the MD grid
+            // Don't call 'module_mdetect_load' here as we don't want to load
+            // the module, just see if it was already loaded.
+            if (libmotiondetect)
+                libmotiondetect->md_draw_grid();
+        }
+    }
+}
+
 // GUI handler for Script mode
-gui_handler scriptGuiHandler = { GUI_MODE_SCRIPT, gui_chdk_draw, gui_script_kbd_process, 0, 0, GUI_MODE_MAGICNUM };      
+gui_handler scriptGuiHandler = { GUI_MODE_SCRIPT, gui_script_draw, gui_script_kbd_process, 0, 0, GUI_MODE_MAGICNUM };      
 
 static gui_handler *old_gui_handler = 0;
 

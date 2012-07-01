@@ -47,6 +47,9 @@ long kbd_process()
 {
     static int key_pressed;
 
+    // Set Shutter Half Press state for GUI task.
+    camera_info.state.is_shutter_half_press = kbd_is_key_pressed(KEY_SHOOT_HALF);
+
 	// Alternative keyboard mode stated/exited by pressing print key.
 	// While running Alt. mode shoot key will start a script execution.
 
@@ -82,7 +85,7 @@ long kbd_process()
     }
        
     // auto iso shift
-    if (kbd_is_key_pressed(KEY_SHOOT_HALF) && kbd_is_key_pressed(conf.alt_mode_button)) 
+    if (camera_info.state.is_shutter_half_press && kbd_is_key_pressed(conf.alt_mode_button)) 
         return 0;
 
     if (kbd_is_key_pressed(conf.alt_mode_button)) 

@@ -1,7 +1,7 @@
 #ifndef GUI_H
 #define GUI_H
 
-typedef unsigned int    coord;
+typedef int             coord;
 typedef unsigned short  color;
 
 #define MAKE_COLOR(bg, fg)  ((color)((((char)(bg))<<8)|((char)(fg))))
@@ -131,94 +131,79 @@ extern struct gui_common_api_ver gui_version;
 //------------------------------------------------------------------- 
 //shortcuts
 //------------------------------------------------------------------
-// #define KEY_NONE (KEY_DUMMY+1)
+
+// Override shortcuts with camera specific values here
+// Default values are set below if not overridden
+
+// For models without ZOOM_LEVER  (#if !CAM_HAS_ZOOM_LEVER)
+// SHORTCUT_SET_INFINITY is not used
+// KEY_DISPLAY is used for gui_subj_dist_override_koef_enum;
+// KEY_LEFT/KEY_RIGHT is used for gui_subj_dist_override_value_enum (because of no separate ZOOM_IN/OUT)
 
 #if defined(CAMERA_a580) // Cam has not erase button AND Half press shoot button + Left sets AFL, + Up sets AEL!
     //Alt mode
     #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
     #define SHORTCUT_MF_TOGGLE           KEY_UP
     //Half press shoot button
-    #define SHORTCUT_TOGGLE_HISTO        KEY_DOWN
-    #define SHORTCUT_TOGGLE_ZEBRA        KEY_MENU
-    #define SHORTCUT_TOGGLE_OSD          KEY_RIGHT
-    #define SHORTCUT_DISABLE_OVERRIDES   KEY_DISPLAY
+    #define SHORTCUT_TOGGLE_HISTO        KEY_MENU
+    #define SHORTCUT_TOGGLE_ZEBRA        KEY_DISPLAY
     //Alt mode & Manual mode    
     #define SHORTCUT_SET_INFINITY        KEY_DISPLAY
-    #define SHORTCUT_SET_HYPERFOCAL      KEY_DOWN
-    // For models without ZOOM_LEVER  (#if !CAM_HAS_ZOOM_LEVER)
-    // SHORTCUT_SET_INFINITY is not used
-    // KEY_DISPLAY is used for gui_subj_dist_override_koef_enum;
-    // KEY_LEFT/KEY_RIGHT is used for gui_subj_dist_override_value_enum (because of no separate ZOOM_IN/OUT)
 
 #elif defined(CAMERA_a3300)	// a3300 has no erase button, so make DISP button the toggle_raw and Alt +/- shortcuts.
     //Alt mode
     // NOTE both of these conflict with adjustable alt
     #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
     #define SHORTCUT_MF_TOGGLE           KEY_FACE
-    //Half press shoot button    
-    #define SHORTCUT_TOGGLE_HISTO        KEY_UP
-    #define SHORTCUT_TOGGLE_ZEBRA        KEY_DOWN
-    #define SHORTCUT_TOGGLE_OSD          KEY_RIGHT
-    #define SHORTCUT_DISABLE_OVERRIDES   KEY_LEFT
-    //Alt mode & Manual mode  
-    #define SHORTCUT_SET_INFINITY        KEY_UP
-    #define SHORTCUT_SET_HYPERFOCAL      KEY_DOWN
 
 #elif !CAM_HAS_ERASE_BUTTON
     //Alt mode
     #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
     #define SHORTCUT_MF_TOGGLE           KEY_UP
     //Half press shoot button   
-    #define SHORTCUT_TOGGLE_HISTO        KEY_DOWN
-    #define SHORTCUT_TOGGLE_ZEBRA        KEY_MENU
-    #define SHORTCUT_TOGGLE_OSD          KEY_RIGHT
-    #define SHORTCUT_DISABLE_OVERRIDES   KEY_LEFT
+    #define SHORTCUT_TOGGLE_HISTO        KEY_MENU
     //Alt mode & Manual mode    
     #define SHORTCUT_SET_INFINITY        KEY_DISPLAY
-    #define SHORTCUT_SET_HYPERFOCAL      KEY_DOWN
-    // For models without ZOOM_LEVER  (#if !CAM_HAS_ZOOM_LEVER)
-    // SHORTCUT_SET_INFINITY is not used
-    // KEY_DISPLAY is used for gui_subj_dist_override_koef_enum;
-    // KEY_LEFT/KEY_RIGHT is used for gui_subj_dist_override_value_enum (because of no separate ZOOM_IN/OUT)
 
-#elif defined(CAMERA_g7) || defined(CAMERA_sx10) || defined(CAMERA_sx1) ||defined(CAMERA_sx120is) || defined(CAMERA_sx20) || defined(CAMERA_sx30) || defined(CAMERA_sx40hs)
-    //Alt mode
-    #define SHORTCUT_TOGGLE_RAW          KEY_ERASE
+#elif defined(CAMERA_g1x) || defined(CAMERA_sx30) || defined(CAMERA_sx40hs)
     //Half press shoot button    
-    #define SHORTCUT_TOGGLE_HISTO        KEY_DOWN
-    #define SHORTCUT_TOGGLE_ZEBRA        KEY_LEFT
-    #define SHORTCUT_TOGGLE_OSD          KEY_RIGHT
-    #define SHORTCUT_DISABLE_OVERRIDES   KEY_UP
-    //Alt mode & Manual mode  
-    #define SHORTCUT_SET_INFINITY        KEY_UP
-    #define SHORTCUT_SET_HYPERFOCAL      KEY_DOWN
+    #define SHORTCUT_TOGGLE_ZEBRA        KEY_ERASE      // On camera Shutter Half Press + Left = switch MF on/off
 
-#elif defined(CAMERA_sx100is) || defined(CAMERA_sx110is)
-    //Alt mode
-    #define SHORTCUT_TOGGLE_RAW          KEY_ERASE
+#elif defined(CAMERA_g12)
     //Half press shoot button    
-    #define SHORTCUT_TOGGLE_HISTO        KEY_UP
-    #define SHORTCUT_TOGGLE_ZEBRA        KEY_DOWN
-    #define SHORTCUT_TOGGLE_OSD          KEY_RIGHT
-    #define SHORTCUT_DISABLE_OVERRIDES   KEY_LEFT
-    //Alt mode & Manual mode  
-    #define SHORTCUT_SET_INFINITY        KEY_UP
-    #define SHORTCUT_SET_HYPERFOCAL      KEY_DOWN
+    #define SHORTCUT_TOGGLE_HISTO        KEY_ERASE      // On camera Shutter Half Press + Up = switch MF on/off
+#endif
 
-#else
-    //Alt mode
-    #define SHORTCUT_TOGGLE_RAW          KEY_ERASE
-    //Half press shoot button    
-    #define SHORTCUT_TOGGLE_HISTO        KEY_UP
-    #define SHORTCUT_TOGGLE_ZEBRA        KEY_LEFT
-    #define SHORTCUT_TOGGLE_OSD          KEY_RIGHT
-    #define SHORTCUT_DISABLE_OVERRIDES   KEY_DOWN
-    //Alt mode & Manual mode  
-    #define SHORTCUT_SET_INFINITY        KEY_UP
-    #define SHORTCUT_SET_HYPERFOCAL      KEY_DOWN
-    #ifndef CAM_HAS_MANUAL_FOCUS
-        #define SHORTCUT_MF_TOGGLE       KEY_DISPLAY
-    #endif
+// Define shortcut values not already set above
+
+//Alt mode
+#if !defined(SHORTCUT_TOGGLE_RAW)
+    #define SHORTCUT_TOGGLE_RAW         KEY_ERASE
+#endif
+#if !defined(CAM_HAS_MANUAL_FOCUS) && !defined(SHORTCUT_MF_TOGGLE)
+    #define SHORTCUT_MF_TOGGLE          KEY_DISPLAY
+#endif
+
+//Half press shoot button    
+#if !defined(SHORTCUT_TOGGLE_HISTO)
+    #define SHORTCUT_TOGGLE_HISTO       KEY_UP
+#endif
+#if !defined(SHORTCUT_TOGGLE_ZEBRA)
+    #define SHORTCUT_TOGGLE_ZEBRA       KEY_LEFT
+#endif
+#if !defined(SHORTCUT_TOGGLE_OSD)
+    #define SHORTCUT_TOGGLE_OSD         KEY_RIGHT
+#endif
+#if !defined(SHORTCUT_DISABLE_OVERRIDES)
+    #define SHORTCUT_DISABLE_OVERRIDES  KEY_DOWN
+#endif
+
+//Alt mode & Manual mode  
+#if !defined(SHORTCUT_SET_INFINITY)
+    #define SHORTCUT_SET_INFINITY       KEY_UP
+#endif
+#if !defined(SHORTCUT_SET_HYPERFOCAL)
+    #define SHORTCUT_SET_HYPERFOCAL     KEY_DOWN
 #endif
 
 #if CAM_HAS_ZOOM_LEVER

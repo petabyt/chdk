@@ -1275,7 +1275,7 @@ int gui_fselect_kbd_process()
         case JOGDIAL_LEFT:
         case KEY_UP:
             if (selected) {
-                if (kbd_is_key_pressed(KEY_SHOOT_HALF)) fselect_goto_prev(4);
+                if (camera_info.state.is_shutter_half_press) fselect_goto_prev(4);
                 else fselect_goto_prev(1);
                 gui_fselect_redraw = 1;
             }
@@ -1283,7 +1283,7 @@ int gui_fselect_kbd_process()
         case KEY_DOWN:
         case JOGDIAL_RIGHT:
             if (selected) {
-                if (kbd_is_key_pressed(KEY_SHOOT_HALF)) fselect_goto_next(4);
+                if (camera_info.state.is_shutter_half_press) fselect_goto_next(4);
                 else fselect_goto_next(1);
                 gui_fselect_redraw = 1;
             }

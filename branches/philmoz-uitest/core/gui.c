@@ -1463,8 +1463,6 @@ static CMenuItem osd_submenu_items[] = {
     MENU_ENUM2(0x5f,LANG_MENU_OSD_SHOW_TEMP,                                &conf.show_temp, gui_temp_mode_modes ),
     MENU_ITEM(0x59,LANG_MENU_OSD_TEMP_FAHRENHEIT,   MENUITEM_BOOL,          &conf.temperature_unit, 0 ),
     MENU_ENUM2(0x71,LANG_MENU_USB_SHOW_INFO,                                &conf.usb_info_enable, gui_show_usb_info_modes ),
-    MENU_ITEM(0x72,LANG_MENU_OSD_LAYOUT_EDITOR,     MENUITEM_PROC,          gui_menu_run_fltmodule, "_osd_le.flt" ),
-    MENU_ITEM(0x2f,LANG_MENU_OSD_GRID_PARAMS,       MENUITEM_SUBMENU,       &grid_submenu, 0 ),
     MENU_ITEM(0x22,LANG_MENU_OSD_VALUES,  	    	MENUITEM_SUBMENU,       &values_submenu, 0 ),
     MENU_ITEM(0x31,LANG_MENU_OSD_DOF_CALC,          MENUITEM_SUBMENU,       &dof_submenu, 0 ),
     MENU_ITEM(0x24,LANG_MENU_OSD_RAW_STATE_PARAMS,  MENUITEM_SUBMENU,       &raw_state_submenu, 0 ),
@@ -1801,6 +1799,9 @@ static const char* gui_user_menu_show_enum(int change, int arg)
 
     if (conf.user_menu_enable == 3) user_menu_save();
 
+    void set_usermenu_state();
+    set_usermenu_state();
+
     return gui_change_simple_enum(&conf.user_menu_enable,change,modes,sizeof(modes)/sizeof(modes[0]));
 }
 
@@ -1819,6 +1820,27 @@ static CMenu menu_settings_submenu = {0x26,LANG_MENU_MENU_SETTINGS, NULL, menu_s
 
 //-------------------------------------------------------------------
 
+static CMenuItem chdk_settings_menu_items[] = {
+    MENU_ITEM   (0x22,LANG_MENU_MAIN_OSD_PARAM,             MENUITEM_SUBMENU,   &osd_submenu, 0 ),
+    MENU_ITEM   (0x72,LANG_MENU_OSD_LAYOUT_EDITOR,          MENUITEM_PROC,      gui_menu_run_fltmodule, "_osd_le.flt" ),
+    MENU_ITEM   (0x28,LANG_MENU_MAIN_VISUAL_PARAM,          MENUITEM_SUBMENU,   &visual_submenu, 0 ),
+    MENU_ITEM   (0x28,LANG_MENU_MENU_SETTINGS,              MENUITEM_SUBMENU,   &menu_settings_submenu, 0 ),
+    MENU_ITEM   (0x28,LANG_MENU_OTHER_SETTINGS,             MENUITEM_SUBMENU,   &settings_submenu, 0 ),
+    MENU_ITEM   (0x2f,LANG_MENU_OSD_GRID_PARAMS,            MENUITEM_SUBMENU,   &grid_submenu, 0 ),
+#ifdef OPT_CURVES
+    MENU_ITEM   (0x85,LANG_MENU_CURVE_PARAM,                MENUITEM_SUBMENU,   &curve_submenu,     0 ),
+#endif
+#ifdef CAM_HAS_GPS
+    MENU_ITEM	(0x2a,LANG_MENU_GPS,                        MENUITEM_SUBMENU,	&gps_submenu,		0 ),
+#endif
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP, 0, 0 ),
+    {0}
+};
+
+CMenu chdk_settings_menu = {0x20,LANG_MENU_CHDK_SETTINGS, NULL, chdk_settings_menu_items };
+
+//-------------------------------------------------------------------
+
 static CMenuItem root_menu_items[] = {
     MENU_ITEM   (0x21,LANG_MENU_OPERATION_PARAM,            MENUITEM_SUBMENU,   &operation_submenu, 0 ),
     MENU_ITEM   (0x23,LANG_MENU_VIDEO_PARAM,                MENUITEM_SUBMENU,   &video_submenu,     0 ),
@@ -1826,27 +1848,36 @@ static CMenuItem root_menu_items[] = {
 #ifdef OPT_EDGEOVERLAY
     MENU_ITEM   (0x7f,LANG_MENU_EDGE_OVERLAY,               MENUITEM_SUBMENU,   &edge_overlay_submenu, 0 ),
 #endif
-#ifdef OPT_CURVES
-    MENU_ITEM   (0x85,LANG_MENU_CURVE_PARAM,                MENUITEM_SUBMENU,   &curve_submenu,     0 ),
-#endif
     MENU_ITEM   (0x25,LANG_MENU_MAIN_HISTO_PARAM,           MENUITEM_SUBMENU,   &histo_submenu, 0 ),
     MENU_ITEM   (0x26,LANG_MENU_MAIN_ZEBRA_PARAM,           MENUITEM_SUBMENU,   &zebra_submenu,     0 ),
 #ifdef OPT_SCRIPTING
     MENU_ITEM   (0x27,LANG_MENU_MAIN_SCRIPT_PARAM,          MENUITEM_SUBMENU,   &script_submenu,    0 ),
 #endif
-    MENU_ITEM   (0x22,LANG_MENU_MAIN_OSD_PARAM,             MENUITEM_SUBMENU,   &osd_submenu, 0 ),
-    MENU_ITEM   (0x28,LANG_MENU_MAIN_VISUAL_PARAM,          MENUITEM_SUBMENU,   &visual_submenu, 0 ),
-    MENU_ITEM   (0x28,LANG_MENU_MENU_SETTINGS,              MENUITEM_SUBMENU,   &menu_settings_submenu, 0 ),
-    MENU_ITEM   (0x28,LANG_MENU_OTHER_SETTINGS,             MENUITEM_SUBMENU,   &settings_submenu, 0 ),
+    MENU_ITEM   (0x22,LANG_MENU_CHDK_SETTINGS,              MENUITEM_SUBMENU,   &chdk_settings_menu, 0 ),
     MENU_ITEM   (0x29,LANG_MENU_MAIN_MISC,                  MENUITEM_SUBMENU,   &misc_submenu,      0 ),
-#ifdef CAM_HAS_GPS
-    MENU_ITEM	(0x2a,LANG_MENU_GPS,                        MENUITEM_SUBMENU,	&gps_submenu,		0 ),
-#endif
-    MENU_ITEM(0x2e,LANG_MENU_USER_MENU,  	    	        MENUITEM_SUBMENU,   &user_submenu, 0 ),
+    MENU_ITEM   (0x2e,LANG_MENU_USER_MENU,  	    	    MENUITEM_SUBMENU,   &user_submenu, 0 ),
     {0}
 };
 
 CMenu root_menu = {0x20,LANG_MENU_MAIN_TITLE, NULL, root_menu_items };
+
+// Set visibility of User Menu in root menu based on user menu state
+// Note this hack requires the User Menu entry to be the last one in the root_menu_items array above.
+void set_usermenu_state()
+{
+    int i;
+    for (i=0; root_menu_items[i].symbol != 0; i++)
+    {
+        if (root_menu_items[i].value == (int*)&user_submenu)
+        {
+            if (conf.user_menu_enable)
+                root_menu_items[i].text = LANG_MENU_USER_MENU;  // Enable user menu option in root menu
+            else
+                root_menu_items[i].text = 0;                    // Disable user menu option in root menu
+            return;
+        }
+    }
+}
 
 //-------------------------------------------------------------------
 
@@ -1932,6 +1963,8 @@ gui_handler* gui_set_mode(gui_handler *mode)
         ((gui_mode->mode > GUI_MODE_MENU)  != (mode->mode > GUI_MODE_MENU)))       // Switch in & out of menu mode
         redraw_buttons = 1;
 #endif
+
+    set_usermenu_state();
 
     gui_handler *old_mode = gui_mode;
     gui_mode = mode;
@@ -2135,7 +2168,10 @@ static void gui_draw_alt_helper()
     int y = 2 * FONT_HEIGHT;
     int x = ((CAM_SCREEN_WIDTH/2)-(FONT_WIDTH*35/2));
 
-    draw_string(x, y, "Shortcuts          MENU = CHDK Menu", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
+    if (conf.user_menu_enable && conf.user_menu_as_root)
+        draw_string(x, y, "Shortcuts            MENU=User Menu", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
+    else
+        draw_string(x, y, "Shortcuts            MENU=CHDK Menu", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
     y += FONT_HEIGHT;
     draw_string(x, y, "SET    = Script Menu               ", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
     y += FONT_HEIGHT;
@@ -2176,7 +2212,13 @@ static void gui_draw_alt_helper()
     }
 
     y += 4;
-    draw_string(x, y, "Shutter Half Press +               ", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
+    if (conf.user_menu_enable)
+        if (conf.user_menu_as_root)
+            draw_string(x, y, "Shutter Half Press + MENU=CHDK Menu", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
+        else
+            draw_string(x, y, "Shutter Half Press + MENU=User Menu", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
+    else
+        draw_string(x, y, "Shutter Half Press +               ", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
     y += FONT_HEIGHT;
 
     shortcut_text(SHORTCUT_DISABLE_OVERRIDES,LANG_MENU_OVERRIDE_DISABLE,gui_override_disable_modes[conf.override_disable]);
@@ -2194,6 +2236,13 @@ static void gui_draw_alt_helper()
     shortcut_text(SHORTCUT_TOGGLE_OSD,LANG_MENU_OSD_SHOW,gui_on_off_enum(0,&conf.show_osd));
     draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
     y += FONT_HEIGHT;
+
+    if (conf.hide_osd == 0)
+    {
+        sprintf(buf,"%-5s = Hide CHDK OSD while pressed",gui_shortcut_text(KEY_DISPLAY));
+        draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y += FONT_HEIGHT;
+    }
 }
 
 #endif
@@ -2214,16 +2263,6 @@ void gui_chdk_draw()
     if ((mode_get()&MODE_MASK) == MODE_REC || (mode_get()&MODE_MASK) == MODE_PLAY)
     {
         draw_txt_string(0, 14, script_title, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-        if (state_kbd_script_run) show_md_grid=5;
-        if (show_md_grid)
-        {
-            --show_md_grid;
-            // If motion detect library loaded then display the MD grid
-            // Don't call 'module_mdetect_load' here as we don't want to load
-            // the module, just see if it was already loaded.
-            if (libmotiondetect)
-                libmotiondetect->md_draw_grid();
-        }
     }
 #endif
 
@@ -2447,18 +2486,13 @@ int gui_chdk_kbd_process()
 // Enter main menu or user menu based on configuration
 void gui_chdk_kbd_process_menu_btn()
 {
-    if (conf.user_menu_as_root && (conf.user_menu_enable != 0)) {
-        if (kbd_is_key_pressed(KEY_SHOOT_HALF))
-            gui_menu_init(&root_menu);
-        else
-            gui_menu_init(&user_submenu);
-    }
-    else {
-        if ((conf.user_menu_enable != 0) && kbd_is_key_pressed(KEY_SHOOT_HALF))
-            gui_menu_init(&user_submenu);
-        else
-            gui_menu_init(&root_menu);
-    }
+    if (conf.user_menu_enable &&
+        ((conf.user_menu_as_root && !camera_info.state.is_shutter_half_press) ||
+         (!conf.user_menu_as_root && camera_info.state.is_shutter_half_press)))
+        gui_menu_init(&user_submenu);
+    else
+        gui_menu_init(&root_menu);
+
     gui_default_kbd_process_menu_btn();
 }
 
@@ -2504,6 +2538,9 @@ void gui_redraw()
         gui_mode_need_redraw = 0;
 	    flag_gui_enforce_redraw |= GUI_REDRAWFLAG_MODE_WAS_CHANGED;
     }
+
+// DEBUG: uncomment if you want debug values always on top
+//gui_draw_debug_vals_osd();
 
     // Call redraw handler
     if (gui_mode->redraw)

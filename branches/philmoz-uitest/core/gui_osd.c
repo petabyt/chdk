@@ -227,7 +227,7 @@ void gui_osd_draw_state()
 
     if ((((conf.tv_enum_type) || (conf.tv_override_value)) && (conf.tv_override_koef)  && !(conf.override_disable==1)) || gui_mode==GUI_MODE_OSD)
     {
-        if(kbd_is_key_pressed(KEY_SHOOT_HALF)) 
+        if(camera_info.state.is_shutter_half_press) 
         { 
             t=(int)(shooting_get_shutter_speed_from_tv96(shooting_get_tv96())*100000);	
             gui_print_osd_state_string_float("TV:%d.%05d", 100000, t);
@@ -283,8 +283,8 @@ void gui_osd_draw_state()
 #ifdef OPT_EDGEOVERLAY
     // edgeoverlay state
     if (conf.edge_overlay_enable || gui_mode==GUI_MODE_OSD) {
-        if (conf.edge_state_draw==0) gui_print_osd_state_string_chr("EDGE:", "LIVE");
-        else if (conf.edge_state_draw==1) gui_print_osd_state_string_chr("EDGE:", ((conf.edge_overlay_pano==0)?"FROZEN":"PANO"));
+        if (camera_info.state.edge_state_draw==0) gui_print_osd_state_string_chr("EDGE:", "LIVE");
+        else if (camera_info.state.edge_state_draw==1) gui_print_osd_state_string_chr("EDGE:", ((conf.edge_overlay_pano==0)?"FROZEN":"PANO"));
     }
 #endif
 #ifdef CAM_QUALITY_OVERRIDE
@@ -425,6 +425,8 @@ static void gui_osd_draw_seconds()
         draw_string(conf.clock_pos.x+(3*FONT_WIDTH), conf.clock_pos.y, osd_buf, conf.osd_color);
     }
 }
+
+static unsigned int movie_reset;
 
 static void gui_osd_draw_movie_time_left()
 {
@@ -656,14 +658,14 @@ static int kbd_use_up_down_left_right_as_fast_switch()
 #else
         jogdial=get_jogdial_direction();
 
-        if (kbd_is_key_pressed(KEY_SHOOT_HALF) && (jogdial==JOGDIAL_RIGHT))
+        if (camera_info.state.is_shutter_half_press && (jogdial==JOGDIAL_RIGHT))
         {
             shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_ev_correction1()+(conf.fast_ev_step+1)*16);
             shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()+(conf.fast_ev_step+1)*16);
             EnterToCompensationEVF();
         }
 
-        if (kbd_is_key_pressed(KEY_SHOOT_HALF) && (jogdial==JOGDIAL_LEFT))
+        if (camera_info.state.is_shutter_half_press && (jogdial==JOGDIAL_LEFT))
         {
             shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_ev_correction1()-(conf.fast_ev_step+1)*16);
             shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()-(conf.fast_ev_step+1)*16);
@@ -755,82 +757,52 @@ static int kbd_use_up_down_left_right_as_fast_switch()
 // Process Shutter Half Press + BUTTON shortcuts
 static int half_disp_press = 0;
 
+static void kbd_shortcut(int button, int *var, int max_value)
+{
+    if (kbd_is_key_clicked(button))
+    {
+        (*var)++;
+        if (*var > max_value)
+        {
+            *var = 0;
+            gui_set_need_restore();
+        }
+    }
+}
+
 void gui_kbd_shortcuts()
 {
     unsigned int m, mode_photo, mode_video;
-    static int pressed = 0;
     static int half_disp_press_old=0;
     
-    if (kbd_is_key_pressed(KEY_SHOOT_HALF)) {
-        if (kbd_is_key_pressed(SHORTCUT_TOGGLE_ZEBRA)) {
-            if (!pressed) {
-                conf.zebra_draw = !conf.zebra_draw;
-                if (!conf.zebra_draw) {
-                    gui_set_need_restore();
-                }
-                pressed = 1;
-            }
-        } else if (kbd_is_key_pressed(SHORTCUT_TOGGLE_HISTO)) {
-            if (!pressed) {
-                if (++conf.show_histo>SHOW_HALF) conf.show_histo=0;
-                if (!conf.show_histo) {
-                    gui_set_need_restore();
-                }
-                pressed = 1;
-            }
-        } else if (kbd_is_key_pressed(SHORTCUT_TOGGLE_OSD)) {
-            if (!pressed) {
-                conf.show_osd = !conf.show_osd;
-                if (!conf.show_osd) {
-                    gui_set_need_restore();
-                }
-                pressed = 1;
-            }
-        } else if (kbd_is_key_pressed(SHORTCUT_DISABLE_OVERRIDES)) {
-             if (!pressed) {
-                 conf.override_disable = !conf.override_disable;
-                 if (!conf.override_disable) {
-                    gui_set_need_restore();
-                 }
-                 pressed = 1;
-             }
-        }
+    if (camera_info.state.is_shutter_half_press)
+    {
+        kbd_shortcut(SHORTCUT_TOGGLE_ZEBRA, &conf.zebra_draw, 1);
+        kbd_shortcut(SHORTCUT_TOGGLE_HISTO, &conf.show_histo, SHOW_HALF);
+        kbd_shortcut(SHORTCUT_TOGGLE_OSD, &conf.show_osd, 1);
+        kbd_shortcut(SHORTCUT_DISABLE_OVERRIDES, &conf.override_disable, 1);
 #if !CAM_HAS_MANUAL_FOCUS && CAM_HAS_ZOOM_LEVER && CAM_CAN_SD_OVERRIDE
         // Todo, check for AF and if its running, don't override
-        else if (kbd_is_key_pressed(SHORTCUT_SD_SUB)) {
-            if (!pressed) {
-                if (!(conf.override_disable==1) && shooting_can_focus() && shooting_get_common_focus_mode()) {
-                    gui_subj_dist_override_value_enum(-1,0);
-                    shooting_set_focus(shooting_get_subject_distance_override_value(),SET_NOW);
-                    //pressed = 1;
-                }
+        if (kbd_is_key_pressed(SHORTCUT_SD_SUB)) {
+            if (!(conf.override_disable==1) && shooting_can_focus() && shooting_get_common_focus_mode()) {
+                gui_subj_dist_override_value_enum(-1,0);
+                shooting_set_focus(shooting_get_subject_distance_override_value(),SET_NOW);
             }
         } else if (kbd_is_key_pressed(SHORTCUT_SD_ADD)) {
-            if (!pressed) {
-                if (!(conf.override_disable==1) && shooting_can_focus() && shooting_get_common_focus_mode()) {
-                    gui_subj_dist_override_value_enum(1,0);
-                    shooting_set_focus(shooting_get_subject_distance_override_value(),SET_NOW);
-                    //pressed = 1;
-                }
+            if (!(conf.override_disable==1) && shooting_can_focus() && shooting_get_common_focus_mode()) {
+                gui_subj_dist_override_value_enum(1,0);
+                shooting_set_focus(shooting_get_subject_distance_override_value(),SET_NOW);
             }
         }
 #endif
-        else {
-            pressed = 0;
-        }
-    } else {
-        pressed = 0;
     }
 
     m = mode_get();
 
     mode_video = MODE_IS_VIDEO(m);
+    mode_photo = (m&MODE_MASK) == MODE_PLAY || !(mode_video || (m&MODE_SHOOTING_MASK)==MODE_STITCH);
 
-    mode_photo = (m&MODE_MASK) == MODE_PLAY || 
-                !( mode_video ||
-                (m&MODE_SHOOTING_MASK)==MODE_STITCH);
-
-    half_disp_press = mode_photo && kbd_is_key_pressed(KEY_SHOOT_HALF) && kbd_is_key_pressed(KEY_DISPLAY);
+    half_disp_press = mode_photo && camera_info.state.is_shutter_half_press && kbd_is_key_pressed(KEY_DISPLAY);
     if (half_disp_press && !half_disp_press_old) 
         gui_set_need_restore();
     half_disp_press_old = half_disp_press;
@@ -881,7 +853,7 @@ static int gui_std_kbd_process()
 #endif
 
 #if CAM_EV_IN_VIDEO
-    if (is_video_recording() && !kbd_is_key_pressed(KEY_SHOOT_HALF))
+    if (is_video_recording() && !camera_info.state.is_shutter_half_press)
     {
 #if CAM_HAS_ERASE_BUTTON
         if (kbd_is_key_clicked(KEY_ERASE))
@@ -921,7 +893,7 @@ int osd_visible(unsigned int playmode)
 {
     if ( conf.hide_osd == 0 ) return(1) ;
 
-    if( !kbd_is_key_pressed(KEY_SHOOT_HALF))
+    if( !camera_info.state.is_shutter_half_press)
     {
         if (playmode == MODE_REC)
         {
@@ -1048,7 +1020,7 @@ void gui_draw_debug_vals_osd()
 
     // DEBUG: "Show misc. values"
     // change ROW to fit values on screen in draw_txt_string(COLUMN, ROW, ...)
-    // uncomment gui_draw_debug_vals_osd() below if you want debug values always on top
+    // uncomment call to gui_draw_debug_vals_osd() in gui_redraw() if you want debug values always on top
     if (conf.debug_misc_vals_show) {
         // show value of Memory Address selected with Memory Browser
         sprintf(osd_buf, "MEM: %#8x", (void*) (*(int*)conf.mem_view_addr_init));    // show value in Hexadecimal integer
@@ -1150,85 +1122,58 @@ void gui_draw_debug_vals_osd()
 
 //-------------------------------------------------------------------
 // void gui_draw_osd()
+//      Common OSD display code
 //-------------------------------------------------------------------
 void gui_draw_osd()
 {
     unsigned int m, mode_photo, mode_video;
-#if CAM_SWIVEL_SCREEN
-    static int flashlight = 0;
-#endif
     m = mode_get();
-
-// DEBUG: uncomment if you want debug values always on top
-//gui_draw_debug_vals_osd();
-
-#if CAM_SWIVEL_SCREEN
-    if (conf.flashlight && (m&MODE_SCREEN_OPENED) && (m&MODE_SCREEN_ROTATED) && (gui_get_mode()==GUI_MODE_NONE /* || gui_get_mode()==GUI_MODE_ALT */)) {
-        draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE));
-        flashlight = 1;
-    }
-    if (flashlight) {
-        if ((!((m&MODE_SCREEN_OPENED) && (m&MODE_SCREEN_ROTATED))) || (gui_get_mode()!=GUI_MODE_NONE /* && gui_get_mode()!=GUI_MODE_ALT */)) {
-            flashlight = 0;
-            gui_set_need_restore();
-        } else {
-            return;
-        }
-    }
-#endif
-    
-    // TODO some of the ifs below should probably use this
-    mode_video = MODE_IS_VIDEO(m);
-
-    mode_photo = (m&MODE_MASK) == MODE_PLAY || 
-                !( mode_video ||
-                (m&MODE_SHOOTING_MASK)==MODE_STITCH);
 
     if (half_disp_press) 
         return;
-
-    if (conf.zebra_draw)
-        if (module_zebra_load())
-	        if (libzebra->gui_osd_draw_zebra(conf.zebra_draw && gui_get_mode()==GUI_MODE_NONE &&
-							kbd_is_key_pressed(KEY_SHOOT_HALF) && mode_photo &&
-							!state_kbd_script_run)) {// no zebra when script running, to save mem
-		        return; // if zebra drawn, we're done
-	}
-#if !CAM_SHOW_OSD_IN_SHOOT_MENU
-      if (!(conf.show_osd && (canon_menu_active==(int)&canon_menu_active-4) && (canon_shoot_menu_active==0)))  return;    
-#else
-      if (!(conf.show_osd && (canon_menu_active==(int)&canon_menu_active-4) /*&& (canon_shoot_menu_active==0)*/ ))  return;
-#endif  
-
     
-    if ((gui_get_mode()==GUI_MODE_NONE || gui_get_mode()==GUI_MODE_ALT) && (
-     (kbd_is_key_pressed(KEY_SHOOT_HALF) && ((conf.show_histo==SHOW_HALF)/* || (m&MODE_MASK) == MODE_PLAY*/)) || 
-     ((conf.show_histo==SHOW_ALWAYS)  &&  /* !((m&MODE_MASK) == MODE_PLAY) && */ (recreview_hold==0))
-    ) && 
-    (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH)) {
+    mode_video = MODE_IS_VIDEO(m);
+    mode_photo = ((m&MODE_MASK) == MODE_PLAY) || !(mode_video || (m&MODE_SHOOTING_MASK)==MODE_STITCH);
+    
+    if (((camera_info.state.is_shutter_half_press && (conf.show_histo==SHOW_HALF)) || 
+         ((conf.show_histo==SHOW_ALWAYS) && (recreview_hold==0))) && 
+        (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH))
+    {
         gui_osd_draw_histo();
     }
 
-    if ((m&MODE_MASK) == MODE_REC && (recreview_hold==0 || conf.show_osd_in_review) ) {
+    if ((m&MODE_MASK) == MODE_REC && (recreview_hold==0 || conf.show_osd_in_review))
+    {
         if (conf.show_grid_lines)
             if (module_grids_load())
                 libgrids->gui_grid_draw_osd(1);
-        if ((gui_get_mode()==GUI_MODE_NONE || gui_get_mode()==GUI_MODE_ALT) && (((kbd_is_key_pressed(KEY_SHOOT_HALF) || (state_kbd_script_run) || (shooting_get_common_focus_mode())) && (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH )) || ((mode_video || is_video_recording()) && conf.show_values_in_video) )) {
- 
-           if (conf.show_dof!=DOF_DONT_SHOW) gui_osd_calc_dof();
-           
-           if ((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX)) gui_osd_draw_dof();  
-           
-           if (conf.values_show_real_iso || conf.values_show_market_iso || conf.values_show_ev_seted || conf.values_show_ev_measured || conf.values_show_bv_measured || conf.values_show_bv_seted || conf.values_show_overexposure || conf.values_show_canon_overexposure || conf.values_show_luminance) gui_osd_calc_expo_param();           	           
+
+        if ((((camera_info.state.is_shutter_half_press || state_kbd_script_run || shooting_get_common_focus_mode()) &&
+              (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH)) ||
+             ((mode_video || is_video_recording()) && conf.show_values_in_video)))
+        {
+           if (conf.show_dof!=DOF_DONT_SHOW)
+               gui_osd_calc_dof();
+           if ((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX))
+               gui_osd_draw_dof();  
+           if (conf.values_show_real_iso || conf.values_show_market_iso || conf.values_show_ev_seted || conf.values_show_ev_measured || 
+               conf.values_show_bv_measured || conf.values_show_bv_seted || conf.values_show_overexposure || conf.values_show_canon_overexposure || conf.values_show_luminance)
+               gui_osd_calc_expo_param();           	           
         }
-        if (conf.show_state) gui_osd_draw_state();
-        if (conf.save_raw && conf.show_raw_state && !mode_video && (!kbd_is_key_pressed(KEY_SHOOT_HALF))) gui_osd_draw_raw_info();
+
+        if (conf.show_state)
+            gui_osd_draw_state();
+
+        if (conf.save_raw && conf.show_raw_state && !mode_video && (!camera_info.state.is_shutter_half_press))
+            gui_osd_draw_raw_info();
         
-        if ((conf.show_values==SHOW_ALWAYS && mode_photo) || ((mode_video || is_video_recording())&& conf.show_values_in_video) || ((kbd_is_key_pressed(KEY_SHOOT_HALF) || (recreview_hold==1)) && (conf.show_values==SHOW_HALF)))
+        if ((conf.show_values==SHOW_ALWAYS && mode_photo) || 
+            ((mode_video || is_video_recording()) && conf.show_values_in_video) || 
+            ((camera_info.state.is_shutter_half_press || (recreview_hold==1)) && (conf.show_values==SHOW_HALF)))
             gui_osd_draw_values(1);
-        else if  (shooting_get_common_focus_mode() && mode_photo && conf.show_values && !((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX)))   
-           gui_osd_draw_values(2);
-        else if  (conf.show_values==SHOW_HALF)
+        else if (shooting_get_common_focus_mode() && mode_photo && conf.show_values && !((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX)))   
+            gui_osd_draw_values(2);
+        else if (conf.show_values==SHOW_HALF)
             gui_osd_draw_values(0);   
     }
 
@@ -1237,29 +1182,23 @@ void gui_draw_osd()
         gui_batt_draw_osd();
         gui_space_draw_osd();
         gui_usb_draw_osd();
-        if(conf.show_temp>0) gui_osd_draw_temp();
+        if (conf.show_temp>0)
+            gui_osd_draw_temp();
 #ifdef CAM_HAS_GPS
         gps_startup();
 #endif
-        if (conf.fast_ev && !mode_video && (m&MODE_MASK) == MODE_REC ) gui_osd_draw_ev();
+        if (conf.fast_ev && !mode_video && (m&MODE_MASK) == MODE_REC )
+            gui_osd_draw_ev();
     }
 
     if ( conf.show_clock )
     {
-        if ( osd_visible(m&MODE_MASK) || ( kbd_is_key_pressed(KEY_SHOOT_HALF) && conf.clock_halfpress==0) ) gui_osd_draw_clock(0,0,0);
-        else if ( kbd_is_key_pressed(KEY_SHOOT_HALF) && conf.clock_halfpress==1 ) gui_osd_draw_seconds();
+        if ( osd_visible(m&MODE_MASK) || ( camera_info.state.is_shutter_half_press && conf.clock_halfpress==0) ) gui_osd_draw_clock(0,0,0);
+        else if ( camera_info.state.is_shutter_half_press && conf.clock_halfpress==1 ) gui_osd_draw_seconds();
     }
 
-    if ( conf.show_movie_time > 0 && (mode_video || is_video_recording())) gui_osd_draw_movie_time_left();
- 
-#if CAM_DRAW_EXPOSITION
-    if (gui_get_mode()==GUI_MODE_NONE && kbd_is_key_pressed(KEY_SHOOT_HALF) && ((m&MODE_MASK)==MODE_REC) && ((m&MODE_SHOOTING_MASK))!=MODE_VIDEO_STD && (m&MODE_SHOOTING_MASK)!=MODE_VIDEO_COMPACT) {
-     strcpy(osd_buf,shooting_get_tv_str());
-     strcat(osd_buf,"\"  F");
-     strcat(osd_buf,shooting_get_av_str());
-     draw_txt_string(22-strlen(osd_buf)/2, 14, osd_buf, conf.osd_color);
-    }
-#endif
+    if ( conf.show_movie_time > 0 && (mode_video || is_video_recording()))
+        gui_osd_draw_movie_time_left();
 
 #if CAM_EV_IN_VIDEO
     if (is_video_recording()) gui_osd_draw_ev_video(get_ev_video_avail());
@@ -1268,20 +1207,78 @@ void gui_draw_osd()
     gui_draw_debug_vals_osd();
 
 #ifdef OPT_UBASIC
-    if (ubasic_error){
-    const char *msg;
-        if (ubasic_error >= UBASIC_E_ENDMARK) {
+    if (ubasic_error)
+    {
+        const char *msg;
+        if (ubasic_error >= UBASIC_E_ENDMARK)
+        {
             msg = ubasic_errstrings[UBASIC_E_UNKNOWN_ERROR];
-        } else {
-        msg = ubasic_errstrings[ubasic_error];
+        }
+        else
+        {
+            msg = ubasic_errstrings[ubasic_error];
+        }
+        sprintf(osd_buf, "uBASIC:%d %s ", ubasic_linenumber(), msg);
+        draw_txt_string(0, 0, osd_buf, MAKE_COLOR(COLOR_RED, COLOR_YELLOW));
     }
-    sprintf(osd_buf, "uBASIC:%d %s ", ubasic_linenumber(), msg);
-    draw_txt_string(0, 0, osd_buf, MAKE_COLOR(COLOR_RED, COLOR_YELLOW));
+#endif
+}
+
+// GUI handler for normal shooting / playback modes
+static void gui_default_draw()
+{
+    unsigned int m, mode_photo, mode_video;
+
+    m = mode_get();
+
+#if CAM_SWIVEL_SCREEN
+    static int flashlight = 0;
+
+    if (conf.flashlight && (m&MODE_SCREEN_OPENED) && (m&MODE_SCREEN_ROTATED))
+    {
+        flashlight = 1;
+        draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE));
+        return;
+    }
+    else if (flashlight)
+    {
+        flashlight = 0;
+        gui_set_need_restore();
+        return;
+    }
+#endif
+
+    if (half_disp_press) 
+        return;
+
+    mode_video = MODE_IS_VIDEO(m);
+    mode_photo = ((m&MODE_MASK) == MODE_PLAY) || !(mode_video || (m&MODE_SHOOTING_MASK)==MODE_STITCH);
+
+    if (conf.zebra_draw)
+        if (module_zebra_load())
+	        if (libzebra->gui_osd_draw_zebra(conf.zebra_draw && camera_info.state.is_shutter_half_press && mode_photo))
+		        return; // if zebra drawn, we're done
+
+#if !CAM_SHOW_OSD_IN_SHOOT_MENU
+    if (!(conf.show_osd && (canon_menu_active==(int)&canon_menu_active-4) && (canon_shoot_menu_active==0))) return;
+#else
+    if (!(conf.show_osd && (canon_menu_active==(int)&canon_menu_active-4) /*&& (canon_shoot_menu_active==0)*/ )) return;
+#endif  
+
+    gui_draw_osd();
+
+#if CAM_DRAW_EXPOSITION
+    if (camera_info.state.is_shutter_half_press && ((m&MODE_MASK)==MODE_REC) && ((m&MODE_SHOOTING_MASK))!=MODE_VIDEO_STD && (m&MODE_SHOOTING_MASK)!=MODE_VIDEO_COMPACT)
+    {
+        strcpy(osd_buf,shooting_get_tv_str());
+        strcat(osd_buf,"\"  F");
+        strcat(osd_buf,shooting_get_av_str());
+        draw_txt_string(22-strlen(osd_buf)/2, 14, osd_buf, conf.osd_color);
     }
 #endif
 }
 
 //-------------------------------------------------------------------
 // GUI/KBD handlers - Canon modes (not in CHDK <ALT> mode, menu etc)
-gui_handler defaultGuiHandler = { GUI_MODE_NONE, gui_draw_osd, gui_std_kbd_process, 0, 0, GUI_MODE_MAGICNUM };
+gui_handler defaultGuiHandler = { GUI_MODE_NONE, gui_default_draw, gui_std_kbd_process, 0, 0, GUI_MODE_MAGICNUM };
 //-------------------------------------------------------------------

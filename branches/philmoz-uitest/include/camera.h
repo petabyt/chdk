@@ -293,11 +293,11 @@ extern _cam_sensor camera_sensor;
 // if this struct changed, please change gui_version.common_api 
 typedef struct 
 {
-    unsigned int    width, height, size;                        // Size of bitmap screen in CHDK co-ordinates
-    unsigned int    buffer_width, buffer_height, buffer_size;   // Physical size of bitmap screen
-    int             edge_hmargin, ts_button_border;             // margin and touch-screen adjustment values
-    int             zebra_nobuf, zebra_aspect_adjust;           // zebra feature settings
-    int             has_variable_aspect;                        // zebra feature settings
+    int    width, height, size;                        // Size of bitmap screen in CHDK co-ordinates
+    int    buffer_width, buffer_height, buffer_size;   // Physical size of bitmap screen
+    int    edge_hmargin, ts_button_border;             // margin and touch-screen adjustment values
+    int    zebra_nobuf, zebra_aspect_adjust;           // zebra feature settings
+    int    has_variable_aspect;                        // zebra feature settings
 } _cam_screen;
 
 extern _cam_screen camera_screen;
@@ -306,6 +306,7 @@ typedef struct
 {
 	int api_version;			// version of this structure
 
+    // Canon PARAMS indexes
     struct
     {
         int camera_name;
@@ -313,6 +314,7 @@ typedef struct
         int artist_name;
         int copyright;
     } params;
+    // Canon PROPCASE indexes
     struct
     {
         int gps;
@@ -331,6 +333,13 @@ typedef struct
     int rombaseaddr, maxramaddr;
     int tick_count_offset;      // get_tick_count value at which the clock ticks over 1 second
     char* chdk_ver;
+    // Miscellaneous variables to record state information
+    // Used to control communication between various tasks and modules
+    struct
+    {
+        int edge_state_draw;        // Current state of overlay (Live/Frozen/Pano)
+        int is_shutter_half_press;  // State of Shutter Half Press button
+    } state;
 } _cam_info;
 
 extern _cam_info camera_info;

@@ -170,7 +170,7 @@ static void get_int_incr_from_button()
         incr_modified=int_incr;
         int_incr=100;
     }
-    if (kbd_is_key_pressed(KEY_SHOOT_HALF))
+    if (camera_info.state.is_shutter_half_press)
     {
         incr_modified=int_incr;
         int_incr=1000;
@@ -279,7 +279,7 @@ static void update_enum_value(int direction)
     if (curr_menu->menu[gui_menu_curr_item].value)
     {
         int c;
-        if (kbd_is_key_pressed(KEY_SHOOT_HALF))    c = 3;
+        if (camera_info.state.is_shutter_half_press)    c = 3;
         else if (kbd_is_key_pressed(KEY_ZOOM_IN))  c = 6;
         else if (kbd_is_key_pressed(KEY_ZOOM_OUT)) c = 3;
         else c = int_incr;
@@ -361,7 +361,7 @@ static void gui_menu_updown(int increment)
     int c, j;
 
     // Determine number of rows to move (1 or 4)
-    if (kbd_is_key_pressed(KEY_SHOOT_HALF) || kbd_is_key_pressed(KEY_ZOOM_IN) || kbd_is_key_pressed(KEY_ZOOM_OUT)) c=4; else c=1;
+    if (camera_info.state.is_shutter_half_press || kbd_is_key_pressed(KEY_ZOOM_IN) || kbd_is_key_pressed(KEY_ZOOM_OUT)) c=4; else c=1;
 
     for (j = 0; j < c; ++j)
     {
@@ -514,7 +514,7 @@ int gui_menu_kbd_process() {
             if (gui_menu_curr_item >= 0) {
                 switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK){
                     case MENUITEM_INT:
-                        if (kbd_is_key_pressed(KEY_SHOOT_HALF))
+                        if (camera_info.state.is_shutter_half_press)
                         {
                             *(curr_menu->menu[gui_menu_curr_item].value) = 0;
                             gui_menu_redraw=1;
