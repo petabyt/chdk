@@ -232,7 +232,7 @@ void console_set_autoredraw(int val) {
 
 void console_redraw()
 {
-	gui_set_need_restore();
+	draw_restore();
 	console_last_drawn = get_tick_count();
 	console_draw();
 }
