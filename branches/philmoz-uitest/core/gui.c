@@ -802,7 +802,6 @@ static CMenuItem misc_submenu_items[] = {
 #ifdef OPT_DEBUGGING
     MENU_ITEM   (0x2a,LANG_MENU_MAIN_DEBUG,                 MENUITEM_SUBMENU,               &debug_submenu,                     0 ),
 #endif
-    MENU_ITEM   (0x86,LANG_MENU_REMOTE_PARAM,               MENUITEM_SUBMENU,               &remote_submenu,                    0 ),
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0,                                  0 ),
     {0},
 };
@@ -1833,6 +1832,9 @@ static CMenuItem chdk_settings_menu_items[] = {
 #ifdef CAM_HAS_GPS
     MENU_ITEM	(0x2a,LANG_MENU_GPS,                        MENUITEM_SUBMENU,	&gps_submenu,		0 ),
 #endif
+#if CAM_REMOTE
+    MENU_ITEM   (0x86,LANG_MENU_REMOTE_PARAM,               MENUITEM_SUBMENU,   &remote_submenu, 0 ),
+#endif
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP, 0, 0 ),
     {0}
 };
@@ -2193,7 +2195,7 @@ static void gui_draw_alt_helper()
         y += FONT_HEIGHT;
     }
 
-#if defined(SHORTCUT_MF_TOGGLE)
+#if !defined(CAM_HAS_MANUAL_FOCUS) && defined(SHORTCUT_MF_TOGGLE)
     shortcut_text(SHORTCUT_MF_TOGGLE,(int)"Manual Focus",gui_on_off_enum(0,&conf.subj_dist_override_koef));
     draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
     y += FONT_HEIGHT;

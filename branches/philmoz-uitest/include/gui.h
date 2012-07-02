@@ -159,7 +159,9 @@ extern struct gui_common_api_ver gui_version;
 #elif !CAM_HAS_ERASE_BUTTON
     //Alt mode
     #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
+#if !defined(CAM_HAS_MANUAL_FOCUS)
     #define SHORTCUT_MF_TOGGLE           KEY_UP
+#endif
     //Half press shoot button   
     #define SHORTCUT_TOGGLE_HISTO        KEY_MENU
     //Alt mode & Manual mode    
