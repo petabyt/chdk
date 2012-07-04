@@ -1992,6 +1992,7 @@ static int luaCB_read_usb_msg( lua_State* L )
   ptp_script_msg *msg = ptp_script_read_msg();
   if(msg) {
     lua_pushlstring(L,msg->data,msg->size);
+    free(msg);
     return 1;
   }
   lua_pushnil(L);
