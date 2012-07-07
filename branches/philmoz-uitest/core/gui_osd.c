@@ -803,8 +803,13 @@ void gui_kbd_shortcuts()
     mode_photo = (m&MODE_MASK) == MODE_PLAY || !(mode_video || (m&MODE_SHOOTING_MASK)==MODE_STITCH);
 
     half_disp_press = mode_photo && camera_info.state.is_shutter_half_press && kbd_is_key_pressed(KEY_DISPLAY);
-    if (half_disp_press && !half_disp_press_old) 
+    if (half_disp_press && !half_disp_press_old)
         gui_set_need_restore();
+    if (half_disp_press)
+    {
+        extern void gui_reset_alt_helper();
+        gui_reset_alt_helper();
+    }
     half_disp_press_old = half_disp_press;
 }
 

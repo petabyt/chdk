@@ -770,19 +770,6 @@ static void gui_show_memory_info(int arg)
     gui_mbox_init(LANG_MSG_MEMORY_INFO_TITLE, (int)buf, MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
 }
 
-static void gui_menuproc_reset_selected(unsigned int btn)
-{
-    if (btn==MBOX_BTN_YES)
-        conf_load_defaults();
-}
-
-static void gui_menuproc_reset(int arg)
-{
-    gui_mbox_init(LANG_MSG_RESET_OPTIONS_TITLE, 
-                  LANG_MSG_RESET_OPTIONS_TEXT,
-                  MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, gui_menuproc_reset_selected);
-}
-
 static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x35,LANG_MENU_MISC_FILE_BROWSER,          MENUITEM_PROC,                  gui_draw_fselect,                   0 ),
     MENU_ITEM   (0x80,(int)"Module Inspector",              MENUITEM_PROC,                  gui_menu_run_fltmodule, "modinsp.flt" ),
@@ -797,7 +784,6 @@ static CMenuItem misc_submenu_items[] = {
 #endif
     MENU_ITEM   (0x80,LANG_MENU_MISC_BUILD_INFO,            MENUITEM_PROC,                  gui_show_build_info, 0 ),
     MENU_ITEM   (0x80,LANG_MENU_MISC_MEMORY_INFO,           MENUITEM_PROC,                  gui_show_memory_info, 0 ),
-    MENU_ITEM   (0x2b,LANG_MENU_MAIN_RESET_OPTIONS,         MENUITEM_PROC,                  gui_menuproc_reset,                 0 ),
     MENU_ITEM   (0x33,(int)"SD Card",                       MENUITEM_SUBMENU,               &sdcard_submenu,                    0 ),
 #ifdef OPT_DEBUGGING
     MENU_ITEM   (0x2a,LANG_MENU_MAIN_DEBUG,                 MENUITEM_SUBMENU,               &debug_submenu,                     0 ),
@@ -1819,6 +1805,19 @@ static CMenu menu_settings_submenu = {0x26,LANG_MENU_MENU_SETTINGS, NULL, menu_s
 
 //-------------------------------------------------------------------
 
+static void gui_menuproc_reset_selected(unsigned int btn)
+{
+    if (btn==MBOX_BTN_YES)
+        conf_load_defaults();
+}
+
+static void gui_menuproc_reset(int arg)
+{
+    gui_mbox_init(LANG_MSG_RESET_OPTIONS_TITLE, 
+                  LANG_MSG_RESET_OPTIONS_TEXT,
+                  MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, gui_menuproc_reset_selected);
+}
+
 static CMenuItem chdk_settings_menu_items[] = {
     MENU_ITEM   (0x22,LANG_MENU_MAIN_OSD_PARAM,             MENUITEM_SUBMENU,   &osd_submenu, 0 ),
     MENU_ITEM   (0x72,LANG_MENU_OSD_LAYOUT_EDITOR,          MENUITEM_PROC,      gui_menu_run_fltmodule, "_osd_le.flt" ),
@@ -1835,6 +1834,7 @@ static CMenuItem chdk_settings_menu_items[] = {
 #if CAM_REMOTE
     MENU_ITEM   (0x86,LANG_MENU_REMOTE_PARAM,               MENUITEM_SUBMENU,   &remote_submenu, 0 ),
 #endif
+    MENU_ITEM   (0x2b,LANG_MENU_MAIN_RESET_OPTIONS,         MENUITEM_PROC,      gui_menuproc_reset, 0 ),
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP, 0, 0 ),
     {0}
 };
@@ -2103,6 +2103,8 @@ static void gui_handle_splash(void) {
 
 #ifdef CAM_DISP_ALT_TEXT
 
+static int is_menu_shortcut = 0;
+
 static char* gui_shortcut_text(int button)
 {
     switch (button)
@@ -2124,13 +2126,14 @@ static char* gui_shortcut_text(int button)
     case KEY_ERASE:
         return "ERASE";
     case KEY_MENU:
-        return "MENU";
+        is_menu_shortcut = 1;
+        return "MENU*";
     default:
         return "?";
     }
 }
 
-static void shortcut_text(int button, int func_str, const char *state)
+static int shortcut_text(int x, int y, int button, int func_str, const char *state)
 {
     buf[0] = 0;
     sprintf(buf,"%-5s %20s",gui_shortcut_text(button),lang_str(func_str));
@@ -2143,6 +2146,8 @@ static void shortcut_text(int button, int func_str, const char *state)
     }
     else
         strcat(buf,"         ");
+    draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+    return y + FONT_HEIGHT;
 }
 
 static int gui_helper_displayat = 0;
@@ -2167,82 +2172,63 @@ static void gui_draw_alt_helper()
         return;
     }
 
-    int y = 2 * FONT_HEIGHT;
+    is_menu_shortcut = 0;
+
+    int y = FONT_HEIGHT;
     int x = ((CAM_SCREEN_WIDTH/2)-(FONT_WIDTH*35/2));
 
     if (conf.user_menu_enable && conf.user_menu_as_root)
-        draw_string(x, y, "Shortcuts            MENU=User Menu", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
+        draw_string(x, y, "<ALT> Shortcuts      MENU=User Menu", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
     else
-        draw_string(x, y, "Shortcuts            MENU=CHDK Menu", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
+        draw_string(x, y, "<ALT> Shortcuts      MENU=CHDK Menu", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
     y += FONT_HEIGHT;
-    draw_string(x, y, "SET    = Script Menu               ", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-    y += FONT_HEIGHT;
-    draw_string(x, y, "Shutter= Run Active Script         ", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-    y += FONT_HEIGHT;
-
-#ifdef OPT_DEBUGGING
-    if (conf.debug_shortcut_action)
+    if (conf.user_menu_enable)
     {
-        shortcut_text(SHORTCUT_TOGGLE_RAW,LANG_MENU_DEBUG_SHORTCUT_ACTION,gui_debug_shortcut_modes[conf.debug_shortcut_action]);
-        draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        if (conf.user_menu_as_root)
+            draw_string(x, y, "Shutter Half Press + MENU=CHDK Menu", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        else
+            draw_string(x, y, "Shutter Half Press + MENU=User Menu", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
         y += FONT_HEIGHT;
     }
-    else
-#endif
-    {
-        shortcut_text(SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE,(conf.save_raw?(conf.dng_raw?"DNG":"RAW"):"Off"));
-        draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-        y += FONT_HEIGHT;
-    }
+    draw_string(x, y, "SET=Script Menu, SHUTTER=Run Script", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+    y += FONT_HEIGHT;
 
 #if !defined(CAM_HAS_MANUAL_FOCUS) && defined(SHORTCUT_MF_TOGGLE)
-    shortcut_text(SHORTCUT_MF_TOGGLE,(int)"Manual Focus",gui_on_off_enum(0,&conf.subj_dist_override_koef));
-    draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-    y += FONT_HEIGHT;
+    y = shortcut_text(x, y, SHORTCUT_MF_TOGGLE,(int)"Manual Focus",gui_on_off_enum(0,&conf.subj_dist_override_koef));
 #endif
 
     if (shooting_get_common_focus_mode())           // Check in manual focus mode
     {
-        shortcut_text(SHORTCUT_SET_INFINITY,(int)"Set Infinity Focus",0);
+        sprintf(buf,"Focus  %5s=Inf.  %5s=HyperFocal",gui_shortcut_text(SHORTCUT_SET_INFINITY),gui_shortcut_text(SHORTCUT_SET_HYPERFOCAL));
         draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
         y += FONT_HEIGHT;
-
-        shortcut_text(SHORTCUT_SET_HYPERFOCAL,(int)"Set HyperFocal Focus",0);
-        draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-        y += FONT_HEIGHT;
-
     }
 
-    y += 4;
-    if (conf.user_menu_enable)
-        if (conf.user_menu_as_root)
-            draw_string(x, y, "Shutter Half Press + MENU=CHDK Menu", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
-        else
-            draw_string(x, y, "Shutter Half Press + MENU=User Menu", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
+#ifdef OPT_DEBUGGING
+    if (conf.debug_shortcut_action)
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_DEBUG_SHORTCUT_ACTION,gui_debug_shortcut_modes[conf.debug_shortcut_action]);
     else
-        draw_string(x, y, "Shutter Half Press +               ", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
+#endif
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE,(conf.save_raw?(conf.dng_raw?"DNG":"RAW"):"Off"));
+
+    draw_string(x, y, "Shutter Half Press +               ", MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
     y += FONT_HEIGHT;
 
-    shortcut_text(SHORTCUT_DISABLE_OVERRIDES,LANG_MENU_OVERRIDE_DISABLE,gui_override_disable_modes[conf.override_disable]);
-    draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-    y += FONT_HEIGHT;
-
-    shortcut_text(SHORTCUT_TOGGLE_HISTO,LANG_MENU_HISTO_SHOW,gui_histo_show_modes[conf.show_histo]);
-    draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-    y += FONT_HEIGHT;
-
-    shortcut_text(SHORTCUT_TOGGLE_ZEBRA,LANG_MENU_ZEBRA_DRAW,gui_on_off_enum(0,&conf.zebra_draw));
-    draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-    y += FONT_HEIGHT;
-
-    shortcut_text(SHORTCUT_TOGGLE_OSD,LANG_MENU_OSD_SHOW,gui_on_off_enum(0,&conf.show_osd));
-    draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-    y += FONT_HEIGHT;
+    y = shortcut_text(x, y, SHORTCUT_DISABLE_OVERRIDES,LANG_MENU_OVERRIDE_DISABLE,gui_override_disable_modes[conf.override_disable]);
+    y = shortcut_text(x, y, SHORTCUT_TOGGLE_HISTO,LANG_MENU_HISTO_SHOW,gui_histo_show_modes[conf.show_histo]);
+    y = shortcut_text(x, y, SHORTCUT_TOGGLE_ZEBRA,LANG_MENU_ZEBRA_DRAW,gui_on_off_enum(0,&conf.zebra_draw));
+    y = shortcut_text(x, y, SHORTCUT_TOGGLE_OSD,LANG_MENU_OSD_SHOW,gui_on_off_enum(0,&conf.show_osd));
 
     if (conf.hide_osd == 0)
     {
         sprintf(buf,"%-5s = Hide CHDK OSD while pressed",gui_shortcut_text(KEY_DISPLAY));
         draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y += FONT_HEIGHT;
+    }
+
+    if (is_menu_shortcut)
+    {
+        draw_string(x, y, "  * - not available in <ALT> mode  ", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
         y += FONT_HEIGHT;
     }
 }
