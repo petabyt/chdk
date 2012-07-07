@@ -3,8 +3,6 @@
 
 // Override stubs_entry.S
 NHSTUB(DisplayImagePhysicalScreen,  0xFFDBA0B8)
-NHSTUB(EnterToCompensationEVF,      0xffe8b110)
-NHSTUB(ExitFromCompensationEVF,     0xffe8b194)
 NHSTUB(GetBatteryTemperature,       0xFFDC7D94)
 NHSTUB(free,                        0xFFCCC768)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
