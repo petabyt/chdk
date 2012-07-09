@@ -143,7 +143,15 @@ static void lua_count_hook(lua_State *L, lua_Debug *ar)
 void lua_script_error(lua_State *Lt,int runtime)
 {
     const char *err = lua_tostring( Lt, -1 );
-    script_console_add_line( err );
+    if(err) {
+        if(!*err) {
+            script_console_add_line( "ERROR: empty error message" );
+        } else {
+            script_console_add_line( err );
+        }
+    } else {
+        script_console_add_line( "ERROR: NULL error message" );
+    }
     if(lua_script_is_ptp) {
 #ifdef CAM_CHDK_PTP
         lua_script_error_ptp(runtime,err);
