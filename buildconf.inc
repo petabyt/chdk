@@ -29,6 +29,9 @@ OPT_LUA_OSLIB=1
 
 # experimental PTP/USB interface
 OPT_PTP=1
+ 
+# code to dump stack and other debug information, see core/dbg_dump.c
+#OPT_DBG_DUMP=1
 
 #OPT_MD_DEBUG=1
 # needs proper fi2.inc in platform/ !!! see http://chdk.setepontos.com/index.php/topic,2995.0.html
