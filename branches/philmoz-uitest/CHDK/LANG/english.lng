@@ -675,20 +675,19 @@
 552 "Disable Zoom Assist button"
 
 553 "DNG version"
-554 "Other Settings"
-555 "Menu Settings"
-556 "Show <ALT> Help Screen"
-557 "  Help Screen Delay"
-558 "CHDK Settings"
+554 "Menu Settings"
+555 "Show <ALT> Help Screen"
+556 "  Help Screen Delay"
+557 "CHDK Settings"
 
 // <ALT> mode help screen text
-559 "%-20s %-14s"                           // Header format, adjust if needed; but total len must be 35
-560 "<ALT> Shortcuts"                       // Len must be <= first string in header format (20)
-561 "Shutter Half Press +"                  // Len must be <= first string in header format (20)
-562 "MENU=CHDK Menu"                        // Len must be <= second string in header format (14)
-563 "MENU=User Menu"                        // Len must be <= second string in header format (14)
-564 "SET=Script Menu, SHUTTER=Run Script"   // Len must be <= 35
-565 "Focus  %5s=Inf.  %5s=HyperFocal"       // Len must be <= 35
-566 "Manual Focus"
-567 "Hide CHDK OSD while pressed"
-568 "  * - not available in <ALT> mode  "   // Len must be <= 35
+558 "%-20s %-14s"                           // Header format, adjust if needed; but total len must be 35
+559 "<ALT> Shortcuts"                       // Len must be <= first string in header format (20)
+560 "Shutter Half Press +"                  // Len must be <= first string in header format (20)
+561 "MENU=CHDK Menu"                        // Len must be <= second string in header format (14)
+562 "MENU=User Menu"                        // Len must be <= second string in header format (14)
+563 "SET=Script Menu, SHUTTER=Run Script"   // Len must be <= 35
+564 "Focus  %5s=Inf.  %5s=HyperFocal"       // Len must be <= 35
+565 "Manual Focus"
+566 "Hide CHDK OSD while pressed"
+567 "  * - not available in <ALT> mode  "   // Len must be <= 35

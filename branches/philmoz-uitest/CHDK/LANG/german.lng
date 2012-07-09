@@ -690,20 +690,19 @@
 552 "Taste Zoom-Assistent deaktivieren"
 
 553 "DNG-Version"
-554 "CHDK-Start-Optionen"
-555 "Menü-Einstellungen"
-556 "Zeige <ALT>-Hilfe"
-557 "   Verzögerung Hilfe-Anzeige"
-558 "CHDK-Einstellungen"
+554 "Menü-Einstellungen"
+555 "Zeige <ALT>-Hilfe"
+556 "   Verzögerung Hilfe-Anzeige"
+557 "CHDK-Einstellungen"
 
 // <ALT> mode help screen text
-559 "%-20s %-14s"                           // Header format, adjust if needed; but total len must be 35
-560 "<ALT>-Tastaturkürzel"                  // Len must be <= first string in header format (20)
-561 "Auslöser halb gedr.+"                  // Len must be <= first string in header format (20)
-562 "MENU=CHDK-Menü"                        // Len must be <= second string in header format (14)
-563 "MENU=User-Menü"                        // Len must be <= second string in header format (14)
-564 "SET=Skriptmenü Auslöser=Skriptstart"   // Len must be <= 35
-565 "Fokus %5s=unend. %5s=hyperfokal"       // Len must be <= 35 (2x -5 for key placeholder)
-566 "Manueller Fokus"
-567 "Temp. Ausblendung CHDK-OSD "           // Len must be <= 27
-568 "  * im <ALT>-Modus nicht verfügbar "   // Len must be <= 35
+558 "%-20s %-14s"                           // Header format, adjust if needed; but total len must be 35
+559 "<ALT>-Tastaturkürzel"                  // Len must be <= first string in header format (20)
+560 "Auslöser halb gedr.+"                  // Len must be <= first string in header format (20)
+561 "MENU=CHDK-Menü"                        // Len must be <= second string in header format (14)
+562 "MENU=User-Menü"                        // Len must be <= second string in header format (14)
+563 "SET=Skriptmenü Auslöser=Skriptstart"   // Len must be <= 35
+564 "Fokus %5s=unend. %5s=hyperfokal"       // Len must be <= 35 (2x -5 for key placeholder)
+565 "Manueller Fokus"
+566 "Temp. Ausblendung CHDK-OSD "           // Len must be <= 27
+567 "  * im <ALT>-Modus nicht verfügbar "   // Len must be <= 35

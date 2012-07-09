@@ -677,25 +677,24 @@
 #define LANG_MENU_SCRIPT_START_ENABLE			551
 #define LANG_MENU_MISC_ZOOM_ASSIST              552
 #define LANG_MENU_DNG_VERSION                   553
-#define LANG_MENU_OTHER_SETTINGS                554
-#define LANG_MENU_MENU_SETTINGS                 555
-#define LANG_MENU_SHOW_ALT_HELP                 556
-#define LANG_MENU_SHOW_ALT_HELP_DELAY           557
-#define LANG_MENU_CHDK_SETTINGS                 558
+#define LANG_MENU_MENU_SETTINGS                 554
+#define LANG_MENU_SHOW_ALT_HELP                 555
+#define LANG_MENU_SHOW_ALT_HELP_DELAY           556
+#define LANG_MENU_CHDK_SETTINGS                 557
 
 // <ALT> mode help screen text
-#define LANG_HELP_HEADER                        559
-#define LANG_HELP_ALT_SHORTCUTS                 560
-#define LANG_HELP_HALF_PRESS                    561
-#define LANG_HELP_CHDK_MENU                     562
-#define LANG_HELP_USER_MENU                     563
-#define LANG_HELP_SCRIPTS                       564
-#define LANG_HELP_FOCUS                         565
-#define LANG_HELP_MANUAL_FOCUS                  566
-#define LANG_HELP_HIDE_OSD                      567
-#define LANG_HELP_NOT_ALT                       568
+#define LANG_HELP_HEADER                        558
+#define LANG_HELP_ALT_SHORTCUTS                 559
+#define LANG_HELP_HALF_PRESS                    560
+#define LANG_HELP_CHDK_MENU                     561
+#define LANG_HELP_USER_MENU                     562
+#define LANG_HELP_SCRIPTS                       563
+#define LANG_HELP_FOCUS                         564
+#define LANG_HELP_MANUAL_FOCUS                  565
+#define LANG_HELP_HIDE_OSD                      566
+#define LANG_HELP_NOT_ALT                       567
 
-#define GUI_LANG_ITEMS                          568
+#define GUI_LANG_ITEMS                          567
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

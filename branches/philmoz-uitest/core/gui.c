@@ -782,6 +782,9 @@ static CMenuItem misc_submenu_items[] = {
 #if defined (OPT_GAMES)
     MENU_ITEM   (0x38,LANG_MENU_MISC_GAMES,                 MENUITEM_SUBMENU,               &games_submenu,                     0 ),
 #endif
+#if CAM_SWIVEL_SCREEN
+    MENU_ITEM   (0x28,LANG_MENU_MISC_FLASHLIGHT,            MENUITEM_BOOL,                  &conf.flashlight, 0 ),
+#endif
     MENU_ITEM   (0x80,LANG_MENU_MISC_BUILD_INFO,            MENUITEM_PROC,                  gui_show_build_info, 0 ),
     MENU_ITEM   (0x80,LANG_MENU_MISC_MEMORY_INFO,           MENUITEM_PROC,                  gui_show_memory_info, 0 ),
     MENU_ITEM   (0x33,(int)"SD Card",                       MENUITEM_SUBMENU,               &sdcard_submenu,                    0 ),
@@ -1683,6 +1686,33 @@ static CMenu zebra_submenu = {0x26,LANG_MENU_ZEBRA_TITLE, NULL, zebra_submenu_it
 
 //-------------------------------------------------------------------
 
+static const char* gui_user_menu_show_enum(int change, int arg)
+{
+    static const char* modes[]={ "Off", "On","On Direct", "Edit" };
+
+    if (conf.user_menu_enable == 3) user_menu_save();
+
+    void set_usermenu_state();
+    set_usermenu_state();
+
+    return gui_change_simple_enum(&conf.user_menu_enable,change,modes,sizeof(modes)/sizeof(modes[0]));
+}
+
+static CMenuItem menu_settings_submenu_items[] = {
+    MENU_ITEM(0x5f,LANG_MENU_USER_MENU_ENABLE,		MENUITEM_ENUM,          gui_user_menu_show_enum, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_USER_MENU_AS_ROOT,     MENUITEM_BOOL,          &conf.user_menu_as_root, 0 ),
+    MENU_ITEM(0x81,LANG_MENU_VIS_MENU_CENTER,       MENUITEM_BOOL,	        &conf.menu_center, 0 ),
+    MENU_ITEM(0x81,LANG_MENU_SELECT_FIRST_ENTRY,    MENUITEM_BOOL,	        &conf.menu_select_first_entry, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_SHOW_ALT_HELP,         MENUITEM_BOOL,          &conf.show_alt_helper, 0 ),
+    MENU_ITEM(0x58,LANG_MENU_SHOW_ALT_HELP_DELAY,   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.show_alt_helper_delay, MENU_MINMAX(0, 10) ),
+    MENU_ITEM(0x51,LANG_MENU_BACK,                  MENUITEM_UP, 0, 0 ),
+    {0}
+};
+
+static CMenu menu_settings_submenu = {0x26,LANG_MENU_MENU_SETTINGS, NULL, menu_settings_submenu_items };
+
+//-------------------------------------------------------------------
+
 #if CAM_ADJUSTABLE_ALT_BUTTON
 
 static const char* gui_alt_mode_button_enum(int change, int arg)
@@ -1754,57 +1784,6 @@ static const char* gui_alt_power_enum(int change, int arg)
     return modes[conf.alt_prevent_shutdown];
 }
 
-static CMenuItem settings_submenu_items[] = {
-#if CAM_SWIVEL_SCREEN
-    MENU_ITEM(0x28,LANG_MENU_MISC_FLASHLIGHT,       MENUITEM_BOOL,          &conf.flashlight, 0 ),
-#endif
-    MENU_ITEM(0x5c,LANG_MENU_MISC_SHOW_SPLASH,      MENUITEM_BOOL,          &conf.splash_show, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_MISC_START_SOUND,      MENUITEM_BOOL,          &conf.start_sound, 0 ),
-#if CAM_USE_ZOOM_FOR_MF
-    MENU_ITEM(0x59,LANG_MENU_MISC_ZOOM_FOR_MF,      MENUITEM_BOOL,          &conf.use_zoom_mf, 0 ),
-#endif
-#if CAM_ADJUSTABLE_ALT_BUTTON
-    MENU_ITEM(0x22,LANG_MENU_MISC_ALT_BUTTON,       MENUITEM_ENUM,          gui_alt_mode_button_enum, 0 ),
-#endif
-#if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
-    MENU_ITEM(0x5c,LANG_MENU_MISC_ZOOM_ASSIST,      MENUITEM_BOOL,          &conf.zoom_assist_button_disable, 0 ),
-#endif
-    MENU_ITEM(0x5d,LANG_MENU_MISC_DISABLE_LCD_OFF,  MENUITEM_ENUM,          gui_alt_power_enum, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                  MENUITEM_UP, 0, 0 ),
-    {0}
-};
-
-static CMenu settings_submenu = {0x26,LANG_MENU_OTHER_SETTINGS, NULL, settings_submenu_items };
-
-//-------------------------------------------------------------------
-
-static const char* gui_user_menu_show_enum(int change, int arg)
-{
-    static const char* modes[]={ "Off", "On","On Direct", "Edit" };
-
-    if (conf.user_menu_enable == 3) user_menu_save();
-
-    void set_usermenu_state();
-    set_usermenu_state();
-
-    return gui_change_simple_enum(&conf.user_menu_enable,change,modes,sizeof(modes)/sizeof(modes[0]));
-}
-
-static CMenuItem menu_settings_submenu_items[] = {
-    MENU_ITEM(0x5f,LANG_MENU_USER_MENU_ENABLE,		MENUITEM_ENUM,          gui_user_menu_show_enum, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_USER_MENU_AS_ROOT,     MENUITEM_BOOL,          &conf.user_menu_as_root, 0 ),
-    MENU_ITEM(0x81,LANG_MENU_VIS_MENU_CENTER,       MENUITEM_BOOL,	        &conf.menu_center, 0 ),
-    MENU_ITEM(0x81,LANG_MENU_SELECT_FIRST_ENTRY,    MENUITEM_BOOL,	        &conf.menu_select_first_entry, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_SHOW_ALT_HELP,         MENUITEM_BOOL,          &conf.show_alt_helper, 0 ),
-    MENU_ITEM(0x58,LANG_MENU_SHOW_ALT_HELP_DELAY,   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.show_alt_helper_delay, MENU_MINMAX(0, 10) ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                  MENUITEM_UP, 0, 0 ),
-    {0}
-};
-
-static CMenu menu_settings_submenu = {0x26,LANG_MENU_MENU_SETTINGS, NULL, menu_settings_submenu_items };
-
-//-------------------------------------------------------------------
-
 static void gui_menuproc_reset_selected(unsigned int btn)
 {
     if (btn==MBOX_BTN_YES)
@@ -1823,7 +1802,6 @@ static CMenuItem chdk_settings_menu_items[] = {
     MENU_ITEM   (0x72,LANG_MENU_OSD_LAYOUT_EDITOR,          MENUITEM_PROC,      gui_menu_run_fltmodule, "_osd_le.flt" ),
     MENU_ITEM   (0x28,LANG_MENU_MAIN_VISUAL_PARAM,          MENUITEM_SUBMENU,   &visual_submenu, 0 ),
     MENU_ITEM   (0x28,LANG_MENU_MENU_SETTINGS,              MENUITEM_SUBMENU,   &menu_settings_submenu, 0 ),
-    MENU_ITEM   (0x28,LANG_MENU_OTHER_SETTINGS,             MENUITEM_SUBMENU,   &settings_submenu, 0 ),
     MENU_ITEM   (0x2f,LANG_MENU_OSD_GRID_PARAMS,            MENUITEM_SUBMENU,   &grid_submenu, 0 ),
 #ifdef OPT_CURVES
     MENU_ITEM   (0x85,LANG_MENU_CURVE_PARAM,                MENUITEM_SUBMENU,   &curve_submenu,     0 ),
@@ -1834,6 +1812,18 @@ static CMenuItem chdk_settings_menu_items[] = {
 #if CAM_REMOTE
     MENU_ITEM   (0x86,LANG_MENU_REMOTE_PARAM,               MENUITEM_SUBMENU,   &remote_submenu, 0 ),
 #endif
+    MENU_ITEM   (0x5c,LANG_MENU_MISC_SHOW_SPLASH,           MENUITEM_BOOL,      &conf.splash_show, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_MISC_START_SOUND,           MENUITEM_BOOL,      &conf.start_sound, 0 ),
+#if CAM_USE_ZOOM_FOR_MF
+    MENU_ITEM   (0x59,LANG_MENU_MISC_ZOOM_FOR_MF,           MENUITEM_BOOL,      &conf.use_zoom_mf, 0 ),
+#endif
+#if CAM_ADJUSTABLE_ALT_BUTTON
+    MENU_ITEM   (0x22,LANG_MENU_MISC_ALT_BUTTON,            MENUITEM_ENUM,      gui_alt_mode_button_enum, 0 ),
+#endif
+#if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
+    MENU_ITEM   (0x5c,LANG_MENU_MISC_ZOOM_ASSIST,           MENUITEM_BOOL,      &conf.zoom_assist_button_disable, 0 ),
+#endif
+    MENU_ITEM   (0x5d,LANG_MENU_MISC_DISABLE_LCD_OFF,       MENUITEM_ENUM,      gui_alt_power_enum, 0 ),
     MENU_ITEM   (0x2b,LANG_MENU_MAIN_RESET_OPTIONS,         MENUITEM_PROC,      gui_menuproc_reset, 0 ),
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP, 0, 0 ),
     {0}
@@ -2191,12 +2181,15 @@ static void gui_draw_alt_helper()
     draw_string(x, y, buf, MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
     y += FONT_HEIGHT;
 
-    sprintf(buf,lang_str(LANG_HELP_HEADER),
-            lang_str(LANG_HELP_HALF_PRESS),
-            (conf.user_menu_enable)?((conf.user_menu_enable && conf.user_menu_as_root)?lang_str(LANG_HELP_CHDK_MENU):lang_str(LANG_HELP_USER_MENU)):""); 
-    buf[35] = 0;
-    draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-    y += FONT_HEIGHT;
+    if (conf.user_menu_enable)
+    {
+        sprintf(buf,lang_str(LANG_HELP_HEADER),
+                lang_str(LANG_HELP_HALF_PRESS),
+                (conf.user_menu_enable && conf.user_menu_as_root)?lang_str(LANG_HELP_CHDK_MENU):lang_str(LANG_HELP_USER_MENU)); 
+        buf[35] = 0;
+        draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y += FONT_HEIGHT;
+    }
 
     draw_string(x, y, lang_str(LANG_HELP_SCRIPTS), MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
     y += FONT_HEIGHT;
@@ -2349,6 +2342,10 @@ int gui_chdk_kbd_process()
 {
     if (alt_mode_script_run()) return 0;
 
+    // Process Shutter Half Press + BUTTON shortcuts
+    gui_kbd_shortcuts();
+    if (camera_info.state.is_shutter_half_press) return 0;
+
 #if !CAM_HAS_ERASE_BUTTON && CAM_CAN_SD_OVERRIDE        // ALT RAW toggle kbd processing if camera has SD override but no erase button
     if (kbd_is_key_clicked(SHORTCUT_TOGGLE_RAW))
     {
@@ -2463,9 +2460,6 @@ int gui_chdk_kbd_process()
     }
 #endif
 
-    // Process Shutter Half Press + BUTTON shortcuts
-    gui_kbd_shortcuts();
-
     return 0;
 }
 
@@ -2547,10 +2541,13 @@ int gui_kbd_process()
     if (gui_mode)
     {
         // Call menu button handler if menu button pressed
-        if (kbd_is_key_clicked(KEY_MENU))
+        if (gui_mode->kbd_process_menu_btn)
         {
-            if (gui_mode->kbd_process_menu_btn) gui_mode->kbd_process_menu_btn();
-            return 0;
+            if (kbd_is_key_clicked(KEY_MENU))
+            {
+                gui_mode->kbd_process_menu_btn();
+                return 0;
+            }
         }
 
         // Call mode handler for other buttons
