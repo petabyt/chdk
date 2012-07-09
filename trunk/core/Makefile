@@ -59,6 +59,9 @@ ifdef OPT_EXMEM_MALLOC
 #CFLAGS+=-DOPT_EXMEM_MALLOC
 OPT_OBJS+=suba.o
 endif
+ifdef OPT_DBG_DUMP
+OPT_OBJS+=dbg_dump.o
+endif
 
 OBJS=entry.o main.o gui_draw.o gui_menu.o gui_user_menu.o gui_mbox.o \
      gui.o kbd.o action_stack.o conf.o module_wrappers.o module_exportlist.o \
