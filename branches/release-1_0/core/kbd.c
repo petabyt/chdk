@@ -109,6 +109,7 @@ static int nTxtbl[]={0,18,43,55,76,93,113,124};
     defined(CAMERA_ixus980_sd990) || \
     defined(CAMERA_a1100) || \
     defined(CAMERA_a3000) || \
+    defined(CAMERA_a3200) || \
     defined(CAMERA_a3300)
 #define ZSTEP_TABLE_SIZE 8
 static int nTxtbl[]={0,1,2,3,4,5,6,7};

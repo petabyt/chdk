@@ -1,0 +1,9 @@
+Canon A3200IS
+-------------
+This was a blind port based on A3300 100d port, this is my first try of CHDK porting.
+
+To enter CHDK <Alt> mode use the FACE button.
+
+-------------------------------------------------------------------------
+- RAW generation files tested.
+
