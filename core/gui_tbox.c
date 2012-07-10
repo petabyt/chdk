@@ -32,7 +32,6 @@ static unsigned int tbox_width; //width of the 'window'
 static const char*  tbox_title;
 static const char*  tbox_msg;
 static char         cursor_to_draw;
-static int          cl_greygrey;
 
 // height of prompt
 #define MAX_LINES              6
@@ -270,7 +269,7 @@ void gui_tbox_draw(int enforce_redraw)
 
             // clean previous symbols line
             int pline = (line == 0)?lines:line-1;
-            draw_filled_rect(key_offset_x, tbox_buttons_y, key_offset_x+(tbox_width-1)*FONT_WIDTH, tbox_buttons_y+3*FONT_HEIGHT, cl_greygrey);
+            draw_filled_rect(key_offset_x, tbox_buttons_y, key_offset_x+(tbox_width-1)*FONT_WIDTH, tbox_buttons_y+3*FONT_HEIGHT, MAKE_COLOR(COLOR_GREY, COLOR_GREY));
 
             // draw current symbols line
             int x, group;
@@ -330,7 +329,7 @@ void gui_tbox_draw(int enforce_redraw)
         cursor_to_draw = 0;
     }
     else {
-        draw_line(text_offset_x+(1+cursor-offset)*FONT_WIDTH, text_offset_y+1, text_offset_x+(1+cursor-offset)*FONT_WIDTH, text_offset_y+FONT_HEIGHT-3, cl_greygrey);
+        draw_line(text_offset_x+(1+cursor-offset)*FONT_WIDTH, text_offset_y+1, text_offset_x+(1+cursor-offset)*FONT_WIDTH, text_offset_y+FONT_HEIGHT-3, MAKE_COLOR(COLOR_GREY, COLOR_GREY));
         cursor_to_draw = 1;
     }
 }
