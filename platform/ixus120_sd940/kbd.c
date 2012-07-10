@@ -22,7 +22,7 @@ extern void _platformsub_kbd_fetch_data(long*);
 
 #define KEYS_MASK0 (0x00000008|0X00000004)
 #define KEYS_MASK1 (0x00000000)
-#define KEYS_MASK2 (0x00000300|0x00000100|0x00000080|0x00000040|0x00000010|0x00000020|0x00000004|0x00000008|0x00000001)
+#define KEYS_MASK2 (0x00000800|0x00000300|0x00000100|0x00000080|0x00000040|0x00000010|0x00000020|0x00000004|0x00000008|0x00000001)
 
 #define NEW_SS (0x2000)
 
@@ -49,10 +49,11 @@ static char kbd_stack[NEW_SS];
 static KeyMap keymap[] = {
 	/* tiny bug: key order matters. see kbd_get_pressed_key() */
 
+	{ 2, KEY_PLAYBACK	, 0x00000800 },
 	{ 2, KEY_SHOOT_FULL	, 0x00000300 },
-    { 2, KEY_SHOOT_FULL_ONLY, 0x00000200 },
+	{ 2, KEY_SHOOT_FULL_ONLY, 0x00000200 },
 	{ 2, KEY_SHOOT_HALF	, 0x00000100 },
-	{ 2, KEY_UP			, 0x00000080 },
+	{ 2, KEY_UP		, 0x00000080 },
 	{ 2, KEY_DOWN		, 0x00000040 },
 	{ 2, KEY_LEFT		, 0x00000010 },
 	{ 2, KEY_RIGHT		, 0x00000020 },
@@ -63,7 +64,6 @@ static KeyMap keymap[] = {
 	{ 0, KEY_DISPLAY	, 0x00000008 },
 	{ 0, KEY_SET		, 0x00000004 },
 	/*
-	{ 2, KEY_PWR_PLAYBACK	, 0x00000800 },
 	{ 2, KEY_PWR_SHOOT		, 0x00000400 },
 	{ 2, KEY_BATTERY_DOOR	, 0x00008000 },
     { 0, KEY_SW_AUTO		, 0x00000001 },
