@@ -13,12 +13,6 @@
 	line 35: alt_mode_key_mask = 0x00004000
 	line 62: { 2, KEY_PRINT		     ,0x00004000 },  //KEY_VIDEO for ALT menu
 	
-	In line 255 special handling of KEY_VIDEO is defined:
-	Short Press of KEY_VIDEO toggles <ALT> mode
-	Long Press of KEY_VIDEO executes original Canon functionality
-	
-	In future versions this will be changed from KEY_VIDEO to KEY_PLAYBACK.
-	
 ------------------------------------------------------------------------------*/
 
 typedef struct {
@@ -121,9 +115,6 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 
 void my_kbd_read_keys()
 {
-	static int altDownTimer=0;
-	const int DISP_DOWN_TIME = 20;
-
 	kbd_prev_state[0] = kbd_new_state[0];
 	kbd_prev_state[1] = kbd_new_state[1];
 	kbd_prev_state[2] = kbd_new_state[2];
@@ -135,14 +126,6 @@ void my_kbd_read_keys()
 	_kbd_read_keys_r2(kbd_new_state);
 	
 	kbd_new_state[2] |=0x00008000;  /// disable the battery door switch
-
-	// support for short/long press of Video button
-	if (kbd_is_key_pressed(KEY_VIDEO)) {			// Video Button held down
-		altDownTimer++;								// timer for KEY_VIDEO
-	}
-	else {
-		altDownTimer = 0;
-	}
 
 	if (kbd_process() == 0) {
 		// leave it alone...
@@ -159,10 +142,6 @@ void my_kbd_read_keys()
 		physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) |(kbd_mod_state[0] & KEYS_MASK0);
 		physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
 		physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) |(kbd_mod_state[2] & KEYS_MASK2);
-
-		if (altDownTimer > DISP_DOWN_TIME) {
-			physw_status[0] &= ~alt_mode_key_mask;  // press the VIDEO button
-		}
 	}
 	
 	// useful for further debugging: print keypress values on display
