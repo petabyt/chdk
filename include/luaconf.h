@@ -715,6 +715,10 @@ union luai_Cast { double l_d; long l_l; };
 ** without modifying the main part of the file.
 */
 
+#ifdef OPT_DBG_LUA_ASSERT
+#include "dbg_dump.h"
+#define lua_assert(x) ((x)?(void)0:dbg_dump_assert("A/LUAASRT.DMP",#x,__FILE__,__LINE__))
 #endif
 
+#endif
 

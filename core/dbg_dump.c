@@ -48,13 +48,14 @@ extern long link_data_start;
 extern long link_bss_start;
 extern long link_bss_end;
 
-void dbg_dump_write(char *name,unsigned flags, int user_data_len, char *user_data) {
+
+void dbg_dump_write(const char *dumpname,unsigned flags, int user_data_len, char *user_data) {
     static dumpinfo buf;
     // convenient access to uncached version
     dumpinfo *pb = (dumpinfo *)((int)&buf | CAM_UNCACHED_BIT);
     
     // use open + uncached mem because we may not have enough memory for fopen
-    int fd=open(name, O_WRONLY|O_CREAT|O_TRUNC, 0777);
+    int fd=open(dumpname, O_WRONLY|O_CREAT|O_TRUNC, 0777);
     if(fd >= 0) {
         int *sp;
         asm volatile( "MOV %0,SP\n" :"=r"(sp));
@@ -113,4 +114,11 @@ void dbg_dump_write(char *name,unsigned flags, int user_data_len, char *user_dat
     } else {
         script_console_add_line( "failed to open dump file" );
     }
+}
+
+void dbg_dump_assert(const char *dumpfile,const char *expr,const char *file,int line) {
+    static char buf[128]; // could overflow if expr is long
+    sprintf(buf,"ASSERT %s:%d %s",file,line,expr);
+    script_console_add_line( buf );
+    dbg_dump_write(dumpfile,0,sizeof(buf),buf);
 }
