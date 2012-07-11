@@ -6,11 +6,11 @@
   
   1 "Main Menu"
 
-  2 "RAW - digital negative"
+  2 "RAW (digital negative)"
   3 "OSD Settings"
-  4 "Histogram - exposure graph"
-  5 "Zebra - show over & under exposure"
-  6 "Script - program your camera"
+  4 "Histogram (exposure graph)"
+  5 "Zebra (show over & under exposure)"
+  6 "Script (program your camera)"
   7 "Visual Settings"
   8 "Miscellaneous Stuff"
   9 "Debug Parameters"
@@ -475,7 +475,7 @@
 369 "Select curve file"
 
 370 "Edge overlay"
-371 "Edge overlay - panorama tool"
+371 "Edge overlay (panorama tool)"
 
 372 "Enable edge overlay"
 373 "Edge overlay threshold"
@@ -691,3 +691,7 @@
 565 "Manual Focus"
 566 "Hide CHDK OSD while pressed"
 567 "  * - not available in <ALT> mode  "   // Len must be <= 35
+
+//
+568 "Manual flash (Power)"
+569 "Fast Ev step size"

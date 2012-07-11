@@ -330,9 +330,9 @@ int _module_run(int moduleidx, int argn, int* arguments)
   }
 
   char* fn=(char*)arguments[0];
-  gui_read_init(fn);
 
-  return 0;
+  // RETURN VALUE: 0-ok, 1-no file found
+  return (gui_read_init(fn) ? 0 : 1 );
 }
 
 
@@ -345,7 +345,7 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 									MODULEINFO_FLAG_SYSTEM,		// flag
 									(int32_t)"Text reader",		// Module name
-									1, 0,						// Module version
+									1, 1,						// Module version
 									0
 								 };
 

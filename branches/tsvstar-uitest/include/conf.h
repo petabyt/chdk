@@ -376,6 +376,8 @@ typedef struct {
     int tbox_char_map;          // Text input box language/char map
     int show_alt_helper;        // Show <ALT> mode help screen
     int show_alt_helper_delay;  // Delay before showing help screen
+
+	int chdk_gui_mode_enum;		// 0-newbie, 1-simple, 2-advanced
 } Conf;
 
 extern Conf conf;
@@ -389,6 +391,9 @@ extern Conf conf;
 #define SHOOTING_PROGRESS_STARTED       1
 #define SHOOTING_PROGRESS_PROCESSING    2
 #define SHOOTING_PROGRESS_DONE          3
+
+// common enum value declarations
+enum { CHDK_MODE_NEWBIE, CHDK_MODE_SIMPLE, CHDK_MODE_ADVANCED };
 
 
 // video quality defaults. Ideally, these should match the camera default settings

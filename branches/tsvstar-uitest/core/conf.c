@@ -460,6 +460,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(290, conf.tbox_char_map,              CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(291, conf.show_alt_helper,            CONF_DEF_VALUE,     i:1, NULL),
     CONF_INFO(292, conf.show_alt_helper_delay,      CONF_DEF_VALUE,     i:3, NULL),
+    CONF_INFO(293, conf.chdk_gui_mode_enum,         CONF_DEF_VALUE,     i:0, NULL),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
