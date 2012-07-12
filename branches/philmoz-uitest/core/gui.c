@@ -1750,6 +1750,12 @@ static const char* gui_alt_mode_button_enum(int change, int arg)
 #elif defined(CAMERA_ixus220_elph300hs) || defined(CAMERA_ixus230_elph310hs)
     static const char* names[]={ "Video", "Display", "Playback", "Video"};
     static const int keys[] = {KEY_PRINT, KEY_DISPLAY, KEY_PLAYBACK, KEY_VIDEO};
+#elif defined(CAMERA_ixus115_elph100hs) 
+    static const char* names[]={ "Playback", "Video", "Menu+Zoom" }; 
+    static const int keys[] = {KEY_PLAYBACK, KEY_VIDEO, KEY_PRINT}; 
+#elif defined(CAMERA_ixus120_sd940) 
+    static const char* names[]={ "Display", "Playback" }; 
+    static const int keys[] = {KEY_DISPLAY, KEY_PLAYBACK }; #else
 #else
 #error camera alt-buttons not defined
 #endif
@@ -2346,6 +2352,8 @@ int gui_chdk_kbd_process()
     gui_kbd_shortcuts();
     if (camera_info.state.is_shutter_half_press) return 0;
 
+    int reset_helper = 0;
+
 #if !CAM_HAS_ERASE_BUTTON && CAM_CAN_SD_OVERRIDE        // ALT RAW toggle kbd processing if camera has SD override but no erase button
     if (kbd_is_key_clicked(SHORTCUT_TOGGLE_RAW))
     {
@@ -2416,15 +2424,18 @@ int gui_chdk_kbd_process()
             if (kbd_is_key_clicked(KEY_RIGHT))
             {
                 sd_override_koef(1);
+                reset_helper = 1;
             }
             else if (kbd_is_key_clicked(KEY_LEFT))
             {
                 sd_override_koef(-1);
+                reset_helper = 1;
             }
             else if (kbd_is_key_clicked(SHORTCUT_SET_INFINITY))
             {
                 conf.subj_dist_override_value=MAX_DIST;
                 shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
+                reset_helper = 1;
             }
             else
 #endif
@@ -2435,6 +2446,7 @@ int gui_chdk_kbd_process()
                     conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance_1e3_f(shooting_get_aperture_from_av96(shooting_get_user_av96()),get_focal_length(lens_get_zoom_point()))/1000;
                 else conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance();
                 shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
+                reset_helper = 1;
             }
             else
             {
@@ -2446,6 +2458,7 @@ int gui_chdk_kbd_process()
                 case KEY_RIGHT:
 #endif
                     sd_override(1);
+                    reset_helper = 1;
                     break;
 #if CAM_HAS_ZOOM_LEVER
                 case KEY_ZOOM_OUT:
@@ -2453,12 +2466,19 @@ int gui_chdk_kbd_process()
                 case KEY_LEFT:
 #endif
                     sd_override(-1);
+                    reset_helper = 1;
                     break;
                 }
             }
         }
     }
 #endif
+
+    if (reset_helper)
+    {
+        gui_set_need_restore();
+        gui_reset_alt_helper();
+    }
 
     return 0;
 }

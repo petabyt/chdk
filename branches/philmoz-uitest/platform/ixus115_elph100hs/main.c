@@ -11,6 +11,7 @@ extern void boot();
 
 void startup()
 {
+
 	long *bss = &link_bss_start;
 	long *ptr;
 
@@ -27,28 +28,27 @@ void startup()
 	boot();
 }
 
-int screen_opened(void) {
-	return (physw_status[2] & 0x00002000);
-}
 
-int screen_rotated(void) {
-	return !(physw_status[2] & 0x00001000);
-}
+// Focus length table
+#define NUM_FL    10   // number of entries in focal length table
+#define NUM_DATA  3    // 3 words in each entry, first is FL
 
-// Focus length table in firmware @ FFFEA5CC
-#define NUM_FL      101 // 0 - 100, entries in firmware
-#define NUM_DATA    2   // 3 words each entry, first is FL
 extern int focus_len_table[NUM_FL*NUM_DATA];
+// Focal length range is 5.0 - 28,0 mm, 20 - 112 in 35-mm equivalent according to Canon's publisehd specs
 
 // Conversion factor lens FL --> 35mm equiv
 // lens      35mm     CF
 // ----      ----     --
-// 15.1       28      ( 28/15.1) * 151 = 280  (min FL)
-// 60.4      112      (112/60.4) * 151 = 280  (max FL)
-#define CF_EFL      280
-#define CF_EFL_DIV  151
+// 5.0       20       (  20 / 5.0)  * 50 = 200  (min FL)
+// 28.0      112      ( 112 / 28.0) * 50 = 200  (max FL)
 
-const int zoom_points = NUM_FL;
+// So, CF_EFL = 20/5.0*10000=40000 (check : 112/28.0*10000=40000)
+// divide by 10 to avoid overflow in get_effective_focal_length()
+#define CF_EFL      200
+#define CF_EFL_DIV  50
+
+
+const int zoom_points = NUM_FL ;
 
 int get_effective_focal_length(int zp) {
 	return (CF_EFL*get_focal_length(zp))/CF_EFL_DIV;
@@ -57,7 +57,7 @@ int get_effective_focal_length(int zp) {
 int get_focal_length(int zp) {
 	if (zp < 0) zp = 0;
 	else if (zp >= NUM_FL) zp = NUM_FL-1;
-	return focus_len_table[zp];
+	return focus_len_table[zp*NUM_DATA];
 }
 
 int get_zoom_x(int zp) {
@@ -66,11 +66,10 @@ int get_zoom_x(int zp) {
 
 long get_vbatt_min()
 {
-	return 6450;    // TODO
+	return 3280;  // min observed was 3.408, then it died
 }
 
 long get_vbatt_max()
 {
-	return 8300;    // TODO
+	return 4057;  // fresh from change (actual was 4.127)
 }
-
