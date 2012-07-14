@@ -74,17 +74,12 @@ extern void _GetKbdState(long*);
            )
 
 //#define LED_AF 0xC02200F4
-#define NEW_SS (0x2000)
 #define SD_READONLY_FLAG    0x00020000 // Found @0xffb5d574, levent 0x90a
 #define USB_MASK            0x04000000 // Found @0xffb5d594, levent 0x902
 #define USB_FLAG            0x04000000 // ?? Found @0xff3bcf44 a3300, levent 0x902
 #define USB_REG 2
 #define SD_READONLY_IDX     2
 #define USB_IDX             2
-
-#ifndef MALLOCD_STACK
-static char kbd_stack[NEW_SS];
-#endif
 
 static KeyMap keymap[] = {
     { 0, KEY_PRINT           ,BTN_Play },
