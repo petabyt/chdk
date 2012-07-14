@@ -47,9 +47,6 @@ static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static long last_kbd_key = 0;
-static int usb_power=0;
-static int remote_key, remote_count;
-static int shoot_counter=0;
 extern void _GetKbdState(long*);
 
 //#define DELAY_TIMEOUT 10000
@@ -72,14 +69,11 @@ extern void _GetKbdState(long*);
             BTN_ZoomTele     \
            )
 
-//#define LED_AF 0xC02200F4
-//#define NEW_SS (0x2000)
 #define SD_READONLY_FLAG    0x00020000 // Found @0xffb5d574, levent 0x90a
 #define USB_MASK            0x04000000 // Found @0xffb5d594, levent 0x902
 #define USB_FLAG            0x04000000 // ?? Found @0xff3bcf44 a3300, levent 0x902
-#define USB_REG 2
+#define USB_IDX 2
 #define SD_READONLY_IDX     2
-//#define USB_IDX             2
 
 extern void usb_remote_key( int ) ;
 int get_usb_bit() 
@@ -89,13 +83,6 @@ int get_usb_bit()
 	_kbd_read_keys_r2(usb_physw);
 	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
 }
-
-
-/*
-#ifndef MALLOCD_STACK
-static char kbd_stack[NEW_SS];
-#endif
-*/
 
 static KeyMap keymap[] = {
     { 0, KEY_PRINT           ,BTN_Play },
@@ -188,18 +175,6 @@ void my_kbd_read_keys() {
    
     physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;   // override SD-Card Readonly Bit
 }
-
-/*
-int get_usb_power(int edge) {
-
-  int x;
-
-    if (edge) return remote_key;
-    x = usb_power;
-    usb_power = 0;
-    return x;
-}
-*/
 
 void kbd_key_press(long key) {
     
