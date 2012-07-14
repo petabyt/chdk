@@ -69,7 +69,6 @@ extern void _GetKbdState(long*);
            )
 
 #define LED_AF 0xC02200F4
-#define NEW_SS (0x2000)
 
 #define SD_READONLY_FLAG (0x00020000)
 #define SD_READONLY_IDX     2
@@ -85,10 +84,6 @@ int get_usb_bit()
 	_kbd_read_keys_r2(usb_physw);
 	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
 }
-
-#ifndef MALLOCD_STACK
-static char kbd_stack[NEW_SS];
-#endif
 
 static KeyMap keymap[] = {
     { 0, KEY_PRINT           ,BTN_Play }, 
