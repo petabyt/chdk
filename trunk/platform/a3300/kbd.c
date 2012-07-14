@@ -12,7 +12,7 @@ typedef struct {
 
 // button and mode dial codes
 // physw [0]
-#define BTN_Play	(0x00002000)//??
+#define BTN_Play	(0x00002000)
 
 // physw [2]
 #define BTN_Up		(0x00000001)
@@ -21,7 +21,7 @@ typedef struct {
 #define BTN_Right	(0x00000008)
 #define BTN_Set		(0x00000010)
 #define BTN_Disp	(0x00000020)
-#define BTN_Face	(0x00000040)//??
+#define BTN_Face	(0x00000040)
 #define BTN_Menu	(0x00000080)
 
 // the MODE dial is in Gray code
@@ -47,12 +47,8 @@ static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static long last_kbd_key = 0;
-static int usb_power=0;
-static int remote_key, remote_count;
-static int shoot_counter=0;
-extern void _GetKbdState(long*);
 
-//#define DELAY_TIMEOUT 10000
+extern void _GetKbdState(long*);
 
 // override key and feather bits to avoid feather osd messing up chdk display in ALT mode
 #define KEYS_MASK0 (BTN_Play)
@@ -72,14 +68,14 @@ extern void _GetKbdState(long*);
             BTN_ZoomTele     \
            )
 
-//#define LED_AF 0xC02200F4
-//#define NEW_SS (0x2000)
-#define SD_READONLY_FLAG    0x00020000 // Found @0xffb5d574, levent 0x90a
-#define USB_MASK            0x04000000 // Found @0xffb5d594, levent 0x902
-#define USB_FLAG            0x04000000 // ?? Found @0xff3bcf44 a3300, levent 0x902
-#define USB_REG 2
+#define LED_AF 0xC02200F4
+#define NEW_SS (0x2000)
+
+#define SD_READONLY_FLAG (0x00020000)
 #define SD_READONLY_IDX     2
-//#define USB_IDX             2
+
+#define USB_MASK (0x04000000)
+#define USB_IDX             2
 
 extern void usb_remote_key( int ) ;
 int get_usb_bit() 
@@ -90,28 +86,25 @@ int get_usb_bit()
 	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
 }
 
-
-/*
 #ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
 #endif
-*/
 
 static KeyMap keymap[] = {
-    { 0, KEY_PRINT           ,BTN_Play },
-    { 2, KEY_SHOOT_FULL      ,BTN_ShootFull | BTN_ShootHalf }, // Found @0xffb5d554, levent 0x01
-    { 2, KEY_SHOOT_HALF      ,BTN_ShootHalf }, // Found @0xffb5d54c, levent 0x00
-    { 2, KEY_SHOOT_FULL_ONLY ,BTN_ShootFull }, // Found @0xffb5d554, levent 0x01
-    { 2, KEY_FACE            ,BTN_Face }, //
-    { 2, KEY_UP              ,BTN_Up }, // Found @0xffb5d4f4, levent 0x04
-    { 2, KEY_DOWN            ,BTN_Down }, // Found @0xffb5d4fc, levent 0x05
-    { 2, KEY_LEFT            ,BTN_Left }, // Found @0xffb5d504, levent 0x06
-    { 2, KEY_RIGHT           ,BTN_Right }, // Found @0xffb5d50c, levent 0x07
-    { 2, KEY_SET             ,BTN_Set }, // Found @0xffb5d514, levent 0x08
-    { 2, KEY_DISPLAY         ,BTN_Disp }, // Found @0xffb5d51c, levent 0x0a
-    { 2, KEY_MENU            ,BTN_Menu }, // Found @0xffb5d52c, levent 0x09
-    { 2, KEY_ZOOM_OUT        ,BTN_ZoomWide }, // Found @0xffb5d55c, levent 0x03
-    { 2, KEY_ZOOM_IN         ,BTN_ZoomTele }, // Found @0xffb5d564, levent 0x02
+    { 0, KEY_PRINT           ,BTN_Play }, 
+    { 2, KEY_SHOOT_FULL      ,BTN_ShootFull | BTN_ShootHalf }, // Found @0xffb5dc9c, levent 0x01
+    { 2, KEY_SHOOT_HALF      ,BTN_ShootHalf }, // Found @0xffb5dc94, levent 0x00
+    { 2, KEY_SHOOT_FULL_ONLY ,BTN_ShootFull }, // Found @0xffb5dc9c, levent 0x01
+    { 2, KEY_FACE            ,BTN_Face }, // 
+    { 2, KEY_UP              ,BTN_Up }, // Found @0xffb5dc3c, levent 0x04
+    { 2, KEY_DOWN            ,BTN_Down }, // Found @0xffb5dc44, levent 0x05
+    { 2, KEY_LEFT            ,BTN_Left }, // Found @0xffb5dc4c, levent 0x06
+    { 2, KEY_RIGHT           ,BTN_Right }, // Found @0xffb5dc54, levent 0x07
+    { 2, KEY_SET             ,BTN_Set }, // Found @0xffb5dc5c, levent 0x08
+    { 2, KEY_DISPLAY         ,BTN_Disp }, // Found @0xffb5dc64, levent 0x0a
+    { 2, KEY_MENU            ,BTN_Menu }, // Found @0xffb5dc74, levent 0x09
+    { 2, KEY_ZOOM_OUT        ,BTN_ZoomWide }, // Found @0xffb5dca4, levent 0x03
+    { 2, KEY_ZOOM_IN         ,BTN_ZoomTele }, // Found @0xffb5dcac, levent 0x02
     { 0, 0, 0 }
 };
 
@@ -122,13 +115,14 @@ void kbd_set_alt_mode_key_mask(long key)
 
 
 extern long __attribute__((naked)) wrap_kbd_p1_f() {
+	
 
-    asm volatile(
-        "STMFD	SP!, {R1-R7,LR} \n"
-        "MOV	R5, #0 \n"
-	//"BL	_kbd_read_keys \n"
-	"BL	my_kbd_read_keys \n"	// patched
-	"B	_kbd_p1_f_cont \n"
+	asm volatile(
+		"STMFD	SP!, {R1-R7,LR} \n"
+		"MOV	R5, #0 \n"
+		//"BL		_kbd_read_keys \n"
+		"BL		my_kbd_read_keys \n"	// pacthed
+		"B		_kbd_p1_f_cont \n"
 	);
 	return 0; // shut up the compiler
 }
@@ -137,7 +131,7 @@ extern long __attribute__((naked)) wrap_kbd_p1_f() {
 static void __attribute__((noinline)) mykbd_task_proceed() {
 	
 	while (physw_run) {
-        _SleepTask(*((int*)(0x1C30 + 0x8))); //  @FF83410C + FF834114
+        _SleepTask(*((int*)(0x1C30 + 0x8))); //  @FF834160 + FF834168
 
 		if (wrap_kbd_p1_f() == 1) {   // autorepeat ?
         	_kbd_p2_f();
@@ -182,24 +176,13 @@ void my_kbd_read_keys() {
 	
 	usb_remote_key(physw_status[USB_IDX]) ;
 
-    if (conf.remote_enable) {
-        physw_status[2] = physw_status[2] & ~(SD_READONLY_FLAG | USB_MASK);   // override USB and SD-Card Readonly Bits
-    }
-   
-    physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;   // override SD-Card Readonly Bit
-}
+	if (conf.remote_enable) {
+		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
+	} else {
+		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
+	}
 
-/*
-int get_usb_power(int edge) {
-
-  int x;
-
-    if (edge) return remote_key;
-    x = usb_power;
-    usb_power = 0;
-    return x;
-}
-*/
+	}
 
 void kbd_key_press(long key) {
     
@@ -347,4 +330,3 @@ long kbd_get_autoclicked_key() {
         return 0;
     }
 #endif
-
