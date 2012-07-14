@@ -39,8 +39,6 @@
 
     #undef  CAM_EMUL_KEYPRESS_DURATION
     #define CAM_EMUL_KEYPRESS_DURATION      10
-    #undef CAM_EMUL_KEYPRESS_DELAY
-    #define CAM_EMUL_KEYPRESS_DELAY         200  // Delay to interpret <alt>-button press as longpress
     #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_BRACKETING                  1
     #undef  CAM_VIDEO_CONTROL
