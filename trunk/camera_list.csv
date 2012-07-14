@@ -83,6 +83,8 @@ ixus120_sd940,101a,,,
 ixus120_sd940,102c,,,
 ixus120_sd940,103b,,,
 ixus120_sd940,103c,,,
+ixus130_sd1400,100a,ALPHA,,SKIP_AUTOBUILD
+ixus130_sd1400,100c,ALPHA,,SKIP_AUTOBUILD
 ixus200_sd980,100c,BETA,,
 ixus200_sd980,101c,BETA,,
 ixus200_sd980,101d,BETA,,
