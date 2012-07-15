@@ -39,31 +39,7 @@ long vid_get_viewport_height()
 	return 240;
 }
 
-
-long vid_get_bitmap_screen_width()
-{
-	return 360;
-}
-
-
-long vid_get_bitmap_screen_height()
-{
-	return 240;
-}
-
-
-long vid_get_bitmap_buffer_width() 
-{ 
-	return 720; 
-}
-
-
-long vid_get_bitmap_buffer_height() 
-{ 
-	return 240; 
-}
-
-
+/// COMMENT below is from a3300, someone should fix this for a3200
 //Have to disable here and add to /sub for 100a 
 //cause 100d crashes when in shoot mode trying to access Alt menu.
 //Re-Added in /SUB/100a

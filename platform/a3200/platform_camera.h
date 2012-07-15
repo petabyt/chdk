@@ -50,6 +50,9 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12 //??
 
+    #undef  CAM_BITMAP_WIDTH
+    #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
+
     #define cam_CFAPattern                  0x02010100  // Red  Green  Green  Blue
 
     #define CAM_COLORMATRIX1                             \
