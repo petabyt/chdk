@@ -19,8 +19,3 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(LockAndRefresh,              0xFFA04AA4)
 NHSTUB(UnlockAndRefresh,            0xFFA04B48)
 NHSTUB(platformsub_kbd_fetch_data,  0xFF85F11C)
-
-# Stubs requires for JogDial code
-STUB(FF896BD4)
-STUB(FF896B04)
-STUB(FFA04AA4)

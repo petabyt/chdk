@@ -27,21 +27,3 @@ NHSTUB(localtime,					0xFF08A9C8)
 NHSTUB(ufree, 						0xFF02BEA0)
 NHSTUB(GetLogToFile,                0xFF1D9B04)
 NHSTUB(EraseLogSector,              0xFF1D9B40)
-
-
-
-
-//Fixed errors in compiler
-
-STUB(FF057EBC)
-
-//movierec.c
-STUB(FF0772A4)
-STUB(FF075688)
-STUB(FF07568C)
-STUB(FF0757D4)
-STUB(FF077E04)
-STUB(FF077E68)
-STUB(FF077ECC)
-STUB(FF075A1C)
-STUB(FF0759C0)

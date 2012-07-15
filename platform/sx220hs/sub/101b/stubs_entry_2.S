@@ -23,8 +23,3 @@ NHSTUB(fread,                       0xFF026BC4)
 NHSTUB(fwrite,                      0xFF026C18)
 NHSTUB(localtime,                   0xFF08446C)
 NHSTUB(ufree,                       0xFF02B884)
-
-//Fixed errors in compiler
-STUB(FF18669C)
-STUB(FF187C10)
-STUB(FF18D1CC)
