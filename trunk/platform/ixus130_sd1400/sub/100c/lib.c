@@ -12,15 +12,12 @@ long hook_raw_size() {
     return 0x14d2400;
 }
 
-// Live picture buffer (shoot half-pressed)
 // search for String "VRAM Address" (like SX10)
 // or search for String "MaxY %ld MinY %ld" and look below
 void *vid_get_viewport_fb() {
     return (void*)0x40547700;
 }
 
-// ?!?
-// possible future use
 void *vid_get_viewport_fb_d() {
     return (void*)(*(int*)0x29f4);         // ff871dec: 0x29a0 + 0x54
 }
@@ -105,25 +102,10 @@ void *vid_get_bitmap_fb() {
     return (void*)0x40431000;
 }
 
-// if buffer width was to small, Logo was shown as distorted "row" on Display
-long vid_get_bitmap_buffer_width() { return 960; }
-long vid_get_bitmap_buffer_height() { return 270; }
-
-long vid_get_bitmap_screen_width() { return 480; }
-long vid_get_bitmap_screen_height() { return 240; }
-
-// buffer containing live view (when shutter half pressed)
-// check by looking at edge overlay
 int vid_get_viewport_width() { return 360; }
+
 long vid_get_viewport_height() { return 270; }
-/*
-int vid_get_viewport_width() {
-    return ((mode_get()&MODE_MASK) == MODE_PLAY)?480:360;
-}
-*/
 
-
-// ?!?
 // search for String "9999"
 // ff9eacb0: 	e250cc27 	subs	ip, r0, #9984	; 0x2700
 // ff9eacb4: 	225cc00f 	subscs	ip, ip, #15	; 0xf

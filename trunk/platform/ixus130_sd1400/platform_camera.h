@@ -28,7 +28,6 @@
     #define CAM_RAW_ROWS                3296		// 
 
     #undef  CAM_HAS_ERASE_BUTTON
- // #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_MULTIPART               1
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER           1
@@ -37,9 +36,6 @@
     #undef CAM_SYNCH
 
     #define CAM_HAS_ZOOM_LEVER          1
-
- // #define CAM_CAN_SD_OVER_NOT_IN_MF   1			// Camera allows subject distance (focus) override when not in manual focus mode
- // #define CAM_CAN_SD_OVERRIDE         1			// Camera allows to do subject distance override
 
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES
@@ -65,6 +61,10 @@
     #undef CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE          5
 
+    #undef  CAM_BITMAP_WIDTH
+    #define CAM_BITMAP_WIDTH           960 // Actual width of bitmap screen in bytes
+
+
     #undef ZEBRA_HMARGIN0
     #define ZEBRA_HMARGIN0              30			//zebra adjust buffer height: show use at sx200is: needed for save memory space
     #define CAM_ZEBRA_ASPECT_ADJUST 1
@@ -86,42 +86,15 @@
                             -279980, 1000000, 766686, 1000000,   67944, 1000000, \
                              -14382, 1000000, 113688, 1000000,  239853, 1000000
 
+    #define cam_CalibrationIlluminant1  17			// Standard Light A
+
     #define CAM_ACTIVE_AREA_X1                  48
     #define CAM_ACTIVE_AREA_Y1                  28
     #define CAM_ACTIVE_AREA_X2                  4416-48
     #define CAM_ACTIVE_AREA_Y2                  3296-28
 
-    //nandoide sept-2009
     #undef CAM_USES_ASPECT_CORRECTION   
-    #undef CAM_USES_ASPECT_YCORRECTION  
     #define CAM_USES_ASPECT_CORRECTION  1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
-    #define CAM_USES_ASPECT_YCORRECTION  0  //only uses mappings on x coordinate
-
-    //grids
-    #undef ASPECT_GRID_XCORRECTION
-    #define ASPECT_GRID_XCORRECTION(x)  ( (x << 2) / 3 )
-    #undef ASPECT_GRID_YCORRECTION
-    #define ASPECT_GRID_YCORRECTION(y)  ( (y) )       //y correction for grids  made on a 360x240 As the buffer is 720x240 we have no correction here.
-    
-    //viewport
-    #undef ASPECT_VIEWPORT_XCORRECTION 
-    #define ASPECT_VIEWPORT_XCORRECTION(x) ASPECT_GRID_XCORRECTION(x)
-    #undef ASPECT_VIEWPORT_YCORRECTION 
-    #define ASPECT_VIEWPORT_YCORRECTION(y) ( (y) ) 
-    #undef EDGE_HMARGIN 
-    #define EDGE_HMARGIN 28
-    
-    //games mappings
-   #undef GAMES_SCREEN_WIDTH
-   #undef GAMES_SCREEN_HEIGHT
-   #define GAMES_SCREEN_WIDTH 360
-   #define GAMES_SCREEN_HEIGHT 240
-   #undef ASPECT_GAMES_XCORRECTION
-   #define ASPECT_GAMES_XCORRECTION(x)   ( (x) << 1 )  
-   #undef ASPECT_GAMES_YCORRECTION
-   #define ASPECT_GAMES_YCORRECTION(y)   ( (y) )  //none
-
-    #define cam_CalibrationIlluminant1  17			// Standard Light A
 
     // cropping
     #define CAM_JPEG_WIDTH              4320
@@ -130,4 +103,6 @@
     #define PARAM_CAMERA_NAME           4			// parameter number for GetParameterData sd990: OK
     #define CAM_CHDK_PTP                1
     #define CAM_DATE_FOLDER_NAMING      1
+
+   #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1  
 

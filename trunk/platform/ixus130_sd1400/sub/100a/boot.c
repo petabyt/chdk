@@ -2,7 +2,6 @@
 #include "platform.h"
 #include "core.h"
 #include "dryos31.h"
-#include "led.h"
 
 const char * const new_sa = &_end;
 
@@ -26,7 +25,6 @@ void __attribute__((naked,noinline)) init_file_modules_task() {    // FF89467C
         "ldreq  r1, =0x0\n" // was: "mov ..., #0"
         "beq    sub_FF8904CC\n" 
     );
-  led_flash(LED_RED, 1);
   asm volatile (
         "pop    {r4, r5, r6, pc}\n"
     );
