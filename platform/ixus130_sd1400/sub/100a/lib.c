@@ -80,44 +80,18 @@ void *vid_get_bitmap_fb() {
     return (void*)0x40431000;
 }
 
-// Live picture buffer (shoot half-pressed)
 // search for String "VRAM Address" (like SX10)
 // or search for String "MaxY %ld MinY %ld" and look below
 void *vid_get_viewport_fb() {
     return (void*)0x40547700;
 }
 
-// ?!?
-// possible future use
 void *vid_get_viewport_fb_d() {
     return (void*)(*(int*)0x29f4);         // ff871dec: 0x29a0 + 0x54
 }
 
-// vid_* stuff is related to BmpDDev() stuff (ROM:FF919A78 and other) and LiveImage.c
-
-// ROM:FF9013D8 0x2D0 = 720 ?!?
-// SD990 ROM:FF83CFC8 ?!?
-//long vid_get_bitmap_screen_width() { return 320; }
-//long vid_get_bitmap_screen_width() { return 360; }
-//long vid_get_bitmap_screen_width() { return 480; }
-long vid_get_bitmap_screen_width() { return 480; }
-//long vid_get_bitmap_screen_width() { return 720; }
-//long vid_get_bitmap_screen_width() { return 960; }
-
-//long vid_get_bitmap_screen_height() { return 240; }
-//long vid_get_bitmap_screen_height() { return 270; }
-long vid_get_bitmap_screen_height() { return 270; }
-
-//int vid_get_viewport_width() { return 360; }    // viewport is still 360, even though live view is 720 (from SD990)
 int vid_get_viewport_width() { return 360; }
 
-/*
-int vid_get_viewport_width() {
-    return ((mode_get()&MODE_MASK) == MODE_PLAY)?480:360;
-}
-*/
-
-//long vid_get_viewport_height() { return 240; }
 long vid_get_viewport_height() { return 270; }
 
 // ?!?
@@ -133,11 +107,3 @@ char *camera_jpeg_count_str() {
     return (char*)0x9eb4c;
 }
 
-// if buffer width was to small, Logo was shown as distorted "row" on Display
-//long vid_get_bitmap_buffer_width() { return 360; }
-//long vid_get_bitmap_buffer_width() { return 720; }
-long vid_get_bitmap_buffer_width() { return 960; }
-
-//long vid_get_bitmap_buffer_height() { return 240; }
-//long vid_get_bitmap_buffer_height() { return 270; }
-long vid_get_bitmap_buffer_height() { return 270; }
