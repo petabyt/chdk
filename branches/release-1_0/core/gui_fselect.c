@@ -444,7 +444,7 @@ void gui_fselect_draw() {
                 else if (ptr->size < 1024*1024*1024)
                     sprintf(buf, "%3ld,%ld M", ptr->size/(1024*1024), (ptr->size%(1024*1024)*10)/(1024*1024) ); // "999,9 M"
                 else
-                    sprintf(buf, "%31d,%ld G", ptr->size/(1024*1024*1024), (ptr->size%(1024*1024*1024)*10)/(1024*1024*1024)); // "999.9 G"
+                    sprintf(buf, "%3ld,%ld G", ptr->size/(1024*1024*1024), (ptr->size%(1024*1024*1024)*10)/(1024*1024*1024)); // "999.9 G"
                     
                 if (ptr->marked)
                   sum_size += ptr->size;
@@ -508,7 +508,7 @@ void gui_fselect_draw() {
           if (fr < 1024*1024)
             sprintf(buf, "%dM (%d%%)", fr/1024, tot? fr*100/tot: 0);
           else
-            sprintf(buf, "%d.%dG (%d%%)", fr/(1024*1024), (fr%(10240))/100, tot? fr*100/tot: 0);
+            sprintf(buf, "%,%dG (%d%%)", fr/(1024*1024), (fr%(10240))/100, tot? fr*100/tot: 0);
         }
         draw_string(foot_x+foot_w-strlen(buf)*FONT_WIDTH-BORDER, foot_y, buf, MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); // free space
         gui_fselect_redraw = 0;
