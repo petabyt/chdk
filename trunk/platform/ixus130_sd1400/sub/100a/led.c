@@ -1,3 +1,4 @@
+/* note, this is unused debug code, left in case someone finds it useful*/
 #include "led.h"
 
 long * LED_GREEN = (long*)0xC0220130,
