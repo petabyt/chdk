@@ -44,15 +44,7 @@ void shutdown() {
   }
 }
 
-int get_flash_params_count(void){
-//ff9859f4: 	e3140902 	tst	r4, #32768	; 0x8000
-//ff9859f8: 	059f0a10 	ldreq	r0, [pc, #2576]	; ff986410: (ff98551c)  **"PropertyTableManagerCore.c"
-//ff9859fc: 	01a01006 	moveq	r1, r6
-//ff985a00: 	0bfa6443 	bleq	loc_ff81eb14
-//ff985a04: 	e3c44902 	bic	r4, r4, #32768	; 0x8000
-//ff985a08: 	e3540074 	cmp	r4, #116	; 0x74
-  return 116;
-}
+int get_flash_params_count(void) { return 0x94; }                          // Found @0xff986190
 
 // based on SX10, values found by experiment
 void camera_set_led(int led, int state, int bright) {

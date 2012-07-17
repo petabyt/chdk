@@ -87,7 +87,7 @@ void *vid_get_viewport_fb() {
 }
 
 void *vid_get_viewport_fb_d() {
-    return (void*)(*(int*)0x29f4);         // ff871dec: 0x29a0 + 0x54
+    return (void*)(*(int*)0x29f8);         // ff871dec: 0x29a0 + 0x58
 }
 
 int vid_get_viewport_width() { return 360; }
