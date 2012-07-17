@@ -82,6 +82,38 @@ void gui_menu_run_fltmodule(int arg)
 
 //-------------------------------------------------------------------
 
+// Transfer between quickdisable state and override_koef when switch chdk_mode
+static void operation_transfer_qdisabled( int mode, int* override_value_ptr, int* override_koef_ptr, enum_callback_func_t* koef_enum_callback )
+{
+	if ( !mode )
+	{
+		// FROM QUICKDISABLED: If value quickdisabled -> enable it but turn off override_koef
+		if ( *override_value_ptr < 0 ) {
+			if ( koef_enum_callback )
+				koef_enum_callback( -20, 0 );
+			else
+				*override_koef_ptr = 0;
+			value_turn_state(override_value_ptr,1);
+		}
+	}
+	else
+	{
+		// TO QUICKDISABLED: If override_koef=off -> turn it on but quickdisable tv_value
+		if ( !*override_koef_ptr ) {
+			value_turn_state(override_value_ptr,-1);
+
+			if ( koef_enum_callback ) {
+				*override_koef_ptr = 0;
+				koef_enum_callback( 1, 0 );
+			} else {
+				*override_koef_ptr = 1;
+			}
+		}
+	}
+}
+
+//-------------------------------------------------------------------
+
 static const char* gui_bracket_values_modes[] =             { "Off", "1/3 Ev","2/3 Ev", "1 Ev", "1 1/3Ev", "1 2/3Ev", "2 Ev", "2 1/3Ev", "2 2/3Ev", "3 Ev", "3 1/3Ev", "3 2/3Ev", "4 Ev"};
 static const char* gui_override_koef_modes[] =              { "Off", "1", "10", "100", "1000" };
 static const char* gui_bracket_type_modes[] =               { "+/-", "-","+"};
@@ -92,10 +124,10 @@ static CMenuItem bracketing_in_continuous_submenu_items[] = {
     MENU_ENUM2  (0x62,LANG_MENU_AV_BRACKET_VALUE,           &conf.av_bracket_value,         gui_bracket_values_modes ),
 #endif
 #if CAM_CAN_SD_OVERRIDE
-    MENU_ITEM   (0x5e,LANG_MENU_SUBJ_DIST_BRACKET_VALUE,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,                 &conf.subj_dist_bracket_value, MENU_MINMAX(0, 100) ),
+    MENU_ITEM   (0x5e,LANG_MENU_SUBJ_DIST_BRACKET_VALUE,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE,                 &conf.subj_dist_bracket_value, MENU_MINMAX(0, 10000) ),
     MENU_ENUM2  (0x5f,LANG_MENU_SUBJ_DIST_BRACKET_KOEF,     &conf.subj_dist_bracket_koef,   gui_override_koef_modes ),
 #endif
-    MENU_ITEM   (0x74,LANG_MENU_ISO_BRACKET_VALUE,          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,                 &conf.iso_bracket_value, MENU_MINMAX(0, 100) ),
+    MENU_ITEM   (0x74,LANG_MENU_ISO_BRACKET_VALUE,          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE,                 &conf.iso_bracket_value, MENU_MINMAX(0, 800) ),
     MENU_ENUM2a (0x5f,LANG_MENU_ISO_BRACKET_KOEF,           &conf.iso_bracket_koef,         gui_override_koef_modes,            4 ),
     MENU_ENUM2  (0x60,LANG_MENU_BRACKET_TYPE,               &conf.bracket_type,             gui_bracket_type_modes ),
     MENU_ITEM   (0x5b,LANG_MENU_CLEAR_BRACKET_VALUES,       MENUITEM_BOOL,                  &conf.clear_bracket,                0 ),
@@ -104,6 +136,23 @@ static CMenuItem bracketing_in_continuous_submenu_items[] = {
     {0}
 };
 static CMenu bracketing_in_continuous_submenu = {0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS_TITLE, NULL, bracketing_in_continuous_submenu_items };
+
+void readjust_bracketing_submenu()
+{
+	// adjust visibility of secondary items
+	int show_advanced = (conf.chdk_gui_mode_enum == CHDK_MODE_ADVANCED);
+	menuitem_foreach2( &bracketing_in_continuous_submenu, LANG_MENU_ISO_BRACKET_KOEF, 0, show_advanced );
+	menuitem_foreach2( &bracketing_in_continuous_submenu, LANG_MENU_SUBJ_DIST_BRACKET_KOEF, 0, show_advanced );
+
+	// Transfer disabled status dependent on chdk_mode
+	// If switch to advanced mode ensure that items are not quickdisabled. And if they are - transfer to override_koef
+	// If switch to simple mode ensure that override_koefs are not off. And if they are - transfer to quickdisable state
+	int to_qdisabled = (conf.chdk_gui_mode_enum != CHDK_MODE_ADVANCED) ? 1 : 0 ;
+#if CAM_CAN_SD_OVERRIDE
+	operation_transfer_qdisabled( to_qdisabled, &conf.subj_dist_bracket_value, &conf.subj_dist_bracket_koef, 0 );
+#endif
+	operation_transfer_qdisabled( to_qdisabled, &conf.iso_bracket_value, &conf.iso_bracket_koef, 0 );
+}
 
 //-------------------------------------------------------------------
 
@@ -1175,27 +1224,28 @@ static const char* gui_nd_filter_state_modes[] =            { "Off", "In", "Out"
 #endif
 static const char* gui_fast_ev_step_modes[] =               { "1/6 Ev","1/3 Ev","1/2 Ev", "2/3 Ev","5/6 Ev","1 Ev","1 1/6 Ev","1 1/3 Ev","1 1/2 Ev", "1 2/3 Ev","1 5/6 Ev","2 Ev","2 1/6 Ev","2 1/3 Ev","2 1/2 Ev", "2 2/3 Ev","2 5/6 Ev","3 Ev","3 1/6 Ev","3 1/3 Ev","3 1/2 Ev", "3 2/3 Ev","3 5/6 Ev","4 Ev"};
 #if CAM_QUALITY_OVERRIDE
-static const char* gui_fast_image_quality_modes[] =         { "sup.fine", "fine", "normal", "Off" };
+static const char* gui_fast_image_quality_modes[] =         { "sup.fine", "fine", "normal", "off" };
 #endif
 
 static CMenuItem operation_submenu_items[] = {
     //MENU_ENUM2  (0x5f,LANG_MENU_OVERRIDE_DISABLE,           &conf.override_disable, gui_override_disable_modes ),
     MENU_ITEM  (0x5f,LANG_MENU_OVERRIDE_DISABLE,           MENUITEM_ENUM,    gui_override_disable, &conf.override_disable ),
     MENU_ITEM   (0x5c,LANG_MENU_OVERRIDE_DISABLE_ALL,       MENUITEM_BOOL,          &conf.override_disable_all,         0 ),
-	  MENU_ITEM(0x61,LANG_MENU_OVERRIDE_TV_VALUE,        MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_tv_override_value_enum, &conf.tv_override_value ),
-	  MENU_ITEM(0x5f,LANG_MENU_OVERRIDE_TV_KOEF,         MENUITEM_ENUM,    gui_tv_override_koef_enum, &conf.tv_override_koef ),
- 	  MENU_ITEM(0x59,LANG_MENU_TV_ENUM_TYPE,             MENUITEM_ENUM,    gui_tv_enum_type_enum, &conf.tv_enum_type ),
+	MENU_ITEM(0x61,LANG_MENU_OVERRIDE_TV_VALUE,        MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_tv_override_value_enum, &conf.tv_override_value ),
+	MENU_ITEM(0x5f,LANG_MENU_OVERRIDE_TV_KOEF,         MENUITEM_ENUM,    gui_tv_override_koef_enum, &conf.tv_override_koef ),
+ 	MENU_ITEM(0x59,LANG_MENU_TV_ENUM_TYPE,             MENUITEM_ENUM,    gui_tv_enum_type_enum, &conf.tv_enum_type ),
 #if CAM_HAS_IRIS_DIAPHRAGM
-	  MENU_ITEM(0x62,LANG_MENU_OVERRIDE_AV_VALUE,        MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_av_override_enum, &conf.av_override_value ),
+	MENU_ITEM(0x62,LANG_MENU_OVERRIDE_AV_VALUE,        MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_av_override_enum, &conf.av_override_value ),
 #endif
 #if CAM_HAS_ND_FILTER
     MENU_ENUM2  (0x5f,LANG_MENU_OVERRIDE_ND_FILTER,         &conf.nd_filter_state,  gui_nd_filter_state_modes ),
 #endif
 #if CAM_CAN_SD_OVERRIDE
-      MENU_ITEM(0x5e,LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE, MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_subj_dist_override_value_enum, &conf.subj_dist_override_value ),
-	  MENU_ITEM(0x5f,LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF,  MENUITEM_ENUM,    gui_subj_dist_override_koef_enum, &conf.subj_dist_override_koef ),
+    MENU_ITEM(0x5e,LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE, MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_subj_dist_override_value_enum, &conf.subj_dist_override_value ),
+    MENU_ITEM(0x5f,LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF,  MENUITEM_ENUM,    gui_subj_dist_override_koef_enum, &conf.subj_dist_override_koef ),
 #endif
-	  MENU_ITEM(0x74,LANG_MENU_OVERRIDE_ISO_VALUE,	   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE,  &conf.iso_override_value, MENU_MINMAX(0, 12800) ),
+	
+    MENU_ITEM(0x74,LANG_MENU_OVERRIDE_ISO_VALUE,	   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE,  &conf.iso_override_value, MENU_MINMAX(0, 12800) ),
     MENU_ENUM2a (0x5f,LANG_MENU_OVERRIDE_ISO_KOEF,          &conf.iso_override_koef, gui_override_koef_modes,       4 ),
 #if ZOOM_OVERRIDE
     MENU_ITEM   (0x5c,LANG_MENU_OVERRIDE_ZOOM,              MENUITEM_BOOL,          &conf.zoom_override,                0 ),
@@ -1227,44 +1277,17 @@ static CMenuItem operation_submenu_items[] = {
 
 static CMenu operation_submenu = {0x21,LANG_MENU_OPERATION_PARAM_TITLE, NULL, operation_submenu_items };
 
+
 static int operation_showhide(int itemid, int visible )
 {
 	return menuitem_foreach2( &operation_submenu, itemid, 0, visible );
 }
 
-// Transfer between quickdisable state and override_koef when switch chdk_mode
-static void operation_transfer_qdisabled( int mode, int* override_value_ptr, int* override_koef_ptr, enum_callback_func_t* koef_enum_callback )
-{
-	if ( !mode )
-	{
-		// FROM QUICKDISABLED: If value quickdisabled -> enable it but turn off override_koef
-		if ( *override_value_ptr < 0 ) {
-			if ( koef_enum_callback )
-				koef_enum_callback( -20, 0 );
-			else
-				*override_koef_ptr = 0;
-			value_turn_state(override_value_ptr,1);
-		}
-	}
-	else
-	{
-		// TO QUICKDISABLED: If override_koef=off -> turn it on but quickdisable tv_value
-		if ( !*override_koef_ptr ) {
-			value_turn_state(override_value_ptr,-1);
-
-			if ( koef_enum_callback ) {
-				*override_koef_ptr = 0;
-				koef_enum_callback( 1, 0 );
-			} else {
-				*override_koef_ptr = 1;
-			}
-		}
-	}
-}
-
+// flags: 0x01= adjust DISABLE_ALL, 0x02 - adjust mode-dependent items
 void readjust_operation_submenu( int flags )
 {
 	// adjust visibility of secondary items
+
 	if ( flags&1 )
 		operation_showhide( LANG_MENU_OVERRIDE_DISABLE_ALL, conf.override_disable );
 
@@ -1800,6 +1823,7 @@ const char* gui_chdk_mode_show_enum(int change, int arg)
     {
 		readjust_autoiso_submenu();
 		readjust_operation_submenu( 0xff );
+		readjust_bracketing_submenu();
     }
 
     return rv;
@@ -2709,6 +2733,7 @@ void gui_activate_alt_mode()
         // start menu readustments according to chdk_mode
         readjust_operation_submenu( 0xff );
         readjust_autoiso_submenu();
+		readjust_bracketing_submenu();
 
         // If user menu set to start automatically when <ALT> mode entered 
         // then enter user menu mode, unless a script was paused by exiting 

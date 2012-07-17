@@ -98,6 +98,22 @@ void gui_menu_unload_module_menus()
 }
 
 //-------------------------------------------------------------------
+static void gui_menu_reset_incr() 
+{
+	int_incr = 1;
+	if ( curr_menu && gui_menu_curr_item>=0 ) {
+		int itemid = lang_strhash31( curr_menu->menu[gui_menu_curr_item].text );
+		if ( itemid == LANG_MENU_SUBJ_DIST_BRACKET_VALUE ||
+			 itemid == LANG_MENU_ISO_BRACKET_VALUE ||
+			 itemid == LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE ||
+			 itemid == LANG_MENU_OVERRIDE_ISO_VALUE )
+		{
+			int_incr = 10;
+		}
+	}
+}
+
+//-------------------------------------------------------------------
 void gui_menu_init(CMenu *menu_ptr) {
 
     if (menu_ptr) {
@@ -118,7 +134,7 @@ void gui_menu_init(CMenu *menu_ptr) {
     len_br1 = rbf_char_width('[');
     len_br2 = rbf_char_width(']');
     cl_rect = rbf_font_height() - 4;
-    int_incr = 1;
+	gui_menu_reset_incr();
 
     gui_menu_redraw=2;
 }
@@ -543,7 +559,7 @@ static void gui_menu_updown(int increment)
                  curr_menu->menu[gui_menu_curr_item].type & MENUITEM_HIDDEN );
 
         // Reset amount to increment integer values by
-        int_incr = 1;
+		gui_menu_reset_incr();
         gui_menu_disp_incr();
 
         // Redraw menu if needed

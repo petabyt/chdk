@@ -327,6 +327,8 @@ short shooting_get_iso_override_value()
 
 short shooting_get_iso_bracket_value()
 {
+	if ( conf.iso_bracket_value<0)
+		return 0;
     return conf.iso_bracket_value*koef[conf.iso_bracket_koef];
 }
 
@@ -345,6 +347,8 @@ int shooting_get_subject_distance_override_value()
 
 int shooting_get_subject_distance_bracket_value()
 {
+	if ( conf.subj_dist_bracket_value<0 )
+		return 0;
     return conf.subj_dist_bracket_value*koef[conf.subj_dist_bracket_koef];
 }
 
