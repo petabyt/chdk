@@ -64,6 +64,9 @@
     #undef  CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH           960 // Actual width of bitmap screen in bytes
 
+    #undef CAM_BITMAP_HEIGHT
+    #define CAM_BITMAP_HEIGHT          270 // Actual height of bitmap screen in rows
+
 
     #undef ZEBRA_HMARGIN0
     #define ZEBRA_HMARGIN0              30			//zebra adjust buffer height: show use at sx200is: needed for save memory space
