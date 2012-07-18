@@ -104,8 +104,11 @@ static void gui_menu_reset_incr()
 	if ( curr_menu && gui_menu_curr_item>=0 ) {
 		int itemid = lang_strhash31( curr_menu->menu[gui_menu_curr_item].text );
 		if ( itemid == LANG_MENU_SUBJ_DIST_BRACKET_VALUE ||
-			 itemid == LANG_MENU_ISO_BRACKET_VALUE ||
-			 itemid == LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE ||
+			 itemid == LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE )
+		{
+			int_incr = 100;
+		}
+		else if ( itemid == LANG_MENU_ISO_BRACKET_VALUE ||
 			 itemid == LANG_MENU_OVERRIDE_ISO_VALUE )
 		{
 			int_incr = 10;
@@ -630,6 +633,24 @@ void gui_menu_right( int value )
             }
 }
 
+
+// Purpose: cancel edit mode without apply changes
+void gui_menu_cancel_editmode()
+{
+	// cancel change
+    int *valueptr = menuitem_get_valueptr(curr_menu,gui_menu_curr_item);
+
+    if ( valueptr )
+        *valueptr = item_prev_value;
+
+    gui_menu_set_editmode(0);
+    gui_menu_left(0);	// process bounds and callbacks
+
+	// keep quickdisable state on cancel
+	if ( item_prev_value < 0 )
+		turn_current_item_off();
+}
+
 //-------------------------------------------------------------------
 // Process button presses when in GUI_MODE_MENU mode
 int gui_menu_kbd_process() {
@@ -640,6 +661,11 @@ int gui_menu_kbd_process() {
 #else    
         case KEY_SHOOT_HALF:
 #endif
+			if ( flag_editmode ) {
+				gui_menu_cancel_editmode();
+				break;
+			}
+
             if (conf.user_menu_enable == 3) {
                 if (curr_menu->title != LANG_MENU_USER_MENU) {
                     /*
@@ -814,20 +840,7 @@ int gui_menu_kbd_process() {
 
         case KEY_DISPLAY:
                 if ( flag_editmode ) {
-
-                    // cancel change
-                    int *valueptr = menuitem_get_valueptr(curr_menu,gui_menu_curr_item);
-
-                    if ( valueptr )
-                        *valueptr = item_prev_value;
-
-                    gui_menu_set_editmode(0);
-                    gui_menu_left(0);	// process bounds and callbacks
-
-					// keep quickdisable state on cancel
-					if ( item_prev_value < 0 )
-						turn_current_item_off();
-					  
+					gui_menu_cancel_editmode();					  
                 } else {
             		gui_menu_back();
                 }            

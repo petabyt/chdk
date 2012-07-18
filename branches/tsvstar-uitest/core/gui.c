@@ -2703,6 +2703,24 @@ void gui_set_alt_mode_state(int new_state)
     gui_current_alt_state = new_state;
 }
 
+static void copy_fname_w_new_ext( char* tgt, char* src, char* ext )
+{
+	if ( !src || !tgt ) return;
+
+	// copy filename
+	char *str = strrchr( src, '/' );
+	if (!str ) { str = src; } else { str++;}
+	strcpy( tgt, str );
+
+	// replce extension
+	str = strrchr( tgt, '.' );
+	if ( !str ) { str = tgt+strlen(tgt); }
+	strcpy(	 str, ext );
+
+		
+}
+
+
 // Called from the GUI task code to set the ALT mode state
 void gui_activate_alt_mode()
 {
@@ -2711,13 +2729,35 @@ void gui_activate_alt_mode()
     case ALT_MODE_ENTER:
 
 		// "Newbie" mode mean start help file
+		// Break regular ALT sequence only if module ok and help exists 
 		if ( conf.chdk_gui_mode_enum == CHDK_MODE_NEWBIE &&  !state_kbd_script_run )
 		{
 			conf.chdk_gui_mode_enum = CHDK_MODE_SIMPLE;
 			conf_save();
 
-			// Break regular ALT sequence only if module ok and help exists
-			unsigned int argv[] ={ (unsigned int)"A/CHDK/CHDK.HLP" };
+			// make path to help file
+
+			char path_buf[60];
+			unsigned int argv[] ={ (unsigned int)path_buf };
+			strcpy( path_buf, "A/CHDK/HELP/");
+
+			char* helpfile_name = path_buf + strlen(path_buf);
+
+			// if not success, try to load "_current_locale_.hlp"
+			if ( conf.lang_file[0] ) {
+				copy_fname_w_new_ext( helpfile_name, conf.lang_file, ".hlp");
+
+				if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
+					break;
+			}
+
+			// if not success, try to load "_base_language_.hlp"
+			copy_fname_w_new_ext( helpfile_name, gui_lang_source_filename, ".hlp");
+			if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
+				break;
+
+			//if not success, try to load "english.hlp"
+			argv[0] = (unsigned int)"A/CHDK/HELP/ENGLISH.HLP";
 			if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
 				break;
 		}
