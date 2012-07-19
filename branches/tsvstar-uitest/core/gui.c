@@ -82,32 +82,18 @@ void gui_menu_run_fltmodule(int arg)
 
 //-------------------------------------------------------------------
 
-// Transfer between quickdisable state and override_koef when switch chdk_mode
-static void operation_transfer_qdisabled( int mode, int* override_value_ptr, int* override_koef_ptr, enum_callback_func_t* koef_enum_callback )
+// Transfer override_koef status to quickdisable state (to reconcile imported conf and script changes of conf)
+static void operation_transfer_qdisabled( int* override_value_ptr, int* override_koef_ptr, enum_callback_func_t* koef_enum_callback )
 {
-	if ( !mode )
-	{
-		// FROM QUICKDISABLED: If value quickdisabled -> enable it but turn off override_koef
-		if ( *override_value_ptr < 0 ) {
-			if ( koef_enum_callback )
-				koef_enum_callback( -20, 0 );
-			else
-				*override_koef_ptr = 0;
-			value_turn_state(override_value_ptr,1);
-		}
-	}
-	else
-	{
-		// TO QUICKDISABLED: If override_koef=off -> turn it on but quickdisable tv_value
-		if ( !*override_koef_ptr ) {
-			value_turn_state(override_value_ptr,-1);
+	// TO QUICKDISABLED: If override_koef=off -> turn it on but quickdisable tv_value
+	if ( !*override_koef_ptr ) {
+		value_turn_state(override_value_ptr,-1);
 
-			if ( koef_enum_callback ) {
-				*override_koef_ptr = 0;
-				koef_enum_callback( 1, 0 );
-			} else {
-				*override_koef_ptr = 1;
-			}
+		if ( koef_enum_callback ) {
+			*override_koef_ptr = 0;
+			koef_enum_callback( 1, 0 );
+		} else {
+			*override_koef_ptr = 1;
 		}
 	}
 }
@@ -125,10 +111,9 @@ static CMenuItem bracketing_in_continuous_submenu_items[] = {
 #endif
 #if CAM_CAN_SD_OVERRIDE
     MENU_ITEM   (0x5e,LANG_MENU_SUBJ_DIST_BRACKET_VALUE,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE,                 &conf.subj_dist_bracket_value, MENU_MINMAX(0, 10000) ),
-    MENU_ENUM2  (0x5f,LANG_MENU_SUBJ_DIST_BRACKET_KOEF,     &conf.subj_dist_bracket_koef,   gui_override_koef_modes ),
+//    MENU_ENUM2  (0x5f,LANG_MENU_SUBJ_DIST_BRACKET_KOEF,     &conf.subj_dist_bracket_koef,   gui_override_koef_modes ),
 #endif
     MENU_ITEM   (0x74,LANG_MENU_ISO_BRACKET_VALUE,          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE,                 &conf.iso_bracket_value, MENU_MINMAX(0, 800) ),
-    MENU_ENUM2a (0x5f,LANG_MENU_ISO_BRACKET_KOEF,           &conf.iso_bracket_koef,         gui_override_koef_modes,            4 ),
     MENU_ENUM2  (0x60,LANG_MENU_BRACKET_TYPE,               &conf.bracket_type,             gui_bracket_type_modes ),
     MENU_ITEM   (0x5b,LANG_MENU_CLEAR_BRACKET_VALUES,       MENUITEM_BOOL,                  &conf.clear_bracket,                0 ),
     MENU_ITEM   (0x5c,LANG_MENU_BRACKETING_ADD_RAW_SUFFIX,  MENUITEM_BOOL,                  &conf.bracketing_add_raw_suffix,    0 ),
@@ -139,19 +124,12 @@ static CMenu bracketing_in_continuous_submenu = {0x2c,LANG_MENU_BRACKET_IN_CONTI
 
 void readjust_bracketing_submenu()
 {
-	// adjust visibility of secondary items
-	int show_advanced = (conf.chdk_gui_mode_enum == CHDK_MODE_ADVANCED);
-	menuitem_foreach2( &bracketing_in_continuous_submenu, LANG_MENU_ISO_BRACKET_KOEF, 0, show_advanced );
-	menuitem_foreach2( &bracketing_in_continuous_submenu, LANG_MENU_SUBJ_DIST_BRACKET_KOEF, 0, show_advanced );
-
-	// Transfer disabled status dependent on chdk_mode
-	// If switch to advanced mode ensure that items are not quickdisabled. And if they are - transfer to override_koef
-	// If switch to simple mode ensure that override_koefs are not off. And if they are - transfer to quickdisable state
-	int to_qdisabled = (conf.chdk_gui_mode_enum != CHDK_MODE_ADVANCED) ? 1 : 0 ;
+	// Reconcile pairs of values to "simple mode" realm:
+	// Ensure that override_koefs are not off. And if they are - transfer to quickdisable state
 #if CAM_CAN_SD_OVERRIDE
-	operation_transfer_qdisabled( to_qdisabled, &conf.subj_dist_bracket_value, &conf.subj_dist_bracket_koef, 0 );
+	operation_transfer_qdisabled( &conf.subj_dist_bracket_value, &conf.subj_dist_bracket_koef, 0 );
 #endif
-	operation_transfer_qdisabled( to_qdisabled, &conf.iso_bracket_value, &conf.iso_bracket_koef, 0 );
+	operation_transfer_qdisabled( &conf.iso_bracket_value, &conf.iso_bracket_koef, 0 );
 }
 
 //-------------------------------------------------------------------
@@ -332,7 +310,6 @@ void readjust_autoiso_submenu()
 	menuitem_foreach2( &autoiso_submenu, LANG_MENU_AUTOISO_IS_FACTOR, 0, func );
 	menuitem_foreach2( &autoiso_submenu, LANG_MENU_AUTOISO_USER_FACTOR, 0, func );
 
-//	func = (!conf.overexp_ev_enum) ? menuitem_hide : menuitem_unhide;
 	func = (conf.overexp_ev_enum);
 	menuitem_foreach2( &autoiso_submenu, LANG_MENU_ZEBRA_OVER, 0, func );
 	menuitem_foreach2( &autoiso_submenu, LANG_MENU_AUTOISO_OVEREXP_THRES, 0, func );
@@ -809,6 +786,63 @@ static void gui_show_memory_info(int arg)
     gui_mbox_init(LANG_MSG_MEMORY_INFO_TITLE, (int)buf, MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
 }
 
+
+// PURPOSE: find filename in "src" copy it to "tgt" with extension "ext"
+static void copy_fname_w_new_ext( char* tgt, char* src, char* ext )
+{
+	if ( !src || !tgt ) return;
+
+	// copy filename
+	char *str = strrchr( src, '/' );
+	if (!str ) { str = src; } else { str++;}
+	strcpy( tgt, str );
+
+	// replce extension
+	str = strrchr( tgt, '.' );
+	if ( !str ) { str = tgt+strlen(tgt); }
+	strcpy(	 str, ext );
+
+		
+}
+
+// PURPOSE: Try to open help file (fallback: selected_locale.hlp -> builtin_locale.hlp -> english.hlp )
+// RETURN: 0 if help was not runned, 1 if ok
+static int gui_show_help(int arg)
+{
+	if ( state_kbd_script_run )
+		return 0;
+
+	// make path to help file
+
+	char path_buf[60];
+	unsigned int argv[] ={ (unsigned int)path_buf };
+	strcpy( path_buf, "A/CHDK/HELP/");
+
+	char* helpfile_name = path_buf + strlen(path_buf);
+
+	// if not success, try to load "_current_locale_.hlp"
+	if ( conf.lang_file[0] ) {
+		copy_fname_w_new_ext( helpfile_name, conf.lang_file, ".hlp");
+
+		if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
+			return 1;
+	}
+
+	// if not success, try to load "_base_language_.hlp"
+	copy_fname_w_new_ext( helpfile_name, gui_lang_source_filename, ".hlp");
+	if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
+		return 1;
+
+	//if not success, try to load "english.hlp"
+	argv[0] = (unsigned int)"A/CHDK/HELP/ENGLISH.HLP";
+	if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
+		return 1;
+
+	return 0;
+}
+
+
+
 static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x35,LANG_MENU_MISC_FILE_BROWSER,          MENUITEM_PROC,                  gui_draw_fselect,                   0 ),
     MENU_ITEM   (0x80,(int)"Module Inspector",              MENUITEM_PROC,                  gui_menu_run_fltmodule, "modinsp.flt" ),
@@ -830,6 +864,7 @@ static CMenuItem misc_submenu_items[] = {
 #ifdef OPT_DEBUGGING
     MENU_ITEM   (0x2a,LANG_MENU_MAIN_DEBUG,                 MENUITEM_SUBMENU,               &debug_submenu,                     0 ),
 #endif
+    MENU_ITEM   (0x80,LANG_MENU_MISC_HELP,			        MENUITEM_PROC,                  gui_show_help,	                    0 ),
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0,                                  0 ),
     {0},
 };
@@ -1232,8 +1267,6 @@ static CMenuItem operation_submenu_items[] = {
     MENU_ITEM  (0x5f,LANG_MENU_OVERRIDE_DISABLE,           MENUITEM_ENUM,    gui_override_disable, &conf.override_disable ),
     MENU_ITEM   (0x5c,LANG_MENU_OVERRIDE_DISABLE_ALL,       MENUITEM_BOOL,          &conf.override_disable_all,         0 ),
 	MENU_ITEM(0x61,LANG_MENU_OVERRIDE_TV_VALUE,        MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_tv_override_value_enum, &conf.tv_override_value ),
-	MENU_ITEM(0x5f,LANG_MENU_OVERRIDE_TV_KOEF,         MENUITEM_ENUM,    gui_tv_override_koef_enum, &conf.tv_override_koef ),
- 	MENU_ITEM(0x59,LANG_MENU_TV_ENUM_TYPE,             MENUITEM_ENUM,    gui_tv_enum_type_enum, &conf.tv_enum_type ),
 #if CAM_HAS_IRIS_DIAPHRAGM
 	MENU_ITEM(0x62,LANG_MENU_OVERRIDE_AV_VALUE,        MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_av_override_enum, &conf.av_override_value ),
 #endif
@@ -1242,11 +1275,10 @@ static CMenuItem operation_submenu_items[] = {
 #endif
 #if CAM_CAN_SD_OVERRIDE
     MENU_ITEM(0x5e,LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE, MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_subj_dist_override_value_enum, &conf.subj_dist_override_value ),
-    MENU_ITEM(0x5f,LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF,  MENUITEM_ENUM,    gui_subj_dist_override_koef_enum, &conf.subj_dist_override_koef ),
+//    MENU_ITEM(0x5f,LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF,  MENUITEM_ENUM,    gui_subj_dist_override_koef_enum, &conf.subj_dist_override_koef ),
 #endif
 	
     MENU_ITEM(0x74,LANG_MENU_OVERRIDE_ISO_VALUE,	   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE,  &conf.iso_override_value, MENU_MINMAX(0, 12800) ),
-    MENU_ENUM2a (0x5f,LANG_MENU_OVERRIDE_ISO_KOEF,          &conf.iso_override_koef, gui_override_koef_modes,       4 ),
 #if ZOOM_OVERRIDE
     MENU_ITEM   (0x5c,LANG_MENU_OVERRIDE_ZOOM,              MENUITEM_BOOL,          &conf.zoom_override,                0 ),
     MENU_ITEM(0x5f,LANG_MENU_OVERRIDE_ZOOM_VALUE,	  MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_zoom_override_enum, &conf.zoom_override_value ),
@@ -1278,59 +1310,31 @@ static CMenuItem operation_submenu_items[] = {
 static CMenu operation_submenu = {0x21,LANG_MENU_OPERATION_PARAM_TITLE, NULL, operation_submenu_items };
 
 
-static int operation_showhide(int itemid, int visible )
-{
-	return menuitem_foreach2( &operation_submenu, itemid, 0, visible );
-}
-
 // flags: 0x01= adjust DISABLE_ALL, 0x02 - adjust mode-dependent items
 void readjust_operation_submenu( int flags )
 {
 	// adjust visibility of secondary items
 
+
 	if ( flags&1 )
-		operation_showhide( LANG_MENU_OVERRIDE_DISABLE_ALL, conf.override_disable );
+		menuitem_foreach2( &operation_submenu, LANG_MENU_OVERRIDE_DISABLE_ALL, 0, conf.override_disable /*mean isVisible */ );
 
-	if ( !(flags&2) )
-		return;
-
-	int show_advanced = (conf.chdk_gui_mode_enum == CHDK_MODE_ADVANCED);
-	operation_showhide( LANG_MENU_OVERRIDE_TV_KOEF, 	show_advanced );
-	operation_showhide( LANG_MENU_TV_ENUM_TYPE, 		show_advanced );
-	operation_showhide( LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF, show_advanced );
-	operation_showhide( LANG_MENU_OVERRIDE_ISO_KOEF,	show_advanced );
-	operation_showhide( LANG_MENU_MISC_FAST_EV,			show_advanced );
-	operation_showhide( LANG_MENU_FLASH_MANUAL_OVERRIDE, show_advanced );
-	operation_showhide( LANG_MENU_MISC_FAST_EV_STEP,	show_advanced );
-	operation_showhide( LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER, show_advanced );
-
-	operation_showhide( LANG_MENU_MISC_FAST_EV_STEP_SIMPLE,	!show_advanced );
-	operation_showhide( LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER_SIMPLE, !show_advanced );
-
-
-	// Transfer disabled status dependent on chdk_mode
-	// If switch to advanced mode ensure that items are not quickdisabled. And if they are - transfer to override_koef
-	// If switch to simple mode ensure that override_koefs are not off. And if they are - transfer to quickdisable state
+	// Reconcile pairs of values to "simple mode" realm:
+	// Ensure that override_koefs are not off. And if they are - transfer to quickdisable state
 	// Important: this block should be before other adjustment
 	// 				because tv_enum_type check will reset tv_override_koef
-	int to_qdisabled = (conf.chdk_gui_mode_enum != CHDK_MODE_ADVANCED) ? 1 : 0 ;
-	operation_transfer_qdisabled( to_qdisabled, &conf.tv_override_value, &conf.tv_override_koef, gui_tv_override_koef_enum );
+
+	operation_transfer_qdisabled( &conf.tv_override_value, &conf.tv_override_koef, gui_tv_override_koef_enum );
 #if CAM_CAN_SD_OVERRIDE
-	operation_transfer_qdisabled( to_qdisabled, &conf.subj_dist_override_value, &conf.subj_dist_override_koef, 0/*gui_subj_dist_override_koef_enum*/ );
+	operation_transfer_qdisabled( &conf.subj_dist_override_value, &conf.subj_dist_override_koef, 0 );
 #endif
-	operation_transfer_qdisabled( to_qdisabled, &conf.iso_override_value, &conf.iso_override_koef, 0 );
-	operation_transfer_qdisabled( to_qdisabled, &conf.flash_video_override_power, &conf.flash_manual_override, 0 );
-	operation_transfer_qdisabled( to_qdisabled, &conf.fast_ev_step, &conf.fast_ev, 0 );
+	operation_transfer_qdisabled( &conf.iso_override_value, &conf.iso_override_koef, 0 );
+	operation_transfer_qdisabled( &conf.flash_video_override_power, &conf.flash_manual_override, 0 );
+	operation_transfer_qdisabled( &conf.fast_ev_step, &conf.fast_ev, 0 );
 
-	// Additional adjustment for SIMPLE mode
-	if ( conf.chdk_gui_mode_enum == CHDK_MODE_SIMPLE )
-	{
-
-		// If tv_type=Factor => set EvStep
-		if ( !conf.tv_enum_type ) {
-			gui_tv_enum_type_enum(+1, 0);
-		}
-
+	// There are no more "Factor mode", so If tv_type=Factor => set tvtype=EvStep
+	if ( !conf.tv_enum_type ) {
+		gui_tv_enum_type_enum(+1, 0);
 	}
 }
 
@@ -1812,25 +1816,7 @@ static const char* gui_user_menu_show_enum(int change, int arg)
     return gui_change_simple_enum(&conf.user_menu_enable,change,modes,sizeof(modes)/sizeof(modes[0]));
 }
 
-const char* gui_chdk_mode_show_enum(int change, int arg)
-{
-    static const char* modes[]={ "Newbie", "Simple","Advanced" };
-
-    int prev_mode = conf.chdk_gui_mode_enum;
-	const char* rv = gui_change_simple_enum(&conf.chdk_gui_mode_enum,change,modes,sizeof(modes)/sizeof(modes[0]));
-
-	if ( prev_mode!=conf.chdk_gui_mode_enum )
-    {
-		readjust_autoiso_submenu();
-		readjust_operation_submenu( 0xff );
-		readjust_bracketing_submenu();
-    }
-
-    return rv;
-}
-
 static CMenuItem menu_settings_submenu_items[] = {
-    MENU_ITEM(0x5c,"CHDK Mode",						MENUITEM_ENUM,          gui_chdk_mode_show_enum, &conf.chdk_gui_mode_enum ),
     MENU_ITEM(0x5f,LANG_MENU_USER_MENU_ENABLE,		MENUITEM_ENUM,          gui_user_menu_show_enum, &conf.user_menu_enable ),
     MENU_ITEM(0x5c,LANG_MENU_USER_MENU_AS_ROOT,     MENUITEM_BOOL,          &conf.user_menu_as_root, 0 ),
     MENU_ITEM(0x81,LANG_MENU_VIS_MENU_CENTER,       MENUITEM_BOOL,	        &conf.menu_center, 0 ),
@@ -2703,23 +2689,6 @@ void gui_set_alt_mode_state(int new_state)
     gui_current_alt_state = new_state;
 }
 
-static void copy_fname_w_new_ext( char* tgt, char* src, char* ext )
-{
-	if ( !src || !tgt ) return;
-
-	// copy filename
-	char *str = strrchr( src, '/' );
-	if (!str ) { str = src; } else { str++;}
-	strcpy( tgt, str );
-
-	// replce extension
-	str = strrchr( tgt, '.' );
-	if ( !str ) { str = tgt+strlen(tgt); }
-	strcpy(	 str, ext );
-
-		
-}
-
 
 // Called from the GUI task code to set the ALT mode state
 void gui_activate_alt_mode()
@@ -2728,47 +2697,25 @@ void gui_activate_alt_mode()
     {
     case ALT_MODE_ENTER:
 
-		// "Newbie" mode mean start help file
-		// Break regular ALT sequence only if module ok and help exists 
-		if ( conf.chdk_gui_mode_enum == CHDK_MODE_NEWBIE &&  !state_kbd_script_run )
-		{
-			conf.chdk_gui_mode_enum = CHDK_MODE_SIMPLE;
-			conf_save();
-
-			// make path to help file
-
-			char path_buf[60];
-			unsigned int argv[] ={ (unsigned int)path_buf };
-			strcpy( path_buf, "A/CHDK/HELP/");
-
-			char* helpfile_name = path_buf + strlen(path_buf);
-
-			// if not success, try to load "_current_locale_.hlp"
-			if ( conf.lang_file[0] ) {
-				copy_fname_w_new_ext( helpfile_name, conf.lang_file, ".hlp");
-
-				if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
-					break;
-			}
-
-			// if not success, try to load "_base_language_.hlp"
-			copy_fname_w_new_ext( helpfile_name, gui_lang_source_filename, ".hlp");
-			if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
-				break;
-
-			//if not success, try to load "english.hlp"
-			argv[0] = (unsigned int)"A/CHDK/HELP/ENGLISH.HLP";
-			if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
-				break;
-		}
-
         conf_store_old_settings();
 
         gui_set_mode(&altGuiHandler);
-        
+
         conf_update_prevent_shutdown();
-        
+
         vid_turn_off_updates();
+
+
+		if ( !state_kbd_script_run && !conf.help_was_shown ) {
+
+			// raise flag first in conf to prevent any probability to endless shutdown
+			conf.help_was_shown = 1;
+			conf_save();
+
+			// Try to open help and break regular ALT sequence if success
+			if ( gui_show_help(0) )
+				break;
+		}
 
         // start menu readustments according to chdk_mode
         readjust_operation_submenu( 0xff );

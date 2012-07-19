@@ -752,7 +752,7 @@ int gui_menu_kbd_process() {
             } else if (gui_menu_curr_item >= 0) {
                 switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK){
                     case MENUITEM_INT:
-                        if (camera_info.state.is_shutter_half_press || conf.chdk_gui_mode_enum==CHDK_MODE_ADVANCED )
+                        if (camera_info.state.is_shutter_half_press /*|| conf.chdk_gui_mode_enum==CHDK_MODE_ADVANCED*/ )
                         {
                             *(curr_menu->menu[gui_menu_curr_item].value) = 0;
                         }
@@ -783,9 +783,9 @@ int gui_menu_kbd_process() {
                     case MENUITEM_ENUM:
                     case MENUITEM_ENUM2:
                         // @tsv: TODO - Check enum size<=3 and do not lock if 
-						if ( conf.chdk_gui_mode_enum == CHDK_MODE_ADVANCED )
+						/* if ( conf.chdk_gui_mode_enum == CHDK_MODE_ADVANCED )
 	                        update_enum_value(1);
-						else
+						else*/
                         	gui_menu_set_editmode(1);
                         gui_menu_redraw=1;
                         break;

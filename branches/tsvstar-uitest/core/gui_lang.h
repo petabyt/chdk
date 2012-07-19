@@ -696,8 +696,9 @@
 
 #define LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER_SIMPLE 568
 #define LANG_MENU_MISC_FAST_EV_STEP_SIMPLE          569
+#define LANG_MENU_MISC_HELP			            570
 
-#define GUI_LANG_ITEMS                          569
+#define GUI_LANG_ITEMS                          570
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
