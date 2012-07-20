@@ -150,7 +150,7 @@ extern struct gui_common_api_ver gui_version;
     //Alt mode & Manual mode    
     #define SHORTCUT_SET_INFINITY        KEY_DISPLAY
 
-#elif defined(CAMERA_a3300)	// a3300 has no erase button, so make DISP button the toggle_raw and Alt +/- shortcuts.
+#elif defined(CAMERA_a3300) || defined(CAMERA_a3200)// a3300 has no erase button, so make DISP button the toggle_raw and Alt +/- shortcuts.
     //Alt mode
     // NOTE both of these conflict with adjustable alt
     #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY

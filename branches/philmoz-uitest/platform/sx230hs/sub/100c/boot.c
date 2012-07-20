@@ -538,7 +538,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
                 "LDR     R7, =0x260C\n"
                 "LDR     R0, [R7,R4,LSL#2]\n"
                 "BL      sub_FF02C128\n"
-                "LDR     R2, =sub_FF0578F0\n"
+                "LDR     R2, =0xFF0578F0\n"
                 "ORR     R3, R4, #0x300\n"
                 "ADD     R1, R2, #0\n"
                 "MOV     R0, #0x1F4\n"

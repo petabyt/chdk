@@ -92,4 +92,6 @@
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
 	#define REMOTE_SYNC_STATUS_LED 	0xC0220014		// specifies an LED that turns on while camera waits for USB remote to sync
+    #define  CAM_FIRMWARE_MEMINFO           1    // Use 'GetMemInfo' (dryos) or 'memPartInfoGet'/'memPartFindMax' (vxworks)
+
 //----------------------------------------------------------
