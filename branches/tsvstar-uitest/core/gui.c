@@ -111,7 +111,6 @@ static CMenuItem bracketing_in_continuous_submenu_items[] = {
 #endif
 #if CAM_CAN_SD_OVERRIDE
     MENU_ITEM   (0x5e,LANG_MENU_SUBJ_DIST_BRACKET_VALUE,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE,                 &conf.subj_dist_bracket_value, MENU_MINMAX(0, 10000) ),
-//    MENU_ENUM2  (0x5f,LANG_MENU_SUBJ_DIST_BRACKET_KOEF,     &conf.subj_dist_bracket_koef,   gui_override_koef_modes ),
 #endif
     MENU_ITEM   (0x74,LANG_MENU_ISO_BRACKET_VALUE,          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE,                 &conf.iso_bracket_value, MENU_MINMAX(0, 800) ),
     MENU_ENUM2  (0x60,LANG_MENU_BRACKET_TYPE,               &conf.bracket_type,             gui_bracket_type_modes ),
@@ -1275,7 +1274,6 @@ static CMenuItem operation_submenu_items[] = {
 #endif
 #if CAM_CAN_SD_OVERRIDE
     MENU_ITEM(0x5e,LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE, MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_subj_dist_override_value_enum, &conf.subj_dist_override_value ),
-//    MENU_ITEM(0x5f,LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF,  MENUITEM_ENUM,    gui_subj_dist_override_koef_enum, &conf.subj_dist_override_koef ),
 #endif
 	
     MENU_ITEM(0x74,LANG_MENU_OVERRIDE_ISO_VALUE,	   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE,  &conf.iso_override_value, MENU_MINMAX(0, 12800) ),
@@ -1288,14 +1286,10 @@ static CMenuItem operation_submenu_items[] = {
     MENU_ITEM   (0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS,      MENUITEM_SUBMENU,       &bracketing_in_continuous_submenu,  0 ),
     MENU_ITEM   (0x2d,LANG_MENU_AUTOISO,                    MENUITEM_SUBMENU,       &autoiso_submenu,                   0 ),
     MENU_ITEM   (0x5b,LANG_MENU_CLEAR_OVERRIDE_VALUES,      MENUITEM_BOOL,          &conf.clear_override,               0 ),
-    MENU_ITEM   (0x5c,LANG_MENU_MISC_FAST_EV,               MENUITEM_BOOL,          &conf.fast_ev,                      0 ),
-    MENU_ENUM2  (0x5f,LANG_MENU_MISC_FAST_EV_STEP,          &conf.fast_ev_step,     gui_fast_ev_step_modes ),
     MENU_ENUM2typ (0x5f,LANG_MENU_MISC_FAST_EV_STEP_SIMPLE,    MENUITEM_ENUM2|MENUITEM_QUICKDISABLE,   &conf.fast_ev_step,     gui_fast_ev_step_modes ),
 #if CAM_REAR_CURTAIN
     MENU_ITEM   (0x5c, LANG_MENU_REAR_CURTAIN,              MENUITEM_BOOL,          &conf.flash_sync_curtain,           0 ),
 #endif
-    MENU_ITEM   (0x5c, LANG_MENU_FLASH_MANUAL_OVERRIDE,     MENUITEM_BOOL,          &conf.flash_manual_override,        0 ),
-    MENU_ITEM   (0x5f, LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER,MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.flash_video_override_power, MENU_MINMAX(0, 2) ),
     MENU_ITEM(0x5f, LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER_SIMPLE,      MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE, &conf.flash_video_override_power, MENU_MINMAX(0, 2) ),
 #if CAM_HAS_VIDEO_BUTTON
     MENU_ITEM   (0x5c, LANG_MENU_FLASH_VIDEO_OVERRIDE,      MENUITEM_BOOL,          &conf.flash_video_override,         0 ),
