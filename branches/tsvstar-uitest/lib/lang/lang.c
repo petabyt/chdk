@@ -158,12 +158,39 @@ char* load_file( const char* name, int* rv_size )
     
     size = read(fd, buf, size );
  	buf[size+1]=0;
+	close(fd);
 
 	if ( rv_size )
   		*rv_size = size;
 	return buf;
 }
 
+
+// Completely same as load_file but place result to cached memory
+//-------------------------------------------------------------------
+char* load_file_to_cached( const char* name, int* rv_size )
+{
+	int size;
+
+	char* buf = load_file( name, &size );
+	if ( rv_size ) *rv_size = size;
+
+	if ( !buf )
+		return 0;
+
+	char* buf_cached = malloc( size+1 );
+	if ( !buf_cached )
+	{
+		if (rv_size) *rv_size=-1;
+		ufree(buf);
+		return 0;
+	}
+
+	memcpy( buf_cached, buf, size+1 );
+	ufree(buf);
+
+	return buf_cached;
+}
 
 // PURPOSE:
 // Universal file processor
@@ -203,6 +230,7 @@ char* lang_str(int str) {
 }
 
 //-------------------------------------------------------------------
+// make hash of string
 unsigned lang_strhash31(int langid)
 {
     if ( langid<MAX_LANGID ) 
@@ -215,4 +243,49 @@ unsigned lang_strhash31(int langid)
 	if ( hash<MAX_LANGID )
 		hash |= (1<<31);
 	return hash;
+}
+
+//============================================
+//		DIFFERENT UTILITY FUNCTIONS
+//============================================
+
+//-------------------------------------------------------------------
+
+// load content to *value_p if file exist and contain number
+// return: 0-file_not_exist_or_failed (value is not changed), 1-ok
+
+int load_int_value_file( char* filename, int* value_p )
+{
+	int tmp;
+	char *buf;
+
+	buf=load_file( filename, &tmp );
+	if ( !buf )
+	   return 0;
+	
+	*value_p = strtol(buf, NULL, 10 /*dec*/);
+	ufree(buf);
+
+	return 1;
+}
+
+//-------------------------------------------------------------------
+
+// save integer "value" to text file with name "filename"
+
+void save_int_value_file( char* filename, int value )
+{
+	char* buf = umalloc(20);
+	if ( !buf )
+		return;
+
+	sprintf(buf,"%d", value);
+
+	int fd = open( filename, O_WRONLY|O_CREAT, 0777);
+	if (fd>=0) 
+	{
+		write(fd, buf, strlen(buf));
+		close(fd);
+	} 
+	ufree(buf);
 }

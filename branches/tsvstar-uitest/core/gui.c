@@ -167,8 +167,8 @@ static const char* gui_script_param_set_enum(int change, int arg)
         }
         gui_enum_value_change(&conf.script_param_set,change,sizeof(modes)/sizeof(modes[0]));
 
-        if (!load_params_values(conf.script_file, 1, 0))
-            script_load(conf.script_file, 0);
+        if ( !load_params_values(conf.script_file, conf.script_param_set) )
+			script_reset_to_default_params_values();
         gui_update_script_submenu();
     }
 
@@ -177,7 +177,7 @@ static const char* gui_script_param_set_enum(int change, int arg)
 
 static void gui_load_script_selected(const char *fn) {
     if (fn)
-        script_load(fn, 1);
+        script_load(fn, SCRIPT_LOAD_LAST_PARAMSET );
 }
 
 static void gui_load_script(int arg) {
@@ -185,7 +185,7 @@ static void gui_load_script(int arg) {
 }
 
 static void gui_load_script_default(int arg) {
-    script_load(conf.script_file, 0);
+	script_reset_to_default_params_values();
     if (conf.script_param_save) {
         save_params_values(1);
     }
