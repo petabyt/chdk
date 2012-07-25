@@ -506,11 +506,11 @@ void gui_fselect_draw(int enforce_redraw) {
                 if (ptr->size < 1024)
                     sprintf(buf, "%5d b", ptr->size); // " 1023 b"
                 else if (ptr->size < 1024*1024)
-                    sprintf(buf, "%3ld,%1d k", ptr->size/1024, (ptr->size%1024*10)/1024); // "999,9 k"
+                    sprintf(buf, "%3ld.%1d k", ptr->size/1024, (ptr->size%1024*10)/1024); // "999.9 k"
                 else if (ptr->size < 1024*1024*1024)
-                    sprintf(buf, "%3ld,%ld M", ptr->size/(1024*1024), (ptr->size%(1024*1024)*10)/(1024*1024) ); // "999,9 M"
+                    sprintf(buf, "%3ld.%ld M", ptr->size/(1024*1024), (ptr->size%(1024*1024)*10)/(1024*1024) ); // "999.9 M"
                 else
-                    sprintf(buf, "%31d,%ld G", ptr->size/(1024*1024*1024), (ptr->size%(1024*1024*1024)*10)/(1024*1024*1024)); // "999.9 G"
+                    sprintf(buf, "%3ld.%ld G", ptr->size/(1024*1024*1024), (ptr->size%(1024*1024*1024)*10)/(1024*1024*1024)); // "999.9 G"
                     
                 if (ptr->marked)
                   sum_size += ptr->size;

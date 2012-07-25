@@ -25,7 +25,3 @@ NHSTUB(fwrite,                      0xFF026C18)
 NHSTUB(localtime,                   0xFF08446C)
 NHSTUB(readdir,                     0xFF2DD404)
 NHSTUB(ufree,                       0xFF02B884)
-
-//Fixed errors in compiler
-STUB(FF187C10)
-STUB(FF18D1CC)
