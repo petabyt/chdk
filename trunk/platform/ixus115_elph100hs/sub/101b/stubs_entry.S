@@ -68,10 +68,10 @@ DEF(active_bitmap_buffer                    ,0x00009cdc) // Found @0xffa32e48
 //    { 1, KEY_SET             ,0x04000000 }, // Found @0xffb996b0, levent 0x08
 //    { 1, KEY_ZOOM_OUT        ,0x10000000 }, // Found @0xffb996b8, levent 0x03
 //    { 1, KEY_ZOOM_IN         ,0x20000000 }, // Found @0xffb996c0, levent 0x02
+//    { 2, KEY_UP              ,0x00000001 }, // Found @0xffb996d8, levent 0x04
 //    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffb99700, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffb99700, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xffb996f8, levent 0x00
-//    { 2, KEY_UP              ,0x00000001 }, // Found @0xffb996d8, levent 0x04
 //    { 2, KEY_DOWN            ,0x00000002 }, // Found @0xffb996e0, levent 0x05
 //    { 2, KEY_LEFT            ,0x00000004 }, // Found @0xffb996e8, levent 0x06
 //    { 2, KEY_RIGHT           ,0x00000008 }, // Found @0xffb996f0, levent 0x07
@@ -105,7 +105,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff8378b8) //  1
 NSTUB(DeleteFile_Fut                          ,0xff8377d4) //112
 NSTUB(DoAFLock                                ,0xff8396dc) //102
 NSTUB(EnterToCompensationEVF                  ,0xff839938) //104
-NSTUB(ExecuteEventProcedure                   ,0xff890b4c) //  2
+NSTUB(ExecuteEventProcedure                   ,0xff890b4c) //  1
 NSTUB(ExitFromCompensationEVF                 ,0xff83997c) //104
 NSTUB(ExitTask                                ,0xff81ec40) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff8481e8) //104
