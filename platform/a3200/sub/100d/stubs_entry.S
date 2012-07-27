@@ -7,6 +7,7 @@
 //   Canon PowerShot A3200 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 47
 //   PLATFORMID = 12836 (0x3224) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d4c                // Found @ 0xffff350c
@@ -137,6 +138,8 @@ NSTUB(GetOpticalTemperature                   ,0xff862254) //102
 NSTUB(GetParameterData                        ,0xff9941a4) //101
 NSTUB(GetPropertyCase                         ,0xff88cef8) //102
 NSTUB(GetSystemTime                           ,0xffab6650) //101
+NSTUB(GetVRAMHPixelsSize                      ,0xff853c08) //102
+NSTUB(GetVRAMVPixelsSize                      ,0xff853c14) //102
 NSTUB(GetZoomLensCurrentPoint                 ,0xff964c28) //102
 NSTUB(GetZoomLensCurrentPosition              ,0xffaa33c8) //102
 NSTUB(GiveSemaphore                           ,0xff83a070) //112
