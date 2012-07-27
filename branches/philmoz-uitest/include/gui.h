@@ -156,6 +156,14 @@ extern struct gui_common_api_ver gui_version;
     #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
     #define SHORTCUT_MF_TOGGLE           KEY_FACE
 
+#elif defined(CAMERA_g1x) || defined(CAMERA_sx30) || defined(CAMERA_sx40hs)
+    //Half press shoot button    
+    #define SHORTCUT_TOGGLE_ZEBRA        KEY_ERASE      // On camera Shutter Half Press + Left = switch MF on/off
+
+#elif defined(CAMERA_g12)
+    //Half press shoot button    
+    #define SHORTCUT_TOGGLE_HISTO        KEY_ERASE      // On camera Shutter Half Press + Up = switch MF on/off
+
 #elif !CAM_HAS_ERASE_BUTTON
     //Alt mode
     #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
@@ -166,14 +174,6 @@ extern struct gui_common_api_ver gui_version;
     #define SHORTCUT_TOGGLE_HISTO        KEY_MENU
     //Alt mode & Manual mode    
     #define SHORTCUT_SET_INFINITY        KEY_DISPLAY
-
-#elif defined(CAMERA_g1x) || defined(CAMERA_sx30) || defined(CAMERA_sx40hs)
-    //Half press shoot button    
-    #define SHORTCUT_TOGGLE_ZEBRA        KEY_ERASE      // On camera Shutter Half Press + Left = switch MF on/off
-
-#elif defined(CAMERA_g12)
-    //Half press shoot button    
-    #define SHORTCUT_TOGGLE_HISTO        KEY_ERASE      // On camera Shutter Half Press + Up = switch MF on/off
 #endif
 
 // Define shortcut values not already set above

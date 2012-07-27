@@ -805,11 +805,13 @@ void gui_kbd_shortcuts()
     half_disp_press = mode_photo && camera_info.state.is_shutter_half_press && kbd_is_key_pressed(KEY_DISPLAY);
     if (half_disp_press && !half_disp_press_old)
         gui_set_need_restore();
+#ifdef CAM_DISP_ALT_TEXT
     if (half_disp_press)
     {
         extern void gui_reset_alt_helper();
         gui_reset_alt_helper();
     }
+#endif
     half_disp_press_old = half_disp_press;
 }
 
