@@ -89,11 +89,11 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 
 
 void gui_module_menu_kbd_process();
-void gui_module_kbd_process();
+int gui_module_kbd_process();
 void gui_module_draw();
 
 gui_handler GUI_MODE_MODULE_INSPECTOR = 
-    /*GUI_MODE_MODULE_INSPECTOR*/   { GUI_MODE_MODULE,   gui_module_draw,       gui_module_kbd_process,      gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_MODULE_INSPECTOR*/   { GUI_MODE_MODULE, gui_module_draw, gui_module_kbd_process, gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
 
 
 int modinspect_redraw;
@@ -103,13 +103,12 @@ static void modinspect_unload_cb(unsigned int btn) {
     if (btn==MBOX_BTN_YES) {
 		module_async_unload_allrunned(0);
         gui_set_mode(modinspect_old_guimode);	// if core gui - return to it
-        draw_restore();
     }
     modinspect_redraw=2;
 }
 
 
-void gui_module_kbd_process() {
+int gui_module_kbd_process() {
     switch (kbd_get_autoclicked_key()) {
     	case KEY_SET:
         	modinspect_redraw=2;
@@ -119,6 +118,7 @@ void gui_module_kbd_process() {
                               MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, modinspect_unload_cb);
 			break;
     }
+    return 0;
 }
 
 //-------------------------------------------------------------------
@@ -133,7 +133,6 @@ extern int module_idx;
 
 void gui_module_menu_kbd_process() {
 	gui_set_mode(modinspect_old_guimode);
-	draw_restore();
   	module_async_unload(module_idx);
 }
 

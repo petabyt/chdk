@@ -6,11 +6,11 @@
   
   1 "Main Menu"
 
-  2 "RAW Parameters"
-  3 "OSD Parameters"
-  4 "Histogram Parameters"
-  5 "Zebra Parameters"
-  6 "Scripting Parameters"
+  2 "RAW - digital negative"
+  3 "OSD Settings"
+  4 "Histogram - exposure graph"
+  5 "Zebra - show over & under exposure"
+  6 "Script - program your camera"
   7 "Visual Settings"
   8 "Miscellaneous Stuff"
   9 "Debug Parameters"
@@ -316,8 +316,8 @@
 237 "Video Quality"
 
 
-238 "Extra Photo Operations"
-239 "Extra Photo Operations"
+238 "Enhanced Photo Operations"
+239 "Enhanced Photo Operations"
 240 "Override Shutter Speed Value"
 241 "    Value Factor"
 242 "Override Aperture Value"
@@ -475,7 +475,7 @@
 369 "Select curve file"
 
 370 "Edge overlay"
-371 "Edge overlay"
+371 "Edge overlay - panorama tool"
 
 372 "Enable edge overlay"
 373 "Edge overlay threshold"
@@ -675,3 +675,19 @@
 552 "Disable Zoom Assist button"
 
 553 "DNG version"
+554 "Menu Settings"
+555 "Show <ALT> Help Screen"
+556 "  Help Screen Delay"
+557 "CHDK Settings"
+
+// <ALT> mode help screen text
+558 "%-20s %-14s"                           // Header format, adjust if needed; but total len must be 35
+559 "<ALT> Shortcuts"                       // Len must be <= first string in header format (20)
+560 "Shutter Half Press +"                  // Len must be <= first string in header format (20)
+561 "MENU=CHDK Menu"                        // Len must be <= second string in header format (14)
+562 "MENU=User Menu"                        // Len must be <= second string in header format (14)
+563 "SET=Script Menu, SHUTTER=Run Script"   // Len must be <= 35
+564 "Focus  %5s=Inf.  %5s=HyperFocal"       // Len must be <= 35
+565 "Manual Focus"
+566 "Hide CHDK OSD while pressed"
+567 "  * - not available in <ALT> mode  "   // Len must be <= 35

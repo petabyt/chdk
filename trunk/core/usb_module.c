@@ -23,11 +23,6 @@
 /*===================================================================================================
     Variables
   ===================================================================================================*/
-extern int sync_counter;
-extern int usb_sync_wait ;
-extern int usb_remote_active ;
-extern int stime_stamp ;
-extern int sync_counter;
 
 extern int get_usb_power(int) ;
 

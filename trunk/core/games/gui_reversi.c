@@ -13,11 +13,11 @@
 #include "module_exportlist.h"
 
 void gui_module_menu_kbd_process();
-void gui_reversi_kbd_process();
+int gui_reversi_kbd_process();
 void gui_reversi_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_REVERSI = 
-    /*GUI_MODE_REVERSI*/    { GUI_MODE_MODULE,   gui_reversi_draw,     gui_reversi_kbd_process,    gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_REVERSI*/    { GUI_MODE_MODULE, gui_reversi_draw, gui_reversi_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
 
 
 //-------------------------------------------------------------------
@@ -362,7 +362,7 @@ int basic_module_init() {
 }
 
 //-------------------------------------------------------------------
-void gui_reversi_kbd_process() {
+int gui_reversi_kbd_process() {
     switch (kbd_get_autoclicked_key()) {
         case KEY_UP:
             yPos =(yPos-1)&7;
@@ -396,6 +396,7 @@ void gui_reversi_kbd_process() {
             need_redraw = 1;
             break;
     }
+    return 0;
 }
 
 //-------------------------------------------------------------------

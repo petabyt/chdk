@@ -100,8 +100,7 @@ int gui_menu_rows()
 static void gui_menu_erase_and_redraw()
 {
     gui_menu_redraw = 2;
-    draw_restore();
-    gui_force_restore();
+    gui_set_need_restore();
 }
 
 //-------------------------------------------------------------------
@@ -131,7 +130,6 @@ static void gui_menu_back() {
         // Return to normal <ALT> mode.
         gui_set_mode(&altGuiHandler);
         kbd_reset_autoclicked_key();    // Need this to stop 'Func/Set' registering twice???
-        draw_restore();
     }
 }
 
@@ -172,7 +170,7 @@ static void get_int_incr_from_button()
         incr_modified=int_incr;
         int_incr=100;
     }
-    if (kbd_is_key_pressed(KEY_SHOOT_HALF))
+    if (camera_info.state.is_shutter_half_press)
     {
         incr_modified=int_incr;
         int_incr=1000;
@@ -199,19 +197,8 @@ static void update_int_value(int direction)
     // set amount to increment by (int_incr) if other buttons pressed
     get_int_incr_from_button();
 
-    // do update based on 'int' sub-type
-    switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_ARG_MASK)
-    {
-        case MENUITEM_ARG_INC:
-            *(curr_menu->menu[gui_menu_curr_item].value) += curr_menu->menu[gui_menu_curr_item].arg * direction;
-            break;
-        case MENUITEM_ARG_ADDR_INC:
-            *(curr_menu->menu[gui_menu_curr_item].value) += *(int *)(curr_menu->menu[gui_menu_curr_item].arg) * direction;
-            break;
-        default:
-            *(curr_menu->menu[gui_menu_curr_item].value) += int_incr * direction;
-            break;
-    }
+    // do update
+    *(curr_menu->menu[gui_menu_curr_item].value) += int_incr * direction;
 
     // Limit new value to defined bounds
     if ( curr_menu->menu[gui_menu_curr_item].type & MENUITEM_F_UNSIGNED)
@@ -292,7 +279,7 @@ static void update_enum_value(int direction)
     if (curr_menu->menu[gui_menu_curr_item].value)
     {
         int c;
-        if (kbd_is_key_pressed(KEY_SHOOT_HALF))    c = 3;
+        if (camera_info.state.is_shutter_half_press)    c = 3;
         else if (kbd_is_key_pressed(KEY_ZOOM_IN))  c = 6;
         else if (kbd_is_key_pressed(KEY_ZOOM_OUT)) c = 3;
         else c = int_incr;
@@ -374,7 +361,7 @@ static void gui_menu_updown(int increment)
     int c, j;
 
     // Determine number of rows to move (1 or 4)
-    if (kbd_is_key_pressed(KEY_SHOOT_HALF) || kbd_is_key_pressed(KEY_ZOOM_IN) || kbd_is_key_pressed(KEY_ZOOM_OUT)) c=4; else c=1;
+    if (camera_info.state.is_shutter_half_press || kbd_is_key_pressed(KEY_ZOOM_IN) || kbd_is_key_pressed(KEY_ZOOM_OUT)) c=4; else c=1;
 
     for (j = 0; j < c; ++j)
     {
@@ -422,7 +409,7 @@ static void gui_menu_updown(int increment)
 
 //-------------------------------------------------------------------
 // Process button presses when in GUI_MODE_MENU mode
-void gui_menu_kbd_process() {
+int gui_menu_kbd_process() {
 
     switch (kbd_get_autoclicked_key() | get_jogdial_direction()) {
 #if CAM_HAS_ERASE_BUTTON
@@ -466,7 +453,7 @@ void gui_menu_kbd_process() {
                     *
                     */
                     if(gui_menu_rows() < num_lines)
-                        draw_restore();
+                        gui_set_need_restore();
                 }
             }
             break;
@@ -527,7 +514,7 @@ void gui_menu_kbd_process() {
             if (gui_menu_curr_item >= 0) {
                 switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK){
                     case MENUITEM_INT:
-                        if (kbd_is_key_pressed(KEY_SHOOT_HALF))
+                        if (camera_info.state.is_shutter_half_press)
                         {
                             *(curr_menu->menu[gui_menu_curr_item].value) = 0;
                             gui_menu_redraw=1;
@@ -626,6 +613,8 @@ void gui_menu_kbd_process() {
             }
 #endif
     }
+
+    return 0;
 }
 
 //-------------------------------------------------------------------
@@ -827,3 +816,29 @@ void gui_menu_draw(int enforce_redraw) {
         }
     }
 }
+
+//-------------------------------------------------------------------
+// Menu button handler for Menu mode
+void gui_menu_kbd_process_menu_btn()
+{
+    extern int gui_user_menu_flag;
+    extern CMenu root_menu;
+
+    gui_menu_unload_module_menus();
+
+    conf_save_new_settings_if_changed();
+
+    if (gui_user_menu_flag)
+    {
+        gui_set_mode(&menuGuiHandler);
+        gui_user_menu_flag = 0;
+        gui_menu_init(&root_menu);
+    }
+    else
+        gui_set_mode(&altGuiHandler);
+}
+
+//-------------------------------------------------------------------
+// GUI handler for menus
+gui_handler menuGuiHandler = { GUI_MODE_MENU, gui_menu_draw, gui_menu_kbd_process, gui_menu_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
+//-------------------------------------------------------------------

@@ -6,6 +6,7 @@ void core_spytask();
 void core_hook_task_create(void *tcb);
 void core_hook_task_delete(void *tcb);
 
+// In core/kbd.c
 long kbd_process();
 
 void gui_init();

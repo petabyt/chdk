@@ -248,7 +248,7 @@ int md_init_motion_detector(
     motion_detector->running=1;
 
     action_push(AS_MOTION_DETECTOR);
-    draw_clear();
+    gui_set_need_restore();
 
     return 1;
 }

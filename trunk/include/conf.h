@@ -304,7 +304,6 @@ typedef struct {
     int edge_overlay_show;              // whether to show overlay even when no button is pressed
     int edge_overlay_play;              // whether edge overlay is switched on also for play mode
     color edge_overlay_color;
-    int edge_state_draw;                // Current state of overlay (Live/Frozen/Pano) [not saved to config file]
 
     int synch_enable;
     int ricoh_ca1_mode;
@@ -374,7 +373,9 @@ typedef struct {
     int gps_beep_warn;
     int gps_on_off;
 
-    int tbox_char_map;      // Text input box language/char map
+    int tbox_char_map;          // Text input box language/char map
+    int show_alt_helper;        // Show <ALT> mode help screen
+    int show_alt_helper_delay;  // Delay before showing help screen
 } Conf;
 
 extern Conf conf;
@@ -401,11 +402,9 @@ extern int state_kbd_script_run;
 extern int state_shooting_progress;
 extern int state_save_raw_nth_only;
 
-extern void script_autostart();     // remote autostart
 extern void conf_save();
 extern void conf_restore();
 extern void conf_load_defaults();
-extern int shutter_int;
 extern void conf_change_dng(void);
 extern void conf_update_prevent_shutdown(void);
 extern int conf_getValue(unsigned short id, tConfigVal* configVal);
@@ -443,6 +442,9 @@ typedef struct {
 
 extern void config_save(const ConfInfo *conf_info, char *filename, int conf_num);
 extern void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void (*info_func)(unsigned short id));
+
+extern void conf_store_old_settings();
+extern int conf_save_new_settings_if_changed();
 
 //-------------------------------------------------------------------
 

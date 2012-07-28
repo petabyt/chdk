@@ -84,7 +84,7 @@ static void reset_edge_overlay()
 
     if (edgebuf != NULL)
     {
-        draw_restore();     // Refresh display to restore Canon OSD
+        gui_set_need_restore();     // Refresh display to restore Canon OSD
         bv_free(edgebuf);
         edgebuf = NULL;
     }
@@ -631,7 +631,7 @@ void edge_overlay()
     // Precalculate some values to make the rest of the
     // code easier to read.
     int bFullPress = kbd_is_key_pressed(KEY_SHOOT_FULL);
-    const int bHalfPress = kbd_is_key_pressed(KEY_SHOOT_HALF);
+    const int bHalfPress = camera_info.state.is_shutter_half_press;
     const int bPlayMode = (mode_get() & MODE_MASK) == MODE_PLAY;
     const int bPanoramaMode = (conf.edge_overlay_pano != 0);
     const int bNeedHalfPress = (conf.edge_overlay_show != 1);
@@ -661,7 +661,7 @@ void edge_overlay()
     {
     case EDGE_LIVE:
     {
-        conf.edge_state_draw=0;
+        camera_info.state.edge_state_draw=0;
         // In this state we assume no edge overlay in memory,
         // but we are ready to create one if the user presses wishes so.
 
@@ -698,7 +698,7 @@ void edge_overlay()
     }
     case EDGE_FROZEN:
     {
-        conf.edge_state_draw=1;
+        camera_info.state.edge_state_draw=1;
         // We have a stored edge overlay in memory and we display
         // it on screen in 'frozen' mode.
 

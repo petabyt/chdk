@@ -14,11 +14,12 @@
 #include "module_load.h"
 
 //-------------------------------------------------------------------
-extern void gui_tbox_kbd_process();
-extern void gui_tbox_draw(int enforce_redraw);
+int gui_tbox_kbd_process();
+void gui_tbox_kbd_process_menu_btn();
+void gui_tbox_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_TBOX =
-    /*GUI_MODE_TBOX*/       { GUI_MODE_MODULE,   gui_tbox_draw,    gui_tbox_kbd_process,   gui_tbox_kbd_process, 0, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_TBOX*/ { GUI_MODE_MODULE, gui_tbox_draw, gui_tbox_kbd_process, gui_tbox_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
 
 static gui_handler *gui_tbox_mode_old; // stored previous gui_mode
 static int module_idx = -1;
@@ -424,7 +425,24 @@ static void tbox_keyboard_key(char curKey, int subgroup)
     gui_tbox_redraw = 1;
 }
 
-void gui_tbox_kbd_process()
+void gui_tbox_kbd_process_menu_btn()
+{
+    switch (Mode)
+    {
+    case 'K':
+        Mode = 'T';
+        break;
+    case 'T':
+        Mode = 'B';
+        break;
+    default: // Mode == 'B'
+        Mode = 'K';
+        break;
+    }
+    gui_tbox_redraw=2;
+}
+
+int gui_tbox_kbd_process()
 {
     if (Mode == 'K') {
         switch (kbd_get_autoclicked_key() | get_jogdial_direction()) {
@@ -463,10 +481,6 @@ void gui_tbox_kbd_process()
                 if (text[cursor+1] != '\0') tbox_move_cursor(1);
                 RESET_CHAR
                 break;
-            case KEY_MENU:
-                Mode = 'T';
-                gui_tbox_redraw=2;
-                break;
         }
     }
     else if (Mode == 'T') {
@@ -501,10 +515,6 @@ void gui_tbox_kbd_process()
                     gui_tbox_redraw = 1;
                 }
                 break;
-            case KEY_MENU:
-                Mode = 'B';
-                gui_tbox_redraw=2;
-                break;
         }
     }
     else { // Mode == 'B'
@@ -524,7 +534,6 @@ void gui_tbox_kbd_process()
             case KEY_SET:
                 kbd_reset_autoclicked_key();
                 gui_set_mode(gui_tbox_mode_old);
-                draw_restore();
                 if (tbox_on_select) {
                     if (tbox_button_active == 0)
                         tbox_on_select(text);   // ok
@@ -535,12 +544,9 @@ void gui_tbox_kbd_process()
                 }
                 module_async_unload(module_idx);
                 break;
-            case KEY_MENU:
-                Mode = 'K';
-                gui_tbox_redraw=2;
-                break;
         }
     }
+    return 0;
 }
 
 

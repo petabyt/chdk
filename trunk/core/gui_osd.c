@@ -7,9 +7,15 @@
 #include "gui_draw.h"
 #include "gui_lang.h"
 #include "gui_osd.h"
-#ifdef OPT_EDGEOVERLAY
-    #include "edgeoverlay.h"
+#include "gui_batt.h"
+#include "gui_usb.h"
+#include "gui_space.h"
+#include "histogram.h"
+#ifdef CAM_HAS_GPS
+#include "gps.h"
 #endif
+#include "modules.h"
+#include "module_load.h"
 
 //-------------------------------------------------------------------
 static char osd_buf[64];
@@ -58,7 +64,7 @@ void gui_osd_calc_dof()
     shooting_update_dof_values();
 }
 
-void gui_osd_calc_expo_param()
+static void gui_osd_calc_expo_param()
 {
     expo.av96=shooting_get_av96();
     expo.tv96=shooting_get_tv96();
@@ -120,19 +126,19 @@ static void gui_print_osd_state_string()
     n+=FONT_HEIGHT;
 }
 
-void gui_print_osd_state_string_int(const char * title, int value)
+static void gui_print_osd_state_string_int(const char * title, int value)
 {
     sprintf(osd_buf, "%s%d", title, value);
     gui_print_osd_state_string();
 }
 
-void gui_print_osd_state_string_chr(const char *title, const char *value)
+static void gui_print_osd_state_string_chr(const char *title, const char *value)
 {
     sprintf(osd_buf, "%s%s", title, value);
     gui_print_osd_state_string();
 }
 
-void gui_print_osd_state_string_float(const char * fmt, int divisor, int value)
+static void gui_print_osd_state_string_float(const char * fmt, int divisor, int value)
 {
     sprintf(osd_buf, fmt, (int)(value/divisor), (int)(value%divisor));
     gui_print_osd_state_string();
@@ -146,26 +152,26 @@ static void gui_print_osd_misc_string()
     m+=FONT_HEIGHT;
 }
 
-void gui_print_osd_misc_string_int(const char * title, int value)
+static void gui_print_osd_misc_string_int(const char * title, int value)
 {
     sprintf(osd_buf, "%s%d", title, value);
     gui_print_osd_misc_string();
 }
 
-void gui_print_osd_misc_string_float(const char * fmt, int divisor, int value)
+static void gui_print_osd_misc_string_float(const char * fmt, int divisor, int value)
 {
     sprintf(osd_buf, fmt, (int)(value/divisor), (int)(value%divisor));
     gui_print_osd_misc_string();
 }
 
-void gui_print_osd_misc_string_canon_values(const char * title, short value)
+static void gui_print_osd_misc_string_canon_values(const char * title, short value)
 {
     strcpy(osd_buf, title);
     sprintf_canon_values(osd_buf+strlen(osd_buf), value);
     gui_print_osd_misc_string();
 }
     
-void gui_print_osd_dof_string_dist(const char * title, int value, short use_good_color, short is_hyp) {
+static void gui_print_osd_dof_string_dist(const char * title, int value, short use_good_color, short is_hyp) {
   strcpy(osd_buf, title);
   int i=strlen(osd_buf);
   if (i<8) {
@@ -210,7 +216,7 @@ void gui_osd_draw_raw_info()
 //-------------------------------------------------------------------
 void gui_osd_draw_state()
 {
-    int a,  gui_mode=gui_get_mode(), m=(mode_get()&MODE_SHOOTING_MASK); 
+    int a,  gui_mode=gui_get_mode();
     long t; 
 
     n=0;
@@ -221,7 +227,7 @@ void gui_osd_draw_state()
 
     if ((((conf.tv_enum_type) || (conf.tv_override_value)) && (conf.tv_override_koef)  && !(conf.override_disable==1)) || gui_mode==GUI_MODE_OSD)
     {
-        if(kbd_is_key_pressed(KEY_SHOOT_HALF)) 
+        if(camera_info.state.is_shutter_half_press) 
         { 
             t=(int)(shooting_get_shutter_speed_from_tv96(shooting_get_tv96())*100000);	
             gui_print_osd_state_string_float("TV:%d.%05d", 100000, t);
@@ -246,8 +252,6 @@ void gui_osd_draw_state()
     if ((conf.autoiso_enable && shooting_get_iso_mode()<=0 && !(m==MODE_M || m==MODE_TV) && shooting_get_flash_mode() && (!(conf.override_disable==1 && conf.override_disable_all))) || gui_mode==GUI_MODE_OSD)  
         gui_print_osd_state_string_chr("AUTOISO:", ((conf.autoiso_enable==1)?"ON":"OFF"));
     if ((conf.subj_dist_override_value && conf.subj_dist_override_koef && shooting_can_focus() && !(conf.override_disable==1)) || ((gui_get_mode()==GUI_MODE_ALT) && shooting_get_common_focus_mode())	|| gui_mode==GUI_MODE_OSD)   {
-        extern const char* gui_subj_dist_override_value_enum(int change, int arg);
-        extern const char* gui_subj_dist_override_koef_enum(int change, int arg);
         gui_print_osd_state_string_chr("SD:",gui_subj_dist_override_value_enum(0,0));
         if (gui_mode==GUI_MODE_ALT)
             gui_print_osd_state_string_chr("FACTOR:",gui_subj_dist_override_koef_enum(0,0));
@@ -279,8 +283,8 @@ void gui_osd_draw_state()
 #ifdef OPT_EDGEOVERLAY
     // edgeoverlay state
     if (conf.edge_overlay_enable || gui_mode==GUI_MODE_OSD) {
-        if (conf.edge_state_draw==0) gui_print_osd_state_string_chr("EDGE:", "LIVE");
-        else if (conf.edge_state_draw==1) gui_print_osd_state_string_chr("EDGE:", ((conf.edge_overlay_pano==0)?"FROZEN":"PANO"));
+        if (camera_info.state.edge_state_draw==0) gui_print_osd_state_string_chr("EDGE:", "LIVE");
+        else if (camera_info.state.edge_state_draw==1) gui_print_osd_state_string_chr("EDGE:", ((conf.edge_overlay_pano==0)?"FROZEN":"PANO"));
     }
 #endif
 #ifdef CAM_QUALITY_OVERRIDE
@@ -406,7 +410,7 @@ void gui_osd_draw_clock(int x, int y, color cl)
     draw_string(((x)?x:conf.clock_pos.x)-w*FONT_WIDTH, (y)?y:conf.clock_pos.y, osd_buf, (cl)?cl:conf.osd_color);
 }
 
-void gui_osd_draw_seconds()
+static void gui_osd_draw_seconds()
 {
     static struct tm *ttm;
 
@@ -422,7 +426,9 @@ void gui_osd_draw_seconds()
     }
 }
 
-void gui_osd_draw_movie_time_left()
+static unsigned int movie_reset;
+
+static void gui_osd_draw_movie_time_left()
 {
     static int card_used, init_space, elapsed, avg_use, time_left;
     static long init_time;
@@ -430,7 +436,10 @@ void gui_osd_draw_movie_time_left()
     static int init = 0;
     static unsigned int skipcalls = 1;
     unsigned int hour=0, min=0, sec=0;
-    int mode_video = MODE_IS_VIDEO(m); 
+    int mode = mode_get();
+    int mode_video = MODE_IS_VIDEO(mode); 
+
+    if ((mode & MODE_MASK) == MODE_PLAY) return;
 
 #if CAM_CHDK_HAS_EXT_VIDEO_MENU
     if (mode_video || is_video_recording())
@@ -451,7 +460,7 @@ void gui_osd_draw_movie_time_left()
             sprintf(osd_buf, "Qual:%2i",conf.video_quality);
             draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y+3*FONT_HEIGHT, osd_buf, conf.osd_color);
         }
-        // everything else is for stills
+        // everything else is for when recording
         if (mode_video)
             return;
     }
@@ -527,7 +536,7 @@ void gui_osd_draw_movie_time_left()
     }
 }
 
-void gui_osd_draw_ev()
+static void gui_osd_draw_ev()
 {
     static char *s[6]={"   ", "1/6", "1/3", "1/2", "2/3", "5/6"};
     short ev=shooting_get_ev_correction1();
@@ -599,3 +608,684 @@ void gui_osd_draw_ev_video(int visible)
     draw_line(x0+37,y0+19,x0+37,y0+22,conf.osd_color);
 #endif
 }
+
+//------------------------------------------------------------------- 
+// Process up/down/left/right/jogdial shortcuts when control options enabled
+static int kbd_use_up_down_left_right_as_fast_switch()
+{
+    static long key_pressed = 0;
+    int m=mode_get(); 
+    int mode_video = (MODE_IS_VIDEO(m) || is_video_recording());
+    int ev_video=0;
+    int jogdial;
+
+#if CAM_EV_IN_VIDEO
+    ev_video = get_ev_video_avail(); 
+#endif
+
+    // One of the control options must be enabled or don't do anything
+    if (!conf.fast_ev && !conf.fast_movie_control && !conf.fast_movie_quality_control) return 0;
+
+    // Clear state variable is neither UP or DOWN is pressed
+    if (!kbd_is_key_pressed(KEY_UP) && !kbd_is_key_pressed(KEY_DOWN)) key_pressed = 0;
+
+    // Must be in record mode and not have Canon menu open
+    if (canon_shoot_menu_active!=0 || (m&MODE_MASK) != MODE_REC) return 0;
+
+    // Adjust exposure if 'Enable Fast EV switch?' option is set
+    if (conf.fast_ev && (key_pressed == 0) && ((m&MODE_SHOOTING_MASK) != MODE_M))
+    {
+#if !CAM_HAS_JOGDIAL
+        if (kbd_is_key_pressed(KEY_UP))
+        {
+            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_ev_correction1()+(conf.fast_ev_step+1)*16);
+            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()+(conf.fast_ev_step+1)*16);
+            EnterToCompensationEVF();
+            key_pressed = KEY_UP;
+                    
+            return 1;
+        } 
+
+        if (kbd_is_key_pressed(KEY_DOWN))
+        {
+            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_ev_correction1()-(conf.fast_ev_step+1)*16);
+            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()-(conf.fast_ev_step+1)*16);
+            EnterToCompensationEVF();
+            key_pressed = KEY_DOWN;
+
+            return 1;
+        }
+#else
+        jogdial=get_jogdial_direction();
+
+        if (camera_info.state.is_shutter_half_press && (jogdial==JOGDIAL_RIGHT))
+        {
+            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_ev_correction1()+(conf.fast_ev_step+1)*16);
+            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()+(conf.fast_ev_step+1)*16);
+            EnterToCompensationEVF();
+        }
+
+        if (camera_info.state.is_shutter_half_press && (jogdial==JOGDIAL_LEFT))
+        {
+            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_ev_correction1()-(conf.fast_ev_step+1)*16);
+            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()-(conf.fast_ev_step+1)*16);
+            EnterToCompensationEVF();
+        }
+#endif
+    } 
+
+    // Adjust video quality/bitrate if 'Video Quality Control?' option is set
+    if (conf.fast_movie_quality_control && key_pressed == 0 && mode_video && is_video_recording())
+    {
+        if (kbd_is_key_pressed(KEY_UP))
+        {
+            if (conf.video_mode==0)
+            {
+#if !CAM_VIDEO_QUALITY_ONLY
+                gui_video_bitrate_enum(1,0);
+                movie_reset = 1;
+#endif
+            }    
+            else if (conf.video_mode==1)
+            {
+                conf.video_quality+=1;
+                if (conf.video_quality>VIDEO_MAX_QUALITY)
+                    conf.video_quality=VIDEO_MAX_QUALITY;
+                movie_reset = 1;
+            }              
+            key_pressed = KEY_UP;
+            return 1;
+        }
+    
+        if (kbd_is_key_pressed(KEY_DOWN))
+        {
+            if (conf.video_mode==0)
+            {
+#if !CAM_VIDEO_QUALITY_ONLY
+                conf.video_bitrate-=1;
+                if (conf.video_bitrate<0)
+                    conf.video_bitrate=0;
+
+                shooting_video_bitrate_change(conf.video_bitrate);
+                movie_reset = 1;
+#endif
+            }
+            else if (conf.video_mode==1)
+            {
+                conf.video_quality-=1;
+                if (conf.video_quality<1)
+                    conf.video_quality=1;
+                movie_reset = 1;
+            }          
+            key_pressed = KEY_DOWN;
+            return 1;
+        }
+    } 
+    
+#if CAM_VIDEO_CONTROL
+    // Pause / unpause video if 'Fast Movie Control' option is set
+    if (conf.fast_movie_control && key_pressed == 0 && !ev_video
+#ifndef CAM_HAS_VIDEO_BUTTON 
+        && mode_video
+#endif
+        )
+    {
+        if (kbd_is_key_pressed(KEY_LEFT) && is_video_recording())
+        {
+            movie_status = VIDEO_RECORD_STOPPED;
+            key_pressed = KEY_LEFT;
+            return 1;
+        }
+
+    	// reyalp - HACK for cams that can do video in any mode
+	    // note that this means this will probably run whenever you press right
+        // BUG this doesn't know whether recording was stopped or paused.
+        if (kbd_is_key_pressed(KEY_RIGHT) && (movie_status == VIDEO_RECORD_STOPPED))
+        {
+            movie_status = VIDEO_RECORD_IN_PROGRESS;
+            movie_reset = 1;
+            key_pressed = KEY_RIGHT;
+            return 1;
+        }
+    } 
+#endif
+
+    return key_pressed;
+}
+
+//------------------------------------------------------------------- 
+// Process Shutter Half Press + BUTTON shortcuts
+static int half_disp_press = 0;
+
+static void kbd_shortcut(int button, int *var, int max_value)
+{
+    if (kbd_is_key_clicked(button))
+    {
+        (*var)++;
+        if (*var > max_value)
+        {
+            *var = 0;
+            gui_set_need_restore();
+        }
+    }
+}
+
+void gui_kbd_shortcuts()
+{
+    unsigned int m, mode_photo, mode_video;
+    static int half_disp_press_old=0;
+    
+    if (camera_info.state.is_shutter_half_press)
+    {
+        kbd_shortcut(SHORTCUT_TOGGLE_ZEBRA, &conf.zebra_draw, 1);
+        kbd_shortcut(SHORTCUT_TOGGLE_HISTO, &conf.show_histo, SHOW_HALF);
+        kbd_shortcut(SHORTCUT_TOGGLE_OSD, &conf.show_osd, 1);
+        kbd_shortcut(SHORTCUT_DISABLE_OVERRIDES, &conf.override_disable, 1);
+#if !CAM_HAS_MANUAL_FOCUS && CAM_HAS_ZOOM_LEVER && CAM_CAN_SD_OVERRIDE
+        // Todo, check for AF and if its running, don't override
+        if (kbd_is_key_pressed(SHORTCUT_SD_SUB)) {
+            if (!(conf.override_disable==1) && shooting_can_focus() && shooting_get_common_focus_mode()) {
+                gui_subj_dist_override_value_enum(-1,0);
+                shooting_set_focus(shooting_get_subject_distance_override_value(),SET_NOW);
+            }
+        } else if (kbd_is_key_pressed(SHORTCUT_SD_ADD)) {
+            if (!(conf.override_disable==1) && shooting_can_focus() && shooting_get_common_focus_mode()) {
+                gui_subj_dist_override_value_enum(1,0);
+                shooting_set_focus(shooting_get_subject_distance_override_value(),SET_NOW);
+            }
+        }
+#endif
+    }
+
+    m = mode_get();
+
+    mode_video = MODE_IS_VIDEO(m);
+    mode_photo = (m&MODE_MASK) == MODE_PLAY || !(mode_video || (m&MODE_SHOOTING_MASK)==MODE_STITCH);
+
+    half_disp_press = mode_photo && camera_info.state.is_shutter_half_press && kbd_is_key_pressed(KEY_DISPLAY);
+    if (half_disp_press && !half_disp_press_old)
+        gui_set_need_restore();
+#ifdef CAM_DISP_ALT_TEXT
+    if (half_disp_press)
+    {
+        extern void gui_reset_alt_helper();
+        gui_reset_alt_helper();
+    }
+#endif
+    half_disp_press_old = half_disp_press;
+}
+
+//------------------------------------------------------------------- 
+// Handler for button presses in normal camera shooting or playback modes
+static int gui_std_kbd_process()
+{
+#ifdef CAM_USE_ZOOM_FOR_MF
+    if (conf.use_zoom_mf && kbd_use_zoom_as_mf())
+        return 1;
+#endif 
+
+    if (kbd_use_up_down_left_right_as_fast_switch())
+        return 1;
+
+    // Process Shutter Half Press + BUTTON shortcuts
+    gui_kbd_shortcuts();
+
+    // process other keys in not <alt> mode
+
+#if CAM_AF_SCAN_DURING_VIDEO_RECORD 
+    if (is_video_recording())
+        if (kbd_is_key_clicked(conf.video_af_key)) MakeAFScan(); 
+#endif 
+
+#if CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
+    // return from digital to optical zoom in video
+#if CAM_HAS_ZOOM_LEVER
+    if (conf.unlock_optical_zoom_for_video && is_video_recording() &&  kbd_is_key_clicked(KEY_ZOOM_OUT))
+#else
+    if (conf.unlock_optical_zoom_for_video && is_video_recording() &&  kbd_is_key_clicked(KEY_DOWN))
+#endif
+    {
+        short x;
+        get_property_case(PROPCASE_DIGITAL_ZOOM_STATE, &x, sizeof(x));
+        if (x)
+        {
+            get_property_case(PROPCASE_DIGITAL_ZOOM_POSITION, &x, sizeof(x));
+#if defined (CAMERA_s90) || defined (CAMERA_s95) || defined (CAMERA_g12) || defined (CAMERA_a3000) || defined (CAMERA_a800)
+	        if (x==0) zoom_status=ZOOM_OPTICAL_MAX; //ERR99: No zoom back from digital to optical zoom possible if set to medium
+#else
+	        if (x==0) zoom_status=ZOOM_OPTICAL_MEDIUM;
+#endif
+        }
+    }
+#endif
+
+#if CAM_EV_IN_VIDEO
+    if (is_video_recording() && !camera_info.state.is_shutter_half_press)
+    {
+#if CAM_HAS_ERASE_BUTTON
+        if (kbd_is_key_clicked(KEY_ERASE))
+#elif !defined (CAMERA_a480) && !defined (CAMERA_a495)
+        if (kbd_is_key_clicked(KEY_DISPLAY))
+#else
+        if (kbd_is_key_clicked(KEY_MENU))
+#endif
+        {
+            set_ev_video_avail(!get_ev_video_avail());
+#ifdef CAM_TOUCHSCREEN_UI
+            redraw_buttons = 1;
+#endif
+        }
+        if (get_ev_video_avail())
+        {
+            if (kbd_is_key_clicked(KEY_LEFT))
+            {
+                set_ev_video(get_ev_video()-1);
+            }
+            if (kbd_is_key_clicked(KEY_RIGHT))
+            {
+                set_ev_video(get_ev_video()+1);
+            }
+        }
+    }
+#endif
+
+    return 0;
+}
+
+//-------------------------------------------------------------------
+// int osd_visible( uint playmode )         // playmode = m&MODE_MASK from gui_draw_osd()
+//                                          // hide_osd =  0=Don't, 1=In Playback, 2=On Disp Press, 3=Both
+//-------------------------------------------------------------------
+int osd_visible(unsigned int playmode)
+{
+    if ( conf.hide_osd == 0 ) return(1) ;
+
+    if( !camera_info.state.is_shutter_half_press)
+    {
+        if (playmode == MODE_REC)
+        {
+            if ( conf.hide_osd < 2 ) return( 1 ) ;
+
+#if defined(PARAM_DISPLAY_MODE1) && defined(PARAM_DISPLAY_MODE2)
+
+			short disp_key_mode ;
+			if (recreview_hold==0)
+			{	
+				if ( shooting_get_display_mode() == 0) return( 1 );			
+			}
+			else
+			{
+				if (conf.show_osd_in_review )
+				{
+					get_parameter_data(PARAM_DISPLAY_MODE2, &disp_key_mode, 2);		
+					if (disp_key_mode == 0 ) return( 1 ) ;
+				}
+			}
+		}
+		else
+		{
+			if (conf.hide_osd == 2 ) 
+			{	
+				short disp_key_mode ;
+
+                get_parameter_data(PARAM_DISPLAY_MODE1, &disp_key_mode, 2);
+                if (disp_key_mode == 1 ) return( 1 ) ;
+            }
+        }
+    }
+#else
+			if ( shooting_get_display_mode() == 0) return 1;
+		}
+	}
+#endif		
+
+    return 0;
+
+}
+
+//-------------------------------------------------------------------
+
+#ifdef OPT_DEBUGGING
+
+static void gui_debug_draw_tasklist(void)
+{
+#ifndef CAM_DRYOS
+    int tasklist[TASKLIST_NUM_TASKS]; // max number of tasks we will look at
+    int n_tasks,n_show_tasks,show_start;
+    const char *name;
+    int i;
+    n_tasks = task_id_list_get(tasklist,sizeof(tasklist)/sizeof(tasklist[0]));
+    show_start = debug_tasklist_start;
+    n_show_tasks = n_tasks - show_start;
+    // auto adjust to show the last N tasks
+    if(n_show_tasks < TASKLIST_MAX_LINES) {
+        show_start = n_tasks - TASKLIST_MAX_LINES;
+        if(show_start<0)
+            show_start = 0;
+        n_show_tasks = n_tasks - show_start;
+    }
+    else if( n_show_tasks > TASKLIST_MAX_LINES ) {
+        n_show_tasks = TASKLIST_MAX_LINES;
+    }
+    sprintf(osd_buf,"%d-%d of %d tasks %c",show_start,show_start+n_show_tasks,n_tasks,debug_display_direction > 0?'+':'-');
+    draw_string(64,0,osd_buf, conf.osd_color);
+    for( i = 0;  i < n_show_tasks; i++ ) {
+        // TODO get full task info
+        name = task_name(tasklist[show_start+i]);
+        if ( !name || !*name ) {
+            name = "(unknown)";
+        }
+        sprintf(osd_buf,"%10s %8X",name,tasklist[show_start+i]);
+        draw_string(64,16+16*i,osd_buf, conf.osd_color);
+    }
+#endif //CAM_DRYOS
+}
+
+#endif
+
+//------------------------------------------------------------------- 
+void gui_draw_debug_vals_osd()
+{
+#ifdef OPT_DEBUGGING
+
+#if defined(OPT_EXMEM_TESTING)
+    // Only do memory corruption testing if not recording video
+    if (!MODE_IS_VIDEO(mode_get()))
+    {
+        // If defined the exmem memory is allocated; but not used for CHDK.
+        // It is filled with a guard value (see wrappers.c) which is checked here
+        // Any corruption is reported, otherwise 'OK' is displayed on screen (along with the exmem memory start address).
+        extern void *exmem_start, *exmem_end;
+        // check exmem allocated memory for corruption
+        unsigned long* p = (unsigned long*)exmem_start;
+        unsigned long *f = 0, *l = 0;
+        long cnt = 0;
+        while (p < (unsigned long*)exmem_end)
+        {
+            if (p[0] != 0xDEADBEEF)
+            {
+                l = p;
+                if (f == 0) f = p;
+                cnt++;
+            }
+            p++;
+        }
+        if (cnt != 0)
+        {
+            sprintf(osd_buf, "s:%8x e:%8x", exmem_start, exmem_end);
+            draw_txt_string(2, 12, osd_buf, conf.osd_color);
+            sprintf(osd_buf, "f:%8x l:%8x c:%d", f, l, cnt);
+        }
+        else
+        {
+            sprintf(osd_buf, "OK 0x%x", exmem_start);
+        }
+        draw_txt_string(2, 13, osd_buf, conf.osd_color);
+        // end of check	
+    }
+#endif
+
+    // DEBUG: "Show misc. values"
+    // change ROW to fit values on screen in draw_txt_string(COLUMN, ROW, ...)
+    // uncomment call to gui_draw_debug_vals_osd() in gui_redraw() if you want debug values always on top
+    if (conf.debug_misc_vals_show) {
+        // show value of Memory Address selected with Memory Browser
+        sprintf(osd_buf, "MEM: %#8x", (void*) (*(int*)conf.mem_view_addr_init));    // show value in Hexadecimal integer
+        //sprintf(osd_buf, "MEM: %8u", (void*) (*(int*)conf.mem_view_addr_init));    // show value in Decimal integer
+        draw_txt_string(28,  9, osd_buf, conf.osd_color);
+
+        // show Autofocus status (if AF is working)
+        extern volatile long focus_busy;
+        sprintf(osd_buf, "FB:  %8u", focus_busy);
+        draw_txt_string(28, 10, osd_buf, conf.osd_color);
+
+        // show Zoom status (if Lens is moving)
+        extern volatile long zoom_busy;
+        sprintf(osd_buf, "ZB:  %8u", zoom_busy);
+        draw_txt_string(28, 11, osd_buf, conf.osd_color);
+
+        // show USB-Power status to debug remote / sync
+        sprintf(osd_buf, "USB: %8u", get_usb_power(1));
+        draw_txt_string(28, 12, osd_buf, conf.osd_color);
+
+        /*
+        // some cameras missing zoom_status
+        sprintf(osd_buf, "ZS:  %#8x", zoom_status);
+        draw_txt_string(28, 13, osd_buf, conf.osd_color);
+        */
+
+        /*
+        sprintf(osd_buf, "VP:  %#8x", vid_get_viewport_fb_d());
+        draw_txt_string(28, 14, osd_buf, conf.osd_color);
+        */
+
+        /*
+        // debug keymap, KEYS_MASKx, SD_READONLY_FLAG, USB_MASK
+        extern long physw_status[3];
+        sprintf(osd_buf, "PS1: %#8x", physw_status[0]);
+        draw_txt_string(28, 10, osd_buf, conf.osd_color);
+
+        sprintf(osd_buf, "PS2: %#8x", physw_status[1]);
+        draw_txt_string(28, 11, osd_buf, conf.osd_color);
+
+        sprintf(osd_buf, "PS3: %#8x", physw_status[2]);
+        draw_txt_string(28, 12, osd_buf, conf.osd_color);
+        */
+
+        /*
+        long v=get_file_counter();
+        sprintf(osd_buf, "1:%03d-%04d", (v>>18)&0x3FF, (v>>4)&0x3FFF);
+        sprintf(osd_buf, "1:%d, %08X", xxxx, eeee);
+        */
+    }
+    {
+        int r,i, p, len;
+        if (conf.debug_display == DEBUG_DISPLAY_PROPS){
+
+            for (i=0;i<10;i++){
+                r = 0;
+                p = conf.debug_propcase_page*10+i;
+                get_property_case(p, &r, 4);
+                sprintf(osd_buf, "%3d: %d              ", p, r);
+                osd_buf[20]=0;
+                draw_string(64,16+16*i,osd_buf, conf.osd_color);
+            }
+        }
+
+        if (conf.debug_display == DEBUG_DISPLAY_PARAMS){
+            extern long* FlashParamsTable[]; 
+            char s[30];
+            int count;
+
+            for (i=0;i<10;i++){
+                r = 0;
+                p = conf.debug_propcase_page*10+i;
+                if (p>=get_flash_params_count()) {
+                    sprintf(osd_buf, "%3d: This parameter does not exists", p);
+                } else  {
+                    len=FlashParamsTable[p][1]>>16;
+                    if ((len==1)||(len==2)||(len==4)){
+                        get_parameter_data(p, &r, len); 
+                        sprintf(osd_buf, "%3d: %30d :%2d ", p, r,len);
+                    }
+                    else {
+                        if (len>=sizeof(s)) count=sizeof(s)-1; else count=len;
+                        get_parameter_data(p, &s, count);
+                        s[count]=0;
+                        sprintf(osd_buf, "%3d: %30s :%2d ", p, s,len);
+                    }
+                }
+                draw_string(16,16+16*i,osd_buf, conf.osd_color);
+            }
+        }
+    }
+
+#ifndef CAM_DRYOS
+    if(conf.debug_display == DEBUG_DISPLAY_TASKS)
+            gui_debug_draw_tasklist();
+#endif
+#endif
+}
+
+//-------------------------------------------------------------------
+// void gui_draw_osd()
+//      Common OSD display code
+//-------------------------------------------------------------------
+void gui_draw_osd()
+{
+    unsigned int m, mode_photo, mode_video;
+    m = mode_get();
+
+    if (half_disp_press) 
+        return;
+    
+    mode_video = MODE_IS_VIDEO(m);
+    mode_photo = ((m&MODE_MASK) == MODE_PLAY) || !(mode_video || (m&MODE_SHOOTING_MASK)==MODE_STITCH);
+    
+    if (((camera_info.state.is_shutter_half_press && (conf.show_histo==SHOW_HALF)) || 
+         ((conf.show_histo==SHOW_ALWAYS) && (recreview_hold==0))) && 
+        (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH))
+    {
+        gui_osd_draw_histo();
+    }
+
+    if ((m&MODE_MASK) == MODE_REC && (recreview_hold==0 || conf.show_osd_in_review))
+    {
+        if (conf.show_grid_lines)
+            if (module_grids_load())
+                libgrids->gui_grid_draw_osd(1);
+
+        if ((((camera_info.state.is_shutter_half_press || state_kbd_script_run || shooting_get_common_focus_mode()) &&
+              (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH)) ||
+             ((mode_video || is_video_recording()) && conf.show_values_in_video)))
+        {
+           if (conf.show_dof!=DOF_DONT_SHOW)
+               gui_osd_calc_dof();
+           if ((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX))
+               gui_osd_draw_dof();  
+           if (conf.values_show_real_iso || conf.values_show_market_iso || conf.values_show_ev_seted || conf.values_show_ev_measured || 
+               conf.values_show_bv_measured || conf.values_show_bv_seted || conf.values_show_overexposure || conf.values_show_canon_overexposure || conf.values_show_luminance)
+               gui_osd_calc_expo_param();           	           
+        }
+
+        if (conf.show_state)
+            gui_osd_draw_state();
+
+        if (conf.save_raw && conf.show_raw_state && !mode_video && (!camera_info.state.is_shutter_half_press))
+            gui_osd_draw_raw_info();
+        
+        if ((conf.show_values==SHOW_ALWAYS && mode_photo) || 
+            ((mode_video || is_video_recording()) && conf.show_values_in_video) || 
+            ((camera_info.state.is_shutter_half_press || (recreview_hold==1)) && (conf.show_values==SHOW_HALF)))
+            gui_osd_draw_values(1);
+        else if (shooting_get_common_focus_mode() && mode_photo && conf.show_values && !((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX)))   
+            gui_osd_draw_values(2);
+        else if (conf.show_values==SHOW_HALF)
+            gui_osd_draw_values(0);   
+    }
+
+    if ( osd_visible(m&MODE_MASK) )  
+    {
+        gui_batt_draw_osd();
+        gui_space_draw_osd();
+        gui_usb_draw_osd();
+        if (conf.show_temp>0)
+            gui_osd_draw_temp();
+#ifdef CAM_HAS_GPS
+        gps_startup();
+#endif
+        if (conf.fast_ev && !mode_video && (m&MODE_MASK) == MODE_REC )
+            gui_osd_draw_ev();
+    }
+
+    if ( conf.show_clock )
+    {
+        if ( osd_visible(m&MODE_MASK) || ( camera_info.state.is_shutter_half_press && conf.clock_halfpress==0) ) gui_osd_draw_clock(0,0,0);
+        else if ( camera_info.state.is_shutter_half_press && conf.clock_halfpress==1 ) gui_osd_draw_seconds();
+    }
+
+    if ( conf.show_movie_time > 0 && (mode_video || is_video_recording()))
+        gui_osd_draw_movie_time_left();
+
+#if CAM_EV_IN_VIDEO
+    if (is_video_recording()) gui_osd_draw_ev_video(get_ev_video_avail());
+#endif
+
+    gui_draw_debug_vals_osd();
+
+#ifdef OPT_UBASIC
+    if (ubasic_error)
+    {
+        const char *msg;
+        if (ubasic_error >= UBASIC_E_ENDMARK)
+        {
+            msg = ubasic_errstrings[UBASIC_E_UNKNOWN_ERROR];
+        }
+        else
+        {
+            msg = ubasic_errstrings[ubasic_error];
+        }
+        sprintf(osd_buf, "uBASIC:%d %s ", ubasic_linenumber(), msg);
+        draw_txt_string(0, 0, osd_buf, MAKE_COLOR(COLOR_RED, COLOR_YELLOW));
+    }
+#endif
+}
+
+// GUI handler for normal shooting / playback modes
+static void gui_default_draw()
+{
+    unsigned int m, mode_photo, mode_video;
+
+    m = mode_get();
+
+#if CAM_SWIVEL_SCREEN
+    static int flashlight = 0;
+
+    if (conf.flashlight && (m&MODE_SCREEN_OPENED) && (m&MODE_SCREEN_ROTATED))
+    {
+        flashlight = 1;
+        draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE));
+        return;
+    }
+    else if (flashlight)
+    {
+        flashlight = 0;
+        gui_set_need_restore();
+        return;
+    }
+#endif
+
+    if (half_disp_press) 
+        return;
+
+    mode_video = MODE_IS_VIDEO(m);
+    mode_photo = ((m&MODE_MASK) == MODE_PLAY) || !(mode_video || (m&MODE_SHOOTING_MASK)==MODE_STITCH);
+
+    if (conf.zebra_draw)
+        if (module_zebra_load())
+	        if (libzebra->gui_osd_draw_zebra(conf.zebra_draw && camera_info.state.is_shutter_half_press && mode_photo))
+		        return; // if zebra drawn, we're done
+
+#if !CAM_SHOW_OSD_IN_SHOOT_MENU
+    if (!(conf.show_osd && (canon_menu_active==(int)&canon_menu_active-4) && (canon_shoot_menu_active==0))) return;
+#else
+    if (!(conf.show_osd && (canon_menu_active==(int)&canon_menu_active-4) /*&& (canon_shoot_menu_active==0)*/ )) return;
+#endif  
+
+    gui_draw_osd();
+
+#if CAM_DRAW_EXPOSITION
+    if (camera_info.state.is_shutter_half_press && ((m&MODE_MASK)==MODE_REC) && ((m&MODE_SHOOTING_MASK))!=MODE_VIDEO_STD && (m&MODE_SHOOTING_MASK)!=MODE_VIDEO_COMPACT)
+    {
+        strcpy(osd_buf,shooting_get_tv_str());
+        strcat(osd_buf,"\"  F");
+        strcat(osd_buf,shooting_get_av_str());
+        draw_txt_string(22-strlen(osd_buf)/2, 14, osd_buf, conf.osd_color);
+    }
+#endif
+}
+
+//-------------------------------------------------------------------
+// GUI/KBD handlers - Canon modes (not in CHDK <ALT> mode, menu etc)
+gui_handler defaultGuiHandler = { GUI_MODE_NONE, gui_default_draw, gui_std_kbd_process, 0, 0, GUI_MODE_MAGICNUM };
+//-------------------------------------------------------------------
