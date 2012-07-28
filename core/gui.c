@@ -1963,6 +1963,8 @@ gui_handler* gui_set_mode(gui_handler *mode)
     gui_handler *old_mode = gui_mode;
     gui_mode = mode;
 
+    gui_osd_need_restore = 0;
+
     // Flag for screen erase/redraw unless mode is marked not to (e.g. menu box popup)
     if (((gui_mode->flags & (GUI_MODE_FLAG_NODRAWRESTORE|GUI_MODE_FLAG_NORESTORE_ON_SWITCH)) == 0) &&
         ((old_mode->flags & GUI_MODE_FLAG_NORESTORE_ON_SWITCH) == 0))
