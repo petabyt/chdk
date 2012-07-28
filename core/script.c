@@ -3,6 +3,7 @@
 #include "platform.h"
 #include "core.h"
 #include "gui.h"
+#include "gui_osd.h"
 #include "gui_draw.h"
 #include "gui_menu.h"
 #include "conf.h"
@@ -21,6 +22,7 @@
 
 //-------------------------------------------------------------------
 
+long kbd_last_clicked;
 const char *script_source_str=NULL; // ptr to content of script
 char cfg_name[100] = "\0";          // buffer to make string "DATAPATH/scriptname.cfg"
 char cfg_set_name[100] = "\0";      // buffer to make string "DATAPATH/scriptname_PARAMSET"
@@ -827,6 +829,76 @@ int script_is_running()
     return !action_stack_is_finished(running_script_stack_name);
 }
 
+//-------------------------------------------------------------------
+
+#ifdef OPT_SCRIPTING
+static void interrupt_script()
+{
+    script_console_add_line(lang_str(LANG_CONSOLE_TEXT_INTERRUPTED));
+    script_end();
+}
+#endif
+
+// Main button processing for CHDK Script mode
+static int gui_script_kbd_process()
+{
+#ifdef OPT_SCRIPTING
+    // Stop a script if the shutter button pressed in Script mode
+    if (kbd_is_key_clicked(KEY_SHOOT_FULL))
+    {
+        if (state_kbd_script_run == 2 || state_kbd_script_run == 3)
+            interrupt_script();
+#ifdef OPT_LUA
+        else if (L)
+        {
+            state_kbd_script_run = 2;
+            lua_run_restore();
+            interrupt_script();
+        }
+#endif
+#ifdef OPT_UBASIC
+        else
+        {
+            state_kbd_script_run = 2;
+            if (jump_label("restore") == 0)
+                interrupt_script();
+        }
+#endif
+    }
+#endif
+
+    return 0;
+}
+
+//-------------------------------------------------------------------
+void gui_script_draw()
+{
+    extern void gui_chdk_draw();
+    gui_chdk_draw();
+
+    if ((mode_get()&MODE_MASK) == MODE_REC || (mode_get()&MODE_MASK) == MODE_PLAY)
+    {
+        static int show_md_grid=0;
+        if (state_kbd_script_run) show_md_grid=5;
+        if (show_md_grid)
+        {
+            --show_md_grid;
+            // If motion detect library loaded then display the MD grid
+            // Don't call 'module_mdetect_load' here as we don't want to load
+            // the module, just see if it was already loaded.
+            if (libmotiondetect)
+                libmotiondetect->md_draw_grid();
+        }
+    }
+}
+
+// GUI handler for Script mode
+gui_handler scriptGuiHandler = { GUI_MODE_SCRIPT, gui_script_draw, gui_script_kbd_process, 0, GUI_MODE_FLAG_NODRAWRESTORE|GUI_MODE_FLAG_NORESTORE_ON_SWITCH, GUI_MODE_MAGICNUM };      
+
+static gui_handler *old_gui_handler = 0;
+
+//-------------------------------------------------------------------
+
 void script_end()
 {
     script_print_screen_end();
@@ -850,6 +922,12 @@ void script_end()
     conf_update_prevent_shutdown();
 
     vid_bitmap_refresh();
+
+    if (old_gui_handler)
+    {
+        gui_set_mode(old_gui_handler);
+        old_gui_handler = 0;
+    }
 }
 
 long script_start_gui( int autostart )
@@ -915,6 +993,8 @@ long script_start_gui( int autostart )
     state_kbd_script_run = 1;
 
     conf_update_prevent_shutdown();
+
+    old_gui_handler = gui_set_mode(&scriptGuiHandler);
 
     return script_stack_start();
 }

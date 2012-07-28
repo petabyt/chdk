@@ -121,7 +121,7 @@ void histogram_process()
     switch (histogram_stage)
     {
         case 0:
-            img=((mode_get()&MODE_MASK) == MODE_PLAY)?vid_get_viewport_fb_d():((kbd_is_key_pressed(KEY_SHOOT_HALF))?vid_get_viewport_fb():vid_get_viewport_live_fb());
+            img=((mode_get()&MODE_MASK) == MODE_PLAY)?vid_get_viewport_fb_d():((camera_info.state.is_shutter_half_press)?vid_get_viewport_fb():vid_get_viewport_live_fb());
 
             if (img==NULL)
                 img = vid_get_viewport_fb();
@@ -387,7 +387,7 @@ void gui_osd_draw_histo() {
             draw_filled_ellipse(conf.histo_pos.x+HISTO_WIDTH-5, conf.histo_pos.y+5, 3, 3, MAKE_COLOR(BG_COLOR(conf.histo_color2), BG_COLOR(conf.histo_color2)));
         }
     }
-    if ((conf.show_overexp ) && kbd_is_key_pressed(KEY_SHOOT_HALF) && (under_exposed || over_exposed))
+    if ((conf.show_overexp ) && camera_info.state.is_shutter_half_press && (under_exposed || over_exposed))
         draw_string(conf.histo_pos.x+HISTO_WIDTH-FONT_WIDTH*3, conf.histo_pos.y-FONT_HEIGHT, "EXP", conf.histo_color);
     if (conf.histo_auto_ajust){
         if (histo_magnification) {
@@ -429,7 +429,7 @@ void live_histogram_process_quick()
 	    histogram_stored_stage = histogram_stage;
     histogram_stage=HISTOGRAM_IDLE_STAGE;
 
-    img=((mode_get()&MODE_MASK) == MODE_PLAY)?vid_get_viewport_fb_d():((kbd_is_key_pressed(KEY_SHOOT_HALF))?vid_get_viewport_fb():vid_get_viewport_live_fb());
+    img=((mode_get()&MODE_MASK) == MODE_PLAY)?vid_get_viewport_fb_d():((camera_info.state.is_shutter_half_press)?vid_get_viewport_fb():vid_get_viewport_live_fb());
     if (img==NULL){
        img = vid_get_viewport_fb();
     }

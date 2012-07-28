@@ -894,7 +894,6 @@ extern void draw_txt_filled_rect_exp(coord col, coord row, unsigned int length, 
 extern void draw_txt_string(coord col, coord row, const char *str, color cl);
 extern void draw_txt_char(coord col, coord row, const char ch, color cl);
 
-extern void draw_clear();
 extern void draw_restore();
 
 extern void draw_fill(coord x, coord y, color cl_fill, color cl_bound);

@@ -13,11 +13,11 @@
 #include "module_load.h"
 
 void gui_module_menu_kbd_process();
-void gui_snake_kbd_process();
+int gui_snake_kbd_process();
 void gui_snake_draw();
 
 gui_handler GUI_MODE_SNAKE = 
-    /*GUI_MODE_SNAKE*/  { GUI_MODE_MODULE,   gui_snake_draw,     gui_snake_kbd_process,    gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_SNAKE*/  { GUI_MODE_MODULE, gui_snake_draw, gui_snake_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
 
 
 //-------------------------------------------------------------------
@@ -301,7 +301,7 @@ static void game_over(){
     snake_start();
 }
 
-void gui_snake_kbd_process() {
+int gui_snake_kbd_process() {
     switch (kbd_get_autoclicked_key()) {
         case KEY_UP:
             if(direction != DIR_DOWN) direction = DIR_UP;
@@ -323,6 +323,7 @@ void gui_snake_kbd_process() {
         case KEY_DISPLAY:
             break;
     }
+    return 0;
 }
 
 void gui_snake_draw() {

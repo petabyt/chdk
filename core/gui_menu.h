@@ -25,10 +25,6 @@
 
 // Value, which specify specific kind of argument
 #define MENUITEM_ARG_MASK       0x0f00
-    // menuitem.arg contain incrementor value
-#define MENUITEM_ARG_INC        0x0100
-    // menuitem.arg contain (int*) to incrementor
-#define MENUITEM_ARG_ADDR_INC   0x0200
     // menuitem.arg contain ptr to callback function
 #define MENUITEM_ARG_CALLBACK   0x0300
 
@@ -62,11 +58,13 @@ typedef struct {
 
 //-------------------------------------------------------------------
 extern void gui_menu_init(CMenu *menu_ptr);
-extern void gui_menu_kbd_process();
-extern void gui_menu_kbd_process_menu_btn();
+extern int gui_menu_kbd_process();
 extern void gui_menu_draw(int enforce_redraw);
 extern void gui_menu_force_redraw();
 extern void gui_menu_unload_module_menus();
 //-------------------------------------------------------------------
 
+extern gui_handler menuGuiHandler;
+
+//-------------------------------------------------------------------
 #endif

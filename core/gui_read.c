@@ -17,12 +17,12 @@
 //-------------------------------------------------------------------
 
 extern void gui_read_kbd_process_menu_btn();
-void gui_read_kbd_process();
+int gui_read_kbd_process();
 void gui_read_draw(int enforce_redraw);
 void gui_read_kbd_leave();
 
 gui_handler GUI_MODE_READ = 
-    /*GUI_MODE_READ*/   { GUI_MODE_MODULE,   gui_read_draw,        gui_read_kbd_process,       gui_read_kbd_process_menu_btn,	0,	GUI_MODE_MAGICNUM };
+    /*GUI_MODE_READ*/   { GUI_MODE_MODULE, gui_read_draw, gui_read_kbd_process, gui_read_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
 
 //-------------------------------------------------------------------
 static int read_file;
@@ -208,7 +208,7 @@ void gui_read_draw(int enforce_redraw) {
 }
 
 //-------------------------------------------------------------------
-void gui_read_kbd_process() {
+int gui_read_kbd_process() {
     switch (kbd_get_autoclicked_key() | get_jogdial_direction()) {
         case JOGDIAL_LEFT:
         case KEY_ZOOM_OUT:
@@ -241,6 +241,7 @@ void gui_read_kbd_process() {
 			gui_read_kbd_leave();
             break;
     }
+    return 0;
 }
 
 // =========  MODULE INIT =================

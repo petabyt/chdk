@@ -11,9 +11,9 @@
 
 //-------------------------------------------------------------------
 void gui_mbox_draw(int enforce_redraw);
-void gui_mbox_kbd_process();
+int gui_mbox_kbd_process();
 
-static gui_handler mboxGuiHandler =    { GUI_MODE_MBOX,    gui_mbox_draw,  gui_mbox_kbd_process,   0,   GUI_MODE_FLAG_NORESTORE_ON_SWITCH,    GUI_MODE_MAGICNUM };
+static gui_handler mboxGuiHandler = { GUI_MODE_MBOX, gui_mbox_draw, gui_mbox_kbd_process, 0, GUI_MODE_FLAG_NORESTORE_ON_SWITCH, GUI_MODE_MAGICNUM };
 
 static gui_handler	*gui_mbox_mode_old;
 static const char*	mbox_title;
@@ -149,7 +149,7 @@ void gui_mbox_draw(int enforce_redraw) {
 }
 
 //-------------------------------------------------------------------
-void gui_mbox_kbd_process() {
+int gui_mbox_kbd_process() {
     switch (kbd_get_clicked_key() | get_jogdial_direction()) {
     case JOGDIAL_LEFT:
     case KEY_LEFT:
@@ -167,11 +167,12 @@ void gui_mbox_kbd_process() {
         kbd_reset_autoclicked_key();
         gui_set_mode(gui_mbox_mode_old);
         if (mbox_flags & MBOX_FUNC_RESTORE)
-            draw_restore();
+            gui_set_need_restore();
         if (mbox_on_select) 
             mbox_on_select(buttons[mbox_buttons[mbox_button_active]].flag);
         break;
     }
+    return 0;
 }
 
 //-------------------------------------------------------------------

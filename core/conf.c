@@ -11,6 +11,8 @@
 #include "gui_osd.h"
 #include "gui_grid.h"
 #include "gui_lang.h"
+#include "gui_menu.h"
+#include "gui_user_menu.h"
 #include "core.h"
 #include "stdlib.h"
 #include "script.h"
@@ -312,7 +314,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(169, conf.bad_pixel_removal,          CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(170, conf.video_af_key,               CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(171, conf.osd_color_override,         CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_RED), NULL),
-    CONF_INFO(172, conf.override_disable,           CONF_DEF_VALUE, i:2, NULL),
+    CONF_INFO(172, conf.override_disable,           CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(173, conf.override_disable_all,       CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO(174, conf.hide_osd,                   CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO(175, conf.save_raw_in_video,          CONF_DEF_VALUE, i:1, NULL),
@@ -456,6 +458,8 @@ static const ConfInfo conf_info[] = {
 
     CONF_INFO(289, conf.dng_version,                CONF_DEF_VALUE,     i:0, conf_change_dng),
     CONF_INFO(290, conf.tbox_char_map,              CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO(291, conf.show_alt_helper,            CONF_DEF_VALUE,     i:1, NULL),
+    CONF_INFO(292, conf.show_alt_helper_delay,      CONF_DEF_VALUE,     i:3, NULL),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
@@ -707,6 +711,8 @@ void conf_restore()
 {
     conf_init_defaults();
     config_restore(&conf_info[0], CONF_FILE, CONF_NUM, conf_info_func);
+    // Fixup old conf.override_disable value
+    if (conf.override_disable == 2) conf.override_disable = 0;
 }
 
 //-------------------------------------------------------------------
@@ -859,6 +865,26 @@ int is_raw_enabled()
         ((shooting_get_drive_mode()>=2) && conf.save_raw_in_timer) ||                       // True if drive mode is timer and save_raw_in_timer is disabled
         ((shooting_get_prop(PROPCASE_BRACKET_MODE)==1) && conf.save_raw_in_ev_bracketing)   // True if bracketing enabled and save_raw_in_ev_bracketing is disabled
     );
+}
+
+//-------------------------------------------------------------------
+static Conf old_conf;
+
+void conf_store_old_settings()
+{
+    old_conf = conf;
+}
+
+int conf_save_new_settings_if_changed()
+{
+    if (memcmp(&old_conf, &conf, sizeof(Conf)) != 0)
+    {
+		user_menu_save();
+        conf_save();
+        conf_store_old_settings();
+        return 1;
+    }
+    return 0;
 }
 
 //-------------------------------------------------------------------

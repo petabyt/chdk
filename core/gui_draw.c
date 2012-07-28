@@ -11,7 +11,8 @@ static char*    frame_buffer[2];
 void            (*draw_pixel_proc)(unsigned int offset, color cl);
 
 //-------------------------------------------------------------------
-static void draw_pixel_std(unsigned int offset, color cl) {
+static void draw_pixel_std(unsigned int offset, color cl)
+{
 #ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY	
 	extern int active_bitmap_buffer;
 	frame_buffer[active_bitmap_buffer][offset] = cl & 0xff;
@@ -21,7 +22,8 @@ static void draw_pixel_std(unsigned int offset, color cl) {
 }
 
 //-------------------------------------------------------------------
-void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl)) {
+void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl))
+{
     draw_pixel_proc = (pixel_proc)?pixel_proc:draw_pixel_std;
 }
 
@@ -46,7 +48,7 @@ int draw_test_guard()
 // Test a pixel value in both frame buffers, returns 0 if either doesn't match or co-ords out of range
 int draw_test_pixel(coord x, coord y, color c)
 {
-    if (x >= camera_screen.width || y >= camera_screen.height) return 0;
+    if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return 0;
     return (frame_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)] == c) &&
            (frame_buffer[1][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)] == c);
 }
@@ -54,9 +56,8 @@ int draw_test_pixel(coord x, coord y, color c)
 #endif
 
 //-------------------------------------------------------------------
-void draw_init() {
-    register int i;
-
+void draw_init()
+{
     frame_buffer[0] = vid_get_bitmap_fb();
     frame_buffer[1] = frame_buffer[0] + camera_screen.buffer_size;
     draw_set_draw_proc(NULL);
@@ -67,9 +68,16 @@ void draw_init() {
 }
 
 //-------------------------------------------------------------------
-void draw_pixel(coord x, coord y, color cl) {
-    if (x >= camera_screen.width || y >= camera_screen.height) return;
-    else {
+void draw_pixel(coord x, coord y, color cl)
+{
+    // Make sure pixel is on screen. Skip top left pixel if screen erase detection is on to avoid triggering the detector.
+#ifdef CAM_DETECT_SCREEN_ERASE
+    if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height) || ((x == 0) && (y == 0))) return;
+#else
+    if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return;
+#endif
+    else
+    {
         register unsigned int offset = y * camera_screen.buffer_width + ASPECT_XCORRECTION(x);
         draw_pixel_proc(offset,   cl);
 #if CAM_USES_ASPECT_CORRECTION
@@ -79,21 +87,25 @@ void draw_pixel(coord x, coord y, color cl) {
 }
 
 //-------------------------------------------------------------------
-color draw_get_pixel(coord x, coord y) {
-    if (x >= camera_screen.width || y >= camera_screen.height) return 0;
+color draw_get_pixel(coord x, coord y)
+{
+    if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return 0;
     return frame_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x) ];
 }
 
 //-------------------------------------------------------------------
 #define swap(v1, v2)   {v1^=v2; v2^=v1; v1^=v2;}
 //-------------------------------------------------------------------
-void draw_line(coord x1, coord y1, coord x2, coord y2, color cl) {
+void draw_line(coord x1, coord y1, coord x2, coord y2, color cl)
+{
      unsigned char steep = abs(y2 - y1) > abs(x2 - x1);
-     if (steep) {
+     if (steep)
+     {
          swap(x1, y1);
          swap(x2, y2);
      }
-     if (x1 > x2) {
+     if (x1 > x2)
+     {
          swap(x1, x2);
          swap(y1, y2);
      }
@@ -103,11 +115,13 @@ void draw_line(coord x1, coord y1, coord x2, coord y2, color cl) {
      int y = y1;
      int ystep = (y1 < y2)?1:-1;
      int x;
-     for (x=x1; x<=x2; ++x) {
+     for (x=x1; x<=x2; ++x)
+     {
          if (steep) draw_pixel(y, x, cl);
          else draw_pixel(x, y, cl);
          error += deltay;
-         if ((error<<1) >= deltax) {
+         if ((error<<1) >= deltax)
+         {
              y += ystep;
              error -= deltax;
          }
@@ -116,7 +130,7 @@ void draw_line(coord x1, coord y1, coord x2, coord y2, color cl) {
 //-------------------------------------------------------------------
 void draw_hline(coord x, coord y, int len, color cl)
 {
-    if (x >= camera_screen.width || y >= camera_screen.height) return;
+    if ((y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return;
     if (x < 0) { len += x; x = 0; }
     if ((x + len) > camera_screen.width) len = camera_screen.width - x;
     register unsigned int offset = y * camera_screen.buffer_width + ASPECT_XCORRECTION(x);
@@ -136,12 +150,13 @@ void draw_vline(coord x, coord y, int len, color cl)
 //-------------------------------------------------------------------
 
 // Local variables set up by draw_rectangle, and used in fill_rect
-static unsigned int xMin, yMin, xMax, yMax;
+static coord xMin, yMin, xMax, yMax;
 
 static void draw_rectangle(coord x1, coord y1, coord x2, coord y2, color cl, int round) 
 {
-    register unsigned int x, y;
+    register coord y;
 
+    // Normalise values
     if (x1>x2) {
     	xMax=x1; xMin=x2;
     } else {
@@ -152,27 +167,26 @@ static void draw_rectangle(coord x1, coord y1, coord x2, coord y2, color cl, int
     } else {
     	yMin=y1; yMax=y2;
     }
-    if (xMax>=camera_screen.width) xMax=camera_screen.width-1;
-    if (xMin>=camera_screen.width) xMin=camera_screen.width-1;
-    if (yMax>=camera_screen.height) yMax=camera_screen.height-1;
-    if (yMin>=camera_screen.height) yMin=camera_screen.height-1;
 
-    for (y=yMin+(round<<1); y<=yMax-(round<<1); ++y)
-    {
-      draw_pixel(xMin, y, cl);
-      draw_pixel(xMax, y, cl);
-    }
+    // Check if completely off screen
+    if ((xMax < 0) || (yMax < 0) || (xMin >= camera_screen.width) || (yMin >= camera_screen.height))
+        return;
 
-    draw_hline(xMin+1+round, yMin, (xMax-1-round) - (xMin+1+round) + 1, cl);
-    draw_hline(xMin+1+round, yMax, (xMax-1-round) - (xMin+1+round) + 1, cl);
+    // Clipping done in draw_hline and draw_vline
+    draw_vline(xMin, yMin + round * 2, yMax - yMin - round * 4 + 1, cl);
+    draw_vline(xMax, yMin + round * 2, yMax - yMin - round * 4 + 1, cl);
+    draw_hline(xMin + 1 + round, yMin, xMax - xMin - round * 2 - 1, cl);
+    draw_hline(xMin + 1 + round, yMax, xMax - xMin - round * 2 - 1, cl);
 }
 
 //-------------------------------------------------------------------
-void draw_rect(coord x1, coord y1, coord x2, coord y2, color cl) {
+void draw_rect(coord x1, coord y1, coord x2, coord y2, color cl)
+{
     draw_rectangle(x1,y1,x2,y2,cl&0xff,0);
 }
 
-void draw_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness) {
+void draw_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness)
+{
     int i;
     cl = cl & 0xff;
     for (i=0; i<thickness; i++)
@@ -181,7 +195,8 @@ void draw_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thick
     }
 }
 
-void draw_rect_shadow(coord x1, coord y1, coord x2, coord y2, color cl, int thickness) {
+void draw_rect_shadow(coord x1, coord y1, coord x2, coord y2, color cl, int thickness)
+{
     int i;
     cl = cl & 0xff;
     for (i=0; i<thickness; i++)
@@ -190,11 +205,13 @@ void draw_rect_shadow(coord x1, coord y1, coord x2, coord y2, color cl, int thic
     }
 }
 //-------------------------------------------------------------------
-void draw_round_rect(coord x1, coord y1, coord x2, coord y2, color cl) { 
+void draw_round_rect(coord x1, coord y1, coord x2, coord y2, color cl)
+{ 
     draw_rectangle(x1,y1,x2,y2,cl&0xff,1);
 } 
 
-void draw_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness) { 
+void draw_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness)
+{ 
     int i;
     cl = cl & 0xff;
     draw_rectangle(x1,y1,x2,y2,cl,1);
@@ -204,32 +221,47 @@ void draw_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int
     }
 } 
 //-------------------------------------------------------------------
-static void fill_rect(color cl) {
-    register unsigned int x, y;
+static void fill_rect(color cl)
+{
+    register coord x, y;
+
+    // Check if completely off screen
+    if ((xMax < 0) || (yMax < 0) || (xMin >= camera_screen.width) || (yMin >= camera_screen.height))
+        return;
+
+    // Clip values
+    if (xMin < -1) xMin = -1;
+    if (yMin < -1) yMin = -1;
+    if (xMax > camera_screen.width) xMax = camera_screen.width;
+    if (yMax > camera_screen.height) yMax = camera_screen.height;
 
     cl = BG_COLOR(cl);
-    for (y=yMin+1; y<=yMax-1; ++y)
+    for (y = yMin+1; y <= yMax-1; ++y)
     {
-        draw_hline(xMin+1, y, (xMax-1) - (xMin+1) + 1, cl);
+        draw_hline(xMin + 1, y, xMax - xMin - 1, cl);
     }
 }
 //-------------------------------------------------------------------
-void draw_filled_rect(coord x1, coord y1, coord x2, coord y2, color cl) {
+void draw_filled_rect(coord x1, coord y1, coord x2, coord y2, color cl)
+{
     draw_rect(x1, y1, x2, y2, cl);
     fill_rect(cl);
 }
 
-void draw_filled_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness) {
+void draw_filled_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness)
+{
     draw_rect_thick(x1, y1, x2, y2, cl, thickness);
     fill_rect(cl);
 }
 //-------------------------------------------------------------------
-void draw_filled_round_rect(coord x1, coord y1, coord x2, coord y2, color cl) { 
+void draw_filled_round_rect(coord x1, coord y1, coord x2, coord y2, color cl)
+{ 
     draw_round_rect(x1, y1, x2, y2, cl); 
     fill_rect(cl);
 } 
 
-void draw_filled_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness) { 
+void draw_filled_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness)
+{ 
     draw_round_rect_thick(x1, y1, x2, y2, cl, thickness); 
     fill_rect(cl);
 } 
@@ -257,7 +289,8 @@ void draw_char(coord x, coord y, const char ch, color cl)
 }
 
 //-------------------------------------------------------------------
-void draw_string(coord x, coord y, const char *s, color cl) {
+void draw_string(coord x, coord y, const char *s, color cl)
+{
     while(*s)
     {
 	    draw_char(x, y, *s, cl);
@@ -272,68 +305,58 @@ void draw_string(coord x, coord y, const char *s, color cl) {
 }
 
 //-------------------------------------------------------------------
-void draw_txt_rect(coord col, coord row, unsigned int length, unsigned int height, color cl) {
+void draw_txt_rect(coord col, coord row, unsigned int length, unsigned int height, color cl)
+{
     draw_rect(col*FONT_WIDTH, row*FONT_HEIGHT, (col+length)*FONT_WIDTH-1, (row+height)*FONT_HEIGHT-1, cl);
 }
 
 //-------------------------------------------------------------------
-void draw_txt_rect_exp(coord col, coord row, unsigned int length, unsigned int height, unsigned int exp, color cl) {
+void draw_txt_rect_exp(coord col, coord row, unsigned int length, unsigned int height, unsigned int exp, color cl)
+{
     draw_rect(col*FONT_WIDTH-exp, row*FONT_HEIGHT-exp, (col+length)*FONT_WIDTH-1+exp, (row+height)*FONT_HEIGHT-1+exp, cl);
 }
 
 //-------------------------------------------------------------------
-void draw_txt_filled_rect(coord col, coord row, unsigned int length, unsigned int height, color cl) {
+void draw_txt_filled_rect(coord col, coord row, unsigned int length, unsigned int height, color cl)
+{
     draw_filled_rect(col*FONT_WIDTH, row*FONT_HEIGHT, (col+length)*FONT_WIDTH-1, (row+height)*FONT_HEIGHT-1, cl);
 }
 
 //-------------------------------------------------------------------
-void draw_txt_filled_rect_exp(coord col, coord row, unsigned int length, unsigned int height, unsigned int exp, color cl) {
+void draw_txt_filled_rect_exp(coord col, coord row, unsigned int length, unsigned int height, unsigned int exp, color cl)
+{
     draw_filled_rect(col*FONT_WIDTH-exp, row*FONT_HEIGHT-exp, (col+length)*FONT_WIDTH-1+exp, (row+height)*FONT_HEIGHT-1+exp, cl);
 }
 
 //-------------------------------------------------------------------
-void draw_txt_string(coord col, coord row, const char *str, color cl) {
+void draw_txt_string(coord col, coord row, const char *str, color cl)
+{
     draw_string(col*FONT_WIDTH, row*FONT_HEIGHT, str, cl);
 }
 
 //-------------------------------------------------------------------
-void draw_txt_char(coord col, coord row, const char ch, color cl) {
+void draw_txt_char(coord col, coord row, const char ch, color cl)
+{
     draw_char(col*FONT_WIDTH, row*FONT_HEIGHT, ch, cl);
-}
-
-//-------------------------------------------------------------------
-void draw_clear() {
-    memset(frame_buffer[0], COLOR_TRANSPARENT, camera_screen.buffer_size*2);
 }
 
 // Restore CANON_OSD
 //-------------------------------------------------------------------
-void draw_restore() {
+void draw_restore()
+{
     vid_bitmap_refresh();
 
 #ifdef CAM_DETECT_SCREEN_ERASE
     draw_set_guard();
 #ifdef CAM_TOUCHSCREEN_UI
-    extern int redraw_buttons;
     redraw_buttons = 1;
 #endif
 #endif
 }
 
 //-------------------------------------------------------------------
-//void draw_fill(coord x, coord y, color cl_fill, color cl_bound) {
-//   if (draw_get_pixel(x, y) != cl_bound && draw_get_pixel(x, y) != cl_fill) {
-//       draw_pixel(x, y, cl_fill);
-//
-//       draw_fill((x+1), y, cl_fill,cl_bound);
-//       draw_fill((x-1), y, cl_fill,cl_bound);
-//       draw_fill(x, (y+1), cl_fill,cl_bound);
-//       draw_fill(x, (y-1), cl_fill,cl_bound);
-//   }
-//}
-
-//-------------------------------------------------------------------
-void draw_circle(coord x, coord y, const unsigned int r, color cl) {
+void draw_circle(coord x, coord y, const unsigned int r, color cl)
+{
     int dx = 0;
     int dy = r;
     int p=(3-(r<<1));
@@ -360,103 +383,129 @@ void draw_circle(coord x, coord y, const unsigned int r, color cl) {
 }
 
 //-------------------------------------------------------------------
-void draw_ellipse(coord xc, coord yc, unsigned int a, unsigned int b, color cl) {
-    int x = 0, y = b;
-    long a2 = (long)a*a, b2 = (long)b*b;
-    long crit1 = -((a2>>2) + (a&1) + b2);
-    long crit2 = -((b2>>2) + (b&1) + a2);
-    long crit3 = -((b2>>2) + (b&1));
-    long t = -a2*y;
-    long dxt = b2*x*2, dyt = -2*a2*y;
-    long d2xt = b2*2, d2yt = a2*2;
-
-    while (y>=0 && x<=a) {
-        draw_pixel(xc+x, yc+y, cl);
-        if (x!=0 || y!=0)
-            draw_pixel(xc-x, yc-y, cl);
-        if (x!=0 && y!=0) {
-            draw_pixel(xc+x, yc-y, cl);
-            draw_pixel(xc-x, yc+y, cl);
+void draw_ellipse(coord CX, coord CY, unsigned int XRadius, unsigned int YRadius, color cl)
+{
+    // Bresenham fast ellipse algorithm - http://homepage.smc.edu/kennedy_john/BELIPSE.PDF
+    int X, Y;
+    int XChange, YChange;
+    int EllipseError;
+    int TwoASquare, TwoBSquare;
+    int StoppingX, StoppingY;
+    TwoASquare = 2*XRadius*XRadius;
+    TwoBSquare = 2*YRadius*YRadius;
+    X = XRadius;
+    Y = 0;
+    XChange = YRadius*YRadius*(1-2*XRadius);
+    YChange = XRadius*XRadius;
+    EllipseError = 0;
+    StoppingX = TwoBSquare*XRadius;
+    StoppingY = 0;
+    while ( StoppingX >= StoppingY ) 
+    {
+        draw_pixel(CX-X,CY-Y,cl);
+        draw_pixel(CX-X,CY+Y,cl);
+        draw_pixel(CX+X,CY-Y,cl);
+        draw_pixel(CX+X,CY+Y,cl);
+        Y++;
+        StoppingY += TwoASquare;
+        EllipseError += YChange;
+        YChange += TwoASquare;
+        if ((2*EllipseError + XChange) > 0 )
+        {
+            X--;
+            StoppingX -= TwoBSquare;
+            EllipseError += XChange;
+            XChange += TwoBSquare;
         }
-        if (t + b2*x <= crit1 || t + a2*y <= crit3)
-            ++x, dxt += d2xt, t += dxt;
-        else if (t - a2*y > crit2)
-            --y, dyt += d2yt, t += dyt;
-        else {
-            ++x, dxt += d2xt, t += dxt;
-            --y, dyt += d2yt, t += dyt;
-        }
-   }
-}
-
-//-------------------------------------------------------------------
-void draw_filled_ellipse(coord xc, coord yc, unsigned int a, unsigned int b, color cl) {
-    int x = 0, y = b;
-    int rx = x, ry = y;
-    unsigned int width = 1;
-    unsigned int height = 1;
-    long a2 = (long)a*a, b2 = (long)b*b;
-    long crit1 = -((a2>>2) + (a&1) + b2);
-    long crit2 = -((b2>>2) + (b&1) + a2);
-    long crit3 = -((b2>>2) + (b&1));
-    long t = -a2*y;
-    long dxt = 2*b2*x, dyt = -2*a2*y;
-    long d2xt = 2*b2, d2yt = 2*a2;
-    
-    color cl_fill = MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl));
-
-    if (b == 0) {
-        draw_filled_rect(xc-a, yc, (a<<1)+1, 1, cl_fill);
-    } else {
-        while (y>=0 && x<=a) {
-            if (t + b2*x <= crit1 || t + a2*y <= crit3) {
-                if (height == 1)
-                    ; /* draw nothing */
-                else if (ry*2+1 > (height-1)*2) {
-                    draw_filled_rect(xc-rx, yc-ry, xc-rx+width-1, yc-ry+(height-1)-1, cl_fill);
-                    draw_filled_rect(xc-rx, yc+ry+1, xc-rx+width-1, yc+ry+1+(1-height)-1, cl_fill);
-                    ry -= height-1;
-                    height = 1;
-                }
-                else {
-                    draw_filled_rect(xc-rx, yc-ry, xc-rx+width-1, yc-ry+(ry*2+1)-1, cl_fill);
-                    ry -= ry;
-                    height = 1;
-                }
-                ++x, dxt += d2xt, t += dxt;
-                rx++;
-                width += 2;
-            }
-            else if (t - a2*y > crit2) {
-                --y, dyt += d2yt, t += dyt;
-                height++;
-            }
-            else {
-                if (ry*2+1 > height*2) {
-                    draw_filled_rect(xc-rx, yc-ry, xc-rx+width-1, yc-ry+height-1, cl_fill);
-                    draw_filled_rect(xc-rx, yc+ry+1, xc-rx+width-1, yc+ry+1-height-1, cl_fill);
-                }
-                else {
-                    draw_filled_rect(xc-rx, yc-ry, xc-rx+width-1, yc-ry+(ry*2+1)-1, cl_fill);
-                }
-                ++x, dxt += d2xt, t += dxt;
-                --y, dyt += d2yt, t += dyt;
-                rx++;
-                width += 2;
-                ry -= height;
-                height = 1;
-            }
-        }
-
-        if (ry > height) {
-            draw_filled_rect(xc-rx, yc-ry, xc-rx+width-1, yc-ry+height-1, cl_fill);
-            draw_filled_rect(xc-rx, yc+ry+1, xc-rx+width-1, yc+ry+1-height-1, cl_fill);
-        }
-        else {
-            draw_filled_rect(xc-rx, yc-ry, xc-rx+width-1, yc-ry+(ry*2+1)-1, cl_fill);
+    }
+    X = 0;
+    Y = YRadius;
+    XChange = YRadius*YRadius;
+    YChange = XRadius*XRadius*(1-2*YRadius);
+    EllipseError = 0;
+    StoppingX = 0;
+    StoppingY = TwoASquare*YRadius;
+    while ( StoppingX <= StoppingY )
+    {
+        draw_pixel(CX-X,CY-Y,cl);
+        draw_pixel(CX-X,CY+Y,cl);
+        draw_pixel(CX+X,CY-Y,cl);
+        draw_pixel(CX+X,CY+Y,cl);
+        X++;
+        StoppingX += TwoBSquare;
+        EllipseError += XChange;
+        XChange += TwoBSquare;
+        if ((2*EllipseError + YChange) > 0 )
+        {
+            Y--;
+            StoppingY -= TwoASquare;
+            EllipseError += YChange;
+            YChange += TwoASquare;
         }
     }
 }
+
+//-------------------------------------------------------------------
+void draw_filled_ellipse(coord CX, coord CY, unsigned int XRadius, unsigned int YRadius, color cl)
+{
+    color cl_fill = MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl));
+
+    // Bresenham fast ellipse algorithm - http://homepage.smc.edu/kennedy_john/BELIPSE.PDF
+    int X, Y;
+    int XChange, YChange;
+    int EllipseError;
+    int TwoASquare, TwoBSquare;
+    int StoppingX, StoppingY;
+    TwoASquare = 2*XRadius*XRadius;
+    TwoBSquare = 2*YRadius*YRadius;
+    X = XRadius;
+    Y = 0;
+    XChange = YRadius*YRadius*(1-2*XRadius);
+    YChange = XRadius*XRadius;
+    EllipseError = 0;
+    StoppingX = TwoBSquare*XRadius;
+    StoppingY = 0;
+    while ( StoppingX >= StoppingY ) 
+    {
+        draw_hline(CX-X,CY-Y,X*2+1,cl_fill);
+        draw_hline(CX-X,CY+Y,X*2+1,cl_fill);
+        Y++;
+        StoppingY += TwoASquare;
+        EllipseError += YChange;
+        YChange += TwoASquare;
+        if ((2*EllipseError + XChange) > 0 )
+        {
+            X--;
+            StoppingX -= TwoBSquare;
+            EllipseError += XChange;
+            XChange += TwoBSquare;
+        }
+    }
+    X = 0;
+    Y = YRadius;
+    XChange = YRadius*YRadius;
+    YChange = XRadius*XRadius*(1-2*YRadius);
+    EllipseError = 0;
+    StoppingX = 0;
+    StoppingY = TwoASquare*YRadius;
+    while ( StoppingX <= StoppingY )
+    {
+        X++;
+        StoppingX += TwoBSquare;
+        EllipseError += XChange;
+        XChange += TwoBSquare;
+        if ((2*EllipseError + YChange) > 0 )
+        {
+            draw_hline(CX-X,CY-Y,X*2+1,cl_fill);
+            draw_hline(CX-X,CY+Y,X*2+1,cl_fill);
+            Y--;
+            StoppingY -= TwoASquare;
+            EllipseError += YChange;
+            YChange += TwoASquare;
+        }
+    }
+}
+
 //-------------------------------------------------------------------
 
 // Colors for icons

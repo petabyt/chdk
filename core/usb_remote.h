@@ -1,6 +1,16 @@
+#ifndef USB_REMOTE_H
+#define USB_REMOTE_H
+
+// Functions.
+extern int handle_usb_remote();
+
 /*===================================================================================================
     Static Variables & #defines
   ===================================================================================================*/
+
+extern int usb_remote_active;
+extern int usb_sync_wait;
+extern int stime_stamp;
 
 #undef USB_REMOTE_DEBUGGING
 //#define USB_REMOTE_DEBUGGING 1
@@ -133,3 +143,4 @@ enum GET_USB_PWR {						// input parameter for get_usb_power()
 
 #define DELAY_TIMEOUT 10000
 
+#endif

@@ -9,10 +9,11 @@
 
 #include "module_load.h"
 
-extern void gui_module_menu_kbd_process();
+void gui_module_menu_kbd_process();
+int gui_debug_kbd_process();
 
 gui_handler GUI_MODE_DEBUG = 
-    /*GUI_MODE_DEBUG*/  { GUI_MODE_MODULE,   gui_debug_draw,       gui_debug_kbd_process,      gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_DEBUG*/  { GUI_MODE_MODULE, gui_debug_draw, gui_debug_kbd_process, gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
 
 //-------------------------------------------------------------------
 static void *addr;
@@ -115,7 +116,7 @@ void gui_debug_draw(int enforce_redraw) {
 }
 
 //-------------------------------------------------------------------
-void gui_debug_kbd_process() {
+int gui_debug_kbd_process() {
     switch (kbd_get_autoclicked_key()) {
     case KEY_DOWN:
         break;
@@ -156,6 +157,7 @@ void gui_debug_kbd_process() {
         debug_to_draw = 2;
         break;
     }
+    return 0;
 }
 
 //-------------------------------------------------------------------

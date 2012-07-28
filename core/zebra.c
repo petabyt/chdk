@@ -167,7 +167,7 @@ static int gui_osd_zebra_init(int show)
     }
     else {
         if (buf) // if zebra was previously on, restore
-            draw_restore();
+            gui_set_need_restore();
 
         gui_osd_zebra_free();
     }
@@ -331,7 +331,7 @@ static int draw_zebra_aspect_adjust(int mrec, unsigned int f, color *cls)
         // if zebra was drawn during previous call of this function
         if (need_restore) {
             if (conf.zebra_restore_screen || conf.zebra_restore_osd) {
-                draw_restore();
+                gui_set_need_restore();
             } else {  // clear buf[] of zebra, only leave Canon OSD
                 if (!mrec) { // Not REC mode
                     // No Canon OSD restore, fill buf[] with transparent color:
@@ -436,7 +436,7 @@ static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f, color *cls) {
         // if zebra was drawn during previous call of this function
         if (need_restore) {
             if (conf.zebra_restore_screen || conf.zebra_restore_osd) {
-                draw_restore();
+                gui_set_need_restore();
             } else {  // clear buf[] of zebra, only leave Canon OSD
                 if (mrec) { // REC mode
                     // copy rescued Canon OSD to buf[] top/bottom parts and fill center with transparent color:

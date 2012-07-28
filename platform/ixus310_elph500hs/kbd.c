@@ -428,7 +428,7 @@ void virtual_buttons()
     char buf[30];
 
     // If shooting or in any Canon menus then don't display any CHDK buttons
-    if (((guiMode == 0) && kbd_is_key_pressed(KEY_SHOOT_HALF)) || !show_virtual_buttons()) return;
+    if (((guiMode == 0) && camera_info.state.is_shutter_half_press) || !show_virtual_buttons()) return;
 
     // Check if border of CHDK button is corrupted, force redraw if so
     if (!draw_test_pixel(0, 80, (guiMode)?COLOR_GREEN:COLOR_WHITE)) redraw_buttons = 1;

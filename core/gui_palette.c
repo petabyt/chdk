@@ -12,11 +12,11 @@
 #include "module_load.h"
 
 void gui_module_menu_kbd_process();
-void gui_palette_kbd_process();
+int gui_palette_kbd_process();
 void gui_palette_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_PALETTE_MODULE = 
-    /*GUI_MODE_PALETTE*/    { GUI_MODE_PALETTE, gui_palette_draw,     gui_palette_kbd_process,    gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_PALETTE*/    { GUI_MODE_PALETTE, gui_palette_draw, gui_palette_kbd_process, gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
 
 //-------------------------------------------------------------------
 static color cl;
@@ -26,7 +26,6 @@ static int gui_palette_redraw;
 
 //-------------------------------------------------------------------
 void gui_palette_init(int mode, color st_color, void (*on_select)(color clr)) {
-	draw_restore();
     cl = st_color;
     palette_mode = mode;
     palette_on_select = on_select;
@@ -35,7 +34,7 @@ void gui_palette_init(int mode, color st_color, void (*on_select)(color clr)) {
 }
 
 //-------------------------------------------------------------------
-void gui_palette_kbd_process() {
+int gui_palette_kbd_process() {
     switch (kbd_get_autoclicked_key())
     {
         case KEY_DOWN:
@@ -63,6 +62,7 @@ void gui_palette_kbd_process() {
             }
             break;
     }
+    return 0;
 }
 
 //-------------------------------------------------------------------

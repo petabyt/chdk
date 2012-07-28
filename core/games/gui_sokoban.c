@@ -27,11 +27,11 @@ static const ConfInfo conf_info[] = {
 };
 
 void gui_module_menu_kbd_process();
-void gui_sokoban_kbd_process();
+int gui_sokoban_kbd_process();
 void gui_sokoban_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_SOKOBAN = 
-    /*GUI_MODE_SOKOBAN*/    { GUI_MODE_MODULE,   gui_sokoban_draw,     gui_sokoban_kbd_process,    gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_SOKOBAN*/    { GUI_MODE_MODULE, gui_sokoban_draw, gui_sokoban_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
 
 //-------------------------------------------------------------------
 #define FIELD_WIDTH             15
@@ -350,7 +350,7 @@ int gui_sokoban_init() {
 }
 
 //-------------------------------------------------------------------
-void gui_sokoban_kbd_process() {
+int gui_sokoban_kbd_process() {
     switch (kbd_get_autoclicked_key()) {
         case KEY_UP:
             moves+=sokoban_move(0, -1);
@@ -387,6 +387,7 @@ void gui_sokoban_kbd_process() {
             need_redraw_all = 1;
             break;
     }
+    return 0;
 }
 
 //-------------------------------------------------------------------

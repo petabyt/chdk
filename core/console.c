@@ -14,6 +14,7 @@ static int console_x;
 static int console_y;
 static int console_autoredraw = 1;
 static long console_last_drawn;
+int console_displayed = 0;
 
 static int console_is_inited()
 {
@@ -126,6 +127,8 @@ void console_draw()
 
     int i, c, l;
 
+    console_displayed = 0;
+
     long t = get_tick_count();
     if (t <= console_last_drawn + CONSOLE_HIDE_TIMEOUT)
     {
@@ -143,6 +146,8 @@ void console_draw()
                 draw_filled_rect(x + l * FONT_WIDTH, y + c * FONT_HEIGHT,
                                  x + console_line_length * FONT_WIDTH, y + c * FONT_HEIGHT + FONT_HEIGHT,
                                  MAKE_COLOR(COLOR_BG, COLOR_BG));
+
+            console_displayed = 1;
         }
     }
 }

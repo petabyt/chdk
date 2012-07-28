@@ -23,7 +23,7 @@ static void rinit()
 	// in case the user menu is larger than the main menu
 	// otherwise it leaves remnants of the user menu above and below
 	// the main menu.
-    draw_restore();
+    gui_set_need_restore();
 	gui_menu_init(&root_menu);
 }
 

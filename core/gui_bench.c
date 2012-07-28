@@ -11,9 +11,10 @@
 #include "module_load.h"
 void gui_bench_draw_callback(int enforce_redraw);
 void gui_bench_menu_kbd_process();
+int gui_bench_kbd_process();
 
 gui_handler GUI_MODE_BENCH = 
-    /*GUI_MODE_BENCH*/  { GUI_MODE_MODULE,   gui_bench_draw_callback,   gui_bench_kbd_process,      gui_bench_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_BENCH*/  { GUI_MODE_MODULE, gui_bench_draw_callback, gui_bench_kbd_process, gui_bench_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
 
 
 //-------------------------------------------------------------------
@@ -230,13 +231,14 @@ static void gui_bench_run() {
 }
 
 //-------------------------------------------------------------------
-void gui_bench_kbd_process() {
+int gui_bench_kbd_process() {
     switch (kbd_get_autoclicked_key()) {
     case KEY_SET:
         gui_bench_init();
         gui_bench_run();
         break;
     }
+    return 0;
 }
 
 //-------------------------------------------------------------------

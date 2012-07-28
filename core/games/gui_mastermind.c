@@ -13,11 +13,11 @@
 #include "module_load.h"
 
 void gui_module_menu_kbd_process();
-void gui_mastermind_kbd_process();
+int gui_mastermind_kbd_process();
 void gui_mastermind_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_MASTERMIND = 
-    /*GUI_MODE_MASTERMIND*/ { GUI_MODE_MODULE,   gui_mastermind_draw,  gui_mastermind_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_MASTERMIND*/ { GUI_MODE_MODULE, gui_mastermind_draw, gui_mastermind_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
 
 
 #define BORDER		 		20
@@ -171,7 +171,7 @@ static void chg_box(int inc_box, int inc_val)
     draw_box(COLOR_BLACK);
 }
 
-void gui_mastermind_kbd_process() {
+int gui_mastermind_kbd_process() {
 	int i=0;
 	rand();
     long key = kbd_get_autoclicked_key();
@@ -225,6 +225,7 @@ void gui_mastermind_kbd_process() {
 			GameGo=1;
         }
     }
+    return 0;
 }
 //-------------------------------------------------------------------
 void gui_mastermind_draw(int enforce_redraw) {

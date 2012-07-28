@@ -37,7 +37,7 @@
     #define CAM_HAS_VIDEO_BUTTON                1
     #define CAM_VIDEO_QUALITY_ONLY              1
     #define CAM_BRACKETING                      1
-    #undef  CAM_VIDEO_CONTROL
+    #undef  CAM_VIDEO_CONTROL                       // Crashes camera if enabled
     #define CAM_HAS_JOGDIAL                     1
     #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1

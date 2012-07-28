@@ -1,16 +1,16 @@
 // CHDK language file 
 // -----------------------------------------------
-// Optimale Schriftart: Libsans16b (mit Umlauten)
-// und Codepage Win1252 (West European Latin) 
+// Optimal font: Libsans16b (with spezial chars)
+// and Codepage Win1252 (West European Latin) 
 // -----------------------------------------------
 // <id> "<text>"
 
   1 "Hauptmenü"
 
-  2 "RAW-Einstellungen"
+  2 "RAW/DNG-Einstellungen"
   3 "OSD-Einstellungen"
-  4 "Histogramm-Einstellungen"
-  5 "Zebra-Einstellungen"
+  4 "Live-Histogramm-Einstellungen"
+  5 "Zebra-Modus-Einstellungen"
   6 "Skript-Einstellungen"
   7 "Anzeige-Einstellungen"
   8 "Verschiedene Einstellungen"
@@ -20,7 +20,7 @@
 
  12 "zurück"
 
- 13 "RAW"
+ 13 "RAW/DNG"
 
  14 "Speichere RAW"
  16 "Nur 1. RAW einer Serie"
@@ -34,24 +34,24 @@
  22 "Status-Anzeige an/aus"
  23 "Zeige diverse Werte"
  24 "   Zoomanzeige-Typ"
- 25 "Zeige DOF Rechner"
+ 25 "Zeige DOF-Rechner"
  26 "Zeige Uhr"
  27 "OSD-Layouteditor..."
  28 "Batterie-Anzeige"
 
  29 "Histogramm"
 
- 30 "Zeige Live-Histogramm"
+ 30 "Live-Histogramm"
  31 "Histogramm-Layout"
  32 "Histogramm-Modus"
- 33 "Zeige Belichtungswarnungen"
+ 33 "Belichtungswarnungen an/aus"
  34 "Ignoriere Grenzwertspitzen"
  35 "Automatische Vergrößerung"
 
- 36 "Zebra"
+ 36 "Zebra-Modus"
 
- 37 "Zeige Zebra"
- 38 "Zebra-Modus"
+ 37 "Zebra-Modus an/aus"
+ 38 "Zebra-Modus-Art"
  39 "Unterbelichtung-Grenzwert"
  40 "Überbelichtung-Grenzwert"
  41 "Orig.-Anzeige wiederherstellen"
@@ -690,3 +690,19 @@
 552 "Taste Zoom-Assistent deaktivieren"
 
 553 "DNG-Version"
+554 "Menü-Einstellungen"
+555 "Zeige <ALT>-Hilfe"
+556 "   Verzögerung Hilfe-Anzeige"
+557 "CHDK-Einstellungen"
+
+// <ALT> mode help screen text
+558 "%-20s %-14s"                           // Header format, adjust if needed; but total len must be 35
+559 "<ALT>-Tastaturkürzel"                  // Len must be <= first string in header format (20)
+560 "Auslöser halb gedr.+"                  // Len must be <= first string in header format (20)
+561 "MENU=CHDK-Menü"                        // Len must be <= second string in header format (14)
+562 "MENU=User-Menü"                        // Len must be <= second string in header format (14)
+563 "SET=Skriptmenü Auslöser=Skriptstart"   // Len must be <= 35
+564 "Fokus %5s=unend. %5s=hyperfokal"       // Len must be <= 35 (2x -5 for key placeholder)
+565 "Manueller Fokus"
+566 "Temp. Ausblendung CHDK-OSD "           // Len must be <= 27
+567 "  * im <ALT>-Modus nicht verfügbar "   // Len must be <= 35

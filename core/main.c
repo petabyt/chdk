@@ -4,14 +4,15 @@
 #include "keyboard.h"
 #include "stdlib.h"
 #include "gui.h"
+#include "gui_draw.h"
 #include "histogram.h"
 #include "raw.h"
+#include "console.h"
 #ifdef OPT_EDGEOVERLAY
     #include "modules.h"
 #endif
 
 #include "module_load.h"
-#include "gui_draw.h"
 
 //==========================================================
 // Data Structure to store camera specific information
@@ -246,6 +247,21 @@ void core_spytask_can_start() {
     spytask_can_start = 1;
 }
 
+#ifdef OPT_SCRIPTING
+// remote autostart
+void script_autostart()
+{
+    // Tell keyboard task we are in <ALT> mode
+    enter_alt();
+    // We were called from the GUI task so switch to <ALT> mode before switching to Script mode
+    gui_activate_alt_mode();
+    // Clear console output
+    console_clear(); 
+    // Switch to script mode and start the script running
+    script_start_gui( 1 );
+}
+#endif
+
 void core_spytask()
 {
     int cnt = 1;
@@ -297,15 +313,6 @@ void core_spytask()
 #endif
     auto_started = 0;
 
-#ifdef OPT_SCRIPTING
-    if (conf.script_startup==1) script_autostart();             // remote autostart
-    if (conf.script_startup==2) {
-        conf.script_startup=0;
-        conf_save();
-        script_autostart();
-    }
-#endif
-
     // Calculate the value of get_tick_count() when the clock ticks over to the next second
     // Used to calculate the SubSecondTime value when saving DNG files.
     long t1, t2;
@@ -319,8 +326,24 @@ void core_spytask()
     } while (t1 != t2);
     camera_info.tick_count_offset = camera_info.tick_count_offset % 1000;
 
+#ifdef OPT_SCRIPTING
+    // remote autostart
+    if (conf.script_startup==1)
+    {
+        script_autostart();
+    }
+    else if (conf.script_startup==2)
+    {
+        conf.script_startup=0;
+        conf_save();
+        script_autostart();
+    }
+#endif
+
     while (1)
     {
+        // Change ALT mode if the KBD task has flagged a state change
+        gui_activate_alt_mode();
 
 #ifdef  CAM_LOAD_CUSTOM_COLORS
         load_chdk_palette();
@@ -342,10 +365,6 @@ void core_spytask()
             if (((cnt++) & 3) == 0)
                 gui_redraw();
         }
-
-        // Unload any GUI menu modules
-        extern void gui_kbd_unload_modules();
-        gui_kbd_unload_modules();
 
         if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
         {

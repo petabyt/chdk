@@ -82,7 +82,7 @@ void gui_osd_draw(int enforce_redraw)
 }
 
 //-------------------------------------------------------------------
-void gui_osd_kbd_process()
+int gui_osd_kbd_process()
 {
     switch (kbd_get_autoclicked_key())
     {
@@ -127,15 +127,27 @@ void gui_osd_kbd_process()
         osd_to_draw = 1;
         break;
     }
+    return 0;
+}
+
+static int module_idx=-1;
+
+void gui_osd_menu_kbd_process()
+{
+	gui_default_kbd_process_menu_btn();
+  	module_async_unload(module_idx);
 }
 
 //-------------------------------------------------------------------
 
-gui_handler layoutGuiHandler =  { GUI_MODE_OSD, gui_osd_draw, gui_osd_kbd_process, gui_default_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };    // THIS IS OSD LAYOUT EDITOR
+gui_handler layoutGuiHandler =
+{
+    // THIS IS OSD LAYOUT EDITOR
+    GUI_MODE_OSD, gui_osd_draw, gui_osd_kbd_process, gui_osd_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM
+};
 
 // =========  MODULE INIT =================
 #include "module_load.h"
-int module_idx=-1;
 
 /***************** BEGIN OF AUXILARY PART *********************
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
@@ -164,7 +176,6 @@ int _module_loader( unsigned int* chdk_export_list )
 }
 
 
-
 //---------------------------------------------------------
 // PURPOSE: Finalize module operations (close allocs, etc)
 // RETURN VALUE: 0-ok, 1-fail
@@ -191,7 +202,6 @@ int _module_run(int moduleidx, int argn, int* arguments)
     step = 10;
 
     gui_set_mode(&layoutGuiHandler);
-    draw_restore();
 
     return 0;
 }

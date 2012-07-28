@@ -16,11 +16,12 @@ extern int module_idx;
 	History:	1.1 - make possible call next mpopup in callback [multilevel mpopups]
 */
 
-void gui_mpopup_kbd_process();
+int gui_mpopup_kbd_process();
+void gui_mpopup_kbd_process_menu_btn();
 void gui_mpopup_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_MPOPUP_MODULE = 
-    /*GUI_MODE_MPOPUP*/ { GUI_MODE_MPOPUP,  gui_mpopup_draw,      gui_mpopup_kbd_process,     gui_mpopup_kbd_process, GUI_MODE_FLAG_NORESTORE_ON_SWITCH, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_MPOPUP*/ { GUI_MODE_MPOPUP, gui_mpopup_draw, gui_mpopup_kbd_process, gui_mpopup_kbd_process_menu_btn, GUI_MODE_FLAG_NORESTORE_ON_SWITCH, GUI_MODE_MAGICNUM };
 
 // Simple popup menu. No title, no separators, only processing items
 
@@ -126,7 +127,16 @@ void exit_mpopup(int action)
 }
 
 //-------------------------------------------------------------------
-void gui_mpopup_kbd_process() {
+void gui_mpopup_kbd_process_menu_btn()
+{
+    kbd_reset_autoclicked_key();
+	exit_mpopup(MPOPUP_CANCEL);		
+	if ( mpopup_on_select==0 )		// exit if not re-inited
+		module_async_unload(module_idx);
+}
+
+int gui_mpopup_kbd_process()
+{
     switch (kbd_get_clicked_key() | get_jogdial_direction()) {
     case JOGDIAL_LEFT:
     case KEY_UP:
@@ -140,12 +150,8 @@ void gui_mpopup_kbd_process() {
         else mpopup_actions_active = 0;
         gui_mpopup_draw_actions();
         break;
-    case KEY_MENU:
     case KEY_LEFT:
-        kbd_reset_autoclicked_key();
-		exit_mpopup(MPOPUP_CANCEL);		
-		if ( mpopup_on_select==0 )		// exit if not re-inited
-		module_async_unload(module_idx);
+        gui_mpopup_kbd_process_menu_btn();
         break;
     case KEY_SET:
         kbd_reset_autoclicked_key();
@@ -154,6 +160,7 @@ void gui_mpopup_kbd_process() {
 		module_async_unload(module_idx);
         break;
     }
+    return 0;
 }
 
 //-------------------------------------------------------------------
