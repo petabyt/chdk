@@ -691,3 +691,6 @@
 565 "Manual Focus"
 566 "Hide CHDK OSD while pressed"
 567 "  * - not available in <ALT> mode  "   // Len must be <= 35
+
+568 "'%s'\nadded to User Menu"
+569 "User Menu is full"

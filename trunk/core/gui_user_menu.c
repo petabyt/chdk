@@ -10,6 +10,7 @@
 #include "gui_lang.h"
 #include "gui_draw.h"
 #include "gui_menu.h"
+#include "gui_mbox.h"
 #include "modules.h"
 #include "module_load.h"
 
@@ -54,9 +55,13 @@ void add_user_menu_item(CMenuItem curr_menu_item, int* cur_memnu_item_indx)
         if(!user_submenu_items[i].text)
         {
             user_submenu_items[i] = curr_menu_item;
-            break;
+            char buf[200];
+            sprintf(buf,lang_str(LANG_USER_MENU_ITEM_ADDED), lang_str(curr_menu_item.text));
+            gui_mbox_init(LANG_MENU_USER_MENU, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+            return;
         }
     }
+    gui_mbox_init(LANG_MENU_USER_MENU, LANG_USER_MENU_FULL, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 }
 
 void del_user_menu_item(int* cur_memnu_item_indx)
