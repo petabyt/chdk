@@ -284,7 +284,7 @@ void _wait_until_remote_button_is_released(void)
   ---------------------------------------------------------------------------------------------------------*/
 
 
-void usb_remote_key(int x)
+void usb_remote_key( void )
 {
 	static int pulse_count=0 ;
 	

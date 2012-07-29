@@ -30,7 +30,7 @@ static long alt_mode_key_mask = 0x00004000;
 #define USB_MASK (8) 
 #define USB_IDX  2
 
-extern void usb_remote_key( int ) ;
+extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
 	return 0 ;
@@ -187,7 +187,7 @@ void my_kbd_read_keys_cont(long *canon_key_state)
 			  (kbd_mod_state[2] & KEYS_MASK2);
     }
 
-	usb_remote_key(physw_status[USB_IDX]) ;
+	usb_remote_key() ;
 
 	if (conf.remote_enable) {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);

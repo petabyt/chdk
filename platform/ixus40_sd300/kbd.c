@@ -58,7 +58,7 @@ static int kbd_data_process_request_data=0;
 extern int remote_key ;
 extern int remote_count ;
 extern int usb_power ;
-extern void usb_remote_key( int ) ;
+extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
 	long usb_physw[3];

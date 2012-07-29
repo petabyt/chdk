@@ -27,7 +27,7 @@ static long last_kbd_key = 0;
 #define USB_MASK (0x40000)	// ?? incomplete port - probably wrong
 #define USB_IDX  2			// ?? incomplete port - probably wrong
 
-extern void usb_remote_key( int ) ;
+extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
 	return 0 ;
