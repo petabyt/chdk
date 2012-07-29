@@ -20,12 +20,7 @@
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff895914 -> ff8921c0 -> ff9931ac -> ffac7c28 -> ffbedae8
-// Current modemap entry not found in firmware - MODE_SCN_POSTER_EFFECT    8743
-// Current modemap entry not found in firmware - MODE_SCN_SUPER_VIVID      8742
-// Current modemap entry not found in firmware - MODE_SCN_MONOCHROME       8754
-// Current modemap entry not found in firmware - MODE_SCN_TOY_CAMERA       8751
-// Current modemap entry not found in firmware - MODE_SCN_MINIATURE        8748
-// Current modemap entry not found in firmware - MODE_SCN_FISHEYE          8747
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00032d14) // Found @0xff83454c

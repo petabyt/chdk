@@ -23,14 +23,6 @@
 // Firmware modemap table found @ff097158 -> ff093580 -> ff1b8470 -> ff3232ac -> ff4957d8
 // Mode 16936 in firmware but not in current modemap
 // Mode 16938 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_SCN_MONOCHROME       8754
-// Current modemap entry not found in firmware - MODE_SCN_TOY_CAMERA       8751
-// Current modemap entry not found in firmware - MODE_SCN_MINIATURE        8748
-// Current modemap entry not found in firmware - MODE_SCN_FISHEYE          8747
-// Current modemap entry not found in firmware - MODE_SCN_POSTER_EFFECT    8743
-// Current modemap entry not found in firmware - MODE_SCN_SUPER_VIVID      8742
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_SWAP       8734
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_ACCENT     8733
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x000358e8) // Found @0xff024d18
