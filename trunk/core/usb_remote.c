@@ -276,7 +276,7 @@ void _wait_until_remote_button_is_released(void)
 
 	usb_remote_key()
 
-	- called from each camera's my_kbd_read_keys() routine with current mmmio containing USB bit
+	- called from each camera's my_kbd_read_keys() routine
 	- monitors USB power state and stores in global variable remote_key
 	- captures the time of 0->1 and 1->0 transisitions and buffers them
 	- store most recent power on pulse width in global variable remote_count
