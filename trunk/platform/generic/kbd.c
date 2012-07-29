@@ -21,7 +21,7 @@ static long kbd_mod_state = 0xFFFFFFFF ;
 static KeyMap keymap[];
 static long last_kbd_key = 0;
 
-extern void usb_remote_key( int ) ;
+extern void usb_remote_key( void ) ;
 
 #define NEW_SS (0x2000)
 #define SD_READONLY_FLAG (0x20000)
@@ -157,7 +157,7 @@ void my_kbd_read_keys()
 			  (kbd_mod_state & 0x1fff);
     }
 	
-	usb_remote_key(kbd_new_state[USB_IDX]) ;
+	usb_remote_key() ;
 
 #if defined(USB_MASK) && defined(USB_IDX)
 		if (conf.remote_enable) {
