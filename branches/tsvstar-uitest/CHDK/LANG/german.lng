@@ -706,3 +706,6 @@
 565 "Manueller Fokus"
 566 "Temp. Ausblendung CHDK-OSD "           // Len must be <= 27
 567 "  * im <ALT>-Modus nicht verfügbar "   // Len must be <= 35
+
+568 "'%s'\nzum Benutzer-Menü hinzugefügt"
+569 "Benutzer-Menü ist voll"

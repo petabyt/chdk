@@ -692,7 +692,10 @@
 566 "Hide CHDK OSD while pressed"
 567 "  * - not available in <ALT> mode  "   // Len must be <= 35
 
+568 "'%s'\nadded to User Menu"
+569 "User Menu is full"
+
 //
-568 "Manual flash (Power)"
-569 "Fast Ev step size"
-570 "Show HELP"
+570 "Manual flash (Power)"
+571 "Fast Ev step size"
+572 "Show HELP"

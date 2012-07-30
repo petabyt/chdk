@@ -198,9 +198,8 @@ static CMenuItem script_submenu_items_top[] = {
     MENU_ITEM   (0x5f,LANG_MENU_SCRIPT_DELAY,               MENUITEM_INT|MENUITEM_F_UNSIGNED,   &conf.script_shoot_delay,   0 ),
     // remote autostart
     MENU_ENUM2  (0x5f,LANG_MENU_SCRIPT_AUTOSTART,           &conf.script_startup,               gui_script_autostart_modes ),
-
-#if CAM_REMOTE
-    MENU_ITEM   (0x86,LANG_MENU_REMOTE_PARAM,               MENUITEM_SUBMENU,                   &remote_submenu,            0 ),
+#ifdef OPT_LUA
+    MENU_ITEM   (0x5c,LANG_MENU_LUA_RESTART,                MENUITEM_BOOL,                      &conf.debug_lua_restart_on_error,   0 ),
 #endif
     MENU_ITEM   (0x5d,LANG_MENU_SCRIPT_DEFAULT_VAL,         MENUITEM_PROC,                      gui_load_script_default,    0 ),
     MENU_ITEM(0x5e,LANG_MENU_SCRIPT_PARAM_SET,     			MENUITEM_ENUM,                      gui_script_param_set_enum, &conf.script_param_set ),
@@ -429,9 +428,6 @@ static CMenuItem debug_submenu_items[] = {
     MENU_ITEM   (0x2a,LANG_MENU_DEBUG_MEMORY_BROWSER,       MENUITEM_PROC,                  gui_menu_run_fltmodule,             "memview.flt" ),
     MENU_ITEM   (0x2a,LANG_MENU_DEBUG_BENCHMARK,            MENUITEM_PROC,                  gui_menu_run_fltmodule,             "benchm.flt" ),
     MENU_ENUM2  (0x5c,LANG_MENU_DEBUG_SHORTCUT_ACTION,      &conf.debug_shortcut_action,    gui_debug_shortcut_modes ),
-#ifdef OPT_LUA
-    MENU_ITEM   (0x5c,LANG_MENU_LUA_RESTART,                MENUITEM_BOOL,                  &conf.debug_lua_restart_on_error,   0 ),
-#endif
     MENU_ITEM   (0x2a,LANG_SAVE_ROMLOG,                     MENUITEM_PROC,                  save_romlog,                        0 ),
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0,                                  0 ),
     {0}
@@ -1869,7 +1865,7 @@ static const char* gui_alt_mode_button_enum(int change, int arg)
     static const int keys[] = {KEY_PLAYBACK, KEY_VIDEO, KEY_PRINT}; 
 #elif defined(CAMERA_ixus120_sd940) 
     static const char* names[]={ "Display", "Playback" }; 
-    static const int keys[] = {KEY_DISPLAY, KEY_PLAYBACK }; #else
+    static const int keys[] = {KEY_DISPLAY, KEY_PLAYBACK };
 #else
 #error camera alt-buttons not defined
 #endif
@@ -2086,6 +2082,8 @@ gui_handler* gui_set_mode(gui_handler *mode)
 
     gui_handler *old_mode = gui_mode;
     gui_mode = mode;
+
+    gui_osd_need_restore = 0;
 
     // Flag for screen erase/redraw unless mode is marked not to (e.g. menu box popup)
     if (((gui_mode->flags & (GUI_MODE_FLAG_NODRAWRESTORE|GUI_MODE_FLAG_NORESTORE_ON_SWITCH)) == 0) &&
@@ -2331,12 +2329,30 @@ static void gui_draw_alt_helper()
         y += FONT_HEIGHT;
     }
 
+#if !CAM_HAS_ERASE_BUTTON && CAM_CAN_SD_OVERRIDE
+#ifdef OPT_DEBUGGING
+    if (conf.debug_shortcut_action)
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_DEBUG_SHORTCUT_ACTION,gui_debug_shortcut_modes[conf.debug_shortcut_action], MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+    else
+#endif
+    if (shooting_get_common_focus_mode())           // Check in manual focus mode
+    {
+#if CAM_HAS_ZOOM_LEVER
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,(int)"Infinity Focus", 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+#else
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,(int)"Chg Focus Factor", 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+#endif
+    }
+    else
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE,(conf.save_raw?(conf.dng_raw?"DNG":"RAW"):"Off"), MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+#else
 #ifdef OPT_DEBUGGING
     if (conf.debug_shortcut_action)
         y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_DEBUG_SHORTCUT_ACTION,gui_debug_shortcut_modes[conf.debug_shortcut_action], MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
     else
 #endif
         y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE,(conf.save_raw?(conf.dng_raw?"DNG":"RAW"):"Off"), MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+#endif
 
     y = shortcut_text(x, y, 0 ,LANG_HELP_HALF_PRESS, 0, MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
 
@@ -2472,6 +2488,8 @@ int gui_chdk_kbd_process()
     gui_kbd_shortcuts();
     if (camera_info.state.is_shutter_half_press) return 0;
 
+    int reset_helper = 0;
+
 #if !CAM_HAS_ERASE_BUTTON && CAM_CAN_SD_OVERRIDE        // ALT RAW toggle kbd processing if camera has SD override but no erase button
     if (kbd_is_key_clicked(SHORTCUT_TOGGLE_RAW))
     {
@@ -2497,6 +2515,7 @@ int gui_chdk_kbd_process()
 #else
             gui_subj_dist_override_koef_enum(1,0);
 #endif
+            reset_helper = 1;
         }
     }
 #else                                                   // ALT RAW toggle kbd processing if can't SD override or has erase button
@@ -2532,7 +2551,7 @@ int gui_chdk_kbd_process()
             if (conf.subj_dist_override_koef>0)
                 conf.subj_dist_override_koef=0;
             else conf.subj_dist_override_koef=1;
-            gui_set_need_restore();
+            reset_helper = 1;
         }
         else
 #endif
@@ -2542,15 +2561,18 @@ int gui_chdk_kbd_process()
             if (kbd_is_key_clicked(KEY_RIGHT))
             {
                 sd_override_koef(1);
+                reset_helper = 1;
             }
             else if (kbd_is_key_clicked(KEY_LEFT))
             {
                 sd_override_koef(-1);
+                reset_helper = 1;
             }
             else if (kbd_is_key_clicked(SHORTCUT_SET_INFINITY))
             {
                 conf.subj_dist_override_value=MAX_DIST;
                 shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
+                reset_helper = 1;
             }
             else
 #endif
@@ -2561,6 +2583,7 @@ int gui_chdk_kbd_process()
                     conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance_1e3_f(shooting_get_aperture_from_av96(shooting_get_user_av96()),get_focal_length(lens_get_zoom_point()))/1000;
                 else conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance();
                 shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
+                reset_helper = 1;
             }
             else
             {
@@ -2572,6 +2595,7 @@ int gui_chdk_kbd_process()
                 case KEY_RIGHT:
 #endif
                     sd_override(1);
+                    reset_helper = 1;
                     break;
 #if CAM_HAS_ZOOM_LEVER
                 case KEY_ZOOM_OUT:
@@ -2579,12 +2603,21 @@ int gui_chdk_kbd_process()
                 case KEY_LEFT:
 #endif
                     sd_override(-1);
+                    reset_helper = 1;
                     break;
                 }
             }
         }
     }
 #endif
+
+    if (reset_helper)
+    {
+        gui_set_need_restore();
+#ifdef CAM_DISP_ALT_TEXT
+        gui_reset_alt_helper();
+#endif
+    }
 
     return 0;
 }
@@ -2691,14 +2724,12 @@ void gui_set_alt_mode_state(int new_state)
     gui_current_alt_state = new_state;
 }
 
-
 // Called from the GUI task code to set the ALT mode state
 void gui_activate_alt_mode()
 {
     switch (gui_current_alt_state)
     {
     case ALT_MODE_ENTER:
-
         conf_store_old_settings();
 
         gui_set_mode(&altGuiHandler);

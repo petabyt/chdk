@@ -1365,16 +1365,24 @@ int gui_fselect_kbd_process()
                     sprintf(selected_file, "%s/%s", current_dir, selected->name);
 					
 					char *ext = strchr(selected->name,'.');
+                    int do_exit = 1;
+
                     if ( ext && (ext[1]|0x20)=='f' && (ext[2]|0x20)=='l' && (ext[3]|0x20)=='t') {
     					if (!fselect_on_select) {
                     		exit_fselect(0);
+                            do_exit = 0;
     						module_run(selected_file, 0, 0,0, UNLOAD_IF_ERR);
-
-							break;
+                        }
+                    } else if ( ext && (ext[1]|0x20)=='t' && (ext[2]|0x20)=='x' && (ext[3]|0x20)=='t') {
+                        if (!fselect_on_select) {
+                            exit_fselect(0);
+                            do_exit = 0;
+                            int argv[] = {(int)selected_file};
+                            module_run("txtread.flt", 0, 1, argv, UNLOAD_IF_ERR);
 						}
 					}
 
-                    exit_fselect(selected_file);
+                    if (do_exit) exit_fselect(selected_file);
 					module_async_unload(module_idx);
                 }
             }

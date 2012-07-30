@@ -23,6 +23,7 @@
 // Requested filename
 enum FilenameMakeModeEnum 
 	{ 	MAKE_PARAMSETNUM_FILENAME,		// "DATA/scriptname.cfg" -> cfg_name
+		MAKE_PARAMSET_NAMES_FILENAME,	// "CFG/scriptname.cfg"  -> cfg_name
 		MAKE_PARAM_FILENAME };			// "DATA/scriptname_%d" -> cfg_param_name
 
 //-------------------------------------------------------------------
@@ -32,7 +33,7 @@ const char *script_source_str=NULL; // ptr to content of script
 char cfg_name[100] = "\0";          // buffer to make cfg files name (paramsetnum, param_names)
 char cfg_param_name[100] = "\0";    // buffer to make cfg param files name (params, state_before_tmprun)
 
-char* paramset_names[10];			// pointer of names of paramsets
+const char* paramset_names[10];		// pointer of names of paramsets
 
 static const char *lua_script_default =
     "--[[\n"
