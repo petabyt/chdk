@@ -27,13 +27,15 @@ extern const char **script_named_values[SCRIPT_NUM_PARAMS];
 extern int script_named_counts[SCRIPT_NUM_PARAMS];
 
 //-------------------------------------------------------------------
-enum ScriptLoad_Mode_ { SCRIPT_LOAD_LAST_PARAMSET = 1, SCRIPT_UPDATE_PARAMS };
+enum ScriptLoad_Mode_ { SCRIPT_LOAD_DEFAULT_VALUES = 0,
+						SCRIPT_LOAD_LAST_PARAMSET,
+						SCRIPT_UPDATE_PARAMS };
 
 extern void script_load(const char *fn, enum ScriptLoad_Mode_ saved_params);
-extern void script_apply_param_string( char* param_str, int allow_paramset_load );
+extern void script_apply_paramstr( char* param_str, int allow_load_paramset );
 extern int load_params_values(const char *fn, int paramset );
 extern void save_params_values(int enforce);
-void script_reset_to_default_params_values();
+extern void script_reset_to_default_params_values();
 
 extern void script_console_add_line(const char *str);
 extern void script_print_screen_init();

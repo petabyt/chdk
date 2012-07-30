@@ -796,12 +796,10 @@ static void copy_fname_w_new_ext( char* tgt, char* src, char* ext )
 	if (!str ) { str = src; } else { str++;}
 	strcpy( tgt, str );
 
-	// replce extension
+	// replace extension
 	str = strrchr( tgt, '.' );
 	if ( !str ) { str = tgt+strlen(tgt); }
 	strcpy(	 str, ext );
-
-		
 }
 
 // PURPOSE: Try to open help file (fallback: selected_locale.hlp -> builtin_locale.hlp -> english.hlp )
@@ -823,19 +821,23 @@ static int gui_show_help(int arg)
 	if ( conf.lang_file[0] ) {
 		copy_fname_w_new_ext( helpfile_name, conf.lang_file, ".hlp");
 
-		if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
-			return 1;
+		if ( is_file_exists( helpfile_name) > 0 )
+			if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
+				return 1;
 	}
 
 	// if not success, try to load "_base_language_.hlp"
 	copy_fname_w_new_ext( helpfile_name, gui_lang_source_filename, ".hlp");
-	if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
-		return 1;
+	if ( is_file_exists( helpfile_name) > 0 )
+		if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
+			return 1;
 
 	//if not success, try to load "english.hlp"
 	argv[0] = (unsigned int)"A/CHDK/HELP/ENGLISH.HLP";
-	if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
-		return 1;
+	if ( is_file_exists( (const char*)argv[0] ) >0 ) {
+		if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
+			return 1;
+	}
 
 	return 0;
 }
