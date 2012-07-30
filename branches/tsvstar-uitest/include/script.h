@@ -5,6 +5,8 @@
 #define SCRIPT_DEFAULT_FILENAME     "A/SCRIPT.LUA"
 #define SCRIPT_NUM_PARAMS           26
 #define SCRIPT_DATA_PATH            "A/CHDK/DATA/"
+#define CFG_BASE_PATH       	    "A/CHDK/CFG/"
+#define SCRIPT_DEFAULT_DIR			"A/CHDK/SCRIPTS/"
 
 #ifdef OPT_UBASIC
 #include "ubasic.h"
@@ -41,6 +43,11 @@ extern void script_console_add_line(const char *str);
 extern void script_print_screen_init();
 extern void script_print_screen_end();
 extern void script_print_screen_statement(int val);
+//-------------------------------------------------------------------
+
+extern const char* paramset_names[10];			// pointer of names of paramsets
+extern void load_params_names_cfg();
+
 //-------------------------------------------------------------------
 
 long script_stack_start();

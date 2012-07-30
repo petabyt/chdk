@@ -32,6 +32,8 @@ const char *script_source_str=NULL; // ptr to content of script
 char cfg_name[100] = "\0";          // buffer to make cfg files name (paramsetnum, param_names)
 char cfg_param_name[100] = "\0";    // buffer to make cfg param files name (params, state_before_tmprun)
 
+char* paramset_names[10];			// pointer of names of paramsets
+
 static const char *lua_script_default =
     "--[[\n"
     "@title Default Script\n"
@@ -122,6 +124,9 @@ char *script_named_strings[SCRIPT_NUM_PARAMS];              // Base storage for 
 static char script_params_update[SCRIPT_NUM_PARAMS];        // Flag is such parameter exist
 static int script_loaded_params[SCRIPT_NUM_PARAMS];         // Copy of original values of parameters 
                                                             // (detect are they changed or not)
+
+const char* paramset_names[10];			// pointer of names of paramsets
+
 
 static long running_script_stack_name = -1;                 // ID of action_stack, which used to control script processing
 
@@ -390,6 +395,11 @@ void make_param_filename( enum FilenameMakeModeEnum mode, const char* fn, int pa
 			base_path = SCRIPT_DATA_PATH;
 			strcpy(extbuf,".set");
 			break;			
+		case MAKE_PARAMSET_NAMES_FILENAME:
+			tgt_buf = cfg_name;
+			base_path = CFG_BASE_PATH;
+			strcpy(extbuf,".cfg");
+			break;
 		case MAKE_PARAM_FILENAME:
 			tgt_buf   = cfg_param_name;
 			base_path = SCRIPT_DATA_PATH;
@@ -707,6 +717,65 @@ void script_load(const char *fn, enum ScriptLoad_Mode_ saved_params) {
 
     gui_update_script_submenu();
 }
+
+//=======================================================
+//             PROCESSING PARAMS_NAME FUNCTIONS
+//=======================================================
+
+void load_params_names_cfg()
+{
+	int num;
+	char* e;
+	char* ptr;
+
+	static char* file_buf = 0;
+	static char* default_names[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+
+	if ( file_buf )
+		ufree( file_buf );
+
+
+	make_param_filename( MAKE_PARAMSET_NAMES_FILENAME, conf.script_file, conf.script_param_set);
+	file_buf = load_file( cfg_name, 0 );
+
+	for ( num=0; num<=9; num++ ) paramset_names[num] = default_names[num];
+
+
+	if ( !file_buf )
+		return;
+
+	for ( ptr=file_buf; *ptr; ) {
+
+		while ( *ptr=='\r' || *ptr=='\n') ptr++;
+        ptr = (char*)skip_whitespace(ptr);
+
+		if ( *ptr>='0' && *ptr<='9' && ptr[1]==':') {
+			num = *ptr-'0';
+
+			ptr+=2;
+			e=(char*)skip_toeol(ptr);
+
+			if (e!=ptr) {
+	
+				// if value exists copy it
+				paramset_names[num]=ptr;
+
+				// and limit to 7 chars length
+				if ( (e-ptr)>7 ) ptr[7]=0;
+			}
+
+			ptr=e;
+			if (*ptr)
+				{ *ptr=0; ptr++;}
+
+			continue;
+		}
+
+        ptr = (char*)skip_toeol(ptr);
+	}
+
+}
+
 
 //=======================================================
 //                 SCRIPT CONSOLE FUNCTIONS
