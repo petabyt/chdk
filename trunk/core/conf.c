@@ -494,7 +494,8 @@ static void conf_change_font_cp() {
 
 static void conf_change_script_file() {
 #ifdef OPT_SCRIPTING
-    script_load(conf.script_file, 2);
+    script_load(conf.script_file, SCRIPT_UPDATE_PARAMS );
+	load_params_names_cfg();
 #endif
 }
 

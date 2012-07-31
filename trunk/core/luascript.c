@@ -876,7 +876,7 @@ static void return_string_selected(const char *str) {
     // Reconnect button input to script - will also signal action stack
     // that file browser / textbox is finished and return last selected file
     // to script caller
-    state_kbd_script_run = 1;
+    state_kbd_script_run = SCRIPT_STATE_RAN;
     // Clear the Func/Set key so that when the script exits, pressing
     // the Func/Set key again will enter the Script menu, not the File Browser / Textbox
     kbd_reset_autoclicked_key();
@@ -887,7 +887,7 @@ static void return_string_selected(const char *str) {
 
 static int luaCB_file_browser( lua_State* L ) {
     // Disconnect button input from script so buttons will work in file browser
-    state_kbd_script_run = 0;
+    state_kbd_script_run = SCRIPT_STATE_INACTIVE;
     // Push file browser action onto stack - will loop doing nothing until file browser exits
     action_push(AS_FILE_BROWSER);
     // Switch to file browser gui mode. Path can be supplied in call or defaults to "A" (root directory).
@@ -898,7 +898,7 @@ static int luaCB_file_browser( lua_State* L ) {
 
 static int luaCB_textbox( lua_State* L ) {
     // Disconnect button input from script so buttons will work in the textbox
-    state_kbd_script_run = 0;
+    state_kbd_script_run = SCRIPT_STATE_INACTIVE;
     if (module_tbox_load())
     {
         // Push textbox action onto stack - will loop doing nothing until textbox exits

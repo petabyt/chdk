@@ -160,25 +160,25 @@ static CMenu remote_submenu = {0x86,LANG_MENU_REMOTE_PARAM_TITLE, NULL, remote_s
 
 static const char* gui_script_param_set_enum(int change, int arg)
 {
-    static const char* modes[]={ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-
     if (change != 0) {
         if (conf.script_param_save) {
             save_params_values(0);
         }
-        gui_enum_value_change(&conf.script_param_set,change,sizeof(modes)/sizeof(modes[0]));
+        gui_enum_value_change(&conf.script_param_set,change,sizeof(paramset_names)/sizeof(paramset_names[0]));
 
-        if (!load_params_values(conf.script_file, 1, 0))
-            script_load(conf.script_file, 0);
+        if ( !load_params_values(conf.script_file, conf.script_param_set) )
+			script_reset_to_default_params_values();
         gui_update_script_submenu();
     }
 
-    return modes[conf.script_param_set];
+    return paramset_names[conf.script_param_set];
 }
 
 static void gui_load_script_selected(const char *fn) {
-    if (fn)
-        script_load(fn, 1);
+    if (fn) {
+        script_load(fn, SCRIPT_LOAD_LAST_PARAMSET );
+		load_params_names_cfg();
+	}
 }
 
 static void gui_load_script(int arg) {
@@ -186,7 +186,7 @@ static void gui_load_script(int arg) {
 }
 
 static void gui_load_script_default(int arg) {
-    script_load(conf.script_file, 0);
+	script_reset_to_default_params_values();
     if (conf.script_param_save) {
         save_params_values(1);
     }

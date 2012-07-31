@@ -27,6 +27,10 @@ int safe_stat (const char *name, struct STD_stat *pStat)
   int rv;
 
   if ( pStat==0 ) return 1;
+
+  // sanity check. canon firmware hangup if start not from 'A/'
+  if ( !name || (name[0] | 0x20)!='a' || name[1]!='/' ) return 1;
+
   memset( pStat, 0, sizeof(struct STD_stat));
   rv =  stat( name, &st );
   if  ( rv != 0 ) return rv;

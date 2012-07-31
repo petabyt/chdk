@@ -647,7 +647,7 @@ void script_reset_to_default_params_values()
 //-------------------------------------------------------------------
 // PURPOSE: Load script to memory ( and free malloc previous if exists)
 // PARAMETERS:  fn - full path of script
-//              saved_params -  //OBSOLETE: 0= reset all parameters to defaults
+//              saved_params -  0= reset all parameters to defaults
 //                              1= load last stored paramset, if script was switched
 //                              2= load current paramset
 //

@@ -4,7 +4,7 @@ include $(topdir)makefile.inc
 
 CFLAGS+=$(CTHUMB)
 
-OBJS = lang.o
+OBJS = lang.o fileutil.o
 
 all: liblang.a
 
