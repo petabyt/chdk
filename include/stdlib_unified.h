@@ -1,5 +1,5 @@
 #ifndef STDLIB_UNIFIED_H
-#define STDLIB_UNIFIEDH
+#define STDLIB_UNIFIED_H
 
 // This is header of unified wrapper platform-dependend io functions
 

@@ -122,71 +122,6 @@ void lang_map_preparsed_from_mem( char* gui_lang_default, int num )
     preparsed_lang_default_end = p;
 }
 
-// PURPOSE:
-// Universal file loader: alloc space and load file
-// RETURN:
-//  pointer to loaded file (0 if fail) and loaded size 
-//			into rv_size (-1 if file not exists)
-//-------------------------------------------------------------------
-char* load_file( const char* name, int* rv_size )
-{
-	int fd;
-	int size = -1;
-	char* buf;
-
-    if ( strlen(name) ) {
-		struct stat st;
-    	if ( stat(name,&st) == 0 )
-		 	 size = st.st_size;
-    }
-
-	if ( rv_size )
-		*rv_size = size;
-
-	if ( size<=0 )
-    	return 0;
-
-	fd = open( name, O_RDONLY, 0777 );
-	if ( fd <=0 )
-    	return 0;
-
-	buf = umalloc(size+1);
-	if ( buf==0 ) {
-		close(fd);
-		return 0;
-	}
-    
-    size = read(fd, buf, size );
- 	buf[size+1]=0;
-
-	if ( rv_size )
-  		*rv_size = size;
-	return buf;
-}
-
-
-// PURPOSE:
-// Universal file processor
-// Load file, process by callback, unalloc/close file
-// RETURN:
-//	 Transfer return value from callback
-// NOTE:
-//	 Call callback even if fail to load/malloc (size=-1 if no file, size=0 if empty) 
-//-------------------------------------------------------------------
-int load_from_file(const char *filename, callback_process_file callback)
-{
-    int size;
-
-    char *buf = load_file( filename, &size);
-
-	size = callback( buf, size );
-
-	if ( buf )
-		ufree(buf);
-
-	return size;
-}
-
 //-------------------------------------------------------------------
 void lang_load_from_file(const char *filename) {
     load_from_file( filename, lang_parse_from_mem );
@@ -203,6 +138,7 @@ char* lang_str(int str) {
 }
 
 //-------------------------------------------------------------------
+// make hash of string
 unsigned lang_strhash31(int langid)
 {
     if ( langid<MAX_LANGID ) 

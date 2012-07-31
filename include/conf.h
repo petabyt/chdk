@@ -398,7 +398,15 @@ extern Conf conf;
 
 extern void user_menu_restore();
 
+// Current stage of script processing
 extern int state_kbd_script_run;
+
+enum {	SCRIPT_STATE_INACTIVE=0,  // 0 - script is inactive now
+		SCRIPT_STATE_RAN,	      // 1 - script works now
+		SCRIPT_STATE_INTERRUPTED, // 2 - shutter button was pressed. wait for second press
+		SCRIPT_STATE_PENDING };   // 3 - final housekeep processing
+
+
 extern int state_shooting_progress;
 extern int state_save_raw_nth_only;
 
