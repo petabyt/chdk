@@ -59,5 +59,6 @@
 	// camera name
 	#define PARAM_CAMERA_NAME		3 // parameter number for GetParameterData
 	#define CAM_EXT_TV_RANGE		1
+	#define CAM_FIRMWARE_MEMINFO		1
 //----------------------------------------------------------
 
