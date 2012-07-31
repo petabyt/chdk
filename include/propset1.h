@@ -47,4 +47,5 @@ WARNING:
 #define PROPCASE_OPTICAL_ZOOM_POSITION      99 //untested !
 #define PROPCASE_STITCH_DIRECTION           52 // 0=left>right, 1=right>left. Some cams have more
 #define PROPCASE_STITCH_SEQUENCE            48 // counts shots in stitch sequence, positive for left-right, negative for right-left
+#define PROPCASE_AF_LOCK                    193
 #endif
