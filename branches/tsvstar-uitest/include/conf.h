@@ -378,6 +378,7 @@ typedef struct {
     int show_alt_helper_delay;  // Delay before showing help screen
 
 	int help_was_shown;		// 0-help wasn't shown yet, 1- help already was shown
+    int menuedit_popup;			// 0-menuedit in-menu, 1-menu edit is popup
 } Conf;
 
 extern Conf conf;

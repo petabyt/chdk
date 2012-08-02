@@ -23,7 +23,7 @@
 #define CONF_MAGICK_VALUE   (0x33204741)
 
 //-------------------------------------------------------------------
-Conf conf = { MAKE_API_VERSION(2,0) };
+Conf conf = { MAKE_API_VERSION(2,1) };
 
 int state_shooting_progress = SHOOTING_PROGRESS_NONE;
 int state_save_raw_nth_only;
@@ -461,6 +461,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(291, conf.show_alt_helper,            CONF_DEF_VALUE,     i:1, NULL),
     CONF_INFO(292, conf.show_alt_helper_delay,      CONF_DEF_VALUE,     i:3, NULL),
     CONF_INFO(293, conf.help_was_shown, 	        CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO(294, conf.menuedit_popup,		        CONF_DEF_VALUE,     i:1, NULL),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 

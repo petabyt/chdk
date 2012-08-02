@@ -13,6 +13,8 @@
 #include "gui_user_menu.h"
 #include "gui_lang.h"
 
+extern gui_handler menueditGuiHandler;
+typedef const char* (*enum_callback_t)(int change, int arg);
 //-------------------------------------------------------------------
 #define MENUSTACK_MAXDEPTH  4
 
@@ -594,9 +596,19 @@ static int item_prev_value = 0;
 void gui_menu_set_editmode(int flag)
 {
    if (flag_editmode!=flag ) {
-	   gui_menu_redraw = 1;
 	   if ( flag ) 
 		   item_prev_value = *menuitem_get_valueptr(curr_menu,gui_menu_curr_item);
+
+		if (!conf.menuedit_popup) {
+			gui_menu_redraw = 1;
+		} else {
+			if ( flag )
+				gui_set_mode(&menueditGuiHandler);
+			else
+				gui_set_mode(&menuGuiHandler);
+
+			gui_menu_redraw = 2;
+		}
    }   
    flag_editmode = flag;
 }
@@ -1171,6 +1183,116 @@ void gui_menu_kbd_process_menu_btn()
 // GUI handler for menus
 gui_handler menuGuiHandler = { GUI_MODE_MENU, gui_menu_draw, gui_menu_kbd_process, gui_menu_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
 //-------------------------------------------------------------------
+
+static void gui_menuedit_draw_text(char *str, int is_center)
+{
+	int xx1;
+	color bg = MAKE_COLOR( BG_COLOR(conf.menu_color), BG_COLOR(conf.menu_color) );
+	int len = rbf_str_width(str);
+
+	if ( len > w ) 
+		len = w;
+	if ( is_center)
+		xx = (w-len)>>1;
+	else
+		xx = 0;
+
+    draw_filled_rect(x, yy, x+xx, yy+rbf_font_height()-1, bg );
+	xx1 = x+xx;
+    xx1+= rbf_draw_string_len( xx1, yy, len, str, cl);
+	if (xx1 < (x+w) )
+	    draw_filled_rect(xx1, yy, x+w-1, yy+rbf_font_height()-1, bg );
+}
+
+void gui_menuedit_draw_initial() 
+{ 
+	int i;
+
+    count_visible = 8;
+    y = (camera_screen.height-(count_visible-1)*rbf_font_height())>>1; 
+
+	// Header
+    rbf_draw_menu_header(x, y-rbf_font_height(), w, 0, "Edit value", conf.menu_title_color);
+    gui_menu_disp_incr();
+
+	// Create body
+	static char* mbox_map[] =
+		{
+			"",
+			"",  // valuename
+			"",
+			0,
+			"",
+			"",
+#if CAM_HAS_ZOOM_LEVER
+			"arrow/jogdial=change value, ZOOM=incrementor",
+#else
+			"arrow/jogdial=change value",
+#endif
+			""   // bottom line
+		};
+
+	mbox_map[1] = lang_str(curr_menu->menu[gui_menu_curr_item].text);
+	if ( curr_menu->menu[gui_menu_curr_item].type & MENUITEM_QUICKDISABLE)
+		mbox_map[7]="DISP=Cancel, MENU=turn on/off, SET=Confirm";
+	else
+		mbox_map[7]="DISP=Cancel, SET=Confirm";
+
+	// Display body
+    cl = conf.menu_color;
+	for ( yy=y, i=0; i<count_visible; i++, yy += rbf_font_height() ) {
+		if ( !mbox_map[i] )
+			continue;
+		gui_menuedit_draw_text( lang_str((int)mbox_map[i]), (i<4) );
+	}
+}
+
+void gui_menuedit_draw(int enforce_redraw) {
+    char tbuf[64];
+
+	if ( enforce_redraw )
+		gui_menu_redraw = 2;
+
+    if (gui_menu_redraw)
+    {
+        if (gui_menu_redraw==2)
+            gui_menuedit_draw_initial();
+
+        gui_menu_redraw=0;
+
+        cl = conf.menu_cursor_color;
+		yy = y + 3*rbf_font_height();
+
+		int* valueptr = menuitem_get_valueptr( curr_menu, gui_menu_curr_item );
+		if (!valueptr)
+			strcpy(tbuf,"---");
+		else if (*valueptr<0)
+			strcpy(tbuf,"[Off]");
+		else {
+	        switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)
+			{
+        	    case MENUITEM_INT:
+                	sprintf(tbuf, "[%d]", *valueptr);
+                	break;
+            	case MENUITEM_ENUM:
+                    sprintf(tbuf,"[%s]",((enum_callback_t)curr_menu->menu[gui_menu_curr_item].value)(0, curr_menu->menu[gui_menu_curr_item].arg) );
+	                break;
+	            case MENUITEM_ENUM2:
+                    sprintf(tbuf,"[%s]", gui_change_enum2(&curr_menu->menu[gui_menu_curr_item], 0) );
+					break;
+				default:
+					strcpy(tbuf,"---");
+            }
+		}
+		gui_menuedit_draw_text( tbuf, 1 );
+	}
+}
+
+//-------------------------------------------------------------------
+// GUI handler for menus
+gui_handler menueditGuiHandler = { GUI_MODE_MENU, gui_menuedit_draw, gui_menu_kbd_process, gui_menu_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
+//-------------------------------------------------------------------
+
 
 /*
 // Infrastructure below cause strange side-effects so it is replaced by simplified show/hide
