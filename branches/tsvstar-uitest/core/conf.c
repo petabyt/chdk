@@ -96,24 +96,24 @@ void clear_values()
 
     if (conf.clear_override)
     {
-        conf.av_override_value=0;
-        conf.tv_override_koef=0;
-        conf.subj_dist_override_koef=0;
-        conf.iso_override_koef=0;
+		value_turn_state( &conf.tv_override_value, -1 );
+		value_turn_state( &conf.av_override_value, -1 );
+		value_turn_state( &conf.subj_dist_override_value, -1 );
+		value_turn_state( &conf.iso_override_value, -1 );
         conf.nd_filter_state=0;
     }
 #if ZOOM_OVERRIDE
     if (conf.clear_zoom_override)
     {
-        conf.zoom_override = 0;
+		value_turn_state( &conf.conf.zoom_override, -1 );
     }
 #endif
     if (conf.clear_bracket)
     {
-        conf.av_bracket_value=0;
-        conf.tv_bracket_value=0;
-        conf.iso_bracket_koef=0;
-        conf.subj_dist_bracket_koef=0;
+        value_turn_state( &conf.av_bracket_value, -1);
+        value_turn_state( &conf.tv_bracket_value, -1);
+        value_turn_state( &conf.iso_bracket_value, -1);
+        value_turn_state( &conf.subj_dist_bracket_value, -1);
     }
     if (conf.clear_video)
     {

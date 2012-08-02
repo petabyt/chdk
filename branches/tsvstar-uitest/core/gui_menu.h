@@ -79,6 +79,8 @@ extern void gui_menu_unload_module_menus();
 extern void gui_enum_value_change(int *value, int change, unsigned num_items);
 extern const char* gui_change_simple_enum(int* value, int change, const char** items, unsigned num_items);
 extern const char* gui_change_enum2(const CMenuItem *menu_item, int change);
+extern void gui_qenum_value_change(int* value, int change, unsigned num_items );
+extern const char* gui_change_simple_qenum(int* value, int change, const char** items, unsigned num_items);
 
 //-------------------------------------------------------------------
 extern int menuitem_foreach2( CMenu* menu, int itemid, int tmp, int visibility);

@@ -67,6 +67,21 @@ const char* gui_change_enum2(const CMenuItem *menu_item, int change)
     return items[*menu_item->value];
 }
 
+// specific processing of migrated to quickdisabled enum fields
+void gui_qenum_value_change(int* value, int change, unsigned num_items ) {
+    *value+=change;
+
+	if (!change && !*value ) {*value=-2; }
+    if (*value<1 && change ) *value = num_items-1;
+    else if (*value>=num_items) *value=1;
+}
+
+const char* gui_change_simple_qenum(int* value, int change, const char** items, unsigned num_items) {
+    gui_qenum_value_change(value, change, num_items);
+	if (*value<=0)
+		return "Off";
+    return items[*value];
+}
 
 //-------------------------------------------------------------------
 int* menuitem_get_valueptr( CMenu *menu, int imenu ) 
@@ -198,11 +213,14 @@ static void gui_menu_back() {
 
 //-------------------------------------------------------------------
 // Turn value on/off (quickdisable items)
-// Argument: 1 turn on, -1 turn off
+// Argument: 1 turn on, -1 turn off, 0 - toggle
 // Return: 1 if changed, 0 otherwise
 int value_turn_state( int* valueptr, int dir )
 {
   // return if item already have same quickdisable status
+  if ( !dir ) 
+	dir = ( *valueptr<0 )?1:-1;
+
   if ( dir >0 ) {
    if ( *valueptr >= 0 )
      return 0;
@@ -219,7 +237,7 @@ int value_turn_state( int* valueptr, int dir )
 
 //-------------------------------------------------------------------
 // Turn current item on/off (quickdisable items)
-// Argument: 1 turn on, -1 turn off
+// Argument: 1 turn on, -1 turn off, 0 - toggle
 // Return: 1 if ok, 0 otherwise
 static int turn_current_item( int dir )
 {
@@ -741,10 +759,8 @@ int gui_menu_kbd_process() {
             break;
         case KEY_MENU:
             // The only way to get this point - "edit" submode
-	    if ( *(curr_menu->menu[gui_menu_curr_item].value) < 0 )
-              turn_current_item_on();
-            else
-              turn_current_item_off();
+			turn_current_item(0);	// toggle state
+			do_callback();
             break;
         case KEY_SET:
             if ( flag_editmode) {
@@ -847,7 +863,9 @@ int gui_menu_kbd_process() {
             break;
 #else
         case KEY_DISPLAY:
-            if (conf.user_menu_enable == 3 && curr_menu->title == LANG_MENU_USER_MENU) {
+            if ( flag_editmode ) {
+				gui_menu_cancel_editmode();					  
+            } else if (conf.user_menu_enable == 3 && curr_menu->title == LANG_MENU_USER_MENU) {
                 gui_menu_back();
             }
             else {
@@ -1129,13 +1147,13 @@ void gui_menu_kbd_process_menu_btn()
     extern int gui_user_menu_flag;
     extern CMenu root_menu;
 
-    gui_menu_unload_module_menus();
-
     // In edit submode - MenuButton mean "Toggle feature" and processed by gui_menu_kbd_process
     if ( gui_menu_get_editmode() ) {
 		gui_menu_kbd_process();
 		return;
     }
+
+    gui_menu_unload_module_menus();
 
     conf_save_new_settings_if_changed();
 

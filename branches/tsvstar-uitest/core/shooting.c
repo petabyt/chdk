@@ -298,6 +298,8 @@ float shooting_get_shutter_speed_override_value()
 
 const char * shooting_get_tv_bracket_value()
 {
+	if (conf.tv_bracket_value<0)
+		return expo_shift[0];
     return expo_shift[conf.tv_bracket_value];
 }
 
@@ -334,6 +336,8 @@ short shooting_get_iso_bracket_value()
 
 const char * shooting_get_av_bracket_value()
 {
+	if ( conf.av_bracket_value<0)
+		return expo_shift[0];
     return expo_shift[conf.av_bracket_value];
 }
 
@@ -1196,7 +1200,7 @@ void shooting_set_autoiso(int iso_mode)
     // TODO also long shutter ?
     if (m==MODE_M || m==MODE_TV || m==MODE_STITCH) return; //Only operate outside of M and Tv
 	int ev_overexp = 0;
-	if ( conf.overexp_ev_enum )
+	if ( conf.overexp_ev_enum>0 )
 	{
 		// No shoot_histogram exist here because no future shot exist yet :)
 		live_histogram_process_quick();
@@ -1354,7 +1358,8 @@ void shooting_tv_bracketing(int when)
             if (!(m==MODE_M || m==MODE_TV || m==MODE_LONG_SHUTTER)) bracketing.tv96=shooting_get_tv96();
             else bracketing.tv96=shooting_get_user_tv96();
         }
-        bracketing.tv96_step=32*conf.tv_bracket_value;
+        bracketing.tv96_step=(conf.tv_bracket_value<=0)?0:(32*conf.tv_bracket_value);
+
     }
     // other shoots
     bracketing.shoot_counter++;
@@ -1383,7 +1388,7 @@ void shooting_av_bracketing(int when)
             bracketing.av96 = shooting_get_av96();
         else
             bracketing.av96 = shooting_get_user_av96();
-        bracketing.av96_step = 32*conf.av_bracket_value;
+        bracketing.av96_step = (conf.av_bracket_value<=0)?0:(32*conf.av_bracket_value);
     }
     // other shoots
     bracketing.shoot_counter++;
@@ -1488,15 +1493,15 @@ void bracketing_reset()
 
 void bracketing_step(int when)
 {
-    if (conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))
+    if (conf.tv_bracket_value>0 && !(conf.override_disable==1 && conf.override_disable_all))
         shooting_tv_bracketing(when);
-    else if (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))
+    else if (conf.av_bracket_value>0 && !(conf.override_disable==1 && conf.override_disable_all))
         shooting_av_bracketing(when);
-    else if ((conf.iso_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.iso_bracket_koef))
+    else if ((conf.iso_bracket_value>0 && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.iso_bracket_koef))
         shooting_iso_bracketing(when);
-    else if ((conf.subj_dist_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.subj_dist_bracket_koef))
+    else if ((conf.subj_dist_bracket_value>0 && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.subj_dist_bracket_koef))
         shooting_subject_distance_bracketing(when);   	      
-    else if ((conf.subj_dist_bracket_value) && (conf.subj_dist_bracket_koef))
+    else if ((conf.subj_dist_bracket_value>0) && (conf.subj_dist_bracket_koef))
         shooting_subject_distance_bracketing(when);
 }
 
