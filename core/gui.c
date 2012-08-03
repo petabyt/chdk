@@ -1162,6 +1162,46 @@ const char* gui_subj_dist_override_koef_enum(int change, int arg)
     return rv;
 }
 
+#if defined(OPT_CURVES)
+
+static const char* gui_conf_curve_enum(int change, int arg) {
+    static const char* modes[]={ "None", "Custom", "+1EV", "+2EV", "Auto DR" };
+
+    gui_enum_value_change(&conf.curve_enable,change,sizeof(modes)/sizeof(modes[0]));
+
+	if (change)
+        if (module_curves_load())
+		    libcurves->curve_init_mode();
+    return modes[conf.curve_enable];
+}
+
+static void gui_load_curve_selected(const char *fn)
+{
+	if (fn) {
+		// TODO we could sanity check here, but curve_set_type should fail gracefullish
+		strcpy(conf.curve_file,fn);
+		if (conf.curve_enable == 1)
+            if (module_curves_load())
+	    	    libcurves->curve_init_mode();
+	}
+}
+
+static void gui_load_curve(int arg)
+{
+    module_fselect_init(LANG_STR_SELECT_CURVE_FILE, conf.curve_file, CURVE_DIR, gui_load_curve_selected);
+}
+
+static CMenuItem curve_submenu_items[] = {
+    MENU_ITEM(0x5f,LANG_MENU_CURVE_ENABLE,        MENUITEM_ENUM,      gui_conf_curve_enum, 0 ),
+    MENU_ITEM(0x35,LANG_MENU_CURVE_LOAD,          MENUITEM_PROC,      gui_load_curve, 0 ),
+    MENU_ITEM(0x51,LANG_MENU_BACK,                MENUITEM_UP, 0, 0 ),
+    {0}
+};
+
+static CMenu curve_submenu = {0x85,LANG_MENU_CURVE_PARAM_TITLE, NULL, curve_submenu_items };
+
+#endif
+
 static const char* gui_override_disable_modes[] =           { "No", "Yes" };
 #if CAM_HAS_ND_FILTER
 static const char* gui_nd_filter_state_modes[] =            { "Off", "In", "Out" };
@@ -1209,6 +1249,9 @@ static CMenuItem operation_submenu_items[] = {
 #endif
 #if CAM_QUALITY_OVERRIDE
     MENU_ENUM2  (0x5c,LANG_MENU_MISC_IMAGE_QUALITY,         &conf.fast_image_quality, gui_fast_image_quality_modes ),
+#endif
+#ifdef OPT_CURVES
+    MENU_ITEM   (0x85,LANG_MENU_CURVE_PARAM,                MENUITEM_SUBMENU,   &curve_submenu,     0 ),
 #endif
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,        0,                                  0 ),
     {0}
@@ -1609,47 +1652,6 @@ static CMenu raw_submenu = {0x24,LANG_MENU_RAW_TITLE, NULL, raw_submenu_items };
 
 //-------------------------------------------------------------------
 
-#if defined(OPT_CURVES)
-
-static const char* gui_conf_curve_enum(int change, int arg) {
-    static const char* modes[]={ "None", "Custom", "+1EV", "+2EV", "Auto DR" };
-
-    gui_enum_value_change(&conf.curve_enable,change,sizeof(modes)/sizeof(modes[0]));
-
-	if (change)
-        if (module_curves_load())
-		    libcurves->curve_init_mode();
-    return modes[conf.curve_enable];
-}
-
-static void gui_load_curve_selected(const char *fn)
-{
-	if (fn) {
-		// TODO we could sanity check here, but curve_set_type should fail gracefullish
-		strcpy(conf.curve_file,fn);
-		if (conf.curve_enable == 1)
-            if (module_curves_load())
-	    	    libcurves->curve_init_mode();
-	}
-}
-
-static void gui_load_curve(int arg)
-{
-    module_fselect_init(LANG_STR_SELECT_CURVE_FILE, conf.curve_file, CURVE_DIR, gui_load_curve_selected);
-}
-
-static CMenuItem curve_submenu_items[] = {
-    MENU_ITEM(0x5f,LANG_MENU_CURVE_ENABLE,        MENUITEM_ENUM,      gui_conf_curve_enum, 0 ),
-    MENU_ITEM(0x35,LANG_MENU_CURVE_LOAD,          MENUITEM_PROC,      gui_load_curve, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                MENUITEM_UP, 0, 0 ),
-    {0}
-};
-
-static CMenu curve_submenu = {0x85,LANG_MENU_CURVE_PARAM_TITLE, NULL, curve_submenu_items };
-
-#endif
-//-------------------------------------------------------------------
-
 void cb_zebra_restore_screen()
 {
     if (!conf.zebra_restore_screen)
@@ -1805,9 +1807,6 @@ static CMenuItem chdk_settings_menu_items[] = {
     MENU_ITEM   (0x28,LANG_MENU_MAIN_VISUAL_PARAM,          MENUITEM_SUBMENU,   &visual_submenu, 0 ),
     MENU_ITEM   (0x28,LANG_MENU_MENU_SETTINGS,              MENUITEM_SUBMENU,   &menu_settings_submenu, 0 ),
     MENU_ITEM   (0x2f,LANG_MENU_OSD_GRID_PARAMS,            MENUITEM_SUBMENU,   &grid_submenu, 0 ),
-#ifdef OPT_CURVES
-    MENU_ITEM   (0x85,LANG_MENU_CURVE_PARAM,                MENUITEM_SUBMENU,   &curve_submenu,     0 ),
-#endif
 #ifdef CAM_HAS_GPS
     MENU_ITEM	(0x2a,LANG_MENU_GPS,                        MENUITEM_SUBMENU,	&gps_submenu,		0 ),
 #endif
