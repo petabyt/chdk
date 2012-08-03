@@ -25,7 +25,16 @@ long hook_raw_size()
 
 void *vid_get_viewport_live_fb()
 {
-    return (void*)0; 
+    void **fb=(void **)0x709C; // from sub_FF9CE768
+    unsigned char buff = *((unsigned char*)0x70AC);
+    if (buff == 0) {
+        buff = 2;
+    }
+    else {
+        buff--;
+    }
+    return fb[buff];
+
 }
 
 // Found at 0xFFA302AC, aBmpddev_c
