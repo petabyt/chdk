@@ -152,6 +152,7 @@ extern void _GiveSemaphore(int sem);
 /* misc */
 extern const char aPhysw;
 extern long physw_run;
+extern long physw_sleep_delay;
 extern long _kbd_p1_f();
 extern void _kbd_p2_f();
 extern void _kbd_pwr_on();

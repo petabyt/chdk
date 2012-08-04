@@ -3065,7 +3065,7 @@ void find_stubs_min(firmware *fw)
 		}
 	}
 	
-	// Find 'physw_run'
+	// Find 'physw_run' & 'physw_sleep_delay'
 	k = get_saved_sig(fw, "task_PhySw");
 	if (k >= 0)
 	{
@@ -3080,7 +3080,9 @@ void find_stubs_min(firmware *fw)
 				uint32_t fadr = followBranch(fw, idx2adr(fw,idx+k+1), 1);
 				uint32_t ofst = fw->buf[adr2idx(fw,fadr)] & 0x00000FFF;
 				print_stubs_min(fw,"physw_run",base+ofst,idx2adr(fw,idx+k));
-				//break;
+
+				ofst = fw->buf[idx+k+2] & 0x00000FFF;
+				print_stubs_min(fw,"physw_sleep_delay",base+ofst,idx2adr(fw,idx+k));
 			}
 		}
 	}

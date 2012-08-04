@@ -31,6 +31,7 @@ NSTUB(kbd_pwr_on                              ,0xffc313c8) //  2 82%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0000f418) // Found @0xffc113ec
 DEF(physw_run                               ,0x00001be4) // Found @0xffc11064
+DEF(physw_sleep_delay                       ,0x00001be2) // Found @0xffc11064
 DEF(levent_table                            ,0xffe9ac78) // Found @0xffe9ac78
 DEF(FlashParamsTable                        ,0xffeb9cdc) // Found @0xffeb9cdc
 DEF(movie_status                            ,0x00005080) // Found @0xffc47950

@@ -95,7 +95,7 @@ long __attribute__((naked)) wrap_kbd_p1_f() ;
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
 	while (physw_run){
-		_SleepTask(*((int*)0x1c18)); //10);
+		_SleepTask(physw_sleep_delay);
 
 		if (wrap_kbd_p1_f() == 1){ // autorepeat ?
 			_kbd_p2_f();
@@ -301,10 +301,6 @@ long kbd_get_autoclicked_key() {
 			return 0;
 		}
 	}
-}
-
-long kbd_use_zoom_as_mf() {
- return 0;
 }
 
 static short new_jogdial=0, old_jogdial=0;
