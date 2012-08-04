@@ -81,7 +81,7 @@ long __attribute__((naked)) wrap_kbd_p1_f() ;
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
 	while (physw_run){
-		_SleepTask(*((int*)(0x1c30+0x14)));//10);
+		_SleepTask(physw_sleep_delay);
 
 		if (wrap_kbd_p1_f() == 1){ // autorepeat ?
 			_kbd_p2_f();

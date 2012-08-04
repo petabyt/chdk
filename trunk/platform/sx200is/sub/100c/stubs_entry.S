@@ -26,6 +26,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0000f058) // Found @0xff821e24
 DEF(physw_run                               ,0x00001c34) // Found @0xff821a94
+DEF(physw_sleep_delay                       ,0x00001c32) // Found @0xff821a94
 DEF(levent_table                            ,0xffb399f0) // Found @0xffb399f0
 DEF(FlashParamsTable                        ,0xffb6d284) // Found @0xffb6d284
 DEF(movie_status                            ,0x000065c0) // Found @0xff937fd0

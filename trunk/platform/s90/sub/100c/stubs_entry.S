@@ -38,6 +38,7 @@ NSTUB(SetPropertyCase                         ,0xff88c960) //  1 96%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x000330d8) // Found @0xff8335b4
 DEF(physw_run                               ,0x00001c44) // Found @0xff83320c
+DEF(physw_sleep_delay                       ,0x00001c42) // Found @0xff83320c
 DEF(levent_table                            ,0xffb8b470) // Found @0xffb8b470
 DEF(FlashParamsTable                        ,0xffbefb70) // Found @0xffbefb70
 DEF(movie_status                            ,0x00007ae8) // Found @0xff961448

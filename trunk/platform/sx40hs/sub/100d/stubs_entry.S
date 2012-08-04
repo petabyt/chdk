@@ -26,6 +26,7 @@ NSTUB(reboot_fw_update                        ,0xff33ede8) //  6 96%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00037548) // Found @0xff024dd8
 DEF(physw_run                               ,0x00001c10) // Found @0xff024968
+DEF(physw_sleep_delay                       ,0x00001c18) // Found @0xff024968
 DEF(levent_table                            ,0xff5939d4) // Found @0xff5939d4
 DEF(FlashParamsTable                        ,0xff607f3c) // Found @0xff607f3c
 DEF(movie_status                            ,0x00002f1c) // Found @0xff077290
