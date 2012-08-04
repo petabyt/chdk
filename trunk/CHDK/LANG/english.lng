@@ -11,7 +11,7 @@
   4 "Histogram - exposure graph"
   5 "Zebra - show over & under exposure"
   6 "Script - program your camera"
-  7 "Visual Settings"
+  7 "Color Settings"
   8 "Miscellaneous Stuff"
   9 "Debug Parameters"
  10 "Reset Options to Default..."
@@ -70,7 +70,7 @@
  48 "Script Parameters"
 
 
- 49 "Visual Settings"
+ 49 "Color Settings"
 
  50 "Language..."
  51 "OSD Codepage"
@@ -561,7 +561,7 @@
 448 "[UP][DOWN] select color"
 449 "[SET] next row"
 450 "NO DOUBLE COLOR"
-451 "reset files"
+451 "Reset menu fonts"
 452 "restart camera..."
 453 "Force manual flash"
 454 "Quality override"
@@ -694,3 +694,6 @@
 
 568 "'%s'\nadded to User Menu"
 569 "User Menu is full"
+
+570 "SD Card"
+571 "Menu Font Settings"

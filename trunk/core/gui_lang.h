@@ -697,7 +697,11 @@
 #define LANG_USER_MENU_ITEM_ADDED				568
 #define LANG_USER_MENU_FULL     				569
 
-#define GUI_LANG_ITEMS                          569
+#define LANG_SD_CARD                            570
+
+#define LANG_MENU_FONT_SETTINGS                 571
+
+#define GUI_LANG_ITEMS                          571
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
