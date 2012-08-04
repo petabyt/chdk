@@ -699,6 +699,13 @@
     #define COLOR_ICON_REC_GREY_DK      COLOR_GREY_DK
     #define COLOR_ICON_REC_GREY_LT      COLOR_GREY_LT
 
+#if defined (CAMERA_sx200is)
+    #undef COLOR_BG
+    #define COLOR_BG                    (CHDK_COLOR_BASE+13) // Transparent Grey
+    #undef COLOR_ALT_BG
+    #define COLOR_ALT_BG                COLOR_BG
+#endif
+
 #elif CAM_BITMAP_PALETTE==14
 
 // Used by :- A3000IS
