@@ -1480,8 +1480,8 @@ const char* gui_histo_show_enum(int change, int arg) {
         static const char* names[]={ "Video", "Display", "Playback", "Video"};
         static const int keys[] = {KEY_PRINT, KEY_DISPLAY, KEY_PLAYBACK, KEY_VIDEO};
     #elif defined(CAMERA_ixus115_elph100hs)
-        static const char* names[]={ "Playback", "Video", "Menu+Zoom" };
-        static const int keys[] = {KEY_PLAYBACK, KEY_VIDEO, KEY_PRINT};
+        static const char* names[]={ "Playback", "Video", "Set+ZoomIn" };
+        static const int keys[] = {KEY_PLAYBACK, KEY_VIDEO, KEY_SET | KEY_ZOOM_IN };
     #elif defined(CAMERA_ixus120_sd940)
         static const char* names[]={ "Display", "Playback" };
         static const int keys[] = {KEY_DISPLAY, KEY_PLAYBACK };
