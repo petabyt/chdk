@@ -85,9 +85,6 @@ DEF(focus_busy                              ,0x00006608) // Found @0xff941f28
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 2, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffb4049c, levent 0x01
-//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xffb4049c, levent 0x01
-//    { 2, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffb40490, levent 0x00
 //    { 2, KEY_MENU            ,0x00000001 }, // Found @0xffb40430, levent 0x09
 //    { 2, KEY_SET             ,0x00000002 }, // Found @0xffb4043c, levent 0x08
 //    { 2, KEY_ZOOM_IN         ,0x00000004 }, // Found @0xffb40448, levent 0x02
@@ -96,6 +93,11 @@ DEF(focus_busy                              ,0x00006608) // Found @0xff941f28
 //    { 2, KEY_RIGHT           ,0x00000020 }, // Found @0xffb4046c, levent 0x07
 //    { 2, KEY_DOWN            ,0x00000040 }, // Found @0xffb40478, levent 0x05
 //    { 2, KEY_UP              ,0x00000080 }, // Found @0xffb40484, levent 0x04
+//    { 2, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffb4049c, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xffb4049c, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffb40490, levent 0x00
+//    { 2, KEY_POWER           ,0x00000400 }, // Found @0xffb404a8, levent 0x600
+//    { 2, KEY_PLAYBACK        ,0x00000800 }, // Found @0xffb404b4, levent 0x601
 //    { 0, 0, 0 }
 //};
 

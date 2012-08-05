@@ -312,6 +312,8 @@ static KeyMap keymap[] = {
     { 2, KEY_SHOOT_FULL     , 0x00000a00 },  // Found @0xff3d146c, levent 0x01
     { 2, KEY_SHOOT_FULL_ONLY, 0x00000800 },	 // http://chdk.setepontos.com/index.php?topic=1444.msg70223#msg70223
     { 2, KEY_SHOOT_HALF     , 0x00000200 },  // Found @0xff3d1464, levent 0x00
+    { 2, KEY_POWER           ,0x00001000 }, // Found @0xff3d1474, levent 0x600
+    { 2, KEY_PLAYBACK        ,0x00004000 }, // Found @0xff3d147c, levent 0x601
 
     { 3, KEY_PRINT          , 0x00000001, LB(0,1), 0, "CHDK",  0,    GUI_MODE_NONE,      100, MODE_REC|MODE_PLAY|MODE_VID }, // virtual touch screen key
 

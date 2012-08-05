@@ -64,6 +64,8 @@ DEF(recreview_hold                          ,0x000059e4) // Found @0xffc65b4c
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 1, KEY_POWER           ,0x00004000 }, // Found @0xffe750c4, levent 0x600 (uses inverted logic in physw_status)
+//    { 1, KEY_PLAYBACK        ,0x02000000 }, // Found @0xffe750e8, levent 0x601 (uses inverted logic in physw_status)
 //    { 1, KEY_SHOOT_FULL      ,0xc0000000 }, // Found @0xffe75130, levent 0x01
 //    { 1, KEY_SHOOT_FULL_ONLY ,0x80000000 }, // Found @0xffe75130, levent 0x01
 //    { 1, KEY_SHOOT_HALF      ,0x40000000 }, // Found @0xffe75124, levent 0x00

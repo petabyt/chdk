@@ -72,10 +72,12 @@ DEF(active_bitmap_buffer                    ,0x0000b478) // Found @0xff249ae8
 //    { 0, KEY_SET             ,0x00010000 }, // Found @0xff3bd1e0, levent 0x08
 //    { 0, KEY_DOWN            ,0x00020000 }, // Found @0xff3bd1e8, levent 0x05
 //    { 0, KEY_MENU            ,0x00040000 }, // Found @0xff3bd1f0, levent 0x09
+//    { 1, KEY_PLAYBACK        ,0x00200000 }, // Found @0xff3bd200, levent 0x601
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xff3bd210, levent 0x01
 //    { 2, KEY_LEFT            ,0x00000100 }, // Found @0xff3bd220, levent 0x06
+//    { 2, KEY_POWER           ,0x00000800 }, // Found @0xff3bd228, levent 0x600
 //    { 2, KEY_SHOOT_FULL      ,0x00002002 }, // Found @0xff3bd210, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00002000 }, // Found @0xff3bd230, levent 0x00
-//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xff3bd210, levent 0x01
 //    { 0, 0, 0 }
 //};
 

@@ -67,11 +67,13 @@ DEF(focus_busy                              ,0x00005478) // Found @0xffcefa8c
 //    { 1, KEY_SET             ,0x00001000 }, // Found @0xffe70b98, levent 0x08
 //    { 1, KEY_MENU            ,0x00002000 }, // Found @0xffe70ba4, levent 0x09
 //    { 1, KEY_DISPLAY         ,0x00004000 }, // Found @0xffe70bb0, levent 0x0a
-//    { 2, KEY_ZOOM_IN         ,0x00000040 }, // Found @0xffe70c28, levent 0x02
-//    { 2, KEY_ZOOM_OUT        ,0x00000080 }, // Found @0xffe70c34, levent 0x03
 //    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe70c1c, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe70c1c, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xffe70c10, levent 0x00
+//    { 2, KEY_ZOOM_IN         ,0x00000040 }, // Found @0xffe70c28, levent 0x02
+//    { 2, KEY_ZOOM_OUT        ,0x00000080 }, // Found @0xffe70c34, levent 0x03
+//    { 2, KEY_POWER           ,0x00002000 }, // Found @0xffe70c4c, levent 0x600 (uses inverted logic in physw_status)
+//    { 2, KEY_PLAYBACK        ,0x00004000 }, // Found @0xffe70c58, levent 0x601 (uses inverted logic in physw_status)
 //    { 0, 0, 0 }
 //};
 

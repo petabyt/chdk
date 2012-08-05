@@ -55,6 +55,8 @@ DEF(focus_busy                              ,0x0000e150) // Found @0xff934128
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 0, KEY_POWER           ,0x00010000 }, // Found @0xffac6288, levent 0x600 (uses inverted logic in physw_status)
+//    { 0, KEY_PLAYBACK        ,0x00020000 }, // Found @0xffac6290, levent 0x601 (uses inverted logic in physw_status)
 //    { 0, KEY_SHOOT_FULL      ,0xc0000000 }, // Found @0xffac62b0, levent 0x01
 //    { 0, KEY_SHOOT_FULL_ONLY ,0x80000000 }, // Found @0xffac62b0, levent 0x01
 //    { 0, KEY_SHOOT_HALF      ,0x40000000 }, // Found @0xffac62a8, levent 0x00

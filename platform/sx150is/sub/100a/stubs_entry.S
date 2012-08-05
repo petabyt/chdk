@@ -66,6 +66,8 @@ DEF(palette_control                         ,0x00009654) // Found @0xffa29f88
 //    { 1, KEY_SHOOT_HALF      ,0x00001000 }, // Found @0xffb90d50, levent 0x00
 //    { 1, KEY_ZOOM_IN         ,0x00004000 }, // Found @0xffb90d60, levent 0x02
 //    { 1, KEY_ZOOM_OUT        ,0x00008000 }, // Found @0xffb90d68, levent 0x03
+//    { 2, KEY_POWER           ,0x00000020 }, // Found @0xffb90d98, levent 0x100
+//    { 2, KEY_PLAYBACK        ,0x00000040 }, // Found @0xffb90da0, levent 0x101
 //    { 2, KEY_UP              ,0x00000100 }, // Found @0xffb90da8, levent 0x04
 //    { 2, KEY_DOWN            ,0x00000200 }, // Found @0xffb90db0, levent 0x05
 //    { 2, KEY_RIGHT           ,0x00000400 }, // Found @0xffb90db8, levent 0x07

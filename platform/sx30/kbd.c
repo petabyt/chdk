@@ -83,7 +83,8 @@ static KeyMap keymap[] = {
 	{ 2, KEY_SHOOT_FULL	, 0x00000300 },
     { 2, KEY_SHOOT_FULL_ONLY, 0x00000200 },	 // http://chdk.setepontos.com/index.php?topic=1444.msg70223#msg70223
 	{ 2, KEY_SHOOT_HALF	, 0x00000100 },
-        
+    { 2, KEY_POWER           ,0x00000400 }, // Found @0xffb979fc, levent 0x600
+    { 2, KEY_PLAYBACK        ,0x00000800 }, // Found @0xffb97a04, levent 0x601
 
 	{ 0, 0, 0 } 
 };

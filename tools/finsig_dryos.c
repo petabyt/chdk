@@ -3742,19 +3742,21 @@ typedef struct {
 	char		nm[32];
 	uint32_t	fadr;
 	uint32_t	ev;
+	int         inv;
 } kinfo;
 
 int		kmask[3];
 kinfo	key_info[100];
 int		kcount = 0;
 
-void add_kinfo(int r, uint32_t b, const char *nm, uint32_t adr, uint32_t ev)
+void add_kinfo(int r, uint32_t b, const char *nm, uint32_t adr, uint32_t ev, int inv)
 {
 	key_info[kcount].reg = r;
 	key_info[kcount].bits = b;
 	strcpy(key_info[kcount].nm, nm);
 	key_info[kcount].fadr = adr;
 	key_info[kcount].ev = ev;
+	key_info[kcount].inv = inv;
 	kcount++;
 	kmask[r] |= b;
 }
@@ -3764,6 +3766,7 @@ uint32_t add_kmval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev,
 	int tidx = adr2idx(fw,tadr);
 	int r, k, kval = 0;
 	uint32_t b = 0;
+	int inv = 0;
 	for (k=0; k<tlen; k+=tsiz)
 	{
 		if (fw->buf[tidx+k+1] == ev)
@@ -3777,8 +3780,9 @@ uint32_t add_kmval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev,
 	{
 		r = (kval >> 5) & 7;
 		b = (1 << (kval & 0x1F));
+		inv = ((kval&0xff0000)==0x10000)?0:1;
 		
-		add_kinfo(r,b|xtra,name,tadr,ev);
+		add_kinfo(r,b|xtra,name,tadr,ev,inv);
 	}
 	
 	return b;
@@ -3794,7 +3798,7 @@ int kinfo_compare(const kinfo *p1, const kinfo *p2)
 	{
 		return -1;
     }
-	if (p1->ev <= 1)	// output shutter entries in reverse order
+	if ((p1->ev <= 1) && (p2->ev <= 1))	// output shutter entries in reverse order
 	{
 		if (p1->bits > p2->bits)
 		{
@@ -3805,13 +3809,16 @@ int kinfo_compare(const kinfo *p1, const kinfo *p2)
 			return 1;
 		}
 	}
-    if (p1->bits > p2->bits)
-	{
-        return 1;
-    }
-	else if (p1->bits < p2->bits)
-	{
-        return -1;
+    else
+    {
+        if (p1->bits > p2->bits)
+        {
+            return 1;
+        }
+        else if (p1->bits < p2->bits)
+        {
+            return -1;
+        }
     }
 
     return 0;
@@ -3826,7 +3833,7 @@ void print_kmvals()
 	int k;
 	for (k=0; k<kcount; k++)
 	{
-		bprintf("//    { %d, %-20s,0x%08x }, // Found @0x%08x, levent 0x%02x\n",key_info[k].reg,key_info[k].nm,key_info[k].bits,key_info[k].fadr,key_info[k].ev);
+		bprintf("//    { %d, %-20s,0x%08x }, // Found @0x%08x, levent 0x%02x%s\n",key_info[k].reg,key_info[k].nm,key_info[k].bits,key_info[k].fadr,key_info[k].ev,(key_info[k].inv==0)?"":" (uses inverted logic in physw_status)");
 	}
 	
 	bprintf("//    { 0, 0, 0 }\n//};\n");
@@ -3932,10 +3939,20 @@ void find_key_vals(firmware *fw)
 		add_kmval(fw,tadr,tsiz,tlen,8,"KEY_SET",0);
 		add_kmval(fw,tadr,tsiz,tlen,9,"KEY_MENU",0);
 		add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_DISPLAY",0);
+        if (fw->dryos_ver <= 47)
+        {
+    		add_kmval(fw,tadr,tsiz,tlen,0x601,"KEY_PLAYBACK",0);
+	    	add_kmval(fw,tadr,tsiz,tlen,0x600,"KEY_POWER",0);
+        }
+        else
+        {
+    		add_kmval(fw,tadr,tsiz,tlen,0x101,"KEY_PLAYBACK",0);
+	    	add_kmval(fw,tadr,tsiz,tlen,0x100,"KEY_POWER",0);
+        }
 				
 		bprintf("\n// Keymap values for kbd.c. Additional keys may be present, only common values included here.\n");
 		print_kmvals();
-	}
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------

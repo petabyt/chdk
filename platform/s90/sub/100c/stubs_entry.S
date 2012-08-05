@@ -65,6 +65,8 @@ DEF(some_flag_for_af_scan                   ,0x00007ff4) // Found @0xff9644d8
 //    { 0, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffb3a93c, levent 0x01
 //    { 0, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xffb3a93c, levent 0x01
 //    { 0, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffb3a930, levent 0x00
+//    { 0, KEY_POWER           ,0x00000400 }, // Found @0xffb3a948, levent 0x600
+//    { 0, KEY_PLAYBACK        ,0x00000800 }, // Found @0xffb3a954, levent 0x601
 //    { 1, KEY_ZOOM_IN         ,0x00000010 }, // Found @0xffb3a9b4, levent 0x02
 //    { 1, KEY_ZOOM_OUT        ,0x00000020 }, // Found @0xffb3a9c0, levent 0x03
 //    { 1, KEY_LEFT            ,0x00000100 }, // Found @0xffb3a9e4, levent 0x06

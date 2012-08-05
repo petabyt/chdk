@@ -61,16 +61,18 @@ DEF(recreview_hold                          ,0x000033a4) // Found @0xff8942c8
 //static KeyMap keymap[] = {
 //    { 0, KEY_SET             ,0x00000004 }, // Found @0xffb0c6b8, levent 0x08
 //    { 0, KEY_DISPLAY         ,0x00000008 }, // Found @0xffb0c6c4, levent 0x0a
-//    { 2, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffb0c73c, levent 0x01
 //    { 2, KEY_MENU            ,0x00000001 }, // Found @0xffb0c6dc, levent 0x09
 //    { 2, KEY_ZOOM_IN         ,0x00000004 }, // Found @0xffb0c6e8, levent 0x02
 //    { 2, KEY_ZOOM_OUT        ,0x00000008 }, // Found @0xffb0c6f4, levent 0x03
 //    { 2, KEY_LEFT            ,0x00000010 }, // Found @0xffb0c700, levent 0x06
 //    { 2, KEY_RIGHT           ,0x00000020 }, // Found @0xffb0c70c, levent 0x07
 //    { 2, KEY_DOWN            ,0x00000040 }, // Found @0xffb0c718, levent 0x05
+//    { 2, KEY_UP              ,0x00000080 }, // Found @0xffb0c724, levent 0x04
+//    { 2, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffb0c73c, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xffb0c73c, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffb0c730, levent 0x00
-//    { 2, KEY_UP              ,0x00000080 }, // Found @0xffb0c724, levent 0x04
+//    { 2, KEY_POWER           ,0x00000400 }, // Found @0xffb0c748, levent 0x600
+//    { 2, KEY_PLAYBACK        ,0x00000800 }, // Found @0xffb0c754, levent 0x601
 //    { 0, 0, 0 }
 //};
 
