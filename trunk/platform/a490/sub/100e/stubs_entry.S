@@ -59,17 +59,19 @@ DEF(recreview_hold                          ,0x0000302c) // Found @0xffc757dc
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 0, KEY_PLAYBACK        ,0x00020000 }, // Found @0xffe820f8, levent 0x601
+//    { 0, KEY_POWER           ,0x00800000 }, // Found @0xffe82110, levent 0x600
 //    { 2, KEY_RIGHT           ,0x00000004 }, // Found @0xffe8211c, levent 0x07
-//    { 2, KEY_ZOOM_OUT        ,0x00000040 }, // Found @0xffe82140, levent 0x03
-//    { 2, KEY_ZOOM_IN         ,0x00000080 }, // Found @0xffe8214c, levent 0x02
-//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe82158, levent 0x08
-//    { 2, KEY_UP              ,0x00100000 }, // Found @0xffe82194, levent 0x04
-//    { 2, KEY_DOWN            ,0x00200000 }, // Found @0xffe821a0, levent 0x05
-//    { 2, KEY_LEFT            ,0x00400000 }, // Found @0xffe821ac, levent 0x06
-//    { 2, KEY_MENU            ,0x01000000 }, // Found @0xffe821c4, levent 0x09
 //    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe82134, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe82134, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xffe82128, levent 0x00
+//    { 2, KEY_ZOOM_OUT        ,0x00000040 }, // Found @0xffe82140, levent 0x03
+//    { 2, KEY_ZOOM_IN         ,0x00000080 }, // Found @0xffe8214c, levent 0x02
+//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe82158, levent 0x08
+//    { 2, KEY_UP              ,0x00100000 }, // Found @0xffe82194, levent 0x04 (uses inverted logic in physw_status)
+//    { 2, KEY_DOWN            ,0x00200000 }, // Found @0xffe821a0, levent 0x05 (uses inverted logic in physw_status)
+//    { 2, KEY_LEFT            ,0x00400000 }, // Found @0xffe821ac, levent 0x06 (uses inverted logic in physw_status)
+//    { 2, KEY_MENU            ,0x01000000 }, // Found @0xffe821c4, levent 0x09 (uses inverted logic in physw_status)
 //    { 0, 0, 0 }
 //};
 

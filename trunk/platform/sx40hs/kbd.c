@@ -81,6 +81,8 @@ static KeyMap keymap[] = {
 	{ 0, KEY_FLASH           ,0x00400000 },
 	{ 0, KEY_PRINT		     ,0x00800000 },
 
+    { 2, KEY_POWER           ,0x00000800 }, // Found @0xff434b8c, levent 0x100
+    { 2, KEY_PLAYBACK        ,0x00001000 }, // Found @0xff434b94, levent 0x101
     { 2, KEY_SHOOT_FULL      ,0x0000c000 }, // Found @0xff434bac, levent 0x01
     { 2, KEY_SHOOT_FULL_ONLY ,0x00008000 }, // Found @0xff434bac, levent 0x01
     { 2, KEY_SHOOT_HALF      ,0x00004000 }, // Found @0xff434ba4, levent 0x00

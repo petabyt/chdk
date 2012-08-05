@@ -77,12 +77,14 @@ DEF(focus_busy                              ,0x00005938) // Found @0xff9115c8
 //    { 0, KEY_UP              ,0x00000008 }, // Found @0xffacd484, levent 0x04
 //    { 1, KEY_MENU            ,0x00000800 }, // Found @0xffacd490, levent 0x09
 //    { 1, KEY_SET             ,0x00004000 }, // Found @0xffacd49c, levent 0x08
+//    { 1, KEY_POWER           ,0x00010000 }, // Found @0xffacd4a8, levent 0x600
+//    { 1, KEY_PLAYBACK        ,0x00080000 }, // Found @0xffacd4cc, levent 0x601
 //    { 2, KEY_SHOOT_FULL      ,0x00001001 }, // Found @0xffacd52c, levent 0x01
-//    { 2, KEY_DISPLAY         ,0x00000040 }, // Found @0xffacd514, levent 0x0a
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00001000 }, // Found @0xffacd52c, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffacd4d8, levent 0x00
+//    { 2, KEY_DISPLAY         ,0x00000040 }, // Found @0xffacd514, levent 0x0a
 //    { 2, KEY_ZOOM_OUT        ,0x00002000 }, // Found @0xffacd538, levent 0x03
 //    { 2, KEY_ZOOM_IN         ,0x00004000 }, // Found @0xffacd544, levent 0x02
-//    { 2, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffacd4d8, levent 0x00
 //    { 0, 0, 0 }
 //};
 

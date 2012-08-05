@@ -56,15 +56,16 @@ DEF(recreview_hold                          ,0x00005b3c) // Found @0xffc63e24
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 1, KEY_POWER           ,0x04000000 }, // Found @0xffe51b28, levent 0x600 (uses inverted logic in physw_status)
 //    { 2, KEY_UP              ,0x00000001 }, // Found @0xffe51b38, levent 0x04
-//    { 2, KEY_MENU            ,0x00000400 }, // Found @0xffe51b80, levent 0x09
-//    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe51b60, levent 0x01
-//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe51b60, levent 0x01
 //    { 2, KEY_DOWN            ,0x00000002 }, // Found @0xffe51b40, levent 0x05
 //    { 2, KEY_RIGHT           ,0x00000004 }, // Found @0xffe51b48, levent 0x07
 //    { 2, KEY_LEFT            ,0x00000008 }, // Found @0xffe51b50, levent 0x06
-//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe51b78, levent 0x08
+//    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe51b60, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe51b60, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xffe51b58, levent 0x00
+//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe51b78, levent 0x08
+//    { 2, KEY_MENU            ,0x00000400 }, // Found @0xffe51b80, levent 0x09
 //    { 0, 0, 0 }
 //};
 

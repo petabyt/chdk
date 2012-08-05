@@ -73,6 +73,8 @@ DEF(focus_busy                              ,0x00006bb4) // Found @0xff959a8c
 //    { 2, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffb475b4, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb475b4, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffb475a8, levent 0x00
+//    { 2, KEY_POWER           ,0x00000004 }, // Found @0xffb475c0, levent 0x600 (uses inverted logic in physw_status)
+//    { 2, KEY_PLAYBACK        ,0x00000008 }, // Found @0xffb475cc, levent 0x601 (uses inverted logic in physw_status)
 //    { 0, 0, 0 }
 //};
 

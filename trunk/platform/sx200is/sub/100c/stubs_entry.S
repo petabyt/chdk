@@ -62,6 +62,8 @@ DEF(focus_busy                              ,0x000063f8) // Found @0xff92e97c
 //    { 0, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffafe418, levent 0x01
 //    { 0, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xffafe418, levent 0x01
 //    { 0, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffafe40c, levent 0x00
+//    { 0, KEY_POWER           ,0x00000400 }, // Found @0xffafe424, levent 0x600
+//    { 0, KEY_PLAYBACK        ,0x00000800 }, // Found @0xffafe430, levent 0x601
 //    { 1, KEY_UP              ,0x00000100 }, // Found @0xffafe4a8, levent 0x04
 //    { 1, KEY_LEFT            ,0x00000200 }, // Found @0xffafe4b4, levent 0x06
 //    { 1, KEY_SET             ,0x00000400 }, // Found @0xffafe4c0, levent 0x08

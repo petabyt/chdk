@@ -74,6 +74,8 @@ DEF(active_bitmap_buffer                    ,0x0000ca64) // Found @0xff29c9b4
 //    { 1, KEY_SHOOT_FULL      ,0x00300000 }, // Found @0xff4537dc, levent 0x01
 //    { 1, KEY_SHOOT_FULL_ONLY ,0x00200000 }, // Found @0xff4537dc, levent 0x01
 //    { 1, KEY_SHOOT_HALF      ,0x00100000 }, // Found @0xff4537d4, levent 0x00
+//    { 1, KEY_POWER           ,0x00400000 }, // Found @0xff4537e4, levent 0x100
+//    { 1, KEY_PLAYBACK        ,0x00800000 }, // Found @0xff4537ec, levent 0x101
 //    { 0, 0, 0 }
 //};
 

@@ -64,6 +64,8 @@ DEF(zoom_busy                               ,0x0000de7c) // Found @0xff92a31c
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 0, KEY_PLAYBACK        ,0x40000000 }, // Found @0xffa95864, levent 0x601
+//    { 0, KEY_POWER           ,0x80000000 }, // Found @0xffa95870, levent 0x600
 //    { 2, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffa95888, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffa95888, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffa9587c, levent 0x00
