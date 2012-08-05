@@ -113,8 +113,6 @@
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1   // enable fix for camera crash at startup when opening the conf / font files
                                                 // see http://chdk.setepontos.com/index.php?topic=6179.0
 
-    #define CAM_FIRMWARE_MEMINFO            1   // Use 'GetMemInfo' to get free memory size.
-
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
