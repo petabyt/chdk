@@ -485,18 +485,7 @@ int gui_osd_draw_zebra(int show)
         COLOR_BLACK
     };
 
-    // Try to get the best viewport buffer. In playmode its the _d one, in
-    // record mode we try to get the fast live one first
-    if (!mrec)
-    {
-        img_buf = vid_get_viewport_fb_d();
-    }
-    else
-    {
-        img_buf = vid_get_viewport_live_fb();
-        if ( !img_buf )
-            img_buf = vid_get_viewport_fb();
-    }
+    img_buf = vid_get_viewport_active_buffer();
 
     if (timer==0)
     {

@@ -121,7 +121,7 @@ void histogram_process()
     switch (histogram_stage)
     {
         case 0:
-            img=((mode_get()&MODE_MASK) == MODE_PLAY)?vid_get_viewport_fb_d():((camera_info.state.is_shutter_half_press)?vid_get_viewport_fb():vid_get_viewport_live_fb());
+            img=vid_get_viewport_active_buffer();
 
             if (img==NULL)
                 img = vid_get_viewport_fb();
@@ -429,7 +429,7 @@ void live_histogram_process_quick()
 	    histogram_stored_stage = histogram_stage;
     histogram_stage=HISTOGRAM_IDLE_STAGE;
 
-    img=((mode_get()&MODE_MASK) == MODE_PLAY)?vid_get_viewport_fb_d():((camera_info.state.is_shutter_half_press)?vid_get_viewport_fb():vid_get_viewport_live_fb());
+    img=vid_get_viewport_active_buffer();
     if (img==NULL){
        img = vid_get_viewport_fb();
     }

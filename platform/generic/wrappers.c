@@ -1522,7 +1522,8 @@ void __attribute__((weak)) *vid_get_bitmap_active_palette()
 
 // Get active viewport buffer address based on PLAY/REC mode.
 // Try to use 'live' buffer in REC mode if vid_get_viewport_live_fb is implemented
-void __attribute__((weak)) *vid_get_viewport_active_buffer()
+// can return NULL in plaback mode, if a video is selected
+void *vid_get_viewport_active_buffer()
 {
   void *p;
 

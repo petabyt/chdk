@@ -214,6 +214,7 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
             vid_get_viewport_image_offset,
             vid_get_viewport_row_offset,
             vid_get_viewport_yscale,
+            vid_get_viewport_active_buffer,
 
 			get_raw_image_addr,
             hook_raw_image_addr,
