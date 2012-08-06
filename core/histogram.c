@@ -435,14 +435,11 @@ void live_histogram_process_quick()
     }
 
     img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
-//    viewport_size = vid_get_viewport_height() * vid_get_viewport_buffer_width();
     viewport_size = vid_get_viewport_height() * vid_get_viewport_byte_width() * vid_get_viewport_yscale();
 
     memset( live_histogram_proc, 0, sizeof(int)*256);
 
     x = 0;	// count how many blocks we have done on the current row (to skip unused buffer space at end of each row)
-
-    viewport_size = (viewport_size<<1) + viewport_size + 1;	// quick *3 and adjust to starting from idx 1
 
     for (i=1; i<viewport_size; i+=HISTO_STEP_SIZE*6) {
        y = img[i];
