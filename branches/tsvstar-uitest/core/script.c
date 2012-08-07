@@ -394,7 +394,7 @@ void make_param_filename( enum FilenameMakeModeEnum mode, const char* fn, int pa
 		case MAKE_PARAMSETNUM_FILENAME:
 			tgt_buf = cfg_name;
 			base_path = SCRIPT_DATA_PATH;
-			strcpy(extbuf,".set");
+			strcpy(extbuf,".cfg");
 			break;			
 		case MAKE_PARAMSET_NAMES_FILENAME:
 			tgt_buf = cfg_name;

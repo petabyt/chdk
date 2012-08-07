@@ -30,6 +30,8 @@
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_MANUAL_FOCUS
+    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
+    #define CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY 1 //exact meaning: SD override works in AF lock or movie mode
     #undef  CAM_HAS_USER_TV_MODES
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1

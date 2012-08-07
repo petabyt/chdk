@@ -278,8 +278,7 @@ static int calc_edge_overlay()
 {
     int shutter_fullpress = kbd_is_key_pressed(KEY_SHOOT_FULL);
 
-    const int bPlayMode = (mode_get() & MODE_MASK) == MODE_PLAY;
-    const unsigned char* img = bPlayMode ? vid_get_viewport_fb_d() :  vid_get_viewport_fb();
+    const unsigned char* img = vid_get_viewport_active_buffer();
     const unsigned char*  ptrh1 = NULL;    // previous pixel line
     const unsigned char*  ptrh2 = NULL;    // current pixel line
     const unsigned char*  ptrh3 = NULL;    // next pixel line

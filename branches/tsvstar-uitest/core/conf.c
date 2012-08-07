@@ -299,7 +299,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(156, conf.clock_indicator,        CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(157, conf.clock_halfpress,        CONF_DEF_VALUE, i:1, NULL),
     
-    CONF_INFO(158, conf.autoiso_enable,             CONF_DEF_VALUE,     i:1, NULL),
+    CONF_INFO(158, conf.autoiso_enable,             CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(159, conf.autoiso_shutter_enum,       CONF_DEF_VALUE,     i:5, NULL), // 5='1/125'
     CONF_INFO(160, conf.autoiso_user_factor,        CONF_DEF_VALUE,     i:5, NULL),
     CONF_INFO(161, conf.autoiso_is_factor,          CONF_DEF_VALUE,     i:2, NULL),

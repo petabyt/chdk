@@ -20,6 +20,7 @@
 #include "gui_lang.h"
 #include "gui_draw.h"
 #include "module_load.h"
+#include "histogram.h"
 
 #include "../lib/lua/lstate.h"  // for L->nCcalls, baseCcalls
 
@@ -1251,6 +1252,29 @@ static int luaCB_shot_histo_enable( lua_State* L )
   return 0;
 }
 
+/*
+histogram,total=get_live_histo()
+returns a histogram of Y values from the viewport buffer (downsampled by HISTO_STEP_SIZE)
+histogram[Y value] = count, so it is zero based unlike a normal lua array
+total is the total number of pixels, may vary depending on viewport size
+*/
+static int luaCB_get_live_histo( lua_State* L )
+{
+  int *h = malloc(256*sizeof(int));
+  if(!h) {
+      return luaL_error(L,"malloc fail");
+  }
+  int total=live_histogram_read_y(h);
+  lua_createtable(L, 0, 256);
+  int i;
+  for(i=0;i<256;i++) {
+    lua_pushnumber(L,h[i]);
+    lua_rawseti(L,-2,i);
+  }
+  lua_pushnumber(L,total);
+  return 2;
+}
+
 static int luaCB_play_sound( lua_State* L )
 {
   play_sound(luaL_checknumber( L, 1 ));
@@ -2248,6 +2272,7 @@ static const luaL_Reg chdk_funcs[] = {
  
     FUNC(get_histo_range)
     FUNC(shot_histo_enable)
+    FUNC(get_live_histo)
     FUNC(play_sound)
     FUNC(get_temperature)
     FUNC(peek)

@@ -28,6 +28,7 @@ NSTUB(kbd_pwr_off                             ,0xff86043c) //  2 64%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00032578) // Found @0xff833584
 DEF(physw_run                               ,0x00001c44) // Found @0xff8331f4
+DEF(physw_sleep_delay                       ,0x00001c42) // Found @0xff8331f4
 DEF(levent_table                            ,0xffb95fe0) // Found @0xffb95fe0
 DEF(FlashParamsTable                        ,0xffbe73c0) // Found @0xffbe73c0
 DEF(movie_status                            ,0x00006d90) // Found @0xff962a78
@@ -73,6 +74,8 @@ DEF(focus_busy                              ,0x00006bb4) // Found @0xff959c48
 //    { 2, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffb47770, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb47770, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffb47764, levent 0x00
+//    { 2, KEY_POWER           ,0x00000004 }, // Found @0xffb4777c, levent 0x600 (uses inverted logic in physw_status)
+//    { 2, KEY_PLAYBACK        ,0x00000008 }, // Found @0xffb47788, levent 0x601 (uses inverted logic in physw_status)
 //    { 0, 0, 0 }
 //};
 

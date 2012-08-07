@@ -8,4 +8,6 @@ Mind this.
 - CHDK for firmware 1.00d is the SAME for 1.00e
 
 
-
+Subject distance override
+ - always works in movie mode
+ - needs activated AF lock in still image mode

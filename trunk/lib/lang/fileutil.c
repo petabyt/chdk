@@ -124,7 +124,7 @@ void save_int_value_file( char* filename, int value )
 
 	sprintf(buf,"%d", value);
 
-	int fd = open( filename, O_WRONLY|O_CREAT, 0777);
+	int fd = open( filename, O_WRONLY|O_CREAT|O_TRUNC, 0777);
 	if (fd>=0) 
 	{
 		write(fd, buf, strlen(buf));

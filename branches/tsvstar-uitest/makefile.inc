@@ -202,6 +202,10 @@ ifdef OPT_DBG_DUMP
 CFLAGS+=-DOPT_DBG_DUMP
 endif
 
+ifdef OPT_DBG_LUA_ASSERT
+CFLAGS+=-DOPT_DBG_LUA_ASSERT
+endif
+
 ifdef OPT_WARNINGS
      ifeq ($(GCC_VERSION_MAJOR),3)
            CFLAGS+=-Wwrite-strings -Wsign-compare -Wunused -Wno-unused-parameter

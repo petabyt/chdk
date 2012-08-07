@@ -12,7 +12,7 @@
   4 "Live-Histogramm-Einstellungen"
   5 "Zebra-Modus-Einstellungen"
   6 "Skript-Einstellungen"
-  7 "Anzeige-Einstellungen"
+  7 "CHDK-OSD-Farben"
   8 "Verschiedene Einstellungen"
   9 "Debugging-Einstellungen"
  10 "Standardwerte zurücksetzen..."
@@ -65,12 +65,12 @@
  47 "aktuelles Skript"
  48 "Skript-Parameter"
 
- 49 "Anzeige-Einstellungen"
+ 49 "CHDK-OSD-Farben"
 
  50 "Sprache..."
  51 "OSD-Codepage"
  52 "Lade RBF-Schriftart..."
- 53 "Farben"
+ 53 "einstellbare Farben"
  54 "OSD-Text"
  55 "OSD-Hintergrund"
  56 "Histogramm"
@@ -275,8 +275,8 @@
 217 "Zeige Hyperfocal-Dist. in Div."
 218 "Zeige Schärfentiefe in Div."
 
-219 "Diverse Werte"
-220 "Diverse Werte"
+219 "Fototechnische Werte"
+220 "Fototechnische Werte"
 221 "Zeige im Rückblick-Modus"
 222 "Zeige Zoom"
 223 "Zeige 'reale' Blende"
@@ -290,14 +290,14 @@
 231 "Zeige überbel. Wert (kein Blitz!)"
 232 "Zeige Szenen-Luminanz"
 
-233 "Video-Einstellungen"
-234 "Video-Einstellungen"
+233 "Erweiterte Video-Funktionen"
+234 "Erweiterte Video-Funktionen"
 235 "Video-Modus"
 236 "Video-Bitrate"
 237 "Video-Qualität"
 
-238 "Extra-Foto"
-239 "Extra-Foto-Einstellungen"
+238 "Erweiterte Foto-Funktionen"
+239 "Erweiterte Foto-Funktionen"
 240 "Ersetze Verschlusszeit"
 241 "   Multiplikator"
 242 "Ersetze Blenden-Wert"
@@ -306,8 +306,8 @@
 245 "Ersetze Fokus-Distanz"
 246 "   Eingabeschrittweite"
 
-247 "Reihe im fortlauf. Modus"
-248 "Reihe im fortlauf. Modus"
+247 "Reihe im Serienbildmodus"
+248 "Reihe im Serienbildmodus"
 249 "Tv-Reihe Betrag"
 250 "Av-Reihe Betrag"
 251 "ISO-Reihe Betrag"
@@ -571,7 +571,7 @@
 448 "[UP][DOWN] Farbe wählen"
 449 "[SET]      nächste Reihe"
 450 "KEINE FARBEN DOPPELT"
-451 "Dateien zurücksetzen ..."
+451 "Zeichensätze zurücksetzen ..."
 452 "Kamera neu starten ..."
 453 "Erzwinge manuellen Blitz"
 
@@ -602,7 +602,7 @@
 473 "Optionen"
 
 474 "Text-Box-Einstellungen"
-475 "Auswahl Textbox Zeichensatz"
+475 "Textbox-Zeichensatz"
 476 "Mehr ->"
 477 "Erzeuge Verzeichnis"
 478 "Umbenennen"
@@ -692,7 +692,7 @@
 553 "DNG-Version"
 554 "Menü-Einstellungen"
 555 "Zeige <ALT>-Hilfe"
-556 "   Verzögerung Hilfe-Anzeige"
+556 "   Verzögerung Anzeige"
 557 "CHDK-Einstellungen"
 
 // <ALT> mode help screen text
@@ -709,3 +709,6 @@
 
 568 "'%s'\nzum Benutzer-Menü hinzugefügt"
 569 "Benutzer-Menü ist voll"
+
+570 "SD-Karte"
+571 "Sprache & Zeichensatz"

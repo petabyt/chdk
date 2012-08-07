@@ -47,6 +47,8 @@
 
 #define KEY_SHOOT_FULL_ONLY 38  // As KEY_SHOOT_FULL but press/release KEY_SHOOT_HALF is not included
 
+#define KEY_POWER           39
+
 #define JOGDIAL_LEFT    100
 #define JOGDIAL_RIGHT   101
 #define FRONTDIAL_LEFT    102

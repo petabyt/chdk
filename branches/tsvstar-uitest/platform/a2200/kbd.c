@@ -41,7 +41,7 @@ extern void _GetKbdState(long*);
 static char kbd_stack[NEW_SS];
 #endif
 
-extern void usb_remote_key( int ) ;
+extern void usb_remote_key( void ) ;
 int get_usb_bit()
 {
         long usb_physw[3];

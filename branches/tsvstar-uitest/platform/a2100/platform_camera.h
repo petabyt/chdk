@@ -131,10 +131,6 @@
 												
 												
 #define  PARAM_CAMERA_NAME                  4      // parameter number for GetParameterData to get camera name
-    #define CAM_FIRMWARE_MEMINFO    1                 // Use 'GetMemInfo' (dryos) or 'memPartInfoGet'/'memPartFindMax' (vxworks)
-                                                 // function in firmware to get free memory details
-                                                 // GetMemInfo should be found correctly by the gensig/finsig signature
-                                                 // finder for all dryos based cameras.
 
 
 //#undef CAM_DRIVE_MODE_FROM_TIMER_MODE            // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.

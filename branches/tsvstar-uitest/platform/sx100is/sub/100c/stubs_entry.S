@@ -29,6 +29,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00010c1c) // Found @0xffc130f4
 DEF(physw_run                               ,0x00001ca4) // Found @0xffc12da0
+DEF(physw_sleep_delay                       ,0x00001ca2) // Found @0xffc12da0
 DEF(levent_table                            ,0xffe7cb64) // Found @0xffe7cb64
 DEF(FlashParamsTable                        ,0xffe9e9dc) // Found @0xffe9e9dc
 DEF(movie_status                            ,0x00005588) // Found @0xffc4abe4
@@ -64,6 +65,8 @@ DEF(focus_busy                              ,0x0000a318) // Found @0xffd0835c
 //    { 0, KEY_SHOOT_FULL      ,0x0000000c }, // Found @0xffe5f93c, levent 0x01
 //    { 0, KEY_SHOOT_FULL_ONLY ,0x00000008 }, // Found @0xffe5f93c, levent 0x01
 //    { 0, KEY_SHOOT_HALF      ,0x00000004 }, // Found @0xffe5f934, levent 0x00
+//    { 0, KEY_POWER           ,0x00004000 }, // Found @0xffe5f944, levent 0x600 (uses inverted logic in physw_status)
+//    { 0, KEY_PLAYBACK        ,0x00800000 }, // Found @0xffe5f95c, levent 0x601 (uses inverted logic in physw_status)
 //    { 1, KEY_ZOOM_IN         ,0x00000100 }, // Found @0xffe5f98c, levent 0x02
 //    { 1, KEY_ZOOM_OUT        ,0x00000200 }, // Found @0xffe5f994, levent 0x03
 //    { 1, KEY_SET             ,0x00010000 }, // Found @0xffe5f99c, levent 0x08

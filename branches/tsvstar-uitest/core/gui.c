@@ -759,7 +759,7 @@ static CMenuItem sdcard_submenu_items[] = {
     {0},
 };
 
-static CMenu sdcard_submenu = {0x33,(int)"SD Card", NULL, sdcard_submenu_items };
+static CMenu sdcard_submenu = {0x33,LANG_SD_CARD, NULL, sdcard_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -866,7 +866,7 @@ static CMenuItem misc_submenu_items[] = {
 #endif
     MENU_ITEM   (0x80,LANG_MENU_MISC_BUILD_INFO,            MENUITEM_PROC,                  gui_show_build_info, 0 ),
     MENU_ITEM   (0x80,LANG_MENU_MISC_MEMORY_INFO,           MENUITEM_PROC,                  gui_show_memory_info, 0 ),
-    MENU_ITEM   (0x33,(int)"SD Card",                       MENUITEM_SUBMENU,               &sdcard_submenu,                    0 ),
+    MENU_ITEM   (0x33,LANG_SD_CARD,                         MENUITEM_SUBMENU,               &sdcard_submenu,                    0 ),
 #ifdef OPT_DEBUGGING
     MENU_ITEM   (0x2a,LANG_MENU_MAIN_DEBUG,                 MENUITEM_SUBMENU,               &debug_submenu,                     0 ),
 #endif
@@ -1259,6 +1259,45 @@ const char* gui_override_disable(int change, int arg)
 	return rv;
 }
 
+#if defined(OPT_CURVES)
+
+static const char* gui_conf_curve_enum(int change, int arg) {
+    static const char* modes[]={ "None", "Custom", "+1EV", "+2EV", "Auto DR" };
+
+    gui_enum_value_change(&conf.curve_enable,change,sizeof(modes)/sizeof(modes[0]));
+
+	if (change)
+        if (module_curves_load())
+		    libcurves->curve_init_mode();
+    return modes[conf.curve_enable];
+}
+
+static void gui_load_curve_selected(const char *fn)
+{
+	if (fn) {
+		// TODO we could sanity check here, but curve_set_type should fail gracefullish
+		strcpy(conf.curve_file,fn);
+		if (conf.curve_enable == 1)
+            if (module_curves_load())
+	    	    libcurves->curve_init_mode();
+	}
+}
+
+static void gui_load_curve(int arg)
+{
+    module_fselect_init(LANG_STR_SELECT_CURVE_FILE, conf.curve_file, CURVE_DIR, gui_load_curve_selected);
+}
+
+static CMenuItem curve_submenu_items[] = {
+    MENU_ITEM(0x5f,LANG_MENU_CURVE_ENABLE,        MENUITEM_ENUM,      gui_conf_curve_enum, &conf.curve_enable ),
+    MENU_ITEM(0x35,LANG_MENU_CURVE_LOAD,          MENUITEM_PROC,      gui_load_curve, 0 ),
+    MENU_ITEM(0x51,LANG_MENU_BACK,                MENUITEM_UP, 0, 0 ),
+    {0}
+};
+
+static CMenu curve_submenu = {0x85,LANG_MENU_CURVE_PARAM_TITLE, NULL, curve_submenu_items };
+
+#endif
 
 #if CAM_HAS_ND_FILTER
 static const char* gui_nd_filter_state_modes[] =            { "Off", "In", "Out" };
@@ -1302,6 +1341,9 @@ static CMenuItem operation_submenu_items[] = {
 #endif
 #if CAM_QUALITY_OVERRIDE
     MENU_ENUM2  (0x5c,LANG_MENU_MISC_IMAGE_QUALITY,         &conf.fast_image_quality, gui_fast_image_quality_modes ),
+#endif
+#ifdef OPT_CURVES
+    MENU_ITEM   (0x85,LANG_MENU_CURVE_PARAM,                MENUITEM_SUBMENU,   &curve_submenu,     0 ),
 #endif
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,        0,                                  0 ),
     {0}
@@ -1411,84 +1453,9 @@ static CMenu grid_submenu = {0x2f,LANG_MENU_GRID_TITLE, NULL, grid_submenu_items
 
 //-------------------------------------------------------------------
 
-static void gui_draw_lang_selected(const char *fn)
-{
-    if (fn) {
-        strcpy(conf.lang_file, fn);
-        lang_load_from_file(conf.lang_file);
-        gui_menu_init(NULL);
-    }
-}
-
-static void gui_draw_load_lang(int arg)
-{
-    module_fselect_init(LANG_STR_SELECT_LANG_FILE, conf.lang_file, "A/CHDK/LANG", gui_draw_lang_selected);
-}
-
-static const char* gui_font_enum(int change, int arg)
-{
-    static const char* fonts[]={ "Win1250", "Win1251", "Win1252", "Win1253", "Win1254", "Win1257"};
-
-    gui_enum_value_change(&conf.font_cp,change,sizeof(fonts)/sizeof(fonts[0]));
-
-    if (change != 0) {
-        font_set(conf.font_cp);
-        rbf_load_from_file(conf.menu_rbf_file, FONT_CP_WIN);
-        gui_menu_init(NULL);
-    }
-
-    return fonts[conf.font_cp];
-}
-
-static void gui_draw_menu_rbf_selected(const char *fn)
-{
-    if (fn) {
-        strcpy(conf.menu_rbf_file, fn);
-        rbf_load_from_file(conf.menu_rbf_file, FONT_CP_WIN);
-        gui_menu_init(NULL);
-    }
-}
-
-static void gui_draw_load_menu_rbf(int arg)
-{
-    module_fselect_init(LANG_STR_SELECT_FONT_FILE, conf.menu_rbf_file, "A/CHDK/FONTS", gui_draw_menu_rbf_selected);
-}
-
-static void gui_draw_symbol_rbf_selected(const char *fn)
-{
-    if (fn) {
-        strcpy(conf.menu_symbol_rbf_file, fn);
-        if(!rbf_load_symbol(conf.menu_symbol_rbf_file)) conf.menu_symbol_enable=0;		//AKA
-        gui_menu_init(NULL);
-    }
-}
-
-static void gui_draw_load_symbol_rbf(int arg)
-{
-    module_fselect_init(LANG_STR_SELECT_SYMBOL_FILE, conf.menu_symbol_rbf_file, "A/CHDK/SYMBOLS", gui_draw_symbol_rbf_selected);
-}
-
-static void gui_menuproc_reset_files(int arg)
-{
-    conf.lang_file[0] = 0;
-    strcpy(conf.menu_symbol_rbf_file,DEFAULT_SYMBOL_FILE);
-    conf.menu_rbf_file[0] = 0;
-    conf_save();
-    gui_mbox_init(LANG_INFORMATION, LANG_MENU_RESTART_CAMERA, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-}
-
-static const char* gui_text_box_charmap[] = { "Default", "German", "Russian" };
-
 static CMenuItem visual_submenu_items[] = {
-    MENU_ITEM(0x35,LANG_MENU_VIS_LANG,                MENUITEM_PROC,      gui_draw_load_lang, 0 ),
-    MENU_ITEM(0x5f,LANG_MENU_VIS_OSD_FONT,            MENUITEM_ENUM,      gui_font_enum, &conf.font_cp ),
-    MENU_ITEM(0x35,LANG_MENU_VIS_MENU_FONT,           MENUITEM_PROC,      gui_draw_load_menu_rbf, 0 ),
-    MENU_ITEM(0x64,LANG_MENU_VIS_SYMBOL,              MENUITEM_BOOL,      &conf.menu_symbol_enable, 0 ),
-    MENU_ITEM(0x35,LANG_MENU_VIS_MENU_SYMBOL_FONT,    MENUITEM_PROC,      gui_draw_load_symbol_rbf, 0 ),
-    MENU_ENUM2(0x5f,LANG_MENU_VIS_CHARMAP,            &conf.tbox_char_map, gui_text_box_charmap ),
-    MENU_ITEM(0x80,LANG_MENU_RESET_FILES,             MENUITEM_PROC, 	  gui_menuproc_reset_files, 0 ),
-    MENU_ITEM(0x0,LANG_MENU_VIS_COLORS,               MENUITEM_SEPARATOR, 0, 0 ),
     MENU_ITEM(0x65,LANG_MENU_MISC_PALETTE,            MENUITEM_PROC,      gui_menu_run_fltmodule, "palette.flt" ),
+    MENU_ITEM(0x0,LANG_MENU_VIS_COLORS,               MENUITEM_SEPARATOR, 0, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_TEXT,            MENUITEM_COLOR_FG,  &conf.osd_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_BKG,             MENUITEM_COLOR_BG,  &conf.osd_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_WARNING,         MENUITEM_COLOR_FG,  &conf.osd_color_warn, 0 ),
@@ -1731,47 +1698,6 @@ static CMenu raw_submenu = {0x24,LANG_MENU_RAW_TITLE, NULL, raw_submenu_items };
 
 //-------------------------------------------------------------------
 
-#if defined(OPT_CURVES)
-
-static const char* gui_conf_curve_enum(int change, int arg) {
-    static const char* modes[]={ "None", "Custom", "+1EV", "+2EV", "Auto DR" };
-
-    gui_enum_value_change(&conf.curve_enable,change,sizeof(modes)/sizeof(modes[0]));
-
-	if (change)
-        if (module_curves_load())
-		    libcurves->curve_init_mode();
-    return modes[conf.curve_enable];
-}
-
-static void gui_load_curve_selected(const char *fn)
-{
-	if (fn) {
-		// TODO we could sanity check here, but curve_set_type should fail gracefullish
-		strcpy(conf.curve_file,fn);
-		if (conf.curve_enable == 1)
-            if (module_curves_load())
-	    	    libcurves->curve_init_mode();
-	}
-}
-
-static void gui_load_curve(int arg)
-{
-    module_fselect_init(LANG_STR_SELECT_CURVE_FILE, conf.curve_file, CURVE_DIR, gui_load_curve_selected);
-}
-
-static CMenuItem curve_submenu_items[] = {
-    MENU_ITEM(0x5f,LANG_MENU_CURVE_ENABLE,        MENUITEM_ENUM,      gui_conf_curve_enum, &conf.curve_enable ),
-    MENU_ITEM(0x35,LANG_MENU_CURVE_LOAD,          MENUITEM_PROC,      gui_load_curve, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                MENUITEM_UP, 0, 0 ),
-    {0}
-};
-
-static CMenu curve_submenu = {0x85,LANG_MENU_CURVE_PARAM_TITLE, NULL, curve_submenu_items };
-
-#endif
-//-------------------------------------------------------------------
-
 void cb_zebra_restore_screen()
 {
     if (!conf.zebra_restore_screen)
@@ -1804,6 +1730,90 @@ static CMenu zebra_submenu = {0x26,LANG_MENU_ZEBRA_TITLE, NULL, zebra_submenu_it
 
 //-------------------------------------------------------------------
 
+static void gui_draw_lang_selected(const char *fn)
+{
+    if (fn) {
+        strcpy(conf.lang_file, fn);
+        lang_load_from_file(conf.lang_file);
+        gui_menu_init(NULL);
+    }
+}
+
+static void gui_draw_load_lang(int arg)
+{
+    module_fselect_init(LANG_STR_SELECT_LANG_FILE, conf.lang_file, "A/CHDK/LANG", gui_draw_lang_selected);
+}
+
+static const char* gui_font_enum(int change, int arg)
+{
+    static const char* fonts[]={ "Win1250", "Win1251", "Win1252", "Win1253", "Win1254", "Win1257"};
+
+    gui_enum_value_change(&conf.font_cp,change,sizeof(fonts)/sizeof(fonts[0]));
+
+    if (change != 0) {
+        font_set(conf.font_cp);
+        rbf_load_from_file(conf.menu_rbf_file, FONT_CP_WIN);
+        gui_menu_init(NULL);
+    }
+
+    return fonts[conf.font_cp];
+}
+
+static void gui_draw_menu_rbf_selected(const char *fn)
+{
+    if (fn) {
+        strcpy(conf.menu_rbf_file, fn);
+        rbf_load_from_file(conf.menu_rbf_file, FONT_CP_WIN);
+        gui_menu_init(NULL);
+    }
+}
+
+static void gui_draw_load_menu_rbf(int arg)
+{
+    module_fselect_init(LANG_STR_SELECT_FONT_FILE, conf.menu_rbf_file, "A/CHDK/FONTS", gui_draw_menu_rbf_selected);
+}
+
+static void gui_draw_symbol_rbf_selected(const char *fn)
+{
+    if (fn) {
+        strcpy(conf.menu_symbol_rbf_file, fn);
+        if(!rbf_load_symbol(conf.menu_symbol_rbf_file)) conf.menu_symbol_enable=0;		//AKA
+        gui_menu_init(NULL);
+    }
+}
+
+static void gui_draw_load_symbol_rbf(int arg)
+{
+    module_fselect_init(LANG_STR_SELECT_SYMBOL_FILE, conf.menu_symbol_rbf_file, "A/CHDK/SYMBOLS", gui_draw_symbol_rbf_selected);
+}
+
+static void gui_menuproc_reset_files(int arg)
+{
+    conf.lang_file[0] = 0;
+    strcpy(conf.menu_symbol_rbf_file,DEFAULT_SYMBOL_FILE);
+    conf.menu_rbf_file[0] = 0;
+    conf_save();
+    gui_mbox_init(LANG_INFORMATION, LANG_MENU_RESTART_CAMERA, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+}
+
+static const char* gui_text_box_charmap[] = { "Default", "German", "Russian" };
+
+static CMenuItem menu_font_submenu_items[] = {
+    MENU_ITEM(0x35,LANG_MENU_VIS_LANG,                MENUITEM_PROC,      gui_draw_load_lang, 0 ),
+    MENU_ITEM(0x5f,LANG_MENU_VIS_OSD_FONT,            MENUITEM_ENUM,      gui_font_enum, &conf.font_cp ),
+    MENU_ITEM(0x35,LANG_MENU_VIS_MENU_FONT,           MENUITEM_PROC,      gui_draw_load_menu_rbf, 0 ),
+    MENU_ITEM(0x64,LANG_MENU_VIS_SYMBOL,              MENUITEM_BOOL,      &conf.menu_symbol_enable, 0 ),
+    MENU_ITEM(0x35,LANG_MENU_VIS_MENU_SYMBOL_FONT,    MENUITEM_PROC,      gui_draw_load_symbol_rbf, 0 ),
+    MENU_ENUM2(0x5f,LANG_MENU_VIS_CHARMAP,            &conf.tbox_char_map, gui_text_box_charmap ),
+    MENU_ITEM(0x80,LANG_MENU_RESET_FILES,             MENUITEM_PROC, 	  gui_menuproc_reset_files, 0 ),
+    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
+    {0}
+};
+
+static CMenu menu_font_submenu = {0x28,LANG_MENU_FONT_SETTINGS, NULL, menu_font_submenu_items };
+
+//-------------------------------------------------------------------
+
 static const char* gui_user_menu_show_enum(int change, int arg)
 {
     static const char* modes[]={ "Off", "On","On Direct", "Edit" };
@@ -1824,6 +1834,7 @@ static CMenuItem menu_settings_submenu_items[] = {
     MENU_ITEM(0x5c,LANG_MENU_MENUEDIT_POPUP,        MENUITEM_BOOL,          &conf.menuedit_popup, 0 ),
     MENU_ITEM(0x5c,LANG_MENU_SHOW_ALT_HELP,         MENUITEM_BOOL,          &conf.show_alt_helper, 0 ),
     MENU_ITEM(0x58,LANG_MENU_SHOW_ALT_HELP_DELAY,   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.show_alt_helper_delay, MENU_MINMAX(0, 10) ),
+    MENU_ITEM(0x28,LANG_MENU_FONT_SETTINGS,         MENUITEM_SUBMENU,       &menu_font_submenu, 0 ),
     MENU_ITEM(0x51,LANG_MENU_BACK,                  MENUITEM_UP, 0, 0 ),
     {0}
 };
@@ -1870,8 +1881,8 @@ static const char* gui_alt_mode_button_enum(int change, int arg)
     static const char* names[]={ "Video", "Display", "Playback", "Video"};
     static const int keys[] = {KEY_PRINT, KEY_DISPLAY, KEY_PLAYBACK, KEY_VIDEO};
 #elif defined(CAMERA_ixus115_elph100hs) 
-    static const char* names[]={ "Playback", "Video", "Menu+Zoom" }; 
-    static const int keys[] = {KEY_PLAYBACK, KEY_VIDEO, KEY_PRINT}; 
+    static const char* names[]={ "Playback", "Video", "Set+ZoomIn" };
+    static const int keys[] = {KEY_PLAYBACK, KEY_VIDEO, KEY_SET | KEY_ZOOM_IN };
 #elif defined(CAMERA_ixus120_sd940) 
     static const char* names[]={ "Display", "Playback" }; 
     static const int keys[] = {KEY_DISPLAY, KEY_PLAYBACK };
@@ -1928,9 +1939,6 @@ static CMenuItem chdk_settings_menu_items[] = {
     MENU_ITEM   (0x28,LANG_MENU_MAIN_VISUAL_PARAM,          MENUITEM_SUBMENU,   &visual_submenu, 0 ),
     MENU_ITEM   (0x28,LANG_MENU_MENU_SETTINGS,              MENUITEM_SUBMENU,   &menu_settings_submenu, 0 ),
     MENU_ITEM   (0x2f,LANG_MENU_OSD_GRID_PARAMS,            MENUITEM_SUBMENU,   &grid_submenu, 0 ),
-#ifdef OPT_CURVES
-    MENU_ITEM   (0x85,LANG_MENU_CURVE_PARAM,                MENUITEM_SUBMENU,   &curve_submenu,     0 ),
-#endif
 #ifdef CAM_HAS_GPS
     MENU_ITEM	(0x2a,LANG_MENU_GPS,                        MENUITEM_SUBMENU,	&gps_submenu,		0 ),
 #endif

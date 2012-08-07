@@ -28,7 +28,7 @@ extern void _GetKbdState(long*);
 #define USB_MASK            0x10000000 // Found @0xff464d94, levent 0x202
 #define USB_IDX             2
 
-extern void usb_remote_key( int ) ;
+extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
 	long usb_physw[3];
@@ -55,6 +55,8 @@ static KeyMap keymap[] = {
     { 0, KEY_ZOOM_OUT        ,0x00200000 }, // Found @0xff464cf4, levent 0x03
 	{ 0, KEY_PRINT		     ,0x01000000 },
 
+    { 2, KEY_POWER           ,0x00000800 }, // Found @0xff464d34, levent 0x100
+    { 2, KEY_PLAYBACK        ,0x00008000 }, // Found @0xff464d54, levent 0x101
     { 2, KEY_SHOOT_FULL      ,0x000c0000 }, // Found @0xff464d64, levent 0x01
     { 2, KEY_SHOOT_FULL_ONLY ,0x00080000 }, // Found @0xff464d64, levent 0x01
     { 2, KEY_SHOOT_HALF      ,0x00040000 }, // Found @0xff464d5c, levent 0x00
@@ -69,7 +71,7 @@ long __attribute__((naked)) wrap_kbd_p1_f() ;
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
 	while (physw_run){
-		_SleepTask(*((int*)0x1c18)); //10);
+		_SleepTask(physw_sleep_delay);
 
 		if (wrap_kbd_p1_f() == 1){ // autorepeat ?
 			_kbd_p2_f();
@@ -150,7 +152,7 @@ void my_kbd_read_keys()
 
 	//_kbd_read_keys_r2(physw_status);
 
-	usb_remote_key(physw_status[USB_IDX]) ;
+	usb_remote_key() ;
 
     physw_status[SD_READONLY_IDX] = physw_status[SD_READONLY_IDX] & ~SD_READONLY_FLAG;
 	if (conf.remote_enable) {
@@ -272,10 +274,6 @@ long kbd_get_autoclicked_key() {
 			return 0;
 		}
 	}
-}
-
-long kbd_use_zoom_as_mf() {
- return 0;
 }
 
 static short new_jogdial = 0, old_jogdial = 0, new_frontdial = 0, old_frontdial = 0;

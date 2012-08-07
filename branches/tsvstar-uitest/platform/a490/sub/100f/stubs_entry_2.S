@@ -2,15 +2,8 @@
 #define NULL_SUB 0xFFC00B20
 
 // Override stubs_entry.S
-NHSTUB(EnterToCompensationEVF,      0xFFC27604)
-NHSTUB(GetBatteryTemperature,       NULL_SUB) // Maybe 0xFFC455B0 works???
 NHSTUB(GetDrive_FreeClusters,       0xFFC5131C)
-NHSTUB(SetScriptMode,               0xFFC00F70)
-NHSTUB(TurnOffBackLight,            0xFFC77F9C)
-NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
-NHSTUB(kbd_read_keys_r2,            0xFFC42FB0)
-NHSTUB(rename,                      0xFFC261E8)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)

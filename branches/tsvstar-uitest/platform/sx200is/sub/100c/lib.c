@@ -79,25 +79,59 @@ char *camera_jpeg_count_str()
  return (void*)0x5408C;                                      // found at FF9C1F28
 }
 
-// PTP display stuff, untested, adapted from ewavr chdkcam patch
-// reyalp - type probably wrong, chdkcam patch suggests opposite order from a540 (e.g. vuya)
-int vid_get_palette_type() { return 2; }
-int vid_get_palette_size() { return 16*4; }
+// PTP display stuff
+int vid_get_palette_type() { return 3; }
+int vid_get_palette_size() { return 256*4; }
+
+/*void *vid_get_bitmap_active_palette() // used from load_chdk_palette
+{
+    return (void *)*(unsigned int*)(0x5744+0x28);  //FF8E6198, FF8E6230
+}*/
 
 void *vid_get_bitmap_active_buffer()
 {
     return (void*)(*(int*)(0x5744+0x14)); //"Add: %p Width : %ld Hight : %ld", FF8E62DC
 }
 
-// values from chdkcam patch
-// commented for now, protocol changes needed to handle correctly
-// note, play mode may be 704, needs to be tested
-#if 0
-int vid_get_viewport_width_proper() { 
-    return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:*(int*)0x2150; // VRAM W DataSize
-}
-int vid_get_viewport_height_proper() {
-    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x2150+4); // VRAM H DataSize
-}
-#endif
+extern int _GetVRAMHPixelsSize();
+extern int _GetVRAMVPixelsSize();
 
+int vid_get_viewport_fullscreen_width() {
+    int mode = mode_get()&MODE_MASK;
+    int mode_shoot = mode_get()&MODE_SHOOTING_MASK;
+    return ((mode == MODE_PLAY) ||
+        (mode != MODE_PLAY && mode_shoot == MODE_SCN_STITCH))?720:_GetVRAMHPixelsSize();
+}
+
+int vid_get_viewport_fullscreen_height() {
+    int mode = mode_get()&MODE_MASK;
+    int mode_shoot = mode_get()&MODE_SHOOTING_MASK;
+    return ((mode == MODE_PLAY) ||
+        (mode != MODE_PLAY && mode_shoot == MODE_SCN_STITCH))?240:_GetVRAMVPixelsSize();
+}
+
+int vid_get_viewport_display_xoffset_proper() {
+    int val=0;
+    int mode = mode_get()&MODE_MASK;
+    int mode_shoot = mode_get()&MODE_SHOOTING_MASK;
+    if(mode != MODE_PLAY && mode_shoot == MODE_SCN_STITCH) {
+        short dir=0;
+        short seq=0;
+        get_property_case(PROPCASE_STITCH_DIRECTION,&dir,sizeof(dir));
+        get_property_case(PROPCASE_STITCH_SEQUENCE,&seq,sizeof(seq));
+        // overall stitch window is 3/4 screen width, centered
+        // live part is 1/2, so margin is either 1/8th or 3/8th
+        if(dir==0) {
+            val = seq?270:90;
+        } else {
+            val = seq?90:270;
+        }
+    }
+    return val;
+}
+
+int vid_get_viewport_display_yoffset_proper() {
+    int mode = mode_get()&MODE_MASK;
+    int mode_shoot = mode_get()&MODE_SHOOTING_MASK;
+    return (mode != MODE_PLAY && mode_shoot == MODE_SCN_STITCH)?70:0; // window is 120, not centered
+}
