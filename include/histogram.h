@@ -10,5 +10,6 @@ extern void gui_osd_draw_histo();
 void live_histogram_process_quick();
 void live_histogram_end_process();
 int live_histogram_get_range(int from, int to);
+int live_histogram_read_y(int *buf);
 
 #endif
