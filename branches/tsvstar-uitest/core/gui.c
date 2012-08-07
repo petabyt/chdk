@@ -30,6 +30,7 @@
 #endif
 #include "usb_remote.h"
 #include "module_load.h"
+#include "profiles.h"
 
 //-------------------------------------------------------------------
 
@@ -1934,6 +1935,7 @@ static void gui_menuproc_reset(int arg)
 }
 
 static CMenuItem chdk_settings_menu_items[] = {
+    MENU_ITEM   (0x28,LANG_MENU_PROFILE_MANAGER,	        MENUITEM_PROC,      gui_menu_run_fltmodule, "profiles.flt" ),
     MENU_ITEM   (0x22,LANG_MENU_MAIN_OSD_PARAM,             MENUITEM_SUBMENU,   &osd_submenu, 0 ),
     MENU_ITEM   (0x72,LANG_MENU_OSD_LAYOUT_EDITOR,          MENUITEM_PROC,      gui_menu_run_fltmodule, "_osd_le.flt" ),
     MENU_ITEM   (0x28,LANG_MENU_MAIN_VISUAL_PARAM,          MENUITEM_SUBMENU,   &visual_submenu, 0 ),
@@ -2452,6 +2454,7 @@ static void gui_debug_shortcut(void)
 // Handler for Menu button press default - enter Menu mode
 void gui_default_kbd_process_menu_btn()
 {
+	profile_set_postprocessing();	// finalize profile restore: create main menu title
     gui_set_mode(&menuGuiHandler);
 }
 
@@ -2777,6 +2780,7 @@ void gui_activate_alt_mode()
         // <ALT> mode when the script was running.
 	    gui_user_menu_flag = 0;
 	    if ((conf.user_menu_enable == 2) && !state_kbd_script_run) {
+			profile_set_postprocessing();	// finalize profile restore: create main menu title
 		    gui_menu_init(&user_submenu);
 		    gui_set_mode(&menuGuiHandler);
 		    gui_user_menu_flag = 1;

@@ -20,12 +20,10 @@
 #include "lauxlib.h"
 #endif
 
-// Requested filename
-enum FilenameMakeModeEnum 
-	{ 	MAKE_PARAMSETNUM_FILENAME,		// "DATA/scriptname.set" -> cfg_name
-		MAKE_PARAMSET_NAMES_FILENAME,	// "CFG/scriptname.cfg"  -> cfg_name
-		MAKE_PARAM_TMPRUN_FILENAME,		// "DATA/_params_.old"   -> cfg_param_name
-		MAKE_PARAM_FILENAME };			// "DATA/scriptname._%d" -> cfg_param_name
+
+#define SCRIPT_DATA_PATH        "A/CHDK/DATA/SCR%02d/"
+#define CFG_PARAMSET_PATH 	    "A/CHDK/CFG/SCR%02d/"
+#define CFG_PARAMSET_0PATH 	    "A/CHDK/CFG/SCRIPT/"
 
 //-------------------------------------------------------------------
 
@@ -372,11 +370,12 @@ static void script_scan(const char *fn, int update_vars) {
 //-------------------------------------------------------------------
 // PURPOSE:     Create cfg filename in buffer.
 // PARAMETERS:  mode - what exact kind of cfg file name required
-//				fn - full path of script  (optional. have no matter for some modes)
+//				fn - full path of script  (optional)
+//						empty/0=get directory
 //				paramset - target paramset (optional)
 // RESULT:  name at cfg_param_name or cfg_name (depending on mode)
 //-------------------------------------------------------------------
-void make_param_filename( enum FilenameMakeModeEnum mode, const char* fn, int paramset )
+const char* make_param_filename( enum FilenameMakeModeEnum mode, const char* fn, int paramset )
 {
 	char extbuf[5];
 	char* tgt_buf;
@@ -395,11 +394,14 @@ void make_param_filename( enum FilenameMakeModeEnum mode, const char* fn, int pa
 		case MAKE_PARAMSETNUM_FILENAME:
 			tgt_buf = cfg_name;
 			base_path = SCRIPT_DATA_PATH;
-			strcpy(extbuf,".cfg");
+			strcpy(extbuf,".set");
 			break;			
 		case MAKE_PARAMSET_NAMES_FILENAME:
 			tgt_buf = cfg_name;
-			base_path = CFG_BASE_PATH;
+			if ( conf.current_profile )
+				base_path = CFG_PARAMSET_PATH;
+			else
+				base_path = CFG_PARAMSET_0PATH;
 			strcpy(extbuf,".cfg");
 			break;
 		case MAKE_PARAM_TMPRUN_FILENAME:
@@ -414,21 +416,29 @@ void make_param_filename( enum FilenameMakeModeEnum mode, const char* fn, int pa
 			sprintf(extbuf,"._%d",paramset);
 			break;			
 		default:		// unknown mode
-			return;
+			return cfg_param_name;
 	}
     
 	// make path
-	strcpy(tgt_buf, base_path);
+	sprintf(tgt_buf, base_path, conf.current_profile%10 );
     
 	// add script filename
 	char* tgt_name=tgt_buf+strlen(tgt_buf);
+	if ( !name ) 
+		*(tgt_name-1)=0;		//remove '/' to get plain directory name
+	else {
 	strncpy( tgt_name, name, 12 );
 	tgt_name[12] = 0;
+	}
 
-	// find where extension start and replace it
-	char* ext = strrchr(tgt_name, '.');
-	if (!ext) ext=tgt_name+strlen(tgt_name);
-	strcpy ( ext, extbuf );
+	if ( tgt_name[0] ) {
+		// find where extension start and replace it
+		char* ext = strrchr(tgt_name, '.');
+		if (!ext) ext=tgt_name+strlen(tgt_name);
+		strcpy ( ext, extbuf );
+	}
+
+	return tgt_buf;
 }
 
 //-------------------------------------------------------------------

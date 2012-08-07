@@ -4,8 +4,6 @@
 //-------------------------------------------------------------------
 #define SCRIPT_DEFAULT_FILENAME     "A/SCRIPT.LUA"
 #define SCRIPT_NUM_PARAMS           26
-#define SCRIPT_DATA_PATH            "A/CHDK/DATA/"
-#define CFG_BASE_PATH       	    "A/CHDK/CFG/"
 #define SCRIPT_DEFAULT_DIR			"A/CHDK/SCRIPTS/"
 
 #ifdef OPT_UBASIC
@@ -51,6 +49,17 @@ extern void script_print_screen_statement(int val);
 
 extern const char* paramset_names[10];			// pointer of names of paramsets
 extern void load_params_names_cfg();
+
+//-------------------------------------------------------------------
+
+// Requested filename
+enum FilenameMakeModeEnum 
+	{ 	MAKE_PARAMSETNUM_FILENAME,		// "DATA/scriptname.set" -> cfg_name
+		MAKE_PARAMSET_NAMES_FILENAME,	// "CFG/scriptname.cfg"  -> cfg_name
+		MAKE_PARAM_TMPRUN_FILENAME,		// "DATA/_params_.old"   -> cfg_param_name
+		MAKE_PARAM_FILENAME };			// "DATA/scriptname._%d" -> cfg_param_name
+
+const char* make_param_filename( enum FilenameMakeModeEnum mode, const char* fn, int paramset );
 
 //-------------------------------------------------------------------
 

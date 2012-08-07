@@ -31,6 +31,7 @@
 #include "action_stack.h"
 #include "console.h"
 #include "gps.h"
+#include "profiles.h"
 
 extern int fselect_sort_nothumb(const void* v1, const void* v2);
 extern short shooting_get_ev_correction1();
@@ -324,6 +325,17 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
             dbg_printf,
 
             gps_getData,
+
+			//profiles.flt
+			load_file,
+			gui_safe_set_profile,
+			gui_activate_sub_menu,
+			gui_menu_add_mark,
+			gui_menu_clean_marks,
+			lang_strhash31,
+			gui_menu_set_kdb_callback,
+			get_menu_currentitem,
+			gui_mbox_init_adv,
 }
 #endif
 

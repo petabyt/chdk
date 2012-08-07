@@ -14,16 +14,27 @@
 #include "gui_lang.h"
 
 extern gui_handler menueditGuiHandler;
-typedef const char* (*enum_callback_t)(int change, int arg);
+
+//-------------------------------------------------------------------
+// Marks: some menuitems could be "highlighted"
+#define MENUMARKS_MAX 5
+
+typedef struct {
+	int category;
+	int itemid;
+} CMenuItemMark;
+
+static CMenuItemMark gui_menu_marks[MENUMARKS_MAX];
+
 //-------------------------------------------------------------------
 #define MENUSTACK_MAXDEPTH  4
 
-//-------------------------------------------------------------------
 typedef struct {
     CMenu       *menu;
     int         curpos;
     int         toppos;
-    int         module_idx;
+    int         module_idx;      // owner of menu (to unload related module)
+	kbd_callback_t* kbd_process_cb;  // additional kbd callback processor to extend menu functionality
 } CMenuStacked;
 
 //-------------------------------------------------------------------
@@ -474,6 +485,7 @@ void gui_activate_sub_menu(CMenu *sub_menu, int module_idx)
     }
 
     gui_menu_stack_ptr++;
+    gui_menu_stack[gui_menu_stack_ptr].kbd_process_cb = 0;
 
     // FIXME check on stack overrun;
     if (gui_menu_stack_ptr > MENUSTACK_MAXDEPTH)
@@ -684,6 +696,18 @@ void gui_menu_cancel_editmode()
 //-------------------------------------------------------------------
 // Process button presses when in GUI_MODE_MENU mode
 int gui_menu_kbd_process() {
+
+	int level;
+
+	// Find last valid kbd_process_cb in stack
+
+	for ( level = gui_menu_stack_ptr; level>=0; level-- ) {
+		if ( gui_menu_stack[gui_menu_stack_ptr].kbd_process_cb ) {
+			if ( gui_menu_stack[gui_menu_stack_ptr].kbd_process_cb( kbd_get_autoclicked_key() | get_jogdial_direction() ) )
+				return 0;
+			break;
+		}
+	}
 
     switch (kbd_get_autoclicked_key() | get_jogdial_direction()) {
 #if CAM_HAS_ERASE_BUTTON
@@ -983,6 +1007,10 @@ void gui_menu_draw(int enforce_redraw) {
     int i, j;
     const char *ch = "";
 
+	int is_cur_marked;
+	int cur_item_hash;
+	CMenuItemMark* mark_p;
+
 	if ( enforce_redraw )
 		gui_menu_redraw = 2;
 
@@ -1027,6 +1055,17 @@ void gui_menu_draw(int enforce_redraw) {
             cl_symbol = (gui_menu_curr_item==imenu)?MAKE_COLOR(BG_COLOR(cl),FG_COLOR(conf.menu_symbol_color)):conf.menu_symbol_color; //color 8Bit=Hintergrund 8Bit=Vordergrund
             is_cur_edited = (gui_menu_curr_item==imenu && flag_editmode);
 
+			// determine is current item in marks list
+			is_cur_marked = 0;
+			cur_item_hash = lang_strhash31(curr_menu->menu[imenu].text);
+			for ( mark_p=(gui_menu_marks+MENUMARKS_MAX-1); mark_p>=gui_menu_marks; mark_p--) {
+				if ( mark_p->itemid== cur_item_hash ) {
+					is_cur_marked=1;
+					break;
+				}
+			}
+			
+
             xx = x;
 
             switch (curr_menu->menu[imenu].type & MENUITEM_MASK)
@@ -1043,7 +1082,8 @@ void gui_menu_draw(int enforce_redraw) {
                 break;
             case MENUITEM_SUBMENU_PROC:
             case MENUITEM_SUBMENU:
-                sprintf(tbuf, "%s%s", lang_str(curr_menu->menu[imenu].text),(conf.menu_symbol_enable)?"":" ->");
+                sprintf(tbuf, "%s%s%s%s", (is_cur_marked?"* ":""),lang_str(curr_menu->menu[imenu].text),
+										  (is_cur_marked?" *":""), (conf.menu_symbol_enable)?"":" ->" );
                 gui_menu_draw_text(tbuf,2);
                 break;
             case MENUITEM_UP:
@@ -1052,7 +1092,12 @@ void gui_menu_draw(int enforce_redraw) {
                 break;
             case MENUITEM_PROC:
             case MENUITEM_TEXT:
+				if ( !is_cur_marked )
                 gui_menu_draw_text(lang_str(curr_menu->menu[imenu].text),1);
+				else {
+	                sprintf(tbuf, "* %s *", lang_str(curr_menu->menu[imenu].text) );
+	                gui_menu_draw_text(tbuf,1);
+				}
                 break;
             case MENUITEM_SEPARATOR:
                 rbf_draw_char(x, yy, ' ', cl);
@@ -1133,8 +1178,6 @@ void gui_menu_draw(int enforce_redraw) {
 
     }
 }
-
-extern CMenuItem* find_mnu(CMenu *curr_menu, int itemid );
 
 // Hide/Unhide item found in menu starting from "cmenu" by its lang_id
 int menuitem_foreach2( CMenu* cmenu, int itemid, int tmp, int visibility )
@@ -1275,7 +1318,7 @@ void gui_menuedit_draw(int enforce_redraw) {
                 	sprintf(tbuf, "[%d]", *valueptr);
                 	break;
             	case MENUITEM_ENUM:
-                    sprintf(tbuf,"[%s]",((enum_callback_t)curr_menu->menu[gui_menu_curr_item].value)(0, curr_menu->menu[gui_menu_curr_item].arg) );
+                    sprintf(tbuf,"[%s]",((enum_callback_func_t*)curr_menu->menu[gui_menu_curr_item].value)(0, curr_menu->menu[gui_menu_curr_item].arg) );
 	                break;
 	            case MENUITEM_ENUM2:
                     sprintf(tbuf,"[%s]", gui_change_enum2(&curr_menu->menu[gui_menu_curr_item], 0) );
@@ -1291,6 +1334,87 @@ void gui_menuedit_draw(int enforce_redraw) {
 //-------------------------------------------------------------------
 // GUI handler for menus
 gui_handler menueditGuiHandler = { GUI_MODE_MENU, gui_menuedit_draw, gui_menu_kbd_process, gui_menu_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
+//-------------------------------------------------------------------
+
+// PURPOSE:
+//    mark menuitem by name
+// PARAMETERS:
+//    category - numeric tag of category(to quick clean category marks)
+//    itemid - lang_strhash31() value of menuitem.text
+int gui_menu_add_mark( int category, int itemid )
+{
+	int i;
+	int empty=-1;
+
+	if ( !itemid )
+		return 0;
+
+	for (i=0;i<MENUMARKS_MAX;i++) {
+		if ( gui_menu_marks[i].itemid==itemid )
+			return 0;
+		if ( gui_menu_marks[i].itemid==0 )
+			empty = i;
+	}
+
+	if (empty<0)
+		return 0;
+
+	gui_menu_marks[empty].category = category;
+	gui_menu_marks[empty].itemid = itemid;
+	return 1;		
+}
+
+// PURPOSE:
+//    Clean marks with tag "category"
+void gui_menu_clean_marks(int category)
+{
+	int i;
+
+	for (i=0;i<MENUMARKS_MAX;i++) {
+		if ( gui_menu_marks[i].category==category )
+			gui_menu_marks[i].itemid = 0;
+	}
+}
+
+
+//-------------------------------------------------------------------
+
+// popup main menu
+void gui_menu_popup_mainmenu()
+{
+    extern CMenu root_menu;
+    extern int gui_user_menu_flag;
+
+	gui_user_menu_flag = 0;
+	gui_menu_init(&root_menu);
+	gui_set_mode(&menuGuiHandler);
+}
+
+// close all menus
+void gui_menu_close_menu( int switch_to_alt )
+{
+    gui_menu_unload_module_menus();
+    conf_save_new_settings_if_changed();
+	if ( switch_to_alt )
+        gui_set_mode(&altGuiHandler);
+}
+
+//-------------------------------------------------------------------
+
+// set kbd callback processor for this level and its submenu
+void gui_menu_set_kdb_callback( kbd_callback_t* func )
+{
+	gui_menu_stack[gui_menu_stack_ptr].kbd_process_cb = func;
+}
+
+// get current menu item
+CMenuItem* get_menu_currentitem()
+{
+	if ( !curr_menu || gui_menu_curr_item<0 )
+		return 0;
+	return (CMenuItem*)&(curr_menu->menu[gui_menu_curr_item]);
+}
+
 //-------------------------------------------------------------------
 
 
@@ -1309,7 +1433,6 @@ extern int menuitem_foreach2( CMenu* menu, int itemid, int tmp, int visibility);
 
 extern void menuitem_hide( CMenuItem* item );
 extern void menuitem_unhide( CMenuItem* item );
-//CMenuItem* find_mnu(CMenu *curr_menu, int itemid );
 extern int value_turn_state( int* valueptr, int dir );
 
 //---------------------------

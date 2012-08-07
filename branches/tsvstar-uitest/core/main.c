@@ -11,7 +11,7 @@
 #ifdef OPT_EDGEOVERLAY
     #include "modules.h"
 #endif
-
+#include "profiles.h"
 #include "module_load.h"
 
 //==========================================================
@@ -286,14 +286,6 @@ void core_spytask()
     finished();
     drv_self_unhide();
 
-    conf_restore();
-    gui_init();
-
-#if CAM_CONSOLE_LOG_ENABLED
-    extern void cam_console_init();
-    cam_console_init();
-#endif
-
     mkdir("A/CHDK");
     mkdir("A/CHDK/FONTS");
     mkdir("A/CHDK/SYMBOLS");
@@ -311,6 +303,17 @@ void core_spytask()
 #ifdef OPT_EDGEOVERLAY
     mkdir("A/CHDK/EDGE");
 #endif
+
+	conf.current_profile=-1;	// enforce mkdir
+    profile_restore(0);			// load profilenum and adjust paths (postponed make root_title)
+    conf_restore();
+    gui_init();
+
+#if CAM_CONSOLE_LOG_ENABLED
+    extern void cam_console_init();
+    cam_console_init();
+#endif
+
     auto_started = 0;
 
     // Calculate the value of get_tick_count() when the clock ticks over to the next second

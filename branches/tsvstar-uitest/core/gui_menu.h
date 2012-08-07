@@ -67,7 +67,9 @@ typedef struct {
 #define MENU_ENUM2a(sym, txt, val, arg, num){ (char)sym, (char)num, MENUITEM_ENUM2, (int)txt, (int*)val, (int)arg }
 
 
-typedef const char* enum_callback_func_t(int change, int arg);
+typedef const char* (enum_callback_func_t)(int change, int arg);
+typedef int (kbd_callback_t)(int);
+
 
 //-------------------------------------------------------------------
 extern void gui_menu_init(CMenu *menu_ptr);
@@ -86,8 +88,28 @@ extern const char* gui_change_simple_qenum(int* value, int change, const char** 
 extern int menuitem_foreach2( CMenu* menu, int itemid, int tmp, int visibility);
 extern int value_turn_state( int* valueptr, int dir );
 
+void gui_activate_sub_menu(CMenu *sub_menu, int module_idx);
+
+void gui_menu_popup_mainmenu();
+void gui_menu_close_menu( int switch_to_alt );
+
+enum {
+   MENU_MARK_CATEGORY_PROFILES,
+};
+
+int gui_menu_add_mark(int category, int itemid );
+void gui_menu_clean_marks(int category);
+
+void gui_menu_set_kdb_callback( kbd_callback_t* func );
+CMenuItem* get_menu_currentitem();
+
 //-------------------------------------------------------------------
 extern gui_handler menuGuiHandler;
+
+//-------------------------------------------------------------------
+extern  CMenu   root_menu;									// defined in gui.c
+
+extern CMenuItem* find_mnu(CMenu *curr_menu, int itemid );  // defined in gui_user_menu.c
 
 //-------------------------------------------------------------------
 #endif

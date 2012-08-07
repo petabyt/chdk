@@ -19,11 +19,13 @@
 
 
 //-------------------------------------------------------------------
-#define CONF_FILE  "A/CHDK/CCHDK2.CFG"
+// this is bufer to contain current config file path
+char conf_filename[25];
+
 #define CONF_MAGICK_VALUE   (0x33204741)
 
 //-------------------------------------------------------------------
-Conf conf = { MAKE_API_VERSION(2,1) };
+Conf conf = { MAKE_API_VERSION(2,2) };
 
 int state_shooting_progress = SHOOTING_PROGRESS_NONE;
 int state_save_raw_nth_only;
@@ -644,7 +646,7 @@ void config_save(const ConfInfo *conf_info, char *filename, int conf_num)
 
 void conf_save()
 {
-    config_save(&conf_info[0], CONF_FILE, CONF_NUM);
+    config_save(&conf_info[0], conf_filename, CONF_NUM);
 }
 
 //-------------------------------------------------------------------
@@ -713,7 +715,7 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
 void conf_restore()
 {
     conf_init_defaults();
-    config_restore(&conf_info[0], CONF_FILE, CONF_NUM, conf_info_func);
+    config_restore(&conf_info[0], conf_filename, CONF_NUM, conf_info_func);
     // Fixup old conf.override_disable value
     if (conf.override_disable == 2) conf.override_disable = 0;
 }

@@ -705,7 +705,11 @@
 #define LANG_MENU_MISC_HELP			            574
 #define LANG_MENU_MENUEDIT_POPUP				575
 
-#define GUI_LANG_ITEMS                          575
+#define LANG_PROFILE_BASE						576
+#define LANG_MENU_PROFILE_MANAGER				577
+#define LANG_MENU_PROFILE_MANAGER_TITLE			578
+
+#define GUI_LANG_ITEMS                          578
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

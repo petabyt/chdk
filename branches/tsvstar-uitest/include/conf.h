@@ -379,6 +379,8 @@ typedef struct {
 
 	int help_was_shown;		// 0-help wasn't shown yet, 1- help already was shown
     int menuedit_popup;			// 0-menuedit in-menu, 1-menu edit is popup
+
+	int current_profile;		// num of selected profile
 } Conf;
 
 extern Conf conf;
@@ -419,6 +421,9 @@ extern void conf_change_dng(void);
 extern void conf_update_prevent_shutdown(void);
 extern int conf_getValue(unsigned short id, tConfigVal* configVal);
 extern int conf_setValue(unsigned short id, tConfigVal configVal);
+
+
+extern char conf_filename[25];
 
 // reyalp: putting these in conf, since the conf values are lookups for them
 // prefixes and extentions available for raw images (index with conf.raw_prefix etc)
