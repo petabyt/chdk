@@ -22,9 +22,10 @@
 
 // Requested filename
 enum FilenameMakeModeEnum 
-	{ 	MAKE_PARAMSETNUM_FILENAME,		// "DATA/scriptname.cfg" -> cfg_name
+	{ 	MAKE_PARAMSETNUM_FILENAME,		// "DATA/scriptname.set" -> cfg_name
 		MAKE_PARAMSET_NAMES_FILENAME,	// "CFG/scriptname.cfg"  -> cfg_name
-		MAKE_PARAM_FILENAME };			// "DATA/scriptname_%d" -> cfg_param_name
+		MAKE_PARAM_TMPRUN_FILENAME,		// "DATA/_params_.old"   -> cfg_param_name
+		MAKE_PARAM_FILENAME };			// "DATA/scriptname._%d" -> cfg_param_name
 
 //-------------------------------------------------------------------
 
@@ -401,10 +402,16 @@ void make_param_filename( enum FilenameMakeModeEnum mode, const char* fn, int pa
 			base_path = CFG_BASE_PATH;
 			strcpy(extbuf,".cfg");
 			break;
+		case MAKE_PARAM_TMPRUN_FILENAME:
+			tgt_buf = cfg_param_name;
+			base_path = SCRIPT_DATA_PATH;
+			strcpy(extbuf,".old");
+			name = "_params_";
+			break;
 		case MAKE_PARAM_FILENAME:
 			tgt_buf   = cfg_param_name;
 			base_path = SCRIPT_DATA_PATH;
-			sprintf(extbuf,"_%d",paramset);
+			sprintf(extbuf,"._%d",paramset);
 			break;			
 		default:		// unknown mode
 			return;
@@ -460,41 +467,18 @@ int load_params_values(const char *fn, int paramset)
     if(!buf)
         return 0;
 
-	int i;
-	char *ptr;
-    for(i = 0; i < SCRIPT_NUM_PARAMS; ++i) script_params_update[i]=0;
-    ptr = buf;
-
-    while (ptr[0]) 
-    {
-        while (ptr[0]==' ' || ptr[0]=='\t') ++ptr; // whitespaces
-        if (ptr[0]=='@')
-        {
-            if (strncmp("@param", ptr, 6) == 0) 
-            {
-                ptr+=6;
-                process_param(ptr, 1);
-            } else if (strncmp("@default", ptr, 8)==0) {
-                ptr+=8;
-                process_default(ptr, 1);
-            } else if (strncmp("@range", ptr, 6)==0) {
-                ptr+=6;
-                process_range(ptr, 1);
-            } else if (strncmp("@values", ptr, 7)==0) {
-                ptr+=7;
-                process_values(ptr, 0);
-            }
-			/* 	// this will reqruired to temporary scripts infrastructure
-				// only in data files (never in script)
-				// not implemented yet
-				else if (strncmp("@load_script", ptr, 12)==0) { 1;}
-				else if (strncmp("@load_paramset", ptr, 14)==0) { 1;}
-			*/
-        }
-        while (ptr[0] && ptr[0]!='\n') ++ptr; // unless end of line
-        if (ptr[0]) ++ptr;
+	// If contain "|" that mean format "filename|paramstr".
+	// Script 'filename' should be loaded
+	char* paramstr = strchr(buf,'|');
+	if ( !paramstr )
+		paramstr=buf;
+	else {
+		*paramstr=0;
+		paramstr++;
+		script_load(buf, SCRIPT_LOAD_DEFAULT_VALUES );
     }
 
+	script_apply_paramstr(paramstr,0);
     ufree(buf);
 
     return 1;
@@ -510,7 +494,7 @@ int load_params_values(const char *fn, int paramset)
 //-------------------------------------------------------------------
 static void do_save_param_file( char* fn, char* script_file, int paramset )
 {
-    int i,n, fd;
+    int i, fd;
     char *buf;
 
     buf=umalloc(250);
@@ -519,36 +503,25 @@ static void do_save_param_file( char* fn, char* script_file, int paramset )
     	fd = open(fn, O_WRONLY|O_CREAT, 0777);
     	if (fd >=0)
 		{
-			///// OLD FORMAT OF DATA FILE////
-
 			// store filename and current paramset
 			if (script_file) {
-				sprintf( buf, "@script_file %s\n", script_file );
+				sprintf( buf, "%s|", script_file );
 				write( fd, buf, strlen(buf) );
 			}
 			if ( paramset >0 ) {
-				sprintf( buf, "@load_paramset %d\n", paramset );
+				sprintf( buf, "#%d", paramset );
 				write( fd, buf, strlen(buf) );
 			}
 
-    		for(n = 0; n < SCRIPT_NUM_PARAMS; ++n)
+			// main param list
+		    for(i = 0; i < SCRIPT_NUM_PARAMS; ++i)
     		{
-    		    if (script_params[n][0] != 0)
+        		if (script_params[i][0] != 0)
     		    {
-    		        sprintf(buf,"@param %c %s\n@default %c %d\n",'a'+n,script_params[n],'a'+n,conf.script_vars[n]);
-    		        if (script_range_values[n] != 0)
-    		            sprintf(buf+strlen(buf),"@range %c %d %d\n",'a'+n,(short)(script_range_values[n]&0xFFFF),(short)(script_range_values[n]>>16));
-    		        if (script_named_counts[n] != 0)
-    		        {
-    		            sprintf(buf+strlen(buf),"@values %c",'a'+n);
-    		            for (i=0; i<script_named_counts[n]; i++)
-    		                sprintf(buf+strlen(buf)," %s",script_named_values[n][i]);
-    		            strcat(buf,"\n");
-    		        }
+					sprintf( buf, ",%c=%d", ('a'+i), conf.script_vars[i] );
     				write(fd, buf, strlen(buf));
 				}
     		}
-    		
     		close(fd);
 		}
 			
@@ -608,6 +581,7 @@ void script_apply_paramstr( char* param_str, int allow_load_paramset )
 	char* e;
 	char* ptr = param_str;
 
+	// #0 mean "load profile #0 before"
 	if ( allow_load_paramset && *ptr=='#') {
 		ptr++;
 		if (*ptr>='0' && *ptr<='9' ) {
@@ -662,6 +636,8 @@ void script_load(const char *fn, enum ScriptLoad_Mode_ saved_params) {
     
 	int size;
 	char* buf;
+
+	fn = make_absolute_path( SCRIPT_DEFAULT_DIR, fn );
 
 //    save_params_values(0);
 
@@ -718,6 +694,80 @@ void script_load(const char *fn, enum ScriptLoad_Mode_ saved_params) {
 
     gui_update_script_submenu();
 }
+
+
+//=======================================================
+//            TEMPORARY SCRIPT RUN FUNCTIONS
+//=======================================================
+
+static tmpscr_callb_t tmpscript_endfn;
+static int            tmpscript_flag = 0;	  // 1 - currently temporary script is processed
+
+// Auxilary: Finalize temporary script 
+//----------------------------------------
+static void temporary_script_unload()
+{
+	if ( !tmpscript_flag )
+		return;
+
+	if (tmpscript_endfn)
+		tmpscript_endfn();
+
+	// if state is active that mean no need to housekeeping yet
+    if ( state_kbd_script_run ) 
+		return;
+
+	tmpscript_flag = 0;
+	tmpscript_endfn = 0;
+	
+	// restore state after run
+	make_param_filename( MAKE_PARAM_TMPRUN_FILENAME, 0, 0);
+	if ( is_file_exists(cfg_param_name) ) {
+		load_params_values("",-1);
+		remove( cfg_param_name );
+	}
+}
+
+//--------------------------------------------------------------------------------
+// PURPOSE: 
+//		Run script without broking of current script params
+// PARAMETERS:
+//		fn - path/name of script to run
+//		paramstr - optional paramstr applied before run ("#profile,var1=val1,var2=val2" format)
+//		callback - user callback to postprocess (process result of script, run next one tmp script)
+//		autoexec_flag - 1 if this is autoexec sequence, 0 otherwise
+//
+// NOTE:
+//	 - This is only one exposed function of tmp run API
+//
+//--------------------------------------------------------------------------------
+void temporary_script_load( char* fn, char* paramstr, tmpscr_callb_t callback, int autoexec_flag )
+{
+	make_param_filename( MAKE_PARAM_TMPRUN_FILENAME, 0, 0);
+
+	// If no "_paramset_.old" exists, mean first call in chain. Store state
+	if ( !is_file_exists(cfg_param_name) )
+		do_save_param_file( cfg_param_name, conf.script_file, conf.script_param_set );
+
+	// Try to load requested script
+	script_load( fn, SCRIPT_LOAD_DEFAULT_VALUES );
+
+	if ( script_source_str == lua_script_default ) {
+		// If no such script found - cancel the run
+		temporary_script_unload();
+		return;
+	}
+
+	if ( paramstr )
+		script_apply_paramstr(paramstr,1);
+
+	tmpscript_endfn = callback;
+    tmpscript_flag = 1;
+
+	// Run script
+	script_start_gui( autoexec_flag );
+}
+
 
 //=======================================================
 //             PROCESSING PARAMS_NAME FUNCTIONS
@@ -776,7 +826,6 @@ void load_params_names_cfg()
 	}
 
 }
-
 
 //=======================================================
 //                 SCRIPT CONSOLE FUNCTIONS
@@ -1100,6 +1149,9 @@ void script_end()
         gui_set_mode(old_gui_handler);
         old_gui_handler = 0;
     }
+
+	if ( tmpscript_flag )
+		temporary_script_unload();
 }
 
 long script_start_gui( int autostart )
@@ -1119,7 +1171,8 @@ long script_start_gui( int autostart )
     console_clear();
     script_print_screen_init();
 
-    if (conf.script_param_save) {
+    if (conf.script_param_save &&
+		 !tmpscript_flag) {
         save_params_values(0);
     }
     if( autostart )

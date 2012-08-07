@@ -39,6 +39,10 @@ extern int load_params_values(const char *fn, int paramset );
 extern void save_params_values(int enforce);
 extern void script_reset_to_default_params_values();
 
+
+typedef void (*tmpscr_callb_t)();
+extern void temporary_script_load( char* fn, char* paramstr, tmpscr_callb_t callback, int autoexec_flag );
+
 extern void script_console_add_line(const char *str);
 extern void script_print_screen_init();
 extern void script_print_screen_end();
