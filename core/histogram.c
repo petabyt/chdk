@@ -414,11 +414,47 @@ static int* live_histogram_proc;		// Buffer int[256] for histogram
 static int live_histogram_overall;		// Total num of pixels in histogram
 static int histogram_stored_stage = -1;		// Stored value of histogram_stage (-1 = not stored yet)
 
+/*
+build histogram of viewport Y values (downsampled by HISTO_STEP_SIZE) in buf, return total number of pixel
+*/
+int live_histogram_read_y(int *buf)
+{
+    int i;
+    int total=0;
+    int x=0;
+    int vp_width=vid_get_viewport_width();
+    int vp_offset=vid_get_viewport_row_offset();
+    int viewport_size=vid_get_viewport_height() * vid_get_viewport_byte_width() * vid_get_viewport_yscale();
+    unsigned char *img=vid_get_viewport_active_buffer();
+    // can be NULL in playback mode (if a movie is selected)
+    // _fb will give us an address, although it may not contain the data we want!
+    // TODO should probably just return all zeros, but need to make sure auto-iso stuff will handle it
+    if (img==NULL){
+       img = vid_get_viewport_fb();
+    }
+
+    img += vid_get_viewport_image_offset();
+
+    memset( buf, 0, sizeof(int)*256);
+
+    x = 0;	// count how many blocks we have done on the current row (to skip unused buffer space at end of each row)
+
+    for (i=1; i<viewport_size; i+=HISTO_STEP_SIZE*6) {
+       ++buf[img[i]];
+       ++total; // TODO - would be better to just calculate this from dimensions and step
+
+       // Handle case where viewport memory buffer is wider than the actual buffer.
+       x += HISTO_STEP_SIZE * 2;	// viewport width is measured in blocks of three bytes each even though the data is stored in six byte chunks !
+       if (x == vp_width) {
+           i += vp_offset;
+           x = 0;
+       }
+    }
+    return total;
+}
+
 void live_histogram_process_quick()
 {
-    static unsigned char *img;
-    int i, y, x, stage,viewport_size;
-
     // Small hack: save space reuse common histogram buffer
     // It should be big enough for int[256]. Currently it is int [5*128]
     histogram_alloc();
@@ -429,33 +465,7 @@ void live_histogram_process_quick()
 	    histogram_stored_stage = histogram_stage;
     histogram_stage=HISTOGRAM_IDLE_STAGE;
 
-    img=vid_get_viewport_active_buffer();
-    if (img==NULL){
-       img = vid_get_viewport_fb();
-    }
-
-    img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
-    viewport_size = vid_get_viewport_height() * vid_get_viewport_byte_width() * vid_get_viewport_yscale();
-
-    memset( live_histogram_proc, 0, sizeof(int)*256);
-
-    x = 0;	// count how many blocks we have done on the current row (to skip unused buffer space at end of each row)
-
-    for (i=1; i<viewport_size; i+=HISTO_STEP_SIZE*6) {
-       y = img[i];
-       ++live_histogram_proc[y];
-
-       // Handle case where viewport memory buffer is wider than the actual buffer.
-       x += HISTO_STEP_SIZE * 2;	// viewport width is measured in blocks of three bytes each even though the data is stored in six byte chunks !
-       if (x == vid_get_viewport_width()) {
-           i += vid_get_viewport_row_offset();
-           x = 0;
-       }
-    }
-
-    live_histogram_overall=0;
-    for (i=0; i<256; ++i) 
-       live_histogram_overall += live_histogram_proc[i];
+    live_histogram_overall = live_histogram_read_y(live_histogram_proc);
     live_histogram_overall /= 100;
 }
 
