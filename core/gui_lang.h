@@ -698,13 +698,20 @@
 #define LANG_USER_MENU_FULL     				569
 
 #define LANG_SD_CARD                            570
-
 #define LANG_MENU_FONT_SETTINGS                 571
 
-#define GUI_LANG_ITEMS                          571
+#define LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER_SIMPLE 572
+#define LANG_MENU_MISC_FAST_EV_STEP_SIMPLE          573
+#define LANG_MENU_MISC_HELP			            574
+#define LANG_MENU_MENUEDIT_POPUP				575
+
+#define GUI_LANG_ITEMS                          575
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
+
+// name of build-in language
+extern char* gui_lang_source_filename;
 
 //-------------------------------------------------------------------
 #endif

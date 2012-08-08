@@ -23,7 +23,7 @@
 #define CONF_MAGICK_VALUE   (0x33204741)
 
 //-------------------------------------------------------------------
-Conf conf = { MAKE_API_VERSION(2,0) };
+Conf conf = { MAKE_API_VERSION(2,1) };
 
 int state_shooting_progress = SHOOTING_PROGRESS_NONE;
 int state_save_raw_nth_only;
@@ -96,24 +96,24 @@ void clear_values()
 
     if (conf.clear_override)
     {
-        conf.av_override_value=0;
-        conf.tv_override_koef=0;
-        conf.subj_dist_override_koef=0;
-        conf.iso_override_koef=0;
+		value_turn_state( &conf.tv_override_value, -1 );
+		value_turn_state( &conf.av_override_value, -1 );
+		value_turn_state( &conf.subj_dist_override_value, -1 );
+		value_turn_state( &conf.iso_override_value, -1 );
         conf.nd_filter_state=0;
     }
 #if ZOOM_OVERRIDE
     if (conf.clear_zoom_override)
     {
-        conf.zoom_override = 0;
+		value_turn_state( &conf.conf.zoom_override, -1 );
     }
 #endif
     if (conf.clear_bracket)
     {
-        conf.av_bracket_value=0;
-        conf.tv_bracket_value=0;
-        conf.iso_bracket_koef=0;
-        conf.subj_dist_bracket_koef=0;
+        value_turn_state( &conf.av_bracket_value, -1);
+        value_turn_state( &conf.tv_bracket_value, -1);
+        value_turn_state( &conf.iso_bracket_value, -1);
+        value_turn_state( &conf.subj_dist_bracket_value, -1);
     }
     if (conf.clear_video)
     {
@@ -230,21 +230,21 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(101, conf.video_bitrate,              CONF_DEF_VALUE,     i:VIDEO_DEFAULT_BITRATE, conf_change_video_bitrate),
     
     CONF_INFO(102, conf.tv_override_value,          CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(103, conf.tv_override_koef,           CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO(103, conf.tv_override_koef,           CONF_DEF_VALUE,     i:0, NULL), // to remove if tv_factor mode will be canceled
 
     CONF_INFO(104, conf.av_override_value,          CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(105, conf.iso_override_value,         CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(106, conf.iso_override_koef,          CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO(106, conf.iso_override_koef,          CONF_DEF_VALUE,     i:0, NULL),	// deprecated - to remove (only to import once and contain 1 then)
     
     CONF_INFO(107, conf.subj_dist_override_value,   CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(108, conf.subj_dist_override_koef,    CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO(108, conf.subj_dist_override_koef,    CONF_DEF_VALUE,     i:0, NULL),	// deprecated - to remove (only to import once and contain 1 then; possible exlusion: superzooms) 
     
     CONF_INFO(109, conf.tv_bracket_value,           CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(110, conf.av_bracket_value,           CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(111, conf.iso_bracket_value,          CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(112, conf.iso_bracket_koef,           CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO(112, conf.iso_bracket_koef,           CONF_DEF_VALUE,     i:0, NULL),	// deprecated - to remove (only to import once and contain 1 then)
     CONF_INFO(113, conf.subj_dist_bracket_value,    CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(114, conf.subj_dist_bracket_koef,     CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO(114, conf.subj_dist_bracket_koef,     CONF_DEF_VALUE,     i:0, NULL),	// deprecated - to remove (only to import once and contain 1 then; possible exlusion: superzooms)
     CONF_INFO(115, conf.bracket_type,               CONF_DEF_VALUE,     i:0, NULL),
 
 //    CONF_INFO(116, conf.recalc_exposure,            CONF_DEF_VALUE,     i:0, NULL),
@@ -280,7 +280,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(139, conf.show_raw_state,             CONF_DEF_VALUE,     i:1, NULL),
     
     CONF_INFO(140, conf.show_values_in_video,       CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(141, conf.tv_enum_type,               CONF_DEF_VALUE,     i:1, NULL),
+    CONF_INFO(141, conf.tv_enum_type,               CONF_DEF_VALUE,     i:1, NULL),		// to remove if tv_factor mode will be canceled
 
     CONF_INFO(142, conf.user_menu_enable,       CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(143, conf.user_menu_vars,         CONF_INT_PTR,   i:0, NULL),
@@ -460,6 +460,8 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(290, conf.tbox_char_map,              CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(291, conf.show_alt_helper,            CONF_DEF_VALUE,     i:1, NULL),
     CONF_INFO(292, conf.show_alt_helper_delay,      CONF_DEF_VALUE,     i:3, NULL),
+    CONF_INFO(293, conf.help_was_shown, 	        CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO(294, conf.menuedit_popup,		        CONF_DEF_VALUE,     i:1, NULL),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 

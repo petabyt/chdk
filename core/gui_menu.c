@@ -13,6 +13,8 @@
 #include "gui_user_menu.h"
 #include "gui_lang.h"
 
+extern gui_handler menueditGuiHandler;
+typedef const char* (*enum_callback_t)(int change, int arg);
 //-------------------------------------------------------------------
 #define MENUSTACK_MAXDEPTH  4
 
@@ -33,12 +35,64 @@ static int          gui_menu_curr_item;
 static int          gui_menu_top_item;
 static int          gui_menu_redraw;
 
-static int          count;
+static int          count_visible;
 static int          x, y;
 static int          w, wplus, num_lines;
 static int          len_bool, len_int, len_enum, len_space, len_br1, len_br2, cl_rect;
 static int          int_incr, incr_modified;
 static unsigned char *item_color;
+
+//-------------------------------------------------------------------
+
+/*
+common code for "enum" menu items that just take a list of string values and don't require any special setters
+would be better to have another menu item type that does this by default
+save memory by eliminating dupe code
+*/
+void gui_enum_value_change(int *value, int change, unsigned num_items) {
+    *value+=change;
+    if (*value<0)
+        *value = num_items-1;
+    else if (*value>=num_items)
+        *value = 0;
+}
+
+const char* gui_change_simple_enum(int* value, int change, const char** items, unsigned num_items) {
+    gui_enum_value_change(value, change, num_items);
+    return items[*value];
+}
+
+const char* gui_change_enum2(const CMenuItem *menu_item, int change)
+{
+    const char** items = (const char**)menu_item->arg;
+    gui_enum_value_change(menu_item->value, change, menu_item->opt_len);
+    return items[*menu_item->value];
+}
+
+// specific processing of migrated to quickdisabled enum fields
+void gui_qenum_value_change(int* value, int change, unsigned num_items ) {
+    *value+=change;
+
+	if (!change && !*value ) {*value=-2; }
+    if (*value<1 && change ) *value = num_items-1;
+    else if (*value>=num_items) *value=1;
+}
+
+const char* gui_change_simple_qenum(int* value, int change, const char** items, unsigned num_items) {
+    gui_qenum_value_change(value, change, num_items);
+	if (*value<=0)
+		return "Off";
+    return items[*value];
+}
+
+//-------------------------------------------------------------------
+int* menuitem_get_valueptr( CMenu *menu, int imenu ) 
+{
+  if (imenu < 0) return 0;
+  if ( (menu->menu[imenu].type & MENUITEM_MASK) == MENUITEM_ENUM )
+    return (int*) menu->menu[imenu].arg;
+  return (int*) menu->menu[imenu].value;
+}
 
 //-------------------------------------------------------------------
 static void gui_menu_set_curr_menu(CMenu *menu_ptr, int top_item, int curr_item) {
@@ -58,6 +112,25 @@ void gui_menu_unload_module_menus()
         if (gui_menu_stack[gui_menu_stack_ptr].module_idx >= 0)
             module_unload_idx(gui_menu_stack[gui_menu_stack_ptr].module_idx);
     }
+}
+
+//-------------------------------------------------------------------
+static void gui_menu_reset_incr() 
+{
+	int_incr = 1;
+	if ( curr_menu && gui_menu_curr_item>=0 ) {
+		int itemid = lang_strhash31( curr_menu->menu[gui_menu_curr_item].text );
+		if ( itemid == LANG_MENU_SUBJ_DIST_BRACKET_VALUE ||
+			 itemid == LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE )
+		{
+			int_incr = 100;
+		}
+		else if ( itemid == LANG_MENU_ISO_BRACKET_VALUE ||
+			 itemid == LANG_MENU_OVERRIDE_ISO_VALUE )
+		{
+			int_incr = 10;
+		}
+	}
 }
 
 //-------------------------------------------------------------------
@@ -81,17 +154,24 @@ void gui_menu_init(CMenu *menu_ptr) {
     len_br1 = rbf_char_width('[');
     len_br2 = rbf_char_width(']');
     cl_rect = rbf_font_height() - 4;
-    int_incr = 1;
+	gui_menu_reset_incr();
 
     gui_menu_redraw=2;
 }
 
 //-------------------------------------------------------------------
+
+// Return num of all rows + recalculate global count_visible
 int gui_menu_rows()
 {
     int n;
+
+    count_visible = 0;
     // Count the numer of rows in current menu
-    for(n = 0; curr_menu->menu[n].text; n++);
+    for(n = 0; curr_menu->menu[n].text; n++) {
+      if ((curr_menu->menu[n].type & MENUITEM_HIDDEN)==0 )
+         count_visible++;
+    }
     return n;
 }
 
@@ -132,6 +212,66 @@ static void gui_menu_back() {
         kbd_reset_autoclicked_key();    // Need this to stop 'Func/Set' registering twice???
     }
 }
+
+//-------------------------------------------------------------------
+// Turn value on/off (quickdisable items)
+// Argument: 1 turn on, -1 turn off, 0 - toggle
+// Return: 1 if changed, 0 otherwise
+int value_turn_state( int* valueptr, int dir )
+{
+  // return if item already have same quickdisable status
+  if ( !dir ) 
+	dir = ( *valueptr<0 )?1:-1;
+
+  if ( dir >0 ) {
+   if ( *valueptr >= 0 )
+     return 0;
+  }
+  else {
+   if ( *valueptr < 0 )
+     return 0;
+  }
+
+  // toggle value
+  *valueptr = - *valueptr - 1;
+  return 1;
+}
+
+//-------------------------------------------------------------------
+// Turn current item on/off (quickdisable items)
+// Argument: 1 turn on, -1 turn off, 0 - toggle
+// Return: 1 if ok, 0 otherwise
+static int turn_current_item( int dir )
+{
+  int* valueptr;
+  valueptr = menuitem_get_valueptr( curr_menu, gui_menu_curr_item );
+
+  if ( !valueptr  )
+    return 0;
+
+  if (( curr_menu->menu[gui_menu_curr_item].type & MENUITEM_QUICKDISABLE ) == 0)
+    return 0;
+
+  if ( value_turn_state( valueptr, dir ) ) {
+	  gui_menu_redraw=1;
+	// TODO - do callback (and add negative value processing in them)
+	return 1;
+  }
+
+  return 0;
+}
+
+//-------------------------------------------------------------------
+static int turn_current_item_on()
+{
+ return turn_current_item(1);
+}
+
+static int turn_current_item_off()
+{
+ return turn_current_item(-1);
+}
+
 
 //-------------------------------------------------------------------
 // Helper functions for gui_menu_kbd_process
@@ -177,6 +317,7 @@ static void get_int_incr_from_button()
     }
 }
 
+//-------------------------------------------------------------------
 // After updating a value check for callback and on_change functions and call if necessary
 static void do_callback()
 {
@@ -196,6 +337,10 @@ static void update_int_value(int direction)
 {
     // set amount to increment by (int_incr) if other buttons pressed
     get_int_incr_from_button();
+
+    // If current item was turned off, then turn it on and do callback below
+    if ( turn_current_item_on() ) 
+      direction=0;
 
     // do update
     *(curr_menu->menu[gui_menu_curr_item].value) += int_incr * direction;
@@ -272,12 +417,17 @@ static void update_bool_value()
     gui_menu_redraw=1;
 }
 
+//-------------------------------------------------------------------
 // Update an 'enum' value, direction = 1 for increment, -1 for decrement
 static void update_enum_value(int direction)
 {
     // update value
     if (curr_menu->menu[gui_menu_curr_item].value)
     {
+        // If current item was turned off, then turn it on and do callback below
+        if ( turn_current_item_on() ) 
+           direction=0;
+
         int c;
         if (camera_info.state.is_shutter_half_press)    c = 3;
         else if (kbd_is_key_pressed(KEY_ZOOM_IN))  c = 6;
@@ -289,15 +439,18 @@ static void update_enum_value(int direction)
         }
         else
         {
-            extern const char* gui_change_enum2(const CMenuItem *menu_item, int change);
             gui_change_enum2(&curr_menu->menu[gui_menu_curr_item], c*direction);
         }
     }
+
+    // execute on_change functions
+    do_callback();
 
     // force menu redraw
     gui_menu_redraw=1;
 }
 
+//-------------------------------------------------------------------
 // Open a sub-menu
 void gui_activate_sub_menu(CMenu *sub_menu, int module_idx)
 {
@@ -308,17 +461,17 @@ void gui_activate_sub_menu(CMenu *sub_menu, int module_idx)
     gui_menu_stack[gui_menu_stack_ptr].module_idx = module_idx;
 
     // Select first item in menu, (or none)
+    gui_menu_set_curr_menu(sub_menu, 0, -1);
     if (conf.menu_select_first_entry)
     {
-        gui_menu_set_curr_menu(sub_menu, 0, 0);
-        if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_TEXT || (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_SEPARATOR)
+	do
         {
-            //++gui_menu_top_item;
             ++gui_menu_curr_item;
         }
+        while ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_TEXT ||
+		(curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_SEPARATOR ||
+		(curr_menu->menu[gui_menu_curr_item].type & MENUITEM_HIDDEN) );
     }
-    else 
-        gui_menu_set_curr_menu(sub_menu, 0, -1);
 
     gui_menu_stack_ptr++;
 
@@ -332,6 +485,34 @@ void gui_activate_sub_menu(CMenu *sub_menu, int module_idx)
     // Force full redraw
     gui_menu_erase_and_redraw();
 }
+
+//-------------------------------------------------------------------
+// Calculate num of visible items between last and start
+int distance_items( int start, int last)
+{
+  int count=0;
+  for(last=last-1; last>=0 && last>=start; last-- ) {
+      if ((curr_menu->menu[last].type & MENUITEM_HIDDEN)==0 )
+         count++;
+  }
+  return count;
+}
+
+// Set top of menu to "offset" distance before "last" item
+void adjust_top ( int last, int offset ) 
+{
+  for ( ; last>0 ; last--)
+  {
+      if ((curr_menu->menu[last].type & MENUITEM_HIDDEN)==0 )
+      {
+	 if ( offset<=0) 
+	    break;
+         offset--; 
+      }
+  }
+  gui_menu_top_item = last;
+}
+
 
 // Open a sub-menu
 static void select_sub_menu()
@@ -373,7 +554,7 @@ static void gui_menu_updown(int increment)
             if (gui_menu_curr_item < 0)                                     // Off top, move to bottom
             {
                 gui_menu_curr_item = gui_menu_rows() - 1;
-                gui_menu_top_item = gui_menu_curr_item - num_lines + 1;
+                adjust_top( gui_menu_curr_item, num_lines - 1);
             }
             else if (gui_menu_curr_item >= gui_menu_rows())                 // Off bottom, move to top
             {
@@ -381,10 +562,10 @@ static void gui_menu_updown(int increment)
             }
             else if (increment == 1)                                        // Still in menu, if moving down adjust scroll if needed
             {
-                if (gui_menu_curr_item - gui_menu_top_item >= num_lines - 1)
+                if ( distance_items(gui_menu_top_item, gui_menu_curr_item) >= num_lines - 1 )
                 {
-                    gui_menu_top_item = gui_menu_curr_item - num_lines + 2;
-                    if (gui_menu_top_item + num_lines > gui_menu_rows()) gui_menu_top_item = gui_menu_rows() - num_lines;
+                    adjust_top( gui_menu_curr_item, num_lines-1 );
+                    if ( distance_items( gui_menu_top_item, gui_menu_rows() ) < num_lines ) adjust_top( gui_menu_rows(), num_lines-1 );
                 }
             }
             else                                                            // Still in menu, and moving up, adjust scroll
@@ -395,16 +576,109 @@ static void gui_menu_updown(int increment)
 
             // Check in case scroll moved off top of menu
             if (gui_menu_top_item < 0) gui_menu_top_item = 0;
+
         } while ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_TEXT || 
-                 (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_SEPARATOR);
+                 (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_SEPARATOR ||
+                 curr_menu->menu[gui_menu_curr_item].type & MENUITEM_HIDDEN );
 
         // Reset amount to increment integer values by
-        int_incr = 1;
+		gui_menu_reset_incr();
         gui_menu_disp_incr();
 
         // Redraw menu if needed
         if (gui_menu_redraw == 0) gui_menu_redraw=1;
     }
+}
+
+static int flag_editmode=0;	// 1 if current menu item is "edit"
+static int item_prev_value = 0;
+
+void gui_menu_set_editmode(int flag)
+{
+   if (flag_editmode!=flag ) {
+	   if ( flag ) 
+		   item_prev_value = *menuitem_get_valueptr(curr_menu,gui_menu_curr_item);
+
+		if (!conf.menuedit_popup) {
+			gui_menu_redraw = 1;
+		} else {
+			if ( flag )
+				gui_set_mode(&menueditGuiHandler);
+			else
+				gui_set_mode(&menuGuiHandler);
+
+			gui_menu_redraw = 2;
+		}
+   }   
+   flag_editmode = flag;
+}
+int gui_menu_get_editmode()
+{ 
+	return flag_editmode;
+}
+
+void gui_menu_left( int value )
+{
+            if (gui_menu_curr_item >= 0) {
+                switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) {
+                    case MENUITEM_INT:
+                        update_int_value(value);
+                        break;
+                    case MENUITEM_BOOL:
+                        update_bool_value();
+                        break;
+                    case MENUITEM_ENUM:
+                    case MENUITEM_ENUM2:
+                        update_enum_value(value);
+                        break;
+                    case MENUITEM_UP:
+                        gui_menu_back();
+                        break;
+                }
+            } else {
+                gui_menu_back();
+            }
+}
+
+void gui_menu_right( int value )
+{
+            if (gui_menu_curr_item >= 0) {
+                switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK){
+                    case MENUITEM_INT:
+                        update_int_value(value);
+                        break;
+                    case MENUITEM_BOOL:
+                        update_bool_value();
+                        break;
+                    case MENUITEM_ENUM:
+                    case MENUITEM_ENUM2:
+                        update_enum_value(value);
+                        break;
+                    case MENUITEM_SUBMENU_PROC:
+                        select_proc();
+                    case MENUITEM_SUBMENU:
+                        select_sub_menu();
+                        break;
+                }
+            }
+}
+
+
+// Purpose: cancel edit mode without apply changes
+void gui_menu_cancel_editmode()
+{
+	// cancel change
+    int *valueptr = menuitem_get_valueptr(curr_menu,gui_menu_curr_item);
+
+    if ( valueptr )
+        *valueptr = item_prev_value;
+
+    gui_menu_set_editmode(0);
+    gui_menu_left(0);	// process bounds and callbacks
+
+	// keep quickdisable state on cancel
+	if ( item_prev_value < 0 )
+		turn_current_item_off();
 }
 
 //-------------------------------------------------------------------
@@ -417,6 +691,11 @@ int gui_menu_kbd_process() {
 #else    
         case KEY_SHOOT_HALF:
 #endif
+			if ( flag_editmode ) {
+				gui_menu_cancel_editmode();
+				break;
+			}
+
             if (conf.user_menu_enable == 3) {
                 if (curr_menu->title != LANG_MENU_USER_MENU) {
                     /*
@@ -452,73 +731,63 @@ int gui_menu_kbd_process() {
                     * on top of the older larger menu
                     *
                     */
-                    if(gui_menu_rows() < num_lines)
+                    gui_menu_rows();
+                    if( count_visible < num_lines)
                         gui_set_need_restore();
                 }
             }
             break;
         case JOGDIAL_LEFT:
+            if ( flag_editmode ) {
+                gui_menu_left(-1);
+            } else
+                gui_menu_updown(-1);
+            break;
         case KEY_UP:
+            if ( flag_editmode ) {
+                gui_menu_right(10);
+            } else
             gui_menu_updown(-1);
             break;
         case JOGDIAL_RIGHT:
+            if ( flag_editmode ) {
+                gui_menu_right(1);
+            } else
+                gui_menu_updown(1);
+            break;
         case KEY_DOWN: 
+            if ( flag_editmode ) {
+                gui_menu_left(-10);
+            } else
             gui_menu_updown(1);
             break;
         case FRONTDIAL_LEFT:
         case KEY_LEFT:
-            if (gui_menu_curr_item >= 0) {
-                switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) {
-                    case MENUITEM_INT:
-                        update_int_value(-1);
-                        break;
-                    case MENUITEM_BOOL:
-                        update_bool_value();
-                        break;
-                    case MENUITEM_ENUM:
-                    case MENUITEM_ENUM2:
-                        update_enum_value(-1);
-                        break;
-                    case MENUITEM_UP:
-                        gui_menu_back();
-                        break;
-                }
-            } else {
-                gui_menu_back();
-            }
+            gui_menu_left(-1);
             break;
         case FRONTDIAL_RIGHT:
         case KEY_RIGHT:
-            if (gui_menu_curr_item >= 0) {
-                switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK){
-                    case MENUITEM_INT:
-                        update_int_value(1);
-                        break;
-                    case MENUITEM_BOOL:
-                        update_bool_value();
-                        break;
-                    case MENUITEM_ENUM:
-                    case MENUITEM_ENUM2:
-                        update_enum_value(1);
-                        break;
-                    case MENUITEM_SUBMENU_PROC:
-                        select_proc();
-                        break;
-                    case MENUITEM_SUBMENU:
-                        select_sub_menu();
-                        break;
-                }
-            }
+            gui_menu_right(1);
+            break;
+        case KEY_MENU:
+            // The only way to get this point - "edit" submode
+			turn_current_item(0);	// toggle state
+			do_callback();
             break;
         case KEY_SET:
-            if (gui_menu_curr_item >= 0) {
+            if ( flag_editmode) {
+                gui_menu_set_editmode(0);
+            } else if (gui_menu_curr_item >= 0) {
                 switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK){
                     case MENUITEM_INT:
-                        if (camera_info.state.is_shutter_half_press)
+                        if (camera_info.state.is_shutter_half_press )
                         {
                             *(curr_menu->menu[gui_menu_curr_item].value) = 0;
-                            gui_menu_redraw=1;
                         }
+                        else {
+                            gui_menu_set_editmode(1);
+                        }							
+                        gui_menu_redraw=1;
                         break;
                     case MENUITEM_BOOL:
                         update_bool_value();
@@ -541,7 +810,8 @@ int gui_menu_kbd_process() {
                         break;
                     case MENUITEM_ENUM:
                     case MENUITEM_ENUM2:
-                        update_enum_value(1);
+                        // @tsv: TODO - Check enum size<=3 and do not lock if 
+						gui_menu_set_editmode(1);
                         gui_menu_redraw=1;
                         break;
                 }
@@ -594,11 +864,17 @@ int gui_menu_kbd_process() {
             break;
 
         case KEY_DISPLAY:
-            gui_menu_back();
+                if ( flag_editmode ) {
+					gui_menu_cancel_editmode();					  
+                } else {
+            		gui_menu_back();
+                }            
             break;
 #else
         case KEY_DISPLAY:
-            if (conf.user_menu_enable == 3 && curr_menu->title == LANG_MENU_USER_MENU) {
+            if ( flag_editmode ) {
+				gui_menu_cancel_editmode();					  
+            } else if (conf.user_menu_enable == 3 && curr_menu->title == LANG_MENU_USER_MENU) {
                 gui_menu_back();
             }
             else {
@@ -617,14 +893,20 @@ int gui_menu_kbd_process() {
     return 0;
 }
 
+static int count_visible_initial;
+
 //-------------------------------------------------------------------
 // Draw menu scroll bar if needed, and title bar
 void gui_menu_draw_initial() { 
     color cl = BG_COLOR(conf.menu_title_color);
 
-    count = gui_menu_rows();
+    // call to calc visible rows
+    gui_menu_rows();
 
-    if (count > num_lines)
+	// remember num of rows for which values are adjusted
+	count_visible_initial = count_visible;
+
+    if (count_visible > num_lines)
     {
         y = ((camera_screen.height-(num_lines-1)*rbf_font_height())>>1);
         wplus = 8; 
@@ -636,7 +918,7 @@ void gui_menu_draw_initial() {
         wplus = 0;
         if (conf.menu_center)
         {
-            y = (camera_screen.height-(count-1)*rbf_font_height())>>1; 
+            y = (camera_screen.height-(count_visible-1)*rbf_font_height())>>1; 
         }
         else
         {
@@ -653,6 +935,7 @@ void gui_menu_draw_initial() {
 // Local variables used by menu draw functions
 static int imenu, yy, xx, symbol_width;
 static color cl, cl_symbol;
+static int is_cur_edited;
 
 // Common code extracted from gui_menu_draw for displaying the symbol on the left
 static void gui_menu_draw_symbol(int num_symbols)
@@ -676,9 +959,9 @@ static void gui_menu_draw_value(const char *str, int len_str)
 {
     gui_menu_draw_symbol(1);
     xx += rbf_draw_string_len(xx, yy, w-len_space-len_space-len_br1-len_str-len_br2-len_space-symbol_width, lang_str(curr_menu->menu[imenu].text), cl);
-    xx += rbf_draw_string(xx, yy, " [", cl);
+    xx += rbf_draw_string(xx, yy, (is_cur_edited?" >":" ["), cl);
     xx += rbf_draw_string_right_len(xx, yy, len_str, str, cl);
-    rbf_draw_string(xx, yy, "] ", cl);
+    rbf_draw_string(xx, yy, (is_cur_edited?"< ":"] "), cl);
 }
 
 // Common code extracted from gui_menu_draw for displaying a text menu string
@@ -702,13 +985,31 @@ void gui_menu_draw(int enforce_redraw) {
 
     if (gui_menu_redraw)
     {
+		// if partial update
+        if (gui_menu_redraw!=2)
+		{
+			// check if size of menu was changed
+			gui_menu_rows();
+			if ( count_visible != count_visible_initial)
+				gui_menu_redraw = 2;
+
+			// if it was shrinked, ask for restore and wait for next draw cycle
+            if ( count_visible < count_visible_initial &&
+				 !(enforce_redraw & GUI_REDRAWFLAG_DRAW_RESTORED) ) {
+				draw_restore();
+			}
+		}
+
         if (gui_menu_redraw==2)
             gui_menu_draw_initial();
 
         gui_menu_redraw=0;
 
-        for (imenu=gui_menu_top_item, i=0, yy=y; curr_menu->menu[imenu].text && i<num_lines; ++imenu, ++i, yy+=rbf_font_height())
+        for (imenu=gui_menu_top_item, i=0, yy=y; curr_menu->menu[imenu].text && i<num_lines; ++imenu)
         {
+            if (curr_menu->menu[imenu].type & MENUITEM_HIDDEN)
+				continue;
+
             cl = (gui_menu_curr_item==imenu)?conf.menu_cursor_color:conf.menu_color;
             /*
             * When cursor is over a symbol, force symbol background color to be the menu cursor color but
@@ -721,6 +1022,7 @@ void gui_menu_draw(int enforce_redraw) {
             * when the cursor highlights a line.
             */
             cl_symbol = (gui_menu_curr_item==imenu)?MAKE_COLOR(BG_COLOR(cl),FG_COLOR(conf.menu_symbol_color)):conf.menu_symbol_color; //color 8Bit=Hintergrund 8Bit=Vordergrund
+            is_cur_edited = (gui_menu_curr_item==imenu && flag_editmode);
 
             xx = x;
 
@@ -730,6 +1032,9 @@ void gui_menu_draw(int enforce_redraw) {
                 gui_menu_draw_value((*(curr_menu->menu[imenu].value))?"\x95":"", len_bool);
                 break;
             case MENUITEM_INT:
+                if ( *(curr_menu->menu[imenu].value) < 0 ) 
+                    strcpy(tbuf,"Off");
+                else
                 sprintf(tbuf, "%d", *(curr_menu->menu[imenu].value));
                 gui_menu_draw_value(tbuf, len_int);
                 break;
@@ -788,34 +1093,61 @@ void gui_menu_draw(int enforce_redraw) {
                                ((*(curr_menu->menu[imenu].value))>>(((curr_menu->menu[imenu].type & MENUITEM_MASK)==MENUITEM_COLOR_BG)?8:0))&0xFF));
                 break;
             case MENUITEM_ENUM:
-                if (curr_menu->menu[imenu].value)
-                    ch = ((const char* (*)(int change, int arg))(curr_menu->menu[imenu].value))(0, curr_menu->menu[imenu].arg);
+                if (curr_menu->menu[imenu].value) {
+                    if ( curr_menu->menu[imenu].arg && *((int*)curr_menu->menu[imenu].arg)<0 )
+                       ch = "Off";
+                    else
+                       ch = ((const char* (*)(int change, int arg))(curr_menu->menu[imenu].value))(0, curr_menu->menu[imenu].arg);
+                }
                 gui_menu_draw_value(ch, len_enum);
                 break;
             case MENUITEM_ENUM2:
                 if (curr_menu->menu[imenu].value)
                 {
-                    extern const char* gui_change_enum2(const CMenuItem *menu_item, int change);
-                    ch = gui_change_enum2(&curr_menu->menu[imenu], 0);
+                    if ( *(curr_menu->menu[imenu].value)<0 )
+                       ch = "Off";
+                    else
+                       ch = gui_change_enum2(&curr_menu->menu[imenu], 0);
                 }
                 gui_menu_draw_value(ch, len_enum);
                 break;
             }
+            ++i;
+            yy+=rbf_font_height();
         }
 
         // scrollbar
-        if (count > num_lines)
+        if (count_visible > num_lines)
         {
             i = num_lines*rbf_font_height()-1 -1;           // full height
-            j = i*num_lines/count;                          // bar height
+            j = i*num_lines/count_visible;                  // bar height
             if (j<20) j=20;
-            i = (i-j)*((gui_menu_curr_item<0)?0:gui_menu_curr_item)/(count-1);   // top pos
+            i = (i-j)*((gui_menu_curr_item<0)?0:distance_items(0,gui_menu_curr_item))/(count_visible-1);   // top pos
             draw_filled_round_rect((x+w)+2, y+1,   (x+w)+6, y+1+i,                             MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
             draw_filled_round_rect((x+w)+2, y+i+j, (x+w)+6, y+num_lines*rbf_font_height()-1-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
             draw_filled_round_rect((x+w)+2, y+1+i, (x+w)+6, y+i+j,                             MAKE_COLOR(COLOR_WHITE, COLOR_WHITE));
         }
+
     }
 }
+
+extern CMenuItem* find_mnu(CMenu *curr_menu, int itemid );
+
+// Hide/Unhide item found in menu starting from "cmenu" by its lang_id
+int menuitem_foreach2( CMenu* cmenu, int itemid, int tmp, int visibility )
+{
+	CMenuItem* item = find_mnu( cmenu, itemid );
+	if ( !item )
+		return 0;
+
+	if ( visibility )
+     *((short*)&(item->type)) &= ~MENUITEM_HIDDEN;   
+	else	
+     *((short*)&(item->type)) |= MENUITEM_HIDDEN;   
+	return 1;
+}
+
+int gui_menu_get_editmode();
 
 //-------------------------------------------------------------------
 // Menu button handler for Menu mode
@@ -823,6 +1155,12 @@ void gui_menu_kbd_process_menu_btn()
 {
     extern int gui_user_menu_flag;
     extern CMenu root_menu;
+
+    // In edit submode - MenuButton mean "Toggle feature" and processed by gui_menu_kbd_process
+    if ( gui_menu_get_editmode() ) {
+		gui_menu_kbd_process();
+		return;
+    }
 
     gui_menu_unload_module_menus();
 
@@ -842,3 +1180,208 @@ void gui_menu_kbd_process_menu_btn()
 // GUI handler for menus
 gui_handler menuGuiHandler = { GUI_MODE_MENU, gui_menu_draw, gui_menu_kbd_process, gui_menu_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
 //-------------------------------------------------------------------
+
+static void gui_menuedit_draw_text(char *str, int is_center)
+{
+	int xx1;
+	color bg = MAKE_COLOR( BG_COLOR(conf.menu_color), BG_COLOR(conf.menu_color) );
+	int len = rbf_str_width(str);
+
+	if ( len > w ) 
+		len = w;
+	if ( is_center)
+		xx = (w-len)>>1;
+	else
+		xx = 0;
+
+    draw_filled_rect(x, yy, x+xx, yy+rbf_font_height()-1, bg );
+	xx1 = x+xx;
+    xx1+= rbf_draw_string_len( xx1, yy, len, str, cl);
+	if (xx1 < (x+w) )
+	    draw_filled_rect(xx1, yy, x+w-1, yy+rbf_font_height()-1, bg );
+}
+
+void gui_menuedit_draw_initial() 
+{ 
+	int i;
+
+    count_visible = 8;
+    y = (camera_screen.height-(count_visible-1)*rbf_font_height())>>1; 
+
+	// Header
+    rbf_draw_menu_header(x, y-rbf_font_height(), w, 0, "Edit value", conf.menu_title_color);
+    gui_menu_disp_incr();
+
+	// Create body
+	static char* mbox_map[] =
+		{
+			"",
+			"",  // valuename
+			"",
+			0,
+			"",
+			"",
+#if CAM_HAS_ZOOM_LEVER
+			"arrow/jogdial=change value, ZOOM=incrementor",
+#else
+			"arrow/jogdial=change value",
+#endif
+			""   // bottom line
+		};
+
+	mbox_map[1] = lang_str(curr_menu->menu[gui_menu_curr_item].text);
+	if ( curr_menu->menu[gui_menu_curr_item].type & MENUITEM_QUICKDISABLE)
+		mbox_map[7]="DISP=Cancel, MENU=turn on/off, SET=Confirm";
+	else
+		mbox_map[7]="DISP=Cancel, SET=Confirm";
+
+	// Display body
+    cl = conf.menu_color;
+	for ( yy=y, i=0; i<count_visible; i++, yy += rbf_font_height() ) {
+		if ( !mbox_map[i] )
+			continue;
+		gui_menuedit_draw_text( lang_str((int)mbox_map[i]), (i<4) );
+	}
+}
+
+void gui_menuedit_draw(int enforce_redraw) {
+    char tbuf[64];
+
+	if ( enforce_redraw )
+		gui_menu_redraw = 2;
+
+    if (gui_menu_redraw)
+    {
+        if (gui_menu_redraw==2)
+            gui_menuedit_draw_initial();
+
+        gui_menu_redraw=0;
+
+        cl = conf.menu_cursor_color;
+		yy = y + 3*rbf_font_height();
+
+		int* valueptr = menuitem_get_valueptr( curr_menu, gui_menu_curr_item );
+		if (!valueptr)
+			strcpy(tbuf,"---");
+		else if (*valueptr<0)
+			strcpy(tbuf,"[Off]");
+		else {
+	        switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)
+			{
+        	    case MENUITEM_INT:
+                	sprintf(tbuf, "[%d]", *valueptr);
+                	break;
+            	case MENUITEM_ENUM:
+                    sprintf(tbuf,"[%s]",((enum_callback_t)curr_menu->menu[gui_menu_curr_item].value)(0, curr_menu->menu[gui_menu_curr_item].arg) );
+	                break;
+	            case MENUITEM_ENUM2:
+                    sprintf(tbuf,"[%s]", gui_change_enum2(&curr_menu->menu[gui_menu_curr_item], 0) );
+					break;
+				default:
+					strcpy(tbuf,"---");
+            }
+		}
+		gui_menuedit_draw_text( tbuf, 1 );
+	}
+}
+
+//-------------------------------------------------------------------
+// GUI handler for menus
+gui_handler menueditGuiHandler = { GUI_MODE_MENU, gui_menuedit_draw, gui_menu_kbd_process, gui_menu_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
+//-------------------------------------------------------------------
+
+
+/*
+// Infrastructure below cause strange side-effects so it is replaced by simplified show/hide
+// List of catched side-effects: shutdown on start, damage "Menu setting" menu or its first item
+//-------------------------------------------------------------------
+
+//-------------------------------------------------------------------
+typedef void menuitem_action_func_t( CMenuItem* item );
+
+// from .h
+enum { FLAG_RECURSIVE=1, FLAG_FIND_ALL=2, FLAG_SKIP_USERMENU=4 };
+extern int menuitem_foreach( CMenu* menu, int itemid, int mode, menuitem_action_func_t* actionfunc );
+extern int menuitem_foreach2( CMenu* menu, int itemid, int tmp, int visibility);
+
+extern void menuitem_hide( CMenuItem* item );
+extern void menuitem_unhide( CMenuItem* item );
+//CMenuItem* find_mnu(CMenu *curr_menu, int itemid );
+extern int value_turn_state( int* valueptr, int dir );
+
+//---------------------------
+void menuitem_hide( CMenuItem* item )
+{
+     *((short*)&(item->type)) |= MENUITEM_HIDDEN;   
+}
+
+void menuitem_unhide( CMenuItem* item )
+{
+     *((short*)&(item->type)) &= ~MENUITEM_HIDDEN;   
+}
+
+
+int menuitem_turn_on( CMenuItem* item )
+{
+	menuitem_turn_state(item,1);
+}
+
+int menuitem_turn_off( CMenuItem* item )
+{
+	menuitem_turn_state(item,-1);
+}
+
+//-------------------------------------------------------------------
+
+//
+// PURPOSE:		Apply actionfunc for menuitem with correct id
+// ARGUMENTS:	curr_menu - start menu
+//				id	 - LANG_ID of looked up item
+//				mode - flags FLAG_RECURSIVE(lookup into deep of tree, or this menu only if absent)
+//							 FLAG_FIND_ALL(change status of all matched items, or first found only if absent)
+//							 FLAG_SKIP_USERMENU(skip usermenu in recursion, or go everywhere)
+//				actionfunc - this func will be called for found item
+// RETURN VALUE: number of found items
+//
+int menuitem_foreach( CMenu* cmenu, int itemid, int mode, menuitem_action_func_t* actionfunc )
+{
+   int rv = 0;
+
+   // processing by idx
+   for (imenu=0; cmenu->menu[imenu].text; ++imenu) {
+	 if ( lang_strhash31(cmenu->menu[imenu].text) == itemid ) {
+         actionfunc( (CMenuItem*) &(cmenu->menu[imenu]) );
+		 rv++;
+	 }
+
+	 if ( (mode & FLAG_RECURSIVE ) &&
+	 	 (cmenu->menu[imenu].type & MENUITEM_MASK) == MENUITEM_SUBMENU ) {
+
+		if ( !(mode & FLAG_SKIP_USERMENU) ||
+			cmenu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU) {
+	      rv += menuitem_foreach((CMenu*)(cmenu->menu[imenu].value), itemid, mode, actionfunc);
+		}
+     }
+
+	 if	( rv && !(mode & FLAG_FIND_ALL) )
+	 	break;
+   }
+   return rv;
+}
+
+//-------------------------------------------------------------------
+
+static CMenuItem* found_item = 0;
+static void menuitem_find ( CMenuItem* item )
+{
+	found_item = item;
+}
+
+// Find menuitem by its id in non-usermenu
+CMenuItem* find_mnu(CMenu *curr_menu, int itemid )
+{                                                                                                 
+	if ( !menuitem_foreach( curr_menu, itemid, FLAG_RECURSIVE|FLAG_SKIP_USERMENU, menuitem_find ) )
+		found_item = 0;
+	return found_item;
+}
+*/

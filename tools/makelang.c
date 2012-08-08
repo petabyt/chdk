@@ -59,10 +59,19 @@ int main( int argc, char **argv )
 	lang_load_from_mem ( file1 );
 	lang_load_from_mem ( file2 );
 
+
+	char* lng_filename = (argc>2 && file2) ? argv[2] : argv[1];
+
 	int num_empty_lines=0;
 	char buf[200];
 
-	printf("//Auto generated file. Do not edit the contents of this file.\n//Update the CHDK/LANG/*.lng files to make changes.\n//Generated from %s\n\n",(argc>2)?argv[2]:argv[1]);
+	printf("//Auto generated file. Do not edit the contents of this file.\n//Update the CHDK/LANG/*.lng files to make changes.\n//Generated from %s\n\n",lng_filename);
+
+	printf("char* gui_lang_source_filename=\"");
+	for (i=0;i<8 && lng_filename[i] && lng_filename[i]!='.'; i++)
+	  printf("%c",lng_filename[i]);
+	printf("\";\n\n");
+
 	printf("static char* gui_lang_default = \\\n");
 	
 	for ( i=1; i<=num_lines; i++ )

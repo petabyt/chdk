@@ -376,6 +376,9 @@ typedef struct {
     int tbox_char_map;          // Text input box language/char map
     int show_alt_helper;        // Show <ALT> mode help screen
     int show_alt_helper_delay;  // Delay before showing help screen
+
+	int help_was_shown;		// 0-help wasn't shown yet, 1- help already was shown
+    int menuedit_popup;			// 0-menuedit in-menu, 1-menu edit is popup
 } Conf;
 
 extern Conf conf;
@@ -389,7 +392,6 @@ extern Conf conf;
 #define SHOOTING_PROGRESS_STARTED       1
 #define SHOOTING_PROGRESS_PROCESSING    2
 #define SHOOTING_PROGRESS_DONE          3
-
 
 // video quality defaults. Ideally, these should match the camera default settings
 #define VIDEO_DEFAULT_QUALITY   84  // ? where does 84 come from

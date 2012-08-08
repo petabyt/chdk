@@ -291,11 +291,15 @@ const int tv_override_zero_shift = 18;
 float shooting_get_shutter_speed_override_value()
 {
     static const float shutter_koef[] = {0, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000};
+	if ( conf.tv_override_value < 0 )
+		return 0;
     return (float)conf.tv_override_value*shutter_koef[conf.tv_override_koef];
 }
 
 const char * shooting_get_tv_bracket_value()
 {
+	if (conf.tv_bracket_value<0)
+		return expo_shift[0];
     return expo_shift[conf.tv_bracket_value];
 }
 
@@ -313,6 +317,8 @@ const char * shooting_get_bracket_type()
 short shooting_get_iso_override_value()
 {
     short iso = conf.iso_override_value*koef[conf.iso_override_koef];
+	if (conf.iso_override_value<0)
+		iso=0;
 #ifdef CAM_ISO_LIMIT_IN_HQ_BURST
     // Limit max ISO in HQ burst mode (also done in shooting_set_iso_real; but done here so OSD display value is correct)
     if ((mode_get() & MODE_SHOOTING_MASK) == MODE_SCN_HIGHSPEED_BURST)
@@ -323,11 +329,15 @@ short shooting_get_iso_override_value()
 
 short shooting_get_iso_bracket_value()
 {
+	if ( conf.iso_bracket_value<0)
+		return 0;
     return conf.iso_bracket_value*koef[conf.iso_bracket_koef];
 }
 
 const char * shooting_get_av_bracket_value()
 {
+	if ( conf.av_bracket_value<0)
+		return expo_shift[0];
     return expo_shift[conf.av_bracket_value];
 }
 
@@ -341,19 +351,24 @@ int shooting_get_subject_distance_override_value()
 
 int shooting_get_subject_distance_bracket_value()
 {
+	if ( conf.subj_dist_bracket_value<0 )
+		return 0;
     return conf.subj_dist_bracket_value*koef[conf.subj_dist_bracket_koef];
 }
 
 int shooting_get_subject_distance_override_koef()
 {
+	if (conf.subj_dist_override_value<0)
+		return 0;
     return koef[(conf.subj_dist_override_koef)];
 }
 
 short shooting_get_av96_override_value()
 {
-    if (conf.av_override_value<=AS_SIZE)
-        return (short) aperture_sizes_table[conf.av_override_value-1].prop_id;
-    return (short) (AV96_MAX+32*(conf.av_override_value-AS_SIZE));
+	int av = (conf.av_override_value<0) ? 0 : conf.av_override_value;
+    if ( av<=AS_SIZE)
+        return (short) aperture_sizes_table[av-1].prop_id;
+    return (short) (AV96_MAX+32*(av-AS_SIZE));
 }
 
 //-------------------------------------------------------------------
@@ -504,7 +519,7 @@ short shooting_get_iso_market_base()
 short shooting_get_iso_market()
 {
     short iso_mode = shooting_get_canon_iso_mode();
-    if ((iso_mode < 50) || (conf.iso_override_koef && conf.iso_override_value) || (conf.iso_bracket_koef && conf.iso_bracket_value))
+    if ((iso_mode < 50) || (conf.iso_override_koef && conf.iso_override_value>0) || (conf.iso_bracket_koef && conf.iso_bracket_value))
     {
         // Original code
         // short iso_b = shooting_get_iso_base();
@@ -1190,7 +1205,7 @@ void shooting_set_autoiso(int iso_mode)
     // TODO also long shutter ?
     if (m==MODE_M || m==MODE_TV || m==MODE_STITCH) return; //Only operate outside of M and Tv
 	int ev_overexp = 0;
-	if ( conf.overexp_ev_enum )
+	if ( conf.overexp_ev_enum>0 )
 	{
 		// No shoot_histogram exist here because no future shot exist yet :)
 		live_histogram_process_quick();
@@ -1265,7 +1280,9 @@ void shooting_set_flash_sync_curtain(int curtain)
 void shooting_set_flash_video_override(int flash, int power)
 {
     int mode = 1;
-    if ((conf.flash_manual_override && conf.flash_video_override && is_video_recording()) || (conf.flash_manual_override && !conf.flash_video_override))
+    if ( (conf.flash_manual_override && power>=0 ) && 
+		 ( (conf.flash_video_override && is_video_recording()) || !conf.flash_video_override )
+	   )
     {
         set_property_case(PROPCASE_FLASH_ADJUST_MODE, &mode, sizeof(mode));
         set_property_case(PROPCASE_FLASH_FIRE, &flash, sizeof(flash));
@@ -1332,7 +1349,7 @@ void shooting_tv_bracketing(int when)
     { // first shoot
         bracketing.shoot_counter=1;
         // if Tv override is enabled... (this was adapted from function shooting_expo_param_override() )
-        if ( ((conf.tv_enum_type) || (conf.tv_override_value)) && (conf.tv_override_koef) && !(conf.override_disable==1) )
+        if ( ((conf.tv_enum_type) || (conf.tv_override_value)) && (conf.tv_override_koef && conf.tv_override_value>=0) && !(conf.override_disable==1) )
         {
             // ...use Tv override value as seed for bracketing:
             if (conf.tv_enum_type)
@@ -1346,7 +1363,8 @@ void shooting_tv_bracketing(int when)
             if (!(m==MODE_M || m==MODE_TV || m==MODE_LONG_SHUTTER)) bracketing.tv96=shooting_get_tv96();
             else bracketing.tv96=shooting_get_user_tv96();
         }
-        bracketing.tv96_step=32*conf.tv_bracket_value;
+        bracketing.tv96_step=(conf.tv_bracket_value<=0)?0:(32*conf.tv_bracket_value);
+
     }
     // other shoots
     bracketing.shoot_counter++;
@@ -1375,7 +1393,7 @@ void shooting_av_bracketing(int when)
             bracketing.av96 = shooting_get_av96();
         else
             bracketing.av96 = shooting_get_user_av96();
-        bracketing.av96_step = 32*conf.av_bracket_value;
+        bracketing.av96_step = (conf.av_bracket_value<=0)?0:(32*conf.av_bracket_value);
     }
     // other shoots
     bracketing.shoot_counter++;
@@ -1480,15 +1498,15 @@ void bracketing_reset()
 
 void bracketing_step(int when)
 {
-    if (conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))
+    if (conf.tv_bracket_value>0 && !(conf.override_disable==1 && conf.override_disable_all))
         shooting_tv_bracketing(when);
-    else if (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))
+    else if (conf.av_bracket_value>0 && !(conf.override_disable==1 && conf.override_disable_all))
         shooting_av_bracketing(when);
-    else if ((conf.iso_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.iso_bracket_koef))
+    else if ((conf.iso_bracket_value>0 && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.iso_bracket_koef))
         shooting_iso_bracketing(when);
-    else if ((conf.subj_dist_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.subj_dist_bracket_koef))
+    else if ((conf.subj_dist_bracket_value>0 && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.subj_dist_bracket_koef))
         shooting_subject_distance_bracketing(when);   	      
-    else if ((conf.subj_dist_bracket_value) && (conf.subj_dist_bracket_koef))
+    else if ((conf.subj_dist_bracket_value>0) && (conf.subj_dist_bracket_koef))
         shooting_subject_distance_bracketing(when);
 }
 
@@ -1520,9 +1538,9 @@ int captseq_hack_override_active()
             return 1;
     if(conf.override_disable==1)
         return 0;
-    if(conf.iso_override_value && conf.iso_override_koef)
+    if(conf.iso_override_value>0 && conf.iso_override_koef)
         return 1;
-    if((conf.tv_enum_type || conf.tv_override_value) && conf.tv_override_koef)
+    if((conf.tv_enum_type || conf.tv_override_value) && conf.tv_override_koef && conf.tv_override_value>=0)
         return 1;
     return 0;
 }
@@ -1666,7 +1684,7 @@ void shooting_expo_param_override_thumb(void)
         shooting_set_tv96_direct(photo_param_put_off.tv96, SET_NOW);
         photo_param_put_off.tv96=0;
     }
-    else if (((conf.tv_enum_type) || (conf.tv_override_value)) && (conf.tv_override_koef) && !(conf.override_disable==1))
+    else if (((conf.tv_enum_type) || (conf.tv_override_value)) && (conf.tv_override_koef && conf.tv_override_value>=0) && !(conf.override_disable==1))
     {
         if (conf.tv_enum_type)
             shooting_set_tv96_direct(32*(conf.tv_override_value-(tv_override_zero_shift)),SET_NOW);
@@ -1679,7 +1697,7 @@ void shooting_expo_param_override_thumb(void)
         shooting_set_sv96(photo_param_put_off.sv96, SET_NOW);
         photo_param_put_off.sv96=0;
     }
-    else if ((conf.iso_override_value) && (conf.iso_override_koef) && !(conf.override_disable==1))
+    else if ((conf.iso_override_value>0) && (conf.iso_override_koef) && !(conf.override_disable==1))
         shooting_set_iso_real(shooting_get_iso_override_value(), SET_NOW);
     else if (conf.autoiso_enable && shooting_get_flash_mode()/*NOT FOR FLASH AUTO MODE*/ && !(conf.override_disable==1 && conf.override_disable_all))
         shooting_set_autoiso(shooting_get_iso_mode());
@@ -1689,7 +1707,7 @@ void shooting_expo_param_override_thumb(void)
         shooting_set_av96_direct(photo_param_put_off.av96, SET_NOW);
         photo_param_put_off.av96=0;
     }
-    else if (conf.av_override_value && !(conf.override_disable==1))
+    else if (conf.av_override_value>0 && !(conf.override_disable==1))
         shooting_set_av96_direct(shooting_get_av96_override_value(), SET_NOW);
 
     if (((state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.subj_dist))
@@ -1697,7 +1715,7 @@ void shooting_expo_param_override_thumb(void)
         shooting_set_focus(photo_param_put_off.subj_dist, SET_NOW);
         photo_param_put_off.subj_dist=0;
     }
-    else if ((conf.subj_dist_override_value) && (conf.subj_dist_override_koef) && !(conf.override_disable==1))
+    else if ((conf.subj_dist_override_value>0) && (conf.subj_dist_override_koef) && !(conf.override_disable==1))
         shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
 
 #if CAM_HAS_ND_FILTER
@@ -1731,7 +1749,7 @@ void shooting_expo_iso_override_thumb(void)
         shooting_set_sv96(photo_param_put_off.sv96, SET_NOW);
         // photo_param_put_off.sv96 is not reset here, it will be reset in next call to shooting_expo_param_override
     }
-    else if ((conf.iso_override_value) && (conf.iso_override_koef) && !(conf.override_disable==1))
+    else if ((conf.iso_override_value>0) && (conf.iso_override_koef) && !(conf.override_disable==1))
         shooting_set_iso_real(shooting_get_iso_override_value(), SET_NOW);
     else if (conf.autoiso_enable && shooting_get_flash_mode()/*NOT FOR FLASH AUTO MODE*/ && !(conf.override_disable==1 && conf.override_disable_all))
         shooting_set_autoiso(shooting_get_iso_mode());
