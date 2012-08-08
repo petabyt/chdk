@@ -299,12 +299,12 @@
 238 "Erweiterte Foto-Funktionen"
 239 "Erweiterte Foto-Funktionen"
 240 "Ersetze Verschlusszeit"
-241 "   Multiplikator"
+241 " "                         //  Multiplikator"
 242 "Ersetze Blenden-Wert"
 243 "Ersetze ISO-Wert"
-244 "   Multiplikator"
-245 "Ersetze Fokus-Distanz"
-246 "   Eingabeschrittweite"
+244 " "                         //  Multiplikator"
+245 "Ersetze Fokus-Distanz (mm)"
+246 " "                         //  Eingabeschrittweite"
 
 247 "Reihe im Serienbildmodus"
 248 "Reihe im Serienbildmodus"
@@ -372,7 +372,7 @@
 
 297 "Zeige Werte in Video"
 
-298 "   Verschlusszeit-Typ"
+298 " "                         //  Verschlusszeit-Typ"
 
 299 "Benutzermenü-Status"
 300 "Benutzermenü"
@@ -440,8 +440,8 @@
 348 "Restzeit Video"
 349 "Lösche Einstellungen bei Start"
 
-350 "Schneller Ev-Wechsel an/aus"
-351 "   Schrittweite (1 EV)"
+350 " "                         //Schneller Ev-Wechsel an/aus"
+351 " "                         //  Schrittweite (1 EV)"
 352 "Ev-Korrektur"
 
 353 "Sicher, dass Sie ALLE RAW-Dateien\nim DCIM-Ordner ohne dazugehörige JPG\nlöschen wollen?"
@@ -556,7 +556,7 @@
 436 "RAW im Auto-Modus aus"
 
 437 "   NUR in Video"
-438 "   Stärke des Blitzes"
+438 " "                         //  Stärke des Blitzes"
 
 439 "DNG als Dateiendung"
 440 "DNG sichtbar via USB"
@@ -573,7 +573,7 @@
 450 "KEINE FARBEN DOPPELT"
 451 "Zeichensätze zurücksetzen ..."
 452 "Kamera neu starten ..."
-453 "Erzwinge manuellen Blitz"
+453 " "                         //Erzwinge manuellen Blitz"
 
 454 "Ersetze Bildqualität"
 455 "Neustart Lua bei Fehler"
@@ -712,3 +712,9 @@
 
 570 "SD-Karte"
 571 "Sprache & Zeichensatz"
+
+572 "Manueller Blitz (Stärke)"
+573 "Ev-Korrektur (Schrittweite)"
+574 "Hilfe-Anzeige"
+575 "Popup-Menü für Werteeingaben"
+
