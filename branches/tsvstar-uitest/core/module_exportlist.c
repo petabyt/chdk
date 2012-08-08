@@ -336,6 +336,22 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 			gui_menu_set_kdb_callback,
 			get_menu_currentitem,
 			gui_mbox_init_adv,
+
+			// profmenu.flt
+			&pmenu_autoexec_list,
+			&pmenu_string_buf,
+			&pmenu_menu_buf,
+			&pmenu_items_buf,
+			&count_autoexec,
+			gui_pmenu_load_script,
+			gui_pmenu_run_script,
+			gui_pmenu_run_as_mode,
+			gui_menu_goto_mainmenu,
+
+			find_mnu,
+			reset_profile_menu,
+			&root_menu,
+			&pmenu_autoexec_scene,
 }
 #endif
 

@@ -249,7 +249,7 @@ void core_spytask_can_start() {
 
 #ifdef OPT_SCRIPTING
 // remote autostart
-void script_autostart()
+void script_autostart_cb()
 {
     // Tell keyboard task we are in <ALT> mode
     enter_alt();
@@ -257,8 +257,11 @@ void script_autostart()
     gui_activate_alt_mode();
     // Clear console output
     console_clear(); 
-    // Switch to script mode and start the script running
-    script_start_gui( 1 );
+}
+
+void script_autostart_fin_cb()
+{
+//    gui_activate_alt_mode();
 }
 #endif
 
@@ -308,6 +311,7 @@ void core_spytask()
     profile_restore(0);			// load profilenum and adjust paths (postponed make root_title)
     conf_restore();
     gui_init();
+	load_profile_menu( 0 );
 
 #if CAM_CONSOLE_LOG_ENABLED
     extern void cam_console_init();
@@ -330,17 +334,7 @@ void core_spytask()
     camera_info.tick_count_offset = camera_info.tick_count_offset % 1000;
 
 #ifdef OPT_SCRIPTING
-    // remote autostart
-    if (conf.script_startup==1)
-    {
-        script_autostart();
-    }
-    else if (conf.script_startup==2)
-    {
-        conf.script_startup=0;
-        conf_save();
-        script_autostart();
-    }
+	do_autoexec_sequence( 1/*ASYNC*/, script_autostart_cb, script_autostart_fin_cb );
 #endif
 
     while (1)
@@ -351,6 +345,9 @@ void core_spytask()
 #ifdef  CAM_LOAD_CUSTOM_COLORS
         load_chdk_palette();
 #endif
+
+		if ( chdk_started_flag )
+			autostart_sequence_entry();	//execute next script if something exists in autoexec queue
 
         if (raw_data_available)
         {

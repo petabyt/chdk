@@ -709,7 +709,11 @@
 #define LANG_MENU_PROFILE_MANAGER				577
 #define LANG_MENU_PROFILE_MANAGER_TITLE			578
 
-#define GUI_LANG_ITEMS                          578
+#define LANG_MENU_GOTO_PROFMENU					579
+#define LANG_MENU_GOTO_MAINMENU					580
+#define LANG_EMPTY_STRING						581
+
+#define GUI_LANG_ITEMS                          581
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

@@ -381,6 +381,8 @@ typedef struct {
     int menuedit_popup;			// 0-menuedit in-menu, 1-menu edit is popup
 
 	int current_profile;		// num of selected profile
+    int scene_script_mode;		// strhash31 of last called menuitem "mode"
+	int profile_menu_mode;		// 0-by default open main menu, 1-by default open profile menu
 } Conf;
 
 extern Conf conf;

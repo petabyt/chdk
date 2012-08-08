@@ -1383,7 +1383,7 @@ void gui_menu_popup_mainmenu()
     extern int gui_user_menu_flag;
 
 	gui_user_menu_flag = 0;
-	gui_menu_init(&root_menu);
+	gui_menu_init(root_menu_ptr);
 	gui_set_mode(&menuGuiHandler);
 }
 

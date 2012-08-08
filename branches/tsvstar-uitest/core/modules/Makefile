@@ -19,13 +19,13 @@ LDOPTS+=-Wl,-N,-Ttext,0x0016ee30 -r -Wl,-d
 OBJS=../gui_calendar.o ../gui_bench.o ../gui_read.o ../gui_debug.o ../gui_tbox.o ../gui_osd_edit.o ../dng.o \
      ../gui_fselect.o ../nothumb.o ../gui_mpopup.o ../curves.o ../edgeoverlay.o \
      ../bitvector.o ../gui_palette.o ../gui_grid.o ../motion_detector.o ../zebra.o \
-     ../games/gui_4wins.o ../games/gui_mastermind.o ../games/gui_reversi.o ../gui_profile.o \
+     ../games/gui_4wins.o ../games/gui_mastermind.o ../games/gui_reversi.o ../gui_profile.o ../gui_profile_menu.o \
 	 ../games/gui_sokoban.o  ../games/gui_tetris.o ../games/gui_snake.o ../games/gui_sudoku.o ../games/simple_game.o
 
 FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt \
      _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop10.flt _rawop12.flt \
      txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt modmenu.flt _tbox.flt _osd_le.flt \
-	 profiles.flt
+	 profiles.flt profmenu.flt
 
 
 all: exportlist ../flt.h $(FLTS)
@@ -162,6 +162,10 @@ fselect.elf: ../gui_fselect.o ../nothumb.o
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 profiles.elf: ../gui_profiles.o
+	@echo \-\> $@
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+
+profmenu.elf: ../gui_profile_menu.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 

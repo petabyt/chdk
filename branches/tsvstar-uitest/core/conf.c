@@ -16,6 +16,7 @@
 #include "core.h"
 #include "stdlib.h"
 #include "script.h"
+#include "profiles.h"
 
 
 //-------------------------------------------------------------------
@@ -25,7 +26,7 @@ char conf_filename[25];
 #define CONF_MAGICK_VALUE   (0x33204741)
 
 //-------------------------------------------------------------------
-Conf conf = { MAKE_API_VERSION(2,2) };
+Conf conf = { MAKE_API_VERSION(2,3) };
 
 int state_shooting_progress = SHOOTING_PROGRESS_NONE;
 int state_save_raw_nth_only;
@@ -48,6 +49,9 @@ static void conf_change_video_bitrate();
 static void conf_change_dng_ext();
 static void conf_change_autoiso();
 extern void cb_autoiso_menu_change(unsigned int item);
+static void conf_change_pmenu_mode();
+extern void conf_change_scene_script();
+
 
 void camera_set_raw(int mode)
 {
@@ -464,6 +468,8 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(292, conf.show_alt_helper_delay,      CONF_DEF_VALUE,     i:3, NULL),
     CONF_INFO(293, conf.help_was_shown, 	        CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(294, conf.menuedit_popup,		        CONF_DEF_VALUE,     i:1, NULL),
+    CONF_INFO(295, conf.scene_script_mode,	        CONF_DEF_VALUE,     i:0, conf_change_scene_script),
+    CONF_INFO(296, conf.profile_menu_mode,	        CONF_DEF_VALUE,     i:1, conf_change_pmenu_mode),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
@@ -485,7 +491,10 @@ void conf_info_func(unsigned short id)
     case 226: 
     case 289: conf_change_dng(); break;
     case 235: conf_change_dng_ext(); break;
+	case 283:
     case 284: conf_change_autoiso(); break;
+    case 295: conf_change_scene_script(); break;
+    case 296: conf_change_pmenu_mode(); break;
     }
 }
 
@@ -551,6 +560,24 @@ void conf_change_autoiso()
   // Use menu callback ( some required enum declaration are isolated there)
   cb_autoiso_menu_change(-1);
 }
+
+
+static void conf_change_pmenu_mode()
+{
+	if ( conf.profile_menu_mode && pmenu_menu_buf )
+		root_menu_ptr = pmenu_menu_buf;
+	else
+		root_menu_ptr = &root_menu;
+}
+
+void conf_change_scene_script()
+{
+	gui_menu_clean_marks(MENU_MARK_CATEGORY_SCENE_SCRIPT);
+	if (conf.scene_script_mode)
+		gui_menu_add_mark(MENU_MARK_CATEGORY_SCENE_SCRIPT,conf.scene_script_mode);
+}
+
+//-----------------------------------------------------------------------
 
 /*
 update the prevent display off/prevent shutdown based on current state

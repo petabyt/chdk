@@ -69,7 +69,7 @@ typedef struct {
 
 typedef const char* (enum_callback_func_t)(int change, int arg);
 typedef int (kbd_callback_t)(int);
-
+typedef void (menuproc_t)(int);
 
 //-------------------------------------------------------------------
 extern void gui_menu_init(CMenu *menu_ptr);
@@ -95,6 +95,7 @@ void gui_menu_close_menu( int switch_to_alt );
 
 enum {
    MENU_MARK_CATEGORY_PROFILES,
+   MENU_MARK_CATEGORY_SCENE_SCRIPT,
 };
 
 int gui_menu_add_mark(int category, int itemid );
@@ -108,6 +109,7 @@ extern gui_handler menuGuiHandler;
 
 //-------------------------------------------------------------------
 extern  CMenu   root_menu;									// defined in gui.c
+extern  CMenu* root_menu_ptr;								// defined in gui.c
 
 extern CMenuItem* find_mnu(CMenu *curr_menu, int itemid );  // defined in gui_user_menu.c
 

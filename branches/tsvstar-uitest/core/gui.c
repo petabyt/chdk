@@ -1934,6 +1934,21 @@ static void gui_menuproc_reset(int arg)
                   MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, gui_menuproc_reset_selected);
 }
 
+static void gui_menu_run_profile_menu(int arg)
+{
+	if ( pmenu_menu_buf ) {
+
+		// Turn off menu (close menu, profile manager, etc) for safety
+		gui_menu_close_menu(1);
+
+		root_menu_ptr = pmenu_menu_buf;
+		conf.profile_menu_mode = 1;      // run profile menu by default
+
+		// open menu back again
+		gui_menu_popup_mainmenu();
+	}
+}
+
 static CMenuItem chdk_settings_menu_items[] = {
     MENU_ITEM   (0x28,LANG_MENU_PROFILE_MANAGER,	        MENUITEM_PROC,      gui_menu_run_fltmodule, "profiles.flt" ),
     MENU_ITEM   (0x22,LANG_MENU_MAIN_OSD_PARAM,             MENUITEM_SUBMENU,   &osd_submenu, 0 ),
@@ -1982,11 +1997,19 @@ static CMenuItem root_menu_items[] = {
 #endif
     MENU_ITEM   (0x22,LANG_MENU_CHDK_SETTINGS,              MENUITEM_SUBMENU,   &chdk_settings_menu, 0 ),
     MENU_ITEM   (0x29,LANG_MENU_MAIN_MISC,                  MENUITEM_SUBMENU,   &misc_submenu,      0 ),
+    MENU_ITEM   (0x28,LANG_MENU_GOTO_PROFMENU,		        MENUITEM_PROC,      gui_menu_run_profile_menu, 0 ),
     MENU_ITEM   (0x2e,LANG_MENU_USER_MENU,  	    	    MENUITEM_SUBMENU,   &user_submenu, 0 ),
     {0}
 };
 
 CMenu root_menu = {0x20,LANG_MENU_MAIN_TITLE, NULL, root_menu_items };
+
+CMenu* root_menu_ptr = &root_menu;
+
+void adjust_root_menu()
+{
+	menuitem_foreach2( &root_menu, LANG_MENU_GOTO_PROFMENU, 0, (pmenu_menu_buf!=0) );
+}
 
 // Set visibility of User Menu in root menu based on user menu state
 // Note this hack requires the User Menu entry to be the last one in the root_menu_items array above.
@@ -2647,12 +2670,31 @@ int gui_chdk_kbd_process()
 // Enter main menu or user menu based on configuration
 void gui_chdk_kbd_process_menu_btn()
 {
-    if (conf.user_menu_enable &&
-        ((conf.user_menu_as_root && !camera_info.state.is_shutter_half_press) ||
-         (!conf.user_menu_as_root && camera_info.state.is_shutter_half_press)))
-        gui_menu_init(&user_submenu);
-    else
-        gui_menu_init(&root_menu);
+
+	profile_set_postprocessing();	// finalize profile restore: create main menu title
+
+	if ( conf.profile_menu_mode && pmenu_menu_buf ) {
+
+		// profile menu exists and "by default"	
+		root_menu_ptr = pmenu_menu_buf;
+
+        if ( camera_info.state.is_shutter_half_press )
+        	gui_menu_init( &root_menu );
+		else
+        	gui_menu_init( root_menu_ptr );
+
+	} else {
+
+		// default behaviour: main/user menu
+    	root_menu_ptr = &root_menu;
+
+		if ( conf.user_menu_enable &&
+	        ((conf.user_menu_as_root && !camera_info.state.is_shutter_half_press) ||
+    	     (!conf.user_menu_as_root && camera_info.state.is_shutter_half_press)))
+        	gui_menu_init(&user_submenu);
+	    else 
+    	    gui_menu_init(&root_menu);
+	}
 
     gui_default_kbd_process_menu_btn();
 }
@@ -2774,6 +2816,7 @@ void gui_activate_alt_mode()
         readjust_operation_submenu( 0xff );
         readjust_autoiso_submenu();
 		readjust_bracketing_submenu();
+		adjust_root_menu();
 
         // If user menu set to start automatically when <ALT> mode entered 
         // then enter user menu mode, unless a script was paused by exiting 
@@ -2781,9 +2824,15 @@ void gui_activate_alt_mode()
 	    gui_user_menu_flag = 0;
 	    if ((conf.user_menu_enable == 2) && !state_kbd_script_run) {
 			profile_set_postprocessing();	// finalize profile restore: create main menu title
-		    gui_menu_init(&user_submenu);
+
+			if ( conf.profile_menu_mode && pmenu_menu_buf ) {
+			    gui_menu_init( pmenu_menu_buf );
+			} else {
+			    gui_menu_init(&user_submenu);
+			    gui_user_menu_flag = 1;
+			}
+
 		    gui_set_mode(&menuGuiHandler);
-		    gui_user_menu_flag = 1;
 	    }
         break;
 

@@ -384,7 +384,7 @@ const char* make_param_filename( enum FilenameMakeModeEnum mode, const char* fn,
 	
 	// find name of script
     if (fn && fn[0] ) 
-{
+	{
 	    name = strrchr( fn, '/' ); 
     	if (name) name++; else name=(char*)fn;
 	}
@@ -398,7 +398,7 @@ const char* make_param_filename( enum FilenameMakeModeEnum mode, const char* fn,
 			break;			
 		case MAKE_PARAMSET_NAMES_FILENAME:
 			tgt_buf = cfg_name;
-			if ( conf.current_profile )
+			if ( conf.current_profile%10 )
 				base_path = CFG_PARAMSET_PATH;
 			else
 				base_path = CFG_PARAMSET_0PATH;
@@ -712,16 +712,31 @@ void script_load(const char *fn, enum ScriptLoad_Mode_ saved_params) {
 
 static tmpscr_callb_t tmpscript_endfn;
 static int            tmpscript_flag = 0;	  // 1 - currently temporary script is processed
+static int			  tmpscript_num_in_chain = 0;	// num of call in chain
 
-// Auxilary: Finalize temporary script 
+// Restore state
 //----------------------------------------
-static void temporary_script_unload()
+void temporary_script_unload()
+{
+	make_param_filename( MAKE_PARAM_TMPRUN_FILENAME, 0, 0);
+	if ( is_file_exists(cfg_param_name) ) {
+		load_params_values("",-1);
+		remove( cfg_param_name );
+	}
+}
+
+// Auxilary: Temporary script finalization
+//----------------------------------------
+static void temporary_script_unload_cb()
 {
 	if ( !tmpscript_flag )
 		return;
 
-	if (tmpscript_endfn)
-		tmpscript_endfn();
+	if (tmpscript_endfn) {
+		// rv=0 of callback mean "do not terminate temporary session"
+		if ( !tmpscript_endfn() )
+			return;
+	}
 
 	// if state is active that mean no need to housekeeping yet
     if ( state_kbd_script_run ) 
@@ -729,13 +744,10 @@ static void temporary_script_unload()
 
 	tmpscript_flag = 0;
 	tmpscript_endfn = 0;
-	
+	tmpscript_num_in_chain = 0;
+
 	// restore state after run
-	make_param_filename( MAKE_PARAM_TMPRUN_FILENAME, 0, 0);
-	if ( is_file_exists(cfg_param_name) ) {
-		load_params_values("",-1);
-		remove( cfg_param_name );
-	}
+	temporary_script_unload();
 }
 
 //--------------------------------------------------------------------------------
@@ -762,17 +774,19 @@ void temporary_script_load( char* fn, char* paramstr, tmpscr_callb_t callback, i
 	// Try to load requested script
 	script_load( fn, SCRIPT_LOAD_DEFAULT_VALUES );
 
+	tmpscript_endfn = callback;
+    tmpscript_flag = 1;
+
 	if ( script_source_str == lua_script_default ) {
 		// If no such script found - cancel the run
-		temporary_script_unload();
+		temporary_script_unload_cb();
 		return;
 	}
 
 	if ( paramstr )
 		script_apply_paramstr(paramstr,1);
 
-	tmpscript_endfn = callback;
-    tmpscript_flag = 1;
+	tmpscript_num_in_chain++;
 
 	// Run script
 	script_start_gui( autoexec_flag );
@@ -1161,7 +1175,7 @@ void script_end()
     }
 
 	if ( tmpscript_flag )
-		temporary_script_unload();
+		temporary_script_unload_cb();
 }
 
 long script_start_gui( int autostart )
@@ -1178,7 +1192,9 @@ long script_start_gui( int autostart )
 
     /*if (!autostart)*/ kbd_key_release_all();
 
-    console_clear();
+	if (!tmpscript_flag || tmpscript_num_in_chain<=1 )
+	    console_clear();
+
     script_print_screen_init();
 
     if (conf.script_param_save &&
