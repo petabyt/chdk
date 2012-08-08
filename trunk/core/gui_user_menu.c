@@ -120,7 +120,7 @@ void move_user_menu_item_down(int* cur_memnu_item_indx)
 }
 
 //-------------------------------------------------------------------
-static CMenuItem* find_mnu(CMenu *curr_menu, int itemid )
+CMenuItem* find_mnu(CMenu *curr_menu, int itemid )
 {
 	int gui_menu_curr_item;
 	CMenuItem* rv=0;

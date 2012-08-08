@@ -37,7 +37,7 @@
 
 struct gui_common_api_ver gui_version = {
 		MAKE_API_VERSION(1,0),			// ver of common api: gui_mode, mbox, this structure
-		MAKE_API_VERSION(1,0)			// ver of menu structure
+		MAKE_API_VERSION(1,1)			// ver of menu structure
 };
 
 // forward declarations
@@ -82,48 +82,41 @@ void gui_menu_run_fltmodule(int arg)
 
 //-------------------------------------------------------------------
 
-/*
-common code for "enum" menu items that just take a list of string values and don't require any special setters
-would be better to have another menu item type that does this by default
-save memory by eliminating dupe code
-*/
-void gui_enum_value_change(int *value, int change, unsigned num_items) {
-    *value+=change;
-    if (*value<0)
-        *value = num_items-1;
-    else if (*value>=num_items)
-        *value = 0;
-}
-
-static const char* gui_change_simple_enum(int* value, int change, const char** items, unsigned num_items) {
-    gui_enum_value_change(value, change, num_items);
-    return items[*value];
-}
-
-const char* gui_change_enum2(const CMenuItem *menu_item, int change)
+// Transfer override_koef status to quickdisable state (to reconcile imported conf and script changes of conf)
+static void operation_transfer_qdisabled( int* override_value_ptr, int* override_koef_ptr, enum_callback_func_t* koef_enum_callback )
 {
-    const char** items = (const char**)menu_item->arg;
-    gui_enum_value_change(menu_item->value, change, menu_item->opt_len);
-    return items[*menu_item->value];
+	// TO QUICKDISABLED: If override_koef=off -> turn it on but quickdisable tv_value
+	if ( !*override_koef_ptr ) {
+		value_turn_state(override_value_ptr,-1);
+
+		if ( koef_enum_callback ) {
+			*override_koef_ptr = 0;
+			koef_enum_callback( 1, 0 );
+		} else {
+			*override_koef_ptr = 1;
+		}
+	}
 }
 
 //-------------------------------------------------------------------
 
-static const char* gui_bracket_values_modes[] =             { "Off", "1/3 Ev","2/3 Ev", "1 Ev", "1 1/3Ev", "1 2/3Ev", "2 Ev", "2 1/3Ev", "2 2/3Ev", "3 Ev", "3 1/3Ev", "3 2/3Ev", "4 Ev"};
-static const char* gui_override_koef_modes[] =              { "Off", "1", "10", "100", "1000" };
 static const char* gui_bracket_type_modes[] =               { "+/-", "-","+"};
 
+const char* gui_bracket_values_enum(int change, int arg)
+{
+	static const char* modes[] =             { "-Off-", "1/3 Ev","2/3 Ev", "1 Ev", "1 1/3Ev", "1 2/3Ev", "2 Ev", "2 1/3Ev", "2 2/3Ev", "3 Ev", "3 1/3Ev", "3 2/3Ev", "4 Ev"};
+	return gui_change_simple_qenum( (int*)arg, change, modes, sizeof(modes)/sizeof(modes[0]) );
+}
+
 static CMenuItem bracketing_in_continuous_submenu_items[] = {
-    MENU_ENUM2  (0x63,LANG_MENU_TV_BRACKET_VALUE,           &conf.tv_bracket_value,         gui_bracket_values_modes ),
+    MENU_ITEM	(0x63,LANG_MENU_TV_BRACKET_VALUE,           MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_bracket_values_enum, &conf.tv_bracket_value ),
 #if CAM_HAS_IRIS_DIAPHRAGM
-    MENU_ENUM2  (0x62,LANG_MENU_AV_BRACKET_VALUE,           &conf.av_bracket_value,         gui_bracket_values_modes ),
+    MENU_ITEM	(0x62,LANG_MENU_AV_BRACKET_VALUE,           MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_bracket_values_enum, &conf.av_bracket_value ),
 #endif
 #if CAM_CAN_SD_OVERRIDE
-    MENU_ITEM   (0x5e,LANG_MENU_SUBJ_DIST_BRACKET_VALUE,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,                 &conf.subj_dist_bracket_value, MENU_MINMAX(0, 100) ),
-    MENU_ENUM2  (0x5f,LANG_MENU_SUBJ_DIST_BRACKET_KOEF,     &conf.subj_dist_bracket_koef,   gui_override_koef_modes ),
+    MENU_ITEM   (0x5e,LANG_MENU_SUBJ_DIST_BRACKET_VALUE,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE,                 &conf.subj_dist_bracket_value, MENU_MINMAX(0, 10000) ),
 #endif
-    MENU_ITEM   (0x74,LANG_MENU_ISO_BRACKET_VALUE,          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,                 &conf.iso_bracket_value, MENU_MINMAX(0, 100) ),
-    MENU_ENUM2a (0x5f,LANG_MENU_ISO_BRACKET_KOEF,           &conf.iso_bracket_koef,         gui_override_koef_modes,            4 ),
+    MENU_ITEM   (0x74,LANG_MENU_ISO_BRACKET_VALUE,          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE,                 &conf.iso_bracket_value, MENU_MINMAX(0, 800) ),
     MENU_ENUM2  (0x60,LANG_MENU_BRACKET_TYPE,               &conf.bracket_type,             gui_bracket_type_modes ),
     MENU_ITEM   (0x5b,LANG_MENU_CLEAR_BRACKET_VALUES,       MENUITEM_BOOL,                  &conf.clear_bracket,                0 ),
     MENU_ITEM   (0x5c,LANG_MENU_BRACKETING_ADD_RAW_SUFFIX,  MENUITEM_BOOL,                  &conf.bracketing_add_raw_suffix,    0 ),
@@ -131,6 +124,16 @@ static CMenuItem bracketing_in_continuous_submenu_items[] = {
     {0}
 };
 static CMenu bracketing_in_continuous_submenu = {0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS_TITLE, NULL, bracketing_in_continuous_submenu_items };
+
+void readjust_bracketing_submenu()
+{
+	// Reconcile pairs of values to "simple mode" realm:
+	// Ensure that override_koefs are not off. And if they are - transfer to quickdisable state
+#if CAM_CAN_SD_OVERRIDE
+	operation_transfer_qdisabled( &conf.subj_dist_bracket_value, &conf.subj_dist_bracket_koef, 0 );
+#endif
+	operation_transfer_qdisabled( &conf.iso_bracket_value, &conf.iso_bracket_koef, 0 );
+}
 
 //-------------------------------------------------------------------
 
@@ -203,7 +206,7 @@ static CMenuItem script_submenu_items_top[] = {
     MENU_ITEM   (0x5c,LANG_MENU_LUA_RESTART,                MENUITEM_BOOL,                      &conf.debug_lua_restart_on_error,   0 ),
 #endif
     MENU_ITEM   (0x5d,LANG_MENU_SCRIPT_DEFAULT_VAL,         MENUITEM_PROC,                      gui_load_script_default,    0 ),
-    MENU_ITEM   (0x5e,LANG_MENU_SCRIPT_PARAM_SET,           MENUITEM_ENUM,                      gui_script_param_set_enum,  0 ),
+    MENU_ITEM(0x5e,LANG_MENU_SCRIPT_PARAM_SET,     			MENUITEM_ENUM,                      gui_script_param_set_enum, &conf.script_param_set ),
     MENU_ITEM   (0x5c,LANG_MENU_SCRIPT_PARAM_SAVE,          MENUITEM_BOOL,                      &conf.script_param_save,    0 ),
     MENU_ITEM   (0x0 ,(int)script_title,                    MENUITEM_SEPARATOR,                 0,                          0 ),
 };
@@ -269,15 +272,14 @@ static const char* gui_autoiso2_shutter_modes[]={ "Off", "1/4s", "1/6s", "1/8s",
 				 "1/40s", "1/50s", "1/60s", "1/80s", "1/100s", "1/125s", "1/160s", "1/250s", "1/500s", "1/1000s"};
 static const int shutter2_values[]={0, 4, 6, 8, 12, 15, 20, 25, 30, 40, 50, 60, 80, 100, 125, 160, 200, 250, 500, 1000 };
 
-static const char* gui_overexp_ev_modes[]={ "Off", "-1/3 Ev", "-2/3 Ev", "-1 Ev", "-1 1/3Ev", "-1 2/3Ev", "-2 Ev" };
-
-void cb_autoiso_menu_change(unsigned int item)
+const char* gui_overexp_ev_enum(int change, int arg)
 {
-    conf.autoiso_min_shutter_numerator = shutter1_values[conf.autoiso_shutter_enum];
-    conf.autoiso2_min_shutter_numerator =  shutter2_values[conf.autoiso2_shutter_enum];
-
-    conf.autoiso_max_iso_auto_real=0;	// set invalid value of real autoiso as flag 'need recalc'
+	static const char* modes[]={ "Off", "-1/3 Ev", "-2/3 Ev", "-1 Ev", "-1 1/3Ev", "-1 2/3Ev", "-2 Ev" };
+	return gui_change_simple_qenum( (int*)arg, change, modes, sizeof(modes)/sizeof(modes[0]) );
 }
+
+
+void cb_autoiso_menu_change(unsigned int item);
 
 static CMenuItem autoiso_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_AUTOISO_ENABLED,            MENUITEM_BOOL,                                      &conf.autoiso_enable,       0 ),
@@ -299,7 +301,7 @@ static CMenuItem autoiso_submenu_items[] = {
     MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_MAX_ISO_HI,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_max_iso_hi,		MENU_MINMAX(20, 320) ),
 #endif
 
-    MENU_ENUM2	(0x5f,LANG_MENU_AUTOISO_OVEREXP_EV,  		&conf.overexp_ev_enum, gui_overexp_ev_modes ),
+    MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_OVEREXP_EV,         MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_overexp_ev_enum, &conf.overexp_ev_enum ),
     MENU_ITEM	(0x57,LANG_MENU_ZEBRA_OVER,            		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso2_over,    		MENU_MINMAX(0, 32) ),
     MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_OVEREXP_THRES, 		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.overexp_threshold, 		MENU_MINMAX(1, 20) ),
 
@@ -308,6 +310,28 @@ static CMenuItem autoiso_submenu_items[] = {
 };
 
 static CMenu autoiso_submenu = {0x2d,LANG_MENU_AUTOISO_TITLE, cb_autoiso_menu_change, autoiso_submenu_items };
+
+void readjust_autoiso_submenu()
+{
+    int func = !conf.autoiso_shutter_enum;
+	menuitem_foreach2( &autoiso_submenu, LANG_MENU_AUTOISO_IS_FACTOR, 0, func );
+	menuitem_foreach2( &autoiso_submenu, LANG_MENU_AUTOISO_USER_FACTOR, 0, func );
+
+	func = (conf.overexp_ev_enum>0);
+	menuitem_foreach2( &autoiso_submenu, LANG_MENU_ZEBRA_OVER, 0, func );
+	menuitem_foreach2( &autoiso_submenu, LANG_MENU_AUTOISO_OVEREXP_THRES, 0, func );
+}
+
+void cb_autoiso_menu_change(unsigned int item)
+{
+    conf.autoiso_min_shutter_numerator = shutter1_values[conf.autoiso_shutter_enum];
+    conf.autoiso2_min_shutter_numerator =  shutter2_values[conf.autoiso2_shutter_enum];
+
+    conf.autoiso_max_iso_auto_real=0;	// set invalid value of real autoiso as flag 'need recalc'
+
+	// adjust visibility of secondary items
+	readjust_autoiso_submenu();
+}
 
 //-------------------------------------------------------------------
 
@@ -766,6 +790,65 @@ static void gui_show_memory_info(int arg)
     gui_mbox_init(LANG_MSG_MEMORY_INFO_TITLE, (int)buf, MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
 }
 
+
+// PURPOSE: find filename in "src" copy it to "tgt" with extension "ext"
+static void copy_fname_w_new_ext( char* tgt, char* src, char* ext )
+{
+	if ( !src || !tgt ) return;
+
+	// copy filename
+	char *str = strrchr( src, '/' );
+	if (!str ) { str = src; } else { str++;}
+	strcpy( tgt, str );
+
+	// replace extension
+	str = strrchr( tgt, '.' );
+	if ( !str ) { str = tgt+strlen(tgt); }
+	strcpy(	 str, ext );
+}
+
+// PURPOSE: Try to open help file (fallback: selected_locale.hlp -> builtin_locale.hlp -> english.hlp )
+// RETURN: 0 if help was not runned, 1 if ok
+static int gui_show_help(int arg)
+{
+	if ( state_kbd_script_run )
+		return 0;
+
+	// make path to help file
+
+	char path_buf[60];
+	unsigned int argv[] ={ (unsigned int)path_buf };
+	strcpy( path_buf, "A/CHDK/HELP/");
+
+	char* helpfile_name = path_buf + strlen(path_buf);
+
+	// if not success, try to load "_current_locale_.hlp"
+	if ( conf.lang_file[0] ) {
+		copy_fname_w_new_ext( helpfile_name, conf.lang_file, ".hlp");
+
+		if ( is_file_exists( helpfile_name) > 0 )
+			if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
+				return 1;
+	}
+
+	// if not success, try to load "_base_language_.hlp"
+	copy_fname_w_new_ext( helpfile_name, gui_lang_source_filename, ".hlp");
+	if ( is_file_exists( helpfile_name) > 0 )
+		if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
+			return 1;
+
+	//if not success, try to load "english.hlp"
+	argv[0] = (unsigned int)"A/CHDK/HELP/ENGLISH.HLP";
+	if ( is_file_exists( (const char*)argv[0] ) >0 ) {
+		if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
+			return 1;
+	}
+
+	return 0;
+}
+
+
+
 static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x35,LANG_MENU_MISC_FILE_BROWSER,          MENUITEM_PROC,                  gui_draw_fselect,                   0 ),
     MENU_ITEM   (0x80,(int)"Module Inspector",              MENUITEM_PROC,                  gui_menu_run_fltmodule, "modinsp.flt" ),
@@ -787,6 +870,7 @@ static CMenuItem misc_submenu_items[] = {
 #ifdef OPT_DEBUGGING
     MENU_ITEM   (0x2a,LANG_MENU_MAIN_DEBUG,                 MENUITEM_SUBMENU,               &debug_submenu,                     0 ),
 #endif
+    MENU_ITEM   (0x80,LANG_MENU_MISC_HELP,			        MENUITEM_PROC,                  gui_show_help,	                    0 ),
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0,                                  0 ),
     {0},
 };
@@ -992,7 +1076,7 @@ static CMenuItem video_submenu_items[] = {
 #if CAM_CHDK_HAS_EXT_VIDEO_MENU
     MENU_ENUM2  (0x23,LANG_MENU_VIDEO_MODE,                 &conf.video_mode,       gui_video_mode_modes ),
 #if !CAM_VIDEO_QUALITY_ONLY
-    MENU_ITEM   (0x5e,LANG_MENU_VIDEO_BITRATE,              MENUITEM_ENUM,          gui_video_bitrate_enum,             0 ),
+      MENU_ITEM(0x5e,LANG_MENU_VIDEO_BITRATE,           MENUITEM_ENUM,    gui_video_bitrate_enum, &conf.video_bitrate ),
 #endif
     MENU_ITEM   (0x60,LANG_MENU_VIDEO_QUALITY,              MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.video_quality, MENU_MINMAX(1, 99) ),
 #if CAM_CHDK_HAS_EXT_VIDEO_TIME
@@ -1013,7 +1097,7 @@ static CMenuItem video_submenu_items[] = {
     MENU_ITEM   (0x83,LANG_MENU_MUTE_ON_ZOOM,               MENUITEM_BOOL,          &conf.mute_on_zoom,                 0 ),
 #endif
 #if CAM_AF_SCAN_DURING_VIDEO_RECORD
-    MENU_ITEM   (0x82,LANG_MENU_VIDEO_AF_KEY,               MENUITEM_ENUM,          gui_video_af_key_enum,              0 ),
+    MENU_ITEM(0x82,LANG_MENU_VIDEO_AF_KEY,   MENUITEM_ENUM,    gui_video_af_key_enum, &conf.video_af_key ),
 #endif
     MENU_ENUM2  (0x5c,LANG_MENU_OSD_SHOW_VIDEO_TIME,        &conf.show_movie_time,  gui_show_movie_time_modes ),
     MENU_ITEM   (0x60,LANG_MENU_OSD_SHOW_VIDEO_REFRESH,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.show_movie_refresh,   MENU_MINMAX(1, 20) ),
@@ -1032,6 +1116,7 @@ static const char* gui_tv_override_koef_enum(int change, int arg)
 
     if (conf.tv_enum_type && change)
     {
+		// tv_type == EvStep
         if (conf.tv_override_koef == 6)
             conf.tv_override_koef = 0;
         else
@@ -1055,11 +1140,13 @@ static const char* gui_tv_override_value_enum(int change, int arg)
     // XXX This array above is redundant with platform/generic/shooting.c, this should be avoided!
     conf.tv_override_value+=change;
     if (conf.tv_enum_type) {
-       if (conf.tv_override_value<0) {
+       if (conf.tv_override_value<0 && change ) {
           conf.tv_override_value=tv_override_amount-1;
         }
        else if ((unsigned)conf.tv_override_value>=(tv_override_amount))
          conf.tv_override_value=0;
+		if ( conf.tv_override_value < 0 )
+			return "Off";
        return tv_override[conf.tv_override_value]; 
     }
     else {
@@ -1089,11 +1176,9 @@ static const char* gui_tv_enum_type_enum(int change, int arg)
 #if CAM_HAS_IRIS_DIAPHRAGM
 const char* gui_av_override_enum(int change, int arg)
 {
-    conf.av_override_value+=change;
-    if (conf.av_override_value<0) conf.av_override_value=shooting_get_aperture_sizes_table_size()+6;
-    else if (conf.av_override_value>shooting_get_aperture_sizes_table_size()+6) conf.av_override_value=0;
+	gui_qenum_value_change( &conf.av_override_value, change, shooting_get_aperture_sizes_table_size()+7 );
 
-    if (conf.av_override_value == 0)
+    if (conf.av_override_value <= 0)
         return "Off";
     else 
     {
@@ -1162,6 +1247,18 @@ const char* gui_subj_dist_override_koef_enum(int change, int arg)
     return rv;
 }
 
+extern void readjust_operation_submenu(int flags);
+
+static const char* gui_override_disable_modes[] =           { "No", "Yes" };
+const char* gui_override_disable(int change, int arg)
+{
+    const char* rv = gui_change_simple_enum( &conf.override_disable, change, (const char**)gui_override_disable_modes,
+										 sizeof(gui_override_disable_modes)/sizeof(gui_override_disable_modes[0]) );
+	if ( change )
+		readjust_operation_submenu( 0x01 );
+	return rv;
+}
+
 #if defined(OPT_CURVES)
 
 static const char* gui_conf_curve_enum(int change, int arg) {
@@ -1202,7 +1299,6 @@ static CMenu curve_submenu = {0x85,LANG_MENU_CURVE_PARAM_TITLE, NULL, curve_subm
 
 #endif
 
-static const char* gui_override_disable_modes[] =           { "No", "Yes" };
 #if CAM_HAS_ND_FILTER
 static const char* gui_nd_filter_state_modes[] =            { "Off", "In", "Out" };
 #endif
@@ -1212,38 +1308,34 @@ static const char* gui_fast_image_quality_modes[] =         { "sup.fine", "fine"
 #endif
 
 static CMenuItem operation_submenu_items[] = {
-    MENU_ENUM2  (0x5f,LANG_MENU_OVERRIDE_DISABLE,           &conf.override_disable, gui_override_disable_modes ),
+    MENU_ITEM  (0x5f,LANG_MENU_OVERRIDE_DISABLE,           MENUITEM_ENUM,    gui_override_disable, &conf.override_disable ),
     MENU_ITEM   (0x5c,LANG_MENU_OVERRIDE_DISABLE_ALL,       MENUITEM_BOOL,          &conf.override_disable_all,         0 ),
-    MENU_ITEM   (0x61,LANG_MENU_OVERRIDE_TV_VALUE,          MENUITEM_ENUM,          gui_tv_override_value_enum,         0 ),
-    MENU_ITEM   (0x5f,LANG_MENU_OVERRIDE_TV_KOEF,           MENUITEM_ENUM,          gui_tv_override_koef_enum,          0 ),
-    MENU_ITEM   (0x59,LANG_MENU_TV_ENUM_TYPE,               MENUITEM_ENUM,          gui_tv_enum_type_enum,              0 ),
+	MENU_ITEM(0x61,LANG_MENU_OVERRIDE_TV_VALUE,        MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_tv_override_value_enum, &conf.tv_override_value ),
 #if CAM_HAS_IRIS_DIAPHRAGM
-    MENU_ITEM   (0x62,LANG_MENU_OVERRIDE_AV_VALUE,          MENUITEM_ENUM,          gui_av_override_enum,               0 ),
+	MENU_ITEM(0x62,LANG_MENU_OVERRIDE_AV_VALUE,        MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_av_override_enum, &conf.av_override_value ),
 #endif
 #if CAM_HAS_ND_FILTER
     MENU_ENUM2  (0x5f,LANG_MENU_OVERRIDE_ND_FILTER,         &conf.nd_filter_state,  gui_nd_filter_state_modes ),
 #endif
 #if CAM_CAN_SD_OVERRIDE
-    MENU_ITEM   (0x5e,LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE,   MENUITEM_ENUM,          gui_subj_dist_override_value_enum,  0 ),
-    MENU_ITEM   (0x5f,LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF,    MENUITEM_ENUM,          gui_subj_dist_override_koef_enum,   0 ),
+    MENU_ITEM(0x5e,LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE, MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_subj_dist_override_value_enum, &conf.subj_dist_override_value ),
 #endif
-    MENU_ITEM   (0x74,LANG_MENU_OVERRIDE_ISO_VALUE,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,     &conf.iso_override_value, MENU_MINMAX(0, 800) ),
-    MENU_ENUM2a (0x5f,LANG_MENU_OVERRIDE_ISO_KOEF,          &conf.iso_override_koef, gui_override_koef_modes,       4 ),
+	
+    MENU_ITEM(0x74,LANG_MENU_OVERRIDE_ISO_VALUE,	   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE,  &conf.iso_override_value, MENU_MINMAX(0, 12800) ),
 #if ZOOM_OVERRIDE
     MENU_ITEM   (0x5c,LANG_MENU_OVERRIDE_ZOOM,              MENUITEM_BOOL,          &conf.zoom_override,                0 ),
-    MENU_ITEM   (0x5f,LANG_MENU_OVERRIDE_ZOOM_VALUE,        MENUITEM_ENUM,          gui_zoom_override_enum,             0 ),
+    MENU_ITEM(0x5f,LANG_MENU_OVERRIDE_ZOOM_VALUE,	  MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_zoom_override_enum, &conf.zoom_override_value ),
+
     MENU_ITEM   (0x5c,LANG_MENU_CLEAR_ZOOM_OVERRIDE_VALUES, MENUITEM_BOOL,          &conf.clear_zoom_override,          0 ),
 #endif
     MENU_ITEM   (0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS,      MENUITEM_SUBMENU,       &bracketing_in_continuous_submenu,  0 ),
     MENU_ITEM   (0x2d,LANG_MENU_AUTOISO,                    MENUITEM_SUBMENU,       &autoiso_submenu,                   0 ),
     MENU_ITEM   (0x5b,LANG_MENU_CLEAR_OVERRIDE_VALUES,      MENUITEM_BOOL,          &conf.clear_override,               0 ),
-    MENU_ITEM   (0x5c,LANG_MENU_MISC_FAST_EV,               MENUITEM_BOOL,          &conf.fast_ev,                      0 ),
-    MENU_ENUM2  (0x5f,LANG_MENU_MISC_FAST_EV_STEP,          &conf.fast_ev_step,     gui_fast_ev_step_modes ),
+    MENU_ENUM2typ (0x5f,LANG_MENU_MISC_FAST_EV_STEP_SIMPLE,    MENUITEM_ENUM2|MENUITEM_QUICKDISABLE,   &conf.fast_ev_step,     gui_fast_ev_step_modes ),
 #if CAM_REAR_CURTAIN
     MENU_ITEM   (0x5c, LANG_MENU_REAR_CURTAIN,              MENUITEM_BOOL,          &conf.flash_sync_curtain,           0 ),
 #endif
-    MENU_ITEM   (0x5c, LANG_MENU_FLASH_MANUAL_OVERRIDE,     MENUITEM_BOOL,          &conf.flash_manual_override,        0 ),
-    MENU_ITEM   (0x5f, LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER,MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.flash_video_override_power, MENU_MINMAX(0, 2) ),
+    MENU_ITEM(0x5f, LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER_SIMPLE,      MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_QUICKDISABLE, &conf.flash_video_override_power, MENU_MINMAX(0, 2) ),
 #if CAM_HAS_VIDEO_BUTTON
     MENU_ITEM   (0x5c, LANG_MENU_FLASH_VIDEO_OVERRIDE,      MENUITEM_BOOL,          &conf.flash_video_override,         0 ),
 #endif
@@ -1258,6 +1350,35 @@ static CMenuItem operation_submenu_items[] = {
 };
 
 static CMenu operation_submenu = {0x21,LANG_MENU_OPERATION_PARAM_TITLE, NULL, operation_submenu_items };
+
+
+// flags: 0x01= adjust DISABLE_ALL, 0x02 - adjust mode-dependent items
+void readjust_operation_submenu( int flags )
+{
+	// adjust visibility of secondary items
+
+
+	if ( flags&1 )
+		menuitem_foreach2( &operation_submenu, LANG_MENU_OVERRIDE_DISABLE_ALL, 0, conf.override_disable /*mean isVisible */ );
+
+	// Reconcile pairs of values to "simple mode" realm:
+	// Ensure that override_koefs are not off. And if they are - transfer to quickdisable state
+	// Important: this block should be before other adjustment
+	// 				because tv_enum_type check will reset tv_override_koef
+
+	operation_transfer_qdisabled( &conf.tv_override_value, &conf.tv_override_koef, gui_tv_override_koef_enum );
+#if CAM_CAN_SD_OVERRIDE
+	operation_transfer_qdisabled( &conf.subj_dist_override_value, &conf.subj_dist_override_koef, 0 );
+#endif
+	operation_transfer_qdisabled( &conf.iso_override_value, &conf.iso_override_koef, 0 );
+	operation_transfer_qdisabled( &conf.flash_video_override_power, &conf.flash_manual_override, 0 );
+	operation_transfer_qdisabled( &conf.fast_ev_step, &conf.fast_ev, 0 );
+
+	// There are no more "Factor mode", so If tv_type=Factor => set tvtype=EvStep
+	if ( !conf.tv_enum_type ) {
+		gui_tv_enum_type_enum(+1, 0);
+	}
+}
 
 //-------------------------------------------------------------------
 
@@ -1554,7 +1675,7 @@ static CMenuItem raw_submenu_items[] = {
 //  MENU_ITEM   (0x60,LANG_MENU_SUB_IN_DARK_VALUE,          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.sub_in_dark_value, MENU_MINMAX(0, 1023) ),
 //  MENU_ITEM   (0x60,LANG_MENU_SUB_OUT_DARK_VALUE,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.sub_out_dark_value, MENU_MINMAX(0, 1023) ),
     MENU_ITEM   (0x2a,LANG_MENU_RAW_DEVELOP,                MENUITEM_PROC,      gui_raw_develop, 0 ),
-    MENU_ITEM   (0x5c,LANG_MENU_BAD_PIXEL_REMOVAL,          MENUITEM_ENUM,      gui_bad_pixel_enum, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_BAD_PIXEL_REMOVAL,          MENUITEM_ENUM,      gui_bad_pixel_enum,  &conf.bad_pixel_removal ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_CACHED,                 MENUITEM_BOOL,      &conf.raw_cache,            0 ),
 #ifdef OPT_DEBUGGING
     MENU_ITEM   (0x5c,LANG_MENU_RAW_TIMER,                  MENUITEM_BOOL,      &conf.raw_timer,            0 ),
@@ -1563,7 +1684,7 @@ static CMenuItem raw_submenu_items[] = {
     MENU_ITEM   (0x0 ,(int)"DNG",                           MENUITEM_SEPARATOR,	0,							0 ),
     MENU_ITEM   (0x5c,LANG_MENU_DNG_FORMAT,                 MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.dng_raw , (int)cb_change_dng ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_DNG_EXT,                MENUITEM_BOOL,      &conf.raw_dng_ext, 0 ),
-    MENU_ITEM   (0x5f,LANG_MENU_DNG_VERSION,                MENUITEM_ENUM,      gui_dng_version, 0),
+    MENU_ITEM   (0x5f,LANG_MENU_DNG_VERSION,                MENUITEM_ENUM,      gui_dng_version, &conf.dng_version),
     MENU_ITEM   (0x2a,LANG_MENU_BADPIXEL_CREATE,            MENUITEM_PROC,      gui_menuproc_badpixel_create, 0 ),
 #endif
 #if defined (DNG_EXT_FROM)
@@ -1706,10 +1827,11 @@ static const char* gui_user_menu_show_enum(int change, int arg)
 }
 
 static CMenuItem menu_settings_submenu_items[] = {
-    MENU_ITEM(0x5f,LANG_MENU_USER_MENU_ENABLE,		MENUITEM_ENUM,          gui_user_menu_show_enum, 0 ),
+    MENU_ITEM(0x5f,LANG_MENU_USER_MENU_ENABLE,		MENUITEM_ENUM,          gui_user_menu_show_enum, &conf.user_menu_enable ),
     MENU_ITEM(0x5c,LANG_MENU_USER_MENU_AS_ROOT,     MENUITEM_BOOL,          &conf.user_menu_as_root, 0 ),
     MENU_ITEM(0x81,LANG_MENU_VIS_MENU_CENTER,       MENUITEM_BOOL,	        &conf.menu_center, 0 ),
     MENU_ITEM(0x81,LANG_MENU_SELECT_FIRST_ENTRY,    MENUITEM_BOOL,	        &conf.menu_select_first_entry, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_MENUEDIT_POPUP,        MENUITEM_BOOL,          &conf.menuedit_popup, 0 ),
     MENU_ITEM(0x5c,LANG_MENU_SHOW_ALT_HELP,         MENUITEM_BOOL,          &conf.show_alt_helper, 0 ),
     MENU_ITEM(0x58,LANG_MENU_SHOW_ALT_HELP_DELAY,   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.show_alt_helper_delay, MENU_MINMAX(0, 10) ),
     MENU_ITEM(0x28,LANG_MENU_FONT_SETTINGS,         MENUITEM_SUBMENU,       &menu_font_submenu, 0 ),
@@ -1758,11 +1880,11 @@ static const char* gui_alt_mode_button_enum(int change, int arg)
 #elif defined(CAMERA_ixus220_elph300hs) || defined(CAMERA_ixus230_elph310hs)
     static const char* names[]={ "Video", "Display", "Playback", "Video"};
     static const int keys[] = {KEY_PRINT, KEY_DISPLAY, KEY_PLAYBACK, KEY_VIDEO};
-#elif defined(CAMERA_ixus115_elph100hs)
+#elif defined(CAMERA_ixus115_elph100hs) 
     static const char* names[]={ "Playback", "Video", "Set+ZoomIn" };
     static const int keys[] = {KEY_PLAYBACK, KEY_VIDEO, KEY_SET | KEY_ZOOM_IN };
-#elif defined(CAMERA_ixus120_sd940)
-    static const char* names[]={ "Display", "Playback" };
+#elif defined(CAMERA_ixus120_sd940) 
+    static const char* names[]={ "Display", "Playback" }; 
     static const int keys[] = {KEY_DISPLAY, KEY_PLAYBACK };
 #else
 #error camera alt-buttons not defined
@@ -1829,12 +1951,12 @@ static CMenuItem chdk_settings_menu_items[] = {
     MENU_ITEM   (0x59,LANG_MENU_MISC_ZOOM_FOR_MF,           MENUITEM_BOOL,      &conf.use_zoom_mf, 0 ),
 #endif
 #if CAM_ADJUSTABLE_ALT_BUTTON
-    MENU_ITEM   (0x22,LANG_MENU_MISC_ALT_BUTTON,            MENUITEM_ENUM,      gui_alt_mode_button_enum, 0 ),
+    MENU_ITEM   (0x22,LANG_MENU_MISC_ALT_BUTTON,            MENUITEM_ENUM,      gui_alt_mode_button_enum, &conf.alt_mode_button ),
 #endif
 #if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
     MENU_ITEM   (0x5c,LANG_MENU_MISC_ZOOM_ASSIST,           MENUITEM_BOOL,      &conf.zoom_assist_button_disable, 0 ),
 #endif
-    MENU_ITEM   (0x5d,LANG_MENU_MISC_DISABLE_LCD_OFF,       MENUITEM_ENUM,      gui_alt_power_enum, 0 ),
+    MENU_ITEM   (0x5d,LANG_MENU_MISC_DISABLE_LCD_OFF,       MENUITEM_ENUM,      gui_alt_power_enum, &conf.alt_prevent_shutdown ),
     MENU_ITEM   (0x2b,LANG_MENU_MAIN_RESET_OPTIONS,         MENUITEM_PROC,      gui_menuproc_reset, 0 ),
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP, 0, 0 ),
     {0}
@@ -1946,6 +2068,8 @@ void gui_init()
 //-------------------------------------------------------------------
 gui_mode_t gui_get_mode() { return gui_mode->mode; }
 
+void gui_menu_set_editmode(int flag);
+
 //-------------------------------------------------------------------
 // Set new GUI mode, returns old mode
 gui_handler* gui_set_mode(gui_handler *mode) 
@@ -1968,6 +2092,10 @@ gui_handler* gui_set_mode(gui_handler *mode)
 #endif
 
     set_usermenu_state();
+
+    // When open first menu - ensure to deactivate edit submode
+    if ( gui_mode->mode == GUI_MODE_MENU && gui_mode->mode!=mode->mode)
+      gui_menu_set_editmode(0);
 
     gui_handler *old_mode = gui_mode;
     gui_mode = mode;
@@ -2622,10 +2750,27 @@ void gui_activate_alt_mode()
         conf_store_old_settings();
 
         gui_set_mode(&altGuiHandler);
-        
+
         conf_update_prevent_shutdown();
-        
+
         vid_turn_off_updates();
+
+
+		if ( !state_kbd_script_run && !conf.help_was_shown ) {
+
+			// raise flag first in conf to prevent any probability to endless shutdown
+			conf.help_was_shown = 1;
+			conf_save();
+
+			// Try to open help and break regular ALT sequence if success
+			if ( gui_show_help(0) )
+				break;
+		}
+
+        // start menu readustments according to chdk_mode
+        readjust_operation_submenu( 0xff );
+        readjust_autoiso_submenu();
+		readjust_bracketing_submenu();
 
         // If user menu set to start automatically when <ALT> mode entered 
         // then enter user menu mode, unless a script was paused by exiting 

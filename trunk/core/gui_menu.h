@@ -2,6 +2,8 @@
 #define GUI_MENU_H
 
 //-------------------------------------------------------------------
+// Type of menuitem. 
+//   ENUM2 - simple choicelist, ENUM - for choicelist with callback
 #define MENUITEM_MASK           0x000f
 #define MENUITEM_BOOL           1
 #define MENUITEM_INT            2
@@ -28,7 +30,13 @@
     // menuitem.arg contain ptr to callback function
 #define MENUITEM_ARG_CALLBACK   0x0300
 
-#define MENU_MINMAX(min, max)   (((max)<<16)|(min&0xFFFF))
+// Hide this item in menu
+#define MENUITEM_HIDDEN		0x1000
+// This item is able to be "turned off" (negate sign) in edit mode
+#define MENUITEM_QUICKDISABLE   0x2000
+
+
+#define MENU_MINMAX(min, max)   (((max)<<16)|(min))
 
 //-------------------------------------------------------------------
 typedef struct {
@@ -41,6 +49,7 @@ typedef struct {
                                     //               _ENUM = pointer to processing func
     int                 arg;        // additional argument
                                     //     by default type is controled by _ARG_MASK and by _F_MINMAX
+                                    //     for ENUM - pointer to related variable
                                     //     for ENUM2 - pointer to string list
 } CMenuItem;
 
@@ -54,7 +63,11 @@ typedef struct {
 // Menu item constructor macros
 #define MENU_ITEM(sym, txt, typ, val, arg)  { (char)sym, 0, (short)typ, (int)txt, (int*)val, (int)arg }
 #define MENU_ENUM2(sym, txt, val, arg)      { (char)sym, sizeof(arg)/sizeof(arg[0]), MENUITEM_ENUM2, (int)txt, (int*)val, (int)arg }
+#define MENU_ENUM2typ(sym, txt, typ, val, arg)    { (char)sym, sizeof(arg)/sizeof(arg[0]), typ, (int)txt, (int*)val, (int)arg }
 #define MENU_ENUM2a(sym, txt, val, arg, num){ (char)sym, (char)num, MENUITEM_ENUM2, (int)txt, (int*)val, (int)arg }
+
+
+typedef const char* enum_callback_func_t(int change, int arg);
 
 //-------------------------------------------------------------------
 extern void gui_menu_init(CMenu *menu_ptr);
@@ -63,7 +76,17 @@ extern void gui_menu_draw(int enforce_redraw);
 extern void gui_menu_force_redraw();
 extern void gui_menu_unload_module_menus();
 //-------------------------------------------------------------------
+extern void gui_enum_value_change(int *value, int change, unsigned num_items);
+extern const char* gui_change_simple_enum(int* value, int change, const char** items, unsigned num_items);
+extern const char* gui_change_enum2(const CMenuItem *menu_item, int change);
+extern void gui_qenum_value_change(int* value, int change, unsigned num_items );
+extern const char* gui_change_simple_qenum(int* value, int change, const char** items, unsigned num_items);
 
+//-------------------------------------------------------------------
+extern int menuitem_foreach2( CMenu* menu, int itemid, int tmp, int visibility);
+extern int value_turn_state( int* valueptr, int dir );
+
+//-------------------------------------------------------------------
 extern gui_handler menuGuiHandler;
 
 //-------------------------------------------------------------------
