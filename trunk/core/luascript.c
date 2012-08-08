@@ -1271,6 +1271,7 @@ static int luaCB_get_live_histo( lua_State* L )
     lua_pushnumber(L,h[i]);
     lua_rawseti(L,-2,i);
   }
+  free(h);
   lua_pushnumber(L,total);
   return 2;
 }
