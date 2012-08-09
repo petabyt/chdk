@@ -609,4 +609,20 @@ int mode_is_video(int m)
 printf("*** mode is video %d ***\n",m);
     return 0;
 }
+
+int shooting_get_real_focus_mode() { printf("%s\n",__FUNCTION__); return 0;}
+int shooting_get_display_mode() { printf("%s\n",__FUNCTION__); return 0;}
+int shooting_get_flash_mode() { printf("%s\n",__FUNCTION__); return 0;}
+int shooting_in_progress() { printf("%s\n",__FUNCTION__); return 0;}
+int shooting_is_flash() { printf("%s\n",__FUNCTION__); return 0;}
+int shooting_get_is_mode() { printf("%s\n",__FUNCTION__); return 0;}
+int shooting_get_ev_correction1() { printf("%s\n",__FUNCTION__); return 0;}
+int shooting_get_resolution() { printf("%s\n",__FUNCTION__); return 0;}
+int lens_get_zoom_point() { printf("%s\n",__FUNCTION__); return 0;}
+int get_focal_length() { printf("%s\n",__FUNCTION__); return 0;}
+int swap_partitions(int n) { printf("%s:%d\n",__FUNCTION__,n); return 0;}
+int conf_toggleValue(int id,int dir) { printf("toggle_value(%d,%d)\n",id,dir); return 0;}
+void JogDial_CCW() {}
+void JogDial_CW() {}
+
 #endif

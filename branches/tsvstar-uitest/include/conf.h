@@ -422,7 +422,8 @@ extern void conf_load_defaults();
 extern void conf_change_dng(void);
 extern void conf_update_prevent_shutdown(void);
 extern int conf_getValue(unsigned short id, tConfigVal* configVal);
-extern int conf_setValue(unsigned short id, tConfigVal configVal);
+extern int conf_setValue(unsigned short id, tConfigVal configVal, int save_conf );
+extern int conf_toggleValue(unsigned short id, int direction, int save_conf );
 
 
 extern char conf_filename[25];

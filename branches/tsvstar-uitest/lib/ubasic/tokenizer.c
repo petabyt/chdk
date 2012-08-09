@@ -227,6 +227,8 @@ static const struct keyword_token keywords[] = {
    {"set_aflock",            TOKENIZER_SET_AFLOCK},
   {"is_capture_mode_valid",  TOKENIZER_IS_CAPTURE_MODE_VALID}, 
   {"reboot",                 TOKENIZER_REBOOT},
+  {"turn_config_value",		  TOKENIZER_TURN_CONFIG_VALUE},
+  {"config_save", 			 TOKENIZER_CONFIG_SAVE},
   
   {"end",                     TOKENIZER_END},
 

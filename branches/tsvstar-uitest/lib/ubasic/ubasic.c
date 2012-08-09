@@ -46,6 +46,7 @@
 #include <fcntl.h>
 #include <io.h>
 #include <stdlib.h> /* rand,srand */
+#include <stdio.h> /* sprintf */
 #include "camera_functions.h"
 #else
 #include "ubasic.h"
@@ -114,6 +115,8 @@ static int ended;
 
 static int ubasic_md_ret_var_num;
 
+static int config_save_flag;  // state of "config_save"
+
 static int expr(void);
 static void line_statement(void);
 static void statement(void);
@@ -176,6 +179,7 @@ ubasic_init(const char *program)
   ubasic_error = UBASIC_E_NONE;
   yield_max_lines = YIELD_MAX_LINES_DEFAULT;
   yield_max_ms = YIELD_MAX_MS_DEFAULT;
+  config_save_flag=1;
 }
 /*---------------------------------------------------------------------------*/
 // read a key name and return key id, 
@@ -529,7 +533,10 @@ factor(void)
       accept(TOKENIZER_GET_TIME);
       int tmode = expr();
       static struct tm *ttm;
+#ifdef UBASIC_TEST
+#else
       ttm = get_localtime();
+#endif
       if (tmode==0) r = ttm->tm_sec;
       else if (tmode==1) r = ttm->tm_min;
       else if (tmode==2) r = ttm->tm_hour;
@@ -1625,14 +1632,14 @@ static void one_short_param_plus_const_function(int token, void (*func)(short,sh
 
 
 static void set_ev_statement()
- 	{
- 	    int to;
- 	    accept(TOKENIZER_SET_EV);
- 	    to = expr();
- 	        shooting_set_prop(PROPCASE_EV_CORRECTION_1, to);
- 	        shooting_set_prop(PROPCASE_EV_CORRECTION_2, to);
- 	    accept_cr();
- 	}
+{
+ 	int to;
+ 	accept(TOKENIZER_SET_EV);
+ 	to = expr();
+ 	shooting_set_prop(PROPCASE_EV_CORRECTION_1, to);
+ 	shooting_set_prop(PROPCASE_EV_CORRECTION_2, to);
+ 	accept_cr();
+}
 
 static void set_movie_status_statement()
 {
@@ -1755,8 +1762,26 @@ static void set_config_value_statement()
     if( conf_getValue(id, &configVal) == CONF_VALUE ) {
         configVal.numb = value;
         configVal.isNumb = 1;
-        conf_setValue(id, configVal);
+        conf_setValue(id, configVal, config_save_flag );
     }
+    accept_cr();
+}
+
+static void turn_config_value_statement()
+{
+    int id, dir;
+    
+    accept(TOKENIZER_TURN_CONFIG_VALUE);
+    id = expr();
+    dir = expr();
+    conf_toggleValue( id, dir, config_save_flag );
+    accept_cr();
+}
+
+static void config_save_statement()
+{
+    accept(TOKENIZER_CONFIG_SAVE);
+    config_save_flag = expr();
     accept_cr();
 }
 
@@ -1832,9 +1857,13 @@ static void md_get_cell_diff_statement()
     var = tokenizer_variable_num();
     accept(TOKENIZER_VARIABLE);
 	
+#ifdef UBASIC_TEST
+    printf("%s\n",__FUNCTION__);
+#else
     if (module_mdetect_load())
         ubasic_set_variable(var, libmotiondetect->md_get_cell_diff(col,row));
     else
+#endif
         ubasic_set_variable(var, 0);
     accept_cr();
 }
@@ -1943,6 +1972,9 @@ static void md_detect_motion_statement()
 //		sprintf(buf,"clip %d [%d,%d][%d,%d]", clipping_region_mode, clipping_region_column1, clipping_region_row1, clipping_region_column2,clipping_region_row2);
 //		script_console_add_line(buf);
 
+#ifdef UBASIC_TEST
+    printf("%s\n",__FUNCTION__);
+#else
     if (module_mdetect_load())
         libmotiondetect->md_init_motion_detector(
 			columns, rows, pixel_measure_mode, detection_timeout, 
@@ -1952,6 +1984,7 @@ static void md_detect_motion_statement()
 			clipping_region_column2, clipping_region_row2,
 			parameters, pixels_step, msecs_before_trigger
     	);
+#endif
     flag_yield=1;
 }
 
@@ -2307,6 +2340,12 @@ statement(void)
 
   case TOKENIZER_SET_CONFIG_VALUE:
     set_config_value_statement();
+    break;
+  case TOKENIZER_TURN_CONFIG_VALUE:
+    turn_config_value_statement();
+    break;
+  case TOKENIZER_CONFIG_SAVE:
+    config_save_statement();
     break;
   case TOKENIZER_SET_YIELD:
     set_yield_statement();

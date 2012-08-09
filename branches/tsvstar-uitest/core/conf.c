@@ -804,7 +804,7 @@ int conf_getValue(unsigned short id, tConfigVal* configVal) {
 }
 
 //-------------------------------------------------------------------
-int conf_setValue(unsigned short id, tConfigVal configVal) {
+int conf_setValue(unsigned short id, tConfigVal configVal, int conf_save_flag ) {
     unsigned short i;
     int ret = CONF_EMPTY, len, len2;
     OSD_pos* pos;
@@ -861,11 +861,41 @@ int conf_setValue(unsigned short id, tConfigVal configVal) {
             break;
         }
     }
-    if( ret!=CONF_EMPTY ) {
+    if( ret!=CONF_EMPTY && conf_save_flag ) {
         conf_save();
     }
     return ret;
 }
+
+int conf_toggleValue(unsigned short id, int direction, int conf_save_flag )
+{
+	int i;
+	int* valueptr;
+
+    for( i=0; i<CONF_NUM; ++i ) {
+        if( conf_info[i].id==id ) {
+
+			// ONLY INTEGER COULD HAVE QUICKDISABLED ABILITY
+
+            if ( conf_info[i].type != CONF_VALUE &&
+                 conf_info[i].type != CONF_VALUE_PTR )
+				break;
+
+			if ( conf_info[i].size!= sizeof(int) )
+				break;
+
+			value_turn_state( (int*)conf_info[i].var, direction );
+
+			if ( conf_save_flag )
+				conf_save();
+
+			return CONF_VALUE;
+		}
+	}
+
+	return CONF_EMPTY;
+}
+
 
 //-------------------------------------------------------------------
 // Common code extracted from raw.c (raw_savefile) and gui_osd.c (gui_osd_draw_raw_info)

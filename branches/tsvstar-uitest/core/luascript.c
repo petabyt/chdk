@@ -1990,7 +1990,7 @@ static int luaCB_set_config_value( lua_State* L ) {
                 break;
             }
         }
-        lua_pushboolean(L, conf_setValue(id, configVal));
+        lua_pushboolean(L, conf_setValue(id, configVal, 1));
         if( configVal.pInt ) {
             free(configVal.pInt);
             configVal.pInt = NULL;
