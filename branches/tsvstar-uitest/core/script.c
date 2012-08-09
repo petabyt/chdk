@@ -485,6 +485,7 @@ int load_params_values(const char *fn, int paramset)
 	else {
 		*paramstr=0;
 		paramstr++;
+		msleep(10);			// wait for tick to prevent shutdown when finish chain on autostart
 		script_load(buf, SCRIPT_LOAD_DEFAULT_VALUES );
     }
 
