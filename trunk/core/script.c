@@ -516,7 +516,7 @@ static void do_save_param_file( char* fn, char* script_file, int paramset )
     buf=umalloc(250);
     if( buf )
 	{
-    	fd = open(fn, O_WRONLY|O_CREAT, 0777);
+    	fd = open(fn, O_WRONLY|O_CREAT|O_TRUNC, 0777);
     	if (fd >=0)
 		{
 			///// OLD FORMAT OF DATA FILE////
