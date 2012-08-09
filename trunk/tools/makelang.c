@@ -67,10 +67,14 @@ int main( int argc, char **argv )
 
 	printf("//Auto generated file. Do not edit the contents of this file.\n//Update the CHDK/LANG/*.lng files to make changes.\n//Generated from %s\n\n",lng_filename);
 
-	printf("char* gui_lang_source_filename=\"");
-	for (i=0;i<8 && lng_filename[i] && lng_filename[i]!='.'; i++)
-	  printf("%c",lng_filename[i]);
-	printf("\";\n\n");
+    // Extract the language name
+    char *s = strrchr(lng_filename,'/');
+    if (s == 0) s = lng_filename; else s++;
+    strcpy(buf,s);
+    s = strrchr(buf,'.');
+    if (s) *s = 0;
+
+	printf("char* gui_lang_source_filename=\"%s\";\n\n",buf);
 
 	printf("static char* gui_lang_default = \\\n");
 	

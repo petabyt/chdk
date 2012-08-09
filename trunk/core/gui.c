@@ -807,6 +807,24 @@ static void copy_fname_w_new_ext( char* tgt, char* src, char* ext )
 	strcpy(	 str, ext );
 }
 
+// Build a help file name with path from a specified source
+// Test if the file exists and return pointer to the filename if it does
+static char* help_file(char *src)
+{
+    // Uses global string buffer 'buf'
+	strcpy(buf, "A/CHDK/HELP/");
+    char *filename = buf + strlen(buf);
+
+    if (src && *src)
+    {
+		copy_fname_w_new_ext(filename, src, ".hlp");
+		if ( is_file_exists(buf) > 0 )
+            return buf;
+    }
+
+    return 0;
+}
+
 // PURPOSE: Try to open help file (fallback: selected_locale.hlp -> builtin_locale.hlp -> english.hlp )
 // RETURN: 0 if help was not runned, 1 if ok
 static int gui_show_help(int arg)
@@ -816,33 +834,24 @@ static int gui_show_help(int arg)
 
 	// make path to help file
 
-	char path_buf[60];
-	unsigned int argv[] ={ (unsigned int)path_buf };
-	strcpy( path_buf, "A/CHDK/HELP/");
-
-	char* helpfile_name = path_buf + strlen(path_buf);
-
-	// if not success, try to load "_current_locale_.hlp"
-	if ( conf.lang_file[0] ) {
-		copy_fname_w_new_ext( helpfile_name, conf.lang_file, ".hlp");
-
-		if ( is_file_exists( helpfile_name) > 0 )
-			if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
-				return 1;
-	}
+	// try to load "_current_locale_.hlp"
+	char* helpfile_name = help_file(conf.lang_file);
 
 	// if not success, try to load "_base_language_.hlp"
-	copy_fname_w_new_ext( helpfile_name, gui_lang_source_filename, ".hlp");
-	if ( is_file_exists( helpfile_name) > 0 )
-		if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
-			return 1;
+    if (helpfile_name == 0)
+        helpfile_name = help_file(gui_lang_source_filename);
 
 	//if not success, try to load "english.hlp"
-	argv[0] = (unsigned int)"A/CHDK/HELP/ENGLISH.HLP";
-	if ( is_file_exists( (const char*)argv[0] ) >0 ) {
-		if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
-			return 1;
-	}
+    if (helpfile_name == 0)
+        helpfile_name = help_file("ENGLISH.HLP");
+
+    // Load file if found
+    if (helpfile_name)
+    {
+    	unsigned int argv[] = { (unsigned int)helpfile_name };
+        if ( module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR) == 0 )
+            return 1;
+    }
 
 	return 0;
 }
@@ -2755,9 +2764,8 @@ void gui_activate_alt_mode()
 
         vid_turn_off_updates();
 
-
-		if ( !state_kbd_script_run && !conf.help_was_shown ) {
-
+		if ( !state_kbd_script_run && !conf.help_was_shown )
+        {
 			// raise flag first in conf to prevent any probability to endless shutdown
 			conf.help_was_shown = 1;
 			conf_save();
