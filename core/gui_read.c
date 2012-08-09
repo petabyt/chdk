@@ -24,6 +24,8 @@ void gui_read_kbd_leave();
 gui_handler GUI_MODE_READ = 
     /*GUI_MODE_READ*/   { GUI_MODE_MODULE, gui_read_draw, gui_read_kbd_process, gui_read_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
 
+gui_handler *old_mode;
+
 //-------------------------------------------------------------------
 static int read_file;
 static int read_file_size;
@@ -81,7 +83,7 @@ int gui_read_init(const char* file) {
     last_time = get_tick_count();
     
 	reader_is_active=1;    
-    gui_set_mode(&GUI_MODE_READ);
+    old_mode = gui_set_mode(&GUI_MODE_READ);
 
     draw_filled_rect(0, 0, camera_screen.width-1, y-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
     draw_filled_rect(0, y, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(BG_COLOR(conf.reader_color), BG_COLOR(conf.reader_color)));
@@ -253,7 +255,7 @@ int module_idx=-1;
 void gui_read_kbd_process_menu_btn()
 {
     gui_read_kbd_process();
-    gui_default_kbd_process_menu_btn();
+    gui_set_mode(old_mode);
   	module_async_unload(module_idx);
 }
 
