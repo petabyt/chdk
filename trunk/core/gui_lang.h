@@ -705,7 +705,9 @@
 #define LANG_MENU_MISC_HELP			            574
 #define LANG_MENU_MENUEDIT_POPUP				575
 
-#define GUI_LANG_ITEMS                          575
+#define LANG_MENU_USER_MENU_SCRIPT_ADD          576
+ 
+#define GUI_LANG_ITEMS                          576
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
