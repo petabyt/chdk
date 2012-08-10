@@ -7,6 +7,7 @@
 //   Canon IXUS 105
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 43
 //   PLATFORMID = 12788 (0x31f4) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d4a                // Found @ 0xffff1c18
@@ -31,6 +32,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0002f100) // Found @0xffc24574
 DEF(physw_run                               ,0x00001c2c) // Found @0xffc241d8
+DEF(physw_sleep_delay                       ,0x00001c2a) // Found @0xffc241d8
 DEF(levent_table                            ,0xffec0320) // Found @0xffec0320
 DEF(FlashParamsTable                        ,0xffefa0e8) // Found @0xffefa0e8
 DEF(movie_status                            ,0x00005780) // Found @0xffd1bc1c
@@ -60,18 +62,20 @@ DEF(recreview_hold                          ,0x000031d0) // Found @0xffc7d224
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 0, KEY_PLAYBACK        ,0x00000100 }, // Found @0xffea7a88, levent 0x601
+//    { 0, KEY_POWER           ,0x00000200 }, // Found @0xffea7a94, levent 0x600
 //    { 0, KEY_MENU            ,0x00000400 }, // Found @0xffea7aa0, levent 0x09
 //    { 1, KEY_LEFT            ,0x08000000 }, // Found @0xffea7adc, levent 0x06
 //    { 1, KEY_ZOOM_OUT        ,0x10000000 }, // Found @0xffea7ae8, levent 0x03
 //    { 1, KEY_ZOOM_IN         ,0x20000000 }, // Found @0xffea7af4, levent 0x02
-//    { 2, KEY_DOWN            ,0x00000002 }, // Found @0xffea7b0c, levent 0x05
-//    { 2, KEY_SHOOT_FULL      ,0x00005000 }, // Found @0xffea7b3c, levent 0x01
-//    { 2, KEY_SHOOT_HALF      ,0x00004000 }, // Found @0xffea7b48, levent 0x00
 //    { 2, KEY_SET             ,0x00000001 }, // Found @0xffea7b00, levent 0x08
-//    { 2, KEY_SHOOT_FULL_ONLY ,0x00001000 }, // Found @0xffea7b3c, levent 0x01
+//    { 2, KEY_DOWN            ,0x00000002 }, // Found @0xffea7b0c, levent 0x05
 //    { 2, KEY_DISPLAY         ,0x00000008 }, // Found @0xffea7b18, levent 0x0a
 //    { 2, KEY_RIGHT           ,0x00000400 }, // Found @0xffea7b24, levent 0x07
 //    { 2, KEY_UP              ,0x00000800 }, // Found @0xffea7b30, levent 0x04
+//    { 2, KEY_SHOOT_FULL      ,0x00005000 }, // Found @0xffea7b3c, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00004000 }, // Found @0xffea7b48, levent 0x00
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00001000 }, // Found @0xffea7b3c, levent 0x01
 //    { 0, 0, 0 }
 //};
 
@@ -100,7 +104,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xffc265b0) //  1
 NSTUB(DeleteFile_Fut                          ,0xffc264cc) //112
 NSTUB(DoAFLock                                ,0xffc27fe0) //102
 NSTUB(EnterToCompensationEVF                  ,0xffc28090) //104
-NSTUB(ExecuteEventProcedure                   ,0xffc6cef0) //  1
+NSTUB(ExecuteEventProcedure                   ,0xffc6cef0) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xffc280d4) //104
 NSTUB(ExitTask                                ,0xffc0eacc) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xffc35864) //104
@@ -119,8 +123,6 @@ NSTUB(GetBatteryTemperature                   ,0xffc49edc) //102
 NSTUB(GetCCDTemperature                       ,0xffc49e68) //102
 NSTUB(GetCurrentAvValue                       ,0xffd14ed4) //102
 NSTUB(GetDrive_ClusterSize                    ,0xffc55b18) //  4
-NSTUB(GetDrive_FreeClusters                   ,0xffc24258) //  3
-// ALT: NSTUB(GetDrive_FreeClusters, 0xffc55b78) // 4 9/0
 NSTUB(GetDrive_TotalClusters                  ,0xffc55b4c) //  3
 NSTUB(GetFocusLensSubjectDistance             ,0xffd14174) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xffd145bc) //  3
@@ -131,6 +133,8 @@ NSTUB(GetOpticalTemperature                   ,0xffc49f50) //102
 NSTUB(GetParameterData                        ,0xffd3fff4) //101
 NSTUB(GetPropertyCase                         ,0xffc70bfc) //102
 NSTUB(GetSystemTime                           ,0xffe1bd7c) //101
+NSTUB(GetVRAMHPixelsSize                      ,0xffcbe1e8) //102
+NSTUB(GetVRAMVPixelsSize                      ,0xffcbe1f4) //102
 NSTUB(GetZoomLensCurrentPoint                 ,0xffd17f9c) //102
 NSTUB(GetZoomLensCurrentPosition              ,0xffe134c8) //102
 NSTUB(GiveSemaphore                           ,0xffc29858) //112

@@ -13,3 +13,7 @@ char *hook_raw_image_addr()
 	return (char*)(0x41d64ecc);
 }
 
+void *vid_get_viewport_live_fb() //TODO:
+{
+  return (void*)vid_get_viewport_fb();
+}

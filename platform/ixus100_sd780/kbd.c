@@ -20,6 +20,7 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static KeyMap keymap[];
 static long last_kbd_key = 0;
+static long alt_mode_key_mask = 0x00000008;
 
 static int aCount=0;
 extern long aHookList[];
@@ -122,6 +123,17 @@ void my_kbd_read_keys()
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
 	}
 
+}
+
+void kbd_set_alt_mode_key_mask(long key)
+{
+        int i;
+        for (i=0; keymap[i].hackkey; ++i) {
+                if (keymap[i].hackkey == key) {
+                        alt_mode_key_mask = keymap[i].canonkey;
+                        return;
+                }
+        }
 }
 
 void kbd_key_press(long key)
@@ -307,29 +319,26 @@ static KeyMap keymap[] = {
      */
 
 	//SD780 - Keymap
-	{ 0, KEY_UP		    , 0x00000008 },
+	{ 0, KEY_UP		, 0x00000008 },
 	{ 0, KEY_DOWN		, 0x00000004 },
 	{ 0, KEY_LEFT		, 0x00000001 },
 	{ 0, KEY_RIGHT		, 0x00000002 },
 
-
 	{ 1, KEY_SET		, 0x00004000 },
-//	{ 1, KEY_PLAY		, 0x00080000 },  //SD780 Play button
 	{ 1, KEY_MENU		, 0x00000800 },
-//	{ 1, KEY_POWER		, 0x00010000 },  //SD780 Power button
+	{ 1, KEY_POWER		, 0x00010000 },  //SD780 Power button
+	{ 1, KEY_PLAYBACK	, 0x00080000 },  //SD780 Play button
+	{ 1, KEY_PRINT		, 0x00080000 }, // <ALT> key
 
 	//xxxf --> xxxd when in movie mode by switch
 	//xxxxxxx4 --> xxxxxxx5 when in lens extended recording mode
 
-
 	{ 2, KEY_SHOOT_FULL	, 0x00001001 },
-    { 2, KEY_SHOOT_FULL_ONLY, 0x00001000 },
+	{ 2, KEY_SHOOT_FULL_ONLY, 0x00001000 },
 	{ 2, KEY_SHOOT_HALF	, 0x00000001 },
 	{ 2, KEY_ZOOM_IN	, 0x00004000 },
 	{ 2, KEY_ZOOM_OUT	, 0x00002000 },
-	{ 2, KEY_PRINT		, 0x00000040 }, //doesn't exist
-	{ 2, KEY_DISPLAY	, 0x00000040 }, //swapped for print atm
-										//We will see if I can make KEY_DISPLAY a long KEY_DISPLAY...
+	{ 2, KEY_DISPLAY	, 0x00000040 },
 	{ 0, 0, 0 }
 };
 

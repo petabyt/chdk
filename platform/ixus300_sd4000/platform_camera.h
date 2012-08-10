@@ -52,7 +52,7 @@
     #define CAM_MULTIPART                   1        // ToDo: test if its working
     #define CAM_DATE_FOLDER_NAMING          1
     //#define CAM_DRAW_EXPOSITION             1      // not required because Canon Firmware does always show it on Shutter half press
-    //#define CAM_ADJUSTABLE_ALT_BUTTON       1      // ToDo
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1      
 
     #define PARAM_CAMERA_NAME               4        // parameter number for GetParameterData to get camera name
 

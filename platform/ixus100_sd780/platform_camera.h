@@ -34,6 +34,8 @@
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES
 
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1
+
     #undef  CAM_REMOTE
     #undef  CAM_SYNCH
 

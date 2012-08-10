@@ -1,19 +1,24 @@
 EDI - README.TXT
 'Emacs your camera!'
 
+Documentation for version 2.7 based on documentation for 2.6.
 
 0. ABOUT
 
     This is readme for EDI - Text editor written in Lua for CHDK. It's designed to give your camera possibility to edit text files (especially scripts) directly on camera.
     
     **** ATTENTION! ****
-    EDI 2.4 requires file_browser() function which is aviable since changeset 1359! If you have an obsolete CHDK version you'll need to use older EDI version (2.3 for example)
+    Since version 2.6 EDI uses textbox() function which is currently aviable in experimental branch. Because of that 'new file' and 'Save as...' options can not be used in other branches (stable 1.0 and reyalp-flt as well). If 'new file' or 'Save as...' option is used in these branches an error occurs!
+
+    While none of above functions is used, EDI 2.7 should work (althought it was not tested).
+
     
 
     WARNING!
 
     I've tested this script only on SX130IS with no problems. A few users were able to use it on other CHDK-supported cameras. Nevertheless THERE IS NO VARRANTY FOR THIS SOFTWARE, IT'S FREE AND MIGHT BE BUGGY. It's rather not likely, but still possible that it could damage file you are editing or even filesystem on SD card. This never happened, but who knows. USE THIS SCRIPT ON YOUR OWN RISK.
 
+    SOME PARTS OF THIS DOCUMENTATION MIGHT BE OUTDATED OR CONTAIN BUGS.
 
 
 1. INSTALLATION
@@ -70,6 +75,7 @@ EDI - README.TXT
     SHOOT_HALF          - change number of lines you'll move by one UP/DOWN press. The number is shown in STATUSBAR (first number after MOVE word). You can swich between 1, 4, 10 and 20 lines. It's usefull to move through long files. DO NOT PRESS SHOT_FULL unless you want to end the script!
     MENU                - open FILE MENU which is described below.
     SET                 - end MOVE mode and go into a WRITE mode.
+    ERASE               - move to the begin of the file.
 
     SHOOT_FULL          - END THE SCRIPT WITHOUT ANY SAVES!!!
     
@@ -89,10 +95,10 @@ EDI - README.TXT
 
     STATUSBAR in WRITE mode describes, which letters/digits are aviable under which keys. STATUSBAR like above means, that you are able to write lowercase letters as follows:
     
-    press LEFT to get letters:  a, b, c, d, e or f
-    press UP to get letters:    g, h, i, j, k or l
-    press RIGHT to get letters: m, n, o, p, q, r or s
-    press DOWN to get letters:  t, u, v, w, x, y or z
+    press LEFT to get letters:  a, b, c, d, e, f
+    press UP to get letters:    g, h, i, j, k, l
+    press RIGHT to get letters: m, n, o, p, q, r, s
+    press DOWN to get letters:  t, u, v, w, x, y, z
     
     When you press a key once you'll get first letter, twice - second and so on. If you need to write another letter just press different letter key. If you need a letter that is aviable under the same key as previous just press SET once and the key. This is just like writing SMS'es on mobile phone.
     

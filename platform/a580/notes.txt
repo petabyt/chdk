@@ -11,19 +11,19 @@ Mind this.
 
 NOTES:
 Half Shutter + Left - Sets AFL
-Half Shutter + Right - Toogle OSD on/off
+Half Shutter + Right - Show OSD (On / Off)
 Half Shutter + Up - Sets AEL
-Half Shutter + Down - Toggle Histogram (Don't / Always / Shoot)
-Half Shutter + Menu - Toggle Zebra on/off
-Half Shutter + Display - Disable overrides
+Half Shutter + Down - Disable overrides (Yes / No)
+Half Shutter + Menu - Show Live Histogram (Don't / Always / Shoot)
+Half Shutter + Display - Draw Zebra (On / Off)
 
 In Alt:
-Display - Toogle RAW on/off
-Up - Toogle MF
+Display - Save RAW (DNG /Off)
+Up - Manual Focus (On / Off)
 
 In ALT + Manual mode:
-Display - Sets Infinity
-Down - Sets Hyperfocal
+Display - Sets Infinity Focus
+Down - Sets HyperFocal Focus
 -------
 Adjustable Alt button supported.
 -------
@@ -42,8 +42,6 @@ ifeq ($(KEYSYS), d3enc)
 endif
 
 PLEASE TEST:
--------
-Curves: Seems it works, please test!!!
 -------
 SDHC multi-partition boot and swap supported. (Tested with 2GB SD (2MB  FAT12 and FAT32 the rest), can someone test it with a larger card 8GB, 16GB...)
 

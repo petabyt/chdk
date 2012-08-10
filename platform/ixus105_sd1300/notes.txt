@@ -1,18 +1,6 @@
 *** General info:
 Digic IV, dryos r43
 
-Untested alpha port of alpha SDM code from http://chdk.setepontos.com/index.php?topic=5720.690
-
-tested (not clear which build or by who):
-- loading, drawing
-- some lua stuff
-- exp override
-
 current issues/unfeatures:
-- load script = camera shutdown
-- save raw = camera shutdown (some stub must be wrong) 
 - no video override
-- edge overlay works but disappears soon
-- zebra doesn't seem to be working
-- some other overrides does not seem to work correctly
 - modemap is incomplete/incorrect (see stubs_entry.S)

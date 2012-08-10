@@ -21,7 +21,7 @@ static long last_kbd_key = 0;
 // override key and feather bits to avoid feather osd messing up chdk display in ALT mode
 #define KEYS_MASK1 (0x00000FF0)     // physw_status[1], override 0xF0 (keys) + 0xF00 (feather)
 #define KEYS_MASK2 (0x00000000)     // physw_status[2]
-//static long alt_mode_key_mask = 0x00000000;   // we use two Keys, no need to override
+static long alt_mode_key_mask = 0x00000000;
 
 #define SD_READONLY_FLAG    (0x00020000)    // SD-Card Lock Status (locked / unlocked)
 #define SD_READONLY_IDX     2
@@ -107,6 +107,16 @@ void my_kbd_read_keys() {
  		
 }
 
+void kbd_set_alt_mode_key_mask(long key)
+{
+        int i;
+        for (i=0; keymap[i].hackkey; ++i) {
+                if (keymap[i].hackkey == key) {
+                        alt_mode_key_mask = keymap[i].canonkey;
+                        return;
+                }
+        }
+}
 
 void kbd_key_press(long key) {
     int i;
@@ -282,13 +292,15 @@ static KeyMap keymap[] = {
     { 0, KEY_DOWN       , 0x00000001 },
     { 0, KEY_LEFT       , 0x00000008 },
     { 0, KEY_RIGHT      , 0x00000002 },
-    { 1, KEY_SET        , 0x00000040 },
+    { 0, KEY_POWER      , 0x00000010 },
+    { 0, KEY_PLAYBACK   , 0x00004000 },    
+    { 0, KEY_PRINT      , 0x00004000 },   // ALT Key = PLAYBACK - other workaround: KEY_UP + KEY_LEFT (camera has no print key)
     { 0, KEY_SHOOT_FULL , 0x00000900 },   // 0x00000800 (KEY_SHOOT_FULL_ONLY) + 0x00000100 (KEY_SHOOT_HALF)
     { 0, KEY_SHOOT_FULL_ONLY, 0x00000800 },
     { 0, KEY_SHOOT_HALF , 0x00000100 },
+    { 1, KEY_SET        , 0x00000040 },
     { 1, KEY_ZOOM_IN    , 0x00000010 },
     { 1, KEY_ZOOM_OUT   , 0x00000020 },
     { 1, KEY_MENU       , 0x00000080 },
-    { 0, KEY_PRINT      , 0x0000000C },   // ALT Key workaround: KEY_UP + KEY_LEFT (camera has no print key)
     { 0, 0, 0 }
 };

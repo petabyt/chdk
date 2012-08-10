@@ -7,6 +7,7 @@
 
 const char * const new_sa = &_end;
 
+extern void task_PhySw();
 extern void task_CaptSeq();
 extern void task_InitFileModules();
 extern void task_RotaryEncoder();
@@ -16,8 +17,8 @@ extern void task_ExpDrv();
 void taskHook(context_t **context)
 { 
 	task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
-
 	// Replace firmware task addresses with ours
+	if(tcb->entry == (void*)task_PhySw)             tcb->entry = (void*)mykbd_task; 
 	if(tcb->entry == (void*)task_CaptSeq)			tcb->entry = (void*)capt_seq_task; 
 	if(tcb->entry == (void*)task_InitFileModules)   tcb->entry = (void*)init_file_modules_task;
 	//if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;
@@ -26,7 +27,6 @@ void taskHook(context_t **context)
 
 void CreateTask_spytask() {
         _CreateTask("SpyTask", 0x19, 0x2000, core_spytask, 0);
-        //_CreateTask("InitCHDKPTP", 0x19, 0x2000, init_chdk_ptp, 0);
 };
 
 void __attribute__((naked,noinline)) boot() {
@@ -291,25 +291,44 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() {
      );
 }
 
+void __attribute__((naked,noinline)) taskcreate_PhySw_my() {
+	asm volatile(
+			"STMFD   SP!, {R3-R5,LR}\n"
+			"LDR     R4, =0x1C20\n"
+			"LDR     R0, [R4,#0x10]\n"
+			"CMP     R0, #0\n"
+			"BNE     loc_FFC2423C\n"
+			"MOV     R3, #0\n"
+			"STR     R3, [SP]\n"
+			"LDR     R3, =mykbd_task\n"		// Changed
+			//  "MOV     R2, #0x800\n"
+			"MOV     R2, #0x2000\n"			// + stack size for new task_PhySw so we don't have to do stack switch
+			"B       sub_FFC2422C\n"    // Continue code
+"loc_FFC2423C:\n"
+			"B       sub_FFC2423C\n"    // Continue code
+	);
+}
+
 void __attribute__((naked,noinline)) task_Startup_my() {
      asm volatile (
                  "STMFD   SP!, {R4,LR}\n"
                  "BL      sub_ffc0650c\n"
                  "BL      sub_ffc25418\n"
                  "BL      sub_ffc23638\n"
-                 "BL      sub_ffc2b744\n" //  was commented in a480
+                 "BL      sub_ffc2b744\n"
                  "BL      sub_ffc2b930\n"
                  //"BL      sub_ffc2b7d8\n"    // This should be the DISKBOOT start
                  "BL      sub_ffc2bacc\n"
                  "BL      sub_ffc222e4\n"
                  "BL      sub_ffc2b960\n"
                  "BL      sub_ffc290dc\n"
-                 "BL      CreateTask_spytask\n"
-                 "BL      sub_ffc2bad0\n"// was commented in a480 for "BL      CreateTask_spytask\n"
-                 "BL      sub_ffc24208\n"
+                 "BL      CreateTask_spytask\n" // +
+			     "BL      sub_ffc2bad0\n"
+                 //"BL      sub_ffc24208\n"
+                 "BL      taskcreate_PhySw_my\n"	// +
                  "BL      sub_ffc27744\n"
                  "BL      sub_ffc2bae8\n"
-                 "BL      sub_ffc216a8\n" // was commented in a480
+                 "BL      sub_ffc216a8\n"
                  "BL      sub_ffc23090\n"
                  "BL      sub_ffc2b4e0\n"
                  "BL      sub_ffc235ec\n"
