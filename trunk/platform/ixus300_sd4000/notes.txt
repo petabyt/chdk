@@ -22,7 +22,8 @@ Thanks to reyalp, asm1989 and some other guys for their support.
 
 
 --- CHDK ALT Mode ---------------------------------------------------
-To enter CHDK ALT mode press LEFT + UP on JogDial (Camera has no special button like Print for CHDK).
+Camera has a user defined <ALT> key.  Default is a short press on the Playback button. Alternative is tp
+press LEFT + UP on JogDial (Camera has no special button like Print for CHDK).
 
 
 --- Links -----------------------------------------------------------
