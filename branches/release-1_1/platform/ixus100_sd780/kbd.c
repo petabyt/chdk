@@ -326,7 +326,7 @@ static KeyMap keymap[] = {
 
 	{ 1, KEY_SET		, 0x00004000 },
 	{ 1, KEY_MENU		, 0x00000800 },
-	{ 1, KEY_POWER		, 0x00010000 },  //SD780 Power button
+//	{ 1, KEY_POWER		, 0x00010000 },  //SD780 Power button
 	{ 1, KEY_PLAYBACK	, 0x00080000 },  //SD780 Play button
 	{ 1, KEY_PRINT		, 0x00080000 }, // <ALT> key
 
