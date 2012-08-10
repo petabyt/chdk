@@ -379,6 +379,12 @@ typedef struct {
 
 	int help_was_shown;		// 0-help wasn't shown yet, 1- help already was shown
     int menuedit_popup;			// 0-menuedit in-menu, 1-menu edit is popup
+
+    // full path & filename
+    char user_menu_script_file[USER_MENU_ITEMS][CONF_STR_LEN];
+    // @title string from file                     
+    char user_menu_script_title[USER_MENU_ITEMS][CONF_STR_LEN];
+
 } Conf;
 
 extern Conf conf;
