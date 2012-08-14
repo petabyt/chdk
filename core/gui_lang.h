@@ -706,8 +706,16 @@
 #define LANG_MENU_MENUEDIT_POPUP				575
 
 #define LANG_MENU_USER_MENU_SCRIPT_ADD          576
- 
-#define GUI_LANG_ITEMS                          576
+
+#define LANG_MENU_EDIT_CHG_VAL                  577
+#define LANG_MENU_EDIT_ADJ_FACTOR               578
+#define LANG_MENU_EDIT_CONFIRM                  579
+#define LANG_MENU_EDIT_ON_OFF                   580
+
+#define LANG_HELP_INF_FOCUS                     581
+#define LANG_HELP_CHG_FOCUS_FACTOR              582
+
+#define GUI_LANG_ITEMS                          582
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

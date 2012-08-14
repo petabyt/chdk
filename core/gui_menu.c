@@ -1032,10 +1032,10 @@ void gui_menu_draw(int enforce_redraw) {
                 gui_menu_draw_value((*(curr_menu->menu[imenu].value))?"\x95":"", len_bool);
                 break;
             case MENUITEM_INT:
-                if ( *(curr_menu->menu[imenu].value) < 0 ) 
+                if ( (*(curr_menu->menu[imenu].value) < 0) && (curr_menu->menu[imenu].type & MENUITEM_F_UNSIGNED) ) 
                     strcpy(tbuf,"Off");
                 else
-                sprintf(tbuf, "%d", *(curr_menu->menu[imenu].value));
+                    sprintf(tbuf, "%d", *(curr_menu->menu[imenu].value));
                 gui_menu_draw_value(tbuf, len_int);
                 break;
             case MENUITEM_SUBMENU_PROC:
@@ -1192,7 +1192,7 @@ static void gui_menuedit_draw_text(char *str, int is_center)
 	if ( is_center)
 		xx = (w-len)>>1;
 	else
-		xx = 0;
+		xx = 4;
 
     draw_filled_rect(x, yy, x+xx, yy+rbf_font_height()-1, bg );
 	xx1 = x+xx;
@@ -1205,43 +1205,44 @@ void gui_menuedit_draw_initial()
 { 
 	int i;
 
-    count_visible = 8;
+	// Create body
+	static int mbox_map[] =
+		{
+			(int)"",
+			0,  // valuename
+			(int)"",
+			(int)"",
+			LANG_MENU_EDIT_CHG_VAL,
+#if CAM_HAS_ZOOM_LEVER
+            LANG_MENU_EDIT_ADJ_FACTOR,
+#endif
+			LANG_MENU_EDIT_CONFIRM,
+            (int)"",
+            (int)""
+		};
+
+    count_visible = sizeof(mbox_map)/sizeof(mbox_map[0]);
+
+	mbox_map[1] = curr_menu->menu[gui_menu_curr_item].text;
+	if ( curr_menu->menu[gui_menu_curr_item].type & MENUITEM_QUICKDISABLE)
+		mbox_map[count_visible-2] = LANG_MENU_EDIT_ON_OFF;
+    else
+    {
+        mbox_map[count_visible-2] = (int)"";
+        count_visible--;
+    }
+
     y = (camera_screen.height-(count_visible-1)*rbf_font_height())>>1; 
 
 	// Header
     rbf_draw_menu_header(x, y-rbf_font_height(), w, 0, "Edit value", conf.menu_title_color);
     gui_menu_disp_incr();
 
-	// Create body
-	static char* mbox_map[] =
-		{
-			"",
-			"",  // valuename
-			"",
-			0,
-			"",
-			"",
-#if CAM_HAS_ZOOM_LEVER
-			"arrow/jogdial=change value, ZOOM=incrementor",
-#else
-			"arrow/jogdial=change value",
-#endif
-			""   // bottom line
-		};
-
-	mbox_map[1] = lang_str(curr_menu->menu[gui_menu_curr_item].text);
-	if ( curr_menu->menu[gui_menu_curr_item].type & MENUITEM_QUICKDISABLE)
-		mbox_map[7]="DISP=Cancel, MENU=turn on/off, SET=Confirm";
-	else
-		mbox_map[7]="DISP=Cancel, SET=Confirm";
-
 	// Display body
     cl = conf.menu_color;
-	for ( yy=y, i=0; i<count_visible; i++, yy += rbf_font_height() ) {
-		if ( !mbox_map[i] )
-			continue;
-		gui_menuedit_draw_text( lang_str((int)mbox_map[i]), (i<4) );
-	}
+	for ( yy=y, i=0; i<count_visible; i++, yy += rbf_font_height() )
+		if ( mbox_map[i] )
+    		gui_menuedit_draw_text( lang_str((int)mbox_map[i]), (i<4) );
 }
 
 void gui_menuedit_draw(int enforce_redraw) {
@@ -1258,24 +1259,31 @@ void gui_menuedit_draw(int enforce_redraw) {
         gui_menu_redraw=0;
 
         cl = conf.menu_cursor_color;
-		yy = y + 3*rbf_font_height();
+		yy = y + 2*rbf_font_height() + rbf_font_height()/2;
 
 		int* valueptr = menuitem_get_valueptr( curr_menu, gui_menu_curr_item );
 		if (!valueptr)
 			strcpy(tbuf,"---");
-		else if (*valueptr<0)
-			strcpy(tbuf,"[Off]");
 		else {
 	        switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)
 			{
         	    case MENUITEM_INT:
-                	sprintf(tbuf, "[%d]", *valueptr);
+            		if ((*valueptr<0) && (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_F_UNSIGNED))
+            			strcpy(tbuf,"[Off]");
+                    else
+                	    sprintf(tbuf, "[%d]", *valueptr);
                 	break;
             	case MENUITEM_ENUM:
-                    sprintf(tbuf,"[%s]",((enum_callback_t)curr_menu->menu[gui_menu_curr_item].value)(0, curr_menu->menu[gui_menu_curr_item].arg) );
+            		if (*valueptr<0)
+            			strcpy(tbuf,"[Off]");
+                    else
+                        sprintf(tbuf,"[%s]",((enum_callback_t)curr_menu->menu[gui_menu_curr_item].value)(0, curr_menu->menu[gui_menu_curr_item].arg) );
 	                break;
 	            case MENUITEM_ENUM2:
-                    sprintf(tbuf,"[%s]", gui_change_enum2(&curr_menu->menu[gui_menu_curr_item], 0) );
+            		if (*valueptr<0)
+            			strcpy(tbuf,"[Off]");
+                    else
+                        sprintf(tbuf,"[%s]", gui_change_enum2(&curr_menu->menu[gui_menu_curr_item], 0) );
 					break;
 				default:
 					strcpy(tbuf,"---");
