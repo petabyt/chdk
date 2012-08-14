@@ -2374,9 +2374,10 @@ static void gui_draw_alt_helper()
     if (shooting_get_common_focus_mode())           // Check in manual focus mode
     {
 #if CAM_HAS_ZOOM_LEVER
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,(int)"Infinity Focus", 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        if (SHORTCUT_TOGGLE_RAW != SHORTCUT_SET_INFINITY)
+            y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW, LANG_HELP_INF_FOCUS, 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
 #else
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,(int)"Chg Focus Factor", 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW, LANG_HELP_CHG_FOCUS_FACTOR, 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
 #endif
     }
     else
