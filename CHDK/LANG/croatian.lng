@@ -11,7 +11,7 @@
   4 "Histogram parametri"
   5 "Zebra parametri"
   6 "Parametri skripti"
-  7 "Postavke izgleda"
+  7 "Boje"
   8 "Razno"
   9 "Debug parametri"
  10 "Povrat na poèetne postavke"
@@ -70,7 +70,7 @@
  48 "Parametri skripte"
  
  
- 49 "Postavke izgleda"
+ 49 "Boje"
  
  50 "Jezik..."
  51 "Stranica kodova"
@@ -474,8 +474,8 @@
 368 "Omoguæi tonalne krivulje"
 369 "Odaberi datoteku krivulja"
 
-370 "Crtanje rubova"
-371 "Crtanje rubova"
+370 "Panorama-crtanje rubova"
+371 "Panorama-crtanje rubova"
 
 372 "Omoguæi crtanje rubova"
 373 "Prag crtanja rubova"
@@ -532,7 +532,7 @@
 419 "Omoguæi u pregledavanju"
 
 421 "Uèitaj+postavke Zooma"
-422 "Zakljuèaj crtanje rubova"
+422 "Panorama"
 423 "Bljesak na zadnju lamelu"
 424 "DNG format"
 425 "Koristi RAW meðumemoriju"
@@ -545,7 +545,7 @@
 432 "Pobjednik Igraè 2"
 433 "Jesam te"
 434 "Neriješeno"
-435 "Onemoguæi Raw u crtanju rubova"
+435 "Onemoguæi Raw u Panorami"
 436 "Onemoguæi Raw u Auto modu"
 437 "   SAMO u videu"
 438 "   Snaga bljeskalice"
@@ -671,3 +671,45 @@
 550 "Odustajanje [Press half]"
 
 551 "Omoguæi'start skripte'"
+
+552 "Onemoguæi ZOOM dugme"
+
+553 "DNG verzija"
+554 "Postavke izbornika"
+555 "<ALT> pomoæni prozor"
+556 "Pomoæni prozor-odgoda"
+557 "CHDK postavke"
+
+// <ALT> mode help screen text
+558 "%-20s %-14s"                           // Header format, adjust if needed; but total len must be 35
+559 "<ALT> kratice"                       // Len must be <= first string in header format (20)
+560 "Shutter Half Press +"                  // Len must be <= first string in header format (20)
+561 "MENU=CHDK Menu"                        // Len must be <= second string in header format (14)
+562 "MENU=User Menu"                        // Len must be <= second string in header format (14)
+563 "SET=Script Menu, SHUTTER=Run Script"   // Len must be <= 35
+564 "Focus  %5s=Inf.  %5s=HyperFocal"       // Len must be <= 35
+565 "Manual Focus"
+566 "Hide CHDK OSD while pressed"
+567 "  * - nedostupno u <ALT> modu  "   // Len must be <= 35
+
+568 "'%s'\ndodano u korisnièki izbornik"
+569 "Korisnièki izbornik je pun"
+
+570 "SD kartica"
+571 "Jezik i font"
+
+//
+572 "Bljeskalica (snaga)"
+573 "Brzi EV korak"
+574 "Prikaži pomoæni prozor"
+575 "Koristi popup za ureðivanje"
+
+576 "Dodaj skriptu u korisnièki izbornik"
+
+577 "Lijevo, Desno & Jogdial = Vrijednost"
+578 "Zoom = Odabir faktora"
+579 "SET  = Potvrdi, DISP = Odbaci"
+580 "MENU = Uklj./Isklj."
+
+581 "Beskrajan fokus"
+582 "Fokus faktor"
