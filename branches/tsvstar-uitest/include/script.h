@@ -60,7 +60,8 @@ enum FilenameMakeModeEnum
 		MAKE_PARAM_TMPRUN_FILENAME,		// "DATA/_params_.old"   -> cfg_param_name
 		MAKE_PARAM_FILENAME };			// "DATA/scriptname._%d" -> cfg_param_name
 
-const char* make_param_filename( enum FilenameMakeModeEnum mode, const char* fn, int paramset );
+extern const char* make_param_filename( enum FilenameMakeModeEnum mode, const char* fn, int paramset );
+extern void make_paramstr( char* tgtbuf );
 
 //-------------------------------------------------------------------
 

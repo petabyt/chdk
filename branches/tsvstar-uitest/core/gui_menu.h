@@ -75,7 +75,7 @@ typedef void (menuproc_t)(int);
 extern void gui_menu_init(CMenu *menu_ptr);
 extern int gui_menu_kbd_process();
 extern void gui_menu_draw(int enforce_redraw);
-extern void gui_menu_force_redraw();
+extern void gui_menu_erase_and_redraw();
 extern void gui_menu_unload_module_menus();
 //-------------------------------------------------------------------
 extern void gui_enum_value_change(int *value, int change, unsigned num_items);
@@ -85,12 +85,13 @@ extern void gui_qenum_value_change(int* value, int change, unsigned num_items );
 extern const char* gui_change_simple_qenum(int* value, int change, const char** items, unsigned num_items);
 
 //-------------------------------------------------------------------
-extern int menuitem_foreach2( CMenu* menu, int itemid, int tmp, int visibility);
+extern int menuitem_set_visible( CMenu* menu, int itemid, int flags, int visibility);
 extern int value_turn_state( int* valueptr, int dir );
 
 void gui_activate_sub_menu(CMenu *sub_menu, int module_idx);
 
 void gui_menu_popup_mainmenu();
+void gui_menu_reopen_menu( int flag_reopen );
 void gui_menu_close_menu( int switch_to_alt );
 
 enum {
@@ -111,7 +112,11 @@ extern gui_handler menuGuiHandler;
 extern  CMenu   root_menu;									// defined in gui.c
 extern  CMenu* root_menu_ptr;								// defined in gui.c
 
+enum { FLAG_FIND_RECURSIVE = 0x01
+};
 extern CMenuItem* find_mnu(CMenu *curr_menu, int itemid );  // defined in gui_user_menu.c
+extern CMenuItem* find_mnu_adv(CMenu *curr_menu, int flags, int itemid );   // defined in gui_user_menu.c
+
 
 //-------------------------------------------------------------------
 #endif

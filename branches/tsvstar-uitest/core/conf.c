@@ -48,9 +48,6 @@ static void conf_change_alt_mode_button();
 static void conf_change_video_bitrate();
 static void conf_change_dng_ext();
 static void conf_change_autoiso();
-extern void cb_autoiso_menu_change(unsigned int item);
-static void conf_change_pmenu_mode();
-extern void conf_change_scene_script();
 
 
 void camera_set_raw(int mode)
@@ -467,9 +464,10 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(291, conf.show_alt_helper,            CONF_DEF_VALUE,     i:1, NULL),
     CONF_INFO(292, conf.show_alt_helper_delay,      CONF_DEF_VALUE,     i:3, NULL),
     CONF_INFO(293, conf.help_was_shown, 	        CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(294, conf.menuedit_popup,		        CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO(295, conf.scene_script_mode,	        CONF_DEF_VALUE,     i:0, conf_change_scene_script),
-    CONF_INFO(296, conf.profile_menu_mode,	        CONF_DEF_VALUE,     i:1, conf_change_pmenu_mode),
+
+    CONF_INFO(1294, conf.menuedit_popup,	        CONF_DEF_VALUE,     i:1, NULL),
+    CONF_INFO(1295, conf.scene_script_mode,	        CONF_DEF_VALUE,     i:0, conf_change_scene_script),
+    CONF_INFO(1296, conf.profile_menu_mode,	        CONF_DEF_VALUE,     i:1, conf_change_pmenu_mode),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
@@ -493,8 +491,8 @@ void conf_info_func(unsigned short id)
     case 235: conf_change_dng_ext(); break;
 	case 283:
     case 284: conf_change_autoiso(); break;
-    case 295: conf_change_scene_script(); break;
-    case 296: conf_change_pmenu_mode(); break;
+    case 1295: conf_change_scene_script(); break;
+    case 1296: conf_update_pmenu_mode(); break;
     }
 }
 
@@ -562,10 +560,10 @@ void conf_change_autoiso()
 }
 
 
-static void conf_change_pmenu_mode()
+void conf_update_pmenu_mode()
 {
-	if ( conf.profile_menu_mode && pmenu_menu_buf )
-		root_menu_ptr = pmenu_menu_buf;
+	if ( conf.profile_menu_mode && pmenu.menu_buf )
+		root_menu_ptr = pmenu.menu_buf;
 	else
 		root_menu_ptr = &root_menu;
 }

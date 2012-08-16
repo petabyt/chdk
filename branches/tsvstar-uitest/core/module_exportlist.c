@@ -338,20 +338,19 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 			gui_mbox_init_adv,
 
 			// profmenu.flt
-			&pmenu_autoexec_list,
-			&pmenu_string_buf,
-			&pmenu_menu_buf,
-			&pmenu_items_buf,
-			&count_autoexec,
+			&pmenu,
 			gui_pmenu_load_script,
 			gui_pmenu_run_script,
 			gui_pmenu_run_as_mode,
-			gui_menu_goto_mainmenu,
+			gui_pmenu_goto_mainmenu,
+			gui_pmenu_unknown_map,
 
 			find_mnu,
 			reset_profile_menu,
+			gui_menu_erase_and_redraw,
 			&root_menu,
-			&pmenu_autoexec_scene,
+			gui_menu_close_menu,
+			gui_menu_reopen_menu,
 }
 #endif
 

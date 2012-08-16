@@ -12,6 +12,7 @@
 #include "gui_menu.h"
 #include "gui_user_menu.h"
 #include "gui_lang.h"
+#include "profiles.h"
 
 extern gui_handler menueditGuiHandler;
 
@@ -188,7 +189,7 @@ int gui_menu_rows()
 
 //-------------------------------------------------------------------
 // Full screen erase and redraw of menu
-static void gui_menu_erase_and_redraw()
+void gui_menu_erase_and_redraw()
 {
     gui_menu_redraw = 2;
     gui_set_need_restore();
@@ -463,7 +464,7 @@ static void update_enum_value(int direction)
 
 //-------------------------------------------------------------------
 // Open a sub-menu
-void gui_activate_sub_menu(CMenu *sub_menu, int module_idx)
+static void _gui_activate_sub_menu(CMenu *sub_menu, int module_idx, int redraw )
 {
     // push current menu on stack
     gui_menu_stack[gui_menu_stack_ptr].menu = curr_menu;
@@ -495,7 +496,13 @@ void gui_activate_sub_menu(CMenu *sub_menu, int module_idx)
     }
 
     // Force full redraw
-    gui_menu_erase_and_redraw();
+	if ( redraw )
+	    gui_menu_erase_and_redraw();
+}
+
+void gui_activate_sub_menu(CMenu *sub_menu, int module_idx )
+{
+	_gui_activate_sub_menu( sub_menu, module_idx, 1 );
 }
 
 //-------------------------------------------------------------------
@@ -529,7 +536,7 @@ void adjust_top ( int last, int offset )
 // Open a sub-menu
 static void select_sub_menu()
 {
-    gui_activate_sub_menu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), -1);
+    _gui_activate_sub_menu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), -1, 1);
 }
 
 // Call a function to process a menu item (may be a sub-menu loaded via a module)
@@ -547,6 +554,44 @@ static void select_proc()
     }
 }
 
+static void gui_menu_updown_process(int increment)
+{
+    do
+    {
+        // Move to next or previous row
+        gui_menu_curr_item += increment;
+
+        if (gui_menu_curr_item < 0)                                     // Off top, move to bottom
+        {
+            gui_menu_curr_item = gui_menu_rows() - 1;
+            adjust_top( gui_menu_curr_item, num_lines - 1);
+        }
+        else if (gui_menu_curr_item >= gui_menu_rows())                 // Off bottom, move to top
+        {
+            gui_menu_curr_item = gui_menu_top_item = 0;
+        }
+        else if (increment == 1)                                        // Still in menu, if moving down adjust scroll if needed
+        {
+            if ( distance_items(gui_menu_top_item, gui_menu_curr_item) >= num_lines - 1 )
+            {
+                adjust_top( gui_menu_curr_item, num_lines-1 );
+                if ( distance_items( gui_menu_top_item, gui_menu_rows() ) < num_lines ) adjust_top( gui_menu_rows(), num_lines-1 );
+            }
+        }
+        else                                                            // Still in menu, and moving up, adjust scroll
+        {
+            if (gui_menu_curr_item == gui_menu_top_item) 
+                --gui_menu_top_item;
+        }
+
+        // Check in case scroll moved off top of menu
+        if (gui_menu_top_item < 0) gui_menu_top_item = 0;
+
+    } while ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_TEXT || 
+             (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_SEPARATOR ||
+             curr_menu->menu[gui_menu_curr_item].type & MENUITEM_HIDDEN );
+}
+
 // Move up / down in menu, adjusting scroll position if needed
 //   increment = -1 to move up, 1 to move down
 static void gui_menu_updown(int increment)
@@ -557,49 +602,14 @@ static void gui_menu_updown(int increment)
     if (camera_info.state.is_shutter_half_press || kbd_is_key_pressed(KEY_ZOOM_IN) || kbd_is_key_pressed(KEY_ZOOM_OUT)) c=4; else c=1;
 
     for (j = 0; j < c; ++j)
-    {
-        do
-        {
-            // Move to next or previous row
-            gui_menu_curr_item += increment;
+		gui_menu_updown_process(increment);
 
-            if (gui_menu_curr_item < 0)                                     // Off top, move to bottom
-            {
-                gui_menu_curr_item = gui_menu_rows() - 1;
-                adjust_top( gui_menu_curr_item, num_lines - 1);
-            }
-            else if (gui_menu_curr_item >= gui_menu_rows())                 // Off bottom, move to top
-            {
-                gui_menu_curr_item = gui_menu_top_item = 0;
-            }
-            else if (increment == 1)                                        // Still in menu, if moving down adjust scroll if needed
-            {
-                if ( distance_items(gui_menu_top_item, gui_menu_curr_item) >= num_lines - 1 )
-                {
-                    adjust_top( gui_menu_curr_item, num_lines-1 );
-                    if ( distance_items( gui_menu_top_item, gui_menu_rows() ) < num_lines ) adjust_top( gui_menu_rows(), num_lines-1 );
-                }
-            }
-            else                                                            // Still in menu, and moving up, adjust scroll
-            {
-                if (gui_menu_curr_item == gui_menu_top_item) 
-                    --gui_menu_top_item;
-            }
+    // Reset amount to increment integer values by
+	gui_menu_reset_incr();
+    gui_menu_disp_incr();
 
-            // Check in case scroll moved off top of menu
-            if (gui_menu_top_item < 0) gui_menu_top_item = 0;
-
-        } while ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_TEXT || 
-                 (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_SEPARATOR ||
-                 curr_menu->menu[gui_menu_curr_item].type & MENUITEM_HIDDEN );
-
-        // Reset amount to increment integer values by
-		gui_menu_reset_incr();
-        gui_menu_disp_incr();
-
-        // Redraw menu if needed
-        if (gui_menu_redraw == 0) gui_menu_redraw=1;
-    }
+    // Redraw menu if needed
+    if (gui_menu_redraw == 0) gui_menu_redraw=1;
 }
 
 static int flag_editmode=0;	// 1 if current menu item is "edit"
@@ -720,7 +730,11 @@ int gui_menu_kbd_process() {
 				break;
 			}
 
-            if (conf.user_menu_enable == 3) {
+
+            if (conf.user_menu_enable > 3) {
+				edit_profile_menu_op( &curr_menu->menu[gui_menu_curr_item] );
+			}
+            else if (conf.user_menu_enable == 3) {
                 if (curr_menu->title != LANG_MENU_USER_MENU) {
                     /*
                     * Add new entry
@@ -771,7 +785,7 @@ int gui_menu_kbd_process() {
             if ( flag_editmode ) {
                 gui_menu_right(10);
             } else
-            gui_menu_updown(-1);
+            	gui_menu_updown(-1);
             break;
         case JOGDIAL_RIGHT:
             if ( flag_editmode ) {
@@ -783,7 +797,7 @@ int gui_menu_kbd_process() {
             if ( flag_editmode ) {
                 gui_menu_left(-10);
             } else
-            gui_menu_updown(1);
+	            gui_menu_updown(1);
             break;
         case FRONTDIAL_LEFT:
         case KEY_LEFT:
@@ -848,7 +862,10 @@ int gui_menu_kbd_process() {
             * Move current entry up in menu
             * if in user menu edit mode and viewing user menu
             */
-            if( (conf.user_menu_enable == 3)  && (curr_menu->title == LANG_MENU_USER_MENU)) {
+            if( (conf.user_menu_enable >= 4) && is_pmenu_menu(curr_menu) ) {
+				move_pmenu_item( &curr_menu->menu[gui_menu_curr_item], -1 );
+    		}
+            else if( (conf.user_menu_enable == 3)  && (curr_menu->title == LANG_MENU_USER_MENU)) {
                 move_user_menu_item_up(&gui_menu_curr_item);
                 if(gui_menu_curr_item < gui_menu_top_item+1) {
                     if(gui_menu_curr_item)
@@ -870,7 +887,10 @@ int gui_menu_kbd_process() {
             * Move current entry down in menu
             * if in user menu edit mode and viewing user menu
             */
-            if( (conf.user_menu_enable == 3)  && (curr_menu->title == LANG_MENU_USER_MENU)) {
+            if( (conf.user_menu_enable >= 4) && is_pmenu_menu(curr_menu) ) {
+				move_pmenu_item( &curr_menu->menu[gui_menu_curr_item], +1 );
+    		}
+            else if( (conf.user_menu_enable == 3)  && (curr_menu->title == LANG_MENU_USER_MENU)) {
                 move_user_menu_item_down(&gui_menu_curr_item);
                 if(gui_menu_curr_item > gui_menu_top_item + num_lines -2) {
                     if((gui_menu_curr_item < USER_MENU_ITEMS) && curr_menu->menu[gui_menu_curr_item +1].text)
@@ -1177,16 +1197,16 @@ void gui_menu_draw(int enforce_redraw) {
 }
 
 // Hide/Unhide item found in menu starting from "cmenu" by its lang_id
-int menuitem_foreach2( CMenu* cmenu, int itemid, int tmp, int visibility )
+int menuitem_set_visible( CMenu* cmenu, int itemid, int flags, int visibility )
 {
-	CMenuItem* item = find_mnu( cmenu, itemid );
+	CMenuItem* item = find_mnu_adv( cmenu, flags, itemid );
 	if ( !item )
 		return 0;
 
 	if ( visibility )
-     *((short*)&(item->type)) &= ~MENUITEM_HIDDEN;   
+      *((short*)&(item->type)) &= ~MENUITEM_HIDDEN;   
 	else	
-     *((short*)&(item->type)) |= MENUITEM_HIDDEN;   
+      *((short*)&(item->type)) |= MENUITEM_HIDDEN;   
 	return 1;
 }
 
@@ -1197,7 +1217,6 @@ int gui_menu_get_editmode();
 void gui_menu_kbd_process_menu_btn()
 {
     extern int gui_user_menu_flag;
-    extern CMenu root_menu;
 
     // In edit submode - MenuButton mean "Toggle feature" and processed by gui_menu_kbd_process
     if ( gui_menu_get_editmode() ) {
@@ -1209,7 +1228,7 @@ void gui_menu_kbd_process_menu_btn()
 
     conf_save_new_settings_if_changed();
 
-    if (gui_user_menu_flag)
+    if ( gui_user_menu_flag )
     {
         gui_set_mode(&menuGuiHandler);
         gui_user_menu_flag = 0;
@@ -1376,24 +1395,118 @@ void gui_menu_clean_marks(int category)
 
 //-------------------------------------------------------------------
 
-// popup main menu
-void gui_menu_popup_mainmenu()
+static int stored_hash_menuname;		// stored last open menu
+static int stored_hash_itemname;		// stored last open menu
+static int stored_is_pmenu;				// stored is was pmenu opened
+
+// PURPOSE:
+//	 Find and open menu named "menuname"
+static int open_menu()
 {
-    extern CMenu root_menu;
+	int item_idx = 0;
+	if ( lang_strhash31(curr_menu->title) == stored_hash_menuname ) {
+
+		// Try to restore menu item
+		for ( item_idx=0; curr_menu->menu[item_idx].text; item_idx++) {
+				if ( lang_strhash31(curr_menu->menu[item_idx].text) == stored_hash_itemname ) {
+					gui_menu_curr_item = item_idx;
+					break;
+				}
+		}
+
+		// adjust top
+		if ( gui_menu_curr_item!=0 ) {
+			gui_menu_curr_item--;
+			gui_menu_updown_process(1);
+		}
+
+		gui_menu_erase_and_redraw();
+		return 1;
+	}
+
+    if ( gui_menu_stack_ptr < MENUSTACK_MAXDEPTH )
+	{
+
+		// Recursive search stored menu
+		for ( item_idx=0; curr_menu->menu[item_idx].text; item_idx++) {
+
+			if ( (curr_menu->menu[item_idx].type & MENUITEM_MASK) == MENUITEM_SUBMENU) {
+				if (curr_menu->menu[item_idx].text != LANG_MENU_USER_MENU) {
+
+					_gui_activate_sub_menu( (CMenu*)(curr_menu->menu[item_idx].value), -1, 0 );
+					if ( open_menu( ) )
+						return 1;
+				}
+			}
+		}
+	}
+
+    if (gui_menu_stack_ptr > 0)
+    {
+        gui_menu_stack_ptr--;
+        gui_menu_set_curr_menu(gui_menu_stack[gui_menu_stack_ptr].menu, gui_menu_stack[gui_menu_stack_ptr].toppos, gui_menu_stack[gui_menu_stack_ptr].curpos);
+	}
+
+	return 0;
+}
+
+// PURPOSE:
+//	 Popup current main menu (CHDK main or profile menu main)
+// PARAMETERS:
+//	 flag_reopen = 1 mean "open last closed menu"
+void gui_menu_reopen_menu( int flag_reopen )
+{
     extern int gui_user_menu_flag;
 
 	gui_user_menu_flag = 0;
+	if ( flag_reopen )
+		root_menu_ptr = (stored_is_pmenu)?pmenu.menu_buf:&root_menu;
+
+	// Item buffer could be reallocated
+	// So adjust root_menu_ptr to current
+	if ( root_menu_ptr!= &root_menu ) {
+
+		if ( pmenu.menu_buf ) {
+			root_menu_ptr = pmenu.menu_buf;
+
+			// minihack: sync root title to pmenu root
+			root_menu_ptr[0].title = root_menu.title;
+		}
+		else
+			root_menu_ptr = &root_menu;
+	}
+
 	gui_menu_init(root_menu_ptr);
+
+	if ( flag_reopen )
+		open_menu ( stored_hash_menuname );
+		
 	gui_set_mode(&menuGuiHandler);
 }
 
-// close all menus
+
+// Popup main menu
+void gui_menu_popup_mainmenu()
+{
+	gui_menu_reopen_menu( 0 );
+}
+
+
+// Close all menus
 void gui_menu_close_menu( int switch_to_alt )
 {
+	stored_hash_menuname = curr_menu ? lang_strhash31(curr_menu->title) : 0;
+	stored_hash_itemname = ( curr_menu && gui_menu_curr_item>=0 ) ? 
+							lang_strhash31( curr_menu->menu[gui_menu_curr_item].text ) : 0;
+	stored_is_pmenu = (root_menu_ptr!=&root_menu);
+
     gui_menu_unload_module_menus();
     conf_save_new_settings_if_changed();
 	if ( switch_to_alt )
         gui_set_mode(&altGuiHandler);
+
+	//??
+    kbd_reset_autoclicked_key();    // Need this to stop 'Func/Set' registering twice???
 }
 
 //-------------------------------------------------------------------

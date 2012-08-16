@@ -495,6 +495,25 @@ int load_params_values(const char *fn, int paramset)
     return 1;
 }
 
+//-------------------------------------------------------------------
+// PURPOSE:     Auxilary function.
+//				Store current script parameters as paramstr to "buf"
+// PARAMETERS:  buf = target buffer
+// NOTE:		no buffer size check. buffer should be big enough
+//-------------------------------------------------------------------
+void make_paramstr( char* buf )
+{
+	int i;
+
+	buf[0]=0;
+	for(i = 0; i < SCRIPT_NUM_PARAMS; ++i)
+    {
+    	if (script_params[i][0] != 0)
+			sprintf( buf+strlen(buf), ",%c=%d", ('a'+i), conf.script_vars[i] );
+    }
+
+}
+
 
 //-------------------------------------------------------------------
 // PURPOSE:     Auxilary function.
@@ -505,7 +524,7 @@ int load_params_values(const char *fn, int paramset)
 //-------------------------------------------------------------------
 static void do_save_param_file( char* fn, char* script_file, int paramset )
 {
-    int i, fd;
+    int fd;
     char *buf;
 
     buf=umalloc(250);
@@ -525,14 +544,8 @@ static void do_save_param_file( char* fn, char* script_file, int paramset )
 			}
 
 			// main param list
-		    for(i = 0; i < SCRIPT_NUM_PARAMS; ++i)
-    		{
-        		if (script_params[i][0] != 0)
-    		    {
-					sprintf( buf, ",%c=%d", ('a'+i), conf.script_vars[i] );
-    				write(fd, buf, strlen(buf));
-				}
-    		}
+			make_paramstr( buf );
+    		write(fd, buf, strlen(buf));
     		close(fd);
 		}
 			

@@ -190,6 +190,7 @@
 #define LANG_MBOX_BTN_YES               138
 #define LANG_MBOX_BTN_NO                139
 #define LANG_MBOX_BTN_CANCEL            140
+#define LANG_CANCEL			            140
 
 
 #define LANG_OSD_LAYOUT_EDITOR_HISTO    141

@@ -14,8 +14,6 @@
 #include "modules.h"
 #include "module_load.h"
 
-//-------------------------------------------------------------------
-extern  CMenu   root_menu;
 
 //-------------------------------------------------------------------
 static void rinit()
@@ -120,7 +118,7 @@ void move_user_menu_item_down(int* cur_memnu_item_indx)
 }
 
 //-------------------------------------------------------------------
-CMenuItem* find_mnu(CMenu *curr_menu, int itemid )
+CMenuItem* find_mnu_adv(CMenu *curr_menu, int flags, int itemid )
 {
 	int gui_menu_curr_item;
 	CMenuItem* rv=0;
@@ -133,15 +131,23 @@ CMenuItem* find_mnu(CMenu *curr_menu, int itemid )
 		if ( lang_strhash31(curr_menu->menu[gui_menu_curr_item].text) == itemid){
 			return (CMenuItem*) &(curr_menu->menu[gui_menu_curr_item]);
 		}
-		if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_SUBMENU)
-			if (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU) {
-				rv = find_mnu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), itemid);
-				if ( rv )
-					return rv;
-			}
+		if ((flags & FLAG_FIND_RECURSIVE) &&
+		  (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_SUBMENU) {
+
+				if (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU) {
+					rv = find_mnu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), itemid);
+					if ( rv )
+						return rv;
+				}
+		}
 		gui_menu_curr_item++;
 	}
 	return 0;
+}
+
+CMenuItem* find_mnu(CMenu *curr_menu, int itemid )
+{
+	return find_mnu_adv(curr_menu, FLAG_FIND_RECURSIVE, itemid );
 }
 
 void user_menu_save() {

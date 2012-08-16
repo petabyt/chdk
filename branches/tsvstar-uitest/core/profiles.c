@@ -10,7 +10,6 @@
 #include "platform.h"
 
 #include "gui_mbox.h"
-#include "console.h"
 
 // A/CHDK/CFG/PROFILES.LST
 //	code|name
@@ -19,14 +18,7 @@
 //========================================================
 
 // Buffers which are core store for profmenu
-char** pmenu_autoexec_list;		// array of pointers to pairs "scriptname\0scripparam\0" - profile menu autoexecution list
-char* pmenu_autoexec_scene;		// pointer to pair "scriptname\0scriptparam\0" of scene to autoexecute (0 - if no one selected)
-char* pmenu_string_buf;			// just plain array of strings (contain everything)
-CMenu* pmenu_menu_buf;   		// array of menu headers
-CMenuItem* pmenu_items_buf;		// result arrays of menuitems (one by one)
-
-int count_autoexec;				// num of pairs in pmenu_autoexec_list
-
+struct ProfileMenu pmenu = { MAKE_API_VERSION(1,0) };
 
 //========================================================
 
@@ -36,6 +28,8 @@ const char PROF_NUM_FILE[] = "A/CHDK/DATA/PROFILE.NOW";		// contain current sele
 
 static char root_menu_title[50];
 static int profile_need_postprocess_flag = 0;
+
+extern void adjust_root_menu();
 
 //-----------------------------------------------------------
 static void get_profilename_to_buf( char* buf, int size )
@@ -89,11 +83,13 @@ static void profile_set( int profile, int do_postprocess )
 		// update base script cfg dir
 		conf.current_profile = profile;
 
+#ifdef OPT_SCRIPTING
 		const char* dir;
 		dir = make_param_filename( MAKE_PARAM_FILENAME, 0, 0 );
 		mkdir(dir);
 		dir =  make_param_filename( MAKE_PARAMSET_NAMES_FILENAME, 0, 0 );
 		mkdir(dir);
+#endif
 
 		profile_need_postprocess_flag = 1;
 		if ( do_postprocess )
@@ -108,9 +104,6 @@ static void profile_set( int profile, int do_postprocess )
 // Callbacks for profile manager 
 void gui_safe_set_profile(int arg)
 {
-	extern void gui_menu_close_menu(int changemode);
-	extern void gui_menu_popup_mainmenu();
-
 	if ( arg == conf.current_profile )
 		return;
 
@@ -166,34 +159,102 @@ void profile_restore( int do_postprocess )
 //=======================================================================
 
 
+char* get_profilemenu_file()
+{
+	static char PROFILE_MENU_FILE[40];
+	sprintf ( PROFILE_MENU_FILE, "A/CHDK/CFG/PROFILES/%02d.CFG", conf.current_profile );
+	return PROFILE_MENU_FILE;
+}
+
+// RETURN: 1 if "menu" is profile menu menu
+//----------------------------------------
+int is_pmenu_menu( const CMenu* menu)
+{
+	if ( pmenu.count_menu<=0 || !pmenu.menu_buf || menu<pmenu.menu_buf )
+	  return 0;
+	return ( (menu - pmenu.menu_buf) < pmenu.count_menu );
+}
+
+// RETURN: stored_idx of profile menu item
+//		-1 if this is not profile menu item
+//----------------------------------------
+int pmenu_get_itemidx( const CMenuItem* item )
+{
+	if ( pmenu.count_items<=0 || !pmenu.items_buf || 
+		 !pmenu.itemidx_buf || item<pmenu.items_buf)
+	  return -1;
+
+	int idx = (item - pmenu.items_buf);
+	if ( idx >= pmenu.count_items )
+		return -1;
+
+	return pmenu.itemidx_buf[idx];
+}
+
+// RETURN: <>0 if "item" is profile menu item
+//----------------------------------------
+int is_pmenu_item( const CMenuItem* item )
+{
+	return (pmenu_get_itemidx(item)+1);
+}
+
+int is_pmenu_regular_item( const CMenuItem* item )
+{
+	return ( is_pmenu_item(item) &&
+		     item->text &&
+			 (item->type & MENUITEM_MASK) != MENUITEM_UP );
+}
+
+
+// PURPOSE: Load profile menu
+// PARAMETERS: autoexeconly - 1 if load only autoexec entry
+//----------------------------------------
 void load_profile_menu( int autoexeconly )
 {
-	char PROFILE_MENU_FILE[40];
-	unsigned int argv[] ={ (autoexeconly)?1:0, (unsigned int)PROFILE_MENU_FILE };
+	unsigned int argv[] ={ (autoexeconly)?PMENU_LOAD_AUTOEXEC:PMENU_LOAD, 0 };
 
-	sprintf ( PROFILE_MENU_FILE, "A/CHDK/CFG/PROFILES/%02d.CFG", conf.current_profile );
-	reset_profile_menu();
-	if ( is_file_exists(PROFILE_MENU_FILE) )
-		module_run("profmenu.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR);
+	reset_profile_menu( &pmenu );
+	argv[1] = (unsigned int)get_profilemenu_file();
+	if ( is_file_exists( (char*)argv[1] ) )
+		module_run("pmenu.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR);
 
-	extern void adjust_root_menu();
+	adjust_root_menu();
+}
+
+// PURPOSE: Load profile menu
+// PARAMETERS: autoexeconly - 1 if load only autoexec entry
+//----------------------------------------
+static void run_edit_profile_menu( unsigned int* argv, int argn )
+{
+	if ( argn < 3 )
+		return;
+
+	argv[1] = (unsigned int)get_profilemenu_file();
+	module_run("pmenuedi.flt", 0, argn, argv, UNLOAD_IF_ERR);
+
 	adjust_root_menu();
 }
 
 //-----------------------------------------------------------
 
 // -> free_buffers(); root_menu_ptr = root_menu;
-void reset_profile_menu()
+void reset_profile_menu( struct ProfileMenu *pmenu_p )
 {
-	pmenu_autoexec_scene  = 0;
-	if ( pmenu_autoexec_list ) free(pmenu_autoexec_list);
-	pmenu_autoexec_list=0;
-	if ( pmenu_string_buf ) free(pmenu_string_buf);
-	pmenu_string_buf=0;
-	if ( pmenu_menu_buf ) free(pmenu_menu_buf);
-	pmenu_menu_buf=0;
-	if ( pmenu_items_buf ) free(pmenu_items_buf);
-	pmenu_items_buf=0;
+	pmenu_p->autoexec_scene  = 0;
+	pmenu_p->editop_cut_idx  = -1;
+
+	pmenu_p->count_autoexec = pmenu_p->count_menu = pmenu_p->count_items = 0;
+
+	if ( pmenu_p->autoexec_list ) free(pmenu_p->autoexec_list);
+	pmenu_p->autoexec_list=0;
+	if ( pmenu_p->string_buf ) free(pmenu_p->string_buf);
+	pmenu.string_buf=0;
+	if ( pmenu_p->menu_buf ) free(pmenu_p->menu_buf);
+	pmenu_p->menu_buf=0;
+	if ( pmenu_p->items_buf ) free(pmenu_p->items_buf);
+	pmenu_p->items_buf=0;
+	if ( pmenu_p->itemidx_buf ) free(pmenu_p->itemidx_buf);
+	pmenu_p->itemidx_buf=0;
 	
 	root_menu_ptr = &root_menu;
 }
@@ -220,6 +281,7 @@ static int autoexec_callback_next();
 
 static int next_autoexec_entry()
 {
+#ifdef OPT_SCRIPTING
 	char* scriptname;
 
 	// First execute each entry from autoexec_list
@@ -250,6 +312,7 @@ static int next_autoexec_entry()
 		script_start_gui( 1 );
 		return 0;
 	}
+#endif
 
 	if ( autoexec_fin_cb ) {
 		autoexec_fin_cb();
@@ -275,7 +338,9 @@ void autostart_sequence_entry()
 	if ( autoexec_async_mode && !state_kbd_script_run ) {
 	  if ( next_autoexec_entry() ) {
 			autoexec_async_mode=0;
+#ifdef OPT_SCRIPTING
 			temporary_script_unload();	// restore previous state
+#endif
 		}
 	}
 }
@@ -302,13 +367,13 @@ void do_autoexec_sequence( int async_mode, void (*callback)(), void(*callback_fi
 
 	autoexec_base_script = 0;
 	ptr_autoexec = 0;
-	ptr_autoexec_scene = pmenu_autoexec_scene;
+	ptr_autoexec_scene = pmenu.autoexec_scene;
 
 	// If autoexec list exists - use it, otherwise base script
 	if ( script_startup_was ) {
 
-		if ( count_autoexec && pmenu_autoexec_list )
-			ptr_autoexec = pmenu_autoexec_list;
+		if ( pmenu.count_autoexec && pmenu.autoexec_list )
+			ptr_autoexec = pmenu.autoexec_list;
 		else
 			autoexec_base_script = 1;
 	}
@@ -326,6 +391,7 @@ void do_autoexec_sequence( int async_mode, void (*callback)(), void(*callback_fi
 
 void gui_pmenu_load_script(int arg) 
 {
+#ifdef OPT_SCRIPTING
 	char* scriptpath = (char*)arg;
 
 	gui_menu_close_menu(1);
@@ -334,21 +400,29 @@ void gui_pmenu_load_script(int arg)
 	script_apply_paramstr( scriptpath+1+strlen(scriptpath),1 );
 
     kbd_reset_autoclicked_key();    // Need this to stop 'Func/Set' registering twice???
+#else
+		gui_mbox_init(LANG_ERROR, (int)"No script support in this CHDK build", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+#endif
 }
 
 void gui_pmenu_run_script(int arg)
 {
+#ifdef OPT_SCRIPTING
 	char* scriptpath = (char*)arg;
 
 	if ( scriptpath && scriptpath[0] )
 		temporary_script_load( scriptpath, scriptpath+1+strlen(scriptpath), 0, 0 );
 	else
 		gui_mbox_init((int)"Run script", (int)"No script defined for this item", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+#else
+		gui_mbox_init(LANG_ERROR, (int)"No script support in this CHDK build", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+#endif
 }
 
 
 void gui_pmenu_run_as_mode(int arg)
 {
+#ifdef OPT_SCRIPTING
 	char* scriptpath = (char*)arg;
 	char* scriptparam = scriptpath;
 	int   namehash = 0;
@@ -363,8 +437,6 @@ void gui_pmenu_run_as_mode(int arg)
 			namehash=0;
 	}
 
-	extern void conf_change_scene_script();
-
 	conf.scene_script_mode = namehash;
 	conf_change_scene_script();
 	conf_save_new_settings_if_changed();
@@ -375,12 +447,110 @@ void gui_pmenu_run_as_mode(int arg)
 	else
 		gui_mbox_init((int)"Mode", (int)"Reset mode", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 	*/
+#else
+		gui_mbox_init(LANG_ERROR, (int)"No script support in this CHDK build", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+#endif
 }
 
-void gui_menu_goto_mainmenu(int arg)
+void gui_pmenu_goto_mainmenu(int arg)
 {
 	gui_menu_close_menu(1);
-	root_menu_ptr = &root_menu;
 	conf.profile_menu_mode = 0;
+	conf_update_pmenu_mode();
 	gui_menu_popup_mainmenu();
+}
+
+void gui_pmenu_unknown_map(int arg)
+{
+	gui_mbox_init((int)"Item", (int)"Unknown item map id", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+}
+
+//-----------------------------------------------------------
+//				PROFILE MENU: EDIT OPERATIONS
+//-----------------------------------------------------------
+
+// Callback for edit operations
+void edit_profile_menu_op( const CMenuItem* curr_menu_item )
+{
+
+  if ( root_menu_ptr == &root_menu ) {
+
+		// Add to profile menu
+		// Profile menu is not visible. No redraw or reopen needed
+
+    	char buf[200];
+		if ( (int)lang_str(curr_menu_item->text) == curr_menu_item->text )
+			sprintf(buf, "\nitem|%s\n", lang_str(curr_menu_item->text));
+		else
+			sprintf(buf, "\nitem|@%d\n", curr_menu_item->text);
+		add_to_profile_menu(buf);
+
+    	sprintf(buf,lang_str(LANG_USER_MENU_ITEM_ADDED), lang_str(curr_menu_item->text));
+	    gui_mbox_init(LANG_MENU_USER_MENU, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+						
+  } else {
+
+		// Profile menu operations.
+
+		unsigned int argv[] ={ PMENU_EDIT_CALLBACK, 0, (int)curr_menu_item, (conf.user_menu_enable == 4)?0:1 };
+		run_edit_profile_menu( argv, sizeof(argv)/sizeof(argv[0]) );
+  }
+
+}
+
+// Move curr_item into move_offs direction: -1 up, +1 down
+void move_pmenu_item( const CMenuItem* curr_item, int move_offs )
+{
+	// check moving ability of item
+	if ( !is_pmenu_regular_item( curr_item ) )
+		return; 
+	
+	const CMenuItem* tgt = curr_item;
+	int steps = (move_offs<0)?1:2;	// for move down offset is +2 because we look for "before" item
+	move_offs = (move_offs<0)?-1:1;
+
+	// Check for boundaries
+	//step 1
+		tgt += move_offs;
+		if ( !is_pmenu_regular_item(tgt) )
+			return;
+
+	//step 2
+		if ( steps==2 ) {
+			tgt += move_offs;
+			if ( !is_pmenu_item(tgt) )
+				return;
+		}
+
+	// Do move
+	unsigned int argv[] ={ PMENU_EDIT_OP, 0, PMENU_OP_MOVE, -1, -1 };
+	argv[3] = pmenu_get_itemidx(tgt);     		// move before this
+	argv[4] = pmenu_get_itemidx(curr_item);		// move this
+	run_edit_profile_menu( argv, sizeof(argv)/sizeof(argv[0]) );
+}
+
+// Add item string to the end of root profile menu
+// TODO: no BAK file. move this to profile menu
+void add_to_profile_menu( char* buf )
+{
+	if ( !buf || !buf[0] )
+		return;
+
+	char* file=get_profilemenu_file();
+	int fd = open(file,O_WRONLY|O_CREAT,0777);
+
+	if ( fd>0 ) {
+    	lseek(fd,0,SEEK_END);
+		write(fd,buf,strlen(buf));
+		close(fd);
+
+		// Turn off menu (close menu, profile manager, etc) for safety
+		gui_menu_close_menu(1);
+
+		// load_profile_menu
+		load_profile_menu( 0 );
+
+		// open menu back again
+		gui_menu_reopen_menu( 1 );
+	}
 }

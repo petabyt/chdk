@@ -14,6 +14,7 @@ extern int module_idx;
 
 /*
 	History:	1.1 - make possible call next mpopup in callback [multilevel mpopups]
+				1.2 - allow to use MPOPUP_CANCEL item in the list
 */
 
 int gui_mpopup_kbd_process();
@@ -52,6 +53,8 @@ void gui_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags
     for (i=0; actions[i].flag && mpopup_actions_num<MAX_ACTIONS; ++i) {
         if (flags & MPOPUP_MASK & actions[i].flag)
             mpopup_actions[mpopup_actions_num++] = i;
+		else if ( actions[i].flag==MPOPUP_CANCEL )
+			mpopup_actions[mpopup_actions_num++] = i;
     }
     if (mpopup_actions_num == 0) {
         on_select(MPOPUP_CANCEL);
@@ -248,7 +251,7 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 									MODULEINFO_FLAG_SYSTEM,		// flag
 									(int32_t)"Popup menu module",		// Module name
-									1, 1,						// Module version
+									1, 2,						// Module version
 									0
 								 };
 

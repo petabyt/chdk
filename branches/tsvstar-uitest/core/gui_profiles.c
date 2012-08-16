@@ -184,7 +184,7 @@ int profiles_kbd_process( int keycode )
 
 			gui_mbox_init_adv((int)"Profile Operation", (int)"Choose operation",  MBOX_BTN_YES_NO_CANCEL|MBOX_DEF_BTN3|MBOX_TEXT_CENTER, 
 					profile_op_cb,
-               		0, (int)"Move", (int)"Delete", LANG_MBOX_BTN_CANCEL);
+               		0, (int)"Move", LANG_POPUP_DELETE, LANG_MBOX_BTN_CANCEL);
 		}
 
 		// internal processing, skip regular processing

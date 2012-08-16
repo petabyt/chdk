@@ -419,11 +419,15 @@ extern int state_save_raw_nth_only;
 extern void conf_save();
 extern void conf_restore();
 extern void conf_load_defaults();
-extern void conf_change_dng(void);
-extern void conf_update_prevent_shutdown(void);
 extern int conf_getValue(unsigned short id, tConfigVal* configVal);
 extern int conf_setValue(unsigned short id, tConfigVal configVal, int save_conf );
 extern int conf_toggleValue(unsigned short id, int direction, int save_conf );
+
+extern void conf_change_dng(void);
+extern void conf_update_prevent_shutdown(void);
+extern void cb_autoiso_menu_change(unsigned int item);
+extern void conf_update_pmenu_mode();
+extern void conf_change_scene_script();
 
 
 extern char conf_filename[25];

@@ -196,6 +196,60 @@ static void gui_load_script_default(int arg) {
     }
 }
 
+enum {
+	MPOPUP_INSERT_SCRIPT_AS_LOAD	= 0x0001,
+	MPOPUP_INSERT_SCRIPT_AS_RUN		= 0x0002,
+	MPOPUP_INSERT_SCRIPT_AS_MODE	= 0x0004,
+};
+
+static struct mpopup_item popup_add_script[]= {
+        { MPOPUP_INSERT_SCRIPT_AS_LOAD,        (int)"Item 'Load script'"  },
+        { MPOPUP_INSERT_SCRIPT_AS_RUN,         (int)"Item 'Run script'"  },
+        { MPOPUP_INSERT_SCRIPT_AS_MODE,        (int)"Make mode"  },
+        { 0,					0 },
+};
+
+static char* insert_as_type = "";
+
+static void gui_add_script_tbox_cb( const char* title )
+{
+	if ( !title )
+		return;
+
+	char* tgtbuf = umalloc(500);
+	if ( !tgtbuf ) return;
+
+	make_paramstr( buf );
+	sprintf(tgtbuf,"%s|%s|%s|%s|\n", insert_as_type, title, conf.script_file,buf);
+	add_to_profile_menu(tgtbuf);
+	ufree(tgtbuf);
+}
+
+static void gui_add_script_mpopup_cb( unsigned int actn ) {
+
+
+    switch (actn) {
+	    case MPOPUP_INSERT_SCRIPT_AS_LOAD:	insert_as_type="load";	break;
+		case MPOPUP_INSERT_SCRIPT_AS_RUN:	insert_as_type="run";	break;
+		case MPOPUP_INSERT_SCRIPT_AS_MODE:	insert_as_type="mode";	break;
+		default:                            return;
+	}
+
+	if (module_tbox_load()) {
+		module_tbox_load()->textbox_init((int)"Add script to profile menu", LANG_PROMPT_RENAME, script_title, 25, gui_add_script_tbox_cb, 0);
+		// do not exit
+		return;
+	}
+}
+
+static void gui_add_script_to_profmenu(int arg) {
+
+	int flags = MPOPUP_INSERT_SCRIPT_AS_LOAD|MPOPUP_INSERT_SCRIPT_AS_RUN|MPOPUP_INSERT_SCRIPT_AS_MODE;
+    module_mpopup_init( popup_add_script, flags, gui_add_script_mpopup_cb, 0);
+}
+
+
+
 static const char* gui_script_autostart_modes[]=            { "Off", "On", "Once"};
 
 static CMenuItem script_submenu_items_top[] = {
@@ -206,6 +260,7 @@ static CMenuItem script_submenu_items_top[] = {
 #ifdef OPT_LUA
     MENU_ITEM   (0x5c,LANG_MENU_LUA_RESTART,                MENUITEM_BOOL,                      &conf.debug_lua_restart_on_error,   0 ),
 #endif
+    MENU_ITEM   (0x35,(int)"Add script to profile menu",    MENUITEM_PROC,                      gui_add_script_to_profmenu,    0 ),
     MENU_ITEM   (0x5d,LANG_MENU_SCRIPT_DEFAULT_VAL,         MENUITEM_PROC,                      gui_load_script_default,    0 ),
     MENU_ITEM(0x5e,LANG_MENU_SCRIPT_PARAM_SET,     			MENUITEM_ENUM,                      gui_script_param_set_enum, &conf.script_param_set ),
     MENU_ITEM   (0x5c,LANG_MENU_SCRIPT_PARAM_SAVE,          MENUITEM_BOOL,                      &conf.script_param_save,    0 ),
@@ -315,12 +370,12 @@ static CMenu autoiso_submenu = {0x2d,LANG_MENU_AUTOISO_TITLE, cb_autoiso_menu_ch
 void readjust_autoiso_submenu()
 {
     int func = !conf.autoiso_shutter_enum;
-	menuitem_foreach2( &autoiso_submenu, LANG_MENU_AUTOISO_IS_FACTOR, 0, func );
-	menuitem_foreach2( &autoiso_submenu, LANG_MENU_AUTOISO_USER_FACTOR, 0, func );
+	menuitem_set_visible( &autoiso_submenu, LANG_MENU_AUTOISO_IS_FACTOR, 0, func );
+	menuitem_set_visible( &autoiso_submenu, LANG_MENU_AUTOISO_USER_FACTOR, 0, func );
 
 	func = (conf.overexp_ev_enum>0);
-	menuitem_foreach2( &autoiso_submenu, LANG_MENU_ZEBRA_OVER, 0, func );
-	menuitem_foreach2( &autoiso_submenu, LANG_MENU_AUTOISO_OVEREXP_THRES, 0, func );
+	menuitem_set_visible( &autoiso_submenu, LANG_MENU_ZEBRA_OVER, 0, func );
+	menuitem_set_visible( &autoiso_submenu, LANG_MENU_AUTOISO_OVEREXP_THRES, 0, func );
 }
 
 void cb_autoiso_menu_change(unsigned int item)
@@ -1369,7 +1424,7 @@ void readjust_operation_submenu( int flags )
 
 
 	if ( flags&1 )
-		menuitem_foreach2( &operation_submenu, LANG_MENU_OVERRIDE_DISABLE_ALL, 0, conf.override_disable /*mean isVisible */ );
+		menuitem_set_visible( &operation_submenu, LANG_MENU_OVERRIDE_DISABLE_ALL, 0, conf.override_disable /*mean isVisible */ );
 
 	// Reconcile pairs of values to "simple mode" realm:
 	// Ensure that override_koefs are not off. And if they are - transfer to quickdisable state
@@ -1826,7 +1881,7 @@ static CMenu menu_font_submenu = {0x28,LANG_MENU_FONT_SETTINGS, NULL, menu_font_
 
 static const char* gui_user_menu_show_enum(int change, int arg)
 {
-    static const char* modes[]={ "Off", "On","On Direct", "Edit" };
+    static const char* modes[]={ "Off", "On","On Direct", "Edit", "Prof-S","Prof-A" };
 
     if (conf.user_menu_enable == 3) user_menu_save();
 
@@ -1945,13 +2000,13 @@ static void gui_menuproc_reset(int arg)
 
 static void gui_menu_run_profile_menu(int arg)
 {
-	if ( pmenu_menu_buf ) {
+	if ( pmenu.menu_buf ) {
 
 		// Turn off menu (close menu, profile manager, etc) for safety
 		gui_menu_close_menu(1);
 
-		root_menu_ptr = pmenu_menu_buf;
 		conf.profile_menu_mode = 1;      // run profile menu by default
+		conf_update_pmenu_mode();
 
 		// open menu back again
 		gui_menu_popup_mainmenu();
@@ -2015,27 +2070,16 @@ CMenu root_menu = {0x20,LANG_MENU_MAIN_TITLE, NULL, root_menu_items };
 
 CMenu* root_menu_ptr = &root_menu;
 
-void adjust_root_menu()
-{
-	menuitem_foreach2( &root_menu, LANG_MENU_GOTO_PROFMENU, 0, (pmenu_menu_buf!=0) );
-}
-
 // Set visibility of User Menu in root menu based on user menu state
-// Note this hack requires the User Menu entry to be the last one in the root_menu_items array above.
 void set_usermenu_state()
 {
-    int i;
-    for (i=0; root_menu_items[i].symbol != 0; i++)
-    {
-        if (root_menu_items[i].value == (int*)&user_submenu)
-        {
-            if (conf.user_menu_enable)
-                root_menu_items[i].text = LANG_MENU_USER_MENU;  // Enable user menu option in root menu
-            else
-                root_menu_items[i].text = 0;                    // Disable user menu option in root menu
-            return;
-        }
-    }
+	menuitem_set_visible( &root_menu, LANG_MENU_USER_MENU, 	0, (conf.user_menu_enable>0 && conf.user_menu_enable<4) );
+}
+
+void adjust_root_menu()
+{
+	menuitem_set_visible( &root_menu, LANG_MENU_GOTO_PROFMENU, 0, (pmenu.menu_buf!=0) );
+	set_usermenu_state();
 }
 
 //-------------------------------------------------------------------
@@ -2526,8 +2570,8 @@ static int alt_mode_script_run()
         return 1;
     }
 
-    return 0;
 #endif
+    return 0;
 }
 
 // Main button processing for CHDK Alt mode (not in MENU mode)
@@ -2682,19 +2726,19 @@ void gui_chdk_kbd_process_menu_btn()
 
 	profile_set_postprocessing();	// finalize profile restore: create main menu title
 
-	if ( conf.profile_menu_mode && pmenu_menu_buf ) {
+	if ( pmenu.menu_buf ) {
 
-		// profile menu exists and "by default"	
-		root_menu_ptr = pmenu_menu_buf;
+		// profile menu exists 
 
-        if ( camera_info.state.is_shutter_half_press )
-        	gui_menu_init( &root_menu );
+		if ( camera_info.state.is_shutter_half_press )
+			root_menu_ptr = ( conf.profile_menu_mode ) ? &root_menu : pmenu.menu_buf;	// halfshoot= invert choose
 		else
-        	gui_menu_init( root_menu_ptr );
+			root_menu_ptr = ( conf.profile_menu_mode ) ? pmenu.menu_buf : &root_menu;	// regular choose
+		gui_menu_popup_mainmenu();
 
 	} else {
 
-		// default behaviour: main/user menu
+		// profile menu doesn't exist. default behaviour: main/user menu
     	root_menu_ptr = &root_menu;
 
 		if ( conf.user_menu_enable &&
@@ -2703,9 +2747,9 @@ void gui_chdk_kbd_process_menu_btn()
         	gui_menu_init(&user_submenu);
 	    else 
     	    gui_menu_init(&root_menu);
-	}
 
-    gui_default_kbd_process_menu_btn();
+	    gui_set_mode(&menuGuiHandler);
+	}
 }
 
 //-------------------------------------------------------------------
@@ -2833,14 +2877,14 @@ void gui_activate_alt_mode()
 	    if ((conf.user_menu_enable == 2) && !state_kbd_script_run) {
 			profile_set_postprocessing();	// finalize profile restore: create main menu title
 
-			if ( conf.profile_menu_mode && pmenu_menu_buf ) {
-			    gui_menu_init( pmenu_menu_buf );
+			if ( pmenu.menu_buf ) {
+				conf_update_pmenu_mode();
+				gui_menu_popup_mainmenu();
 			} else {
 			    gui_menu_init(&user_submenu);
 			    gui_user_menu_flag = 1;
+			    gui_set_mode(&menuGuiHandler);
 			}
-
-		    gui_set_mode(&menuGuiHandler);
 	    }
         break;
 
