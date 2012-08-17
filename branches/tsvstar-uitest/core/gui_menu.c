@@ -1476,6 +1476,8 @@ void gui_menu_reopen_menu( int flag_reopen )
 			root_menu_ptr = &root_menu;
 	}
 
+	extern void adjust_root_menu();
+	adjust_root_menu();
 	gui_menu_init(root_menu_ptr);
 
 	if ( flag_reopen )

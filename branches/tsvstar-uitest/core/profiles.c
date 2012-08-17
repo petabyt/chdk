@@ -485,7 +485,7 @@ void edit_profile_menu_op( const CMenuItem* curr_menu_item )
 			sprintf(buf, "\nitem|@%d\n", curr_menu_item->text);
 		add_to_profile_menu(buf);
 
-    	sprintf(buf,lang_str(LANG_USER_MENU_ITEM_ADDED), lang_str(curr_menu_item->text));
+    	sprintf(buf,"'%s'\nadded to PROFILE Menu", lang_str(curr_menu_item->text));
 	    gui_mbox_init(LANG_MENU_USER_MENU, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 						
   } else {
@@ -536,21 +536,9 @@ void add_to_profile_menu( char* buf )
 	if ( !buf || !buf[0] )
 		return;
 
-	char* file=get_profilemenu_file();
-	int fd = open(file,O_WRONLY|O_CREAT,0777);
+	unsigned int argv[] ={ PMENU_EDIT_OP, 0, PMENU_OP_ADD, -1, (int)buf };
+	run_edit_profile_menu( argv, sizeof(argv)/sizeof(argv[0]) );
 
-	if ( fd>0 ) {
-    	lseek(fd,0,SEEK_END);
-		write(fd,buf,strlen(buf));
-		close(fd);
-
-		// Turn off menu (close menu, profile manager, etc) for safety
-		gui_menu_close_menu(1);
-
-		// load_profile_menu
-		load_profile_menu( 0 );
-
-		// open menu back again
-		gui_menu_reopen_menu( 1 );
-	}
+	extern void adjust_root_menu();
+	adjust_root_menu();
 }

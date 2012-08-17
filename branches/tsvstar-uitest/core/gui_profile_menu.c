@@ -947,21 +947,22 @@ int do_load_process_cb( char* content, int size )
 
 	// PREPARE TO PASS #2: Allocate buffers
 
-	ptr_string = pmenu.string_buf = malloc( count_string );
-	ptr_menu   = pmenu.menu_buf	  = malloc( count_menu * sizeof(CMenu) );
-	pmenu.items_buf = malloc( count_items * sizeof(CMenuItem) );
-	pmenu.itemidx_buf = malloc( (count_items) * sizeof(short) );
-	ptr_autoexec = pmenu.autoexec_list = malloc( (pmenu.count_autoexec) * sizeof(char*) );
+	ptr_string = pmenu.string_buf = malloc( count_string +1 );
+	ptr_menu   = pmenu.menu_buf	  = malloc( count_menu * sizeof(CMenu) +1 );
+	pmenu.items_buf = malloc( count_items * sizeof(CMenuItem) +1 );
+	pmenu.itemidx_buf = malloc( (count_items) * sizeof(short) +1 );
+	ptr_autoexec = pmenu.autoexec_list = malloc( (pmenu.count_autoexec) * sizeof(char*) +1 );
 
 	// this items will gone after parsing so allocate them last 
-	pmenu_items_tmpbuf		 = malloc( count_items * sizeof(CMenuItem) );
-	ptr_level  = pmenu_level_buf = malloc( count_items );
+	pmenu_items_tmpbuf		 = malloc( count_items * sizeof(CMenuItem) +1 );
+	ptr_level  = pmenu_level_buf = malloc( count_items +1 );
 
 	// for items tmpbuf is filled from file. and postprocess move to main buf
 	ptr_item  = pmenu_items_tmpbuf;
 
 	// if fail to allocate anything - no profile menu provided at all
 	if ( !pmenu.string_buf ||
+		 !pmenu.autoexec_list ||
 		 !pmenu.menu_buf ||
 		 !pmenu_level_buf ||
 		 !pmenu.items_buf || 
@@ -1035,8 +1036,11 @@ int do_edit_process_cb( char* content, int size )
 	// PREPARE TO ASSEMBLE PASSES
 
 	// Allocate string buf to correct processing "real" pass ( required only for RENAME )
-	if ( edit_op == PMENU_OP_RENAME )
-		ptr_string = pmenu.string_buf = malloc( count_string );
+	if ( edit_op == PMENU_OP_RENAME ) {
+		ptr_string = pmenu.string_buf = malloc( count_string+1 );
+		if ( !pmenu.string_buf ) 
+			return pmenu_error();
+	}
 
 
 	// Allocate big enough buffer to contain target file
@@ -1048,11 +1052,8 @@ int do_edit_process_cb( char* content, int size )
 	ptr_tgt_file = tgt_file_buf;
 
 	// if fail to allocate anything - no profile menu provided at all
-	if ( !tgt_file_buf ||
-		 !pmenu.string_buf ) 
-	{
+	if ( !tgt_file_buf ) 
 		return pmenu_error();
-	}
 
 	// ASSEMBLE PASSES: assemble tgt file depending on requested operation
 
@@ -1177,6 +1178,7 @@ void do_edit_operation( int op, int val1, int val2 )
 		 st.st_mtime != pmenu.file_mtime ) 
 	  return;
 
+	int is_root_pmenu = (root_menu_ptr!=&root_menu);
  
 	// Do edit processing
 
@@ -1192,6 +1194,7 @@ void do_edit_operation( int op, int val1, int val2 )
 		content = load_file( pmenufile_name, &size );
 
 		// close menu
+		if ( is_root_pmenu )
 		gui_menu_close_menu(1);
 
 		do_edit_process_cb( content, size );
@@ -1221,6 +1224,7 @@ void do_edit_operation( int op, int val1, int val2 )
 		}
 
 		// close menu
+		if ( is_root_pmenu )
 		gui_menu_close_menu(1);
 	}
 
@@ -1232,6 +1236,7 @@ void do_edit_operation( int op, int val1, int val2 )
 		ufree( content );
 
 	// reopen menu
+	if ( is_root_pmenu )
 	gui_menu_reopen_menu(1);
 }
 

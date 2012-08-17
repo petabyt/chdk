@@ -351,6 +351,7 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 			&root_menu,
 			gui_menu_close_menu,
 			gui_menu_reopen_menu,
+			&root_menu_ptr,
 }
 #endif
 
