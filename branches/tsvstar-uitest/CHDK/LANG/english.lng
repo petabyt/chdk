@@ -704,10 +704,20 @@
 574 "Show HELP"
 575 "Use popup to edit value"
 
-576 "Base"
-577 "Profile Manager"
-578 "Profiles"
-579 "Profile Menu"
-580 "Main Menu"
-581 ""
+576 "Add script to User Menu"
+
+577 "Left, Right & Jogdial = Change Value"
+578 "Zoom = Adjust Increment Factor"
+579 "SET  = Confirm, DISP = Cancel"
+580 "MENU = Turn On/Off"
+
+581 "Infinity Focus"
+582 "Chg Focus Factor"
+
+583 "Base"
+584 "Profile Manager"
+585 "Profiles"
+586 "Profile Menu"
+587 "Main Menu"
+588 ""
 

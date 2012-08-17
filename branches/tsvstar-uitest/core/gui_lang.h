@@ -706,15 +706,25 @@
 #define LANG_MENU_MISC_HELP			            574
 #define LANG_MENU_MENUEDIT_POPUP				575
 
-#define LANG_PROFILE_BASE						576
-#define LANG_MENU_PROFILE_MANAGER				577
-#define LANG_MENU_PROFILE_MANAGER_TITLE			578
+#define LANG_MENU_USER_MENU_SCRIPT_ADD          576
 
-#define LANG_MENU_GOTO_PROFMENU					579
-#define LANG_MENU_GOTO_MAINMENU					580
-#define LANG_EMPTY_STRING						581
+#define LANG_MENU_EDIT_CHG_VAL                  577
+#define LANG_MENU_EDIT_ADJ_FACTOR               578
+#define LANG_MENU_EDIT_CONFIRM                  579
+#define LANG_MENU_EDIT_ON_OFF                   580
 
-#define GUI_LANG_ITEMS                          581
+#define LANG_HELP_INF_FOCUS                     581
+#define LANG_HELP_CHG_FOCUS_FACTOR              582
+
+#define LANG_PROFILE_BASE						583
+#define LANG_MENU_PROFILE_MANAGER				584
+#define LANG_MENU_PROFILE_MANAGER_TITLE			585
+
+#define LANG_MENU_GOTO_PROFMENU					586
+#define LANG_MENU_GOTO_MAINMENU					587
+#define LANG_EMPTY_STRING						588
+
+#define GUI_LANG_ITEMS                          588
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

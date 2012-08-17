@@ -4,6 +4,7 @@ Digic IV, dryos, propset 2
 Video is h264 NOT mjpeg
 ND filter only, NO iris
 
+<ALT> key is user defined.  Default is a short press on the Playback key. Can also be set to the DISP key.
 
 *** Features known BROKEN or NOT supported:
 - ZEBRA is not working yet (13-Mar-2010)

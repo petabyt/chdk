@@ -222,6 +222,7 @@ static void gui_add_script_tbox_cb( const char* title )
 	make_paramstr( buf );
 	sprintf(tgtbuf,"%s|%s|%s|%s|\n", insert_as_type, title, conf.script_file,buf);
 	add_to_profile_menu(tgtbuf);
+    gui_mbox_init(LANG_MENU_USER_MENU, (int)"Script added to PROFILE menu", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 	ufree(tgtbuf);
 }
 
@@ -248,7 +249,14 @@ static void gui_add_script_to_profmenu(int arg) {
     module_mpopup_init( popup_add_script, flags, gui_add_script_mpopup_cb, 0);
 }
 
+extern void add_script_to_user_menu( char * , char *);
 
+static void gui_add_script_to_user_menu(int arg) {
+    if ( conf.user_menu_enable==3 )
+    	add_script_to_user_menu( conf.script_file ,  script_title );
+	else
+		gui_add_script_to_profmenu(arg);
+}
 
 static const char* gui_script_autostart_modes[]=            { "Off", "On", "Once"};
 
@@ -260,7 +268,7 @@ static CMenuItem script_submenu_items_top[] = {
 #ifdef OPT_LUA
     MENU_ITEM   (0x5c,LANG_MENU_LUA_RESTART,                MENUITEM_BOOL,                      &conf.debug_lua_restart_on_error,   0 ),
 #endif
-    MENU_ITEM   (0x35,(int)"Add script to profile menu",    MENUITEM_PROC,                      gui_add_script_to_profmenu,    0 ),
+    MENU_ITEM   (0x35,LANG_MENU_USER_MENU_SCRIPT_ADD,       MENUITEM_PROC,                      gui_add_script_to_user_menu, 0 ),
     MENU_ITEM   (0x5d,LANG_MENU_SCRIPT_DEFAULT_VAL,         MENUITEM_PROC,                      gui_load_script_default,    0 ),
     MENU_ITEM(0x5e,LANG_MENU_SCRIPT_PARAM_SET,     			MENUITEM_ENUM,                      gui_script_param_set_enum, &conf.script_param_set ),
     MENU_ITEM   (0x5c,LANG_MENU_SCRIPT_PARAM_SAVE,          MENUITEM_BOOL,                      &conf.script_param_save,    0 ),
@@ -1945,10 +1953,13 @@ static const char* gui_alt_mode_button_enum(int change, int arg)
 #elif defined(CAMERA_ixus220_elph300hs) || defined(CAMERA_ixus230_elph310hs)
     static const char* names[]={ "Video", "Display", "Playback", "Video"};
     static const int keys[] = {KEY_PRINT, KEY_DISPLAY, KEY_PLAYBACK, KEY_VIDEO};
-#elif defined(CAMERA_ixus115_elph100hs) 
+#elif defined(CAMERA_ixus115_elph100hs)
     static const char* names[]={ "Playback", "Video", "Set+ZoomIn" };
     static const int keys[] = {KEY_PLAYBACK, KEY_VIDEO, KEY_SET | KEY_ZOOM_IN };
-#elif defined(CAMERA_ixus120_sd940) 
+#elif defined(CAMERA_ixus300_sd4000)
+    static const char* names[]={ "Playback", "Up + Left" };
+    static const int keys[] = {KEY_PLAYBACK, KEY_UP | KEY_LEFT };
+#elif defined(CAMERA_ixus120_sd940) || (CAMERA_ixus100_sd780) || defined(CAMERA_ixus105_sd1300)
     static const char* names[]={ "Display", "Playback" }; 
     static const int keys[] = {KEY_DISPLAY, KEY_PLAYBACK };
 #else
@@ -2433,9 +2444,10 @@ static void gui_draw_alt_helper()
     if (shooting_get_common_focus_mode())           // Check in manual focus mode
     {
 #if CAM_HAS_ZOOM_LEVER
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,(int)"Infinity Focus", 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        if (SHORTCUT_TOGGLE_RAW != SHORTCUT_SET_INFINITY)
+            y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW, LANG_HELP_INF_FOCUS, 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
 #else
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,(int)"Chg Focus Factor", 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW, LANG_HELP_CHG_FOCUS_FACTOR, 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
 #endif
     }
     else

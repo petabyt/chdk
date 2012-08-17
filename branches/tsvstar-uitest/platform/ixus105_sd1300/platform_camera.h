@@ -28,32 +28,26 @@
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT  0x40000000 // Found @0xffc29e80
     #define CAM_PROPSET                 3
-    #define CAM_NEED_HP                 1
     #define CAM_MULTIPART               1
-    #define CAM_HAS_PLAYBACK_PB         1
-    #define CAM_MOVIE_PLE               1
-    #define CAM_USES_EXMEM              1
-    #define CAM_USE_SET_BUTTON          1 
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_VIDEO_QUALITY_ONLY          1
     #undef  CAM_VIDEO_CONTROL
     #undef  CAM_USE_ZOOM_FOR_MF
-    #undef CAM_HAS_ERASE_BUTTON
-    #define  CAM_SHOW_OSD_IN_SHOOT_MENU  1
+    #undef  CAM_HAS_ERASE_BUTTON
+    #define CAM_SHOW_OSD_IN_SHOOT_MENU  1
     #define CAM_EXT_TV_RANGE            1
     #define CAM_HAS_ND_FILTER           1
 
-    // pattern
+    // pattern // TODO:
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
-    // color
-
+    // color  // TODO:
     #define CAM_COLORMATRIX1                               \
       827547, 1000000, -290458, 1000000, -126086, 1000000, \
      -12829,  1000000, 530507,  1000000, 50537,   1000000, \
       5181,   1000000, 48183,   1000000, 245014,  1000000
 
-    #define cam_CalibrationIlluminant1 1 // Daylight
+    #define cam_CalibrationIlluminant1 1 // Daylight  // TODO:
     // cropping
     #define CAM_JPEG_WIDTH  3648
     #define CAM_JPEG_HEIGHT 2736
@@ -65,10 +59,17 @@
     // camera name
     #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
-    #undef  CAM_WHITE_LEVEL
-    #undef  CAM_BLACK_LEVEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
-    #define CAM_WHITE_LEVEL             ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
-    #define CAM_BLACK_LEVEL             127
-    
+
+    #undef  CAM_BITMAP_WIDTH
+    #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
+
+    #undef  CAM_USES_ASPECT_CORRECTION
+    #define CAM_USES_ASPECT_CORRECTION      1
+
+    #define CAM_ADJUSTABLE_ALT_BUTTON      1
+
+    #define  CAM_ZEBRA_ASPECT_ADJUST      1
+
+    #define  CAM_STARTUP_CRASH_FILE_OPEN_FIX      1
 

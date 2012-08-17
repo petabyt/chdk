@@ -255,7 +255,7 @@ void gui_osd_draw_state()
         gui_print_osd_state_string_chr("SD:",gui_subj_dist_override_value_enum(0,0));
         if (gui_mode==GUI_MODE_ALT && conf.subj_dist_override_koef>1) {
             gui_print_osd_state_string_chr("FACTOR:",gui_subj_dist_override_koef_enum(0,0));
-	}
+    }
     }
     if ((conf.iso_override_value>0 && conf.iso_override_koef && !(conf.override_disable==1))   || gui_mode==GUI_MODE_OSD)
         gui_print_osd_state_string_int("ISO:", shooting_get_iso_override_value());
@@ -280,7 +280,7 @@ void gui_osd_draw_state()
     }
 #endif
     if (conf.override_disable == 1) gui_print_osd_state_string_chr("NO ", "OVERRIDES");
-// TODO: show power
+    // TODO: show power
     if (conf.flash_manual_override && conf.flash_video_override_power>0 ) gui_print_osd_state_string_chr("Flash:", "Manual Override");
 #ifdef OPT_EDGEOVERLAY
     // edgeoverlay state
