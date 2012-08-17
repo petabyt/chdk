@@ -36,18 +36,19 @@
     #define CAM_RAW_ROWS                    3060 // actual size from fw 12754080pix at FF375484 -> 19131120/12*8
 
     #define CAM_HAS_CMOS                    1
-
     #define CAM_HAS_ND_FILTER               1
+    #define CAM_HAS_JOGDIAL                 1
+    #define CAM_HAS_VIDEO_BUTTON            1
+    #define CAM_HAS_MOVIE_DIGEST_MODE       1
+
+    #undef  CAM_HAS_ERASE_BUTTON
 
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
+
+    #define CAM_VIDEO_QUALITY_ONLY          1
+    #undef  CAM_VIDEO_CONTROL
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 
-    #define CAM_HAS_VIDEO_BUTTON            1
-    #define CAM_VIDEO_QUALITY_ONLY          1
-
-    #undef  CAM_VIDEO_CONTROL
-
-    #define CAM_HAS_JOGDIAL                 1
     #undef  CAM_USE_ZOOM_FOR_MF
 
     #undef  CAM_UNCACHED_BIT                    // shut up compiler
@@ -70,15 +71,17 @@
     #define CAM_ACTIVE_AREA_X2              4168
     #define CAM_ACTIVE_AREA_Y2              3060
 
-    #define PARAM_CAMERA_NAME               4 // parameter number for GetParameterData
+    #define PARAM_CAMERA_NAME               4 // parameter number for GetParameterData - Camera Model name
+    #define PARAM_OWNER_NAME                7 // parameter number for GetParameterData - Owner name
+    
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
     #define CAM_EXT_TV_RANGE                1
+    #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
 
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              10
-    #undef  CAM_HAS_ERASE_BUTTON
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
     #define CAM_HAS_VARIABLE_ASPECT         1
@@ -98,7 +101,6 @@
     #define CAM_ZEBRA_NOBUF                 1
 
     //#define CAM_QUALITY_OVERRIDE            1 // works not really
-    #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
@@ -110,5 +112,4 @@
     #define REMOTE_SYNC_STATUS_LED          0xC0220130  // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1
-    #define CAM_HAS_MOVIE_DIGEST_MODE       1
 //----------------------------------------------------------

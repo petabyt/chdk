@@ -183,7 +183,7 @@ static void gui_print_osd_dof_string_dist(const char * title, int value, short u
     }
     sprintf(osd_buf+strlen(osd_buf), "%9s", "");
     osd_buf[9-i]=0;
-    draw_string(conf.values_pos.x+i*FONT_WIDTH, conf.values_pos.y+m, osd_buf, use_good_color?((conf.osd_color & 0xff00) | COLOR_GREEN):conf.osd_color);
+    draw_string(conf.values_pos.x+i*FONT_WIDTH, conf.values_pos.y+m, osd_buf, use_good_color?((conf.osd_color & 0xff00) | COLOR_HISTO_G):conf.osd_color);
   } else {
     osd_buf[9]=0;
     draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
