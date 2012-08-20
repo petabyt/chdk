@@ -275,8 +275,6 @@ void gui_update_script_submenu()
 static const char* gui_autoiso_shutter_modes[] =            { "Auto", "1/8s", "1/15s", "1/30s", "1/60s", "1/125s", "1/250s", "1/500s", "1/1000s" };
 static const int shutter1_values[]={0, 8, 15, 30, 60, 125, 250, 500, 1000 };
 
-static const char* gui_autoiso2_shutter_modes[]={ "Off", "1/4s", "1/6s", "1/8s", "1/12s", "1/15s", "1/20s", "1/25s", "1/30s", 
-				 "1/40s", "1/50s", "1/60s", "1/80s", "1/100s", "1/125s", "1/160s", "1/250s", "1/500s", "1/1000s"};
 static const int shutter2_values[]={0, 4, 6, 8, 12, 15, 20, 25, 30, 40, 50, 60, 80, 100, 125, 160, 200, 250, 500, 1000 };
 
 const char* gui_overexp_ev_enum(int change, int arg)
@@ -285,8 +283,12 @@ const char* gui_overexp_ev_enum(int change, int arg)
 	return gui_change_simple_qenum( (int*)arg, change, modes, sizeof(modes)/sizeof(modes[0]) );
 }
 
-
-void cb_autoiso_menu_change(unsigned int item);
+const char* gui_autoiso2_shutter_enum(int change, int arg)
+{
+	static const char* modes[]={ "Off", "1/4s", "1/6s", "1/8s", "1/12s", "1/15s", "1/20s", "1/25s", "1/30s", 
+				 "1/40s", "1/50s", "1/60s", "1/80s", "1/100s", "1/125s", "1/160s", "1/250s", "1/500s", "1/1000s"};
+	return gui_change_simple_qenum( (int*)arg, change, modes, sizeof(modes)/sizeof(modes[0]) );
+}
 
 static CMenuItem autoiso_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_AUTOISO_ENABLED,            MENUITEM_BOOL,                                      &conf.autoiso_enable,       0 ),
@@ -300,14 +302,14 @@ static CMenuItem autoiso_submenu_items[] = {
     MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_MIN_ISO,            MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_min_iso,      	MENU_MINMAX(1, 20) ),
     MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_MAX_ISO_AUTO, 		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_max_iso_auto, 	MENU_MINMAX(10, 320) ),
 
-	//@tsv
-    MENU_ENUM2	(0x5f,LANG_MENU_AUTOISO_MIN_SHUTTER2,  		&conf.autoiso2_shutter_enum,                        gui_autoiso2_shutter_modes ),
+    MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_MIN_SHUTTER2,  		MENUITEM_ENUM|MENUITEM_QUICKDISABLE,				gui_autoiso2_shutter_enum,	&conf.autoiso2_shutter_enum ),
     MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_MAX_ISO2, 			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso2_max_iso_auto,	MENU_MINMAX(10, 320) ),
 
 #if !defined(CAMERA_sx230hs)
     MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_MAX_ISO_HI,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_max_iso_hi,		MENU_MINMAX(20, 320) ),
 #endif
 
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
     MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_OVEREXP_EV,         MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_overexp_ev_enum, &conf.overexp_ev_enum ),
     MENU_ITEM	(0x57,LANG_MENU_ZEBRA_OVER,            		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso2_over,    		MENU_MINMAX(0, 32) ),
     MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_OVEREXP_THRES, 		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.overexp_threshold, 		MENU_MINMAX(1, 20) ),
@@ -321,18 +323,20 @@ static CMenu autoiso_submenu = {0x2d,LANG_MENU_AUTOISO_TITLE, cb_autoiso_menu_ch
 void readjust_autoiso_submenu()
 {
     int func = !conf.autoiso_shutter_enum;
-	menuitem_foreach2( &autoiso_submenu, LANG_MENU_AUTOISO_IS_FACTOR, 0, func );
-	menuitem_foreach2( &autoiso_submenu, LANG_MENU_AUTOISO_USER_FACTOR, 0, func );
+	menuitem_set_visible( &autoiso_submenu, LANG_MENU_AUTOISO_IS_FACTOR, 0, func );
+	menuitem_set_visible( &autoiso_submenu, LANG_MENU_AUTOISO_USER_FACTOR, 0, func );
+
+	menuitem_set_visible( &autoiso_submenu, LANG_MENU_AUTOISO_MAX_ISO2, 0, (conf.autoiso2_shutter_enum>0) );
 
 	func = (conf.overexp_ev_enum>0);
-	menuitem_foreach2( &autoiso_submenu, LANG_MENU_ZEBRA_OVER, 0, func );
-	menuitem_foreach2( &autoiso_submenu, LANG_MENU_AUTOISO_OVEREXP_THRES, 0, func );
+	menuitem_set_visible( &autoiso_submenu, LANG_MENU_ZEBRA_OVER, 0, func );
+	menuitem_set_visible( &autoiso_submenu, LANG_MENU_AUTOISO_OVEREXP_THRES, 0, func );
 }
 
 void cb_autoiso_menu_change(unsigned int item)
 {
     conf.autoiso_min_shutter_numerator = shutter1_values[conf.autoiso_shutter_enum];
-    conf.autoiso2_min_shutter_numerator =  shutter2_values[conf.autoiso2_shutter_enum];
+    conf.autoiso2_min_shutter_numerator =  (conf.autoiso2_shutter_enum<0)? 0 : shutter2_values[conf.autoiso2_shutter_enum];
 
     conf.autoiso_max_iso_auto_real=0;	// set invalid value of real autoiso as flag 'need recalc'
 
@@ -1375,7 +1379,7 @@ void readjust_operation_submenu( int flags )
 
 
 	if ( flags&1 )
-		menuitem_foreach2( &operation_submenu, LANG_MENU_OVERRIDE_DISABLE_ALL, 0, conf.override_disable /*mean isVisible */ );
+		menuitem_set_visible( &operation_submenu, LANG_MENU_OVERRIDE_DISABLE_ALL, 0, conf.override_disable /*mean isVisible */ );
 
 	// Reconcile pairs of values to "simple mode" realm:
 	// Ensure that override_koefs are not off. And if they are - transfer to quickdisable state
@@ -2006,21 +2010,14 @@ static CMenuItem root_menu_items[] = {
 CMenu root_menu = {0x20,LANG_MENU_MAIN_TITLE, NULL, root_menu_items };
 
 // Set visibility of User Menu in root menu based on user menu state
-// Note this hack requires the User Menu entry to be the last one in the root_menu_items array above.
 void set_usermenu_state()
 {
-    int i;
-    for (i=0; root_menu_items[i].symbol != 0; i++)
-    {
-        if (root_menu_items[i].value == (int*)&user_submenu)
-        {
-            if (conf.user_menu_enable)
-                root_menu_items[i].text = LANG_MENU_USER_MENU;  // Enable user menu option in root menu
-            else
-                root_menu_items[i].text = 0;                    // Disable user menu option in root menu
-            return;
-        }
-    }
+	menuitem_set_visible( &root_menu, LANG_MENU_USER_MENU, 	0, (conf.user_menu_enable>0 && conf.user_menu_enable<4) );
+}
+
+void adjust_root_menu()
+{
+	set_usermenu_state();
 }
 
 //-------------------------------------------------------------------
@@ -2511,8 +2508,8 @@ static int alt_mode_script_run()
         return 1;
     }
 
-    return 0;
 #endif
+    return 0;
 }
 
 // Main button processing for CHDK Alt mode (not in MENU mode)
@@ -2790,6 +2787,7 @@ void gui_activate_alt_mode()
         readjust_operation_submenu( 0xff );
         readjust_autoiso_submenu();
 		readjust_bracketing_submenu();
+		adjust_root_menu();
 
         // If user menu set to start automatically when <ALT> mode entered 
         // then enter user menu mode, unless a script was paused by exiting 

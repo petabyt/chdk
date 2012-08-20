@@ -1131,19 +1131,17 @@ void gui_menu_draw(int enforce_redraw) {
     }
 }
 
-extern CMenuItem* find_mnu(CMenu *curr_menu, int itemid );
-
 // Hide/Unhide item found in menu starting from "cmenu" by its lang_id
-int menuitem_foreach2( CMenu* cmenu, int itemid, int tmp, int visibility )
+int menuitem_set_visible( CMenu* cmenu, int itemid, int flags, int visibility )
 {
-	CMenuItem* item = find_mnu( cmenu, itemid );
+	CMenuItem* item = find_mnu_adv( cmenu, flags, itemid );
 	if ( !item )
 		return 0;
 
 	if ( visibility )
-     *((short*)&(item->type)) &= ~MENUITEM_HIDDEN;   
+      *((short*)&(item->type)) &= ~MENUITEM_HIDDEN;   
 	else	
-     *((short*)&(item->type)) |= MENUITEM_HIDDEN;   
+      *((short*)&(item->type)) |= MENUITEM_HIDDEN;   
 	return 1;
 }
 
@@ -1154,7 +1152,6 @@ int gui_menu_get_editmode();
 void gui_menu_kbd_process_menu_btn()
 {
     extern int gui_user_menu_flag;
-    extern CMenu root_menu;
 
     // In edit submode - MenuButton mean "Toggle feature" and processed by gui_menu_kbd_process
     if ( gui_menu_get_editmode() ) {
@@ -1166,7 +1163,7 @@ void gui_menu_kbd_process_menu_btn()
 
     conf_save_new_settings_if_changed();
 
-    if (gui_user_menu_flag)
+    if ( gui_user_menu_flag )
     {
         gui_set_mode(&menuGuiHandler);
         gui_user_menu_flag = 0;
@@ -1314,7 +1311,6 @@ extern int menuitem_foreach2( CMenu* menu, int itemid, int tmp, int visibility);
 
 extern void menuitem_hide( CMenuItem* item );
 extern void menuitem_unhide( CMenuItem* item );
-//CMenuItem* find_mnu(CMenu *curr_menu, int itemid );
 extern int value_turn_state( int* valueptr, int dir );
 
 //---------------------------

@@ -45,7 +45,6 @@ static void conf_change_alt_mode_button();
 static void conf_change_video_bitrate();
 static void conf_change_dng_ext();
 static void conf_change_autoiso();
-extern void cb_autoiso_menu_change(unsigned int item);
 
 void camera_set_raw(int mode)
 {
@@ -516,6 +515,8 @@ void conf_info_func(unsigned short id)
     case 226: 
     case 289: conf_change_dng(); break;
     case 235: conf_change_dng_ext(); break;
+	case 159:
+	case 283:
     case 284: conf_change_autoiso(); break;
     }
 }
