@@ -25,6 +25,8 @@
 
 //-------------------------------------------------------------------
 extern void gui_mbox_init(int title, int msg, const unsigned int flags, void (*on_select)(unsigned int btn));
+extern void gui_mbox_init_adv(int title, int msg, const unsigned int flags, void (*on_select)(unsigned int btn),
+			int btn_ok, int btn_yes, int btn_no, int btn_cancel);
 
 extern void gui_browser_progress_show(const char* msg, const unsigned int perc);
 

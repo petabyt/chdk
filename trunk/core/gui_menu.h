@@ -67,7 +67,8 @@ typedef struct {
 #define MENU_ENUM2a(sym, txt, val, arg, num){ (char)sym, (char)num, MENUITEM_ENUM2, (int)txt, (int*)val, (int)arg }
 
 
-typedef const char* enum_callback_func_t(int change, int arg);
+typedef const char* (enum_callback_func_t)(int change, int arg);
+typedef void (menuproc_t)(int);
 
 //-------------------------------------------------------------------
 extern void gui_menu_init(CMenu *menu_ptr);
@@ -83,11 +84,20 @@ extern void gui_qenum_value_change(int* value, int change, unsigned num_items );
 extern const char* gui_change_simple_qenum(int* value, int change, const char** items, unsigned num_items);
 
 //-------------------------------------------------------------------
-extern int menuitem_foreach2( CMenu* menu, int itemid, int tmp, int visibility);
+extern int menuitem_set_visible( CMenu* menu, int itemid, int flags, int visibility);
 extern int value_turn_state( int* valueptr, int dir );
 
 //-------------------------------------------------------------------
 extern gui_handler menuGuiHandler;
+
+//-------------------------------------------------------------------
+extern  CMenu   root_menu;									// defined in gui.c
+
+enum { FLAG_FIND_RECURSIVE = 0x01
+};
+extern CMenuItem* find_mnu(CMenu *curr_menu, int itemid );  // defined in gui_user_menu.c
+extern CMenuItem* find_mnu_adv(CMenu *curr_menu, int flags, int itemid );   // defined in gui_user_menu.c
+
 
 //-------------------------------------------------------------------
 #endif

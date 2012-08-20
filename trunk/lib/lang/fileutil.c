@@ -98,7 +98,7 @@ int load_from_file(const char *filename, callback_process_file callback)
 // PURPOSE: Load content to *value_p if file exist and contain number
 // RETURN: 0-file_not_exist_or_failed (value is not changed), 1-ok
 
-int load_int_value_file( char* filename, int* value_p )
+int load_int_value_file( const char* filename, int* value_p )
 {
 	int tmp;
 	char *buf;
@@ -107,7 +107,8 @@ int load_int_value_file( char* filename, int* value_p )
 	if ( !buf )
 	   return 0;
 	
-	*value_p = strtol(buf, NULL, 10 /*dec*/);
+	if ( value_p )	
+		*value_p = strtol(buf, NULL, 10 /*dec*/);
 	ufree(buf);
 
 	return 1;
@@ -116,7 +117,7 @@ int load_int_value_file( char* filename, int* value_p )
 
 // PURPOSE: Save integer "value" to text file with name "filename"
 
-void save_int_value_file( char* filename, int value )
+void save_int_value_file( const char* filename, int value )
 {
 	char* buf = umalloc(20);
 	if ( !buf )

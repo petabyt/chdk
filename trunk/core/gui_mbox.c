@@ -42,7 +42,10 @@ static coord    mbox_buttons_x, mbox_buttons_y;
 static void (*mbox_on_select)(unsigned int btn);
 
 //-------------------------------------------------------------------
-void gui_mbox_init(int title, int msg, const unsigned int flags, void (*on_select)(unsigned int btn)) {
+
+void gui_mbox_init_adv(int title, int msg, const unsigned int flags, void (*on_select)(unsigned int btn),
+			int btn_ok, int btn_yes, int btn_no, int btn_cancel) 
+{
     int i;
 
     mbox_buttons_num = 0;
@@ -65,7 +68,21 @@ void gui_mbox_init(int title, int msg, const unsigned int flags, void (*on_selec
     mbox_to_draw = 1;
     mbox_flags = flags;
     mbox_on_select = on_select;
+
+    buttons[0].text=btn_ok;
+    buttons[1].text=btn_yes;
+    buttons[2].text=btn_no;
+    buttons[3].text=btn_cancel;
+
     gui_mbox_mode_old = gui_set_mode(&mboxGuiHandler);
+}
+
+
+void gui_mbox_init(int title, int msg, const unsigned int flags, void (*on_select)(unsigned int btn)) {
+
+	gui_mbox_init_adv(title, msg, flags, on_select,
+               LANG_MBOX_BTN_OK, LANG_MBOX_BTN_YES, LANG_MBOX_BTN_NO, LANG_MBOX_BTN_CANCEL);
+
 }
 
 //-------------------------------------------------------------------
