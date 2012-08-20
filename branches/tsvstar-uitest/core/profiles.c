@@ -215,7 +215,7 @@ void load_profile_menu( int autoexeconly )
 
 	reset_profile_menu( &pmenu );
 	argv[1] = (unsigned int)get_profilemenu_file();
-	if ( is_file_exists( (char*)argv[1] ) )
+	if ( is_file_exists( (char*)argv[1] ) > 0 )
 		module_run("pmenu.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR);
 
 	adjust_root_menu();

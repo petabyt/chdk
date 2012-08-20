@@ -431,7 +431,7 @@ extern int conf_toggleValue(unsigned short id, int direction, int save_conf );
 
 extern void conf_change_dng(void);
 extern void conf_update_prevent_shutdown(void);
-extern void cb_autoiso_menu_change(unsigned int item);
+extern void cb_autoiso_menu_change(unsigned int item);  // gui.c
 extern void conf_update_pmenu_mode();
 extern void conf_change_scene_script();
 

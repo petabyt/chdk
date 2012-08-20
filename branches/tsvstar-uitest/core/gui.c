@@ -332,8 +332,6 @@ void gui_update_script_submenu()
 static const char* gui_autoiso_shutter_modes[] =            { "Auto", "1/8s", "1/15s", "1/30s", "1/60s", "1/125s", "1/250s", "1/500s", "1/1000s" };
 static const int shutter1_values[]={0, 8, 15, 30, 60, 125, 250, 500, 1000 };
 
-static const char* gui_autoiso2_shutter_modes[]={ "Off", "1/4s", "1/6s", "1/8s", "1/12s", "1/15s", "1/20s", "1/25s", "1/30s", 
-				 "1/40s", "1/50s", "1/60s", "1/80s", "1/100s", "1/125s", "1/160s", "1/250s", "1/500s", "1/1000s"};
 static const int shutter2_values[]={0, 4, 6, 8, 12, 15, 20, 25, 30, 40, 50, 60, 80, 100, 125, 160, 200, 250, 500, 1000 };
 
 const char* gui_overexp_ev_enum(int change, int arg)
@@ -342,8 +340,12 @@ const char* gui_overexp_ev_enum(int change, int arg)
 	return gui_change_simple_qenum( (int*)arg, change, modes, sizeof(modes)/sizeof(modes[0]) );
 }
 
-
-void cb_autoiso_menu_change(unsigned int item);
+const char* gui_autoiso2_shutter_enum(int change, int arg)
+{
+	static const char* modes[]={ "Off", "1/4s", "1/6s", "1/8s", "1/12s", "1/15s", "1/20s", "1/25s", "1/30s", 
+				 "1/40s", "1/50s", "1/60s", "1/80s", "1/100s", "1/125s", "1/160s", "1/250s", "1/500s", "1/1000s"};
+	return gui_change_simple_qenum( (int*)arg, change, modes, sizeof(modes)/sizeof(modes[0]) );
+}
 
 static CMenuItem autoiso_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_AUTOISO_ENABLED,            MENUITEM_BOOL,                                      &conf.autoiso_enable,       0 ),
@@ -357,14 +359,14 @@ static CMenuItem autoiso_submenu_items[] = {
     MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_MIN_ISO,            MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_min_iso,      	MENU_MINMAX(1, 20) ),
     MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_MAX_ISO_AUTO, 		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_max_iso_auto, 	MENU_MINMAX(10, 320) ),
 
-	//@tsv
-    MENU_ENUM2	(0x5f,LANG_MENU_AUTOISO_MIN_SHUTTER2,  		&conf.autoiso2_shutter_enum,                        gui_autoiso2_shutter_modes ),
+    MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_MIN_SHUTTER2,  		MENUITEM_ENUM|MENUITEM_QUICKDISABLE,				gui_autoiso2_shutter_enum,	&conf.autoiso2_shutter_enum ),
     MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_MAX_ISO2, 			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso2_max_iso_auto,	MENU_MINMAX(10, 320) ),
 
 #if !defined(CAMERA_sx230hs)
     MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_MAX_ISO_HI,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_max_iso_hi,		MENU_MINMAX(20, 320) ),
 #endif
 
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
     MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_OVEREXP_EV,         MENUITEM_ENUM|MENUITEM_QUICKDISABLE,    gui_overexp_ev_enum, &conf.overexp_ev_enum ),
     MENU_ITEM	(0x57,LANG_MENU_ZEBRA_OVER,            		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso2_over,    		MENU_MINMAX(0, 32) ),
     MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_OVEREXP_THRES, 		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.overexp_threshold, 		MENU_MINMAX(1, 20) ),
@@ -381,6 +383,8 @@ void readjust_autoiso_submenu()
 	menuitem_set_visible( &autoiso_submenu, LANG_MENU_AUTOISO_IS_FACTOR, 0, func );
 	menuitem_set_visible( &autoiso_submenu, LANG_MENU_AUTOISO_USER_FACTOR, 0, func );
 
+	menuitem_set_visible( &autoiso_submenu, LANG_MENU_AUTOISO_MAX_ISO2, 0, (conf.autoiso2_shutter_enum>0) );
+
 	func = (conf.overexp_ev_enum>0);
 	menuitem_set_visible( &autoiso_submenu, LANG_MENU_ZEBRA_OVER, 0, func );
 	menuitem_set_visible( &autoiso_submenu, LANG_MENU_AUTOISO_OVEREXP_THRES, 0, func );
@@ -389,7 +393,7 @@ void readjust_autoiso_submenu()
 void cb_autoiso_menu_change(unsigned int item)
 {
     conf.autoiso_min_shutter_numerator = shutter1_values[conf.autoiso_shutter_enum];
-    conf.autoiso2_min_shutter_numerator =  shutter2_values[conf.autoiso2_shutter_enum];
+    conf.autoiso2_min_shutter_numerator =  (conf.autoiso2_shutter_enum<0)? 0 : shutter2_values[conf.autoiso2_shutter_enum];
 
     conf.autoiso_max_iso_auto_real=0;	// set invalid value of real autoiso as flag 'need recalc'
 
@@ -1960,7 +1964,7 @@ static const char* gui_alt_mode_button_enum(int change, int arg)
     static const char* names[]={ "Playback", "Up + Left" };
     static const int keys[] = {KEY_PLAYBACK, KEY_UP | KEY_LEFT };
 #elif defined(CAMERA_ixus120_sd940) || (CAMERA_ixus100_sd780) || defined(CAMERA_ixus105_sd1300)
-    static const char* names[]={ "Display", "Playback" }; 
+    static const char* names[]={ "Display", "Playback" };
     static const int keys[] = {KEY_DISPLAY, KEY_PLAYBACK };
 #else
 #error camera alt-buttons not defined

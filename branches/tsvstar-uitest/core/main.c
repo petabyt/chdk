@@ -4,6 +4,7 @@
 #include "keyboard.h"
 #include "stdlib.h"
 #include "gui.h"
+#include "gui_osd.h"
 #include "gui_draw.h"
 #include "histogram.h"
 #include "raw.h"
@@ -262,6 +263,7 @@ void script_autostart_cb()
 void script_autostart_fin_cb()
 {
 //    gui_activate_alt_mode();
+    gui_set_mode(&defaultGuiHandler);
 }
 #endif
 

@@ -66,8 +66,10 @@ void add_user_menu_item(CMenuItem curr_menu_item, int* cur_memnu_item_indx)
 void gui_load_user_menu_script(const char *fn) 
 {
     if (fn) {
+#ifdef OPT_SCRIPTING
         script_load(fn, SCRIPT_LOAD_LAST_PARAMSET );
         load_params_names_cfg();
+#endif
 
         // exit menu system on the assumption the user will want to run the script just loaded
 
