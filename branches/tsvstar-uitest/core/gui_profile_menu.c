@@ -438,7 +438,7 @@ int read_scriptparam_value()
 			e++;
 			while( *e==' ' || *e=='\t' ) e++;	// ltrim
 
-			if ( *e<'0' || *e>'9' ) {
+			if ( (*e<'0' || *e>'9') && *e!='-' ) {
 				ptr=e;
 				wait_comma=1;
 				continue;
@@ -449,6 +449,9 @@ int read_scriptparam_value()
 			*tgt++ = *ptr;	// copy varname
 			*tgt++ = '=';	// copy '='
 			ptr=e;
+			if ( *ptr=='-')
+				*tgt++ = *ptr++;
+		
 			while ( *ptr>='0' && *ptr<='9' )	// copy value
 				*tgt++ = *ptr++;
 
