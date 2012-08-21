@@ -71,8 +71,9 @@ static KeyMap keymap[] = {
 	{ 2, KEY_SHOOT_FULL	, 0x00000003 },
     { 2, KEY_SHOOT_FULL_ONLY, 0x00000002 },	 // http://chdk.setepontos.com/index.php?topic=1444.msg70223#msg70223
 	{ 2, KEY_SHOOT_HALF	, 0x00000001 },
-    { 2, KEY_POWER           ,0x00000004 }, // Found @0xffbb9428, levent 0x600 (uses inverted logic in physw_status)
-    { 2, KEY_PLAYBACK        ,0x00000008 }, // Found @0xffbb9430, levent 0x601 (uses inverted logic in physw_status)
+// Commented out since inverted logic breaks CHDK (for now)
+//    { 2, KEY_POWER           ,0x00000004 }, // Found @0xffbb9428, levent 0x600 (uses inverted logic in physw_status)
+//    { 2, KEY_PLAYBACK        ,0x00000008 }, // Found @0xffbb9430, levent 0x601 (uses inverted logic in physw_status)
 
 	{ 0, 0, 0 } 
 };
