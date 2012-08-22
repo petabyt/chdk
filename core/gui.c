@@ -2766,7 +2766,12 @@ void gui_activate_alt_mode()
     case ALT_MODE_ENTER:
         conf_store_old_settings();
 
-        gui_set_mode(&altGuiHandler);
+		extern gui_handler scriptGuiHandler;
+
+	    if (state_kbd_script_run)
+	        gui_set_mode(&scriptGuiHandler);
+		else
+	        gui_set_mode(&altGuiHandler);
 
         conf_update_prevent_shutdown();
 
