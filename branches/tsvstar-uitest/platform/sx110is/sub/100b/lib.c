@@ -37,12 +37,31 @@ void *vid_get_viewport_fb_d()
     return (void*)(*(int*)0x5114);   //0x50C0 + 0x54, 0x50C0 found at 0xFFC45E78 and look at 0xffc46568/0xFFC46594
 }
 
+// note this appears to be 216 in rec mode 
 long vid_get_viewport_height()
 {
-    return 240;
+    return vid_get_viewport_height_proper()>>1;
 }
 char *camera_jpeg_count_str()
 {
 	// Found at ROM:FFD84BC0	
  return (void*)0x45E58;
+}
+
+extern int _GetVRAMHPixelsSize();
+extern int _GetVRAMVPixelsSize();
+// normally 720, others unknown
+int vid_get_viewport_width_proper() { 
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:_GetVRAMHPixelsSize();
+}
+// playback seems to be 240, rec 216 (?!), varies with digital zoom
+int vid_get_viewport_height_proper() {
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:_GetVRAMVPixelsSize();
+}
+// this camera does not have stitch, so always fullscreen
+int vid_get_viewport_fullscreen_width() {
+    return vid_get_viewport_width_proper();
+}
+int vid_get_viewport_fullscreen_height() {
+    return vid_get_viewport_height_proper();
 }
