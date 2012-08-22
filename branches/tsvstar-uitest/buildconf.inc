@@ -6,6 +6,11 @@ OPT_CALENDAR=1
 OPT_DEBUGGING=1
 OPT_EDGEOVERLAY=1
 
+# Old-style user menu
+#OPT_USER_MENU=1
+# Profiles and Profile Menu
+OPT_PROFILES=1
+
 # Scripting components
 OPT_UBASIC=1
 OPT_LUA=1

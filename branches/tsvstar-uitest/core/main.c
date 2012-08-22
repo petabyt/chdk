@@ -313,7 +313,9 @@ void core_spytask()
     profile_restore(0);			// load profilenum and adjust paths (postponed make root_title)
     conf_restore();
     gui_init();
+#ifdef OPT_PROFILES
 	load_profile_menu( 0 );
+#endif
 
 #if CAM_CONSOLE_LOG_ENABLED
     extern void cam_console_init();

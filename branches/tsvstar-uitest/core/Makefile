@@ -63,7 +63,16 @@ ifdef OPT_DBG_DUMP
 OPT_OBJS+=dbg_dump.o
 endif
 
-OBJS=entry.o main.o gui_draw.o gui_menu.o gui_user_menu.o gui_mbox.o \
+ifdef OPT_USER_MENU
+CFLAGS+=-DOPT_USER_MENU
+OPT_OBJS+=gui_user_menu.o
+endif
+ifdef OPT_PROFILES
+CFLAGS+=-DOPT_PROFILES
+endif
+
+
+OBJS=entry.o main.o gui_draw.o gui_menu.o gui_mbox.o \
      gui.o kbd.o action_stack.o conf.o module_wrappers.o module_exportlist.o \
      histogram.o gui_batt.o gui_usb.o gui_space.o gui_osd.o raw.o \
      gui_lang.o modules.o module_load.o profiles.o \

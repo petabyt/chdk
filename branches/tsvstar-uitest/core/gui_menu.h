@@ -114,8 +114,8 @@ extern  CMenu* root_menu_ptr;								// defined in gui.c
 
 enum { FLAG_FIND_RECURSIVE = 0x01
 };
-extern CMenuItem* find_mnu(CMenu *curr_menu, int itemid );  // defined in gui_user_menu.c
-extern CMenuItem* find_mnu_adv(CMenu *curr_menu, int flags, int itemid );   // defined in gui_user_menu.c
+extern CMenuItem* find_mnu(CMenu *curr_menu, int itemid );
+extern CMenuItem* find_mnu_adv(CMenu *curr_menu, int flags, int itemid );
 
 
 //-------------------------------------------------------------------

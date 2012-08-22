@@ -731,10 +731,15 @@ int gui_menu_kbd_process() {
 			}
 
 
+#ifdef OPT_PROFILES
             if (conf.user_menu_enable > 3) {
 				edit_profile_menu_op( &curr_menu->menu[gui_menu_curr_item] );
 			}
-            else if (conf.user_menu_enable == 3) {
+#else
+			if (0) {}
+#endif
+#ifdef OPT_USER_MENU
+			else if (conf.user_menu_enable == 3) {
                 if (curr_menu->title != LANG_MENU_USER_MENU) {
                     /*
                     * Add new entry
@@ -774,6 +779,7 @@ int gui_menu_kbd_process() {
                         gui_set_need_restore();
                 }
             }
+#endif
             break;
         case JOGDIAL_LEFT:
             if ( flag_editmode ) {
@@ -862,9 +868,14 @@ int gui_menu_kbd_process() {
             * Move current entry up in menu
             * if in user menu edit mode and viewing user menu
             */
+#ifdef OPT_PROFILES
             if( (conf.user_menu_enable >= 4) && is_pmenu_menu(curr_menu) ) {
 				move_pmenu_item( &curr_menu->menu[gui_menu_curr_item], -1 );
     		}
+#else
+			if (0) {}
+#endif
+#ifdef OPT_USER_MENU
             else if( (conf.user_menu_enable == 3)  && (curr_menu->title == LANG_MENU_USER_MENU)) {
                 move_user_menu_item_up(&gui_menu_curr_item);
                 if(gui_menu_curr_item < gui_menu_top_item+1) {
@@ -874,6 +885,7 @@ int gui_menu_kbd_process() {
 
                 gui_menu_redraw=1;
             }
+#endif
             else {
                 if (int_incr >= 10){
                     int_incr /= 10;
@@ -887,9 +899,14 @@ int gui_menu_kbd_process() {
             * Move current entry down in menu
             * if in user menu edit mode and viewing user menu
             */
+#ifdef OPT_PROFILES
             if( (conf.user_menu_enable >= 4) && is_pmenu_menu(curr_menu) ) {
 				move_pmenu_item( &curr_menu->menu[gui_menu_curr_item], +1 );
     		}
+#else
+			if (0) {}
+#endif
+#ifdef OPT_USER_MENU
             else if( (conf.user_menu_enable == 3)  && (curr_menu->title == LANG_MENU_USER_MENU)) {
                 move_user_menu_item_down(&gui_menu_curr_item);
                 if(gui_menu_curr_item > gui_menu_top_item + num_lines -2) {
@@ -899,6 +916,7 @@ int gui_menu_kbd_process() {
 
                 gui_menu_redraw=1;
             }
+#endif
             else {
                 if (int_incr <= 1000){
                     int_incr *= 10;
@@ -918,8 +936,10 @@ int gui_menu_kbd_process() {
         case KEY_DISPLAY:
             if ( flag_editmode ) {
 				gui_menu_cancel_editmode();					  
+#ifdef OPT_USER_MENU
             } else if (conf.user_menu_enable == 3 && curr_menu->title == LANG_MENU_USER_MENU) {
                 gui_menu_back();
+#endif
             }
             else {
                 if (int_incr <= 1000){
@@ -1228,6 +1248,7 @@ void gui_menu_kbd_process_menu_btn()
 
     conf_save_new_settings_if_changed();
 
+#ifdef OPT_USER_MENU
     if ( gui_user_menu_flag )
     {
         gui_set_mode(&menuGuiHandler);
@@ -1235,6 +1256,7 @@ void gui_menu_kbd_process_menu_btn()
         gui_menu_init(&root_menu);
     }
     else
+#endif
         gui_set_mode(&altGuiHandler);
 }
 
@@ -1536,98 +1558,34 @@ CMenuItem* get_menu_currentitem()
 }
 
 //-------------------------------------------------------------------
-
-
-/*
-// Infrastructure below cause strange side-effects so it is replaced by simplified show/hide
-// List of catched side-effects: shutdown on start, damage "Menu setting" menu or its first item
-//-------------------------------------------------------------------
-
-//-------------------------------------------------------------------
-typedef void menuitem_action_func_t( CMenuItem* item );
-
-// from .h
-enum { FLAG_RECURSIVE=1, FLAG_FIND_ALL=2, FLAG_SKIP_USERMENU=4 };
-extern int menuitem_foreach( CMenu* menu, int itemid, int mode, menuitem_action_func_t* actionfunc );
-extern int menuitem_foreach2( CMenu* menu, int itemid, int tmp, int visibility);
-
-extern void menuitem_hide( CMenuItem* item );
-extern void menuitem_unhide( CMenuItem* item );
-extern int value_turn_state( int* valueptr, int dir );
-
-//---------------------------
-void menuitem_hide( CMenuItem* item )
+CMenuItem* find_mnu_adv(CMenu *curr_menu, int flags, int itemid )
 {
-     *((short*)&(item->type)) |= MENUITEM_HIDDEN;   
-}
+	int gui_menu_curr_item;
+	CMenuItem* rv=0;
 
-void menuitem_unhide( CMenuItem* item )
-{
-     *((short*)&(item->type)) &= ~MENUITEM_HIDDEN;   
-}
+	if ( itemid==0 )
+		return 0;		
 
-
-int menuitem_turn_on( CMenuItem* item )
-{
-	menuitem_turn_state(item,1);
-}
-
-int menuitem_turn_off( CMenuItem* item )
-{
-	menuitem_turn_state(item,-1);
-}
-
-//-------------------------------------------------------------------
-
-//
-// PURPOSE:		Apply actionfunc for menuitem with correct id
-// ARGUMENTS:	curr_menu - start menu
-//				id	 - LANG_ID of looked up item
-//				mode - flags FLAG_RECURSIVE(lookup into deep of tree, or this menu only if absent)
-//							 FLAG_FIND_ALL(change status of all matched items, or first found only if absent)
-//							 FLAG_SKIP_USERMENU(skip usermenu in recursion, or go everywhere)
-//				actionfunc - this func will be called for found item
-// RETURN VALUE: number of found items
-//
-int menuitem_foreach( CMenu* cmenu, int itemid, int mode, menuitem_action_func_t* actionfunc )
-{
-   int rv = 0;
-
-   // processing by idx
-   for (imenu=0; cmenu->menu[imenu].text; ++imenu) {
-	 if ( lang_strhash31(cmenu->menu[imenu].text) == itemid ) {
-         actionfunc( (CMenuItem*) &(cmenu->menu[imenu]) );
-		 rv++;
-	 }
-
-	 if ( (mode & FLAG_RECURSIVE ) &&
-	 	 (cmenu->menu[imenu].type & MENUITEM_MASK) == MENUITEM_SUBMENU ) {
-
-		if ( !(mode & FLAG_SKIP_USERMENU) ||
-			cmenu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU) {
-	      rv += menuitem_foreach((CMenu*)(cmenu->menu[imenu].value), itemid, mode, actionfunc);
+	gui_menu_curr_item = 0;
+	while(curr_menu->menu[gui_menu_curr_item].text) {
+		if ( lang_strhash31(curr_menu->menu[gui_menu_curr_item].text) == itemid){
+			return (CMenuItem*) &(curr_menu->menu[gui_menu_curr_item]);
 		}
-     }
+		if ((flags & FLAG_FIND_RECURSIVE) &&
+		  (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_SUBMENU) {
 
-	 if	( rv && !(mode & FLAG_FIND_ALL) )
-	 	break;
-   }
-   return rv;
+				if (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU) {
+					rv = find_mnu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), itemid);
+					if ( rv )
+						return rv;
+				}
+		}
+		gui_menu_curr_item++;
+	}
+	return 0;
 }
 
-//-------------------------------------------------------------------
-
-static CMenuItem* found_item = 0;
-static void menuitem_find ( CMenuItem* item )
-{
-	found_item = item;
-}
-
-// Find menuitem by its id in non-usermenu
 CMenuItem* find_mnu(CMenu *curr_menu, int itemid )
-{                                                                                                 
-	if ( !menuitem_foreach( curr_menu, itemid, FLAG_RECURSIVE|FLAG_SKIP_USERMENU, menuitem_find ) )
-		found_item = 0;
-	return found_item;
+{
+	return find_mnu_adv(curr_menu, FLAG_FIND_RECURSIVE, itemid );
 }
-*/

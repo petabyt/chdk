@@ -384,14 +384,21 @@ typedef struct {
     int scene_script_mode;		// strhash31 of last called menuitem "mode"
 	int profile_menu_mode;		// 0-by default open main menu, 1-by default open profile menu
 
-    // full path & filename
-    char user_menu_script_file[USER_MENU_ITEMS][CONF_STR_LEN];
-    // @title string from file                     
-    char user_menu_script_title[USER_MENU_ITEMS][CONF_STR_LEN];
-
 } Conf;
 
+struct UserMenuConf {
+    // full path & filename
+    char script_file[USER_MENU_ITEMS][CONF_STR_LEN];
+    // @title string from file                     
+    char script_title[USER_MENU_ITEMS][CONF_STR_LEN];
+};
+
 extern Conf conf;
+
+#ifdef OPT_USER_MENU
+extern struct UserMenuConf um_conf;
+#endif
+
 
 #define ALT_PREVENT_SHUTDOWN_NO         0
 #define ALT_PREVENT_SHUTDOWN_ALT        1

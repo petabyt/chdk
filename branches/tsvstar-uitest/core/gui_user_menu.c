@@ -90,15 +90,15 @@ void add_script_to_user_menu( char * fname ,  char * title )
     {
         if(!user_submenu_items[i].text)   // insert script title & full filename in next available spot 
         {
-            strcpy(conf.user_menu_script_file[i-1], fname) ;
-            strcpy(conf.user_menu_script_title[i-1], title) ;
+            strcpy(um_conf.script_file[i-1], fname) ;
+            strcpy(um_conf.script_title[i-1], title) ;
 
             user_submenu_items[i].symbol = 0x35;
             user_submenu_items[i].opt_len = 0 ;
             user_submenu_items[i].type = MENUITEM_PROC;
-            user_submenu_items[i].text = (int) conf.user_menu_script_title[i-1];
+            user_submenu_items[i].text = (int) um_conf.script_title[i-1];
             user_submenu_items[i].value = (int *) gui_load_user_menu_script ;
-            user_submenu_items[i].arg = (int) conf.user_menu_script_file[i-1] ;
+            user_submenu_items[i].arg = (int) um_conf.script_file[i-1] ;
             
             char buf[200];
             sprintf(buf,lang_str(LANG_USER_MENU_ITEM_ADDED), lang_str(user_submenu_items[i].text));
@@ -124,11 +124,11 @@ void del_user_menu_item(int* cur_memnu_item_indx)
     for(i = *cur_memnu_item_indx; user_submenu_items[i].text; i++)
     {
         user_submenu_items[i] = user_submenu_items[i+1];
-        strcpy(conf.user_menu_script_file[i-1], conf.user_menu_script_file[i] ) ;
-        strcpy(conf.user_menu_script_title[i-1], conf.user_menu_script_title[i] ) ;
+        strcpy(um_conf.script_file[i-1], um_conf.script_file[i] ) ;
+        strcpy(um_conf.script_title[i-1], um_conf.script_title[i] ) ;
         if( user_submenu_items[i].value == (int *) gui_load_user_menu_script ) {        
-            user_submenu_items[i].text = (int) conf.user_menu_script_title[i-1];
-            user_submenu_items[i].arg = (int) conf.user_menu_script_file[i-1] ;
+            user_submenu_items[i].text = (int) um_conf.script_title[i-1];
+            user_submenu_items[i].arg = (int) um_conf.script_file[i-1] ;
         }
     }
 
@@ -156,24 +156,24 @@ static void move_user_menu_item(int* cur_memnu_item_indx, int dir)
     
     src_index-- ; dst_index--;
    
-    strncpy(tbuff, conf.user_menu_script_file[dst_index],CONF_STR_LEN-1) ;
-    strncpy(conf.user_menu_script_file[dst_index], conf.user_menu_script_file[src_index],CONF_STR_LEN-1) ;    
-    strncpy(conf.user_menu_script_file[src_index], tbuff, CONF_STR_LEN-1);
+    strncpy(tbuff, um_conf.script_file[dst_index],CONF_STR_LEN-1) ;
+    strncpy(um_conf.script_file[dst_index], um_conf.script_file[src_index],CONF_STR_LEN-1) ;    
+    strncpy(um_conf.script_file[src_index], tbuff, CONF_STR_LEN-1);
             
-    strncpy(tbuff, conf.user_menu_script_title[dst_index],CONF_STR_LEN-1) ;
-    strncpy(conf.user_menu_script_title[dst_index], conf.user_menu_script_title[src_index],CONF_STR_LEN-1) ;
-    strncpy(conf.user_menu_script_title[src_index], tbuff,CONF_STR_LEN-1) ;
+    strncpy(tbuff, um_conf.script_title[dst_index],CONF_STR_LEN-1) ;
+    strncpy(um_conf.script_title[dst_index], um_conf.script_title[src_index],CONF_STR_LEN-1) ;
+    strncpy(um_conf.script_title[src_index], tbuff,CONF_STR_LEN-1) ;
     
      src_index++ ; dst_index++ ;
             
      if( user_submenu_items[src_index].value == (int *) gui_load_user_menu_script ) {        
-        user_submenu_items[src_index].text = (int) conf.user_menu_script_title[src_index-1];
-        user_submenu_items[src_index].arg = (int) conf.user_menu_script_file[src_index-1] ;
+        user_submenu_items[src_index].text = (int) um_conf.script_title[src_index-1];
+        user_submenu_items[src_index].arg = (int) um_conf.script_file[src_index-1] ;
      }
         
      if( user_submenu_items[dst_index].value == (int *) gui_load_user_menu_script ) {        
-        user_submenu_items[dst_index].text = (int) conf.user_menu_script_title[dst_index-1];
-        user_submenu_items[dst_index].arg = (int) conf.user_menu_script_file[dst_index-1] ;
+        user_submenu_items[dst_index].text = (int) um_conf.script_title[dst_index-1];
+        user_submenu_items[dst_index].arg = (int) um_conf.script_file[dst_index-1] ;
      }
         
      *cur_memnu_item_indx += dir;
@@ -202,38 +202,6 @@ void move_user_menu_item_down(int* cur_memnu_item_indx)
         move_user_menu_item(cur_memnu_item_indx, 1);
 }
 
-//-------------------------------------------------------------------
-CMenuItem* find_mnu_adv(CMenu *curr_menu, int flags, int itemid )
-{
-	int gui_menu_curr_item;
-	CMenuItem* rv=0;
-
-	if ( itemid==0 )
-		return 0;		
-
-	gui_menu_curr_item = 0;
-	while(curr_menu->menu[gui_menu_curr_item].text) {
-		if ( lang_strhash31(curr_menu->menu[gui_menu_curr_item].text) == itemid){
-			return (CMenuItem*) &(curr_menu->menu[gui_menu_curr_item]);
-		}
-		if ((flags & FLAG_FIND_RECURSIVE) &&
-		  (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_SUBMENU) {
-
-				if (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU) {
-					rv = find_mnu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), itemid);
-					if ( rv )
-						return rv;
-				}
-		}
-		gui_menu_curr_item++;
-	}
-	return 0;
-}
-
-CMenuItem* find_mnu(CMenu *curr_menu, int itemid )
-{
-	return find_mnu_adv(curr_menu, FLAG_FIND_RECURSIVE, itemid );
-}
 
 void user_menu_save() {
     int x;
@@ -257,8 +225,8 @@ void user_menu_save() {
         else
         {
             conf.user_menu_vars[x] = 0 ;
-            *(char *)conf.user_menu_script_title[x] = 0;
-            *(char*)conf.user_menu_script_file[x] = 0 ;
+            *(char *)um_conf.script_title[x] = 0;
+            *(char*)um_conf.script_file[x] = 0 ;
         }
     } 
 }
@@ -278,9 +246,9 @@ void user_menu_restore() {
             user_submenu_items[y].symbol = 0x35;        // restore the script entry
             user_submenu_items[y].opt_len = 0 ;
             user_submenu_items[y].type = MENUITEM_PROC;
-            user_submenu_items[y].text = (int) conf.user_menu_script_title[x];
+            user_submenu_items[y].text = (int) um_conf.script_title[x];
             user_submenu_items[y].value = (int *) gui_load_user_menu_script ;
-            user_submenu_items[y].arg = (int) conf.user_menu_script_file[x] ;  
+            user_submenu_items[y].arg = (int) um_conf.script_file[x] ;  
         
         }
         else

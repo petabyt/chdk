@@ -26,10 +26,11 @@ const char CONF_BASEFILE[] = "A/CHDK/CFG/CHDK_%02d.CFG";			// template of chdk c
 const char CONF_0BASEFILE[] = "A/CHDK/CCHDK2.CFG";					// back-compatible name of chdk cfg for profile#0
 const char PROF_NUM_FILE[] = "A/CHDK/DATA/PROFILE.NOW";		// contain current select profile num
 
+extern void adjust_root_menu();
+
+#ifdef OPT_PROFILES
 static char root_menu_title[50];
 static int profile_need_postprocess_flag = 0;
-
-extern void adjust_root_menu();
 
 //-----------------------------------------------------------
 static void get_profilename_to_buf( char* buf, int size )
@@ -37,34 +38,6 @@ static void get_profilename_to_buf( char* buf, int size )
 	unsigned int argv[] ={ 1, (unsigned int)buf, (unsigned int) size, conf.current_profile };
 	module_run("profiles.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR);
 }
-
-
-//-----------------------------------------------------------
-void profile_set_postprocessing()
-{
-	if ( !profile_need_postprocess_flag )
-		return;
-	profile_need_postprocess_flag=0;
-
-	// set main menu title
-	extern CMenu root_menu;
-	memset( root_menu_title, 0, sizeof(root_menu_title));
-	strcpy( root_menu_title, lang_str( LANG_MENU_MAIN_TITLE ) );
-
-	int size=strlen(root_menu_title);
-	if ( size>=46 ) {
-		root_menu.title = LANG_MENU_MAIN_TITLE;
-	} else {
-		strcpy( root_menu_title+size,": " );
-		get_profilename_to_buf( root_menu_title+size+2, 46-size );
-
-		root_menu.title = (int) root_menu_title;
-	}
-
-	// load_profile_menu
-	//load_profile_menu( 0 );
-}
-
 
 //-----------------------------------------------------------
 // Set current profile to "profile". do_postprocess=true - complete process, =false - postpone mainmenu title update
@@ -101,9 +74,64 @@ static void profile_set( int profile, int do_postprocess )
 }
 
 //-----------------------------------------------------------
+// Store id of currently selected profile
+void profile_remember()
+{
+	save_int_value_file(PROF_NUM_FILE, conf.current_profile);
+}
+#endif
+
+//-----------------------------------------------------------
+// PURPOSE: Load stored profile num
+// PARAMETERS: do_postprocess - <>0 make whole processing at once, 0 postpone finalization
+
+void profile_restore( int do_postprocess )
+{
+#ifdef OPT_PROFILES
+	int profile=0;
+
+	load_int_value_file( PROF_NUM_FILE, &profile );
+	profile_need_postprocess_flag = 1;				// say if need to finalize immediatly after
+	profile_set( profile, do_postprocess );
+#else
+	strcpy( conf_filename, CONF_0BASEFILE );
+#endif
+}
+
+//-----------------------------------------------------------
+void profile_set_postprocessing()
+{
+#ifdef OPT_PROFILES
+	if ( !profile_need_postprocess_flag )
+		return;
+	profile_need_postprocess_flag=0;
+
+	// set main menu title
+	extern CMenu root_menu;
+	memset( root_menu_title, 0, sizeof(root_menu_title));
+	strcpy( root_menu_title, lang_str( LANG_MENU_MAIN_TITLE ) );
+
+	int size=strlen(root_menu_title);
+	if ( size>=46 ) {
+		root_menu.title = LANG_MENU_MAIN_TITLE;
+	} else {
+		strcpy( root_menu_title+size,": " );
+		get_profilename_to_buf( root_menu_title+size+2, 46-size );
+
+		root_menu.title = (int) root_menu_title;
+	}
+
+	// load_profile_menu
+	//load_profile_menu( 0 );
+#endif
+}
+
+
+//-----------------------------------------------------------
 // Callbacks for profile manager 
 void gui_safe_set_profile(int arg)
 {
+#ifdef OPT_PROFILES
 	if ( arg == conf.current_profile )
 		return;
 
@@ -117,7 +145,9 @@ void gui_safe_set_profile(int arg)
 	if ( is_file_exists( conf_filename ) )
 		conf_restore();
 	else {
+#ifdef OPT_USER_MENU
 		user_menu_save();
+#endif
         conf_save();
         conf_store_old_settings();
 	}
@@ -132,26 +162,7 @@ void gui_safe_set_profile(int arg)
 
 	// open menu back again
 	//gui_menu_popup_mainmenu();
-}
-
-//-----------------------------------------------------------
-// Store id of currently selected profile
-void profile_remember()
-{
-	save_int_value_file(PROF_NUM_FILE, conf.current_profile);
-}
-
-//-----------------------------------------------------------
-// PURPOSE: Load stored profile num
-// PARAMETERS: do_postprocess - <>0 make whole processing at once, 0 postpone finalization
-
-void profile_restore( int do_postprocess )
-{
-	int profile=0;
-
-	load_int_value_file( PROF_NUM_FILE, &profile );
-	profile_need_postprocess_flag = 1;				// say if need to finalize immediatly after
-	profile_set( profile, do_postprocess );
+#endif
 }
 
 //=======================================================================
@@ -159,6 +170,7 @@ void profile_restore( int do_postprocess )
 //=======================================================================
 
 
+#ifdef OPT_PROFILES
 char* get_profilemenu_file()
 {
 	static char PROFILE_MENU_FILE[40];
@@ -234,6 +246,7 @@ static void run_edit_profile_menu( unsigned int* argv, int argn )
 
 	adjust_root_menu();
 }
+#endif
 
 //-----------------------------------------------------------
 
@@ -282,6 +295,7 @@ static int autoexec_callback_next();
 static int next_autoexec_entry()
 {
 #ifdef OPT_SCRIPTING
+#ifdef OPT_PROFILES
 	char* scriptname;
 
 	// First execute each entry from autoexec_list
@@ -302,6 +316,7 @@ static int next_autoexec_entry()
 		temporary_script_load( scriptname, scriptname+1+strlen(scriptname), autoexec_callback_next, 1 );
 		return 0;
 	}
+#endif
 
 	// Then autoexec_base_script
 	if ( autoexec_base_script )
@@ -391,6 +406,7 @@ void do_autoexec_sequence( int async_mode, void (*callback)(), void(*callback_fi
 
 void gui_pmenu_load_script(int arg) 
 {
+#ifdef OPT_PROFILES
 #ifdef OPT_SCRIPTING
 	char* scriptpath = (char*)arg;
 
@@ -403,10 +419,12 @@ void gui_pmenu_load_script(int arg)
 #else
 		gui_mbox_init(LANG_ERROR, (int)"No script support in this CHDK build", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 #endif
+#endif
 }
 
 void gui_pmenu_run_script(int arg)
 {
+#ifdef OPT_PROFILES
 #ifdef OPT_SCRIPTING
 	char* scriptpath = (char*)arg;
 
@@ -417,11 +435,13 @@ void gui_pmenu_run_script(int arg)
 #else
 		gui_mbox_init(LANG_ERROR, (int)"No script support in this CHDK build", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 #endif
+#endif
 }
 
 
 void gui_pmenu_run_as_mode(int arg)
 {
+#ifdef OPT_PROFILES
 #ifdef OPT_SCRIPTING
 	char* scriptpath = (char*)arg;
 	char* scriptparam = scriptpath;
@@ -450,24 +470,31 @@ void gui_pmenu_run_as_mode(int arg)
 #else
 		gui_mbox_init(LANG_ERROR, (int)"No script support in this CHDK build", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 #endif
+#endif
 }
 
 void gui_pmenu_goto_mainmenu(int arg)
 {
+#ifdef OPT_PROFILES
 	gui_menu_close_menu(1);
 	conf.profile_menu_mode = 0;
 	conf_update_pmenu_mode();
 	gui_menu_popup_mainmenu();
+#endif
 }
 
 void gui_pmenu_unknown_map(int arg)
 {
+#ifdef OPT_PROFILES
 	gui_mbox_init((int)"Item", (int)"Unknown item map id", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+#endif
 }
 
 //-----------------------------------------------------------
 //				PROFILE MENU: EDIT OPERATIONS
 //-----------------------------------------------------------
+
+#ifdef OPT_PROFILES
 
 // Callback for edit operations
 void edit_profile_menu_op( const CMenuItem* curr_menu_item )
@@ -542,3 +569,4 @@ void add_to_profile_menu( char* buf )
 	extern void adjust_root_menu();
 	adjust_root_menu();
 }
+#endif

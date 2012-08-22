@@ -27,6 +27,9 @@ char conf_filename[25];
 
 //-------------------------------------------------------------------
 Conf conf = { MAKE_API_VERSION(2,3) };
+#ifdef OPT_USER_MENU
+struct UserMenuConf um_conf;
+#endif
 
 int state_shooting_progress = SHOOTING_PROGRESS_NONE;
 int state_save_raw_nth_only;
@@ -465,37 +468,39 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(293, conf.help_was_shown, 	        CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(294, conf.menuedit_popup,		        CONF_DEF_VALUE,     i:1, NULL),
 
+#ifdef OPT_USER_MENU
     // NOTE : there must be USER_MENU_ITEMS entries in this section
-    CONF_INFO(295, conf.user_menu_script_file[ 0], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(296, conf.user_menu_script_file[ 1], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(297, conf.user_menu_script_file[ 2], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(298, conf.user_menu_script_file[ 3], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(299, conf.user_menu_script_file[ 4], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(300, conf.user_menu_script_file[ 5], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(301, conf.user_menu_script_file[ 6], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(302, conf.user_menu_script_file[ 7], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(303, conf.user_menu_script_file[ 8], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(304, conf.user_menu_script_file[ 9], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(305, conf.user_menu_script_file[10], CONF_CHAR_PTR,      ptr:"", NULL),    
-    CONF_INFO(306, conf.user_menu_script_file[11], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(307, conf.user_menu_script_file[12], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(308, conf.user_menu_script_file[13], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(295, um_conf.script_file[ 0], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(296, um_conf.script_file[ 1], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(297, um_conf.script_file[ 2], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(298, um_conf.script_file[ 3], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(299, um_conf.script_file[ 4], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(300, um_conf.script_file[ 5], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(301, um_conf.script_file[ 6], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(302, um_conf.script_file[ 7], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(303, um_conf.script_file[ 8], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(304, um_conf.script_file[ 9], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(305, um_conf.script_file[10], CONF_CHAR_PTR,      ptr:"", NULL),    
+    CONF_INFO(306, um_conf.script_file[11], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(307, um_conf.script_file[12], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(308, um_conf.script_file[13], CONF_CHAR_PTR,      ptr:"", NULL),
 
     // NOTE : there must be USER_MENU_ITEMS entries in this section too
-    CONF_INFO(309, conf.user_menu_script_title[ 0], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(310, conf.user_menu_script_title[ 1], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(311, conf.user_menu_script_title[ 2], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(312, conf.user_menu_script_title[ 3], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(313, conf.user_menu_script_title[ 4], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(314, conf.user_menu_script_title[ 5], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(315, conf.user_menu_script_title[ 6], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(316, conf.user_menu_script_title[ 7], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(317, conf.user_menu_script_title[ 8], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(318, conf.user_menu_script_title[ 9], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(319, conf.user_menu_script_title[10], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(320, conf.user_menu_script_title[11], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(321, conf.user_menu_script_title[12], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(322, conf.user_menu_script_title[13], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(309, um_conf.script_title[ 0], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(310, um_conf.script_title[ 1], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(311, um_conf.script_title[ 2], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(312, um_conf.script_title[ 3], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(313, um_conf.script_title[ 4], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(314, um_conf.script_title[ 5], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(315, um_conf.script_title[ 6], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(316, um_conf.script_title[ 7], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(317, um_conf.script_title[ 8], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(318, um_conf.script_title[ 9], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(319, um_conf.script_title[10], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(320, um_conf.script_title[11], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(321, um_conf.script_title[12], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(322, um_conf.script_title[13], CONF_CHAR_PTR,      ptr:"", NULL),
+#endif
 
     CONF_INFO(1295, conf.scene_script_mode,	        CONF_DEF_VALUE,     i:0, conf_change_scene_script),
     CONF_INFO(1296, conf.profile_menu_mode,	        CONF_DEF_VALUE,     i:1, conf_change_pmenu_mode),
@@ -513,7 +518,9 @@ void conf_info_func(unsigned short id)
     case  66: conf_change_menu_rbf_file(); break;
     case  67: conf_update_prevent_shutdown(); break;
     case 101: conf_change_video_bitrate(); break;
+#ifdef OPT_USER_MENU
     case 143: user_menu_restore(); break;
+#endif
     case 183: conf_change_menu_symbol_rbf_file(); break;
     case 194: conf_change_script_file(); break;
     case 2:
@@ -961,17 +968,29 @@ int is_raw_enabled()
 
 //-------------------------------------------------------------------
 static Conf old_conf;
+#ifdef OPT_USER_MENU
+static struct UserMenuConf old_umconf;
+#endif
 
 void conf_store_old_settings()
 {
     old_conf = conf;
+#ifdef OPT_USER_MENU
+	old_umconf = um_conf;
+#endif
 }
 
 int conf_save_new_settings_if_changed()
 {
-    if (memcmp(&old_conf, &conf, sizeof(Conf)) != 0)
+	int flag=0;
+#ifdef OPT_USER_MENU
+    flag = memcmp(&old_umconf, &um_conf, sizeof(struct UserMenuConf));
+#endif
+    if (flag || memcmp(&old_conf, &conf, sizeof(Conf)) )
     {
+#ifdef OPT_USER_MENU
 		user_menu_save();
+#endif
         conf_save();
         conf_store_old_settings();
         return 1;
