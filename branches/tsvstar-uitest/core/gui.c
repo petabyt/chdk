@@ -196,58 +196,12 @@ static void gui_load_script_default(int arg) {
     }
 }
 
-enum {
-	MPOPUP_INSERT_SCRIPT_AS_LOAD	= 0x0001,
-	MPOPUP_INSERT_SCRIPT_AS_RUN		= 0x0002,
-	MPOPUP_INSERT_SCRIPT_AS_MODE	= 0x0004,
-};
-
-static struct mpopup_item popup_add_script[]= {
-        { MPOPUP_INSERT_SCRIPT_AS_LOAD,        (int)"Item 'Load script'"  },
-        { MPOPUP_INSERT_SCRIPT_AS_RUN,         (int)"Item 'Run script'"  },
-        { MPOPUP_INSERT_SCRIPT_AS_MODE,        (int)"Make mode"  },
-        { 0,					0 },
-};
-
-static char* insert_as_type = "";
-
 #ifdef OPT_PROFILES
-static void gui_add_script_tbox_cb( const char* title )
-{
-	if ( !title )
-		return;
-
-	char* tgtbuf = umalloc(500);
-	if ( !tgtbuf ) return;
-
-	make_paramstr( buf );
-	sprintf(tgtbuf,"%s|%s|%s|%s|\n", insert_as_type, title, conf.script_file,buf);
-	add_to_profile_menu(tgtbuf);
-    gui_mbox_init(LANG_MENU_USER_MENU, (int)"Script added to PROFILE menu", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-	ufree(tgtbuf);
-}
-
-static void gui_add_script_mpopup_cb( unsigned int actn ) {
-
-
-    switch (actn) {
-	    case MPOPUP_INSERT_SCRIPT_AS_LOAD:	insert_as_type="load";	break;
-		case MPOPUP_INSERT_SCRIPT_AS_RUN:	insert_as_type="run";	break;
-		case MPOPUP_INSERT_SCRIPT_AS_MODE:	insert_as_type="mode";	break;
-		default:                            return;
-	}
-
-	if (module_tbox_load()) {
-		module_tbox_load()->textbox_init((int)"Add script to profile menu", LANG_PROMPT_RENAME, script_title, 25, gui_add_script_tbox_cb, 0);
-		// do not exit
-		return;
-	}
-}
-
 static void gui_add_script_to_profmenu(int arg) {
 
-	int flags = MPOPUP_INSERT_SCRIPT_AS_LOAD|MPOPUP_INSERT_SCRIPT_AS_RUN|MPOPUP_INSERT_SCRIPT_AS_MODE;
-    module_mpopup_init( popup_add_script, flags, gui_add_script_mpopup_cb, 0);
+	make_paramstr( buf );
+	unsigned int argv[] ={ PMENU_ADD_SCRIPT, 0, (int)script_title, (int)conf.script_file, (int)buf };
+	run_edit_profile_menu( argv, sizeof(argv)/sizeof(argv[0]) );
 }
 #endif
 

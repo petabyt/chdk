@@ -33,6 +33,8 @@
 #include "gps.h"
 #include "profiles.h"
 
+extern void adjust_root_menu();
+
 extern int fselect_sort_nothumb(const void* v1, const void* v2);
 extern short shooting_get_ev_correction1();
 
@@ -352,6 +354,7 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 			gui_menu_close_menu,
 			gui_menu_reopen_menu,
 			&root_menu_ptr,
+			adjust_root_menu(),
 }
 #endif
 

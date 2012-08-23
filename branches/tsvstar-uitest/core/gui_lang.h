@@ -720,11 +720,28 @@
 #define LANG_MENU_PROFILE_MANAGER				584
 #define LANG_MENU_PROFILE_MANAGER_TITLE			585
 
+#define LANG_TITLE_PROFMENU						586
 #define LANG_MENU_GOTO_PROFMENU					586
 #define LANG_MENU_GOTO_MAINMENU					587
 #define LANG_EMPTY_STRING						588
 
-#define GUI_LANG_ITEMS                          588
+#define LANG_POPUP_SUBM_INSERT					589
+#define LANG_POPUP_DELETE_SEPARATOR				590
+#define LANG_POPUP_ROLLBACK						591
+#define LANG_POPUP_SUBMENU						592
+#define LANG_POPUP_SEPARATOR					593
+#define LANG_PROMPT_ENTER_TITLE					594
+#define LANG_PROMPT_CHOOSE_OPERATION			595
+#define LANG_POPUP_AS_LOADSCRIPT				596
+#define LANG_POPUP_AS_RUNSCRIPT					597
+#define LANG_POPUP_AS_MODESCRIPT				598
+#define LANG_ERR_NO_SCRIPT_FOR_ITEM				599
+#define LANG_MENU_ADD_SCRIPT_TO_PMENU			600
+#define LANG_MSG_ADDED_SCRIPT_TO_PMENU			601
+#define LANG_MSG_ADDED_ITEM_TO_PMENU			602
+#define LANG_ERR_UNKNOWN_ITEM					603
+
+#define GUI_LANG_ITEMS                          603
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

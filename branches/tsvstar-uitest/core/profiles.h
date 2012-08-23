@@ -48,6 +48,8 @@ extern char* get_profilemenu_file();
 extern int is_pmenu_menu( const CMenu* menu);
 extern int pmenu_get_itemidx( const CMenuItem* item );
 extern int is_pmenu_item( const CMenuItem* item );
+extern void run_edit_profile_menu( unsigned int* argv, int argn );
+
 
 extern void load_profile_menu( int autoexeconly );
 extern void reset_profile_menu( struct ProfileMenu *pmenu_p );
@@ -66,7 +68,9 @@ enum {
 	PMENU_LOAD,					// complete load menu
 	PMENU_LOAD_AUTOEXEC,		// load autoexec only (obsolete)
 	PMENU_EDIT_OP,				// edit operation,  argv[2]=op_code, argv[3]=edval1, argv[4]=edval2
-	PMENU_EDIT_CALLBACK			// callback on profile menu item:	argv[2]=CMenuItem_ptr
+	PMENU_EDIT_CALLBACK,		// callback on profile menu item:	argv[2]=CMenuItem_ptr, argv[1]=is_advanced_edit
+	PMENU_MMENU_CALLBACK,		// callback on main menu item:		argv[2]=CMenuItem_ptr
+	PMENU_ADD_SCRIPT,			// UI sequence to add script: argv[2]=title, argv[3]=path, argv[4]=paramstr
 };
 
 

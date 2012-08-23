@@ -1198,7 +1198,7 @@ void do_edit_operation( int op, int val1, int val2 )
 
 		// close menu
 		if ( is_root_pmenu )
-		gui_menu_close_menu(1);
+			gui_menu_close_menu(1);
 
 		do_edit_process_cb( content, size );
 
@@ -1228,7 +1228,7 @@ void do_edit_operation( int op, int val1, int val2 )
 
 		// close menu
 		if ( is_root_pmenu )
-		gui_menu_close_menu(1);
+			gui_menu_close_menu(1);
 	}
 
 	// Parse in-memory content
@@ -1238,9 +1238,13 @@ void do_edit_operation( int op, int val1, int val2 )
 	if ( content )
 		ufree( content );
 
+	extern void adjust_root_menu();
+
 	// reopen menu
 	if ( is_root_pmenu )
-	gui_menu_reopen_menu(1);
+		gui_menu_reopen_menu(1);
+	else
+		adjust_root_menu();
 }
 
 #endif
@@ -1248,6 +1252,8 @@ void do_edit_operation( int op, int val1, int val2 )
 // =========  PROCESSING 'HALFSHOOT' ON PMENU ITEM =================
 
 #ifdef EDIT_FEATURE
+
+static void finish_edit() { gui_menu_erase_and_redraw(); module_async_unload(module_idx); }
 
 static int op_item_idx;
 static int op_item_action;
@@ -1267,10 +1273,10 @@ enum {
 };
 
 static struct mpopup_item popup_main[]= {
-        { MPOPUP_INSERT,        (int)"Insert ->"  },
+        { MPOPUP_INSERT,        LANG_POPUP_SUBM_INSERT },
         { MPOPUP_DELETE,        LANG_POPUP_DELETE },
-        { MPOPUP_DELETE_SEPARATOR, (int)"Delete separator" },
-        { MPOPUP_ROLLBACK,      (int)"Rollback" },
+        { MPOPUP_DELETE_SEPARATOR, LANG_POPUP_DELETE_SEPARATOR },
+        { MPOPUP_ROLLBACK,      LANG_POPUP_ROLLBACK },
         { MPOPUP_RENAME,        LANG_POPUP_RENAME  },
         { MPOPUP_CUT,           LANG_POPUP_CUT    },
         { MPOPUP_PASTE,         LANG_POPUP_PASTE  },
@@ -1279,8 +1285,8 @@ static struct mpopup_item popup_main[]= {
 };
 
 static struct mpopup_item popup_insert[]= {
-        { MPOPUP_INSERT_SUBMENU,   (int)"Submenu"  },
-        { MPOPUP_INSERT_SEPARATOR, (int)"Separator"  },
+        { MPOPUP_INSERT_SUBMENU,   LANG_POPUP_SUBMENU },
+        { MPOPUP_INSERT_SEPARATOR, LANG_POPUP_SEPARATOR },
 		/* INSERT_SCRIPT_AS_RUN
 		 * INSERT_SCRIPT_AS_LOAD
 		 * INSERT_SCRIPT_AS_MODE
@@ -1333,8 +1339,7 @@ static void tbox_cb(const char* name)
 			break;
 	}		
 
-	gui_menu_erase_and_redraw();
-	module_async_unload(module_idx);
+	finish_edit();
 }
 
 static void pmenu_mpopup_insert_cb(unsigned int actn) {
@@ -1342,21 +1347,20 @@ static void pmenu_mpopup_insert_cb(unsigned int actn) {
 	    case MPOPUP_INSERT_SUBMENU:
 			op_item_action = actn;
             if (module_tbox_load()) {
-                module_tbox_load()->textbox_init((int)"Submenu", (int)"Enter title:", "", 25, tbox_cb, 0);
+                module_tbox_load()->textbox_init(LANG_POPUP_SUBMENU, LANG_PROMPT_ENTER_TITLE, "", 25, tbox_cb, 0);
 				return;
 			}
 			break;
 	    case MPOPUP_INSERT_SEPARATOR:
 			op_item_action = actn;
             if (module_tbox_load()) {
-                module_tbox_load()->textbox_init((int)"Separtor", (int)"Enter title:", "", 25, tbox_cb, 0);
+                module_tbox_load()->textbox_init(LANG_POPUP_SEPARATOR, LANG_PROMPT_ENTER_TITLE, "", 25, tbox_cb, 0);
 				return;
 			}
 			break;
 	}
 
-	gui_menu_erase_and_redraw();
-	module_async_unload(module_idx);
+	finish_edit();
 }
 
 static void pmenu_mpopup_main_cb(unsigned int actn) {
@@ -1394,8 +1398,7 @@ static void pmenu_mpopup_main_cb(unsigned int actn) {
 			break;
 	}
 
-	gui_menu_erase_and_redraw();
-	module_async_unload(module_idx);
+	finish_edit();
 }
 
 static void simple_op_cb(unsigned int btn)
@@ -1417,8 +1420,7 @@ static void simple_op_cb(unsigned int btn)
 		}
 	}
 
-	gui_menu_erase_and_redraw();
-	module_async_unload(module_idx);
+	finish_edit();
 }
 
 
@@ -1440,7 +1442,7 @@ static int gui_pmenu_edit_cb( CMenuItem* item, int advanced_mode )
 		if ( (item->type & MENUITEM_MASK) == MENUITEM_UP )
 			return 1;
 		
-		gui_mbox_init_adv((int)"Operation", (int)"Choose operation",  MBOX_BTN_YES_NO_CANCEL|MBOX_DEF_BTN3|MBOX_TEXT_CENTER, 
+		gui_mbox_init_adv(LANG_TITLE_PROFMENU, LANG_PROMPT_CHOOSE_OPERATION,  MBOX_BTN_YES_NO_CANCEL|MBOX_DEF_BTN3|MBOX_TEXT_CENTER, 
 					simple_op_cb,
                		0, LANG_POPUP_DELETE, LANG_POPUP_RENAME, LANG_MBOX_BTN_CANCEL);
 
@@ -1457,6 +1459,78 @@ static int gui_pmenu_edit_cb( CMenuItem* item, int advanced_mode )
 	}
 
 	return 0;
+}
+
+//------- ADD SCRIPT UI ------
+
+enum {
+	MPOPUP_INSERT_SCRIPT_AS_LOAD	= 0x0001,
+	MPOPUP_INSERT_SCRIPT_AS_RUN		= 0x0002,
+	MPOPUP_INSERT_SCRIPT_AS_MODE	= 0x0004,
+};
+
+static struct mpopup_item popup_add_script[]= {
+        { MPOPUP_INSERT_SCRIPT_AS_LOAD,        LANG_POPUP_AS_LOADSCRIPT },
+        { MPOPUP_INSERT_SCRIPT_AS_RUN,         LANG_POPUP_AS_RUNSCRIPT  },
+        { MPOPUP_INSERT_SCRIPT_AS_MODE,        LANG_POPUP_AS_MODESCRIPT },
+        { 0,					0 },
+};
+
+static char* insert_as_type = "";
+static char* ed_script_title = "";
+static char* ed_script_file = "";
+static char* ed_script_paramstr = "";
+
+static void gui_add_script_tbox_cb( const char* title )
+{
+	char buf[500];
+	if ( title ) {
+		sprintf(buf,"%s|%s|%s|%s|\n", insert_as_type, title, ed_script_file, ed_script_paramstr );
+		do_edit_operation( PMENU_OP_ADD, -1, (int)buf );
+		gui_mbox_init( LANG_TITLE_PROFMENU, LANG_MSG_ADDED_SCRIPT_TO_PMENU, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+	}
+
+	finish_edit();
+}
+
+static void gui_add_script_mpopup_cb( unsigned int actn )
+{
+    switch (actn) {
+	    case MPOPUP_INSERT_SCRIPT_AS_LOAD:	insert_as_type="load";	break;
+		case MPOPUP_INSERT_SCRIPT_AS_RUN:	insert_as_type="run";	break;
+		case MPOPUP_INSERT_SCRIPT_AS_MODE:	insert_as_type="mode";	break;
+		default:                            finish_edit();			return;
+	}
+
+	if (module_tbox_load()) {
+		module_tbox_load()->textbox_init(LANG_MENU_ADD_SCRIPT_TO_PMENU, LANG_PROMPT_ENTER_TITLE, ed_script_title, 25, gui_add_script_tbox_cb, 0);
+		// do not exit
+		return;
+	}
+	finish_edit();
+}
+
+static void gui_pmenu_add_script()
+{
+
+	int flags = MPOPUP_INSERT_SCRIPT_AS_LOAD|MPOPUP_INSERT_SCRIPT_AS_RUN|MPOPUP_INSERT_SCRIPT_AS_MODE;
+    module_mpopup_init( popup_add_script, flags, gui_add_script_mpopup_cb, 0);
+}
+
+//------- ADD ITEM UI ------
+
+static void gui_pmenu_add_item( CMenuItem* item )
+{
+	char buf[500];
+	if ( (int)lang_str(item->text) == item->text )
+		sprintf(buf, "\nitem|%s\n", lang_str(item->text));
+	else
+		sprintf(buf, "\nitem|@%d\n", item->text);
+
+	do_edit_operation( PMENU_OP_ADD, -1, (int)buf );
+	sprintf(buf,lang_str(LANG_MSG_ADDED_ITEM_TO_PMENU), lang_str(item->text));
+    gui_mbox_init(LANG_MENU_USER_MENU, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+	finish_edit();
 }
 
 #endif
@@ -1551,7 +1625,19 @@ int _module_run(int moduleidx, int argn, int* arguments)
   else if ( argn >= 4 && arguments[0]==PMENU_EDIT_CALLBACK )
   {
 	gui_pmenu_edit_cb( (CMenuItem*) arguments[2], arguments[3] );
-  } else
+  } 
+  else if ( argn>=5 && arguments[0]==PMENU_ADD_SCRIPT )
+  {
+	ed_script_title		= (char*)arguments[2];
+	ed_script_file		= (char*)arguments[3];
+	ed_script_paramstr	= (char*)arguments[4];
+	gui_pmenu_add_script();
+  }
+  else if ( argn>=3 && arguments[0]==PMENU_MMENU_CALLBACK )
+  {
+	gui_pmenu_add_item( (CMenuItem*) arguments[2] );
+  }
+  else
 
 #endif
   if ( arguments[0]==PMENU_LOAD || arguments[0]==PMENU_LOAD_AUTOEXEC )

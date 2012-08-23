@@ -236,7 +236,7 @@ void load_profile_menu( int autoexeconly )
 // PURPOSE: Load profile menu
 // PARAMETERS: autoexeconly - 1 if load only autoexec entry
 //----------------------------------------
-static void run_edit_profile_menu( unsigned int* argv, int argn )
+void run_edit_profile_menu( unsigned int* argv, int argn )
 {
 	if ( argn < 3 )
 		return;
@@ -431,7 +431,7 @@ void gui_pmenu_run_script(int arg)
 	if ( scriptpath && scriptpath[0] )
 		temporary_script_load( scriptpath, scriptpath+1+strlen(scriptpath), 0, 0 );
 	else
-		gui_mbox_init((int)"Run script", (int)"No script defined for this item", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+		gui_mbox_init(LANG_ERROR, LANG_ERR_NO_SCRIPT_FOR_ITEM, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 #else
 		gui_mbox_init(LANG_ERROR, (int)"No script support in this CHDK build", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 #endif
@@ -486,7 +486,7 @@ void gui_pmenu_goto_mainmenu(int arg)
 void gui_pmenu_unknown_map(int arg)
 {
 #ifdef OPT_PROFILES
-	gui_mbox_init((int)"Item", (int)"Unknown item map id", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+	gui_mbox_init(LANG_TITLE_PROFMENU, LANG_ERR_UNKNOWN_ITEM, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 #endif
 }
 
@@ -499,30 +499,9 @@ void gui_pmenu_unknown_map(int arg)
 // Callback for edit operations
 void edit_profile_menu_op( const CMenuItem* curr_menu_item )
 {
-
-  if ( root_menu_ptr == &root_menu ) {
-
-		// Add to profile menu
-		// Profile menu is not visible. No redraw or reopen needed
-
-    	char buf[200];
-		if ( (int)lang_str(curr_menu_item->text) == curr_menu_item->text )
-			sprintf(buf, "\nitem|%s\n", lang_str(curr_menu_item->text));
-		else
-			sprintf(buf, "\nitem|@%d\n", curr_menu_item->text);
-		add_to_profile_menu(buf);
-
-    	sprintf(buf,"'%s'\nadded to PROFILE Menu", lang_str(curr_menu_item->text));
-	    gui_mbox_init(LANG_MENU_USER_MENU, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-						
-  } else {
-
-		// Profile menu operations.
-
-		unsigned int argv[] ={ PMENU_EDIT_CALLBACK, 0, (int)curr_menu_item, (conf.user_menu_enable == 4)?0:1 };
-		run_edit_profile_menu( argv, sizeof(argv)/sizeof(argv[0]) );
-  }
-
+	unsigned int argv[] ={ (root_menu_ptr == &root_menu)? PMENU_MMENU_CALLBACK:PMENU_EDIT_CALLBACK, 
+							0, (int)curr_menu_item, (conf.user_menu_enable == 4)?0:1 };
+	run_edit_profile_menu( argv, sizeof(argv)/sizeof(argv[0]) );
 }
 
 // Move curr_item into move_offs direction: -1 up, +1 down
@@ -554,19 +533,5 @@ void move_pmenu_item( const CMenuItem* curr_item, int move_offs )
 	argv[3] = pmenu_get_itemidx(tgt);     		// move before this
 	argv[4] = pmenu_get_itemidx(curr_item);		// move this
 	run_edit_profile_menu( argv, sizeof(argv)/sizeof(argv[0]) );
-}
-
-// Add item string to the end of root profile menu
-// TODO: no BAK file. move this to profile menu
-void add_to_profile_menu( char* buf )
-{
-	if ( !buf || !buf[0] )
-		return;
-
-	unsigned int argv[] ={ PMENU_EDIT_OP, 0, PMENU_OP_ADD, -1, (int)buf };
-	run_edit_profile_menu( argv, sizeof(argv)/sizeof(argv[0]) );
-
-	extern void adjust_root_menu();
-	adjust_root_menu();
 }
 #endif
