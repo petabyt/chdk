@@ -31,11 +31,11 @@
  20 "OSD"
 
  21 "OSD-Anzeige an/aus"
- 22 "Status-Anzeige an/aus"
- 23 "Zeige diverse Werte"
- 24 "   Zoomanzeige-Typ"
- 25 "Zeige DOF-Rechner"
- 26 "Zeige Uhr"
+ 22 "Statusanzeige an/aus"
+ 23 "Anzeige fototechnischer Werte"
+ 24 "   Zoomanzeigetyp"
+ 25 "DOF-Rechner-Darstellung"
+ 26 "Uhrzeitanzeige"
  27 "OSD-Layouteditor..."
  28 "Batterie-Anzeige"
 
@@ -92,21 +92,21 @@
  70 "Textbetrachter"
  71 "Spiele"
  72 "Taschenlampe"
- 73 "Zeige Startbildschirm"
- 74 "Nutze Zoomtasten für MF"
+ 73 "Startbildschirm an/aus"
+ 74 "Zoom-Tasten für MF nutzen"
  75 "<ALT> Modus-Taste"
  76 "Farbpalette anzeigen"
- 77 "Zeige Versions-Info"
- 78 "Zeige Speicher-Info"
+ 77 "Versions-Info"
+ 78 "Speicher-Info"
 
 
  79 "Debugging-Einstellungen"
 
  80 "Debug-Daten-Anzeige"
- 81 "PropCase-Seite"
+ 81 "   Seitenauswahl"
  82 "Zeige verschiedene Werte"
  83 "Speicher-Browser"
- 84 "ALT[+/-] Debug-Funkt."
+ 84 "Debug-Funktionstaste"
  85 "Mache SD-Karte bootfähig..."
 
 
@@ -115,9 +115,9 @@
  87 "Spannung MAX (mV)"
  88 "Spannung MIN (mV)"
  89 "25+ Schritte"
- 90 "Zeige Prozent"
- 91 "Zeige Volt"
- 92 "Zeige Symbol"
+ 90 "Prozentanzeige"
+ 91 "Voltanzeige"
+ 92 "Symbolanzeige"
 
 
  93 "Textbetrachter"
@@ -220,9 +220,9 @@
 170 "*** BEENDET ***"
 
 171 "*** Ordner löschen ***"
-172 "SICHER, daß Sie\nALLE Dateien im Ordner\nlöschen möchten?"
+172 "SICHER, dass Sie\nALLE Dateien im Ordner\nlöschen möchten?"
 173 "*** Datei löschen ***"
-174 "SICHER, daß Sie\ndie ausgewählte Datei\nlöschen möchten?"
+174 "SICHER, dass Sie\ndie ausgewählte Datei\nlöschen möchten?"
 
 175 "Benchmark"
 176 "Berechnung..."
@@ -245,11 +245,11 @@
 191 "Löschen"
 192 "Auswahl umkehren"
 193 "*** Datei verschieben ***"
-194 "SICHER, daß Sie die\n%d ausgewählten Dateien\nvon %s/\n hierher verschieben möchten?"
+194 "SICHER, dass Sie die\n%d ausgewählten Dateien\nvon %s/\n hierher verschieben möchten?"
 195 "*** Datei kopieren ***"
-196 "SICHER, daß Sie die\n%d ausgewählten Dateien\nvon %s/\n hierher kopieren möchten?"
+196 "SICHER, dass Sie die\n%d ausgewählten Dateien\nvon %s/\n hierher kopieren möchten?"
 197 "*** Datei löschen ***"
-198 "SICHER, daß Sie die\n%d ausgewählten Dateien\n löschen möchten?"
+198 "SICHER, dass Sie die\n%d ausgewählten Dateien\n löschen möchten?"
 199 "Bitte warten..."
 
 200 "Zeige Gitternetzlinien"
@@ -267,28 +267,28 @@
 
 210 "DOF-Rechner"
 211 "DOF-Rechner"
-212 "Canon Motiv-Dist. als Nah-Limit" 
-213 "Benutze EXIF Motiv-Dist. (PC65)"
-214 "Zeige Motiv-Dist. in Div."
-215 "Zeige Nah-Limit in Div."
-216 "Zeige Fern-Limit in Div."
-217 "Zeige Hyperfocal-Dist. in Div."
-218 "Zeige Schärfentiefe in Div."
+212 "Canon-Motivdistanz als Nahlimit" 
+213 "EXIF-Motivdistanz"
+214 "Anzeige Motivdistanz"
+215 "Anzeige Nahlimit"
+216 "Anzeige Fernlimit"
+217 "Anzeige hyperfokale Distanz"
+218 "Anzeige Schärfentiefe"
 
 219 "Fototechnische Werte"
 220 "Fototechnische Werte"
 221 "Zeige im Rückblick-Modus"
-222 "Zeige Zoom"
-223 "Zeige 'reale' Blende"
-224 "Zeige 'reale' ISO"
-225 "Zeige 'Market' ISO"
-226 "Zeige ISO nur bei AutoISO"
-227 "Zeige eingest. Beli-Wert"
-228 "Zeige gemes. Beli-Wert"
-229 "Zeige eingest. Helligkeitswert"
-230 "Zeige gemes. Helligkeitswert"
-231 "Zeige überbel. Wert (kein Blitz!)"
-232 "Zeige Szenen-Luminanz"
+222 "Zoom"
+223 "'reale' Blende"
+224 "'reale' ISO"
+225 "'Market' ISO"
+226 "ISO nur bei AutoISO"
+227 "eingestellter Belichtungswert"
+228 "gemessener Belichtungswert"
+229 "eingestellter Helligkeitswert"
+230 "gemessener Helligkeitswert"
+231 "Überbelichtungswert (kein Blitz)"
+232 "Szenen-Luminanz"
 
 233 "Erweiterte Video-Funktionen"
 234 "Erweiterte Video-Funktionen"
@@ -328,7 +328,7 @@
 
 264 "Lösche Ersatzwerte bei Neustart"
 
-265 "Zeige Canon-Überbeli-Wert"
+265 "Canon-Überbelichtungswert"
 
 266 "RAW-Enwicklung"
 267 "Bitte Kamera im Auf-\nnahmemodus starten und ein Bild\nmachen."
@@ -337,10 +337,10 @@
 270 "RAW-Mittelwert"
 271 "Nicht genug Speicherkartenplatz:\n%dM benötigt, %dM verfügbar."
 
-272 "OSD im Review-Modus an/aus"
+272 "OSD bei Rückschau an/aus"
 273 "Task-List-Start"
 
-274 "Motiventfernung von Linse"
+274 "Motiventfernung von Objektiv"
 
 275 "Lösche Beträge bei Neustart"
 
@@ -360,17 +360,17 @@
 286 "OSD-Warnung"
 287 "OSD-Warnung-Hintergrund"
 288 "Speicherplatz-Symbol-Farbe"
-289 "Symbol-Anzeige"
+289 "Symbolanzeige"
 290 "Verbleib. Platz"
-291 "Anzeige in Prozent"
-292 "Anzeige in MB"
+291 "Prozentanzeige"
+292 "MB-Anzeige"
 293 "Speicherplatz-Text"
-294 "Zeige Anzahl verbleib. RAW"
-295 "Verbleib. RAW"
+294 "Anzeige RAW-Anzahl"
+295 "RAW-Anzahl"
 
-296 "Zeige RAW-Status"
+296 "Anzeige RAW-Status"
 
-297 "Zeige Werte in Video"
+297 "   Anzeige im Videomodus"
 
 298 " "                         //  Verschlusszeit-Typ"
 
@@ -379,9 +379,9 @@
 
 301 " "
 
-302 "Linsen-Adpt.-Skala 100=1x"
+302 "Objektivadapter 100=1x"
 
-303 "Balken-Anzeige"
+303 "Balkenanzeige"
 304 "   Balkenlänge"
 305 "   Breite/Höhe"
 306 "   Untergrenze (%)"
@@ -409,7 +409,7 @@
 323 "Benutzer-Auto-ISO aktivieren"
 324 "Min. Verschlusszeit"
 325 "Benutzer-Faktor (1/FL/F)"
-326 "IS Faktor (Tv x Faktor)"
+326 "IS-Faktor (Tv x Faktor)"
 327 "Max. ISO Hi (x10)"
 328 "Max. ISO Auto (x10)"
 329 "Min. ISO (x10)"
@@ -612,7 +612,7 @@
 
 482 "Aktuelle Benutzer-Kurve"
 483 "Tetris"
-484 "Zeige Partitions Nr."
+484 "Anzeige Partitionsnummer"
 485 "Video ohne Zeitbegrenzung"
 486 "CMOS kann bei zu langer Aufnahmedauer überhitzen!"
 
@@ -685,7 +685,7 @@
 
 550 "Abbruch mit [Auslöser halb]"
 
-551 "Skript-Start an/aus"
+551 "Skriptstart an/aus"
 
 552 "Taste Zoom-Assistent deaktivieren"
 
@@ -707,8 +707,8 @@
 566 "Temp. Ausblendung CHDK-OSD "           // Len must be <= 27
 567 "  * im <ALT>-Modus nicht verfügbar "   // Len must be <= 35
 
-568 "'%s'\nzum Benutzer-Menü hinzugefügt"
-569 "Benutzer-Menü ist voll"
+568 "'%s'\nzum Benutzermenü hinzugefügt"
+569 "Benutzermenü ist voll"
 
 570 "SD-Karte"
 571 "Sprache & Zeichensatz"
@@ -718,7 +718,7 @@
 574 "Hilfe-Anzeige"
 575 "Popup-Menü für Werteeingaben"
 
-576 "Skript in Benutzer-Menü einfügen"
+576 "Skript in Benutzermenü einfügen"
 
 577 "Li, Re &  Drehrad = Werteänderung"
 578 "Zoom = Eingabeschrittweite wählen"
