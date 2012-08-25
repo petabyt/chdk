@@ -74,7 +74,7 @@ ixus1000_sd4500,100f,BETA,,
 ixus1000_sd4500,102b,BETA,,
 ixus100_sd780,100b,BETA,,
 ixus100_sd780,100c,BETA,,
-ixus105_sd1300,100d,ALPHA,,SKIP_AUTOBUILD
+ixus105_sd1300,100d,ALPHA,,
 ixus115_elph100hs,100c,BETA,,
 ixus115_elph100hs,101a,BETA,,
 ixus115_elph100hs,101b,BETA,101c,
