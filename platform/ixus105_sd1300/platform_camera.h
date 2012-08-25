@@ -39,13 +39,13 @@
     #define CAM_EXT_TV_RANGE            1
     #define CAM_HAS_ND_FILTER           1
 
-    // pattern // TODO:
-    #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
-    // color  // TODO:
+    // pattern
+    #define cam_CFAPattern 0x01000201 // Green Blue Red Green
+    // color
     #define CAM_COLORMATRIX1                               \
-      827547, 1000000, -290458, 1000000, -126086, 1000000, \
-     -12829,  1000000, 530507,  1000000, 50537,   1000000, \
-      5181,   1000000, 48183,   1000000, 245014,  1000000
+      14052, 10000, -5229, 10000, -1156, 10000, \
+      -1325, 10000,  9420, 10000,  2252, 10000, \
+       -498, 10000,  1957, 10000,  4116, 10000
 
     #define cam_CalibrationIlluminant1 1 // Daylight  // TODO:
     // cropping
