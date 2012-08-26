@@ -119,6 +119,8 @@
 
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 
+    #define CAM_USE_ALT_SET_ZOOM_POINT      1   // Define to use the alternate code in lens_set_zoom_point()
+
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                 68      // Override min subject distance
     #undef  CAMERA_MAX_DIST

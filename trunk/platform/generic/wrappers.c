@@ -150,13 +150,8 @@ void lens_set_zoom_point(long newpt)
         newpt = zoom_points-1;
     }
 
-#if defined(CAMERA_sx30) || \
-    defined(CAMERA_g12) || \
-    defined(CAMERA_sx130is)|| \
-    defined(CAMERA_g10) || \
-    defined(CAMERA_sx220hs) || \
-    defined(CAMERA_sx230hs) || \
-    defined(CAMERA_ixus220_elph300hs)
+#if defined(CAM_USE_ALT_SET_ZOOM_POINT)
+
 	if (lens_get_zoom_point() != newpt)
 	{
 		// Get current digital zoom mode & state
@@ -172,11 +167,7 @@ void lens_set_zoom_point(long newpt)
 			_PT_MoveDigitalZoomToWide();
 		}
 
-  #if defined(CAMERA_sx30) || \
-    defined(CAMERA_sx130is) || \
-    defined(CAMERA_sx220hs) || \
-    defined(CAMERA_sx230hs) || \
-    defined(CAMERA_ixus220_elph300hs)
+  #if defined(CAM_USE_ALT_PT_MoveOpticalZoomAt)
 		// SX30 - _MoveZoomLensWithPoint crashes camera
 		// _PT_MoveOpticalZoomAt works, and updates PROPCASE_OPTICAL_ZOOM_POSITION; but doesn't wait for zoom to finish
         // IXUS220, SX220/230 - _MoveZoomLensWithPoint does not notify the JPEG engine of the new focal length,
@@ -193,11 +184,11 @@ void lens_set_zoom_point(long newpt)
 		// g10,g12 & sx30 only use this value for optical zoom
 		zoom_status=ZOOM_OPTICAL_MAX;
 
-  #if defined(CAMERA_g12)|| defined(CAMERA_g10) 
+  #if !defined(CAM_USE_ALT_PT_MoveOpticalZoomAt) 
 	    _SetPropertyCase(PROPCASE_OPTICAL_ZOOM_POSITION, &newpt, sizeof(newpt));
   #endif
 	}
-#else	// !(CAMERA_g10 || CAMERA_g12 || CAMERA_sx30)
+#else	// !(CAM_USE_ALT_SET_ZOOM_POINT)
     _MoveZoomLensWithPoint((short*)&newpt);
 
     // tight loop here hangs some cameras (the task that clears zoom_busy
@@ -208,7 +199,7 @@ void lens_set_zoom_point(long newpt)
     else if (newpt >= zoom_points) zoom_status=ZOOM_OPTICAL_MAX;
     else zoom_status=ZOOM_OPTICAL_MEDIUM;
     _SetPropertyCase(PROPCASE_OPTICAL_ZOOM_POSITION, &newpt, sizeof(newpt));
-#endif	// !(CAMERA_g10 || CAMERA_g12 || CAMERA_sx30)
+#endif	// !(CAM_USE_ALT_SET_ZOOM_POINT)
 }
 
 void lens_set_zoom_speed(long newspd)

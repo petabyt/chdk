@@ -201,6 +201,9 @@
 
     #undef  CAM_NEED_SET_ZOOM_DELAY             // Define to add a delay after setting the zoom position before resetting the focus position in shooting_set_zoom 
 
+    #undef  CAM_USE_ALT_SET_ZOOM_POINT          // Define to use the alternate code in lens_set_zoom_point()
+    #undef  CAM_USE_ALT_PT_MoveOpticalZoomAt    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
+
     #undef  USE_REAL_AUTOISO                    // Define this to use real-iso instead of marketing-iso as values of autoiso mechanizm
     #undef  OVEREXP_COMPENSATE_OVERALL          // Define this to make overexposure_compensation work for all scenes, instead of day-light only
 
