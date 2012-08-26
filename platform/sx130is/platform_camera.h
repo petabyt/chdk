@@ -86,6 +86,9 @@
     #define DEFAULT_RAW_EXT                 2
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
+    
+    #define CAM_USE_ALT_SET_ZOOM_POINT      1   // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1  // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
