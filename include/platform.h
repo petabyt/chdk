@@ -121,6 +121,7 @@ typedef struct {
 #define SHOW_ALWAYS    1
 #define SHOW_HALF      2
 
+#define PHOTO_PARAM_TV_NONE 32767 // ~ 1/(2^341) seconds, safe marker for "no value"
 
 typedef struct {
     short av96;
@@ -293,6 +294,8 @@ short shooting_get_flash_mode();
 
 
 /******************************************************************/
+void shooting_init(); // startup initialization
+
 int shooting_get_user_tv_id();
 #if defined(CAM_DRAW_EXPOSITION)
     char* shooting_get_tv_str();
