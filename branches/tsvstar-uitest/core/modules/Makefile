@@ -20,12 +20,13 @@ OBJS=../gui_calendar.o ../gui_bench.o ../gui_read.o ../gui_debug.o ../gui_tbox.o
      ../gui_fselect.o ../nothumb.o ../gui_mpopup.o ../curves.o ../edgeoverlay.o  ../gui_profile_menu.o \
      ../bitvector.o ../gui_palette.o ../gui_grid.o ../motion_detector.o ../zebra.o ../gui_profile_menu_edit.o \
      ../games/gui_4wins.o ../games/gui_mastermind.o ../games/gui_reversi.o ../gui_profiles.o \
-	 ../games/gui_sokoban.o  ../games/gui_tetris.o ../games/gui_snake.o ../games/gui_sudoku.o ../games/simple_game.o
+	 ../games/gui_sokoban.o  ../games/gui_tetris.o ../games/gui_snake.o ../games/gui_sudoku.o ../games/simple_game.o \
+	 ../gui_profiles_manager.o
 
 FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt \
      _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop10.flt _rawop12.flt \
      txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt modmenu.flt _tbox.flt _osd_le.flt \
-	 profiles.flt pmenu.flt pmenuedi.flt
+	 profiles.flt pmenu.flt pmenuedi.flt prof_min.flt
 
 
 all: exportlist ../flt.h $(FLTS)
@@ -161,7 +162,11 @@ fselect.elf: ../gui_fselect.o ../nothumb.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
-profiles.elf: ../gui_profiles.o
+profiles.elf: ../gui_profiles_manager.o
+	@echo \-\> $@
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+
+prof_min.elf: ../gui_profiles.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
@@ -174,6 +179,10 @@ pmenuedi.elf: ../gui_profile_menu_edit.o
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 ../gui_profile_menu_edit.o: ../gui_profile_menu.c
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -DEDIT_FEATURE=1 -nostdinc -c -o $@ $<
+
+../gui_profiles_manager.o: ../gui_profiles.c
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -DEDIT_FEATURE=1 -nostdinc -c -o $@ $<
 

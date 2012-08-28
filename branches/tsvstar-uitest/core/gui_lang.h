@@ -741,7 +741,18 @@
 #define LANG_MSG_ADDED_ITEM_TO_PMENU			602
 #define LANG_ERR_UNKNOWN_ITEM					603
 
-#define GUI_LANG_ITEMS                          603
+#define LANG_POPUP_CLONE_PROFILE				604
+#define LANG_PROMPT_CLONE_PROFILE               605
+#define LANG_PROMPT_ADD_PROFILE                 606
+#define LANG_MBOX_BTN_NEW                       607
+#define LANG_MBOX_BTN_SHARED                    608
+#define LANG_ERROR_NO_SHARED_SLOT               609
+#define LANG_ERROR_NO_REGULAR_SLOT              610
+#define LANG_POPUP_ADD_PROFILE					611
+#define LANG_PROFILE_DELETE_TEXT				612
+#define LANG_PROFILE_INFO						613
+
+#define GUI_LANG_ITEMS                          613
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

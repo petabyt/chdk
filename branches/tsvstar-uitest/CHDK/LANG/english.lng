@@ -735,4 +735,15 @@
 600 "Add script to profile menu"
 601 "Script added to PROFILE menu"
 602 "'%s'\nadded to PROFILE Menu"
-603 "Unknown reffered item"
+603 "Unknown reference item"
+
+604 "Clone profile"
+605 "Clone profile as:"
+606 "Add profile as:"
+607 "New"
+608 "Shared
+609 "There are no empty shared slot\nfor requested profile"
+610 "There are no empty slot"
+611 "Add profile"
+612 "Are you sure to delete profile?"
+613 "Profile: %s\nId: %d\nShare setting with:"

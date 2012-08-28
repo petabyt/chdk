@@ -36,6 +36,10 @@ static int profile_need_postprocess_flag = 0;
 static void get_profilename_to_buf( char* buf, int size )
 {
 	unsigned int argv[] ={ 1, (unsigned int)buf, (unsigned int) size, conf.current_profile };
+
+	// Try to choose already loaded module or load minimal module
+	char* module_name =  (module_find("profiles.flt")>=0)?"profiles.flt":"prof_min.flt";
+
 	module_run("profiles.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR);
 }
 

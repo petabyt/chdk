@@ -104,6 +104,7 @@ void gui_menu_clean_marks(int category);
 
 void gui_menu_set_kdb_callback( kbd_callback_t* func );
 CMenuItem* get_menu_currentitem();
+void gui_menu_select_first_entry();
 
 //-------------------------------------------------------------------
 extern gui_handler menuGuiHandler;

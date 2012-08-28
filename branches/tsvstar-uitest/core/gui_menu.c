@@ -463,6 +463,25 @@ static void update_enum_value(int direction)
 }
 
 //-------------------------------------------------------------------
+// Select first entry (or none)
+void gui_menu_select_first_entry()
+{
+	gui_menu_top_item  = 0;
+	gui_menu_curr_item = -1;
+
+    if (conf.menu_select_first_entry)
+    {
+		do
+        {
+            ++gui_menu_curr_item;
+        }
+        while ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_TEXT ||
+		(curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_SEPARATOR ||
+		(curr_menu->menu[gui_menu_curr_item].type & MENUITEM_HIDDEN) );
+    }
+}
+
+//-------------------------------------------------------------------
 // Open a sub-menu
 static void _gui_activate_sub_menu(CMenu *sub_menu, int module_idx, int redraw )
 {
@@ -472,18 +491,10 @@ static void _gui_activate_sub_menu(CMenu *sub_menu, int module_idx, int redraw )
     gui_menu_stack[gui_menu_stack_ptr].toppos = gui_menu_top_item;
     gui_menu_stack[gui_menu_stack_ptr].module_idx = module_idx;
 
+	gui_menu_set_curr_menu( sub_menu, 0, -1 );
+
     // Select first item in menu, (or none)
-    gui_menu_set_curr_menu(sub_menu, 0, -1);
-    if (conf.menu_select_first_entry)
-    {
-	do
-        {
-            ++gui_menu_curr_item;
-        }
-        while ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_TEXT ||
-		(curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_SEPARATOR ||
-		(curr_menu->menu[gui_menu_curr_item].type & MENUITEM_HIDDEN) );
-    }
+	gui_menu_select_first_entry();
 
     gui_menu_stack_ptr++;
     gui_menu_stack[gui_menu_stack_ptr].kbd_process_cb = 0;
@@ -500,7 +511,7 @@ static void _gui_activate_sub_menu(CMenu *sub_menu, int module_idx, int redraw )
 	    gui_menu_erase_and_redraw();
 }
 
-void gui_activate_sub_menu(CMenu *sub_menu, int module_idx )
+void gui_activate_sub_menu( CMenu *sub_menu, int module_idx )
 {
 	_gui_activate_sub_menu( sub_menu, module_idx, 1 );
 }
