@@ -203,6 +203,7 @@
 
     #undef  CAM_USE_ALT_SET_ZOOM_POINT          // Define to use the alternate code in lens_set_zoom_point()
     #undef  CAM_USE_ALT_PT_MoveOpticalZoomAt    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
+    #undef  CAM_USE_OPTICAL_MAX_ZOOM_STATUS     // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
 
     #undef  USE_REAL_AUTOISO                    // Define this to use real-iso instead of marketing-iso as values of autoiso mechanizm
     #undef  OVEREXP_COMPENSATE_OVERALL          // Define this to make overexposure_compensation work for all scenes, instead of day-light only
