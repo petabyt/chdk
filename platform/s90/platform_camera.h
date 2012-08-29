@@ -93,6 +93,8 @@
                                                 // see http://chdk.setepontos.com/index.php?topic=6179.0
 
 	#define REMOTE_SYNC_STATUS_LED 	0xc0220130		// specifies an LED that turns on while camera waits for USB remote to sync
-															
+
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
+    
 //----------------------------------------------------------
 
