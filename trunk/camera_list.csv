@@ -179,6 +179,7 @@ sx20,100f,,,
 sx20,102b,,,
 sx20,102d,,102c,
 sx200is,100c,,100d,
+sx210is,100c,ALPHA,,SKIP_AUTOBUILD
 sx220hs,100a,BETA,,
 sx220hs,101a,BETA,,
 sx220hs,101b,BETA,101c:101e,
