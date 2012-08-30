@@ -36,7 +36,7 @@
 #define MENUITEM_QUICKDISABLE   0x2000
 
 
-#define MENU_MINMAX(min, max)   (((max)<<16)|(min))
+#define MENU_MINMAX(min, max)   (((max)<<16)|(min&0xFFFF))
 
 //-------------------------------------------------------------------
 typedef struct {

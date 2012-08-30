@@ -655,7 +655,9 @@ void gui_menu_right( int value )
                         update_enum_value(value);
                         break;
                     case MENUITEM_SUBMENU_PROC:
+                    case MENUITEM_PROC:
                         select_proc();
+                        break;
                     case MENUITEM_SUBMENU:
                         select_sub_menu();
                         break;
