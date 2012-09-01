@@ -66,3 +66,26 @@ int vid_get_viewport_yscale() {
 	return 2;               // S90 viewport is 480 pixels high
 }
 
+extern int _GetVRAMHPixelsSize();
+extern int _GetVRAMVPixelsSize();
+
+int vid_get_viewport_width_proper() { 
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:_GetVRAMHPixelsSize();
+}
+
+int vid_get_viewport_height_proper() {
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?480:_GetVRAMVPixelsSize();
+}
+
+// assumes full screen, stitch not checked
+int vid_get_viewport_fullscreen_width() {
+    return vid_get_viewport_width_proper();
+}
+int vid_get_viewport_fullscreen_height() {
+    return vid_get_viewport_height_proper();
+}
+
+// 256 entry palette based on 101c sub_FF9152C4
+int vid_get_palette_type() { return 3; }
+int vid_get_palette_size() { return 256*4; }
+

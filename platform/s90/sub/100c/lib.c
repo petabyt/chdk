@@ -84,3 +84,14 @@ char *camera_jpeg_count_str()
 {
     return (char*)0x9792C;// S90 OK /* Search for a9999 ; "9999" */
 }
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)*(unsigned int*)(0x5CFC+0x2C);  // sub_FF915248, via sub_FFAE54A0 two refs to "Palette Class."
+}
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x5CFC+0x18)); //sub_FF9152EC via "<GetBmpVramInfo> Add: %p Width : %ld Hight : %ld"
+}
+
+
