@@ -34,6 +34,10 @@ DEF(canon_shoot_menu_active                 ,0x0000ac29) // Found @0xff98cb14
 DEF(playrec_mode                            ,0x00005640) // Found @0xff86d210
 DEF(zoom_status                             ,0x0000e3e0) // Found @0xffa7b644
 DEF(some_flag_for_af_scan                   ,0x00009b58) // Found @0xff94a2ac
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 1 int value, which is the the zoom focus length.
+// there are 6 entries in the table - set NUM_FL to 6
+DEF(focus_len_table                         ,0xffb77cd0) // Found @0xffb77cd0
 DEF(zoom_busy                               ,0x00009100) // Found @0xff9407e8
 DEF(focus_busy                              ,0x00008f8c) // Found @0xff9397fc
 //DEF(recreview_hold                          ,0x0000645c) // Found @0xff88b558, ** != ** stubs_min = 0x0000a868 (0xA78C+0xDC)
