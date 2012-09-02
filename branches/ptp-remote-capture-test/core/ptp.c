@@ -19,6 +19,18 @@ static int buf_size=0;
 static unsigned script_run_id; 
 #endif
 
+#ifdef CAM_CHDK_PTP_REMOTESHOOT
+
+static int image_data_is_available=0;
+static int remote_capture_is_enabled=0;
+
+void ptp_file_data_available(int type)
+{
+    image_data_is_available = type;
+}
+
+#endif //CAM_CHDK_PTP_REMOTESHOOT
+
 static int handle_ptp(
                 int h, ptp_data *data, int opcode, int sess_id, int trans_id,
                 int param1, int param2, int param3, int param4, int param5);
@@ -236,6 +248,8 @@ static int handle_ptp(
   ptp.sess_id = sess_id;
   ptp.trans_id = trans_id;
   ptp.num_param = 0;
+  
+  
   
   // TODO 
   // calling this on every PTP command is not good on cameras without CAM_FIRMWARE_MEMINFO
@@ -630,7 +644,132 @@ static int handle_ptp(
             send_ptp_data(data,"\0",1);
         }
         break;
-
+#ifdef CAM_CHDK_PTP_REMOTESHOOT
+    case PTP_CHDK_RemoteCaptureInit:
+        ptp.num_param = 1;
+#ifndef CAM_HAS_FILEWRITETASK_HOOK
+        if ( param2 != 2 ) { //only raw accepted
+#else
+        if ( (param2 > 7) || (param2 < 1) ) { //request out of allowable range?
+#endif
+            set_remote_file_target(0,0,0); //disarm (back to normal)
+            get_next_chunk_data_for_ptp(-1, NULL, NULL); //frees up current hook (if any)
+            remote_capture_is_enabled=0;
+        }
+        else {
+            if (!(mode_get() & MODE_REC)) { //not rec mode?
+                ptp.code = PTP_RC_GeneralError;
+            }
+            else {
+                set_remote_file_target(param2,param3,param4);
+                remote_capture_is_enabled=1;
+            }
+        }
+        ptp.param1 = remote_capture_is_enabled;
+        break;
+    case PTP_CHDK_RemoteCaptureIsReady:
+        ptp.num_param = 1;
+        if ( remote_capture_is_enabled == 1 ) {
+            ptp.param1 = image_data_is_available;
+        }
+        else {
+            ptp.param1 = 0x10000000; //error
+        }
+        break;
+    case PTP_CHDK_RemoteCaptureGetData:
+        if (remote_capture_is_enabled == 0) {
+            param2=-1; //choose error path
+        }
+        unsigned int rcgd_size;
+        char *rcgd_addr;
+        int rcerr;
+        rcerr=0;
+        switch ( param2 ) {
+            case 0: //send filename w/o extension or path!
+                get_next_chunk_data_for_ptp(0, &rcgd_addr, &rcgd_size);
+                if ( (rcgd_addr==0) || (rcgd_size==0) ) {
+                    // send dummy data, otherwise error hoses connection
+                    send_ptp_data(data,"\0",1);
+                    ptp.num_param = 2;
+                    ptp.param1 = 0; //size
+                    ptp.param2 = 0; //0 = no more chunks
+                    rcerr=1;
+                }
+                else {
+                    send_ptp_data(data,rcgd_addr,rcgd_size);
+                    ptp.num_param = 2;
+                    ptp.param1 = rcgd_size; //size
+                    ptp.param2 = 0;
+                }
+                break;
+            case 2: //send a chunk of raw
+                get_next_chunk_data_for_ptp(2, &rcgd_addr, &rcgd_size);
+                if ( (rcgd_addr==0) || (rcgd_size==0) ) {
+                    // send dummy data, otherwise error hoses connection
+                    send_ptp_data(data,"\0",1);
+                    ptp.num_param = 2;
+                    ptp.param1 = 0; //size
+                    ptp.param2 = 0; //0 = no more chunks
+                    if (rcgd_addr==0) rcerr=1;
+                }
+                else {
+                    send_ptp_data(data,rcgd_addr,rcgd_size);
+                    ptp.num_param = 2;
+                    ptp.param1 = rcgd_size; //size
+                    ptp.param2 = 2;
+                }
+                break;
+#ifdef CAM_HAS_FILEWRITETASK_HOOK
+            case 1: //send a chunk of jpeg
+                get_next_chunk_data_for_ptp(1, &rcgd_addr, &rcgd_size);
+                if ( (rcgd_addr==0) || (rcgd_size==0) ) {
+                    // send dummy data, otherwise error hoses connection
+                    send_ptp_data(data,"\0",1);
+                    ptp.num_param = 2;
+                    ptp.param1 = 0; //size
+                    ptp.param2 = 0; //0 = no more chunks
+                    if (rcgd_addr==0) rcerr=1;
+                }
+                else {
+                    send_ptp_data(data,rcgd_addr,rcgd_size);
+                    ptp.num_param = 2;
+                    ptp.param1 = rcgd_size; //size
+                    ptp.param2 = 1;
+                }
+                break;
+            case 4: //send a chunk of yuv
+                get_next_chunk_data_for_ptp(4, &rcgd_addr, &rcgd_size);
+                if ( (rcgd_addr==0) || (rcgd_size==0) ) {
+                    // send dummy data, otherwise error hoses connection
+                    send_ptp_data(data,"\0",1);
+                    ptp.num_param = 2;
+                    ptp.param1 = 0; //size
+                    ptp.param2 = 0; //0 = no more chunks
+                    if (rcgd_addr==0) rcerr=1;
+                }
+                else {
+                    send_ptp_data(data,rcgd_addr,rcgd_size);
+                    ptp.num_param = 2;
+                    ptp.param1 = rcgd_size; //size
+                    ptp.param2 = 4;
+                }
+                break;
+#endif //CAM_HAS_FILEWRITETASK_HOOK
+            default:
+                rcerr=2;
+        }
+        if ( rcerr>0 ) {
+            set_remote_file_target(0,0,0);
+            get_next_chunk_data_for_ptp(-1, &rcgd_addr, &rcgd_size); //frees up the current hook
+            remote_capture_is_enabled=0;
+            if ( rcerr==2 ) {
+                ptp.code = PTP_RC_GeneralError;
+                // send dummy data, otherwise error hoses connection
+                send_ptp_data(data,"\0",1);
+            }
+        }
+        break;
+#endif //CAM_CHDK_PTP_REMOTESHOOT
     default:
       ptp.code = PTP_RC_ParameterNotSupported;
       break;

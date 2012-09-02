@@ -74,6 +74,9 @@ enum ptp_chdk_command {
                             //  return data is protocol information, frame buffer descriptions and selected display data
                             //  Currently a data phase is always returned. Future versions may define other behavior 
                             //  for values in currently unused parameters.
+  PTP_CHDK_RemoteCaptureInit,
+  PTP_CHDK_RemoteCaptureIsReady,
+  PTP_CHDK_RemoteCaptureGetData
 };
 
 // data types as used by ReadScriptMessage

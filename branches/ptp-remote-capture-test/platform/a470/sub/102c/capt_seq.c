@@ -4,6 +4,13 @@
 
 static long *nrflag = (long*)0x88d8; //found in sub_ffd0d528
 
+typedef struct {
+    unsigned int address;
+    unsigned int length;
+} cam_ptp_data_chunk; //camera specific structure
+
+#define MAX_CHUNKS_FOR_JPEG 3 //can be model specific (it's either for JPEG or native RAW)
+
 #include "../../../generic/capt_seq.c"
 
 void __attribute__((naked,noinline)) sub_FFD0D528_my(){ 
@@ -825,4 +832,261 @@ void __attribute__((naked,noinline)) sub_FFC70178_my()
 "       BNE     sub_FFC0BDB8\n"
 "       LDMFD   SP!, {R4-R6,PC}\n"
         );
+}
+
+//parts of filewritetask follow
+
+void __attribute__((naked,noinline)) filewritetask(  ) { //sub_FFDC18E4
+asm volatile (
+      "    STMFD   SP!, {R1-R5,LR} \n" 
+      "    LDR     R4, =0xC0C8 \n" 
+"loc_FFDC18EC:\n"
+      "    LDR     R0, [R4, #0x10] \n" 
+      "    MOV     R2, #0 \n" 
+      "    ADD     R1, SP, #8 \n" 
+      "    BL      sub_FFC1763C \n" //ReceiveMessageQueue
+      "    CMP     R0, #0 \n" 
+      "    BNE     loc_FFDC191C \n" 
+      "    LDR     R0, [SP, #8] \n" 
+      "    LDR     R1, [R0] \n" 
+      "    CMP     R1, #1 \n" 
+      "    BNE     loc_FFDC1924 \n" 
+      "    LDR     R0, [R4, #8] \n" 
+      "    BL      sub_FFC0B844 \n" //GiveSemaphore
+"loc_FFDC191C:\n"
+      "    BL      sub_FFC0BB70 \n" //ExitTask
+      "    LDMFD   SP!, {R1-R5,PC} \n" 
+"loc_FFDC1924:\n"
+      "    SUB     R1, R1, #2 \n" 
+      "    CMP     R1, #5 \n" 
+      "    ADDLS   PC, PC, R1, LSL #2 \n" //switch
+      "    B       loc_FFDC18EC \n" 
+      "    B       loc_FFDC194C \n" 
+      "    B       loc_FFDC19B0 \n" 
+      "    B       loc_FFDC19B8 \n" 
+      "    B       loc_FFDC19B8 \n" 
+      "    B       loc_FFDC19B8 \n" 
+      "    B       loc_FFDC19C0 \n" 
+"loc_FFDC194C:\n" //case 0
+      "    MOV     R0, #0 \n" 
+      "    STR     R0, [SP] \n" 
+"loc_FFDC1954:\n"
+      "    LDR     R0, [R4, #0x10] \n" 
+      "    MOV     R1, SP \n" 
+      "    BL      sub_FFC17840 \n" 
+      "    LDR     R0, [SP] \n" 
+      "    CMP     R0, #0 \n" 
+      "    BEQ     loc_FFDC1980 \n" 
+      "    LDR     R0, [R4, #0x10] \n" 
+      "    MOV     R2, #0 \n" 
+      "    ADD     R1, SP, #4 \n" 
+      "    BL      sub_FFC1763C \n" //ReceiveMessageQueue
+      "    B       loc_FFDC1954 \n" 
+"loc_FFDC1980:\n"
+      "    LDR     R0, [R4] \n" 
+      "    CMN     R0, #1 \n" 
+      "    BEQ     loc_FFDC19A4 \n" 
+      "    BL      sub_FFC13B5C \n" //Close
+      "    MVN     R0, #0 \n" 
+      "    STR     R0, [R4] \n" 
+      "    LDR     R0, =0x7BA94 \n" 
+      "    BL      sub_FFC3CEF0 \n" 
+      "    BL      sub_FFC3E7A4 \n" 
+"loc_FFDC19A4:\n"
+      "    LDR     R0, [R4, #0xC] \n" 
+      "    BL      sub_FFC0B844 \n" //GiveSemaphore
+      "    B       loc_FFDC18EC \n" 
+"loc_FFDC19B0:\n" //case 1
+      "    BL      sub_FFDC1B84_my \n" //-> open file
+      "    B       loc_FFDC18EC \n" 
+"loc_FFDC19B8:\n" //case 2,3,4
+      "    BL      sub_FFDC1CC4_my \n" //-> write file
+      "    B       loc_FFDC18EC \n" 
+"loc_FFDC19C0:\n" //case 5
+      "    BL      sub_FFDC1DC0_my \n" //-> close file
+      "    B       loc_FFDC18EC \n"
+    );
+}
+
+void __attribute__((naked,noinline)) sub_FFDC1B84_my(  ) {
+asm volatile (
+      "    STMFD   SP!, {R4-R8,LR} \n" 
+      "    MOV     R4, R0 \n" 
+      "    ADD     R0, R0, #0x2C \n" 
+      "    SUB     SP, SP, #0x38 \n" 
+      "    BL      sub_FFC3CEF0 \n" 
+      "    MOV     R1, #0 \n" 
+      "    BL      sub_FFC3E754 \n" 
+      "    LDR     R0, [R4, #0xC] \n" 
+      "    BL      sub_FFC3F044 \n" 
+      "    LDR     R7, [R4, #8] \n" 
+      "    LDR     R8, =0x1B6 \n" 
+      "    ADD     R6, R4, #0x2C \n" 
+      "    LDR     R5, [R4, #0xC] \n" 
+//place hook here
+//the task's data block is at [r4] at this point, filename starts at [r4+0x2c]
+//the block can be captured here for a (new) camera with unknown data block structure
+//for ptp remote capture, return fake file handle (255) when done and jump to 0xFFDC1C28
+//if writing does not need to be prevented, just continue
+      "STMFD SP!, {R4-R12,LR}\n"
+      "ADD R1, R4, #0x14\n" //data chunk definitions start here
+      "ADD R0, R4, #0x2c\n" //name starts here
+      "BL filewrite_main_hook\n"
+      "LDMFD SP!, {R4-R12,LR}\n"
+      "LDR R0, =ignore_current_write\n"
+      "LDR R0, [R0]\n"
+      "CMP R0, #0\n"
+      "MOVNE R0, #0xff\n"
+      "LDRNE PC, =0xffdc1c28\n" //adapt this to the current routine
+//hook end
+      "    MOV     R0, R6 \n" 
+      "    MOV     R1, R7 \n" 
+      "    MOV     R2, R8 \n" 
+      "    BL      sub_FFC13B34 \n" //Open
+//
+      "LDR PC, =0xffdc1bc8\n" //continue in ROM
+//      "    CMN     R0, #1 \n" // rom:ffdc1bc8 (check for failure in Open)
+//      "    BNE     loc_FFDC1C28 \n" // jump here when exiting the hook above
+    );
+}
+
+void __attribute__((naked,noinline)) sub_FFDC1CC4_my(  ) {
+asm volatile (
+      "    STMFD   SP!, {R4-R10,LR} \n"             // rom:ffdc1cc4  0xE92D47F0 
+      "    MOV     R4, R0 \n" //pointer to the data block
+      "    LDR     R0, [R0] \n"                     // rom:ffdc1ccc  0xE5900000 
+      "    CMP     R0, #4 \n" //stage "4"?
+      "    LDREQ   R6, [R4, #0x18] \n" //1st chunk length
+      "    LDREQ   R7, [R4, #0x14] \n" //1st chunk address (exif)
+      "    BEQ     loc_FFDC1D00 \n"                 // rom:ffdc1cdc  0x0A000007 
+      "    CMP     R0, #5 \n" //stage "5"?
+      "    LDREQ   R6, [R4, #0x20] \n" //2nd chunk length
+      "    LDREQ   R7, [R4, #0x1C] \n" //2nd chunk address (jpeg)
+      "    BEQ     loc_FFDC1D00 \n"                 // rom:ffdc1cec  0x0A000003 
+      "    CMP     R0, #6 \n" //stage "6"?
+      "    BNE     loc_FFDC1D14 \n"                 // rom:ffdc1cf4  0x1A000006 
+      "    LDR     R6, [R4, #0x28] \n" //3rd chunk length (seems to always be zero)
+      "    LDR     R7, [R4, #0x24] \n" //3rd chunk address
+"loc_FFDC1D00:\n"
+      "    CMP     R6, #0 \n"                       // rom:ffdc1d00  0xE3560000 
+      "    BNE     loc_FFDC1D24 \n"                 // rom:ffdc1d04  0x1A000006 
+"loc_FFDC1D08:\n"
+      "    MOV     R1, R4 \n"                       // rom:ffdc1d08  0xE1A01004 
+      "    MOV     R0, #7 \n"                       // rom:ffdc1d0c  0xE3A00007 
+      "    B       loc_FFDC1DB8 \n"                 // rom:ffdc1d10  0xEA000028 
+"loc_FFDC1D14:\n"
+      "    LDR     R1, =0x1E2 \n"                   // rom:ffdc1d14  0xE59F1144 
+      "    LDR     R0, =0xFFDC1CA4 \n"              // rom:ffdc1d18  0xE24F007C 
+      "    BL      sub_FFC0BDB8 \n"                 // rom:ffdc1d1c  0xEBF92825 
+      "    B       loc_FFDC1D08 \n"                 // rom:ffdc1d20  0xEAFFFFF8 
+"loc_FFDC1D24:\n"
+      "    LDR     R9, =0xC0C8 \n"                  // rom:ffdc1d24  0xE51F90A8 
+      "    MOV     R5, R6 \n"                       // rom:ffdc1d28  0xE1A05006 
+"loc_FFDC1D2C:\n"
+      "    LDR     R0, [R4, #4] \n"                 // rom:ffdc1d2c  0xE5940004 
+      "    CMP     R5, #0x1000000 \n"               // rom:ffdc1d30  0xE3550401 
+      "    MOVLS   R8, R5 \n"                       // rom:ffdc1d34  0x91A08005 
+      "    MOVHI   R8, #0x1000000 \n"               // rom:ffdc1d38  0x83A08401 
+      "    BIC     R1, R0, #0xFF000000 \n"          // rom:ffdc1d3c  0xE3C014FF 
+      "    CMP     R1, #0 \n"                       // rom:ffdc1d40  0xE3510000 
+      "    BICNE   R0, R0, #0xFF000000 \n"          // rom:ffdc1d44  0x13C004FF 
+      "    RSBNE   R0, R0, #0x1000000 \n"           // rom:ffdc1d48  0x12600401 
+      "    CMPNE   R8, R0 \n"                       // rom:ffdc1d4c  0x11580000 
+      "    MOVHI   R8, R0 \n"                       // rom:ffdc1d50  0x81A08000 
+//mod start
+      "LDR R0, =ignore_current_write\n"
+      "LDR R0, [R0]\n"
+      "CMP R0, #0\n"
+      "MOVNE R0, R8\n" //"everything's written"
+      "BNE loc_ffdc1d64\n" //jump past Write (in RAM, because there are jump targets before this location)
+//mod end
+      "    LDR     R0, [R9] \n"                     // rom:ffdc1d54  0xE5990000 
+      "    MOV     R2, R8 \n" //nr of bytes to be written
+      "    MOV     R1, R7 \n"                       // rom:ffdc1d5c  0xE1A01007 
+      "    BL      sub_FFC13C08 \n" //Write
+"loc_ffdc1d64:\n" //+
+      "    LDR     R1, [R4, #4] \n"                 // rom:ffdc1d64  0xE5941004 
+      "    CMP     R8, R0 \n"                       // rom:ffdc1d68  0xE1580000 
+      "    ADD     R1, R1, R0 \n"                   // rom:ffdc1d6c  0xE0811000 
+      "    STR     R1, [R4, #4] \n"                 // rom:ffdc1d70  0xE5841004 
+      "    BEQ     loc_FFDC1D8C \n"                 // rom:ffdc1d74  0x0A000004 
+      "    LDR     R0, =0x10B1 \n"                  // rom:ffdc1d78  0xE59F00E4 
+      "    BL      sub_FFC5B7B0 \n"                 // rom:ffdc1d7c  0xEBFA668B 
+      "    LDR     R1, =0x9200005 \n"               // rom:ffdc1d80  0xE59F10E0 
+      "    STR     R1, [R4, #0x10] \n"              // rom:ffdc1d84  0xE5841010 
+      "    B       loc_FFDC1D08 \n"                 // rom:ffdc1d88  0xEAFFFFDE 
+"loc_FFDC1D8C:\n"
+      "    SUB     R5, R5, R0 \n"                   // rom:ffdc1d8c  0xE0455000 
+      "    CMP     R5, R6 \n"                       // rom:ffdc1d90  0xE1550006 
+      "    ADD     R7, R7, R0 \n"                   // rom:ffdc1d94  0xE0877000 
+      "    LDRCS   R1, =0x211 \n"                   // rom:ffdc1d98  0x259F10CC 
+      "    LDRCS   R0, =0xFFDC1CA4 \n"              // rom:ffdc1d9c  0x224F0C01 
+      "    BLCS    sub_FFC0BDB8 \n"                 // rom:ffdc1da0  0x2BF92804 
+      "    CMP     R5, #0 \n"                       // rom:ffdc1da4  0xE3550000 
+      "    BNE     loc_FFDC1D2C \n"                 // rom:ffdc1da8  0x1AFFFFDF 
+      "    LDR     R0, [R4] \n"                     // rom:ffdc1dac  0xE5940000 
+      "    MOV     R1, R4 \n"                       // rom:ffdc1db0  0xE1A01004 
+      "    ADD     R0, R0, #1 \n"                   // rom:ffdc1db4  0xE2800001 
+"loc_FFDC1DB8:\n"
+      "    LDMFD   SP!, {R4-R10,LR} \n"             // rom:ffdc1db8  0xE8BD47F0 
+      "    B       sub_FFDC183C \n"                 // rom:ffdc1dbc  0xEAFFFE9E
+    );
+}
+
+void __attribute__((naked,noinline)) sub_FFDC1DC0_my(  ) {
+asm volatile (
+      "    STMFD   SP!, {R4,R5,LR} \n"              // rom:ffdc1dc0  0xE92D4030 
+      "    LDR     R5, =0xC0C8 \n"                  // rom:ffdc1dc4  0xE51F5148 
+      "    MOV     R4, R0 \n"                       // rom:ffdc1dc8  0xE1A04000 
+      "    LDR     R0, [R5] \n"                     // rom:ffdc1dcc  0xE5950000 
+      "    SUB     SP, SP, #0x1C \n"                // rom:ffdc1dd0  0xE24DD01C 
+      "    CMN     R0, #1 \n"                       // rom:ffdc1dd4  0xE3700001 
+      "    BEQ     loc_FFDC1DF4 \n"                 // rom:ffdc1dd8  0x0A000005 
+//mod start
+      "LDR R1, =ignore_current_write\n"
+      "LDR R1, [R1]\n"
+      "CMP R1, #0\n"
+      "MOVNE R0, #0\n" //"close OK"
+      "LDRNE R1, =ignore_current_write\n"
+      "STRNE R0, [R1]\n" //also disarm flag
+      "LDRNE PC, =0xffdc1de0\n" //jump past Close (in ROM)
+//mod end
+      "    BL      sub_FFC13B5C \n" //Close, has only one param (R0)
+      "    CMP     R0, #0 \n" // rom:ffdc1de0
+      "    LDRNE   R0, =0x9200003 \n"               // rom:ffdc1de4  0x159F0084 
+      "    STRNE   R0, [R4, #0x10] \n"              // rom:ffdc1de8  0x15840010 
+      "    MVN     R0, #0 \n"                       // rom:ffdc1dec  0xE3E00000 
+      "    STR     R0, [R5] \n"                     // rom:ffdc1df0  0xE5850000 
+"loc_FFDC1DF4:\n"
+      "    LDR     R0, [R4, #0x10] \n"              // rom:ffdc1df4  0xE5940010 
+      "LDR PC, =0xffdc1df8\n" //+ continue in ROM
+/*      "    TST     R0, #1 \n"                       // rom:ffdc1df8  0xE3100001 
+      "    BNE     loc_FFDC1E3C \n"                 // rom:ffdc1dfc  0x1A00000E 
+      "    LDR     R0, =0x81FF \n"                  // rom:ffdc1e00  0xE59F006C 
+      "    ADD     R1, SP, #4 \n"                   // rom:ffdc1e04  0xE28D1004 
+      "    STR     R0, [SP, #4] \n"                 // rom:ffdc1e08  0xE58D0004 
+      "    MOV     R0, #0x20 \n"                    // rom:ffdc1e0c  0xE3A00020 
+      "    STR     R0, [SP, #8] \n"                 // rom:ffdc1e10  0xE58D0008 
+      "    LDR     R0, [R4, #4] \n"                 // rom:ffdc1e14  0xE5940004 
+      "    STR     R0, [SP, #0xC] \n"               // rom:ffdc1e18  0xE58D000C 
+      "    LDR     R0, [R4, #0xC] \n"               // rom:ffdc1e1c  0xE594000C 
+      "    STR     R0, [SP, #0x10] \n"              // rom:ffdc1e20  0xE58D0010 
+      "    LDR     R0, [R4, #0xC] \n"               // rom:ffdc1e24  0xE594000C 
+      "    STR     R0, [SP, #0x14] \n"              // rom:ffdc1e28  0xE58D0014 
+      "    LDR     R0, [R4, #0xC] \n"               // rom:ffdc1e2c  0xE594000C 
+      "    STR     R0, [SP, #0x18] \n"              // rom:ffdc1e30  0xE58D0018 
+      "    ADD     R0, R4, #0x2C \n"                // rom:ffdc1e34  0xE284002C 
+      "    BL      sub_FFC3E068 \n"                 // rom:ffdc1e38  0xEBF9F08A 
+"loc_FFDC1E3C:\n"
+      "    ADD     R0, R4, #0x2C \n"                // rom:ffdc1e3c  0xE284002C 
+      "    BL      sub_FFC3CEF0 \n"                 // rom:ffdc1e40  0xEBF9EC2A 
+      "    BL      sub_FFC3E7A4 \n"                 // rom:ffdc1e44  0xEBF9F256 
+      "    LDR     R1, [R5, #0x14] \n"              // rom:ffdc1e48  0xE5951014 
+      "    CMP     R1, #0 \n"                       // rom:ffdc1e4c  0xE3510000 
+      "    LDRNE   R0, [R4, #0x10] \n"              // rom:ffdc1e50  0x15940010 
+      "    BLXNE   R1 \n"                           // rom:ffdc1e54  0x112FFF31 
+      "    ADD     SP, SP, #0x1C \n"                // rom:ffdc1e58  0xE28DD01C 
+      "    LDMFD   SP!, {R4,R5,PC} \n"              // rom:ffdc1e5c  0xE8BD8030
+*/
+    );
 }

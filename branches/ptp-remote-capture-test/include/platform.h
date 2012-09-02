@@ -274,6 +274,11 @@ void hook_raw_install();
 void hook_raw_save_complete();
 
 /******************************************************************/
+#ifdef CAM_CHDK_PTP_REMOTESHOOT
+void set_remote_file_target (int, int, int);
+void get_next_chunk_data_for_ptp( int, char **, unsigned int *);
+#endif
+/******************************************************************/
 
 long lens_get_zoom_pos();
 void lens_set_zoom_pos(long newpos);

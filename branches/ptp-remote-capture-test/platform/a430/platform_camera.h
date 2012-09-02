@@ -61,4 +61,5 @@
 
 	#define CAM_DETECT_SCREEN_ERASE		    1
     #define CAM_FIRMWARE_MEMINFO            1
+    #define CAM_CHDK_PTP_REMOTESHOOT        1
 //----------------------------------------------------------

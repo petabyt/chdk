@@ -165,6 +165,7 @@ extern void capt_seq_task();
 extern void movie_record_task();
 extern void init_file_modules_task();
 extern void exp_drv_task();
+extern void filewritetask();
 
 void kbd_fetch_data(long *dst);
 

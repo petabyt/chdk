@@ -85,6 +85,8 @@
     #undef  CAM_BRACKETING                      // Cameras that have bracketing (focus & ev) in original firmware already, most likely s- & g-series (propcase for digic III not found yet!)
     #undef  CAM_EXT_TV_RANGE                    // CHDK can make exposure time longer than 64s
     #define CAM_CHDK_PTP                    1   // include CHDK PTP support
+    #undef  CAM_CHDK_PTP_REMOTESHOOT            // support for shooting with remote target
+    #undef  CAM_HAS_FILEWRITETASK_HOOK          // FileWriteTask hook is available (local file write can be prevented)
 
     #define CAM_UNCACHED_BIT                0x10000000 // bit indicating the uncached memory
 

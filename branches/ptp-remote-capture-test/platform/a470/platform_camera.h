@@ -61,6 +61,10 @@
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
     #define CAM_EXT_TV_RANGE                1
     #define CAM_DETECT_SCREEN_ERASE         1
+    
+    #define CAM_CHDK_PTP_REMOTESHOOT        1
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+    
     //#define DNG_EXT_FROM                  ".DPS"
 	
 	#define REMOTE_SYNC_STATUS_LED 	0xc022008C		// specifies an LED that turns on while camera waits for USB remote to sync
