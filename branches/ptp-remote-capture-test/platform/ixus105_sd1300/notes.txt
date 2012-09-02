@@ -1,0 +1,6 @@
+*** General info:
+Digic IV, dryos r43
+
+current issues/unfeatures:
+- no video override
+- modemap is incomplete/incorrect (see stubs_entry.S)
