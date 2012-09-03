@@ -59,4 +59,6 @@
     #define CAM_FIRMWARE_MEMINFO            1       // Use 'GetMemInfo' to get free memory size.
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+
 //----------------------------------------------------------
