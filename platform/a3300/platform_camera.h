@@ -71,6 +71,8 @@
 
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
 
+    #undef  CAM_HAS_ERASE_BUTTON    
+
     #define CAM_HAS_ND_FILTER               1
 
     #define CAM_VIDEO_QUALITY_ONLY          1
