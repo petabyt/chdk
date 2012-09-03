@@ -33,7 +33,7 @@
     #define CAM_HAS_ND_FILTER               1
     #undef CAM_HAS_MANUAL_FOCUS
     #undef CAM_HAS_USER_TV_MODES // Shutter speed  = TV, Aperture = AV
-
+    #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     // #undef CAM_CAN_SD_OVER_NOT_IN_MF
     // #undef CAM_CAN_SD_OVERRIDE
 
@@ -48,6 +48,8 @@
 	
     #undef  CAM_MENU_BORDERWIDTH
     #define CAM_MENU_BORDERWIDTH            10	
+	
+	#define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1	
 	
     // pattern
     #define cam_CFAPattern                  0x01000201 // Green  Blue  Red  Green
