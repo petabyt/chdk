@@ -72,6 +72,8 @@
 
     #define PARAM_CAMERA_NAME               4       // ?? parameter number for GetParameterData
 
+    #undef  CAM_HAS_ERASE_BUTTON    // camera does not have a separate erase button
+
     #define CAM_HAS_ND_FILTER               1       // ??
 
     #define CAM_VIDEO_QUALITY_ONLY          1       // ??
@@ -90,3 +92,5 @@
     #define CAM_BITMAP_PALETTE              15      // ??
 
     #define CHDK_COLOR_BASE                 0x1D    // ??  Start color index for CHDK colors loaded into camera palette.
+
+
