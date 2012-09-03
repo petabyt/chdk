@@ -13,7 +13,7 @@ V režimu ALT:
  [Set] - pøejití do menu skriptu
 
 V menu:
- [Nahoru, Dolù, Kruhové ovládací koleèko] - navigace
+ [Nahoru, Dolù, JogDial] - navigace
  [Doleva, Doprava] - pøejití do podmenu/zmìna hodnoty
  [Disp] - zpìt o jednu úroveò menu
  [Pøiblížení] - zmìna pøírùstku
@@ -21,7 +21,7 @@ V menu:
  [Menu] - vypnutí menu CHDK
 
 Pøi editaci položky menu:
- [Doleva, Doprava, Kruhové ovládací koleèko] - zmìna hodnoty o 1
+ [Doleva, Doprava, JogDial] - zmìna hodnoty o 1
  [Nahoru, Dolù] - zmìna hodnoty o 10
  [Menu] - zapnutí/vypnutí funkènosti
  [Set] - potvrzení zmìny

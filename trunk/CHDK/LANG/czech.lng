@@ -62,7 +62,7 @@
  43 "Kreslit pøes zebru"
 
 
- 44 "Skripty"
+ 44 "Skript"
 
  45 "Naèíst skript ze souboru..."
  46 "Prodleva zahájení skriptu (.1s)"
@@ -98,12 +98,12 @@
  70 "Prohlíeè textovıch souborù"
  71 "Hry"
  72 "Baterka"
- 73 "Zobr. úvod. obraz.@naètení"
+ 73 "Zobr. úvod. obraz. @ naètení"
  74 "Pouít páèky pøiblí. pro MF"
  75 "Tlaèítko reimu <ALT>"
  76 "Vykreslit paletu"
- 77 "Zobrazit inf. o sestavení"
- 78 "Zobrazit inf. o pamìti"
+ 77 "Zobrazit Informace o sestavení"
+ 78 "Zobrazit Informace o pamìti"
 
 
  79 "Ladìní"
@@ -187,7 +187,7 @@
 136 "Dnes:"
 
 // messagebox buttons
-137 "Ok"
+137 "OK"
 138 "Ano"
 139 "Ne"
 140 "Storno"
@@ -202,7 +202,7 @@
 147 "Hodiny"
 
 // palette
-148 "Stisknìte SET pro vykreslení barvy "
+148 "Stisknìte SET pro vykreslení barvy"
 149 "     Stisknìte MENU pro ukonèení"
 150 "Barva"
 151 "Pouijte %s pro vıbìr barvy"
@@ -346,7 +346,7 @@
 262 "AV expozice - pøepoè. poø."
 263 "ISO expozice - pøepoè. poø."
 
-264 "Smazat hodn. potlaèení@spušt."
+264 "Smazat hodn. potl. @ spušt."
 
 265 "Zobr. hodn. 'Canon' pøeexp."
 
@@ -362,7 +362,7 @@
 
 274 "Subj. vzdál od èoèek"
 
-275 "Smazat hodn. bracketu@spušt."
+275 "Smazat hodn. bracketu @ spušt."
 
 276 "Vytvoøit kartu se dvìma oddíly"
 277 "Pøepnout oddíly"
@@ -410,7 +410,7 @@
 313 "Formát hodin"
 314 "Barva pozadí zbıvajícího místa"
 315 "Indikace 12h èasu"
-316 "Zobrazit@namáèknutí spouštì"
+316 "Zobrazit @ namáèknutí spouštì"
 
 317 "Nastavení zobrazení RAW"
 318 "RAW"
@@ -420,9 +420,9 @@
 
 321 "Uivatelské Auto ISO"
 322 "Uivatelské Auto ISO"
-323 "Povolit uiv. Auto ISO"
+323 "Povolit uivatel. Auto ISO"
 324 "Min. rychlost závìrky"
-325 "  Uiv. koefic. (1/FL/koef.)"
+325 "  Uivatel. koefic. (1/FL/koef.)"
 326 "  IS koeficient (Tv*koef.)"
 327 "Max ISO HI (x10)"
 328 "Max ISO AUTO (x10)"
@@ -433,23 +433,23 @@
 332 "Kurzor - barva textu"
 333 "Kurzor - barva pozadí"
 334 "Centrovat menu"
-335 "Ztlumit zvuk pøi zoomování"
+335 "Ztlumit zvuk pøi pøiblíení"
 
 336 "Ruèní odstranìní vadnıch pixelù"
 337 "Vyp."
 338 "Prùmìr"
-339 "RAWconv"
+339 "RAWkonv"
 
 340 "Potlaèení"
 341 "Potlaèení - pozadí"
 342 "Zakázat potlaèení"
 343 "  Vèet. AutoIso & Bracketing?"
 344 "  Skrıt v ?"
-345 "Zakázat @ Video Rec?"
+345 "Zakázat @ záznam videa?"
 346 "Zobr. zbıv. èas videa?"
 347 "  Frekvence obnovení (~s)"
 348 "Zbıvající èas videa"
-349 "Smazat param. videa@spušt.?"
+349 "Smazat param. videa @ spušt.?"
 350 " "
 351 " "
 352 "Korekce EV"
@@ -486,8 +486,8 @@
 377 "Povolit synch. dálk. spouš"
 378 "Povolit synchronizaci"
 379 "Povolit synchr. prodlevu"
-380 "Synchr. prodleva 0.1ms"
-381 "Synchr. prodleva 0.1s"
+380 "Synchr. prodleva 0,1ms"
+381 "Synchr. prodleva 0,1s"
 
 382 "Tlaèítko AF"
 383 "Naèíst vıch. hodnoty param."
@@ -501,9 +501,9 @@
 389 "Vıjimky"
 390 "Menu vıjimek RAW"
 391 "Varovat pøi vıjimkách"
-392 "Vdy vybrat 1. poloku@menu"
+392 "Vdy vybrat 1. poloku @ menu"
 
-393 "Prodleva (0.1s)"
+393 "Prodleva (0,1s)"
 394 "Synchroniz. dálk. spouš"
 395 "Rychlé ovládání videa?"
 396 "Teplota"
@@ -524,7 +524,7 @@
 411 "Zobrazení Ev videa"
 412 "   Hodnota potlaèení pøiblíení"
 413 "Potlaèení pøiblíení"
-414 "   Smazat@spušt."
+414 "   Smazat @ spuštìní"
 415 "Pøipojit RAW pøíponu"
 416 "  ve Fahrenheitech"
 417 "Naèíst pøekrytí okrajù"
@@ -698,7 +698,18 @@
 570 "SD karta"
 571 "Jazyk a písmo"
 
+//
 572 "Ruèní blesk (vıkon)"
-573 "Fast Ev step size"
+573 "Velikost kroku rychl. Ev"
 574 "Zobrazit NÁPOVÌDU"
-575 "Use popup to edit value"
+575 "Pouít vysk. okno pro edit. hodn."
+
+576 "Pøidat skript do uivatel. menu"
+
+577 "Doleva, Doprava & JogDial = Zmìna hodnoty"
+578 "Pøiblíení = Úprava koeficientu pøírùstku"
+579 "SET  = Potvrzení, DISP = Storno"
+580 "MENU = Zapnnutí/Vypnutí"
+
+581 "Nekoneènı fokus"
+582 "Zmìnit koeficient fokusu"
