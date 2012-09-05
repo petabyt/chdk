@@ -751,8 +751,10 @@
 #define LANG_POPUP_ADD_PROFILE					611
 #define LANG_PROFILE_DELETE_TEXT				612
 #define LANG_PROFILE_INFO						613
+#define LANG_WARN_NAME_REQUIRED					614
+#define LANG_MENU_PMENU_EDIT					615
 
-#define GUI_LANG_ITEMS                          613
+#define GUI_LANG_ITEMS                          615
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

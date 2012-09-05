@@ -463,15 +463,31 @@ static const char* str_trim_and_check( const char* name )
 	return 0;
 }
 
+static void open_add_tbox();
+
 static void tbox_add_cb(const char* name)
 {
+	if ( !name )
+		return;
+
 	name = str_trim_and_check(name);
 	if ( name )
 		do_edit_operation( PROFILE_OP_ADD, -1, (int)name);
+	else
+		gui_mbox_init( LANG_POPUP_ADD_PROFILE, LANG_WARN_NAME_REQUIRED, MBOX_BTN_OK, open_add_tbox );
 }
+
+static void open_add_tbox()
+{
+	if (module_tbox_load())
+		module_tbox_load()->textbox_init( (op_add_clone_idx<0)?LANG_POPUP_ADD_PROFILE:LANG_POPUP_CLONE_PROFILE, LANG_PROMPT_ENTER_TITLE, "", 25, tbox_add_cb, 0);
+}
+
 
 static void tbox_rename_cb(const char* name)
 {
+	if ( !name )
+		return;
 	name = str_trim_and_check(name);
 	if ( name )
 		do_edit_operation( PROFILE_OP_RENAME, get_cur_appidx(), (int)name );
@@ -483,8 +499,7 @@ static void mbox_add_op_cb(unsigned int btn)
 		return;
 
 	op_add_shared = (btn==MBOX_BTN_NO);
-	if (module_tbox_load())
-		module_tbox_load()->textbox_init( (op_add_clone_idx<0)?LANG_POPUP_ADD_PROFILE:LANG_POPUP_CLONE_PROFILE, LANG_PROMPT_ENTER_TITLE, "", 25, tbox_add_cb, 0);
+	open_add_tbox();
 }
 
 static void profile_delete_op(unsigned int btn)

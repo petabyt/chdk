@@ -1853,34 +1853,36 @@ static CMenu menu_font_submenu = {0x28,LANG_MENU_FONT_SETTINGS, NULL, menu_font_
 
 //-------------------------------------------------------------------
 
+extern void adjust_root_menu();
+
+#ifdef OPT_USER_MENU
 static const char* gui_user_menu_show_enum(int change, int arg)
 {
-#ifdef OPT_USER_MENU
-    static const char* modes[]={ "Off", "On","On Direct", "Edit"
-#ifdef OPT_PROFILES
-			, "Prof-S","Prof-A" 
-#endif
-		};
+    static const char* modes[]={ "Off", "On", "On Direct", "Edit" };
 
     if (conf.user_menu_enable == 3) user_menu_save();
-
-    void set_usermenu_state();
-    set_usermenu_state();
-#else
-#ifdef OPT_PROFILES
-    static const char* modes[]={ "Off", "--","On Direct", "--", "Prof-S","Prof-A" };
-#else
-    static const char* modes[]={ "Off" };
-#endif
-#endif
-
+	adjust_root_menu();
     return gui_change_simple_enum(&conf.user_menu_enable,change,modes,sizeof(modes)/sizeof(modes[0]));
 }
+#endif
+
+#ifdef OPT_PROFILES
+static const char* gui_pmenu_show_enum(int change, int arg)
+{
+    static const char* modes[]={ "Off", "On", "On Direct", "S.Edit", "Adv.Edit"};
+	adjust_root_menu();
+    return gui_change_simple_enum(&conf.profile_menu_editmode,change,modes,sizeof(modes)/sizeof(modes[0]));
+}
+#endif
+
 
 static CMenuItem menu_settings_submenu_items[] = {
-    MENU_ITEM(0x5f,LANG_MENU_USER_MENU_ENABLE,		MENUITEM_ENUM,          gui_user_menu_show_enum, &conf.user_menu_enable ),
 #ifdef OPT_USER_MENU
+    MENU_ITEM(0x5f,LANG_MENU_USER_MENU_ENABLE,		MENUITEM_ENUM,          gui_user_menu_show_enum, &conf.user_menu_enable ),
     MENU_ITEM(0x5c,LANG_MENU_USER_MENU_AS_ROOT,     MENUITEM_BOOL,          &conf.user_menu_as_root, 0 ),
+#endif
+#ifdef OPT_PROFILES
+    MENU_ITEM(0x5c,LANG_MENU_PMENU_EDIT,     		MENUITEM_ENUM,          gui_pmenu_show_enum, &conf.profile_menu_editmode ),
 #endif
     MENU_ITEM(0x81,LANG_MENU_VIS_MENU_CENTER,       MENUITEM_BOOL,	        &conf.menu_center, 0 ),
     MENU_ITEM(0x81,LANG_MENU_SELECT_FIRST_ENTRY,    MENUITEM_BOOL,	        &conf.menu_select_first_entry, 0 ),
@@ -2067,20 +2069,17 @@ CMenu root_menu = {0x20,LANG_MENU_MAIN_TITLE, NULL, root_menu_items };
 
 CMenu* root_menu_ptr = &root_menu;
 
-// Set visibility of User Menu in root menu based on user menu state
-void set_usermenu_state()
-{
-#ifdef OPT_USER_MENU
-	menuitem_set_visible( &root_menu, LANG_MENU_USER_MENU, 	0, (conf.user_menu_enable>0 && conf.user_menu_enable<4) );
-#endif
-}
-
 void adjust_root_menu()
 {
-#ifdef OPT_PROFILES
-	menuitem_set_visible( &root_menu, LANG_MENU_GOTO_PROFMENU, 0, (pmenu.menu_buf!=0) );
+#ifdef OPT_USER_MENU
+/*	menuitem_set_visible( &menu_settings_submenu_items, LANG_MENU_USER_MENU_ENABLE, 	0, (!pmenu.menu_buf) );
+	menuitem_set_visible( &menu_settings_submenu_items, LANG_MENU_USER_MENU_AS_ROOT, 	0, (!pmenu.menu_buf) );
+*/
+	menuitem_set_visible( &root_menu, LANG_MENU_USER_MENU, 	0, (!pmenu.menu_buf && conf.user_menu_enable>0) );
 #endif
-	set_usermenu_state();
+#ifdef OPT_PROFILES
+	menuitem_set_visible( &root_menu, LANG_MENU_GOTO_PROFMENU, 0, (pmenu.menu_buf!=0 && conf.profile_menu_editmode ) );
+#endif
 }
 
 //-------------------------------------------------------------------
@@ -2170,7 +2169,7 @@ gui_handler* gui_set_mode(gui_handler *mode)
         redraw_buttons = 1;
 #endif
 
-    set_usermenu_state();
+	adjust_root_menu();
 
     // When open first menu - ensure to deactivate edit submode
     if ( gui_mode->mode == GUI_MODE_MENU && gui_mode->mode!=mode->mode)
@@ -2729,7 +2728,7 @@ void gui_chdk_kbd_process_menu_btn()
 #ifdef OPT_PROFILES
 	profile_set_postprocessing();	// finalize profile restore: create main menu title
 
-	if ( pmenu.menu_buf ) {
+	if ( pmenu.menu_buf && conf.profile_menu_editmode ) {
 
 		// profile menu exists 
 
@@ -2890,7 +2889,7 @@ void gui_activate_alt_mode()
 #ifdef OPT_PROFILES
 			profile_set_postprocessing();	// finalize profile restore: create main menu title
 
-			if ( pmenu.menu_buf ) {
+			if ( pmenu.menu_buf && conf.profile_menu_editmode ) {
 				conf_update_pmenu_mode();
 				gui_menu_popup_mainmenu();
 			}

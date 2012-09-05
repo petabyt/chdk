@@ -383,6 +383,7 @@ typedef struct {
 	int current_profile;		// num of selected profile
     int scene_script_mode;		// strhash31 of last called menuitem "mode"
 	int profile_menu_mode;		// 0-by default open main menu, 1-by default open profile menu
+	int profile_menu_editmode;
 
 } Conf;
 

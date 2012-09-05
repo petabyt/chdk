@@ -747,3 +747,5 @@
 611 "Add profile"
 612 "Are you sure to delete profile?"
 613 "Profile: %s\nId: %d\nShare setting with:"
+614 "Empty name is not allowed"
+615 "Profile Menu"

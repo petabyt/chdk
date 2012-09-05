@@ -300,6 +300,10 @@ void core_spytask()
     mkdir("A/CHDK/MODULES");
     mkdir("A/CHDK/MODULES/CFG");
     mkdir("A/CHDK/GRIDS");
+#ifdef OPT_PROFILES
+    mkdir("A/CHDK/CFG");
+    mkdir("A/CHDK/CFG/PROFILES");
+#endif
 #ifdef OPT_CURVES
     mkdir("A/CHDK/CURVES");
 #endif

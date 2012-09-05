@@ -504,6 +504,7 @@ static const ConfInfo conf_info[] = {
 
     CONF_INFO(1295, conf.scene_script_mode,	        CONF_DEF_VALUE,     i:0, conf_change_scene_script),
     CONF_INFO(1296, conf.profile_menu_mode,	        CONF_DEF_VALUE,     i:1, conf_change_pmenu_mode),
+    CONF_INFO(1297, conf.profile_menu_editmode,     CONF_DEF_VALUE,     i:1, conf_change_pmenu_mode),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
@@ -601,7 +602,7 @@ void conf_change_autoiso()
 
 void conf_update_pmenu_mode()
 {
-	if ( conf.profile_menu_mode && pmenu.menu_buf )
+	if ( conf.profile_menu_mode && conf.profile_menu_editmode && pmenu.menu_buf )
 		root_menu_ptr = pmenu.menu_buf;
 	else
 		root_menu_ptr = &root_menu;
