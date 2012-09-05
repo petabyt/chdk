@@ -1177,6 +1177,15 @@ void do_edit_operation( int op, int val1, int val2 )
 	  st.st_mtime=0;
 	}
 
+	// If no pmenu file exists, create empty one
+	if ( !st.st_size )
+	{
+		int fd;
+		fd = safe_open( pmenufile_name, O_WRONLY|STD_O_CREAT|STD_O_TRUNC, 0777 );
+		if ( fd > 0 )
+			close(fd);
+	}
+
 	if ( st.st_size != pmenu.file_size ||
 		 st.st_mtime != pmenu.file_mtime ) 
 	  return;

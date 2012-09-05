@@ -743,7 +743,7 @@ int gui_menu_kbd_process() {
 
 
 #ifdef OPT_PROFILES
-            if (conf.user_menu_enable > 3) {
+            if (conf.profile_menu_editmode > 2) {
 				edit_profile_menu_op( &curr_menu->menu[gui_menu_curr_item] );
 			}
 #else
@@ -880,7 +880,7 @@ int gui_menu_kbd_process() {
             * if in user menu edit mode and viewing user menu
             */
 #ifdef OPT_PROFILES
-            if( (conf.user_menu_enable >= 4) && is_pmenu_menu(curr_menu) ) {
+            if( (conf.profile_menu_editmode > 2) && is_pmenu_menu(curr_menu) ) {
 				move_pmenu_item( &curr_menu->menu[gui_menu_curr_item], -1 );
     		}
 #else
@@ -911,7 +911,7 @@ int gui_menu_kbd_process() {
             * if in user menu edit mode and viewing user menu
             */
 #ifdef OPT_PROFILES
-            if( (conf.user_menu_enable >= 4) && is_pmenu_menu(curr_menu) ) {
+            if( (conf.profile_menu_editmode > 2) && is_pmenu_menu(curr_menu) ) {
 				move_pmenu_item( &curr_menu->menu[gui_menu_curr_item], +1 );
     		}
 #else

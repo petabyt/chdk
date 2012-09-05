@@ -2885,11 +2885,12 @@ void gui_activate_alt_mode()
         // then enter user menu mode, unless a script was paused by exiting 
         // <ALT> mode when the script was running.
 	    gui_user_menu_flag = 0;
-	    if ((conf.user_menu_enable == 2) && !state_kbd_script_run) {
-#ifdef OPT_PROFILES
-			profile_set_postprocessing();	// finalize profile restore: create main menu title
 
-			if ( pmenu.menu_buf && conf.profile_menu_editmode ) {
+	    if (!state_kbd_script_run) {
+#ifdef OPT_PROFILES
+			if ( conf.profile_menu_editmode==2 && pmenu.menu_buf )
+			{
+				profile_set_postprocessing();	// finalize profile restore: create main menu title
 				conf_update_pmenu_mode();
 				gui_menu_popup_mainmenu();
 			}
@@ -2897,7 +2898,9 @@ void gui_activate_alt_mode()
 			if (0) {}
 #endif
 #ifdef OPT_USER_MENU
-			else {
+	    	else if (conf.user_menu_enable == 2) {
+				profile_set_postprocessing();	// finalize profile restore: create main menu title
+
 			    gui_menu_init(&user_submenu);
 			    gui_user_menu_flag = 1;
 			    gui_set_mode(&menuGuiHandler);

@@ -504,7 +504,7 @@ void gui_pmenu_unknown_map(int arg)
 void edit_profile_menu_op( const CMenuItem* curr_menu_item )
 {
 	unsigned int argv[] ={ (root_menu_ptr == &root_menu)? PMENU_MMENU_CALLBACK:PMENU_EDIT_CALLBACK, 
-							0, (int)curr_menu_item, (conf.user_menu_enable == 4)?0:1 };
+							0, (int)curr_menu_item, (conf.profile_menu_editmode == 3)?0:1 };
 	run_edit_profile_menu( argv, sizeof(argv)/sizeof(argv[0]) );
 }
 
