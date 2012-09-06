@@ -94,7 +94,6 @@
 
 	#define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
 	#define CHDK_COLOR_BASE                 0xA2    // Start color index for CHDK colors loaded into camera palette.
-	#define CAM_USE_COLORED_ICONS           1       // Enable using the CHDK-DE colored icons.
 	
 	// Not sure values
 	//
