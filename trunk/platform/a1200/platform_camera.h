@@ -91,7 +91,7 @@
 
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              16
-    #define CAM_USE_COLORED_ICONS           1       // Enable using the CHDK-DE colored icons.
+    #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                 0x9F    // Start color index for CHDK colors loaded into camera palette
                                                     // Note: overloads Canon RED for proper logo display
 
