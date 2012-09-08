@@ -14,7 +14,7 @@ include $(topdir)version.inc
 ifndef OPT_DE_VERSION
     VER=CHDK
 else
-    VER=CHDK_DE
+    VER=CHDK-DE
     ifndef OPT_DEFAULT_LANG
         OPT_DEFAULT_LANG=german
     endif
