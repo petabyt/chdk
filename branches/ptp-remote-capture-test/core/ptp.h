@@ -109,6 +109,15 @@ enum ptp_chdk_script_data_type {
 // bit flags for scripting support
 #define PTP_CHDK_SCRIPT_SUPPORT_LUA  0x1
 
+// bit flags for remote capture
+// used to select and also to indicate available data in PTP_CHDK_RemoteCaptureIsReady
+#define PTP_CHDK_CAPTURE_JPG    0x1
+#define PTP_CHDK_CAPTURE_RAW    0x2
+#define PTP_CHDK_CAPTURE_YUV    0x4 // not implemented yet
+
+// status from PTP_CHDK_RemoteCaptureIsReady if capture not enabled
+#define PTP_CHDK_CAPTURE_ERR    0x10000000
+
 // message types
 enum ptp_chdk_script_msg_type {
     PTP_CHDK_S_MSGTYPE_NONE = 0, // no messages waiting

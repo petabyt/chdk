@@ -21,6 +21,7 @@
 #include "gui_draw.h"
 #include "module_load.h"
 #include "histogram.h"
+#include "remotecap.h"
 
 #include "../lib/lua/lstate.h"  // for L->nCcalls, baseCcalls
 
@@ -2164,6 +2165,37 @@ static int luaCB_set_yield( lua_State* L )
   return 2;
 }
 
+/*
+get remote capture supported types
+bitmask=get_remotecap_support()
+*/
+static int luaCB_get_remotecap_support( lua_State* L )
+{
+    lua_pushnumber(L,remotecap_get_target_support());
+    return 1;
+}
+
+#ifdef CAM_CHDK_PTP_REMOTESHOOT
+/*
+status=init_remotecap(bitmask[,startline, numlines])
+bitmask = 0 clear usb capture mode
+lines only applies to raw for now
+startline defaults to 0
+numlines defaults to full buffer
+TODO
+should have a timeout
+startline/numlines might not valid across different sources
+*/
+static int luaCB_init_remotecap( lua_State* L )
+{
+    int what=luaL_checknumber(L, 1);
+    int startline=luaL_optnumber(L, 2, 0);
+    int numlines=luaL_optnumber(L, 3, 0);
+    lua_pushboolean(L,remotecap_set_target(what,startline,numlines));
+    return 1;
+}
+#endif
+
 static void register_func( lua_State* L, const char *name, void *func) {
   lua_pushcfunction( L, func );
   lua_setglobal( L, name );
@@ -2347,6 +2379,10 @@ static const luaL_Reg chdk_funcs[] = {
 #ifdef CAM_CHDK_PTP
     FUNC(read_usb_msg)
     FUNC(write_usb_msg)
+#endif
+    FUNC(get_remotecap_support)
+#ifdef CAM_CHDK_PTP_REMOTESHOOT
+    FUNC(init_remotecap)
 #endif
     {NULL, NULL},
 };
