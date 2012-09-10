@@ -12,7 +12,7 @@ int remotecap_get_target_support(void) {
 #ifdef CAM_CHDK_PTP_REMOTESHOOT
     ret |= PTP_CHDK_CAPTURE_RAW;
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
-    ret |= PTP_CHDK_CAPTURE_JPG;
+    ret |= PTP_CHDK_CAPTURE_JPG | PTP_CHDK_CAPTURE_YUV;
 #endif
 #endif
     return ret;
@@ -116,12 +116,15 @@ void remotecap_jpeg_available(const char *name) {
         return;
     }
     filewrite_wait = 3000; // x10ms sleeps = 30 sec timeout, TODO make setable
-    //todo:
-    //- find an address for this
-    //- check the current picture size (L,M1,M2,S,whatever...)
-    //- implement it
-    yuvchunk[0].address=0;
-    yuvchunk[0].length=0;
+#if 0
+    //for use in debug & porting, for example to dump the filewritetask data block or some memory
+    yuvchunk[0].address=0x1000;
+    yuvchunk[0].length=MAXRAMADDR+1-0x1000;
+#else
+    yuvchunk[0].address=(int)hook_yuv_shooting_buf_addr();
+    //UYVY format is assumed, 16bits/pixel total
+    yuvchunk[0].length=hook_yuv_shooting_buf_width()*hook_yuv_shooting_buf_height()*2;
+#endif
 
     jpegcurrchnk=0;
     yuvcurrchnk=0;

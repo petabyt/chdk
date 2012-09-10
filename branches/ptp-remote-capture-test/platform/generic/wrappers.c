@@ -1532,6 +1532,13 @@ void *vid_get_viewport_active_buffer()
   return p;
 }
 
+// helper function stubs for the PTP remote shooting extension
+#ifdef CAM_HAS_FILEWRITETASK_HOOK
+char __attribute__((weak)) *hook_yuv_shooting_buf_addr()    { return (char*)0xffffffff; }; //NULL would mean error
+int __attribute__((weak)) hook_yuv_shooting_buf_width()     { return 0; };
+int __attribute__((weak)) hook_yuv_shooting_buf_height()    { return 0; };
+#endif // CAM_HAS_FILEWRITETASK_HOOK
+
 /*
  debug logging function that can be sent to various places
  body is ifdef'd inside the body to allow exporting to modules

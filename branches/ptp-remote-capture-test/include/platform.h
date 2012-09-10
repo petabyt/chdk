@@ -274,6 +274,12 @@ void hook_raw_install();
 void hook_raw_save_complete();
 
 /******************************************************************/
+#ifdef CAM_HAS_FILEWRITETASK_HOOK
+char *hook_yuv_shooting_buf_addr();
+int hook_yuv_shooting_buf_width();
+int hook_yuv_shooting_buf_height();
+#endif
+/******************************************************************/
 
 long lens_get_zoom_pos();
 void lens_set_zoom_pos(long newpos);
