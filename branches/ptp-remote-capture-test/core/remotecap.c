@@ -176,7 +176,7 @@ void remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size )
                 remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_JPG);
             }
             break;
-        case 4: //yuv
+        case PTP_CHDK_CAPTURE_YUV: //yuv
             // TODO this will probably be like jpeg
             if ( yuvcurrchnk >= MAX_CHUNKS_FOR_YUV ) {
                 *addr=(char*)0xffffffff;
@@ -203,6 +203,7 @@ void remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size )
 #endif
     }
     if ( (!remotecap_get_available_data_type()) || (fmt == -1) ) {
+        // TODO these will be called at the end raw and again at the end of jpeg/yuv
         remotecap_set_available_data_type(0); // for fmt -1 case
         filewrite_wait = 0;
         // allow raw hook to continue

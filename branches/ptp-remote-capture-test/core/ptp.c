@@ -676,7 +676,6 @@ static int handle_ptp(
             if(rcgd_addr==0) { // null address means error, otherwise just last chunk
                 ptp.code = PTP_RC_GeneralError;
                 remotecap_set_target(0,0,0);
-                remotecap_get_data_chunk(-1, NULL, NULL); //frees up the current hook
             }
         }
         else {

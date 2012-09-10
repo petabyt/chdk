@@ -1,7 +1,6 @@
 // generic capt_seq fuctions
 #include "asmsafe.h"
 #include "conf.h"
-#include "stdlib.h"
 
 #define RAWDATA_AVAILABLE (1)
 #define RAWDATA_SAVED (2)
