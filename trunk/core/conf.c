@@ -348,7 +348,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(202, conf.fast_movie_control,         CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(203, conf.show_temp,                  CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO2(204, conf.temp_pos,                  CONF_OSD_POS,   CAM_SCREEN_WIDTH-9*FONT_WIDTH-2,FONT_HEIGHT),
-    CONF_INFO(205, conf.fast_movie_quality_control, CONF_DEF_VALUE, i:1, NULL),
+    CONF_INFO(205, conf.fast_movie_quality_control, CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(206, conf.remote_zoom_enable,         CONF_DEF_VALUE, i:0, NULL),
 //    CONF_INFO(207, conf.zoom_timeout,               CONF_DEF_VALUE, i:5, NULL),   // Not used
    	CONF_INFO(208, conf.start_sound,                CONF_DEF_VALUE, i:0, NULL),
