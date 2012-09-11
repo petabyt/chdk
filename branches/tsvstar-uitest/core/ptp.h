@@ -10,7 +10,7 @@ protocol version history
 2.0 - return PTP_CHDK_TYPE_TABLE for tables instead of TYPE_STRING, allow return of empty strings
 2.1 - experimental live view, not formally released
 2.2 - live view (work in progress)
-2.3 - live view (work in progress)
+2.3 - live view - released in 1.1
 */
 
 #define PTP_OC_CHDK 0x9999

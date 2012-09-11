@@ -345,6 +345,8 @@ void core_spytask()
 	do_autoexec_sequence( 1/*ASYNC*/, script_autostart_cb, script_autostart_fin_cb );
 #endif
 
+    shooting_init();
+
     while (1)
     {
         // Change ALT mode if the KBD task has flagged a state change

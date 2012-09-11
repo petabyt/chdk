@@ -15,6 +15,8 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
+//NSTUB(GetDrive_FreeClusters                 ,0xffc24258) //  3        *** != 0xffc55b78
+// ALT: NSTUB(GetDrive_FreeClusters, 0xffc55b78) // 4 9/0
 //NSTUB(kbd_pwr_off                           ,0xffc47e04) //  2 64%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
@@ -104,7 +106,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xffc265b0) //  1
 NSTUB(DeleteFile_Fut                          ,0xffc264cc) //112
 NSTUB(DoAFLock                                ,0xffc27fe0) //102
 NSTUB(EnterToCompensationEVF                  ,0xffc28090) //104
-NSTUB(ExecuteEventProcedure                   ,0xffc6cef0) //  2
+NSTUB(ExecuteEventProcedure                   ,0xffc6cef0) //  1
 NSTUB(ExitFromCompensationEVF                 ,0xffc280d4) //104
 NSTUB(ExitTask                                ,0xffc0eacc) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xffc35864) //104

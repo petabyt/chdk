@@ -3353,7 +3353,7 @@ void find_stubs_min(firmware *fw)
                 int mul = 1;
                 if ((fw->buf[k+1] == 100) && (fw->buf[k+2] == 0)) mul = 3;
                 if ((fw->buf[k+1] == 100) && (fw->buf[k+2] != 0)) mul = 2;
-                for (k1 = k + mul; (k1 < fw->size) && (fw->buf[k1] > fw->buf[k1-mul]) && (fw->buf[k1] != max_focus_len); k1 += mul) ;
+                for (k1 = k + mul; (k1 < fw->size) && (fw->buf[k1] > fw->buf[k1-mul]) && (fw->buf[k1] > min_focus_len) && (fw->buf[k1] < max_focus_len); k1 += mul) ;
                 if (fw->buf[k1] == max_focus_len)
                 {
                     found++;

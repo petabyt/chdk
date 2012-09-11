@@ -730,7 +730,7 @@
 595 "Choose operation"
 596 "Item 'Load script'"
 597 "Item 'Run script'"
-598 "Make mode"
+598 "Item 'Mode'"
 599 "No script defined for this item"
 600 "Add script to profile menu"
 601 "Script added to PROFILE menu"
@@ -741,7 +741,7 @@
 605 "Clone profile as:"
 606 "Add profile as:"
 607 "New"
-608 "Shared
+608 "Shared"
 609 "There are no empty shared slot\nfor requested profile"
 610 "There are no empty slot"
 611 "Add profile"

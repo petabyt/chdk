@@ -94,6 +94,8 @@
     #define CAM_ZEBRA_ASPECT_ADJUST         1
     #define CAM_ZEBRA_NOBUF                 1
 
+    #define CAM_USE_ALT_SET_ZOOM_POINT      1   // Define to use the alternate code in lens_set_zoom_point()
+
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1       // enable fix for camera crash at startup when opening the conf / font files
                                                     // see http://chdk.setepontos.com/index.php?topic=6179.0
 
