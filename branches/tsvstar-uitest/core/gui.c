@@ -2180,13 +2180,17 @@ gui_handler* gui_set_mode(gui_handler *mode)
 
     gui_osd_need_restore = 0;
 
-    // Flag for screen erase/redraw unless mode is marked not to (e.g. menu box popup)
-    if (((gui_mode->flags & (GUI_MODE_FLAG_NODRAWRESTORE|GUI_MODE_FLAG_NORESTORE_ON_SWITCH)) == 0) &&
-        ((old_mode->flags & GUI_MODE_FLAG_NORESTORE_ON_SWITCH) == 0))
-        gui_set_need_restore();
-    // If old mode did not erase screen on exit then force current mode to redraw itself (e.g. exit menu popup back to file select)
-    if ((old_mode->flags & (GUI_MODE_FLAG_NORESTORE_ON_SWITCH)) != 0)
+    if ( (old_mode->flags & (GUI_MODE_FLAG_NORESTORE_ON_SWITCH)) != 0 ) {
+
+	    // If old mode did not erase screen on exit then force current mode 
+		//	to redraw itself (e.g. exit menu popup back to file select)
         gui_set_need_redraw();
+	}
+    else if ( ((gui_mode->flags & (GUI_MODE_FLAG_NODRAWRESTORE|GUI_MODE_FLAG_NORESTORE_ON_SWITCH)) == 0) ) {
+	    // Flag for screen erase/redraw unless mode is marked not to (e.g. menu box popup)
+        gui_set_need_restore();
+	}
+
 
 #ifdef CAM_DISP_ALT_TEXT
     if (gui_mode->mode == GUI_MODE_ALT)

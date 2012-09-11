@@ -720,17 +720,19 @@ int gui_menu_kbd_process() {
 
 	int level;
 
+	int keycode = kbd_get_autoclicked_key() | get_jogdial_direction();
+
 	// Find last valid kbd_process_cb in stack
 
 	for ( level = gui_menu_stack_ptr; level>=0; level-- ) {
 		if ( gui_menu_stack[gui_menu_stack_ptr].kbd_process_cb ) {
-			if ( gui_menu_stack[gui_menu_stack_ptr].kbd_process_cb( kbd_get_autoclicked_key() | get_jogdial_direction() ) )
+			if ( gui_menu_stack[gui_menu_stack_ptr].kbd_process_cb( keycode ) )
 				return 0;
 			break;
 		}
 	}
 
-    switch (kbd_get_autoclicked_key() | get_jogdial_direction()) {
+    switch ( keycode ) {
 #if CAM_HAS_ERASE_BUTTON
         case KEY_ERASE:
 #else    
