@@ -15,7 +15,9 @@ void remotecap_jpeg_available(const char *name);
 // called from filewrite to check if it needs to continue waiting
 int remotecap_filewrite_wait(void);
 // called by ptp code to get next chunk address/size for the format (fmt) that is being currently worked on
-void remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size );
+int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size );
+// frees both hooks, clears available_image_data, signals end of shoot()
+void remotecap_free_hooks(void);
 #else
 #define remotecap_get_target_support() (0)
 #endif

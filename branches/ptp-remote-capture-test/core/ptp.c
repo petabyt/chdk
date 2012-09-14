@@ -664,13 +664,14 @@ static int handle_ptp(
             param2=-1; //choose error path
         }
         unsigned int rcgd_size;
+        int rcgd_notlast;
         char *rcgd_addr;
 
-        remotecap_get_data_chunk(param2, &rcgd_addr, &rcgd_size);
+        rcgd_notlast = remotecap_get_data_chunk(param2, &rcgd_addr, &rcgd_size); // returns "not last chunk"
+        ptp.num_param = 2;
         if ( (rcgd_addr==0) || (rcgd_size==0) ) {
             // send dummy data, otherwise error hoses connection
             send_ptp_data(data,"\0",1);
-            ptp.num_param = 2;
             ptp.param1 = 0; //size
             ptp.param2 = 0; //0 = no more chunks
             if(rcgd_addr==0) { // null address means error, otherwise just last chunk
@@ -680,9 +681,11 @@ static int handle_ptp(
         }
         else {
             send_ptp_data(data,rcgd_addr,rcgd_size);
-            ptp.num_param = 2;
             ptp.param1 = rcgd_size; //size
-            ptp.param2 = param2; // chunk type
+            ptp.param2 = rcgd_notlast; // are there chunks left?
+        }
+        if ( !rcgd_notlast && !remotecap_get_available_data_type() && (rcgd_addr!=0) ) { //no more chunks of anything the current hook provides
+            remotecap_free_hooks();
         }
         break;
 #endif //CAM_CHDK_PTP_REMOTESHOOT

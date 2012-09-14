@@ -53,13 +53,13 @@ int remotecap_set_target ( int type, int lstart, int lcount )
     // TODO not clear REC should be required, could be valid to set / clear before switching
     if ((type & ~remotecap_get_target_support()) || !(mode_get() & MODE_REC)) {
         remote_file_target=0;
-        remotecap_get_data_chunk(-1, NULL, NULL); //frees up current hook (if any)
+        remotecap_free_hooks(); //frees up current hook (if any)
         return 0;
     }
     remote_file_target=type;
     // clear requested
     if(type==0) {
-        remotecap_get_data_chunk(-1, NULL, NULL); //frees up current hook (if any)
+        remotecap_free_hooks(); //frees up current hook (if any)
         return 1;
     }
     startline=lstart;
@@ -77,7 +77,7 @@ void remotecap_set_available_data_type(int type)
 }
 
 void filewrite_set_discard_jpeg(int state);
-void filewrite_get_jpeg_chunk(char **ardr,unsigned *size, unsigned n);
+int filewrite_get_jpeg_chunk(char **ardr,unsigned *size, unsigned n);
 
 void remotecap_raw_available(void) {
     if (startline<0) startline=0;
@@ -143,8 +143,9 @@ int remotecap_filewrite_wait(void) {
 #endif
 
 // called by ptp code to get next chunk address/size for the format (fmt) that is being currently worked on
-void remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size )
+int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size )
 {
+    int notlastchunk = 0; // default = no more chunks
     switch ( fmt )
     {
         case 0: //name
@@ -156,6 +157,7 @@ void remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size )
             *size=9;
             break;
         case PTP_CHDK_CAPTURE_RAW: //raw
+            //TODO turn this into a function?
             if ( rawcurrchnk >= MAX_CHUNKS_FOR_RAW ) {
                 *addr=(char*)0xffffffff;
                 *size=0;
@@ -164,23 +166,24 @@ void remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size )
                 *addr=(char*)rawchunk[rawcurrchnk].address;
                 *size=rawchunk[rawcurrchnk].length;
                 rawcurrchnk+=1;
+                if ( rawcurrchnk < MAX_CHUNKS_FOR_RAW ) {
+                    if ( rawchunk[rawcurrchnk].length != 0 ) notlastchunk = 1; // not the last chunk
+                }
             }
-            if ( (*addr==0) || (*size==0) ) {
+            if ( (*addr==0) || (*size==0) || (!notlastchunk) ) {
                 remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_RAW);
             }
             break;
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
         case PTP_CHDK_CAPTURE_JPG: //jpeg
-            filewrite_get_jpeg_chunk(addr,size,jpegcurrchnk);
-            // TODO this will require an extra request cycle,
-            // would be more efficient to set a flag for last
+            notlastchunk = filewrite_get_jpeg_chunk(addr,size,jpegcurrchnk);
             jpegcurrchnk+=1;
-            if ( (*addr==0) || (*size==0) ) {
+            if ( (*addr==0) || (*size==0) || (!notlastchunk) ) {
                 remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_JPG);
             }
             break;
         case PTP_CHDK_CAPTURE_YUV: //yuv
-            // TODO this will probably be like jpeg
+            // TODO use the same function as for RAW?
             if ( yuvcurrchnk >= MAX_CHUNKS_FOR_YUV ) {
                 *addr=(char*)0xffffffff;
                 *size=0;
@@ -189,8 +192,11 @@ void remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size )
                 *addr=(char*)yuvchunk[yuvcurrchnk].address;
                 *size=yuvchunk[yuvcurrchnk].length;
                 yuvcurrchnk+=1;
+                if ( yuvcurrchnk < MAX_CHUNKS_FOR_YUV ) {
+                    if ( yuvchunk[yuvcurrchnk].length != 0 ) notlastchunk = 1; // not the last chunk
+                }
             }
-            if ( (*addr==0) || (*size==0) ) {
+            if ( (*addr==0) || (*size==0) || (!notlastchunk) ) {
                 remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_YUV);
             }
             break;
@@ -205,14 +211,16 @@ void remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size )
             remotecap_set_available_data_type(0);
 #endif
     }
-    if ( (!remotecap_get_available_data_type()) || (fmt == -1) ) {
-        // TODO these will be called at the end raw and again at the end of jpeg/yuv
-        remotecap_set_available_data_type(0); // for fmt -1 case
-        filewrite_wait = 0;
-        // allow raw hook to continue
-        // TODO could do like filewrite wait
-        hook_raw_save_complete(); 
-        state_shooting_progress=SHOOTING_PROGRESS_DONE; //shoot() needs this... TODO
-    }
+    return notlastchunk;
 }
 
+void remotecap_free_hooks(void) {
+    // TODO these will be called at the end raw and again at the end of jpeg/yuv
+    remotecap_set_available_data_type(0); // for fmt -1 case
+    // free the filewrite hook
+    filewrite_wait = 0;
+    // allow raw hook to continue
+    // TODO could do like filewrite wait
+    hook_raw_save_complete(); 
+    state_shooting_progress=SHOOTING_PROGRESS_PROCESSING;
+}

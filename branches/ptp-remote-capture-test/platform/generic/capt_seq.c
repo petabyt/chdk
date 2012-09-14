@@ -74,14 +74,20 @@ get address and size of chunk N
 returns NULL addr and zero size when max chunks reached
 */
 static cam_ptp_data_chunk *jpeg_chunks;
-void filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n) {
-    if(n >= MAX_CHUNKS_FOR_JPEG || jpeg_chunks == NULL) {
+int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n) {
+    if (n >= MAX_CHUNKS_FOR_JPEG || jpeg_chunks == NULL) {
         *addr=(char *)0xFFFFFFFF; // signals last chunk
         *size=0;
-        return;
+        return 0; // last chunk
     }
     *addr=(char *)jpeg_chunks[n].address;
     *size=jpeg_chunks[n].length;
+    if (n < MAX_CHUNKS_FOR_JPEG-1) {
+        if (jpeg_chunks[n+1].length==0) {
+            return 0; // last chunk
+        }
+    }
+    return 1; // not last chunk
 }
 
 void filewrite_set_discard_jpeg(int state) {
