@@ -23,7 +23,9 @@ extern int mode_is_video(int);
 extern int is_video_recording();
 
 /* propcase ID constants. These are in their own header files for easier sed processing */
-#if CAM_PROPSET == 4
+#if CAM_PROPSET == 5
+    #include "propset5.h"   // DryOS R50
+#elif CAM_PROPSET == 4
     #include "propset4.h"
 #elif CAM_PROPSET == 3
     #include "propset3.h"

@@ -3,7 +3,7 @@
 /*
 CHDK capture mode constants.
 WARNING: This file is used with gen_modelist_lua.sed to generate modelist.lua
-WARNING: These are used for platform independent script values. 
+WARNING: These are used for platform independent script values.
 Changing order or inserting new values will break script compatibility.
 ADD NEW VALUES AT THE END!
 
@@ -39,7 +39,7 @@ enum {
     MODE_TV                 ,
     MODE_AV                 ,
     MODE_M                  , // note, use only for true manual modes that allow direct control of Tv/Av
-    MODE_PORTRAIT           , 
+    MODE_PORTRAIT           ,
     MODE_NIGHT_SCENE        , // "night scene" mode. Note, this can be a dail position, or under the scene menu (SCN_NIGHT_SCENE).
     MODE_LANDSCAPE          ,
     MODE_VIDEO_STD          ,
@@ -105,7 +105,7 @@ enum {
     MODE_SCN_HDR            , // g12 (HDR scene mode)
     MODE_VIDEO_MINIATURE    , // g12 (miniature effect video mode)
     MODE_VIDEO_IFRAME_MOVIE , // sx220
-    MODE_VIDEO_MOVIE_DIGEST , // sx220 (the camera automatically record a short video clip (up to approximately 4 seconds) every time you shoot 
+    MODE_VIDEO_MOVIE_DIGEST , // sx220 (the camera automatically record a short video clip (up to approximately 4 seconds) every time you shoot
     MODE_SCN_HIGHSPEED_BURST, // sx220
     MODE_SCN_BEST_IMAGE     , // sx220
     MODE_SCN_TOY_CAMERA     , // sx220
@@ -125,8 +125,10 @@ enum {
     MODE_SNOW               ,
     MODE_FIREWORK           , // ixus1000 end
     MODE_LIVE               , // A3300is
-    MODE_DISCREET			 , // A3300is
+    MODE_DISCREET           , // A3300is
     MODE_BLUR_REDUCTION     , // a800
+    MODE_SCN_SOFTFOCUS      , // sx260 asm1989
+    MODE_SCN_SMOOTH_SKIN    , // sx260
 };
 
 #endif
