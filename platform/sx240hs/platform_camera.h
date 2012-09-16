@@ -89,8 +89,6 @@
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX     1           // enable workaround for camera crash at startup when opening the conf / font files
                                                             // see http://chdk.setepontos.com/index.php?topic=6179.0
-    #define CAM_DETECT_SCREEN_ERASE             1
-    #define CAM_FIRMWARE_MEMINFO                1           // Use 'GetMemInfo' to get free memory size.
 
     #define CAM_ZEBRA_ASPECT_ADJUST             1
     #define CAM_ZEBRA_NOBUF                     1

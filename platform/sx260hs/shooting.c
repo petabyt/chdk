@@ -8,7 +8,6 @@
 #include "stdio.h"
 
 #define PARAM_FILE_COUNTER      0x3A        // tested param 58 asm1989
-#define PARAM_EXPOSURE_COUNTER  0x02
 
 //ASM1989  max zoom not included
 //No zoom 3.1 3.5 4.0 4.5 5.0 5.6 6.3 7.1 8.0
