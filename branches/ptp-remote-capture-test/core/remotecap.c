@@ -3,17 +3,16 @@
 #include "platform.h"
 #include "conf.h"
 #include "remotecap.h"
-static int filewrite_wait; // counter for filewrite wait, decrements for every 10ms sleep
+#ifdef CAM_CHDK_PTP_REMOTESHOOT
+static int hook_wait[2]; // counter for raw(0)/filewrite(1) wait, decrements for every 10ms sleep
 
 static int available_image_data=0; // type of data available
 
 int remotecap_get_target_support(void) {
     int ret = 0;
-#ifdef CAM_CHDK_PTP_REMOTESHOOT
     ret |= PTP_CHDK_CAPTURE_RAW;
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
     ret |= PTP_CHDK_CAPTURE_JPG | PTP_CHDK_CAPTURE_YUV;
-#endif
 #endif
     return ret;
 }
@@ -31,6 +30,7 @@ typedef struct {
 static ptp_data_chunk rawchunk[MAX_CHUNKS_FOR_RAW];
 static int rawcurrchnk;
 static char nameforptp[12];
+static long filenumforptp;
 static int startline=0;
 static int linecount=0;
 
@@ -80,6 +80,13 @@ void filewrite_set_discard_jpeg(int state);
 int filewrite_get_jpeg_chunk(char **ardr,unsigned *size, unsigned n);
 
 void remotecap_raw_available(void) {
+    filenumforptp = get_target_file_num(); // need to get this here for consistency
+    if(!(remote_file_target & PTP_CHDK_CAPTURE_RAW)) {
+        hook_wait[0] = 0; // don't block capt_seq task
+        return;
+    }
+    hook_wait[0] = 3000; // x10ms sleeps = 30 sec timeout, TODO make setable
+
     if (startline<0) startline=0;
     if (startline>CAM_RAW_ROWS-1) startline=0;
     if (linecount<=0) linecount=CAM_RAW_ROWS;
@@ -112,10 +119,10 @@ TODO name is not currently saved here
 */
 void remotecap_jpeg_available(const char *name) {
     if(!(remote_file_target & (PTP_CHDK_CAPTURE_JPG | PTP_CHDK_CAPTURE_YUV | PTP_CHDK_CAPTURE_RAW))) {
-        filewrite_wait = 0; // don't block filewrite task
+        hook_wait[1] = 0; // don't block filewrite task
         return;
     }
-    filewrite_wait = 3000; // x10ms sleeps = 30 sec timeout, TODO make setable
+    hook_wait[1] = 3000; // x10ms sleeps = 30 sec timeout, TODO make setable
 #if 0
     //for use in debug & porting, for example to dump the filewritetask data block or some memory
     yuvchunk[0].address=0x1000;
@@ -130,17 +137,17 @@ void remotecap_jpeg_available(const char *name) {
     yuvcurrchnk=0;
     remotecap_set_available_data_type(remote_file_target & (PTP_CHDK_CAPTURE_JPG | PTP_CHDK_CAPTURE_YUV));
 }
+#endif
 
 /*
 return true until data is read, or timeout / cancel
 */
-int remotecap_filewrite_wait(void) {
-    if(filewrite_wait) {
-        filewrite_wait--;
+int remotecap_hook_wait(int which) {
+    if(hook_wait[which]) {
+        hook_wait[which]--;
     }
-    return filewrite_wait && remotecap_get_available_data_type();
+    return hook_wait[which] && remotecap_get_available_data_type();
 }
-#endif
 
 // called by ptp code to get next chunk address/size for the format (fmt) that is being currently worked on
 int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size )
@@ -152,7 +159,7 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size )
             //two ways to get this
             //1) get_file_next_counter(), may increment between the raw and filewrite hooks
             //2) from filewritetask data (only available for jpeg and yuv)
-            sprintf(nameforptp,"IMG_%04d",get_target_file_num());
+            sprintf(nameforptp,"IMG_%04d",filenumforptp);
             *addr=&nameforptp[0];
             *size=9;
             break;
@@ -170,17 +177,17 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size )
                     if ( rawchunk[rawcurrchnk].length != 0 ) notlastchunk = 1; // not the last chunk
                 }
             }
-            if ( (*addr==0) || (*size==0) || (!notlastchunk) ) {
-                remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_RAW);
-            }
+//             if ( (*addr==0) || (*size==0) || (!notlastchunk) ) {
+//                 remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_RAW);
+//             }
             break;
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
         case PTP_CHDK_CAPTURE_JPG: //jpeg
             notlastchunk = filewrite_get_jpeg_chunk(addr,size,jpegcurrchnk);
             jpegcurrchnk+=1;
-            if ( (*addr==0) || (*size==0) || (!notlastchunk) ) {
-                remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_JPG);
-            }
+//             if ( (*addr==0) || (*size==0) || (!notlastchunk) ) {
+//                 remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_JPG);
+//             }
             break;
         case PTP_CHDK_CAPTURE_YUV: //yuv
             // TODO use the same function as for RAW?
@@ -196,9 +203,9 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size )
                     if ( yuvchunk[yuvcurrchnk].length != 0 ) notlastchunk = 1; // not the last chunk
                 }
             }
-            if ( (*addr==0) || (*size==0) || (!notlastchunk) ) {
-                remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_YUV);
-            }
+//             if ( (*addr==0) || (*size==0) || (!notlastchunk) ) {
+//                 remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_YUV);
+//             }
             break;
 #else
         default:
@@ -214,13 +221,17 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size )
     return notlastchunk;
 }
 
+void remotecap_data_type_done(int type) {
+    remotecap_set_available_data_type(available_image_data & ~type);
+}
+
 void remotecap_free_hooks(void) {
     // TODO these will be called at the end raw and again at the end of jpeg/yuv
     remotecap_set_available_data_type(0); // for fmt -1 case
     // free the filewrite hook
-    filewrite_wait = 0;
+    hook_wait[1] = 0;
     // allow raw hook to continue
-    // TODO could do like filewrite wait
-    hook_raw_save_complete(); 
-    state_shooting_progress=SHOOTING_PROGRESS_PROCESSING;
+    hook_wait[0] = 0;
+    state_shooting_progress=SHOOTING_PROGRESS_PROCESSING; //is this still needed without shoot()?
 }
+#endif //CAM_CHDK_PTP_REMOTESHOOT

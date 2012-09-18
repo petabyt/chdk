@@ -44,25 +44,21 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
 
     raw_save_stage = RAWDATA_AVAILABLE;
 #ifdef CAM_CHDK_PTP_REMOTESHOOT
-    if ( remotecap_get_target() == 0 ) //no remote redirection
-    {
-        core_rawdata_available(); //notifies spytask in core/main.c
-    }
-    else if ( (remotecap_get_target() & 2) > 0 ) //chdk raw requested
+    if ( remotecap_get_target() != 0 ) //remote redirection
     {
         remotecap_raw_available();
+        while (remotecap_hook_wait(0)) {
+            _SleepTask(10);
+        }
     }
     else
-    {
-        raw_save_stage = RAWDATA_SAVED;
-    }
-#else
-    core_rawdata_available(); //notifies spytask in core/main.c
 #endif //CAM_CHDK_PTP_REMOTESHOOT
-    while (raw_save_stage != RAWDATA_SAVED){
-	_SleepTask(10);
+    {
+        core_rawdata_available(); //notifies spytask in core/main.c
+        while (raw_save_stage != RAWDATA_SAVED){
+        _SleepTask(10);
+        }
     }
-
  asm volatile("LDMFD   SP!, {R0-R12,PC}\n");
 }
 
@@ -98,7 +94,7 @@ void filewrite_main_hook(char *name, cam_ptp_data_chunk *pdc)
 {
     jpeg_chunks = pdc;
     remotecap_jpeg_available(name);
-    while (remotecap_filewrite_wait()) {
+    while (remotecap_hook_wait(1)) {
         _SleepTask(10);
     }
     jpeg_chunks=NULL;

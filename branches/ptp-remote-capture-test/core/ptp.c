@@ -683,6 +683,9 @@ static int handle_ptp(
             send_ptp_data(data,rcgd_addr,rcgd_size);
             ptp.param1 = rcgd_size; //size
             ptp.param2 = rcgd_notlast; // are there chunks left?
+            if (!rcgd_notlast) {
+                remotecap_data_type_done(param2); //data type done
+            }
         }
         if ( !rcgd_notlast && !remotecap_get_available_data_type() && (rcgd_addr!=0) ) { //no more chunks of anything the current hook provides
             remotecap_free_hooks();
