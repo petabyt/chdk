@@ -58,6 +58,7 @@
     #define CAM_ACTIVE_AREA_Y2              1962
     // camera name
     #define PARAM_CAMERA_NAME               4 // parameter number for GetParameterData
+    #define CAM_FIRMWARE_MEMINFO            1
 
 	#define REMOTE_SYNC_STATUS_LED 	0xc0220084				// specifies an LED that turns on while camera waits for USB remote to sync
 //----------------------------------------------------------
