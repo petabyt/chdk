@@ -1,0 +1,32 @@
+************************************
+A810 Notes 
+************************************
+Porting thread: http://chdk.setepontos.com/index.php?topic=8450.msg88862#msg88862
+
+To enter CHDK <ALT> mode use the Playback [>] button.
+
+Playback [>] or Help [?] button can be configured as <ALT> mode button.
+
+
+KNOWN BUGS
+**********
+- mkdir using chdkptp returns error
+- Colors of Connect4 are wrong.
+- GetBatteryTemperature() returns always -99° Celsius or -146° Fahrenheit
+- Mute during zoom in/out is not implemented
+- Video Time limit removal is not implemented.
+- AF during video recording is disabled.
+- Motion detection was not tested
+
+
+For Developers
+**************
+- rand() and srand() are not part of original firmware. 
+  They were added in platorm/a810/lib.c to sudoku, Snake, and Mastermind work.
+- AF during video recording is disabled: 
+  http://chdk.setepontos.com/index.php?topic=8450.msg90563#msg90563
+- chdkptp liveview works in all modes, but *vid_get_viewport_live_fb() should be fixed:
+  void *vid_get_viewport_live_fb() {return 0x0;}:
+- hook_raw_image_addr() & hook_alt_raw_image_addr() return the same value
+
+Last Update 2012/09/18
