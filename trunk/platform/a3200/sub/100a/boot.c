@@ -60,32 +60,15 @@ extern void task_PhySw();
 
 void taskHook(context_t **context) {
 
-	task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
+    task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
 
-	// Replace firmware task addresses with ours
-	if(tcb->entry == (void*)task_PhySw)             tcb->entry = (void*)mykbd_task;
-	if(tcb->entry == (void*)task_CaptSeq)           tcb->entry = (void*)capt_seq_task;
-	if(tcb->entry == (void*)task_InitFileModules)   tcb->entry = (void*)init_file_modules_task;
-	if(tcb->entry == (void*)task_MovieRecord)       tcb->entry = (void*)movie_record_task;
-	if(tcb->entry == (void*)task_ExpDrv)            tcb->entry = (void*)exp_drv_task;
+    // Replace firmware task addresses with ours
+    if(tcb->entry == (void*)task_PhySw)             tcb->entry = (void*)mykbd_task;
+    if(tcb->entry == (void*)task_CaptSeq)           tcb->entry = (void*)capt_seq_task;
+    if(tcb->entry == (void*)task_InitFileModules)   tcb->entry = (void*)init_file_modules_task;
+    if(tcb->entry == (void*)task_MovieRecord)       tcb->entry = (void*)movie_record_task;
+    if(tcb->entry == (void*)task_ExpDrv)            tcb->entry = (void*)exp_drv_task;
 }
-
-/*---------------------------------------------------------------------
-  Memory Map:
-    0001900     MEMBASEADDR             start of data - used for initialized vars
-    0011057??                           end of inited data 
-    0011058??                           start of bss - used for zeroed/uninited vars 
-    0xxxxxx                             end of bss 
-    016A88C     MEMISOSTART             start of our data / bss 
-
-    0400000??                           raw buffers
-    8000000??                           end of raw buffers
-
-    C0xxxxxx                            I/O
-
-    FF810000    ROMBASEADDR             start of rom
-    FFFFFFFF                            end of rom
-----------------------------------------------------------------------*/
 
 //** boot  @ 0xFF81000C
 
@@ -104,9 +87,9 @@ asm volatile (
       "MCR     p15, 0, R0, c6, c0 \n"
       "MOV     R0, #0xC000002F \n"
       "MCR     p15, 0, R0, c6, c1 \n"
-      "MOV     R0, #0x33 \n" 			// memory region & size. bits 5:1 = size index, actual size = 2^(size index + 1) = 64MB
+      "MOV     R0, #0x33 \n"
       "MCR     p15, 0, R0, c6, c2 \n"
-      "MOV     R0, #0x40000033 \n" 	// memory region & size. bits 5:1 = size index, actual size = 2^(size index + 1) = 64MB
+      "MOV     R0, #0x40000033 \n"
       "MCR     p15, 0, R0, c6, c3 \n"
       "MOV     R0, #0x80000017 \n"
       "MCR     p15, 0, R0, c6, c4 \n"
@@ -164,7 +147,7 @@ asm volatile (
       "LDR     R1, [R2] \n"
       "ORR     R1, R1, #1 \n"
       "STR     R1, [R2] \n"
-      "LDR     R0, =0xFFC337A8 \n" // canon_data_src
+      "LDR     R0, =0xFFC33798 \n" // canon_data_src
       "LDR     R1, =0x1900 \n"     // MEMBASEADDR
       "LDR     R3, =0xF0AC \n"
 "loc_FF81013C:\n"
@@ -172,25 +155,25 @@ asm volatile (
       "LDRCC   R2, [R0], #4 \n"
       "STRCC   R2, [R1], #4 \n"
       "BCC     loc_FF81013C \n"
-      "LDR     R1, =0x16A88C \n" 		// MEMISOSTART
+      "LDR     R1, =0x16A88C \n"   // MEMISOSTART
       "MOV     R2, #0 \n"
 "loc_FF810154:\n"
       "CMP     R3, R1 \n"
       "STRCC   R2, [R3], #4 \n"
       "BCC     loc_FF810154 \n"
-      "B       sub_FF810358_my \n"	//patched
+//      "B       sub_FF810358 \n" //original
+      "B       sub_FF810358_my \n" //patched
 	);
 }
 
 
 //** sub_FF810358_my  @ 0xFF810358 
 
-void __attribute__((naked,noinline)) sub_FF810358_my(  ) {
+void __attribute__((naked,noinline)) sub_FF810358_my() {
 
 // Hook Canon Firmware Tasks, http://chdk.setepontos.com/index.php/topic,4194.0.html
-   *(int*)0x1938=(int)taskHook;		//ROM @ 0xFF81069C
-   *(int*)0x193C=(int)taskHook;		//ROM @ 0xFF8106DC
-
+   *(int*)0x1938=(int)taskHook;
+   *(int*)0x193C=(int)taskHook;
 
 // Power Button detection (short press = playback mode, long press = record mode) 
 /* a3200 0x24f8 found @ ff85fc00 */
@@ -240,7 +223,7 @@ asm volatile (
       "SUB     SP, SP, #0x74 \n"
       "MOV     R1, #0x74 \n"
       "MOV     R0, SP \n"
-      "BL      sub_FFB58394 \n"
+      "BL      sub_FFB58388 \n"
       "MOV     R0, #0x53000 \n"
       "STR     R0, [SP, #4] \n"
 #if defined(OPT_CHDK_IN_EXMEM)
@@ -407,7 +390,7 @@ asm volatile (
       "BL      sub_FF83C354 \n"
       "BL      CreateTask_spytask\n"	//added
       "BL      taskcreatePhySw_my\n"	//added
-//      "BL      sub_FF83413C \n" 		//removed
+//      "BL      sub_FF83413C \n"       //removed
       "BL      sub_FF837AF4 \n" 
       "BL      sub_FF83C36C \n" 
       "BL      sub_FF831600 \n" 
@@ -435,9 +418,9 @@ asm volatile (
       "MOV     R3, #0 \n"
       "STR     R3, [SP] \n"
 //      "LDR     R3, =0xFF834108 \n" //original. Replaced by mykbd_tasks
-      "LDR     R3, =mykbd_task\n"	//added
+      "LDR     R3, =mykbd_task\n"    //added
 //      "MOV     R2, #0x800 \n"      //original
-      "MOV     R2, #0x2000 \n" 		//patched
+      "MOV     R2, #0x2000 \n"       //patched
       "MOV     R1, #0x17 \n"
       "LDR     R0, =0xFF834390 \n"
       "BL      sub_FF83A3BC \n"
@@ -466,7 +449,7 @@ void CreateTask_spytask() {
 };
 
 
-//** init_file_modules_task  @ 0xFF895844 
+//** init_file_modules_task  @ 0xFF895794 
 
 void __attribute__((naked,noinline)) init_file_modules_task() {
 asm volatile (
@@ -478,7 +461,7 @@ asm volatile (
       "MOVNE   R0, R5 \n"
       "BLNE    sub_FF8915CC \n"
       "BL      sub_FF88D760 \n"
-      "BL      core_spytask_can_start\n"//added
+      "BL      core_spytask_can_start\n"    //added
       "CMP     R4, #0 \n"
       "LDMNEFD SP!, {R4-R6,PC} \n"
       "MOV     R0, R5 \n"

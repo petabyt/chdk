@@ -48,7 +48,7 @@
     #define CAM_DNG_LENS_INFO               { 50,10, 250,10, 28,10, 59,10 } // See comments in camera.h   a3300is
 
     #undef  CAM_SENSOR_BITS_PER_PIXEL
-    #define CAM_SENSOR_BITS_PER_PIXEL       12 //??
+    #define CAM_SENSOR_BITS_PER_PIXEL       12
 
     #undef  CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
@@ -60,23 +60,21 @@
     -12829, 1000000,  530507, 1000000,   50537, 1000000, \
       5181, 1000000,   48183, 1000000,  245014, 1000000
 
-    #define cam_CalibrationIlluminant1      1       // ?? Daylight
+    #define cam_CalibrationIlluminant1      1       // Daylight
 
     #undef  CAM_USES_ASPECT_CORRECTION
-    #define CAM_USES_ASPECT_CORRECTION      1       // ?? camera uses the modified graphics primitives to map screens an viewports to buffers more sized
+    #define CAM_USES_ASPECT_CORRECTION      1       // camera uses the modified graphics primitives to map screens an viewports to buffers more sized
 
     #define CAM_QUALITY_OVERRIDE            1
 
     #define CAM_ZEBRA_ASPECT_ADJUST         1
     #define CAM_ZEBRA_NOBUF                 1		// ??
 
-    #define PARAM_CAMERA_NAME               4       // ?? parameter number for GetParameterData
+    #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
 
-    #undef  CAM_HAS_ERASE_BUTTON    // camera does not have a separate erase button
+    #define CAM_HAS_ND_FILTER               1       //
 
-    #define CAM_HAS_ND_FILTER               1       // ??
-
-    #define CAM_VIDEO_QUALITY_ONLY          1       // ??
+    #define CAM_VIDEO_QUALITY_ONLY          1       //
 
     #define CAM_DATE_FOLDER_NAMING          1       // ??
 
@@ -86,11 +84,15 @@
 
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_VIDEO_CONTROL
-    #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              15      // ??
+    #define CAM_BITMAP_PALETTE              15      //
 
-    #define CHDK_COLOR_BASE                 0x1D    // ??  Start color index for CHDK colors loaded into camera palette.
+    #define CHDK_COLOR_BASE                 0x1D    // Start color index for CHDK colors loaded into camera palette.
 
+    #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
+    #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments    
+    #define CAM_NEED_SET_ZOOM_DELAY          300  // Define to add a delay after setting the zoom position
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
 
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1
