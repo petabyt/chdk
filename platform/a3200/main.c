@@ -58,11 +58,11 @@ int get_zoom_x(int zp) {
 
 long get_vbatt_min()
 {
-	return 3000;  //??
+	return 3050; 
 }
 
 
 long get_vbatt_max()
 {
-	return 4150; //??
+	return 4100; 
 }

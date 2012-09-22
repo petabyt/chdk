@@ -31,7 +31,7 @@ void camera_set_led(int led, int state, int bright) {
 }
 
 int get_flash_params_count(void){
- return 0xa0;	// Found @0xff994830  a3300is
+ return 0xa0;	// Found @0xff9941e4
 }
 
 long vid_get_viewport_height()
@@ -39,12 +39,7 @@ long vid_get_viewport_height()
 	return 240;
 }
 
-/// COMMENT below is from a3300, someone should fix this for a3200
-//Have to disable here and add to /sub for 100a 
-//cause 100d crashes when in shoot mode trying to access Alt menu.
-//Re-Added in /SUB/100a
-//---------------------------------------------------------------
-/*void vid_bitmap_refresh() {
+void vid_bitmap_refresh() {
 	
 	extern int full_screen_refresh;
 	extern void _ScreenUnlock();
@@ -53,7 +48,4 @@ long vid_get_viewport_height()
 	full_screen_refresh |= 3;
 	_ScreenLock();
 	_ScreenUnlock();
-}*/
-
-
-
+}

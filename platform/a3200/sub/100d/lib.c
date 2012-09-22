@@ -1,6 +1,6 @@
 #include "platform.h"
 
-char *hook_raw_image_addr()   
+char *hook_raw_image_addr()
 {
 		return (char*) 0x421316C0;		//Found at FFB210A4 a3200is
 }
@@ -32,8 +32,6 @@ void *vid_get_viewport_fb_d()
 	return (void*)(*(int*)(0x29A0+0x58));     // FF871340 + FF871378  a3200is
 }
 
-
-
 void *vid_get_viewport_live_fb()
 {
 	return (void*)(*(int*)(0x20D0+0x138));		//FF850CA0 + FF850CF0  a3200is
@@ -43,11 +41,4 @@ void *vid_get_viewport_live_fb()
 void *vid_get_viewport_fb()
 {	
 	return (void*)0x40546b80;       // Found @0xffb1db58   a3200is
-}
-
-extern void draw_filled_rect( int, int, int, int, int );
-
-void vid_bitmap_refresh()
-{
-	draw_filled_rect(0, 0, 360, 240, 0x00) ;
 }
