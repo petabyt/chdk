@@ -158,7 +158,7 @@ int _rand(void) {
       "AND     %[result], R1, R0, LSR #0x10 \n"
       : [result]"=r"   (value)
       : [input]"m"  (ptr)
-      : /*No clobbers*/
+      : "r0","r1","r2"
 	);
     return value;
 };
