@@ -129,6 +129,7 @@ enum {
     MODE_BLUR_REDUCTION     , // a800
     MODE_SCN_SOFTFOCUS      , // sx260 asm1989
     MODE_SCN_SMOOTH_SKIN    , // sx260
+    MODE_DIGITAL_IS         , // a810/a2300
 };
 
 #endif
