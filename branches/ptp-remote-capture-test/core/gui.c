@@ -1882,6 +1882,9 @@ static const char* gui_alt_mode_button_enum(int change, int arg)
 #elif defined(CAMERA_a650)
     static const char* names[]={ "Print", "ISO"};
     static const int keys[]={ KEY_PRINT, KEY_ISO };
+#elif defined(CAMERA_a810)
+    static const char* names[]={ "Playback", "Help"};
+    static const int keys[]={ KEY_PRINT, KEY_HELP };
 #elif defined(CAMERA_a3300) || defined(CAMERA_a3200)
     static const char* names[]={ "Print", "Face", "Disp"};
     static const int keys[]={ KEY_PRINT, KEY_FACE, KEY_DISPLAY };
@@ -1909,6 +1912,9 @@ static const char* gui_alt_mode_button_enum(int change, int arg)
 #elif defined(CAMERA_ixus120_sd940) || (CAMERA_ixus100_sd780) || defined(CAMERA_ixus105_sd1300)
     static const char* names[]={ "Display", "Playback" };
     static const int keys[] = {KEY_DISPLAY, KEY_PLAYBACK };
+#elif defined(CAMERA_a1200)
+        static const char* names[]={ "Playback", "Face", "Disp"};
+        static const int keys[]={ KEY_PLAYBACK, KEY_FACE, KEY_DISPLAY };
 #else
 #error camera alt-buttons not defined
 #endif

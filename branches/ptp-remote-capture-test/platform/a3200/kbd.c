@@ -10,38 +10,6 @@ typedef struct {
     long canonkey;
 } KeyMap;
 
-// button and mode dial codes
-// physw [0]
-#define BTN_Play	(0x00002000)//??
-
-// physw [2]
-#define BTN_Up		(0x00000001)
-#define BTN_Down	(0x00000002)
-#define BTN_Left	(0x00000004)
-#define BTN_Right	(0x00000008)
-#define BTN_Set		(0x00000010)
-#define BTN_Disp	(0x00000020)
-#define BTN_Face	(0x00000040)//??
-#define BTN_Menu	(0x00000080)
-
-// the MODE dial is in Gray code
-// the following are informational, not used
-/*
-#define DIAL_Movie	(0x00000600)
-#define DIAL_Discreet	(0x00000200)
-#define DIAL_FishEye	(0x00000000)
-#define DIAL_Scene	(0x00000100)
-#define DIAL_Easy	(0x00000300)
-#define DIAL_Auto	(0x00000700)
-#define DIAL_Live	(0x00000500)
-#define DIAL_Program	(0x00000400)
-*/
-
-#define BTN_ShootHalf	(0x00001000)
-#define BTN_ShootFull	(0x00002000)
-#define BTN_ZoomWide	(0x00004000)
-#define BTN_ZoomTele	(0x00008000)
-
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
@@ -49,25 +17,10 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long last_kbd_key = 0;
 extern void _GetKbdState(long*);
 
-//#define DELAY_TIMEOUT 10000
-
 // override key and feather bits to avoid feather osd messing up chdk display in ALT mode
-#define KEYS_MASK0 (BTN_Play)
-#define KEYS_MASK1 (0x00000000)
-#define KEYS_MASK2 ( \
-            BTN_Up      |\
-            BTN_Down    |\
-            BTN_Left    |\
-            BTN_Right   |\
-            BTN_Set     |\
-            BTN_Disp    |\
-            BTN_Face    |\
-            BTN_Menu    |\
-            BTN_ShootHalf   |\
-            BTN_ShootFull   |\
-            BTN_ZoomWide    |\
-            BTN_ZoomTele     \
-           )
+#define KEYS_MASK0 (0x00002000) //Logic OR of group 0 Keymap values
+#define KEYS_MASK1 (0x00000000) //Logic OR of group 1 Keymap values
+#define KEYS_MASK2 (0x0000F0FF) //Logic OR of group 2 Keymap values
 
 #define SD_READONLY_FLAG    0x00020000 // Found @0xffb5d574, levent 0x90a
 #define USB_MASK            0x04000000 // Found @0xffb5d594, levent 0x902
@@ -85,20 +38,25 @@ int get_usb_bit()
 }
 
 static KeyMap keymap[] = {
-    { 0, KEY_PRINT           ,BTN_Play },
-    { 2, KEY_SHOOT_FULL      ,BTN_ShootFull | BTN_ShootHalf }, // Found @0xffb5d554, levent 0x01
-    { 2, KEY_SHOOT_HALF      ,BTN_ShootHalf }, // Found @0xffb5d54c, levent 0x00
-    { 2, KEY_SHOOT_FULL_ONLY ,BTN_ShootFull }, // Found @0xffb5d554, levent 0x01
-    { 2, KEY_FACE            ,BTN_Face }, //
-    { 2, KEY_UP              ,BTN_Up }, // Found @0xffb5d4f4, levent 0x04
-    { 2, KEY_DOWN            ,BTN_Down }, // Found @0xffb5d4fc, levent 0x05
-    { 2, KEY_LEFT            ,BTN_Left }, // Found @0xffb5d504, levent 0x06
-    { 2, KEY_RIGHT           ,BTN_Right }, // Found @0xffb5d50c, levent 0x07
-    { 2, KEY_SET             ,BTN_Set }, // Found @0xffb5d514, levent 0x08
-    { 2, KEY_DISPLAY         ,BTN_Disp }, // Found @0xffb5d51c, levent 0x0a
-    { 2, KEY_MENU            ,BTN_Menu }, // Found @0xffb5d52c, levent 0x09
-    { 2, KEY_ZOOM_OUT        ,BTN_ZoomWide }, // Found @0xffb5d55c, levent 0x03
-    { 2, KEY_ZOOM_IN         ,BTN_ZoomTele }, // Found @0xffb5d564, levent 0x02
+	// Order IS important. kbd_get_pressed_key will walk down this table  
+	// and take the first matching mask. Notice that KEY_SHOOT_HALF is  
+	// always pressed if KEY_SHOOT_FULL is. --MarcusSt
+    { 0, KEY_PRINT           ,0x00002000 }, //KEY_PLAYBACK as ALT button
+//    { 0, KEY_PLAYBACK        ,0x00002000 }, // Found @0xffb5d4cc, levent 0x601
+//    { 0, KEY_POWER           ,0x00004000 }, // Found @0xffb5d4d4, levent 0x600
+    { 2, KEY_SHOOT_FULL      ,0x00003000 }, // Found @0xffb5d544, levent 0x01
+    { 2, KEY_SHOOT_HALF      ,0x00001000 }, // Found @0xffb5d53c, levent 0x00
+    { 2, KEY_SHOOT_FULL_ONLY ,0x00002000 }, // Found @0xffb5d544, levent 0x01
+    { 2, KEY_FACE            ,0x00000040 }, //
+    { 2, KEY_UP              ,0x00000001 }, // Found @0xffb5d4e4, levent 0x04
+    { 2, KEY_DOWN            ,0x00000002 }, // Found @0xffb5d4ec, levent 0x05
+    { 2, KEY_LEFT            ,0x00000004 }, // Found @0xffb5d4f4, levent 0x06
+    { 2, KEY_RIGHT           ,0x00000008 }, // Found @0xffb5d4fc, levent 0x07
+    { 2, KEY_SET             ,0x00000010 }, // Found @0xffb5d504, levent 0x08
+    { 2, KEY_DISPLAY         ,0x00000020 }, // Found @0xffb5d50c, levent 0x0a
+    { 2, KEY_MENU            ,0x00000080 }, // Found @0xffb5d51c, levent 0x09
+    { 2, KEY_ZOOM_OUT        ,0x00004000 }, // Found @0xffb5d54c, levent 0x03
+    { 2, KEY_ZOOM_IN         ,0x00008000 }, // Found @0xffb5d554, levent 0x02    
     { 0, 0, 0 }
 };
 

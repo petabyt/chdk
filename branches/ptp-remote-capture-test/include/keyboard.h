@@ -49,6 +49,9 @@
 
 #define KEY_POWER           39
 
+//A810/A1300/A2300/A2400/A4000
+#define KEY_HELP            40
+
 #define JOGDIAL_LEFT        100
 #define JOGDIAL_RIGHT       101
 #define FRONTDIAL_LEFT      102

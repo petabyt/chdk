@@ -24,6 +24,8 @@ Up - Manual Focus (On / Off)
 In ALT + Manual mode:
 Display - Sets Infinity Focus
 Down - Sets HyperFocal Focus
+
+WORKING:
 -------
 Adjustable Alt button supported.
 -------
@@ -40,14 +42,13 @@ ifeq ($(KEYSYS), d3enc)
     FI2KEY=6F....71
     FI2IV =53....3D
 endif
+-------
+Fast EV Switch
 
 PLEASE TEST:
 -------
 SDHC multi-partition boot and swap supported. (Tested with 2GB SD (2MB  FAT12 and FAT32 the rest), can someone test it with a larger card 8GB, 16GB...)
 
 NOT WORKING:
-Enable Fast EV Switch: activates ISO/Continous mode
-!Workaround:
-http://chdk.setepontos.com/index.php/topic,2501.msg23321.html#msg23321
 -------
 Video: fast video control (on Left (Pause) camera hangs), disabled, not supported?
