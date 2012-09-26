@@ -20,12 +20,14 @@ if (p[0]==0xFF96193C)  p[0]=(int)movie_record_task;
 if (p[0]==0xFF898364)  p[0]=(int)init_file_modules_task;
 if (p[0]==0xFF8C0ED0)  p[0]=(int)exp_drv_task;
 if (p[0]==0xFF85E508)  p[0]=(int)JogDial_task_my;
+if (p[0]==0xFFA791B0)  p[0]=(int)filewritetask;
 }
 
 void taskCreateHook2(int *p) { 
 p-=17;
 if (p[0]==0xFF898364)  p[0]=(int)init_file_modules_task;
 if (p[0]==0xFF8C0ED0)  p[0]=(int)exp_drv_task;
+if (p[0]==0xFFA791B0)  p[0]=(int)filewritetask;
 }
 
 void __attribute__((naked,noinline)) boot() {

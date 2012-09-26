@@ -1261,10 +1261,6 @@ asm volatile (
       "    ADD     R6, R4, #0x38 \n"        // file name
       "    LDR     R5, [R4, #0xC] \n" 
 //place hook here
-//the task's data block is at [r4] at this point, filename starts at [r4+0x2c]
-//the block can be captured here for a (new) camera with unknown data block structure
-//for ptp remote capture, return fake file handle (255) when done and jump to 0xFFDC1C28
-//if writing does not need to be prevented, just continue
       "STMFD SP!, {R4-R12,LR}\n"
       "ADD R1, R4, #0x14\n" //data chunk definitions start here
       "ADD R0, R4, #0x38\n" //name starts here
@@ -1333,7 +1329,7 @@ asm volatile (
 }
 
 
-void __attribute__((naked,noinline)) sub_FFA79414_my(  ) {
+void __attribute__((naked,noinline)) sub_FFA79414_my(  ) { // write
 asm volatile (
       "    STMFD   SP!, {R4-R10,LR} \n" 
       "    MOV     R4, R0 \n" 
@@ -1413,7 +1409,7 @@ asm volatile (
 }
 
 
-void __attribute__((naked,noinline)) sub_FFA78E8C_my(  ) {
+void __attribute__((naked,noinline)) sub_FFA78E8C_my(  ) { // close
 asm volatile (
       "    STMFD   SP!, {R4-R6,LR} \n" 
       "    LDR     R5, =0xB414 \n" 
