@@ -42,7 +42,6 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
     }
 #endif
 
-    raw_save_stage = RAWDATA_AVAILABLE;
 #ifdef CAM_CHDK_PTP_REMOTESHOOT
     if ( remotecap_get_target() != 0 ) //remote redirection
     {
@@ -54,6 +53,7 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
     else
 #endif //CAM_CHDK_PTP_REMOTESHOOT
     {
+        raw_save_stage = RAWDATA_AVAILABLE;
         core_rawdata_available(); //notifies spytask in core/main.c
         while (raw_save_stage != RAWDATA_SAVED){
         _SleepTask(10);
@@ -117,7 +117,7 @@ ASM_SAFE("BL _wait_until_remote_button_is_released\n")
 
 void hook_raw_save_complete()
 {
-    raw_save_stage = RAWDATA_SAVED; //spytask notifies about the finished raw save procedure
+    raw_save_stage = RAWDATA_SAVED;
 }
 
 void __attribute__((naked,noinline)) capt_seq_hook_set_nr()

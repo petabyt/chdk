@@ -668,7 +668,9 @@ static int handle_ptp(
         char *rcgd_addr;
 
         rcgd_notlast = remotecap_get_data_chunk(param2, &rcgd_addr, &rcgd_size); // returns "not last chunk"
-        ptp.num_param = 2;
+        ptp.num_param = 4;
+        ptp.param3 = 0; //TODO write offset (!), latest cameras are nasty
+        ptp.param4 = (unsigned int)rcgd_addr; //return mem address as additional info
         if ( (rcgd_addr==0) || (rcgd_size==0) ) {
             // send dummy data, otherwise error hoses connection
             send_ptp_data(data,"\0",1);
