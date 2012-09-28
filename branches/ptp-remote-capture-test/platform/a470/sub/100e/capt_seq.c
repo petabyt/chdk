@@ -911,7 +911,7 @@ asm volatile (
       "    LDR     R0, [R4] \n" 
       "    CMN     R0, #1 \n" 
       "    BEQ     loc_FFDC0F68 \n" 
-      "    BL      sub_FFC13B5C \n" 
+      "    BL      fwt_close\n"         // mod! sub_FFC13B5C Close
       "    MVN     R0, #0 \n" 
       "    STR     R0, [R4] \n" 
       "    LDR     R0, =0x7BA14 \n" 
@@ -949,25 +949,16 @@ asm volatile (
       "    ADD     R6, R4, #0x2C \n" 
       "    LDR     R5, [R4, #0xC] \n" 
 //place hook here
-//the task's data block is at [r4] at this point, filename starts at [r4+0x2c]
-//the block can be captured here for a (new) camera with unknown data block structure
-//for ptp remote capture, return fake file handle (255) when done and jump to 0xFFDC11EC
-//if writing does not need to be prevented, just continue
       "STMFD SP!, {R4-R12,LR}\n"
       "ADD R1, R4, #0x14\n" //data chunk definitions start here
       "ADD R0, R4, #0x2c\n" //name starts here
       "BL filewrite_main_hook\n"
       "LDMFD SP!, {R4-R12,LR}\n"
-      "LDR R0, =ignore_current_write\n"
-      "LDR R0, [R0]\n"
-      "CMP R0, #0\n"
-      "MOVNE R0, #0xff\n"
-      "LDRNE PC, =0xFFDC11EC\n"
 //hook end
       "    MOV     R0, R6 \n" 
       "    MOV     R1, R7 \n" 
       "    MOV     R2, R8 \n" 
-      "    BL      sub_FFC13B34 \n" 
+      "    BL      fwt_open\n"  // mod! sub_FFC13B34 Open
 //
       "LDR PC, =0xffdc118c\n" //+ continue in ROM
 //      "    CMN     R0, #1 \n" // rom:ffdc118c
@@ -1018,19 +1009,11 @@ asm volatile (
       "    RSBNE   R0, R0, #0x1000000 \n" 
       "    CMPNE   R8, R0 \n" 
       "    MOVHI   R8, R0 \n" 
-//mod start
-      "LDR R0, =ignore_current_write\n"
-      "LDR R0, [R0]\n"
-      "CMP R0, #0\n"
-      "MOVNE R0, R8\n" //"everything's written"
-      "BNE loc_ffdc1328\n" //jump past Write (in RAM, because there are jump targets before this location)
-//mod end
       "    LDR     R0, [R9] \n" 
       "    MOV     R2, R8 \n" // nr of bytes to be written
       "    MOV     R1, R7 \n" 
-      "    BL      sub_FFC13C08 \n" // Write
-"loc_ffdc1328:\n" //+
-      "    LDR     R1, [R4, #4] \n" // rom:ffdc1328
+      "    BL      fwt_write\n"     // mod! sub_FFC13C08 Write
+      "    LDR     R1, [R4, #4] \n"
       "    CMP     R8, R0 \n" 
       "    ADD     R1, R1, R0 \n" 
       "    STR     R1, [R4, #4] \n" 
@@ -1067,16 +1050,7 @@ asm volatile (
       "    SUB     SP, SP, #0x1C \n" 
       "    CMN     R0, #1 \n" 
       "    BEQ     loc_FFDC13B8 \n" 
-//mod start
-      "LDR R1, =ignore_current_write\n"
-      "LDR R1, [R1]\n"
-      "CMP R1, #0\n"
-      "MOVNE R0, #0\n" //"close OK"
-      "LDRNE R1, =ignore_current_write\n"
-      "STRNE R0, [R1]\n" //also disarm flag
-      "LDRNE PC, =0xffdc13a4\n" //jump past Close (in ROM)
-//mod end
-      "    BL      sub_FFC13B5C \n" // Close
+      "    BL      fwt_close\n" // mod! sub_FFC13B5C Close
       "    CMP     R0, #0 \n" // rom:ffdc13a4
       "    LDRNE   R0, =0x9200003 \n" 
       "    STRNE   R0, [R4, #0x10] \n" 

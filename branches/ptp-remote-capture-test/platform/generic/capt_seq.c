@@ -17,6 +17,7 @@
 static long raw_save_stage;
 volatile long shutter_open_time=0;      // for DNG EXIF creation
 volatile long shutter_open_tick_count;  // for DNG EXIF creation
+static int imagesavecomplete=1;
 
 #ifdef CAM_CHDK_PTP_REMOTESHOOT
 #include "remotecap.h"
@@ -27,6 +28,12 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
 {
  asm volatile("STMFD   SP!, {R0-R12,LR}\n");
 
+#ifdef CAM_HAS_FILEWRITETASK_HOOK
+#ifdef CAM_DRYOS
+    imagesavecomplete=0; // TODO is there a better place to do this?
+#endif //CAM_DRYOS
+#endif //CAM_HAS_FILEWRITETASK_HOOK
+ 
 #ifdef PAUSE_FOR_FILE_COUNTER
     // Some cameras need a slight delay for the file counter to be updated correctly
     // before raw_savefile tries to get the file name & directory.
@@ -144,3 +151,63 @@ void __attribute__((naked,noinline)) capt_seq_hook_set_nr()
  asm volatile("LDMFD   SP!, {R0-R12,PC}\n");
 }
 
+#ifdef CAM_HAS_FILEWRITETASK_HOOK
+// wrapper functions for use in filewritetask
+#ifdef CAM_DRYOS
+void __attribute__((naked,noinline)) fwt_open () {
+/*
+ * R3 is free to use
+ */
+asm volatile (
+      "LDR R3, =ignore_current_write\n"
+      "LDR R3, [R3]\n"
+      "CMP R3, #0\n"
+      "MVNNE R0, #0x2\n"   // fake, invalid file descriptor
+      "BXNE LR\n"
+      "BEQ _Open\n"        // no interception
+    );
+}
+
+void __attribute__((naked,noinline)) fwt_write () {
+/*
+ * R3 is free to use
+ */
+asm volatile (
+      "LDR R3, =ignore_current_write\n"
+      "LDR R3, [R3]\n"
+      "CMP R3, #0\n"
+      "MOVNE R0, R2\n"     // "everything's written"
+      "BXNE LR\n"
+      "BEQ _Write\n"       // no interception
+    );
+}
+
+void __attribute__((naked,noinline)) fwt_close () {
+/*
+ * R1, R2, R3 is free to use
+ */
+asm volatile (
+      "LDR R2, =ignore_current_write\n"
+      "LDR R3, [R2]\n"
+      "CMP R3, #0\n"
+      "MOVNE R0, #0\n"      // return 0
+      "STRNE R0, [R2]\n"    // also disarm flag
+      "BLEQ _Close\n"        // no interception
+    );
+
+asm volatile (
+      "LDR R2, =imagesavecomplete\n"
+      "MOV R1, #1\n"      
+      "STR R1, [R2]\n"    // image saved TODO: check for multiple runs of filewritetask!
+    );
+
+asm volatile (
+      "BX LR\n"
+    );
+}
+#endif //CAM_DRYOS
+#endif //CAM_HAS_FILEWRITETASK_HOOK
+
+int is_image_save_complete() {
+    return imagesavecomplete;
+}

@@ -1119,57 +1119,11 @@ void __attribute__((naked,noinline)) sub_FF8B079C_my()
         "LDRNE   R0, =0xFF8B05A0\n"
         "BNE     sub_FF81E88C\n"
         "LDMFD   SP!, {R4-R6,PC}\n"
+        ".ltorg"
      );
 };
 
 // ************ filewritetask *************
-
-void __attribute__((naked,noinline)) fwt_open () {  //wrapper for Open() aka sub_FF8353BC
-/*
- * R3 is free to use
- */
-asm volatile (
-      "LDR R3, =ignore_current_write\n"
-      "LDR R3, [R3]\n"
-      "CMP R3, #0\n"
-      "MVNNE R0, #0x2\n"   // fake, invalid file descriptor
-      "MOVNE PC, LR\n"
-      "BEQ _Open\n"        // no interception
-      ".ltorg"
-    );
-}
-
-
-void __attribute__((naked,noinline)) fwt_write () { //wrapper for Write() aka sub_FF8354A4
-/*
- * R3 is free to use
- */
-asm volatile (
-      "LDR R3, =ignore_current_write\n"
-      "LDR R3, [R3]\n"
-      "CMP R3, #0\n"
-      "MOVNE R0, R2\n"     // "everything's written"
-      "MOVNE PC, LR\n"
-      "BEQ _Write\n"       // no interception
-    );
-}
-
-
-void __attribute__((naked,noinline)) fwt_close () { //wrapper for Close() aka sub_FF835414
-/*
- * R1, R2, R3 is free to use
- */
-asm volatile (
-      "LDR R2, =ignore_current_write\n"
-      "LDR R3, [R2]\n"
-      "CMP R3, #0\n"
-      "MOVNE R0, #0\n"      // return 0
-      "STRNE R0, [R2]\n"    // also disarm flag
-      "MOVNE PC, LR\n"
-      "BEQ _Close\n"        // no interception
-    );
-}
-
 
 void __attribute__((naked,noinline)) filewritetask () { //sub_FFA78FF4
 asm volatile (

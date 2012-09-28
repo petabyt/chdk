@@ -81,6 +81,10 @@ int filewrite_get_jpeg_chunk(char **ardr,unsigned *size, unsigned n);
 
 void remotecap_raw_available(void) {
     filenumforptp = get_target_file_num(); // need to get this here for consistency
+// TODO this should probably just be noop if hook doesn't exist
+#ifdef CAM_HAS_FILEWRITETASK_HOOK
+    filewrite_set_discard_jpeg(1);
+#endif
     if(!(remote_file_target & PTP_CHDK_CAPTURE_RAW)) {
         hook_wait[0] = 0; // don't block capt_seq task
         return;
@@ -105,10 +109,6 @@ void remotecap_raw_available(void) {
         rawchunk[0].length=linecount*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8;
     }
     rawcurrchnk=0;
-// TODO this should probably just be noop if hook doesn't exist
-#ifdef CAM_HAS_FILEWRITETASK_HOOK
-    filewrite_set_discard_jpeg(1);
-#endif
     remotecap_set_available_data_type(PTP_CHDK_CAPTURE_RAW); //notifies ptp code in core/ptp.c, first thing to happen
 }
 

@@ -299,6 +299,7 @@ int shooting_in_progress();
 int shooting_is_flash();
 int shooting_is_flash_ready();
 short shooting_get_flash_mode();
+int is_image_save_complete();
 
 
 /******************************************************************/
