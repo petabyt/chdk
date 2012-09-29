@@ -22,12 +22,7 @@
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff89353c -> ff88fde8 -> ff98d574 -> ffac135c -> ffbe5148
-// Current modemap entry not found in firmware - MODE_SCN_POSTER_EFFECT    8734
-// Current modemap entry not found in firmware - MODE_SCN_SUPER_VIVID      8742
-// Current modemap entry not found in firmware - MODE_SCN_MONOCHROME       8754
-// Current modemap entry not found in firmware - MODE_SCN_TOY_CAMERA       8751
-// Current modemap entry not found in firmware - MODE_SCN_MINIATURE        8748
-// Current modemap entry not found in firmware - MODE_SCN_FISHEYE          8747
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00032914) // Found @0xff834658
@@ -110,7 +105,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff836778) //  1
 NSTUB(DeleteFile_Fut                          ,0xff836694) //112
 NSTUB(DoAFLock                                ,0xff8384c8) //102
 NSTUB(EnterToCompensationEVF                  ,0xff838724) //104
-NSTUB(ExecuteEventProcedure                   ,0xff886db8) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff886db8) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff838768) //104
 NSTUB(ExitTask                                ,0xff81ec40) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff846c78) //104
