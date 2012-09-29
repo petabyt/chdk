@@ -216,6 +216,8 @@
     #undef  CAM_ZOOM_ASSIST_BUTTON_CONTROL      // Activate menu option to enable/disable the zoom assist button on the SX30/SX40
                                                 // For other cameras, requires additional support code in kbd.c (see the SX30 or SX40 version)
 
+    #undef  CAM_MISSING_RAND                    // Define this if srand()/rand() functions not found in firmware (a810/a2300)
+
 //----------------------------------------------------------
 // Overridden values for each camera
 //----------------------------------------------------------

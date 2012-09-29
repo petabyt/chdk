@@ -113,6 +113,7 @@
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202   // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
+    #define CAM_MISSING_RAND                 1    // srand()/rand() functions not found in firmware. If defined, CHDK use functions implemented in C
 
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// TODO specifies an LED that turns on while camera waits for USB remote to sync
 
