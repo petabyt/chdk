@@ -17,10 +17,6 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long last_kbd_key = 0;
 static long alt_mode_key_mask = 0x000C0000;	// disp + set
 
-static int usb_power=0;
-static int remote_key, remote_count;
-static int shoot_counter=0;
-
 extern void _GetKbdState(long*);
 
 #define DELAY_TIMEOUT 10000
@@ -135,20 +131,17 @@ void my_kbd_read_keys() {
 		physw_status[2] = (kbd_new_state[2] | KEYS_MASK2) & (~KEYS_MASK2 | kbd_mod_state[2]);
 	}
 	
-	remote_key = (physw_status[2] & USB_MASK)==USB_MASK;
 	
-	if (remote_key)
-		remote_count += 1;
-	else if (remote_count) {
-		usb_power = remote_count;
-		remote_count = 0;
-	}
-	
-	if (conf.remote_enable) {
-		physw_status[2] = physw_status[2] & ~(SD_READONLY_FLAG | USB_MASK);   // override USB and SD-Card Readonly Bits
-    }																		 
-	
-	physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;   // override SD-Card Readonly Bit
+        //usb_remote_key(physw_status[USB_IDX]) ;
+        usb_remote_key() ;
+
+        if (conf.remote_enable) {
+                physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
+        } else {
+                physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
+        }
+
+
 }
 
 

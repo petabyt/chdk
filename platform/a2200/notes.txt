@@ -11,7 +11,7 @@ To put camera in Auto Focus Lock (AFL), half press SHUTTER + LEFT button combina
 ****************************************
 Development notes:
 
-Override Subj. Dist. only works if camera is put in AFL mode and then use a script to take the picture.
+Override Subj. Dist. only works if camera is put in AFL.
 
 Other overrides (eg. Shutter speed) might need AFL mode too, or at least wait untill Auto Focus finishes, or they might be ignored.
 
@@ -24,8 +24,6 @@ Version specific notes:
 	To shoot images with lua over PTP, first put the camera in "mode 1" and back to "mode 0" before using it normaly or it might crash.
 	
 * 100D
-	
-	If compiled with PTP, using lua scripts on camera might crash it, BASIC scripts work fine. Lua over PTP also works fine.
 	
 	To shoot images with lua over PTP, first put the camera in "mode 1" and back to "mode 0" before using it normaly or it might crash.
 	

@@ -62,7 +62,8 @@ void *vid_get_viewport_fb() {
 		
 void *vid_get_viewport_fb_d() {
 	
-	return (void*)(*(int*)(0x3C70+0x58));	// Found @0xFF871344 + @0xFF871376
+
+	return (void*)(*(int*)(0x29a0+0x58));	// Found @0xff871344 & 0xff87137c
 }		
 
 //void vid_bitmap_refresh() {

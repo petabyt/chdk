@@ -57,6 +57,15 @@
 	
 	#define cam_CalibrationIlluminant1	1	// Daylight
 	
+	#undef CAM_SCREEN_WIDTH
+	#define CAM_SCREEN_WIDTH	360
+    #undef CAM_SCREEN_HEIGHT
+    #define CAM_SCREEN_HEIGHT	240
+    #undef CAM_BITMAP_WIDTH
+    #define CAM_BITMAP_WIDTH	720
+    #undef CAM_BITMAP_HEIGHT
+    #define CAM_BITMAP_HEIGHT	240
+	
 	#undef 	CAM_USES_ASPECT_CORRECTION
 	#define	CAM_USES_ASPECT_CORRECTION	1	//camera uses the modified graphics primitives to map screens an viewports to buffers more sized
 	
@@ -94,6 +103,12 @@
 
 	#define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
 	#define CHDK_COLOR_BASE                 0xA2    // Start color index for CHDK colors loaded into camera palette.
+	
+	//#define CAM_CAN_SD_OVER_IN_AF_LOCK      1   // Camera allows subject distance (focus) override when in AF Lock mode
+	#undef  CAM_CAN_SD_OVER_NOT_IN_MF
+	#define CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY 1		//exact meaning: SD override works in AF lock or movie mode
+	
+	#define CAM_SHOW_OSD_IN_SHOOT_MENU	1
 	
 	// Not sure values
 	//

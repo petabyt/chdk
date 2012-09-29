@@ -31,25 +31,25 @@ void camera_set_led(int led, int state, int bright) {
 	_LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
 
-long vid_get_bitmap_screen_width() {
-			
-	return 360;
-}
-
-long vid_get_bitmap_screen_height() {
-			
-	return 240;
-}
-
-long vid_get_bitmap_buffer_width() {
-			
-	return 720;			// Found @0xFF912C28 (1.00B)
-}	
-
-long vid_get_bitmap_buffer_height() {
-			
-	return 240;			// Found @0xFF912C2C (1.00B)
-}
+//long vid_get_bitmap_screen_width() {
+//			
+//	return 360;
+//}
+//
+//long vid_get_bitmap_screen_height() {
+//			
+//	return 240;
+//}
+//
+//long vid_get_bitmap_buffer_width() {
+//			
+//	return 720;			// Found @0xFF912C28 (1.00B)
+//}	
+//
+//long vid_get_bitmap_buffer_height() {
+//			
+//	return 240;			// Found @0xFF912C2C (1.00B)
+//}
 
 //int vid_get_viewport_buffer_width() {
 //	
@@ -144,3 +144,18 @@ void load_chdk_palette() {
     }
 }
 
+int vid_get_palette_type() {
+	
+	return 3;
+}
+
+int vid_get_palette_size() {
+	
+	return 256 * 4;
+}
+
+void *vid_get_bitmap_active_buffer()
+{
+
+	return (void*)(*(int*)(0x560C+0x18)); // found @ FF912D5C: A2200 100b & 100d
+}

@@ -61,8 +61,8 @@ const ShutterSpeed shutter_speeds_table[] = {
 	{  31,  992, "1/1250",  800 },
 	{  32, 1024, "1/1600",  625 },
 	{  33, 1056, "1/2000",  500 },
-//	{  34, 1088, "1/2500",  400 },
-//	{  35, 1120, "1/3200",  313 },
+	{  34, 1088, "1/2500",  400 },
+	{  35, 1120, "1/3200",  313 },
 };
 
 const ISOTable iso_table[] = {
@@ -93,15 +93,15 @@ const CapturemodeMap modemap[] = {
 	{ MODE_SCN_LONG_SHUTTER,	16390 },
 	{ MODE_SCN_FACE_SELF_TIMER,	16936 },
 	{ MODE_SCN_WINK_SELF_TIMER,	16938 },
-	{ MODE_SCN_FISHEYE,			8747 },	// not found in stub_entry.S - efect mode - fish eye
-	{ MODE_SCN_MINIATURE,		8748 },	// not found in stub_entry.S - efect mode - miniature
-	{ MODE_SCN_TOY_CAMERA,		8751 },	// not found in stub_entry.S - efect mode - toy camera
-	{ MODE_SCN_MONOCHROME,		8754 },	// not found in stub_entry.S - efect mode - monochrome
-	{ MODE_SCN_SUPER_VIVID,		8742 },	// not found in stub_entry.S - efect mode - super vivid
-	{ MODE_SCN_POSTER_EFFECT,	8734 },	// not found in stub_entry.S - efect mode - poster efect
+	{ MODE_SCN_FISHEYE,			 8747 },
+	{ MODE_SCN_MINIATURE,		 8748 },
+	{ MODE_SCN_TOY_CAMERA,		 8751 },
+	{ MODE_SCN_MONOCHROME,		 8754 },
+	{ MODE_SCN_SUPER_VIVID,		 8742 },
+	{ MODE_SCN_POSTER_EFFECT,	 8743 },
 	{ MODE_DISCREET,			32817 },
-	{ MODE_VIDEO_STD,			2621 },
-	{ MODE_VIDEO_MINIATURE,		2627 },
+	{ MODE_VIDEO_STD,			 2621 },
+	{ MODE_VIDEO_MINIATURE,		 2627 },
 } ;	
 
 #include "../generic/shooting.c"
