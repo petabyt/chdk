@@ -440,7 +440,11 @@ int screen_opened(void);
 // 0 not rotated, non-zero rotated
 int screen_rotated(void);
 #endif
-
+/******************************************************************/
+//experimental
+int register_pt_hooks();
+void supported_pt_completefilewrite();
+void image_save_completed();
 /******************************************************************/
 void clear_values();
 /******************************************************************/

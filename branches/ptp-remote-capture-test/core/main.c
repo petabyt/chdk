@@ -341,6 +341,10 @@ void core_spytask()
 #endif
 
     shooting_init();
+    if ( !register_pt_hooks() )
+    {
+        supported_pt_completefilewrite();
+    }
 
     while (1)
     {

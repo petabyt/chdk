@@ -18,21 +18,21 @@ static long raw_save_stage;
 volatile long shutter_open_time=0;      // for DNG EXIF creation
 volatile long shutter_open_tick_count;  // for DNG EXIF creation
 static int imagesavecomplete=1;
+static int no_pt_completefilewrite=1;
 
 #ifdef CAM_CHDK_PTP_REMOTESHOOT
 #include "remotecap.h"
 static int ignore_current_write=0; //used by the platform routine to check whether to write the current file
-#endif
+#ifdef CAM_DRYOS
+volatile int current_write_ignored=0; //needed to prevent nasty surprises with the current override code
+#endif //CAM_DRYOS
+#endif //CAM_CHDK_PTP_REMOTESHOOT
 
 void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
 {
  asm volatile("STMFD   SP!, {R0-R12,LR}\n");
 
-#ifdef CAM_HAS_FILEWRITETASK_HOOK
-#ifdef CAM_DRYOS
-    imagesavecomplete=0; // TODO is there a better place to do this?
-#endif //CAM_DRYOS
-#endif //CAM_HAS_FILEWRITETASK_HOOK
+    imagesavecomplete=no_pt_completefilewrite; // TODO is there a better place to do this?
  
 #ifdef PAUSE_FOR_FILE_COUNTER
     // Some cameras need a slight delay for the file counter to be updated correctly
@@ -162,6 +162,8 @@ asm volatile (
       "LDR R3, =ignore_current_write\n"
       "LDR R3, [R3]\n"
       "CMP R3, #0\n"
+      "LDRNE R2, =current_write_ignored\n" // safe, as Open() won't be called
+      "STRNE R3, [R2]\n"
       "MVNNE R0, #0x2\n"   // fake, invalid file descriptor
       "BXNE LR\n"
       "BEQ _Open\n"        // no interception
@@ -173,7 +175,7 @@ void __attribute__((naked,noinline)) fwt_write () {
  * R3 is free to use
  */
 asm volatile (
-      "LDR R3, =ignore_current_write\n"
+      "LDR R3, =current_write_ignored\n"
       "LDR R3, [R3]\n"
       "CMP R3, #0\n"
       "MOVNE R0, R2\n"     // "everything's written"
@@ -187,26 +189,45 @@ void __attribute__((naked,noinline)) fwt_close () {
  * R1, R2, R3 is free to use
  */
 asm volatile (
-      "LDR R2, =ignore_current_write\n"
+      "STR LR, [SP, #-4]!\n"
+      "LDR R2, =current_write_ignored\n"
       "LDR R3, [R2]\n"
       "CMP R3, #0\n"
       "MOVNE R0, #0\n"      // return 0
-      "STRNE R0, [R2]\n"    // also disarm flag
       "BLEQ _Close\n"        // no interception
     );
-
+/*
+ * following operations depend on whether the overridden PT_CompleteFileWrite is available
+ */
 asm volatile (
-      "LDR R2, =imagesavecomplete\n"
-      "MOV R1, #1\n"      
-      "STR R1, [R2]\n"    // image saved TODO: check for multiple runs of filewritetask!
-    );
-
-asm volatile (
+      "LDR R3, =no_pt_completefilewrite\n"
+      "LDR R1, [R3]\n"
+      "CMP R1, #0\n"
+      "LDRNE R3, =imagesavecomplete\n"
+      "MOVNE R1, #1\n"      
+      "STRNE R1, [R3]\n"    // image saved TODO: check for multiple runs of filewritetask!
+      "MOVNE R1, #0\n"
+      "LDRNE R2, =ignore_current_write\n"
+      "STRNE R1, [R2]\n"
+      "LDR LR, [SP], #4\n"
       "BX LR\n"
     );
 }
 #endif //CAM_DRYOS
 #endif //CAM_HAS_FILEWRITETASK_HOOK
+
+void supported_pt_completefilewrite() {
+    no_pt_completefilewrite=0;
+}
+
+void image_save_completed() {
+/* 
+ * only called from the overridden PT_CompleteFileWrite eventproc
+ * it should handle RAW+JPEG correctly, TODO: extend the filewritetask hook and the protocol...
+ */
+    imagesavecomplete = 1;
+    ignore_current_write = 0;
+}
 
 int is_image_save_complete() {
     return imagesavecomplete;
