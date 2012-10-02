@@ -56,6 +56,3 @@ Why would I want to use CHDK?
 
 What are scripts? Scripts are BASIC language programs that give you the ability to control the operation of the camera under program control. They have been used to add or extend the native capability of the camera: more flexible intervalometers, extended-range exposure compensation, extended bracketing ability, lightning photography, etc. See the script pages for more details.
 
-
-(to be expanded)
-

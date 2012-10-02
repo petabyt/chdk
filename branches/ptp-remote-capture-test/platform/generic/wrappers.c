@@ -1561,6 +1561,25 @@ void dbg_printf(char *fmt,...) {
 #endif
 }
 
+#ifdef CAM_MISSING_RAND
+/* Some cameras does not have srand()/rand() functions in firmware, and should be aded here.
+E.G. a810/a2300
+*/
+static unsigned int random_variable;
+void *_srand(unsigned int seed) {
+    random_variable = seed;
+    return (void *) &random_variable;
+}
+
+int _rand(void) {
+    int value;
+    value = random_variable*0x41C64E6D+0x3039;
+    random_variable = value;
+    value = (0x7FFF & (value>>0x10));
+    return value;
+};
+#endif
+
 // experimental
 int overridden_PT_CompleteFileWrite() {
     //_LogPrintf(0x120,"my_PT_CompleteFileWrite");

@@ -134,31 +134,3 @@ void *vid_get_bitmap_active_buffer()
 {
     return (void*)(*(int*)(0x5400+0x18)); //found @ loc_ff909bb0 a810 100b
 }
-
-// Funtion missing in a810, necessary for games
-static unsigned int random_variable;
-void *_srand(unsigned int seed) {
-    random_variable = seed;
-    return (void *) &random_variable;
-}
-
-int _rand(void) {
-    int value;
-    void * ptr = (void*) (&random_variable);
-    
-    asm volatile (
-      "LDR     R1, %[input] \n"
-      "LDR     R2, =0x41C64E6D \n"
-      "LDR     R0, [R1] \n"
-      "MUL     R0, R2, R0 \n"
-      "ADD     R0, R0, #0x3000 \n"
-      "ADD     R0, R0, #0x39 \n"
-      "STR     R0, [R1] \n"
-      "MVN     R1, #0x8000 \n"
-      "AND     %[result], R1, R0, LSR #0x10 \n"
-      : [result]"=r"   (value)
-      : [input]"m"  (ptr)
-      : "r0","r1","r2"
-	);
-    return value;
-};
