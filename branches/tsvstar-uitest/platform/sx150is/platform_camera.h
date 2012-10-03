@@ -97,11 +97,15 @@
                                                           // Used to enabled bracketing in custom timer, required on many recent cameras
                                                           // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-	#define CAM_DETECT_SCREEN_ERASE                     1 // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
+    #define CAM_DETECT_SCREEN_ERASE                     1 // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                             0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
 
-	#define REMOTE_SYNC_STATUS_LED 	0xC0220014		// specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED                      0xC0220014		// specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_USE_ALT_SET_ZOOM_POINT                  1   // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_USE_ALT_PT_MoveOpticalZoomAt            1   // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
+
 	
 //----------------------------------------------------------

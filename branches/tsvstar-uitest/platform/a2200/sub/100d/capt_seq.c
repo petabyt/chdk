@@ -73,10 +73,11 @@ asm volatile (
 "	 BL		 sub_FF8790BC \n"
 "	 BL		 shooting_expo_param_override \n"// added
 "	 BL		 sub_FF876588 \n"
-"    LDR     R0, [R5, #0x28] \n" 
-"    CMP     R0, #0 \n" 
-"    BLNE    sub_FF968FB0 \n" 
-
+"	 MOV	 R0, #0 \n"						// might be needed to fixes overrides behavior
+"	 STR	 R0, [R5, #0x28] \n"			// uncomment these two and coment out next three lines
+//"    LDR     R0, [R5, #0x28] \n"			// Above two lines make this code redundant 
+//"    CMP     R0, #0 \n" 					// Above two lines make this code redundant
+//"    BLNE    sub_FF968FB0 \n" 			// Above two lines make this code redundant
 
 "    B       loc_FF878B58 \n" 
 "loc_FF8789D8:\n"

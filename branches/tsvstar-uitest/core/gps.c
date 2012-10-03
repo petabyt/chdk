@@ -51,8 +51,8 @@ char g_d_tim[10];
 char g_d_dat[12];
 char g_d_tim_gps[10];
 char g_d_dat_gps[12];
-int g_d_lat_ref;
-int g_d_lon_ref;
+//int g_d_lat_ref;
+//int g_d_lon_ref;
 
 int bild_ohne_signal=0;
 int zeit_bis_ende=0;
@@ -204,11 +204,11 @@ void gps_get_data(){
 		t=time(NULL);
 		ttm = localtime(&t);
 
-		g_d_lat_ref = gps.latitudeRef;
+//		g_d_lat_ref = gps.latitudeRef;
 		g_d_lat=0.0;
 		g_d_lat=(gps.latitude[0]/(gps.latitude[1]*1.0)) + (gps.latitude[2]/(gps.latitude[3]*60.0)) + (gps.latitude[4]/(gps.latitude[5]*3600.0));
 
-		g_d_lon_ref=gps.longitudeRef;
+//		g_d_lon_ref=gps.longitudeRef;
 		g_d_lon=0.0;
 		g_d_lon=(gps.longitude[0]/(gps.longitude[1]*1.0)) + (gps.longitude[2]/(gps.longitude[3]*60.0)) + (gps.longitude[4]/(gps.longitude[5]*3600.0));
 
@@ -1348,8 +1348,9 @@ void init_gps_trackback_task(){
 	g_d_lon_nav=0.0;
 	g_d_lon_nav=(longi[0]/(longi[1]*1.0)) + (longi[2]/(longi[3]*60.0)) + (longi[4]/(longi[5]*3600.0));
 
-	char bild[8];
+	char bild[9];
 	sprintf(bild, "%s", camera_jpeg_current_filename());
+	bild[8] = '\0';
 
 	if ((int)g_d_lat_nav != 0)
 	{
@@ -1412,7 +1413,7 @@ double gps_kurswinkel(int zaehler){
 		char anz1[40];
 		char anz2[40];
 		char anz3[40];
-		char bild[8];
+		char bild[9];
 
 	if (gui_get_mode()==GUI_MODE_NONE)
 	{
@@ -1439,13 +1440,14 @@ double gps_kurswinkel(int zaehler){
 		if (nav_home==0)
 		{
 			sprintf(bild, "%s", camera_jpeg_current_filename());
+            bild[8] = '\0';
 			sprintf(vBuf, lang_str(LANG_MENU_GPS_t_14), bild);
 			draw_txt_string(0, 1, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
 		}
 		if (nav_home==1)
 		{
-			sprintf(bild, "%s", camera_jpeg_current_filename());
-			sprintf(vBuf, lang_str(LANG_MENU_GPS_t_17), bild);
+//			sprintf(bild, "%s", camera_jpeg_current_filename());
+			sprintf(vBuf, lang_str(LANG_MENU_GPS_t_17));//, bild);
 			draw_txt_string(0, 1, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
 		}
 		

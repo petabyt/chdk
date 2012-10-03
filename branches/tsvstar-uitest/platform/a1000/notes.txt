@@ -1,12 +1,10 @@
 ****************************************
+A1200
+
+DryOS, Propset 2
 
 Camera depending notes: 
-
-
-- s5is uses Propset 2 of Properties (see http://tinyurl.com/6zbv9b)
-- s5is does have a REAL IRIS Diaphragm, it does NOT have an an ND Filter! 
-Mind this.
-- DryOS Camera
-- Video Overrides and subsequently all things that have to do with video (remaining time etc) do NOT work as of now.
-
-
+* For scripting and shortcuts, the FACE button is treated by CHDK as the erase button
+* Camera has no Iris diaphragm, only an ND filter
+* Camera can only boot form FAT16. Multiple partitions are supported, and must be used
+  to autostart from cards larger than 4GB

@@ -4,13 +4,14 @@
 // Camera info:
 //   DRYOS R39 (DRYOS version 2.3, release #0039)
 //   Firmware Ver GM1.01A
-//   Possible corrupt firmware dump - file size to small for start address 0xff810000
-//     file size = 7.00MB, should be 7.94MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon PowerShot S90
 
 // Values for makefile.inc
 //   PLATFORMOSVER = 39
+//   PLATFORMID = 12769 (0x31e1) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
+//   KEYSYS = d4                 // Found @ 0xffff3564
+//   NEED_ENCODED_DISKBOOT = 3   // Found @ 0xffff3574
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -36,6 +37,10 @@ DEF(canon_shoot_menu_active                 ,0x00008dd1) // Found @0xff9ab7a0
 DEF(playrec_mode                            ,0x00002d64) // Found @0xff87fa20
 DEF(zoom_status                             ,0x00008aa4) // Found @0xff99bb74
 DEF(some_flag_for_af_scan                   ,0x00007ff4) // Found @0xff96452c
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 3 int value(s), the first is the zoom focus length.
+// there are 10 entries in the table - set NUM_FL to 10
+DEF(focus_len_table                         ,0xfffe2af8) // Found @0xfffe2af8
 DEF(zoom_busy                               ,0x00007a14) // Found @0xff95d6cc
 DEF(focus_busy                              ,0x000078dc) // Found @0xff957bdc
 //DEF(recreview_hold                          ,0x00003a94) // Found @0xff89e6bc, ** != ** stubs_min = 0x00008a28 (0x8944+0xE4)

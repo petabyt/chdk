@@ -1,5 +1,4 @@
-#define PARAM_FILE_COUNTER      0x3B	// a3300is
-#define PARAM_EXPOSURE_COUNTER  0x02	// a3300is
+#define PARAM_FILE_COUNTER      0x3B	// a320is
 
 #include "platform.h"
 

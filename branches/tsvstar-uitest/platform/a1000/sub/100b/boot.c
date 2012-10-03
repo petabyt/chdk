@@ -1212,7 +1212,7 @@ void __attribute__((naked,noinline)) sub_FFC60680_my() {
           "MOVNE   R1, #0\n"
           "MOVNE   R0, R5\n"
           "BLNE    sub_FFC5C45C\n"
-          "BL      sub_FFC59D98\n"            // +----> Hook for SDHC booting
+          "BL      sub_FFC59D98_my\n"            // +----> Hook for SDHC booting
 
           "BL      core_spytask_can_start\n"     // +----> CHDK: Set "it's-safe-to-start"-Flag for spytask
 
@@ -1306,8 +1306,8 @@ void __attribute__((naked,noinline)) sub_FFC3FA8C_my() {
           "ADD     R4, R0, R1,LSL#2\n"
           "LDR     R0, [R4,#0x38]\n"
           "MOV     R1, R6\n"
-          //"BL      sub_FFC3F81C_my\n"            // +----> Hook for SDHC booting
           "BL      sub_FFC3F81C_my\n"            // +----> Hook for SDHC booting
+          //"BL      sub_FFC3F81C\n"     
           "CMP     R0, #0\n"
           "LDMEQFD SP!, {R4-R6,PC}\n"
           "LDR     R0, [R4,#0x38]\n"
@@ -1447,7 +1447,8 @@ void __attribute__((naked,noinline)) sub_FFC3F81C_my() {
           "MOVEQ   R5, R3\n"
           "MOVEQ   R4, #1\n"
      "loc_FFC3F93C:\n"
-          "MOV     R0, #3\n"
+          //"MOV     R0, #3\n"
+          "MOV     R0, #2\n"
           "BL      sub_FFC53F08\n"
           "CMP     R4, #0\n"
           "BNE     loc_FFC3F974\n"

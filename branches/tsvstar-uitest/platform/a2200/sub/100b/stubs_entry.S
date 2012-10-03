@@ -15,19 +15,13 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(SetFileAttributes                     ,0xff837180) //  6        *** != 0xffb370d8
-//NSTUB(kbd_pwr_off                           ,0xff8602cc) //  2 60%    *** != 0x00000000
+NSTUB(kbd_pwr_off                             ,0xff8602cc) //  2 60%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
-//NSTUB(mkdir                                 ,0xff837214) //  6 53%        == 0xff837214
+NSTUB(mkdir                                   ,0xff837214) //  6 53%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff89353c -> ff88fde8 -> ff98d574 -> ffac1350 -> ffbe5140
-// Current modemap entry not found in firmware - MODE_SCN_POSTER_EFFECT    8734
-// Current modemap entry not found in firmware - MODE_SCN_SUPER_VIVID      8742
-// Current modemap entry not found in firmware - MODE_SCN_MONOCHROME       8754
-// Current modemap entry not found in firmware - MODE_SCN_TOY_CAMERA       8751
-// Current modemap entry not found in firmware - MODE_SCN_MINIATURE        8748
-// Current modemap entry not found in firmware - MODE_SCN_FISHEYE          8747
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00032914) // Found @0xff834658
@@ -48,9 +42,9 @@ DEF(focus_len_table                         ,0xfffe2a98) // Found @0xfffe2a98
 DEF(zoom_busy                               ,0x00006544) // Found @0xff9600c0
 DEF(focus_busy                              ,0x00006454) // Found @0xff95d4a0
 DEF(recreview_hold                          ,0x000034c0) // Found @0xff898ac8
-//DEF(palette_control                         ,0x00009010) // Found @0xffa00624,          stubs_min = 0x00009010 (0x9010)
-//DEF(active_palette_buffer                   ,0x00009018) // Found @0xffa00628,          stubs_min = 0x00009018 (0x9018)
-//DEF(palette_buffer                          ,0x000b41e4) // Found @0xffa009dc,          stubs_min = 0x000b41e4 (0xB41E4)
+DEF(palette_control                         ,0x00009010) // Found @0xffa00624
+DEF(active_palette_buffer                   ,0x00009018) // Found @0xffa00628
+DEF(palette_buffer                          ,0x000b41e4) // Found @0xffa009dc
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x403f1000; }             // Found @0xff85b81c
@@ -110,7 +104,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff836778) //  1
 NSTUB(DeleteFile_Fut                          ,0xff836694) //112
 NSTUB(DoAFLock                                ,0xff8384c8) //102
 NSTUB(EnterToCompensationEVF                  ,0xff838724) //104
-NSTUB(ExecuteEventProcedure                   ,0xff886db8) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff886db8) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff838768) //104
 NSTUB(ExitTask                                ,0xff81ec40) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff846c78) //104
@@ -177,6 +171,7 @@ NSTUB(ScreenUnlock                            ,0xff8a4704) //  3
 NSTUB(SetAE_ShutterSpeed                      ,0xffb164e8) //102
 NSTUB(SetAutoShutdownTime                     ,0xff88fa50) //103
 NSTUB(SetCurrentCaptureModeType               ,0xff89675c) //101
+NSTUB(SetFileAttributes                       ,0xff837180) //  6
 NSTUB(SetFileTimeStamp                        ,0xff837108) //  6
 NSTUB(SetLogicalEventActive                   ,0xff88f754) //101
 NSTUB(SetParameterData                        ,0xff98e4dc) //101
