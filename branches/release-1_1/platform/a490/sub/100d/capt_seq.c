@@ -258,7 +258,8 @@ void __attribute__((naked,noinline)) sub_FFC594BC_my(){ //
 			"MOV	R0, R4 \n"                           
 			"BL	sub_FFD10CE4_my \n"  			//---------->                    
 			"MOV	R5, R0 \n"                           
-			"BL     capt_seq_hook_raw_here\n"	// +"BL	sub_FFC5BFCC \n"                      
+			"BL     capt_seq_hook_raw_here\n"	// +
+			"BL	sub_FFC5BFCC \n"                      
 			"BL	sub_FFC5C014 \n"                      
 			"BL	sub_FFC5C054 \n"                      
 			"MOV	R2, R4 \n"                           
