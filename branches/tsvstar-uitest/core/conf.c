@@ -505,6 +505,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(1295, conf.scene_script_mode,	        CONF_DEF_VALUE,     i:0, conf_change_scene_script),
     CONF_INFO(1296, conf.profile_menu_mode,	        CONF_DEF_VALUE,     i:1, conf_change_pmenu_mode),
     CONF_INFO(1297, conf.profile_menu_editmode,     CONF_DEF_VALUE,     i:1, conf_change_pmenu_mode),
+    CONF_INFO(1298, conf.pmenu_as_root,				CONF_DEF_VALUE,     i:0, NULL),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 

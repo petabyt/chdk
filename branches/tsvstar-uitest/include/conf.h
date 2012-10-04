@@ -384,6 +384,7 @@ typedef struct {
     int scene_script_mode;		// strhash31 of last called menuitem "mode"
 	int profile_menu_mode;		// 0-by default open main menu, 1-by default open profile menu
 	int profile_menu_editmode;
+	int pmenu_as_root;			// 0-last, 1-main, 2-profile
 
 } Conf;
 

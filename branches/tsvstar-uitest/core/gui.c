@@ -1875,6 +1875,7 @@ static const char* gui_pmenu_show_enum(int change, int arg)
 }
 #endif
 
+static const char* gui_pmenu_asroot_modes[] = { "Last", "Main", "Profile" };
 
 static CMenuItem menu_settings_submenu_items[] = {
 #ifdef OPT_USER_MENU
@@ -1883,6 +1884,8 @@ static CMenuItem menu_settings_submenu_items[] = {
 #endif
 #ifdef OPT_PROFILES
     MENU_ITEM(0x5c,LANG_MENU_PMENU_EDIT,     		MENUITEM_ENUM,          gui_pmenu_show_enum, &conf.profile_menu_editmode ),
+    MENU_ENUM2(0x5c,LANG_MENU_PMENU_AS_ROOT,                            	&conf.pmenu_as_root, gui_pmenu_asroot_modes ),
+
 #endif
     MENU_ITEM(0x81,LANG_MENU_VIS_MENU_CENTER,       MENUITEM_BOOL,	        &conf.menu_center, 0 ),
     MENU_ITEM(0x81,LANG_MENU_SELECT_FIRST_ENTRY,    MENUITEM_BOOL,	        &conf.menu_select_first_entry, 0 ),
@@ -2742,10 +2745,18 @@ void gui_chdk_kbd_process_menu_btn()
 
 		// profile menu exists 
 
+		int is_pmenu;
+		switch ( conf.pmenu_as_root )
+		{
+			case 0: is_pmenu = conf.profile_menu_mode; break;	// last
+			case 1: is_pmenu = 0; break;						// main
+			default: is_pmenu = 1;								// profile
+		}
+
 		if ( camera_info.state.is_shutter_half_press )
-			root_menu_ptr = ( conf.profile_menu_mode ) ? &root_menu : pmenu.menu_buf;	// halfshoot= invert choose
+			root_menu_ptr = ( is_pmenu ) ? &root_menu : pmenu.menu_buf;	// halfshoot= invert choose
 		else
-			root_menu_ptr = ( conf.profile_menu_mode ) ? pmenu.menu_buf : &root_menu;	// regular choose
+			root_menu_ptr = ( is_pmenu ) ? pmenu.menu_buf : &root_menu;	// regular choose
 		gui_menu_popup_mainmenu();
 
 	} else 

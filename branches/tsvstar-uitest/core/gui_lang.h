@@ -753,8 +753,9 @@
 #define LANG_PROFILE_INFO						613
 #define LANG_WARN_NAME_REQUIRED					614
 #define LANG_MENU_PMENU_EDIT					615
+#define LANG_MENU_PMENU_AS_ROOT					616
 
-#define GUI_LANG_ITEMS                          615
+#define GUI_LANG_ITEMS                          616
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
