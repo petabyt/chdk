@@ -13,8 +13,5 @@ and converted for a dev trunk build in July of 2012.
 
 ---
 Additional merge notes from reyalp
-bitmap related defines in platform_camera.h probably need to be updated to current trunk style
-bitmap related functions in platform/sub/lib.c probably need to be updated
 led.c in platform/sub/100a is probably not needed
 modemap appears to be incomplete, per stubs_entry.S
-task hooks should use addresses from stubs_entry rather than strcmp
