@@ -62,18 +62,15 @@
     #define CAM_BITMAP_PALETTE          5
 
     #undef  CAM_BITMAP_WIDTH
-    #define CAM_BITMAP_WIDTH           960 // Actual width of bitmap screen in bytes
+    #define CAM_BITMAP_WIDTH            960 // Actual width of bitmap screen in bytes
 
     #undef CAM_BITMAP_HEIGHT
-    #define CAM_BITMAP_HEIGHT          270 // Actual height of bitmap screen in rows
+    #define CAM_BITMAP_HEIGHT           270 // Actual height of bitmap screen in rows
 
+    #define CAM_ZEBRA_ASPECT_ADJUST     1
+    #define CAM_ZEBRA_NOBUF             1
 
-    #undef ZEBRA_HMARGIN0
-    #define ZEBRA_HMARGIN0              30			//zebra adjust buffer height: show use at sx200is: needed for save memory space
-    #define CAM_ZEBRA_ASPECT_ADJUST 1
-    #define CAM_ZEBRA_NOBUF 1
-
-    #define CAM_QUALITY_OVERRIDE 1
+    #define CAM_QUALITY_OVERRIDE        1
     #undef CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL   12
     #undef CAM_WHITE_LEVEL
@@ -91,10 +88,10 @@
 
     #define cam_CalibrationIlluminant1  17			// Standard Light A
 
-    #define CAM_ACTIVE_AREA_X1                  48
-    #define CAM_ACTIVE_AREA_Y1                  28
-    #define CAM_ACTIVE_AREA_X2                  4416-48
-    #define CAM_ACTIVE_AREA_Y2                  3296-28
+    #define CAM_ACTIVE_AREA_X1          48
+    #define CAM_ACTIVE_AREA_Y1          28
+    #define CAM_ACTIVE_AREA_X2          4416-48
+    #define CAM_ACTIVE_AREA_Y2          3296-28
 
     #undef CAM_USES_ASPECT_CORRECTION   
     #define CAM_USES_ASPECT_CORRECTION  1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
