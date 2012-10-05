@@ -20,23 +20,24 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-#define CAM_DRYOS         1
-#define CAM_DRYOS_2_3_R39 1 // Defined for cameras with DryOS version R39 or higher
-#define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher
+#define CAM_DRYOS                       1
+#define CAM_PROPSET				        4
+#define CAM_DRYOS_2_3_R39               1 // Defined for cameras with DryOS version R39 or higher
+#define CAM_DRYOS_2_3_R47               1 // Defined for cameras with DryOS version R47 or higher
 
 #define CAM_DETECT_SCREEN_ERASE			1
 #define CAM_AV_OVERRIDE_IRIS_FIX		1
 #define CAM_KEY_CLICK_DELAY 			150
 #define CAM_ADJUSTABLE_ALT_BUTTON		1
-#define CAM_PROPSET				4
-#define	CAM_DATE_FOLDER_NAMING		        1
+
+#define	CAM_DATE_FOLDER_NAMING		    1
 #define CAM_HAS_ND_FILTER		        1 // verify
 #define CAM_HAS_VIDEO_BUTTON			1
 #define CAM_VIDEO_QUALITY_ONLY                  1
 #define CAM_SHOW_OSD_IN_SHOOT_MENU              1
 #define CAM_HAS_VARIABLE_ASPECT                 1
 #define CAM_QUALITY_OVERRIDE                    1 // enable 'Super Fine' JPEG compression mode
-#define CAM_STARTUP_CRASH_FILE_OPEN_FIX         1
+#define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 #define CAM_DRIVE_MODE_FROM_TIMER_MODE	        1
 
 #define PARAM_DISPLAY_MODE1                     59  // param number for LCD display mode when camera in playback
@@ -51,15 +52,10 @@
 #undef CAM_HAS_ERASE_BUTTON
 #undef CAM_HAS_IRIS_DIAPHRAGM
 #undef CAM_HAS_MANUAL_FOCUS
-#undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
+#undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 
 #undef CAM_USES_ASPECT_CORRECTION
-#define CAM_USES_ASPECT_CORRECTION  1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
-//#undef CAM_SCREEN_WIDTH
-//#define CAM_SCREEN_WIDTH               480
-
-//#undef CAM_BITMAP_HEIGHT
-//#define CAM_BITMAP_HEIGHT               270
+#define CAM_USES_ASPECT_CORRECTION      1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
 
 #undef CAM_BITMAP_WIDTH
 #undef CAM_BITMAP_HEIGHT
@@ -67,34 +63,34 @@
 #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
 
 #undef  CAM_UNCACHED_BIT
-#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff02be50
+#define CAM_UNCACHED_BIT                0x40000000 // Found @0xff02be50
 
 #undef  CAM_SENSOR_BITS_PER_PIXEL
-#define CAM_SENSOR_BITS_PER_PIXEL   12 // Look into
+#define CAM_SENSOR_BITS_PER_PIXEL       12 // Look into
 
 #undef CAM_BITMAP_PALETTE
-#define CAM_BITMAP_PALETTE          10
+#define CAM_BITMAP_PALETTE              10
 
 #undef EDGE_HMARGIN
-#define EDGE_HMARGIN                10 // Look into
+#define EDGE_HMARGIN                    10 // Look into
 
-#define CAM_ZEBRA_ASPECT_ADJUST 1
-#define CAM_ZEBRA_NOBUF 1
+#define CAM_ZEBRA_ASPECT_ADJUST         1
+//#define CAM_ZEBRA_NOBUF               1
 
-#define CAM_EXT_TV_RANGE            1
+#define CAM_EXT_TV_RANGE                1
 
+#define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
 
 // RAW & DNG related values
-
-#define CAM_RAW_ROWPIX          4168 // Found @0xff14d678
-#define CAM_RAW_ROWS            3060 // Found @0xff14d684
-#define CAM_JPEG_WIDTH          4000
-#define CAM_JPEG_HEIGHT         3000
-#define CAM_ACTIVE_AREA_X1	96 // Update
-#define CAM_ACTIVE_AREA_Y1	24 // Update
-#define CAM_ACTIVE_AREA_X2	4168 // Update 
-#define CAM_ACTIVE_AREA_Y2	3060 // Update
-#define cam_CFAPattern          0x02010100 // Camera Bayer sensor data layout: Red  Green  Green  Blue
+#define CAM_RAW_ROWPIX                  4168 // Found @0xff14d678
+#define CAM_RAW_ROWS                    3060 // Found @0xff14d684
+#define CAM_JPEG_WIDTH                  4000
+#define CAM_JPEG_HEIGHT                 3000
+#define CAM_ACTIVE_AREA_X1	            96 // Update
+#define CAM_ACTIVE_AREA_Y1	            24 // Update
+#define CAM_ACTIVE_AREA_X2	            4168 // Update 
+#define CAM_ACTIVE_AREA_Y2	            3060 // Update
+#define cam_CFAPattern                  0x02010100 // Camera Bayer sensor data layout: Red  Green  Green  Blue
 #define CAM_COLORMATRIX1	\
 	544808, 1000000, -174047, 1000000, -80399, 1000000, \
 	-75055, 1000000, 440444, 1000000, 11367, 1000000, \
@@ -107,5 +103,5 @@
 #define CAM_DNG_LENS_INFO       { 50,10, 400,10, 30,10, 59,10 } // See comments in camera.h // 5.0 - 40.0
 
 #define REMOTE_SYNC_STATUS_LED 	0xC0220130		// specifies an LED that turns on while camera waits for USB remote to sync
- #define CAM_HAS_CMOS                   1
+#define CAM_HAS_CMOS                   1
 

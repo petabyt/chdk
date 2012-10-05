@@ -26,14 +26,14 @@ static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static long last_kbd_key = 0;
-static long alt_mode_key_mask = 0x00004000; // KEY_VIDEO
+static long alt_mode_key_mask = 0x00000400; // KEY_PLAYBACK
 
 extern void _GetKbdState(long*);
 
 
-#define KEYS_MASK0 (0x00004000|0X00000004)
+#define KEYS_MASK0 (0x00000400|0X00000004)
 #define KEYS_MASK1 (0x00000000)
-#define KEYS_MASK2 (0x00004000|0x00000300|0x00000100|0x00000080|0x00000040|0x00000010|0x00000020|0x00000004|0x00000008|0x00000002|0x00000001)
+#define KEYS_MASK2 0x000047FF
 
 #define NEW_SS (0x2000)
 
@@ -60,7 +60,7 @@ static char kbd_stack[NEW_SS];
 static KeyMap keymap[] = {
 	/* tiny bug: key order matters. see kbd_get_pressed_key() */
 
-	{ 2, KEY_PRINT		     ,0x00004000 },  //KEY_VIDEO for ALT menu
+    { 2, KEY_PRINT           ,0x00000400 }, // KEY_PLAYBACK for ALT menu
     { 2, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xff3a8018, levent 0x01
     { 2, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xff3a8018, levent 0x01
     { 2, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xff3a8010, levent 0x00
@@ -73,9 +73,9 @@ static KeyMap keymap[] = {
     { 2, KEY_DOWN            ,0x00000040 }, // Found @0xff3a8000, levent 0x05
 	{ 2, KEY_DISPLAY         ,0x00000040 },
     { 2, KEY_UP              ,0x00000080 }, // Found @0xff3a8008, levent 0x04
-	{ 2, KEY_VIDEO		     , 0x00004000 },
-//	{ 2, KEY_PLAYBACK	     , 0x00008000 },
-	
+    { 2, KEY_PLAYBACK        ,0x00000400 }, // Found @0xff3a7ff0, levent 0x101
+//    { 2, KEY_POWER           ,0x00000800 }, // Found @0xff3a7ff8, levent 0x100
+    { 2, KEY_VIDEO           ,0x00004000 }, // Found @0xff3a8008, levent 0x19
     { 0, 0, 0 }
 };
 

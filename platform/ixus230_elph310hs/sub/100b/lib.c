@@ -9,32 +9,32 @@ full 19131120
 
 char *hook_raw_image_addr()
 {
-	if (*((int*)(0x2EF8 + 0xC)) != 0) // FF0795BC
-		return (char*) 0x46000000;  // 
-	else
-		return (char*) 0x413391A0; // FF368444
+	// Appears to be two raw buffers (this returns active buffer)
+	// Addresses below found in table at 0xFF3B9B74  used in sub_FF0DDBFC
+	// [0x2EF8 + 0xC] --> defines which buffer is active
 
+	if (*((int*)(0x2EF8 + 0xC)) != 0) //loc_FF078D38: 0x2EF8 (@FF078D3C) + 0xC (@FF078D68)
+		return (char*) 0x46000000; 
+	else
+		return (char*) 0x413391A0;
 }
 
 char *hook_alt_raw_image_addr()
 {
-	if (*((int*)(0x2EF8 + 0xC)) == 0) // FF0795BC
-		return (char*) 0x46000000;  // 
-	else
-		return (char*) 0x413391A0; // FF368444
+	// Appears to be two raw buffers (this returns active buffer)
+	// Addresses below found in table at 0xFF3B9B74  used in sub_FF0DDBFC
+	// [0x2EF8 + 0xC] --> defines which buffer is active
 
+	if (*((int*)(0x2EF8 + 0xC)) == 0) //loc_FF078D38: 0x2EF8 (@FF078D3C) + 0xC (@FF078D68)
+		return (char*) 0x46000000; 
+	else
+		return (char*) 0x413391A0;
 }
 
 long hook_raw_size()
 {
 	//FF36849C
-	return 0x0123eaf0;
-	
-}
-
-void *vid_get_viewport_live_fb()
-{
-	return (void*)(void*)(*(int*)(0x2158)); // FF044208
+	return 0x0123eaf0;	
 }
 
 // OSD buffer
@@ -44,24 +44,15 @@ void *vid_get_bitmap_fb()
 	return (void*)0x40471000;
 }	                           
 
-// Live picture buffer (shoot half-pressed)
-void *vid_get_viewport_fb()
-{
-	return (void*)0x405c6b80;  					                   // found by search for VRAM Address @FF365654
-}
-
 void *vid_get_viewport_fb_d()
 {
 	//FF06C234
 	//FF06C26C
 	return (void*)(*(int*)(0x2C58+0x58));                  
-
 }
 
 char *camera_jpeg_count_str()
 {
 	//FF226398
 	return (void*)0x000B9574;                                      
-
 }
-
