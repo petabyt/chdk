@@ -1,3 +1,3 @@
 #include "stubs_asm.h"
-DEF(viewport_buffers,                   0xFF3A6FB4)     // 1.00a sub_FF04470C (FF044ABC)
+DEF(viewport_buffers,                   0xFF3A6F44)     // 1.00a sub_FF04470C (FF044ABC)
 DEF(active_viewport_buffer,             0x2158)         // 1.00a sub_FF04470C (FF044710)

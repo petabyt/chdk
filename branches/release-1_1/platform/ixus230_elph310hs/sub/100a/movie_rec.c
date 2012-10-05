@@ -11,17 +11,17 @@ void  set_quality(int *x){ // -17 highest; +12 lowest
 	movie_record_task()
 -----------------------------------------------------------------------*/
 void __attribute__((naked,noinline)) movie_record_task() {
-// FF18676C
+// FF186748
     asm volatile (
         "    STMFD   SP!, {R2-R10,LR} \n" 
-        "    LDR     R6, =0xFF1854DC \n" // diff
-        "    LDR     R7, =0xFF1861D8 \n" // diff
+        "    LDR     R6, =0xFF1854B8 \n" 
+        "    LDR     R7, =0xFF1861B4 \n" 
         "    LDR     R4, =0x6CC0 \n" 
         "    LDR     R9, =0x6D6 \n" 
         "    LDR     R10, =0x2710 \n" 
         "    MOV     R8, #1 \n" 
         "    MOV     R5, #0 \n" 
-        "loc_FF18678C:\n"       // diff
+        "loc_FF186768:\n"
         "    LDR     R0, [R4, #0x24] \n" 
         "    MOV     R2, #0 \n" 
         "    ADD     R1, SP, #4 \n" 
@@ -32,27 +32,27 @@ void __attribute__((naked,noinline)) movie_record_task() {
         "    CMPNE   R0, #2 \n" 
         "    LDRNE   R0, [R4, #0x44] \n" 
         "    CMPNE   R0, #6 \n" 
-        "    BNE     loc_FF1868C8 \n" // diff
+        "    BNE     loc_FF1868A4 \n" 
         "    LDR     R0, [SP, #4] \n" 
         "    LDR     R1, [R0] \n" 
         "    SUB     R1, R1, #2 \n" 
         "    CMP     R1, #0xD \n" 
         "    ADDCC   PC, PC, R1, LSL #2 \n" 
-        "    B       loc_FF1868C8 \n" // diff until next loc
-        "    B       loc_FF186868 \n" 
-        "    B       loc_FF18688C \n" 
-        "    B       loc_FF18689C \n" 
         "    B       loc_FF1868A4 \n" 
-        "    B       loc_FF1868AC \n" 
-        "    B       loc_FF1868B4 \n" 
-        "    B       loc_FF186870 \n" 
-        "    B       loc_FF1868BC \n" 
-        "    B       loc_FF18687C \n" 
-        "    B       loc_FF1868C8 \n" 
-        "    B       loc_FF1868C4 \n" 
-        "    B       loc_FF186834 \n" 
-        "    B       loc_FF186804 \n" 
-        "loc_FF186804:\n" // jump table entry 12
+        "    B       loc_FF186844 \n" 
+        "    B       loc_FF186868 \n" 
+        "    B       loc_FF186878 \n" 
+        "    B       loc_FF186880 \n" 
+        "    B       loc_FF186888 \n" 
+        "    B       loc_FF186890 \n" 
+        "    B       loc_FF18684C \n" 
+        "    B       loc_FF186898 \n" 
+        "    B       loc_FF186858 \n" 
+        "    B       loc_FF1868A4 \n" 
+        "    B       loc_FF1868A0 \n" 
+        "    B       loc_FF186810 \n" 
+        "    B       loc_FF1867E0 \n" 
+        "loc_FF1867E0:\n" // jump table entry 12
         "    STR     R5, [R4, #0x40] \n" 
         "    STR     R5, [R4, #0x30] \n" 
         "    STR     R5, [R4, #0x34] \n" 
@@ -64,8 +64,8 @@ void __attribute__((naked,noinline)) movie_record_task() {
         "    STR     R0, [R4, #0xC] \n" 
         "    MOV     R0, #6 \n" 
         "    STR     R0, [R4, #0x44] \n" 
-        "    B       loc_FF186854 \n" //diff
-        "loc_FF186834:\n" // jump table entry 11
+        "    B       loc_FF186830 \n" 
+        "loc_FF186810:\n" // jump table entry 11
         "    STR     R5, [R4, #0x40] \n" 
         "    STR     R5, [R4, #0x30] \n" 
         "    STR     R6, [R4, #0xD8] \n" 
@@ -74,82 +74,82 @@ void __attribute__((naked,noinline)) movie_record_task() {
         "    ADD     R0, R0, #1 \n" 
         "    STR     R0, [R4, #0xC] \n" 
         "    STR     R8, [R4, #0x44] \n" 
-        "loc_FF186854:\n"
-        "    LDR     R2, =0xFF184A84 \n" 
+        "loc_FF186830:\n"
+        "    LDR     R2, =0xFF184A60 \n" 
         "    LDR     R1, =0xB1A28 \n" 
-        "    LDR     R0, =0xFF184B98 \n" 
+        "    LDR     R0, =0xFF184B74 \n" 
         "    BL      sub_FF045B24 \n" 
-        "    B       loc_FF1868C8 \n" 
-        "loc_FF186868:\n"    // jump table entry
+        "    B       loc_FF1868A4 \n" 
+        "loc_FF186844:\n" // jump table entry 0
 //begin patch
-        //"    BL      sub_FF185DBC \n" //original
-        "    BL     movie_time\n" //patched
+        // "    BL      sub_FF185D98 \n" // original
+        "    BL     movie_time\n"     //patched
 "label_A:\n"
 //end patch
-        "    B       loc_FF1868C8 \n" 
-        "loc_FF186870:\n" // jump table entry 6
+        "    B       loc_FF1868A4 \n" 
+        "loc_FF18684C:\n" // jump table entry 6
         "    LDR     R1, [R4, #0xF4] \n" 
         "    BLX     R1 \n" 
-        "    LDR     R0, =0x6D48-4 \n" // added - found at FF1866A4 in 100b
+        "    LDR     R0, =0x6D48-4 \n" // added - found at FF1866A4 in 100a
         "    BL      set_quality \n" // added
-        "    B       loc_FF1868C8 \n" // diff
-        "loc_FF18687C:\n" // jump table entry 8
+        "    B       loc_FF1868A4 \n" 
+        "loc_FF186858:\n"  // jump table entry 8
         "    LDR     R1, [R0, #0x18] \n" 
         "    LDR     R0, [R0, #4] \n" 
-        "    BL      sub_FF2E47C0 \n" // diff
-        "    B       loc_FF1868C8 \n" 
-        "loc_FF18688C:\n" // jump table entry 1
+        "    BL      sub_FF2E474C \n" //diff
+        "    B       loc_FF1868A4 \n" 
+        "loc_FF186868:\n" // jump table entry 1
         "    LDR     R0, [R4, #0x44] \n" 
         "    CMP     R0, #5 \n" 
         "    STRNE   R8, [R4, #0x34] \n" 
-        "    B       loc_FF1868C8 \n" 
-        "loc_FF18689C:\n" // jump table entry 2
-        "    BL      sub_FF185150 \n" 
-        "    B       loc_FF1868C8 \n" 
-        "loc_FF1868A4:\n" // jump table entry 3
-        "    BL      sub_FF184E48 \n" 
-        "    B       loc_FF1868C8 \n" 
-        "loc_FF1868AC:\n" // jump table entry 4
-        "    BL      sub_FF184BF0 \n" 
-        "    B       loc_FF1868C8 \n" 
-        "loc_FF1868B4:\n" // jump table entry 5
-        "    BL      sub_FF184810 \n" 
-        "    B       loc_FF1868C8 \n" 
-        "loc_FF1868BC:\n" // jump table entry 7
-        "    BL      sub_FF184790 \n" 
-        "    B       loc_FF1868C8 \n" 
-        "loc_FF1868C4:\n" // jump table entry 10
-        "    BL      sub_FF186E40 \n" 
-        "loc_FF1868C8:\n" // jump table default entry & 9
+        "    B       loc_FF1868A4 \n" 
+        "loc_FF186878:\n" // jump table entry 2
+        "    BL      sub_FF18512C \n" 
+        "    B       loc_FF1868A4 \n" 
+        "loc_FF186880:\n" // jump table entry 3
+        "    BL      sub_FF184E24 \n" 
+        "    B       loc_FF1868A4 \n" 
+        "loc_FF186888:\n" // jump table entry 4
+        "    BL      sub_FF184BCC \n" 
+        "    B       loc_FF1868A4 \n" 
+        "loc_FF186890:\n" // jump table entry 5
+        "    BL      sub_FF1847EC \n" 
+        "    B       loc_FF1868A4 \n" 
+        "loc_FF186898:\n" // jump table entry 7
+        "    BL      sub_FF18476C \n" 
+        "    B       loc_FF1868A4 \n" 
+        "loc_FF1868A0:\n" // jump table entry 10
+        "    BL      sub_FF186E1C \n" 
+        "loc_FF1868A4:\n" // jump table default entry & 9
         "    LDR     R1, [SP, #4] \n" 
-        "    LDR     R3, =0xFF1844E4 \n" // **"MovieRecorder.c"
+        "    LDR     R3, =0xFF1844C0 \n" // **"MovieRecorder.c"
         "    STR     R5, [R1] \n" 
         "    STR     R9, [SP] \n" 
         "    LDR     R0, [R4, #0x28] \n" 
         "    MOV     R2, R10 \n" 
         "    BL      sub_FF02BC8C \n" 
-        "    B       loc_FF18678C \n" // diff
+        "    B       loc_FF186768 \n" 
     );
 }
 
 void __attribute__((naked,noinline)) movie_time() {
     if( (int)conf.ext_video_time == 1 ) {
         asm volatile (
-          "BL     sub_FF185DBC_my\n"
+          "BL     sub_FF185D98_my\n"
           "B      label_A\n"
         );
     } else {
         asm volatile (
-          "BL     sub_FF185DBC\n"
+          "BL     sub_FF185D98\n"
           "B      label_A\n"
         );
     }
 }
 /*----------------------------------------------------------------------
-	sub_FF185DBC_my()
+	sub_FF185D98_my()
 -----------------------------------------------------------------------*/
-void __attribute__((naked,noinline)) sub_FF185DBC_my() {
-// FF185DBC 
+void __attribute__((naked,noinline)) sub_FF185D98_my() {
+// FF185D98
     asm volatile (
         "    STMFD   SP!, {R0-R8,LR} \n" 
         "    LDR     R6, =0x6CC0 \n" 
@@ -163,52 +163,51 @@ void __attribute__((naked,noinline)) sub_FF185DBC_my() {
         "    MUL     R0, R3, R0 \n" 
         "    CMP     R1, #0 \n" 
         "    MOV     R2, #1 \n" 
-        "    BNE     loc_FF185E00 \n" 
+        "    BNE     loc_FF185DDC \n" 
         "    LDR     R1, [R6, #0x90] \n" 
         "    CMP     R1, #0 \n" 
-        "    BNE     loc_FF185E10 \n" 
-        "    B       loc_FF185E08 \n" 
-        "loc_FF185E00:\n"
+        "    BNE     loc_FF185DEC \n" 
+        "    B       loc_FF185DE4 \n" 
+        "loc_FF185DDC:\n"
         "    CMP     R1, #3 \n" 
-        "    BNE     loc_FF185E10 \n" 
-        "loc_FF185E08:\n"
+        "    BNE     loc_FF185DEC \n" 
+        "loc_FF185DE4:\n"
         "    STR     R2, [R6, #0x48] \n" 
-        "    B       loc_FF185E1C \n" 
-        "loc_FF185E10:\n"
+        "    B       loc_FF185DF8 \n" 
+        "loc_FF185DEC:\n"
         "    MOV     R1, #0x3E8 \n" 
-        "    BL      sub_FF3A2FD0 \n" 
+        "    BL      sub_FF3A2F5C \n" //diff
         "    STR     R0, [R6, #0x48] \n" 
-        "loc_FF185E1C:\n"
+        "loc_FF185DF8:\n"
         "    LDR     R4, =0xB1A5C \n" 
         "    MOV     R7, #2 \n" 
         "    LDR     R0, [R4, #8] \n" 
         "    CMP     R0, #0 \n" 
-        "    BEQ     loc_FF185E84 \n" 
+        "    BEQ     loc_FF185E60 \n" 
         "    LDR     R0, [R6, #0x58] \n" 
         "    MOV     R1, #4 \n" 
         "    CMP     R0, #0x18 \n" 
-        "    BEQ     loc_FF186018 \n" 
-        "    BGT     loc_FF185E60 \n" 
+        "    BEQ     loc_FF185FF4 \n" 
+        "    BGT     loc_FF185E3C \n" 
         "    CMP     R0, #0xA \n" 
         "    CMPNE   R0, #0xF \n" 
         "    STREQ   R7, [R4, #0x14] \n" 
-        "    BEQ     loc_FF185E84 \n" 
+        "    BEQ     loc_FF185E60 \n" 
         "    CMP     R0, #0x14 \n" 
-        "    BNE     loc_FF185E78 \n" 
-        "    B       loc_FF186018 \n" 
-        "loc_FF185E60:\n"
+        "    BNE     loc_FF185E54 \n" 
+        "    B       loc_FF185FF4 \n" 
+        "loc_FF185E3C:\n"
         "    CMP     R0, #0x1E \n" 
-        "    BEQ     loc_FF186018 \n" 
+        "    BEQ     loc_FF185FF4 \n" 
         "    CMP     R0, #0x3C \n" 
         "    MOVEQ   R0, #8 \n" 
         "    STREQ   R0, [R4, #0x14] \n" 
-        "    BEQ     loc_FF185E84 \n" 
-        "loc_FF185E78:\n"
+        "    BEQ     loc_FF185E60 \n" 
+        "loc_FF185E54:\n"
         "    LDR     R1, =0x7D9 \n" 
-                "    LDR     R0, =0xFF1844E4 \n" // **"MovieRecorder.c" // diff
-                //"    BL      sub_FF00EDBC \n" // original
-                "    BL      _DebugAssert \n" // patched
-        "loc_FF185E84:\n"
+        "    LDR     R0, =0xFF1844C0 \n" // **"MovieRecorder.c"
+        "    BL      _DebugAssert \n"
+        "loc_FF185E60:\n"
         "    LDR     R2, =0x6CC2 \n" 
         "    LDR     R0, [R6, #0xB8] \n" 
         "    MOV     R3, #2 \n" 
@@ -240,12 +239,12 @@ void __attribute__((naked,noinline)) sub_FF185DBC_my() {
         "    LDR     R8, =0xB1A44 \n" 
         "    CMP     R0, #2 \n" 
         "    CMPNE   R0, #3 \n" 
-        "    BNE     loc_FF185F80 \n" 
+        "    BNE     loc_FF185F5C \n" 
         "    LDR     R0, [R6, #0x90] \n" 
         "    CMP     R0, #0 \n" 
         "    LDRNE   R0, =0x443FC000 \n" 
         "    STRNE   R0, [R5] \n" 
-        "    BNE     loc_FF185F80 \n" 
+        "    BNE     loc_FF185F5C \n" 
         "    LDR     R0, =0x460B8600 \n" 
         "    LDR     R1, =0x10959E0 \n" 
         "    STR     R0, [R5] \n" 
@@ -263,7 +262,7 @@ void __attribute__((naked,noinline)) sub_FF185DBC_my() {
         "    MOV     R2, #9 \n" 
         "    MOV     R1, #5 \n" 
         "    MOV     R0, #0x10 \n" 
-        "    BL      sub_FF29934C \n" 
+        "    BL      sub_FF29930C \n" 
         "    LDR     R1, [R5] \n" 
         "    LDR     R0, [R6, #0x9C] \n" 
         "    ADD     R1, R1, R0, LSL #1 \n" 
@@ -272,57 +271,57 @@ void __attribute__((naked,noinline)) sub_FF185DBC_my() {
         "    RSB     R0, R0, #0 \n" 
         "    ADD     R0, R1, R0, LSL #1 \n" 
         "    STR     R0, [R5, #4] \n" 
-        "loc_FF185F80:\n"
-        "    LDR     R3, =0xFF185D88 \n" 
+        "loc_FF185F5C:\n"
+        "    LDR     R3, =0xFF185D64 \n" 
         "    LDMIA   R5, {R0,R1} \n" 
         "    STR     R3, [SP] \n" 
         "    LDR     R3, =0xB1A5C \n" 
         "    SUB     R2, R3, #0x18 \n" 
-        //"    BL      sub_FF2E325C \n" // original // diff
-        "    BL      sub_FF2E325C_my \n" // patched
+        //"    BL      sub_FF2E31E8 \n" //diff from 100b
+        "    BL      sub_FF2E31E8_my \n" // patched
         "    LDR     R3, [R6, #0xB8] \n" 
         "    STR     R3, [SP] \n" 
         "    LDR     R0, [R6, #0x90] \n" 
         "    LDRD    R2, [R6, #0xF8] \n" 
-        "    BL      sub_FF2E3698 \n" 
+        "    BL      sub_FF2E3624 \n" //diff
         "    LDR     R0, [R6, #0x64] \n" 
         "    LDR     R3, =0x6D48 \n" 
         "    AND     R1, R0, #0xFF \n" 
         "    LDR     R0, [R8] \n" 
         "    SUB     R2, R3, #4 \n" 
-        "    BL      sub_FF2E11F8 \n" 
+        "    BL      sub_FF2E1184 \n" //diff
         "    LDRH    R0, [R6, #6] \n" 
         "    CMP     R0, #2 \n" 
-        "    LDREQ   R0, =0xFF185A60 \n" 
+        "    LDREQ   R0, =0xFF185A3C \n" 
         "    STREQ   R0, [R6, #0xF4] \n" 
         "    LDR     R0, [R6, #0x90] \n" 
         "    CMP     R0, #0 \n" 
-        "    LDREQ   R1, =0xFF185694 \n" 
+        "    LDREQ   R1, =0xFF185670 \n" 
         "    STREQ   R1, [R6, #0xF4] \n" 
         "    LDR     R2, [R6, #0xC] \n" 
-        "    LDR     R1, =0xFF3EC2C0 \n" 
+        "    LDR     R1, =0xFF3EC250 \n" //diff
         "    CMP     R2, #2 \n" 
-        "    BNE     sub_FF186020 \n" 
+        "    BNE     sub_FF185FFC \n" 
         "    LDR     R0, [R6, #0x4C] \n" 
         "    ADD     R0, R1, R0, LSL #3 \n" 
         "    LDR     R1, [R8, #0xC] \n" 
         "    LDR     R0, [R0, R1, LSL #2] \n" 
-        "    BL      sub_FF29F3BC \n" 
-        "    LDR     R0, =0xFF1855B8 \n" 
+        "    BL      sub_FF29F37C \n" 
+        "    LDR     R0, =0xFF185594 \n" 
         "    MOV     R1, #0 \n" 
-        "    BL      sub_FF29F8B8 \n" 
-        "    B       sub_FF18605C \n" 
-        "loc_FF186018:\n"
+        "    BL      sub_FF29F878 \n" 
+        "    B       sub_FF186038 \n" 
+        "loc_FF185FF4:\n"
         "    STR     R1, [R4, #0x14] \n" 
-        "    B       loc_FF185E84 \n" 
-    );
+        "    B       loc_FF185E60 \n" 
+	);
 }
 
 /*----------------------------------------------------------------------
-	sub_FF2E325C_my()
+	sub_FF2E31E8_my()
 -----------------------------------------------------------------------*/
-void __attribute__((naked,noinline)) sub_FF2E325C_my() {
-// FF2E325C
+void __attribute__((naked,noinline)) sub_FF2E31E8_my() {
+// FF2E31E8
     asm volatile (
         "    STMFD   SP!, {R0-R12,LR} \n" 
         "    MOV     R9, R0 \n" 
@@ -330,12 +329,12 @@ void __attribute__((naked,noinline)) sub_FF2E325C_my() {
         "    LDR     R8, [SP, #0x38] \n" 
         "    CMP     R0, #0 \n" 
         "    LDREQ   R1, =0x346 \n" 
-        "    LDREQ   R0, =0xFF2E20E0 \n" // **"MovWriter.c"
+        "    LDREQ   R0, =0xFF2E206C \n" // **"MovWriter.c"
         "    MOV     R5, #0 \n" 
         "    MOV     R4, R2 \n" 
         "    MOV     R10, R3 \n" 
         "    MOV     R7, R5 \n" 
-        "    BLEQ    sub_FF00EDBC \n" 
+        "    BLEQ    _DebugAssert \n" 
         "    LDR     R6, =0xC318 \n" 
         "    LDR     R0, [R4] \n" 
         "    MOV     R11, #0x1E \n" 
@@ -348,58 +347,59 @@ void __attribute__((naked,noinline)) sub_FF2E325C_my() {
         "    LDR     R0, =0x7530 \n" 
         "    CMP     R1, #0xB \n" 
         "    ADDCC   PC, PC, R1, LSL #2 \n" 
-        "    B       loc_FF2E3348 \n" 
-        "    B       loc_FF2E32FC \n" 
-        "    B       loc_FF2E32EC \n" 
-        "    B       loc_FF2E3324 \n" 
-        "    B       loc_FF2E3338 \n" 
-        "    B       loc_FF2E3348 \n" 
-        "    B       loc_FF2E3348 \n" 
-        "    B       loc_FF2E3348 \n" 
-        "    B       loc_FF2E3348 \n" 
-        "    B       loc_FF2E331C \n" 
-        "    B       loc_FF2E3314 \n" 
-        "    B       loc_FF2E3304 \n" 
-        "loc_FF2E32EC:\n" // jump table entry 1
+        "    B       loc_FF2E32D4 \n" 
+        "    B       loc_FF2E3288 \n" 
+        "    B       loc_FF2E3278 \n" 
+        "    B       loc_FF2E32B0 \n" 
+        "    B       loc_FF2E32C4 \n" 
+        "    B       loc_FF2E32D4 \n" 
+        "    B       loc_FF2E32D4 \n" 
+        "    B       loc_FF2E32D4 \n" 
+        "    B       loc_FF2E32D4 \n" 
+        "    B       loc_FF2E32A8 \n" 
+        "    B       loc_FF2E32A0 \n" 
+        "    B       loc_FF2E3290 \n" 
+
+        "loc_FF2E3278:\n" // jump table entry 1
         "    LDR     R7, =0x5DC0 \n" 
         "    MOV     R0, #0x18 \n" 
         "    STR     R7, [R6, #0x12C] \n" 
-        "    B       loc_FF2E3330 \n" 
-        "loc_FF2E32FC:\n" // jump table entry 0
+        "    B       loc_FF2E32BC \n" //diff
+        "loc_FF2E3288:\n" // jump table entry 0
         "    MOV     R7, R0 \n" 
-        "    B       loc_FF2E3308 \n" 
-        "loc_FF2E3304:\n" // jump table entry 10
+        "    B       loc_FF2E3294 \n" //diff
+        "loc_FF2E3290:\n" // jump table entry 10
         "    LDR     R7, =0x5DC \n" 
-        "loc_FF2E3308:\n"
+        "loc_FF2E3294:\n"
         "    STR     R0, [R6, #0x12C] \n" 
         "    STR     R11, [R6, #0xD8] \n" 
-        "    B       loc_FF2E3354 \n" 
-        "loc_FF2E3314:\n" // jump table entry 9
+        "    B       loc_FF2E32E0 \n" 
+        "loc_FF2E32A0:\n" // jump table entry 9
         "    LDR     R7, =0xBB8 \n" 
-        "    B       loc_FF2E3308 \n" 
-        "loc_FF2E331C:\n" // jump table entry 8
+        "    B       loc_FF2E3294 \n" 
+        "loc_FF2E32A8:\n" // jump table entry 8
         "    LDR     R7, =0x1770 \n" 
-        "    B       loc_FF2E3308 \n" 
-        "loc_FF2E3324:\n" // jump table entry 2
+        "    B       loc_FF2E3294 \n" 
+        "loc_FF2E32B0:\n" // jump table entry 2
         "    LDR     R7, =0x57600000 \n" // 2hrs, orignal 0x3A980
         "    STR     R0, [R6, #0x12C] \n" 
         "    MOV     R0, #240 \n" // original 0xF0
-        "loc_FF2E3330:\n"
+        "loc_FF2E32BC:\n"
         "    STR     R0, [R6, #0xD8] \n" 
-        "    B       loc_FF2E3354 \n" 
-        "loc_FF2E3338:\n" // jump table entry 3
+        "    B       loc_FF2E32E0 \n" 
+        "loc_FF2E32C4:\n" // jump table entry 3
         "    STR     R0, [R6, #0x12C] \n" 
         "    LDR     R7, =0x28800000 \n" // 2hrs, original 0x1D4C0
         "    MOV     R0, #0x78 \n" // 120 fps (0x78 = dec 120)
-        "    B       loc_FF2E3330 \n" 
-        "loc_FF2E3348:\n" // jump table default entry & 4-7
+        "    B       loc_FF2E32BC \n" 
+
+        "loc_FF2E32D4:\n" // jump table default entry & 4-7
         "    LDR     R1, =0x377 \n" 
-        "    LDR     R0, =0xFF2E20E0 \n" // **"MovWriter.c"
-        //"    BL      sub_FF00EDBC \n" // original
+        "    LDR     R0, =0xFF2E206C \n" // **"MovWriter.c"
         "    BL      _DebugAssert \n" // patched
-        "loc_FF2E3354:\n"
+        "loc_FF2E32E0:\n"
         "    LDR     R0, [R6, #0xD8] \n" 
-        "    LDR     R1, =0xE0F \n" 
+        "    LDR     R1, =7200 \n" // 2hrs, original 0xE0F
         "    MOV     R0, R0, LSR #1 \n" 
         "    STR     R0, [R6, #0xDC] \n" 
         "    LDR     R0, [R10] \n" 
@@ -418,36 +418,35 @@ void __attribute__((naked,noinline)) sub_FF2E325C_my() {
         "    MOVEQ   R0, #0x20000 \n" 
         "    MOVEQ   R5, #1 \n" 
         "    STREQ   R0, [R6, #0xAC] \n" 
-        "    BEQ     loc_FF2E33E8 \n" 
+        "    BEQ     loc_FF2E3374 \n" 
         "    CMP     R0, #0x280 \n" 
         "    LDREQ   R0, =0x7A760 \n" 
         "    MOVEQ   R5, #2 \n" 
         "    STREQ   R0, [R6, #0xAC] \n" 
-        "    BEQ     loc_FF2E33E8 \n" 
-        "    CMP     R0, #0x500 \n" 
-        "    LDREQ   R0, =0x11DA50 \n"         
+        "    BEQ     loc_FF2E3374 \n" 
+        "    CMP     R0, #0x500 \n" //0x500=1280
+        "    LDREQ   R0, =0x11DA50 \n" 
         "    LDR     R1, =7200 \n" // 2hrs, original 0x257
         "    MOVEQ   R5, #4 \n" 
         "    STREQ   R0, [R6, #0xAC] \n" 
-        "    BEQ     loc_FF2E33E8 \n" 
+        "    BEQ     loc_FF2E3374 \n" 
         "    CMP     R0, #0x780 \n" 
-        "    BNE     loc_FF2E33F0 \n" 
+        "    BNE     loc_FF2E337C \n" 
         "    MOV     R0, #2097152 \n" // 10mins, original 0x200000
         "    MOV     R5, #5 \n" 
         "    STR     R0, [R6, #0xAC] \n" 
-        "loc_FF2E33E8:\n"
+        "loc_FF2E3374:\n"
         "    STR     R1, [R6, #0x4C] \n" 
-        "    B       loc_FF2E33FC \n" 
-        "loc_FF2E33F0:\n"
+        "    B       loc_FF2E3388 \n" 
+        "loc_FF2E337C:\n"
         "    LDR     R1, =0x39F \n" 
-        "    LDR     R0, =0xFF2E20E0 \n" // **"MovWriter.c"
-        //"    BL      sub_FF00EDBC \n" // original
-        "    BL      _DebugAssert \n" // patched
-        "loc_FF2E33FC:\n"
+        "    LDR     R0, =0xFF2E206C \n" // **"MovWriter.c"
+        "    BL      _DebugAssert \n"
+        "loc_FF2E3388:\n"
         "    LDR     R0, [R6, #0x4C] \n" 
         "    LDR     R1, =0x138D \n" 
         "    MUL     R0, R7, R0 \n" 
-        "    BL      sub_FF3A2FD0 \n" 
+        "    BL      sub_FF3A2F5C \n" 
         "    ADD     R0, R0, #1 \n" 
         "    ADD     R0, R0, R0, LSL #2 \n" 
         "    STR     R0, [R6, #0x48] \n" 
@@ -455,28 +454,28 @@ void __attribute__((naked,noinline)) sub_FF2E325C_my() {
         "    CMP     R8, #0xA \n" 
         "    CMPNE   R8, #9 \n" 
         "    CMPNE   R8, #8 \n" 
-        "    BNE     loc_FF2E3440 \n" 
+        "    BNE     loc_FF2E33CC \n" 
         "    LDR     R1, =0x3E9 \n" 
         "    MUL     R0, R1, R0 \n" 
         "    MOV     R1, R7 \n" 
-        "    BL      sub_FF3A2FD0 \n" 
+        "    BL      sub_FF3A2F5C \n" 
         "    STR     R0, [R6, #0x4C] \n" 
-        "loc_FF2E3440:\n"
+        "loc_FF2E33CC:\n"
         "    CMP     R8, #2 \n" 
         "    CMPNE   R8, #3 \n" 
-        "    BNE     loc_FF2E3478 \n" 
+        "    BNE     loc_FF2E3404 \n" 
         "    RSB     R0, R7, R7, LSL #4 \n" 
         "    LDR     R1, =0x3E9 \n" 
         "    MOV     R0, R0, LSL #1 \n" 
         "    STR     R11, [R6, #0x4C] \n" 
-        "    BL      sub_FF3A2FD0 \n" 
+        "    BL      sub_FF3A2F5C \n" 
         "    LDR     R1, [R6, #0xE0] \n" 
         "    MOV     R7, R1 \n" 
-        "    BL      sub_FF3A2FD0 \n" 
+        "    BL      sub_FF3A2F5C \n" 
         "    ADD     R0, R0, #1 \n" 
         "    MUL     R0, R7, R0 \n" 
         "    STR     R0, [R6, #0x48] \n" 
-        "loc_FF2E3478:\n"
+        "loc_FF2E3404:\n"
         "    LDR     R0, [R4, #0xC] \n" 
         "    LDR     R7, [R10, #0xC] \n" 
         "    ADDS    R1, R0, #0 \n" 
@@ -496,7 +495,7 @@ void __attribute__((naked,noinline)) sub_FF2E325C_my() {
         "    ADD     R2, R2, R3 \n" 
         "    CMP     R12, #0 \n" 
         "    ADD     R0, R0, R9 \n" 
-        "    BEQ     loc_FF2E35F8 \n"
+        "    BEQ     loc_FF2E3584 \n"
         "    STR     R2, [R6, #0xFC] \n" 
         "    LDR     R3, [R6, #0x4C] \n" 
         "    LDR     R9, =0x15E4BC \n" 
@@ -521,7 +520,7 @@ void __attribute__((naked,noinline)) sub_FF2E325C_my() {
         "    MOV     R2, #0 \n" 
         "    ADD     R10, R9, #0x10 \n" 
         "    STR     R8, [R6, #0x10C] \n" 
-        "loc_FF2E3528:\n"
+        "loc_FF2E34B4:\n"
         "    MLA     R0, R2, R7, R8 \n" 
         "    ADD     R12, R9, R2, LSL #3 \n" 
         "    ADD     R0, R0, #3 \n" 
@@ -529,15 +528,15 @@ void __attribute__((naked,noinline)) sub_FF2E325C_my() {
         "    STR     R0, [R11, R2, LSL #2] \n" 
         "    MOV     R0, #0 \n" 
         "    ADD     R6, R10, R2, LSL #3 \n" 
-        "loc_FF2E3544:\n"
+"loc_FF2E34D0:\n"
         "    STR     R3, [R12, R0, LSL #2] \n" 
         "    STR     R3, [R6, R0, LSL #2] \n" 
         "    ADD     R0, R0, #1 \n" 
         "    CMP     R0, #2 \n" 
-        "    BLT     loc_FF2E3544 \n" 
+        "    BLT     loc_FF2E34D0 \n" 
         "    ADD     R2, R2, #1 \n" 
         "    CMP     R2, #2 \n" 
-        "    BLT     loc_FF2E3528 \n" 
+        "    BLT     loc_FF2E34B4 \n" 
         "    LDRH    R3, [R4, #0x14] \n" 
         "    LDR     R2, [R4, #8] \n" 
         "    MOV     R0, R5 \n" 
@@ -546,8 +545,8 @@ void __attribute__((naked,noinline)) sub_FF2E325C_my() {
         "    LDR     R2, [R1, #0x94] \n" 
         "    ADD     R0, R0, R2 \n" 
         "    STR     R0, [R1, #0x8C] \n" 
-        "    LDMFD   SP!, {R0-R12,PC} \n"         
-        "loc_FF2E35F8:\n"
+        "    LDMFD   SP!, {R0-R12,PC} \n" 
+        "loc_FF2E3584:\n"
         "    ADD     R2, R2, #0x1F \n" 
         "    BIC     R2, R2, #0x1F \n" 
         "    STR     R2, [R6, #0x100] \n" 
