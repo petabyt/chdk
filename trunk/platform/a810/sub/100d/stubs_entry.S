@@ -85,6 +85,8 @@ DEF(palette_buffer                          ,0x000b42c0) // Found @0xff9d2e54
 //    { 1, KEY_LEFT            ,0x02000000 }, // Found @0xffb10168, levent 0x06
 //    { 1, KEY_MENU            ,0x04000000 }, // Found @0xffb10170, levent 0x09
 //    { 1, KEY_SET             ,0x08000000 }, // Found @0xffb10178, levent 0x08
+//    { 1, KEY_VIDEO           ,0x10000000 }, // Found @0xffb10180, levent 0x1a
+//    { 1, KEY_HELP            ,0x20000000 }, // Found @0xffb10188, levent 0x14
 //    { 1, KEY_POWER           ,0x40000000 }, // Found @0xffb10190, levent 0x100
 //    { 1, KEY_PLAYBACK        ,0x80000000 }, // Found @0xffb10198, levent 0x101
 //    { 0, 0, 0 }
@@ -116,7 +118,7 @@ NSTUB(DebugAssert                             ,0x003f6afc) //111
 NSTUB(DeleteDirectory_Fut                     ,0xff82fa74) //  1
 NSTUB(DoAFLock                                ,0xff831a04) //102
 NSTUB(EnterToCompensationEVF                  ,0xff831c60) //104
-NSTUB(ExecuteEventProcedure                   ,0xff87a800) //  2
+NSTUB(ExecuteEventProcedure                   ,0xff87a800) //  1
 NSTUB(ExitFromCompensationEVF                 ,0xff831ca4) //104
 NSTUB(ExitTask                                ,0x003f6ab4) //105
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff83ca58) //104
