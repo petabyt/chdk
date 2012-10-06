@@ -523,7 +523,7 @@ typedef struct {
     int             maxram;
 	char		    cam[100];
 
-    // Alt copy of ROM in RAM (DryOS R50)
+    // Alt copy of ROM in RAM (DryOS R50, R51)
     uint32_t        *buf2;          // pointer to loaded FW data that is copied
     uint32_t        base2;          // RAM address copied to
     uint32_t        base_copied;    // ROM address copued from
@@ -534,7 +534,7 @@ uint32_t fwval(firmware *fw, int i)
 {
     if ((i >= 0) && (i < fw->size))
         return fw->buf[i];
-    if (fw->dryos_ver == 50)
+    if (fw->dryos_ver >= 50)
     {
         i = ((i * 4) + (fw->base - fw->base2)) / 4;
         if ((i >= 0) && (i < fw->size2))
@@ -832,7 +832,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 	else
 	{
 		fw->dryos_ver = atoi(((char*)&fw->buf[k])+28);
-        if (fw->dryos_ver > 50)
+        if (fw->dryos_ver > 51)
     		bprintf("//   DRYOS R%d (%s) *** New DRYOS Version - please update finsig_dryos.c ***\n",fw->dryos_ver,(char*)&fw->buf[k]);
         else
     		bprintf("//   DRYOS R%d (%s)\n",fw->dryos_ver,(char*)&fw->buf[k]);
@@ -874,6 +874,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
         break;
 	case 49: 
 	case 50: 
+	case 51:
         cam_idx = (((fw->base==0xFF000000)?0xFFF40190:0xFFFE0170) - fw->base) / 4; 
         pid_idx = (((fw->base==0xFF000000)?0xFFF40040:0xFFFE0040) - fw->base) / 4; 
         if ((cam_idx < fw->size) && (strncmp((char*)&fw->buf[cam_idx],"Canon ",6) != 0))
@@ -985,10 +986,10 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
         }
     }
 	
-    // DryOS R50 copies a block of ROM to RAM and then uses that copy
+    // DryOS R50/R51 copies a block of ROM to RAM and then uses that copy
     // Need to allow for this in finding addresses
     // Seen on SX260HS
-    if (fw->dryos_ver == 50)
+    if (fw->dryos_ver >= 50)
     {
         fw->buf2 = 0;
         fw->base2 = 0;
@@ -1175,6 +1176,7 @@ typedef struct {
 	int		dryos47_offset;
 	int		dryos49_offset;
 	int		dryos50_offset;
+	int		dryos51_offset;
 } string_sig;
 
 #if defined(PLATFORMOS_dryos)
@@ -1213,6 +1215,7 @@ string_sig string_sigs[] = {
 	{ 1, "GetParameterData", "PTM_RestoreUIProperty", 0xF0000004 },
 	{ 1, "GetPropertyCase", "PT_GetPropertyCaseString", 1 },
 	{ 1, "GetPropertyCase", "PT_GetPropertyCaseInt", 0x0100000F },
+	{ 1, "GetPropertyCase", "GetPropertyCase", 0x0100000F },
 	{ 1, "GetSDProtect", "GetSDProtect", 1 },
 	{ 1, "GetSystemTime", "GetSystemTime", 1 },
 	{ 1, "LEDDrive", "LEDDrive", 1 },
@@ -1234,6 +1237,7 @@ string_sig string_sigs[] = {
     { 1, "SetLogicalEventActive", "UiEvnt_SetLogicalEventActive", 1 },
     { 1, "SetParameterData", "PTM_BackupUIProperty", 1 },
 	{ 1, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000003 },
+	{ 1, "SetPropertyCase", "SetPropertyCase", 0x01000004 },
 	{ 1, "SetScriptMode", "SetScriptMode", 1 },
     { 1, "SleepTask", "SleepTask", 1 },
     { 1, "strcmp", "strcmp", 0 },
@@ -1332,9 +1336,9 @@ string_sig string_sigs[] = {
     { 5, "CreateTask", "CreateTask", 1 },
     { 5, "ExitTask", "ExitTask", 1 },
     { 5, "SleepTask", "SleepTask", 1 },
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50
-	{ 5, "UpdateMBROnFlash", "MakeBootDisk", 0x01000003,				  11,   11,   11,   11,   11,   11,    1,    1,    1 },
-	{ 5, "MakeSDCardBootable", "MakeBootDisk", 0x01000003,				   1,    1,    1,    1,    1,    1,    8,    8,    8 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
+	{ 5, "UpdateMBROnFlash", "MakeBootDisk", 0x01000003,				  11,   11,   11,   11,   11,   11,    1,    1,    1,    1 },
+	{ 5, "MakeSDCardBootable", "MakeBootDisk", 0x01000003,				   1,    1,    1,    1,    1,    1,    8,    8,    8,    8 },
 
     { 6, "Restart", "Bye", 0 },
 	{ 6, "GetImageFolder", "GetCameraObjectTmpPath ERROR[ID:%lx] [TRY:%lx]\n", 0 },
@@ -1349,11 +1353,11 @@ string_sig string_sigs[] = {
 	
 	{ 8, "WriteSDCard", "Mounter.c", 0 }, 
 	
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50
-	{ 9, "kbd_p1_f", "task_PhySw", 0x01000001,							   5,    5,    5,    5,    5,    5,    5,    5,    5 },
-	{ 9, "kbd_p2_f", "task_PhySw", 0xf1000001,							   7,    7,    7,    7,    7,    7,    7,    7,    7 },
-	{ 9, "kbd_read_keys", "kbd_p1_f", 0x01000001,						   2,    2,    2,    2,    2,    2,    2,    2,    2 },
-	{ 9, "kbd_p1_f_cont", "kbd_p1_f", 0,								   3,    3,    3,    3,    3,    3,    3,    3,    3 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
+	{ 9, "kbd_p1_f", "task_PhySw", 0x01000001,							   5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
+	{ 9, "kbd_p2_f", "task_PhySw", 0xf1000001,							   7,    7,    7,    7,    7,    7,    7,    7,    7,    7 },
+	{ 9, "kbd_read_keys", "kbd_p1_f", 0x01000001,						   2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
+	{ 9, "kbd_p1_f_cont", "kbd_p1_f", 0,								   3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
 	{ 9, "kbd_read_keys_r2", "kbd_read_keys", 0x0100000C },
 	{ 9, "GetKbdState", "kbd_read_keys", 0x01000009 },
 	{ 9, "GetKbdState", "kbd_read_keys", 0x0100000A },
@@ -1367,24 +1371,24 @@ string_sig string_sigs[] = {
 	{ 10, "task_RotaryEncoder", "RotaryEncoder", 1 },
 	{ 10, "task_RotaryEncoder", "RotarySw", 1 },
 
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50
-	{ 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,				   5,    5,    5,    5,    5,    5,    5,    5,    5 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  14,   14,   14,   14,   14,   14,   14,   14,   14 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  15,   15,   15,   15,   15,   15,   15,   15,   15 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  20,   20,   20,   20,   20,   20,   19,   20,   20 },
-	{ 11, "_log", (char*)log_test, 0x01000001,							   1,    1,    1,    1,    1,    1,    1,    1,    1 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
+	{ 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,				   5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  14,   14,   14,   14,   14,   14,   14,   14,   14,   14 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  15,   15,   15,   15,   15,   15,   15,   15,   15,   15 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  20,   20,   20,   20,   20,   20,   19,   20,   20,   20 },
+	{ 11, "_log", (char*)log_test, 0x01000001,							   1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
 	
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50
-	{ 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,						0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54, 0x00 },
-	{ 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1, 	0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x34, 0x4C },
-	{ 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1, 			0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38, 0x38, 0x50 },
-	{ 12, "free", "free", 1,											0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30, 0x30, 0x48 },
-	{ 12, "malloc", "malloc", 0x01000003,								0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C, 0x44 },
-	{ 12, "TakeSemaphore", "TakeSemaphore", 1,							0x14, 0x14, 0x14, 0x14, 0x14, 0x1C, 0x1C, 0x1C, 0x1C },
-	{ 12, "GiveSemaphore", "GiveSemaphore", 1,							0x18, 0x18, 0x18, 0x18, 0x18, 0x20, 0x20, 0x20, 0x20 },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C,0x354 },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000,0x000 },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x000,0x2C4,0x000,0x000,0x000,0x000,0x000,0x000 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
+	{ 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,						0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54, 0x00, 0x00 },
+	{ 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1, 	0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x34, 0x4C, 0x4C },
+	{ 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1, 			0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38, 0x38, 0x50, 0x50 },
+	{ 12, "free", "free", 1,											0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30, 0x30, 0x48, 0x48 },
+	{ 12, "malloc", "malloc", 0x01000003,								0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C, 0x44, 0x44 },
+	{ 12, "TakeSemaphore", "TakeSemaphore", 1,							0x14, 0x14, 0x14, 0x14, 0x14, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C },
+	{ 12, "GiveSemaphore", "GiveSemaphore", 1,							0x18, 0x18, 0x18, 0x18, 0x18, 0x20, 0x20, 0x20, 0x20, 0x20 },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C,0x354,0x354 },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x000,0x2C4,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
 	
 	{ 13, "strftime", "Sunday", 1 },
 	
@@ -1422,6 +1426,7 @@ int dryos_offset(firmware *fw, string_sig *sig)
 	case 47:	return sig->dryos47_offset;
 	case 49:	return sig->dryos49_offset;
 	case 50:	return sig->dryos50_offset;
+	case 51:	return sig->dryos51_offset;
 	}
 	return 0;
 }
@@ -3943,13 +3948,23 @@ void find_key_vals(firmware *fw)
         {
     		add_kmval(fw,tadr,tsiz,tlen,0x601,"KEY_PLAYBACK",0);
 	    	add_kmval(fw,tadr,tsiz,tlen,0x600,"KEY_POWER",0);
+	    	add_kmval(fw,tadr,tsiz,tlen,0x12,"KEY_VIDEO",0);
         }
         else
         {
     		add_kmval(fw,tadr,tsiz,tlen,0x101,"KEY_PLAYBACK",0);
 	    	add_kmval(fw,tadr,tsiz,tlen,0x100,"KEY_POWER",0);
+            if (fw->dryos_ver == 49)
+            {
+                add_kmval(fw,tadr,tsiz,tlen,0x19,"KEY_VIDEO",0);
+            }
+            else if(fw->dryos_ver == 50)
+            {
+                add_kmval(fw,tadr,tsiz,tlen,0x1A,"KEY_VIDEO",0);
+                add_kmval(fw,tadr,tsiz,tlen,0x14,"KEY_HELP",0);
+            }	
         }
-				
+
 		bprintf("\n// Keymap values for kbd.c. Additional keys may be present, only common values included here.\n");
 		print_kmvals();
     }
