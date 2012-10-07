@@ -32,6 +32,7 @@ NSTUB(PT_PlaySound                            ,0xff076e60) //  4 93%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x000388e4) // Found @0xff01f5ac
 DEF(physw_run                               ,0x00001c60) // Found @0xff01f158
+DEF(physw_sleep_delay                       ,0x00001c68) // Found @0xff01f158
 DEF(levent_table                            ,0xff587648) // Found @0xff587648
 DEF(FlashParamsTable                        ,0xff6401e4) // Found @0xff6401e4
 DEF(movie_status                            ,0x0000ab7c) // Found @0xff1b6fdc
@@ -71,9 +72,12 @@ DEF(active_bitmap_buffer                    ,0x0000dc1c) // Found @0xff281168
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 1, KEY_POWER           ,0x00400000 }, // Found @0xff441660, levent 0x100
+//    { 1, KEY_PLAYBACK        ,0x00800000 }, // Found @0xff441668, levent 0x101
 //    { 1, KEY_SHOOT_FULL      ,0x03000000 }, // Found @0xff441678, levent 0x01
 //    { 1, KEY_SHOOT_FULL_ONLY ,0x02000000 }, // Found @0xff441678, levent 0x01
 //    { 1, KEY_SHOOT_HALF      ,0x01000000 }, // Found @0xff441670, levent 0x00
+//    { 2, KEY_VIDEO           ,0x00000020 }, // Found @0xff4416c8, levent 0x1a
 //    { 2, KEY_MENU            ,0x00000040 }, // Found @0xff4416d0, levent 0x09
 //    { 2, KEY_DISPLAY         ,0x00000080 }, // Found @0xff4416d8, levent 0x0a
 //    { 2, KEY_UP              ,0x00000100 }, // Found @0xff4416e0, levent 0x04

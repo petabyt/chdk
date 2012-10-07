@@ -27,6 +27,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0001061c) // Found @0xffc130cc
 DEF(physw_run                               ,0x00001ca4) // Found @0xffc12d7c
+DEF(physw_sleep_delay                       ,0x00001ca2) // Found @0xffc12d7c
 DEF(levent_table                            ,0xffe60474) // Found @0xffe60474
 DEF(FlashParamsTable                        ,0xffe7d1b4) // Found @0xffe7d1b4
 DEF(movie_status                            ,0x00005570) // Found @0xffc498b4
@@ -59,6 +60,7 @@ DEF(zoom_busy                               ,0x00009dc0) // Found @0xffd02c78
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 1, KEY_POWER           ,0x00004000 }, // Found @0xffe43f60, levent 0x600 (uses inverted logic in physw_status)
 //    { 1, KEY_SHOOT_FULL      ,0xc0000000 }, // Found @0xffe43fb0, levent 0x01
 //    { 1, KEY_SHOOT_FULL_ONLY ,0x80000000 }, // Found @0xffe43fb0, levent 0x01
 //    { 1, KEY_SHOOT_HALF      ,0x40000000 }, // Found @0xffe43fa8, levent 0x00

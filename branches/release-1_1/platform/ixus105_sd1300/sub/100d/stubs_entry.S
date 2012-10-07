@@ -34,6 +34,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0002f100) // Found @0xffc24574
 DEF(physw_run                               ,0x00001c2c) // Found @0xffc241d8
+DEF(physw_sleep_delay                       ,0x00001c2a) // Found @0xffc241d8
 DEF(levent_table                            ,0xffec0320) // Found @0xffec0320
 DEF(FlashParamsTable                        ,0xffefa0e8) // Found @0xffefa0e8
 DEF(movie_status                            ,0x00005780) // Found @0xffd1bc1c
@@ -63,18 +64,20 @@ DEF(recreview_hold                          ,0x000031d0) // Found @0xffc7d224
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 0, KEY_PLAYBACK        ,0x00000100 }, // Found @0xffea7a88, levent 0x601
+//    { 0, KEY_POWER           ,0x00000200 }, // Found @0xffea7a94, levent 0x600
 //    { 0, KEY_MENU            ,0x00000400 }, // Found @0xffea7aa0, levent 0x09
 //    { 1, KEY_LEFT            ,0x08000000 }, // Found @0xffea7adc, levent 0x06
 //    { 1, KEY_ZOOM_OUT        ,0x10000000 }, // Found @0xffea7ae8, levent 0x03
 //    { 1, KEY_ZOOM_IN         ,0x20000000 }, // Found @0xffea7af4, levent 0x02
-//    { 2, KEY_DOWN            ,0x00000002 }, // Found @0xffea7b0c, levent 0x05
-//    { 2, KEY_SHOOT_FULL      ,0x00005000 }, // Found @0xffea7b3c, levent 0x01
-//    { 2, KEY_SHOOT_HALF      ,0x00004000 }, // Found @0xffea7b48, levent 0x00
 //    { 2, KEY_SET             ,0x00000001 }, // Found @0xffea7b00, levent 0x08
-//    { 2, KEY_SHOOT_FULL_ONLY ,0x00001000 }, // Found @0xffea7b3c, levent 0x01
+//    { 2, KEY_DOWN            ,0x00000002 }, // Found @0xffea7b0c, levent 0x05
 //    { 2, KEY_DISPLAY         ,0x00000008 }, // Found @0xffea7b18, levent 0x0a
 //    { 2, KEY_RIGHT           ,0x00000400 }, // Found @0xffea7b24, levent 0x07
 //    { 2, KEY_UP              ,0x00000800 }, // Found @0xffea7b30, levent 0x04
+//    { 2, KEY_SHOOT_FULL      ,0x00005000 }, // Found @0xffea7b3c, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00004000 }, // Found @0xffea7b48, levent 0x00
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00001000 }, // Found @0xffea7b3c, levent 0x01
 //    { 0, 0, 0 }
 //};
 

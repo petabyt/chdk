@@ -27,6 +27,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x000100bc) // Found @0xffc11c0c
 DEF(physw_run                               ,0x00001bf0) // Found @0xffc118a8
+DEF(physw_sleep_delay                       ,0x00001bee) // Found @0xffc118a8
 DEF(levent_table                            ,0xffe73984) // Found @0xffe73984
 DEF(FlashParamsTable                        ,0xffe90724) // Found @0xffe90724
 DEF(movie_status                            ,0x00005200) // Found @0xffc45690
@@ -55,15 +56,16 @@ DEF(recreview_hold                          ,0x00005b64) // Found @0xffc64340
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 1, KEY_POWER           ,0x04000000 }, // Found @0xffe525c8, levent 0x600 (uses inverted logic in physw_status)
 //    { 2, KEY_UP              ,0x00000001 }, // Found @0xffe525d8, levent 0x04
-//    { 2, KEY_MENU            ,0x00000400 }, // Found @0xffe52620, levent 0x09
-//    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe52600, levent 0x01
-//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe52600, levent 0x01
 //    { 2, KEY_DOWN            ,0x00000002 }, // Found @0xffe525e0, levent 0x05
 //    { 2, KEY_RIGHT           ,0x00000004 }, // Found @0xffe525e8, levent 0x07
 //    { 2, KEY_LEFT            ,0x00000008 }, // Found @0xffe525f0, levent 0x06
-//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe52618, levent 0x08
+//    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe52600, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe52600, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xffe525f8, levent 0x00
+//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe52618, levent 0x08
+//    { 2, KEY_MENU            ,0x00000400 }, // Found @0xffe52620, levent 0x09
 //    { 0, 0, 0 }
 //};
 

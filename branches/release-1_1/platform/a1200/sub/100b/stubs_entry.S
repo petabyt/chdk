@@ -26,6 +26,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00032954) // Found @0xff834310
 DEF(physw_run                               ,0x00001c30) // Found @0xff833ed0
+DEF(physw_sleep_delay                       ,0x00001c38) // Found @0xff833ed0
 DEF(levent_table                            ,0xffb995e4) // Found @0xffb995e4
 DEF(FlashParamsTable                        ,0xffbe67c4) // Found @0xffbe67c4
 DEF(movie_status                            ,0x000065b4) // Found @0xff963af0
@@ -35,6 +36,10 @@ DEF(canon_shoot_menu_active                 ,0x00007a6d) // Found @0xff9a7b88
 DEF(playrec_mode                            ,0x00002be8) // Found @0xff87ceb4
 DEF(zoom_status                             ,0x0000ca68) // Found @0xffac5184
 DEF(some_flag_for_af_scan                   ,0x00006988) // Found @0xff9677fc
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 3 int value(s), the first is the zoom focus length.
+// there are 8 entries in the table - set NUM_FL to 8
+//DEF(focus_len_table                         ,0xfffe2a98) // Found @0xfffe2a98,          stubs_min = 0xfffe2a98 (0xfffe2a98)
 DEF(zoom_busy                               ,0x00006510) // Found @0xff960534
 DEF(focus_busy                              ,0x00006420) // Found @0xff95d914
 DEF(recreview_hold                          ,0x00003490) // Found @0xff897fa8
@@ -58,8 +63,13 @@ DEF(palette_buffer                          ,0x000b41e4) // Found @0xffa00dbc
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 2, KEY_SHOOT_FULL      ,0x0000000c }, // Found @0xffb579c4, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000008 }, // Found @0xffb579c4, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000004 }, // Found @0xffb579bc, levent 0x00
 //    { 2, KEY_ZOOM_IN         ,0x00000010 }, // Found @0xffb579cc, levent 0x02
 //    { 2, KEY_ZOOM_OUT        ,0x00000020 }, // Found @0xffb579d4, levent 0x03
+//    { 2, KEY_POWER           ,0x00000040 }, // Found @0xffb579dc, levent 0x600
+//    { 2, KEY_PLAYBACK        ,0x00000080 }, // Found @0xffb579e4, levent 0x601
 //    { 2, KEY_UP              ,0x00000100 }, // Found @0xffb579ec, levent 0x04
 //    { 2, KEY_DOWN            ,0x00000200 }, // Found @0xffb579f4, levent 0x05
 //    { 2, KEY_RIGHT           ,0x00000400 }, // Found @0xffb579fc, levent 0x07
@@ -67,9 +77,6 @@ DEF(palette_buffer                          ,0x000b41e4) // Found @0xffa00dbc
 //    { 2, KEY_SET             ,0x00001000 }, // Found @0xffb57a0c, levent 0x08
 //    { 2, KEY_MENU            ,0x00002000 }, // Found @0xffb57a14, levent 0x09
 //    { 2, KEY_DISPLAY         ,0x00004000 }, // Found @0xffb57a1c, levent 0x0a
-//    { 2, KEY_SHOOT_FULL      ,0x0000000c }, // Found @0xffb579c4, levent 0x01
-//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000008 }, // Found @0xffb579c4, levent 0x01
-//    { 2, KEY_SHOOT_HALF      ,0x00000004 }, // Found @0xffb579bc, levent 0x00
 //    { 0, 0, 0 }
 //};
 
