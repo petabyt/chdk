@@ -76,6 +76,7 @@ DEF(active_bitmap_buffer                    ,0x00009a68) // Found @0xff23394c
 //    { 2, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xff3a8010, levent 0x00
 //    { 2, KEY_PLAYBACK        ,0x00000400 }, // Found @0xff3a8020, levent 0x101
 //    { 2, KEY_POWER           ,0x00000800 }, // Found @0xff3a8028, levent 0x100
+//    { 2, KEY_VIDEO           ,0x00004000 }, // Found @0xff3a8038, levent 0x19
 //    { 0, 0, 0 }
 //};
 
@@ -106,7 +107,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff027a20) //  1
 NSTUB(DeleteFile_Fut                          ,0xff02793c) //112
 NSTUB(DoAFLock                                ,0xff0298cc) //102
 NSTUB(EnterToCompensationEVF                  ,0xff029b2c) //104
-NSTUB(ExecuteEventProcedure                   ,0xff0862bc) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff0862bc) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff029b70) //104
 NSTUB(ExitTask                                ,0xff00ed74) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff037a8c) //104

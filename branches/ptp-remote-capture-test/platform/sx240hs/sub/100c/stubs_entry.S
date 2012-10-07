@@ -77,6 +77,7 @@ DEF(active_bitmap_buffer                    ,0x0000dc1c) // Found @0xff281168
 //    { 1, KEY_SHOOT_FULL      ,0x03000000 }, // Found @0xff441678, levent 0x01
 //    { 1, KEY_SHOOT_FULL_ONLY ,0x02000000 }, // Found @0xff441678, levent 0x01
 //    { 1, KEY_SHOOT_HALF      ,0x01000000 }, // Found @0xff441670, levent 0x00
+//    { 2, KEY_VIDEO           ,0x00000020 }, // Found @0xff4416c8, levent 0x1a
 //    { 2, KEY_MENU            ,0x00000040 }, // Found @0xff4416d0, levent 0x09
 //    { 2, KEY_DISPLAY         ,0x00000080 }, // Found @0xff4416d8, levent 0x0a
 //    { 2, KEY_UP              ,0x00000100 }, // Found @0xff4416e0, levent 0x04

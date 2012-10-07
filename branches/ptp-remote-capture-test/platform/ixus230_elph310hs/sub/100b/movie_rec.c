@@ -81,8 +81,11 @@ void __attribute__((naked,noinline)) movie_record_task() {
         "    BL      sub_FF045B24 \n" 
         "    B       loc_FF1868A4 \n" 
         "loc_FF186844:\n" // jump table entry 0
+//begin patch
         //"    BL      sub_FF185D98 \n" // original
-        "    BL      sub_FF185D98_my \n" // patched
+        "    BL     movie_time\n"     //patched
+"label_A:\n"
+//end patch
         "    B       loc_FF1868A4 \n" 
         "loc_FF18684C:\n" // jump table entry 6
         "    LDR     R1, [R4, #0xF4] \n" 
@@ -129,6 +132,19 @@ void __attribute__((naked,noinline)) movie_record_task() {
     );
 }
 
+void __attribute__((naked,noinline)) movie_time() {
+    if( (int)conf.ext_video_time == 1 ) {
+        asm volatile (
+          "BL     sub_FF185D98_my\n"
+          "B      label_A\n"
+        );
+    } else {
+        asm volatile (
+          "BL     sub_FF185D98\n"
+          "B      label_A\n"
+        );
+    }
+}
 /*----------------------------------------------------------------------
 	sub_FF185D98_my()
 -----------------------------------------------------------------------*/

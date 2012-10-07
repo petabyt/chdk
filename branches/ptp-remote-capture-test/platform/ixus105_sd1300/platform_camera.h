@@ -49,12 +49,12 @@
 
     #define cam_CalibrationIlluminant1 1 // Daylight  // TODO:
     // cropping
-    #define CAM_JPEG_WIDTH  3648
-    #define CAM_JPEG_HEIGHT 2736
-    #define CAM_ACTIVE_AREA_X1 6
-    #define CAM_ACTIVE_AREA_Y1 12
-    #define CAM_ACTIVE_AREA_X2 3690
-    #define CAM_ACTIVE_AREA_Y2 2772
+    #define CAM_JPEG_WIDTH  4000
+    #define CAM_JPEG_HEIGHT 3000
+    #define CAM_ACTIVE_AREA_X1 0
+    #define CAM_ACTIVE_AREA_Y1 10
+    #define CAM_ACTIVE_AREA_X2 4072
+    #define CAM_ACTIVE_AREA_Y2 3040
 
     // camera name
     #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData

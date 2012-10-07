@@ -66,6 +66,7 @@ DEF(focus_busy                              ,0x0000b27c) // Found @0xff9507e0
 //    { 0, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffa9cda8, levent 0x00
 //    { 0, KEY_PLAYBACK        ,0x00000004 }, // Found @0xffa9cdb8, levent 0x601 (uses inverted logic in physw_status)
 //    { 1, KEY_LEFT            ,0x00001000 }, // Found @0xffa9ce28, levent 0x06
+//    { 1, KEY_VIDEO           ,0x00002000 }, // Found @0xffa9ce30, levent 0x12
 //    { 1, KEY_SET             ,0x00010000 }, // Found @0xffa9ce40, levent 0x08
 //    { 1, KEY_DISPLAY         ,0x00020000 }, // Found @0xffa9ce48, levent 0x0a
 //    { 1, KEY_MENU            ,0x00040000 }, // Found @0xffa9ce50, levent 0x09
