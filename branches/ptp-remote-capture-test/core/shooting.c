@@ -49,22 +49,6 @@ void shooting_init()
     photo_param_put_off.tv96=PHOTO_PARAM_TV_NONE;
 }
 
-extern unsigned _ExecuteEventProcedure(const char *name,...);
-extern int overridden_PT_CompleteFileWrite();
-
-int register_pt_hooks() {
-    if(_ExecuteEventProcedure("System.Create") == -1) {
-        return 1;
-    }
-    if(_ExecuteEventProcedure("SS.Create") == -1) {
-        return 2;
-    }
-    if(_ExecuteEventProcedure("ExportToEventProcedure","PT_CompleteFileWrite",overridden_PT_CompleteFileWrite) == -1) {
-        return 3;
-    }
-    //_LogPrintf(0x120,"pt hook(s) registered");
-    return 0;
-}
 //-------------------------------------------------------------------
 // Functions to access Canon properties
 

@@ -95,3 +95,28 @@ void __attribute__((naked,noinline)) shooting_expo_iso_override(void)
     // Restore registers
     asm volatile("LDMFD   SP!, {R0-R12,PC}\n");
 }
+
+//extern unsigned _ExecuteEventProcedure(const char *name,...);
+extern int overridden_PT_CompleteFileWrite();
+
+// ExecuteEventProducedure isn't safe to call from thumb on all cams
+// since there's not much else here, not worth running through call_func_ptr
+int register_pt_hooks() {
+    // older cams only have SystemEventInit
+    if(_ExecuteEventProcedure("SystemEventInit") == -1) {
+        if(_ExecuteEventProcedure("System.Create") == -1) {
+            return 1;
+        }
+    }
+    if(_ExecuteEventProcedure("RegisterProductTestEvent") == -1) {
+        if(_ExecuteEventProcedure("SS.Create") == -1) {
+            return 2;
+        }
+    }
+    // note override must be in ARM code
+    if(_ExecuteEventProcedure("ExportToEventProcedure","PT_CompleteFileWrite",overridden_PT_CompleteFileWrite) == -1) {
+        return 3;
+    }
+    //_LogPrintf(0x120,"pt hook(s) registered");
+    return 0;
+}
