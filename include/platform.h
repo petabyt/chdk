@@ -560,6 +560,12 @@ unsigned call_func_ptr(void *func, const unsigned *args, unsigned n_args);
 */
 int reboot(const char *bootfile);
 
+/*
+arm cache control
+*/
+void icache_flush_all(void);
+void dcache_clean_all(void);
+
 #define started() debug_led(1)
 #define finished() debug_led(0)
 

@@ -379,6 +379,13 @@ int module_load( char* name, _module_bind_t callback)
    flat_module_name_make(modules[idx]->modulename, name);
    modules[idx]->runtime_bind_callback = (uint32_t) callback;     //@tsv reuse unneeded entry to store valuable
 
+   // TODO these could be changed to operate on affected address ranges only
+   // after relocating but before attempting to execute loaded code
+   // clean data cache to ensure code is in main memory
+   dcache_clean_all();
+   // then flush instruction cache to ensure no addresses containing new code are cached
+   icache_flush_all();
+   
    int bind_err=0;
    if ( flat._module_exportlist ) { 
         modules[idx]->_module_exportlist += (unsigned int)flat_buf; 
