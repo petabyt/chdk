@@ -197,7 +197,7 @@ asm volatile (
       "BLEQ _Close\n"        // no interception
     );
 /*
- * following operations depend on whether the overridden PT_CompleteFileWrite is available
+ * following operation depends on whether the overridden PT_CompleteFileWrite is available
  */
 asm volatile (
       "LDR R3, =no_pt_completefilewrite\n"
@@ -205,10 +205,35 @@ asm volatile (
       "CMP R1, #0\n"
       "LDRNE R3, =imagesavecomplete\n"
       "MOVNE R1, #1\n"      
-      "STRNE R1, [R3]\n"    // image saved TODO: check for multiple runs of filewritetask!
-      "MOVNE R1, #0\n"
-      "LDRNE R2, =ignore_current_write\n"
-      "STRNE R1, [R2]\n"
+      "STRNE R1, [R3]\n"    // image saved
+    );
+/*
+ * following operation will act faster than PT_CompleteFileWrite
+ */
+asm volatile (
+      "MOV R1, #0\n"
+      "LDR R2, =ignore_current_write\n"
+      "STR R1, [R2]\n"
+      "LDR R2, =current_write_ignored\n"
+      "STR R1, [R2]\n"
+      "LDR LR, [SP], #4\n"
+      "BX LR\n"
+    );
+}
+#else
+/*
+ * VxWorks camera with overridden Close() in FileWriteTask
+ */
+void __attribute__((naked,noinline)) fwt_close () {
+/*
+ * to be used when imagesavecomplete handling is needed
+ */
+asm volatile (
+      "STR LR, [SP, #-4]!\n"
+      "BL _Close\n"        // no interception needed
+      "LDR R3, =imagesavecomplete\n"
+      "MOV R2, #1\n"      
+      "STR R2, [R3]\n"    // image saved
       "LDR LR, [SP], #4\n"
       "BX LR\n"
     );
@@ -223,7 +248,6 @@ void supported_pt_completefilewrite() {
 void image_save_completed() {
 /* 
  * only called from the overridden PT_CompleteFileWrite eventproc
- * it should handle RAW+JPEG correctly, TODO: extend the filewritetask hook and the protocol...
  */
     imagesavecomplete = 1;
     ignore_current_write = 0;

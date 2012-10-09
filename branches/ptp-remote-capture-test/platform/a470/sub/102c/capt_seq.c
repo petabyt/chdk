@@ -9,7 +9,7 @@ typedef struct {
     unsigned int length;
 } cam_ptp_data_chunk; //camera specific structure
 
-#define MAX_CHUNKS_FOR_JPEG 3 //can be model specific (it's either for JPEG or native RAW)
+#define MAX_CHUNKS_FOR_JPEG 3 //model specific
 
 #include "../../../generic/capt_seq.c"
 
