@@ -75,3 +75,19 @@ void vid_turn_on_updates()
     //_RefreshPhysicalScreen(1);
     _UnlockAndRefresh();
 }*/
+
+// Functions for PTP Live View system
+
+void *vid_get_bitmap_active_palette() {
+        return (void*)(*(int*)(0x4970+0x20));  //Found @ 0xffcd1e80 a495 100f
+}
+
+
+// 64 entry palette based on 100f 0xffcd1e80
+int vid_get_palette_type()                      { return 4; }
+int vid_get_palette_size()                      { return 16*4; }
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x4970+0xC)); //found @ 0xffcd1f3c a495 100f
+}

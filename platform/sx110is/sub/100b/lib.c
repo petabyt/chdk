@@ -66,14 +66,13 @@ int vid_get_viewport_fullscreen_height() {
     return vid_get_viewport_height_proper();
 }
 
-/*
 //this camera uses a 16 entry VUYA palette. The alpha values all appear to be 0 or 3
 int vid_get_palette_type() { return 4; }
 int vid_get_palette_size() { return 16*4; } // from sub_FFCD28D4
 void *vid_get_bitmap_active_palette() {
     return (void *)*(unsigned int*)(0x7BCC+0x20);  // sub_FFCD28D4, via sub_FFD8B650 two refs to "Palette Class."
 }
-*/
+
 void *vid_get_bitmap_active_buffer()
 {
     return (void*)(*(int*)(0x7BCC+0xC)); //"Add: %p Width : %ld Hight : %ld", sub_FFCD2998
