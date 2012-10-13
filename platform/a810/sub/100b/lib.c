@@ -3,20 +3,11 @@
 char *hook_raw_image_addr()     {return (char*) 0x420B7FC0;}   //Found @0xffae0ef4 a810
 char *hook_alt_raw_image_addr() {return (char*) 0x420B7FC0;}   //Found @0xffae0ef4 a810
 
-#if 0
-//With this implementation, live view works only in some capture modes.
-//Some overlay objects have wrong color
+
 void *vid_get_viewport_live_fb()
 {
-    return (void*)(*(int*)(0x2094+0x138));		//0xff848398 [0xff8488d8] + 0xff8483f0 a810
-}
-#else
-//With this implementation, live view works in all capture modes
-void *vid_get_viewport_live_fb()
-{
-    return 0x0;
-/*    void **fb=(void **)0x2094;
-    unsigned char buff = *((unsigned char*)0);
+    void **fb=(void **)0x2274;
+    unsigned char buff = *((unsigned char*)0x2094);
     if (buff == 0) {
         buff = 2;
     }
@@ -24,9 +15,7 @@ void *vid_get_viewport_live_fb()
         buff--;
     }
     return fb[buff];
-*/
 }
-#endif
 
 /*
  * Note copied from SX110 IS
