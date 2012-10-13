@@ -49,6 +49,12 @@
 	//#define CAM_SHOW_OSD_IN_SHOOT_MENU    1
 	//#define CAM_QUALITY_OVERRIDE          1
 
+    #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
+//    #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments    
+    #define CAM_NEED_SET_ZOOM_DELAY          100  // Define to add a delay after setting the zoom position
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
+
+
     #define CAM_HAS_CMOS                    1
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_MANUAL_FOCUS
@@ -62,8 +68,11 @@
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
-    #define CAM_CAN_SD_OVER_IN_AF_LOCK      1
+    #define CAM_CAN_SD_OVERRIDE             1    // Camera allows to do subject distance override
+    #undef  CAM_CAN_SD_OVER_NOT_IN_MF            // no SD override unless in manual focus mode
+    #undef  CAM_CAN_SD_OVER_IN_AF_LOCK           // SD override when AF locked only
+    #define CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY 1    // Camera allows subject distance (focus) override only when in AF Lock mode OR in movie mode
+    
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  DNG_BADPIXEL_VALUE_LIMIT
     #define DNG_BADPIXEL_VALUE_LIMIT        16      // Camera sensor apparently has bad pixels with value > 0 & <=16
