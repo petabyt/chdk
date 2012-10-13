@@ -859,10 +859,10 @@ asm volatile (
       "STRH    R4, [R5, #2] \n"
       "BLEQ    _DebugAssert \n" //RAM
       "MOV     R0, R4 \n"
-      "BL      sub_FF9D8CBC \n"
+//      "BL      sub_FF9D8CBC \n" //original _apex2us
+      "BL      apex2us \n"   //patch
       "MOV     R4, R0 \n"
-//      "BL      sub_FF8E93E8 \n" //original
-      "   BL      apex2us \n"   //patch
+      "BL      sub_FF8E93E8 \n"
       "MOV     R0, R4 \n"
       "BL      sub_FF8F1BF0 \n"
       "TST     R0, #1 \n"
