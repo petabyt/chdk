@@ -101,7 +101,7 @@ NSTUB(CreateTask                              ,0xff81afac) //101
 NSTUB(DebugAssert                             ,0xff81b284) //111
 NSTUB(DeleteDirectory_Fut                     ,0xff823640) //  1
 NSTUB(DeleteFile_Fut                          ,0xff82355c) //112
-NSTUB(ExecuteEventProcedure                   ,0xff86df60) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff86df60) //  2
 NSTUB(ExitTask                                ,0xff81b23c) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff83024c) //104
 NSTUB(ExpCtrlTool_StopContiAE                 ,0xff830390) //104

@@ -394,13 +394,13 @@ int match_compare1(const Match *p1, const Match *p2)
     /* NOTE: If a function has *more* matches, it will be prefered, even if it has a lower percent matches */
     if (p1->success > p2->success)
 	{
-		if (p2->fail != 0)
+		if ((p2->fail == 0) && (p1->fail > 0))
 		{
-			return -1;
+			return 1;
 		}
 		else
 		{
-			return 1;
+			return -1;
 		}
     }
 	else if (p1->success < p2->success)
@@ -1263,7 +1263,9 @@ string_sig string_sigs[] = {
     { 2, "MoveZoomLensWithPoint", "MoveZoomLensWithPoint", 1 },
     { 2, "GetCurrentAvValue", "GetCurrentAvValue", 1 },
 	{ 2, "PT_MoveOpticalZoomAt", "PT_MoveOpticalZoomAt", 1 },
+	{ 2, "PT_MoveOpticalZoomAt", "SS.MoveOpticalZoomAt", 1 },
 	{ 2, "PT_MoveDigitalZoomToWide", "PT_MoveDigitalZoomToWide", 1 },
+	{ 2, "PT_MoveDigitalZoomToWide", "SS.MoveDigitalZoomToWide", 1 },
 	{ 2, "MoveIrisWithAv", "MoveIrisWithAv", 1},
     { 2, "PutInNdFilter", "TurnOnNdFilter", 1 },
     { 2, "PutOutNdFilter", "TurnOffNdFilter", 1 },
@@ -1274,7 +1276,9 @@ string_sig string_sigs[] = {
 	{ 2, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000008 },
 	{ 2, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000009 },
 	{ 2, "UnlockAF", "PT_UnlockAF", 0x01000002 },
+	{ 2, "UnlockAF", "SS.UnlockAF", 0x01000002 },
 	{ 2, "DoAFLock", "PT_DoAFLock", 0x01000002 },
+	{ 2, "DoAFLock", "SS.DoAFLock", 0x01000002 },
 	{ 2, "GetSystemTime", "PT_GetSystemTime", 0x01000003 },
 	{ 2, "PT_PlaySound", "PT_PlaySound", 0x01000005 },
 	{ 2, "StartRecModeMenu", "StartRecModeMenu", 1 },

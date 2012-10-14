@@ -116,7 +116,7 @@ NSTUB(DebugAssert                             ,0xff81eb14) //111
 NSTUB(DeleteDirectory_Fut                     ,0xff836814) //  1
 NSTUB(DeleteFile_Fut                          ,0xff836730) //112
 NSTUB(EnterToCompensationEVF                  ,0xff8383e4) //104
-NSTUB(ExecuteEventProcedure                   ,0xff88b948) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff88b948) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff838428) //104
 NSTUB(ExitTask                                ,0xff81eacc) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff8462a0) //104

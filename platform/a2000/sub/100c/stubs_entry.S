@@ -15,7 +15,7 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(ExecuteEventProcedure                 ,0xffc553c4) //  1        *** != 0xffc5543c
+//NSTUB(ExecuteEventProcedure                 ,0xffc553c4) //  2        *** != 0xffc5543c
 //NSTUB(GetBatteryTemperature                 ,0xffc33504) //102        *** != 0xffc33494
 //NSTUB(Lseek                                 ,0xffc13484) //101        *** != 0xffc1354c
 //NSTUB(Read                                  ,0xffc0a138) //101        *** != 0xffc133ec

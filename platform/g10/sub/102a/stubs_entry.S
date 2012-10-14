@@ -99,7 +99,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff823a18) //  1
 NSTUB(DeleteFile_Fut                          ,0xff823934) //112
 NSTUB(DoAFLock                                ,0xff825e48) //102
 NSTUB(EnterToCompensationEVF                  ,0xff826110) //104
-NSTUB(ExecuteEventProcedure                   ,0xff873ae4) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff873ae4) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff826154) //104
 NSTUB(ExitTask                                ,0xff81b184) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff831950) //104
