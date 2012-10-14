@@ -103,6 +103,7 @@ extern int overridden_PT_CompleteFileWrite();
 // since there's not much else here, not worth running through call_func_ptr
 int register_pt_hooks() {
     // older cams only have SystemEventInit
+    // TODO these probably don't support PT_CompleteFileWrite anyway
     if(_ExecuteEventProcedure("SystemEventInit") == -1) {
         if(_ExecuteEventProcedure("System.Create") == -1) {
             return 1;
@@ -112,6 +113,13 @@ int register_pt_hooks() {
         if(_ExecuteEventProcedure("SS.Create") == -1) {
             return 2;
         }
+    }
+    // check if PT_CompleteFileWrite eventproc was registered by above
+    // if not registered, firmware returns -1
+    // default PT_ComleteFileWrite normally returns 0, 
+    // arg will handle if it just does a BX LR
+    if(_ExecuteEventProcedure("PT_ComleteFileWrite",0) == -1) {
+        return 4;
     }
     // note override must be in ARM code
     if(_ExecuteEventProcedure("ExportToEventProcedure","PT_CompleteFileWrite",overridden_PT_CompleteFileWrite) == -1) {
