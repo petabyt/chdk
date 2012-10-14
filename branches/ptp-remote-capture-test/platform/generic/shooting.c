@@ -118,7 +118,7 @@ int register_pt_hooks() {
     // if not registered, firmware returns -1
     // default PT_ComleteFileWrite normally returns 0, 
     // arg will handle if it just does a BX LR
-    if(_ExecuteEventProcedure("PT_ComleteFileWrite",0) == -1) {
+    if(_ExecuteEventProcedure("PT_CompleteFileWrite",0) == -1) {
         return 4;
     }
     // note override must be in ARM code
