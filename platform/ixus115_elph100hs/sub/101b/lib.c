@@ -75,3 +75,9 @@ char *camera_jpeg_count_str()
 	return (void*)0xBB3A8;
 
 }
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x5AC4+0x18)); //found @ loc_ff9267ac ixus115 101b
+}
+
