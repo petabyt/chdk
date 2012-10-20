@@ -18,6 +18,7 @@ Shortcut Keys
 Known bugs
 **********
 - Raw doesn't work in auto mode
+- os.mkdir in lua returns an error status, regardless of whether the directory was created
 
 
 For Developers
