@@ -195,9 +195,8 @@ long set_property_case(long id, void *buf, long bufsize);
 long get_file_counter();
 long get_exposure_counter();
 long get_file_next_counter();
-#if defined(CAM_DATE_FOLDER_NAMING) 
-    void get_target_dir_name(char*);
-#else
+void get_target_dir_name(char*);
+#ifndef CAM_DATE_FOLDER_NAMING
     long get_target_dir_num();
 #endif
 long get_target_file_num();
