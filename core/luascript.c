@@ -529,6 +529,14 @@ static int luaCB_get_exp_count( lua_State* L )
   return 1;
 }
 
+static int luaCB_get_image_dir( lua_State* L )
+{
+  char dir[32];
+  get_target_dir_name(dir);
+  lua_pushstring( L, dir );
+  return 1;
+}
+
 static int luaCB_get_tv96( lua_State* L )
 {
   lua_pushnumber( L, shooting_get_tv96() );
@@ -2203,6 +2211,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_vbatt)
     FUNC(get_zoom)
     FUNC(get_exp_count)
+    FUNC(get_image_dir)
     FUNC(get_flash_params_count)
     FUNC(get_parameter_data)
 

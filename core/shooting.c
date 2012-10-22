@@ -180,6 +180,12 @@ long get_exposure_counter()
     return v;
 }
 
+#ifndef CAM_DATE_FOLDER_NAMING
+void get_target_dir_name(char *dir) {
+    sprintf(dir,"A/DCIM/%03dCANON",get_target_dir_num());
+}
+#endif
+
 //-------------------------------------------------------------------
 // Get time related values
 

@@ -116,14 +116,11 @@ int raw_savefile() {
         t.actime = t.modtime = time(NULL);
 
         mkdir_if_not_exist("A/DCIM");
-#if defined(CAM_DATE_FOLDER_NAMING)
         if (conf.raw_in_dir)
             get_target_dir_name(dir);
         else
             sprintf(dir, RAW_TARGET_DIRECTORY, 100);
-#else
-        sprintf(dir, RAW_TARGET_DIRECTORY, (conf.raw_in_dir)?get_target_dir_num():100);
-#endif
+
         mkdir_if_not_exist(dir);
 
         sprintf(fn, "%s/", dir);
