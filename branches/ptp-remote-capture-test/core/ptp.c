@@ -666,10 +666,12 @@ static int handle_ptp(
         unsigned int rcgd_size;
         int rcgd_notlast;
         char *rcgd_addr;
+        int rcgd_pos;
 
-        rcgd_notlast = remotecap_get_data_chunk(param2, &rcgd_addr, &rcgd_size); // returns "not last chunk"
-        ptp.num_param = 3;
-        ptp.param3 = (unsigned int)rcgd_addr; //return mem address as additional info
+        rcgd_notlast = remotecap_get_data_chunk(param2, &rcgd_addr, &rcgd_size, &rcgd_pos); // returns "not last chunk"
+        ptp.num_param = 4;
+        ptp.param3 = rcgd_pos; //client needs to seek to this file position before writing the chunk (-1 = ignore)
+        ptp.param4 = (unsigned int)rcgd_addr; //return mem address as additional info
         if ( (rcgd_addr==0) || (rcgd_size==0) ) {
             // send dummy data, otherwise error hoses connection
             send_ptp_data(data,"\0",1);
@@ -687,9 +689,12 @@ static int handle_ptp(
             if (!rcgd_notlast) {
                 remotecap_data_type_done(param2); //data type done
             }
+            else if (rcgd_notlast == 2) { //jpeg, current queue done
+                remotecap_free_hooks(1); //continue with the next hook
+            }
         }
         if ( !rcgd_notlast && !remotecap_get_available_data_type() && (rcgd_addr!=0) ) { //no more chunks of anything the current hook provides
-            remotecap_free_hooks();
+            remotecap_free_hooks(0);
         }
         break;
 #endif //CAM_CHDK_PTP_REMOTESHOOT

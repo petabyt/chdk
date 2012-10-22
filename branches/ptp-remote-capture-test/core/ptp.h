@@ -1,7 +1,7 @@
 #ifndef __CHDK_PTP_H
 #define __CHDK_PTP_H
 #define PTP_CHDK_VERSION_MAJOR 2  // increase only with backwards incompatible changes (and reset minor)
-#define PTP_CHDK_VERSION_MINOR 104  // increase with extensions of functionality
+#define PTP_CHDK_VERSION_MINOR 105  // increase with extensions of functionality
 /*
 protocol version history
 0.1 - initial proposal from mweerden, + luar

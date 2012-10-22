@@ -15,6 +15,9 @@ typedef struct {
 } cam_ptp_data_chunk; //camera specific structure
 
 #define MAX_CHUNKS_FOR_JPEG 7 // filewritetask is prepared for this many chunks
+#define FWT_FILE_OFFSET 4     // offset of "chunk's offset in file"
+#define FWT_FULL_SIZE   8     // offset of full jpeg file size
+#define FWT_SEEK_FLAG   0x50  // offset of the flag that signals non-sequential write
 
 #include "../../../generic/capt_seq.c"
 
@@ -995,6 +998,7 @@ asm volatile (
       "    MOV     R4, R0 \n" 
 //hook start placed here to avoid bne a few instructions below
       "STMFD SP!, {R4-R12,LR}\n"
+      "MOV R2, R4\n"        //data block start (only needed for DryOS >= r50 cameras)
       "ADD R1, R4, #0x18\n" //data chunk definitions start here (found by analysing the write handler below)
       "ADD R0, R4, #0x54\n" //name starts here
       "BL filewrite_main_hook\n"
@@ -1003,8 +1007,7 @@ asm volatile (
       "    LDR     R0, [R6, #4] \n" 
       "    SUB     SP, SP, #0x3C \n" 
       "    CMP     R0, #0 \n" 
-//      "    BNE     loc_FFA5235C \n" //-
-      "LDRNE PC, =0xFFA5235C\n"       //+ only needed because the RAM copy of this routine is shortened to save some space
+      "    BNE     loc_FFA5235C \n"
       "    ADD     R0, R4, #0x54 \n" 
       "    BL      sub_FF86671C \n"   // path check or something
       "    MOV     R1, #0 \n" 
@@ -1024,8 +1027,6 @@ asm volatile (
       "    MOV     R1, R8 \n" 
       "    MOV     R0, R7 \n" 
       "    BL      fwt_open\n"  //mod! sub_FF830154 Open
-      "LDR PC, =0xffa52288\n"   //+ continue in ROM
-/*
       "    CMN     R0, #1 \n" // rom:ffa52288
       "    BNE     loc_FFA522EC \n"
       "    MOV     R0, R7 \n" 
@@ -1074,12 +1075,18 @@ asm volatile (
       "    MOV     R2, #0x20 \n" 
       "    ADD     R1, R4, #0x54 \n" 
       "    BL      sub_003FC364 \n" 
-      "    LDR     R1, [R4, #8] \n" 
-      "    MOV     R0, R5 \n" 
-      "    BL      sub_FF830430 \n" 
+//mod start      
+      "LDR R3, =current_write_ignored\n"
+      "LDR R3, [R3]\n"
+      "CMP R3, #0\n"
+      "BNE loc_FFA5235C\n" // jump over the next block
+//mod end
+      "    LDR     R1, [R4, #8] \n" //total file size
+      "    MOV     R0, R5 \n"       //file descriptor
+      "    BL      sub_FF830430 \n" //function that checks something on the new file
       "    CMP     R0, #0 \n" 
       "    MOVEQ   R1, R4 \n" 
-      "    MOVEQ   R0, #7 \n" 
+      "    MOVEQ   R0, #7 \n"       //check failed: close
       "    BEQ     loc_FFA52380 \n" 
 "loc_FFA5235C:\n"
       "    LDR     R0, [R4, #0x50] \n" 
@@ -1097,7 +1104,6 @@ asm volatile (
 "loc_FFA52384:\n"
       "    ADD     SP, SP, #0x3C \n" 
       "    LDMFD   SP!, {R4-R9,PC} \n"
-*/
       );
 }
 
@@ -1187,7 +1193,13 @@ asm volatile (
       "    LDR     R6, =0x9200003 \n" 
       "    TST     R1, #0x8000 \n" 
       "    BEQ     loc_FFA523CC \n" 
-      "    BL      sub_FF83015C \n" 
+//mod start      
+      "LDR R3, =current_write_ignored\n"
+      "LDR R3, [R3]\n"
+      "CMP R3, #0\n"
+      "BNE loc_FFA523CC\n" // jump over the next block
+//mod end
+      "    BL      sub_FF83015C \n"     // fsionotify related
       "    B       loc_FFA523D0 \n" 
 "loc_FFA523CC:\n"
       "    BL      fwt_close\n"         // mod! sub_FF830158 Close

@@ -88,6 +88,7 @@
     #define CAM_CHDK_PTP_REMOTESHOOT        1   // support for shooting with remote target
 
     #undef  CAM_HAS_FILEWRITETASK_HOOK          // FileWriteTask hook is available (local file write can be prevented)
+    #undef  CAM_EXTENDED_FILEWRITETASK          // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
 
     #define CAM_UNCACHED_BIT                0x10000000 // bit indicating the uncached memory
 

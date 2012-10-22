@@ -18,7 +18,15 @@ static long raw_save_stage;
 volatile long shutter_open_time=0;      // for DNG EXIF creation
 volatile long shutter_open_tick_count;  // for DNG EXIF creation
 static int imagesavecomplete=1;
+#ifdef CAM_HAS_COMPLETEFILEWRITE_REPLACEMENT
+/*
+ * should be defined in capt_seq.c for cams that implement fwt_after_close()
+ * only makes sense for VxWorks cams (and DryOS < r23)
+ */
+static int no_pt_completefilewrite=0;
+#else
 static int no_pt_completefilewrite=1;
+#endif //CAM_HAS_COMPLETEFILEWRITE_REPLACEMENT
 
 #ifdef CAM_CHDK_PTP_REMOTESHOOT
 #include "remotecap.h"
@@ -77,7 +85,15 @@ get address and size of chunk N
 returns NULL addr and zero size when max chunks reached
 */
 static cam_ptp_data_chunk *jpeg_chunks;
-int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n) {
+#ifdef CAM_EXTENDED_FILEWRITETASK
+static int jpeg_bytes_left;
+static int jpeg_curr_session_chunk;
+static int jpeg_file_offset;
+static int jpeg_full_size;
+#endif //CAM_EXTENDED_FILEWRITETASK
+int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n,int *pos) {
+#ifndef CAM_EXTENDED_FILEWRITETASK
+    *pos=-1;
     if (n >= MAX_CHUNKS_FOR_JPEG || jpeg_chunks == NULL) {
         *addr=(char *)0xFFFFFFFF; // signals last chunk
         *size=0;
@@ -91,21 +107,106 @@ int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n) {
         }
     }
     return 1; // not last chunk
+#else
+    if ( n == 0 ) { // first chunk for this shot
+        jpeg_bytes_left = jpeg_full_size;
+    }
+    if ( jpeg_chunks == NULL ) { //do we have a valid queue?
+        n=50; // variable reused
+        while (n>0) { //wait for at most 500ms
+            _SleepTask(10);
+            n--;
+            if ( jpeg_chunks != NULL ) break;
+        }
+        if ( jpeg_chunks == NULL ) { //timeout, error
+            *addr=(char *)0;
+            *size=0;
+            *pos=-1;
+            return 0;
+        }
+    }
+    /*
+     * handle multiple filewritetask invocations
+     * return 0 for the last chunk
+     * return 1 when there's an additional chunk in the current queue
+     * return 2 when the current queue is done, but the file isn't
+     */
+    *addr=(char *)jpeg_chunks[jpeg_curr_session_chunk].address;
+    *size=jpeg_chunks[jpeg_curr_session_chunk].length;
+    jpeg_bytes_left -= *size;
+    if (jpeg_curr_session_chunk == 0) {
+        *pos=jpeg_file_offset; //only post file offset for the first chunk in the current queue
+    }
+    else {
+        *pos=-1;
+    }
+    jpeg_curr_session_chunk++;
+    if (jpeg_bytes_left>0) {
+        if ( (jpeg_curr_session_chunk-1) < (MAX_CHUNKS_FOR_JPEG-1) ) {
+            if (jpeg_chunks[jpeg_curr_session_chunk].length==0) { //last chunk of the current queue
+                return 2;
+            }
+        }
+        else {
+            return 2;
+        }
+    }
+    else {
+        return 0; //last
+    }
+
+    return 1; //not last
+
+#endif
 }
 
 void filewrite_set_discard_jpeg(int state) {
     ignore_current_write = state;
 }
 
-void filewrite_main_hook(char *name, cam_ptp_data_chunk *pdc)
+void filewrite_main_hook(char *name, cam_ptp_data_chunk *pdc, char *fwt_data) //TODO arguments could be optimized
 {
+#ifdef CAM_EXTENDED_FILEWRITETASK
+    // don't forget to #define FWT_FILE_OFFSET, FWT_FULL_SIZE, FWT_SEEK_FLAG
+    jpeg_curr_session_chunk = 0;
+    /*
+     * file open flags are at offset 0xc for DryOS r50
+     * these are the following for a "complicated" case (in order of appearance)
+     * 0x8301: seek is needed (initial), value passed to open()
+     * 0x8009: no seek
+     * 0x8009: no seek
+     * 0x8001: seek is needed (final)
+     * 
+     * for a simple case
+     * 0x301
+     * 
+     * seek flag is at offset 0x50 for DryOS r50
+     * 0: no seek
+     * 2: seek
+     * 3: seek if file offset != 0
+     */
+    switch ( *(int*)(fwt_data+FWT_SEEK_FLAG) ) {
+        case 2:
+            jpeg_file_offset = *(int*)(fwt_data+FWT_FILE_OFFSET);
+            break;
+        case 3:
+            if ( *(int*)(fwt_data+FWT_FILE_OFFSET) != 0 ) {
+                jpeg_file_offset = *(int*)(fwt_data+FWT_FILE_OFFSET);
+                break;
+            }
+            //fall through
+        default:
+            jpeg_file_offset = -1; // no seek needed
+            break;
+    }
+    jpeg_full_size = *(int*)(fwt_data+FWT_FULL_SIZE);
+#endif //CAM_EXTENDED_FILEWRITETASK
     jpeg_chunks = pdc;
     remotecap_jpeg_available(name);
     while (remotecap_hook_wait(1)) {
         _SleepTask(10);
     }
     jpeg_chunks=NULL;
-
 }
 #endif //CAM_HAS_FILEWRITETASK_HOOK
 
@@ -164,7 +265,7 @@ asm volatile (
       "CMP R3, #0\n"
       "LDRNE R2, =current_write_ignored\n" // safe, as Open() won't be called
       "STRNE R3, [R2]\n"
-      "MVNNE R0, #0x2\n"   // fake, invalid file descriptor
+      "MOVNE R0, #0xFF\n"   // fake, invalid file descriptor
       "BXNE LR\n"
       "BEQ _Open\n"        // no interception
     );
@@ -216,25 +317,24 @@ asm volatile (
       "STR R1, [R2]\n"
       "LDR R2, =current_write_ignored\n"
       "STR R1, [R2]\n"
+    );
+asm volatile (
       "LDR LR, [SP], #4\n"
       "BX LR\n"
     );
 }
 #else
 /*
- * VxWorks camera with overridden Close() in FileWriteTask
+ * helper function for VxWorks camera
  */
-void __attribute__((naked,noinline)) fwt_close () {
+void __attribute__((naked,noinline)) fwt_after_close () {
 /*
  * to be used when imagesavecomplete handling is needed
  */
 asm volatile (
-      "STR LR, [SP, #-4]!\n"
-      "BL _Close\n"        // no interception needed
       "LDR R3, =imagesavecomplete\n"
       "MOV R2, #1\n"      
       "STR R2, [R3]\n"    // image saved
-      "LDR LR, [SP], #4\n"
       "BX LR\n"
     );
 }

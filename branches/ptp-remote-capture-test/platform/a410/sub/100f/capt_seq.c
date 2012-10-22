@@ -10,6 +10,7 @@ typedef struct {
 } cam_ptp_data_chunk; //camera specific structure
 
 #define MAX_CHUNKS_FOR_JPEG 3 //model specific
+#define CAM_HAS_COMPLETEFILEWRITE_REPLACEMENT 1
 
 #include "../../../generic/capt_seq.c"
 
@@ -634,7 +635,8 @@ asm volatile (
       "    STR     R2, [R12] \n"                    // rom:ffc523f8  0xE58C2000 
       "    LDMEQFD SP!, {R4,R5,PC} \n"              // rom:ffc523fc  0x08BD8030 
       "    MOV     LR, PC \n"                       // rom:ffc52400  0xE1A0E00F 
-      "    MOV     PC, R5 \n"                       // rom:ffc52404  0xE1A0F005 
+      "    MOV     PC, R5 \n" //end of save, sends signal to filesheduletask
+      "    BL      fwt_after_close\n" //+
       "    LDMFD   SP!, {R4,R5,PC} \n"              // rom:ffc52408  0xE8BD8030 
     );
 }
