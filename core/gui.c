@@ -1918,6 +1918,9 @@ static const char* gui_alt_mode_button_enum(int change, int arg)
 #elif defined(CAMERA_a1200)
         static const char* names[]={ "Playback", "Face", "Disp"};
         static const int keys[]={ KEY_PLAYBACK, KEY_FACE, KEY_DISPLAY };
+#elif defined(CAMERA_g1x)
+    static const char* names[]={ "Shrtcut", "Video", "Meter", "AE Lock", "Erase" };
+        static const int keys[]={ KEY_PRINT, KEY_VIDEO, KEY_DISPLAY, KEY_AE_LOCK, KEY_ERASE };
 #else
 #error camera alt-buttons not defined
 #endif
