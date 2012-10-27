@@ -11,7 +11,7 @@ protocol version history
 2.1 - experimental live view, not formally released
 2.2 - live view (work in progress)
 2.3 - live view - released in 1.1
-2.4 - initial remote capture test
+2.4 - live view protocol 2.1
 */
 
 #define PTP_OC_CHDK 0x9999

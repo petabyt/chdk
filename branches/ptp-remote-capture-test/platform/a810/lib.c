@@ -85,15 +85,15 @@ void vid_bitmap_refresh() {
     _UnlockAndRefresh();
 }
 
-
-#ifdef CAM_LOAD_CUSTOM_COLORS
-// Function to load CHDK custom colors into active Canon palette
 void *vid_get_bitmap_active_palette() {
         extern int active_palette_buffer;
         extern char* palette_buffer[];
-        return (palette_buffer[active_palette_buffer]+8);
+        return (palette_buffer[active_palette_buffer]+4);
 }
 
+#ifdef CAM_LOAD_CUSTOM_COLORS
+// Function to load CHDK custom colors into active Canon palette
+ 
 void load_chdk_palette() {
 
         extern int active_palette_buffer;
@@ -127,6 +127,7 @@ void load_chdk_palette() {
 #endif
 
 // Functions for PTP Live View system
+// 256 entry palette based on 100b sub_FF909B0C
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
 

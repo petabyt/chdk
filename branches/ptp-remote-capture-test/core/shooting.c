@@ -181,6 +181,12 @@ long get_exposure_counter()
     return v;
 }
 
+#ifndef CAM_DATE_FOLDER_NAMING
+void get_target_dir_name(char *dir) {
+    sprintf(dir,"A/DCIM/%03dCANON",get_target_dir_num());
+}
+#endif
+
 //-------------------------------------------------------------------
 // Get time related values
 
@@ -524,7 +530,7 @@ short shooting_get_iso_market_base()
 short shooting_get_iso_market()
 {
     short iso_mode = shooting_get_canon_iso_mode();
-    if ((iso_mode < 50) || (conf.iso_override_koef && conf.iso_override_value>0) || (conf.iso_bracket_koef && conf.iso_bracket_value))
+    if ((iso_mode < 50) || (conf.iso_override_koef && conf.iso_override_value>0) || (conf.iso_bracket_koef && conf.iso_bracket_value>0))
     {
         // Original code
         // short iso_b = shooting_get_iso_base();
