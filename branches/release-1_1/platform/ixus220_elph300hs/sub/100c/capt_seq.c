@@ -101,6 +101,9 @@ asm volatile (
 
 // jump table entry 1
 "loc_FF882A14: \n"
+"         BL      wait_until_remote_button_is_released\n"         // +++
+//"       BL      capt_seq_hook_set_nr\n"                         // +++
+
 "		LDR		R8, [R0,#0xC] \n"
 "       MOV     R0, R8 \n"
 
