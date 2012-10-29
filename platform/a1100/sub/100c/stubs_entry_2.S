@@ -4,7 +4,7 @@
 // Override stubs_entry.S
 NHSTUB(ExpCtrlTool_StopContiAE,     0xFFC1FAAC)
 NHSTUB(SetAE_ShutterSpeed,          0xFFE3D994)
-NHSTUB(kbd_pwr_off,                 0xFFC30B40)
+NHSTUB(kbd_pwr_off,                 0xFFC30BAC)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
