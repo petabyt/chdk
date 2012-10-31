@@ -694,7 +694,18 @@
 #define LANG_HELP_HIDE_OSD                      566
 #define LANG_HELP_NOT_ALT                       567
 
-#define GUI_LANG_ITEMS                          567
+#define LANG_USER_MENU_ITEM_ADDED				568
+#define LANG_USER_MENU_FULL     				569
+
+#define LANG_SD_CARD                            570
+#define LANG_MENU_FONT_SETTINGS                 571
+
+#define LANG_MENU_USER_MENU_SCRIPT_ADD          572
+
+#define LANG_HELP_INF_FOCUS                     573
+#define LANG_HELP_CHG_FOCUS_FACTOR              574
+
+#define GUI_LANG_ITEMS                          574
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

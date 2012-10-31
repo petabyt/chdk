@@ -61,6 +61,12 @@ int get_flash_params_count(void){
 }
 
 
+// This camera crashes if GetBatteryTemperature is called, override auto detected stub
+int _GetBatteryTemperature()
+{
+      return -99;
+}
+
 /*void vid_turn_off_updates()
 {
     extern void _LockAndRefresh();   // wrapper function for screen lock

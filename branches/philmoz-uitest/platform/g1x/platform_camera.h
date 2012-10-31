@@ -31,7 +31,7 @@
     #define CAM_HAS_ND_FILTER                   1
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
     #define CAM_SWIVEL_SCREEN                   1
-    //#define CAM_ADJUSTABLE_ALT_BUTTON           1
+    #define CAM_ADJUSTABLE_ALT_BUTTON           1
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                1
@@ -129,8 +129,6 @@
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1       // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                         // Used to enabled bracketing in custom timer, required on many recent cameras
                                                         // see http://chdk.setepontos.com/index.php/topic,3994.405.html
-
-    #define CAM_FIRMWARE_MEMINFO                1       // Use 'GetMemInfo' to get free memory size.
 
     #define CAM_AV_OVERRIDE_IRIS_FIX            1       // for cameras that require _MoveIrisWithAv function to override Av in bracketing.
 

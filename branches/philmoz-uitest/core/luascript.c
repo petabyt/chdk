@@ -20,6 +20,7 @@
 #include "gui_lang.h"
 #include "gui_draw.h"
 #include "module_load.h"
+#include "histogram.h"
 
 #include "../lib/lua/lstate.h"  // for L->nCcalls, baseCcalls
 
@@ -528,6 +529,14 @@ static int luaCB_get_exp_count( lua_State* L )
   return 1;
 }
 
+static int luaCB_get_image_dir( lua_State* L )
+{
+  char dir[32];
+  get_target_dir_name(dir);
+  lua_pushstring( L, dir );
+  return 1;
+}
+
 static int luaCB_get_tv96( lua_State* L )
 {
   lua_pushnumber( L, shooting_get_tv96() );
@@ -876,7 +885,7 @@ static void return_string_selected(const char *str) {
     // Reconnect button input to script - will also signal action stack
     // that file browser / textbox is finished and return last selected file
     // to script caller
-    state_kbd_script_run = 1;
+    state_kbd_script_run = SCRIPT_STATE_RAN;
     // Clear the Func/Set key so that when the script exits, pressing
     // the Func/Set key again will enter the Script menu, not the File Browser / Textbox
     kbd_reset_autoclicked_key();
@@ -887,7 +896,7 @@ static void return_string_selected(const char *str) {
 
 static int luaCB_file_browser( lua_State* L ) {
     // Disconnect button input from script so buttons will work in file browser
-    state_kbd_script_run = 0;
+    state_kbd_script_run = SCRIPT_STATE_INACTIVE;
     // Push file browser action onto stack - will loop doing nothing until file browser exits
     action_push(AS_FILE_BROWSER);
     // Switch to file browser gui mode. Path can be supplied in call or defaults to "A" (root directory).
@@ -898,7 +907,7 @@ static int luaCB_file_browser( lua_State* L ) {
 
 static int luaCB_textbox( lua_State* L ) {
     // Disconnect button input from script so buttons will work in the textbox
-    state_kbd_script_run = 0;
+    state_kbd_script_run = SCRIPT_STATE_INACTIVE;
     if (module_tbox_load())
     {
         // Push textbox action onto stack - will loop doing nothing until textbox exits
@@ -1249,6 +1258,30 @@ static int luaCB_shot_histo_enable( lua_State* L )
 {
   shot_histogram_set(luaL_checknumber( L, 1 ));
   return 0;
+}
+
+/*
+histogram,total=get_live_histo()
+returns a histogram of Y values from the viewport buffer (downsampled by HISTO_STEP_SIZE)
+histogram[Y value] = count, so it is zero based unlike a normal lua array
+total is the total number of pixels, may vary depending on viewport size
+*/
+static int luaCB_get_live_histo( lua_State* L )
+{
+  int *h = malloc(256*sizeof(int));
+  if(!h) {
+      return luaL_error(L,"malloc fail");
+  }
+  int total=live_histogram_read_y(h);
+  lua_createtable(L, 0, 256);
+  int i;
+  for(i=0;i<256;i++) {
+    lua_pushnumber(L,h[i]);
+    lua_rawseti(L,-2,i);
+  }
+  free(h);
+  lua_pushnumber(L,total);
+  return 2;
 }
 
 static int luaCB_play_sound( lua_State* L )
@@ -2178,6 +2211,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_vbatt)
     FUNC(get_zoom)
     FUNC(get_exp_count)
+    FUNC(get_image_dir)
     FUNC(get_flash_params_count)
     FUNC(get_parameter_data)
 
@@ -2248,6 +2282,7 @@ static const luaL_Reg chdk_funcs[] = {
  
     FUNC(get_histo_range)
     FUNC(shot_histo_enable)
+    FUNC(get_live_histo)
     FUNC(play_sound)
     FUNC(get_temperature)
     FUNC(peek)

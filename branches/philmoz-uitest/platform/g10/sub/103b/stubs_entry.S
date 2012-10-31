@@ -25,6 +25,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00011cb8) // Found @0xff821c28
 DEF(physw_run                               ,0x00001c2c) // Found @0xff82189c
+DEF(physw_sleep_delay                       ,0x00001c2a) // Found @0xff82189c
 DEF(levent_table                            ,0xffb43abc) // Found @0xffb43abc
 DEF(FlashParamsTable                        ,0xffb7524c) // Found @0xffb7524c
 DEF(movie_status                            ,0x00005418) // Found @0xff8629c4
@@ -60,6 +61,8 @@ DEF(recreview_hold                          ,0x00006274) // Found @0xff888be8
 //    { 0, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffb0f800, levent 0x01
 //    { 0, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb0f800, levent 0x01
 //    { 0, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffb0f7f4, levent 0x00
+//    { 0, KEY_POWER           ,0x40000000 }, // Found @0xffb0f830, levent 0x600 (uses inverted logic in physw_status)
+//    { 0, KEY_PLAYBACK        ,0x80000000 }, // Found @0xffb0f83c, levent 0x601 (uses inverted logic in physw_status)
 //    { 1, KEY_ZOOM_OUT        ,0x00000008 }, // Found @0xffb0f86c, levent 0x03
 //    { 1, KEY_ZOOM_IN         ,0x00000010 }, // Found @0xffb0f878, levent 0x02
 //    { 1, KEY_LEFT            ,0x00000400 }, // Found @0xffb0f8c0, levent 0x06
@@ -96,7 +99,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff823a18) //  1
 NSTUB(DeleteFile_Fut                          ,0xff823934) //112
 NSTUB(DoAFLock                                ,0xff825e48) //102
 NSTUB(EnterToCompensationEVF                  ,0xff826110) //104
-NSTUB(ExecuteEventProcedure                   ,0xff873ae4) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff873ae4) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff826154) //104
 NSTUB(ExitTask                                ,0xff81b184) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff831950) //104

@@ -248,14 +248,18 @@ int action_stack_standard(long p)
             action_pop();
         break;
     case AS_WAIT_CLICK:
+#ifdef OPT_SCRIPTING
         if(action_process_delay(2) || (kbd_last_clicked = kbd_get_clicked_key()))
         {
             if (!kbd_last_clicked)
                 kbd_last_clicked=0xFFFF;
+#endif
             action_clear_delay();
             action_pop();
             action_pop();
+#ifdef OPT_SCRIPTING
         }
+#endif
         break;
     case AS_WAIT_SHOOTING_IN_PROGRESS:
         if (shooting_in_progress() || MODE_IS_VIDEO(mode_get()))

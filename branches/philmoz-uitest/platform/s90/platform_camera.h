@@ -85,6 +85,8 @@
 
     #define CAM_ZEBRA_ASPECT_ADJUST     1
 
+    #define CAM_DATE_FOLDER_NAMING          0x100 //Value found in the last function, which is called in GetImageFolder. (first compare)
+
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
@@ -93,6 +95,8 @@
                                                 // see http://chdk.setepontos.com/index.php?topic=6179.0
 
 	#define REMOTE_SYNC_STATUS_LED 	0xc0220130		// specifies an LED that turns on while camera waits for USB remote to sync
-															
+
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
+    
 //----------------------------------------------------------
 

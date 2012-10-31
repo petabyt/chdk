@@ -2,7 +2,7 @@ topdir=../../
 
 include $(topdir)makefile.inc
 
-OBJS = callfunc.o reboot.o
+OBJS = callfunc.o reboot.o cache.o
 
 OBJS_ALL = $(OBJS)
 OBJS_ALL += reversebytes.o 

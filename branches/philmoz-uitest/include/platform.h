@@ -23,7 +23,9 @@ extern int mode_is_video(int);
 extern int is_video_recording();
 
 /* propcase ID constants. These are in their own header files for easier sed processing */
-#if CAM_PROPSET == 4
+#if CAM_PROPSET == 5
+    #include "propset5.h"   // DryOS R50
+#elif CAM_PROPSET == 4
     #include "propset4.h"
 #elif CAM_PROPSET == 3
     #include "propset3.h"
@@ -121,6 +123,7 @@ typedef struct {
 #define SHOW_ALWAYS    1
 #define SHOW_HALF      2
 
+#define PHOTO_PARAM_TV_NONE 32767 // ~ 1/(2^341) seconds, safe marker for "no value"
 
 typedef struct {
     short av96;
@@ -192,9 +195,8 @@ long set_property_case(long id, void *buf, long bufsize);
 long get_file_counter();
 long get_exposure_counter();
 long get_file_next_counter();
-#if defined(CAM_DATE_FOLDER_NAMING) 
-    void get_target_dir_name(char*);
-#else
+void get_target_dir_name(char*);
+#ifndef CAM_DATE_FOLDER_NAMING
     long get_target_dir_num();
 #endif
 long get_target_file_num();
@@ -293,6 +295,8 @@ short shooting_get_flash_mode();
 
 
 /******************************************************************/
+void shooting_init(); // startup initialization
+
 int shooting_get_user_tv_id();
 #if defined(CAM_DRAW_EXPOSITION)
     char* shooting_get_tv_str();
@@ -554,6 +558,12 @@ unsigned call_func_ptr(void *func, const unsigned *args, unsigned n_args);
  see lib/armutil/reboot.c for documentation
 */
 int reboot(const char *bootfile);
+
+/*
+arm cache control
+*/
+void icache_flush_all(void);
+void dcache_clean_all(void);
 
 #define started() debug_led(1)
 #define finished() debug_led(0)

@@ -25,6 +25,7 @@
 // Values below can be overridden in 'stubs_min.S':
 //DEF(physw_status                            ,0x000386bc) // Found @0xff024db0,          stubs_min = 0x000386bc (0x000386bc)
 //DEF(physw_run                               ,0x00001c3c) // Found @0xff02493c,          stubs_min = 0x00001c3c (0x00001c3c)
+DEF(physw_sleep_delay                       ,0x00001c44) // Found @0xff02493c
 //DEF(levent_table                            ,0xff5905c4) // Found @0xff5905c4,          stubs_min = 0xff5905c4 (0xff5905c4)
 //DEF(FlashParamsTable                        ,0xff6267ac) // Found @0xff6267ac,          stubs_min = 0xff6267ac (0xff6267ac)
 //DEF(movie_status                            ,0x00009bfc) // Found @0xff1cb1b0,          stubs_min = 0x00009bfc (0x00009bfc)
@@ -68,11 +69,14 @@ DEF(active_bitmap_buffer                    ,0x0000ca64) // Found @0xff29c9b4
 //    { 0, KEY_SET             ,0x00000020 }, // Found @0xff453764, levent 0x08
 //    { 0, KEY_UP              ,0x00000040 }, // Found @0xff45376c, levent 0x04
 //    { 0, KEY_RIGHT           ,0x00000080 }, // Found @0xff453774, levent 0x07
+//    { 0, KEY_VIDEO           ,0x00000100 }, // Found @0xff45377c, levent 0x19
 //    { 0, KEY_ZOOM_OUT        ,0x00008000 }, // Found @0xff4537b4, levent 0x03
 //    { 0, KEY_ZOOM_IN         ,0x00010000 }, // Found @0xff4537bc, levent 0x02
 //    { 1, KEY_SHOOT_FULL      ,0x00300000 }, // Found @0xff4537e4, levent 0x01
 //    { 1, KEY_SHOOT_FULL_ONLY ,0x00200000 }, // Found @0xff4537e4, levent 0x01
 //    { 1, KEY_SHOOT_HALF      ,0x00100000 }, // Found @0xff4537dc, levent 0x00
+//    { 1, KEY_POWER           ,0x00400000 }, // Found @0xff4537ec, levent 0x100
+//    { 1, KEY_PLAYBACK        ,0x00800000 }, // Found @0xff4537f4, levent 0x101
 //    { 0, 0, 0 }
 //};
 
@@ -103,7 +107,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff026fb8) //  1
 NSTUB(DeleteFile_Fut                          ,0xff026ed4) //112
 NSTUB(DoAFLock                                ,0xff029208) //102
 NSTUB(EnterToCompensationEVF                  ,0xff0295dc) //104
-NSTUB(ExecuteEventProcedure                   ,0xff08d868) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff08d868) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff029620) //104
 NSTUB(ExitTask                                ,0xff00ed80) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff037d9c) //104

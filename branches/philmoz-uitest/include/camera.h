@@ -41,6 +41,7 @@
     #undef  CAM_HAS_NATIVE_ND_FILTER            // Camera has built-in ND filter with Canon menu support for enable/disable
     #define CAM_CAN_SD_OVER_NOT_IN_MF       1   // Camera allows subject distance (focus) override when not in manual focus mode
     #undef  CAM_CAN_SD_OVER_IN_AF_LOCK          // Camera allows subject distance (focus) override when in AF Lock mode
+    #undef  CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY     // Camera allows subject distance (focus) override only when in AF Lock mode OR in movie mode
     #define CAM_CAN_SD_OVERRIDE             1   // Camera allows to do subject distance override
     #define CAM_HAS_MANUAL_FOCUS            1   // Camera has manual focus mode
     #define CAM_HAS_USER_TV_MODES           1   // Camera has tv-priority or manual modes with ability to set tv value
@@ -172,7 +173,8 @@
     #undef  CAM_FIRMWARE_MEMINFO                // Use 'GetMemInfo' (dryos) or 'memPartInfoGet'/'memPartFindMax' (vxworks)
                                                 // function in firmware to get free memory details
                                                 // GetMemInfo should be found correctly by the gensig/finsig signature
-                                                // finder for all dryos based cameras.
+                                                // enabled by default for all dryos cams, disable using
+                                                // #define CAM_FIRMWARE_MEMINFO 0
 
     #undef  CAM_NO_MEMPARTINFO                  // VXWORKS camera does not have memPartInfoGet, fall back to memPartFindMax
 
@@ -199,6 +201,10 @@
 
     #undef  CAM_NEED_SET_ZOOM_DELAY             // Define to add a delay after setting the zoom position before resetting the focus position in shooting_set_zoom 
 
+    #undef  CAM_USE_ALT_SET_ZOOM_POINT          // Define to use the alternate code in lens_set_zoom_point()
+    #undef  CAM_USE_ALT_PT_MoveOpticalZoomAt    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
+    #undef  CAM_USE_OPTICAL_MAX_ZOOM_STATUS     // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
+
     #undef  USE_REAL_AUTOISO                    // Define this to use real-iso instead of marketing-iso as values of autoiso mechanizm
     #undef  OVEREXP_COMPENSATE_OVERALL          // Define this to make overexposure_compensation work for all scenes, instead of day-light only
 
@@ -209,6 +215,8 @@
 	
     #undef  CAM_ZOOM_ASSIST_BUTTON_CONTROL      // Activate menu option to enable/disable the zoom assist button on the SX30/SX40
                                                 // For other cameras, requires additional support code in kbd.c (see the SX30 or SX40 version)
+
+    #undef  CAM_MISSING_RAND                    // Define this if srand()/rand() functions not found in firmware (a810/a2300)
 
 //----------------------------------------------------------
 // Overridden values for each camera
@@ -236,6 +244,16 @@
 
 #ifndef OPT_PTP
     #undef CAM_CHDK_PTP
+#endif
+
+// default CAM_FIRMWARE_MEMINFO on for DryOS cams, but allow #define CAM_FIRMWARE_MEMINFO 0 to turn off
+// TODO this should go away once we are satisfied it works everywhere
+#ifdef CAM_DRYOS
+    #ifndef CAM_FIRMWARE_MEMINFO
+        #define CAM_FIRMWARE_MEMINFO 1
+    #elif CAM_FIRMWARE_MEMINFO == 0
+        #undef CAM_FIRMWARE_MEMINFO
+    #endif
 #endif
 
 //==========================================================

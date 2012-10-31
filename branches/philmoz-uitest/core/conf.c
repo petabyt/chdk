@@ -45,7 +45,6 @@ static void conf_change_alt_mode_button();
 static void conf_change_video_bitrate();
 static void conf_change_dng_ext();
 static void conf_change_autoiso();
-extern void cb_autoiso_menu_change(unsigned int item);
 
 void camera_set_raw(int mode)
 {
@@ -299,7 +298,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(156, conf.clock_indicator,        CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(157, conf.clock_halfpress,        CONF_DEF_VALUE, i:1, NULL),
     
-    CONF_INFO(158, conf.autoiso_enable,             CONF_DEF_VALUE,     i:1, NULL),
+    CONF_INFO(158, conf.autoiso_enable,             CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(159, conf.autoiso_shutter_enum,       CONF_DEF_VALUE,     i:5, NULL), // 5='1/125'
     CONF_INFO(160, conf.autoiso_user_factor,        CONF_DEF_VALUE,     i:5, NULL),
     CONF_INFO(161, conf.autoiso_is_factor,          CONF_DEF_VALUE,     i:2, NULL),
@@ -349,7 +348,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(202, conf.fast_movie_control,         CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(203, conf.show_temp,                  CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO2(204, conf.temp_pos,                  CONF_OSD_POS,   CAM_SCREEN_WIDTH-9*FONT_WIDTH-2,FONT_HEIGHT),
-    CONF_INFO(205, conf.fast_movie_quality_control, CONF_DEF_VALUE, i:1, NULL),
+    CONF_INFO(205, conf.fast_movie_quality_control, CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(206, conf.remote_zoom_enable,         CONF_DEF_VALUE, i:0, NULL),
 //    CONF_INFO(207, conf.zoom_timeout,               CONF_DEF_VALUE, i:5, NULL),   // Not used
    	CONF_INFO(208, conf.start_sound,                CONF_DEF_VALUE, i:0, NULL),
@@ -460,6 +459,39 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(290, conf.tbox_char_map,              CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(291, conf.show_alt_helper,            CONF_DEF_VALUE,     i:1, NULL),
     CONF_INFO(292, conf.show_alt_helper_delay,      CONF_DEF_VALUE,     i:3, NULL),
+
+    // NOTE : there must be USER_MENU_ITEMS entries in this section
+    CONF_INFO(295, conf.user_menu_script_file[ 0], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(296, conf.user_menu_script_file[ 1], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(297, conf.user_menu_script_file[ 2], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(298, conf.user_menu_script_file[ 3], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(299, conf.user_menu_script_file[ 4], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(300, conf.user_menu_script_file[ 5], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(301, conf.user_menu_script_file[ 6], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(302, conf.user_menu_script_file[ 7], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(303, conf.user_menu_script_file[ 8], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(304, conf.user_menu_script_file[ 9], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(305, conf.user_menu_script_file[10], CONF_CHAR_PTR,      ptr:"", NULL),    
+    CONF_INFO(306, conf.user_menu_script_file[11], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(307, conf.user_menu_script_file[12], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(308, conf.user_menu_script_file[13], CONF_CHAR_PTR,      ptr:"", NULL),
+
+    // NOTE : there must be USER_MENU_ITEMS entries in this section too
+    CONF_INFO(309, conf.user_menu_script_title[ 0], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(310, conf.user_menu_script_title[ 1], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(311, conf.user_menu_script_title[ 2], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(312, conf.user_menu_script_title[ 3], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(313, conf.user_menu_script_title[ 4], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(314, conf.user_menu_script_title[ 5], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(315, conf.user_menu_script_title[ 6], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(316, conf.user_menu_script_title[ 7], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(317, conf.user_menu_script_title[ 8], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(318, conf.user_menu_script_title[ 9], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(319, conf.user_menu_script_title[10], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(320, conf.user_menu_script_title[11], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(321, conf.user_menu_script_title[12], CONF_CHAR_PTR,      ptr:"", NULL),
+    CONF_INFO(322, conf.user_menu_script_title[13], CONF_CHAR_PTR,      ptr:"", NULL),
+
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
@@ -481,6 +513,8 @@ void conf_info_func(unsigned short id)
     case 226: 
     case 289: conf_change_dng(); break;
     case 235: conf_change_dng_ext(); break;
+	case 159:
+	case 283:
     case 284: conf_change_autoiso(); break;
     }
 }
@@ -494,7 +528,8 @@ static void conf_change_font_cp() {
 
 static void conf_change_script_file() {
 #ifdef OPT_SCRIPTING
-    script_load(conf.script_file, 2);
+    script_load(conf.script_file, SCRIPT_UPDATE_PARAMS );
+	load_params_names_cfg();
 #endif
 }
 

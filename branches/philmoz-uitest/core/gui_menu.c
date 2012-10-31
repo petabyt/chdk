@@ -730,7 +730,7 @@ void gui_menu_draw(int enforce_redraw) {
                 gui_menu_draw_value((*(curr_menu->menu[imenu].value))?"\x95":"", len_bool);
                 break;
             case MENUITEM_INT:
-                sprintf(tbuf, "%d", *(curr_menu->menu[imenu].value));
+                    sprintf(tbuf, "%d", *(curr_menu->menu[imenu].value));
                 gui_menu_draw_value(tbuf, len_int);
                 break;
             case MENUITEM_SUBMENU_PROC:
@@ -822,13 +822,12 @@ void gui_menu_draw(int enforce_redraw) {
 void gui_menu_kbd_process_menu_btn()
 {
     extern int gui_user_menu_flag;
-    extern CMenu root_menu;
 
     gui_menu_unload_module_menus();
 
     conf_save_new_settings_if_changed();
 
-    if (gui_user_menu_flag)
+    if ( gui_user_menu_flag )
     {
         gui_set_mode(&menuGuiHandler);
         gui_user_menu_flag = 0;

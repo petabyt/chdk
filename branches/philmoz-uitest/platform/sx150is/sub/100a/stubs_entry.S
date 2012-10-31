@@ -25,6 +25,7 @@ NSTUB(kbd_pwr_off                             ,0xff8652c4) //  2 60%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00033694) // Found @0xff834580
 DEF(physw_run                               ,0x00001c30) // Found @0xff83412c
+DEF(physw_sleep_delay                       ,0x00001c38) // Found @0xff83412c
 DEF(levent_table                            ,0xffbe99e8) // Found @0xffbe99e8
 DEF(FlashParamsTable                        ,0xffc4e360) // Found @0xffc4e360
 DEF(movie_status                            ,0x00006ec4) // Found @0xff985fb4
@@ -65,6 +66,9 @@ DEF(palette_control                         ,0x00009654) // Found @0xffa29f88
 //    { 1, KEY_SHOOT_HALF      ,0x00001000 }, // Found @0xffb90d50, levent 0x00
 //    { 1, KEY_ZOOM_IN         ,0x00004000 }, // Found @0xffb90d60, levent 0x02
 //    { 1, KEY_ZOOM_OUT        ,0x00008000 }, // Found @0xffb90d68, levent 0x03
+//    { 2, KEY_VIDEO           ,0x00000010 }, // Found @0xffb90d90, levent 0x19
+//    { 2, KEY_POWER           ,0x00000020 }, // Found @0xffb90d98, levent 0x100
+//    { 2, KEY_PLAYBACK        ,0x00000040 }, // Found @0xffb90da0, levent 0x101
 //    { 2, KEY_UP              ,0x00000100 }, // Found @0xffb90da8, levent 0x04
 //    { 2, KEY_DOWN            ,0x00000200 }, // Found @0xffb90db0, levent 0x05
 //    { 2, KEY_RIGHT           ,0x00000400 }, // Found @0xffb90db8, levent 0x07
@@ -102,7 +106,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff83678c) //  1
 NSTUB(DeleteFile_Fut                          ,0xff8366a8) //112
 NSTUB(DoAFLock                                ,0xff838934) //102
 NSTUB(EnterToCompensationEVF                  ,0xff838bf0) //104
-NSTUB(ExecuteEventProcedure                   ,0xff890dd0) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff890dd0) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff838c34) //104
 NSTUB(ExitTask                                ,0xff81ed74) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff8469b8) //104

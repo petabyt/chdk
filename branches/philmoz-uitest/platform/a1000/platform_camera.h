@@ -54,4 +54,7 @@
     #define CAM_ACTIVE_AREA_X2              3682
     #define CAM_ACTIVE_AREA_Y2              2764
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
+
+    #define CAM_MULTIPART                   1
+
 //----------------------------------------------------------

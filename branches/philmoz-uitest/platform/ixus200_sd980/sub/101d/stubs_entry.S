@@ -51,6 +51,7 @@ NSTUB(kbd_pwr_off                             ,0xff85ae98) //  2 64%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00044558) // Found @0xff8335a8
 DEF(physw_run                               ,0x00001c44) // Found @0xff833200
+DEF(physw_sleep_delay                       ,0x00001c42) // Found @0xff833200
 DEF(levent_table                            ,0xffb7a458) // Found @0xffb7a458
 DEF(FlashParamsTable                        ,0xffbdad4c) // Found @0xffbdad4c
 DEF(movie_status                            ,0x000067e0) // Found @0xff94addc
@@ -84,9 +85,6 @@ DEF(recreview_hold                          ,0x00003818) // Found @0xff89a7c8
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 2, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffb40668, levent 0x01
-//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xffb40668, levent 0x01
-//    { 2, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffb4065c, levent 0x00
 //    { 2, KEY_MENU            ,0x00000001 }, // Found @0xffb405fc, levent 0x09
 //    { 2, KEY_SET             ,0x00000002 }, // Found @0xffb40608, levent 0x08
 //    { 2, KEY_ZOOM_IN         ,0x00000004 }, // Found @0xffb40614, levent 0x02
@@ -95,6 +93,11 @@ DEF(recreview_hold                          ,0x00003818) // Found @0xff89a7c8
 //    { 2, KEY_RIGHT           ,0x00000020 }, // Found @0xffb40638, levent 0x07
 //    { 2, KEY_DOWN            ,0x00000040 }, // Found @0xffb40644, levent 0x05
 //    { 2, KEY_UP              ,0x00000080 }, // Found @0xffb40650, levent 0x04
+//    { 2, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffb40668, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xffb40668, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffb4065c, levent 0x00
+//    { 2, KEY_POWER           ,0x00000400 }, // Found @0xffb40674, levent 0x600
+//    { 2, KEY_PLAYBACK        ,0x00000800 }, // Found @0xffb40680, levent 0x601
 //    { 0, 0, 0 }
 //};
 
@@ -123,7 +126,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff834e78) //  1
 NSTUB(DeleteFile_Fut                          ,0xff834d94) //112
 NSTUB(DoAFLock                                ,0xff8368f0) //102
 NSTUB(EnterToCompensationEVF                  ,0xff836ae0) //104
-NSTUB(ExecuteEventProcedure                   ,0xff884e30) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff884e30) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff836b24) //104
 NSTUB(ExitTask                                ,0xff81e844) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff844254) //104

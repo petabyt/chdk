@@ -20,16 +20,12 @@
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff8959c4 -> ff892270 -> ff9937f8 -> ffac8368 -> ffbeea50
-// Current modemap entry not found in firmware - MODE_SCN_POSTER_EFFECT    8743
-// Current modemap entry not found in firmware - MODE_SCN_SUPER_VIVID      8742
-// Current modemap entry not found in firmware - MODE_SCN_MONOCHROME       8754
-// Current modemap entry not found in firmware - MODE_SCN_TOY_CAMERA       8751
-// Current modemap entry not found in firmware - MODE_SCN_MINIATURE        8748
-// Current modemap entry not found in firmware - MODE_SCN_FISHEYE          8747
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00032d34) // Found @0xff8345a0
 DEF(physw_run                               ,0x00001c30) // Found @0xff834160
+DEF(physw_sleep_delay                       ,0x00001c38) // Found @0xff834160
 DEF(levent_table                            ,0xffba1198) // Found @0xffba1198
 DEF(FlashParamsTable                        ,0xffbeec88) // Found @0xffbeec88
 DEF(movie_status                            ,0x00006734) // Found @0xff96962c
@@ -66,16 +62,18 @@ DEF(palette_buffer                          ,0x000b477c) // Found @0xffa07028
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 2, KEY_SHOOT_FULL      ,0x00003000 }, // Found @0xffb5dcac, levent 0x01
-//    { 2, KEY_SHOOT_FULL_ONLY ,0x00002000 }, // Found @0xffb5dcac, levent 0x01
+//    { 0, KEY_PLAYBACK        ,0x00002000 }, // Found @0xffb5dc34, levent 0x601
+//    { 0, KEY_POWER           ,0x00004000 }, // Found @0xffb5dc3c, levent 0x600
 //    { 2, KEY_UP              ,0x00000001 }, // Found @0xffb5dc4c, levent 0x04
 //    { 2, KEY_DOWN            ,0x00000002 }, // Found @0xffb5dc54, levent 0x05
-//    { 2, KEY_SHOOT_HALF      ,0x00001000 }, // Found @0xffb5dca4, levent 0x00
 //    { 2, KEY_LEFT            ,0x00000004 }, // Found @0xffb5dc5c, levent 0x06
 //    { 2, KEY_RIGHT           ,0x00000008 }, // Found @0xffb5dc64, levent 0x07
 //    { 2, KEY_SET             ,0x00000010 }, // Found @0xffb5dc6c, levent 0x08
 //    { 2, KEY_DISPLAY         ,0x00000020 }, // Found @0xffb5dc74, levent 0x0a
 //    { 2, KEY_MENU            ,0x00000080 }, // Found @0xffb5dc84, levent 0x09
+//    { 2, KEY_SHOOT_FULL      ,0x00003000 }, // Found @0xffb5dcac, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00002000 }, // Found @0xffb5dcac, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00001000 }, // Found @0xffb5dca4, levent 0x00
 //    { 2, KEY_ZOOM_OUT        ,0x00004000 }, // Found @0xffb5dcb4, levent 0x03
 //    { 2, KEY_ZOOM_IN         ,0x00008000 }, // Found @0xffb5dcbc, levent 0x02
 //    { 0, 0, 0 }
@@ -108,7 +106,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff8366c0) //  1
 NSTUB(DeleteFile_Fut                          ,0xff8365dc) //112
 NSTUB(DoAFLock                                ,0xff838480) //102
 NSTUB(EnterToCompensationEVF                  ,0xff8386dc) //104
-NSTUB(ExecuteEventProcedure                   ,0xff889244) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff889244) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff838720) //104
 NSTUB(ExitTask                                ,0xff81ec40) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff846ce0) //104

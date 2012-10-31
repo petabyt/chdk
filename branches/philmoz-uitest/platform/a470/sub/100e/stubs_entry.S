@@ -27,6 +27,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0001007c) // Found @0xffc11c0c
 DEF(physw_run                               ,0x00001bf0) // Found @0xffc118a8
+DEF(physw_sleep_delay                       ,0x00001bee) // Found @0xffc118a8
 DEF(levent_table                            ,0xffe72ec8) // Found @0xffe72ec8
 DEF(FlashParamsTable                        ,0xffe8fc68) // Found @0xffe8fc68
 DEF(movie_status                            ,0x000051d8) // Found @0xffc45174
@@ -55,15 +56,16 @@ DEF(recreview_hold                          ,0x00005b3c) // Found @0xffc63e24
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 1, KEY_POWER           ,0x04000000 }, // Found @0xffe51b2c, levent 0x600 (uses inverted logic in physw_status)
 //    { 2, KEY_UP              ,0x00000001 }, // Found @0xffe51b3c, levent 0x04
-//    { 2, KEY_MENU            ,0x00000400 }, // Found @0xffe51b84, levent 0x09
-//    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe51b64, levent 0x01
-//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe51b64, levent 0x01
 //    { 2, KEY_DOWN            ,0x00000002 }, // Found @0xffe51b44, levent 0x05
 //    { 2, KEY_RIGHT           ,0x00000004 }, // Found @0xffe51b4c, levent 0x07
 //    { 2, KEY_LEFT            ,0x00000008 }, // Found @0xffe51b54, levent 0x06
-//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe51b7c, levent 0x08
+//    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe51b64, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe51b64, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xffe51b5c, levent 0x00
+//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe51b7c, levent 0x08
+//    { 2, KEY_MENU            ,0x00000400 }, // Found @0xffe51b84, levent 0x09
 //    { 0, 0, 0 }
 //};
 
@@ -91,7 +93,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xffc134ec) //  1
 NSTUB(DeleteFile_Fut                          ,0xffc13408) //112
 NSTUB(DoAFLock                                ,0xffc157a0) //102
 NSTUB(EnterToCompensationEVF                  ,0xffc15a90) //104
-NSTUB(ExecuteEventProcedure                   ,0xffc53308) //  1
+NSTUB(ExecuteEventProcedure                   ,0xffc53308) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xffc15bdc) //104
 NSTUB(ExitTask                                ,0xffc0bb70) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xffc218c8) //104

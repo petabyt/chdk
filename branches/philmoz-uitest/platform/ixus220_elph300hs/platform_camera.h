@@ -93,6 +93,9 @@
 
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #undef  CAM_HAS_MANUAL_FOCUS
+    
+    #define CAM_USE_ALT_SET_ZOOM_POINT      1   // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1  // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
     #define CAM_HAS_CMOS                    1
 	

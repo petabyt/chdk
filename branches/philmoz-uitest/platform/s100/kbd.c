@@ -17,7 +17,7 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long last_kbd_key = 0;
 extern void _GetKbdState(long*);
 
-#define KEYS_MASK0 (0x000181EE)
+#define KEYS_MASK0 (0x000181EF)
 #define KEYS_MASK1 (0x00B00000)
 #define KEYS_MASK2 (0x00000000)
 
@@ -26,7 +26,7 @@ extern void _GetKbdState(long*);
 #define USB_MASK            0x10000000 // Found @0xff45383c, levent 0x202
 #define USB_IDX             2
 
-extern void usb_remote_key( int ) ;
+extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
 	long usb_physw[3];
@@ -37,8 +37,9 @@ int get_usb_bit()
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 static KeyMap keymap[] = {
+    { 0, KEY_ERASE           ,0x00000001 },
     { 0, KEY_DOWN            ,0x00000002 }, // Found @0xff45373c, levent 0x05
-	{ 0, KEY_DISPLAY	     ,0x00000002 },
+    { 0, KEY_DISPLAY         ,0x00000002 },
     { 0, KEY_LEFT            ,0x00000004 }, // Found @0xff453744, levent 0x06
     { 0, KEY_MENU            ,0x00000008 }, // Found @0xff45374c, levent 0x09
     { 0, KEY_SET             ,0x00000020 }, // Found @0xff45375c, levent 0x08
@@ -46,7 +47,7 @@ static KeyMap keymap[] = {
     { 0, KEY_RIGHT           ,0x00000080 }, // Found @0xff45376c, levent 0x07
     { 0, KEY_ZOOM_OUT        ,0x00008000 }, // Found @0xff4537ac, levent 0x03
     { 0, KEY_ZOOM_IN         ,0x00010000 }, // Found @0xff4537b4, levent 0x02
-	{ 0, KEY_VIDEO           ,0x00000100 },
+    { 0, KEY_VIDEO           ,0x00000100 },
 
     { 1, KEY_PRINT           ,0x00800000 }, // ALT menu on PLAYBACK button
     { 1, KEY_PLAYBACK        ,0x00800000 },
@@ -137,7 +138,7 @@ void my_kbd_read_keys()
 		else if (jogdial_stopped && state_kbd_script_run) jogdial_control(0);
 	}
 
-	usb_remote_key(physw_status[USB_IDX]);
+	usb_remote_key();
 
 	if (conf.remote_enable) {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);

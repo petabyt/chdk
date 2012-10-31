@@ -40,7 +40,7 @@ extern void _GetKbdState(long*);
 #define SD_READONLY_IDX     2
 #define USB_IDX             2
 
-extern void usb_remote_key( int ) ;
+extern void usb_remote_key( void ) ;
 int get_usb_bit()
 {
 		long usb_physw[3];
@@ -58,11 +58,11 @@ static KeyMap keymap[] = {
 	// tiny bug: key order matters. KEY_SHOOT_FULL needs to come before KEY_SHOOT_HALF and KEY_SHOOT_FULL_ONLY
 
 	{ 0, KEY_PLAYBACK    ,0x00000001 },
+	{ 0, KEY_PRINT       ,0x00000001 }, // set <ALT> key default to Playback key
 	{ 1, KEY_MENU        ,0x01000000 }, // Found @0xffb99680, levent 0x09
 	{ 1, KEY_SET         ,0x04000000 }, // Found @0xffb99688, levent 0x08
 	{ 1, KEY_ZOOM_OUT    ,0x10000000 }, // Found @0xffb99690, levent 0x03
 	{ 1, KEY_ZOOM_IN     ,0x20000000 }, // Found @0xffb99698, levent 0x02
-	{ 1, KEY_PRINT       ,0x24000000 }, // KEY_MENU + KEY_ZOOM_IN
 	{ 1, KEY_VIDEO       ,0x80000000 },
 	{ 2, KEY_UP          ,0x00000001 }, // Found @0xffb996b0, levent 0x04
 	{ 2, KEY_DOWN        ,0x00000002 }, // Found @0xffb996b8, levent 0x05
@@ -137,7 +137,7 @@ void my_kbd_read_keys() {
 		physw_status[2] = (kbd_new_state[2] | KEYS_MASK2) & (~KEYS_MASK2 | kbd_mod_state[2]);
 	}
 
-	usb_remote_key(physw_status[USB_IDX]) ;
+	usb_remote_key() ;
 
 	if (conf.remote_enable) {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);

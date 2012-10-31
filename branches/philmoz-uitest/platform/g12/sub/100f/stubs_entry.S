@@ -25,6 +25,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00034474) // Found @0xff8349f4
 DEF(physw_run                               ,0x00001c3c) // Found @0xff8345f0
+DEF(physw_sleep_delay                       ,0x00001c44) // Found @0xff8345f0
 DEF(levent_table                            ,0xffc0c030) // Found @0xffc0c030
 DEF(FlashParamsTable                        ,0xffc89900) // Found @0xffc89900
 DEF(movie_status                            ,0x000072d4) // Found @0xff986d88
@@ -75,6 +76,8 @@ DEF(active_bitmap_buffer                    ,0x0000a610) // Found @0xffa57bc4
 //    { 2, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffbb95c0, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffbb95c0, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffbb95b8, levent 0x00
+//    { 2, KEY_POWER           ,0x00000004 }, // Found @0xffbb95c8, levent 0x600 (uses inverted logic in physw_status)
+//    { 2, KEY_PLAYBACK        ,0x00000008 }, // Found @0xffbb95d0, levent 0x601 (uses inverted logic in physw_status)
 //    { 0, 0, 0 }
 //};
 
@@ -104,7 +107,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff836b3c) //  1
 NSTUB(DeleteFile_Fut                          ,0xff836a58) //112
 NSTUB(DoAFLock                                ,0xff838940) //102
 NSTUB(EnterToCompensationEVF                  ,0xff838d24) //104
-NSTUB(ExecuteEventProcedure                   ,0xff8917a4) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff8917a4) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff838d68) //104
 NSTUB(ExitTask                                ,0xff81eb30) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff847454) //104

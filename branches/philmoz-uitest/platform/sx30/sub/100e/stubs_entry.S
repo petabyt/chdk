@@ -25,6 +25,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00034594) // Found @0xff8349f0
 DEF(physw_run                               ,0x00001c3c) // Found @0xff8345ec
+DEF(physw_sleep_delay                       ,0x00001c44) // Found @0xff8345ec
 DEF(levent_table                            ,0xffc0e7d0) // Found @0xffc0e7d0
 DEF(FlashParamsTable                        ,0xffc67a9c) // Found @0xffc67a9c
 DEF(movie_status                            ,0x00003524) // Found @0xff882fc8
@@ -68,11 +69,14 @@ DEF(active_bitmap_buffer                    ,0x0000b1cc) // Found @0xffa4a7ac
 //    { 0, KEY_LEFT            ,0x00001000 }, // Found @0xffb978a8, levent 0x06
 //    { 0, KEY_RIGHT           ,0x00002000 }, // Found @0xffb978b0, levent 0x07
 //    { 0, KEY_SET             ,0x00004000 }, // Found @0xffb978b8, levent 0x08
+//    { 0, KEY_VIDEO           ,0x00008000 }, // Found @0xffb978c0, levent 0x12
 //    { 0, KEY_DISPLAY         ,0x00020000 }, // Found @0xffb978d0, levent 0x0a
 //    { 0, KEY_MENU            ,0x00040000 }, // Found @0xffb978d8, levent 0x09
 //    { 2, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffb97938, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xffb97938, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffb97930, levent 0x00
+//    { 2, KEY_POWER           ,0x00000400 }, // Found @0xffb97940, levent 0x600
+//    { 2, KEY_PLAYBACK        ,0x00000800 }, // Found @0xffb97948, levent 0x601
 //    { 0, 0, 0 }
 //};
 
@@ -102,7 +106,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff836b38) //  1
 NSTUB(DeleteFile_Fut                          ,0xff836a54) //112
 NSTUB(DoAFLock                                ,0xff838ab8) //102
 NSTUB(EnterToCompensationEVF                  ,0xff838d44) //104
-NSTUB(ExecuteEventProcedure                   ,0xff895cc0) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff895cc0) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff838d88) //104
 NSTUB(ExitTask                                ,0xff81eb30) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff8474fc) //104

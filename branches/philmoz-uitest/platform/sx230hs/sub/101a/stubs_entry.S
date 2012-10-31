@@ -23,18 +23,11 @@
 // Firmware modemap table found @ff097158 -> ff093580 -> ff1b8470 -> ff3232ac -> ff4957d8
 // Mode 16936 in firmware but not in current modemap
 // Mode 16938 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_SCN_MONOCHROME       8754
-// Current modemap entry not found in firmware - MODE_SCN_TOY_CAMERA       8751
-// Current modemap entry not found in firmware - MODE_SCN_MINIATURE        8748
-// Current modemap entry not found in firmware - MODE_SCN_FISHEYE          8747
-// Current modemap entry not found in firmware - MODE_SCN_POSTER_EFFECT    8743
-// Current modemap entry not found in firmware - MODE_SCN_SUPER_VIVID      8742
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_SWAP       8734
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_ACCENT     8733
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x000358e8) // Found @0xff024d18
 DEF(physw_run                               ,0x00001c44) // Found @0xff0248ac
+DEF(physw_sleep_delay                       ,0x00001c4c) // Found @0xff0248ac
 DEF(levent_table                            ,0xff421558) // Found @0xff421558
 DEF(FlashParamsTable                        ,0xff495a24) // Found @0xff495a24
 DEF(movie_status                            ,0x00008624) // Found @0xff18c740
@@ -79,10 +72,13 @@ DEF(active_bitmap_buffer                    ,0x0000b478) // Found @0xff249ae8
 //    { 0, KEY_SET             ,0x00010000 }, // Found @0xff3bd1e0, levent 0x08
 //    { 0, KEY_DOWN            ,0x00020000 }, // Found @0xff3bd1e8, levent 0x05
 //    { 0, KEY_MENU            ,0x00040000 }, // Found @0xff3bd1f0, levent 0x09
+//    { 0, KEY_VIDEO           ,0x00080000 }, // Found @0xff3bd1f8, levent 0x12
+//    { 1, KEY_PLAYBACK        ,0x00200000 }, // Found @0xff3bd200, levent 0x601
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xff3bd210, levent 0x01
 //    { 2, KEY_LEFT            ,0x00000100 }, // Found @0xff3bd220, levent 0x06
+//    { 2, KEY_POWER           ,0x00000800 }, // Found @0xff3bd228, levent 0x600
 //    { 2, KEY_SHOOT_FULL      ,0x00002002 }, // Found @0xff3bd210, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00002000 }, // Found @0xff3bd230, levent 0x00
-//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xff3bd210, levent 0x01
 //    { 0, 0, 0 }
 //};
 
@@ -113,7 +109,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff026eb4) //  1
 NSTUB(DeleteFile_Fut                          ,0xff026dd0) //112
 NSTUB(DoAFLock                                ,0xff02900c) //102
 NSTUB(EnterToCompensationEVF                  ,0xff0292a8) //104
-NSTUB(ExecuteEventProcedure                   ,0xff0881a8) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff0881a8) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff0292ec) //104
 NSTUB(ExitTask                                ,0xff00ec40) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff038584) //104

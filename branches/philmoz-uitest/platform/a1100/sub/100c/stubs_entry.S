@@ -17,7 +17,7 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NSTUB(ExpCtrlTool_StopContiAE               ,0xffc1f9c4) //104        *** != 0xffc1faac
 //NSTUB(SetAE_ShutterSpeed                    ,0xffe425b8) //102        *** != 0xffe3d994
-//NSTUB(kbd_pwr_off                           ,0xffc30b9c) //  2 64%    *** != 0xffc30b40
+//NSTUB(kbd_pwr_off                           ,0xffc30b9c) //  2 64%    *** != 0xffc30bac
 NSTUB(kbd_pwr_on                              ,0xffc30b5c) //  2 82%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
@@ -27,6 +27,7 @@ NSTUB(kbd_pwr_on                              ,0xffc30b5c) //  2 82%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0000c624) // Found @0xffc11a0c
 DEF(physw_run                               ,0x00001c24) // Found @0xffc11680
+DEF(physw_sleep_delay                       ,0x00001c22) // Found @0xffc11680
 DEF(levent_table                            ,0xffe93cdc) // Found @0xffe93cdc
 DEF(FlashParamsTable                        ,0xffebbee0) // Found @0xffebbee0
 DEF(movie_status                            ,0x00005630) // Found @0xffcf8080
@@ -66,11 +67,13 @@ DEF(focus_busy                              ,0x00005478) // Found @0xffcefa8c
 //    { 1, KEY_SET             ,0x00001000 }, // Found @0xffe70b98, levent 0x08
 //    { 1, KEY_MENU            ,0x00002000 }, // Found @0xffe70ba4, levent 0x09
 //    { 1, KEY_DISPLAY         ,0x00004000 }, // Found @0xffe70bb0, levent 0x0a
-//    { 2, KEY_ZOOM_IN         ,0x00000040 }, // Found @0xffe70c28, levent 0x02
-//    { 2, KEY_ZOOM_OUT        ,0x00000080 }, // Found @0xffe70c34, levent 0x03
 //    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe70c1c, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe70c1c, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xffe70c10, levent 0x00
+//    { 2, KEY_ZOOM_IN         ,0x00000040 }, // Found @0xffe70c28, levent 0x02
+//    { 2, KEY_ZOOM_OUT        ,0x00000080 }, // Found @0xffe70c34, levent 0x03
+//    { 2, KEY_POWER           ,0x00002000 }, // Found @0xffe70c4c, levent 0x600 (uses inverted logic in physw_status)
+//    { 2, KEY_PLAYBACK        ,0x00004000 }, // Found @0xffe70c58, levent 0x601 (uses inverted logic in physw_status)
 //    { 0, 0, 0 }
 //};
 
@@ -98,7 +101,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xffc13270) //  1
 NSTUB(DeleteFile_Fut                          ,0xffc1318c) //112
 NSTUB(DoAFLock                                ,0xffc14f40) //102
 NSTUB(EnterToCompensationEVF                  ,0xffc14ff0) //104
-NSTUB(ExecuteEventProcedure                   ,0xffc555c0) //  1
+NSTUB(ExecuteEventProcedure                   ,0xffc555c0) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xffc15034) //104
 NSTUB(ExitTask                                ,0xffc0b23c) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xffc1f880) //104

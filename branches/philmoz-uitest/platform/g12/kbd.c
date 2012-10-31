@@ -42,7 +42,7 @@ extern void _GetKbdState(long*);
 #define USB_MASK (0x4000000)
 #define USB_IDX 2
 
-extern void usb_remote_key( int ) ;
+extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
 	long usb_physw[3];
@@ -71,6 +71,9 @@ static KeyMap keymap[] = {
 	{ 2, KEY_SHOOT_FULL	, 0x00000003 },
     { 2, KEY_SHOOT_FULL_ONLY, 0x00000002 },	 // http://chdk.setepontos.com/index.php?topic=1444.msg70223#msg70223
 	{ 2, KEY_SHOOT_HALF	, 0x00000001 },
+// Commented out since inverted logic breaks CHDK (for now)
+//    { 2, KEY_POWER           ,0x00000004 }, // Found @0xffbb9428, levent 0x600 (uses inverted logic in physw_status)
+//    { 2, KEY_PLAYBACK        ,0x00000008 }, // Found @0xffbb9430, levent 0x601 (uses inverted logic in physw_status)
 
 	{ 0, 0, 0 } 
 };
@@ -81,7 +84,7 @@ long __attribute__((naked)) wrap_kbd_p1_f() ;
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
 	while (physw_run){
-		_SleepTask(*((int*)(0x1c30+0x14)));//10);
+		_SleepTask(physw_sleep_delay);
 
 		if (wrap_kbd_p1_f() == 1){ // autorepeat ?
 			_kbd_p2_f();
@@ -162,7 +165,7 @@ void my_kbd_read_keys()
 
 	//_kbd_read_keys_r2(physw_status);	// re-reads physw_status[0] from 0x2DE4 at start (so above doesn't work properly) !!!!!
 
-	usb_remote_key(physw_status[USB_IDX]) ;
+	usb_remote_key() ;
 
 	if (conf.remote_enable) {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);

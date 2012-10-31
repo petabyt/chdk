@@ -25,6 +25,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00011ec4) // Found @0xff821b14
 DEF(physw_run                               ,0x00001c30) // Found @0xff821788
+DEF(physw_sleep_delay                       ,0x00001c2e) // Found @0xff821788
 DEF(levent_table                            ,0xffb4acc8) // Found @0xffb4acc8
 DEF(FlashParamsTable                        ,0xffb7455c) // Found @0xffb7455c
 DEF(movie_status                            ,0x00005430) // Found @0xff864304
@@ -33,6 +34,10 @@ DEF(canon_shoot_menu_active                 ,0x0000ac29) // Found @0xff98cb24
 DEF(playrec_mode                            ,0x00005640) // Found @0xff86d218
 DEF(zoom_status                             ,0x0000e3e0) // Found @0xffa7b654
 DEF(some_flag_for_af_scan                   ,0x00009b58) // Found @0xff94a2bc
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 1 int value, which is the the zoom focus length.
+// there are 6 entries in the table - set NUM_FL to 6
+DEF(focus_len_table                         ,0xffb77ce0) // Found @0xffb77ce0
 DEF(zoom_busy                               ,0x00009100) // Found @0xff9407f0
 DEF(focus_busy                              ,0x00008f8c) // Found @0xff939804
 //DEF(recreview_hold                          ,0x0000645c) // Found @0xff88b560, ** != ** stubs_min = 0x0000a868 (0xA78C+0xDC)
@@ -56,6 +61,9 @@ DEF(focus_busy                              ,0x00008f8c) // Found @0xff939804
 //    { 0, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffb0abe8, levent 0x01
 //    { 0, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb0abe8, levent 0x01
 //    { 0, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffb0abdc, levent 0x00
+//    { 0, KEY_POWER           ,0x00002000 }, // Found @0xffb0abf4, levent 0x600
+//    { 0, KEY_PLAYBACK        ,0x00004000 }, // Found @0xffb0ac00, levent 0x601
+//    { 1, KEY_VIDEO           ,0x00000020 }, // Found @0xffb0ac60, levent 0x12
 //    { 1, KEY_SET             ,0x00000100 }, // Found @0xffb0ac84, levent 0x08
 //    { 1, KEY_DISPLAY         ,0x00000200 }, // Found @0xffb0ac90, levent 0x0a
 //    { 1, KEY_UP              ,0x00000400 }, // Found @0xffb0ac9c, levent 0x04
@@ -90,7 +98,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff8233f4) //  1
 NSTUB(DeleteFile_Fut                          ,0xff823310) //112
 NSTUB(DoAFLock                                ,0xff825864) //102
 NSTUB(EnterToCompensationEVF                  ,0xff825b10) //104
-NSTUB(ExecuteEventProcedure                   ,0xff8759f0) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff8759f0) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff825b54) //104
 NSTUB(ExitTask                                ,0xff81b184) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff8311d8) //104

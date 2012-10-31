@@ -376,6 +376,12 @@ typedef struct {
     int tbox_char_map;          // Text input box language/char map
     int show_alt_helper;        // Show <ALT> mode help screen
     int show_alt_helper_delay;  // Delay before showing help screen
+
+    // full path & filename
+    char user_menu_script_file[USER_MENU_ITEMS][CONF_STR_LEN];
+    // @title string from file                     
+    char user_menu_script_title[USER_MENU_ITEMS][CONF_STR_LEN];
+
 } Conf;
 
 extern Conf conf;
@@ -390,7 +396,6 @@ extern Conf conf;
 #define SHOOTING_PROGRESS_PROCESSING    2
 #define SHOOTING_PROGRESS_DONE          3
 
-
 // video quality defaults. Ideally, these should match the camera default settings
 #define VIDEO_DEFAULT_QUALITY   84  // ? where does 84 come from
 #define VIDEO_MAX_QUALITY       99
@@ -398,7 +403,15 @@ extern Conf conf;
 
 extern void user_menu_restore();
 
+// Current stage of script processing
 extern int state_kbd_script_run;
+
+enum {	SCRIPT_STATE_INACTIVE=0,  // 0 - script is inactive now
+		SCRIPT_STATE_RAN,	      // 1 - script works now
+		SCRIPT_STATE_INTERRUPTED, // 2 - shutter button was pressed. wait for second press
+		SCRIPT_STATE_PENDING };   // 3 - final housekeep processing
+
+
 extern int state_shooting_progress;
 extern int state_save_raw_nth_only;
 
@@ -407,6 +420,7 @@ extern void conf_restore();
 extern void conf_load_defaults();
 extern void conf_change_dng(void);
 extern void conf_update_prevent_shutdown(void);
+extern void cb_autoiso_menu_change(unsigned int item);  // gui.c
 extern int conf_getValue(unsigned short id, tConfigVal* configVal);
 extern int conf_setValue(unsigned short id, tConfigVal configVal);
 

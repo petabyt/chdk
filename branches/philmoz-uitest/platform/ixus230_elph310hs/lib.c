@@ -47,12 +47,38 @@ int get_flash_params_count(void){
 // Viewport and Bitmap values that shouldn't change across firmware versions.
 // Values that may change are in lib.c for each firmware version.
 
+// Defined in stubs_min.S
+extern char active_viewport_buffer;
+extern void* viewport_buffers[];
+
+void *vid_get_viewport_fb()
+{
+    // Return first viewport buffer - for case when vid_get_viewport_live_fb not defined
+    // Offset the return value because the viewport is left justified instead of centered on this camera
+    return viewport_buffers[0];
+}
+
+void *vid_get_viewport_live_fb()
+{
+    if (MODE_IS_VIDEO(mode_get()) || (movie_status==VIDEO_RECORD_IN_PROGRESS))
+        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
+
+    // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
+    // Offset the return value because the viewport is left justified instead of centered on this camera
+    return viewport_buffers[(active_viewport_buffer-1)&3];
+}
+
 long vid_get_bitmap_screen_width() { return 360; }
 long vid_get_bitmap_screen_height() { return 240; }
 long vid_get_bitmap_buffer_width() { return 960; }
 long vid_get_bitmap_buffer_height() { return 270; }
 
 int vid_get_viewport_buffer_width() { return 360; }
+
+// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+int vid_get_viewport_yscale() {
+	return 2;               // ixus230/ixus3310 viewport is 480 pixels high
+}
 
 int vid_get_viewport_width()
 {
@@ -86,14 +112,44 @@ int vid_get_viewport_yoffset()
 	return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
-// viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
-// returns the byte offset into the viewport buffer where the image pixels start (to skip any black borders)
-//int vid_get_viewport_image_offset() {
-//	return (vid_get_viewport_yoffset() * vid_get_viewport_buffer_width() + vid_get_viewport_xoffset()) * 3;
-//}
+int vid_get_viewport_display_xoffset()
+{
+	if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 0;
+    }
+    else 
+    {
+        // viewport width offset table for each image size
+	    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+        static long vp_w[5] = { 0, 0, 0, 0 };    // should all be even values for edge overlay
+	    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
+}
 
-// viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
-// returns the byte offset to skip at the end of a viewport buffer row to get to the next row.
-//int vid_get_viewport_row_offset() {
-//	return (vid_get_viewport_buffer_width() - vid_get_viewport_width()) * 3;
-//}
+// Functions for PTP Live View system
+
+int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
+int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2; }
+int vid_get_viewport_height_proper()            { return 480; }
+int vid_get_viewport_buffer_width_proper()      { return 960; }
+int vid_get_viewport_fullscreen_height()        { return 480; }
+int vid_get_palette_type()                      { return 3; }
+int vid_get_palette_size()                      { return 256 * 4; }
+int vid_get_aspect_ratio()                      { return 1; }
+
+// Defined in stubs_entry.S
+extern int active_bitmap_buffer;
+extern char* bitmap_buffer[];
+
+void *vid_get_bitmap_active_buffer()
+{
+    return bitmap_buffer[active_bitmap_buffer];
+}
+
+void *vid_get_bitmap_active_palette()
+{
+    extern int active_palette_buffer;
+    extern char* palette_buffer[];
+    return (palette_buffer[active_palette_buffer]+8);
+}

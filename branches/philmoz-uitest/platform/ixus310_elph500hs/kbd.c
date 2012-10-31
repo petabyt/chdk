@@ -57,7 +57,7 @@ extern void _GetKbdState(long*);
 #define USB_MASK (0x4000000)
 #define USB_IDX  2
 
-extern void usb_remote_key( int ) ;
+extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
 	long usb_physw[3];
@@ -312,6 +312,8 @@ static KeyMap keymap[] = {
     { 2, KEY_SHOOT_FULL     , 0x00000a00 },  // Found @0xff3d146c, levent 0x01
     { 2, KEY_SHOOT_FULL_ONLY, 0x00000800 },	 // http://chdk.setepontos.com/index.php?topic=1444.msg70223#msg70223
     { 2, KEY_SHOOT_HALF     , 0x00000200 },  // Found @0xff3d1464, levent 0x00
+    { 2, KEY_POWER           ,0x00001000 }, // Found @0xff3d1474, levent 0x600
+    { 2, KEY_PLAYBACK        ,0x00004000 }, // Found @0xff3d147c, levent 0x601
 
     { 3, KEY_PRINT          , 0x00000001, LB(0,1), 0, "CHDK",  0,    GUI_MODE_NONE,      100, MODE_REC|MODE_PLAY|MODE_VID }, // virtual touch screen key
 
@@ -526,7 +528,7 @@ long __attribute__((naked)) wrap_kbd_p1_f() ;
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
 	while (physw_run){
-		_SleepTask(*((int*)(0x1c3c+0x8)));
+		_SleepTask(physw_sleep_delay);
 
 		if (wrap_kbd_p1_f() == 1){ // autorepeat ?
 			_kbd_p2_f();
@@ -586,7 +588,7 @@ void my_kbd_read_keys()
 		physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) | (kbd_mod_state[2] & KEYS_MASK2);
 	}
 
-	usb_remote_key(physw_status[USB_IDX]) ;
+	usb_remote_key() ;
 
 	if (conf.remote_enable) {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);

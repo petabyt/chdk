@@ -32,7 +32,7 @@ extern void _platformsub_kbd_fetch_data(long*);
 #define USB_MASK (0x00080000)
 #define USB_IDX  2
 
-extern void usb_remote_key( int ) ;
+extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
 	long usb_physw[3];
@@ -50,6 +50,7 @@ static KeyMap keymap[] = {
 	/* tiny bug: key order matters. see kbd_get_pressed_key() */
 
 	{ 2, KEY_PLAYBACK	, 0x00000800 },
+	{ 2, KEY_PRINT		, 0x00000800 }, // set default <ALT> key to playback
 	{ 2, KEY_SHOOT_FULL	, 0x00000300 },
 	{ 2, KEY_SHOOT_FULL_ONLY, 0x00000200 },
 	{ 2, KEY_SHOOT_HALF	, 0x00000100 },
@@ -60,7 +61,6 @@ static KeyMap keymap[] = {
 	{ 2, KEY_ZOOM_IN	, 0x00000004 },
 	{ 2, KEY_ZOOM_OUT	, 0x00000008 },
 	{ 2, KEY_MENU		, 0x00000001 },
-	{ 0, KEY_PRINT		, 0x00000008 }, //doesn't exist so fake as DISPLAY
 	{ 0, KEY_DISPLAY	, 0x00000008 },
 	{ 0, KEY_SET		, 0x00000004 },
 	/*
@@ -157,7 +157,7 @@ void my_kbd_read_keys()
 		}
 	}
 	
-	usb_remote_key(physw_status[USB_IDX]) ;
+	usb_remote_key() ;
 
 	if (conf.remote_enable) {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);

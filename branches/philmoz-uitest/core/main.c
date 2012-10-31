@@ -340,6 +340,8 @@ void core_spytask()
     }
 #endif
 
+    shooting_init();
+
     while (1)
     {
         // Change ALT mode if the KBD task has flagged a state change

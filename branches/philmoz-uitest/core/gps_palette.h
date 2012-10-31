@@ -1,3 +1,5 @@
+#include "gui_draw.h"
+
 /*-----------------------------------------------------------------------------------
 **	$Id: gps_palette.h, v 1.1 2011/11/20 genie01 Exp $
 **---------------------------------------------------------------------------------*/
@@ -5,25 +7,25 @@
 
 //  Record-Mode
 
-	#define COLOR_GPS_TRANSPARENT   		0x00
-	#define COLOR_GPS_BLACK         		0xFF
-	#define COLOR_GPS_WHITE         		0x01
-	#define COLOR_GPS_RED           		0x6c
-	#define COLOR_GPS_YELLOW        		0x20
-	#define COLOR_GPS_GREEN         		0x90
-	#define COLOR_GPS_BLUE          		0x6d
+	#define COLOR_GPS_TRANSPARENT   		COLOR_TRANSPARENT
+	#define COLOR_GPS_BLACK         		COLOR_BLACK
+	#define COLOR_GPS_WHITE         		COLOR_WHITE
+	#define COLOR_GPS_RED           		COLOR_HISTO_R
+	#define COLOR_GPS_YELLOW        		COLOR_HISTO_RG
+	#define COLOR_GPS_GREEN         		COLOR_HISTO_G
+	#define COLOR_GPS_BLUE          		COLOR_HISTO_B
 
 //  --------------------------------------------	
 
 //  Play-Mode
 
-	#define COLOR_GPS_PLAY_TRANSPARENT   	0x00
-	#define COLOR_GPS_PLAY_BLACK         	0xFF
-	#define COLOR_GPS_PLAY_WHITE         	0x01
-	#define COLOR_GPS_PLAY_RED           	0x9f
-	#define COLOR_GPS_PLAY_YELLOW        	0x92
-	#define COLOR_GPS_PLAY_GREEN         	0xa0
-	#define COLOR_GPS_PLAY_BLUE          	0xa1
+	#define COLOR_GPS_PLAY_TRANSPARENT   	COLOR_TRANSPARENT
+	#define COLOR_GPS_PLAY_BLACK         	COLOR_BLACK
+	#define COLOR_GPS_PLAY_WHITE         	COLOR_WHITE
+	#define COLOR_GPS_PLAY_RED           	COLOR_HISTO_R_PLAY
+	#define COLOR_GPS_PLAY_YELLOW        	COLOR_HISTO_RG_PLAY
+	#define COLOR_GPS_PLAY_GREEN         	COLOR_HISTO_G_PLAY
+	#define COLOR_GPS_PLAY_BLUE          	COLOR_HISTO_B_PLAY
 /*-----------------------------------------------------------------------------------
 **	$Id: gps.c, v 1.1 2011/11/20 genie01 Exp $
 **---------------------------------------------------------------------------------*/

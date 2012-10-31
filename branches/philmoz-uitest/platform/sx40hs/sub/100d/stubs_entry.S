@@ -26,6 +26,7 @@ NSTUB(reboot_fw_update                        ,0xff33ede8) //  6 96%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00037548) // Found @0xff024dd8
 DEF(physw_run                               ,0x00001c10) // Found @0xff024968
+DEF(physw_sleep_delay                       ,0x00001c18) // Found @0xff024968
 DEF(levent_table                            ,0xff5939d4) // Found @0xff5939d4
 DEF(FlashParamsTable                        ,0xff607f3c) // Found @0xff607f3c
 DEF(movie_status                            ,0x00002f1c) // Found @0xff077290
@@ -68,8 +69,11 @@ DEF(active_bitmap_buffer                    ,0x0000c314) // Found @0xff295438
 //    { 0, KEY_LEFT            ,0x00001000 }, // Found @0xff434ac4, levent 0x06
 //    { 0, KEY_RIGHT           ,0x00002000 }, // Found @0xff434acc, levent 0x07
 //    { 0, KEY_SET             ,0x00004000 }, // Found @0xff434ad4, levent 0x08
+//    { 0, KEY_VIDEO           ,0x00008000 }, // Found @0xff434adc, levent 0x19
 //    { 0, KEY_DISPLAY         ,0x00020000 }, // Found @0xff434aec, levent 0x0a
 //    { 0, KEY_MENU            ,0x00040000 }, // Found @0xff434af4, levent 0x09
+//    { 2, KEY_POWER           ,0x00000800 }, // Found @0xff434b54, levent 0x100
+//    { 2, KEY_PLAYBACK        ,0x00001000 }, // Found @0xff434b5c, levent 0x101
 //    { 2, KEY_SHOOT_FULL      ,0x0000c000 }, // Found @0xff434b74, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00008000 }, // Found @0xff434b74, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00004000 }, // Found @0xff434b6c, levent 0x00
@@ -103,7 +107,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff026fe0) //  1
 NSTUB(DeleteFile_Fut                          ,0xff026efc) //112
 NSTUB(DoAFLock                                ,0xff029330) //102
 NSTUB(EnterToCompensationEVF                  ,0xff029704) //104
-NSTUB(ExecuteEventProcedure                   ,0xff08cfdc) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff08cfdc) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff029748) //104
 NSTUB(ExitTask                                ,0xff00ed80) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff037bf0) //104

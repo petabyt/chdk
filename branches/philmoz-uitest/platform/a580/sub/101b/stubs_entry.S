@@ -25,6 +25,7 @@ NSTUB(kbd_pwr_on                              ,0xffc318fc) //  2 86%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0000ebdc) // Found @0xffc11c24
 DEF(physw_run                               ,0x00001bf0) // Found @0xffc118c0
+DEF(physw_sleep_delay                       ,0x00001bee) // Found @0xffc118c0
 DEF(levent_table                            ,0xffe7fb40) // Found @0xffe7fb40
 DEF(FlashParamsTable                        ,0xffe9ef08) // Found @0xffe9ef08
 DEF(movie_status                            ,0x000051b0) // Found @0xffc46414
@@ -57,6 +58,7 @@ DEF(zoom_busy                               ,0x00007f4c) // Found @0xffd085dc
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 1, KEY_POWER           ,0x00004000 }, // Found @0xffe5c62c, levent 0x600 (uses inverted logic in physw_status)
 //    { 1, KEY_SHOOT_FULL      ,0xc0000000 }, // Found @0xffe5c68c, levent 0x01
 //    { 1, KEY_SHOOT_FULL_ONLY ,0x80000000 }, // Found @0xffe5c68c, levent 0x01
 //    { 1, KEY_SHOOT_HALF      ,0x40000000 }, // Found @0xffe5c680, levent 0x00
@@ -96,7 +98,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xffc1350c) //  1
 NSTUB(DeleteFile_Fut                          ,0xffc13428) //112
 NSTUB(DoAFLock                                ,0xffc157b4) //102
 NSTUB(EnterToCompensationEVF                  ,0xffc15aa4) //104
-NSTUB(ExecuteEventProcedure                   ,0xffc5459c) //  1
+NSTUB(ExecuteEventProcedure                   ,0xffc5459c) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xffc15bf0) //104
 NSTUB(ExitTask                                ,0xffc0bb70) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xffc218b8) //104

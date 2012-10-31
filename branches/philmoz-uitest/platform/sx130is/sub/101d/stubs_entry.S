@@ -29,6 +29,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00032b34) // Found @0xff834658
 DEF(physw_run                               ,0x00001c3c) // Found @0xff83424c
+DEF(physw_sleep_delay                       ,0x00001c44) // Found @0xff83424c
 DEF(levent_table                            ,0xffb97a10) // Found @0xffb97a10
 DEF(FlashParamsTable                        ,0xffbe829c) // Found @0xffbe829c
 DEF(movie_status                            ,0x00006bac) // Found @0xff9698bc
@@ -65,8 +66,13 @@ DEF(palette_buffer                          ,0x000b3a58) // Found @0xffa0978c
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 2, KEY_SHOOT_FULL      ,0x0000000c }, // Found @0xffb4f468, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000008 }, // Found @0xffb4f468, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000004 }, // Found @0xffb4f460, levent 0x00
 //    { 2, KEY_ZOOM_IN         ,0x00000010 }, // Found @0xffb4f470, levent 0x02
 //    { 2, KEY_ZOOM_OUT        ,0x00000020 }, // Found @0xffb4f478, levent 0x03
+//    { 2, KEY_POWER           ,0x00000040 }, // Found @0xffb4f480, levent 0x600 (uses inverted logic in physw_status)
+//    { 2, KEY_PLAYBACK        ,0x00000080 }, // Found @0xffb4f488, levent 0x601 (uses inverted logic in physw_status)
 //    { 2, KEY_UP              ,0x00000100 }, // Found @0xffb4f490, levent 0x04
 //    { 2, KEY_DOWN            ,0x00000200 }, // Found @0xffb4f498, levent 0x05
 //    { 2, KEY_RIGHT           ,0x00000400 }, // Found @0xffb4f4a0, levent 0x07
@@ -74,9 +80,6 @@ DEF(palette_buffer                          ,0x000b3a58) // Found @0xffa0978c
 //    { 2, KEY_SET             ,0x00001000 }, // Found @0xffb4f4b0, levent 0x08
 //    { 2, KEY_MENU            ,0x00002000 }, // Found @0xffb4f4b8, levent 0x09
 //    { 2, KEY_DISPLAY         ,0x00004000 }, // Found @0xffb4f4c0, levent 0x0a
-//    { 2, KEY_SHOOT_FULL      ,0x0000000c }, // Found @0xffb4f468, levent 0x01
-//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000008 }, // Found @0xffb4f468, levent 0x01
-//    { 2, KEY_SHOOT_HALF      ,0x00000004 }, // Found @0xffb4f460, levent 0x00
 //    { 0, 0, 0 }
 //};
 
@@ -105,7 +108,7 @@ NSTUB(DebugAssert                             ,0xff81eb78) //111
 NSTUB(DeleteDirectory_Fut                     ,0xff836758) //  1
 NSTUB(DeleteFile_Fut                          ,0xff836674) //112
 NSTUB(EnterToCompensationEVF                  ,0xff838628) //104
-NSTUB(ExecuteEventProcedure                   ,0xff889a98) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff889a98) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff83866c) //104
 NSTUB(ExitTask                                ,0xff81eb30) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff846a84) //104

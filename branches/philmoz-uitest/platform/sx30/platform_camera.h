@@ -110,8 +110,6 @@
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-    #define CAM_FIRMWARE_MEMINFO            1   // Use 'GetMemInfo' to get free memory size.
-
     #define CAM_AV_OVERRIDE_IRIS_FIX        1   // for cameras that require _MoveIrisWithAv function to override Av.
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1   // For cameras with 'low light' mode that does now work with raw define this
@@ -122,6 +120,8 @@
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_NEED_SET_ZOOM_DELAY         300 // SX30 needs a short delay after setting the zoom before resetting focus in shooting_set_zoom()
+    #define CAM_USE_ALT_SET_ZOOM_POINT      1   // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1  // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                 95      // Override min subject distance

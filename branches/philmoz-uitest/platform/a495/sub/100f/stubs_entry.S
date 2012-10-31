@@ -24,23 +24,12 @@ NSTUB(kbd_pwr_off                             ,0xffc435e4) //  2 64%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffc70720 -> ffc6d288 -> ffd2e1e4 -> ffe0aa64 -> ffecf6a0
-// Mode 16417 in firmware but not in current modemap
-// Mode 16399 in firmware but not in current modemap
-// Mode 16934 in firmware but not in current modemap
-// Mode 16935 in firmware but not in current modemap
-// Mode 16936 in firmware but not in current modemap
-// Mode 16407 in firmware but not in current modemap
-// Mode  2609 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_SUPER_MACRO         16905
-// Current modemap entry not found in firmware - MODE_SCN_SNOW            16404
-// Current modemap entry not found in firmware - MODE_SCN_INDOOR          16401
-// Current modemap entry not found in firmware - MODE_SCN_KIDS_PETS       16400
-// Current modemap entry not found in firmware - MODE_SCN_NIGHT_SCENE     16395
-// Current modemap entry not found in firmware - MODE_VIDEO_STD            2598
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0002e7f4) // Found @0xffc23b2c
 DEF(physw_run                               ,0x00001bf0) // Found @0xffc23790
+DEF(physw_sleep_delay                       ,0x00001bf8) // Found @0xffc23790
 DEF(levent_table                            ,0xffea2d14) // Found @0xffea2d14
 DEF(FlashParamsTable                        ,0xffecf894) // Found @0xffecf894
 DEF(movie_status                            ,0x000054a0) // Found @0xffd0c7d8
@@ -74,17 +63,19 @@ DEF(focus_busy                              ,0x00005334) // Found @0xffd07040
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 0, KEY_PLAYBACK        ,0x00020000 }, // Found @0xffe84ebc, levent 0x601
+//    { 0, KEY_POWER           ,0x00800000 }, // Found @0xffe84ed4, levent 0x600
 //    { 2, KEY_RIGHT           ,0x00000004 }, // Found @0xffe84ee0, levent 0x07
-//    { 2, KEY_ZOOM_OUT        ,0x00000040 }, // Found @0xffe84f04, levent 0x03
-//    { 2, KEY_ZOOM_IN         ,0x00000080 }, // Found @0xffe84f10, levent 0x02
-//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe84f1c, levent 0x08
-//    { 2, KEY_UP              ,0x00100000 }, // Found @0xffe84f58, levent 0x04
-//    { 2, KEY_DOWN            ,0x00200000 }, // Found @0xffe84f64, levent 0x05
-//    { 2, KEY_LEFT            ,0x00400000 }, // Found @0xffe84f70, levent 0x06
-//    { 2, KEY_MENU            ,0x01000000 }, // Found @0xffe84f88, levent 0x09
 //    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe84ef8, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe84ef8, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xffe84eec, levent 0x00
+//    { 2, KEY_ZOOM_OUT        ,0x00000040 }, // Found @0xffe84f04, levent 0x03
+//    { 2, KEY_ZOOM_IN         ,0x00000080 }, // Found @0xffe84f10, levent 0x02
+//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe84f1c, levent 0x08
+//    { 2, KEY_UP              ,0x00100000 }, // Found @0xffe84f58, levent 0x04 (uses inverted logic in physw_status)
+//    { 2, KEY_DOWN            ,0x00200000 }, // Found @0xffe84f64, levent 0x05 (uses inverted logic in physw_status)
+//    { 2, KEY_LEFT            ,0x00400000 }, // Found @0xffe84f70, levent 0x06 (uses inverted logic in physw_status)
+//    { 2, KEY_MENU            ,0x01000000 }, // Found @0xffe84f88, levent 0x09 (uses inverted logic in physw_status)
 //    { 0, 0, 0 }
 //};
 
@@ -113,7 +104,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xffc25b64) //  1
 NSTUB(DeleteFile_Fut                          ,0xffc25a80) //112
 NSTUB(DoAFLock                                ,0xffc27554) //102
 NSTUB(EnterToCompensationEVF                  ,0xffc27604) //104
-NSTUB(ExecuteEventProcedure                   ,0xffc65870) //  1
+NSTUB(ExecuteEventProcedure                   ,0xffc65870) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xffc27648) //104
 NSTUB(ExitTask                                ,0xffc0f438) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xffc34ce4) //104

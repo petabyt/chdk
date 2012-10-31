@@ -4,13 +4,14 @@
 // Camera info:
 //   DRYOS R39 (DRYOS version 2.3, release #0039)
 //   Firmware Ver GM1.01A
-//   Possible corrupt firmware dump - file size to small for start address 0xff810000
-//     file size = 7.00MB, should be 7.94MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon PowerShot S90
 
 // Values for makefile.inc
 //   PLATFORMOSVER = 39
+//   PLATFORMID = 12769 (0x31e1) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
+//   KEYSYS = d4                 // Found @ 0xffff3564
+//   NEED_ENCODED_DISKBOOT = 3   // Found @ 0xffff3574
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -26,6 +27,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x000330d8) // Found @0xff8335b4
 DEF(physw_run                               ,0x00001c44) // Found @0xff83320c
+DEF(physw_sleep_delay                       ,0x00001c42) // Found @0xff83320c
 DEF(levent_table                            ,0xffb8b4c4) // Found @0xffb8b4c4
 DEF(FlashParamsTable                        ,0xffbefbc4) // Found @0xffbefbc4
 DEF(movie_status                            ,0x00007ae8) // Found @0xff96149c
@@ -35,6 +37,10 @@ DEF(canon_shoot_menu_active                 ,0x00008dd1) // Found @0xff9ab7a0
 DEF(playrec_mode                            ,0x00002d64) // Found @0xff87fa20
 DEF(zoom_status                             ,0x00008aa4) // Found @0xff99bb74
 DEF(some_flag_for_af_scan                   ,0x00007ff4) // Found @0xff96452c
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 3 int value(s), the first is the zoom focus length.
+// there are 10 entries in the table - set NUM_FL to 10
+DEF(focus_len_table                         ,0xfffe2af8) // Found @0xfffe2af8
 DEF(zoom_busy                               ,0x00007a14) // Found @0xff95d6cc
 DEF(focus_busy                              ,0x000078dc) // Found @0xff957bdc
 //DEF(recreview_hold                          ,0x00003a94) // Found @0xff89e6bc, ** != ** stubs_min = 0x00008a28 (0x8944+0xE4)
@@ -58,6 +64,8 @@ DEF(focus_busy                              ,0x000078dc) // Found @0xff957bdc
 //    { 0, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffb3a990, levent 0x01
 //    { 0, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xffb3a990, levent 0x01
 //    { 0, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffb3a984, levent 0x00
+//    { 0, KEY_POWER           ,0x00000400 }, // Found @0xffb3a99c, levent 0x600
+//    { 0, KEY_PLAYBACK        ,0x00000800 }, // Found @0xffb3a9a8, levent 0x601
 //    { 1, KEY_ZOOM_IN         ,0x00000010 }, // Found @0xffb3aa08, levent 0x02
 //    { 1, KEY_ZOOM_OUT        ,0x00000020 }, // Found @0xffb3aa14, levent 0x03
 //    { 1, KEY_LEFT            ,0x00000100 }, // Found @0xffb3aa38, levent 0x06
@@ -95,7 +103,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff834e84) //  1
 NSTUB(DeleteFile_Fut                          ,0xff834da0) //112
 NSTUB(DoAFLock                                ,0xff836b98) //102
 NSTUB(EnterToCompensationEVF                  ,0xff836d3c) //104
-NSTUB(ExecuteEventProcedure                   ,0xff888d28) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff888d28) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff836d80) //104
 NSTUB(ExitTask                                ,0xff81e844) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff844700) //104

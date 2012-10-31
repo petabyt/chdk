@@ -183,7 +183,7 @@ static void gui_print_osd_dof_string_dist(const char * title, int value, short u
     }
     sprintf(osd_buf+strlen(osd_buf), "%9s", "");
     osd_buf[9-i]=0;
-    draw_string(conf.values_pos.x+i*FONT_WIDTH, conf.values_pos.y+m, osd_buf, use_good_color?((conf.osd_color & 0xff00) | COLOR_GREEN):conf.osd_color);
+    draw_string(conf.values_pos.x+i*FONT_WIDTH, conf.values_pos.y+m, osd_buf, use_good_color?((conf.osd_color & 0xff00) | COLOR_HISTO_G):conf.osd_color);
   } else {
     osd_buf[9]=0;
     draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
@@ -850,7 +850,7 @@ static int gui_std_kbd_process()
         if (x)
         {
             get_property_case(PROPCASE_DIGITAL_ZOOM_POSITION, &x, sizeof(x));
-#if defined (CAMERA_s90) || defined (CAMERA_s95) || defined (CAMERA_g12) || defined (CAMERA_a3000) || defined (CAMERA_a800)
+#if defined(CAM_USE_OPTICAL_MAX_ZOOM_STATUS)
 	        if (x==0) zoom_status=ZOOM_OPTICAL_MAX; //ERR99: No zoom back from digital to optical zoom possible if set to medium
 #else
 	        if (x==0) zoom_status=ZOOM_OPTICAL_MEDIUM;

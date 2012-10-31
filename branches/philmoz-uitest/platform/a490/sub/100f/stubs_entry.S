@@ -15,16 +15,10 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(EnterToCompensationEVF                ,0xffc27608) //104        *** != 0xffc27604
-//NSTUB(GetBatteryTemperature                 ,0xffc45624) //102        *** != 0x00000000
 //NSTUB(GetDrive_FreeClusters                 ,0xffc23810) //  3        *** != 0xffc5131c
 // ALT: NSTUB(GetDrive_FreeClusters, 0xffc5131c) // 4 9/0
-//NSTUB(SetScriptMode                         ,0xffc6cb44) //101        *** != 0xffc00f70
-//NSTUB(TurnOffBackLight                      ,0xffc77d88) //104        *** != 0xffc77f9c
-//NSTUB(kbd_pwr_off                           ,0xffc435ec) //  2 64%    *** != 0x00000000
+NSTUB(kbd_pwr_off                             ,0xffc435ec) //  2 64%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
-//NSTUB(kbd_read_keys_r2                      ,0xffc42fb8) //109        *** != 0xffc42fb0
-//NSTUB(rename                                ,0xffc259f0) //  4        *** != 0xffc261e8
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffc70628 -> ffc6d174 -> ffd2e028 -> ffe07c90 -> ffeca52c
@@ -33,6 +27,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0002e754) // Found @0xffc23b2c
 DEF(physw_run                               ,0x00001bf0) // Found @0xffc23790
+DEF(physw_sleep_delay                       ,0x00001bee) // Found @0xffc23790
 DEF(levent_table                            ,0xffe9fe78) // Found @0xffe9fe78
 DEF(FlashParamsTable                        ,0xffeca71c) // Found @0xffeca71c
 DEF(movie_status                            ,0x00005470) // Found @0xffd0c6a4
@@ -66,17 +61,19 @@ DEF(recreview_hold                          ,0x0000302c) // Found @0xffc757dc
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 0, KEY_PLAYBACK        ,0x00020000 }, // Found @0xffe8204c, levent 0x601
+//    { 0, KEY_POWER           ,0x00800000 }, // Found @0xffe82064, levent 0x600
 //    { 2, KEY_RIGHT           ,0x00000004 }, // Found @0xffe82070, levent 0x07
-//    { 2, KEY_ZOOM_OUT        ,0x00000040 }, // Found @0xffe82094, levent 0x03
-//    { 2, KEY_ZOOM_IN         ,0x00000080 }, // Found @0xffe820a0, levent 0x02
-//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe820ac, levent 0x08
-//    { 2, KEY_UP              ,0x00100000 }, // Found @0xffe820e8, levent 0x04
-//    { 2, KEY_DOWN            ,0x00200000 }, // Found @0xffe820f4, levent 0x05
-//    { 2, KEY_LEFT            ,0x00400000 }, // Found @0xffe82100, levent 0x06
-//    { 2, KEY_MENU            ,0x01000000 }, // Found @0xffe82118, levent 0x09
 //    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe82088, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe82088, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xffe8207c, levent 0x00
+//    { 2, KEY_ZOOM_OUT        ,0x00000040 }, // Found @0xffe82094, levent 0x03
+//    { 2, KEY_ZOOM_IN         ,0x00000080 }, // Found @0xffe820a0, levent 0x02
+//    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe820ac, levent 0x08
+//    { 2, KEY_UP              ,0x00100000 }, // Found @0xffe820e8, levent 0x04 (uses inverted logic in physw_status)
+//    { 2, KEY_DOWN            ,0x00200000 }, // Found @0xffe820f4, levent 0x05 (uses inverted logic in physw_status)
+//    { 2, KEY_LEFT            ,0x00400000 }, // Found @0xffe82100, levent 0x06 (uses inverted logic in physw_status)
+//    { 2, KEY_MENU            ,0x01000000 }, // Found @0xffe82118, levent 0x09 (uses inverted logic in physw_status)
 //    { 0, 0, 0 }
 //};
 
@@ -104,7 +101,8 @@ NSTUB(DebugAssert                             ,0xffc0f680) //111
 NSTUB(DeleteDirectory_Fut                     ,0xffc25b68) //  1
 NSTUB(DeleteFile_Fut                          ,0xffc25a84) //112
 NSTUB(DoAFLock                                ,0xffc27558) //102
-NSTUB(ExecuteEventProcedure                   ,0xffc65798) //  1
+NSTUB(EnterToCompensationEVF                  ,0xffc27608) //104
+NSTUB(ExecuteEventProcedure                   ,0xffc65798) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xffc2764c) //104
 NSTUB(ExitTask                                ,0xffc0f438) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xffc34ce8) //104
@@ -119,6 +117,7 @@ NSTUB(FreeMemory                              ,0xffdfa3a4) //101
 NSTUB(FreeUncacheableMemory                   ,0xffc2931c) //112
 NSTUB(Fseek_Fut                               ,0xffc25da0) //101
 NSTUB(Fwrite_Fut                              ,0xffc25d00) //101
+NSTUB(GetBatteryTemperature                   ,0xffc45624) //102
 NSTUB(GetCCDTemperature                       ,0xffc455b0) //102
 NSTUB(GetCurrentAvValue                       ,0xffd087b8) //102
 NSTUB(GetDrive_ClusterSize                    ,0xffc512bc) //  4
@@ -173,8 +172,10 @@ NSTUB(SetFileTimeStamp                        ,0xffc263a8) //  4
 NSTUB(SetLogicalEventActive                   ,0xffc6caf4) //101
 NSTUB(SetParameterData                        ,0xffd2f014) //101
 NSTUB(SetPropertyCase                         ,0xffc69374) //102
+NSTUB(SetScriptMode                           ,0xffc6cb44) //101
 NSTUB(SleepTask                               ,0xffc29160) //101
 NSTUB(TakeSemaphore                           ,0xffc0f034) //101
+NSTUB(TurnOffBackLight                        ,0xffc77d88) //104
 NSTUB(TurnOnBackLight                         ,0xffc77d70) //104
 NSTUB(UIFS_WriteFirmInfoToFile                ,0xffd1f818) //101
 NSTUB(UnlockAF                                ,0xffc27590) //102
@@ -199,6 +200,7 @@ NSTUB(kbd_p1_f                                ,0xffc23ba8) //109
 NSTUB(kbd_p1_f_cont                           ,0xffc23bb4) //109
 NSTUB(kbd_p2_f                                ,0xffc2345c) //109
 NSTUB(kbd_read_keys                           ,0xffc23b2c) //109
+NSTUB(kbd_read_keys_r2                        ,0xffc42fb8) //109
 NSTUB(lseek                                   ,0xffc26228) //101
 NSTUB(malloc                                  ,0xffc04104) //112
 NSTUB(memcmp                                  ,0xffc11318) //101
@@ -213,6 +215,7 @@ NSTUB(qsort                                   ,0xffe3936c) //  4
 NSTUB(rand                                    ,0xffc11420) //  1
 NSTUB(read                                    ,0xffc0b308) //101
 NSTUB(reboot_fw_update                        ,0xffdea6b8) //  1
+NSTUB(rename                                  ,0xffc259f0) //  4
 NSTUB(set_control_event                       ,0xffc6c814) //111
 NSTUB(srand                                   ,0xffc11414) //  1
 NSTUB(stat                                    ,0xffc26270) //  3

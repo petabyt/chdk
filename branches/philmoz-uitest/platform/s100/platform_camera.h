@@ -34,7 +34,8 @@
     #define CAM_MENU_BORDERWIDTH            10
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_HAS_JOGDIAL                 1
-    #undef  CAM_HAS_ERASE_BUTTON
+    #define CAM_HAS_ERASE_BUTTON            1
+    #define CAM_KEY_CLICK_DELAY             10 // camera requires additional delay for click command
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_BRACKETING                  1
@@ -84,8 +85,6 @@
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1   // enable workaround for camera crash at startup when opening the conf / font files
                                                 // see http://chdk.setepontos.com/index.php?topic=6179.0
-
-    #define CAM_FIRMWARE_MEMINFO            1   // Use 'GetMemInfo' to get free memory size.
 
     // TODO: - we may need this to save memory
     //#define CAM_ZEBRA_NOBUF                 1

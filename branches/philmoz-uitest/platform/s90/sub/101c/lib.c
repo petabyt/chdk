@@ -50,13 +50,15 @@ long hook_raw_size()
 
 void *vid_get_viewport_live_fb()
 {
-	    return (void*)0;
-#if 0
-	void **fb=(void **)0x94E18;                               
-	unsigned char buff = *((unsigned char*)0x9114+6);         
-    if (buff == 0) buff = 2;  else buff--;    
+    void **fb=(void **)0x2240; //100c, 101a, 101c @ff84e0b4; sub_ff84d748
+    unsigned char buff = *((unsigned char*)0x2084); //100c, 101a, 101c @ff84de2c; sub_ff84d748
+    if (buff == 0) {
+        buff = 2;
+    }
+    else {
+        buff--;
+    }
     return fb[buff];
-#endif
 }
 
 void *vid_get_bitmap_fb()       
@@ -104,3 +106,13 @@ char *camera_jpeg_count_str()
 {
     return (char*)0x9792C;// S90 OK /* Search for a9999 ; "9999" */
 }
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)*(unsigned int*)(0x5CFC+0x2C);  // sub_FF9152C4, via sub_FFAE56B0 two refs to "Palette Class."
+}
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x5CFC+0x18)); //sub_FF9152C4 via "<GetBmpVramInfo> Add: %p Width : %ld Hight : %ld"
+}
+

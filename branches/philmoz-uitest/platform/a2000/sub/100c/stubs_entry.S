@@ -15,7 +15,7 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(ExecuteEventProcedure                 ,0xffc553c4) //  1        *** != 0xffc5543c
+//NSTUB(ExecuteEventProcedure                 ,0xffc553c4) //  2        *** != 0xffc5543c
 //NSTUB(GetBatteryTemperature                 ,0xffc33504) //102        *** != 0xffc33494
 //NSTUB(Lseek                                 ,0xffc13484) //101        *** != 0xffc1354c
 //NSTUB(Read                                  ,0xffc0a138) //101        *** != 0xffc133ec
@@ -31,6 +31,7 @@ NSTUB(kbd_pwr_on                              ,0xffc313c8) //  2 82%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0000f418) // Found @0xffc113ec
 DEF(physw_run                               ,0x00001be4) // Found @0xffc11064
+DEF(physw_sleep_delay                       ,0x00001be2) // Found @0xffc11064
 DEF(levent_table                            ,0xffe9ac78) // Found @0xffe9ac78
 DEF(FlashParamsTable                        ,0xffeb9cdc) // Found @0xffeb9cdc
 DEF(movie_status                            ,0x00005080) // Found @0xffc47950
@@ -63,6 +64,8 @@ DEF(focus_busy                              ,0x00007ee4) // Found @0xffcfe824
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 1, KEY_POWER           ,0x00004000 }, // Found @0xffe75c5c, levent 0x600 (uses inverted logic in physw_status)
+//    { 1, KEY_PLAYBACK        ,0x02000000 }, // Found @0xffe75c80, levent 0x601 (uses inverted logic in physw_status)
 //    { 1, KEY_SHOOT_FULL      ,0xc0000000 }, // Found @0xffe75cc8, levent 0x01
 //    { 1, KEY_SHOOT_FULL_ONLY ,0x80000000 }, // Found @0xffe75cc8, levent 0x01
 //    { 1, KEY_SHOOT_HALF      ,0x40000000 }, // Found @0xffe75cbc, levent 0x00

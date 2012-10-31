@@ -394,13 +394,13 @@ int match_compare1(const Match *p1, const Match *p2)
     /* NOTE: If a function has *more* matches, it will be prefered, even if it has a lower percent matches */
     if (p1->success > p2->success)
 	{
-		if (p2->fail != 0)
+		if ((p2->fail == 0) && (p1->fail > 0))
 		{
-			return -1;
+			return 1;
 		}
 		else
 		{
-			return 1;
+			return -1;
 		}
     }
 	else if (p1->success < p2->success)
@@ -523,7 +523,7 @@ typedef struct {
     int             maxram;
 	char		    cam[100];
 
-    // Alt copy of ROM in RAM (DryOS R50)
+    // Alt copy of ROM in RAM (DryOS R50, R51)
     uint32_t        *buf2;          // pointer to loaded FW data that is copied
     uint32_t        base2;          // RAM address copied to
     uint32_t        base_copied;    // ROM address copued from
@@ -534,7 +534,7 @@ uint32_t fwval(firmware *fw, int i)
 {
     if ((i >= 0) && (i < fw->size))
         return fw->buf[i];
-    if (fw->dryos_ver == 50)
+    if (fw->dryos_ver >= 50)
     {
         i = ((i * 4) + (fw->base - fw->base2)) / 4;
         if ((i >= 0) && (i < fw->size2))
@@ -832,7 +832,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 	else
 	{
 		fw->dryos_ver = atoi(((char*)&fw->buf[k])+28);
-        if (fw->dryos_ver > 50)
+        if (fw->dryos_ver > 51)
     		bprintf("//   DRYOS R%d (%s) *** New DRYOS Version - please update finsig_dryos.c ***\n",fw->dryos_ver,(char*)&fw->buf[k]);
         else
     		bprintf("//   DRYOS R%d (%s)\n",fw->dryos_ver,(char*)&fw->buf[k]);
@@ -874,6 +874,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
         break;
 	case 49: 
 	case 50: 
+	case 51:
         cam_idx = (((fw->base==0xFF000000)?0xFFF40190:0xFFFE0170) - fw->base) / 4; 
         pid_idx = (((fw->base==0xFF000000)?0xFFF40040:0xFFFE0040) - fw->base) / 4; 
         if ((cam_idx < fw->size) && (strncmp((char*)&fw->buf[cam_idx],"Canon ",6) != 0))
@@ -985,10 +986,10 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
         }
     }
 	
-    // DryOS R50 copies a block of ROM to RAM and then uses that copy
+    // DryOS R50/R51 copies a block of ROM to RAM and then uses that copy
     // Need to allow for this in finding addresses
     // Seen on SX260HS
-    if (fw->dryos_ver == 50)
+    if (fw->dryos_ver >= 50)
     {
         fw->buf2 = 0;
         fw->base2 = 0;
@@ -1175,6 +1176,7 @@ typedef struct {
 	int		dryos47_offset;
 	int		dryos49_offset;
 	int		dryos50_offset;
+	int		dryos51_offset;
 } string_sig;
 
 #if defined(PLATFORMOS_dryos)
@@ -1213,6 +1215,7 @@ string_sig string_sigs[] = {
 	{ 1, "GetParameterData", "PTM_RestoreUIProperty", 0xF0000004 },
 	{ 1, "GetPropertyCase", "PT_GetPropertyCaseString", 1 },
 	{ 1, "GetPropertyCase", "PT_GetPropertyCaseInt", 0x0100000F },
+	{ 1, "GetPropertyCase", "GetPropertyCase", 0x0100000F },
 	{ 1, "GetSDProtect", "GetSDProtect", 1 },
 	{ 1, "GetSystemTime", "GetSystemTime", 1 },
 	{ 1, "LEDDrive", "LEDDrive", 1 },
@@ -1234,6 +1237,7 @@ string_sig string_sigs[] = {
     { 1, "SetLogicalEventActive", "UiEvnt_SetLogicalEventActive", 1 },
     { 1, "SetParameterData", "PTM_BackupUIProperty", 1 },
 	{ 1, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000003 },
+	{ 1, "SetPropertyCase", "SetPropertyCase", 0x01000004 },
 	{ 1, "SetScriptMode", "SetScriptMode", 1 },
     { 1, "SleepTask", "SleepTask", 1 },
     { 1, "strcmp", "strcmp", 0 },
@@ -1259,7 +1263,9 @@ string_sig string_sigs[] = {
     { 2, "MoveZoomLensWithPoint", "MoveZoomLensWithPoint", 1 },
     { 2, "GetCurrentAvValue", "GetCurrentAvValue", 1 },
 	{ 2, "PT_MoveOpticalZoomAt", "PT_MoveOpticalZoomAt", 1 },
+	{ 2, "PT_MoveOpticalZoomAt", "SS.MoveOpticalZoomAt", 1 },
 	{ 2, "PT_MoveDigitalZoomToWide", "PT_MoveDigitalZoomToWide", 1 },
+	{ 2, "PT_MoveDigitalZoomToWide", "SS.MoveDigitalZoomToWide", 1 },
 	{ 2, "MoveIrisWithAv", "MoveIrisWithAv", 1},
     { 2, "PutInNdFilter", "TurnOnNdFilter", 1 },
     { 2, "PutOutNdFilter", "TurnOffNdFilter", 1 },
@@ -1270,7 +1276,9 @@ string_sig string_sigs[] = {
 	{ 2, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000008 },
 	{ 2, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000009 },
 	{ 2, "UnlockAF", "PT_UnlockAF", 0x01000002 },
+	{ 2, "UnlockAF", "SS.UnlockAF", 0x01000002 },
 	{ 2, "DoAFLock", "PT_DoAFLock", 0x01000002 },
+	{ 2, "DoAFLock", "SS.DoAFLock", 0x01000002 },
 	{ 2, "GetSystemTime", "PT_GetSystemTime", 0x01000003 },
 	{ 2, "PT_PlaySound", "PT_PlaySound", 0x01000005 },
 	{ 2, "StartRecModeMenu", "StartRecModeMenu", 1 },
@@ -1332,9 +1340,9 @@ string_sig string_sigs[] = {
     { 5, "CreateTask", "CreateTask", 1 },
     { 5, "ExitTask", "ExitTask", 1 },
     { 5, "SleepTask", "SleepTask", 1 },
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50
-	{ 5, "UpdateMBROnFlash", "MakeBootDisk", 0x01000003,				  11,   11,   11,   11,   11,   11,    1,    1,    1 },
-	{ 5, "MakeSDCardBootable", "MakeBootDisk", 0x01000003,				   1,    1,    1,    1,    1,    1,    8,    8,    8 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
+	{ 5, "UpdateMBROnFlash", "MakeBootDisk", 0x01000003,				  11,   11,   11,   11,   11,   11,    1,    1,    1,    1 },
+	{ 5, "MakeSDCardBootable", "MakeBootDisk", 0x01000003,				   1,    1,    1,    1,    1,    1,    8,    8,    8,    8 },
 
     { 6, "Restart", "Bye", 0 },
 	{ 6, "GetImageFolder", "GetCameraObjectTmpPath ERROR[ID:%lx] [TRY:%lx]\n", 0 },
@@ -1349,11 +1357,11 @@ string_sig string_sigs[] = {
 	
 	{ 8, "WriteSDCard", "Mounter.c", 0 }, 
 	
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50
-	{ 9, "kbd_p1_f", "task_PhySw", 0x01000001,							   5,    5,    5,    5,    5,    5,    5,    5,    5 },
-	{ 9, "kbd_p2_f", "task_PhySw", 0xf1000001,							   7,    7,    7,    7,    7,    7,    7,    7,    7 },
-	{ 9, "kbd_read_keys", "kbd_p1_f", 0x01000001,						   2,    2,    2,    2,    2,    2,    2,    2,    2 },
-	{ 9, "kbd_p1_f_cont", "kbd_p1_f", 0,								   3,    3,    3,    3,    3,    3,    3,    3,    3 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
+	{ 9, "kbd_p1_f", "task_PhySw", 0x01000001,							   5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
+	{ 9, "kbd_p2_f", "task_PhySw", 0xf1000001,							   7,    7,    7,    7,    7,    7,    7,    7,    7,    7 },
+	{ 9, "kbd_read_keys", "kbd_p1_f", 0x01000001,						   2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
+	{ 9, "kbd_p1_f_cont", "kbd_p1_f", 0,								   3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
 	{ 9, "kbd_read_keys_r2", "kbd_read_keys", 0x0100000C },
 	{ 9, "GetKbdState", "kbd_read_keys", 0x01000009 },
 	{ 9, "GetKbdState", "kbd_read_keys", 0x0100000A },
@@ -1367,24 +1375,24 @@ string_sig string_sigs[] = {
 	{ 10, "task_RotaryEncoder", "RotaryEncoder", 1 },
 	{ 10, "task_RotaryEncoder", "RotarySw", 1 },
 
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50
-	{ 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,				   5,    5,    5,    5,    5,    5,    5,    5,    5 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  14,   14,   14,   14,   14,   14,   14,   14,   14 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  15,   15,   15,   15,   15,   15,   15,   15,   15 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  20,   20,   20,   20,   20,   20,   19,   20,   20 },
-	{ 11, "_log", (char*)log_test, 0x01000001,							   1,    1,    1,    1,    1,    1,    1,    1,    1 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
+	{ 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,				   5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  14,   14,   14,   14,   14,   14,   14,   14,   14,   14 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  15,   15,   15,   15,   15,   15,   15,   15,   15,   15 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  20,   20,   20,   20,   20,   20,   19,   20,   20,   20 },
+	{ 11, "_log", (char*)log_test, 0x01000001,							   1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
 	
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50
-	{ 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,						0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54, 0x00 },
-	{ 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1, 	0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x34, 0x4C },
-	{ 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1, 			0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38, 0x38, 0x50 },
-	{ 12, "free", "free", 1,											0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30, 0x30, 0x48 },
-	{ 12, "malloc", "malloc", 0x01000003,								0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C, 0x44 },
-	{ 12, "TakeSemaphore", "TakeSemaphore", 1,							0x14, 0x14, 0x14, 0x14, 0x14, 0x1C, 0x1C, 0x1C, 0x1C },
-	{ 12, "GiveSemaphore", "GiveSemaphore", 1,							0x18, 0x18, 0x18, 0x18, 0x18, 0x20, 0x20, 0x20, 0x20 },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C,0x354 },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000,0x000 },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x000,0x2C4,0x000,0x000,0x000,0x000,0x000,0x000 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
+	{ 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,						0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54, 0x00, 0x00 },
+	{ 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1, 	0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x34, 0x4C, 0x4C },
+	{ 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1, 			0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38, 0x38, 0x50, 0x50 },
+	{ 12, "free", "free", 1,											0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30, 0x30, 0x48, 0x48 },
+	{ 12, "malloc", "malloc", 0x01000003,								0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C, 0x44, 0x44 },
+	{ 12, "TakeSemaphore", "TakeSemaphore", 1,							0x14, 0x14, 0x14, 0x14, 0x14, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C },
+	{ 12, "GiveSemaphore", "GiveSemaphore", 1,							0x18, 0x18, 0x18, 0x18, 0x18, 0x20, 0x20, 0x20, 0x20, 0x20 },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C,0x354,0x354 },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x000,0x2C4,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
 	
 	{ 13, "strftime", "Sunday", 1 },
 	
@@ -1422,6 +1430,7 @@ int dryos_offset(firmware *fw, string_sig *sig)
 	case 47:	return sig->dryos47_offset;
 	case 49:	return sig->dryos49_offset;
 	case 50:	return sig->dryos50_offset;
+	case 51:	return sig->dryos51_offset;
 	}
 	return 0;
 }
@@ -2662,7 +2671,7 @@ void find_modemap(firmware *fw)
 								k = 0;
 								while ((*p != 0xFFFF) && (k < 50))
 								{
-									if (((fw->dryos_ver < 49) && ((*p < 8000) || (*p > 8999))) || ((fw->dryos_ver >= 49) && ((*p < 4000) || (*p > 4999))))
+									if (((fw->dryos_ver < 47) && ((*p < 8000) || (*p > 8999))) || ((fw->dryos_ver >= 47) && ((*p < 4000) || (*p > 4999))))
 									{
 										osig *m = find_sig_val(modemap, *p);
 										if (!m)
@@ -3065,7 +3074,7 @@ void find_stubs_min(firmware *fw)
 		}
 	}
 	
-	// Find 'physw_run'
+	// Find 'physw_run' & 'physw_sleep_delay'
 	k = get_saved_sig(fw, "task_PhySw");
 	if (k >= 0)
 	{
@@ -3080,7 +3089,9 @@ void find_stubs_min(firmware *fw)
 				uint32_t fadr = followBranch(fw, idx2adr(fw,idx+k+1), 1);
 				uint32_t ofst = fw->buf[adr2idx(fw,fadr)] & 0x00000FFF;
 				print_stubs_min(fw,"physw_run",base+ofst,idx2adr(fw,idx+k));
-				//break;
+
+				ofst = fw->buf[idx+k+2] & 0x00000FFF;
+				print_stubs_min(fw,"physw_sleep_delay",base+ofst,idx2adr(fw,idx+k));
 			}
 		}
 	}
@@ -3351,7 +3362,7 @@ void find_stubs_min(firmware *fw)
                 int mul = 1;
                 if ((fw->buf[k+1] == 100) && (fw->buf[k+2] == 0)) mul = 3;
                 if ((fw->buf[k+1] == 100) && (fw->buf[k+2] != 0)) mul = 2;
-                for (k1 = k + mul; (k1 < fw->size) && (fw->buf[k1] > fw->buf[k1-mul]) && (fw->buf[k1] != max_focus_len); k1 += mul) ;
+                for (k1 = k + mul; (k1 < fw->size) && (fw->buf[k1] > fw->buf[k1-mul]) && (fw->buf[k1] > min_focus_len) && (fw->buf[k1] < max_focus_len); k1 += mul) ;
                 if (fw->buf[k1] == max_focus_len)
                 {
                     found++;
@@ -3740,19 +3751,21 @@ typedef struct {
 	char		nm[32];
 	uint32_t	fadr;
 	uint32_t	ev;
+	int         inv;
 } kinfo;
 
 int		kmask[3];
 kinfo	key_info[100];
 int		kcount = 0;
 
-void add_kinfo(int r, uint32_t b, const char *nm, uint32_t adr, uint32_t ev)
+void add_kinfo(int r, uint32_t b, const char *nm, uint32_t adr, uint32_t ev, int inv)
 {
 	key_info[kcount].reg = r;
 	key_info[kcount].bits = b;
 	strcpy(key_info[kcount].nm, nm);
 	key_info[kcount].fadr = adr;
 	key_info[kcount].ev = ev;
+	key_info[kcount].inv = inv;
 	kcount++;
 	kmask[r] |= b;
 }
@@ -3762,6 +3775,7 @@ uint32_t add_kmval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev,
 	int tidx = adr2idx(fw,tadr);
 	int r, k, kval = 0;
 	uint32_t b = 0;
+	int inv = 0;
 	for (k=0; k<tlen; k+=tsiz)
 	{
 		if (fw->buf[tidx+k+1] == ev)
@@ -3775,8 +3789,9 @@ uint32_t add_kmval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev,
 	{
 		r = (kval >> 5) & 7;
 		b = (1 << (kval & 0x1F));
+		inv = ((kval&0xff0000)==0x10000)?0:1;
 		
-		add_kinfo(r,b|xtra,name,tadr,ev);
+		add_kinfo(r,b|xtra,name,tadr,ev,inv);
 	}
 	
 	return b;
@@ -3792,7 +3807,7 @@ int kinfo_compare(const kinfo *p1, const kinfo *p2)
 	{
 		return -1;
     }
-	if (p1->ev <= 1)	// output shutter entries in reverse order
+	if ((p1->ev <= 1) && (p2->ev <= 1))	// output shutter entries in reverse order
 	{
 		if (p1->bits > p2->bits)
 		{
@@ -3803,13 +3818,16 @@ int kinfo_compare(const kinfo *p1, const kinfo *p2)
 			return 1;
 		}
 	}
-    if (p1->bits > p2->bits)
-	{
-        return 1;
-    }
-	else if (p1->bits < p2->bits)
-	{
-        return -1;
+    else
+    {
+        if (p1->bits > p2->bits)
+        {
+            return 1;
+        }
+        else if (p1->bits < p2->bits)
+        {
+            return -1;
+        }
     }
 
     return 0;
@@ -3824,7 +3842,7 @@ void print_kmvals()
 	int k;
 	for (k=0; k<kcount; k++)
 	{
-		bprintf("//    { %d, %-20s,0x%08x }, // Found @0x%08x, levent 0x%02x\n",key_info[k].reg,key_info[k].nm,key_info[k].bits,key_info[k].fadr,key_info[k].ev);
+		bprintf("//    { %d, %-20s,0x%08x }, // Found @0x%08x, levent 0x%02x%s\n",key_info[k].reg,key_info[k].nm,key_info[k].bits,key_info[k].fadr,key_info[k].ev,(key_info[k].inv==0)?"":" (uses inverted logic in physw_status)");
 	}
 	
 	bprintf("//    { 0, 0, 0 }\n//};\n");
@@ -3930,10 +3948,30 @@ void find_key_vals(firmware *fw)
 		add_kmval(fw,tadr,tsiz,tlen,8,"KEY_SET",0);
 		add_kmval(fw,tadr,tsiz,tlen,9,"KEY_MENU",0);
 		add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_DISPLAY",0);
-				
+        if (fw->dryos_ver <= 47)
+        {
+    		add_kmval(fw,tadr,tsiz,tlen,0x601,"KEY_PLAYBACK",0);
+	    	add_kmval(fw,tadr,tsiz,tlen,0x600,"KEY_POWER",0);
+	    	add_kmval(fw,tadr,tsiz,tlen,0x12,"KEY_VIDEO",0);
+        }
+        else
+        {
+    		add_kmval(fw,tadr,tsiz,tlen,0x101,"KEY_PLAYBACK",0);
+	    	add_kmval(fw,tadr,tsiz,tlen,0x100,"KEY_POWER",0);
+            if (fw->dryos_ver == 49)
+            {
+                add_kmval(fw,tadr,tsiz,tlen,0x19,"KEY_VIDEO",0);
+            }
+            else if(fw->dryos_ver == 50)
+            {
+                add_kmval(fw,tadr,tsiz,tlen,0x1A,"KEY_VIDEO",0);
+                add_kmval(fw,tadr,tsiz,tlen,0x14,"KEY_HELP",0);
+            }	
+        }
+
 		bprintf("\n// Keymap values for kbd.c. Additional keys may be present, only common values included here.\n");
 		print_kmvals();
-	}
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------

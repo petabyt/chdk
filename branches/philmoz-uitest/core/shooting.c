@@ -38,12 +38,16 @@ static short svm96_base=0;
 static short sv96_base_tmp=0;
 
 // Storage for delayed shooting overrides
-PHOTO_PARAM photo_param_put_off;
+static PHOTO_PARAM photo_param_put_off;
 
 static short *min_av96_zoom_point_tbl = NULL;
 
 DOF_TYPE dof_values;
 
+void shooting_init()
+{
+    photo_param_put_off.tv96=PHOTO_PARAM_TV_NONE;
+}
 //-------------------------------------------------------------------
 // Functions to access Canon properties
 
@@ -175,6 +179,12 @@ long get_exposure_counter()
     v = ((v>>4)&0x3FFF);
     return v;
 }
+
+#ifndef CAM_DATE_FOLDER_NAMING
+void get_target_dir_name(char *dir) {
+    sprintf(dir,"A/DCIM/%03dCANON",get_target_dir_num());
+}
+#endif
 
 //-------------------------------------------------------------------
 // Get time related values
@@ -722,7 +732,12 @@ short shooting_can_focus()
 {
     int m=mode_get()&MODE_SHOOTING_MASK;
 #if !CAM_CAN_SD_OVER_NOT_IN_MF && CAM_CAN_SD_OVERRIDE
-#if CAM_CAN_SD_OVER_IN_AF_LOCK
+#if CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY
+    if (shooting_get_prop(PROPCASE_AF_LOCK))
+        return 1;
+    else if (!MODE_IS_VIDEO(m))
+        return 0;
+#elif CAM_CAN_SD_OVER_IN_AF_LOCK
     if (shooting_get_prop(PROPCASE_AF_LOCK))
         return 1;
 #elif CAM_HAS_VIDEO_BUTTON
@@ -1511,7 +1526,7 @@ void shooting_bracketing(void)
 int captseq_hack_override_active()
 {
     if (state_kbd_script_run)
-        if ( photo_param_put_off.tv96 || photo_param_put_off.sv96 )
+        if ( photo_param_put_off.tv96 != PHOTO_PARAM_TV_NONE || photo_param_put_off.sv96 )
             return 1;
     if(conf.override_disable==1)
         return 0;
@@ -1656,10 +1671,10 @@ void set_ev_video(int x)
 
 void shooting_expo_param_override_thumb(void)
 {
-    if ( ((state_kbd_script_run) || (usb_remote_active)) && photo_param_put_off.tv96 )
+    if ( ((state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.tv96 != PHOTO_PARAM_TV_NONE))
     {
         shooting_set_tv96_direct(photo_param_put_off.tv96, SET_NOW);
-        photo_param_put_off.tv96=0;
+        photo_param_put_off.tv96=PHOTO_PARAM_TV_NONE;
     }
     else if (((conf.tv_enum_type) || (conf.tv_override_value)) && (conf.tv_override_koef) && !(conf.override_disable==1))
     {
