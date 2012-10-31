@@ -598,8 +598,8 @@
 482 "Current custom curve"
 483 "Tetris"
 484 "Show partition number"
-485 "Video without Timelimit"
-486 "CMOS can overheat during a long recording time!"
+485 "Video without time limit"
+486 "Sensor may overheat during long recordings!"
 
 //GPS Anfang---------------------------------
 487 "GPS-Settings"
