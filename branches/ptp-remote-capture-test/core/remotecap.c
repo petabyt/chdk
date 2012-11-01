@@ -77,7 +77,7 @@ void remotecap_set_available_data_type(int type)
 }
 
 void filewrite_set_discard_jpeg(int state);
-int filewrite_get_jpeg_chunk(char **ardr,unsigned *size, unsigned n, int *pos);
+int filewrite_get_jpeg_chunk(char **addr,unsigned *size, unsigned n, int *pos);
 
 void remotecap_raw_available(void) {
     filenumforptp = get_target_file_num(); // need to get this here for consistency
@@ -208,7 +208,7 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
 //                 remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_YUV);
 //             }
             break;
-#else
+#endif
         default:
             /*
              * attempting to get an unsupported image format will result in
@@ -217,7 +217,6 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
             *addr=NULL;
             *size=0;
             remotecap_set_available_data_type(0);
-#endif
     }
     return notlastchunk;
 }
@@ -227,11 +226,15 @@ void remotecap_data_type_done(int type) {
 }
 
 void remotecap_free_hooks(int mode) {
-    if (mode==1) { // for DryOS >= r50
-        // free the current filewrite hook
-        hook_wait[1] = 0;
+#ifdef CAM_EXTENDED_FILEWRITETASK
+    if (mode==1) // for DryOS >= r50
+    {
+        remotecap_jpeg_chunks_done(); // make jpeg_chunks NULL, immediately
+        hook_wait[1] = 0; // free the current filewrite hook
     }
-    else {
+    else
+#endif
+    {
         // TODO these will be called at the end raw and again at the end of jpeg/yuv
         remotecap_set_available_data_type(0); // for fmt -1 case
         // free the filewrite hook

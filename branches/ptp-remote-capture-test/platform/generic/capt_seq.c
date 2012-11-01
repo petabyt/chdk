@@ -108,14 +108,11 @@ int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n,int *pos) {
     }
     return 1; // not last chunk
 #else
-    if ( n == 0 ) { // first chunk for this shot
-        jpeg_bytes_left = jpeg_full_size;
-    }
     if ( jpeg_chunks == NULL ) { //do we have a valid queue?
-        n=50; // variable reused
-        while (n>0) { //wait for at most 500ms
+        int m=50;
+        while (m>0) { //wait for at most 500ms
             _SleepTask(10);
-            n--;
+            m--;
             if ( jpeg_chunks != NULL ) break;
         }
         if ( jpeg_chunks == NULL ) { //timeout, error
@@ -124,6 +121,9 @@ int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n,int *pos) {
             *pos=-1;
             return 0;
         }
+    }
+    if ( n == 0 ) { // first chunk for this shot
+        jpeg_bytes_left = jpeg_full_size;
     }
     /*
      * handle multiple filewritetask invocations
@@ -142,7 +142,7 @@ int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n,int *pos) {
     }
     jpeg_curr_session_chunk++;
     if (jpeg_bytes_left>0) {
-        if ( (jpeg_curr_session_chunk-1) < (MAX_CHUNKS_FOR_JPEG-1) ) {
+        if ( jpeg_curr_session_chunk < MAX_CHUNKS_FOR_JPEG ) {
             if (jpeg_chunks[jpeg_curr_session_chunk].length==0) { //last chunk of the current queue
                 return 2;
             }
@@ -157,7 +157,7 @@ int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n,int *pos) {
 
     return 1; //not last
 
-#endif
+#endif //CAM_EXTENDED_FILEWRITETASK
 }
 
 void filewrite_set_discard_jpeg(int state) {
@@ -208,6 +208,13 @@ void filewrite_main_hook(char *name, cam_ptp_data_chunk *pdc, char *fwt_data) //
     }
     jpeg_chunks=NULL;
 }
+
+#ifdef CAM_EXTENDED_FILEWRITETASK
+void remotecap_jpeg_chunks_done() {
+    jpeg_chunks=NULL;
+}
+#endif //CAM_EXTENDED_FILEWRITETASK
+
 #endif //CAM_HAS_FILEWRITETASK_HOOK
 
 #endif //CAM_CHDK_PTP_REMOTESHOOT
