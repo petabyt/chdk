@@ -304,6 +304,15 @@ float shooting_get_shutter_speed_override_value()
     return (float)conf.tv_override_value*shutter_koef[conf.tv_override_koef];
 }
 
+static int shooting_get_tv96_override_value()
+{
+    // Calculate the tv96 value for the tv override
+    if (conf.tv_enum_type)
+        return 32*(conf.tv_override_value-tv_override_zero_shift);
+    else
+        return shooting_get_tv96_from_shutter_speed(shooting_get_shutter_speed_override_value());
+}
+
 const char * shooting_get_tv_bracket_value()
 {
     return expo_shift[conf.tv_bracket_value];
@@ -1342,13 +1351,10 @@ void shooting_tv_bracketing(int when)
     { // first shoot
         bracketing.shoot_counter=1;
         // if Tv override is enabled... (this was adapted from function shooting_expo_param_override() )
-        if ( ((conf.tv_enum_type) || (conf.tv_override_value)) && (conf.tv_override_koef) && !(conf.override_disable==1) )
+        if (is_tv_override_enabled)
         {
             // ...use Tv override value as seed for bracketing:
-            if (conf.tv_enum_type)
-                bracketing.tv96 = 32*(conf.tv_override_value-tv_override_zero_shift);
-            else
-                bracketing.tv96 = shooting_get_tv96_from_shutter_speed(shooting_get_shutter_speed_override_value());
+            bracketing.tv96 = shooting_get_tv96_override_value();
         }
         // Tv override is disabled, use camera's opinion of Tv for bracketing seed value.
         else 
@@ -1490,16 +1496,16 @@ void bracketing_reset()
 
 void bracketing_step(int when)
 {
-    if (conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))
+    if (is_tv_bracketing_enabled)
         shooting_tv_bracketing(when);
-    else if (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))
+    else if (is_av_bracketing_enabled)
         shooting_av_bracketing(when);
-    else if ((conf.iso_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.iso_bracket_koef))
+    else if (is_iso_bracketing_enabled)
         shooting_iso_bracketing(when);
-    else if ((conf.subj_dist_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.subj_dist_bracket_koef))
+    else if (is_sd_bracketing_enabled)
         shooting_subject_distance_bracketing(when);   	      
-    else if ((conf.subj_dist_bracket_value) && (conf.subj_dist_bracket_koef))
-        shooting_subject_distance_bracketing(when);
+//    else if ((conf.subj_dist_bracket_value) && (conf.subj_dist_bracket_koef))
+//        shooting_subject_distance_bracketing(when);
 }
 
 void shooting_bracketing(void)
@@ -1530,9 +1536,9 @@ int captseq_hack_override_active()
             return 1;
     if(conf.override_disable==1)
         return 0;
-    if(conf.iso_override_value && conf.iso_override_koef)
+    if(is_iso_override_enabled)
         return 1;
-    if((conf.tv_enum_type || conf.tv_override_value) && conf.tv_override_koef)
+    if(is_tv_override_enabled)
         return 1;
     return 0;
 }
@@ -1671,17 +1677,14 @@ void set_ev_video(int x)
 
 void shooting_expo_param_override_thumb(void)
 {
-    if ( ((state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.tv96 != PHOTO_PARAM_TV_NONE))
+    if (((state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.tv96 != PHOTO_PARAM_TV_NONE))
     {
         shooting_set_tv96_direct(photo_param_put_off.tv96, SET_NOW);
         photo_param_put_off.tv96=PHOTO_PARAM_TV_NONE;
     }
-    else if (((conf.tv_enum_type) || (conf.tv_override_value)) && (conf.tv_override_koef) && !(conf.override_disable==1))
+    else if (is_tv_override_enabled)
     {
-        if (conf.tv_enum_type)
-            shooting_set_tv96_direct(32*(conf.tv_override_value-(tv_override_zero_shift)),SET_NOW);
-        else
-            shooting_set_tv96_direct(shooting_get_tv96_from_shutter_speed(shooting_get_shutter_speed_override_value()), SET_NOW);
+        shooting_set_tv96_direct(shooting_get_tv96_override_value(),SET_NOW);
     }
 
     if (((state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.sv96))
@@ -1689,9 +1692,9 @@ void shooting_expo_param_override_thumb(void)
         shooting_set_sv96(photo_param_put_off.sv96, SET_NOW);
         photo_param_put_off.sv96=0;
     }
-    else if ((conf.iso_override_value) && (conf.iso_override_koef) && !(conf.override_disable==1))
+    else if (is_iso_override_enabled)
         shooting_set_iso_real(shooting_get_iso_override_value(), SET_NOW);
-    else if (conf.autoiso_enable && shooting_get_flash_mode()/*NOT FOR FLASH AUTO MODE*/ && !(conf.override_disable==1 && conf.override_disable_all))
+    else if (conf.autoiso_enable && shooting_get_flash_mode()/*NOT FOR FLASH AUTO MODE*/ && autoiso_and_bracketing_overrides_are_enabled)
         shooting_set_autoiso(shooting_get_iso_mode());
 
     if (((state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.av96))
@@ -1699,7 +1702,7 @@ void shooting_expo_param_override_thumb(void)
         shooting_set_av96_direct(photo_param_put_off.av96, SET_NOW);
         photo_param_put_off.av96=0;
     }
-    else if (conf.av_override_value && !(conf.override_disable==1))
+    else if (is_av_override_enabled)
         shooting_set_av96_direct(shooting_get_av96_override_value(), SET_NOW);
 
     if (((state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.subj_dist))
@@ -1707,7 +1710,7 @@ void shooting_expo_param_override_thumb(void)
         shooting_set_focus(photo_param_put_off.subj_dist, SET_NOW);
         photo_param_put_off.subj_dist=0;
     }
-    else if ((conf.subj_dist_override_value) && (conf.subj_dist_override_koef) && !(conf.override_disable==1))
+    else if (is_sd_override_enabled)
         shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
 
 #if CAM_HAS_ND_FILTER
@@ -1741,9 +1744,9 @@ void shooting_expo_iso_override_thumb(void)
         shooting_set_sv96(photo_param_put_off.sv96, SET_NOW);
         // photo_param_put_off.sv96 is not reset here, it will be reset in next call to shooting_expo_param_override
     }
-    else if ((conf.iso_override_value) && (conf.iso_override_koef) && !(conf.override_disable==1))
+    else if (is_iso_override_enabled)
         shooting_set_iso_real(shooting_get_iso_override_value(), SET_NOW);
-    else if (conf.autoiso_enable && shooting_get_flash_mode()/*NOT FOR FLASH AUTO MODE*/ && !(conf.override_disable==1 && conf.override_disable_all))
+    else if (conf.autoiso_enable && shooting_get_flash_mode()/*NOT FOR FLASH AUTO MODE*/ && autoiso_and_bracketing_overrides_are_enabled)
         shooting_set_autoiso(shooting_get_iso_mode());
 
 #if defined(CAM_HAS_ND_FILTER) && defined(CAM_HAS_NATIVE_ND_FILTER)

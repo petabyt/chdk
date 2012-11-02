@@ -15,6 +15,9 @@
 #define MENUITEM_COLOR_FG       10
 #define MENUITEM_ENUM2          11
 #define MENUITEM_SUBMENU_PROC   12
+#define MENUITEM_STATE_VAL_PAIR 13  // value is a pointer to a 2 element CMenuItem array
+                                    // used for config values that have an on/off state as well as an adjustable value (e.g. ISO override, etc)
+                                    // the first element is the value control, the second is the on/off state control
 
 // Flags, which describe limits of F_INT value
 #define MENUITEM_F_MASK         0x00f0
@@ -25,8 +28,8 @@
 
 // Value, which specify specific kind of argument
 #define MENUITEM_ARG_MASK       0x0f00
-    // menuitem.arg contain ptr to callback function
-#define MENUITEM_ARG_CALLBACK   0x0300
+// menuitem.arg contain ptr to callback function
+#define MENUITEM_ARG_CALLBACK   0x0100
 
 #define MENU_MINMAX(min, max)   (((max)<<16)|(min&0xFFFF))
 

@@ -210,8 +210,14 @@ typedef struct {
     int bracketing_add_raw_suffix;
     int clear_bracket;
     int clear_video;
-    int override_disable;
-    int override_disable_all;
+    int override_disable;       // Uses negative/obscure logic.
+                                // 0 = CHDK Tv/Av/ISO/SD overrides are enabled
+                                // 1 = Overrides are disabled
+                                // 2 = Overrides are enabled and the shortcut button to enable/disable them is disabled
+                                // Notes: Option 2 is depracated from version 1.2
+                                //        Disabling these overrides does not disable Auto ISO and Bracketing overrides (see next item)
+    int override_disable_all;   // 0 = Auto ISO and Bracketing enabled, even if other overrides disabled above
+                                // 1 = Auto ISO and Bracketing enabled only when other overrides are enabled
 
     int tv_override_value;
     int tv_override_koef;
@@ -385,6 +391,31 @@ typedef struct {
 } Conf;
 
 extern Conf conf;
+
+// Some macros to simplify the code
+
+// True if TV/AV/ISO/SD overrides are enabled, false if disabled (excludes Auto ISO and bracketing overrides which can be still be enabled)
+#define overrides_are_enabled   ( conf.override_disable != 1 )
+// True if Auto ISO and bracketing overrides are enabled, false if disabled
+#define autoiso_and_bracketing_overrides_are_enabled    ( !(conf.override_disable == 1 && conf.override_disable_all) )
+
+// True if a TV override value is set, false otherwise
+#define is_tv_override_enabled  ( (conf.tv_enum_type || conf.tv_override_value) && conf.tv_override_koef && overrides_are_enabled )
+// True if a AV override value is set, false otherwise
+#define is_av_override_enabled  ( conf.av_override_value && overrides_are_enabled )
+// True if a ISO override value is set, false otherwise
+#define is_iso_override_enabled ( conf.iso_override_value && conf.iso_override_koef && overrides_are_enabled )
+// True if a SD (subject distance) override value is set, false otherwise
+#define is_sd_override_enabled  ( conf.subj_dist_override_value && conf.subj_dist_override_koef && overrides_are_enabled )
+
+// True if a TV bracketing value is set, false otherwise
+#define is_tv_bracketing_enabled  ( conf.tv_bracket_value && autoiso_and_bracketing_overrides_are_enabled )
+// True if a AV bracketing value is set, false otherwise
+#define is_av_bracketing_enabled  ( conf.av_bracket_value && autoiso_and_bracketing_overrides_are_enabled )
+// True if a ISO bracketing value is set, false otherwise
+#define is_iso_bracketing_enabled ( conf.iso_bracket_value && conf.iso_bracket_koef && autoiso_and_bracketing_overrides_are_enabled )
+// True if a SD (subject distance) bracketing value is set, false otherwise
+#define is_sd_bracketing_enabled  ( conf.subj_dist_bracket_value && conf.subj_dist_bracket_koef && autoiso_and_bracketing_overrides_are_enabled && shooting_can_focus() )
 
 #define ALT_PREVENT_SHUTDOWN_NO         0
 #define ALT_PREVENT_SHUTDOWN_ALT        1

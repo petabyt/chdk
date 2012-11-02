@@ -225,7 +225,7 @@ void gui_osd_draw_state()
     //draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+6*FONT_HEIGHT, osd_buf, conf.osd_color);
     ////////////////////////////  
 
-    if ((((conf.tv_enum_type) || (conf.tv_override_value)) && (conf.tv_override_koef)  && !(conf.override_disable==1)) || gui_mode==GUI_MODE_OSD)
+    if (is_tv_override_enabled || gui_mode==GUI_MODE_OSD)
     {
         if(camera_info.state.is_shutter_half_press) 
         { 
@@ -243,33 +243,35 @@ void gui_osd_draw_state()
             }
         }
     }
-    if ((conf.av_override_value && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD)  
+    if (is_av_override_enabled || gui_mode==GUI_MODE_OSD)  
         gui_print_osd_state_string_float("AV:%d.%02d", 100, shooting_get_aperture_from_av96(shooting_get_av96_override_value()));
 #if CAM_HAS_ND_FILTER
     if ((conf.nd_filter_state && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD) 
         gui_print_osd_state_string_chr("NDFILTER:", ((conf.nd_filter_state==1)?"IN":"OUT"));
 #endif    
-    if ((conf.autoiso_enable && shooting_get_iso_mode()<=0 && !(m==MODE_M || m==MODE_TV) && shooting_get_flash_mode() && (!(conf.override_disable==1 && conf.override_disable_all))) || gui_mode==GUI_MODE_OSD)  
+    if ((conf.autoiso_enable && shooting_get_iso_mode()<=0 && !(m==MODE_M || m==MODE_TV) && shooting_get_flash_mode() && (autoiso_and_bracketing_overrides_are_enabled)) || gui_mode==GUI_MODE_OSD)  
         gui_print_osd_state_string_chr("AUTOISO:", ((conf.autoiso_enable==1)?"ON":"OFF"));
-    if ((conf.subj_dist_override_value && conf.subj_dist_override_koef && shooting_can_focus() && !(conf.override_disable==1)) || ((gui_get_mode()==GUI_MODE_ALT) && shooting_get_common_focus_mode())	|| gui_mode==GUI_MODE_OSD)   {
+    if ((is_sd_override_enabled && shooting_can_focus()) || ((gui_get_mode()==GUI_MODE_ALT) && shooting_get_common_focus_mode()) || gui_mode==GUI_MODE_OSD)
+    {
         gui_print_osd_state_string_chr("SD:",gui_subj_dist_override_value_enum(0,0));
         if (gui_mode==GUI_MODE_ALT)
             gui_print_osd_state_string_chr("FACTOR:",gui_subj_dist_override_koef_enum(0,0));
     }
-    if ((conf.iso_override_value && conf.iso_override_koef && !(conf.override_disable==1))   || gui_mode==GUI_MODE_OSD)
+    if (is_iso_override_enabled || gui_mode==GUI_MODE_OSD)
         gui_print_osd_state_string_int("ISO:", shooting_get_iso_override_value());
-    if ((gui_mode==GUI_MODE_OSD) || (shooting_get_drive_mode() && m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE)) {
-    if ((conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all)) || (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))  || (conf.iso_bracket_value && conf.iso_bracket_koef && !(conf.override_disable==1 && conf.override_disable_all)) || ((conf.subj_dist_bracket_value) && (conf.subj_dist_bracket_koef) && (shooting_can_focus() && !(conf.override_disable==1 && conf.override_disable_all))))
+    if ((gui_mode==GUI_MODE_OSD) || (shooting_get_drive_mode() && m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE))
+    {
+      if (is_tv_bracketing_enabled || is_av_bracketing_enabled || is_iso_bracketing_enabled || is_sd_bracketing_enabled)
         gui_print_osd_state_string_chr("BRACKET:", shooting_get_bracket_type());
-      if (conf.tv_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))
+      if (is_tv_bracketing_enabled)
         gui_print_osd_state_string_chr("TV:", shooting_get_tv_bracket_value());
-      else if  (conf.av_bracket_value && !(conf.override_disable==1 && conf.override_disable_all))
+      else if (is_av_bracketing_enabled)
         gui_print_osd_state_string_chr("AV:", shooting_get_av_bracket_value());
-      else if  (conf.iso_bracket_value && conf.iso_bracket_koef   && !(conf.override_disable==1 && conf.override_disable_all))
+      else if (is_iso_bracketing_enabled)
         gui_print_osd_state_string_int("ISO:", shooting_get_iso_bracket_value());
-      else if  ((conf.subj_dist_bracket_value  && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.subj_dist_bracket_koef) && (shooting_can_focus()))
+      else if (is_sd_bracketing_enabled)
         gui_print_osd_state_string_int("SD:",shooting_get_subject_distance_bracket_value());
-     }
+    }
 #ifdef OPT_CURVES
     if (conf.curve_enable || gui_mode==GUI_MODE_OSD) {
         if (conf.curve_enable==1) gui_print_osd_state_string_chr("CURVES:", "CSTM");

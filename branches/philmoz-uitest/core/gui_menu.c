@@ -192,55 +192,55 @@ static void do_callback()
 }
 
 // Update an 'int' value, direction = 1 for increment, -1 for decrement
-static void update_int_value(int direction)
+static void update_int_value(const CMenuItem *mi, int direction)
 {
     // set amount to increment by (int_incr) if other buttons pressed
     get_int_incr_from_button();
 
     // do update
-    *(curr_menu->menu[gui_menu_curr_item].value) += int_incr * direction;
+    *(mi->value) += int_incr * direction;
 
     // Limit new value to defined bounds
-    if ( curr_menu->menu[gui_menu_curr_item].type & MENUITEM_F_UNSIGNED)
+    if ( mi->type & MENUITEM_F_UNSIGNED)
     {
-        if (*(curr_menu->menu[gui_menu_curr_item].value) < 0) 
-            *(curr_menu->menu[gui_menu_curr_item].value) = 0;
+        if (*(mi->value) < 0) 
+            *(mi->value) = 0;
 
-        if ( curr_menu->menu[gui_menu_curr_item].type & MENUITEM_F_MIN)
+        if ( mi->type & MENUITEM_F_MIN)
         {
-            if (*(curr_menu->menu[gui_menu_curr_item].value) < (unsigned short)(curr_menu->menu[gui_menu_curr_item].arg & 0xFFFF)) 
-                *(curr_menu->menu[gui_menu_curr_item].value) = (unsigned short)(curr_menu->menu[gui_menu_curr_item].arg & 0xFFFF);
+            if (*(mi->value) < (unsigned short)(mi->arg & 0xFFFF)) 
+                *(mi->value) = (unsigned short)(mi->arg & 0xFFFF);
         }
     }
     else
     {
-        if (*(curr_menu->menu[gui_menu_curr_item].value) < -9999) 
-            *(curr_menu->menu[gui_menu_curr_item].value) = -9999;
+        if (*(mi->value) < -9999) 
+            *(mi->value) = -9999;
 
-        if ( curr_menu->menu[gui_menu_curr_item].type & MENUITEM_F_MIN)
+        if ( mi->type & MENUITEM_F_MIN)
         {
-            if (*(curr_menu->menu[gui_menu_curr_item].value) < (short)(curr_menu->menu[gui_menu_curr_item].arg & 0xFFFF)) 
-                *(curr_menu->menu[gui_menu_curr_item].value) = (short)(curr_menu->menu[gui_menu_curr_item].arg & 0xFFFF);
+            if (*(mi->value) < (short)(mi->arg & 0xFFFF)) 
+                *(mi->value) = (short)(mi->arg & 0xFFFF);
         }
     }
 
-    if (*(curr_menu->menu[gui_menu_curr_item].value) > 99999) 
-        *(curr_menu->menu[gui_menu_curr_item].value) = 99999;
+    if (*(mi->value) > 99999) 
+        *(mi->value) = 99999;
 
-    if ( curr_menu->menu[gui_menu_curr_item].type & MENUITEM_F_UNSIGNED)
+    if ( mi->type & MENUITEM_F_UNSIGNED)
     {
-        if ( curr_menu->menu[gui_menu_curr_item].type & MENUITEM_F_MAX)
+        if ( mi->type & MENUITEM_F_MAX)
         {
-            if (*(curr_menu->menu[gui_menu_curr_item].value) > (unsigned short)((curr_menu->menu[gui_menu_curr_item].arg>>16) & 0xFFFF)) 
-                *(curr_menu->menu[gui_menu_curr_item].value) = (unsigned short)((curr_menu->menu[gui_menu_curr_item].arg>>16) & 0xFFFF);
+            if (*(mi->value) > (unsigned short)((mi->arg>>16) & 0xFFFF)) 
+                *(mi->value) = (unsigned short)((mi->arg>>16) & 0xFFFF);
         }
     }
     else
     {
-        if ( curr_menu->menu[gui_menu_curr_item].type & MENUITEM_F_MAX)
+        if ( mi->type & MENUITEM_F_MAX)
         {
-            if (*(curr_menu->menu[gui_menu_curr_item].value) > (short)((curr_menu->menu[gui_menu_curr_item].arg>>16) & 0xFFFF)) 
-                *(curr_menu->menu[gui_menu_curr_item].value) = (short)((curr_menu->menu[gui_menu_curr_item].arg>>16) & 0xFFFF);
+            if (*(mi->value) > (short)((mi->arg>>16) & 0xFFFF)) 
+                *(mi->value) = (short)((mi->arg>>16) & 0xFFFF);
         }
     }
 
@@ -260,10 +260,10 @@ static void update_int_value(int direction)
 }
 
 // Update a 'bool' value
-static void update_bool_value()
+static void update_bool_value(const CMenuItem *mi)
 {
     // update value
-    *(curr_menu->menu[gui_menu_curr_item].value) = !(*(curr_menu->menu[gui_menu_curr_item].value));
+    *(mi->value) = !(*(mi->value));
 
     // execute custom callback and on_change functions
     do_callback();
@@ -273,24 +273,24 @@ static void update_bool_value()
 }
 
 // Update an 'enum' value, direction = 1 for increment, -1 for decrement
-static void update_enum_value(int direction)
+static void update_enum_value(const CMenuItem *mi, int direction)
 {
     // update value
-    if (curr_menu->menu[gui_menu_curr_item].value)
+    if (mi->value)
     {
         int c;
         if (camera_info.state.is_shutter_half_press)    c = 3;
         else if (kbd_is_key_pressed(KEY_ZOOM_IN))  c = 6;
         else if (kbd_is_key_pressed(KEY_ZOOM_OUT)) c = 3;
         else c = int_incr;
-        if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_ENUM)
+        if ((mi->type & MENUITEM_MASK) == MENUITEM_ENUM)
         {
-            ((const char* (*)(int change, int arg))(curr_menu->menu[gui_menu_curr_item].value))(c*direction, curr_menu->menu[gui_menu_curr_item].arg);
+            ((const char* (*)(int change, int arg))(mi->value))(c*direction, mi->arg);
         }
         else
         {
             extern const char* gui_change_enum2(const CMenuItem *menu_item, int change);
-            gui_change_enum2(&curr_menu->menu[gui_menu_curr_item], c*direction);
+            gui_change_enum2(mi, c*direction);
         }
     }
 
@@ -400,6 +400,9 @@ static void gui_menu_updown(int increment)
 
         // Reset amount to increment integer values by
         int_incr = 1;
+        if (((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_STATE_VAL_PAIR) &&
+            (curr_menu->menu[gui_menu_curr_item].arg > 0))
+            int_incr = curr_menu->menu[gui_menu_curr_item].arg;
         gui_menu_disp_incr();
 
         // Redraw menu if needed
@@ -411,7 +414,8 @@ static void gui_menu_updown(int increment)
 // Process button presses when in GUI_MODE_MENU mode
 int gui_menu_kbd_process() {
 
-    switch (kbd_get_autoclicked_key() | get_jogdial_direction()) {
+    switch (kbd_get_autoclicked_key() | get_jogdial_direction())
+    {
 #if CAM_HAS_ERASE_BUTTON
         case KEY_ERASE:
 #else    
@@ -470,17 +474,34 @@ int gui_menu_kbd_process() {
             if (gui_menu_curr_item >= 0) {
                 switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) {
                     case MENUITEM_INT:
-                        update_int_value(-1);
+                        update_int_value(&curr_menu->menu[gui_menu_curr_item],-1);
                         break;
                     case MENUITEM_BOOL:
-                        update_bool_value();
+                        update_bool_value(&curr_menu->menu[gui_menu_curr_item]);
                         break;
                     case MENUITEM_ENUM:
                     case MENUITEM_ENUM2:
-                        update_enum_value(-1);
+                        update_enum_value(&curr_menu->menu[gui_menu_curr_item],-1);
                         break;
                     case MENUITEM_UP:
                         gui_menu_back();
+                        break;
+                    case MENUITEM_STATE_VAL_PAIR:
+                        {
+                            CMenuItem *c = (CMenuItem*)(curr_menu->menu[gui_menu_curr_item].value);
+                            if (*(c[1].value) == 0)
+                                update_bool_value(&c[1]);
+                            switch (c[0].type & MENUITEM_MASK)
+                            {
+                                case MENUITEM_INT:
+                                    update_int_value(&c[0],-1);
+                                    break;
+                                case MENUITEM_ENUM:
+                                case MENUITEM_ENUM2:
+                                    update_enum_value(&c[0],-1);
+                                    break;
+                            }
+                        }
                         break;
                 }
             } else {
@@ -492,20 +513,37 @@ int gui_menu_kbd_process() {
             if (gui_menu_curr_item >= 0) {
                 switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK){
                     case MENUITEM_INT:
-                        update_int_value(1);
+                        update_int_value(&curr_menu->menu[gui_menu_curr_item],1);
                         break;
                     case MENUITEM_BOOL:
-                        update_bool_value();
+                        update_bool_value(&curr_menu->menu[gui_menu_curr_item]);
                         break;
                     case MENUITEM_ENUM:
                     case MENUITEM_ENUM2:
-                        update_enum_value(1);
+                        update_enum_value(&curr_menu->menu[gui_menu_curr_item],1);
                         break;
                     case MENUITEM_SUBMENU_PROC:
                         select_proc();
                         break;
                     case MENUITEM_SUBMENU:
                         select_sub_menu();
+                        break;
+                    case MENUITEM_STATE_VAL_PAIR:
+                        {
+                            CMenuItem *c = (CMenuItem*)(curr_menu->menu[gui_menu_curr_item].value);
+                            if (*(c[1].value) == 0)
+                                update_bool_value(&c[1]);
+                            switch (c[0].type & MENUITEM_MASK)
+                            {
+                                case MENUITEM_INT:
+                                    update_int_value(&c[0],1);
+                                    break;
+                                case MENUITEM_ENUM:
+                                case MENUITEM_ENUM2:
+                                    update_enum_value(&c[0],1);
+                                    break;
+                            }
+                        }
                         break;
                 }
             }
@@ -521,7 +559,7 @@ int gui_menu_kbd_process() {
                         }
                         break;
                     case MENUITEM_BOOL:
-                        update_bool_value();
+                        update_bool_value(&curr_menu->menu[gui_menu_curr_item]);
                         break;
                     case MENUITEM_SUBMENU_PROC:
                     case MENUITEM_PROC:
@@ -541,8 +579,14 @@ int gui_menu_kbd_process() {
                         break;
                     case MENUITEM_ENUM:
                     case MENUITEM_ENUM2:
-                        update_enum_value(1);
+                        update_enum_value(&curr_menu->menu[gui_menu_curr_item],1);
                         gui_menu_redraw=1;
+                        break;
+                    case MENUITEM_STATE_VAL_PAIR:
+                        {
+                            CMenuItem *c = (CMenuItem*)(curr_menu->menu[gui_menu_curr_item].value);
+                            update_bool_value(&c[1]);
+                        }
                         break;
                 }
             }
@@ -691,6 +735,44 @@ static void gui_menu_draw_text(char *str, int num_symbols)
     rbf_draw_char(xx, yy, ' ', cl);
 }
 
+// Common code extracted from gui_menu_draw for displaying an int or enum that can be enabled/disabled
+static void gui_menu_draw_state_value(CMenuItem *c)
+{
+    char tbuf[64];
+    int len_str = 0;
+    const char *ch = "";
+
+    switch (c[0].type & MENUITEM_MASK)
+    {
+    case MENUITEM_INT:
+        len_str = len_enum;
+        sprintf(tbuf, "%d", *(c[0].value));
+        ch = tbuf;
+        break;
+    case MENUITEM_ENUM:
+        len_str = len_enum;
+        if (c[0].value)
+            ch = ((const char* (*)(int change, int arg))(c[0].value))(0, c[0].arg);
+        break;
+    case MENUITEM_ENUM2:
+        len_str = len_enum;
+        if (c[0].value)
+        {
+            extern const char* gui_change_enum2(const CMenuItem *menu_item, int change);
+            ch = gui_change_enum2(c, 0);
+        }
+        break;
+    }
+
+    gui_menu_draw_symbol(1);
+    xx += rbf_draw_string_len(xx, yy, w-len_space-len_space-len_br1-len_str-len_br2-len_space-symbol_width-len_br1-len_br2-len_bool, lang_str(curr_menu->menu[imenu].text), cl);
+    xx += rbf_draw_string(xx, yy, " [", cl);
+    xx += rbf_draw_string_len(xx, yy, len_bool, (*(c[1].value))?"\x95":"", cl);
+    xx += rbf_draw_string(xx, yy, "][", cl);
+    xx += rbf_draw_string_right_len(xx, yy, len_str, ch, cl);
+    rbf_draw_string(xx, yy, "] ", cl);
+}
+
 //-------------------------------------------------------------------
 void gui_menu_draw(int enforce_redraw) {
     static char tbuf[64];
@@ -726,11 +808,14 @@ void gui_menu_draw(int enforce_redraw) {
 
             switch (curr_menu->menu[imenu].type & MENUITEM_MASK)
             {
+            case MENUITEM_STATE_VAL_PAIR:
+                gui_menu_draw_state_value((CMenuItem*)(curr_menu->menu[imenu].value));
+                break;
             case MENUITEM_BOOL:
                 gui_menu_draw_value((*(curr_menu->menu[imenu].value))?"\x95":"", len_bool);
                 break;
             case MENUITEM_INT:
-                    sprintf(tbuf, "%d", *(curr_menu->menu[imenu].value));
+                sprintf(tbuf, "%d", *(curr_menu->menu[imenu].value));
                 gui_menu_draw_value(tbuf, len_int);
                 break;
             case MENUITEM_SUBMENU_PROC:

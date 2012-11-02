@@ -320,7 +320,7 @@
 #define	LANG_MENU_OVERRIDE_TV_KOEF              241
 #define LANG_MENU_OVERRIDE_AV_VALUE             242
 #define	LANG_MENU_OVERRIDE_ISO_VALUE            243
-#define	LANG_MENU_OVERRIDE_ISO_KOEF             244
+//#define	LANG_MENU_OVERRIDE_ISO_KOEF             244
 #define	LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE      245
 #define	LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF       246
 
@@ -329,9 +329,9 @@
 #define LANG_MENU_TV_BRACKET_VALUE              249
 #define LANG_MENU_AV_BRACKET_VALUE              250
 #define LANG_MENU_ISO_BRACKET_VALUE             251
-#define LANG_MENU_ISO_BRACKET_KOEF              252
+//#define LANG_MENU_ISO_BRACKET_KOEF              252
 #define LANG_MENU_SUBJ_DIST_BRACKET_VALUE       253
-#define LANG_MENU_SUBJ_DIST_BRACKET_KOEF        254
+//#define LANG_MENU_SUBJ_DIST_BRACKET_KOEF        254
 #define LANG_MENU_BRACKET_TYPE                  255
 
 #define LANG_MENU_SCRIPT_AUTOSTART              256
@@ -445,7 +445,7 @@
 #define LANG_OSD_LAYOUT_EDITOR_VIDEO            348
 #define LANG_MENU_CLEAR_VIDEO_VALUES            349
 #define LANG_MENU_MISC_FAST_EV                  350
-#define LANG_MENU_MISC_FAST_EV_STEP             351
+//#define LANG_MENU_MISC_FAST_EV_STEP             351
 #define LANG_OSD_LAYOUT_EDITOR_EV               352
 
 #define LANG_FSELECT_PURGE_DCIM_TEXT            353
@@ -546,7 +546,7 @@
 #define LANG_MENU_RAW_SAVE_IN_EDGEOVERLAY       435
 #define LANG_MENU_RAW_SAVE_IN_AUTO              436
 #define LANG_MENU_FLASH_VIDEO_OVERRIDE          437
-#define LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER    438
+//#define LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER    438
 #define LANG_MENU_RAW_DNG_EXT                   439
 #define LANG_MENU_DNG_VIA_USB                   440 
 #define LANG_MENU_GAMES_MASTERMIND              441

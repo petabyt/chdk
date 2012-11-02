@@ -110,8 +110,20 @@ const char* gui_change_enum2(const CMenuItem *menu_item, int change)
 //-------------------------------------------------------------------
 
 static const char* gui_bracket_values_modes[] =             { "Off", "1/3 Ev","2/3 Ev", "1 Ev", "1 1/3Ev", "1 2/3Ev", "2 Ev", "2 1/3Ev", "2 2/3Ev", "3 Ev", "3 1/3Ev", "3 2/3Ev", "4 Ev"};
-static const char* gui_override_koef_modes[] =              { "Off", "1", "10", "100", "1000" };
+static const char* gui_override_koef_modes[] =              { "Off", "x     1", "x    10", "x   100", "x  1000" };
 static const char* gui_bracket_type_modes[] =               { "+/-", "-","+"};
+
+#if CAM_CAN_SD_OVERRIDE
+static CMenuItem sd_bracket[2] = {
+    MENU_ITEM   (0, 0,  MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.subj_dist_bracket_value,  MENU_MINMAX(0, 30000) ),
+    MENU_ITEM   (0, 0,  MENUITEM_BOOL,                                      &conf.subj_dist_bracket_koef,   0 ),
+};
+#endif
+
+static CMenuItem iso_bracket[2] = {
+    MENU_ITEM   (0, 0,  MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.iso_bracket_value,        MENU_MINMAX(0, 10000) ),
+    MENU_ITEM   (0, 0,  MENUITEM_BOOL,                                      &conf.iso_bracket_koef,         0 ),
+};
 
 static CMenuItem bracketing_in_continuous_submenu_items[] = {
     MENU_ENUM2  (0x63,LANG_MENU_TV_BRACKET_VALUE,           &conf.tv_bracket_value,         gui_bracket_values_modes ),
@@ -119,11 +131,9 @@ static CMenuItem bracketing_in_continuous_submenu_items[] = {
     MENU_ENUM2  (0x62,LANG_MENU_AV_BRACKET_VALUE,           &conf.av_bracket_value,         gui_bracket_values_modes ),
 #endif
 #if CAM_CAN_SD_OVERRIDE
-    MENU_ITEM   (0x5e,LANG_MENU_SUBJ_DIST_BRACKET_VALUE,    MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,                 &conf.subj_dist_bracket_value, MENU_MINMAX(0, 100) ),
-    MENU_ENUM2  (0x5f,LANG_MENU_SUBJ_DIST_BRACKET_KOEF,     &conf.subj_dist_bracket_koef,   gui_override_koef_modes ),
+    MENU_ITEM   (0x5e,LANG_MENU_SUBJ_DIST_BRACKET_VALUE,    MENUITEM_STATE_VAL_PAIR,        &sd_bracket,                        100 ),
 #endif
-    MENU_ITEM   (0x74,LANG_MENU_ISO_BRACKET_VALUE,          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,                 &conf.iso_bracket_value, MENU_MINMAX(0, 100) ),
-    MENU_ENUM2a (0x5f,LANG_MENU_ISO_BRACKET_KOEF,           &conf.iso_bracket_koef,         gui_override_koef_modes,            4 ),
+    MENU_ITEM   (0x74,LANG_MENU_ISO_BRACKET_VALUE,          MENUITEM_STATE_VAL_PAIR,        &iso_bracket,                       10 ),
     MENU_ENUM2  (0x60,LANG_MENU_BRACKET_TYPE,               &conf.bracket_type,             gui_bracket_type_modes ),
     MENU_ITEM   (0x5b,LANG_MENU_CLEAR_BRACKET_VALUES,       MENUITEM_BOOL,                  &conf.clear_bracket,                0 ),
     MENU_ITEM   (0x5c,LANG_MENU_BRACKETING_ADD_RAW_SUFFIX,  MENUITEM_BOOL,                  &conf.bracketing_add_raw_suffix,    0 ),
@@ -1033,7 +1043,7 @@ static CMenu video_submenu = {0x23,LANG_MENU_VIDEO_PARAM_TITLE, NULL, video_subm
 
 static const char* gui_tv_override_koef_enum(int change, int arg)
 {
-    static const char* modes[]={"Off", "1/100K", "1/10000", "1/1000","1/100","1/10", "1","10","100"};
+    static const char* modes[]={"Off", "x1/100K", "x 1/10K", "x1/1000", "x 1/100", "x  1/10", "x     1", "x    10", "x   100"};
 
     if (conf.tv_enum_type && change)
     {
@@ -1045,6 +1055,8 @@ static const char* gui_tv_override_koef_enum(int change, int arg)
     else
     	gui_enum_value_change(&conf.tv_override_koef,change,sizeof(modes)/sizeof(modes[0]));
 
+    if (conf.tv_enum_type && (conf.tv_override_koef == 6))
+        return "On";
     return modes[conf.tv_override_koef]; 
 }
 
@@ -1058,21 +1070,22 @@ static const char* gui_tv_override_value_enum(int change, int arg)
     */
 
     // XXX This array above is redundant with platform/generic/shooting.c, this should be avoided!
-    conf.tv_override_value+=change;
-    if (conf.tv_enum_type) {
-       if (conf.tv_override_value<0) {
-          conf.tv_override_value=tv_override_amount-1;
-        }
-       else if ((unsigned)conf.tv_override_value>=(tv_override_amount))
-         conf.tv_override_value=0;
-       return tv_override[conf.tv_override_value]; 
+    conf.tv_override_value += change;
+    if (conf.tv_enum_type)
+    {
+        if (conf.tv_override_value < 0)
+            conf.tv_override_value = tv_override_amount-1;
+        else if ((unsigned)conf.tv_override_value >= tv_override_amount)
+            conf.tv_override_value = 0;
+        return tv_override[conf.tv_override_value]; 
     }
-    else {
-        if (conf.tv_override_value<0) {
-            conf.tv_override_value=100;
-        }
-        else if (conf.tv_override_value>100)  conf.tv_override_value=0;
-            sprintf(buf, "%d",  conf.tv_override_value);
+    else
+    {
+        if (conf.tv_override_value < 0)
+            conf.tv_override_value = 100;
+        else if (conf.tv_override_value > 100)
+            conf.tv_override_value=0;
+        sprintf(buf, "%d", conf.tv_override_value);
         return buf; 
     }
 }
@@ -1082,11 +1095,14 @@ static const char* gui_tv_enum_type_enum(int change, int arg)
     static const char* modes[]={"Factor", "Ev Step"};
 
     gui_enum_value_change(&conf.tv_enum_type,change,sizeof(modes)/sizeof(modes[0]));
-    if (change) {
-        conf.tv_override_koef=6;
+    if (change)
+    {
+        if (conf.tv_override_koef)
+            conf.tv_override_koef = 6;
         if (conf.tv_enum_type)  
-            conf.tv_override_value=tv_override_zero_shift;
-        else conf.tv_override_value=1; 
+            conf.tv_override_value = tv_override_zero_shift;
+        else
+            conf.tv_override_value = 1; 
     }
     return modes[conf.tv_enum_type]; 
 }
@@ -1211,10 +1227,25 @@ static const char* gui_override_disable_modes[] =           { "No", "Yes" };
 #if CAM_HAS_ND_FILTER
 static const char* gui_nd_filter_state_modes[] =            { "Off", "In", "Out" };
 #endif
-static const char* gui_fast_ev_step_modes[] =               { "1/6 Ev","1/3 Ev","1/2 Ev", "2/3 Ev","5/6 Ev","1 Ev","1 1/6 Ev","1 1/3 Ev","1 1/2 Ev", "1 2/3 Ev","1 5/6 Ev","2 Ev","2 1/6 Ev","2 1/3 Ev","2 1/2 Ev", "2 2/3 Ev","2 5/6 Ev","3 Ev","3 1/6 Ev","3 1/3 Ev","3 1/2 Ev", "3 2/3 Ev","3 5/6 Ev","4 Ev"};
+static const char* gui_fast_ev_step_modes[] =               { "1/6 Ev","1/3 Ev","1/2 Ev", "2/3 Ev","5/6 Ev","1 Ev","1 1/6Ev","1 1/3Ev","1 1/2Ev", "1 2/3Ev","1 5/6Ev","2 Ev","2 1/6Ev","2 1/3Ev","2 1/2Ev", "2 2/3Ev","2 5/6Ev","3 Ev","3 1/6Ev","3 1/3Ev","3 1/2Ev", "3 2/3Ev","3 5/6Ev","4 Ev"};
 #if CAM_QUALITY_OVERRIDE
-static const char* gui_fast_image_quality_modes[] =         { "sup.fine", "fine", "normal", "off" };
+static const char* gui_fast_image_quality_modes[] =         { "Sup.Fine", "Fine", "Normal", "Off" };
 #endif
+
+static CMenuItem iso_override_items[2] = {
+    MENU_ITEM   (0, 0,  MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.iso_override_value,           MENU_MINMAX(0, 10000) ),
+    MENU_ITEM   (0, 0,  MENUITEM_BOOL,                                      &conf.iso_override_koef,            0),
+};
+
+static CMenuItem fast_ev_switch[2] = {
+    MENU_ENUM2  (0, 0,                                                      &conf.fast_ev_step,                 gui_fast_ev_step_modes ),
+    MENU_ITEM   (0, 0,  MENUITEM_BOOL,                                      &conf.fast_ev,                      0 ),
+};
+
+static CMenuItem manual_flash[2] = {
+    MENU_ITEM   (0, 0,  MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.flash_video_override_power,   MENU_MINMAX(0, 2) ),
+    MENU_ITEM   (0, 0,  MENUITEM_BOOL,                                      &conf.flash_manual_override,        0 ),
+};
 
 static CMenuItem operation_submenu_items[] = {
     MENU_ENUM2  (0x5f,LANG_MENU_OVERRIDE_DISABLE,           &conf.override_disable, gui_override_disable_modes ),
@@ -1232,32 +1263,29 @@ static CMenuItem operation_submenu_items[] = {
     MENU_ITEM   (0x5e,LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE,   MENUITEM_ENUM,          gui_subj_dist_override_value_enum,  0 ),
     MENU_ITEM   (0x5f,LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF,    MENUITEM_ENUM,          gui_subj_dist_override_koef_enum,   0 ),
 #endif
-    MENU_ITEM   (0x74,LANG_MENU_OVERRIDE_ISO_VALUE,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,     &conf.iso_override_value, MENU_MINMAX(0, 800) ),
-    MENU_ENUM2a (0x5f,LANG_MENU_OVERRIDE_ISO_KOEF,          &conf.iso_override_koef, gui_override_koef_modes,       4 ),
+    MENU_ITEM   (0x74,LANG_MENU_OVERRIDE_ISO_VALUE,         MENUITEM_STATE_VAL_PAIR,(int)&iso_override_items,           10 ),
 #if ZOOM_OVERRIDE
     MENU_ITEM   (0x5c,LANG_MENU_OVERRIDE_ZOOM,              MENUITEM_BOOL,          &conf.zoom_override,                0 ),
     MENU_ITEM   (0x5f,LANG_MENU_OVERRIDE_ZOOM_VALUE,        MENUITEM_ENUM,          gui_zoom_override_enum,             0 ),
     MENU_ITEM   (0x5c,LANG_MENU_CLEAR_ZOOM_OVERRIDE_VALUES, MENUITEM_BOOL,          &conf.clear_zoom_override,          0 ),
 #endif
-    MENU_ITEM   (0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS,      MENUITEM_SUBMENU,       &bracketing_in_continuous_submenu,  0 ),
-    MENU_ITEM   (0x2d,LANG_MENU_AUTOISO,                    MENUITEM_SUBMENU,       &autoiso_submenu,                   0 ),
-    MENU_ITEM   (0x5b,LANG_MENU_CLEAR_OVERRIDE_VALUES,      MENUITEM_BOOL,          &conf.clear_override,               0 ),
-    MENU_ITEM   (0x5c,LANG_MENU_MISC_FAST_EV,               MENUITEM_BOOL,          &conf.fast_ev,                      0 ),
-    MENU_ENUM2  (0x5f,LANG_MENU_MISC_FAST_EV_STEP,          &conf.fast_ev_step,     gui_fast_ev_step_modes ),
+    MENU_ITEM   (0x5c,LANG_MENU_MISC_FAST_EV,               MENUITEM_STATE_VAL_PAIR,&fast_ev_switch,                    0 ),
 #if CAM_REAR_CURTAIN
     MENU_ITEM   (0x5c, LANG_MENU_REAR_CURTAIN,              MENUITEM_BOOL,          &conf.flash_sync_curtain,           0 ),
 #endif
-    MENU_ITEM   (0x5c, LANG_MENU_FLASH_MANUAL_OVERRIDE,     MENUITEM_BOOL,          &conf.flash_manual_override,        0 ),
-    MENU_ITEM   (0x5f, LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER,MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.flash_video_override_power, MENU_MINMAX(0, 2) ),
+    MENU_ITEM   (0x5c, LANG_MENU_FLASH_MANUAL_OVERRIDE,     MENUITEM_STATE_VAL_PAIR,&manual_flash,                      0 ),
 #if CAM_HAS_VIDEO_BUTTON
     MENU_ITEM   (0x5c, LANG_MENU_FLASH_VIDEO_OVERRIDE,      MENUITEM_BOOL,          &conf.flash_video_override,         0 ),
 #endif
 #if CAM_QUALITY_OVERRIDE
     MENU_ENUM2  (0x5c,LANG_MENU_MISC_IMAGE_QUALITY,         &conf.fast_image_quality, gui_fast_image_quality_modes ),
 #endif
+    MENU_ITEM   (0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS,      MENUITEM_SUBMENU,       &bracketing_in_continuous_submenu,  0 ),
+    MENU_ITEM   (0x2d,LANG_MENU_AUTOISO,                    MENUITEM_SUBMENU,       &autoiso_submenu,                   0 ),
 #ifdef OPT_CURVES
-    MENU_ITEM   (0x85,LANG_MENU_CURVE_PARAM,                MENUITEM_SUBMENU,   &curve_submenu,     0 ),
+    MENU_ITEM   (0x85,LANG_MENU_CURVE_PARAM,                MENUITEM_SUBMENU,       &curve_submenu,                     0 ),
 #endif
+    MENU_ITEM   (0x5b,LANG_MENU_CLEAR_OVERRIDE_VALUES,      MENUITEM_BOOL,          &conf.clear_override,               0 ),
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,        0,                                  0 ),
     {0}
 };
