@@ -84,6 +84,8 @@
     #undef  CAM_REAR_CURTAIN                    // Camera do not have front/rear curtain flash sync in menu
     #undef  CAM_BRACKETING                      // Cameras that have bracketing (focus & ev) in original firmware already, most likely s- & g-series (propcase for digic III not found yet!)
     #undef  CAM_EXT_TV_RANGE                    // CHDK can make exposure time longer than 64s
+    #define CAM_EXT_AV_RANGE                6   // Number of 1/3 stop increments to extend the Av range beyond the Canon default smallest aperture
+                                                //  override in platform_camera.h for cameras with different range (e.g. G1X can't go below F/16 so set this to 0)
     #define CAM_CHDK_PTP                    1   // include CHDK PTP support
 
     #define CAM_UNCACHED_BIT                0x10000000 // bit indicating the uncached memory

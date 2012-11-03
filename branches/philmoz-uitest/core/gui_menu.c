@@ -143,16 +143,38 @@ static void gui_menu_disp_incr()
     static char sbuf[7];
     extern int rbf_str_clipped_width(const char *str, int l, int maxlen);
 
+    int as_hhmmss = 0;
+    if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_STATE_VAL_PAIR)
+    {
+        CMenuItem *c = (CMenuItem*)(curr_menu->menu[gui_menu_curr_item].value);
+        if (c[0].type & MENUITEM_HHMMSS)
+            as_hhmmss = 1;
+    }
+    else if (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_HHMMSS)
+        as_hhmmss = 1;
+
     int max = rbf_str_clipped_width("±10K",0,100);
 
-    if (int_incr >= 1000)
+    if (as_hhmmss)
     {
-        sprintf(sbuf, "±%dK",int_incr/1000);
+        if (int_incr == 1)
+            strcpy(sbuf,"±SS");
+        else if (int_incr == 10)
+            strcpy(sbuf,"±MM");
+        else
+        {
+            int_incr = 100;
+            strcpy(sbuf,"±H");
+        }
     }
     else
     {
-        sprintf(sbuf, "±%d",int_incr);
+        if (int_incr >= 1000)
+            sprintf(sbuf, "±%dK",int_incr/1000);
+        else
+            sprintf(sbuf, "±%d",int_incr);
     }
+
     rbf_draw_string_len(x+w+wplus-2-max,y-rbf_font_height(),max,sbuf,conf.menu_title_color);
 }
 
@@ -742,6 +764,10 @@ static void gui_menu_draw_state_value(CMenuItem *c)
     int len_str = 0;
     const char *ch = "";
 
+    int text = curr_menu->menu[imenu].text;
+    if (c[0].text != 0)
+        text = c[0].text;
+
     switch (c[0].type & MENUITEM_MASK)
     {
     case MENUITEM_INT:
@@ -765,7 +791,7 @@ static void gui_menu_draw_state_value(CMenuItem *c)
     }
 
     gui_menu_draw_symbol(1);
-    xx += rbf_draw_string_len(xx, yy, w-len_space-len_space-len_br1-len_str-len_br2-len_space-symbol_width-len_br1-len_br2-len_bool, lang_str(curr_menu->menu[imenu].text), cl);
+    xx += rbf_draw_string_len(xx, yy, w-len_space-len_space-len_br1-len_str-len_br2-len_space-symbol_width-len_br1-len_br2-len_bool, lang_str(text), cl);
     xx += rbf_draw_string(xx, yy, " [", cl);
     xx += rbf_draw_string_len(xx, yy, len_bool, (*(c[1].value))?"\x95":"", cl);
     xx += rbf_draw_string(xx, yy, "][", cl);

@@ -204,21 +204,22 @@ int shooting_get_tick_count()
 //-------------------------------------------------------------------
 // Convert values to/from APEX 96
 
-static const double sqrt2=1.4142135623731;  //square root from 2
-static const double log_2=0.6931471805599;  //natural logarithm of 2
-static const double k=12.5;                 //K is the reflected-light meter calibration constant
+static const double sqrt2 = 1.4142135623731;        //square root from 2
+//static const double log_2 = 0.6931471805599;        //natural logarithm of 2
+static const double inv_log_2 = 1.44269504088906;   // 1 / log_2
+static const double k=12.5;                         //K is the reflected-light meter calibration constant
 
 short shooting_get_sv96_from_iso(short iso)
 {
     if (iso > 0)
-        return (short)(log(pow(2.0,(-7.0/4.0))*(double)(iso))*96.0/(log_2));
+        return (short)(log(pow(2.0,(-7.0/4.0))*(double)(iso))*96.0*(inv_log_2));
     return 0;
 }
 
 short shooting_get_svm96_from_iso(short iso)
 {
     if (iso > 0)
-        return (short)(log((double)(iso)*32.0/100.0)*96.0/(log_2));
+        return (short)(log((double)(iso)*32.0/100.0)*96.0*(inv_log_2));
     return 0;
 }
 
@@ -244,7 +245,12 @@ short shooting_get_iso_market_from_svm96(short svm96)
 short shooting_get_tv96_from_shutter_speed(float t)
 {
     if (t > 0)
-        return (short) (96.0*log(1.0/t)/log_2);
+    {
+        t = ((96.0 * log(1.0/t)) * inv_log_2);
+        if (t < 0)
+            return (short)(t - 0.5);
+        return (short)(t + 0.5);
+    }
     return -10000;
 }
 
@@ -298,29 +304,20 @@ const int tv_override_zero_shift = 18+15;
 const int tv_override_zero_shift = 18;
 #endif
 
-float shooting_get_shutter_speed_override_value()
-{
-    static const float shutter_koef[] = {0, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000};
-    return (float)conf.tv_override_value*shutter_koef[conf.tv_override_koef];
-}
-
 static int shooting_get_tv96_override_value()
 {
     // Calculate the tv96 value for the tv override
-    if (conf.tv_enum_type)
+    if (conf.tv_enum_type==0)
         return 32*(conf.tv_override_value-tv_override_zero_shift);
+    else if (conf.tv_enum_type==1)
+        return shooting_get_tv96_from_shutter_speed((float)conf.tv_override_long_exp);
     else
-        return shooting_get_tv96_from_shutter_speed(shooting_get_shutter_speed_override_value());
+        return shooting_get_tv96_from_shutter_speed(((float)conf.tv_override_short_exp)/100000.0);
 }
 
 const char * shooting_get_tv_bracket_value()
 {
     return expo_shift[conf.tv_bracket_value];
-}
-
-const char * shooting_get_tv_override_value()
-{
-    return tv_override[conf.tv_override_value];
 }
 
 const char * shooting_get_bracket_type()
@@ -370,9 +367,9 @@ int shooting_get_subject_distance_override_koef()
 
 short shooting_get_av96_override_value()
 {
-    if (conf.av_override_value<=AS_SIZE)
-        return (short) aperture_sizes_table[conf.av_override_value-1].prop_id;
-    return (short) (AV96_MAX+32*(conf.av_override_value-AS_SIZE));
+    if (conf.av_override_value<AS_SIZE)
+        return (short) aperture_sizes_table[conf.av_override_value].prop_id;
+    return (short) (AV96_MAX+32*(conf.av_override_value-AS_SIZE+1));
 }
 
 //-------------------------------------------------------------------
@@ -442,12 +439,6 @@ int shooting_get_user_av_id()
 #endif
     return 0;
 }
-
-// Not used
-//short shooting_get_aperture_sizes_table_prop_id(short i)
-//{
-//    return aperture_sizes_table[i].prop_id;
-//}
 
 short shooting_get_min_real_aperture()
 {
@@ -887,7 +878,7 @@ void shooting_set_user_tv_by_id_rel(int v)
 
 void shooting_set_shutter_speed(float t, short ev_correction, short is_now)
 {
-	if (t>0) shooting_set_tv96_direct( ((short) 96.0*log(1/t)/log_2) + ev_correction, is_now);
+	if (t>0) shooting_set_tv96_direct( shooting_get_tv96_from_shutter_speed(t) + ev_correction, is_now);
 }
 
 void shooting_set_shutter_speed_ubasic(int t, short is_now)
@@ -895,7 +886,7 @@ void shooting_set_shutter_speed_ubasic(int t, short is_now)
     if ((mode_get()&MODE_MASK) != MODE_PLAY)
     {
         if (t>0)
-            shooting_set_tv96_direct((short) (96.0*log(100000.0/(double)t)/log_2), is_now);
+            shooting_set_tv96_direct(shooting_get_tv96_from_shutter_speed(((double)t)/100000), is_now);
     }
 }
 

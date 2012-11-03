@@ -317,10 +317,10 @@
 #define LANG_MENU_OPERATION_PARAM_TITLE         238
 #define LANG_MENU_OPERATION_PARAM               239
 #define LANG_MENU_OVERRIDE_TV_VALUE             240
-#define	LANG_MENU_OVERRIDE_TV_KOEF              241
+#define	LANG_MENU_OVERRIDE_TV_LONG_EXP          241
 #define LANG_MENU_OVERRIDE_AV_VALUE             242
 #define	LANG_MENU_OVERRIDE_ISO_VALUE            243
-//#define	LANG_MENU_OVERRIDE_ISO_KOEF             244
+#define	LANG_MENU_OVERRIDE_TV_SHORT_EXP         244
 #define	LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE      245
 #define	LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF       246
 
@@ -337,12 +337,12 @@
 #define LANG_MENU_SCRIPT_AUTOSTART              256
 #define LANG_MENU_REMOTE_ENABLE                 257
 
-#define LANG_MENU_EXPOSURE_TITLE                258
-#define LANG_MENU_EXPOSURE                      259
-#define LANG_MENU_RECALC_EXPOSURE               260
-#define LANG_MENU_TV_EXPOSURE_ORDER             261  
-#define LANG_MENU_AV_EXPOSURE_ORDER             262  
-#define LANG_MENU_ISO_EXPOSURE_ORDER            263
+//#define LANG_MENU_EXPOSURE_TITLE                258
+//#define LANG_MENU_EXPOSURE                      259
+//#define LANG_MENU_RECALC_EXPOSURE               260
+//#define LANG_MENU_TV_EXPOSURE_ORDER             261  
+//#define LANG_MENU_AV_EXPOSURE_ORDER             262  
+//#define LANG_MENU_ISO_EXPOSURE_ORDER            263
 
 #define LANG_MENU_CLEAR_OVERRIDE_VALUES         264
 #define LANG_MENU_SHOW_CANON_OVEREXPOSURE       265

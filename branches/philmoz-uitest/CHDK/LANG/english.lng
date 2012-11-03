@@ -318,11 +318,11 @@
 
 238 "Enhanced Photo Operations"
 239 "Enhanced Photo Operations"
-240 "Override Shutter Speed"
-241 "  Off/On/Multiplier"
-242 "Override Aperture"
+240 "  Ev Step Value"
+241 "  Long Exp. Value"
+242 "Override Av"
 243 "Override ISO"
-//244 "  Off/Multiplier"
+244 "  Short Exp. Value"
 245 "Override Subj. Dist."
 246 "  Change by +/-"
 
@@ -339,12 +339,13 @@
 256 "Autostart"
 257 "Enable Remote"
 
-258 "Exposure Control (No Flash)"
-259 "Exposure Control (No Flash)"
-260 "Recalc Exposure"
-261 "TV Exposure Recalc Order"
-262 "AV Exposure Recalc Order"
-263 "ISO Exposure Recalc Order"
+//258 "Exposure Control (No Flash)"
+//259 "Exposure Control (No Flash)"
+//259 "Exposure Control (No Flash)"
+//260 "Recalc Exposure"
+//261 "TV Exposure Recalc Order"
+//262 "AV Exposure Recalc Order"
+//263 "ISO Exposure Recalc Order"
 
 264 "Disable Overrides on Startup"
 
@@ -392,7 +393,7 @@
 
 297 "Show values in video"
 
-298 "  Shutter override type"
+298 "Override Tv     type ->"
 299 "User Menu Enable"
 300 "User Menu"
 

@@ -19,6 +19,8 @@
 #define CONF_CHAR_PTR       4
 // OSD_pos
 #define CONF_OSD_POS        5
+// Pointer to struct containing item count, item size and pointer to items
+#define CONF_STRUCT_PTR     6
 
 // Name of default symbol file (for reset)
 #define DEFAULT_SYMBOL_FILE "A/CHDK/SYMBOLS/icon_10.rbf"
@@ -34,6 +36,27 @@ typedef struct {
     int* pInt;
     OSD_pos pos;
 } tConfigVal;
+
+// Struct to handle variable sized arrays of 'things' in config
+typedef struct {
+    int             num_items;
+    int             item_size;
+    int             (*saved_size)();
+    char*           (*save)(char *dst);
+    int             (*load)(char *src);
+} tVarArrayConfig;
+
+// User Menu config structures
+typedef struct {
+    int     var;            // index or hash of main menu item or script
+    char    *script_file;   // name of script file
+    char    *script_title;  // name of script (title from script)
+} tUserMenuItem;
+
+typedef struct {
+    tVarArrayConfig cfg;
+    tUserMenuItem   *items;
+} tUserMenuConfig;
 
 // Please try do not change existed structure, because this will broke modules compatibility
 // If add field to the end of structure minor api version should be increased.
@@ -219,9 +242,12 @@ typedef struct {
     int override_disable_all;   // 0 = Auto ISO and Bracketing enabled, even if other overrides disabled above
                                 // 1 = Auto ISO and Bracketing enabled only when other overrides are enabled
 
+    int tv_override_enabled;
     int tv_override_value;
-    int tv_override_koef;
-    int tv_enum_type;
+    int tv_override_long_exp;
+    int tv_override_short_exp;
+    int tv_enum_type;           // 0 = Ev Step, 1 = Long Exposure (HH:MM:SS), 2 = Short Exposure (0.xxxxx)
+    int av_override_enabled;
     int av_override_value;
 
     int nd_filter_state;
@@ -290,8 +316,9 @@ typedef struct {
     int script_startup;          // remote autostart
     int remote_enable;           // remote enable
     int user_menu_enable;
-    int user_menu_vars[USER_MENU_ITEMS];
     int user_menu_as_root;
+    tUserMenuConfig user_menu_vars;
+    int user_menu_has_changed;      // not saved to config file, used to tell code that file needs to be saved
     int zoom_scale;
     int unlock_optical_zoom_for_video;
     int mute_on_zoom;
@@ -315,9 +342,7 @@ typedef struct {
     int ricoh_ca1_mode;
     int synch_delay_enable;
     int synch_delay_value;
-    //int synch_delay_coarse_value;     // obsolete - no longer used
     int remote_zoom_enable;
-    //int zoom_timeout;                 // obsolete - no longer used
 
     int script_param_set;
     int script_param_save;
@@ -383,11 +408,6 @@ typedef struct {
     int show_alt_helper;        // Show <ALT> mode help screen
     int show_alt_helper_delay;  // Delay before showing help screen
 
-    // full path & filename
-    char user_menu_script_file[USER_MENU_ITEMS][CONF_STR_LEN];
-    // @title string from file                     
-    char user_menu_script_title[USER_MENU_ITEMS][CONF_STR_LEN];
-
 } Conf;
 
 extern Conf conf;
@@ -400,9 +420,14 @@ extern Conf conf;
 #define autoiso_and_bracketing_overrides_are_enabled    ( !(conf.override_disable == 1 && conf.override_disable_all) )
 
 // True if a TV override value is set, false otherwise
-#define is_tv_override_enabled  ( (conf.tv_enum_type || conf.tv_override_value) && conf.tv_override_koef && overrides_are_enabled )
+#define is_tv_override_enabled  (  conf.tv_override_enabled && overrides_are_enabled && \
+                                    ((conf.tv_override_value && (conf.tv_enum_type == 0)) || \
+                                     (conf.tv_override_long_exp && (conf.tv_enum_type == 1)) ||  \
+                                     (conf.tv_override_short_exp && (conf.tv_enum_type == 2)) \
+                                     ) \
+                                )
 // True if a AV override value is set, false otherwise
-#define is_av_override_enabled  ( conf.av_override_value && overrides_are_enabled )
+#define is_av_override_enabled  ( conf.av_override_enabled && overrides_are_enabled )
 // True if a ISO override value is set, false otherwise
 #define is_iso_override_enabled ( conf.iso_override_value && conf.iso_override_koef && overrides_are_enabled )
 // True if a SD (subject distance) override value is set, false otherwise

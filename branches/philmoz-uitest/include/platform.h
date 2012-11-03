@@ -309,8 +309,6 @@ void shooting_set_shutter_speed_ubasic(int t, short is_now);
 short shooting_get_user_tv96();
 void shooting_set_user_tv96(short v);
 float shooting_get_shutter_speed_from_tv96(short tv);
-float shooting_get_shutter_speed_override_value();
-const char * shooting_get_tv_override_value();
 const char * shooting_get_tv_bracket_value();
 const char * shooting_get_bracket_type();
 void shooting_set_user_tv_by_id(int v);

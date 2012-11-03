@@ -234,13 +234,12 @@ void gui_osd_draw_state()
         }
         else 
         {
-            if (conf.tv_enum_type) 
-                gui_print_osd_state_string_chr("TV:",shooting_get_tv_override_value()); 
-            else  
-            {
-                t=(int)(shooting_get_shutter_speed_override_value()*100000);
-                gui_print_osd_state_string_float("TV:%d.%05d", 100000, t);
-            }
+            if (conf.tv_enum_type==0)
+                gui_print_osd_state_string_chr("TV:",gui_tv_override_value_enum(0,0)); 
+            else if (conf.tv_enum_type==1)
+                gui_print_osd_state_string_chr("TV:",gui_hhmss_enum(0,(int)(&conf.tv_override_long_exp))); 
+            else
+                gui_print_osd_state_string_float("TV:%d.%05d", 100000, conf.tv_override_short_exp);
         }
     }
     if (is_av_override_enabled || gui_mode==GUI_MODE_OSD)  

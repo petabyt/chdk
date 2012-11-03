@@ -102,7 +102,10 @@
     #define CAM_SENSOR_BITS_PER_PIXEL           14
 
     #define CAM_EXT_TV_RANGE                    1
+    #undef CAM_EXT_AV_RANGE
+    #define CAM_EXT_AV_RANGE                    0       // G1X can't go below F/16 so set this to 0
     #define CAM_QUALITY_OVERRIDE                1
+    #define CAM_REAR_CURTAIN                    1
 
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION          1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 

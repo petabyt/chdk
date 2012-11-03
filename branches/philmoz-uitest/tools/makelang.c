@@ -108,7 +108,7 @@ int main( int argc, char **argv )
 
     printf(";\n\n");
 	
-    if ( num_empty_lines > 10 )
+    if ( num_empty_lines > 50 )
 	  printf("#warning Too many empty lines are detected. Please ensure that .lng files have serial numbers\n\n");
 
     printf("//Sanity check of GUI_LANG_ITEMS\n");

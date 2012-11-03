@@ -339,11 +339,11 @@
 238 "Ek Fotoðraf Ýþlemleri"
 
 239 "Ek Fotoðraf Ýþlemleri"
-240 "Baskýn Perde Hýzý"
-241 "    Deðer Çarpaný"
+//240 "Baskýn Perde Hýzý"
+//241 "    Deðer Çarpaný"
 242 "Baskýn Diyaf. Açýklýðý"
 243 "Baskýn ASA Hýzý  (ISO)"
-244 "    Deðer Çarpaný"
+//244 "    Deðer Çarpaný"
 245 "Baskýn Nesne  Uzaklýðý"
 246 "    Deðer Çarpaný (mm)"
 
@@ -363,12 +363,12 @@
 256 "Otomatik Baþlat"
 257 "Kumanda'yý Etkinleþtir"
 
-258 "Pozlama Kontrolü (Flaþsýz)"
-259 "Pozlama Kontrolü (Flaþsýz)"
-260 "Pozlamayý Tekrar Hesapla"
-261 "PÖ POZL Tekrar Hsplm. Emri"
-262 "DÖ POZL Tekrar Hsplm. Emri"
-263 "ISOPOZL Tekrar Hsplm. Emri"
+//258 "Pozlama Kontrolü (Flaþsýz)"
+//259 "Pozlama Kontrolü (Flaþsýz)"
+//260 "Pozlamayý Tekrar Hesapla"
+//261 "PÖ POZL Tekrar Hsplm. Emri"
+//262 "DÖ POZL Tekrar Hsplm. Emri"
+//263 "ISOPOZL Tekrar Hsplm. Emri"
 
 264 "Deðiþen Deð. Baþlangýçta Sil"
 
@@ -492,7 +492,7 @@
 349 "Baþlangýçta Vid.Deðiþ Temzle?"
 
 350 "PD (Pozl.Deð) Düðmesi'ni Aç?"
-351 "   Adým Boyutu (1 PD)?"
+//351 "   Adým Boyutu (1 PD)?"
 352 "PD Doðruluðu"
 
 353 "DCIM alt klasörlerindeki ;\nJPEG eþi silinmiþ olan tüm\nRAW dosyalarýný ayýklamak\nistediðinizden emin misiniz?"
@@ -623,7 +623,7 @@
 436 "  < OTO Modu     >"
 
 437 "   YALNIZCA Video'da"
-438 "   Flaþ Çýkýþ Gücü"
+//438 "   Flaþ Çýkýþ Gücü"
 
 439 "'DNG' Dosya Uzantýsý"
 440 "DNG, USB Yoluyla Görülebilir"
