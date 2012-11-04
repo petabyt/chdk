@@ -103,6 +103,7 @@
 
     #define CAM_EXT_TV_RANGE                    1
     #define CAM_QUALITY_OVERRIDE                1
+    #define CAM_REAR_CURTAIN                    1
 
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION          1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 

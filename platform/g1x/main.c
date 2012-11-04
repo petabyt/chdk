@@ -37,7 +37,7 @@ int screen_rotated(void) {
 
 // Focus length table in firmware @ FFFEA5CC
 #define NUM_FL      101 // 0 - 100, entries in firmware
-#define NUM_DATA    2   // 3 words each entry, first is FL
+#define NUM_DATA    2   // 2 words each entry, first is FL
 extern int focus_len_table[NUM_FL*NUM_DATA];
 
 // Conversion factor lens FL --> 35mm equiv
@@ -57,7 +57,7 @@ int get_effective_focal_length(int zp) {
 int get_focal_length(int zp) {
 	if (zp < 0) zp = 0;
 	else if (zp >= NUM_FL) zp = NUM_FL-1;
-	return focus_len_table[zp];
+	return focus_len_table[zp*NUM_DATA];
 }
 
 int get_zoom_x(int zp) {
