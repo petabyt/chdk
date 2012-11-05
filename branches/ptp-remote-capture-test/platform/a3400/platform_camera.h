@@ -1,6 +1,6 @@
-// Camera - A1200 - platform_camera.h
+// Camera - A810 - platform_camera.h
 
-// This file contains the various settings values specific to the A1200 camera.
+// This file contains the various settings values specific to the A810 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -27,27 +27,26 @@
     #define CAM_DRYOS_2_3_R39               1       // Defined for cameras with DryOS version R39 or higher
     #define CAM_DRYOS_2_3_R47               1       // Defined for cameras with DryOS version R47 or higher
 
-    #define CAM_RAW_ROWPIX                  4104    // Found @0xff937e98
-    #define CAM_RAW_ROWS                    3048    // Found @0xff937ea4
+    #define CAM_RAW_ROWPIX                  4704 // Found @0xff932e60 a3400
+    #define CAM_RAW_ROWS                    3504 // Found @0xff932e6c
 
     #undef  CAM_UNCACHED_BIT
-    #define CAM_UNCACHED_BIT                0x40000000  // Found @0xff83a2e0
+    #define CAM_UNCACHED_BIT                0x40000000 // Found @0xff8342d0 a3400
 
-    #define CAM_JPEG_WIDTH                  4000
-    #define CAM_JPEG_HEIGHT                 3000
-    #define CAM_ACTIVE_AREA_X1              0
-    #define CAM_ACTIVE_AREA_Y1              10
-    #define CAM_ACTIVE_AREA_X2              4072
-    #define CAM_ACTIVE_AREA_Y2              3040
+    #define CAM_JPEG_WIDTH                  4608     
+    #define CAM_JPEG_HEIGHT                 3456    
+    #define CAM_ACTIVE_AREA_X1              16    	//Not Checked
+    #define CAM_ACTIVE_AREA_Y1              26      //Not Checked
+    #define CAM_ACTIVE_AREA_X2              4640    //Not Checked
+    #define CAM_ACTIVE_AREA_Y2              3486    //Not Checked
 
-    #define CAM_DNG_LENS_INFO   { 50,10, 200,10, 28,10, 59,10 } // See comments in camera.h
+    #define CAM_DNG_LENS_INFO               { 50,10, 250,10, 28,10, 69,10 } // See comments in camera.h
 
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-    #define cam_CFAPattern                  0x01000201  // Green  Blue  Red  Green
-//  #define cam_CFAPattern                  0x02010100  // Red  Green  Green  Blue
-
+    #define cam_CFAPattern                  0x01000201   // [Green Blue Red Green]
+    
     #define CAM_COLORMATRIX1                             \
     827547, 1000000, -290458, 1000000, -126086, 1000000, \
     -12829, 1000000,  530507, 1000000,   50537, 1000000, \
@@ -56,7 +55,7 @@
     #define cam_CalibrationIlluminant1      1       // Daylight
 
     #undef  CAM_USES_ASPECT_CORRECTION
-    #define CAM_USES_ASPECT_CORRECTION      1
+    #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
 
     #define CAM_ZEBRA_ASPECT_ADJUST         1
     #define CAM_ZEBRA_NOBUF                 1
@@ -83,19 +82,14 @@
 
     #undef  CAM_HAS_ERASE_BUTTON
 
-    #undef  CAM_HAS_IS                              // Camera does not have an image stabilizer
-
     #undef  CAM_HAS_MANUAL_FOCUS
 
     #undef  CAM_VIDEO_CONTROL
 
-    #define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
-
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              16
-    #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                 0x9F    // Start color index for CHDK colors loaded into camera palette
-                                                    // Note: overloads Canon RED for proper logo display
+    #define CAM_BITMAP_PALETTE              15      // palette number reserved in core/gui_draw.h
+//    #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
+//    #define CHDK_COLOR_BASE                 0x90    // Start color index for CHDK colors loaded into camera palette
 
     #define CAM_HAS_VARIABLE_ASPECT         1
     #undef  CAM_USES_ASPECT_CORRECTION
@@ -108,13 +102,16 @@
     #define CAM_FIRMWARE_MEMINFO             1
 
     #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
-    #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments
+    #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments    
     #define CAM_NEED_SET_ZOOM_DELAY          300  // Define to add a delay after setting the zoom position
-    #define CAM_USE_ALT_SET_ZOOM_POINT       1    // Define to use the alternate code in lens_set_zoom_point()
-    #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
 
-    #define CAM_CAN_SD_OVERRIDE              1    // SD override enable
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF             // no SD override unless in manual focus mode
-    #undef  CAM_CAN_SD_OVER_IN_AF_LOCK            // SD override when AF locked only
-    #define CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY  1    // SD override when AF locked or video mode
+    #define CAM_QUALITY_OVERRIDE             1
+
+    #undef  CAM_USB_EVENTID
+    #define CAM_USB_EVENTID                     0x202   // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
+    #define CAM_MISSING_RAND                 1    // srand()/rand() functions not found in firmware. If defined, CHDK use functions implemented in C
+
+//	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// TODO specifies an LED that turns on while camera waits for USB remote to sync
+
+//----------------------------------------------------------

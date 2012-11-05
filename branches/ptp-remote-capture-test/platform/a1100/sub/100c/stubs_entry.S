@@ -17,7 +17,7 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NSTUB(ExpCtrlTool_StopContiAE               ,0xffc1f9c4) //104        *** != 0xffc1faac
 //NSTUB(SetAE_ShutterSpeed                    ,0xffe425b8) //102        *** != 0xffe3d994
-//NSTUB(kbd_pwr_off                           ,0xffc30b9c) //  2 64%    *** != 0xffc30b40
+//NSTUB(kbd_pwr_off                           ,0xffc30b9c) //  2 64%    *** != 0xffc30bac
 NSTUB(kbd_pwr_on                              ,0xffc30b5c) //  2 82%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':

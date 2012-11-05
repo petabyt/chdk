@@ -3,25 +3,25 @@
 char *hook_raw_image_addr()
 {
 	// Appears to be two raw buffers (this returns active buffer)
-	// Addresses below found in table at FF476254 used in sub_FF0EF32C 
-	// [0x40C8 + 0xC] --> defines which buffer is active
+	// Addresses below found in table at FF47684C used in sub_FF0EF360 
+	// [0x40D0 + 0xC] --> defines which buffer is active
 
-	if (*((int*)0x40D4) != 0)
+	if (*((int*)0x40DC) != 0)
 		return (char*) 0x4A6BA6A0;
 	else
-		return (char*) 0x44000000;	// found at (FF40A81C) [search CRAW BUF]
+		return (char*) 0x44000000;	// found at (FF40AE10) [search CRAW BUF]
 }
 
 char *hook_alt_raw_image_addr()
 {
 	// Appears to be two raw buffers (this returns inactive buffer)
-	// Addresses below found in table at FF476254 used in sub_FF0EF32C 
-	// [0x40C8 + 0xC] --> defines which buffer is active
+	// Addresses below found in table at FF47684C used in sub_FF0EF360 
+	// [0x40D0 + 0xC] --> defines which buffer is active
 
-	if (*((int*)0x40D4) == 0)
+	if (*((int*)0x40DC) == 0)
 		return (char*) 0x4A6BA6A0;
 	else
-		return (char*) 0x44000000;	// found at (FF40A81C) [search CRAW BUF]
+		return (char*) 0x44000000;	// found at (FF40AE10) [search CRAW BUF]
 }
 
 

@@ -31,7 +31,7 @@
     #define CAM_HAS_ND_FILTER                   1
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
     #define CAM_SWIVEL_SCREEN                   1
-    //#define CAM_ADJUSTABLE_ALT_BUTTON           1
+    #define CAM_ADJUSTABLE_ALT_BUTTON           1
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                1
@@ -103,6 +103,7 @@
 
     #define CAM_EXT_TV_RANGE                    1
     #define CAM_QUALITY_OVERRIDE                1
+    #define CAM_REAR_CURTAIN                    1
 
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION          1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
