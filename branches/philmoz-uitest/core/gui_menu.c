@@ -143,37 +143,46 @@ static void gui_menu_disp_incr()
     static char sbuf[7];
     extern int rbf_str_clipped_width(const char *str, int l, int maxlen);
 
+    int item_type = curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK;
     int as_hhmmss = 0;
-    if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_STATE_VAL_PAIR)
+    if (item_type == MENUITEM_STATE_VAL_PAIR)
     {
         CMenuItem *c = (CMenuItem*)(curr_menu->menu[gui_menu_curr_item].value);
+        item_type = c[0].type & MENUITEM_MASK;
         if (c[0].type & MENUITEM_HHMMSS)
             as_hhmmss = 1;
     }
     else if (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_HHMMSS)
+    {
         as_hhmmss = 1;
+    }
 
     int max = rbf_str_clipped_width("±10K",0,100);
 
-    if (as_hhmmss)
+    if ((item_type == MENUITEM_INT) || (item_type == MENUITEM_ENUM) || (item_type == MENUITEM_ENUM2))
     {
-        if (int_incr == 1)
-            strcpy(sbuf,"±SS");
-        else if (int_incr == 10)
-            strcpy(sbuf,"±MM");
+        if (as_hhmmss)
+        {
+            if (int_incr == 1)
+                strcpy(sbuf,"±SS");
+            else if (int_incr == 10)
+                strcpy(sbuf,"±MM");
+            else
+            {
+                int_incr = 100;
+                strcpy(sbuf,"±H");
+            }
+        }
         else
         {
-            int_incr = 100;
-            strcpy(sbuf,"±H");
+            if (int_incr >= 1000)
+                sprintf(sbuf, "±%dK",int_incr/1000);
+            else
+                sprintf(sbuf, "±%d",int_incr);
         }
     }
     else
-    {
-        if (int_incr >= 1000)
-            sprintf(sbuf, "±%dK",int_incr/1000);
-        else
-            sprintf(sbuf, "±%d",int_incr);
-    }
+        sbuf[0] = 0;
 
     rbf_draw_string_len(x+w+wplus-2-max,y-rbf_font_height(),max,sbuf,conf.menu_title_color);
 }
@@ -630,10 +639,12 @@ int gui_menu_kbd_process() {
                 gui_menu_redraw=1;
             }
             else {
-                if (int_incr >= 10){
+                if (int_incr >= 10)
+                {
                     int_incr /= 10;
+                    gui_menu_redraw=1;
+                    gui_menu_disp_incr();
                 }
-                gui_menu_disp_incr();
             }
             break;
 
@@ -652,10 +663,12 @@ int gui_menu_kbd_process() {
                 gui_menu_redraw=1;
             }
             else {
-                if (int_incr <= 1000){
+                if (int_incr <= 1000)
+                {
                     int_incr *= 10;
+                    gui_menu_redraw=1;
+                    gui_menu_disp_incr();
                 }
-                gui_menu_disp_incr();
             }
             break;
 
@@ -668,12 +681,15 @@ int gui_menu_kbd_process() {
                 gui_menu_back();
             }
             else {
-                if (int_incr <= 1000){
+                if (int_incr <= 1000)
+                {
                     int_incr *= 10;
                 }
-                else {
+                else
+                {
                     int_incr = 1;
                 }
+                gui_menu_redraw=1;
                 gui_menu_disp_incr();
                 break;
             }
@@ -747,6 +763,41 @@ static void gui_menu_draw_value(const char *str, int len_str)
     rbf_draw_string(xx, yy, "] ", cl);
 }
 
+static void gui_set_int_cursor(int offset)
+{
+    if (gui_menu_curr_item==imenu)
+    {
+        switch (int_incr)
+        {
+        case 1000:
+            offset += 1;
+            break;
+        case 100:
+            offset += 2;
+            break;
+        case 10:
+            offset += 3;
+            break;
+        case 1:
+            offset += 4;
+            break;
+        }
+        rbf_enable_cursor(offset,offset);
+    }
+}
+
+// Common code extracted from gui_menu_draw for displaying an int, enum or bool value on the right
+static void gui_menu_draw_int(const char *str, int len_str)
+{
+    gui_menu_draw_symbol(1);
+    xx += rbf_draw_string_len(xx, yy, w-len_space-len_space-len_br1-len_str-len_br2-len_space-symbol_width, lang_str(curr_menu->menu[imenu].text), cl);
+    xx += rbf_draw_string(xx, yy, " [", cl);
+    gui_set_int_cursor(0);
+    xx += rbf_draw_string_right_len(xx, yy, len_str, str, cl);
+    rbf_disable_cursor();
+    rbf_draw_string(xx, yy, "] ", cl);
+}
+
 // Common code extracted from gui_menu_draw for displaying a text menu string
 static void gui_menu_draw_text(char *str, int num_symbols)
 {
@@ -761,27 +812,49 @@ static void gui_menu_draw_text(char *str, int num_symbols)
 static void gui_menu_draw_state_value(CMenuItem *c)
 {
     char tbuf[64];
-    int len_str = 0;
     const char *ch = "";
 
     int text = curr_menu->menu[imenu].text;
     if (c[0].text != 0)
         text = c[0].text;
 
+    gui_menu_draw_symbol(1);
+    xx += rbf_draw_string_len(xx, yy, w-len_space-len_space-len_br1-len_enum-len_br2-len_space-symbol_width-len_br1-len_br2-len_bool, lang_str(text), cl);
+    xx += rbf_draw_string(xx, yy, " [", cl);
+    xx += rbf_draw_string_len(xx, yy, len_bool, (*(c[1].value))?"\x95":"", cl);
+    xx += rbf_draw_string(xx, yy, "][", cl);
+
     switch (c[0].type & MENUITEM_MASK)
     {
     case MENUITEM_INT:
-        len_str = len_enum;
-        sprintf(tbuf, "%d", *(c[0].value));
+        sprintf(tbuf, "%5d", *(c[0].value));
+        gui_set_int_cursor(0);
         ch = tbuf;
         break;
     case MENUITEM_ENUM:
-        len_str = len_enum;
         if (c[0].value)
             ch = ((const char* (*)(int change, int arg))(c[0].value))(0, c[0].arg);
+        if ((c[0].type & MENUITEM_HHMMSS) && (gui_menu_curr_item==imenu))
+        {
+            switch (int_incr)
+            {
+            case 1:
+                rbf_enable_cursor(5,6);
+                break;
+            case 10:
+                rbf_enable_cursor(2,3);
+                break;
+            default:
+                rbf_enable_cursor(0,0);
+                break;
+            }
+        }
+        if (c[0].type & MENUITEM_DECIMAL)
+        {
+            gui_set_int_cursor(2);
+        }
         break;
     case MENUITEM_ENUM2:
-        len_str = len_enum;
         if (c[0].value)
         {
             extern const char* gui_change_enum2(const CMenuItem *menu_item, int change);
@@ -790,12 +863,8 @@ static void gui_menu_draw_state_value(CMenuItem *c)
         break;
     }
 
-    gui_menu_draw_symbol(1);
-    xx += rbf_draw_string_len(xx, yy, w-len_space-len_space-len_br1-len_str-len_br2-len_space-symbol_width-len_br1-len_br2-len_bool, lang_str(text), cl);
-    xx += rbf_draw_string(xx, yy, " [", cl);
-    xx += rbf_draw_string_len(xx, yy, len_bool, (*(c[1].value))?"\x95":"", cl);
-    xx += rbf_draw_string(xx, yy, "][", cl);
-    xx += rbf_draw_string_right_len(xx, yy, len_str, ch, cl);
+    xx += rbf_draw_string_right_len(xx, yy, len_enum, ch, cl);
+    rbf_disable_cursor();
     rbf_draw_string(xx, yy, "] ", cl);
 }
 
@@ -841,8 +910,8 @@ void gui_menu_draw(int enforce_redraw) {
                 gui_menu_draw_value((*(curr_menu->menu[imenu].value))?"\x95":"", len_bool);
                 break;
             case MENUITEM_INT:
-                sprintf(tbuf, "%d", *(curr_menu->menu[imenu].value));
-                gui_menu_draw_value(tbuf, len_int);
+                sprintf(tbuf, "%5d", *(curr_menu->menu[imenu].value));
+                gui_menu_draw_int(tbuf, len_int);
                 break;
             case MENUITEM_SUBMENU_PROC:
             case MENUITEM_SUBMENU:

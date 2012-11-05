@@ -32,6 +32,7 @@
 #define MENUITEM_ARG_CALLBACK   0x0100
 
 #define MENUITEM_HHMMSS         0x1000  // Display / edit value as H:MM:SS
+#define MENUITEM_DECIMAL        0x2000  // Display / edit value as 0.xxxxx
 
 #define MENU_MINMAX(min, max)   (((max)<<16)|(min&0xFFFF))
 

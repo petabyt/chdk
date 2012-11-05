@@ -1246,7 +1246,7 @@ static CMenuItem tv_override_long_exp[2] = {
 };
 
 static CMenuItem tv_override_short_exp[2] = {
-    MENU_ITEM   (0, LANG_MENU_OVERRIDE_TV_SHORT_EXP, MENUITEM_ENUM|MENUITEM_F_UNSIGNED, gui_decimal_enum,       &conf.tv_override_short_exp ),
+    MENU_ITEM   (0, LANG_MENU_OVERRIDE_TV_SHORT_EXP, MENUITEM_ENUM|MENUITEM_DECIMAL, gui_decimal_enum,          &conf.tv_override_short_exp ),
     MENU_ITEM   (0, 0,  MENUITEM_BOOL,                                      &conf.tv_override_enabled,          0 ),
 };
 
