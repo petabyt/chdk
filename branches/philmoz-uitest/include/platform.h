@@ -391,10 +391,6 @@ short shooting_get_iso_bracket_value();
 short shooting_get_canon_overexposure_value();
 short shooting_get_bv96();
 int shooting_get_luminance();
-//const char* shooting_get_flash_light_value();
-/******************************************************************/
-int shooting_get_canon_subject_distance();
-int shooting_get_exif_subject_dist();
 /******************************************************************/
 void shooting_expo_param_override();
 void shooting_bracketing(void);

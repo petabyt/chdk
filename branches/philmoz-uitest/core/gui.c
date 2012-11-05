@@ -1226,6 +1226,7 @@ const char* gui_hhmss_enum(int change, int arg)
 }
 
 static const char* gui_override_disable_modes[] =           { "No", "Yes" };
+static const char* gui_flash_power_modes[] =                { "Min", "Med", "Max" };
 #if CAM_HAS_ND_FILTER
 static const char* gui_nd_filter_state_modes[] =            { "Off", "In", "Out" };
 #endif
@@ -1260,7 +1261,7 @@ static CMenuItem fast_ev_switch[2] = {
 };
 
 static CMenuItem manual_flash[2] = {
-    MENU_ITEM   (0, 0,  MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.flash_video_override_power,   MENU_MINMAX(0, 2) ),
+    MENU_ENUM2  (0, 0,                                                      &conf.flash_video_override_power,   gui_flash_power_modes ),
     MENU_ITEM   (0, 0,  MENUITEM_BOOL,                                      &conf.flash_manual_override,        0 ),
 };
 
