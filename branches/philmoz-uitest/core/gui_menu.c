@@ -759,7 +759,10 @@ static void gui_menu_draw_value(const char *str, int len_str)
     gui_menu_draw_symbol(1);
     xx += rbf_draw_string_len(xx, yy, w-len_space-len_space-len_br1-len_str-len_br2-len_space-symbol_width, lang_str(curr_menu->menu[imenu].text), cl);
     xx += rbf_draw_string(xx, yy, " [", cl);
+    if (gui_menu_curr_item==imenu)
+        rbf_enable_cursor(0,6);
     xx += rbf_draw_string_right_len(xx, yy, len_str, str, cl);
+    rbf_disable_cursor();
     rbf_draw_string(xx, yy, "] ", cl);
 }
 
@@ -849,9 +852,13 @@ static void gui_menu_draw_state_value(CMenuItem *c)
                 break;
             }
         }
-        if (c[0].type & MENUITEM_DECIMAL)
+        else if (c[0].type & MENUITEM_DECIMAL)
         {
             gui_set_int_cursor(2);
+        }
+        else if (gui_menu_curr_item==imenu)
+        {
+            rbf_enable_cursor(0,6);
         }
         break;
     case MENUITEM_ENUM2:
@@ -859,6 +866,8 @@ static void gui_menu_draw_state_value(CMenuItem *c)
         {
             extern const char* gui_change_enum2(const CMenuItem *menu_item, int change);
             ch = gui_change_enum2(c, 0);
+            if (gui_menu_curr_item==imenu)
+                rbf_enable_cursor(0,6);
         }
         break;
     }
@@ -907,7 +916,7 @@ void gui_menu_draw(int enforce_redraw) {
                 gui_menu_draw_state_value((CMenuItem*)(curr_menu->menu[imenu].value));
                 break;
             case MENUITEM_BOOL:
-                gui_menu_draw_value((*(curr_menu->menu[imenu].value))?"\x95":"", len_bool);
+                gui_menu_draw_value((*(curr_menu->menu[imenu].value))?"\x95":" ", len_bool);
                 break;
             case MENUITEM_INT:
                 sprintf(tbuf, "%5d", *(curr_menu->menu[imenu].value));
