@@ -15,10 +15,9 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(SetFileAttributes                     ,0xff837180) //  6        *** != 0xffb370d8
-//NSTUB(kbd_pwr_off                           ,0xff8602cc) //  2 60%    *** != 0x00000000
+NSTUB(kbd_pwr_off                             ,0xff8602cc) //  2 60%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
-//NSTUB(mkdir                                 ,0xff837214) //  6 53%    *** != 0xff837218
+//NSTUB(mkdir                                 ,0xff837214) //  6 53%    *** != 0xff836708
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff89353c -> ff88fde8 -> ff98d574 -> ffac135c -> ffbe5148
@@ -27,6 +26,7 @@
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00032914) // Found @0xff834658
 DEF(physw_run                               ,0x00001c30) // Found @0xff834218
+DEF(physw_sleep_delay                       ,0x00001c38) // Found @0xff834218
 DEF(levent_table                            ,0xffb97b9c) // Found @0xffb97b9c
 DEF(FlashParamsTable                        ,0xffbe5384) // Found @0xffbe5384
 DEF(movie_status                            ,0x000065ec) // Found @0xff96367c
@@ -43,9 +43,9 @@ DEF(focus_len_table                         ,0xfffe2a98) // Found @0xfffe2a98
 DEF(zoom_busy                               ,0x00006544) // Found @0xff9600c0
 DEF(focus_busy                              ,0x00006454) // Found @0xff95d4a0
 DEF(recreview_hold                          ,0x000034c0) // Found @0xff898ac8
-//DEF(palette_control                         ,0x00009010) // Found @0xffa00624,          stubs_min = 0x00009010 (0x9010)
-//DEF(active_palette_buffer                   ,0x00009018) // Found @0xffa00628,          stubs_min = 0x00009018 (0x9018)
-//DEF(palette_buffer                          ,0x000b41e4) // Found @0xffa009dc,          stubs_min = 0x000b41e4 (0xB41E4)
+DEF(palette_control                         ,0x00009010) // Found @0xffa00624
+DEF(active_palette_buffer                   ,0x00009018) // Found @0xffa00628
+DEF(palette_buffer                          ,0x000b41e4) // Found @0xffa009dc
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x403f1000; }             // Found @0xff85b81c
@@ -63,7 +63,12 @@ DEF(recreview_hold                          ,0x000034c0) // Found @0xff898ac8
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 0, KEY_PLAYBACK        ,0x01000000 }, // Found @0xffb561dc, levent 0x601
+//    { 0, KEY_POWER           ,0x02000000 }, // Found @0xffb561e4, levent 0x600
 //    { 0, KEY_MENU            ,0x04000000 }, // Found @0xffb561ec, levent 0x09
+//    { 1, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffb56214, levent 0x01
+//    { 1, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb56214, levent 0x01
+//    { 1, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffb5620c, levent 0x00
 //    { 1, KEY_UP              ,0x00001000 }, // Found @0xffb5621c, levent 0x04
 //    { 1, KEY_RIGHT           ,0x00002000 }, // Found @0xffb56224, levent 0x07
 //    { 1, KEY_DOWN            ,0x00004000 }, // Found @0xffb5622c, levent 0x05
@@ -72,9 +77,6 @@ DEF(recreview_hold                          ,0x000034c0) // Found @0xff898ac8
 //    { 1, KEY_ZOOM_IN         ,0x00020000 }, // Found @0xffb56244, levent 0x02
 //    { 1, KEY_SET             ,0x00040000 }, // Found @0xffb5624c, levent 0x08
 //    { 1, KEY_DISPLAY         ,0x00080000 }, // Found @0xffb56254, levent 0x0a
-//    { 1, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffb56214, levent 0x01
-//    { 1, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb56214, levent 0x01
-//    { 1, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffb5620c, levent 0x00
 //    { 0, 0, 0 }
 //};
 
@@ -172,6 +174,7 @@ NSTUB(ScreenUnlock                            ,0xff8a4704) //  3
 NSTUB(SetAE_ShutterSpeed                      ,0xffb164f4) //102
 NSTUB(SetAutoShutdownTime                     ,0xff88fa50) //103
 NSTUB(SetCurrentCaptureModeType               ,0xff89675c) //101
+NSTUB(SetFileAttributes                       ,0xff837180) //  6
 NSTUB(SetFileTimeStamp                        ,0xff837108) //  6
 NSTUB(SetLogicalEventActive                   ,0xff88f754) //101
 NSTUB(SetParameterData                        ,0xff98e4dc) //101

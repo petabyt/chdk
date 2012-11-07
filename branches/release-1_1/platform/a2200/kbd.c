@@ -21,7 +21,7 @@ extern void _GetKbdState(long*);
 
 #define DELAY_TIMEOUT 10000
 
-#define KEYS_MASK0			(0x04000000|0x00800000)
+#define KEYS_MASK0			(0x05000000|0x00800000)
 #define KEYS_MASK1			(0x00000001|0x00000002|0x00000003|0x00001000|0x00002000|0x00004000|0x00008000|0x00010000|0x00020000|0x00040000|0x00080000)
 #define KEYS_MASK2			(0x00000000)
 
@@ -49,9 +49,10 @@ int get_usb_bit()
 static KeyMap keymap[] = {
 	
 	/* tiny bug: key order matters. see kbd_get_pressed_key() */
-	//{ 0, KEY_FACE            ,0x00800000 },
-	{ 0, KEY_PRINT           ,0x00800000 },	// Doesn't exist, FACE for ALT menu
+	{ 0, KEY_PRINT           ,0x01000000 },	// Use KEY_PLAYBACK for ALT menu
+    { 0, KEY_PLAYBACK        ,0x01000000 }, // Found @0xffb561dc, levent 0x601	
 	{ 0, KEY_MENU            ,0x04000000 }, // Found @0xffb561e4 (1.00B), levent 0x09
+	{ 0, KEY_FACE            ,0x00800000 },
 	{ 1, KEY_UP              ,0x00001000 }, // Found @0xffb56214 (1.00B), levent 0x04
 	{ 1, KEY_RIGHT           ,0x00002000 }, // Found @0xffb5621c (1.00B), levent 0x07
 	{ 1, KEY_DOWN            ,0x00004000 }, // Found @0xffb56224 (1.00B), levent 0x05
@@ -63,7 +64,7 @@ static KeyMap keymap[] = {
 	{ 1, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffb5620c (1.00B), levent 0x01
 	{ 1, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb5620c (1.00B), levent 0x01
 	{ 1, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffb56204 (1.00B), levent 0x00
-	//{ 1, KEY_PRINT           ,0x000C0000 }, // Doesn't exist, DISP + SET for ALT menu
+//    { 0, KEY_POWER           ,0x02000000 }, // Found @0xffb561e4 (1.00D), levent 0x600
 	{ 0, 0, 0 }
 };
 
