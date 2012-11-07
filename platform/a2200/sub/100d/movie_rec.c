@@ -38,32 +38,32 @@ asm volatile (
 "    SUB     R1, R1, #2 \n" 
 "    CMP     R1, #0xB \n" 
 "    ADDCC   PC, PC, R1, LSL #2 \n" 
-"    B       loc_FF96428C \n" 
-"    B       loc_FF96423C \n" 
-"    B       loc_FF964260 \n" 
-"    B       loc_FF964270 \n" 
-"    B       loc_FF964278 \n" 
-"    B       loc_FF964244 \n" 
-"    B       loc_FF964280 \n" 
-"    B       loc_FF964250 \n" 
-"    B       loc_FF96428C \n" 
-"    B       loc_FF964288 \n" 
-"    B       loc_FF964208 \n" 
-"    B       loc_FF9641D8 \n" 
-"loc_FF9641D8:\n"
+"    B       loc_FF96428C \n" //Jump Table
+"    B       loc_FF96423C \n" //(01)
+"    B       loc_FF964260 \n" //(02)
+"    B       loc_FF964270 \n" //(03)
+"    B       loc_FF964278 \n" //(04)
+"    B       loc_FF964244 \n" //(05)
+"    B       loc_FF964280 \n" //(06)
+"    B       loc_FF964250 \n" //(07)
+"    B       loc_FF96428C \n" //(08)
+"    B       loc_FF964288 \n" //(09)
+"    B       loc_FF964208 \n" //(10)
+"    B       loc_FF9641D8 \n" //(11)
+"loc_FF9641D8:\n" //Jump Table entry 11
 "    STR     R5, [R4, #0x40] \n" 
 "    STR     R5, [R4, #0x30] \n" 
 "    STR     R5, [R4, #0x34] \n" 
 "    STRH    R5, [R4, #6] \n" 
-"    STR     R6, [R4, #0xB4] \n" 
-"    STR     R7, [R4, #0xCC] \n" 
+"    STR     R6, [R4, #0xB4] \n"
+"    STR     R7, [R4, #0xCC] \n"
 "    LDR     R0, [R4, #0xC] \n" 
 "    ADD     R0, R0, #1 \n" 
 "    STR     R0, [R4, #0xC] \n" 
 "    MOV     R0, #6 \n" 
 "    STR     R0, [R4, #0x44] \n" 
-"    B       loc_FF964228 \n" 
-"loc_FF964208:\n"
+"    B       loc_FF964228 \n"
+"loc_FF964208:\n" //Jump Table entry 10
 "    STR     R5, [R4, #0x40] \n" 
 "    STR     R5, [R4, #0x30] \n" 
 "    STR     R6, [R4, #0xB4] \n" 
@@ -78,44 +78,44 @@ asm volatile (
 "    LDR     R0, =0xFF962FA8 \n" 
 "    BL      sub_FF852C0C \n" 
 "    B       loc_FF96428C \n" 
-"loc_FF96423C:\n"
+"loc_FF96423C:\n" //Jump Table entry 01
 "	 BL		 unlock_optical_zoom \n"		// added
 "    BL      sub_FF9637D0 \n" 
 "    B       loc_FF96428C \n" 
-"loc_FF964244:\n"
+"loc_FF964244:\n" //Jump Table entry 05
 "    LDR     R1, [R4, #0xCC] \n" 
 "    BLX     R1 \n" 
 "    B       loc_FF96428C \n" 
-"loc_FF964250:\n"
+"loc_FF964250:\n" //Jump Table entry 07
 "    LDR     R1, [R0, #0x18] \n" 
 "    LDR     R0, [R0, #4] \n" 
 "    BL      sub_FFAA6D1C \n" 
 "    B       loc_FF96428C \n" 
-"loc_FF964260:\n"
+"loc_FF964260:\n" //Jump Table entry 02
 "    LDR     R0, [R4, #0x44] \n" 
 "    CMP     R0, #5 \n" 
 "    STRNE   R8, [R4, #0x34] \n" 
 "    B       loc_FF96428C \n" 
-"loc_FF964270:\n"
+"loc_FF964270:\n" //Jump Table entry 03
 "    BL      sub_FF963338 \n" 
 "    B       loc_FF96428C \n" 
-"loc_FF964278:\n"
+"loc_FF964278:\n" //Jump Table entry 04
 "    BL      sub_FF962FF4 \n" 
 "    B       loc_FF96428C \n" 
-"loc_FF964280:\n"
+"loc_FF964280:\n" //Jump Table entry 06
 "    BL      sub_FF962E20 \n" 
 "    B       loc_FF96428C \n" 
-"loc_FF964288:\n"
+"loc_FF964288:\n" //Jump Table entry 09
 "    BL      sub_FF9646CC \n" 
 "loc_FF96428C:\n"
 "    LDR     R1, [SP, #4] \n" 
-"    LDR     R3, =0xFF962C68 \n" 
+"    LDR     R3, =0xFF962C68 \n"
 "    STR     R5, [R1] \n" 
 "    STR     R9, [SP] \n" 
 "    LDR     R0, [R4, #0x28] \n" 
 "    MOV     R2, R10 \n" 
 "    BL      sub_FF83A4E4 \n" 
-"    B       loc_FF964168 \n" 
+"    B       loc_FF964168 \n"
 	);
 }
 
@@ -490,11 +490,11 @@ asm volatile (
 "    LDR     R1, [SP, #0x60] \n" 
 "    BL      sub_FFAA7000 \n" 
 "    LDR     R0, [R6, #0x68] \n" 
-"    LDR     R3, =0x6630 \n" 
+"    LDR     R3, =0x6630 \n"        // <-0x6630
 "    ADD     R1, R0, #1 \n" 
 "    STR     R1, [R6, #0x68] \n" 
 "    LDR     R0, [SP, #0x60] \n" 
-"    SUB     R2, R3, #4 \n" 
+"    SUB     R2, R3, #4 \n"         // <- -4
 "    BL      sub_FFAA4DD4 \n" 
 "	 LDR	 R0, =0x662C \n"				// added, 6630 - 4
 "	 BL		 set_quality \n"				// added

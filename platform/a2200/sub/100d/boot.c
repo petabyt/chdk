@@ -121,7 +121,6 @@ asm volatile (
 	);
 }
 
-
 void __attribute__((naked,noinline)) sub_FF810358_my() {
 	
 	*(int*)0x1938=(int)taskHook;
@@ -395,7 +394,6 @@ asm volatile (
 "    LDMFD   SP!, {R3-R5,PC} \n" 
 	);
 }
-
 
 void spytask(long ua, long ub, long uc, long ud, long ue, long uf) {
 	
