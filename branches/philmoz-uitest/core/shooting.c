@@ -269,16 +269,6 @@ int shooting_get_luminance()// http://en.wikipedia.org/wiki/APEX_system
 //-------------------------------------------------------------------
 // Get override values
 
-// Define the adjustment factor values for the subject distance override
-// Note: also used for ISO overide; but only first five values used
-#if MAX_DIST > 1000000      // Superzoom - e.g. SX30, SX40
-static const int koef[] = {0,1,10,100,1000,10000,100000,1000000,-1};
-#elif MAX_DIST > 100000     // G12, IXUS310
-static const int koef[] = {0,1,10,100,1000,10000,100000,-1};
-#else                       // Original values (MAX_DIST = 65535)
-static const int koef[] = {0,1,10,100,1000};
-#endif
-
 static const char * expo_shift[] = { "Off", "1/3Ev","2/3Ev", "1Ev", "1 1/3Ev", "1 2/3Ev", "2Ev", "2 1/3Ev", "2 2/3Ev", "3Ev", "3 1/3Ev", "3 2/3Ev", "4Ev"};
 
 const char* tv_override[]={
@@ -328,7 +318,7 @@ const char * shooting_get_bracket_type()
 
 short shooting_get_iso_override_value()
 {
-    short iso = conf.iso_override_value*koef[conf.iso_override_koef];
+    short iso = conf.iso_override_value;
 #ifdef CAM_ISO_LIMIT_IN_HQ_BURST
     // Limit max ISO in HQ burst mode (also done in shooting_set_iso_real; but done here so OSD display value is correct)
     if ((mode_get() & MODE_SHOOTING_MASK) == MODE_SCN_HIGHSPEED_BURST)
@@ -339,7 +329,7 @@ short shooting_get_iso_override_value()
 
 short shooting_get_iso_bracket_value()
 {
-    return conf.iso_bracket_value*koef[conf.iso_bracket_koef];
+    return conf.iso_bracket_value;
 }
 
 const char * shooting_get_av_bracket_value()
@@ -349,7 +339,7 @@ const char * shooting_get_av_bracket_value()
 
 int shooting_get_subject_distance_override_value()
 {
-    if (conf.subj_dist_override_value != INFINITY_DIST)
+    if (conf.subj_dist_override_koef != 2)
         return (conf.subj_dist_override_value < shooting_get_lens_to_focal_plane_width()?0:(conf.subj_dist_override_value - shooting_get_lens_to_focal_plane_width()));
     else
         return INFINITY_DIST;
@@ -357,12 +347,7 @@ int shooting_get_subject_distance_override_value()
 
 int shooting_get_subject_distance_bracket_value()
 {
-    return conf.subj_dist_bracket_value*koef[conf.subj_dist_bracket_koef];
-}
-
-int shooting_get_subject_distance_override_koef()
-{
-    return koef[(conf.subj_dist_override_koef)];
+    return conf.subj_dist_bracket_value;
 }
 
 short shooting_get_av96_override_value()
@@ -757,7 +742,7 @@ short shooting_can_focus()
 short shooting_get_common_focus_mode()
 {
 #if !CAM_HAS_MANUAL_FOCUS && CAM_CAN_SD_OVERRIDE
-    return shooting_get_subject_distance_override_koef();
+    return conf.subj_dist_override_koef;
 #elif !CAM_CAN_SD_OVERRIDE
     return 0;
 #else

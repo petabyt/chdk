@@ -4,6 +4,7 @@
 #include "lang.h"
 #include "conf.h"
 #include "gui.h"
+#include "gui_menu.h"
 #include "gui_draw.h"
 #include "gui_lang.h"
 #include "gui_osd.h"
@@ -254,7 +255,14 @@ void gui_osd_draw_state()
     {
         gui_print_osd_state_string_chr("SD:",gui_subj_dist_override_value_enum(0,0));
         if (gui_mode==GUI_MODE_ALT)
-            gui_print_osd_state_string_chr("FACTOR:",gui_subj_dist_override_koef_enum(0,0));
+        {
+            if (conf.subj_dist_override_koef == 1)
+            {
+                gui_print_osd_state_string_chr("Adj:",menu_increment_factor_string());
+            }
+            else
+                gui_print_osd_state_string_chr("Adj:",gui_subj_dist_override_koef_enum(0,0));
+        }
     }
     if (is_iso_override_enabled || gui_mode==GUI_MODE_OSD)
         gui_print_osd_state_string_int("ISO:", shooting_get_iso_override_value());

@@ -110,7 +110,6 @@ const char* gui_change_enum2(const CMenuItem *menu_item, int change)
 //-------------------------------------------------------------------
 
 static const char* gui_bracket_values_modes[] =             { "Off", "1/3 Ev","2/3 Ev", "1 Ev", "1 1/3Ev", "1 2/3Ev", "2 Ev", "2 1/3Ev", "2 2/3Ev", "3 Ev", "3 1/3Ev", "3 2/3Ev", "4 Ev"};
-//static const char* gui_override_koef_modes[] =              { "Off", "x     1", "x    10", "x   100", "x  1000" };
 static const char* gui_bracket_type_modes[] =               { "+/-", "-","+"};
 
 #if CAM_CAN_SD_OVERRIDE
@@ -1087,48 +1086,28 @@ const char* gui_zoom_override_enum(int change, int arg)
 
 const char* gui_subj_dist_override_value_enum(int change, int arg)
 {
-	int koef = shooting_get_subject_distance_override_koef();
     static char buf[9];
-    if (koef == -1)
-    {
-        // If 'Infinity' selected in the 'koef' setting then set SD to the infinity value
-        // technically the same as MAX_DIST when it's sent to the firmware function 
-        // in the camera; but used here to alter the CHDK OSD display.
-        conf.subj_dist_override_value = INFINITY_DIST;
-    }
+
+    if (conf.subj_dist_override_koef == 2)  // Infinity selected
+        strcpy(buf,"   Inf.");
     else
     {
         // Increment / decrement the SD value, wrapping around from MIN_DIST to MAX_DIST
-        conf.subj_dist_override_value += (change*koef);
+        conf.subj_dist_override_value += (change/**koef*/);
         if (conf.subj_dist_override_value < MIN_DIST)
             conf.subj_dist_override_value = MAX_DIST;
         else if (conf.subj_dist_override_value > MAX_DIST)
             conf.subj_dist_override_value = MIN_DIST;
+        sprintf(buf, "%7d", shooting_get_subject_distance_override_value());
     }
-    if (conf.subj_dist_override_value == INFINITY_DIST)
-        strcpy(buf,"Inf.");
-    else
-        sprintf(buf, "%d", shooting_get_subject_distance_override_value());
+
     return buf; 
 }
 
 const char* gui_subj_dist_override_koef_enum(int change, int arg)
 {
-    // Define the adjustment factor values for the subject distance override
-#if MAX_DIST > 1000000      // Superzoom - e.g. SX30, SX40
-    static const char* modes[] = { "Off", "1", "10", "100", "1000", "10K", "100K", "1M", "Inf." };
-#elif MAX_DIST > 100000     // G12, IXUS310
-    static const char* modes[] = { "Off", "1", "10", "100", "1000", "10K", "100K", "Inf." };
-#else                       // Original values (MAX_DIST = 65535)
-    static const char* modes[] = { "Off", "1", "10", "100", "1000" };
-#endif
+    static const char* modes[] = { "Off", "On", "Inf" };
 	const char *rv = gui_change_simple_enum(&conf.subj_dist_override_koef,change,modes,sizeof(modes)/sizeof(modes[0]));
-    // If we've selected 'Infinity' focus then set the SD override value
-    // Otherwise if we had previously selected 'Infinity' then reset back to MAX_DIST
-    if (shooting_get_subject_distance_override_koef() == -1)
-        conf.subj_dist_override_value = INFINITY_DIST;
-    else if (conf.subj_dist_override_value == INFINITY_DIST)
-        conf.subj_dist_override_value = MAX_DIST;
     return rv;
 }
 
@@ -1266,10 +1245,16 @@ static CMenuItem manual_flash[2] = {
 };
 
 #if CAM_HAS_IRIS_DIAPHRAGM
-
 static CMenuItem av_override_items[2] = {
     MENU_ITEM   (0, 0,  MENUITEM_ENUM,                                      gui_av_override_enum,               0 ),
     MENU_ITEM   (0, 0,  MENUITEM_BOOL,                                      &conf.av_override_enabled,          0 ),
+};
+#endif
+
+#if CAM_CAN_SD_OVERRIDE
+static CMenuItem sd_override_items[2] = {
+    MENU_ITEM   (0, 0,   MENUITEM_ENUM|MENUITEM_SD_INT,                     gui_subj_dist_override_value_enum,  0 ),
+    MENU_ITEM   (0, 0,   MENUITEM_ENUM,                                     gui_subj_dist_override_koef_enum,   0 ),
 };
 #endif
 
@@ -1281,7 +1266,10 @@ static CMenuItem operation_submenu_items[] = {
 #if CAM_HAS_IRIS_DIAPHRAGM
     MENU_ITEM   (0x62,LANG_MENU_OVERRIDE_AV_VALUE,          MENUITEM_STATE_VAL_PAIR,&av_override_items,                 0 ),
 #endif
-    MENU_ITEM   (0x74,LANG_MENU_OVERRIDE_ISO_VALUE,         MENUITEM_STATE_VAL_PAIR,(int)&iso_override_items,           10 ),
+    MENU_ITEM   (0x74,LANG_MENU_OVERRIDE_ISO_VALUE,         MENUITEM_STATE_VAL_PAIR,&iso_override_items,                10 ),
+#if CAM_CAN_SD_OVERRIDE
+    MENU_ITEM   (0x5e,LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE,   MENUITEM_STATE_VAL_PAIR,&sd_override_items,                 0 ),
+#endif
     MENU_ITEM   (0x5c,LANG_MENU_MISC_FAST_EV,               MENUITEM_STATE_VAL_PAIR,&fast_ev_switch,                    0 ),
     MENU_ITEM   (0x5c, LANG_MENU_FLASH_MANUAL_OVERRIDE,     MENUITEM_STATE_VAL_PAIR,&manual_flash,                      0 ),
 #if CAM_HAS_VIDEO_BUTTON
@@ -1292,10 +1280,6 @@ static CMenuItem operation_submenu_items[] = {
 #endif
 #if CAM_HAS_ND_FILTER
     MENU_ENUM2  (0x5f,LANG_MENU_OVERRIDE_ND_FILTER,         &conf.nd_filter_state,  gui_nd_filter_state_modes ),
-#endif
-#if CAM_CAN_SD_OVERRIDE
-    MENU_ITEM   (0x5e,LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE,   MENUITEM_ENUM,          gui_subj_dist_override_value_enum,  0 ),
-    MENU_ITEM   (0x5f,LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF,    MENUITEM_ENUM,          gui_subj_dist_override_koef_enum,   0 ),
 #endif
 #if ZOOM_OVERRIDE
     MENU_ITEM   (0x5c,LANG_MENU_OVERRIDE_ZOOM,              MENUITEM_BOOL,          &conf.zoom_override,                0 ),
@@ -2428,10 +2412,50 @@ void gui_default_kbd_process_menu_btn()
 #if CAM_HAS_ZOOM_LEVER
 static void sd_override_koef(int direction)
 {
-    gui_subj_dist_override_koef_enum(direction,0);
-#if !CAM_HAS_MANUAL_FOCUS
-    if (conf.subj_dist_override_koef==0) gui_subj_dist_override_koef_enum(direction,0);
+    if (direction > 0)
+    {
+        if (conf.subj_dist_override_koef==0)
+        {
+            conf.subj_dist_override_koef = 1;
+            menu_set_increment_factor(1);
+        }
+#if MAX_DIST > 1000000      // Superzoom - e.g. SX30, SX40
+        else if (menu_get_increment_factor() < 1000000)
+#elif MAX_DIST > 100000     // G12, IXUS310
+        else if (menu_get_increment_factor() < 100000)
+#else                       // Original values (MAX_DIST = 65535)
+        else if (menu_get_increment_factor() < 10000)
 #endif
+        {
+            menu_set_increment_factor(menu_get_increment_factor() * 10);
+        }
+        else
+        {
+            conf.subj_dist_override_koef = 2;
+        }
+    }
+    else if (direction < 0)
+    {
+        if (conf.subj_dist_override_koef==2)
+        {
+            conf.subj_dist_override_koef = 1;
+#if MAX_DIST > 1000000      // Superzoom - e.g. SX30, SX40
+            menu_set_increment_factor(1000000);
+#elif MAX_DIST > 100000     // G12, IXUS310
+            menu_set_increment_factor(100000);
+#else                       // Original values (MAX_DIST = 65535)
+            menu_set_increment_factor(10000);
+#endif
+        }
+        else if (menu_get_increment_factor() > 1)
+        {
+            menu_set_increment_factor(menu_get_increment_factor() / 10);
+        }
+        else
+        {
+            conf.subj_dist_override_koef = 0;
+        }
+    }
     shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
 }
 #endif
@@ -2439,8 +2463,11 @@ static void sd_override_koef(int direction)
 // Change SD override by factor amount, direction = 1 to increase (zoom in), -1 to decrease (zoom out)
 static void sd_override(int direction)
 {
-    gui_subj_dist_override_value_enum(direction,0);
-    shooting_set_focus(shooting_get_subject_distance_override_value(),SET_NOW);
+    if (conf.subj_dist_override_koef == 1)
+    {
+        gui_subj_dist_override_value_enum(direction*menu_get_increment_factor(),0);
+        shooting_set_focus(shooting_get_subject_distance_override_value(),SET_NOW);
+    }
 }
 
 static int alt_mode_script_run()
