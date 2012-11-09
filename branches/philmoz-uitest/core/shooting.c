@@ -297,12 +297,12 @@ const int tv_override_zero_shift = 18;
 static int shooting_get_tv96_override_value()
 {
     // Calculate the tv96 value for the tv override
-    if (conf.tv_enum_type==0)
+    if (conf.tv_enum_type==TV_OVERRIDE_EV_STEP)
         return 32*(conf.tv_override_value-tv_override_zero_shift);
-    else if (conf.tv_enum_type==1)
-        return shooting_get_tv96_from_shutter_speed((float)conf.tv_override_long_exp);
-    else
+    else if (conf.tv_enum_type==TV_OVERRIDE_SHORT_EXP)
         return shooting_get_tv96_from_shutter_speed(((float)conf.tv_override_short_exp)/100000.0);
+    else
+        return shooting_get_tv96_from_shutter_speed((float)conf.tv_override_long_exp);
 }
 
 const char * shooting_get_tv_bracket_value()
@@ -339,7 +339,7 @@ const char * shooting_get_av_bracket_value()
 
 int shooting_get_subject_distance_override_value()
 {
-    if (conf.subj_dist_override_koef != 2)
+    if (conf.subj_dist_override_koef != SD_OVERRIDE_INFINITY)
         return (conf.subj_dist_override_value < shooting_get_lens_to_focal_plane_width()?0:(conf.subj_dist_override_value - shooting_get_lens_to_focal_plane_width()));
     else
         return INFINITY_DIST;

@@ -420,10 +420,13 @@ extern Conf conf;
 #define autoiso_and_bracketing_overrides_are_enabled    ( !(conf.override_disable == 1 && conf.override_disable_all) )
 
 // True if a TV override value is set, false otherwise
+#define TV_OVERRIDE_EV_STEP     0
+#define TV_OVERRIDE_SHORT_EXP   1
+#define TV_OVERRIDE_LONG_EXP    2
 #define is_tv_override_enabled  (  conf.tv_override_enabled && overrides_are_enabled && \
-                                    ((conf.tv_override_value && (conf.tv_enum_type == 0)) || \
-                                     (conf.tv_override_long_exp && (conf.tv_enum_type == 1)) ||  \
-                                     (conf.tv_override_short_exp && (conf.tv_enum_type == 2)) \
+                                    ((conf.tv_override_value && (conf.tv_enum_type == TV_OVERRIDE_EV_STEP)) || \
+                                     (conf.tv_override_short_exp && (conf.tv_enum_type == TV_OVERRIDE_SHORT_EXP)) ||  \
+                                     (conf.tv_override_long_exp && (conf.tv_enum_type == TV_OVERRIDE_LONG_EXP)) \
                                      ) \
                                 )
 // True if a AV override value is set, false otherwise
@@ -431,6 +434,9 @@ extern Conf conf;
 // True if a ISO override value is set, false otherwise
 #define is_iso_override_enabled ( conf.iso_override_value && conf.iso_override_koef && overrides_are_enabled )
 // True if a SD (subject distance) override value is set, false otherwise
+#define SD_OVERRIDE_OFF         0
+#define SD_OVERRIDE_ON          1
+#define SD_OVERRIDE_INFINITY    2
 #define is_sd_override_enabled  ( conf.subj_dist_override_value && conf.subj_dist_override_koef && overrides_are_enabled )
 
 // True if a TV bracketing value is set, false otherwise

@@ -235,12 +235,12 @@ void gui_osd_draw_state()
         }
         else 
         {
-            if (conf.tv_enum_type==0)
+            if (conf.tv_enum_type==TV_OVERRIDE_EV_STEP)
                 gui_print_osd_state_string_chr("TV:",gui_tv_override_value_enum(0,0)); 
-            else if (conf.tv_enum_type==1)
-                gui_print_osd_state_string_chr("TV:",gui_hhmss_enum(0,(int)(&conf.tv_override_long_exp))); 
-            else
+            else if (conf.tv_enum_type==TV_OVERRIDE_SHORT_EXP)
                 gui_print_osd_state_string_float("TV:%d.%05d", 100000, conf.tv_override_short_exp);
+            else
+                gui_print_osd_state_string_chr("TV:",gui_hhmss_enum(0,(int)(&conf.tv_override_long_exp))); 
         }
     }
     if (is_av_override_enabled || gui_mode==GUI_MODE_OSD)  
@@ -256,7 +256,7 @@ void gui_osd_draw_state()
         gui_print_osd_state_string_chr("SD:",gui_subj_dist_override_value_enum(0,0));
         if (gui_mode==GUI_MODE_ALT)
         {
-            if (conf.subj_dist_override_koef == 1)
+            if (conf.subj_dist_override_koef == SD_OVERRIDE_ON)
             {
                 gui_print_osd_state_string_chr("Adj:",menu_increment_factor_string());
             }

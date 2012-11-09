@@ -97,7 +97,7 @@ void clear_values()
     {
         conf.av_override_enabled=0;
         conf.tv_override_enabled=0;
-        conf.subj_dist_override_koef=0;
+        conf.subj_dist_override_koef=SD_OVERRIDE_OFF;
         conf.iso_override_koef=0;
         conf.nd_filter_state=0;
     }
@@ -236,7 +236,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(106, conf.iso_override_koef,          CONF_DEF_VALUE,     i:0, NULL),
     
     CONF_INFO(107, conf.subj_dist_override_value,   CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(108, conf.subj_dist_override_koef,    CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO(108, conf.subj_dist_override_koef,    CONF_DEF_VALUE,     i:SD_OVERRIDE_OFF, NULL),
     
     CONF_INFO(109, conf.tv_bracket_value,           CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(110, conf.av_bracket_value,           CONF_DEF_VALUE,     i:0, NULL),
@@ -278,7 +278,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(139, conf.show_raw_state,             CONF_DEF_VALUE,     i:1, NULL),
     
     CONF_INFO(140, conf.show_values_in_video,       CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(141, conf.tv_enum_type,               CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO(141, conf.tv_enum_type,               CONF_DEF_VALUE,     i:TV_OVERRIDE_EV_STEP, NULL),
 
     CONF_INFO(142, conf.user_menu_enable,       CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(143, conf.user_menu_vars,         CONF_STRUCT_PTR,i:0, NULL),

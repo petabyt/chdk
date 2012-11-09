@@ -1049,7 +1049,11 @@ const char* gui_tv_override_value_enum(int change, int arg)
 
 static const char* gui_tv_enum_type_enum(int change, int arg)
 {
-    static const char* modes[ ]= { "Ev Step", "LongExp", "ShrtExp" };
+#ifdef CAM_EXT_TV_RANGE
+    static const char* modes[ ]= { "Ev Step", "ShrtExp", "LongExp" };
+#else
+    static const char* modes[ ]= { "Ev Step", "ShrtExp" };
+#endif
 
     gui_enum_value_change(&conf.tv_enum_type,change,sizeof(modes)/sizeof(modes[0]));
     if (change)
@@ -1088,7 +1092,7 @@ const char* gui_subj_dist_override_value_enum(int change, int arg)
 {
     static char buf[9];
 
-    if (conf.subj_dist_override_koef == 2)  // Infinity selected
+    if (conf.subj_dist_override_koef == SD_OVERRIDE_INFINITY)  // Infinity selected
         strcpy(buf,"   Inf.");
     else
     {
@@ -1219,10 +1223,12 @@ static CMenuItem tv_override_evstep[2] = {
     MENU_ITEM   (0, 0,  MENUITEM_BOOL,                                      &conf.tv_override_enabled,          0 ),
 };
 
+#ifdef CAM_EXT_TV_RANGE
 static CMenuItem tv_override_long_exp[2] = {
     MENU_ITEM   (0, LANG_MENU_OVERRIDE_TV_LONG_EXP,  MENUITEM_ENUM|MENUITEM_HHMMSS, gui_hhmss_enum,             &conf.tv_override_long_exp ),
     MENU_ITEM   (0, 0,  MENUITEM_BOOL,                                      &conf.tv_override_enabled,          0 ),
 };
+#endif
 
 static CMenuItem tv_override_short_exp[2] = {
     MENU_ITEM   (0, LANG_MENU_OVERRIDE_TV_SHORT_EXP, MENUITEM_ENUM|MENUITEM_DECIMAL, gui_decimal_enum,          &conf.tv_override_short_exp ),
@@ -1310,14 +1316,16 @@ void set_tv_override_menu()
         mi->value = (int*)(&tv_override_evstep);
         mi->arg = 1;
         break;
-    case 1:     // Long exposure
-        mi->value = (int*)(&tv_override_long_exp);
-        mi->arg = 1;
-        break;
-    case 2:     // Short exposure
+    case 1:     // Short exposure
         mi->value = (int*)(&tv_override_short_exp);
         mi->arg = 100;
         break;
+#ifdef CAM_EXT_TV_RANGE
+    case 2:     // Long exposure
+        mi->value = (int*)(&tv_override_long_exp);
+        mi->arg = 1;
+        break;
+#endif
     }
 }
 
@@ -2414,9 +2422,9 @@ static void sd_override_koef(int direction)
 {
     if (direction > 0)
     {
-        if (conf.subj_dist_override_koef==0)
+        if (conf.subj_dist_override_koef==SD_OVERRIDE_OFF)
         {
-            conf.subj_dist_override_koef = 1;
+            conf.subj_dist_override_koef = SD_OVERRIDE_ON;
             menu_set_increment_factor(1);
         }
 #if MAX_DIST > 1000000      // Superzoom - e.g. SX30, SX40
@@ -2431,14 +2439,14 @@ static void sd_override_koef(int direction)
         }
         else
         {
-            conf.subj_dist_override_koef = 2;
+            conf.subj_dist_override_koef = SD_OVERRIDE_INFINITY;
         }
     }
     else if (direction < 0)
     {
-        if (conf.subj_dist_override_koef==2)
+        if (conf.subj_dist_override_koef==SD_OVERRIDE_INFINITY)
         {
-            conf.subj_dist_override_koef = 1;
+            conf.subj_dist_override_koef = SD_OVERRIDE_ON;
 #if MAX_DIST > 1000000      // Superzoom - e.g. SX30, SX40
             menu_set_increment_factor(1000000);
 #elif MAX_DIST > 100000     // G12, IXUS310
@@ -2453,7 +2461,7 @@ static void sd_override_koef(int direction)
         }
         else
         {
-            conf.subj_dist_override_koef = 0;
+            conf.subj_dist_override_koef = SD_OVERRIDE_OFF;
         }
     }
     shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
@@ -2463,7 +2471,7 @@ static void sd_override_koef(int direction)
 // Change SD override by factor amount, direction = 1 to increase (zoom in), -1 to decrease (zoom out)
 static void sd_override(int direction)
 {
-    if (conf.subj_dist_override_koef == 1)
+    if (conf.subj_dist_override_koef == SD_OVERRIDE_ON)
     {
         gui_subj_dist_override_value_enum(direction*menu_get_increment_factor(),0);
         shooting_set_focus(shooting_get_subject_distance_override_value(),SET_NOW);
@@ -2560,9 +2568,9 @@ int gui_chdk_kbd_process()
 #if !CAM_HAS_MANUAL_FOCUS
         if (kbd_is_key_clicked(SHORTCUT_MF_TOGGLE))     // Camera does not have manual focus
         {
-            if (conf.subj_dist_override_koef>0)
-                conf.subj_dist_override_koef=0;
-            else conf.subj_dist_override_koef=1;
+            if (conf.subj_dist_override_koef>SD_OVERRIDE_OFF)
+                conf.subj_dist_override_koef=SD_OVERRIDE_OFF;
+            else conf.subj_dist_override_koef=SD_OVERRIDE_ON;
             reset_helper = 1;
         }
         else
