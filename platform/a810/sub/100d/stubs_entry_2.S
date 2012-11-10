@@ -4,7 +4,6 @@
 // Override stubs_entry.S
 NSTUB(DeleteFile_Fut,               0xff82fa00)
 NSTUB(PT_PlaySound,                 0xff87503c)
-NHSTUB(Remove,                      0xff830248)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
 NHSTUB(MakeDirectory_Fut,           0xff8305a4)
