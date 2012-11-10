@@ -21,7 +21,6 @@
 //NSTUB(GetBatteryTemperature                 ,0xff85875c) //102        *** != 0x00000000
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff8305a4
 //NSTUB(PT_PlaySound                          ,0xff87503c) //  4 93%        == 0xff87503c
-//NSTUB(Remove                                ,0xff830254) //  6 60%    *** != 0xff830248
 //NSTUB(kbd_pwr_off                           ,0xff856660) //  2 60%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 //NSTUB(mkdir                                 ,0xff83064c) //  6 60%    *** != 0xff8305a4
@@ -174,6 +173,7 @@ NSTUB(Read                                    ,0xff815b88) //101
 NSTUB(ReadFastDir                             ,0xffa53ba4) //  6
 NSTUB(Rec2PB                                  ,0xff885f14) //104
 NSTUB(RefreshPhysicalScreen                   ,0xff894a08) //104
+NSTUB(Remove                                  ,0xff830248) //  6
 NSTUB(RenameFile_Fut                          ,0xff82f96c) //  6
 NSTUB(Restart                                 ,0xff83464c) //106
 NSTUB(ScreenLock                              ,0xff895a28) //  4
