@@ -14,7 +14,7 @@ PT_PlaySound 0xFF07F848
 ReadFastDir 0xFF2DD404
 RenameFile_Fut 0xFF026908
 rename 0xFF026908
-Remove 0xFF0271F8
+Remove 0xFF0271F8 14
 SetFileTimeStamp 0xFF027410
 _sqrt 0xFF3AED14
 add_ptp_handler 0xFF28AA1C
