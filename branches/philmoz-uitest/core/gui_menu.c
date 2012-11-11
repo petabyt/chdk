@@ -37,7 +37,7 @@ static int          count;
 static int          x, y;
 static int          w, wplus, num_lines;
 static int          len_bool, len_int, len_enum, len_space, len_br1, len_br2, cl_rect;
-static int          int_incr, incr_modified;
+static int          int_incr;
 static unsigned char *item_color;
 
 //-------------------------------------------------------------------
@@ -214,27 +214,6 @@ static void gui_menu_back() {
 // Helper functions for gui_menu_kbd_process
 //  common code blocks extracted to try and make it easier to understand
 
-// If updating an 'int' value check if other buttons are also pressed, and set increment accordingly
-// E.G. if ZOOM_OUT is held then RIGHT pressed the 'int' value will be incremented by 10, ZOOM_IN + RIGHT increment by 100
-static void get_int_incr_from_button()
-{
-    if (kbd_is_key_pressed(KEY_ZOOM_OUT))
-    {
-        incr_modified=int_incr;
-        int_incr=10;
-    }
-    if (kbd_is_key_pressed(KEY_ZOOM_IN))
-    {
-        incr_modified=int_incr;
-        int_incr=100;
-    }
-    if (camera_info.state.is_shutter_half_press)
-    {
-        incr_modified=int_incr;
-        int_incr=1000;
-    }
-}
-
 // After updating a value check for callback and on_change functions and call if necessary
 static void do_callback()
 {
@@ -252,9 +231,6 @@ static void do_callback()
 // Update an 'int' value, direction = 1 for increment, -1 for decrement
 static void update_int_value(const CMenuItem *mi, int direction)
 {
-    // set amount to increment by (int_incr) if other buttons pressed
-    get_int_incr_from_button();
-
     // do update
     *(mi->value) += int_incr * direction;
 
@@ -304,14 +280,6 @@ static void update_int_value(const CMenuItem *mi, int direction)
 
     // execute custom callback and on_change functions
     do_callback();
-
-    // reset int_incr if necessary
-    if (incr_modified)
-    {
-        int_incr = incr_modified;
-        incr_modified = 0;
-        //gui_menu_disp_incr();
-    }
 
     // force menu redraw
     gui_menu_redraw=1;
@@ -458,7 +426,6 @@ static void gui_menu_updown(int increment)
         if (((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_STATE_VAL_PAIR) &&
             (curr_menu->menu[gui_menu_curr_item].arg > 0))
             int_incr = curr_menu->menu[gui_menu_curr_item].arg;
-        //gui_menu_disp_incr();
 
         // Redraw menu if needed
         if (gui_menu_redraw == 0) gui_menu_redraw=1;
@@ -669,7 +636,6 @@ int gui_menu_kbd_process() {
                 if (decrement_factor())
                 {
                     gui_menu_redraw=1;
-                    //gui_menu_disp_incr();
                 }
             }
             break;
@@ -692,7 +658,6 @@ int gui_menu_kbd_process() {
                 if (increment_factor())
                 {
                     gui_menu_redraw=1;
-                    //gui_menu_disp_incr();
                 }
             }
             break;
@@ -711,7 +676,6 @@ int gui_menu_kbd_process() {
                     int_incr = 1;
                 }
                 gui_menu_redraw=1;
-                //gui_menu_disp_incr();
                 break;
             }
 #endif
@@ -748,7 +712,6 @@ void gui_menu_draw_initial() {
     }
 
     rbf_draw_menu_header(x, y-rbf_font_height(), w+wplus, (conf.menu_symbol_enable)?curr_menu->symbol:0, lang_str(curr_menu->title), conf.menu_title_color);
-    //gui_menu_disp_incr();
 }
 
 //-------------------------------------------------------------------
@@ -778,49 +741,11 @@ static void gui_set_int_cursor(int offset)
 {
     if (gui_menu_curr_item==imenu)
     {
-        switch (int_incr)
+        int n = int_incr;
+        while (n > 1)
         {
-        case 1000:
-            offset += 1;
-            break;
-        case 100:
-            offset += 2;
-            break;
-        case 10:
-            offset += 3;
-            break;
-        case 1:
-            offset += 4;
-            break;
-        }
-        rbf_enable_cursor(offset,offset);
-    }
-}
-
-static void gui_set_sd_int_cursor(int offset)
-{
-    if (gui_menu_curr_item==imenu)
-    {
-        switch (int_incr)
-        {
-        case 100000:
-            offset += 1;
-            break;
-        case 10000:
-            offset += 2;
-            break;
-        case 1000:
-            offset += 3;
-            break;
-        case 100:
-            offset += 4;
-            break;
-        case 10:
-            offset += 5;
-            break;
-        case 1:
-            offset += 6;
-            break;
+            n /= 10;
+            offset--;
         }
         rbf_enable_cursor(offset,offset);
     }
@@ -834,23 +759,13 @@ static void gui_menu_draw_value(const char *str, int len_str)
     xx += rbf_draw_string(xx, yy, " [", cl);
     if (gui_menu_curr_item==imenu)
     {
-        if (curr_menu->menu[imenu].type & MENUITEM_SD_INT)
-            gui_set_sd_int_cursor(0);
+        if (len_str == len_int)
+            gui_set_int_cursor(4);
+        else if (curr_menu->menu[imenu].type & MENUITEM_SD_INT)
+            gui_set_int_cursor(6);
         else
             rbf_enable_cursor(0,6);
     }
-    xx += rbf_draw_string_right_len(xx, yy, len_str, str, cl);
-    rbf_disable_cursor();
-    rbf_draw_string(xx, yy, "] ", cl);
-}
-
-// Common code extracted from gui_menu_draw for displaying an int, enum or bool value on the right
-static void gui_menu_draw_int(const char *str, int len_str)
-{
-    gui_menu_draw_symbol(1);
-    xx += rbf_draw_string_len(xx, yy, w-len_space-len_space-len_br1-len_str-len_br2-len_space-symbol_width, lang_str(curr_menu->menu[imenu].text), cl);
-    xx += rbf_draw_string(xx, yy, " [", cl);
-    gui_set_int_cursor(0);
     xx += rbf_draw_string_right_len(xx, yy, len_str, str, cl);
     rbf_disable_cursor();
     rbf_draw_string(xx, yy, "] ", cl);
@@ -895,7 +810,7 @@ static void gui_menu_draw_state_value(CMenuItem *c)
     {
     case MENUITEM_INT:
         sprintf(tbuf, "%5d", *(c[0].value));
-        gui_set_int_cursor(0);
+        gui_set_int_cursor(4);
         ch = tbuf;
         break;
     case MENUITEM_ENUM:
@@ -918,12 +833,12 @@ static void gui_menu_draw_state_value(CMenuItem *c)
         }
         else if (c[0].type & MENUITEM_DECIMAL)
         {
-            gui_set_int_cursor(2);
+            gui_set_int_cursor(6);
         }
         else if (c[0].type & MENUITEM_SD_INT)
         {
             if (isdigit(ch[strlen(ch)-1]))
-                gui_set_sd_int_cursor(0);
+                gui_set_int_cursor(6);
         }
         else if (gui_menu_curr_item==imenu)
         {
@@ -989,7 +904,7 @@ void gui_menu_draw(int enforce_redraw) {
                 break;
             case MENUITEM_INT:
                 sprintf(tbuf, "%5d", *(curr_menu->menu[imenu].value));
-                gui_menu_draw_int(tbuf, len_int);
+                gui_menu_draw_value(tbuf, len_int);
                 break;
             case MENUITEM_SUBMENU_PROC:
             case MENUITEM_SUBMENU:
