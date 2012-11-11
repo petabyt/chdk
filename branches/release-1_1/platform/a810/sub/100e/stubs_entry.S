@@ -173,7 +173,7 @@ NSTUB(Read                                    ,0xff815b88) //101
 NSTUB(ReadFastDir                             ,0xffa545d8) //  6
 NSTUB(Rec2PB                                  ,0xff886020) //104
 NSTUB(RefreshPhysicalScreen                   ,0xff894b14) //104
-//NSTUB(Remove                                ,0xff830248) //  6            == 0xff830248
+NSTUB(Remove                                  ,0xff830248) //  6
 NSTUB(RenameFile_Fut                          ,0xff82f96c) //  6
 NSTUB(Restart                                 ,0xff83464c) //106
 NSTUB(ScreenLock                              ,0xff895b34) //  4
