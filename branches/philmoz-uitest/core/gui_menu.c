@@ -64,18 +64,46 @@ char *menu_increment_factor_string()
     return buf;
 }
 
+#define MAX(a,b)    ((a>=b)?a:b)
+
 static int increment_factor()
 {
     int item_flags = curr_menu->menu[gui_menu_curr_item].type;
     int item_type = item_flags & MENUITEM_MASK;
+    int item_arg = curr_menu->menu[gui_menu_curr_item].arg;
+    int item_val = *(curr_menu->menu[gui_menu_curr_item].value);
     if (item_type == MENUITEM_STATE_VAL_PAIR)
     {
         CMenuItem *c = (CMenuItem*)(curr_menu->menu[gui_menu_curr_item].value);
         item_flags = c[0].type;
         item_type = item_flags & MENUITEM_MASK;
+        item_arg = c[0].arg;
+        item_val = *(c[0].value);
     }
 
-    int max = ((item_type == MENUITEM_INT) || (item_flags & MENUITEM_DECIMAL)) ? 10000 : 1;
+    int max = ((item_type == MENUITEM_INT) || (item_flags & MENUITEM_DECIMAL)) ? ((item_val<0)?1000:10000) : 1;
+
+    if ( item_flags & MENUITEM_F_MINMAX )
+    {
+        int vmax = 0;
+        if ( item_flags & MENUITEM_F_UNSIGNED )
+        {
+            vmax = MAX(MENU_MIN_UNSIGNED(item_arg),MENU_MAX_UNSIGNED(item_arg));
+        }
+        else
+        {
+            vmax = MAX(abs(MENU_MIN_SIGNED(item_arg)),abs(MENU_MAX_SIGNED(item_arg)));
+        }
+        if (vmax < max)
+        {
+            max = 1;
+            while (vmax/10 != 0)
+            {
+                max *= 10;
+                vmax /= 10;
+            }
+        }
+    }
 
     if (item_flags & MENUITEM_HHMMSS)
     {
@@ -242,8 +270,8 @@ static void update_int_value(const CMenuItem *mi, int direction)
 
         if ( mi->type & MENUITEM_F_MIN)
         {
-            if (*(mi->value) < (unsigned short)(mi->arg & 0xFFFF)) 
-                *(mi->value) = (unsigned short)(mi->arg & 0xFFFF);
+            if (*(mi->value) < MENU_MIN_UNSIGNED(mi->arg)) 
+                *(mi->value) = MENU_MIN_UNSIGNED(mi->arg);
         }
     }
     else
@@ -253,8 +281,8 @@ static void update_int_value(const CMenuItem *mi, int direction)
 
         if ( mi->type & MENUITEM_F_MIN)
         {
-            if (*(mi->value) < (short)(mi->arg & 0xFFFF)) 
-                *(mi->value) = (short)(mi->arg & 0xFFFF);
+            if (*(mi->value) < MENU_MIN_SIGNED(mi->arg)) 
+                *(mi->value) = MENU_MIN_SIGNED(mi->arg);
         }
     }
 
@@ -265,16 +293,16 @@ static void update_int_value(const CMenuItem *mi, int direction)
     {
         if ( mi->type & MENUITEM_F_MAX)
         {
-            if (*(mi->value) > (unsigned short)((mi->arg>>16) & 0xFFFF)) 
-                *(mi->value) = (unsigned short)((mi->arg>>16) & 0xFFFF);
+            if (*(mi->value) > MENU_MAX_UNSIGNED(mi->arg)) 
+                *(mi->value) = MENU_MAX_UNSIGNED(mi->arg);
         }
     }
     else
     {
         if ( mi->type & MENUITEM_F_MAX)
         {
-            if (*(mi->value) > (short)((mi->arg>>16) & 0xFFFF)) 
-                *(mi->value) = (short)((mi->arg>>16) & 0xFFFF);
+            if (*(mi->value) > MENU_MAX_SIGNED(mi->arg)) 
+                *(mi->value) = MENU_MAX_SIGNED(mi->arg);
         }
     }
 
@@ -438,20 +466,20 @@ int gui_menu_kbd_process() {
 
     switch (kbd_get_autoclicked_key() | get_jogdial_direction())
     {
-#if CAM_HAS_ERASE_BUTTON
         case KEY_ERASE:
-#else    
         case KEY_SHOOT_HALF:
-#endif
-            if (conf.user_menu_enable == 3) {
-                if (curr_menu->title != LANG_MENU_USER_MENU) {
+            if (conf.user_menu_enable == 3)
+            {
+                if (curr_menu->title != LANG_MENU_USER_MENU)
+                {
                     /*
                     * Add new entry
                     * user menu is currently not visible so no redraw necessary
                     */
                     add_user_menu_item(curr_menu->menu[gui_menu_curr_item],&gui_menu_curr_item);
                 }
-                else {
+                else
+                {
                     /*
                     * Remove entry from menu
                     */
@@ -481,6 +509,12 @@ int gui_menu_kbd_process() {
                     if(gui_menu_rows() < num_lines)
                         gui_set_need_restore();
                 }
+            }
+            else
+            {
+                if (!increment_factor())
+                    int_incr = 1;
+                gui_menu_redraw=1;
             }
             break;
         case JOGDIAL_LEFT:
@@ -645,20 +679,20 @@ int gui_menu_kbd_process() {
             * Move current entry down in menu
             * if in user menu edit mode and viewing user menu
             */
-            if( (conf.user_menu_enable == 3)  && (curr_menu->title == LANG_MENU_USER_MENU)) {
+            if( (conf.user_menu_enable == 3)  && (curr_menu->title == LANG_MENU_USER_MENU))
+            {
                 move_user_menu_item_down(&gui_menu_curr_item);
-                if(gui_menu_curr_item > gui_menu_top_item + num_lines -2) {
+                if(gui_menu_curr_item > gui_menu_top_item + num_lines -2)
+                {
                     if((gui_menu_curr_item < USER_MENU_ITEMS) && curr_menu->menu[gui_menu_curr_item +1].text)
                         gui_menu_top_item++;
                 }
-
                 gui_menu_redraw=1;
             }
-            else {
+            else
+            {
                 if (increment_factor())
-                {
                     gui_menu_redraw=1;
-                }
             }
             break;
 
@@ -667,17 +701,17 @@ int gui_menu_kbd_process() {
             break;
 #else
         case KEY_DISPLAY:
-            if (conf.user_menu_enable == 3 && curr_menu->title == LANG_MENU_USER_MENU) {
+            if (conf.user_menu_enable == 3 && curr_menu->title == LANG_MENU_USER_MENU)
+            {
                 gui_menu_back();
             }
-            else {
+            else
+            {
                 if (!increment_factor())
-                {
                     int_incr = 1;
-                }
                 gui_menu_redraw=1;
-                break;
             }
+            break;
 #endif
     }
 
@@ -781,10 +815,43 @@ static void gui_menu_draw_text(char *str, int num_symbols)
     rbf_draw_char(xx, yy, ' ', cl);
 }
 
+static int factor_disp_len()
+{
+    int l = 0;
+    if (gui_menu_curr_item==imenu)
+    {
+        l = -1;
+        int n = int_incr;
+        while (n > 0)
+        {
+            l++;
+            n /= 10;
+        }
+    }
+    return l;
+}
+
+static char tbuf[64];
+
+static void get_int_disp_string(int value)
+{
+    sprintf(tbuf, "%5d", value);
+    if (value < 0)
+    {
+        int spos, cpos;
+        for (spos=0; spos<5; spos++) if (tbuf[spos] == '-') break;
+        cpos = 4 - factor_disp_len();
+        if (cpos <= spos)
+        {
+            tbuf[spos] = ' ';
+            tbuf[cpos-1] = '-';
+        }
+    }
+}
+
 // Common code extracted from gui_menu_draw for displaying an int or enum that can be enabled/disabled
 static void gui_menu_draw_state_value(CMenuItem *c)
 {
-    char tbuf[64];
     const char *ch = "";
 
     int text = curr_menu->menu[imenu].text;
@@ -809,7 +876,7 @@ static void gui_menu_draw_state_value(CMenuItem *c)
     switch (c[0].type & MENUITEM_MASK)
     {
     case MENUITEM_INT:
-        sprintf(tbuf, "%5d", *(c[0].value));
+        get_int_disp_string(*(c[0].value));
         gui_set_int_cursor(4);
         ch = tbuf;
         break;
@@ -862,8 +929,8 @@ static void gui_menu_draw_state_value(CMenuItem *c)
 }
 
 //-------------------------------------------------------------------
-void gui_menu_draw(int enforce_redraw) {
-    static char tbuf[64];
+void gui_menu_draw(int enforce_redraw)
+{
     int i, j;
     const char *ch = "";
 
@@ -903,7 +970,7 @@ void gui_menu_draw(int enforce_redraw) {
                 gui_menu_draw_value((*(curr_menu->menu[imenu].value))?"\x95":" ", len_bool);
                 break;
             case MENUITEM_INT:
-                sprintf(tbuf, "%5d", *(curr_menu->menu[imenu].value));
+                get_int_disp_string(*(curr_menu->menu[imenu].value));
                 gui_menu_draw_value(tbuf, len_int);
                 break;
             case MENUITEM_SUBMENU_PROC:
