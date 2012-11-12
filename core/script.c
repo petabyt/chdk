@@ -484,12 +484,6 @@ int load_params_values(const char *fn, int paramset)
                 ptr+=7;
                 process_values(ptr, 0);
             }
-			/* 	// this will reqruired to temporary scripts infrastructure
-				// only in data files (never in script)
-				// not implemented yet
-				else if (strncmp("@load_script", ptr, 12)==0) { 1;}
-				else if (strncmp("@load_paramset", ptr, 14)==0) { 1;}
-			*/
         }
         while (ptr[0] && ptr[0]!='\n') ++ptr; // unless end of line
         if (ptr[0]) ++ptr;
@@ -519,8 +513,6 @@ static void do_save_param_file( char* fn, char* script_file, int paramset )
     	fd = open(fn, O_WRONLY|O_CREAT|O_TRUNC, 0777);
     	if (fd >=0)
 		{
-			///// OLD FORMAT OF DATA FILE////
-
 			// store filename and current paramset
 			if (script_file) {
 				sprintf( buf, "@script_file %s\n", script_file );
@@ -537,7 +529,12 @@ static void do_save_param_file( char* fn, char* script_file, int paramset )
     		    {
     		        sprintf(buf,"@param %c %s\n@default %c %d\n",'a'+n,script_params[n],'a'+n,conf.script_vars[n]);
     		        if (script_range_values[n] != 0)
-    		            sprintf(buf+strlen(buf),"@range %c %d %d\n",'a'+n,(short)(script_range_values[n]&0xFFFF),(short)(script_range_values[n]>>16));
+                    {
+                        if (script_range_types[n] & MENUITEM_F_UNSIGNED)
+    		                sprintf(buf+strlen(buf),"@range %c %d %d\n",'a'+n,(unsigned short)(script_range_values[n]&0xFFFF),(unsigned short)(script_range_values[n]>>16));
+                        else
+    		                sprintf(buf+strlen(buf),"@range %c %d %d\n",'a'+n,(short)(script_range_values[n]&0xFFFF),(short)(script_range_values[n]>>16));
+                    }
     		        if (script_named_counts[n] != 0)
     		        {
     		            sprintf(buf+strlen(buf),"@values %c",'a'+n);
