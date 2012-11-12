@@ -504,7 +504,12 @@ void save_params_values(int unconditional)
         {
             sprintf(buf,"@param %c %s\n@default %c %d\n",'a'+n,script_params[n],'a'+n,conf.script_vars[n]);
             if (script_range_values[n] != 0)
-                sprintf(buf+strlen(buf),"@range %c %d %d\n",'a'+n,(short)(script_range_values[n]&0xFFFF),(short)(script_range_values[n]>>16));
+            {
+                if (script_range_types[n] & MENUITEM_F_UNSIGNED)
+                    sprintf(buf+strlen(buf),"@range %c %d %d\n",'a'+n,(unsigned short)(script_range_values[n]&0xFFFF),(unsigned short)(script_range_values[n]>>16));
+                else
+                    sprintf(buf+strlen(buf),"@range %c %d %d\n",'a'+n,(short)(script_range_values[n]&0xFFFF),(short)(script_range_values[n]>>16));
+            }
             if (script_named_counts[n] != 0)
             {
                 sprintf(buf+strlen(buf),"@values %c",'a'+n);
