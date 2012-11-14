@@ -926,9 +926,8 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
     }
 }
 
-#ifdef CAM_CHDK_PTP_REMOTESHOOT
-//TODO: as this is a module, maybe this part should not be conditional
 #include "remotecap.h"
+
 void create_dng_for_ptp(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, unsigned long uncachedbit, int startline, int linecount) 
 {
     //TODO: implement partial image (?)
@@ -962,20 +961,14 @@ void free_dng_for_ptp(char* rawadr, char* altrawadr)
         free_dng_header();
     }
 }
-#endif //CAM_CHDK_PTP_REMOTESHOOT
 
 /*********** BEGIN OF AUXILARY PART **********************/
 
 #include "module_load.h"
 
 struct libdng_sym libdng = {
-#ifdef CAM_CHDK_PTP_REMOTESHOOT
     MAKE_API_VERSION(1,1),      // apiver: increase major if incompatible changes made in module, 
     // increase minor if compatible changes made(including extending this struct)
-#else
-    MAKE_API_VERSION(1,0),      // apiver: increase major if incompatible changes made in module, 
-    // increase minor if compatible changes made(including extending this struct)
-#endif
 
     create_badpixel_bin,
     raw_init_badpixel_bin,
@@ -984,12 +977,11 @@ struct libdng_sym libdng = {
     badpixel_list_loaded_b,
 
     convert_dng_to_chdk_raw,
-    write_dng
+    write_dng,
     
-#ifdef CAM_CHDK_PTP_REMOTESHOOT
-    ,create_dng_for_ptp,
+    // added in module API version 1.1
+    create_dng_for_ptp,
     free_dng_for_ptp
-#endif
 };
 
 

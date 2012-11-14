@@ -3,9 +3,7 @@
 #ifndef DNG_H
 #define DNG_H
 
-#ifdef CAM_CHDK_PTP_REMOTESHOOT
 #include "remotecap.h"
-#endif
 
 // This is to minimize export list to different modules
 struct libdng_sym {
@@ -19,10 +17,9 @@ struct libdng_sym {
 	void (*convert_dng_to_chdk_raw)(char* fn);
 	void (*write_dng)(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit);
 
-#ifdef CAM_CHDK_PTP_REMOTESHOOT
+    // added in module API version 1.1
 	void (*create_dng_for_ptp)(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, unsigned long uncachedbit, int startline, int linecount);
 	void (*free_dng_for_ptp)(char* rawadr, char* altrawadr);
-#endif
 };
 
 // Defines of exported to chdk symbols
@@ -50,10 +47,8 @@ struct libdng_sym {
 
     extern void unload_bad_pixels_list_b(void);
 
-#ifdef CAM_CHDK_PTP_REMOTESHOOT
     extern void create_dng_for_ptp(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, unsigned long uncachedbit, int startline, int linecount);
     extern void free_dng_for_ptp(char* rawadr, char* altrawadr);
-#endif
 #endif
 
 extern int module_convert_dng_to_chdk_raw(char* fn);		// Return: 0-fail, 1-ok
