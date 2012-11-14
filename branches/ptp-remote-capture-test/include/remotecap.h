@@ -1,7 +1,12 @@
 #ifndef REMOTECAP_H
 #define REMOTECAP_H
-// get supported remote capture data types
 #ifdef CAM_CHDK_PTP_REMOTESHOOT
+typedef struct {
+    unsigned int address;
+    unsigned int length;
+} ptp_data_chunk;
+
+// get supported remote capture data types
 int remotecap_get_target_support(void);
 // set request remote capture data
 int remotecap_set_target(int type, int lstart, int lcount);
@@ -22,6 +27,14 @@ void remotecap_data_type_done(int type);
 void remotecap_free_hooks(int);
 // sets jpeg_chunks to NULL for DryOS r50+
 void remotecap_jpeg_chunks_done(void);
+
+#define MAX_CHUNKS_FOR_RAW 3 //raw data, including the DNG exif and thumbnail when asked
+#define MAX_CHUNKS_FOR_YUV 1 //yuv data
+
+//possible values for remotecap_hook_wait()
+#define RC_WAIT_FWTASK 1
+#define RC_WAIT_CAPTSEQTASK 0
+
 #else
 #define remotecap_get_target_support() (0)
 #endif

@@ -264,10 +264,10 @@ struct
 
 #define TIFF_HDR_SIZE (8)
 
-char* dng_header_buf;
+static char* dng_header_buf;
 int dng_header_buf_size;
 int dng_header_buf_offset;
-char *thumbnail_buf;
+static char *thumbnail_buf;
 
 void add_to_buf(void* var, int size)
 {
@@ -926,13 +926,56 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
     }
 }
 
+#ifdef CAM_CHDK_PTP_REMOTESHOOT
+//TODO: as this is a module, maybe this part should not be conditional
+#include "remotecap.h"
+void create_dng_for_ptp(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, unsigned long uncachedbit, int startline, int linecount) 
+{
+    //TODO: implement partial image (?)
+    create_dng_header();
+
+    if (dng_header_buf)
+    {
+        fill_gamma_buf();
+        if (conf.dng_version)
+            patch_bad_pixels_b();
+        create_thumbnail();
+        pdc[0].address = (unsigned int)dng_header_buf|uncachedbit;
+        pdc[0].length = (unsigned int)dng_header_buf_size;
+        pdc[1].address = (unsigned int)thumbnail_buf|uncachedbit;
+        pdc[1].length = DNG_TH_WIDTH*DNG_TH_HEIGHT*3;
+
+        //TODO: reversing could be done on host instead, how about a flag?
+        reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
+
+        // Get alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
+        pdc[2].address = (unsigned int)altrawadr|uncachedbit;
+        pdc[2].length = camera_sensor.raw_size;
+    }
+}
+void free_dng_for_ptp(char* rawadr, char* altrawadr)
+{
+    if (rawadr == altrawadr)    // If only one RAW buffer then we have to swap the bytes back
+        reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
+    if (dng_header_buf)
+    {
+        free_dng_header();
+    }
+}
+#endif //CAM_CHDK_PTP_REMOTESHOOT
+
 /*********** BEGIN OF AUXILARY PART **********************/
 
 #include "module_load.h"
 
 struct libdng_sym libdng = {
+#ifdef CAM_CHDK_PTP_REMOTESHOOT
+    MAKE_API_VERSION(1,1),      // apiver: increase major if incompatible changes made in module, 
+    // increase minor if compatible changes made(including extending this struct)
+#else
     MAKE_API_VERSION(1,0),      // apiver: increase major if incompatible changes made in module, 
     // increase minor if compatible changes made(including extending this struct)
+#endif
 
     create_badpixel_bin,
     raw_init_badpixel_bin,
@@ -942,6 +985,11 @@ struct libdng_sym libdng = {
 
     convert_dng_to_chdk_raw,
     write_dng
+    
+#ifdef CAM_CHDK_PTP_REMOTESHOOT
+    ,create_dng_for_ptp,
+    free_dng_for_ptp
+#endif
 };
 
 

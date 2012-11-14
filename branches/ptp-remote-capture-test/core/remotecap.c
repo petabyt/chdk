@@ -3,6 +3,9 @@
 #include "platform.h"
 #include "conf.h"
 #include "remotecap.h"
+#include "module_load.h"
+#include "modules.h"
+#include "raw.h"
 #ifdef CAM_CHDK_PTP_REMOTESHOOT
 static int hook_wait[2]; // counter for raw(0)/filewrite(1) wait, decrements for every 10ms sleep
 
@@ -17,15 +20,7 @@ int remotecap_get_target_support(void) {
     return ret;
 }
 
-
 static int remote_file_target=0;
-
-typedef struct {
-    unsigned int address;
-    unsigned int length;
-} ptp_data_chunk;
-
-#define MAX_CHUNKS_FOR_RAW 1 //raw data, could include the DNG exif
 
 static ptp_data_chunk rawchunk[MAX_CHUNKS_FOR_RAW];
 static int rawcurrchnk;
@@ -35,8 +30,6 @@ static int startline=0;
 static int linecount=0;
 
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
-
-#define MAX_CHUNKS_FOR_YUV 1 //yuv data
 static ptp_data_chunk yuvchunk[MAX_CHUNKS_FOR_YUV];
 static int yuvcurrchnk;
 static int jpegcurrchnk;
@@ -78,6 +71,7 @@ void remotecap_set_available_data_type(int type)
 
 void filewrite_set_discard_jpeg(int state);
 int filewrite_get_jpeg_chunk(char **addr,unsigned *size, unsigned n, int *pos);
+int remotecap_raw_savefile(ptp_data_chunk *rawchunk, int startline, int linecount);
 
 void remotecap_raw_available(void) {
     filenumforptp = get_target_file_num(); // need to get this here for consistency
@@ -88,30 +82,19 @@ void remotecap_raw_available(void) {
     yuvcurrchnk=0;
 #endif //CAM_HAS_FILEWRITETASK_HOOK
     if(!(remote_file_target & PTP_CHDK_CAPTURE_RAW)) {
-        hook_wait[0] = 0; // don't block capt_seq task
+        hook_wait[RC_WAIT_CAPTSEQTASK] = 0; // don't block capt_seq task
         return;
     }
-    hook_wait[0] = 3000; // x10ms sleeps = 30 sec timeout, TODO make setable
+    hook_wait[RC_WAIT_CAPTSEQTASK] = 3000; // x10ms sleeps = 30 sec timeout, TODO make setable
 
     if (startline<0) startline=0;
     if (startline>CAM_RAW_ROWS-1) startline=0;
     if (linecount<=0) linecount=CAM_RAW_ROWS;
     if ( (linecount+startline)>CAM_RAW_ROWS ) linecount=CAM_RAW_ROWS-startline;
-    
-    rawchunk[0].address=(unsigned int)(hook_raw_image_addr()+startline*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8 );
-    if ( (startline==0) && (linecount==CAM_RAW_ROWS) )
-    {
-        //hook_raw_size() is sometimes different than CAM_RAW_ROWS*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8
-        // TODO above shoudln't be true!!!
-        //if whole size is requested, send hook_raw_size()
-        rawchunk[0].length=(unsigned int)hook_raw_size();
-    }
-    else
-    {
-        rawchunk[0].length=linecount*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8;
-    }
+
     rawcurrchnk=0;
-    remotecap_set_available_data_type(PTP_CHDK_CAPTURE_RAW); //notifies ptp code in core/ptp.c, first thing to happen
+    
+    remotecap_raw_savefile(&rawchunk[0],startline,linecount);
 }
 
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
@@ -121,10 +104,10 @@ TODO name is not currently saved here
 */
 void remotecap_jpeg_available(const char *name) {
     if(!(remote_file_target & (PTP_CHDK_CAPTURE_JPG | PTP_CHDK_CAPTURE_YUV | PTP_CHDK_CAPTURE_RAW))) {
-        hook_wait[1] = 0; // don't block filewrite task
+        hook_wait[RC_WAIT_FWTASK] = 0; // don't block filewrite task
         return;
     }
-    hook_wait[1] = 3000; // x10ms sleeps = 30 sec timeout, TODO make setable
+    hook_wait[RC_WAIT_FWTASK] = 3000; // x10ms sleeps = 30 sec timeout, TODO make setable
 #if 0
     //for use in debug & porting, for example to dump the filewritetask data block or some memory
     yuvchunk[0].address=0x1000;
@@ -230,7 +213,7 @@ void remotecap_free_hooks(int mode) {
     if (mode==1) // for DryOS >= r50
     {
         remotecap_jpeg_chunks_done(); // make jpeg_chunks NULL, immediately
-        hook_wait[1] = 0; // free the current filewrite hook
+        hook_wait[RC_WAIT_FWTASK] = 0; // free the current filewrite hook
     }
     else
 #endif
@@ -238,10 +221,92 @@ void remotecap_free_hooks(int mode) {
         // TODO these will be called at the end raw and again at the end of jpeg/yuv
         remotecap_set_available_data_type(0); // for fmt -1 case
         // free the filewrite hook
-        hook_wait[1] = 0;
+        hook_wait[RC_WAIT_FWTASK] = 0;
         // allow raw hook to continue
-        hook_wait[0] = 0;
+        hook_wait[RC_WAIT_CAPTSEQTASK] = 0;
         state_shooting_progress=SHOOTING_PROGRESS_PROCESSING; //is this still needed without shoot()?
     }
+}
+
+extern void patch_bad_pixels(void);
+extern char* get_raw_image_addr(void);
+extern char* get_alt_raw_image_addr(void);
+// version of raw_savefile() for ptp
+int remotecap_raw_savefile(ptp_data_chunk *rawchunk, int startline, int linecount) {
+    int ret = 0;
+#if DNG_SUPPORT
+    if (conf.dng_raw) {  //REMINDER: set this from script before shooting
+        if ( module_dng_load(LIBDNG_OWNED_BY_RAW) ) {
+            if ( API_VERSION_MATCH_REQUIREMENT(libdng->version, 1, 1) ) {
+                libdng->capture_data_for_exif();
+            }
+            else {
+                module_dng_unload(LIBDNG_OWNED_BY_RAW);
+                conf.dng_raw=0; //TODO: this is rude, but it does prevent further tries with an incompatible module
+            }
+        }
+    }
+#endif    
+    // Get pointers to RAW buffers (will be the same on cameras that don't have two or more buffers)
+    char* rawadr = get_raw_image_addr();
+    char* altrawadr = get_alt_raw_image_addr();
+
+    if (conf.bad_pixel_removal) patch_bad_pixels();
+
+    state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
+
+    started();
+    
+//TODO: partial raw implemented, partial dng not
+    
+#if DNG_SUPPORT
+    if (conf.dng_raw)
+    {
+        if ( module_dng_load(LIBDNG_OWNED_BY_RAW) )
+            libdng->create_dng_for_ptp(rawchunk, rawadr, altrawadr, CAM_UNCACHED_BIT, startline, linecount );
+    }
+    else 
+#endif
+    {
+        rawchunk[0].address=(unsigned int)(rawadr+startline*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8 )|CAM_UNCACHED_BIT;
+        if ( (startline==0) && (linecount==CAM_RAW_ROWS) )
+        {
+            //hook_raw_size() is sometimes different than CAM_RAW_ROWS*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8
+            // TODO above shoudln't be true!!!
+            //if whole size is requested, send hook_raw_size()
+            rawchunk[0].length=(unsigned int)hook_raw_size();
+        }
+        else
+        {
+            rawchunk[0].length=linecount*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8;
+        }
+      
+        rawchunk[1].address=0xffffffff;
+        rawchunk[1].length=0;
+    }
+    remotecap_set_available_data_type(PTP_CHDK_CAPTURE_RAW);
+    
+    while (remotecap_hook_wait(RC_WAIT_CAPTSEQTASK)) {
+        msleep(10);
+    }
+    
+#if DNG_SUPPORT
+    if (conf.dng_raw)
+    {
+        libdng->free_dng_for_ptp(rawadr, altrawadr);
+    }
+#endif
+    
+    finished();
+
+    ret = 1;
+
+#ifdef OPT_CURVES
+    if (conf.curve_enable) {
+        if (module_curves_load())
+            libcurves->curve_apply();
+    }
+#endif
+    return ret;
 }
 #endif //CAM_CHDK_PTP_REMOTESHOOT

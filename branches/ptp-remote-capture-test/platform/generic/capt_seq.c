@@ -61,9 +61,6 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
     if ( remotecap_get_target() != 0 ) //remote redirection
     {
         remotecap_raw_available();
-        while (remotecap_hook_wait(0)) {
-            _SleepTask(10);
-        }
     }
     else
 #endif //CAM_CHDK_PTP_REMOTESHOOT
@@ -203,7 +200,7 @@ void filewrite_main_hook(char *name, cam_ptp_data_chunk *pdc, char *fwt_data) //
 #endif //CAM_EXTENDED_FILEWRITETASK
     jpeg_chunks = pdc;
     remotecap_jpeg_available(name);
-    while (remotecap_hook_wait(1)) {
+    while (remotecap_hook_wait(RC_WAIT_FWTASK)) {
         _SleepTask(10);
     }
     jpeg_chunks=NULL;
