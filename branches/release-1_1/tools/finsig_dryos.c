@@ -3346,7 +3346,8 @@ void find_stubs_min(firmware *fw)
 			(isLDR_PC(fw,adr2idx(fw,followBranch(fw,idx2adr(fw,k),1)))))	// LDR R0, =base
 		{
 			uint32_t base = LDR2val(fw,adr2idx(fw,followBranch(fw,idx2adr(fw,k),1)));
-			print_stubs_min(fw,"some_flag_for_af_scan",base,followBranch(fw,idx2adr(fw,k),1));
+            if (base < fw->base)
+			    print_stubs_min(fw,"some_flag_for_af_scan",base,followBranch(fw,idx2adr(fw,k),1));
 			//break;
 		}
 	}
