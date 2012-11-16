@@ -57,3 +57,13 @@ long vid_get_viewport_height()
    return 240;
 }
 
+// Functions for PTP Live View system
+// 256 entry palette based on 100b 
+// sub_FFCD6110  <- Called for a function with 2 ref to **"Palette Class.
+int vid_get_palette_type()                      { return 3; }
+int vid_get_palette_size()                      { return 256 * 4; }
+
+void *vid_get_bitmap_active_buffer()
+{   //found @loc_ffcd61b4 ixus105 100b ->Called before *"..<GetBmpVramInfo> Add
+    return (void*)(*(int*)(0x4AD0+0x18)); 
+}
