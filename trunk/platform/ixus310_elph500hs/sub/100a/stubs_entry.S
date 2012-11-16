@@ -17,7 +17,6 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NSTUB(kbd_pwr_off                             ,0xff0560cc) //  2 60%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
-//NSTUB(reboot_fw_update                      ,0xff2e99d0) //  6 83%    *** != 0xff2e99cc
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff090c3c -> ff08d864 -> ff1af368 -> ff320abc -> ff4ce6f0
@@ -214,6 +213,7 @@ NSTUB(openfastdir                             ,0xff2e43dc) //  6
 NSTUB(qsort                                   ,0xff24d5e0) //  6
 NSTUB(rand                                    ,0xff24d118) //  6
 NSTUB(read                                    ,0xff00ad58) //101
+NSTUB(reboot_fw_update                        ,0xff2e99cc) //106
 NSTUB(rename                                  ,0xff026f14) //  6
 NSTUB(set_control_event                       ,0xff08ce6c) //111
 NSTUB(srand                                   ,0xff24d10c) //  6

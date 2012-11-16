@@ -104,11 +104,14 @@ else
 	touch signatures_vxworks.h
 endif
 
-signatures_dryos.h: gensig_dryos$(EXE) gensigs_dryos.sh sig_ref_dryos_1.txt sig_ref_dryos_1.bin sig_ref_dryos_2.txt sig_ref_dryos_2.bin sig_ref_dryos_3.txt sig_ref_dryos_3.bin sig_ref_dryos_4.txt sig_ref_dryos_4.bin sig_ref_dryos_5.txt sig_ref_dryos_5.bin sig_ref_dryos_6.txt sig_ref_dryos_6.bin sig_ref_dryos_7.txt sig_ref_dryos_7.bin sig_ref_dryos_8.txt sig_ref_dryos_8.bin sig_ref_dryos_9.txt sig_ref_dryos_9.bin sig_ref_dryos_10.txt sig_ref_dryos_10.bin
+signatures_dryos.h: gensig_dryos$(EXE) gensigs_dryos.sh sig_ref_dryos_1.txt sig_ref_dryos_1.bin sig_ref_dryos_2.txt sig_ref_dryos_2.bin sig_ref_dryos_3.txt sig_ref_dryos_3.bin \
+                    sig_ref_dryos_4.txt sig_ref_dryos_4.bin sig_ref_dryos_5.txt sig_ref_dryos_5.bin sig_ref_dryos_6.txt sig_ref_dryos_6.bin sig_ref_dryos_7.txt sig_ref_dryos_7.bin \
+                    sig_ref_dryos_8.txt sig_ref_dryos_8.bin sig_ref_dryos_9.txt sig_ref_dryos_9.bin sig_ref_dryos_10.txt sig_ref_dryos_10.bin sig_ref_dryos_11.txt sig_ref_dryos_11.bin
 	@echo \-\> $@
 ifdef OPT_GEN_SIGS
-	if [ -s sig_ref_dryos_1.bin ] && [ -s sig_ref_dryos_2.bin ] && [ -s sig_ref_dryos_3.bin ] && [ -s sig_ref_dryos_4.bin ] && [ -s sig_ref_dryos_5.bin ] && [ -s sig_ref_dryos_6.bin ] && [ -s sig_ref_dryos_7.bin ] && [ -s sig_ref_dryos_8.bin ] && [ -s sig_ref_dryos_9.bin ] && [ -s sig_ref_dryos_10.bin ] ; then \
-	  $(SH) ./gensigs_dryos.sh $(SORT) dryos "1 2 3 4 5 6 7 8 9 10" > signatures_dryos.h ; \
+	if [ -s sig_ref_dryos_1.bin ] && [ -s sig_ref_dryos_2.bin ] && [ -s sig_ref_dryos_3.bin ] && [ -s sig_ref_dryos_4.bin ] && [ -s sig_ref_dryos_5.bin ] && \
+	   [ -s sig_ref_dryos_6.bin ] && [ -s sig_ref_dryos_7.bin ] && [ -s sig_ref_dryos_8.bin ] && [ -s sig_ref_dryos_9.bin ] && [ -s sig_ref_dryos_10.bin ] && [ -s sig_ref_dryos_11.bin ] ; then \
+	  $(SH) ./gensigs_dryos.sh $(SORT) dryos "1 2 3 4 5 6 7 8 9 10 11" > signatures_dryos.h ; \
 	else \
 	  echo CAUTION! \'signatures_dryos.h\' is not updated due to \'sig_ref_dryos_?.bin\` is empty! ; \
 	  touch signatures_dryos.h ; \
@@ -156,6 +159,9 @@ sig_ref_dryos_9.bin:
 
 sig_ref_dryos_10.bin:
 	touch sig_ref_dryos_10.bin
+
+sig_ref_dryos_11.bin:
+	touch sig_ref_dryos_11.bin
 
 finsig_$(PLATFORMOS).o: finsig_$(PLATFORMOS).c signatures_$(PLATFORMOS).h
 
