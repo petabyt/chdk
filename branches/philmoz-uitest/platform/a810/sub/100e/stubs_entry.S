@@ -20,12 +20,10 @@
 //NSTUB(DeleteFile_Fut                        ,0xff82fa00) //  1 90%        == 0xff82fa00
 //NSTUB(GetBatteryTemperature                 ,0xff85875c) //102        *** != 0x00000000
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff8305a4
-//NSTUB(PT_PlaySound                          ,0xff87503c) //  4 93%        == 0xff87503c
 //NSTUB(kbd_pwr_off                           ,0xff856660) //  2 60%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 //NSTUB(mkdir                                 ,0xff83064c) //  6 60%    *** != 0xff8305a4
 // ERROR: rand is not found.                               //--- ---    *** != 0x00000000
-//NSTUB(reboot_fw_update                      ,0xffa59aa4) //  6 64%    *** != 0xffa59aa0
 // ERROR: srand is not found.                              //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
@@ -44,8 +42,6 @@ DEF(canon_menu_active                       ,0x00002e2c) // Found @0xff87f32c
 DEF(canon_shoot_menu_active                 ,0x0000778d) // Found @0xff99b5a4
 DEF(playrec_mode                            ,0x00002b80) // Found @0xff8733d8
 DEF(zoom_status                             ,0x0000b3e0) // Found @0xffa83908
-DEF(some_flag_for_af_scan                   ,0xffb7397c) // Found @0xff9db3a4
-DEF(some_flag_for_af_scan                   ,0xffb7397c) // Found @0xff9de0bc
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 2 int value(s), the first is the zoom focus length.
 // there are 64 entries in the table - set NUM_FL to 64
@@ -165,6 +161,7 @@ NSTUB(Open                                    ,0xff82ffac) //101
 NSTUB(PB2Rec                                  ,0xff885fe0) //104
 NSTUB(PT_MoveDigitalZoomToWide                ,0xff86c594) //102
 NSTUB(PT_MoveOpticalZoomAt                    ,0xff86c56c) //102
+//NSTUB(PT_PlaySound                          ,0xff87503c) // 11            == 0xff87503c
 NSTUB(PostLogicalEventForNotPowerType         ,0xff882864) //103
 NSTUB(PostLogicalEventToUI                    ,0xff8828b0) //103
 NSTUB(PutInNdFilter                           ,0xffa6e904) //102
@@ -225,6 +222,7 @@ NSTUB(opendir                                 ,0xffa54474) //  6
 NSTUB(openfastdir                             ,0xffa54474) //  6
 NSTUB(qsort                                   ,0xff9d7180) //  6
 NSTUB(read                                    ,0xff815b88) //101
+//NSTUB(reboot_fw_update                      ,0xffa59aa0) //106            == 0xffa59aa0
 NSTUB(rename                                  ,0xff82f96c) //  6
 NSTUB(set_control_event                       ,0xff882bac) //111
 NSTUB(stat                                    ,0xff830338) //  3

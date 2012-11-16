@@ -208,7 +208,7 @@ NSTUB(openfastdir                             ,0xffa478b8) //  1
 NSTUB(qsort                                   ,0xffaaf200) //  1
 NSTUB(rand                                    ,0xff81cd64) //  1
 NSTUB(read                                    ,0xff819ae4) //101
-NSTUB(reboot_fw_update                        ,0xffa4effc) //  5
+NSTUB(reboot_fw_update                        ,0xffa4effc) //106
 NSTUB(rename                                  ,0xff823548) //  1
 NSTUB(set_control_event                       ,0xff87b694) //111
 NSTUB(srand                                   ,0xff81cd58) //  1
