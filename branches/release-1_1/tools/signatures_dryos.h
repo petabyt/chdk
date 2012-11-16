@@ -7824,6 +7824,80 @@ static FuncSig func_sig_ScreenLock_10[] = {
 	{ -1, -1, -1 },
 };
 
+static FuncSig func_sig_GetImageFolder_11[] = {
+	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D43F0
+	{   1, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05001
+	{   2, 0xe1a06000, 0xfdfff000 }, // mov:6:0xE1A06000
+	{   3, 0xe04dd000, 0xfdfff000 }, // sub:6:0xE24DD014
+	{   4, 0xe1a07000, 0xfdfff000 }, // mov:6:0xE1A07002
+	{   5, 0xe1a08000, 0xfdfff000 }, // mov:6:0xE1A08003
+	{   6, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01E65
+	{   7, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
+	{   8, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFC1B
+	{   9, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
+	{  10, 0x000f0000, 0xf00ff000 }, // ldr:8:0x059F0224
+	{  11, 0x01a01000, 0xfdfff000 }, // mov:6:0x03A01E65
+	{  12, 0x0b000000, 0x0f000000 }, // b, bl:3:0x0B534B11
+	{  13, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
+	{  14, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFCF7
+	{  15, 0xe1b04000, 0xfdfff000 }, // mov:6:0xE1B04000
+	{  16, 0x01a00000, 0xfdfff000 }, // mov:6:0x03A00001
+	{  17, 0x0a000000, 0x0f000000 }, // b, bl:3:0x0A00002A
+	{  18, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE5940008
+	{  19, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01000
+	{  20, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB53494F
+	{  21, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00205
+	{  22, 0xe1a09000, 0xfdfff000 }, // mov:6:0xE1A09B20
+	{  23, 0xe00f1000, 0xf00ff000 }, // ldr:8:0xE59F120C
+	{  24, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE5940010
+	{  25, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02009
+	{  26, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFA2E
+	{  27, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE59F01FC
+	{  28, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBF92A33
+	{  29, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE350000E
+	{  30, 0x0a000000, 0x0f000000 }, // b, bl:3:0x0A00000E
+	{  31, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A0200D
+	/* 32/32 */
+	{ -1, -1, -1 },
+};
+
+static FuncSig func_sig_PT_PlaySound_11[] = {
+	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4070
+	{   1, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE1A04000
+	{   2, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05804
+	{   3, 0xe1100901, 0xfdffffff }, // tst:7:0xE3100901
+	{   4, 0xe1a06000, 0xfdfff000 }, // mov:6:0xE1A06001
+	{   5, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05825
+	{   6, 0x0a000000, 0x0f000000 }, // b, bl:3:0x0A000007
+	{   7, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02006
+	{   8, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01000
+	{   9, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
+	{  10, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFF0A
+	{  11, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
+	{  12, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
+	{  13, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01F7F
+	{  14, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEA00000E
+	{  15, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE51F00B4
+	{  16, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE5900004
+	{  17, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500001
+	{  18, 0x100f1000, 0xf00ff000 }, // ldr:8:0x159F13B0
+	{  19, 0x100f0000, 0xf00ff000 }, // sub:10:0x124F00B8
+	{  20, 0x0b000000, 0x0f000000 }, // b, bl:3:0x1B57E54B
+	{  21, 0xe1140a02, 0xfdffffff }, // tst:7:0xE3140A02
+	{  22, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
+	{  23, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02006
+	{  24, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01000
+	{  25, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
+	{  26, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFF39
+	{  27, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
+	{  28, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
+	{  29, 0xe00f1000, 0xf00ff000 }, // ldr:8:0xE59F1388
+	{  30, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD4070
+	{  31, 0xe00f0000, 0xf00ff000 }, // sub:10:0xE24F00E8
+	/* 32/32 */
+	{ -1, -1, -1 },
+};
+
 FuncsList func_list[] = {
 	{ "AllocateMemory", func_sig_AllocateMemory_1, 1 },
 	{ "AllocateMemory", func_sig_AllocateMemory_2, 2 },
@@ -7878,6 +7952,7 @@ FuncsList func_list[] = {
 	{ "GetFocusLensSubjectDistanceFromLens", func_sig_GetFocusLensSubjectDistanceFromLens_1, 1 },
 	{ "GetFocusLensSubjectDistanceFromLens", func_sig_GetFocusLensSubjectDistanceFromLens_3, 3 },
 	{ "GetFocusLensSubjectDistanceFromLens", func_sig_GetFocusLensSubjectDistanceFromLens_4, 4 },
+	{ "GetImageFolder", func_sig_GetImageFolder_11, 11 },
 	{ "GetImageFolder", func_sig_GetImageFolder_4, 4 },
 	{ "GetImageFolder", func_sig_GetImageFolder_6, 6 },
 	{ "GetKbdState", func_sig_GetKbdState_4, 4 },
@@ -7915,6 +7990,7 @@ FuncsList func_list[] = {
 	{ "PB2Rec", func_sig_PB2Rec_3, 3 },
 	{ "PT_MoveDigitalZoomToWide", func_sig_PT_MoveDigitalZoomToWide_4, 4 },
 	{ "PT_MoveOpticalZoomAt", func_sig_PT_MoveOpticalZoomAt_4, 4 },
+	{ "PT_PlaySound", func_sig_PT_PlaySound_11, 11 },
 	{ "PT_PlaySound", func_sig_PT_PlaySound_2, 2 },
 	{ "PT_PlaySound", func_sig_PT_PlaySound_4, 4 },
 	{ "PT_PlaySound", func_sig_PT_PlaySound_6, 6 },
