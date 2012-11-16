@@ -1346,6 +1346,7 @@ string_sig string_sigs[] = {
 
     { 6, "Restart", "Bye", 0 },
 	{ 6, "GetImageFolder", "GetCameraObjectTmpPath ERROR[ID:%lx] [TRY:%lx]\n", 0 },
+    { 6, "reboot_fw_update", "FirmUpgrade.c", 0 },
 	
 	{ 7, "task_CaptSeq", "CaptSeqTask", 1 },
 	{ 7, "task_ExpDrv", "ExpDrvTask", 1 },

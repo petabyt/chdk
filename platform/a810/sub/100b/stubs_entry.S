@@ -20,12 +20,10 @@
 //NSTUB(DeleteFile_Fut                        ,0xff82fa00) //  1 90%        == 0xff82fa00
 //NSTUB(GetBatteryTemperature                 ,0xff85875c) //102        *** != 0x00000000
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff8305a4
-//NSTUB(PT_PlaySound                          ,0xff87503c) //  4 93%        == 0xff87503c
 //NSTUB(kbd_pwr_off                           ,0xff856660) //  2 60%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 //NSTUB(mkdir                                 ,0xff83064c) //  6 60%    *** != 0xff8305a4
 // ERROR: rand is not found.                               //--- ---    *** != 0x00000000
-//NSTUB(reboot_fw_update                      ,0xffa59070) //  6 64%    *** != 0xffa5906c
 // ERROR: srand is not found.                              //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
@@ -163,6 +161,7 @@ NSTUB(Open                                    ,0xff82ffac) //101
 NSTUB(PB2Rec                                  ,0xff885ed4) //104
 NSTUB(PT_MoveDigitalZoomToWide                ,0xff86c594) //102
 NSTUB(PT_MoveOpticalZoomAt                    ,0xff86c56c) //102
+//NSTUB(PT_PlaySound                          ,0xff87503c) // 11            == 0xff87503c
 NSTUB(PostLogicalEventForNotPowerType         ,0xff882864) //103
 NSTUB(PostLogicalEventToUI                    ,0xff8828b0) //103
 NSTUB(PutInNdFilter                           ,0xffa6ded0) //102
@@ -223,6 +222,7 @@ NSTUB(opendir                                 ,0xffa53a40) //  6
 NSTUB(openfastdir                             ,0xffa53a40) //  6
 NSTUB(qsort                                   ,0xff9d6fac) //  6
 NSTUB(read                                    ,0xff815b88) //101
+//NSTUB(reboot_fw_update                      ,0xffa5906c) //106            == 0xffa5906c
 NSTUB(rename                                  ,0xff82f96c) //  6
 NSTUB(set_control_event                       ,0xff882bac) //111
 NSTUB(stat                                    ,0xff830338) //  3

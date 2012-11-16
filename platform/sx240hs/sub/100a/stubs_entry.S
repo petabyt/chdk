@@ -20,10 +20,8 @@
 //NSTUB(DeleteFile_Fut                        ,0xff02163c) //  1 90%        == 0xff02163c
 //NSTUB(LEDDrive                              ,0xff1b980c) //101        *** != 0xff04d06c
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff02214c
-//NSTUB(PT_PlaySound                          ,0xff076e60) //  4 93%        == 0xff076e60
 // ERROR: kbd_pwr_off is not found.                        //--- ---    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
-//NSTUB(reboot_fw_update                      ,0xff335514) //  6 64%    *** != 0xff335510
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff08bd50 -> ff0882ac -> ff1f2f40 -> ff365dac -> ff63fe50
@@ -160,6 +158,7 @@ NSTUB(Open                                    ,0xff021be8) //101
 NSTUB(PB2Rec                                  ,0xff08b370) //104
 NSTUB(PT_MoveDigitalZoomToWide                ,0xff06a190) //102
 NSTUB(PT_MoveOpticalZoomAt                    ,0xff06a168) //102
+//NSTUB(PT_PlaySound                          ,0xff076e60) // 11            == 0xff076e60
 NSTUB(PostLogicalEventForNotPowerType         ,0xff08598c) //103
 NSTUB(PostLogicalEventToUI                    ,0xff0859d8) //103
 NSTUB(PutInNdFilter                           ,0xff3dd204) //102
@@ -221,6 +220,7 @@ NSTUB(openfastdir                             ,0xff32fdc4) //  6
 NSTUB(qsort                                   ,0xff281e24) //  6
 NSTUB(rand                                    ,0xff28195c) //  6
 NSTUB(read                                    ,0xff005d9c) //101
+//NSTUB(reboot_fw_update                      ,0xff335510) //106            == 0xff335510
 NSTUB(rename                                  ,0xff0215a8) //  6
 NSTUB(set_control_event                       ,0xff0878c8) //111
 NSTUB(srand                                   ,0xff281950) //  6

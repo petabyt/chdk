@@ -3,7 +3,6 @@
 
 // Override stubs_entry.S
 NHSTUB(kbd_pwr_on,						NULL_SUB)
-NHSTUB(reboot_fw_update                ,0xff2e99cc)
 
 // These don´t exist/aren´t found in dryos
 NHSTUB(SetZoomActuatorSpeedPercent,		NULL_SUB)

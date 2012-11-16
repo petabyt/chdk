@@ -1,0 +1,3 @@
+0xff000000
+GetImageFolder 0xFF1B8488
+PT_PlaySound 0xff091b80
