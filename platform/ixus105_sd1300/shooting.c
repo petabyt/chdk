@@ -75,15 +75,21 @@ const ISOTable iso_table[] = { // propcase 149
     { 14,  1600,  "1600", -1},
 };        
 
-
 const CapturemodeMap modemap[] = { // propcase 49
-	{ MODE_AUTO,               32768  },
-	{ MODE_P,                  32772  },
-	{ MODE_SCN_PORTRAIT,       32783  },
-	{ MODE_SCN_NIGHT_SNAPSHOT, 32781  },
-	{ MODE_SCN_KIDS_PETS,      32786  },
-	{ MODE_SCN_INDOOR,     	   32787  },
-//  { MODE_FACESELF_TIMER,     16936  },
+    { MODE_AUTO,               32768  },
+    { MODE_P,                  32772  },
+    { MODE_SCN_PORTRAIT,       32783  },
+    { MODE_SCN_NIGHT_SNAPSHOT, 32781  },
+    { MODE_SCN_KIDS_PETS,      32786  },
+    { MODE_SCN_INDOOR,         32787  },
+    { MODE_FOLIAGE,            16405  },
+    { MODE_SCN_SNOW,           16406  },
+    { MODE_SCN_BEACH,          16407  },
+    { MODE_SCN_FIREWORK,       16408  },
+    { MODE_SCN_UNDERWATER,     16409  },
+    { MODE_SCN_LONG_SHUTTER,   16390  },
+    { MODE_SCN_LOWLIGHT,       16417  },
+    { MODE_SCN_FACE_SELF_TIMER,16936  },
     { MODE_VIDEO_STD,          2609   },
 };
 

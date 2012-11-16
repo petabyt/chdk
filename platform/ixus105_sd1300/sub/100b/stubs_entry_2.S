@@ -5,7 +5,6 @@
 // Override stubs_entry.S
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
-NHSTUB(MakeAFScan,                  0xFFD1E738)
+NHSTUB(MakeAFScan,                  0xFFD1E688)
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 
-NHSTUB(GetDrive_FreeClusters, 0xffc55b78)

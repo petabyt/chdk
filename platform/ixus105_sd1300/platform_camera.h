@@ -30,9 +30,6 @@
     #define CAM_PROPSET                 3
     #define CAM_MULTIPART               1
     #undef  CAM_HAS_MANUAL_FOCUS
-    #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
-    #define CAM_VIDEO_QUALITY_ONLY          1
-    #undef  CAM_VIDEO_CONTROL
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_HAS_ERASE_BUTTON
     #define CAM_SHOW_OSD_IN_SHOOT_MENU  1
@@ -51,10 +48,10 @@
     // cropping
     #define CAM_JPEG_WIDTH  4000
     #define CAM_JPEG_HEIGHT 3000
-    #define CAM_ACTIVE_AREA_X1 0
-    #define CAM_ACTIVE_AREA_Y1 10
-    #define CAM_ACTIVE_AREA_X2 4072
-    #define CAM_ACTIVE_AREA_Y2 3040
+    #define CAM_ACTIVE_AREA_X1 8
+    #define CAM_ACTIVE_AREA_Y1 22
+    #define CAM_ACTIVE_AREA_X2 4024
+    #define CAM_ACTIVE_AREA_Y2 3028
 
     // camera name
     #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
@@ -73,3 +70,9 @@
 
     #define  CAM_STARTUP_CRASH_FILE_OPEN_FIX      1
 
+//-------------------
+    #undef  CAM_VIDEO_CONTROL
+    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO   1
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
+    #define CAM_QUALITY_OVERRIDE            1
+    #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
