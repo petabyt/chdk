@@ -19,6 +19,8 @@
 #define CONF_CHAR_PTR       4
 // OSD_pos
 #define CONF_OSD_POS        5
+// Pointer to struct containing item count, item size and pointer to items
+#define CONF_STRUCT_PTR     6
 
 // Name of default symbol file (for reset)
 #define DEFAULT_SYMBOL_FILE "A/CHDK/SYMBOLS/icon_10.rbf"
@@ -34,6 +36,27 @@ typedef struct {
     int* pInt;
     OSD_pos pos;
 } tConfigVal;
+
+// Struct to handle variable sized arrays of 'things' in config
+typedef struct {
+    int             num_items;
+    int             item_size;
+    int             (*saved_size)();
+    char*           (*save)(char *dst);
+    int             (*load)(char *src);
+} tVarArrayConfig;
+
+// User Menu config structures
+typedef struct {
+    int     var;            // index or hash of main menu item or script
+    char    *script_file;   // name of script file
+    char    *script_title;  // name of script (title from script)
+} tUserMenuItem;
+
+typedef struct {
+    tVarArrayConfig cfg;
+    tUserMenuItem   *items;
+} tUserMenuConfig;
 
 // Please try do not change existed structure, because this will broke modules compatibility
 // If add field to the end of structure minor api version should be increased.
@@ -210,12 +233,21 @@ typedef struct {
     int bracketing_add_raw_suffix;
     int clear_bracket;
     int clear_video;
-    int override_disable;
-    int override_disable_all;
+    int override_disable;       // Uses negative/obscure logic.
+                                // 0 = CHDK Tv/Av/ISO/SD overrides are enabled
+                                // 1 = Overrides are disabled
+                                // 2 = Overrides are enabled and the shortcut button to enable/disable them is disabled
+                                // Notes: Option 2 is depracated from version 1.2
+                                //        Disabling these overrides does not disable Auto ISO and Bracketing overrides (see next item)
+    int override_disable_all;   // 0 = Auto ISO and Bracketing enabled, even if other overrides disabled above
+                                // 1 = Auto ISO and Bracketing enabled only when other overrides are enabled
 
+    int tv_override_enabled;
     int tv_override_value;
-    int tv_override_koef;
-    int tv_enum_type;
+    int tv_override_long_exp;
+    int tv_override_short_exp;
+    int tv_enum_type;           // 0 = Ev Step, 1 = Long Exposure (HH:MM:SS), 2 = Short Exposure (0.xxxxx)
+    int av_override_enabled;
     int av_override_value;
 
     int nd_filter_state;
@@ -284,8 +316,9 @@ typedef struct {
     int script_startup;          // remote autostart
     int remote_enable;           // remote enable
     int user_menu_enable;
-    int user_menu_vars[USER_MENU_ITEMS];
     int user_menu_as_root;
+    tUserMenuConfig user_menu_vars;
+    int user_menu_has_changed;      // not saved to config file, used to tell code that file needs to be saved
     int zoom_scale;
     int unlock_optical_zoom_for_video;
     int mute_on_zoom;
@@ -309,9 +342,7 @@ typedef struct {
     int ricoh_ca1_mode;
     int synch_delay_enable;
     int synch_delay_value;
-    //int synch_delay_coarse_value;     // obsolete - no longer used
     int remote_zoom_enable;
-    //int zoom_timeout;                 // obsolete - no longer used
 
     int script_param_set;
     int script_param_save;
@@ -377,17 +408,45 @@ typedef struct {
     int show_alt_helper;        // Show <ALT> mode help screen
     int show_alt_helper_delay;  // Delay before showing help screen
 
-	int help_was_shown;		// 0-help wasn't shown yet, 1- help already was shown
-    int menuedit_popup;			// 0-menuedit in-menu, 1-menu edit is popup
-
-    // full path & filename
-    char user_menu_script_file[USER_MENU_ITEMS][CONF_STR_LEN];
-    // @title string from file                     
-    char user_menu_script_title[USER_MENU_ITEMS][CONF_STR_LEN];
-
 } Conf;
 
 extern Conf conf;
+
+// Some macros to simplify the code
+
+// True if TV/AV/ISO/SD overrides are enabled, false if disabled (excludes Auto ISO and bracketing overrides which can be still be enabled)
+#define overrides_are_enabled   ( conf.override_disable != 1 )
+// True if Auto ISO and bracketing overrides are enabled, false if disabled
+#define autoiso_and_bracketing_overrides_are_enabled    ( !(conf.override_disable == 1 && conf.override_disable_all) )
+
+// True if a TV override value is set, false otherwise
+#define TV_OVERRIDE_EV_STEP     0
+#define TV_OVERRIDE_SHORT_EXP   1
+#define TV_OVERRIDE_LONG_EXP    2
+#define is_tv_override_enabled  (  conf.tv_override_enabled && overrides_are_enabled && \
+                                    ((conf.tv_override_value && (conf.tv_enum_type == TV_OVERRIDE_EV_STEP)) || \
+                                     (conf.tv_override_short_exp && (conf.tv_enum_type == TV_OVERRIDE_SHORT_EXP)) ||  \
+                                     (conf.tv_override_long_exp && (conf.tv_enum_type == TV_OVERRIDE_LONG_EXP)) \
+                                     ) \
+                                )
+// True if a AV override value is set, false otherwise
+#define is_av_override_enabled  ( conf.av_override_enabled && overrides_are_enabled )
+// True if a ISO override value is set, false otherwise
+#define is_iso_override_enabled ( conf.iso_override_value && conf.iso_override_koef && overrides_are_enabled )
+// True if a SD (subject distance) override value is set, false otherwise
+#define SD_OVERRIDE_OFF         0
+#define SD_OVERRIDE_ON          1
+#define SD_OVERRIDE_INFINITY    2
+#define is_sd_override_enabled  ( conf.subj_dist_override_value && conf.subj_dist_override_koef && overrides_are_enabled )
+
+// True if a TV bracketing value is set, false otherwise
+#define is_tv_bracketing_enabled  ( conf.tv_bracket_value && autoiso_and_bracketing_overrides_are_enabled )
+// True if a AV bracketing value is set, false otherwise
+#define is_av_bracketing_enabled  ( conf.av_bracket_value && autoiso_and_bracketing_overrides_are_enabled )
+// True if a ISO bracketing value is set, false otherwise
+#define is_iso_bracketing_enabled ( conf.iso_bracket_value && conf.iso_bracket_koef && autoiso_and_bracketing_overrides_are_enabled )
+// True if a SD (subject distance) bracketing value is set, false otherwise
+#define is_sd_bracketing_enabled  ( conf.subj_dist_bracket_value && conf.subj_dist_bracket_koef && autoiso_and_bracketing_overrides_are_enabled && shooting_can_focus() )
 
 #define ALT_PREVENT_SHUTDOWN_NO         0
 #define ALT_PREVENT_SHUTDOWN_ALT        1

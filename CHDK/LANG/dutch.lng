@@ -326,11 +326,11 @@
 238 "Extra Foto-instellingen"
 
 239 "Extra Foto-instellingen"
-240 "Overschr. sluitersnelh."
-241 "    Waardefactor"
+//240 "Overschr. sluitersnelh."
+//241 "    Waardefactor"
 242 "Overscrijf Diafragmawaarde"
 243 "Overschrijf ISO-waarde"
-244 "    Waardefactor"
+//244 "    Waardefactor"
 245 "Overschrijf onderw.afstand"
 246 "    Waardefactor (mm)"
 
@@ -350,13 +350,12 @@
 257 "Afstandsbediening aan"
 
 
-258 "Belichting (Geen flits)"
-
-259 "Belichting (Geen flits)"
-260 "Herbereken belichting"
-261 "TV-belichting herbereken volgorde"
-262 "AV-belichting herbereken volgorde"
-263 "ISO-belichting herbereken volgorde"
+//258 "Belichting (Geen flits)"
+//259 "Belichting (Geen flits)"
+//260 "Herbereken belichting"
+//261 "TV-belichting herbereken volgorde"
+//262 "AV-belichting herbereken volgorde"
+//263 "ISO-belichting herbereken volgorde"
 
 264 "Leeg overschrijfwrd bij starten"
 
@@ -468,7 +467,7 @@
 348 "Resterende videotijd"
 349 "Wis videoinst. bij opstarten?"
 350 "Schakel snelle Ev-wissel in?"
-351 "   Stapgrootte (1 EV)?"
+//351 "   Stapgrootte (1 EV)?"
 352 "EV-correctie"
 353 "Wil je ECHT ALLE RAW-bestanden\nzonder bijbehorende JPG\nin DCIM-map wissen?"
 354 "Wil je ECHT ALLE RAW-bestanden\nzonder bijbehorende JPG\nin geselecteerde map wissen?"
@@ -567,7 +566,7 @@
 435 "Raw uit @ RandBedekking"
 436 "Raw uit @ Auto Mode"
 437 "   ALLEEN in video"
-438 "   Flitskracht"
+//438 "   Flitskracht"
 
 439 "'DNG'-extensie"
 440 "DNG zichtbaar via USB"

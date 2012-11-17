@@ -4,6 +4,7 @@
 #include "lang.h"
 #include "conf.h"
 #include "gui.h"
+#include "gui_menu.h"
 #include "gui_draw.h"
 #include "gui_lang.h"
 #include "gui_osd.h"
@@ -225,7 +226,7 @@ void gui_osd_draw_state()
     //draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+6*FONT_HEIGHT, osd_buf, conf.osd_color);
     ////////////////////////////  
 
-    if ((((conf.tv_enum_type) || (conf.tv_override_value)) && (conf.tv_override_koef && conf.tv_override_value>=0)  && !(conf.override_disable==1)) || gui_mode==GUI_MODE_OSD)
+    if (is_tv_override_enabled || gui_mode==GUI_MODE_OSD)
     {
         if(camera_info.state.is_shutter_half_press) 
         { 
@@ -234,43 +235,50 @@ void gui_osd_draw_state()
         }
         else 
         {
-            if (conf.tv_enum_type) 
-                gui_print_osd_state_string_chr("TV:",shooting_get_tv_override_value()); 
-            else  
-            {
-                t=(int)(shooting_get_shutter_speed_override_value()*100000);
-                gui_print_osd_state_string_float("TV:%d.%05d", 100000, t);
-            }
+            if (conf.tv_enum_type==TV_OVERRIDE_EV_STEP)
+                gui_print_osd_state_string_chr("TV:",gui_tv_override_value_enum(0,0)); 
+            else if (conf.tv_enum_type==TV_OVERRIDE_SHORT_EXP)
+                gui_print_osd_state_string_float("TV:%d.%05d", 100000, conf.tv_override_short_exp);
+            else
+                gui_print_osd_state_string_chr("TV:",gui_hhmss_enum(0,(int)(&conf.tv_override_long_exp))); 
         }
     }
-    if ((conf.av_override_value>0 && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD)  
+    if (is_av_override_enabled || gui_mode==GUI_MODE_OSD)  
         gui_print_osd_state_string_float("AV:%d.%02d", 100, shooting_get_aperture_from_av96(shooting_get_av96_override_value()));
 #if CAM_HAS_ND_FILTER
     if ((conf.nd_filter_state && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD) 
         gui_print_osd_state_string_chr("NDFILTER:", ((conf.nd_filter_state==1)?"IN":"OUT"));
 #endif    
-    if ((conf.autoiso_enable && shooting_get_iso_mode()<=0 && !(m==MODE_M || m==MODE_TV) && shooting_get_flash_mode() && (!(conf.override_disable==1 && conf.override_disable_all))) || gui_mode==GUI_MODE_OSD)  
+    if ((conf.autoiso_enable && shooting_get_iso_mode()<=0 && !(m==MODE_M || m==MODE_TV) && shooting_get_flash_mode() && (autoiso_and_bracketing_overrides_are_enabled)) || gui_mode==GUI_MODE_OSD)  
         gui_print_osd_state_string_chr("AUTOISO:", ((conf.autoiso_enable==1)?"ON":"OFF"));
-    if ((conf.subj_dist_override_value>0 && conf.subj_dist_override_koef && shooting_can_focus() && !(conf.override_disable==1)) || ((gui_get_mode()==GUI_MODE_ALT) && shooting_get_common_focus_mode())	|| gui_mode==GUI_MODE_OSD)   {
+    if ((is_sd_override_enabled && shooting_can_focus()) || ((gui_get_mode()==GUI_MODE_ALT) && shooting_get_common_focus_mode()) || gui_mode==GUI_MODE_OSD)
+    {
         gui_print_osd_state_string_chr("SD:",gui_subj_dist_override_value_enum(0,0));
-        if (gui_mode==GUI_MODE_ALT && conf.subj_dist_override_koef>1) {
-            gui_print_osd_state_string_chr("FACTOR:",gui_subj_dist_override_koef_enum(0,0));
+        if (gui_mode==GUI_MODE_ALT)
+        {
+            if (conf.subj_dist_override_koef == SD_OVERRIDE_ON)
+            {
+                gui_print_osd_state_string_chr("Adj:",menu_increment_factor_string());
+            }
+            else
+                gui_print_osd_state_string_chr("Adj:",gui_subj_dist_override_koef_enum(0,0));
+        }
     }
-    }
-    if ((conf.iso_override_value>0 && conf.iso_override_koef && !(conf.override_disable==1))   || gui_mode==GUI_MODE_OSD)
+    if (is_iso_override_enabled || gui_mode==GUI_MODE_OSD)
         gui_print_osd_state_string_int("ISO:", shooting_get_iso_override_value());
-    if ((gui_mode==GUI_MODE_OSD) || (shooting_get_drive_mode() && m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE)) {
-    if ((conf.tv_bracket_value>0 && !(conf.override_disable==1 && conf.override_disable_all)) || (conf.av_bracket_value>0 && !(conf.override_disable==1 && conf.override_disable_all))  || (conf.iso_bracket_value>0 && conf.iso_bracket_koef && !(conf.override_disable==1 && conf.override_disable_all)) || ((conf.subj_dist_bracket_value>0) && (conf.subj_dist_bracket_koef) && (shooting_can_focus() && !(conf.override_disable==1 && conf.override_disable_all))))
+    if ((gui_mode==GUI_MODE_OSD) || (shooting_get_drive_mode() && m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE))
+    {
+      if (is_tv_bracketing_enabled || is_av_bracketing_enabled || is_iso_bracketing_enabled || is_sd_bracketing_enabled)
         gui_print_osd_state_string_chr("BRACKET:", shooting_get_bracket_type());
-      if (conf.tv_bracket_value>0 && !(conf.override_disable==1 && conf.override_disable_all))
+      if (is_tv_bracketing_enabled)
         gui_print_osd_state_string_chr("TV:", shooting_get_tv_bracket_value());
-      else if  (conf.av_bracket_value>0 && !(conf.override_disable==1 && conf.override_disable_all))
+      else if (is_av_bracketing_enabled)
         gui_print_osd_state_string_chr("AV:", shooting_get_av_bracket_value());
-      else if  (conf.iso_bracket_value>0 && conf.iso_bracket_koef   && !(conf.override_disable==1 && conf.override_disable_all))
+      else if (is_iso_bracketing_enabled)
         gui_print_osd_state_string_int("ISO:", shooting_get_iso_bracket_value());
-      else if  ((conf.subj_dist_bracket_value>0  && !(conf.override_disable==1 && conf.override_disable_all)) && (conf.subj_dist_bracket_koef) && (shooting_can_focus()))
+      else if (is_sd_bracketing_enabled)
         gui_print_osd_state_string_int("SD:",shooting_get_subject_distance_bracket_value());
-     }
+    }
 #ifdef OPT_CURVES
     if (conf.curve_enable || gui_mode==GUI_MODE_OSD) {
         if (conf.curve_enable==1) gui_print_osd_state_string_chr("CURVES:", "CSTM");
@@ -280,8 +288,7 @@ void gui_osd_draw_state()
     }
 #endif
     if (conf.override_disable == 1) gui_print_osd_state_string_chr("NO ", "OVERRIDES");
-    // TODO: show power
-    if (conf.flash_manual_override && conf.flash_video_override_power>0 ) gui_print_osd_state_string_chr("Flash:", "Manual Override");
+    if (conf.flash_manual_override) gui_print_osd_state_string_chr("Flash:", "Manual Override");
 #ifdef OPT_EDGEOVERLAY
     // edgeoverlay state
     if (conf.edge_overlay_enable || gui_mode==GUI_MODE_OSD) {
@@ -626,7 +633,7 @@ static int kbd_use_up_down_left_right_as_fast_switch()
 #endif
 
     // One of the control options must be enabled or don't do anything
-    if ((!conf.fast_ev || conf.fast_ev_step<0) && !conf.fast_movie_control && !conf.fast_movie_quality_control) return 0;
+    if (!conf.fast_ev && !conf.fast_movie_control && !conf.fast_movie_quality_control) return 0;
 
     // Clear state variable is neither UP or DOWN is pressed
     if (!kbd_is_key_pressed(KEY_UP) && !kbd_is_key_pressed(KEY_DOWN)) key_pressed = 0;
@@ -635,7 +642,7 @@ static int kbd_use_up_down_left_right_as_fast_switch()
     if (canon_shoot_menu_active!=0 || (m&MODE_MASK) != MODE_REC) return 0;
 
     // Adjust exposure if 'Enable Fast EV switch?' option is set
-    if (conf.fast_ev && conf.fast_ev_step>=0 && (key_pressed == 0) && ((m&MODE_SHOOTING_MASK) != MODE_M))
+    if (conf.fast_ev && (key_pressed == 0) && ((m&MODE_SHOOTING_MASK) != MODE_M))
     {
 #if !CAM_HAS_JOGDIAL
         if (kbd_is_key_pressed(KEY_UP))
@@ -1196,7 +1203,7 @@ void gui_draw_osd()
 #ifdef CAM_HAS_GPS
         gps_startup();
 #endif
-        if (conf.fast_ev && conf.fast_ev_step>=0 && !mode_video && (m&MODE_MASK) == MODE_REC )
+        if (conf.fast_ev && !mode_video && (m&MODE_MASK) == MODE_REC )
             gui_osd_draw_ev();
     }
 

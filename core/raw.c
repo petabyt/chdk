@@ -91,7 +91,7 @@ int raw_savefile() {
 
     shooting_bracketing();
 
-    if(conf.tv_bracket_value>0 || conf.av_bracket_value>0 || conf.iso_bracket_value>0 || conf.subj_dist_bracket_value>0 ) {
+    if(conf.tv_bracket_value || conf.av_bracket_value || conf.iso_bracket_value || conf.subj_dist_bracket_value) {
         if(state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
             br_counter = 1;
         else

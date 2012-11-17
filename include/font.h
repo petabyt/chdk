@@ -44,6 +44,8 @@ extern int rbf_draw_clipped_string(int x, int y, const char *str, color cl, int 
 extern int rbf_draw_string_len(int x, int y, int len, const char *str, color cl);
 extern int rbf_draw_string_right_len(int x, int y, int len, const char *str, color cl);
 extern int rbf_draw_menu_header(int x, int y, int len, char symbol, const char *str, color cl);
+extern void rbf_enable_cursor(int s, int e);
+extern void rbf_disable_cursor();
 
 //-------------------------------------------------------------------
 #endif

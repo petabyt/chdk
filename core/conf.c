@@ -19,11 +19,11 @@
 
 
 //-------------------------------------------------------------------
-#define CONF_FILE  "A/CHDK/CCHDK2.CFG"
+#define CONF_FILE  "A/CHDK/CCHDK3.CFG"
 #define CONF_MAGICK_VALUE   (0x33204741)
 
 //-------------------------------------------------------------------
-Conf conf = { MAKE_API_VERSION(2,1) };
+Conf conf = { MAKE_API_VERSION(2,2) };
 
 int state_shooting_progress = SHOOTING_PROGRESS_NONE;
 int state_save_raw_nth_only;
@@ -95,24 +95,24 @@ void clear_values()
 
     if (conf.clear_override)
     {
-		value_turn_state( &conf.tv_override_value, -1 );
-		value_turn_state( &conf.av_override_value, -1 );
-		value_turn_state( &conf.subj_dist_override_value, -1 );
-		value_turn_state( &conf.iso_override_value, -1 );
+        conf.av_override_enabled=0;
+        conf.tv_override_enabled=0;
+        conf.subj_dist_override_koef=SD_OVERRIDE_OFF;
+        conf.iso_override_koef=0;
         conf.nd_filter_state=0;
     }
 #if ZOOM_OVERRIDE
     if (conf.clear_zoom_override)
     {
-		value_turn_state( &conf.conf.zoom_override, -1 );
+        conf.zoom_override = 0;
     }
 #endif
     if (conf.clear_bracket)
     {
-        value_turn_state( &conf.av_bracket_value, -1);
-        value_turn_state( &conf.tv_bracket_value, -1);
-        value_turn_state( &conf.iso_bracket_value, -1);
-        value_turn_state( &conf.subj_dist_bracket_value, -1);
+        conf.av_bracket_value=0;
+        conf.tv_bracket_value=0;
+        conf.iso_bracket_koef=0;
+        conf.subj_dist_bracket_koef=0;
     }
     if (conf.clear_video)
     {
@@ -229,27 +229,26 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(101, conf.video_bitrate,              CONF_DEF_VALUE,     i:VIDEO_DEFAULT_BITRATE, conf_change_video_bitrate),
     
     CONF_INFO(102, conf.tv_override_value,          CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(103, conf.tv_override_koef,           CONF_DEF_VALUE,     i:0, NULL), // to remove if tv_factor mode will be canceled
+    CONF_INFO(103, conf.tv_override_enabled,        CONF_DEF_VALUE,     i:0, NULL),
 
     CONF_INFO(104, conf.av_override_value,          CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(105, conf.iso_override_value,         CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(106, conf.iso_override_koef,          CONF_DEF_VALUE,     i:0, NULL),	// deprecated - to remove (only to import once and contain 1 then)
+    CONF_INFO(106, conf.iso_override_koef,          CONF_DEF_VALUE,     i:0, NULL),
     
     CONF_INFO(107, conf.subj_dist_override_value,   CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(108, conf.subj_dist_override_koef,    CONF_DEF_VALUE,     i:0, NULL),	// deprecated - to remove (only to import once and contain 1 then; possible exlusion: superzooms) 
+    CONF_INFO(108, conf.subj_dist_override_koef,    CONF_DEF_VALUE,     i:SD_OVERRIDE_OFF, NULL),
     
     CONF_INFO(109, conf.tv_bracket_value,           CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(110, conf.av_bracket_value,           CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(111, conf.iso_bracket_value,          CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(112, conf.iso_bracket_koef,           CONF_DEF_VALUE,     i:0, NULL),	// deprecated - to remove (only to import once and contain 1 then)
+    CONF_INFO(112, conf.iso_bracket_koef,           CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(113, conf.subj_dist_bracket_value,    CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(114, conf.subj_dist_bracket_koef,     CONF_DEF_VALUE,     i:0, NULL),	// deprecated - to remove (only to import once and contain 1 then; possible exlusion: superzooms)
+    CONF_INFO(114, conf.subj_dist_bracket_koef,     CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(115, conf.bracket_type,               CONF_DEF_VALUE,     i:0, NULL),
-
-//    CONF_INFO(116, conf.recalc_exposure,            CONF_DEF_VALUE,     i:0, NULL),
-//    CONF_INFO(117, conf.tv_exposure_order,          CONF_DEF_VALUE,     i:2, NULL),
-//    CONF_INFO(118, conf.av_exposure_order,          CONF_DEF_VALUE,     i:1, NULL),
-//    CONF_INFO(119, conf.iso_exposure_order,         CONF_DEF_VALUE,     i:3, NULL),
+    
+    CONF_INFO(116, conf.tv_override_long_exp,       CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO(117, conf.tv_override_short_exp,      CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO(118, conf.av_override_enabled,        CONF_DEF_VALUE,     i:0, NULL),
 
     CONF_INFO(120, conf.script_startup,             CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(121, conf.remote_enable,              CONF_DEF_VALUE,     i:0, NULL),
@@ -279,10 +278,10 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(139, conf.show_raw_state,             CONF_DEF_VALUE,     i:1, NULL),
     
     CONF_INFO(140, conf.show_values_in_video,       CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(141, conf.tv_enum_type,               CONF_DEF_VALUE,     i:1, NULL),		// to remove if tv_factor mode will be canceled
+    CONF_INFO(141, conf.tv_enum_type,               CONF_DEF_VALUE,     i:TV_OVERRIDE_EV_STEP, NULL),
 
     CONF_INFO(142, conf.user_menu_enable,       CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(143, conf.user_menu_vars,         CONF_INT_PTR,   i:0, NULL),
+    CONF_INFO(143, conf.user_menu_vars,         CONF_STRUCT_PTR,i:0, NULL),
     CONF_INFO(144, conf.zoom_scale,             CONF_DEF_VALUE, i:100, NULL), 
     CONF_INFO(145, conf.space_bar_show,         CONF_DEF_VALUE, i:1, NULL), 
     CONF_INFO(146, conf.space_bar_size,         CONF_DEF_VALUE, i:1, NULL), 
@@ -459,40 +458,6 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(290, conf.tbox_char_map,              CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(291, conf.show_alt_helper,            CONF_DEF_VALUE,     i:1, NULL),
     CONF_INFO(292, conf.show_alt_helper_delay,      CONF_DEF_VALUE,     i:3, NULL),
-    CONF_INFO(293, conf.help_was_shown, 	        CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(294, conf.menuedit_popup,		        CONF_DEF_VALUE,     i:1, NULL),
-
-    // NOTE : there must be USER_MENU_ITEMS entries in this section
-    CONF_INFO(295, conf.user_menu_script_file[ 0], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(296, conf.user_menu_script_file[ 1], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(297, conf.user_menu_script_file[ 2], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(298, conf.user_menu_script_file[ 3], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(299, conf.user_menu_script_file[ 4], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(300, conf.user_menu_script_file[ 5], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(301, conf.user_menu_script_file[ 6], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(302, conf.user_menu_script_file[ 7], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(303, conf.user_menu_script_file[ 8], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(304, conf.user_menu_script_file[ 9], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(305, conf.user_menu_script_file[10], CONF_CHAR_PTR,      ptr:"", NULL),    
-    CONF_INFO(306, conf.user_menu_script_file[11], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(307, conf.user_menu_script_file[12], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(308, conf.user_menu_script_file[13], CONF_CHAR_PTR,      ptr:"", NULL),
-
-    // NOTE : there must be USER_MENU_ITEMS entries in this section too
-    CONF_INFO(309, conf.user_menu_script_title[ 0], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(310, conf.user_menu_script_title[ 1], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(311, conf.user_menu_script_title[ 2], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(312, conf.user_menu_script_title[ 3], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(313, conf.user_menu_script_title[ 4], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(314, conf.user_menu_script_title[ 5], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(315, conf.user_menu_script_title[ 6], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(316, conf.user_menu_script_title[ 7], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(317, conf.user_menu_script_title[ 8], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(318, conf.user_menu_script_title[ 9], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(319, conf.user_menu_script_title[10], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(320, conf.user_menu_script_title[11], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(321, conf.user_menu_script_title[12], CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(322, conf.user_menu_script_title[13], CONF_CHAR_PTR,      ptr:"", NULL),
 
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
@@ -599,10 +564,101 @@ void conf_update_prevent_shutdown(void) {
 }
 
 //-------------------------------------------------------------------
-static void conf_init_defaults() {
+static void init_user_menu(int num_items);
+
+static int user_menu_saved_size()
+{
+    // User menu saved as:
+    //      - num_items (int)
+    //      - (var + script_file + script_title)[num_items]
+    return conf.user_menu_vars.cfg.num_items * (sizeof(int) + CONF_STR_LEN * 2) + sizeof(int);
+}
+
+static char* user_menu_store_data(char *p)
+{
+    int i;
+
+    memcpy(p, &conf.user_menu_vars.cfg.num_items, sizeof(int));
+    p += sizeof(int);
+    
+    for (i=0; i<conf.user_menu_vars.cfg.num_items; i++)
+    {
+        memcpy(p, &conf.user_menu_vars.items[i].var, sizeof(int));
+        p += sizeof(int);
+        memset(p, 0, CONF_STR_LEN * 2);
+        if (conf.user_menu_vars.items[i].script_file) memcpy(p, conf.user_menu_vars.items[i].script_file, strlen(conf.user_menu_vars.items[i].script_file));
+        p += CONF_STR_LEN;
+        if (conf.user_menu_vars.items[i].script_title) memcpy(p, conf.user_menu_vars.items[i].script_title, strlen(conf.user_menu_vars.items[i].script_title));
+        p += CONF_STR_LEN;
+    }
+
+    return p;
+}
+
+static int user_menu_load_data(char *p)
+{
+    int i, n;
+
+    memcpy(&n, p, sizeof(int));
+    if (n > conf.user_menu_vars.cfg.num_items)
+        init_user_menu(n);
+    p += sizeof(int);
+    
+    for (i=0; i<n; i++)
+    {
+        memcpy(&conf.user_menu_vars.items[i].var, p, sizeof(int));
+        p += sizeof(int);
+        if (*p)
+        {
+            if (conf.user_menu_vars.items[i].script_file == 0)
+                conf.user_menu_vars.items[i].script_file = malloc(CONF_STR_LEN);
+            strcpy(conf.user_menu_vars.items[i].script_file,p);
+        }
+        p += CONF_STR_LEN;
+        if (*p)
+        {
+            if (conf.user_menu_vars.items[i].script_title == 0)
+                conf.user_menu_vars.items[i].script_title = malloc(CONF_STR_LEN);
+            strcpy(conf.user_menu_vars.items[i].script_title,p);
+        }
+        p += CONF_STR_LEN;
+    }
+
+    return user_menu_saved_size();
+}
+
+static void init_user_menu(int num_items)
+{
+    if (conf.user_menu_vars.items)
+    {
+        int i;
+        for (i=0; i<conf.user_menu_vars.cfg.num_items; i++)
+        {
+            if (conf.user_menu_vars.items[i].script_file)
+                free(conf.user_menu_vars.items[i].script_file);
+            if (conf.user_menu_vars.items[i].script_title)
+                free(conf.user_menu_vars.items[i].script_title);
+        }
+        free(conf.user_menu_vars.items);
+        conf.user_menu_vars.items = 0;
+    }
+
+    conf.user_menu_vars.cfg.num_items = num_items;
+    conf.user_menu_vars.cfg.item_size = sizeof(tUserMenuItem);
+    conf.user_menu_vars.cfg.saved_size = user_menu_saved_size;
+    conf.user_menu_vars.cfg.save = user_menu_store_data;
+    conf.user_menu_vars.cfg.load = user_menu_load_data;
+    conf.user_menu_vars.items = malloc(num_items * sizeof(tUserMenuItem));
+    memset(conf.user_menu_vars.items, 0, num_items * sizeof(tUserMenuItem));
+}
+
+static void conf_init_defaults()
+{
     // init some defaults values
     def_batt_volts_max = get_vbatt_max();
     def_batt_volts_min = get_vbatt_min();
+
+    init_user_menu(USER_MENU_ITEMS);
 }
 
 //-------------------------------------------------------------------
@@ -648,7 +704,18 @@ void config_save(const ConfInfo *conf_info, char *filename, int conf_num)
     register int i;
     
     int size = sizeof(t) + conf_num * sizeof(ConfInfoSave);
-    for (i=0; i<conf_num; i++) size += conf_info[i].size;
+    for (i=0; i<conf_num; i++)
+    {
+        if (conf_info[i].type == CONF_STRUCT_PTR)
+        {
+            tVarArrayConfig *cfg = (tVarArrayConfig*)(conf_info[i].var);
+            size += cfg->saved_size();
+        }
+        else
+        {
+            size += conf_info[i].size;
+        }
+    }
 
     char *buf = umalloc(size);
     char *p = buf;
@@ -663,11 +730,19 @@ void config_save(const ConfInfo *conf_info, char *filename, int conf_num)
             ((ConfInfoSave*)p)->id   = conf_info[i].id;
             ((ConfInfoSave*)p)->size = conf_info[i].size;
             p += sizeof(ConfInfoSave);
-            memcpy(p, conf_info[i].var, conf_info[i].size);
-            // Clear out unused space after string config item value
-            if ((conf_info[i].size == CONF_STR_LEN) && (strlen(conf_info[i].var) < CONF_STR_LEN))
-                memset(p+strlen(conf_info[i].var), 0, CONF_STR_LEN-strlen(conf_info[i].var));
-            p += conf_info[i].size;
+            if (conf_info[i].type == CONF_STRUCT_PTR)
+            {
+                tVarArrayConfig *cfg = (tVarArrayConfig*)(conf_info[i].var);
+                p = cfg->save(p);
+            }
+            else
+            {
+                memcpy(p, conf_info[i].var, conf_info[i].size);
+                // Clear out unused space after string config item value
+                if ((conf_info[i].size == CONF_STR_LEN) && (strlen(conf_info[i].var) < CONF_STR_LEN))
+                    memset(p+strlen(conf_info[i].var), 0, CONF_STR_LEN-strlen(conf_info[i].var));
+                p += conf_info[i].size;
+            }
         }
 
         write(fd, buf, p-buf);
@@ -699,7 +774,8 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
         return;
 
     fd = open(filename, O_RDONLY, 0777); 
-    if( fd < 0 ) {
+    if( fd < 0 )
+    {
         ufree(buf);
         return;
     }
@@ -707,13 +783,15 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
     rcnt = read(fd,buf,st.st_size);
     close(fd);
     // read magick value
-    if (*(int *)buf!=CONF_MAGICK_VALUE || rcnt != st.st_size) {
+    if (*(int *)buf!=CONF_MAGICK_VALUE || rcnt != st.st_size)
+    {
         ufree(buf);
         return;
     }
 
     offs=sizeof(int);
-    while (1) {
+    while (1)
+    {
         if (offs + sizeof(short) > rcnt)
             break;
         id=*((short *)(buf + offs));
@@ -724,11 +802,22 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
         size=*((short *)(buf + offs));
         offs += sizeof(short);
 
-        for (i=0; i<conf_num; ++i) {
-            if (confinfo[i].id==id && confinfo[i].size==size) {
-                if (offs + size <= rcnt) {
-                   memcpy(confinfo[i].var, buf+offs, size);
-                   if (info_func) info_func(confinfo[i].id);
+        for (i=0; i<conf_num; ++i)
+        {
+            if (confinfo[i].id==id && confinfo[i].size==size)
+            {
+                if (offs + size <= rcnt)
+                {
+                    if (confinfo[i].type == CONF_STRUCT_PTR)
+                    {
+                        tVarArrayConfig *cfg = (tVarArrayConfig*)(confinfo[i].var);
+                        size = cfg->load(buf+offs);
+                    }
+                    else
+                    {
+                        memcpy(confinfo[i].var, buf+offs, size);
+                    }
+                    if (info_func) info_func(confinfo[i].id);
                 }
                 break;
             }
@@ -909,12 +998,13 @@ static Conf old_conf;
 
 void conf_store_old_settings()
 {
+    conf.user_menu_has_changed = 0;
     old_conf = conf;
 }
 
 int conf_save_new_settings_if_changed()
 {
-    if (memcmp(&old_conf, &conf, sizeof(Conf)) != 0)
+    if (conf.user_menu_has_changed || (memcmp(&old_conf, &conf, sizeof(Conf)) != 0))
     {
 		user_menu_save();
         conf_save();

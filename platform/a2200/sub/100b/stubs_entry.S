@@ -26,6 +26,7 @@ NSTUB(mkdir                                   ,0xff837214) //  6 53%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00032914) // Found @0xff834658
 DEF(physw_run                               ,0x00001c30) // Found @0xff834218
+DEF(physw_sleep_delay                       ,0x00001c38) // Found @0xff834218
 DEF(levent_table                            ,0xffb97b94) // Found @0xffb97b94
 DEF(FlashParamsTable                        ,0xffbe537c) // Found @0xffbe537c
 DEF(movie_status                            ,0x000065ec) // Found @0xff96367c
@@ -62,7 +63,12 @@ DEF(palette_buffer                          ,0x000b41e4) // Found @0xffa009dc
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 0, KEY_PLAYBACK        ,0x01000000 }, // Found @0xffb561d4, levent 0x601
+//    { 0, KEY_POWER           ,0x02000000 }, // Found @0xffb561dc, levent 0x600
 //    { 0, KEY_MENU            ,0x04000000 }, // Found @0xffb561e4, levent 0x09
+//    { 1, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffb5620c, levent 0x01
+//    { 1, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb5620c, levent 0x01
+//    { 1, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffb56204, levent 0x00
 //    { 1, KEY_UP              ,0x00001000 }, // Found @0xffb56214, levent 0x04
 //    { 1, KEY_RIGHT           ,0x00002000 }, // Found @0xffb5621c, levent 0x07
 //    { 1, KEY_DOWN            ,0x00004000 }, // Found @0xffb56224, levent 0x05
@@ -71,9 +77,6 @@ DEF(palette_buffer                          ,0x000b41e4) // Found @0xffa009dc
 //    { 1, KEY_ZOOM_IN         ,0x00020000 }, // Found @0xffb5623c, levent 0x02
 //    { 1, KEY_SET             ,0x00040000 }, // Found @0xffb56244, levent 0x08
 //    { 1, KEY_DISPLAY         ,0x00080000 }, // Found @0xffb5624c, levent 0x0a
-//    { 1, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffb5620c, levent 0x01
-//    { 1, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb5620c, levent 0x01
-//    { 1, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffb56204, levent 0x00
 //    { 0, 0, 0 }
 //};
 
@@ -216,7 +219,7 @@ NSTUB(openfastdir                             ,0xffa8aec0) //  6
 NSTUB(qsort                                   ,0xffaf64f4) //  6
 NSTUB(rand                                    ,0xffa04b50) //  6
 NSTUB(read                                    ,0xff81ad58) //101
-NSTUB(reboot_fw_update                        ,0xffa904b0) //  6
+NSTUB(reboot_fw_update                        ,0xffa904b0) //106
 NSTUB(rename                                  ,0xff836600) //  6
 NSTUB(set_control_event                       ,0xff88f418) //111
 NSTUB(srand                                   ,0xffa04b44) //  6

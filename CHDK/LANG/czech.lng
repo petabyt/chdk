@@ -318,11 +318,11 @@
 
 238 "Rozšíøené možnosti focení"
 239 "Rozšíøené možnosti focení"
-240 "Potlaèit rychlost závìrky"
-241 " "
+//240 "Potlaèit rychlost závìrky"
+//241 " "
 242 "Potlaèit hodnotu clony"
 243 "Potlaèit hodnotu ISO"
-244 " "
+//244 " "
 245 "Potlaèit hodn. subj. vzdál. (mm)"
 246 " "
 
@@ -339,12 +339,12 @@
 256 "Autostart"
 257 "Povolit dálk. ovládání"
 
-258 "Øízení expozice (ne blesk)"
-259 "Øízení expozice (ne blesk)"
-260 "Pøepoèítat expozici"
-261 "TV expozice - pøepoè. poø."
-262 "AV expozice - pøepoè. poø."
-263 "ISO expozice - pøepoè. poø."
+//258 "Øízení expozice (ne blesk)"
+//259 "Øízení expozice (ne blesk)"
+//260 "Pøepoèítat expozici"
+//261 "TV expozice - pøepoè. poø."
+//262 "AV expozice - pøepoè. poø."
+//263 "ISO expozice - pøepoè. poø."
 
 264 "Smazat hodn. potl. @ spušt."
 
@@ -451,7 +451,7 @@
 348 "Zbývající èas videa"
 349 "Smazat param. videa @ spušt.?"
 350 " "
-351 " "
+//351 " "
 352 "Korekce EV"
 353 "OPRAVDU vymazat VŠECHNY\nRAW soubory bez odpovídajících JPG\nv adresáøi DCIM?"
 354 "OPRAVDU vymazat VŠECHNY\nRAW soubory bez odpovídajících JPG\nve vybraném adresáøi?"
@@ -548,7 +548,7 @@
 435 "Zakázat RAW @ pøekrytí okrajù"
 436 "Zakázat RAW @ režim Auto"
 437 "   POUZE ve videu"
-438 " "
+//438 " "
 439 "Pøípona 'DNG' souboru"
 440 "DNG viditelné pøes USB"
 441 "Mastermind"
@@ -698,18 +698,7 @@
 570 "SD karta"
 571 "Jazyk a písmo"
 
-//
-572 "Ruèní blesk (výkon)"
-573 "Velikost kroku rychl. Ev"
-574 "Zobrazit NÁPOVÌDU"
-575 "Použít vysk. okno pro edit. hodn."
+572 "Pøidat skript do uživatel. menu"
 
-576 "Pøidat skript do uživatel. menu"
-
-577 "Doleva, Doprava & JogDial = Zmìna hodnoty"
-578 "Pøiblížení = Úprava koeficientu pøírùstku"
-579 "SET  = Potvrzení, DISP = Storno"
-580 "MENU = Zapnnutí/Vypnutí"
-
-581 "Nekoneèný fokus"
-582 "Zmìnit koeficient fokusu"
+573 "Nekoneèný fokus"
+574 "Zmìnit koeficient fokusu"

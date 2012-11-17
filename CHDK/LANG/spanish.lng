@@ -1,8 +1,8 @@
-/ / Archivo en lenguaje CHDK
-/ / Formato de la lengua línea:
-/ / <id> "<text>"
-/ / <id> - Debe ser positivo
-/ / <text> - Cualquier texto encerrado en comillas
+// Archivo en lenguaje CHDK
+// Formato de la lengua línea:
+// <id> "<text>"
+// <id> - Debe ser positivo
+// <text> - Cualquier texto encerrado en comillas
   
    1 "Menú principal"
 
@@ -17,7 +17,7 @@
   10 "Restablecer Opciones predeterminadas..."
   11 "Guardar Opciones Ahora ..."
 
-/ / 12 "<- Volver"
+// 12 "<- Volver"
   12 "Volver"
 
 
@@ -39,7 +39,7 @@
   25 "Ver Cálculos de DOF"
   26 "Ver Reloj"
   27 "Editar Posición de OSD"
-/ / 28 "Batería ->"
+// 28 "Batería ->"
   28 "Batería"
 
 
@@ -110,12 +110,12 @@
 
   79 "Opciones de Depuración"
 
-/ / 80 "Ver PropCases"
+// 80 "Ver PropCases"
   80 "Ver Datos Depuración"
   81 "Página PropCase"
   82 "Ver Valores Miscelaneos"
   83 "Explorador de Memoria"
-/ / 84 "Volcado de memoria RAM en ALT + / - Pulse"
+// 84 "Volcado de memoria RAM en ALT + / - Pulse"
   84 "Función de Depuración ALT +/-"
   85 "Crear Tarjeta de Arranque ..."
 
@@ -159,14 +159,14 @@
 110 "*** Información ***"
 111 "Por favor, enciende tu cámara \nen modo PLAY \nY vuelve a intentarlo.:)"
 
-/ / Navegador de archivos títulos
+// Navegador de archivos títulos
 112 "Explorador de Archivos"
 113 "Escoja Archivo de Comandos"
 114 "Escoja Archivo de texto"
 115 "Escoja Archivo Tipos RBF"
 116 "Escoja Archivo de Idioma"
 
-/ / Para el calendario
+// Para el calendario
 117 "Enero"
 118 "Febrero"
 119 "Marzo"
@@ -190,13 +190,13 @@
 
 136 "Hoy:"
 
-/ / Messagebox botones
+// Messagebox botones
 137 "Ok"
 138 "Sí"
 139 "No"
 140 "Cancelar"
 
-/ / OSD editor de diseño
+// OSD editor de diseño
 141 "Histograma"
 142 "Calc DOF"
 143 "Estado"
@@ -205,13 +205,13 @@
 146 "Texto de Bat."
 147 "Reloj"
 
-/ / Paleta
+// Paleta
 148 "Pulse SET para escoger un color particular"
 149 "     Pulse Menú para Salir        "
 150 "Color"
 151 "Use %s para seleccionar color"
 
-/ / Reversi
+// Reversi
 152 "*** Resultados del juego ***"
 153 "Ganó el juego!:)"
 154 "Perdió el juego!:("
@@ -229,24 +229,24 @@
 
 163 "*** Acerca De ***"
 
-/ / Sokoban
+// Sokoban
 164 "  Nivel"
 165 "  Movidas"
 166 "*** Terminado ***"
 167 "¡SÍ! \n ¡Usted lo logró!"
 
-/ / Console
+// Console
 168 "*** Iniciado ***"
 169 "*** Interrumpido ***"
 170 "*** Terminado ***"
 
-/ / Explorador de archivos
+// Explorador de archivos
 171 "*** Eliminar Directorio ***"
 172 "¿Está seguro de eliminar \ntodos los archivos del \ndirectorio seleccionado?"
 173 "*** Eliminar Archivos ***"
 174 "¿Estás seguro de eliminar \nlos archivos seleccionados?"
 
-/ / Referencia
+// Referencia
 175 "Rendimiento"
 176 "Calculando ..."
 177 "Rend. de Cámara      [SET] para iniciar"
@@ -278,7 +278,7 @@
 200 "Ver líneas de Cuadrícula"
 201 "Carga archivo de Cuadrícula ..."
 202 "Cuadrícula"
-/ / 203 "Grid ->"
+// 203 "Grid ->"
 203 "Cuadrícula"
 204 "Escojer Archivo de Cuadrícula"
 205 "Cuadrícula Actual"
@@ -290,7 +290,7 @@
 209 "Color de Relleno"
 
 210 "Calculador DOF"
-/ / 211 "Calculadora DOF ->"
+// 211 "Calculadora DOF ->"
 211 "Calculador DOF"
 212 "Dist. Suj. Canon->Lím. cerc."
 213 "Usar Dist. Suj. EXIF (PC65)"
@@ -302,7 +302,7 @@
 
 
 219 "Valores Miscelaneos"
-/ / 220 "Varios Valores ->"
+// 220 "Varios Valores ->"
 220 "Valores Miscelaneos"
 221 "Ver en modo de revisión"
 222 "Ver Zoom"
@@ -318,7 +318,7 @@
 232 "Ver Luminancia de Escena"
 
 233 "Opciones de Video"
-/ / 234 "Parámetros de vídeo ->"
+// 234 "Parámetros de vídeo ->"
 234 "Opciones de Video"
 235 "Modo de Video"
 236 "Bitrate de Video"
@@ -326,18 +326,18 @@
 
 
 238 "Opciones Extra de Fotografía"
-/ / 239 "Extra Operaciones de fotos ->"
+// 239 "Extra Operaciones de fotos ->"
 239 "Opciones Extra de Fotografía"
-240 "Forzar veloc. Obtur."
-241 "   Factor Multip."
+//240 "Forzar veloc. Obtur."
+//241 "   Factor Multip."
 242 "Forzar Apertura"
 243 "Forzar ISO"
-244 "   Factor Multip."
+//244 "   Factor Multip."
 245 "Forzar Dist. Objeto"
 246 "   Factor Multip. (mm)"
 
 247 "Bracketing en Modo Continuo"
-/ / 248 "Bracketing en modo continuo ->"
+// 248 "Bracketing en modo continuo ->"
 248 "Bracketing en Modo Continuo"
 249 "Valor Bracketing Tv"
 250 "Valor Bracketing Av"
@@ -350,13 +350,13 @@
 256 "Autoinicio"
 257 "Habilitar Remoto"
 
-258 "Control de Exposición (NO Flash)"
-/ / 259 "Control de la exposición (No Flash) ->"
-259 "Control de Exposición (NO Flash)"
-260 "Recalc Exposición"
-261 "Orden Recalc exposición Tv"
-262 "Orden Recalc exposición AV"
-263 "Orden Recalc exposición ISO"
+//258 "Control de Exposición (NO Flash)"
+//// 259 "Control de la exposición (No Flash) ->"
+//259 "Control de Exposición (NO Flash)"
+//260 "Recalc Exposición"
+//261 "Orden Recalc exposición Tv"
+//262 "Orden Recalc exposición AV"
+//263 "Orden Recalc exposición ISO"
 
 264 "Borrar Forzados en Inicio"
 
@@ -370,7 +370,7 @@
 271 "No hay suficiente espacio en tarjeta:\n%dM requerido, %dM disponible"
 
 272 "Ver OSD en el modo de revisión"
-/ / 273 "Ver datos de parámetros"
+// 273 "Ver datos de parámetros"
 273 "Comienzo Lista de Tareas"
 
 274 "Dist. Sujeto de la Lente"
@@ -419,7 +419,7 @@
 308 "Unidad Alerta"
 309 "  Umbral de Alerta"
 310 "Habilitar zoom óptico"
-/ / 311 "Reloj ->"
+// 311 "Reloj ->"
 311 "Reloj"
 312 "Configuración del Reloj"
 313 "Formato de Reloj"
@@ -428,15 +428,15 @@
 316 "Ver OSD @medio obturador"
 
 317 "Conf. Visualiz. RAW"
-/ / 318 "Raw ->"
+// 318 "Raw ->"
 318 "RAW"
 
 319 "Conf. Visualiz. Espacio Archivos"
-/ / 320 "Filespace ->"
+// 320 "Filespace ->"
 320 "Espacio de Archivos"
 
 321 "Auto ISO Personalizado"
-/ / 322 "Custom Auto ISO ->"
+// 322 "Custom Auto ISO ->"
 322 "Auto ISO Personalizado"
 323 "Hab. Auto ISO Personalizado"
 324 "Veloc. Mín. de Obtura."
@@ -469,7 +469,7 @@
 348 "Tiempo Rest. Vídeo"
 349 "Limp. Param. Video Inicio?"
 350 "Habilitar Switch Ev Rápido?"
-351 " Tamaño de paso (1 EV)"
+//351 " Tamaño de paso (1 EV)"
 352 "Corrección Ev"
 353 "¿Está seguro de borrar los Archivos \nRAW sin el correspondiente JPG? \nen carpeta DCIM?"
 354 "¿Está seguro de borrar los Archivos \nRAW sin el correspondiente JPG? \nen carpeta seleccionada?"
@@ -487,7 +487,7 @@
 364 "Fondo del Símbolo"
 
 365 "Curvas Propias"
-/ / "366" Custom curvas -> "
+// "366" Custom curvas -> "
 366 "Curvas Propias"
 367 "Cargar Perfil de Curva ..."
 368 "Habilitar Curva"
@@ -536,12 +536,12 @@
 
 403 "Extensión Resta de RAW"
 
-/ / 404->sets what value in the file being subtracted is considered zero.
-/ / 404 "Subtract input dark value"
+// 404->sets what value in the file being subtracted is considered zero.
+// 404 "Subtract input dark value"
 404 "Valor Cero en Archivo Restado"
 
-/ / 405->sets the minimum value that will produced by subtracting.
-/ / 405 "Subtract output dark value"
+// 405->sets the minimum value that will produced by subtracting.
+// 405 "Subtract output dark value"
 405 "Valor Mínimo al restar"
 
 406 "desde"
@@ -576,7 +576,7 @@
 435 "Deshab. Raw @ EdgerOverlay"
 436 "Deshab. Raw @ Auto Mode"
 437 "Habil. flash en video?"
-438 "  Potencia Flash"
+//438 "  Potencia Flash"
 439 "Extensión Arch. 'DNG'"
 440 "DNG visible via USB"
 441 "Mastermind"
@@ -592,4 +592,3 @@
 451 "Reset archivos"
 452 "Reiniciar Cámara..."
 453 "Forzar flash manual"
-     "Force manual flash"
