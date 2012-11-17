@@ -1461,7 +1461,7 @@ const char* gui_histo_show_enum(int change, int arg) {
     #elif defined(CAMERA_a650)
         static const char* names[]={ "Print", "ISO"};
         static const int keys[]={ KEY_PRINT, KEY_ISO };
-    #elif defined(CAMERA_a810) 
+    #elif defined(CAMERA_a810) || defined(CAMERA_a1300) 
         static const char* names[]={ "Playback", "Help"}; 
         static const int keys[]={ KEY_PRINT, KEY_HELP }; 
     #elif defined(CAMERA_a3300) || defined(CAMERA_a3200)
