@@ -335,12 +335,18 @@ int lseek (int fd, long offset, int whence)
     return _lseek(fd, offset, whence); /* yes, it's lower-case lseek here since Lseek calls just lseek (A610) */
 }
 
-long mkdir(const char *dirname) 
+long mkdir(const char *dirname)
 {
-	return _MakeDirectory_Fut(dirname,-1); // meaning of second arg is not clear, firmware seems to use -1
+#ifdef MKDIR_RETURN_ONE_ON_SUCCESS
+    // mkdir returns 1 on success, 0 on fail. So, values are inverted, to be compatible with previous versions
+    if(_MakeDirectory_Fut(dirname,1)) return 0;
+    else                              return 1;
+#else
+    return _MakeDirectory_Fut(dirname,-1); // meaning of second arg is not clear, firmware seems to use -1
+#endif
 }
 
-long mkdir_if_not_exist(const char *dirname) 
+long mkdir_if_not_exist(const char *dirname)
 {
     // Check if directory exists and create it if it does not.
     struct stat st;

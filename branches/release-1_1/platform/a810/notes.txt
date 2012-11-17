@@ -10,7 +10,6 @@ Playback [>] or Help [?] button can be configured as <ALT> mode button.
 
 KNOWN BUGS
 **********
-- mkdir using chdkptp returns error
 - Colors of Connect4 are wrong.
 - GetBatteryTemperature() returns always -99° Celsius or -146° Fahrenheit
 - Mute during zoom in/out is not implemented
@@ -27,4 +26,4 @@ For Developers
   http://chdk.setepontos.com/index.php?topic=8450.msg90563#msg90563
 - hook_raw_image_addr() & hook_alt_raw_image_addr() return the same value
 
-Last Update 2012/10/02
+Last Update 2012/11/08
