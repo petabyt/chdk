@@ -886,6 +886,48 @@
 #define	COLOR_ICON_REC_GREY_LT		COLOR_GREY_LT
 //
 
+#elif CAM_BITMAP_PALETTE==17 // used in A3100 + A3150^M
+    #define COLOR_WHITE                 0x11
+    #define COLOR_RED                   0x22
+    #define COLOR_BLUE                  0x00
+    #define COLOR_GREY                  0x66
+    #define COLOR_GREEN                 0xcc
+    #define COLOR_BLUE_LT               0x4e
+    #define COLOR_YELLOW                0x2d
+    #define COLOR_SPLASH_RED            0x22
+    #define COLOR_SPLASH_PINK           0x24
+    #define COLOR_SPLASH_GREY           0x66
+    #define COLOR_BG                    0x37
+    #define COLOR_FG                    COLOR_WHITE
+    #define COLOR_SELECTED_BG           COLOR_RED
+    #define COLOR_SELECTED_FG           COLOR_WHITE
+    #define COLOR_ALT_BG                0xD4
+
+    #define COLOR_HISTO_R              0x02
+    #define COLOR_HISTO_G              0x0c
+    #define COLOR_HISTO_B              0xe3
+    #define COLOR_HISTO_R_PLAY         0x02
+    #define COLOR_HISTO_G_PLAY         0x0c
+    #define COLOR_HISTO_B_PLAY         0x00
+    #define COLOR_HISTO_RB             0xf0 //32
+    #define COLOR_HISTO_RG             0xf0 //0b
+    #define COLOR_HISTO_RG_PLAY        0xf0 //09
+    #define COLOR_HISTO_RB_PLAY        0xf0 //09
+    #define COLOR_HISTO_BG_PLAY        0xf0 //00
+    #define COLOR_HISTO_BG             0xf0 //0e
+
+    #define COLOR_ICON_REC_RED         0x62
+    #define COLOR_ICON_REC_RED_DK      0x72
+    #define COLOR_ICON_REC_RED_LT      0x52
+    #define COLOR_ICON_REC_GREEN       0xc6
+    #define COLOR_ICON_REC_GREEN_DK    0xc7
+    #define COLOR_ICON_REC_GREEN_LT    0xc5
+    #define COLOR_ICON_REC_YELLOW      0x9d
+    #define COLOR_ICON_REC_YELLOW_DK    0x9c
+    #define COLOR_ICON_REC_YELLOW_LT    0x8d
+    #define COLOR_ICON_REC_GREY         COLOR_GREY
+    #define COLOR_ICON_REC_GREY_DK      0x77
+    #define COLOR_ICON_REC_GREY_LT      0x55
 
 #else
     #error CAM_BITMAP_PALETTE not defined

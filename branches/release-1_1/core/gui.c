@@ -1500,6 +1500,9 @@ const char* gui_histo_show_enum(int change, int arg) {
     #elif defined(CAMERA_g1x)
         static const char* names[]={ "Shrtcut", "Video", "Meter", "AE Lock", "Erase" };
             static const int keys[]={ KEY_PRINT, KEY_VIDEO, KEY_DISPLAY, KEY_AE_LOCK, KEY_ERASE };
+   #elif defined(CAMERA_a3100)  || (CAMERA_a3150)
+        static const char* names[]={ "Playback", "Print", "Disp"};
+        static const int keys[]={ KEY_PLAYBACK, KEY_PRINT, KEY_DISPLAY };
     #else
         #error camera alt-buttons not defined
     #endif
