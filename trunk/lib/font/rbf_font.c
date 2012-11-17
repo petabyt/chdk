@@ -383,10 +383,37 @@ int rbf_draw_string(int x, int y, const char *str, color cl) {
 }
 
 //-------------------------------------------------------------------
-int rbf_draw_clipped_string(int x, int y, const char *str, color cl, int l, int maxlen) {
+static int cursor_on = 0;
+static int cursor_start = 0;
+static int cursor_end = 0;
+
+void rbf_enable_cursor(int s, int e)
+{
+    cursor_on = 1;
+    cursor_start = s;
+    cursor_end = e;
+}
+
+void rbf_disable_cursor()
+{
+    cursor_on = 0;
+}
+
+int rbf_draw_clipped_string(int x, int y, const char *str, color cl, int l, int maxlen)
+{
+    int i = 0;
+    color inv_cl = ((cl & 0xFF00) >> 8) | ((cl & 0xFF) << 8);
+
     // Draw chars from string up to max pixel length
     while (*str && l+rbf_char_width(*str)<=maxlen)
-        l+=rbf_draw_char(x+l, y, *str++, cl);
+    {
+        if (cursor_on && (cursor_start <= i) && (i <= cursor_end))
+            l+=rbf_draw_char(x+l, y, *str++, inv_cl);
+        else
+            l+=rbf_draw_char(x+l, y, *str++, cl);
+        i++;
+    }
+
     return l;
 }
 
