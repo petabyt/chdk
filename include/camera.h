@@ -217,7 +217,8 @@
                                                 // For other cameras, requires additional support code in kbd.c (see the SX30 or SX40 version)
 
     #undef  CAM_MISSING_RAND                    // Define this if srand()/rand() functions not found in firmware (a810/a2300)
-
+    #undef  MKDIR_RETURN_ONE_ON_SUCCESS         // Define this if mkdir() return 1 on success, 0 on fail (a810/a1300)
+    
 //----------------------------------------------------------
 // Overridden values for each camera
 //----------------------------------------------------------
