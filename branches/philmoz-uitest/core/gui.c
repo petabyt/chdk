@@ -1259,7 +1259,7 @@ static CMenuItem av_override_items[2] = {
 
 #if CAM_CAN_SD_OVERRIDE
 static CMenuItem sd_override_items[2] = {
-    MENU_ITEM   (0, 0,   MENUITEM_ENUM|MENUITEM_SD_INT,                     gui_subj_dist_override_value_enum,  0 ),
+    MENU_ITEM   (0, 0,   MENUITEM_ENUM|MENUITEM_SD_INT,                     gui_subj_dist_override_value_enum,  MAX_DIST ),
     MENU_ITEM   (0, 0,   MENUITEM_ENUM,                                     gui_subj_dist_override_koef_enum,   0 ),
 };
 #endif
@@ -1849,6 +1849,9 @@ static const char* gui_alt_mode_button_enum(int change, int arg)
 #elif defined(CAMERA_g1x)
     static const char* names[]={ "Shrtcut", "Video", "Meter", "AE Lock", "Erase" };
         static const int keys[]={ KEY_PRINT, KEY_VIDEO, KEY_DISPLAY, KEY_AE_LOCK, KEY_ERASE };
+#elif defined(CAMERA_a3100)  || (CAMERA_a3150)
+    static const char* names[]={ "Playback", "Print", "Disp"};
+    static const int keys[]={ KEY_PLAYBACK, KEY_PRINT, KEY_DISPLAY };
 #else
 #error camera alt-buttons not defined
 #endif
@@ -2427,13 +2430,7 @@ static void sd_override_koef(int direction)
             conf.subj_dist_override_koef = SD_OVERRIDE_ON;
             menu_set_increment_factor(1);
         }
-#if MAX_DIST > 1000000      // Superzoom - e.g. SX30, SX40
-        else if (menu_get_increment_factor() < 1000000)
-#elif MAX_DIST > 100000     // G12, IXUS310
-        else if (menu_get_increment_factor() < 100000)
-#else                       // Original values (MAX_DIST = 65535)
-        else if (menu_get_increment_factor() < 10000)
-#endif
+        else if (menu_get_increment_factor() < menu_calc_max_increment_factor(MAX_DIST))
         {
             menu_set_increment_factor(menu_get_increment_factor() * 10);
         }
@@ -2447,13 +2444,7 @@ static void sd_override_koef(int direction)
         if (conf.subj_dist_override_koef==SD_OVERRIDE_INFINITY)
         {
             conf.subj_dist_override_koef = SD_OVERRIDE_ON;
-#if MAX_DIST > 1000000      // Superzoom - e.g. SX30, SX40
-            menu_set_increment_factor(1000000);
-#elif MAX_DIST > 100000     // G12, IXUS310
-            menu_set_increment_factor(100000);
-#else                       // Original values (MAX_DIST = 65535)
-            menu_set_increment_factor(10000);
-#endif
+            menu_set_increment_factor(menu_calc_max_increment_factor(MAX_DIST));
         }
         else if (menu_get_increment_factor() > 1)
         {

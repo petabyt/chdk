@@ -41,6 +41,9 @@ static int          int_incr;
 static unsigned char *item_color;
 
 //-------------------------------------------------------------------
+// Functions to access increment factor from other code
+// Used for quick SD override in ALT mode without entering menu
+
 int menu_get_increment_factor()
 {
     return int_incr;
@@ -51,6 +54,7 @@ void menu_set_increment_factor(int n)
     int_incr = n;
 }
 
+// Generate display string for int_incr value
 char *menu_increment_factor_string()
 {
     static char buf[8];
@@ -64,14 +68,35 @@ char *menu_increment_factor_string()
     return buf;
 }
 
+// Given a maximum value for a int menu item, calculate the largest int_incr value
+int menu_calc_max_increment_factor(int max_value)
+{
+    int max = 1;
+    while (max_value/10 != 0)
+    {
+        max *= 10;
+        max_value /= 10;
+    }
+    return max;
+}
+
+//-------------------------------------------------------------------
+// Adjust the int_incr value up or down - adjust limits based on current
+// menu item type and settings
+
 #define MAX(a,b)    ((a>=b)?a:b)
 
 static int increment_factor()
 {
+    // Increase int_incr
+    // Returns 1 if value changed.
+
+    // Get info about the current menu item
     int item_flags = curr_menu->menu[gui_menu_curr_item].type;
     int item_type = item_flags & MENUITEM_MASK;
     int item_arg = curr_menu->menu[gui_menu_curr_item].arg;
     int item_val = *(curr_menu->menu[gui_menu_curr_item].value);
+    // If state / value menu pair get info from value entry
     if (item_type == MENUITEM_STATE_VAL_PAIR)
     {
         CMenuItem *c = (CMenuItem*)(curr_menu->menu[gui_menu_curr_item].value);
@@ -81,11 +106,14 @@ static int increment_factor()
         item_val = *(c[0].value);
     }
 
+    // Calculate max allowed value for int_incr
+    // Default is 10000 for positive int values, 1000 for negative values or 1 otherwise
     int max = ((item_type == MENUITEM_INT) || (item_flags & MENUITEM_DECIMAL)) ? ((item_val<0)?1000:10000) : 1;
 
+    // If an int value has a defined MIN / MAX range then adjust int_incr max to fit the range
+    int vmax = 0;
     if ( item_flags & MENUITEM_F_MINMAX )
     {
-        int vmax = 0;
         if ( item_flags & MENUITEM_F_UNSIGNED )
         {
             vmax = MAX(MENU_MIN_UNSIGNED(item_arg),MENU_MAX_UNSIGNED(item_arg));
@@ -94,33 +122,27 @@ static int increment_factor()
         {
             vmax = MAX(abs(MENU_MIN_SIGNED(item_arg)),abs(MENU_MAX_SIGNED(item_arg)));
         }
-        if (vmax < max)
-        {
-            max = 1;
-            while (vmax/10 != 0)
-            {
-                max *= 10;
-                vmax /= 10;
-            }
-        }
     }
 
+    // Default for SD type (item_arg holds max allowed value)
+    if (item_flags & MENUITEM_SD_INT)
+    {
+        vmax = item_arg;
+    }
+
+    // If a max value has been set adjust accordingly
+    if (vmax > 0)
+    {
+        max = menu_calc_max_increment_factor(vmax);
+    }
+
+    // Default for HH:MM:SS type
     if (item_flags & MENUITEM_HHMMSS)
     {
         max = 100;
     }
 
-    if (item_flags & MENUITEM_SD_INT)
-    {
-#if MAX_DIST > 1000000      // Superzoom - e.g. SX30, SX40
-        max = 1000000;
-#elif MAX_DIST > 100000     // G12, IXUS310
-        max = 100000;
-#else                       // Original values (MAX_DIST = 65535)
-        max = 10000;
-#endif
-    }
-
+    // Adjust value
     if (int_incr < max)
     {
         int_incr *= 10;
@@ -137,6 +159,9 @@ static int increment_factor()
 
 static int decrement_factor()
 {
+    // Decrease int_incr
+    // Returns 1 if value changed.
+
     if (int_incr > 1)
     {
         int_incr /= 10;
@@ -815,6 +840,7 @@ static void gui_menu_draw_text(char *str, int num_symbols)
     rbf_draw_char(xx, yy, ' ', cl);
 }
 
+// Calculate how many display digits required to accomodate current int_incr value
 static int factor_disp_len()
 {
     int l = 0;
@@ -833,6 +859,8 @@ static int factor_disp_len()
 
 static char tbuf[64];
 
+// Convert an int value to a display string, adjust position of '-' for negative values to
+// not clash with int_incr 'cursor' position
 static void get_int_disp_string(int value)
 {
     sprintf(tbuf, "%5d", value);
