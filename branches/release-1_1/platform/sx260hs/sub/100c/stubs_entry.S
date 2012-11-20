@@ -17,7 +17,7 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(DeleteFile_Fut                        ,0xff02163c) //  1 90%    *** != 0x00000000
+//NSTUB(DeleteFile_Fut                        ,0xff02163c) //  1 90%        == 0xff02163c
 //NSTUB(LEDDrive                              ,0xff1b989c) //101        *** != 0xff04d06c
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff02214c
 // ERROR: kbd_pwr_off is not found.                        //--- ---    *** != 0x00000000
