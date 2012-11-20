@@ -100,6 +100,7 @@ static int fi2rec_size(uint32_t dryos_ver)
     switch (dryos_ver)
     {
     case 50:
+	case 51:
     	return sizeof (fi2_rec_s);
     default:
     	return sizeof (fi2_rec_s) - 4; // exclude the new R50 extra value
