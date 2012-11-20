@@ -1819,7 +1819,7 @@ static const char* gui_alt_mode_button_enum(int change, int arg)
 #elif defined(CAMERA_sx100is) || defined(CAMERA_sx110is)
     static const char* names[]={ "Print", "Face"};
     static const int keys[]={ KEY_PRINT, KEY_FACE };
-#elif defined(CAMERA_sx10) || defined(CAMERA_sx1) || defined(CAMERA_sx20) || defined(CAMERA_sx30) || defined(CAMERA_sx40hs)
+#elif defined(CAMERA_sx10) || defined(CAMERA_sx1) || defined(CAMERA_sx20) || defined(CAMERA_sx30) || defined(CAMERA_sx40hs) || defined(CAMERA_sx50hs)
     static const char* names[]={ "Shrtcut", "Flash", "Video"};
     static const int keys[]={ KEY_PRINT, KEY_FLASH, KEY_VIDEO };
 #elif defined(CAMERA_a410) || defined(CAMERA_a430) || defined(CAMERA_a420) || defined(CAMERA_a530) || defined(CAMERA_a540) || defined(CAMERA_a570) || defined(CAMERA_a580) || defined(CAMERA_a590) ||defined(CAMERA_a630) || defined(CAMERA_a640) || defined(CAMERA_a610) || defined(CAMERA_a620) || defined(CAMERA_a700) || defined(CAMERA_a710) || defined(CAMERA_a720) || defined(CAMERA_ixus65_sd630) || defined(CAMERA_ixus800_sd700) 
