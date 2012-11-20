@@ -54,12 +54,12 @@ void shutdown_soft()
    _PostLogicalEventForNotPowerType(0x1005,0);
 }
 
-void JogDial_CW(void){ //TODO: find correct value
-	_PostLogicalEventForNotPowerType(0x874, 1);  // RotateJogDialRight
+void JogDial_CW(void){
+	_PostLogicalEventToUI(0x872, 1);  // RotateJogDialRight (levent_table)
 }
 
-void JogDial_CCW(void){ //TODO: find correct value
-	_PostLogicalEventForNotPowerType(0x875, 1);  // RotateJogDialLeft
+void JogDial_CCW(void){
+	_PostLogicalEventToUI(0x873, 1);  // RotateJogDialLeft (levent_table)
 }
 
 int vid_get_viewport_width()
