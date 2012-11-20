@@ -1,11 +1,11 @@
 #!/bin/sh
 
-VERSIONS=$4
+VERSIONS=$3
 
 echo
 
 for v in $VERSIONS; do
-    cat sig_ref_$3_${v}.txt | \
+    cat sig_ref_$2_${v}.txt | \
 	( read line; rom_start=($line) ; \
     while read line; do
     	# workaround - multiword read does not work in Windows shell!
@@ -15,7 +15,7 @@ for v in $VERSIONS; do
         length=${line[2]}
         lnk_addr=${line[3]}
         lnk_length=${line[4]}
-	./$1 sig_ref_$3_${v}.bin ${rom_start} ${name}_${v} $addr ${length:-32} ${lnk_addr:-0} ${lnk_length:-32}
+	./gensig_dryos sig_ref_$2_${v}.bin ${rom_start} ${name}_${v} $addr ${length:-32} ${lnk_addr:-0} ${lnk_length:-32}
     done
 	)
 done
@@ -23,10 +23,10 @@ done
 echo "FuncsList func_list[] = {"
 
 for v in $VERSIONS; do
-    cat sig_ref_$3_${v}.txt | \
+    cat sig_ref_$2_${v}.txt | \
 	( read line; rom_start=($line) ; \
     awk -v v=${v} '{ printf("\t{ \"%s\", func_sig_%s_%d, %d },\n",$1,$1,v,v)}'
 	)
-done | "$2"
+done | "$1"
 
 echo -e "\t{ NULL }\n};"
