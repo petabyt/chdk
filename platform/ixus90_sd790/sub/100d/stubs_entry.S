@@ -130,10 +130,10 @@ NSTUB(GetZoomLensCurrentPosition              ,0xffa23268) //102
 NSTUB(GiveSemaphore                           ,0xff81b77c) //112
 NSTUB(IsStrobeChargeCompleted                 ,0xff8bdc20) //102
 NSTUB(LEDDrive                                ,0xff8422b8) //103
-NSTUB(LocalTime                               ,0xff866d20) //  1
+NSTUB(LocalTime                               ,0xff866d20) //115
 NSTUB(LockMainPower                           ,0xff875708) //103
 NSTUB(Lseek                                   ,0xff823ee0) //101
-NSTUB(MakeDirectory_Fut                       ,0xff8236c0) //  1
+NSTUB(MakeDirectory_Fut                       ,0xff8236c0) //116
 NSTUB(MoveFocusLensToDistance                 ,0xffa844b8) //102
 NSTUB(MoveIrisWithAv                          ,0xffa295c8) //102
 NSTUB(MoveZoomLensWithPoint                   ,0xffa29b4c) //102
@@ -187,17 +187,16 @@ NSTUB(free                                    ,0xff813a98) //112
 NSTUB(kbd_p1_f                                ,0xff821f4c) //109
 NSTUB(kbd_p1_f_cont                           ,0xff821f58) //109
 NSTUB(kbd_p2_f                                ,0xff821780) //109
-NSTUB(kbd_pwr_off                             ,0xff842bac) //  2
-NSTUB(kbd_pwr_on                              ,0xff842b5c) //  2
 NSTUB(kbd_read_keys                           ,0xff821e48) //109
 NSTUB(kbd_read_keys_r2                        ,0xff8426e0) //109
+NSTUB(kbd_pwr_off                             ,0xff842bac) //  2
+NSTUB(kbd_pwr_on                              ,0xff842b5c) //  2
 NSTUB(lseek                                   ,0xff823ee0) //101
 NSTUB(malloc                                  ,0xff8139c4) //112
 NSTUB(memcmp                                  ,0xff81d854) //101
 NSTUB(memcpy                                  ,0xff894584) //101
 NSTUB(memset                                  ,0xff9b0838) //101
-NSTUB(mkdir                                   ,0xff824144) //  1
-// ALT: NSTUB(mkdir, 0xff8241e4) // 1 32/0
+NSTUB(mkdir                                   ,0xff824144) //109
 NSTUB(mktime_ext                              ,0xff894df0) //  1
 NSTUB(open                                    ,0xff819dfc) //  1
 NSTUB(opendir                                 ,0xffa12254) //  1

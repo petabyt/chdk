@@ -22,7 +22,6 @@
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff8305a4
 //NSTUB(kbd_pwr_off                           ,0xff856660) //  2 60%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
-//NSTUB(mkdir                                 ,0xff83064c) //  6 60%    *** != 0xff8305a4
 // ERROR: rand is not found.                               //--- ---    *** != 0x00000000
 // ERROR: srand is not found.                              //--- ---    *** != 0x00000000
 
@@ -149,7 +148,7 @@ NSTUB(GetZoomLensCurrentPosition              ,0xffa64194) //102
 NSTUB(GiveSemaphore                           ,0x003f7704) //112
 NSTUB(IsStrobeChargeCompleted                 ,0xff8c9b38) //102
 NSTUB(LEDDrive                                ,0xff95c2f0) //101
-NSTUB(LocalTime                               ,0x003fb1b8) //  6
+NSTUB(LocalTime                               ,0x003fb1b8) //115
 NSTUB(LockMainPower                           ,0xff883170) //103
 NSTUB(Lseek                                   ,0xff8302f0) //101
 NSTUB(MakeSDCardBootable                      ,0xff866814) //105
@@ -216,6 +215,7 @@ NSTUB(malloc                                  ,0xff812f20) //112
 NSTUB(memcmp                                  ,0xff81ae58) //101
 NSTUB(memcpy                                  ,0xff835da4) //101
 NSTUB(memset                                  ,0xff9d71e0) //101
+//NSTUB(mkdir                                 ,0xff8305a4) // 12            == 0xff8305a4
 NSTUB(mktime_ext                              ,0xff896064) //  1
 NSTUB(open                                    ,0xff815934) //  6
 NSTUB(opendir                                 ,0xffa54474) //  6

@@ -17,7 +17,6 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NSTUB(kbd_pwr_off                             ,0xff8602cc) //  2 60%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
-NSTUB(mkdir                                   ,0xff837214) //  6 53%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff89353c -> ff88fde8 -> ff98d574 -> ffac1350 -> ffbe5140
@@ -144,10 +143,10 @@ NSTUB(GetZoomLensCurrentPosition              ,0xffa9d884) //102
 NSTUB(GiveSemaphore                           ,0xff83a058) //112
 NSTUB(IsStrobeChargeCompleted                 ,0xff8d66c4) //102
 NSTUB(LEDDrive                                ,0xff85f8c8) //101
-NSTUB(LocalTime                               ,0xff8846a8) //  6
+NSTUB(LocalTime                               ,0xff8846a8) //115
 NSTUB(LockMainPower                           ,0xff88f9dc) //103
 NSTUB(Lseek                                   ,0xff836f98) //101
-NSTUB(MakeDirectory_Fut                       ,0xff836708) //  6
+NSTUB(MakeDirectory_Fut                       ,0xff836708) //116
 NSTUB(MakeSDCardBootable                      ,0xff86ff38) //105
 NSTUB(MoveFocusLensToDistance                 ,0xffb1366c) //102
 NSTUB(MoveIrisWithAv                          ,0xffaad658) //102
@@ -212,6 +211,7 @@ NSTUB(malloc                                  ,0xff8141ec) //112
 NSTUB(memcmp                                  ,0xff8208bc) //101
 NSTUB(memcpy                                  ,0xff83fce0) //101
 NSTUB(memset                                  ,0xffa04a10) //101
+NSTUB(mkdir                                   ,0xff837218) //109
 NSTUB(mktime_ext                              ,0xff8a54e4) //  1
 NSTUB(open                                    ,0xff81ab04) //  6
 NSTUB(opendir                                 ,0xffa8aec0) //  6

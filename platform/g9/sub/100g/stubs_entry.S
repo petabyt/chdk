@@ -140,10 +140,10 @@ NSTUB(GetZoomLensCurrentPosition              ,0xffa3e658) //102
 NSTUB(GiveSemaphore                           ,0xff81ba5c) //112
 NSTUB(IsStrobeChargeCompleted                 ,0xff8c1344) //102
 NSTUB(LEDDrive                                ,0xff848890) //103
-NSTUB(LocalTime                               ,0xff86b538) //  1
+NSTUB(LocalTime                               ,0xff86b538) //115
 NSTUB(LockMainPower                           ,0xff8731f0) //103
 NSTUB(Lseek                                   ,0xff82566c) //101
-NSTUB(MakeDirectory_Fut                       ,0xff824e08) //  1
+NSTUB(MakeDirectory_Fut                       ,0xff824e08) //116
 NSTUB(MoveFocusLensToDistance                 ,0xffa0e134) //102
 NSTUB(MoveIrisWithAv                          ,0xff9371a8) //102
 NSTUB(MoveZoomLensWithPoint                   ,0xff93ad3c) //102
@@ -204,8 +204,7 @@ NSTUB(malloc                                  ,0xff8139dc) //112
 NSTUB(memcmp                                  ,0xff81e834) //101
 NSTUB(memcpy                                  ,0xff895cf0) //101
 NSTUB(memset                                  ,0xffa8d404) //101
-NSTUB(mkdir                                   ,0xff8258d0) //  1
-// ALT: NSTUB(mkdir, 0xff825970) // 1 32/0
+NSTUB(mkdir                                   ,0xff8258d0) //109
 NSTUB(mktime_ext                              ,0xff89655c) //  1
 NSTUB(open                                    ,0xff81a0e0) //  1
 NSTUB(opendir                                 ,0xffa2cb18) //  1

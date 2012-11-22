@@ -148,7 +148,7 @@ NSTUB(GetZoomLensCurrentPosition              ,0xffa7ad40) //102
 NSTUB(GiveSemaphore                           ,0x003f7704) //112
 NSTUB(IsStrobeChargeCompleted                 ,0xff8cca9c) //102
 NSTUB(LEDDrive                                ,0xff964050) //101
-NSTUB(LocalTime                               ,0x003fb1b8) //  6
+NSTUB(LocalTime                               ,0x003fb1b8) //115
 NSTUB(LockMainPower                           ,0xff8870ac) //103
 NSTUB(Lseek                                   ,0xff8316f4) //101
 NSTUB(MakeSDCardBootable                      ,0xff867324) //105

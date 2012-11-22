@@ -17,7 +17,6 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NSTUB(kbd_pwr_off                             ,0xffc43e84) //  2 60%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
-//NSTUB(mkdir                                 ,0xffc267f8) //  6 53%    *** != 0xffc267fc
 // ERROR: rand is not found.                               //--- ---    *** != 0x00000000
 // ERROR: srand is not found.                              //--- ---    *** != 0x00000000
 
@@ -145,10 +144,10 @@ NSTUB(GetZoomLensCurrentPosition              ,0xffe09db4) //102
 NSTUB(GiveSemaphore                           ,0xffc0f1f0) //112
 NSTUB(IsStrobeChargeCompleted                 ,0xffcaf2c8) //102
 NSTUB(LEDDrive                                ,0xffc43538) //101
-NSTUB(LocalTime                               ,0xffc65708) //  6
+NSTUB(LocalTime                               ,0xffc65708) //115
 NSTUB(LockMainPower                           ,0xffc70290) //103
 NSTUB(Lseek                                   ,0xffc2657c) //101
-NSTUB(MakeDirectory_Fut                       ,0xffc25cec) //  6
+NSTUB(MakeDirectory_Fut                       ,0xffc25cec) //116
 NSTUB(MakeSDCardBootable                      ,0xffc53034) //105
 NSTUB(MoveFocusLensToDistance                 ,0xffe6bef0) //102
 NSTUB(MoveIrisWithAv                          ,0xffe15bd4) //102
@@ -213,6 +212,7 @@ NSTUB(malloc                                  ,0xffc041f0) //112
 NSTUB(memcmp                                  ,0xffc114d8) //101
 NSTUB(memcpy                                  ,0xffc2ee6c) //101
 NSTUB(memset                                  ,0xffd8d00c) //101
+//NSTUB(mkdir                                 ,0xffc267fc) //109            == 0xffc267fc
 NSTUB(mktime_ext                              ,0xffc82008) //  1
 NSTUB(open                                    ,0xffc0b108) //  6
 NSTUB(opendir                                 ,0xffdff77c) //  6

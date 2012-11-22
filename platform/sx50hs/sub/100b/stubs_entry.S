@@ -18,7 +18,6 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NSTUB(DeleteFile_Fut                          ,0xff01c468) //  1 90%
-// ERROR: LocalTime is not found.                          //--- ---    *** != 0x0068f420
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff01cf78
 // ERROR: kbd_pwr_off is not found.                        //--- ---    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
@@ -146,6 +145,7 @@ NSTUB(GetZoomLensCurrentPosition              ,0xff1e4b98) //102
 NSTUB(GiveSemaphore                           ,0x0068aaec) //112
 NSTUB(IsStrobeChargeCompleted                 ,0xff037018) //102
 NSTUB(LEDDrive                                ,0xff1f0e54) //101
+//NSTUB(LocalTime                             ,0x0068f420) //115            == 0x0068f420
 NSTUB(LockMainPower                           ,0xff09f41c) //103
 NSTUB(Lseek                                   ,0xff01ccf8) //101
 NSTUB(MakeSDCardBootable                      ,0xff072de4) //105
