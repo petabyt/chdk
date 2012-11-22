@@ -17,7 +17,7 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NSTUB(kbd_pwr_off                             ,0xff8602cc) //  2 60%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
-//NSTUB(mkdir                                 ,0xff837214) //  6 53%    *** != 0xff836708
+//NSTUB(mkdir                                 ,0xff837218) //109        *** != 0xff836708
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff89353c -> ff88fde8 -> ff98d574 -> ffac135c -> ffbe5148
@@ -144,10 +144,10 @@ NSTUB(GetZoomLensCurrentPosition              ,0xffa9d884) //102
 NSTUB(GiveSemaphore                           ,0xff83a058) //112
 NSTUB(IsStrobeChargeCompleted                 ,0xff8d66c4) //102
 NSTUB(LEDDrive                                ,0xff85f8c8) //101
-NSTUB(LocalTime                               ,0xff8846a8) //  6
+NSTUB(LocalTime                               ,0xff8846a8) //115
 NSTUB(LockMainPower                           ,0xff88f9dc) //103
 NSTUB(Lseek                                   ,0xff836f98) //101
-NSTUB(MakeDirectory_Fut                       ,0xff836708) //  6
+NSTUB(MakeDirectory_Fut                       ,0xff836708) //116
 NSTUB(MakeSDCardBootable                      ,0xff86ff38) //105
 NSTUB(MoveFocusLensToDistance                 ,0xffb13678) //102
 NSTUB(MoveIrisWithAv                          ,0xffaad664) //102

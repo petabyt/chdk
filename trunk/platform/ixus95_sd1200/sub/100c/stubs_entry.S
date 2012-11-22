@@ -19,9 +19,9 @@
 //NSTUB(SetScriptMode                         ,0xffc5d99c) //101        *** != 0x00000000
 //NSTUB(UnlockAF                              ,0xffc152d0) //102        *** != 0xffc47b9c
 //NSTUB(WriteSDCard                           ,0xffce4300) //108        *** != 0xffce4118
+//NSTUB(kbd_read_keys                         ,0xffc11d70) //109        *** != 0xffc11d80
 //NSTUB(kbd_pwr_off                           ,0xffc30e1c) //  2 64%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
-//NSTUB(kbd_read_keys                         ,0xffc11d70) //109        *** != 0xffc11d80
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffc614e8 -> ffc5dfb8 -> ffd1af7c -> ffdf7360 -> ffeb35d8
@@ -146,10 +146,10 @@ NSTUB(GetZoomLensCurrentPosition              ,0xffde56b4) //102
 NSTUB(GiveSemaphore                           ,0xffc16ca4) //112
 NSTUB(IsStrobeChargeCompleted                 ,0xffc88190) //102
 NSTUB(LEDDrive                                ,0xffc3043c) //103
-NSTUB(LocalTime                               ,0xffc5426c) //  1
+NSTUB(LocalTime                               ,0xffc5426c) //115
 NSTUB(LockMainPower                           ,0xffc5dbd0) //103
 NSTUB(Lseek                                   ,0xffc13d7c) //101
-NSTUB(MakeDirectory_Fut                       ,0xffc1355c) //  1
+NSTUB(MakeDirectory_Fut                       ,0xffc1355c) //116
 NSTUB(MoveFocusLensToDistance                 ,0xffe34c40) //102
 NSTUB(MoveIrisWithAv                          ,0xffdea9c4) //102
 NSTUB(MoveZoomLensWithPoint                   ,0xffdeaf4c) //102
@@ -208,8 +208,7 @@ NSTUB(malloc                                  ,0xffc03968) //112
 NSTUB(memcmp                                  ,0xffc0cc5c) //101
 NSTUB(memcpy                                  ,0xffc6cc38) //101
 NSTUB(memset                                  ,0xffd65020) //101
-NSTUB(mkdir                                   ,0xffc13fe0) //  1
-// ALT: NSTUB(mkdir, 0xffc14080) // 1 32/0
+NSTUB(mkdir                                   ,0xffc13fe0) //109
 NSTUB(mktime_ext                              ,0xffc6d4a4) //  1
 NSTUB(open                                    ,0xffc0984c) //  1
 NSTUB(opendir                                 ,0xffdd7984) //  1
