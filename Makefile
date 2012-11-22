@@ -190,6 +190,17 @@ print-missing-dump:
 		echo "missing primary for $(PLATFORM) $(PLATFORMSUB)" ; \
 	fi
 
+rebuild-stubs:
+	if [ -s $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc ] ; then \
+		if [ -s $(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN ] ; then \
+			echo "rebuild stubs for $(PLATFORM)-$(PLATFORMSUB)" ;\
+			$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) stubs_entry.S ;\
+		else \
+			echo "!!! missing primary for $(PLATFORM)-$(PLATFORMSUB)"; \
+		fi; \
+	else \
+		echo "!!! wrong platform $(PLATFORM)-$(PLATFORMSUB)"; \
+	fi
 
 # for batch builds, build tools for vx and dryos once, instead of once for every firmware
 alltools:
@@ -232,6 +243,9 @@ os-camera-lists:
 # Note this will not fail, just prints all the missing ones
 batch-print-missing-dumps:
 	sh tools/auto_build.sh $(MAKE) print-missing-dump $(CAMERA_LIST)
+
+batch-rebuild-stubs: alltools
+	sh tools/auto_build.sh $(MAKE) rebuild-stubs $(CAMERA_LIST) -noskip
 
 batch-clean:
 	sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST)
