@@ -1,7 +1,0 @@
-****************************************
-
-Camera depending notes: 
-
-This cam should work with CHDK as is, no special notes existing.
-
-

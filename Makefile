@@ -191,15 +191,11 @@ print-missing-dump:
 	fi
 
 rebuild-stubs:
-	if [ -s $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc ] ; then \
-		if [ -s $(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN ] ; then \
-			echo "rebuild stubs for $(PLATFORM)-$(PLATFORMSUB)" ;\
-			$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) stubs_entry.S ;\
-		else \
-			echo "!!! missing primary for $(PLATFORM)-$(PLATFORMSUB)"; \
-		fi; \
+	if [ -s $(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN ] ; then \
+		echo "rebuild stubs for $(PLATFORM)-$(PLATFORMSUB)" ;\
+		$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) stubs_entry.S ;\
 	else \
-		echo "!!! wrong platform $(PLATFORM)-$(PLATFORMSUB)"; \
+		echo "!!! missing primary for $(PLATFORM)-$(PLATFORMSUB)"; \
 	fi
 
 # for batch builds, build tools for vx and dryos once, instead of once for every firmware
