@@ -11,5 +11,6 @@ sig_ref_dryos_8.bin   : should contain sx20-102d primary			Dryos 2.3 R39
 sig_ref_dryos_9.bin   : should contain s95-100e primary				Dryos 2.3 R45
 sig_ref_dryos_10.bin  : should contain ixus120_sd940-103c primary	Dryos 2.3 R43
 sig_ref_dryos_11.bin  : should contain sx50hs-100b primary	        Dryos 2.3 R51
+sig_ref_dryos_12.bin  : should contain a1300-100d primary	        Dryos 2.3 R50
 
 files should have rom start address in first line.
