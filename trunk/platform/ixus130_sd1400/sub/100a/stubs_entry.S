@@ -104,7 +104,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff8365d4) //  1
 NSTUB(DeleteFile_Fut                          ,0xff8364f0) //112
 NSTUB(DoAFLock                                ,0xff83809c) //102
 NSTUB(EnterToCompensationEVF                  ,0xff8381e8) //104
-NSTUB(ExecuteEventProcedure                   ,0xff8884e8) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff8884e8) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff83822c) //104
 NSTUB(ExitTask                                ,0xff81eacc) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff845e30) //104
@@ -216,7 +216,7 @@ NSTUB(openfastdir                             ,0xffa75000) //  4
 NSTUB(qsort                                   ,0xffae5444) //  4
 NSTUB(rand                                    ,0xff820774) //  1
 NSTUB(read                                    ,0xff81ac7c) //101
-NSTUB(reboot_fw_update                        ,0xffa7a598) //  1
+NSTUB(reboot_fw_update                        ,0xffa7a598) //106
 NSTUB(rename                                  ,0xff83645c) //  4
 NSTUB(set_control_event                       ,0xff8906e8) //111
 NSTUB(srand                                   ,0xff820768) //  1

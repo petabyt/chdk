@@ -7,6 +7,7 @@
 //   Canon PowerShot A2100 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 31
 //   PLATFORMID = 12734 (0x31be) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d4                 // Found @ 0xffff1d14
@@ -28,6 +29,7 @@ NSTUB(kbd_pwr_on                              ,0xffc30b94) //  2 82%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0000c664) // Found @0xffc11a0c
 DEF(physw_run                               ,0x00001c24) // Found @0xffc11680
+DEF(physw_sleep_delay                       ,0x00001c22) // Found @0xffc11680
 DEF(levent_table                            ,0xffe95518) // Found @0xffe95518
 DEF(FlashParamsTable                        ,0xffebde00) // Found @0xffebde00
 DEF(movie_status                            ,0x00005670) // Found @0xffcf840c
@@ -59,15 +61,17 @@ DEF(recreview_hold                          ,0x000030dc) // Found @0xffc657a0
 //    { 1, KEY_SET             ,0x01000000 }, // Found @0xffe71624, levent 0x08
 //    { 1, KEY_MENU            ,0x02000000 }, // Found @0xffe71630, levent 0x09
 //    { 1, KEY_DISPLAY         ,0x04000000 }, // Found @0xffe7163c, levent 0x0a
+//    { 2, KEY_SHOOT_FULL      ,0x0000000c }, // Found @0xffe716a8, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000008 }, // Found @0xffe716a8, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000004 }, // Found @0xffe7169c, levent 0x00
 //    { 2, KEY_ZOOM_IN         ,0x00000010 }, // Found @0xffe716b4, levent 0x02
 //    { 2, KEY_ZOOM_OUT        ,0x00000020 }, // Found @0xffe716c0, levent 0x03
+//    { 2, KEY_POWER           ,0x00000040 }, // Found @0xffe716cc, levent 0x600 (uses inverted logic in physw_status)
+//    { 2, KEY_PLAYBACK        ,0x00000080 }, // Found @0xffe716d8, levent 0x601 (uses inverted logic in physw_status)
 //    { 2, KEY_UP              ,0x00000100 }, // Found @0xffe716e4, levent 0x04
 //    { 2, KEY_DOWN            ,0x00000200 }, // Found @0xffe716f0, levent 0x05
 //    { 2, KEY_RIGHT           ,0x00000400 }, // Found @0xffe716fc, levent 0x07
 //    { 2, KEY_LEFT            ,0x00000800 }, // Found @0xffe71708, levent 0x06
-//    { 2, KEY_SHOOT_FULL      ,0x0000000c }, // Found @0xffe716a8, levent 0x01
-//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000008 }, // Found @0xffe716a8, levent 0x01
-//    { 2, KEY_SHOOT_HALF      ,0x00000004 }, // Found @0xffe7169c, levent 0x00
 //    { 0, 0, 0 }
 //};
 
@@ -95,7 +99,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xffc13270) //  1
 NSTUB(DeleteFile_Fut                          ,0xffc1318c) //112
 NSTUB(DoAFLock                                ,0xffc14f3c) //102
 NSTUB(EnterToCompensationEVF                  ,0xffc14fec) //104
-NSTUB(ExecuteEventProcedure                   ,0xffc554e4) //  1
+NSTUB(ExecuteEventProcedure                   ,0xffc554e4) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xffc15030) //104
 NSTUB(ExitTask                                ,0xffc0b23c) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xffc1f8d8) //104
@@ -124,6 +128,8 @@ NSTUB(GetOpticalTemperature                   ,0xffc32cf4) //102
 NSTUB(GetParameterData                        ,0xffd1cfac) //101
 NSTUB(GetPropertyCase                         ,0xffc59250) //102
 NSTUB(GetSystemTime                           ,0xffdf5dbc) //101
+NSTUB(GetVRAMHPixelsSize                      ,0xffc959a8) //102
+NSTUB(GetVRAMVPixelsSize                      ,0xffc959b4) //102
 NSTUB(GetZoomLensCurrentPoint                 ,0xffcf4e88) //102
 NSTUB(GetZoomLensCurrentPosition              ,0xffdedca8) //102
 NSTUB(GiveSemaphore                           ,0xffc168b4) //112
@@ -204,7 +210,7 @@ NSTUB(openfastdir                             ,0xffde00b0) //  1
 NSTUB(qsort                                   ,0xffe27428) //  1
 NSTUB(rand                                    ,0xffc0cd68) //  1
 NSTUB(read                                    ,0xffc09ae4) //101
-NSTUB(reboot_fw_update                        ,0xffde3c28) //  5
+NSTUB(reboot_fw_update                        ,0xffde3c28) //106
 NSTUB(rename                                  ,0xffc13138) //  1
 NSTUB(set_control_event                       ,0xffc5c5f4) //111
 NSTUB(srand                                   ,0xffc0cd5c) //  1

@@ -28,6 +28,7 @@ NSTUB(kbd_pwr_off                             ,0xff861ed0) //  2 60%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x000336c4) // Found @0xff83466c
 DEF(physw_run                               ,0x00001c30) // Found @0xff8342c4
+DEF(physw_sleep_delay                       ,0x00001c38) // Found @0xff8342c4
 DEF(levent_table                            ,0xffbc1084) // Found @0xffbc1084
 DEF(FlashParamsTable                        ,0xffc095bc) // Found @0xffc095bc
 DEF(movie_status                            ,0x0000720c) // Found @0xff96de58
@@ -61,11 +62,13 @@ DEF(focus_busy                              ,0x00006fc8) // Found @0xff9639d0
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
+//    { 0, KEY_POWER           ,0x00000008 }, // Found @0xffb6583c, levent 0x600
+//    { 0, KEY_UP              ,0x00000080 }, // Found @0xffb6584c, levent 0x04
+//    { 0, KEY_DOWN            ,0x00000100 }, // Found @0xffb65854, levent 0x05
 //    { 0, KEY_SHOOT_FULL      ,0x00002002 }, // Found @0xffb65834, levent 0x01
 //    { 0, KEY_SHOOT_HALF      ,0x00002000 }, // Found @0xffb6585c, levent 0x00
 //    { 0, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb65834, levent 0x01
-//    { 0, KEY_UP              ,0x00000080 }, // Found @0xffb6584c, levent 0x04
-//    { 0, KEY_DOWN            ,0x00000100 }, // Found @0xffb65854, levent 0x05
+//    { 0, KEY_PLAYBACK        ,0x00800000 }, // Found @0xffb6586c, levent 0x601
 //    { 1, KEY_RIGHT           ,0x00004000 }, // Found @0xffb658ec, levent 0x07
 //    { 1, KEY_LEFT            ,0x00008000 }, // Found @0xffb658f4, levent 0x06
 //    { 1, KEY_SET             ,0x00010000 }, // Found @0xffb658fc, levent 0x08
@@ -99,7 +102,7 @@ NSTUB(DeleteDirectory_Fut                     ,0xff8366ac) //  1
 NSTUB(DeleteFile_Fut                          ,0xff8365c8) //112
 NSTUB(DoAFLock                                ,0xff8383f0) //102
 NSTUB(EnterToCompensationEVF                  ,0xff838598) //104
-NSTUB(ExecuteEventProcedure                   ,0xff88d364) //  1
+NSTUB(ExecuteEventProcedure                   ,0xff88d364) //  2
 NSTUB(ExitFromCompensationEVF                 ,0xff8385dc) //104
 NSTUB(ExitTask                                ,0xff81eacc) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff846458) //104
@@ -212,7 +215,7 @@ NSTUB(openfastdir                             ,0xffaa1bcc) //  4
 NSTUB(qsort                                   ,0xffb17f74) //  4
 NSTUB(rand                                    ,0xff820784) //  1
 NSTUB(read                                    ,0xff81ac7c) //101
-NSTUB(reboot_fw_update                        ,0xffaa7164) //  1
+NSTUB(reboot_fw_update                        ,0xffaa7164) //106
 NSTUB(rename                                  ,0xff836534) //  4
 NSTUB(set_control_event                       ,0xff896f40) //111
 NSTUB(srand                                   ,0xff820778) //  1
