@@ -40,6 +40,8 @@
     #undef CAM_HAS_ERASE_BUTTON    // Camera does not have a dedicated erase button
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Display", "Playback" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_DISPLAY, KEY_PLAYBACK }
    
     #define CAM_DNG_LENS_INFO               { 50,10, 200,10, 28,10, 59,10 } // See comments in camera.h
     // pattern

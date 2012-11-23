@@ -33,7 +33,6 @@
 
 #undef  CAM_SWIVEL_SCREEN                       // Camera has rotated LCD screen
 
-//#undef  CAM_ADJUSTABLE_ALT_BUTTON               // ALT-button can be set from menu
 #define CAM_REMOTE                  1           // Camera supports USB-remote
 #undef  CAM_MULTIPART                           // Camera supports SD-card multipartitioning
 

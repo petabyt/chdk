@@ -26,6 +26,8 @@
     #define CAM_AV_OVERRIDE_IRIS_FIX        1       // for cameras that require _MoveIrisWithAv function to override Av.
     #define CAM_KEY_CLICK_DELAY             150
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Video", "Display", "Playback", "Video" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_DISPLAY, KEY_PLAYBACK, KEY_VIDEO }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
     #define CAM_DRYOS_2_3_R39               1

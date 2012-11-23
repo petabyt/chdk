@@ -38,6 +38,8 @@
     #define CAM_KEY_CLICK_DELAY             10 // camera requires additional delay for click command
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video", "Display" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
     #define CAM_BRACKETING                  1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1

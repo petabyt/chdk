@@ -80,6 +80,8 @@
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
     
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Print", "Disp" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_PRINT, KEY_DISPLAY }
 
     #undef CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              17

@@ -25,6 +25,8 @@
     #define CAM_AV_OVERRIDE_IRIS_FIX        1
     #define CAM_KEY_CLICK_DELAY             150
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video", "Display" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
     #define CAM_DRYOS_2_3_R39               1

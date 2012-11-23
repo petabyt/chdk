@@ -35,6 +35,8 @@
     #undef  CAM_HAS_USER_TV_MODES
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Display", "Playback" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_DISPLAY, KEY_PLAYBACK }
 
     #undef  CAM_REMOTE
     #undef  CAM_SYNCH

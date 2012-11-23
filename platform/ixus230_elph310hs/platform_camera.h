@@ -29,6 +29,8 @@
 #define CAM_AV_OVERRIDE_IRIS_FIX		1
 #define CAM_KEY_CLICK_DELAY 			150
 #define CAM_ADJUSTABLE_ALT_BUTTON		1
+#define CAM_ALT_BUTTON_NAMES            { "Playback", "Display", "Video" }
+#define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_DISPLAY, KEY_VIDEO }
 
 #define	CAM_DATE_FOLDER_NAMING		    1
 #define CAM_HAS_ND_FILTER		        1 // verify

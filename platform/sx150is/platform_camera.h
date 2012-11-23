@@ -37,6 +37,8 @@
     #define CAM_UNCACHED_BIT                            0x40000000
 
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
+    #define CAM_ALT_BUTTON_NAMES                { "Playback", "Video", "Display" }
+    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
 
     #define CAM_DNG_LENS_INFO                           { 50,10, 600,10, 34,10, 56,10 } // See comments in camera.h
     // pattern

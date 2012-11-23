@@ -28,6 +28,8 @@
     #undef  CAM_SYNCH
     #define CAM_SWIVEL_SCREEN               1
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Shrtcut", "Flash", "Timer", "ISO", "Video" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_FLASH, KEY_TIMER, KEY_ISO, KEY_VIDEO }
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  CAM_VIDEO_CONTROL

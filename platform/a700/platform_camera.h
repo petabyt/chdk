@@ -30,6 +30,8 @@
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 2
     #define CAM_EV_IN_VIDEO                 1
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Print", "Display" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_DISPLAY }
 
     #define CAM_DNG_LENS_INFO               { 58,10, 348,10, 28,10, 48,10 } // See comments in camera.h
     // pattern

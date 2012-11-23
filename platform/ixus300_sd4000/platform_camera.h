@@ -53,6 +53,8 @@
     #define CAM_DATE_FOLDER_NAMING          1
     //#define CAM_DRAW_EXPOSITION             1      // not required because Canon Firmware does always show it on Shutter half press
     #define CAM_ADJUSTABLE_ALT_BUTTON       1      
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Up + Left" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_UP | KEY_LEFT }
 
     #define PARAM_CAMERA_NAME               4        // parameter number for GetParameterData to get camera name
 

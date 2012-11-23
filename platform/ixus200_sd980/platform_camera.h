@@ -28,8 +28,6 @@
     #define CAM_RAW_ROWPIX                  4080 // from calcs see 100C lib.c
     #define CAM_RAW_ROWS                    3048 //  "     "    "    "    "
 
-    #define CAM_ADJUSTABLE_ALT_BUTTON       0
-
     #define CAM_HAS_VIDEO_BUTTON            1
     #define CAM_VIDEO_QUALITY_ONLY          1
     #define CAM_BRACKETING                  1

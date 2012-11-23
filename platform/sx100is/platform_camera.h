@@ -30,6 +30,8 @@
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Print", "Face" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_FACE }
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_REAR_CURTAIN                1

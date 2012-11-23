@@ -27,6 +27,8 @@
     #define CAM_RAW_ROWS                    3048    // for 12 MP
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Print", "ISO" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_ISO }
     #define CAM_SWIVEL_SCREEN               1
     #define CAM_CAN_MUTE_MICROPHONE         1
 

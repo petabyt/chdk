@@ -28,7 +28,9 @@
     #undef  CAM_HAS_CMOS                        // Camera has CMOS sensor
     #undef  CAM_SWIVEL_SCREEN                   // Camera has rotated LCD screen
     #define CAM_USE_ZOOM_FOR_MF             1   // Zoom lever can be used for manual focus adjustments
-    #undef  CAM_ADJUSTABLE_ALT_BUTTON           // ALT-button can be set from menu
+    #undef  CAM_ADJUSTABLE_ALT_BUTTON           // ALT-button can be set from menu, must set next two values as well
+    #undef  CAM_ALT_BUTTON_NAMES                // Define the list of names for the ALT button   - e.g. { "Print", "Display" }
+    #undef  CAM_ALT_BUTTON_OPTIONS              // Define the list of options for the ALT button - e.g. { KEY_PRINT, KEY_DISPLAY }
     #define CAM_REMOTE                      1   // Camera supports USB-remote
     #undef  SYNCHABLE_REMOTE_NOT_ENABLED        // Disable support for synchable remote switch (in kbd.c) TODO only used by one camera ???
     #define CAM_SYNCH                       1   // Camera supports SDM precision synch
