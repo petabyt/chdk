@@ -27,9 +27,13 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
     // before raw_savefile tries to get the file name & directory.
     // Add '#define PAUSE_FOR_FILE_COUNTER 100' in the camera firmware capt_seq.c file.
     // The value can be adjusted as needed for different cameras.
+    // The code will delay for the specified time or until the file counter changes
     if (conf.save_raw && is_raw_enabled())  // Only delay if RAW enabled (prevents slowdown in HQ burst mode)
     {
-        _SleepTask(PAUSE_FOR_FILE_COUNTER);
+        int fc = get_file_counter();
+        int tc = get_tick_count() + PAUSE_FOR_FILE_COUNTER;
+        while ((get_file_counter() == fc) && (get_tick_count() < tc))
+            _SleepTask(10);
     }
 #endif
 
