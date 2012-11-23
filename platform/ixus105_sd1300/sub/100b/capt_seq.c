@@ -91,7 +91,6 @@ asm volatile (
       "MOV     R0, R5 \n"
 //      "BL      sub_FFD20314 \n"   //original
       "BL      sub_FFD20314_my \n"  //patched
-      "BL      capt_seq_hook_raw_here\n"      // +
       "TST     R0, #1 \n"
       "STRNE   R9, [R6, #0x10] \n"
       "B       loc_FFC5FCB0 \n"
@@ -352,7 +351,6 @@ asm volatile (
 //      "BL      sub_FFD20314 \n"  //original
      "BL      sub_FFD20314_my \n"  //patched
       "MOV     R5, R0 \n"
-      "BL      capt_seq_hook_raw_here\n"      // +
       "B       loc_FFC5FE74 \n"
 "loc_FFC5FE64:\n"
       "LDR     R0, =0x2850 \n"
@@ -360,6 +358,7 @@ asm volatile (
       "CMP     R0, #0 \n"
       "MOVNE   R5, #0x1D \n"
 "loc_FFC5FE74:\n"
+      "BL      capt_seq_hook_raw_here\n" // ++++->
       "BL      sub_FFC62930 \n"
       "BL      sub_FFC62978 \n"
       "BL      sub_FFC629B8 \n"
