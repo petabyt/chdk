@@ -6,6 +6,8 @@
 
 static long *nrflag = (long*)0x5CB4;
 
+#define PAUSE_FOR_FILE_COUNTER 150
+
 #include "../../../generic/capt_seq.c"
 
 
