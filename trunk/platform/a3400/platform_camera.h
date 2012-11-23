@@ -97,7 +97,9 @@
     #undef CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                720   // Actual width of bitmap screen in bytes
 
-    #define  CAM_ADJUSTABLE_ALT_BUTTON       1    // ALT-button can be set from menu
+    #define  CAM_ADJUSTABLE_ALT_BUTTON      1    // ALT-button can be set from menu
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Help" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_HELP }
 
     #define CAM_FIRMWARE_MEMINFO             1
 

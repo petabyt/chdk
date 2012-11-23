@@ -96,3 +96,5 @@
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Print", "Face", "Disp"}
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_FACE, KEY_DISPLAY }

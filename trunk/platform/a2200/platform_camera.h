@@ -110,7 +110,9 @@
 	
 	#define CAM_SHOW_OSD_IN_SHOOT_MENU	1
 
-    #define  CAM_ADJUSTABLE_ALT_BUTTON       1    // ALT-button can be set from menu
+    #define  CAM_ADJUSTABLE_ALT_BUTTON      1    // ALT-button can be set from menu
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Face", "Disp" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_FACE, KEY_DISPLAY }
 	
 	// Not sure values
 	//

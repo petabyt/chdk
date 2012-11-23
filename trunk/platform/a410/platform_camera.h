@@ -33,6 +33,8 @@
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_MANUAL_FOCUS
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Print", "Display" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_DISPLAY }
 
     #undef  CAM_HAS_USER_TV_MODES
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1

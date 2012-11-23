@@ -1795,65 +1795,11 @@ static CMenu menu_settings_submenu = {0x26,LANG_MENU_MENU_SETTINGS, NULL, menu_s
 
 static const char* gui_alt_mode_button_enum(int change, int arg)
 {
-#if defined(CAMERA_s2is) || defined(CAMERA_s3is) || defined(CAMERA_s5is)
-    static const char* names[]={ "Shrtcut", "Flash", "Timer", "ISO", "Video" };
-    static const int keys[]={ KEY_PRINT, KEY_FLASH, KEY_TIMER, KEY_ISO, KEY_VIDEO };
-#elif defined(CAMERA_g7) || defined(CAMERA_g9)
-    static const char* names[]={ "Print", "FE"};
-    static const int keys[]={ KEY_PRINT, KEY_MICROPHONE };
-#elif defined(CAMERA_g10) || defined(CAMERA_g12)  
-    static const char* names[]={ "Print", "Disp",  "AE Lock", "Jump" };
-    static const int keys[]={ KEY_PRINT, KEY_DISPLAY, KEY_AE_LOCK, KEY_METERING};
-#elif defined(CAMERA_g11)
-    static const char* names[]={ "Print", "Disp",  "AE Lock", "Jump" };
-    static const int keys[]={ KEY_PRINT, KEY_DISPLAY, KEY_MICROPHONE, KEY_METERING};	
-#elif defined(CAMERA_a650)
-    static const char* names[]={ "Print", "ISO"};
-    static const int keys[]={ KEY_PRINT, KEY_ISO };
-#elif defined(CAMERA_a810) || defined(CAMERA_a1300) || defined(CAMERA_a3400)
-    static const char* names[]={ "Playback", "Help"};
-    static const int keys[]={ KEY_PRINT, KEY_HELP };
-#elif defined(CAMERA_a3300) || defined(CAMERA_a3200)
-    static const char* names[]={ "Print", "Face", "Disp"};
-    static const int keys[]={ KEY_PRINT, KEY_FACE, KEY_DISPLAY };
-#elif defined(CAMERA_sx100is) || defined(CAMERA_sx110is)
-    static const char* names[]={ "Print", "Face"};
-    static const int keys[]={ KEY_PRINT, KEY_FACE };
-#elif defined(CAMERA_sx10) || defined(CAMERA_sx1) || defined(CAMERA_sx20) || defined(CAMERA_sx30) || defined(CAMERA_sx40hs) || defined(CAMERA_sx50hs)
-    static const char* names[]={ "Shrtcut", "Flash", "Video"};
-    static const int keys[]={ KEY_PRINT, KEY_FLASH, KEY_VIDEO };
-#elif defined(CAMERA_a410) || defined(CAMERA_a430) || defined(CAMERA_a420) || defined(CAMERA_a530) || defined(CAMERA_a540) || defined(CAMERA_a570) || defined(CAMERA_a580) || defined(CAMERA_a590) ||defined(CAMERA_a630) || defined(CAMERA_a640) || defined(CAMERA_a610) || defined(CAMERA_a620) || defined(CAMERA_a700) || defined(CAMERA_a710) || defined(CAMERA_a720) || defined(CAMERA_ixus65_sd630) || defined(CAMERA_ixus800_sd700) 
-    static const char* names[]={ "Print", "Display"};
-    static const int keys[] = {KEY_PRINT, KEY_DISPLAY};
-#elif defined(CAMERA_sx150is) || (CAMERA_sx220hs) || defined(CAMERA_sx230hs) || defined(CAMERA_s100)
-    static const char* names[]={ "Playback", "Video", "Display" };
-    static const int keys[] = {KEY_PRINT, KEY_VIDEO, KEY_DISPLAY};
-#elif defined(CAMERA_ixus220_elph300hs)
-    static const char* names[]={ "Video", "Display", "Playback", "Video"};
-    static const int keys[] = {KEY_PRINT, KEY_DISPLAY, KEY_PLAYBACK, KEY_VIDEO};
-#elif defined(CAMERA_ixus230_elph310hs)
-    static const char* names[]={ "Playback", "Display", "Video"};
-    static const int keys[] = {KEY_PLAYBACK, KEY_DISPLAY, KEY_VIDEO};
-#elif defined(CAMERA_ixus115_elph100hs)
-    static const char* names[]={ "Playback", "Video", "Set+ZoomIn" };
-    static const int keys[] = {KEY_PLAYBACK, KEY_VIDEO, KEY_SET | KEY_ZOOM_IN };
-#elif defined(CAMERA_ixus300_sd4000)
-    static const char* names[]={ "Playback", "Up + Left" };
-    static const int keys[] = {KEY_PLAYBACK, KEY_UP | KEY_LEFT };
-#elif defined(CAMERA_ixus120_sd940) || (CAMERA_ixus100_sd780) || defined(CAMERA_ixus105_sd1300)
-    static const char* names[]={ "Display", "Playback" };
-    static const int keys[] = {KEY_DISPLAY, KEY_PLAYBACK };
-#elif defined(CAMERA_a1200) || defined(CAMERA_a2200)
-        static const char* names[]={ "Playback", "Face", "Disp"};
-        static const int keys[]={ KEY_PLAYBACK, KEY_FACE, KEY_DISPLAY };
-#elif defined(CAMERA_g1x)
-    static const char* names[]={ "Shrtcut", "Video", "Meter", "AE Lock", "Erase" };
-        static const int keys[]={ KEY_PRINT, KEY_VIDEO, KEY_DISPLAY, KEY_AE_LOCK, KEY_ERASE };
-#elif defined(CAMERA_a3100)  || (CAMERA_a3150)
-    static const char* names[]={ "Playback", "Print", "Disp"};
-    static const int keys[]={ KEY_PLAYBACK, KEY_PRINT, KEY_DISPLAY };
+#if defined(CAM_ALT_BUTTON_NAMES) && defined(CAM_ALT_BUTTON_OPTIONS)
+    static const char* names[] = CAM_ALT_BUTTON_NAMES;
+    static const int keys[] = CAM_ALT_BUTTON_OPTIONS;
 #else
-#error camera alt-buttons not defined
+#error Make sure CAM_ALT_BUTTON_NAMES and CAM_ALT_BUTTON_OPTIONS are defined in platform_camera.h
 #endif
     int i;
 

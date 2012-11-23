@@ -30,6 +30,8 @@
     #define CAM_EMUL_KEYPRESS_DURATION      10
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Print", "Disp",  "AE Lock", "Jump" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_DISPLAY, KEY_AE_LOCK, KEY_METERING}
 
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_MULTIPART                   1
