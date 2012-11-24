@@ -27,6 +27,8 @@
 
     #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Print", "FE" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_MICROPHONE }
     #define CAM_MULTIPART                   1
     #define CAM_HAS_ND_FILTER               1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1

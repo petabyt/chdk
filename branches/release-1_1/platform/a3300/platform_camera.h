@@ -31,6 +31,8 @@
     #define CAM_RAW_ROWS                    3504    // Found @0xFFB21398  a3300is
 
     #define CAM_ADJUSTABLE_ALT_BUTTON 1
+    #define CAM_ALT_BUTTON_NAMES            { "Print", "Face", "Disp"}
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_FACE, KEY_DISPLAY }
 
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000  // Found @0xff83a6a8   a3300is
