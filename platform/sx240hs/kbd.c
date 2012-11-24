@@ -58,18 +58,12 @@ static KeyMap keymap[] = {
     { 1, KEY_SHOOT_FULL      ,0x03000000 }, // Found @0xff441560, levent 0x01
     { 1, KEY_SHOOT_FULL_ONLY ,0x02000000 }, // Found @0xff441560, levent 0x01
     { 1, KEY_SHOOT_HALF      ,0x01000000 }, // Found @0xff441558, levent 0x00
-    { 1, KEY_ZOOM_OUT        , 0x08000000 },    // From sx260hs
-    { 1, KEY_ZOOM_OUT1       , 0x08000000 },
-    { 1, KEY_ZOOM_OUT        , 0x0C000000 },
-    { 1, KEY_ZOOM_OUT3       , 0x0C000000 },
+    { 1, KEY_ZOOM_OUT        , 0x0C000000 },    // From sx260hs
     { 1, KEY_ZOOM_OUT        , 0x04000000 },
-    { 1, KEY_ZOOM_OUT2       , 0x04000000 },
-    { 1, KEY_ZOOM_IN         , 0x10000000 },
-    { 1, KEY_ZOOM_IN1        , 0x10000000 },
+    { 1, KEY_ZOOM_OUT        , 0x08000000 },
     { 1, KEY_ZOOM_IN         , 0x30000000 },
-    { 1, KEY_ZOOM_IN3        , 0x30000000 },
+    { 1, KEY_ZOOM_IN         , 0x10000000 },
     { 1, KEY_ZOOM_IN         , 0x20000000 },
-    { 1, KEY_ZOOM_IN2        , 0x20000000 },
     { 1, KEY_POWER           ,0x00400000 }, // Found @0xff441548, levent 0x100
     { 1, KEY_PLAYBACK        ,0x00800000 }, // Found @0xff441550, levent 0x101    
     { 2, KEY_VIDEO           ,0x00000020 }, // Found @0xff4415b0, levent 0x1a
@@ -229,7 +223,8 @@ long kbd_is_key_pressed(long key) {
 
     for (i=0;keymap[i].hackkey;i++) {
         if (keymap[i].hackkey == key) {
-            return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
+			if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)
+                return 1;
         }
     }
     return 0;
@@ -278,7 +273,7 @@ long kbd_get_autoclicked_key() {
     register long key, t;
 
     key=kbd_get_clicked_key();
-    if (key) {
+    if (key && (key != last_kbd_key)) {
         last_kbd_key = key;
         press_count = 0;
         last_kbd_time = get_tick_count();
