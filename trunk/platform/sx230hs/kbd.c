@@ -57,18 +57,12 @@ static char kbd_stack[NEW_SS];
 
 static KeyMap keymap[] = {
 
-    { 0, KEY_ZOOM_OUT        , 0x00000001 },
-    { 0, KEY_ZOOM_OUT1       , 0x00000001 },
-    { 0, KEY_ZOOM_OUT        , 0x00000002 },
-    { 0, KEY_ZOOM_OUT3       , 0x00000002 },
     { 0, KEY_ZOOM_OUT        , 0x00000003 },
-    { 0, KEY_ZOOM_OUT2       , 0x00000003 },
-    { 0, KEY_ZOOM_IN         , 0x00000004 },
-    { 0, KEY_ZOOM_IN1        , 0x00000004 },
-    { 0, KEY_ZOOM_IN         , 0x00000008 },
-    { 0, KEY_ZOOM_IN3        , 0x00000008 },
+    { 0, KEY_ZOOM_OUT        , 0x00000001 },
+    { 0, KEY_ZOOM_OUT        , 0x00000002 },
     { 0, KEY_ZOOM_IN         , 0x0000000C },
-    { 0, KEY_ZOOM_IN2        , 0x0000000C },
+    { 0, KEY_ZOOM_IN         , 0x00000004 },
+    { 0, KEY_ZOOM_IN         , 0x00000008 },
     { 0, KEY_UP_SOFT         , 0x00000400 },
     { 0, KEY_DISPLAY         , 0x00000800 },
     { 0, KEY_UP              , 0x00001000 },
@@ -249,7 +243,8 @@ long kbd_is_key_pressed(long key) {
 	int i;
     for (i=0;keymap[i].hackkey;i++) {
         if (keymap[i].hackkey == key) {
-            return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
+			if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)
+                return 1;
         }
     }
     return 0;
@@ -300,7 +295,7 @@ long kbd_get_autoclicked_key() {
     register long key, t;
 
     key=kbd_get_clicked_key();
-    if (key) {
+    if (key && (key != last_kbd_key)) {
         last_kbd_key = key;
         press_count = 0;
         last_kbd_time = get_tick_count();

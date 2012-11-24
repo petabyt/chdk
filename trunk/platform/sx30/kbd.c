@@ -55,36 +55,30 @@ int get_usb_bit()
 
 static KeyMap keymap[] = {
 
-	{ 0, KEY_ZOOM_IN	, 0x00000020 }, // 2 bits used, 4 values (0x00000060)
-	{ 0, KEY_ZOOM_IN1	, 0x00000020 }, // 2 bits used, 4 values (0x00000060)
-	{ 0, KEY_ZOOM_IN	, 0x00000040 }, // 2 bits used, 4 values (0x00000060)
-	{ 0, KEY_ZOOM_IN2	, 0x00000040 }, // 2 bits used, 4 values (0x00000060)
-	{ 0, KEY_ZOOM_IN	, 0x00000060 }, // 2 bits used, 4 values (0x00000060)
-	{ 0, KEY_ZOOM_IN3	, 0x00000060 }, // 2 bits used, 4 values (0x00000060)
-	{ 0, KEY_ZOOM_OUT	, 0x00000080 }, // 2 bits used, 4 values (0x00000180)
-	{ 0, KEY_ZOOM_OUT1	, 0x00000080 }, // 2 bits used, 4 values (0x00000180)
-	{ 0, KEY_ZOOM_OUT	, 0x00000100 }, // 2 bits used, 4 values (0x00000180)
-	{ 0, KEY_ZOOM_OUT2	, 0x00000100 }, // 2 bits used, 4 values (0x00000180)
-	{ 0, KEY_ZOOM_OUT	, 0x00000180 }, // 2 bits used, 4 values (0x00000180)
-	{ 0, KEY_ZOOM_OUT3	, 0x00000180 }, // 2 bits used, 4 values (0x00000180)
-	{ 0, KEY_UP			, 0x00000400 },
-	{ 0, KEY_DOWN		, 0x00000800 },
-	{ 0, KEY_LEFT		, 0x00001000 },
-	{ 0, KEY_RIGHT		, 0x00002000 },
-	{ 0, KEY_SET		, 0x00004000 },
-	{ 0, KEY_VIDEO      , 0x00008000 },
-	{ 0, KEY_ZOOM_ASSIST, 0x00010000 },
-	{ 0, KEY_DISPLAY	, 0x00020000 },
-	{ 0, KEY_MENU		, 0x00040000 },
-	{ 0, KEY_ERASE		, 0x00080000 },
-	{ 0, KEY_FLASH      , 0x00400000 },
-	{ 0, KEY_PRINT		, 0x00800000 },
+	{ 0, KEY_ZOOM_IN	        ,0x00000060 }, // 2 bits used, 4 values (0x00000060)
+	{ 0, KEY_ZOOM_IN	        ,0x00000020 }, // 2 bits used, 4 values (0x00000060)
+	{ 0, KEY_ZOOM_IN	        ,0x00000040 }, // 2 bits used, 4 values (0x00000060)
+	{ 0, KEY_ZOOM_OUT	        ,0x00000180 }, // 2 bits used, 4 values (0x00000180)
+	{ 0, KEY_ZOOM_OUT	        ,0x00000080 }, // 2 bits used, 4 values (0x00000180)
+	{ 0, KEY_ZOOM_OUT	        ,0x00000100 }, // 2 bits used, 4 values (0x00000180)
+	{ 0, KEY_UP			        ,0x00000400 },
+	{ 0, KEY_DOWN		        ,0x00000800 },
+	{ 0, KEY_LEFT		        ,0x00001000 },
+	{ 0, KEY_RIGHT		        ,0x00002000 },
+	{ 0, KEY_SET		        ,0x00004000 },
+	{ 0, KEY_VIDEO              ,0x00008000 },
+	{ 0, KEY_ZOOM_ASSIST        ,0x00010000 },
+	{ 0, KEY_DISPLAY	        ,0x00020000 },
+	{ 0, KEY_MENU		        ,0x00040000 },
+	{ 0, KEY_ERASE		        ,0x00080000 },
+	{ 0, KEY_FLASH              ,0x00400000 },
+	{ 0, KEY_PRINT		        ,0x00800000 },
 
-	{ 2, KEY_SHOOT_FULL	, 0x00000300 },
-    { 2, KEY_SHOOT_FULL_ONLY, 0x00000200 },	 // http://chdk.setepontos.com/index.php?topic=1444.msg70223#msg70223
-	{ 2, KEY_SHOOT_HALF	, 0x00000100 },
-    { 2, KEY_POWER           ,0x00000400 }, // Found @0xffb979fc, levent 0x600
-    { 2, KEY_PLAYBACK        ,0x00000800 }, // Found @0xffb97a04, levent 0x601
+	{ 2, KEY_SHOOT_FULL	        ,0x00000300 },
+    { 2, KEY_SHOOT_FULL_ONLY    ,0x00000200 },	 // http://chdk.setepontos.com/index.php?topic=1444.msg70223#msg70223
+	{ 2, KEY_SHOOT_HALF	        ,0x00000100 },
+    { 2, KEY_POWER              ,0x00000400 }, // Found @0xffb979fc, levent 0x600
+    { 2, KEY_PLAYBACK           ,0x00000800 }, // Found @0xffb97a04, levent 0x601
 
 	{ 0, 0, 0 } 
 };
@@ -202,7 +196,8 @@ void kbd_key_press(long key)
 {
 	int i;
 
-	for (i=0;keymap[i].hackkey;i++){
+	for (i=0;keymap[i].hackkey;i++)
+    {
 		if (keymap[i].hackkey == key)
 		{
 			kbd_mod_state[keymap[i].grp] &= ~keymap[i].canonkey;
@@ -214,8 +209,10 @@ void kbd_key_press(long key)
 void kbd_key_release(long key)
 {
 	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
+	for (i=0;keymap[i].hackkey;i++)
+    {
+		if (keymap[i].hackkey == key)
+        {
 			kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
 			return;
 		}
@@ -232,9 +229,12 @@ void kbd_key_release_all()
 long kbd_is_key_pressed(long key)
 {
 	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
+	for (i=0;keymap[i].hackkey;i++)
+    {
+		if (keymap[i].hackkey == key)
+        {
+			if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)
+                return 1;
 		}
 	}
 	return 0;
@@ -243,8 +243,10 @@ long kbd_is_key_pressed(long key)
 long kbd_is_key_clicked(long key)
 {
 	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
+	for (i=0;keymap[i].hackkey;i++)
+    {
+		if (keymap[i].hackkey == key)
+        {
 			return ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
 			       ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0);
 		}
@@ -255,8 +257,10 @@ long kbd_is_key_clicked(long key)
 long kbd_get_pressed_key()
 {
 	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0){
+	for (i=0;keymap[i].hackkey;i++)
+    {
+		if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)
+        {
 			return keymap[i].hackkey;
 		}
 	}
@@ -266,40 +270,53 @@ long kbd_get_pressed_key()
 long kbd_get_clicked_key()
 {
 	int i;
-	for (i=0;keymap[i].hackkey;i++){
+	for (i=0;keymap[i].hackkey;i++)
+    {
 		if (((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-		    ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)) {
+		    ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0))
+        {
 			return keymap[i].hackkey;
 		}
 	}
 	return 0;
 }
 
-void kbd_reset_autoclicked_key() {
+void kbd_reset_autoclicked_key()
+{
 	last_kbd_key = 0;
 }
 
-long kbd_get_autoclicked_key() {
+long kbd_get_autoclicked_key()
+{
 	static long last_kbd_time = 0, press_count = 0;
 	register long key, t;
 
 	key=kbd_get_clicked_key();
-	if (key) {
+	if (key && (key != last_kbd_key))
+    {
 		last_kbd_key = key;
 		press_count = 0;
 		last_kbd_time = get_tick_count();
 		return key;
-	} else {
-		if (last_kbd_key && kbd_is_key_pressed(last_kbd_key)) {
+	}
+    else
+    {
+		if (last_kbd_key && kbd_is_key_pressed(last_kbd_key))
+        {
 			t = get_tick_count();
-			if (t-last_kbd_time>((press_count)?175:500)) {
+			if (t-last_kbd_time>((press_count)?175:500))
+            {
 				++press_count;
 				last_kbd_time = t;
 				return last_kbd_key;
-			} else {
+			}
+            else
+            {
 				return 0;
 			}
-		} else {
+		}
+        else
+        {
 			last_kbd_key = 0;
 			return 0;
 		}
