@@ -19,7 +19,6 @@ NHSTUB(ExpCtrlTool_StopContiAE,     0xFF91F0FC)
 NHSTUB(GetLogToFile,                0xFFB44520) // GetLogToFile() -> A/ROMLOG.txt
 NHSTUB(MFOff,                       0xFF98FC20)
 NHSTUB(MFOn,                        0xFF98FBF0)
-NHSTUB(Rename,                      0xFF87B644)
 NHSTUB(SetScriptMode,               0xFF9A6394)
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFF8E5AAC)
 NHSTUB(iosInit,                     0xFFB58E2C)

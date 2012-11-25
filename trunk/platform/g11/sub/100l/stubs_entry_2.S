@@ -5,7 +5,6 @@
 NHSTUB(SetScriptMode,               0xFF810F4C)
 NHSTUB(TurnOffBackLight,            0xFF8A348C)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
-NHSTUB(rename,                      0xFF835A8C)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)

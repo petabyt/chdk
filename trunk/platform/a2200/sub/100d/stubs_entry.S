@@ -103,11 +103,11 @@ NSTUB(AllocateUncacheableMemory               ,0xff83a660) //112
 NSTUB(Close                                   ,0xff836d7c) //101
 NSTUB(CreateTask                              ,0xff81e9b0) //101
 NSTUB(DebugAssert                             ,0xff81ec88) //111
-NSTUB(DeleteDirectory_Fut                     ,0xff836778) //  1
+NSTUB(DeleteDirectory_Fut                     ,0xff836778) //116
 NSTUB(DeleteFile_Fut                          ,0xff836694) //112
 NSTUB(DoAFLock                                ,0xff8384c8) //102
 NSTUB(EnterToCompensationEVF                  ,0xff838724) //104
-NSTUB(ExecuteEventProcedure                   ,0xff886db8) //  2
+NSTUB(ExecuteEventProcedure                   ,0xff886db8) //104
 NSTUB(ExitFromCompensationEVF                 ,0xff838768) //104
 NSTUB(ExitTask                                ,0xff81ec40) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff846c78) //104
@@ -132,7 +132,7 @@ NSTUB(GetFocusLensSubjectDistance             ,0xff95e124) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xff95e584) //  3
 NSTUB(GetImageFolder                          ,0xff93e9ac) //  6
 NSTUB(GetKbdState                             ,0xff8602b4) //109
-NSTUB(GetMemInfo                              ,0xff81a29c) //  3
+NSTUB(GetMemInfo                              ,0xff81a29c) //115
 NSTUB(GetOpticalTemperature                   ,0xff862250) //102
 NSTUB(GetParameterData                        ,0xff98e56c) //101
 NSTUB(GetPropertyCase                         ,0xff88ab20) //102
@@ -167,7 +167,7 @@ NSTUB(ReadFastDir                             ,0xffa8b014) //  6
 NSTUB(Rec2PB                                  ,0xff892be4) //104
 NSTUB(RefreshPhysicalScreen                   ,0xff8a3468) //104
 NSTUB(Remove                                  ,0xff836ef0) //  6
-NSTUB(RenameFile_Fut                          ,0xff836600) //  6
+NSTUB(RenameFile_Fut                          ,0xff836600) //116
 NSTUB(Restart                                 ,0xff83be70) //106
 NSTUB(ScreenLock                              ,0xff8a46a0) //  4
 NSTUB(ScreenUnlock                            ,0xff8a4704) //  3
@@ -199,7 +199,7 @@ NSTUB(add_ptp_handler                         ,0xffa40c00) //  6
 NSTUB(apex2us                                 ,0xffa05a10) //  4
 NSTUB(close                                   ,0xff81abb4) //  6
 NSTUB(closedir                                ,0xffa8ae70) //  4
-NSTUB(err_init_task                           ,0xff815fd4) //  4
+NSTUB(err_init_task                           ,0xff815fd4) //111
 NSTUB(exmem_alloc                             ,0xff885670) //101
 NSTUB(free                                    ,0xff814244) //112
 NSTUB(kbd_p1_f                                ,0xff8346d4) //109
@@ -214,16 +214,14 @@ NSTUB(memcpy                                  ,0xff83fce0) //101
 NSTUB(memset                                  ,0xffa04a10) //101
 NSTUB(mktime_ext                              ,0xff8a54e4) //  1
 NSTUB(open                                    ,0xff81ab04) //  6
-NSTUB(opendir                                 ,0xffa8aec0) //  6
-NSTUB(openfastdir                             ,0xffa8aec0) //  6
+NSTUB(OpenFastDir                             ,0xffa8aec0) //  6
 NSTUB(qsort                                   ,0xffaf6500) //  6
 NSTUB(rand                                    ,0xffa04b50) //  6
 NSTUB(read                                    ,0xff81ad58) //101
 NSTUB(reboot_fw_update                        ,0xffa904b0) //106
-NSTUB(rename                                  ,0xff836600) //  6
 NSTUB(set_control_event                       ,0xff88f418) //111
 NSTUB(srand                                   ,0xffa04b44) //  6
-NSTUB(stat                                    ,0xff836fe0) //  3
+NSTUB(stat                                    ,0xff836fe0) //109
 NSTUB(strcat                                  ,0xff8a4c9c) //  1
 NSTUB(strchr                                  ,0xff8140b8) //  1
 NSTUB(strcmp                                  ,0xff820878) //101
@@ -240,6 +238,6 @@ NSTUB(strtolx                                 ,0xff83fde4) //109
   DEF(task_InitFileModules                    ,0xff8933bc) //110
   DEF(task_MovieRecord                        ,0xff964148) //110
   DEF(task_PhySw                              ,0xff834214) //110
-NSTUB(time                                    ,0xff884c84) //  6
-NSTUB(vsprintf                                ,0xff820820) //  6
+NSTUB(time                                    ,0xff884c84) //109
+NSTUB(vsprintf                                ,0xff820820) //115
 NSTUB(write                                   ,0xff836dd0) //101

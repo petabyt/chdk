@@ -18,7 +18,6 @@ NHSTUB(ExpCtrlTool_StartContiAE,    0xFF926EE0)
 NHSTUB(ExpCtrlTool_StopContiAE,     0xFF926F10)
 NHSTUB(MFOff,                       0xFF9961C8)
 NHSTUB(MFOn,                        0xFF996198)
-NHSTUB(Rename,                      0xFF87A4CC)
 NHSTUB(SetScriptMode,               0xFF9ABC48)
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFF8E68F4)
 NHSTUB(GetVRAMHPixelsSize,0xFFB19684) // by find_eventproc name @ 0xFFB7E12C

@@ -7,7 +7,6 @@ NHSTUB(GetBatteryTemperature,       0xFFC33494) //point to GetCCDTemperature
 NHSTUB(Lseek,                       0xFFC1354C)
 NHSTUB(Read,                        0xFFC133EC)
 NHSTUB(kbd_pwr_off,                 0xFFC31418)
-NHSTUB(rename,                      0xffc13418)
 NHSTUB(write,                       0xffc0a198)
 
 // These don't exist/aren't found in dryos

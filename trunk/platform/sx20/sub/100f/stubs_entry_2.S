@@ -10,7 +10,6 @@ NHSTUB(UnlockAF,                    0xFF8796C4)
 NHSTUB(VbattGet,                    0xff95d0ec)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
-NHSTUB(openfastdir,                 0xDEADC0DE)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)

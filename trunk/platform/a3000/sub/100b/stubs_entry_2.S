@@ -10,7 +10,6 @@ NHSTUB(ScreenUnlock,                0xFFD85BA4)
 NHSTUB(SetScriptMode,               0xFFC00F70)
 NHSTUB(UnlockAF,                    0xFFC59F38)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
-NHSTUB(rename,                      0xFFC26394)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
