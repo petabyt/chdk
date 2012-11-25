@@ -32,6 +32,8 @@
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
     #define CAM_SWIVEL_SCREEN                   1
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
+    #define CAM_ALT_BUTTON_NAMES                { "Shrtcut", "Video", "Meter", "AE Lock", "Erase" }
+    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY, KEY_AE_LOCK, KEY_ERASE }
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                1
@@ -102,6 +104,8 @@
     #define CAM_SENSOR_BITS_PER_PIXEL           14
 
     #define CAM_EXT_TV_RANGE                    1
+    #undef CAM_EXT_AV_RANGE
+    #define CAM_EXT_AV_RANGE                    0       // G1X can't go below F/16 so set this to 0
     #define CAM_QUALITY_OVERRIDE                1
     #define CAM_REAR_CURTAIN                    1
 

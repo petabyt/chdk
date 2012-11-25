@@ -30,6 +30,8 @@
 	#define CAM_DRAW_EXPOSITION				1
 	#undef  CAM_HAS_ERASE_BUTTON
 	#define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Print", "Display" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_DISPLAY }
 
 	#undef  CAM_HAS_IRIS_DIAPHRAGM
 	#define CAM_HAS_ND_FILTER				1

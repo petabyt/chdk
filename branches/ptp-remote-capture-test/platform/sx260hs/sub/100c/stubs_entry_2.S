@@ -3,8 +3,8 @@
 
 // Override stubs_entry.S
 NHSTUB(LEDDrive,                    0xFF04D06C)
-NHSTUB(DeleteFile_Fut,              NULL_SUB)       // ? not in 100a
-NHSTUB(MakeDirectory_Fut,           0xFF02214C)
+NHSTUB(DeleteFile_Fut,              0xFF02163C)
+NHSTUB(MakeDirectory_Fut,           0xFF02214C)     //mkdir
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
 NHSTUB(reboot_fw_update,            0xFF3355A0)     //  asm1899 100b was: FF335538 finsig: 6 64%  0xff33553c

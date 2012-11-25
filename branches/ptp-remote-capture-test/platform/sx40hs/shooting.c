@@ -164,4 +164,4 @@ long get_target_dir_num() {
 }
 #endif
 
-int circle_of_confusion = 5;
+int circle_of_confusion = 5;   // calculated at http://www.dofmaster.com/digital_coc.html

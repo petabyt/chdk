@@ -52,18 +52,12 @@ static KeyMap keymap[] = {
     { 0, KEY_SHOOT_FULL_ONLY, 0x00000200 },
     { 0, KEY_SHOOT_HALF     , 0x00000100 },
 
-    { 1, KEY_ZOOM_OUT       , 0x00000010 }, //method taken from the SX220 port
-    { 1, KEY_ZOOM_OUT1      , 0x00000010 },
+    { 1, KEY_ZOOM_OUT       , 0x00000030 }, //method taken from the SX220 port
+    { 1, KEY_ZOOM_OUT       , 0x00000010 },
     { 1, KEY_ZOOM_OUT       , 0x00000020 },
-    { 1, KEY_ZOOM_OUT3      , 0x00000020 },
-    { 1, KEY_ZOOM_OUT       , 0x00000030 },
-    { 1, KEY_ZOOM_OUT2      , 0x00000030 },
-    { 1, KEY_ZOOM_IN        , 0x00000040 },
-    { 1, KEY_ZOOM_IN1       , 0x00000040 },
-    { 1, KEY_ZOOM_IN        , 0x00000080 },
-    { 1, KEY_ZOOM_IN3       , 0x00000080 },
     { 1, KEY_ZOOM_IN        , 0x000000C0 },
-    { 1, KEY_ZOOM_IN2       , 0x000000C0 },
+    { 1, KEY_ZOOM_IN        , 0x00000040 },
+    { 1, KEY_ZOOM_IN        , 0x00000080 },
 
     { 1, KEY_UP             , 0x00000100 },
     { 1, KEY_DOWN           , 0x00001000 },
@@ -240,7 +234,8 @@ long kbd_is_key_pressed(long key)
 	int i;
 	for (i=0;keymap[i].hackkey;i++){
 		if (keymap[i].hackkey == key){
-			return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
+			if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)
+                return 1;
 		}
 	}
 	return 0;
@@ -291,7 +286,7 @@ long kbd_get_autoclicked_key() {
 	register long key, t;
 	
 	key=kbd_get_clicked_key();
-	if (key) {
+	if (key && (key != last_kbd_key)) {
 		last_kbd_key = key;
 		press_count = 0;
 		last_kbd_time = get_tick_count();

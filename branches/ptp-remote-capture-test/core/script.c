@@ -484,12 +484,6 @@ int load_params_values(const char *fn, int paramset)
                 ptr+=7;
                 process_values(ptr, 0);
             }
-			/* 	// this will reqruired to temporary scripts infrastructure
-				// only in data files (never in script)
-				// not implemented yet
-				else if (strncmp("@load_script", ptr, 12)==0) { 1;}
-				else if (strncmp("@load_paramset", ptr, 14)==0) { 1;}
-			*/
         }
         while (ptr[0] && ptr[0]!='\n') ++ptr; // unless end of line
         if (ptr[0]) ++ptr;
@@ -519,8 +513,6 @@ static void do_save_param_file( char* fn, char* script_file, int paramset )
     	fd = open(fn, O_WRONLY|O_CREAT|O_TRUNC, 0777);
     	if (fd >=0)
 		{
-			///// OLD FORMAT OF DATA FILE////
-
 			// store filename and current paramset
 			if (script_file) {
 				sprintf( buf, "@script_file %s\n", script_file );
@@ -537,7 +529,12 @@ static void do_save_param_file( char* fn, char* script_file, int paramset )
     		    {
     		        sprintf(buf,"@param %c %s\n@default %c %d\n",'a'+n,script_params[n],'a'+n,conf.script_vars[n]);
     		        if (script_range_values[n] != 0)
-    		            sprintf(buf+strlen(buf),"@range %c %d %d\n",'a'+n,(short)(script_range_values[n]&0xFFFF),(short)(script_range_values[n]>>16));
+                    {
+                        if (script_range_types[n] & MENUITEM_F_UNSIGNED)
+    		                sprintf(buf+strlen(buf),"@range %c %d %d\n",'a'+n,(unsigned short)(script_range_values[n]&0xFFFF),(unsigned short)(script_range_values[n]>>16));
+                        else
+    		                sprintf(buf+strlen(buf),"@range %c %d %d\n",'a'+n,(short)(script_range_values[n]&0xFFFF),(short)(script_range_values[n]>>16));
+                    }
     		        if (script_named_counts[n] != 0)
     		        {
     		            sprintf(buf+strlen(buf),"@values %c",'a'+n);
@@ -783,7 +780,7 @@ void load_params_names_cfg()
 //=======================================================
 
 //-------------------------------------------------------------------
-static int  print_screen_p;             // print_screen predicate: 0-off 1-on.
+static int  print_screen_p;             // print_screen predicate: 0=off, else is log file number. negative=append, postive=overwrite 
 static int  print_screen_d = -1;        // print_screen file descriptor.
 char print_screen_file[25];
 
@@ -823,6 +820,7 @@ void script_print_screen_statement(int val)
     print_screen_d = open(print_screen_file, O_WRONLY|O_CREAT|flag_trunc, 0777);
     if (print_screen_d>=0) lseek(print_screen_d,0,SEEK_END);
   }
+  else script_print_screen_end() ;
 }
 
 void script_console_add_line(const char *str)

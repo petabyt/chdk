@@ -318,11 +318,11 @@
 
 238 "Posebne foto operacije"
 239 "Posebne foto operacije"
-240 "Brzina zatvaraèa TV"
-241 "    Koeficijent"
+//240 "Brzina zatvaraèa TV"
+//241 "    Koeficijent"
 242 "Apertura AV"
 243 "ISO osjetljivost"
-244 "    Koeficijent"
+//244 "    Koeficijent"
 245 "Udaljenost"
 246 "    Koeficijent (mm)"
 
@@ -339,12 +339,12 @@
 256 "Autostart"
 257 "Omoguæi daljinsku kontr.USB"
 
-258 "Kontrola ekspozicije (No Flash)"
-259 "Kontrola ekspozicije (No Flash)"
-260 "Rekalk.ekspozicije"
-261 "TV rekalk.ekspozicije"
-262 "AV rekalk.ekspozicije"
-263 "ISO rekalk.ekspozicije"
+//258 "Kontrola ekspozicije (No Flash)"
+//259 "Kontrola ekspozicije (No Flash)"
+//260 "Rekalk.ekspozicije"
+//261 "TV rekalk.ekspozicije"
+//262 "AV rekalk.ekspozicije"
+//263 "ISO rekalk.ekspozicije"
 
 264 "Obriši prekrivanja na startu"
 
@@ -451,7 +451,7 @@
 348 "Preostalo vrijeme videa"
 349 "Obriši videoparam. na startu"
 350 "Omoguæi brzo EV prebacivanje"
-351 "   Korak (1 EV)"
+//351 "   Korak (1 EV)"
 352 "EV korekcija"
 353 "Obriši sve\nRAW dat. bez odgovarajuæih JPG\nu DCIM mapi?"
 354 "Obriši sve\nRAW dat. bez odgovarajuæih JPG\nu odabranoj mapi?"
@@ -548,7 +548,7 @@
 435 "Onemoguæi Raw u Panorami"
 436 "Onemoguæi Raw u Auto modu"
 437 "   SAMO u videu"
-438 "   Snaga bljeskalice"
+//438 "   Snaga bljeskalice"
 439 "'DNG' nastavak datoteke"
 440 "DNG vidljiv preko USB"
 441 "Planiranje"
@@ -698,18 +698,7 @@
 570 "SD kartica"
 571 "Jezik i font"
 
-//
-572 "Bljeskalica (snaga)"
-573 "Brzi EV korak"
-574 "Prikaži pomoæni prozor"
-575 "Koristi popup za ureðivanje"
+572 "Dodaj skriptu u korisnièki izbornik"
 
-576 "Dodaj skriptu u korisnièki izbornik"
-
-577 "Lijevo, Desno & Jogdial = Vrijednost"
-578 "Zoom = Odabir faktora"
-579 "SET  = Potvrdi, DISP = Odbaci"
-580 "MENU = Uklj./Isklj."
-
-581 "Beskrajan fokus"
-582 "Fokus faktor"
+573 "Beskrajan fokus"
+574 "Fokus faktor"

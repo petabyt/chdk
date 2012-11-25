@@ -33,6 +33,8 @@
     #define CAM_EMUL_KEYPRESS_DURATION      10
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Print", "Disp",  "AE Lock", "Jump" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_DISPLAY, KEY_AE_LOCK, KEY_METERING}
 
     #define CAM_RAW_ROWPIX                  4480    // G10 auto found @0xffacde38
     #define CAM_RAW_ROWS                    3348    // G10 auto found @0xffacde3c

@@ -317,10 +317,10 @@
 #define LANG_MENU_OPERATION_PARAM_TITLE         238
 #define LANG_MENU_OPERATION_PARAM               239
 #define LANG_MENU_OVERRIDE_TV_VALUE             240
-#define	LANG_MENU_OVERRIDE_TV_KOEF              241
+#define	LANG_MENU_OVERRIDE_TV_LONG_EXP          241
 #define LANG_MENU_OVERRIDE_AV_VALUE             242
 #define	LANG_MENU_OVERRIDE_ISO_VALUE            243
-#define	LANG_MENU_OVERRIDE_ISO_KOEF             244
+#define	LANG_MENU_OVERRIDE_TV_SHORT_EXP         244
 #define	LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE      245
 #define	LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF       246
 
@@ -329,20 +329,20 @@
 #define LANG_MENU_TV_BRACKET_VALUE              249
 #define LANG_MENU_AV_BRACKET_VALUE              250
 #define LANG_MENU_ISO_BRACKET_VALUE             251
-#define LANG_MENU_ISO_BRACKET_KOEF              252
+//#define LANG_MENU_ISO_BRACKET_KOEF              252
 #define LANG_MENU_SUBJ_DIST_BRACKET_VALUE       253
-#define LANG_MENU_SUBJ_DIST_BRACKET_KOEF        254
+//#define LANG_MENU_SUBJ_DIST_BRACKET_KOEF        254
 #define LANG_MENU_BRACKET_TYPE                  255
 
 #define LANG_MENU_SCRIPT_AUTOSTART              256
 #define LANG_MENU_REMOTE_ENABLE                 257
 
-#define LANG_MENU_EXPOSURE_TITLE                258
-#define LANG_MENU_EXPOSURE                      259
-#define LANG_MENU_RECALC_EXPOSURE               260
-#define LANG_MENU_TV_EXPOSURE_ORDER             261  
-#define LANG_MENU_AV_EXPOSURE_ORDER             262  
-#define LANG_MENU_ISO_EXPOSURE_ORDER            263
+//#define LANG_MENU_EXPOSURE_TITLE                258
+//#define LANG_MENU_EXPOSURE                      259
+//#define LANG_MENU_RECALC_EXPOSURE               260
+//#define LANG_MENU_TV_EXPOSURE_ORDER             261  
+//#define LANG_MENU_AV_EXPOSURE_ORDER             262  
+//#define LANG_MENU_ISO_EXPOSURE_ORDER            263
 
 #define LANG_MENU_CLEAR_OVERRIDE_VALUES         264
 #define LANG_MENU_SHOW_CANON_OVEREXPOSURE       265
@@ -445,7 +445,7 @@
 #define LANG_OSD_LAYOUT_EDITOR_VIDEO            348
 #define LANG_MENU_CLEAR_VIDEO_VALUES            349
 #define LANG_MENU_MISC_FAST_EV                  350
-#define LANG_MENU_MISC_FAST_EV_STEP             351
+//#define LANG_MENU_MISC_FAST_EV_STEP             351
 #define LANG_OSD_LAYOUT_EDITOR_EV               352
 
 #define LANG_FSELECT_PURGE_DCIM_TEXT            353
@@ -546,7 +546,7 @@
 #define LANG_MENU_RAW_SAVE_IN_EDGEOVERLAY       435
 #define LANG_MENU_RAW_SAVE_IN_AUTO              436
 #define LANG_MENU_FLASH_VIDEO_OVERRIDE          437
-#define LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER    438
+//#define LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER    438
 #define LANG_MENU_RAW_DNG_EXT                   439
 #define LANG_MENU_DNG_VIA_USB                   440 
 #define LANG_MENU_GAMES_MASTERMIND              441
@@ -700,28 +700,15 @@
 #define LANG_SD_CARD                            570
 #define LANG_MENU_FONT_SETTINGS                 571
 
-#define LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER_SIMPLE 572
-#define LANG_MENU_MISC_FAST_EV_STEP_SIMPLE          573
-#define LANG_MENU_MISC_HELP			            574
-#define LANG_MENU_MENUEDIT_POPUP				575
+#define LANG_MENU_USER_MENU_SCRIPT_ADD          572
 
-#define LANG_MENU_USER_MENU_SCRIPT_ADD          576
+#define LANG_HELP_INF_FOCUS                     573
+#define LANG_HELP_CHG_FOCUS_FACTOR              574
 
-#define LANG_MENU_EDIT_CHG_VAL                  577
-#define LANG_MENU_EDIT_ADJ_FACTOR               578
-#define LANG_MENU_EDIT_CONFIRM                  579
-#define LANG_MENU_EDIT_ON_OFF                   580
-
-#define LANG_HELP_INF_FOCUS                     581
-#define LANG_HELP_CHG_FOCUS_FACTOR              582
-
-#define GUI_LANG_ITEMS                          582
+#define GUI_LANG_ITEMS                          574
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
-
-// name of build-in language
-extern char* gui_lang_source_filename;
 
 //-------------------------------------------------------------------
 #endif

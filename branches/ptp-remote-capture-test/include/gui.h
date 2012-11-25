@@ -85,8 +85,11 @@ extern gui_mode_t gui_get_mode();
 extern gui_handler* gui_set_mode(gui_handler *mode);
 extern void gui_reset_alt_helper();
 
+extern void gui_enum_value_change(int *value, int change, unsigned num_items);
 extern const char* gui_subj_dist_override_value_enum(int change, int arg);
 extern const char* gui_subj_dist_override_koef_enum(int change, int arg);
+extern const char* gui_tv_override_value_enum(int change, int arg);
+extern const char* gui_hhmss_enum(int change, int arg);
 
 #if !CAM_VIDEO_QUALITY_ONLY
 extern const char* gui_video_bitrate_enum(int change, int arg);

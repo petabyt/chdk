@@ -7,6 +7,7 @@
 //   Canon PowerShot A2100 IS
 
 // Values for makefile.inc
+//   PLATFORMOSVER = 31
 //   PLATFORMID = 12734 (0x31be) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   KEYSYS = d4                 // Found @ 0xffff1d14
@@ -28,6 +29,7 @@ NSTUB(kbd_pwr_on                              ,0xffc30b94) //  2 82%
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0000c664) // Found @0xffc11a0c
 DEF(physw_run                               ,0x00001c24) // Found @0xffc11680
+DEF(physw_sleep_delay                       ,0x00001c22) // Found @0xffc11680
 DEF(levent_table                            ,0xffe95518) // Found @0xffe95518
 DEF(FlashParamsTable                        ,0xffebde00) // Found @0xffebde00
 DEF(movie_status                            ,0x00005670) // Found @0xffcf840c
@@ -59,15 +61,17 @@ DEF(recreview_hold                          ,0x000030dc) // Found @0xffc657a0
 //    { 1, KEY_SET             ,0x01000000 }, // Found @0xffe71624, levent 0x08
 //    { 1, KEY_MENU            ,0x02000000 }, // Found @0xffe71630, levent 0x09
 //    { 1, KEY_DISPLAY         ,0x04000000 }, // Found @0xffe7163c, levent 0x0a
+//    { 2, KEY_SHOOT_FULL      ,0x0000000c }, // Found @0xffe716a8, levent 0x01
+//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000008 }, // Found @0xffe716a8, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00000004 }, // Found @0xffe7169c, levent 0x00
 //    { 2, KEY_ZOOM_IN         ,0x00000010 }, // Found @0xffe716b4, levent 0x02
 //    { 2, KEY_ZOOM_OUT        ,0x00000020 }, // Found @0xffe716c0, levent 0x03
+//    { 2, KEY_POWER           ,0x00000040 }, // Found @0xffe716cc, levent 0x600 (uses inverted logic in physw_status)
+//    { 2, KEY_PLAYBACK        ,0x00000080 }, // Found @0xffe716d8, levent 0x601 (uses inverted logic in physw_status)
 //    { 2, KEY_UP              ,0x00000100 }, // Found @0xffe716e4, levent 0x04
 //    { 2, KEY_DOWN            ,0x00000200 }, // Found @0xffe716f0, levent 0x05
 //    { 2, KEY_RIGHT           ,0x00000400 }, // Found @0xffe716fc, levent 0x07
 //    { 2, KEY_LEFT            ,0x00000800 }, // Found @0xffe71708, levent 0x06
-//    { 2, KEY_SHOOT_FULL      ,0x0000000c }, // Found @0xffe716a8, levent 0x01
-//    { 2, KEY_SHOOT_FULL_ONLY ,0x00000008 }, // Found @0xffe716a8, levent 0x01
-//    { 2, KEY_SHOOT_HALF      ,0x00000004 }, // Found @0xffe7169c, levent 0x00
 //    { 0, 0, 0 }
 //};
 
@@ -91,11 +95,11 @@ NSTUB(AllocateUncacheableMemory               ,0xffc16e98) //112
 NSTUB(Close                                   ,0xffc138e0) //101
 NSTUB(CreateTask                              ,0xffc0afac) //101
 NSTUB(DebugAssert                             ,0xffc0b284) //111
-NSTUB(DeleteDirectory_Fut                     ,0xffc13270) //  1
+NSTUB(DeleteDirectory_Fut                     ,0xffc13270) //116
 NSTUB(DeleteFile_Fut                          ,0xffc1318c) //112
 NSTUB(DoAFLock                                ,0xffc14f3c) //102
 NSTUB(EnterToCompensationEVF                  ,0xffc14fec) //104
-NSTUB(ExecuteEventProcedure                   ,0xffc554e4) //  1
+NSTUB(ExecuteEventProcedure                   ,0xffc554e4) //104
 NSTUB(ExitFromCompensationEVF                 ,0xffc15030) //104
 NSTUB(ExitTask                                ,0xffc0b23c) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xffc1f8d8) //104
@@ -119,20 +123,22 @@ NSTUB(GetDrive_TotalClusters                  ,0xffc3ec68) //  5
 NSTUB(GetFocusLensSubjectDistance             ,0xffcf084c) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xffcf0c28) //  3
 NSTUB(GetKbdState                             ,0xffc30b60) //109
-NSTUB(GetMemInfo                              ,0xffc03be4) //  1
+NSTUB(GetMemInfo                              ,0xffc03be4) //115
 NSTUB(GetOpticalTemperature                   ,0xffc32cf4) //102
 NSTUB(GetParameterData                        ,0xffd1cfac) //101
 NSTUB(GetPropertyCase                         ,0xffc59250) //102
 NSTUB(GetSystemTime                           ,0xffdf5dbc) //101
+NSTUB(GetVRAMHPixelsSize                      ,0xffc959a8) //102
+NSTUB(GetVRAMVPixelsSize                      ,0xffc959b4) //102
 NSTUB(GetZoomLensCurrentPoint                 ,0xffcf4e88) //102
 NSTUB(GetZoomLensCurrentPosition              ,0xffdedca8) //102
 NSTUB(GiveSemaphore                           ,0xffc168b4) //112
 NSTUB(IsStrobeChargeCompleted                 ,0xffc87128) //102
 NSTUB(LEDDrive                                ,0xffc300c0) //103
-NSTUB(LocalTime                               ,0xffc531a8) //  1
+NSTUB(LocalTime                               ,0xffc531a8) //115
 NSTUB(LockMainPower                           ,0xffc5cb44) //103
 NSTUB(Lseek                                   ,0xffc13a20) //101
-NSTUB(MakeDirectory_Fut                       ,0xffc13200) //  1
+NSTUB(MakeDirectory_Fut                       ,0xffc13200) //116
 NSTUB(MoveFocusLensToDistance                 ,0xffe40c28) //102
 NSTUB(MoveIrisWithAv                          ,0xffdf2fbc) //102
 NSTUB(MoveZoomLensWithPoint                   ,0xffdf3548) //102
@@ -182,7 +188,7 @@ NSTUB(add_ptp_handler                         ,0xffdb1e84) //  3
 NSTUB(apex2us                                 ,0xffd6ced4) //  4
 NSTUB(close                                   ,0xffc098fc) //  1
 NSTUB(closedir                                ,0xffde0214) //  1
-NSTUB(err_init_task                           ,0xffc04e2c) //  4
+NSTUB(err_init_task                           ,0xffc04e2c) //111
 NSTUB(exmem_alloc                             ,0xffc53ddc) //103
 NSTUB(free                                    ,0xffc03a3c) //112
 NSTUB(kbd_p1_f                                ,0xffc11a90) //109
@@ -195,16 +201,14 @@ NSTUB(malloc                                  ,0xffc03968) //112
 NSTUB(memcmp                                  ,0xffc0cc60) //101
 NSTUB(memcpy                                  ,0xffc6ba00) //101
 NSTUB(memset                                  ,0xffd6c1bc) //101
-NSTUB(mkdir                                   ,0xffc13c84) //  1
-// ALT: NSTUB(mkdir, 0xffc13d24) // 1 32/0
+NSTUB(mkdir                                   ,0xffc13c84) //109
 NSTUB(mktime_ext                              ,0xffc6c26c) //  1
 NSTUB(open                                    ,0xffc0984c) //  1
-NSTUB(opendir                                 ,0xffde00b0) //  1
-NSTUB(openfastdir                             ,0xffde00b0) //  1
+NSTUB(OpenFastDir                             ,0xffde00b0) //  1
 NSTUB(qsort                                   ,0xffe27428) //  1
 NSTUB(rand                                    ,0xffc0cd68) //  1
 NSTUB(read                                    ,0xffc09ae4) //101
-NSTUB(reboot_fw_update                        ,0xffde3c28) //  5
+NSTUB(reboot_fw_update                        ,0xffde3c28) //106
 NSTUB(rename                                  ,0xffc13138) //  1
 NSTUB(set_control_event                       ,0xffc5c5f4) //111
 NSTUB(srand                                   ,0xffc0cd5c) //  1
@@ -225,6 +229,6 @@ NSTUB(strtolx                                 ,0xffc1c710) //109
   DEF(task_InitFileModules                    ,0xffc6036c) //107
   DEF(task_MovieRecord                        ,0xffcf8660) //107
   DEF(task_PhySw                              ,0xffc1167c) //107
-NSTUB(time                                    ,0xffc5305c) //  1
-NSTUB(vsprintf                                ,0xffc0cba4) //  1
+NSTUB(time                                    ,0xffc5305c) //109
+NSTUB(vsprintf                                ,0xffc0cba4) //115
 NSTUB(write                                   ,0xffc1398c) //101

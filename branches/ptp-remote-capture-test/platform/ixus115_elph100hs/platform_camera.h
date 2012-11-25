@@ -66,6 +66,8 @@
     #define CAM_AV_OVERRIDE_IRIS_FIX        1       // for cameras that require _MoveIrisWithAv function to override Av.
     #define CAM_KEY_CLICK_DELAY             150
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video", "Set+ZoomIn" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_VIDEO, KEY_SET | KEY_ZOOM_IN }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
     #define CAM_CAN_SD_OVERRIDE             1    // Camera allows to do subject distance override
