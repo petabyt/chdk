@@ -1104,7 +1104,7 @@ static int luaCB_print_screen( lua_State* L )
   if (lua_isboolean( L, 1 ))
     script_print_screen_statement( lua_toboolean( L, 1 ) );
   else
-    script_print_screen_statement( luaL_checknumber( L, 1 )+10000 );
+    script_print_screen_statement( luaL_checknumber( L, 1 ));
   return 0;
 }
 

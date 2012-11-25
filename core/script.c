@@ -780,7 +780,7 @@ void load_params_names_cfg()
 //=======================================================
 
 //-------------------------------------------------------------------
-static int  print_screen_p;             // print_screen predicate: 0-off 1-on.
+static int  print_screen_p;             // print_screen predicate: 0=off, else is log file number. negative=append, postive=overwrite 
 static int  print_screen_d = -1;        // print_screen file descriptor.
 char print_screen_file[25];
 
@@ -820,6 +820,7 @@ void script_print_screen_statement(int val)
     print_screen_d = open(print_screen_file, O_WRONLY|O_CREAT|flag_trunc, 0777);
     if (print_screen_d>=0) lseek(print_screen_d,0,SEEK_END);
   }
+  else script_print_screen_end() ;
 }
 
 void script_console_add_line(const char *str)
