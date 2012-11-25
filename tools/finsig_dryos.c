@@ -988,6 +988,7 @@ func_entry  func_names[] =
 {
     // Do these first as they are needed to find others
     { "CreateJumptable", 1 },
+    { "_uartr_req", 1 },
 
     { "AllocateMemory" },
     { "AllocateUncacheableMemory" },
@@ -1112,13 +1113,11 @@ func_entry  func_names[] =
     { "mkdir" },
     { "mktime_ext" },
     { "open" },
-    { "opendir" },
-    { "openfastdir" },
+    { "OpenFastDir" },
     { "qsort" },
     { "rand" },
     { "read" },
     { "reboot_fw_update" },
-    { "rename" },
     { "set_control_event" },
     { "srand" },
     { "stat" },
@@ -1426,6 +1425,7 @@ string_sig string_sigs[] = {
 	{ 4, "ExpCtrlTool_StopContiAE", "StopContiAE", 10 },
 	{ 4, "ExpCtrlTool_StartContiAE", "StartContiAE", 9 },
 	{ 4, "ExpCtrlTool_StartContiAE", "StartContiAE", 10 },
+    { 4, "ExecuteEventProcedure", "Can not Execute ", 14 },
 
     { 5, "UIFS_WriteFirmInfoToFile", "UIFS_WriteFirmInfoToFile", 1 },
     { 5, "CreateTask", "CreateTask", 1 },
@@ -1461,6 +1461,8 @@ string_sig string_sigs[] = {
 	{ 9, "strtolx", "strtol", 0,                                           1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
     { 9, "mkdir", "MakeDirectory_Fut", 0x01000001,                        17,   17,   17,   17,   17,   17,   17,   17,   17,   17 },
     { 9, "mkdir", "MakeDirectory_Fut", 0x01000002,                        17,   17,   17,   17,   17,   17,   17,   17,   17,   17 },
+    { 9, "time", "MakeDirectory_Fut", 0,                                  12,   12,   12,   12,   12,   12,   12,   12,   12,   12 },
+    { 9, "stat", "_uartr_req", 0,                                          0,    0,    0,    4,    4,    4,    4,    4,    4,    4 },
 	
 	{ 10, "task_CaptSeq", "CaptSeqTask", 1 },
 	{ 10, "task_ExpDrv", "ExpDrvTask", 1 },
@@ -1472,10 +1474,12 @@ string_sig string_sigs[] = {
 
 	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
 	{ 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,				   5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
+	{ 11, "err_init_task", "\n-- %s() error in init_task() --", 0,		   2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
 	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  14,   14,   14,   14,   14,   14,   14,   14,   14,   14 },
 	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  15,   15,   15,   15,   15,   15,   15,   15,   15,   15 },
 	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  20,   20,   20,   20,   20,   20,   19,   20,   20,   20 },
 	{ 11, "_log", (char*)log_test, 0x01000001,							   1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
+	{ 11, "_uartr_req", "A/uartr.req", 0,							       3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
 	
 	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
 	{ 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,						0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54, 0x00, 0x00 },
@@ -1494,8 +1498,15 @@ string_sig string_sigs[] = {
 	{ 14, "_pow", "_pow", 0 },
 
     { 15, "LocalTime", "%04d:%02d:%02d %02d:%02d:%02d", 0x01000001 },
+    { 15, "GetMemInfo", "Malloc Information\n", 0x01000001 },
+    { 15, "GetMemInfo", "Malloc Information (%s type)\n", 0x01000001 },
+    { 15, "vsprintf", "\nCPrintf Size Over!!", 0x01000001 },
+    { 15, "ReadFastDir", "ReadFast_ERROR\n", 0x01000001 },
+    { 15, "OpenFastDir", "OpenFastDir_ERROR\n", 0x01000001 },
 
-    { 16, "MakeDirectory_Fut", (char*)0x9400015, 0x01000001 },
+    { 16, "DeleteDirectory_Fut", (char*)0x09400017, 0x01000001 },
+    { 16, "MakeDirectory_Fut", (char*)0x09400015, 0x01000001 },
+    { 16, "RenameFile_Fut", (char*)0x09400013, 0x01000001 },
 	
     { 0, 0, 0, 0 }
 };
@@ -1693,7 +1704,7 @@ int match_strsig4(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 	int j1;
 	uint32_t *p1;
 	int ofst = sig->offset;
-	for (p1 = p-ofst-1, j1 = j-ofst-1; j1 >= 0; j1--, p1--)
+	for (p1 = fw->buf, j1 = 0; j1 < fw->size; j1++, p1++)
 	{
 		if (((p1[0] & 0xFFFF0000) == 0xE92D0000) && 	// STMFD
 			((p1[ofst] & 0xFE0F0000) == 0xE20F0000))   	// ADR ?
@@ -2215,10 +2226,10 @@ int match_strsig15(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
     uint32_t *p1;
     for (p1 = fw->buf, j1 = 0; j1 < fw->size; j1++, p1++)
     {
-	    if (((p1[0] & 0xFE0F0000) == 0xE20F0000) || ((p1[0] & 0xFE1F0000) == 0xE41F0000))   // LDR or ADR ?
+	    if (((p1[0] & 0x0E0F0000) == 0x020F0000) || ((p1[0] & 0x0E1F0000) == 0x041F0000))   // LDR or ADR ?
 	    {
 		    uint32_t padr;
-		    if ((p1[0] & 0xFE1F0000) == 0xE41F0000) // LDR ?
+		    if ((p1[0] & 0x0E1F0000) == 0x041F0000) // LDR ?
                 padr = LDR2val(fw,j1);
 		    else
                 padr = ADR2adr(fw,j1);

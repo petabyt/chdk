@@ -96,8 +96,6 @@ extern long _DeleteFile_Fut(const char *name);
 extern long _MakeDirectory_Fut(const char *name,int unk);
 extern long _DeleteDirectory_Fut(const char *name);
 
-extern int _rename(const char *oldname, const char *newname);
-
 extern int _isdigit(int c);
 extern int _isspace(int c);
 extern int _isalpha(int c);
@@ -247,9 +245,13 @@ extern void _SetFileAttributes(int fd, int attr);
 #endif
 
 /* file */
+#ifndef CAM_DRYOS
 extern void *_opendir(const char* name);
 extern void *_readdir(void *d);
+#else
+extern void *_OpenFastDir(const char* name);
 extern int _ReadFastDir(void *d, void* dd); // DRYOS
+#endif
 extern int   _closedir(void *d);
 extern void  _rewinddir(void *d);
 extern int   _stat(const char *name, void *pStat);

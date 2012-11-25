@@ -10,7 +10,6 @@ NHSTUB(SetParameterData,            0xFF972F9C)
 NHSTUB(UIFS_WriteFirmInfoToFile,    NULL_SUB)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
-NHSTUB(rename,                      0xFF825E60)
 NHSTUB(srand,                       0xFF81BDB4)
 NHSTUB(write,                       0xFF81A328)
 

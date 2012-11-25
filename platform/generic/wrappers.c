@@ -392,7 +392,7 @@ void rewinddir(DIR *d) {
 #else // dryos
 DIR *opendir(const char* name) {
     DIR *d;
-    DIR_dryos *dh = _opendir(name);
+    DIR_dryos *dh = _OpenFastDir(name);
     if(!dh) {
         return (void *)0;
     }

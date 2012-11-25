@@ -3,7 +3,6 @@
 
 // Override stubs_entry.S
 NHSTUB(GetZoomLensCurrentPosition,  0xffd07fc4)
-NHSTUB(rename,                      0xffc14ff4)
 NHSTUB(write,                       0xffc0a3d8)
 
 // These don't exist/aren't found in dryos

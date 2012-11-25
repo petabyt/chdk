@@ -1,5 +1,3 @@
 0xff810000
-ExecuteEventProcedure 0xff869180
 kbd_pwr_off 0xff842a88
 kbd_pwr_on 0xff842a38
-time 0xff866d48

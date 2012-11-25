@@ -7,7 +7,6 @@ NSTUB(GetBatteryTemperature,        NULL_SUB)
 NHSTUB(UnlockAF,                    0xff878efc)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
-NHSTUB(rename,                      0xFF836DD8)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)

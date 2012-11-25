@@ -3,13 +3,10 @@ GetDrive_ClusterSize 0xFF86BB04 13
 GetDrive_TotalClusters 0xFF86BB38 11
 GetDrive_FreeClusters 0xFF86BB64 9
 ReadFastDir 0xFFA7E1E4
-stat 0xFF835560
-opendir 0xFFA7E0B0
-openfastdir 0xFFA7E0B0
+OpenFastDir 0xFFA7E0B0
 closedir 0xFFA7E06C 17
 GetFocusLensSubjectDistanceFromLens 0xFF9430E8 22
 add_ptp_handler 0xFFA3F97C
-GetMemInfo 0xFF81A070
 SetFileTimeStamp 0xFF835694 17
 ScreenLock 0xFF9F98B4 10
 ScreenUnlock 0xFF9F98DC 9
