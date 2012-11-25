@@ -10,17 +10,13 @@ mkdir 0xff027520
 GetImageFolder 0xFF1598B8
 PT_PlaySound 0xFF07F848
 ReadFastDir 0xFF2DD404
-RenameFile_Fut 0xFF026908
-rename 0xFF026908
 Remove 0xFF0271F8 14
 SetFileTimeStamp 0xFF027410
 _sqrt 0xFF3AED14
 add_ptp_handler 0xFF28AA1C
 close 0xFF00ABB4 22
 open 0xFF00AB04
-opendir 0xFF2DD2B0
-openfastdir 0xFF2DD2B0
+OpenFastDir 0xFF2DD2B0
 qsort 0xFF359478 19
 time 0xFF084A48
-vsprintf 0xFF010858 15
 SetFileAttributes 0xFF027488 21

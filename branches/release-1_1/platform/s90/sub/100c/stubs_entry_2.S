@@ -6,7 +6,6 @@ NHSTUB(GetPropertyCase,             0xFF88CA64)
 NHSTUB(SetScriptMode,               0xFF810F4C)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
-NHSTUB(rename,                      0xFF8354F0)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)

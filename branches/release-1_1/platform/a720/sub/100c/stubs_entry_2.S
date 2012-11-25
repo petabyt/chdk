@@ -4,7 +4,6 @@
 // Override stubs_entry.S
 NHSTUB(GetZoomLensCurrentPosition,  0xFFD03B5C)
 NHSTUB(SetPropertyCase,             0xFFC50CC8)
-NHSTUB(rename,                      0xFFC15100)
 NHSTUB(write,                       0xFFC0A4A8)
 
 // These don't exist
