@@ -24,7 +24,7 @@ OBJS=../gui_calendar.o ../gui_bench.o ../gui_read.o ../gui_debug.o ../gui_tbox.o
 
 FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt \
      _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop10.flt _rawop12.flt \
-     txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt modmenu.flt _tbox.flt _osd_le.flt
+     txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt _tbox.flt _osd_le.flt
 
 
 all: exportlist ../flt.h $(FLTS)
@@ -121,10 +121,6 @@ grids.elf: ../gui_grid.o
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 
 modinsp.elf: module_inspector.o
-	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
-
-modmenu.elf: module_menu.o ../nothumb.o
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 

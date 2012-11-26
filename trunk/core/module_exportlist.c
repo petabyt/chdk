@@ -32,7 +32,6 @@
 #include "console.h"
 #include "gps.h"
 
-extern int fselect_sort_nothumb(const void* v1, const void* v2);
 extern short shooting_get_ev_correction1();
 
 extern long shutter_open_time; // defined in platform/generic/capt_seq.c
@@ -255,9 +254,6 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 			// tetris.flt
 			TurnOnBackLight,
 			TurnOffBackLight,
-
-			// modmenu.flt
-			load_from_file,
 
 			action_stack_create,
 			action_pop,
