@@ -495,8 +495,7 @@ static void conf_change_font_cp() {
 
 static void conf_change_script_file() {
 #ifdef OPT_SCRIPTING
-    script_load(conf.script_file, SCRIPT_UPDATE_PARAMS );
-	load_params_names_cfg();
+    script_load(conf.script_file);
 #endif
 }
 
@@ -1008,6 +1007,7 @@ int conf_save_new_settings_if_changed()
     {
 		user_menu_save();
         conf_save();
+        save_params_values(0);
         conf_store_old_settings();
         return 1;
     }

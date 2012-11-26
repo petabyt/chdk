@@ -1,5 +1,6 @@
 #include "stdlib.h"
 #include "lang.h"
+#include "fileutil.h"
 
 static char* preparsed_lang_default_start=0;
 static char* preparsed_lang_default_end=0;            // @this is for correct detection which is in heap

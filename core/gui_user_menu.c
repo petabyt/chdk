@@ -69,8 +69,7 @@ void gui_load_user_menu_script(const char *fn)
     if (fn)
     {
 #ifdef OPT_SCRIPTING
-		script_load(fn, SCRIPT_LOAD_LAST_PARAMSET );
-		load_params_names_cfg();
+		script_load(fn);
 #endif
 
         // exit menu system on the assumption the user will want to run the script just loaded
