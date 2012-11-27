@@ -74,14 +74,7 @@ gui.o: FORCE
 
 FORCE:
 
-nothumb.o: nothumb.c
-	@echo $< \-\> $@
-	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
-
 main.bin: main.elf
-	@echo $< \-\> $@
-	$(OBJDUMP) -z -d main.elf > main.dump
-	$(OBJCOPY) -O binary main.elf main.bin
 
 main.elf: $(OBJS) $(topdir)platform/$(PLATFORM)/libplatform.a \
           $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/libplatformsub.a \
@@ -95,12 +88,12 @@ main.elf: $(OBJS) $(topdir)platform/$(PLATFORM)/libplatform.a \
 
 	$(SIZE) $@ | tee $(topdir)size.txt
 	@printf " %s-%s (%s, #%s): MEMISOSIZE used: 0x%s\n" \
-   $(PLATFORM) $(PLATFORMSUB) $(PLATFORMOS) $(PLATFORMID) \
-   `tail -c16 $(topdir)size.txt | head -c6` >> $(topdir)bin/caminfo.txt
+      $(PLATFORM) $(PLATFORMSUB) $(PLATFORMOS) $(PLATFORMID) \
+      `tail -c16 $(topdir)size.txt | head -c6` >> $(topdir)bin/caminfo.txt
 	rm -f $(topdir)size.txt
 
 clean:
-	rm -f $(OBJS) main.bin main.elf main.dump main.elf.syms
+	rm -f *.o $(OBJS) main.bin main.elf main.dump main.elf.syms
 
 distclean: clean
 	rm -f $(OBJS:.o=.d)

@@ -28,7 +28,24 @@ tmp:=$(shell echo "BUILD_SVNREV := $(BUILD_SVNREV)" > revision.inc)
 # CHDK folder for full package
 ZIPDIRS:=$(shell ls -R CHDK | grep CHDK/ | $(ESED) 's?:?/*?')
 
-SUBDIRS=lib platform core loader CHDK
+SUBDIRS=platform
+
+# SKIP_CORE prevents cleaning core in root level make, to speed up batch clean
+ifndef SKIP_CORE
+SUBDIRS:=$(SUBDIRS) core
+endif
+
+SUBDIRS:=$(SUBDIRS) loader
+
+# SKIP_CHDK prevents cleaning CHDK in root level make, to speed up batch clean
+ifndef SKIP_CHDK
+SUBDIRS:=$(SUBDIRS) CHDK
+endif
+
+# SKIP_LIB prevents cleaning lib in root level make, to speed up batch clean
+ifndef SKIP_LIB
+SUBDIRS:=lib $(SUBDIRS)
+endif
 
 # SKIP_TOOLS prevents re-building tools in root level make, to speed up batch builds
 ifndef SKIP_TOOLS
@@ -205,7 +222,7 @@ alltools:
 
 # note assumes PLATFORMOS is always in same case!
 os-camera-list-entry:
-	echo $(PLATFORM),$(PLATFORMSUB),$(subst _,,$(STATE)),$(COPY_TO), >> camera_list_$(PLATFORMOS).csv
+	echo $(PLATFORM),$(PLATFORMSUB),$(subst _,,$(STATE)),$(COPY_TO),$(SKIP_AUTOBUILD) >> camera_list_$(PLATFORMOS).csv
 
 # define targets to batch build all cameras & firmware versions
 # list of cameras/firmware versions is in 'camera_list.csv'
@@ -233,15 +250,20 @@ batch-zip-complete: version alltools
 os-camera-lists:
 	echo 'CAMERA,FIRMWARE,BETA_STATUS,COPY_TO,SKIP_AUTOBUILD' > camera_list_dryos.csv
 	echo 'CAMERA,FIRMWARE,BETA_STATUS,COPY_TO,SKIP_AUTOBUILD' > camera_list_vxworks.csv
-	sh tools/auto_build.sh $(MAKE) os-camera-list-entry $(CAMERA_LIST)
+	sh tools/auto_build.sh $(MAKE) os-camera-list-entry $(CAMERA_LIST) -noskip
 
 # make sure each enabled firmware/sub has a PRIMARY.BIN
 # Note this will not fail, just prints all the missing ones
 batch-print-missing-dumps:
-	sh tools/auto_build.sh $(MAKE) print-missing-dump $(CAMERA_LIST)
+	sh tools/auto_build.sh $(MAKE) print-missing-dump $(CAMERA_LIST) -noskip
 
 batch-rebuild-stubs: alltools
 	sh tools/auto_build.sh $(MAKE) rebuild-stubs $(CAMERA_LIST) -noskip
 
 batch-clean:
-	sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST)
+	$(MAKE) -C tools PLATFORMOS=vxworks clean
+	$(MAKE) -C tools PLATFORMOS=dryos clean
+	$(MAKE) -C lib clean
+	$(MAKE) -C core clean
+	$(MAKE) -C CHDK clean
+	SKIP_CORE=1 SKIP_CHDK=1 SKIP_LIB=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST) -noskip
