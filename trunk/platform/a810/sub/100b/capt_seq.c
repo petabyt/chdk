@@ -7,7 +7,7 @@
 static long *nrflag = (long*)(0x873c+0x00);  // Found @ ff9df3a8 & ff9df408 a810
 #define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto
 
-#define PAUSE_FOR_FILE_COUNTER 150           // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
+#define PAUSE_FOR_FILE_COUNTER 250           // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 #include "../../../generic/capt_seq.c"
 
 //** capt_seq_task  @ 0xFF86ECA8 
