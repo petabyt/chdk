@@ -15,9 +15,9 @@ void __attribute__((noreturn)) my_restart()
     //DebugLedCounter = DEBUG_LED_DELAY; *pDebugLed = 0x44;  while (DebugLedCounter--) { asm("nop\n nop\n"); };
 
 	{
-		char *dst = (long*)MEMISOSTART;
-		const char *src = blob_chdk_core;
-        long length = blob_chdk_core_size;
+		long *dst = (long*)MEMISOSTART;
+		const long *src = blob_chdk_core;
+        long length = (blob_chdk_core_size + 3) >> 2;
 
 		if (src < dst && dst < src + length)
 		{
