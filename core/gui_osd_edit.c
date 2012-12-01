@@ -37,9 +37,7 @@ static OSD_elem osd[]={
     {LANG_OSD_LAYOUT_EDITOR_TEMP,       &conf.temp_pos,         {9*FONT_WIDTH, FONT_HEIGHT}     },
     {LANG_OSD_LAYOUT_EDITOR_VIDEO,      &conf.mode_video_pos,   {9*FONT_WIDTH, 4*FONT_HEIGHT}   },
     {LANG_OSD_LAYOUT_EDITOR_EV,         &conf.mode_ev_pos,      {12*FONT_WIDTH, FONT_HEIGHT}    },
-#if CAM_EV_IN_VIDEO
     {LANG_OSD_LAYOUT_EDITOR_EV_VIDEO,   &conf.ev_video_pos,     {70, 24}},
-#endif
     {LANG_OSD_LAYOUT_EDITOR_USB_INFO,   &conf.usb_info_pos,     {31, 14}},  
     {0}
 };
@@ -118,6 +116,7 @@ int gui_osd_kbd_process()
         break;
     case KEY_SET:
         ++curr_item;
+        if ((osd[curr_item].title == LANG_OSD_LAYOUT_EDITOR_EV_VIDEO) && !camera_info.cam_ev_in_video) curr_item++;
         if (!osd[curr_item].pos) 
             curr_item = 0;
         osd_to_draw = 1;
@@ -212,7 +211,7 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 									sizeof(struct ModuleInfo),
 
 									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									PLATFORMID,		            // Specify platform dependency (uses CAM_EV_IN_VIDEO to create array)
+									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 									MODULEINFO_FLAG_SYSTEM,     // flag
 									(int32_t)"OSD Editor",		// Module name
 									1, 0,						// Module version

@@ -356,6 +356,8 @@ typedef struct
     int rombaseaddr, maxramaddr;
     int tick_count_offset;      // get_tick_count value at which the clock ticks over 1 second
     char* chdk_ver;
+    // Can CHDK can change exposure in video mode?
+    int cam_ev_in_video;
     // Miscellaneous variables to record state information
     // Used to control communication between various tasks and modules
     struct

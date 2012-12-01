@@ -166,6 +166,11 @@ _cam_info camera_info =
     ROMBASEADDR, MAXRAMADDR,
     0,
     HDK_VERSION" ver. "BUILD_NUMBER,
+#if defined(CAM_EV_IN_VIDEO)
+    CAM_EV_IN_VIDEO,
+#else
+    0,
+#endif
 };
 
 //==========================================================
