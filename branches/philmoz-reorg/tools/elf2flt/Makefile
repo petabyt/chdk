@@ -11,7 +11,7 @@ all: elf2flt$(EXE) fltdump$(EXE)
 
 %.o: %.c
 	@echo $< \-\> $@
-	$(HOSTCC) $(HOSTCFLAGS) -Wno-format -DPLATFORMOS_$(PLATFORMOS) -c -o $@ $<
+	$(HOSTCC) $(HOSTCFLAGS) -Wno-format -c -o $@ $<
 
 .dep/%.d: %.c .dep
 	$(HOSTCC) $(HOSTCFLAGS) -MM $< > $@.$$$$; \

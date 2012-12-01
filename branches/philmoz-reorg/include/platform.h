@@ -33,6 +33,9 @@ extern int is_video_recording();
     #include "propset2.h"
 #elif CAM_PROPSET == 1      // most digic2 cameras
     #include "propset1.h"
+#elif CAM_PROPSET == 0      // dummy for module build
+    // Don't load a propset when building modules
+    // If any module tries to use a propset value it will generate an error
 #else
     #error unknown camera processor
 #endif

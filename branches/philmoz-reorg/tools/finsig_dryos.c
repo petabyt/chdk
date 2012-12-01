@@ -1279,7 +1279,6 @@ typedef struct {
 	int		dryos51_offset;
 } string_sig;
 
-#if defined(PLATFORMOS_dryos)
 #include "signatures_dryos.h"
 
 uint32_t log_test[] = {
@@ -1510,9 +1509,6 @@ string_sig string_sigs[] = {
 	
     { 0, 0, 0, 0 }
 };
-#else
-#error Incorrect platform OS - DryOS only.
-#endif
 
 int find_func(const char* name)
 {

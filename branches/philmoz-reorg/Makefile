@@ -30,6 +30,11 @@ ZIPDIRS:=$(shell ls -R CHDK | grep CHDK/ | $(ESED) 's?:?/*?')
 
 SUBDIRS=platform
 
+# SKIP_MODULES prevents re-building core/modules in root level make, to speed up batch builds
+ifndef SKIP_MODULES
+SUBDIRS:=$(SUBDIRS) modules
+endif
+
 # SKIP_CORE prevents cleaning core in root level make, to speed up batch clean
 ifndef SKIP_CORE
 SUBDIRS:=$(SUBDIRS) core
@@ -58,7 +63,7 @@ fir: version firsub
 
 firsub: all
 	mkdir -p $(topdir)bin
-	mkdir -p  $(topdir)CHDK/MODULES
+	mkdir -p $(topdir)CHDK/MODULES
 	cp $(topdir)loader/$(PLATFORM)/main.bin $(topdir)bin/main.bin
     ifndef NOZERO100K
         ifeq ($(OSTYPE),Windows)
@@ -91,7 +96,7 @@ firsub: all
 		mv $(topdir)bin/main.bin  $(topdir)bin/DISKBOOT.BIN
     endif
 	rm -f $(topdir)CHDK/MODULES/*
-	cp $(topdir)core/modules/*.flt $(topdir)CHDK/MODULES
+	cp $(topdir)modules/*.flt $(topdir)CHDK/MODULES
 	@echo "**** Firmware creation completed successfully"
 
 
@@ -217,8 +222,11 @@ rebuild-stubs:
 
 # for batch builds, build tools for vx and dryos once, instead of once for every firmware
 alltools:
-	$(MAKE) -C tools PLATFORMOS=vxworks clean all
-	$(MAKE) -C tools PLATFORMOS=dryos clean all
+	$(MAKE) -C tools clean all
+
+# for batch builds, build modules once, instead of once for every firmware
+allmodules:
+	$(MAKE) -C modules clean all
 
 # note assumes PLATFORMOS is always in same case!
 os-camera-list-entry:
@@ -234,14 +242,14 @@ os-camera-list-entry:
 #                                 camera define the alternate firmware here. see COPY_TO comments above.
 # - skip auto build (optional) :- any value in this column will exclude the camera/firmware from the auto build
 
-batch-zip: version alltools
-	SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) firzipsub $(CAMERA_LIST)
+batch-zip: version alltools allmodules
+	SKIP_TOOLS=1 SKIP_MODULES=1 sh tools/auto_build.sh $(MAKE) firzipsub $(CAMERA_LIST)
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
 
-batch-zip-complete: version alltools
-	SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) firzipsubcomplete $(CAMERA_LIST)
+batch-zip-complete: version alltools allmodules
+	SKIP_TOOLS=1 SKIP_MODULES=1 sh tools/auto_build.sh $(MAKE) firzipsubcomplete $(CAMERA_LIST)
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
@@ -261,9 +269,9 @@ batch-rebuild-stubs: alltools
 	sh tools/auto_build.sh $(MAKE) rebuild-stubs $(CAMERA_LIST) -noskip
 
 batch-clean:
-	$(MAKE) -C tools PLATFORMOS=vxworks clean
-	$(MAKE) -C tools PLATFORMOS=dryos clean
+	$(MAKE) -C tools clean
 	$(MAKE) -C lib clean
 	$(MAKE) -C core clean
+	$(MAKE) -C modules clean
 	$(MAKE) -C CHDK clean
-	SKIP_CORE=1 SKIP_CHDK=1 SKIP_LIB=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST) -noskip
+	SKIP_CORE=1 SKIP_MODULES=1 SKIP_CHDK=1 SKIP_LIB=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST) -noskip

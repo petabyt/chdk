@@ -9,8 +9,6 @@ LDLIBS= -lgcc
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(topdir)tools/link-boot.ld
 LDOPTS+=-Wl,-N,-Ttext,$(MEMISOSTART)
 
-SUBDIRS=modules
-
 all: main.bin
 
 # Core CHDK flag

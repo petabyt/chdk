@@ -1,6 +1,6 @@
-#include "../module_load.h"
-#include "../gui_draw.h"
-#include "../module_exportlist.h"
+#include "module_load.h"
+#include "gui_draw.h"
+#include "module_exportlist.h"
 
 
 // =========  MODULE INIT =================
@@ -81,8 +81,8 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 
 /*************** GUI MODULE *******************/
 
-#include "../flt.h"
-#include "../gui_mbox.h"
+#include "flt.h"
+#include "gui_mbox.h"
 #include "keyboard.h"
 #include "stdlib.h"
 #include "platform.h"

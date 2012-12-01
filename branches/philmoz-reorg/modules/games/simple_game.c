@@ -1,8 +1,8 @@
 #include "platform.h"
-#include "../module_load.h"
-#include "../gui_draw.h"
-#include "../gui_lang.h"
-#include "../gui_mbox.h"
+#include "module_load.h"
+#include "gui_draw.h"
+#include "gui_lang.h"
+#include "gui_mbox.h"
 
 extern int basic_module_init();
 
