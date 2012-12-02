@@ -93,7 +93,7 @@ main.elf: $(OBJS) $(topdir)platform/$(PLATFORM)/libplatform.a \
 	rm -f $(topdir)size.txt
 
 clean:
-	rm -f *.o $(OBJS) main.bin main.elf main.dump main.elf.syms
+	rm -f *.o main.bin main.elf main.bin.dump main.elf.syms
 
 distclean: clean
 	rm -f $(OBJS:.o=.d)

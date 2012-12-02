@@ -78,7 +78,7 @@ makelang$(EXE): makelang.o
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
 clean:
-	rm -f pakwif$(EXE) $(OBJS) makeexport.o
+	rm -f *.o makeexport$(EXE) pakwif$(EXE) finsig_$(PLATFORMOS)$(EXE) dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE) gensig_$(PLATFORMOS)$(EXE)
 #	if [ -s sig_ref_vxworks_1.bin ] && [ -s sig_ref_vxworks_2.bin ] && [ -s sig_ref_vxworks_3.bin ] ; then \
 #	  rm -f signatures_vxworks.h ; \
 #	fi
