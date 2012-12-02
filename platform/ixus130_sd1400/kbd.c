@@ -15,7 +15,7 @@ static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static long last_kbd_key = 0;
-
+extern void _GetKbdState(long*);
 
 #define KEYS_MASK0 (0x0000000C)		// physw_status[0]
 					// override key and feather bits to avoid feather osd messing up chdk display in ALT mode

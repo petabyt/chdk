@@ -47,7 +47,7 @@ void *vid_get_viewport_fb()
 void *vid_get_viewport_fb_d()
 {
     int x=(*(int*)0x71AB0); // @ffd0f29c
-    return (void*) (x ? x : vid_get_viewport_fb()) ;
+    return (x) ? (void*)x : vid_get_viewport_fb();
 }
 
 long vid_get_viewport_height()

@@ -222,7 +222,6 @@ NSTUB(OpenFastDir                             ,0xffa6a324) //115
 NSTUB(qsort                                   ,0xff9eec44) //  6
 NSTUB(read                                    ,0xff815b58) //101
 //NSTUB(reboot_fw_update                      ,0xffa6f854) //106            == 0xffa6f854
-NSTUB(rename                                  ,0xff830dd0) //  6
 NSTUB(set_control_event                       ,0xff886ad4) //  6
 NSTUB(stat                                    ,0xff83173c) //109
 NSTUB(strcat                                  ,0xff89a8d0) //  1
