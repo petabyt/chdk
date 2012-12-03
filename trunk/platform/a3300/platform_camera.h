@@ -94,3 +94,10 @@
 
     #define CHDK_COLOR_BASE                 0xE2    // Start color index for CHDK colors loaded into camera palette. Kosy chose a place Canon doesn't seem to use.
     #define CAM_LOAD_CUSTOM_COLORS	    	  1       // Enable loading CHDK colors into the camera palette memory/hardware	
+
+    // Define shortcut overrides where defaults are not suitable
+    // a3300 has no erase button, so make DISP button the toggle_raw and Alt +/- shortcuts.
+    //Alt mode
+    // NOTE both of these conflict with adjustable alt
+    #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
+    #define SHORTCUT_MF_TOGGLE           KEY_FACE

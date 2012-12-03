@@ -34,6 +34,10 @@
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_DISPLAY, KEY_AE_LOCK, KEY_METERING}
 
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
+    #define CAM_RESET_AEL_AFTER_VIDEO_AF    1   // Cam needs AE Lock state reset after AF in video recording
+    #define CAM_VIDEO_AF_BUTTON_NAMES       { "", "Shutter", "Set", "AE Lock" }
+    #define CAM_VIDEO_AF_BUTTON_OPTIONS     { 0, KEY_SHOOT_HALF, KEY_SET, KEY_AE_LOCK }
+
     #define CAM_MULTIPART                   1
     #define CAM_HAS_JOGDIAL                 1
     #undef  CAM_USE_ZOOM_FOR_MF
@@ -76,6 +80,8 @@
 
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                    2
+
+    #undef  CAM_HAS_HI_ISO_AUTO_MODE                // Camera does not have HI Auto ISO mode
 
     // bayer sensor pattern
     #define cam_CFAPattern                  0x02010100  // Red  Green  Green  Blue
@@ -128,4 +134,8 @@
     #define CAMERA_MIN_DIST                 68      // Override min subject distance
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 258065  // Override max subject distance
+
+    // Define shortcut overrides where defaults are not suitable
+    #define SHORTCUT_TOGGLE_HISTO           KEY_ERASE   // On camera Shutter Half Press + Up = switch MF on/off
+
 //----------------------------------------------------------
