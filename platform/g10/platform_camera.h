@@ -52,6 +52,7 @@
 
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
+    #define CAM_RESET_AEL_AFTER_VIDEO_AF    1   // Cam needs AE Lock state reset after AF in video recording
     #define CAM_HAS_JOGDIAL                 1
 
     #define CAM_BRACKETING                  1

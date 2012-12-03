@@ -307,10 +307,10 @@ static CMenuItem autoiso_submenu_items[] = {
     MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_MIN_ISO,            MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_min_iso,      	MENU_MINMAX(1, 20) ),
     MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_MAX_ISO_AUTO, 		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_max_iso_auto, 	MENU_MINMAX(10, 320) ),
 
-    MENU_ENUM2  (0x5f,LANG_MENU_AUTOISO_MIN_SHUTTER2,           &conf.autoiso2_shutter_enum,                        gui_autoiso2_shutter_modes ), 
+    MENU_ENUM2  (0x5f,LANG_MENU_AUTOISO_MIN_SHUTTER2,       &conf.autoiso2_shutter_enum,                        gui_autoiso2_shutter_modes ), 
     MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_MAX_ISO2, 			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso2_max_iso_auto,	MENU_MINMAX(10, 320) ),
 
-#if !defined(CAMERA_sx230hs)
+#if CAM_HAS_HI_ISO_AUTO_MODE
     MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_MAX_ISO_HI,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_max_iso_hi,		MENU_MINMAX(20, 320) ),
 #endif
 
@@ -970,13 +970,8 @@ const char* gui_video_bitrate_enum(int change, int arg)
 #if CAM_AF_SCAN_DURING_VIDEO_RECORD
 static const char* gui_video_af_key_enum(int change, int arg)
 {
-#if CAMERA_g12
-    static const char* names[]={ "", "Shutter", "Set", "AE Lock"}; 
-    static const int keys[]={0, KEY_SHOOT_HALF, KEY_SET, KEY_AE_LOCK }; 
-#else
-    static const char* names[]={ "", "Shutter", "Set"}; 
-    static const int keys[]={0, KEY_SHOOT_HALF, KEY_SET }; 
-#endif
+    static const char* names[] = CAM_VIDEO_AF_BUTTON_NAMES; 
+    static const int keys[] = CAM_VIDEO_AF_BUTTON_OPTIONS; 
     int i; 
  
     for (i=0; i<sizeof(names)/sizeof(names[0]); ++i) { 
@@ -1527,7 +1522,7 @@ static CMenuItem raw_exceptions_submenu_items[] = {
 #if defined CAM_HAS_VIDEO_BUTTON
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_VIDEO,          MENUITEM_BOOL,      &conf.save_raw_in_video,        0 ),
 #endif
-#if defined(CAMERA_s3is)
+#if defined(CAM_HAS_SPORTS_MODE)
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_SPORTS,         MENUITEM_BOOL,      &conf.save_raw_in_sports,       0 ),
 #endif
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_BURST,          MENUITEM_BOOL,      &conf.save_raw_in_burst,        0 ),
@@ -2149,11 +2144,7 @@ static char* gui_shortcut_text(int button)
     switch (button)
     {
     case KEY_DISPLAY:
-#if defined(CAMERA_g1x)
-        return "METER";
-#else
-        return "DISP";
-#endif
+        return CAM_DISP_BUTTON_NAME;
     case KEY_UP:
         return "UP";
     case KEY_DOWN:

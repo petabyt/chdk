@@ -38,6 +38,7 @@
     #define CAM_HAS_ZOOM_LEVER              1   // Camera has dedicated zoom buttons
     #undef  CAM_DRAW_EXPOSITION                 // Output expo-pair on screen (for cameras which (sometimes) don't do that)
     #define CAM_HAS_ERASE_BUTTON            1   // Camera has dedicated erase button
+    #define CAM_HAS_DISP_BUTTON             1   // Camera has dedicated DISP button
     #define CAM_HAS_IRIS_DIAPHRAGM          1   // Camera has real diaphragm mechanism (http://en.wikipedia.org/wiki/Diaphragm_%28optics%29)
     #undef  CAM_HAS_ND_FILTER                   // Camera has build-in ND filter
     #undef  CAM_HAS_NATIVE_ND_FILTER            // Camera has built-in ND filter with Canon menu support for enable/disable
@@ -74,12 +75,14 @@
     #define CAM_DISP_ALT_TEXT               1   // Display the '<ALT>' message at the bottom of the screen in ALT mode (IXUS 310 changes button color instead)
 
     #undef  CAM_AF_SCAN_DURING_VIDEO_RECORD     // CHDK can make single AF scan during video record
+    #undef  CAM_RESET_AEL_AFTER_VIDEO_AF        // Cam needs AE Lock state reset after AF in video recording
     #undef  CAM_HAS_VIDEO_BUTTON                // Camera can take stills in video mode, and vice versa
     #undef  CAM_EV_IN_VIDEO                     // CHDK can change exposure in video mode
     #define CAM_VIDEO_CONTROL               1   // pause / unpause video recordings
     #undef  CAM_VIDEO_QUALITY_ONLY              // Override Video Bitrate is not supported
     #undef  CAM_CHDK_HAS_EXT_VIDEO_TIME         // Camera can override time limit of video record -> sx220/230
     #undef  CAM_HAS_MOVIE_DIGEST_MODE           // The values in the 'movie_status' variable change if the camera has this mode (see is_video_recording())
+    #undef  CAM_HAS_SPORTS_MODE                 // Define to enable the RAW exception override control for SPORTS mode (s3is, sx30, sx40, etc)
 
     #define ZOOM_OVERRIDE                   0   // Shall zoom-override be used? default 0 becoz not implemented right now
 
@@ -209,6 +212,8 @@
     #undef  CAM_USE_ALT_PT_MoveOpticalZoomAt    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
     #undef  CAM_USE_OPTICAL_MAX_ZOOM_STATUS     // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
 
+    #define CAM_MARKET_ISO_BASE             100 // Base 'market' ISO value (SX40 & G1X use 200)
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1   // Camera has 'HI ISO Auto' mode (as well as Auto ISO mode)
     #undef  USE_REAL_AUTOISO                    // Define this to use real-iso instead of marketing-iso as values of autoiso mechanizm
     #undef  OVEREXP_COMPENSATE_OVERALL          // Define this to make overexposure_compensation work for all scenes, instead of day-light only
 
@@ -259,6 +264,84 @@
     #elif CAM_FIRMWARE_MEMINFO == 0
         #undef CAM_FIRMWARE_MEMINFO
     #endif
+#endif
+
+// Define default video AF scan buttons if not already defined in platform_camera.h
+#if CAM_AF_SCAN_DURING_VIDEO_RECORD
+    #ifndef CAM_VIDEO_AF_BUTTON_NAMES
+        #define CAM_VIDEO_AF_BUTTON_NAMES   { "", "Shutter", "Set" }
+        #define CAM_VIDEO_AF_BUTTON_OPTIONS { 0, KEY_SHOOT_HALF, KEY_SET }
+    #endif
+#endif
+
+// Define default value for DISP button name in shortcut text unless aready set in platform_camera.h
+// e.g. G1X uses Meter button as DISP in CHDK
+#ifndef CAM_DISP_BUTTON_NAME
+    #define CAM_DISP_BUTTON_NAME            "DISP"
+#endif
+
+//------------------------------------------------------------------- 
+// Keyboard / Button shortcuts - define in platform_camera.h
+// if the default values are not suitable
+// Default values are set below if not overridden
+//------------------------------------------------------------------
+
+// For models without ZOOM_LEVER  (#if !CAM_HAS_ZOOM_LEVER)
+// SHORTCUT_SET_INFINITY is not used
+// KEY_DISPLAY is used for gui_subj_dist_override_koef_enum;
+// KEY_LEFT/KEY_RIGHT is used for gui_subj_dist_override_value_enum (because of no separate ZOOM_IN/OUT)
+
+// Define keyboard / button shortcut values not already set above
+
+//Alt mode
+#if !defined(SHORTCUT_TOGGLE_RAW)
+    #if CAM_HAS_ERASE_BUTTON
+        #define SHORTCUT_TOGGLE_RAW         KEY_ERASE
+    #else
+        #define SHORTCUT_TOGGLE_RAW         KEY_DISPLAY
+    #endif
+#endif
+#if !defined(CAM_HAS_MANUAL_FOCUS) && !defined(SHORTCUT_MF_TOGGLE)
+    #if CAM_HAS_ERASE_BUTTON
+        #define SHORTCUT_MF_TOGGLE          KEY_DISPLAY
+    #else
+        #define SHORTCUT_MF_TOGGLE          KEY_UP
+    #endif
+#endif
+
+//Half press shoot button    
+#if !defined(SHORTCUT_TOGGLE_HISTO)
+    #if CAM_HAS_ERASE_BUTTON
+        #define SHORTCUT_TOGGLE_HISTO       KEY_UP
+    #else
+        #define SHORTCUT_TOGGLE_HISTO       KEY_MENU
+    #endif
+#endif
+#if !defined(SHORTCUT_TOGGLE_ZEBRA)
+    #define SHORTCUT_TOGGLE_ZEBRA       KEY_LEFT
+#endif
+#if !defined(SHORTCUT_TOGGLE_OSD)
+    #define SHORTCUT_TOGGLE_OSD         KEY_RIGHT
+#endif
+#if !defined(SHORTCUT_DISABLE_OVERRIDES)
+    #define SHORTCUT_DISABLE_OVERRIDES  KEY_DOWN
+#endif
+
+//Alt mode & Manual mode  
+#if !defined(SHORTCUT_SET_INFINITY)
+    #if CAM_HAS_ERASE_BUTTON
+        #define SHORTCUT_SET_INFINITY       KEY_UP
+    #else
+        #define SHORTCUT_SET_INFINITY       KEY_DISPLAY
+    #endif
+#endif
+#if !defined(SHORTCUT_SET_HYPERFOCAL)
+    #define SHORTCUT_SET_HYPERFOCAL     KEY_DOWN
+#endif
+
+#if CAM_HAS_ZOOM_LEVER
+    #define SHORTCUT_SD_SUB KEY_ZOOM_OUT
+    #define SHORTCUT_SD_ADD KEY_ZOOM_IN
 #endif
 
 //==========================================================

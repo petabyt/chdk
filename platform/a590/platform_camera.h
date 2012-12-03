@@ -65,5 +65,10 @@
     #define CAMERA_MAX_DIST                 52855   // Override max subject distance
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 
+    // Define shortcut overrides where defaults are not suitable
+    // Shutter Half Press + Down = AFL
+    //Half press shoot button    
+    #define SHORTCUT_DISABLE_OVERRIDES   KEY_DISPLAY
+
 //----------------------------------------------------------
 

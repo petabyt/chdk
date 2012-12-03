@@ -1203,7 +1203,7 @@ void MakeAFScan(void){
 #endif
  _MakeAFScan(&a, 3);
  some_flag_for_af_scan=save;
-#if defined(CAMERA_g12) || defined(CAMERA_g10)
+#if CAM_RESET_AEL_AFTER_VIDEO_AF
  int ae_lock;
  get_property_case(PROPCASE_AE_LOCK,&ae_lock,sizeof(ae_lock));
  if (ae_lock == 0)						// AE not locked so ensure it is unlocked after re-focus

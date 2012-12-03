@@ -47,6 +47,8 @@
     #undef  CAM_MENU_BORDERWIDTH
     #define CAM_MENU_BORDERWIDTH            10
 
+    #undef  CAM_HAS_HI_ISO_AUTO_MODE                // Camera does not have HI Auto ISO mode
+
     // bayer sensor pattern
     #define cam_CFAPattern                  0x01000201  // Green  Blue  Red  Green
 
@@ -131,6 +133,11 @@
     #define CAMERA_MAX_DIST                 9090910 // Override max subject distance
 
     #define CAM_ZOOM_ASSIST_BUTTON_CONTROL      1       // Activate the menu option to allow disabling the zoom assist button
+
+    #define CAM_HAS_SPORTS_MODE                 1   // Camera has SPORTS mode, enable RAW exception override control
+
+    // Define shortcut overrides where defaults are not suitable
+    #define SHORTCUT_TOGGLE_ZEBRA           KEY_ERASE   // On camera Shutter Half Press + Up = switch MF on/off
 
 //----------------------------------------------------------
 

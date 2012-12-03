@@ -873,7 +873,7 @@ static int gui_std_kbd_process()
     {
 #if CAM_HAS_ERASE_BUTTON
         if (kbd_is_key_clicked(KEY_ERASE))
-#elif !defined (CAMERA_a480) && !defined (CAMERA_a495)
+#elif CAM_HAS_DISP_BUTTON
         if (kbd_is_key_clicked(KEY_DISPLAY))
 #else
         if (kbd_is_key_clicked(KEY_MENU))

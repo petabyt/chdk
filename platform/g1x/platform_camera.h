@@ -31,9 +31,12 @@
     #define CAM_HAS_ND_FILTER                   1
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
     #define CAM_SWIVEL_SCREEN                   1
+
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
     #define CAM_ALT_BUTTON_NAMES                { "Shrtcut", "Video", "Meter", "AE Lock", "Erase" }
     #define CAM_ALT_BUTTON_OPTIONS              { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY, KEY_AE_LOCK, KEY_ERASE }
+    #define CAM_DISP_BUTTON_NAME                "METER"
+
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                1
@@ -49,6 +52,10 @@
 
     #undef  CAM_MENU_BORDERWIDTH
     #define CAM_MENU_BORDERWIDTH                10
+
+    #undef  CAM_MARKET_ISO_BASE
+    #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value
+    #undef  CAM_HAS_HI_ISO_AUTO_MODE                // Camera does not have HI Auto ISO mode
 
     // bayer sensor pattern
     #define cam_CFAPattern                      0x02010100 // Red  Green  Green  Blue
@@ -155,4 +162,8 @@
     #define CAMERA_MIN_DIST                     275     // Override min subject distance
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                     660067  // Override max subject distance
+
+    // Define shortcut overrides where defaults are not suitable
+    #define SHORTCUT_TOGGLE_ZEBRA           KEY_ERASE   // On camera Shutter Half Press + Up = switch MF on/off
+
 //----------------------------------------------------------
