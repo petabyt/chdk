@@ -195,6 +195,7 @@
     #undef  CAM_DISABLE_RAW_IN_HQ_BURST         // For cameras with 'HQ Burst' mode that does not work with raw define this
     #undef  CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
     #undef  CAM_ISO_LIMIT_IN_HQ_BURST           // Defines max ISO override value for HQ Burst mode (higher values crash camera)
+    #undef  CAM_MIN_ISO_OVERRIDE                // Defines min (non-zero) ISO override value - lower value may crash if flash used [0 = AUTO, so always allowed]
     
     #undef  CAM_HAS_GPS                         // for cameras with GPS reseiver: includes the GPS coordinates in in DNG file
 
