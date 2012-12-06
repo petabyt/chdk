@@ -324,6 +324,11 @@ short shooting_get_iso_override_value()
     if ((mode_get() & MODE_SHOOTING_MASK) == MODE_SCN_HIGHSPEED_BURST)
         if (iso > CAM_ISO_LIMIT_IN_HQ_BURST) iso = CAM_ISO_LIMIT_IN_HQ_BURST;
 #endif
+#ifdef CAM_MIN_ISO_OVERRIDE
+    // Limit min (non-zero) ISO
+    // Some cameras will crash if flash used and ISO set lower than this value (most easily tested in AUTO mode)
+    if ((iso > 0) && (iso < CAM_MIN_ISO_OVERRIDE)) iso = CAM_MIN_ISO_OVERRIDE;
+#endif
     return iso;
 }
 
@@ -983,6 +988,10 @@ void shooting_set_iso_real(short iso, short is_now)
             // Limit max ISO in HQ burst mode
             if ((mode_get() & MODE_SHOOTING_MASK) == MODE_SCN_HIGHSPEED_BURST)
                 if (iso > CAM_ISO_LIMIT_IN_HQ_BURST) iso = CAM_ISO_LIMIT_IN_HQ_BURST;
+#endif
+#ifdef CAM_MIN_ISO_OVERRIDE
+            // Limit min (non-zero) ISO
+            if ((iso > 0) && (iso < CAM_MIN_ISO_OVERRIDE)) iso = CAM_MIN_ISO_OVERRIDE;
 #endif
             shooting_set_sv96(shooting_get_sv96_from_iso(iso), is_now);
         }

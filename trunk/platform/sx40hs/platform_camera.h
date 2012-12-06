@@ -52,6 +52,8 @@
     #undef  CAM_MARKET_ISO_BASE
     #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value
     #undef  CAM_HAS_HI_ISO_AUTO_MODE                // Camera does not have HI Auto ISO mode
+    #define CAM_ISO_LIMIT_IN_HQ_BURST           930 // Defines max ISO override value for HQ Burst mode (higher values crash camera)
+    #define CAM_MIN_ISO_OVERRIDE                70  // Defines min (non-zero) ISO override value - lower value may crash if flash used [0 = AUTO, so always allowed]
 
     // bayer sensor pattern
     #define cam_CFAPattern                      0x02010100 // Red  Green  Green  Blue
@@ -120,7 +122,6 @@
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1       // For cameras with 'low light' mode that does not work with raw define this
     #define CAM_DISABLE_RAW_IN_HQ_BURST         1       // For cameras with 'HQ Burst' mode that does not work with raw define this
     #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN 1     // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
-    #define CAM_ISO_LIMIT_IN_HQ_BURST           930     // Defines max ISO override value for HQ Burst mode (higher values crash camera)
     #define CAM_HAS_MOVIE_DIGEST_MODE           1       // Changes the values in the 'movie_status' variable if the camera has this mode
 
     #define CAM_LOAD_CUSTOM_COLORS              1       // Enable loading CHDK colors into the camera palette memory/hardware
