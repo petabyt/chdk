@@ -1285,6 +1285,10 @@ uint32_t log_test[] = {
 	0x1526E50E, 0x3FDBCB7B, 0
 };
 
+uint32_t DeleteDirectory_Fut_test[] = { 0x09400017 };
+uint32_t MakeDirectory_Fut_test[]   = { 0x09400015 };
+uint32_t RenameFile_Fut_test[]      = { 0x09400013 };
+
 string_sig string_sigs[] = {
 	{ 1, "AllocateMemory", "AllocateMemory", 1 },
     { 1, "Close", "Close", 1 },
@@ -1503,9 +1507,9 @@ string_sig string_sigs[] = {
     { 15, "ReadFastDir", "ReadFast_ERROR\n", 0x01000001 },
     { 15, "OpenFastDir", "OpenFastDir_ERROR\n", 0x01000001 },
 
-    { 16, "DeleteDirectory_Fut", (char*)0x09400017, 0x01000001 },
-    { 16, "MakeDirectory_Fut", (char*)0x09400015, 0x01000001 },
-    { 16, "RenameFile_Fut", (char*)0x09400013, 0x01000001 },
+    { 16, "DeleteDirectory_Fut", (char*)DeleteDirectory_Fut_test, 0x01000001 },
+    { 16, "MakeDirectory_Fut", (char*)MakeDirectory_Fut_test, 0x01000001 },
+    { 16, "RenameFile_Fut", (char*)RenameFile_Fut_test, 0x01000001 },
 	
     { 0, 0, 0, 0 }
 };
@@ -2255,7 +2259,7 @@ int match_strsig15(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 //	Function immediately preceeding usage of hex value
 int find_strsig16(firmware *fw, string_sig *sig, int k)
 {
-	uint32_t nm0 = (uint32_t)sig->ev_name;
+	uint32_t nm0 = *((uint32_t*)sig->ev_name);
 	uint32_t *p;
 	int j;
 	

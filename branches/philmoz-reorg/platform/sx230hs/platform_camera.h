@@ -111,6 +111,7 @@
 
     #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
 
+    #undef  CAM_HAS_HI_ISO_AUTO_MODE            // SX230 does not have HI Auto ISO mode
     #define USE_REAL_AUTOISO                1
     #define OVEREXP_COMPENSATE_OVERALL      1
     

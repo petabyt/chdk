@@ -486,11 +486,7 @@ short shooting_get_iso_market_base()
     if (iso_market_base==0)
     {
         if (iso_table[1-iso_table[0].id].prop_id == 50) iso_market_base=50;
-#if defined(CAMERA_sx40hs) || defined(CAMERA_g1x)
-        else iso_market_base=200;
-#else
-        else iso_market_base=100;
-#endif
+        else iso_market_base=CAM_MARKET_ISO_BASE;
     }
     return iso_market_base;
 }

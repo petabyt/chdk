@@ -216,7 +216,6 @@ NSTUB(qsort                                   ,0xffae5444) //  4
 NSTUB(rand                                    ,0xff820774) //  1
 NSTUB(read                                    ,0xff81ac7c) //101
 NSTUB(reboot_fw_update                        ,0xffa7a598) //106
-NSTUB(rename                                  ,0xff83645c) //  4
 NSTUB(set_control_event                       ,0xff8906e8) //111
 NSTUB(srand                                   ,0xff820768) //  1
 NSTUB(stat                                    ,0xff836cdc) //109

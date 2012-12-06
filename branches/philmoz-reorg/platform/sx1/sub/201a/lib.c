@@ -56,7 +56,7 @@ int vid_get_palette_type() { return 2; }
 int vid_get_palette_size() { return 16*4; }
 
 void *vid_get_bitmap_active_palette() {
-    return *(unsigned int*)(0x8D10+0x20); // sub_FF903BBC
+    return (void*)(*(unsigned int*)(0x8D10+0x20)); // sub_FF903BBC
 }
 void *vid_get_bitmap_active_buffer()
 {
