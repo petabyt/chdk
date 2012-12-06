@@ -15,8 +15,6 @@ KNOWN BUGS
 - Mute during zoom in/out is not implemented
 - Video Time limit removal is not implemented.
 - AF during video recording is disabled.
-- Motion detection was not tested
-
 
 For Developers
 **************
