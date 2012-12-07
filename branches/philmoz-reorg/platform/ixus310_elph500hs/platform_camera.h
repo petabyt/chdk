@@ -93,6 +93,7 @@
     #define EDGE_HMARGIN                    2
 
     #undef  CAM_HAS_HI_ISO_AUTO_MODE                // Camera does not have HI Auto ISO mode
+    #define CAM_MIN_ISO_OVERRIDE            70      // Defines min (non-zero) ISO override value - lower value may crash if flash used [0 = AUTO, so always allowed]
 
     // bayer sensor pattern
     #define cam_CFAPattern                  0x02010100 // Red  Green  Green  Blue
