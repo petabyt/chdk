@@ -1,8 +1,6 @@
 #ifndef RAW_H
 #define RAW_H
 
-#include "camera.h"
-
 //-------------------------------------------------------------------
 #define RAW_PREFIX_IMG          0
 #define RAW_PREFIX_CRW          1

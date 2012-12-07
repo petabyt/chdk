@@ -6,10 +6,12 @@
  *   This is main file of module processing system. Module load/unload/service functions
  */
 
+#include "platform.h"
 #include "stdlib.h"
 #include "console.h"
 #include "gui.h"
-#include "platform.h"
+#include "keyboard.h"
+#include "cache.h"
 
 #include "flt.h"
 #include "module_load.h"

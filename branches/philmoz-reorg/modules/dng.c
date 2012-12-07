@@ -1,6 +1,10 @@
+#include "camera_info.h"
 #include "stdlib.h"
-#include "string.h"
-#include "platform.h"
+#include "modes.h"
+#include "debug_led.h"
+#include "clock.h"
+#include "properties.h"
+#include "shooting.h"
 #include "conf.h"
 #include "console.h"
 #include "dng.h"
@@ -14,6 +18,11 @@
 #define DNG_TH_WIDTH 128
 #define DNG_TH_HEIGHT 96
 // higly recommended that DNG_TH_WIDTH*DNG_TH_HEIGHT would be divisible by 512
+
+// new version to support DNG double buffer
+void reverse_bytes_order2(char* from, char* to, int count);
+// convert old version calls to new version (to minimise code changes)
+#define reverse_bytes_order(start, count)   reverse_bytes_order2(start,start,count)
 
 struct dir_entry{unsigned short tag; unsigned short type; unsigned int count; unsigned int offset;};
 
@@ -108,6 +117,8 @@ static unsigned int badpixel_opcode[] =
 #define ILLUMINANT2_INDEX           38      // tag 0xc65b
 #define FORWARD_MATRIX1_INDEX       39      // tag 0xc714
 #define FORWARD_MATRIX2_INDEX       40      // tag 0xc715
+
+#define CAM_MAKE                    "Canon"
 
 struct dir_entry ifd0[]={
     {0xFE,   T_LONG,       1,  1},                                 // NewSubFileType: Preview Image
@@ -617,10 +628,10 @@ void convert_dng_to_chdk_raw(char* fn)
     FILE *dng, *raw;
     int *buf;
     int i;
-    struct STD_stat st;
+    struct stat st;
     struct utimbuf t;
 
-    if (safe_stat(fn, &st) != 0 || st.st_size<=camera_sensor.raw_size)  return;
+    if (stat(fn, &st) != 0 || st.st_size<=camera_sensor.raw_size)  return;
     buf=malloc(BUF_SIZE);
     if (buf)
     {
@@ -755,9 +766,16 @@ int raw_init_badpixel_bin()
 short* binary_list=NULL;
 int binary_count=-1;
 
+void unload_bad_pixels_list_b(void)
+{
+    if (binary_list) free(binary_list);
+    binary_list=NULL;
+    binary_count=-1;
+}
+
 void load_bad_pixels_list_b(char* filename)
 {
-    struct STD_stat st;
+    struct stat st;
     long filesize;
     void* ptr;
     FILE *fd;
@@ -769,7 +787,7 @@ void load_bad_pixels_list_b(char* filename)
     }
 
     binary_count=-1;
-    if (safe_stat(filename,&st)!=0) return;
+    if (stat(filename,&st)!=0) return;
     filesize=st.st_size;
     if (filesize%(2*sizeof(short)) != 0) return;
     if (filesize == 0) { binary_count = 0; return; }    // Allow empty badpixel.bin file
@@ -784,13 +802,6 @@ void load_bad_pixels_list_b(char* filename)
         binary_count=filesize/(2*sizeof(short));
     }
     else free(ptr);
-}
-
-void unload_bad_pixels_list_b(void)
-{
-    if (binary_list) free(binary_list);
-    binary_list=NULL;
-    binary_count=-1;
 }
 
 void patch_bad_pixels_b(void)
@@ -930,7 +941,7 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
 
 #include "module_load.h"
 
-struct libdng_sym libdng = {
+struct libdng_sym _libdng = {
     MAKE_API_VERSION(1,0),      // apiver: increase major if incompatible changes made in module, 
     // increase minor if compatible changes made(including extending this struct)
 
@@ -950,7 +961,7 @@ void* MODULE_EXPORT_LIST[] = {
     /* 0 */ (void*)EXPORTLIST_MAGIC_NUMBER,
     /* 1 */ (void*)1,
 
-    &libdng
+    &_libdng
 };
 
 //--------------------------------------------

@@ -2,9 +2,8 @@
 **	$Id: gps.c, v 1.2 2012/01/05 genie01 Exp $
 **---------------------------------------------------------------------------------*/
 
-#include "stdio.h"
-#include "stdlib.h"
 #include "platform.h"
+#include "stdlib.h"
 #include "gps.h"
 
 void gps_getData(tGPS* gps){

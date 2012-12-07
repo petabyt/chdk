@@ -1,7 +1,5 @@
-#include "stdlib.h"
 #include "platform.h"
-#include "core.h"
-#include "keyboard.h"
+#include "stdlib.h"
 #include "conf.h"
 #include "font.h"
 #include "lang.h"

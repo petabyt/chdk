@@ -4,8 +4,8 @@
 #include "gui.h"
 #include "gui_draw.h"
 #include "flt.h"
-#ifndef THIS_IS_CHDK_CORE
-#include "module_exportlist.h"
+#ifdef CHDK_MODULE_CODE
+    #include "module_exportlist.h"
 #endif
 
 // This is main CHDK trunk

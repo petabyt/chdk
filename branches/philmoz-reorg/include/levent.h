@@ -37,4 +37,9 @@ int levent_post_to_ui_by_name(const char *name);
 /* post press/unpress events for RecButton and PBButton */
 void levent_set_record(void);
 void levent_set_play(void);
+
+extern void SetLogicalEventActive(unsigned event, unsigned state);
+extern void PostLogicalEventForNotPowerType(unsigned event, unsigned unk);
+extern void PostLogicalEventToUI(unsigned event, unsigned unk);
+
 #endif

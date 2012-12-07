@@ -1,8 +1,8 @@
 #include "stdlib.h"
 #include "gui.h"
 #include "font.h"
-#include "../../core/gui_draw.h"
-#include "../../include/conf.h"
+#include "gui_draw.h"
+#include "conf.h"
 
 //-------------------------------------------------------------------
 #define RBF_MAX_NAME        64

@@ -57,8 +57,22 @@
 #define FRONTDIAL_LEFT      102
 #define FRONTDIAL_RIGHT     103
 
-#ifdef CAM_TOUCHSCREEN_UI
-extern int redraw_buttons;
-#endif
+/******************************************************************/
+
+void kbd_key_press(long key);
+void kbd_key_release(long key);
+void kbd_key_release_all();
+long kbd_is_key_pressed(long key);
+long kbd_is_key_clicked(long key);
+long kbd_get_pressed_key();
+long kbd_get_clicked_key();
+long kbd_get_autoclicked_key();
+void kbd_reset_autoclicked_key();
+long kbd_use_zoom_as_mf();
+void kbd_set_alt_mode_key_mask(long key);
+int get_usb_power(int edge);
+long get_jogdial_direction(void);
+
+/******************************************************************/
 
 #endif

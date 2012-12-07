@@ -1,5 +1,4 @@
 #include "stdlib.h"
-#include "stdlib_unified.h"
 #include "fileutil.h"
 
 // PURPOSE:
@@ -15,8 +14,8 @@ char* load_file( const char* name, int* rv_size )
 	char* buf;
 
 	// get size of file
-	struct STD_stat st;
-    if ( safe_stat(name,&st) == 0 )
+	struct stat st;
+    if ( stat(name,&st) == 0 )
 		size = st.st_size;
 
 	if ( rv_size )
@@ -140,8 +139,8 @@ void save_int_value_file( const char* filename, int value )
 // result: 0=not_exists, -1=exist_but_empty, 1=exist_and_nonempty
 int is_file_exists(const char* fn)		
 {
-	struct STD_stat st; 
-	if ( safe_stat(fn,&st) )
+	struct stat st; 
+	if ( stat(fn,&st) )
 	  return 0;
 	return ( st.st_size==0)?-1:1;
 }

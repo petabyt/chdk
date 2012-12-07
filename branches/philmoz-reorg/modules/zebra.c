@@ -1,10 +1,12 @@
-#include "platform.h"
+#include "camera_info.h"
 #include "zebra.h"
 #include "conf.h"
 #include "keyboard.h"
+#include "modes.h"
+#include "viewport.h"
+#include "properties.h"
 #include "stdlib.h"
 #include "gui_draw.h"
-#include "gui_menu.h"
 #include "gui_lang.h"
 #include "gui_osd.h"
 #include "gui_batt.h"
@@ -544,7 +546,7 @@ int module_idx=-1;
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-struct libzebra_sym libzebra = {
+struct libzebra_sym _libzebra = {
     MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
 							    // increase minor if compatible changes made(including extending this struct)
     gui_osd_draw_zebra
@@ -555,7 +557,7 @@ void* MODULE_EXPORT_LIST[] = {
 	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
 	/* 1 */	(void*)1,
 
-			&libzebra
+			&_libzebra
 		};
 
 

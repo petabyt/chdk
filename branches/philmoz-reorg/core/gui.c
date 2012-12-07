@@ -1,19 +1,17 @@
-#include "stdlib.h"
 #include "platform.h"
+#include "stdlib.h"
 #include "core.h"
 #include "keyboard.h"
+#include "touchscreen.h"
 #include "conf.h"
-#include "camera.h"
 #include "font.h"
 #include "lang.h"
 #include "fileutil.h"
-#include "kbd.h"
 #include "gui.h"
 #include "gui_lang.h"
 #include "gui_draw.h"
 #include "gui_menu.h"
 #include "gui_user_menu.h"
-#include "gui_palette.h"
 #include "gui_mbox.h"
 #include "console.h"
 #ifdef OPT_DEBUGGING
@@ -21,7 +19,6 @@
 #endif
 #include "gui_osd.h"
 #include "raw.h"
-#include "dng.h"
 #include "modules.h"
 #ifdef OPT_SCRIPTING
     #include "script.h"
@@ -1575,7 +1572,7 @@ static void raw_fselect_cb(const char * filename)
     struct stat st;
     if (!filename) return;
     stat((char*)filename,&st);
-    if (st.st_size!=hook_raw_size()) return;
+    if (st.st_size!=camera_sensor.raw_size) return;
     gui_mbox_init((int)"", LANG_RAW_DEVELOP_MESSAGE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
     raw_prepare_develop((char*)filename);
 }

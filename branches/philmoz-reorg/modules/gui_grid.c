@@ -1,12 +1,10 @@
+#include "camera_info.h"
 #include "stdlib.h"
 #include "keyboard.h"
-#include "platform.h"
-#include "core.h"
 #include "conf.h"
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_grid.h"
-#include "gui_menu.h"
 #include "gui_lang.h"
 
 #include "modules.h"
@@ -145,7 +143,7 @@ void grid_lines_load(const char *fn)
         if (!buf) return;
 
         grid = grid_default;
-        fd = safe_open(fn, O_RDONLY, 0777);
+        fd = open(fn, O_RDONLY, 0777);
         if (fd>=0) {
             int rcnt = read(fd, buf, GRID_BUF_SIZE);
             if (rcnt > 0) {
@@ -201,7 +199,7 @@ void gui_grid_draw_osd(int force) {
 #include "module_load.h"
 
 
-struct libgrids_sym libgrids = {
+struct libgrids_sym _libgrids = {
 			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
 										// increase minor if compatible changes made(including extending this struct)
 			gui_grid_draw_osd,
@@ -217,7 +215,7 @@ int module_idx=-1;
 void* MODULE_EXPORT_LIST[] = {
 	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
 	/* 1 */	(void*)1,
-			&libgrids
+			&_libgrids
 		};
 
 

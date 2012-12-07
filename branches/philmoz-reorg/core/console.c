@@ -1,7 +1,6 @@
+#include "platform.h"
 #include "console.h"
 #include "stdlib.h"
-#include "platform.h"
-#include "camera.h"
 #include "gui.h"
 #include "gui_draw.h"
 

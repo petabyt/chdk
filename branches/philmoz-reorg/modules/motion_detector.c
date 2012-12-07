@@ -22,10 +22,13 @@ Sity: Kharkiv
 #define MD_INFO_BUF_SIZE 4096
 #endif
 
+#include "camera_info.h"
 #include "motion_detector.h"
 #include "action_stack.h"
 #include "console.h"
 #include "keyboard.h"
+#include "clock.h"
+#include "viewport.h"
 
 #include "gui.h"
 #include "gui_draw.h"
@@ -642,7 +645,7 @@ int module_idx=-1;
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-struct libmotiondetect_sym libmotiondetect = {
+struct libmotiondetect_sym _libmotiondetect = {
 			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
 										// increase minor if compatible changes made(including extending this struct)
 
@@ -659,7 +662,7 @@ void* MODULE_EXPORT_LIST[] = {
 	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
 	/* 1 */	(void*)1,
 
-			&libmotiondetect
+			&_libmotiondetect
 		};
 
 

@@ -1,7 +1,9 @@
+#include "camera_info.h"
 #include "stdlib.h"
 #include "keyboard.h"
-#include "platform.h"
-#include "core.h"
+#include "viewport.h"
+#include "clock.h"
+#include "raw_buffer.h"
 #include "lang.h"
 #include "gui.h"
 #include "gui_lang.h"
@@ -171,19 +173,19 @@ static void gui_bench_run() {
         bench_to_draw = 2;
     }
 
-    x = safe_open("A/BENCH.TMP", O_WRONLY|STD_O_CREAT, 0777);
+    x = open("A/BENCH.TMP", O_WRONLY|O_CREAT, 0777);
     if (x>=0) {
         bench.disk_write_raw_bps = 0;
         gui_bench_draw();
         t = get_tick_count();
-        s=write(x, hook_raw_image_addr(), hook_raw_size());
+        s=write(x, hook_raw_image_addr(), camera_sensor.raw_size);
         t = get_tick_count() - t;
         close(x);
         bench.disk_write_raw_bps = s*100 / (t/10);
         bench_to_draw = 2;
     }
 
-    x = safe_open("A/BENCH.TMP", O_WRONLY|STD_O_CREAT, 0777);
+    x = open("A/BENCH.TMP", O_WRONLY|O_CREAT, 0777);
     if (x>=0) {
         bench.disk_write_mem_bps = 0;
         gui_bench_draw();
@@ -196,7 +198,7 @@ static void gui_bench_run() {
     }
 
     if (buf) {
-        x = safe_open("A/BENCH.TMP", O_WRONLY|STD_O_CREAT, 0777);
+        x = open("A/BENCH.TMP", O_WRONLY|O_CREAT, 0777);
         if (x>=0) {
             bench.disk_write_buf_bps = 0;
             gui_bench_draw();
@@ -210,7 +212,7 @@ static void gui_bench_run() {
             bench_to_draw = 2;
         }
 
-        x = safe_open("A/BENCH.TMP", O_RDONLY, 0777);
+        x = open("A/BENCH.TMP", O_RDONLY, 0777);
         if (x>=0) {
             bench.disk_read_buf_bps = 0;
             gui_bench_draw();

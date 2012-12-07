@@ -1,7 +1,6 @@
 #include "stdlib.h"
 #include "keyboard.h"
 #include "platform.h"
-#include "core.h"
 #include "gui.h"
 #include "gui_osd.h"
 #include "gui_draw.h"

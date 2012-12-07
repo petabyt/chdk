@@ -10,14 +10,12 @@
 		  in gui.c and add ptr below to stucture (*usb_control_module[10])(int)
  ===================================================================================================================================================*/
 
+#include "platform.h"
 #include "kbd.h"
 #include "stdlib.h"
-#include "platform.h"
-#include "core.h"
 #include "keyboard.h"
 #include "conf.h"
 #include "action_stack.h"
-#include "camera.h"
 #include "usb_remote.h"
 
 /*===================================================================================================

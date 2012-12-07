@@ -1,11 +1,12 @@
-#include "platform.h"
-
+#include "camera_info.h"
 #include "edgeoverlay.h"
 #include "conf.h"
 #include "keyboard.h"
+#include "modes.h"
+#include "viewport.h"
+#include "shooting.h"
 #include "stdlib.h"
 #include "gui_draw.h"
-#include "gui_menu.h"
 #include "gui_lang.h"
 #include "bitvector.h"
 
@@ -133,11 +134,11 @@ void save_edge_overlay(void)
     char fn[64];
     char msg[64];
     FILE *fd;
-    STD_DIR* d;
+    DIR* d;
     int fnum = 0;
     int fr = 0;
     int zoom = 0;
-    struct STD_dirent* de;
+    struct dirent* de;
     static struct utimbuf t;
     // nothing to save? then dont save
 
@@ -150,13 +151,13 @@ void save_edge_overlay(void)
     zoom = shooting_get_zoom();
 
     // first figure out the most appropriate filename to use
-    d = safe_opendir(EDGE_SAVE_DIR);
+    d = opendir(EDGE_SAVE_DIR);
     if( ! d )
     {
         return;
     }
 
-    while( (de = safe_readdir(d)) )
+    while( (de = readdir(d)) )
     {
         fr = get_edge_file_num(de->d_name);
         if( fr > fnum )
@@ -180,7 +181,7 @@ void save_edge_overlay(void)
         sprintf(msg, "Saved as %s",fn);
         draw_string(0, 0, msg, conf.osd_color);
     }
-    safe_closedir(d);
+    closedir(d);
 }
 
 // load the edge overlay from a file
@@ -762,7 +763,7 @@ int module_idx=-1;
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-struct libedgeovr_sym libedgeovr = {
+struct libedgeovr_sym _libedgeovr = {
 			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
 										// increase minor if compatible changes made(including extending this struct)
 
@@ -776,7 +777,7 @@ void* MODULE_EXPORT_LIST[] = {
 	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
 	/* 1 */	(void*)1,
 
-			&libedgeovr
+			&_libedgeovr
 		};
 
 

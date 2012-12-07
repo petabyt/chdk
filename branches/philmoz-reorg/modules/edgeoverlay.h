@@ -15,18 +15,8 @@ struct libedgeovr_sym {
     void (*save_edge_overlay)(void);
 };
 
-// Defines of exported to chdk symbols
-#ifdef THIS_IS_CHDK_CORE
-	// This section is for CHDK core
-	extern struct libedgeovr_sym* libedgeovr;
-    extern struct libedgeovr_sym* module_edgeovr_load();	// 0fail, addr-ok
-#else
-	// This section is for module
-    extern void edge_overlay();
-    extern void load_edge_overlay(const char* fn);
-    extern void save_edge_overlay(void);
-#endif
-
+extern struct libedgeovr_sym* libedgeovr;
+extern struct libedgeovr_sym* module_edgeovr_load();	// 0fail, addr-ok
 extern void module_restore_edge(void **buf, int *state);
 extern void module_save_edge(void* buf, int state);
 

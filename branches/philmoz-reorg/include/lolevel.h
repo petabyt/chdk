@@ -125,6 +125,13 @@ extern int _toupper(int c);
 
 extern int _vsprintf(char *buf, const char *fmt, __builtin_va_list va_list);
 
+/**
+ * No STUBS!
+ * You can't use these two directly from THUMB code (core), only from platform.
+ */
+//extern int fprintf(FILE *fd, char*buf, ...);
+extern int printf(char *buf, ...);
+
 extern void *_malloc(long size);
 extern void _free(void *p);
 extern void *_AllocateUncacheableMemory(long size);
@@ -245,15 +252,6 @@ extern void _SetFileAttributes(int fd, int attr);
 #endif
 
 /* file */
-#ifndef CAM_DRYOS
-extern void *_opendir(const char* name);
-extern void *_readdir(void *d);
-#else
-extern void *_OpenFastDir(const char* name);
-extern int _ReadFastDir(void *d, void* dd); // DRYOS
-#endif
-extern int   _closedir(void *d);
-extern void  _rewinddir(void *d);
 extern int   _stat(const char *name, void *pStat);
 extern unsigned long _GetDrive_ClusterSize(int drive);
 extern unsigned long _GetDrive_TotalClusters(int drive);

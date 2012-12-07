@@ -51,17 +51,16 @@
 #include "ubasic.h"
 #include "platform.h"
 #include "script.h"
-#include "camera.h"
 #include "shot_histogram.h"
 #include "stdlib.h"
 #include "levent.h"
 #include "console.h"
-#include "../../core/modules.h"
+#include "modules.h"
 #endif
-#include "../../core/action_stack.h"
+#include "action_stack.h"
 #include "tokenizer.h"
 
-#include "../../include/conf.h"
+#include "conf.h"
 
 #define INCLUDE_OLD_GET__SYNTAX
 

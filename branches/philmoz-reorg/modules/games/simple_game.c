@@ -1,4 +1,4 @@
-#include "platform.h"
+#include "modes.h"
 #include "module_load.h"
 #include "gui_draw.h"
 #include "gui_lang.h"

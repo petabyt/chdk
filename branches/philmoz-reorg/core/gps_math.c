@@ -3,7 +3,6 @@
 #include "camera.h"
 #ifdef CAM_HAS_GPS
 #include <stdlib.h>
-#include <stdio.h>
 #include "math.h"
 #include "gps_math.h"
 

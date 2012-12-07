@@ -1,14 +1,13 @@
+#include "camera_info.h"
 #include "stdlib.h"
 #include "keyboard.h"
-#include "platform.h"
-#include "core.h"
+#include "clock.h"
 #include "conf.h"
 #include "gui.h"
 #include "font.h"
 #include "gui_draw.h"
 #include "gui_batt.h"
 #include "gui_read.h"
-#include "gui_menu.h"
 #include "gui_lang.h"
 
 #include "modules.h"
@@ -63,14 +62,14 @@ static void gui_read_draw_scroll_indicator() {
 
 //-------------------------------------------------------------------
 int gui_read_init(const char* file) {
-    static struct STD_stat   st;
-    read_file = safe_open(file, O_RDONLY, 0777);
+    static struct stat   st;
+    read_file = open(file, O_RDONLY, 0777);
     if (strcmp(file, conf.reader_file)!=0) {
         conf.reader_pos = 0;
         strcpy(conf.reader_file, file);
     }
     read_on_screen = 0;
-    read_file_size = (read_file>=0 && safe_stat((char*)file, &st)==0)?st.st_size:0;
+    read_file_size = (read_file>=0 && stat((char*)file, &st)==0)?st.st_size:0;
     if (read_file_size<=conf.reader_pos) {
         conf.reader_pos = 0;
     }

@@ -1,8 +1,6 @@
 #ifndef GUI_DRAW_H
 #define GUI_DRAW_H
 
-#include "camera.h"     // ensure the camera definition is loaded
-
 //-------------------------------------------------------------------
 
 // Moved from gui_bench.c, gui_debug.c, gui_calendar.c, gui_reversi.c & gui_sokoban.c so it can be overridden
@@ -14,6 +12,12 @@
 // Common colors that are the same in all palettes
 #define COLOR_TRANSPARENT               0x00
 #define COLOR_BLACK                     0xFF
+
+//-------------------------------------------------------------------
+
+#ifndef CHDK_MODULE_CODE
+
+#include "camera.h"     // ensure the camera definition is loaded
 
 //-------------------------------------------------------------------
 
@@ -966,6 +970,10 @@
     #define COLOR_ICON_PLY_GREY_LT      COLOR_ICON_REC_GREY_LT
 #endif
 
+#endif  // CHDK_MODULE_CODE
+
+//-------------------------------------------------------------------
+
 #define FONT_WIDTH                      8
 #define FONT_HEIGHT                     16
 
@@ -973,11 +981,9 @@
 extern void draw_init();
 extern void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl));
 
-#ifdef CAM_DETECT_SCREEN_ERASE
 extern void draw_set_guard();
 extern int draw_test_guard();
 extern int draw_test_pixel(coord x, coord y, color c);
-#endif
 
 extern color draw_get_pixel(coord x, coord y);
 

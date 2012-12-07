@@ -1,7 +1,6 @@
 #include "platform.h"
 #include "conf.h"
 #include "shot_histogram.h"
-#include "camera.h"
 #include "raw.h"
 #include "stdlib.h"
 

@@ -4,12 +4,12 @@
  *    CHDK-FLAT Module System.  Sergey Taranenko aka tsvstar
  */
 
+#include "platform.h"
 #include "module_exportlist.h"
 #include "lang.h"
-#include "platform.h"
 #include "stdlib.h"
-#include "stdlib_unified.h"
 #include "keyboard.h"
+#include "raw_buffer.h"
 
 #include "gui.h"
 #include "gui_draw.h"
@@ -27,7 +27,6 @@
 
 #include "modules.h"
 #include "module_load.h"
-#include "raw.h"
 #include "action_stack.h"
 #include "console.h"
 #include "gps.h"
@@ -119,15 +118,15 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 
             write,
             lseek,
-            safe_open,
+            open,
             close,
             read,
             remove,
             rename,
-            safe_stat,
-            safe_opendir,
-            safe_readdir,
-            safe_closedir,
+            stat,
+            opendir,
+            readdir,
+            closedir,
 			mkdir,
 
             fopen,
@@ -157,6 +156,7 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
             strtol,
             strrchr,
             strncpy,
+            toupper,
             memcpy,
             memset,
 
@@ -217,7 +217,6 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 
 			get_raw_image_addr,
             hook_raw_image_addr,
-            hook_raw_size,
 			raw_prepare_develop,
 
             kbd_get_autoclicked_key,

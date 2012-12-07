@@ -1,4 +1,5 @@
 #include "platform.h"
+#include "raw_buffer.h"
 #include "conf.h"
 #include "stdlib.h"
 #include "raw.h"
@@ -73,7 +74,7 @@ int raw_savefile() {
         started();
         fd = open(fn, O_RDONLY, 0777);
         if (fd>=0) {
-            read(fd, rawadr, hook_raw_size());
+            read(fd, rawadr, camera_sensor.raw_size);
             close(fd);
         }
 #ifdef OPT_CURVES
@@ -150,13 +151,13 @@ int raw_savefile() {
             else 
             {
                 // Write active RAW buffer
-                write(fd, (char*)(((unsigned long)rawadr)|CAM_UNCACHED_BIT), hook_raw_size());
+                write(fd, (char*)(((unsigned long)rawadr)|CAM_UNCACHED_BIT), camera_sensor.raw_size);
             }
             close(fd);
             utime(fn, &t);
 #else
             // Write active RAW buffer
-            write(fd, (char*)(((unsigned long)rawadr)|CAM_UNCACHED_BIT), hook_raw_size());
+            write(fd, (char*)(((unsigned long)rawadr)|CAM_UNCACHED_BIT), camera_sensor.raw_size);
             close(fd);
             utime(fn, &t);
 #endif

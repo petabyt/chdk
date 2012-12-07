@@ -1,7 +1,7 @@
+#include "camera_info.h"
 #include "stdlib.h"
 #include "keyboard.h"
-#include "platform.h"
-#include "core.h"
+#include "modes.h"
 #include "lang.h"
 #include "conf.h"
 #include "gui.h"
@@ -287,9 +287,9 @@ int gui_sokoban_init() {
     if(!num_levels) {
         char *buf,*p;
         FILE *fd;    
-        struct STD_stat st;
+        struct stat st;
 
-        if (safe_stat((char *)level_file_name,&st) != 0 || st.st_size==0) 
+        if (stat((char *)level_file_name,&st) != 0 || st.st_size==0) 
             return 0;
 
         fd=fopen(level_file_name,"rb");

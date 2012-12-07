@@ -2,7 +2,6 @@
 #include "conf.h"
 #include "stdlib.h"
 #include "ptp.h"
-#include "core.h"
 #include "live_view.h"
 
 #ifdef CAM_CHDK_PTP

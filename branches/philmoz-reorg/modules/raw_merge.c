@@ -1,6 +1,8 @@
-#include "raw_merge.h"
+#include "camera_info.h"
 #include "stdlib.h"
-#include "platform.h"
+#include "raw_merge.h"
+#include "debug_led.h"
+#include "sd_card.h"
 #include "gui_mpopup.h"
 #include "gui_mbox.h"
 #include "raw.h"
@@ -45,7 +47,7 @@ static int raw_subtract_values(int from, int sub) {
 /* subtract "sub" from "from" and store the result in "dest"*/
 /* TODO allow replacing if dest == from or sub*/
 int raw_subtract(const char *from, const char *sub, const char *dest) {
-    unsigned req=(hook_raw_size()>>10) + 1;
+    unsigned req=(camera_sensor.raw_size>>10) + 1;
     unsigned avail=GetFreeCardSpaceKb();
     FILE *ffrom = NULL, *fsub = NULL, *fdest = NULL;
     char *baccum = 0,*bsub = 0;
@@ -55,12 +57,12 @@ int raw_subtract(const char *from, const char *sub, const char *dest) {
 
     static struct utimbuf t;
 
-    struct STD_stat st;
+    struct stat st;
 
-    if (safe_stat((char *)from,&st) != 0 || st.st_size!=hook_raw_size()) 
+    if (stat((char *)from,&st) != 0 || st.st_size!=camera_sensor.raw_size) 
         return 0;
 
-    if (safe_stat((char *)sub,&st) != 0 || st.st_size!=hook_raw_size()) 
+    if (stat((char *)sub,&st) != 0 || st.st_size!=camera_sensor.raw_size) 
         return 0;
 
      if( (baccum=malloc(camera_sensor.raw_rowlen)) &&
@@ -211,13 +213,13 @@ int raw_merge_start(int action){
 int raw_merge_add_file(const char * filename) {
   int  t,src,i,j,nrow;
   FILE *fbrawin=NULL,*fbrawout,*fcraw;
-  struct STD_stat st;
+  struct stat st;
 
   if (!filename)
     return 0;
 
-  safe_stat(filename,&st);
-  if (st.st_size!=hook_raw_size())
+  stat(filename,&st);
+  if (st.st_size!=camera_sensor.raw_size)
     return 0;
 
   started();
@@ -376,7 +378,7 @@ int module_idx=-1;
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-struct librawop_sym librawop = {
+struct librawop_sym _librawop = {
 			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
 										// increase minor if compatible changes made(including extending this struct)
 			raw_merge_start,
@@ -390,7 +392,7 @@ void* MODULE_EXPORT_LIST[] = {
 	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
 	/* 1 */	(void*)1,
 		
-			&librawop
+			&_librawop
 		};
 
 

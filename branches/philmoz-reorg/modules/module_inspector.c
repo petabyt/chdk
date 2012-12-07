@@ -1,3 +1,5 @@
+#include "camera_info.h"
+#include "meminfo.h"
 #include "module_load.h"
 #include "gui_draw.h"
 #include "module_exportlist.h"
@@ -85,7 +87,6 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 #include "gui_mbox.h"
 #include "keyboard.h"
 #include "stdlib.h"
-#include "platform.h"
 
 
 void gui_module_menu_kbd_process();

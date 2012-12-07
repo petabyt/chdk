@@ -6,9 +6,9 @@
  *   Specific "shortcuts", dynamic libraries binding
  */
 
+#include "platform.h"
 #include "modules.h"
 #include "module_load.h"
-#include "camera.h"
 #include "stdlib.h"
 #include "conf.h"
 #include "gui_draw.h"

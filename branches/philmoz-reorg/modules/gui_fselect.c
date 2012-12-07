@@ -1,7 +1,9 @@
+#include "camera_info.h"
 #include "stdlib.h"
 #include "keyboard.h"
-#include "platform.h"
-#include "core.h"
+#include "modes.h"
+#include "sd_card.h"
+#include "debug_led.h"
 #include "lang.h"
 #include "gui.h"
 #include "gui_draw.h"
@@ -235,25 +237,25 @@ int fselect_sort(const void* v1, const void* v2) {
 
 //-------------------------------------------------------------------
 static void gui_fselect_read_dir(const char* dir) {
-    STD_DIR           *d;
-    struct STD_dirent *de;
-    static struct STD_stat   st;
+    DIR           *d;
+    struct dirent *de;
+    static struct stat   st;
     struct fitem  **ptr = &head, *prev = NULL;
     int    i;
 
     gui_fselect_free_data();
 //#ifdef CAM_DRYOS_2_3_R39
     if(dir[0]=='A' && dir[1]==0)
-        d = safe_opendir("A/");
+        d = opendir("A/");
     else
-        d = safe_opendir(dir);
+        d = opendir(dir);
 /* //remove for platf independedncy. looks like sequence above is safe
 #else
-    d = safe_opendir(dir);
+    d = opendir(dir);
 #endif
 */
     if (d) {
-        de = safe_readdir(d);
+        de = readdir(d);
         while (de) {
             if (de->d_name[0] != 0xE5 /* deleted entry */ && (de->d_name[0]!='.' || de->d_name[1]!=0)) {
                 *ptr = malloc(sizeof(struct fitem));
@@ -263,7 +265,7 @@ static void gui_fselect_read_dir(const char* dir) {
                     if ((*ptr)->name)
                         strcpy((*ptr)->name, de->d_name);
                     sprintf(buf, "%s/%s", dir, de->d_name);
-                    if (safe_stat(buf, &st)==0) {
+                    if (stat(buf, &st)==0) {
                         (*ptr)->attr=st.st_attrib;
                         (*ptr)->size=st.st_size;
                         (*ptr)->mtime=st.st_mtime;
@@ -278,9 +280,9 @@ static void gui_fselect_read_dir(const char* dir) {
                     ++count;
                 }
             }
-            de = safe_readdir(d);
+            de = readdir(d);
         }
-        safe_closedir(d);
+        closedir(d);
     }
     *ptr=NULL;
 
@@ -337,9 +339,9 @@ int gui_fselect_find_start_dir(const char* dir)
     // Make sure there is something left to check
     while (strlen(current_dir) > 0)
     {
-        struct STD_stat st;
+        struct stat st;
         // check if input 'dir' exists
-        if (safe_stat(current_dir,&st) == 0)
+        if (stat(current_dir,&st) == 0)
         {
             // exists - check if it is a directory or file
             if (st.st_attrib & DOS_ATTR_DIRECTORY)
@@ -596,8 +598,8 @@ static void fselect_delete_file_cb(unsigned int btn) {
 
 static void fselect_purge_cb(unsigned int btn)
 {
-    STD_DIR             *d,  *d2,  *d3,  *d4;
-    struct STD_dirent   *de, *de2, *de3, *de4;
+    DIR             *d,  *d2,  *d3,  *d4;
+    struct dirent   *de, *de2, *de3, *de4;
     struct fitem    *ptr, *ptr2;
     char            sub_dir[20], sub_dir_search[20];
     char            selected_item[256];
@@ -607,19 +609,19 @@ static void fselect_purge_cb(unsigned int btn)
         //If selected folder is DCIM (this is to purge all RAW files in any Canon folder)
         if (selected->name[0] == 'D' && selected->name[1] == 'C' && selected->name[2] == 'I' && selected->name[3] == 'M') {
             sprintf(current_dir+strlen(current_dir), "/%s", selected->name);
-            d=safe_opendir(current_dir);
-            while ((de=safe_readdir(d)) != NULL) {//Loop to find all Canon folders
+            d=opendir(current_dir);
+            while ((de=readdir(d)) != NULL) {//Loop to find all Canon folders
                 if (de->d_name[0] != '.' && de->d_name[1] != '.') {//If item is not UpDir
                     sprintf(sub_dir, "%s/%s", current_dir, de->d_name);
-                    d2=safe_opendir(sub_dir);
-                    while ((de2=safe_readdir(d2)) != NULL) {//Loop to find all the RAW files inside a Canon folder
+                    d2=opendir(sub_dir);
+                    while ((de2=readdir(d2)) != NULL) {//Loop to find all the RAW files inside a Canon folder
                         if (de2->d_name[0] == 'C' || de2->d_name[9] == 'C') {//If file is RAW (Either CRW/CR2 prefix or file extension)
-                            d3=safe_opendir(current_dir);
-                            while ((de3=safe_readdir(d3)) != NULL) {//Loop to find all Canon folders
+                            d3=opendir(current_dir);
+                            while ((de3=readdir(d3)) != NULL) {//Loop to find all Canon folders
                                 if (de3->d_name[0] != '.' && de3->d_name[1] != '.') {//If item is not UpDir
                                     sprintf(sub_dir_search, "%s/%s", current_dir, de3->d_name);
-                                    d4=safe_opendir(sub_dir_search);
-                                    while ((de4=safe_readdir(d4)) != NULL) {//Loop to find a corresponding JPG file inside a Canon folder
+                                    d4=opendir(sub_dir_search);
+                                    while ((de4=readdir(d4)) != NULL) {//Loop to find a corresponding JPG file inside a Canon folder
                                         if (de2->d_name[4] == de4->d_name[4] && de2->d_name[5] == de4->d_name[5] &&//If the four digits of the Canon number are the same
                                             de2->d_name[6] == de4->d_name[6] && de2->d_name[7] == de4->d_name[7] &&
                                             de4->d_name[9] == 'J' && !(de4->d_name[0] == 'C' || de4->d_name[9] == 'C' || de4->d_name[0] == 0xE5)) {//If file is JPG, is not CRW/CR2 and is not a deleted item
@@ -627,10 +629,10 @@ static void fselect_purge_cb(unsigned int btn)
                                                 found=1;//A JPG file with the same Canon number was found
                                         }
                                     }
-                                    safe_closedir(d4);
+                                    closedir(d4);
                                 }
                             }
-                            safe_closedir(d3);
+                            closedir(d3);
                             //If no JPG found, delete RAW file
                             if (found == 0) {
                                 sprintf(selected_item, "%s/%s", sub_dir, de2->d_name);
@@ -643,10 +645,10 @@ static void fselect_purge_cb(unsigned int btn)
                             }
                         }
                     }
-                    safe_closedir(d2);
+                    closedir(d2);
                 }
             }
-            safe_closedir(d);
+            closedir(d);
             i=strlen(current_dir);
             while (current_dir[--i] != '/');
             current_dir[i]=0;
@@ -654,11 +656,11 @@ static void fselect_purge_cb(unsigned int btn)
         //If item is a Canon folder (this is to purge all RAW files inside a single Canon folder)
         else if (selected->name[3] == 'C') {
             sprintf(current_dir+strlen(current_dir), "/%s", selected->name);
-            d=safe_opendir(current_dir);
-            while ((de=safe_readdir(d)) != NULL) {//Loop to find all the RAW files inside the Canon folder
+            d=opendir(current_dir);
+            while ((de=readdir(d)) != NULL) {//Loop to find all the RAW files inside the Canon folder
                 if (de->d_name[0] == 'C' || de->d_name[9] == 'C') {//If file is RAW (Either CRW/CR2 prefix or file extension)
-                    d2=safe_opendir(current_dir);
-                    while ((de2=safe_readdir(d2)) != NULL) {//Loop to find a corresponding JPG file inside the Canon folder
+                    d2=opendir(current_dir);
+                    while ((de2=readdir(d2)) != NULL) {//Loop to find a corresponding JPG file inside the Canon folder
                         if (de->d_name[4] == de2->d_name[4] && de->d_name[5] == de2->d_name[5] &&//If the four digits of the Canon number are the same
                             de->d_name[6] == de2->d_name[6] && de->d_name[7] == de2->d_name[7] &&
                             de2->d_name[9] == 'J' && !(de2->d_name[0] == 'C' || de2->d_name[9] == 'C' || de2->d_name[0] == 0xE5)) {//If file is JPG and is not CRW/CR2 and is not a deleted item
@@ -666,7 +668,7 @@ static void fselect_purge_cb(unsigned int btn)
                                 found=1;//A JPG file with the same Canon number was found
                         }
                     }
-                    safe_closedir(d2);
+                    closedir(d2);
                     //If no JPG found, delete RAW file
                     if (found == 0) {
                         sprintf(selected_item, "%s/%s", current_dir, de->d_name);
@@ -679,7 +681,7 @@ static void fselect_purge_cb(unsigned int btn)
                     }
                 }
             }
-            safe_closedir(d);
+            closedir(d);
             i=strlen(current_dir);
             while (current_dir[--i] != '/');
             current_dir[i]=0;
@@ -717,15 +719,15 @@ static void fselect_purge_cb(unsigned int btn)
 
 //-------------------------------------------------------------------
 static void fselect_delete_folder_cb(unsigned int btn) {
-    STD_DIR           *d;
-    struct STD_dirent *de;
+    DIR           *d;
+    struct dirent *de;
     int           i;
 
     if (btn==MBOX_BTN_YES) {
         sprintf(current_dir+strlen(current_dir), "/%s", selected->name);
-        d = safe_opendir(current_dir);
+        d = opendir(current_dir);
         if (d) {
-            de = safe_readdir(d);
+            de = readdir(d);
             while (de) {
                 if (de->d_name[0] != 0xE5 /* deleted entry */ && (de->d_name[0]!='.' || (de->d_name[1]!='.' && de->d_name[1]!=0) || (de->d_name[1]=='.' && de->d_name[2]!=0))) {
                     started();
@@ -733,9 +735,9 @@ static void fselect_delete_folder_cb(unsigned int btn) {
                     remove(selected_file);
                     finished();
                 }
-                de = safe_readdir(d);
+                de = readdir(d);
             }
-            safe_closedir(d);
+            closedir(d);
         }
         started();
         remove(current_dir);
@@ -851,13 +853,13 @@ static void fselect_marked_paste_cb(unsigned int btn) {
                     if (marked_count)
                         gui_browser_progress_show(lang_str(LANG_FSELECT_PROGRESS_TITLE),i*100/marked_count);
                     sprintf(selected_file, "%s/%s", marked_dir, ptr->name);
-                    fsrc = safe_open(selected_file, O_RDONLY, 0777);
+                    fsrc = open(selected_file, O_RDONLY, 0777);
                     if (fsrc>=0) {
                         sprintf(selected_file, "%s/%s", current_dir, ptr->name);
                         // trying to open for read to check if file exists
-                        fdst = safe_open(selected_file, O_RDONLY, 0777);
+                        fdst = open(selected_file, O_RDONLY, 0777);
                         if (fdst<0) {
-                            fdst = safe_open(selected_file, O_WRONLY|STD_O_CREAT, 0777);
+                            fdst = open(selected_file, O_WRONLY|O_CREAT, 0777);
                             if (fdst>=0) {
                                 do {
                                     ss=read(fsrc, buf, MARKED_BUF_SIZE);
@@ -957,10 +959,10 @@ static void fselect_chdk_replace_cb(unsigned int btn) {
 
     buf = umalloc(MARKED_BUF_SIZE);
     sprintf(selected_file, "%s/%s", current_dir, selected->name);
-    fsrc = safe_open(selected_file, O_RDONLY, 0777);
+    fsrc = open(selected_file, O_RDONLY, 0777);
     if (fsrc>=0) {
         strcpy(selected_file,"A/DISKBOOT.BIN");
-            fdst = safe_open(selected_file, O_WRONLY|STD_O_CREAT|STD_O_TRUNC, 0777);
+            fdst = open(selected_file, O_WRONLY|O_CREAT|O_TRUNC, 0777);
             if (fdst>=0) {
                 do {
                     ss=read(fsrc, buf, MARKED_BUF_SIZE);
@@ -1030,7 +1032,7 @@ static void fselect_subtract_cb(unsigned int btn) {
     for (ptr=head; ptr; ptr=ptr->next) {
         if (ptr->marked && ptr->attr != 0xFF &&
             !(ptr->attr & DOS_ATTR_DIRECTORY) &&
-            ptr->size == hook_raw_size() &&
+            ptr->size == camera_sensor.raw_size &&
             (strcmp(ptr->name,selected->name)) != 0) {
             sprintf(raw_subtract_from,"%s/%s",current_dir,ptr->name);
             sprintf(raw_subtract_dest,"%s/%s%s",current_dir,img_prefixes[conf.sub_batch_prefix],ptr->name+4);
@@ -1053,7 +1055,7 @@ static void setup_batch_subtract(void) {
     int i;
     char *p = buf + sprintf(buf,"%s %s\n",selected->name,lang_str(LANG_FSELECT_SUB_FROM));
     for (ptr=head, i=0; ptr; ptr=ptr->next) {
-        if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY) && ptr->size == hook_raw_size()) {
+        if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY) && ptr->size == camera_sensor.raw_size) {
             if ( i < MAX_SUB_NAMES ) {
                 sprintf(p, "%s\n",ptr->name);
                 // keep a pointer to the one before the end, so we can stick ...and more on
@@ -1246,6 +1248,19 @@ void finalize_fselect()
     module_rawop_unload();
 }
 
+static int chk_ext(char *ext, char *tst)
+{
+    if (ext && (strlen(ext) == strlen(tst)+1))
+    {
+        int i;
+        for (i=0; i<strlen(tst); i++)
+            if (toupper(ext[i+1]) != toupper(tst[i]))
+                return 0;
+        return 1;
+    }
+    return 0;
+}
+
 static void exit_fselect(char* file)
 {
     finalize_fselect();
@@ -1326,11 +1341,11 @@ int gui_fselect_kbd_process()
                     (selected->name[0] == 'D' && selected->name[1] == 'C' && selected->name[2] == 'I' && selected->name[3] == 'M') ||//If item is DCIM folder
                     (selected->name[3] == 'C'))//If item is a DCIM sub folder
                     i |= MPOPUP_PURGE;//Display PURGE RAW function in popup menu
-                if(selected->size == hook_raw_size())
+                if(selected->size == camera_sensor.raw_size)
                     mpopup_rawop_flag |= MPOPUP_RAW_DEVELOP;
 
                 if ( module_convert_dng_to_chdk_raw(0) )    // if dng module exist
-                    if((fselect_marked_count()>1)||(selected->size > hook_raw_size()))
+                    if((fselect_marked_count()>1)||(selected->size > camera_sensor.raw_size))
                         mpopup_rawop_flag |= MPOPUP_DNG_TO_CRW;
 
                 if (selected->name[9] == 'B' && selected->name[10] == 'I' && selected->name[11] == 'N') //If item is DCIM folder
@@ -1367,14 +1382,18 @@ int gui_fselect_kbd_process()
                     char *ext = strchr(selected->name,'.');
                     int do_exit = 1;
 
-                    if ( ext && (ext[1]|0x20)=='f' && (ext[2]|0x20)=='l' && (ext[3]|0x20)=='t') {
+                    if (chk_ext(ext,"flt"))
+                    {
                         if (!fselect_on_select) {
                             exit_fselect(0);
                             do_exit = 0;
                             module_run(selected_file, 0, 0,0, UNLOAD_IF_ERR);
                         }
-                    } else if ( ext && (ext[1]|0x20)=='t' && (ext[2]|0x20)=='x' && (ext[3]|0x20)=='t') {
-                        if (!fselect_on_select) {
+                    }
+                    else if (chk_ext(ext,"txt") || chk_ext(ext,"log"))
+                    {
+                        if (!fselect_on_select)
+                        {
                             exit_fselect(0);
                             do_exit = 0;
                             int argv[] = {(int)selected_file};

@@ -1,7 +1,8 @@
+#include "camera_info.h"
 #include "stdlib.h"
 #include "keyboard.h"
-#include "platform.h"
-#include "core.h"
+#include "clock.h"
+#include "backlight.h"
 #include "lang.h"
 #include "gui.h"
 #include "gui_draw.h"
@@ -121,8 +122,8 @@ StcGame *game;
 long mkdir_if_not_exist(const char *dirname) 
 {
     // Check if directory exists and create it if it does not.
-    struct STD_stat st;
-    if (safe_stat(dirname,&st) != 0) return mkdir(dirname);
+    struct stat st;
+    if (stat(dirname,&st) != 0) return mkdir(dirname);
     return 0;   // Success
 }
 

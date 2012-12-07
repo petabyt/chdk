@@ -129,4 +129,5 @@ enum ptp_chdk_script_msg_status {
     PTP_CHDK_S_MSGSTATUS_QFULL,  // queue is full
     PTP_CHDK_S_MSGSTATUS_BADID,  // specified ID is not running
 };
+
 #endif // __CHDK_PTP_H

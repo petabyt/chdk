@@ -1,8 +1,8 @@
-#include "platform.h"
+#include "camera_info.h"
 #include "conf.h"
 #include "stdlib.h"
+#include "shooting.h"
 #include "raw.h"
-#include "gui_menu.h"
 #include "gui_lang.h"
 
 #include "modules.h"
@@ -101,6 +101,23 @@ static int curve_load_data(const char *name,CURVE_TYPE curve_type) {
 	return 1;
 }
 
+void curve_init_mode() {
+	switch(conf.curve_enable) {
+		case 1: // custom - ensure alloc and load conf.curve_file
+			curve_load_data(conf.curve_file,CURVE_CUSTOM);
+		break;
+		case 2: // system - ensure alloc and load syscurve
+		case 3:
+		case 4:
+			curve_load_data("A/CHDK/SYSCURVES.CVF",CURVE_SYSTEM);
+		break;
+		default:
+			conf.curve_enable = 0;
+		case 0: // disabled - free
+			curve_free_data();
+	}
+}
+
 void curve_set_mode(int value) {
 	if((value>=0) && (value<=4)) conf.curve_enable=value;
 	curve_init_mode();
@@ -119,23 +136,6 @@ void curve_set_file(const char *s) {
         conf.curve_file[99]=0x0;
         curve_init_mode();
    	}
-}
-
-void curve_init_mode() {
-	switch(conf.curve_enable) {
-		case 1: // custom - ensure alloc and load conf.curve_file
-			curve_load_data(conf.curve_file,CURVE_CUSTOM);
-		break;
-		case 2: // system - ensure alloc and load syscurve
-		case 3:
-		case 4:
-			curve_load_data("A/CHDK/SYSCURVES.CVF",CURVE_SYSTEM);
-		break;
-		default:
-			conf.curve_enable = 0;
-		case 0: // disabled - free
-			curve_free_data();
-	}
 }
 
 // TODO border pixels should not be hard coded
@@ -423,7 +423,7 @@ void curve_apply() {
 #include "module_load.h"
 
 
-struct libcurves_sym libcurves = {
+struct libcurves_sym _libcurves = {
 			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
 										// increase minor if compatible changes made(including extending this struct)
 			curve_init_mode,
@@ -441,7 +441,7 @@ int module_idx=-1;
 void* MODULE_EXPORT_LIST[] = {
 	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
 	/* 1 */	(void*)1,
-			&libcurves
+			&_libcurves
 		};
 
 

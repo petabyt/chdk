@@ -1,6 +1,6 @@
+#include "platform.h"
 #include "stdlib.h"
 #include "keyboard.h"
-#include "platform.h"
 #include "lang.h"
 #include "conf.h"
 #include "gui.h"

@@ -17,13 +17,7 @@ struct libzebra_sym {
     int (*gui_osd_draw_zebra)(int show);
 };
 
-// Defines of exported to chdk symbols
-#ifdef THIS_IS_CHDK_CORE
-	// This section is for CHDK core
-	extern struct libzebra_sym* libzebra;
-    extern struct libzebra_sym* module_zebra_load();	// 0fail, addr-ok
-#else
-	// This section is for module
-#endif
+extern struct libzebra_sym* libzebra;
+extern struct libzebra_sym* module_zebra_load();	// 0fail, addr-ok
 
 #endif

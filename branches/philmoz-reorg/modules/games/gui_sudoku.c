@@ -8,10 +8,9 @@
 	- battery and watch
 */
 
+#include "camera_info.h"
 #include "stdlib.h"
 #include "keyboard.h"
-#include "platform.h"
-#include "core.h"
 #include "lang.h"
 #include "conf.h"
 #include "gui.h"
@@ -68,7 +67,7 @@ int draw;	//with flags, for drawing
 int xPadStart, yPadStart, padLineDistance; //number pad X, Y and distance, for entering a number
 int xPosPad, yPosPad;
 
-struct STD_stat st;  //used for save games
+struct stat st;  //used for save games
 
 int field[9][9];
 
@@ -850,7 +849,7 @@ void sudoku_menu_execute()
             exit_sudoku(1); //save and exit
             break;
         case 7:
-            if (safe_stat("A/CHDK/GAMES/SUDOKU.SAV", &st)==0) {
+            if (stat("A/CHDK/GAMES/SUDOKU.SAV", &st)==0) {
                 remove("A/CHDK/GAMES/SUDOKU.SAV");
             }
             break;
@@ -1012,8 +1011,8 @@ int gui_sudoku_init()
 	draw|=BG;
 	gui_sudoku_draw(0);
 
-	if (safe_stat("A/CHDK/GAMES/SUDOKU.SAV", &st)==0) { //load last sudoku
-        int f = safe_open("A/CHDK/GAMES/SUDOKU.SAV", O_RDONLY, 0777);
+	if (stat("A/CHDK/GAMES/SUDOKU.SAV", &st)==0) { //load last sudoku
+        int f = open("A/CHDK/GAMES/SUDOKU.SAV", O_RDONLY, 0777);
         read(f, user, sizeof(user));
         read(f, field, sizeof(field));
         close(f);
@@ -1040,7 +1039,7 @@ void gui_module_menu_kbd_process() {
 
 void exit_sudoku(int save) {
     if (save!=0) {
-        save = safe_open("A/CHDK/GAMES/SUDOKU.SAV", O_WRONLY|STD_O_CREAT|STD_O_TRUNC, 0777);
+        save = open("A/CHDK/GAMES/SUDOKU.SAV", O_WRONLY|O_CREAT|O_TRUNC, 0777);
         write(save, user, sizeof(user));
         write(save, field, sizeof(field));
         close(save);

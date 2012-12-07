@@ -1,8 +1,7 @@
 #include "platform.h"
+#include "stdlib.h"
 #include "core.h"
 #include "conf.h"
-#include "keyboard.h"
-#include "stdlib.h"
 #include "gui.h"
 #include "gui_draw.h"
 #include "histogram.h"
@@ -277,6 +276,7 @@ void core_spytask()
     spytask_can_start=0;
 
 #ifdef OPT_EXMEM_MALLOC
+    extern void exmem_malloc_init(void);
     exmem_malloc_init();
 #endif
 

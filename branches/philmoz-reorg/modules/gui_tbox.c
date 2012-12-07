@@ -1,13 +1,11 @@
+#include "camera_info.h"
 #include "stdlib.h"
 #include "keyboard.h"
-#include "platform.h"
-#include "core.h"
 #include "conf.h"
 #include "lang.h"
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_lang.h"
-#include "gui_menu.h"
 #include "gui_mbox.h"
 #include "gui_tbox.h"
 
@@ -552,7 +550,7 @@ int gui_tbox_kbd_process()
 
 //==================================================
 
-struct libtextbox_sym libtextbox = {
+struct libtextbox_sym _libtextbox = {
     MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
 							    // increase minor if compatible changes made(including extending this struct)
     textbox_init,
@@ -563,7 +561,7 @@ void* MODULE_EXPORT_LIST[] = {
 	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
 	/* 1 */	(void*)1,
 
-			&libtextbox
+			&_libtextbox
 		};
 
 
