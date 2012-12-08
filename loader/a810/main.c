@@ -9,28 +9,20 @@ void __attribute__((noreturn)) my_restart()
     {
 		long *dst = (long*)MEMISOSTART;
 		const long *src = blob_chdk_core;
-        long length = blob_chdk_core_size;
+  		long length = (blob_chdk_core_size + 3) >> 2;
 
         if (src < dst && dst < src + length)
         {
              /* Have to copy backwards */
              src += length;
              dst += length;
-             while (length--)
-             {
-                  *--dst = *--src;
-             }
+             while (length--) *--dst = *--src;
         }
         else
-        {
-            while (length--)
-            {
-                *dst++ = *src++;
-            }
-        }
+    		while (length--)  *dst++ = *src++;
     }
 	
-    //a810 100b found at FFA7165C
+    //a810 100b found @ 0xff834680
     asm volatile (
          "LDR     R1, =0xC0200000\n"
          "MVN     R0, #0\n"
