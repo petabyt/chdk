@@ -572,9 +572,9 @@ void gui_fselect_draw(int enforce_redraw) {
           unsigned int fr, tot;
           fr = GetFreeCardSpaceKb(); tot = GetTotalCardSpaceKb();
           if (fr < 1024*1024)
-            sprintf(buf, "%dM (%d%%)", fr/1024, tot? fr*100/tot: 0);
+            sprintf(buf, "%dM (%d%%)", fr>>10, tot? fr*100/tot: 0);
           else
-            sprintf(buf, "%d.%dG (%d%%)", fr/(1024*1024), (fr%(10240))/100, tot? fr*100/tot: 0);
+            sprintf(buf, "%d.%dG (%d%%)", fr>>20, ((fr&0x000FFFFF)*100)>>20, tot? fr*100/tot: 0);
         }
         draw_string(foot_x+foot_w-strlen(buf)*FONT_WIDTH-BORDER, foot_y, buf, MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); // free space
         gui_fselect_redraw = 0;
