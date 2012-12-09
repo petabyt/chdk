@@ -2468,18 +2468,18 @@ int find_matches(firmware *fw, const char *curr_name, int k)
                         {
                             if (isLDR_PC_cond(fw,n->off+i+s->offs))
                             {
-                                int k = LDR2idx(fw,n->off+i+s->offs);
-                                if (strcmp((char*)(&fw->buf[k]),"Mounter.c") == 0)
+                                int m = adr2idx(fw,LDR2val(fw,n->off+i+s->offs));
+                                if ((m >= 0) && (m < fw->size) && (strcmp((char*)(&fw->buf[m]),"Mounter.c") == 0))
                                 {
                                     fnd = 1;
                                 }
-                                else
+                            }
+                            else if (isADR_PC_cond(fw,n->off+i+s->offs))
+                            {
+                                int m = adr2idx(fw,ADR2adr(fw,n->off+i+s->offs));
+                                if ((m >= 0) && (m < fw->size) && (strcmp((char*)(&fw->buf[m]),"Mounter.c") == 0))
                                 {
-                                    k = adr2idx(fw,fw->buf[k]);
-                                    if ((k >= 0) && (k < fw->size) && (strcmp((char*)(&fw->buf[k]),"Mounter.c") == 0))
-                                    {
-                                        fnd = 1;
-                                    }
+                                    fnd = 1;
                                 }
                             }
 				        }
