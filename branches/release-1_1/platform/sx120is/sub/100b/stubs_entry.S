@@ -15,8 +15,8 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(GetDrive_ClusterSize                  ,0xffc4591c) //  5 93%    *** != 0xffc45918
-//NSTUB(GetDrive_FreeClusters                 ,0xffc4597c) //  5 93%    *** != 0xffc45978
+//NSTUB(GetDrive_ClusterSize                  ,0xffc4591c) //  5        *** != 0xffc45918
+//NSTUB(GetDrive_FreeClusters                 ,0xffc4597c) //  5        *** != 0xffc45978
 //NSTUB(GetDrive_TotalClusters                ,0xffc45600) //  3        *** != 0xffc45948
 // ALT: NSTUB(GetDrive_TotalClusters, 0xffc45880) // 3 12/0
 // ALT: NSTUB(GetDrive_TotalClusters, 0xffc458ac) // 3 12/0

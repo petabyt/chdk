@@ -15,7 +15,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-NSTUB(GetDrive_TotalClusters                  ,0xff852414) //  5 93%
 NSTUB(kbd_pwr_off                             ,0xff843204) //  2 64%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
@@ -133,6 +132,7 @@ NSTUB(GetCCDTemperature                       ,0xff845ebc) //102
 NSTUB(GetCurrentAvValue                       ,0xff913380) //102
 NSTUB(GetDrive_ClusterSize                    ,0xff8523e8) //  5
 NSTUB(GetDrive_FreeClusters                   ,0xff852440) //  5
+NSTUB(GetDrive_TotalClusters                  ,0xff852414) //  5
 NSTUB(GetFocusLensSubjectDistance             ,0xff912430) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xff91280c) //  3
 NSTUB(GetKbdState                             ,0xff8431ec) //109

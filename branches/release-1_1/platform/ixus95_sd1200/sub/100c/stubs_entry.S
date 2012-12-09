@@ -16,7 +16,6 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NSTUB(DoAFLock                              ,0xffc15298) //102        *** != 0xffc47b8c
-NSTUB(GetDrive_TotalClusters                  ,0xffc3f848) //  5 93%
 //NSTUB(SetScriptMode                         ,0xffc5d99c) //101        *** != 0x00000000
 //NSTUB(UnlockAF                              ,0xffc152d0) //102        *** != 0xffc47b9c
 //NSTUB(WriteSDCard                           ,0xffce4300) //108        *** != 0xffce4118
@@ -131,6 +130,7 @@ NSTUB(GetCCDTemperature                       ,0xffc33858) //102
 NSTUB(GetCurrentAvValue                       ,0xffcf1384) //102
 NSTUB(GetDrive_ClusterSize                    ,0xffc3f81c) //  5
 NSTUB(GetDrive_FreeClusters                   ,0xffc3f874) //  5
+NSTUB(GetDrive_TotalClusters                  ,0xffc3f848) //  5
 NSTUB(GetFocusLensSubjectDistance             ,0xffcf0434) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xffcf0810) //  3
 NSTUB(GetKbdState                             ,0xffc30e04) //109
