@@ -17,6 +17,7 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NSTUB(ExecuteEventProcedure                 ,0xffc553c4) //104        *** != 0xffc5543c
 //NSTUB(GetBatteryTemperature                 ,0xffc33504) //102        *** != 0xffc33494
+NSTUB(GetDrive_FreeClusters                   ,0xffc3fc8c) //  1 94%
 //NSTUB(Lseek                                 ,0xffc13484) //101        *** != 0xffc1354c
 //NSTUB(Read                                  ,0xffc0a138) //101        *** != 0xffc133ec
 //NSTUB(kbd_pwr_off                           ,0xffc31408) //  2 64%    *** != 0xffc31418
@@ -121,7 +122,6 @@ NSTUB(Fwrite_Fut                              ,0xffc12e6c) //101
 NSTUB(GetCCDTemperature                       ,0xffc33494) //102
 NSTUB(GetCurrentAvValue                       ,0xffd0025c) //102
 NSTUB(GetDrive_ClusterSize                    ,0xffc3fc24) //  1
-NSTUB(GetDrive_FreeClusters                   ,0xffc3fc8c) //  1
 NSTUB(GetDrive_TotalClusters                  ,0xffc3fc58) //  1
 NSTUB(GetFocusLensSubjectDistance             ,0xffcff354) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xffcff660) //  3

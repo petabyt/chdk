@@ -116,8 +116,7 @@ NSTUB(GetBatteryTemperature                   ,0xffc49edc) //102
 NSTUB(GetCCDTemperature                       ,0xffc49e68) //102
 NSTUB(GetCurrentAvValue                       ,0xffd14ed4) //102
 NSTUB(GetDrive_ClusterSize                    ,0xffc55b18) //  4
-NSTUB(GetDrive_FreeClusters                   ,0xffc24258) //  3
-// ALT: NSTUB(GetDrive_FreeClusters, 0xffc55b78) // 4 9/0
+NSTUB(GetDrive_FreeClusters                   ,0xffc55b78) //  4
 NSTUB(GetDrive_TotalClusters                  ,0xffc55b4c) //  3
 NSTUB(GetFocusLensSubjectDistance             ,0xffd14174) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xffd145bc) //  3

@@ -257,8 +257,16 @@ os-camera-lists:
 batch-print-missing-dumps:
 	sh tools/auto_build.sh $(MAKE) print-missing-dump $(CAMERA_LIST) -noskip
 
+# rebuild all the stubs_entry.S files    
 batch-rebuild-stubs: alltools
 	sh tools/auto_build.sh $(MAKE) rebuild-stubs $(CAMERA_LIST) -noskip
+
+# rebuild all the stubs_entry.S files    
+# parallel version, starts each camera/firmware version build in a seperate session
+# Note:- Windows only, this will use all available CPU and a fair amount of memory
+#        but will rebuild much faster on a machine with many CPU cores
+batch-rebuild-stubs-parallel: alltools
+	sh tools/auto_build_parallel.sh $(MAKE) rebuild-stubs $(CAMERA_LIST) -noskip
 
 batch-clean:
 	$(MAKE) -C tools PLATFORMOS=vxworks clean

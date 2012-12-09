@@ -16,6 +16,7 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NSTUB(DoAFLock                              ,0xff8258d0) //102        *** != 0xff863a80
+NSTUB(GetDrive_FreeClusters                   ,0xff8596b0) //  1 94%
 //NSTUB(UnlockAF                              ,0xff825908) //102        *** != 0xff863a90
 //NSTUB(kbd_pwr_off                           ,0xff84a3a8) //  2 64%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
@@ -119,7 +120,6 @@ NSTUB(GetBatteryTemperature                   ,0xff84ce3c) //102
 NSTUB(GetCCDTemperature                       ,0xff84cdcc) //102
 NSTUB(GetCurrentAvValue                       ,0xff9303b0) //102
 NSTUB(GetDrive_ClusterSize                    ,0xff859648) //  1
-NSTUB(GetDrive_FreeClusters                   ,0xff8596b0) //  1
 NSTUB(GetDrive_TotalClusters                  ,0xff85967c) //  1
 NSTUB(GetFocusLensSubjectDistance             ,0xff92f474) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xff92f85c) //  3
