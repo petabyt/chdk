@@ -1279,12 +1279,15 @@ typedef struct {
 	int		dryos51_offset;
 } string_sig;
 
-#if defined(PLATFORMOS_dryos)
 #include "signatures_dryos.h"
 
 uint32_t log_test[] = {
 	0x1526E50E, 0x3FDBCB7B, 0
 };
+
+uint32_t DeleteDirectory_Fut_test[] = { 0x09400017 };
+uint32_t MakeDirectory_Fut_test[]   = { 0x09400015 };
+uint32_t RenameFile_Fut_test[]      = { 0x09400013 };
 
 string_sig string_sigs[] = {
 	{ 1, "AllocateMemory", "AllocateMemory", 1 },
@@ -1504,15 +1507,12 @@ string_sig string_sigs[] = {
     { 15, "ReadFastDir", "ReadFast_ERROR\n", 0x01000001 },
     { 15, "OpenFastDir", "OpenFastDir_ERROR\n", 0x01000001 },
 
-    { 16, "DeleteDirectory_Fut", (char*)0x09400017, 0x01000001 },
-    { 16, "MakeDirectory_Fut", (char*)0x09400015, 0x01000001 },
-    { 16, "RenameFile_Fut", (char*)0x09400013, 0x01000001 },
+    { 16, "DeleteDirectory_Fut", (char*)DeleteDirectory_Fut_test, 0x01000001 },
+    { 16, "MakeDirectory_Fut", (char*)MakeDirectory_Fut_test, 0x01000001 },
+    { 16, "RenameFile_Fut", (char*)RenameFile_Fut_test, 0x01000001 },
 	
     { 0, 0, 0, 0 }
 };
-#else
-#error Incorrect platform OS - DryOS only.
-#endif
 
 int find_func(const char* name)
 {
@@ -2259,7 +2259,7 @@ int match_strsig15(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 //	Function immediately preceeding usage of hex value
 int find_strsig16(firmware *fw, string_sig *sig, int k)
 {
-	uint32_t nm0 = (uint32_t)sig->ev_name;
+	uint32_t nm0 = *((uint32_t*)sig->ev_name);
 	uint32_t *p;
 	int j;
 	
@@ -2366,6 +2366,7 @@ int find_matches(firmware *fw, const char *curr_name, int k)
 
 	count = 0;
 
+    // Try and match using 'string' based signature matching first
 	for (i = 0; string_sigs[i].ev_name != 0 && !found_ev; i++)
 	{
 		if (strcmp(curr_name, string_sigs[i].name) == 0)
@@ -2378,6 +2379,8 @@ int find_matches(firmware *fw, const char *curr_name, int k)
 		}
 	}
 
+    // If not found see if the name is in the old style instruction compare match table
+    // Set start value for j in next section if found
     if (!found_ev)
     {
         found_ev = 1;
@@ -2391,6 +2394,7 @@ int find_matches(firmware *fw, const char *curr_name, int k)
         }
     }
 
+    // Not found so far, try instruction comparison matching
 	while (!found_ev)
     {
    		sig = func_list[j].sig;
@@ -2453,6 +2457,37 @@ int find_matches(firmware *fw, const char *curr_name, int k)
 				}
 				if (success > fail)
                 {
+                    // Special case for drive space functions, see if there is a refernce to "Mounter.c" in the function
+                    // Increase match % if so, increase fail count if not
+                    if ((strcmp(curr_name, "GetDrive_ClusterSize") == 0) ||
+                        (strcmp(curr_name, "GetDrive_FreeClusters") == 0) ||
+                        (strcmp(curr_name, "GetDrive_TotalClusters") == 0))
+                    {
+                        int fnd = 0;
+				        for (s = sig; s->offs != -1; s++)
+                        {
+                            if (isLDR_PC_cond(fw,n->off+i+s->offs))
+                            {
+                                int m = adr2idx(fw,LDR2val(fw,n->off+i+s->offs));
+                                if ((m >= 0) && (m < fw->size) && (strcmp((char*)(&fw->buf[m]),"Mounter.c") == 0))
+                                {
+                                    fnd = 1;
+                                }
+                            }
+                            else if (isADR_PC_cond(fw,n->off+i+s->offs))
+                            {
+                                int m = adr2idx(fw,ADR2adr(fw,n->off+i+s->offs));
+                                if ((m >= 0) && (m < fw->size) && (strcmp((char*)(&fw->buf[m]),"Mounter.c") == 0))
+                                {
+                                    fnd = 1;
+                                }
+                            }
+				        }
+                        if (fnd)
+                            success++;
+                        else
+                            fail++;
+                    }
 					fwAddMatch(fw,idx2adr(fw,i+n->off),success,fail,k,func_list[j].ver);
 					if (count >= MAX_MATCHES)
                     {

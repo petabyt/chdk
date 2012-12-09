@@ -1,6 +1,6 @@
 #include "stdlib.h"
 #include "stdlib_unified.h"
-#include "lang.h"
+#include "fileutil.h"
 
 // PURPOSE:
 // Universal file loader: alloc space and load file

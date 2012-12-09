@@ -234,6 +234,16 @@ ifndef SKIPBUILDRULES
 	@echo $^ \-\> $@
 	$(AR) rcs $@ $^
 
+%.bin: %.elf
+	@echo $< \-\> $@
+	$(OBJDUMP) -z -d $< > $@.dump
+	$(OBJCOPY) -O binary $< $@
+
+%.elf:
+	@echo \-\> $@
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS) $(LDFLAGS) $(LDOPTS)
+	( $(NM) $@ | grep ' U ' > $@.syms ) && exit 1 || exit 0
+
 .dep/%.d: %.c .dep
 	$(CC) $(CFLAGS) -M $< > $@.$$$$; \
 	    sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \

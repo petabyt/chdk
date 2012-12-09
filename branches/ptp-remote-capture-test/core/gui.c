@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "font.h"
 #include "lang.h"
+#include "fileutil.h"
 #include "kbd.h"
 #include "gui.h"
 #include "gui_lang.h"
@@ -169,24 +170,25 @@ static CMenu remote_submenu = {0x86,LANG_MENU_REMOTE_PARAM_TITLE, NULL, remote_s
 
 static const char* gui_script_param_set_enum(int change, int arg)
 {
-    if (change != 0) {
-        if (conf.script_param_save) {
-            save_params_values(0);
-        }
-        gui_enum_value_change(&conf.script_param_set,change,sizeof(paramset_names)/sizeof(paramset_names[0]));
+    static const char* modes[]={ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
+    if (change != 0)
+    {
+        save_params_values(0);
+        gui_enum_value_change(&conf.script_param_set,change,sizeof(modes)/sizeof(modes[0]));
 
         if ( !load_params_values(conf.script_file, conf.script_param_set) )
 			script_reset_to_default_params_values();
         gui_update_script_submenu();
     }
 
-    return paramset_names[conf.script_param_set];
+    return modes[conf.script_param_set];
 }
 
 static void gui_load_script_selected(const char *fn) {
     if (fn) {
-        script_load(fn, SCRIPT_LOAD_LAST_PARAMSET );
-		load_params_names_cfg();
+        save_params_values(0);
+        script_load(fn);
 	}
 }
 
@@ -196,9 +198,7 @@ static void gui_load_script(int arg) {
 
 static void gui_load_script_default(int arg) {
 	script_reset_to_default_params_values();
-    if (conf.script_param_save) {
-        save_params_values(1);
-    }
+    save_params_values(1);
 }
 
 extern void add_script_to_user_menu( char * , char *);
@@ -307,10 +307,10 @@ static CMenuItem autoiso_submenu_items[] = {
     MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_MIN_ISO,            MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_min_iso,      	MENU_MINMAX(1, 20) ),
     MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_MAX_ISO_AUTO, 		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_max_iso_auto, 	MENU_MINMAX(10, 320) ),
 
-    MENU_ENUM2  (0x5f,LANG_MENU_AUTOISO_MIN_SHUTTER2,           &conf.autoiso2_shutter_enum,                        gui_autoiso2_shutter_modes ), 
+    MENU_ENUM2  (0x5f,LANG_MENU_AUTOISO_MIN_SHUTTER2,       &conf.autoiso2_shutter_enum,                        gui_autoiso2_shutter_modes ), 
     MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_MAX_ISO2, 			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso2_max_iso_auto,	MENU_MINMAX(10, 320) ),
 
-#if !defined(CAMERA_sx230hs)
+#if CAM_HAS_HI_ISO_AUTO_MODE
     MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_MAX_ISO_HI,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_max_iso_hi,		MENU_MINMAX(20, 320) ),
 #endif
 
@@ -970,13 +970,8 @@ const char* gui_video_bitrate_enum(int change, int arg)
 #if CAM_AF_SCAN_DURING_VIDEO_RECORD
 static const char* gui_video_af_key_enum(int change, int arg)
 {
-#if CAMERA_g12
-    static const char* names[]={ "", "Shutter", "Set", "AE Lock"}; 
-    static const int keys[]={0, KEY_SHOOT_HALF, KEY_SET, KEY_AE_LOCK }; 
-#else
-    static const char* names[]={ "", "Shutter", "Set"}; 
-    static const int keys[]={0, KEY_SHOOT_HALF, KEY_SET }; 
-#endif
+    static const char* names[] = CAM_VIDEO_AF_BUTTON_NAMES; 
+    static const int keys[] = CAM_VIDEO_AF_BUTTON_OPTIONS; 
     int i; 
  
     for (i=0; i<sizeof(names)/sizeof(names[0]); ++i) { 
@@ -1527,7 +1522,7 @@ static CMenuItem raw_exceptions_submenu_items[] = {
 #if defined CAM_HAS_VIDEO_BUTTON
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_VIDEO,          MENUITEM_BOOL,      &conf.save_raw_in_video,        0 ),
 #endif
-#if defined(CAMERA_s3is)
+#if defined(CAM_HAS_SPORTS_MODE)
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_SPORTS,         MENUITEM_BOOL,      &conf.save_raw_in_sports,       0 ),
 #endif
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_BURST,          MENUITEM_BOOL,      &conf.save_raw_in_burst,        0 ),
@@ -2149,11 +2144,7 @@ static char* gui_shortcut_text(int button)
     switch (button)
     {
     case KEY_DISPLAY:
-#if defined(CAMERA_g1x)
-        return "METER";
-#else
-        return "DISP";
-#endif
+        return CAM_DISP_BUTTON_NAME;
     case KEY_UP:
         return "UP";
     case KEY_DOWN:

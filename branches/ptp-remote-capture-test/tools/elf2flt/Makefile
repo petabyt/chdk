@@ -27,7 +27,7 @@ fltdump$(EXE): fltdump.o myio.o
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
 clean:
-	rm -f $(OBJS) fltdump.o
+	rm -f *.o elf2flt$(EXE) fltdump$(EXE)
 
 distclean: clean
 

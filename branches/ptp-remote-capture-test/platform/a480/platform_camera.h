@@ -27,7 +27,8 @@
     #define CAM_RAW_ROWS                    2772
 
     #undef  CAM_USE_ZOOM_FOR_MF
-    #undef  CAM_HAS_ERASE_BUTTON
+    #undef  CAM_HAS_ERASE_BUTTON                    // Camera does not have Erase button
+    #undef  CAM_HAS_DISP_BUTTON                     // Camera does not have DISP button
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_MANUAL_FOCUS

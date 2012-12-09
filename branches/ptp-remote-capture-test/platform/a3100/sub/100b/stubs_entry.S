@@ -15,8 +15,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(GetDrive_FreeClusters                 ,0xff8339b8) //  3        *** != 0xff863190
-// ALT: NSTUB(GetDrive_FreeClusters, 0xff863190) // 4 9/0
 //NSTUB(kbd_pwr_off                           ,0xff85471c) //  2 64%    *** != 0x00000000
 NSTUB(kbd_pwr_on                              ,0xff8546dc) //  2 82%
 
@@ -122,6 +120,7 @@ NSTUB(GetBatteryTemperature                   ,0xff8567fc) //102
 NSTUB(GetCCDTemperature                       ,0xff856788) //102
 NSTUB(GetCurrentAvValue                       ,0xff926d50) //102
 NSTUB(GetDrive_ClusterSize                    ,0xff863130) //  4
+//NSTUB(GetDrive_FreeClusters                 ,0xff863190) //  4            == 0xff863190
 NSTUB(GetDrive_TotalClusters                  ,0xff863164) //  3
 NSTUB(GetFocusLensSubjectDistance             ,0xff926048) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xff9264a0) //  3
@@ -215,7 +214,6 @@ NSTUB(qsort                                   ,0xffa8df60) //  4
 NSTUB(rand                                    ,0xff821388) //  1
 NSTUB(read                                    ,0xff81b270) //101
 NSTUB(reboot_fw_update                        ,0xffa2ea70) //106
-NSTUB(rename                                  ,0xff835b9c) //  4
 NSTUB(set_control_event                       ,0xff882514) //111
 NSTUB(srand                                   ,0xff82137c) //  1
 NSTUB(stat                                    ,0xff83641c) //109
