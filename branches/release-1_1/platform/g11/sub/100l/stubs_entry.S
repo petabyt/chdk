@@ -15,6 +15,9 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
+NSTUB(GetDrive_ClusterSize                    ,0xff86fc80) //  3 92%
+NSTUB(GetDrive_FreeClusters                   ,0xff86fbf4) //  5 73%
+// ALT: NSTUB(GetDrive_FreeClusters, 0xff86fc1c) // 5 11/4
 //NSTUB(SetScriptMode                         ,0xff895134) //101        *** != 0xff810f4c
 //NSTUB(TurnOffBackLight                      ,0xff8a34dc) //104        *** != 0xff8a348c
 NSTUB(kbd_pwr_off                             ,0xff86043c) //  2 64%
@@ -121,8 +124,6 @@ NSTUB(Fwrite_Fut                              ,0xff8355b8) //101
 NSTUB(GetBatteryTemperature                   ,0xff8635d8) //102
 NSTUB(GetCCDTemperature                       ,0xff863564) //102
 NSTUB(GetCurrentAvValue                       ,0xff95c3ec) //102
-NSTUB(GetDrive_ClusterSize                    ,0xff86fc80) //  3
-NSTUB(GetDrive_FreeClusters                   ,0xff86fce0) //  3
 NSTUB(GetDrive_TotalClusters                  ,0xff86fcb4) //  3
 NSTUB(GetFocusLensSubjectDistance             ,0xff95a9c0) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xff95ae08) //  3

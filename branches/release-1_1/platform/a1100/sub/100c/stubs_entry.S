@@ -16,6 +16,7 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NSTUB(ExpCtrlTool_StopContiAE               ,0xffc1f9c4) //104        *** != 0xffc1faac
+NSTUB(GetDrive_TotalClusters                  ,0xffc3edb0) //  5 93%
 //NSTUB(SetAE_ShutterSpeed                    ,0xffe425b8) //102        *** != 0xffe3d994
 //NSTUB(kbd_pwr_off                           ,0xffc30b9c) //  2 64%    *** != 0xffc30bac
 NSTUB(kbd_pwr_on                              ,0xffc30b5c) //  2 82%
@@ -120,7 +121,6 @@ NSTUB(GetCCDTemperature                       ,0xffc32bd0) //102
 NSTUB(GetCurrentAvValue                       ,0xffcf18a8) //102
 NSTUB(GetDrive_ClusterSize                    ,0xffc3ed84) //  5
 NSTUB(GetDrive_FreeClusters                   ,0xffc3eddc) //  5
-NSTUB(GetDrive_TotalClusters                  ,0xffc3edb0) //  5
 NSTUB(GetFocusLensSubjectDistance             ,0xffcf08f4) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xffcf0cd4) //  3
 NSTUB(GetKbdState                             ,0xffc30b28) //109
