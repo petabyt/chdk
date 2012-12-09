@@ -18,7 +18,6 @@
 //NSTUB(DoAFLock                              ,0xff8255ec) //102        *** != 0xff85e914
 //NSTUB(EnterToCompensationEVF                ,0xff8256d8) //104        *** != 0x00000000
 //NSTUB(ExitFromCompensationEVF               ,0xff82571c) //104        *** != 0x00000000
-NSTUB(GetDrive_TotalClusters                  ,0xff855d68) //  5 93%
 //NSTUB(UnlockAF                              ,0xff825624) //102        *** != 0xff85e924
 //NSTUB(kbd_pwr_off                           ,0xff8470e4) //  2 64%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
@@ -121,6 +120,7 @@ NSTUB(GetCCDTemperature                       ,0xff8497d0) //102
 NSTUB(GetCurrentAvValue                       ,0xff928378) //102
 NSTUB(GetDrive_ClusterSize                    ,0xff855d3c) //  5
 NSTUB(GetDrive_FreeClusters                   ,0xff855d94) //  5
+NSTUB(GetDrive_TotalClusters                  ,0xff855d68) //  5
 NSTUB(GetFocusLensSubjectDistance             ,0xff927428) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xff927804) //  3
 NSTUB(GetKbdState                             ,0xff8470cc) //109
