@@ -2366,6 +2366,7 @@ int find_matches(firmware *fw, const char *curr_name, int k)
 
 	count = 0;
 
+    // Try and match using 'string' based signature matching first
 	for (i = 0; string_sigs[i].ev_name != 0 && !found_ev; i++)
 	{
 		if (strcmp(curr_name, string_sigs[i].name) == 0)
@@ -2378,6 +2379,8 @@ int find_matches(firmware *fw, const char *curr_name, int k)
 		}
 	}
 
+    // If not found see if the name is in the old style instruction compare match table
+    // Set start value for j in next section if found
     if (!found_ev)
     {
         found_ev = 1;
@@ -2391,6 +2394,7 @@ int find_matches(firmware *fw, const char *curr_name, int k)
         }
     }
 
+    // Not found so far, try instruction comparison matching
 	while (!found_ev)
     {
    		sig = func_list[j].sig;
@@ -2453,6 +2457,37 @@ int find_matches(firmware *fw, const char *curr_name, int k)
 				}
 				if (success > fail)
                 {
+                    // Special case for drive space functions, see if there is a refernce to "Mounter.c" in the function
+                    // Increase match % if so, increase fail count if not
+                    if ((strcmp(curr_name, "GetDrive_ClusterSize") == 0) ||
+                        (strcmp(curr_name, "GetDrive_FreeClusters") == 0) ||
+                        (strcmp(curr_name, "GetDrive_TotalClusters") == 0))
+                    {
+                        int fnd = 0;
+				        for (s = sig; s->offs != -1; s++)
+                        {
+                            if (isLDR_PC_cond(fw,n->off+i+s->offs))
+                            {
+                                int k = LDR2idx(fw,n->off+i+s->offs);
+                                if (strcmp((char*)(&fw->buf[k]),"Mounter.c") == 0)
+                                {
+                                    fnd = 1;
+                                }
+                                else
+                                {
+                                    k = adr2idx(fw,fw->buf[k]);
+                                    if ((k >= 0) && (k < fw->size) && (strcmp((char*)(&fw->buf[k]),"Mounter.c") == 0))
+                                    {
+                                        fnd = 1;
+                                    }
+                                }
+                            }
+				        }
+                        if (fnd)
+                            success++;
+                        else
+                            fail++;
+                    }
 					fwAddMatch(fw,idx2adr(fw,i+n->off),success,fail,k,func_list[j].ver);
 					if (count >= MAX_MATCHES)
                     {

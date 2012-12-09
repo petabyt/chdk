@@ -15,6 +15,7 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
+NSTUB(GetDrive_FreeClusters                   ,0xffc40048) //  1 94%
 //NSTUB(PT_PlaySound                          ,0xffc48c7c) //102        *** != 0xffc48fbc
 //NSTUB(SetAE_ShutterSpeed                    ,0xffe42b88) //102        *** != 0xffe3de6c
 //NSTUB(kbd_pwr_off                           ,0xffc3163c) //  2 64%    *** != 0xffc3164c
@@ -124,7 +125,6 @@ NSTUB(GetBatteryTemperature                   ,0xffc33738) //102
 NSTUB(GetCCDTemperature                       ,0xffc336c8) //102
 NSTUB(GetCurrentAvValue                       ,0xffd005ec) //102
 NSTUB(GetDrive_ClusterSize                    ,0xffc3ffe0) //  1
-NSTUB(GetDrive_FreeClusters                   ,0xffc40048) //  1
 NSTUB(GetDrive_TotalClusters                  ,0xffc40014) //  1
 NSTUB(GetFocusLensSubjectDistance             ,0xffcff6e4) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xffcff9f0) //  3

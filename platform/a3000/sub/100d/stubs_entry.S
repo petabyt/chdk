@@ -16,8 +16,6 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NSTUB(DoAFLock                              ,0xffc27744) //102        *** != 0xffc59f78
-//NSTUB(GetDrive_FreeClusters                 ,0xffc239b8) //  3        *** != 0xffc524a0
-// ALT: NSTUB(GetDrive_FreeClusters, 0xffc524a0) // 4 9/0
 //NSTUB(LEDDrive                              ,0xffc43a04) //103        *** != 0xffc43acc
 //NSTUB(ScreenLock                            ,0xffd86d9c) //  3        *** != 0xffd86fa4
 //NSTUB(ScreenUnlock                          ,0xffd86de0) //  7        *** != 0xffd85c54
@@ -127,6 +125,7 @@ NSTUB(GetBatteryTemperature                   ,0xffc46680) //102
 NSTUB(GetCCDTemperature                       ,0xffc4660c) //102
 NSTUB(GetCurrentAvValue                       ,0xffd0ca30) //102
 NSTUB(GetDrive_ClusterSize                    ,0xffc52440) //  4
+//NSTUB(GetDrive_FreeClusters                 ,0xffc524a0) //  4            == 0xffc524a0
 NSTUB(GetDrive_TotalClusters                  ,0xffc52474) //  3
 NSTUB(GetFocusLensSubjectDistance             ,0xffd0bd28) //102
 NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xffd0c180) //  3
