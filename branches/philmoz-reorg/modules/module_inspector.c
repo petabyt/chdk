@@ -83,7 +83,6 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 
 /*************** GUI MODULE *******************/
 
-#include "flt.h"
 #include "gui_mbox.h"
 #include "keyboard.h"
 #include "stdlib.h"

@@ -13,7 +13,6 @@
 #include "keyboard.h"
 #include "cache.h"
 
-#include "flt.h"
 #include "module_load.h"
 #include "module_exportlist.h"
 

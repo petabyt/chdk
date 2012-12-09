@@ -18,8 +18,8 @@
 //NSTUB(GetDrive_ClusterSize                  ,0xffc4591c) //  5        *** != 0xffc45918
 //NSTUB(GetDrive_FreeClusters                 ,0xffc4597c) //  5        *** != 0xffc45978
 //NSTUB(GetDrive_TotalClusters                ,0xffc45600) //  3        *** != 0xffc45948
-// ALT: NSTUB(GetDrive_TotalClusters, 0xffc45880) // 3 11/0
-// ALT: NSTUB(GetDrive_TotalClusters, 0xffc458ac) // 3 11/0
+// ALT: NSTUB(GetDrive_TotalClusters, 0xffc45880) // 3 12/0
+// ALT: NSTUB(GetDrive_TotalClusters, 0xffc458ac) // 3 12/0
 //NSTUB(RefreshPhysicalScreen                 ,0xffd90b78) //104        *** != 0xffd9098c
 //NSTUB(ScreenUnlock                          ,0xffd9098c) //  3        *** != 0xffd90b78
 //NSTUB(SetScriptMode                         ,0xffc65c00) //101        *** != 0xffc63b40
