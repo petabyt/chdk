@@ -87,7 +87,10 @@ long vid_get_bitmap_screen_height() { return 240; }
 long vid_get_bitmap_buffer_width() { return 960; }
 long vid_get_bitmap_buffer_height() { return 270; }
 
-
+// Physical width of viewport row in bytes
+int vid_get_viewport_byte_width() {
+	return 960 * 6 / 4;     // SX210IS - wide screen LCD is 960 pixels wide, each group of 4 pixels uses 6 bytes (UYVYYY)
+}
 
 //This cam is 0 -> 16:9,  1 -> 4:3
 
@@ -95,30 +98,56 @@ int vid_get_viewport_width()
 {
 	// viewport width table for each image size
 	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
-	static long vp_w[5] = { 480, 360, 360, 272, 216 };
-	return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+	//static long vp_w[5] = { 480, 360, 360, 272, 216 };
+	
+	// 0 = 16:9, 1 = 4:3
+	// somehow, prop PROPCASE_ASPECT_RATIO doesn't work
+	//static long vp_w[5] =  { 480, 360, 360, 272, 216 };
+	//return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+	
+	// if widescreen, photo and video modes
+	if( ( (shooting_get_prop(PROPCASE_RESOLUTION) == 8) && (!MODE_IS_VIDEO(mode_get())) ) ||
+	    ( (MODE_IS_VIDEO(mode_get())) && (shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 4) ) )
+		return 480;
+	else
+		return 360;
 }
 
-int vid_get_viewport_xoffset()
+int vid_get_viewport_display_xoffset()
 {
 	// viewport width offset table for each image size
 	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
-	static long vp_w[5] = { 0, 60, 0, 44, 72 };				// should all be even values for edge overlay
-	return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+	//static long vp_w[5] = { 0, 60, 0, 44, 72 };
+	
+	// 0 = 16:9, 1 = 4:3
+	// see vid_get_viewport_width()
+	//static long vp_w[5] = { 0, 60, 0, 44, 72 };				// should all be even values for edge overlay
+	//return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+
+	// if widescreen, photo and video modes
+	if( ( (shooting_get_prop(PROPCASE_RESOLUTION) == 8) && (!MODE_IS_VIDEO(mode_get())) ) ||
+	    ( (MODE_IS_VIDEO(mode_get())) && (shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 4) ) )
+		return 0;
+	else
+		return 60;
 }
 
 long vid_get_viewport_height()
 {
 	// viewport height table for each image size
 	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
-	static long vp_h[5] = { 240, 240, 214, 240, 240 };
-	return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+	//static long vp_h[5] = { 240, 240, 214, 240, 240 };
+	//return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+	// is always 240 on sx210is
+	return 240;
 }
 
-int vid_get_viewport_yoffset()
+int vid_get_viewport_display_yoffset()
 {
 	// viewport height offset table for each image size
 	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
-	static long vp_h[5] = { 0, 0, 13, 0, 0 };
-	return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+	//static long vp_h[5] = { 0, 0, 13, 0, 0 };
+	//return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+	return 0;
 }
+

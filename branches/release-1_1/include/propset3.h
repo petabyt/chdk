@@ -45,4 +45,5 @@ WARNING:
 #define PROPCASE_ASPECT_RATIO               294
 #define PROPCASE_TIMER_MODE                 225
 #define PROPCASE_OPTICAL_ZOOM_POSITION      197
+#define PROPCASE_VIDEO_RESOLUTION           169
 #endif

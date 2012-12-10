@@ -95,6 +95,13 @@
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION  1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
 
+    #undef CAM_BITMAP_WIDTH
+    #define CAM_BITMAP_WIDTH 960
+    #undef CAM_BITMAP_HEIGHT
+    #define CAM_BITMAP_HEIGHT 270
+    #undef CAM_SCREEN_WIDTH
+    #define CAM_SCREEN_WIDTH 480
+
     #undef EDGE_HMARGIN
     #define EDGE_HMARGIN 10			//10 fits video mode of sx210
 
