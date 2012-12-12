@@ -131,7 +131,6 @@ enum GET_USB_PWR {						// input parameter for get_usb_power()
 
 #define REMOTE_CLICK_TIME 100
 #define DEBOUNCE_TIME 10
-#define MAX_PULSE_TIME 10000
 #define FULL_PRESS_PULSE_TIME 1000
 #define MAX_FULL_PRESS_DELAY 1000
 #define CA1_MIN_HALFPRESS_TIME 10
