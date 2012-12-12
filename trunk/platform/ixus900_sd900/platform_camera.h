@@ -35,6 +35,7 @@
     #undef  CAM_HAS_IS
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1       // force CHDK OSD to show in record more
     #define CAM_FEATURE_FEATHER             1
     //#define CAM_CONSOLE_LOG_ENABLED       1       // ToDo: LOG stuff is disabled/removed

@@ -31,6 +31,7 @@
     #define CAM_MULTIPART                   1
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #undef  CAM_VIDEO_CONTROL
     #undef  CAM_UNCACHED_BIT                        // shut up compiler
