@@ -15,7 +15,7 @@
 
 void gui_module_menu_kbd_process();
 int gui_4wins_kbd_process();
-void gui_4wins_draw(int enforce_redraw);
+void gui_4wins_draw();
 
 gui_handler GUI_MODE_4WINS = 
     /*GUI_MODE_4WINS*/  { GUI_MODE_MODULE, gui_4wins_draw, gui_4wins_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
@@ -368,7 +368,7 @@ int gui_4wins_kbd_process()
     return 0;
 }
 //-------------------------------------------------------------------
-void gui_4wins_draw(int enforce_redraw) {
+void gui_4wins_draw() {
   static char str[16];
   sprintf(str, "Batt: %3d%%", get_batt_perc());
   draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+31, camera_screen.height/FONT_HEIGHT-2, str, INFO_TEXT_COLOR);

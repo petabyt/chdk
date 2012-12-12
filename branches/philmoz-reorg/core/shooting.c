@@ -181,6 +181,7 @@ long get_exposure_counter()
 
 #ifndef CAM_DATE_FOLDER_NAMING
 void get_target_dir_name(char *dir) {
+    extern long get_target_dir_num();
     sprintf(dir,"A/DCIM/%03dCANON",get_target_dir_num());
 }
 #endif

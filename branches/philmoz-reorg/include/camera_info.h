@@ -82,11 +82,13 @@ typedef struct
     // Canon PROPCASE indexes
     struct
     {
+        int propset;
         int gps;
         int orientation_sensor;
         int tv;
         int av;
         int min_av;
+        int ev_correction_1;
         int ev_correction_2;
         int flash_mode;
         int flash_fire;
@@ -94,12 +96,27 @@ typedef struct
         int wb_adj;
         int aspect_ratio;
         int shooting;
+        int resolution;
+        int quality;
     } props;
-    int rombaseaddr, maxramaddr;
+    int rombaseaddr, maxramaddr, memisosize, exmem;
     int tick_count_offset;      // get_tick_count value at which the clock ticks over 1 second
+    char* platform;
+    char* platformsub;
     char* chdk_ver;
+    char* build_number;
+    char* chdk_dng_ver;
+    char* build_svnrev;
+    char* build_date;
+    char* build_time;
+    char* os;
     // Can CHDK can change exposure in video mode?
     int cam_ev_in_video;
+    int cam_has_nd_filter;
+    int cam_has_iris_diaphragm;
+    int cam_has_video_button;
+    int cam_has_manual_focus;
+    int cam_has_multipart;
     // Miscellaneous variables to record state information
     // Used to control communication between various tasks and modules
     struct

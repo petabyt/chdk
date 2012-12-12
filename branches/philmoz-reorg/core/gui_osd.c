@@ -1223,18 +1223,18 @@ void gui_draw_osd()
     gui_draw_debug_vals_osd();
 
 #ifdef OPT_UBASIC
-    if (ubasic_error)
+    if (libubasic && libubasic->ubasic_error())
     {
         const char *msg;
-        if (ubasic_error >= UBASIC_E_ENDMARK)
+        if (libubasic->ubasic_error() >= UBASIC_E_ENDMARK)
         {
-            msg = ubasic_errstrings[UBASIC_E_UNKNOWN_ERROR];
+            msg = libubasic->ubasic_errstring(UBASIC_E_UNKNOWN_ERROR);
         }
         else
         {
-            msg = ubasic_errstrings[ubasic_error];
+            msg = libubasic->ubasic_errstring(libubasic->ubasic_error());
         }
-        sprintf(osd_buf, "uBASIC:%d %s ", ubasic_linenumber(), msg);
+        sprintf(osd_buf, "uBASIC:%d %s ", libubasic->ubasic_linenumber(), msg);
         draw_txt_string(0, 0, osd_buf, MAKE_COLOR(COLOR_RED, COLOR_YELLOW));
     }
 #endif

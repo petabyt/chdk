@@ -8,7 +8,7 @@
 
 
 //-------------------------------------------------------------------
-void gui_mbox_draw(int enforce_redraw);
+void gui_mbox_draw();
 int gui_mbox_kbd_process();
 
 static gui_handler mboxGuiHandler = { GUI_MODE_MBOX, gui_mbox_draw, gui_mbox_kbd_process, 0, GUI_MODE_FLAG_NORESTORE_ON_SWITCH, GUI_MODE_MAGICNUM };
@@ -104,7 +104,7 @@ static void gui_mbox_draw_buttons() {
 }
 
 //-------------------------------------------------------------------
-void gui_mbox_draw(int enforce_redraw) {
+void gui_mbox_draw() {
     if (mbox_to_draw) {
         char c[MAX_LINES][MAX_WIDTH+1];
         const char *p=mbox_msg;

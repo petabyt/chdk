@@ -6,6 +6,7 @@
 #include "math.h"
 #include "levent.h"
 #include "stdlib.h"
+#include "ptp.h"
 
 //----------------------------------------------------------------------------
 // Char Wrappers
@@ -1309,6 +1310,14 @@ void create_partitions(void){
 	}
 }
 
+#else
+
+// Dummy for scripts if not implemented in camera
+int swap_partitions(int new_partition) { return 0; }
+int get_part_count(void) { return 0; }
+int get_part_type() { return 0; }
+unsigned char get_active_partition(void) { return 0; }
+
 #endif
 
 int mute_on_zoom(int x){
@@ -1358,9 +1367,9 @@ void MakeAFScan(void){
 }
 #endif
 
-long __attribute__((weak)) get_jogdial_direction(void){
- return 0;
-}
+long __attribute__((weak)) get_jogdial_direction(void)  { return 0; }
+void __attribute__((weak)) JogDial_CW(void)     {}
+void __attribute__((weak)) JogDial_CCW(void)    {}
 
 #if defined (DNG_EXT_FROM)
 

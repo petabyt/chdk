@@ -6,14 +6,13 @@
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_lang.h"
-#include "gui_calendar.h"
 
 #include "module_load.h"
 #include "module_exportlist.h"
 
 void gui_calendar_menu_kbd_process();
 int gui_calendar_kbd_process();
-void gui_calendar_draw(int enforce_redraw);
+void gui_calendar_draw();
 
 gui_handler GUI_MODE_CALENDAR = 
     /*GUI_MODE_CALENDAR*/   { GUI_MODE_MODULE, gui_calendar_draw, gui_calendar_kbd_process, gui_calendar_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
@@ -130,7 +129,7 @@ int gui_calendar_kbd_process() {
 }
 
 //-------------------------------------------------------------------
-void gui_calendar_draw(int enforce_redraw) {
+void gui_calendar_draw() {
     int x, y;
     static char str[32];
     int w, d, i;

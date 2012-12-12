@@ -18,7 +18,7 @@
 typedef struct
 {
     uint32_t    hash;
-    void        *address;
+    const void  *address;
 } sym_hash;
 
 // Hashed Symbol table for exported symbols
@@ -52,7 +52,7 @@ int module_load( char* name, _module_bind_t callback);
 int module_run(char* name, _module_bind_t callback, int argn, void* args, enum ModuleUnloadMode unload_after);
 void module_unload(char* name);
 void module_unload_idx(int module_idx);
-void* module_find_symbol_address(uint32_t importid);
+const void* module_find_symbol_address(uint32_t importid);
 
 // Flag for modules which couldn't be safely autounloaded (lua, basic,..)
 #define MODULE_FLAG_DISABLE_AUTOUNLOAD 1

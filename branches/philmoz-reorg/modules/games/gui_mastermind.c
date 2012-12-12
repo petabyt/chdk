@@ -13,7 +13,7 @@
 
 void gui_module_menu_kbd_process();
 int gui_mastermind_kbd_process();
-void gui_mastermind_draw(int enforce_redraw);
+void gui_mastermind_draw();
 
 gui_handler GUI_MODE_MASTERMIND = 
     /*GUI_MODE_MASTERMIND*/ { GUI_MODE_MODULE, gui_mastermind_draw, gui_mastermind_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
@@ -227,7 +227,7 @@ int gui_mastermind_kbd_process() {
     return 0;
 }
 //-------------------------------------------------------------------
-void gui_mastermind_draw(int enforce_redraw) {
+void gui_mastermind_draw() {
     static struct tm *ttm;
 
     draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH+15, 0, lang_str(LANG_MENU_GAMES_MASTERMIND), MAKE_COLOR(COLOR_GREY, COLOR_WHITE));

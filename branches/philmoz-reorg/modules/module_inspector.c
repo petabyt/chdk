@@ -173,9 +173,9 @@ void gui_module_draw()
 			showidx++;
 		}
 
-//    sprintf(buf, lang_str(LANG_MSG_MEMORY_INFO_TEXT), core_get_free_memory(), MEMISOSIZE, &_start, &_end);
+//    sprintf(buf, lang_str(LANG_MSG_MEMORY_INFO_TEXT), core_get_free_memory(), camera_info.memisosize, &_start, &_end);
 //		sprintf(buf,"MEM     %08x-%08x - %d free",&_start, &_end,core_get_free_memory());
-//		sprintf(buf,"--- %-12s %08x - %d","CHDK",&_start, MEMISOSIZE );
+//		sprintf(buf,"--- %-12s %08x - %d","CHDK",&_start, camera_info.memisosize );
 
         draw_txt_string(1, 4+showidx,  "SET-redraw, DISP-unload_all, MENU-exit",       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 

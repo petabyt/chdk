@@ -89,6 +89,8 @@ extern int chdir(char *pathname);
 extern int remove(const char *name);
 extern int stat (const char *name, struct stat *pStat);
 
+extern unsigned char SetFileAttributes(const char* fn, unsigned char attr);
+
 // reverse engineered file struct. Appears to be valid for both vxworks and dryos
 // don't use this directly unless you absolutely need to
 // don't EVER try to create one yourself, as this isn't the full structure.

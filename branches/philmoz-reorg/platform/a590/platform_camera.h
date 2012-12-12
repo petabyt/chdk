@@ -26,6 +26,8 @@
     #define CAM_RAW_ROWPIX                  3336    // for new 8 MP
     #define CAM_RAW_ROWS                    2480    // for new 8 MP
 
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1
+
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_ALT_BUTTON_NAMES            { "Print", "Display" }

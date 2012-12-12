@@ -48,25 +48,41 @@
 #include <stdlib.h> /* rand,srand */
 #include "camera_functions.h"
 #else
+#include "camera_info.h"
 #include "ubasic.h"
-#include "platform.h"
 #include "script.h"
 #include "shot_histogram.h"
 #include "stdlib.h"
 #include "levent.h"
 #include "console.h"
 #include "modules.h"
+#include "modes.h"
+#include "shooting.h"
+#include "sd_card.h"
+#include "backlight.h"
+#include "battery.h"
+#include "temperature.h"
+#include "clock.h"
+#include "properties.h"
+#include "file_counter.h"
+#include "lens.h"
+#include "debug_led.h"
+#include "kbd.h"
+#include "keyboard.h"
+#include "shutdown.h"
+#include "sound.h"
 #endif
 #include "action_stack.h"
 #include "tokenizer.h"
 
 #include "conf.h"
 
-#define INCLUDE_OLD_GET__SYNTAX
+// Forward references
+int ubasic_get_variable(int varnum);
+void ubasic_set_variable(int varum, int value);
+int ubasic_finished(void);
 
-#ifdef DEBUG
-#include <stdio.h>
-#endif
+#define INCLUDE_OLD_GET__SYNTAX
 
 static char const *program_ptr;
 #define MAX_STRINGLEN 40
@@ -328,7 +344,7 @@ factor(void)
     break;
   case TOKENIZER_GET_PLATFORM_ID:
     accept(TOKENIZER_GET_PLATFORM_ID);
-    r = PLATFORMID;
+    r = conf.platformid;
     break;
   case TOKENIZER_GET_DRIVE_MODE:
     accept(TOKENIZER_GET_DRIVE_MODE);
@@ -376,11 +392,11 @@ factor(void)
     break;
   case TOKENIZER_GET_QUALITY:
     accept(TOKENIZER_GET_QUALITY);
-    r = shooting_get_prop(PROPCASE_QUALITY);
+    r = shooting_get_prop(camera_info.props.quality);
     break;
   case TOKENIZER_GET_ORIENTATION_SENSOR:
     accept(TOKENIZER_GET_ORIENTATION_SENSOR);
-    r = shooting_get_prop(PROPCASE_ORIENTATION_SENSOR);
+    r = shooting_get_prop(camera_info.props.orientation_sensor);
     break;
   case TOKENIZER_GET_ZOOM_STEPS:
     accept(TOKENIZER_GET_ZOOM_STEPS);
@@ -388,19 +404,25 @@ factor(void)
     break;
   case TOKENIZER_GET_ND_PRESENT:
     accept(TOKENIZER_GET_ND_PRESENT);
-    #if !CAM_HAS_ND_FILTER
-    r = 0;
-    #endif
-    #if CAM_HAS_ND_FILTER && !CAM_HAS_IRIS_DIAPHRAGM
-    r = 1;
-    #endif
-    #if CAM_HAS_ND_FILTER && CAM_HAS_IRIS_DIAPHRAGM
-    r = 2;
-    #endif
+    if (camera_info.cam_has_nd_filter == 0)
+    {
+        r = 0;
+    }
+    else
+    {
+        if (camera_info.cam_has_iris_diaphragm == 0)
+        {
+            r = 1;
+        }
+        else
+        {
+            r = 2;
+        }
+    }
     break;
   case TOKENIZER_GET_PROPSET:
     accept(TOKENIZER_GET_PROPSET);
-    r = CAM_PROPSET;
+    r = camera_info.props.propset;
     break;
   case TOKENIZER_GET_TV96:
     accept(TOKENIZER_GET_TV96);
@@ -484,11 +506,7 @@ factor(void)
     break;
   case TOKENIZER_GET_VIDEO_BUTTON:
     accept(TOKENIZER_GET_VIDEO_BUTTON);
-    #if CAM_HAS_VIDEO_BUTTON
-    r = 1;
-    #else
-    r = 0;
-    #endif
+    r = (camera_info.cam_has_video_button) ? 1 : 0;
     break;
   case TOKENIZER_GET_RAW_COUNT:
     accept(TOKENIZER_GET_RAW_COUNT);
@@ -577,13 +595,11 @@ factor(void)
     int var2 = expr();
     if( conf_getValue(var1, &configVal) == CONF_VALUE) r = configVal.numb; else r = var2;
     break;
-#ifdef CAM_MULTIPART
   case TOKENIZER_SWAP_PARTITIONS:
     accept(TOKENIZER_SWAP_PARTITIONS);
     int partNr = expr();
     r = swap_partitions(partNr);
     break;
-#endif
   default:
     r = varfactor();
     break;
@@ -1628,8 +1644,8 @@ static void set_ev_statement()
  	    int to;
  	    accept(TOKENIZER_SET_EV);
  	    to = expr();
- 	        shooting_set_prop(PROPCASE_EV_CORRECTION_1, to);
- 	        shooting_set_prop(PROPCASE_EV_CORRECTION_2, to);
+ 	        shooting_set_prop(camera_info.props.ev_correction_1, to);
+ 	        shooting_set_prop(camera_info.props.ev_correction_2, to);
  	    accept_cr();
  	}
 
@@ -1672,13 +1688,16 @@ static void set_focus_statement()
     to = expr();
     int m=mode_get()&MODE_SHOOTING_MASK;
 	int mode_video=MODE_IS_VIDEO(m);
-#if CAM_HAS_MANUAL_FOCUS
-    if (shooting_get_focus_mode() || (mode_video)) shooting_set_focus(to, SET_NOW);
-    else shooting_set_focus(to, SET_LATER);
-#else
-    if (mode_video) shooting_set_focus(to, SET_NOW);
-    else shooting_set_focus(to, SET_LATER);    
-#endif    
+    if (camera_info.cam_has_manual_focus)
+    {
+        if (shooting_get_focus_mode() || (mode_video)) shooting_set_focus(to, SET_NOW);
+        else shooting_set_focus(to, SET_LATER);
+    }
+    else
+    {
+        if (mode_video) shooting_set_focus(to, SET_NOW);
+        else shooting_set_focus(to, SET_LATER);    
+    }
     accept_cr();
 }
 
@@ -1831,7 +1850,9 @@ static void md_get_cell_diff_statement()
     var = tokenizer_variable_num();
     accept(TOKENIZER_VARIABLE);
 	
-    if (module_mdetect_load())
+	struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
+
+    if (libmotiondetect)
         ubasic_set_variable(var, libmotiondetect->md_get_cell_diff(col,row));
     else
         ubasic_set_variable(var, 0);
@@ -1941,8 +1962,10 @@ static void md_detect_motion_statement()
 
 //		sprintf(buf,"clip %d [%d,%d][%d,%d]", clipping_region_mode, clipping_region_column1, clipping_region_row1, clipping_region_column2,clipping_region_row2);
 //		script_console_add_line(buf);
+	
+	struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
 
-    if (module_mdetect_load())
+    if (libmotiondetect)
         libmotiondetect->md_init_motion_detector(
 			columns, rows, pixel_measure_mode, detection_timeout, 
 			measure_interval, threshold, draw_grid,
@@ -2164,10 +2187,10 @@ statement(void)
       set_movie_status_statement();
       break;
   case TOKENIZER_SET_RESOLUTION:
-      set_propcase_statement(token, PROPCASE_RESOLUTION);
+      set_propcase_statement(token, camera_info.props.resolution);
       break;
   case TOKENIZER_SET_QUALITY:
-      set_propcase_statement(token, PROPCASE_QUALITY);
+      set_propcase_statement(token, camera_info.props.quality);
       break;
 
   case TOKENIZER_WAIT_CLICK:
@@ -2179,16 +2202,12 @@ statement(void)
 
   case TOKENIZER_WHEEL_LEFT:
       accept(token);
-#ifdef CAM_HAS_JOGDIAL
       JogDial_CCW();
-#endif
       accept_cr();
       break;
   case TOKENIZER_WHEEL_RIGHT:
       accept(token);
-#ifdef CAM_HAS_JOGDIAL
       JogDial_CW();
-#endif
       accept_cr();
       break;
 

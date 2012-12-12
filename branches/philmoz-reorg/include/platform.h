@@ -16,6 +16,12 @@
 #include "meminfo.h"
 #include "debug_led.h"
 #include "shooting.h"
+#include "file_counter.h"
+#include "temperature.h"
+#include "battery.h"
+#include "lens.h"
+#include "shutdown.h"
+#include "sound.h"
 
 // return whether video is actually being recorded
 extern int is_video_recording();
@@ -74,22 +80,6 @@ typedef struct {
 } PHOTO_PARAM;
 
 typedef struct {
-    short hyperfocal_valid;
-    short distance_valid;
-    int   hyperfocal_distance_1e3;
-    int   aperture_value;
-    int   focal_length;
-    int   subject_distance;
-    int   near_limit;
-    int   far_limit;
-    int   hyperfocal_distance;
-    int   depth_of_field;
-    int   min_stack_distance;
-} DOF_TYPE;
-
-extern DOF_TYPE dof_values;
-
-typedef struct {
     short av96;
     short tv96;
     short sv96;
@@ -118,17 +108,6 @@ void mark_filesystem_bootable();
 
 /******************************************************************/
 
-long get_file_counter();
-long get_exposure_counter();
-long get_file_next_counter();
-void get_target_dir_name(char*);
-#ifndef CAM_DATE_FOLDER_NAMING
-    long get_target_dir_num();
-#endif
-long get_target_file_num();
-
-/******************************************************************/
-
 #ifdef CAM_LOAD_CUSTOM_COLORS
 // Color palette function
 extern void load_chdk_palette();
@@ -138,28 +117,12 @@ extern void load_chdk_palette();
 void hook_raw_save_complete();
 
 /******************************************************************/
-
-long lens_get_zoom_pos();
-void lens_set_zoom_pos(long newpos);
-long lens_get_zoom_point();
-void lens_set_zoom_point(long newpt);
-void lens_set_zoom_speed(long newspd); //for S-series
-long lens_get_focus_pos();
-long lens_get_focus_pos_from_lens();
-void lens_set_focus_pos(long newpos);
-long lens_get_target_distance();
-
-/******************************************************************/
 extern void shooting_init(); // startup initialization
 
 #if defined(CAM_DRAW_EXPOSITION)
     char* shooting_get_tv_str();
     char* shooting_get_av_str();
 #endif
-/******************************************************************/
-extern int circle_of_confusion;
-/******************************************************************/
-extern const int zoom_points;
 /******************************************************************/
 extern int auto_started;
 
@@ -184,42 +147,14 @@ int screen_rotated(void);
 void clear_values();
 /******************************************************************/
 
-long stat_get_vbatt();
-int get_ccd_temp();
-int get_optical_temp();
-int get_battery_temp();
-long get_vbatt_min();
-long get_vbatt_max();
-void play_sound(unsigned sound);
-void camera_set_raw(int mode);
-void camera_set_nr(int mode);
-int camera_get_nr();
-int camera_get_script_autostart();
-void camera_set_script_autostart();
-void enter_alt();
-void exit_alt();
-void camera_shutdown_in_a_second(void);
-
-void disable_shutdown();
-void enable_shutdown();
-
-void JogDial_CW(void);
-void JogDial_CCW(void);
 void change_video_tables(int a, int b);
-int get_flash_params_count(void);
 
 /******************************************************************/
-void __attribute__((noreturn)) shutdown();
-void camera_set_led(int led, int state, int bright);
-/****************************************/
 extern int canon_menu_active;
 extern char canon_shoot_menu_active;
 extern int recreview_hold;
 
-extern int movie_status;
-
 void MakeAFScan(void);
-extern int movie_status;
 extern int zoom_status;
 void EnterToCompensationEVF(void);
 void ExitFromCompensationEVF(void);
@@ -254,79 +189,10 @@ void save_ext_for_dng(void);
 void change_ext_to_dng(void);
 void change_ext_to_default(void);
 
-void DoAFLock(void);
-void UnlockAF(void);
-
 void drv_self_hide(void);
 void drv_self_unhide(void);
 
-void SetScriptMode(unsigned mode);
-/*
- call C function with argument list created at runtime.
- See lib/armutil/callfunc.S for documentation
-*/
-unsigned call_func_ptr(void *func, const unsigned *args, unsigned n_args);
-
-/*
- reboot, optionally loading a different binary
- see lib/armutil/reboot.c for documentation
-*/
-int reboot(const char *bootfile);
-
-#ifdef CAM_CHDK_PTP
-
-typedef struct {
-    int code;
-    int sess_id;
-    int trans_id;
-    int num_param;
-    int param1;
-    int param2;
-    int param3;
-    int param4;
-    int param5;
-} PTPContainer;
-
-typedef struct {
-    int handle;
-    int (*send_data)(int handle, const char *buf, int part_size, int total_size, int, int, int); // (0xFF9F525C), total_size should be 0 except for the first call
-    int (*recv_data)(int handle, char *buf, int size, int, int); // (0xFF9F5500)
-    int (*send_resp)(int handle, PTPContainer *resp); // (0xFF9F5688)
-    int (*get_data_size)(int handle); // (0xFF9F5830)
-    int (*send_err_resp)(int handle, PTPContainer *resp); // (0xFF9F5784)
-    int unknown1; // ???
-    int (*f2)(); // ??? (0xFF8D5B24)
-    int (*f3)(); // ??? (0xFF8D5B5C)
-    // more??
-} ptp_data;
-
-typedef int (*ptp_handler)(int, ptp_data*, int, int, int, int, int, int, int, int);
-
-int add_ptp_handler(int opcode, ptp_handler handler, int unknown);
-
-void init_chdk_ptp();
-void init_chdk_ptp_task();
-
-typedef struct {
-    unsigned size;
-    unsigned script_id; // id of script message is to/from 
-    unsigned type;
-    unsigned subtype;
-    char data[];
-} ptp_script_msg;
-int ptp_script_write_msg(ptp_script_msg *msg);
-ptp_script_msg* ptp_script_read_msg(void);
-ptp_script_msg* ptp_script_create_msg(unsigned type, unsigned subtype, unsigned datasize, const void *data);
-int ptp_script_write_error_msg(unsigned errtype, const char *err);
-
-#endif // CAM_CHDK_PTP
-
-int switch_mode_usb(int mode); // 0 = playback, 1 = record; return indicates success
-                               // N.B.: switch_mode only supported when USB is connected
-
 void ExitTask();
-
-unsigned char SetFileAttributes(const char* fn, unsigned char attr);
 
 #ifdef CAM_HAS_GPS
     void GPS_UpdateData();

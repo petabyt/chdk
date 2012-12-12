@@ -47,7 +47,7 @@ static int curr_item;
 static int step;
 
 //-------------------------------------------------------------------
-void gui_osd_draw(int enforce_redraw)
+void gui_osd_draw()
 {
     char osd_buf[64];
 

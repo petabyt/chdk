@@ -9,12 +9,9 @@
 #include "gui_draw.h"
 #include "gui_lang.h"
 #include "gui_mbox.h"
-#include "gui_mpopup.h"
-#include "gui_fselect.h"
 #include "modules.h"
 #include "raw.h"
 #include "conf.h"
-#include "dng.h"
 
 #include "module_load.h"
 

@@ -1,8 +1,11 @@
 topdir=../../
 
+override PLATFORM=modules
+override PLATFORMSUB=100a
+
 include $(topdir)makefile.inc
 
-CFLAGS+=$(CTHUMB) -DFS_USE_FUT
+CFLAGS+=$(CTHUMB) -DFS_USE_FUT -mlong-calls -DCHDK_MODULE_CODE
 
 LUA_OPTLIB_OBJS=
 

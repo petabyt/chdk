@@ -14,7 +14,7 @@
 //-------------------------------------------------------------------
 int gui_tbox_kbd_process();
 void gui_tbox_kbd_process_menu_btn();
-void gui_tbox_draw(int enforce_redraw);
+void gui_tbox_draw();
 
 gui_handler GUI_MODE_TBOX =
     /*GUI_MODE_TBOX*/ { GUI_MODE_MODULE, gui_tbox_draw, gui_tbox_kbd_process, gui_tbox_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
@@ -166,7 +166,7 @@ static void gui_tbox_draw_buttons() {
     x+=BUTTON_SIZE*FONT_WIDTH+BUTTON_SEP;
 }
 
-void gui_tbox_draw(int enforce_redraw)
+void gui_tbox_draw()
 {
     if ((gui_tbox_redraw && !text_limit_reached) || gui_tbox_redraw == 2) {
         if (gui_tbox_redraw==2) {

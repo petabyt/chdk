@@ -1,8 +1,11 @@
 topdir=../../
 
+override PLATFORM=modules
+override PLATFORMSUB=100a
+
 include $(topdir)makefile.inc
 
-CFLAGS+=$(CTHUMB)
+CFLAGS+=$(CTHUMB) -mlong-calls -DCHDK_MODULE_CODE
 
 OBJS = camera_functions.o tokenizer.o ubasic.o
 

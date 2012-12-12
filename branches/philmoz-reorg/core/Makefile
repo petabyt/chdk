@@ -39,9 +39,6 @@ endif
 ifdef OPT_SCRIPTING
 OPT_OBJS+=script.o
 endif 
-ifdef OPT_LUA
-OPT_OBJS+=luascript.o 
-endif 
 ifdef OPT_LUA_CALL_NATIVE
 CFLAGS+=-DOPT_LUA_CALL_NATIVE
 endif
@@ -74,8 +71,7 @@ main.bin: main.elf
 main.elf: $(OBJS) $(topdir)platform/$(PLATFORM)/libplatform.a \
           $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/libplatformsub.a \
           $(topdir)lib/font/libfont.a $(topdir)lib/math/libmath.a \
-          $(topdir)lib/ubasic/libubasic.a $(topdir)lib/lang/liblang.a \
-          $(topdir)lib/lua/liblua.a \
+          $(topdir)lib/lang/liblang.a \
           $(topdir)lib/armutil/libarmutil.a
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^  $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)

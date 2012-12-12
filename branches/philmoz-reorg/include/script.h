@@ -12,7 +12,7 @@
 #endif
 
 #ifdef OPT_LUA
-#include "../core/luascript.h"
+#include "luascript.h"
 #endif
 
 //-------------------------------------------------------------------

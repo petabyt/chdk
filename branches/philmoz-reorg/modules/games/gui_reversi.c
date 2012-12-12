@@ -14,7 +14,7 @@
 
 void gui_module_menu_kbd_process();
 int gui_reversi_kbd_process();
-void gui_reversi_draw(int enforce_redraw);
+void gui_reversi_draw();
 
 gui_handler GUI_MODE_REVERSI = 
     /*GUI_MODE_REVERSI*/    { GUI_MODE_MODULE, gui_reversi_draw, gui_reversi_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
@@ -400,7 +400,7 @@ int gui_reversi_kbd_process() {
 }
 
 //-------------------------------------------------------------------
-void gui_reversi_draw(int enforce_redraw) {
+void gui_reversi_draw() {
     if (need_redraw_all) {
         need_redraw_all = 0;
         DrawMainWindow();

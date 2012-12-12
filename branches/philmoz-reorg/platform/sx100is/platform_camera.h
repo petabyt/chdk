@@ -36,6 +36,7 @@
     #undef  CAM_VIDEO_CONTROL
     #define CAM_REAR_CURTAIN                1
     #define CAM_HAS_JOGDIAL                 1
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1
 
     #define CAM_DNG_LENS_INFO               { 60,10, 600,10, 28,10, 43,10 } // See comments in camera.h
     // pattern

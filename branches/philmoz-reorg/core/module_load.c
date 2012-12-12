@@ -155,7 +155,7 @@ static int module_do_relocations( struct flat_hdr* flat, void* relocbuf, uint32_
 }
 
 // Find symbol address in array from hash id
-void* module_find_symbol_address(uint32_t importid)
+const void* module_find_symbol_address(uint32_t importid)
 {
     // binary search (first entry is magic number & entry count)
     int min = 1, max = EXPORTLIST_LAST_IDX;
@@ -175,7 +175,7 @@ void* module_find_symbol_address(uint32_t importid)
 static int module_do_imports( struct flat_hdr* flat, void* relocbuf, uint32_t import_count )
 {
 	int i;
-	void* importaddress;
+	const void* importaddress;
 	uint32_t* ptr;
 	unsigned char* buf = (unsigned char*)flat;
    

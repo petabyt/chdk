@@ -32,7 +32,7 @@ SUBDIRS=platform
 
 # SKIP_MODULES prevents re-building core/modules in root level make, to speed up batch builds
 ifndef SKIP_MODULES
-SUBDIRS:=$(SUBDIRS) modules
+SUBDIRS:=$(SUBDIRS) lib/lua lib/ubasic modules
 endif
 
 # SKIP_CORE prevents cleaning core in root level make, to speed up batch clean
@@ -226,6 +226,8 @@ alltools:
 
 # for batch builds, build modules once, instead of once for every firmware
 allmodules:
+	$(MAKE) -C lib/lua clean all
+	$(MAKE) -C lib/ubasic clean all
 	$(MAKE) -C modules clean all
 
 # note assumes PLATFORMOS is always in same case!
@@ -279,6 +281,8 @@ batch-rebuild-stubs-parallel: alltools
 batch-clean:
 	$(MAKE) -C tools clean
 	$(MAKE) -C lib clean
+	$(MAKE) -C lib/lua clean
+	$(MAKE) -C lib/ubasic clean
 	$(MAKE) -C core clean
 	$(MAKE) -C modules clean
 	$(MAKE) -C CHDK clean

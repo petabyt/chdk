@@ -12,7 +12,6 @@
 #include "stdlib.h"
 #include "conf.h"
 #include "gui_draw.h"
-#include "dng.h"
 #include "lang.h"
 
 /************* GENERIC ******/
@@ -173,6 +172,62 @@ void module_mdetect_unload()
 }
 
 
+/************* DYNAMIC LIBRARY uBasic ******/
+
+#define MODULE_NAME_UBASIC "ubasic.flt"
+
+struct libubasic_sym* libubasic;
+
+static int bind_module_ubasic( void** export_list )
+{
+    return bind_module_generic(export_list, (void**)&libubasic, 1, 1, 0);
+}
+
+// Return: 0-fail, 1-ok
+struct libubasic_sym* module_ubasic_load()
+{
+    module_lua_unload();
+    return module_load_generic((void**)&libubasic, MODULE_NAME_UBASIC, bind_module_ubasic, MODULE_FLAG_DISABLE_AUTOUNLOAD);
+}
+
+void module_ubasic_unload()
+{
+	if (libubasic)
+    {
+    	module_unload(MODULE_NAME_UBASIC);  
+        libubasic = 0;
+    }
+}
+
+
+/************* DYNAMIC LIBRARY Lua ******/
+
+#define MODULE_NAME_LUA "lua.flt"
+
+struct liblua_sym* liblua;
+
+static int bind_module_lua( void** export_list )
+{
+    return bind_module_generic(export_list, (void**)&liblua, 1, 1, 0);
+}
+
+// Return: 0-fail, 1-ok
+struct liblua_sym* module_lua_load()
+{
+    module_ubasic_unload();
+    return module_load_generic((void**)&liblua, MODULE_NAME_LUA, bind_module_lua, MODULE_FLAG_DISABLE_AUTOUNLOAD);
+}
+
+void module_lua_unload()
+{
+	if (liblua)
+    {
+    	module_unload(MODULE_NAME_LUA);  
+        liblua = 0;
+    }
+}
+
+
 /************* DYNAMIC LIBRARY ZEBRA ******/
 
 #define MODULE_NAME_ZEBRA "zebra.flt"
@@ -204,13 +259,17 @@ static int bind_module_curves( void** export_list )
     return bind_module_generic(export_list, (void**)&libcurves, 1, 1, 0);
 }
 
+#endif
+
 // Return: 0-fail, addr-ok
 struct libcurves_sym* module_curves_load()
 {
+#if defined(OPT_CURVES)
     return module_load_generic((void**)&libcurves, MODULE_NAME_CURVES, bind_module_curves, 0);
-}
-
+#else
+    return 0;
 #endif
+}
 
 
 /************* DYNAMIC LIBRARY GRIDS ******/

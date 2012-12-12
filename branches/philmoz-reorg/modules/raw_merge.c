@@ -3,7 +3,6 @@
 #include "raw_merge.h"
 #include "debug_led.h"
 #include "sd_card.h"
-#include "gui_mpopup.h"
 #include "gui_mbox.h"
 #include "raw.h"
 #include "gui_lang.h"

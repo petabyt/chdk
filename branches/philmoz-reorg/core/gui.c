@@ -14,12 +14,10 @@
 #include "gui_user_menu.h"
 #include "gui_mbox.h"
 #include "console.h"
-#ifdef OPT_DEBUGGING
-    #include "gui_debug.h"
-#endif
 #include "gui_osd.h"
 #include "raw.h"
 #include "modules.h"
+#include "levent.h"
 #ifdef OPT_SCRIPTING
     #include "script.h"
 #endif
@@ -768,13 +766,13 @@ static void gui_show_build_info(int arg)
 #else
     sprintf(comp, "UNKNOWN" );
 #endif
-    sprintf(buf, lang_str(LANG_MSG_BUILD_INFO_TEXT), HDK_VERSION, BUILD_NUMBER, BUILD_SVNREV, __DATE__, __TIME__, PLATFORM, PLATFORMSUB, comp);
+    sprintf(buf, lang_str(LANG_MSG_BUILD_INFO_TEXT), camera_info.chdk_ver, camera_info.build_number, camera_info.build_svnrev, camera_info.build_date, camera_info.build_time, camera_info.platform, camera_info.platformsub, comp);
     gui_mbox_init(LANG_MSG_BUILD_INFO_TITLE, (int)buf, MBOX_FUNC_RESTORE|MBOX_TEXT_LEFT, NULL);
 }
 
 static void gui_show_memory_info(int arg)
 {
-    sprintf(buf, lang_str(LANG_MSG_MEMORY_INFO_TEXT), core_get_free_memory(), MEMISOSIZE, &_start, &_end);
+    sprintf(buf, lang_str(LANG_MSG_MEMORY_INFO_TEXT), core_get_free_memory(), camera_info.memisosize, &_start, &_end);
     gui_mbox_init(LANG_MSG_MEMORY_INFO_TITLE, (int)buf, MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
 }
 
@@ -2590,13 +2588,13 @@ gui_handler altGuiHandler = { GUI_MODE_ALT, gui_chdk_draw, gui_chdk_kbd_process,
 // Main GUI redraw function, perform common initialisation then calls the redraw handler for the mode
 void gui_redraw()
 {
-    static int flag_gui_enforce_redraw = 0;
+    int flag_gui_enforce_redraw = 0;
 
 #ifdef CAM_DETECT_SCREEN_ERASE
     if (!draw_test_guard() && gui_get_mode())     // Attempt to detect screen erase in <Alt> mode, redraw if needed
     {
         draw_set_guard();
-        flag_gui_enforce_redraw |= GUI_REDRAWFLAG_ERASEGUARD;
+        flag_gui_enforce_redraw = 1;
 #ifdef CAM_TOUCHSCREEN_UI
         redraw_buttons = 1;
 #endif
@@ -2615,14 +2613,14 @@ void gui_redraw()
     {
         draw_restore();
         gui_osd_need_restore = 0;
-        flag_gui_enforce_redraw |= GUI_REDRAWFLAG_DRAW_RESTORED;
+        flag_gui_enforce_redraw = 1;
     }
 
     // Force mode redraw if needed
     if (gui_mode_need_redraw)
     {
         gui_mode_need_redraw = 0;
-	    flag_gui_enforce_redraw |= GUI_REDRAWFLAG_MODE_WAS_CHANGED;
+	    flag_gui_enforce_redraw = 1;
     }
 
 // DEBUG: uncomment if you want debug values always on top
@@ -2631,8 +2629,6 @@ void gui_redraw()
     // Call redraw handler
     if (gui_mode->redraw)
         gui_mode->redraw(flag_gui_enforce_redraw);
-
-	flag_gui_enforce_redraw = 0;
 }
 
 //-------------------------------------------------------------------
@@ -2703,7 +2699,8 @@ void gui_activate_alt_mode()
         conf_save_new_settings_if_changed();
 
 #ifdef OPT_UBASIC
-        ubasic_error = UBASIC_E_NONE;
+        if (libubasic)
+            libubasic->ubasic_set_error(UBASIC_E_NONE);
 #endif
         rbf_set_codepage(FONT_CP_WIN);
         vid_turn_on_updates();

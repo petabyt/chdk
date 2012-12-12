@@ -7,7 +7,6 @@
 #include "font.h"
 #include "gui_draw.h"
 #include "gui_batt.h"
-#include "gui_read.h"
 #include "gui_lang.h"
 
 #include "modules.h"
@@ -17,7 +16,7 @@
 
 extern void gui_read_kbd_process_menu_btn();
 int gui_read_kbd_process();
-void gui_read_draw(int enforce_redraw);
+void gui_read_draw();
 void gui_read_kbd_leave();
 
 gui_handler GUI_MODE_READ = 
@@ -106,7 +105,7 @@ static int read_fit_next_char(int ch) {
 }
 
 //-------------------------------------------------------------------
-void gui_read_draw(int enforce_redraw) {
+void gui_read_draw() {
     if (conf.reader_autoscroll && !pause && get_tick_count()-last_time >= conf.reader_autoscroll_delay*1000 && (conf.reader_pos+read_on_screen)<read_file_size) {
         conf.reader_pos += read_on_screen;
         read_to_draw = 1;

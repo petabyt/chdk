@@ -8,15 +8,15 @@
 #include "gui.h"
 #include "gui_lang.h"
 #include "gui_draw.h"
-#include "gui_bench.h"
 
 #include "module_load.h"
-void gui_bench_draw_callback(int enforce_redraw);
+
+void gui_bench_draw();
 void gui_bench_menu_kbd_process();
 int gui_bench_kbd_process();
 
 gui_handler GUI_MODE_BENCH = 
-    /*GUI_MODE_BENCH*/  { GUI_MODE_MODULE, gui_bench_draw_callback, gui_bench_kbd_process, gui_bench_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_BENCH*/  { GUI_MODE_MODULE, gui_bench_draw, gui_bench_kbd_process, gui_bench_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
 
 
 //-------------------------------------------------------------------
@@ -110,19 +110,14 @@ void gui_bench_draw() {
     }
 }
 
-void gui_bench_draw_callback(int enforce_redraw) {
-	gui_bench_draw();
-}
-
-
 //-------------------------------------------------------------------
-static void gui_bench_run() {
-    register long t;
+static void __attribute__((optimize("O0"))) gui_bench_run() {
+    long t;
     register int i, n;
-    int s, x=0x55;
+    register unsigned int s, x=0x55;
     register int *buf;
     register char *scr;
-    char c;
+    register char c;
     
     bench_to_draw = 2;
 

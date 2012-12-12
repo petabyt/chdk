@@ -44,11 +44,6 @@ extern void gui_activate_alt_mode();        // Called from GUI task to set ALT m
 #define GUI_MODE_FLAG_NODRAWRESTORE       1
 #define GUI_MODE_FLAG_NORESTORE_ON_SWITCH 2
 
-// Values (bit-flag) for gui_draw argument
-#define GUI_REDRAWFLAG_ERASEGUARD       1
-#define GUI_REDRAWFLAG_MODE_WAS_CHANGED 2
-#define GUI_REDRAWFLAG_DRAW_RESTORED    4
-
 // Structure to store gui redraw and kbd process handlers for each mode
 typedef struct
 {
@@ -98,8 +93,6 @@ extern const char* gui_video_bitrate_enum(int change, int arg);
 #ifdef OPT_SCRIPTING
 extern void gui_update_script_submenu();
 #endif
-
-extern void gui_menu_run_fltmodule(int arg);
 
 //------------------------------------------------------------------- 
 #ifdef OPT_DEBUGGING

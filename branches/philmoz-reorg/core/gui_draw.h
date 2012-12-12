@@ -1026,4 +1026,9 @@ extern void draw_get_icon_colors();
 extern color icon_green[3], icon_red[3], icon_yellow[3], icon_grey[3];
 
 //-------------------------------------------------------------------
+
+#define NUM_SCRIPT_COLORS   18
+extern unsigned char script_colors[NUM_SCRIPT_COLORS][2];
+
+//-------------------------------------------------------------------
 #endif

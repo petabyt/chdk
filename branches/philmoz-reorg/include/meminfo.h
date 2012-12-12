@@ -18,4 +18,8 @@ typedef struct {
 extern void GetMemInfo(cam_meminfo*);
 extern int GetExMemInfo(cam_meminfo*);
 
+// reyalp used to calculate size of loaded CHDK
+// these are linker symbols, with no actual data attached!
+extern const char _start,_end;
+
 #endif

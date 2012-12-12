@@ -1,30 +1,47 @@
-#include "platform.h"
+#include "camera_info.h"
+#include "stdlib.h"
+#include "gui.h"
+#include "gui_draw.h"
+#include "module_load.h"
+#include "modules.h"
 #include "luascript.h"
 #include "kbd.h"
 #include "script.h"
-#include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
 #include "conf.h"
 #include "shot_histogram.h"
-#include "stdlib.h"
 #include "raw.h"
-#include "modules.h"
 #include "levent.h"
 #include "console.h"
 #include "action_stack.h"
 #include "ptp.h"
-#include "gui_fselect.h"
 #include "lang.h"
 #include "gui_lang.h"
-#include "gui_draw.h"
-#include "module_load.h"
 #include "histogram.h"
+#include "shooting.h"
+#include "battery.h"
+#include "temperature.h"
+#include "backlight.h"
+#include "keyboard.h"
+#include "shutdown.h"
+#include "sound.h"
+#include "modes.h"
+#include "sd_card.h"
+#include "clock.h"
+#include "lens.h"
+#include "properties.h"
+#include "file_counter.h"
+#include "debug_led.h"
+#include "meminfo.h"
 
 #include "../lib/lua/lstate.h"  // for L->nCcalls, baseCcalls
 
 lua_State* L;
 lua_State* Lt;
+
+extern struct liblua_sym _liblua;
+extern void register_lua_funcs( lua_State* L );
 
 static int lua_script_is_ptp;
 static int run_first_resume; // 1 first 'resume', 0 = resuming from yield
@@ -44,7 +61,6 @@ static void lua_script_enable_yield_hook(void) {
     yield_hook_enabled = 1;
 }
 
-#ifdef CAM_CHDK_PTP
 // create a ptp message from the given stack index
 // incompatible types will return a TYPE_UNSUPPORTED message
 static ptp_script_msg *lua_create_usb_msg( lua_State* L, int index, unsigned msgtype) {
@@ -113,6 +129,13 @@ static ptp_script_msg *lua_create_usb_msg( lua_State* L, int index, unsigned msg
     return ptp_script_create_msg(msgtype,datatype,datasize,data);
 }
 
+void lua_script_reset()
+{
+  module_rawop_unload();
+  lua_close( L );
+  L = 0;
+}
+
 void lua_script_error_ptp(int runtime, const char *err) {
     if(runtime) {
         ptp_script_write_error_msg(PTP_CHDK_S_ERRTYPE_RUN, err);
@@ -121,14 +144,6 @@ void lua_script_error_ptp(int runtime, const char *err) {
         ptp_script_write_error_msg(PTP_CHDK_S_ERRTYPE_COMPILE, err);
         lua_script_reset();
     }
-}
-#endif
-
-void lua_script_reset()
-{
-  module_rawop_unload();
-  lua_close( L );
-  L = 0;
 }
 
 static void lua_count_hook(lua_State *L, lua_Debug *ar)
@@ -153,9 +168,7 @@ void lua_script_error(lua_State *Lt,int runtime)
         script_console_add_line( "ERROR: NULL error message" );
     }
     if(lua_script_is_ptp) {
-#ifdef CAM_CHDK_PTP
         lua_script_error_ptp(runtime,err);
-#endif
     } else {
         if(runtime) {
             if(conf.debug_lua_restart_on_error) {
@@ -175,7 +188,6 @@ void lua_script_error(lua_State *Lt,int runtime)
 // TODO more stuff from script.c should be moved here
 void lua_script_finish(lua_State *L) 
 {
-#ifdef CAM_CHDK_PTP
     if(lua_script_is_ptp) {
         // send all return values as RET messages
         int i,end = lua_gettop(L);
@@ -195,7 +207,6 @@ void lua_script_finish(lua_State *L)
             }
         }
     }
-#endif
 }
 
 int lua_script_start( char const* script, int ptp )
@@ -271,14 +282,12 @@ static int lua_get_key_arg( lua_State * L, int narg )
     return k;
 }
 
-#ifdef OPT_CURVES
-#include "curves.h"
-
 static int luaCB_set_curve_state( lua_State* L )
 {
   int value;
   value=luaL_checknumber( L, 1 );
 
+  struct libcurves_sym* libcurves = module_curves_load();
   if ( libcurves && libcurves->curve_set_mode)
 		libcurves->curve_set_mode(value);
 
@@ -295,6 +304,7 @@ static int luaCB_set_curve_file( lua_State* L )
 {
   size_t l;
   const char *s = luaL_checklstring(L, 1, &l);
+  struct libcurves_sym* libcurves = module_curves_load();
   if ( libcurves && libcurves->curve_set_file)
 		libcurves->curve_set_file(s);
   return 0;
@@ -305,7 +315,6 @@ static int luaCB_get_curve_file( lua_State* L )
   lua_pushstring(L,conf.curve_file);
   return 1;
 }
-#endif
 
 static int luaCB_set_aflock(lua_State* L) 
 {
@@ -360,35 +369,41 @@ static int luaCB_console_redraw( lua_State* L )
   return 0;
 }
 
-#ifdef CAM_MULTIPART
 static int luaCB_get_partitionInfo( lua_State* L )
 {
-  lua_createtable(L, 0, 4);
-  SET_INT_FIELD("count",  get_part_count());
-  SET_INT_FIELD("active", get_active_partition());
-  SET_INT_FIELD("type",   get_part_type());
-  SET_INT_FIELD("size",   GetTotalCardSpaceKb()>>10);
-  return 1;
+    if (camera_info.cam_has_multipart)
+    {
+      lua_createtable(L, 0, 4);
+      SET_INT_FIELD("count",  get_part_count());
+      SET_INT_FIELD("active", get_active_partition());
+      SET_INT_FIELD("type",   get_part_type());
+      SET_INT_FIELD("size",   GetTotalCardSpaceKb()>>10);
+      return 1;
+    }
+    return 0;
 }
 
 static int luaCB_swap_partitions( lua_State* L )
 {
-  int partNr;
+    if (camera_info.cam_has_multipart)
+    {
+      int partNr;
 
-  if( lua_gettop(L)==1 )
-  {
-    partNr = luaL_checknumber(L, 1);
-  }
-  else
-  {
-    int partCount = get_part_count();
-    partNr = get_active_partition()+1;
-    if( partNr > partCount ) partNr = 1;
-  }
-  lua_pushboolean(L, swap_partitions(partNr));
-  return 1;
+      if( lua_gettop(L)==1 )
+      {
+        partNr = luaL_checknumber(L, 1);
+      }
+      else
+      {
+        int partCount = get_part_count();
+        partNr = get_active_partition()+1;
+        if( partNr > partCount ) partNr = 1;
+      }
+      lua_pushboolean(L, swap_partitions(partNr));
+      return 1;
+    }
+    return 0;
 }
-#endif
 
 static int luaCB_get_av96( lua_State* L )
 {
@@ -640,13 +655,16 @@ static int luaCB_set_focus( lua_State* L )
     int m=mode_get()&MODE_SHOOTING_MASK;
     int mode_video=MODE_IS_VIDEO(m);
 
-#if CAM_HAS_MANUAL_FOCUS
-    if (shooting_get_focus_mode() || (mode_video)) shooting_set_focus(to, SET_NOW);
-    else shooting_set_focus(to, SET_LATER);
-#else
-    if (shooting_get_common_focus_mode() || mode_video) shooting_set_focus(to, SET_NOW);
-    else shooting_set_focus(to, SET_LATER);    
-#endif    
+    if (camera_info.cam_has_manual_focus)
+    {
+        if (shooting_get_focus_mode() || (mode_video)) shooting_set_focus(to, SET_NOW);
+        else shooting_set_focus(to, SET_LATER);
+    }
+    else
+    {
+        if (shooting_get_common_focus_mode() || mode_video) shooting_set_focus(to, SET_NOW);
+        else shooting_set_focus(to, SET_LATER);    
+    }
   return 0;
 }
 
@@ -825,7 +843,6 @@ static int luaCB_is_key( lua_State* L )
   return 1;
 }
 
-#if CAM_HAS_JOGDIAL
 static int luaCB_wheel_right( lua_State* L )
 {
   JogDial_CW();
@@ -837,11 +854,11 @@ static int luaCB_wheel_left( lua_State* L )
   JogDial_CCW();
   return 0;
 }
-#endif
 
 static int luaCB_md_get_cell_diff( lua_State* L )
 {
-    if (module_mdetect_load())
+    struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
+    if (libmotiondetect)
         lua_pushnumber( L, libmotiondetect->md_get_cell_diff(luaL_checknumber(L,1), luaL_checknumber(L,2)));
     else
         lua_pushnumber( L, 0 );
@@ -867,7 +884,8 @@ static int luaCB_md_detect_motion( lua_State* L )
   int parameters = (luaL_optnumber(L,14,1));
   int pixels_step = (luaL_optnumber(L,15,6));
   int msecs_before_trigger = (luaL_optnumber(L,16,0));
-  if (module_mdetect_load() && libmotiondetect->md_init_motion_detector(
+  struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
+  if (libmotiondetect && libmotiondetect->md_init_motion_detector(
     columns, rows, pixel_measure_mode, detection_timeout, 
     measure_interval, threshold, draw_grid,
     clipping_region_mode,
@@ -926,31 +944,6 @@ static int luaCB_textbox( lua_State* L ) {
 }
 
 // begin lua draw fuctions
-unsigned char script_colors[][2]  = {
-
-                                        {COLOR_TRANSPARENT,         COLOR_TRANSPARENT},         //  1   trans
-                                        {COLOR_BLACK,               COLOR_BLACK},               //  2   black
-                                        {COLOR_WHITE,               COLOR_WHITE},               //  3   white
-                                        
-                                        {COLOR_ICON_PLY_RED,        COLOR_ICON_REC_RED},        //  4   red
-                                        {COLOR_ICON_PLY_RED_DK,     COLOR_ICON_REC_RED_DK},     //  5   red_dark
-                                        {COLOR_ICON_PLY_RED_LT,     COLOR_ICON_REC_RED_LT},     //  6   red_light
-                                        {COLOR_ICON_PLY_GREEN,      COLOR_ICON_REC_GREEN},      //  7   green
-                                        {COLOR_ICON_PLY_GREEN_DK,   COLOR_ICON_REC_GREEN_DK},   //  8   green_dark
-                                        {COLOR_ICON_PLY_GREEN_LT,   COLOR_ICON_REC_GREEN_LT},   //  9   green_light
-                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  10  blue
-                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  11  blue_dark   - placeholder
-                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  12  blue_light  - placeholder
-
-                                        {COLOR_ICON_PLY_GREY,       COLOR_ICON_REC_GREY},       //  13  grey
-                                        {COLOR_ICON_PLY_GREY_DK,    COLOR_ICON_REC_GREY_DK},    //  14  grey_dark
-                                        {COLOR_ICON_PLY_GREY_LT,    COLOR_ICON_REC_GREY_LT},    //  15  grey_light
-
-                                        {COLOR_ICON_PLY_YELLOW,     COLOR_ICON_REC_YELLOW},     //  16  yellow
-                                        {COLOR_ICON_PLY_YELLOW_DK,  COLOR_ICON_REC_YELLOW_DK},  //  17  yellow_dark
-                                        {COLOR_ICON_PLY_YELLOW_LT,  COLOR_ICON_REC_YELLOW_LT}   //  18  yellow_light
-                                    };
-
 static int get_color(int cl) {
     char out=0;                     //defaults to 0 if any wrong number
 
@@ -1137,12 +1130,7 @@ static int luaCB_set_movie_status( lua_State* L )
 
 static int luaCB_get_video_button( lua_State* L )
 {
-  int to;
-  #if CAM_HAS_VIDEO_BUTTON
-  to = 1;
-  #else
-  to = 0;
-  #endif
+  int to = (camera_info.cam_has_video_button) ? 1 : 0;
   lua_pushnumber( L, to );
   return 1;
 }
@@ -1197,7 +1185,7 @@ static int luaCB_get_IS_mode( lua_State* L )
 
 static int luaCB_get_orientation_sensor( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_prop(PROPCASE_ORIENTATION_SENSOR) );
+  lua_pushnumber( L, shooting_get_prop(camera_info.props.orientation_sensor) );
   return 1;
 }
 
@@ -1210,22 +1198,24 @@ static int luaCB_get_zoom_steps( lua_State* L )
 static int luaCB_get_nd_present( lua_State* L )
 {
   int to;
-  #if !CAM_HAS_ND_FILTER
-  to = 0;
-  #endif
-  #if CAM_HAS_ND_FILTER && !CAM_HAS_IRIS_DIAPHRAGM
-  to = 1;
-  #endif
-  #if CAM_HAS_ND_FILTER && CAM_HAS_IRIS_DIAPHRAGM
-  to = 2;
-  #endif
+  if (camera_info.cam_has_nd_filter == 0)
+  {
+    to = 0;
+  }
+  else
+  {
+    if (camera_info.cam_has_iris_diaphragm == 0)
+      to = 1;
+    else
+      to = 2;
+  }
   lua_pushnumber( L, to );
   return 1;
 }
 
 static int luaCB_get_propset( lua_State* L )
 {
-  lua_pushnumber( L, CAM_PROPSET );
+  lua_pushnumber( L, camera_info.props.propset );
   return 1;
 }
 
@@ -1239,8 +1229,8 @@ static int luaCB_set_ev( lua_State* L )
 {
   int to;
   to = luaL_checknumber( L, 1 );
-  shooting_set_prop(PROPCASE_EV_CORRECTION_1, to);
-  shooting_set_prop(PROPCASE_EV_CORRECTION_2, to);
+  shooting_set_prop(camera_info.props.ev_correction_1, to);
+  shooting_set_prop(camera_info.props.ev_correction_2, to);
   return 0;
 }
 
@@ -1469,19 +1459,15 @@ static void set_number_field(lua_State* L, const char *key, int val)
 static int luaCB_get_buildinfo( lua_State* L )
 {
   lua_createtable(L, 0, 9);
-  set_string_field( L,"platform", PLATFORM );
-  set_string_field( L,"platsub", PLATFORMSUB );
-  set_string_field( L,"version", HDK_VERSION );
-  set_string_field( L,"build_number", BUILD_NUMBER );
-  set_string_field( L,"build_revision", BUILD_SVNREV );
-  set_string_field( L,"build_date", __DATE__ );
-  set_string_field( L,"build_time", __TIME__ );
-#ifndef CAM_DRYOS
-  set_string_field( L,"os", "vxworks" );
-#else
-  set_string_field( L,"os", "dryos" );
-#endif
-  set_number_field( L, "platformid", PLATFORMID );
+  set_string_field( L,"platform", camera_info.platform );
+  set_string_field( L,"platsub", camera_info.platformsub );
+  set_string_field( L,"version", camera_info.chdk_ver );
+  set_string_field( L,"build_number", camera_info.build_number );
+  set_string_field( L,"build_revision", camera_info.build_svnrev );
+  set_string_field( L,"build_date", camera_info.build_date );
+  set_string_field( L,"build_time", camera_info.build_time );
+  set_string_field( L,"os", camera_info.os );
+  set_number_field( L,"platformid", conf.platformid );
   return 1;
 }
 
@@ -1504,7 +1490,8 @@ static int luaCB_set_raw_develop( lua_State* L )
 static int luaCB_raw_merge_start( lua_State* L )
 {
   int op = luaL_checknumber(L,1);
-  if (!module_rawop_load())
+  struct librawop_sym* librawop = module_rawop_load();
+  if (!librawop)
     return luaL_argerror(L,1,"fail to load raw merge module");
 
   if ( API_VERSION_MATCH_REQUIREMENT( librawop->version, 1, 0 ) &&
@@ -1519,14 +1506,16 @@ static int luaCB_raw_merge_start( lua_State* L )
 // TODO sanity check file ? Get it from C
 static int luaCB_raw_merge_add_file( lua_State* L )
 {
-  if (!module_rawop_load())
+  struct librawop_sym* librawop = module_rawop_load();
+  if (!librawop)
     return luaL_argerror(L,1,"fail to load raw merge module");
   return librawop->raw_merge_add_file(luaL_checkstring( L, 1 ));
 }
 
 static int luaCB_raw_merge_end( lua_State* L )
 {
-  if (!module_rawop_load())
+  struct librawop_sym* librawop = module_rawop_load();
+  if (!librawop)
     return luaL_argerror(L,1,"fail to load raw merge module");
   librawop->raw_merge_end();
   return 0;
@@ -1785,7 +1774,6 @@ pack the lua args into a buffer to pass to the native code calling functions
 currently only handles strings/numbers
 start is the stack index of the first arg
 */
-#ifdef OPT_LUA_CALL_NATIVE
 static int pack_native_args( lua_State* L, unsigned start, unsigned *argbuf)
 {
   unsigned i;
@@ -1898,8 +1886,6 @@ static int luaCB_call_event_proc( lua_State* L )
   free(argbuf);
   return 1;
 }
-
-#endif // OPT_LUA_CALL_NATIVE
 
 /*
 result = reboot(["filename"])
@@ -2014,7 +2000,6 @@ static int luaCB_set_file_attributes( lua_State* L ) {
     return 1;
 }
 
-#ifdef CAM_CHDK_PTP
 /*
 msg = read_usb_msg([timeout])
 read a message from the CHDK ptp interface.
@@ -2075,7 +2060,6 @@ static int luaCB_write_usb_msg( lua_State* L )
   lua_pushboolean(L,ptp_script_write_msg(msg)); 
   return 1;
 }
-#endif
 
 /* helper for meminfo to set table field only if valid */
 static void set_meminfo_num( lua_State* L,const char *name, int val) {
@@ -2114,38 +2098,30 @@ static int luaCB_get_meminfo( lua_State* L ) {
     // for memory info, duplicated from lowlevel
     extern const char _start,_end;
 
-#if defined(OPT_EXMEM_MALLOC) && !defined(OPT_EXMEM_TESTING)
-    const char *default_heapname="exmem";
-#else
-    const char *default_heapname="system";
-#endif
+    const char *default_heapname = (camera_info.exmem)?"exmem":"system";
     const char *heapname = luaL_optstring( L, 1, default_heapname );
     cam_meminfo meminfo;
 
-    if(strcmp(heapname,"system") == 0) {
+    if (camera_info.exmem == 0)
+    {
         GetMemInfo(&meminfo);
     }
-#if defined(OPT_EXMEM_MALLOC) && !defined(OPT_EXMEM_TESTING)
-    else if(strcmp(heapname,"exmem") == 0) {
+    else
+    {
         GetExMemInfo(&meminfo);
         meminfo.allocated_count = -1; // not implemented in suba
     }
-#endif
-    else {
-        lua_pushboolean(L,0);
-        return 1;
-    }
     // adjust start and size, if CHDK is loaded at heap start
     if(meminfo.start_address == (int)(&_start)) {
-        meminfo.start_address += MEMISOSIZE;
-        meminfo.total_size -= MEMISOSIZE;
+        meminfo.start_address += camera_info.memisosize;
+        meminfo.total_size -= camera_info.memisosize;
     }
     lua_createtable(L, 0, 13); // might not always use 13, but doesn't hurt
     set_string_field( L,"name", heapname );
     lua_pushboolean( L, (strcmp(heapname,default_heapname)==0));
     lua_setfield(L, -2, "chdk_malloc");
     set_number_field( L, "chdk_start", (int)(&_start) );
-    set_number_field( L, "chdk_size", MEMISOSIZE );
+    set_number_field( L, "chdk_size", camera_info.memisosize );
     set_meminfo_num( L, "start_address", meminfo.start_address );
     set_meminfo_num( L, "end_address", meminfo.end_address);
     set_meminfo_num( L, "total_size", meminfo.total_size);
@@ -2241,10 +2217,8 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(wait_click)
     FUNC(is_pressed)
     FUNC(is_key)
-#ifdef CAM_HAS_JOGDIAL
     FUNC(wheel_right)
     FUNC(wheel_left)
-#endif
     FUNC(md_get_cell_diff)
     FUNC(md_detect_motion)
     FUNC(autostarted)
@@ -2256,10 +2230,8 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(shut_down)
     FUNC(print_screen)
 
-#ifdef CAM_MULTIPART
     FUNC(get_partitionInfo)
     FUNC(swap_partitions)
-#endif
 
     FUNC(get_focus_mode)
     FUNC(get_focus_state)
@@ -2307,12 +2279,10 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(raw_merge_end)
     FUNC(set_backlight)
     FUNC(set_aflock)
-#ifdef OPT_CURVES
     FUNC(set_curve_state)
     FUNC(get_curve_state)
     FUNC(set_curve_file)
     FUNC(get_curve_file)
-#endif
     // get levent definition by name or id, nil if not found
     FUNC(get_levent_def)
     // get levent definition by index, nil if out of range
@@ -2332,10 +2302,8 @@ static const luaL_Reg chdk_funcs[] = {
 
     FUNC(switch_mode_usb)
 
-#ifdef OPT_LUA_CALL_NATIVE
     FUNC(call_event_proc)
     FUNC(call_func_ptr)
-#endif
     FUNC(reboot)
     FUNC(get_config_value)
     FUNC(set_config_value)
@@ -2352,10 +2320,8 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(draw_clear)
     FUNC(draw_string)
     FUNC(set_yield)
-#ifdef CAM_CHDK_PTP
     FUNC(read_usb_msg)
     FUNC(write_usb_msg)
-#endif
     {NULL, NULL},
 };
 
@@ -2378,7 +2344,6 @@ void register_lua_funcs( lua_State* L )
     lua_pushcfunction( L, r->func );
     lua_setglobal( L, r->name );
   }
-#ifdef CAM_CHDK_PTP
    luaL_dostring(L,"function usb_msg_table_to_string(t)"
                     " local v2s=function(v)"
                         " local t=type(v)"
@@ -2401,5 +2366,101 @@ void register_lua_funcs( lua_State* L )
                     " return r"
                    " end");
 
-#endif
 }
+
+// =========  MODULE INIT =================
+
+int module_idx=-1;
+
+/***************** BEGIN OF AUXILARY PART *********************
+  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+ **************************************************************/
+
+static void lua_set_variable(int varnum, int value)
+{
+    char var = 'a'+varnum;
+    lua_pushlstring( L, &var, 1 );
+    lua_pushnumber( L, value );
+    lua_settable( L, LUA_GLOBALSINDEX );
+}
+
+static void _lua_pushnumber(lua_Number n)               { lua_pushnumber(Lt,n); }
+static void _lua_pushlstring(const char *s, size_t l)   { lua_pushlstring(Lt,s,l); }
+static void _lua_pushnil()                              { lua_pushnil(Lt); }
+static void _lua_pushboolean(int b)                     { lua_pushboolean(Lt,b); }
+
+struct liblua_sym _liblua =
+{
+	MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
+								// increase minor if compatible changes made(including extending this struct)
+
+    lua_script_start,
+    lua_script_run,
+    lua_run_restore,
+    lua_script_reset,
+    lua_set_variable,
+
+    _lua_pushnumber,
+    _lua_pushlstring,
+    _lua_pushnil,
+    _lua_pushboolean,
+};
+
+void* MODULE_EXPORT_LIST[] = {
+	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
+	/* 1 */	(void*)1,
+    &_liblua
+};
+
+//---------------------------------------------------------
+// PURPOSE:   Bind module symbols with chdk. 
+//		Required function
+// PARAMETERS: pointer to chdk list of export
+// RETURN VALUE: 1 error, 0 ok
+//---------------------------------------------------------
+int _module_loader( unsigned int* chdk_export_list )
+{
+  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
+     return 1;
+
+  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
+	  return 1;
+
+  return 0;
+}
+
+//---------------------------------------------------------
+// PURPOSE: Finalize module operations (close allocs, etc)
+// RETURN VALUE: 0-ok, 1-fail
+//---------------------------------------------------------
+int _module_unloader()
+{
+  return 0;
+}
+
+//---------------------------------------------------------
+// PURPOSE: Default action for simple modules (direct run)
+// NOTE: Please comment this function if no default action and this library module
+//---------------------------------------------------------
+int _module_run(int moduleidx, int argn, int* arguments)
+{
+  module_idx=moduleidx;
+
+  return 0;
+}
+
+/******************** Module Information structure ******************/
+
+struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
+									sizeof(struct ModuleInfo),
+
+									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+									0,							// flag
+									(int32_t)"Lua",// Module name
+									1, 0,						// Module version
+									(int32_t)"Run Lua Scripts"
+								 };
+
+
+/*************** END OF AUXILARY PART *******************/

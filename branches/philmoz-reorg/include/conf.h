@@ -524,4 +524,13 @@ extern int conf_save_new_settings_if_changed();
 
 //-------------------------------------------------------------------
 
+int camera_get_script_autostart();
+void camera_set_script_autostart();
+
+void camera_set_raw(int mode);
+void camera_set_nr(int mode);
+int camera_get_nr();
+
+//-------------------------------------------------------------------
+
 #endif

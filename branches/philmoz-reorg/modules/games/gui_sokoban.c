@@ -28,7 +28,7 @@ static const ConfInfo conf_info[] = {
 
 void gui_module_menu_kbd_process();
 int gui_sokoban_kbd_process();
-void gui_sokoban_draw(int enforce_redraw);
+void gui_sokoban_draw();
 
 gui_handler GUI_MODE_SOKOBAN = 
     /*GUI_MODE_SOKOBAN*/    { GUI_MODE_MODULE, gui_sokoban_draw, gui_sokoban_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
@@ -391,7 +391,7 @@ int gui_sokoban_kbd_process() {
 }
 
 //-------------------------------------------------------------------
-void gui_sokoban_draw(int enforce_redraw) {
+void gui_sokoban_draw() {
     int y, x;
     static char str[16];
 

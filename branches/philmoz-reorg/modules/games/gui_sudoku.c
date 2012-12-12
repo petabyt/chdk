@@ -24,7 +24,7 @@
 
 void gui_module_menu_kbd_process();
 int gui_sudoku_kbd_process();
-void gui_sudoku_draw(int enforce_redraw);
+void gui_sudoku_draw();
 void exit_sudoku();
 
 gui_handler GUI_MODE_SUDOKU =
@@ -267,7 +267,7 @@ void redraw()
 	if (mode==MODE_EDIT)draw_numpad();
 }
 
-void gui_sudoku_draw(int enforce_redraw)
+void gui_sudoku_draw()
 {
 	//battery and watch?
 	if (draw&BG)redraw();

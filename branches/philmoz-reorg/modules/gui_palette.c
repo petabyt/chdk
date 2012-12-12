@@ -12,7 +12,7 @@
 
 void gui_module_menu_kbd_process();
 int gui_palette_kbd_process();
-void gui_palette_draw(int enforce_redraw);
+void gui_palette_draw();
 
 gui_handler GUI_MODE_PALETTE_MODULE = 
     /*GUI_MODE_PALETTE*/    { GUI_MODE_PALETTE, gui_palette_draw, gui_palette_kbd_process, gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
@@ -73,7 +73,7 @@ int gui_palette_kbd_process() {
 #define DISP_TOP            (FONT_HEIGHT + BORDER_SIZE)
 #define DISP_BOTTOM         (FONT_HEIGHT + BORDER_SIZE + CELL_SIZE * 16)
 
-void gui_palette_draw(int enforce_redraw) {
+void gui_palette_draw() {
     unsigned int x, y, xl, xr;
     char f=0;
     color c;

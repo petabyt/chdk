@@ -3,10 +3,14 @@
 #include "keyboard.h"
 #include "gui.h"
 #include "gui_draw.h"
-#include "gui_debug.h"
 #include "conf.h"
 
 #include "module_load.h"
+
+//-------------------------------------------------------------------
+void gui_debug_draw();
+
+//-------------------------------------------------------------------
 
 void gui_module_menu_kbd_process();
 int gui_debug_kbd_process();
@@ -70,7 +74,7 @@ static void gui_debug_draw_values(const coord y, void* addr) {
 }
 
 //-------------------------------------------------------------------
-void gui_debug_draw(int enforce_redraw) {
+void gui_debug_draw() {
     switch (debug_to_draw) {
         case 1:
             draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));

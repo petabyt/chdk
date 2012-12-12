@@ -73,6 +73,9 @@ void kbd_set_alt_mode_key_mask(long key);
 int get_usb_power(int edge);
 long get_jogdial_direction(void);
 
+void JogDial_CW(void);
+void JogDial_CCW(void);
+
 /******************************************************************/
 
 #endif

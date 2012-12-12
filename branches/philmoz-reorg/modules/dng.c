@@ -345,8 +345,8 @@ void create_dng_header(){
     // Fix the counts and offsets where needed
 
     ifd0[CAMERA_NAME_INDEX].count = ifd0[UNIQUE_CAMERA_MODEL_INDEX].count = strlen(cam_name) + 1;
-    ifd0[CHDK_VER_INDEX].offset = (int)camera_info.chdk_ver;
-    ifd0[CHDK_VER_INDEX].count = strlen(camera_info.chdk_ver) + 1;
+    ifd0[CHDK_VER_INDEX].offset = (int)camera_info.chdk_dng_ver;
+    ifd0[CHDK_VER_INDEX].count = strlen(camera_info.chdk_dng_ver) + 1;
     ifd0[ARTIST_NAME_INDEX].count = strlen(artist_name) + 1;
     ifd0[COPYRIGHT_INDEX].count = strlen(copyright) + 1;
     ifd0[ORIENTATION_INDEX].offset = get_orientation_for_exif(exif_data.orientation);

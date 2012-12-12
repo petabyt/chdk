@@ -1,6 +1,8 @@
 #ifndef PROPERTIES_H
 #define PROPERTIES_H
 
+#ifndef CHDK_MODULE_CODE
+
 /* propcase ID constants. These are in their own header files for easier sed processing */
 #if CAM_PROPSET == 5
     #include "propset5.h"   // DryOS R50
@@ -19,6 +21,8 @@
     #error unknown camera processor
 #endif
 
+#endif
+
 extern long get_property_case(long id, void *buf, long bufsize);
 extern long set_property_case(long id, void *buf, long bufsize);
 
@@ -27,5 +31,7 @@ extern int shooting_get_prop(int id);
 
 extern long get_parameter_data(long id, void *buf, long bufsize);
 extern long set_parameter_data(long id, void *buf, long bufsize);
+
+int get_flash_params_count(void);
 
 #endif

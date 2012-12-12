@@ -20,7 +20,8 @@ LDOPTS+=-Wl,-N,-Ttext,0x0016ee30 -r -Wl,-d
 
 FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt \
      _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop10.flt _rawop12.flt \
-     txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt _tbox.flt _osd_le.flt
+     txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt _tbox.flt _osd_le.flt \
+     ubasic.flt lua.flt
 
 all: exportlist $(FLTS)
 
@@ -81,7 +82,6 @@ _rawop10.elf: raw_merge10.o
 _rawop12.elf: raw_merge12.o
 _osd_le.elf: gui_osd_edit.o
 fselect.elf: gui_fselect.o nothumb.o
-#lua.elf: lib_edgeoverlay.o luascript.o $(topdir)lib/lua/liblua.a
 
 4wins.elf: simple_game.o gui_4wins.o
 mastmind.elf: simple_game.o gui_mastermind.o
@@ -90,6 +90,9 @@ tetris.elf: simple_game.o gui_tetris.o
 snake.elf: simple_game.o gui_snake.o
 sokoban.elf: gui_sokoban.o
 sudoku.elf: simple_game.o gui_sudoku.o
+
+ubasic.elf: ubasic.o $(topdir)lib/ubasic/libubasic.a
+lua.elf: luascript.o $(topdir)lib/lua/liblua.a
 
 clean:
 	rm -f *.o *.elf.syms *.elf *.flt

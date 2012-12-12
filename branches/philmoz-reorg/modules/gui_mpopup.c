@@ -17,7 +17,7 @@ extern int module_idx;
 
 int gui_mpopup_kbd_process();
 void gui_mpopup_kbd_process_menu_btn();
-void gui_mpopup_draw(int enforce_redraw);
+void gui_mpopup_draw();
 
 gui_handler GUI_MODE_MPOPUP_MODULE = 
     /*GUI_MODE_MPOPUP*/ { GUI_MODE_MPOPUP, gui_mpopup_draw, gui_mpopup_kbd_process, gui_mpopup_kbd_process_menu_btn, GUI_MODE_FLAG_NORESTORE_ON_SWITCH, GUI_MODE_MAGICNUM };
@@ -87,7 +87,7 @@ static void gui_mpopup_draw_actions() {
 }
 
 //-------------------------------------------------------------------
-void gui_mpopup_draw(int enforce_redraw) {
+void gui_mpopup_draw() {
     if (mpopup_to_draw) {
         int i;
         coord x=0, y=0;

@@ -15,10 +15,7 @@
 #include "fileutil.h"
 #include "gui_lang.h"
 #include "kbd.h"
-
-#ifdef OPT_LUA
-#include "lauxlib.h"
-#endif
+#include "ptp.h"
 
 // Requested filename
 enum FilenameMakeModeEnum {
@@ -758,18 +755,23 @@ static void process_script()
 
     if (state_kbd_script_run != SCRIPT_STATE_PENDING) {
 #ifdef OPT_LUA
-        if( L ) {
-            lua_script_run();
+        if ( liblua )
+        {
+            liblua->lua_script_run();
         } else
 #endif
         {
 #ifdef OPT_UBASIC
-            ubasic_run();
-            if (ubasic_finished()) {
-                script_console_add_line(lang_str(LANG_CONSOLE_TEXT_FINISHED));
-                action_pop();
-                script_end();
-            }    
+            if (libubasic)
+            {
+                libubasic->ubasic_run();
+                if (libubasic->ubasic_finished())
+                {
+                    script_console_add_line(lang_str(LANG_CONSOLE_TEXT_FINISHED));
+                    action_pop();
+                    script_end();
+                }    
+            }
 #endif
         }
     }
@@ -805,17 +807,18 @@ static int script_action_stack(long p)
                 {
                     action_pop();
 #ifdef OPT_LUA
-                    if (L)
+                    if (liblua)
                     {
                         // We need to recover the motion detector's
                         // result and push
                         // it onto the thread's stack.
-                        lua_pushnumber( Lt, libmotiondetect->md_get_result() );
+                        liblua->lua_pushnumber( libmotiondetect->md_get_result() );
                     } else
 #endif
                     {
 #ifdef OPT_UBASIC
-                        ubasic_set_md_ret(libmotiondetect->md_get_result());
+                        if (libubasic)
+                            libubasic->ubasic_set_md_ret(libmotiondetect->md_get_result());
 #endif
                     }
                 }
@@ -824,27 +827,28 @@ static int script_action_stack(long p)
             {
                 action_pop();
 #ifdef OPT_LUA
-                if (L)
+                if (liblua)
                 {
-                    lua_pushnumber( Lt, 0 );
+                    liblua->lua_pushnumber( 0 );
                 } else
 #endif
                 {
 #ifdef OPT_UBASIC
-                    ubasic_set_md_ret(0);
+                    if (libubasic)
+                        libubasic->ubasic_set_md_ret(0);
 #endif
                 }
             }
             break;
 #if defined(OPT_LUA) && defined(CAM_CHDK_PTP)
         case AS_SCRIPT_READ_USB_MSG:
-            if(L) { // only lua supported for now
+            if (liblua) { // only lua supported for now
                 ptp_script_msg *msg = ptp_script_read_msg();
                 if(action_process_delay(2) || msg) {
                     if(msg) {
-                        lua_pushlstring( Lt,msg->data,msg->size);
+                        liblua->lua_pushlstring(msg->data,msg->size);
                     } else {
-                        lua_pushnil(Lt);
+                        liblua->lua_pushnil();
                     }
                     action_clear_delay();
                     action_pop();
@@ -853,7 +857,7 @@ static int script_action_stack(long p)
             }
             break;
         case AS_SCRIPT_WRITE_USB_MSG:
-            if(L) { // only lua supported for now
+            if(liblua) { // only lua supported for now
                 ptp_script_msg *msg = (ptp_script_msg *)action_get_prev(2);
                 int r = ptp_script_write_msg(msg);
                 if(action_process_delay(3) || r) {
@@ -861,7 +865,7 @@ static int script_action_stack(long p)
                     action_pop();
                     action_pop();
                     action_pop();
-                    lua_pushboolean(Lt,r);
+                    liblua->lua_pushboolean(r);
                 }
             }
             break;
@@ -910,10 +914,10 @@ static int gui_script_kbd_process()
         if (state_kbd_script_run == SCRIPT_STATE_INTERRUPTED || state_kbd_script_run == SCRIPT_STATE_PENDING )
             interrupt_script();
 #ifdef OPT_LUA
-        else if (L)
+        else if (liblua)
         {
             state_kbd_script_run = SCRIPT_STATE_INTERRUPTED;
-            lua_run_restore();
+            liblua->lua_run_restore();
             interrupt_script();
         }
 #endif
@@ -921,7 +925,7 @@ static int gui_script_kbd_process()
         else
         {
             state_kbd_script_run = SCRIPT_STATE_INTERRUPTED;
-            if (jump_label("restore") == 0)
+            if (libubasic && libubasic->jump_label("restore") == 0)
                 interrupt_script();
         }
 #endif
@@ -964,13 +968,14 @@ void script_end()
 {
     script_print_screen_end();
 #ifdef OPT_LUA
-    if( L ) {
-      lua_script_reset();
+    if ( liblua )
+    {
+      liblua->lua_script_reset();
     } else
 #endif
     {
 #ifdef OPT_UBASIC
-      ubasic_end();
+      if (libubasic) libubasic->ubasic_end();
 #endif
     }
     // If motion detect library loaded then shut down motion detector
@@ -1017,15 +1022,18 @@ long script_start_gui( int autostart )
 
     if( is_lua( conf.script_file ) ) {
 #ifdef OPT_LUA
-        if( !lua_script_start(script_source_str,0) ) {
-            return -1;
-        }
-        for (i=0; i<SCRIPT_NUM_PARAMS; ++i) {
-            if( script_params[i][0] ) {
-                char var = 'a'+i;
-                lua_pushlstring( L, &var, 1 );
-                lua_pushnumber( L, conf.script_vars[i] );
-                lua_settable( L, LUA_GLOBALSINDEX );
+        module_lua_load();
+        if (liblua)
+        {
+            if( !liblua->lua_script_start(script_source_str,0) ) {
+                return -1;
+            }
+            for (i=0; i<SCRIPT_NUM_PARAMS; ++i)
+            {
+                if( script_params[i][0] )
+                {
+                    liblua->lua_set_variable(i, conf.script_vars[i]);
+                }
             }
         }
 #else
@@ -1037,10 +1045,22 @@ long script_start_gui( int autostart )
     } else
     { // ubasic
 #ifdef OPT_UBASIC
-        ubasic_init(script_source_str);
+        module_ubasic_load();
+        if (libubasic)
+        {
+            libubasic->ubasic_init(script_source_str);
 
-        for (i=0; i<SCRIPT_NUM_PARAMS; ++i) {
-            ubasic_set_variable(i, conf.script_vars[i]);
+            for (i=0; i<SCRIPT_NUM_PARAMS; ++i)
+            {
+                libubasic->ubasic_set_variable(i, conf.script_vars[i]);
+            }
+        }
+        else
+        {
+            char msg[64];
+            sprintf(msg,"uBasic module failed to load");
+            console_add_line(msg);
+            return -1;
         }
 #else
         char msg[64];
@@ -1062,11 +1082,18 @@ long script_start_gui( int autostart )
 #if defined(OPT_LUA) && defined(CAM_CHDK_PTP)
 long script_start_ptp( char *script )
 {
-  if (!lua_script_start(script,1)) return -1;
-  state_kbd_script_run = SCRIPT_STATE_RAN;
-  kbd_set_block(1);
-  auto_started = 0;
-  return script_stack_start();
+    module_lua_load();
+    if (liblua)
+    {
+        if (liblua->lua_script_start(script,1))
+        {
+            state_kbd_script_run = SCRIPT_STATE_RAN;
+            kbd_set_block(1);
+            auto_started = 0;
+            return script_stack_start();
+        }
+    }
+    return -1;
 }
 #endif
 

@@ -7,6 +7,8 @@
 #include "histogram.h"
 #include "raw.h"
 #include "console.h"
+#include "kbd.h"
+#include "ptp.h"
 #ifdef OPT_EDGEOVERLAY
     #include "modules.h"
 #endif
@@ -145,6 +147,7 @@ _cam_info camera_info =
 #endif
     },
     {
+    CAM_PROPSET,
 #if defined(CAM_HAS_GPS)
     PROPCASE_GPS,
 #else
@@ -152,7 +155,7 @@ _cam_info camera_info =
 #endif
     PROPCASE_ORIENTATION_SENSOR,
     PROPCASE_TV, PROPCASE_AV, PROPCASE_MIN_AV,
-    PROPCASE_EV_CORRECTION_2, 
+    PROPCASE_EV_CORRECTION_1, PROPCASE_EV_CORRECTION_2, 
     PROPCASE_FLASH_MODE, PROPCASE_FLASH_FIRE, 
     PROPCASE_METERING_MODE, PROPCASE_WB_ADJ,
 #if defined(PROPCASE_ASPECT_RATIO)
@@ -160,13 +163,51 @@ _cam_info camera_info =
 #else
     0,
 #endif
-    PROPCASE_SHOOTING,
+    PROPCASE_SHOOTING, PROPCASE_RESOLUTION, PROPCASE_QUALITY,
     },
-    ROMBASEADDR, MAXRAMADDR,
+    ROMBASEADDR, MAXRAMADDR, 0,
+#if defined(OPT_EXMEM_MALLOC) && !defined(OPT_EXMEM_TESTING)
+    1,
+#else
     0,
+#endif
+    0,
+    PLATFORM, PLATFORMSUB,
+    HDK_VERSION, BUILD_NUMBER, 
     HDK_VERSION" ver. "BUILD_NUMBER,
-#if defined(CAM_EV_IN_VIDEO)
-    CAM_EV_IN_VIDEO,
+    BUILD_SVNREV, __DATE__, __TIME__,
+#if defined(CAM_DRYOS)
+    "dryos",
+#else
+    "vxworks",
+#endif
+#if CAM_EV_IN_VIDEO
+    1,
+#else
+    0,
+#endif
+#if defined(CAM_HAS_ND_FILTER)
+    1,
+#else
+    0,
+#endif
+#if defined(CAM_HAS_IRIS_DIAPHRAGM)
+    1,
+#else
+    0,
+#endif
+#if defined(CAM_HAS_VIDEO_BUTTON)
+    1,
+#else
+    0,
+#endif
+#if defined(CAM_HAS_MANUAL_FOCUS)
+    1,
+#else
+    0,
+#endif
+#if defined(CAM_MULTIPART)
+    1,
 #else
     0,
 #endif
@@ -270,6 +311,9 @@ void core_spytask()
 {
     int cnt = 1;
     int i=0;
+
+    // Init camera_info bits that can't be done statically
+    camera_info.memisosize = MEMISOSIZE;
 
     raw_need_postprocess = 0;
 
