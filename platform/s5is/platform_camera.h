@@ -33,6 +33,7 @@
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON            1
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #define CAM_EXT_TV_RANGE                1
 
     #define CAM_DNG_LENS_INFO               { 60,10, 720,10, 27,10, 35,10 } // See comments in camera.h

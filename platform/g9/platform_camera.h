@@ -26,6 +26,7 @@
     #define CAM_RAW_ROWPIX                  4104   // for 12 MP
     #define CAM_RAW_ROWS                    3048   // for 12 MP
     #define CAM_HAS_ND_FILTER               1
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_ALT_BUTTON_NAMES            { "Print", "FE" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_MICROPHONE }

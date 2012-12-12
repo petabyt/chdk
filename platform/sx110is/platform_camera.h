@@ -37,6 +37,7 @@
     #undef  CAM_VIDEO_CONTROL
     #define CAM_MULTIPART                   1
     #define CAM_HAS_JOGDIAL                 1
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12

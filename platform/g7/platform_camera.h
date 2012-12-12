@@ -31,6 +31,7 @@
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_MICROPHONE }
     #define CAM_MULTIPART                   1
     #define CAM_HAS_ND_FILTER               1
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_HAS_JOGDIAL                 1
 

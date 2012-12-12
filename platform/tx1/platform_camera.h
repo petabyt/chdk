@@ -29,6 +29,7 @@
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_MANUAL_FOCUS
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_MULTIPART                   1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1

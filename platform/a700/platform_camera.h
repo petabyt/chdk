@@ -26,6 +26,7 @@
     #define CAM_RAW_ROWS                    2136    // for 6 MP
 
     #undef  CAM_HAS_IS
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 2
     #define CAM_EV_IN_VIDEO                 1

@@ -40,6 +40,7 @@
     #undef  CAM_VIDEO_CONTROL
     #define CAM_MULTIPART                   1
     #define CAM_HAS_JOGDIAL                 1
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_UNCACHED_BIT                        // shut up compiler
     #define CAM_UNCACHED_BIT                0x40000000
