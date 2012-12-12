@@ -94,14 +94,7 @@ void usb_one_press_switch(int usb_state)
 			break ;
 
 		case SW_POWER_ON :
-			if ( usb_state == USB_POWER_ON )
-			{
-				if ( current_time - time_stamp > MAX_PULSE_TIME )		// timeout ?
-				{
-					virtual_remote_state =  REMOTE_RELEASE ;			// clear shutter but hang here until usb power goes away
-				}
-			}
-			else
+			if ( usb_state != USB_POWER_ON )
 			{
 				if ( current_time - time_stamp > DEBOUNCE_TIME ) // debounce
 				{
