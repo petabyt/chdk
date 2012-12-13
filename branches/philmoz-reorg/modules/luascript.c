@@ -7,8 +7,6 @@
 #include "luascript.h"
 #include "kbd.h"
 #include "script.h"
-#include "lualib.h"
-#include "lauxlib.h"
 #include "conf.h"
 #include "shot_histogram.h"
 #include "raw.h"
@@ -35,6 +33,8 @@
 #include "debug_led.h"
 #include "meminfo.h"
 
+#include "../lib/lua/lualib.h"
+#include "../lib/lua/lauxlib.h"
 #include "../lib/lua/lstate.h"  // for L->nCcalls, baseCcalls
 
 lua_State* L;

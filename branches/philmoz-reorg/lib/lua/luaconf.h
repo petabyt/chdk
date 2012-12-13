@@ -149,7 +149,7 @@
 
 #else
 
-#define LUA_API     extern
+#define LUA_API     extern __attribute((short_call))
 
 #endif
 

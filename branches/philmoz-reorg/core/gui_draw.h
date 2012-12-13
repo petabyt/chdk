@@ -970,6 +970,40 @@
     #define COLOR_ICON_PLY_GREY_LT      COLOR_ICON_REC_GREY_LT
 #endif
 
+#else
+
+extern  unsigned char    module_colors[];
+
+#undef  SCREEN_COLOR
+#define SCREEN_COLOR        (module_colors[0])
+#define COLOR_WHITE         (module_colors[1])
+#define COLOR_RED           (module_colors[2])
+#define COLOR_GREY          (module_colors[3])
+#define COLOR_GREEN         (module_colors[4])
+#define COLOR_BLUE_LT       (module_colors[5])
+#define COLOR_BLUE          (module_colors[6])
+#define COLOR_YELLOW        (module_colors[7])
+#define COLOR_BG            (module_colors[8])
+#define COLOR_FG            (module_colors[9])
+#define COLOR_SELECTED_BG   (module_colors[10])
+#define COLOR_SELECTED_FG   (module_colors[11])
+#define COLOR_ALT_BG        (module_colors[12])
+#define COLOR_SPLASH_RED    (module_colors[13])
+#define COLOR_SPLASH_PINK   (module_colors[14])
+#define COLOR_SPLASH_GREY   (module_colors[15])
+#define COLOR_HISTO_R       (module_colors[16])
+#define COLOR_HISTO_R_PLAY  (module_colors[17])
+#define COLOR_HISTO_B       (module_colors[18])
+#define COLOR_HISTO_G       (module_colors[19])
+#define COLOR_HISTO_G_PLAY  (module_colors[20])
+#define COLOR_HISTO_BG      (module_colors[21])
+#define COLOR_HISTO_RG      (module_colors[22])
+#define COLOR_HISTO_RB      (module_colors[23])
+#define COLOR_HISTO_RB_PLAY (module_colors[24])
+#define COLOR_HISTO_B_PLAY  (module_colors[25])
+#define COLOR_HISTO_BG_PLAY (module_colors[26])
+#define COLOR_HISTO_RG_PLAY (module_colors[27])
+
 #endif  // CHDK_MODULE_CODE
 
 //-------------------------------------------------------------------

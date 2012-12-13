@@ -519,7 +519,6 @@ void module_async_unload_allrunned(int enforce)
 				 (module_flags[idx]&MODULE_FLAG_DISABLE_AUTOUNLOAD)==0 ) )
 			module_unload_request[idx]=10;
 	}     	  
-     
 }
 
 

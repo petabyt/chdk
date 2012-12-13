@@ -247,7 +247,7 @@ int apply_import( struct relevant_section* base_sect,
 
 	default:
 		// Use only ABS32 because we can't be sure that module will be loaded not too far from core to PC24/THM_CALL
-		PRINTERR(stderr, "Only R_ARM_ABS32 relocations could be processed as imported symbol. Please compile with -mlong-call or use manual import\n");
+		PRINTERR(stderr, "Only R_ARM_ABS32 relocations could be processed as imported symbol (%s). Please compile with -mlong-call or use manual import\n",symname);
 		return ELFFLT_UNHANDLED_RELOC;
   }
   return ELFFLT_OK;

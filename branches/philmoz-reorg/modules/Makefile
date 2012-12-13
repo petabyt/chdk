@@ -16,7 +16,7 @@ CFLAGS+=$(CTHUMB) -mlong-calls -DCHDK_MODULE_CODE
 # warning: library order matters!
 LDLIBS= -lgcc
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(topdir)tools/link-boot.ld
-LDOPTS+=-Wl,-N,-Ttext,0x0016ee30 -r -Wl,-d
+LDOPTS+=-Wl,-N,-Ttext,0 -r -Wl,-d
 
 FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt \
      _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop10.flt _rawop12.flt \

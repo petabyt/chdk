@@ -43,6 +43,8 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
 extern long shutter_open_time; // defined in platform/generic/capt_seq.c
 extern long shutter_open_tick_count; // defined in platform/generic/capt_seq.c
 
+extern  unsigned char    module_colors[];
+
 // ATTENTION: DO NOT USE BRACES OR OWN /**/-STYLE COMMENTS ANYWHERE IN THIS FILE TO AVOID AUTO PARSING MISTAKES
 
 
@@ -53,35 +55,6 @@ extern long shutter_open_tick_count; // defined in platform/generic/capt_seq.c
 // 	  1. PLEASE DO NOT CHANGE START AND FINAL COMMENTS TO CORRECT AUTOPARSING
 
 /* EXPORTED_DEFINES_BEGIN */
-
-char SCREEN__EXPORTEDSYM_COLOR        = SCREEN_COLOR		;
-char COLOR__EXPORTEDSYM_WHITE         = COLOR_WHITE         ;
-char COLOR__EXPORTEDSYM_RED           = COLOR_RED           ;
-char COLOR__EXPORTEDSYM_GREY          = COLOR_GREY          ;
-char COLOR__EXPORTEDSYM_GREEN         = COLOR_GREEN         ;
-char COLOR__EXPORTEDSYM_BLUE_LT       = COLOR_BLUE_LT       ;
-char COLOR__EXPORTEDSYM_BLUE          = COLOR_BLUE          ;
-char COLOR__EXPORTEDSYM_YELLOW        = COLOR_YELLOW        ;
-char COLOR__EXPORTEDSYM_BG            = COLOR_BG            ;
-char COLOR__EXPORTEDSYM_FG            = COLOR_FG            ;
-char COLOR__EXPORTEDSYM_SELECTED_BG   = COLOR_SELECTED_BG   ;
-char COLOR__EXPORTEDSYM_SELECTED_FG   = COLOR_SELECTED_FG   ;
-char COLOR__EXPORTEDSYM_ALT_BG        = COLOR_ALT_BG        ;
-char COLOR__EXPORTEDSYM_SPLASH_RED    = COLOR_SPLASH_RED    ;
-char COLOR__EXPORTEDSYM_SPLASH_PINK   = COLOR_SPLASH_PINK   ;
-char COLOR__EXPORTEDSYM_SPLASH_GREY   = COLOR_SPLASH_GREY   ;
-char COLOR__EXPORTEDSYM_HISTO_R       = COLOR_HISTO_R       ;
-char COLOR__EXPORTEDSYM_HISTO_R_PLAY  = COLOR_HISTO_R_PLAY  ;
-char COLOR__EXPORTEDSYM_HISTO_B       = COLOR_HISTO_B       ;
-char COLOR__EXPORTEDSYM_HISTO_G       = COLOR_HISTO_G       ;
-char COLOR__EXPORTEDSYM_HISTO_G_PLAY  = COLOR_HISTO_G_PLAY  ;
-char COLOR__EXPORTEDSYM_HISTO_BG      = COLOR_HISTO_BG      ;
-char COLOR__EXPORTEDSYM_HISTO_RG      = COLOR_HISTO_RG      ;
-char COLOR__EXPORTEDSYM_HISTO_RB      = COLOR_HISTO_RB      ;
-char COLOR__EXPORTEDSYM_HISTO_RB_PLAY = COLOR_HISTO_RB_PLAY ;
-char COLOR__EXPORTEDSYM_HISTO_B_PLAY  = COLOR_HISTO_B_PLAY  ;
-char COLOR__EXPORTEDSYM_HISTO_BG_PLAY = COLOR_HISTO_BG_PLAY ;
-char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 
 /* EXPORTED_DEFINES_END */
 
@@ -109,6 +82,7 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
             module_find_symbol_address,
             module_restore_edge,
             module_save_edge,
+            &module_colors,
 
             &altGuiHandler,
             &camera_info,
@@ -285,36 +259,6 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
 			
 			pow_calc,
 			pow_calc_2,
-
-			// export palette
-			&SCREEN__EXPORTEDSYM_COLOR		 ,
-			&COLOR__EXPORTEDSYM_WHITE        ,
-			&COLOR__EXPORTEDSYM_RED          ,
-			&COLOR__EXPORTEDSYM_GREY         ,
-			&COLOR__EXPORTEDSYM_GREEN        ,
-			&COLOR__EXPORTEDSYM_BLUE_LT      ,
-			&COLOR__EXPORTEDSYM_BLUE         ,
-			&COLOR__EXPORTEDSYM_YELLOW       ,
-			&COLOR__EXPORTEDSYM_BG           ,
-			&COLOR__EXPORTEDSYM_FG           ,
-			&COLOR__EXPORTEDSYM_SELECTED_BG  ,
-			&COLOR__EXPORTEDSYM_SELECTED_FG  ,
-			&COLOR__EXPORTEDSYM_ALT_BG       ,
-			&COLOR__EXPORTEDSYM_SPLASH_RED   ,
-			&COLOR__EXPORTEDSYM_SPLASH_PINK  ,
-			&COLOR__EXPORTEDSYM_SPLASH_GREY  ,
-			&COLOR__EXPORTEDSYM_HISTO_R      ,
-			&COLOR__EXPORTEDSYM_HISTO_R_PLAY ,
-			&COLOR__EXPORTEDSYM_HISTO_B      ,
-			&COLOR__EXPORTEDSYM_HISTO_G      ,
-			&COLOR__EXPORTEDSYM_HISTO_G_PLAY ,
-			&COLOR__EXPORTEDSYM_HISTO_BG     ,
-			&COLOR__EXPORTEDSYM_HISTO_RG     ,
-			&COLOR__EXPORTEDSYM_HISTO_RB     ,
-			&COLOR__EXPORTEDSYM_HISTO_RB_PLAY,
-			&COLOR__EXPORTEDSYM_HISTO_B_PLAY ,
-			&COLOR__EXPORTEDSYM_HISTO_BG_PLAY,
-			&COLOR__EXPORTEDSYM_HISTO_RG_PLAY,
 
             module_tbox_load,
 

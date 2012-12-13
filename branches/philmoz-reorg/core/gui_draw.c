@@ -533,6 +533,37 @@ unsigned char script_colors[NUM_SCRIPT_COLORS][2]  = {
                                         {COLOR_ICON_PLY_YELLOW_LT,  COLOR_ICON_REC_YELLOW_LT}   //  18  yellow_light
                                     };
 
+unsigned char module_colors[] = {
+    SCREEN_COLOR		,
+    COLOR_WHITE         ,
+    COLOR_RED           ,
+    COLOR_GREY          ,
+    COLOR_GREEN         ,
+    COLOR_BLUE_LT       ,
+    COLOR_BLUE          ,
+    COLOR_YELLOW        ,
+    COLOR_BG            ,
+    COLOR_FG            ,
+    COLOR_SELECTED_BG   ,
+    COLOR_SELECTED_FG   ,
+    COLOR_ALT_BG        ,
+    COLOR_SPLASH_RED    ,
+    COLOR_SPLASH_PINK   ,
+    COLOR_SPLASH_GREY   ,
+    COLOR_HISTO_R       ,
+    COLOR_HISTO_R_PLAY  ,
+    COLOR_HISTO_B       ,
+    COLOR_HISTO_G       ,
+    COLOR_HISTO_G_PLAY  ,
+    COLOR_HISTO_BG      ,
+    COLOR_HISTO_RG      ,
+    COLOR_HISTO_RB      ,
+    COLOR_HISTO_RB_PLAY ,
+    COLOR_HISTO_B_PLAY  ,
+    COLOR_HISTO_BG_PLAY ,
+    COLOR_HISTO_RG_PLAY ,
+};
+
 //-------------------------------------------------------------------
 
 // Colors for icons
