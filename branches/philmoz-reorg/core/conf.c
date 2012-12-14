@@ -248,6 +248,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(117, conf.tv_override_short_exp,      CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(118, conf.av_override_enabled,        CONF_DEF_VALUE,     i:0, NULL),
 
+    CONF_INFO(119, conf.script_allow_lua_native_calls,CONF_DEF_VALUE,   i:0, NULL),
     CONF_INFO(120, conf.script_startup,             CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(121, conf.remote_enable,              CONF_DEF_VALUE,     i:0, NULL),
     
@@ -900,6 +901,9 @@ int conf_setValue(unsigned short id, tConfigVal configVal) {
     int ret = CONF_EMPTY, len, len2;
     OSD_pos* pos;
     
+    // Don't allow scripts to enable Lua native calls.
+    if (id == 119) return ret;
+
     for( i=0; i<CONF_NUM; ++i ) {
         if( conf_info[i].id==id ) {
             switch( conf_info[i].type ) {

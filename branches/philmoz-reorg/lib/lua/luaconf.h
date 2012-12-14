@@ -149,7 +149,8 @@
 
 #else
 
-#define LUA_API     extern __attribute((short_call))
+// Set internal functions as 'short_call' to make CHDK module smaller
+#define LUA_API     __attribute__((short_call)) extern
 
 #endif
 
@@ -173,11 +174,13 @@
       defined(__ELF__)
 /* reyalp: hidden is irrelevant if not dynamically linked*/
 #if defined(HDK_VERSION)
-#define LUAI_FUNC   extern
+// Set internal functions as 'short_call' to make CHDK module smaller
+#define LUAI_FUNC   __attribute__((short_call)) extern
+#define LUAI_DATA   extern
 #else
 #define LUAI_FUNC   __attribute__((visibility("hidden"))) extern
-#endif
 #define LUAI_DATA   LUAI_FUNC
+#endif
 
 #else
 #define LUAI_FUNC   extern

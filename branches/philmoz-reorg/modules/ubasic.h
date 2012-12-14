@@ -54,28 +54,6 @@ enum ubasic_errors
     UBASIC_E_ENDMARK
 };
 
-struct libubasic_sym 
-{
-	int version;
-
-    void (*ubasic_init)(const char *program);
-    void (*ubasic_run)(void);
-    void (*ubasic_end)(void);
-    int (*ubasic_finished)(void);
-    int (*ubasic_linenumber)(void);
-    int (*ubasic_get_variable)(int varnum);
-    void (*ubasic_set_variable)(int varum, int value);
-    void (*ubasic_set_md_ret)(int md_ret);
-    int (*jump_label)(char * label);
-
-    int (*ubasic_error)(void);
-    void (*ubasic_set_error)(int err);
-    // returns string version of error
-    const char* (*ubasic_errstring)(int error);
-};
-
-extern struct libubasic_sym* libubasic;
-extern struct libubasic_sym* module_ubasic_load();		// 0fail, addr-ok
-extern void module_ubasic_unload();
+#include "script_api.h"
 
 #endif /* __UBASIC_H__ */

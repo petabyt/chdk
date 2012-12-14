@@ -176,21 +176,14 @@ void module_mdetect_unload()
 
 #define MODULE_NAME_UBASIC "ubasic.flt"
 
-struct libubasic_sym* libubasic;
+static struct libscriptapi_sym* libubasic;
 
 static int bind_module_ubasic( void** export_list )
 {
     return bind_module_generic(export_list, (void**)&libubasic, 1, 1, 0);
 }
 
-// Return: 0-fail, 1-ok
-struct libubasic_sym* module_ubasic_load()
-{
-    module_lua_unload();
-    return module_load_generic((void**)&libubasic, MODULE_NAME_UBASIC, bind_module_ubasic, MODULE_FLAG_DISABLE_AUTOUNLOAD);
-}
-
-void module_ubasic_unload()
+static void module_ubasic_unload()
 {
 	if (libubasic)
     {
@@ -204,27 +197,46 @@ void module_ubasic_unload()
 
 #define MODULE_NAME_LUA "lua.flt"
 
-struct liblua_sym* liblua;
+static struct libscriptapi_sym* liblua;
 
 static int bind_module_lua( void** export_list )
 {
     return bind_module_generic(export_list, (void**)&liblua, 1, 1, 0);
 }
 
-// Return: 0-fail, 1-ok
-struct liblua_sym* module_lua_load()
-{
-    module_ubasic_unload();
-    return module_load_generic((void**)&liblua, MODULE_NAME_LUA, bind_module_lua, MODULE_FLAG_DISABLE_AUTOUNLOAD);
-}
-
-void module_lua_unload()
+static void module_lua_unload()
 {
 	if (liblua)
     {
     	module_unload(MODULE_NAME_LUA);  
         liblua = 0;
     }
+}
+
+
+/************* DYNAMIC LIBRARY Script language ******/
+
+struct libscriptapi_sym* libscriptapi;
+
+struct libscriptapi_sym* module_script_lang_load(int lang_id)
+{
+    switch (lang_id)
+    {
+    case SCRIPT_LANG_UBASIC:
+        module_lua_unload();
+        libscriptapi = module_load_generic((void**)&libubasic, MODULE_NAME_UBASIC, bind_module_ubasic, MODULE_FLAG_DISABLE_AUTOUNLOAD);
+        break;
+    case SCRIPT_LANG_LUA:
+        module_ubasic_unload();
+        libscriptapi = module_load_generic((void**)&liblua, MODULE_NAME_LUA, bind_module_lua, MODULE_FLAG_DISABLE_AUTOUNLOAD);
+        break;
+    default:
+        module_lua_unload();
+        module_ubasic_unload();
+        libscriptapi = 0;
+        break;
+    }
+    return libscriptapi;
 }
 
 

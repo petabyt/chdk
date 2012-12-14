@@ -1222,22 +1222,13 @@ void gui_draw_osd()
 
     gui_draw_debug_vals_osd();
 
-#ifdef OPT_UBASIC
-    if (libubasic && libubasic->ubasic_error())
+    if (libscriptapi)
     {
-        const char *msg;
-        if (libubasic->ubasic_error() >= UBASIC_E_ENDMARK)
+        if (libscriptapi->error_msg(osd_buf))
         {
-            msg = libubasic->ubasic_errstring(UBASIC_E_UNKNOWN_ERROR);
+            draw_txt_string(0, 0, osd_buf, MAKE_COLOR(COLOR_RED, COLOR_YELLOW));
         }
-        else
-        {
-            msg = libubasic->ubasic_errstring(libubasic->ubasic_error());
-        }
-        sprintf(osd_buf, "uBASIC:%d %s ", libubasic->ubasic_linenumber(), msg);
-        draw_txt_string(0, 0, osd_buf, MAKE_COLOR(COLOR_RED, COLOR_YELLOW));
     }
-#endif
 }
 
 // GUI handler for normal shooting / playback modes

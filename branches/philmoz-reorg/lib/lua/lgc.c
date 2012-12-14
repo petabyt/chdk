@@ -125,7 +125,7 @@ static void marktmu (global_State *g) {
 
 
 /* move `dead' udata that need finalization to list `tmudata' */
-size_t luaC_separateudata (lua_State *L, int all) {
+LUAI_FUNC size_t luaC_separateudata (lua_State *L, int all) {
   global_State *g = G(L);
   size_t deadmem = 0;
   GCObject **p = &g->mainthread->next;
@@ -474,13 +474,13 @@ static void GCTM (lua_State *L) {
 /*
 ** Call all GC tag methods
 */
-void luaC_callGCTM (lua_State *L) {
+LUAI_FUNC void luaC_callGCTM (lua_State *L) {
   while (G(L)->tmudata)
     GCTM(L);
 }
 
 
-void luaC_freeall (lua_State *L) {
+LUAI_FUNC void luaC_freeall (lua_State *L) {
   global_State *g = G(L);
   int i;
   g->currentwhite = WHITEBITS | bitmask(SFIXEDBIT);  /* mask to collect all elements */
@@ -607,7 +607,7 @@ static l_mem singlestep (lua_State *L) {
 }
 
 
-void luaC_step (lua_State *L) {
+LUAI_FUNC void luaC_step (lua_State *L) {
   global_State *g = G(L);
   l_mem lim = (GCSTEPSIZE/100) * g->gcstepmul;
   if (lim == 0)
@@ -633,7 +633,7 @@ void luaC_step (lua_State *L) {
 }
 
 
-void luaC_fullgc (lua_State *L) {
+LUAI_FUNC void luaC_fullgc (lua_State *L) {
   global_State *g = G(L);
   if (g->gcstate <= GCSpropagate) {
     /* reset sweep marks to sweep all elements (returning them to white) */
@@ -659,7 +659,7 @@ void luaC_fullgc (lua_State *L) {
 }
 
 
-void luaC_barrierf (lua_State *L, GCObject *o, GCObject *v) {
+LUAI_FUNC void luaC_barrierf (lua_State *L, GCObject *o, GCObject *v) {
   global_State *g = G(L);
   lua_assert(isblack(o) && iswhite(v) && !isdead(g, v) && !isdead(g, o));
   lua_assert(g->gcstate != GCSfinalize && g->gcstate != GCSpause);
@@ -672,7 +672,7 @@ void luaC_barrierf (lua_State *L, GCObject *o, GCObject *v) {
 }
 
 
-void luaC_barrierback (lua_State *L, Table *t) {
+LUAI_FUNC void luaC_barrierback (lua_State *L, Table *t) {
   global_State *g = G(L);
   GCObject *o = obj2gco(t);
   lua_assert(isblack(o) && !isdead(g, o));
@@ -683,7 +683,7 @@ void luaC_barrierback (lua_State *L, Table *t) {
 }
 
 
-void luaC_link (lua_State *L, GCObject *o, lu_byte tt) {
+LUAI_FUNC void luaC_link (lua_State *L, GCObject *o, lu_byte tt) {
   global_State *g = G(L);
   o->gch.next = g->rootgc;
   g->rootgc = o;
@@ -692,7 +692,7 @@ void luaC_link (lua_State *L, GCObject *o, lu_byte tt) {
 }
 
 
-void luaC_linkupval (lua_State *L, UpVal *uv) {
+LUAI_FUNC void luaC_linkupval (lua_State *L, UpVal *uv) {
   global_State *g = G(L);
   GCObject *o = obj2gco(uv);
   o->gch.next = g->rootgc;  /* link upvalue into `rootgc' list */

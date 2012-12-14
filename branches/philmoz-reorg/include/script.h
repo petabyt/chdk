@@ -7,14 +7,6 @@
 #define SCRIPT_DATA_PATH            "A/CHDK/DATA/"
 #define SCRIPT_DEFAULT_DIR			"A/CHDK/SCRIPTS/"
 
-#ifdef OPT_UBASIC
-#include "ubasic.h"
-#endif
-
-#ifdef OPT_LUA
-#include "luascript.h"
-#endif
-
 //-------------------------------------------------------------------
 
 extern long kbd_last_clicked;
@@ -48,7 +40,7 @@ long script_start_gui( int autostart );
 int script_key_is_pressed( int keyid );
 int script_key_is_clicked( int keyid );
 int script_keyid_by_name( const char *name );
-#ifdef OPT_LUA
+#ifdef CAM_CHDK_PTP
 long script_start_ptp( char *script );
 #endif
 void script_wait_and_end();

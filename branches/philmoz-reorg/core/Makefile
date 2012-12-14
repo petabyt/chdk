@@ -39,9 +39,6 @@ endif
 ifdef OPT_SCRIPTING
 OPT_OBJS+=script.o
 endif 
-ifdef OPT_LUA_CALL_NATIVE
-CFLAGS+=-DOPT_LUA_CALL_NATIVE
-endif
 ifdef OPT_PTP
 # in top level
 #CFLAGS+=-DOPT_PTP

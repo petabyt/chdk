@@ -1,4 +1,5 @@
 #include "camera_info.h"
+#include "stdlib.h"
 #include "module_load.h"
 #include "module_exportlist.h"
 #include "ubasic.h"
@@ -13,7 +14,7 @@ int module_idx=-1;
 
 extern int ubasic_error;
 extern const char *ubasic_errstrings[UBASIC_E_ENDMARK];
-void ubasic_init(const char *program);
+int ubasic_init(const char *program, int is_ptp);
 void ubasic_run(void);
 void ubasic_end(void);
 int ubasic_finished(void);
@@ -23,29 +24,50 @@ void ubasic_set_variable(int varum, int value);
 void ubasic_set_md_ret(int md_ret);
 int jump_label(char * label);
 
-static int _ubasic_error()                      { return ubasic_error; }
-static void _ubasic_set_error(int err)          { ubasic_error = err; }
-static const char*  _ubasic_errstring(int err)  { return ubasic_errstrings[err]; }
+static int ubasic_error_msg(char *buf)
+{
+    if (ubasic_error)
+    {
+        const char *msg;
+        if (ubasic_error >= UBASIC_E_ENDMARK)
+        {
+            msg = ubasic_errstrings[UBASIC_E_UNKNOWN_ERROR];
+        }
+        else
+        {
+            msg = ubasic_errstrings[ubasic_error];
+        }
+        sprintf(buf, "uBASIC:%d %s ", ubasic_linenumber(), msg);
+        return 1;
+    }
+    return 0;
+}
 
-struct libubasic_sym _libubasic =
+static void ubasic_reset_error(int err)         { ubasic_error = UBASIC_E_NONE; }
+static int ubasic_run_restore(void)             { return jump_label("restore"); }
+
+// Dummy routines for API (PTP not supported in ubasic)
+static void ubasic_read_usb_msg(char *data, unsigned int size)  {}
+static void ubasic_write_usb_msg(int result)                    {}
+
+struct libscriptapi_sym _libubasic =
 {
 	MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
 								// increase minor if compatible changes made(including extending this struct)
 
     ubasic_init,
     ubasic_run,
-    ubasic_end,
     ubasic_finished,
-    ubasic_linenumber,
-    ubasic_get_variable,
+    ubasic_end,
     ubasic_set_variable,
     ubasic_set_md_ret,
-    jump_label,
+    ubasic_run_restore,
 
-    _ubasic_error,
-    _ubasic_set_error,
-    // holds short error messages for all known ubasic_errors
-    _ubasic_errstring,
+    ubasic_error_msg,
+    ubasic_reset_error,
+
+    ubasic_read_usb_msg,
+    ubasic_write_usb_msg,
 };
 
 void* MODULE_EXPORT_LIST[] = {

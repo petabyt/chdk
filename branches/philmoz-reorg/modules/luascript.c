@@ -40,7 +40,6 @@
 lua_State* L;
 lua_State* Lt;
 
-extern struct liblua_sym _liblua;
 extern void register_lua_funcs( lua_State* L );
 
 static int lua_script_is_ptp;
@@ -261,7 +260,8 @@ void lua_script_run(void)
 }
 
 // run the "restore" function at the end of a script
-void lua_run_restore()
+// Mimic uBasic logic, return 0 to trigger script interrupt immediately
+int lua_run_restore()
 {
 	lua_getglobal(Lt, "restore");
 	if (lua_isfunction(Lt, -1)) {
@@ -269,6 +269,7 @@ void lua_run_restore()
 			script_console_add_line( lua_tostring( Lt, -1 ) );
 		}
 	}
+    return 0;
 }
 
 DOF_TYPE dof_values;
@@ -1816,26 +1817,33 @@ result: R0 value after the call returns
 */
 static int luaCB_call_func_ptr( lua_State* L)
 {
-  unsigned *argbuf=NULL;
-  unsigned n_args = lua_gettop(L)-1;
-  void *fptr;
+    if (conf.script_allow_lua_native_calls)
+    {
+        unsigned *argbuf=NULL;
+        unsigned n_args = lua_gettop(L)-1;
+        void *fptr;
 
-  fptr=(void *)luaL_checknumber( L, 1 );
+        fptr=(void *)luaL_checknumber( L, 1 );
 
-  if (n_args) {
-    argbuf=malloc(n_args * 4);
-    if(!argbuf) {
-      return luaL_error( L, "malloc fail" );
+        if (n_args)
+        {
+            argbuf=malloc(n_args * 4);
+            if(!argbuf)
+            {
+                return luaL_error( L, "malloc fail" );
+            }
+            if(!pack_native_args(L, 2, argbuf))
+            {
+                free(argbuf);
+                return luaL_error( L, "expected string or number" );
+            }
+        }
+          
+        lua_pushnumber( L, call_func_ptr(fptr, argbuf, n_args) );
+        free(argbuf);
+        return 1;
     }
-    if(!pack_native_args(L, 2, argbuf)) {
-      free(argbuf);
-      return luaL_error( L, "expected string or number" );
-    }
-  }
-  
-  lua_pushnumber( L, call_func_ptr(fptr, argbuf, n_args) );
-  free(argbuf);
-  return 1;
+    return luaL_error( L, "native calls disabled" );
 }
 
 /* 
@@ -1863,28 +1871,34 @@ RegisterNRTableEvent
 extern unsigned _ExecuteEventProcedure(const char *name,...);
 static int luaCB_call_event_proc( lua_State* L )
 {
-  const char *evpname;
-  unsigned *argbuf;
-  unsigned n_args = lua_gettop(L);
+    if (conf.script_allow_lua_native_calls)
+    {
+        const char *evpname;
+        unsigned *argbuf;
+        unsigned n_args = lua_gettop(L);
 
-  evpname=luaL_checkstring( L, 1 );
+        evpname=luaL_checkstring( L, 1 );
 
-  argbuf=malloc(n_args * 4);
-  if (!argbuf) {
-    return luaL_error( L, "malloc fail" );
-  }
+        argbuf=malloc(n_args * 4);
+        if (!argbuf)
+        {
+            return luaL_error( L, "malloc fail" );
+        }
 
-  // event proc name is first arg
-  *argbuf = (unsigned)evpname;
+        // event proc name is first arg
+        *argbuf = (unsigned)evpname;
   
-  if(!pack_native_args(L,2,argbuf+1)) {
-    free(argbuf);
-    return luaL_error( L, "expected string or number" );
-  }
+        if(!pack_native_args(L,2,argbuf+1))
+        {
+            free(argbuf);
+            return luaL_error( L, "expected string or number" );
+        }
   
-  lua_pushnumber( L, call_func_ptr(_ExecuteEventProcedure,argbuf,n_args) );
-  free(argbuf);
-  return 1;
+        lua_pushnumber( L, call_func_ptr(_ExecuteEventProcedure,argbuf,n_args) );
+        free(argbuf);
+        return 1;
+    }
+    return luaL_error( L, "native calls disabled" );
 }
 
 /*
@@ -2384,26 +2398,46 @@ static void lua_set_variable(int varnum, int value)
     lua_settable( L, LUA_GLOBALSINDEX );
 }
 
-static void _lua_pushnumber(lua_Number n)               { lua_pushnumber(Lt,n); }
-static void _lua_pushlstring(const char *s, size_t l)   { lua_pushlstring(Lt,s,l); }
-static void _lua_pushnil()                              { lua_pushnil(Lt); }
-static void _lua_pushboolean(int b)                     { lua_pushboolean(Lt,b); }
+static int lua_script_finished()                        { return 0; }
+static int lua_error_msg(char *buf)                     { return 0; }
+static void lua_reset_error(int err)                    { }
+static void lua_set_md_ret(int md_ret)                  { lua_pushnumber(Lt,md_ret); }
 
-struct liblua_sym _liblua =
+static void lua_read_usb_msg(char *data, unsigned int size)
+{
+    if (data)
+    {
+        lua_pushlstring(Lt,data,size);
+    }
+    else
+    {
+        lua_pushnil(Lt);
+    }
+}
+
+static void lua_write_usb_msg(int result)
+{
+    lua_pushboolean(Lt,result);
+}
+
+struct libscriptapi_sym _liblua =
 {
 	MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
 								// increase minor if compatible changes made(including extending this struct)
 
     lua_script_start,
     lua_script_run,
-    lua_run_restore,
+    lua_script_finished,        // Dummy for interface
     lua_script_reset,
     lua_set_variable,
+    lua_set_md_ret,
+    lua_run_restore,
 
-    _lua_pushnumber,
-    _lua_pushlstring,
-    _lua_pushnil,
-    _lua_pushboolean,
+    lua_error_msg,
+    lua_reset_error,
+
+    lua_read_usb_msg,
+    lua_write_usb_msg,
 };
 
 void* MODULE_EXPORT_LIST[] = {

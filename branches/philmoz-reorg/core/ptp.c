@@ -11,13 +11,11 @@
 #include "live_view.h"
 static int buf_size=0;
 
-#ifdef OPT_LUA
 #include "script.h"
 #include "action_stack.h"
 // process id for scripts, increments before each attempt to run script
 // does not handle wraparound
 static unsigned script_run_id; 
-#endif
 
 static int handle_ptp(
                 int h, ptp_data *data, int opcode, int sess_id, int trans_id,
@@ -113,7 +111,6 @@ static int send_ptp_data(ptp_data *data, const char *buf, int size)
   return 1;
 }
 
-#ifdef OPT_LUA
 // TODO this could be a generic ring buffer of words
 #define PTP_SCRIPT_MSG_Q_LEN 16
 typedef struct {
@@ -217,8 +214,6 @@ int ptp_script_write_error_msg(unsigned errtype, const char *err) {
   return ptp_script_write_msg(msg);
 }
 
-#endif
-
 static int handle_ptp(
                int h, ptp_data *data, int opcode, int sess_id, int trans_id,
                int param1, int param2, int param3, int param4, int param5)
@@ -257,9 +252,7 @@ static int handle_ptp(
     case PTP_CHDK_ScriptSupport:
       ptp.num_param = 1;
       ptp.param1 = 0;
-#ifdef OPT_LUA
       ptp.param1 |= PTP_CHDK_SCRIPT_SUPPORT_LUA;
-#endif
       break;
     case PTP_CHDK_ScriptStatus:
       ptp.num_param = 1;
@@ -267,9 +260,7 @@ static int handle_ptp(
       ptp.param1 = 0;
 #ifdef OPT_SCRIPTING
       ptp.param1 |= script_is_running()?PTP_CHDK_SCRIPT_STATUS_RUN:0;
-#ifdef OPT_LUA
       ptp.param1 |= (!script_msg_q_empty(&msg_q_out))?PTP_CHDK_SCRIPT_STATUS_MSG:0;
-#endif
 #endif
       break;
     case PTP_CHDK_GetMemory:
@@ -505,7 +496,6 @@ static int handle_ptp(
       }
       break;
 
-#ifdef OPT_LUA
     // TODO this should flush data even if scripting isn't supported
     case PTP_CHDK_ExecuteScript:
       {
@@ -619,7 +609,6 @@ static int handle_ptp(
       }
       break;
     }
-#endif
 
     case PTP_CHDK_GetDisplayData:
         ptp.num_param = 1;

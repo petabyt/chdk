@@ -45,4 +45,8 @@
 //--------------------------
 #include "gui_tbox.h"
 
+// MODULE "Lua/uBasic" API
+//--------------------------
+#include "script_api.h"
+
 #endif

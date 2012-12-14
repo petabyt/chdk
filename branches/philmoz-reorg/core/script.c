@@ -729,15 +729,8 @@ void script_console_add_line(const char *str)
 
 static int is_lua( const char* script_file)
 {
-  int len;
-  char const* s;
-  
-  s = script_file;
-  len = strlen( s );
-  return !s[0] || (len >= 4 && ( s[len-1] == 'a' || s[len-1] == 'A' )
-    && ( s[len-2] == 'u' || s[len-2] == 'U' )
-    && ( s[len-3] == 'l' || s[len-3] == 'L' )
-    && s[len-4] == '.');
+    char *ext = strrchr(script_file,'.');
+    return (ext && (strlen(ext) == 4) && (toupper(ext[1]) == 'L') && (toupper(ext[2]) == 'U') && (toupper(ext[3]) == 'A'));
 }
 
 void script_wait_and_end(void)
@@ -753,26 +746,17 @@ void script_wait_and_end(void)
 static void process_script()
 {   // Note: This function is called from an action stack for AS_SCRIPT_RUN.
 
-    if (state_kbd_script_run != SCRIPT_STATE_PENDING) {
-#ifdef OPT_LUA
-        if ( liblua )
+    if (state_kbd_script_run != SCRIPT_STATE_PENDING)
+    {
+        if ( libscriptapi )
         {
-            liblua->lua_script_run();
-        } else
-#endif
-        {
-#ifdef OPT_UBASIC
-            if (libubasic)
+            libscriptapi->script_run();
+            if (libscriptapi->script_finished())
             {
-                libubasic->ubasic_run();
-                if (libubasic->ubasic_finished())
-                {
-                    script_console_add_line(lang_str(LANG_CONSOLE_TEXT_FINISHED));
-                    action_pop();
-                    script_end();
-                }    
-            }
-#endif
+                script_console_add_line(lang_str(LANG_CONSOLE_TEXT_FINISHED));
+                action_pop();
+                script_end();
+            }    
         }
     }
 }
@@ -806,50 +790,31 @@ static int script_action_stack(long p)
                 if (libmotiondetect->md_detect_motion()==0)
                 {
                     action_pop();
-#ifdef OPT_LUA
-                    if (liblua)
+                    if (libscriptapi)
                     {
                         // We need to recover the motion detector's
                         // result and push
                         // it onto the thread's stack.
-                        liblua->lua_pushnumber( libmotiondetect->md_get_result() );
-                    } else
-#endif
-                    {
-#ifdef OPT_UBASIC
-                        if (libubasic)
-                            libubasic->ubasic_set_md_ret(libmotiondetect->md_get_result());
-#endif
+                        libscriptapi->set_md_ret(libmotiondetect->md_get_result());
                     }
                 }
             }
             else
             {
                 action_pop();
-#ifdef OPT_LUA
-                if (liblua)
+                if (libscriptapi)
                 {
-                    liblua->lua_pushnumber( 0 );
-                } else
-#endif
-                {
-#ifdef OPT_UBASIC
-                    if (libubasic)
-                        libubasic->ubasic_set_md_ret(0);
-#endif
+                    libscriptapi->set_md_ret(0);
                 }
             }
             break;
-#if defined(OPT_LUA) && defined(CAM_CHDK_PTP)
+#if defined(CAM_CHDK_PTP)
         case AS_SCRIPT_READ_USB_MSG:
-            if (liblua) { // only lua supported for now
+            if (libscriptapi) { // only lua supported for now
                 ptp_script_msg *msg = ptp_script_read_msg();
-                if(action_process_delay(2) || msg) {
-                    if(msg) {
-                        liblua->lua_pushlstring(msg->data,msg->size);
-                    } else {
-                        liblua->lua_pushnil();
-                    }
+                if (action_process_delay(2) || msg)
+                {
+                    libscriptapi->read_usb_msg((msg)?msg->data:0,msg->size);
                     action_clear_delay();
                     action_pop();
                     action_pop();
@@ -857,15 +822,16 @@ static int script_action_stack(long p)
             }
             break;
         case AS_SCRIPT_WRITE_USB_MSG:
-            if(liblua) { // only lua supported for now
+            if (libscriptapi) { // only lua supported for now
                 ptp_script_msg *msg = (ptp_script_msg *)action_get_prev(2);
                 int r = ptp_script_write_msg(msg);
-                if(action_process_delay(3) || r) {
+                if (action_process_delay(3) || r)
+                {
                     action_clear_delay();
                     action_pop();
                     action_pop();
                     action_pop();
-                    liblua->lua_pushboolean(r);
+                    libscriptapi->write_usb_msg(r);
                 }
             }
             break;
@@ -913,22 +879,12 @@ static int gui_script_kbd_process()
     {
         if (state_kbd_script_run == SCRIPT_STATE_INTERRUPTED || state_kbd_script_run == SCRIPT_STATE_PENDING )
             interrupt_script();
-#ifdef OPT_LUA
-        else if (liblua)
+        else if (libscriptapi)
         {
             state_kbd_script_run = SCRIPT_STATE_INTERRUPTED;
-            liblua->lua_run_restore();
-            interrupt_script();
-        }
-#endif
-#ifdef OPT_UBASIC
-        else
-        {
-            state_kbd_script_run = SCRIPT_STATE_INTERRUPTED;
-            if (libubasic && libubasic->jump_label("restore") == 0)
+            if (libscriptapi->run_restore())
                 interrupt_script();
         }
-#endif
     }
 #endif
 
@@ -967,16 +923,9 @@ static gui_handler *old_gui_handler = 0;
 void script_end()
 {
     script_print_screen_end();
-#ifdef OPT_LUA
-    if ( liblua )
+    if ( libscriptapi )
     {
-      liblua->lua_script_reset();
-    } else
-#endif
-    {
-#ifdef OPT_UBASIC
-      if (libubasic) libubasic->ubasic_end();
-#endif
+      libscriptapi->script_reset();
     }
     // If motion detect library loaded then shut down motion detector
     module_mdetect_unload();
@@ -1020,54 +969,27 @@ long script_start_gui( int autostart )
     else
         script_console_add_line(lang_str(LANG_CONSOLE_TEXT_STARTED));
 
-    if( is_lua( conf.script_file ) ) {
-#ifdef OPT_LUA
-        module_lua_load();
-        if (liblua)
+    module_script_lang_load((is_lua(conf.script_file))?SCRIPT_LANG_LUA:SCRIPT_LANG_UBASIC);
+    if (libscriptapi)
+    {
+        if ( !libscriptapi->script_start(script_source_str,0) )
         {
-            if( !liblua->lua_script_start(script_source_str,0) ) {
-                return -1;
-            }
-            for (i=0; i<SCRIPT_NUM_PARAMS; ++i)
-            {
-                if( script_params[i][0] )
-                {
-                    liblua->lua_set_variable(i, conf.script_vars[i]);
-                }
-            }
-        }
-#else
-        char msg[64];
-        sprintf(msg,lang_str(LANG_CONSOLE_SCRIPT_DISABLED_IN_BUILD),"Lua");
-        console_add_line(msg);
-        return -1;
-#endif
-    } else
-    { // ubasic
-#ifdef OPT_UBASIC
-        module_ubasic_load();
-        if (libubasic)
-        {
-            libubasic->ubasic_init(script_source_str);
-
-            for (i=0; i<SCRIPT_NUM_PARAMS; ++i)
-            {
-                libubasic->ubasic_set_variable(i, conf.script_vars[i]);
-            }
-        }
-        else
-        {
-            char msg[64];
-            sprintf(msg,"uBasic module failed to load");
-            console_add_line(msg);
             return -1;
         }
-#else
+        for (i=0; i<SCRIPT_NUM_PARAMS; ++i)
+        {
+            if( script_params[i][0] )
+            {
+                libscriptapi->set_variable(i, conf.script_vars[i]);
+            }
+        }
+    }
+    else
+    {
         char msg[64];
-        sprintf(msg,lang_str(LANG_CONSOLE_SCRIPT_DISABLED_IN_BUILD),"UBASIC");
+        sprintf(msg,"%s module failed to load",(is_lua(conf.script_file))?"Lua":"uBasic");
         console_add_line(msg);
         return -1;
-#endif
     }
 
     state_kbd_script_run = SCRIPT_STATE_RAN;
@@ -1079,13 +1001,13 @@ long script_start_gui( int autostart )
     return script_stack_start();
 }
 
-#if defined(OPT_LUA) && defined(CAM_CHDK_PTP)
+#if defined(CAM_CHDK_PTP)
 long script_start_ptp( char *script )
 {
-    module_lua_load();
-    if (liblua)
+    module_script_lang_load(SCRIPT_LANG_LUA);
+    if (libscriptapi)
     {
-        if (liblua->lua_script_start(script,1))
+        if (libscriptapi->script_start(script,1))
         {
             state_kbd_script_run = SCRIPT_STATE_RAN;
             kbd_set_block(1);

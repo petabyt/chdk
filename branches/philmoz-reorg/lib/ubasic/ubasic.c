@@ -180,8 +180,8 @@ ubasic_linenumber()
 }
 
 /*---------------------------------------------------------------------------*/
-void
-ubasic_init(const char *program)
+int
+ubasic_init(const char *program, int is_ptp)
 {
   program_ptr = program;
   flag_yield = 0;
@@ -191,6 +191,7 @@ ubasic_init(const char *program)
   ubasic_error = UBASIC_E_NONE;
   yield_max_lines = YIELD_MAX_LINES_DEFAULT;
   yield_max_ms = YIELD_MAX_MS_DEFAULT;
+  return 1;
 }
 /*---------------------------------------------------------------------------*/
 // read a key name and return key id, 

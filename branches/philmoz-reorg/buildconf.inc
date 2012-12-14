@@ -7,15 +7,7 @@ OPT_DEBUGGING=1
 OPT_EDGEOVERLAY=1
 
 # Scripting components
-OPT_UBASIC=1
-OPT_LUA=1
-OPT_LUA_STRLIB=1
-OPT_LUA_IOLIB=1
-OPT_LUA_OSLIB=1
-# allow Lua to call arbitrary ROM functions and eventprocs
-# WARNING: This is DANGEROUS. e.g. call_event_proc("EraseSectorOfRom",...)
-# NOTE: the interface for this may change in the future, to support better support buffers etc
-#OPT_LUA_CALL_NATIVE=1
+OPT_SCRIPTING=1
 
 # experimental - allocate memory from alternate heap. Default 2MB from EXMEM_RAMDISK
 # See exmem_malloc_init in generic/wrappers.c
