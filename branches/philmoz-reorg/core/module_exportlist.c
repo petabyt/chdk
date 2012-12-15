@@ -4,10 +4,9 @@
  *    CHDK-FLAT Module System.  Sergey Taranenko aka tsvstar
  */
 
-#include "platform.h"
-#include "module_exportlist.h"
-#include "lang.h"
+#include "camera_info.h"
 #include "stdlib.h"
+#include "lang.h"
 #include "keyboard.h"
 #include "raw_buffer.h"
 
@@ -28,12 +27,28 @@
 #include "levent.h"
 #include "kbd.h"
 #include "ptp.h"
-
-#include "modules.h"
-#include "module_load.h"
+#include "shooting.h"
+#include "clock.h"
+#include "viewport.h"
+#include "debug_led.h"
+#include "battery.h"
+#include "properties.h"
+#include "shutdown.h"
+#include "sd_card.h"
+#include "meminfo.h"
+#include "sound.h"
+#include "temperature.h"
+#include "file_counter.h"
+#include "backlight.h"
+#include "modes.h"
+#include "lens.h"
 #include "action_stack.h"
 #include "console.h"
 #include "gps.h"
+
+#include "modules.h"
+#include "module_load.h"
+#include "module_exportlist.h"
 
 extern short shooting_get_ev_correction1();
 
@@ -264,8 +279,6 @@ extern  unsigned char    module_colors[];
 
             config_save,
             config_restore,
-
-            dbg_printf,
 
             gps_getData,
 

@@ -36,13 +36,9 @@ struct gui_common_api_ver gui_version = {
 		MAKE_API_VERSION(1,2)			// ver of menu structure
 };
 
-// forward declarations
 //-------------------------------------------------------------------
+// forward declarations
 extern void dump_memory();
-// from platform/generic/shooting.c
-extern const char* tv_override[];
-extern const int tv_override_amount;
-extern const int tv_override_zero_shift;
 
 //-------------------------------------------------------------------
 
@@ -105,8 +101,8 @@ const char* gui_change_enum2(const CMenuItem *menu_item, int change)
 
 //-------------------------------------------------------------------
 
-static const char* gui_bracket_values_modes[] =             { "Off", "1/3 Ev","2/3 Ev", "1 Ev", "1 1/3Ev", "1 2/3Ev", "2 Ev", "2 1/3Ev", "2 2/3Ev", "3 Ev", "3 1/3Ev", "3 2/3Ev", "4 Ev"};
-static const char* gui_bracket_type_modes[] =               { "+/-", "-","+"};
+static const char* gui_bracket_values_modes[] = { "Off", "1/3 Ev","2/3 Ev", "1 Ev", "1 1/3Ev", "1 2/3Ev", "2 Ev", "2 1/3Ev", "2 2/3Ev", "3 Ev", "3 1/3Ev", "3 2/3Ev", "4 Ev" };
+static const char* gui_bracket_type_modes[] =   { "+/-", "-", "+", "-/+" };
 
 #if CAM_CAN_SD_OVERRIDE
 static CMenuItem sd_bracket[2] = {
@@ -1042,9 +1038,22 @@ static CMenu video_submenu = {0x23,LANG_MENU_VIDEO_PARAM_TITLE, NULL, video_subm
 //-------------------------------------------------------------------
 // "Extra Photo Operations" Menu
 
+static const char* tv_override[]={
+#ifdef CAM_EXT_TV_RANGE
+    // add very long time exposures as approximately powers of 2, adding 15 exposures
+    "2048","1625","1290","1024","812","645","512","406","322","256","203","161","128","101","80",
+#endif
+    "64","50.8", "40.3", "32", "25.4","20","16", "12.7", "10","8", "6.3","5","4","3.2", "2.5","2", 
+    "1.6", "1.3", "1", "0.8", "0.6", "0.5", "0.4", "0.3", "1/4", "1/5", "1/6", "1/8", "1/10", "1/13", 
+    "1/15", "1/20", "1/25", "1/30", "1/40", "1/50", "1/60", "1/80", "1/100", "1/125", "1/160", "1/200", 
+    "1/250", "1/320", "1/400", "1/500", "1/640","1/800", "1/1000", "1/1250", "1/1600","1/2000","1/2500",
+    "1/3200","1/4000", "1/5000", "1/6400", "1/8000", "1/10000", "1/12500", "1/16000", "1/20000", "1/25000", 
+    "1/32000", "1/40000", "1/50000", "1/64000","1/80000", "1/100k"
+};
+
 const char* gui_tv_override_value_enum(int change, int arg)
 {
-    gui_enum_value_change(&conf.tv_override_value,change,tv_override_amount);
+    gui_enum_value_change(&conf.tv_override_value,change,sizeof(tv_override)/sizeof(tv_override[0]));
     return tv_override[conf.tv_override_value]; 
 }
 

@@ -13,6 +13,9 @@ include $(topdir)version.inc
 
 ifndef OPT_DE_VERSION
     VER=CHDK
+    ifndef OPT_DEFAULT_LANG
+        OPT_DEFAULT_LANG=english
+    endif
 else
     VER=CHDK_DE
     ifndef OPT_DEFAULT_LANG

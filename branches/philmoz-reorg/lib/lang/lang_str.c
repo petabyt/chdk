@@ -5,7 +5,7 @@
 //-------------------------------------------------------------------
 // String list now is generated automatically from .lng files
 // Please add new lines directly to english.lng and please try to keep ids serial
-#include "gui_lang_str.h"
+#include "lang_str.h"
 
 //-------------------------------------------------------------------
 void gui_lang_init() {

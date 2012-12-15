@@ -1,5 +1,7 @@
 topdir=../../
 
+SKIPPLATFORMCHECK=1
+
 include $(topdir)makefile.inc
 
 OBJS = callfunc.o reboot.o cache.o

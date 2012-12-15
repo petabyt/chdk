@@ -14,7 +14,6 @@
 #include "histogram.h"
 
 #include "modules.h"
-#include "module_exportlist.h"
 
 //-------------------------------------------------------------------
 

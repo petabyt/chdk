@@ -1,7 +1,6 @@
 #include "camera_info.h"
 #include "stdlib.h"
 #include "module_load.h"
-#include "module_exportlist.h"
 #include "ubasic.h"
 
 // =========  MODULE INIT =================

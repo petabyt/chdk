@@ -729,6 +729,7 @@ void script_console_add_line(const char *str)
 
 static int is_lua( const char* script_file)
 {
+    if (script_file[0] == 0) return 1;  // Default script is Lua
     char *ext = strrchr(script_file,'.');
     return (ext && (strlen(ext) == 4) && (toupper(ext[1]) == 'L') && (toupper(ext[2]) == 'U') && (toupper(ext[3]) == 'A'));
 }

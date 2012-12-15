@@ -1,11 +1,11 @@
 topdir=../
 
 SKIPBUILDRULES=1
-
-override PLATFORM=modules
-override PLATFORMSUB=100a
+SKIPPLATFORMCHECK=1
 
 include $(topdir)makefile.inc
+
+SUBDIRS=$(topdir)lib/lua $(topdir)lib/ubasic $(topdir)lib/armutil $(topdir)lib/math $(topdir)lib/lang $(topdir)lib/font
 
 OBJ_ISDIGIT=
 ifeq ($(GCC_VERSION_MAJOR),3)
@@ -23,7 +23,7 @@ FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect
      txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt _tbox.flt _osd_le.flt \
      ubasic.flt lua.flt
 
-all: exportlist $(FLTS)
+all: exportlist.inc module_exportlist.o $(FLTS)
 
 %.o: %.c
 	@echo $< \-\> $@
@@ -45,8 +45,8 @@ all: exportlist $(FLTS)
 %.flt: %.elf
 	@echo \-\> $@
 #	arm-elf-objdump$(EXE) -d -r -x $< >$<.dumpobj
-#	$(topdir)/tools/elf2flt/elf2flt$(EXE) $< $@ -e -f -h -r -s -iexportlist.txt -!$(topdir)/tools/elf2flt/stoplist.txt >$@.dump
-	$(topdir)/tools/elf2flt/elf2flt$(EXE) $< $@ -iexportlist.txt -!$(topdir)/tools/elf2flt/stoplist.txt > $(DEVNULL)
+#	$(topdir)/tools/elf2flt/elf2flt$(EXE) $< $@ -e -f -h -r -s -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt >$@.dump
+	$(topdir)/tools/elf2flt/elf2flt$(EXE) $< $@ -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt > $(DEVNULL)
 
 raw_merge10.o: raw_merge.c
 	@echo $< \-\> $@
@@ -100,8 +100,10 @@ clean:
 distclean: clean
 #	rm -f *.flt
 
-exportlist:  $(topdir)core/module_exportlist.c
+exportlist.inc:  module_exportlist.c
 	@echo $< \-\> $@
-	$(topdir)tools/makeexport$(EXE) $(topdir)core/module_exportlist.c $(topdir)core/module_exportlist.h exportlist.txt $(topdir)core/module_hashlist.h
+	$(topdir)tools/makeexport$(EXE) module_exportlist.c module_exportlist.h exportlist.inc module_hashlist.h
+
+module_exportlist.o: module_exportlist.c module_exportlist.h module_hashlist.h
 
 include $(topdir)bottom.inc

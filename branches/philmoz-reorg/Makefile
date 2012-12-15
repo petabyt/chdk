@@ -28,34 +28,33 @@ tmp:=$(shell echo "BUILD_SVNREV := $(BUILD_SVNREV)" > revision.inc)
 # CHDK folder for full package
 ZIPDIRS:=$(shell ls -R CHDK | grep CHDK/ | $(ESED) 's?:?/*?')
 
-SUBDIRS=platform
-
-# SKIP_MODULES prevents re-building core/modules in root level make, to speed up batch builds
-ifndef SKIP_MODULES
-SUBDIRS:=$(SUBDIRS) lib/lua lib/ubasic modules
-endif
-
-# SKIP_CORE prevents cleaning core in root level make, to speed up batch clean
-ifndef SKIP_CORE
-SUBDIRS:=$(SUBDIRS) core
-endif
-
-SUBDIRS:=$(SUBDIRS) loader
-
-# SKIP_CHDK prevents cleaning CHDK in root level make, to speed up batch clean
-ifndef SKIP_CHDK
-SUBDIRS:=$(SUBDIRS) CHDK
-endif
-
-# SKIP_LIB prevents cleaning lib in root level make, to speed up batch clean
-ifndef SKIP_LIB
-SUBDIRS:=lib $(SUBDIRS)
-endif
+SUBDIRS=
 
 # SKIP_TOOLS prevents re-building tools in root level make, to speed up batch builds
 ifndef SKIP_TOOLS
-SUBDIRS:=tools $(SUBDIRS)
+SUBDIRS+=tools
 endif
+
+# SKIP_MODULES prevents re-building core/modules in root level make, to speed up batch builds
+ifndef SKIP_MODULES
+SUBDIRS+=modules
+endif
+
+# SKIP_CHDK prevents cleaning CHDK in root level make, to speed up batch clean
+ifndef SKIP_CHDK
+SUBDIRS+=CHDK
+endif
+
+# Must do platform before core
+SUBDIRS+=platform
+
+# SKIP_CORE prevents cleaning core in root level make, to speed up batch clean
+ifndef SKIP_CORE
+SUBDIRS+=core
+endif
+
+# Must do this last as it builds the final .bin file
+SUBDIRS+=loader
 
 .PHONY: fir
 fir: version firsub
@@ -63,7 +62,6 @@ fir: version firsub
 
 firsub: all
 	mkdir -p $(topdir)bin
-	mkdir -p $(topdir)CHDK/MODULES
 	cp $(topdir)loader/$(PLATFORM)/main.bin $(topdir)bin/main.bin
     ifndef NOZERO100K
         ifeq ($(OSTYPE),Windows)
@@ -95,8 +93,6 @@ firsub: all
     else
 		mv $(topdir)bin/main.bin  $(topdir)bin/DISKBOOT.BIN
     endif
-	rm -f $(topdir)CHDK/MODULES/*
-	cp $(topdir)modules/*.flt $(topdir)CHDK/MODULES
 	@echo "**** Firmware creation completed successfully"
 
 
@@ -226,9 +222,8 @@ alltools:
 
 # for batch builds, build modules once, instead of once for every firmware
 allmodules:
-	$(MAKE) -C lib/lua clean all
-	$(MAKE) -C lib/ubasic clean all
 	$(MAKE) -C modules clean all
+	$(MAKE) -C CHDK clean all
 
 # note assumes PLATFORMOS is always in same case!
 os-camera-list-entry:
@@ -245,18 +240,18 @@ os-camera-list-entry:
 # - skip auto build (optional) :- any value in this column will exclude the camera/firmware from the auto build
 
 batch-zip: version alltools allmodules
-	SKIP_TOOLS=1 SKIP_MODULES=1 sh tools/auto_build.sh $(MAKE) firzipsub $(CAMERA_LIST)
+	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firzipsub $(CAMERA_LIST)
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
 
 batch-zip-complete: version alltools allmodules
-	SKIP_TOOLS=1 SKIP_MODULES=1 sh tools/auto_build.sh $(MAKE) firzipsubcomplete $(CAMERA_LIST)
+	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firzipsubcomplete $(CAMERA_LIST)
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
 	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
 
-# note, this will not include cameras with SKIP_AUTOBUILD set
+# note, this will include cameras with SKIP_AUTOBUILD set
 os-camera-lists:
 	echo 'CAMERA,FIRMWARE,BETA_STATUS,COPY_TO,SKIP_AUTOBUILD' > camera_list_dryos.csv
 	echo 'CAMERA,FIRMWARE,BETA_STATUS,COPY_TO,SKIP_AUTOBUILD' > camera_list_vxworks.csv
@@ -280,10 +275,7 @@ batch-rebuild-stubs-parallel: alltools
 
 batch-clean:
 	$(MAKE) -C tools clean
-	$(MAKE) -C lib clean
-	$(MAKE) -C lib/lua clean
-	$(MAKE) -C lib/ubasic clean
 	$(MAKE) -C core clean
 	$(MAKE) -C modules clean
 	$(MAKE) -C CHDK clean
-	SKIP_CORE=1 SKIP_MODULES=1 SKIP_CHDK=1 SKIP_LIB=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST) -noskip
+	SKIP_CORE=1 SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST) -noskip

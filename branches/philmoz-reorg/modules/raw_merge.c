@@ -8,7 +8,6 @@
 #include "gui_lang.h"
 #include "lang.h"
 #include "conf.h"
-#include "module_exportlist.h"
 
 #define TEMP_FILE_NAME   "A/raw16.tmp"
 #define TEMP_FILE_NAME_1 "A/raw16_1.tmp"

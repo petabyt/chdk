@@ -264,7 +264,7 @@ static int module_do_action( char* actionname, uint32_t offset, uint32_t count, 
 //         Optional ( NULL - do not bind )
 // RETURN:    -1 - failed, >=0 =idx of module
 //-----------------------------------------------
-int module_load( char* name, _module_bind_t callback)
+int module_load(char* name, _module_bind_t callback)
 {
    int idx;
 

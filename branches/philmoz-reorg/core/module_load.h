@@ -48,7 +48,7 @@ enum ModuleUnloadMode
 
 int module_check_is_exist(char* name);
 int module_find(char * name );
-int module_load( char* name, _module_bind_t callback);
+int module_load(char* name, _module_bind_t callback);
 int module_run(char* name, _module_bind_t callback, int argn, void* args, enum ModuleUnloadMode unload_after);
 void module_unload(char* name);
 void module_unload_idx(int module_idx);

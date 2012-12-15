@@ -2,7 +2,6 @@
 #include "meminfo.h"
 #include "module_load.h"
 #include "gui_draw.h"
-#include "module_exportlist.h"
 
 
 // =========  MODULE INIT =================

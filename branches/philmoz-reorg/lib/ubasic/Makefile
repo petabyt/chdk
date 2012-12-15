@@ -1,7 +1,6 @@
 topdir=../../
 
-override PLATFORM=modules
-override PLATFORMSUB=100a
+SKIPPLATFORMCHECK=1
 
 include $(topdir)makefile.inc
 

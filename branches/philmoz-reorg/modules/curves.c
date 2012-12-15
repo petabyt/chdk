@@ -6,7 +6,6 @@
 #include "gui_lang.h"
 
 #include "modules.h"
-#include "module_exportlist.h"
 #include "curves.h"
 
 /*

@@ -44,7 +44,7 @@ static int bind_module_generic( void** export_list, void** lib, int count, int m
 }
 
 // Return: 0-fail, addr-ok
-static void* module_load_generic(void **lib, char *name, int (*callback)(void**), int flags)
+static void* module_load_generic(void **lib, char *name, _module_bind_t callback, int flags)
 {
     if (*lib == 0)
     {

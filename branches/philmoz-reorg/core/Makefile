@@ -53,9 +53,9 @@ OPT_OBJS+=dbg_dump.o
 endif
 
 OBJS=entry.o main.o gui_draw.o gui_menu.o gui_user_menu.o gui_mbox.o \
-     gui.o kbd.o action_stack.o conf.o module_exportlist.o \
+     gui.o kbd.o action_stack.o conf.o \
      histogram.o gui_batt.o gui_usb.o gui_space.o gui_osd.o raw.o \
-     gui_lang.o modules.o module_load.o \
+     modules.o module_load.o $(topdir)modules/module_exportlist.o \
      levent.o shot_histogram.o console.o shooting.o \
      usb_input.o usb_module.o usb_remote.o gps_math.o gps.o $(OPT_OBJS)
 
@@ -86,22 +86,6 @@ clean:
 distclean: clean
 	rm -f $(OBJS:.o=.d)
 
-module_load.o: module_load.c module_load.h module_exportlist.c module_exportlist.h
-
-module_exportlist.h: $(topdir)tools/makeexport$(EXE) module_exportlist.c
-	@echo $< \-\> $@
-	$(topdir)tools/makeexport$(EXE) module_exportlist.c module_exportlist.h modules/exportlist.txt module_hashlist.h
-
-gui_lang.o: gui_lang.c gui_lang.h gui_lang_str.h
-
-ifdef OPT_DEFAULT_LANG
-gui_lang_str.h: $(topdir)tools/makelang$(EXE) $(topdir)CHDK/LANG/english.lng $(topdir)CHDK/LANG/$(OPT_DEFAULT_LANG).lng
-	@echo $< \-\> $@
-	$(topdir)tools/makelang$(EXE) $(topdir)CHDK/LANG/english.lng $(topdir)CHDK/LANG/$(OPT_DEFAULT_LANG).lng > gui_lang_str.h
-else
-gui_lang_str.h: $(topdir)tools/makelang$(EXE) $(topdir)CHDK/LANG/english.lng
-	@echo $< \-\> $@
-	$(topdir)tools/makelang$(EXE) $(topdir)CHDK/LANG/english.lng > gui_lang_str.h
-endif
+module_load.o: module_load.c module_load.h $(topdir)modules/module_exportlist.h
 
 include $(topdir)bottom.inc

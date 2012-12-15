@@ -1,5 +1,4 @@
 #include "stdlib.h"
-#include "gui.h"
 #include "font.h"
 #include "gui_draw.h"
 #include "conf.h"

@@ -8,7 +8,6 @@
 #include "gui_lang.h"
 
 #include "modules.h"
-#include "module_exportlist.h"
 
 //-------------------------------------------------------------------
 #define GRID_BUF_SIZE               0x1000

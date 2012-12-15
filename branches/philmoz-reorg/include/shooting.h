@@ -45,7 +45,6 @@ typedef struct {
     short dsubj_dist;
     short subj_dist_step;
     short shoot_counter;
-    short type;
 } EXPO_BRACKETING_VALUES;
 
 typedef struct {
@@ -74,7 +73,6 @@ extern short shooting_get_flash_mode();
 /******************************************************************/
 
 extern int shooting_get_user_tv_id();
-extern short shooting_get_tv96_from_shutter_speed(float t);
 extern short shooting_get_tv96();
 extern void shooting_set_tv96(short v, short is_now);
 extern void shooting_set_tv96_direct(short v, short is_now);
@@ -82,16 +80,12 @@ extern void shooting_set_shutter_speed_ubasic(int t, short is_now);
 extern short shooting_get_user_tv96();
 extern void shooting_set_user_tv96(short v);
 extern float shooting_get_shutter_speed_from_tv96(short tv);
-extern const char * shooting_get_tv_bracket_value();
-extern const char * shooting_get_bracket_type();
 extern void shooting_set_user_tv_by_id(int v);
 extern void shooting_set_user_tv_by_id_rel(int v);
-extern const ShutterSpeed *shooting_get_tv_line();
 
 /******************************************************************/
 
 extern short shooting_get_aperture_sizes_table_size();
-extern short shooting_get_max_aperture_sizes_table_prop_id();
 extern short shooting_get_aperture_from_av96(short av96);
 extern int shooting_get_user_av_id();
 extern void shooting_set_user_av_by_id(int v);
@@ -102,9 +96,7 @@ extern short shooting_get_user_av96();
 extern void shooting_set_user_av96(short v);
 extern void shooting_set_user_av_by_id_rel(int v);
 extern short shooting_get_real_aperture();
-extern short shooting_get_min_real_aperture();
 extern short shooting_get_av96_override_value();
-extern const char * shooting_get_av_bracket_value();
 extern void shooting_set_nd_filter_state(short v, short is_now);
 
 /******************************************************************/
@@ -136,8 +128,6 @@ extern int shooting_get_depth_of_field();
 extern int shooting_get_min_stack_distance();
 extern int shooting_get_subject_distance();
 extern int shooting_get_subject_distance_override_value();
-extern int shooting_get_subject_distance_bracket_value();
-extern int shooting_get_subject_distance_override_koef();
 extern int shooting_get_lens_to_focal_plane_width();
 extern short shooting_get_drive_mode();
 extern short shooting_can_focus();
@@ -155,7 +145,6 @@ extern short shooting_get_iso_real();
 extern void shooting_set_iso_real(short iso, short is_now);
 extern void shooting_set_sv96(short sv96, short is_now);
 extern short shooting_get_iso_override_value();
-extern short shooting_get_iso_bracket_value();
 
 /******************************************************************/
 
@@ -172,8 +161,6 @@ extern void shooting_expo_param_override();
 extern void shooting_bracketing(void);
 
 extern void shooting_video_bitrate_change(int v);
-extern void shooting_tv_bracketing();
-extern void shooting_av_bracketing();
 
 /******************************************************************/
 

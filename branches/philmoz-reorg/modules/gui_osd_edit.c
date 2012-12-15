@@ -12,7 +12,6 @@
 #include "gui_osd.h"
 
 #include "module_load.h"
-#include "module_exportlist.h"
 
 //-------------------------------------------------------------------
 typedef struct {

@@ -1,8 +1,10 @@
 topdir=../../
 
+SKIPPLATFORMCHECK=1
+
 include $(topdir)makefile.inc
 
-CFLAGS+=$(CTHUMB)
+CFLAGS+=$(CTHUMB) -DCHDK_MODULE_CODE
 
 OBJS = d2d.o wrapper.o
 

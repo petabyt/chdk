@@ -1,8 +1,10 @@
 topdir=../../
 
+SKIPPLATFORMCHECK=1
+
 include $(topdir)makefile.inc
 
-CFLAGS+=$(CTHUMB)
+CFLAGS+=$(CTHUMB) -DCHDK_MODULE_CODE
 
 OBJS = font_8x16.o rbf_font.o
 

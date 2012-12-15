@@ -215,6 +215,25 @@ void gui_osd_draw_raw_info()
 }
 
 //-------------------------------------------------------------------
+
+static const char * shooting_get_bracket_type()
+{
+    static const char * expo_type[] = { "+/-", "-","+"};
+    return expo_type[conf.bracket_type];
+}
+
+static const char * expo_shift[] = { "Off", "1/3Ev","2/3Ev", "1Ev", "1 1/3Ev", "1 2/3Ev", "2Ev", "2 1/3Ev", "2 2/3Ev", "3Ev", "3 1/3Ev", "3 2/3Ev", "4Ev"};
+
+static const char * shooting_get_tv_bracket_value()
+{
+    return expo_shift[conf.tv_bracket_value];
+}
+
+static const char * shooting_get_av_bracket_value()
+{
+    return expo_shift[conf.av_bracket_value];
+}
+
 void gui_osd_draw_state()
 {
     int a,  gui_mode=gui_get_mode();
@@ -275,9 +294,9 @@ void gui_osd_draw_state()
       else if (is_av_bracketing_enabled)
         gui_print_osd_state_string_chr("AV:", shooting_get_av_bracket_value());
       else if (is_iso_bracketing_enabled)
-        gui_print_osd_state_string_int("ISO:", shooting_get_iso_bracket_value());
+        gui_print_osd_state_string_int("ISO:", conf.iso_bracket_value);
       else if (is_sd_bracketing_enabled)
-        gui_print_osd_state_string_int("SD:",shooting_get_subject_distance_bracket_value());
+        gui_print_osd_state_string_int("SD:", conf.subj_dist_bracket_value);
     }
 #ifdef OPT_CURVES
     if (conf.curve_enable || gui_mode==GUI_MODE_OSD) {

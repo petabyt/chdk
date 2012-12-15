@@ -468,7 +468,7 @@ int closedir(DIR *d)
         // Mark closed (just in case)
         d->cam_DIR = 0;
         // Free allocated memory
-        _free(d);    
+        free(d);    
     }
     return rv;
 }
