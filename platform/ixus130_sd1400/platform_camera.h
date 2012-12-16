@@ -49,7 +49,6 @@
 
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY      1
-    #define DNG_SUPPORT                 1
 
     #define CAM_EXT_TV_RANGE            1
 

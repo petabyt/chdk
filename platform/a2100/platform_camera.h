@@ -93,7 +93,6 @@
 
 
 // RAW & DNG related values
-//#define DNG_SUPPORT                 1           // Camera supports DNG format for saving of RAW images
     #undef  DEFAULT_RAW_EXT 
     #define DEFAULT_RAW_EXT                 2  // use .CR2            // extension to use for raw (see raw_exts in conf.c)
     #define CAM_JPEG_WIDTH                  4000
