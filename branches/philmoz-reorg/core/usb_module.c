@@ -10,9 +10,10 @@
 		  in gui.c and add ptr below to stucture (*usb_control_module[10])(int)
  ===================================================================================================================================================*/
 
-#include "platform.h"
-#include "kbd.h"
+#include "camera_info.h"
 #include "stdlib.h"
+#include "clock.h"
+#include "shooting.h"
 #include "keyboard.h"
 #include "conf.h"
 #include "action_stack.h"
@@ -613,14 +614,10 @@ void usb_shoot_module_bracketing()
 	Control Module :  Video
 		- starts video (with sync if selected) on press,  stops on next press
   ---------------------------------------------------------------------------------------------------*/
-#ifdef  CAM_HAS_VIDEO_BUTTON   
-	#define USB_VIDEO_BUTTON KEY_VIDEO
-#else
-	#define USB_VIDEO_BUTTON KEY_SHOOT_FULL
-#endif	
 
 void usb_video_module_normal()
 {
+    int usb_video_button = (camera_info.cam_has_video_button) ? KEY_VIDEO : KEY_SHOOT_FULL;
 
 	switch( logic_module_state )
 	{
@@ -636,7 +633,7 @@ void usb_video_module_normal()
 
 				case REMOTE_HALF_PRESS :
 				case REMOTE_FULL_PRESS:
-					kbd_key_press(USB_VIDEO_BUTTON);
+					kbd_key_press(usb_video_button);
 					logic_module_state = LM_START_RECORD ;
 					break ;
 
@@ -651,7 +648,7 @@ void usb_video_module_normal()
 			{
 				case REMOTE_RELEASE :
 					logic_module_state = LM_RECORDING ;
-					kbd_key_release(USB_VIDEO_BUTTON);
+					kbd_key_release(usb_video_button);
 					break ;
 
 				case REMOTE_HALF_PRESS :
@@ -672,7 +669,7 @@ void usb_video_module_normal()
 
 				case REMOTE_HALF_PRESS :
 				case REMOTE_FULL_PRESS:
-					kbd_key_press(USB_VIDEO_BUTTON);
+					kbd_key_press(usb_video_button);
 					logic_module_state = LM_STOP_RECORDING ;
 					break ;
 
@@ -687,7 +684,7 @@ void usb_video_module_normal()
 			{
 				case REMOTE_RELEASE :
 					logic_module_state = LM_RELEASE ;
-					kbd_key_release(USB_VIDEO_BUTTON);
+					kbd_key_release(usb_video_button);
 					break ;
 
 				case REMOTE_HALF_PRESS :

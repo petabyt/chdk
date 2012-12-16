@@ -20,7 +20,7 @@ liblua.a: $(OBJS)
 check:
 
 clean:
-	rm -f $(OBJS) liblua.a
+	rm -f $(OBJS) *.a
 
 distclean: clean
 	rm -f $(OBJS:.o=.d)

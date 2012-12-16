@@ -1,7 +1,14 @@
 #ifndef __CHDK_PTP_H
 #define __CHDK_PTP_H
+
+// CHDK PTP interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 #define PTP_CHDK_VERSION_MAJOR 2  // increase only with backwards incompatible changes (and reset minor)
 #define PTP_CHDK_VERSION_MINOR 4  // increase with extensions of functionality
+
 /*
 protocol version history
 0.1 - initial proposal from mweerden, + luar

@@ -1,6 +1,11 @@
 #ifndef MATH_H
 #define MATH_H
 
+// CHDK floating point math functions
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 #ifndef __VFP_FP__
 extern double d2d(double value);
 #else

@@ -3,19 +3,19 @@
 
 //-------------------------------------------------------------------
 
-// Moved from gui_bench.c, gui_debug.c, gui_calendar.c, gui_reversi.c & gui_sokoban.c so it can be overridden
-// Default value is white in SX30 & G12 palette making white text hard to read
-#define SCREEN_COLOR                    0xF7
-
-//-------------------------------------------------------------------
-
 // Common colors that are the same in all palettes
 #define COLOR_TRANSPARENT               0x00
 #define COLOR_BLACK                     0xFF
 
 //-------------------------------------------------------------------
 
+// For CHDK core code use #define versions of color values
+// For module and platform independent code use the module_colors[X] version (see below)
 #ifndef CHDK_MODULE_CODE
+
+// Moved from gui_bench.c, gui_debug.c, gui_calendar.c, gui_reversi.c & gui_sokoban.c so it can be overridden
+// Default value is white in SX30 & G12 palette making white text hard to read
+#define SCREEN_COLOR                    0xF7
 
 #include "camera.h"     // ensure the camera definition is loaded
 
@@ -972,9 +972,10 @@
 
 #else
 
-extern  unsigned char    module_colors[];
+// Module & platform independent code color settings
 
-#undef  SCREEN_COLOR
+extern  const unsigned char const module_colors[];
+
 #define SCREEN_COLOR        (module_colors[0])
 #define COLOR_WHITE         (module_colors[1])
 #define COLOR_RED           (module_colors[2])
@@ -1062,7 +1063,7 @@ extern color icon_green[3], icon_red[3], icon_yellow[3], icon_grey[3];
 //-------------------------------------------------------------------
 
 #define NUM_SCRIPT_COLORS   18
-extern unsigned char script_colors[NUM_SCRIPT_COLORS][2];
+extern const unsigned char const script_colors[NUM_SCRIPT_COLORS][2];
 
 //-------------------------------------------------------------------
 #endif

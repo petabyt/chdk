@@ -19,7 +19,7 @@ lang_str.h: $(topdir)tools/makelang$(EXE) $(topdir)CHDK/LANG/english.lng $(topdi
 	$(topdir)tools/makelang$(EXE) $(topdir)CHDK/LANG/english.lng $(topdir)CHDK/LANG/$(OPT_DEFAULT_LANG).lng > lang_str.h
 
 clean:
-	rm -f $(OBJS) libfont.a
+	rm -f $(OBJS) *.a
 
 distclean: clean
 	rm -f $(OBJS:.o=.d)

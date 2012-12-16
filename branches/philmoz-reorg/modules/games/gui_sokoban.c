@@ -10,7 +10,7 @@
 #include "gui_batt.h"
 #include "gui_mbox.h"
 
-#include "module_load.h"
+#include "module_def.h"
 
 //-------------------------------------------------------------------
 

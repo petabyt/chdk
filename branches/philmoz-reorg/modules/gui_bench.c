@@ -9,7 +9,7 @@
 #include "gui_lang.h"
 #include "gui_draw.h"
 
-#include "module_load.h"
+#include "module_def.h"
 
 void gui_bench_draw();
 void gui_bench_menu_kbd_process();

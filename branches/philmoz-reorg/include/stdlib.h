@@ -1,6 +1,11 @@
 #ifndef STDLIB_H
 #define STDLIB_H
 
+// CHDK stdlib
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 #define NULL		((void*)0)
 
 #define SEEK_SET        0
@@ -10,7 +15,7 @@
 #define O_RDONLY        0
 #define O_WRONLY        1
 #define O_RDWR          2
-#define O_APPEND        8   // DryOS only, will be removed for VxWorks so file will be overwritten instead of appended
+#define O_APPEND        8   // DryOS only, wrapper code will removed this for VxWorks so file will be overwritten instead of appended
 
 // CHDK defined values - note does not match VxWorks values
 // Values are corrected in 'open' function to match OS requirements

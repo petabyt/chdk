@@ -16,7 +16,10 @@
 #include "gps.h"
 #endif
 #include "modules.h"
-#include "module_load.h"
+
+//-------------------------------------------------------------------
+
+extern const char* gui_video_bitrate_enum(int change, int arg);
 
 //-------------------------------------------------------------------
 static char osd_buf[64];
@@ -975,6 +978,15 @@ int osd_visible(unsigned int playmode)
 
 #ifdef OPT_DEBUGGING
 
+extern int debug_display_direction;
+
+#ifndef CAM_DRYOS
+extern int debug_tasklist_start;
+#endif
+
+#define TASKLIST_MAX_LINES 12 // probably as much as will fit on screen
+#define TASKLIST_NUM_TASKS 64 // should be enough ?
+
 static void gui_debug_draw_tasklist(void)
 {
 #ifndef CAM_DRYOS
@@ -1153,6 +1165,26 @@ void gui_draw_debug_vals_osd()
             gui_debug_draw_tasklist();
 #endif
 #endif
+}
+
+// Update displayed debug page for tasks/props/params
+void gui_update_debug_page()
+{
+#ifndef CAM_DRYOS
+    if(conf.debug_display == DEBUG_DISPLAY_TASKS)
+    {
+        debug_tasklist_start += debug_display_direction*(TASKLIST_MAX_LINES-2); // a little intentional overlap
+        if(debug_tasklist_start >= TASKLIST_NUM_TASKS || debug_tasklist_start < 0)
+            debug_tasklist_start = 0;
+    }
+    else 
+#endif
+    if (conf.debug_display == DEBUG_DISPLAY_PROPS || conf.debug_display == DEBUG_DISPLAY_PARAMS)
+    {
+        conf.debug_propcase_page += debug_display_direction*1;
+        if(conf.debug_propcase_page > 128 || conf.debug_propcase_page < 0) 
+            conf.debug_propcase_page = 0;
+    }
 }
 
 //-------------------------------------------------------------------

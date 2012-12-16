@@ -1,6 +1,11 @@
 #ifndef LEVENT_H
 #define LEVENT_H
 
+// CHDK interface to firmware 'logical events'
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 #define LEVENT_INVALID_INDEX 0xFFFFFFFF
 
 /* logical event definition*/

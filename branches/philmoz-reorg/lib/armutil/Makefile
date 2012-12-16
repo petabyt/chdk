@@ -13,7 +13,7 @@ all: libarmutil.a
 libarmutil.a: $(OBJS)
 
 clean:
-	rm -f $(OBJS_ALL) libarmutil.a
+	rm -f $(OBJS_ALL) *.a
 
 distclean: clean
 	rm -f $(OBJS_ALL:.o=.d)

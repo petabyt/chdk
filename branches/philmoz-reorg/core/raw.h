@@ -1,6 +1,11 @@
 #ifndef RAW_H
 #define RAW_H
 
+// CHDK Raw file saving interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 //-------------------------------------------------------------------
 #define RAW_PREFIX_IMG          0
 #define RAW_PREFIX_CRW          1
@@ -20,11 +25,6 @@ extern int make_pixel_list(char * ptr, int size);
 extern unsigned short get_raw_pixel(unsigned int x,unsigned  int y);
 extern char* get_raw_image_addr(void);
 extern void patch_bad_pixel(unsigned int x,unsigned  int y);
-
-
-// = mult * pow ( x/xdiv, y/ydiv)
-extern int pow_calc( int mult, int x, int x_div, int y, int y_div);
-extern int pow_calc_2( int mult, int x, int x_div, double y, int y_div);
 
 //-------------------------------------------------------------------
 #endif

@@ -1,6 +1,11 @@
 #ifndef VIEWPORT_H
 #define VIEWPORT_H
 
+// CHDK Viewport & screen buffer interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 /******************************************************************/
 
 extern long vid_is_bitmap_shown();

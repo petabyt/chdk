@@ -1,8 +1,9 @@
-#include "modes.h"
-#include "module_load.h"
+#include "gui.h"
 #include "gui_draw.h"
 #include "gui_lang.h"
 #include "gui_mbox.h"
+#include "modes.h"
+#include "module_def.h"
 
 extern int basic_module_init();
 

@@ -1,11 +1,12 @@
-#include "platform.h"
+#include "camera_info.h"
 #include "stdlib.h"
 #include "lang.h"
+#include "modes.h"
+#include "keyboard.h"
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_lang.h"
 #include "gui_mbox.h"
-
 
 //-------------------------------------------------------------------
 void gui_mbox_draw();

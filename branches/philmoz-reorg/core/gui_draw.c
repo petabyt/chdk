@@ -508,32 +508,32 @@ void draw_filled_ellipse(coord CX, coord CY, unsigned int XRadius, unsigned int 
 
 //-------------------------------------------------------------------
 
-unsigned char script_colors[NUM_SCRIPT_COLORS][2]  = {
+const unsigned char const script_colors[NUM_SCRIPT_COLORS][2]  = {
 
-                                        {COLOR_TRANSPARENT,         COLOR_TRANSPARENT},         //  1   trans
-                                        {COLOR_BLACK,               COLOR_BLACK},               //  2   black
-                                        {COLOR_WHITE,               COLOR_WHITE},               //  3   white
+    {COLOR_TRANSPARENT,         COLOR_TRANSPARENT},         //  1   trans
+    {COLOR_BLACK,               COLOR_BLACK},               //  2   black
+    {COLOR_WHITE,               COLOR_WHITE},               //  3   white
                                         
-                                        {COLOR_ICON_PLY_RED,        COLOR_ICON_REC_RED},        //  4   red
-                                        {COLOR_ICON_PLY_RED_DK,     COLOR_ICON_REC_RED_DK},     //  5   red_dark
-                                        {COLOR_ICON_PLY_RED_LT,     COLOR_ICON_REC_RED_LT},     //  6   red_light
-                                        {COLOR_ICON_PLY_GREEN,      COLOR_ICON_REC_GREEN},      //  7   green
-                                        {COLOR_ICON_PLY_GREEN_DK,   COLOR_ICON_REC_GREEN_DK},   //  8   green_dark
-                                        {COLOR_ICON_PLY_GREEN_LT,   COLOR_ICON_REC_GREEN_LT},   //  9   green_light
-                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  10  blue
-                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  11  blue_dark   - placeholder
-                                        {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  12  blue_light  - placeholder
+    {COLOR_ICON_PLY_RED,        COLOR_ICON_REC_RED},        //  4   red
+    {COLOR_ICON_PLY_RED_DK,     COLOR_ICON_REC_RED_DK},     //  5   red_dark
+    {COLOR_ICON_PLY_RED_LT,     COLOR_ICON_REC_RED_LT},     //  6   red_light
+    {COLOR_ICON_PLY_GREEN,      COLOR_ICON_REC_GREEN},      //  7   green
+    {COLOR_ICON_PLY_GREEN_DK,   COLOR_ICON_REC_GREEN_DK},   //  8   green_dark
+    {COLOR_ICON_PLY_GREEN_LT,   COLOR_ICON_REC_GREEN_LT},   //  9   green_light
+    {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  10  blue
+    {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  11  blue_dark   - placeholder
+    {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  12  blue_light  - placeholder
 
-                                        {COLOR_ICON_PLY_GREY,       COLOR_ICON_REC_GREY},       //  13  grey
-                                        {COLOR_ICON_PLY_GREY_DK,    COLOR_ICON_REC_GREY_DK},    //  14  grey_dark
-                                        {COLOR_ICON_PLY_GREY_LT,    COLOR_ICON_REC_GREY_LT},    //  15  grey_light
+    {COLOR_ICON_PLY_GREY,       COLOR_ICON_REC_GREY},       //  13  grey
+    {COLOR_ICON_PLY_GREY_DK,    COLOR_ICON_REC_GREY_DK},    //  14  grey_dark
+    {COLOR_ICON_PLY_GREY_LT,    COLOR_ICON_REC_GREY_LT},    //  15  grey_light
 
-                                        {COLOR_ICON_PLY_YELLOW,     COLOR_ICON_REC_YELLOW},     //  16  yellow
-                                        {COLOR_ICON_PLY_YELLOW_DK,  COLOR_ICON_REC_YELLOW_DK},  //  17  yellow_dark
-                                        {COLOR_ICON_PLY_YELLOW_LT,  COLOR_ICON_REC_YELLOW_LT}   //  18  yellow_light
-                                    };
+    {COLOR_ICON_PLY_YELLOW,     COLOR_ICON_REC_YELLOW},     //  16  yellow
+    {COLOR_ICON_PLY_YELLOW_DK,  COLOR_ICON_REC_YELLOW_DK},  //  17  yellow_dark
+    {COLOR_ICON_PLY_YELLOW_LT,  COLOR_ICON_REC_YELLOW_LT}   //  18  yellow_light
+};
 
-unsigned char module_colors[] = {
+const unsigned char const module_colors[] = {
     SCREEN_COLOR		,
     COLOR_WHITE         ,
     COLOR_RED           ,

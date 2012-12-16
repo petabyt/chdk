@@ -9,6 +9,12 @@ OPT_EDGEOVERLAY=1
 # Scripting components
 OPT_SCRIPTING=1
 
+# Force config option on to allow Lua to call arbitrary ROM functions and eventprocs
+# By default this is a user controlled setting in the CHDK UI.
+# Setting this build option will permanently enable native calls
+# WARNING: This is DANGEROUS. e.g. call_event_proc("EraseSectorOfRom",...)
+#OPT_FORCE_LUA_CALL_NATIVE=1
+
 # experimental - allocate memory from alternate heap. Default 2MB from EXMEM_RAMDISK
 # See exmem_malloc_init in generic/wrappers.c
 #OPT_EXMEM_MALLOC=1

@@ -1,6 +1,7 @@
-#include "platform.h"
-#include "console.h"
+#include "camera_info.h"
 #include "stdlib.h"
+#include "console.h"
+#include "clock.h"
 #include "gui.h"
 #include "gui_draw.h"
 

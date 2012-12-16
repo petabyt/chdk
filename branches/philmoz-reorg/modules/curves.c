@@ -419,7 +419,7 @@ void curve_apply() {
 
 // =========  MODULE INIT =================
 
-#include "module_load.h"
+#include "module_def.h"
 
 
 struct libcurves_sym _libcurves = {

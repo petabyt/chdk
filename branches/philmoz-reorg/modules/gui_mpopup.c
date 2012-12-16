@@ -6,7 +6,7 @@
 #include "gui_lang.h"
 #include "gui_mpopup.h"
 
-#include "module_load.h"
+#include "module_def.h"
 
 extern int module_idx;
 

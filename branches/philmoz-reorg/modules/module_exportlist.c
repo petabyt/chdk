@@ -6,26 +6,22 @@
 
 #include "camera_info.h"
 #include "stdlib.h"
+#include "conf.h"
 #include "lang.h"
 #include "keyboard.h"
 #include "raw_buffer.h"
-
-#include "gui.h"
 #include "gui_draw.h"
 #include "gui_batt.h"
 #include "gui_space.h"
-#include "gui_menu.h"
 #include "gui_osd.h"
 #include "gui_mbox.h"
-#include "gui_mpopup.h"
 #include "gui_usb.h"
-#include "conf.h"
 #include "raw.h"
+#include "math.h"
 #include "font.h"
 #include "histogram.h"
 #include "shot_histogram.h"
 #include "levent.h"
-#include "kbd.h"
 #include "ptp.h"
 #include "shooting.h"
 #include "clock.h"
@@ -50,15 +46,11 @@
 #include "module_load.h"
 #include "module_exportlist.h"
 
-extern short shooting_get_ev_correction1();
-
 extern long* FlashParamsTable[]; 
 extern unsigned _ExecuteEventProcedure(const char *name,...);
 
 extern long shutter_open_time; // defined in platform/generic/capt_seq.c
 extern long shutter_open_tick_count; // defined in platform/generic/capt_seq.c
-
-extern  unsigned char    module_colors[];
 
 // ATTENTION: DO NOT USE BRACES OR OWN /**/-STYLE COMMENTS ANYWHERE IN THIS FILE TO AVOID AUTO PARSING MISTAKES
 
@@ -272,8 +264,7 @@ extern  unsigned char    module_colors[];
 			get_raw_pixel,
 			patch_bad_pixel,
 			
-			pow_calc,
-			pow_calc_2,
+			pow,
 
             module_tbox_load,
 

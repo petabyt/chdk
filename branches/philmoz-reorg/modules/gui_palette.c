@@ -8,7 +8,7 @@
 #include "gui_lang.h"
 #include "gui_palette.h"
 
-#include "module_load.h"
+#include "module_def.h"
 
 void gui_module_menu_kbd_process();
 int gui_palette_kbd_process();
@@ -125,7 +125,6 @@ void gui_module_menu_kbd_process() {
 }
 
 // =========  MODULE INIT =================
-#include "module_load.h"
 int module_idx=-1;
 
 /***************** BEGIN OF AUXILARY PART *********************

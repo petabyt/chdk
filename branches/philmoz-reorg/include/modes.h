@@ -1,6 +1,11 @@
 #ifndef MODES_H
 #define MODES_H
 
+// CHDK Camera Mode interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 /******************************************************************/
 
 #define MODE_MASK               0x0300
@@ -16,7 +21,7 @@
 extern int mode_is_video(int);
 #define MODE_IS_VIDEO(m)    mode_is_video(m)
 
-int mode_get();
+extern int mode_get();
 
 /******************************************************************/
 

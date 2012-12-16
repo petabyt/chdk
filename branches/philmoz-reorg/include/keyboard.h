@@ -1,6 +1,11 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
+// CHDK Keyboard / Button interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 #define KEY_UP              1
 #define KEY_DOWN            2
 #define KEY_LEFT            3
@@ -59,22 +64,27 @@
 
 /******************************************************************/
 
-void kbd_key_press(long key);
-void kbd_key_release(long key);
-void kbd_key_release_all();
-long kbd_is_key_pressed(long key);
-long kbd_is_key_clicked(long key);
-long kbd_get_pressed_key();
-long kbd_get_clicked_key();
-long kbd_get_autoclicked_key();
-void kbd_reset_autoclicked_key();
-long kbd_use_zoom_as_mf();
-void kbd_set_alt_mode_key_mask(long key);
-int get_usb_power(int edge);
-long get_jogdial_direction(void);
+extern void kbd_key_press(long key);
+extern void kbd_key_release(long key);
+extern void kbd_key_release_all();
+extern long kbd_is_key_pressed(long key);
+extern long kbd_is_key_clicked(long key);
+extern long kbd_get_pressed_key();
+extern long kbd_get_clicked_key();
+extern long kbd_get_autoclicked_key();
+extern void kbd_reset_autoclicked_key();
+extern long kbd_use_zoom_as_mf();
+extern void kbd_set_alt_mode_key_mask(long key);
+extern int get_usb_power(int edge);
+extern long get_jogdial_direction(void);
 
-void JogDial_CW(void);
-void JogDial_CCW(void);
+extern void JogDial_CW(void);
+extern void JogDial_CCW(void);
+
+extern void kbd_set_block(int bEnableBlock);
+
+extern void enter_alt();
+extern void exit_alt();
 
 /******************************************************************/
 

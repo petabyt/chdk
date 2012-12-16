@@ -5,7 +5,6 @@
 #include "platform.h"
 #include "stdlib.h"
 #include "ptp.h"
-#include "kbd.h"
 #include "core.h"
 
 #include "live_view.h"

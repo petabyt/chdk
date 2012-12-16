@@ -9,7 +9,7 @@
 #include "gui_batt.h"
 #include "gui_mbox.h"
 
-#include "module_load.h"
+#include "module_def.h"
 
 void gui_module_menu_kbd_process();
 int gui_reversi_kbd_process();

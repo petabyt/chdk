@@ -7,7 +7,7 @@
 #include "gui_draw.h"
 #include "gui_lang.h"
 
-#include "module_load.h"
+#include "module_def.h"
 
 void gui_calendar_menu_kbd_process();
 int gui_calendar_kbd_process();

@@ -1314,9 +1314,10 @@ void create_partitions(void){
 
 // Dummy for scripts if not implemented in camera
 int swap_partitions(int new_partition) { return 0; }
-int get_part_count(void) { return 0; }
+int get_part_count(void) { return 1; }
 int get_part_type() { return 0; }
-unsigned char get_active_partition(void) { return 0; }
+unsigned char get_active_partition(void) { return 1; }
+int is_partition_changed() { return 0; }
 
 #endif
 

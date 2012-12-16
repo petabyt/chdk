@@ -195,7 +195,7 @@ void gui_grid_draw_osd(int force) {
 
 // =========  MODULE INIT =================
 
-#include "module_load.h"
+#include "module_def.h"
 
 
 struct libgrids_sym _libgrids = {

@@ -1,6 +1,11 @@
 #ifndef _ACTION_STACK_H
 #define _ACTION_STACK_H
 
+// CHDK Script action handler
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 #define ACTION_STACK_SIZE 24
 #define MAX_ACTION_STACKS 5
 

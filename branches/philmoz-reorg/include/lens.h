@@ -1,6 +1,11 @@
 #ifndef LENS_H
 #define LENS_H
 
+// CHDK Lens focus & zoom interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 long lens_get_zoom_pos();
 void lens_set_zoom_pos(long newpos);
 long lens_get_zoom_point();

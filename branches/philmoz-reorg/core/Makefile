@@ -44,20 +44,16 @@ ifdef OPT_PTP
 #CFLAGS+=-DOPT_PTP
 OPT_OBJS+=ptp.o live_view.o
 endif
-ifdef OPT_EXMEM_MALLOC
-#CFLAGS+=-DOPT_EXMEM_MALLOC
-OPT_OBJS+=suba.o
-endif
 ifdef OPT_DBG_DUMP
 OPT_OBJS+=dbg_dump.o
 endif
 
-OBJS=entry.o main.o gui_draw.o gui_menu.o gui_user_menu.o gui_mbox.o \
+# Build platform dependent code (independent code is built in lib/core/libcore.a)
+OBJS=entry.o main.o gui_draw.o gui_menu.o gui_user_menu.o \
      gui.o kbd.o action_stack.o conf.o \
-     histogram.o gui_batt.o gui_usb.o gui_space.o gui_osd.o raw.o \
-     modules.o module_load.o $(topdir)modules/module_exportlist.o \
-     levent.o shot_histogram.o console.o shooting.o \
-     usb_input.o usb_module.o usb_remote.o gps_math.o gps.o $(OPT_OBJS)
+     histogram.o gui_osd.o raw.o \
+     modules.o shot_histogram.o shooting.o \
+     gps.o camera_info.o $(OPT_OBJS)
 
 gui.o: FORCE
 
@@ -68,8 +64,8 @@ main.bin: main.elf
 main.elf: $(OBJS) $(topdir)platform/$(PLATFORM)/libplatform.a \
           $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/libplatformsub.a \
           $(topdir)lib/font/libfont.a $(topdir)lib/math/libmath.a \
-          $(topdir)lib/lang/liblang.a \
-          $(topdir)lib/armutil/libarmutil.a
+          $(topdir)lib/lang/liblang.a $(topdir)lib/armutil/libarmutil.a \
+          $(topdir)lib/core/libcore.a
 	@echo \-\> $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^  $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
 	( $(NM) $@ | grep ' U ' > $@.syms ) && echo "error: unresolved symbols in $@ (see $@.syms)" && exit 1 || exit 0
@@ -85,7 +81,5 @@ clean:
 
 distclean: clean
 	rm -f $(OBJS:.o=.d)
-
-module_load.o: module_load.c module_load.h $(topdir)modules/module_exportlist.h
 
 include $(topdir)bottom.inc

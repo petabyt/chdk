@@ -15,7 +15,7 @@ libmath.a: $(OBJS)
 d2d.o: d2d.c fdlibm.h
 
 clean:
-	rm -f $(OBJS) libmath.a
+	rm -f $(OBJS) *.a
 
 distclean: clean
 	rm -f $(OBJS:.o=.d)

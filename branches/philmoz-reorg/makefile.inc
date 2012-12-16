@@ -170,6 +170,9 @@ endif
 ifdef OPT_SCRIPTING 
 CFLAGS+=-DOPT_SCRIPTING
 endif
+ifdef OPT_FORCE_LUA_CALL_NATIVE
+CFLAGS+=-DOPT_FORCE_LUA_CALL_NATIVE
+endif
 
 ifdef OPT_EXMEM_MALLOC
 CFLAGS+=-DOPT_EXMEM_MALLOC
@@ -218,6 +221,12 @@ default: all
 ifndef SKIPBUILDRULES
 
 %.o: %.c
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+%.o: $(topdir)core/%.c
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+%.o: $(topdir)modules/%.c
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 %.o: %.S

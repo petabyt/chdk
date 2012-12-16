@@ -1,6 +1,11 @@
 #ifndef CONF_H
 #define CONF_H
 
+// CHDK Config items interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 #include "gui.h"
 #include "script.h"
 

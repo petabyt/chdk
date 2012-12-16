@@ -11,9 +11,8 @@
 
   ===================================================================================================================================================*/
 
-#include "platform.h"
-#include "kbd.h"
 #include "stdlib.h"
+#include "clock.h"
 #include "conf.h"
 #include "usb_remote.h"
 

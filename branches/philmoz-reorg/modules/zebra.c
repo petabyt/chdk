@@ -538,7 +538,7 @@ int gui_osd_draw_zebra(int show)
 
 // =========  MODULE INIT =================
 
-#include "module_load.h"
+#include "module_def.h"
 int module_idx=-1;
 
 /***************** BEGIN OF AUXILARY PART *********************

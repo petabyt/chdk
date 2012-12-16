@@ -1,7 +1,5 @@
-#include "platform.h"
 #include "stdlib.h"
 #include "conf.h"
-#include "gui.h"
 #include "gui_draw.h"
 #include "gui_usb.h"
 

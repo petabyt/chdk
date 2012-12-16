@@ -5,7 +5,7 @@
 #include "gui_draw.h"
 #include "conf.h"
 
-#include "module_load.h"
+#include "module_def.h"
 
 //-------------------------------------------------------------------
 void gui_debug_draw();
@@ -173,7 +173,6 @@ void gui_module_menu_kbd_process() {
 
 
 // =========  MODULE INIT =================
-#include "module_load.h"
 int module_idx=-1;
 
 /***************** BEGIN OF AUXILARY PART *********************

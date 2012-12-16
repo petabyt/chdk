@@ -14,8 +14,13 @@
 #include "lang.h"
 #include "fileutil.h"
 #include "gui_lang.h"
-#include "kbd.h"
 #include "ptp.h"
+
+//-------------------------------------------------------------------
+
+#define SCRIPT_DEFAULT_FILENAME     "A/SCRIPT.LUA"
+#define SCRIPT_DATA_PATH            "A/CHDK/DATA/"
+#define SCRIPT_DEFAULT_DIR			"A/CHDK/SCRIPTS/"
 
 // Requested filename
 enum FilenameMakeModeEnum {
@@ -604,7 +609,6 @@ void save_params_values( int enforce )
 void script_reset_to_default_params_values() 
 {
 	script_scan( conf.script_file, 1 );			// load all values from script
-    gui_update_script_submenu();
 }
 
 //-------------------------------------------------------------------
@@ -660,6 +664,7 @@ void script_load(const char *fn)
     script_scan( conf.script_file, update_vars );      	// re-fill @title/@names/@order/@range/@value + reset values to @default if update_vars=1
 	load_params_values( conf.script_file, conf.script_param_set );
 
+    extern void gui_update_script_submenu();
     gui_update_script_submenu();
 }
 
@@ -1002,9 +1007,9 @@ long script_start_gui( int autostart )
     return script_stack_start();
 }
 
-#if defined(CAM_CHDK_PTP)
 long script_start_ptp( char *script )
 {
+#if defined(CAM_CHDK_PTP)
     module_script_lang_load(SCRIPT_LANG_LUA);
     if (libscriptapi)
     {
@@ -1016,9 +1021,9 @@ long script_start_ptp( char *script )
             return script_stack_start();
         }
     }
+#endif
     return -1;
 }
-#endif
 
 int script_key_is_pressed(int k)
 {

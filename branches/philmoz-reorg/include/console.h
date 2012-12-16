@@ -1,6 +1,11 @@
 #ifndef _CONSOLE_H
 #define _CONSOLE_H
 
+// CHDK console OSD interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 #define MAX_CONSOLE_LINES        14
 #define MAX_CONSOLE_LINE_LENGTH  45
 #define CONSOLE_HIDE_TIMEOUT     3000

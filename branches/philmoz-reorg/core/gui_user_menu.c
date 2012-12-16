@@ -9,7 +9,6 @@
 #include "gui_menu.h"
 #include "gui_mbox.h"
 #include "modules.h"
-#include "module_load.h"
 
 
 //-------------------------------------------------------------------

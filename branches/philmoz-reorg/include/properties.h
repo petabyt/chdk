@@ -1,6 +1,14 @@
 #ifndef PROPERTIES_H
 #define PROPERTIES_H
 
+// CHDK Firmware params & props interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
+// If building for CHDK core include appropriate propset file
+// For modules & platform independent code trying to use any PROPCASE value will give an error
+// In this case use the camera_info struct instead
 #ifndef CHDK_MODULE_CODE
 
 /* propcase ID constants. These are in their own header files for easier sed processing */
@@ -14,9 +22,6 @@
     #include "propset2.h"
 #elif CAM_PROPSET == 1      // most digic2 cameras
     #include "propset1.h"
-#elif CAM_PROPSET == 0      // dummy for module build
-    // Don't load a propset when building modules
-    // If any module tries to use a propset value it will generate an error
 #else
     #error unknown camera processor
 #endif
@@ -32,6 +37,6 @@ extern int shooting_get_prop(int id);
 extern long get_parameter_data(long id, void *buf, long bufsize);
 extern long set_parameter_data(long id, void *buf, long bufsize);
 
-int get_flash_params_count(void);
+extern int get_flash_params_count(void);
 
 #endif

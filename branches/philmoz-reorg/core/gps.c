@@ -33,6 +33,21 @@ void gps_getData(tGPS* gps){
 #include "gps_palette.h"
 //----------------
 
+// Forward reference
+void anzeige_gps();
+void anzeige_kompass();
+void test_timezone();
+void gpx_record();
+void trackback();
+char *load_bitmap(char *datei);
+void anzeige_kompassnadel (int winkel, double s_w, double c_w, char *bitmap, int laenge, int m_x, int m_y, int offset_x, int offset_y, int f_v_1, int f_h_1, int f_v_2, int f_h_2);
+void anzeige_kompassbild (char *bitmap1, int o_x, int o_y, int f_v_0, int f_h_0, int f_v_1, int f_h_1, int f_v_2, int f_h_2, int f_v_4, int f_h_4);
+
+extern char * camera_jpeg_current_filename();
+extern char * camera_jpeg_current_latitude();
+extern char * camera_jpeg_current_longitude();
+extern char * camera_jpeg_current_height();
+extern int _CreateTask (const char *name, int prio, int stack_size /*?*/, void *entry, long parm /*?*/);
 
 extern int exit_gpx_record;
 extern int exit_gps_kompass;
@@ -173,9 +188,10 @@ int winkel;                                     // Winkel auf Anzeige von Marsch
 t_regression deltareg;                  		// Gl?ttung und Geschwindigkeit
 
 
-void gps_updateData(){
-
-	GPS_UpdateData();
+void gps_updateData()
+{
+    extern void GPS_UpdateData();
+    GPS_UpdateData();
 }
 
 void gps_get_data(){

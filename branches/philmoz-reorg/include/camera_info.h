@@ -1,7 +1,10 @@
-// camera_info.h
-
 #ifndef CAMERA_INFO_H
 #define CAMERA_INFO_H
+
+// CHDK camera info interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 //==========================================================
 // Data Structure to store camera specific information
@@ -117,6 +120,7 @@ typedef struct
     int cam_has_video_button;
     int cam_has_manual_focus;
     int cam_has_multipart;
+    int cam_remote_sync_status_led;
     // Miscellaneous variables to record state information
     // Used to control communication between various tasks and modules
     struct

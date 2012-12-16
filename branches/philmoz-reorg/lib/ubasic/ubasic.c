@@ -67,7 +67,6 @@
 #include "file_counter.h"
 #include "lens.h"
 #include "debug_led.h"
-#include "kbd.h"
 #include "keyboard.h"
 #include "shutdown.h"
 #include "sound.h"

@@ -9,7 +9,7 @@
 #include "gui_mbox.h"
 #include "gui_tbox.h"
 
-#include "module_load.h"
+#include "module_def.h"
 
 //-------------------------------------------------------------------
 int gui_tbox_kbd_process();

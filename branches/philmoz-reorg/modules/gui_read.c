@@ -9,8 +9,7 @@
 #include "gui_batt.h"
 #include "gui_lang.h"
 
-#include "modules.h"
-#include "module_load.h"
+#include "module_def.h"
 
 //-------------------------------------------------------------------
 
@@ -245,7 +244,6 @@ int gui_read_kbd_process() {
 }
 
 // =========  MODULE INIT =================
-#include "module_load.h"
 int module_idx=-1;
 
 //-------------------------------------------------------------------

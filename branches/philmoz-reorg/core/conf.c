@@ -5,7 +5,7 @@
 #include "font.h"
 #include "raw.h"
 #include "modules.h"
-#include "module_load.h"
+#include "module_def.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
 #include "gui_lang.h"
@@ -248,7 +248,11 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(117, conf.tv_override_short_exp,      CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(118, conf.av_override_enabled,        CONF_DEF_VALUE,     i:0, NULL),
 
+#if defined(OPT_FORCE_LUA_CALL_NATIVE)
+    CONF_INFO(119, conf.script_allow_lua_native_calls,CONF_DEF_VALUE,   i:1, NULL),
+#else
     CONF_INFO(119, conf.script_allow_lua_native_calls,CONF_DEF_VALUE,   i:0, NULL),
+#endif
     CONF_INFO(120, conf.script_startup,             CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(121, conf.remote_enable,              CONF_DEF_VALUE,     i:0, NULL),
     
@@ -751,7 +755,17 @@ void config_save(const ConfInfo *conf_info, char *filename, int conf_num)
 
 void conf_save()
 {
+// if Lua native calls are forced on, don't save state to config file since user did not select it
+#if defined(OPT_FORCE_LUA_CALL_NATIVE)
+    conf.script_allow_lua_native_calls = 0;
+#endif
+
     config_save(&conf_info[0], CONF_FILE, CONF_NUM);
+
+// if Lua native calls are forced on, re-enable native calls
+#if defined(OPT_FORCE_LUA_CALL_NATIVE)
+    conf.script_allow_lua_native_calls = 1;
+#endif
 }
 
 //-------------------------------------------------------------------
@@ -837,6 +851,11 @@ void conf_restore()
     config_restore(&conf_info[0], CONF_FILE, CONF_NUM, conf_info_func);
     // Fixup old conf.override_disable value
     if (conf.override_disable == 2) conf.override_disable = 0;
+
+// Enable Lua native calls if builder wants them forced on
+#if defined(OPT_FORCE_LUA_CALL_NATIVE)
+    conf.script_allow_lua_native_calls = 1;
+#endif
 }
 
 //-------------------------------------------------------------------

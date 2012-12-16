@@ -369,7 +369,7 @@ void raw_merge_end(void) {
 
 
 // =========  MODULE INIT =================
-#include "module_load.h"
+#include "module_def.h"
 int module_idx=-1;
 
 /***************** BEGIN OF AUXILARY PART *********************

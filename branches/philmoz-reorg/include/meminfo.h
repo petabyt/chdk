@@ -1,6 +1,11 @@
 #ifndef MEMINFO_H
 #define MEMINFO_H
 
+// CHDK Firmware free memory interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 // Data returned from GetMemInfo & GetExMemInfo functions stored in this data structure
 typedef struct {
     int start_address;

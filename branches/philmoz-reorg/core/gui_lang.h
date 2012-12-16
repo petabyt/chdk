@@ -1,6 +1,11 @@
 #ifndef GUI_LANG_H
 #define GUI_LANG_H
 
+// CHDK Language String numbers
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 //-------------------------------------------------------------------
 #define LANG_MENU_MAIN_TITLE            1
 

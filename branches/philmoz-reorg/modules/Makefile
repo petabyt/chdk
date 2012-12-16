@@ -5,7 +5,8 @@ SKIPPLATFORMCHECK=1
 
 include $(topdir)makefile.inc
 
-SUBDIRS=$(topdir)lib/lua $(topdir)lib/ubasic $(topdir)lib/armutil $(topdir)lib/math $(topdir)lib/lang $(topdir)lib/font
+SUBDIRS=$(topdir)lib/lua $(topdir)lib/ubasic $(topdir)lib/armutil $(topdir)lib/math
+SUBDIRS+=$(topdir)lib/lang $(topdir)lib/font $(topdir)lib/core
 
 OBJ_ISDIGIT=
 ifeq ($(GCC_VERSION_MAJOR),3)
@@ -18,12 +19,14 @@ LDLIBS= -lgcc
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(topdir)tools/link-boot.ld
 LDOPTS+=-Wl,-N,-Ttext,0 -r -Wl,-d
 
+# Only build modules files here. Platform indepedant code to be linked to code CHDK should be in libraries (above)
+# to avoid 'long_call' overhead
 FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt \
      _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop10.flt _rawop12.flt \
      txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt _tbox.flt _osd_le.flt \
      ubasic.flt lua.flt
 
-all: exportlist.inc module_exportlist.o $(FLTS)
+all: $(FLTS)
 
 %.o: %.c
 	@echo $< \-\> $@
@@ -99,11 +102,5 @@ clean:
 
 distclean: clean
 #	rm -f *.flt
-
-exportlist.inc:  module_exportlist.c
-	@echo $< \-\> $@
-	$(topdir)tools/makeexport$(EXE) module_exportlist.c module_exportlist.h exportlist.inc module_hashlist.h
-
-module_exportlist.o: module_exportlist.c module_exportlist.h module_hashlist.h
 
 include $(topdir)bottom.inc

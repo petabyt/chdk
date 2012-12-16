@@ -1,5 +1,6 @@
-#include "module_load.h"
+#include "gui.h"
 #include "gui_draw.h"
+#include "module_def.h"
 
 extern int basic_module_init();
 

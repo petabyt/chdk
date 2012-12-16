@@ -158,6 +158,8 @@ static CMenu remote_submenu = {0x86,LANG_MENU_REMOTE_PARAM_TITLE, NULL, remote_s
 //-------------------------------------------------------------------
 
 #ifdef OPT_SCRIPTING
+// Forward reference
+void gui_update_script_submenu();
 
 static const char* gui_script_param_set_enum(int change, int arg)
 {
@@ -189,6 +191,7 @@ static void gui_load_script(int arg) {
 
 static void gui_load_script_default(int arg) {
 	script_reset_to_default_params_values();
+    gui_update_script_submenu();
     save_params_values(1);
 }
 
@@ -770,6 +773,7 @@ static void gui_show_memory_info(int arg)
     gui_mbox_init(LANG_MSG_MEMORY_INFO_TITLE, (int)buf, MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
 }
 
+#if !defined(OPT_FORCE_LUA_CALL_NATIVE)
 static void lua_native_call_warning(unsigned int btn)
 {
     if (btn==MBOX_BTN_NO)
@@ -781,6 +785,7 @@ static void gui_lua_native_call_warning(int arg)
     if (conf.script_allow_lua_native_calls)
         gui_mbox_init(LANG_WARNING, LANG_MENU_LUA_NATIVE_CALLS_WARNING, MBOX_BTN_YES_NO|MBOX_DEF_BTN2|MBOX_TEXT_CENTER, lua_native_call_warning);
 }
+#endif
 
 static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x35,LANG_MENU_MISC_FILE_BROWSER,          MENUITEM_PROC,                  gui_draw_fselect,                   0 ),
@@ -799,7 +804,9 @@ static CMenuItem misc_submenu_items[] = {
 #endif
     MENU_ITEM   (0x80,LANG_MENU_MISC_BUILD_INFO,            MENUITEM_PROC,                  gui_show_build_info, 0 ),
     MENU_ITEM   (0x80,LANG_MENU_MISC_MEMORY_INFO,           MENUITEM_PROC,                  gui_show_memory_info, 0 ),
+#if !defined(OPT_FORCE_LUA_CALL_NATIVE)
     MENU_ITEM   (0x28,LANG_MENU_ENABLE_LUA_NATIVE_CALLS,    MENUITEM_BOOL|MENUITEM_ARG_CALLBACK, &conf.script_allow_lua_native_calls, (int)gui_lua_native_call_warning ),
+#endif
     MENU_ITEM   (0x33,LANG_SD_CARD,                         MENUITEM_SUBMENU,               &sdcard_submenu,                    0 ),
 #ifdef OPT_DEBUGGING
     MENU_ITEM   (0x2a,LANG_MENU_MAIN_DEBUG,                 MENUITEM_SUBMENU,               &debug_submenu,                     0 ),
@@ -2325,10 +2332,9 @@ void gui_chdk_draw()
 }
 
 //-------------------------------------------------------------------
-#ifdef OPT_DEBUGGING
-
 static void gui_debug_shortcut(void) 
 {
+#ifdef OPT_DEBUGGING
     static int lastcall = -1;
     int t=get_tick_count();
     if ( lastcall != -1) {
@@ -2341,27 +2347,14 @@ static void gui_debug_shortcut(void)
                 dump_memory();
                 break;
             case 2:
-#ifndef CAM_DRYOS
-                if(conf.debug_display == DEBUG_DISPLAY_TASKS) {
-                    debug_tasklist_start += debug_display_direction*(TASKLIST_MAX_LINES-2); // a little intentional overlap
-                    if(debug_tasklist_start >= TASKLIST_NUM_TASKS || debug_tasklist_start < 0)
-                        debug_tasklist_start = 0;
-                }
-                else 
-#endif
-                    if (conf.debug_display == DEBUG_DISPLAY_PROPS || conf.debug_display == DEBUG_DISPLAY_PARAMS) {
-                        conf.debug_propcase_page += debug_display_direction*1;
-                        if(conf.debug_propcase_page > 128 || conf.debug_propcase_page < 0) 
-                            conf.debug_propcase_page = 0;
-                    }
-                    break;
+                gui_update_debug_page();
+                break;
             case 3:
                 gui_compare_props(1);
                 break;
     }
-}
-
 #endif
+}
 
 //-------------------------------------------------------------------
 // Handler for Menu button press default - enter Menu mode
@@ -2458,9 +2451,7 @@ int gui_chdk_kbd_process()
     {
         if (conf.debug_shortcut_action > 0)
         {
-#ifdef OPT_DEBUGGING
             gui_debug_shortcut();
-#endif
         }
         // Check in manual focus mode
         else if (!shooting_get_common_focus_mode())
@@ -2486,9 +2477,7 @@ int gui_chdk_kbd_process()
     {
         if (conf.debug_shortcut_action > 0)
         {
-#ifdef OPT_DEBUGGING
             gui_debug_shortcut();
-#endif
         }
         else
         {

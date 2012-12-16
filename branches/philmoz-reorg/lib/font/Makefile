@@ -18,7 +18,7 @@ font_8x16_uni_packed.h: font_8x16_uni.h $(topdir)tools/font_8x16_pack$(EXE)
 	$(topdir)tools/font_8x16_pack$(EXE) > font_8x16_uni_packed.h
 
 clean:
-	rm -f $(OBJS) libfont.a
+	rm -f $(OBJS) *.a
 
 distclean: clean
 	rm -f $(OBJS:.o=.d)

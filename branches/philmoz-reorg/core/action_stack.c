@@ -2,7 +2,6 @@
 #include "console.h"
 #include "stdlib.h"
 #include "conf.h"
-#include "kbd.h"
 #include "keyboard.h"
 #include "histogram.h"
 #include "action_stack.h"

@@ -336,20 +336,3 @@ int make_pixel_list(char * ptr, int size) {
     }
 	return 0;
 }
-
-int pow_calc( int mult, int x, int x_div, int y, int y_div)
-{
-	return pow_calc_2( mult, x, x_div, y, y_div);
-}
-
-int pow_calc_2( int mult, int x, int x_div, double y, int y_div)
-{
-	double x1 = x;
-	if ( x_div != 1 ) { x1=x1/x_div;}
-	if ( y_div != 1 ) { y=y/y_div;}
-
-	if ( mult==1 )
-		return pow( x1, y );
-                else
-		return mult	* pow( x1, y );
-}

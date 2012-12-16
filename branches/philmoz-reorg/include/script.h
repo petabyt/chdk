@@ -1,11 +1,13 @@
 #ifndef SCRIPT_H
 #define SCRIPT_H
 
+// CHDK Script interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 //-------------------------------------------------------------------
-#define SCRIPT_DEFAULT_FILENAME     "A/SCRIPT.LUA"
 #define SCRIPT_NUM_PARAMS           26
-#define SCRIPT_DATA_PATH            "A/CHDK/DATA/"
-#define SCRIPT_DEFAULT_DIR			"A/CHDK/SCRIPTS/"
 
 //-------------------------------------------------------------------
 
@@ -32,17 +34,15 @@ extern void script_print_screen_end();
 extern void script_print_screen_statement(int val);
 //-------------------------------------------------------------------
 
-long script_stack_start();
-int script_is_running();
-void script_end();
-long script_start_gui( int autostart );
+extern int script_is_running();
+extern void script_end();
+extern long script_start_gui( int autostart );
 
-int script_key_is_pressed( int keyid );
-int script_key_is_clicked( int keyid );
-int script_keyid_by_name( const char *name );
-#ifdef CAM_CHDK_PTP
-long script_start_ptp( char *script );
-#endif
-void script_wait_and_end();
+extern int script_key_is_pressed( int keyid );
+extern int script_key_is_clicked( int keyid );
+extern int script_keyid_by_name( const char *name );
+extern long script_start_ptp( char *script );
+extern void script_wait_and_end();
+//-------------------------------------------------------------------
 
 #endif

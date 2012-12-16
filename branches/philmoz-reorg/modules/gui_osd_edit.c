@@ -11,7 +11,7 @@
 #include "gui_space.h"
 #include "gui_osd.h"
 
-#include "module_load.h"
+#include "module_def.h"
 
 //-------------------------------------------------------------------
 typedef struct {
@@ -145,7 +145,6 @@ gui_handler layoutGuiHandler =
 };
 
 // =========  MODULE INIT =================
-#include "module_load.h"
 
 /***************** BEGIN OF AUXILARY PART *********************
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION

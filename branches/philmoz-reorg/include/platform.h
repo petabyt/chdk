@@ -194,14 +194,6 @@ void drv_self_unhide(void);
 
 void ExitTask();
 
-#ifdef CAM_HAS_GPS
-    void GPS_UpdateData();
-	extern char * camera_jpeg_current_filename();
-	extern char * camera_jpeg_current_latitude();
-	extern char * camera_jpeg_current_longitude();
-	extern char * camera_jpeg_current_height();
-#endif
-
 // debug logging function - see generic wrappers.c to adjust destination
 // WARNING fixed length buffer
 extern void dbg_printf(char *fmt,...);

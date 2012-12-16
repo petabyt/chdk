@@ -15,9 +15,11 @@
 					this to build a Arduino-type remote control keypad
   ===================================================================================================*/
 
-#include "platform.h"
-#include "kbd.h"
+#include "camera_info.h"
 #include "stdlib.h"
+#include "clock.h"
+#include "modes.h"
+#include "shooting.h"
 #include "conf.h"
 #include "action_stack.h"
 #include "gui_draw.h"
@@ -219,16 +221,11 @@ void kbd_calibrate_synch_delay()
 
   ---------------------------------------------------------------------------------------------------------*/
 
-#ifdef REMOTE_SYNC_STATUS_LED
-
-	void usb_remote_status_led(int state)
-	{
-	  *(int*)REMOTE_SYNC_STATUS_LED=state ? 0x46 : 0x44;
-	}
-
-#else
-	void usb_remote_status_led(int state) {} ;
-#endif
+void usb_remote_status_led(int state)
+{
+    if (camera_info.cam_remote_sync_status_led)
+        *(int*)camera_info.cam_remote_sync_status_led=state ? 0x46 : 0x44;
+}
 
 
 /*---------------------------------------------------------------------------------------------------------

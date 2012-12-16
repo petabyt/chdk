@@ -1430,7 +1430,6 @@ void gui_fselect_kbd_process_menu_btn()
 
 
 // =========  MODULE INIT =================
-#include "module_load.h"
 int module_idx=-1;
 
 /***************** BEGIN OF AUXILARY PART *********************

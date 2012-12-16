@@ -1,7 +1,8 @@
 #include "camera_info.h"
+#include "gui.h"
+#include "gui_draw.h"
 #include "meminfo.h"
 #include "module_load.h"
-#include "gui_draw.h"
 
 
 // =========  MODULE INIT =================

@@ -13,6 +13,7 @@
 #include "gui_mbox.h"
 #include "gui_lang.h"
 #include "gps.h"
+#include "math.h"
 
 //thumbnail
 #define DNG_TH_WIDTH 128
@@ -554,6 +555,23 @@ unsigned short get_metering_mode_for_exif(short metering_mode)
     }
 }
 
+int pow_calc_2( int mult, int x, int x_div, double y, int y_div)
+{
+	double x1 = x;
+	if ( x_div != 1 ) { x1=x1/x_div;}
+	if ( y_div != 1 ) { y=y/y_div;}
+
+	if ( mult==1 )
+		return pow( x1, y );
+                else
+		return mult	* pow( x1, y );
+}
+
+int pow_calc( int mult, int x, int x_div, int y, int y_div)
+{
+	return pow_calc_2( mult, x, x_div, y, y_div);
+}
+
 void capture_data_for_exif(void)
 {
     short short_prop_val;
@@ -939,7 +957,7 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
 
 /*********** BEGIN OF AUXILARY PART **********************/
 
-#include "module_load.h"
+#include "module_def.h"
 
 struct libdng_sym _libdng = {
     MAKE_API_VERSION(1,0),      // apiver: increase major if incompatible changes made in module, 
