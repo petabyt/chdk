@@ -62,7 +62,6 @@
 #define  CAM_REAR_CURTAIN           1             // Camera do not have front/rear curtain flash sync in menu
 //#undef  CAM_BRACKETING                          // Cameras that have bracketing (focus & ev) in original firmware already, most likely s- & g-series (propcase for digic III not found yet!)
 #define  CAM_EXT_TV_RANGE			1            // CHDK can make exposure time longer than 64s
-#define CAM_CHDK_PTP                1           // include CHDK PTP support
 
     #undef  CAM_UNCACHED_BIT
 	#define CAM_UNCACHED_BIT  0x40000000 // Found @0xffc16e84
