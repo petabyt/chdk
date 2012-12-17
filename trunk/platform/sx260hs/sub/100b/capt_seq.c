@@ -27,8 +27,8 @@ void __attribute__((naked,noinline)) capt_seq_task() {
         "BEQ     loc_FF06D6F8\n"
         "LDR     R1, =0x493\n"
         "LDR     R0, =0xFF06D060\n"         //aSsshoottask_c
-        "BL      sub_0068AFD8\n"            //assert  RAM
-        "BL      sub_0068AD90\n"            //ExitTask RAM
+        "BL      _DebugAssert\n"            //assert  RAM
+        "BL      _ExitTask\n"            //ExitTask RAM
         "LDMFD   SP!, {R3-R9,PC}\n"
 "loc_FF06D6F8:\n"
         "LDR     R0, [SP]\n"
@@ -281,7 +281,7 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 "loc_FF06D9DC:\n"
         "LDR     R1, =0x5F4\n"
         "LDR     R0, =0xFF06D060\n"
-        "BL      sub_0068AFD8\n"            //RAM
+        "BL      _DebugAssert\n"            //RAM
 "loc_FF06D9E8:\n"
         "LDR     R0, [SP]\n"
         "LDR     R1, [R0, #4]\n"
@@ -292,7 +292,7 @@ void __attribute__((naked,noinline)) capt_seq_task() {
         "CMP     R0, #0\n"
         "LDREQ   R1, =0x117\n"
         "LDREQ   R0, =0xFF06D060\n"
-        "BLEQ    sub_0068AFD8\n"            //RAM
+        "BLEQ    _DebugAssert\n"            //RAM
         "STR     R6, [R5, #8]\n"
         "B       loc_FF06D6CC\n"
 //End of function sub_FF06D6BC
@@ -445,7 +445,7 @@ void __attribute__((naked,noinline)) sub_FF1BEF7C_my() {
         "TST     R0, #1\n"
         "MOVNE   R1, #0xD4\n"
         "LDRNE   R0, =0xFF1BF344\n"
-        "BLNE    sub_0068AFD8\n"            //RAM
+        "BLNE    _DebugAssert\n"            //RAM
         "LDR     R0, [SP]\n"
         "CMP     R0, #0\n"
         "BNE     loc_FF1BF194\n"
@@ -543,7 +543,7 @@ void __attribute__((naked,noinline)) exp_drv_task() {
         "LDR     R0, [R6, #0x1C]\n"
         "MOV     R1, #1\n"
         "BL      sub_0068B954\n"            //RAM
-        "BL      sub_0068AD90\n"            //RAM
+        "BL      _ExitTask\n"
         "ADD     SP, SP, #0x2C\n"
         "LDMFD   SP!, {R4-R9,PC}\n"
 "loc_FF0BC248:\n"
@@ -553,7 +553,7 @@ void __attribute__((naked,noinline)) exp_drv_task() {
         "LDR     R1, [R0, #4]\n"
         "MOV     R0, R1\n"
         "BLX     R2\n"
-        "B       sub_FF0BC838\n"
+        "B       loc_FF0BC838\n"
 "loc_FF0BC264:\n"
         "CMP     R1, #0x28\n"
         "BNE     loc_FF0BC2B4\n"
@@ -575,7 +575,7 @@ void __attribute__((naked,noinline)) exp_drv_task() {
         "LDR     R0, [R1, #0x90]\n"
         "LDR     R1, [R1, #0x8C]\n"
         "BLX     R1\n"
-        "B       sub_FF0BC838\n"
+        "B       loc_FF0BC838\n"
 "loc_FF0BC2B4:\n"
         "CMP     R1, #0x29\n"
         "BNE     loc_FF0BC2FC\n"
@@ -630,7 +630,7 @@ void __attribute__((naked,noinline)) exp_drv_task() {
         "LDR     R1, =0x15CB\n"
  "loc_FF0BC370:\n"
         "LDR     R0, =0xFF0B7968\n"
-        "BL      sub_0068AFD8\n"            //RAM
+        "BL      _DebugAssert\n"            //RAM
         "B       loc_FF0BC2A0\n"
 "loc_FF0BC37C:\n"
         "LDR     R0, [SP, #0x28]\n"
@@ -896,13 +896,13 @@ void __attribute__((naked,noinline)) exp_drv_task() {
         "CMP     R0, #1\n"
         "CMPNE   R0, #4\n"
         "CMPNE   R0, #0xE\n"
-        "BNE     sub_FF0BC770\n"
+        "BNE     loc_FF0BC770\n"
         "B       loc_FF0BC73C\n"
 "loc_FF0BC72C:\n"
         "CMP     R0, #0x13\n"
         "CMPNE   R0, #0x17\n"
         "CMPNE   R0, #0x1A\n"
-        "BNE     sub_FF0BC770\n"
+        "BNE     loc_FF0BC770\n"
 "loc_FF0BC73C:\n"
         "LDRSH   R0, [R4]\n"
         "CMN     R0, #0xC00\n"
@@ -1055,7 +1055,7 @@ void __attribute__((naked,noinline)) sub_FF0B86F8_my() {
         "TST     R0, #1\n"
         "LDRNE   R1, =0x7AE\n"
         "LDRNE   R0, =0xFF0B7968\n"
-        "BLNE    sub_0068AFD8\n"            //RAM
+        "BLNE    _DebugAssert\n"            //RAM
 "loc_FF0B8808:\n"
         "CMP     R5, #1\n"
         "LDMNEFD SP!, {R4-R8,PC}\n"
@@ -1068,7 +1068,7 @@ void __attribute__((naked,noinline)) sub_FF0B86F8_my() {
         "LDMFD   SP!, {R4-R8,LR}\n"
         "LDR     R1, =0x7B3\n"
         "LDR     R0, =0xFF0B7968\n"
-        "B       sub_0068AFD8\n"            //RAM
+        "B       _DebugAssert\n"            //RAM
 //"End of function sub_FF0B86F8\n"
     );
 }
@@ -1083,14 +1083,14 @@ void __attribute__((naked,noinline)) sub_FF0A7068_my() {
         "CMP     R0, #1\n"
         "LDRNE   R1, =0x14D\n"
         "LDRNE   R0, =0xFF0A6EA0\n"         //"Shutter.c"
-        "BLNE    sub_0068AFD8\n"            //RAM       ASSERT
+        "BLNE    _DebugAssert\n"            //RAM       ASSERT
         "CMN     R4, #0xC00\n"
         "LDREQSH R4, [R5, #2]\n"
         "CMN     R4, #0xC00\n"
         "LDREQ   R1, =0x153\n"
         "LDREQ   R0, =0xFF0A6EA0\n"         //"Shutter.c"
         "STRH    R4, [R5, #2]\n"
-        "BLEQ    sub_0068AFD8\n"            //RAM
+        "BLEQ    _DebugAssert\n"            //RAM
         "MOV     R0, R4\n"
 //PATCH BEGIN
         //"BL      sub_FF283E48\n"
@@ -1105,7 +1105,7 @@ void __attribute__((naked,noinline)) sub_FF0A7068_my() {
         "LDMFD   SP!, {R4-R6,LR}\n"
         "MOV     R1, #0x158\n"
         "LDR     R0, =0xFF0A6EA0\n"
-        "B       sub_0068AFD8\n"            //RAM
+        "B       _DebugAssert\n"            //RAM
 //"End of function sub_FF0A7068\n"
     );
 }
