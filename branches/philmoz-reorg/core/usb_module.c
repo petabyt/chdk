@@ -23,8 +23,6 @@
     Variables
   ===================================================================================================*/
 
-extern int get_usb_power(int) ;
-
 extern enum SWITCH_TYPE	 switch_type ;
 extern enum CONTROL_MODULE  control_module  ;
 extern enum VIRTUAL_REMOTE_STATE  virtual_remote_state;

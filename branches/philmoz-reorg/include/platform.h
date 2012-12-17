@@ -22,6 +22,7 @@
 #include "lens.h"
 #include "shutdown.h"
 #include "sound.h"
+#include "task.h"
 
 // return whether video is actually being recorded
 extern int is_video_recording();
@@ -191,8 +192,6 @@ void change_ext_to_default(void);
 
 void drv_self_hide(void);
 void drv_self_unhide(void);
-
-void ExitTask();
 
 // debug logging function - see generic wrappers.c to adjust destination
 // WARNING fixed length buffer

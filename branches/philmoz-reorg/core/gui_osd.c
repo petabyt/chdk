@@ -267,10 +267,9 @@ void gui_osd_draw_state()
     }
     if (is_av_override_enabled || gui_mode==GUI_MODE_OSD)  
         gui_print_osd_state_string_float("AV:%d.%02d", 100, shooting_get_aperture_from_av96(shooting_get_av96_override_value()));
-#if CAM_HAS_ND_FILTER
-    if ((conf.nd_filter_state && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD) 
-        gui_print_osd_state_string_chr("NDFILTER:", ((conf.nd_filter_state==1)?"IN":"OUT"));
-#endif    
+    if (camera_info.cam_has_nd_filter)
+        if ((conf.nd_filter_state && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD) 
+            gui_print_osd_state_string_chr("NDFILTER:", ((conf.nd_filter_state==1)?"IN":"OUT"));
     if ((conf.autoiso_enable && shooting_get_iso_mode()<=0 && !(m==MODE_M || m==MODE_TV) && shooting_get_flash_mode() && (autoiso_and_bracketing_overrides_are_enabled)) || gui_mode==GUI_MODE_OSD)  
         gui_print_osd_state_string_chr("AUTOISO:", ((conf.autoiso_enable==1)?"ON":"OFF"));
     if ((is_sd_override_enabled && shooting_can_focus()) || ((gui_get_mode()==GUI_MODE_ALT) && shooting_get_common_focus_mode()) || gui_mode==GUI_MODE_OSD)

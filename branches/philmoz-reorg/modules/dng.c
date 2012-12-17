@@ -334,7 +334,7 @@ void create_dng_header(){
     if (camera_info.props.gps)
     {
         // If camera has GPS get the GPS data
-        gps_getData(&gps_data); 
+        get_property_case(camera_info.props.gps, &gps_data, sizeof(gps_data));
     }
     else
     {

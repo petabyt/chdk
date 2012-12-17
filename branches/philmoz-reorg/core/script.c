@@ -868,18 +868,15 @@ int script_is_running()
 
 //-------------------------------------------------------------------
 
-#ifdef OPT_SCRIPTING
 static void interrupt_script()
 {
     script_console_add_line(lang_str(LANG_CONSOLE_TEXT_INTERRUPTED));
     script_end();
 }
-#endif
 
 // Main button processing for CHDK Script mode
 static int gui_script_kbd_process()
 {
-#ifdef OPT_SCRIPTING
     // Stop a script if the shutter button pressed in Script mode
     if (kbd_is_key_clicked(KEY_SHOOT_FULL))
     {
@@ -892,7 +889,6 @@ static int gui_script_kbd_process()
                 interrupt_script();
         }
     }
-#endif
 
     return 0;
 }

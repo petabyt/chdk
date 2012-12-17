@@ -2,18 +2,18 @@
 **	$Id: gps.c, v 1.2 2012/01/05 genie01 Exp $
 **---------------------------------------------------------------------------------*/
 
-#include "platform.h"
+#include "camera_info.h"
 #include "stdlib.h"
+#include "properties.h"
+#include "task.h"
+#include "modes.h"
+#include "debug_led.h"
+#include "shutdown.h"
+#include "sound.h"
+#include "backlight.h"
+#include "temperature.h"
+#include "file_counter.h"
 #include "gps.h"
-
-void gps_getData(tGPS* gps){
-    if (camera_info.props.gps)
-        get_property_case(camera_info.props.gps, gps, sizeof(tGPS));
-    else
-        memset(gps, 0, sizeof(tGPS));
-}
-
-#ifdef CAM_HAS_GPS
 
 #include "stddef.h"
 #include "conf.h"
@@ -47,7 +47,6 @@ extern char * camera_jpeg_current_filename();
 extern char * camera_jpeg_current_latitude();
 extern char * camera_jpeg_current_longitude();
 extern char * camera_jpeg_current_height();
-extern int _CreateTask (const char *name, int prio, int stack_size /*?*/, void *entry, long parm /*?*/);
 
 extern int exit_gpx_record;
 extern int exit_gps_kompass;
@@ -214,7 +213,7 @@ void gps_get_data(){
 	while ( nm==1 )
 	{
 		gps_updateData();
-		gps_getData(&gps);
+        get_property_case(camera_info.props.gps, &gps, sizeof(gps));
 
 		t=time(NULL);
 		ttm = localtime(&t);
@@ -269,7 +268,7 @@ void gps_get_data(){
 		{
 			if (anzeige_symbol==0)
 			{
-				_CreateTask("ANZSYMBOL", 0x19, 0x500, anzeige_gps, 0);
+				CreateTask("ANZSYMBOL", 0x19, 0x500, anzeige_gps);
 				anzeige_symbol=1;
 			}
 		}
@@ -286,7 +285,7 @@ void gps_startup()
 {
 	if (((int)conf.gps_on_off ==1) && (exit_gps_data==1))
     {
-	    _CreateTask("GPSDATA", 0x19, 0x400, gps_get_data, 0);
+	    CreateTask("GPSDATA", 0x19, 0x400, gps_get_data);
 		exit_gps_data=0;
 	}
 }
@@ -1135,7 +1134,7 @@ void wegpunkt(){
 			fclose(fp);
 			bild_ohne_signal=1;
 			zeit_bis_ende=(int)conf.gps_wait_for_signal;
-			_CreateTask("BILDOHNESIGNAL", 0x19, 0x1000, gpx_bild_ohne_signal, 0);
+			CreateTask("BILDOHNESIGNAL", 0x19, 0x1000, gpx_bild_ohne_signal);
 		}
 		else
 		{
@@ -1155,11 +1154,11 @@ void init_gpx_record_task(){
 
 	if ((int)conf.gps_on_off ==0) {return; }
 
-	_CreateTask("GPSRECORD", 0x19, 0x800, gpx_record, 0);
+	CreateTask("GPSRECORD", 0x19, 0x800, gpx_record);
 
 	if ((int)conf.gps_track_symbol==1)
 	{
-		_CreateTask("TRACKSYMBOL", 0x19, 0x600, anzeige_track, 0);
+		CreateTask("TRACKSYMBOL", 0x19, 0x600, anzeige_track);
 	}
 }
 
@@ -1330,7 +1329,7 @@ void gps_navigate_home(){
 
 	if ((int)conf.gps_track_symbol==1)
 	{
-		_CreateTask("TRACKSYMBOL", 0x19, 0x600, anzeige_track, 0);
+		CreateTask("TRACKSYMBOL", 0x19, 0x600, anzeige_track);
 	}
 
 	if ((int)g_d_lat_nav != 0)
@@ -1385,7 +1384,7 @@ void init_gps_kompass_task(){
 
 	if ((int)conf.gps_on_off ==0) {return; }
 
-	_CreateTask("GPSKOMPASS", 0x19, 0x900, anzeige_kompass, 0);
+	CreateTask("GPSKOMPASS", 0x19, 0x900, anzeige_kompass);
 }
 
 double gps_kurswinkel(int zaehler){
@@ -1738,8 +1737,6 @@ void anzeige_kompassbild (char *bitmap1, int o_x, int o_y, int f_v_0, int f_h_0,
 
 	}
 }
-
-#endif
 
 /*-----------------------------------------------------------------------------------
 **	$Id: gps.c, v 1.2 2012/01/05 genie01 Exp $

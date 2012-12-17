@@ -328,10 +328,8 @@ static const ConfInfo conf_info[] = {
     CONF_INFO2(182, conf.mode_ev_pos,               CONF_OSD_POS,   CAM_SCREEN_WIDTH-40*FONT_WIDTH-2,CAM_SCREEN_HEIGHT-8*FONT_HEIGHT-2),
     CONF_INFO(183, conf.menu_symbol_rbf_file,       CONF_CHAR_PTR,   ptr:DEFAULT_SYMBOL_FILE, conf_change_menu_symbol_rbf_file),
     CONF_INFO(184, conf.menu_symbol_color,          CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
-#ifdef OPT_CURVES
     CONF_INFO(185, conf.curve_file,                 CONF_CHAR_PTR,      ptr:"", NULL),
     CONF_INFO(186, conf.curve_enable,               CONF_DEF_VALUE,     i:0, NULL),
-#endif
     CONF_INFO(187, conf.edge_overlay_enable,        CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(188, conf.edge_overlay_thresh,        CONF_DEF_VALUE, i:60, NULL),
     CONF_INFO(189, conf.edge_overlay_color,         CONF_DEF_VALUE, cl:0x66, NULL),
@@ -497,9 +495,7 @@ static void conf_change_font_cp() {
 }
 
 static void conf_change_script_file() {
-#ifdef OPT_SCRIPTING
     script_load(conf.script_file);
-#endif
 }
 
 
@@ -855,6 +851,10 @@ void conf_restore()
 // Enable Lua native calls if builder wants them forced on
 #if defined(OPT_FORCE_LUA_CALL_NATIVE)
     conf.script_allow_lua_native_calls = 1;
+#endif
+// If curves not compiled in force option off
+#if !defined(OPT_CURVES)
+    conf.curve_enable = 0;
 #endif
 }
 

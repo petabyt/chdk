@@ -847,8 +847,8 @@ void exmem_malloc_init() {
 		// If loading CHDK into exmem then move heap start past the end of CHDK
 		// and reduce available space by CHDK size (MEMISOSIZE)
 		// round MEMISOSIZE up to next 4 byte boundary if needed (just in case)
-		exmem_start = mem + ((MEMISOSIZE+3)&0xFFFFFFFC);
-		exmem_size = EXMEM_BUFFER_SIZE - ((MEMISOSIZE+3)&0xFFFFFFFC);
+		exmem_start = mem + ((camera_info.memisosize+3)&0xFFFFFFFC);
+		exmem_size = EXMEM_BUFFER_SIZE - ((camera_info.memisosize+3)&0xFFFFFFFC);
 #else
 		// Set start & size based on requested values
 		exmem_start = mem;
@@ -1558,22 +1558,23 @@ long __attribute__((weak)) _GetCurrentTargetDistance()
 }
 #endif
 
-#ifdef CAM_CHDK_PTP
 int add_ptp_handler(int opcode, ptp_handler handler, int unknown)
 {
-  return _add_ptp_handler(opcode,handler,unknown);
+#ifdef CAM_CHDK_PTP
+    return _add_ptp_handler(opcode,handler,unknown);
+#else
+    return 0;
+#endif
 }
 
-// this would make more sense in generic/main.c but not all a cameras use it
-void init_chdk_ptp_task() {
-  _CreateTask("InitCHDKPTP", 0x19, 0x200, init_chdk_ptp, 0);
-};
-
-#endif
+int CreateTask (const char *name, int prio, int stack_size, void *entry)
+{
+    return _CreateTask(name, prio, stack_size, entry, 0);
+}
 
 void ExitTask()
 {
-  _ExitTask();
+    _ExitTask();
 }
 
 // TODO not in sigs for vx yet

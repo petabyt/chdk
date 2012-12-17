@@ -1,13 +1,8 @@
 #!build time optional components - comment out the features you dont want to have in your build or copy this file to localbuildconf.inc and override settings there
 OPT_GAMES=1
 OPT_CURVES=1
-OPT_TEXTREADER=1
-OPT_CALENDAR=1
 OPT_DEBUGGING=1
 OPT_EDGEOVERLAY=1
-
-# Scripting components
-OPT_SCRIPTING=1
 
 # Force config option on to allow Lua to call arbitrary ROM functions and eventprocs
 # By default this is a user controlled setting in the CHDK UI.
@@ -27,12 +22,8 @@ OPT_SCRIPTING=1
 
 # experimental PTP/USB interface
 OPT_PTP=1
- 
-# code to dump stack and other debug information, see core/dbg_dump.c
-#OPT_DBG_DUMP=1
 
 # record asserts in lua C code with dbg_dump_assert
-# requires OPT_DBG_DUMP
 #OPT_DBG_LUA_ASSERT=1
 
 #OPT_MD_DEBUG=1

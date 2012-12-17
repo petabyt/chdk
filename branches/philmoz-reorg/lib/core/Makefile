@@ -9,9 +9,9 @@ include $(topdir)makefile.inc
 
 CFLAGS+=$(CTHUMB) -DCHDK_MODULE_CODE
 
-OBJS = gui_batt.o gui_space.o gui_usb.o gui_mbox.o
-OBJS+= suba.o levent.o console.o gps_math.o
-OBJS+= usb_input.o usb_module.o usb_remote.o
+OBJS = gui_batt.o gui_space.o gui_usb.o gui_mbox.o gps.o modules.o
+OBJS+= suba.o levent.o console.o gps_math.o live_view.o ptp.o
+OBJS+= usb_input.o usb_module.o usb_remote.o histogram.o
 OBJS+= $(topdir)modules/exportlist.inc module_exportlist.o module_load.o
 
 all: libcore.a

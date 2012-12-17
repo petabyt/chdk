@@ -1,11 +1,9 @@
-#include "camera.h"
-#ifdef CAM_CHDK_PTP
+#include "camera_info.h"
 #include "stddef.h"
-
-#include "platform.h"
 #include "stdlib.h"
 #include "ptp.h"
 #include "core.h"
+#include "task.h"
 
 #include "live_view.h"
 static int buf_size=0;
@@ -20,7 +18,7 @@ static int handle_ptp(
                 int h, ptp_data *data, int opcode, int sess_id, int trans_id,
                 int param1, int param2, int param3, int param4, int param5);
 
-void init_chdk_ptp()
+static void init_chdk_ptp()
 {
   int r;
  
@@ -34,6 +32,11 @@ void init_chdk_ptp()
 
   ExitTask();
 }
+
+void init_chdk_ptp_task()
+{
+    CreateTask("InitCHDKPTP", 0x19, 0x200, init_chdk_ptp);
+};
 
 /*
 WARNING: it appears that on some vxworks cameras,
@@ -257,10 +260,8 @@ static int handle_ptp(
       ptp.num_param = 1;
 // TODO script_is_running should always be defined, just ret 0 if script disabled
       ptp.param1 = 0;
-#ifdef OPT_SCRIPTING
       ptp.param1 |= script_is_running()?PTP_CHDK_SCRIPT_STATUS_RUN:0;
       ptp.param1 |= (!script_msg_q_empty(&msg_q_out))?PTP_CHDK_SCRIPT_STATUS_MSG:0;
-#endif
       break;
     case PTP_CHDK_GetMemory:
       if ( param2 == 0 || param3 < 1 ) // null pointer or invalid size?
@@ -629,5 +630,3 @@ static int handle_ptp(
   
   return 1;
 }
-
-#endif // CAM_CHDK_PTP

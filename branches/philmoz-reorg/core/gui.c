@@ -18,9 +18,7 @@
 #include "raw.h"
 #include "modules.h"
 #include "levent.h"
-#ifdef OPT_SCRIPTING
-    #include "script.h"
-#endif
+#include "script.h"
 #ifdef CAM_HAS_GPS
 #include "gps.h"
 #endif
@@ -157,7 +155,6 @@ static CMenu remote_submenu = {0x86,LANG_MENU_REMOTE_PARAM_TITLE, NULL, remote_s
 
 //-------------------------------------------------------------------
 
-#ifdef OPT_SCRIPTING
 // Forward reference
 void gui_update_script_submenu();
 
@@ -265,8 +262,6 @@ void gui_update_script_submenu()
         script_submenu_items[p]=script_submenu_items_bottom[i];
     }
 }
-
-#endif
 
 //-------------------------------------------------------------------
 
@@ -790,12 +785,8 @@ static void gui_lua_native_call_warning(int arg)
 static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x35,LANG_MENU_MISC_FILE_BROWSER,          MENUITEM_PROC,                  gui_draw_fselect,                   0 ),
     MENU_ITEM   (0x80,(int)"Module Inspector",              MENUITEM_PROC,                  gui_menu_run_fltmodule, "modinsp.flt" ),
-#ifdef OPT_CALENDAR
     MENU_ITEM   (0x36,LANG_MENU_MISC_CALENDAR,              MENUITEM_PROC,                  gui_menu_run_fltmodule, "calend.flt" ),
-#endif
-#ifdef OPT_TEXTREADER
     MENU_ITEM   (0x37,LANG_MENU_MISC_TEXT_READER,           MENUITEM_SUBMENU,               &reader_submenu,                    0 ),
-#endif
 #if defined (OPT_GAMES)
     MENU_ITEM   (0x38,LANG_MENU_MISC_GAMES,                 MENUITEM_SUBMENU,               &games_submenu,                     0 ),
 #endif
@@ -1904,9 +1895,7 @@ static CMenuItem root_menu_items[] = {
 #endif
     MENU_ITEM   (0x25,LANG_MENU_MAIN_HISTO_PARAM,           MENUITEM_SUBMENU,   &histo_submenu, 0 ),
     MENU_ITEM   (0x26,LANG_MENU_MAIN_ZEBRA_PARAM,           MENUITEM_SUBMENU,   &zebra_submenu,     0 ),
-#ifdef OPT_SCRIPTING
     MENU_ITEM   (0x27,LANG_MENU_MAIN_SCRIPT_PARAM,          MENUITEM_SUBMENU,   &script_submenu,    0 ),
-#endif
     MENU_ITEM   (0x22,LANG_MENU_CHDK_SETTINGS,              MENUITEM_SUBMENU,   &chdk_settings_menu, 0 ),
     MENU_ITEM   (0x29,LANG_MENU_MAIN_MISC,                  MENUITEM_SUBMENU,   &misc_submenu,      0 ),
     MENU_ITEM   (0x2e,LANG_MENU_USER_MENU,  	    	    MENUITEM_SUBMENU,   &user_submenu, 0 ),
@@ -2321,12 +2310,10 @@ void gui_chdk_draw()
     gui_draw_osd();
 #endif
 
-#ifdef OPT_SCRIPTING
     if ((mode_get()&MODE_MASK) == MODE_REC || (mode_get()&MODE_MASK) == MODE_PLAY)
     {
         draw_txt_string(0, 14, script_title, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
     }
-#endif
 
     console_draw();
 }
@@ -2416,7 +2403,6 @@ static void sd_override(int direction)
 
 static int alt_mode_script_run()
 {
-#ifdef OPT_SCRIPTING
     int remote_script_start_ready = 0;
 
     // Start the current script if script_start is enabled, we are in <ALT> mode and there is a pulse longer than 100mSec on USB port
@@ -2430,7 +2416,6 @@ static int alt_mode_script_run()
         return 1;
     }
 
-#endif
     return 0;
 }
 
@@ -2487,13 +2472,11 @@ int gui_chdk_kbd_process()
         }
     }
 #endif
-#ifdef OPT_SCRIPTING                                    // ALT Set button processing if scripting enabled - open script menu
     else if (kbd_is_key_clicked(KEY_SET))
     {
         gui_menu_init(&script_submenu);
         gui_default_kbd_process_menu_btn();
     }
-#endif
 #if CAM_CAN_SD_OVERRIDE                                 // ALT button processing if camera has SD override
     else
     {

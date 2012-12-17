@@ -293,12 +293,12 @@ extern void _Restart(unsigned option);
 
 // boot an fir/fi2 file
 extern void _reboot_fw_update(const char* bootfile);
-#ifdef CAM_CHDK_PTP
+
+// PTP
 extern int _add_ptp_handler(int, void*, int);
 extern void _set_control_event(int);
 extern void _PB2Rec();
 extern void _Rec2PB();
-#endif
 
 #ifdef OPT_EXMEM_MALLOC
 // dryos + some vxworks only takes 3 params in reality

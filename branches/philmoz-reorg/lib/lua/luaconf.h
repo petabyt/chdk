@@ -719,7 +719,7 @@ union luai_Cast { double l_d; long l_l; };
 */
 
 #ifdef OPT_DBG_LUA_ASSERT
-#include "dbg_dump.h"
+void dbg_dump_assert(const char *dumpname, const char *expr,const char *file, int line);
 #define lua_assert(x) ((x)?(void)0:dbg_dump_assert("A/LUAASRT.DMP",#x,__FILE__,__LINE__))
 #endif
 

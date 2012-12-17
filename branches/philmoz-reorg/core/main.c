@@ -53,7 +53,7 @@ void dump_memory()
     if (fd) {
         long val0 = *((long*)(0|CAM_UNCACHED_BIT));
         write(fd, &val0, 4);
-        write(fd, (void*)4, MAXRAMADDR-3);   // MAXRAMADDR is last valid RAM location
+        write(fd, (void*)4, camera_info.maxramaddr-3);   // camera_info.maxramaddr is last valid RAM location
         close(fd);
     }
     vid_bitmap_refresh();
@@ -91,7 +91,18 @@ void core_spytask_can_start() {
     spytask_can_start = 1;
 }
 
-#ifdef OPT_SCRIPTING
+/*
+note, from tools/link-boot.ld
+    link_text_start = _start
+    link_data_start = link_text_end
+    link_bss_start = link_data_end
+    link_bss_end = _end
+*/
+extern long link_text_start;
+extern long link_data_start;
+extern long link_bss_start;
+extern long link_bss_end;
+
 // remote autostart
 void script_autostart()
 {
@@ -104,7 +115,6 @@ void script_autostart()
     // Switch to script mode and start the script running
     script_start_gui( 1 );
 }
-#endif
 
 void core_spytask()
 {
@@ -113,6 +123,10 @@ void core_spytask()
 
     // Init camera_info bits that can't be done statically
     camera_info.memisosize = MEMISOSIZE;
+    camera_info.text_start = (int)&link_text_start;
+    camera_info.data_start = (int)&link_data_start;
+    camera_info.bss_start = (int)&link_bss_start;
+    camera_info.bss_end = (int)&link_bss_end;
 
     raw_need_postprocess = 0;
 
@@ -151,14 +165,10 @@ void core_spytask()
     mkdir("A/CHDK/MODULES");
     mkdir("A/CHDK/MODULES/CFG");
     mkdir("A/CHDK/GRIDS");
-#ifdef OPT_CURVES
     mkdir("A/CHDK/CURVES");
-#endif
     mkdir("A/CHDK/DATA");
     mkdir("A/CHDK/LOGS");
-#ifdef OPT_EDGEOVERLAY
     mkdir("A/CHDK/EDGE");
-#endif
     auto_started = 0;
 
     // Calculate the value of get_tick_count() when the clock ticks over to the next second
@@ -174,7 +184,6 @@ void core_spytask()
     } while (t1 != t2);
     camera_info.tick_count_offset = camera_info.tick_count_offset % 1000;
 
-#ifdef OPT_SCRIPTING
     // remote autostart
     if (conf.script_startup==1)
     {
@@ -186,7 +195,6 @@ void core_spytask()
         conf_save();
         script_autostart();
     }
-#endif
 
     shooting_init();
 

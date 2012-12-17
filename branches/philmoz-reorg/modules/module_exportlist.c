@@ -40,7 +40,6 @@
 #include "lens.h"
 #include "action_stack.h"
 #include "console.h"
-#include "gps.h"
 
 #include "modules.h"
 #include "module_load.h"
@@ -188,6 +187,7 @@ extern long shutter_open_tick_count; // defined in platform/generic/capt_seq.c
             gui_osd_draw_ev_video,
 
             vid_get_bitmap_fb,
+            vid_bitmap_refresh,
             vid_get_viewport_fb,
             vid_get_viewport_fb_d,
             vid_get_viewport_live_fb,
@@ -270,8 +270,6 @@ extern long shutter_open_tick_count; // defined in platform/generic/capt_seq.c
 
             config_save,
             config_restore,
-
-            gps_getData,
 
     DoAFLock,
     GetJpgCount,

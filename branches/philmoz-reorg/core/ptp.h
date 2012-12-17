@@ -166,7 +166,6 @@ typedef int (*ptp_handler)(int, ptp_data*, int, int, int, int, int, int, int, in
 
 int add_ptp_handler(int opcode, ptp_handler handler, int unknown);
 
-void init_chdk_ptp();
 void init_chdk_ptp_task();
 
 typedef struct {

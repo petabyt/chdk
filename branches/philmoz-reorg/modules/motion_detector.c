@@ -29,7 +29,7 @@ Sity: Kharkiv
 #include "keyboard.h"
 #include "clock.h"
 #include "viewport.h"
-
+#include "debug_led.h"
 #include "gui.h"
 #include "gui_draw.h"
 
@@ -283,7 +283,7 @@ static void md_save_calls_history(){
 				"region: [%d,%d-%d,%d], region type: %d\r\n"
 				"wait interval: %d, parameters: %d, calls: %d, detected cells: %d\r\n", 
 				1900+ttm->tm_year, ttm->tm_mon+1, ttm->tm_mday, ttm->tm_hour, ttm->tm_min, ttm->tm_sec,
-				HDK_VERSION, BUILD_NUMBER, __DATE__, __TIME__, PLATFORM, PLATFORMSUB,
+				camera_info.chdk_ver, camera_info.build_number, camera_info.build_date, camera_info.build_time, camera_info.platform, camera_info.platformsub,
 				motion_detector->columns, motion_detector->rows, motion_detector->threshold, motion_detector->measure_interval, motion_detector->pixels_step,
 				motion_detector->clipping_region_column1, motion_detector->clipping_region_row1, motion_detector->clipping_region_column2, motion_detector->clipping_region_row2, motion_detector->clipping_region_mode,
 				motion_detector->msecs_before_trigger, motion_detector->parameters, motion_detector->comp_calls_cnt,

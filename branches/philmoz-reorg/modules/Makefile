@@ -95,7 +95,7 @@ sokoban.elf: gui_sokoban.o
 sudoku.elf: simple_game.o gui_sudoku.o
 
 ubasic.elf: ubasic.o $(topdir)lib/ubasic/libubasic.a
-lua.elf: luascript.o $(topdir)lib/lua/liblua.a
+lua.elf: luascript.o dbg_dump.o $(topdir)lib/lua/liblua.a
 
 clean:
 	rm -f *.o *.elf.syms *.elf *.flt

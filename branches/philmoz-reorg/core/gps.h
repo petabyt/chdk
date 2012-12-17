@@ -23,7 +23,6 @@ typedef struct {
     char    unknown2[260];
 } tGPS;
 
-extern void gps_getData(tGPS* gps);
 extern void gps_startup();
 extern void write_timezone();
 extern void write_home();
