@@ -19,6 +19,9 @@ extern float fabsf(float x);
 extern float scalbnf(float x, int n);
 extern float copysignf(float x, float y);
 */
+
+#define M_PI		3.14159265358979323846
+
 extern double log(double x);
 extern double log2(double x);
 extern double log10(double x);

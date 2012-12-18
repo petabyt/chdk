@@ -149,8 +149,12 @@
 
 #else
 
+#if defined(HDK_VERSION)
 // Set internal functions as 'short_call' to make CHDK module smaller
 #define LUA_API     __attribute__((short_call)) extern
+#else
+#define LUA_API     extern
+#endif
 
 #endif
 

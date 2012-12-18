@@ -265,6 +265,10 @@ extern long shutter_open_tick_count; // defined in platform/generic/capt_seq.c
 			patch_bad_pixel,
 			
 			pow,
+            sqrt,
+            log10,
+            log2,
+            log,
 
             module_tbox_load,
 

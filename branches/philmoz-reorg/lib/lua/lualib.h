@@ -30,6 +30,9 @@ LUALIB_API int (luaopen_string) (lua_State *L);
 #define LUA_MATHLIBNAME "math"
 LUALIB_API int (luaopen_math) (lua_State *L);
 
+#define LUA_IMATHLIBNAME "imath"
+LUALIB_API int (luaopen_imath) (lua_State *L);
+
 #define LUA_DBLIBNAME   "debug"
 LUALIB_API int (luaopen_debug) (lua_State *L);
 
