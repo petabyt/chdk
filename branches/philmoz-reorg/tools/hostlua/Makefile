@@ -8,7 +8,7 @@ include $(topdir)makefile.inc
 LUA_SRC=$(topdir)lib/lua
 CORE_SRC=$(topdir)modules
 
-HOSTCFLAGS+=-DHOST_LUA -DLUA_ANSI -I./include
+HOSTCFLAGS+=-DHOST_LUA -DLUA_ANSI -I./include -I$(CORE_SRC)
 
 %.o: $(CORE_SRC)/%.c
 	@echo $< \-\> $@
