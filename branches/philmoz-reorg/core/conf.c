@@ -770,7 +770,7 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
     int fd, rcnt, i;
     unsigned short id, size;
     char *buf;
-    int offs, old_ver;
+    int offs;
     struct stat st;
 
     config_load_defaults(confinfo, conf_num, info_func);

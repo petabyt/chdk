@@ -2109,7 +2109,7 @@ NOTES
 */
 static int luaCB_get_meminfo( lua_State* L ) {
     // for memory info, duplicated from lowlevel
-    extern const char _start,_end;
+    extern const char _start;
 
     const char *default_heapname = (camera_info.exmem)?"exmem":"system";
     const char *heapname = luaL_optstring( L, 1, default_heapname );
@@ -2160,10 +2160,10 @@ static int luaCB_set_yield( lua_State* L )
   return 2;
 }
 
-static void register_func( lua_State* L, const char *name, void *func) {
-  lua_pushcfunction( L, func );
-  lua_setglobal( L, name );
-}
+//static void register_func( lua_State* L, const char *name, void *func) {
+//  lua_pushcfunction( L, func );
+//  lua_setglobal( L, name );
+//}
 
 #define FUNC( X ) { #X,	luaCB_##X },
 static const luaL_Reg chdk_funcs[] = {

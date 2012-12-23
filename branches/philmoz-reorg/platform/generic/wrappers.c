@@ -1423,7 +1423,9 @@ void change_ext_to_default(void){
 #endif
 
 
+#if !CAM_DRYOS
 static long drv_struct[16];
+#endif
 
 long dh_err()
 {

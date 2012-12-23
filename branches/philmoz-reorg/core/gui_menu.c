@@ -743,9 +743,8 @@ int gui_menu_kbd_process() {
 
 //-------------------------------------------------------------------
 // Draw menu scroll bar if needed, and title bar
-void gui_menu_draw_initial() { 
-    color cl = BG_COLOR(conf.menu_title_color);
-
+void gui_menu_draw_initial()
+{ 
     count = gui_menu_rows();
 
     if (count > num_lines)

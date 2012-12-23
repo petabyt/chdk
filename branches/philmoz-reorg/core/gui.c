@@ -2301,8 +2301,6 @@ static void gui_draw_alt_helper()
 //-------------------------------------------------------------------
 void gui_chdk_draw()
 {
-    static int show_md_grid=0;
-
 #ifdef CAM_DISP_ALT_TEXT
     gui_draw_alt_helper();
     draw_string(((CAM_SCREEN_WIDTH/2)-(FONT_WIDTH*5/2)), (CAM_SCREEN_HEIGHT-FONT_HEIGHT), "<ALT>", MAKE_COLOR(COLOR_RED, COLOR_WHITE));

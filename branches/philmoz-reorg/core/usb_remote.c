@@ -241,7 +241,6 @@ void usb_remote_status_led(int state)
 void _wait_until_remote_button_is_released(void)
 {
 	int tick;
-	long x;
 
 	if (	( conf.remote_enable )				// menu : USB remote enabled - bracket everything in this function
 		&&	( conf.synch_enable  )				// menu : Sync enabled - tells us to wait for USB to disconnect
@@ -403,7 +402,6 @@ extern void (*usb_module_video[])( ) ;
 int handle_usb_remote()
 {
 	static int rmt_state = RMT_DISABLED ;
-	unsigned int m1 ;
 
     if(conf.remote_enable)
 	{

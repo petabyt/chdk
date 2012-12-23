@@ -205,10 +205,6 @@ void gps_get_data(){
 	int nm=1;
 	unsigned long t;
 	static struct tm *ttm;
-
-	char buf[100];
-	char anz1[40];
-	char anz2[40];
 	
 	while ( nm==1 )
 	{
@@ -364,7 +360,6 @@ void test_timezone(){
 
 	if ((int)conf.gps_on_off ==0) {return; }
 
-	char vBuf[512];
 	char text[2][30];
 	char home_name[30];
 	int zeitzone_1, zeitzone_2;
@@ -568,7 +563,6 @@ void anzeige_track(){
 		int o_x1=315;
 		int o_y1=0;
 		int nmm=0;
-		int zp=1;
 
 		int f_v_0;
 		int f_h_0;
@@ -689,15 +683,12 @@ void gpx_bild_ohne_signal(){
 	char w1[20];
 	char w2[30];
 	char w3[10];
-	int c;
 	int o=1, p=1, q=0;
 	int blo=0;
 	unsigned long bat;
 	int abbruch=0;
 	Taste_Funktion=1;
 	Taste_Taste=11;
-
-	int zoom=0;
 	
 	while ( zeit_bis_ende !=0 )
 	{
@@ -1307,9 +1298,6 @@ void gps_navigate_home(){
 
 	if ((int)conf.gps_on_off ==0) {return; }
 
-	char lat[40];
-	char lon[40];
-	char vBuf[512];
 	char text[2][30];
 	char home_name[30];
 	char * succ;
@@ -1426,7 +1414,6 @@ double gps_kurswinkel(int zaehler){
 		angle1=(int)winkel;
 		char anz1[40];
 		char anz2[40];
-		char anz3[40];
 		char bild[9];
 
 	if (gui_get_mode()==GUI_MODE_NONE)
@@ -1498,9 +1485,7 @@ void anzeige_kompass(){
 	char *bitmap;
 	char *bitmap1;
 
-	double winkel=0;
 	double gwinkel=0;
-	double bwinkel=0;
 	double w=0.0;
 	double c_w;
 	double s_w;
@@ -1508,8 +1493,6 @@ void anzeige_kompass(){
 	int rr=0;
 	int n=0;
 	int zaehler=0;
-	int mx=0;
-	int my=0;
 	int m=0;
 	int alter_winkel=0;
 
@@ -1517,7 +1500,6 @@ void anzeige_kompass(){
 	int m_x = offset_x + 31;
 	int offset_y = 150;		//128
 	int m_y = offset_y + 31;
-	int b_b = BITMAP_WIDTH;
 
 	int f_v_0=COLOR_GPS_TRANSPARENT;
 	int f_h_0=COLOR_GPS_TRANSPARENT;

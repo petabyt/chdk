@@ -370,8 +370,6 @@ int gui_fselect_find_start_dir(const char* dir)
 //-------------------------------------------------------------------
 void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, void (*on_select)(const char *fn))
 {
-    int i;
-
     int chars_width = NAME_FONT_SIZE + SIZE_FONT_SIZE + TIME_FONT_SIZE;
     main_w = SPACING/*N*/+SPACING+TAB_DIVIDER+SPACING/*S*/+SPACING+TAB_DIVIDER+SPACING/*T*/+SPACING+SCROLLBAR+chars_width;
     main_h = HEAD_FONT_LINES + TAB_DIVIDER + BODY_FONT_LINES + TAB_DIVIDER + FOOT_FONT_LINES;
@@ -424,7 +422,6 @@ void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, 
 //-------------------------------------------------------------------
 void gui_fselect_draw_initial() {
     int title_font_size;
-    int i;
 
     draw_filled_rect(head_x, head_y, head_x+head_w-1, head_y+head_h-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK)); //header box
     title_font_size = strlen(fselect_title) * FONT_WIDTH;
@@ -835,7 +832,6 @@ static void fselect_marked_paste_cb(unsigned int btn) {
     struct fitem  *ptr;
     int ss, sd = 0, fsrc, fdst, i=0;
     register int *buf;
-    unsigned char fend;
     static struct utimbuf t;
 
     if (btn != MBOX_BTN_YES) return;
@@ -903,7 +899,6 @@ static inline unsigned int fselect_real_marked_count() {
 }
 //-------------------------------------------------------------------
 static unsigned int fselect_marked_count() {
-    struct fitem  *ptr;
     register unsigned int cnt=fselect_real_marked_count();
 
     if (!cnt) {
@@ -947,9 +942,8 @@ static void fselect_marked_delete_cb(unsigned int btn) {
 
 //-------------------------------------------------------------------
 static void fselect_chdk_replace_cb(unsigned int btn) {
-    int ss, sd = 0, fsrc, fdst, i=0;
+    int ss, sd = 0, fsrc, fdst;
     register int *buf;
-    unsigned char fend;
     static struct utimbuf t;
 
     if (btn != MBOX_BTN_YES) return;

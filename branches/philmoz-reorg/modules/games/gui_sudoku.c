@@ -202,7 +202,7 @@ void draw_menu()
 
 void draw_field()
 {
-	int i, x, y, number;
+	int i, x, y;
 	static char str[16];
 
 	//redraw last field to remove the marker
@@ -800,7 +800,6 @@ int sudoku_new(void)
 void sudoku_menu_execute()
 {
 	int y, x;
-	static char str[16];
 	switch (menuPos)
 	{
 		case 0:	//check Sudoku

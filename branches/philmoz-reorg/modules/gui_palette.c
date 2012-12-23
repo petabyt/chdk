@@ -75,7 +75,6 @@ int gui_palette_kbd_process() {
 
 void gui_palette_draw() {
     unsigned int x, y, xl, xr;
-    char f=0;
     color c;
     static char buf[64];
 

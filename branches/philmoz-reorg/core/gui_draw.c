@@ -154,8 +154,6 @@ static coord xMin, yMin, xMax, yMax;
 
 static void draw_rectangle(coord x1, coord y1, coord x2, coord y2, color cl, int round) 
 {
-    register coord y;
-
     // Normalise values
     if (x1>x2) {
     	xMax=x1; xMin=x2;
@@ -223,7 +221,7 @@ void draw_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int
 //-------------------------------------------------------------------
 static void fill_rect(color cl)
 {
-    register coord x, y;
+    register coord y;
 
     // Check if completely off screen
     if ((xMax < 0) || (yMax < 0) || (xMin >= camera_screen.width) || (yMin >= camera_screen.height))

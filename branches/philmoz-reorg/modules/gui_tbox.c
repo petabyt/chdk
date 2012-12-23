@@ -24,8 +24,6 @@ static int module_idx = -1;
 
 static int gui_tbox_redraw;
 static char text_limit_reached;
-static int vkbd_txtfield_width=200;
-static int vkbd_txtfield_height=75;
 static unsigned int tbox_width; //width of the 'window'
 
 static const char*  tbox_title;
@@ -267,7 +265,6 @@ void gui_tbox_draw()
             color cl;
 
             // clean previous symbols line
-            int pline = (line == 0)?lines:line-1;
             draw_filled_rect(key_offset_x, tbox_buttons_y, key_offset_x+(tbox_width-1)*FONT_WIDTH, tbox_buttons_y+3*FONT_HEIGHT, MAKE_COLOR(COLOR_GREY, COLOR_GREY));
 
             // draw current symbols line

@@ -446,8 +446,7 @@ int rbf_draw_string_right_len(int x, int y, int len, const char *str, color cl) 
 
 //-------------------------------------------------------------------
 int rbf_draw_menu_header(int x, int y, int len, char symbol, const char *str, color cl) { 
-    int l=0, strLen=0, i, ll, lr;
-    const char *s=str; 
+    int l=0, i, ll, lr;
 
     // If symbol to be added to string determing the width of the symbol + space
     if (symbol!=0x0 && conf.menu_symbol_enable && rbf_font_height()>=rbf_symbol_height()) {

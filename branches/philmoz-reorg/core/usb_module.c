@@ -515,8 +515,6 @@ void usb_shoot_module_bracketing()
 
 	current_time = get_tick_count() ;
 
-	static long usb_remote_stack_name = -1;
-
 	switch( logic_module_state )
 	{
 		case LM_RESET :

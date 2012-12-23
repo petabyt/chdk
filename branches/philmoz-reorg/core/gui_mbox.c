@@ -111,7 +111,6 @@ void gui_mbox_draw() {
         const char *p=mbox_msg;
         coord x=0, y=0, d;
         unsigned int w, h=0, l=0, bw=(mbox_buttons_num*BUTTON_SIZE*FONT_WIDTH+(mbox_buttons_num-1)*BUTTON_SEP);
-        color cl_t =((mode_get()&MODE_MASK) == MODE_PLAY)?MAKE_COLOR(0xAA, COLOR_WHITE):MAKE_COLOR(0xDF, COLOR_WHITE);
 
         w =strlen(mbox_title);
         if (w > MAX_WIDTH) w = MAX_WIDTH;

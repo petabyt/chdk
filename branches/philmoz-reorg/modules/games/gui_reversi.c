@@ -281,11 +281,9 @@ static void Clk(uchar x, uchar y) {
 
 //-------------------------------------------------------------------
 static void Timer() {
-    uchar PPP;
- 
     if ((InGame) & (CurrPlayer==Computer || Computer==COMPUTER_ONLY)) {
         if (CanPlace(CurrPlayer)) {
-            PPP=ComputerPlace(CurrPlayer);
+            ComputerPlace(CurrPlayer);
             //xPos = PPP >> 4; yPos = PPP & 0x0F;
             NumPl1=GetNum(FIELD_PLAYER1);
             NumPl2=GetNum(FIELD_PLAYER2);

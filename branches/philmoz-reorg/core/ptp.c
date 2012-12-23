@@ -424,7 +424,7 @@ static int handle_ptp(
     case PTP_CHDK_DownloadFile:
       {
         FILE *f;
-        int tmp,t,s,r,fn_len;
+        int tmp,t,s,r;
         char *buf, *fn;
 
         if ( temp_data_kind != 1 )

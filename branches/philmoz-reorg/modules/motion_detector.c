@@ -549,7 +549,7 @@ int md_get_cell_diff(int column, int row){
 void md_draw_grid(){
     int x_step, y_step, col, row;
     int xoffset, yoffset;
-    int do_draw_rect, i, tmp2, in_clipping_region, color, col_start, col_stop, row_start, row_stop;
+    int do_draw_rect, i, tmp2, in_clipping_region, color;
 
     if(!md_running() || motion_detector->draw_grid==0){
         return ;

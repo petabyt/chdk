@@ -239,7 +239,7 @@ static const char * shooting_get_av_bracket_value()
 
 void gui_osd_draw_state()
 {
-    int a,  gui_mode=gui_get_mode();
+    int gui_mode=gui_get_mode();
     long t; 
 
     n=0;
@@ -644,9 +644,9 @@ void gui_osd_draw_ev_video(int visible)
 static int kbd_use_up_down_left_right_as_fast_switch()
 {
     static long key_pressed = 0;
-    int m=mode_get(); 
+    int m = mode_get(); 
     int mode_video = (MODE_IS_VIDEO(m) || is_video_recording());
-    int ev_video=0;
+    int ev_video = 0;
     int jogdial;
 
 #if CAM_EV_IN_VIDEO
@@ -986,9 +986,9 @@ extern int debug_tasklist_start;
 #define TASKLIST_MAX_LINES 12 // probably as much as will fit on screen
 #define TASKLIST_NUM_TASKS 64 // should be enough ?
 
+#ifndef CAM_DRYOS
 static void gui_debug_draw_tasklist(void)
 {
-#ifndef CAM_DRYOS
     int tasklist[TASKLIST_NUM_TASKS]; // max number of tasks we will look at
     int n_tasks,n_show_tasks,show_start;
     const char *name;
@@ -1017,8 +1017,8 @@ static void gui_debug_draw_tasklist(void)
         sprintf(osd_buf,"%10s %8X",name,tasklist[show_start+i]);
         draw_string(64,16+16*i,osd_buf, conf.osd_color);
     }
-#endif //CAM_DRYOS
 }
+#endif //CAM_DRYOS
 
 #endif
 
@@ -1167,6 +1167,7 @@ void gui_draw_debug_vals_osd()
 }
 
 // Update displayed debug page for tasks/props/params
+#ifdef OPT_DEBUGGING
 void gui_update_debug_page()
 {
 #ifndef CAM_DRYOS
@@ -1185,6 +1186,7 @@ void gui_update_debug_page()
             conf.debug_propcase_page = 0;
     }
 }
+#endif
 
 //-------------------------------------------------------------------
 // void gui_draw_osd()

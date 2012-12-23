@@ -209,7 +209,7 @@ int raw_merge_start(int action){
 }
 
 int raw_merge_add_file(const char * filename) {
-  int  t,src,i,j,nrow;
+  int  src,i,j,nrow;
   FILE *fbrawin=NULL,*fbrawout,*fcraw;
   struct stat st;
 
