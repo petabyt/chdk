@@ -51,7 +51,6 @@
 
     #undef  CAM_MARKET_ISO_BASE
     #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value
-    #undef  CAM_HAS_HI_ISO_AUTO_MODE                // Camera does not have HI Auto ISO mode
     #define CAM_ISO_LIMIT_IN_HQ_BURST           930 // Defines max ISO override value for HQ Burst mode (higher values crash camera)
     #define CAM_MIN_ISO_OVERRIDE                70  // Defines min (non-zero) ISO override value - lower value may crash if flash used [0 = AUTO, so always allowed]
 

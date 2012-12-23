@@ -116,7 +116,6 @@
 	
 	// Not sure values
 	//
-	//#undef CAM_CHDK_PTP
 	//#undef  CAM_USE_ZOOM_FOR_MF
 	//#define	CAM_AF_SCAN_DURING_VIDEO_RECORD	1
 	//#undef	CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO

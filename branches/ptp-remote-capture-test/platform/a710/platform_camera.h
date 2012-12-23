@@ -25,6 +25,8 @@
     #define CAM_RAW_ROWPIX                  3152    // for 7 MP
     #define CAM_RAW_ROWS                    2340    // for 7 MP
 
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1
+
     #define CAM_MULTIPART                   1
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1

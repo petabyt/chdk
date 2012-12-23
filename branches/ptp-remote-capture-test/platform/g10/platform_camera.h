@@ -28,6 +28,7 @@
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_HAS_ND_FILTER               1
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1
  
     #undef  CAM_EMUL_KEYPRESS_DURATION
     #define CAM_EMUL_KEYPRESS_DURATION      10

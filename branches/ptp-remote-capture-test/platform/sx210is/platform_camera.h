@@ -49,7 +49,6 @@
 
     #undef  CAM_UNCACHED_BIT  // shut up compiler
     #define CAM_UNCACHED_BIT    0x40000000
-    #define DNG_SUPPORT                 1
     // pattern
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
     // color
@@ -94,6 +93,13 @@
 
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION  1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
+
+    #undef CAM_BITMAP_WIDTH
+    #define CAM_BITMAP_WIDTH 960
+    #undef CAM_BITMAP_HEIGHT
+    #define CAM_BITMAP_HEIGHT 270
+    #undef CAM_SCREEN_WIDTH
+    #define CAM_SCREEN_WIDTH 480
 
     #undef EDGE_HMARGIN
     #define EDGE_HMARGIN 10			//10 fits video mode of sx210

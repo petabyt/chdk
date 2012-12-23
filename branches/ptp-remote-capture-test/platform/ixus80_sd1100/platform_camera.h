@@ -32,6 +32,7 @@
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES
+    #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     // TODO / test
     #undef  CAM_REMOTE

@@ -37,7 +37,7 @@ static int          count;
 static int          x, y;
 static int          w, wplus, num_lines;
 static int          len_bool, len_int, len_enum, len_space, len_br1, len_br2, cl_rect;
-static int          int_incr;
+static int          int_incr = 1;
 static unsigned char *item_color;
 
 //-------------------------------------------------------------------

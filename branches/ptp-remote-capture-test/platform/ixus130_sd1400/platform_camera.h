@@ -49,7 +49,6 @@
 
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY      1
-    #define DNG_SUPPORT                 1
 
     #define CAM_EXT_TV_RANGE            1
 
@@ -101,7 +100,6 @@
     #define CAM_JPEG_HEIGHT             3240
     // camera name
     #define PARAM_CAMERA_NAME           4			// parameter number for GetParameterData sd990: OK
-    #define CAM_CHDK_PTP                1
     #define CAM_DATE_FOLDER_NAMING      1
 
    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1  
