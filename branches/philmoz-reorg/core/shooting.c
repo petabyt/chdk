@@ -266,7 +266,7 @@ int shooting_get_luminance()// http://en.wikipedia.org/wiki/APEX_system
 
 // Index of '0' entry in the tv_override array (1 sec) (see gui.c for tv_override array)
 #if CAM_EXT_TV_RANGE
-#define tv_override_zero_shift  18+15
+#define tv_override_zero_shift  (18+15)
 #else
 #define tv_override_zero_shift  18
 #endif
