@@ -220,7 +220,7 @@ void usb_shoot_module_normal()
 						switch ( switch_type)
 						{
 							case SW_ONE_PRESS :
-								usb_remote_stack_name = action_stack_create(&action_stack_standard,AS_SHOOT);
+								usb_remote_stack_name = action_stack_create(&action_stack_AS_SHOOT);
 								usb_sync_wait = 1;
 								logic_module_state = LM_HALF_PRESS ;
 								break ;
@@ -363,7 +363,7 @@ void usb_shoot_module_normal()
 
 				case REMOTE_HALF_PRESS :
 				case REMOTE_FULL_PRESS:
-					usb_remote_stack_name = action_stack_create(&action_stack_standard,AS_SHOOT);
+					usb_remote_stack_name = action_stack_create(&action_stack_AS_SHOOT);
 					logic_module_state = LM_FULL_PRESS ;
 					break ;
 
@@ -413,7 +413,7 @@ void usb_shoot_module_burst()
 
 				case REMOTE_HALF_PRESS :
 				case REMOTE_FULL_PRESS:
-					usb_remote_stack_name = action_stack_create(&action_stack_standard,AS_SHOOT);
+					usb_remote_stack_name = action_stack_create(&action_stack_AS_SHOOT);
 					logic_module_state = LM_HALF_PRESS ;
 					break ;
 
@@ -472,7 +472,7 @@ void usb_shoot_module_zoom()
 
 				case ZOOM_SHOOT :
 					logic_module_state = LM_FULL_PRESS ;
-					usb_remote_stack_name = action_stack_create(&action_stack_standard,AS_SHOOT);
+					usb_remote_stack_name = action_stack_create(&action_stack_AS_SHOOT);
 					break ;
 
 				case ZOOM_FULL_OUT :

@@ -51,6 +51,7 @@
 #include "camera_info.h"
 #include "ubasic.h"
 #include "script.h"
+#include "script_key_funcs.h"
 #include "shot_histogram.h"
 #include "stdlib.h"
 #include "levent.h"
@@ -73,13 +74,14 @@
 #endif
 #include "action_stack.h"
 #include "tokenizer.h"
+#include "lang.h"
+#include "gui_lang.h"
 
 #include "conf.h"
 
 // Forward references
 int ubasic_get_variable(int varnum);
 void ubasic_set_variable(int varum, int value);
-int ubasic_finished(void);
 
 #define INCLUDE_OLD_GET__SYNTAX
 
@@ -300,7 +302,7 @@ factor(void)
     break;
   case TOKENIZER_SCRIPT_AUTOSTARTED:
     accept(TOKENIZER_SCRIPT_AUTOSTARTED);
-    r = camera_get_script_autostart();
+    r = camera_info.state.auto_started;
     break;
   case TOKENIZER_GET_SCRIPT_AUTOSTART:
     accept(TOKENIZER_GET_SCRIPT_AUTOSTART);
@@ -832,7 +834,7 @@ print_statement(void)
       sprintf(buf+strlen(buf), "%d", expr());
     }
   } while(tokenizer_token() != TOKENIZER_CR && tokenizer_token() != TOKENIZER_ENDOFINPUT && tokenizer_token() != TOKENIZER_ELSE);
-  script_console_add_line(buf);
+  script_console_add_line((long)buf);
   DEBUG_PRINTF("End of print\n");
   accept_cr();
 }
@@ -1521,7 +1523,7 @@ static void
 shoot_statement(void)
 {
   accept(TOKENIZER_SHOOT);
-  action_push(AS_SHOOT);
+  action_push_func(action_stack_AS_SHOOT);
   flag_yield=1;
   DEBUG_PRINTF("End of shoot\n");
   accept_cr();
@@ -1861,119 +1863,94 @@ static void md_get_cell_diff_statement()
 
 static void md_detect_motion_statement()
 {
-
- int columns;
- int rows;
- int pixel_measure_mode;
- int detection_timeout;
- int measure_interval;
- int threshold;
- int draw_grid=0;
- int clipping_region_mode=0;
- int clipping_region_row1=0;
- int clipping_region_column1=0;
- int clipping_region_row2=0;
- int clipping_region_column2=0;
- int parameters=0;
- int pixels_step=1;
- int msecs_before_trigger=0;
-
- //static char buf[128];
+    int columns;
+    int rows;
+    int pixel_measure_mode;
+    int detection_timeout;
+    int measure_interval;
+    int threshold;
+    int draw_grid=0;
+    int clipping_region_mode=0;
+    int clipping_region_row1=0;
+    int clipping_region_column1=0;
+    int clipping_region_row2=0;
+    int clipping_region_column2=0;
+    int parameters=0;
+    int pixels_step=1;
+    int msecs_before_trigger=0;
 
     accept(TOKENIZER_MD_DETECT_MOTION);
 
-//		sprintf(buf,"token: %d",tokenizer_token()); script_console_add_line(buf);
-		columns=expr();tokenizer_next();
+    columns=expr();tokenizer_next();
 
-//		sprintf(buf,"tk: %d",tokenizer_token()); script_console_add_line(buf);
-		rows=expr();tokenizer_next();
+    rows=expr();tokenizer_next();
 
-//		sprintf(buf,"tk %d",tokenizer_token()); script_console_add_line(buf);
-		pixel_measure_mode=expr();tokenizer_next();
+    pixel_measure_mode=expr();tokenizer_next();
 
-		detection_timeout=expr();tokenizer_next();
+    detection_timeout=expr();tokenizer_next();
 
-//		printf("token: %d",tokenizer_token());
-		measure_interval=expr();tokenizer_next();
+    measure_interval=expr();tokenizer_next();
 
-//		printf("token: %d",tokenizer_token());
-		threshold=expr();tokenizer_next();
+    threshold=expr();tokenizer_next();
 
-//		printf("token: %d",tokenizer_token());
-		draw_grid=expr();tokenizer_next();
+    draw_grid=expr();tokenizer_next();
 
-//		printf("token: %d",tokenizer_token());
-        ubasic_md_ret_var_num = tokenizer_variable_num();
-
-//		printf("%d,%d,%d,%d",columns,rows,pixel_measure_mode, detection_timeout);
+    ubasic_md_ret_var_num = tokenizer_variable_num();
 
     accept(TOKENIZER_VARIABLE);
 
+    if (tokenizer_token() != TOKENIZER_CR && tokenizer_token() != TOKENIZER_ELSE) {
+        // eat COMA	
+        //			tokenizer_next();
+    }
 
     if (tokenizer_token() != TOKENIZER_CR && tokenizer_token() != TOKENIZER_ELSE) {
-			// eat COMA	
-//			tokenizer_next();
-		}
-
-
-		
-    if (tokenizer_token() != TOKENIZER_CR && tokenizer_token() != TOKENIZER_ELSE) {
-				tokenizer_next();
+        tokenizer_next();
         clipping_region_mode = expr();
     }
     if (tokenizer_token() != TOKENIZER_CR && tokenizer_token() != TOKENIZER_ELSE ) {
-				tokenizer_next();
+        tokenizer_next();
         clipping_region_column1 = expr();
     }
     if (tokenizer_token() != TOKENIZER_CR && tokenizer_token() != TOKENIZER_ELSE ) {
-				tokenizer_next();
+        tokenizer_next();
         clipping_region_row1 = expr();
     }
     if (tokenizer_token() != TOKENIZER_CR && tokenizer_token() != TOKENIZER_ELSE ) {
-				tokenizer_next();
+        tokenizer_next();
         clipping_region_column2 = expr();
     }
     if (tokenizer_token() != TOKENIZER_CR && tokenizer_token() != TOKENIZER_ELSE ) {
-				tokenizer_next();
+        tokenizer_next();
         clipping_region_row2 = expr();
     }
     if (tokenizer_token() != TOKENIZER_CR && tokenizer_token() != TOKENIZER_ELSE ) {
-				tokenizer_next();
+        tokenizer_next();
         parameters = expr();
     }
     if (tokenizer_token() != TOKENIZER_CR && tokenizer_token() != TOKENIZER_ELSE ) {
-				tokenizer_next();
+        tokenizer_next();
         pixels_step = expr();
     }
 
     if (tokenizer_token() != TOKENIZER_CR && tokenizer_token() != TOKENIZER_ELSE ) {
-				tokenizer_next();
+        tokenizer_next();
         msecs_before_trigger = expr();
     }
-			
 
     accept_cr();
 
-//		sprintf(buf,"[%dx%d] md:%d tmout:%d", columns, rows, pixel_measure_mode, detection_timeout);
-//		script_console_add_line(buf);
-
-//		sprintf(buf,"int:%d trsh:%d g:%d vr:%d", measure_interval, threshold, draw_grid, ret_var_num);
-//		script_console_add_line(buf);
-
-//		sprintf(buf,"clip %d [%d,%d][%d,%d]", clipping_region_mode, clipping_region_column1, clipping_region_row1, clipping_region_column2,clipping_region_row2);
-//		script_console_add_line(buf);
-	
-	struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
+    struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
 
     if (libmotiondetect)
         libmotiondetect->md_init_motion_detector(
-			columns, rows, pixel_measure_mode, detection_timeout, 
-			measure_interval, threshold, draw_grid,
-			clipping_region_mode,
-			clipping_region_column1, clipping_region_row1,
-			clipping_region_column2, clipping_region_row2,
-			parameters, pixels_step, msecs_before_trigger
-    	);
+        columns, rows, pixel_measure_mode, detection_timeout, 
+        measure_interval, threshold, draw_grid,
+        clipping_region_mode,
+        clipping_region_column1, clipping_region_row1,
+        clipping_region_column2, clipping_region_row2,
+        parameters, pixels_step, msecs_before_trigger
+        );
     flag_yield=1;
 }
 
@@ -2381,34 +2358,51 @@ line_statement(void)
   return;
 }
 /*---------------------------------------------------------------------------*/
-void
-ubasic_run(void)
+int ubasic_run(void)
 {
- unsigned start_tick = get_tick_count();
- unsigned lines = 0;
- flag_yield = 0;
+    unsigned start_tick = get_tick_count();
+    unsigned lines = 0;
+    flag_yield = 0;
 
- do
- {
-  if( ubasic_finished() ) {
-    DEBUG_PRINTF("uBASIC program finished\n");
-    return;
-  }
+    do
+    {
+        if ( ended || tokenizer_finished() )
+        {
+            DEBUG_PRINTF("uBASIC program finished\n");
+            if (ubasic_error)
+            {
+                // Generate error message
+                char buf[100];
+                const char *msg;
+                if (ubasic_error >= UBASIC_E_ENDMARK)
+                {
+                    msg = ubasic_errstrings[UBASIC_E_UNKNOWN_ERROR];
+                }
+                else
+                {
+                    msg = ubasic_errstrings[ubasic_error];
+                }
+                sprintf(buf, "uBASIC:%d %s ", ubasic_linenumber(), msg);
+                // Show error message
+                script_console_add_line((long)buf);
+                script_console_add_line(LANG_CONSOLE_TEXT_TERMINATED);
+                return SCRIPT_RUN_ERROR;
+            }
+            // Show 'Finished' message
+            script_console_add_line(LANG_CONSOLE_TEXT_FINISHED);
+            return SCRIPT_RUN_ENDED;
+        }
 
-  line_statement();
+        line_statement();
 
-  // Return control to CHDK only if external processing required  
-  if ( flag_yield )
-    return;
+        // Return control to CHDK only if external processing required  
+        if ( flag_yield )
+            return SCRIPT_RUN_RUNNING;
 
-  lines++;
- } while (lines < yield_max_lines && get_tick_count() - start_tick < yield_max_ms);
-}
-/*---------------------------------------------------------------------------*/
-int
-ubasic_finished(void)
-{
-  return ended || tokenizer_finished();
+        lines++;
+    } while (lines < yield_max_lines && get_tick_count() - start_tick < yield_max_ms);
+
+    return SCRIPT_RUN_RUNNING;
 }
 /*---------------------------------------------------------------------------*/
 void

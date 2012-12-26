@@ -105,6 +105,7 @@ _cam_screen camera_screen =
 #else
     0,
 #endif
+    CAM_MENU_BORDERWIDTH,
 };
 
 _cam_info camera_info =
@@ -188,6 +189,11 @@ _cam_info camera_info =
 #else
     0,
 #endif
+#if defined(CAM_HAS_ZOOM_LEVER)
+    1,
+#else
+    0,
+#endif
 #if defined(CAM_HAS_MANUAL_FOCUS)
     1,
 #else
@@ -200,6 +206,12 @@ _cam_info camera_info =
 #endif
 #if defined(REMOTE_SYNC_STATUS_LED)
     REMOTE_SYNC_STATUS_LED,
+#else
+    0,
+#endif
+    CAM_KEY_PRESS_DELAY, CAM_KEY_RELEASE_DELAY, 
+#if defined(CAM_KEY_CLICK_DELAY)
+    CAM_KEY_CLICK_DELAY,
 #else
     0,
 #endif

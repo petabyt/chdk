@@ -67,6 +67,7 @@ typedef struct
     int     edge_hmargin, ts_button_border;             // margin and touch-screen adjustment values
     int     zebra_nobuf, zebra_aspect_adjust;           // zebra feature settings
     int     has_variable_aspect;                        // zebra feature settings
+    int     menu_border_width;                          // Width of border on each side of CHDK menu
 } _cam_screen;
 
 extern _cam_screen camera_screen;
@@ -116,20 +117,23 @@ typedef struct
     char* build_date;
     char* build_time;
     char* os;
-    // Can CHDK can change exposure in video mode?
-    int cam_ev_in_video;
+    int cam_ev_in_video;            // Can CHDK can change exposure in video mode?
     int cam_has_nd_filter;
     int cam_has_iris_diaphragm;
-    int cam_has_video_button;
+    int cam_has_video_button, cam_has_zoom_lever;
     int cam_has_manual_focus;
     int cam_has_multipart;
     int cam_remote_sync_status_led;
+    int cam_key_press_delay, cam_key_release_delay, cam_key_click_delay;
     // Miscellaneous variables to record state information
     // Used to control communication between various tasks and modules
     struct
     {
         int edge_state_draw;        // Current state of overlay (Live/Frozen/Pano)
         int is_shutter_half_press;  // State of Shutter Half Press button
+        int auto_started;           // Set to 1 if script auto-started
+        int user_menu_has_changed;  // not saved to config file, used to tell code that file needs to be saved
+        int kbd_last_clicked;       // For scripts
     } state;
 } _cam_info;
 

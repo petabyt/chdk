@@ -169,7 +169,6 @@ void core_spytask()
     mkdir("A/CHDK/DATA");
     mkdir("A/CHDK/LOGS");
     mkdir("A/CHDK/EDGE");
-    auto_started = 0;
 
     // Calculate the value of get_tick_count() when the clock ticks over to the next second
     // Used to calculate the SubSecondTime value when saving DNG files.

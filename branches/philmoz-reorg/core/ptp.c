@@ -1,15 +1,17 @@
 #include "camera_info.h"
 #include "stddef.h"
 #include "stdlib.h"
+#include "keyboard.h"
 #include "ptp.h"
 #include "core.h"
 #include "task.h"
-
-#include "live_view.h"
-static int buf_size=0;
-
 #include "script.h"
 #include "action_stack.h"
+#include "live_view.h"
+#include "modules.h"
+
+static int buf_size=0;
+
 // process id for scripts, increments before each attempt to run script
 // does not handle wraparound
 static unsigned script_run_id; 
@@ -214,6 +216,22 @@ int ptp_script_write_error_msg(unsigned errtype, const char *err) {
     return 0;
   }
   return ptp_script_write_msg(msg);
+}
+
+// Load Lua module, parse PTP script and start execution if parse ok.
+static long script_start_ptp( char *script )
+{
+    module_script_lang_load(0);     // Force load of Lua module
+    if (libscriptapi)
+    {
+        if (libscriptapi->script_start(script,1))
+        {
+            kbd_set_block(1);
+            camera_info.state.auto_started = 0;
+            return script_stack_start();
+        }
+    }
+    return -1;
 }
 
 static int handle_ptp(

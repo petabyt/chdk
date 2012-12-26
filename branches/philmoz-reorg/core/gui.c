@@ -155,116 +155,6 @@ static CMenu remote_submenu = {0x86,LANG_MENU_REMOTE_PARAM_TITLE, NULL, remote_s
 
 //-------------------------------------------------------------------
 
-// Forward reference
-void gui_update_script_submenu();
-
-static const char* gui_script_param_set_enum(int change, int arg)
-{
-    static const char* modes[]={ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-
-    if (change != 0)
-    {
-        save_params_values(0);
-        gui_enum_value_change(&conf.script_param_set,change,sizeof(modes)/sizeof(modes[0]));
-
-        if ( !load_params_values(conf.script_file, conf.script_param_set) )
-			script_reset_to_default_params_values();
-        gui_update_script_submenu();
-    }
-
-    return modes[conf.script_param_set];
-}
-
-static void gui_load_script_selected(const char *fn) {
-    if (fn) {
-        save_params_values(0);
-        script_load(fn);
-	}
-}
-
-static void gui_load_script(int arg) {
-    module_fselect_init(LANG_STR_SELECT_SCRIPT_FILE, conf.script_file, "A/CHDK/SCRIPTS", gui_load_script_selected);
-}
-
-static void gui_load_script_default(int arg) {
-	script_reset_to_default_params_values();
-    gui_update_script_submenu();
-    save_params_values(1);
-}
-
-extern void add_script_to_user_menu( char * , char *);
-
-static void gui_add_script_to_user_menu(int arg) {
-    add_script_to_user_menu( conf.script_file ,  script_title );
-}
-
-static const char* gui_script_autostart_modes[]=            { "Off", "On", "Once"};
-
-static CMenuItem script_submenu_items_top[] = {
-    MENU_ITEM   (0x35,LANG_MENU_SCRIPT_LOAD,                MENUITEM_PROC,                      gui_load_script,            0 ),
-    MENU_ITEM   (0x5f,LANG_MENU_SCRIPT_DELAY,               MENUITEM_INT|MENUITEM_F_UNSIGNED,   &conf.script_shoot_delay,   0 ),
-    // remote autostart
-    MENU_ENUM2  (0x5f,LANG_MENU_SCRIPT_AUTOSTART,           &conf.script_startup,               gui_script_autostart_modes ),
-    MENU_ITEM   (0x5c,LANG_MENU_LUA_RESTART,                MENUITEM_BOOL,                      &conf.debug_lua_restart_on_error,   0 ),
-    MENU_ITEM   (0x35,LANG_MENU_USER_MENU_SCRIPT_ADD,       MENUITEM_PROC,                      gui_add_script_to_user_menu, 0 ),
-    MENU_ITEM   (0x5d,LANG_MENU_SCRIPT_DEFAULT_VAL,         MENUITEM_PROC,                      gui_load_script_default,    0 ),
-    MENU_ITEM   (0x5e,LANG_MENU_SCRIPT_PARAM_SET,           MENUITEM_ENUM,                      gui_script_param_set_enum,  0 ),
-    MENU_ITEM   (0x5c,LANG_MENU_SCRIPT_PARAM_SAVE,          MENUITEM_BOOL,                      &conf.script_param_save,    0 ),
-    MENU_ITEM   (0x0 ,(int)script_title,                    MENUITEM_SEPARATOR,                 0,                          0 ),
-};
-
-static CMenuItem script_submenu_items_bottom[] = {
-    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                        0,                          0 ),
-    {0}
-};
-
-static CMenuItem script_submenu_items[sizeof(script_submenu_items_top)/sizeof(script_submenu_items_top[0])+SCRIPT_NUM_PARAMS+
-                               sizeof(script_submenu_items_bottom)/sizeof(script_submenu_items_bottom[0])];
-
-static CMenu script_submenu = {0x27,LANG_MENU_SCRIPT_TITLE, NULL, script_submenu_items };
-
-void gui_update_script_submenu() 
-{
-    register int p=0, i;
-
-    for (i=0; i<sizeof(script_submenu_items_top)/sizeof(script_submenu_items_top[0]); ++p, ++i)
-    {
-        script_submenu_items[p]=script_submenu_items_top[i];
-    }
-    for (i=0; i<SCRIPT_NUM_PARAMS; ++i)
-    {
-        if (script_param_order[i])
-        {
-            int n = script_param_order[i]-1;
-
-            script_submenu_items[p].symbol = 0x0;
-            script_submenu_items[p].text = (int)script_params[n];
-            script_submenu_items[p].type = MENUITEM_INT;
-            script_submenu_items[p].value = &conf.script_vars[n];
-
-            if (script_range_values[n] != 0)
-            {
-                script_submenu_items[p].type = script_range_types[n];
-                script_submenu_items[p].arg = script_range_values[n];
-            }
-            else if (script_named_counts[n] != 0)
-            {
-                script_submenu_items[p].type = MENUITEM_ENUM2;
-                script_submenu_items[p].opt_len = script_named_counts[n];
-                script_submenu_items[p].arg = (int)script_named_values[n];
-            }
-
-            ++p;
-        }
-    }
-    for (i=0; i<sizeof(script_submenu_items_bottom)/sizeof(script_submenu_items_bottom[0]); ++p, ++i)
-    {
-        script_submenu_items[p]=script_submenu_items_bottom[i];
-    }
-}
-
-//-------------------------------------------------------------------
-
 static const char* gui_autoiso_shutter_modes[] =            { "Auto", "1/8s", "1/15s", "1/30s", "1/60s", "1/125s", "1/250s", "1/500s", "1/1000s" };
 static const int shutter1_values[]={0, 8, 15, 30, 60, 125, 250, 500, 1000 };
 
@@ -1886,6 +1776,8 @@ CMenu chdk_settings_menu = {0x20,LANG_MENU_CHDK_SETTINGS, NULL, chdk_settings_me
 
 //-------------------------------------------------------------------
 
+extern CMenu script_submenu;
+
 static CMenuItem root_menu_items[] = {
     MENU_ITEM   (0x21,LANG_MENU_OPERATION_PARAM,            MENUITEM_SUBMENU,   &operation_submenu, 0 ),
     MENU_ITEM   (0x23,LANG_MENU_VIDEO_PARAM,                MENUITEM_SUBMENU,   &video_submenu,     0 ),
@@ -2580,7 +2472,6 @@ void gui_redraw()
 {
     int flag_gui_enforce_redraw = 0;
 
-#ifdef CAM_DETECT_SCREEN_ERASE
     if (!draw_test_guard() && gui_get_mode())     // Attempt to detect screen erase in <Alt> mode, redraw if needed
     {
         draw_set_guard();
@@ -2589,7 +2480,6 @@ void gui_redraw()
         redraw_buttons = 1;
 #endif
     }
-#endif
 
     gui_handle_splash();
 
@@ -2687,9 +2577,6 @@ void gui_activate_alt_mode()
 
     case ALT_MODE_LEAVE:
         conf_save_new_settings_if_changed();
-
-        if (libscriptapi)
-            libscriptapi->reset_error();
 
         rbf_set_codepage(FONT_CP_WIN);
         vid_turn_on_updates();

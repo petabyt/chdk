@@ -25,7 +25,6 @@ Conf conf = { MAKE_API_VERSION(2,2) };
 
 int state_shooting_progress = SHOOTING_PROGRESS_NONE;
 int state_save_raw_nth_only;
-int auto_started;
 
 // reyalp: putting these in conf, since the conf values are lookups for them
 // prefixes and extentions available for raw images (index with conf.raw_prefix etc)
@@ -54,19 +53,6 @@ void camera_set_nr(int mode)
     // "Auto", "Off", "On"
     conf.raw_nr = mode;
 }
-int camera_get_script_autostart()
-{   
-    // 1 = Autostarted
-    return auto_started;
-}
-
-
-void camera_set_script_autostart(int state)
-{   
-    // 1 = Autostarted
-    auto_started = state;
-}
-
 
 int camera_get_nr()
 {
@@ -1018,13 +1004,13 @@ static Conf old_conf;
 
 void conf_store_old_settings()
 {
-    conf.user_menu_has_changed = 0;
+    camera_info.state.user_menu_has_changed = 0;
     old_conf = conf;
 }
 
 int conf_save_new_settings_if_changed()
 {
-    if (conf.user_menu_has_changed || (memcmp(&old_conf, &conf, sizeof(Conf)) != 0))
+    if (camera_info.state.user_menu_has_changed || (memcmp(&old_conf, &conf, sizeof(Conf)) != 0))
     {
 		user_menu_save();
         conf_save();

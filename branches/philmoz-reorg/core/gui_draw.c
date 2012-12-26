@@ -28,7 +28,6 @@ void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl))
 }
 
 //-------------------------------------------------------------------
-#ifdef CAM_DETECT_SCREEN_ERASE
 
 #define GUARD_VAL   SCREEN_COLOR
 
@@ -53,8 +52,6 @@ int draw_test_pixel(coord x, coord y, color c)
            (frame_buffer[1][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)] == c);
 }
 
-#endif
-
 //-------------------------------------------------------------------
 void draw_init()
 {
@@ -62,8 +59,18 @@ void draw_init()
     frame_buffer[1] = frame_buffer[0] + camera_screen.buffer_size;
     draw_set_draw_proc(NULL);
 
-#ifdef CAM_DETECT_SCREEN_ERASE
     draw_set_guard();
+}
+
+// Restore CANON_OSD
+//-------------------------------------------------------------------
+void draw_restore()
+{
+    vid_bitmap_refresh();
+
+    draw_set_guard();
+#ifdef CAM_TOUCHSCREEN_UI
+    redraw_buttons = 1;
 #endif
 }
 
@@ -71,11 +78,7 @@ void draw_init()
 void draw_pixel(coord x, coord y, color cl)
 {
     // Make sure pixel is on screen. Skip top left pixel if screen erase detection is on to avoid triggering the detector.
-#ifdef CAM_DETECT_SCREEN_ERASE
     if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height) || ((x == 0) && (y == 0))) return;
-#else
-    if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return;
-#endif
     else
     {
         register unsigned int offset = y * camera_screen.buffer_width + ASPECT_XCORRECTION(x);
@@ -336,20 +339,6 @@ void draw_txt_string(coord col, coord row, const char *str, color cl)
 void draw_txt_char(coord col, coord row, const char ch, color cl)
 {
     draw_char(col*FONT_WIDTH, row*FONT_HEIGHT, ch, cl);
-}
-
-// Restore CANON_OSD
-//-------------------------------------------------------------------
-void draw_restore()
-{
-    vid_bitmap_refresh();
-
-#ifdef CAM_DETECT_SCREEN_ERASE
-    draw_set_guard();
-#ifdef CAM_TOUCHSCREEN_UI
-    redraw_buttons = 1;
-#endif
-#endif
 }
 
 //-------------------------------------------------------------------

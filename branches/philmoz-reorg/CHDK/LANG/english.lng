@@ -338,6 +338,8 @@
 
 258 "Enabling Lua Native Calls may allow\nscripts to damage your camera.\nIf you aren't sure\ndon't enable this.\n\nDo you want to enable Native Calls?"
 259 "Enable Lua Native Calls?"
+260 "*** TERMINATED ***"
+261 "*** Autostart ***"
 
 264 "Disable Overrides on Startup"
 

@@ -1,6 +1,7 @@
-#include "platform.h"
+#include "camera_info.h"
 #include "stdlib.h"
 #include "conf.h"
+#include "keyboard.h"
 #include "font.h"
 #include "lang.h"
 #include "gui.h"
@@ -52,7 +53,7 @@ void add_user_menu_item(CMenuItem curr_menu_item, int* cur_menu_item_indx)
             char buf[200];
             sprintf(buf,lang_str(LANG_USER_MENU_ITEM_ADDED), lang_str(curr_menu_item.text));
             gui_mbox_init(LANG_MENU_USER_MENU, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-            conf.user_menu_has_changed = 1;
+            camera_info.state.user_menu_has_changed = 1;
             return;
         }
     }
@@ -102,7 +103,7 @@ void add_script_to_user_menu( char * fname ,  char * title )
             char buf[200];
             sprintf(buf,lang_str(LANG_USER_MENU_ITEM_ADDED), lang_str(user_submenu_items[i].text));
             gui_mbox_init(LANG_MENU_USER_MENU, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-            conf.user_menu_has_changed = 1;
+            camera_info.state.user_menu_has_changed = 1;
             return;
         }
     }
@@ -142,7 +143,7 @@ void del_user_menu_item(int* cur_menu_item_indx)
     if(!user_submenu_items[*cur_menu_item_indx].text)
         *cur_menu_item_indx -= 1;
 
-    conf.user_menu_has_changed = 1;
+    camera_info.state.user_menu_has_changed = 1;
 }
 
 static void move_user_menu_item(int* cur_menu_item_indx, int dir)
@@ -171,7 +172,7 @@ static void move_user_menu_item(int* cur_menu_item_indx, int dir)
         
     *cur_menu_item_indx += dir;
 
-    conf.user_menu_has_changed = 1;
+    camera_info.state.user_menu_has_changed = 1;
 }
 
 void move_user_menu_item_up(int* cur_menu_item_indx)

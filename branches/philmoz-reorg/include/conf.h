@@ -176,7 +176,6 @@ typedef struct {
     color histo_color2; // markers/border
     color osd_color;
     color osd_color_warn;
-//    color batt_icon_color;
     color space_color;
     color menu_color;
     color menu_title_color;
@@ -203,8 +202,6 @@ typedef struct {
     char reader_rbf_file[100];
     int  reader_codepage;
     int  reader_wrap_by_words;
-
-    //int sokoban_level;
 
     int flashlight;
     int fast_ev;
@@ -260,15 +257,11 @@ typedef struct {
 
     int iso_override_value;
     int iso_override_koef;
-//    int zoom_override_value;
-//    int zoom_override;
     int subj_dist_override_value;
     int subj_dist_override_koef;
     int clear_override;
-//    int clear_zoom_override;
 
     int autoiso_enable;
-//  int autoiso_shutter;
     int autoiso_shutter_enum;
     int autoiso_user_factor;
     int autoiso_is_factor;
@@ -297,7 +290,6 @@ typedef struct {
     int dof_far_limit_in_misc;
     int dof_hyperfocal_in_misc;
     int dof_depth_in_misc;
-//    int dof_dist_from_lens;
 
     int values_show_in_review;
     int values_show_zoom;
@@ -324,7 +316,6 @@ typedef struct {
     int user_menu_enable;
     int user_menu_as_root;
     tUserMenuConfig user_menu_vars;
-    int user_menu_has_changed;      // not saved to config file, used to tell code that file needs to be saved
     int zoom_scale;
     int unlock_optical_zoom_for_video;
     int mute_on_zoom;
@@ -471,14 +462,6 @@ extern Conf conf;
 
 extern void user_menu_restore();
 
-// Current stage of script processing
-extern int state_kbd_script_run;
-
-enum {	SCRIPT_STATE_INACTIVE=0,  // 0 - script is inactive now
-		SCRIPT_STATE_RAN,	      // 1 - script works now
-		SCRIPT_STATE_INTERRUPTED, // 2 - shutter button was pressed. wait for second press
-		SCRIPT_STATE_PENDING };   // 3 - final housekeep processing
-
 
 extern int state_shooting_progress;
 extern int state_save_raw_nth_only;
@@ -529,9 +512,6 @@ extern void conf_store_old_settings();
 extern int conf_save_new_settings_if_changed();
 
 //-------------------------------------------------------------------
-
-int camera_get_script_autostart();
-void camera_set_script_autostart();
 
 void camera_set_raw(int mode);
 void camera_set_nr(int mode);

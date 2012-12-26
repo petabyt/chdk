@@ -68,10 +68,6 @@
     #define CAM_MENU_BORDERWIDTH            30  // Defines the width of the border on each side of the CHDK menu. The CHDK menu will have this
                                                 // many pixels left blank to the on each side. Should not be less than 10 to allow room for the
                                                 // scroll bar on the right.
-    #define CAM_DETECT_SCREEN_ERASE         1   // Define this to add 'guard' pixel to the screen bitmap to help detect if the firmware has erase the screen
-                                                // If the guard pixel changes the CHDK ALT menu is forced to redraw.
-                                                // Take care not to place CHDK OSD elements over the guard pixel.
-                                                // The guard pixel is the first pixel of the top row in the screen bitmap.
 
     #undef  CAM_TOUCHSCREEN_UI                  // Define to enable touch screen U/I (e.g. IXUS 310 HS)
     #define CAM_TS_BUTTON_BORDER            0   // Define this to leave a border on each side of the OSD display for touch screen buttons.

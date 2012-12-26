@@ -8,8 +8,6 @@
 #include "console.h"
 #include "usb_remote.h"
 
-int state_kbd_script_run;
-
 static int kbd_blocked;
 
 void enter_alt()

@@ -6,6 +6,7 @@
 #include "modules.h"
 #include "luascript.h"
 #include "script.h"
+#include "script_key_funcs.h"
 #include "conf.h"
 #include "shot_histogram.h"
 #include "raw.h"
@@ -137,7 +138,6 @@ void lua_script_reset()
 void lua_script_error_ptp(int runtime, const char *err) {
     if(runtime) {
         ptp_script_write_error_msg(PTP_CHDK_S_ERRTYPE_RUN, err);
-        script_end();
     } else {
         ptp_script_write_error_msg(PTP_CHDK_S_ERRTYPE_COMPILE, err);
         lua_script_reset();
@@ -153,33 +153,42 @@ static void lua_count_hook(lua_State *L, lua_Debug *ar)
     lua_yield( L, 0 );
 }
 
-void lua_script_error(lua_State *Lt,int runtime)
+int lua_script_error(lua_State *Lt,int runtime)
 {
     const char *err = lua_tostring( Lt, -1 );
-    if(err) {
-        if(!*err) {
-            script_console_add_line( "ERROR: empty error message" );
-        } else {
-            script_console_add_line( err );
+
+    if(err)
+    {
+        if(!*err)
+        {
+            script_console_add_line( (long)"ERROR: empty error message" );
         }
-    } else {
-        script_console_add_line( "ERROR: NULL error message" );
+        else
+        {
+            script_console_add_line( (long)err );
+        }
     }
-    if(lua_script_is_ptp) {
+    else
+    {
+        script_console_add_line( (long)"ERROR: NULL error message" );
+    }
+
+    if (lua_script_is_ptp)
+    {
         lua_script_error_ptp(runtime,err);
-    } else {
-        if(runtime) {
-            if(conf.debug_lua_restart_on_error) {
-                lua_script_reset();
-                script_start_gui(0);
-            } else {
-                script_wait_and_end();
-            }
-        } else {
-            script_print_screen_end();
-            script_wait_and_end();
+    }
+    else
+    {
+        if (runtime && conf.debug_lua_restart_on_error)
+        {
+            script_end();
+            script_start_gui(0);
+            return SCRIPT_RUN_RUNNING;
         }
     }
+
+    script_console_add_line(LANG_CONSOLE_TEXT_TERMINATED);
+    return SCRIPT_RUN_ERROR;
 }
 
 
@@ -209,27 +218,28 @@ void lua_script_finish(lua_State *L)
 
 int lua_script_start( char const* script, int ptp )
 {
-  lua_script_is_ptp = ptp;
-  L = lua_open();
-  luaL_openlibs( L );
-  register_lua_funcs( L );
+    lua_script_is_ptp = ptp;
+    L = lua_open();
+    luaL_openlibs( L );
+    register_lua_funcs( L );
 
-  Lt = lua_newthread( L );
-  lua_setfield( L, LUA_REGISTRYINDEX, "Lt" );
-  if( luaL_loadstring( Lt, script ) != 0 ) {
-    lua_script_error(Lt,0);
-    return 0;
-  }
-  lua_sethook(Lt, lua_count_hook, LUA_MASKCOUNT, YIELD_CHECK_COUNT );
-  lua_script_enable_yield_hook();
-  run_first_resume = 1;
-  yield_max_count = YIELD_MAX_COUNT_DEFAULT;
-  yield_max_ms = YIELD_MAX_MS_DEFAULT;
-  return 1;
+    Lt = lua_newthread( L );
+    lua_setfield( L, LUA_REGISTRYINDEX, "Lt" );
+    if( luaL_loadstring( Lt, script ) != 0 )
+    {
+        lua_script_error(Lt,0);
+        return 0;
+    }
+    lua_sethook(Lt, lua_count_hook, LUA_MASKCOUNT, YIELD_CHECK_COUNT );
+    lua_script_enable_yield_hook();
+    run_first_resume = 1;
+    yield_max_count = YIELD_MAX_COUNT_DEFAULT;
+    yield_max_ms = YIELD_MAX_MS_DEFAULT;
+    return 1;
 }
 
 // run a timeslice of lua script
-void lua_script_run(void)
+int lua_script_run(void)
 {
     int Lres;
     int top;
@@ -243,19 +253,25 @@ void lua_script_run(void)
     run_hook_count = 0;
     Lres = lua_resume( Lt, top );
 
-    if (Lres == LUA_YIELD) {
+    if (Lres == LUA_YIELD)
+    {
         // yielded
-        return;
-    } else if(Lres != 0) {
-        lua_script_error(Lt,1);
-        return;
-    } else {
+    }
+    else if (Lres != 0)
+    {
+        return lua_script_error(Lt,1);
+    }
+    else 
+    {
         // finished normally, add ptp result
         lua_script_finish(Lt);
-        script_console_add_line(lang_str(LANG_CONSOLE_TEXT_FINISHED));
-        action_pop();
-        script_end();
+        // Display 'Finished message', unless running from PTP
+        if (lua_script_is_ptp == 0)
+            script_console_add_line(LANG_CONSOLE_TEXT_FINISHED);
+        return SCRIPT_RUN_ENDED;
     }
+
+    return SCRIPT_RUN_RUNNING;
 }
 
 // run the "restore" function at the end of a script
@@ -265,8 +281,10 @@ int lua_run_restore()
 	lua_getglobal(Lt, "restore");
 	if (lua_isfunction(Lt, -1)) {
 		if (lua_pcall( Lt, 0, 0, 0 )) {
-			script_console_add_line( lua_tostring( Lt, -1 ) );
+			script_console_add_line( (long)lua_tostring( Lt, -1 ) );
 		}
+        if (lua_script_is_ptp == 0)
+            script_console_add_line(LANG_CONSOLE_TEXT_FINISHED);
 	}
     return 0;
 }
@@ -327,7 +345,7 @@ static int luaCB_set_aflock(lua_State* L)
 
 static int luaCB_shoot( lua_State* L )
 {
-  action_push(AS_SHOOT);
+  action_push_func(action_stack_AS_SHOOT);
   return lua_yield( L, 0 );
 }
 
@@ -911,11 +929,20 @@ static void return_string_selected(const char *str) {
 	lua_pushstring( Lt, (str && str[0])? str : NULL );
 }
 
+static void action_stack_AS_WAIT_MODULE()
+{
+    // state_kbd_script_run is set to 0 when the file browser is started from a Lua script
+    // it is reset back to 1 when the file browser exits and control is returned back to
+    // the script
+    if (state_kbd_script_run)
+        action_pop_func();
+}
+
 static int luaCB_file_browser( lua_State* L ) {
     // Disconnect button input from script so buttons will work in file browser
     state_kbd_script_run = SCRIPT_STATE_INACTIVE;
     // Push file browser action onto stack - will loop doing nothing until file browser exits
-    action_push(AS_FILE_BROWSER);
+    action_push_func(action_stack_AS_WAIT_MODULE);
     // Switch to file browser gui mode. Path can be supplied in call or defaults to "A" (root directory).
     module_fselect_init(LANG_STR_FILE_BROWSER, luaL_optstring( L, 1, "A" ), "A", return_string_selected);
     // Yield the script so that the action stack will process the AS_FILE_BROWSER action
@@ -928,7 +955,7 @@ static int luaCB_textbox( lua_State* L ) {
     if (module_tbox_load())
     {
         // Push textbox action onto stack - will loop doing nothing until textbox exits
-        action_push(AS_TEXTBOX);
+        action_push_func(action_stack_AS_WAIT_MODULE);
         // Switch to textbox gui mode. Text box prompt should be passed as param.
         module_tbox_load()->textbox_init((int)luaL_optstring( L, 1, "Text box" ),   //title
                                          (int)luaL_optstring( L, 2, "Enter text" ), //message
@@ -1041,7 +1068,7 @@ static int luaCB_draw_clear( lua_State* L ) {
 
 static int luaCB_autostarted( lua_State* L )
 {
-  lua_pushboolean( L, camera_get_script_autostart() );
+  lua_pushboolean( L, camera_info.state.auto_started );
   return 1;
 }
 
@@ -2013,6 +2040,45 @@ static int luaCB_set_file_attributes( lua_State* L ) {
     return 1;
 }
 
+static void action_stack_AS_SCRIPT_READ_USB_MSG()
+{
+    long delay = action_top(2);
+
+    ptp_script_msg *msg = ptp_script_read_msg();
+
+    if (action_process_delay(delay) || msg)
+    {
+        if (msg && msg->data)
+        {
+            lua_pushlstring(Lt,msg->data,msg->size);
+        }
+        else
+        {
+            lua_pushnil(Lt);
+        }
+        action_clear_delay();
+        action_pop_func();
+        action_pop();
+    }
+}
+
+static void action_stack_AS_SCRIPT_WRITE_USB_MSG()
+{
+    ptp_script_msg *msg = (ptp_script_msg *)action_top(2);
+    long delay = action_top(3);
+
+    int r = ptp_script_write_msg(msg);
+
+    if (action_process_delay(delay) || r)
+    {
+        action_clear_delay();
+        lua_pushboolean(Lt,r);
+        action_pop_func();
+        action_pop();
+        action_pop();
+    }
+}
+
 /*
 msg = read_usb_msg([timeout])
 read a message from the CHDK ptp interface.
@@ -2024,7 +2090,7 @@ static int luaCB_read_usb_msg( lua_State* L )
   int timeout = luaL_optnumber( L, 1, 0 );
   if(timeout) {
     action_push(timeout);
-    action_push(AS_SCRIPT_READ_USB_MSG);
+    action_push_func(action_stack_AS_SCRIPT_READ_USB_MSG);
     return lua_yield( L, 0 );
   }
   ptp_script_msg *msg = ptp_script_read_msg();
@@ -2067,7 +2133,7 @@ static int luaCB_write_usb_msg( lua_State* L )
   if(timeout) {
     action_push(timeout);
     action_push((int)msg);
-    action_push(AS_SCRIPT_WRITE_USB_MSG);
+    action_push_func(action_stack_AS_SCRIPT_WRITE_USB_MSG);
     return lua_yield( L, 0 );
   }
   lua_pushboolean(L,ptp_script_write_msg(msg)); 
@@ -2397,27 +2463,7 @@ static void lua_set_variable(int varnum, int value)
     lua_settable( L, LUA_GLOBALSINDEX );
 }
 
-static int lua_script_finished()                        { return 0; }
-static int lua_error_msg(char *buf)                     { return 0; }
-static void lua_reset_error(int err)                    { }
 static void lua_set_md_ret(int md_ret)                  { lua_pushnumber(Lt,md_ret); }
-
-static void lua_read_usb_msg(char *data, unsigned int size)
-{
-    if (data)
-    {
-        lua_pushlstring(Lt,data,size);
-    }
-    else
-    {
-        lua_pushnil(Lt);
-    }
-}
-
-static void lua_write_usb_msg(int result)
-{
-    lua_pushboolean(Lt,result);
-}
 
 struct libscriptapi_sym _liblua =
 {
@@ -2426,17 +2472,10 @@ struct libscriptapi_sym _liblua =
 
     lua_script_start,
     lua_script_run,
-    lua_script_finished,        // Dummy for interface
     lua_script_reset,
     lua_set_variable,
     lua_set_md_ret,
     lua_run_restore,
-
-    lua_error_msg,
-    lua_reset_error,
-
-    lua_read_usb_msg,
-    lua_write_usb_msg,
 };
 
 void* MODULE_EXPORT_LIST[] = {

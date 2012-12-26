@@ -1,6 +1,7 @@
-#include "platform.h"
+#include "camera_info.h"
 #include "stdlib.h"
 #include "conf.h"
+#include "keyboard.h"
 #include "font.h"
 #include "lang.h"
 #include "gui.h"
@@ -200,7 +201,7 @@ void gui_menu_init(CMenu *menu_ptr) {
     }
 
     num_lines = camera_screen.height/rbf_font_height()-1;
-    x = CAM_MENU_BORDERWIDTH;
+    x = camera_screen.menu_border_width;
     w = camera_screen.width-x-x;
     len_bool = rbf_str_width("\x95");
     len_int = rbf_str_width("99999");
@@ -674,7 +675,6 @@ int gui_menu_kbd_process() {
             }
             break;
 
-#if CAM_HAS_ZOOM_LEVER
         case KEY_ZOOM_IN:
             /*
             * Move current entry up in menu
@@ -686,14 +686,12 @@ int gui_menu_kbd_process() {
                     if(gui_menu_curr_item)
                         gui_menu_top_item = gui_menu_curr_item-1;
                 }
-
                 gui_menu_redraw=1;
             }
-            else {
+            else
+            {
                 if (decrement_factor())
-                {
-                    gui_menu_redraw=1;
-                }
+                    gui_menu_redraw = 1;
             }
             break;
 
@@ -715,27 +713,23 @@ int gui_menu_kbd_process() {
             else
             {
                 if (increment_factor())
-                    gui_menu_redraw=1;
+                    gui_menu_redraw = 1;
             }
             break;
 
         case KEY_DISPLAY:
-            gui_menu_back();
-            break;
-#else
-        case KEY_DISPLAY:
-            if (conf.user_menu_enable == 3 && curr_menu->title == LANG_MENU_USER_MENU)
+            if (camera_info.cam_has_zoom_lever || (conf.user_menu_enable == 3 && curr_menu->title == LANG_MENU_USER_MENU))
             {
                 gui_menu_back();
             }
             else
             {
+                // For cams without zoom lever, DISP adjusts increment factor
                 if (!increment_factor())
                     int_incr = 1;
                 gui_menu_redraw=1;
             }
             break;
-#endif
     }
 
     return 0;

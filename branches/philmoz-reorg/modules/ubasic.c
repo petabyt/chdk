@@ -12,43 +12,14 @@ int module_idx=-1;
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-extern int ubasic_error;
-extern const char *ubasic_errstrings[UBASIC_E_ENDMARK];
 int ubasic_init(const char *program, int is_ptp);
-void ubasic_run(void);
+int ubasic_run(void);
 void ubasic_end(void);
-int ubasic_finished(void);
-int ubasic_linenumber(void);
-int ubasic_get_variable(int varnum);
 void ubasic_set_variable(int varum, int value);
 void ubasic_set_md_ret(int md_ret);
 int jump_label(char * label);
 
-static int ubasic_error_msg(char *buf)
-{
-    if (ubasic_error)
-    {
-        const char *msg;
-        if (ubasic_error >= UBASIC_E_ENDMARK)
-        {
-            msg = ubasic_errstrings[UBASIC_E_UNKNOWN_ERROR];
-        }
-        else
-        {
-            msg = ubasic_errstrings[ubasic_error];
-        }
-        sprintf(buf, "uBASIC:%d %s ", ubasic_linenumber(), msg);
-        return 1;
-    }
-    return 0;
-}
-
-static void ubasic_reset_error(int err)         { ubasic_error = UBASIC_E_NONE; }
 static int ubasic_run_restore(void)             { return jump_label("restore"); }
-
-// Dummy routines for API (PTP not supported in ubasic)
-static void ubasic_read_usb_msg(char *data, unsigned int size)  {}
-static void ubasic_write_usb_msg(int result)                    {}
 
 struct libscriptapi_sym _libubasic =
 {
@@ -57,17 +28,10 @@ struct libscriptapi_sym _libubasic =
 
     ubasic_init,
     ubasic_run,
-    ubasic_finished,
     ubasic_end,
     ubasic_set_variable,
     ubasic_set_md_ret,
     ubasic_run_restore,
-
-    ubasic_error_msg,
-    ubasic_reset_error,
-
-    ubasic_read_usb_msg,
-    ubasic_write_usb_msg,
 };
 
 void* MODULE_EXPORT_LIST[] = {

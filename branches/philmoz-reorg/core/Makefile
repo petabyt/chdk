@@ -12,11 +12,9 @@ LDOPTS+=-Wl,-N,-Ttext,$(MEMISOSTART)
 all: main.bin
 
 # Build platform dependent code (independent code is built in lib/core/libcore.a)
-OBJS=entry.o main.o gui_draw.o gui_menu.o gui_user_menu.o \
-     gui.o kbd.o action_stack.o conf.o \
-     gui_osd.o raw.o script.o \
-     shot_histogram.o shooting.o \
-     camera_info.o
+OBJS=entry.o main.o gui_draw.o \
+     gui.o kbd.o conf.o gui_osd.o raw.o \
+     shot_histogram.o shooting.o camera_info.o
 
 gui.o: FORCE
 

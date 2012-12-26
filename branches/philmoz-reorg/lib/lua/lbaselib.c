@@ -75,7 +75,7 @@ static int luaB_print (lua_State *L) {
 #ifdef HOST_LUA
   fprintf(stdout,"%s\n",buf);
 #else
-  script_console_add_line(buf);
+  script_console_add_line((long)buf);
 #endif
 
   return 0;

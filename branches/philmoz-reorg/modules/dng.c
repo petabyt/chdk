@@ -843,77 +843,76 @@ int badpixel_list_loaded_b(void) {
 
 // -----------------------------------------------
 
-enum BadpixelFSM {
-    BADPIX_START,
-    BADPIX_S1,
-    BADPIX_S2
-};
+static unsigned int badpix_cnt1;
 
-int badpixel_task_stack(long p)
+static void action_stack_BADPIX_S2()
 {
-    static unsigned int badpix_cnt1;
+    // Process bad pixel generation actions
 
-    switch(p)
+    action_pop_func();
+
+    console_clear();
+    if (badpix_cnt1 == init_badpixel_bin_flag)
     {
-    case BADPIX_START:
-        action_pop();
-
-        console_clear();
-        console_add_line("Wait please... ");
-        console_add_line("This takes a few seconds,");
-        console_add_line("don't panic!");
-
-        init_badpixel_bin_flag = INIT_BADPIXEL_COUNT;
-
-        shooting_set_tv96_direct(96, SET_LATER);
-        action_push(BADPIX_S1);
-        action_push(AS_SHOOT);
-        action_push_delay(3000);
-        break;
-    case BADPIX_S1:
-        action_pop();
-
-        badpix_cnt1 = init_badpixel_bin_flag;
-        init_badpixel_bin_flag = INIT_BADPIXEL_FILE;
-        shooting_set_tv96_direct(96, SET_LATER);
-
-        action_push(BADPIX_S2);
-        action_push(AS_SHOOT);
-        break;
-    case BADPIX_S2:
-        action_pop();
-
-        console_clear();
-        if (badpix_cnt1 == init_badpixel_bin_flag)
-        {
-            // TODO script asked confirmation first
-            // should sanity check bad pixel count at least,
-            // wrong buffer address could make badpixel bigger than available mem
-            char msg[32];
-            console_add_line("badpixel.bin created.");
-            sprintf(msg, "Bad pixel count: %d", badpix_cnt1);
-            console_add_line(msg);
-            remove(PATH_BADPIXEL_BIN);
-            rename(PATH_BAD_TMP_BIN,PATH_BADPIXEL_BIN);
-        }
-        else
-        {
-            console_add_line("badpixel.bin failed.");
-            console_add_line("Please try again.");
-        }
-        init_badpixel_bin_flag = 0;
-        remove(PATH_BAD_TMP_BIN);
-
-        action_push_delay(3000);
-        break;
-    default:
-        action_stack_standard(p);
-        break;
+        // TODO script asked confirmation first
+        // should sanity check bad pixel count at least,
+        // wrong buffer address could make badpixel bigger than available mem
+        char msg[32];
+        console_add_line("badpixel.bin created.");
+        sprintf(msg, "Bad pixel count: %d", badpix_cnt1);
+        console_add_line(msg);
+        remove(PATH_BADPIXEL_BIN);
+        rename(PATH_BAD_TMP_BIN,PATH_BADPIXEL_BIN);
     }
+    else
+    {
+        console_add_line("badpixel.bin failed.");
+        console_add_line("Please try again.");
+    }
+    init_badpixel_bin_flag = 0;
+    remove(PATH_BAD_TMP_BIN);
 
-    return 1;
+    // Delay to give user time to read messages
+    action_push_delay(3000);
 }
 
+static void action_stack_BADPIX_S1()
+{
+    // Process bad pixel generation actions
+
+    action_pop_func();
+
+    // Count bad pixels from previous shot
+    badpix_cnt1 = init_badpixel_bin_flag;
+    init_badpixel_bin_flag = INIT_BADPIXEL_FILE;
+    shooting_set_tv96_direct(96, SET_LATER);
+
+    // Push stack items for next phase (note reversed execution order)
+    action_push_func(action_stack_BADPIX_S2);
+    action_push_func(action_stack_AS_SHOOT);
+}
+
+static void action_stack_BADPIX_START()
+{
+    // Process bad pixel generation actions
+
+    action_pop_func();
+
+    // Notify yser
+    console_clear();
+    console_add_line("Wait please... ");
+    console_add_line("This takes a few seconds,");
+    console_add_line("don't panic!");
+
+    init_badpixel_bin_flag = INIT_BADPIXEL_COUNT;
+
+    shooting_set_tv96_direct(96, SET_LATER);
+
+    // Push stack items for next phase (note reversed execution order)
+    action_push_func(action_stack_BADPIX_S1);
+    action_push_func(action_stack_AS_SHOOT);
+    action_push_delay(3000);
+}
 
 void create_badpixel_bin()
 {
@@ -924,7 +923,8 @@ void create_badpixel_bin()
     }
 
     gui_set_mode(&altGuiHandler);
-    action_stack_create(&badpixel_task_stack, BADPIX_START);
+    // Create an action stack to generate bad pixels - start with action_stack_BADPIX_START func above
+    action_stack_create(&action_stack_BADPIX_START);
 }
 
 //-------------------------------------------------------------------

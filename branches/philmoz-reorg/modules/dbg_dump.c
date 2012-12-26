@@ -104,13 +104,13 @@ void dbg_dump_write(const char *dumpname,unsigned flags, int user_data_len, char
         }
         close(fd);
     } else {
-        script_console_add_line( "failed to open dump file" );
+        script_console_add_line( (long)"failed to open dump file" );
     }
 }
 
 void dbg_dump_assert(const char *dumpfile,const char *expr,const char *file,int line) {
     static char buf[128]; // could overflow if expr is long
     sprintf(buf,"ASSERT %s:%d %s",file,line,expr);
-    script_console_add_line( buf );
+    script_console_add_line( (long)buf );
     dbg_dump_write(dumpfile,0,sizeof(buf),buf);
 }

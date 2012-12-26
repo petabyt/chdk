@@ -94,8 +94,8 @@ snake.elf: simple_game.o gui_snake.o
 sokoban.elf: gui_sokoban.o
 sudoku.elf: simple_game.o gui_sudoku.o
 
-ubasic.elf: ubasic.o $(topdir)lib/ubasic/libubasic.a
-lua.elf: luascript.o cordic_math.o dbg_dump.o $(topdir)lib/lua/liblua.a
+ubasic.elf: ubasic.o script_key_funcs.o $(topdir)lib/ubasic/libubasic.a
+lua.elf: luascript.o script_key_funcs.o cordic_math.o dbg_dump.o $(topdir)lib/lua/liblua.a
 
 clean:
 	rm -f *.o *.elf.syms *.elf *.flt *.dump *.dumpobj

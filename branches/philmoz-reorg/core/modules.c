@@ -7,6 +7,7 @@
  */
 
 #include "camera_info.h"
+#include "console.h"
 #include "modules.h"
 #include "module_load.h"
 
@@ -214,17 +215,40 @@ static void module_lua_unload()
 
 struct libscriptapi_sym* libscriptapi;
 
-struct libscriptapi_sym* module_script_lang_load(int lang_id)
+// Which script language is being used
+#define SCRIPT_LANG_UBASIC  0
+#define SCRIPT_LANG_LUA     1
+
+static int script_lang_id(const char* script_file)
 {
+    if ((script_file == 0) || (script_file[0] == 0))
+        return SCRIPT_LANG_LUA;  // Default script is Lua
+
+    char *ext = strrchr(script_file,'.');
+
+    if (ext && (strlen(ext) == 4) && (toupper(ext[1]) == 'L') && (toupper(ext[2]) == 'U') && (toupper(ext[3]) == 'A'))
+        return SCRIPT_LANG_LUA;
+
+    return SCRIPT_LANG_UBASIC;
+}
+
+struct libscriptapi_sym* module_script_lang_load(const char *script_fn)
+{
+    int lang_id = script_lang_id(script_fn);
+
+    char *lang_name = "Unknown";
+
     switch (lang_id)
     {
     case SCRIPT_LANG_UBASIC:
         module_lua_unload();
         libscriptapi = module_load_generic((void**)&libubasic, MODULE_NAME_UBASIC, bind_module_ubasic, MODULE_FLAG_DISABLE_AUTOUNLOAD);
+        lang_name = "uBasic";
         break;
     case SCRIPT_LANG_LUA:
         module_ubasic_unload();
         libscriptapi = module_load_generic((void**)&liblua, MODULE_NAME_LUA, bind_module_lua, MODULE_FLAG_DISABLE_AUTOUNLOAD);
+        lang_name = "Lua";
         break;
     default:
         module_lua_unload();
@@ -232,6 +256,14 @@ struct libscriptapi_sym* module_script_lang_load(int lang_id)
         libscriptapi = 0;
         break;
     }
+
+    if (libscriptapi == 0)
+    {
+        char msg[64];
+        sprintf(msg,"%s script module failed to load",lang_name);
+        console_add_line(msg);
+    }
+
     return libscriptapi;
 }
 

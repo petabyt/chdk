@@ -32,7 +32,10 @@ Sity: Kharkiv
 #include "debug_led.h"
 #include "gui.h"
 #include "gui_draw.h"
+#include "script_api.h"
 
+// Forward references
+static int md_detect_motion(void);
 
 #define MD_XY2IDX(x,y) ((y)*motion_detector->columns+x)
 
@@ -58,9 +61,6 @@ enum {
     MD_REGION_INCLUDE=1,
     MD_REGION_EXCLUDE=2
 };
-
-
-
 
 
 struct motion_detector_s {
@@ -106,9 +106,25 @@ struct motion_detector_s {
 
 static struct motion_detector_s *motion_detector=NULL;
 
+// Stack process function for running MD logic
+static void action_stack_AS_MOTION_DETECTOR()
+{
+    if (md_detect_motion() == 0)
+    {
+        if (libscriptapi)
+        {
+            // We need to recover the motion detector's
+            // result and push
+            // it onto the thread's stack.
+            libscriptapi->set_md_ret(motion_detector->return_value);
+        }
+        action_pop_func();
+    }
+}
+
 static void md_kbd_sched_immediate_shoot(int no_release)
 {
-    action_pop();// REMOVE MD ITEM
+    action_pop_func();// REMOVE MD ITEM
 
     // stack operations are reversed!
     if (!no_release)  // only release shutter if allowed
@@ -116,7 +132,7 @@ static void md_kbd_sched_immediate_shoot(int no_release)
       action_push_release(KEY_SHOOT_FULL);
       action_push_delay(20);
     }
-    action_push(AS_MOTION_DETECTOR); // it will removed right after exit from this function
+    action_push_func(action_stack_AS_MOTION_DETECTOR); // it will removed right after exit from this function
     kbd_key_press(KEY_SHOOT_FULL); // not a stack operation... pressing right now
 }
 
@@ -249,7 +265,7 @@ int md_init_motion_detector(
 
     motion_detector->running=1;
 
-    action_push(AS_MOTION_DETECTOR);
+    action_push_func(action_stack_AS_MOTION_DETECTOR);
     gui_set_need_restore();
 
     return 1;
@@ -348,7 +364,7 @@ static int md_running(){
 }
 
 
-int md_detect_motion(void){
+static int md_detect_motion(void){
     int *tmp;
     unsigned char * img;
     int vp_w, vp_h, idx, tmp2, tick, in_clipping_region, x_step, y_step, x_end, y_end;
@@ -629,11 +645,6 @@ void md_draw_grid(){
 
 }
 
-int md_get_result()
-{
-    return motion_detector->return_value;
-}
-
 
 // =========  MODULE INIT =================
 
@@ -650,10 +661,8 @@ struct libmotiondetect_sym _libmotiondetect = {
 
         md_close_motion_detector,
         md_init_motion_detector,
-        md_detect_motion,
         md_get_cell_diff,
         md_draw_grid,
-        md_get_result
 	};
 
 

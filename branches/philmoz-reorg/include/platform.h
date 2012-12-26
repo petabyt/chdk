@@ -125,7 +125,6 @@ extern void shooting_init(); // startup initialization
     char* shooting_get_av_str();
 #endif
 /******************************************************************/
-extern int auto_started;
 
 // returns 0 if in play, nonzero if rec
 int rec_mode_active(void); 

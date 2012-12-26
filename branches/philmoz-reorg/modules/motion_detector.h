@@ -124,10 +124,8 @@ struct libmotiondetect_sym {
          int msecs_before_trigger
     );
 
-    int (*md_detect_motion)(void);
     int (*md_get_cell_diff)(int column, int row);
     void (*md_draw_grid)();
-    int (*md_get_result)();
 };
 
 //-------------------------------------------------------------------

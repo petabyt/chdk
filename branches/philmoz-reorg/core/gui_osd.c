@@ -1273,14 +1273,6 @@ void gui_draw_osd()
 #endif
 
     gui_draw_debug_vals_osd();
-
-    if (libscriptapi)
-    {
-        if (libscriptapi->error_msg(osd_buf))
-        {
-            draw_txt_string(0, 0, osd_buf, MAKE_COLOR(COLOR_RED, COLOR_YELLOW));
-        }
-    }
 }
 
 // GUI handler for normal shooting / playback modes
