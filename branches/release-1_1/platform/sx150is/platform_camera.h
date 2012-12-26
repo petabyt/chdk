@@ -99,8 +99,6 @@
                                                           // Used to enabled bracketing in custom timer, required on many recent cameras
                                                           // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-    #define CAM_DETECT_SCREEN_ERASE                     1 // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
-
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                             0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
 
