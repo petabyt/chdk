@@ -31,13 +31,10 @@ static long alt_mode_key_mask = 0x00004000;
 extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
-	return 0 ;
-/*	
 	long usb_physw[3];
 	usb_physw[USB_IDX] = 0;
 	_kbd_read_keys_r2(usb_physw);
 	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
-*/
 }
 
 #ifndef MALLOCD_STACK
