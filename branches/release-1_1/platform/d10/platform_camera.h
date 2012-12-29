@@ -32,10 +32,6 @@
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
 
-    // TODO
-    //  #define CAM_CAN_SD_OVER_NOT_IN_MF       1       // Camera allows subject distance (focus) override when not in manual focus mode
-    //  #define CAM_CAN_SD_OVERRIDE             1       // Camera allows to do subject distance override
-
     // long shutter is acutally user TV, may work ?
     #undef  CAM_HAS_USER_TV_MODES
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
@@ -96,4 +92,9 @@
 	#define REMOTE_SYNC_STATUS_LED 	0xc0220134		// specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_FIRMWARE_MEMINFO            1   // Use 'GetMemInfo' to get free memory size.
+    #undef  CAMERA_MIN_DIST
+    #define CAMERA_MIN_DIST                 30      // Override min subject distance
+    #undef  CAMERA_MAX_DIST
+    #define CAMERA_MAX_DIST                 193731  // Override max subject distance
+
 //----------------------------------------------------------
