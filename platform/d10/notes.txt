@@ -33,6 +33,7 @@ Working/completed
 - bracketing in custom timer mode
 - CHDK ptp extension
 - extra long exposures
+- SD override in MF and AF mode.
 
 Scripts tested successfully
 - llibtst.lua 
@@ -45,9 +46,8 @@ Scripts tested successfully
 
 Known issues:
 - Continuous shooting with raw/dng enabled crashes (sometimes ?)
-- CHDK OSD disappears frequently.
 - If you press the shutter quickly without waiting for focus, override settings are ignored
 - DNG has dark borders. This is intentional, the active area covers all pixels that have any data, but there are large areas which have data but are distinct from the normal jpeg area.
 - AF in video doesn't seem to work
 - with video optical zoom, if you zoom into digital zoom, you cannot zoom out the optical
-- Startup crash, especially with lots of images on the card.
+- Camera will crash if SD override is used while servo AF is enabled.
