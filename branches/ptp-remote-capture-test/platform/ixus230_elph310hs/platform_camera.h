@@ -25,7 +25,6 @@
 #define CAM_DRYOS_2_3_R39               1 // Defined for cameras with DryOS version R39 or higher
 #define CAM_DRYOS_2_3_R47               1 // Defined for cameras with DryOS version R47 or higher
 
-#define CAM_DETECT_SCREEN_ERASE			1
 #define CAM_AV_OVERRIDE_IRIS_FIX		1
 #define CAM_KEY_CLICK_DELAY 			150
 #define CAM_ADJUSTABLE_ALT_BUTTON		1

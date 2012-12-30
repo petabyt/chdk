@@ -23,20 +23,26 @@
     #define CAM_PROPSET                     2
     #define CAM_DRYOS                       1
 
-    #define CAM_RAW_ROWPIX                  4104    // 12 MP 12bpp
-    #define CAM_RAW_ROWS                    3048    // from " CrwAddress %lx, CrwSize H %ld V %ld\r"
+    #define CAM_RAW_ROWPIX                  4080 // Found @0xff8eb014
+    #define CAM_RAW_ROWS                    3048 // Found @0xff8eb018
 
     #undef  CAM_HAS_ERASE_BUTTON
-    #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_MULTIPART                   1
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
+
+    // TODO
+    #undef  CAM_HAS_MANUAL_FOCUS
+    #define CAM_CAN_SD_OVER_NOT_IN_MF       1       // Camera allows subject distance (focus) override when not in manual focus mode
+    #define CAM_CAN_SD_OVERRIDE             1       // Camera allows to do subject distance override
+    #define CAM_USE_ZOOM_FOR_MF             1
+    
+    //#define CAM_EV_IN_VIDEO                 1
 
     // long shutter is acutally user TV, may work ?
     #undef  CAM_HAS_USER_TV_MODES
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
-    // TODO this doesn't seem to be working
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
 
     #undef  CAM_VIDEO_CONTROL
@@ -48,32 +54,37 @@
     #define CAM_UNCACHED_BIT                0x40000000
 
     #undef  CAM_BITMAP_PALETTE
-    // OK looks similar to ixus100 based on forum posts
-    #define CAM_BITMAP_PALETTE              5
 
+    #define CAM_BITMAP_PALETTE              13
+    #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
+    #define CHDK_COLOR_BASE                 0xd0    // Starting color index for CHDK colors loaded into camera palette.
+    
     #define CAM_QUALITY_OVERRIDE            1
     #undef CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
-    #define CAM_DNG_LENS_INFO               { 62,10, 186,10, 28,10, 49,10 } // See comments in camera.h
+    #define CAM_HAS_JOGDIAL                 1
+    #define CAM_FEATURE_FEATHER             1
 
-    #define cam_CFAPattern 0x01000201 // Green  Blue  Red  Green 
+    #define CAM_DNG_LENS_INFO               { 50,10, 200,10, 28,10, 58,10 } // See comments in camera.h
 
-    #define CAM_COLORMATRIX1                        \
-      14052, 10000,   -5229, 10000,   -1156, 10000, \
-      -1325, 10000,    9420, 10000,    2252, 10000, \
-       -498, 10000,    1957, 10000,    4116, 10000
-    #define cam_CalibrationIlluminant1      21      // D65
+    #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue
+    // color
 
-    // cropping OK
+    #define CAM_COLORMATRIX1                             \
+     764117, 1000000, -223884, 1000000, -116036, 1000000, \
+     -35875, 1000000,  582534, 1000000,   32982, 1000000, \
+      10441, 1000000,   64164, 1000000,  198520, 1000000 
+    #define cam_CalibrationIlluminant1      1
+
     #define CAM_JPEG_WIDTH                  4000
     #define CAM_JPEG_HEIGHT                 3000
-    #define CAM_ACTIVE_AREA_X1              0       // some data all the way to left, normal 8 ?
-    #define CAM_ACTIVE_AREA_Y1              10
-    #define CAM_ACTIVE_AREA_X2              4072    // or 4024
-    #define CAM_ACTIVE_AREA_Y2              3040    // or 3041 or 3020
+    #define CAM_ACTIVE_AREA_X1              24       //
+    #define CAM_ACTIVE_AREA_Y1              12
+    #define CAM_ACTIVE_AREA_X2              4056    //
+    #define CAM_ACTIVE_AREA_Y2              3036    //
 
     // camera name OK
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
@@ -81,8 +92,13 @@
     //aspect correction
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
+
+    #undef CAM_SCREEN_WIDTH
     #undef CAM_BITMAP_WIDTH
-    #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
+    #undef CAM_BITMAP_HEIGHT
+    #define CAM_SCREEN_WIDTH                480 // Width of bitmap screen in CHDK co-ordinates
+    #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
+    #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
 
     #define CAM_ZEBRA_ASPECT_ADJUST         1
 
@@ -90,10 +106,5 @@
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 	#define REMOTE_SYNC_STATUS_LED 	0xc0220134		// specifies an LED that turns on while camera waits for USB remote to sync
-
-    #undef  CAMERA_MIN_DIST
-    #define CAMERA_MIN_DIST                 30      // Override min subject distance
-    #undef  CAMERA_MAX_DIST
-    #define CAMERA_MAX_DIST                 193731  // Override max subject distance
 
 //----------------------------------------------------------
