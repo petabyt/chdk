@@ -26,10 +26,8 @@ static long last_kbd_key = 0;
 extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
-	long usb_physw[3];
-	usb_physw[USB_IDX] = 0;
-	_kbd_read_keys_r2(usb_physw);
-	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
+    volatile long *mmio1 = (void*)0xc0220204;
+    return( (*mmio1 & USB_MASK ) == USB_MASK);
 }
 
 
@@ -127,13 +125,14 @@ void my_kbd_read_keys()
 
 	}
 	
+	_kbd_read_keys_r2(physw_status) ;
+	
 	usb_remote_key() ;
 
 	if (conf.remote_enable) {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-	} else {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
+		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(USB_MASK);
 	}
+	physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;
 
     _kbd_pwr_off();
 
