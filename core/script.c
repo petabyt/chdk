@@ -23,8 +23,8 @@
 
 // Requested filename
 enum FilenameMakeModeEnum {
-    MAKE_PARAMSETNUM_FILENAME,		// "DATA/scriptname.cfg" -> cfg_name
-	MAKE_PARAM_FILENAME 			// "DATA/scriptname_%d" -> cfg_param_name
+    MAKE_PARAMSETNUM_FILENAME,      // "DATA/scriptname.cfg" -> cfg_name
+    MAKE_PARAM_FILENAME             // "DATA/scriptname_%d" -> cfg_param_name
 };
 
 //-------------------------------------------------------------------
@@ -112,7 +112,9 @@ char script_title[36];                                      // Title of current 
 // 1. Values of script parameters are stored in conf.script_vars
 // 2. Encoding scheme is: array[VAR-'a'] = value
 
-char script_params[SCRIPT_NUM_PARAMS][28];                  // Parameter title
+#define MAX_PARAM_NAME_LEN  27
+
+char script_params[SCRIPT_NUM_PARAMS][MAX_PARAM_NAME_LEN+1];// Parameter title
 short script_param_order[SCRIPT_NUM_PARAMS];                // Ordered as_in_script list of variables ( [idx] = id_of_var )
                                                             // to display in same order in script
 int script_range_values[SCRIPT_NUM_PARAMS];                 // Min/Max values for param validation
@@ -121,7 +123,6 @@ short script_range_types[SCRIPT_NUM_PARAMS];                // Specifies if rang
 const char **script_named_values[SCRIPT_NUM_PARAMS];        // Array of list values for named parameters
 int script_named_counts[SCRIPT_NUM_PARAMS];                 // Count of # of entries in each script_list_values array
 char *script_named_strings[SCRIPT_NUM_PARAMS];              // Base storage for named value string data
-static char script_params_update[SCRIPT_NUM_PARAMS];        // Flag is such parameter exist
 static int script_loaded_params[SCRIPT_NUM_PARAMS];         // Copy of original values of parameters 
                                                             // (detect are they changed or not)
 
@@ -129,9 +130,10 @@ static long running_script_stack_name = -1;                 // ID of action_stac
 
 //-------------------------------------------------------------------
 
-const char* skip_whitespace(const char* p)  { while (*p==' ' || *p=='\t') p++; return p; }  // Skip past whitespace
-const char* skip_token(const char* p)       { while (*p && *p!='\r' && *p!='\n' && *p!=' ' && *p!='\t') p++; return p; }  // Skip past current token value
-const char* skip_toeol(const char* p)       { while (*p && *p!='\r' && *p!='\n') p++; return p; } // Skip to end of line
+const char* skip_whitespace(const char* p)  { while (*p==' ' || *p=='\t') p++; return p; }                                  // Skip past whitespace
+const char* skip_token(const char* p)       { while (*p && *p!='\r' && *p!='\n' && *p!=' ' && *p!='\t') p++; return p; }    // Skip past current token value
+const char* skip_toeol(const char* p)       { while (*p && *p!='\r' && *p!='\n') p++; return p; }                           // Skip to end of line
+const char* skip_eol(const char *p)         { p = skip_toeol(p); if (*p == '\r') p++; if (*p == '\n') p++; return p; }      // Skip past end of line
 
 //=======================================================
 //             PROCESSING "@ACTION" FUNCTIONS
@@ -154,54 +156,65 @@ static void process_title(const char *title)
 }
 
 //-------------------------------------------------------------------
-// Process one entry "@param VAR TITLE"
+// Process one entry "@param VAR TITLE" to check if it exists
 //      param = ptr right after descriptor (should point to var)
-//      update = 0 - get
-//               1 - check is such parameter exists in loaded script
-// RESULT: script_params[VAR] - parameter title
-//         script_params_update[VAR] 
-// RETURN VALUE: 0 if err, 1..26 = id of var
+// RETURN VALUE: 0 if not found, 1..26 = id of var
+// Used to ensure that a param loaded from an old saved paramset does
+// not overwrite defaults from script
 //-------------------------------------------------------------------
-static int process_param(const char *param, int update)
+static int check_param(const char *param)
 {
     register const char *ptr = param;
-    register int n, i=0;
+    register int n=0, i=0, l;
 
     ptr = skip_whitespace(ptr);
     if (ptr[0] && (ptr[0]>='a' && ptr[0]<='a'+SCRIPT_NUM_PARAMS) && (ptr[1]==' ' || ptr[1]=='\t'))
     {
-        n=ptr[0]-'a';
+        n = ptr[0]-'a';                                 // VAR
+        ptr = skip_whitespace(ptr+2);                   // skip to TITLE
+        l = skip_toeol(ptr) - ptr;                      // get length of TITLE
+        if (l > MAX_PARAM_NAME_LEN)
+            l = MAX_PARAM_NAME_LEN;
+        if (l != strlen(script_params[n]))              // Check length matches existing TITLE length
+            n = 0;
+        else if (strncmp(ptr,script_params[n],l) != 0)  // Check that TITLE matches existing TITLE
+            n = 0;
+        else
+            n++;
+    }
+    return n; // n=1 if '@param a' was processed, n=2 for 'b' ... n=26 for 'z'. n=0 if failed.
+}
+
+//-------------------------------------------------------------------
+// Process one entry "@param VAR TITLE"
+//      param = ptr right after descriptor (should point to var)
+// RESULT: script_params[VAR] - parameter title
+// RETURN VALUE: 0 if err, 1..26 = id of var
+//-------------------------------------------------------------------
+static int process_param(const char *param)
+{
+    register const char *ptr = param;
+    register int n=0, i=0, l;
+
+    ptr = skip_whitespace(ptr);
+    if (ptr[0] && (ptr[0]>='a' && ptr[0]<='a'+SCRIPT_NUM_PARAMS) && (ptr[1]==' ' || ptr[1]=='\t'))
+    {
+        n = ptr[0]-'a';
         ptr = skip_whitespace(ptr+2);
-        script_params_update[n] = 1;
-        while (i<(sizeof(script_params[0])-1) && ptr[i] && ptr[i]!='\r' && ptr[i]!='\n')
-        {
-            if (update)
-            { 
-                if (script_params[n][i]!=ptr[i]) 
-                {
-                    script_params_update[n] = 0; 
-                    break;
-                }
-            } 
-            else 
-                script_params[n][i] = ptr[i];
-            ++i;
-        }
-        if (!update) script_params[n][i] = 0;
+        l = skip_toeol(ptr) - ptr;                  // get length of TITLE
+        if (l > MAX_PARAM_NAME_LEN)
+            l = MAX_PARAM_NAME_LEN;
+        strncpy(script_params[n],ptr,l);
         n++;
     }
-    else
-        n=0; // ??? else produce error message    
     return n; // n=1 if '@param a' was processed, n=2 for 'b' ... n=26 for 'z'. n=0 if failed.
 }
 
 //-------------------------------------------------------------------
 // Process one entry "@default VAR VALUE"
 //      param = ptr right after descriptor (should point to var)
-//      update = 0 - get
-//               1 - only if updated
 //-------------------------------------------------------------------
-static void process_default(const char *param, char update)
+static void process_default(const char *param)
 {
     register const char *ptr = param;
     register int n;
@@ -209,23 +222,18 @@ static void process_default(const char *param, char update)
     ptr = skip_whitespace(ptr);
     if (ptr[0] && (ptr[0]>='a' && ptr[0]<='a'+SCRIPT_NUM_PARAMS) && (ptr[1]==' ' || ptr[1]=='\t'))
     {
-        n=ptr[0]-'a';
+        n = ptr[0]-'a';
         ptr = skip_whitespace(ptr+2);
-        if (!update || script_params_update[n])
-        {
-            conf.script_vars[n] = strtol(ptr, NULL, 0);
-            script_loaded_params[n] = conf.script_vars[n];
-        }
+        conf.script_vars[n] = strtol(ptr, NULL, 0);
+        script_loaded_params[n] = conf.script_vars[n];
     } // ??? else produce error message
 }
 
 //-------------------------------------------------------------------
 // Process one entry "@range VAR MIN MAX"
 //      param = ptr right after descriptor (should point to var)
-//      update = 0 - get
-//               1 - only if updated
 //-------------------------------------------------------------------
-static void process_range(const char *param, char update)
+static void process_range(const char *param)
 {
     register const char *ptr = param;
     register int n;
@@ -233,31 +241,26 @@ static void process_range(const char *param, char update)
     ptr = skip_whitespace(ptr);
     if (ptr[0] && (ptr[0]>='a' && ptr[0]<='a'+SCRIPT_NUM_PARAMS) && (ptr[1]==' ' || ptr[1]=='\t'))
     {
-        n=ptr[0]-'a';
+        n = ptr[0]-'a';
         ptr = skip_whitespace(ptr+2);
-        if (!update || script_params_update[n])
-        {
-            int min = strtol(ptr,NULL,0);
-            ptr = skip_whitespace(skip_token(ptr));
-            int max = strtol(ptr,NULL,0);
-            script_range_values[n] = MENU_MINMAX(min,max);
-            if ((min == 0) && (max == 1))
-                script_range_types[n] = MENUITEM_BOOL;
-            else if ((min >= 0) && (max >= 0)) 
-                script_range_types[n] = MENUITEM_INT|MENUITEM_F_MINMAX|MENUITEM_F_UNSIGNED;
-            else
-                script_range_types[n] = MENUITEM_INT|MENUITEM_F_MINMAX;
-        }
+        int min = strtol(ptr,NULL,0);
+        ptr = skip_whitespace(skip_token(ptr));
+        int max = strtol(ptr,NULL,0);
+        script_range_values[n] = MENU_MINMAX(min,max);
+        if ((min == 0) && (max == 1))
+            script_range_types[n] = MENUITEM_BOOL;
+        else if ((min >= 0) && (max >= 0)) 
+            script_range_types[n] = MENUITEM_INT|MENUITEM_F_MINMAX|MENUITEM_F_UNSIGNED;
+        else
+            script_range_types[n] = MENUITEM_INT|MENUITEM_F_MINMAX;
     } // ??? else produce error message
 }
 
 //-------------------------------------------------------------------
 // Process one entry "@values VAR A B C D ..."
 //      param = ptr right after descriptor (should point to var)
-//      update = 0 - get
-//               1 - only if updated
 //-------------------------------------------------------------------
-static void process_values(const char *param, char update)
+static void process_values(const char *param)
 {
     register const char *ptr = param;
     register int n;
@@ -265,38 +268,35 @@ static void process_values(const char *param, char update)
     ptr = skip_whitespace(ptr);
     if (ptr[0] && (ptr[0]>='a' && ptr[0]<='a'+SCRIPT_NUM_PARAMS) && (ptr[1]==' ' || ptr[1]=='\t'))
     {
-        n=ptr[0]-'a';
+        n = ptr[0]-'a';
         ptr = skip_whitespace(ptr+2);
-        if (!update || script_params_update[n])
+        int len = skip_toeol(ptr) - ptr;
+        script_named_strings[n] = malloc(len+1);
+        strncpy(script_named_strings[n], ptr, len);
+        script_named_strings[n][len] = 0;
+
+        const char *p = script_named_strings[n];
+        int cnt = 0;
+        while (*p)
         {
-            int len = skip_toeol(ptr) - ptr;
-            script_named_strings[n] = malloc(len+1);
-            strncpy(script_named_strings[n], ptr, len);
-            script_named_strings[n][len] = 0;
+            p = skip_whitespace(skip_token(p));
+            cnt++;
+        }
+        script_named_counts[n] = cnt;
+        script_named_values[n] = malloc(cnt * sizeof(char*));
 
-            const char *p = script_named_strings[n];
-            int cnt = 0;
-            while (*p)
+        p = script_named_strings[n];
+        cnt = 0;
+        while (*p)
+        {
+            script_named_values[n][cnt] = p;
+            p = skip_token(p);
+            if (*p)
             {
-                p = skip_whitespace(skip_token(p));
-                cnt++;
+                *((char*)p) = 0;
+                p = skip_whitespace(p+1);
             }
-            script_named_counts[n] = cnt;
-            script_named_values[n] = malloc(cnt * sizeof(char*));
-
-            p = script_named_strings[n];
-            cnt = 0;
-            while (*p)
-            {
-                script_named_values[n][cnt] = p;
-                p = skip_token(p);
-                if (*p)
-                {
-                    *((char*)p) = 0;
-                    p = skip_whitespace(p+1);
-                }
-                cnt++;
-            }
+            cnt++;
         }
     } // ??? else produce error message
 }
@@ -308,34 +308,31 @@ static void process_values(const char *param, char update)
 //-------------------------------------------------------------------
 // PURPOSE: Parse script (script_source_str) for @xxx
 // PARAMETERS:  fn - full path of script
-//              update_vars - 1 process "@defaults", 0 do not
 // RESULTS:  script_title
 //           script_params
 //           script_params_order
 //           script_loaded_params, conf.script_vars
 //-------------------------------------------------------------------
-static void script_scan(const char *fn, int update_vars) {
+static void script_scan(const char *fn)
+{
     register const char *ptr = script_source_str;
     register int i, j=0, n;
     char *c;
 
-	if ( !ptr ) { ptr = lua_script_default; } 	// sanity check
+    if ( !ptr ) { ptr = lua_script_default; }     // sanity check
 
-	// Build title
+    // Build title
 
     c=strrchr(fn, '/');
     strncpy(script_title, (c)?c+1:fn, sizeof(script_title));
     script_title[sizeof(script_title)-1]=0;
 
-	// Reset everything
+    // Reset everything
 
     for (i=0; i<SCRIPT_NUM_PARAMS; ++i)
     {
-    	if (update_vars)
-        {
-            conf.script_vars[i] = 0;
-            script_loaded_params[i] = 0;
-	    }
+        conf.script_vars[i] = 0;
+        script_loaded_params[i] = 0;
         script_params[i][0]=0;
         script_param_order[i]=0;
         script_range_values[i] = 0;
@@ -346,7 +343,7 @@ static void script_scan(const char *fn, int update_vars) {
         script_named_counts[i] = 0;
     }
 
-	// Fillup order, defaults
+    // Fillup order, defaults
 
     while (ptr[0])
     {
@@ -354,87 +351,81 @@ static void script_scan(const char *fn, int update_vars) {
         if (ptr[0]=='@') {
             if (strncmp("@title", ptr, 6)==0)
             {
-                ptr+=6;
-                process_title(ptr);
+                process_title(ptr+6);
             }
             else if (strncmp("@param", ptr, 6)==0)
             {
-                ptr+=6;
-                n=process_param(ptr, 0); // n=1 if '@param a' was processed, n=2 for 'b' ... n=26 for 'z'. n=0 if failed.
+                n = process_param(ptr+6); // n=1 if '@param a' was processed, n=2 for 'b' ... n=26 for 'z'. n=0 if failed.
                 if (n>0 && n<=SCRIPT_NUM_PARAMS)
                 {
                   script_param_order[j]=n;
                   j++;
                 }
             }
-            else if (update_vars && strncmp("@default", ptr, 8)==0)
+            else if (strncmp("@default", ptr, 8)==0)
             {
-                ptr+=8;
-                process_default(ptr, 0);
+                process_default(ptr+8);
             }
-            else if (update_vars && strncmp("@range", ptr, 6)==0)
+            else if (strncmp("@range", ptr, 6)==0)
             {
-                ptr+=6;
-                process_range(ptr, 0);
+                process_range(ptr+6);
             }
-            else if (update_vars && strncmp("@values", ptr, 7)==0)
+            else if (strncmp("@values", ptr, 7)==0)
             {
-                ptr+=7;
-                process_values(ptr, 0);
+                process_values(ptr+7);
             }
         }
-        while (ptr[0] && ptr[0]!='\n') ++ptr; // unless end of line
-        if (ptr[0]) ++ptr;
+        ptr = skip_eol(ptr);
     }
 }
 
 //-------------------------------------------------------------------
 // PURPOSE:     Create cfg filename in buffer.
 // PARAMETERS:  mode - what exact kind of cfg file name required
-//				fn - full path of script  (optional. have no matter for some modes)
-//				paramset - target paramset (optional)
+//                fn - full path of script  (optional. have no matter for some modes)
+//                paramset - target paramset (optional)
 // RESULT:  name at cfg_param_name or cfg_name (depending on mode)
 //-------------------------------------------------------------------
 void make_param_filename( enum FilenameMakeModeEnum mode, const char* fn, int paramset )
 {
-	char extbuf[5];
-	char* tgt_buf;
-	char* name = 0;
-	
-	// find name of script
+    char extbuf[5];
+    char* tgt_buf;
+    char* name = 0;
+    
+    // find name of script
     if (fn && fn[0]) 
     {
-	    name = strrchr( fn, '/' ); 
-    	if (name) name++; else name=(char*)fn;
-	}
+        name = strrchr( fn, '/' ); 
+        if (name) name++; else name=(char*)fn;
+    }
 
-	// prepare base data to make
-	switch ( mode )
+    // prepare base data to make
+    switch ( mode )
     {
-		case MAKE_PARAMSETNUM_FILENAME:
-			tgt_buf = cfg_name;
-			strcpy(extbuf,".cfg");
-			break;			
-		case MAKE_PARAM_FILENAME:
-			tgt_buf = cfg_param_name;
-			sprintf(extbuf,"_%d",paramset);
-			break;			
-		default:		// unknown mode
-			return;
-	}
+        case MAKE_PARAMSETNUM_FILENAME:
+            tgt_buf = cfg_name;
+            strcpy(extbuf,".cfg");
+            break;            
+        case MAKE_PARAM_FILENAME:
+            tgt_buf = cfg_param_name;
+            sprintf(extbuf,"_%d",paramset);
+            break;            
+        default:        // unknown mode
+            return;
+    }
     
-	// make path
-	strcpy(tgt_buf, SCRIPT_DATA_PATH);
+    // make path
+    strcpy(tgt_buf, SCRIPT_DATA_PATH);
     
-	// add script filename
-	char* tgt_name=tgt_buf+strlen(tgt_buf);
-	strncpy( tgt_name, name, 12 );
-	tgt_name[12] = 0;
+    // add script filename
+    char* tgt_name=tgt_buf+strlen(tgt_buf);
+    strncpy( tgt_name, name, 12 );
+    tgt_name[12] = 0;
 
-	// find where extension start and replace it
-	char* ext = strrchr(tgt_name, '.');
-	if (!ext) ext=tgt_name+strlen(tgt_name);
-	strcpy ( ext, extbuf );
+    // find where extension start and replace it
+    char* ext = strrchr(tgt_name, '.');
+    if (!ext) ext=tgt_name+strlen(tgt_name);
+    strcpy ( ext, extbuf );
 }
 
 //-------------------------------------------------------------------
@@ -442,13 +433,13 @@ void make_param_filename( enum FilenameMakeModeEnum mode, const char* fn, int pa
 //-------------------------------------------------------------------
 void get_last_paramset_num(const char *fn)
 {
-	// skip if internal script used
+    // skip if internal script used
     if (fn == NULL || fn[0] == 0) return;
 
     make_param_filename( MAKE_PARAMSETNUM_FILENAME, fn, 0);
-	if ( !load_int_value_file( cfg_name, &conf.script_param_set ) )
-	   conf.script_param_set = 0;
-	make_param_filename( MAKE_PARAM_FILENAME, fn, conf.script_param_set);
+    if ( !load_int_value_file( cfg_name, &conf.script_param_set ) )
+       conf.script_param_set = 0;
+    make_param_filename( MAKE_PARAM_FILENAME, fn, conf.script_param_set);
 }
 
 //-------------------------------------------------------------------
@@ -459,45 +450,53 @@ void get_last_paramset_num(const char *fn)
 //-------------------------------------------------------------------
 int load_params_values(const char *fn, int paramset)
 {
-   	// skip if internal script used
+    // skip if internal script used
     if (fn == NULL || fn[0] == 0) return 0;
     
-	conf.script_param_set = paramset;
-	make_param_filename( MAKE_PARAM_FILENAME, fn, paramset );
+    conf.script_param_set = paramset;
+    make_param_filename( MAKE_PARAM_FILENAME, fn, paramset );
 
-	int size;
-	char* buf = load_file( cfg_param_name, &size);
+    int size;
+    char* buf = load_file( cfg_param_name, &size);
     if (!buf)
         return 0;
 
-	int i;
-    for (i = 0; i < SCRIPT_NUM_PARAMS; ++i) 
-        script_params_update[i]=0;
+    const char* ptr = buf;
 
-    char* ptr = buf;
-
+    // Initial scan of saved paramset file
+    // Ensure all saved params match defaults from script
+    // If not assume saved file is invalid and don't load it
+    //   may occur if script is changed, or file was saved by a different script with same name
     while (ptr[0]) 
     {
-        while (ptr[0]==' ' || ptr[0]=='\t') ++ptr; // whitespaces
+        ptr = skip_whitespace(ptr);
         if (ptr[0]=='@')
         {
             if (strncmp("@param", ptr, 6) == 0) 
             {
-                ptr+=6;
-                process_param(ptr, 1);
-            } else if (strncmp("@default", ptr, 8)==0) {
-                ptr+=8;
-                process_default(ptr, 1);
-            } else if (strncmp("@range", ptr, 6)==0) {
-                ptr+=6;
-                process_range(ptr, 1);
-            } else if (strncmp("@values", ptr, 7)==0) {
-                ptr+=7;
-                process_values(ptr, 0);
+                if (!check_param(ptr+6))
+                    return 0;
             }
         }
-        while (ptr[0] && ptr[0]!='\n') ++ptr; // unless end of line
-        if (ptr[0]) ++ptr;
+        ptr = skip_eol(ptr);
+    }
+
+    // All ok, reset and process file
+    ptr = buf;
+
+    while (ptr[0]) 
+    {
+        ptr = skip_whitespace(ptr);
+        if (ptr[0]=='@')
+        {
+            // Already checked file, so only need to load the @default values
+            // @param, @range & @values already set from script
+            if (strncmp("@default", ptr, 8)==0)
+            {
+                process_default(ptr+8);
+            }
+        }
+        ptr = skip_eol(ptr);
     }
 
     ufree(buf);
@@ -508,60 +507,30 @@ int load_params_values(const char *fn, int paramset)
 
 //-------------------------------------------------------------------
 // PURPOSE:     Auxilary function.
-//				Actually save param file
+//                Actually save param file
 // PARAMETERS:  fn = name of target file (actually always cfg_param_name)
-//				script_file = name if need to restore path
-//				paramset = num of paramset, if it should be restored
 //-------------------------------------------------------------------
-static void do_save_param_file( char* fn, char* script_file, int paramset )
+static void do_save_param_file(char* fn)
 {
-    int i,n, fd;
-    char *buf;
+    int i, n;
+    FILE *fd;
+    char buf[250];
 
-    buf=umalloc(250);
-    if( buf )
-	{
-    	fd = open(fn, O_WRONLY|O_CREAT|O_TRUNC, 0777);
-    	if (fd >=0)
-		{
-			// store filename and current paramset
-			if (script_file) {
-				sprintf( buf, "@script_file %s\n", script_file );
-				write( fd, buf, strlen(buf) );
-			}
-			if ( paramset >0 ) {
-				sprintf( buf, "@load_paramset %d\n", paramset );
-				write( fd, buf, strlen(buf) );
-			}
-
-    		for(n = 0; n < SCRIPT_NUM_PARAMS; ++n)
-    		{
-    		    if (script_params[n][0] != 0)
-    		    {
-    		        sprintf(buf,"@param %c %s\n@default %c %d\n",'a'+n,script_params[n],'a'+n,conf.script_vars[n]);
-    		        if (script_range_values[n] != 0)
-                    {
-                        if (script_range_types[n] & MENUITEM_F_UNSIGNED)
-    		                sprintf(buf+strlen(buf),"@range %c %d %d\n",'a'+n,(unsigned short)(script_range_values[n]&0xFFFF),(unsigned short)(script_range_values[n]>>16));
-                        else
-    		                sprintf(buf+strlen(buf),"@range %c %d %d\n",'a'+n,(short)(script_range_values[n]&0xFFFF),(short)(script_range_values[n]>>16));
-                    }
-    		        if (script_named_counts[n] != 0)
-    		        {
-    		            sprintf(buf+strlen(buf),"@values %c",'a'+n);
-    		            for (i=0; i<script_named_counts[n]; i++)
-    		                sprintf(buf+strlen(buf)," %s",script_named_values[n][i]);
-    		            strcat(buf,"\n");
-    		        }
-    				write(fd, buf, strlen(buf));
-				}
-    		}
-    		
-    		close(fd);
-		}
-			
-  		ufree(buf);
-	}
+    fd = fopen(fn, "w");
+    if (fd)
+    {
+        for(n = 0; n < SCRIPT_NUM_PARAMS; ++n)
+        {
+            if (script_params[n][0] != 0)
+            {
+                // Only need to save @param & @default info - @range & @values are only loaded from script header
+                sprintf(buf,"@param %c %s\n@default %c %d\n",'a'+n,script_params[n],'a'+n,conf.script_vars[n]);
+                fwrite(buf, strlen(buf), 1, fd);
+            }
+        }
+        
+        fclose(fd);
+    }
 }
 
 //-------------------------------------------------------------------
@@ -580,13 +549,13 @@ void save_params_values( int enforce )
 {
     if (conf.script_param_save)
     {
-	    // Write paramsetnum file
+        // Write paramsetnum file
         make_param_filename( MAKE_PARAMSETNUM_FILENAME, conf.script_file, 0);
         save_int_value_file( cfg_name, conf.script_param_set );
 
         int i, changed=0;
 
-	    // Check is anything changed since last time
+        // Check is anything changed since last time
         for(i = 0; i < SCRIPT_NUM_PARAMS; i++)
         {
             if (script_loaded_params[i] != conf.script_vars[i]) changed++;
@@ -596,8 +565,8 @@ void save_params_values( int enforce )
         if (enforce || changed)
         {
             // Write parameters file
-	        make_param_filename( MAKE_PARAM_FILENAME, conf.script_file, conf.script_param_set);
-	        do_save_param_file( cfg_param_name, 0, -1);
+            make_param_filename( MAKE_PARAM_FILENAME, conf.script_file, conf.script_param_set);
+            do_save_param_file(cfg_param_name);
         }
     }
 }
@@ -607,7 +576,7 @@ void save_params_values( int enforce )
 //-------------------------------------------------------------------
 void script_reset_to_default_params_values() 
 {
-	script_scan( conf.script_file, 1 );			// load all values from script
+    script_scan( conf.script_file );    // load all values from script
     gui_update_script_submenu();
 }
 
@@ -624,45 +593,41 @@ void script_reset_to_default_params_values()
 //-------------------------------------------------------------------
 void script_load(const char *fn)
 {
-	int size;
-	char* buf;
+    int size;
+    char* buf;
 
     if(script_source_str && script_source_str != lua_script_default)
         free((void *)script_source_str);
 
-    int update_vars = (strcmp(fn, conf.script_file) != 0);  // is file was switched
-
     // if filename is empty, try to load default named script.
-	// if no such one, lua_script_default will be used
+    // if no such one, lua_script_default will be used
     if ( !fn[0] )
     {
-		update_vars = 1; 
-		buf = load_file_to_cached( SCRIPT_DEFAULT_FILENAME, &size );
-		if ( buf )
+        buf = load_file_to_cached( SCRIPT_DEFAULT_FILENAME, &size );
+        if ( buf )
                 fn = SCRIPT_DEFAULT_FILENAME;
     }
     else
     {
-		buf = load_file_to_cached( fn, &size );
-	}
-
-	if ( !buf )
-    {
-		// if failed to load - say "internal" and raise flag need update
-	    script_source_str = lua_script_default;
-        conf.script_file[0] = 0;
-        update_vars = 1; 
-	}
-	else
-    {
-		// if ok - set pointers to script
-		script_source_str = buf;
-		strcpy(conf.script_file, fn);
+        buf = load_file_to_cached( fn, &size );
     }
 
-    get_last_paramset_num( conf.script_file );			// update data paths
-    script_scan( conf.script_file, update_vars );      	// re-fill @title/@names/@order/@range/@value + reset values to @default if update_vars=1
-	load_params_values( conf.script_file, conf.script_param_set );
+    if ( !buf )
+    {
+        // if failed to load - say "internal" and raise flag need update
+        script_source_str = lua_script_default;
+        conf.script_file[0] = 0;
+    }
+    else
+    {
+        // if ok - set pointers to script
+        script_source_str = buf;
+        strcpy(conf.script_file, fn);
+    }
+
+    get_last_paramset_num( conf.script_file );            // update data paths
+    script_scan( conf.script_file );                      // re-fill @title/@names/@order/@range/@value + reset values to @default
+    load_params_values( conf.script_file, conf.script_param_set );
 
     gui_update_script_submenu();
 }
