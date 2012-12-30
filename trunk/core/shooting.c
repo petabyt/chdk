@@ -736,6 +736,14 @@ short shooting_can_focus()
     // TODO whats the reason for this ?!?
     return (shooting_get_zoom()<8) && (m!=MODE_AUTO) && (m!=MODE_SCN_UNDERWATER);
 #else
+#ifdef PROPCASE_CONTINUOUS_AF
+    if (shooting_get_prop(PROPCASE_CONTINUOUS_AF))
+        return 0;
+#endif
+#ifdef PROPCASE_SERVO_AF
+    if (shooting_get_prop(PROPCASE_SERVO_AF))
+        return 0;
+#endif
     return 1;
 #endif
 }
