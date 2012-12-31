@@ -240,7 +240,7 @@ int action_stack_standard(long p)
         }
         break;
     case AS_WAIT_SAVE:
-        if (state_shooting_progress == SHOOTING_PROGRESS_DONE)
+        if ((state_shooting_progress == SHOOTING_PROGRESS_DONE) || !shooting_in_progress())
             action_pop();
         break;
     case AS_WAIT_FLASH:
