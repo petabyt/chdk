@@ -2463,7 +2463,7 @@ static void lua_set_variable(int varnum, int value)
     lua_settable( L, LUA_GLOBALSINDEX );
 }
 
-static void lua_set_md_ret(int md_ret)                  { lua_pushnumber(Lt,md_ret); }
+static void lua_set_as_ret(int md_ret)                  { lua_pushnumber(Lt,md_ret); }
 
 struct libscriptapi_sym _liblua =
 {
@@ -2474,7 +2474,7 @@ struct libscriptapi_sym _liblua =
     lua_script_run,
     lua_script_reset,
     lua_set_variable,
-    lua_set_md_ret,
+    lua_set_as_ret,
     lua_run_restore,
 };
 

@@ -8,6 +8,7 @@
 #include "keyboard.h"
 #include "histogram.h"
 #include "action_stack.h"
+#include "script_api.h"
 
 //----------------------------------------------------------------------------------
 
@@ -329,8 +330,12 @@ void action_clear_delay(void)
 
 static void action_stack_AS_WAIT_SAVE()
 {
-    if (state_shooting_progress == SHOOTING_PROGRESS_DONE)
+    if (!shooting_in_progress())
+    {
         action_pop_func();
+        if (libscriptapi)
+            libscriptapi->set_as_ret((state_shooting_progress == SHOOTING_PROGRESS_NONE) ? 0 : 1);
+    }
 }
 
 static void action_stack_AS_WAIT_FLASH()

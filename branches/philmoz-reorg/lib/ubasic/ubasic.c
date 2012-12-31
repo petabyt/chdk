@@ -128,7 +128,8 @@ static int variables[MAX_VARNUM];
 
 static int ended;
 
-static int ubasic_md_ret_var_num;
+// Variable number to store return values from Action Stack functions (e.g. motion_detect, shoot)
+static int ubasic_as_ret_var_num;
 
 static int expr(void);
 static void line_statement(void);
@@ -1523,6 +1524,12 @@ static void
 shoot_statement(void)
 {
   accept(TOKENIZER_SHOOT);
+  ubasic_as_ret_var_num = -1;
+  if (tokenizer_token() != TOKENIZER_CR)
+  {
+    ubasic_as_ret_var_num = tokenizer_variable_num();
+    accept(TOKENIZER_VARIABLE);
+  }
   action_push_func(action_stack_AS_SHOOT);
   flag_yield=1;
   DEBUG_PRINTF("End of shoot\n");
@@ -1895,7 +1902,7 @@ static void md_detect_motion_statement()
 
     draw_grid=expr();tokenizer_next();
 
-    ubasic_md_ret_var_num = tokenizer_variable_num();
+    ubasic_as_ret_var_num = tokenizer_variable_num();
 
     accept(TOKENIZER_VARIABLE);
 
@@ -2427,7 +2434,9 @@ ubasic_end() {
 }
 /*---------------------------------------------------------------------------*/
 
-void ubasic_set_md_ret(int md_ret)
+// Save Action Stack 'return' value in selected variable
+void ubasic_set_as_ret(int md_ret)
 {
-    ubasic_set_variable(ubasic_md_ret_var_num, md_ret);
+    if (ubasic_as_ret_var_num >= 0)
+        ubasic_set_variable(ubasic_as_ret_var_num, md_ret);
 }

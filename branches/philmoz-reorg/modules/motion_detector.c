@@ -116,7 +116,7 @@ static void action_stack_AS_MOTION_DETECTOR()
             // We need to recover the motion detector's
             // result and push
             // it onto the thread's stack.
-            libscriptapi->set_md_ret(motion_detector->return_value);
+            libscriptapi->set_as_ret(motion_detector->return_value);
         }
         action_pop_func();
     }

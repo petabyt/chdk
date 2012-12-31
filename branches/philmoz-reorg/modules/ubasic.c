@@ -16,7 +16,7 @@ int ubasic_init(const char *program, int is_ptp);
 int ubasic_run(void);
 void ubasic_end(void);
 void ubasic_set_variable(int varum, int value);
-void ubasic_set_md_ret(int md_ret);
+void ubasic_set_as_ret(int md_ret);
 int jump_label(char * label);
 
 static int ubasic_run_restore(void)             { return jump_label("restore"); }
@@ -30,7 +30,7 @@ struct libscriptapi_sym _libubasic =
     ubasic_run,
     ubasic_end,
     ubasic_set_variable,
-    ubasic_set_md_ret,
+    ubasic_set_as_ret,
     ubasic_run_restore,
 };
 

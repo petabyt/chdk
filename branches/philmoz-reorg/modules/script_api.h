@@ -10,7 +10,7 @@ struct libscriptapi_sym
     int     (*script_run)( void );          // run script timeslice
     void    (*script_reset)(void);
     void    (*set_variable)(int varnum, int value);
-    void    (*set_md_ret)(int md_ret);
+    void    (*set_as_ret)(int as_ret);      // save 'return' value from action stack code (e.g. motion detect, shoot)
     int     (*run_restore)( void );         // run the "restore" function at the end of a script
 };
 
