@@ -18,3 +18,6 @@ NHSTUB(MakeAFScan,                  0xFFD16FF4)
 NHSTUB(TurnOffMic,                  0xFFC37A8C)
 NHSTUB(TurnOnMic,                   0xFFC37A60)
 NHSTUB(UIFS_GetLastPath,            0xFFD15C48)
+
+// Override for 'stat' found by sig finder - needs old version
+NHSTUB(stat,                        0xffc13a9c)
