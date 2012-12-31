@@ -52,4 +52,7 @@ WARNING:
 #define PROPCASE_DIGITAL_ZOOM_MODE          91      //G10 Digital Zoom Mode/State 0 = off/standard, 2 = 1.7x, 3 = 2.1x
 #define PROPCASE_STITCH_DIRECTION           233     //D10 0=left>right, 1=right>left
 #define PROPCASE_STITCH_SEQUENCE            238     //D10 counts shots in stitch sequence, positive=left>right, negative=right>left
+#define PROPCASE_VIDEO_RESOLUTION           169
+#define PROPCASE_SERVO_AF                   293     //ixus110 0 = servo AF not active, 1 = servo AF active
+#define PROPCASE_AF_LOCK                    11
 #endif
