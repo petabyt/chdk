@@ -40,7 +40,7 @@ void *vid_get_viewport_fb_d()
 // note this appears to be 216 in rec mode 
 long vid_get_viewport_height()
 {
-    return vid_get_viewport_height_proper()>>1;
+    return vid_get_viewport_height_proper();
 }
 char *camera_jpeg_count_str()
 {
