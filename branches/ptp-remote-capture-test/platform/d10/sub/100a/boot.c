@@ -30,6 +30,10 @@ void taskHook(context_t **context) {
  if(tcb->entry == task_InitFileModules) tcb->entry = (void*)init_file_modules_task;
  if(tcb->entry == task_MovieRecord)     tcb->entry = (void*)movie_record_task;
  if(tcb->entry == task_ExpDrv)          tcb->entry = (void*)exp_drv_task;
+// for development testing with/without, not be needed once development is complete
+#ifdef CAM_HAS_FILEWRITETASK_HOOK
+ if(tcb->entry == (void *)0xFFA25FB4)   tcb->entry = (void*)filewritetask;
+#endif
 }
 
 #define DEBUG_LED ((unsigned volatile *)0xC0220130) // RED
