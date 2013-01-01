@@ -20,6 +20,7 @@ extern void task_CaptSeq();
 extern void task_InitFileModules();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
+extern void task_FileWrite();
 
 void taskHook(context_t **context) { 
  task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
