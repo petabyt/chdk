@@ -32,7 +32,7 @@ void taskHook(context_t **context) {
  if(tcb->entry == task_ExpDrv)          tcb->entry = (void*)exp_drv_task;
 // for development testing with/without, not be needed once development is complete
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
- if(tcb->entry == (void *)0xFFA25FB4)   tcb->entry = (void*)filewritetask;
+ if(tcb->entry == task_FileWrite)   tcb->entry = (void*)filewritetask;
 #endif
 }
 
