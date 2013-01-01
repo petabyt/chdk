@@ -17,10 +17,11 @@ Shortcut Keys
  TOGGLE OSD                RIGHT Key
  TOGGLE DISABLE OVERRIDES  LEFT Key
 
-Know bugs
-*********
-- RAW doesn't work on auto mode
+Camera has both an iris and an ND filter
 
+Known bugs
+**********
+- Raw doesn't work in auto mode
 
 For Developers
 **************

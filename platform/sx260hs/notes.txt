@@ -15,11 +15,11 @@ Shortcut Keys
  TOGGLE OSD                RIGHT Key
  TOGGLE DISABLE OVERRIDES  LEFT Key
 
+Camera has both an iris and an ND filter
+
 Known bugs
 **********
 - Raw doesn't work in auto mode
-- os.mkdir in lua returns an error status, regardless of whether the directory was created
-
 
 For Developers
 **************
