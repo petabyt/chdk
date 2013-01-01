@@ -15,7 +15,12 @@ int remotecap_get_target_support(void) {
     int ret = 0;
     ret |= PTP_CHDK_CAPTURE_RAW;
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
-    ret |= PTP_CHDK_CAPTURE_JPG | PTP_CHDK_CAPTURE_YUV;
+    ret |= PTP_CHDK_CAPTURE_JPG;
+    // only report YUV if supported, but note may not be available in current mode
+    // TODO should maybe be a camera.h define?
+    if(hook_yuv_shooting_buf_addr() != (void *)0xFFFFFFFF) {
+        ret |= PTP_CHDK_CAPTURE_YUV;
+    }
 #endif
     return ret;
 }
