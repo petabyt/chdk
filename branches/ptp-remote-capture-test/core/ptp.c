@@ -636,20 +636,6 @@ static int handle_ptp(
         }
         break;
 #ifdef CAM_CHDK_PTP_REMOTESHOOT
-    case PTP_CHDK_RemoteCaptureInit:
-        ptp.num_param = 1;
-        if(remotecap_set_target(param2,param3,param4)) {
-            // TODO temp to handle expected values on client
-            if(param2 == 0) { // return 0 on clear
-                ptp.param1 = 0;
-            } else {
-                ptp.param1 = 1;
-            }
-        } else {
-            ptp.param1 = 0;
-            ptp.code = PTP_RC_GeneralError;
-        }
-        break;
     case PTP_CHDK_RemoteCaptureIsReady:
         ptp.num_param = 1;
         if ( remotecap_get_target() ) {

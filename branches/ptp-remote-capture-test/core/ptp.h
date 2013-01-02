@@ -1,7 +1,7 @@
 #ifndef __CHDK_PTP_H
 #define __CHDK_PTP_H
 #define PTP_CHDK_VERSION_MAJOR 2  // increase only with backwards incompatible changes (and reset minor)
-#define PTP_CHDK_VERSION_MINOR 105  // increase with extensions of functionality
+#define PTP_CHDK_VERSION_MINOR 106  // increase with extensions of functionality
 /*
 protocol version history
 0.1 - initial proposal from mweerden, + luar
@@ -75,9 +75,22 @@ enum ptp_chdk_command {
                             //  return data is protocol information, frame buffer descriptions and selected display data
                             //  Currently a data phase is always returned. Future versions may define other behavior 
                             //  for values in currently unused parameters.
-  PTP_CHDK_RemoteCaptureInit,
-  PTP_CHDK_RemoteCaptureIsReady,
-  PTP_CHDK_RemoteCaptureGetData
+  // Direct image capture over USB. - 
+  // Under development, subject to change, documentation incomplete
+  // Use lua get_remotecap_support for available data types, lua init_remotecap for setup
+  PTP_CHDK_RemoteCaptureIsReady, // Check if data is available
+                                 // return param1 is status 
+                                 //  0 = not ready
+                                 //  0x10000000 = error
+                                 //  otherwise bitmask of PTP_CHDK_CAPTURE_* datatypes
+  PTP_CHDK_RemoteCaptureGetData  // retrieve data
+                                 // param2 is data to get
+                                 //  0 = camera filename
+                                 //  otherwise bit indicating data type to get
+                                 // return param1 is length
+                                 // return param2 more chunks available?
+                                 //  0 = no more chunks of selected format
+                                 // return param3 seek required to pos (-1 = no seek)
 };
 
 // data types as used by ReadScriptMessage
