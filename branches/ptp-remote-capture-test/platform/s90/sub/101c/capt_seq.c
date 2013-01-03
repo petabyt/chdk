@@ -10,6 +10,19 @@ typedef struct {
 } cam_ptp_data_chunk; //camera specific structure
 
 #define MAX_CHUNKS_FOR_JPEG 4 //model specific
+/*
+ * fwt_data_struct: defined here as it's camera dependent
+ * unneeded members are designated with unkn
+ * file_offset, full_size, seek_flag only needs to be defined for DryOS>=r50 generation cameras
+ * pdc and name are always needed
+ */
+typedef struct
+{
+    int unkn1, unkn2, unkn3, unkn4, unkn5;
+    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_JPEG];
+    int unkn6;
+    char name[32];
+} fwt_data_struct;
 
 #include "../../../generic/capt_seq.c"
 
@@ -1212,8 +1225,7 @@ asm volatile (
       "    LDR     R5, [R4, #0xC] \n" 
 //place hook here
       "STMFD SP!, {R4-R12,LR}\n"
-      "ADD R1, R4, #0x14\n" //data chunk definitions start here
-      "ADD R0, R4, #0x38\n" //name starts here
+      "MOV R0, R4\n"
       "BL filewrite_main_hook\n"
       "LDMFD SP!, {R4-R12,LR}\n"
 //hook end

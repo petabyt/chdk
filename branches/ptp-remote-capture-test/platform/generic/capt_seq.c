@@ -165,10 +165,10 @@ void filewrite_set_discard_jpeg(int state) {
     ignore_current_write = state;
 }
 
-void filewrite_main_hook(char *name, cam_ptp_data_chunk *pdc, char *fwt_data) //TODO arguments could be optimized
+void filewrite_main_hook(fwt_data_struct *fwt_data)
 {
 #ifdef CAM_EXTENDED_FILEWRITETASK
-    // don't forget to #define FWT_FILE_OFFSET, FWT_FULL_SIZE, FWT_SEEK_FLAG
+    // don't forget to #define FWT_CONDSEEK, FWT_MUSTSEEK
     jpeg_curr_session_chunk = 0;
     /*
      * file open flags are at offset 0xc for DryOS r50
@@ -183,16 +183,16 @@ void filewrite_main_hook(char *name, cam_ptp_data_chunk *pdc, char *fwt_data) //
      * 
      * seek flag is at offset 0x50 for DryOS r50
      * 0: no seek
-     * 2: seek
-     * 3: seek if file offset != 0
+     * 2: seek                      -> FWT_MUSTSEEK
+     * 3: seek if file offset != 0  -> FWT_CONDSEEK
      */
-    switch ( *(int*)(fwt_data+FWT_SEEK_FLAG) ) {
-        case 2:
-            jpeg_file_offset = *(int*)(fwt_data+FWT_FILE_OFFSET);
+    switch ( fwt_data->seek_flag ) {
+        case FWT_MUSTSEEK:
+            jpeg_file_offset = fwt_data->file_offset;
             break;
-        case 3:
-            if ( *(int*)(fwt_data+FWT_FILE_OFFSET) != 0 ) {
-                jpeg_file_offset = *(int*)(fwt_data+FWT_FILE_OFFSET);
+        case FWT_CONDSEEK:
+            if ( fwt_data->file_offset != 0 ) {
+                jpeg_file_offset = fwt_data->file_offset;
                 break;
             }
             //fall through
@@ -200,10 +200,10 @@ void filewrite_main_hook(char *name, cam_ptp_data_chunk *pdc, char *fwt_data) //
             jpeg_file_offset = -1; // no seek needed
             break;
     }
-    jpeg_full_size = *(int*)(fwt_data+FWT_FULL_SIZE);
+    jpeg_full_size = fwt_data->full_size;
 #endif //CAM_EXTENDED_FILEWRITETASK
-    jpeg_chunks = pdc;
-    remotecap_jpeg_available(name);
+    jpeg_chunks = &(fwt_data->pdc[0]);
+    remotecap_jpeg_available(&(fwt_data->name[0]));
     while (remotecap_hook_wait(RC_WAIT_FWTASK)) {
         _SleepTask(10);
     }
@@ -292,6 +292,22 @@ asm volatile (
       "BEQ _Write\n"       // no interception
     );
 }
+
+#ifdef CAM_EXTENDED_FILEWRITETASK
+void __attribute__((naked,noinline)) fwt_lseek () {
+/*
+ * R3 is free to use
+ */
+asm volatile (
+      "LDR R3, =current_write_ignored\n"
+      "LDR R3, [R3]\n"
+      "CMP R3, #0\n"
+      "MOVNE R0, R1\n"     // "file position set to the requested value"
+      "BXNE LR\n"
+      "BEQ _Lseek\n"       // no interception
+    );
+}
+#endif // CAM_EXTENDED_FILEWRITETASK
 
 void __attribute__((naked,noinline)) fwt_close () {
 /*

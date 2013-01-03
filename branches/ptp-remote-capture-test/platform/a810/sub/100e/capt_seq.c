@@ -15,9 +15,24 @@ typedef struct {
 } cam_ptp_data_chunk; //camera specific structure
 
 #define MAX_CHUNKS_FOR_JPEG 7 // filewritetask is prepared for this many chunks
-#define FWT_FILE_OFFSET 4     // offset of "chunk's offset in file"
-#define FWT_FULL_SIZE   8     // offset of full jpeg file size
-#define FWT_SEEK_FLAG   0x50  // offset of the flag that signals non-sequential write
+/*
+ * fwt_data_struct: defined here as it's camera dependent
+ * unneeded members are designated with unkn
+ * file_offset, full_size, seek_flag only needs to be defined for DryOS>=r50 generation cameras
+ * pdc and name are always needed
+ */
+typedef struct
+{
+    int unkn1;
+    int file_offset;    // needed for DryOS>=r50
+    int full_size;      // needed for DryOS>=r50
+    int unkn2, unkn3, unkn4;
+    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_JPEG];
+    int seek_flag;      // needed for DryOS>=r50
+    char name[32];
+} fwt_data_struct;
+#define FWT_MUSTSEEK    2   // value of seek_flag indicating seek is required
+#define FWT_CONDSEEK    3   // value of seek_flag indicating seek is required when file_offset not 0
 
 #include "../../../generic/capt_seq.c"
 
@@ -888,20 +903,6 @@ asm volatile (
 
 /*************** filewritetask ***************/
 
-void __attribute__((naked,noinline)) fwt_lseek () {
-/*
- * R3 is free to use
- */
-asm volatile (
-      "LDR R3, =current_write_ignored\n"
-      "LDR R3, [R3]\n"
-      "CMP R3, #0\n"
-      "MOVNE R0, R1\n"     // "file position set to the requested value"
-      "BXNE LR\n"
-      "BEQ _Lseek\n"       // no interception
-    );
-}
-
 void __attribute__((naked,noinline)) filewritetask(  ) { //sub_FFA52E28
 asm volatile (
       "    STMFD   SP!, {R1-R7,LR} \n" 
@@ -997,9 +998,7 @@ asm volatile (
       "    MOV     R4, R0 \n" 
 //hook start placed here to avoid bne a few instructions below
       "STMFD SP!, {R4-R12,LR}\n"
-      "MOV R2, R4\n"        //data block start (only needed for DryOS >= r50 cameras)
-      "ADD R1, R4, #0x18\n" //data chunk definitions start here (found by analysing the write handler below)
-      "ADD R0, R4, #0x54\n" //name starts here
+      //"MOV R0, R4\n"        //data block start, commented out as R0 is already holding what we need
       "BL filewrite_main_hook\n"
       "LDMFD SP!, {R4-R12,LR}\n"
 //hook end
