@@ -12,6 +12,12 @@
 // This file needs more comments / documentation !!!!
 
 //-------------------------------------------------------------------
+// Forward references
+
+// returns 0 if in play, nonzero if rec
+int rec_mode_active(void); 
+
+//-------------------------------------------------------------------
 // From lolevel.h
 extern volatile long focus_busy;
 extern long playrec_mode;
@@ -36,17 +42,28 @@ static short sv96_base=0;
 static short svm96_base=0;
 static short sv96_base_tmp=0;
 
-// Storage for delayed shooting overrides
-static PHOTO_PARAM photo_param_put_off;
-
 static short *min_av96_zoom_point_tbl = NULL;
 
 DOF_TYPE dof_values;
+
+// Storage for delayed shooting overrides
+#define PHOTO_PARAM_TV_NONE 32767 // ~ 1/(2^341) seconds, safe marker for "no value"
+
+typedef struct {
+    short av96;
+    short tv96;
+    short sv96;
+    short subj_dist;
+    short nd_filter;
+} PHOTO_PARAM;
+
+static PHOTO_PARAM photo_param_put_off;
 
 void shooting_init()
 {
     photo_param_put_off.tv96=PHOTO_PARAM_TV_NONE;
 }
+
 //-------------------------------------------------------------------
 // Functions to access Canon properties
 

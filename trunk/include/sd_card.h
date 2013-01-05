@@ -21,4 +21,6 @@ extern int get_part_count(void);
 extern int is_partition_changed(void);
 extern void create_partitions(void);
 
+extern void mark_filesystem_bootable();
+
 #endif

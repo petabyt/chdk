@@ -380,7 +380,7 @@ static void action_stack_process()
 {
     if (active_stack->stack_ptr >= 0)
     {
-        // Pop function address and id from stack (put back later if needed)
+        // Get function address and id from stack
         long id = action_top(0);
         action_func f = (action_func)action_top(1);
         if (id == AS_FUNC_ENTRY)    // Safety check

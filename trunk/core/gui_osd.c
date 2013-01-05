@@ -19,12 +19,35 @@
 
 //-------------------------------------------------------------------
 
+// Values for conf.show_histo
+#define SHOW_ALWAYS    1
+#define SHOW_HALF      2
+
+//-------------------------------------------------------------------
+
 extern const char* gui_video_bitrate_enum(int change, int arg);
 
 //-------------------------------------------------------------------
 static char osd_buf[64];
 
 DOF_TYPE dof_values;
+
+typedef struct {
+    short av96;
+    short tv96;
+    short sv96;
+    short iso;
+    short sv96_market;
+    short iso_market;
+    short bv96_measured;
+    short bv96_seted;       //Ev96_internal-Sv96
+    short ev96_seted;       //Tv96+Av96
+    short ev96_measured;    //Bv96+Sv96
+    short dev96;            // Ev96_external-Ev96_internal
+    short dev96_canon;      // Canon OverExposure
+    int b;                  //average scene luminance 
+} EXPO_TYPE;
+
 static EXPO_TYPE expo;
 
 //-------------------------------------------------------------------

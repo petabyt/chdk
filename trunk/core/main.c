@@ -22,22 +22,6 @@ static volatile int spytask_can_start;
     extern void wegpunkt();
 #endif
 
-void core_hook_task_create(void *tcb)
-{
-}
-
-void core_hook_task_delete(void *tcb)
-{
-char *name = (char*)(*(long*)((char*)tcb+0x34));
- if (strcmp(name,"tInitFileM")==0) core_spytask_can_start();
-}
-
-
-long core_get_noise_reduction_value()
-{
-    return conf.raw_nr;
-}
-
 
 void dump_memory()
 {
@@ -146,9 +130,14 @@ void core_spytask()
     started();
     msleep(50);
     finished();
+
+#if !CAM_DRYOS
     drv_self_unhide();
+#endif
 
     conf_restore();
+
+    extern void gui_init();
     gui_init();
 
 #if CAM_CONSOLE_LOG_ENABLED
@@ -209,6 +198,7 @@ void core_spytask()
         if (raw_data_available)
         {
             raw_need_postprocess = raw_savefile();
+            extern void hook_raw_save_complete();
             hook_raw_save_complete();
             raw_data_available = 0;
 #ifdef CAM_HAS_GPS
