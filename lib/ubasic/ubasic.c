@@ -295,7 +295,7 @@ factor(void)
   break;
   case TOKENIZER_GET_RAW_NR:
     accept(TOKENIZER_GET_RAW_NR);
-    r = camera_get_nr();     
+    r = conf.raw_nr;     
     break;
   case TOKENIZER_IS_KEY:
     accept(TOKENIZER_IS_KEY);
@@ -2256,10 +2256,14 @@ statement(void)
       cls_statement();
       break;
   case TOKENIZER_SET_RAW:
-      one_int_param_function(token, camera_set_raw);
+      accept(token);
+      conf.save_raw = expr();
+      accept_cr();
       break;
   case TOKENIZER_SET_RAW_NR:
-      one_int_param_function(token, camera_set_nr);
+      accept(token);
+      conf.raw_nr = expr();
+      accept_cr();
       break;
   case TOKENIZER_SET_SCRIPT_AUTOSTART:
       set_autostart_statement();

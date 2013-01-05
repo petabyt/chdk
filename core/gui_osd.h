@@ -45,4 +45,14 @@ extern gui_handler defaultGuiHandler;
 
 //-------------------------------------------------------------------
 
+extern void MakeAFScan(void);
+
+extern void EnterToCompensationEVF(void);
+extern void ExitFromCompensationEVF(void);
+
+extern int canon_menu_active;
+extern char canon_shoot_menu_active;
+
+//-------------------------------------------------------------------
+
 #endif

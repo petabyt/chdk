@@ -5,7 +5,8 @@
 #include "conf.h"
 #include "keyboard.h"
 #include "touchscreen.h"
-#include "../../core/gui_draw.h"
+#include "gui_draw.h"
+#include "gui_osd.h"
 
 // Uncomment this line to enable 'PLAY' and 'OFF' buttons in the CHDK OSD 
 // Can be used to switch in/out of playback mode and power off the camera 

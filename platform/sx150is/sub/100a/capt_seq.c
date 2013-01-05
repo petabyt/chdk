@@ -1,6 +1,7 @@
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
+#include "conf.h"
 
 //static long *nrflag = (long*)0xC910; // FFAB026C
 
@@ -21,7 +22,7 @@ int capt_seq_hook_set_nr_my(int orig)
 	if (orig!=NR_ON && orig!=NR_OFF)
 		return orig;
 
-	switch (core_get_noise_reduction_value()){
+	switch (conf.raw_nr){
 	case NOISE_REDUCTION_OFF:
 		return NR_OFF;
 	case NOISE_REDUCTION_ON:

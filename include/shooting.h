@@ -8,6 +8,10 @@
 
 /******************************************************************/
 
+extern void shooting_init(); // startup initialization
+
+/******************************************************************/
+
 #define SET_NOW      1
 #define SET_LATER    0
 
@@ -165,7 +169,18 @@ extern short shooting_get_ev_correction2();
 extern void shooting_expo_param_override();
 extern void shooting_bracketing(void);
 
-extern void shooting_video_bitrate_change(int v);
+/******************************************************************/
+
+extern void PutInNdFilter();
+extern void PutOutNdFilter();
+extern long GetCurrentAvValue();
+extern long IsStrobeChargeCompleted();
+extern void SetCurrentCaptureModeType();
+
+extern int get_ev_video_avail(void);
+extern void set_ev_video_avail(int);
+extern int get_ev_video(void);
+extern void set_ev_video(int);
 
 /******************************************************************/
 
@@ -181,15 +196,46 @@ extern int shooting_set_mode_canon(int mode);
 
 /******************************************************************/
 
+#define MIN_DIST                    CAMERA_MIN_DIST     // Defined in camera.h (can be overridden in platform_camera.h)
+#define MAX_DIST                    CAMERA_MAX_DIST     // Defined in camera.h (can be overridden in platform_camera.h)
+#define INFINITY_DIST               0xFFFFFFFF          // Value to send to firmware to select 'infinity' focus
+
 int get_focal_length(int zp);
 int get_effective_focal_length(int zp);
 int get_zoom_x(int zp);
 
 /******************************************************************/
 
+// Video recording current status constants, see movie_status variable 
+#define VIDEO_RECORD_NEVER_STARTED  0  
+#define VIDEO_RECORD_STOPPED        1  
+#define VIDEO_RECORD_IN_PROGRESS    4
+
+//Optical & digital zoom status constants, see zoom_status variable 
+#define ZOOM_OPTICAL_MIN            1
+#define ZOOM_OPTICAL_MAX            2
+#define ZOOM_OPTICAL_MEDIUM         3
+//#define ZOOM_OPTICAL_IN             4
+//#define ZOOM_OPTICAL_OUT            5
+//#define ZOOM_OPTICAL_REACHED_MIN    7
+
+//#define ZOOM_DIGITAL_MAX            9
+//#define ZOOM_DIGITAL_MEDIUM         10
+//#define ZOOM_DIGITAL_IN             11
+//#define ZOOM_DIGITAL_OUT            12
+//#define ZOOM_DIGITAL_REACHED_MAX    13
+
+// return whether video is actually being recorded
+extern int is_video_recording();
+
+extern void change_video_tables(int a, int b);
+extern void shooting_video_bitrate_change(int v);
+
 extern int movie_status;
+extern int zoom_status;
 extern const int zoom_points;
 extern int circle_of_confusion;
+extern int recreview_hold;
 
 /******************************************************************/
 

@@ -14,6 +14,16 @@ extern void boot();
 extern void mykbd_task(long ua, long ub, long uc, long ud, long ue, long uf);
 extern void kbd_process_task(long ua, long ub, long uc, long ud, long ue, long uf);
 
+static void core_hook_task_create(void *tcb)
+{
+}
+
+static void core_hook_task_delete(void *tcb)
+{
+    char *name = (char*)(*(long*)((char*)tcb+0x34));
+    if (strcmp(name,"tInitFileM")==0) core_spytask_can_start();
+}
+
 static int stop_hooking;
 
 static void (*taskprev)(
@@ -44,6 +54,12 @@ static void task_start_hook(
     taskprev(p0, p1, p2, p3, p4, p5, p6, p7, p8, p9 ); // then, whatever was the call intended to be...
 	}
 
+
+static void remount_filesystem()
+{
+    _Unmount_FileSystem();
+    _Mount_FileSystem();
+}
 
 
 static void task_fs(

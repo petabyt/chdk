@@ -43,24 +43,6 @@ static void conf_change_video_bitrate();
 static void conf_change_dng_ext();
 static void conf_change_autoiso();
 
-void camera_set_raw(int mode)
-{
-    conf.save_raw = mode;
-}
-
-void camera_set_nr(int mode)
-{
-    // "Auto", "Off", "On"
-    conf.raw_nr = mode;
-}
-
-int camera_get_nr()
-{
-    // "Auto", "Off", "On"
-    return conf.raw_nr;
-}
-
-
 void clear_values()
 {	
     if (conf.platformid != PLATFORMID) // the following config entries will be resetted if you switch the camera using the same cfg
@@ -520,10 +502,24 @@ void conf_change_dng(void){
 #endif
 }
 
-void conf_change_dng_ext(void){
 #if defined (DNG_EXT_FROM)
- save_ext_for_dng();
- if (conf.dng_usb_ext) change_ext_to_dng(); else change_ext_to_default();
+void cb_change_dng_usb_ext()
+{
+    extern void change_ext_to_dng(void);
+    extern void change_ext_to_default(void);
+    if (conf.dng_usb_ext)
+        change_ext_to_dng();
+    else
+        change_ext_to_default();
+}
+#endif
+
+void conf_change_dng_ext(void)
+{
+#if defined (DNG_EXT_FROM)
+    extern void save_ext_for_dng(void);
+    save_ext_for_dng();
+    cb_change_dng_usb_ext();
 #endif 
 }
 

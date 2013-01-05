@@ -748,19 +748,19 @@ static int luaCB_set_prop_str( lua_State *L ) {
 
 static int luaCB_set_raw_nr( lua_State* L )
 {
-  camera_set_nr(luaL_checknumber( L, 1 ));
+  conf.raw_nr = luaL_checknumber( L, 1 );
   return 0;
 }
 
 static int luaCB_get_raw_nr( lua_State* L )
 {
-  lua_pushnumber( L, camera_get_nr() );
+  lua_pushnumber( L, conf.raw_nr );
   return 1;
 }
 
 static int luaCB_set_raw( lua_State* L )
 {
-  camera_set_raw(luaL_checknumber( L, 1 ));
+  conf.save_raw = luaL_checknumber( L, 1 );
   return 0;
 }
 

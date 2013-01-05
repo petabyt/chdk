@@ -1496,11 +1496,7 @@ static const char* gui_bad_pixel_enum(int change, int arg)
 }
 
 #if defined (DNG_EXT_FROM)
-static void cb_change_dng_usb_ext()
-{
-    if (conf.dng_usb_ext) change_ext_to_dng();
-    else change_ext_to_default();
-}
+extern void cb_change_dng_usb_ext();
 #endif
 
 static const char* gui_raw_nr_modes[] =                     { "Auto", "Off", "On"};
