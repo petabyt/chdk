@@ -311,21 +311,17 @@
 249 "Tv-Reihe Betrag"
 250 "Av-Reihe Betrag"
 251 "ISO-Reihe Betrag"
-252 "   Multiplikator"
+
 253 "Fokus-Reihe Betrag"
-254 "   Multiplikator"
+
 255 "Reihen-Typ"
 
 256 "Autostart"
 257 "USB-Fernbedienung an/aus"
-
-//258 "Beli-Kontrolle (Blitz aus)"
-//259 "Beli-Kontrolle (Blitz aus)"
-//260 "Neuberechnung Belichtung"
-//261 "Tv Exposure Neuberechnung"
-//262 "Av Exposure Neuberechnung"
-//263 "ISO Exposure Neuberechnung"
-
+258 "Bei Aktivierung von Lua Native Calls\nkönnen möglicherweise bestimmte\nSkripte die Kamera beschädigen.\n\nSoll Native Calls aktiviert werden?"
+259 "Lua Native Calls aktivieren?"
+260 "*** ABGEBROCHEN ***"
+261 "*** Autostart ***"
 264 "Lösche Ersatzwerte bei Start"
 
 265 "Canon-Überbelichtungswert"
@@ -441,7 +437,7 @@
 349 "Lösche Einstellungen bei Start"
 
 350 "Ev-Korrektur"
-//351 "   Schrittweite (1 EV)"
+
 352 "Ev-Korrektur"
 
 353 "Sicher, dass Sie ALLE RAW-Dateien\nim DCIM-Ordner ohne dazugehörige JPG\nlöschen wollen?"
@@ -469,7 +465,7 @@
 371 "Konturenüberlagerung"
 372 "Konturenüberlagerung an/aus"
 373 "   Grenzwert"
-374 "   Überlagerungsfarbe"
+374 "Konturenfarbe"
 
 375 "USB-Fernbedienung-Parameter"
 376 "USB-Fernbedienung-Parameter"
