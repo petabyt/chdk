@@ -84,12 +84,6 @@ int task_id_list_get(int *idlist,int size)
 {
     return _taskIdListGet(idlist,size);
 }
-
-void remount_filesystem()
-{
-    _Unmount_FileSystem();
-    _Mount_FileSystem();
-}
 #endif
 
 long get_property_case(long id, void *buf, long bufsize)
@@ -1432,22 +1426,21 @@ long dh_err()
     return -1;
 }
 
+#if !CAM_DRYOS
 void drv_self_hide()
 {
-#if !CAM_DRYOS
     long drvnum;
 
     drvnum = _iosDrvInstall(dh_err,dh_err,dh_err,dh_err,dh_err,dh_err,dh_err);
     if (drvnum >= 0)
 	_iosDevAdd(drv_struct, "A/DISKBOOT.BIN", drvnum);
-#endif
 }
 
-void drv_self_unhide(){
-#if !CAM_DRYOS
+void drv_self_unhide()
+{
  _iosDevDelete(drv_struct);
-#endif
 }
+#endif
 
 int  apex2us(int apex_tv){
 #if CAM_EXT_TV_RANGE

@@ -40,6 +40,9 @@
     #define CAM_ACTIVE_AREA_X2              4072
     #define CAM_ACTIVE_AREA_Y2              3040
 
+    #undef  CAM_MENU_BORDERWIDTH
+    #define CAM_MENU_BORDERWIDTH            10
+
     #define CAM_DNG_LENS_INFO   { 50,10, 200,10, 28,10, 59,10 } // See comments in camera.h
 
     #undef  CAM_SENSOR_BITS_PER_PIXEL

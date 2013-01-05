@@ -1,6 +1,7 @@
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
+#include "conf.h"
 
 //#include "../../../generic/capt_seq.c"
 
@@ -52,7 +53,7 @@ void capt_seq_hook_set_nr()
 #if 0
     long *nrflag = (long*)0x53EC;
 
-    switch (core_get_noise_reduction_value()){
+    switch (conf.raw_nr){
     case NOISE_REDUCTION_AUTO_CANON:
 	// leave it alone
 	break;

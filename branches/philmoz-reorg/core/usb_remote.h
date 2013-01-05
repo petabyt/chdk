@@ -8,6 +8,7 @@
 
 // Functions.
 extern int handle_usb_remote();
+extern void wait_until_remote_button_is_released(void);
 
 /*===================================================================================================
     Static Variables & #defines

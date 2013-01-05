@@ -65,7 +65,7 @@ void hook_raw_save_complete()
 void __attribute__((naked,noinline)) capt_seq_hook_set_nr()
 {
  asm volatile("STMFD   SP!, {R0-R12,LR}\n");
-    switch (core_get_noise_reduction_value()){
+    switch (conf.raw_nr){
     case NOISE_REDUCTION_AUTO_CANON:
         // leave it alone
 #if defined(NR_AUTO)			// If value defined store it (e.g. for G12 & SX30 need to reset back to 0 to enable auto)

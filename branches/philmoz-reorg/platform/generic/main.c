@@ -10,6 +10,16 @@ extern long link_bss_start;
 extern long link_bss_end;
 extern void boot();
 
+static void core_hook_task_create(void *tcb)
+{
+}
+
+static void core_hook_task_delete(void *tcb)
+{
+    char *name = (char*)(*(long*)((char*)tcb+0x34));
+    if (strcmp(name,"tInitFileM")==0) core_spytask_can_start();
+}
+
 
 static int stop_hooking;
 
@@ -38,6 +48,12 @@ static void task_start_hook(
     task_prev(p0, p1, p2, p3, p4, p5, p6, p7, p8, p9 );
 }
 
+
+static void remount_filesystem()
+{
+    _Unmount_FileSystem();
+    _Mount_FileSystem();
+}
 
 
 static void init_file_modules_hook(
