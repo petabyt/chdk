@@ -55,9 +55,9 @@ void write_output()
 
 void usage(char *err)
 {
-    bprintf("finsig <primary> <base> <outputfilename> - Error = %s\n",err);
+    bprintf("finsig <primary> <base> <outputfilename> [alt base] - Error = %s\n",err);
     write_output();
-    fprintf(stderr,"finsig <primary> <base> <outputfilename> - Error = %s\n",err);
+    fprintf(stderr,"finsig <primary> <base> <outputfilename> [alt base] - Error = %s\n",err);
     exit(1);
 }
 
@@ -467,24 +467,57 @@ typedef struct {
     // Alt copy of ROM in RAM (DryOS R50, R51)
     uint32_t        *buf2;          // pointer to loaded FW data that is copied
     uint32_t        base2;          // RAM address copied to
-    uint32_t        base_copied;    // ROM address copued from
+    uint32_t        base_copied;    // ROM address copied from
     int             size2;          // Block size copied (in words)
+
+    // Alt copy of ROM (DryOS R51 - only seen on S110 so far)
+    uint32_t        alt_base;       // Alternative base address
 } firmware;
 
-uint32_t fwval(firmware *fw, int i)
+int idx_valid(firmware *fw, int i)
 {
     if ((i >= 0) && (i < fw->size))
-        return fw->buf[i];
-    if (fw->dryos_ver >= 50)
+        return 1;
+    if ((fw->dryos_ver >= 51) && (fw->alt_base) && (i >= fw->size))
+    {
+        i = ((i * 4) - (fw->alt_base - fw->base)) / 4;
+        if ((i >= 0) && (i < fw->size))
+            return 1;
+    }
+    if ((fw->dryos_ver >= 50) && (i < 0))
     {
         i = ((i * 4) + (fw->base - fw->base2)) / 4;
         if ((i >= 0) && (i < fw->size2))
-            return fw->buf2[i];
+            return 1;
+    }
+    return 0;
+}
+
+uint32_t* fwadr(firmware *fw, int i)
+{
+    if ((i >= 0) && (i < fw->size))
+        return &fw->buf[i];
+    if ((fw->dryos_ver >= 51) && (fw->alt_base) && (i >= fw->size))
+    {
+        i = ((i * 4) - (fw->alt_base - fw->base)) / 4;
+        if ((i >= 0) && (i < fw->size))
+            return &fw->buf[i];
+    }
+    if ((fw->dryos_ver >= 50) && (i < 0))
+    {
+        i = ((i * 4) + (fw->base - fw->base2)) / 4;
+        if ((i >= 0) && (i < fw->size2))
+            return &fw->buf2[i];
     }
     fprintf(stderr,"Invalid firmware offset %d.\n",i);
     bprintf("\nInvalid firmware offset %d. Possible corrupt firmware or incorrect start address.\n",i);
     write_output();
     exit(1);
+}
+
+uint32_t fwval(firmware *fw, int i)
+{
+    return *fwadr(fw,i);
 }
 
 void addBufRange(firmware *fw, int o, int l)
@@ -578,12 +611,15 @@ uint32_t idx2adr(firmware *fw, int idx)
     return fw->base + (idx << 2);
 }
 
-uint32_t adr2idx(firmware *fw, int adr)
+int adr2idx(firmware *fw, uint32_t adr)
 {
-    return (adr - fw->base) >> 2;
+    if (adr < fw->base)
+        return -((fw->base - adr) >> 2);
+    else
+        return (adr - fw->base) >> 2;
 }
 
-uint32_t ptr2idx(firmware *fw, int idx)
+int ptr2idx(firmware *fw, int idx)
 {
     return (fwval(fw,idx) - fw->base) >> 2;
 }
@@ -736,7 +772,7 @@ int isB(firmware *fw, int offset)
 	return ((fwval(fw,offset) & 0xFF000000) == 0xEA000000);	// B
 }
 
-void load_firmware(firmware *fw, char *filename, char *base_addr)
+void load_firmware(firmware *fw, char *filename, char *base_addr, char *alt_base_addr)
 {
     FILE *f = fopen(filename, "rb");
     int k;
@@ -748,6 +784,10 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 	}
 
     fw->base = strtoul(base_addr, NULL, 0);
+    if (alt_base_addr)
+        fw->alt_base = strtoul(alt_base_addr, NULL, 0);
+    else
+        fw->alt_base = 0;
 
     fseek(f,0,SEEK_END);
     fw->size = (ftell(f)+3)/4;
@@ -793,6 +833,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 
 	// Get camera name & platformid     ***** UPDATE for new DryOS version *****
 	int fsize = -((int)fw->base)/4;
+    if (fw->alt_base) fsize = -((int)fw->alt_base)/4;
 	int cam_idx = 0;
     int pid_idx = 0;
 	switch (fw->dryos_ver)
@@ -801,25 +842,35 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 	case 23:
 	case 31:
 	case 39: 
-        cam_idx = (0xFFFE0110 - fw->base) / 4; 
-        pid_idx = (0xFFFE0130 - fw->base) / 4; 
+        cam_idx = adr2idx(fw,0xFFFE0110); 
+        pid_idx = adr2idx(fw,0xFFFE0130); 
         break;
 	case 43:
 	case 45: 
-        cam_idx = (0xFFFE00D0 - fw->base) / 4; 
-        pid_idx = (0xFFFE0130 - fw->base) / 4; 
+        cam_idx = adr2idx(fw,0xFFFE00D0);
+        pid_idx = adr2idx(fw,0xFFFE0130);
         break;
 	case 47: 
-        cam_idx = (((fw->base==0xFF000000)?0xFFF40170:0xFFFE0170) - fw->base) / 4; 
-        pid_idx = (((fw->base==0xFF000000)?0xFFF40040:0xFFFE0040) - fw->base) / 4; 
+        cam_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40170:0xFFFE0170);
+        pid_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40040:0xFFFE0040);
         break;
 	case 49: 
 	case 50: 
 	case 51:
-        cam_idx = (((fw->base==0xFF000000)?0xFFF40190:0xFFFE0170) - fw->base) / 4; 
-        pid_idx = (((fw->base==0xFF000000)?0xFFF40040:0xFFFE0040) - fw->base) / 4; 
-        if ((cam_idx < fw->size) && (strncmp((char*)&fw->buf[cam_idx],"Canon ",6) != 0))
-            cam_idx = (((fw->base==0xFF000000)?0xFFF40170:0xFFFE0170) - fw->base) / 4; 
+        if (fw->alt_base)
+        {
+            cam_idx = adr2idx(fw,(fw->alt_base==0xFF000000)?0xFFF40190:0xFFFE0170);
+            pid_idx = adr2idx(fw,(fw->alt_base==0xFF000000)?0xFFF40040:0xFFFE0040);
+            if (idx_valid(fw,cam_idx) && (strncmp((char*)fwadr(fw,cam_idx),"Canon ",6) != 0))
+                cam_idx = adr2idx(fw,(fw->alt_base==0xFF000000)?0xFFF40170:0xFFFE0170);
+        }
+        else
+        {
+            cam_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40190:0xFFFE0170);
+            pid_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40040:0xFFFE0040);
+            if (idx_valid(fw,cam_idx) && (strncmp((char*)fwadr(fw,cam_idx),"Canon ",6) != 0))
+                cam_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40170:0xFFFE0170);
+        }
         break;
 	}
 
@@ -830,9 +881,9 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 	}
 	
 	strcpy(fw->cam,"Unknown");
-	if ((cam_idx < fw->size) && (strncmp((char*)&fw->buf[cam_idx],"Canon ",6) == 0))
+	if (idx_valid(fw,cam_idx) && (strncmp((char*)fwadr(fw,cam_idx),"Canon ",6) == 0))
 	{
-		strcpy(fw->cam,(char*)&fw->buf[cam_idx]);
+		strcpy(fw->cam,(char*)fwadr(fw,cam_idx));
 		bprintf("//   %s\n",fw->cam);
 	}
 	else
@@ -843,9 +894,9 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 	bprintf("\n// Values for makefile.inc\n");
 	bprintf("//   PLATFORMOSVER = %d\n",fw->dryos_ver);
 
-    if ((pid_idx > 0) && (pid_idx < fw->size))
+    if (idx_valid(fw,pid_idx))
     {
-        fw->pid = fw->buf[pid_idx] & 0xFFFF;
+        fw->pid = fwval(fw,pid_idx) & 0xFFFF;
 		bprintf("//   PLATFORMID = %d (0x%04x) // Found @ 0x%08x\n",fw->pid,fw->pid,idx2adr(fw,pid_idx));
     }
     else fw->pid = 0;
@@ -865,14 +916,14 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 		bprintf("//   MAXRAMADDR = 0x%08x\n",fw->maxram);
 
     uint32_t ofst = adr2idx(fw,0xFFFF0000);    // Offset of area to find dancing bits
-    if ((ofst < fw->size) && isB(fw,ofst) && isLDR_PC(fw,ofst+1))
+    if (idx_valid(fw,ofst) && isB(fw,ofst) && isLDR_PC(fw,ofst+1))
     {
         // Get KEYSYS value
         ofst = adr2idx(fw,LDR2val(fw,ofst+1));     // Address of firmware encryption key
-        if (ofst < fw->size)
+        if (idx_valid(fw,ofst))
         {
             char *ksys = "? Not found, possible new firmware encryption key.";
-            switch (fw->buf[ofst])
+            switch (fwval(fw,ofst))
             {
             case 0x70726964:    ksys = "d3   "; break;
             case 0x646C726F:    ksys = "d3enc"; break;
@@ -886,7 +937,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
 
         // Get NEED_ENCODED_DISKBOOT value
         ofst = ofst + 4; // Address of dancing bits data (try after firmware key)
-        if (ofst < fw->size)
+        if (idx_valid(fw,ofst))
         {
             int fnd = 0, i, j;
             for (i=0; i<VITALY && !fnd; i++)
@@ -894,7 +945,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
                 fnd = i+1;
                 for (j=0; j<8 && fnd; j++)
                 {
-                    if ((fw->buf[ofst+j] & 0xFF) != _chr_[i][j])
+                    if ((fwval(fw,ofst+j) & 0xFF) != _chr_[i][j])
                     {
                         fnd = 0;
                     }
@@ -909,7 +960,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
                     fnd = i+1;
                     for (j=0; j<8 && fnd; j++)
                     {
-                        if ((fw->buf[ofst+j] & 0xFF) != _chr_[i][j])
+                        if ((fwval(fw,ofst+j) & 0xFF) != _chr_[i][j])
                         {
                             fnd = 0;
                         }
@@ -926,7 +977,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr)
             }
         }
     }
-	
+
     // DryOS R50/R51 copies a block of ROM to RAM and then uses that copy
     // Need to allow for this in finding addresses
     // Seen on SX260HS
@@ -1582,8 +1633,8 @@ int fw_string_process(firmware *fw, string_sig *sig, int k, int (*check_match)(f
 //		String				-	DCB	"func"
 int match_strsig1(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 {
-    uint32_t fadr = fw->buf[j-1];       // function address (*padr)
-    if (fadr >= fw->base)
+    uint32_t fadr = fwval(fw,j-1);  // function address (*padr)
+    if (idx_valid(fw,adr2idx(fw,fadr)))
     {
        	if (sig->offset > 1) fadr = followBranch(fw, fadr, 1);
         fadr = followBranch2(fw, fadr, sig->offset);
@@ -1617,7 +1668,7 @@ int find_strsig2(firmware *fw, string_sig *sig, int k)
                 if (*p1 == sadr)                // pointer to string?
                 {
                     uint32_t fadr = fw->buf[j1+1];      // function address (*padr)
-                    if (fadr >= fw->base)
+                    if (idx_valid(fw,adr2idx(fw,fadr)))
                     {
                         uint32_t bfadr = followBranch2(fw, fadr, sig->offset);
 						if ((sig->offset <= 1) || (bfadr != fadr))
@@ -1878,7 +1929,7 @@ int match_strsig8(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 						(isSTR(fw,j2+2) && ((fw->buf[j2+2] & 0xfff) == ofst)))		// STR ?
 					{
 						fadr = fw->buf[j1];
-						if (fadr >= fw->base)
+						if (idx_valid(fw,adr2idx(fw,fadr)))
 						{
 							//fprintf(stderr,"%s %08x\n",curr_name,fadr);
 							fwAddMatch(fw,fadr,32,0,k,108);
@@ -4012,7 +4063,7 @@ int main(int argc, char **argv)
 
     clock_t t1 = clock();
 
-    if (argc != 4)
+    if ((argc < 4) || (argc > 5))
         usage("args");
 
     out_fp = fopen(argv[3],"w");
@@ -4029,7 +4080,7 @@ int main(int argc, char **argv)
     bprintf("// !!! THIS FILE IS GENERATED. DO NOT EDIT. !!!\n");
     bprintf("#include \"stubs_asm.h\"\n\n");
 
-    load_firmware(&fw,argv[1],argv[2]);
+    load_firmware(&fw,argv[1],argv[2],(argc==5)?argv[4]:0);
 	
     // Find all the valid ranges for checking (skips over large blocks of 0xFFFFFFFF)
     findRanges(&fw);
