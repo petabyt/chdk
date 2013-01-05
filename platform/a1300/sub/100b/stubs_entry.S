@@ -107,14 +107,14 @@ DEF(ctypes, 0xffb0f440)
 NSTUB(AllocateMemory                          ,0xffa71ac0) //101
 NSTUB(AllocateUncacheableMemory               ,0xff832e2c) //112
 NSTUB(Close                                   ,0xff830074) //101
-NSTUB(CreateTask                              ,0x003f6824) //105
+NSTUB(CreateTask                              ,0x003f6824) //101
 NSTUB(DebugAssert                             ,0x003f6afc) //111
 NSTUB(DeleteDirectory_Fut                     ,0xff82fa74) //116
 NSTUB(DoAFLock                                ,0xff831a04) //102
 NSTUB(EnterToCompensationEVF                  ,0xff831c60) //104
 NSTUB(ExecuteEventProcedure                   ,0xff87a800) //104
 NSTUB(ExitFromCompensationEVF                 ,0xff831ca4) //104
-NSTUB(ExitTask                                ,0x003f6ab4) //105
+NSTUB(ExitTask                                ,0x003f6ab4) //101
 NSTUB(ExpCtrlTool_StartContiAE                ,0xff83ca58) //104
 NSTUB(ExpCtrlTool_StopContiAE                 ,0xff83cbb4) //104
 NSTUB(Fclose_Fut                              ,0xff82fb0c) //101
@@ -183,8 +183,8 @@ NSTUB(SetLogicalEventActive                   ,0xff882eec) //101
 NSTUB(SetParameterData                        ,0xff985494) //101
 NSTUB(SetPropertyCase                         ,0xff87e744) //102
 NSTUB(SetScriptMode                           ,0xff882f3c) //101
-NSTUB(SleepTask                               ,0x003f79b0) //105
-NSTUB(TakeSemaphore                           ,0x003f7634) //112
+NSTUB(SleepTask                               ,0x003f79b0) //101
+NSTUB(TakeSemaphore                           ,0x003f7634) //101
 NSTUB(TurnOffBackLight                        ,0xff88fe88) //104
 NSTUB(TurnOnBackLight                         ,0xff88fe70) //104
 NSTUB(UIFS_WriteFirmInfoToFile                ,0xff977a68) //101
