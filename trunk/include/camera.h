@@ -1,5 +1,9 @@
 // camera.h
 
+#ifdef CHDK_MODULE_CODE
+#error camera.h cannot be #included in module code (did you mean camera_info.h).
+#endif
+
 // This file contains the default values for various settings that may change across camera models.
 // Setting values specific to each camera model can be found in the platform/XXX/platform_camera.h file for camera.
 
@@ -64,10 +68,6 @@
     #define CAM_MENU_BORDERWIDTH            30  // Defines the width of the border on each side of the CHDK menu. The CHDK menu will have this
                                                 // many pixels left blank to the on each side. Should not be less than 10 to allow room for the
                                                 // scroll bar on the right.
-    #define CAM_DETECT_SCREEN_ERASE         1   // Define this to add 'guard' pixel to the screen bitmap to help detect if the firmware has erase the screen
-                                                // If the guard pixel changes the CHDK ALT menu is forced to redraw.
-                                                // Take care not to place CHDK OSD elements over the guard pixel.
-                                                // The guard pixel is the first pixel of the top row in the screen bitmap.
 
     #undef  CAM_TOUCHSCREEN_UI                  // Define to enable touch screen U/I (e.g. IXUS 310 HS)
     #define CAM_TS_BUTTON_BORDER            0   // Define this to leave a border on each side of the OSD display for touch screen buttons.
@@ -95,7 +95,6 @@
 
     #define CAM_UNCACHED_BIT                0x10000000 // bit indicating the uncached memory
 
-    #define CAM_MAKE                        "Canon"
     #define CAM_SENSOR_BITS_PER_PIXEL       10  // Bits per pixel. 10 is standard, 12 is supported except for curves
     #define CAM_WHITE_LEVEL                 ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)      // 10bpp = 1023 ((1<<10)-1), 12bpp = 4095 ((1<<12)-1)
     #define CAM_BLACK_LEVEL                 ((1<<(CAM_SENSOR_BITS_PER_PIXEL-5))-1)  // 10bpp = 31 ((1<<5)-1),    12bpp = 127 ((1<<7)-1)
@@ -346,113 +345,7 @@
 #endif
 
 //==========================================================
-// Data Structure to store camera specific information
-// Used by modules to ensure module code is platform independent
-
-typedef struct {
-	int api_version;			// version of this structure
-
-    int bits_per_pixel;
-    int black_level;
-    int white_level;
-    int raw_rows, raw_rowpix, raw_rowlen, raw_size;
-    union                       // DNG JPEG info
-    {
-        struct
-        {
-            int x, y;           // DNG JPEG top left corner
-            int width, height;  // DNG JPEG size
-        } jpeg;
-        struct
-        {
-            int origin[2];
-            int size[2];
-        } crop;
-    };
-    union                       // DNG active sensor area (Y1, X1, Y2, X2)
-    {
-        struct
-        {
-            int y1, x1, y2, x2;
-        } active_area;
-        int dng_active_area[4];
-    };
-    int lens_info[8];           // DNG Lens Info
-    int exposure_bias[2];       // DNG Exposure Bias
-    int cfa_pattern;
-    int calibration_illuminant1;
-    int color_matrix1[18];      // DNG Color Matrix
-    int calibration_illuminant2;
-    int color_matrix2[18];      // DNG Color Matrix 2
-    int has_calibration1;
-    int camera_calibration1[18];// DNG Camera Calibration Matrix 1
-    int has_calibration2;
-    int camera_calibration2[18];// DNG Camera Calibration Matrix 2
-    int has_forwardmatrix1;
-    int forward_matrix1[18];    // DNG Camera Forward Matrix 1
-    int has_forwardmatrix2;
-    int forward_matrix2[18];    // DNG Camera Forward Matrix 1
-    int dng_badpixel_value_limit;
-} _cam_sensor;
-
-extern _cam_sensor camera_sensor;
-
-// if this struct changed, please change gui_version.common_api 
-typedef struct 
-{
-    int    width, height, size;                        // Size of bitmap screen in CHDK co-ordinates
-    int    buffer_width, buffer_height, buffer_size;   // Physical size of bitmap screen
-    int    edge_hmargin, ts_button_border;             // margin and touch-screen adjustment values
-    int    zebra_nobuf, zebra_aspect_adjust;           // zebra feature settings
-    int    has_variable_aspect;                        // zebra feature settings
-} _cam_screen;
-
-extern _cam_screen camera_screen;
-
-typedef struct
-{
-	int api_version;			// version of this structure
-
-    // Canon PARAMS indexes
-    struct
-    {
-        int camera_name;
-        int owner_name;
-        int artist_name;
-        int copyright;
-    } params;
-    // Canon PROPCASE indexes
-    struct
-    {
-        int gps;
-        int orientation_sensor;
-        int tv;
-        int av;
-        int min_av;
-        int ev_correction_2;
-        int flash_mode;
-        int flash_fire;
-        int metering_mode;
-        int wb_adj;
-        int aspect_ratio;
-        int shooting;
-    } props;
-    int rombaseaddr, maxramaddr;
-    int tick_count_offset;      // get_tick_count value at which the clock ticks over 1 second
-    char* chdk_ver;
-    // Can CHDK can change exposure in video mode?
-    int cam_ev_in_video;
-    // Miscellaneous variables to record state information
-    // Used to control communication between various tasks and modules
-    struct
-    {
-        int edge_state_draw;        // Current state of overlay (Live/Frozen/Pano)
-        int is_shutter_half_press;  // State of Shutter Half Press button
-    } state;
-} _cam_info;
-
-extern _cam_info camera_info;
-
+#include "camera_info.h"
 //==========================================================
 
 #endif /* CAMERA_H */

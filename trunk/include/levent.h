@@ -1,6 +1,11 @@
 #ifndef LEVENT_H
 #define LEVENT_H
 
+// CHDK interface to firmware 'logical events'
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 #define LEVENT_INVALID_INDEX 0xFFFFFFFF
 
 /* logical event definition*/
@@ -37,4 +42,19 @@ int levent_post_to_ui_by_name(const char *name);
 /* post press/unpress events for RecButton and PBButton */
 void levent_set_record(void);
 void levent_set_play(void);
+
+extern void SetLogicalEventActive(unsigned event, unsigned state);
+extern void PostLogicalEventForNotPowerType(unsigned event, unsigned unk);
+extern void PostLogicalEventToUI(unsigned event, unsigned unk);
+extern void SetScriptMode(unsigned mode);
+
+extern int switch_mode_usb(int mode); // 0 = playback, 1 = record; return indicates success
+                                      // N.B.: switch_mode only supported when USB is connected
+
+/*
+ call C function with argument list created at runtime.
+ See lib/armutil/callfunc.S for documentation
+*/
+unsigned call_func_ptr(void *func, const unsigned *args, unsigned n_args);
+
 #endif

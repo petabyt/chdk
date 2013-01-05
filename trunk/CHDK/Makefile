@@ -1,4 +1,7 @@
 topdir=../
+
+SKIPPLATFORMCHECK=1
+
 include $(topdir)makefile.inc
 
 ifndef OPT_DE_VERSION
@@ -11,8 +14,12 @@ GENLUA=LUALIB/GEN/propset1.lua LUALIB/GEN/propset2.lua LUALIB/GEN/propset3.lua L
 # generate some lua files from CHDK source
 all: $(GENLUA)
 	@echo "copy" $(LOGO)
-	mkdir -p $(topdir)CHDK/DATA
-	cp $(topdir)CHDK/$(LOGO) $(topdir)CHDK/DATA/$(LOGO)
+	mkdir -p DATA
+	cp $(LOGO) DATA/$(LOGO)
+	@echo "copy modules"
+	mkdir -p MODULES
+	rm -f MODULES/*
+	cp $(topdir)modules/*.flt MODULES
 
 LUALIB/GEN/propset1.lua:  $(topdir)include/propset1.h
 	@echo "->" $@
@@ -40,7 +47,7 @@ LUALIB/GEN/modelist.lua:  $(topdir)include/modelist.h
 
 clean:
 	rm -f $(GENLUA)
-	rm -f $(topdir)CHDK/DATA/$(LOGO)
+	rm -f DATA/$(LOGO)
 	rm -f MODULES/*.flt
 
 include $(topdir)bottom.inc

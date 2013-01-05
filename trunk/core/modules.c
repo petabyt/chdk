@@ -6,14 +6,10 @@
  *   Specific "shortcuts", dynamic libraries binding
  */
 
+#include "camera_info.h"
+#include "console.h"
 #include "modules.h"
 #include "module_load.h"
-#include "camera.h"
-#include "stdlib.h"
-#include "conf.h"
-#include "gui_draw.h"
-#include "dng.h"
-#include "lang.h"
 
 /************* GENERIC ******/
 
@@ -45,7 +41,7 @@ static int bind_module_generic( void** export_list, void** lib, int count, int m
 }
 
 // Return: 0-fail, addr-ok
-static void* module_load_generic(void **lib, char *name, int (*callback)(void**), int flags)
+static void* module_load_generic(void **lib, char *name, _module_bind_t callback, int flags)
 {
     if (*lib == 0)
     {
@@ -64,15 +60,20 @@ static void* module_load_generic(void **lib, char *name, int (*callback)(void**)
 
 /************* DYNAMIC LIBRARY RAWOPERATION ******/
 
-#if CAM_SENSOR_BITS_PER_PIXEL==10
-#define MODULE_NAME_RAWOP "_rawop10.flt"
-#elif CAM_SENSOR_BITS_PER_PIXEL==12
-#define MODULE_NAME_RAWOP "_rawop12.flt"
-#elif CAM_SENSOR_BITS_PER_PIXEL==14
-#define MODULE_NAME_RAWOP "_rawop14.flt"
-#else 
- #error define set_raw_pixel for sensor bit depth
-#endif
+static char* rawop_module_name()
+{
+    switch (camera_sensor.bits_per_pixel)
+    {
+    case 10:
+        return "_rawop10.flt";
+    case 12:
+        return "_rawop12.flt";
+    case 14:
+        return "_rawop14.flt";
+    default:
+        return 0;
+    }
+}
 
 // This is to minimize sharing sym to use this lib in other modules
 struct librawop_sym* librawop;
@@ -81,7 +82,7 @@ void module_rawop_unload()
 {
 	if (librawop)
     {
-    	module_unload(MODULE_NAME_RAWOP);  
+    	module_unload(rawop_module_name());  
         librawop = 0;
     }
 }
@@ -94,7 +95,7 @@ static int bind_module_rawop( void** export_list )
 // Return: 0-fail, otherwise - bind list
 struct librawop_sym* module_rawop_load()
 {
-    return module_load_generic((void**)&librawop, MODULE_NAME_RAWOP, bind_module_rawop, 0);
+    return module_load_generic((void**)&librawop, rawop_module_name(), bind_module_rawop, 0);
 }
 
 
@@ -108,8 +109,6 @@ static int saved_edgestate = 0;
 
 void module_restore_edge(void **buf, int *state) { *buf = saved_edgebuf; *state = saved_edgestate; }
 void module_save_edge(void* buf, int state)      { saved_edgebuf = buf; saved_edgestate = state; }
-
-#ifdef OPT_EDGEOVERLAY
 
 #define MODULE_NAME_EDGEOVR "edgeovr.flt"
 
@@ -139,11 +138,8 @@ struct libedgeovr_sym* module_edgeovr_load()
     return libedgeovr;
 }
 
-
 // edgeovr module will never unload to keep its picture
 // void module_edgeovr_unload() {}
-
-#endif
 
 
 /************* DYNAMIC LIBRARY MOTION DETECT ******/
@@ -173,6 +169,105 @@ void module_mdetect_unload()
 }
 
 
+/************* DYNAMIC LIBRARY uBasic ******/
+
+#define MODULE_NAME_UBASIC "ubasic.flt"
+
+static struct libscriptapi_sym* libubasic;
+
+static int bind_module_ubasic( void** export_list )
+{
+    return bind_module_generic(export_list, (void**)&libubasic, 1, 1, 0);
+}
+
+static void module_ubasic_unload()
+{
+	if (libubasic)
+    {
+    	module_unload(MODULE_NAME_UBASIC);  
+        libubasic = 0;
+    }
+}
+
+
+/************* DYNAMIC LIBRARY Lua ******/
+
+#define MODULE_NAME_LUA "lua.flt"
+
+static struct libscriptapi_sym* liblua;
+
+static int bind_module_lua( void** export_list )
+{
+    return bind_module_generic(export_list, (void**)&liblua, 1, 1, 0);
+}
+
+static void module_lua_unload()
+{
+	if (liblua)
+    {
+    	module_unload(MODULE_NAME_LUA);  
+        liblua = 0;
+    }
+}
+
+
+/************* DYNAMIC LIBRARY Script language ******/
+
+struct libscriptapi_sym* libscriptapi;
+
+// Which script language is being used
+#define SCRIPT_LANG_UBASIC  0
+#define SCRIPT_LANG_LUA     1
+
+static int script_lang_id(const char* script_file)
+{
+    if ((script_file == 0) || (script_file[0] == 0))
+        return SCRIPT_LANG_LUA;  // Default script is Lua
+
+    char *ext = strrchr(script_file,'.');
+
+    if (ext && (strlen(ext) == 4) && (toupper(ext[1]) == 'L') && (toupper(ext[2]) == 'U') && (toupper(ext[3]) == 'A'))
+        return SCRIPT_LANG_LUA;
+
+    return SCRIPT_LANG_UBASIC;
+}
+
+struct libscriptapi_sym* module_script_lang_load(const char *script_fn)
+{
+    int lang_id = script_lang_id(script_fn);
+
+    char *lang_name = "Unknown";
+
+    switch (lang_id)
+    {
+    case SCRIPT_LANG_UBASIC:
+        module_lua_unload();
+        libscriptapi = module_load_generic((void**)&libubasic, MODULE_NAME_UBASIC, bind_module_ubasic, MODULE_FLAG_DISABLE_AUTOUNLOAD);
+        lang_name = "uBasic";
+        break;
+    case SCRIPT_LANG_LUA:
+        module_ubasic_unload();
+        libscriptapi = module_load_generic((void**)&liblua, MODULE_NAME_LUA, bind_module_lua, MODULE_FLAG_DISABLE_AUTOUNLOAD);
+        lang_name = "Lua";
+        break;
+    default:
+        module_lua_unload();
+        module_ubasic_unload();
+        libscriptapi = 0;
+        break;
+    }
+
+    if (libscriptapi == 0)
+    {
+        char msg[64];
+        sprintf(msg,"%s script module failed to load",lang_name);
+        console_add_line(msg);
+    }
+
+    return libscriptapi;
+}
+
+
 /************* DYNAMIC LIBRARY ZEBRA ******/
 
 #define MODULE_NAME_ZEBRA "zebra.flt"
@@ -193,8 +288,6 @@ struct libzebra_sym* module_zebra_load()
 
 /************* DYNAMIC LIBRARY CURVES ******/
 
-#if defined(OPT_CURVES)
-
 #define MODULE_NAME_CURVES "curves.flt"
 
 struct libcurves_sym* libcurves;
@@ -207,10 +300,11 @@ static int bind_module_curves( void** export_list )
 // Return: 0-fail, addr-ok
 struct libcurves_sym* module_curves_load()
 {
-    return module_load_generic((void**)&libcurves, MODULE_NAME_CURVES, bind_module_curves, 0);
+    if (camera_sensor.bits_per_pixel == 10)
+        return module_load_generic((void**)&libcurves, MODULE_NAME_CURVES, bind_module_curves, 0);
+    libcurves = 0;
+    return 0;
 }
-
-#endif
 
 
 /************* DYNAMIC LIBRARY GRIDS ******/
@@ -284,7 +378,6 @@ struct libdng_sym* libdng;
 
 void module_dng_unload(int owner)
 {
-#if DNG_SUPPORT
 	if (libdng==0)
     	return;
 
@@ -293,7 +386,6 @@ void module_dng_unload(int owner)
 		return;
 
 	module_unload(MODULE_NAME_DNG);  
-#endif
 }
 
 static int bind_module_dng( void** export_list )
@@ -304,7 +396,6 @@ static int bind_module_dng( void** export_list )
 // Return: 0-fail, otherwise - bind list
 struct libdng_sym* module_dng_load(int owner)
 {
-#if DNG_SUPPORT
     module_dng_semaphore |= owner;
 
     module_load_generic((void**)&libdng, MODULE_NAME_DNG, bind_module_dng, MODULE_FLAG_DISABLE_AUTOUNLOAD);
@@ -313,9 +404,6 @@ struct libdng_sym* module_dng_load(int owner)
         module_dng_semaphore=0;
 
     return libdng;
-#else
-    return 0;
-#endif
 }
 
 // Make convertion or check operation exsitsing
@@ -324,7 +412,6 @@ struct libdng_sym* module_dng_load(int owner)
 //--------------------------------------------------------
 int module_convert_dng_to_chdk_raw(char* fn)
 {
-#if DNG_SUPPORT
 	if ( fn==0 )
 		return module_check_is_exist(MODULE_NAME_DNG);
 	if ( !module_dng_load(LIBDNG_OWNED_BY_CONVERT) )
@@ -332,9 +419,6 @@ int module_convert_dng_to_chdk_raw(char* fn)
 	libdng->convert_dng_to_chdk_raw(fn);
 	module_dng_unload(LIBDNG_OWNED_BY_CONVERT);
 	return 1;
-#else
-	return 0;
-#endif
 }
 
 

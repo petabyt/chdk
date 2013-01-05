@@ -15,14 +15,13 @@
 					this to build a Arduino-type remote control keypad
   ===================================================================================================*/
 
-#include "kbd.h"
+#include "camera_info.h"
 #include "stdlib.h"
-#include "platform.h"
-#include "core.h"
-#include "keyboard.h"
+#include "clock.h"
+#include "modes.h"
+#include "shooting.h"
 #include "conf.h"
 #include "action_stack.h"
-#include "camera.h"
 #include "gui_draw.h"
 #include "usb_remote.h"
 
@@ -222,16 +221,11 @@ void kbd_calibrate_synch_delay()
 
   ---------------------------------------------------------------------------------------------------------*/
 
-#ifdef REMOTE_SYNC_STATUS_LED
-
-	void usb_remote_status_led(int state)
-	{
-	  *(int*)REMOTE_SYNC_STATUS_LED=state ? 0x46 : 0x44;
-	}
-
-#else
-	void usb_remote_status_led(int state) {} ;
-#endif
+void usb_remote_status_led(int state)
+{
+    if (camera_info.cam_remote_sync_status_led)
+        *(int*)camera_info.cam_remote_sync_status_led=state ? 0x46 : 0x44;
+}
 
 
 /*---------------------------------------------------------------------------------------------------------
@@ -247,7 +241,6 @@ void kbd_calibrate_synch_delay()
 void _wait_until_remote_button_is_released(void)
 {
 	int tick;
-	long x;
 
 	if (	( conf.remote_enable )				// menu : USB remote enabled - bracket everything in this function
 		&&	( conf.synch_enable  )				// menu : Sync enabled - tells us to wait for USB to disconnect
@@ -409,7 +402,6 @@ extern void (*usb_module_video[])( ) ;
 int handle_usb_remote()
 {
 	static int rmt_state = RMT_DISABLED ;
-	unsigned int m1 ;
 
     if(conf.remote_enable)
 	{

@@ -1,39 +1,56 @@
-#include "console.h"
+#include "camera_info.h"
 #include "stdlib.h"
-#include "platform.h"
-#include "camera.h"
+#include "modes.h"
+#include "clock.h"
+#include "shooting.h"
+#include "console.h"
 #include "conf.h"
-#include "kbd.h"
 #include "keyboard.h"
 #include "histogram.h"
 #include "action_stack.h"
+#include "script_api.h"
 
-extern int usb_sync_wait ;
+//----------------------------------------------------------------------------------
 
+#define AS_FUNC_ENTRY   0xa32f1c9e      // Magic number to flag a function ptr on the stack
+
+//----------------------------------------------------------------------------------
+// action stack memory structure
+
+#define ACTION_STACK_SIZE 48
+#define MAX_ACTION_STACKS 5
 
 typedef struct _action_stack
 {
-    int (*action_process)(long p);
-    long stack[ACTION_STACK_SIZE];
-    int stack_ptr;
-    long comp_id;
-    unsigned long delay_target_ticks;
+    long                    stack[ACTION_STACK_SIZE];   // Actions and parameters
+    int                     stack_ptr;                  // Current position in stack
+    long                    comp_id;                    // Unique ID
+    unsigned long           delay_target_ticks;         // Used for sleep function
+    struct _action_stack*   next;                       // next action stack
 } action_stack_t;
 
-static action_stack_t** action_stacks = NULL;
-static int active_stack = -1;
-static int num_stacks = 0;
-static long task_comp_id = 1;
+//----------------------------------------------------------------------------------
+// Global variables for implementation
+
+static action_stack_t* action_stacks = NULL;            // List of active stacks
+static action_stack_t* active_stack = NULL;             // Currently executing stack
+static action_stack_t* free_stacks = NULL;              // Free list (for reuse of memory)
+static int num_stacks = 0;                              // Number of active stacks
+static long task_comp_id = 1;                           // Next stack ID
+
+//----------------------------------------------------------------------------------
+// Stack management functions
 
 // Returns true if the task denoted by comp_id has finished execution.
 // comp_id is returned by action_stack_create().
 int action_stack_is_finished(long comp_id)
 {
-    int i;
-    for (i = 0; i < num_stacks; ++i)
+    action_stack_t *p = action_stacks;
+    while (p)
     {
-        if (action_stacks[i]->comp_id == comp_id)
+        if (p->comp_id == comp_id)
             return 0;
+        p = p->next;
     }
 
     return 1;
@@ -41,277 +58,365 @@ int action_stack_is_finished(long comp_id)
 
 // Starts a new action stack with initial stack entry p.
 // The action stack is alive as long as its stack has entries.
-long action_stack_create(action_process proc_func, long p)
+// The proc_func parameter is a pointer to the initial processing function
+// for the stack
+long action_stack_create(action_func proc_func)
 {
     // Cap the maximum number of action_stacks
     if (num_stacks == MAX_ACTION_STACKS)
         return -1;
 
     // Initialize new action stack
-    action_stack_t** tmp = (action_stack_t**)malloc(sizeof(action_stack_t*) * (num_stacks + 1));
-    memcpy(tmp, action_stacks, sizeof(action_stack_t*) * num_stacks);
-
-    tmp[num_stacks] = (action_stack_t*)malloc(sizeof(action_stack_t));
-
-    action_stack_t* stack = tmp[num_stacks];
-    if(proc_func) {
-        stack->action_process = proc_func;
-    } else {
-        stack->action_process = action_stack_standard;
+    action_stack_t* stack = 0;
+    if (free_stacks)
+    {
+        // Reuse previous memory block
+        stack = free_stacks;
+        free_stacks = free_stacks->next;
     }
+    else
+    {
+        // Get a new block
+        stack = (action_stack_t*)malloc(sizeof(action_stack_t));
+    }
+    memset(stack,0,sizeof(action_stack_t));
 
-    stack->stack_ptr = 0;
+    // Insert at start of list - stacks execute in order of most recent creation
+    stack->next = action_stacks;
+    action_stacks = stack;
+
+    // Initialize id & processing function
     stack->comp_id = task_comp_id;
-    stack->delay_target_ticks = 0;
-    stack->stack[0] = p;
+    stack->stack[0] = (long)proc_func;
+    stack->stack[1] = AS_FUNC_ENTRY;    // Can't use action_push_func as active_stack not set
+    stack->stack_ptr = 1;
 
-    action_stack_t** old = action_stacks;
-    action_stacks = tmp;
     ++num_stacks;
 
-    if (old != NULL)
-        free(old);
-
     // Increment task_comp_id, handle wraparound,
-    // and do not take values already in use
-    do
-    {
-        ++task_comp_id;
-        if (task_comp_id < 0)
-            task_comp_id = 0;
-    } while( !action_stack_is_finished(task_comp_id) );
+    // For this to clash with a running stack you would need to leave one running
+    // while 2 billion more were created - highly unlikely.
+    ++task_comp_id;
+
     return stack->comp_id;
 }
 
-static void action_stack_finish(int task_id)
+// Clean up and release an action stack
+static void action_stack_finish(action_stack_t *p)
 {
-    action_stack_t** tmp = NULL;
-    if (num_stacks > 1)
-        tmp = (action_stack_t**)malloc(sizeof(action_stack_t*) * (num_stacks - 1));
-
-    int src_index, dst_index;
-    for (src_index = 0, dst_index = 0; src_index < num_stacks; ++src_index)
+    // Remove 'active_stack' from the list since it is done execuing
+    if (p == action_stacks)
     {
-        if (src_index != task_id)
+        action_stacks = action_stacks->next;
+    }
+    else
+    {
+        action_stack_t* prev = action_stacks;
+        while (prev && (prev->next != p))
         {
-            tmp[dst_index] = action_stacks[src_index];
-            ++dst_index;
+            prev = prev->next;
         }
-        else
+        if (prev)
         {
-            free(action_stacks[src_index]);
+            prev->next = prev->next->next;
         }
     }
 
-    action_stack_t** old = action_stacks;
     --num_stacks;
-    action_stacks = tmp;
-    free(old);
+
+    // Instead of freeing memory, save it to the free list
+    // Next time this block will be reused
+    p->next = free_stacks;
+    free_stacks = p;
 }
 
-// Can only be called from an action stack
-void action_pop()
+// Find and terminate an action stack
+// comp_id is returned by action_stack_create().
+void action_stack_kill(long comp_id)
 {
-    if (active_stack == -1)
-        return;
-
-    --(action_stacks[active_stack]->stack_ptr);
+    action_stack_t *p = action_stacks;
+    while (p)
+    {
+        if (p->comp_id == comp_id)
+        {
+            p->stack_ptr = -1;
+            action_stack_finish(p);
+            return;
+        }
+        p = p->next;
+    }
 }
 
+//----------------------------------------------------------------------------------
+// Add / remove a generic entry from the stack
+// Note - these assume 'active_stack' is set correctly.
+
+// Get top Nth entry off the stack (without removing it)
+// Can only be called from an action stack
+long action_top(int n)
+{
+    if (active_stack)
+        return active_stack->stack[active_stack->stack_ptr-n];
+    return 0;
+}
+
+// Pop top entry off the stack
+// Can only be called from an action stack
+long action_pop()
+{
+    if (active_stack)
+        return active_stack->stack[active_stack->stack_ptr--];
+    return 0;
+}
+
+// Pop top func entry off the stack
+// Can only be called from an action stack
+long action_pop_func()
+{
+    action_pop();
+    return action_pop();
+}
+
+// Push a new entry onto the stack
+// Can only be called from an action stack
+void action_push(long p)
+{
+    if (active_stack)
+        active_stack->stack[++active_stack->stack_ptr] = p;
+}
+
+// Push a function onto the stack
+void action_push_func(action_func f)
+{
+    action_push((long)f);
+    action_push(AS_FUNC_ENTRY);
+}
+
+//----------------------------------------------------------------------------------
+// Custom functions to push specific actions onto the stack
+
+// Process a sleep function from the stack
+static void action_stack_AS_SLEEP()
+{
+    long delay = action_top(2);
+
+    if (action_process_delay(delay))
+    {
+        action_clear_delay();
+        action_pop_func();
+        action_pop();
+    }
+}
+
+// Push a sleep onto the stack
 // Can only be called from an action stack
 void action_push_delay(long msec)
 {
     action_push(msec);
-    action_push(AS_SLEEP);
+    action_push_func(action_stack_AS_SLEEP);
 }
 
+// Process a button press action from the stack
+static void action_stack_AS_PRESS()
+{
+    extern int usb_sync_wait;
+
+    action_pop_func();
+    long skey = action_pop();   // Key parameter
+
+    if ((skey == KEY_SHOOT_FULL) && conf.remote_enable && conf.synch_enable) usb_sync_wait = 1;
+
+    kbd_key_press(skey);
+}
+
+// Push a button press action onto the stack
 // Can only be called from an action stack
 void action_push_press(long key)
 {
     // WARNING stack program flow is reversed
-    action_push_delay(CAM_KEY_PRESS_DELAY);
+    action_push_delay(camera_info.cam_key_press_delay);
     action_push(key);
-    action_push(AS_PRESS);
+    action_push_func(action_stack_AS_PRESS);
 }
 
+// Process a button release action from the stack
+static void action_stack_AS_RELEASE()
+{
+    action_pop_func();
+    long skey = action_pop();   // Key parameter
+    kbd_key_release(skey);
+}
+
+// Push a button release action onto the stack
 // Can only be called from an action stack
 void action_push_release(long key)
 {
     // WARNING stack program flow is reversed
-    action_push_delay(CAM_KEY_RELEASE_DELAY);
+    action_push_delay(camera_info.cam_key_release_delay);
     action_push(key);
-    action_push(AS_RELEASE);
+    action_push_func(action_stack_AS_RELEASE);
 }
 
+// Push a button click action onto the stack (press, optional delay, release)
+// Can only be called from an action stack
 void action_push_click(long key)
 {
-// WARNING stack program flow is reversed
+    // WARNING stack program flow is reversed
     action_push_release(key);
-#if defined(CAM_KEY_CLICK_DELAY) // camera need delay for click
-    action_push_delay(CAM_KEY_CLICK_DELAY);
-#endif
+    // camera need delay for click?
+    if (camera_info.cam_key_click_delay > 0)
+        action_push_delay(camera_info.cam_key_click_delay);
     action_push_press(key);
 }
 
+// Wait for a button to be pressed and released (or the timeout to expire)
+static void action_stack_AS_WAIT_CLICK()
+{
+    long delay = action_top(2);
+
+    if (action_process_delay(delay) || (camera_info.state.kbd_last_clicked = kbd_get_clicked_key()))
+    {
+        if (!camera_info.state.kbd_last_clicked)
+            camera_info.state.kbd_last_clicked=0xFFFF;
+        action_clear_delay();
+        action_pop_func();
+        action_pop();
+    }
+}
+
+// Push a wait for button click action onto the stack
+// Can only be called from an action stack
 void action_wait_for_click(int timeout)
 {
     // accept wait_click 0 for infinite, but use -1 internally to avoid confusion with generated waits
     action_push(timeout?timeout:-1);
-    action_push(AS_WAIT_CLICK);
+    action_push_func(action_stack_AS_WAIT_CLICK);
 }
 
-// Can only be called from an action stack
-void action_push(long p)
-{
-    if (active_stack == -1)
-        return;
+//----------------------------------------------------------------------------------
+// Delay processing
 
-    action_stack_t* task = action_stacks[active_stack];
-    task->stack[++task->stack_ptr] = p;
-}
-
-// Can only be called from an action stack
-long action_get_prev(int p)
-{
-    if (active_stack == -1)
-        return 0;
-
-    action_stack_t* task = action_stacks[active_stack];
-    return task->stack[task->stack_ptr-(p-1)];
-}
-
-// handle initializing and checking a timeout value on the stack
-// p is the how far up the stack the timout value is
+// handle initializing and checking a timeout value set by 'delay'
 // returns zero if the timeout has not expired, 1 if it has
 // does not pop the delay value off the stack or clear the delay value
-int action_process_delay(int p)
+int action_process_delay(long delay)
 {
     unsigned t = get_tick_count();
     // FIXME take care if overflow occurs
-    if (action_stacks[active_stack]->delay_target_ticks == 0)
+    if (active_stack->delay_target_ticks == 0)
     {
-        /* setup timer */
-        long delay = action_get_prev(p);
         /* delay of -1 signals indefinite (actually 1 day) delay*/
-        if(delay == -1) {
+        if(delay == -1)
             delay = 86400000;
-        }
-        action_stacks[active_stack]->delay_target_ticks = t+delay;
+
+        active_stack->delay_target_ticks = t+delay;
         return 0;
     }
-    if (action_stacks[active_stack]->delay_target_ticks <= t)
+    if (active_stack->delay_target_ticks <= t)
     {
         return 1;
     }
     return 0;
 }
 
+// Disable current delay
 void action_clear_delay(void)
 {
-    action_stacks[active_stack]->delay_target_ticks = 0;
+    active_stack->delay_target_ticks = 0;
 }
 
-// Defines some standard operations. Returns false if it could not process anything.
-// Can only be called from an action stack
-int action_stack_standard(long p)
+//----------------------------------------------------------------------------------
+// 'Shoot' actions
+
+static void action_stack_AS_WAIT_SAVE()
 {
-    long skey ;
-
-    switch (p)
+    if (!shooting_in_progress())
     {
-    case AS_PRESS:
-        skey=action_get_prev(2) ;
-        if ((skey == KEY_SHOOT_FULL) &&  conf.remote_enable && conf.synch_enable ) usb_sync_wait = 1 ;
-        kbd_key_press(skey);
-        action_pop();
-        action_pop();
-        break;
-    case AS_RELEASE:
-        kbd_key_release(action_get_prev(2));
-        action_pop();
-        action_pop();
-        break;
-    case AS_SLEEP:
-        if(action_process_delay(2))
-        {
-            action_clear_delay();
-            action_pop();
-            action_pop();
-        }
-        break;
-    case AS_WAIT_SAVE:
-        if ((state_shooting_progress == SHOOTING_PROGRESS_DONE) || !shooting_in_progress())
-            action_pop();
-        break;
-    case AS_WAIT_FLASH:
-        if (shooting_is_flash_ready())
-            action_pop();
-        break;
-    case AS_WAIT_CLICK:
-#ifdef OPT_SCRIPTING
-        if(action_process_delay(2) || (kbd_last_clicked = kbd_get_clicked_key()))
-        {
-            if (!kbd_last_clicked)
-                kbd_last_clicked=0xFFFF;
-#endif
-            action_clear_delay();
-            action_pop();
-            action_pop();
-#ifdef OPT_SCRIPTING
-        }
-#endif
-        break;
-    case AS_WAIT_SHOOTING_IN_PROGRESS:
-        if (shooting_in_progress() || MODE_IS_VIDEO(mode_get()))
-        {
-            action_pop();
-        }
-        break;
-    case AS_SHOOT:
-        state_shooting_progress = SHOOTING_PROGRESS_NONE;
-
-        // Initiate a shoot. Remember that stack program flow is reversed!
-        action_pop();
-        // XXX FIXME find out how to wait to jpeg save finished
-        action_push_delay(conf.script_shoot_delay*100);
-
-        action_push(AS_WAIT_SAVE);
-
-        action_push_release(KEY_SHOOT_HALF);
-        action_push_release(KEY_SHOOT_FULL);
-
-        action_push_press(KEY_SHOOT_FULL);
-
-        action_push(AS_WAIT_FLASH);
-        action_push(AS_WAIT_SHOOTING_IN_PROGRESS);
-
-        action_push_press(KEY_SHOOT_HALF);
-    default:
-        return 0;
+        action_pop_func();
+        if (libscriptapi)
+            libscriptapi->set_as_ret((state_shooting_progress == SHOOTING_PROGRESS_NONE) ? 0 : 1);
     }
-
-    return 1;
 }
 
-static void action_stack_process(int task_id)
+static void action_stack_AS_WAIT_FLASH()
 {
-    action_stack_t* stack = action_stacks[task_id];
-    if (stack->stack_ptr > -1)
+    if (shooting_is_flash_ready())
+        action_pop_func();
+}
+
+static void action_stack_AS_WAIT_SHOOTING_IN_PROGRESS()
+{
+    if (shooting_in_progress() || MODE_IS_VIDEO(mode_get()))
+        action_pop_func();
+}
+
+void action_stack_AS_SHOOT()
+{
+    action_pop_func();
+
+    state_shooting_progress = SHOOTING_PROGRESS_NONE;
+
+    // XXX FIXME find out how to wait to jpeg save finished
+    action_push_delay(conf.script_shoot_delay*100);
+
+    action_push_func(action_stack_AS_WAIT_SAVE);
+
+    action_push_release(KEY_SHOOT_HALF);
+    action_push_release(KEY_SHOOT_FULL);
+
+    action_push_press(KEY_SHOOT_FULL);
+
+    action_push_func(action_stack_AS_WAIT_FLASH);
+    action_push_func(action_stack_AS_WAIT_SHOOTING_IN_PROGRESS);
+
+    action_push_press(KEY_SHOOT_HALF);
+}
+
+//----------------------------------------------------------------------------------
+// Stack execution
+
+// Run the topmost function on the active stack.
+static void action_stack_process()
+{
+    if (active_stack->stack_ptr >= 0)
     {
-        stack->action_process(action_get_prev(1));
+        // Pop function address and id from stack (put back later if needed)
+        long id = action_top(0);
+        action_func f = (action_func)action_top(1);
+        if (id == AS_FUNC_ENTRY)    // Safety check
+        {
+            f();
+        }
+        else
+        {
+            char buf[100];
+            sprintf(buf,"AS Error - Not a Function. Aborting. %d %08x %08x.",active_stack->stack_ptr,id,f);
+            script_console_add_line((long)buf);
+            action_stack_finish(active_stack);
+        }
     }
     else
     {
-        action_stack_finish(task_id);
+        action_stack_finish(active_stack);
     }
 }
 
+// Run the topmost function on each stack
 void action_stack_process_all()
 {
-    for (active_stack = num_stacks - 1; active_stack >= 0; --active_stack)
-    {
-        action_stack_process(active_stack);
-    }
+    active_stack = action_stacks;
 
-    active_stack = -1;
+    while (active_stack)
+    {
+        // Save the next stack in case the current one ends and 
+        // releases it's stack during execution
+        action_stack_t *next = active_stack->next;
+
+        // Process stack functions
+        action_stack_process();
+
+        active_stack = next;
+    }
 }
+
+//----------------------------------------------------------------------------------

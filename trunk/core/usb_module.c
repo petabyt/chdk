@@ -10,21 +10,18 @@
 		  in gui.c and add ptr below to stucture (*usb_control_module[10])(int)
  ===================================================================================================================================================*/
 
-#include "kbd.h"
+#include "camera_info.h"
 #include "stdlib.h"
-#include "platform.h"
-#include "core.h"
+#include "clock.h"
+#include "shooting.h"
 #include "keyboard.h"
 #include "conf.h"
 #include "action_stack.h"
-#include "camera.h"
 #include "usb_remote.h"
 
 /*===================================================================================================
     Variables
   ===================================================================================================*/
-
-extern int get_usb_power(int) ;
 
 extern enum SWITCH_TYPE	 switch_type ;
 extern enum CONTROL_MODULE  control_module  ;
@@ -223,7 +220,7 @@ void usb_shoot_module_normal()
 						switch ( switch_type)
 						{
 							case SW_ONE_PRESS :
-								usb_remote_stack_name = action_stack_create(&action_stack_standard,AS_SHOOT);
+								usb_remote_stack_name = action_stack_create(&action_stack_AS_SHOOT);
 								usb_sync_wait = 1;
 								logic_module_state = LM_HALF_PRESS ;
 								break ;
@@ -366,7 +363,7 @@ void usb_shoot_module_normal()
 
 				case REMOTE_HALF_PRESS :
 				case REMOTE_FULL_PRESS:
-					usb_remote_stack_name = action_stack_create(&action_stack_standard,AS_SHOOT);
+					usb_remote_stack_name = action_stack_create(&action_stack_AS_SHOOT);
 					logic_module_state = LM_FULL_PRESS ;
 					break ;
 
@@ -416,7 +413,7 @@ void usb_shoot_module_burst()
 
 				case REMOTE_HALF_PRESS :
 				case REMOTE_FULL_PRESS:
-					usb_remote_stack_name = action_stack_create(&action_stack_standard,AS_SHOOT);
+					usb_remote_stack_name = action_stack_create(&action_stack_AS_SHOOT);
 					logic_module_state = LM_HALF_PRESS ;
 					break ;
 
@@ -475,7 +472,7 @@ void usb_shoot_module_zoom()
 
 				case ZOOM_SHOOT :
 					logic_module_state = LM_FULL_PRESS ;
-					usb_remote_stack_name = action_stack_create(&action_stack_standard,AS_SHOOT);
+					usb_remote_stack_name = action_stack_create(&action_stack_AS_SHOOT);
 					break ;
 
 				case ZOOM_FULL_OUT :
@@ -517,8 +514,6 @@ void usb_shoot_module_bracketing()
 	int current_time ;
 
 	current_time = get_tick_count() ;
-
-	static long usb_remote_stack_name = -1;
 
 	switch( logic_module_state )
 	{
@@ -615,14 +610,10 @@ void usb_shoot_module_bracketing()
 	Control Module :  Video
 		- starts video (with sync if selected) on press,  stops on next press
   ---------------------------------------------------------------------------------------------------*/
-#ifdef  CAM_HAS_VIDEO_BUTTON   
-	#define USB_VIDEO_BUTTON KEY_VIDEO
-#else
-	#define USB_VIDEO_BUTTON KEY_SHOOT_FULL
-#endif	
 
 void usb_video_module_normal()
 {
+    int usb_video_button = (camera_info.cam_has_video_button) ? KEY_VIDEO : KEY_SHOOT_FULL;
 
 	switch( logic_module_state )
 	{
@@ -638,7 +629,7 @@ void usb_video_module_normal()
 
 				case REMOTE_HALF_PRESS :
 				case REMOTE_FULL_PRESS:
-					kbd_key_press(USB_VIDEO_BUTTON);
+					kbd_key_press(usb_video_button);
 					logic_module_state = LM_START_RECORD ;
 					break ;
 
@@ -653,7 +644,7 @@ void usb_video_module_normal()
 			{
 				case REMOTE_RELEASE :
 					logic_module_state = LM_RECORDING ;
-					kbd_key_release(USB_VIDEO_BUTTON);
+					kbd_key_release(usb_video_button);
 					break ;
 
 				case REMOTE_HALF_PRESS :
@@ -674,7 +665,7 @@ void usb_video_module_normal()
 
 				case REMOTE_HALF_PRESS :
 				case REMOTE_FULL_PRESS:
-					kbd_key_press(USB_VIDEO_BUTTON);
+					kbd_key_press(usb_video_button);
 					logic_module_state = LM_STOP_RECORDING ;
 					break ;
 
@@ -689,7 +680,7 @@ void usb_video_module_normal()
 			{
 				case REMOTE_RELEASE :
 					logic_module_state = LM_RELEASE ;
-					kbd_key_release(USB_VIDEO_BUTTON);
+					kbd_key_release(usb_video_button);
 					break ;
 
 				case REMOTE_HALF_PRESS :

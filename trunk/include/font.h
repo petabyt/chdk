@@ -1,7 +1,10 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include "gui.h"
+// CHDK Font interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 //-------------------------------------------------------------------
 #define FONT_CP_WIN     0

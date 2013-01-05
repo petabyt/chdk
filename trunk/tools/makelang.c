@@ -74,8 +74,6 @@ int main( int argc, char **argv )
     s = strrchr(buf,'.');
     if (s) *s = 0;
 
-	printf("char* gui_lang_source_filename=\"%s\";\n\n",buf);
-
 	printf("static char* gui_lang_default = \\\n");
 	
 	for ( i=1; i<=num_lines; i++ )

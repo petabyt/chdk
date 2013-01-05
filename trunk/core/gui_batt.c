@@ -1,9 +1,7 @@
 #include "stdlib.h"
 #include "keyboard.h"
-#include "platform.h"
-#include "core.h"
+#include "battery.h"
 #include "conf.h"
-#include "gui.h"
 #include "gui_draw.h"
 #include "gui_batt.h"
 //-------------------------------------------------------------------

@@ -51,13 +51,7 @@ void addBufRange(uint32_t *p, int o, int l)
     last = n;
 }
 
-#if defined(PLATFORMOS_vxworks)
 #include "signatures_vxworks.h"
-#elif defined(PLATFORMOS_dryos)
-#include "signatures_dryos.h"
-#else
-#error Undefined platform OS
-#endif
 
 int match_compare(const Match *p1, const Match *p2)
 {

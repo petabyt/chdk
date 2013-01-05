@@ -1,4 +1,3 @@
-#include "platform.h"
 #include "stdlib.h"
 #include "levent.h"
 

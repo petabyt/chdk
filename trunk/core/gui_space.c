@@ -1,11 +1,8 @@
+#include "camera_info.h"
 #include "stdlib.h"
-#include "keyboard.h"
-#include "platform.h"
-#include "core.h"
 #include "conf.h"
-#include "gui.h"
+#include "sd_card.h"
 #include "gui_draw.h"
-#include "gui_batt.h"
 #include "gui_space.h"
 //-------------------------------------------------------------------
 
@@ -134,67 +131,57 @@ static void gui_space_draw_icon() {
 }
 
 //-------------------------------------------------------------------
-static void gui_space_draw_percent() {
-    unsigned short offset = 0;
+static void gui_space_draw_value()
+{
+    int offset = 0;
 
     space_color();
-#if CAM_MULTIPART
-    unsigned short partition_number = get_active_partition();
-    if((conf.show_partition_nr) && (get_part_count() > 1)) {
-        sprintf(osd_buf, "%1d:\0", partition_number);
-        offset=2;
+
+    if ((conf.show_partition_nr) && (get_part_count() > 1))
+    {
+        sprintf(osd_buf, "%1d:\0", get_active_partition());
+        offset = 2;
     }
-    if(is_partition_changed())
+
+    if (is_partition_changed())
     {
         sprintf(osd_buf+offset, "???\0");
     }
     else
-#endif
     {
-        sprintf(osd_buf+offset, "%3d%%\0", perc);
+        if (conf.space_perc_show)
+        {
+            sprintf(osd_buf+offset, "%3d%%\0", perc);
+        }
+        else if (conf.space_mb_show)
+        {
+            unsigned int freemb = GetFreeCardSpaceKb()/1024;
+            if (freemb < 10000) sprintf(osd_buf+offset, "%4d%M\0",freemb);
+            else sprintf(osd_buf+offset, "%4d%G\0",freemb/1024);   // if 10 GiB or more free, print in GiB instead of MiB
+        }
     }
+
     draw_string(conf.space_txt_pos.x, conf.space_txt_pos.y, osd_buf, cl);
 }
 
 //-------------------------------------------------------------------
-static void gui_space_draw_mb() {
-    unsigned short offset = 0;
-    unsigned int freemb = GetFreeCardSpaceKb()/1024;
 
-    space_color();
-#if CAM_MULTIPART
-    unsigned short partition_number = get_active_partition();
-    if((conf.show_partition_nr) && (get_part_count() > 1)) {
-        sprintf(osd_buf, "%1d:\0", partition_number);
-        offset=2;
-    }
-    if(is_partition_changed())  {
-        sprintf(osd_buf+offset, "???\0");
-    }
-    else
-#endif
+void gui_space_draw_osd()
+{
+    if (conf.space_icon_show)
     {
-        if (freemb < 10000) sprintf(osd_buf+offset, "%4d%M\0",freemb);
-        else sprintf(osd_buf+offset, "%4d%G\0",freemb/1024);   // if 10 GiB or more free, print in GiB instead of MiB
-        draw_string(conf.space_txt_pos.x, conf.space_txt_pos.y, osd_buf, cl);
-    }
-}
-
-//-------------------------------------------------------------------
-
-void gui_space_draw_osd() {
-    if (conf.space_icon_show)   {
         gui_space_draw_icon();
     }
-    if (conf.space_perc_show)  {
-        gui_space_draw_percent();
-    } else if (conf.space_mb_show) {
-        gui_space_draw_mb();
+    if (conf.space_perc_show || conf.space_mb_show)
+    {
+        gui_space_draw_value();
     }
-  if (conf.space_bar_show==1)  {
+    if (conf.space_bar_show == 1)
+    {
         gui_space_draw_spacebar_horizontal();
     }
-  if (conf.space_bar_show==2) {
+    else if (conf.space_bar_show == 2)
+    {
         gui_space_draw_spacebar_vertical();
     }
 }

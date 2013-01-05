@@ -1,9 +1,11 @@
 #include "platform.h"
 #include "conf.h"
 #include "shot_histogram.h"
-#include "camera.h"
 #include "raw.h"
 #include "stdlib.h"
+
+#define SHOT_HISTOGRAM_STEP 31
+#define SHOT_HISTOGRAM_MARGIN 100
 
 #define RAW_TARGET_DIRECTORY    "A/DCIM/%03dCANON"
 #define RAW_TARGET_FILENAME     "%s_%04d.%s"

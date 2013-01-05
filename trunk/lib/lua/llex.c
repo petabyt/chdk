@@ -61,7 +61,7 @@ static void save (LexState *ls, int c) {
 }
 
 
-void luaX_init (lua_State *L) {
+LUAI_FUNC void luaX_init (lua_State *L) {
   int i;
   for (i=0; i<NUM_RESERVED; i++) {
     TString *ts = luaS_new(L, luaX_tokens[i]);
@@ -75,7 +75,7 @@ void luaX_init (lua_State *L) {
 #define MAXSRC          80
 
 
-const char *luaX_token2str (LexState *ls, int token) {
+LUAI_FUNC const char *luaX_token2str (LexState *ls, int token) {
   if (token < FIRST_RESERVED) {
     lua_assert(token == cast(unsigned char, token));
     return (iscntrl(token)) ? luaO_pushfstring(ls->L, "char(%d)", token) :
@@ -99,7 +99,7 @@ static const char *txtToken (LexState *ls, int token) {
 }
 
 
-void luaX_lexerror (LexState *ls, const char *msg, int token) {
+LUAI_FUNC void luaX_lexerror (LexState *ls, const char *msg, int token) {
   char buff[MAXSRC];
   luaO_chunkid(buff, getstr(ls->source), MAXSRC);
   msg = luaO_pushfstring(ls->L, "%s:%d: %s", buff, ls->linenumber, msg);
@@ -109,12 +109,12 @@ void luaX_lexerror (LexState *ls, const char *msg, int token) {
 }
 
 
-void luaX_syntaxerror (LexState *ls, const char *msg) {
+LUAI_FUNC void luaX_syntaxerror (LexState *ls, const char *msg) {
   luaX_lexerror(ls, msg, ls->t.token);
 }
 
 
-TString *luaX_newstring (LexState *ls, const char *str, size_t l) {
+LUAI_FUNC TString *luaX_newstring (LexState *ls, const char *str, size_t l) {
   lua_State *L = ls->L;
   TString *ts = luaS_newlstr(L, str, l);
   TValue *o = luaH_setstr(L, ls->fs->h, ts);  /* entry for `str' */
@@ -135,7 +135,7 @@ static void inclinenumber (LexState *ls) {
 }
 
 
-void luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source) {
+LUAI_FUNC void luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source) {
   ls->decpoint = '.';
   ls->L = L;
   ls->lookahead.token = TK_EOS;  /* no look-ahead token */
@@ -447,7 +447,7 @@ static int llex (LexState *ls, SemInfo *seminfo) {
 }
 
 
-void luaX_next (LexState *ls) {
+LUAI_FUNC void luaX_next (LexState *ls) {
   ls->lastline = ls->linenumber;
   if (ls->lookahead.token != TK_EOS) {  /* is there a look-ahead token? */
     ls->t = ls->lookahead;  /* use this one */
@@ -458,7 +458,7 @@ void luaX_next (LexState *ls) {
 }
 
 
-void luaX_lookahead (LexState *ls) {
+LUAI_FUNC void luaX_lookahead (LexState *ls) {
   lua_assert(ls->lookahead.token == TK_EOS);
   ls->lookahead.token = llex(ls, &ls->lookahead.seminfo);
 }

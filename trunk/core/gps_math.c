@@ -1,9 +1,5 @@
-
-
-#include "camera.h"
-#ifdef CAM_HAS_GPS
-#include <stdlib.h>
-#include <stdio.h>
+#include "camera_info.h"
+#include "stdlib.h"
 #include "math.h"
 #include "gps_math.h"
 
@@ -17,32 +13,6 @@ int fac(int n){
 	int f=1;
 	for (i=2; i<=n; i++) f*=i;
 	return(f);
-}
-
-double Round(double Zahl, int Stellen){
-	static double v [] = {
-		1.,
-		10.,
-		100.,
-		1000.,
-		10000.,
-		100000.,
-		1000000.,
-		10000000.,
-		100000000.,
-		1000000000.,
-		10000000000.,
-		100000000000.,
-		1000000000000.,
-		10000000000000.,
-		100000000000000.,
-		1000000000000000.,
-		10000000000000000.,
-		100000000000000000.,
-		1000000000000000000.
-	};
-
-	return floor(Zahl * v[Stellen] + 0.5) / v[Stellen];
 }
 
 /* double arccos(double x, int n){
@@ -184,6 +154,10 @@ static double doubleExpTable [MAXDIGITS+1] = {
 	100000000000000000.0,
 	1000000000000000000.0
 };
+
+double Round(double Zahl, int Stellen){
+	return floor(Zahl * doubleExpTable[Stellen] + 0.5) / doubleExpTable[Stellen];
+}
 
 static quad quadExpTable[MAXDIGITS+1] = {
 	1LL,
@@ -568,5 +542,3 @@ double cos (double phi) {
 /*-----------------------------------------------------------------------------------
 **	$Id: sincos.c,v 1.2 2011/10/08 14:53:25 wolf Exp $
 **---------------------------------------------------------------------------------*/
-
-#endif

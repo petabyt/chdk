@@ -1,10 +1,12 @@
 #include "camera.h"
 #include "lolevel.h"
 #include "platform.h"
+#include "raw_buffer.h"
 #include "conf.h"
 #include "math.h"
 #include "levent.h"
 #include "stdlib.h"
+#include "ptp.h"
 
 //----------------------------------------------------------------------------
 // Char Wrappers
@@ -303,7 +305,11 @@ short SetAE_ShutterSpeed(short *tv)             { return _SetAE_ShutterSpeed(tv)
 
 int open (const char *name, int flags, int mode )
 {
-#ifdef CAM_DRYOS
+#if !CAM_DRYOS
+    // Adjust O_TRUNC and O_CREAT flags for VxWorks
+    // Remove O_APPEND flag if present (not in VxWorks)
+    flags = (flags & ~(O_TRUNC|O_CREAT|O_APPEND)) | ((flags & (O_TRUNC|O_CREAT)) << 1);
+#else
     if(!name || name[0]!='A')
         return -1;
 #endif
@@ -375,64 +381,201 @@ int remove(const char *name)
 
 //----------------------------------------------------------------------------
 // directory wrappers
-#ifndef CAM_DRYOS
-DIR *opendir(const char* name) {
-    return _opendir(name);
-}
-struct dirent* readdir(DIR *d) {
-    return _readdir(d);
-}
-int closedir(DIR *d) {
-    return _closedir(d);
-}
 
-void rewinddir(DIR *d) {
-    return _rewinddir(d);
-}
-#else // dryos
-DIR *opendir(const char* name) {
-    DIR *d;
-    DIR_dryos *dh = _OpenFastDir(name);
-    if(!dh) {
-        return (void *)0;
-    }
-    d = _malloc(sizeof(DIR));
-    if(!d) {
-        _closedir(dh);
+extern int   _closedir(void *d);
+//extern void  _rewinddir(void *d);     // Not used
+
+DIR *opendir(const char* name)
+{
+    // Create CHDK DIR structure
+    DIR *dir = malloc(sizeof(DIR));
+    // If malloc failed return failure
+    if (dir == 0) return NULL;
+
+    // Save camera internal DIR structure (we don't care what it is)
+#if defined(CAM_DRYOS)
+    extern void *_OpenFastDir(const char* name);
+    dir->cam_DIR = _OpenFastDir(name);
+#else
+    extern void *_opendir(const char* name);
+    dir->cam_DIR = _opendir(name);
+#endif
+    // Init readdir return value
+    dir->dir.d_name[0] = 0;
+
+    // If failed clean up and return failure
+    if (!dir->cam_DIR)
+    {
+        free(dir);
         return NULL;
     }
-    d->dh = dh;
-    return d;
+
+    return dir;
 }
 
-struct dirent * readdir(DIR *d) {
-  _ReadFastDir(d->dh, d->de_buf);
-  return d->de_buf[0]? &d->de : NULL;
-}
+#ifndef CAM_DRYOS
 
-int closedir(DIR *d) {
-    int r;
-    if(!d) {
-        return -1;
+// Internal VxWorks dirent structure returned by readdir
+struct __dirent
+{
+    char            d_name[100];
+};
+
+extern void *_readdir(void *d);
+
+struct dirent* readdir(DIR *d)
+{
+    if (d && d->cam_DIR)
+    {
+        // Get next entry from firmware function
+        struct __dirent *de = _readdir(d->cam_DIR);
+        // Return next directory name if present, else return 0 (end of list)
+        if (de)
+        {
+            strcpy(d->dir.d_name,de->d_name);
+            return &d->dir;
+        }
+        else
+        {
+            d->dir.d_name[0] = 0;
+        }
     }
-    r = _closedir(d->dh);
-    _free(d);    
-    return r;
+    return NULL;
 }
 
-/* not used
-void rewinddir(DIR *d) {
-    if(!d) {
-        return;
+#else // dryos
+
+extern int _ReadFastDir(void *d, void* dd); // DRYOS
+
+struct dirent * readdir(DIR *d)
+{
+    if (d && d->cam_DIR)
+    {
+        _ReadFastDir(d->cam_DIR, d->dir.d_name);
+        return d->dir.d_name[0]? &d->dir : NULL;
     }
-    _rewinddir(d->dh);
+    return NULL;
 }
-*/
 
 #endif // dryos dir functions
 
-int stat(const char *name, struct stat *pStat) {
-    return _stat(name, pStat);
+int closedir(DIR *d)
+{
+    int rv = -1;
+    if (d && d->cam_DIR)
+    {
+        rv = _closedir(d->cam_DIR);
+        // Mark closed (just in case)
+        d->cam_DIR = 0;
+        // Free allocated memory
+        free(d);    
+    }
+    return rv;
+}
+
+//Not used
+//void rewinddir(DIR *d)
+//{
+//    if (d && d->cam_DIR)
+//    {
+//        _rewinddir(d->cam_DIR);
+//    }
+//}
+
+//-----------------------------------------------------------------------------------
+
+// Internal camera firmare 'stat' structures
+
+#if !CAM_DRYOS
+
+struct	__stat  // VxWorks
+{
+    unsigned long	st_dev;		/* device ID number */
+    unsigned long	st_ino;		/* file serial number */
+    unsigned short	st_mode;	/* file mode (see below) */
+    short		st_nlink;	/* number of links to file */
+    short		st_uid;		/* user ID of file's owner */
+    short		st_gid;		/* group ID of file's group */
+    unsigned long	st_rdev;	/* device ID, only if special file */
+    unsigned long	st_size;	/* size of file, in bytes */
+    unsigned long	st_atime;	/* time of last access */
+    unsigned long	st_mtime;	/* time of last modification */
+    unsigned long	st_ctime;	/* time of last change of file status */
+    long		st_blksize;
+    long		st_blocks;
+    unsigned char	st_attrib;	/* file attribute byte (dosFs only) */
+    int			reserved1;	/* reserved for future use */
+    int			reserved2;	/* reserved for future use */
+    int			reserved3;	/* reserved for future use */
+    int			reserved4;	/* reserved for future use */
+    int			reserved5;	/* reserved for future use */
+    int			reserved6;	/* reserved for future use */
+};
+
+#else
+
+#ifndef CAM_DRYOS_2_3_R39
+
+struct	__stat  // DryOS pre R39
+    {
+    unsigned long	st_dev;		//?
+    unsigned long	st_ino;		//?
+    unsigned short	st_mode;	//?
+    short		st_nlink;	//?
+    short		st_uid;		//?
+    short		st_gid;		//?
+    unsigned long	st_atime;	//?
+    unsigned long	st_mtime;	//?
+    unsigned long	st_ctime;	//?
+    unsigned long	st_size;
+    long		st_blksize;	//?
+    long		st_blocks;	//?
+    unsigned char	st_attrib;
+    int			reserved1;	//
+    int			reserved2;	//
+    int			reserved3;	//
+    int			reserved4;	//
+    int			reserved5;	//
+    int			reserved6;	//
+};
+
+#else
+
+struct __stat   // DryOS post R39
+{
+    unsigned long	st_unknown_1;
+    unsigned long	st_attrib;
+    unsigned long	st_size;
+    unsigned long	st_ctime;
+    unsigned long	st_mtime;
+    unsigned long	st_unknown_2;
+};
+
+#endif//CAM_DRYOS_2_3_R39
+
+#endif//CAM_DRYOS
+
+int stat(const char *name, struct stat *pStat)
+{
+    // sanity check. canon firmware hangup if start not from 'A/'
+    if ( !name || (name[0] | 0x20)!='a' || name[1]!='/' ) return 1;
+
+    // use temp __stat stucture to match camera firmware
+    // and copy values across to output
+    struct __stat lStat;
+    int rv = _stat(name, &lStat);
+    if (rv == 0)
+    {
+        pStat->st_attrib = lStat.st_attrib;
+        pStat->st_size = lStat.st_size;
+        pStat->st_ctime = lStat.st_ctime;
+        pStat->st_mtime = lStat.st_mtime;
+    }
+    else
+    {
+        memset( pStat, 0, sizeof(struct stat));
+    }
+    return rv;
 }
 
 FILE *fopen(const char *filename, const char *mode) {
@@ -704,8 +847,8 @@ void exmem_malloc_init() {
 		// If loading CHDK into exmem then move heap start past the end of CHDK
 		// and reduce available space by CHDK size (MEMISOSIZE)
 		// round MEMISOSIZE up to next 4 byte boundary if needed (just in case)
-		exmem_start = mem + ((MEMISOSIZE+3)&0xFFFFFFFC);
-		exmem_size = EXMEM_BUFFER_SIZE - ((MEMISOSIZE+3)&0xFFFFFFFC);
+		exmem_start = mem + ((camera_info.memisosize+3)&0xFFFFFFFC);
+		exmem_size = EXMEM_BUFFER_SIZE - ((camera_info.memisosize+3)&0xFFFFFFFC);
 #else
 		// Set start & size based on requested values
 		exmem_start = mem;
@@ -946,7 +1089,7 @@ unsigned int GetJpgCount(void){
 }
 
 unsigned int GetRawCount(void){
- return GetFreeCardSpaceKb()/((hook_raw_size() / 1024)+GetFreeCardSpaceKb()/GetJpgCount());
+ return GetFreeCardSpaceKb()/((camera_sensor.raw_size / 1024)+GetFreeCardSpaceKb()/GetJpgCount());
 }
 
 void EnterToCompensationEVF(void)
@@ -1167,6 +1310,15 @@ void create_partitions(void){
 	}
 }
 
+#else
+
+// Dummy for scripts if not implemented in camera
+int swap_partitions(int new_partition) { return 0; }
+int get_part_count(void) { return 1; }
+int get_part_type() { return 0; }
+unsigned char get_active_partition(void) { return 1; }
+int is_partition_changed() { return 0; }
+
 #endif
 
 int mute_on_zoom(int x){
@@ -1216,9 +1368,9 @@ void MakeAFScan(void){
 }
 #endif
 
-long __attribute__((weak)) get_jogdial_direction(void){
- return 0;
-}
+long __attribute__((weak)) get_jogdial_direction(void)  { return 0; }
+void __attribute__((weak)) JogDial_CW(void)     {}
+void __attribute__((weak)) JogDial_CCW(void)    {}
 
 #if defined (DNG_EXT_FROM)
 
@@ -1271,7 +1423,9 @@ void change_ext_to_default(void){
 #endif
 
 
+#if !CAM_DRYOS
 static long drv_struct[16];
+#endif
 
 long dh_err()
 {
@@ -1406,22 +1560,23 @@ long __attribute__((weak)) _GetCurrentTargetDistance()
 }
 #endif
 
-#ifdef CAM_CHDK_PTP
 int add_ptp_handler(int opcode, ptp_handler handler, int unknown)
 {
-  return _add_ptp_handler(opcode,handler,unknown);
+#ifdef CAM_CHDK_PTP
+    return _add_ptp_handler(opcode,handler,unknown);
+#else
+    return 0;
+#endif
 }
 
-// this would make more sense in generic/main.c but not all a cameras use it
-void init_chdk_ptp_task() {
-  _CreateTask("InitCHDKPTP", 0x19, 0x200, init_chdk_ptp, 0);
-};
-
-#endif
+int CreateTask (const char *name, int prio, int stack_size, void *entry)
+{
+    return _CreateTask(name, prio, stack_size, entry, 0);
+}
 
 void ExitTask()
 {
-  _ExitTask();
+    _ExitTask();
 }
 
 // TODO not in sigs for vx yet

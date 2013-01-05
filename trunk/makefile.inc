@@ -13,6 +13,9 @@ include $(topdir)version.inc
 
 ifndef OPT_DE_VERSION
     VER=CHDK
+    ifndef OPT_DEFAULT_LANG
+        OPT_DEFAULT_LANG=english
+    endif
 else
     VER=CHDK_DE
     ifndef OPT_DEFAULT_LANG
@@ -143,18 +146,31 @@ endif
 
 CTHUMB=-mthumb
 CFLAGS+=-mthumb-interwork
-CFLAGS+=-I$(topdir)include -I$(topdir)core -I$(topdir)platform/$(PLATFORM) $(PLFLAGS) $(CPPFLAGS)
-CFLAGS+=-DPLATFORM=\"$(PLATFORM)\" -DPLATFORMSUB=\"$(PLATFORMSUB)\" -DPLATFORMID=$(PLATFORMID) -DHDK_VERSION=\"$(VER)\" -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -DBUILD_SVNREV=\"$(BUILD_SVNREV)\" -DCAMERA_$(PLATFORM)=1
+CFLAGS+=-I$(topdir)include -I$(topdir)core -I$(topdir)modules -I$(topdir)platform/$(PLATFORM) $(PLFLAGS) $(CPPFLAGS)
+ifndef SKIPPLATFORMCHECK
+CFLAGS+=-DPLATFORM=\"$(PLATFORM)\" -DPLATFORMSUB=\"$(PLATFORMSUB)\" -DPLATFORMID=$(PLATFORMID) -DVER_$(VER)
+CFLAGS+=-DHDK_VERSION=\"$(VER)\" -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -DBUILD_SVNREV=\"$(BUILD_SVNREV)\" -DCAMERA_$(PLATFORM)=1
+endif
 CFLAGS+=-Wall -Wno-unused -Wno-format
 LDFLAGS=-L$(topdir)lib/math -L$(topdir)lib/font
 LDFLAGS+=-L$(topdir)lib/libc -L$(topdir)lib/ubasic
 LDFLAGS+=-L$(topdir)platform/$(PLATFORM) -L$(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)
 
-ifndef OPT_DE_VERSION
-CFLAGS+=-DVER_CHDK
-else
-CFLAGS+=-DVER_CHDK_DE
+ifdef OPT_GAMES
+CFLAGS+=-DOPT_GAMES
 endif
+
+ifdef OPT_CURVES
+CFLAGS+=-DOPT_CURVES
+endif
+
+ifdef OPT_EDGEOVERLAY
+CFLAGS+=-DOPT_EDGEOVERLAY
+endif
+
+ifdef OPT_MD_DEBUG
+CFLAGS+=-DOPT_MD_DEBUG
+endif 
 
 ifdef OPT_DEBUGGING
 CFLAGS+=-DOPT_DEBUGGING
@@ -164,18 +180,8 @@ ifdef OPT_PTP
 CFLAGS+=-DOPT_PTP
 endif
 
-ifdef OPT_LUA
-CFLAGS+=-DOPT_LUA
-OPT_SCRIPTING=1
-endif
-
-ifdef OPT_UBASIC
-CFLAGS+=-DOPT_UBASIC
-OPT_SCRIPTING=1
-endif
-
-ifdef OPT_SCRIPTING 
-CFLAGS+=-DOPT_SCRIPTING
+ifdef OPT_FORCE_LUA_CALL_NATIVE
+CFLAGS+=-DOPT_FORCE_LUA_CALL_NATIVE
 endif
 
 ifdef OPT_EXMEM_MALLOC
@@ -196,10 +202,6 @@ endif
 
 ifdef EXMEM_BUFFER_SIZE
 CFLAGS+=-DEXMEM_BUFFER_SIZE=$(EXMEM_BUFFER_SIZE)
-endif
-
-ifdef OPT_DBG_DUMP
-CFLAGS+=-DOPT_DBG_DUMP
 endif
 
 ifdef OPT_DBG_LUA_ASSERT
@@ -225,6 +227,12 @@ default: all
 ifndef SKIPBUILDRULES
 
 %.o: %.c
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+%.o: $(topdir)core/%.c
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+%.o: $(topdir)modules/%.c
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 %.o: %.S

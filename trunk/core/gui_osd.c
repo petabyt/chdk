@@ -1,6 +1,6 @@
+#include "platform.h"
 #include "stdlib.h"
 #include "keyboard.h"
-#include "platform.h"
 #include "lang.h"
 #include "conf.h"
 #include "gui.h"
@@ -16,7 +16,10 @@
 #include "gps.h"
 #endif
 #include "modules.h"
-#include "module_load.h"
+
+//-------------------------------------------------------------------
+
+extern const char* gui_video_bitrate_enum(int change, int arg);
 
 //-------------------------------------------------------------------
 static char osd_buf[64];
@@ -215,9 +218,28 @@ void gui_osd_draw_raw_info()
 }
 
 //-------------------------------------------------------------------
+
+static const char * shooting_get_bracket_type()
+{
+    static const char * expo_type[] = { "+/-", "-","+"};
+    return expo_type[conf.bracket_type];
+}
+
+static const char * expo_shift[] = { "Off", "1/3Ev","2/3Ev", "1Ev", "1 1/3Ev", "1 2/3Ev", "2Ev", "2 1/3Ev", "2 2/3Ev", "3Ev", "3 1/3Ev", "3 2/3Ev", "4Ev"};
+
+static const char * shooting_get_tv_bracket_value()
+{
+    return expo_shift[conf.tv_bracket_value];
+}
+
+static const char * shooting_get_av_bracket_value()
+{
+    return expo_shift[conf.av_bracket_value];
+}
+
 void gui_osd_draw_state()
 {
-    int a,  gui_mode=gui_get_mode();
+    int gui_mode=gui_get_mode();
     long t; 
 
     n=0;
@@ -245,10 +267,9 @@ void gui_osd_draw_state()
     }
     if (is_av_override_enabled || gui_mode==GUI_MODE_OSD)  
         gui_print_osd_state_string_float("AV:%d.%02d", 100, shooting_get_aperture_from_av96(shooting_get_av96_override_value()));
-#if CAM_HAS_ND_FILTER
-    if ((conf.nd_filter_state && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD) 
-        gui_print_osd_state_string_chr("NDFILTER:", ((conf.nd_filter_state==1)?"IN":"OUT"));
-#endif    
+    if (camera_info.cam_has_nd_filter)
+        if ((conf.nd_filter_state && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD) 
+            gui_print_osd_state_string_chr("NDFILTER:", ((conf.nd_filter_state==1)?"IN":"OUT"));
     if ((conf.autoiso_enable && shooting_get_iso_mode()<=0 && !(m==MODE_M || m==MODE_TV) && shooting_get_flash_mode() && (autoiso_and_bracketing_overrides_are_enabled)) || gui_mode==GUI_MODE_OSD)  
         gui_print_osd_state_string_chr("AUTOISO:", ((conf.autoiso_enable==1)?"ON":"OFF"));
     if ((is_sd_override_enabled && shooting_can_focus()) || ((gui_get_mode()==GUI_MODE_ALT) && shooting_get_common_focus_mode()) || gui_mode==GUI_MODE_OSD)
@@ -275,9 +296,9 @@ void gui_osd_draw_state()
       else if (is_av_bracketing_enabled)
         gui_print_osd_state_string_chr("AV:", shooting_get_av_bracket_value());
       else if (is_iso_bracketing_enabled)
-        gui_print_osd_state_string_int("ISO:", shooting_get_iso_bracket_value());
+        gui_print_osd_state_string_int("ISO:", conf.iso_bracket_value);
       else if (is_sd_bracketing_enabled)
-        gui_print_osd_state_string_int("SD:",shooting_get_subject_distance_bracket_value());
+        gui_print_osd_state_string_int("SD:", conf.subj_dist_bracket_value);
     }
 #ifdef OPT_CURVES
     if (conf.curve_enable || gui_mode==GUI_MODE_OSD) {
@@ -623,9 +644,9 @@ void gui_osd_draw_ev_video(int visible)
 static int kbd_use_up_down_left_right_as_fast_switch()
 {
     static long key_pressed = 0;
-    int m=mode_get(); 
+    int m = mode_get(); 
     int mode_video = (MODE_IS_VIDEO(m) || is_video_recording());
-    int ev_video=0;
+    int ev_video = 0;
     int jogdial;
 
 #if CAM_EV_IN_VIDEO
@@ -956,9 +977,18 @@ int osd_visible(unsigned int playmode)
 
 #ifdef OPT_DEBUGGING
 
+extern int debug_display_direction;
+
+#ifndef CAM_DRYOS
+extern int debug_tasklist_start;
+#endif
+
+#define TASKLIST_MAX_LINES 12 // probably as much as will fit on screen
+#define TASKLIST_NUM_TASKS 64 // should be enough ?
+
+#ifndef CAM_DRYOS
 static void gui_debug_draw_tasklist(void)
 {
-#ifndef CAM_DRYOS
     int tasklist[TASKLIST_NUM_TASKS]; // max number of tasks we will look at
     int n_tasks,n_show_tasks,show_start;
     const char *name;
@@ -987,8 +1017,8 @@ static void gui_debug_draw_tasklist(void)
         sprintf(osd_buf,"%10s %8X",name,tasklist[show_start+i]);
         draw_string(64,16+16*i,osd_buf, conf.osd_color);
     }
-#endif //CAM_DRYOS
 }
+#endif //CAM_DRYOS
 
 #endif
 
@@ -1136,6 +1166,28 @@ void gui_draw_debug_vals_osd()
 #endif
 }
 
+// Update displayed debug page for tasks/props/params
+#ifdef OPT_DEBUGGING
+void gui_update_debug_page()
+{
+#ifndef CAM_DRYOS
+    if(conf.debug_display == DEBUG_DISPLAY_TASKS)
+    {
+        debug_tasklist_start += debug_display_direction*(TASKLIST_MAX_LINES-2); // a little intentional overlap
+        if(debug_tasklist_start >= TASKLIST_NUM_TASKS || debug_tasklist_start < 0)
+            debug_tasklist_start = 0;
+    }
+    else 
+#endif
+    if (conf.debug_display == DEBUG_DISPLAY_PROPS || conf.debug_display == DEBUG_DISPLAY_PARAMS)
+    {
+        conf.debug_propcase_page += debug_display_direction*1;
+        if(conf.debug_propcase_page > 128 || conf.debug_propcase_page < 0) 
+            conf.debug_propcase_page = 0;
+    }
+}
+#endif
+
 //-------------------------------------------------------------------
 // void gui_draw_osd()
 //      Common OSD display code
@@ -1221,23 +1273,6 @@ void gui_draw_osd()
 #endif
 
     gui_draw_debug_vals_osd();
-
-#ifdef OPT_UBASIC
-    if (ubasic_error)
-    {
-        const char *msg;
-        if (ubasic_error >= UBASIC_E_ENDMARK)
-        {
-            msg = ubasic_errstrings[UBASIC_E_UNKNOWN_ERROR];
-        }
-        else
-        {
-            msg = ubasic_errstrings[ubasic_error];
-        }
-        sprintf(osd_buf, "uBASIC:%d %s ", ubasic_linenumber(), msg);
-        draw_txt_string(0, 0, osd_buf, MAKE_COLOR(COLOR_RED, COLOR_YELLOW));
-    }
-#endif
 }
 
 // GUI handler for normal shooting / playback modes

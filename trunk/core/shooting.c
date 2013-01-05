@@ -1,5 +1,4 @@
 #include "platform.h"
-#include "core.h"
 #include "keyboard.h"
 #include "math.h"
 #include "stdlib.h"
@@ -155,11 +154,6 @@ short shooting_get_aperture_sizes_table_size()
     return AS_SIZE;
 }
 
-short shooting_get_max_aperture_sizes_table_prop_id()
-{
-    return AV96_MAX;
-}
-
 //-------------------------------------------------------------------
 // Get file related info
 
@@ -182,6 +176,7 @@ long get_exposure_counter()
 
 #ifndef CAM_DATE_FOLDER_NAMING
 void get_target_dir_name(char *dir) {
+    extern long get_target_dir_num();
     sprintf(dir,"A/DCIM/%03dCANON",get_target_dir_num());
 }
 #endif
@@ -269,29 +264,11 @@ int shooting_get_luminance()// http://en.wikipedia.org/wiki/APEX_system
 //-------------------------------------------------------------------
 // Get override values
 
-static const char * expo_shift[] = { "Off", "1/3Ev","2/3Ev", "1Ev", "1 1/3Ev", "1 2/3Ev", "2Ev", "2 1/3Ev", "2 2/3Ev", "3Ev", "3 1/3Ev", "3 2/3Ev", "4Ev"};
-
-const char* tv_override[]={
-#ifdef CAM_EXT_TV_RANGE
-    // add very long time exposures as approximately powers of 2, adding 15 exposures
-    "2048","1625","1290","1024","812","645","512","406","322","256","203","161","128","101","80",
-#endif
-    "64","50.8", "40.3", "32", "25.4","20","16", "12.7", "10","8", "6.3","5","4","3.2", "2.5","2", 
-    "1.6", "1.3", "1", "0.8", "0.6", "0.5", "0.4", "0.3", "1/4", "1/5", "1/6", "1/8", "1/10", "1/13", 
-    "1/15", "1/20", "1/25", "1/30", "1/40", "1/50", "1/60", "1/80", "1/100", "1/125", "1/160", "1/200", 
-    "1/250", "1/320", "1/400", "1/500", "1/640","1/800", "1/1000", "1/1250", "1/1600","1/2000","1/2500",
-    "1/3200","1/4000", "1/5000", "1/6400", "1/8000", "1/10000", "1/12500", "1/16000", "1/20000", "1/25000", 
-    "1/32000", "1/40000", "1/50000", "1/64000","1/80000", "1/100k"
-};
-
-// Size of 'tv_override' array
-const int tv_override_amount = sizeof(tv_override)/sizeof(tv_override[0]);
-
-// Index of '0' entry in the tv_override array (1 sec)
+// Index of '0' entry in the tv_override array (1 sec) (see gui.c for tv_override array)
 #if CAM_EXT_TV_RANGE
-const int tv_override_zero_shift = 18+15;
+#define tv_override_zero_shift  (18+15)
 #else
-const int tv_override_zero_shift = 18;
+#define tv_override_zero_shift  18
 #endif
 
 static int shooting_get_tv96_override_value()
@@ -303,17 +280,6 @@ static int shooting_get_tv96_override_value()
         return shooting_get_tv96_from_shutter_speed(((float)conf.tv_override_short_exp)/100000.0);
     else
         return shooting_get_tv96_from_shutter_speed((float)conf.tv_override_long_exp);
-}
-
-const char * shooting_get_tv_bracket_value()
-{
-    return expo_shift[conf.tv_bracket_value];
-}
-
-const char * shooting_get_bracket_type()
-{
-    static const char * expo_type[] = { "+/-", "-","+"};
-    return expo_type[conf.bracket_type];
 }
 
 short shooting_get_iso_override_value()
@@ -332,27 +298,12 @@ short shooting_get_iso_override_value()
     return iso;
 }
 
-short shooting_get_iso_bracket_value()
-{
-    return conf.iso_bracket_value;
-}
-
-const char * shooting_get_av_bracket_value()
-{
-    return expo_shift[conf.av_bracket_value];
-}
-
 int shooting_get_subject_distance_override_value()
 {
     if (conf.subj_dist_override_koef != SD_OVERRIDE_INFINITY)
         return (conf.subj_dist_override_value < shooting_get_lens_to_focal_plane_width()?0:(conf.subj_dist_override_value - shooting_get_lens_to_focal_plane_width()));
     else
         return INFINITY_DIST;
-}
-
-int shooting_get_subject_distance_bracket_value()
-{
-    return conf.subj_dist_bracket_value;
 }
 
 short shooting_get_av96_override_value()
@@ -402,18 +353,18 @@ int shooting_get_user_tv_id()
     return 0;
 }
 
-const ShutterSpeed *shooting_get_tv_line()
-{
-    short tvv;
-    long i;
-    get_property_case(PROPCASE_USER_TV, &tvv, sizeof(tvv));
-    for (i=0;i<SS_SIZE;i++)
-    {
-        if (shutter_speeds_table[i].prop_id == tvv)
-            return &shutter_speeds_table[i];
-    }
-    return 0;
-}
+//const ShutterSpeed *shooting_get_tv_line()
+//{
+//    short tvv;
+//    long i;
+//    get_property_case(PROPCASE_USER_TV, &tvv, sizeof(tvv));
+//    for (i=0;i<SS_SIZE;i++)
+//    {
+//        if (shutter_speeds_table[i].prop_id == tvv)
+//            return &shutter_speeds_table[i];
+//    }
+//    return 0;
+//}
 
 int shooting_get_user_av_id()
 {
@@ -1332,13 +1283,26 @@ int shooting_set_mode_chdk(int mode)
 
 EXPO_BRACKETING_VALUES bracketing;
 
-void shooting_tv_bracketing(int when)
+// Adjustment multipliers for bracketing types
+static int bracket_steps[4][2] = {
+    {  1, -1 },     // +/- option - shoot at 0, +1, -1
+    { -1, -1 },     // -   option - shoot at 0, -1, -2
+    {  1,  1 },     // +   option - shoot at 0, +1, +2
+    { -1,  1 },     // -/+ option - shoot at 0, -1, +1
+};
+static int bracket_delta[4][2] = {
+    {  1,  0 },     // +/- option - shoot at 0, +1, -1
+    {  1,  1 },     // -   option - shoot at 0, -1, -2
+    {  1,  1 },     // +   option - shoot at 0, +1, +2
+    {  1,  0 },     // -/+ option - shoot at 0, -1, +1
+};
+
+static void shooting_tv_bracketing(int when)
 {
-    short value, is_odd;
-    int m=mode_get()&MODE_SHOOTING_MASK;
-    if (bracketing.shoot_counter==0)
-    { // first shoot
-        bracketing.shoot_counter=1;
+    // first shot? (actually this is called just after the first shot has been taken)
+    if (bracketing.shoot_counter == 0)
+    {
+        int m = mode_get()&MODE_SHOOTING_MASK;
         // if Tv override is enabled... (this was adapted from function shooting_expo_param_override() )
         if (is_tv_override_enabled)
         {
@@ -1351,58 +1315,43 @@ void shooting_tv_bracketing(int when)
             if (!(m==MODE_M || m==MODE_TV || m==MODE_LONG_SHUTTER)) bracketing.tv96=shooting_get_tv96();
             else bracketing.tv96=shooting_get_user_tv96();
         }
-        bracketing.tv96_step=32*conf.tv_bracket_value;
+        bracketing.tv96_step = 32*conf.tv_bracket_value;
     }
-    // other shoots
-    bracketing.shoot_counter++;
-    is_odd=(bracketing.shoot_counter&1);
-    if ((!is_odd) || (conf.bracket_type>0))
-        bracketing.dtv96+=bracketing.tv96_step;
-    if (((!is_odd) && (conf.bracket_type==0)) || (conf.bracket_type==1))
-        value=bracketing.tv96-bracketing.dtv96;
-    else value=bracketing.tv96+bracketing.dtv96;
 
+    // Adjust delta TV value for shot based on shot number
+    bracketing.dtv96 += (bracketing.tv96_step * bracket_delta[conf.bracket_type][bracketing.shoot_counter&1]);
+    // Calculate new TV (note, need to subtract delta because higher values are shorter shutter speeds / darker images)
+    short value = bracketing.tv96 - (bracketing.dtv96 * bracket_steps[conf.bracket_type][bracketing.shoot_counter&1]);
+
+    // Inc for next shot
+    bracketing.shoot_counter++;
+
+    // Apply value for next shot to be taken
     shooting_set_tv96_direct(value, when);
 }
 
-void shooting_av_bracketing(int when)
+static void shooting_av_bracketing(int when)
 {
-    short value,is_odd;
-
-    int m = mode_get()&MODE_SHOOTING_MASK;
-
+    // first shot? (actually this is called just after the first shot has been taken)
     if (bracketing.shoot_counter == 0)
-    { // first shoot
-        bracketing.shoot_counter = 1;
-        //short av_override_value=shooting_get_av96_override_value;
-        //if (av_override_value) bracketing.av96=av_override_value;
+    {
+        int m = mode_get()&MODE_SHOOTING_MASK;
         if (!(m==MODE_M || m==MODE_AV))
             bracketing.av96 = shooting_get_av96();
         else
             bracketing.av96 = shooting_get_user_av96();
         bracketing.av96_step = 32*conf.av_bracket_value;
     }
-    // other shoots
+
+    // Adjust delta AV value for shot based on shot number
+    bracketing.dav96 += (bracketing.av96_step * bracket_delta[conf.bracket_type][bracketing.shoot_counter&1]);
+    // Calculate new AV (note, need to subtract delta because higher values are smaller apertures / darker images)
+    short value = bracketing.av96 - (bracketing.dav96 * bracket_steps[conf.bracket_type][bracketing.shoot_counter&1]);
+
+    // Inc for next shot
     bracketing.shoot_counter++;
-    is_odd = (bracketing.shoot_counter&1);
-    value = bracketing.av96;
 
-    if ( !is_odd || (conf.bracket_type > 0) || ( is_odd && (conf.bracket_type == 0) && ((bracketing.av96 - bracketing.dav96) < AV96_MIN) ))
-    {
-        bracketing.dav96 += bracketing.av96_step;
-    }
-
-    if (((!is_odd && (conf.bracket_type == 0)) || (conf.bracket_type == 1)) && ((bracketing.av96 - bracketing.dav96) >= AV96_MIN))
-    {
-        value -= bracketing.dav96;
-    }
-    else if ((is_odd && (conf.bracket_type == 0)) 
-            || (conf.bracket_type == 2) 
-            || ((!is_odd && (conf.bracket_type == 0)) && ((bracketing.av96 - bracketing.dav96) < AV96_MIN)))
-    {
-        value += bracketing.dav96;
-    }
-
+    // Apply value for next shot to be taken
     if (value != bracketing.av96)
     {
         shooting_set_av96_direct(value, when);
@@ -1412,89 +1361,62 @@ void shooting_av_bracketing(int when)
     }
 }
 
-void shooting_iso_bracketing(int when){
-    short value=0, is_odd;
-    if (bracketing.shoot_counter==0)
-    { // first shoot
-        bracketing.shoot_counter=1;
-        bracketing.iso=shooting_get_iso_real();
-        bracketing.iso_step=shooting_get_iso_bracket_value();
+static void shooting_iso_bracketing(int when)
+{
+    // first shot? (actually this is called just after the first shot has been taken)
+    if (bracketing.shoot_counter == 0)
+    {
+        bracketing.iso = shooting_get_iso_real();
+        bracketing.iso_step = conf.iso_bracket_value;
     }
-    // other shoots
-    bracketing.shoot_counter++;
-    is_odd=(bracketing.shoot_counter&1);
 
-    if (((!is_odd) || (conf.bracket_type>0)) || (((is_odd) && (conf.bracket_type==0)) && (bracketing.iso<=bracketing.diso)))
-    {
-        bracketing.diso+=bracketing.iso_step;
-    }
-    if ((((!is_odd) && (conf.bracket_type==0)) || (conf.bracket_type==1)) && (bracketing.iso>bracketing.diso))
-    {
-        value=bracketing.iso-bracketing.diso;
-        shooting_set_iso_real(value, when);
-    }
-    else if ((((is_odd) && (conf.bracket_type==0)) || (conf.bracket_type==2)) || (((!is_odd) && (conf.bracket_type==0)) && (bracketing.iso<=bracketing.diso)))
-    {
-        value=bracketing.iso+bracketing.diso;
-        shooting_set_iso_real(value, when);
-    }
+    // Adjust delta ISO value for shot based on shot number
+    bracketing.diso += (bracketing.iso_step * bracket_delta[conf.bracket_type][bracketing.shoot_counter&1]);
+    // Calculate new ISO (higher ISO = brighter image)
+    short value = bracketing.iso + (bracketing.diso * bracket_steps[conf.bracket_type][bracketing.shoot_counter&1]);
+    if (value <= 0) value = 50;
+
+    // Inc for next shot
+    bracketing.shoot_counter++;
+
+    // Apply value for next shot to be taken
+    shooting_set_iso_real(value, when);
 }
 
-void shooting_subject_distance_bracketing(int when){
-    short value=0, is_odd;
-    if (bracketing.shoot_counter==0)
-    { // first shoot
-        bracketing.shoot_counter=1;
-        bracketing.subj_dist=shooting_get_subject_distance();
-        bracketing.subj_dist_step=shooting_get_subject_distance_bracket_value();
+static void shooting_subject_distance_bracketing(int when)
+{
+    // first shot? (actually this is called just after the first shot has been taken)
+    if (bracketing.shoot_counter == 0)
+    {
+        bracketing.subj_dist = shooting_get_subject_distance();
+        bracketing.subj_dist_step = conf.subj_dist_bracket_value;
     }
-    // other shoots
+
+    // Adjust delta SD value for shot based on shot number
+    bracketing.dsubj_dist += (bracketing.subj_dist_step * bracket_delta[conf.bracket_type][bracketing.shoot_counter&1]);
+    // Calculate new SD
+    int value = bracketing.subj_dist + (bracketing.dsubj_dist * bracket_steps[conf.bracket_type][bracketing.shoot_counter&1]);
+    if (value < MIN_DIST) value = MIN_DIST;
+    else if (value > MAX_DIST) value = MAX_DIST;
+
+    // Inc for next shot
     bracketing.shoot_counter++;
-    is_odd=(bracketing.shoot_counter&1);
-    if (((!is_odd) || (conf.bracket_type>0)) || (((is_odd) && (conf.bracket_type==0)) && (bracketing.subj_dist<=bracketing.dsubj_dist)))
-    {
-        bracketing.dsubj_dist+=bracketing.subj_dist_step;
-    }
-    if ((((!is_odd) && (conf.bracket_type==0)) || (conf.bracket_type==1)) && (bracketing.subj_dist>bracketing.dsubj_dist))
-    {
-        value=bracketing.subj_dist-bracketing.dsubj_dist;
-        shooting_set_focus(value, when);
-    }
-    else if ((((is_odd) && (conf.bracket_type==0)) || (conf.bracket_type==2)) || (((!is_odd) && (conf.bracket_type==0)) && (bracketing.subj_dist<=bracketing.dsubj_dist)))
-    {
-        value=bracketing.subj_dist+bracketing.dsubj_dist;
-        shooting_set_focus(value, when);
-    }
+
+    // Apply value for next shot to be taken
+    shooting_set_focus(value, when);
 }
 
 void bracketing_reset()
 {
-    bracketing.shoot_counter=0;
-    bracketing.av96=0;
-    bracketing.dav96=0;
-    bracketing.tv96=0;
-    bracketing.dtv96=0;
-    bracketing.sv96=0;
-    bracketing.dsv96=0;
-    bracketing.iso=0;
-    bracketing.diso=0;
-    bracketing.subj_dist=0;
-    bracketing.dsubj_dist=0;
-    bracketing.type=0;
+    memset(&bracketing,0,sizeof(bracketing));
 }
 
 void bracketing_step(int when)
 {
-    if (is_tv_bracketing_enabled)
-        shooting_tv_bracketing(when);
-    else if (is_av_bracketing_enabled)
-        shooting_av_bracketing(when);
-    else if (is_iso_bracketing_enabled)
-        shooting_iso_bracketing(when);
-    else if (is_sd_bracketing_enabled)
-        shooting_subject_distance_bracketing(when);   	      
-//    else if ((conf.subj_dist_bracket_value) && (conf.subj_dist_bracket_koef))
-//        shooting_subject_distance_bracketing(when);
+    if (is_tv_bracketing_enabled)       shooting_tv_bracketing(when);
+    else if (is_av_bracketing_enabled)  shooting_av_bracketing(when);
+    else if (is_iso_bracketing_enabled) shooting_iso_bracketing(when);
+    else if (is_sd_bracketing_enabled)  shooting_subject_distance_bracketing(when);   	      
 }
 
 void shooting_bracketing(void)

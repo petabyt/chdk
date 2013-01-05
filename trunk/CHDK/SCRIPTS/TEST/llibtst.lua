@@ -372,8 +372,7 @@ function tstat(name,expect)
 		local fail
 		if type(expect) == 'table' then
 			for k,v in pairs(expect) do
-				-- special case, dryos >= R39 doesn't set atime
-				if r[k] ~= v and not (k == 'atime' and r[k] == nil) then
+				if r[k] ~= v then
 					logfail("expected "..tostring(k).."="..tostring(v).." not "..tostring(r[k]))
 					fail = true
 				end
@@ -382,8 +381,7 @@ function tstat(name,expect)
 		if not fail then
 			logok()
 		end
---		local keys={ "dev", "ino", "mode", "nlink", "uid", "gid", "rdev", "size", "atime", "mtime", "ctime", "blksize", "blocks", "attrib", "reserved1", "reserved2", "reserved3", "reserved4", "reserved5", "reserved6",}
-		local keys={ "dev", "mode", "size", "atime", "mtime", "ctime", "blksize", "blocks", "attrib","is_dir","is_file",}
+		local keys={ "size", "mtime", "ctime", "attrib","is_dir","is_file",}
 		log("{\n")
 		for _,v in ipairs(keys) do
 			log(" ",tostring(v),"=",tostring(r[v]),"\n")
@@ -458,7 +456,7 @@ function os_test()
 		tutime(fn) -- utime, current
 		tstat(fn)
 		tutime(fn,os.time({year=1984,month=1,day=1,hour=0}),os.time({year=1984,month=12,day=25,hour=0}))
-		tstat(fn,{mtime=os.time({year=1984,month=1,day=1,hour=0}),atime=os.time({year=1984,month=12,day=25,hour=0})})
+		tstat(fn,{mtime=os.time({year=1984,month=1,day=1,hour=0})})
 		tstat(tdir0,{is_file=false,is_dir=true})
 		tren(tdir0..tdat0,tdir0..tdat1)
 		tlistdir(tdir0)

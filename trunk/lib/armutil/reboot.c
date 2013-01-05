@@ -1,4 +1,3 @@
-#include "platform.h"
 #include "stdlib.h"
 #define LOW_LEVEL
 #include "lolevel.h"

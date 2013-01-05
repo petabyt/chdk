@@ -1,10 +1,9 @@
+#include "camera_info.h"
 #include "stdlib.h"
-#include "platform.h"
-#include "core.h"
-#include "keyboard.h"
 #include "conf.h"
 #include "math.h"
-#include "gui.h"
+#include "modes.h"
+#include "viewport.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
 #include "histogram.h"
@@ -42,7 +41,6 @@ static unsigned int *histogram_proc[5] = { 0,0,0,0,0 };     // RGBYG
 static unsigned int histo_max[5], histo_max_center[5];      // RGBYG
 static float histo_max_center_invw[5];                      // RGBYG
 
-static long exposition_thresh = (CAM_SCREEN_WIDTH * CAM_SCREEN_HEIGHT) / 500;
 static long histo_magnification;
 static long under_exposed;
 static long over_exposed;
@@ -90,6 +88,8 @@ void histogram_process()
     float (*histogram_transform)(float);
     unsigned int histo_fill[5];
     int histo_main;
+
+    long exposition_thresh = camera_screen.size / 500;
 
     // Select transform function
     switch (conf.histo_mode)

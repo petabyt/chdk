@@ -2,19 +2,18 @@
 **	$Id: gps.c, v 1.2 2012/01/05 genie01 Exp $
 **---------------------------------------------------------------------------------*/
 
-#include "stdio.h"
+#include "camera_info.h"
 #include "stdlib.h"
-#include "platform.h"
+#include "properties.h"
+#include "task.h"
+#include "modes.h"
+#include "debug_led.h"
+#include "shutdown.h"
+#include "sound.h"
+#include "backlight.h"
+#include "temperature.h"
+#include "file_counter.h"
 #include "gps.h"
-
-void gps_getData(tGPS* gps){
-    if (camera_info.props.gps)
-        get_property_case(camera_info.props.gps, gps, sizeof(tGPS));
-    else
-        memset(gps, 0, sizeof(tGPS));
-}
-
-#ifdef CAM_HAS_GPS
 
 #include "stddef.h"
 #include "conf.h"
@@ -34,6 +33,20 @@ void gps_getData(tGPS* gps){
 #include "gps_palette.h"
 //----------------
 
+// Forward reference
+void anzeige_gps();
+void anzeige_kompass();
+void test_timezone();
+void gpx_record();
+void trackback();
+char *load_bitmap(char *datei);
+void anzeige_kompassnadel (int winkel, double s_w, double c_w, char *bitmap, int laenge, int m_x, int m_y, int offset_x, int offset_y, int f_v_1, int f_h_1, int f_v_2, int f_h_2);
+void anzeige_kompassbild (char *bitmap1, int o_x, int o_y, int f_v_0, int f_h_0, int f_v_1, int f_h_1, int f_v_2, int f_h_2, int f_v_4, int f_h_4);
+
+extern char * camera_jpeg_current_filename();
+extern char * camera_jpeg_current_latitude();
+extern char * camera_jpeg_current_longitude();
+extern char * camera_jpeg_current_height();
 
 extern int exit_gpx_record;
 extern int exit_gps_kompass;
@@ -174,9 +187,10 @@ int winkel;                                     // Winkel auf Anzeige von Marsch
 t_regression deltareg;                  		// Gl?ttung und Geschwindigkeit
 
 
-void gps_updateData(){
-
-	GPS_UpdateData();
+void gps_updateData()
+{
+    extern void GPS_UpdateData();
+    GPS_UpdateData();
 }
 
 void gps_get_data(){
@@ -191,15 +205,11 @@ void gps_get_data(){
 	int nm=1;
 	unsigned long t;
 	static struct tm *ttm;
-
-	char buf[100];
-	char anz1[40];
-	char anz2[40];
 	
 	while ( nm==1 )
 	{
 		gps_updateData();
-		gps_getData(&gps);
+        get_property_case(camera_info.props.gps, &gps, sizeof(gps));
 
 		t=time(NULL);
 		ttm = localtime(&t);
@@ -254,7 +264,7 @@ void gps_get_data(){
 		{
 			if (anzeige_symbol==0)
 			{
-				_CreateTask("ANZSYMBOL", 0x19, 0x500, anzeige_gps, 0);
+				CreateTask("ANZSYMBOL", 0x19, 0x500, anzeige_gps);
 				anzeige_symbol=1;
 			}
 		}
@@ -271,7 +281,7 @@ void gps_startup()
 {
 	if (((int)conf.gps_on_off ==1) && (exit_gps_data==1))
     {
-	    _CreateTask("GPSDATA", 0x19, 0x400, gps_get_data, 0);
+	    CreateTask("GPSDATA", 0x19, 0x400, gps_get_data);
 		exit_gps_data=0;
 	}
 }
@@ -350,7 +360,6 @@ void test_timezone(){
 
 	if ((int)conf.gps_on_off ==0) {return; }
 
-	char vBuf[512];
 	char text[2][30];
 	char home_name[30];
 	int zeitzone_1, zeitzone_2;
@@ -554,7 +563,6 @@ void anzeige_track(){
 		int o_x1=315;
 		int o_y1=0;
 		int nmm=0;
-		int zp=1;
 
 		int f_v_0;
 		int f_h_0;
@@ -675,15 +683,12 @@ void gpx_bild_ohne_signal(){
 	char w1[20];
 	char w2[30];
 	char w3[10];
-	int c;
 	int o=1, p=1, q=0;
 	int blo=0;
 	unsigned long bat;
 	int abbruch=0;
 	Taste_Funktion=1;
 	Taste_Taste=11;
-
-	int zoom=0;
 	
 	while ( zeit_bis_ende !=0 )
 	{
@@ -1120,7 +1125,7 @@ void wegpunkt(){
 			fclose(fp);
 			bild_ohne_signal=1;
 			zeit_bis_ende=(int)conf.gps_wait_for_signal;
-			_CreateTask("BILDOHNESIGNAL", 0x19, 0x1000, gpx_bild_ohne_signal, 0);
+			CreateTask("BILDOHNESIGNAL", 0x19, 0x1000, gpx_bild_ohne_signal);
 		}
 		else
 		{
@@ -1140,11 +1145,11 @@ void init_gpx_record_task(){
 
 	if ((int)conf.gps_on_off ==0) {return; }
 
-	_CreateTask("GPSRECORD", 0x19, 0x800, gpx_record, 0);
+	CreateTask("GPSRECORD", 0x19, 0x800, gpx_record);
 
 	if ((int)conf.gps_track_symbol==1)
 	{
-		_CreateTask("TRACKSYMBOL", 0x19, 0x600, anzeige_track, 0);
+		CreateTask("TRACKSYMBOL", 0x19, 0x600, anzeige_track);
 	}
 }
 
@@ -1293,9 +1298,6 @@ void gps_navigate_home(){
 
 	if ((int)conf.gps_on_off ==0) {return; }
 
-	char lat[40];
-	char lon[40];
-	char vBuf[512];
 	char text[2][30];
 	char home_name[30];
 	char * succ;
@@ -1315,7 +1317,7 @@ void gps_navigate_home(){
 
 	if ((int)conf.gps_track_symbol==1)
 	{
-		_CreateTask("TRACKSYMBOL", 0x19, 0x600, anzeige_track, 0);
+		CreateTask("TRACKSYMBOL", 0x19, 0x600, anzeige_track);
 	}
 
 	if ((int)g_d_lat_nav != 0)
@@ -1370,7 +1372,7 @@ void init_gps_kompass_task(){
 
 	if ((int)conf.gps_on_off ==0) {return; }
 
-	_CreateTask("GPSKOMPASS", 0x19, 0x900, anzeige_kompass, 0);
+	CreateTask("GPSKOMPASS", 0x19, 0x900, anzeige_kompass);
 }
 
 double gps_kurswinkel(int zaehler){
@@ -1412,7 +1414,6 @@ double gps_kurswinkel(int zaehler){
 		angle1=(int)winkel;
 		char anz1[40];
 		char anz2[40];
-		char anz3[40];
 		char bild[9];
 
 	if (gui_get_mode()==GUI_MODE_NONE)
@@ -1484,9 +1485,7 @@ void anzeige_kompass(){
 	char *bitmap;
 	char *bitmap1;
 
-	double winkel=0;
 	double gwinkel=0;
-	double bwinkel=0;
 	double w=0.0;
 	double c_w;
 	double s_w;
@@ -1494,8 +1493,6 @@ void anzeige_kompass(){
 	int rr=0;
 	int n=0;
 	int zaehler=0;
-	int mx=0;
-	int my=0;
 	int m=0;
 	int alter_winkel=0;
 
@@ -1503,7 +1500,6 @@ void anzeige_kompass(){
 	int m_x = offset_x + 31;
 	int offset_y = 150;		//128
 	int m_y = offset_y + 31;
-	int b_b = BITMAP_WIDTH;
 
 	int f_v_0=COLOR_GPS_TRANSPARENT;
 	int f_h_0=COLOR_GPS_TRANSPARENT;
@@ -1723,8 +1719,6 @@ void anzeige_kompassbild (char *bitmap1, int o_x, int o_y, int f_v_0, int f_h_0,
 
 	}
 }
-
-#endif
 
 /*-----------------------------------------------------------------------------------
 **	$Id: gps.c, v 1.2 2012/01/05 genie01 Exp $

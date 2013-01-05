@@ -1,16 +1,12 @@
-#include "stdlib.h"
-#include "platform.h"
-#include "core.h"
-#include "keyboard.h"
-#include "conf.h"
-#include "action_stack.h"
 #include "camera.h"
+#include "stdlib.h"
+#include "conf.h"
+#include "keyboard.h"
+#include "action_stack.h"
 #include "lang.h"
 #include "gui_lang.h"
 #include "console.h"
 #include "usb_remote.h"
-
-int state_kbd_script_run;
 
 static int kbd_blocked;
 

@@ -1,6 +1,11 @@
 #ifndef GUI_LANG_H
 #define GUI_LANG_H
 
+// CHDK Language String numbers
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 //-------------------------------------------------------------------
 #define LANG_MENU_MAIN_TITLE            1
 
@@ -21,7 +26,6 @@
 #define LANG_MENU_RAW_TITLE             13
 
 #define LANG_MENU_RAW_SAVE              14
-//#define LANG_MENU_RAW_AFTER_DFS         15
 #define LANG_MENU_RAW_FIRST_ONLY        16
 #define LANG_MENU_RAW_SAVE_IN_DIR       17
 #define LANG_MENU_RAW_PREFIX            18
@@ -329,20 +333,16 @@
 #define LANG_MENU_TV_BRACKET_VALUE              249
 #define LANG_MENU_AV_BRACKET_VALUE              250
 #define LANG_MENU_ISO_BRACKET_VALUE             251
-//#define LANG_MENU_ISO_BRACKET_KOEF              252
 #define LANG_MENU_SUBJ_DIST_BRACKET_VALUE       253
-//#define LANG_MENU_SUBJ_DIST_BRACKET_KOEF        254
 #define LANG_MENU_BRACKET_TYPE                  255
 
 #define LANG_MENU_SCRIPT_AUTOSTART              256
 #define LANG_MENU_REMOTE_ENABLE                 257
 
-//#define LANG_MENU_EXPOSURE_TITLE                258
-//#define LANG_MENU_EXPOSURE                      259
-//#define LANG_MENU_RECALC_EXPOSURE               260
-//#define LANG_MENU_TV_EXPOSURE_ORDER             261  
-//#define LANG_MENU_AV_EXPOSURE_ORDER             262  
-//#define LANG_MENU_ISO_EXPOSURE_ORDER            263
+#define LANG_MENU_LUA_NATIVE_CALLS_WARNING      258
+#define LANG_MENU_ENABLE_LUA_NATIVE_CALLS       259
+#define LANG_CONSOLE_TEXT_TERMINATED            260
+#define LANG_CONSOLE_TEXT_AUTOSTARTED           261
 
 #define LANG_MENU_CLEAR_OVERRIDE_VALUES         264
 #define LANG_MENU_SHOW_CANON_OVEREXPOSURE       265
@@ -357,7 +357,6 @@
 #define LANG_MENU_OSD_SHOW_IN_REVIEW            272
 #define LANG_MENU_DEBUG_TASKLIST_START          273
 
-//#define LANG_MENU_DOF_DIST_FROM_LENS            274
 #define LANG_MENU_CLEAR_BRACKET_VALUES          275
 
 #define LANG_MENU_DEBUG_CREATE_MULTIPART        276
@@ -445,7 +444,6 @@
 #define LANG_OSD_LAYOUT_EDITOR_VIDEO            348
 #define LANG_MENU_CLEAR_VIDEO_VALUES            349
 #define LANG_MENU_MISC_FAST_EV                  350
-//#define LANG_MENU_MISC_FAST_EV_STEP             351
 #define LANG_OSD_LAYOUT_EDITOR_EV               352
 
 #define LANG_FSELECT_PURGE_DCIM_TEXT            353
@@ -526,7 +524,6 @@
 #define LANG_MENU_EDGE_LOAD                     417
 #define LANG_MENU_EDGE_SAVE                     418
 #define LANG_MENU_EDGE_PLAY                     419
-// #define LANG_MENU_EDGE_FREE                  420 // option no longer exists
 #define LANG_MENU_EDGE_ZOOM                     421
 #define LANG_MENU_EDGE_PANO                     422
 #define LANG_MENU_REAR_CURTAIN                  423 
@@ -546,7 +543,6 @@
 #define LANG_MENU_RAW_SAVE_IN_EDGEOVERLAY       435
 #define LANG_MENU_RAW_SAVE_IN_AUTO              436
 #define LANG_MENU_FLASH_VIDEO_OVERRIDE          437
-//#define LANG_MENU_FLASH_VIDEO_OVERRIDE_POWER    438
 #define LANG_MENU_RAW_DNG_EXT                   439
 #define LANG_MENU_DNG_VIA_USB                   440 
 #define LANG_MENU_GAMES_MASTERMIND              441
