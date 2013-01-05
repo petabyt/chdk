@@ -1,11 +1,9 @@
-#include "platform.h"
-#include "conf.h"
+#include "camera_info.h"
 #include "stdlib.h"
+#include "conf.h"
+#include "viewport.h"
 #include "ptp.h"
-#include "core.h"
 #include "live_view.h"
-
-#ifdef CAM_CHDK_PTP
 
 /*
 send selected data for live view
@@ -70,7 +68,7 @@ int live_view_get_data(ptp_data *data, int flags) {
     bm->margin_right = 0;
     bm->margin_bot = 0;
 
-    bm->visible_width = ASPECT_XCORRECTION(camera_screen.width);
+    bm->visible_width = camera_screen.physical_width;
     bm->visible_height = camera_screen.height;
 
 
@@ -123,4 +121,3 @@ int live_view_get_data(ptp_data *data, int flags) {
     free(buf);
     return total_size;
 }
-#endif

@@ -1,6 +1,11 @@
 #ifndef GUI_MBOX_H
 #define GUI_MBOX_H
 
+// CHDK Popup Message Box OSD interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 //-------------------------------------------------------------------
 #define MBOX_BTN_MASK           0x00FF
 #define MBOX_BTN_OK             0x0001
@@ -24,10 +29,8 @@
 #define MBOX_DEF_BTN3           0x2000
 
 //-------------------------------------------------------------------
-extern void gui_mbox_init(int title, int msg, const unsigned int flags, void (*on_select)(unsigned int btn));
-extern void gui_mbox_init_adv(int title, int msg, const unsigned int flags, void (*on_select)(unsigned int btn),
-			int btn_ok, int btn_yes, int btn_no, int btn_cancel);
 
+extern void gui_mbox_init(int title, int msg, const unsigned int flags, void (*on_select)(unsigned int btn));
 extern void gui_browser_progress_show(const char* msg, const unsigned int perc);
 
 //-------------------------------------------------------------------

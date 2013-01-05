@@ -1,29 +1,26 @@
-#include "camera.h"
-#ifdef CAM_CHDK_PTP
+#include "camera_info.h"
 #include "stddef.h"
-
-#include "platform.h"
 #include "stdlib.h"
+#include "keyboard.h"
 #include "ptp.h"
-#include "kbd.h"
 #include "core.h"
-
-#include "live_view.h"
-static int buf_size=0;
-
-#ifdef OPT_LUA
+#include "task.h"
 #include "script.h"
 #include "action_stack.h"
+#include "live_view.h"
+#include "modules.h"
+
+static int buf_size=0;
+
 // process id for scripts, increments before each attempt to run script
 // does not handle wraparound
 static unsigned script_run_id; 
-#endif
 
 static int handle_ptp(
                 int h, ptp_data *data, int opcode, int sess_id, int trans_id,
                 int param1, int param2, int param3, int param4, int param5);
 
-void init_chdk_ptp()
+static void init_chdk_ptp()
 {
   int r;
  
@@ -37,6 +34,11 @@ void init_chdk_ptp()
 
   ExitTask();
 }
+
+void init_chdk_ptp_task()
+{
+    CreateTask("InitCHDKPTP", 0x19, 0x200, init_chdk_ptp);
+};
 
 /*
 WARNING: it appears that on some vxworks cameras,
@@ -113,7 +115,6 @@ static int send_ptp_data(ptp_data *data, const char *buf, int size)
   return 1;
 }
 
-#ifdef OPT_LUA
 // TODO this could be a generic ring buffer of words
 #define PTP_SCRIPT_MSG_Q_LEN 16
 typedef struct {
@@ -217,7 +218,21 @@ int ptp_script_write_error_msg(unsigned errtype, const char *err) {
   return ptp_script_write_msg(msg);
 }
 
-#endif
+// Load Lua module, parse PTP script and start execution if parse ok.
+static long script_start_ptp( char *script )
+{
+    module_script_lang_load(0);     // Force load of Lua module
+    if (libscriptapi)
+    {
+        if (libscriptapi->script_start(script,1))
+        {
+            kbd_set_block(1);
+            camera_info.state.auto_started = 0;
+            return script_stack_start();
+        }
+    }
+    return -1;
+}
 
 static int handle_ptp(
                int h, ptp_data *data, int opcode, int sess_id, int trans_id,
@@ -257,20 +272,14 @@ static int handle_ptp(
     case PTP_CHDK_ScriptSupport:
       ptp.num_param = 1;
       ptp.param1 = 0;
-#ifdef OPT_LUA
       ptp.param1 |= PTP_CHDK_SCRIPT_SUPPORT_LUA;
-#endif
       break;
     case PTP_CHDK_ScriptStatus:
       ptp.num_param = 1;
 // TODO script_is_running should always be defined, just ret 0 if script disabled
       ptp.param1 = 0;
-#ifdef OPT_SCRIPTING
       ptp.param1 |= script_is_running()?PTP_CHDK_SCRIPT_STATUS_RUN:0;
-#ifdef OPT_LUA
       ptp.param1 |= (!script_msg_q_empty(&msg_q_out))?PTP_CHDK_SCRIPT_STATUS_MSG:0;
-#endif
-#endif
       break;
     case PTP_CHDK_GetMemory:
       if ( param2 == 0 || param3 < 1 ) // null pointer or invalid size?
@@ -433,7 +442,7 @@ static int handle_ptp(
     case PTP_CHDK_DownloadFile:
       {
         FILE *f;
-        int tmp,t,s,r,fn_len;
+        int tmp,t,s,r;
         char *buf, *fn;
 
         if ( temp_data_kind != 1 )
@@ -505,7 +514,6 @@ static int handle_ptp(
       }
       break;
 
-#ifdef OPT_LUA
     // TODO this should flush data even if scripting isn't supported
     case PTP_CHDK_ExecuteScript:
       {
@@ -619,7 +627,6 @@ static int handle_ptp(
       }
       break;
     }
-#endif
 
     case PTP_CHDK_GetDisplayData:
         ptp.num_param = 1;
@@ -641,5 +648,3 @@ static int handle_ptp(
   
   return 1;
 }
-
-#endif // CAM_CHDK_PTP

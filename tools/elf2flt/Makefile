@@ -5,13 +5,16 @@ SKIPPLATFORMCHECK=1
 
 include $(topdir)makefile.inc
 
+# Add directory to find flt.h file.
+HOSTCFLAGS+=-I$(topdir)modules
+
 OBJS= myio.o elf-arm.o elfflt.o main.o
 
 all: elf2flt$(EXE) fltdump$(EXE)
 
 %.o: %.c
 	@echo $< \-\> $@
-	$(HOSTCC) $(HOSTCFLAGS) -Wno-format -DPLATFORMOS_$(PLATFORMOS) -c -o $@ $<
+	$(HOSTCC) $(HOSTCFLAGS) -Wno-format -c -o $@ $<
 
 .dep/%.d: %.c .dep
 	$(HOSTCC) $(HOSTCFLAGS) -MM $< > $@.$$$$; \

@@ -1,5 +1,6 @@
-#include "font.h"
 #include "stdlib.h"
+#include "gui.h"
+#include "font.h"
 #include "codepages.h"
 #include "font_8x16_uni_packed.h"
 

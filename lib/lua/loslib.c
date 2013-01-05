@@ -292,25 +292,25 @@ static int os_stat (lua_State *L) {
   const char *name = luaL_checkstring(L, 1);
   int result = stat(name,&st);
   if (result==0) {
-    lua_createtable(L, 0, 11);  /* = number of fields */
+    lua_createtable(L, 0, 6);  /* = number of fields */
     // don't expose the fields that aren't useful
 	// but leave them commented out for reference
-#ifndef CAM_DRYOS_2_3_R39
-    setfield(L,"dev",st.st_dev);		/* device ID number */
+//#ifndef CAM_DRYOS_2_3_R39
+//    setfield(L,"dev",st.st_dev);		/* device ID number */
 //    setfield(L,"ino",st.st_ino);		/* no inodes in fat, always -1 */
-    setfield(L,"mode",st.st_mode);	/* file mode (see below) */
-#endif
+//    setfield(L,"mode",st.st_mode);	/* file mode (see below) */
+//#endif
 //    setfield(L,"nlink",st.st_nlink);	/* dryos 0, vxworks 1 */
 //    setfield(L,"uid",st.st_uid);		/* no users or groups on fat */
 //    setfield(L,"gid",st.st_gid);		/* " */
-#if !CAM_DRYOS
+//#if !CAM_DRYOS
 // doesn't appear useful, I wasn't able to stat any special files
 //    setfield(L,"rdev",st.st_rdev);	/* device ID, only if special file */
-#endif
+//#endif
     setfield(L,"size",st.st_size);	/* size of file, in bytes */
-#ifndef CAM_DRYOS_2_3_R39
-    setfield(L,"atime",st.st_atime);	/* time of last access */
-#endif
+//#ifndef CAM_DRYOS_2_3_R39
+//    setfield(L,"atime",st.st_atime);	/* time of last access */
+//#endif
     setfield(L,"mtime",st.st_mtime);	/* time of last modification */
     setfield(L,"ctime",st.st_ctime);	/* time of last change of file status */
 #ifdef HOST_LUA
@@ -334,10 +334,10 @@ static int os_stat (lua_State *L) {
       }
     }
 #else
-#ifndef CAM_DRYOS_2_3_R39
-    setfield(L,"blksize",st.st_blksize); /* This is NOT the dos sector size. Appears to be 512 on all I've tested! */
-    setfield(L,"blocks",st.st_blocks);   /* number of blocks required to store file. May not be the same as size on disk, per above*/
-#endif
+//#ifndef CAM_DRYOS_2_3_R39
+//    setfield(L,"blksize",st.st_blksize); /* This is NOT the dos sector size. Appears to be 512 on all I've tested! */
+//    setfield(L,"blocks",st.st_blocks);   /* number of blocks required to store file. May not be the same as size on disk, per above*/
+//#endif
     setfield(L,"attrib",st.st_attrib);	/* file attribute byte (dosFs only) */
 	// for convenience
 	// note volume labels are neither file nor directory

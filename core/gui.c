@@ -1,31 +1,24 @@
-#include "stdlib.h"
 #include "platform.h"
+#include "stdlib.h"
 #include "core.h"
 #include "keyboard.h"
+#include "touchscreen.h"
 #include "conf.h"
-#include "camera.h"
 #include "font.h"
 #include "lang.h"
 #include "fileutil.h"
-#include "kbd.h"
 #include "gui.h"
 #include "gui_lang.h"
 #include "gui_draw.h"
 #include "gui_menu.h"
 #include "gui_user_menu.h"
-#include "gui_palette.h"
 #include "gui_mbox.h"
 #include "console.h"
-#ifdef OPT_DEBUGGING
-    #include "gui_debug.h"
-#endif
 #include "gui_osd.h"
 #include "raw.h"
-#include "dng.h"
 #include "modules.h"
-#ifdef OPT_SCRIPTING
-    #include "script.h"
-#endif
+#include "levent.h"
+#include "script.h"
 #ifdef CAM_HAS_GPS
 #include "gps.h"
 #endif
@@ -41,13 +34,9 @@ struct gui_common_api_ver gui_version = {
 		MAKE_API_VERSION(1,2)			// ver of menu structure
 };
 
-// forward declarations
 //-------------------------------------------------------------------
+// forward declarations
 extern void dump_memory();
-// from platform/generic/shooting.c
-extern const char* tv_override[];
-extern const int tv_override_amount;
-extern const int tv_override_zero_shift;
 
 //-------------------------------------------------------------------
 
@@ -110,8 +99,8 @@ const char* gui_change_enum2(const CMenuItem *menu_item, int change)
 
 //-------------------------------------------------------------------
 
-static const char* gui_bracket_values_modes[] =             { "Off", "1/3 Ev","2/3 Ev", "1 Ev", "1 1/3Ev", "1 2/3Ev", "2 Ev", "2 1/3Ev", "2 2/3Ev", "3 Ev", "3 1/3Ev", "3 2/3Ev", "4 Ev"};
-static const char* gui_bracket_type_modes[] =               { "+/-", "-","+"};
+static const char* gui_bracket_values_modes[] = { "Off", "1/3 Ev","2/3 Ev", "1 Ev", "1 1/3Ev", "1 2/3Ev", "2 Ev", "2 1/3Ev", "2 2/3Ev", "3 Ev", "3 1/3Ev", "3 2/3Ev", "4 Ev" };
+static const char* gui_bracket_type_modes[] =   { "+/-", "-", "+", "-/+" };
 
 #if CAM_CAN_SD_OVERRIDE
 static CMenuItem sd_bracket[2] = {
@@ -163,118 +152,6 @@ static CMenuItem remote_submenu_items[] = {
     {0}
 };
 static CMenu remote_submenu = {0x86,LANG_MENU_REMOTE_PARAM_TITLE, NULL, remote_submenu_items };
-
-//-------------------------------------------------------------------
-
-#ifdef OPT_SCRIPTING
-
-static const char* gui_script_param_set_enum(int change, int arg)
-{
-    static const char* modes[]={ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-
-    if (change != 0)
-    {
-        save_params_values(0);
-        gui_enum_value_change(&conf.script_param_set,change,sizeof(modes)/sizeof(modes[0]));
-
-        if ( !load_params_values(conf.script_file, conf.script_param_set) )
-			script_reset_to_default_params_values();
-        gui_update_script_submenu();
-    }
-
-    return modes[conf.script_param_set];
-}
-
-static void gui_load_script_selected(const char *fn) {
-    if (fn) {
-        save_params_values(0);
-        script_load(fn);
-	}
-}
-
-static void gui_load_script(int arg) {
-    module_fselect_init(LANG_STR_SELECT_SCRIPT_FILE, conf.script_file, "A/CHDK/SCRIPTS", gui_load_script_selected);
-}
-
-static void gui_load_script_default(int arg) {
-	script_reset_to_default_params_values();
-    save_params_values(1);
-}
-
-extern void add_script_to_user_menu( char * , char *);
-
-static void gui_add_script_to_user_menu(int arg) {
-    add_script_to_user_menu( conf.script_file ,  script_title );
-}
-
-static const char* gui_script_autostart_modes[]=            { "Off", "On", "Once"};
-
-static CMenuItem script_submenu_items_top[] = {
-    MENU_ITEM   (0x35,LANG_MENU_SCRIPT_LOAD,                MENUITEM_PROC,                      gui_load_script,            0 ),
-    MENU_ITEM   (0x5f,LANG_MENU_SCRIPT_DELAY,               MENUITEM_INT|MENUITEM_F_UNSIGNED,   &conf.script_shoot_delay,   0 ),
-    // remote autostart
-    MENU_ENUM2  (0x5f,LANG_MENU_SCRIPT_AUTOSTART,           &conf.script_startup,               gui_script_autostart_modes ),
-#ifdef OPT_LUA
-    MENU_ITEM   (0x5c,LANG_MENU_LUA_RESTART,                MENUITEM_BOOL,                      &conf.debug_lua_restart_on_error,   0 ),
-#endif
-    MENU_ITEM   (0x35,LANG_MENU_USER_MENU_SCRIPT_ADD,       MENUITEM_PROC,                      gui_add_script_to_user_menu, 0 ),
-    MENU_ITEM   (0x5d,LANG_MENU_SCRIPT_DEFAULT_VAL,         MENUITEM_PROC,                      gui_load_script_default,    0 ),
-    MENU_ITEM   (0x5e,LANG_MENU_SCRIPT_PARAM_SET,           MENUITEM_ENUM,                      gui_script_param_set_enum,  0 ),
-    MENU_ITEM   (0x5c,LANG_MENU_SCRIPT_PARAM_SAVE,          MENUITEM_BOOL,                      &conf.script_param_save,    0 ),
-    MENU_ITEM   (0x0 ,(int)script_title,                    MENUITEM_SEPARATOR,                 0,                          0 ),
-};
-
-static CMenuItem script_submenu_items_bottom[] = {
-    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                        0,                          0 ),
-    {0}
-};
-
-static CMenuItem script_submenu_items[sizeof(script_submenu_items_top)/sizeof(script_submenu_items_top[0])+SCRIPT_NUM_PARAMS+
-                               sizeof(script_submenu_items_bottom)/sizeof(script_submenu_items_bottom[0])];
-
-static CMenu script_submenu = {0x27,LANG_MENU_SCRIPT_TITLE, NULL, script_submenu_items };
-
-void gui_update_script_submenu() 
-{
-    register int p=0, i;
-
-    for (i=0; i<sizeof(script_submenu_items_top)/sizeof(script_submenu_items_top[0]); ++p, ++i)
-    {
-        script_submenu_items[p]=script_submenu_items_top[i];
-    }
-    for (i=0; i<SCRIPT_NUM_PARAMS; ++i)
-    {
-        if (script_param_order[i])
-        {
-            int n = script_param_order[i]-1;
-
-            script_submenu_items[p].symbol = 0x0;
-            script_submenu_items[p].text = (int)script_params[n];
-            script_submenu_items[p].type = MENUITEM_INT;
-            script_submenu_items[p].value = &conf.script_vars[n];
-
-            if (script_range_values[n] != 0)
-            {
-                script_submenu_items[p].type = script_range_types[n];
-                script_submenu_items[p].arg = script_range_values[n];
-            }
-            else if (script_named_counts[n] != 0)
-            {
-                script_submenu_items[p].type = MENUITEM_ENUM2;
-                script_submenu_items[p].opt_len = script_named_counts[n];
-                script_submenu_items[p].arg = (int)script_named_values[n];
-            }
-
-            ++p;
-        }
-    }
-    for (i=0; i<sizeof(script_submenu_items_bottom)/sizeof(script_submenu_items_bottom[0]); ++p, ++i)
-    {
-        script_submenu_items[p]=script_submenu_items_bottom[i];
-    }
-}
-
-#endif
 
 //-------------------------------------------------------------------
 
@@ -771,25 +648,35 @@ static void gui_show_build_info(int arg)
 #else
     sprintf(comp, "UNKNOWN" );
 #endif
-    sprintf(buf, lang_str(LANG_MSG_BUILD_INFO_TEXT), HDK_VERSION, BUILD_NUMBER, BUILD_SVNREV, __DATE__, __TIME__, PLATFORM, PLATFORMSUB, comp);
+    sprintf(buf, lang_str(LANG_MSG_BUILD_INFO_TEXT), camera_info.chdk_ver, camera_info.build_number, camera_info.build_svnrev, camera_info.build_date, camera_info.build_time, camera_info.platform, camera_info.platformsub, comp);
     gui_mbox_init(LANG_MSG_BUILD_INFO_TITLE, (int)buf, MBOX_FUNC_RESTORE|MBOX_TEXT_LEFT, NULL);
 }
 
 static void gui_show_memory_info(int arg)
 {
-    sprintf(buf, lang_str(LANG_MSG_MEMORY_INFO_TEXT), core_get_free_memory(), MEMISOSIZE, &_start, &_end);
+    sprintf(buf, lang_str(LANG_MSG_MEMORY_INFO_TEXT), core_get_free_memory(), camera_info.memisosize, &_start, &_end);
     gui_mbox_init(LANG_MSG_MEMORY_INFO_TITLE, (int)buf, MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
 }
+
+#if !defined(OPT_FORCE_LUA_CALL_NATIVE)
+static void lua_native_call_warning(unsigned int btn)
+{
+    if (btn==MBOX_BTN_NO)
+        conf.script_allow_lua_native_calls = 0;
+}
+
+static void gui_lua_native_call_warning(int arg)
+{
+    if (conf.script_allow_lua_native_calls)
+        gui_mbox_init(LANG_WARNING, LANG_MENU_LUA_NATIVE_CALLS_WARNING, MBOX_BTN_YES_NO|MBOX_DEF_BTN2|MBOX_TEXT_CENTER, lua_native_call_warning);
+}
+#endif
 
 static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x35,LANG_MENU_MISC_FILE_BROWSER,          MENUITEM_PROC,                  gui_draw_fselect,                   0 ),
     MENU_ITEM   (0x80,(int)"Module Inspector",              MENUITEM_PROC,                  gui_menu_run_fltmodule, "modinsp.flt" ),
-#ifdef OPT_CALENDAR
     MENU_ITEM   (0x36,LANG_MENU_MISC_CALENDAR,              MENUITEM_PROC,                  gui_menu_run_fltmodule, "calend.flt" ),
-#endif
-#ifdef OPT_TEXTREADER
     MENU_ITEM   (0x37,LANG_MENU_MISC_TEXT_READER,           MENUITEM_SUBMENU,               &reader_submenu,                    0 ),
-#endif
 #if defined (OPT_GAMES)
     MENU_ITEM   (0x38,LANG_MENU_MISC_GAMES,                 MENUITEM_SUBMENU,               &games_submenu,                     0 ),
 #endif
@@ -798,6 +685,9 @@ static CMenuItem misc_submenu_items[] = {
 #endif
     MENU_ITEM   (0x80,LANG_MENU_MISC_BUILD_INFO,            MENUITEM_PROC,                  gui_show_build_info, 0 ),
     MENU_ITEM   (0x80,LANG_MENU_MISC_MEMORY_INFO,           MENUITEM_PROC,                  gui_show_memory_info, 0 ),
+#if !defined(OPT_FORCE_LUA_CALL_NATIVE)
+    MENU_ITEM   (0x28,LANG_MENU_ENABLE_LUA_NATIVE_CALLS,    MENUITEM_BOOL|MENUITEM_ARG_CALLBACK, &conf.script_allow_lua_native_calls, (int)gui_lua_native_call_warning ),
+#endif
     MENU_ITEM   (0x33,LANG_SD_CARD,                         MENUITEM_SUBMENU,               &sdcard_submenu,                    0 ),
 #ifdef OPT_DEBUGGING
     MENU_ITEM   (0x2a,LANG_MENU_MAIN_DEBUG,                 MENUITEM_SUBMENU,               &debug_submenu,                     0 ),
@@ -1036,9 +926,22 @@ static CMenu video_submenu = {0x23,LANG_MENU_VIDEO_PARAM_TITLE, NULL, video_subm
 //-------------------------------------------------------------------
 // "Extra Photo Operations" Menu
 
+static const char* tv_override[]={
+#ifdef CAM_EXT_TV_RANGE
+    // add very long time exposures as approximately powers of 2, adding 15 exposures
+    "2048","1625","1290","1024","812","645","512","406","322","256","203","161","128","101","80",
+#endif
+    "64","50.8", "40.3", "32", "25.4","20","16", "12.7", "10","8", "6.3","5","4","3.2", "2.5","2", 
+    "1.6", "1.3", "1", "0.8", "0.6", "0.5", "0.4", "0.3", "1/4", "1/5", "1/6", "1/8", "1/10", "1/13", 
+    "1/15", "1/20", "1/25", "1/30", "1/40", "1/50", "1/60", "1/80", "1/100", "1/125", "1/160", "1/200", 
+    "1/250", "1/320", "1/400", "1/500", "1/640","1/800", "1/1000", "1/1250", "1/1600","1/2000","1/2500",
+    "1/3200","1/4000", "1/5000", "1/6400", "1/8000", "1/10000", "1/12500", "1/16000", "1/20000", "1/25000", 
+    "1/32000", "1/40000", "1/50000", "1/64000","1/80000", "1/100k"
+};
+
 const char* gui_tv_override_value_enum(int change, int arg)
 {
-    gui_enum_value_change(&conf.tv_override_value,change,tv_override_amount);
+    gui_enum_value_change(&conf.tv_override_value,change,sizeof(tv_override)/sizeof(tv_override[0]));
     return tv_override[conf.tv_override_value]; 
 }
 
@@ -1575,7 +1478,7 @@ static void raw_fselect_cb(const char * filename)
     struct stat st;
     if (!filename) return;
     stat((char*)filename,&st);
-    if (st.st_size!=hook_raw_size()) return;
+    if (st.st_size!=camera_sensor.raw_size) return;
     gui_mbox_init((int)"", LANG_RAW_DEVELOP_MESSAGE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
     raw_prepare_develop((char*)filename);
 }
@@ -1873,6 +1776,8 @@ CMenu chdk_settings_menu = {0x20,LANG_MENU_CHDK_SETTINGS, NULL, chdk_settings_me
 
 //-------------------------------------------------------------------
 
+extern CMenu script_submenu;
+
 static CMenuItem root_menu_items[] = {
     MENU_ITEM   (0x21,LANG_MENU_OPERATION_PARAM,            MENUITEM_SUBMENU,   &operation_submenu, 0 ),
     MENU_ITEM   (0x23,LANG_MENU_VIDEO_PARAM,                MENUITEM_SUBMENU,   &video_submenu,     0 ),
@@ -1882,9 +1787,7 @@ static CMenuItem root_menu_items[] = {
 #endif
     MENU_ITEM   (0x25,LANG_MENU_MAIN_HISTO_PARAM,           MENUITEM_SUBMENU,   &histo_submenu, 0 ),
     MENU_ITEM   (0x26,LANG_MENU_MAIN_ZEBRA_PARAM,           MENUITEM_SUBMENU,   &zebra_submenu,     0 ),
-#ifdef OPT_SCRIPTING
     MENU_ITEM   (0x27,LANG_MENU_MAIN_SCRIPT_PARAM,          MENUITEM_SUBMENU,   &script_submenu,    0 ),
-#endif
     MENU_ITEM   (0x22,LANG_MENU_CHDK_SETTINGS,              MENUITEM_SUBMENU,   &chdk_settings_menu, 0 ),
     MENU_ITEM   (0x29,LANG_MENU_MAIN_MISC,                  MENUITEM_SUBMENU,   &misc_submenu,      0 ),
     MENU_ITEM   (0x2e,LANG_MENU_USER_MENU,  	    	    MENUITEM_SUBMENU,   &user_submenu, 0 ),
@@ -2290,8 +2193,6 @@ static void gui_draw_alt_helper()
 //-------------------------------------------------------------------
 void gui_chdk_draw()
 {
-    static int show_md_grid=0;
-
 #ifdef CAM_DISP_ALT_TEXT
     gui_draw_alt_helper();
     draw_string(((CAM_SCREEN_WIDTH/2)-(FONT_WIDTH*5/2)), (CAM_SCREEN_HEIGHT-FONT_HEIGHT), "<ALT>", MAKE_COLOR(COLOR_RED, COLOR_WHITE));
@@ -2299,21 +2200,18 @@ void gui_chdk_draw()
     gui_draw_osd();
 #endif
 
-#ifdef OPT_SCRIPTING
     if ((mode_get()&MODE_MASK) == MODE_REC || (mode_get()&MODE_MASK) == MODE_PLAY)
     {
         draw_txt_string(0, 14, script_title, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
     }
-#endif
 
     console_draw();
 }
 
 //-------------------------------------------------------------------
-#ifdef OPT_DEBUGGING
-
 static void gui_debug_shortcut(void) 
 {
+#ifdef OPT_DEBUGGING
     static int lastcall = -1;
     int t=get_tick_count();
     if ( lastcall != -1) {
@@ -2326,27 +2224,14 @@ static void gui_debug_shortcut(void)
                 dump_memory();
                 break;
             case 2:
-#ifndef CAM_DRYOS
-                if(conf.debug_display == DEBUG_DISPLAY_TASKS) {
-                    debug_tasklist_start += debug_display_direction*(TASKLIST_MAX_LINES-2); // a little intentional overlap
-                    if(debug_tasklist_start >= TASKLIST_NUM_TASKS || debug_tasklist_start < 0)
-                        debug_tasklist_start = 0;
-                }
-                else 
-#endif
-                    if (conf.debug_display == DEBUG_DISPLAY_PROPS || conf.debug_display == DEBUG_DISPLAY_PARAMS) {
-                        conf.debug_propcase_page += debug_display_direction*1;
-                        if(conf.debug_propcase_page > 128 || conf.debug_propcase_page < 0) 
-                            conf.debug_propcase_page = 0;
-                    }
-                    break;
+                gui_update_debug_page();
+                break;
             case 3:
                 gui_compare_props(1);
                 break;
     }
-}
-
 #endif
+}
 
 //-------------------------------------------------------------------
 // Handler for Menu button press default - enter Menu mode
@@ -2408,7 +2293,6 @@ static void sd_override(int direction)
 
 static int alt_mode_script_run()
 {
-#ifdef OPT_SCRIPTING
     int remote_script_start_ready = 0;
 
     // Start the current script if script_start is enabled, we are in <ALT> mode and there is a pulse longer than 100mSec on USB port
@@ -2422,7 +2306,6 @@ static int alt_mode_script_run()
         return 1;
     }
 
-#endif
     return 0;
 }
 
@@ -2443,9 +2326,7 @@ int gui_chdk_kbd_process()
     {
         if (conf.debug_shortcut_action > 0)
         {
-#ifdef OPT_DEBUGGING
             gui_debug_shortcut();
-#endif
         }
         // Check in manual focus mode
         else if (!shooting_get_common_focus_mode())
@@ -2471,9 +2352,7 @@ int gui_chdk_kbd_process()
     {
         if (conf.debug_shortcut_action > 0)
         {
-#ifdef OPT_DEBUGGING
             gui_debug_shortcut();
-#endif
         }
         else
         {
@@ -2483,13 +2362,11 @@ int gui_chdk_kbd_process()
         }
     }
 #endif
-#ifdef OPT_SCRIPTING                                    // ALT Set button processing if scripting enabled - open script menu
     else if (kbd_is_key_clicked(KEY_SET))
     {
         gui_menu_init(&script_submenu);
         gui_default_kbd_process_menu_btn();
     }
-#endif
 #if CAM_CAN_SD_OVERRIDE                                 // ALT button processing if camera has SD override
     else
     {
@@ -2593,18 +2470,16 @@ gui_handler altGuiHandler = { GUI_MODE_ALT, gui_chdk_draw, gui_chdk_kbd_process,
 // Main GUI redraw function, perform common initialisation then calls the redraw handler for the mode
 void gui_redraw()
 {
-    static int flag_gui_enforce_redraw = 0;
+    int flag_gui_enforce_redraw = 0;
 
-#ifdef CAM_DETECT_SCREEN_ERASE
     if (!draw_test_guard() && gui_get_mode())     // Attempt to detect screen erase in <Alt> mode, redraw if needed
     {
         draw_set_guard();
-        flag_gui_enforce_redraw |= GUI_REDRAWFLAG_ERASEGUARD;
+        flag_gui_enforce_redraw = 1;
 #ifdef CAM_TOUCHSCREEN_UI
         redraw_buttons = 1;
 #endif
     }
-#endif
 
     gui_handle_splash();
 
@@ -2618,14 +2493,14 @@ void gui_redraw()
     {
         draw_restore();
         gui_osd_need_restore = 0;
-        flag_gui_enforce_redraw |= GUI_REDRAWFLAG_DRAW_RESTORED;
+        flag_gui_enforce_redraw = 1;
     }
 
     // Force mode redraw if needed
     if (gui_mode_need_redraw)
     {
         gui_mode_need_redraw = 0;
-	    flag_gui_enforce_redraw |= GUI_REDRAWFLAG_MODE_WAS_CHANGED;
+	    flag_gui_enforce_redraw = 1;
     }
 
 // DEBUG: uncomment if you want debug values always on top
@@ -2634,8 +2509,6 @@ void gui_redraw()
     // Call redraw handler
     if (gui_mode->redraw)
         gui_mode->redraw(flag_gui_enforce_redraw);
-
-	flag_gui_enforce_redraw = 0;
 }
 
 //-------------------------------------------------------------------
@@ -2705,9 +2578,6 @@ void gui_activate_alt_mode()
     case ALT_MODE_LEAVE:
         conf_save_new_settings_if_changed();
 
-#ifdef OPT_UBASIC
-        ubasic_error = UBASIC_E_NONE;
-#endif
         rbf_set_codepage(FONT_CP_WIN);
         vid_turn_on_updates();
         gui_set_mode(&defaultGuiHandler);

@@ -1,6 +1,11 @@
 #ifndef GUI_H
 #define GUI_H
 
+// CHDK Gui interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 typedef int             coord;
 typedef unsigned short  color;
 
@@ -44,11 +49,6 @@ extern void gui_activate_alt_mode();        // Called from GUI task to set ALT m
 #define GUI_MODE_FLAG_NODRAWRESTORE       1
 #define GUI_MODE_FLAG_NORESTORE_ON_SWITCH 2
 
-// Values (bit-flag) for gui_draw argument
-#define GUI_REDRAWFLAG_ERASEGUARD       1
-#define GUI_REDRAWFLAG_MODE_WAS_CHANGED 2
-#define GUI_REDRAWFLAG_DRAW_RESTORED    4
-
 // Structure to store gui redraw and kbd process handlers for each mode
 typedef struct
 {
@@ -91,35 +91,6 @@ extern const char* gui_subj_dist_override_koef_enum(int change, int arg);
 extern const char* gui_tv_override_value_enum(int change, int arg);
 extern const char* gui_hhmss_enum(int change, int arg);
 
-#if !CAM_VIDEO_QUALITY_ONLY
-extern const char* gui_video_bitrate_enum(int change, int arg);
-#endif
-
-#ifdef OPT_SCRIPTING
-extern void gui_update_script_submenu();
-#endif
-
-extern void gui_menu_run_fltmodule(int arg);
-
-//------------------------------------------------------------------- 
-#ifdef OPT_DEBUGGING
-
-#define TASKLIST_MAX_LINES 12 // probably as much as will fit on screen
-#define TASKLIST_NUM_TASKS 64 // should be enough ?
-
-#define DEBUG_DISPLAY_NONE 0
-#define DEBUG_DISPLAY_PROPS 1
-#define DEBUG_DISPLAY_PARAMS 2
-#ifndef CAM_DRYOS
-#define DEBUG_DISPLAY_TASKS 3
-#endif
-
-#ifndef CAM_DRYOS
-extern int debug_tasklist_start;
-#endif
-extern int debug_display_direction;
-
-#endif
 //------------------------------------------------------------------- 
 
 struct gui_common_api_ver {

@@ -42,10 +42,11 @@
 #define setprogdir(L)		((void)0)
 
 
+#if 0
 static void ll_unloadlib (void *lib);
 static void *ll_load (lua_State *L, const char *path);
 static lua_CFunction ll_sym (lua_State *L, void *lib, const char *sym);
-
+#endif
 
 
 #if defined(LUA_DL_DLOPEN)
@@ -229,6 +230,7 @@ static lua_CFunction ll_sym (lua_State *L, void *lib, const char *sym) {
 ** =======================================================
 */
 
+#if 0
 #undef LIB_FAIL
 #define LIB_FAIL	"absent"
 
@@ -253,6 +255,7 @@ static lua_CFunction ll_sym (lua_State *L, void *lib, const char *sym) {
   lua_pushliteral(L, DLMSG);
   return NULL;
 }
+#endif
 
 /* }====================================================== */
 #endif
@@ -385,8 +388,8 @@ static void loaderror (lua_State *L, const char *filename) {
 
 static int loader_Lua (lua_State *L) {
   const char *filename;
-  const char *name = luaL_checkstring(L, 1);
 #if 0
+  const char *name = luaL_checkstring(L, 1);
   filename = findfile(L, name, "path");
   if (filename == NULL) return 1;  /* library not found in this path */
 #else

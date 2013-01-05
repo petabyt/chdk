@@ -1,6 +1,11 @@
 #ifndef USB_REMOTE_H
 #define USB_REMOTE_H
 
+// CHDK USB Remote Switch interface
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 // Functions.
 extern int handle_usb_remote();
 

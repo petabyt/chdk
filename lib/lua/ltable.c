@@ -159,7 +159,7 @@ static int findindex (lua_State *L, Table *t, StkId key) {
 }
 
 
-int luaH_next (lua_State *L, Table *t, StkId key) {
+LUAI_FUNC int luaH_next (lua_State *L, Table *t, StkId key) {
   int i = findindex(L, t, key);  /* find original element */
   for (i++; i < t->sizearray; i++) {  /* try first array part */
     if (!ttisnil(&t->array[i])) {  /* a non-nil value? */
@@ -324,7 +324,7 @@ static void resize (lua_State *L, Table *t, int nasize, int nhsize) {
 }
 
 
-void luaH_resizearray (lua_State *L, Table *t, int nasize) {
+LUAI_FUNC void luaH_resizearray (lua_State *L, Table *t, int nasize) {
   int nsize = (t->node == dummynode) ? 0 : sizenode(t);
   resize(L, t, nasize, nsize);
 }
@@ -355,7 +355,7 @@ static void rehash (lua_State *L, Table *t, const TValue *ek) {
 */
 
 
-Table *luaH_new (lua_State *L, int narray, int nhash) {
+LUAI_FUNC Table *luaH_new (lua_State *L, int narray, int nhash) {
   Table *t = luaM_new(L, Table);
   luaC_link(L, obj2gco(t), LUA_TTABLE);
   t->metatable = NULL;
@@ -371,7 +371,7 @@ Table *luaH_new (lua_State *L, int narray, int nhash) {
 }
 
 
-void luaH_free (lua_State *L, Table *t) {
+LUAI_FUNC void luaH_free (lua_State *L, Table *t) {
   if (t->node != dummynode)
     luaM_freearray(L, t->node, sizenode(t), Node);
   luaM_freearray(L, t->array, t->sizearray, TValue);
@@ -432,7 +432,7 @@ static TValue *newkey (lua_State *L, Table *t, const TValue *key) {
 /*
 ** search function for integers
 */
-const TValue *luaH_getnum (Table *t, int key) {
+LUAI_FUNC const TValue *luaH_getnum (Table *t, int key) {
   /* (1 <= key && key <= t->sizearray) */
   if (cast(unsigned int, key-1) < cast(unsigned int, t->sizearray))
     return &t->array[key-1];
@@ -452,7 +452,7 @@ const TValue *luaH_getnum (Table *t, int key) {
 /*
 ** search function for strings
 */
-const TValue *luaH_getstr (Table *t, TString *key) {
+LUAI_FUNC const TValue *luaH_getstr (Table *t, TString *key) {
   Node *n = hashstr(t, key);
   do {  /* check whether `key' is somewhere in the chain */
     if (ttisstring(gkey(n)) && rawtsvalue(gkey(n)) == key)
@@ -466,7 +466,7 @@ const TValue *luaH_getstr (Table *t, TString *key) {
 /*
 ** main search function
 */
-const TValue *luaH_get (Table *t, const TValue *key) {
+LUAI_FUNC const TValue *luaH_get (Table *t, const TValue *key) {
   switch (ttype(key)) {
     case LUA_TNIL: return luaO_nilobject;
     case LUA_TSTRING: return luaH_getstr(t, rawtsvalue(key));
@@ -491,7 +491,7 @@ const TValue *luaH_get (Table *t, const TValue *key) {
 }
 
 
-TValue *luaH_set (lua_State *L, Table *t, const TValue *key) {
+LUAI_FUNC TValue *luaH_set (lua_State *L, Table *t, const TValue *key) {
   const TValue *p = luaH_get(t, key);
   t->flags = 0;
   if (p != luaO_nilobject)
@@ -505,7 +505,7 @@ TValue *luaH_set (lua_State *L, Table *t, const TValue *key) {
 }
 
 
-TValue *luaH_setnum (lua_State *L, Table *t, int key) {
+LUAI_FUNC TValue *luaH_setnum (lua_State *L, Table *t, int key) {
   const TValue *p = luaH_getnum(t, key);
   if (p != luaO_nilobject)
     return cast(TValue *, p);
@@ -517,7 +517,7 @@ TValue *luaH_setnum (lua_State *L, Table *t, int key) {
 }
 
 
-TValue *luaH_setstr (lua_State *L, Table *t, TString *key) {
+LUAI_FUNC TValue *luaH_setstr (lua_State *L, Table *t, TString *key) {
   const TValue *p = luaH_getstr(t, key);
   if (p != luaO_nilobject)
     return cast(TValue *, p);
@@ -557,7 +557,7 @@ static int unbound_search (Table *t, unsigned int j) {
 ** Try to find a boundary in table `t'. A `boundary' is an integer index
 ** such that t[i] is non-nil and t[i+1] is nil (and 0 if t[1] is nil).
 */
-int luaH_getn (Table *t) {
+LUAI_FUNC int luaH_getn (Table *t) {
   unsigned int j = t->sizearray;
   if (j > 0 && ttisnil(&t->array[j - 1])) {
     /* there is a boundary in the array part: (binary) search for it */

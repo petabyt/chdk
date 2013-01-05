@@ -3,13 +3,11 @@
 #include "conf.h"
 #include "histogram.h"
 #include "font.h"
-#include "camera.h"
 #include "raw.h"
 #include "modules.h"
-#include "module_load.h"
+#include "module_def.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
-#include "gui_grid.h"
 #include "gui_lang.h"
 #include "gui_menu.h"
 #include "gui_user_menu.h"
@@ -27,7 +25,6 @@ Conf conf = { MAKE_API_VERSION(2,2) };
 
 int state_shooting_progress = SHOOTING_PROGRESS_NONE;
 int state_save_raw_nth_only;
-int auto_started;
 
 // reyalp: putting these in conf, since the conf values are lookups for them
 // prefixes and extentions available for raw images (index with conf.raw_prefix etc)
@@ -56,19 +53,6 @@ void camera_set_nr(int mode)
     // "Auto", "Off", "On"
     conf.raw_nr = mode;
 }
-int camera_get_script_autostart()
-{   
-    // 1 = Autostarted
-    return auto_started;
-}
-
-
-void camera_set_script_autostart(int state)
-{   
-    // 1 = Autostarted
-    auto_started = state;
-}
-
 
 int camera_get_nr()
 {
@@ -250,6 +234,11 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(117, conf.tv_override_short_exp,      CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(118, conf.av_override_enabled,        CONF_DEF_VALUE,     i:0, NULL),
 
+#if defined(OPT_FORCE_LUA_CALL_NATIVE)
+    CONF_INFO(119, conf.script_allow_lua_native_calls,CONF_DEF_VALUE,   i:1, NULL),
+#else
+    CONF_INFO(119, conf.script_allow_lua_native_calls,CONF_DEF_VALUE,   i:0, NULL),
+#endif
     CONF_INFO(120, conf.script_startup,             CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(121, conf.remote_enable,              CONF_DEF_VALUE,     i:0, NULL),
     
@@ -325,10 +314,8 @@ static const ConfInfo conf_info[] = {
     CONF_INFO2(182, conf.mode_ev_pos,               CONF_OSD_POS,   CAM_SCREEN_WIDTH-40*FONT_WIDTH-2,CAM_SCREEN_HEIGHT-8*FONT_HEIGHT-2),
     CONF_INFO(183, conf.menu_symbol_rbf_file,       CONF_CHAR_PTR,   ptr:DEFAULT_SYMBOL_FILE, conf_change_menu_symbol_rbf_file),
     CONF_INFO(184, conf.menu_symbol_color,          CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
-#ifdef OPT_CURVES
     CONF_INFO(185, conf.curve_file,                 CONF_CHAR_PTR,      ptr:"", NULL),
     CONF_INFO(186, conf.curve_enable,               CONF_DEF_VALUE,     i:0, NULL),
-#endif
     CONF_INFO(187, conf.edge_overlay_enable,        CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(188, conf.edge_overlay_thresh,        CONF_DEF_VALUE, i:60, NULL),
     CONF_INFO(189, conf.edge_overlay_color,         CONF_DEF_VALUE, cl:0x66, NULL),
@@ -494,9 +481,7 @@ static void conf_change_font_cp() {
 }
 
 static void conf_change_script_file() {
-#ifdef OPT_SCRIPTING
     script_load(conf.script_file);
-#endif
 }
 
 
@@ -752,7 +737,17 @@ void config_save(const ConfInfo *conf_info, char *filename, int conf_num)
 
 void conf_save()
 {
+// if Lua native calls are forced on, don't save state to config file since user did not select it
+#if defined(OPT_FORCE_LUA_CALL_NATIVE)
+    conf.script_allow_lua_native_calls = 0;
+#endif
+
     config_save(&conf_info[0], CONF_FILE, CONF_NUM);
+
+// if Lua native calls are forced on, re-enable native calls
+#if defined(OPT_FORCE_LUA_CALL_NATIVE)
+    conf.script_allow_lua_native_calls = 1;
+#endif
 }
 
 //-------------------------------------------------------------------
@@ -761,7 +756,7 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
     int fd, rcnt, i;
     unsigned short id, size;
     char *buf;
-    int offs, old_ver;
+    int offs;
     struct stat st;
 
     config_load_defaults(confinfo, conf_num, info_func);
@@ -838,6 +833,15 @@ void conf_restore()
     config_restore(&conf_info[0], CONF_FILE, CONF_NUM, conf_info_func);
     // Fixup old conf.override_disable value
     if (conf.override_disable == 2) conf.override_disable = 0;
+
+// Enable Lua native calls if builder wants them forced on
+#if defined(OPT_FORCE_LUA_CALL_NATIVE)
+    conf.script_allow_lua_native_calls = 1;
+#endif
+// If curves not compiled in force option off
+#if !defined(OPT_CURVES)
+    conf.curve_enable = 0;
+#endif
 }
 
 //-------------------------------------------------------------------
@@ -902,6 +906,9 @@ int conf_setValue(unsigned short id, tConfigVal configVal) {
     int ret = CONF_EMPTY, len, len2;
     OSD_pos* pos;
     
+    // Don't allow scripts to enable Lua native calls.
+    if (id == 119) return ret;
+
     for( i=0; i<CONF_NUM; ++i ) {
         if( conf_info[i].id==id ) {
             switch( conf_info[i].type ) {
@@ -997,13 +1004,13 @@ static Conf old_conf;
 
 void conf_store_old_settings()
 {
-    conf.user_menu_has_changed = 0;
+    camera_info.state.user_menu_has_changed = 0;
     old_conf = conf;
 }
 
 int conf_save_new_settings_if_changed()
 {
-    if (conf.user_menu_has_changed || (memcmp(&old_conf, &conf, sizeof(Conf)) != 0))
+    if (camera_info.state.user_menu_has_changed || (memcmp(&old_conf, &conf, sizeof(Conf)) != 0))
     {
 		user_menu_save();
         conf_save();

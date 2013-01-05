@@ -1,7 +1,7 @@
-#include "stdlib.h"
 #include "platform.h"
-#include "core.h"
+#include "stdlib.h"
 #include "keyboard.h"
+#include "touchscreen.h"
 #include "conf.h"
 #include "font.h"
 #include "gui_draw.h"
@@ -28,7 +28,6 @@ void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl))
 }
 
 //-------------------------------------------------------------------
-#ifdef CAM_DETECT_SCREEN_ERASE
 
 #define GUARD_VAL   SCREEN_COLOR
 
@@ -53,8 +52,6 @@ int draw_test_pixel(coord x, coord y, color c)
            (frame_buffer[1][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)] == c);
 }
 
-#endif
-
 //-------------------------------------------------------------------
 void draw_init()
 {
@@ -62,8 +59,18 @@ void draw_init()
     frame_buffer[1] = frame_buffer[0] + camera_screen.buffer_size;
     draw_set_draw_proc(NULL);
 
-#ifdef CAM_DETECT_SCREEN_ERASE
     draw_set_guard();
+}
+
+// Restore CANON_OSD
+//-------------------------------------------------------------------
+void draw_restore()
+{
+    vid_bitmap_refresh();
+
+    draw_set_guard();
+#ifdef CAM_TOUCHSCREEN_UI
+    redraw_buttons = 1;
 #endif
 }
 
@@ -71,11 +78,7 @@ void draw_init()
 void draw_pixel(coord x, coord y, color cl)
 {
     // Make sure pixel is on screen. Skip top left pixel if screen erase detection is on to avoid triggering the detector.
-#ifdef CAM_DETECT_SCREEN_ERASE
     if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height) || ((x == 0) && (y == 0))) return;
-#else
-    if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return;
-#endif
     else
     {
         register unsigned int offset = y * camera_screen.buffer_width + ASPECT_XCORRECTION(x);
@@ -154,8 +157,6 @@ static coord xMin, yMin, xMax, yMax;
 
 static void draw_rectangle(coord x1, coord y1, coord x2, coord y2, color cl, int round) 
 {
-    register coord y;
-
     // Normalise values
     if (x1>x2) {
     	xMax=x1; xMin=x2;
@@ -223,7 +224,7 @@ void draw_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int
 //-------------------------------------------------------------------
 static void fill_rect(color cl)
 {
-    register coord x, y;
+    register coord y;
 
     // Check if completely off screen
     if ((xMax < 0) || (yMax < 0) || (xMin >= camera_screen.width) || (yMin >= camera_screen.height))
@@ -338,20 +339,6 @@ void draw_txt_string(coord col, coord row, const char *str, color cl)
 void draw_txt_char(coord col, coord row, const char ch, color cl)
 {
     draw_char(col*FONT_WIDTH, row*FONT_HEIGHT, ch, cl);
-}
-
-// Restore CANON_OSD
-//-------------------------------------------------------------------
-void draw_restore()
-{
-    vid_bitmap_refresh();
-
-#ifdef CAM_DETECT_SCREEN_ERASE
-    draw_set_guard();
-#ifdef CAM_TOUCHSCREEN_UI
-    redraw_buttons = 1;
-#endif
-#endif
 }
 
 //-------------------------------------------------------------------
@@ -505,6 +492,64 @@ void draw_filled_ellipse(coord CX, coord CY, unsigned int XRadius, unsigned int 
         }
     }
 }
+
+//-------------------------------------------------------------------
+
+const unsigned char const script_colors[NUM_SCRIPT_COLORS][2]  = {
+
+    {COLOR_TRANSPARENT,         COLOR_TRANSPARENT},         //  1   trans
+    {COLOR_BLACK,               COLOR_BLACK},               //  2   black
+    {COLOR_WHITE,               COLOR_WHITE},               //  3   white
+                                        
+    {COLOR_ICON_PLY_RED,        COLOR_ICON_REC_RED},        //  4   red
+    {COLOR_ICON_PLY_RED_DK,     COLOR_ICON_REC_RED_DK},     //  5   red_dark
+    {COLOR_ICON_PLY_RED_LT,     COLOR_ICON_REC_RED_LT},     //  6   red_light
+    {COLOR_ICON_PLY_GREEN,      COLOR_ICON_REC_GREEN},      //  7   green
+    {COLOR_ICON_PLY_GREEN_DK,   COLOR_ICON_REC_GREEN_DK},   //  8   green_dark
+    {COLOR_ICON_PLY_GREEN_LT,   COLOR_ICON_REC_GREEN_LT},   //  9   green_light
+    {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  10  blue
+    {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  11  blue_dark   - placeholder
+    {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  12  blue_light  - placeholder
+
+    {COLOR_ICON_PLY_GREY,       COLOR_ICON_REC_GREY},       //  13  grey
+    {COLOR_ICON_PLY_GREY_DK,    COLOR_ICON_REC_GREY_DK},    //  14  grey_dark
+    {COLOR_ICON_PLY_GREY_LT,    COLOR_ICON_REC_GREY_LT},    //  15  grey_light
+
+    {COLOR_ICON_PLY_YELLOW,     COLOR_ICON_REC_YELLOW},     //  16  yellow
+    {COLOR_ICON_PLY_YELLOW_DK,  COLOR_ICON_REC_YELLOW_DK},  //  17  yellow_dark
+    {COLOR_ICON_PLY_YELLOW_LT,  COLOR_ICON_REC_YELLOW_LT}   //  18  yellow_light
+};
+
+const unsigned char const module_colors[] = {
+    SCREEN_COLOR		,
+    COLOR_WHITE         ,
+    COLOR_RED           ,
+    COLOR_GREY          ,
+    COLOR_GREEN         ,
+    COLOR_BLUE_LT       ,
+    COLOR_BLUE          ,
+    COLOR_YELLOW        ,
+    COLOR_BG            ,
+    COLOR_FG            ,
+    COLOR_SELECTED_BG   ,
+    COLOR_SELECTED_FG   ,
+    COLOR_ALT_BG        ,
+    COLOR_SPLASH_RED    ,
+    COLOR_SPLASH_PINK   ,
+    COLOR_SPLASH_GREY   ,
+    COLOR_HISTO_R       ,
+    COLOR_HISTO_R_PLAY  ,
+    COLOR_HISTO_B       ,
+    COLOR_HISTO_G       ,
+    COLOR_HISTO_G_PLAY  ,
+    COLOR_HISTO_BG      ,
+    COLOR_HISTO_RG      ,
+    COLOR_HISTO_RB      ,
+    COLOR_HISTO_RB_PLAY ,
+    COLOR_HISTO_B_PLAY  ,
+    COLOR_HISTO_BG_PLAY ,
+    COLOR_HISTO_RG_PLAY ,
+};
 
 //-------------------------------------------------------------------
 

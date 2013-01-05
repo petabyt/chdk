@@ -1,13 +1,18 @@
 topdir=../../
 
 SKIPBUILDRULES=1
+SKIPPLATFORMCHECK=1
 
 include $(topdir)makefile.inc
 
 LUA_SRC=$(topdir)lib/lua
+CORE_SRC=$(topdir)modules
 
-HOSTCFLAGS+=-DHOST_LUA -DLUA_ANSI -I./include
+HOSTCFLAGS+=-DHOST_LUA -DLUA_ANSI -I./include -I$(CORE_SRC)
 
+%.o: $(CORE_SRC)/%.c
+	@echo $< \-\> $@
+	$(HOSTCC) $(HOSTCFLAGS) -c -o $@ $<
 
 %.o: $(LUA_SRC)/%.c
 	@echo $< \-\> $@
@@ -24,7 +29,7 @@ HOSTCFLAGS+=-DHOST_LUA -DLUA_ANSI -I./include
 
 # these are always built for hostlua, you can hide them from scripts by setting 
 # the corresponding globals to nil
-LUA_OPTLIB_OBJS=
+LUA_OPTLIB_OBJS=cordic_math.o
 
 HOSTCFLAGS+=-DOPT_LUA_IOLIB
 LUA_OPTLIB_OBJS+=liolib.o
@@ -39,7 +44,7 @@ COMMON_OBJS = lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
 	lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o \
 	lundump.o lvm.o lzio.o \
        \
-       lauxlib.o lbaselib.o ldblib.o ltablib.o lmathlib.o \
+       lauxlib.o lbaselib.o ldblib.o ltablib.o lmathlib.o limathlib.o \
 	   $(LUA_OPTLIB_OBJS) loadlib.o linit.o
 
 OBJS=$(COMMON_OBJS)
@@ -69,7 +74,7 @@ $(LUAC_T): $(LUAC_O) $(LUA_A)
 check:
 
 clean:
-	rm -f $(OBJS) $(LUA_A) $(LUA_T) $(LUAC_T)
+	rm -f $(OBJS) $(LUA_A) $(LUA_T) $(LUAC_T) $(LUA_O) $(LUAC_O)
 
 distclean: clean
 	rm -f $(OBJS:.o=.d)

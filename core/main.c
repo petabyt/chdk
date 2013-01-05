@@ -1,177 +1,16 @@
 #include "platform.h"
+#include "stdlib.h"
 #include "core.h"
 #include "conf.h"
-#include "keyboard.h"
-#include "stdlib.h"
 #include "gui.h"
 #include "gui_draw.h"
 #include "histogram.h"
 #include "raw.h"
 #include "console.h"
-#ifdef OPT_EDGEOVERLAY
-    #include "modules.h"
-#endif
+#include "ptp.h"
+#include "modules.h"
 
 #include "module_load.h"
-
-//==========================================================
-// Data Structure to store camera specific information
-// Used by modules to ensure module code is platform independent
-
-_cam_sensor camera_sensor = { 
-    MAKE_API_VERSION(1,0),
-
-    CAM_SENSOR_BITS_PER_PIXEL, 
-    CAM_BLACK_LEVEL, CAM_WHITE_LEVEL,
-    CAM_RAW_ROWS, CAM_RAW_ROWPIX, (CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL)/8, CAM_RAW_ROWS * ((CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL)/8),
-#if defined(CAM_ACTIVE_AREA_X1) && defined(CAM_JPEG_WIDTH)
-    {{
-        (CAM_ACTIVE_AREA_X2-CAM_ACTIVE_AREA_X1-CAM_JPEG_WIDTH)/2, (CAM_ACTIVE_AREA_Y2-CAM_ACTIVE_AREA_Y1-CAM_JPEG_HEIGHT)/2,
-        CAM_JPEG_WIDTH, CAM_JPEG_HEIGHT
-    }},
-    { { CAM_ACTIVE_AREA_Y1, CAM_ACTIVE_AREA_X1, CAM_ACTIVE_AREA_Y2, CAM_ACTIVE_AREA_X2 } }, 
-#else
-    {{
-        0, 0,
-        0, 0
-    }},
-    { { 0, 0, 0, 0 } }, 
-#endif
-#if defined(CAM_DNG_LENS_INFO)
-    CAM_DNG_LENS_INFO,
-#else
-    { 0, 0, 0, 0, 0, 0, 0, 0 },
-#endif
-#if defined(CAM_DNG_EXPOSURE_BIAS)
-    { CAM_DNG_EXPOSURE_BIAS },
-#else
-    { -1 , 2 },
-#endif
-#if defined(cam_CFAPattern)
-    cam_CFAPattern, 
-#else
-    0,
-#endif
-#if defined(CAM_COLORMATRIX1)
-    cam_CalibrationIlluminant1,
-    { CAM_COLORMATRIX1 },
-#else
-    0,
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-#endif
-#if defined(CAM_COLORMATRIX2)
-    cam_CalibrationIlluminant2,
-    { CAM_COLORMATRIX2 },
-#else
-    0,
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-#endif
-#if defined(CAM_CAMERACALIBRATION1)
-    1,
-    { CAM_CAMERACALIBRATION1 },
-#else
-    0,
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-#endif
-#if defined(CAM_CAMERACALIBRATION2)
-    1,
-    { CAM_CAMERACALIBRATION2 },
-#else
-    0,
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-#endif
-#if defined(CAM_FORWARDMATRIX1)
-    1,
-    { CAM_FORWARDMATRIX1 },
-#else
-    0,
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-#endif
-#if defined(CAM_FORWARDMATRIX2)
-    1,
-    { CAM_FORWARDMATRIX2 },
-#else
-    0,
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-#endif
-    DNG_BADPIXEL_VALUE_LIMIT,
-};
-
-_cam_screen camera_screen =
-{
-    CAM_SCREEN_WIDTH, CAM_SCREEN_HEIGHT, CAM_SCREEN_WIDTH * CAM_SCREEN_HEIGHT,
-    CAM_BITMAP_WIDTH, CAM_BITMAP_HEIGHT, CAM_BITMAP_WIDTH * CAM_BITMAP_HEIGHT,
-    EDGE_HMARGIN, CAM_TS_BUTTON_BORDER,
-#if defined(CAM_ZEBRA_NOBUF)
-    1,
-#else
-    0,
-#endif
-#if defined(CAM_ZEBRA_ASPECT_ADJUST)
-    1,
-#else
-    0,
-#endif
-#if defined(CAM_HAS_VARIABLE_ASPECT)
-    1,
-#else
-    0,
-#endif
-};
-
-_cam_info camera_info =
-{
-    MAKE_API_VERSION(1,0),
-
-    {
-#if defined(PARAM_CAMERA_NAME)
-    PARAM_CAMERA_NAME,
-#else
-    0,
-#endif
-#if defined(PARAM_OWNER_NAME)
-    PARAM_OWNER_NAME,
-#else
-    0,
-#endif
-#if defined(PARAM_ARTIST_NAME)
-    PARAM_ARTIST_NAME,
-#else
-    0,
-#endif
-#if defined(PARAM_COPYRIGHT)
-    PARAM_COPYRIGHT,
-#else
-    0,
-#endif
-    },
-    {
-#if defined(CAM_HAS_GPS)
-    PROPCASE_GPS,
-#else
-    0,
-#endif
-    PROPCASE_ORIENTATION_SENSOR,
-    PROPCASE_TV, PROPCASE_AV, PROPCASE_MIN_AV,
-    PROPCASE_EV_CORRECTION_2, 
-    PROPCASE_FLASH_MODE, PROPCASE_FLASH_FIRE, 
-    PROPCASE_METERING_MODE, PROPCASE_WB_ADJ,
-#if defined(PROPCASE_ASPECT_RATIO)
-    PROPCASE_ASPECT_RATIO,
-#else
-    0,
-#endif
-    PROPCASE_SHOOTING,
-    },
-    ROMBASEADDR, MAXRAMADDR,
-    0,
-    HDK_VERSION" ver. "BUILD_NUMBER,
-#if defined(CAM_EV_IN_VIDEO)
-    CAM_EV_IN_VIDEO,
-#else
-    0,
-#endif
-};
 
 //==========================================================
 
@@ -214,7 +53,7 @@ void dump_memory()
     if (fd) {
         long val0 = *((long*)(0|CAM_UNCACHED_BIT));
         write(fd, &val0, 4);
-        write(fd, (void*)4, MAXRAMADDR-3);   // MAXRAMADDR is last valid RAM location
+        write(fd, (void*)4, camera_info.maxramaddr-3);   // camera_info.maxramaddr is last valid RAM location
         close(fd);
     }
     vid_bitmap_refresh();
@@ -252,7 +91,18 @@ void core_spytask_can_start() {
     spytask_can_start = 1;
 }
 
-#ifdef OPT_SCRIPTING
+/*
+note, from tools/link-boot.ld
+    link_text_start = _start
+    link_data_start = link_text_end
+    link_bss_start = link_data_end
+    link_bss_end = _end
+*/
+extern long link_text_start;
+extern long link_data_start;
+extern long link_bss_start;
+extern long link_bss_end;
+
 // remote autostart
 void script_autostart()
 {
@@ -265,18 +115,25 @@ void script_autostart()
     // Switch to script mode and start the script running
     script_start_gui( 1 );
 }
-#endif
 
 void core_spytask()
 {
     int cnt = 1;
     int i=0;
 
+    // Init camera_info bits that can't be done statically
+    camera_info.memisosize = MEMISOSIZE;
+    camera_info.text_start = (int)&link_text_start;
+    camera_info.data_start = (int)&link_data_start;
+    camera_info.bss_start = (int)&link_bss_start;
+    camera_info.bss_end = (int)&link_bss_end;
+
     raw_need_postprocess = 0;
 
     spytask_can_start=0;
 
 #ifdef OPT_EXMEM_MALLOC
+    extern void exmem_malloc_init(void);
     exmem_malloc_init();
 #endif
 
@@ -308,15 +165,10 @@ void core_spytask()
     mkdir("A/CHDK/MODULES");
     mkdir("A/CHDK/MODULES/CFG");
     mkdir("A/CHDK/GRIDS");
-#ifdef OPT_CURVES
     mkdir("A/CHDK/CURVES");
-#endif
     mkdir("A/CHDK/DATA");
     mkdir("A/CHDK/LOGS");
-#ifdef OPT_EDGEOVERLAY
     mkdir("A/CHDK/EDGE");
-#endif
-    auto_started = 0;
 
     // Calculate the value of get_tick_count() when the clock ticks over to the next second
     // Used to calculate the SubSecondTime value when saving DNG files.
@@ -331,7 +183,6 @@ void core_spytask()
     } while (t1 != t2);
     camera_info.tick_count_offset = camera_info.tick_count_offset % 1000;
 
-#ifdef OPT_SCRIPTING
     // remote autostart
     if (conf.script_startup==1)
     {
@@ -343,7 +194,6 @@ void core_spytask()
         conf_save();
         script_autostart();
     }
-#endif
 
     shooting_init();
 

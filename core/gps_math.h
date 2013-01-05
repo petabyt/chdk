@@ -1,3 +1,11 @@
+#ifndef GPS_MATH_H
+#define GPS_MATH_H
+
+// Additional math functions for GPS
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
+
 extern int fac(int n);
 //extern double arccos(double x, int n);
 extern double arctan(double x, int n);
@@ -158,3 +166,4 @@ cos (double phi);
 **	$Id: sincos.h,v 1.2 2011/10/08 14:53:25 wolf Exp $
 **---------------------------------------------------------------------------------*/
 
+#endif

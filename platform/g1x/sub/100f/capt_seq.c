@@ -479,7 +479,7 @@ void __attribute__((naked,noinline)) exp_drv_task()
 "                BL      sub_FF0B97AC \n"
 "                B       loc_FF0CDAE4 \n"
 
-" loc_FF0CDB70: \n"
+"loc_FF0CDB70: \n"
 "                CMP     R1, #0x2F \n"
 "                BNE     loc_FF0CDBC0 \n"
 "                LDR     R0, [R6,#0x1C] \n"

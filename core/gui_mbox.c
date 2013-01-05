@@ -1,16 +1,15 @@
+#include "camera_info.h"
 #include "stdlib.h"
-#include "keyboard.h"
-#include "platform.h"
-#include "core.h"
 #include "lang.h"
+#include "modes.h"
+#include "keyboard.h"
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_lang.h"
 #include "gui_mbox.h"
 
-
 //-------------------------------------------------------------------
-void gui_mbox_draw(int enforce_redraw);
+void gui_mbox_draw();
 int gui_mbox_kbd_process();
 
 static gui_handler mboxGuiHandler = { GUI_MODE_MBOX, gui_mbox_draw, gui_mbox_kbd_process, 0, GUI_MODE_FLAG_NORESTORE_ON_SWITCH, GUI_MODE_MAGICNUM };
@@ -106,13 +105,12 @@ static void gui_mbox_draw_buttons() {
 }
 
 //-------------------------------------------------------------------
-void gui_mbox_draw(int enforce_redraw) {
+void gui_mbox_draw() {
     if (mbox_to_draw) {
         char c[MAX_LINES][MAX_WIDTH+1];
         const char *p=mbox_msg;
         coord x=0, y=0, d;
         unsigned int w, h=0, l=0, bw=(mbox_buttons_num*BUTTON_SIZE*FONT_WIDTH+(mbox_buttons_num-1)*BUTTON_SEP);
-        color cl_t =((mode_get()&MODE_MASK) == MODE_PLAY)?MAKE_COLOR(0xAA, COLOR_WHITE):MAKE_COLOR(0xDF, COLOR_WHITE);
 
         w =strlen(mbox_title);
         if (w > MAX_WIDTH) w = MAX_WIDTH;

@@ -133,7 +133,7 @@ int main( int argc, char **argv )
     const char* exp_def_tag="/* EXPORTED_DEFINES_";
 	int flag_section_defines = 0;
 
-	fprintf(out_h,"#ifndef THIS_IS_CHDK_CORE\n");
+	fprintf(out_h,"#ifdef CHDK_MODULE_CODE\n");
     for(; *cur && *cur!='{'; cur++) {
 
 		if ( !strncmp(cur,exp_def_tag,strlen(exp_def_tag)) )

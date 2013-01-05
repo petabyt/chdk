@@ -19,7 +19,6 @@
 
  12 "Back"
 
-
  13 "RAW"
 
  14 "Save RAW"
@@ -331,21 +330,16 @@
 249 "TV Bracketing"
 250 "AV Bracketing"
 251 "ISO Bracketing"
-//252 "  Off/Multiplier"
 253 "Subj. Dist. Bracket (mm)"
-//254 "  Off/Multiplier"
 255 "Bracketing Type"
 
 256 "Autostart"
 257 "Enable Remote"
 
-//258 "Exposure Control (No Flash)"
-//259 "Exposure Control (No Flash)"
-//259 "Exposure Control (No Flash)"
-//260 "Recalc Exposure"
-//261 "TV Exposure Recalc Order"
-//262 "AV Exposure Recalc Order"
-//263 "ISO Exposure Recalc Order"
+258 "Enabling Lua Native Calls may allow\nscripts to damage your camera.\nIf you aren't sure\ndon't enable this.\n\nDo you want to enable Native Calls?"
+259 "Enable Lua Native Calls?"
+260 "*** TERMINATED ***"
+261 "*** Autostart ***"
 
 264 "Disable Overrides on Startup"
 
@@ -452,7 +446,6 @@
 348 "Remaining video time"
 349 "Clear videoparams on Start?"
 350 "Enable Fast Ev switch?"
-//351 "   Step size (1 EV)?"
 352 "EV correction"
 353 "Are you SURE to delete ALL\nRAW files without corresponding JPG\nin DCIM folder?"
 354 "Are you SURE to delete ALL\nRAW files without corresponding JPG\nin selected folder?"

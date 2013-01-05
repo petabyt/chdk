@@ -4,6 +4,7 @@
 #include "core.h"
 #include "conf.h"
 #include "keyboard.h"
+#include "touchscreen.h"
 #include "../../core/gui_draw.h"
 
 // Uncomment this line to enable 'PLAY' and 'OFF' buttons in the CHDK OSD 

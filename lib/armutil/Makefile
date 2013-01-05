@@ -1,18 +1,19 @@
 topdir=../../
 
+SKIPPLATFORMCHECK=1
+
 include $(topdir)makefile.inc
 
 OBJS = callfunc.o reboot.o cache.o
 
 OBJS_ALL = $(OBJS)
-OBJS_ALL += reversebytes.o 
 
-all: libarmutil.a reversebytes.o 
+all: libarmutil.a
 
 libarmutil.a: $(OBJS)
 
 clean:
-	rm -f $(OBJS_ALL) libarmutil.a
+	rm -f $(OBJS_ALL) *.a
 
 distclean: clean
 	rm -f $(OBJS_ALL:.o=.d)

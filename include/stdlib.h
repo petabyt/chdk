@@ -1,7 +1,10 @@
-#include "camera.h"
-
 #ifndef STDLIB_H
 #define STDLIB_H
+
+// CHDK stdlib
+
+// Note: used in modules and platform independent code. 
+// Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 #define NULL		((void*)0)
 
@@ -12,84 +15,23 @@
 #define O_RDONLY        0
 #define O_WRONLY        1
 #define O_RDWR          2
+#define O_APPEND        8   // DryOS only, wrapper code will removed this for VxWorks so file will be overwritten instead of appended
 
-#ifndef THIS_IS_CHDK_CORE
-#include "stdlib_unified.h"
-#endif
-
-
-#if !CAM_DRYOS
-
-#define O_TRUNC         0x400
-#define O_CREAT         0x200
-
-struct	stat
-    {
-    unsigned long	st_dev;		/* device ID number */
-    unsigned long	st_ino;		/* file serial number */
-    unsigned short	st_mode;	/* file mode (see below) */
-    short		st_nlink;	/* number of links to file */
-    short		st_uid;		/* user ID of file's owner */
-    short		st_gid;		/* group ID of file's group */
-    unsigned long	st_rdev;	/* device ID, only if special file */
-    unsigned long	st_size;	/* size of file, in bytes */
-    unsigned long	st_atime;	/* time of last access */
-    unsigned long	st_mtime;	/* time of last modification */
-    unsigned long	st_ctime;	/* time of last change of file status */
-    long		st_blksize;
-    long		st_blocks;
-    unsigned char	st_attrib;	/* file attribute byte (dosFs only) */
-    int			reserved1;	/* reserved for future use */
-    int			reserved2;	/* reserved for future use */
-    int			reserved3;	/* reserved for future use */
-    int			reserved4;	/* reserved for future use */
-    int			reserved5;	/* reserved for future use */
-    int			reserved6;	/* reserved for future use */
-};
-
-#else
-
-#define O_APPEND        0x8 // ok for dryos, vx?
+// CHDK defined values - note does not match VxWorks values
+// Values are corrected in 'open' function to match OS requirements
 #define O_TRUNC         0x200
 #define O_CREAT         0x100
 
-#ifndef CAM_DRYOS_2_3_R39
-struct	stat
-    {
-    unsigned long	st_dev;		//?
-    unsigned long	st_ino;		//?
-    unsigned short	st_mode;	//?
-    short		st_nlink;	//?
-    short		st_uid;		//?
-    short		st_gid;		//?
-    unsigned long	st_atime;	//?
-    unsigned long	st_mtime;	//?
-    unsigned long	st_ctime;	//?
-    unsigned long	st_size;
-    long		st_blksize;	//?
-    long		st_blocks;	//?
-    unsigned char	st_attrib;
-    int			reserved1;	//
-    int			reserved2;	//
-    int			reserved3;	//
-    int			reserved4;	//
-    int			reserved5;	//
-    int			reserved6;	//
-};
-
-#else
-struct	stat
-    {
-    unsigned long	st_unknown_1;
+// CHDK 'stat' structure - does not match VxWorks or DryOS internal structs
+// Converted in stat function (generic/wrappers.c)
+// This is the minimal set of values now available from the firmware
+struct stat
+{
     unsigned long	st_attrib;
     unsigned long	st_size;
     unsigned long	st_ctime;
     unsigned long	st_mtime;
-    unsigned long	st_unknown_2;
 };
-#endif//CAM_DRYOS_2_3_R39
-
-#endif //CAM_DRYOS
 
 extern int rand(void);
 extern void* srand(unsigned int seed);
@@ -135,7 +77,6 @@ extern void *memset(void *s, int c, int n);
 extern int memcmp(const void *s1, const void *s2, long n);
 extern void *memchr(const void *s, int c, int n);
 
-
 extern void SleepTask(long msec);
 extern long taskLock();
 extern long taskUnlock();
@@ -151,6 +92,9 @@ extern long mkdir_if_not_exist(const char *dirname);
 extern int rename(const char *oldname, const char *newname);
 extern int chdir(char *pathname);
 extern int remove(const char *name);
+extern int stat (const char *name, struct stat *pStat);
+
+extern unsigned char SetFileAttributes(const char* fn, unsigned char attr);
 
 // reverse engineered file struct. Appears to be valid for both vxworks and dryos
 // don't use this directly unless you absolutely need to
@@ -177,13 +121,6 @@ extern long feof(FILE *file);
 extern long ftell(FILE *file);
 extern char *fgets(char *buf, int n, FILE *f);
 
-/**
- * No STUBS!
- * You can't use these two directly from THUMB code (core), only from platform.
- */
-extern int fprintf(FILE *fd, char*buf, ...);
-extern int printf(char *buf, ...);
-
 extern void msleep(long msec);
 extern long task_lock();
 extern long task_unlock();
@@ -195,6 +132,8 @@ extern const char *strerror(int num);
 extern int errnoOfTaskGet(int tid);
 #define errno (errnoOfTaskGet(0))
 
+//-------------------------------------------------------------------------------------
+
 #define DOS_ATTR_RDONLY         0x01            /* read-only file */
 #define DOS_ATTR_HIDDEN         0x02            /* hidden file */
 #define DOS_ATTR_SYSTEM         0x04            /* system file */
@@ -202,57 +141,28 @@ extern int errnoOfTaskGet(int tid);
 #define DOS_ATTR_DIRECTORY      0x10            /* entry is a sub-directory */
 #define DOS_ATTR_ARCHIVE        0x20            /* file subject to archiving */
 
-#if !CAM_DRYOS
-struct dirent {
-    char                d_name[100];
-};
-#else
-// NOTE this is not complete and may not be accurate for all versions
-struct dirent {
-    char                d_name[13];
-    unsigned long	unk1;
-    unsigned char 	attrib;
-    unsigned long 	size;
-    unsigned long	time1;
-    unsigned long	time2;
-    unsigned long	time3;
-};
-#endif
+//-------------------------------------------------------------------------------------
 
-#if !CAM_DRYOS
-typedef struct {
-    unsigned int        fd;
-    unsigned int        loc;
-    struct dirent       dir;
-} DIR;
-#else
-// structure returned by dryos
-// actual size may vary depending on version
-typedef struct {
-    int fh;
-    int unk[4];
-} DIR_dryos;
+// CHDK structs for opendir/readdir/closedir
+// Conversion to/from camera specific versions done in wrapper code
+struct dirent   // Returned from readdir
+{
+    char            d_name[100];    // We only use the name value
+};
 
-// struct returned by our wrappers around opendir
-typedef struct {
-    DIR_dryos *dh;
-    union {
-        struct dirent de;
-#ifdef CAM_DRYOS_2_3_R39
-        char de_buf[64];
-#else
-        char de_buf[40];
-#endif
-    };
+// Returned from opendir
+typedef struct
+{
+    void            *cam_DIR;   // Camera specific internal DIR structure
+    struct dirent   dir;        // Last info returned from readdir
 } DIR;
-#endif
 
 extern DIR*           opendir (const char* name);
 extern struct dirent* readdir (DIR*);
 extern int            closedir (DIR*);
-extern void           rewinddir (DIR*);
-extern int            stat (const char *name, struct stat *pStat);
+//extern void           rewinddir (DIR*);   // Not used
 
+//-------------------------------------------------------------------------------------
 
 struct tm
 	{

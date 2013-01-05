@@ -1,4 +1,5 @@
 #include "platform.h"
+#include "raw_buffer.h"
 #include "conf.h"
 #include "stdlib.h"
 #include "raw.h"
@@ -73,7 +74,7 @@ int raw_savefile() {
         started();
         fd = open(fn, O_RDONLY, 0777);
         if (fd>=0) {
-            read(fd, rawadr, hook_raw_size());
+            read(fd, rawadr, camera_sensor.raw_size);
             close(fd);
         }
 #ifdef OPT_CURVES
@@ -150,13 +151,13 @@ int raw_savefile() {
             else 
             {
                 // Write active RAW buffer
-                write(fd, (char*)(((unsigned long)rawadr)|CAM_UNCACHED_BIT), hook_raw_size());
+                write(fd, (char*)(((unsigned long)rawadr)|CAM_UNCACHED_BIT), camera_sensor.raw_size);
             }
             close(fd);
             utime(fn, &t);
 #else
             // Write active RAW buffer
-            write(fd, (char*)(((unsigned long)rawadr)|CAM_UNCACHED_BIT), hook_raw_size());
+            write(fd, (char*)(((unsigned long)rawadr)|CAM_UNCACHED_BIT), camera_sensor.raw_size);
             close(fd);
             utime(fn, &t);
 #endif
@@ -334,21 +335,4 @@ int make_pixel_list(char * ptr, int size) {
         if (*ptr) ++ptr;
     }
 	return 0;
-}
-
-int pow_calc( int mult, int x, int x_div, int y, int y_div)
-{
-	return pow_calc_2( mult, x, x_div, y, y_div);
-}
-
-int pow_calc_2( int mult, int x, int x_div, double y, int y_div)
-{
-	double x1 = x;
-	if ( x_div != 1 ) { x1=x1/x_div;}
-	if ( y_div != 1 ) { y=y/y_div;}
-
-	if ( mult==1 )
-		return pow( x1, y );
-                else
-		return mult	* pow( x1, y );
 }

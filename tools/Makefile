@@ -6,7 +6,7 @@ SKIPPLATFORMCHECK=1
 include $(topdir)makefile.inc
 include $(topdir)version.inc
 
-OBJS=pakwif.o finsig_$(PLATFORMOS).o gensig_$(PLATFORMOS).o dumpchk.o dancingbits.o rawconvert.o dumputil.o find_levent.o find_eventproc.o yuvconvert.o font_8x16_pack.o makelang.o
+OBJS=pakwif.o finsig_vxworks.o finsig_dryos.o gensig_vxworks.o gensig_dryos.o dumpchk.o dancingbits.o rawconvert.o dumputil.o find_levent.o find_eventproc.o yuvconvert.o font_8x16_pack.o makelang.o
 
 ifdef OPT_FI2
   SUBDIRS=packfi2
@@ -15,14 +15,14 @@ endif
 SUBDIRS+=elf2flt
 
 
-all: makeexport$(EXE) pakwif$(EXE) finsig_$(PLATFORMOS)$(EXE) dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE)
+all: makeexport$(EXE) pakwif$(EXE) finsig_vxworks$(EXE) finsig_dryos$(EXE) dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE)
 
 # not needed by batch builds, not built by default
 extras: rawconvert$(EXE) yuvconvert$(EXE) find_levent$(EXE) find_eventproc$(EXE) dumpchk$(EXE)
 
 %.o: %.c
 	@echo $< \-\> $@
-	$(HOSTCC) $(HOSTCFLAGS) -DPLATFORMOS_$(PLATFORMOS) -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -c -o $@ $<
+	$(HOSTCC) $(HOSTCFLAGS) -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -c -o $@ $<
 
 .dep/%.d: %.c .dep
 	$(HOSTCC) $(HOSTCFLAGS) -MM $< > $@.$$$$; \
@@ -37,11 +37,19 @@ pakwif$(EXE): pakwif.o
 	@echo $< \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
-finsig_$(PLATFORMOS)$(EXE): finsig_$(PLATFORMOS).o
+finsig_vxworks$(EXE): finsig_vxworks.o
 	@echo $< \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
-gensig_$(PLATFORMOS)$(EXE): gensig_$(PLATFORMOS).o
+gensig_vxworks$(EXE): gensig_vxworks.o
+	@echo $< \-\> $@
+	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
+
+finsig_dryos$(EXE): finsig_dryos.o
+	@echo $< \-\> $@
+	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
+
+gensig_dryos$(EXE): gensig_dryos.o
 	@echo $< \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
@@ -78,7 +86,7 @@ makelang$(EXE): makelang.o
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
 clean:
-	rm -f *.o makeexport$(EXE) pakwif$(EXE) finsig_$(PLATFORMOS)$(EXE) dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE) gensig_$(PLATFORMOS)$(EXE)
+	rm -f *.o makeexport$(EXE) pakwif$(EXE) finsig_dryos$(EXE) finsig_vxworks$(EXE) dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE) gensig_dryos$(EXE) gensig_vxworks$(EXE)
 #	if [ -s sig_ref_vxworks_1.bin ] && [ -s sig_ref_vxworks_2.bin ] && [ -s sig_ref_vxworks_3.bin ] ; then \
 #	  rm -f signatures_vxworks.h ; \
 #	fi
@@ -168,7 +176,8 @@ sig_ref_dryos_11.bin:
 sig_ref_dryos_12.bin:
 	touch sig_ref_dryos_12.bin
 
-finsig_$(PLATFORMOS).o: finsig_$(PLATFORMOS).c signatures_$(PLATFORMOS).h
+finsig_vxworks.o: finsig_vxworks.c signatures_vxworks.h
+finsig_dryos.o: finsig_dryos.c signatures_dryos.h
 
 font_8x16_pack.o: font_8x16_pack.c ../lib/font/font_8x16_uni.h
 

@@ -11,7 +11,7 @@ all: fi2enc$(EXE)
 
 %.o: %.c
 	@echo $< \-\> $@
-	$(HOSTCC) $(HOSTCFLAGS) -DPLATFORMOS_$(PLATFORMOS) -c -o $@ $<
+	$(HOSTCC) $(HOSTCFLAGS) -c -o $@ $<
 
 .dep/%.d: %.c .dep
 	$(HOSTCC) $(HOSTCFLAGS) -MM $< > $@.$$$$; \
