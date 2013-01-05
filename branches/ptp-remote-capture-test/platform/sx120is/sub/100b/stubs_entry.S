@@ -25,6 +25,7 @@
 //NSTUB(SetScriptMode                         ,0xffc65c00) //101        *** != 0xffc63b40
 //NSTUB(kbd_pwr_off                           ,0xffc36f50) //  2 64%    *** != 0xffc36f60
 NSTUB(kbd_pwr_on                              ,0xffc36f10) //  2 82%
+//NSTUB(stat                                  ,0xffc13ae0) //109        *** != 0xffc13a9c
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffc69820 -> ffc66244 -> ffd38774 -> ffe1dae4 -> ffeec334
@@ -218,7 +219,6 @@ NSTUB(read                                    ,0xffc09894) //101
 NSTUB(reboot_fw_update                        ,0xffe027fc) //106
 NSTUB(set_control_event                       ,0xffc65804) //111
 NSTUB(srand                                   ,0xffc0ccb8) //  1
-NSTUB(stat                                    ,0xffc13ae0) //109
 NSTUB(strcat                                  ,0xffc75668) //  1
 NSTUB(strchr                                  ,0xffc756f0) //  1
 NSTUB(strcmp                                  ,0xffc0cb54) //101
