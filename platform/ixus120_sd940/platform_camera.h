@@ -51,6 +51,9 @@
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              3
 
+    #undef  CAM_MENU_BORDERWIDTH
+    #define CAM_MENU_BORDERWIDTH            10
+
     #define CAM_COLORMATRIX1                               \
       827547, 1000000, -290458, 1000000, -126086, 1000000, \
      -12829,  1000000, 530507,  1000000, 50537,   1000000, \
