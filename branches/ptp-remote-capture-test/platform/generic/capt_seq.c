@@ -263,104 +263,49 @@ void __attribute__((naked,noinline)) capt_seq_hook_set_nr()
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
 // wrapper functions for use in filewritetask
 #ifdef CAM_DRYOS
-void __attribute__((naked,noinline)) fwt_open () {
-/*
- * R3 is free to use
- */
-asm volatile (
-      "LDR R3, =ignore_current_write\n"
-      "LDR R3, [R3]\n"
-      "CMP R3, #0\n"
-      "LDRNE R2, =current_write_ignored\n" // safe, as Open() won't be called
-      "STRNE R3, [R2]\n"
-      "MOVNE R0, #0xFF\n"   // fake, invalid file descriptor
-      "BXNE LR\n"
-      "BEQ _Open\n"        // no interception
-    );
+int fwt_open(const char *name, int flags, int mode) {
+    if (!ignore_current_write) {
+        return _Open(name, flags, mode);
+    }
+    current_write_ignored=1;
+    return 255; // fake, invalid file descriptor
 }
 
-void __attribute__((naked,noinline)) fwt_write () {
-/*
- * R3 is free to use
- */
-asm volatile (
-      "LDR R3, =current_write_ignored\n"
-      "LDR R3, [R3]\n"
-      "CMP R3, #0\n"
-      "MOVNE R0, R2\n"     // "everything's written"
-      "BXNE LR\n"
-      "BEQ _Write\n"       // no interception
-    );
+int fwt_write(int fd, const void *buffer, long nbytes) {
+    if (!current_write_ignored) {
+        return _Write(fd, buffer, nbytes);
+    }
+    return (int)nbytes; // "everything's written"
 }
 
 #ifdef CAM_EXTENDED_FILEWRITETASK
-void __attribute__((naked,noinline)) fwt_lseek () {
-/*
- * R3 is free to use
- */
-asm volatile (
-      "LDR R3, =current_write_ignored\n"
-      "LDR R3, [R3]\n"
-      "CMP R3, #0\n"
-      "MOVNE R0, R1\n"     // "file position set to the requested value"
-      "BXNE LR\n"
-      "BEQ _Lseek\n"       // no interception
-    );
+int fwt_lseek(int fd, long offset, int whence) {
+    if (!current_write_ignored) {
+        return _Lseek(fd, offset, whence);
+    }
+    return (int)offset; // "file position set to the requested value"
 }
 #endif // CAM_EXTENDED_FILEWRITETASK
 
-void __attribute__((naked,noinline)) fwt_close () {
-/*
- * R1, R2, R3 is free to use
- */
-asm volatile (
-      "STR LR, [SP, #-4]!\n"
-      "LDR R2, =current_write_ignored\n"
-      "LDR R3, [R2]\n"
-      "CMP R3, #0\n"
-      "MOVNE R0, #0\n"      // return 0
-      "BLEQ _Close\n"        // no interception
-    );
-/*
- * following operation depends on whether the overridden PT_CompleteFileWrite is available
- */
-asm volatile (
-      "LDR R3, =no_pt_completefilewrite\n"
-      "LDR R1, [R3]\n"
-      "CMP R1, #0\n"
-      "LDRNE R3, =imagesavecomplete\n"
-      "MOVNE R1, #1\n"      
-      "STRNE R1, [R3]\n"    // image saved
-    );
-/*
- * following operation will act faster than PT_CompleteFileWrite
- */
-asm volatile (
-      "MOV R1, #0\n"
-      "LDR R2, =ignore_current_write\n"
-      "STR R1, [R2]\n"
-      "LDR R2, =current_write_ignored\n"
-      "STR R1, [R2]\n"
-    );
-asm volatile (
-      "LDR LR, [SP], #4\n"
-      "BX LR\n"
-    );
+int fwt_close (int fd) {
+    if (!current_write_ignored) {
+        return _Close(fd);
+    }
+    if (no_pt_completefilewrite) {
+        imagesavecomplete=1;
+    }
+    ignore_current_write=0;
+    current_write_ignored=0;
+    return 0;
 }
 #else
 /*
  * helper function for VxWorks camera
- */
-void __attribute__((naked,noinline)) fwt_after_close () {
-/*
  * to be used when imagesavecomplete handling is needed
  */
-asm volatile (
-      "LDR R3, =imagesavecomplete\n"
-      "MOV R2, #1\n"      
-      "STR R2, [R3]\n"    // image saved
-      "BX LR\n"
-    );
+int fwt_after_close (int param) {
+    imagesavecomplete=1;
+    return param;
 }
 #endif //CAM_DRYOS
 #endif //CAM_HAS_FILEWRITETASK_HOOK
