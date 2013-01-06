@@ -1,0 +1,49 @@
+#######################################################################
+#location;latitude xxx.x°=xxxx;longitude xxx.x°=xxxx;local time +/-UTC#
+#######################################################################
+Berlin;525;135;1
+Kiel;543;101;1
+Rostock;540;121;1
+Schwerin;536;113;1
+Lübeck;535;104;1
+Hamburg;533;100;1
+Bremen;530;88;1
+Hannover;523;97;1
+Magdeburg;521;116;1
+Leipzig;513;123;1
+Dresden;510;137;1
+Köln;509;69;1
+Koblenz;503;76;1
+Mainz;500;82;1
+Frankfurt;501;86;1
+Nürnberg;494;110;1
+Saarbrücken;492;70;1
+Regensburg;490;121;1
+Stuttgart;487;91;1
+Freiburg;479;78;1
+München;481;115;1
+#
+London;513;0;0
+Wien;482;163;1
+Prag;500;144;1
+Warschau;522;210;1
+Maribor;465;156;1
+Zagreb;458;159;1
+Bern;469;74;1
+Paris;488;23;1
+Luxemburg;498;61;1
+Brüssel;508;43;1
+Amsterdam;523;48;1
+Kopenhagen;556;125;1
+Rom;419;124;1
+Madrid;404;-37;1
+Oslo;599;107;1
+Stockholm;593;180;1
+Helsinki;601;249;2
+Lahti;609;256;2
+Las Palmas;281;-154;0
+Rio de Janeiro;-229;-432;-3
+Sydney;-338;1512;10
+New York;407;-740;-5
+Tokio;356;1396;9
+Singapur;13;1038;7
