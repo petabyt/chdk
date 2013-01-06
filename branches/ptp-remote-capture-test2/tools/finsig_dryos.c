@@ -1186,6 +1186,7 @@ func_entry  func_names[] =
 
     { "task_CaptSeq" },
     { "task_ExpDrv" },
+    { "task_FileWrite", 0, 1 },
     { "task_InitFileModules" },
     { "task_MovieRecord" },
     { "task_PhySw", 0, 1 },
@@ -1500,6 +1501,7 @@ string_sig string_sigs[] = {
 	{ 7, "task_PhySw", "PhySw", 1 },
 	{ 7, "task_RotaryEncoder", "RotaryEncoder", 1 },
 	{ 7, "task_RotaryEncoder", "RotarySw", 1 },
+	{ 7, "task_FileWrite", "FileWriteTask", 1 },
 	
 	{ 8, "WriteSDCard", "Mounter.c", 0 }, 
 
@@ -1525,6 +1527,7 @@ string_sig string_sigs[] = {
 	{ 10, "task_PhySw", "PhySw", 1 },
 	{ 10, "task_RotaryEncoder", "RotaryEncoder", 1 },
 	{ 10, "task_RotaryEncoder", "RotarySw", 1 },
+	{ 10, "task_FileWrite", "FileWriteTask", 1 },
 
 	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
 	{ 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,				   5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },

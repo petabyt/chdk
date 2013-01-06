@@ -39,6 +39,14 @@ extern void load_chdk_palette();
 #endif
 /******************************************************************/
 
+/******************************************************************/
+#ifdef CAM_HAS_FILEWRITETASK_HOOK
+char *hook_yuv_shooting_buf_addr();
+int hook_yuv_shooting_buf_width();
+int hook_yuv_shooting_buf_height();
+#endif
+/******************************************************************/
+int is_image_save_complete();
 #if defined(CAM_DRAW_EXPOSITION)
     char* shooting_get_tv_str();
     char* shooting_get_av_str();
@@ -60,6 +68,10 @@ int screen_rotated(void);
 #endif
 
 /******************************************************************/
+//experimental
+int register_pt_hooks();
+void supported_pt_completefilewrite();
+void image_save_completed();
 
 #if CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 extern void UnsetZoomForMovie();

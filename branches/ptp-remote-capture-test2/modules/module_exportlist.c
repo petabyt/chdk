@@ -40,6 +40,7 @@
 #include "lens.h"
 #include "action_stack.h"
 #include "console.h"
+#include "remotecap.h"
 
 #include "modules.h"
 #include "module_load.h"
@@ -429,6 +430,9 @@ extern long shutter_open_tick_count; // defined in platform/generic/capt_seq.c
     ptp_script_write_msg,
     ptp_script_read_msg,
     ptp_script_write_error_msg,
+
+    remotecap_get_target_support,
+    remotecap_set_target,
 }
 #endif
 
