@@ -275,6 +275,12 @@ void hook_raw_install();
 void hook_raw_save_complete();
 
 /******************************************************************/
+#ifdef CAM_HAS_FILEWRITETASK_HOOK
+char *hook_yuv_shooting_buf_addr();
+int hook_yuv_shooting_buf_width();
+int hook_yuv_shooting_buf_height();
+#endif
+/******************************************************************/
 
 long lens_get_zoom_pos();
 void lens_set_zoom_pos(long newpos);
@@ -292,6 +298,7 @@ int shooting_in_progress();
 int shooting_is_flash();
 int shooting_is_flash_ready();
 short shooting_get_flash_mode();
+int is_image_save_complete();
 
 
 /******************************************************************/
@@ -426,7 +433,11 @@ int screen_opened(void);
 // 0 not rotated, non-zero rotated
 int screen_rotated(void);
 #endif
-
+/******************************************************************/
+//experimental
+int register_pt_hooks();
+void supported_pt_completefilewrite();
+void image_save_completed();
 /******************************************************************/
 void clear_values();
 /******************************************************************/

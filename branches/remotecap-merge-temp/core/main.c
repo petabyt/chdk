@@ -346,6 +346,10 @@ void core_spytask()
 #endif
 
     shooting_init();
+    if ( !register_pt_hooks() )
+    {
+        supported_pt_completefilewrite();
+    }
 
     while (1)
     {
@@ -396,7 +400,8 @@ void core_spytask()
 #endif
         }
 
-        if ((state_shooting_progress == SHOOTING_PROGRESS_PROCESSING) && (!shooting_in_progress()))
+        if ((state_shooting_progress == SHOOTING_PROGRESS_PROCESSING) 
+            && (!shooting_in_progress()) && is_image_save_complete())
         {
             state_shooting_progress = SHOOTING_PROGRESS_DONE;
             if (raw_need_postprocess) raw_postprocess();

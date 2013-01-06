@@ -3,6 +3,8 @@
 #ifndef DNG_H
 #define DNG_H
 
+#include "remotecap.h"
+
 // This is to minimize export list to different modules
 struct libdng_sym {
 	int  version;
@@ -14,6 +16,10 @@ struct libdng_sym {
 
 	void (*convert_dng_to_chdk_raw)(char* fn);
 	void (*write_dng)(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit);
+
+    // added in module API version 1.1
+	void (*create_dng_for_ptp)(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, unsigned long uncachedbit, int startline, int linecount);
+	void (*free_dng_for_ptp)(char* rawadr, char* altrawadr);
 };
 
 // Defines of exported to chdk symbols
@@ -42,6 +48,8 @@ struct libdng_sym {
 
     extern void unload_bad_pixels_list_b(void);
 
+    extern void create_dng_for_ptp(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, unsigned long uncachedbit, int startline, int linecount);
+    extern void free_dng_for_ptp(char* rawadr, char* altrawadr);
 #endif
 
 extern int module_convert_dng_to_chdk_raw(char* fn);		// Return: 0-fail, 1-ok
