@@ -2,7 +2,8 @@
 #include "platform.h"
 #include "core.h"
 
-static long *nrflag = (long*)0xe7d8; // S95 100e: FFAF9528
+static long *nrflag = (long*)(0x757c+0x08);  // Found @ ff98e1fc & ff98e214
+#define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto
 
 #include "../../../generic/capt_seq.c"
 
