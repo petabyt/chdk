@@ -78,22 +78,25 @@
 
     #define CAM_EXT_TV_RANGE                1
     
-    #undef CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              10
-    #undef CAM_HAS_ERASE_BUTTON
-    #define  CAM_SHOW_OSD_IN_SHOOT_MENU     1
+    #undef  CAM_BITMAP_PALETTE
+    #define CAM_BITMAP_PALETTE              13
+    #define CAM_LOAD_CUSTOM_COLORS          1           // Enable loading CHDK colors into the camera palette memory
+    #define CHDK_COLOR_BASE                 0xA8        // Start color index for CHDK colors loaded into camera palette.
+
+    #undef  CAM_HAS_ERASE_BUTTON
+    #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
     #define CAM_HAS_VARIABLE_ASPECT         1
-    #undef CAM_USES_ASPECT_CORRECTION
+    #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1
-    #undef CAM_SCREEN_WIDTH
-    #undef CAM_BITMAP_WIDTH
-    #undef CAM_BITMAP_HEIGHT
+    #undef  CAM_SCREEN_WIDTH
+    #undef  CAM_BITMAP_WIDTH
+    #undef  CAM_BITMAP_HEIGHT
     #define CAM_SCREEN_WIDTH                480 // Width of bitmap screen in CHDK co-ordinates
     #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
     #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
 
-    #undef EDGE_HMARGIN
+    #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                    10
 
 
