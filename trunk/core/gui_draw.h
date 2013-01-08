@@ -505,7 +505,7 @@
 
 #elif CAM_BITMAP_PALETTE==10
 
-// Used by :- SX220HS, SX230HS, IXUS220_ELPH300HS, IXUS230_ELPH310HS
+// Used by :- IXUS220_ELPH300HS, IXUS230_ELPH310HS
 
     #define COLOR_WHITE                 0x01
     #define COLOR_RED                   0x9f
@@ -640,7 +640,7 @@
 
 #elif CAM_BITMAP_PALETTE==13
 
-// Used by :- G12, SX30, SX40HS, IXUS310_ELPH500HS, SX200IS, A1200
+// Used by :- G12, IXUS310_ELPH500HS, SX30, SX40HS, SX200IS, SX220HS, SX230HS, SX240HS, SX260HS
 
     #define COLOR_WHITE                 0x01
     #define COLOR_GREY_DK               0x1a
