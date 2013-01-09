@@ -35,7 +35,7 @@ extern int get_usb_bit() ;
 int sync_counter=0;
 int usb_sync_wait = 0 ;
 int usb_remote_active=0 ;
-int stime_stamp = 0 ;
+int bracketing_timeout = 0 ;
 int usb_power=0;
 int usb_count=0;
 int logic_module_usb_count = 0 ;
@@ -494,7 +494,7 @@ int handle_usb_remote()
 					}
 					else
 					{
-						sprintf(buf,"RMT=%d drv=%d lgc=%d  sync=%d  tmo=%d  ", usb_remote_active, driver_state, logic_module_state, usb_sync_wait, (stime_stamp?get_tick_count()-stime_stamp:0));
+						sprintf(buf,"RMT=%d drv=%d lgc=%d  sync=%d  tmo=%d  ", usb_remote_active, driver_state, logic_module_state, usb_sync_wait, (bracketing_timeout?bracketing_timeout-get_tick_count():0));
 						draw_string(2,48,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
 					}
 
