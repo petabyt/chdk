@@ -1426,6 +1426,8 @@ static void shooting_subject_distance_bracketing(int when)
 void bracketing_reset()
 {
     memset(&bracketing,0,sizeof(bracketing));
+    memset(&photo_param_put_off,0,sizeof(photo_param_put_off));
+    photo_param_put_off.tv96=PHOTO_PARAM_TV_NONE;
 }
 
 void bracketing_step(int when)
