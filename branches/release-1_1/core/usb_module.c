@@ -532,7 +532,7 @@ void usb_shoot_module_bracketing()
 			break ;
 
 		case LM_RELEASE :
-			if (( stime_stamp ) && ( current_time - stime_stamp > 5000 ) )
+			if (( stime_stamp ) && ( current_time - stime_stamp > 10000 ) )
 			{
 				 bracketing_reset() ;
 				 stime_stamp = 0 ;

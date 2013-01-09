@@ -1492,6 +1492,11 @@ void bracketing_reset()
     bracketing.subj_dist=0;
     bracketing.dsubj_dist=0;
     bracketing.type=0;
+    photo_param_put_off.av96=0;
+    photo_param_put_off.tv96=0;
+    photo_param_put_off.sv96=0;
+    photo_param_put_off.subj_dist=0;
+    photo_param_put_off.nd_filter=0;
 }
 
 void bracketing_step(int when)
