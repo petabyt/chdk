@@ -6,7 +6,7 @@
 #include "math.h"
 #include "levent.h"
 #include "stdlib.h"
-#include "ptp.h"
+#include "ptp_chdk.h"
 
 //----------------------------------------------------------------------------
 // Char Wrappers
@@ -94,6 +94,29 @@ long get_property_case(long id, void *buf, long bufsize)
 long set_property_case(long id, void *buf, long bufsize)
 {
     return _SetPropertyCase(id, buf, bufsize);
+}
+
+// FlashParamsTable entries point to this 16 byte structure
+typedef struct
+{
+    void*   data;   // Pointer to param data
+    short   unk1;
+    short   size;   // param size
+    short   unk2;
+    short   unk3;
+    short   unk4;
+    char    unk5;
+    char    unk6;
+} flashParam;
+
+short get_parameter_size(long id)
+{
+    extern flashParam* FlashParamsTable[];
+
+    if ((id >= 0) && (id < get_flash_params_count()))
+        return FlashParamsTable[id]->size;
+
+    return 0;
 }
 
 long get_parameter_data(long id, void *buf, long bufsize)

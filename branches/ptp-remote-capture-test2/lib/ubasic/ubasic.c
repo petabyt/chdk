@@ -788,7 +788,7 @@ jump_label(char * label)
     }
   }
   if (tokenizer_token() == TOKENIZER_ENDOFINPUT) {
-    if (state_kbd_script_run == 1) {  
+    if (camera_info.state.state_kbd_script_run == 1) {  
       DEBUG_PRINTF("Label %s not found", label);
       ubasic_error = UBASIC_E_UNK_LABEL;
     }

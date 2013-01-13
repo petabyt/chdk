@@ -242,7 +242,7 @@ void remotecap_free_hooks(int mode) {
         hook_wait[RC_WAIT_FWTASK] = 0;
         // allow raw hook to continue
         hook_wait[RC_WAIT_CAPTSEQTASK] = 0;
-        state_shooting_progress=SHOOTING_PROGRESS_PROCESSING; //is this still needed without shoot()?
+        camera_info.state.state_shooting_progress=SHOOTING_PROGRESS_PROCESSING; //is this still needed without shoot()?
     }
 }
 
@@ -272,7 +272,7 @@ int remotecap_raw_savefile(ptp_data_chunk *rawchunk, int startline, int linecoun
 
     if (conf.bad_pixel_removal) patch_bad_pixels();
 
-    state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
+    camera_info.state.state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
 
     started();
     

@@ -1,13 +1,9 @@
 #include "platform.h"
-#include "stdlib.h"
-#include "core.h"
-#include "keyboard.h"
 #include "touchscreen.h"
 #include "conf.h"
 #include "font.h"
 #include "lang.h"
 #include "fileutil.h"
-#include "gui.h"
 #include "gui_lang.h"
 #include "gui_draw.h"
 #include "gui_menu.h"
@@ -18,7 +14,6 @@
 #include "raw.h"
 #include "modules.h"
 #include "levent.h"
-#include "script.h"
 #ifdef CAM_HAS_GPS
 #include "gps.h"
 #endif
@@ -2095,7 +2090,7 @@ void gui_reset_alt_helper()
 
 static void gui_draw_alt_helper()
 {
-    if ((state_kbd_script_run != 0) || (console_displayed != 0))
+    if ((camera_info.state.state_kbd_script_run != 0) || (console_displayed != 0))
     {
         if (gui_helper_displayat <= get_tick_count())
             gui_set_need_restore();
@@ -2551,7 +2546,7 @@ void gui_activate_alt_mode()
 
 		extern gui_handler scriptGuiHandler;
         
-	    if (state_kbd_script_run)
+	    if (camera_info.state.state_kbd_script_run)
 	        gui_set_mode(&scriptGuiHandler);
 		else
 	        gui_set_mode(&altGuiHandler);
@@ -2564,7 +2559,7 @@ void gui_activate_alt_mode()
         // then enter user menu mode, unless a script was paused by exiting 
         // <ALT> mode when the script was running.
 	    gui_user_menu_flag = 0;
-	    if ((conf.user_menu_enable == 2) && !state_kbd_script_run) {
+	    if ((conf.user_menu_enable == 2) && !camera_info.state.state_kbd_script_run) {
 		    gui_menu_init(&user_submenu);
 		    gui_set_mode(&menuGuiHandler);
 		    gui_user_menu_flag = 1;

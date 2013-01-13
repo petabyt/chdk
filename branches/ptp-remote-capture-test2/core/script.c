@@ -15,8 +15,6 @@
 
 //-------------------------------------------------------------------
 
-int state_kbd_script_run;
-
 static long running_script_stack_name = -1;                 // ID of action_stack, which used to control script processing
 
 //-------------------------------------------------------------------
@@ -96,7 +94,7 @@ void script_console_add_line(long str_id)
 // Stack process function for running current script
 static void action_stack_AS_SCRIPT_RUN()
 {
-    if (state_kbd_script_run && libscriptapi)
+    if (camera_info.state.state_kbd_script_run && libscriptapi)
     {
         int rv = libscriptapi->script_run();
         if (rv != SCRIPT_RUN_RUNNING)
@@ -114,7 +112,7 @@ static void action_stack_AS_SCRIPT_RUN()
 
 long script_stack_start()
 {
-    state_kbd_script_run = SCRIPT_STATE_RAN;
+    camera_info.state.state_kbd_script_run = SCRIPT_STATE_RAN;
     running_script_stack_name = action_stack_create(&action_stack_AS_SCRIPT_RUN);
     return running_script_stack_name;
 }
@@ -133,11 +131,11 @@ static int gui_script_kbd_process()
     if (kbd_is_key_clicked(KEY_SHOOT_FULL))
     {
         script_console_add_line(LANG_CONSOLE_TEXT_INTERRUPTED);
-        if (state_kbd_script_run == SCRIPT_STATE_INTERRUPTED)
+        if (camera_info.state.state_kbd_script_run == SCRIPT_STATE_INTERRUPTED)
             script_end();
         else if (libscriptapi)
         {
-            state_kbd_script_run = SCRIPT_STATE_INTERRUPTED;
+            camera_info.state.state_kbd_script_run = SCRIPT_STATE_INTERRUPTED;
             if (libscriptapi->run_restore() == 0)
                 script_end();
         }
@@ -155,7 +153,7 @@ void gui_script_draw()
     if ((mode_get()&MODE_MASK) == MODE_REC || (mode_get()&MODE_MASK) == MODE_PLAY)
     {
         static int show_md_grid=0;
-        if (state_kbd_script_run) show_md_grid=5;
+        if (camera_info.state.state_kbd_script_run) show_md_grid=5;
         if (show_md_grid)
         {
             --show_md_grid;
@@ -204,7 +202,7 @@ void script_end()
 
 	shot_histogram_set(0);
     kbd_key_release_all();
-    state_kbd_script_run = SCRIPT_STATE_INACTIVE;
+    camera_info.state.state_kbd_script_run = SCRIPT_STATE_INACTIVE;
 
     conf_update_prevent_shutdown();
 

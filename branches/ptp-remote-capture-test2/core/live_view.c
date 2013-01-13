@@ -2,7 +2,7 @@
 #include "stdlib.h"
 #include "conf.h"
 #include "viewport.h"
-#include "ptp.h"
+#include "ptp_chdk.h"
 #include "live_view.h"
 
 /*

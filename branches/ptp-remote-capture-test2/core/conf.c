@@ -1,5 +1,4 @@
 #include "platform.h"
-#include "keyboard.h"
 #include "conf.h"
 #include "histogram.h"
 #include "font.h"
@@ -12,9 +11,6 @@
 #include "gui_menu.h"
 #include "gui_user_menu.h"
 #include "core.h"
-#include "stdlib.h"
-#include "script.h"
-
 
 //-------------------------------------------------------------------
 #define CONF_FILE  "A/CHDK/CCHDK3.CFG"
@@ -22,9 +18,6 @@
 
 //-------------------------------------------------------------------
 Conf conf = { MAKE_API_VERSION(2,2) };
-
-int state_shooting_progress = SHOOTING_PROGRESS_NONE;
-int state_save_raw_nth_only;
 
 // reyalp: putting these in conf, since the conf values are lookups for them
 // prefixes and extentions available for raw images (index with conf.raw_prefix etc)
@@ -536,7 +529,7 @@ doesn't really belong in conf but not clear where else it should go
 void conf_update_prevent_shutdown(void) {
     if(conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALWAYS 
         || (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT && gui_get_mode() != GUI_MODE_NONE)
-        || (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT_SCRIPT && state_kbd_script_run)) {
+        || (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT_SCRIPT && camera_info.state.state_kbd_script_run)) {
         disable_shutdown();
     } else {
         enable_shutdown();

@@ -462,10 +462,6 @@ extern Conf conf;
 
 extern void user_menu_restore();
 
-
-extern int state_shooting_progress;
-extern int state_save_raw_nth_only;
-
 extern void conf_save();
 extern void conf_restore();
 extern void conf_load_defaults();
