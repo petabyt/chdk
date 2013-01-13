@@ -96,6 +96,8 @@ typedef struct {
     int bm_desc_start;
 } lv_data_header;
 
+#ifndef CHDK_PTP_PROTOCOL_ONLY
 extern int live_view_get_data(ptp_data *data, int flags);
+#endif
 
 #endif // __LIVE_VIEW_H
