@@ -1,5 +1,0 @@
-open	Module use open(), which is platform-dependend. Please use safe_open() from "stdlib_unified.h"
-opendir	Module use opendir(), which is platform-dependend. Please use safe_*dir() family from "stdlib_unified.h"
-readdir	Module use readdir(), which is platform-dependend. Please use safe_*dir() family from "stdlib_unified.h"
-closedir	 Module use closedir(), which is platform-dependend. Please use safe_*dir() family from "stdlib_unified.h"
-stat	Module use stat(), which is platform-dependend. Please use safe_stat() from "stdlib_unified.h"
