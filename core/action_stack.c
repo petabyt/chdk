@@ -334,7 +334,7 @@ static void action_stack_AS_WAIT_SAVE()
     {
         action_pop_func();
         if (libscriptapi)
-            libscriptapi->set_as_ret((state_shooting_progress == SHOOTING_PROGRESS_NONE) ? 0 : 1);
+            libscriptapi->set_as_ret((camera_info.state.state_shooting_progress == SHOOTING_PROGRESS_NONE) ? 0 : 1);
     }
 }
 
@@ -354,7 +354,7 @@ void action_stack_AS_SHOOT()
 {
     action_pop_func();
 
-    state_shooting_progress = SHOOTING_PROGRESS_NONE;
+    camera_info.state.state_shooting_progress = SHOOTING_PROGRESS_NONE;
 
     // XXX FIXME find out how to wait to jpeg save finished
     action_push_delay(conf.script_shoot_delay*100);

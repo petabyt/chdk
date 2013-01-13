@@ -33,46 +33,6 @@ extern void drv_self_unhide(void);
 
 /******************************************************************/
 
-#ifdef CAM_LOAD_CUSTOM_COLORS
-// Color palette function
-extern void load_chdk_palette();
-#endif
-/******************************************************************/
-
-#if defined(CAM_DRAW_EXPOSITION)
-    char* shooting_get_tv_str();
-    char* shooting_get_av_str();
-#endif
-/******************************************************************/
-
-// not used. Right now this is just to preserve code from earlier version of mode_get()
-// in case we want to check play/rec switch state in the future.
-// WARNING: it isn't known if all variants of this check the switch state or some other bit.
-// should return 0 is switch is in play position, non-zero otherwise
-//int rec_switch_state(void);
-
-// swivel screen state.
-#ifdef CAM_SWIVEL_SCREEN
-// 0 not open, non-zero open
-int screen_opened(void);
-// 0 not rotated, non-zero rotated
-int screen_rotated(void);
-#endif
-
-/******************************************************************/
-
-#if CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
-extern void UnsetZoomForMovie();
-#endif
-#ifdef CAM_AV_OVERRIDE_IRIS_FIX
-extern int MoveIrisWithAv(short*);
-#endif
-#if CAM_EV_IN_VIDEO
-extern void ExpCtrlTool_StartContiAE(int, int);
-extern void ExpCtrlTool_StopContiAE(int, int);
-extern short SetAE_ShutterSpeed(short* tv);
-#endif
-
 // debug logging function - see generic wrappers.c to adjust destination
 // WARNING fixed length buffer
 extern void dbg_printf(char *fmt,...);
@@ -84,6 +44,8 @@ extern void dbg_printf(char *fmt,...);
 #else
 #define DBGPRINTF(...)
 #endif
+
+/******************************************************************/
 
 #endif
 

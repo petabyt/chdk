@@ -111,7 +111,7 @@ const CapturemodeMap modemap[] = {
 //	
 //	asm volatile("STMFD   SP!, {R0-R12,LR}\n");
 //	
-//	if ((state_kbd_script_run) && (photo_param_put_off.sv96)) {
+//	if ((camera_info.state.state_kbd_script_run) && (photo_param_put_off.sv96)) {
 //		shooting_set_sv96(photo_param_put_off.sv96, SET_NOW);
 //		// photo_param_put_off.sv96 is not reset here, it will be reset in next call to shooting_expo_param_override
 //   }

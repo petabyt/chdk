@@ -129,15 +129,21 @@ typedef struct
     // Used to control communication between various tasks and modules
     struct
     {
-        int edge_state_draw;        // Current state of overlay (Live/Frozen/Pano)
-        int is_shutter_half_press;  // State of Shutter Half Press button
-        int auto_started;           // Set to 1 if script auto-started
-        int user_menu_has_changed;  // not saved to config file, used to tell code that file needs to be saved
-        int kbd_last_clicked;       // For scripts
+        int     edge_state_draw;            // Current state of overlay (Live/Frozen/Pano)
+        int     is_shutter_half_press;      // State of Shutter Half Press button
+        int     auto_started;               // Set to 1 if script auto-started
+        int     user_menu_has_changed;      // not saved to config file, used to tell code that file needs to be saved
+        int     kbd_last_clicked;           // For scripts
+        long    shutter_open_time;          // For DNG EXIF creation
+        long    shutter_open_tick_count;    // For DNG EXIF creation
+        int     state_shooting_progress;    // Holds current state when still image being processed
+        int     state_kbd_script_run;       // Script execution state
     } state;
 } _cam_info;
 
 extern _cam_info camera_info;
+
+extern void camera_info_init();
 
 //==========================================================
 

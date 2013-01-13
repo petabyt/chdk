@@ -218,3 +218,28 @@ _cam_info camera_info =
 };
 
 //==========================================================
+
+/*
+note, from tools/link-boot.ld
+    link_text_start = _start
+    link_data_start = link_text_end
+    link_bss_start = link_data_end
+    link_bss_end = _end
+*/
+extern long link_text_start;
+extern long link_data_start;
+extern long link_bss_start;
+extern long link_bss_end;
+
+// Initialise any camera_info values that need to be set at
+// startup
+void camera_info_init()
+{
+    camera_info.memisosize = MEMISOSIZE;
+    camera_info.text_start = (int)&link_text_start;
+    camera_info.data_start = (int)&link_data_start;
+    camera_info.bss_start = (int)&link_bss_start;
+    camera_info.bss_end = (int)&link_bss_end;
+}
+
+//==========================================================

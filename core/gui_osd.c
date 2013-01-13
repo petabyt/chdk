@@ -1155,7 +1155,6 @@ void gui_draw_debug_vals_osd()
         }
 
         if (conf.debug_display == DEBUG_DISPLAY_PARAMS){
-            extern long* FlashParamsTable[]; 
             char s[30];
             int count;
 
@@ -1165,7 +1164,7 @@ void gui_draw_debug_vals_osd()
                 if (p>=get_flash_params_count()) {
                     sprintf(osd_buf, "%3d: This parameter does not exists", p);
                 } else  {
-                    len=FlashParamsTable[p][1]>>16;
+                    len = get_parameter_size(p);
                     if ((len==1)||(len==2)||(len==4)){
                         get_parameter_data(p, &r, len); 
                         sprintf(osd_buf, "%3d: %30d :%2d ", p, r,len);
@@ -1239,7 +1238,7 @@ void gui_draw_osd()
             if (module_grids_load())
                 libgrids->gui_grid_draw_osd(1);
 
-        if ((((camera_info.state.is_shutter_half_press || state_kbd_script_run || shooting_get_common_focus_mode()) &&
+        if ((((camera_info.state.is_shutter_half_press || camera_info.state.state_kbd_script_run || shooting_get_common_focus_mode()) &&
               (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH)) ||
              ((mode_video || is_video_recording()) && conf.show_values_in_video)))
         {
@@ -1344,6 +1343,9 @@ static void gui_default_draw()
 #if CAM_DRAW_EXPOSITION
     if (camera_info.state.is_shutter_half_press && ((m&MODE_MASK)==MODE_REC) && ((m&MODE_SHOOTING_MASK))!=MODE_VIDEO_STD && (m&MODE_SHOOTING_MASK)!=MODE_VIDEO_COMPACT)
     {
+        extern char* shooting_get_tv_str();
+        extern char* shooting_get_av_str();
+
         strcpy(osd_buf,shooting_get_tv_str());
         strcat(osd_buf,"\"  F");
         strcat(osd_buf,shooting_get_av_str());

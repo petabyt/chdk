@@ -118,7 +118,7 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 void my_kbd_read_keys()
 {
 	// If script are running, replace PRINT button with DISPLAY
-	if (state_kbd_script_run) {
+	if (camera_info.state.state_kbd_script_run) {
 		int i;
 		for (i=0; keymap[i].hackkey; i++) {
 			if (keymap[i].hackkey == KEY_PRINT) {

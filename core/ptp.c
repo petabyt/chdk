@@ -2,12 +2,13 @@
 #include "stddef.h"
 #include "stdlib.h"
 #include "keyboard.h"
-#include "ptp.h"
+#include "ptp_chdk.h"
 #include "core.h"
 #include "task.h"
 #include "script.h"
 #include "action_stack.h"
 #include "live_view.h"
+#include "meminfo.h"
 #include "modules.h"
 
 static int buf_size=0;
@@ -629,12 +630,17 @@ static int handle_ptp(
     }
 
     case PTP_CHDK_GetDisplayData:
-        ptp.num_param = 1;
-        ptp.param1 = live_view_get_data(data,param2);
-        if(!ptp.param1) {
-            ptp.code = PTP_RC_GeneralError;
-            // send dummy data, otherwise error hoses connection
-            send_ptp_data(data,"\0",1);
+        {
+            extern int live_view_get_data(ptp_data *data, int flags);
+
+            ptp.num_param = 1;
+            ptp.param1 = live_view_get_data(data,param2);
+            if(!ptp.param1)
+            {
+                ptp.code = PTP_RC_GeneralError;
+                // send dummy data, otherwise error hoses connection
+                send_ptp_data(data,"\0",1);
+            }
         }
         break;
 

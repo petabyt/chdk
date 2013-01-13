@@ -22,7 +22,7 @@
 #include "histogram.h"
 #include "shot_histogram.h"
 #include "levent.h"
-#include "ptp.h"
+#include "ptp_chdk.h"
 #include "shooting.h"
 #include "clock.h"
 #include "viewport.h"
@@ -45,11 +45,7 @@
 #include "module_load.h"
 #include "module_exportlist.h"
 
-extern long* FlashParamsTable[]; 
 extern unsigned _ExecuteEventProcedure(const char *name,...);
-
-extern long shutter_open_time; // defined in platform/generic/capt_seq.c
-extern long shutter_open_tick_count; // defined in platform/generic/capt_seq.c
 
 // ATTENTION: DO NOT USE BRACES OR OWN /**/-STYLE COMMENTS ANYWHERE IN THIS FILE TO AVOID AUTO PARSING MISTAKES
 
@@ -85,7 +81,6 @@ extern long shutter_open_tick_count; // defined in platform/generic/capt_seq.c
             module_mpopup_init,
 			module_convert_dng_to_chdk_raw,
             module_grids_load,
-            module_find_symbol_address,
             module_restore_edge,
             module_save_edge,
             &module_colors,
@@ -261,12 +256,10 @@ extern long shutter_open_tick_count; // defined in platform/generic/capt_seq.c
 
             get_focal_length,
 			get_effective_focal_length,
+            get_parameter_size,
 			get_parameter_data,
 			get_property_case,
 
-            &shutter_open_time,
-            &shutter_open_tick_count,
-			&state_shooting_progress,
 			get_raw_pixel,
 			patch_bad_pixel,
 			
@@ -369,7 +362,6 @@ extern long shutter_open_tick_count; // defined in platform/generic/capt_seq.c
     shot_histogram_isenabled,
     shot_histogram_set,
     stat_get_vbatt,
-    &state_kbd_script_run,
     strcat,
     swap_partitions,
     get_part_count,
@@ -377,7 +369,6 @@ extern long shutter_open_tick_count; // defined in platform/generic/capt_seq.c
     get_active_partition,
     &zoom_points,
 
-    &FlashParamsTable,
     PostLogicalEventForNotPowerType,
     PostLogicalEventToUI,
     SetFileAttributes,

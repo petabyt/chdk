@@ -1274,7 +1274,9 @@ void shooting_set_nd_filter_state(short v, short is_now)
 void unlock_optical_zoom(void)
 {
 #if CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
-    if (conf.unlock_optical_zoom_for_video) UnsetZoomForMovie();
+    extern void UnsetZoomForMovie();
+    if (conf.unlock_optical_zoom_for_video)
+        UnsetZoomForMovie();
 #endif
 
 #if CAM_EV_IN_VIDEO
@@ -1373,6 +1375,7 @@ static void shooting_av_bracketing(int when)
     {
         shooting_set_av96_direct(value, when);
 #ifdef CAM_AV_OVERRIDE_IRIS_FIX
+        extern int MoveIrisWithAv(short*);
         MoveIrisWithAv(&value);
 #endif
     }
@@ -1445,7 +1448,7 @@ void shooting_bracketing(void)
         int m=mode_get()&MODE_SHOOTING_MASK;
         if (m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE) 
         {
-            if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
+            if (camera_info.state.state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
                 bracketing_reset() ;
             bracketing_step(SET_NOW) ;
         }
@@ -1461,7 +1464,7 @@ void shooting_bracketing(void)
 // caller must save regs
 int captseq_hack_override_active()
 {
-    if (state_kbd_script_run)
+    if (camera_info.state.state_kbd_script_run)
         if ( photo_param_put_off.tv96 != PHOTO_PARAM_TV_NONE || photo_param_put_off.sv96 )
             return 1;
     if(conf.override_disable==1)
@@ -1537,6 +1540,9 @@ int mode_get(void)
     mode = (rec_mode_active())?MODE_REC:MODE_PLAY;
 
 #ifdef CAM_SWIVEL_SCREEN
+    extern int screen_opened(void);     // 0 not open, non-zero open
+    extern int screen_rotated(void);    // 0 not rotated, non-zero rotated
+
     mode |= (screen_opened())?MODE_SCREEN_OPENED:0;
     mode |= (screen_rotated())?MODE_SCREEN_ROTATED:0;
 #endif
@@ -1569,6 +1575,9 @@ int get_ev_video(void)
 
 void set_ev_video_avail(int x)
 {
+    extern void ExpCtrlTool_StartContiAE(int, int);
+    extern void ExpCtrlTool_StopContiAE(int, int);
+
     if (ev_video_avail==x) return;
     ev_video_avail=x;
     if (x)
@@ -1596,6 +1605,7 @@ void set_ev_video(int x)
     if (tv>=tv_min_video)
     {
         ev_video=x;
+        extern short SetAE_ShutterSpeed(short* tv);
         SetAE_ShutterSpeed(&tv);
     }
 }
@@ -1607,7 +1617,7 @@ void set_ev_video(int x)
 
 void shooting_expo_param_override_thumb(void)
 {
-    if (((state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.tv96 != PHOTO_PARAM_TV_NONE))
+    if (((camera_info.state.state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.tv96 != PHOTO_PARAM_TV_NONE))
     {
         shooting_set_tv96_direct(photo_param_put_off.tv96, SET_NOW);
         photo_param_put_off.tv96=PHOTO_PARAM_TV_NONE;
@@ -1617,7 +1627,7 @@ void shooting_expo_param_override_thumb(void)
         shooting_set_tv96_direct(shooting_get_tv96_override_value(),SET_NOW);
     }
 
-    if (((state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.sv96))
+    if (((camera_info.state.state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.sv96))
     {
         shooting_set_sv96(photo_param_put_off.sv96, SET_NOW);
         photo_param_put_off.sv96=0;
@@ -1627,7 +1637,7 @@ void shooting_expo_param_override_thumb(void)
     else if (conf.autoiso_enable && shooting_get_flash_mode()/*NOT FOR FLASH AUTO MODE*/ && autoiso_and_bracketing_overrides_are_enabled)
         shooting_set_autoiso(shooting_get_iso_mode());
 
-    if (((state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.av96))
+    if (((camera_info.state.state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.av96))
     {
         shooting_set_av96_direct(photo_param_put_off.av96, SET_NOW);
         photo_param_put_off.av96=0;
@@ -1635,7 +1645,7 @@ void shooting_expo_param_override_thumb(void)
     else if (is_av_override_enabled)
         shooting_set_av96_direct(shooting_get_av96_override_value(), SET_NOW);
 
-    if (((state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.subj_dist))
+    if (((camera_info.state.state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.subj_dist))
     {
         shooting_set_focus(photo_param_put_off.subj_dist, SET_NOW);
         photo_param_put_off.subj_dist=0;
@@ -1644,7 +1654,7 @@ void shooting_expo_param_override_thumb(void)
         shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
 
 #if CAM_HAS_ND_FILTER
-    if ((state_kbd_script_run) && (photo_param_put_off.nd_filter))
+    if ((camera_info.state.state_kbd_script_run) && (photo_param_put_off.nd_filter))
     {
         shooting_set_nd_filter_state(photo_param_put_off.nd_filter, SET_NOW);
         photo_param_put_off.nd_filter=0;
@@ -1669,7 +1679,7 @@ void shooting_expo_param_override_thumb(void)
 // need to do this before exposure calc for ISO, as well as after on some cameras
 void shooting_expo_iso_override_thumb(void)
 {
-    if ((state_kbd_script_run) && (photo_param_put_off.sv96))
+    if ((camera_info.state.state_kbd_script_run) && (photo_param_put_off.sv96))
     {
         shooting_set_sv96(photo_param_put_off.sv96, SET_NOW);
         // photo_param_put_off.sv96 is not reset here, it will be reset in next call to shooting_expo_param_override
@@ -1680,7 +1690,7 @@ void shooting_expo_iso_override_thumb(void)
         shooting_set_autoiso(shooting_get_iso_mode());
 
 #if defined(CAM_HAS_ND_FILTER) && defined(CAM_HAS_NATIVE_ND_FILTER)
-    if ((state_kbd_script_run) && (photo_param_put_off.nd_filter))
+    if ((camera_info.state.state_kbd_script_run) && (photo_param_put_off.nd_filter))
     {
         shooting_set_nd_filter_state(photo_param_put_off.nd_filter, SET_NOW);
         //photo_param_put_off.nd_filter=0;

@@ -144,12 +144,12 @@ void my_kbd_read_keys()
 		physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
 		physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) | (kbd_mod_state[2] & KEYS_MASK2);
 
-		if ((jogdial_stopped==0) && !state_kbd_script_run)
+		if ((jogdial_stopped==0) && !camera_info.state.state_kbd_script_run)
 		{
 			jogdial_stopped=1;
 			get_jogdial_direction();
 		}
-		else if (jogdial_stopped && state_kbd_script_run) jogdial_stopped=0;
+		else if (jogdial_stopped && camera_info.state.state_kbd_script_run) jogdial_stopped=0;
 	}
 	
 	usb_remote_key() ;

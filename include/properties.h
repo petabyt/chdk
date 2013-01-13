@@ -34,6 +34,7 @@ extern long set_property_case(long id, void *buf, long bufsize);
 extern void shooting_set_prop(int id, int v);
 extern int shooting_get_prop(int id);
 
+extern short get_parameter_size(long id);
 extern long get_parameter_data(long id, void *buf, long bufsize);
 extern long set_parameter_data(long id, void *buf, long bufsize);
 
