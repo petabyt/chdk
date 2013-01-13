@@ -16,7 +16,7 @@ extern void wait_until_remote_button_is_released(void);
 
 extern int usb_remote_active;
 extern int usb_sync_wait;
-extern int stime_stamp;
+extern int bracketing_timeout;
 
 #undef USB_REMOTE_DEBUGGING
 //#define USB_REMOTE_DEBUGGING 1
@@ -147,5 +147,7 @@ enum GET_USB_PWR {						// input parameter for get_usb_power()
 #define CA1_FULL_WAIT_PRESS_TIMEOUT 30000
 
 #define DELAY_TIMEOUT 10000
+
+#define BRACKETING_TIMEOUT 10000
 
 #endif

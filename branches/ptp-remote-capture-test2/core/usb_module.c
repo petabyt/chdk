@@ -522,10 +522,10 @@ void usb_shoot_module_bracketing()
 			break ;
 
 		case LM_RELEASE :
-			if (( stime_stamp ) && ( current_time - stime_stamp > 5000 ) )
+			if (( bracketing_timeout ) && ( current_time > bracketing_timeout ) )
 			{
 				 bracketing_reset() ;
-				 stime_stamp = 0 ;
+				 bracketing_timeout = 0 ;
 			}
 			switch ( virtual_remote_state )
 			{
@@ -540,7 +540,7 @@ void usb_shoot_module_bracketing()
 				case REMOTE_FULL_PRESS:
 					kbd_key_press(KEY_SHOOT_FULL);
 					logic_module_state = LM_FULL_PRESS ;
-					stime_stamp	= current_time ;
+					bracketing_timeout = current_time + BRACKETING_TIMEOUT ;
 					break ;
 
 				default :
@@ -563,7 +563,7 @@ void usb_shoot_module_bracketing()
 				case REMOTE_FULL_PRESS:
 					kbd_key_press(KEY_SHOOT_FULL);
 					logic_module_state = LM_FULL_PRESS ;
-					stime_stamp	= current_time ;
+					bracketing_timeout = current_time + BRACKETING_TIMEOUT ;
 					break ;
 
 				default :

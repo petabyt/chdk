@@ -83,7 +83,10 @@
     #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              10
+    #define CAM_BITMAP_PALETTE              13
+    #define CAM_LOAD_CUSTOM_COLORS          1           // Enable loading CHDK colors into the camera palette memory
+    #define CHDK_COLOR_BASE                 0xA8        // Start color index for CHDK colors loaded into camera palette.
+
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
     #define CAM_HAS_VARIABLE_ASPECT         1
