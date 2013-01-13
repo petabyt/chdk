@@ -137,6 +137,7 @@ enum ptp_chdk_script_msg_status {
     PTP_CHDK_S_MSGSTATUS_BADID,  // specified ID is not running
 };
 
+#ifndef CHDK_PTP_PROTOCOL_ONLY
 typedef struct {
     int code;
     int sess_id;
@@ -179,5 +180,5 @@ int ptp_script_write_msg(ptp_script_msg *msg);
 ptp_script_msg* ptp_script_read_msg(void);
 ptp_script_msg* ptp_script_create_msg(unsigned type, unsigned subtype, unsigned datasize, const void *data);
 int ptp_script_write_error_msg(unsigned errtype, const char *err);
-
+#endif // CHDK_PTP_PROTOCOL_ONLY
 #endif // __CHDK_PTP_H
