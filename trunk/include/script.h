@@ -8,7 +8,6 @@
 
 //-------------------------------------------------------------------
 // Current stage of script processing
-extern int state_kbd_script_run;
 
 enum {	SCRIPT_STATE_INACTIVE=0,  // 0 - script is inactive now
 		SCRIPT_STATE_RAN,	      // 1 - script works now

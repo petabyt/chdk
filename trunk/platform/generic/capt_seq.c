@@ -15,8 +15,6 @@
 #endif
 
 static long raw_save_stage;
-volatile long shutter_open_time=0;      // for DNG EXIF creation
-volatile long shutter_open_tick_count;  // for DNG EXIF creation
 
 void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
 {
@@ -80,8 +78,8 @@ void __attribute__((naked,noinline)) capt_seq_hook_set_nr()
         break;
     };
 
- shutter_open_time=_time((void*)0);
- shutter_open_tick_count = get_tick_count();
+ camera_info.state.shutter_open_time = _time((void*)0);
+ camera_info.state.shutter_open_tick_count = get_tick_count();
 
  asm volatile("LDMFD   SP!, {R0-R12,PC}\n");
 }

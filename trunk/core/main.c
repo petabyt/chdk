@@ -7,9 +7,7 @@
 #include "histogram.h"
 #include "raw.h"
 #include "console.h"
-#include "ptp.h"
 #include "modules.h"
-
 #include "module_load.h"
 
 //==========================================================
@@ -75,18 +73,6 @@ void core_spytask_can_start() {
     spytask_can_start = 1;
 }
 
-/*
-note, from tools/link-boot.ld
-    link_text_start = _start
-    link_data_start = link_text_end
-    link_bss_start = link_data_end
-    link_bss_end = _end
-*/
-extern long link_text_start;
-extern long link_data_start;
-extern long link_bss_start;
-extern long link_bss_end;
-
 // remote autostart
 void script_autostart()
 {
@@ -106,11 +92,7 @@ void core_spytask()
     int i=0;
 
     // Init camera_info bits that can't be done statically
-    camera_info.memisosize = MEMISOSIZE;
-    camera_info.text_start = (int)&link_text_start;
-    camera_info.data_start = (int)&link_data_start;
-    camera_info.bss_start = (int)&link_bss_start;
-    camera_info.bss_end = (int)&link_bss_end;
+    camera_info_init();
 
     raw_need_postprocess = 0;
 
@@ -122,6 +104,7 @@ void core_spytask()
 #endif
 
 #ifdef CAM_CHDK_PTP
+    extern void init_chdk_ptp_task();
     init_chdk_ptp_task();
 #endif
 
@@ -192,6 +175,8 @@ void core_spytask()
         gui_activate_alt_mode();
 
 #ifdef  CAM_LOAD_CUSTOM_COLORS
+        // Color palette function
+        extern void load_chdk_palette();
         load_chdk_palette();
 #endif
 
@@ -207,13 +192,13 @@ void core_spytask()
             continue;
         }
 
-        if ((state_shooting_progress != SHOOTING_PROGRESS_PROCESSING) || recreview_hold)
+        if ((camera_info.state.state_shooting_progress != SHOOTING_PROGRESS_PROCESSING) || recreview_hold)
         {
             if (((cnt++) & 3) == 0)
                 gui_redraw();
         }
 
-        if (state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
+        if (camera_info.state.state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
         {
             if (conf.show_histo)
                 histogram_process();
@@ -236,9 +221,9 @@ void core_spytask()
 #endif
         }
 
-        if ((state_shooting_progress == SHOOTING_PROGRESS_PROCESSING) && (!shooting_in_progress()))
+        if ((camera_info.state.state_shooting_progress == SHOOTING_PROGRESS_PROCESSING) && (!shooting_in_progress()))
         {
-            state_shooting_progress = SHOOTING_PROGRESS_DONE;
+            camera_info.state.state_shooting_progress = SHOOTING_PROGRESS_DONE;
             if (raw_need_postprocess) raw_postprocess();
         }
 

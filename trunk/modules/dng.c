@@ -578,8 +578,6 @@ void capture_data_for_exif(void)
     time_t datetime;
     long subsectime;
     struct tm *ttm;
-    extern volatile long shutter_open_time;         // defined in platform/generic/capt_seq.c
-    extern volatile long shutter_open_tick_count;   // defined in platform/generic/capt_seq.c
     int wb[3];
 
     exif_data.iso=shooting_get_iso_market();
@@ -590,13 +588,13 @@ void capture_data_for_exif(void)
     cam_apex_shutter[0] = short_prop_val;
 
     // Date & time tag (note - uses shutter speed from 'short_prop_val' code above)
-    if (shutter_open_time)
+    if (camera_info.state.shutter_open_time)
     {
         // milliseconds component of shutter_open_time
-        subsectime = (shutter_open_tick_count - camera_info.tick_count_offset) % 1000;
+        subsectime = (camera_info.state.shutter_open_tick_count - camera_info.tick_count_offset) % 1000;
         // shutter closing time
-        datetime = shutter_open_time + ((cam_shutter[0] + (subsectime * 1000)) / 1000000);
-        shutter_open_time=0;
+        datetime = camera_info.state.shutter_open_time + ((cam_shutter[0] + (subsectime * 1000)) / 1000000);
+        camera_info.state.shutter_open_time = 0;
     }
     else
     {
@@ -777,7 +775,7 @@ int raw_init_badpixel_bin()
     }
     if (f) fclose(f);
     init_badpixel_bin_flag = count;
-    state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
+    camera_info.state.state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
     return 1;
 }
 

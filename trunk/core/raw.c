@@ -55,7 +55,7 @@ int raw_savefile() {
 			libdng->capture_data_for_exif();
 	}
 #endif    
-    if (state_kbd_script_run && shot_histogram_isenabled()) build_shot_histogram();
+    if (camera_info.state.state_kbd_script_run && shot_histogram_isenabled()) build_shot_histogram();
 
     // Get pointers to RAW buffers (will be the same on cameras that don't have two or more buffers)
     char* rawadr = get_raw_image_addr();
@@ -92,8 +92,9 @@ int raw_savefile() {
 
     shooting_bracketing();
 
-    if(conf.tv_bracket_value || conf.av_bracket_value || conf.iso_bracket_value || conf.subj_dist_bracket_value) {
-        if(state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
+    if (conf.tv_bracket_value || conf.av_bracket_value || conf.iso_bracket_value || conf.subj_dist_bracket_value)
+    {
+        if (camera_info.state.state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
             br_counter = 1;
         else
             br_counter++;
@@ -102,11 +103,12 @@ int raw_savefile() {
         br_counter=0;
 
     // got here second time in a row. Skip second RAW saving.
-    if (conf.raw_save_first_only && state_shooting_progress == SHOOTING_PROGRESS_PROCESSING) {
+    if (conf.raw_save_first_only && camera_info.state.state_shooting_progress == SHOOTING_PROGRESS_PROCESSING)
+    {
         return 0;
     }
 
-    state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
+    camera_info.state.state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
 
     if (conf.save_raw && is_raw_enabled())
     {
