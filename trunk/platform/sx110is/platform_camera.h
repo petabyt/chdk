@@ -26,7 +26,6 @@
     #define CAM_RAW_ROWPIX                  3720
     #define CAM_RAW_ROWS                    2772
 
-    #undef  CAM_SYNCH
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #define CAM_REAR_CURTAIN                1

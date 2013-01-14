@@ -25,7 +25,6 @@
     #define CAM_RAW_ROWPIX                  2672    // for 5 MP
     #define CAM_RAW_ROWS                    1968    // for 5 MP
 
-    #undef  CAM_SYNCH
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_IRIS_DIAPHRAGM

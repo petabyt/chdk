@@ -37,7 +37,6 @@
     #undef  CAM_ALT_BUTTON_OPTIONS              // Define the list of options for the ALT button - e.g. { KEY_PRINT, KEY_DISPLAY }
     #define CAM_REMOTE                      1   // Camera supports USB-remote
     #undef  SYNCHABLE_REMOTE_NOT_ENABLED        // Disable support for synchable remote switch (in kbd.c) TODO only used by one camera ???
-    #define CAM_SYNCH                       1   // Camera supports SDM precision synch
     #undef  CAM_MULTIPART                       // Camera supports SD-card multipartitioning
     #define CAM_HAS_ZOOM_LEVER              1   // Camera has dedicated zoom buttons
     #undef  CAM_DRAW_EXPOSITION                 // Output expo-pair on screen (for cameras which (sometimes) don't do that)
