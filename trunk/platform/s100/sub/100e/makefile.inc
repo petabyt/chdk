@@ -3,11 +3,13 @@ PLATFORMID=12854
 
 PLATFORMOS=dryos
 
+# Force disable of EXMEM (not implemented yet)
+override OPT_EXMEM_MALLOC=
+override OPT_CHDK_IN_EXMEM=
+override OPT_EXMEM_TESTING=
+
 # address where wif or diskboot code will be loaded by camera
 MEMBASEADDR=0x1900
-
-# size of memory region for CHDK
-RESTARTSTART=0x50000
 
 # points to the start of the memory pool used by the firmware
 MEMISOSTART=0x195D34
@@ -21,7 +23,6 @@ MAXRAMADDR = 0x0fffffff
 NEED_ENCODED_DISKBOOT=7
 
 PLFLAGS=-DMEMBASEADDR=$(MEMBASEADDR) -DMEMISOSTART=$(MEMISOSTART) -DMEMISOSIZE=$(MEMISOSIZE)
-PLFLAGS+=-DRESTARTSTART=$(RESTARTSTART)
 
 #suppress FI2 since it doesn't work
 override OPT_FI2=
