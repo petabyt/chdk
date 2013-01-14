@@ -517,13 +517,17 @@ void usb_shoot_module_zoom()
 extern void bracketing_step() ;
 extern void bracketing_reset() ;
 
+void usb_bracketing_done()
+{
+        bracketing_reset() ;
+	stime_stamp = 0 ;
+}
+
 void usb_shoot_module_bracketing()
 {
 	int current_time ;
 
 	current_time = get_tick_count() ;
-
-	static long usb_remote_stack_name = -1;
 
 	switch( logic_module_state )
 	{
@@ -532,25 +536,17 @@ void usb_shoot_module_bracketing()
 			break ;
 
 		case LM_RELEASE :
-			if (( stime_stamp ) && ( current_time - stime_stamp > 10000 ) )
-			{
-				 bracketing_reset() ;
-				 stime_stamp = 0 ;
-			}
+			if (( stime_stamp ) && ( current_time - stime_stamp > 10000 ) ) usb_bracketing_done() ;
+			
 			switch ( virtual_remote_state )
 			{
 				case REMOTE_RELEASE :
 					break ;
 
 				case REMOTE_HALF_PRESS :
+                               case REMOTE_FULL_PRESS:                                 // Note : need a half-press to setup bracketing step
 					kbd_key_press(KEY_SHOOT_HALF);
 					logic_module_state = LM_HALF_PRESS ;
-					break ;
-
-				case REMOTE_FULL_PRESS:
-					kbd_key_press(KEY_SHOOT_FULL);
-					logic_module_state = LM_FULL_PRESS ;
-					stime_stamp	= current_time ;
 					break ;
 
 				default :
@@ -565,15 +561,19 @@ void usb_shoot_module_bracketing()
 				case REMOTE_RELEASE :
 					kbd_key_release(KEY_SHOOT_HALF);
 					logic_module_state = LM_RELEASE ;
+                                        usb_bracketing_done() ;
 					break ;
 
 				case REMOTE_HALF_PRESS :
 					break ;
 
 				case REMOTE_FULL_PRESS:
-					kbd_key_press(KEY_SHOOT_FULL);
-					logic_module_state = LM_FULL_PRESS ;
-					stime_stamp	= current_time ;
+                                        if ( shooting_in_progress() )
+                                        {
+						kbd_key_press(KEY_SHOOT_FULL);
+						logic_module_state = LM_FULL_PRESS ;
+						stime_stamp	= current_time ;
+					}
 					break ;
 
 				default :
