@@ -38,9 +38,6 @@
     #define CAM_ALT_BUTTON_NAMES            { "Display", "Playback" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_DISPLAY, KEY_PLAYBACK }
 
-    #undef  CAM_REMOTE
-    #undef  CAM_SYNCH
-
     // #define CAM_CAN_SD_OVER_NOT_IN_MF       1       // Camera allows subject distance (focus) override when not in manual focus mode
     // #define CAM_CAN_SD_OVERRIDE             1       // Camera allows to do subject distance override
 

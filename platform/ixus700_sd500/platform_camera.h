@@ -25,7 +25,6 @@
     #define CAM_RAW_ROWPIX                  3152    // for 7 MP
     #define CAM_RAW_ROWS                    2340    // for 7 MP
 
-    #undef  CAM_SYNCH
     #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_DRAW_EXPOSITION             1
     #undef  CAM_HAS_ERASE_BUTTON
