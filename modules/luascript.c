@@ -289,8 +289,6 @@ int lua_run_restore()
     return 0;
 }
 
-DOF_TYPE dof_values;
-
 // get key ID of key name at arg, throw error if invalid
 static int lua_get_key_arg( lua_State * L, int narg )
 {
