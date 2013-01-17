@@ -91,6 +91,7 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
             &camera_sensor,
             &gui_version,
             &conf,
+            &dof_values,
             &libscriptapi,
 
             malloc,
