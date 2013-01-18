@@ -44,6 +44,8 @@ void taskCreateHook(int *p) {
  if (p[0]==0xFFC67A68)  p[0]=(int)init_file_modules_task;
  if (p[0]==0xFFC36528)  p[0]=(int)JogDial_task_my;	
  if (p[0]==0xFFC4CC8C)  p[0]=(int)movie_record_task;	 
+ if (p[0]==0xFFC8BDDC)  p[0]=(int)exp_drv_task;	 
+
 }
 
 void taskCreateHook2(int *p) { 
