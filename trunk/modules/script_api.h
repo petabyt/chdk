@@ -1,6 +1,11 @@
 #ifndef SCRIPT_API_H
 #define SCRIPT_API_H
 
+// Return values from 'script_run'
+#define SCRIPT_RUN_ENDED        0
+#define SCRIPT_RUN_RUNNING      1
+#define SCRIPT_RUN_ERROR        -1
+
 // Module interface for script languages (Lua and uBasic)
 struct libscriptapi_sym 
 {
