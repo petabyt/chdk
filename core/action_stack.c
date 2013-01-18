@@ -24,7 +24,7 @@ typedef struct _action_stack
 {
     long                    stack[ACTION_STACK_SIZE];   // Actions and parameters
     int                     stack_ptr;                  // Current position in stack
-    long                    comp_id;                    // Unique ID
+    AS_ID                   comp_id;                    // Unique ID
     unsigned long           delay_target_ticks;         // Used for sleep function
     struct _action_stack*   next;                       // next action stack
 } action_stack_t;
@@ -36,14 +36,14 @@ static action_stack_t* action_stacks = NULL;            // List of active stacks
 static action_stack_t* active_stack = NULL;             // Currently executing stack
 static action_stack_t* free_stacks = NULL;              // Free list (for reuse of memory)
 static int num_stacks = 0;                              // Number of active stacks
-static long task_comp_id = 1;                           // Next stack ID
+static AS_ID task_comp_id = 1;                          // Next stack ID (0 = unused / finished stack)
 
 //----------------------------------------------------------------------------------
 // Stack management functions
 
 // Returns true if the task denoted by comp_id has finished execution.
 // comp_id is returned by action_stack_create().
-int action_stack_is_finished(long comp_id)
+int action_stack_is_finished(AS_ID comp_id)
 {
     action_stack_t *p = action_stacks;
     while (p)
@@ -60,7 +60,7 @@ int action_stack_is_finished(long comp_id)
 // The action stack is alive as long as its stack has entries.
 // The proc_func parameter is a pointer to the initial processing function
 // for the stack
-long action_stack_create(action_func proc_func)
+AS_ID action_stack_create(action_func proc_func)
 {
     // Cap the maximum number of action_stacks
     if (num_stacks == MAX_ACTION_STACKS)
@@ -93,10 +93,12 @@ long action_stack_create(action_func proc_func)
 
     ++num_stacks;
 
-    // Increment task_comp_id, handle wraparound,
+    // Increment task_comp_id
     // For this to clash with a running stack you would need to leave one running
-    // while 2 billion more were created - highly unlikely.
+    // while 4 billion more were created - highly unlikely.
     ++task_comp_id;
+    // Reset just in case it wraps around to 'finished' value
+    if (task_comp_id == 0) task_comp_id = 1;
 
     return stack->comp_id;
 }
@@ -104,6 +106,9 @@ long action_stack_create(action_func proc_func)
 // Clean up and release an action stack
 static void action_stack_finish(action_stack_t *p)
 {
+    // Check in case already finalised
+    if (p->comp_id == 0) return;
+
     // Remove 'active_stack' from the list since it is done execuing
     if (p == action_stacks)
     {
@@ -124,6 +129,10 @@ static void action_stack_finish(action_stack_t *p)
 
     --num_stacks;
 
+    // Mark as free in case this function gets called again
+    p->comp_id = 0;
+    p->stack_ptr = -1;
+
     // Instead of freeing memory, save it to the free list
     // Next time this block will be reused
     p->next = free_stacks;
@@ -132,14 +141,13 @@ static void action_stack_finish(action_stack_t *p)
 
 // Find and terminate an action stack
 // comp_id is returned by action_stack_create().
-void action_stack_kill(long comp_id)
+void action_stack_kill(AS_ID comp_id)
 {
     action_stack_t *p = action_stacks;
     while (p)
     {
         if (p->comp_id == comp_id)
         {
-            p->stack_ptr = -1;
             action_stack_finish(p);
             return;
         }

@@ -118,7 +118,7 @@ extern void debug_error(int ) ;
 
 void usb_shoot_module_normal()
 {
-	static long usb_remote_stack_name = -1;
+	static AS_ID usb_remote_stack_name = 0;
 
 	if ( conf.synch_enable == 0  )			// handle key presses differently if in sync mode
 	{
@@ -347,7 +347,7 @@ void usb_shoot_module_normal()
 
  void usb_shoot_module_quick()
 {
-	static long usb_remote_stack_name = -1;
+	static AS_ID usb_remote_stack_name = 0;
 
 	switch( logic_module_state )
 	{
@@ -397,7 +397,7 @@ void usb_shoot_module_normal()
 
 void usb_shoot_module_burst()
 {
-	static long usb_remote_stack_name = -1;
+	static AS_ID usb_remote_stack_name = 0;
 
 	switch( logic_module_state )
 	{
@@ -451,7 +451,7 @@ void usb_shoot_module_burst()
 
 void usb_shoot_module_zoom()
 {
-	static long usb_remote_stack_name = -1;
+	static AS_ID usb_remote_stack_name = 0;
 
 	switch( logic_module_state )
 	{

@@ -15,7 +15,7 @@
 
 //-------------------------------------------------------------------
 
-static long running_script_stack_name = -1;                 // ID of action_stack, which used to control script processing
+static AS_ID running_script_stack_name = 0;     // ID of action_stack, which used to control script processing
 
 //-------------------------------------------------------------------
 
