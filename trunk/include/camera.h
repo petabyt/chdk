@@ -226,7 +226,11 @@
 
     #undef  CAM_MISSING_RAND                    // Define this if srand()/rand() functions not found in firmware (a810/a2300)
     #undef  MKDIR_RETURN_ONE_ON_SUCCESS         // Define this if mkdir() return 1 on success, 0 on fail (a810/a1300)
-    
+
+    #undef  CAM_OPTIONAL_EXTRA_BUTTON           // extra button (remapped, for use in ALT mode) can be set from menu, must set next two values as well
+    #undef  CAM_EXTRA_BUTTON_NAMES              // Define the list of names for the extra button   - e.g. { "Off", "Display" }
+    #undef  CAM_EXTRA_BUTTON_OPTIONS            // Define the list of button constants for the extra button, starting with 0 - e.g. { 0, KEY_DISPLAY }
+
 //----------------------------------------------------------
 // Overridden values for each camera
 //----------------------------------------------------------

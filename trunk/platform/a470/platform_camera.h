@@ -65,4 +65,7 @@
 	
 	#define REMOTE_SYNC_STATUS_LED 	0xc022008C		// specifies an LED that turns on while camera waits for USB remote to sync
 	
+    #define CAM_OPTIONAL_EXTRA_BUTTON       1       // allow the Power button to be remapped in ALT mode
+    #define CAM_EXTRA_BUTTON_NAMES          { "OFF", "Display" }
+    #define CAM_EXTRA_BUTTON_OPTIONS        { 0, KEY_DISPLAY }
 //----------------------------------------------------------
