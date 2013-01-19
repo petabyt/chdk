@@ -404,6 +404,8 @@ typedef struct {
     int tbox_char_map;          // Text input box language/char map
     int show_alt_helper;        // Show <ALT> mode help screen
     int show_alt_helper_delay;  // Delay before showing help screen
+    
+    long extra_button; // extra button for use in ALT mode, 0 when disabled
 
 } Conf;
 

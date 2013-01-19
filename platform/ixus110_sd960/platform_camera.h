@@ -107,4 +107,7 @@
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 	#define REMOTE_SYNC_STATUS_LED 	0xc0220134		// specifies an LED that turns on while camera waits for USB remote to sync
 
+    #define CAM_OPTIONAL_EXTRA_BUTTON       1   // allow the Power button to be remapped in ALT mode
+    #define CAM_EXTRA_BUTTON_NAMES          { "OFF", "Display" }
+    #define CAM_EXTRA_BUTTON_OPTIONS        { 0, KEY_DISPLAY }
 //----------------------------------------------------------
