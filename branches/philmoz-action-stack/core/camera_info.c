@@ -210,11 +210,6 @@ _cam_info camera_info =
     0,
 #endif
     CAM_KEY_PRESS_DELAY, CAM_KEY_RELEASE_DELAY, 
-#if defined(CAM_KEY_CLICK_DELAY)
-    CAM_KEY_CLICK_DELAY,
-#else
-    0,
-#endif
 };
 
 //==========================================================

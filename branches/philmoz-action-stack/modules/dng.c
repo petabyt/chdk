@@ -843,7 +843,7 @@ int badpixel_list_loaded_b(void) {
 
 static unsigned int badpix_cnt1;
 
-static void action_stack_BADPIX_S2()
+static int action_stack_BADPIX_S2()
 {
     // Process bad pixel generation actions
 
@@ -872,9 +872,11 @@ static void action_stack_BADPIX_S2()
 
     // Delay to give user time to read messages
     action_push_delay(3000);
+
+    return 1;
 }
 
-static void action_stack_BADPIX_S1()
+static int action_stack_BADPIX_S1()
 {
     // Process bad pixel generation actions
 
@@ -887,10 +889,12 @@ static void action_stack_BADPIX_S1()
 
     // Push stack items for next phase (note reversed execution order)
     action_push_func(action_stack_BADPIX_S2);
-    action_push_func(action_stack_AS_SHOOT);
+    action_push_shoot(1);
+
+    return 1;
 }
 
-static void action_stack_BADPIX_START()
+static int action_stack_BADPIX_START()
 {
     // Process bad pixel generation actions
 
@@ -908,8 +912,10 @@ static void action_stack_BADPIX_START()
 
     // Push stack items for next phase (note reversed execution order)
     action_push_func(action_stack_BADPIX_S1);
-    action_push_func(action_stack_AS_SHOOT);
+    action_push_shoot(1);
     action_push_delay(3000);
+
+    return 1;
 }
 
 void create_badpixel_bin()

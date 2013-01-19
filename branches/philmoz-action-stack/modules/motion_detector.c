@@ -107,7 +107,7 @@ struct motion_detector_s {
 static struct motion_detector_s *motion_detector=NULL;
 
 // Stack process function for running MD logic
-static void action_stack_AS_MOTION_DETECTOR()
+static int action_stack_AS_MOTION_DETECTOR()
 {
     if (md_detect_motion() == 0)
     {
@@ -119,7 +119,9 @@ static void action_stack_AS_MOTION_DETECTOR()
             libscriptapi->set_as_ret(motion_detector->return_value);
         }
         action_pop_func();
+        return 1;
     }
+    return 0;
 }
 
 static void md_kbd_sched_immediate_shoot(int no_release)
@@ -130,7 +132,7 @@ static void md_kbd_sched_immediate_shoot(int no_release)
     if (!no_release)  // only release shutter if allowed
     {
       action_push_release(KEY_SHOOT_FULL);
-      action_push_delay(20);
+      action_push_delay(camera_info.cam_key_press_delay);
     }
     action_push_func(action_stack_AS_MOTION_DETECTOR); // it will removed right after exit from this function
     kbd_key_press(KEY_SHOOT_FULL); // not a stack operation... pressing right now

@@ -237,17 +237,21 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
 			TurnOnBackLight,
 			TurnOffBackLight,
 
+            // Action stack functions
 			action_stack_create,
-            action_stack_AS_SHOOT,
 			action_pop,
             action_pop_func,
             action_top,
 			action_push,
             action_push_func,
 			action_push_delay,
+            action_push_click,
+            action_push_press,
             action_push_release,
-            action_process_delay,
-            action_clear_delay,
+            action_push_shoot,
+            action_wait_for_click,
+
+            // Console functions
 			console_clear,
 			console_add_line,
 
@@ -281,9 +285,6 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
     JogDial_CCW,
     JogDial_CW,
     UnlockAF,
-    action_push_click,
-    action_push_press,
-    action_wait_for_click,
     camera_set_led,
     camera_shutdown_in_a_second,
     &circle_of_confusion,

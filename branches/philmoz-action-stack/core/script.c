@@ -92,7 +92,7 @@ void script_console_add_line(long str_id)
 //=======================================================
 
 // Stack process function for running current script
-static void action_stack_AS_SCRIPT_RUN()
+static int action_stack_AS_SCRIPT_RUN()
 {
     if (camera_info.state.state_kbd_script_run && libscriptapi)
     {
@@ -102,12 +102,15 @@ static void action_stack_AS_SCRIPT_RUN()
             // Script language is responsible for displaying 'Finished' or error
             // messages so all we need to do is shutdown the script engine
             script_end();
+            return 1;
         }
     }
     else
     {
         action_pop_func();
+        return 1;
     }
+    return 0;
 }
 
 long script_stack_start()

@@ -7,12 +7,12 @@
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 // Action stack processing function
-typedef void (*action_func)(void);
+typedef int (*action_func)(void);
 
 // Action stack ID
 typedef unsigned long AS_ID;
 
-void action_stack_AS_SHOOT(void);
+int action_stack_AS_SHOOT(void);
 
 AS_ID action_stack_create(action_func proc_func);
 
@@ -23,12 +23,11 @@ void action_push_delay(long msec);
 void action_push_press(long key);
 void action_push_release(long key);
 void action_push_click(long key);
+void action_push_shoot(int retry);
 long action_pop_func();
 void action_push_func(action_func f);
 
 void action_wait_for_click(int timeout);
-int action_process_delay(long delay);
-void action_clear_delay(void);
 
 void action_stack_process_all();
 int  action_stack_is_finished(AS_ID comp_id);
