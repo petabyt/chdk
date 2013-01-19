@@ -18,8 +18,10 @@ static KeyMap keymap[];
 static long last_kbd_key = 0;
 
 #define KEYS_MASK0 (0x00000000)
-#define KEYS_MASK1 (0x00000000)
+int keys_mask1 = 0x00000000;
+int keys_inv1 = 0x00000000;
 #define KEYS_MASK2 (0x153F)
+static int set_fake_key=0;
 
 #define NEW_SS (0x2000)
 #define SD_READONLY_FLAG (0x20000)
@@ -49,6 +51,10 @@ long __attribute__((naked)) wrap_kbd_p1_f() ;
 
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
+    kbd_new_state[0] = physw_status[0];
+    kbd_new_state[1] = physw_status[1] ^ keys_inv1;
+    kbd_new_state[2] = physw_status[2];
+
     while (physw_run){
 	_SleepTask(10);
 
@@ -110,6 +116,8 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
     return 0; // shut up the compiler
 }
 
+void enable_extra_button(short);
+
 void my_kbd_read_keys()
 {
     kbd_prev_state[0] = kbd_new_state[0];
@@ -120,18 +128,20 @@ void my_kbd_read_keys()
 
     kbd_fetch_data(kbd_new_state);
 
+    kbd_new_state[1] = kbd_new_state[1] ^ keys_inv1;
+    
     if (kbd_process() == 0){
 	// leave it alone...
 	physw_status[0] = kbd_new_state[0];
-	physw_status[1] = kbd_new_state[1];
+	physw_status[1] = kbd_new_state[1] ^ keys_inv1;
 	physw_status[2] = kbd_new_state[2];
     } else {
 	// override keys
 	physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) |
 			  (kbd_mod_state[0] & KEYS_MASK0);
 
-	physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) |
-			  (kbd_mod_state[1] & KEYS_MASK1);
+	physw_status[1] = ((kbd_new_state[1] & (~keys_mask1)) |
+			  (kbd_mod_state[1] & keys_mask1)) ^ keys_inv1;
 
 	physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) |
 			  (kbd_mod_state[2] & KEYS_MASK2);
@@ -147,6 +157,10 @@ void my_kbd_read_keys()
     else physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
     _kbd_pwr_off();
 
+    if (set_fake_key & 0x10000000) {
+        enable_extra_button((short)(set_fake_key & 0xffff));
+        set_fake_key=0;
+    }
 }
 
 
@@ -176,7 +190,7 @@ void kbd_key_release(long key)
 void kbd_key_release_all()
 {
   kbd_mod_state[0] |= KEYS_MASK0;
-  kbd_mod_state[1] |= KEYS_MASK1;
+  kbd_mod_state[1] |= keys_mask1;
   kbd_mod_state[2] |= KEYS_MASK2;
 }
 
@@ -301,6 +315,7 @@ static KeyMap keymap[] = {
     /* tiny bug: key order matters. see kbd_get_pressed_key()
      * for example
      */
+//	{ 1, KEY_POWER		, 0x04000000 }, // levent 0x600 (uses inverted logic in physw_status)
 	{ 2, KEY_UP			, 0x00000001 }, //
 	{ 2, KEY_DOWN		, 0x00000002 }, // 
 	{ 2, KEY_LEFT		, 0x00000008 }, // 
@@ -311,9 +326,37 @@ static KeyMap keymap[] = {
 	{ 2, KEY_SHOOT_HALF	, 0x00000010 },  
 	{ 2, KEY_MENU		, 0x00000400 }, 
 	{ 2, KEY_PRINT		, 0x00001000 }, //
+	{ 0, 0, 0 }, // placeholder
 	{ 0, 0, 0 }
 };
 
+void enable_extra_button(short key) {
+/*
+ * enable or disable the additional "fake" button
+ * in this case, the power button will be re-mapped in ALT mode
+ * called from the kbd task
+ * beware: the "placeholder" in keymap[] is directly addressed here
+ * the placeholder has to be the last entry before the terminating { 0, 0, 0 }, if it is ever set to { 0, 0, 0 }
+ */
+    if (key) {
+        keys_mask1=0x04000000;
+        keys_inv1= 0x04000000;
+        keymap[10].grp=1;
+        keymap[10].canonkey=0x04000000;
+        keymap[10].hackkey=key;
+    }
+    else {
+        keys_mask1=0x00000000;
+        keys_inv1= 0x00000000;
+        keymap[10].grp=0;
+        keymap[10].canonkey=0;
+        keymap[10].hackkey=0;
+    }
+}
+
+void kbd_set_extra_button(short key) { // called by core
+    set_fake_key=key|0x10000000;    
+}
 
 void kbd_fetch_data(long *dst)
 {
