@@ -91,7 +91,7 @@ asm volatile (
 "loc_FF963370:\n"  //Jump Table entry 07
       "LDR     R1, [R0, #0x18] \n"
       "LDR     R0, [R0, #4] \n"
-      "BL      sub_FFA8200C \n"
+      "BL      sub_FFA82004 \n"
       "B       loc_FF9633AC \n"
 "loc_FF963380:\n"  //Jump Table entry 02
       "LDR     R0, [R4, #0x44] \n"
@@ -122,7 +122,7 @@ asm volatile (
 }
 
 //This function was used to take values for set_quality
-//** sub_FF9562C2C_my  @ 0xFF962C2C
+//** sub_FF9562C2C_my  @ 0xFF962C2C 
 /*
 void __attribute__((naked,noinline)) sub_FF962C2C_my() {
 asm volatile (
@@ -217,7 +217,7 @@ asm volatile (
       "ADD     R2, SP, #0x50 \n"
       "ADD     R1, SP, #0x54 \n"
       "ADD     R0, SP, #0x58 \n"
-      "BL      sub_FFA820E4 \n"
+      "BL      sub_FFA820DC \n"
       "MOVS    R9, R0 \n"
       "BNE     loc_FF962DA4 \n"
 "loc_FF962D88:\n"
@@ -490,7 +490,7 @@ asm volatile (
 "loc_FF963150:\n"
       "LDR     R0, [SP, #0x58] \n"
       "LDR     R1, [SP, #0x60] \n"
-      "BL      sub_FFA8230C \n"
+      "BL      sub_FFA82304 \n"
       "LDR     R0, [R6, #0x68] \n"
       "LDR     R3, =0x6568 \n"        // <- 0x6568
       "ADD     R1, R0, #1 \n"
@@ -520,7 +520,7 @@ asm volatile (
       "BL      sub_003FC934 \n"
       "LDR     R1, =0xABAA8 \n"
       "STR     R0, [SP, #0x48] \n"
-      "BL      sub_FFA7FEB0 \n"
+      "BL      sub_FFA7FEA8 \n"
 "loc_FF9631C4:\n"
       "CMP     R7, #1 \n"
       "BNE     loc_FF9631D8 \n"
@@ -552,7 +552,7 @@ asm volatile (
 "loc_FF963228:\n"
       "BL      sub_003FC934 \n" //RAM
       "MOV     R4, R0 \n"
-      "BL      sub_FFA826A0 \n"
+      "BL      sub_FFA82698 \n"
       "LDR     R0, [R6, #0x8C] \n"
       "CMP     R0, R4 \n"
       "BNE     loc_FF96324C \n"

@@ -11,7 +11,7 @@ Playback [>] or Help [?] button can be configured as <ALT> mode button.
 
 KNOWN BUGS
 **********
-- mkdir function fails
+- 
 
 For Developers
 **************
@@ -19,4 +19,4 @@ For Developers
   They were added to platform/generic/wrappers.c under #ifdef CAM_MISSING_RAND
 - Extended video time not implemented
 
-Last Update 2012/10/19
+Last Update 2013/01/19

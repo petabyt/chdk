@@ -103,7 +103,7 @@ asm volatile (
       "LDR     R1, [R2] \n"
       "ORR     R1, R1, #1 \n"
       "STR     R1, [R2] \n"
-      "LDR     R0, =0xFFC241C8 \n"
+      "LDR     R0, =0xFFC241C0 \n"
       "LDR     R1, =0x3F1000 \n"
       "LDR     R3, =0x400654 \n"
 "loc_FF81013C:\n"
@@ -111,7 +111,7 @@ asm volatile (
       "LDRCC   R2, [R0], #4 \n"
       "STRCC   R2, [R1], #4 \n"
       "BCC     loc_FF81013C \n"
-      "LDR     R0, =0xFFC180B0 \n"
+      "LDR     R0, =0xFFC180A8 \n"
       "LDR     R1, =0x1900 \n"
       "LDR     R3, =0xDA18 \n"
 "loc_FF810158:\n"
@@ -280,7 +280,7 @@ asm volatile (
 
 //** sub_FF81A6A8_my  @ 0xFF81A6A8 
 
-void __attribute__((naked,noinline)) sub_FF81A6A8_my() {
+void __attribute__((naked,noinline)) sub_FF81A6A8_my(  ) { 
 asm volatile (
       "STMFD   SP!, {R4,LR} \n"
       "BL      sub_FF82EB0C \n"
@@ -345,11 +345,12 @@ asm volatile (
 }
 
 
-//** task_Startup_my  @ 0xFF81A638
+//** task_Startup_my  @ 0xFF81A638 
 
 void __attribute__((naked,noinline)) task_Startup_my(  ) { 
 asm volatile (
       "STMFD   SP!, {R4,LR} \n"
+      "BL      sub_FF8148C8 \n"
       "BL      sub_FF82FC34 \n"
       "BL      sub_FF82DE60 \n"
       "BL      sub_FF835BD8 \n"
@@ -399,7 +400,7 @@ asm volatile (
       "MOV     R2, #0x2000 \n" // stack size for new task_PhySw so we don't have to do stack switch
       "MOV     R1, #0x17 \n"
       "LDR     R0, =0xFF82EC0C \n"
-      "BL      sub_003F7A50 \n" //RAM
+      "BL      sub_003F7A50 \n"
       "STR     R0, [R4, #4] \n"
 "loc_FF82E9E4:\n"
       "BL      sub_FF880638 \n"

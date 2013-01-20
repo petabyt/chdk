@@ -1,6 +1,6 @@
-// Camera - A810 - platform_camera.h
+// Camera - A3400 - platform_camera.h
 
-// This file contains the various settings values specific to the A810 camera.
+// This file contains the various settings values specific to the A3400 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -21,7 +21,7 @@
 // don't override them again in here.
 
     #define CAM_DRYOS                       1
-    #define CAM_PROPSET                     4
+    #define CAM_PROPSET                     5
 
     #define CAM_DRYOS_2_3_R31               1       // Define for cameras with DryOS release R31 or greater -> G10
     #define CAM_DRYOS_2_3_R39               1       // Defined for cameras with DryOS version R39 or higher
@@ -111,6 +111,7 @@
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202   // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
     #define CAM_MISSING_RAND                 1    // srand()/rand() functions not found in firmware. If defined, CHDK use functions implemented in C
+    #define MKDIR_RETURN_ONE_ON_SUCCESS      1    // mkdir() return 1 on success, 0 on fail.
 
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// TODO specifies an LED that turns on while camera waits for USB remote to sync
 
