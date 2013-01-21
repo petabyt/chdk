@@ -84,8 +84,8 @@
     // cropping
     #define CAM_JPEG_WIDTH                  3648
     #define CAM_JPEG_HEIGHT                 2736
-    #define CAM_ACTIVE_AREA_X1              16
-    #define CAM_ACTIVE_AREA_Y1              8
+    #define CAM_ACTIVE_AREA_X1              8
+    #define CAM_ACTIVE_AREA_Y1              16
     #define CAM_ACTIVE_AREA_X2              3692
     #define CAM_ACTIVE_AREA_Y2              2776
 
