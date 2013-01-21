@@ -1710,6 +1710,35 @@ static const char* gui_alt_mode_button_enum(int change, int arg)
 }
 #endif
 
+#if CAM_OPTIONAL_EXTRA_BUTTON
+static const char* gui_extra_button_enum(int change, int arg)
+{
+#if defined(CAM_EXTRA_BUTTON_NAMES) && defined(CAM_EXTRA_BUTTON_OPTIONS)
+    static const char* names[] = CAM_EXTRA_BUTTON_NAMES;
+    static const int keys[] = CAM_EXTRA_BUTTON_OPTIONS;
+#else
+#error Make sure CAM_EXTRA_BUTTON_NAMES and CAM_EXTRA_BUTTON_OPTIONS are defined in platform_camera.h
+#endif
+    int i;
+
+    for (i=0; i<sizeof(names)/sizeof(names[0]); ++i) {
+        if (conf.extra_button==keys[i]) {
+            break;
+        }
+    }
+
+    i+=change;
+    if (i<0)
+        i=(sizeof(names)/sizeof(names[0]))-1;
+    else if (i>=(sizeof(names)/sizeof(names[0])))
+        i=0;
+
+    conf.extra_button = keys[i];
+    kbd_set_extra_button((short)conf.extra_button);
+    return names[i];
+}
+#endif //CAM_OPTIONAL_EXTRA_BUTTON
+
 static const char* gui_alt_power_enum(int change, int arg)
 {
 // Script option is retained even if scripting is disabled, otherwise conf values will change
@@ -1753,6 +1782,9 @@ static CMenuItem chdk_settings_menu_items[] = {
 #endif
 #if CAM_ADJUSTABLE_ALT_BUTTON
     MENU_ITEM   (0x22,LANG_MENU_MISC_ALT_BUTTON,            MENUITEM_ENUM,      gui_alt_mode_button_enum, 0 ),
+#endif
+#if CAM_OPTIONAL_EXTRA_BUTTON
+    MENU_ITEM   (0x22,LANG_MENU_MISC_EXTRA_BUTTON,          MENUITEM_ENUM,      gui_extra_button_enum, 0 ),
 #endif
 #if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
     MENU_ITEM   (0x5c,LANG_MENU_MISC_ZOOM_ASSIST,           MENUITEM_BOOL,      &conf.zoom_assist_button_disable, 0 ),

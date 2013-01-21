@@ -27,7 +27,6 @@
     #define CAM_RAW_ROWPIX                  3728    // see platform/sub/*/lib.c
     #define CAM_RAW_ROWS                    2778
 
-    #undef  CAM_SYNCH
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      0
     #define CAM_REAR_CURTAIN                1

@@ -35,7 +35,6 @@
     #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     // TODO / test
-    #undef  CAM_REMOTE
 
     #define CAM_DNG_LENS_INFO               { 62,10, 186,10, 28,10, 49,10 } // See comments in camera.h
     // pattern

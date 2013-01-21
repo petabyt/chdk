@@ -25,7 +25,6 @@
     #define CAM_RAW_ROWPIX                  2672    // for 5 MP
     #define CAM_RAW_ROWS                    1968    // for 5 MP
 
-    #undef  CAM_SYNCH
     #define CAM_SWIVEL_SCREEN               1
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_ALT_BUTTON_NAMES            { "Shrtcut", "Flash", "Timer", "ISO", "Video" }

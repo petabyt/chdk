@@ -20,8 +20,9 @@ static long last_kbd_key = 0;
 
 // OK, ixus110
 #define KEYS_MASK0 (0x00000000)
-#define KEYS_MASK1 (0x0000F001)
+static int keys_mask1=0x0000F000;
 #define KEYS_MASK2 (0x4EEF)
+static int set_fake_key=0;
 
 #define SD_READONLY_FLAG    0x00020000 // Found @0xffaeeb8c, levent 0x90a
 #define SD_READONLY_IDX     2
@@ -85,6 +86,7 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 extern void _GetKbdState(long*);
 long get_jogdial_direction();
 volatile int jogdial_stopped=0;
+void enable_extra_button(short);
 
 void my_kbd_read_keys()
 {
@@ -107,7 +109,7 @@ void my_kbd_read_keys()
     } else {
         // override keys
         physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) | (kbd_mod_state[0] & KEYS_MASK0);
-        physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
+        physw_status[1] = (kbd_new_state[1] & (~keys_mask1)) | (kbd_mod_state[1] & keys_mask1);
         physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) | (kbd_mod_state[2] & KEYS_MASK2);
         if ((jogdial_stopped==0) && !camera_info.state.state_kbd_script_run) {
             jogdial_stopped=1;
@@ -131,6 +133,11 @@ void my_kbd_read_keys()
 //    physw_status[2] |= BATDOOR_MASK;
 
     _kbd_pwr_off();
+    
+    if (set_fake_key & 0x10000000) {
+        enable_extra_button((short)(set_fake_key & 0xffff));
+        set_fake_key=0;
+    }
 }
 
 void kbd_key_press(long key)
@@ -158,7 +165,7 @@ void kbd_key_release(long key)
 void kbd_key_release_all()
 {
   kbd_mod_state[0] |= KEYS_MASK0;
-  kbd_mod_state[1] |= KEYS_MASK1;
+  kbd_mod_state[1] |= keys_mask1;
   kbd_mod_state[2] |= KEYS_MASK2;
 }
 
@@ -298,7 +305,7 @@ static KeyMap keymap[] = {
     { 2, KEY_MENU            ,0x00000800 }, // Found @0xffaeeb5c, levent 0x09
     { 2, KEY_PLAYBACK        ,0x00004000 }, // Found @0xffaeeb68, levent 0x601
     { 2, KEY_PRINT           ,0x00004000 },
-    { 1, KEY_DISPLAY         ,0x00000001 }, // fake key for development...
+    { 0, 0                   ,0x00000000 }, // placeholder for the fake key
 //    { 2, KEY_LEFT_SOFT       ,0x00000001 },
 //    { 2, KEY_RIGHT_SOFT      ,0x00000002 },
 //    { 2, KEY_DOWN_SOFT       ,0x00000004 },
@@ -306,6 +313,31 @@ static KeyMap keymap[] = {
     { 0, 0, 0 }
 };
 
+void enable_extra_button(short key) {
+/*
+ * enable or disable the additional "fake" button
+ * in this case, the power button will be re-mapped in ALT mode
+ * called from the kbd task
+ * beware: the "placeholder" in keymap[] is directly addressed here
+ * the placeholder has to be the last entry before the terminating { 0, 0, 0 }, if it is ever set to { 0, 0, 0 }
+ */
+    if (key) {
+        keys_mask1=0x0000F001;
+        keymap[14].grp=1;
+        keymap[14].canonkey=0x00000001;
+        keymap[14].hackkey=key;
+    }
+    else {
+        keys_mask1=0x0000F000;
+        keymap[14].grp=0;
+        keymap[14].canonkey=0;
+        keymap[14].hackkey=0;
+    }
+}
+
+void kbd_set_extra_button(short key) { // called by core
+    set_fake_key=key|0x10000000;    
+}
 
 void kbd_fetch_data(long *dst)
 {

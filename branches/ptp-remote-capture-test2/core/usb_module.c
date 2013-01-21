@@ -118,7 +118,7 @@ extern void debug_error(int ) ;
 
 void usb_shoot_module_normal()
 {
-	static long usb_remote_stack_name = -1;
+	static AS_ID usb_remote_stack_name = 0;
 
 	if ( conf.synch_enable == 0  )			// handle key presses differently if in sync mode
 	{
@@ -347,7 +347,7 @@ void usb_shoot_module_normal()
 
  void usb_shoot_module_quick()
 {
-	static long usb_remote_stack_name = -1;
+	static AS_ID usb_remote_stack_name = 0;
 
 	switch( logic_module_state )
 	{
@@ -397,7 +397,7 @@ void usb_shoot_module_normal()
 
 void usb_shoot_module_burst()
 {
-	static long usb_remote_stack_name = -1;
+	static AS_ID usb_remote_stack_name = 0;
 
 	switch( logic_module_state )
 	{
@@ -451,7 +451,7 @@ void usb_shoot_module_burst()
 
 void usb_shoot_module_zoom()
 {
-	static long usb_remote_stack_name = -1;
+	static AS_ID usb_remote_stack_name = 0;
 
 	switch( logic_module_state )
 	{
@@ -509,6 +509,13 @@ void usb_shoot_module_zoom()
 extern void bracketing_step() ;
 extern void bracketing_reset() ;
 
+void usb_bracketing_done()
+{
+	bracketing_reset() ;
+	bracketing_timeout = 0 ;
+}
+
+
 void usb_shoot_module_bracketing()
 {
 	int current_time ;
@@ -522,25 +529,17 @@ void usb_shoot_module_bracketing()
 			break ;
 
 		case LM_RELEASE :
-			if (( bracketing_timeout ) && ( current_time > bracketing_timeout ) )
-			{
-				 bracketing_reset() ;
-				 bracketing_timeout = 0 ;
-			}
+			if (( bracketing_timeout ) && ( current_time > bracketing_timeout ) ) usb_bracketing_done() ;
+
 			switch ( virtual_remote_state )
 			{
 				case REMOTE_RELEASE :
 					break ;
 
 				case REMOTE_HALF_PRESS :
+				case REMOTE_FULL_PRESS:					// Note : need a half-press to setup bracketing step
 					kbd_key_press(KEY_SHOOT_HALF);
 					logic_module_state = LM_HALF_PRESS ;
-					break ;
-
-				case REMOTE_FULL_PRESS:
-					kbd_key_press(KEY_SHOOT_FULL);
-					logic_module_state = LM_FULL_PRESS ;
-					bracketing_timeout = current_time + BRACKETING_TIMEOUT ;
 					break ;
 
 				default :
@@ -548,22 +547,26 @@ void usb_shoot_module_bracketing()
 					break ;
 			}
 			break ;
-
+             
 		case LM_HALF_PRESS :
 			switch ( virtual_remote_state )
 			{
 				case REMOTE_RELEASE :
 					kbd_key_release(KEY_SHOOT_HALF);
 					logic_module_state = LM_RELEASE ;
+				 	usb_bracketing_done() ;
 					break ;
 
 				case REMOTE_HALF_PRESS :
 					break ;
 
 				case REMOTE_FULL_PRESS:
-					kbd_key_press(KEY_SHOOT_FULL);
-					logic_module_state = LM_FULL_PRESS ;
-					bracketing_timeout = current_time + BRACKETING_TIMEOUT ;
+					if ( shooting_in_progress() )
+					{
+						kbd_key_press(KEY_SHOOT_FULL);
+						logic_module_state = LM_FULL_PRESS ;
+						bracketing_timeout = current_time + BRACKETING_TIMEOUT ;
+					}
 					break ;
 
 				default :

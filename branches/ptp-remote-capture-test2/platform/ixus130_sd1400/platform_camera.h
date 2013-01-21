@@ -32,9 +32,6 @@
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER           1
 
-    #undef CAM_REMOTE
-    #undef CAM_SYNCH
-
     #define CAM_HAS_ZOOM_LEVER          1
 
     #undef  CAM_HAS_MANUAL_FOCUS

@@ -35,6 +35,7 @@ static void conf_change_alt_mode_button();
 static void conf_change_video_bitrate();
 static void conf_change_dng_ext();
 static void conf_change_autoiso();
+static void conf_set_extra_button();
 
 void clear_values()
 {	
@@ -420,6 +421,9 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(290, conf.tbox_char_map,              CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(291, conf.show_alt_helper,            CONF_DEF_VALUE,     i:1, NULL),
     CONF_INFO(292, conf.show_alt_helper_delay,      CONF_DEF_VALUE,     i:3, NULL),
+#if defined(CAM_OPTIONAL_EXTRA_BUTTON)
+    CONF_INFO(293, conf.extra_button,               CONF_DEF_VALUE,     i:0, conf_set_extra_button),
+#endif
 
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
@@ -445,6 +449,7 @@ void conf_info_func(unsigned short id)
 	case 159:
 	case 283:
     case 284: conf_change_autoiso(); break;
+    case 293: conf_set_extra_button(); break;
     }
 }
 
@@ -473,6 +478,12 @@ static void conf_change_alt_mode_button() {
     kbd_set_alt_mode_key_mask(conf.alt_mode_button);
 #else
     conf.alt_mode_button = KEY_PRINT;
+#endif
+}
+
+static void conf_set_extra_button() {
+#if CAM_OPTIONAL_EXTRA_BUTTON
+    kbd_set_extra_button((short)conf.extra_button);
 #endif
 }
 

@@ -34,7 +34,6 @@
     #define CAM_UNCACHED_BIT                0x40000000   // ROM:FF88A248 via ExMem.FreeCacheable()
 
     #undef  CAM_HAS_ERASE_BUTTON
-    #undef  CAM_SYNCH
     #define CAM_HAS_ND_FILTER               1       // ToDo: does camera have ND ?
 
     //#undef  CAM_HAS_MANUAL_FOCUS                  // ToDo: test if its working

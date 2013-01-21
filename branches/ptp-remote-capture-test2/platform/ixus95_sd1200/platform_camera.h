@@ -33,8 +33,6 @@
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES
 
-    #undef  CAM_SYNCH
-
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     //#define CAM_AF_SCAN_DURING_VIDEO_RECORD 1     //TODO: change to define and find NSTUB
 

@@ -26,7 +26,6 @@
     #define CAM_RAW_ROWPIX                  3720
     #define CAM_RAW_ROWS                    2772
 
-    #undef  CAM_SYNCH
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #define CAM_REAR_CURTAIN                1
@@ -62,6 +61,8 @@
     #define CAM_JPEG_HEIGHT                 2592
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1   // enable fix for camera crash at startup when opening the conf / font files see http://chdk.setepontos.com/index.php?topic=6179.0
+
+    #define CAM_EXT_TV_RANGE                1
 
    //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
   

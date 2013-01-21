@@ -701,7 +701,9 @@
 #define LANG_HELP_INF_FOCUS                     573
 #define LANG_HELP_CHG_FOCUS_FACTOR              574
 
-#define GUI_LANG_ITEMS                          574
+#define LANG_MENU_MISC_EXTRA_BUTTON             575
+
+#define GUI_LANG_ITEMS                          575
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

@@ -30,8 +30,6 @@ extern const char* gui_video_bitrate_enum(int change, int arg);
 //-------------------------------------------------------------------
 static char osd_buf[64];
 
-DOF_TYPE dof_values;
-
 typedef struct {
     short av96;
     short tv96;

@@ -34,7 +34,6 @@
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #undef  CAM_HAS_IS
     #define CAM_MULTIPART                   1
-    #undef  CAM_SYNCH
 
     #define CAM_DNG_LENS_INFO               { 77,10, 231,10, 28,10, 49,10 } // See comments in camera.h
     // pattern

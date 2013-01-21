@@ -26,7 +26,6 @@
     #define CAM_RAW_ROWPIX                  3336    // for new 8 MP
     #define CAM_RAW_ROWS                    2480    // for new 8 MP
 
-    #undef  CAM_SYNCH
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
