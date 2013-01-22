@@ -12,10 +12,10 @@ typedef struct {
     char    heightRef[4];
     int     height[2];
     int     timeStamp[6];
-    char    status[4];
+    char    status[2];
     char    mapDatum[7];
     char    dateStamp[11];
-    char    unknown2[260];
+    char    unknown2[160];
 } tGPS;
 
 extern int _CreateTask (const char *name, int prio, int stack_size /*?*/, void *entry, long parm /*?*/);
