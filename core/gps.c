@@ -217,10 +217,12 @@ void gps_get_data(){
 //		g_d_lat_ref = gps.latitudeRef;
 		g_d_lat=0.0;
 		g_d_lat=(gps.latitude[0]/(gps.latitude[1]*1.0)) + (gps.latitude[2]/(gps.latitude[3]*60.0)) + (gps.latitude[4]/(gps.latitude[5]*3600.0));
+		if (gps.latitudeRef[0]=='S') g_d_lat=-g_d_lat;
 
 //		g_d_lon_ref=gps.longitudeRef;
 		g_d_lon=0.0;
 		g_d_lon=(gps.longitude[0]/(gps.longitude[1]*1.0)) + (gps.longitude[2]/(gps.longitude[3]*60.0)) + (gps.longitude[4]/(gps.longitude[5]*3600.0));
+		if (gps.longitudeRef[0]=='W') g_d_lon=-g_d_lon;
 
 		g_d_hei=0.0;
 		g_d_hei=gps.height[0]/(gps.height[1]*1.0);
