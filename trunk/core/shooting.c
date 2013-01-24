@@ -843,14 +843,15 @@ void shooting_set_shutter_speed(float t, short ev_correction, short is_now)
 	if (t>0) shooting_set_tv96_direct( shooting_get_tv96_from_shutter_speed(t) + ev_correction, is_now);
 }
 
-void shooting_set_shutter_speed_ubasic(int t, short is_now)
-{
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-    {
-        if (t>0)
-            shooting_set_tv96_direct(shooting_get_tv96_from_shutter_speed(((double)t)/100000), is_now);
-    }
-}
+// No longer used - 'set_shutter_speed' function disabled in uBasic
+//void shooting_set_shutter_speed_ubasic(int t, short is_now)
+//{
+//    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+//    {
+//        if (t>0)
+//            shooting_set_tv96_direct(shooting_get_tv96_from_shutter_speed(((double)t)/100000), is_now);
+//    }
+//}
 
 void shooting_set_av96(short v, short is_now)
 {

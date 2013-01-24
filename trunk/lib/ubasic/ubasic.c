@@ -2087,9 +2087,9 @@ statement(void)
   case TOKENIZER_PLAY_SOUND:
       one_int_param_function(token, (void (*)(int))play_sound);
       break;
-  case TOKENIZER_SET_SHUTTER_SPEED:
-      one_int_param_plus_const_function(token, shooting_set_shutter_speed_ubasic, SET_LATER);
-      break;
+  //case TOKENIZER_SET_SHUTTER_SPEED:
+  //    one_int_param_plus_const_function(token, shooting_set_shutter_speed_ubasic, SET_LATER);
+  //    break;
   case TOKENIZER_SET_USER_TV96:
       one_short_param_function(token, shooting_set_user_tv96);
       break;
