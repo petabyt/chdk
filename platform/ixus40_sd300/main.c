@@ -190,37 +190,38 @@ long get_vbatt_max()
     return 4100;
 	}
 
+// Focus length table in firmware @0xffd792e8
+#define NUM_FL      7   // 0 - 6, entries in firmware
+#define NUM_DATA    3   // 3 words each entry, first is FL
+extern int focus_len_table[NUM_FL*NUM_DATA];
 
-static const int fl_tbl[] = {7700,9030,10490,12520,15600,18780,23100};
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
-#define CF_EFL 47946
+// Conversion factor lens FL --> 35mm equiv
+// lens      35mm     CF
+// ----      ----     --
+// 5.8       35       ( 35/ 5.8) * 580 = 3500  (min FL)
+// 17.4      105      (105/17.4) * 580 = 3500  (max FL)
+#define CF_EFL      3500
+#define	CF_EFL_DIV  580
 
 const int zoom_points = NUM_FL;
 
-int get_effective_focal_length(int zp) 
-	{
-    return (CF_EFL*get_focal_length(zp))/10000;
-	}
+int get_effective_focal_length(int zp) {
+    return (CF_EFL*get_focal_length(zp))/CF_EFL_DIV;
+}
 
-int get_focal_length(int zp) 
-	{
-    if (zp<0) return fl_tbl[0];
-		else if (zp>NUM_FL-1) return fl_tbl[NUM_FL-1];
-				else return fl_tbl[zp];
-	}
+int get_focal_length(int zp) {
+    if (zp < 0) zp = 0;
+    else if (zp >= NUM_FL) zp = NUM_FL-1;
+    return focus_len_table[zp*NUM_DATA];
+}
 
-int get_zoom_x(int zp) 
-	{
-    if (zp<1) return 10;
-		else if (zp>NUM_FL-1) return fl_tbl[NUM_FL-1]*10/fl_tbl[0];
-				else return fl_tbl[zp]*10/fl_tbl[0];
-	}
+int get_zoom_x(int zp) {
+    return get_focal_length(zp)*10/focus_len_table[0];
+}
 
-
-// TODO this may not work with play/rec override
-// playrec_mode not verified
 int rec_mode_active(void) {
-    return ((physw_status[0]&0x03)==0x01) ? 0 : 1;
+    //return ((physw_status[0]&0x03)==0x01) ? 0 : 1;
+    return (playrec_mode==1); //(0 in play, 1 in record, 2 in record review)
 }
 
 #if 0

@@ -650,7 +650,7 @@ static int handle_ptp(
   }
 
   // send response
-  data->send_resp( data->handle, &ptp );
+  data->send_resp( data->handle, &ptp, 0 );
   
   return 1;
 }
