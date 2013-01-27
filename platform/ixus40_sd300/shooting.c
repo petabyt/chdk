@@ -1,5 +1,5 @@
 ///NOTE: also change this define in lib.c!
-#define PARAM_FILE_COUNTER      0x2E 
+#define PARAM_FILE_COUNTER      0x2A 
 #include "platform.h"
 
 const ApertureSize aperture_sizes_table[] = {
