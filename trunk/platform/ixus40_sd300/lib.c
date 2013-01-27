@@ -1,13 +1,16 @@
 #include "platform.h"
 #include "lolevel.h"
-#define PARAM_FILE_COUNTER      0x2E
+#define PARAM_FILE_COUNTER      0x2A
 
 extern void _sub_FF821D04(long mem, long *data);
 extern long _GetPropertyCase_orig(long opt_id, void *buf, long bufsize);
 extern long _SetPropertyCase_orig(long opt_id, void *buf, long bufsize);
 extern long _GetParameterData_orig(long id, void *buf, long size);
+extern long _SetParameterData_orig(long id, void *buf, long size);
 extern void _SetAFBeamBrightness(long val);
 extern void _SetAFBeamOff();
+extern unsigned long _time_orig(unsigned long *timer);
+
 
 //looks like there is no strobechargecompletet flag ?!
 //do it in my own way. found some code to get the eventflag
@@ -21,6 +24,23 @@ long IsStrobeChargeCompleted_my(){
     return (l>>20)&1;
 }
 
+static unsigned long bootuptime = 0;
+
+unsigned long time_my(unsigned long *timer) {
+/*
+the original "time" function doesn't seem to work correctly
+chdk's clock display runs at around 1/7 speed with it (the display is only correct right after bootup)
+this hack provides a replacement using GetSystemTime (which incements every 1ms, I guess),
+but it will be off by a few seconds.
+There might be a fault in this chdk port somewhere...
+*/
+unsigned long timer2; //unsigned long *timer will be NULL when called from chdk
+    _GetSystemTime((long*)&timer2);
+    if (bootuptime == 0) {
+        bootuptime = _time_orig((unsigned long*)0)-(timer2)/1000;
+    }
+    return bootuptime+(timer2)/1000;
+}
 
 //workaround
 //strange, on my cam the propcase_shooting (205)
@@ -105,22 +125,12 @@ void SetPropertyCase_my(long cse, void *ptr, long len){
     }
 }
 
-//do the same hack as above for getparameterdata:
 void GetParameterData_my(long param, void *ptr, long len){
-    if ((param & 0xBFFF) == PARAM_FILE_COUNTER){
-        volatile unsigned short *pdata; 
-        pdata=(void*)(0x42056C+2); //this seems to be the memory location of the current file number
-        
-        if (len==sizeof(long)){
-            *(long*)ptr = (*pdata)-16; //the mem loc stores (filenum+1)*16
-        }else if (len==sizeof(short)){
-            *(short*)ptr = (*pdata)-16; //the mem loc stores (filenum+1)*16
-        }else{
-            //??? FIXME
-        }
-    }else{
-        _GetParameterData_orig(param, ptr, len);
-    }
+    _GetParameterData_orig(param&0xfff, ptr, len); //need to work around chdk's hardcoded 0x4000
+}
+
+void SetParameterData_my(long param, void *ptr, long len){
+    _SetParameterData_orig(param&0xfff, ptr, len); //need to work around chdk's hardcoded 0x4000
 }
 
 
@@ -244,7 +254,7 @@ void debug_led(int state)
 }
 
 int get_flash_params_count(void){
- return 83;
+ return 70;
 }
 
 void set_led(int led, int state)
@@ -270,4 +280,27 @@ void camera_set_led(int led, int state, int bright)
 		    led_off(5);
 		} else
         led_off(led);
+}
+
+// FlashParamsTable entries point to this structure
+typedef struct
+{
+    short   unk1;
+    short   unk2;
+    void*   data;   // Pointer to param data
+    short   size;   // param size
+    short   unk3;
+    int     unk4;
+    short   unk5;
+    short   unk6;
+} flashParam_old;
+
+short get_parameter_size(long id)
+{
+    extern flashParam_old* FlashParamsTable[];
+
+    if ((id >= 0) && (id < get_flash_params_count()))
+        return FlashParamsTable[id]->size;
+
+    return 0;
 }
