@@ -3,6 +3,7 @@
 DEF(led_table, 0xBC24) //should be ok, points to 0xC02200D8 led reg
 DEF(physw_status, 0x117B8) //ok
 DEF(canon_menu_active,0x7D68) //ok!
+DEF(focus_len_table, 0xffd792e8)
 
 //should be ok
 DEF(zoom_busy, 0x6E230)

@@ -32,6 +32,7 @@
     #undef  CAM_HAS_USER_TV_MODES
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
+    #undef  CAM_VIDEO_CONTROL
     #undef  CAM_HAS_IS
 
     #define CAM_DNG_LENS_INFO               { 58,10, 174,10, 28,10, 49,10 } // See comments in camera.h
@@ -54,6 +55,7 @@
     // camera name
     #define PARAM_CAMERA_NAME               2       // parameter number for GetParameterData
     #define CAM_NO_MEMPARTINFO              1       // vxworks function missing
+    #define CAM_FIRMWARE_MEMINFO            1
 
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 

@@ -109,7 +109,7 @@ typedef struct
     char    unk6;
 } flashParam;
 
-short get_parameter_size(long id)
+short __attribute__((weak)) get_parameter_size(long id)
 {
     extern flashParam* FlashParamsTable[];
 

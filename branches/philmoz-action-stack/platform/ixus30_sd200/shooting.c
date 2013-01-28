@@ -1,5 +1,5 @@
 ///NOTE: also change this define in lib.c!
-#define PARAM_FILE_COUNTER      0x2A 
+#define PARAM_FILE_COUNTER      0x2A
 #include "platform.h"
 
 const ApertureSize aperture_sizes_table[] = {
@@ -115,7 +115,8 @@ const CapturemodeMap modemap[] = {
 
 
 long get_file_next_counter() {
-    return ((get_file_counter()>>4)+1)<<4;
+//    return ((get_file_counter()>>4)+1)<<4;
+    return get_file_counter();
 }
 
 long get_target_file_num() {

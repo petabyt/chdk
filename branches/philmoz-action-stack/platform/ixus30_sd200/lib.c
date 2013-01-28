@@ -1,5 +1,6 @@
 #include "platform.h"
 #include "lolevel.h"
+#include "levent.h"
 #define PARAM_FILE_COUNTER      0x2A
 
 extern void _sub_FF821D04(long mem, long *data);
@@ -11,16 +12,15 @@ extern void _SetAFBeamBrightness(long val);
 extern void _SetAFBeamOff();
 extern unsigned long _time_orig(unsigned long *timer);
 
-
 //looks like there is no strobechargecompletet flag ?!
 //do it in my own way. found some code to get the eventflag
 //at 0xFF941A14. copied the call there in my own c-code
 //looking at sd400 asm showed that flash info is (val>>20)&1
 //seems correct here as well..
-long IsStrobeChargeCompleted_my(){
-    volatile long *p = (void*)0x6763C;
+long IsStrobeChargeCompleted_my(){ //look at ff9417d0
+    volatile long *p = (void*)0x675BC; //
     long l;
-    _sub_FF821D04(*p, &l);
+    _sub_FF821D04(*p, &l); //same
     return (l>>20)&1;
 }
 
@@ -118,6 +118,9 @@ void GetPropertyCase_my(long cse, void *ptr, long len){
 }
 
 void SetPropertyCase_my(long cse, void *ptr, long len){
+/*
+PROPCASE_SV_MARKET, PROPCASE_SV, PROPCASE_DELTA_SV -> lower ISO values cause crash
+*/
     if (cse == PROPCASE_SHOOTING){
         //do nothing
     }else{
@@ -132,7 +135,6 @@ void GetParameterData_my(long param, void *ptr, long len){
 void SetParameterData_my(long param, void *ptr, long len){
     _SetParameterData_orig(param&0xfff, ptr, len); //need to work around chdk's hardcoded 0x4000
 }
-
 
 void shutdown()
 {
@@ -304,3 +306,21 @@ short get_parameter_size(long id)
 
     return 0;
 }
+
+/*
+int switch_mode_usb(int mode)
+{
+    if ( mode == 0 ) {
+        //extern void _EnterToPlayFromRec();
+        //_EnterToPlayFromRec();
+        //levent_post_to_ui_by_name("ModeLeverPlay");
+        levent_post_to_ui_by_name("ConnectUSBCable");
+    } else if ( mode == 1 ) {
+        //extern void _EnterToRecFromPlay();
+        //_EnterToRecFromPlay(); ineffective
+        //levent_post_to_ui_by_name("ModeLeverStillRec"); mode switch but bad state, no USB
+        levent_post_to_ui_by_name("DisconnectUSBCable"); crash
+    } else return 0;
+    return 1;
+}
+*/

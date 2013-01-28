@@ -49,18 +49,16 @@ static void task_start_hook(
     _CreateTask("SpyTask", 0x19, 0x2000, spytask, 0); // First creates the SpyTask, i.e. the main CHDK loop
     
     //create our second keypress task
-		_CreateTask("SpyTask2", 0x18, 0x2000, kbd_process_task, 0); 
+    _CreateTask("SpyTask2", 0x18, 0x2000, kbd_process_task, 0); 
     
     taskprev(p0, p1, p2, p3, p4, p5, p6, p7, p8, p9 ); // then, whatever was the call intended to be...
 	}
-
 
 static void remount_filesystem()
 {
     _Unmount_FileSystem();
     _Mount_FileSystem();
 }
-
 
 static void task_fs(
     long p0,    long p1,    long p2,    long p3,    long p4,
@@ -103,15 +101,17 @@ void createHook (void *pNewTcb)
     char *name = (char*)(*(long*)((char*)pNewTcb+0x34));
     long *entry = (long*)((char*)pNewTcb+0x74);
     
-    //volatile long *p; p=(void*) 0xc02200E0; *p=0x46; //debug led
     
     // always hook first task creation
     // to create SpyTask
     if (!stop_hooking){
+
         taskprev = (void*)(*entry);
         *entry = (long)task_start_hook;
         stop_hooking = 1;
+
     }else{
+
         // hook/replace another tasks
         // Replace the call to "SwitchCheckTask" with our own procedure
         if (my_ncmp(name, "tSwitchChe", 10) == 0){
@@ -129,13 +129,14 @@ void createHook (void *pNewTcb)
             *entry = (long)capt_seq_hook;
         }
 
+
         if (my_ncmp(name, "tMovieRecT", 10) == 0){
             *entry = (long)movie_record_hook;
         }
 
-core_hook_task_create(pNewTcb);
+        core_hook_task_create(pNewTcb);
+        }
 }
-	}
 
 void deleteHook (void *pTcb)
 	{
@@ -148,7 +149,6 @@ void startup()
     long *ptr;
     long i,l;
 
-    //volatile long *p; p=(void*) 0xc02200E0; *p=0x46; //debug led
 
     // sanity check
     if ((long)&link_bss_end > (MEMISOSTART + MEMISOSIZE)) {
@@ -219,8 +219,9 @@ int get_zoom_x(int zp) {
     return get_focal_length(zp)*10/focus_len_table[0];
 }
 
+
 int rec_mode_active(void) {
-    //return ((physw_status[0]&0x03)==0x01) ? 0 : 1;
+//    return ((physw_status[0]&0x03)==0x01) ? 0 : 1;
     return (playrec_mode==1); //(0 in play, 1 in record, 2 in record review)
 }
 
