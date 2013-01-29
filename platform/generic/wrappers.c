@@ -125,7 +125,7 @@ typedef struct
 } flashParam;
 #endif // CAM_FLASHPARAMS_VERSION
 
-short __attribute__((weak)) get_parameter_size(long id)
+short get_parameter_size(long id)
 {
     extern flashParam* FlashParamsTable[];
 
