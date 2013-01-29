@@ -572,18 +572,11 @@ static int luaCB_get_zoom( lua_State* L )
 
 static int luaCB_get_parameter_data( lua_State* L )
 {
-  extern long* FlashParamsTable[]; 
-
   unsigned size;
   unsigned id = luaL_checknumber( L, 1 );
   unsigned val;
 
-  if (id >= get_flash_params_count()) {
-    // return nil
-    return 0;
-  }
-
-  size = FlashParamsTable[id][1]>>16;
+  size = get_parameter_size(id);
   if (size == 0) {
     // return nil
     return 0;

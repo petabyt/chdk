@@ -2497,7 +2497,6 @@ void gui_draw_debug_vals_osd() {
         }
 
         if (conf.debug_display == DEBUG_DISPLAY_PARAMS){
-            extern long* FlashParamsTable[]; 
             char s[30];
             int count;
 
@@ -2507,7 +2506,7 @@ void gui_draw_debug_vals_osd() {
                 if (p>=get_flash_params_count()) {
                     sprintf(buf, "%3d: This parameter does not exists", p);
                 } else  {
-                    len=FlashParamsTable[p][1]>>16;
+                    len = get_parameter_size(p);
                     if ((len==1)||(len==2)||(len==4)){
                         get_parameter_data(p, &r, len); 
                         sprintf(buf, "%3d: %30d :%2d ", p, r,len);
