@@ -636,7 +636,7 @@
 
 #elif CAM_BITMAP_PALETTE==13
 
-// Used by :- G12, SX30, SX40HS, IXUS310_ELPH500HS, SX200IS, A1200
+// Used by :- G12, IXUS310_ELPH500HS, SX30, SX40HS, SX200IS, A1200, A810
 
     #define COLOR_WHITE                 0x01
     #define COLOR_GREY_DK               0x1a
