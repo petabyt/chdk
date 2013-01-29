@@ -96,7 +96,22 @@ long set_property_case(long id, void *buf, long bufsize)
     return _SetPropertyCase(id, buf, bufsize);
 }
 
-// FlashParamsTable entries point to this 16 byte structure
+// FlashParamsTable entries point to this structure
+#if CAM_FLASHPARAMS_VERSION == 2
+// ixus30_sd200, ixus40_sd300
+typedef struct
+{
+    short   unk1;
+    short   unk2;
+    void*   data;   // Pointer to param data
+    short   size;   // param size
+    short   unk3;
+    int     unk4;
+    short   unk5;
+    short   unk6;
+} flashParam;
+#else
+// version 3 (every camera from 2005 on)
 typedef struct
 {
     void*   data;   // Pointer to param data
@@ -108,6 +123,7 @@ typedef struct
     char    unk5;
     char    unk6;
 } flashParam;
+#endif // CAM_FLASHPARAMS_VERSION
 
 short __attribute__((weak)) get_parameter_size(long id)
 {

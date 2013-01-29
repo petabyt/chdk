@@ -25,6 +25,7 @@
 
     #undef  CAM_DRYOS                           // Camera is DryOS-based
     #undef  CAM_PROPSET                         // Camera's properties group (the generation)
+    #define CAM_FLASHPARAMS_VERSION         3   // flash parameters structure version (every camera from 2005 on is version 3)
     #undef  CAM_DRYOS_2_3_R31                   // Define for cameras with DryOS release R31 or greater -> G10
     #undef  CAM_DRYOS_2_3_R39                   // Define for cameras with DryOS release R39 or greater
     #undef  CAM_DRYOS_2_3_R47                   // Define for cameras with DryOS release R47 or greater -> Cameras can boot from FAT32

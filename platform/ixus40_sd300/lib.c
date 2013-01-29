@@ -281,26 +281,3 @@ void camera_set_led(int led, int state, int bright)
 		} else
         led_off(led);
 }
-
-// FlashParamsTable entries point to this structure
-typedef struct
-{
-    short   unk1;
-    short   unk2;
-    void*   data;   // Pointer to param data
-    short   size;   // param size
-    short   unk3;
-    int     unk4;
-    short   unk5;
-    short   unk6;
-} flashParam_old;
-
-short get_parameter_size(long id)
-{
-    extern flashParam_old* FlashParamsTable[];
-
-    if ((id >= 0) && (id < get_flash_params_count()))
-        return FlashParamsTable[id]->size;
-
-    return 0;
-}
