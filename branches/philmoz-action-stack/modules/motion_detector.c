@@ -118,7 +118,7 @@ static int action_stack_AS_MOTION_DETECTOR()
             // it onto the thread's stack.
             libscriptapi->set_as_ret(motion_detector->return_value);
         }
-        action_pop_func();
+        action_pop_func(0);
         return 1;
     }
     return 0;
@@ -126,7 +126,7 @@ static int action_stack_AS_MOTION_DETECTOR()
 
 static void md_kbd_sched_immediate_shoot(int no_release)
 {
-    action_pop_func();// REMOVE MD ITEM
+    action_pop_func(0);// REMOVE MD ITEM
 
     // stack operations are reversed!
     if (!no_release)  // only release shutter if allowed

@@ -107,7 +107,7 @@ static int action_stack_AS_SCRIPT_RUN()
     }
     else
     {
-        action_pop_func();
+        action_pop_func(0);
         return 1;
     }
     return 0;

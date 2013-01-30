@@ -352,8 +352,7 @@ static int action_stack_AS_LUA_SLEEP()
 {
     if (get_tick_count() >= action_top(2))
     {
-        action_pop_func();
-        action_pop();
+        action_pop_func(1);
         return 1;
     }
     return 0;
@@ -957,8 +956,7 @@ static int action_stack_AS_WAIT_MODULE()
     // the script
     if (camera_info.state.state_kbd_script_run)
     {
-        action_pop_func();
-        return 1;
+        action_pop_func(0);
     }
     return 0;
 }
@@ -2079,8 +2077,7 @@ static int action_stack_AS_SCRIPT_READ_USB_MSG()
         {
             lua_pushnil(Lt);
         }
-        action_pop_func();
-        action_pop();
+        action_pop_func(1);
         return 1;
     }
     return 0;
@@ -2095,9 +2092,7 @@ static int action_stack_AS_SCRIPT_WRITE_USB_MSG()
     if ((get_tick_count() >= action_top(3)) || r)
     {
         lua_pushboolean(Lt,r);
-        action_pop_func();
-        action_pop();
-        action_pop();
+        action_pop_func(2);
         return 1;
     }
     return 0;

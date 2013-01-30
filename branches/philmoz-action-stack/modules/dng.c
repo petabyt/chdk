@@ -847,7 +847,7 @@ static int action_stack_BADPIX_S2()
 {
     // Process bad pixel generation actions
 
-    action_pop_func();
+    action_pop_func(0);
 
     console_clear();
     if (badpix_cnt1 == init_badpixel_bin_flag)
@@ -880,7 +880,7 @@ static int action_stack_BADPIX_S1()
 {
     // Process bad pixel generation actions
 
-    action_pop_func();
+    action_pop_func(0);
 
     // Count bad pixels from previous shot
     badpix_cnt1 = init_badpixel_bin_flag;
@@ -898,7 +898,7 @@ static int action_stack_BADPIX_START()
 {
     // Process bad pixel generation actions
 
-    action_pop_func();
+    action_pop_func(0);
 
     // Notify yser
     console_clear();

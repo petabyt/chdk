@@ -332,7 +332,6 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
 
             // Action stack functions
             action_stack_create,
-            action_pop,
             action_pop_func,
             action_top,
             action_push,

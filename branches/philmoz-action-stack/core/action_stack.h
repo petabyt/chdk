@@ -17,14 +17,13 @@ int action_stack_AS_SHOOT(void);
 AS_ID action_stack_create(action_func proc_func);
 
 long action_top(int n);
-long action_pop();
 void action_push(long p);
 void action_push_delay(long msec);
 void action_push_press(long key);
 void action_push_release(long key);
 void action_push_click(long key);
 void action_push_shoot(int retry);
-long action_pop_func();
+long action_pop_func(int nParam);
 void action_push_func(action_func f);
 
 void action_wait_for_click(int timeout);

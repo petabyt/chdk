@@ -1514,8 +1514,7 @@ static int action_stack_AS_UBASIC_SLEEP()
 {
     if (get_tick_count() >= action_top(2))
     {
-        action_pop_func();
-        action_pop();
+        action_pop_func(1);
         return 1;
     }
     return 0;
