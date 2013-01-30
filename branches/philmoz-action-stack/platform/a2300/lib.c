@@ -1,8 +1,9 @@
 #include "platform.h"
 #include "lolevel.h"
 
-#define LED_PR 0xC0220120
 static char*    frame_buffer[2];
+#define LED_PR 0xC0220120
+//#define LED_AF 0xC0223030
 
 void shutdown()
 {
@@ -29,10 +30,12 @@ void debug_led(int state)
      *(int*)LED_PR=state ? 0x46 : 0x44;
 }
 
-// A810 has two 'lights' - Power LED, and AF assist lamp
+// To do: Check this!!!
+// A2300 has two 'lights' - Power LED, and AF assist lamp
 // Power Led = first entry in table (led 0)
-// AF Assist Lamp = second entry in table (led 1) ????
+// AF Assist Lamp = second entry in table (led 1)
 void camera_set_led(int led, int state, int bright) {
+	return;
  static char led_table[2]={0,4};
  _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
@@ -44,18 +47,12 @@ void shutdown_soft()
 
 int vid_get_viewport_width()
 {
-    // viewport width table for each image size
-    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_w[4] = { 360, 360, 360, 360 };
-    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+	return 360;
 }
 
 long vid_get_viewport_height()
 {
-    // viewport height table for each image size
-    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_h[4] = { 240, 240, 240, 240 };
-    return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+   return 240;
 }
 
 int vid_get_viewport_xoffset() 
@@ -74,15 +71,15 @@ int vid_get_viewport_yoffset()
     return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
-void vid_bitmap_refresh() {
+void vid_bitmap_refresh() 
+{
+	extern int full_screen_refresh;
+    extern void _ScreenLock();
+    extern void _ScreenUnlock();
 
-    extern int full_screen_refresh;
-    extern void _LockAndRefresh();      // wrapper function for screen lock
-    extern void _UnlockAndRefresh();    // wrapper function for screen unlock
-
-    full_screen_refresh |= 3;
-    _LockAndRefresh();
-    _UnlockAndRefresh();
+	full_screen_refresh |= 3;
+    _ScreenLock();
+    _ScreenUnlock();
 }
 
 void *vid_get_bitmap_active_palette() {
@@ -102,8 +99,7 @@ void load_chdk_palette() {
         {
                 int *pal = (int*)vid_get_bitmap_active_palette();
                 if (pal[CHDK_COLOR_BASE+0] != 0x33ADF62)
-                {
-                
+                {                
                         pal[CHDK_COLOR_BASE+0]  = 0x33ADF62;  // Red
                         pal[CHDK_COLOR_BASE+1]  = 0x326EA40;  // Dark Red
                         pal[CHDK_COLOR_BASE+2]  = 0x34CD57F;  // Light Red
@@ -127,11 +123,10 @@ void load_chdk_palette() {
 #endif
 
 // Functions for PTP Live View system
-// 256 entry palette based on 100b sub_FF909B0C
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
 
 void *vid_get_bitmap_active_buffer()
 {
-    return (void*)(*(int*)(0x5400+0x18)); //found @ loc_ff909bb0 a810 100b
+    return (void*)(*(int*)(0x542C+0x18)); //found @ loc_ff90a118 a2300 b101
 }

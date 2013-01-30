@@ -1,6 +1,6 @@
-// Camera - A810 - platform_camera.h
+// Camera - A2300 - platform_camera.h
 
-// This file contains the various settings values specific to the A810 camera.
+// This file contains the various settings values specific to the A2300 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -21,37 +21,38 @@
 // don't override them again in here.
 
     #define CAM_DRYOS                       1
-    #define CAM_PROPSET                     4
+    #define CAM_PROPSET                     5
 
     #define CAM_DRYOS_2_3_R31               1       // Define for cameras with DryOS release R31 or greater -> G10
     #define CAM_DRYOS_2_3_R39               1       // Defined for cameras with DryOS version R39 or higher
     #define CAM_DRYOS_2_3_R47               1       // Defined for cameras with DryOS version R47 or higher
 
-    #define CAM_RAW_ROWPIX                  4704 // Found @0xff92def4 a810
-    #define CAM_RAW_ROWS                    3504 // Found @0xff92df00 a810
+
+    #define CAM_RAW_ROWPIX                  4704    // Found @0xff92e1c4  a2300
+    #define CAM_RAW_ROWS                    3504    // Found @0xff92e1d0  a2300
 
     #undef  CAM_UNCACHED_BIT
-    #define CAM_UNCACHED_BIT                0x40000000 // Found @0xff832e74 a810
+    #define CAM_UNCACHED_BIT                0x40000000 // Found @0xff834324 a2300
 
     #define CAM_JPEG_WIDTH                  4608     
     #define CAM_JPEG_HEIGHT                 3456    
-    #define CAM_ACTIVE_AREA_X1              16    	
-    #define CAM_ACTIVE_AREA_Y1              26
-    #define CAM_ACTIVE_AREA_X2              4640
-    #define CAM_ACTIVE_AREA_Y2              3486
+    #define CAM_ACTIVE_AREA_X1              16		//Not verified
+    #define CAM_ACTIVE_AREA_Y1              26		//Not verified
+    #define CAM_ACTIVE_AREA_X2              4640	//Not verified
+    #define CAM_ACTIVE_AREA_Y2              3486	//Not verified
 
-    #define CAM_DNG_LENS_INFO               { 50,10, 250,10, 28,10, 69,10 } // See comments in camera.h a810
+    #define CAM_DNG_LENS_INFO               { 50,10, 250,10, 28,10, 69,10 } // See comments in camera.h   a2300is
 
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
-
+    
     #define cam_CFAPattern                  0x01000201   // [Green Blue Red Green]
     
     #define CAM_COLORMATRIX1                             \
     827547, 1000000, -290458, 1000000, -126086, 1000000, \
     -12829, 1000000,  530507, 1000000,   50537, 1000000, \
       5181, 1000000,   48183, 1000000,  245014, 1000000
-
+      
     #define cam_CalibrationIlluminant1      1       // Daylight
 
     #undef  CAM_USES_ASPECT_CORRECTION
@@ -77,15 +78,15 @@
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
     #undef  CAM_HAS_IRIS_DIAPHRAGM
-
+	
     #undef  CAM_HAS_ERASE_BUTTON
-
+    
     #undef  CAM_HAS_IS                              // Camera does not have an image stabilizer
 
     #undef  CAM_HAS_MANUAL_FOCUS
-
+    
     #undef  CAM_VIDEO_CONTROL
-
+    
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              13      // palette number reserved in core/gui_draw.h
     #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
@@ -108,7 +109,6 @@
     #define CAM_NEED_SET_ZOOM_DELAY          300  // Define to add a delay after setting the zoom position
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
 
-//    #define CAM_AF_SCAN_DURING_VIDEO_RECORD  1  //TODO: Disabled until find a solution.
     #define CAM_QUALITY_OVERRIDE             1
 
     #undef  CAM_USB_EVENTID
@@ -116,6 +116,5 @@
     #define CAM_MISSING_RAND                 1    // srand()/rand() functions not found in firmware. If defined, CHDK use functions implemented in C
     #define MKDIR_RETURN_ONE_ON_SUCCESS      1    // mkdir() return 1 on success, 0 on fail.
 
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// TODO specifies an LED that turns on while camera waits for USB remote to sync
-
+//	#define REMOTE_SYNC_STATUS_LED 	0xC0223030		// TODO specifies an LED that turns on while camera waits for USB remote to sync
 //----------------------------------------------------------
