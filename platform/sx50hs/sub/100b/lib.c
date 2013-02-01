@@ -2,7 +2,6 @@
 
 char *hook_raw_image_addr()
 {
-
 	// [0x3B14 + 0xC] --> defines which buffer is active
 
     if (*((int*)(0x3B14 + 0xC)) != 0)       //SX50: 0x3B14 (@FF08A0B0 ) + 0xC (@FF08A0DC)
@@ -11,8 +10,9 @@ char *hook_raw_image_addr()
         return (char*) 0x44000000;
 }
 
-char *hook_alt_raw_image_addr() {
-    if (*((int*)(0x3188 + 0xC)) == 0)
+char *hook_alt_raw_image_addr()
+{
+    if (*((int*)(0x3B14 + 0xC)) == 0)
         return (char*) 0x4ADB23C0;
     else
         return (char*) 0x44000000;
