@@ -11,7 +11,7 @@ b=6         -- rows to split picture into
 c=1         -- measure mode (Y,U,V R,G,B) – U=0, Y=1, V=2, R=3, G=4, B=5
 d=300000    -- timeout (mSec) 
 e=200       -- comparison interval (msec) - less than 100 will slow down other CHDK functions
-g=1         -- draw grid (0=no, 1=yes)   
+g=3         -- draw grid (0=no, 1=grid, 2=sensitivity readout, 3=sensitivity readout & grid)   
 h=0         -- not used in LUA - in uBasic is the variable that gets loaded with the number of cells with motion detected
 i=0         -- region masking mode: 0=no regions, 1=include, 2=exclude
 j=0         --      first column
