@@ -170,7 +170,7 @@ void gui_script_draw()
 }
 
 // GUI handler for Script mode
-gui_handler scriptGuiHandler = { GUI_MODE_SCRIPT, gui_script_draw, gui_script_kbd_process, 0, GUI_MODE_FLAG_NODRAWRESTORE|GUI_MODE_FLAG_NORESTORE_ON_SWITCH, GUI_MODE_MAGICNUM };      
+gui_handler scriptGuiHandler = { GUI_MODE_SCRIPT, gui_script_draw, gui_script_kbd_process, 0, 0, GUI_MODE_MAGICNUM };      
 
 static gui_handler *old_gui_handler = 0;
 
@@ -179,6 +179,9 @@ static gui_handler *old_gui_handler = 0;
 // Terminate a script, either because of error, or the script finished
 void script_end()
 {
+    // Tell other code that script has ended
+    camera_info.state.state_kbd_script_run = SCRIPT_STATE_INACTIVE;
+
     script_print_screen_end();
 
     // Restore old handler - prevent calling MD draw after module unloaded
@@ -205,11 +208,8 @@ void script_end()
 
 	shot_histogram_set(0);
     kbd_key_release_all();
-    camera_info.state.state_kbd_script_run = SCRIPT_STATE_INACTIVE;
 
     conf_update_prevent_shutdown();
-
-    vid_bitmap_refresh();
 }
 
 long script_start_gui( int autostart )

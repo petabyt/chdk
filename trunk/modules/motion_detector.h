@@ -30,14 +30,13 @@ function md_detect_changes (
   rows, // input parameter. number of rows to split screen into
 
   pixel_measure_mode, // input parameter.
-		// 1 - for Y,
+    // 1 - for Y,
     // 2 for U, - (mx3)not sure if this mode required
     // 3 for V, - (mx3)not sure if this mode required
     // 4 for gray, - (mx3)not sure if this mode required
     // 5 for R, - (mx3)not sure if this mode required
     // 6 for G, - (mx3)not sure if this mode required
     // 7 for B - (mx3)not sure if this mode required
-	// 9 for face detection
 
   detection_timeout, // input parameter. number of millisecnds to abort detection. detected_cells_count will be 0 for timeout condition
 
@@ -45,9 +44,9 @@ function md_detect_changes (
 
   threshold, // input parameter. difference value for which procedure will trigger detection of changes
 
-  draw_grid, // boolean input parameter. 
-             // true(1) to draw grid(detected sectors/cells).
-             // false(0) - to not display grid/detected sectors
+  draw_grid, // bit mask input parameter. 
+             // bit 0 - to draw grid (detected sectors/cells).
+             // bit 1 - to display most recent cell difference
 
   detected_cells_count, // output parameter. count of cells where pixel values differs enough to trigger motion detection
 
@@ -81,8 +80,6 @@ function md_get_cell_diff (
 
 #include "stdlib.h"
 
-#define MOTION_DETECTOR_CELLS 1024
-
 struct libmotiondetect_sym {
 	int version;
 
@@ -98,15 +95,14 @@ struct libmotiondetect_sym {
                                         // 5 for R, - (mx3)not sure if this mode required
                                         // 6 for G, - (mx3)not sure if this mode required
                                         // 7 for B - (mx3)not sure if this mode required
-                                        // 9 for face detection
          int detection_timeout,         // input parameter. number of millisecnds to abort detection.
                                         // detected_cells_count will be 0 for timeout condition
          int measure_interval,          // input parameter. number of milliseconds between comparison of two pictures
          int threshold,                 // input parameter. difference value for which procedure will trigger detection of changes
-         int draw_grid,                 // boolean input parameter. 
-                                        // true(1) to draw grid(detected sectors/cells).
-                                        // false(0) - to not display grid/detected sectors
-// clipping. allows to exclude some region from mtion detection triggering
+         int draw_grid,                 // bit mask input parameter. 
+                                        // bit 0 - controls drawing grid(detected sectors/cells) (0=off, 1=on).
+                                        // bit 1 - controls display of most recent cell difference (0=off, 1=on).
+// clipping. allows to exclude some region from motion detection triggering
 // or use onli selected area to make motion detection
 // I'm not sure that following parameters are required but using them anyway
          int clipping_region_mode,      // input parameter.
