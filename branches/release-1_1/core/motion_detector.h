@@ -30,14 +30,12 @@ function md_detect_changes (
   rows, // input parameter. number of rows to split screen into
 
   pixel_measure_mode, // input parameter.
-		// 1 - for Y,
-    // 2 for U, - (mx3)not sure if this mode required
-    // 3 for V, - (mx3)not sure if this mode required
-    // 4 for gray, - (mx3)not sure if this mode required
-    // 5 for R, - (mx3)not sure if this mode required
-    // 6 for G, - (mx3)not sure if this mode required
-    // 7 for B - (mx3)not sure if this mode required
-	// 9 for face detection
+    // 0 for Y,
+    // 1 for U, - (mx3)not sure if this mode required
+    // 2 for V, - (mx3)not sure if this mode required
+    // 3 for R, - (mx3)not sure if this mode required
+    // 4 for G, - (mx3)not sure if this mode required
+    // 5 for B, - (mx3)not sure if this mode required
 
   detection_timeout, // input parameter. number of millisecnds to abort detection. detected_cells_count will be 0 for timeout condition
 
@@ -81,8 +79,6 @@ function md_get_cell_diff (
 
 #include "../include/platform.h"
 #include "../include/stdlib.h"
-
-#define MOTION_DETECTOR_CELLS 1024
 
 struct libmotiondetect_sym {
 	int version;
@@ -131,14 +127,12 @@ extern int md_init_motion_detector(
  int rows, // input parameter. number of rows to split screen into
 
  int pixel_measure_mode, // input parameter.
-		// 1 - for Y,
-    // 2 for U, - (mx3)not sure if this mode required
-    // 3 for V, - (mx3)not sure if this mode required
-    // 4 for gray, - (mx3)not sure if this mode required
-    // 5 for R, - (mx3)not sure if this mode required
-    // 6 for G, - (mx3)not sure if this mode required
-    // 7 for B - (mx3)not sure if this mode required
-	// 9 for face detection
+    // 0 for Y,
+    // 1 for U, - (mx3)not sure if this mode required
+    // 2 for V, - (mx3)not sure if this mode required
+    // 3 for R, - (mx3)not sure if this mode required
+    // 4 for G, - (mx3)not sure if this mode required
+    // 5 for B, - (mx3)not sure if this mode required
 
  int detection_timeout, // input parameter. number of millisecnds to abort detection. detected_cells_count will be 0 for timeout condition
 
