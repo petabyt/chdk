@@ -179,10 +179,11 @@ long action_pop()
 
 // Pop top func entry off the stack
 // Can only be called from an action stack
-long action_pop_func()
+long action_pop_func(int nParam)
 {
-    action_pop();
-    return action_pop();
+    for (; nParam >= 0; nParam--)
+        action_pop();
+    return action_pop();    // Return function pointer / last parameter
 }
 
 // Push a new entry onto the stack
@@ -201,113 +202,12 @@ void action_push_func(action_func f)
 }
 
 //----------------------------------------------------------------------------------
-// Custom functions to push specific actions onto the stack
-
-// Process a sleep function from the stack
-static void action_stack_AS_SLEEP()
-{
-    long delay = action_top(2);
-
-    if (action_process_delay(delay))
-    {
-        action_clear_delay();
-        action_pop_func();
-        action_pop();
-    }
-}
-
-// Push a sleep onto the stack
-// Can only be called from an action stack
-void action_push_delay(long msec)
-{
-    action_push(msec);
-    action_push_func(action_stack_AS_SLEEP);
-}
-
-// Process a button press action from the stack
-static void action_stack_AS_PRESS()
-{
-    extern int usb_sync_wait;
-
-    action_pop_func();
-    long skey = action_pop();   // Key parameter
-
-    if ((skey == KEY_SHOOT_FULL) && conf.remote_enable && conf.synch_enable) usb_sync_wait = 1;
-
-    kbd_key_press(skey);
-}
-
-// Push a button press action onto the stack
-// Can only be called from an action stack
-void action_push_press(long key)
-{
-    // WARNING stack program flow is reversed
-    action_push_delay(camera_info.cam_key_press_delay);
-    action_push(key);
-    action_push_func(action_stack_AS_PRESS);
-}
-
-// Process a button release action from the stack
-static void action_stack_AS_RELEASE()
-{
-    action_pop_func();
-    long skey = action_pop();   // Key parameter
-    kbd_key_release(skey);
-}
-
-// Push a button release action onto the stack
-// Can only be called from an action stack
-void action_push_release(long key)
-{
-    // WARNING stack program flow is reversed
-    action_push_delay(camera_info.cam_key_release_delay);
-    action_push(key);
-    action_push_func(action_stack_AS_RELEASE);
-}
-
-// Push a button click action onto the stack (press, optional delay, release)
-// Can only be called from an action stack
-void action_push_click(long key)
-{
-    // WARNING stack program flow is reversed
-    action_push_release(key);
-    // camera need delay for click?
-    if (camera_info.cam_key_click_delay > 0)
-        action_push_delay(camera_info.cam_key_click_delay);
-    action_push_press(key);
-}
-
-// Wait for a button to be pressed and released (or the timeout to expire)
-static void action_stack_AS_WAIT_CLICK()
-{
-    long delay = action_top(2);
-
-    if (action_process_delay(delay) || (camera_info.state.kbd_last_clicked = kbd_get_clicked_key()))
-    {
-        if (!camera_info.state.kbd_last_clicked)
-            camera_info.state.kbd_last_clicked=0xFFFF;
-        action_clear_delay();
-        action_pop_func();
-        action_pop();
-    }
-}
-
-// Push a wait for button click action onto the stack
-// Can only be called from an action stack
-void action_wait_for_click(int timeout)
-{
-    // accept wait_click 0 for infinite, but use -1 internally to avoid confusion with generated waits
-    action_push(timeout?timeout:-1);
-    action_push_func(action_stack_AS_WAIT_CLICK);
-}
-
-//----------------------------------------------------------------------------------
 // Delay processing
 
 // handle initializing and checking a timeout value set by 'delay'
 // returns zero if the timeout has not expired, 1 if it has
 // does not pop the delay value off the stack or clear the delay value
-int action_process_delay(long delay)
+static int action_process_delay(long delay)
 {
     unsigned t = get_tick_count();
     // FIXME take care if overflow occurs
@@ -327,57 +227,240 @@ int action_process_delay(long delay)
     return 0;
 }
 
-// Disable current delay
-void action_clear_delay(void)
+//----------------------------------------------------------------------------------
+// Custom functions to push specific actions onto the stack
+
+// Pop a sleep from the stack
+// Can only be called from an action stack
+void action_pop_delay()
 {
     active_stack->delay_target_ticks = 0;
+    action_pop_func(1);
+}
+
+// Process a sleep function from the stack
+static int action_stack_AS_SLEEP()
+{
+    long delay = action_top(2);
+
+    if (action_process_delay(delay))
+    {
+        action_pop_delay();
+        return 1;
+    }
+
+    return 0;
+}
+
+// Push a sleep onto the stack
+// Can only be called from an action stack
+void action_push_delay(long msec)
+{
+    action_push(msec);
+    action_push_func(action_stack_AS_SLEEP);
+}
+
+// Process a button press action from the stack
+static int action_stack_AS_PRESS()
+{
+    extern int usb_sync_wait;
+
+    long skey = action_pop_func(1); // Key parameter returned
+
+    if ((skey == KEY_SHOOT_FULL) && conf.remote_enable && conf.synch_enable) usb_sync_wait = 1;
+
+    kbd_key_press(skey);
+
+    return 1;
+}
+
+// Push a button press action onto the stack
+// Can only be called from an action stack
+void action_push_press(long key)
+{
+    // WARNING stack program flow is reversed
+    action_push_delay(camera_info.cam_key_press_delay);
+    action_push(key);
+    action_push_func(action_stack_AS_PRESS);
+}
+
+// Process a button release action from the stack
+static int action_stack_AS_RELEASE()
+{
+    long skey = action_pop_func(1); // Key parameter returned
+    kbd_key_release(skey);
+    return 1;
+}
+
+// Push a button release action onto the stack
+// Can only be called from an action stack
+void action_push_release(long key)
+{
+    // WARNING stack program flow is reversed
+    action_push_delay(camera_info.cam_key_release_delay);
+    action_push(key);
+    action_push_func(action_stack_AS_RELEASE);
+}
+
+// Push a button click action onto the stack (press, optional delay, release)
+// Can only be called from an action stack
+void action_push_click(long key)
+{
+    // WARNING stack program flow is reversed
+    action_push_release(key);
+    action_push_press(key);
+}
+
+// Wait for a button to be pressed and released (or the timeout to expire)
+static int action_stack_AS_WAIT_CLICK()
+{
+    long delay = action_top(2);
+
+    if (action_process_delay(delay) || (camera_info.state.kbd_last_clicked = kbd_get_clicked_key()))
+    {
+        if (!camera_info.state.kbd_last_clicked)
+            camera_info.state.kbd_last_clicked=0xFFFF;
+        action_pop_delay();
+        return 1;
+    }
+
+    return 0;
+}
+
+// Push a wait for button click action onto the stack
+// Can only be called from an action stack
+void action_wait_for_click(int timeout)
+{
+    // accept wait_click 0 for infinite, but use -1 internally to avoid confusion with generated waits
+    action_push(timeout?timeout:-1);
+    action_push_func(action_stack_AS_WAIT_CLICK);
 }
 
 //----------------------------------------------------------------------------------
 // 'Shoot' actions
 
-static void action_stack_AS_WAIT_SAVE()
+// Action stack function - wait for shooting to be finished
+// parameters - retry flag
+static int action_stack_AS_WAIT_SHOOTING_DONE()
 {
+    // Are we there yet?
     if (!shooting_in_progress())
     {
-        action_pop_func();
-        if (libscriptapi)
-            libscriptapi->set_as_ret((camera_info.state.state_shooting_progress == SHOOTING_PROGRESS_NONE) ? 0 : 1);
+        // Remove this action from stack
+        int retry = action_pop_func(1); // Retry parameter returned
+
+        // Check if shoot succeeded or not
+        if (camera_info.state.state_shooting_progress == SHOOTING_PROGRESS_NONE)
+        {
+            if (retry)
+            {
+                // Shoot failed, retry once, if it fails again give up
+                action_push_shoot(0);
+
+                // Short delay before retrying shoot
+                action_push_delay(250);
+            }
+            else
+            {
+                // Failed - already retried, or no retry requested
+                // Return 'shoot' status to script - 2 = shoot failed
+                if (libscriptapi)
+                    libscriptapi->set_as_ret(2);
+            }
+        }
+        else
+        {
+            // Return 'shoot' status to script - 0 = shoot succesful
+            if (libscriptapi)
+                libscriptapi->set_as_ret(0);
+
+            // Final script config delay (XXX FIXME find out how to wait to jpeg save finished)
+            if (conf.script_shoot_delay > 0)
+                action_push_delay(conf.script_shoot_delay*100);
+        }
+
+        return 1;
     }
+    return 0;
 }
 
-static void action_stack_AS_WAIT_FLASH()
+// Action stack function - wait for flash to charge
+static int action_stack_AS_WAIT_FLASH()
 {
     if (shooting_is_flash_ready())
-        action_pop_func();
+    {
+        action_pop_func(0);
+        return 1;
+    }
+    return 0;
 }
 
-static void action_stack_AS_WAIT_SHOOTING_IN_PROGRESS()
+// Action stack function - wait for camera ready to shoot after half press, or timeout
+// parameters - timeout delay, retry flag
+static int action_stack_AS_WAIT_SHOOTING_IN_PROGRESS()
 {
+    // Get parameters
+    int timeout = action_top(2);
+    int retry = action_top(3);
+
     if (shooting_in_progress() || MODE_IS_VIDEO(mode_get()))
-        action_pop_func();
+    {
+        // Remove this action from the stack
+        action_pop_func(2);
+
+        // Push the rest of the shoot actions onto the stack (reversed flow)
+
+        // Push 'retry if failed' parameter for exit action
+        action_push(retry);
+        action_push_func(action_stack_AS_WAIT_SHOOTING_DONE);
+
+        // Full press shutter
+        action_push_click(KEY_SHOOT_FULL);
+
+        // Wait for flash recharged
+        action_push_func(action_stack_AS_WAIT_FLASH);
+
+        return 1;
+    }
+    if (get_tick_count() >= timeout)
+    {
+        // Remove this action from the stack
+        action_pop_func(2);
+
+        // Return 'shoot' status to script - 1 = shutter half press timed out
+        if (libscriptapi)
+            libscriptapi->set_as_ret(1);
+
+        return 1;
+    }
+    return 0;
 }
 
-void action_stack_AS_SHOOT()
+// Push the core 'shoot' actions onto the stack
+// Note: action stack actions are processed in reverse order
+void action_push_shoot(int retry)
 {
-    action_pop_func();
-
+    // Init shooting state
     camera_info.state.state_shooting_progress = SHOOTING_PROGRESS_NONE;
 
-    // XXX FIXME find out how to wait to jpeg save finished
-    action_push_delay(conf.script_shoot_delay*100);
-
-    action_push_func(action_stack_AS_WAIT_SAVE);
-
-    action_push_release(KEY_SHOOT_HALF);
-    action_push_release(KEY_SHOOT_FULL);
-
-    action_push_press(KEY_SHOOT_FULL);
-
-    action_push_func(action_stack_AS_WAIT_FLASH);
+    // Wait for camera ready to shoot or timeout
+    action_push(retry);
+    action_push(get_tick_count() + 5000);
     action_push_func(action_stack_AS_WAIT_SHOOTING_IN_PROGRESS);
 
+    // Half press shutter
     action_push_press(KEY_SHOOT_HALF);
+}
+
+int action_stack_AS_SHOOT()
+{
+    // Remove this action from stack
+    action_pop_func(0);
+
+    // Push the shoot actions (with retry on shoot failure)
+    action_push_shoot(1);
+
+    return 1;
 }
 
 //----------------------------------------------------------------------------------
@@ -386,14 +469,16 @@ void action_stack_AS_SHOOT()
 // Run the topmost function on the active stack.
 static void action_stack_process()
 {
-    if (active_stack->stack_ptr >= 0)
+    int process = 1;
+
+    while (process && (active_stack->stack_ptr >= 0))
     {
         // Get function address and id from stack
         long id = action_top(0);
         action_func f = (action_func)action_top(1);
         if (id == AS_FUNC_ENTRY)    // Safety check
         {
-            f();
+            process = f();
         }
         else
         {
@@ -401,9 +486,11 @@ static void action_stack_process()
             sprintf(buf,"AS Error - Not a Function. Aborting. %d %08x %08x.",active_stack->stack_ptr,id,f);
             script_console_add_line((long)buf);
             action_stack_finish(active_stack);
+            return;
         }
     }
-    else
+
+    if (active_stack->stack_ptr < 0)
     {
         action_stack_finish(active_stack);
     }

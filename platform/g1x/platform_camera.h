@@ -136,7 +136,8 @@
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX     1       // enable fix for camera crash at startup when opening the conf / font files
                                                         // see http://chdk.setepontos.com/index.php?topic=6179.0
 
-    #define CAM_KEY_CLICK_DELAY                 150
+    #undef  CAM_KEY_PRESS_DELAY
+    #define CAM_KEY_PRESS_DELAY                 60      // delay after a press
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1       // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                         // Used to enabled bracketing in custom timer, required on many recent cameras

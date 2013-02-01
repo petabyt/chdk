@@ -35,7 +35,8 @@
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_HAS_JOGDIAL                 1
     #define CAM_HAS_ERASE_BUTTON            1
-    #define CAM_KEY_CLICK_DELAY             10 // camera requires additional delay for click command
+    #undef  CAM_KEY_PRESS_DELAY
+    #define CAM_KEY_PRESS_DELAY             60      // delay after a press
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video", "Display" }

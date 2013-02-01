@@ -26,7 +26,8 @@
 #define CAM_DRYOS_2_3_R47               1 // Defined for cameras with DryOS version R47 or higher
 
 #define CAM_AV_OVERRIDE_IRIS_FIX		1
-#define CAM_KEY_CLICK_DELAY 			150
+#undef  CAM_KEY_PRESS_DELAY
+#define CAM_KEY_PRESS_DELAY             60      // delay after a press
 #define CAM_ADJUSTABLE_ALT_BUTTON		1
 #define CAM_ALT_BUTTON_NAMES            { "Playback", "Display", "Video" }
 #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_DISPLAY, KEY_VIDEO }

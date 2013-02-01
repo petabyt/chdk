@@ -124,7 +124,7 @@ typedef struct
     int cam_has_manual_focus;
     int cam_has_multipart;
     int cam_remote_sync_status_led;
-    int cam_key_press_delay, cam_key_release_delay, cam_key_click_delay;
+    int cam_key_press_delay, cam_key_release_delay;
     // Miscellaneous variables to record state information
     // Used to control communication between various tasks and modules
     struct

@@ -343,14 +343,44 @@ static int luaCB_set_aflock(lua_State* L)
 
 static int luaCB_shoot( lua_State* L )
 {
-  action_push_func(action_stack_AS_SHOOT);
+  action_push_shoot(luaL_optnumber( L, 1, 1 ));
   return lua_yield( L, 0 );
+}
+
+// Process a sleep function from the stack
+static int action_stack_AS_LUA_SLEEP()
+{
+    if (get_tick_count() >= action_top(2))
+    {
+        action_pop_func(1);
+        return 1;
+    }
+    return 0;
+}
+
+static int sleep_delay(int delay)
+{
+    /* delay of -1 signals indefinite (actually 1 day) delay */
+    if (delay == -1)
+        delay = 86400000;
+
+    if (delay > 0)
+        return delay + get_tick_count();
+
+    return 0;
 }
 
 static int luaCB_sleep( lua_State* L )
 {
-  action_push_delay( luaL_checknumber( L, 1 ) );
-  return lua_yield( L, 0 );
+    int delay = sleep_delay(luaL_checknumber( L, 1 ));
+
+    if (delay > 0)
+    {
+        action_push(delay);
+        action_push_func(action_stack_AS_LUA_SLEEP);
+    }
+
+    return lua_yield( L, 0 );
 }
 
 // for press,release and click
@@ -835,8 +865,7 @@ static int luaCB_set_zoom( lua_State* L )
 
 static int luaCB_wait_click( lua_State* L )
 {
-  int timeout = luaL_optnumber( L, 1, 0 );
-  action_wait_for_click(timeout);
+  action_wait_for_click(luaL_optnumber( L, 1, 0 ));
   return lua_yield( L, 0 );
 }
 
@@ -920,13 +949,16 @@ static void return_string_selected(const char *str) {
 	lua_pushstring( Lt, (str && str[0])? str : NULL );
 }
 
-static void action_stack_AS_WAIT_MODULE()
+static int action_stack_AS_WAIT_MODULE()
 {
     // state_kbd_script_run is set to 0 when the file browser is started from a Lua script
     // it is reset back to 1 when the file browser exits and control is returned back to
     // the script
     if (camera_info.state.state_kbd_script_run)
-        action_pop_func();
+    {
+        action_pop_func(0);
+    }
+    return 0;
 }
 
 static int luaCB_file_browser( lua_State* L ) {
@@ -2031,13 +2063,11 @@ static int luaCB_set_file_attributes( lua_State* L ) {
     return 1;
 }
 
-static void action_stack_AS_SCRIPT_READ_USB_MSG()
+static int action_stack_AS_SCRIPT_READ_USB_MSG()
 {
-    long delay = action_top(2);
-
     ptp_script_msg *msg = ptp_script_read_msg();
 
-    if (action_process_delay(delay) || msg)
+    if ((get_tick_count() >= action_top(2)) || msg)
     {
         if (msg && msg->data)
         {
@@ -2047,27 +2077,25 @@ static void action_stack_AS_SCRIPT_READ_USB_MSG()
         {
             lua_pushnil(Lt);
         }
-        action_clear_delay();
-        action_pop_func();
-        action_pop();
+        action_pop_func(1);
+        return 1;
     }
+    return 0;
 }
 
-static void action_stack_AS_SCRIPT_WRITE_USB_MSG()
+static int action_stack_AS_SCRIPT_WRITE_USB_MSG()
 {
     ptp_script_msg *msg = (ptp_script_msg *)action_top(2);
-    long delay = action_top(3);
 
     int r = ptp_script_write_msg(msg);
 
-    if (action_process_delay(delay) || r)
+    if ((get_tick_count() >= action_top(3)) || r)
     {
-        action_clear_delay();
         lua_pushboolean(Lt,r);
-        action_pop_func();
-        action_pop();
-        action_pop();
+        action_pop_func(2);
+        return 1;
     }
+    return 0;
 }
 
 /*
@@ -2078,14 +2106,16 @@ If timeout is given and not zero, wait until a message is available or timeout e
 */
 static int luaCB_read_usb_msg( lua_State* L )
 {
-  int timeout = luaL_optnumber( L, 1, 0 );
-  if(timeout) {
+  int timeout = sleep_delay(luaL_optnumber(L,1,0));
+  if (timeout > 0)
+  {
     action_push(timeout);
     action_push_func(action_stack_AS_SCRIPT_READ_USB_MSG);
     return lua_yield( L, 0 );
   }
   ptp_script_msg *msg = ptp_script_read_msg();
-  if(msg) {
+  if(msg)
+  {
     lua_pushlstring(L,msg->data,msg->size);
     free(msg);
     return 1;
@@ -2105,23 +2135,27 @@ NOTE strings will not include a terminating NULL, must be handled by recipient
 static int luaCB_write_usb_msg( lua_State* L )
 {
   ptp_script_msg *msg;
-  int timeout = luaL_optnumber( L, 2, 0 );
+  int timeout = sleep_delay(luaL_optnumber(L,2,0));
   // TODO would it be better to either ignore this or return nil ?
   // a write_usb_msg(function_which_returns_no_value()) is an error in this case
   // replacing with nil might be more luaish
-  if(lua_gettop(L) < 1) {
+  if (lua_gettop(L) < 1)
+  {
     return luaL_error(L,"missing argument");
   }
   msg=lua_create_usb_msg(L,1,PTP_CHDK_S_MSGTYPE_USER);
   // for user messages, trying to create a message from an incompatible type throws an error
-  if(msg->subtype == PTP_CHDK_TYPE_UNSUPPORTED) {
+  if (msg->subtype == PTP_CHDK_TYPE_UNSUPPORTED)
+  {
     free(msg);
     return luaL_error(L,"unsupported type");
   }
-  if(!msg) {
+  if (!msg)
+  {
     return luaL_error(L,"failed to create message");
   }
-  if(timeout) {
+  if (timeout)
+  {
     action_push(timeout);
     action_push((int)msg);
     action_push_func(action_stack_AS_SCRIPT_WRITE_USB_MSG);
