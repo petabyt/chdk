@@ -30,13 +30,12 @@ function md_detect_changes (
   rows, // input parameter. number of rows to split screen into
 
   pixel_measure_mode, // input parameter.
-    // 1 - for Y,
-    // 2 for U, - (mx3)not sure if this mode required
-    // 3 for V, - (mx3)not sure if this mode required
-    // 4 for gray, - (mx3)not sure if this mode required
-    // 5 for R, - (mx3)not sure if this mode required
-    // 6 for G, - (mx3)not sure if this mode required
-    // 7 for B - (mx3)not sure if this mode required
+    // 0 for Y,
+    // 1 for U, - (mx3)not sure if this mode required
+    // 2 for V, - (mx3)not sure if this mode required
+    // 3 for R, - (mx3)not sure if this mode required
+    // 4 for G, - (mx3)not sure if this mode required
+    // 5 for B, - (mx3)not sure if this mode required
 
   detection_timeout, // input parameter. number of millisecnds to abort detection. detected_cells_count will be 0 for timeout condition
 
@@ -88,13 +87,12 @@ struct libmotiondetect_sym {
          int columns,                   // input parameter. number of columns to split screen into
          int rows,                      // input parameter. number of rows to split screen into
          int pixel_measure_mode,        // input parameter.
-                                        // 1 - for Y,
-                                        // 2 for U, - (mx3)not sure if this mode required
-                                        // 3 for V, - (mx3)not sure if this mode required
-                                        // 4 for gray, - (mx3)not sure if this mode required
-                                        // 5 for R, - (mx3)not sure if this mode required
-                                        // 6 for G, - (mx3)not sure if this mode required
-                                        // 7 for B - (mx3)not sure if this mode required
+                                        // 0 for Y,
+                                        // 1 for U, - (mx3)not sure if this mode required
+                                        // 2 for V, - (mx3)not sure if this mode required
+                                        // 3 for R, - (mx3)not sure if this mode required
+                                        // 4 for G, - (mx3)not sure if this mode required
+                                        // 5 for B, - (mx3)not sure if this mode required
          int detection_timeout,         // input parameter. number of millisecnds to abort detection.
                                         // detected_cells_count will be 0 for timeout condition
          int measure_interval,          // input parameter. number of milliseconds between comparison of two pictures

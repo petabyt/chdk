@@ -241,7 +241,7 @@ int md_init_motion_detector
     else
     {
         motion_detector.clipping_region_column2 = clipping_region_column2;
-        motion_detector.clipping_region_column1 =clipping_region_column1;
+        motion_detector.clipping_region_column1 = clipping_region_column1;
     }
 
     if (clipping_region_row1>clipping_region_row2)
@@ -452,7 +452,7 @@ static int md_detect_motion(void)
                 (motion_detector.clipping_region_mode==MD_REGION_NONE) ||
                 (motion_detector.clipping_region_mode==MD_REGION_EXCLUDE && in_clipping_region==0) ||
                 (motion_detector.clipping_region_mode==MD_REGION_INCLUDE && in_clipping_region==1)
-                )
+               )
             {
                 // Calc img x start and end offsets
                 int x_start = ((col * vp_w) / motion_detector.columns) * 3;
@@ -616,7 +616,7 @@ void md_draw_grid()
                 && row+1<=motion_detector.clipping_region_row2
                 )
             {
-                    in_clipping_region = 1;
+                in_clipping_region = 1;
             }
 
             if ((motion_detector.clipping_region_mode==MD_REGION_EXCLUDE && in_clipping_region==0) ||
