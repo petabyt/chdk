@@ -1508,16 +1508,45 @@ release_statement(void)
   accept_cr();
 }
 /*---------------------------------------------------------------------------*/
+
+// Process a sleep function from the stack
+static int action_stack_AS_UBASIC_SLEEP()
+{
+    if (get_tick_count() >= action_top(2))
+    {
+        action_pop_func(1);
+        return 1;
+    }
+    return 0;
+}
+
+static int sleep_delay(int delay)
+{
+    /* delay of -1 signals indefinite (actually 1 day) delay */
+    if (delay == -1)
+        delay = 86400000;
+
+    if (delay > 0)
+        return delay + get_tick_count();
+
+    return 0;
+}
+
 static void
 sleep_statement(void)
 {
-  int val;
-  accept(TOKENIZER_SLEEP);
-  val = expr();
-  action_push_delay(val);
-  flag_yield=1;
-  DEBUG_PRINTF("End of sleep\n");
-  accept_cr();
+    accept(TOKENIZER_SLEEP);
+
+    int delay = sleep_delay(expr());
+    if (delay > 0)
+    {
+        action_push(delay);
+        action_push_func(action_stack_AS_UBASIC_SLEEP);
+    }
+
+    flag_yield=1;
+    DEBUG_PRINTF("End of sleep\n");
+    accept_cr();
 }
 /*---------------------------------------------------------------------------*/
 static void
@@ -1530,7 +1559,7 @@ shoot_statement(void)
     ubasic_as_ret_var_num = tokenizer_variable_num();
     accept(TOKENIZER_VARIABLE);
   }
-  action_push_func(action_stack_AS_SHOOT);
+  action_push_shoot(1);
   flag_yield=1;
   DEBUG_PRINTF("End of shoot\n");
   accept_cr();
@@ -2087,9 +2116,9 @@ statement(void)
   case TOKENIZER_PLAY_SOUND:
       one_int_param_function(token, (void (*)(int))play_sound);
       break;
-  case TOKENIZER_SET_SHUTTER_SPEED:
-      one_int_param_plus_const_function(token, shooting_set_shutter_speed_ubasic, SET_LATER);
-      break;
+  //case TOKENIZER_SET_SHUTTER_SPEED:
+  //    one_int_param_plus_const_function(token, shooting_set_shutter_speed_ubasic, SET_LATER);
+  //    break;
   case TOKENIZER_SET_USER_TV96:
       one_short_param_function(token, shooting_set_user_tv96);
       break;

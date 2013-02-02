@@ -221,11 +221,11 @@ LUALIB_API int luaopen_imath (lua_State *L) {
 
     lua_pushnumber(L, INT_SCALE);
     lua_setfield(L, -2, "scale");
-    lua_pushnumber(L, FIXED2INT(FULL_CIRCLE[RAD]));
+    lua_pushnumber(L, FIXED2INTR(FULL_CIRCLE[RAD]));
     lua_setfield(L, -2, "pi2");
-    lua_pushnumber(L, FIXED2INT(HALF_CIRCLE[RAD]));
+    lua_pushnumber(L, FIXED2INTR(HALF_CIRCLE[RAD]));
     lua_setfield(L, -2, "pi");
-    lua_pushnumber(L, FIXED2INT(QUART_CIRCLE[RAD]));
+    lua_pushnumber(L, FIXED2INTR(QUART_CIRCLE[RAD]));
     lua_setfield(L, -2, "pi_2");
 
     return 1;

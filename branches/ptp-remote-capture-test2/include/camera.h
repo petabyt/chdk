@@ -25,6 +25,7 @@
 
     #undef  CAM_DRYOS                           // Camera is DryOS-based
     #undef  CAM_PROPSET                         // Camera's properties group (the generation)
+    #define CAM_FLASHPARAMS_VERSION         3   // flash parameters structure version (every camera from 2005 on is version 3)
     #undef  CAM_DRYOS_2_3_R31                   // Define for cameras with DryOS release R31 or greater -> G10
     #undef  CAM_DRYOS_2_3_R39                   // Define for cameras with DryOS release R39 or greater
     #undef  CAM_DRYOS_2_3_R47                   // Define for cameras with DryOS release R47 or greater -> Cameras can boot from FAT32
@@ -130,9 +131,8 @@
     
     #undef  CAM_DATE_FOLDER_NAMING              // set if camera uses date based folder naming (Option "Create Folder" in Canon Menu) and get_target_dir_name is implemented
     
-    #undef  CAM_KEY_CLICK_DELAY                 // additional delay between press and release for scripted click
-    #define CAM_KEY_PRESS_DELAY             20  // delay after a press - TODO can we combine this with above ?
-    #define CAM_KEY_RELEASE_DELAY           20  // delay after a release - TODO do we really need to wait after release ?
+    #define CAM_KEY_PRESS_DELAY             30  // delay after a press - TODO can we combine this with above ?
+    #define CAM_KEY_RELEASE_DELAY           30  // delay after a release - TODO do we really need to wait after release ?
 
     #undef  CAM_STARTUP_CRASH_FILE_OPEN_FIX     // enable fix for camera intermittently crash at startup when opening the conf / font files
                                                 // Some cameras throw "ASSERT!! FsIoNotify.c Line xxx    Task name: SpyTask" in ROMLOG
