@@ -88,7 +88,7 @@ STUB(FF8310C8)
 // trial
 NSTUB(EnterToPlayFromRec, 0xFF93D600)
 NSTUB(EnterToRecFromPlay, 0xFF93D534)
-NSTUB(tasktcb, 0xFFAD2064);
+NSTUB(tasktcb, 0xFFAD2064)
 
 //don't touch these, old notes
 
