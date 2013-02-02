@@ -172,8 +172,12 @@ void __attribute__((naked,noinline)) sub_FFC01198_my() {
                  "MOV     R0, #0x53000\n"
                  "STR     R0, [SP,#4]\n"
                  //"LDR     R0, =0x12E9FC\n"
+#if defined(OPT_CHDK_IN_EXMEM)
+                 "LDR     R0, =0x12E9FC\n"
+#else
                  "LDR     R0, =new_sa\n"        // + remove the line ^ if using these two
                  "LDR     R0, [R0]\n"           // + this is related to chdk size
+#endif
                  "LDR     R2, =0x2F9C00\n"
                  "LDR     R1, =0x2F24A8\n"
                  "STR     R0, [SP,#8]\n"
@@ -266,7 +270,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() {
                  "BL      sub_ffc239e4\n"
                  "LDR     R1, =0xC0220000\n"
                  "MOV     R0, #0x44\n"
-                 "STR     R0, [R1,#0x20]\n"
+                 "STR     R0, [R1,#0x1c]\n"
                  "BL      sub_ffc23bd0\n"
  "loc_ffc0fb30:\n"
                  "B       loc_ffc0fb30\n"                 
