@@ -44,33 +44,42 @@ char* get_alt_raw_image_addr(void) {    // return inactive buffer for cameras wi
 }
 //-------------------------------------------------------------------
 
-int raw_savefile() {
+// Set in raw_savefile and used in get_raw_pixel & set_raw_pixel (for performance)
+// Don't call set/get_raw_pixel until this value is initialised
+static char *rawadr;    // Pointer to current raw image buffer
+
+int raw_savefile()
+{
     int ret = 0;
     int fd;
     static struct utimbuf t;
     static int br_counter; 
+
+    // Get pointers to RAW buffers (will be the same on cameras that don't have two or more buffers)
+    rawadr = get_raw_image_addr();
+    char *altrawadr = get_alt_raw_image_addr();
+
 #if DNG_SUPPORT
-    if (conf.save_raw && conf.dng_raw && is_raw_enabled()) {                             
+    if (conf.save_raw && conf.dng_raw && is_raw_enabled())
+    {                             
 		if ( module_dng_load(LIBDNG_OWNED_BY_RAW) )
 			libdng->capture_data_for_exif();
 	}
 #endif    
     if (camera_info.state.state_kbd_script_run && shot_histogram_isenabled()) build_shot_histogram();
 
-    // Get pointers to RAW buffers (will be the same on cameras that don't have two or more buffers)
-    char* rawadr = get_raw_image_addr();
-    char* altrawadr = get_alt_raw_image_addr();
-
 #if DNG_SUPPORT
     // count/save badpixels if requested
     if( libdng &&
 		libdng->raw_init_badpixel_bin && 
-		libdng->raw_init_badpixel_bin()) {
+		libdng->raw_init_badpixel_bin())
+    {
         return 0;
     }
 #endif    
 
-    if (develop_raw) {
+    if (develop_raw)
+    {
         started();
         fd = open(fn, O_RDONLY, 0777);
         if (fd>=0) {
@@ -192,7 +201,7 @@ void raw_postprocess() {
 
 void set_raw_pixel(unsigned int x, unsigned int y, unsigned short value) {
 #if CAM_SENSOR_BITS_PER_PIXEL==10
-    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*camera_sensor.raw_rowlen+(x/8)*10;
+    unsigned char* addr=(unsigned char*)rawadr+y*camera_sensor.raw_rowlen+(x/8)*10;
     switch (x%8) {
         case 0: addr[0]=(addr[0]&0x3F)|(value<<6); addr[1]=value>>2;                  break;
         case 1: addr[0]=(addr[0]&0xC0)|(value>>4); addr[3]=(addr[3]&0x0F)|(value<<4); break;
@@ -204,7 +213,7 @@ void set_raw_pixel(unsigned int x, unsigned int y, unsigned short value) {
         case 7: addr[8]=value;                     addr[9]=(addr[9]&0xFC)|(value>>8); break;
     }
 #elif CAM_SENSOR_BITS_PER_PIXEL==12
-    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*camera_sensor.raw_rowlen+(x/4)*6;
+    unsigned char* addr=(unsigned char*)rawadr+y*camera_sensor.raw_rowlen+(x/4)*6;
     switch (x%4) {
         case 0: addr[0] = (addr[0]&0x0F) | (unsigned char)(value << 4);  addr[1] = (unsigned char)(value >> 4);  break;
         case 1: addr[0] = (addr[0]&0xF0) | (unsigned char)(value >> 8);  addr[3] = (unsigned char)value;         break;
@@ -212,7 +221,7 @@ void set_raw_pixel(unsigned int x, unsigned int y, unsigned short value) {
         case 3: addr[4] = (unsigned char)value; addr[5] = (addr[5]&0xF0) | (unsigned char)(value >> 8);  break;
     }
 #elif CAM_SENSOR_BITS_PER_PIXEL==14
-    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*camera_sensor.raw_rowlen+(x/8)*14;
+    unsigned char* addr=(unsigned char*)rawadr+y*camera_sensor.raw_rowlen+(x/8)*14;
     switch (x%8) {
         case 0: addr[ 0]=(addr[0]&0x03)|(value<< 2); addr[ 1]=value>>6;                                                         break;
         case 1: addr[ 0]=(addr[0]&0xFC)|(value>>12); addr[ 2]=(addr[ 2]&0x0F)|(value<< 4); addr[ 3]=value>>4;                   break;
@@ -231,7 +240,7 @@ void set_raw_pixel(unsigned int x, unsigned int y, unsigned short value) {
 //-------------------------------------------------------------------
 unsigned short get_raw_pixel(unsigned int x,unsigned  int y) {
 #if CAM_SENSOR_BITS_PER_PIXEL==10
-    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*camera_sensor.raw_rowlen+(x/8)*10;
+    unsigned char* addr=(unsigned char*)rawadr+y*camera_sensor.raw_rowlen+(x/8)*10;
     switch (x%8) {
         case 0: return ((0x3fc&(((unsigned short)addr[1])<<2)) | (addr[0] >> 6));
         case 1: return ((0x3f0&(((unsigned short)addr[0])<<4)) | (addr[3] >> 4));
@@ -243,7 +252,7 @@ unsigned short get_raw_pixel(unsigned int x,unsigned  int y) {
         case 7: return ((0x300&(((unsigned short)addr[9])<<8)) | (addr[8]));
     }
 #elif CAM_SENSOR_BITS_PER_PIXEL==12
-    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*camera_sensor.raw_rowlen+(x/4)*6;
+    unsigned char* addr=(unsigned char*)rawadr+y*camera_sensor.raw_rowlen+(x/4)*6;
     switch (x%4) {
         case 0: return ((unsigned short)(addr[1])        << 4) | (addr[0] >> 4);
         case 1: return ((unsigned short)(addr[0] & 0x0F) << 8) | (addr[3]);
@@ -251,7 +260,7 @@ unsigned short get_raw_pixel(unsigned int x,unsigned  int y) {
         case 3: return ((unsigned short)(addr[5] & 0x0F) << 8) | (addr[4]);
     }
 #elif CAM_SENSOR_BITS_PER_PIXEL==14
-    unsigned char* addr=(unsigned char*)get_raw_image_addr()+y*camera_sensor.raw_rowlen+(x/8)*14;
+    unsigned char* addr=(unsigned char*)rawadr+y*camera_sensor.raw_rowlen+(x/8)*14;
     switch (x%8) {
         case 0: return ((unsigned short)(addr[ 1])        <<  6) | (addr[ 0] >> 2);
         case 1: return ((unsigned short)(addr[ 0] & 0x03) << 12) | (addr[ 3] << 4) | (addr[ 2] >> 4);
