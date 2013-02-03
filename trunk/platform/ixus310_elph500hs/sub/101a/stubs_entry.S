@@ -47,6 +47,8 @@ DEF(active_palette_buffer                   ,0x0000a42c) // Found @0xff244994
 DEF(palette_buffer                          ,0x000c7dec) // Found @0xff244e6c
 DEF(bitmap_buffer                           ,0x0000a464) // Found @0xff249aec
 DEF(active_bitmap_buffer                    ,0x0000a45c) // Found @0xff249af0
+DEF(viewport_buffers                        ,0xff3d0430) // Found @0xff043404
+DEF(active_viewport_buffer                  ,0x00002104) // Found @0xff043138
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40471000; }             // Found @0xff04f54c
