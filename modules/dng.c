@@ -741,7 +741,9 @@ int init_badpixel_bin_flag; // contants above to count/create file, > 0 num bad 
 int raw_init_badpixel_bin()
 {
     int count;
+    register unsigned int x, y, len;
     unsigned short c[2];
+
     FILE*f;
     if(init_badpixel_bin_flag == INIT_BADPIXEL_FILE)
     {
@@ -756,20 +758,22 @@ int raw_init_badpixel_bin()
         return 0;
     }
     count = 0;
-    for (c[0]=camera_sensor.active_area.x1; c[0]<camera_sensor.active_area.x2; c[0]++)
+    for (x=camera_sensor.active_area.x1; x<camera_sensor.active_area.x2; x++)
     {
-        for (c[1]=camera_sensor.active_area.y1; c[1]<camera_sensor.active_area.y2; c[1]++)
+        for (y=camera_sensor.active_area.y1; y<camera_sensor.active_area.y2; y++)
         {
-            if (get_raw_pixel(c[0],c[1]) <= camera_sensor.dng_badpixel_value_limit)
+            if (get_raw_pixel(x,y) <= camera_sensor.dng_badpixel_value_limit)
             {
-                unsigned short l;
-                for (l=0; l<7 && (c[1]+l+1)<camera_sensor.active_area.y2; l++)
-                    if (get_raw_pixel(c[0],c[1]+l+1) > camera_sensor.dng_badpixel_value_limit)
+                for (len=1; len<8 && (y+len)<camera_sensor.active_area.y2; len++)
+                    if (get_raw_pixel(x,y+len) > camera_sensor.dng_badpixel_value_limit)
                         break;
-                c[1] = c[1] | (l << 13);
-                if (f) fwrite(c, 1, 4, f);
-                c[1] = (c[1] & 0x1FFF) + l;
-                count = count + l + 1;
+                if (f)
+                {
+                    c[0] = x;
+                    c[1] = y | ((len-1) << 13);
+                    fwrite(c, 1, 4, f);
+                }
+                count = count + len;
             }
         }
     }
