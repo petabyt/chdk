@@ -48,6 +48,8 @@ DEF(focus_len_table                         ,0xfffe29b0) // Found @0xfffe29b0
 DEF(zoom_busy                               ,0x00005648) // Found @0xffd0f784
 DEF(focus_busy                              ,0x000054ec) // Found @0xffd0b1b0
 //DEF(recreview_hold                          ,0x00003174) // Found @0xffc78d30, ** != ** stubs_min = 0x00006598 (0x64CC+0xCC)
+DEF(viewport_buffers                        ,0xffe98618) // Found @0xffcb932c
+DEF(active_viewport_buffer                  ,0x00004290) // Found @0xffcb9174
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x10361000; }             // Found @0xffc3fc80

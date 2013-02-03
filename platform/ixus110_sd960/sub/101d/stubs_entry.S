@@ -59,11 +59,11 @@ DEF(recreview_hold                          ,0x00003640) // Found @0xff881428
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
 //    { 1, KEY_POWER           ,0x00000001 }, // Found @0xffaeea90, levent 0x600
-//    { 1, KEY_ZOOM_OUT        ,0x00002000 }, // Found @0xffaeeab4, levent 0x03
-//    { 1, KEY_ZOOM_IN         ,0x00004000 }, // Found @0xffaeeac0, levent 0x02
 //    { 1, KEY_SHOOT_FULL      ,0x00009000 }, // Found @0xffaeeacc, levent 0x01
 //    { 1, KEY_SHOOT_FULL_ONLY ,0x00008000 }, // Found @0xffaeeacc, levent 0x01
 //    { 1, KEY_SHOOT_HALF      ,0x00001000 }, // Found @0xffaeeaa8, levent 0x00
+//    { 1, KEY_ZOOM_OUT        ,0x00002000 }, // Found @0xffaeeab4, levent 0x03
+//    { 1, KEY_ZOOM_IN         ,0x00004000 }, // Found @0xffaeeac0, levent 0x02
 //    { 2, KEY_LEFT            ,0x00000020 }, // Found @0xffaeeb14, levent 0x06
 //    { 2, KEY_RIGHT           ,0x00000040 }, // Found @0xffaeeb20, levent 0x07
 //    { 2, KEY_DOWN            ,0x00000080 }, // Found @0xffaeeb2c, levent 0x05

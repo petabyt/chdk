@@ -2963,6 +2963,31 @@ void find_platform_vals(firmware *fw)
 
 //------------------------------------------------------------------------------------------------------------
 
+uint32_t find_viewport_address(firmware *fw, int *kout)
+{
+    int k, k1;
+
+	// find viewwport address for 'vid_get_viewport_fb'
+	k = find_str_ref(fw, "VRAM Address  : %p\r");
+	if (k >= 0)
+	{
+		for (k1=k-1; k1>k-8; k1--)
+		{
+			if (isLDR(fw,k1) && isLDR(fw,k1+1))
+			{
+				uint32_t v1 = LDR2val(fw,k1);
+				uint32_t v2 = LDR2val(fw,k1+1);
+				if (v2 > v1) v1 = v2;
+                *kout = k1;
+                return v1;
+			}
+		}
+	}
+
+    *kout = -1;
+    return 0;
+}
+
 // Search for things that go in 'lib.c'
 void find_lib_vals(firmware *fw)
 {
@@ -3001,19 +3026,10 @@ void find_lib_vals(firmware *fw)
 	}
 	
 	// find 'vid_get_viewport_fb'
-	k = find_str_ref(fw, "VRAM Address  : %p\r");
+    uint32_t v = find_viewport_address(fw,&k);
 	if (k >= 0)
 	{
-		for (k1=k-1; k1>k-8; k1--)
-		{
-			if (isLDR(fw,k1) && isLDR(fw,k1+1))
-			{
-				uint32_t v1 = LDR2val(fw,k1);
-				uint32_t v2 = LDR2val(fw,k1+1);
-				if (v2 > v1) v1 = v2;
-				bprintf("//void *vid_get_viewport_fb()      { return (void*)0x%08x; }             // Found @0x%08x\n",v1,idx2adr(fw,k1));
-			}
-		}
+        bprintf("//void *vid_get_viewport_fb()      { return (void*)0x%08x; }             // Found @0x%08x\n",v,idx2adr(fw,k));
 	}
 	
 	// find 'vid_get_viewport_fb_d'
@@ -3636,6 +3652,61 @@ void find_stubs_min(firmware *fw)
                                     uint32_t active_bitmap_buffer = adr + (fwval(fw,k2+1) & 0xFFF);
                                     print_stubs_min(fw,"bitmap_buffer",bitmap_buffer,idx2adr(fw,k2));
                                     print_stubs_min(fw,"active_bitmap_buffer",active_bitmap_buffer,idx2adr(fw,k2+1));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Get viewport address
+    uint32_t v = find_viewport_address(fw,&k);
+	if (k >= 0)
+	{
+        int found = 0;
+
+        // Find location in firmware that holds viewport address
+        for (k=0; !found && k<fw->size; k++)
+        {
+            if (fw->buf[k] == v)
+            {
+                uint32_t vp = idx2adr(fw,k);
+                // Find location in firmware that points to viewport address
+                for (k1=0; !found && k1<fw->size; k1++)
+                {
+                    if (fw->buf[k1] == vp)
+                    {
+                        // Find code loading from 'vp'
+                        for (k2=0; k2<fw->size; k2++)
+                        {
+                            if (isLDR_PC(fw,k2) && (LDR2val(fw,k2) == vp))
+                            {
+                                // Scan back to start of function
+                                int k3;
+                                for (k3=k2-1; !found && k3>k2-1000; k3--)
+                                {
+                            		if ((fw->buf[k3] & 0xFFFFF000) == 0xe92d4000)    // STMFD SP!, {..,LR}
+                            		{
+                                        // Check if function sig matches what we want
+                                        if (isLDR_PC(fw,k3+1) && isLDR_PC(fw,k3+2) && isLDR(fw,k3+3) &&
+                                            (((fw->buf[k3+1] & 0x0000F000) >> 12) == ((fw->buf[k3+3] & 0x000F0000) >> 16)))
+                                        {
+                                            uint32_t a = LDR2val(fw,k3+1);
+                                            print_stubs_min(fw,"viewport_buffers",vp,idx2adr(fw,k2));
+                                            print_stubs_min(fw,"active_viewport_buffer",a,idx2adr(fw,k3+1));
+                                            found = 1;
+                                        }
+                                        else if (isLDR_PC(fw,k3+1) && isLDR_PC(fw,k3+3) && isLDR(fw,k3+4) &&
+                                            (((fw->buf[k3+1] & 0x0000F000) >> 12) == ((fw->buf[k3+4] & 0x000F0000) >> 16)))
+                                        {
+                                            uint32_t a = LDR2val(fw,k3+1);
+                                            print_stubs_min(fw,"viewport_buffers",vp,idx2adr(fw,k2));
+                                            print_stubs_min(fw,"active_viewport_buffer",a,idx2adr(fw,k3+1));
+                                            found = 1;
+                                        }
+                                    }
                                 }
                             }
                         }

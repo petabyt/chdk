@@ -50,6 +50,8 @@ DEF(recreview_hold                          ,0x000034d0) // Found @0xff890ce0
 DEF(palette_control                         ,0x00008a28) // Found @0xff9ea614
 DEF(active_palette_buffer                   ,0x00008a30) // Found @0xff9ea618
 DEF(palette_buffer                          ,0x000b38f0) // Found @0xff9ea9bc
+DEF(viewport_buffers                        ,0xffb2f904) // Found @0xff849c00
+DEF(active_viewport_buffer                  ,0x000020bc) // Found @0xff849968
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40411000; }             // Found @0xff852d54

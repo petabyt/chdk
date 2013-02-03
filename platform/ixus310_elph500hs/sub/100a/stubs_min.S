@@ -1,7 +1,5 @@
 #include "stubs_asm.h"
 
-DEF(viewport_buffers,                   0xFF3D0418)     // 1.00a sub_FF0435C8 (FF043978)
-DEF(active_viewport_buffer,             0x2104)         // 1.00a sub_FF0435C8 (FF0435CC & FF043A28)
 DEF(canon_play_menu_active,             0x0000e784)
 DEF(touch_screen_x,                     0x000028f0)
 DEF(touch_screen_y,                     0x000028f2)

@@ -38,6 +38,8 @@ DEF(some_flag_for_af_scan                   ,0x00005b28) // Found @0xffd1e584
 DEF(zoom_busy                               ,0x000056e0) // Found @0xffd17c24
 DEF(focus_busy                              ,0x00005584) // Found @0xffd135b8
 DEF(recreview_hold                          ,0x000031d0) // Found @0xffc7d224
+DEF(viewport_buffers                        ,0xffeaed08) // Found @0xffcbdecc
+DEF(active_viewport_buffer                  ,0x00004270) // Found @0xffcbddc4
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x403f1000; }             // Found @0xffc43628
