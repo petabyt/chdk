@@ -42,6 +42,8 @@ DEF(focus_len_table                         ,0xfffe29b0) // Found @0xfffe29b0
 DEF(zoom_busy                               ,0x0000585c) // Found @0xff9299f4
 DEF(focus_busy                              ,0x00005700) // Found @0xff925420
 DEF(recreview_hold                          ,0x000031e0) // Found @0xff88bb24
+DEF(viewport_buffers                        ,0xffae1370) // Found @0xff8cec74
+DEF(active_viewport_buffer                  ,0x0000437c) // Found @0xff8ceabc
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x103e1000; }             // Found @0xff84fdfc
