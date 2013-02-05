@@ -67,8 +67,6 @@
     #undef CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
 
-    #define CAM_ZEBRA_ASPECT_ADJUST         1
-
     #define CAM_EXT_TV_RANGE                1
     #define CAM_QUALITY_OVERRIDE            1
 

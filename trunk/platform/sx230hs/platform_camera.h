@@ -101,7 +101,6 @@
     #define EDGE_HMARGIN                    10
 
 
-    #define CAM_ZEBRA_ASPECT_ADJUST         1
     #define CAM_ZEBRA_NOBUF                 1
 
     #define CAM_QUALITY_OVERRIDE            1

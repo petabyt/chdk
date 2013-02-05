@@ -101,8 +101,6 @@
 
     #define CAM_BITMAP_PALETTE              1   // which color set is used for this camera
 
-    #undef  CAM_HAS_VARIABLE_ASPECT             // can switch between 16:9 and 4:3
-
     // Older cameras had a screen/bitmap buffer that was 360 pixels wide (or 480 for wide screen models)
     // CHDK was built around this 360 pixel wide display model
     // Newer cameras have a 720 pixel wide bitmap (960 for wide screen cameras)
@@ -121,9 +119,8 @@
                                                 // used to allow super fine JPEG option on cameras where this has been removed
                                                 // from the Canon menu. Note: may not actually work on all cameras.
 
-    #undef  CAM_ZEBRA_ASPECT_ADJUST             // zebra needs to account for real bitmap size being different from what lib.c reports
-                                                // also used by some cameras with normal bitmap layouts for memory saving ?
-    #undef  CAM_ZEBRA_NOBUF                     // zebra draws directly on bitmap buffer. Requires above as well
+    #undef  CAM_ZEBRA_NOBUF                     // zebra draws directly on bitmap buffer.
+    #undef  CAM_HAS_VARIABLE_ASPECT             // can switch between 16:9 and 4:3 (used by zebra code)
     
     #undef  CAM_DATE_FOLDER_NAMING              // set if camera uses date based folder naming (Option "Create Folder" in Canon Menu) and get_target_dir_name is implemented
     
@@ -219,7 +216,8 @@
     #define CAMERA_MIN_DIST         0           // Define min distance that can be set in _MoveFocusLensToDistance (allow override - e.g. G12 min dist = 1)
     #define CAMERA_MAX_DIST         65535       // Define max distance that can be set in _MoveFocusLensToDistance (allow override for superzooms - SX30/SX40)
 
-	#undef	DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY	// Draw pixels on active bitmap buffer only. Requires active_bitmap_buffer location in stubs_min.S or stubs_entry.S.
+	#undef	DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY	// Draw pixels on active bitmap buffer only.
+                                                // Requires bitmap_buffer & active_bitmap_buffer location in stubs_min.S or stubs_entry.S.
 	
     #undef  CAM_ZOOM_ASSIST_BUTTON_CONTROL      // Activate menu option to enable/disable the zoom assist button on the SX30/SX40
                                                 // For other cameras, requires additional support code in kbd.c (see the SX30 or SX40 version)

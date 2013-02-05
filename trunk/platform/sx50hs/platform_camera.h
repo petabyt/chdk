@@ -98,8 +98,6 @@
     #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
     #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
 
-    #define CAM_ZEBRA_ASPECT_ADJUST             1
-
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE                  15
   
