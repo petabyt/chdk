@@ -54,13 +54,39 @@ void JogDial_CCW(void){
  _PostLogicalEventForNotPowerType(0x86F, 1);  // @FF41688C
 }
 
-
 // Viewport and Bitmap values that shouldn't change across firmware versions.
 // Values that may change are in lib.c for each firmware version.
 
 // Defined in stubs_min.S
+extern char active_viewport_buffer;
+extern void* viewport_buffers[];
+
+void *vid_get_viewport_fb()
+{
+    // Return first viewport buffer - for case when vid_get_viewport_live_fb not defined
+    // Offset the return value because the viewport is left justified instead of centered on this camera
+    return viewport_buffers[0];
+}
+
+void *vid_get_viewport_live_fb()
+{
+    if (MODE_IS_VIDEO(mode_get()) || (movie_status==VIDEO_RECORD_IN_PROGRESS))
+        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
+
+    // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
+    // Offset the return value because the viewport is left justified instead of centered on this camera
+    return viewport_buffers[(active_viewport_buffer-1)&3];
+}
+
+// Defined in stubs_min.S
 extern int active_bitmap_buffer;
 extern char* bitmap_buffer[];
+
+void *vid_get_bitmap_fb()
+{
+    // Return first bitmap buffer address
+    return bitmap_buffer[0];
+}
 
 // Physical width of viewport row in bytes
 int vid_get_viewport_byte_width() {
