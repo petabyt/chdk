@@ -73,8 +73,6 @@
 
 //  #define DNG_EXT_FROM                    ".CR2"
 
-    #define CAM_ZEBRA_ASPECT_ADJUST         1
-
 	#define REMOTE_SYNC_STATUS_LED 	0xc02200BC		// specifies an LED that turns on while camera waits for USB remote to sync
 
 //----------------------------------------------------------

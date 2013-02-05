@@ -86,10 +86,6 @@
                                                 // used to allow super fine JPEG option on cameras where this has been removed
                                                 // from the Canon menu. Note: may not actually work on all cameras.
 
-	#define CAM_ZEBRA_ASPECT_ADJUST 1                 // zebra needs to account for real bitmap size being different from what lib.c reports
-                                                // also used by some cameras with normal bitmap layouts for memory saving ?
-//#undef CAM_ZEBRA_NOBUF                          // zebra draws directly on bitmap buffer. Requires above as well
-
 
 // RAW & DNG related values
     #undef  DEFAULT_RAW_EXT 

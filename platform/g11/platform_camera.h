@@ -91,8 +91,6 @@
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
-    #define CAM_ZEBRA_ASPECT_ADJUST         1
-
     #define CAM_DATE_FOLDER_NAMING          0x100 //Value found in the last function, which is called in GetImageFolder. (first compare)
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.

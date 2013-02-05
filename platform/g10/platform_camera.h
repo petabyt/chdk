@@ -95,7 +95,6 @@
         -1003,  1000000,     1750,  1000000,     5561,  1000000
 
     // zebra 
-    #define CAM_ZEBRA_ASPECT_ADJUST         1
     #define CAM_ZEBRA_NOBUF                 1
 
     #define CAM_USE_ALT_SET_ZOOM_POINT      1   // Define to use the alternate code in lens_set_zoom_point()

@@ -68,8 +68,6 @@
     #define CAM_ALT_BUTTON_NAMES            { "Display", "Playback" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_DISPLAY, KEY_PLAYBACK }
 
-    #define  CAM_ZEBRA_ASPECT_ADJUST      1
-
     #define  CAM_STARTUP_CRASH_FILE_OPEN_FIX      1
 
 //-------------------

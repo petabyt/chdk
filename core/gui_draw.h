@@ -1018,7 +1018,6 @@ extern void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl)
 
 extern void draw_set_guard();
 extern int draw_test_guard();
-extern int draw_test_pixel(coord x, coord y, color c);
 
 extern color draw_get_pixel(coord x, coord y);
 

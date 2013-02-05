@@ -68,7 +68,6 @@
 
     #define CAM_QUALITY_OVERRIDE            1
 
-    #define CAM_ZEBRA_ASPECT_ADJUST         1
     #define CAM_ZEBRA_NOBUF                 1
 
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData

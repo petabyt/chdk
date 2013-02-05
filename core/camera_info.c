@@ -95,11 +95,7 @@ _cam_screen camera_screen =
 #else
     0,
 #endif
-#if defined(CAM_ZEBRA_ASPECT_ADJUST)
-    1,
-#else
-    0,
-#endif
+    CAM_USES_ASPECT_CORRECTION,
 #if defined(CAM_HAS_VARIABLE_ASPECT)
     1,
 #else

@@ -76,9 +76,6 @@
 #undef EDGE_HMARGIN
 #define EDGE_HMARGIN                    10 // Look into
 
-#define CAM_ZEBRA_ASPECT_ADJUST         1
-//#define CAM_ZEBRA_NOBUF               1
-
 #define CAM_EXT_TV_RANGE                1
 
 #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1

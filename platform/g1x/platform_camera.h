@@ -25,6 +25,8 @@
     #define CAM_DRYOS_2_3_R39                   1
     #define CAM_DRYOS_2_3_R47                   1
 
+    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only. Requires active_bitmap_buffer location in stubs_min.S or stubs_entry.S.
+
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                    0x40000000 // Found @0xff02ac74
 
@@ -122,8 +124,6 @@
     #undef CAM_BITMAP_HEIGHT
     #define CAM_BITMAP_WIDTH                    960     // Actual width of bitmap screen in bytes
     #define CAM_BITMAP_HEIGHT                   270     // Actual height of bitmap screen in rows
-
-    #define CAM_ZEBRA_ASPECT_ADJUST             1
 
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE                  13
