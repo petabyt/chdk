@@ -155,19 +155,24 @@ long vid_get_viewport_height()
     return _GetVRAMVPixelsSize();
 }
 
-// viewport height offset table for each image size
-// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-static long vp_yo[5] = { 0, 30, 13, 0 };
-
-int vid_get_viewport_yoffset()
+static int vp_yoffset(int stitch)
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    // viewport height offset table for each image size
+    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+    static long vp_yo[5] = { 0, 30, 13, 0 };
+
+    int m = mode_get();
+    if ((m & MODE_MASK) == MODE_PLAY)
     {
         return 0;
     }
-    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
     {
-        return 0;
+        return stitch;
+    }
+    else if (mode_is_video(m))
+    {
+        return 30;
     }
     else
     {
@@ -175,20 +180,14 @@ int vid_get_viewport_yoffset()
     }
 }
 
+int vid_get_viewport_yoffset()
+{
+    return vp_yoffset(0);
+}
+
 int vid_get_viewport_display_yoffset()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
-    {
-        return 0;
-    }
-    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
-    {
-        return 72;
-    }
-    else
-    {
-	    return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-    }
+    return vp_yoffset(72);
 }
 
 // Functions for PTP Live View system

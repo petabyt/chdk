@@ -134,34 +134,34 @@ long vid_get_viewport_height()
     return _GetVRAMVPixelsSize();
 }
 
-int vid_get_viewport_yoffset()
+static int vp_yoffset(int stitch)
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    int m = mode_get();
+    if ((m & MODE_MASK) == MODE_PLAY)
     {
         return 0;
     }
     else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
     {
-        return 0;
+        return stitch;
+    }
+    else if (mode_is_video(m))
+    {
+        return 30;
     }
     else if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)	// Wide screen top & bottom 30 pixels not used in viewport
 		return 30;
 	return 0;
 }
 
+int vid_get_viewport_yoffset()
+{
+    return vp_yoffset(0);
+}
+
 int vid_get_viewport_display_yoffset()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
-    {
-        return 0;
-    }
-    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
-    {
-        return 72;
-    }
-    else if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)	// Wide screen top & bottom 30 pixels not used in viewport
-		return 30;
-	return 0;
+    return vp_yoffset(72);
 }
 
 // Functions for PTP Live View system
