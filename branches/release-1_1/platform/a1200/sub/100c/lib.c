@@ -36,7 +36,7 @@ void *vid_get_viewport_live_fb() {              // lifted from a2200 1.00b
         //if ((mode_get()&MODE_MASK) == MODE_REC)
         //      return (void*)((void*)(*(int*)(0x2144))-vid_get_viewport_xoffset()*3);
 
-    return (void*)(void*)(*(int*)(0x2144)); // Possible addresses (20F0, 2144, 221C)
+    return (void*)(void*)(*(int*)(0x20F8)); // Possible addresses (20F8, 214C, 28C0)
 
     // Found by searching RAM locations that referenced 0x40546B80 (viewport buffer)
         // and also changed to the other buffer addresses over time. Then used each here

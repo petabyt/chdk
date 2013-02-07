@@ -28,7 +28,7 @@ void taskHook(context_t **context) {
 
 //** boot  @ 0xFF81000C 
 
-void __attribute__((naked,noinline)) boot(  ) { 
+void __attribute__((naked,noinline)) boot() {
 asm volatile (
       "LDR     R1, =0xC0410000 \n"
       "MOV     R0, #0 \n"
@@ -130,10 +130,9 @@ asm volatile (
 	);
 }
 
-
 //** sub_FF810380_my  @ 0xFF810380 
 
-void __attribute__((naked,noinline)) sub_FF810380_my(  ) { 
+void __attribute__((naked,noinline)) sub_FF810380_my() {
 
    //http://chdk.setepontos.com/index.php/topic,4194.0.html
    *(int*)0x1934=(int)taskHook;
@@ -184,7 +183,7 @@ asm volatile (
 
 //** sub_FF8111D8_my  @ 0xFF8111D8 
 
-void __attribute__((naked,noinline)) sub_FF8111D8_my(  ) { 
+void __attribute__((naked,noinline)) sub_FF8111D8_my() {
 asm volatile (
       "STR     LR, [SP, #-4]! \n"
       "SUB     SP, SP, #0x74 \n"
@@ -241,7 +240,7 @@ asm volatile (
 
 //** sub_FF814288_my  @ 0xFF814288 
 
-void __attribute__((naked,noinline)) sub_FF814288_my(  ) { 
+void __attribute__((naked,noinline)) sub_FF814288_my() {
 asm volatile (
       "STMFD   SP!, {R4,LR} \n"
       "BL      sub_FF810B50 \n"
@@ -277,7 +276,6 @@ asm volatile (
 	);
 }
 
-
 //** sub_FF81A6A8_my  @ 0xFF81A6A8 
 
 void __attribute__((naked,noinline)) sub_FF81A6A8_my() {
@@ -293,7 +291,7 @@ asm volatile (
 
 //** taskcreate_Startup_my  @ 0xFF81A6BC 
 
-void __attribute__((naked,noinline)) taskcreate_Startup_my(  ) { 
+void __attribute__((naked,noinline)) taskcreate_Startup_my() {
 asm volatile (
       "STMFD   SP!, {R3-R7,LR} \n"
       "BL      sub_FF835B90 \n"
@@ -393,9 +391,9 @@ asm volatile (
       "BNE     loc_FF82E9E4 \n"
       "MOV     R3, #0 \n"
       "STR     R3, [SP] \n"
-//      "LDR     R3, =0xFF82E97C \n"
-      "LDR     R3, =mykbd_task \n" //patched  task_PhySw
-//      "MOV     R2, #0x800 \n"
+//      "LDR     R3, =0xFF82E97C \n" //original
+      "LDR     R3, =mykbd_task \n"   //patched  task_PhySw
+//      "MOV     R2, #0x800 \n"      //original
       "MOV     R2, #0x2000 \n" // stack size for new task_PhySw so we don't have to do stack switch
       "MOV     R1, #0x17 \n"
       "LDR     R0, =0xFF82EC0C \n"
@@ -426,7 +424,7 @@ void CreateTask_spytask() {
 
 //** init_file_modules_task  @ 0xFF88A668 
 
-void __attribute__((naked,noinline)) init_file_modules_task(  ) { 
+void __attribute__((naked,noinline)) init_file_modules_task() {
 asm volatile (
       "STMFD   SP!, {R4-R6,LR} \n"
       "BL      sub_FF882BA4 \n"
