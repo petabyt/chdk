@@ -3,7 +3,6 @@
 // autofound in stubs_entry.S
 
 void *vid_get_bitmap_fb()        { return (void*)0x403f1000; }             // Found @0xff85b414
-void *vid_get_viewport_fb()      { return (void*)0x40546b80; }             // Found @0xffb18b70
 void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x2970+0x58)); } // Found @0xff870968 & 0xff8709a0
 char *camera_jpeg_count_str()    { return (char*)0x000b3b14; }             // Found @0xff9f76c4
 long hook_raw_size()             { return 0x011e4ee0; }                    // Found @0xffb1c030
@@ -29,20 +28,6 @@ char *hook_alt_raw_image_addr() {
 
     return (char*) 0x41BDED00 ; //  instruction @ 0xffb1bfd8  -> data @0xffb1c0b8
 }
-
-
-void *vid_get_viewport_live_fb() {              // lifted from a2200 1.00b
-
-        //if ((mode_get()&MODE_MASK) == MODE_REC)
-        //      return (void*)((void*)(*(int*)(0x2144))-vid_get_viewport_xoffset()*3);
-
-    return (void*)(void*)(*(int*)(0x2144)); // Possible addresses (20F0, 2144, 221C)
-
-    // Found by searching RAM locations that referenced 0x40546B80 (viewport buffer)
-        // and also changed to the other buffer addresses over time. Then used each here
-        // and selected value that gave the fastest Motion Detect response using http://dataghost.com/chdk/md_meter.html.
-}
-
 
 void vid_bitmap_refresh() {
 

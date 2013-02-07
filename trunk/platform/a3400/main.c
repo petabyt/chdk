@@ -56,6 +56,7 @@ int get_zoom_x(int zp) {
     return get_focal_length(zp)*10/focus_len_table[0];
 }
 
+// TODO: is battery v min/max ok?
 long get_vbatt_min()
 {
     return 3000;
