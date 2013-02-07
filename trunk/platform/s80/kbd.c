@@ -1,8 +1,8 @@
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
-#include "keyboard.h"
 #include "conf.h"
+#include "keyboard.h"
 
 typedef struct {
 	short grp;
@@ -10,51 +10,47 @@ typedef struct {
 	long canonkey;
 } KeyMap;
 
+
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static KeyMap keymap[];
 static long last_kbd_key = 0;
+static long alt_mode_key_mask = 0x00000000;
 
-#define KEYS_MASK0 (0x00000000)
-static int keys_mask1 = 0x00000000;
-static int keys_inv1 = 0x00000000;
-#define KEYS_MASK2 (0x153F)
-static int set_fake_key=0;
+#define KEYS_MASK0 (0x0000C000)	// state[0] mask
+#define KEYS_MASK1 (0x3C3E0033) // state[1] mask
+#define KEYS_MASK2 (0x00000000) // ????
 
 #define NEW_SS (0x2000)
 #define SD_READONLY_FLAG (0x20000)
-
-#define USB_MASK (0x40000)
-#define USB_IDX 2
+#define SD_READONLY_REG 2
+#define USB_MASK (0x20)
+#define USB_IDX  2
 
 extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
-	long usb_physw[3];
-	usb_physw[USB_IDX] = 0;
-	_kbd_read_keys_r2(usb_physw);
-	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
+        return 0 ;
+/*      
+        long usb_physw[3];
+        usb_physw[USB_IDX] = 0;
+        _kbd_read_keys_r2(usb_physw);
+        return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
+*/
 }
+
 
 #ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
 #endif
 
-void kbd_fetch_data(long*);
-
-
-
-
+extern void _platformsub_kbd_fetch_data(long*);
 long __attribute__((naked)) wrap_kbd_p1_f() ;
 
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
-    kbd_new_state[0] = physw_status[0];
-    kbd_new_state[1] = physw_status[1] ^ keys_inv1;
-    kbd_new_state[2] = physw_status[2];
-
     while (physw_run){
 	_SleepTask(10);
 
@@ -106,64 +102,91 @@ mykbd_task(long ua, long ub, long uc, long ud, long ue, long uf)
 
 long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 {
-
     asm volatile(
-                "STMFD   SP!, {R1-R5,LR}\n"
-                "MOV     R4, #0\n"
+                "STMFD   SP!, {R4-R7,LR}\n"
+                "SUB     SP, SP, #0xC\n"
                 "BL      my_kbd_read_keys\n"
-               	"B	 _kbd_p1_f_cont\n"
+                "B       _kbd_p1_f_cont\n"
     );
     return 0; // shut up the compiler
 }
 
-void enable_extra_button(short);
+//scrollwheel:
+//[0xc0240204] >> 16: 16 bit counter
+//[0xc0240404] >> 16: another -"- (reverse?)
+//0x11a70, 72, 74, 76: halfwords storing the above counter values
+//0x11a70, 0x11a72: [0xc0240404] >> 16
+//0x11a74, 0x11a76: [0xc0240204] >> 16
+long get_jogdial_direction(void) {
+    static int new_jogdial=0, old_jogdial=0;
+    
+    old_jogdial=new_jogdial;
+    new_jogdial=(*(int*)0xC0240404)>>16;
+    if (old_jogdial<new_jogdial) return JOGDIAL_LEFT; 
+    else if (old_jogdial>new_jogdial) return JOGDIAL_RIGHT;
+    else return 0;
+}
+
+volatile int jogdial_stopped=0;
 
 void my_kbd_read_keys()
 {
+
     kbd_prev_state[0] = kbd_new_state[0];
     kbd_prev_state[1] = kbd_new_state[1];
     kbd_prev_state[2] = kbd_new_state[2];
 
-    _kbd_pwr_on();
+    _platformsub_kbd_fetch_data(kbd_new_state);
 
-    kbd_fetch_data(kbd_new_state);
-
-    kbd_new_state[1] = kbd_new_state[1] ^ keys_inv1;
-    
     if (kbd_process() == 0){
-	// leave it alone...
-	physw_status[0] = kbd_new_state[0];
-	physw_status[1] = kbd_new_state[1] ^ keys_inv1;
-	physw_status[2] = kbd_new_state[2];
+        // leave it alone...
+        physw_status[0] = kbd_new_state[0];
+        physw_status[1] = kbd_new_state[1];
+        physw_status[2] = kbd_new_state[2];
+        physw_status[1] |= alt_mode_key_mask;
+        jogdial_stopped=0;
+        
     } else {
-	// override keys
-	physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) |
-			  (kbd_mod_state[0] & KEYS_MASK0);
+        // override keys
+        physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) |
+                (kbd_mod_state[0] & KEYS_MASK0);
+        physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) |
+                (kbd_mod_state[1] & KEYS_MASK1);
+        physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) |
+                (kbd_mod_state[2] & KEYS_MASK2);
 
-	physw_status[1] = ((kbd_new_state[1] & (~keys_mask1)) |
-			  (kbd_mod_state[1] & keys_mask1)) ^ keys_inv1;
+        if ((jogdial_stopped==0) && !camera_info.state.state_kbd_script_run) {
+            jogdial_stopped=1;
+            get_jogdial_direction();
+        }
+        else if (jogdial_stopped && camera_info.state.state_kbd_script_run)
+            jogdial_stopped=0;
 
-	physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) |
-			  (kbd_mod_state[2] & KEYS_MASK2);
     }
 
     _kbd_read_keys_r2(physw_status);
 
-	usb_remote_key() ;
+    usb_remote_key() ;
 
     if (conf.remote_enable) {
-      physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-     }
-    else physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
-    _kbd_pwr_off();
-
-    if (set_fake_key & 0x10000000) {
-        enable_extra_button((short)(set_fake_key & 0xffff));
-        set_fake_key=0;
+        physw_status[SD_READONLY_REG] = physw_status[SD_READONLY_REG] & ~(SD_READONLY_FLAG | USB_MASK);
     }
+    else
+        physw_status[SD_READONLY_REG] = physw_status[SD_READONLY_REG] & ~SD_READONLY_FLAG;
 }
 
+/****************/
 
+void kbd_set_alt_mode_key_mask(long key)
+{
+    int i;
+    for (i=0; keymap[i].hackkey; ++i) {
+	if (keymap[i].hackkey == key) {
+	    alt_mode_key_mask = keymap[i].canonkey;
+	    return;
+	}
+    }
+}
 
 void kbd_key_press(long key)
 {
@@ -190,8 +213,8 @@ void kbd_key_release(long key)
 void kbd_key_release_all()
 {
   kbd_mod_state[0] |= KEYS_MASK0;
-  kbd_mod_state[1] |= keys_mask1;
-  kbd_mod_state[2] |= KEYS_MASK2;
+  kbd_mod_state[1] |= KEYS_MASK1;
+ // kbd_mod_state[2] |= KEYS_MASK2;
 }
 
 long kbd_is_key_pressed(long key)
@@ -219,7 +242,7 @@ long kbd_is_key_clicked(long key)
 
 long kbd_get_pressed_key()
 {
-	int i;
+    int i;
     for (i=0;keymap[i].hackkey;i++){
 	if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0){
 	    return keymap[i].hackkey;
@@ -269,102 +292,70 @@ long kbd_get_autoclicked_key() {
             return 0;
         }
     }
-	
-	
 }
 
 long kbd_use_zoom_as_mf() {
     static long v;
     static long zoom_key_pressed = 0;
 
-    if (kbd_is_key_pressed(KEY_ZOOM_IN) && (mode_get()&MODE_MASK) == MODE_REC) {
+    if (kbd_is_key_pressed(KEY_ZOOM_IN) && kbd_is_key_pressed(KEY_MF) && (mode_get()&MODE_MASK) == MODE_REC) {
         get_property_case(PROPCASE_FOCUS_MODE, &v, 4);
         if (v) {
             kbd_key_release_all();
-            kbd_key_press(KEY_RIGHT);
+            kbd_key_press(KEY_MF);
+            kbd_key_press(KEY_UP);
             zoom_key_pressed = KEY_ZOOM_IN;
             return 1;
         }
     } else {
         if (zoom_key_pressed==KEY_ZOOM_IN) {
-            kbd_key_release(KEY_RIGHT);
+            kbd_key_release(KEY_UP);
             zoom_key_pressed = 0;
             return 1;
         }
     }
-    if (kbd_is_key_pressed(KEY_ZOOM_OUT) && (mode_get()&MODE_MASK) == MODE_REC) {
+    if (kbd_is_key_pressed(KEY_ZOOM_OUT) && kbd_is_key_pressed(KEY_MF) && (mode_get()&MODE_MASK) == MODE_REC) {
         get_property_case(PROPCASE_FOCUS_MODE, &v, 4);
         if (v) {
             kbd_key_release_all();
-            kbd_key_press(KEY_LEFT);
+            kbd_key_press(KEY_MF);
+            kbd_key_press(KEY_DOWN);
             zoom_key_pressed = KEY_ZOOM_OUT;
             return 1;
         }
     } else {
         if (zoom_key_pressed==KEY_ZOOM_OUT) {
-            kbd_key_release(KEY_LEFT);
+            kbd_key_release(KEY_DOWN);
             zoom_key_pressed = 0;
             return 1;
         }
     }
     return 0;
 }
-
-
 static KeyMap keymap[] = {
     /* tiny bug: key order matters. see kbd_get_pressed_key()
      * for example
      */
-//	{ 1, KEY_POWER		, 0x04000000 }, // levent 0x600 (uses inverted logic in physw_status)
-	{ 2, KEY_UP			, 0x00000001 }, //
-	{ 2, KEY_DOWN		, 0x00000002 }, // 
-	{ 2, KEY_LEFT		, 0x00000008 }, // 
-	{ 2, KEY_RIGHT		, 0x00000004 }, //
-	{ 2, KEY_SET		, 0x00000100 }, //
-	{ 2, KEY_SHOOT_FULL	, 0x00000030 }, 
-    { 2, KEY_SHOOT_FULL_ONLY, 0x00000020 },
-	{ 2, KEY_SHOOT_HALF	, 0x00000010 },  
-	{ 2, KEY_MENU		, 0x00000400 }, 
-	{ 2, KEY_PRINT		, 0x00001000 }, //
-	{ 0, 0, 0 }, // placeholder
-	{ 0, 0, 0 }
+        { 1, KEY_UP		, 0x00040000 },
+        { 1, KEY_DOWN		, 0x00100000 },
+        { 1, KEY_LEFT		, 0x00020000 },
+        { 1, KEY_RIGHT		, 0x00080000 }, // ok
+        { 1, KEY_SET		, 0x00200000 }, // ok
+        { 0, KEY_SHOOT_FULL	, 0x0000C000 }, // org
+        { 0, KEY_SHOOT_FULL_ONLY	, 0x00008000 }, //
+        { 0, KEY_SHOOT_HALF	, 0x00004000 }, // ?? org
+        { 1, KEY_ZOOM_IN	, 0x00000001 }, // ok
+        { 1, KEY_ZOOM_OUT	, 0x00000002 }, // ok
+        { 1, KEY_MENU		, 0x08000000 }, // ok
+        { 1, KEY_DISPLAY	, 0x10000000 }, // ok
+        { 1, KEY_PRINT		, 0x00000010 }, // ok
+        { 1, KEY_ERASE		, 0x20000000 }, // ok
+        { 1, KEY_EXPO_CORR	, 0x04000000 }, // ok
+        { 1, KEY_ISO		, 0x00040000 }, // up
+        { 1, KEY_FLASH		, 0x00080000 }, // right
+        { 1, KEY_MF		, 0x00100000 }, // down
+        { 1, KEY_MACRO		, 0x00020000 }, // left
+        { 1, KEY_MICROPHONE     , 0x00000020 }, //
+        { 0, 0, 0 }
 };
 
-void enable_extra_button(short key) {
-/*
- * enable or disable the additional "fake" button
- * in this case, the power button will be re-mapped in ALT mode
- * called from the kbd task
- * beware: the "placeholder" in keymap[] is directly addressed here
- * the placeholder has to be the last entry before the terminating { 0, 0, 0 }, if it is ever set to { 0, 0, 0 }
- */
-    if (key) {
-        keys_mask1=0x04000000;
-        keys_inv1= 0x04000000;
-        keymap[10].grp=1;
-        keymap[10].canonkey=0x04000000;
-        keymap[10].hackkey=key;
-    }
-    else {
-        keys_mask1=0x00000000;
-        keys_inv1= 0x00000000;
-        keymap[10].grp=0;
-        keymap[10].canonkey=0;
-        keymap[10].hackkey=0;
-    }
-}
-
-void kbd_set_extra_button(short key) { // called by core
-    set_fake_key=key|0x10000000;    
-}
-
-void kbd_fetch_data(long *dst)
-{
-    volatile long *mmio0 = (void*)0xc0220200;
-    volatile long *mmio1 = (void*)0xc0220204;
-    volatile long *mmio2 = (void*)0xc0220208;
-
-    dst[0] = *mmio0;
-    dst[1] = *mmio1;
-    dst[2] = *mmio2 & 0xffff;
-}
