@@ -20,7 +20,6 @@ void shutdown()
 	while(1);
 }
 
-
 void debug_led(int state)
 {
 	// using power LED, which defaults to on
@@ -30,9 +29,9 @@ void debug_led(int state)
      *(int*)LED_PR=state ? 0x46 : 0x44;
 }
 
-// Check this!!
-// A810 has two 'lights' - Power LED, and AF assist lamp
-// Power Led = first entry in table (led 0)
+// To do: Check this!!
+// A3400IS has two 'lights' - Power LED, and AF assist lamp
+// Power Led = first entry in table (led 0) ???
 // AF Assist Lamp = second entry in table (led 1) ????
 void camera_set_led(int led, int state, int bright) {
     return;
@@ -80,31 +79,32 @@ int vid_get_viewport_yoffset()
 void vid_bitmap_refresh() {
 
     extern int full_screen_refresh;
-    extern void _LockAndRefresh();      // wrapper function for screen lock
-    extern void _UnlockAndRefresh();    // wrapper function for screen unlock
+    extern void _ScreenLock();
+    extern void _ScreenUnlock();
 
     full_screen_refresh |= 3;
-    _LockAndRefresh();
-    _UnlockAndRefresh();
+    _ScreenLock();
+    _ScreenUnlock();
 }
 
+void *vid_get_bitmap_active_palette() {
+        extern int active_palette_buffer;
+        extern char* palette_buffer[];
+        return (palette_buffer[active_palette_buffer]+4);
+}
 
 #ifdef CAM_LOAD_CUSTOM_COLORS
 // Function to load CHDK custom colors into active Canon palette
-void *vid_get_bitmap_active_palette() {
-    //To do:
-}
-
+// To do:
 void load_chdk_palette() {
 
         extern int active_palette_buffer;
         // Only load for the standard record and playback palettes
-        if ((active_palette_buffer == 0) || (active_palette_buffer == 4))
+        if ((active_palette_buffer == 0) || (active_palette_buffer == 5))
         {
                 int *pal = (int*)vid_get_bitmap_active_palette();
                 if (pal[CHDK_COLOR_BASE+0] != 0x33ADF62)
-                {
-                
+                {                
                         pal[CHDK_COLOR_BASE+0]  = 0x33ADF62;  // Red
                         pal[CHDK_COLOR_BASE+1]  = 0x326EA40;  // Dark Red
                         pal[CHDK_COLOR_BASE+2]  = 0x34CD57F;  // Light Red

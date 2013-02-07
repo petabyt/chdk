@@ -83,7 +83,8 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f() {
 static void __attribute__((noinline)) mykbd_task_proceed() {
 	
 	while (physw_run) {
-		_SleepTask(*((int*)(0x1C18 + 0x8))); //   @FF82E980 + FF82E988  a3400 101a
+		_SleepTask(physw_sleep_delay);
+//		_SleepTask(*((int*)(0x1C18 + 0x8))); //   @FF82E980 + FF82E988  a3400 101a
 		if (wrap_kbd_p1_f() == 1) {   // autorepeat ?
 			_kbd_p2_f();
 		}
@@ -283,5 +284,3 @@ long kbd_use_zoom_as_mf() {
 	return 0;
 }
 #endif
-
-

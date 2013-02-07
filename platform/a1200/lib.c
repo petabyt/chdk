@@ -64,7 +64,24 @@ int vid_get_viewport_yoffset() {
     return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
+extern char active_viewport_buffer;
+extern void* viewport_buffers[];
 
+void *vid_get_viewport_fb()
+{
+    // Return first viewport buffer - for case when vid_get_viewport_live_fb not defined
+    return viewport_buffers[0];
+}
+
+void *vid_get_viewport_live_fb()
+{
+    if (MODE_IS_VIDEO(mode_get()))
+        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
+
+   // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
+    return viewport_buffers[(active_viewport_buffer-1)&3];
+}
+   
 // Function to load CHDK custom colors into active Canon palette
 
 void *vid_get_bitmap_active_palette() {

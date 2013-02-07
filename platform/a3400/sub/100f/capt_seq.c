@@ -26,7 +26,7 @@ asm volatile (
       "TST     R0, #1 \n"
       "BEQ     loc_FF872460 \n"
       "LDR     R1, =0x493 \n"
-      "LDR     R0, =0xFF871F90 \n" //**"SsShootTask.c"
+      "LDR     R0, =0xFF871F90 \n" // "SsShootTask.c"
       "BL      _DebugAssert \n"
       "BL      _ExitTask \n"
       "LDMFD   SP!, {R3-R9,PC} \n"
@@ -75,9 +75,9 @@ asm volatile (
       "BL      sub_FF870230 \n"
 //      "LDR     R0, [R4, #0x28] \n"
 //      "CMP     R0, #0 \n"
-//      "BLNE    sub_FF968D48 \n"
-      "MOV     R0, #0\n"
-      "STR     R0, [R4,#0x28]\n"          //fixes overrides  behavior at short shutter press
+//      "BLNE    sub_FF968D48 \n" // above 3 lines removed - redundant with added lines below
+      "MOV     R0, #0\n"          // patch added
+      "STR     R0, [R4,#0x28]\n"  //fixes overrides  behavior at short shutter press
       "B       loc_FF8726C8 \n"
 "loc_FF87250C:\n"
       "LDR     R5, [R0, #0x10] \n"
@@ -224,7 +224,7 @@ asm volatile (
       "B       loc_FF8726C8 \n"
 "loc_FF8726BC:\n"
       "LDR     R1, =0x5F4 \n"
-      "LDR     R0, =0xFF871F90 \n" //**"SsShootTask.c"
+      "LDR     R0, =0xFF871F90 \n" // "SsShootTask.c"
       "BL      _DebugAssert \n"
 "loc_FF8726C8:\n"
       "LDR     R0, [SP] \n"
@@ -235,7 +235,7 @@ asm volatile (
       "LDR     R0, [R5, #8] \n"
       "CMP     R0, #0 \n"
       "LDREQ   R1, =0x117 \n"
-      "LDREQ   R0, =0xFF871F90 \n" //**"SsShootTask.c"
+      "LDREQ   R0, =0xFF871F90 \n" // "SsShootTask.c"
       "BLEQ    _DebugAssert \n"
       "STR     R6, [R5, #8] \n"
       "B       loc_FF872434 \n"
@@ -244,7 +244,7 @@ asm volatile (
 
 //** sub_FF968CAC_my  @ 0xFF968CAC 
 //CHECK THIS!!!
-void __attribute__((naked,noinline)) sub_FF968CAC_my(  ) { 
+void __attribute__((naked,noinline)) sub_FF968CAC_my() {
 asm volatile (
       "STMFD   SP!, {R4-R6,LR} \n"
       "LDR     R5, =0x376AC \n"
@@ -283,7 +283,7 @@ asm volatile (
       "BNE     loc_FF968D3C \n"
       "MOV     R0, R6 \n"
       "BL      sub_FFA87454 \n"  //original
-//      "BL      sub_FFA87454_my \n" //This function calls *"SsStandardCaptureSeq.c"
+//      "BL      sub_FFA87454_my \n" //This function calls "SsStandardCaptureSeq.c"
       "MOV     R4, R0 \n"
       "B       loc_FF968D40 \n"
 "loc_FF968D2C:\n"
@@ -301,7 +301,7 @@ asm volatile (
 
 //** sub_FFA87454_my  @ 0xFFA87454
 /*
-void __attribute__((naked,noinline)) sub_FFA87454_my(  ) {
+void __attribute__((naked,noinline)) sub_FFA87454_my() {
 asm volatile (
       "STMFD   SP!, {R3-R9,LR} \n"
       "MOV     R4, R0 \n"
@@ -454,7 +454,7 @@ asm volatile (
 
 //** exp_drv_task  @ 0xFF8B1A4C 
 
-void __attribute__((naked,noinline)) exp_drv_task(  ) { 
+void __attribute__((naked,noinline)) exp_drv_task() {
 asm volatile (
       "STMFD   SP!, {R4-R9,LR} \n"
       "SUB     SP, SP, #0x2C \n"
@@ -743,7 +743,8 @@ asm volatile (
       "BL      sub_FF8AE310 \n"
       "B       loc_FF8B1F88 \n"
 "loc_FF8B1E68:\n"
-      "BL      sub_FF8AE6BC \n"
+//      "BL      sub_FF8AE6BC \n"  //original
+      "BL      sub_FF8AE6BC_my \n" //patched
       "MOV     R8, #0 \n"
       "B       loc_FF8B1F88 \n"
 "loc_FF8B1E74:\n"
@@ -922,60 +923,12 @@ asm volatile (
       "LDR     R0, [SP, #0x28] \n"
       "BL      sub_FF8B2E2C \n"
       "B       loc_FF8B1A6C \n"
-"loc_FF8B20E0:\n"
-      "STMFD   SP!, {R4-R12,LR} \n"
-      "LDR     R8, =0x3E3C \n"
-      "MOV     R11, R0 \n"
-      "LDR     R0, [R8, #0x18] \n"
-      "MOV     R9, R1 \n"
-      "CMP     R0, #1 \n"
-      "LDR     R6, [SP, #0x30] \n"
-      "LDR     R7, [SP, #0x38] \n"
-      "LDRNE   R1, =0x1723 \n"
-      "LDRNE   R0, =0xFF8ADA84 \n"
-      "MOV     R5, R2 \n"
-      "MOV     R10, R3 \n"
-      "BLNE    _DebugAssert \n"
-      "CMP     R9, #0 \n"
-      "LDREQ   R1, =0x1724 \n"
-      "LDREQ   R0, =0xFF8ADA84 \n"
-      "BLEQ    _DebugAssert \n"
-      "CMP     R5, #0xA \n"
-      "LDRHI   R1, =0x1725 \n"
-      "LDRHI   R0, =0xFF8ADA84 \n"
-      "BLHI    _DebugAssert \n"
-      "BL      sub_FF8B2E00 \n"
-      "MOV     R4, R0 \n"
-      "STR     R11, [R0] \n"
-      "ADD     R0, R5, R5, LSL #1 \n"
-      "MOV     R2, R0, LSL #2 \n"
-      "MOV     R1, R9 \n"
-      "ADD     R0, R4, #4 \n"
-      "BL      sub_003FC17C \n"
-      "STR     R5, [R4, #0x7C] \n"
-      "STR     R10, [R4, #0x80] \n"
-      "LDR     R1, [SP, #0x28] \n"
-      "CMP     R6, #0 \n"
-      "STR     R1, [R4, #0x84] \n"
-      "LDR     R1, [SP, #0x2C] \n"
-      "LDREQ   R6, =0xFF8AD33C \n"
-      "STRH    R1, [R4, #0x88] \n"
-      "STR     R6, [R4, #0x8C] \n"
-      "LDR     R0, [SP, #0x34] \n"
-      "CMP     R7, #0 \n"
-      "LDREQ   R7, =0xFF8AD33C \n"
-      "STR     R0, [R4, #0x90] \n"
-      "STR     R7, [R4, #0x94] \n"
-      "LDR     R0, [SP, #0x3C] \n"
-      "MOV     R1, R4 \n"
-      "STR     R0, [R4, #0x98] \n"
 	);
 }
 
+//** sub_FF8AE6BC_my  @ 0xFF8AE6BC 
 
-//** sub_FF8AB4B0_my  @ 0xFF8AE6BC 
-
-void __attribute__((naked,noinline)) sub_FF8AB4B0_my(  ) { 
+void __attribute__((naked,noinline)) sub_FF8AE6BC_my() {
 asm volatile (
       "STMFD   SP!, {R4-R8,LR} \n"
       "LDR     R7, =0x3E3C \n"
@@ -1028,19 +981,15 @@ asm volatile (
 "loc_FF8AE774:\n"
       "STRH    R0, [R4, #0xC] \n"
       "LDRSH   R0, [R4, #6] \n"
-      "BL      sub_FF89E38C \n"
-      "LDRSH   R0, [R4, #8] \n"
-      "MOV     R1, #1 \n"
-      "BL      sub_FF89EBCC \n"
-      "MOV     R1, #0 \n"
-      "ADD     R0, R4, #8 \n"
+//      "BL      sub_FF89E38C \n"  //original
+      "BL      sub_FF89E38C_my \n" //patched
+      "B       sub_FF8AE780 \n" // continue in firmware
 	);
 }
 
+//** sub_FF89E38C_my  @ 0xFF89E38C 
 
-//** sub_FF89A150_my  @ 0xFF89E38C 
-
-void __attribute__((naked,noinline)) sub_FF89A150_my(  ) { 
+void __attribute__((naked,noinline)) sub_FF89E38C_my() {
 asm volatile (
       "STMFD   SP!, {R4-R6,LR} \n"
       "LDR     R5, =0x3AC8 \n"

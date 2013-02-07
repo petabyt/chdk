@@ -4,7 +4,7 @@
 // Override stubs_entry.S
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
-NHSTUB(MakeDirectory_Fut,           0xff831974) //mkdir requires #define MKDIR_RETURN_ONE_ON_SUCCESS
+NHSTUB(MakeDirectory_Fut,           0xff831974) //mkdir. This requires #define MKDIR_RETURN_ONE_ON_SUCCESS
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)

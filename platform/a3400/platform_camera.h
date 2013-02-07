@@ -84,9 +84,9 @@
     #undef  CAM_VIDEO_CONTROL
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              15      // palette number reserved in core/gui_draw.h
-//    #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
-//    #define CHDK_COLOR_BASE                 0x90    // Start color index for CHDK colors loaded into camera palette
+    #define CAM_BITMAP_PALETTE              13      // palette number reserved in core/gui_draw.h
+    #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
+    #define CHDK_COLOR_BASE                 0xD0    // Start color index for CHDK colors loaded into camera palette
 
     #define CAM_HAS_VARIABLE_ASPECT         1
     #undef  CAM_USES_ASPECT_CORRECTION

@@ -2,7 +2,7 @@
 
 #define PARAM_FILE_COUNTER      0x3A	// a810
 
-// http://chdk.setepontos.com/index.php?topic=2031.msg27692#msg27692
+// To do: http://chdk.setepontos.com/index.php?topic=2031.msg27692#msg27692
 // PROPCASE_AV (68)
 const ApertureSize aperture_sizes_table[] = {
 	{  9, 293, "2.8" },
@@ -84,10 +84,10 @@ const CapturemodeMap modemap[] = {
     { MODE_VIDEO_IFRAME_MOVIE,   2633 },
     { MODE_AUTO,                32768 },
     { MODE_P,                   32772 },
-    { MODE_SCN_LONG_SHUTTER,    32774 }, 
-    { MODE_SCN_PORTRAIT,        32785 }, 
-    { MODE_SCN_SNOW,            32793 }, 
-    { MODE_SCN_FIREWORK,        32795 }, 	
+    { MODE_SCN_LONG_SHUTTER,    32774 },
+    { MODE_SCN_PORTRAIT,        32785 },
+    { MODE_SCN_SNOW,            32793 },
+    { MODE_SCN_FIREWORK,        32795 },
     { MODE_SCN_LOWLIGHT,        32805 }, 
     { MODE_DISCREET,            32821 }, 
     { MODE_SCN_SUPER_VIVID,     33322 }, 
