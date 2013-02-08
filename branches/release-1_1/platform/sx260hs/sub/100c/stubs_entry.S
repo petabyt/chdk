@@ -51,8 +51,8 @@ DEF(active_palette_buffer                   ,0x0000dbf0) // Found @0xff27c45c
 DEF(palette_buffer                          ,0x000ddb24) // Found @0xff27c924
 DEF(bitmap_buffer                           ,0x0000dc24) // Found @0xff281164
 DEF(active_bitmap_buffer                    ,0x0000dc1c) // Found @0xff281168
-//DEF(viewport_buffers                        ,0xff441144) // Found @0xff03d9bc,          stubs_min = 0xff441144 (0xFF441144)
-//DEF(active_viewport_buffer                  ,0x000021b0) // Found @0xff03d658,          stubs_min = 0x000021b0 (0x21B0)
+DEF(viewport_buffers                        ,0xff441144) // Found @0xff03d9bc
+DEF(active_viewport_buffer                  ,0x000021b0) // Found @0xff03d658
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x406c5000; }             // Found @0xff047848
@@ -221,7 +221,7 @@ NSTUB(OpenFastDir                             ,0xff32fe54) //115
 NSTUB(qsort                                   ,0xff281eb4) //  6
 NSTUB(rand                                    ,0xff2819ec) //  6
 NSTUB(read                                    ,0xff005d9c) //101
-//NSTUB(reboot_fw_update                      ,0xff3355a0) //106            == 0xff3355a0
+NSTUB(reboot_fw_update                        ,0xff3355a0) //106
 NSTUB(set_control_event                       ,0xff0878c8) //111
 NSTUB(srand                                   ,0xff2819e0) //  6
 NSTUB(stat                                    ,0xff021f14) //109
