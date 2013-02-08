@@ -6,7 +6,6 @@ NHSTUB(LEDDrive,                    0xFF04D06C)
 NHSTUB(MakeDirectory_Fut,           0xFF02214C)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
-NHSTUB(reboot_fw_update,            0xFF335538)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)

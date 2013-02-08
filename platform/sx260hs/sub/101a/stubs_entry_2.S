@@ -5,10 +5,8 @@
 NHSTUB(LEDDrive,                    0xFF04D06C)
 NHSTUB(DeleteFile_Fut,              0xFF02163C)
 NHSTUB(MakeDirectory_Fut,           0xFF02214C)
-NHSTUB(PT_PlaySound,                0xFF076E60)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
-NHSTUB(reboot_fw_update,            0xFF3355D8)     //finsig: 0xff3355dc 64%
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)

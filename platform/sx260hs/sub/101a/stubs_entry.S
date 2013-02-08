@@ -51,8 +51,8 @@ DEF(active_palette_buffer                   ,0x0000dbf8) // Found @0xff27c494
 DEF(palette_buffer                          ,0x000ddb24) // Found @0xff27c95c
 DEF(bitmap_buffer                           ,0x0000dc2c) // Found @0xff28119c
 DEF(active_bitmap_buffer                    ,0x0000dc24) // Found @0xff2811a0
-//DEF(viewport_buffers                        ,0xff44117c) // Found @0xff03d9bc,          stubs_min = 0xff44117c (0xFF44117C)
-//DEF(active_viewport_buffer                  ,0x000021b0) // Found @0xff03d658,          stubs_min = 0x000021b0 (0x21B0)
+DEF(viewport_buffers                        ,0xff44117c) // Found @0xff03d9bc
+DEF(active_viewport_buffer                  ,0x000021b0) // Found @0xff03d658
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x406c5000; }             // Found @0xff047848
@@ -159,7 +159,7 @@ NSTUB(Open                                    ,0xff021be8) //101
 NSTUB(PB2Rec                                  ,0xff08b370) //104
 NSTUB(PT_MoveDigitalZoomToWide                ,0xff06a190) //102
 NSTUB(PT_MoveOpticalZoomAt                    ,0xff06a168) //102
-//NSTUB(PT_PlaySound                          ,0xff076e60) // 11            == 0xff076e60
+NSTUB(PT_PlaySound                            ,0xff076e60) // 11
 NSTUB(PostLogicalEventForNotPowerType         ,0xff08598c) //103
 NSTUB(PostLogicalEventToUI                    ,0xff0859d8) //103
 NSTUB(PutInNdFilter                           ,0xff3dd354) //102
@@ -220,7 +220,7 @@ NSTUB(OpenFastDir                             ,0xff32fe8c) //115
 NSTUB(qsort                                   ,0xff281eec) //  6
 NSTUB(rand                                    ,0xff281a24) //  6
 NSTUB(read                                    ,0xff005d9c) //101
-//NSTUB(reboot_fw_update                      ,0xff3355d8) //106            == 0xff3355d8
+NSTUB(reboot_fw_update                        ,0xff3355d8) //106
 NSTUB(set_control_event                       ,0xff0878c8) //111
 NSTUB(srand                                   ,0xff281a18) //  6
 NSTUB(stat                                    ,0xff021f14) //109
