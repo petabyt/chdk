@@ -23,9 +23,9 @@
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1
     #define DNG_VERT_RLE_BADPIXELS              1
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
-    #define CAM_HAS_ND_FILTER                   1 // Camera has built-in ND filter (in addition to iris)
+    #define CAM_HAS_ND_FILTER                   1           // Camera has built-in ND filter (in addition to iris)
     #undef  CAM_KEY_PRESS_DELAY
-    #define CAM_KEY_PRESS_DELAY                 60      // delay after a press
+    #define CAM_KEY_PRESS_DELAY                 60          // delay after a press
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1
 
     #define CAM_DRYOS_2_3_R39                   1
@@ -35,6 +35,7 @@
     #define CAM_DRYOS                           1
     #define CAM_RAW_ROWPIX                      4176        //ASM1989 FINSIG  Found @0xff17db40
     #define CAM_RAW_ROWS                        3060        // Found @0xff17db4c
+    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1           // Draw pixels on active bitmap buffer only.
 
     #define CAM_HAS_CMOS                        1
 
