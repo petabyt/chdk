@@ -225,5 +225,6 @@ sx40hs,100f,,,
 sx40hs,100g,,,
 sx40hs,100i,,,
 sx50hs,100b,ALPHA,,SKIP_AUTOBUILD
+sx50hs,100c,ALPHA,,SKIP_AUTOBUILD
 tx1,100g,,,
 tx1,101b,,,
