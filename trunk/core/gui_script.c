@@ -103,6 +103,7 @@ char script_title[36];                                      // Title of current 
 // 2. Encoding scheme is: array[VAR-'a'] = value
 
 #define MAX_PARAM_NAME_LEN  27
+#define DEFAULT_PARAM_SET   10                              // Value of conf.script_param_set for 'Default' rather than saved parameters
 
 char script_params[SCRIPT_NUM_PARAMS][MAX_PARAM_NAME_LEN+1];// Parameter title
 static short script_param_order[SCRIPT_NUM_PARAMS];         // Ordered as_in_script list of variables ( [idx] = id_of_var )
@@ -441,6 +442,8 @@ int load_params_values(const char *fn, int paramset)
 {
     // skip if internal script used
     if (fn == NULL || fn[0] == 0) return 0;
+    // skip if 'default' parameters requested
+    if (paramset == DEFAULT_PARAM_SET) return 0;
     
     conf.script_param_set = paramset;
     make_param_filename( MAKE_PARAM_FILENAME, fn, paramset );
@@ -536,7 +539,7 @@ static void do_save_param_file(char* fn)
 //-------------------------------------------------------------------
 void save_params_values( int enforce )
 {
-    if (conf.script_param_save)
+    if (conf.script_param_save && (conf.script_param_set != DEFAULT_PARAM_SET))
     {
         // Write paramsetnum file
         make_param_filename( MAKE_PARAMSETNUM_FILENAME, conf.script_file, 0);
@@ -628,7 +631,7 @@ void gui_update_script_submenu();
 
 static const char* gui_script_param_set_enum(int change, int arg)
 {
-    static const char* modes[]={ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+    static const char* modes[]={ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Default" };
 
     if (change != 0)
     {
@@ -641,6 +644,25 @@ static const char* gui_script_param_set_enum(int change, int arg)
     }
 
     return modes[conf.script_param_set];
+}
+
+static const char* gui_script_param_save_enum(int change, int arg)
+{
+    static const char* modes[]={ "Off", "On" };
+
+    if (conf.script_param_set != DEFAULT_PARAM_SET)
+    {
+        if (change != 0)
+        {
+            gui_enum_value_change(&conf.script_param_save,change,sizeof(modes)/sizeof(modes[0]));
+            if (conf.script_param_save)
+                save_params_values(0);
+        }
+
+        return modes[conf.script_param_save];
+    }
+
+    return modes[0];
 }
 
 static void gui_load_script_selected(const char *fn) {
@@ -681,7 +703,7 @@ static CMenuItem script_submenu_items[] = {
     MENU_ITEM   (0x35,LANG_MENU_USER_MENU_SCRIPT_ADD,       MENUITEM_PROC,                      gui_add_script_to_user_menu, 0 ),
     MENU_ITEM   (0x5d,LANG_MENU_SCRIPT_DEFAULT_VAL,         MENUITEM_PROC,                      gui_load_script_default,    0 ),
     MENU_ITEM   (0x5e,LANG_MENU_SCRIPT_PARAM_SET,           MENUITEM_ENUM,                      gui_script_param_set_enum,  0 ),
-    MENU_ITEM   (0x5c,LANG_MENU_SCRIPT_PARAM_SAVE,          MENUITEM_BOOL,                      &conf.script_param_save,    0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_SCRIPT_PARAM_SAVE,          MENUITEM_ENUM,                      gui_script_param_save_enum, 0 ),
     MENU_ITEM   (0x0 ,(int)script_title,                    MENUITEM_SEPARATOR,                 0,                          0 ),
 
     // SCRIPT_NUM_PARAMS entries - filled in at runtime
