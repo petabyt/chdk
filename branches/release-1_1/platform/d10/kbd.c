@@ -295,7 +295,7 @@ static KeyMap keymap[] = {
 	{ 2, KEY_DISPLAY	, 0x00000200 },
 	{ 2, KEY_PRINT		, 0x00000800 },
 //	{ 1, KEY_MODE		, 0x20000000 }, // D10 mode select 
-//	{ 1, KEY_PLAY		, 0x80000000 }, // D10 play button
+	{ 1, KEY_PLAYBACK	, 0x80000000 }, // D10 play button
 	{ 0, 0, 0 }
 };
 
