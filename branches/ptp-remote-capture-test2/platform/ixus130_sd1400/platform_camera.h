@@ -63,7 +63,6 @@
     #undef CAM_BITMAP_HEIGHT
     #define CAM_BITMAP_HEIGHT           270 // Actual height of bitmap screen in rows
 
-    #define CAM_ZEBRA_ASPECT_ADJUST     1
     #define CAM_ZEBRA_NOBUF             1
 
     #define CAM_QUALITY_OVERRIDE        1

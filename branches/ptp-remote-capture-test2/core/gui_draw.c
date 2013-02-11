@@ -7,15 +7,20 @@
 #include "gui_draw.h"
 
 //-------------------------------------------------------------------
-static char*    frame_buffer[2];
 void            (*draw_pixel_proc)(unsigned int offset, color cl);
 
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+extern char* bitmap_buffer[];
+extern int active_bitmap_buffer;
+#else
+static char* frame_buffer[2];
+#endif
 //-------------------------------------------------------------------
+
 static void draw_pixel_std(unsigned int offset, color cl)
 {
-#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY	
-	extern int active_bitmap_buffer;
-	frame_buffer[active_bitmap_buffer][offset] = cl & 0xff;
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+	bitmap_buffer[active_bitmap_buffer][offset] = cl & 0xff;
 #else
 	frame_buffer[0][offset] = frame_buffer[1][offset] = cl & 0xff;
 #endif
@@ -33,30 +38,33 @@ void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl))
 
 void draw_set_guard()
 {
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+    *((unsigned char*)(bitmap_buffer[0])) = GUARD_VAL;
+    *((unsigned char*)(bitmap_buffer[1])) = GUARD_VAL;
+#else
     *((unsigned char*)(frame_buffer[0])) = GUARD_VAL;
     *((unsigned char*)(frame_buffer[1])) = GUARD_VAL;
+#endif
 }
 
 int draw_test_guard()
 {
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+    if (*((unsigned char*)(bitmap_buffer[active_bitmap_buffer])) != GUARD_VAL) return 0;
+#else
     if (*((unsigned char*)(frame_buffer[0])) != GUARD_VAL) return 0;
     if (*((unsigned char*)(frame_buffer[1])) != GUARD_VAL) return 0;
+#endif
     return 1;
-}
-
-// Test a pixel value in both frame buffers, returns 0 if either doesn't match or co-ords out of range
-int draw_test_pixel(coord x, coord y, color c)
-{
-    if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return 0;
-    return (frame_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)] == c) &&
-           (frame_buffer[1][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)] == c);
 }
 
 //-------------------------------------------------------------------
 void draw_init()
 {
+#ifndef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
     frame_buffer[0] = vid_get_bitmap_fb();
     frame_buffer[1] = frame_buffer[0] + camera_screen.buffer_size;
+#endif
     draw_set_draw_proc(NULL);
 
     draw_set_guard();
@@ -93,7 +101,11 @@ void draw_pixel(coord x, coord y, color cl)
 color draw_get_pixel(coord x, coord y)
 {
     if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return 0;
-    return frame_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x) ];
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+    return bitmap_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)];
+#else
+    return frame_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)];
+#endif
 }
 
 //-------------------------------------------------------------------
@@ -148,7 +160,7 @@ void draw_vline(coord x, coord y, int len, color cl)
     if (y < 0) { len += y; y = 0; }
     if ((y + len) > camera_screen.height) len = camera_screen.height - y;
     for (; len>0; len--, y++)
-      draw_pixel(x, y, cl);
+        draw_pixel(x, y, cl);
 }
 //-------------------------------------------------------------------
 
@@ -276,14 +288,16 @@ void draw_char(coord x, coord y, const char ch, color cl)
     // First draw blank lines at top
     for (i=0; i<f->offset; i++)
         draw_hline(x, y+i, FONT_WIDTH, BG_COLOR(cl));
+
     // Now draw character data
     for (; i<f->offset+f->size; i++)
     {
 	    for (ii=0; ii<FONT_WIDTH; ii++)
         {
-            draw_pixel(x+ii ,y+i, (sym[i] & (0x80>>ii))? FG_COLOR(cl) : BG_COLOR(cl));
+            draw_pixel(x+ii, y+i, (sym[i] & (0x80>>ii))? FG_COLOR(cl) : BG_COLOR(cl));
 	    }
     }
+
     // Last draw blank lines at bottom
     for (; i<FONT_HEIGHT; i++)
         draw_hline(x, y+i, FONT_WIDTH, BG_COLOR(cl));

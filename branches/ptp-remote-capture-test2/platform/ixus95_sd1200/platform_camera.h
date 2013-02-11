@@ -80,7 +80,6 @@
     #undef CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
 
-    #define CAM_ZEBRA_ASPECT_ADJUST         1
     // camera has little free memory
     #define CAM_ZEBRA_NOBUF                 1
 

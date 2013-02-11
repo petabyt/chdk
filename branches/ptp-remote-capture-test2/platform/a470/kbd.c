@@ -18,8 +18,8 @@ static KeyMap keymap[];
 static long last_kbd_key = 0;
 
 #define KEYS_MASK0 (0x00000000)
-int keys_mask1 = 0x00000000;
-int keys_inv1 = 0x00000000;
+static int keys_mask1 = 0x00000000;
+static int keys_inv1 = 0x00000000;
 #define KEYS_MASK2 (0x153F)
 static int set_fake_key=0;
 

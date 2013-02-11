@@ -51,11 +51,11 @@
 // over or underexposed pixel. Again the buffer is copied to the
 // camera bitmap memory when done.
 
-// Determining which code path is done with the CAM_ZEBRA_ASPECT_ADJUST
+// Determining which code path is done with the CAM_USES_ASPECT_CORRECTION
 // value in platform_camera.h (accessed via camera_screen.zebra_aspect_adjust).
-// If CAM_ZEBRA_ASPECT_ADJUST is not defined (or 0) the older code
+// If CAM_USES_ASPECT_CORRECTION is not defined (or 0) the older code
 // is used that assumes the bitmap screen is 360 bytes wide.
-// Defining CAM_ZEBRA_ASPECT_ADJUST as 1 will use the newer code.
+// Defining CAM_USES_ASPECT_CORRECTION as 1 will use the newer code.
 
 // Another difference is that the old code path saves the top and bottom
 // of the Canon OSD from the bitmap screen memory and overlays this on
@@ -74,7 +74,7 @@
 // with bars above and below. Cameras with 16:9 LCD screens will show
 // a 4:3 image with bars to the left and right.
 
-// For older cameras (that do not define CAM_ZEBRA_ASPECT_ADJUST) the 
+// For older cameras (that do not define CAM_USES_ASPECT_CORRECTION) the 
 // aspect ratio is controlled by the CAM_HAS_VARIABLE_ASPECT value
 // in platform_camera.h (camera_screen.has_variable_aspect). Defining
 // this value tells the code that the camera has a 16:9 LCD but can

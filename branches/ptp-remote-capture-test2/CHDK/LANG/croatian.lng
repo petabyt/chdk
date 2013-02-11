@@ -318,11 +318,11 @@
 
 238 "Posebne foto operacije"
 239 "Posebne foto operacije"
-//240 "Brzina zatvaraèa TV"
-//241 "    Koeficijent"
+240 "EV korak"
+241 "Dugaèka ekspozicija"
 242 "Apertura AV"
 243 "ISO osjetljivost"
-//244 "    Koeficijent"
+244 "Kratka ekspozicija"
 245 "Udaljenost"
 246 "    Koeficijent (mm)"
 
@@ -339,8 +339,8 @@
 256 "Autostart"
 257 "Omoguæi daljinsku kontr.USB"
 
-//258 "Kontrola ekspozicije (No Flash)"
-//259 "Kontrola ekspozicije (No Flash)"
+258 "Omoguæavanje Lua 'Native Calls'\nmože trajno oštetiti vašu kameru!\nAko niste sigurni\nne radite to!\n\nŽelite li omoguæiti 'Native Calls'?"
+259 "Omoguæi Lua 'Native Calls'"
 //260 "Rekalk.ekspozicije"
 //261 "TV rekalk.ekspozicije"
 //262 "AV rekalk.ekspozicije"
@@ -450,7 +450,7 @@
 347 "Refreshrate (~sec)"
 348 "Preostalo vrijeme videa"
 349 "Obriši videoparam. na startu"
-350 "Omoguæi brzo EV prebacivanje"
+350 "Omoguæi brzi EV"
 //351 "   Korak (1 EV)"
 352 "EV korekcija"
 353 "Obriši sve\nRAW dat. bez odgovarajuæih JPG\nu DCIM mapi?"
@@ -702,3 +702,5 @@
 
 573 "Beskrajan fokus"
 574 "Fokus faktor"
+
+575 "ON/OFF tipka za <ALT> mod"

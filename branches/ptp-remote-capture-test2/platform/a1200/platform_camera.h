@@ -61,7 +61,6 @@
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1
 
-    #define CAM_ZEBRA_ASPECT_ADJUST         1
     #define CAM_ZEBRA_NOBUF                 1
 
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
@@ -121,3 +120,6 @@
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF             // no SD override unless in manual focus mode
     #undef  CAM_CAN_SD_OVER_IN_AF_LOCK            // SD override when AF locked only
     #define CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY  1    // SD override when AF locked or video mode
+
+    #undef  CAM_AF_LED                            // AF Lamp index for camera_set_led()
+    #define CAM_AF_LED                       2    //

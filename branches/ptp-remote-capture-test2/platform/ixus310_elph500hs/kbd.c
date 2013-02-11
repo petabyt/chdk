@@ -426,6 +426,14 @@ int chdk_process_touch()
 
 int redraw_buttons = 1;
 
+// Test a pixel value of the CHDK on-screen button to see if it may have been erased
+static int draw_test_pixel(coord x, coord y, color c)
+{
+    extern char* bitmap_buffer[];
+    extern int active_bitmap_buffer;
+    return (bitmap_buffer[active_bitmap_buffer][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)] == c);
+}
+
 void virtual_buttons()
 {
     int guiMode = gui_get_mode();

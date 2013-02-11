@@ -1,0 +1,24 @@
+S80
+
+- DIGIC II
+- has iris
+- has no ND filter
+- has a "subCPU", therefore it wakes up on USB connection
+
+Porting thread, where the contributors can be looked up:
+http://chdk.setepontos.com/index.php?topic=336
+
+Current source is based on the source provided by Lionfish, with the following changes:
+
+- several addresses have been corrected (functions, firmware variables)
+- jogdial is supported
+- no special shortcuts are defined
+- DNG should work, but will have black borders (until someone defines the active area)
+
+Not changed:
+
+- capt_seq.c and movie_rec.c is unverified, mostly untouched
+
+Issues:
+
+- To start in play mode, press and hold the play [>] button until the camera starts
