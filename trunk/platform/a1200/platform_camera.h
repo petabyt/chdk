@@ -120,3 +120,6 @@
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF             // no SD override unless in manual focus mode
     #undef  CAM_CAN_SD_OVER_IN_AF_LOCK            // SD override when AF locked only
     #define CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY  1    // SD override when AF locked or video mode
+
+    #undef  CAM_AF_LED                            // AF Lamp index for camera_set_led()
+    #define CAM_AF_LED                       2    //
