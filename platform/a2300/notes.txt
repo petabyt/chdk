@@ -18,7 +18,5 @@ Development notes:
 *****************
 - This was a blind port.
 - hook_raw_image_addr() & hook_alt_raw_image_addr() return the same value
-- vid_get_viewport_live_fb() returns 0x0
-- Palette was not verified
 - Tables in shooting.c not verified.
 - DNG calibration not done.
