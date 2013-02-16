@@ -10,6 +10,7 @@ NHSTUB(DoAFLock, 0xff93de38) //
 NHSTUB(EnterToCompensationEVF, 0xff93df9c) //
 NHSTUB(ExecuteEventProcedure, 0xFF81756C) // same as in ixus40
 NHSTUB(ExitFromCompensationEVF, 0xff93dfdc) //
+NHSTUB(Feof_Fut, 0xff869d08)
 NHSTUB(FreeMemory, 0xff81eb10) //ixus40: same issue as with allocatememory
 NHSTUB(FreeUncacheableMemory, 0xFF8152BC) // same
 NHSTUB(GetBatteryTemperature, 0xffa486ac)  //
@@ -100,23 +101,3 @@ NHSTUB(Close, 0xffac265c) // "close"
 */
 
 //NSTUB(time, 0xff8149c8) //Time, but it works equally wrong as time
-
-//adresses are ok but sd300 pdata differs, | 0x4000 lets it return 0 all the time,
-//without it you get crashes at some data addr :(
-//NHSTUB(GetParameterData, 0xFF95A55C) //should be ok!
-
-//should be ok but sd300 doesnt have all cases :(
-//NHSTUB(GetPropertyCase, 0xFF82CB54)
-
-//looks like there is no strobechargecompletet flag ?!
-//do it in my own way. found some code to get the eventflag
-//at 0xFF941A14. copied the call there in my own c-code
-//looking at sd400 asm showed that flash info is (val>>20)&1
-//seems correct here as well... see ixus40.../lib.c
-
-/**********************************************************/
-//as sd300 doesnt seem to have uniqueled stuff we do it our own way
-//see ixus40_sd300(lib.c for details
-//we need the af set/get methods:
-//and uniqueled is set to NULL dummy
-/**********************************************************/
