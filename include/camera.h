@@ -229,6 +229,10 @@
     #undef  CAM_EXTRA_BUTTON_NAMES              // Define the list of names for the extra button   - e.g. { "Off", "Display" }
     #undef  CAM_EXTRA_BUTTON_OPTIONS            // Define the list of button constants for the extra button, starting with 0 - e.g. { 0, KEY_DISPLAY }
 
+    #define CAM_AF_LED                      -1  // ***** NOTE ***** Need to override this in platform_camera.h with correct value
+                                                // Defines 'led' Index value for camera_set_led function to control the AutoFocus assist LED
+                                                // Used for the Motion Detect & Live View buffer testing
+
 //----------------------------------------------------------
 // Overridden values for each camera
 //----------------------------------------------------------

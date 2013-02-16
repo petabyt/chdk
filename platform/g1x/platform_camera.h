@@ -27,6 +27,9 @@
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only. Requires active_bitmap_buffer location in stubs_min.S or stubs_entry.S.
 
+    #undef  CAM_AF_LED
+    #define CAM_AF_LED                          3   // Index of AF led in camera_set_led function
+
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                    0x40000000 // Found @0xff02ac74
 

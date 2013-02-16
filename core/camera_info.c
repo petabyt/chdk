@@ -206,6 +206,7 @@ _cam_info camera_info =
     0,
 #endif
     CAM_KEY_PRESS_DELAY, CAM_KEY_RELEASE_DELAY, 
+    CAM_AF_LED,
 };
 
 //==========================================================
@@ -231,6 +232,10 @@ void camera_info_init()
     camera_info.data_start = (int)&link_data_start;
     camera_info.bss_start = (int)&link_bss_start;
     camera_info.bss_end = (int)&link_bss_end;
+
+    camera_info.perf.md_draw.time.min = 0xFFFFFFFF;
+    camera_info.perf.md_detect.time.min = 0xFFFFFFFF;
+    camera_info.perf.af_led.min = 0xFFFFFFFF;
 }
 
 //==========================================================

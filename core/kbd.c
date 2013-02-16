@@ -7,6 +7,8 @@
 #include "gui_lang.h"
 #include "console.h"
 #include "usb_remote.h"
+#include "clock.h"
+#include "debug_led.h"
 
 static int kbd_blocked;
 
@@ -42,6 +44,27 @@ void kbd_set_block(int bEnableBlock)
 long kbd_process()
 {
     static int key_pressed;
+
+    if (camera_info.perf.md_af_tuning)
+    {
+        switch (camera_info.perf.md_af_on_flag)
+        {
+        case 1:
+            if (get_tick_count() >= (camera_info.perf.md_detect_tick + camera_info.perf.md_af_on_delay))
+            {
+                camera_info.perf.md_af_on_flag = 2;
+                camera_set_led(camera_info.cam_af_led,1,0);
+            }
+            break;
+        case 2:
+            if (get_tick_count() >= (camera_info.perf.md_detect_tick + camera_info.perf.md_af_on_delay + camera_info.perf.md_af_on_time))
+            {
+                camera_info.perf.md_af_on_flag = 0;
+                camera_set_led(camera_info.cam_af_led,0,0);
+            }
+            break;
+        }
+    }
 
     // Set Shutter Half Press state for GUI task.
     camera_info.state.is_shutter_half_press = kbd_is_key_pressed(KEY_SHOOT_HALF);
