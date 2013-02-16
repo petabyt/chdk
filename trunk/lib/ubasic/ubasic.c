@@ -2316,7 +2316,7 @@ statement(void)
       break;
       // << mx3 . motion_detector
 
-  case TOKENIZER_MD_AF_ON_TIME:
+  case TOKENIZER_MD_AF_LED_CONTROL:
       accept(token);
       camera_info.perf.md_af_on_delay = expr();
       camera_info.perf.md_af_on_time = expr();

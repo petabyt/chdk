@@ -893,7 +893,7 @@ static int luaCB_wheel_left( lua_State* L )
   return 0;
 }
 
-static int luaCB_md_af_on_time( lua_State* L )
+static int luaCB_md_af_led_control( lua_State* L )
 {
     camera_info.perf.md_af_on_delay = luaL_checknumber( L, 1 );
     camera_info.perf.md_af_on_time = luaL_checknumber( L, 2 );
@@ -2336,7 +2336,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(wheel_left)
     FUNC(md_get_cell_diff)
     FUNC(md_detect_motion)
-    FUNC(md_af_on_time)
+    FUNC(md_af_led_control)
     FUNC(autostarted)
     FUNC(get_autostart)
     FUNC(set_autostart)
