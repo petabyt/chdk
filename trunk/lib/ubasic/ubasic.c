@@ -2316,6 +2316,17 @@ statement(void)
       break;
       // << mx3 . motion_detector
 
+  case TOKENIZER_MD_AF_ON_TIME:
+      accept(token);
+      camera_info.perf.md_af_on_delay = expr();
+      camera_info.perf.md_af_on_time = expr();
+      if ((camera_info.perf.md_af_on_time > 0) && (camera_info.cam_af_led >= 0))
+          camera_info.perf.md_af_tuning = 1;        // Enable MD testing with AF LED
+      else
+          camera_info.perf.md_af_tuning = 0;        // Disable MD testing
+      accept_cr();
+      break;
+
   case TOKENIZER_SHOT_HISTO_ENABLE:
       one_int_param_function(token, (void (*)(int))shot_histogram_set);
       break;

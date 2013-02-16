@@ -74,6 +74,18 @@ extern _cam_screen camera_screen;
 
 typedef struct
 {
+    unsigned int    tick_count;         // tick count of last call to function
+    unsigned int    last, min, max, sum, count;
+} time_counter;
+
+typedef struct
+{
+    time_counter    time;               // time taken inside last call of function
+    unsigned int    time_between_calls; // time taken between calls to function
+} perf_counter;
+
+typedef struct
+{
 	int api_version;			// version of this structure
 
     // Canon PARAMS indexes
@@ -125,6 +137,7 @@ typedef struct
     int cam_has_multipart;
     int cam_remote_sync_status_led;
     int cam_key_press_delay, cam_key_release_delay;
+    int cam_af_led;
     // Miscellaneous variables to record state information
     // Used to control communication between various tasks and modules
     struct
@@ -139,6 +152,22 @@ typedef struct
         int     state_shooting_progress;    // Holds current state when still image being processed
         int     state_kbd_script_run;       // Script execution state
     } state;
+
+    // Performance counters
+    struct
+    {
+        perf_counter    md_draw;            // counters for motion detector drawing
+        perf_counter    md_detect;          // counters for motion detector detection
+        unsigned int    md_detect_tick;     // Tick count of last motion detection
+        unsigned int    capt_tick;          // Tick count of last capture (capt_seq_hook_raw_here)
+        unsigned int    wait_remote_tick;   // Tick count of last call to _wait_until_remote_button_is_released
+        int             md_af_tuning;       // Flag to enable/disable the Motion Detect tuning code using the AF LED
+        int             af_led_on;          // Counter to time AF led turn on (for AF LED MD tuning)
+        time_counter    af_led;             // Counters for AF led MD timing
+        int             md_af_on_flag;      // Flag to turn on AF led after MD detects motion (to calculate delay from detect to capture)
+        unsigned int    md_af_on_delay;     // How long after MD triggers to wait before turning on AF led
+        unsigned int    md_af_on_time;      // How long to leave AF led on for
+    } perf;
 } _cam_info;
 
 extern _cam_info camera_info;

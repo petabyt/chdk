@@ -49,6 +49,7 @@ enum
     MD_MEASURE_MODE_B=5
 };
 
+// Bit values for motion_detector.parameters
 enum
 {
     MD_DO_IMMEDIATE_SHOOT=1,
@@ -107,16 +108,56 @@ struct motion_detector_s
 
 static struct motion_detector_s motion_detector;
 
+void time_counter_capture(time_counter *t)
+{
+    t->last = get_tick_count() - t->tick_count;
+    if (t->last < t->min)
+        t->min = t->last;
+    if (t->last > t->max)
+        t->max = t->last;
+    t->sum += t->last;
+    t->count++;
+}
+
 // Stack process function for running MD logic
 static int action_stack_AS_MOTION_DETECTOR()
 {
+    // MD testing with AF LED
+    if (camera_info.perf.md_af_tuning)
+    {
+        if (camera_info.perf.af_led_on == 0)
+        {
+            camera_info.perf.af_led_on--;
+            camera_info.perf.af_led.tick_count = get_tick_count();
+            camera_set_led(camera_info.cam_af_led,1,0);
+        }
+        else if (camera_info.perf.af_led_on > 0)
+        {
+            camera_info.perf.af_led_on--;
+        }
+    }
+
     if (md_detect_motion() == 0)
     {
+        if (motion_detector.return_value)
+        {
+            camera_info.perf.md_detect_tick = get_tick_count();
+        }
+
+        // MD testing with AF LED
+        if (camera_info.perf.md_af_tuning)
+        {
+            camera_set_led(camera_info.cam_af_led,0,0);
+            if (motion_detector.return_value)
+            {
+                time_counter_capture(&camera_info.perf.af_led);
+            }
+        }
+
         if (libscriptapi)
         {
             // We need to recover the motion detector's
-            // result and push
-            // it onto the thread's stack.
+            // result and push it onto the thread's stack.
             libscriptapi->set_as_ret(motion_detector.return_value);
         }
         action_pop_func(0);
@@ -133,10 +174,17 @@ static void md_kbd_sched_immediate_shoot(int no_release)
     if (!no_release)  // only release shutter if allowed
     {
         action_push_release(KEY_SHOOT_FULL);
-        action_push_delay(camera_info.cam_key_press_delay);
     }
+    if (camera_info.cam_key_press_delay > 0)
+        action_push_delay(camera_info.cam_key_press_delay);
     action_push_func(action_stack_AS_MOTION_DETECTOR); // it will removed right after exit from this function
     kbd_key_press(KEY_SHOOT_FULL); // not a stack operation... pressing right now
+
+    // MD testing with AF LED
+    if (camera_info.perf.md_af_tuning)
+    {
+        camera_info.perf.md_af_on_flag = 1;
+    }
 }
 
 static int clip(int v)
@@ -269,6 +317,7 @@ int md_init_motion_detector
 
     motion_detector.running = 1;
 
+    camera_info.perf.af_led_on = 100;
     action_push_func(action_stack_AS_MOTION_DETECTOR);
     gui_set_need_restore();
 
@@ -371,7 +420,7 @@ static int md_running()
 
 static int md_detect_motion(void)
 {
-    int idx, tick;
+    int idx, tick, rv;
     int val, cy, cv, cu;
 
     register int col, row, x, y;
@@ -382,6 +431,8 @@ static int md_detect_motion(void)
     }
 
     tick=get_tick_count();
+    rv = 1;
+
 #ifdef OPT_MD_DEBUG
     if(motion_detector.comp_calls_cnt < MD_REC_CALLS_CNT)
     {
@@ -402,6 +453,9 @@ static int md_detect_motion(void)
         // wait for the next time
         return 1;
     }
+
+    camera_info.perf.md_detect.time_between_calls = tick - camera_info.perf.md_detect.time.tick_count;  // Time since last call
+    camera_info.perf.md_detect.time.tick_count = tick;
 
     motion_detector.last_measure_time = tick;
 
@@ -536,30 +590,26 @@ static int md_detect_motion(void)
         motion_detector.previous_picture_is_ready = 1;
         motion_detector.start_time = get_tick_count();
         motion_detector.last_measure_time = motion_detector.start_time - motion_detector.measure_interval;
-        return 1;
     }
-
-    if ( motion_detector.detected_cells > 0 )
+    else if ( motion_detector.detected_cells > 0 )
     {
-//      sprintf(buf,"-cells: %d", motion_detector.detected_cells);
-//      script_console_add_line(buf);
-
         if (motion_detector.start_time+motion_detector.msecs_before_trigger < tick)
         {
             motion_detector.running=0;
             motion_detector.return_value = motion_detector.detected_cells;
 
-//          md_save_calls_history();
             if ((motion_detector.parameters&MD_DO_IMMEDIATE_SHOOT) != 0)
             {
                 //make shoot
                 md_kbd_sched_immediate_shoot(motion_detector.parameters&MD_NO_SHUTTER_RELEASE_ON_SHOOT);
             }
-            return 0;
+            rv = 0;
         }
     }
 
-    return 1;
+    time_counter_capture(&camera_info.perf.md_detect.time);
+
+    return rv;
 }
 
 int md_get_cell_diff(int column, int row)
@@ -584,6 +634,10 @@ void md_draw_grid()
         return;
 	}
 
+    int ts = get_tick_count();
+    camera_info.perf.md_draw.time_between_calls = ts - camera_info.perf.md_draw.time.tick_count;  // Time since last call
+    camera_info.perf.md_draw.time.tick_count = ts;
+
 	int xoffset = vid_get_viewport_display_xoffset();	// used when image size != viewport size
 	int yoffset = vid_get_viewport_display_yoffset();	// used when image size != viewport size
 
@@ -595,7 +649,7 @@ void md_draw_grid()
     int y_start, y_end = yoffset;
     int x_start, x_end;
 
-    for (i=0, row=0; row < motion_detector.rows; row++)
+    for (i=0, row=0; row < motion_detector.rows && camera_info.state.state_kbd_script_run; row++)
     {
         // Calc display start and end offsets
         y_start = y_end;    // reuse last end value as new start value
@@ -644,6 +698,8 @@ void md_draw_grid()
             }
         }
     }
+
+    time_counter_capture(&camera_info.perf.md_draw.time);
 }
 
 
