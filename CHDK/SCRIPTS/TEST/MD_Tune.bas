@@ -63,7 +63,8 @@ e=e*100
 g=g*1000
 n=n*10000
 
-md_af_on_time w*10 z*10
+rem turn on AF LED testing
+md_af_led_control w*10 z*10
 
 P=get_mode
 if P=1 then goto "PlayModeError"
@@ -106,5 +107,6 @@ until 0
 end
 
 :restore
-  md_af_on_time 0 0
+  rem turn off AF LED testing
+  md_af_led_control 0 0
 end
