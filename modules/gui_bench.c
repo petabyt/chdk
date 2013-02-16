@@ -111,18 +111,12 @@ void gui_bench_draw() {
 }
 
 //-------------------------------------------------------------------
-static void __attribute__((optimize("O0"))) gui_bench_run() {
+static void __attribute__((optimize("O0"))) bench_screen_write() {
     long t;
-    register int i, n;
-    register unsigned int s, x=0x55;
-    register int *buf;
-    register char *scr;
+    register unsigned int i, s;
     register char c;
+    register char *scr;
     
-    bench_to_draw = 2;
-
-    bench.screen_output_bps = 0;
-    gui_bench_draw();
     scr = vid_get_bitmap_fb();
     s = camera_screen.buffer_size;
     t = get_tick_count();
@@ -131,10 +125,14 @@ static void __attribute__((optimize("O0"))) gui_bench_run() {
             scr[i] = c;
     t = get_tick_count() - t;
     bench.screen_output_bps = s*64*100 / (t/10);
-    bench_to_draw = 1;
-    
-    bench.screen_input_bps = 0;
-    gui_bench_draw();
+}
+
+static void __attribute__((optimize("O0"))) bench_screen_read() {
+    long t;
+    register unsigned int i, n, s;
+    register char c;
+    register char *scr;
+
     scr = vid_get_viewport_fb();
     s = camera_screen.width * vid_get_viewport_height() * 3;
     t = get_tick_count();
@@ -143,28 +141,63 @@ static void __attribute__((optimize("O0"))) gui_bench_run() {
             c = scr[i];
     t = get_tick_count() - t;
     bench.screen_input_bps = s*64*100 / (t/10);
+}
+
+static void __attribute__((optimize("O0"))) bench_mem_write(int *buff) {
+    long t;
+    register unsigned int i, n, x=0x55;
+    register int *buf = buff;
+    
+    t = get_tick_count();
+    for (n=0; n<1024; ++n)
+        for (i=0; i<0x10000/4; ++i)
+            buf[i] = x;
+    t = get_tick_count() - t;
+    bench.memory_write_bps = 0x10000*100 / (t/10) * 1024;
+}
+
+static void __attribute__((optimize("O0"))) bench_mem_read(int *buff) {
+    long t;
+    register unsigned int i, n, x;
+    register int *buf = buff;
+
+    t = get_tick_count();
+    for (n=0; n<1024; ++n)
+        for (i=0; i<0x10000/4; ++i)
+            x = buf[i];
+    t = get_tick_count() - t;
+    bench.memory_read_bps = 0x10000*100 / (t/10) * 1024;
+}
+
+//-------------------------------------------------------------------
+static void gui_bench_run() {
+    long t;
+    register int x;
+    register unsigned int n, s;
+    register int *buf;
+    
+    bench_to_draw = 2;
+
+    bench.screen_output_bps = 0;
+    gui_bench_draw();
+    bench_screen_write();
+    bench_to_draw = 1;
+    
+    bench.screen_input_bps = 0;
+    gui_bench_draw();
+    bench_screen_read();
     bench_to_draw = 2;
 
     buf = malloc(0x10000);
     if (buf) {
         bench.memory_write_bps = 0;
         gui_bench_draw();
-        t = get_tick_count();
-        for (n=0; n<1024; ++n)
-            for (i=0; i<0x10000/4; ++i)
-                buf[i] = x;
-        t = get_tick_count() - t;
-        bench.memory_write_bps = 0x10000*100 / (t/10) * 1024;
+        bench_mem_write(buf);
         bench_to_draw = 2;
 
         bench.memory_read_bps = 0;
         gui_bench_draw();
-        t = get_tick_count();
-        for (n=0; n<1024; ++n)
-            for (i=0; i<0x10000/4; ++i)
-                x = buf[i];
-        t = get_tick_count() - t;
-        bench.memory_read_bps = 0x10000*100 / (t/10) * 1024;
+        bench_mem_read(buf);
         bench_to_draw = 2;
     }
 
