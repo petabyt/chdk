@@ -483,9 +483,9 @@ static int md_detect_motion(void)
 
     for (idx=0, row=0; row < motion_detector.rows; row++)
     {
-        // Calc img y start and end offsets
+        // Calc img y start and end offsets (use same height for all cells so 'points' is consistent)
         int y_start = ((row * vp_h) / motion_detector.rows) * vp_bw;
-        int y_end = (((row + 1) * vp_h) / motion_detector.rows) * vp_bw;
+        int y_end = y_start + ((vp_h / motion_detector.rows) * vp_bw);
 
         for (col=0; col < motion_detector.columns; col++, idx++)
         {
@@ -508,9 +508,9 @@ static int md_detect_motion(void)
                 (motion_detector.clipping_region_mode==MD_REGION_INCLUDE && in_clipping_region==1)
                )
             {
-                // Calc img x start and end offsets
+                // Calc img x start and end offsets (use same width for all cells so 'points' is consistent)
                 int x_start = ((col * vp_w) / motion_detector.columns) * 3;
-                int x_end = (((col + 1) * vp_w) / motion_detector.columns) * 3;
+                int x_end = x_start + ((vp_w / motion_detector.columns) * 3);
 
                 int points = 0;
 
