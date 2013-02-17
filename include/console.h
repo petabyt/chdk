@@ -6,12 +6,7 @@
 // Note: used in modules and platform independent code. 
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
-#define MAX_CONSOLE_LINES        14
-#define MAX_CONSOLE_LINE_LENGTH  45
-#define CONSOLE_HIDE_TIMEOUT     3000
-
 extern void console_close();
-extern void console_init(int num_lines, int line_length, int x_pos, int y_pos);
 extern void console_clear();
 extern void console_add_line(const char *str);
 extern void console_draw();
