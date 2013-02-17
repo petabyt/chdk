@@ -84,8 +84,6 @@ void script_autostart()
     enter_alt();
     // We were called from the GUI task so switch to <ALT> mode before switching to Script mode
     gui_activate_alt_mode();
-    // Clear console output
-    console_clear(); 
     // Switch to script mode and start the script running
     script_start_gui( 1 );
 }

@@ -222,6 +222,7 @@ long script_start_gui( int autostart )
     camera_info.state.kbd_last_clicked = 0;
     kbd_key_release_all();
 
+    // Close old console, will be re-opened when first line added
     console_close();
     script_print_screen_init();
 
