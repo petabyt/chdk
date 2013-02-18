@@ -13,6 +13,7 @@ void camera_sleep(long v);
 void camera_shoot();
 int md_detect_motion(void);
 int md_get_cell_diff(int column, int row);
+int md_get_cell_val(int column, int row);
 int md_init_motion_detector();
 void camera_set_raw(int mode);
 void ubasic_camera_get_raw();

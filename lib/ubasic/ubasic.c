@@ -1881,17 +1881,38 @@ static void md_get_cell_diff_statement()
     int var, col, row;
     accept(TOKENIZER_MD_GET_CELL_DIFF);
 
-		col=expr();tokenizer_next();
+    col=expr();tokenizer_next();
 
-		row=expr();tokenizer_next();
+    row=expr();tokenizer_next();
 
     var = tokenizer_variable_num();
     accept(TOKENIZER_VARIABLE);
 	
-	struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
+    struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
 
     if (libmotiondetect)
         ubasic_set_variable(var, libmotiondetect->md_get_cell_diff(col,row));
+    else
+        ubasic_set_variable(var, 0);
+    accept_cr();
+}
+
+static void md_get_cell_val_statement()
+{
+    int var, col, row;
+    accept(TOKENIZER_MD_GET_CELL_VAL);
+
+    col=expr();tokenizer_next();
+
+    row=expr();tokenizer_next();
+
+    var = tokenizer_variable_num();
+    accept(TOKENIZER_VARIABLE);
+	
+    struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
+
+    if (libmotiondetect)
+        ubasic_set_variable(var, libmotiondetect->md_get_cell_val(col,row));
     else
         ubasic_set_variable(var, 0);
     accept_cr();
@@ -2313,6 +2334,9 @@ statement(void)
       break;
   case  TOKENIZER_MD_GET_CELL_DIFF:
       md_get_cell_diff_statement();
+      break;
+  case  TOKENIZER_MD_GET_CELL_VAL:
+      md_get_cell_val_statement();
       break;
       // << mx3 . motion_detector
 

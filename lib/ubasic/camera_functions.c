@@ -169,6 +169,11 @@ int md_get_cell_diff(int column, int row)
     printf("*** md_get_sell_diff %d %d ***\n", column, row);
 	return 0;
 }
+int md_get_cell_val(int column, int row)
+{
+    printf("*** md_get_sell_abs %d %d ***\n", column, row);
+	return 0;
+}
 int md_init_motion_detector()
 {
     printf("*** md_init_motion_detector ***\n");

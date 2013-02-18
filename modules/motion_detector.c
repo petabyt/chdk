@@ -99,6 +99,8 @@ struct motion_detector_s
     int pixels_step;
     int msecs_before_trigger;
 
+    int points ;
+
 // debug
 #ifdef OPT_MD_DEBUG
     int comp_calls_cnt;
@@ -570,7 +572,7 @@ static int md_detect_motion(void)
                         points++;
                     }
                 }
-
+                motion_detector.points = points ;
                 diff = (curr - motion_detector.prev[idx]) / points;
                 if (diff < 0) diff = -diff;
                 if ((diff > motion_detector.threshold) &&
@@ -582,7 +584,7 @@ static int md_detect_motion(void)
 
             motion_detector.diff[idx] = diff;
             motion_detector.prev[idx] = curr;
-        }
+	}
     }
 
     if (motion_detector.previous_picture_is_ready == 0)
@@ -610,6 +612,17 @@ static int md_detect_motion(void)
     time_counter_capture(&camera_info.perf.md_detect.time);
 
     return rv;
+}
+
+int md_get_cell_val(int column, int row)
+{
+    if ((column<1 || column > motion_detector.columns) ||
+        (row<1 || row > motion_detector.rows))
+    {
+        return 0;
+    }
+
+    return motion_detector.prev[ MD_XY2IDX(column-1,row-1) ]/motion_detector.points ;
 }
 
 int md_get_cell_diff(int column, int row)
@@ -713,13 +726,14 @@ int module_idx=-1;
  **************************************************************/
 
 struct libmotiondetect_sym _libmotiondetect = {
-			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
-										// increase minor if compatible changes made(including extending this struct)
+			MAKE_API_VERSION(1,0),	// apiver: increase major if incompatible changes made in module, 
+						// increase minor if compatible changes made(including extending this struct)
 
         md_close_motion_detector,
         md_init_motion_detector,
         md_get_cell_diff,
         md_draw_grid,
+        md_get_cell_val,
 	};
 
 

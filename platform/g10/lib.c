@@ -40,17 +40,16 @@ void debug_led(int state)
 }
 
 // G10 has 8 led values - tested with uBasic  set_led n, 1   (no brightness control implemented)
-// #  Index   LED
-// 1   0      Upper indicator Green
-// 2   1      Upper indicator Orange
-// 3   2      Lower indicator Yellow
-// 4   3      Power LED Green
-// 5   8      Blue print button LED
-// 6   9      AF Assist Lamp
-//     10     "
-//     11     "
-// 7   14     ISO LED
-// 8   15     EV LED
+// set_led led_table  LED
+// ======= =========  =====================
+//   0         0      Upper indicator Green
+//   1         1      Upper indicator Orange
+//   2         2      Lower indicator Yellow
+//   3         3      Power LED Green
+//   4         8      Blue print button LED
+//   5         9      AF Assist Lamp (also index 9&10)
+//   6         14     ISO LED
+//   7         15     EV LED
 
 void camera_set_led(int led, int state, int bright) {
  static char led_table[8]={0,1,2,3,8,9,14,15};

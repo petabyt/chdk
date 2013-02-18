@@ -206,6 +206,7 @@ static const struct keyword_token keywords[] = {
 
   {"md_detect_motion",        TOKENIZER_MD_DETECT_MOTION},
   {"md_get_cell_diff",        TOKENIZER_MD_GET_CELL_DIFF},
+  {"md_get_cell_val",         TOKENIZER_MD_GET_CELL_VAL},
   {"md_af_led_control",       TOKENIZER_MD_AF_LED_CONTROL},
   {"autostarted",             TOKENIZER_SCRIPT_AUTOSTARTED},
   {"get_autostart",           TOKENIZER_GET_SCRIPT_AUTOSTART},
