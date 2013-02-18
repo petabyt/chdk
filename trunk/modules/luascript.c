@@ -914,6 +914,17 @@ static int luaCB_md_get_cell_diff( lua_State* L )
     return 1;
 }
 
+
+static int luaCB_md_get_cell_val( lua_State* L )
+{
+    struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
+    if (libmotiondetect)
+        lua_pushnumber( L, libmotiondetect->md_get_cell_val(luaL_checknumber(L,1), luaL_checknumber(L,2)));
+    else
+        lua_pushnumber( L, 0 );
+    return 1;
+}
+
 static int luaCB_md_detect_motion( lua_State* L )
 {
   int columns = (luaL_optnumber(L,1,6));
@@ -2335,6 +2346,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(wheel_right)
     FUNC(wheel_left)
     FUNC(md_get_cell_diff)
+    FUNC(md_get_cell_val)
     FUNC(md_detect_motion)
     FUNC(md_af_led_control)
     FUNC(autostarted)
