@@ -32,6 +32,9 @@
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
 
+    #undef  CAM_AF_LED
+    #define CAM_AF_LED                          1
+
     #define CAM_DRYOS_2_3_R39                   1
     #define CAM_DRYOS_2_3_R47                   1
     #define CAM_PROPSET                         4

@@ -131,7 +131,7 @@ static int action_stack_AS_MOTION_DETECTOR()
         {
             camera_info.perf.af_led_on--;
             camera_info.perf.af_led.tick_count = get_tick_count();
-            camera_set_led(camera_info.cam_af_led,1,0);
+            camera_set_led(camera_info.cam_af_led,1,200);
         }
         else if (camera_info.perf.af_led_on > 0)
         {

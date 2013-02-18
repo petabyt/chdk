@@ -30,6 +30,9 @@
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
+    #undef  CAM_AF_LED
+    #define CAM_AF_LED                      1
+
     #define CAM_DRYOS_2_3_R39               1
     #define CAM_DRYOS_2_3_R47               1
     #define CAM_PROPSET                     4
