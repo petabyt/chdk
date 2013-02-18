@@ -28,6 +28,9 @@
 
     #define CAM_HAS_HI_ISO_AUTO_MODE        1
 
+    #undef  CAM_AF_LED
+    #define CAM_AF_LED                      10
+
     #define CAM_MULTIPART                   1
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_ALT_BUTTON_NAMES            { "Print", "Display" }

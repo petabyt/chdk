@@ -53,7 +53,7 @@ long kbd_process()
             if (get_tick_count() >= (camera_info.perf.md_detect_tick + camera_info.perf.md_af_on_delay))
             {
                 camera_info.perf.md_af_on_flag = 2;
-                camera_set_led(camera_info.cam_af_led,1,0);
+                camera_set_led(camera_info.cam_af_led,1,200);
             }
             break;
         case 2:
