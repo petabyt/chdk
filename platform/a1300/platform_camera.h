@@ -1,6 +1,6 @@
 // Camera - A1300 - platform_camera.h
 
-// This file contains the various settings values specific to the A810 camera.
+// This file contains the various settings values specific to the A1300 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -54,9 +54,6 @@
 
     #define cam_CalibrationIlluminant1      1       // Daylight
 
-    #undef  CAM_USES_ASPECT_CORRECTION
-    #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
-
     #define CAM_ZEBRA_NOBUF                 1
 
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
@@ -86,9 +83,9 @@
     #undef  CAM_VIDEO_CONTROL
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              15      // palette number reserved in core/gui_draw.h
-//    #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
-//    #define CHDK_COLOR_BASE                 0x90    // Start color index for CHDK colors loaded into camera palette
+    #define CAM_BITMAP_PALETTE              13      // palette number reserved in core/gui_draw.h
+    #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
+    #define CHDK_COLOR_BASE                 0xD0    // Start color index for CHDK colors loaded into camera palette
 
     #define CAM_HAS_VARIABLE_ASPECT         1
     #undef  CAM_USES_ASPECT_CORRECTION
@@ -116,5 +113,8 @@
     #define MKDIR_RETURN_ONE_ON_SUCCESS      1    // mkdir() return 1 on success, 0 on fail.
 
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// TODO specifies an LED that turns on while camera waits for USB remote to sync
+
+    #undef  CAM_AF_LED
+    #define CAM_AF_LED                          1   // Index of AF led in camera_set_led function
 
 //----------------------------------------------------------

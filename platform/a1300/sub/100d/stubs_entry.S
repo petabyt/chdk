@@ -162,7 +162,7 @@ NSTUB(Open                                    ,0xff82ffac) //101
 NSTUB(PB2Rec                                  ,0xff885fe0) //104
 NSTUB(PT_MoveDigitalZoomToWide                ,0xff86c594) //102
 NSTUB(PT_MoveOpticalZoomAt                    ,0xff86c56c) //102
-//NSTUB(PT_PlaySound                          ,0xff87503c) // 11            == 0xff87503c
+NSTUB(PT_PlaySound                            ,0xff87503c) // 11
 NSTUB(PostLogicalEventForNotPowerType         ,0xff882864) //103
 NSTUB(PostLogicalEventToUI                    ,0xff8828b0) //103
 NSTUB(PutInNdFilter                           ,0xffa6e000) //102
@@ -171,7 +171,7 @@ NSTUB(Read                                    ,0xff815b88) //101
 NSTUB(ReadFastDir                             ,0xffa53cd4) //115
 NSTUB(Rec2PB                                  ,0xff886020) //104
 NSTUB(RefreshPhysicalScreen                   ,0xff894b14) //104
-//NSTUB(Remove                                ,0xff830248) //  6            == 0xff830248
+NSTUB(Remove                                  ,0xff830248) //  6
 NSTUB(RenameFile_Fut                          ,0xff82f96c) //116
 NSTUB(Restart                                 ,0xff83464c) //106
 NSTUB(ScreenLock                              ,0xff895b34) //  4
@@ -217,13 +217,13 @@ NSTUB(malloc                                  ,0xff812f20) //112
 NSTUB(memcmp                                  ,0xff81ae58) //101
 NSTUB(memcpy                                  ,0xff835da4) //101
 NSTUB(memset                                  ,0xff9d713c) //101
-//NSTUB(mkdir                                 ,0xff8305a4) // 12            == 0xff8305a4
+NSTUB(mkdir                                   ,0xff8305a4) // 12
 NSTUB(mktime_ext                              ,0xff896064) //  1
 NSTUB(open                                    ,0xff815934) //  6
 NSTUB(OpenFastDir                             ,0xffa53b70) //115
 NSTUB(qsort                                   ,0xff9d70dc) //  6
 NSTUB(read                                    ,0xff815b88) //101
-//NSTUB(reboot_fw_update                      ,0xffa5919c) //106            == 0xffa5919c
+NSTUB(reboot_fw_update                        ,0xffa5919c) //106
 NSTUB(set_control_event                       ,0xff882bac) //111
 NSTUB(stat                                    ,0xff830338) //109
 NSTUB(strcat                                  ,0xff8966e4) //  1

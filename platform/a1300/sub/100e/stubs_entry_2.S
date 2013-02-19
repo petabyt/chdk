@@ -5,14 +5,12 @@
 NSTUB(DeleteFile_Fut,               0xff82fa00)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
-NHSTUB(MakeDirectory_Fut,           0xff8305a4)
- NSTUB(GetBatteryTemperature,       NULL_SUB)   // Does not work in A1200, SX130, A800 & A810 (included dummy in sub/100c/lib.c)
+NHSTUB(MakeDirectory_Fut,           0xff8305a4) //mkdir. This requires #define MKDIR_RETURN_ONE_ON_SUCCESS
+ NSTUB(GetBatteryTemperature,       NULL_SUB)   // Does not work in A1200, SX130, A800 & A810 (included dummy in sub/100e/lib.c)
 
 // Additional
 //NHSTUB(MakeAFScan,                   0xff95f260) //Obtained using chdk-pt comparing to 100d
 //NHSTUB(MakeAFScan,                  0xff831a04) //This is address of DoAFLock
-NHSTUB(LockAndRefresh,              0xff895b34)
-NHSTUB(UnlockAndRefresh,            0xff895b98)
 NHSTUB(platformsub_kbd_fetch_data,  0xff856648)
 
 // These don't exist

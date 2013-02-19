@@ -10,16 +10,15 @@ Playback [>] or Help [?] button can be configured as <ALT> mode button.
 
 KNOWN BUGS
 **********
-- Colors of Connect4 are wrong.
 - GetBatteryTemperature() returns always -99° Celsius or -146° Fahrenheit
 - Mute during zoom in/out is not implemented
 - Video Time limit removal is not implemented.
 - AF during video recording is disabled.
-
+- Conflicting CHDK shortcuts
 
 For Developers
 **************
-A1300 and A810 100d ROM code appears identical, and builds for one camera will run on the other.
+A1300 and A810 ROM code appears identical, and builds for one camera will run on the other.
 However, the builds differ because
  PLATFORMID is different, so PS.FI2 files are not compatible and script would report the wrong value.
 Any code changes made to one camera should probably be applied to the other.
@@ -29,5 +28,3 @@ Any code changes made to one camera should probably be applied to the other.
 - AF during video recording is disabled: 
   http://chdk.setepontos.com/index.php?topic=8450.msg90563#msg90563
 - hook_raw_image_addr() & hook_alt_raw_image_addr() return the same value
-
-Last Update 2012/11/07
