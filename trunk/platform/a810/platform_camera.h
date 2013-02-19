@@ -21,7 +21,7 @@
 // don't override them again in here.
 
     #define CAM_DRYOS                       1
-    #define CAM_PROPSET                     4
+    #define CAM_PROPSET                     5
 
     #define CAM_DRYOS_2_3_R31               1       // Define for cameras with DryOS release R31 or greater -> G10
     #define CAM_DRYOS_2_3_R39               1       // Defined for cameras with DryOS version R39 or higher
@@ -53,9 +53,6 @@
       5181, 1000000,   48183, 1000000,  245014, 1000000
 
     #define cam_CalibrationIlluminant1      1       // Daylight
-
-    #undef  CAM_USES_ASPECT_CORRECTION
-    #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
 
     #define CAM_ZEBRA_NOBUF                 1
 
@@ -116,5 +113,8 @@
     #define MKDIR_RETURN_ONE_ON_SUCCESS      1    // mkdir() return 1 on success, 0 on fail.
 
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// TODO specifies an LED that turns on while camera waits for USB remote to sync
+
+    #undef  CAM_AF_LED
+    #define CAM_AF_LED                          1   // Index of AF led in camera_set_led function
 
 //----------------------------------------------------------
