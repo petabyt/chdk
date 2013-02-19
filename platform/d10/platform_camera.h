@@ -94,4 +94,7 @@
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 193731  // Override max subject distance
 
+    #undef CAM_AF_LED
+    #define CAM_AF_LED                       2
+
 //----------------------------------------------------------
