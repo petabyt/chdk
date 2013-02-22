@@ -1165,7 +1165,7 @@ void gpx_record(){
 	char vBuf[512];
 	int r=0;
 	unsigned long t;
-	char gpx_name[17];
+	char gpx_name[30];
 	static struct tm *ttm;
 	t=time(NULL);
 	ttm = localtime(&t);
@@ -1312,7 +1312,7 @@ void gps_navigate_home(){
 		fgets(text[1], 15, fp);
 		fgets(text[2], 15, fp);
 	}
-
+    fclose(fp);
 
 	g_d_lat_nav = (strtol (text[1], &succ, 10 )) / 10000000.0;
 	g_d_lon_nav = (strtol (text[2], &succ, 10 )) / 10000000.0;

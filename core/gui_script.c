@@ -154,7 +154,7 @@ static void process_title(const char *title)
 static int check_param(const char *param)
 {
     register const char *ptr = param;
-    register int n=0, i=0, l;
+    register int n=0, l;
 
     ptr = skip_whitespace(ptr);
     if (ptr[0] && (ptr[0]>='a' && ptr[0]<='a'+SCRIPT_NUM_PARAMS) && (ptr[1]==' ' || ptr[1]=='\t'))
@@ -183,7 +183,7 @@ static int check_param(const char *param)
 static int process_param(const char *param)
 {
     register const char *ptr = param;
-    register int n=0, i=0, l;
+    register int n=0, l;
 
     ptr = skip_whitespace(ptr);
     if (ptr[0] && (ptr[0]>='a' && ptr[0]<='a'+SCRIPT_NUM_PARAMS) && (ptr[1]==' ' || ptr[1]=='\t'))
@@ -504,7 +504,7 @@ int load_params_values(const char *fn, int paramset)
 //-------------------------------------------------------------------
 static void do_save_param_file(char* fn)
 {
-    int i, n;
+    int n;
     FILE *fd;
     char buf[250];
 
