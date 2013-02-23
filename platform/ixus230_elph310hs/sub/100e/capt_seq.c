@@ -82,7 +82,7 @@ void __attribute__((naked,noinline)) capt_seq_task() {
         //"    CMP     R0, #0 \n" 
         //"    BLNE    sub_FF18C580 \n" // above 3 lines removed - redundant with added lines below
         "    MOV     R0, #0 \n" // added
-        "    STR     R0, [R5,#0x28] \n" //added, fixes overrides behavior at short shutter press (S95)
+        "    STR     R0, [R4,#0x28] \n" //added, fixes overrides behavior at short shutter press (S95)
         "    B       loc_FF076CD8 \n" 
         "loc_FF076AEC:\n" // jump table entry 1
         "    LDR     R5, [R0, #0x10] \n" 
