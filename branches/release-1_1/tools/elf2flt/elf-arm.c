@@ -6,7 +6,6 @@
  * 	(c)2011	Sergey Taranenko aka tsvstar
  */
 #include <stdlib.h>
-#include <malloc.h>
 #include <string.h>
 
 #include "elfflt.h"
