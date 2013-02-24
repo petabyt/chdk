@@ -9,7 +9,7 @@ PLATFORMOS=dryos
 # address where wif or diskboot code will be loaded by camera
 MEMBASEADDR=0x1900
 
-EXMEM_HEAP_SKIP=0x2DB400	#(0x44000000-0x43D2C000) from sub_FF88798A4 = size of video buffers in EXMEM area 
+EXMEM_HEAP_SKIP=0x2DB400	#(0x44000000-0x43D24C00) from sub_FF879418 = size of video buffers in EXMEM area 
 EXMEM_BUFFER_SIZE=0x100000	# Amount of EXMEM memory to allocate for CHDK; 40000=256KB, 80000=512KB, A0000=640kb, C0000=768KB, 100000=1MB
 
 # points to the start of the memory pool used by the firmware
