@@ -38,8 +38,9 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
 {
  asm volatile("STMFD   SP!, {R0-R12,LR}\n");
 
+    camera_info.perf.capt_tick = get_tick_count();
     imagesavecomplete=no_pt_completefilewrite; // TODO is there a better place to do this?
- 
+
 #ifdef PAUSE_FOR_FILE_COUNTER
     // Some cameras need a slight delay for the file counter to be updated correctly
     // before raw_savefile tries to get the file name & directory.

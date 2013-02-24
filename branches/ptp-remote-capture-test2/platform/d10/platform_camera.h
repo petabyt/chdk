@@ -94,5 +94,8 @@
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 193731  // Override max subject distance
 
+    #undef CAM_AF_LED
+    #define CAM_AF_LED                       2
+
     #define CAM_HAS_FILEWRITETASK_HOOK      1       // file write hook for remote capture etc
 //----------------------------------------------------------

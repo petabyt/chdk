@@ -894,11 +894,33 @@ static int luaCB_wheel_left( lua_State* L )
   return 0;
 }
 
+static int luaCB_md_af_led_control( lua_State* L )
+{
+    camera_info.perf.md_af_on_delay = luaL_checknumber( L, 1 );
+    camera_info.perf.md_af_on_time = luaL_checknumber( L, 2 );
+    if ((camera_info.perf.md_af_on_time > 0) && (camera_info.cam_af_led >= 0))
+        camera_info.perf.md_af_tuning = 1;        // Enable MD testing with AF LED
+    else
+        camera_info.perf.md_af_tuning = 0;        // Disable MD testing
+    return 0;
+}
+
 static int luaCB_md_get_cell_diff( lua_State* L )
 {
     struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
     if (libmotiondetect)
         lua_pushnumber( L, libmotiondetect->md_get_cell_diff(luaL_checknumber(L,1), luaL_checknumber(L,2)));
+    else
+        lua_pushnumber( L, 0 );
+    return 1;
+}
+
+
+static int luaCB_md_get_cell_val( lua_State* L )
+{
+    struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
+    if (libmotiondetect)
+        lua_pushnumber( L, libmotiondetect->md_get_cell_val(luaL_checknumber(L,1), luaL_checknumber(L,2)));
     else
         lua_pushnumber( L, 0 );
     return 1;
@@ -2353,7 +2375,9 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(wheel_right)
     FUNC(wheel_left)
     FUNC(md_get_cell_diff)
+    FUNC(md_get_cell_val)
     FUNC(md_detect_motion)
+    FUNC(md_af_led_control)
     FUNC(autostarted)
     FUNC(get_autostart)
     FUNC(set_autostart)

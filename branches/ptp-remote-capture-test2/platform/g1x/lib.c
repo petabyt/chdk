@@ -29,7 +29,7 @@ void shutdown()
 	while(1);
 }
 
-#define LED_PR 0xC022C30C	// Power LED (@FF15B178 & @FF15B1CC)
+#define LED_PR 0xC022C30C	// Power LED (@FF15D0D0 & @FF15D124 G1X 1.00f)
 
 void debug_led(int state)
 {

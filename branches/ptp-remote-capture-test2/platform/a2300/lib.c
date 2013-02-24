@@ -1,7 +1,6 @@
 #include "platform.h"
 #include "lolevel.h"
 
-static char*    frame_buffer[2];
 #define LED_PR 0xC0220120
 //#define LED_AF 0xC0223030
 
@@ -26,7 +25,6 @@ void debug_led(int state)
 	// using power LED, which defaults to on
 	// for debugging turn LED off if state is 1 and on for state = 0
 	// leaves LED on at end of debugging
-    volatile long *p = (void*)LED_PR;
      *(int*)LED_PR=state ? 0x46 : 0x44;
 }
 

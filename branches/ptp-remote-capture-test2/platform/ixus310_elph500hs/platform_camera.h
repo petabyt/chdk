@@ -27,6 +27,9 @@
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
 
+    #undef  CAM_AF_LED
+    #define CAM_AF_LED                          1   // Index of AF led in camera_set_led function
+
     #define CAM_RAW_ROWPIX                      4168 // Found @0xff14a2ec
     #define CAM_RAW_ROWS                        3060 // Found @0xff14a2f0
     #undef  CAM_UNCACHED_BIT

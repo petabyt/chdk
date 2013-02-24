@@ -26,6 +26,9 @@
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
 
+    #undef  CAM_AF_LED
+    #define CAM_AF_LED                          4   // Index of AF led in camera_set_led function
+
     #define CAM_SWIVEL_SCREEN                   1
 
     #undef  CAM_EMUL_KEYPRESS_DURATION

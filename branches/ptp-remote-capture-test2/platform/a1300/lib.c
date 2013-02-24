@@ -2,7 +2,6 @@
 #include "lolevel.h"
 
 #define LED_PR 0xC0220120
-static char*    frame_buffer[2];
 
 void shutdown()
 {
@@ -24,22 +23,15 @@ void debug_led(int state)
 {
 	// using power LED, which defaults to on
 	// for debugging turn LED off if state is 1 and on for state = 0
-	// leaves LED on at end of debugging
-    volatile long *p = (void*)LED_PR;
      *(int*)LED_PR=state ? 0x46 : 0x44;
 }
 
 // A810 has two 'lights' - Power LED, and AF assist lamp
 // Power Led = first entry in table (led 0)
-// AF Assist Lamp = second entry in table (led 1) ????
+// AF Assist Lamp = second entry in table (led 1)
 void camera_set_led(int led, int state, int bright) {
- static char led_table[2]={0,4};
- _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
-}
-
-void shutdown_soft()
-{
-   _PostLogicalEventForNotPowerType(0x1005,0);
+	static char led_table[2]={0,4};
+    if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], state);
 }
 
 int vid_get_viewport_width()
@@ -77,12 +69,12 @@ int vid_get_viewport_yoffset()
 void vid_bitmap_refresh() {
 
     extern int full_screen_refresh;
-    extern void _LockAndRefresh();      // wrapper function for screen lock
-    extern void _UnlockAndRefresh();    // wrapper function for screen unlock
+    extern void _ScreenLock();
+    extern void _ScreenUnlock();
 
     full_screen_refresh |= 3;
-    _LockAndRefresh();
-    _UnlockAndRefresh();
+    _ScreenLock();
+    _ScreenUnlock();
 }
 
 void *vid_get_bitmap_active_palette() {
@@ -98,7 +90,7 @@ void load_chdk_palette() {
 
         extern int active_palette_buffer;
         // Only load for the standard record and playback palettes
-        if ((active_palette_buffer == 0) || (active_palette_buffer == 4))
+        if ((active_palette_buffer == 0) || (active_palette_buffer == 5))
         {
                 int *pal = (int*)vid_get_bitmap_active_palette();
                 if (pal[CHDK_COLOR_BASE+0] != 0x33ADF62)
