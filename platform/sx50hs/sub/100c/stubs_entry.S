@@ -191,7 +191,7 @@ NSTUB(VbattGet                                ,0xff018ae4) //101
 NSTUB(Write                                   ,0xff01cb30) //101
 NSTUB(WriteSDCard                             ,0xff1ccb9c) //108
 NSTUB(_log                                    ,0x00690cd8) //111
-NSTUB(_log10                                  ,0x00693890) //112
+NSTUB(_log10                                  ,0x00691218) //112
 NSTUB(_pow                                    ,0x00691390) //114
 NSTUB(_sqrt                                   ,0x00693030) //  6
 NSTUB(add_ptp_handler                         ,0xff300128) //  6
