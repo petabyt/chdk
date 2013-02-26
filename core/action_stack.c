@@ -474,13 +474,6 @@ static void action_stack_process()
 // Run the topmost function on each stack
 void action_stack_process_all()
 {
-    // Set clicked key for scripts.
-    if (kbd_get_clicked_key())
-    {
-        camera_info.state.kbd_last_clicked = kbd_get_clicked_key();
-        camera_info.state.kbd_last_clicked_time = get_tick_count();
-    }
-
     active_stack = action_stacks;
 
     while (active_stack)
