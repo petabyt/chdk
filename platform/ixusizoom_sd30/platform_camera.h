@@ -38,6 +38,12 @@
     #undef  DNG_SUPPORT
 	
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+
+    // Keyboard repeat and initial delays
+    #undef  KBD_REPEAT_DELAY
+    #define KBD_REPEAT_DELAY                140
+    #undef  KBD_INITIAL_DELAY
+    #define KBD_INITIAL_DELAY               300
 	
 //----------------------------------------------------------
 

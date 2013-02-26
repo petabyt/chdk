@@ -258,7 +258,6 @@ static void gui_menu_back() {
         // Occurs when script menu opened using 'Func/Set' button
         // Return to normal <ALT> mode.
         gui_set_mode(&altGuiHandler);
-        kbd_reset_autoclicked_key();    // Need this to stop 'Func/Set' registering twice???
     }
 }
 

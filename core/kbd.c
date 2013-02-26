@@ -10,6 +10,51 @@
 #include "clock.h"
 #include "debug_led.h"
 
+//-------------------------------------------------------------------
+// Keyboard auto repeat
+
+static long last_kbd_key = 0;
+static long last_kbd_time = 0;
+static long press_count = 0;
+
+long kbd_get_autoclicked_key()
+{
+	register long key, t;
+
+	key=kbd_get_clicked_key();
+	if (key)
+    {
+		last_kbd_key = key;
+		press_count = 0;
+		last_kbd_time = get_tick_count();
+		return key;
+	}
+    else
+    {
+		if (last_kbd_key && kbd_is_key_pressed(last_kbd_key))
+        {
+			t = get_tick_count();
+			if (t-last_kbd_time > ((press_count) ? KBD_REPEAT_DELAY : KBD_INITIAL_DELAY))
+            {
+				++press_count;
+				last_kbd_time = t;
+				return last_kbd_key;
+			}
+            else
+            {
+				return 0;
+			}
+		}
+        else
+        {
+			last_kbd_key = 0;
+			return 0;
+		}
+	}
+}
+
+//-------------------------------------------------------------------
+
 static int kbd_blocked;
 
 void enter_alt()
@@ -65,6 +110,10 @@ long kbd_process()
             break;
         }
     }
+
+    // Reset keyboard auto repeat if no buttons pressed
+    if (kbd_get_pressed_key() == 0)
+        last_kbd_key = 0;
 
     // Set Shutter Half Press state for GUI task.
     camera_info.state.is_shutter_half_press = kbd_is_key_pressed(KEY_SHOOT_HALF);

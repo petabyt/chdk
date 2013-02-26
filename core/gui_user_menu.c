@@ -70,7 +70,6 @@ void gui_load_user_menu_script(const char *fn)
         // exit menu system on the assumption the user will want to run the script just loaded
 
         gui_set_mode(&altGuiHandler);
-        kbd_reset_autoclicked_key();
         rinit();
     }
 }

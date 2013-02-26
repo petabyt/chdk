@@ -999,9 +999,6 @@ static void return_string_selected(const char *str) {
     // that file browser / textbox is finished and return last selected file
     // to script caller
     camera_info.state.state_kbd_script_run = SCRIPT_STATE_RAN;
-    // Clear the Func/Set key so that when the script exits, pressing
-    // the Func/Set key again will enter the Script menu, not the File Browser / Textbox
-    kbd_reset_autoclicked_key();
 
     // Push selected file as script return value
 	lua_pushstring( Lt, (str && str[0])? str : NULL );
