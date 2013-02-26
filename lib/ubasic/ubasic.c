@@ -1818,17 +1818,53 @@ static void set_config_value_statement()
 
 /*---------------------------------------------------------------------------*/
 
+// Wait for a button to be pressed and released (or the timeout to expire)
+static int action_stack_AS_UBASIC_WAIT_CLICK()
+{
+    // Check key pressed or timeout
+    if ((get_tick_count() >= action_top(2)) || camera_info.state.kbd_last_clicked)
+    {
+        // If timed out set key state to "no_key", otherwise key pressed so set last checked time
+        if (!camera_info.state.kbd_last_clicked)
+            camera_info.state.kbd_last_clicked=0xFFFF;
+        else
+            camera_info.state.kbd_last_checked_time = camera_info.state.kbd_last_clicked_time;
+
+        action_pop_func(1);
+        return 1;
+    }
+
+    return 0;
+}
+
 static void wait_click_statement()
 {
-    int timeout=0;
     accept(TOKENIZER_WAIT_CLICK);
-    if (tokenizer_token() != TOKENIZER_CR &&
-        tokenizer_token() != TOKENIZER_ELSE ) {
-        timeout = expr();
+
+    int delay = -1;
+    if ((tokenizer_token() != TOKENIZER_CR) && (tokenizer_token() != TOKENIZER_ELSE))
+    {
+        delay = expr();
     }
-    action_wait_for_click(timeout);
-    flag_yield=1;
+    delay = sleep_delay(delay);
+
     accept_cr();
+
+    // Reset 'clicked' key if it has not changed since last time
+    if (camera_info.state.kbd_last_clicked_time <= camera_info.state.kbd_last_checked_time)
+    {
+        camera_info.state.kbd_last_clicked = 0;
+    }
+
+    // Set up for wait or click testing
+    action_push(delay);
+    action_push_func(action_stack_AS_UBASIC_WAIT_CLICK);
+
+    // Check for short delay or key already pressed by calling action stack routine once now
+    if (action_stack_AS_UBASIC_WAIT_CLICK() == 0)
+    {
+        flag_yield=1;
+    }
 }
 
 static void is_key_statement(void)

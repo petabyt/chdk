@@ -12,6 +12,7 @@
 #include "lang.h"
 #include "gui_lang.h"
 #include "ptp.h"
+#include "clock.h"
 
 //-------------------------------------------------------------------
 
@@ -219,7 +220,9 @@ long script_start_gui( int autostart )
     shot_histogram_set(0);
     camera_info.state.auto_started = autostart;
 
+    // Keyboard init
     camera_info.state.kbd_last_clicked = 0;
+    camera_info.state.kbd_last_checked_time = get_tick_count();
     kbd_key_release_all();
 
     // Close old console, will be re-opened when first line added
