@@ -241,12 +241,10 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
             kbd_is_key_pressed,
             kbd_key_press,
             kbd_get_clicked_key,
-            kbd_reset_autoclicked_key,
             get_jogdial_direction,
             JogDial_CCW,
             JogDial_CW,
 
-            GetFreeCardSpaceKb,
             debug_led,
             camera_set_led,
 
@@ -322,6 +320,7 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
             img_prefixes,
             img_exts,
             GetTotalCardSpaceKb,
+            GetFreeCardSpaceKb,
             get_exposure_counter,
             get_target_dir_name,
             GetJpgCount,
