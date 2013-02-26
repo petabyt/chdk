@@ -115,6 +115,13 @@ long kbd_process()
     if (kbd_get_pressed_key() == 0)
         last_kbd_key = 0;
 
+    // Set clicked key for scripts.
+    if (kbd_get_clicked_key())
+    {
+        camera_info.state.kbd_last_clicked = kbd_get_clicked_key();
+        camera_info.state.kbd_last_clicked_time = get_tick_count();
+    }
+
     // Set Shutter Half Press state for GUI task.
     camera_info.state.is_shutter_half_press = kbd_is_key_pressed(KEY_SHOOT_HALF);
 
