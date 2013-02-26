@@ -341,7 +341,6 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
             action_push_press,
             action_push_release,
             action_push_shoot,
-            action_wait_for_click,
 
             // Console functions
             console_clear,

@@ -311,31 +311,6 @@ void action_push_click(long key)
     action_push_press(key);
 }
 
-// Wait for a button to be pressed and released (or the timeout to expire)
-static int action_stack_AS_WAIT_CLICK()
-{
-    long delay = action_top(2);
-
-    if (action_process_delay(delay) || (camera_info.state.kbd_last_clicked = kbd_get_clicked_key()))
-    {
-        if (!camera_info.state.kbd_last_clicked)
-            camera_info.state.kbd_last_clicked=0xFFFF;
-        action_pop_delay();
-        return 1;
-    }
-
-    return 0;
-}
-
-// Push a wait for button click action onto the stack
-// Can only be called from an action stack
-void action_wait_for_click(int timeout)
-{
-    // accept wait_click 0 for infinite, but use -1 internally to avoid confusion with generated waits
-    action_push(timeout?timeout:-1);
-    action_push_func(action_stack_AS_WAIT_CLICK);
-}
-
 //----------------------------------------------------------------------------------
 // 'Shoot' actions
 
@@ -499,6 +474,13 @@ static void action_stack_process()
 // Run the topmost function on each stack
 void action_stack_process_all()
 {
+    // Set clicked key for scripts.
+    if (kbd_get_clicked_key())
+    {
+        camera_info.state.kbd_last_clicked = kbd_get_clicked_key();
+        camera_info.state.kbd_last_clicked_time = get_tick_count();
+    }
+
     active_stack = action_stacks;
 
     while (active_stack)

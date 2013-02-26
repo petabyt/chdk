@@ -863,10 +863,46 @@ static int luaCB_set_zoom( lua_State* L )
   return 0;
 }
 
+// Wait for a button to be pressed and released (or the timeout to expire)
+static int action_stack_AS_LUA_WAIT_CLICK()
+{
+    // Check key pressed or timeout
+    if ((get_tick_count() >= action_top(2)) || camera_info.state.kbd_last_clicked)
+    {
+        // If timed out set key state to "no_key", otherwise key pressed so set last checked time
+        if (!camera_info.state.kbd_last_clicked)
+            camera_info.state.kbd_last_clicked=0xFFFF;
+        else
+            camera_info.state.kbd_last_checked_time = camera_info.state.kbd_last_clicked_time;
+
+        action_pop_func(1);
+        return 1;
+    }
+
+    return 0;
+}
+
 static int luaCB_wait_click( lua_State* L )
 {
-  action_wait_for_click(luaL_optnumber( L, 1, 0 ));
-  return lua_yield( L, 0 );
+    int delay = sleep_delay(luaL_optnumber( L, 1, -1 ));
+
+    // Reset 'clicked' key if it has not changed since last time
+    if (camera_info.state.kbd_last_clicked_time <= camera_info.state.kbd_last_checked_time)
+    {
+        camera_info.state.kbd_last_clicked = 0;
+    }
+
+    // Set up for wait or click testing
+    action_push(delay);
+    action_push_func(action_stack_AS_LUA_WAIT_CLICK);
+
+    // Check for short delay or key already pressed by calling action stack routine once now
+    if (action_stack_AS_LUA_WAIT_CLICK() == 0)
+    {
+        return lua_yield( L, 0 );
+    }
+
+    return 1;
 }
 
 static int luaCB_is_pressed( lua_State* L )
