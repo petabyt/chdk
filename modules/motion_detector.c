@@ -110,7 +110,7 @@ struct motion_detector_s
 
 static struct motion_detector_s motion_detector;
 
-void time_counter_capture(time_counter *t)
+static void time_counter_capture(time_counter *t)
 {
     t->last = get_tick_count() - t->tick_count;
     if (t->last < t->min)
@@ -432,7 +432,7 @@ static int md_detect_motion(void)
         return 0;
     }
 
-    tick=get_tick_count();
+    tick = get_tick_count();
     rv = 1;
 
 #ifdef OPT_MD_DEBUG
@@ -455,9 +455,6 @@ static int md_detect_motion(void)
         // wait for the next time
         return 1;
     }
-
-    camera_info.perf.md_detect.time_between_calls = tick - camera_info.perf.md_detect.time.tick_count;  // Time since last call
-    camera_info.perf.md_detect.time.tick_count = tick;
 
     motion_detector.last_measure_time = tick;
 
@@ -609,8 +606,6 @@ static int md_detect_motion(void)
         }
     }
 
-    time_counter_capture(&camera_info.perf.md_detect.time);
-
     return rv;
 }
 
@@ -646,10 +641,6 @@ void md_draw_grid()
     {
         return;
 	}
-
-    int ts = get_tick_count();
-    camera_info.perf.md_draw.time_between_calls = ts - camera_info.perf.md_draw.time.tick_count;  // Time since last call
-    camera_info.perf.md_draw.time.tick_count = ts;
 
 	int xoffset = vid_get_viewport_display_xoffset();	// used when image size != viewport size
 	int yoffset = vid_get_viewport_display_yoffset();	// used when image size != viewport size
@@ -711,8 +702,6 @@ void md_draw_grid()
             }
         }
     }
-
-    time_counter_capture(&camera_info.perf.md_draw.time);
 }
 
 

@@ -242,8 +242,6 @@ void _wait_until_remote_button_is_released(void)
 {
 	int tick;
 
-    camera_info.perf.wait_remote_tick = get_tick_count();
-
 	if (	( conf.remote_enable )				// menu : USB remote enabled - bracket everything in this function
 		&&	( conf.synch_enable  )				// menu : Sync enabled - tells us to wait for USB to disconnect
 		&&	( usb_sync_wait      ) )			// only sync when USB remote is active - don't trap normal shooting
