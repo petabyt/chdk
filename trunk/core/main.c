@@ -244,19 +244,6 @@ void core_spytask()
             draw_txt_string(1, i++, osd_buf, conf.osd_color);
         }
 
-        //sprintf(osd_buf, "%-4d %-4d %-4d %-4d %-4d", 
-        //    camera_info.perf.md_draw.time_between_calls, camera_info.perf.md_draw.time.last,
-        //    camera_info.perf.md_draw.time.min, camera_info.perf.md_draw.time.max, 
-        //    (camera_info.perf.md_draw.time.count>0)?camera_info.perf.md_draw.time.sum/camera_info.perf.md_draw.time.count:0);
-        //draw_txt_string(1, i++, osd_buf, conf.osd_color);
-        //sprintf(osd_buf, "%-4d %-4d %-4d %-4d %-4d", 
-        //    camera_info.perf.md_detect.time_between_calls, camera_info.perf.md_detect.time.last,
-        //    camera_info.perf.md_detect.time.min, camera_info.perf.md_detect.time.max, 
-        //    (camera_info.perf.md_detect.time.count>0)?camera_info.perf.md_detect.time.sum/camera_info.perf.md_detect.time.count:0);
-        //draw_txt_string(1, i++, osd_buf, conf.osd_color);
-        //sprintf(osd_buf, "%-5d %-5d", camera_info.perf.wait_remote_tick - camera_info.perf.md_detect_tick, camera_info.perf.capt_tick - camera_info.perf.md_detect_tick);
-        //draw_txt_string(1, i++, osd_buf, conf.osd_color);
-
         // Process async module unload requests
         module_tick_unloader();
 
