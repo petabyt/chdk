@@ -243,8 +243,31 @@ varfactor(void)
   return r;
 }
 /*---------------------------------------------------------------------------*/
-static int
-factor(void)
+static int shooting_get_near_limit_of_acceptable_sharpness()
+{
+  shooting_update_dof_values();
+  return dof_values.near_limit;
+}
+
+static int shooting_get_far_limit_of_acceptable_sharpness()
+{
+  shooting_update_dof_values();
+  return dof_values.far_limit;
+}
+
+static int shooting_get_depth_of_field()
+{
+  shooting_update_dof_values();
+  return dof_values.depth_of_field;
+}
+
+static int shooting_get_min_stack_distance()
+{
+  shooting_update_dof_values();
+  return dof_values.min_stack_distance;
+}
+
+static int factor(void)
 {
   int r = 0;
   tConfigVal configVal;
@@ -278,12 +301,16 @@ factor(void)
     r = (unsigned short) stat_get_vbatt();
     break;
   case TOKENIZER_GET_DAY_SECONDS:
-    accept(TOKENIZER_GET_DAY_SECONDS);
-    r = shooting_get_day_seconds();
+    {
+        accept(TOKENIZER_GET_DAY_SECONDS);
+        struct tm *ttm;
+        ttm = get_localtime();
+        r = ttm->tm_hour * 3600 + ttm->tm_min * 60 + ttm->tm_sec;
+    }
     break;
   case TOKENIZER_GET_TICK_COUNT:
     accept(TOKENIZER_GET_TICK_COUNT);
-    r = shooting_get_tick_count();     
+    r = get_tick_count();     
     break;
   case TOKENIZER_GET_MODE:
     accept(TOKENIZER_GET_MODE);
