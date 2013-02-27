@@ -465,8 +465,10 @@ static int luaCB_get_bv96( lua_State* L )
 
 static int luaCB_get_day_seconds( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_day_seconds() );
-  return 1;
+    struct tm *ttm;
+    ttm = get_localtime();
+    lua_pushnumber( L, ttm->tm_hour * 3600 + ttm->tm_min * 60 + ttm->tm_sec );
+    return 1;
 }
 
 static int luaCB_get_disk_size( lua_State* L )
@@ -579,7 +581,7 @@ static int luaCB_get_sv96( lua_State* L )
 
 static int luaCB_get_tick_count( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_tick_count() );
+  lua_pushnumber( L, get_tick_count() );
   return 1;
 }
 

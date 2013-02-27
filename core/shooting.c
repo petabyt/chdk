@@ -199,21 +199,6 @@ void get_target_dir_name(char *dir) {
 #endif
 
 //-------------------------------------------------------------------
-// Get time related values
-
-int shooting_get_day_seconds()
-{
-    struct tm *ttm;
-    ttm = get_localtime();
-    return ttm->tm_hour * 3600 + ttm->tm_min * 60 + ttm->tm_sec;
-}
-
-int shooting_get_tick_count()
-{
-    return (int)get_tick_count();
-}
-
-//-------------------------------------------------------------------
 // Convert values to/from APEX 96
 
 static const double sqrt2 = 1.4142135623731;        //square root from 2
@@ -656,30 +641,6 @@ int shooting_get_hyperfocal_distance()
 {
   shooting_update_dof_values();
   return dof_values.hyperfocal_distance;
-}
-
-int shooting_get_near_limit_of_acceptable_sharpness()
-{
-  shooting_update_dof_values();
-  return dof_values.near_limit;
-}
-
-int shooting_get_far_limit_of_acceptable_sharpness()
-{
-  shooting_update_dof_values();
-  return dof_values.far_limit;
-}
-
-int shooting_get_depth_of_field()
-{
-  shooting_update_dof_values();
-  return dof_values.depth_of_field;
-}
-
-int shooting_get_min_stack_distance()
-{
-  shooting_update_dof_values();
-  return dof_values.min_stack_distance;
 }
 
 short shooting_can_focus()

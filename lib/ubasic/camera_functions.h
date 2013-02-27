@@ -23,8 +23,6 @@ void shooting_set_prop(int id, int v);
 int shooting_get_prop(int id);
 long stat_get_vbatt();
 void camera_set_led(int led, int state, int bright);
-int shooting_get_day_seconds();
-int shooting_get_tick_count();
 int ubasic_camera_script_autostart();
 int get_usb_power(int edge);
 void camera_set_script_autostart(int state);
