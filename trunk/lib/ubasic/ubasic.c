@@ -1872,6 +1872,7 @@ static void wait_click_statement()
     if ((tokenizer_token() != TOKENIZER_CR) && (tokenizer_token() != TOKENIZER_ELSE))
     {
         delay = expr();
+        if (delay == 0) delay = -1;
     }
     delay = sleep_delay(delay);
 

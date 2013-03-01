@@ -886,7 +886,9 @@ static int action_stack_AS_LUA_WAIT_CLICK()
 
 static int luaCB_wait_click( lua_State* L )
 {
-    int delay = sleep_delay(luaL_optnumber( L, 1, -1 ));
+    int delay = luaL_optnumber( L, 1, 0 );
+    if (delay == 0) delay = -1;
+    delay = sleep_delay(delay);
 
     // Reset 'clicked' key if it has not changed since last time
     if (camera_info.state.kbd_last_clicked_time <= camera_info.state.kbd_last_checked_time)
