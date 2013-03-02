@@ -34,23 +34,18 @@ void debug_led(int state)
 // AF Assist Lamp = second entry in table (led 1)
 void camera_set_led(int led, int state, int bright) {
 	return;
- static char led_table[2]={0,4};
- _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
-}
-
-void shutdown_soft()
-{
-   _PostLogicalEventForNotPowerType(0x1005,0);
+	static char led_table[2]={0,4};
+	_LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
 
 int vid_get_viewport_width()
 {
-	return 360;
+    return 360;
 }
 
 long vid_get_viewport_height()
 {
-   return 240;
+    return 240;
 }
 
 int vid_get_viewport_xoffset() 
