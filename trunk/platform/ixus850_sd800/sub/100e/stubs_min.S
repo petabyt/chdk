@@ -227,3 +227,5 @@ DEF(some_flag_for_af_scan, 0x6AE0)
 DEF(some_f_for_dng, 0x9A68)
 DEF(second_ext_for_dng, 0x9A8C)
 DEF(levent_table,0xFF9A6CEC)
+
+DEF(sys_mempart_id, 0xcf38)
