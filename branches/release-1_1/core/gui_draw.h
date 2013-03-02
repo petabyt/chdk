@@ -636,7 +636,8 @@
 
 #elif CAM_BITMAP_PALETTE==13
 
-// Used by :- G12, IXUS310_ELPH500HS, SX30, SX40HS, SX200IS, A1200, A810
+// Used by :- G12, IXUS310_ELPH500HS, SX30, SX40HS, SX200IS, SX220HS, SX230HS, SX240HS, SX260HS,
+//            A810, A1300, A2300, A3400, A4000
 
     #define COLOR_WHITE                 0x01
     #define COLOR_GREY_DK               0x1a
@@ -886,7 +887,7 @@
 #define	COLOR_ICON_REC_GREY_LT		COLOR_GREY_LT
 //
 
-#elif CAM_BITMAP_PALETTE==17 // used in A3100 + A3150^M
+#elif CAM_BITMAP_PALETTE==17 // used in A3100 + A3150
     #define COLOR_WHITE                 0x11
     #define COLOR_RED                   0x22
     #define COLOR_BLUE                  0x00
