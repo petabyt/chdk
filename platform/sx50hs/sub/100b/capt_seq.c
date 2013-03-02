@@ -11,7 +11,7 @@ static long *nrflag = (long*)(0xa414+0x0c);  // Found @ ff1f526c & ff1f5288
 
 #include "../../../generic/capt_seq.c"
 
-//sx50
+//** capt_seq_task @ 0xFF085A8C
 void __attribute__((naked,noinline)) capt_seq_task() {
     asm volatile (
             "STMFD   SP!, {R3-R7,LR}\n"
@@ -26,9 +26,9 @@ void __attribute__((naked,noinline)) capt_seq_task() {
             "TST     R0, #1\n"
             "BEQ     loc_FF085AC8\n"
             "LDR     R1, =0x491\n"
-            "LDR     R0, =0xFF0853D8 \n"
-            "BL      sub_68B104\n"
-            "BL      sub_68AE1C\n"
+            "LDR     R0, =0xFF0853D8 \n"  // SsShootTask.c
+            "BL      _DebugAssert \n"
+            "BL      _ExitTask \n"
             "LDMFD   SP!, {R3-R7,PC}\n"
     "loc_FF085AC8:\n"
             "LDR     R0, [SP]\n"
@@ -38,83 +38,44 @@ void __attribute__((naked,noinline)) capt_seq_task() {
             "B       loc_FF085D74\n"
     "loc_FF085ADC:\n"
             "B       loc_FF085B7C\n"
-    "loc_FF085AE0:\n"
             "B       loc_FF085B94\n"
-    "loc_FF085AE4:\n"
             "B       loc_FF085BA0\n"
-    "loc_FF085AE8:\n"
             "B       loc_FF085BC0\n"
-    "loc_FF085AEC:\n"
             "B       loc_FF085BB8\n"
-    "loc_FF085AF0:\n"
             "B       loc_FF085BCC\n"
-    "loc_FF085AF4:\n"
             "B       loc_FF085BD4\n"
-    "loc_FF085AF8:\n"
             "B       loc_FF085BDC\n"
-    "loc_FF085AFC:\n"
             "B       loc_FF085BF8\n"
-    "loc_FF085B00:\n"
             "B       loc_FF085C4C\n"
-    "loc_FF085B04:\n"
             "B       loc_FF085C04\n"
-    "loc_FF085B08:\n"
             "B       loc_FF085C10\n"
-    "loc_FF085B0C:\n"
             "B       loc_FF085C18\n"
-    "loc_FF085B10:\n"
             "B       loc_FF085C34\n"
-    "loc_FF085B14:\n"
             "B       loc_FF085C3C\n"
-    "loc_FF085B18:\n"
             "B       loc_FF085C44\n"
-    "loc_FF085B1C:\n"
             "B       loc_FF085C54\n"
-    "loc_FF085B20:\n"
             "B       loc_FF085C5C\n"
-    "loc_FF085B24:\n"
             "B       loc_FF085C64\n"
-    "loc_FF085B28:\n"
             "B       loc_FF085C6C\n"
-    "loc_FF085B2C:\n"
             "B       loc_FF085C74\n"
-    "loc_FF085B30:\n"
             "B       loc_FF085C7C\n"
-    "loc_FF085B34:\n"
             "B       loc_FF085C84\n"
-    "loc_FF085B38:\n"
             "B       loc_FF085C8C\n"
-    "loc_FF085B3C:\n"
             "B       loc_FF085C94\n"
-    "loc_FF085B40:\n"
             "B       loc_FF085C9C\n"
-    "loc_FF085B44:\n"
             "B       loc_FF085CA8\n"
-    "loc_FF085B48:\n"
             "B       loc_FF085CB0\n"
-    "loc_FF085B4C:\n"
             "B       loc_FF085CBC\n"
-    "loc_FF085B50:\n"
             "B       loc_FF085CC4\n"
-    "loc_FF085B54:\n"
             "B       loc_FF085CF4\n"
-    "loc_FF085B58:\n"
             "B       loc_FF085CFC\n"
-    "loc_FF085B5C:\n"
             "B       loc_FF085D04\n"
-    "loc_FF085B60:\n"
             "B       loc_FF085D0C\n"
-    "loc_FF085B64:\n"
             "B       loc_FF085D14\n"
-    "loc_FF085B68:\n"
             "B       loc_FF085D1C\n"
-    "loc_FF085B6C:\n"
             "B       loc_FF085D28\n"
-    "loc_FF085B70:\n"
             "B       loc_FF085D30\n"
-    "loc_FF085B74:\n"
             "B       loc_FF085D3C\n"
-    "loc_FF085B78:\n"
             "B       loc_FF085D80\n"
     "loc_FF085B7C:\n"
     //PATCH BEGIN
@@ -247,11 +208,11 @@ void __attribute__((naked,noinline)) capt_seq_task() {
             "MOV     R2, #2\n"
             "ADD     R1, R4, #0x6A\n"
             "MOV     R0, #0x6F \n"
-            "BL      sub_FF09B1C0\n"
+            "BL      _GetPropertyCase \n"
             "TST     R0, #1\n"
             "LDRNE   R1, =0x592\n"
-            "LDRNE   R0, =0xFF0853D8 \n"
-            "BLNE    sub_68B104\n"
+            "LDRNE   R0, =0xFF0853D8 \n" // SsShootTask.c
+            "BLNE    _DebugAssert \n"
             "LDRH    R0, [R4,#0x6A]\n"
             "CMP     R0, #1\n"
             "BLEQ    sub_FF1F4188\n"
@@ -300,7 +261,7 @@ void __attribute__((naked,noinline)) capt_seq_task() {
     "loc_FF085D74:\n"
             "LDR     R1, =0x5F2\n"
             "LDR     R0, =0xFF0853D8 \n"
-            "BL      sub_68B104\n"
+      "BL      _DebugAssert \n"
     "loc_FF085D80:\n"
             "LDR     R0, [SP]\n"
             "LDR     R1, [R0,#4]\n"
@@ -311,13 +272,14 @@ void __attribute__((naked,noinline)) capt_seq_task() {
             "CMP     R0, #0\n"
             "LDREQ   R1, =0x117\n"
             "LDREQ   R0, =0xFF0853D8 \n"
-            "BLEQ    sub_68B104\n"
+            "BLEQ    _DebugAssert \n"
             "STR     R6, [R5,#8]\n"
             "B       loc_FF085A9C\n"
 
     );
 }
 
+//** sub_FF085EC8_my @ 0xFF085EC8
 void __attribute__((naked,noinline)) sub_FF085EC8_my() {
     asm volatile(
 "sub_FF085EC8:\n"
@@ -336,11 +298,11 @@ void __attribute__((naked,noinline)) sub_FF085EC8_my() {
         "LDR     R0, =0x10F\n"
         "MOV     R2, #4\n"
         "ADD     R1, R6, #0x78\n"
-        "BL      sub_FF09B038\n"
+        "BL      _SetPropertyCase \n"
         "MOV     R2, #4\n"
         "ADD     R1, R6, #0x7C\n"
         "MOV     R0, #0x2C \n"
-        "BL      sub_FF09B038\n"
+        "BL      _SetPropertyCase \n"
 "loc_FF085F18:\n"
         "LDR     R0, [R5,#0x9C]\n"
         "TST     R0, #0x20\n"
@@ -372,6 +334,7 @@ void __attribute__((naked,noinline)) sub_FF085EC8_my() {
 );
 }
 
+//** sub_FF1F5D70_my @ 0xFF1F5D70
 void __attribute__((naked,noinline)) sub_FF1F5D70_my () {
     asm volatile(
             "STMFD   SP!, {R3-R7,LR}\n"
@@ -444,7 +407,7 @@ void __attribute__((naked,noinline)) sub_FF1F5D70_my () {
             "MOV     R3, #0xB3 \n"
             "STR     R3, [SP]\n"
             "LDR     R2, =0x3A98\n"
-            "LDR     R3, =0xFF1F6090 \n"
+            "LDR     R3, =0xFF1F6090 \n"  //SsCaptureSeq.c
             "MOV     R1, #0x8000\n"
             "BL      sub_FF08FAA0\n"
     "loc_FF1F5E80:\n"
@@ -465,6 +428,12 @@ void __attribute__((naked,noinline)) sub_FF1F5D70_my () {
             "MOV     R0, R4\n"
             "BL      sub_FF1F5150\n"
             "BL      sub_FF1F66A4\n"
+
+		//begin patch
+    		"BL      wait_until_remote_button_is_released\n"
+    		"BL      capt_seq_hook_set_nr\n"
+    	//end patch    
+            
     "loc_FF1F5EC0:\n"
             "LDRH    R0, [R6]\n"
             "CMP     R0, R5\n"
@@ -495,11 +464,11 @@ void __attribute__((naked,noinline)) sub_FF1F5D70_my () {
             "LDR     R0, =0x181\n"
             "MOV     R2, #4\n"
             "MOV     R1, SP\n"
-            "BL      sub_FF09B1C0\n"
+            "BL      _GetPropertyCase \n"
             "TST     R0, #1\n"
             "MOVNE   R1, #0xD4 \n"
-            "LDRNE   R0, =0xFF1F6090 \n"
-            "BLNE    sub_68B104\n"
+            "LDRNE   R0, =0xFF1F6090 \n" //SsCaptureSeq.c
+      "BLNE    _DebugAssert \n"
             "LDR     R0, [SP]\n"
             "CMP     R0, #0\n"
             "BNE     loc_FF1F5F60\n"
@@ -527,10 +496,10 @@ void __attribute__((naked,noinline)) sub_FF1F5D70_my () {
             "LDRNE   R0, [R4,#8]\n"
             "CMPNE   R0, #1\n"
             "MOVLS   R0, #2\n"
-            "BLLS    sub_FF091040\n"//don't delete this comment! add address to stubs_auto.S: "B sub_FF091040"
+            "BLLS    sub_FF091040\n"
     		//begin patch
-    		        "BL      wait_until_remote_button_is_released\n"
-    		        "BL      capt_seq_hook_set_nr\n"
+//    		        "BL      wait_until_remote_button_is_released\n"
+//    		        "BL      capt_seq_hook_set_nr\n"
     		//end patch
             "LDR     R0, [R6,#0x9C]\n"
             "TST     R0, #0x10\n"
@@ -555,7 +524,7 @@ void __attribute__((naked,noinline)) sub_FF1F5D70_my () {
     );
 }
 
-////sx260 FF0BC1B0
+//** exp_drv_task @ 0xFF0CCA8C
 void __attribute__((naked,noinline)) exp_drv_task() {
     asm volatile(
             "STMFD   SP!, {R4-R9,LR}\n"
@@ -595,7 +564,7 @@ void __attribute__((naked,noinline)) exp_drv_task() {
             "LDR     R0, [R6,#0x1C]\n"
             "MOV     R1, #1\n"
             "BL      sub_68BB50\n"
-            "BL      sub_68AE1C\n"
+            "BL      _ExitTask \n"
             "ADD     SP, SP, #0x2C\n"
             "LDMFD   SP!, {R4-R9,PC}\n"
     "loc_FF0CCB24:\n"
@@ -682,7 +651,7 @@ void __attribute__((naked,noinline)) exp_drv_task() {
             "LDR     R1, =0x1675\n"
     "loc_FF0CCC4C:\n"
             "LDR     R0, =0xFF0C81AC \n"
-            "BL      sub_68B104\n"
+      "BL      _DebugAssert \n"
             "B       loc_FF0CCB7C\n"
     "loc_FF0CCC58:\n"
             "LDR     R0, [SP,#0x28]\n"
@@ -1071,7 +1040,7 @@ void __attribute__((naked,noinline)) exp_drv_task() {
     );
 }
 
-// sx50
+//** sub_FF0C8F84_my @ 0xFF0C8F84
 void __attribute__((naked,noinline)) sub_FF0C8F84_my() {
     asm volatile(
             "STMFD   SP!, {R4-R8,LR}\n"
@@ -1147,7 +1116,7 @@ void __attribute__((naked,noinline)) sub_FF0C8F84_my() {
             "TST     R0, #1\n"
             "LDRNE   R0, =0xFF0C81AC \n"
             "MOVNE   R1, #0x820\n"
-            "BLNE    sub_68B104\n"
+            "BLNE    _DebugAssert \n"
     "loc_FF0C9094:\n"
             "CMP     R5, #1\n"
             "LDMNEFD SP!, {R4-R8,PC}\n"
@@ -1160,12 +1129,12 @@ void __attribute__((naked,noinline)) sub_FF0C8F84_my() {
             "LDMFD   SP!, {R4-R8,LR}\n"
             "LDR     R1, =0x825\n"
             "LDR     R0, =0xFF0C81AC \n"
-            "B       sub_68B104\n"
+            "B       _DebugAssert \n"
 
     );
 }
 
-//sx50
+//** sub_FF0B657C_my @ 0xFF0B657C
 void __attribute__((naked,noinline)) sub_FF0B657C_my() {
     asm volatile(
             "STMFD   SP!, {R4-R6,LR}\n"
@@ -1175,14 +1144,14 @@ void __attribute__((naked,noinline)) sub_FF0B657C_my() {
             "CMP     R0, #1\n"
             "MOVNE   R1, #0x154\n"
             "LDRNE   R0, =0xFF0B63B4 \n"
-            "BLNE    sub_68B104\n"
+            "BLNE    _DebugAssert \n"
             "CMN     R4, #0xC00\n"
             "LDREQSH R4, [R5,#2]\n"
             "CMN     R4, #0xC00\n"
             "LDREQ   R1, =0x15A\n"
             "LDREQ   R0, =0xFF0B63B4 \n"
             "STRH    R4, [R5,#2]\n"
-            "BLEQ    sub_68B104\n"
+            "BLEQ    _DebugAssert \n"
             "MOV     R0, R4\n"
     //PATCH BEGIN
             //"BL      sub_FF2B4AA0\n"
@@ -1197,6 +1166,6 @@ void __attribute__((naked,noinline)) sub_FF0B657C_my() {
             "LDMFD   SP!, {R4-R6,LR}\n"
             "LDR     R1, =0x15F\n"
             "LDR     R0, =0xFF0B63B4 \n"
-            "B       sub_68B104\n"
+            "B       _DebugAssert \n"
     		);
 }

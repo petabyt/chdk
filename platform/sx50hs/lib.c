@@ -69,12 +69,32 @@ int vid_get_viewport_yscale() {
     return 2;
 }
 
+//void *vid_get_viewport_live_fb()
+//{
+//    // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
+//    int pos=active_viewport_buffer&0xF;
+//	return viewport_buffers[pos];
+//}
+
+// Defined in stubs_min.S
+extern char active_viewport_buffer;
+extern void* viewport_buffers[];
+
+void *vid_get_viewport_fb()
+{
+    // Return first viewport buffer - for case when vid_get_viewport_live_fb not defined
+    return viewport_buffers[0];
+}
+
 void *vid_get_viewport_live_fb()
 {
+    if (MODE_IS_VIDEO(mode_get()))
+        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
+
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
-    int pos=active_viewport_buffer&0xF;
-	return viewport_buffers[pos];
+    return viewport_buffers[(active_viewport_buffer-1)&3];
 }
+
 
 // Defined in stubs_min.S
 extern int active_bitmap_buffer;
@@ -235,5 +255,5 @@ void load_chdk_palette()
 
 // SX50 Values below go in 'lib.c':
 void *vid_get_bitmap_fb()        { return (void*)0x406c5000; }             // Found @0xff056b6c
-void *vid_get_viewport_fb()      { return (void*)0x4081ab80; }             // Found @0xff431694
+//void *vid_get_viewport_fb()      { return (void*)0x4081ab80; }             // Found @0xff431694
 int get_flash_params_count(void) { return 0xa6; }                          // Found @0xff205ce4
