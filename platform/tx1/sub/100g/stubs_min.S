@@ -16,3 +16,4 @@ DEF(some_f_for_dng, 0x6FE0)
 DEF(second_ext_for_dng, 0x7004)
 DEF(levent_table,0xFFB5BF2C)
 DEF(playrec_mode,0xD4EC) // "SSAPI::MenuIn"
+DEF(sys_mempart_id, 0x5190)

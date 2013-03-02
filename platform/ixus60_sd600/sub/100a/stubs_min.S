@@ -31,3 +31,4 @@ DEF(movie_status, 0x6EB44)
 
 DEF(levent_table,0xFF96B4FC)
 DEF(playrec_mode,=0x643C) // "MenuIn"
+DEF(sys_mempart_id, 0xbf38)

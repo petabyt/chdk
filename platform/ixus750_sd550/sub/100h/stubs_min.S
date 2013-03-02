@@ -18,3 +18,4 @@ DEF(movie_status, 0x7386C)
 DEF(physw_run, 0x1FCC)
 DEF(levent_table,0xFF95995C)
 DEF(playrec_mode,0x6FE8) // "MenuIn"
+DEF(sys_mempart_id, 0xec50)

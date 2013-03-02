@@ -237,3 +237,5 @@ DEF(SwitchStatus, 0x0000FBB0)
 
 // Logical Event Table
 DEF(levent_table,0xFF9A1124)   // search for "DCD aPressrightbutton" and look above
+
+DEF(sys_mempart_id, 0xcf90)

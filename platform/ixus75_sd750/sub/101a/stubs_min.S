@@ -19,3 +19,4 @@ DEF(zoom_status, 0x26B8) // found near _MoveOpticalToTele, _StopOpticalZoom etc
 DEF(some_f_for_dng, 0x7214)
 DEF(second_ext_for_dng, 0x7238)
 DEF(levent_table,0xFFB3AA4C)
+DEF(sys_mempart_id, 0x5540)

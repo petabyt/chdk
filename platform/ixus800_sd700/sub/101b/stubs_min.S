@@ -18,3 +18,4 @@ DEF(some_f_for_dng, 0x8B0C)
 DEF(second_ext_for_dng, 0x8B30)
 DEF(levent_table,0xFF96B1CC)
 DEF(playrec_mode,0x6440) //"MenuIn"
+DEF(sys_mempart_id, 0xc088)
