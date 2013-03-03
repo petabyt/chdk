@@ -225,11 +225,9 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
             kbd_is_key_pressed,
             kbd_key_press,
 			kbd_get_clicked_key,
-			kbd_reset_autoclicked_key,
             get_jogdial_direction,
 
 			// for rawop.flt
-            GetFreeCardSpaceKb,
             debug_led,
 
 			mode_get,
@@ -251,6 +249,7 @@ char COLOR__EXPORTEDSYM_HISTO_RG_PLAY = COLOR_HISTO_RG_PLAY ;
             img_prefixes,
             img_exts,
             GetTotalCardSpaceKb,
+            GetFreeCardSpaceKb,
 
 			// tetris.flt
 			TurnOnBackLight,

@@ -142,16 +142,14 @@ void gui_mpopup_kbd_process() {
         break;
     case KEY_MENU:
     case KEY_LEFT:
-        kbd_reset_autoclicked_key();
 		exit_mpopup(MPOPUP_CANCEL);		
 		if ( mpopup_on_select==0 )		// exit if not re-inited
 		module_async_unload(module_idx);
         break;
     case KEY_SET:
-        kbd_reset_autoclicked_key();
 		exit_mpopup(actions[mpopup_actions[mpopup_actions_active]].flag);		
 		if ( mpopup_on_select==0 )		// exit if not re-inited
-		module_async_unload(module_idx);
+            module_async_unload(module_idx);
         break;
     }
 }

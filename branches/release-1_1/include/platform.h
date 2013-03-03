@@ -49,10 +49,6 @@ extern int is_video_recording();
 #define MODE_SCREEN_OPENED          0x0400
 #define MODE_SCREEN_ROTATED         0x0800
 
-/* Keyboard repeat and initial delays */
-#define KBD_REPEAT_DELAY  140
-#define KBD_INITIAL_DELAY 300
-
 // Video recording current status constants, see movie_status variable 
 #define VIDEO_RECORD_NEVER_STARTED  0  
 #define VIDEO_RECORD_STOPPED        1  
@@ -212,7 +208,6 @@ long kbd_is_key_clicked(long key);
 long kbd_get_pressed_key();
 long kbd_get_clicked_key();
 long kbd_get_autoclicked_key();
-void kbd_reset_autoclicked_key();
 long kbd_use_zoom_as_mf();
 long kbd_use_up_down_left_right_as_fast_switch();
 void kbd_set_alt_mode_key_mask(long key);

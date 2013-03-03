@@ -222,6 +222,10 @@
     #undef  CAM_MISSING_RAND                    // Define this if srand()/rand() functions not found in firmware (a810/a2300)
     #undef  MKDIR_RETURN_ONE_ON_SUCCESS         // Define this if mkdir() return 1 on success, 0 on fail (a810/a1300)
     
+    // Keyboard repeat and initial delays (override in platform_camera.h if needed)
+    #define KBD_REPEAT_DELAY                175
+    #define KBD_INITIAL_DELAY               500
+
 //----------------------------------------------------------
 // Overridden values for each camera
 //----------------------------------------------------------
