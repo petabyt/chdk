@@ -14,8 +14,6 @@ long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
-static long last_kbd_key = 0;
-
 extern void _GetKbdState(long*);
 
 
@@ -210,10 +208,6 @@ long kbd_get_clicked_key() {
 		}
 	}
 	return 0;
-}
-
-void kbd_reset_autoclicked_key() {
-	last_kbd_key = 0;
 }
 
 
