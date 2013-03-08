@@ -111,4 +111,7 @@
 
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// TODO specifies an LED that turns on while camera waits for USB remote to sync
 
+    #undef  CAM_AF_LED
+    #define CAM_AF_LED                       1   // Index of AF led in camera_set_led function
+
 //----------------------------------------------------------

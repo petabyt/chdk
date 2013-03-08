@@ -21,4 +21,3 @@ For Developers
 - hook_raw_image_addr() & hook_alt_raw_image_addr() return the same value
 - Tables in shooting.c not verified
 - DNG calibration not done
-- camera_set_led() is not implemented. 
