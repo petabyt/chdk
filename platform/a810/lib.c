@@ -31,7 +31,7 @@ void debug_led(int state)
 // AF Assist Lamp = second entry in table (led 1)
 void camera_set_led(int led, int state, int bright) {
     static char led_table[2]={0,4};
-    if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], state);
+    if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], (!state)&1);
 }
 
 int vid_get_viewport_width()
