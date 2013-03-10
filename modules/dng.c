@@ -14,6 +14,7 @@
 #include "gui_lang.h"
 #include "gps.h"
 #include "math.h"
+#include "cache.h"
 
 //thumbnail
 #define DNG_TH_WIDTH 128
@@ -953,11 +954,21 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
 
         reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
 
+        // if reverse was done on cached raw, clean cache before writing
+        if(!((unsigned long)altrawadr & uncachedbit)) {
+            dcache_clean_all();
+        }
+
         // Write alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
         write(fd, (char*)(((unsigned long)altrawadr)|uncachedbit), camera_sensor.raw_size);
 
-        if (rawadr == altrawadr)    // If only one RAW buffer then we have to swap the bytes back
+        if (rawadr == altrawadr) {    // If only one RAW buffer then we have to swap the bytes back
             reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
+            // if unreverse was done on cached raw, clean cache for jpeg
+            if(!((unsigned long)altrawadr & uncachedbit)) {
+                dcache_clean_all();
+            }
+        }
 
         free_dng_header();
     }
