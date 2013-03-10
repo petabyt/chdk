@@ -40,6 +40,7 @@
 #include "lens.h"
 #include "action_stack.h"
 #include "console.h"
+#include "cache.h"
 
 #include "modules.h"
 #include "module_load.h"
@@ -415,6 +416,8 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
             ptp_script_write_msg,
             ptp_script_read_msg,
             ptp_script_write_error_msg,
+
+            dcache_clean_all,
 }
 #endif
 
