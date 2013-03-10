@@ -3,11 +3,11 @@
 #include "gui_draw.h"
 #include "meminfo.h"
 #include "module_load.h"
-
+#include "simple_module.h"
 
 // =========  MODULE INIT =================
 
-int module_idx=-1;
+static int running = 0;
 
 extern int basic_module_init();
 
@@ -15,71 +15,54 @@ extern int basic_module_init();
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)0
-		};
-
-
-//---------------------------------------------------------
-// PURPOSE:   Bind module symbols with chdk. 
-//		Required function
-// PARAMETERS: pointer to chdk list of export
-// RETURN VALUE: 1 error, 0 ok
-//---------------------------------------------------------
-int _module_loader( unsigned int* chdk_export_list )
+int _run()
 {
-  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-     return 1;
+    basic_module_init();
 
-  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
-	  return 1;
-
-  return 0;
+    return 0;
 }
 
-
-
-//---------------------------------------------------------
-// PURPOSE: Finalize module operations (close allocs, etc)
-// RETURN VALUE: 0-ok, 1-fail
-//---------------------------------------------------------
-int _module_unloader()
+int _module_can_unload()
 {
-  return 0;
+    return running == 0;
 }
 
-
-//---------------------------------------------------------
-// PURPOSE: Default action for simple modules (direct run)
-// NOTE: Please comment this function if no default action and this library module
-//---------------------------------------------------------
-int _module_run(int moduleidx, int argn, int* arguments)
+int _module_exit_alt()
 {
-  module_idx=moduleidx;
-
-  basic_module_init();
-  return 0;
+    running = 0;
+    return 0;
 }
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+libsimple_sym _librun =
+{
+    {
+         0, 0, _module_can_unload, _module_exit_alt, _run
+    }
+};
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
-									(int32_t)"Module Inspector",// Module name
-									1, 0,						// Module version
-									(int32_t)"Show list of loaded modules"
-								 };
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    {1,0},						// Module version
 
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    (int32_t)"Module Inspector",// Module name
+    (int32_t)"Show list of loaded modules",
+
+    &_librun.base,
+
+    {1,0},                      // GUI version
+    {0,0},                      // CONF version
+    {0,0},                      // CAM SENSOR version
+    {0,0},                      // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/
-
-
-
 
 /*************** GUI MODULE *******************/
 
@@ -87,53 +70,56 @@ struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
 #include "keyboard.h"
 #include "stdlib.h"
 
-
 void gui_module_menu_kbd_process();
 int gui_module_kbd_process();
 void gui_module_draw();
 
 gui_handler GUI_MODE_MODULE_INSPECTOR = 
-    /*GUI_MODE_MODULE_INSPECTOR*/   { GUI_MODE_MODULE, gui_module_draw, gui_module_kbd_process, gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
-
+/*GUI_MODE_MODULE_INSPECTOR*/   { GUI_MODE_MODULE, gui_module_draw, gui_module_kbd_process, gui_module_menu_kbd_process, 0 };
 
 int modinspect_redraw;
 gui_handler *modinspect_old_guimode;
 
-static void modinspect_unload_cb(unsigned int btn) {
-    if (btn==MBOX_BTN_YES) {
-		module_async_unload_allrunned(0);
+static void modinspect_unload_cb(unsigned int btn)
+{
+    if (btn==MBOX_BTN_YES)
+    {
+        running = 0;
+        module_exit_alt();
         gui_set_mode(modinspect_old_guimode);	// if core gui - return to it
     }
     modinspect_redraw=2;
 }
 
-
-int gui_module_kbd_process() {
-    switch (kbd_get_autoclicked_key()) {
-    	case KEY_SET:
-        	modinspect_redraw=2;
-        	break;
-    	case KEY_DISPLAY:
-                gui_mbox_init( (int)"Module Inspector", (int)"Unload all modules?",
-                              MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, modinspect_unload_cb);
-			break;
+int gui_module_kbd_process()
+{
+    switch (kbd_get_autoclicked_key())
+    {
+    case KEY_SET:
+        modinspect_redraw = 2;
+        break;
+    case KEY_DISPLAY:
+        gui_mbox_init( (int)"Module Inspector", (int)"Unload all modules?",
+            MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, modinspect_unload_cb);
+        break;
     }
     return 0;
 }
 
 //-------------------------------------------------------------------
 
-int basic_module_init() {
-	modinspect_redraw=2;
+int basic_module_init()
+{
+    running = 1;
+    modinspect_redraw = 2;
     modinspect_old_guimode = gui_set_mode(&GUI_MODE_MODULE_INSPECTOR);
-	return 1;
+    return 1;
 }
 
-extern int module_idx;
-
-void gui_module_menu_kbd_process() {
-	gui_set_mode(modinspect_old_guimode);
-  	module_async_unload(module_idx);
+void gui_module_menu_kbd_process()
+{
+    running = 0;
+    gui_set_mode(modinspect_old_guimode);
 }
 
 static void gui_mem_info(char *typ, cam_meminfo *meminfo, int showidx)

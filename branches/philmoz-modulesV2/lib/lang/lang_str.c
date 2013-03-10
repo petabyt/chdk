@@ -1,3 +1,4 @@
+#include "camera_info.h"
 #include "conf.h"
 #include "lang.h"
 #include "gui_lang.h"

@@ -7,11 +7,15 @@
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 //==========================================================
+
+#include "stdlib.h"
+
+//==========================================================
 // Data Structure to store camera specific information
 // Used by modules to ensure module code is platform independent
 
 typedef struct {
-	int api_version;			// version of this structure
+	_version_t api_version;     // version of this structure
 
     int bits_per_pixel;
     int black_level;
@@ -80,7 +84,7 @@ typedef struct
 
 typedef struct
 {
-	int api_version;			// version of this structure
+	_version_t api_version; 			// version of this structure
 
     // Canon PARAMS indexes
     struct

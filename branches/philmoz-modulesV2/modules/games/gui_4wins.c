@@ -10,16 +10,16 @@
 #include "gui_lang.h"
 #include "gui_batt.h"
 #include "gui_mbox.h"
+#include "modes.h"
 
 #include "module_def.h"
 
-void gui_module_menu_kbd_process();
+void gui_game_menu_kbd_process();
 int gui_4wins_kbd_process();
 void gui_4wins_draw();
 
 gui_handler GUI_MODE_4WINS = 
-    /*GUI_MODE_4WINS*/  { GUI_MODE_MODULE, gui_4wins_draw, gui_4wins_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
-
+    /*GUI_MODE_4WINS*/  { GUI_MODE_MODULE, gui_4wins_draw, gui_4wins_kbd_process, gui_game_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE };
 
 #define BORDER		 20
 #define XBORDER		 (camera_screen.ts_button_border+BORDER)
@@ -375,21 +375,26 @@ void gui_4wins_draw() {
   gui_osd_draw_clock(camera_screen.ts_button_border+35*FONT_WIDTH,208-FONT_HEIGHT,INFO_TEXT_COLOR);
 }
 
-extern int module_idx;
-void gui_module_menu_kbd_process() {
-	gui_default_kbd_process_menu_btn();
-  	module_async_unload(module_idx);
-}
+#include "simple_game.c"
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    {1,0},						// Module version
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
-									-LANG_MENU_GAMES_CONNECT4,	// Module name
-									1, 0,						// Module version
-									(int32_t) "Game"
-								 };
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    -LANG_MENU_GAMES_CONNECT4,	// Module name
+    (int32_t) "Game",
+
+    &_librun.base,
+
+    {1,0},                      // GUI version
+    {0,0},                      // CONF version
+    {0,0},                      // CAM SENSOR version
+    {0,0},                      // CAM INFO version
+};

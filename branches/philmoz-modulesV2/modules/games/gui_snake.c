@@ -8,16 +8,16 @@
 #include "gui_lang.h"
 #include "gui_batt.h"
 #include "gui_mbox.h"
+#include "modes.h"
 
 #include "module_def.h"
 
-void gui_module_menu_kbd_process();
+void gui_game_menu_kbd_process();
 int gui_snake_kbd_process();
 void gui_snake_draw();
 
 gui_handler GUI_MODE_SNAKE = 
-    /*GUI_MODE_SNAKE*/  { GUI_MODE_MODULE, gui_snake_draw, gui_snake_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
-
+    /*GUI_MODE_SNAKE*/  { GUI_MODE_MODULE, gui_snake_draw, gui_snake_kbd_process, gui_game_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE };
 
 //-------------------------------------------------------------------
 #define SNAKE_MAX_LENGTH 0xF0
@@ -432,24 +432,28 @@ int basic_module_init() {
   return gui_snake_init();
 }
 
-extern int module_idx;
-void gui_module_menu_kbd_process() {
-	gui_default_kbd_process_menu_btn();
-  	module_async_unload(module_idx);
-}
+#include "simple_game.c"
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    {1,0},						// Module version
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
-									(int32_t)"Snake",			// Module name
-									1, 0,						// Module version
-									(int32_t)"Game"
-								 };
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
+    (int32_t)"Snake",			// Module name
+    (int32_t)"Game",
+
+    &_librun.base,
+
+    {1,0},                      // GUI version
+    {0,0},                      // CONF version
+    {0,0},                      // CAM SENSOR version
+    {0,0},                      // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/

@@ -6,7 +6,7 @@
 // Used by modules to ensure module code is platform independent
 
 _cam_sensor camera_sensor = { 
-    MAKE_API_VERSION(1,0),
+    {1,0},
 
     CAM_SENSOR_BITS_PER_PIXEL, 
     CAM_BLACK_LEVEL, CAM_WHITE_LEVEL,
@@ -106,7 +106,7 @@ _cam_screen camera_screen =
 
 _cam_info camera_info =
 {
-    MAKE_API_VERSION(1,0),
+    {1,0},
 
     {
 #if defined(PARAM_CAMERA_NAME)

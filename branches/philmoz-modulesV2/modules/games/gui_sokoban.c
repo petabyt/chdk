@@ -11,6 +11,7 @@
 #include "gui_mbox.h"
 
 #include "module_def.h"
+#include "simple_module.h"
 
 //-------------------------------------------------------------------
 
@@ -30,7 +31,7 @@ int gui_sokoban_kbd_process();
 void gui_sokoban_draw();
 
 gui_handler GUI_MODE_SOKOBAN = 
-    /*GUI_MODE_SOKOBAN*/    { GUI_MODE_MODULE, gui_sokoban_draw, gui_sokoban_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_SOKOBAN*/    { GUI_MODE_MODULE, gui_sokoban_draw, gui_sokoban_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE };
 
 //-------------------------------------------------------------------
 #define FIELD_WIDTH             15
@@ -452,46 +453,44 @@ void gui_sokoban_draw() {
 }
 
 
-extern int module_idx;
-void gui_module_menu_kbd_process() {
+static int running = 0;
+
+void gui_module_menu_kbd_process()
+{
+    running = 0;
 	gui_default_kbd_process_menu_btn();
-  	module_async_unload(module_idx);
 }
 
-
 // =========  MODULE INIT =================
-
-int module_idx=-1;
 
 /***************** BEGIN OF AUXILARY PART *********************
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)0
-		};
+int _run()
+{
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    {
+        gui_mbox_init(LANG_MSG_INFO_TITLE, LANG_MSG_SWITCH_TO_PLAY_MODE, MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, 0);
+    }
+    else
+    {
+        running = 1;
+        gui_sokoban_init();
+    }
 
+    return 0;
+}
 
 //---------------------------------------------------------
-// PURPOSE:   Bind module symbols with chdk. 
-//		Required function
-// PARAMETERS: pointer to chdk list of export
+// PURPOSE:   Perform on-load initialisation
 // RETURN VALUE: 1 error, 0 ok
 //---------------------------------------------------------
 int _module_loader( unsigned int* chdk_export_list )
 {
-  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-     return 1;
-
-  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
-	  return 1;
-
-  config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/sokoban.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0);
-
-  return 0;
+    config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/sokoban.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0);
+    return 0;
 }
-
 
 //---------------------------------------------------------
 // PURPOSE: Finalize module operations (close allocs, etc)
@@ -503,40 +502,44 @@ int _module_unloader()
     return 0;
 }
 
-
-//---------------------------------------------------------
-// PURPOSE: Default action for simple modules (direct run)
-// NOTE: Please comment this function if no default action and this library module
-//---------------------------------------------------------
-int _module_run(int moduleidx, int argn, int* arguments)
+int _module_can_unload()
 {
-  module_idx=moduleidx;
-
-  int rv = 0;
-  if ((mode_get()&MODE_MASK) != MODE_PLAY) {
-      gui_mbox_init(LANG_MSG_INFO_TITLE, LANG_MSG_SWITCH_TO_PLAY_MODE,
-                    MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, 0);
-  } else {
-	rv = gui_sokoban_init();
-  }
-  if ( ! rv )
-	module_async_unload(moduleidx);		// fail to init - "unload me"
-
-  return 0;
+    return running == 0;
 }
 
+int _module_exit_alt()
+{
+    running = 0;
+    return 0;
+}
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+libsimple_sym _librun =
+{
+    {
+         0, _module_unloader, _module_can_unload, _module_exit_alt, _run
+    }
+};
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
-									-LANG_MENU_GAMES_SOKOBAN,	// Module name
-									1, 0,						// Module version
-									(int32_t)"Game"
-								 };
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    {1,0},						// Module version
+
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    -LANG_MENU_GAMES_SOKOBAN,	// Module name
+    (int32_t)"Game",
+
+    &_librun.base,
+
+    {1,0},                      // GUI version
+    {0,0},                      // CONF version
+    {0,0},                      // CAM SENSOR version
+    {0,0},                      // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/

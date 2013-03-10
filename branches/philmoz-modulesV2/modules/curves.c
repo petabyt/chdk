@@ -5,8 +5,8 @@
 #include "raw.h"
 #include "gui_lang.h"
 
-#include "modules.h"
 #include "curves.h"
+#include "module_def.h"
 
 /*
 	Expands curves features
@@ -419,92 +419,47 @@ void curve_apply() {
 
 // =========  MODULE INIT =================
 
-#include "module_def.h"
-
-
-struct libcurves_sym _libcurves = {
-			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
-										// increase minor if compatible changes made(including extending this struct)
-			curve_init_mode,
-			curve_apply,
-            curve_set_mode,
-            curve_set_file
-};
-
-int module_idx=-1;
-
 /***************** BEGIN OF AUXILARY PART *********************
-  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
- **************************************************************/
+ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+**************************************************************/
 
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)1,
-			&_libcurves
-		};
-
-
-//---------------------------------------------------------
-// PURPOSE:   Bind module symbols with chdk. 
-//		Required function
-// PARAMETERS: pointer to chdk list of export
-// RETURN VALUE: 1 error, 0 ok
-//---------------------------------------------------------
-int _module_loader( unsigned int* chdk_export_list )
+int _module_can_unload()
 {
-  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-     return 1;
-
-  if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
-	 return 1;
-  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 2, 0 ) )
-	 return 1;
-
-  // Startup initialize
-  curve_init_mode();
-
-  return 0;
+    return conf.curve_enable == 0;
 }
-
-
-
-//---------------------------------------------------------
-// PURPOSE: Finalize module operations (close allocs, etc)
-// RETURN VALUE: 0-ok, 1-fail
-//---------------------------------------------------------
-int _module_unloader()
-{
-	// This could be happens only if on-load mistake
-	// CHDK never unload this library (but load only if needed)
-	// Reason: perfomance reason - to avoid load on each raw_processing
-  return 0;
-}
-
-
-//---------------------------------------------------------
-// PURPOSE: Default action for simple modules (direct run)
-// NOTE: Please comment this function if no default action and this library module
-//---------------------------------------------------------
-int _module_run(int moduleidx, int argn, int* arguments)
-{
-  module_idx=moduleidx;
-
-  return 0;
-}
-
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+libcurves_sym _libcurves = 
+{
+    {
+         0, 0, _module_can_unload, 0, 0
+    },
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									MODULEINFO_FLAG_SYSTEM,		// flag
-									(int32_t)"Curves (dll)",	// Module name
-									1, 0,						// Module version
-									(int32_t)"Apply curves to shots. Only 10bit sensor version"
-								 };
+    curve_init_mode,
+    curve_apply,
+    curve_set_mode,
+    curve_set_file
+};
 
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    {2,0},						// Module version
+
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    (int32_t)"Curves (dll)",	// Module name
+    (int32_t)"Apply curves to shots. Only 10bit sensor version",
+
+    &_libcurves.base,
+
+    {0,0},                      // GUI version
+    {2,0},                      // CONF version
+    {1,0},                      // CAM SENSOR version
+    {0,0},                      // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/

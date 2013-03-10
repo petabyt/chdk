@@ -2,9 +2,6 @@
 #include "stdlib.h"
 #include "gui.h"
 #include "gui_draw.h"
-#include "module_def.h"
-#include "modules.h"
-#include "luascript.h"
 #include "script.h"
 #include "script_key_funcs.h"
 #include "conf.h"
@@ -32,6 +29,15 @@
 #include "file_counter.h"
 #include "debug_led.h"
 #include "meminfo.h"
+
+#include "script_api.h"
+#include "curves.h"
+#include "motion_detector.h"
+#include "raw_merge.h"
+#include "gui_fselect.h"
+#include "gui_tbox.h"
+#include "module_def.h"
+#include "luascript.h"
 
 #include "../lib/lua/lualib.h"
 #include "../lib/lua/lauxlib.h"
@@ -130,9 +136,8 @@ static ptp_script_msg *lua_create_usb_msg( lua_State* L, int index, unsigned msg
 
 void lua_script_reset()
 {
-  module_rawop_unload();
-  lua_close( L );
-  L = 0;
+    lua_close( L );
+    L = 0;
 }
 
 void lua_script_error_ptp(int runtime, const char *err) {
@@ -148,9 +153,9 @@ static void lua_count_hook(lua_State *L, lua_Debug *ar)
 {
     run_hook_count++;
     if( L->nCcalls > L->baseCcalls || !yield_hook_enabled )
-    return;
+        return;
     if(run_hook_count >= yield_max_count || get_tick_count() - run_start_tick >= yield_max_ms)
-    lua_yield( L, 0 );
+        lua_yield( L, 0 );
 }
 
 int lua_script_error(lua_State *Lt,int runtime)
@@ -300,36 +305,28 @@ static int lua_get_key_arg( lua_State * L, int narg )
 
 static int luaCB_set_curve_state( lua_State* L )
 {
-  int value;
-  value=luaL_checknumber( L, 1 );
-
-  struct libcurves_sym* libcurves = module_curves_load();
-  if ( libcurves && libcurves->curve_set_mode)
-		libcurves->curve_set_mode(value);
-
-  return 0;
+    libcurves->curve_set_mode(luaL_checknumber( L, 1 ));
+    return 0;
 }
 
 static int luaCB_get_curve_state( lua_State* L )
 {
-  lua_pushnumber(L,conf.curve_enable);
-  return 1;
+    lua_pushnumber(L,conf.curve_enable);
+    return 1;
 }
 
 static int luaCB_set_curve_file( lua_State* L )
 {
-  size_t l;
-  const char *s = luaL_checklstring(L, 1, &l);
-  struct libcurves_sym* libcurves = module_curves_load();
-  if ( libcurves && libcurves->curve_set_file)
-		libcurves->curve_set_file(s);
-  return 0;
+    size_t l;
+    const char *s = luaL_checklstring(L, 1, &l);
+    libcurves->curve_set_file(s);
+    return 0;
 }
 
 static int luaCB_get_curve_file( lua_State* L )
 {
-  lua_pushstring(L,conf.curve_file);
-  return 1;
+    lua_pushstring(L,conf.curve_file);
+    return 1;
 }
 
 static int luaCB_set_aflock(lua_State* L) 
@@ -946,56 +943,48 @@ static int luaCB_md_af_led_control( lua_State* L )
 
 static int luaCB_md_get_cell_diff( lua_State* L )
 {
-    struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
-    if (libmotiondetect)
-        lua_pushnumber( L, libmotiondetect->md_get_cell_diff(luaL_checknumber(L,1), luaL_checknumber(L,2)));
-    else
-        lua_pushnumber( L, 0 );
+    lua_pushnumber( L, libmotiondetect->md_get_cell_diff(luaL_checknumber(L,1), luaL_checknumber(L,2)));
     return 1;
 }
 
 
 static int luaCB_md_get_cell_val( lua_State* L )
 {
-    struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
-    if (libmotiondetect)
-        lua_pushnumber( L, libmotiondetect->md_get_cell_val(luaL_checknumber(L,1), luaL_checknumber(L,2)));
-    else
-        lua_pushnumber( L, 0 );
+    lua_pushnumber( L, libmotiondetect->md_get_cell_val(luaL_checknumber(L,1), luaL_checknumber(L,2)));
     return 1;
 }
 
 static int luaCB_md_detect_motion( lua_State* L )
 {
-  int columns = (luaL_optnumber(L,1,6));
-  int rows = (luaL_optnumber(L,2,4));
-  int pixel_measure_mode = (luaL_optnumber(L,3,1));
-  int detection_timeout = (luaL_optnumber(L,4,10000));
-  int measure_interval = (luaL_optnumber(L,5,7));
-  int threshold = (luaL_optnumber(L,6,10));
-  int draw_grid = (luaL_optnumber(L,7,1));
-   // arg 8 is the return value in ubasic. We
-   // ignore it here. - AUJ
-  int clipping_region_mode = (luaL_optnumber(L,9,0));
-  int clipping_region_column1 = (luaL_optnumber(L,10,0));
-  int clipping_region_row1 = (luaL_optnumber(L,11,0));
-  int clipping_region_column2 = (luaL_optnumber(L,12,0));
-  int clipping_region_row2 = (luaL_optnumber(L,13,0));
-  int parameters = (luaL_optnumber(L,14,1));
-  int pixels_step = (luaL_optnumber(L,15,6));
-  int msecs_before_trigger = (luaL_optnumber(L,16,0));
-  struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
-  if (libmotiondetect && libmotiondetect->md_init_motion_detector(
-    columns, rows, pixel_measure_mode, detection_timeout, 
-    measure_interval, threshold, draw_grid,
-    clipping_region_mode,
-    clipping_region_column1, clipping_region_row1,
-    clipping_region_column2, clipping_region_row2,
-    parameters, pixels_step, msecs_before_trigger
-  ))
-    return lua_yield(L, 0);
-  else
-    return luaL_error( L, "md_init_motion_detector failed" );
+    int columns = (luaL_optnumber(L,1,6));
+    int rows = (luaL_optnumber(L,2,4));
+    int pixel_measure_mode = (luaL_optnumber(L,3,1));
+    int detection_timeout = (luaL_optnumber(L,4,10000));
+    int measure_interval = (luaL_optnumber(L,5,7));
+    int threshold = (luaL_optnumber(L,6,10));
+    int draw_grid = (luaL_optnumber(L,7,1));
+    // arg 8 is the return value in ubasic. We
+    // ignore it here. - AUJ
+    int clipping_region_mode = (luaL_optnumber(L,9,0));
+    int clipping_region_column1 = (luaL_optnumber(L,10,0));
+    int clipping_region_row1 = (luaL_optnumber(L,11,0));
+    int clipping_region_column2 = (luaL_optnumber(L,12,0));
+    int clipping_region_row2 = (luaL_optnumber(L,13,0));
+    int parameters = (luaL_optnumber(L,14,1));
+    int pixels_step = (luaL_optnumber(L,15,6));
+    int msecs_before_trigger = (luaL_optnumber(L,16,0));
+
+    if (libmotiondetect->md_init_motion_detector(
+        columns, rows, pixel_measure_mode, detection_timeout, 
+        measure_interval, threshold, draw_grid,
+        clipping_region_mode,
+        clipping_region_column1, clipping_region_row1,
+        clipping_region_column2, clipping_region_row2,
+        parameters, pixels_step, msecs_before_trigger
+        ))
+        return lua_yield(L, 0);
+    else
+        return luaL_error( L, "md_init_motion_detector failed" );
 }
 
 static void return_string_selected(const char *str) {
@@ -1026,7 +1015,7 @@ static int luaCB_file_browser( lua_State* L ) {
     // Push file browser action onto stack - will loop doing nothing until file browser exits
     action_push_func(action_stack_AS_WAIT_MODULE);
     // Switch to file browser gui mode. Path can be supplied in call or defaults to "A" (root directory).
-    module_fselect_init(LANG_STR_FILE_BROWSER, luaL_optstring( L, 1, "A" ), "A", return_string_selected);
+    libfselect->file_select(LANG_STR_FILE_BROWSER, luaL_optstring( L, 1, "A" ), "A", return_string_selected);
     // Yield the script so that the action stack will process the AS_FILE_BROWSER action
     return lua_yield(L, 0);
 }
@@ -1034,16 +1023,16 @@ static int luaCB_file_browser( lua_State* L ) {
 static int luaCB_textbox( lua_State* L ) {
     // Disconnect button input from script so buttons will work in the textbox
     camera_info.state.state_kbd_script_run = SCRIPT_STATE_INACTIVE;
-    if (module_tbox_load())
+    // Switch to textbox gui mode. Text box prompt should be passed as param.
+    int rv = libtextbox->textbox_init((int)luaL_optstring( L, 1, "Text box" ),   //title
+        (int)luaL_optstring( L, 2, "Enter text" ), //message
+        luaL_optstring( L, 3, ""  ),               //default string
+        luaL_optnumber( L, 4, 30),                 //max size of a text
+        return_string_selected, 0);
+    if (rv)
     {
         // Push textbox action onto stack - will loop doing nothing until textbox exits
         action_push_func(action_stack_AS_WAIT_MODULE);
-        // Switch to textbox gui mode. Text box prompt should be passed as param.
-        module_tbox_load()->textbox_init((int)luaL_optstring( L, 1, "Text box" ),   //title
-                                         (int)luaL_optstring( L, 2, "Enter text" ), //message
-                                         luaL_optstring( L, 3, ""  ),               //default string
-                                         luaL_optnumber( L, 4, 30),                 //max size of a text
-                                         return_string_selected, 0);
     }
     else
         return_string_selected(0);
@@ -1598,36 +1587,26 @@ static int luaCB_set_raw_develop( lua_State* L )
 
 static int luaCB_raw_merge_start( lua_State* L )
 {
-  int op = luaL_checknumber(L,1);
-  struct librawop_sym* librawop = module_rawop_load();
-  if (!librawop)
-    return luaL_argerror(L,1,"fail to load raw merge module");
-
-  if ( API_VERSION_MATCH_REQUIREMENT( librawop->version, 1, 0 ) &&
-       (op == RAW_OPERATION_SUM || op == RAW_OPERATION_AVERAGE) ) {
-    return librawop->raw_merge_start(op);   
-  }
-  else {
-    return luaL_argerror(L,1,"invalid raw merge op");
-  }
+    int op = luaL_checknumber(L,1);
+    if ((op == RAW_OPERATION_SUM || op == RAW_OPERATION_AVERAGE))
+    {
+        return librawop->raw_merge_start(op);   
+    }
+    else {
+        return luaL_argerror(L,1,"invalid raw merge op");
+    }
 }
 
 // TODO sanity check file ? Get it from C
 static int luaCB_raw_merge_add_file( lua_State* L )
 {
-  struct librawop_sym* librawop = module_rawop_load();
-  if (!librawop)
-    return luaL_argerror(L,1,"fail to load raw merge module");
-  return librawop->raw_merge_add_file(luaL_checkstring( L, 1 ));
+    return librawop->raw_merge_add_file(luaL_checkstring( L, 1 ));
 }
 
 static int luaCB_raw_merge_end( lua_State* L )
 {
-  struct librawop_sym* librawop = module_rawop_load();
-  if (!librawop)
-    return luaL_argerror(L,1,"fail to load raw merge module");
-  librawop->raw_merge_end();
-  return 0;
+    librawop->raw_merge_end();
+    return 0;
 }
 
 // Enable/disable LCD back light (input argument 1/0)
@@ -2535,8 +2514,6 @@ void register_lua_funcs( lua_State* L )
 
 // =========  MODULE INIT =================
 
-int module_idx=-1;
-
 /***************** BEGIN OF AUXILARY PART *********************
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
@@ -2551,10 +2528,13 @@ static void lua_set_variable(int varnum, int value)
 
 static void lua_set_as_ret(int md_ret)                  { lua_pushnumber(Lt,md_ret); }
 
-struct libscriptapi_sym _liblua =
+/******************** Module Information structure ******************/
+
+libscriptapi_sym _liblua =
 {
-	MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
-								// increase minor if compatible changes made(including extending this struct)
+    {
+         0, 0, 0, 0, 0
+    },
 
     lua_script_start,
     lua_script_run,
@@ -2564,61 +2544,24 @@ struct libscriptapi_sym _liblua =
     lua_run_restore,
 };
 
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)1,
-    &_liblua
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    {2,0},						// Module version
+
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    (int32_t)"Lua",             // Module name
+    (int32_t)"Run Lua Scripts",
+
+    &_liblua.base,
+
+    {1,0},                      // GUI version
+    {0,0},                      // CONF version
+    {0,0},                      // CAM SENSOR version
+    {0,0},                      // CAM INFO version
 };
-
-//---------------------------------------------------------
-// PURPOSE:   Bind module symbols with chdk. 
-//		Required function
-// PARAMETERS: pointer to chdk list of export
-// RETURN VALUE: 1 error, 0 ok
-//---------------------------------------------------------
-int _module_loader( unsigned int* chdk_export_list )
-{
-  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-     return 1;
-
-  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
-	  return 1;
-
-  return 0;
-}
-
-//---------------------------------------------------------
-// PURPOSE: Finalize module operations (close allocs, etc)
-// RETURN VALUE: 0-ok, 1-fail
-//---------------------------------------------------------
-int _module_unloader()
-{
-  return 0;
-}
-
-//---------------------------------------------------------
-// PURPOSE: Default action for simple modules (direct run)
-// NOTE: Please comment this function if no default action and this library module
-//---------------------------------------------------------
-int _module_run(int moduleidx, int argn, int* arguments)
-{
-  module_idx=moduleidx;
-
-  return 0;
-}
-
-/******************** Module Information structure ******************/
-
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
-
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
-									(int32_t)"Lua",// Module name
-									1, 0,						// Module version
-									(int32_t)"Run Lua Scripts"
-								 };
-
 
 /*************** END OF AUXILARY PART *******************/

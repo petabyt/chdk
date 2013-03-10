@@ -6,6 +6,23 @@
 // Note: used in modules and platform independent code. 
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
+//==========================================================
+
+typedef struct
+{
+    unsigned short  major;
+    unsigned short  minor;
+} _version_t;
+
+typedef int             coord;
+typedef unsigned short  color;
+
+#define MAKE_COLOR(bg, fg)  ((color)((((char)(bg))<<8)|((char)(fg))))
+#define FG_COLOR(color)     ((unsigned char)(color & 0xFF))
+#define BG_COLOR(color)     ((unsigned char)(color >> 8))
+
+//==========================================================
+
 #define NULL		((void*)0)
 
 #define SEEK_SET        0

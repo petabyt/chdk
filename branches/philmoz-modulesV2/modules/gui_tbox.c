@@ -7,8 +7,8 @@
 #include "gui_draw.h"
 #include "gui_lang.h"
 #include "gui_mbox.h"
-#include "gui_tbox.h"
 
+#include "gui_tbox.h"
 #include "module_def.h"
 
 //-------------------------------------------------------------------
@@ -17,10 +17,10 @@ void gui_tbox_kbd_process_menu_btn();
 void gui_tbox_draw();
 
 gui_handler GUI_MODE_TBOX =
-    /*GUI_MODE_TBOX*/ { GUI_MODE_MODULE, gui_tbox_draw, gui_tbox_kbd_process, gui_tbox_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_TBOX*/ { GUI_MODE_MODULE, gui_tbox_draw, gui_tbox_kbd_process, gui_tbox_kbd_process_menu_btn, 0 };
 
 static gui_handler *gui_tbox_mode_old; // stored previous gui_mode
-static int module_idx = -1;
+static int running = 0;
 
 static int gui_tbox_redraw;
 static char text_limit_reached;
@@ -112,6 +112,8 @@ static char *map_chars(int line, int group)
 //-------------------------------------------------------
 int textbox_init(int title, int msg, const char* defaultstr, unsigned int maxsize, void (*on_select)(const char* newstr), char *input_buffer)
 {
+    running = 1;
+
     if (input_buffer)
         text = input_buffer;
     else
@@ -536,7 +538,7 @@ int gui_tbox_kbd_process()
                     }
                     tbox_on_select = 0;         // Prevent unloader from calling this function again
                 }
-                module_async_unload(module_idx);
+                running = 0;
                 break;
         }
     }
@@ -545,39 +547,6 @@ int gui_tbox_kbd_process()
 
 
 //==================================================
-
-struct libtextbox_sym _libtextbox = {
-    MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
-							    // increase minor if compatible changes made(including extending this struct)
-    textbox_init,
-};
-
-
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)1,
-
-			&_libtextbox
-		};
-
-
-//---------------------------------------------------------
-// PURPOSE:   Bind module symbols with chdk.
-//        Required function
-// PARAMETERS: pointer to chdk list of export
-// RETURN VALUE: 1 error, 0 ok
-//---------------------------------------------------------
-int _module_loader( void** chdk_export_list )
-{
-  if ( (unsigned int)chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-     return 1;
-
-  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
-      return 1;
-
-  return 0;
-}
-
 
 //---------------------------------------------------------
 // PURPOSE: Finalize module operations (close allocs, etc)
@@ -592,34 +561,47 @@ int _module_unloader()
         tbox_on_select = 0;     // prevent calling twice in the (unlikely) event of the unload called twice
     }
 
-    //sanity clean to prevent accidentaly assign/restore guimode to unloaded module
-    GUI_MODE_TBOX.magicnum = 0;
-
     return 0;
 }
 
-
-//---------------------------------------------------------
-// PURPOSE: Default action for simple modules (direct run)
-// NOTE: Please comment this function if no default action and this library module
-//---------------------------------------------------------
-int _module_run(int moduleidx, int argn, int* arguments)
+int _module_can_unload()
 {
-  module_idx=moduleidx;
-
-  return 0;
+    return running == 0;
 }
 
+int _module_exit_alt()
+{
+    running = 0;
+    return 0;
+}
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {    MODULEINFO_V1_MAGICNUM,
-                                    sizeof(struct ModuleInfo),
+libtextbox_sym _libtextbox =
+{
+    {
+         0, _module_unloader, _module_can_unload, _module_exit_alt, 0
+    },
 
-                                    ANY_CHDK_BRANCH, 0,             // Requirements of CHDK version
-                                    ANY_PLATFORM_ALLOWED,           // Specify platform dependency
-                                    MODULEINFO_FLAG_SYSTEM,         // flag
-                                    (int32_t)"Virtual keyboard",    // Module name
-                                    1, 0,                           // Module version
-                                    0
-                                 };
+    textbox_init,
+};
+
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    {2,0},                          // Module version
+
+    ANY_CHDK_BRANCH, 0,             // Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,           // Specify platform dependency
+
+    (int32_t)"Virtual keyboard",    // Module name
+    0,
+
+    &_libtextbox.base,
+
+    {1,0},                      // GUI version
+    {0,0},                      // CONF version
+    {0,0},                      // CAM SENSOR version
+    {0,0},                      // CAM INFO version
+};

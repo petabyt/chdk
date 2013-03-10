@@ -1233,8 +1233,7 @@ void gui_draw_osd()
     if ((m&MODE_MASK) == MODE_REC && (recreview_hold==0 || conf.show_osd_in_review))
     {
         if (conf.show_grid_lines)
-            if (module_grids_load())
-                libgrids->gui_grid_draw_osd(1);
+            libgrids->gui_grid_draw_osd(1);
 
         if ((((camera_info.state.is_shutter_half_press || camera_info.state.state_kbd_script_run || shooting_get_common_focus_mode()) &&
               (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH)) ||
@@ -1326,9 +1325,8 @@ static void gui_default_draw()
     mode_photo = ((m&MODE_MASK) == MODE_PLAY) || !(mode_video || (m&MODE_SHOOTING_MASK)==MODE_STITCH);
 
     if (conf.zebra_draw)
-        if (module_zebra_load())
-	        if (libzebra->gui_osd_draw_zebra(conf.zebra_draw && camera_info.state.is_shutter_half_press && mode_photo))
-		        return; // if zebra drawn, we're done
+        if (libzebra->gui_osd_draw_zebra(conf.zebra_draw && camera_info.state.is_shutter_half_press && mode_photo))
+		    return; // if zebra drawn, we're done
 
 #if !CAM_SHOW_OSD_IN_SHOOT_MENU
     if (!(conf.show_osd && (canon_menu_active==(int)&canon_menu_active-4) && (canon_shoot_menu_active==0))) return;
@@ -1354,5 +1352,5 @@ static void gui_default_draw()
 
 //-------------------------------------------------------------------
 // GUI/KBD handlers - Canon modes (not in CHDK <ALT> mode, menu etc)
-gui_handler defaultGuiHandler = { GUI_MODE_NONE, gui_default_draw, gui_std_kbd_process, 0, 0, GUI_MODE_MAGICNUM };
+gui_handler defaultGuiHandler = { GUI_MODE_NONE, gui_default_draw, gui_std_kbd_process, 0, 0 };
 //-------------------------------------------------------------------

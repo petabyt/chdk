@@ -5,47 +5,38 @@
 
 #include "module_def.h"
 
-#define MODULES_PATH "A/CHDK/MODULES"
-
-// Struct for symbol hash table entries
-typedef struct
-{
-    uint32_t    hash;
-    const void  *address;
-} sym_hash;
-
 // Base typedefs
 //-------------------
 
-typedef int (*_module_bind_t)( void** chdk_export_list );
-
-enum ModuleUnloadMode
+// Handler structure for module loading / unloading
+// The 'default_lib' value points to the 'unloaded' interface functions
+// These can then auto-load the module when called and redirect to the loaded
+// interface functions.
+typedef struct _module_handler
 {
-	DO_NOT_UNLOAD,	// load, run and then leave
-    UNLOAD_IF_ERR,	// load, run. if module was not loaded yet and have no run handler, unload it after
-    UNLOAD_ALWAYS	// load, run and then unload
-};
+    base_interface_t**  lib;
+    base_interface_t*   default_lib;
+    _version_t          version;        // Should match module_version in ModuleInfo
+                                        // For simple modules like games set to {0,0} to skip version check
+    char*               name;
+} module_handler_t;
 
 // Common module functions
 //-------------------------
 
-int module_check_is_exist(char* name);
-int module_find(char * name );
-int module_load(char* name, _module_bind_t callback);
-int module_run(char* name, _module_bind_t callback, int argn, void* args, enum ModuleUnloadMode unload_after);
+int module_load(module_handler_t* hMod);
 void module_unload(char* name);
-void module_unload_idx(int module_idx);
-const void* module_find_symbol_address(uint32_t importid);
 
-// Flag for modules which couldn't be safely autounloaded (lua, basic,..)
-#define MODULE_FLAG_DISABLE_AUTOUNLOAD 1
-void module_set_flags(unsigned int idx, char value);
+int module_run(char* name);
 
 void* module_get_adr(unsigned int idx);
 
 // Asynchronous unloading
 //-------------------------
-void module_async_unload_allrunned(int enforce);
+void module_exit_alt();
 void module_tick_unloader();
+
+// Logging
+void module_log_clear();
 
 #endif /* __MODULE_LOAD_H__ */

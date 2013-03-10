@@ -3,9 +3,11 @@
 #include "keyboard.h"
 #include "gui.h"
 #include "gui_draw.h"
+#include "gui_lang.h"
 #include "conf.h"
 
 #include "module_def.h"
+#include "simple_module.h"
 
 //-------------------------------------------------------------------
 void gui_debug_draw();
@@ -16,9 +18,10 @@ void gui_module_menu_kbd_process();
 int gui_debug_kbd_process();
 
 gui_handler GUI_MODE_DEBUG = 
-    /*GUI_MODE_DEBUG*/  { GUI_MODE_MODULE, gui_debug_draw, gui_debug_kbd_process, gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+/*GUI_MODE_DEBUG*/  { GUI_MODE_MODULE, gui_debug_draw, gui_debug_kbd_process, gui_module_menu_kbd_process, 0 };
 
 //-------------------------------------------------------------------
+static int running = 0;
 static void *addr;
 static char debug_to_draw;
 static char debug_cont_update;
@@ -27,7 +30,9 @@ static char *bad_address = "Invalid Address               ";
 static unsigned int step;
 
 //-------------------------------------------------------------------
-void gui_debug_init(void *st_addr) {
+void gui_debug_init(void *st_addr)
+{
+    running = 1;
     addr = st_addr;
     debug_to_draw = 1;
     debug_cont_update = 1;
@@ -165,96 +170,65 @@ int gui_debug_kbd_process() {
 
 //-------------------------------------------------------------------
 
-extern int module_idx;
-void gui_module_menu_kbd_process() {
-	gui_default_kbd_process_menu_btn();
-  	module_async_unload(module_idx);
+void gui_module_menu_kbd_process()
+{
+    running = 0;
+    gui_default_kbd_process_menu_btn();
 }
 
 
 // =========  MODULE INIT =================
-int module_idx=-1;
 
 /***************** BEGIN OF AUXILARY PART *********************
-  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
- **************************************************************/
+ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+**************************************************************/
 
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)0
-		};
-
-
-//---------------------------------------------------------
-// PURPOSE:   Bind module symbols with chdk. 
-//		Required function
-// PARAMETERS: pointer to chdk list of export
-// RETURN VALUE: 1 error, 0 ok
-//---------------------------------------------------------
-int _module_loader( unsigned int* chdk_export_list )
+int _run()
 {
-  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-     return 1;
+    void* adr =(char*)(conf.mem_view_addr_init);
+    gui_debug_init(adr);
 
-  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
-	  return 1;
-  if ( !API_VERSION_MATCH_REQUIREMENT( camera_info.api_version, 1, 0 ) )
-	 return 1;
-  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 2, 0 ) )
-	 return 1;
-
-  return 0;
+    return 0;
 }
 
-
-
-//---------------------------------------------------------
-// PURPOSE: Finalize module operations (close allocs, etc)
-// RETURN VALUE: 0-ok, 1-fail
-//---------------------------------------------------------
-int _module_unloader()
+int _module_can_unload()
 {
-  return 0;
+    return running == 0;
 }
 
-
-//---------------------------------------------------------
-// PURPOSE: Default action for simple modules (direct run)
-// NOTE: Please comment this function if no default action and this library module
-//---------------------------------------------------------
-int _module_run(int moduleidx, int argn, int* arguments)
+int _module_exit_alt()
 {
-  module_idx=moduleidx;
-
-  void* adr;
-
-  if ( argn== 0 )
-    adr =(char*)(conf.mem_view_addr_init);
-  else if ( argn ==1)
-    adr = (char*)arguments[0]; 
-  else {
-	module_async_unload(moduleidx);
-    return 1;
-  }
-
-  gui_debug_init(adr);
-
-  return 0;
+    running = 0;
+    return 0;
 }
-
 
 /******************** Module Information structure ******************/
-#include "gui_lang.h"
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+libsimple_sym _librun =
+{
+    {
+         0, 0, _module_can_unload, _module_exit_alt, _run
+    }
+};
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
-									-LANG_MENU_DEBUG_MEMORY_BROWSER,	// Module name
-									1, 0,						// Module version
-									(int32_t)"Simple memory content browser"
-								 };
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    {1,0},						// Module version
+
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    -LANG_MENU_DEBUG_MEMORY_BROWSER,	// Module name
+    (int32_t)"Simple memory content browser",
+
+    &_librun.base,
+
+    {1,0},                      // GUI version
+    {2,0},                      // CONF version
+    {0,0},                      // CAM SENSOR version
+    {1,0},                      // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/

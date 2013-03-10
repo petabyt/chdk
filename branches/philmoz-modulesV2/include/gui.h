@@ -6,13 +6,6 @@
 // Note: used in modules and platform independent code. 
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
-typedef int             coord;
-typedef unsigned short  color;
-
-#define MAKE_COLOR(bg, fg)  ((color)((((char)(bg))<<8)|((char)(fg))))
-#define FG_COLOR(color)     ((unsigned char)(color & 0xFF))
-#define BG_COLOR(color)     ((unsigned char)(color >> 8))
-
 // Module ID's for specific modules that we need to be able to detect
 // use GUI_MODE_MODULE for generic module modes (e.g.games)
 enum Gui_Mode_ {
@@ -68,9 +61,6 @@ typedef struct
     void (*kbd_process_menu_btn)(void);
 
 	int flags;
-
-	// Safety check for modules
-	unsigned int magicnum;
 } gui_handler;
 
 extern gui_handler altGuiHandler;
@@ -93,10 +83,11 @@ extern const char* gui_hhmss_enum(int change, int arg);
 
 //------------------------------------------------------------------- 
 
-struct gui_common_api_ver {
-		unsigned int common_api;		// common gui version: gui_mode handling, mbox, this structure
-		unsigned int menu_api;		// cmenu structure version
-	};
+struct gui_common_api_ver 
+{
+    _version_t common_api;		// common gui version: gui_mode handling, mbox, this structure
+	_version_t menu_api;		// cmenu structure version
+};
 
 // Defined in gui.c
 extern struct gui_common_api_ver gui_version;

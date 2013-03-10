@@ -1,6 +1,8 @@
 #ifndef TEXTBOX_H
 #define TEXTBOX_H
 
+#include "flt.h"
+
 #define MAX_TEXT_SIZE   100
 
 // Note: if using the text box module pass in a function to the 'on_select' parameter
@@ -16,13 +18,13 @@
 // In this case the module owns the buffer and the contents must be copied to local
 // storage in the 'on_select' code.
 
-struct libtextbox_sym {
-	int version;
+typedef struct
+{
+    base_interface_t    base;
+
     int (*textbox_init)(int title, int msg, const char* defaultstr, unsigned int maxsize, void (*on_select)(const char* newstr), char *input_buffer);
-};
+} libtextbox_sym;
 
-extern struct libtextbox_sym* libtextbox;
-
-extern struct libtextbox_sym* module_tbox_load();	// 0fail, addr-ok
+extern libtextbox_sym* libtextbox;
 
 #endif

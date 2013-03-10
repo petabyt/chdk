@@ -6,7 +6,6 @@ typedef short int16_t;
 typedef unsigned int uint32_t;
 typedef int int32_t;
 
-
 //================= CFLT format header =====================
 
 /*
@@ -20,38 +19,10 @@ typedef int int32_t;
 		* this is just array of offsets in flat
     - import_list  [start from flt_hdr.import_start]
 		* this is array of import_record_t
-    - symbol_list  [start from flt_hdr.symbols_start. till file_size]
-        * plain list of zero-terminated strings
-		* symbol idx are same as in used exportlist.txt
-	    * unused by module symbols are present in list but empty
-        * 2 and more continuous empty names could be squeezed to (0x80|num_of_empty_names)
-		* This table is not used in module loader now. 
-		  No impact to loaded size of module. This extension just for debug purpose and possible future usage
 */
 
-
-#define	FLAT_VERSION	    0x00000007L
+#define	FLAT_VERSION	    0x00000009L
 #define FLAT_MAGIC_NUMBER   "CFLAT"
-
-
-// Structures of relocation and importing
-//---------------------------------------
-
-// Rules how relocations works:
-//  Relocation:
-//  	*(flat_base+reloc[i]) += flat_base;
-//  Import:
-//    symidx = import[i].importidx
-//	  *(flat_base+import[i].offs) += chdk_export_table[sym_idx]
-
-
-typedef unsigned int reloc_record_t;
-typedef struct {
-		uint32_t offs;			// offset of changed record from begin of flat
-		uint32_t importidx;     // index of symbol in chdk_export_table
-	} import_record_t;
-
-
 
 //================= FLAT Header structure ==============
 /*
@@ -59,44 +30,43 @@ typedef struct {
  * development,  all fields are in network byte order.
  */
 
+// Module file header
+// This is located at the start of the module file and is used to load the module
+// into memory and perform any necessary relocations.
+// Once loaded the _module_info pointer handles everything else.
 struct flat_hdr {
     char magic[4];          // "CFLA"
-    union {
-    	uint32_t rev;          			/* version (as above) */
-        uint32_t runtime_bind_callback; // while loaded: callback to chdk binder function 
+  	uint32_t rev;          	// version (as above)
+    uint32_t entry;         // Offset of start .text segment
+    uint32_t data_start;    // Offset of data segment from beginning of file
+    uint32_t bss_start;     // Offset of bss segment from beginning of file
+                            // (It is assumed that data_end through bss_end forms the bss segment.)
+
+    // Relocation info - replaced with module name after module has been relocated
+    union
+    {
+        char     modulename[12];        // while loaded: module identification (replaces fields below)
+        struct
+        {
+            uint32_t reloc_start;		// Offset of relocation records from beginning of file
+            uint32_t import_start;		// Offset of import section
+        	uint32_t file_size;         // size of file
+        };
     };
-    uint32_t entry;        // Offset of start .text segment
-    uint32_t data_start;   // Offset of data segment from beginning of file
-    uint32_t bss_start;    // Offset of bss segment from beginning of file
 
-    /* (It is assumed that data_end through bss_end forms the bss segment.) */
-
-	// v5
-	uint32_t _module_info;		// Offset ModuleInfo from beginning file
-
-
-    uint32_t reloc_start;		// Offset of relocation records from beginning of file
-    uint32_t import_start;		// Offset of import section
-	uint32_t symbols_start;     // offset of symbol table list
-
-    int32_t _module_loader;       // CFLAT: offsets specific symbols from beginning file 
-    int32_t _module_unloader;       
-    int32_t _module_run;       
-    int32_t _module_exportlist;
-    union {       
-        char     modulename[12];   // while loaded: module identification
-        struct {
-				uint32_t file_size;	   // size of file (and this is last byte of symbol table+1)
-				uint32_t filler1;  
-				uint32_t filler2;  
-			   };
+    // Offset / Pointer to ModuleInfo structure
+    union
+    {
+        uint32_t            _module_info_offset;    // Offset ModuleInfo from beginning of file
+#if __SIZEOF_POINTER__ == 8 // For elfflt.c on 64 bit Linux
+	    uint32_t            _module_info;           // Ptr to ModuleInfo after relocation
+#else
+	    struct ModuleInfo*  _module_info;           // Ptr to ModuleInfo after relocation
+#endif
     };
 };
 
-
-
 //================= Module information structure =====================
-
 
 #define MODULEINFO_V1_MAGICNUM  0x023703e5
 
@@ -108,23 +78,51 @@ struct flat_hdr {
 
 #define ANY_PLATFORM_ALLOWED	0
 
-// This is system module (hide in Module list)
-#define MODULEINFO_FLAG_SYSTEM	1
+// Base module interface - once loaded into memory and any relocations done these
+// functions provide the minimum interface to run the module code.
+// Extend this interface for modules that need additional functions (e.g. libdng_sym in dng.h)
+typedef struct
+{
+    int     (*loader)();        // loader function. Optional
+                                // Should only perform initialisation that can be done module is first loaded.
+    int     (*unloader)();      // unloader function. Optional
+                                // Does any necessary clean up just prior to module being removed
+    int     (*can_unload)();    // ask module if it is safe to unload. Optional
+                                // Called each keyboard task tick to see if it is safe to unload the module
+    int     (*exit_alt)();      // alert module that CHDK is leaving <ALT> mode. Optional
+                                // If the module should be unloaded when <ALT> mode exits then this function
+                                // should tell the module to return 'true' on the next call to can_unload
+                                // This function should not do any cleanup or shutdown of the module
+    int     (*run)();           // run module (for simple modules like games). Optional
+                                // If not supplied the an extended interface is required to call module code
+} base_interface_t;
 
+// Module information structure
+// Contains everything used to communicate with and run code in the module
 struct ModuleInfo 
 {
-	uint32_t magicnum;
-	uint32_t sizeof_struct;
-	uint16_t chdk_required_branch;
-	uint32_t chdk_required_ver;
-	uint32_t chdk_required_platfid;
-	uint32_t flags;
+	uint32_t            magicnum;               // MODULEINFO_V1_MAGICNUM - sanity check when loading
+	uint32_t            sizeof_struct;          // sizeof this struct - sanity check when loading
+	_version_t          module_version;         // version of module - compared to version in module_handler_t
+	uint32_t            chdk_required_branch;   // CHDK version checks
+	uint32_t            chdk_required_ver;
+	uint32_t            chdk_required_platfid;
 
-	int32_t moduleName;			// pointer to string with module name or -LANG_ID
-	uint16_t major_ver, minor_ver;
-	int32_t description;		// pointer to string with module description
+	int32_t             moduleName;			    // pointer to string with module name or -LANG_ID
+	int32_t             description;		    // pointer to string with module description (not currently used)
+
+#if __SIZEOF_POINTER__ == 8 // For elfflt.c on 64 bit Linux
+    uint32_t            lib;
+#else
+    base_interface_t*   lib;                    // Pointer to interface library
+#endif
+
+    // Version checks (set to {0,0} to skip check)
+    _version_t          gui_ver;                // GUI version
+    _version_t          conf_ver;               // CONF version
+    _version_t          cam_sensor_ver;         // CAM SENSOR version
+    _version_t          cam_info_ver;           // CAM INFO version
 };
-
 
 #endif /* __FLT_H__ */
 

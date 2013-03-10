@@ -1,14 +1,13 @@
+#include "camera_info.h"
 #include "stdlib.h"
 #include "keyboard.h"
 #include "lang.h"
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_lang.h"
+
 #include "gui_mpopup.h"
-
 #include "module_def.h"
-
-extern int module_idx;
 
 /*
 	History:	1.1 - make possible call next mpopup in callback [multilevel mpopups]
@@ -20,12 +19,13 @@ void gui_mpopup_kbd_process_menu_btn();
 void gui_mpopup_draw();
 
 gui_handler GUI_MODE_MPOPUP_MODULE = 
-    /*GUI_MODE_MPOPUP*/ { GUI_MODE_MPOPUP, gui_mpopup_draw, gui_mpopup_kbd_process, gui_mpopup_kbd_process_menu_btn, GUI_MODE_FLAG_NORESTORE_ON_SWITCH, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_MPOPUP*/ { GUI_MODE_MPOPUP, gui_mpopup_draw, gui_mpopup_kbd_process, gui_mpopup_kbd_process_menu_btn, GUI_MODE_FLAG_NORESTORE_ON_SWITCH };
 
 // Simple popup menu. No title, no separators, only processing items
 
 //-------------------------------------------------------------------
 static gui_handler              *gui_mpopup_mode_old;
+static int                      running = 0;
 static char                     mpopup_to_draw;
 
 #define MAX_ACTIONS             10
@@ -45,6 +45,8 @@ static mpopup_on_select_t mpopup_on_select;
 void gui_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode) 
 {
     int i;
+
+    running++;
 
     mpopup_actions_num = 0;
     actions = popup_actions;
@@ -121,18 +123,17 @@ void exit_mpopup(int action)
     gui_set_mode(gui_mpopup_mode_old);
 
 	mpopup_on_select_t on_select = mpopup_on_select;	// this could be reinited in callback
-
 	mpopup_on_select=0;
     if (on_select) 
         on_select(action);
+
+    running--;
 }
 
 //-------------------------------------------------------------------
 void gui_mpopup_kbd_process_menu_btn()
 {
 	exit_mpopup(MPOPUP_CANCEL);		
-	if ( mpopup_on_select==0 )		// exit if not re-inited
-		module_async_unload(module_idx);
 }
 
 int gui_mpopup_kbd_process()
@@ -155,8 +156,6 @@ int gui_mpopup_kbd_process()
         break;
     case KEY_SET:
 		exit_mpopup(actions[mpopup_actions[mpopup_actions_active]].flag);		
-		if ( mpopup_on_select==0 )		// exit if not re-inited
-		    module_async_unload(module_idx);
         break;
     }
     return 0;
@@ -166,36 +165,9 @@ int gui_mpopup_kbd_process()
 
 // =========  MODULE INIT =================
 
-int module_idx=-1;
-
 /***************** BEGIN OF AUXILARY PART *********************
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
-
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)0
-		};
-
-
-//---------------------------------------------------------
-// PURPOSE:   Bind module symbols with chdk. 
-//		Required function
-// PARAMETERS: pointer to chdk list of export
-// RETURN VALUE: 1 error, 0 ok
-//---------------------------------------------------------
-int _module_loader( unsigned int* chdk_export_list )
-{
-  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-     return 1;
-
-  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
-	  return 1;
-
-  return 0;
-}
-
-
 
 //---------------------------------------------------------
 // PURPOSE: Finalize module operations (close allocs, etc)
@@ -206,49 +178,50 @@ int _module_unloader()
     if (mpopup_on_select) 
         mpopup_on_select(MPOPUP_CANCEL);
 
-	//sanity clean to prevent accidentaly assign/restore guimode to unloaded module 
-	GUI_MODE_MPOPUP_MODULE.magicnum = 0;
-
     return 0;
 }
 
-
-//---------------------------------------------------------
-// PURPOSE: Default action for simple modules (direct run)
-// NOTE: Please comment this function if no default action and this library module
-//---------------------------------------------------------
-int _module_run(int moduleidx, int argn, int* arguments)
+int _module_can_unload()
 {
-  module_idx=moduleidx;
-
-  if ( argn!=4) {
-	module_async_unload(moduleidx);
-    return 1;
-  }
-
-  // Currently only old (0) mode is supported
-  // This is for load error if newer version is required
-  if (arguments[3]!=0)
-		return 1;
-
-  gui_mpopup_init( (struct mpopup_item*)arguments[0], (const unsigned int)arguments[1], (void*) arguments[2], arguments[3]);
-  
-
-  return 0;
+    return running == 0;
 }
 
+int _module_exit_alt()
+{
+	exit_mpopup(MPOPUP_CANCEL);		
+    running = 0;
+    return 0;
+}
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+libmpopup_sym _libmpopup =
+{
+    {
+         0, _module_unloader, _module_can_unload, _module_exit_alt, 0
+    },
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									MODULEINFO_FLAG_SYSTEM,		// flag
-									(int32_t)"Popup menu module",		// Module name
-									1, 2,						// Module version
-									0
-								 };
+    gui_mpopup_init
+};
+
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    {2,0},						    // Module version
+
+    ANY_CHDK_BRANCH, 0,			    // Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		    // Specify platform dependency
+
+    (int32_t)"Popup menu module",   // Module name
+    0,
+
+    &_libmpopup.base,
+
+    {1,0},                      // GUI version
+    {0,0},                      // CONF version
+    {0,0},                      // CAM SENSOR version
+    {0,0},                      // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/

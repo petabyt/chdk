@@ -3,8 +3,7 @@
 #include "histogram.h"
 #include "font.h"
 #include "raw.h"
-#include "modules.h"
-#include "module_def.h"
+#include "gui.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
 #include "gui_lang.h"
@@ -12,12 +11,15 @@
 #include "gui_user_menu.h"
 #include "core.h"
 
+#include "modules.h"
+#include "module_def.h"
+
 //-------------------------------------------------------------------
 #define CONF_FILE  "A/CHDK/CCHDK3.CFG"
 #define CONF_MAGICK_VALUE   (0x33204741)
 
 //-------------------------------------------------------------------
-Conf conf = { MAKE_API_VERSION(2,2) };
+Conf conf = {{2,2}};
 
 // reyalp: putting these in conf, since the conf values are lookups for them
 // prefixes and extentions available for raw images (index with conf.raw_prefix etc)
@@ -424,6 +426,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(293, conf.extra_button,               CONF_DEF_VALUE,     i:0, conf_set_extra_button),
 #endif
 
+    CONF_INFO(294, conf.module_logging,             CONF_DEF_VALUE,     i:0, NULL),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
@@ -486,22 +489,19 @@ static void conf_set_extra_button() {
 #endif
 }
 
-static void conf_change_video_bitrate() {
+static void conf_change_video_bitrate()
+{
     shooting_video_bitrate_change(conf.video_bitrate);
- }
+}
 
-void conf_change_dng(void){
+void conf_change_dng(void)
+{
 #if DNG_SUPPORT
- if (conf.save_raw && conf.dng_raw && conf.dng_version) {
-	if ( !module_dng_load(LIBDNG_OWNED_BY_RAW) )
-        return;
-    if (!libdng->badpixel_list_loaded_b()) libdng->load_bad_pixels_list_b("A/CHDK/badpixel.bin");
-    if (!libdng->badpixel_list_loaded_b()) conf.dng_version=0;
- }
- else if ( libdng && libdng->load_bad_pixels_list_b ) {
-    libdng->load_bad_pixels_list_b(0);        //unload badpixel.bin
- 	module_dng_unload(LIBDNG_OWNED_BY_RAW);
- }
+    if (conf.save_raw && conf.dng_raw && conf.dng_version)
+    {
+        if (!libdng->badpixel_list_loaded_b()) libdng->load_bad_pixels_list_b("A/CHDK/badpixel.bin");
+        if (!libdng->badpixel_list_loaded_b()) conf.dng_version=0;
+    }
 #endif
 }
 

@@ -1,6 +1,5 @@
 #include "camera_info.h"
 #include "stdlib.h"
-#include "raw_merge.h"
 #include "debug_led.h"
 #include "sd_card.h"
 #include "gui_mbox.h"
@@ -9,9 +8,13 @@
 #include "lang.h"
 #include "conf.h"
 
+#include "raw_merge.h"
+#include "module_def.h"
+
 #define TEMP_FILE_NAME   "A/raw16.tmp"
 #define TEMP_FILE_NAME_1 "A/raw16_1.tmp"
 
+static int running = 0;
 static int raw_action;
 static int raw_count;
 static unsigned short *row;
@@ -62,6 +65,8 @@ int raw_subtract(const char *from, const char *sub, const char *dest) {
 
     if (stat((char *)sub,&st) != 0 || st.st_size!=camera_sensor.raw_size) 
         return 0;
+
+    running = 1;
 
      if( (baccum=malloc(camera_sensor.raw_rowlen)) &&
         (bsub=malloc(camera_sensor.raw_rowlen)) &&
@@ -183,6 +188,7 @@ int raw_subtract(const char *from, const char *sub, const char *dest) {
         t.actime = t.modtime = time(NULL);
         utime((char *)dest, &t);
     }
+    running = 0;
     return status;
 }
 
@@ -205,6 +211,7 @@ int raw_merge_start(int action){
     free(row);
     return 0;
   }
+	running = 1;
   return 1;
 }
 
@@ -365,84 +372,62 @@ void raw_merge_end(void) {
   finished();
   free(rawrow);
   free(row);
+
+    running = 0;
 }
 
 
 // =========  MODULE INIT =================
-#include "module_def.h"
-int module_idx=-1;
 
 /***************** BEGIN OF AUXILARY PART *********************
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-struct librawop_sym _librawop = {
-			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
-										// increase minor if compatible changes made(including extending this struct)
-			raw_merge_start,
-			raw_merge_add_file,
-			raw_merge_end,
-			raw_subtract
-		};
-
-
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)1,
-		
-			&_librawop
-		};
-
-
-//---------------------------------------------------------
-// PURPOSE:   Bind module symbols with chdk. 
-//		Required function
-// PARAMETERS: pointer to chdk list of export
-// RETURN VALUE: 1 error, 0 ok
-//---------------------------------------------------------
-int _module_loader( unsigned int* chdk_export_list )
+int _module_can_unload()
 {
-  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-     return 1;
-
-  if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
-	 return 1;
-
-  return 0;
+    return running == 0;
 }
-
-
-
-//---------------------------------------------------------
-// PURPOSE: Finalize module operations (close allocs, etc)
-// RETURN VALUE: 0-ok, 1-fail
-//---------------------------------------------------------
-int _module_unloader()
-{
-  return 0;
-}
-
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+librawop_sym _librawop = 
+{
+    {
+         0, 0, _module_can_unload, 0, 0
+    },
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									MODULEINFO_FLAG_SYSTEM,		// flag
-#if CAM_MODULE_SENSOR_BITS_PER_PIXEL==10
-									(int32_t)"RAW operations-10bpp(dll)",// Module name
-#else
-									(int32_t)"RAW operations-12bpp(dll)",// Module name
-#endif
-									1, 0,						// Module version
-#if CAM_MODULE_SENSOR_BITS_PER_PIXEL==10
-									(int32_t)"Implementation of RAW operations\n(Avg, Sum, Sub) for 10bit sensor"
-#else
-									(int32_t)"Implementation of RAW operations\n(Avg, Sum, Sub) for 12bit sensor"
-#endif
-								 };
+    raw_merge_start,
+    raw_merge_add_file,
+    raw_merge_end,
+    raw_subtract
+};
 
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    {2,0},						// Module version
+
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+#if CAM_MODULE_SENSOR_BITS_PER_PIXEL==10
+    (int32_t)"RAW operations-10bpp(dll)",// Module name
+#else
+    (int32_t)"RAW operations-12bpp(dll)",// Module name
+#endif
+#if CAM_MODULE_SENSOR_BITS_PER_PIXEL==10
+    (int32_t)"Implementation of RAW operations\n(Avg, Sum, Sub) for 10bit sensor",
+#else
+    (int32_t)"Implementation of RAW operations\n(Avg, Sum, Sub) for 12bit sensor",
+#endif
+
+    &_librawop.base,
+
+    {0,0},                      // GUI version
+    {0,0},                      // CONF version
+    {1,0},                      // CAM SENSOR version
+    {0,0},                      // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/

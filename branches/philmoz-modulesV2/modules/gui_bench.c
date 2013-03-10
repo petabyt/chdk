@@ -12,12 +12,11 @@
 #include "module_def.h"
 
 void gui_bench_draw();
-void gui_bench_menu_kbd_process();
+void gui_module_menu_kbd_process();
 int gui_bench_kbd_process();
 
 gui_handler GUI_MODE_BENCH = 
-    /*GUI_MODE_BENCH*/  { GUI_MODE_MODULE, gui_bench_draw, gui_bench_kbd_process, gui_bench_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
-
+    /*GUI_MODE_BENCH*/  { GUI_MODE_MODULE, gui_bench_draw, gui_bench_kbd_process, gui_module_menu_kbd_process, 0 };
 
 //-------------------------------------------------------------------
 static struct {
@@ -261,7 +260,8 @@ static void gui_bench_run() {
 }
 
 //-------------------------------------------------------------------
-int gui_bench_kbd_process() {
+int gui_bench_kbd_process()
+{
     switch (kbd_get_autoclicked_key()) {
     case KEY_SET:
         gui_bench_init();
@@ -273,28 +273,33 @@ int gui_bench_kbd_process() {
 
 //-------------------------------------------------------------------
 
-int basic_module_init() {
+int basic_module_init()
+{
 	gui_bench_init();
     gui_set_mode(&GUI_MODE_BENCH);
 	return 1;
 }
 
-extern int module_idx;
-
-void gui_bench_menu_kbd_process() {
-	gui_default_kbd_process_menu_btn();
-  	module_async_unload(module_idx);
-}
+#include "simple_module.c"
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    {1,0},						// Module version
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
-									-LANG_MENU_DEBUG_BENCHMARK,	// Module name
-									1, 0,						// Module version
-									(int32_t) "Test camera low level perfomance"
-								 };
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    -LANG_MENU_DEBUG_BENCHMARK,	// Module name
+    (int32_t) "Test camera low level perfomance",
+
+    &_librun.base,
+
+    {1,0},                      // GUI version
+    {0,0},                      // CONF version
+    {0,0},                      // CAM SENSOR version
+    {0,0},                      // CAM INFO version
+};

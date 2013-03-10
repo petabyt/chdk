@@ -4,13 +4,14 @@
 #include "font.h"
 #include "lang.h"
 #include "fileutil.h"
+#include "gui.h"
 #include "gui_lang.h"
 #include "gui_draw.h"
 #include "gui_menu.h"
 #include "gui_user_menu.h"
 #include "gui_mbox.h"
-#include "console.h"
 #include "gui_osd.h"
+#include "console.h"
 #include "raw.h"
 #include "modules.h"
 #include "levent.h"
@@ -24,9 +25,10 @@
 
 #define SPLASH_TIME               20
 
-struct gui_common_api_ver gui_version = {
-		MAKE_API_VERSION(1,0),			// ver of common api: gui_mode, mbox, this structure
-		MAKE_API_VERSION(1,2)			// ver of menu structure
+struct gui_common_api_ver gui_version =
+{
+    {1,0},			// ver of common api: gui_mode, mbox, this structure
+    {1,2}			// ver of menu structure
 };
 
 //-------------------------------------------------------------------
@@ -60,9 +62,9 @@ extern  CMenu   user_submenu;
 //-------------------------------------------------------------------
 
 // Run a module directly from a menu
-void gui_menu_run_fltmodule(int arg)
+static void gui_menu_run_fltmodule(int arg)
 {
-    module_run((char*)arg, 0, 0,0, UNLOAD_IF_ERR);
+    module_run((char*)arg);
 }
 
 //-------------------------------------------------------------------
@@ -254,9 +256,8 @@ static void save_romlog(int arg)
 {
     extern unsigned _ExecuteEventProcedure(const char *name,...);
 
-    struct stat st;
-    if (stat("A/ROMLOG.LOG",&st)    == 0) remove("A/ROMLOG.LOG");
-    if (stat("A/RomLogErr.txt",&st) == 0) remove("A/RomLogErr.txt");
+    if (stat("A/ROMLOG.LOG",0)    == 0) remove("A/ROMLOG.LOG");
+    if (stat("A/RomLogErr.txt",0) == 0) remove("A/RomLogErr.txt");
 
     unsigned args[3];
     args[0] = (unsigned)"SystemEventInit";
@@ -492,25 +493,23 @@ static CMenu gps_submenu = {0x2a,LANG_MENU_GPS, NULL, gps_submenu_items };
 
 static void gui_draw_read_selected(const char *fn)
 {
-    if (fn) {
-		unsigned int argv[] ={ (unsigned int)fn };
-		module_run("txtread.flt", 0, sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR);
+    if (fn)
+    {
+		libtxtread->read_file(fn);
     }
 }
 
 static void gui_draw_read(int arg)
 {
-    module_fselect_init_w_mode(LANG_STR_SELECT_TEXT_FILE, conf.reader_file, "A/CHDK/BOOKS", gui_draw_read_selected, 1);
+    libfselect->file_select(LANG_STR_SELECT_TEXT_FILE, conf.reader_file, "A/CHDK/BOOKS", gui_draw_read_selected);
 }
 
 static void gui_draw_read_last(int arg)
 {
-    struct stat st;
-    if (stat(conf.reader_file,&st) == 0) {
+    if (stat(conf.reader_file,0) == 0)
         gui_draw_read_selected(conf.reader_file);
-    } else {
+    else
         gui_draw_read(arg);
-    }
 }
 
 static void gui_draw_rbf_selected(const char *fn)
@@ -522,7 +521,7 @@ static void gui_draw_rbf_selected(const char *fn)
 
 static void gui_draw_load_rbf(int arg)
 {
-    module_fselect_init(LANG_STR_SELECT_FONT_FILE, conf.reader_rbf_file, "A/CHDK/FONTS", gui_draw_rbf_selected);
+    libfselect->file_select(LANG_STR_SELECT_FONT_FILE, conf.reader_rbf_file, "A/CHDK/FONTS", gui_draw_rbf_selected);
 }
 
 static const char* gui_reader_codepage_cps[] = { "Win1251", "DOS"};
@@ -626,9 +625,32 @@ static CMenu sdcard_submenu = {0x33,LANG_SD_CARD, NULL, sdcard_submenu_items };
 
 //-------------------------------------------------------------------
 
+static void gui_delete_module_log_callback(unsigned int btn)
+{
+    if (btn == MBOX_BTN_YES)
+        module_log_clear();
+}
+
+static void gui_delete_module_log(int arg)
+{
+    gui_mbox_init(LANG_WARNING, LANG_MENU_DELETE_MODULE_LOG, MBOX_BTN_YES_NO|MBOX_DEF_BTN2|MBOX_TEXT_CENTER, gui_delete_module_log_callback);
+}
+
+static CMenuItem module_submenu_items[] = {
+    MENU_ITEM   (0x80,LANG_MENU_MODULE_INSPECTOR,           MENUITEM_PROC,                  gui_menu_run_fltmodule, "modinsp.flt" ),
+    MENU_ITEM   (0x5c,LANG_MENU_MODULE_LOGGING,             MENUITEM_BOOL,                  &conf.module_logging, 0 ),
+    MENU_ITEM   (0x2b,LANG_MENU_DELETE_MODULE_LOG,          MENUITEM_PROC,                  gui_delete_module_log, 0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0, 0 ),
+    {0},
+};
+
+static CMenu module_submenu = {0x28,LANG_MENU_MODULES, NULL, module_submenu_items };
+
+//-------------------------------------------------------------------
+
 static void gui_draw_fselect(int arg)
 {
-    module_fselect_init(LANG_STR_FILE_BROWSER, "A", "A", NULL);
+    libfselect->file_select(LANG_STR_FILE_BROWSER, "A", "A", NULL);
 }
 
 static void gui_show_build_info(int arg)
@@ -669,19 +691,19 @@ static void gui_lua_native_call_warning(int arg)
 
 static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x35,LANG_MENU_MISC_FILE_BROWSER,          MENUITEM_PROC,                  gui_draw_fselect,                   0 ),
-    MENU_ITEM   (0x80,(int)"Module Inspector",              MENUITEM_PROC,                  gui_menu_run_fltmodule, "modinsp.flt" ),
+    MENU_ITEM   (0x28,LANG_MENU_MODULES,                    MENUITEM_SUBMENU,               &module_submenu,                    0 ),
     MENU_ITEM   (0x36,LANG_MENU_MISC_CALENDAR,              MENUITEM_PROC,                  gui_menu_run_fltmodule, "calend.flt" ),
     MENU_ITEM   (0x37,LANG_MENU_MISC_TEXT_READER,           MENUITEM_SUBMENU,               &reader_submenu,                    0 ),
 #if defined (OPT_GAMES)
     MENU_ITEM   (0x38,LANG_MENU_MISC_GAMES,                 MENUITEM_SUBMENU,               &games_submenu,                     0 ),
 #endif
 #if CAM_SWIVEL_SCREEN
-    MENU_ITEM   (0x28,LANG_MENU_MISC_FLASHLIGHT,            MENUITEM_BOOL,                  &conf.flashlight, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_MISC_FLASHLIGHT,            MENUITEM_BOOL,                  &conf.flashlight, 0 ),
 #endif
     MENU_ITEM   (0x80,LANG_MENU_MISC_BUILD_INFO,            MENUITEM_PROC,                  gui_show_build_info, 0 ),
     MENU_ITEM   (0x80,LANG_MENU_MISC_MEMORY_INFO,           MENUITEM_PROC,                  gui_show_memory_info, 0 ),
 #if !defined(OPT_FORCE_LUA_CALL_NATIVE)
-    MENU_ITEM   (0x28,LANG_MENU_ENABLE_LUA_NATIVE_CALLS,    MENUITEM_BOOL|MENUITEM_ARG_CALLBACK, &conf.script_allow_lua_native_calls, (int)gui_lua_native_call_warning ),
+    MENU_ITEM   (0x5c,LANG_MENU_ENABLE_LUA_NATIVE_CALLS,    MENUITEM_BOOL|MENUITEM_ARG_CALLBACK, &conf.script_allow_lua_native_calls, (int)gui_lua_native_call_warning ),
 #endif
     MENU_ITEM   (0x33,LANG_SD_CARD,                         MENUITEM_SUBMENU,               &sdcard_submenu,                    0 ),
 #ifdef OPT_DEBUGGING
@@ -1016,8 +1038,7 @@ static const char* gui_conf_curve_enum(int change, int arg) {
     gui_enum_value_change(&conf.curve_enable,change,sizeof(modes)/sizeof(modes[0]));
 
 	if (change)
-        if (module_curves_load())
-		    libcurves->curve_init_mode();
+        libcurves->curve_init_mode();
     return modes[conf.curve_enable];
 }
 
@@ -1027,14 +1048,13 @@ static void gui_load_curve_selected(const char *fn)
 		// TODO we could sanity check here, but curve_set_type should fail gracefullish
 		strcpy(conf.curve_file,fn);
 		if (conf.curve_enable == 1)
-            if (module_curves_load())
-	    	    libcurves->curve_init_mode();
+            libcurves->curve_init_mode();
 	}
 }
 
 static void gui_load_curve(int arg)
 {
-    module_fselect_init(LANG_STR_SELECT_CURVE_FILE, conf.curve_file, CURVE_DIR, gui_load_curve_selected);
+    libfselect->file_select(LANG_STR_SELECT_CURVE_FILE, conf.curve_file, CURVE_DIR, gui_load_curve_selected);
 }
 
 static CMenuItem curve_submenu_items[] = {
@@ -1229,19 +1249,17 @@ void set_tv_override_menu()
 static void gui_load_edge_selected( const char* fn )
 {
     if (fn)
-        if (module_edgeovr_load())
-            libedgeovr->load_edge_overlay(fn);
+        libedgeovr->load_edge_overlay(fn);
 }
 
 static void gui_menuproc_edge_save(int arg)
 {
-    if (module_edgeovr_load())
-        libedgeovr->save_edge_overlay();
+    libedgeovr->save_edge_overlay();
 }
 
 static void gui_menuproc_edge_load(int arg)
 {
-    module_fselect_init(LANG_MENU_EDGE_LOAD, EDGE_SAVE_DIR, EDGE_SAVE_DIR, gui_load_edge_selected);
+    libfselect->file_select(LANG_MENU_EDGE_LOAD, EDGE_SAVE_DIR, EDGE_SAVE_DIR, gui_load_edge_selected);
 }
 
 static const char* gui_edge_pano_modes[] =                  { "Off", "Right", "Down", "Left", "Up", "Free" };
@@ -1269,13 +1287,12 @@ static CMenu edge_overlay_submenu = {0x7f,LANG_MENU_EDGE_OVERLAY_TITLE, NULL, ed
 static void gui_grid_lines_load_selected(const char *fn)
 {
     if (fn)
-        if (module_grids_load())
-            libgrids->grid_lines_load(fn);
+        libgrids->grid_lines_load(fn);
 }
 
 static void gui_grid_lines_load(int arg)
 {
-    module_fselect_init(LANG_STR_SELECT_GRID_FILE, conf.grid_lines_file, "A/CHDK/GRIDS", gui_grid_lines_load_selected);
+    libfselect->file_select(LANG_STR_SELECT_GRID_FILE, conf.grid_lines_file, "A/CHDK/GRIDS", gui_grid_lines_load_selected);
 }
 
 static CMenuItem grid_submenu_items[] = {
@@ -1295,8 +1312,13 @@ static CMenu grid_submenu = {0x2f,LANG_MENU_GRID_TITLE, NULL, grid_submenu_items
 
 //-------------------------------------------------------------------
 
+static void gui_menu_run_palette(int arg)
+{
+    libpalette->show_palette(PALETTE_MODE_DEFAULT, 0, NULL);
+}
+
 static CMenuItem visual_submenu_items[] = {
-    MENU_ITEM(0x65,LANG_MENU_MISC_PALETTE,            MENUITEM_PROC,      gui_menu_run_fltmodule, "palette.flt" ),
+    MENU_ITEM(0x65,LANG_MENU_MISC_PALETTE,            MENUITEM_PROC,      gui_menu_run_palette, 0 ),
     MENU_ITEM(0x0,LANG_MENU_VIS_COLORS,               MENUITEM_SEPARATOR, 0, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_TEXT,            MENUITEM_COLOR_FG,  &conf.osd_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_BKG,             MENUITEM_COLOR_BG,  &conf.osd_color, 0 ),
@@ -1460,10 +1482,7 @@ static const char* gui_dng_version(int change, int arg)
 
 static void gui_menuproc_badpixel_create(int arg)
 {
-	// After this action module will not be unloaded until reboot 
-	// because not clear when it finished
-	if ( module_dng_load(LIBDNG_OWNED_BY_CREATEBADPIXEL) )
-    	libdng->create_badpixel_bin();
+    libdng->create_badpixel_bin();
 }
 
 #endif
@@ -1480,7 +1499,7 @@ static void raw_fselect_cb(const char * filename)
 
 static void gui_raw_develop(int arg)
 {
-    module_fselect_init(LANG_RAW_DEVELOP_SELECT_FILE, "A/DCIM", "A", raw_fselect_cb);
+    libfselect->file_select(LANG_RAW_DEVELOP_SELECT_FILE, "A/DCIM", "A", raw_fselect_cb);
 }
     
 static const char* gui_bad_pixel_enum(int change, int arg)
@@ -1579,7 +1598,7 @@ static void gui_draw_lang_selected(const char *fn)
 
 static void gui_draw_load_lang(int arg)
 {
-    module_fselect_init(LANG_STR_SELECT_LANG_FILE, conf.lang_file, "A/CHDK/LANG", gui_draw_lang_selected);
+    libfselect->file_select(LANG_STR_SELECT_LANG_FILE, conf.lang_file, "A/CHDK/LANG", gui_draw_lang_selected);
 }
 
 static const char* gui_font_enum(int change, int arg)
@@ -1608,7 +1627,7 @@ static void gui_draw_menu_rbf_selected(const char *fn)
 
 static void gui_draw_load_menu_rbf(int arg)
 {
-    module_fselect_init(LANG_STR_SELECT_FONT_FILE, conf.menu_rbf_file, "A/CHDK/FONTS", gui_draw_menu_rbf_selected);
+    libfselect->file_select(LANG_STR_SELECT_FONT_FILE, conf.menu_rbf_file, "A/CHDK/FONTS", gui_draw_menu_rbf_selected);
 }
 
 static void gui_draw_symbol_rbf_selected(const char *fn)
@@ -1622,7 +1641,7 @@ static void gui_draw_symbol_rbf_selected(const char *fn)
 
 static void gui_draw_load_symbol_rbf(int arg)
 {
-    module_fselect_init(LANG_STR_SELECT_SYMBOL_FILE, conf.menu_symbol_rbf_file, "A/CHDK/SYMBOLS", gui_draw_symbol_rbf_selected);
+    libfselect->file_select(LANG_STR_SELECT_SYMBOL_FILE, conf.menu_symbol_rbf_file, "A/CHDK/SYMBOLS", gui_draw_symbol_rbf_selected);
 }
 
 static void gui_menuproc_reset_files(int arg)
@@ -1676,7 +1695,7 @@ static CMenuItem menu_settings_submenu_items[] = {
     {0}
 };
 
-static CMenu menu_settings_submenu = {0x26,LANG_MENU_MENU_SETTINGS, NULL, menu_settings_submenu_items };
+static CMenu menu_settings_submenu = {0x28,LANG_MENU_MENU_SETTINGS, NULL, menu_settings_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -1909,14 +1928,6 @@ gui_handler* gui_set_mode(gui_handler *mode)
 {
 	if ( gui_mode == mode )
 		return gui_mode;
-
-	// Sanity check for case module pointer - is this really gui_handler
-    if ( mode->magicnum != GUI_MODE_MAGICNUM ) {
-		// If sanity failed (module is unload) - set to default mode
-    	gui_mode = &defaultGuiHandler;
-        gui_set_need_restore();
-		return gui_mode;
-	}
 	
 #ifdef CAM_TOUCHSCREEN_UI
     if (((gui_mode->mode == GUI_MODE_NONE) != (mode->mode == GUI_MODE_NONE)) ||    // Change from GUI_MODE_NONE to any other or vice-versa
@@ -2487,7 +2498,7 @@ void gui_chdk_kbd_process_menu_btn()
 
 //-------------------------------------------------------------------
 // GUI handler for <ALT> mode
-gui_handler altGuiHandler = { GUI_MODE_ALT, gui_chdk_draw, gui_chdk_kbd_process, gui_chdk_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };            
+gui_handler altGuiHandler = { GUI_MODE_ALT, gui_chdk_draw, gui_chdk_kbd_process, gui_chdk_kbd_process_menu_btn, 0, };
 
 //-------------------------------------------------------------------
 // Main GUI redraw function, perform common initialisation then calls the redraw handler for the mode
@@ -2601,13 +2612,12 @@ void gui_activate_alt_mode()
     case ALT_MODE_LEAVE:
         conf_save_new_settings_if_changed();
 
+        // Unload all modules which are marked as safe to unload, or loaded for menus
+        module_exit_alt();
+
         rbf_set_codepage(FONT_CP_WIN);
         vid_turn_on_updates();
         gui_set_mode(&defaultGuiHandler);
-
-        // Unload all modules which are marked as safe to unload, or loaded for menus
-        gui_menu_unload_module_menus();
-        module_async_unload_allrunned(0);
 
 	    conf_update_prevent_shutdown();
         break;
