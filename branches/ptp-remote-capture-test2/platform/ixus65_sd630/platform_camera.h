@@ -64,8 +64,15 @@
     // camera name
     #define PARAM_CAMERA_NAME               3       // parameter number for GetParameterData
     #define DNG_EXT_FROM                    ".DPS"
+    #define CAM_FIRMWARE_MEMINFO            1
 	
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+
+    // Keyboard repeat and initial delays
+    #undef  KBD_REPEAT_DELAY
+    #define KBD_REPEAT_DELAY                140
+    #undef  KBD_INITIAL_DELAY
+    #define KBD_INITIAL_DELAY               300
 	
 //----------------------------------------------------------
 

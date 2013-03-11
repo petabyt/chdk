@@ -191,7 +191,7 @@ NSTUB(VbattGet                                ,0xff018ae4) //101
 NSTUB(Write                                   ,0xff01cb30) //101
 NSTUB(WriteSDCard                             ,0xff1ccb9c) //108
 NSTUB(_log                                    ,0x00690cd8) //111
-NSTUB(_log10                                  ,0x00693890) //112
+NSTUB(_log10                                  ,0x00691218) //112
 NSTUB(_pow                                    ,0x00691390) //114
 NSTUB(_sqrt                                   ,0x00693030) //  6
 NSTUB(add_ptp_handler                         ,0xff300128) //  6
@@ -218,7 +218,7 @@ NSTUB(OpenFastDir                             ,0xff36e3b4) //115
 NSTUB(qsort                                   ,0xff3f8374) //  6
 NSTUB(rand                                    ,0xff2b2a6c) //  6
 NSTUB(read                                    ,0xff005d3c) //101
-//NSTUB(reboot_fw_update                      ,0xff38f52c) //106            == 0xff38f52c
+NSTUB(reboot_fw_update                        ,0xff38f52c) //106
 NSTUB(set_control_event                       ,0xff09ecfc) //111
 NSTUB(srand                                   ,0xff2b2a60) //  6
 NSTUB(stat                                    ,0xff01cd40) //109

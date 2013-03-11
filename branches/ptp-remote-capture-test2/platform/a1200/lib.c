@@ -36,32 +36,36 @@ int vid_get_viewport_width() {
 
     // viewport width table for each image size
     // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_w[4] = { 360, 360, 360, 360 };
-    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    //static long vp_w[4] = { 360, 360, 360, 360 };
+    //return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    return(360);
 }
 
 long vid_get_viewport_height() {
 
     // viewport height table for each image size
     // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_h[4] = { 240, 240, 240, 240 };
-    return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    // static long vp_h[4] = { 240, 240, 240, 240 };
+    // return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    return( 240 );
 }
 
 int vid_get_viewport_xoffset() {
 
     // viewport width offset table for each image size
     // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_w[4] = { 0, 0, 0, 0 };               // should all be even values for edge overlay
-    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    //static long vp_w[4] = { 0, 0, 0, 0 };               // should all be even values for edge overlay
+    //return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    return( 0 ) ;
 }
 
 int vid_get_viewport_yoffset() {
 
     // viewport height offset table for each image size
     // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_h[4] = { 0, 0, 0, 0 };
-    return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    // static long vp_h[4] = { 0, 0, 0, 0 };
+    // return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    return ( 0 ) ;
 }
 
 extern char active_viewport_buffer;

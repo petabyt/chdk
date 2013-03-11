@@ -466,8 +466,10 @@ static int luaCB_get_bv96( lua_State* L )
 
 static int luaCB_get_day_seconds( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_day_seconds() );
-  return 1;
+    struct tm *ttm;
+    ttm = get_localtime();
+    lua_pushnumber( L, ttm->tm_hour * 3600 + ttm->tm_min * 60 + ttm->tm_sec );
+    return 1;
 }
 
 static int luaCB_get_disk_size( lua_State* L )
@@ -580,7 +582,7 @@ static int luaCB_get_sv96( lua_State* L )
 
 static int luaCB_get_tick_count( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_tick_count() );
+  lua_pushnumber( L, get_tick_count() );
   return 1;
 }
 
@@ -864,10 +866,48 @@ static int luaCB_set_zoom( lua_State* L )
   return 0;
 }
 
+// Wait for a button to be pressed and released (or the timeout to expire)
+static int action_stack_AS_LUA_WAIT_CLICK()
+{
+    // Check key pressed or timeout
+    if ((get_tick_count() >= action_top(2)) || camera_info.state.kbd_last_clicked)
+    {
+        // If timed out set key state to "no_key", otherwise key pressed so set last checked time
+        if (!camera_info.state.kbd_last_clicked)
+            camera_info.state.kbd_last_clicked=0xFFFF;
+        else
+            camera_info.state.kbd_last_checked_time = camera_info.state.kbd_last_clicked_time;
+
+        action_pop_func(1);
+        return 1;
+    }
+
+    return 0;
+}
+
 static int luaCB_wait_click( lua_State* L )
 {
-  action_wait_for_click(luaL_optnumber( L, 1, 0 ));
-  return lua_yield( L, 0 );
+    int delay = luaL_optnumber( L, 1, 0 );
+    if (delay == 0) delay = -1;
+    delay = sleep_delay(delay);
+
+    // Reset 'clicked' key if it has not changed since last time
+    if (camera_info.state.kbd_last_clicked_time <= camera_info.state.kbd_last_checked_time)
+    {
+        camera_info.state.kbd_last_clicked = 0;
+    }
+
+    // Set up for wait or click testing
+    action_push(delay);
+    action_push_func(action_stack_AS_LUA_WAIT_CLICK);
+
+    // Check for short delay or key already pressed by calling action stack routine once now
+    if (action_stack_AS_LUA_WAIT_CLICK() == 0)
+    {
+        return lua_yield( L, 0 );
+    }
+
+    return 1;
 }
 
 static int luaCB_is_pressed( lua_State* L )
@@ -964,9 +1004,6 @@ static void return_string_selected(const char *str) {
     // that file browser / textbox is finished and return last selected file
     // to script caller
     camera_info.state.state_kbd_script_run = SCRIPT_STATE_RAN;
-    // Clear the Func/Set key so that when the script exits, pressing
-    // the Func/Set key again will enter the Script menu, not the File Browser / Textbox
-    kbd_reset_autoclicked_key();
 
     // Push selected file as script return value
 	lua_pushstring( Lt, (str && str[0])? str : NULL );

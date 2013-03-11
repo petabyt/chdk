@@ -130,7 +130,6 @@ void exit_mpopup(int action)
 //-------------------------------------------------------------------
 void gui_mpopup_kbd_process_menu_btn()
 {
-    kbd_reset_autoclicked_key();
 	exit_mpopup(MPOPUP_CANCEL);		
 	if ( mpopup_on_select==0 )		// exit if not re-inited
 		module_async_unload(module_idx);
@@ -155,10 +154,9 @@ int gui_mpopup_kbd_process()
         gui_mpopup_kbd_process_menu_btn();
         break;
     case KEY_SET:
-        kbd_reset_autoclicked_key();
 		exit_mpopup(actions[mpopup_actions[mpopup_actions_active]].flag);		
 		if ( mpopup_on_select==0 )		// exit if not re-inited
-		module_async_unload(module_idx);
+		    module_async_unload(module_idx);
         break;
     }
     return 0;

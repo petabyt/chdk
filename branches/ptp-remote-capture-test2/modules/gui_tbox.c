@@ -527,7 +527,6 @@ int gui_tbox_kbd_process()
                 gui_tbox_draw_buttons();
                 break;
             case KEY_SET:
-                kbd_reset_autoclicked_key();
                 gui_set_mode(gui_tbox_mode_old);
                 if (tbox_on_select) {
                     if (tbox_button_active == 0)

@@ -41,7 +41,6 @@ void clear_values()
 {	
     if (conf.platformid != PLATFORMID) // the following config entries will be resetted if you switch the camera using the same cfg
     {
-    conf.raw_cache = 0;
 #if ZOOM_OVERRIDE
     conf.zoom_override_value = 0;
 #endif
@@ -332,7 +331,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(222, conf.edge_overlay_play,          CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(223, conf.edge_overlay_pano,          CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(224, conf.edge_overlay_zoom,          CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(225, conf.raw_cache,                  CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO(225, conf.raw_cache,                  CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO(226, conf.dng_raw,                    CONF_DEF_VALUE, i:1, conf_change_dng),
     CONF_INFO(227, conf.flash_sync_curtain,         CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(228, conf.raw_timer,                  CONF_DEF_VALUE, i:0, NULL),

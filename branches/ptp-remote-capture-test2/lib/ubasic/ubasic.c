@@ -243,8 +243,31 @@ varfactor(void)
   return r;
 }
 /*---------------------------------------------------------------------------*/
-static int
-factor(void)
+static int shooting_get_near_limit_of_acceptable_sharpness()
+{
+  shooting_update_dof_values();
+  return dof_values.near_limit;
+}
+
+static int shooting_get_far_limit_of_acceptable_sharpness()
+{
+  shooting_update_dof_values();
+  return dof_values.far_limit;
+}
+
+static int shooting_get_depth_of_field()
+{
+  shooting_update_dof_values();
+  return dof_values.depth_of_field;
+}
+
+static int shooting_get_min_stack_distance()
+{
+  shooting_update_dof_values();
+  return dof_values.min_stack_distance;
+}
+
+static int factor(void)
 {
   int r = 0;
   tConfigVal configVal;
@@ -278,12 +301,16 @@ factor(void)
     r = (unsigned short) stat_get_vbatt();
     break;
   case TOKENIZER_GET_DAY_SECONDS:
-    accept(TOKENIZER_GET_DAY_SECONDS);
-    r = shooting_get_day_seconds();
+    {
+        accept(TOKENIZER_GET_DAY_SECONDS);
+        struct tm *ttm;
+        ttm = get_localtime();
+        r = ttm->tm_hour * 3600 + ttm->tm_min * 60 + ttm->tm_sec;
+    }
     break;
   case TOKENIZER_GET_TICK_COUNT:
     accept(TOKENIZER_GET_TICK_COUNT);
-    r = shooting_get_tick_count();     
+    r = get_tick_count();     
     break;
   case TOKENIZER_GET_MODE:
     accept(TOKENIZER_GET_MODE);
@@ -1818,17 +1845,54 @@ static void set_config_value_statement()
 
 /*---------------------------------------------------------------------------*/
 
+// Wait for a button to be pressed and released (or the timeout to expire)
+static int action_stack_AS_UBASIC_WAIT_CLICK()
+{
+    // Check key pressed or timeout
+    if ((get_tick_count() >= action_top(2)) || camera_info.state.kbd_last_clicked)
+    {
+        // If timed out set key state to "no_key", otherwise key pressed so set last checked time
+        if (!camera_info.state.kbd_last_clicked)
+            camera_info.state.kbd_last_clicked=0xFFFF;
+        else
+            camera_info.state.kbd_last_checked_time = camera_info.state.kbd_last_clicked_time;
+
+        action_pop_func(1);
+        return 1;
+    }
+
+    return 0;
+}
+
 static void wait_click_statement()
 {
-    int timeout=0;
     accept(TOKENIZER_WAIT_CLICK);
-    if (tokenizer_token() != TOKENIZER_CR &&
-        tokenizer_token() != TOKENIZER_ELSE ) {
-        timeout = expr();
+
+    int delay = -1;
+    if ((tokenizer_token() != TOKENIZER_CR) && (tokenizer_token() != TOKENIZER_ELSE))
+    {
+        delay = expr();
+        if (delay == 0) delay = -1;
     }
-    action_wait_for_click(timeout);
-    flag_yield=1;
+    delay = sleep_delay(delay);
+
     accept_cr();
+
+    // Reset 'clicked' key if it has not changed since last time
+    if (camera_info.state.kbd_last_clicked_time <= camera_info.state.kbd_last_checked_time)
+    {
+        camera_info.state.kbd_last_clicked = 0;
+    }
+
+    // Set up for wait or click testing
+    action_push(delay);
+    action_push_func(action_stack_AS_UBASIC_WAIT_CLICK);
+
+    // Check for short delay or key already pressed by calling action stack routine once now
+    if (action_stack_AS_UBASIC_WAIT_CLICK() == 0)
+    {
+        flag_yield=1;
+    }
 }
 
 static void is_key_statement(void)

@@ -22,3 +22,5 @@ DEF(recreview_hold, 0x117A8) //WRONG
 
 DEF(levent_table,0xFF9575F8)
 DEF(playrec_mode, 0x6DA0) // "MenuIn"
+
+DEF(sys_mempart_id, 0xea18)

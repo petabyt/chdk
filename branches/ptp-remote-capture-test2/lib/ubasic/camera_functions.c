@@ -217,15 +217,7 @@ void camera_set_led(int led, int state, int bright)
 {
     printf("*** set led %d %d %d ***\n",led, state, bright);
 }
-int shooting_get_day_seconds()
-{
-	return 0;
-}
 
-int shooting_get_tick_count()
-{
-	return 0;
-}
 int camera_get_script_autostart()
 {
 	return 0;
@@ -330,24 +322,6 @@ int shooting_get_subject_distance()
     return 1000;
 }
 
-int shooting_get_near_limit_of_acceptable_sharpness()
-{
-    printf("*** shooting_get_near_limit_of_acceptable_sharpness ***\n");
-    return 500;
-}
-
-int shooting_get_far_limit_of_acceptable_sharpness()
-{
-    printf("*** shooting_get_far_limit_of_acceptable_sharpness ***\n");
-    return 1500;
-}
-
-int shooting_get_depth_of_field()
-{
-    printf("*** shooting_get_depth_of_field ***\n");
-    return 1000;
-}
-
 int shooting_get_hyperfocal_distance()
 {
     printf("*** shooting_get_hyperfocal_distance ***\n");
@@ -376,12 +350,6 @@ short shooting_get_focus_ok()
 {
     printf("*** shooting_get_focus_ok ***\n");
     return 0;
-}
-
-short shooting_get_min_stack_distance()
-{
-    printf("*** shooting_get_min_stack_distance ***\n");
-    return 77;
 }
 
 short shooting_get_iso_market()

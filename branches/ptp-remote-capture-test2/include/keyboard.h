@@ -6,10 +6,6 @@
 // Note: used in modules and platform independent code. 
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
-/* Keyboard repeat and initial delays (only used on 3 cams) */
-#define KBD_REPEAT_DELAY  140
-#define KBD_INITIAL_DELAY 300
-
 #define KEY_UP              1
 #define KEY_DOWN            2
 #define KEY_LEFT            3
@@ -76,7 +72,6 @@ extern long kbd_is_key_clicked(long key);
 extern long kbd_get_pressed_key();
 extern long kbd_get_clicked_key();
 extern long kbd_get_autoclicked_key();
-extern void kbd_reset_autoclicked_key();
 extern long kbd_use_zoom_as_mf();
 extern void kbd_set_alt_mode_key_mask(long key);
 extern void kbd_set_extra_button(short);

@@ -40,6 +40,7 @@
 #include "lens.h"
 #include "action_stack.h"
 #include "console.h"
+#include "cache.h"
 #include "remotecap.h"
 
 #include "modules.h"
@@ -242,12 +243,10 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
             kbd_is_key_pressed,
             kbd_key_press,
             kbd_get_clicked_key,
-            kbd_reset_autoclicked_key,
             get_jogdial_direction,
             JogDial_CCW,
             JogDial_CW,
 
-            GetFreeCardSpaceKb,
             debug_led,
             camera_set_led,
 
@@ -257,12 +256,9 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
             shooting_get_av96,
             shooting_get_bv96,
             shooting_get_common_focus_mode,
-            shooting_get_day_seconds,
-            shooting_get_depth_of_field,
             shooting_get_display_mode,
             shooting_get_drive_mode,
             shooting_get_ev_correction1,
-            shooting_get_far_limit_of_acceptable_sharpness,
             shooting_get_flash_mode,
             shooting_get_focus_mode,
             shooting_get_focus_ok,
@@ -272,14 +268,11 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
             shooting_get_iso_market,
             shooting_get_iso_mode,
             shooting_get_iso_real,
-            shooting_get_min_stack_distance,
-            shooting_get_near_limit_of_acceptable_sharpness,
             shooting_get_prop,
             shooting_get_real_focus_mode,
             shooting_get_resolution,
             shooting_get_subject_distance,
             shooting_get_sv96,
-            shooting_get_tick_count,
             shooting_get_tv96,
             shooting_get_user_av96,
             shooting_get_user_av_id,
@@ -323,6 +316,7 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
             img_prefixes,
             img_exts,
             GetTotalCardSpaceKb,
+            GetFreeCardSpaceKb,
             get_exposure_counter,
             get_target_dir_name,
             GetJpgCount,
@@ -342,7 +336,6 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
             action_push_press,
             action_push_release,
             action_push_shoot,
-            action_wait_for_click,
 
             // Console functions
             console_clear,
@@ -424,6 +417,8 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
             ptp_script_write_msg,
             ptp_script_read_msg,
             ptp_script_write_error_msg,
+
+            dcache_clean_all,
 
     remotecap_get_target_support,
     remotecap_set_target,
