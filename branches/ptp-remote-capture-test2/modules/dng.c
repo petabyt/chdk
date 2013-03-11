@@ -992,6 +992,10 @@ void create_dng_for_ptp(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, unsi
 
         //TODO: reversing could be done on host instead, how about a flag?
         reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
+        // if reverse was done on cached raw, clean cache before writing
+        if(!((unsigned long)altrawadr & uncachedbit)) {
+            dcache_clean_all();
+        }
 
         // Get alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
         pdc[2].address = (unsigned int)altrawadr|uncachedbit;
@@ -1000,8 +1004,14 @@ void create_dng_for_ptp(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, unsi
 }
 void free_dng_for_ptp(char* rawadr, char* altrawadr)
 {
-    if (rawadr == altrawadr)    // If only one RAW buffer then we have to swap the bytes back
+    if (rawadr == altrawadr) {   // If only one RAW buffer then we have to swap the bytes back
         reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
+        // if unreverse was done on cached raw, clean cache for jpeg
+        // TODO all dng functions should probably use cam_info for uncached bit
+        if(!((unsigned long)altrawadr & camera_info.cam_uncached_bit)) {
+            dcache_clean_all();
+        }
+    }
     if (dng_header_buf)
     {
         free_dng_header();
