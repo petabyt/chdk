@@ -21,12 +21,17 @@ void *vid_get_bitmap_fb()
     return (void*)0x103C79A0;   // same as sd630, found at 0xFF935518
 }
 
-/**
- * TODO: ??????
- */
-void *vid_get_viewport_live_fb()
+void *vid_get_viewport_live_fb() // from ixus65
 {
-    return (void*)0;    // not req?
+       void **fb=(void **)0x5284; // @ 0xff8a6d24 for 100d
+       unsigned char buff = *((unsigned char*)0x5294); // @ 0xff8a6d20 for 100d
+       if (buff == 0) {
+           buff = 2;
+       }
+       else {
+           buff--;
+       }
+       return fb[buff];
 }
 
 /**
@@ -34,9 +39,7 @@ void *vid_get_viewport_live_fb()
  */
 void *vid_get_viewport_fb()
 {
-    // found at aImgddev_c, 0xFF9341E0 - 3 potential values for R3, perhaps someone
-    // better at assembly can work this one out (my skills are rusty :/)
-    return (void*)0x105599A0;   // or 0x104AF0cA0, 0x105F17A0?
+    return (void*)0x105f17a0;   // @ 0xffac8ee8 for 100d
 }
 
 /**
@@ -44,9 +47,7 @@ void *vid_get_viewport_fb()
  */
 void *vid_get_viewport_fb_d()
 {
-    // check around aImageplayer_c, 0xFF937AC8
-    return (void*)0x6DB9C;   // TODO, no idea about this one at all
-                             // a literal stab in the dark
+    return (void*)(*(int*)0x6db8c); // @ 0xff938920 for 100d
 }
 
 long vid_get_viewport_height()
@@ -56,5 +57,22 @@ long vid_get_viewport_height()
 
 char *camera_jpeg_count_str()
 {
-    return (char*)0x10B80;      // TODO, was marked for fixing in sd630??
+    return (char*)0x79158; // @ 0xffa5f3f4 for 100d
 }
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)0x5ea0); // in sub_ff935598 DisplayPhysicalScreenWithYUVPalette for 100d
+}
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)0x6d4a8; // found also in sub_ff935598 for 100d
+}
+
+int vid_get_palette_type() { return 1; }
+int vid_get_palette_size() { return 16*4; }
+
+// note: buffers change dimensions when TV-out is active or in movie mode, these may not be handled
+// stitch mode is not supported
+int vid_get_viewport_width_proper()  { return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:*(int*)0x3ced0;} //sub_ff8a9594 for 100d
+int vid_get_viewport_height_proper() { return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:*(int*)(0x3ced0+4);} //"VRAM DataSize H : %04ld, V : %04ld"
