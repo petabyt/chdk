@@ -140,6 +140,9 @@
     #define CAMERA_MAX_DIST                     9523810 // Override max subject distance
 
     #define CAM_ZOOM_ASSIST_BUTTON_CONTROL      1       // Activate the menu option to allow disabling the zoom assist button
-    #define MKDIR_RETURN_ONE_ON_SUCCESS      1    // mkdir() return 1 on success, 0 on fail.
+    #define MKDIR_RETURN_ONE_ON_SUCCESS         1       // mkdir() return 1 on success, 0 on fail.
+
+    #undef  CAM_AF_LED                                  // AF Lamp index for camera_set_led()
+    #define CAM_AF_LED                          1       //
 
 //----------------------------------------------------------
