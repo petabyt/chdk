@@ -86,49 +86,43 @@ const ISOTable iso_table[] = {
 	{  18,4000, "4000", -1},
 	{  19,5000, "5000", -1},
 	{  20,6400, "6400", -1},
-
-
-
 };          
 
-
+// These two modes are identified by finsig but camera crashes if used.
+//	{ MODE_????????????,       32805  }, //Registering Face ID? Crash.
+//	{ MODE_SCN_LOWLIGHT,       32805  }, //Hidden mode?  Crash
+// See report here: http://chdk.setepontos.com/index.php?topic=8932.msg97543#msg97543
 const CapturemodeMap modemap[] = {
-	{ MODE_M,                  32769  },
-	{ MODE_TV,                 32771  },
-	{ MODE_AV,                 32770  },
-	{ MODE_P,                  32772  },
-	{ MODE_AUTO,               32768  },
-	{ MODE_SPORTS,             33287  },
-
-    { MODE_VIDEO_MOVIE_DIGEST, 33337  },
-    { MODE_PORTRAIT,           16401  },
-	{ MODE_SCN_SMOOTH_SKIN,    16914  },
+	{ MODE_VIDEO_STD,           2626  },
+    { MODE_VIDEO_SUPER_SLOW,    2631  },
+    { MODE_VIDEO_IFRAME_MOVIE,  2633  },
+	{ MODE_SCN_COLOR_ACCENT,    8737  },
+	{ MODE_SCN_COLOR_SWAP,      8738  },
+	{ MODE_SCN_SUPER_VIVID,     8746  },
+	{ MODE_SCN_POSTER_EFFECT,   8747  },
+	{ MODE_SCN_FISHEYE,         8751  },
+	{ MODE_SCN_MINIATURE,       8752  },
+	{ MODE_SCN_HDR,             8754  },
+    { MODE_SCN_TOY_CAMERA,      8755  },
+    { MODE_SCN_SOFTFOCUS,       8756  },
+	{ MODE_SCN_MONOCHROME,      8758  },
 	{ MODE_SCN_HIGHSPEED_BURST,16393  },
-	{ MODE_NIGHT_SCENE,        16945  },
+    { MODE_PORTRAIT,           16401  },
 	{ MODE_SCN_SNOW,           16409  },
 	{ MODE_SCN_FIREWORK,       16411  },
 	{ MODE_SCN_STITCH,         16909  },
-
-
-	{ MODE_SCN_HDR,             8754  },
-	{ MODE_SCN_FISHEYE,         8751  },
-	{ MODE_SCN_MINIATURE,       8752  },
-	{ MODE_SCN_TOY_CAMERA,      8755  },
-	{ MODE_SCN_MONOCHROME,      8758  },
-	{ MODE_SCN_SUPER_VIVID,     8746  },
-	{ MODE_SCN_POSTER_EFFECT,   8747  },
-	{ MODE_SCN_COLOR_ACCENT,    8737  },
-	{ MODE_SCN_COLOR_SWAP,      8738  },
-
-	{ MODE_SCN_SMART_SHUTTER,  16941  },
+	{ MODE_SCN_SMOOTH_SKIN,    16914  },
     { MODE_SCN_FACE_SELF_TIMER,16940  },
+	{ MODE_SCN_SMART_SHUTTER,  16941  },
     { MODE_SCN_WINK_SELF_TIMER,16942  },
-
-    { MODE_VIDEO_IFRAME_MOVIE,  2633  },
-    { MODE_VIDEO_SUPER_SLOW,    2631  },
-	{ MODE_VIDEO_STD,           2626  },
-
-
+	{ MODE_NIGHT_SCENE,        16945  },
+	{ MODE_AUTO,               32768  },
+	{ MODE_M,                  32769  },
+	{ MODE_AV,                 32770  },
+	{ MODE_TV,                 32771  },
+	{ MODE_P,                  32772  },
+	{ MODE_SPORTS,             33287  },
+    { MODE_VIDEO_MOVIE_DIGEST, 33337  },
 };
 
 #include "../generic/shooting.c"

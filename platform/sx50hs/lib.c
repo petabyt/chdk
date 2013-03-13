@@ -50,11 +50,11 @@ void camera_set_led(int led, int state, int bright) {
 
 
 void JogDial_CW(void){
- _PostLogicalEventForNotPowerType(0x872, 1);  // RotateJogDialRight (in table @ FF593E50, fw 1.00g)
+ _PostLogicalEventForNotPowerType(0x872, 1);  // RotateJogDialRight (in table @ ff62f34c, fw 1.00b)
 }
 
 void JogDial_CCW(void){
- _PostLogicalEventForNotPowerType(0x873, 1);  // RotateJogDialLeft (in table @ FF593E5C, fw 1.00g)
+ _PostLogicalEventForNotPowerType(0x873, 1);  // RotateJogDialLeft (in table @ ff62f358, fw 1.00b)
 }
 
 // Viewport and Bitmap values that shouldn't change across firmware versions.

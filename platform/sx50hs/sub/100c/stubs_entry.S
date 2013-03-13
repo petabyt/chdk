@@ -24,7 +24,6 @@ NSTUB(DeleteFile_Fut                          ,0xff01c468) //  1 90%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff04aac8 -> ff09f920 -> ff204794 -> ff394820 -> ff6ee034
-// Mode  8756 in firmware but not in current modemap
 // Mode 32805 in firmware but not in current modemap
 // Mode 33295 in firmware but not in current modemap
 

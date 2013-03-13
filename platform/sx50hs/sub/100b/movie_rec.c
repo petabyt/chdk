@@ -8,12 +8,14 @@ void  set_quality(int *x){ // -17 highest; +12 lowest
  if (conf.video_mode) *x=12-((conf.video_quality-1)*(12+17)/(99-1));
 }
 
-void __attribute__((naked,noinline)) movie_record_task(){ //SX50HS
+//** movie_record_task  @ 0xFF0813C0
 
+void __attribute__((naked,noinline)) movie_record_task(){
 asm volatile (
 		"STMFD   SP!, {R2-R12,LR}\n"
         "LDR     R11, =0x619\n"
-        "LDR     R8, =sub_FF080EFC_my\n"
+        "LDR     R8, =0xFF080EFC\n"  //original
+//        "LDR     R8, =sub_FF080EFC_my\n" //patched
         "LDR     R9, =0xFF080EF8\n"
         "LDR     R4, =0x38B0\n"
         "LDR     R10, =0x2710\n"
@@ -44,41 +46,24 @@ asm volatile (
         "CMP     R1, #0x11\n"
         "ADDCC   PC, PC, R1,LSL#2\n"
         "B       loc_FF08159C\n"
-"loc_FF08143C:\n"
-        "B       loc_FF0814D8\n"
-"loc_FF081440:\n"
-        "B       loc_FF0814F4\n"
-"loc_FF081444:\n"
-        "B       loc_FF081504\n"
-"loc_FF081448:\n"
-        "B       loc_FF08150C\n"
-"loc_FF08144C:\n"
-        "B       loc_FF081514\n"
-"loc_FF081450:\n"
-        "B       loc_FF08151C\n"
-"loc_FF081454:\n"
-        "B       loc_FF0814E0\n"
-"loc_FF081458:\n"
-        "B       loc_FF081548\n"
-"loc_FF08145C:\n"
-        "B       loc_FF081574\n"
-"loc_FF081460:\n"
-        "B       loc_FF08157C\n"
-"loc_FF081464:\n"
-        "B       loc_FF0814EC\n"
-"loc_FF081468:\n"
-        "B       loc_FF08159C\n"
-"loc_FF08146C:\n"
-        "B       loc_FF08158C\n"
-"loc_FF081470:\n"
-        "B       loc_FF081594\n"
-"loc_FF081474:\n"
-        "B       loc_FF081584\n"
-"loc_FF081478:\n"
-        "B       loc_FF0814B0\n"
-"loc_FF08147C:\n"
-        "B       loc_FF081480\n"
-"loc_FF081480:\n"
+        "B       loc_FF0814D8\n" //(01)
+        "B       loc_FF0814F4\n" //(02)
+        "B       loc_FF081504\n" //(03)
+        "B       loc_FF08150C\n" //(04)
+        "B       loc_FF081514\n" //(05)
+        "B       loc_FF08151C\n" //(06)
+        "B       loc_FF0814E0\n" //(07)
+        "B       loc_FF081548\n" //(08)
+        "B       loc_FF081574\n" //(09)
+        "B       loc_FF08157C\n" //(10)
+        "B       loc_FF0814EC\n" //(11)
+        "B       loc_FF08159C\n" //(12)
+        "B       loc_FF08158C\n" //(13)
+        "B       loc_FF081594\n" //(14)
+        "B       loc_FF081584\n" //(15)
+        "B       loc_FF0814B0\n" //(16)
+        "B       loc_FF081480\n" //(17)
+"loc_FF081480:\n" //Jump Table entry 17
         "STR     R6, [R4,#0x40]\n"
         "STR     R6, [R4,#0x34]\n"
         "STR     R7, [R4,#0x148]\n"
@@ -91,7 +76,7 @@ asm volatile (
         "MOV     R0, #6\n"
         "STR     R0, [R4,#0x44]\n"
         "B       loc_FF0814D0\n"
-"loc_FF0814B0:\n"
+"loc_FF0814B0:\n" //Jump Table entry 16
         "STR     R6, [R4,#0x40]\n"
         "STR     R7, [R4,#0x148]\n"
         "STR     R8, [R4,#0xCC]\n"
@@ -103,33 +88,39 @@ asm volatile (
 "loc_FF0814D0:\n"
         "STR     R5, [R4,#8]\n"
         "B       loc_FF08159C\n"
-"loc_FF0814D8:\n"
+"loc_FF0814D8:\n" //Jump Table entry 01
+//begin patch
         //"BL      sub_FF080B4C\n"
 		"BL      movie_time\n"
 "label_A:\n"
+//end patch
         "B       loc_FF08159C\n"
 "loc_FF0814E0:\n"
         "LDR     R1, [R4,#0xCC]\n"
         "BLX     R1\n"
+//begin patch
+      "LDR	   R0, =0x3924 \n"   //added, 0x3928 - 0x4 taken from  "loc_" see commented function below.
+      "BL      set_quality \n"   // added
+//end patch
         "B       loc_FF08159C\n"
-"loc_FF0814EC:\n"
+"loc_FF0814EC:\n" //Jump Table entry 11
         "BL      sub_FF082120\n"
         "B       loc_FF08159C\n"
-"loc_FF0814F4:\n"
+"loc_FF0814F4:\n" //Jump Table entry 02
         "LDR     R0, [R4,#0x44]\n"
         "CMP     R0, #5\n"
         "STRNE   R5, [R4,#0x34]\n"
         "B       loc_FF08159C\n"
-"loc_FF081504:\n"
+"loc_FF081504:\n" //Jump Table entry 03
         "BL      sub_FF080178\n"
         "B       loc_FF08159C\n"
-"loc_FF08150C:\n"
+"loc_FF08150C:\n" //Jump Table entry 04
         "BL      sub_FF080060\n"
         "B       loc_FF08159C\n"
-"loc_FF081514:\n"
+"loc_FF081514:\n" //Jump Table entry 05
         "BL      sub_FF07FD44\n"
         "B       loc_FF08159C\n"
-"loc_FF08151C:\n"
+"loc_FF08151C:\n" //Jump Table entry 06
         "LDR     R1, [R4,#0x94]\n"
         "LDR     R0, =0x4840F640\n"
         "CMP     R1, #0\n"
@@ -142,7 +133,7 @@ asm volatile (
 "loc_FF081540:\n"
         "BL      sub_FF1EDD14\n"
         "B       loc_FF08159C\n"
-"loc_FF081548:\n"
+"loc_FF081548:\n" //Jump Table entry 08
         "LDR     R0, =0x43964\n"
         "LDR     R0, [R0,#8]\n"
         "CMP     R0, #0\n"
@@ -154,20 +145,20 @@ asm volatile (
         "MOV     R0, #3\n"
         "STR     R0, [R4,#0x44]\n"
         "B       loc_FF08159C\n"
-"loc_FF081574:\n"
+"loc_FF081574:\n" //Jump Table entry 09
         "BL      sub_FF07ED64\n"
         "B       loc_FF08159C\n"
-"loc_FF08157C:\n"
+"loc_FF08157C:\n" //Jump Table entry 10
         "BL      sub_FF08202C\n"
         "B       loc_FF08159C\n"
-"loc_FF081584:\n"
+"loc_FF081584:\n" //Jump Table entry 15
         //"BL      loc_FF082040\n"
 		"BL      sub_FF082040\n"
         "B       loc_FF08159C\n"
-"loc_FF08158C:\n"
+"loc_FF08158C:\n" //Jump Table entry 13
         "BL      sub_FF07FA5C\n"
         "B       loc_FF08159C\n"
-"loc_FF081594:\n"
+"loc_FF081594:\n" //Jump Table entry 14
         "BL      sub_FF07F8DC\n"
         "STR     R5, [R4,#0x144]\n"
 "loc_FF08159C:\n"
@@ -180,7 +171,7 @@ asm volatile (
         "MOV     R2, R10\n"
         "BL      sub_68B044\n"
         "LDR     R0, [R4,#0x118]\n"
-        "BL      sub_68AAEC\n"
+        "BL      _GiveSemaphore \n"
         "B       loc_FF0813E4\n"
     );
 }
@@ -198,6 +189,8 @@ void __attribute__((naked,noinline)) movie_time() {
         );
     }
 }
+
+//** sub_FF080B4C_my  @ 0xFF080B4C
 
 void __attribute__((naked,noinline)) sub_FF080B4C_my() {
  asm volatile (
@@ -259,7 +252,7 @@ void __attribute__((naked,noinline)) sub_FF080B4C_my() {
 "loc_FF080C10:\n"
         "LDR     R1, =0x74C\n"
         "LDR     R0, =0xFF07E60C \n"
-        "BL      sub_68B104\n"
+        "BL      _DebugAssert \n"
 "loc_FF080C1C:\n"
         "LDR     R0, [R6,#0x64]\n"
         "CMP     R0, #1\n"
@@ -461,6 +454,8 @@ void __attribute__((naked,noinline)) sub_FF080B4C_my() {
         );
 }
 
+//** sub_FF1ED0C0_my  @ 0xFF1ED0C0
+
 void __attribute__((naked,noinline)) sub_FF1ED0C0_my(){
 asm volatile (
         "STMFD   SP!, {R0-R11,LR}\n"
@@ -474,7 +469,7 @@ asm volatile (
         "MOV     R6, #0\n"
         "MOV     R4, R3\n"
         "MOV     R5, R6\n"
-        "BLEQ    sub_68B104\n"
+        "BLEQ    _DebugAssert \n"
         "LDR     R8, =0x9B38\n"
         "CMP     R9, #0\n"
         "MOV     R11, #0\n"
@@ -498,35 +493,20 @@ asm volatile (
         "MOV     R10, #0x1E\n"
         "ADDCC   PC, PC, R9,LSL#2\n"
         "B       loc_FF1ED218\n"
-"loc_FF1ED14C:\n"
         "B       loc_FF1ED1A0\n"
-"loc_FF1ED150:\n"
         "B       loc_FF1ED198\n"
-"loc_FF1ED154:\n"
         "B       loc_FF1ED188\n"
-"loc_FF1ED158:\n"
         "B       loc_FF1ED1F4\n"
-"loc_FF1ED15C:\n"
         "B       loc_FF1ED204\n"
-"loc_FF1ED160:\n"
         "B       loc_FF1ED218\n"
-"loc_FF1ED164:\n"
         "B       loc_FF1ED218\n"
-"loc_FF1ED168:\n"
         "B       loc_FF1ED218\n"
-"loc_FF1ED16C:\n"
         "B       loc_FF1ED218\n"
-"loc_FF1ED170:\n"
         "B       loc_FF1ED1C0\n"
-"loc_FF1ED174:\n"
         "B       loc_FF1ED1B8\n"
-"loc_FF1ED178:\n"
         "B       loc_FF1ED1B0\n"
-"loc_FF1ED17C:\n"
         "B       loc_FF1ED1EC\n"
-"loc_FF1ED180:\n"
         "B       loc_FF1ED1E4\n"
-"loc_FF1ED184:\n"
         "B       loc_FF1ED1D0\n"
 "loc_FF1ED188:\n"
         "LDR     R5, =0x5DC0\n"
@@ -590,7 +570,7 @@ asm volatile (
 "loc_FF1ED218:\n"
         "LDR     R1, =0x411\n"
         "LDR     R0, =0xFF1EA678 \n"
-        "BL      sub_68B104\n"
+        "BL      _DebugAssert \n"
 "loc_FF1ED224:\n"
         "LDR     R0, [R8,#0xF8]\n"
        
@@ -645,7 +625,7 @@ asm volatile (
 "loc_FF1ED2C4:\n"
         "LDR     R1, =0x439\n"
         "LDR     R0, =0xFF1EA678 \n"
-        "BL      sub_68B104\n"
+        "BL      _DebugAssert \n"
 "loc_FF1ED2D0:\n"
         "LDR     R9, [R4,#8]\n"
         "CMP     R9, #0xB\n"
@@ -740,8 +720,9 @@ asm volatile (
 
         );
 }
-	
-	void __attribute__((naked,noinline)) sub_FF080EFC_my(){
+
+/*	
+void __attribute__((naked,noinline)) sub_FF080EFC_my(){
 asm volatile (
         "STMFD   SP!, {R4-R8,LR}\n"
         "SUB     SP, SP, #0x50\n"
@@ -777,7 +758,7 @@ asm volatile (
         "CMP     R0, #0\n"
         "LDREQ   R1, =0x86B\n"
         "LDREQ   R0, =0xFF07E60C \n"
-        "BLEQ    sub_68B104\n"
+        "BLEQ    _DebugAssert \n"
         "LDR     R0, [R5,#0x6C]\n"
         "LDR     R1, [R5,#0xC8]\n"
         "BL      sub_69092C\n"
@@ -828,7 +809,7 @@ asm volatile (
         "BL      sub_FF192968\n"
         "LDR     R0, [R5,#0x1C]\n"
         "LDR     R1, [R5,#0x60]\n"
-        "BL      sub_68AA1C\n"
+        "BL      _TakeSemaphore \n"
         "CMP     R0, #9\n"
         "BNE     loc_FF0810B4\n"
 "loc_FF081040:\n"
@@ -886,7 +867,7 @@ asm volatile (
         "BL      sub_FF192968\n"
         "LDR     R0, [R5,#0x1C]\n"
         "LDR     R1, [R5,#0x60]\n"
-        "BL      sub_68AA1C\n"
+        "BL      _TakeSemaphore \n"
         "CMP     R0, #9\n"
         "BEQ     loc_FF081040\n"
         "LDR     R0, [SP,#0x48]\n"
@@ -922,7 +903,7 @@ asm volatile (
         "BL      sub_FF192968\n"
         "LDR     R0, [R5,#0x1C]\n"
         "LDR     R1, [R5,#0x60]\n"
-        "BL      sub_68AA1C\n"
+        "BL      _TakeSemaphore \n"
         "CMP     R0, #9\n"
         "BNE     loc_FF081210\n"
         "MOV     R1, #0\n"
@@ -1054,4 +1035,4 @@ asm volatile (
 
 		    );
 }
-
+*/
