@@ -35,7 +35,7 @@ module_handler_t h_rawop =
 {
     (base_interface_t**)&librawop,
     &default_librawop.base,
-    {2,0},
+    RAW_MERGE_VERSION,
     0
 };
 
@@ -109,7 +109,7 @@ module_handler_t h_edgeovr =
 {
     (base_interface_t**)&libedgeovr,
     &default_libedgeovr.base,
-    {2,0},
+    EDGEOVERLAY_VERSION,
     MODULE_NAME_EDGEOVR
 };
 
@@ -170,7 +170,7 @@ module_handler_t h_motiondetect =
 {
     (base_interface_t**)&libmotiondetect,
     &default_libmotiondetect.base,
-    {2,0},
+    MOTION_DETECTOR_VERSION,
     MODULE_NAME_MDETECT
 };
 
@@ -238,7 +238,7 @@ module_handler_t h_script =
 {
     (base_interface_t**)&libscriptapi,
     &default_libscriptapi.base,
-    {2,0},
+    SCRIPT_API_VERSION,
     MODULE_NAME_UNK
 };
 
@@ -338,7 +338,7 @@ module_handler_t h_zebra =
 {
     (base_interface_t**)&libzebra,
     &default_libzebra.base,
-    {2,0},
+    ZEBRA_VERSION,
     MODULE_NAME_ZEBRA
 };
 
@@ -375,7 +375,7 @@ module_handler_t h_curves =
 {
     (base_interface_t**)&libcurves,
     &default_libcurves.base,
-    {2,0},
+    CURVES_VERSION,
     MODULE_NAME_CURVES
 };
 
@@ -436,7 +436,7 @@ module_handler_t h_grids =
 {
     (base_interface_t**)&libgrids,
     &default_libgrids.base,
-    {2,0},
+    GUI_GRID_VERSION,
     MODULE_NAME_GRIDS
 };
 
@@ -477,7 +477,7 @@ module_handler_t h_palette =
 {
     (base_interface_t**)&libpalette,
     &default_libpalette.base,
-    {2,0},
+    GUI_PALETTE_VERSION,
     MODULE_NAME_PALETTE
 };
 
@@ -510,7 +510,7 @@ module_handler_t h_mpopup =
 {
     (base_interface_t**)&libmpopup,
     &default_libmpopup.base,
-    {2,0},
+    GUI_MPOPUP_VERSION,
     MODULE_NAME_MPOPUP
 };
 
@@ -543,7 +543,7 @@ module_handler_t h_fselect =
 {
     (base_interface_t**)&libfselect,
     &default_libfselect.base,
-    {2,0},
+    GUI_FSELECT_VERSION,
     MODULE_NAME_FSELECT
 };
 
@@ -576,7 +576,7 @@ module_handler_t h_dng =
 {
     (base_interface_t**)&libdng,
     &default_libdng.base,
-    {2,0},
+    DNG_VERSION,
     MODULE_NAME_DNG
 };
 
@@ -651,7 +651,7 @@ module_handler_t h_textbox =
 {
     (base_interface_t**)&libtextbox,
     &default_libtextbox.base,
-    {2,0},
+    GUI_TBOX_VERSION,
     MODULE_NAME_TBOX
 };
 
@@ -687,7 +687,7 @@ module_handler_t h_txtread =
 {
     (base_interface_t**)&libtxtread,
     &default_libtxtread.base,
-    {2,0},
+    GUI_READ_VERSION,
     MODULE_NAME_TXTREAD
 };
 

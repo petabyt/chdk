@@ -240,7 +240,7 @@ struct ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
     sizeof(struct ModuleInfo),
-    {2,0},						// Module version
+    GUI_GRID_VERSION,			// Module version
 
     ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
@@ -250,10 +250,10 @@ struct ModuleInfo _module_info =
 
     &_libgrids.base,
 
-    {0,0},                      // GUI version
-    {2,0},                      // CONF version
-    {1,0},                      // CAM SENSOR version
-    {0,0},                      // CAM INFO version
+    CONF_VERSION,               // CONF version
+    ANY_VERSION,                // CAM SCREEN version
+    ANY_VERSION,                // CAM SENSOR version
+    ANY_VERSION,                // CAM INFO version
 };
 
 /*************** END OF AUXILARY PART *******************/

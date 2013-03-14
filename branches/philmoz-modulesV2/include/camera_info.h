@@ -62,9 +62,10 @@ typedef struct {
 
 extern _cam_sensor camera_sensor;
 
-// if this struct changed, please change gui_version.common_api 
 typedef struct 
 {
+	_version_t api_version; 			                // version of this structure
+
     int     width, height, size;                        // Size of bitmap screen in CHDK co-ordinates
     int     physical_width;                             // Actual width of bitmap screen in pixels
     int     buffer_width, buffer_height, buffer_size;   // Physical size of bitmap screen

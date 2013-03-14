@@ -118,10 +118,10 @@ struct ModuleInfo
 #endif
 
     // Version checks (set to {0,0} to skip check)
-    _version_t          gui_ver;                // GUI version
-    _version_t          conf_ver;               // CONF version
-    _version_t          cam_sensor_ver;         // CAM SENSOR version
-    _version_t          cam_info_ver;           // CAM INFO version
+    _version_t          conf_ver;               // CONF version (Conf structure in conf.h)
+    _version_t          cam_screen_ver;         // CAM SCREEN version (camera_screen in camera_info.h)
+    _version_t          cam_sensor_ver;         // CAM SENSOR version (camera_sensor in camera_info.h)
+    _version_t          cam_info_ver;           // CAM INFO version (camera_info in camera_info.h)
 };
 
 #endif /* __FLT_H__ */

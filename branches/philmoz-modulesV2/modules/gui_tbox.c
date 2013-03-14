@@ -590,18 +590,18 @@ struct ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
     sizeof(struct ModuleInfo),
-    {2,0},                          // Module version
+    GUI_TBOX_VERSION,           // Module version
 
-    ANY_CHDK_BRANCH, 0,             // Requirements of CHDK version
-    ANY_PLATFORM_ALLOWED,           // Specify platform dependency
+    ANY_CHDK_BRANCH, 0,         // Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
-    (int32_t)"Virtual keyboard",    // Module name
+    (int32_t)"Virtual keyboard",// Module name
     0,
 
     &_libtextbox.base,
 
-    {1,0},                      // GUI version
-    {0,0},                      // CONF version
-    {0,0},                      // CAM SENSOR version
-    {0,0},                      // CAM INFO version
+    CONF_VERSION,               // CONF version
+    CAM_SCREEN_VERSION,         // CAM SCREEN version
+    ANY_VERSION,                // CAM SENSOR version
+    ANY_VERSION,                // CAM INFO version
 };

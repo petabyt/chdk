@@ -8,6 +8,8 @@
 
 //==========================================================
 
+#include "versions.h"
+
 typedef struct
 {
     unsigned short  major;

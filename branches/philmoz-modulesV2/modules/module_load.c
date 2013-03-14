@@ -518,15 +518,15 @@ static int _module_load(module_handler_t* hMod)
 		return 1;
     }
 
-	if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, mod_info->gui_ver ) )
-    {
-        moduleload_error("incorrect GUI version", 0);
-		return 1;
-    }
-
 	if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, mod_info->conf_ver ) )
     {
         moduleload_error("incorrect CONF version", 0);
+		return 1;
+    }
+
+	if ( !API_VERSION_MATCH_REQUIREMENT( camera_screen.api_version, mod_info->cam_screen_ver ) )
+    {
+        moduleload_error("incorrect CAM SCREEN version", 0);
 		return 1;
     }
 
@@ -632,7 +632,7 @@ static module_handler_t h_run =
 {
     (base_interface_t**)&librun,
     &default_librun.base,
-    {0,0},
+    ANY_VERSION,
     0
 };
 

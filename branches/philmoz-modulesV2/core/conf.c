@@ -19,7 +19,7 @@
 #define CONF_MAGICK_VALUE   (0x33204741)
 
 //-------------------------------------------------------------------
-Conf conf = {{2,2}};
+Conf conf = {CONF_VERSION};
 
 // reyalp: putting these in conf, since the conf values are lookups for them
 // prefixes and extentions available for raw images (index with conf.raw_prefix etc)

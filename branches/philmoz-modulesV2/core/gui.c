@@ -25,12 +25,6 @@
 
 #define SPLASH_TIME               20
 
-struct gui_common_api_ver gui_version =
-{
-    {1,0},			// ver of common api: gui_mode, mbox, this structure
-    {1,2}			// ver of menu structure
-};
-
 //-------------------------------------------------------------------
 // forward declarations
 extern void dump_memory();

@@ -83,14 +83,4 @@ extern const char* gui_hhmss_enum(int change, int arg);
 
 //------------------------------------------------------------------- 
 
-struct gui_common_api_ver 
-{
-    _version_t common_api;		// common gui version: gui_mode handling, mbox, this structure
-	_version_t menu_api;		// cmenu structure version
-};
-
-// Defined in gui.c
-extern struct gui_common_api_ver gui_version;
-//------------------------------------------------------------------- 
-
 #endif
