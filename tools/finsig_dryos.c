@@ -813,7 +813,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr, char *alt_base
 	else
 	{
 		fw->dryos_ver = atoi(((char*)&fw->buf[k])+28);
-        if (fw->dryos_ver > 51)
+        if (fw->dryos_ver > 52)
     		bprintf("//   DRYOS R%d (%s) *** New DRYOS Version - please update finsig_dryos.c ***\n",fw->dryos_ver,(char*)&fw->buf[k]);
         else
     		bprintf("//   DRYOS R%d (%s)\n",fw->dryos_ver,(char*)&fw->buf[k]);
@@ -857,6 +857,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr, char *alt_base
 	case 49: 
 	case 50: 
 	case 51:
+	case 52:
         if (fw->alt_base)
         {
             cam_idx = adr2idx(fw,(fw->alt_base==0xFF000000)?0xFFF40190:0xFFFE0170);
@@ -931,6 +932,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr, char *alt_base
             case 0x80751A95:    ksys = "d4a  "; break;
             case 0x76894368:    ksys = "d4b  "; break;
             case 0x50838EF7:    ksys = "d4c  "; break;
+            case 0xCCE4D2E6:    ksys = "d4d  "; break;
             }
             bprintf("//   KEYSYS = %s              // Found @ 0x%08x\n",ksys,idx2adr(fw,ofst));
         }
@@ -978,7 +980,7 @@ void load_firmware(firmware *fw, char *filename, char *base_addr, char *alt_base
         }
     }
 
-    // DryOS R50/R51 copies a block of ROM to RAM and then uses that copy
+    // DryOS R50/R51/R52 copies a block of ROM to RAM and then uses that copy
     // Need to allow for this in finding addresses
     // Seen on SX260HS
     if (fw->dryos_ver >= 50)
@@ -1328,6 +1330,7 @@ typedef struct {
 	int		dryos49_offset;
 	int		dryos50_offset;
 	int		dryos51_offset;
+	int		dryos52_offset;
 } string_sig;
 
 #include "signatures_dryos.h"
@@ -1485,9 +1488,9 @@ string_sig string_sigs[] = {
     { 5, "CreateTask", "CreateTask", 1 },
     { 5, "ExitTask", "ExitTask", 1 },
     { 5, "SleepTask", "SleepTask", 1 },
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
-	{ 5, "UpdateMBROnFlash", "MakeBootDisk", 0x01000003,				  11,   11,   11,   11,   11,   11,    1,    1,    1,    1 },
-	{ 5, "MakeSDCardBootable", "MakeBootDisk", 0x01000003,				   1,    1,    1,    1,    1,    1,    8,    8,    8,    8 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
+	{ 5, "UpdateMBROnFlash", "MakeBootDisk", 0x01000003,				  11,   11,   11,   11,   11,   11,    1,    1,    1,    1,    1 },
+	{ 5, "MakeSDCardBootable", "MakeBootDisk", 0x01000003,				   1,    1,    1,    1,    1,    1,    8,    8,    8,    8,    8 },
 
     { 6, "Restart", "Bye", 0 },
 	{ 6, "GetImageFolder", "GetCameraObjectTmpPath ERROR[ID:%lx] [TRY:%lx]\n", 0 },
@@ -1504,19 +1507,19 @@ string_sig string_sigs[] = {
 	{ 8, "WriteSDCard", "Mounter.c", 0 }, 
 
     // Ensure ordering in func_names is correct for dependencies here
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
-	{ 9, "kbd_p1_f", "task_PhySw", 0,							           5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
-	{ 9, "kbd_p2_f", "task_PhySw", 0,							           7,    7,    7,    7,    7,    7,    7,    7,    7,    7 },
-	{ 9, "kbd_read_keys", "kbd_p1_f", 0,						           2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
-	{ 9, "kbd_p1_f_cont", "kbd_p1_f", -1,								   3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
-    { 9, "kbd_read_keys_r2", "kbd_read_keys", 0,                          11,   11,   11,   11,   11,   11,   11,   11,   11,   11 },
-    { 9, "GetKbdState", "kbd_read_keys", 0,                                8,    8,    8,    8,    8,    8,    8,    8,    8,    8 },
-	{ 9, "GetKbdState", "kbd_read_keys", 0,                                9,    9,    9,    9,    9,    9,    9,    9,    9,    9 },
-	{ 9, "strtolx", "strtol", 0,                                           1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
-    { 9, "mkdir", "MakeDirectory_Fut", 0x01000001,                        17,   17,   17,   17,   17,   17,   17,   17,   17,   17 },
-    { 9, "mkdir", "MakeDirectory_Fut", 0x01000002,                        17,   17,   17,   17,   17,   17,   17,   17,   17,   17 },
-    { 9, "time", "MakeDirectory_Fut", 0,                                  12,   12,   12,   12,   12,   12,   12,   12,   12,   12 },
-    { 9, "stat", "_uartr_req", 0,                                          0,    0,    0,    4,    4,    4,    4,    4,    4,    4 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
+	{ 9, "kbd_p1_f", "task_PhySw", 0,							           5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
+	{ 9, "kbd_p2_f", "task_PhySw", 0,							           7,    7,    7,    7,    7,    7,    7,    7,    7,    7,    7 },
+	{ 9, "kbd_read_keys", "kbd_p1_f", 0,						           2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
+	{ 9, "kbd_p1_f_cont", "kbd_p1_f", -1,								   3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
+    { 9, "kbd_read_keys_r2", "kbd_read_keys", 0,                          11,   11,   11,   11,   11,   11,   11,   11,   11,   11,   11 },
+    { 9, "GetKbdState", "kbd_read_keys", 0,                                8,    8,    8,    8,    8,    8,    8,    8,    8,    8,    8 },
+	{ 9, "GetKbdState", "kbd_read_keys", 0,                                9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9 },
+	{ 9, "strtolx", "strtol", 0,                                           1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
+    { 9, "mkdir", "MakeDirectory_Fut", 0x01000001,                        17,   17,   17,   17,   17,   17,   17,   17,   17,   17,   17 },
+    { 9, "mkdir", "MakeDirectory_Fut", 0x01000002,                        17,   17,   17,   17,   17,   17,   17,   17,   17,   17,   17 },
+    { 9, "time", "MakeDirectory_Fut", 0,                                  12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12 },
+    { 9, "stat", "_uartr_req", 0,                                          0,    0,    0,    4,    4,    4,    4,    4,    4,    4,    4 },
 	
 	{ 10, "task_CaptSeq", "CaptSeqTask", 1 },
 	{ 10, "task_ExpDrv", "ExpDrvTask", 1 },
@@ -1526,26 +1529,26 @@ string_sig string_sigs[] = {
 	{ 10, "task_RotaryEncoder", "RotaryEncoder", 1 },
 	{ 10, "task_RotaryEncoder", "RotarySw", 1 },
 
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
-	{ 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,				   5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
-	{ 11, "err_init_task", "\n-- %s() error in init_task() --", 0,		   2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  14,   14,   14,   14,   14,   14,   14,   14,   14,   14 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  15,   15,   15,   15,   15,   15,   15,   15,   15,   15 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  20,   20,   20,   20,   20,   20,   19,   20,   20,   20 },
-	{ 11, "_log", (char*)log_test, 0x01000001,							   1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
-	{ 11, "_uartr_req", "A/uartr.req", 0,							       3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
+	{ 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,				   5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
+	{ 11, "err_init_task", "\n-- %s() error in init_task() --", 0,		   2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  15,   15,   15,   15,   15,   15,   15,   15,   15,   15,   15 },
+	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  20,   20,   20,   20,   20,   20,   19,   20,   20,   20,   20 },
+	{ 11, "_log", (char*)log_test, 0x01000001,							   1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
+	{ 11, "_uartr_req", "A/uartr.req", 0,							       3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
 	
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51
-	{ 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,						0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54, 0x00, 0x00 },
-	{ 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1, 	0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x34, 0x4C, 0x4C },
-	{ 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1, 			0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38, 0x38, 0x50, 0x50 },
-	{ 12, "free", "free", 1,											0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30, 0x30, 0x48, 0x48 },
-	{ 12, "malloc", "malloc", 0x01000003,								0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C, 0x44, 0x44 },
-	{ 12, "TakeSemaphore", "TakeSemaphore", 1,							0x14, 0x14, 0x14, 0x14, 0x14, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C },
-	{ 12, "GiveSemaphore", "GiveSemaphore", 1,							0x18, 0x18, 0x18, 0x18, 0x18, 0x20, 0x20, 0x20, 0x20, 0x20 },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C,0x354,0x35C },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x000,0x2C4,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
+	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
+	{ 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,						0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54, 0x00, 0x00, 0x00 },
+	{ 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1, 	0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x34, 0x4C, 0x4C, 0x4C },
+	{ 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1, 			0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38, 0x38, 0x50, 0x50, 0x50 },
+	{ 12, "free", "free", 1,											0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30, 0x30, 0x48, 0x48, 0x48 },
+	{ 12, "malloc", "malloc", 0x01000003,								0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C, 0x44, 0x44, 0x44 },
+	{ 12, "TakeSemaphore", "TakeSemaphore", 1,							0x14, 0x14, 0x14, 0x14, 0x14, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C },
+	{ 12, "GiveSemaphore", "GiveSemaphore", 1,							0x18, 0x18, 0x18, 0x18, 0x18, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C,0x354,0x35C,0x35C },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
+	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x000,0x2C4,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
 	
 	{ 13, "strftime", "Sunday", 1 },
 	
@@ -1592,6 +1595,7 @@ int dryos_offset(firmware *fw, string_sig *sig)
 	case 49:	return sig->dryos49_offset;
 	case 50:	return sig->dryos50_offset;
 	case 51:	return sig->dryos51_offset;
+	case 52:	return sig->dryos52_offset;
 	}
 	return 0;
 }
