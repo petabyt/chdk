@@ -22,7 +22,7 @@ long kbd_get_autoclicked_key()
 	register long key, t;
 
 	key=kbd_get_clicked_key();
-	if (key)
+	if (key && (key != last_kbd_key))
     {
 		last_kbd_key = key;
 		press_count = 0;
