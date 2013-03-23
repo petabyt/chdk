@@ -206,7 +206,7 @@ int vid_get_viewport_display_yoffset()
 
 int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
 int vid_get_viewport_height_proper()            { return vid_get_viewport_height(); }
-int vid_get_palette_type()                      { return 3; }
+int vid_get_palette_type()                      { return 5; }
 int vid_get_palette_size()                      { return 256 * 4; }
 
 void *vid_get_bitmap_active_buffer()
@@ -227,24 +227,24 @@ void load_chdk_palette()
 
     extern int active_palette_buffer;
     // Only load for the standard record and playback palettes
-    if ((active_palette_buffer == 0) || (active_palette_buffer == 3) || (active_palette_buffer == 6))
+    if ((active_palette_buffer == 0) || (active_palette_buffer == 5) || (active_palette_buffer == 6))
     {
         int *pal = (int*)vid_get_bitmap_active_palette();
-        if (pal[CHDK_COLOR_BASE+0] != 0x33ADF62)
+        if (pal[CHDK_COLOR_BASE+0] != 0x3F3ADF62)
         {
-            pal[CHDK_COLOR_BASE+0]  = 0x33ADF62;  // Red
-            pal[CHDK_COLOR_BASE+1]  = 0x326EA40;  // Dark Red
-            pal[CHDK_COLOR_BASE+2]  = 0x34CD57F;  // Light Red
-            pal[CHDK_COLOR_BASE+3]  = 0x373BFAE;  // Green
-            pal[CHDK_COLOR_BASE+4]  = 0x34BD6CA;  // Dark Green
-            pal[CHDK_COLOR_BASE+5]  = 0x395AB95;  // Light Green
-            pal[CHDK_COLOR_BASE+6]  = 0x34766F0;  // Blue
-            pal[CHDK_COLOR_BASE+7]  = 0x31250F3;  // Dark Blue
-            pal[CHDK_COLOR_BASE+8]  = 0x37F408F;  // Cyan
-            pal[CHDK_COLOR_BASE+9]  = 0x3512D5B;  // Magenta
-            pal[CHDK_COLOR_BASE+10] = 0x3A9A917;  // Yellow
-            pal[CHDK_COLOR_BASE+11] = 0x3819137;  // Dark Yellow
-            pal[CHDK_COLOR_BASE+12] = 0x3DED115;  // Light Yellow
+            pal[CHDK_COLOR_BASE+0]  = 0x3F3ADF62;  // Red
+            pal[CHDK_COLOR_BASE+1]  = 0x3F26EA40;  // Dark Red
+            pal[CHDK_COLOR_BASE+2]  = 0x3F4CD57F;  // Light Red
+            pal[CHDK_COLOR_BASE+3]  = 0x3F73BFAE;  // Green
+            pal[CHDK_COLOR_BASE+4]  = 0x3F4BD6CA;  // Dark Green
+            pal[CHDK_COLOR_BASE+5]  = 0x3F95AB95;  // Light Green
+            pal[CHDK_COLOR_BASE+6]  = 0x3F4766F0;  // Blue
+            pal[CHDK_COLOR_BASE+7]  = 0x3F1250F3;  // Dark Blue
+            pal[CHDK_COLOR_BASE+8]  = 0x3F7F408F;  // Cyan
+            pal[CHDK_COLOR_BASE+9]  = 0x3F512D5B;  // Magenta
+            pal[CHDK_COLOR_BASE+10] = 0x3FA9A917;  // Yellow
+            pal[CHDK_COLOR_BASE+11] = 0x3F819137;  // Dark Yellow
+            pal[CHDK_COLOR_BASE+12] = 0x3FDED115;  // Light Yellow
 
             extern char palette_control;
             palette_control = 1;
