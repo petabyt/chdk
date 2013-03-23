@@ -27,3 +27,11 @@ NHSTUB(taskcreate_JogDial, 0xFF8283b8)
 NHSTUB(task_JogDial, 0xFF8287a8)
 NHSTUB(taskNameToId, 0xFFB136CC)
 
+NSTUB(orig_MoveFocusLensToDistance, 0xffab89d8)
+NHSTUB(MoveFocusLensToDistance, my_MoveFocusLensToDistance)
+
+NHSTUB(MakeAFScan, my_MakeAFScan)
+NSTUB(orig_MakeAFScan, 0xff955dd8)
+
+NHSTUB(LEDDrive, 0xFF82DBB8)
+NHSTUB(PostLEDMessage, 0xFF82D8FC)
