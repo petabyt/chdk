@@ -175,9 +175,6 @@ void startup()
     while (bss<&link_bss_end)
         *bss++ = 0;
 
-    // fill memory with this magic value so we could see what
-    // parts of memory were or not used
-
     boot();
 }
 
@@ -227,5 +224,6 @@ playrec_mode:
 3 when switched into play mode while in record mode
 2 record mode
 4 in recmode menu
+5 when recmode overlay animation is activated by the jogdial
 0 when switched on in play mode
 */

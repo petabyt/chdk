@@ -26,3 +26,5 @@ DEF(FlashParamsTable, 0xFF96ABDC)
 DEF(focus_len_table, 0xfffe41f4)
 
 DEF(sys_mempart_id, 0xf230) // memShow
+
+DEF(active_bitmap_buffer, 0x7f3c0)

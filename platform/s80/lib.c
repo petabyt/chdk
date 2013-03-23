@@ -23,34 +23,37 @@ void shutdown()
 
 void debug_led(int state)
 {
-    //volatile long *p=(void*)LED_PR;
-    volatile long *p = (void*)LED_AF;
+    volatile long *p = (void*)LED_PR;
+    //volatile long *p = (void*)LED_AF;
 
     if (state) {
-	p[0]=0x46;
+	p[0]=0x47;
     }
     else {
 	p[0]=0x44;
     }
 }
 
-//#define LED_BASE 0xc0220080
-//#define LED_AF 0xC0220094//was 0xc0220080 //a650- 0xc0220080//from g7
-/* FIXME */
-void camera_set_led(int led, int state, int bright)//?
+void camera_set_led(int led, int state, int bright)
 {
 /*
-  int leds[] = {12,16,4,8,4,0,4};
-  if(led < 4 || led > 10 || led == 6) return;
-  volatile long *p=(void*)LED_BASE + leds[led-4];
-    if (state)
-	p[0]=0x46;
-    else
-	p[0]=0x44;
+0 upper green
+1 upper orange (red?)
+2 lower orange
+4 power green
+5 power orange
+8 blue (print)
+9..11 af
 */
-	debug_led(state);
-}
+ struct led_control led_c;
 
+ led_c.led_num=led%16;
+ led_c.action=state<=1 ? !state : state;
+ led_c.brightness=bright;
+ led_c.blink_count=255;
+ _PostLEDMessage(&led_c);
+}
+ 
 
 int get_flash_params_count(void){
  return 94; // @FF96AD60
@@ -131,3 +134,14 @@ int vid_get_viewport_display_yoffset() {
     return ((m&MODE_SHOOTING_MASK) == MODE_STITCH)?60:0; // window is 120, centered in 240 screen
 }
 
+/*
+int switch_mode_usb(int mode) // not working
+{
+    if ( mode == 0 ) {
+        levent_set_play();
+    } else if ( mode == 1 ) {
+        levent_set_record();
+    } else return 0;
+    return 1;
+}
+*/

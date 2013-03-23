@@ -22,23 +22,25 @@
 
     #define CAM_PROPSET                         1
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
-    #define CAM_ALT_BUTTON_NAMES                { "Shrtcut", "Display", "Timer" }
-    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PRINT, KEY_DISPLAY, KEY_MICROPHONE }
+    #define CAM_ALT_BUTTON_NAMES                { "Shrtcut", "Display", "Timer", "Jump" }
+    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PRINT, KEY_DISPLAY, KEY_MICROPHONE, KEY_EXPO_CORR }
     #define CAM_RAW_ROWPIX                      3344   // @FF8B49E0 (100g)
     #define CAM_RAW_ROWS                        2484   // @FF8B49E0 (100g)
-    #define CAM_CAN_SD_OVER_NOT_IN_MF           1
+
+    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
+    #define CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY     1 // SD override when AF locked or video mode
+    #undef  CAM_HAS_MANUAL_FOCUS                  // needed, SD override is misbehaving in MF
+
     #undef  CAM_HAS_IS    
     #define CAM_CAN_MUTE_MICROPHONE             1
-    //#define CAM_EV_IN_VIDEO             1
+    #define CAM_EV_IN_VIDEO                     1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
-    #define CAM_DRAW_EXPOSITION                 1
     #define CAM_HAS_ERASE_BUTTON                1
-    //#define CAM_HAS_ND_FILTER                   1 // no ND filter!
     #define CAM_HAS_JOGDIAL                     1
-    #define CAM_AF_SCAN_DURING_VIDEO_RECORD     2 // assumption: will probably crash in some (hires?) modes
-    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1 // david
+    //#undef CAM_AF_SCAN_DURING_VIDEO_RECORD        // always crashes
+    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
     #undef  CAM_VIDEO_CONTROL
-    //#define CAM_CHDK_HAS_EXT_VIDEO_MENU	1
+    #define CAM_CHDK_HAS_EXT_VIDEO_MENU         1
 
     #define CAM_DNG_LENS_INFO                   { 58,10, 207,10, 28,10, 53,10 } // See comments in camera.h
     // pattern
@@ -53,13 +55,16 @@
     // cropping
     #define CAM_JPEG_WIDTH                      3264
     #define CAM_JPEG_HEIGHT                     2448
-    #define CAM_ACTIVE_AREA_X1                  0    //trial only
-    #define CAM_ACTIVE_AREA_Y1                  0
-    #define CAM_ACTIVE_AREA_X2                  3344
-    #define CAM_ACTIVE_AREA_Y2                  2484
+    #define CAM_ACTIVE_AREA_X1                  8
+    #define CAM_ACTIVE_AREA_Y1                  2
+    #define CAM_ACTIVE_AREA_X2                  3296
+    #define CAM_ACTIVE_AREA_Y2                  2482
     // camera name
     #define PARAM_CAMERA_NAME                   3 // parameter number for GetParameterData
     #define DNG_EXT_FROM                        ".DPS"
-    //#define CAM_EXT_TV_RANGE            1
+    #define CAM_EXT_TV_RANGE                    1
 
     #define CAM_FIRMWARE_MEMINFO                1
+    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1
+    #undef  CAM_AF_LED
+    #define CAM_AF_LED                          9   // Index of AF led in camera_set_led function

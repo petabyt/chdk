@@ -3,7 +3,7 @@
 #include "platform.h"
 
 const ApertureSize aperture_sizes_table[] = {
-    {  9, 288, "2.8" },
+    {  9, 293, "2.8" },
     { 10, 320, "3.2" },
     { 11, 352, "3.5" },
     { 12, 384, "4.0" },
@@ -12,7 +12,7 @@ const ApertureSize aperture_sizes_table[] = {
     { 15, 480, "5.6" },
     { 16, 512, "6.3" },
     { 17, 544, "7.1" },
-    { 18, 576, "8.0" },
+    { 18, 576, "8.0" }, // Canon UI limit
     { 19, 608, "9.0" },
     { 20, 640, "10.1"},
     { 21, 672, "11.3" },
@@ -79,41 +79,28 @@ const ISOTable iso_table[] = {
     {  4,  400,  "400", -1},
 };
 
-struct {
-	int hackmode;
-	int canonmode;
-} modemap[] = {
-    { MODE_AUTO,               32768 },
-    { MODE_P,                  32772 },
-    { MODE_TV,                 32771 },
-    { MODE_AV,                 32770 },
-    { MODE_M,                  32769 },
-    { MODE_VIDEO_STD,          2597  },
-    { MODE_VIDEO_HIRES,        2600  },
-    { MODE_VIDEO_COMPACT,      2599  },
-    { MODE_VIDEO_COLOR_SWAP,   2596  },
-    { MODE_VIDEO_COLOR_ACCENT, 2595  },
-    { MODE_VIDEO_TIME_LAPSE,   2601  },
-    { MODE_STITCH,             33290 },
-    { MODE_PORTRAIT,           16397 },
-    { MODE_SCN_NIGHT_SCENE,    16398 },
-    { MODE_NIGHT_SNAPSHOT,     16395 },
-    { MODE_SCN_INDOOR,         16401 },
-    { MODE_SCN_SNOW,           16403 },
-    { MODE_SCN_FIREWORK,       16405 },
-    { MODE_SCN_UNDERWATER,     16406 },
-    { MODE_SCN_COLOR_ACCENT,   16922 },
-    { MODE_SCN_SPORT,          16903 },
-    { MODE_SCN_KIDS_PETS,      16400 },
-    { MODE_SCN_FOLIAGE,        16402 },
-    { MODE_SCN_BEACH,          16404 },
-    { MODE_SCN_AQUARIUM,       16407 },
-    { MODE_SCN_ISO_3200,       16412 },
-    { MODE_SCN_COLOR_SWAP,     16923 },
-    { MODE_LANDSCAPE,          16396 }
+const CapturemodeMap modemap[] = {
+    { MODE_M,                   0 },
+    { MODE_P,                   1 },
+    { MODE_AV,                  2 },
+    { MODE_TV,                  3 },
+    { MODE_MY_COLORS,           4 },
+    { MODE_STITCH,              5 },
+    { MODE_AUTO,                6 },
+    { MODE_SCN_LANDSCAPE,       7 },
+    { MODE_SCN_DIGITAL_MACRO,   8 },
+    { MODE_SCN_NIGHT_SCENE,     9 },
+    { MODE_SCN_PORTRAIT,       10 },
+    { MODE_SCN_FOLIAGE,        11 },
+    { MODE_SCN_SNOW,           12 },
+    { MODE_SCN_BEACH,          13 },
+    { MODE_SCN_UNDERWATER,     14 },
+    { MODE_SCN_INDOOR,         15 },
+    { MODE_SCN_NIGHT_SNAPSHOT, 16 },
+    { MODE_SCN_KIDS_PETS,      17 },
+    { MODE_SCN_FIREWORK,       18 },
+    { MODE_VIDEO_STD,          19 },
 };
-
-//#define MODESCNT (sizeof(modemap)/sizeof(modemap[0]))
 
 #include "../generic/shooting.c"
 
