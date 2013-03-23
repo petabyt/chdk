@@ -176,7 +176,7 @@ s2is,100g,,100i,
 s3is,100a,,,
 s5is,101a,,,
 s5is,101b,,,
-s80,100g,ALPHA,,SKIP_AUTOBUILD
+s80,100g,ALPHA,,
 s90,100c,BETA,,
 s90,101a,BETA,,
 s90,101c,BETA,101b,
