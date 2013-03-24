@@ -110,6 +110,9 @@ ixus120_sd940,101a,,,
 ixus120_sd940,102c,,,
 ixus120_sd940,103b,,,
 ixus120_sd940,103c,,,
+ixus125_elph110hs,100d,ALPHA,,SKIP_AUTOBUILD
+ixus125_elph110hs,100e,ALPHA,,
+ixus125_elph110hs,101a,ALPHA,,
 ixus130_sd1400,100a,ALPHA,,SKIP_AUTOBUILD
 ixus130_sd1400,100c,ALPHA,,
 ixus200_sd980,100c,BETA,,
