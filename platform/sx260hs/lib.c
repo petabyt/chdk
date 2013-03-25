@@ -29,14 +29,16 @@ void shutdown() {
     while(1);
 }
 
-#define LED_PR 0xC022C30C                       // Power LED (@FF15B178 & @FF15B1CC)
+
+// see http://chdk.wikia.com/wiki/SX260#LED_addresses
+// #define LED_PR 0xC022C30C                       // Power LED (@FF15B178 & @FF15B1CC)
 
 void debug_led(int state) {
     // using power LED, which defaults to on
     // for debugging turn LED off if state is 1 and on for state = 0
     // leaves LED on at end of debugging
-    volatile long *p = (void*)LED_PR;
-    *p = (*p & 0xFFFFFFCF) | ((state) ? 0x00 : 0x20);
+//    volatile long *p = (void*)LED_PR;
+//    *p = (*p & 0xFFFFFFCF) | ((state) ? 0x00 : 0x20);
 }
 
 // SX260 has two 'lights' - Power LED, and AF assist lamp

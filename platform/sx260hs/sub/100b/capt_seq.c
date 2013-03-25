@@ -429,10 +429,10 @@ void __attribute__((naked,noinline)) sub_FF1BEF7C_my() {
         "MOV     R0, R4\n"
         "BL      sub_FF1BE314\n"
         "BL      sub_FF1BF828\n"
-//PATCH BEGIN  ASM1989 Looks Like not sure
+//PATCH BEGIN 
 //Suggested by nafraf
-//        "BL      wait_until_remote_button_is_released\n"
-//        "BL      capt_seq_hook_set_nr\n"
+        "BL      wait_until_remote_button_is_released\n"
+        "BL      capt_seq_hook_set_nr\n"
 //PATCH END
 "loc_FF1BF14C:\n"
         "LDR     R0, [R6, #0x94]\n"
@@ -476,8 +476,8 @@ void __attribute__((naked,noinline)) sub_FF1BEF7C_my() {
         "BLLS    sub_FF07654C\n"            //don't delete this comment! add address to stubs_auto.S: "B sub_FF07654C"
 //begin patch
 //Previous try by asm189  (-test-nr)
-        "BL      wait_until_remote_button_is_released\n"
-        "BL      capt_seq_hook_set_nr\n"        
+//        "BL      wait_until_remote_button_is_released\n"
+//        "BL      capt_seq_hook_set_nr\n"        
 //end patch
         "LDR     R0, [R6, #0x94]\n"
         "TST     R0, #0x10\n"
