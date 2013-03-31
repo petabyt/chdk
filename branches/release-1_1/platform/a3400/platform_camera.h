@@ -63,6 +63,8 @@
 
     #define CAM_EXT_TV_RANGE                1
 
+    #define CAM_HAS_VIDEO_BUTTON            1
+    #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
 
     #define DNG_VERT_RLE_BADPIXELS          1
@@ -78,8 +80,6 @@
     #undef  CAM_HAS_ERASE_BUTTON
 
     #undef  CAM_HAS_MANUAL_FOCUS
-
-    #undef  CAM_VIDEO_CONTROL
 
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              13      // palette number reserved in core/gui_draw.h
