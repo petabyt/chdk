@@ -1,5 +1,5 @@
 /*
-limathlib.c,v 1.0
+limathlib.c,v 1.1
 integer based trigonometric mathematics
 all values scaled by 1000 (imath.scale)
 
@@ -182,6 +182,32 @@ static int imath_sqrt (lua_State *L) {
     return 1;
 }
 
+//additional math
+static int imath_int (lua_State *L) {
+    lua_pushnumber(L, FIXED2INTR(fint(INT2FIXEDR(luaL_checknumber(L, 1)))));
+    return 1;
+}
+
+static int imath_frac (lua_State *L) {
+    lua_pushnumber(L, FIXED2INTR(ffrac(INT2FIXEDR(luaL_checknumber(L, 1)))));
+    return 1;
+}
+
+static int imath_ceil (lua_State *L) {
+    lua_pushnumber(L, FIXED2INTR(fceil(INT2FIXEDR(luaL_checknumber(L, 1)))));
+    return 1;
+}
+
+static int imath_floor (lua_State *L) {
+    lua_pushnumber(L, FIXED2INTR(ffloor(INT2FIXEDR(luaL_checknumber(L, 1)))));
+    return 1;
+}
+
+static int imath_round (lua_State *L) {
+    lua_pushnumber(L, FIXED2INTR(fround(INT2FIXEDR(luaL_checknumber(L, 1)))));
+    return 1;
+}
+
 static const luaL_Reg imathlib[] = {
     {"muldiv", imath_muldiv},
     {"mul",    imath_mul},
@@ -209,6 +235,11 @@ static const luaL_Reg imathlib[] = {
     {"log10",  imath_log10},
     {"pow",    imath_pow},
     {"sqrt",   imath_sqrt},
+    {"int",    imath_int},
+    {"frac",   imath_frac},
+    {"ceil",   imath_ceil},
+    {"floor",  imath_floor},
+    {"round",  imath_round},
     {NULL, NULL}
 };
 
