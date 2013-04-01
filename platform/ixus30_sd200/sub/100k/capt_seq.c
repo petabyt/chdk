@@ -1,16 +1,14 @@
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
-#include "conf.h"
-
-//#include "../../../generic/capt_seq.c"
-
-#define RAWDATA_AVAILABLE (1)
-#define RAWDATA_SAVED (2)
 
 #define NR_ON (2)
 #define NR_OFF (1)
 #define NR_AUTO (0)
+
+static long *nrflag = (long*)0x5c5c;
+
+#include "../../../generic/capt_seq.c"
 
 /*
 from debug strings:
@@ -18,65 +16,6 @@ from debug strings:
 [0x5c5c]: darksub setting (0=according to table, 1=off, 2=on)
 */
 
-static long raw_save_stage;
-
-void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
-{
- asm volatile("STMFD   SP!, {R0-R12,LR}\n");
-	long save_count=0; 
-	volatile long *p; p=(void*) 0xc02200E4; 
-	 *p=0x46;
-	 
-	
-	raw_save_stage = RAWDATA_AVAILABLE;
-	core_rawdata_available();
-	while (raw_save_stage != RAWDATA_SAVED){
-		_SleepTask(10);
-		save_count++;
-		if (save_count>20){
-			*p=0x46;
-			save_count=0;
-		}else if(save_count>10){
-			*p=0;
-		}
-	}
-		
-	 *p=0;
- asm volatile("LDMFD   SP!, {R0-R12,PC}\n");
-}
-
-void hook_raw_save_complete()
-{
-    raw_save_stage = RAWDATA_SAVED;
-}
-
-
-void __attribute__((naked,noinline)) capt_seq_hook_set_nr()
-{
-//	return;
-//#if 0
-/*
-something weird is going on...
-the "on" setting remains until i set it to "off" (in the same shooting session)
-so the "auto" path has to be used too (it wasn't until now)
-*/
-asm volatile("STMFD   SP!, {R0-R12,LR}\n");
-    long *nrflag = (long*)0x5c5c;
-
-    switch (conf.raw_nr){
-    case NOISE_REDUCTION_AUTO_CANON:
-	*nrflag = NR_AUTO; //"according to table"
-	break;
-    case NOISE_REDUCTION_OFF:
-	*nrflag = NR_OFF;
-	break;
-    case NOISE_REDUCTION_ON:
-	*nrflag = NR_ON;
-	break;
-    };
-asm volatile("LDMFD   SP!, {R0-R12,PC}\n");
-//#endif
-}
 /*
 void __attribute__((naked,noinline)) sub_FF9460CC_my()
 {
