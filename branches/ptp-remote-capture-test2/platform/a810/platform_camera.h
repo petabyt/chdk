@@ -62,6 +62,8 @@
 
     #define CAM_EXT_TV_RANGE                1
 
+    #define CAM_HAS_VIDEO_BUTTON            1
+    #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
 
     #define DNG_VERT_RLE_BADPIXELS          1
@@ -79,8 +81,6 @@
     #undef  CAM_HAS_IS                              // Camera does not have an image stabilizer
 
     #undef  CAM_HAS_MANUAL_FOCUS
-
-    #undef  CAM_VIDEO_CONTROL
 
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              13      // palette number reserved in core/gui_draw.h
@@ -104,7 +104,9 @@
     #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
     #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments    
     #define CAM_NEED_SET_ZOOM_DELAY          300  // Define to add a delay after setting the zoom position
-    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
+    #define CAM_USE_ALT_SET_ZOOM_POINT       1    // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
 //    #define CAM_AF_SCAN_DURING_VIDEO_RECORD  1  //TODO: Disabled until find a solution.
     #define CAM_QUALITY_OVERRIDE             1

@@ -37,6 +37,7 @@
     #define CAM_VIDEO_QUALITY_ONLY              1
 
     #undef  CAM_HAS_IS
+    #define CAM_MIN_ISO_OVERRIDE                62
 
     #define CAM_DNG_LENS_INFO                   { 58,10, 174,10, 28,10, 49,10 } // See comments in camera.h
     // pattern

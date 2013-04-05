@@ -260,7 +260,7 @@ void __attribute__((naked,noinline)) capt_seq_task() {
             "B       loc_FF085D80\n"
     "loc_FF085D74:\n"
             "LDR     R1, =0x5F2\n"
-            "LDR     R0, =0xFF0853D8 \n"
+            "LDR     R0, =0xFF0853D8 \n"  // SsShootTask.c
       "BL      _DebugAssert \n"
     "loc_FF085D80:\n"
             "LDR     R0, [SP]\n"
@@ -271,7 +271,7 @@ void __attribute__((naked,noinline)) capt_seq_task() {
             "LDR     R0, [R5,#8]\n"
             "CMP     R0, #0\n"
             "LDREQ   R1, =0x117\n"
-            "LDREQ   R0, =0xFF0853D8 \n"
+            "LDREQ   R0, =0xFF0853D8 \n"  // SsShootTask.c
             "BLEQ    _DebugAssert \n"
             "STR     R6, [R5,#8]\n"
             "B       loc_FF085A9C\n"

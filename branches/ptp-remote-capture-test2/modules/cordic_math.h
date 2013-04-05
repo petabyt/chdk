@@ -1,18 +1,29 @@
 /*
 CORDIC LIBRARY
-integer based trigonometric functions
+integer based trigonometric mathematics
+all values scaled by 100000 (CORDIC_SCALE)
+
 based on http://www.andreadrian.de/c-workshop/index.html
-rudi 2012/12/04
+
+(c)2012/2013 rudi from CHDK[-DE] forum
+License GPL 2.0
 
 trigonometric functions
-    angel as DEG:
+    angle as DEG:
     sind, cosd, tand, asind, acosd, atand, recd, pold
-    angel as RAD:
+    angle as RAD:
     sinr, cosr, tanr, asinr, acosr, atanr, recr, polr
 
-additional functins
+additional functions
     integer calculation (a * b / c):
     fixed muldivScaled(fixed a , fixed b, fixed c)
+
+additional math functions
+    fixed fint(a)   get integer
+    fixed ffrac(a)  get fraction part
+    fixed fceil(a)  get largest previous integer
+    fixed ffloor(a) get smallest following integer
+    fixed fround(a) get nearest integer
 
 all values in CORDIC routines are from type 'fixed' (4 byte integer)
     makros to convert values:
@@ -28,8 +39,8 @@ typedef long fixed;
 typedef int int4b; //4 byte integer
 enum fcordic {ROTATE, VECTOR};
 typedef int fcordic;
-enum tangel {RAD, DEG};
-typedef int tangel;
+enum tangle {RAD, DEG};
+typedef int tangle;
 
 enum {
     FRACTIONBITS = 17,
@@ -51,28 +62,28 @@ enum {
 #define FIXED2INTR(X)   (fixedToInt((X), 1))
 
 //intern used functions
-LUALIB_API void cordic(tangel t, fcordic f, fixed *x, fixed *y, fixed *z);
+LUALIB_API void cordic(tangle t, fcordic f, fixed *x, fixed *y, fixed *z);
 LUALIB_API fixed mulScaled(fixed a, fixed b);
 LUALIB_API fixed divScaled(fixed a, fixed b);
 LUALIB_API int convertToQ1(fixed *x, fixed *y);
 LUALIB_API void convertFromQ1(fixed *x, fixed *y, int q);
-LUALIB_API int rotateToQ1(tangel t, fixed *phi);
-LUALIB_API void rotateFromQ1(tangel t, fixed *phi, int q);
+LUALIB_API int rotateToQ1(tangle t, fixed *phi);
+LUALIB_API void rotateFromQ1(tangle t, fixed *phi, int q);
 LUALIB_API fixed cathetus(fixed x);
 /* base CIRCULAR mode, ROTATE */
-LUALIB_API void sincosCordic(tangel t, fixed phi, fixed *sinphi, fixed *cosphi);
+LUALIB_API void sincosCordic(tangle t, fixed phi, fixed *sinphi, fixed *cosphi);
 /* base CIRCULAR mode, VECTOR */
-LUALIB_API void atanhypCordic(tangel t, fixed px, fixed py, fixed *phi, fixed *hyp);
+LUALIB_API void atanhypCordic(tangle t, fixed px, fixed py, fixed *phi, fixed *hyp);
 /* functions CIRCULAR mode, ROTATE */
-LUALIB_API fixed sinCordic(tangel t, fixed phi);
-LUALIB_API fixed cosCordic(tangel t, fixed phi);
-LUALIB_API fixed tanCordic(tangel t, fixed phi);
-LUALIB_API void recCordic(tangel t, fixed r, fixed theta, fixed *px, fixed *py);
+LUALIB_API fixed sinCordic(tangle t, fixed phi);
+LUALIB_API fixed cosCordic(tangle t, fixed phi);
+LUALIB_API fixed tanCordic(tangle t, fixed phi);
+LUALIB_API void recCordic(tangle t, fixed r, fixed theta, fixed *px, fixed *py);
 /* functions CIRCULAR mode, VECTOR */
-LUALIB_API fixed asinCordic(tangel t, fixed x);
-LUALIB_API fixed acosCordic(tangel t, fixed x);
-LUALIB_API fixed atanCordic(tangel t, fixed x);
-LUALIB_API void polCordic(tangel t, fixed px, fixed py, fixed *r, fixed *theta);
+LUALIB_API fixed asinCordic(tangle t, fixed x);
+LUALIB_API fixed acosCordic(tangle t, fixed x);
+LUALIB_API fixed atanCordic(tangle t, fixed x);
+LUALIB_API void polCordic(tangle t, fixed px, fixed py, fixed *r, fixed *theta);
 
 // extern
 // PI/2, PI, 2*PI
@@ -103,3 +114,9 @@ LUALIB_API fixed asinr(fixed x);
 LUALIB_API fixed acosr(fixed x);
 LUALIB_API fixed atanr(fixed x);
 LUALIB_API void polr(fixed px, fixed py, fixed *r, fixed *theta);
+//additional math
+LUALIB_API fixed fint(fixed a);
+LUALIB_API fixed ffrac(fixed a);
+LUALIB_API fixed fceil(fixed a);
+LUALIB_API fixed ffloor(fixed a);
+LUALIB_API fixed fround(fixed a);

@@ -12,6 +12,8 @@
 	SUB	R3, R3, #1
 	CMP	R3, #0
 	BNE	1b
+
+// ordinary startup...
 	
 	MOV     SP, #0x1900
 	MOV     R11, #0

@@ -5,7 +5,7 @@ all values scaled by 100000 (CORDIC_SCALE)
 
 based on http://www.andreadrian.de/c-workshop/index.html
 
-(c)2012 rudi from CHDK[-DE] forum
+(c)2012/2013 rudi from CHDK[-DE] forum
 License GPL 2.0
 */
 
@@ -27,7 +27,7 @@ fixed ATAN_LIMIT        = 0x36f602be;           // 7035.00536
 fixed FIXED_MAX         = 16383.99999;
 
 // CORDIC main routine
-LUALIB_API void cordic(tangel t, fcordic f, fixed *x, fixed *y, fixed *z) {
+LUALIB_API void cordic(tangle t, fcordic f, fixed *x, fixed *y, fixed *z) {
     long *patan_tab = atan_tab[t];
     long xstep, ystep, zstep = 1;
     int i;
@@ -103,7 +103,7 @@ LUALIB_API void convertFromQ1(fixed *x, fixed *y, int q) {
     *y = fy * *y;
 }
 
-LUALIB_API int rotateToQ1(tangel t, fixed *phi) {
+LUALIB_API int rotateToQ1(tangle t, fixed *phi) {
     *phi = (*phi % FULL_CIRCLE[t] + FULL_CIRCLE[t]) % FULL_CIRCLE[t];
     int q = *phi / QUART_CIRCLE[t] + 1;
     switch(q) {
@@ -114,7 +114,7 @@ LUALIB_API int rotateToQ1(tangel t, fixed *phi) {
     return q;
 }
 
-LUALIB_API void rotateFromQ1(tangel t, fixed *phi, int q) {
+LUALIB_API void rotateFromQ1(tangle t, fixed *phi, int q) {
     switch(q) {
         case 2: *phi = HALF_CIRCLE[t] - *phi; break;
         case 3: *phi = HALF_CIRCLE[t] + *phi; break;
@@ -127,7 +127,7 @@ LUALIB_API fixed cathetus(fixed x) {
 }
 
 // base CIRCULAR mode, ROTATE
-LUALIB_API void sincosCordic(tangel t, fixed phi, fixed *sinphi, fixed *cosphi) {
+LUALIB_API void sincosCordic(tangle t, fixed phi, fixed *sinphi, fixed *cosphi) {
     int q = rotateToQ1(t, &phi);
     fixed x = INV_GAIN_CIRCLE[t], y = 0, z = phi;
     cordic(t, ROTATE, &x, &y, &z);
@@ -137,7 +137,7 @@ LUALIB_API void sincosCordic(tangel t, fixed phi, fixed *sinphi, fixed *cosphi) 
 }
 
 // base CIRCULAR mode, VECTOR
-LUALIB_API void atanhypCordic(tangel t, fixed px, fixed py, fixed *phi, fixed *hyp) {
+LUALIB_API void atanhypCordic(tangle t, fixed px, fixed py, fixed *phi, fixed *hyp) {
     int q = convertToQ1(&px, &py);
     int f = 0;
     while (px > ATAN_LIMIT || py > ATAN_LIMIT) {
@@ -161,25 +161,25 @@ LUALIB_API void atanhypCordic(tangel t, fixed px, fixed py, fixed *phi, fixed *h
 }
 
 // functions in CIRCULAR mode, ROTATE
-LUALIB_API fixed sinCordic(tangel t, fixed phi) {
+LUALIB_API fixed sinCordic(tangle t, fixed phi) {
     fixed _sin, _cos;
     sincosCordic(t, phi, &_sin, &_cos);
     return _sin;
 }
 
-LUALIB_API fixed cosCordic(tangel t, fixed phi) {
+LUALIB_API fixed cosCordic(tangle t, fixed phi) {
     fixed _sin, _cos;
     sincosCordic(t, phi, &_sin, &_cos);
     return _cos;
 }
 
-LUALIB_API fixed tanCordic(tangel t, fixed phi) {
+LUALIB_API fixed tanCordic(tangle t, fixed phi) {
     fixed _sin, _cos;
     sincosCordic(t, phi, &_sin, &_cos);
     return divScaled(_sin, _cos);
 }
 
-LUALIB_API void recCordic(tangel t, fixed r, fixed theta, fixed *px, fixed *py) {
+LUALIB_API void recCordic(tangle t, fixed r, fixed theta, fixed *px, fixed *py) {
     fixed _sin, _cos;
     sincosCordic(t, theta, &_sin, &_cos);
     *px = mulScaled(r, _cos);
@@ -187,27 +187,27 @@ LUALIB_API void recCordic(tangel t, fixed r, fixed theta, fixed *px, fixed *py) 
 }
 
 // functions in CIRCULAR mode, VECTOR
-LUALIB_API fixed asinCordic(tangel t, fixed x) {
+LUALIB_API fixed asinCordic(tangle t, fixed x) {
     fixed phi, hyp;
     fixed _cos = cathetus(x);
     atanhypCordic(t, _cos, x, &phi, &hyp);
     return phi;
 }
 
-LUALIB_API fixed acosCordic(tangel t, fixed x) {
+LUALIB_API fixed acosCordic(tangle t, fixed x) {
     fixed phi, hyp;
     fixed _sin = cathetus(x);
     atanhypCordic(t, x, _sin, &phi, &hyp);
     return phi;
 }
 
-LUALIB_API fixed atanCordic(tangel t, fixed x) {
+LUALIB_API fixed atanCordic(tangle t, fixed x) {
     fixed phi, hyp;
     atanhypCordic(t, CORDIC_SCALE, x, &phi, &hyp);
     return phi;
 }
 
-LUALIB_API void polCordic(tangel t, fixed px, fixed py, fixed *r, fixed *theta) {
+LUALIB_API void polCordic(tangle t, fixed px, fixed py, fixed *r, fixed *theta) {
     fixed phi, hyp;
     atanhypCordic(t, px, py, &phi, &hyp);
     *theta = phi;
@@ -279,6 +279,30 @@ LUALIB_API fixed atanr(fixed x) {
 
 LUALIB_API void polr(fixed px, fixed py, fixed *r, fixed *theta) {
     polCordic(RAD, px, py, r, theta);
+}
+
+//additional math functions
+LUALIB_API fixed fint(fixed a) {
+    int sign = cordic_sign(a);
+    return sign * (cordic_abs(a) >> FRACTIONBITS << FRACTIONBITS);
+}
+
+LUALIB_API fixed ffrac(fixed a) {
+    return a - fint(a);
+}
+
+LUALIB_API fixed fceil(fixed a) {
+    fixed int_a = fint(a);
+    return (a < 0 || a == int_a)? int_a: int_a + CORDIC_SCALE;
+}
+
+LUALIB_API fixed ffloor(fixed a) {
+    fixed int_a = fint(a);
+    return (a > 0 || a == int_a)? int_a: int_a - CORDIC_SCALE;
+}
+
+LUALIB_API fixed fround(fixed a) {
+    return ffloor(a + CORDIC_SCALE/2);
 }
 
 // convert functions
