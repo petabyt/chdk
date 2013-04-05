@@ -28,13 +28,13 @@ void debug_led(int state)
     *(int*)LED_PR=state ? 0x46 : 0x44;
 }
 
+// A495 has 2 led values
+// 0/7 - Power LED Green
+// 1/9 - AF LED Orange
 void camera_set_led(int led, int state, int bright) {
-    long val = state ? 0x46 : 0x44;
-    switch ( led )
-    {
-    default:
-        *(int*)LED_PR = val;
-    }
+    static char led_table[2]={7,9};
+//    if(state<=1) _LEDDrive(led_table[led%2], (!state)&1);
+    if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], (!state)&1);
 }
 
 void vid_bitmap_refresh() {
@@ -44,15 +44,15 @@ void vid_bitmap_refresh() {
     // asm1989: i've tried refreshphysical screen (screen unlock) and that caused the canon and
     // function menu to not display at all. This seems to work and is called in a similar
     // way in other places where original OSD should be refreshed.
-    extern void _LockAndRefresh();   // wrapper function for screen lock
-    extern void _UnlockAndRefresh();   // wrapper function for screen unlock
+    extern void _ScreenLock();
+    extern void _ScreenUnlock();
 
-    _LockAndRefresh();
+    _ScreenLock();
 
     enabled_refresh_physical_screen=1;
     full_screen_refresh=3;   // found in ScreenUnlock underneath a CameraLog.c call
 
-    _UnlockAndRefresh();
+    _ScreenUnlock();
 }
 
 // Near "PropertyTableManagerCore.c" ROM:FFD2ED94
