@@ -42,17 +42,10 @@ struct flat_hdr {
     uint32_t bss_start;     // Offset of bss segment from beginning of file
                             // (It is assumed that data_end through bss_end forms the bss segment.)
 
-    // Relocation info - replaced with module name after module has been relocated
-    union
-    {
-        char     modulename[12];        // while loaded: module identification (replaces fields below)
-        struct
-        {
-            uint32_t reloc_start;		// Offset of relocation records from beginning of file
-            uint32_t import_start;		// Offset of import section
-        	uint32_t file_size;         // size of file
-        };
-    };
+    // Relocation info
+    uint32_t reloc_start;   // Offset of relocation records from beginning of file
+    uint32_t import_start;  // Offset of import section
+    uint32_t file_size;     // size of file
 
     // Offset / Pointer to ModuleInfo structure
     union

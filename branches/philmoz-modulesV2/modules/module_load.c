@@ -74,7 +74,6 @@ typedef int (*_module_action_t)( struct flat_hdr* flat, void* relocbuf, uint32_t
 
 //********************************************************/
 
-#define MAX_NUM_LOADED_MODULES  10
 #define BUFFER_FOR_READ_SIZE    4096
 #define MODULES_PATH            "A/CHDK/MODULES"
 
@@ -127,14 +126,8 @@ void b_close(int fd)
 //**       Auxilary module system functions             **
 //********************************************************/
 
-struct module_entry
-{
-    struct flat_hdr*    hdr;
-    module_handler_t*   hMod;   // handler info
-};
-
 // array of loaded modules (hdr == NULL -> slot is empty)
-static struct module_entry modules[MAX_NUM_LOADED_MODULES];
+static module_entry modules[MAX_NUM_LOADED_MODULES];
 
 //-----------------------------------------------
 // Cut module name to 11 sym
@@ -175,7 +168,7 @@ static int module_find(char * name )
 
     for ( i=0; i<MAX_NUM_LOADED_MODULES; i++ ) 
     {
-        if ( modules[i].hdr && !strcmp(namebuf, modules[i].hdr->modulename) )
+        if ( modules[i].hdr && !strcmp(namebuf, modules[i].modulename) )
         {
             return i;
         }
@@ -564,7 +557,7 @@ static int _module_load(module_handler_t* hMod)
     modules[idx].hdr = flat_buf;
 
     // store runtime params
-    flat_module_name_make(flat_buf->modulename, module_filename);
+    flat_module_name_make(modules[idx].modulename, module_filename);
     modules[idx].hMod = hMod;
 
     // TODO these could be changed to operate on affected address ranges only
@@ -657,7 +650,7 @@ static void module_unload_idx(int idx)
 {
     if ( idx>=0 )
     {
-        module_log_unload(modules[idx].hdr->modulename);
+        module_log_unload(modules[idx].modulename);
 
         // Make finalization module
         if ( modules[idx].hdr->_module_info->lib->unloader )
@@ -716,9 +709,10 @@ void module_tick_unloader()
     }
 }
 
-void* module_get_adr(unsigned int idx)
+module_entry* module_get_adr(unsigned int idx)
 {
     if (idx < MAX_NUM_LOADED_MODULES)
-        return modules[idx].hdr;
+        if (modules[idx].hdr)
+            return &modules[idx];
     return 0;
 }

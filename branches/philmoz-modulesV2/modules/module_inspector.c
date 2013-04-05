@@ -144,24 +144,16 @@ void gui_module_draw()
         draw_txt_string(0, 2,  "Idx Name         Addr       Size", MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
 		showidx=0;
-		for ( idx=0; idx<20; idx++)
+		for ( idx=0; idx<MAX_NUM_LOADED_MODULES; idx++)
 		{
-			struct flat_hdr* flat = module_get_adr(idx);
-			if (flat==0) continue;
-
-			char namebuf[12];
-			memcpy(namebuf,flat->modulename,11);
-			namebuf[11]=0;
+            module_entry* mod = module_get_adr(idx);;
+			if (mod == 0) continue;
 
 			char txt[50];
-		    sprintf(txt,"%02d: %-12s %08x - %d bytes", idx, namebuf, (unsigned)flat, flat->reloc_start);
-        	draw_txt_string(0, 3+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+		    sprintf(txt,"%02d: %-12s %08x - %d bytes", idx, mod->modulename, (unsigned)mod->hdr, mod->hdr->reloc_start);
+        	draw_txt_string(0, 3+showidx, txt, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 			showidx++;
 		}
-
-//    sprintf(buf, lang_str(LANG_MSG_MEMORY_INFO_TEXT), core_get_free_memory(), camera_info.memisosize, &_start, &_end);
-//		sprintf(buf,"MEM     %08x-%08x - %d free",&_start, &_end,core_get_free_memory());
-//		sprintf(buf,"--- %-12s %08x - %d","CHDK",&_start, camera_info.memisosize );
 
         draw_txt_string(1, 4+showidx,  "SET-redraw, DISP-unload_all, MENU-exit",       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
 
