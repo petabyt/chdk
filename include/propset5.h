@@ -24,6 +24,7 @@ The build uses tools/gen_propset_lua.sed to generate propset5.lua from this file
 #define PROPCASE_FLASH_SYNC_CURTAIN              64
 #define PROPCASE_SUBJECT_DIST2                   65    
 #define PROPCASE_DELTA_SV                        79
+#define PROPCASE_DIGITAL_ZOOM_MODE               91         // Digital Zoom Mode/State 0 = off/standard, 2 = 1.5x, 3 = 2.0x
 #define PROPCASE_DIGITAL_ZOOM_STATE              94         // Digital Zoom Mode/State 0 = Digital Zoom off, 1 = Digital Zoom on
 #define PROPCASE_DIGITAL_ZOOM_POSITION           95
 #define PROPCASE_DRIVE_MODE                      102

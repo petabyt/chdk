@@ -35,6 +35,7 @@ WARNING:
 #define PROPCASE_EV_CORRECTION_1            107
 #define PROPCASE_EV_CORRECTION_2            209
 #define PROPCASE_ORIENTATION_SENSOR         221
+#define PROPCASE_DIGITAL_ZOOM_MODE          91     // Digital Zoom Mode/State 0 = off/standard, 2 = 1.4x, 3 = 2.3x
 #define PROPCASE_DIGITAL_ZOOM_STATE         94
 #define PROPCASE_DIGITAL_ZOOM_POSITION      95
 #define PROPCASE_DISPLAY_MODE               105
