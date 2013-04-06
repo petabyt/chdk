@@ -1,13 +1,13 @@
 --[[
 ********************************************
 Licence: GPL
-(C)2012 rudi, Version: 0.1
+(C)2012 rudi, Version: 0.2
 
 imath library test
     integer based trigonometric functions
     use CORDIC algorithm
 ********************************************
-@title imath functions V0.1
+@title imath functions V0.2
 ]]
 
 -- Int2Str(value[,x10^dpow:default=0[, unit:string][, fix:number]])
@@ -47,7 +47,7 @@ z = 2 * scale                                       -- 2.000
 hyp = imath.sqrt(imath.mul(x, x) + imath.mul(y, y)) -- 5.000
 
 phi_deg = 30 * scale                                -- 30 deg
-phi_rad = imath.div(imath.pi_2, y)                  -- PI/3 equal 30 deg
+phi_rad = imath.div(imath.pi_2, y)                  -- (PI/2)/3 equal 30 deg
 
 
 -----MAIN-----
@@ -123,7 +123,18 @@ print()
 print("press key for page 5")
 wait_click(0)
 cls()
-print("additional:")
+print("additional math page 1:")
+val = x + 500   -- 4.500
+printf("int(%s) = %s", str1E3(val), str1E3(imath.int(val)))
+printf("frac(%s) = %s", str1E3(val), str1E3(imath.frac(val)))
+printf("ceil(%s) = %s", str1E3(val), str1E3(imath.ceil(val)))
+printf("floor(%s) = %s", str1E3(val), str1E3(imath.floor(val)))
+printf("round(%s) = %s", str1E3(val), str1E3(imath.round(val)))
+print()
+print("press key for page 6")
+wait_click(0)
+cls()
+print("additional math page 2:")
 pow = imath.pow(z, x)
 const_1E3 = 1000 * scale
 printf("log(%s) = %s", str1E3(pow), str1E3(imath.log(pow)))

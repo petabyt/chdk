@@ -283,12 +283,7 @@ LUALIB_API void polr(fixed px, fixed py, fixed *r, fixed *theta) {
 
 //additional math functions
 LUALIB_API fixed fint(fixed a) {
-    int sign = cordic_sign(a);
-    return sign * (cordic_abs(a) >> FRACTIONBITS << FRACTIONBITS);
-}
-
-LUALIB_API fixed ffrac(fixed a) {
-    return a - fint(a);
+    return cordic_sign(a) * (cordic_abs(a) & CORDIC_INTEGER);
 }
 
 LUALIB_API fixed fceil(fixed a) {
@@ -302,7 +297,7 @@ LUALIB_API fixed ffloor(fixed a) {
 }
 
 LUALIB_API fixed fround(fixed a) {
-    return ffloor(a + CORDIC_SCALE/2);
+    return ffloor(a + CORDIC_SCALE / 2);
 }
 
 // convert functions
@@ -320,25 +315,23 @@ LUALIB_API fixed floatToFixed(double a) {
 }
 
 LUALIB_API fixed intToFixed(int4b a, int round) {
-    int sign = cordic_sign(a);
     double res = cordic_abs(a);
-    if (round) { res = res + ROUND_IN; }
+    if (round) res = res + 0.5;
     res = res * CORDIC_SCALE / INT_SCALE;
     if (res > INT_MAX) {
         // error fixed overflow
         res = INT_MAX;
     }
-    return sign * res;
+    return cordic_sign(a) * res;
 }
 
 LUALIB_API int4b fixedToInt(fixed a, int round) {
-    int sign = cordic_sign(a);
     double res = cordic_abs(a);
-    if (round) { res = res + ROUND_OUT; }
     if (res > INT_MAX) {
         // error int4b overflow
         res = INT_MAX;
     }
     res = res * INT_SCALE / CORDIC_SCALE;
-    return sign * res;
+    if (round) res = res + 0.5;
+    return cordic_sign(a) * res;
 }

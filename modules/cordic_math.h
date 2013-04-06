@@ -20,7 +20,6 @@ additional functions
 
 additional math functions
     fixed fint(a)   get integer
-    fixed ffrac(a)  get fraction part
     fixed fceil(a)  get largest previous integer
     fixed ffloor(a) get smallest following integer
     fixed fround(a) get nearest integer
@@ -47,9 +46,8 @@ enum {
     N = 17,
     M = 9,
     CORDIC_SCALE = 1 << FRACTIONBITS,
+    CORDIC_INTEGER = ~(CORDIC_SCALE - 1),
     INT_SCALE = 1000,
-    ROUND_IN = (INT_SCALE / CORDIC_SCALE) >> 1,
-    ROUND_OUT = (CORDIC_SCALE / INT_SCALE) >> 1,
 };
 
 #include "limits.h"
@@ -116,7 +114,6 @@ LUALIB_API fixed atanr(fixed x);
 LUALIB_API void polr(fixed px, fixed py, fixed *r, fixed *theta);
 //additional math
 LUALIB_API fixed fint(fixed a);
-LUALIB_API fixed ffrac(fixed a);
 LUALIB_API fixed fceil(fixed a);
 LUALIB_API fixed ffloor(fixed a);
 LUALIB_API fixed fround(fixed a);
