@@ -828,10 +828,13 @@ void gui_kbd_shortcuts()
     
     if (camera_info.state.is_shutter_half_press)
     {
-        kbd_shortcut(SHORTCUT_TOGGLE_ZEBRA, &conf.zebra_draw, 1);
-        kbd_shortcut(SHORTCUT_TOGGLE_HISTO, &conf.show_histo, SHOW_HALF);
-        kbd_shortcut(SHORTCUT_TOGGLE_OSD, &conf.show_osd, 1);
-        kbd_shortcut(SHORTCUT_DISABLE_OVERRIDES, &conf.override_disable, 1);
+        if (conf.enable_shortcuts == 1)
+        {
+            kbd_shortcut(SHORTCUT_TOGGLE_ZEBRA, &conf.zebra_draw, 1);
+            kbd_shortcut(SHORTCUT_TOGGLE_HISTO, &conf.show_histo, SHOW_HALF);
+            kbd_shortcut(SHORTCUT_TOGGLE_OSD, &conf.show_osd, 1);
+            kbd_shortcut(SHORTCUT_DISABLE_OVERRIDES, &conf.override_disable, 1);
+        }
 #if !CAM_HAS_MANUAL_FOCUS && CAM_HAS_ZOOM_LEVER && CAM_CAN_SD_OVERRIDE
         // Todo, check for AF and if its running, don't override
         if (kbd_is_key_pressed(SHORTCUT_SD_SUB)) {
