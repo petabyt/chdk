@@ -8,10 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "elfflt.h"
-#include "elf.h"
-#include "flt.h"
 #include "myio.h"
+#include "elfflt.h"
 
 extern uint32_t offs_divsi3_skip_div0_test;
 extern uint32_t offs_div0_from_arm;

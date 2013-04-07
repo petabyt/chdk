@@ -388,8 +388,7 @@ long mkdir(const char *dirname)
 long mkdir_if_not_exist(const char *dirname)
 {
     // Check if directory exists and create it if it does not.
-    struct stat st;
-    if (stat(dirname,&st) != 0) return mkdir(dirname);
+    if (stat(dirname,0) != 0) return mkdir(dirname);
     return 0;   // Success
 }
 
@@ -597,16 +596,19 @@ int stat(const char *name, struct stat *pStat)
     // and copy values across to output
     struct __stat lStat;
     int rv = _stat(name, &lStat);
-    if (rv == 0)
+    if (pStat)
     {
-        pStat->st_attrib = lStat.st_attrib;
-        pStat->st_size = lStat.st_size;
-        pStat->st_ctime = lStat.st_ctime;
-        pStat->st_mtime = lStat.st_mtime;
-    }
-    else
-    {
-        memset( pStat, 0, sizeof(struct stat));
+        if (rv == 0)
+        {
+            pStat->st_attrib = lStat.st_attrib;
+            pStat->st_size = lStat.st_size;
+            pStat->st_ctime = lStat.st_ctime;
+            pStat->st_mtime = lStat.st_mtime;
+        }
+        else
+        {
+            memset( pStat, 0, sizeof(struct stat));
+        }
     }
     return rv;
 }

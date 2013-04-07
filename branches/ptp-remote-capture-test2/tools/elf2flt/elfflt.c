@@ -13,10 +13,8 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-#include "elf.h"
-#include "elfflt.h"
-#include "flt.h"
 #include "myio.h"
+#include "elfflt.h"
 
 #define DEBUGPRINTF(...) do {} while (0)
 
@@ -263,7 +261,7 @@ void print_offs(char *prefix, int offs, char* postfix)
     char* sect="unkn";
     
     if ( !offs ) {
-        printf("%s 0x0 %s",prefix, postfix);
+        printf("%s 0x00000000 %s",prefix, postfix);
         return;
     }
     
@@ -273,7 +271,7 @@ void print_offs(char *prefix, int offs, char* postfix)
        { sect="data"; secoffs=flat->data_start;}
     else if  ( offs >=flat->bss_start && offs<flat->reloc_start )
        { sect="bss"; secoffs=flat->bss_start;}         
-    printf("%s 0x%x (%s+0x%x)%s",prefix, offs,sect,offs-secoffs,postfix);
+    printf("%s 0x%08x (%s+0x%08x)%s",prefix, offs,sect,offs-secoffs,postfix);
 }
 
 
@@ -577,7 +575,6 @@ elfloader_load(char* filename, char* fltfile)
   if ( !flat_import_buf) { PRINTERR(stderr, "fail to malloc flat import buf\n"); return ELFFLT_OUTPUT_ERROR;}
   memset(flat_import_buf, 0, flatrelocsize);
 
-
   // Fill flat with sections aligned to int32
 
   flat = (struct flat_hdr*) flat_buf;
@@ -614,12 +611,8 @@ elfloader_load(char* filename, char* fltfile)
   flat->reloc_start = flatmainsize;
   flat_reloc_count = 0;
 
-  //@tsv - this is for debug purpose only
-  flat->filler1 = data.flat_offset;
-
   flat->import_start = 0;
   flat_import_count = 0;
-
   
   flat_reloc = (reloc_record_t*)(flat_buf+flatmainsize);  
   flat_reloc_cur = flat_reloc;
@@ -651,19 +644,14 @@ elfloader_load(char* filename, char* fltfile)
                   
   if ( FLAG_VERBOSE )
    	  printf(">>elf2flt: lookup entry symbols\n");
-  flat->_module_loader = find_symbol_inflat("_module_loader", &text );
-  flat->_module_unloader = find_symbol_inflat("_module_unloader", &text );
-  flat->_module_run = find_symbol_inflat("_module_run", &text );
-  flat->_module_exportlist = find_symbol_inflat("MODULE_EXPORT_LIST", 0 );
 
-  //
-  flat->_module_info = find_symbol_inflat("_module_info", &data );
-  if ( flat->_module_info <=0 ) {
+  flat->_module_info_offset = find_symbol_inflat("_module_info", &data );
+  if ( flat->_module_info_offset <=0 ) {
     PRINTERR(stderr, "No or invalid section of _module_info. This symbol should be initialized as ModuleInfo structure.\n");
     return ELFFLT_NO_MODULEINFO;
   }
 
-  struct ModuleInfo* _module_info = (struct ModuleInfo*) (flat_buf + flat->_module_info);
+  struct ModuleInfo* _module_info = (struct ModuleInfo*) (flat_buf + flat->_module_info_offset);
   if ( _module_info->magicnum != MODULEINFO_V1_MAGICNUM ) 
   {
     PRINTERR(stderr, "Wrong _module_info->magicnum value. Please check correct filling of this structure\n");
@@ -675,12 +663,42 @@ elfloader_load(char* filename, char* fltfile)
     return ELFFLT_NO_MODULEINFO;
   }
 
-  // Prepare symbol list
-  flat->symbols_start = flat->import_start+flat_import_count*sizeof(import_record_t);
-  int flat_symtablesize=0;
-  flat->file_size = flat->symbols_start + flat_symtablesize;
+  // Group import relocations
+  //  Input = array of offset/index pairs - one for each address to be relocated to a core CHDK symbol
+  //  Output = list of entries of the form:
+  //        Index, Offset1 | (N<<24), Offset2, ..., OffsetN
+  //  where each offset is a reference to the same core CHDK symbol
+  uint32_t *new_import_buf = malloc(flat_import_count*3*sizeof(uint32_t));
+  uint32_t new_import_cnt = 0;
+  int process = 1;
+  while (process)
+  {
+      process = 0;
+      for (i=0; i<flat_import_count; i++)
+      {
+          if (flat_import_buf[i].offs != 0)
+          {
+              process = 1;
+              int cnt = 0;
+              uint32_t idx = flat_import_buf[i].importidx;
+              new_import_buf[new_import_cnt++] = idx;
+              int pcnt = new_import_cnt;
+              int j;
+              for (j=0; j<flat_import_count; j++)
+              {
+                  if (flat_import_buf[j].importidx == idx)
+                  {
+                      new_import_buf[new_import_cnt++] = flat_import_buf[j].offs;
+                      flat_import_buf[j].offs = 0;
+                      cnt++;
+                  }
+              }
+              new_import_buf[pcnt] = (cnt << 24) | new_import_buf[pcnt];
+          }
+      }
+  }
 
-
+  flat->file_size = flat->import_start+new_import_cnt*sizeof(uint32_t);
 
   if ( FLAG_DUMP_FLT_HEADERS ) {
 	printf("\nFLT Headers:\n");
@@ -688,17 +706,12 @@ elfloader_load(char* filename, char* fltfile)
 	printf("->data_start   0x%x (size %d)\n", flat->data_start,  flat->bss_start - flat->data_start );
 	printf("->bss_start    0x%x (size %d)\n", flat->bss_start,   flat->reloc_start - flat->bss_start );
 	printf("->reloc_start  0x%x (size %d)\n", flat->reloc_start, flat_reloc_count*sizeof(reloc_record_t) );
-	printf("->import_start 0x%x (size %d %d)\n", flat->import_start, flat->symbols_start-flat->import_start, flat_import_count*sizeof(import_record_t) );
-	printf("->symbol_start 0x%x (size %d)\n", flat->symbols_start, flat_symtablesize );
-
-	print_offs("\n.._module_loader()   =", flat->_module_loader,"\n");
-	print_offs(".._module_unloader() = ", flat->_module_unloader,"\n");
-	print_offs(".._module_run()      = ", flat->_module_run,"\n");
-	print_offs("..MODULE_EXPORT_LIST = ", flat->_module_exportlist,"\n");
+	printf("->import_start 0x%x (size %d %d)\n", flat->import_start, flat->file_size-flat->import_start, flat_import_count*sizeof(import_record_t) );
+    printf("\n");
 
 	printf("\nModule info:\n");
 	printf("->Module Name: %s\n", get_flat_string(_module_info->moduleName) );
-	printf("->Module Ver: %d.%d\n", _module_info->major_ver, _module_info->minor_ver );
+	printf("->Module Ver: %d.%d\n", _module_info->module_version.major, _module_info->module_version.minor );
 
 	char* branches_str[] = {"any branch","CHDK", "CHDK_DE", "CHDK_SDM", "PRIVATEBUILD"};
 	int branch = (_module_info->chdk_required_branch>REQUIRE_CHDK_PRIVATEBUILD) ? 
@@ -708,13 +721,12 @@ elfloader_load(char* filename, char* fltfile)
 	  	printf("Any platform.\n");
 	else
 	  	printf(" Platform #%d only.\n", _module_info->chdk_required_platfid );
-	if ( _module_info->flags ) {
-		printf("->Flags:");
-		if ( _module_info->flags & MODULEINFO_FLAG_SYSTEM )
-			printf(" SYSTEM ");
-	    printf("\n");
-	}
-	printf("->Module Info: %s\n", get_flat_string(_module_info->description) );
+	printf("->Description: %s\n", get_flat_string(_module_info->description) );
+	print_offs("->lib                 = ", (int)_module_info->lib,"\n");
+	//print_offs("->_module_loader()    = ", (int)_module_info->loader,"\n");
+	//print_offs("->_module_unloader()  = ", (int)_module_info->unloader,"\n");
+	//print_offs("->_module_can_unload()= ", (int)_module_info->can_unload,"\n");
+	//print_offs("->_module_exit_alt()  = ", (int)_module_info->exit_alt,"\n");
   }
 
   if ( FLAG_DUMP_FLAT ) {
@@ -730,12 +742,18 @@ elfloader_load(char* filename, char* fltfile)
     }
 
     printf("\nDump imports:\n");
-    for( i = 0; i< flat_import_count; i++)
+    for (i = 0; i< new_import_cnt;)
     {
-		import_record_t* import=&flat_import_buf[i];
-        print_offs("Offs: ",import->offs,"");
-		int addend = *(uint32_t*)(flat_buf+import->offs);
-		printf(" = sym_%d[%s]+0x%x\n",import->importidx,get_import_symbol(import->importidx),addend);
+        uint32_t idx = new_import_buf[i++];
+        int cnt = new_import_buf[i] >> 24;
+        int j;
+        for (j=0; j<cnt; j++)
+        {
+            uint32_t offs = new_import_buf[i++] & 0x00FFFFFF;
+            print_offs((j==0)?"Offs: ":"      ",offs,"");
+		    int addend = *(uint32_t*)(flat_buf+offs);
+		    printf(" = sym_%08x[%s]+0x%x\n",idx,get_import_symbol(idx),addend);
+        }
     }
   }
 
@@ -745,7 +763,7 @@ elfloader_load(char* filename, char* fltfile)
 
   int output_fd = open(fltfile,O_WRONLY|O_CREAT|O_TRUNC|O_BINARY,0777);
   i = write(output_fd, flat_buf, flat->import_start);
-  i = write(output_fd, flat_import_buf, flat_import_count*sizeof(import_record_t));
+  i = write(output_fd, new_import_buf, new_import_cnt*sizeof(uint32_t));
   close(output_fd);
 
   return ELFFLT_OK;

@@ -9,6 +9,7 @@
 #include "gui_batt.h"
 #include "gui_lang.h"
 
+#include "gui_read.h"
 #include "module_def.h"
 
 //-------------------------------------------------------------------
@@ -19,11 +20,12 @@ void gui_read_draw();
 void gui_read_kbd_leave();
 
 gui_handler GUI_MODE_READ = 
-    /*GUI_MODE_READ*/   { GUI_MODE_MODULE, gui_read_draw, gui_read_kbd_process, gui_read_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
+/*GUI_MODE_READ*/   { GUI_MODE_MODULE, gui_read_draw, gui_read_kbd_process, gui_read_kbd_process_menu_btn, 0 };
 
 gui_handler *old_mode;
 
 //-------------------------------------------------------------------
+static int running = 0;
 static int read_file;
 static int read_file_size;
 static int read_on_screen;
@@ -59,7 +61,10 @@ static void gui_read_draw_scroll_indicator() {
 }
 
 //-------------------------------------------------------------------
-int gui_read_init(const char* file) {
+int gui_read_init(const char* file)
+{
+    running = 1;
+
     static struct stat   st;
     read_file = open(file, O_RDONLY, 0777);
     if (strcmp(file, conf.reader_file)!=0) {
@@ -244,7 +249,6 @@ int gui_read_kbd_process() {
 }
 
 // =========  MODULE INIT =================
-int module_idx=-1;
 
 //-------------------------------------------------------------------
 // Menu button handled for text reader
@@ -252,52 +256,29 @@ void gui_read_kbd_process_menu_btn()
 {
     gui_read_kbd_process();
     gui_set_mode(old_mode);
-  	module_async_unload(module_idx);
 }
 
 void gui_read_kbd_leave()
 {
-	if ( !reader_is_active )
-		return;
+    if ( !reader_is_active )
+        return;
 
     reader_is_active = 0;
     rbf_load_from_file(conf.menu_rbf_file, FONT_CP_WIN);
-	if (read_file >= 0) {
-    	close(read_file);
-	    read_file=-1;
+    if (read_file >= 0)
+    {
+        close(read_file);
+        read_file=-1;
     }
+
+    running = 0;
 }
+
+// =========  MODULE INIT =================
 
 /***************** BEGIN OF AUXILARY PART *********************
-  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
- **************************************************************/
-
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)0
-		};
-
-
-//---------------------------------------------------------
-// PURPOSE:   Bind module symbols with chdk. 
-//		Required function
-// PARAMETERS: pointer to chdk list of export
-// RETURN VALUE: 1 error, 0 ok
-//---------------------------------------------------------
-int _module_loader( unsigned int* chdk_export_list )
-{
-  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-     return 1;
-
-  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
-	  return 1;
-  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 2, 0 ) )
-	 return 1;
-
-  return 0;
-}
-
-
+ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+**************************************************************/
 
 //---------------------------------------------------------
 // PURPOSE: Finalize module operations (close allocs, etc)
@@ -308,43 +289,49 @@ int _module_unloader()
     // We should make "leave sequence" to restore font settings
     gui_read_kbd_leave();
 
-    GUI_MODE_READ.magicnum = 0;	//sanity clean to prevent accidentaly assign/restore guimode to unloaded module 
-
     return 0;
 }
 
-
-//---------------------------------------------------------
-// PURPOSE: Default action for simple modules (direct run)
-// NOTE: Please comment this function if no default action and this library module
-//---------------------------------------------------------
-int _module_run(int moduleidx, int argn, int* arguments)
+int _module_can_unload()
 {
-  module_idx=moduleidx;
-
-  if ( argn!=1 || arguments[0]==0) {
-	module_async_unload(moduleidx);
-    return 1;
-  }
-
-  char* fn=(char*)arguments[0];
-
-  // RETURN VALUE: 0-ok, 1-no file found
-  return (gui_read_init(fn) ? 0 : 1 );
+    return running == 0;
 }
 
+int _module_exit_alt()
+{
+    running = 0;
+    return 0;
+}
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+libtxtread_sym _libtxtread =
+{
+    {
+         0, _module_unloader, _module_can_unload, _module_exit_alt, 0
+    },
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									MODULEINFO_FLAG_SYSTEM,		// flag
-									(int32_t)"Text reader",		// Module name
-									1, 1,						// Module version
-									0
-								 };
+    gui_read_init
+};
+
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    GUI_READ_VERSION,			// Module version
+
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    (int32_t)"Text reader",		// Module name
+    0,
+
+    &_libtxtread.base,
+
+    CONF_VERSION,               // CONF version
+    CAM_SCREEN_VERSION,         // CAM SCREEN version
+    ANY_VERSION,                // CAM SENSOR version
+    ANY_VERSION,                // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/

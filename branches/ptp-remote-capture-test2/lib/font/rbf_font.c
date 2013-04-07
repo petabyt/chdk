@@ -1,8 +1,9 @@
+#include "camera_info.h"
 #include "stdlib.h"
-#include "gui.h"
-#include "font.h"
-#include "gui_draw.h"
 #include "conf.h"
+#include "gui.h"
+#include "gui_draw.h"
+#include "font.h"
 
 //-------------------------------------------------------------------
 #define RBF_MAX_NAME        64

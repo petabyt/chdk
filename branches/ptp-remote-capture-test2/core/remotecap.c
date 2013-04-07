@@ -255,15 +255,7 @@ int remotecap_raw_savefile(ptp_data_chunk *rawchunk, int startline, int linecoun
     int ret = 0;
 #if DNG_SUPPORT
     if (conf.dng_raw) {  //REMINDER: set this from script before shooting
-        if ( module_dng_load(LIBDNG_OWNED_BY_RAW) ) {
-            if ( API_VERSION_MATCH_REQUIREMENT(libdng->version, 1, 1) ) {
-                libdng->capture_data_for_exif();
-            }
-            else {
-                module_dng_unload(LIBDNG_OWNED_BY_RAW);
-                conf.dng_raw=0; //TODO: this is rude, but it does prevent further tries with an incompatible module
-            }
-        }
+        libdng->capture_data_for_exif();
     }
 #endif    
     // Get pointers to RAW buffers (will be the same on cameras that don't have two or more buffers)
@@ -281,8 +273,7 @@ int remotecap_raw_savefile(ptp_data_chunk *rawchunk, int startline, int linecoun
 #if DNG_SUPPORT
     if (conf.dng_raw)
     {
-        if ( module_dng_load(LIBDNG_OWNED_BY_RAW) )
-            libdng->create_dng_for_ptp(rawchunk, rawadr, altrawadr, CAM_UNCACHED_BIT, startline, linecount );
+        libdng->create_dng_for_ptp(rawchunk, rawadr, altrawadr, CAM_UNCACHED_BIT, startline, linecount );
     }
     else 
 #endif
@@ -322,8 +313,7 @@ int remotecap_raw_savefile(ptp_data_chunk *rawchunk, int startline, int linecoun
 
 #ifdef OPT_CURVES
     if (conf.curve_enable) {
-        if (module_curves_load())
-            libcurves->curve_apply();
+        libcurves->curve_apply();
     }
 #endif
     return ret;

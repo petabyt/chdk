@@ -1,16 +1,17 @@
 #include "camera_info.h"
-#include "edgeoverlay.h"
 #include "conf.h"
 #include "keyboard.h"
 #include "modes.h"
 #include "viewport.h"
 #include "shooting.h"
 #include "stdlib.h"
+#include "gui.h"
 #include "gui_draw.h"
 #include "gui_lang.h"
 #include "bitvector.h"
 
-#include "modules.h"
+#include "edgeoverlay.h"
+#include "module_def.h"
 
 //-------------------------------------------------------------------
 
@@ -18,6 +19,10 @@
 #define EDGE_FILE_PREFIX "EDG_"
 #define EDGE_FILE_FORMAT EDGE_FILE_PREFIX "%04d.edg"
 #define EDGE_SLICES     2
+
+// steps for up/down/left/right moving the overlay in ALT mode
+#define XINC 6
+#define YINC 2
 
 typedef enum _edge_fsm_state
 {
@@ -756,49 +761,19 @@ void edge_overlay()
 // =========  MODULE INIT =================
 
 #include "module_def.h"
-int module_idx=-1;
 
 /***************** BEGIN OF AUXILARY PART *********************
-  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
- **************************************************************/
-
-struct libedgeovr_sym _libedgeovr = {
-			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
-										// increase minor if compatible changes made(including extending this struct)
-
-			edge_overlay,
-            load_edge_overlay,
-            save_edge_overlay,
-		};
-
-
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)1,
-
-			&_libedgeovr
-		};
-
+ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+**************************************************************/
 
 //---------------------------------------------------------
-// PURPOSE:   Bind module symbols with chdk. 
-//		Required function
-// PARAMETERS: pointer to chdk list of export
+// PURPOSE:   Perform on-load initialisation
 // RETURN VALUE: 1 error, 0 ok
 //---------------------------------------------------------
 int _module_loader( unsigned int* chdk_export_list )
 {
-  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-     return 1;
-
-  if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
-	 return 1;
-  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 2, 0 ) )
-	 return 1;
-
-  module_restore_edge((void**)&edgebuf, (int*)&fsm_state);
-
-  return 0;
+    module_restore_edge((void**)&edgebuf, (int*)&fsm_state);
+    return 0;
 }
 
 
@@ -822,31 +797,42 @@ int _module_unloader()
     return 0;
 }
 
-
-//---------------------------------------------------------
-// PURPOSE: Default action for simple modules (direct run)
-// NOTE: Please comment this function if no default action and this library module
-//---------------------------------------------------------
-int _module_run(int moduleidx, int argn, int* arguments)
+int _module_can_unload()
 {
-  module_idx=moduleidx;
-
-  return 0;
+    return conf.edge_overlay_enable == 0;
 }
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+libedgeovr_sym _libedgeovr = 
+{
+    {
+         _module_loader, _module_unloader, _module_can_unload, 0, 0
+    },
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									MODULEINFO_FLAG_SYSTEM,		// flag
-									(int32_t)"Edge Overlay (dll)",// Module name
-									1, 0,						// Module version
-									(int32_t)"Implementation one of core modes"
-								 };
+    edge_overlay,
+    load_edge_overlay,
+    save_edge_overlay,
+};
 
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    EDGEOVERLAY_VERSION,		// Module version
+
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    (int32_t)"Edge Overlay (dll)",// Module name
+    (int32_t)"Implementation one of core modes",
+
+    &_libedgeovr.base,
+
+    CONF_VERSION,               // CONF version
+    CAM_SCREEN_VERSION,         // CAM SCREEN version
+    ANY_VERSION,                // CAM SENSOR version
+    CAM_INFO_VERSION,           // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/
-
