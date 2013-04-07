@@ -6,11 +6,11 @@
 #include "lang.h"
 #include "gui.h"
 #include "gui_draw.h"
-#include "modules.h"
-#include "module_load.h"
 #include "gui_menu.h"
 #include "gui_user_menu.h"
 #include "gui_lang.h"
+
+#include "gui_palette.h"
 
 //-------------------------------------------------------------------
 #define MENUSTACK_MAXDEPTH  4
@@ -20,7 +20,6 @@ typedef struct {
     CMenu       *menu;
     int         curpos;
     int         toppos;
-    int         module_idx;
 } CMenuStacked;
 
 //-------------------------------------------------------------------
@@ -177,19 +176,6 @@ static void gui_menu_set_curr_menu(CMenu *menu_ptr, int top_item, int curr_item)
 }
 
 //-------------------------------------------------------------------
-// Unload any module based sub-menus
-void gui_menu_unload_module_menus()
-{
-    // Unload any module menus
-    while (gui_menu_stack_ptr > 0)
-    {
-        gui_menu_stack_ptr--;
-        if (gui_menu_stack[gui_menu_stack_ptr].module_idx >= 0)
-            module_unload_idx(gui_menu_stack[gui_menu_stack_ptr].module_idx);
-    }
-}
-
-//-------------------------------------------------------------------
 void gui_menu_init(CMenu *menu_ptr) {
 
     if (menu_ptr) {
@@ -247,8 +233,6 @@ static void gui_menu_back() {
     if (gui_menu_stack_ptr > 0)
     {
         gui_menu_stack_ptr--;
-        if (gui_menu_stack[gui_menu_stack_ptr].module_idx >= 0)
-            module_unload_idx(gui_menu_stack[gui_menu_stack_ptr].module_idx);
         gui_menu_set_curr_menu(gui_menu_stack[gui_menu_stack_ptr].menu, gui_menu_stack[gui_menu_stack_ptr].toppos, gui_menu_stack[gui_menu_stack_ptr].curpos);
         gui_menu_erase_and_redraw();
     }
@@ -373,13 +357,12 @@ static void update_enum_value(const CMenuItem *mi, int direction)
 }
 
 // Open a sub-menu
-void gui_activate_sub_menu(CMenu *sub_menu, int module_idx)
+void gui_activate_sub_menu(CMenu *sub_menu)
 {
     // push current menu on stack
     gui_menu_stack[gui_menu_stack_ptr].menu = curr_menu;
     gui_menu_stack[gui_menu_stack_ptr].curpos = gui_menu_curr_item;
     gui_menu_stack[gui_menu_stack_ptr].toppos = gui_menu_top_item;
-    gui_menu_stack[gui_menu_stack_ptr].module_idx = module_idx;
 
     // Select first item in menu, (or none)
     if (conf.menu_select_first_entry)
@@ -410,7 +393,7 @@ void gui_activate_sub_menu(CMenu *sub_menu, int module_idx)
 // Open a sub-menu
 static void select_sub_menu()
 {
-    gui_activate_sub_menu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), -1);
+    gui_activate_sub_menu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value));
 }
 
 // Call a function to process a menu item (may be a sub-menu loaded via a module)
@@ -653,7 +636,7 @@ int gui_menu_kbd_process() {
                     case MENUITEM_COLOR_FG:
                     case MENUITEM_COLOR_BG:
                         item_color=((unsigned char*)(curr_menu->menu[gui_menu_curr_item].value)) + (((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_COLOR_BG)?1:0);
-                        module_palette_run(PALETTE_MODE_SELECT, FG_COLOR(*item_color), gui_menu_color_selected);
+                        libpalette->show_palette(PALETTE_MODE_SELECT, FG_COLOR(*item_color), gui_menu_color_selected);
                         gui_menu_redraw=2;
                         break;
                     case MENUITEM_ENUM:
@@ -1081,8 +1064,6 @@ void gui_menu_kbd_process_menu_btn()
 {
     extern int gui_user_menu_flag;
 
-    gui_menu_unload_module_menus();
-
     conf_save_new_settings_if_changed();
 
     if ( gui_user_menu_flag )
@@ -1097,5 +1078,5 @@ void gui_menu_kbd_process_menu_btn()
 
 //-------------------------------------------------------------------
 // GUI handler for menus
-gui_handler menuGuiHandler = { GUI_MODE_MENU, gui_menu_draw, gui_menu_kbd_process, gui_menu_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
+gui_handler menuGuiHandler = { GUI_MODE_MENU, gui_menu_draw, gui_menu_kbd_process, gui_menu_kbd_process_menu_btn, 0 };
 //-------------------------------------------------------------------

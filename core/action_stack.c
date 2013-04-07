@@ -339,15 +339,13 @@ static int action_stack_AS_WAIT_SHOOTING_DONE()
             {
                 // Failed - already retried, or no retry requested
                 // Return 'shoot' status to script - 2 = shoot failed
-                if (libscriptapi)
-                    libscriptapi->set_as_ret(2);
+                libscriptapi->set_as_ret(2);
             }
         }
         else
         {
             // Return 'shoot' status to script - 0 = shoot succesful
-            if (libscriptapi)
-                libscriptapi->set_as_ret(0);
+            libscriptapi->set_as_ret(0);
 
             // Final script config delay (XXX FIXME find out how to wait to jpeg save finished)
             if (conf.script_shoot_delay > 0)
@@ -403,8 +401,7 @@ static int action_stack_AS_WAIT_SHOOTING_IN_PROGRESS()
         action_pop_func(2);
 
         // Return 'shoot' status to script - 1 = shutter half press timed out
-        if (libscriptapi)
-            libscriptapi->set_as_ret(1);
+        libscriptapi->set_as_ret(1);
 
         return 1;
     }

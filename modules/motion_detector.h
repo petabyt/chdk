@@ -77,10 +77,11 @@ function md_get_cell_diff (
 #ifndef __MOTION_DETECTOR__
 #define __MOTION_DETECTOR__
 
-#include "stdlib.h"
+#include "flt.h"
 
-struct libmotiondetect_sym {
-	int version;
+typedef struct
+{
+    base_interface_t    base;
 
     void (*md_close_motion_detector)();
     int (*md_init_motion_detector)(
@@ -122,12 +123,11 @@ struct libmotiondetect_sym {
     void (*md_draw_grid)();
     int (*md_get_cell_val)(int column, int row);
 
-};
+} libmotiondetect_sym;
 
 //-------------------------------------------------------------------
-	extern struct libmotiondetect_sym* libmotiondetect;
-    extern struct libmotiondetect_sym* module_mdetect_load();		// 0fail, addr-ok
-    extern void module_mdetect_unload();
+extern libmotiondetect_sym* libmotiondetect;
+extern libmotiondetect_sym* module_mdetect_load();		// 0fail, addr-ok
 
 #endif
 

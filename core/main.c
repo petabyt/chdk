@@ -7,7 +7,8 @@
 #include "histogram.h"
 #include "raw.h"
 #include "console.h"
-#include "modules.h"
+
+#include "edgeoverlay.h"
 #include "module_load.h"
 
 //==========================================================
@@ -215,7 +216,7 @@ void core_spytask()
                 {
                     skip_counter--;
                 }
-                else if (module_edgeovr_load())
+                else
                 {
                     libedgeovr->edge_overlay();
                 }

@@ -1,35 +1,81 @@
 /*
- *   CHDK-FLAT Module System.  
- *
- *   (c)2011 Sergey Taranenko aka tsvstar
- *
- *   This is main file of module processing system. Module load/unload/service functions
- */
+*   CHDK-FLAT Module System.  
+*
+*   (c)2011 Sergey Taranenko aka tsvstar
+*
+*   This is main file of module processing system. Module load/unload/service functions
+*/
 
+#include "camera_info.h"
 #include "stdlib.h"
+#include "conf.h"
 #include "console.h"
+
 #include "keyboard.h"
 #include "cache.h"
-#include "conf.h"
+#include "clock.h"
+#include "raw_buffer.h"
+#include "shooting.h"
+#include "viewport.h"
+#include "battery.h"
+#include "gui.h"
+#include "gui_draw.h"
+#include "gui_osd.h"
+#include "gui_usb.h"
+#include "gui_batt.h"
+#include "gui_mbox.h"
+#include "gui_space.h"
+#include "levent.h"
+#include "sd_card.h"
+#include "sound.h"
+#include "temperature.h"
+#include "meminfo.h"
+#include "font.h"
+#include "lang.h"
+#include "properties.h"
+#include "ptp_chdk.h"
+#include "histogram.h"
+#include "shot_histogram.h"
+#include "action_stack.h"
+#include "debug_led.h"
+#include "raw.h"
+#include "shutdown.h"
+#include "modes.h"
+#include "backlight.h"
+#include "math.h"
+#include "file_counter.h"
+#include "lens.h"
 
+#include "modules.h"
 #include "module_load.h"
 #include "module_exportlist.h"
 
-//********************************************************/
-
-typedef int (*_module_loader_t)( unsigned int* chdk_export_list );
-typedef int (*_module_unloader_t)();
-typedef int (*_module_run_t)(int moduleidx, int argn, int* arguments);
-
-// Hashed Symbol table for exported symbols
-extern sym_hash symbol_hash_table[];
+extern unsigned _ExecuteEventProcedure(const char *name,...);
 
 //********************************************************/
-//**    TEMPORARY FROM .H FILES   **
+
+// Struct for symbol hash table entries
+typedef struct
+{
+    uint32_t    hash;
+    const void  *address;
+} sym_hash;
+
+// Symbol hash table for resolving exported symbol references
+sym_hash symbol_hash_table[] =
+{
+    { EXPORTLIST_MAGIC_NUMBER, (void*)EXPORTLIST_LAST_IDX },
+#include "module_hashlist.h"
+};
+
 //********************************************************/
 
-#define MAX_NUM_LOADED_MODULES 10
-#define BUFFER_FOR_READ_SIZE   4096
+typedef int (*_module_action_t)( struct flat_hdr* flat, void* relocbuf, uint32_t count );
+
+//********************************************************/
+
+#define BUFFER_FOR_READ_SIZE    4096
+#define MODULES_PATH            "A/CHDK/MODULES"
 
 //********************************************************/
 //**    Small library for safe io to cacheable memory   **
@@ -37,71 +83,60 @@ extern sym_hash symbol_hash_table[];
 //**  be loaded										    **
 //********************************************************/
 
-static char* buf_load=0;
+static char* buf_load=0;    // Also used for relocatio & imports
 
 int b_read(int fd, char* buf, int len)
 {
-  if (buf_load==0) {
-    buf_load = umalloc( BUFFER_FOR_READ_SIZE );
     if (buf_load==0)
-       return 0;
-  }
-  int loaded=0, now=1;
+    {
+        buf_load = umalloc( BUFFER_FOR_READ_SIZE );
+        if (buf_load==0)
+            return 0;
+    }
 
-  while (now && loaded<len)
-  {
-     now = len-loaded;
-     if ( now > BUFFER_FOR_READ_SIZE )
-       now = BUFFER_FOR_READ_SIZE;
+    int loaded=0, now=1;
 
-     now = read(fd,buf_load,now);
-     
-     memcpy(buf+loaded, buf_load, now);
-     loaded+=now;
-  }
-  return loaded;
+    while (now && loaded<len)
+    {
+        now = len-loaded;
+        if ( now > BUFFER_FOR_READ_SIZE )
+            now = BUFFER_FOR_READ_SIZE;
+
+        now = read(fd,buf_load,now);
+
+        memcpy(buf+loaded, buf_load, now);
+        loaded+=now;
+    }
+
+    return loaded;
 }
 
 void b_close(int fd)
 {
-  if (fd >=0 )
-  close(fd);
+    if (fd >= 0)
+        close(fd);
 
-  if (buf_load)
-   ufree(buf_load);
-  buf_load=0;
+    if (buf_load)
+        ufree(buf_load);
+    buf_load=0;
 }
-
 
 
 //********************************************************/
 //**       Auxilary module system functions             **
 //********************************************************/
 
-// array of pointer to loaded modules (NULL - slot is empty)
-static struct flat_hdr* modules[MAX_NUM_LOADED_MODULES];
-
-// >0- if correspondend module require to unload it
-static unsigned char module_unload_request[MAX_NUM_LOADED_MODULES]; 
-
-// =1- if correspondend module ask to unload it on exit from main menu
-static unsigned char module_flags[MAX_NUM_LOADED_MODULES]; 
+// array of loaded modules (hdr == NULL -> slot is empty)
+static module_entry modules[MAX_NUM_LOADED_MODULES];
 
 //-----------------------------------------------
-// Cut module name to 11 sym + make it uppercase
+// Cut module name to 11 sym
 //-----------------------------------------------
 static void flat_module_name_make( char* tgt, char* name )
 {
-	char *p=tgt;
-
-	for (; *name; name++ ){
-		if ( *name=='/') {
-			p=tgt;
-		} else if ( (p-tgt) < 11 ) {
-			*p=*name; p++;
-		}
-    }
-    *p=0;
+    char *p = strrchr(name,'/');
+    strncpy(tgt, (p) ? p+1 : name, 12);
+    tgt[11] = 0;
 }
 
 //-----------------------------------------------
@@ -109,60 +144,67 @@ static void flat_module_name_make( char* tgt, char* name )
 //-----------------------------------------------
 static void flat_module_path_make( char* tgt, char* name )
 {
-	// check is name absolute path
-	if ( name[0]=='A' && name[1]=='/')
-   		strcpy(tgt,name);
-	else
-   sprintf(tgt,"%s/%s",MODULES_PATH,name);
+    // check is name absolute path
+    if ( name[0]=='A' && name[1]=='/')
+        strcpy(tgt,name);
+    else
+        sprintf(tgt,"%s/%s",MODULES_PATH,name);
 }
 
 //-----------------------------------------------
 // PURPOSE: Find idx_loaded by module name or by module idx
 // RETURN: -1 if module not loaded yet, otherwise idx in modules[]
 //-----------------------------------------------
-int module_find(char * name )
+static int module_find(char * name )
 {
-   char namebuf[12];
-   int i = (uint32_t)name;
+    char namebuf[12];
+    int i = (uint32_t)name;
 
-   // Check if given parameter is idx
-   if (i < MAX_NUM_LOADED_MODULES)
-    return (modules[i] ? i : -1);
+    // Check if given parameter is idx
+    if (i < MAX_NUM_LOADED_MODULES)
+        return (modules[i].hdr ? i : -1);
 
-   flat_module_name_make(namebuf,name);
+    flat_module_name_make(namebuf,name);
 
-   for ( i=0; i<MAX_NUM_LOADED_MODULES; i++ ) 
-   {
-    if ( modules[i] &&  !strcmp(namebuf, modules[i]->modulename) ) {
-        return i;
+    for ( i=0; i<MAX_NUM_LOADED_MODULES; i++ ) 
+    {
+        if ( modules[i].hdr && !strcmp(namebuf, modules[i].modulename) )
+        {
+            return i;
+        }
     }
-   }
-   return -1;
+    return -1;
 }
 
-
 //-----------------------------------------------
+// Structures of relocation and importing
+//---------------------------------------
 
-typedef int (*module_action_t)( struct flat_hdr* flat, void* relocbuf, uint32_t count );
+// Rules how relocations works:
+//  Relocation:
+//  	*(flat_base+reloc[i]) += flat_base;
+//  Import:
+//    symidx = import[i].importidx
+//	  *(flat_base+import[i].offs) += module_find_symbol_address(symidx)
 
 static int module_do_relocations( struct flat_hdr* flat, void* relocbuf, uint32_t reloc_count )
 {
-   int i;
-   unsigned int offs;
-   unsigned char* buf = (unsigned char*)flat;
+    int i;
+    unsigned char* buf = (unsigned char*)flat;
+    uint32_t* rbuf = (uint32_t*)relocbuf;
 
-   for ( i=0; i < reloc_count; i++ )
-   {
-      offs = *(uint32_t*)relocbuf;
-      relocbuf = ((uint32_t*)relocbuf)+1;
-	  //@tsv todo: if (offs>=flat->reloc_start) error_out_of_bound
-      *(uint32_t*)(buf+offs) += (uint32_t)buf;
-   }  
-   return 1;
+    for ( i=0; i < reloc_count; i++ )
+    {
+        unsigned int offs = rbuf[i];
+        //@tsv todo: if (offs>=flat->reloc_start) error_out_of_bound
+        *(uint32_t*)(buf+offs) += (uint32_t)buf;
+    }
+
+    return 1;
 }
 
 // Find symbol address in array from hash id
-const void* module_find_symbol_address(uint32_t importid)
+static const void* module_find_symbol_address(uint32_t importid)
 {
     // binary search (first entry is magic number & entry count)
     int min = 1, max = EXPORTLIST_LAST_IDX;
@@ -181,88 +223,172 @@ const void* module_find_symbol_address(uint32_t importid)
 
 static int module_do_imports( struct flat_hdr* flat, void* relocbuf, uint32_t import_count )
 {
-	int i;
-	const void* importaddress;
-	uint32_t* ptr;
-	unsigned char* buf = (unsigned char*)flat;
-   
+    int i;
+    unsigned char* buf = (unsigned char*)flat;
+    uint32_t* rbuf = (uint32_t*)relocbuf;
 
-	for ( i=0; i < import_count; i++ )
-	{
-		ptr = (uint32_t*)( buf + ((import_record_t*)relocbuf)->offs );
-		importaddress = module_find_symbol_address(((import_record_t*)relocbuf)->importidx);
-
+    for ( i=0; i < import_count; )
+    {
+        const void* importaddress = module_find_symbol_address(rbuf[i++]);
         if (importaddress == 0) return 0;
 
-		*ptr += (int)importaddress;  //(uint32_t)CHDK_EXPORT_LIST[importidx];
-        relocbuf = ((import_record_t*)relocbuf)+1;
-	}  
+        int cnt = rbuf[i] >> 24;
+        for (; cnt>0; cnt--)
+        {
+            uint32_t offs = rbuf[i++] & 0x00FFFFFF;
+            uint32_t* ptr = (uint32_t*)( buf + offs );
+            *ptr += (int)importaddress;
+        }
+    }  
     return 1;
 }
 
 // variables to quick error
 static char* module_filename;
 static int module_fd;
-static char* flat_buf;
-static char* reloc_buf;
+static struct flat_hdr* flat_buf;
 
 //-----------------------------------------------
-static int moduleload_error(char* text, int value)
+static void moduleload_error(char* text, int value)
 {
-  if ( module_fd >=0 )
-    b_close( module_fd);
+    if ( module_fd >=0 )
+        b_close( module_fd);
 
-  if ( flat_buf )
-      free(flat_buf);
-  if ( reloc_buf )
-      ufree(reloc_buf);   
+    if ( flat_buf )
+        free(flat_buf);
 
-  //extern int console_is_inited();
-  extern volatile int chdk_started_flag;
-  if ( chdk_started_flag ) {
-  char fmt[50];
-  strcpy(fmt,"Fail to load %s: ");
-  strcpy(fmt+17,text);
+    //extern int console_is_inited();
+    extern volatile int chdk_started_flag;
+    if ( chdk_started_flag ) {
+        char fmt[50];
+        strcpy(fmt,"Fail to load %s: ");
+        strcpy(fmt+17,text);
 
-  char buf[100];
-  sprintf(buf, fmt, module_filename, value);
+        char buf[100];
+        sprintf(buf, fmt, module_filename, value);
 
-  console_clear();
-  console_add_line(buf);
-	  msleep(1000);
-  }
-
-  return -1;
+        console_clear();
+        console_add_line(buf);
+        msleep(1000);
+    }
 }
-
 
 //-----------------------------------------------
 // return: 0 if error, otherwise ok
-static int module_do_action( char* actionname, uint32_t offset, uint32_t count, uint32_t segment_size, module_action_t func )
+static int module_do_action( char* actionname, uint32_t offset, uint32_t count, uint32_t segment_size, _module_action_t func )
 {
-   if ( !count ) 
-		return 1;
+    if ( count > 0 ) 
+    {
+        if ( offset != lseek(module_fd, offset, SEEK_SET) )
+        {
+            moduleload_error("action %s",(int)actionname);
+            return 0;
+        }
+        if ( segment_size != read(module_fd, buf_load, segment_size) )
+        {
+            moduleload_error("action %s", (int)actionname);
+            return 0;
+        }
 
-   reloc_buf = umalloc( segment_size );
-   if ( !reloc_buf )
-       	return (int)moduleload_error("malloc",0);   
+        // make relocations
+        if ( !func( flat_buf, (uint32_t*)buf_load, count ) )  
+        {
+            moduleload_error("bad import symbol",0);
+            return 0;
+        }
+    }
 
-   if ( offset != lseek(module_fd, offset, SEEK_SET) )
-       	return (int)moduleload_error("action %s",(int)actionname);
-   if ( segment_size != read(module_fd, reloc_buf, segment_size) )
-       	return (int)moduleload_error("action %s", (int)actionname);
+    return 1;
+}
 
-   // make relocations
-   if ( !func( (struct flat_hdr*) flat_buf, (uint32_t*)reloc_buf, count ) )  
-       	return (int)moduleload_error("bad import symbol",0);
+static int alloc_reloc_buf(uint32_t reloc_size, uint32_t import_size)
+{
+    // Get larger size
+    int sz = (reloc_size > import_size) ? reloc_size : import_size;
 
-   ufree(reloc_buf); reloc_buf=0;
-   return 1;
+    if (sz > BUFFER_FOR_READ_SIZE)  // If larger than already allocated
+    {
+        if (buf_load) ufree(buf_load);
+        buf_load = umalloc(sz);
+        if ( buf_load == 0 )
+        {
+            moduleload_error("malloc",0);   
+            return 0;
+        }
+    }
+
+    return 1;
 }
 
 //********************************************************/
 //**           Main module system functions             **
 //********************************************************/
+
+//-----------------------------------------------
+// Logging
+
+static void module_writeline(char *buf)
+{
+    if (conf.module_logging)
+    {
+        FILE *fp = fopen("A/MODULES.LOG","a");
+        fwrite(buf,strlen(buf),1,fp);
+        fclose(fp);
+    }
+}
+
+static void module_log_hdr()
+{
+    static int hdr_logged = 0;
+
+    if (conf.module_logging)
+    {
+        if (hdr_logged == 0)
+        {
+            hdr_logged = 1;
+
+            time_t datetime;
+            struct tm *ttm;
+            char buf[100];
+
+            datetime = time(NULL);
+            ttm = localtime(&datetime);
+
+            sprintf(buf, "Tick    ,Op,Address ,Name (%04d:%02d:%02d %02d:%02d:%02d)\n", ttm->tm_year+1900, ttm->tm_mon+1, ttm->tm_mday, ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
+
+            module_writeline(buf);
+        }
+    }
+}
+
+void module_log_clear()
+{
+    remove("A/MODULES.LOG");
+}
+
+static void module_log_load(char *name, void* adr)
+{
+    if (conf.module_logging)
+    {
+        char buf[100];
+        sprintf(buf,"%8d,LD,%08x,%s\n",get_tick_count(),adr,name);
+
+        module_log_hdr();
+        module_writeline(buf);
+    }
+}
+
+static void module_log_unload(char *name)
+{
+    if (conf.module_logging)
+    {
+        char buf[100];
+        sprintf(buf,"%8d,UN,        ,%s\n",get_tick_count(),name);
+
+        module_log_hdr();
+        module_writeline(buf);
+    }
+}
 
 //-----------------------------------------------
 // PARAMETER:  name - filename of module
@@ -271,211 +397,272 @@ static int module_do_action( char* actionname, uint32_t offset, uint32_t count, 
 //         Optional ( NULL - do not bind )
 // RETURN:    -1 - failed, >=0 =idx of module
 //-----------------------------------------------
-int module_load(char* name, _module_bind_t callback)
+
+// Bind loaded module to library pointer
+static int bind_module( module_handler_t* hMod, void* module_lib )
 {
-   int idx;
+    *hMod->lib = module_lib;
 
-   module_fd = -1;
-   module_filename = name;
-   flat_buf = 0;
-   reloc_buf = 0;
+    // If unloading module, reset library to unloaded default
+    if (*hMod->lib == 0)
+        *hMod->lib = hMod->default_lib;
 
-/* possible to have idx=0. so no checks
-   if (!name)		
-      return -1;
-*/
+    return 0;
+}
 
-   //moduleload_error("Loading module %s", (uint32_t)name);
+static int _module_load(module_handler_t* hMod)
+{
+    int idx;
 
-   // Check if module loaded
-   idx = module_find(name);
-   if ( idx>=0 ) {
-	  // reset possible unload request
-	  module_unload_request[idx]=0;
-      if ( callback )
-          callback( (void**) modules[idx]->_module_exportlist );
-      return idx;
-   }
+    module_fd = -1;
+    module_filename = hMod->name;
+    flat_buf = 0;
+    buf_load = 0;
 
-   // Find empty slot   
-   for ( idx=0; idx<MAX_NUM_LOADED_MODULES && modules[idx]; idx++ );
+    // Check if module loaded
+    idx = module_find(module_filename);
+    if ( idx>=0 )
+        return idx;
 
-   if  ( idx == MAX_NUM_LOADED_MODULES )
-      return moduleload_error("%d already loaded",MAX_NUM_LOADED_MODULES);
+    // Find empty slot   
+    for ( idx=0; idx<MAX_NUM_LOADED_MODULES && modules[idx].hdr; idx++ );
 
-   module_unload_request[idx]=0;
-   module_flags[idx]=0;
+    if  ( idx == MAX_NUM_LOADED_MODULES )
+    {
+        moduleload_error("%d already loaded",MAX_NUM_LOADED_MODULES);
+        return -1;
+    }
 
-   char path[60];
-   struct flat_hdr flat;
-   int size_flat;
+    char path[60];
+    struct flat_hdr flat;
+    int size_flat;
 
-   flat_module_path_make(path,name);
+    flat_module_path_make(path,module_filename);
 
-   module_fd = open( path, O_RDONLY, 0777 );
-   if ( module_fd <=0 )
-      return moduleload_error("file not found",0);
+    module_fd = open( path, O_RDONLY, 0777 );
+    if ( module_fd <=0 )
+    {
+        moduleload_error("file not found",0);
+        return -1;
+    }
 
-   // @tsv TODO - compare loaded with requested
-   b_read( module_fd, (char*)&flat, sizeof(flat) );
+    // @tsv TODO - compare loaded with requested
+    b_read( module_fd, (char*)&flat, sizeof(flat) );
 
-   if  ( flat.rev!=FLAT_VERSION || memcmp( flat.magic, FLAT_MAGIC_NUMBER, 4) )
-      return moduleload_error("bad magicnum", 0);
+    if ( flat.rev!=FLAT_VERSION || memcmp( flat.magic, FLAT_MAGIC_NUMBER, 4) )
+    {
+        moduleload_error("bad magicnum", 0);
+        return -1;
+    }
 
-   size_flat = flat.reloc_start;
+    size_flat = flat.reloc_start;
 
-   flat_buf = malloc( size_flat );
-   if ( !flat_buf ) 
-      return moduleload_error("malloc",0);
-    
-   if ( 0!= lseek(module_fd, 0, SEEK_SET) )
-        return moduleload_error("read",0);
-   if ( size_flat != b_read(module_fd, flat_buf, size_flat) )
-        return moduleload_error("read",0);
+    flat_buf = (struct flat_hdr*)malloc( size_flat );
+    if ( !flat_buf ) 
+    {
+        moduleload_error("malloc",0);
+        return -1;
+    }
 
-   b_close(-1);	// filebuf not needed below
+    module_log_load(module_filename,flat_buf);
 
+    if ( 0!= lseek(module_fd, 0, SEEK_SET) )
+    {
+        moduleload_error("read",0);
+        return -1;
+    }
+    if ( size_flat != b_read(module_fd, (char*)flat_buf, size_flat) )
+    {
+        moduleload_error("read",0);
+        return -1;
+    }
 
-   // Module info checks
+    // Module info checks
 
-   struct ModuleInfo* _module_info = 0;
-   if ( flat._module_info )    
-   { 
-	 _module_info = (struct ModuleInfo* ) ((unsigned int)flat_buf+flat._module_info);
+    struct ModuleInfo *mod_info = flat_buf->_module_info = (struct ModuleInfo*)((unsigned int)flat_buf+flat_buf->_module_info_offset);
 
-	 if  ( _module_info->magicnum != MODULEINFO_V1_MAGICNUM ||
-		   _module_info->sizeof_struct != sizeof(struct ModuleInfo) )
-       return moduleload_error("Malformed module info", 0 );
+    if ( mod_info->magicnum != MODULEINFO_V1_MAGICNUM || mod_info->sizeof_struct != sizeof(struct ModuleInfo) )
+    {
+        moduleload_error("Malformed module info", 0 );
+        return -1;
+    }
 
-	 if  ( _module_info->chdk_required_branch &&
-		   _module_info->chdk_required_branch != CURRENT_CHDK_BRANCH )
-       return moduleload_error("require different CHDK branch",0 );
+    if ( mod_info->chdk_required_branch && mod_info->chdk_required_branch != CURRENT_CHDK_BRANCH )
+    {
+        moduleload_error("require different CHDK branch",0 );
+        return -1;
+    }
 
-	 if  ( _module_info->chdk_required_ver > CHDK_BUILD_NUM)
-       return moduleload_error("require CHDK%05d", _module_info->chdk_required_ver);
+    if ( mod_info->chdk_required_ver > CHDK_BUILD_NUM) 
+    {
+        moduleload_error("require CHDK%05d", mod_info->chdk_required_ver);
+        return -1;
+    }
 
-     if  ( _module_info->chdk_required_platfid && 
-		   _module_info->chdk_required_platfid != conf.platformid )
-       return moduleload_error("require platfid %d", _module_info->chdk_required_platfid);
-   }
+    if ( mod_info->chdk_required_platfid && mod_info->chdk_required_platfid != conf.platformid )
+    {
+        moduleload_error("require platfid %d", mod_info->chdk_required_platfid);
+        return -1;
+    }
 
-   // Make relocations
+	if ( !API_VERSION_MATCH_REQUIREMENT( mod_info->module_version, hMod->version ) )
+    {
+        moduleload_error("incorrect module version", 0);
+		return 1;
+    }
 
-   int reloc_size = flat.import_start - flat.reloc_start;
-   int reloc_count = reloc_size/sizeof(reloc_record_t);
-   if ( !module_do_action( "reloc", flat.reloc_start, reloc_count, reloc_size, module_do_relocations ) )
-	  return -1;
+	if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, mod_info->conf_ver ) )
+    {
+        moduleload_error("incorrect CONF version", 0);
+		return 1;
+    }
 
-   int import_size = flat.file_size - flat.import_start;
-   int import_count = import_size/sizeof(import_record_t);
-   if ( !module_do_action( "export", flat.import_start, import_count, import_size, module_do_imports ) )
-	  return -1;
+	if ( !API_VERSION_MATCH_REQUIREMENT( camera_screen.api_version, mod_info->cam_screen_ver ) )
+    {
+        moduleload_error("incorrect CAM SCREEN version", 0);
+		return 1;
+    }
 
-   b_close( module_fd );
-   module_fd = -1;
+	if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, mod_info->cam_sensor_ver ) )
+    {
+        moduleload_error("incorrect CAM SENSOR version", 0);
+		return 1;
+    }
 
-   // Module is valid. Finalize binding
+	if ( !API_VERSION_MATCH_REQUIREMENT( camera_info.api_version, mod_info->cam_info_ver ) )
+    {
+        moduleload_error("incorrect CAM INFO version", 0);
+		return 1;
+    }
 
-   modules[idx] = (struct flat_hdr* )flat_buf;
+    // Make relocations
 
-   modules[idx]->_module_info = (uint32_t) _module_info;
-   if ( flat._module_loader )    { modules[idx]->_module_loader += (unsigned int)flat_buf; }
-   if ( flat._module_unloader )  { modules[idx]->_module_unloader += (unsigned int)flat_buf; }
-   if ( flat._module_run )       { modules[idx]->_module_run += (unsigned int)flat_buf; }
+    int reloc_size = flat.import_start - flat.reloc_start;
+    int reloc_count = reloc_size/sizeof(uint32_t);
+    int import_size = flat.file_size - flat.import_start;
+    int import_count = import_size/sizeof(uint32_t);
 
-   // store runtime params
-   flat_module_name_make(modules[idx]->modulename, name);
-   modules[idx]->runtime_bind_callback = (uint32_t) callback;     //@tsv reuse unneeded entry to store valuable
+    if (!alloc_reloc_buf(reloc_size, import_size))
+        return -1;
+    if ( !module_do_action( "reloc", flat.reloc_start, reloc_count, reloc_size, module_do_relocations ) )
+        return -1;
+    if ( !module_do_action( "export", flat.import_start, import_count, import_size, module_do_imports ) )
+        return -1;
 
-   // TODO these could be changed to operate on affected address ranges only
-   // after relocating but before attempting to execute loaded code
-   // clean data cache to ensure code is in main memory
-   dcache_clean_all();
-   // then flush instruction cache to ensure no addresses containing new code are cached
-   icache_flush_all();
-   
-   int bind_err=0;
-   if ( flat._module_exportlist ) { 
-        modules[idx]->_module_exportlist += (unsigned int)flat_buf; 
-        if ( * ((uint32_t*)modules[idx]->_module_exportlist) != EXPORTLIST_MAGIC_NUMBER )
-            return moduleload_error("wrong import magic",0);
+    b_close( module_fd );
+    module_fd = -1;
 
-        if ( callback )
-            bind_err = callback( (void**) modules[idx]->_module_exportlist );
-   }
+    // Module is valid. Finalize binding
 
-   if ( modules[idx]->_module_loader ) {
-		uint32_t x = ((_module_loader_t) modules[idx]->_module_loader )((unsigned int*)&symbol_hash_table[0]);
+    modules[idx].hdr = flat_buf;
+
+    // store runtime params
+    flat_module_name_make(modules[idx].modulename, module_filename);
+    modules[idx].hMod = hMod;
+
+    // TODO these could be changed to operate on affected address ranges only
+    // after relocating but before attempting to execute loaded code
+    // clean data cache to ensure code is in main memory
+    dcache_clean_all();
+    // then flush instruction cache to ensure no addresses containing new code are cached
+    icache_flush_all();
+
+    int bind_err = bind_module( hMod, mod_info->lib );
+
+    if ( mod_info->lib->loader )
+    {
+        uint32_t x = mod_info->lib->loader();
         bind_err = bind_err || x;
-   }
+    }
 
-   if ( bind_err )
-   {
-        module_unload(name); flat_buf=0;
-        return moduleload_error("chdk mismatch",0);
-   }
+    if ( bind_err )
+    {
+        module_unload(module_filename);
+        moduleload_error("chdk mismatch",0);
+        return -1;
+    }
 
-   return idx;
+    return idx;
+}
+
+// Return: 0-fail, 1-ok
+int module_load(module_handler_t* hMod)
+{
+    // Attempt to load module
+    *hMod->lib = 0;
+    _module_load(hMod);
+
+    // If load succeeded return success
+    if (*hMod->lib && (*hMod->lib != hMod->default_lib))
+    {
+        return 1;
+    }
+
+    // If load failed reset library to unloaded default
+    if (*hMod->lib == 0)
+        *hMod->lib = hMod->default_lib;
+
+    // Failure
+    return 0;
 }
 
 //-----------------------------------------------
-// PURPOSE: 	run module "name" with argn/argv arguments. 
-//				callback = chdk-bind/unbind exported by module symbols.
-//				unload_after = 0 - do not unload
-//							   1 - unload if load and no run handler
-//							   2 - unload always
+// PURPOSE: 	run simple module "name"
 // RETURN VALUE: passed from module. -1 if something was failed
 //-----------------------------------------------
-int module_run(char* name, _module_bind_t callback, int argn, void* args, enum ModuleUnloadMode unload_after)
+static int default_run();
+
+static libsimple_sym default_librun =
 {
-   int rv = -1;
-   int loadflag=0;
+    {
+        0, 0, 0, 0,
+        default_run
+    }
+};
+libsimple_sym*  librun = &default_librun;
 
-   int moduleidx = module_find(name);
-	if ( moduleidx<0 )
-	{
-		loadflag=1;
-	
-		moduleidx = module_load( name, callback );
-   		if ( moduleidx<0 )
-      		return -1;
-	}
+static module_handler_t h_run =
+{
+    (base_interface_t**)&librun,
+    &default_librun.base,
+    ANY_VERSION,
+    0
+};
 
-   if ( modules[moduleidx]->_module_run ) {
-      kbd_key_release_all();
-	  module_unload_request[moduleidx]=0;	// sanity stability clean
-      rv = ( (_module_run_t) modules[moduleidx]->_module_run )(moduleidx, argn, args);
-	}
-	else if ( unload_after==UNLOAD_IF_ERR && loadflag)
-		unload_after=UNLOAD_ALWAYS;
+static int default_run()
+{
+    if (module_load(&h_run))
+        if (librun->base.run)
+            librun->base.run();
 
-   if ( unload_after==UNLOAD_ALWAYS )
-      module_unload(name);
-   return rv;
+    return 0;
+}
+
+int module_run(char* name)
+{
+    h_run.name = name;
+    return librun->base.run();
 }
 
 
 //-----------------------------------------------
-void module_unload_idx(int idx)
+static void module_unload_idx(int idx)
 {
-   _module_loader_t callback;
+    if ( idx>=0 )
+    {
+        module_log_unload(modules[idx].modulename);
 
-   if ( idx>=0 ) {
         // Make finalization module
-        if ( modules[idx]->_module_unloader )
-           ((_module_unloader_t) modules[idx]->_module_unloader )();
+        if ( modules[idx].hdr->_module_info->lib->unloader )
+            modules[idx].hdr->_module_info->lib->unloader();
+
         // Unbind pointers to module (chdk core callback)
-        if ( modules[idx]->runtime_bind_callback ) {
-           callback = (_module_loader_t)modules[idx]->runtime_bind_callback;
-           callback(0);
-        }
-       
+        bind_module(modules[idx].hMod,0);
+
         // Free slot
-        free ( modules[idx] );
-        modules[idx]=0;
-        module_unload_request[idx]=0;
-        module_flags[idx]=0;
-   }
+        free ( modules[idx].hdr );
+        modules[idx].hdr = 0;
+    }
 }
 
 void module_unload(char* name)
@@ -484,50 +671,24 @@ void module_unload(char* name)
 }
 
 //-----------------------------------------------
-// Return: 0 no such module exist, !=0 found
-//-----------------------------------------------
-int module_check_is_exist(char* name)
-{
-    char path[60];
-    flat_module_path_make(path, name);
-
-    struct stat st;
-    if (stat(path,&st) != 0) return 0;  // file does not exist
-
-    return 1;
-}
-
-//-----------------------------------------------
-void module_async_unload(unsigned int idx)
-{
-  if (idx <MAX_NUM_LOADED_MODULES)
-     module_unload_request[idx]=2;
-}
-
-void module_set_flags(unsigned int idx, char value)
-{
-  if (idx <MAX_NUM_LOADED_MODULES)
-     module_flags[idx]=value;
-}
-
-//-----------------------------------------------
-// Close all runned modules
+// Warn modules when leaving <ALT>
 //   1. Called when goto GUI_MODE_NONE
-//   2. Close in 0.1sec to finalize possible in-module flow
-//	 3. Close only modules which are raised flag autounload
+//   2. Tell all modules that we are leaving <ALT> mode
 //-----------------------------------------------
-void module_async_unload_allrunned(int enforce)
+void module_exit_alt()
 {
-	int idx;
+    int idx;
 
-    for( idx=0; idx<MAX_NUM_LOADED_MODULES; idx++) {
-		if ( modules[idx] &&
-				( enforce ||
-				 (module_flags[idx]&MODULE_FLAG_DISABLE_AUTOUNLOAD)==0 ) )
-			module_unload_request[idx]=10;
-	}     	  
+    for( idx=MAX_NUM_LOADED_MODULES-1; idx>=0; idx--)
+    {
+        if ( modules[idx].hdr )
+        {
+            // Tell module we are leaving <ALT>
+            if (modules[idx].hdr->_module_info->lib->exit_alt)
+                modules[idx].hdr->_module_info->lib->exit_alt();
+        }
+    }     	  
 }
-
 
 
 //-----------------------------------------------
@@ -535,22 +696,23 @@ void module_async_unload_allrunned(int enforce)
 //-----------------------------------------------
 void module_tick_unloader()
 {
-  int idx;
+    int idx;
 
-  for( idx=0; idx<MAX_NUM_LOADED_MODULES; idx++) {
-    if ( module_unload_request[idx] >0 ) {
-        module_unload_request[idx]--;
-        //do unload on second tick to give module time to finish
-            // (even if we set it right before return from function tick could happen at same moment)
-        if ( module_unload_request[idx] == 0 )
-            module_unload_idx(idx);
+    for( idx=MAX_NUM_LOADED_MODULES-1; idx>=0; idx--)
+    {
+        if (modules[idx].hdr && modules[idx].hdr->_module_info->lib->can_unload)
+        {
+            // Ask module if it is safe to unload
+            if (modules[idx].hdr->_module_info->lib->can_unload())
+                module_unload_idx(idx);
+        }
     }
-  }
 }
 
-void* module_get_adr(unsigned int idx)
+module_entry* module_get_adr(unsigned int idx)
 {
-	if (idx < MAX_NUM_LOADED_MODULES)
-		return modules[idx];
-	return 0;
+    if (idx < MAX_NUM_LOADED_MODULES)
+        if (modules[idx].hdr)
+            return &modules[idx];
+    return 0;
 }

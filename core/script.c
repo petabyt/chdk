@@ -7,12 +7,15 @@
 #include "script.h"
 #include "console.h"
 #include "action_stack.h"
-#include "modules.h"
 #include "shot_histogram.h"
 #include "lang.h"
+#include "gui.h"
 #include "gui_lang.h"
 #include "ptp.h"
 #include "clock.h"
+
+#include "script_api.h"
+#include "motion_detector.h"
 
 //-------------------------------------------------------------------
 
@@ -95,7 +98,7 @@ void script_console_add_line(long str_id)
 // Stack process function for running current script
 static int action_stack_AS_SCRIPT_RUN()
 {
-    if (camera_info.state.state_kbd_script_run && libscriptapi)
+    if (camera_info.state.state_kbd_script_run)
     {
         int rv = libscriptapi->script_run();
         if (rv != SCRIPT_RUN_RUNNING)
@@ -137,7 +140,7 @@ static int gui_script_kbd_process()
         script_console_add_line(LANG_CONSOLE_TEXT_INTERRUPTED);
         if (camera_info.state.state_kbd_script_run == SCRIPT_STATE_INTERRUPTED)
             script_end();
-        else if (libscriptapi)
+        else
         {
             camera_info.state.state_kbd_script_run = SCRIPT_STATE_INTERRUPTED;
             if (libscriptapi->run_restore() == 0)
@@ -161,17 +164,13 @@ void gui_script_draw()
         if (show_md_grid)
         {
             --show_md_grid;
-            // If motion detect library loaded then display the MD grid
-            // Don't call 'module_mdetect_load' here as we don't want to load
-            // the module, just see if it was already loaded.
-            if (libmotiondetect)
-                libmotiondetect->md_draw_grid();
+            libmotiondetect->md_draw_grid();
         }
     }
 }
 
 // GUI handler for Script mode
-gui_handler scriptGuiHandler = { GUI_MODE_SCRIPT, gui_script_draw, gui_script_kbd_process, 0, 0, GUI_MODE_MAGICNUM };      
+gui_handler scriptGuiHandler = { GUI_MODE_SCRIPT, gui_script_draw, gui_script_kbd_process, 0, 0 };      
 
 static gui_handler *old_gui_handler = 0;
 
@@ -193,13 +192,7 @@ void script_end()
     }
 
     // Reset script language module
-    if ( libscriptapi )
-    {
-        libscriptapi->script_reset();
-    }
-
-    // If motion detect library loaded then shut down motion detector
-    module_mdetect_unload();
+    libscriptapi->script_reset();
 
     // Kill off the action_stack for the script, since we've just reset the script
     // language and unloaded the MD module, we don't need to let the stack empty
@@ -233,24 +226,17 @@ long script_start_gui( int autostart )
 
     script_console_add_line((autostart)?LANG_CONSOLE_TEXT_AUTOSTARTED:LANG_CONSOLE_TEXT_STARTED);
 
-    module_script_lang_load(conf.script_file);
-    if (libscriptapi)
-    {
-        if ( !libscriptapi->script_start(script_source_str,0) )
-        {
-            return -1;
-        }
-        for (i=0; i<SCRIPT_NUM_PARAMS; ++i)
-        {
-            if( script_params[i][0] )
-            {
-                libscriptapi->set_variable(i, conf.script_vars[i]);
-            }
-        }
-    }
-    else
+    module_set_script_lang(conf.script_file);
+    if ( !libscriptapi->script_start(script_source_str,0) )
     {
         return -1;
+    }
+    for (i=0; i<SCRIPT_NUM_PARAMS; ++i)
+    {
+        if( script_params[i][0] )
+        {
+            libscriptapi->set_variable(i, conf.script_vars[i]);
+        }
     }
 
     conf_update_prevent_shutdown();

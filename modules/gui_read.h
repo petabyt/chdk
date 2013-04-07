@@ -1,5 +1,5 @@
-#ifndef GUI_GRID_H
-#define GUI_GRID_H
+#ifndef GUI_READ_H
+#define GUI_READ_H
 
 #include "flt.h"
 
@@ -7,12 +7,11 @@ typedef struct
 {
     base_interface_t    base;
 
-    void (*gui_grid_draw_osd)(int force);
-    void (*grid_lines_load)(const char *fn);
-} libgrids_sym;
+    int (*read_file)(const char *fn);
+} libtxtread_sym;
 
 //-------------------------------------------------------------------
-extern libgrids_sym* libgrids;
+extern libtxtread_sym* libtxtread;
 
 //-------------------------------------------------------------------
 #endif

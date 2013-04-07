@@ -5,8 +5,9 @@
 // Data Structure to store camera specific information
 // Used by modules to ensure module code is platform independent
 
-_cam_sensor camera_sensor = { 
-    MAKE_API_VERSION(1,0),
+_cam_sensor camera_sensor = 
+{ 
+    CAM_SENSOR_VERSION,
 
     CAM_SENSOR_BITS_PER_PIXEL, 
     CAM_BLACK_LEVEL, CAM_WHITE_LEVEL,
@@ -86,6 +87,8 @@ _cam_sensor camera_sensor = {
 
 _cam_screen camera_screen =
 {
+    CAM_SCREEN_VERSION,
+
     CAM_SCREEN_WIDTH, CAM_SCREEN_HEIGHT, CAM_SCREEN_WIDTH * CAM_SCREEN_HEIGHT,
     ASPECT_XCORRECTION(CAM_SCREEN_WIDTH),
     CAM_BITMAP_WIDTH, CAM_BITMAP_HEIGHT, CAM_BITMAP_WIDTH * CAM_BITMAP_HEIGHT,
@@ -106,7 +109,7 @@ _cam_screen camera_screen =
 
 _cam_info camera_info =
 {
-    MAKE_API_VERSION(1,0),
+    CAM_INFO_VERSION,
 
     {
 #if defined(PARAM_CAMERA_NAME)

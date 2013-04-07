@@ -11,53 +11,6 @@
 #include "modules.h"
 #include "module_load.h"
 
-/************* GENERIC ******/
-
-static int bind_module_generic( void** export_list, void** lib, int count, int major, int minor )
-{
-    *lib = 0;
-
-	// Unbind
-	if ( !export_list ) {
-    	return 0;
-  	}
-
-	// Bind
-	if ( (unsigned int)export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-	     return 1;
-  	if ( (unsigned int)export_list[1] < count )
-    	 return 1;
-
-	*lib = (void*)export_list[2];
-
-	if ( !*lib )
-    	 return 1;
-	if ( (major > 0) && !API_VERSION_MATCH_REQUIREMENT( *((int*)(*lib)), major, minor ) ) {
-		*lib=0;
-		return 1;
-	}
-
-	return 0;
-}
-
-// Return: 0-fail, addr-ok
-static void* module_load_generic(void **lib, char *name, _module_bind_t callback, int flags)
-{
-    if (*lib == 0)
-    {
-        int module_idx = module_load(name, callback);
-        if ( module_idx < 0 )
-            module_unload(name);  
-        else
-        {
-            if (flags)
-    	 	    module_set_flags(module_idx, flags);
-        }
-    }
-
-    return *lib;
-}
-
 /************* DYNAMIC LIBRARY RAWOPERATION ******/
 
 static char* rawop_module_name()
@@ -75,28 +28,65 @@ static char* rawop_module_name()
     }
 }
 
-// This is to minimize sharing sym to use this lib in other modules
-struct librawop_sym* librawop;
+// Forward reference
+extern librawop_sym default_librawop;
 
-void module_rawop_unload()
+module_handler_t h_rawop =
 {
-	if (librawop)
-    {
-    	module_unload(rawop_module_name());  
-        librawop = 0;
-    }
+    (base_interface_t**)&librawop,
+    &default_librawop.base,
+    RAW_MERGE_VERSION,
+    0
+};
+
+static int module_load_rawop()
+{
+    h_rawop.name = rawop_module_name();
+    return module_load(&h_rawop);
 }
 
-static int bind_module_rawop( void** export_list )
+// Default (unloaded) function(s)
+static int default_raw_merge_start(int action)
 {
-    return bind_module_generic(export_list, (void**)&librawop, 1, 0, 0);
+    // If load succeeded call module version of function
+    if (module_load_rawop())
+        return librawop->raw_merge_start(action);
+
+    // Failure
+    return 0;
+}
+static int default_raw_merge_add_file(const char* filename)
+{
+    // Do nothing unless 'raw_merge_start' already called to load module
+    return 0;
+}
+static void default_raw_merge_end()
+{
+    // Do nothing unless 'raw_merge_start' already called to load module
+    return;
+}
+static int default_raw_subtract(const char *from, const char *sub, const char *dest)
+{
+    // If load succeeded call module version of function
+    if (module_load_rawop())
+        return librawop->raw_subtract(from, sub, dest);
+
+    // Failure
+    return 0;
 }
 
-// Return: 0-fail, otherwise - bind list
-struct librawop_sym* module_rawop_load()
+// Default library - module unloaded
+librawop_sym default_librawop =
 {
-    return module_load_generic((void**)&librawop, rawop_module_name(), bind_module_rawop, 0);
-}
+    { 0,0,0,0,0 },
+    default_raw_merge_start,
+    default_raw_merge_add_file,
+    default_raw_merge_end,
+    default_raw_subtract
+};
+
+// Library pointer
+librawop_sym* librawop = &default_librawop;
 
 
 /************* DYNAMIC LIBRARY EDGE OVERLAY ******/
@@ -112,15 +102,19 @@ void module_save_edge(void* buf, int state)      { saved_edgebuf = buf; saved_ed
 
 #define MODULE_NAME_EDGEOVR "edgeovr.flt"
 
-struct libedgeovr_sym* libedgeovr;
+// Forward reference
+extern libedgeovr_sym default_libedgeovr;
 
-static int bind_module_edgeovr( void** export_list )
+module_handler_t h_edgeovr =
 {
-    return bind_module_generic(export_list, (void**)&libedgeovr, 1, 1, 0);
-}
+    (base_interface_t**)&libedgeovr,
+    &default_libedgeovr.base,
+    EDGEOVERLAY_VERSION,
+    MODULE_NAME_EDGEOVR
+};
 
 // Return: 0-fail, 1-ok
-struct libedgeovr_sym* module_edgeovr_load()
+static int module_edgeovr_load()
 {
     // This flag is because edgeovr called each tick
     //   If module loading failed, then do not try to load it until reboot
@@ -128,96 +122,132 @@ struct libedgeovr_sym* module_edgeovr_load()
     static int flag_load_fail = 0;
 
     if ( flag_load_fail==0 )
-    {
-        module_load_generic((void**)&libedgeovr, MODULE_NAME_EDGEOVR, bind_module_edgeovr, MODULE_FLAG_DISABLE_AUTOUNLOAD);
-
-        if (libedgeovr == 0)
+        if (!module_load(&h_edgeovr))
     		flag_load_fail = 1;
-    }
 
-    return libedgeovr;
+    return flag_load_fail == 0;
 }
 
-// edgeovr module will never unload to keep its picture
-// void module_edgeovr_unload() {}
+// Default (unloaded) function(s)
+static void default_edge_overlay()
+{
+    // If load succeeded call module version of function
+    if (module_edgeovr_load())
+        libedgeovr->edge_overlay();
+}
+static void default_load_edge_overlay(const char* fn)
+{
+    // If load succeeded call module version of function
+    if (module_edgeovr_load())
+        libedgeovr->load_edge_overlay(fn);
+}
+static void default_save_edge_overlay()
+{
+    // Don't need to do anything unless module already loaded
+    return;
+}
 
+// Default library - module unloaded
+libedgeovr_sym default_libedgeovr =
+{
+    { 0,0,0,0,0 },
+    default_edge_overlay,
+    default_load_edge_overlay,
+    default_save_edge_overlay
+};
+
+// Library pointer
+libedgeovr_sym* libedgeovr = &default_libedgeovr;
 
 /************* DYNAMIC LIBRARY MOTION DETECT ******/
 
 #define MODULE_NAME_MDETECT "mdetect.flt"
 
-struct libmotiondetect_sym* libmotiondetect;
+// Forward reference
+extern libmotiondetect_sym default_libmotiondetect;
 
-static int bind_module_motiondetect( void** export_list )
+module_handler_t h_motiondetect =
 {
-    return bind_module_generic(export_list, (void**)&libmotiondetect, 1, 1, 0);
+    (base_interface_t**)&libmotiondetect,
+    &default_libmotiondetect.base,
+    MOTION_DETECTOR_VERSION,
+    MODULE_NAME_MDETECT
+};
+
+// Default (unloaded) function(s)
+static int default_md_init_motion_detector(
+ int columns, int rows, int pixel_measure_mode, int detection_timeout, int measure_interval, int threshold, int draw_grid, 
+ int clipping_region_mode, int clipping_region_column1, int clipping_region_row1, int clipping_region_column2, int clipping_region_row2,
+ int parameters, int pixels_step, int msecs_before_trigger)
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_motiondetect))
+        return libmotiondetect->md_init_motion_detector(
+                    columns, rows, pixel_measure_mode, detection_timeout, measure_interval, threshold, draw_grid, 
+                    clipping_region_mode, clipping_region_column1, clipping_region_row1, clipping_region_column2, clipping_region_row2,
+                    parameters, pixels_step, msecs_before_trigger);
+
+    // Failure
+    return 0;
+}
+static void default_md_close_motion_detector()
+{
+    // Do nothing unless module loaded using 'md_init_motion_detector'
+    return;
+}
+static void default_md_draw_grid()
+{
+    // Do nothing unless module loaded using 'md_init_motion_detector'
+    return;
+}
+static int default_md_get_cell_diff(int column, int row)
+{
+    // Do nothing unless module loaded using 'md_init_motion_detector'
+    return 0;
+}
+static int default_md_get_cell_val(int column, int row)
+{
+    // Do nothing unless module loaded using 'md_init_motion_detector'
+    return 0;
 }
 
-// Return: 0-fail, 1-ok
-struct libmotiondetect_sym* module_mdetect_load()
+// Default library - module unloaded
+libmotiondetect_sym default_libmotiondetect =
 {
-    return module_load_generic((void**)&libmotiondetect, MODULE_NAME_MDETECT, bind_module_motiondetect, MODULE_FLAG_DISABLE_AUTOUNLOAD);
-}
+    { 0,0,0,0,0 },
+    default_md_close_motion_detector,
+    default_md_init_motion_detector,
+    default_md_get_cell_diff,
+    default_md_draw_grid,
+    default_md_get_cell_val
+};
 
-void module_mdetect_unload()
-{
-	if (libmotiondetect)
-    {
-    	module_unload(MODULE_NAME_MDETECT);  
-        libmotiondetect = 0;
-    }
-}
-
-
-/************* DYNAMIC LIBRARY uBasic ******/
-
-#define MODULE_NAME_UBASIC "ubasic.flt"
-
-static struct libscriptapi_sym* libubasic;
-
-static int bind_module_ubasic( void** export_list )
-{
-    return bind_module_generic(export_list, (void**)&libubasic, 1, 1, 0);
-}
-
-static void module_ubasic_unload()
-{
-	if (libubasic)
-    {
-    	module_unload(MODULE_NAME_UBASIC);  
-        libubasic = 0;
-    }
-}
-
-
-/************* DYNAMIC LIBRARY Lua ******/
-
-#define MODULE_NAME_LUA "lua.flt"
-
-static struct libscriptapi_sym* liblua;
-
-static int bind_module_lua( void** export_list )
-{
-    return bind_module_generic(export_list, (void**)&liblua, 1, 1, 0);
-}
-
-static void module_lua_unload()
-{
-	if (liblua)
-    {
-    	module_unload(MODULE_NAME_LUA);  
-        liblua = 0;
-    }
-}
-
+// Library pointer
+libmotiondetect_sym* libmotiondetect = &default_libmotiondetect;
 
 /************* DYNAMIC LIBRARY Script language ******/
 
-struct libscriptapi_sym* libscriptapi;
+#define MODULE_NAME_UNK     "unknown"
+#define MODULE_NAME_LUA     "lua.flt"
+#define MODULE_NAME_UBASIC  "ubasic.flt"
+
+// Forward reference
+extern libscriptapi_sym default_libscriptapi;
+
+module_handler_t h_script =
+{
+    (base_interface_t**)&libscriptapi,
+    &default_libscriptapi.base,
+    SCRIPT_API_VERSION,
+    MODULE_NAME_UNK
+};
 
 // Which script language is being used
-#define SCRIPT_LANG_UBASIC  0
-#define SCRIPT_LANG_LUA     1
+#define SCRIPT_LANG_NONE    0
+#define SCRIPT_LANG_UBASIC  1
+#define SCRIPT_LANG_LUA     2
+
+static int current_lang_id = SCRIPT_LANG_NONE;
 
 static int script_lang_id(const char* script_file)
 {
@@ -232,209 +262,452 @@ static int script_lang_id(const char* script_file)
     return SCRIPT_LANG_UBASIC;
 }
 
-struct libscriptapi_sym* module_script_lang_load(const char *script_fn)
+void module_set_script_lang(const char* script_file)
 {
-    int lang_id = script_lang_id(script_fn);
+    char* lang_names[] = { MODULE_NAME_UNK, MODULE_NAME_UBASIC, MODULE_NAME_LUA };
 
-    char *lang_name = "Unknown";
+    int lang_id = script_lang_id(script_file);
 
-    switch (lang_id)
+    if (lang_id != current_lang_id)
     {
-    case SCRIPT_LANG_UBASIC:
-        module_lua_unload();
-        libscriptapi = module_load_generic((void**)&libubasic, MODULE_NAME_UBASIC, bind_module_ubasic, MODULE_FLAG_DISABLE_AUTOUNLOAD);
-        lang_name = "uBasic";
-        break;
-    case SCRIPT_LANG_LUA:
-        module_ubasic_unload();
-        libscriptapi = module_load_generic((void**)&liblua, MODULE_NAME_LUA, bind_module_lua, MODULE_FLAG_DISABLE_AUTOUNLOAD);
-        lang_name = "Lua";
-        break;
-    default:
-        module_lua_unload();
-        module_ubasic_unload();
-        libscriptapi = 0;
-        break;
+        module_unload(h_script.name);
+        current_lang_id = lang_id;
+        h_script.name = lang_names[lang_id];
     }
-
-    if (libscriptapi == 0)
-    {
-        char msg[64];
-        sprintf(msg,"%s script module failed to load",lang_name);
-        console_add_line(msg);
-    }
-
-    return libscriptapi;
 }
 
+// Default (unloaded) function(s)
+static int default_script_start(char const* script, int is_ptp)
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_script))
+        return libscriptapi->script_start(script, is_ptp);
+
+    // Failure
+    return 0;
+}
+static int default_script_run()
+{
+    // Nothing to do if script not started
+    return 0;
+}
+static void default_script_reset()
+{
+    // Nothing to do if script not started
+    return;
+}
+static void default_set_variable(int varnum, int value)
+{
+    // Nothing to do if script not started
+    return;
+}
+static void default_set_as_ret(int as_ret)
+{
+    // Nothing to do if script not started
+    return;
+}
+static int default_run_restore()
+{
+    // Nothing to do if script not started
+    return 0;
+}
+
+// Default library - module unloaded
+libscriptapi_sym default_libscriptapi =
+{
+    { 0,0,0,0,0 },
+    default_script_start,
+    default_script_run,
+    default_script_reset,
+    default_set_variable,
+    default_set_as_ret,
+    default_run_restore
+};
+
+// Library pointer
+libscriptapi_sym* libscriptapi = &default_libscriptapi;
 
 /************* DYNAMIC LIBRARY ZEBRA ******/
 
 #define MODULE_NAME_ZEBRA "zebra.flt"
 
-struct libzebra_sym* libzebra;
+// Forward reference
+extern libzebra_sym default_libzebra;
 
-static int bind_module_zebra( void** export_list )
+module_handler_t h_zebra =
 {
-    return bind_module_generic(export_list, (void**)&libzebra, 1, 1, 0);
+    (base_interface_t**)&libzebra,
+    &default_libzebra.base,
+    ZEBRA_VERSION,
+    MODULE_NAME_ZEBRA
+};
+
+// Default (unloaded) function(s)
+static int default_gui_osd_draw_zebra(int show)
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_zebra))
+        return libzebra->gui_osd_draw_zebra(show);
+
+    // Failure
+    return 0;
 }
 
-// Return: 0-fail, 1-ok
-struct libzebra_sym* module_zebra_load()
+// Default library - module unloaded
+libzebra_sym default_libzebra =
 {
-    return module_load_generic((void**)&libzebra, MODULE_NAME_ZEBRA, bind_module_zebra, MODULE_FLAG_DISABLE_AUTOUNLOAD);
-}
+    { 0,0,0,0,0 },
+    default_gui_osd_draw_zebra
+};
+
+// Library pointer
+libzebra_sym* libzebra = &default_libzebra;
 
 
 /************* DYNAMIC LIBRARY CURVES ******/
 
 #define MODULE_NAME_CURVES "curves.flt"
 
-struct libcurves_sym* libcurves;
+// Forward reference
+extern libcurves_sym default_libcurves;
 
-static int bind_module_curves( void** export_list )
+module_handler_t h_curves =
 {
-    return bind_module_generic(export_list, (void**)&libcurves, 1, 1, 0);
-}
+    (base_interface_t**)&libcurves,
+    &default_libcurves.base,
+    CURVES_VERSION,
+    MODULE_NAME_CURVES
+};
 
 // Return: 0-fail, addr-ok
-struct libcurves_sym* module_curves_load()
+static int module_curves_load()
 {
     if (camera_sensor.bits_per_pixel == 10)
-        return module_load_generic((void**)&libcurves, MODULE_NAME_CURVES, bind_module_curves, 0);
-    libcurves = 0;
+        return module_load(&h_curves);
     return 0;
 }
 
+// Default (unloaded) function(s)
+static void default_curve_init_mode()
+{
+    // If load succeeded call module version of function
+    if (module_curves_load())
+        libcurves->curve_init_mode();
+}
+static void default_curve_apply()
+{
+    // Do nothing if module not loaded
+    return;
+}
+static void default_curve_set_mode()
+{
+    // If load succeeded call module version of function
+    if (module_curves_load())
+        libcurves->curve_set_mode();
+}
+static void default_curve_set_file()
+{
+    // If load succeeded call module version of function
+    if (module_curves_load())
+        libcurves->curve_set_file();
+}
+
+// Default library - module unloaded
+libcurves_sym default_libcurves =
+{
+    { 0,0,0,0,0 },
+    default_curve_init_mode,
+    default_curve_apply,
+    default_curve_set_mode,
+    default_curve_set_file
+};
+
+// Library pointer
+libcurves_sym* libcurves = &default_libcurves;
 
 /************* DYNAMIC LIBRARY GRIDS ******/
 
 #define MODULE_NAME_GRIDS "grids.flt"
 
-struct libgrids_sym* libgrids;
+// Forward reference
+extern libgrids_sym default_libgrids;
 
-static int bind_module_grids( void** export_list )
+module_handler_t h_grids =
 {
-    return bind_module_generic(export_list, (void**)&libgrids, 1, 1, 0);
+    (base_interface_t**)&libgrids,
+    &default_libgrids.base,
+    GUI_GRID_VERSION,
+    MODULE_NAME_GRIDS
+};
+
+// Default (unloaded) function(s)
+static void default_gui_grid_draw_osd(int force)
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_grids))
+        libgrids->gui_grid_draw_osd(force);
+}
+static void default_grid_lines_load(const char *fn)
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_grids))
+        libgrids->grid_lines_load(fn);
 }
 
-// Return: 0-fail, addr-ok
-struct libgrids_sym* module_grids_load()
+// Default library - module unloaded
+libgrids_sym default_libgrids =
 {
-    return module_load_generic((void**)&libgrids, MODULE_NAME_GRIDS, bind_module_grids, 0);
-}
+    { 0,0,0,0,0 },
+    default_gui_grid_draw_osd,
+    default_grid_lines_load
+};
+
+// Library pointer
+libgrids_sym* libgrids = &default_libgrids;
 
 
 /************* MODULE PALETTE ******/
 
-void module_palette_run(int mode, color st_color, void (*on_select)(color clr))
+#define MODULE_NAME_PALETTE "palette.flt"
+
+// Forward reference
+extern libpalette_sym default_libpalette;
+
+module_handler_t h_palette =
 {
-	unsigned int argv[] = {	mode,
-							(unsigned int)st_color,
-							(unsigned int)on_select };
-    module_run("palette.flt", 0, sizeof(argv)/sizeof(argv[0]), argv,  UNLOAD_IF_ERR);
+    (base_interface_t**)&libpalette,
+    &default_libpalette.base,
+    GUI_PALETTE_VERSION,
+    MODULE_NAME_PALETTE
+};
+
+// Default (unloaded) function
+static void default_show_palette(int mode, color st_color, void (*on_select)(color clr))
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_palette))
+        libpalette->show_palette(mode, st_color, on_select);
 }
 
+// Default library - module unloaded
+libpalette_sym default_libpalette =
+{
+    { 0,0,0,0,0 },
+    default_show_palette
+};
+
+// Library pointer
+libpalette_sym* libpalette = &default_libpalette;
 
 /************* MODULE MPOPUP ******/
 
-void module_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode)
+#define MODULE_NAME_MPOPUP "mpopup.flt"
+
+// Forward reference
+extern libmpopup_sym default_libmpopup;
+
+module_handler_t h_mpopup =
 {
-	unsigned int argv[] = {	(unsigned int)popup_actions,
-							(unsigned int)flags,
-							(unsigned int)on_select,
-							(unsigned int)mode,
-							 };
-    module_run("mpopup.flt", 0, sizeof(argv)/sizeof(argv[0]), argv,  UNLOAD_IF_ERR);
+    (base_interface_t**)&libmpopup,
+    &default_libmpopup.base,
+    GUI_MPOPUP_VERSION,
+    MODULE_NAME_MPOPUP
+};
+
+// Default (unloaded) function
+static void default_show_popup(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode)
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_mpopup))
+        libmpopup->show_popup(popup_actions, flags, on_select, mode);
 }
 
+// Default library - module unloaded
+libmpopup_sym default_libmpopup =
+{
+    { 0,0,0,0,0 },
+    default_show_popup
+};
+
+// Library pointer
+libmpopup_sym* libmpopup = &default_libmpopup;
 
 /************* MODULE FSELECT ******/
 
-void module_fselect_init_w_mode(int title, const char* prev_dir, const char* default_dir, void (*on_select)(const char *fn), unsigned int key_redraw_mode)
+#define MODULE_NAME_FSELECT "fselect.flt"
+
+// Forward reference
+extern libfselect_sym default_libfselect;
+
+module_handler_t h_fselect =
 {
-	unsigned int argv[] = {	title,
-							(unsigned int)prev_dir,
-							(unsigned int)default_dir,
-							(unsigned int)on_select,
-							(unsigned int)key_redraw_mode,
-							 };
-    module_run("fselect.flt", 0,  sizeof(argv)/sizeof(argv[0]), argv, UNLOAD_IF_ERR);
+    (base_interface_t**)&libfselect,
+    &default_libfselect.base,
+    GUI_FSELECT_VERSION,
+    MODULE_NAME_FSELECT
+};
+
+// Default (unloaded) function
+static void default_file_select(int title, const char* prev_dir, const char* default_dir, void (*on_select)(const char *fn))
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_fselect))
+        libfselect->file_select(title, prev_dir, default_dir, on_select);
 }
 
-void module_fselect_init(int title, const char* prev_dir, const char* default_dir, void (*on_select)(const char *fn))
+// Default library - module unloaded
+libfselect_sym default_libfselect =
 {
-	module_fselect_init_w_mode(title, prev_dir, default_dir, on_select, 0/*key_redraw_mode*/);
-}
+    { 0,0,0,0,0 },
+    default_file_select
+};
+
+// Library pointer
+libfselect_sym* libfselect = &default_libfselect;
 
 /************* MODULE DNG ******/
 
 #define MODULE_NAME_DNG "_dng.flt"
 
-// This is to keep module in memory while it required by anyone
-static int module_dng_semaphore;
+// Forward reference
+extern libdng_sym default_libdng;
 
-struct libdng_sym* libdng;
-
-void module_dng_unload(int owner)
+module_handler_t h_dng =
 {
-	if (libdng==0)
-    	return;
+    (base_interface_t**)&libdng,
+    &default_libdng.base,
+    DNG_VERSION,
+    MODULE_NAME_DNG
+};
 
-  	module_dng_semaphore &= ~owner;
-	if (module_dng_semaphore)
-		return;
+// Default (unloaded) function
+static void default_create_badpixel_bin()
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_dng))
+        libdng->create_badpixel_bin();
+}
+static int default_raw_init_badpixel_bin()
+{
+    // Do nothing unless module is loaded
+    return 0;
+}
+static void default_capture_data_for_exif()
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_dng))
+        libdng->capture_data_for_exif();
+}
+static void default_load_bad_pixels_list_b(char* filename)
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_dng))
+        libdng->load_bad_pixels_list_b(filename);
+}
+static int default_badpixel_list_loaded_b()
+{
+    // Do nothing unless module is loaded
+    return 0;
+}
+static int default_convert_dng_to_chdk_raw(char* fn)
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_dng))
+        return libdng->convert_dng_to_chdk_raw(fn);
 
-	module_unload(MODULE_NAME_DNG);  
+    // Failure
+    return 0;
+}
+static void default_write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
+{
+    // Do nothing unless module is loaded
+    return;
 }
 
-static int bind_module_dng( void** export_list )
+// Default library - module unloaded
+libdng_sym default_libdng =
 {
-    return bind_module_generic(export_list, (void**)&libdng, 1, 1, 0);
-}
+    { 0,0,0,0,0 },
+    default_create_badpixel_bin,
+    default_raw_init_badpixel_bin,
+    default_capture_data_for_exif,
+    default_load_bad_pixels_list_b,
+    default_badpixel_list_loaded_b,
+    default_convert_dng_to_chdk_raw,
+    default_write_dng
+};
 
-// Return: 0-fail, otherwise - bind list
-struct libdng_sym* module_dng_load(int owner)
-{
-    module_dng_semaphore |= owner;
-
-    module_load_generic((void**)&libdng, MODULE_NAME_DNG, bind_module_dng, MODULE_FLAG_DISABLE_AUTOUNLOAD);
-
-    if (libdng == 0)
-        module_dng_semaphore=0;
-
-    return libdng;
-}
-
-// Make convertion or check operation exsitsing
-// Parameter: fn = filename or 0 to just check is operation possible
-// Return: 0-fail, 1-ok
-//--------------------------------------------------------
-int module_convert_dng_to_chdk_raw(char* fn)
-{
-	if ( fn==0 )
-		return module_check_is_exist(MODULE_NAME_DNG);
-	if ( !module_dng_load(LIBDNG_OWNED_BY_CONVERT) )
-		return 0;
-	libdng->convert_dng_to_chdk_raw(fn);
-	module_dng_unload(LIBDNG_OWNED_BY_CONVERT);
-	return 1;
-}
-
+// Library pointer
+libdng_sym* libdng = &default_libdng;
 
 /************* MODULE TBOX ******/
 
 #define MODULE_NAME_TBOX "_tbox.flt"
 
-struct libtextbox_sym* libtextbox;
+// Forward reference
+extern libtextbox_sym default_libtextbox;
 
-static int bind_module_tbox( void** export_list )
+module_handler_t h_textbox =
 {
-    return bind_module_generic(export_list, (void**)&libtextbox, 1, 1, 0);
+    (base_interface_t**)&libtextbox,
+    &default_libtextbox.base,
+    GUI_TBOX_VERSION,
+    MODULE_NAME_TBOX
+};
+
+// Default (unloaded) function
+static int default_textbox_init(int title, int msg, const char* defaultstr, unsigned int maxsize, void (*on_select)(const char* newstr), char *input_buffer)
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_textbox))
+        return libtextbox->textbox_init(title,msg,defaultstr,maxsize,on_select,input_buffer);
+
+    // Failure
+    return 0;
 }
 
-// Return: 0-fail, addr-ok
-struct libtextbox_sym* module_tbox_load()
+// Default library - module unloaded
+libtextbox_sym default_libtextbox =
 {
-    return module_load_generic((void**)&libtextbox, MODULE_NAME_TBOX, bind_module_tbox, 0);
+    { 0,0,0,0,0 },
+    default_textbox_init,
+};
+
+// Library pointer
+libtextbox_sym* libtextbox = &default_libtextbox;
+
+/************* MODULE TXTREAD ******/
+
+#define MODULE_NAME_TXTREAD "txtread.flt"
+
+// Forward reference
+extern libtxtread_sym default_libtxtread;
+
+module_handler_t h_txtread =
+{
+    (base_interface_t**)&libtxtread,
+    &default_libtxtread.base,
+    GUI_READ_VERSION,
+    MODULE_NAME_TXTREAD
+};
+
+// Default (unloaded) function
+static int default_read_file(const char *fn)
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_txtread))
+        return libtxtread->read_file(fn);
+
+    // Failure
+    return 0;
 }
+
+// Default library - module unloaded
+libtxtread_sym default_libtxtread =
+{
+    { 0,0,0,0,0 },
+    default_read_file,
+};
+
+// Library pointer
+libtxtread_sym* libtxtread = &default_libtxtread;

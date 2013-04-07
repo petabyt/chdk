@@ -1,6 +1,10 @@
 #ifndef MODULES_H
 #define MODULES_H
 
+// Simple modules (e.g. games, calendar)
+//--------------------------
+#include "simple_module.h"
+
 // MODULE "RAW OPERATIONS"
 //--------------------------
 #include "raw_merge.h"
@@ -44,6 +48,10 @@
 // MODULE "TBOX"
 //--------------------------
 #include "gui_tbox.h"
+
+// MODULE "TXTREAD"
+//--------------------------
+#include "gui_read.h"
 
 // MODULE "Lua/uBasic" API
 //--------------------------

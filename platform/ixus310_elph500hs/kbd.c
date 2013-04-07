@@ -5,6 +5,7 @@
 #include "conf.h"
 #include "keyboard.h"
 #include "touchscreen.h"
+#include "gui.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
 

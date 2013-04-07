@@ -62,17 +62,14 @@ int raw_savefile()
 #if DNG_SUPPORT
     if (conf.save_raw && conf.dng_raw && is_raw_enabled())
     {                             
-		if ( module_dng_load(LIBDNG_OWNED_BY_RAW) )
-			libdng->capture_data_for_exif();
+        libdng->capture_data_for_exif();
 	}
 #endif    
     if (camera_info.state.state_kbd_script_run && shot_histogram_isenabled()) build_shot_histogram();
 
 #if DNG_SUPPORT
     // count/save badpixels if requested
-    if( libdng &&
-		libdng->raw_init_badpixel_bin && 
-		libdng->raw_init_badpixel_bin())
+    if (libdng->raw_init_badpixel_bin())
     {
         return 0;
     }
@@ -87,10 +84,8 @@ int raw_savefile()
             close(fd);
         }
 #ifdef OPT_CURVES
-        if (conf.curve_enable) {
-  			if (module_curves_load())
-				libcurves->curve_apply();
-		}
+        if (conf.curve_enable)
+            libcurves->curve_apply();
 #endif
         finished();
         develop_raw=0;
@@ -156,8 +151,7 @@ int raw_savefile()
 #if DNG_SUPPORT
             if (conf.dng_raw)
             {
-				if ( module_dng_load(LIBDNG_OWNED_BY_RAW) )
-					libdng->write_dng(fd, rawadr, altrawadr, CAM_UNCACHED_BIT );
+                libdng->write_dng(fd, rawadr, altrawadr, CAM_UNCACHED_BIT );
             }
             else 
             {
@@ -185,10 +179,8 @@ int raw_savefile()
     }
 
 #ifdef OPT_CURVES
-    if (conf.curve_enable) {
-  		if (module_curves_load())
-			libcurves->curve_apply();
-	}
+    if (conf.curve_enable)
+        libcurves->curve_apply();
 #endif
     return ret;
 }

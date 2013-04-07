@@ -6,8 +6,12 @@
 // Note: used in modules and platform independent code. 
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
-#include "gui.h"
+//==========================================================
+
+#include "stdlib.h"
 #include "script.h"
+
+//==========================================================
 
 #define USER_MENU_ITEMS     14
 #define CONF_STR_LEN        100
@@ -69,7 +73,7 @@ typedef struct {
 // Don't make any of the entries conditionally compiled in - this will change the offsets between cameras causing problems with
 // making the modules camera/platform independant
 typedef struct {
-	int api_version;			// version of this structure
+	_version_t api_version;			// version of this structure
 
     int save_raw;
     int save_raw_in_video;
@@ -406,6 +410,8 @@ typedef struct {
     int show_alt_helper_delay;  // Delay before showing help screen
     
     long extra_button; // extra button for use in ALT mode, 0 when disabled
+
+    int module_logging;
 
 } Conf;
 

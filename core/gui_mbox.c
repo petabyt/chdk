@@ -12,7 +12,7 @@
 void gui_mbox_draw();
 int gui_mbox_kbd_process();
 
-static gui_handler mboxGuiHandler = { GUI_MODE_MBOX, gui_mbox_draw, gui_mbox_kbd_process, 0, GUI_MODE_FLAG_NORESTORE_ON_SWITCH, GUI_MODE_MAGICNUM };
+static gui_handler mboxGuiHandler = { GUI_MODE_MBOX, gui_mbox_draw, gui_mbox_kbd_process, 0, GUI_MODE_FLAG_NORESTORE_ON_SWITCH };
 
 static gui_handler	*gui_mbox_mode_old;
 static const char*	mbox_title;

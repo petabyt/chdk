@@ -18,8 +18,10 @@
 #include "gui_lang.h"
 #include "gui_batt.h"
 #include "gui_mbox.h"
+#include "modes.h"
 
 #include "module_def.h"
+#include "simple_module.h"
 
 void gui_module_menu_kbd_process();
 int gui_sudoku_kbd_process();
@@ -27,7 +29,9 @@ void gui_sudoku_draw();
 void exit_sudoku();
 
 gui_handler GUI_MODE_SUDOKU =
-    /*GUI_MODE_SUDOKU*/  { GUI_MODE_MODULE, gui_sudoku_draw, gui_sudoku_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_SUDOKU*/  { GUI_MODE_MODULE, gui_sudoku_draw, gui_sudoku_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE };
+
+static int running = 0;
 
 //-------------------------------------------------------------------
 #define SUDOKU_BG_COLOR		MAKE_COLOR(COLOR_WHITE, COLOR_WHITE)
@@ -65,8 +69,6 @@ int menuPos;
 int draw;	//with flags, for drawing
 int xPadStart, yPadStart, padLineDistance; //number pad X, Y and distance, for entering a number
 int xPosPad, yPosPad;
-
-struct stat st;  //used for save games
 
 int field[9][9];
 
@@ -847,7 +849,7 @@ void sudoku_menu_execute()
             exit_sudoku(1); //save and exit
             break;
         case 7:
-            if (stat("A/CHDK/GAMES/SUDOKU.SAV", &st)==0) {
+            if (stat("A/CHDK/GAMES/SUDOKU.SAV", 0)==0) {
                 remove("A/CHDK/GAMES/SUDOKU.SAV");
             }
             break;
@@ -1009,7 +1011,7 @@ int gui_sudoku_init()
 	draw|=BG;
 	gui_sudoku_draw(0);
 
-	if (stat("A/CHDK/GAMES/SUDOKU.SAV", &st)==0) { //load last sudoku
+	if (stat("A/CHDK/GAMES/SUDOKU.SAV", 0)==0) { //load last sudoku
         int f = open("A/CHDK/GAMES/SUDOKU.SAV", O_RDONLY, 0777);
         read(f, user, sizeof(user));
         read(f, field, sizeof(field));
@@ -1025,36 +1027,85 @@ int gui_sudoku_init()
 	return 1;
 }
 
-int basic_module_init() {
-  return gui_sudoku_init();
-}
-extern int module_idx;
-void gui_module_menu_kbd_process() {
+void gui_module_menu_kbd_process()
+{
 	if (mode==MODE_VIEW)mode=MODE_MENU;
     else mode=MODE_VIEW;
     draw|=FIELD|MENU;
 }
 
-void exit_sudoku(int save) {
-    if (save!=0) {
+void exit_sudoku(int save)
+{
+    if (save!=0)
+    {
         save = open("A/CHDK/GAMES/SUDOKU.SAV", O_WRONLY|O_CREAT|O_TRUNC, 0777);
         write(save, user, sizeof(user));
         write(save, field, sizeof(field));
         close(save);
     }
+    running = 0;
     gui_default_kbd_process_menu_btn();
-  	module_async_unload(module_idx);
 }
+
+// =========  MODULE INIT =================
+
+/***************** BEGIN OF AUXILARY PART *********************
+  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+ **************************************************************/
+
+int _run()
+{
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    {
+        gui_mbox_init(LANG_MSG_INFO_TITLE, LANG_MSG_SWITCH_TO_PLAY_MODE, MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, 0);
+    }
+    else
+    {
+        running = 1;
+        gui_sudoku_init();
+    }
+
+    return 0;
+}
+
+int _module_can_unload()
+{
+    return running == 0;
+}
+
+int _module_exit_alt()
+{
+    running = 0;
+    return 0;
+}
+
+/*************** END OF AUXILARY PART *******************/
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+libsimple_sym _librun =
+{
+    {
+         0, 0, _module_can_unload, _module_exit_alt, _run
+    }
+};
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
-									(int32_t)"Sudoku",			// Module name
-									1, 0,						// Module version
-									(int32_t) "Game"
-								 };
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    SIMPLE_MODULE_VERSION,		// Module version
+
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    (int32_t)"Sudoku",			// Module name
+    (int32_t) "Game",
+
+    &_librun.base,
+
+    ANY_VERSION,                // CONF version
+    CAM_SCREEN_VERSION,         // CAM SCREEN version
+    ANY_VERSION,                // CAM SENSOR version
+    ANY_VERSION,                // CAM INFO version
+};

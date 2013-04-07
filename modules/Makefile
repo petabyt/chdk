@@ -67,9 +67,9 @@ reversebytes.o: reversebytes.S
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
 
-calend.elf: simple_module.o gui_calendar.o
+calend.elf: gui_calendar.o
 _tbox.elf: gui_tbox.o
-benchm.elf: simple_module.o gui_bench.o
+benchm.elf: gui_bench.o
 memview.elf: gui_debug.o
 palette.elf: gui_palette.o
 mpopup.elf: gui_mpopup.o
@@ -86,13 +86,13 @@ _rawop12.elf: raw_merge12.o
 _osd_le.elf: gui_osd_edit.o
 fselect.elf: gui_fselect.o nothumb.o
 
-4wins.elf: simple_game.o gui_4wins.o
-mastmind.elf: simple_game.o gui_mastermind.o
-reversi.elf: simple_game.o gui_reversi.o
-tetris.elf: simple_game.o gui_tetris.o
-snake.elf: simple_game.o gui_snake.o
+4wins.elf: gui_4wins.o
+mastmind.elf: gui_mastermind.o
+reversi.elf: gui_reversi.o
+tetris.elf: gui_tetris.o
+snake.elf: gui_snake.o
 sokoban.elf: gui_sokoban.o
-sudoku.elf: simple_game.o gui_sudoku.o
+sudoku.elf: gui_sudoku.o
 
 ubasic.elf: ubasic.o script_key_funcs.o $(topdir)lib/ubasic/libubasic.a
 lua.elf: luascript.o script_key_funcs.o cordic_math.o dbg_dump.o $(topdir)lib/lua/liblua.a

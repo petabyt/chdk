@@ -4,10 +4,10 @@
 #include "conf.h"
 #include "gui.h"
 #include "gui_draw.h"
-#include "gui_grid.h"
 #include "gui_lang.h"
 
-#include "modules.h"
+#include "gui_grid.h"
+#include "module_def.h"
 
 //-------------------------------------------------------------------
 #define GRID_BUF_SIZE               0x1000
@@ -195,51 +195,19 @@ void gui_grid_draw_osd(int force) {
 
 // =========  MODULE INIT =================
 
-#include "module_def.h"
-
-
-struct libgrids_sym _libgrids = {
-			MAKE_API_VERSION(1,0),		// apiver: increase major if incompatible changes made in module, 
-										// increase minor if compatible changes made(including extending this struct)
-			gui_grid_draw_osd,
-            grid_lines_load
-};
-
-int module_idx=-1;
-
 /***************** BEGIN OF AUXILARY PART *********************
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)1,
-			&_libgrids
-		};
-
-
 //---------------------------------------------------------
-// PURPOSE:   Bind module symbols with chdk. 
-//		Required function
-// PARAMETERS: pointer to chdk list of export
+// PURPOSE:   Perform on-load initialisation
 // RETURN VALUE: 1 error, 0 ok
 //---------------------------------------------------------
 int _module_loader( unsigned int* chdk_export_list )
 {
-  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-     return 1;
-
-  if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
-	 return 1;
-  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 2, 0 ) )
-	 return 1;
-
-  grid_lines_load(conf.grid_lines_file);
-
-  return 0;
+    grid_lines_load(conf.grid_lines_file);
+    return 0;
 }
-
-
 
 //---------------------------------------------------------
 // PURPOSE: Finalize module operations (close allocs, etc)
@@ -251,31 +219,41 @@ int _module_unloader()
     return 0;
 }
 
-
-//---------------------------------------------------------
-// PURPOSE: Default action for simple modules (direct run)
-// NOTE: Please comment this function if no default action and this library module
-//---------------------------------------------------------
-int _module_run(int moduleidx, int argn, int* arguments)
+int _module_can_unload()
 {
-  module_idx=moduleidx;
-
-  return 0;
+    return conf.show_grid_lines == 0;
 }
-
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+libgrids_sym _libgrids =
+{
+    {
+         _module_loader, _module_unloader, _module_can_unload, 0, 0
+    },
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									MODULEINFO_FLAG_SYSTEM,		// flag
-									(int32_t)"Grids (dll)",	    // Module name
-									1, 0,						// Module version
-									(int32_t)"Grid Display"
-								 };
+    gui_grid_draw_osd,
+    grid_lines_load
+};
 
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    GUI_GRID_VERSION,			// Module version
+
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    (int32_t)"Grids (dll)",	    // Module name
+    (int32_t)"Grid Display",
+
+    &_libgrids.base,
+
+    CONF_VERSION,               // CONF version
+    ANY_VERSION,                // CAM SCREEN version
+    ANY_VERSION,                // CAM SENSOR version
+    ANY_VERSION,                // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/

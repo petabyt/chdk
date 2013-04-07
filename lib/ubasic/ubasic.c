@@ -49,6 +49,7 @@
 #include "camera_functions.h"
 #else
 #include "camera_info.h"
+#include "conf.h"
 #include "ubasic.h"
 #include "script.h"
 #include "script_key_funcs.h"
@@ -56,7 +57,6 @@
 #include "stdlib.h"
 #include "levent.h"
 #include "console.h"
-#include "modules.h"
 #include "modes.h"
 #include "shooting.h"
 #include "sd_card.h"
@@ -71,13 +71,12 @@
 #include "keyboard.h"
 #include "shutdown.h"
 #include "sound.h"
+#include "motion_detector.h"
 #endif
 #include "action_stack.h"
 #include "tokenizer.h"
 #include "lang.h"
 #include "gui_lang.h"
-
-#include "conf.h"
 
 // Forward references
 int ubasic_get_variable(int varnum);
@@ -1951,14 +1950,9 @@ static void md_get_cell_diff_statement()
 
     var = tokenizer_variable_num();
     accept(TOKENIZER_VARIABLE);
-	
-    struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
-
-    if (libmotiondetect)
-        ubasic_set_variable(var, libmotiondetect->md_get_cell_diff(col,row));
-    else
-        ubasic_set_variable(var, 0);
     accept_cr();
+
+    ubasic_set_variable(var, libmotiondetect->md_get_cell_diff(col,row));
 }
 
 static void md_get_cell_val_statement()
@@ -1972,14 +1966,9 @@ static void md_get_cell_val_statement()
 
     var = tokenizer_variable_num();
     accept(TOKENIZER_VARIABLE);
-	
-    struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
-
-    if (libmotiondetect)
-        ubasic_set_variable(var, libmotiondetect->md_get_cell_val(col,row));
-    else
-        ubasic_set_variable(var, 0);
     accept_cr();
+
+    ubasic_set_variable(var, libmotiondetect->md_get_cell_val(col,row));
 }
 
 static void md_detect_motion_statement()
@@ -2061,17 +2050,14 @@ static void md_detect_motion_statement()
 
     accept_cr();
 
-    struct libmotiondetect_sym* libmotiondetect = module_mdetect_load();
-
-    if (libmotiondetect)
-        libmotiondetect->md_init_motion_detector(
+    libmotiondetect->md_init_motion_detector(
         columns, rows, pixel_measure_mode, detection_timeout, 
         measure_interval, threshold, draw_grid,
         clipping_region_mode,
         clipping_region_column1, clipping_region_row1,
         clipping_region_column2, clipping_region_row2,
-        parameters, pixels_step, msecs_before_trigger
-        );
+        parameters, pixels_step, msecs_before_trigger);
+
     flag_yield=1;
 }
 

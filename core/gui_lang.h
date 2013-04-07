@@ -703,7 +703,12 @@
 
 #define LANG_MENU_MISC_EXTRA_BUTTON             575
 
-#define GUI_LANG_ITEMS                          575
+#define LANG_MENU_MODULES                       576
+#define LANG_MENU_MODULE_INSPECTOR              577
+#define LANG_MENU_MODULE_LOGGING                578
+#define LANG_MENU_DELETE_MODULE_LOG             579
+
+#define GUI_LANG_ITEMS                          579
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

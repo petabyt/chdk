@@ -1,7 +1,10 @@
 #ifndef GUI_MPOPUP_H
 #define GUI_MPOPUP_H
 
+#include "flt.h"
+
 //-------------------------------------------------------------------
+
 #define MPOPUP_MASK             0x7FFF
 #define MPOPUP_CANCEL           0x8000
 
@@ -11,7 +14,16 @@ struct mpopup_item {
 };
 
 //-------------------------------------------------------------------
-extern void module_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode);
+
+typedef struct
+{
+    base_interface_t    base;
+
+    void (*show_popup)(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode);
+} libmpopup_sym;
+
+//-------------------------------------------------------------------
+extern libmpopup_sym* libmpopup;
 
 //-------------------------------------------------------------------
 #endif

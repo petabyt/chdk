@@ -19,7 +19,6 @@
 #define ELFFLT_OUTPUT_ERROR        11
 #define ELFFLT_UNSAFE_SYMBOL       12
 
-
 /**
  * \brief      Load and relocate an ELF file.
  */
@@ -45,9 +44,17 @@ extern struct relevant_section bss, data, rodata, text;
 extern char* flat_buf;
 extern struct flat_hdr* flat;
 
+typedef uint32_t reloc_record_t;
+
 extern uint32_t flat_reloc_count;
 extern reloc_record_t *flat_reloc;
 extern reloc_record_t *flat_reloc_cur;
+
+typedef struct
+{
+    uint32_t offs;			// offset of changed record from begin of flat
+	uint32_t importidx;     // index of symbol in chdk_export_table
+} import_record_t;
 
 extern uint32_t flat_import_count;
 extern import_record_t* flat_import_buf; // point to begining of import table in memory
