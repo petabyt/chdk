@@ -370,4 +370,7 @@
             ptp_script_write_msg,
             ptp_script_read_msg,
             ptp_script_write_error_msg,
+
+    remotecap_get_target_support,
+    remotecap_set_target,
 }

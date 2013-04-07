@@ -230,6 +230,7 @@ NSTUB(strtol                                  ,0xff83e71c) //101
 NSTUB(strtolx                                 ,0xff83e520) //109
   DEF(task_CaptSeq                            ,0xff87a208) //107
   DEF(task_ExpDrv                             ,0xff8c0e80) //110
+  DEF(task_FileWrite                          ,0xffa78ff4) //107
   DEF(task_InitFileModules                    ,0xff898314) //107
   DEF(task_MovieRecord                        ,0xff961780) //107
   DEF(task_PhySw                              ,0xff833208) //107

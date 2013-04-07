@@ -15,6 +15,7 @@
 #include "gui_lang.h"
 #include "histogram.h"
 #include "shooting.h"
+#include "remotecap.h"
 #include "battery.h"
 #include "temperature.h"
 #include "backlight.h"
@@ -2293,6 +2294,34 @@ static int luaCB_set_yield( lua_State* L )
 //  lua_pushcfunction( L, func );
 //  lua_setglobal( L, name );
 //}
+/*
+get remote capture supported types
+bitmask=get_remotecap_support()
+*/
+static int luaCB_get_remotecap_support( lua_State* L )
+{
+    lua_pushnumber(L,remotecap_get_target_support());
+    return 1;
+}
+
+/*
+status=init_remotecap(bitmask[,startline, numlines])
+bitmask = 0 clear usb capture mode
+lines only applies to raw for now
+startline defaults to 0
+numlines defaults to full buffer
+TODO
+should have a timeout
+startline/numlines might not valid across different sources
+*/
+static int luaCB_init_remotecap( lua_State* L )
+{
+    int what=luaL_checknumber(L, 1);
+    int startline=luaL_optnumber(L, 2, 0);
+    int numlines=luaL_optnumber(L, 3, 0);
+    lua_pushboolean(L,remotecap_set_target(what,startline,numlines));
+    return 1;
+}
 
 #define FUNC( X ) { #X,	luaCB_##X },
 static const luaL_Reg chdk_funcs[] = {
@@ -2466,6 +2495,8 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(set_yield)
     FUNC(read_usb_msg)
     FUNC(write_usb_msg)
+    FUNC(get_remotecap_support)
+    FUNC(init_remotecap)
     {NULL, NULL},
 };
 

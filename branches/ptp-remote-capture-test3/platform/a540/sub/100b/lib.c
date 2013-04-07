@@ -13,6 +13,31 @@ long hook_raw_size()
     return 0x75A8F0; // OK (find on ".crw")
 }
 
+/*
+buffer that holds the uncompressed yuv source of the fresh jpeg
+not used for L or W picture size
+*/
+char *hook_yuv_shooting_buf_addr() {
+    return (char*)0x105599A0; // based on proximity to viewport_fb in ROM table at FFEF8370, by comparison to a410
+}
+
+/*
+via sub_FFCA2CC8, after EnableEngineClocks
+note these update during shooting, may hold incorrect values after resolution changes
+invalid for L or Wide (continues to hold previous value)
+*/
+int hook_yuv_shooting_buf_width() {
+    if (shooting_get_resolution() !=0 && shooting_get_resolution() !=8)
+        return *(int*)0x33394; //FFCB1D50
+    return 0;
+}
+
+int hook_yuv_shooting_buf_height() {
+    if (shooting_get_resolution() !=0 && shooting_get_resolution() !=8)
+        return *(int*)0x33398; //FFCB1D54
+    return 0;
+}
+
 void *vid_get_bitmap_fb()
 {
     return (void*)0x103C79A0; // OK (find in _CreatePhysicalVram)

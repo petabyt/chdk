@@ -33,6 +33,19 @@ extern void drv_self_unhide(void);
 
 /******************************************************************/
 
+/******************************************************************/
+#ifdef CAM_HAS_FILEWRITETASK_HOOK
+char *hook_yuv_shooting_buf_addr();
+int hook_yuv_shooting_buf_width();
+int hook_yuv_shooting_buf_height();
+#endif
+/******************************************************************/
+int is_image_save_complete();
+/******************************************************************/
+//experimental
+int register_pt_hooks();
+void supported_pt_completefilewrite();
+void image_save_completed();
 // debug logging function - see generic wrappers.c to adjust destination
 // WARNING fixed length buffer
 extern void dbg_printf(char *fmt,...);
@@ -44,8 +57,6 @@ extern void dbg_printf(char *fmt,...);
 #else
 #define DBGPRINTF(...)
 #endif
-
-/******************************************************************/
 
 #endif
 

@@ -14,7 +14,7 @@ all: main.bin
 # Build platform dependent code (independent code is built in lib/core/libcore.a)
 OBJS=entry.o main.o gui_draw.o \
      gui.o kbd.o conf.o gui_osd.o raw.o \
-     shot_histogram.o shooting.o camera_info.o
+     shot_histogram.o shooting.o camera_info.o remotecap.o
 
 gui.o: FORCE
 

@@ -64,4 +64,6 @@
     #undef CAM_AF_LED
     #define CAM_AF_LED                      9
 
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+
 //----------------------------------------------------------
