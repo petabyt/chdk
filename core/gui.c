@@ -1788,6 +1788,7 @@ static CMenuItem chdk_settings_menu_items[] = {
 #if CAM_REMOTE
     MENU_ITEM   (0x86,LANG_MENU_REMOTE_PARAM,               MENUITEM_SUBMENU,   &remote_submenu, 0 ),
 #endif
+    MENU_ITEM   (0x5c,LANG_MENU_MISC_ENABLE_SHORTCUTS,      MENUITEM_BOOL,      &conf.enable_shortcuts, 0 ),
     MENU_ITEM   (0x5c,LANG_MENU_MISC_SHOW_SPLASH,           MENUITEM_BOOL,      &conf.splash_show, 0 ),
     MENU_ITEM   (0x5c,LANG_MENU_MISC_START_SOUND,           MENUITEM_BOOL,      &conf.start_sound, 0 ),
 #if CAM_USE_ZOOM_FOR_MF
@@ -2204,10 +2205,17 @@ static void gui_draw_alt_helper()
 
     y = shortcut_text(x, y, 0 ,LANG_HELP_HALF_PRESS, 0, MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
 
-    y = shortcut_text(x, y, SHORTCUT_DISABLE_OVERRIDES,LANG_MENU_OVERRIDE_DISABLE,gui_override_disable_modes[conf.override_disable], MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-    y = shortcut_text(x, y, SHORTCUT_TOGGLE_HISTO,LANG_MENU_HISTO_SHOW,gui_histo_show_modes[conf.show_histo], MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-    y = shortcut_text(x, y, SHORTCUT_TOGGLE_ZEBRA,LANG_MENU_ZEBRA_DRAW,gui_on_off_enum(0,&conf.zebra_draw), MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-    y = shortcut_text(x, y, SHORTCUT_TOGGLE_OSD,LANG_MENU_OSD_SHOW,gui_on_off_enum(0,&conf.show_osd), MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+    if ( conf.enable_shortcuts)
+    {
+        y = shortcut_text(x, y, SHORTCUT_DISABLE_OVERRIDES,LANG_MENU_OVERRIDE_DISABLE,gui_override_disable_modes[conf.override_disable], MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_HISTO,LANG_MENU_HISTO_SHOW,gui_histo_show_modes[conf.show_histo], MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_ZEBRA,LANG_MENU_ZEBRA_DRAW,gui_on_off_enum(0,&conf.zebra_draw), MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_OSD,LANG_MENU_OSD_SHOW,gui_on_off_enum(0,&conf.show_osd), MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+    }
+    else
+    {
+        y = shortcut_text(x, y, 0,LANG_HELP_SHORTCUTS_DISABLED, 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+    }
 
     if (conf.hide_osd == 0)
         y = shortcut_text(x, y, KEY_DISPLAY, LANG_HELP_HIDE_OSD, 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));

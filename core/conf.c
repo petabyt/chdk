@@ -427,6 +427,8 @@ static const ConfInfo conf_info[] = {
 #endif
 
     CONF_INFO(294, conf.module_logging,             CONF_DEF_VALUE,     i:0, NULL),
+
+    CONF_INFO(295, conf.enable_shortcuts,           CONF_DEF_VALUE,     i:1, NULL),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 

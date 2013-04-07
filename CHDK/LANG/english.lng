@@ -703,3 +703,6 @@
 577 "Module Inspector"
 578 "Enable Logging"
 579 "Delete Module Log"
+
+580 "Enable Half-Press Shortcut Keys"
+581 "<< Shortcuts disabled  >>"
