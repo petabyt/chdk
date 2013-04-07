@@ -708,7 +708,10 @@
 #define LANG_MENU_MODULE_LOGGING                578
 #define LANG_MENU_DELETE_MODULE_LOG             579
 
-#define GUI_LANG_ITEMS                          579
+#define LANG_MENU_MISC_ENABLE_SHORTCUTS         580
+#define LANG_HELP_SHORTCUTS_DISABLED            581
+ 
+#define GUI_LANG_ITEMS                          581
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

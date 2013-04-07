@@ -413,6 +413,8 @@ typedef struct {
 
     int module_logging;
 
+    int enable_shortcuts;     // enable keyboard shortcuts
+
 } Conf;
 
 extern Conf conf;
