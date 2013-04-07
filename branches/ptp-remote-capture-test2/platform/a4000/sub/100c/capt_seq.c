@@ -7,7 +7,7 @@
 static long *nrflag = (long*)(0x8868+0x00);  // Found @ ff9e4024 & ff9e406c
 #define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto
 
-#define PAUSE_FOR_FILE_COUNTER 200           // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
+#define PAUSE_FOR_FILE_COUNTER 300           // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 #include "../../../generic/capt_seq.c"
 
 //** capt_seq_task  @ 0xFF870DB0
@@ -244,7 +244,7 @@ asm volatile (
 
 
 //**  sub_FF9646A0_my  @ 0xFF9646A0
-//CHECK THIS!!!
+
 void __attribute__((naked,noinline)) sub_FF9646A0_my() {
 asm volatile (
       "STMFD   SP!, {R4-R6,LR} \n"
@@ -271,8 +271,6 @@ asm volatile (
       "MOV     R0, R6 \n"
       "BL      sub_FF9642F0 \n"
       "BL      sub_FF964CB4 \n"
-
-//This was not tested:
 //begin patch
       "BL      wait_until_remote_button_is_released\n"
       "BL      capt_seq_hook_set_nr\n"
