@@ -3,6 +3,11 @@
 
 #include <stdio.h>
 
+typedef struct
+{
+    unsigned short  major;
+    unsigned short  minor;
+} _version_t;
 
 #ifndef O_BINARY
 #define O_BINARY 0 //not defined on linux

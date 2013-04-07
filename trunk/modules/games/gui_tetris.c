@@ -9,16 +9,16 @@
 #include "gui_lang.h"
 #include "gui_batt.h"
 #include "gui_mbox.h"
+#include "modes.h"
 
 #include "module_def.h"
 
-void gui_module_menu_kbd_process();
+void gui_game_menu_kbd_process();
 int gui_tetris_kbd_process();
 void gui_tetris_draw();
 
 gui_handler GUI_MODE_TETRIS = 
-    /*GUI_MODE_TETRIS*/ { GUI_MODE_MODULE, gui_tetris_draw, gui_tetris_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
-
+    /*GUI_MODE_TETRIS*/ { GUI_MODE_MODULE, gui_tetris_draw, gui_tetris_kbd_process, gui_game_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE };
 
 #define BOARD_WIDTH     (10)
 #define BOARD_HEIGHT    (22)
@@ -121,8 +121,7 @@ StcGame *game;
 long mkdir_if_not_exist(const char *dirname) 
 {
     // Check if directory exists and create it if it does not.
-    struct stat st;
-    if (stat(dirname,&st) != 0) return mkdir(dirname);
+    if (stat(dirname,0) != 0) return mkdir(dirname);
     return 0;   // Success
 }
 
@@ -695,7 +694,6 @@ void gui_tetris_draw(){
   gameUpdate(game);
 }
 
-
 int gui_tetris_kbd_process() {
         switch ( kbd_get_autoclicked_key() )
         {
@@ -728,24 +726,28 @@ int gui_tetris_kbd_process() {
         return 0;
 }
 
-extern int module_idx;
-
-void gui_module_menu_kbd_process() {
-	gui_default_kbd_process_menu_btn();
-  	module_async_unload(module_idx);
-}
+#include "simple_game.c"
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    SIMPLE_MODULE_VERSION,		// Module version
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
-									(int32_t)"Tetris",			// Module name
-									1, 0,						// Module version
-									(int32_t)"Game"
-								 };
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    (int32_t)"Tetris",			// Module name
+    (int32_t)"Game",
+
+    &_librun.base,
+
+    ANY_VERSION,                // CONF version
+    CAM_SCREEN_VERSION,         // CAM SCREEN version
+    ANY_VERSION,                // CAM SENSOR version
+    ANY_VERSION,                // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/

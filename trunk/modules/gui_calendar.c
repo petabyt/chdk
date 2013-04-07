@@ -9,12 +9,12 @@
 
 #include "module_def.h"
 
-void gui_calendar_menu_kbd_process();
+void gui_module_menu_kbd_process();
 int gui_calendar_kbd_process();
 void gui_calendar_draw();
 
 gui_handler GUI_MODE_CALENDAR = 
-    /*GUI_MODE_CALENDAR*/   { GUI_MODE_MODULE, gui_calendar_draw, gui_calendar_kbd_process, gui_calendar_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE, GUI_MODE_MAGICNUM };
+    /*GUI_MODE_CALENDAR*/   { GUI_MODE_MODULE, gui_calendar_draw, gui_calendar_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE };
 
 //-------------------------------------------------------------------
 #define TITLE_COLOR             (MAKE_COLOR(COLOR_BLACK, COLOR_WHITE))
@@ -177,22 +177,26 @@ void gui_calendar_draw() {
     }
 }
 
-extern int module_idx;
-
-void gui_calendar_menu_kbd_process() {
-	gui_default_kbd_process_menu_btn();
-  	module_async_unload(module_idx);
-}
+#include "simple_module.c"
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    SIMPLE_MODULE_VERSION,		// Module version
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
-									-LANG_MENU_MISC_CALENDAR,	// Module name
-									1, 0,						// Module version
-									0
-								 };
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    -LANG_MENU_MISC_CALENDAR,	// Module name
+    0,
+
+    &_librun.base,
+
+    ANY_VERSION,                // CONF version
+    CAM_SCREEN_VERSION,         // CAM SCREEN version
+    ANY_VERSION,                // CAM SENSOR version
+    ANY_VERSION,                // CAM INFO version
+};

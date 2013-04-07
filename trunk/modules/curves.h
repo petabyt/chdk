@@ -1,19 +1,21 @@
 #ifndef CURVES_H
 #define CURVES_H
 
+#include "flt.h"
+
 #define CURVE_DIR "A/CHDK/CURVES"
 
-struct libcurves_sym {
-	int version;
+typedef struct 
+{
+    base_interface_t    base;
 
 	void (*curve_init_mode)();
 	void (*curve_apply)();
     void (*curve_set_mode)();
     void (*curve_set_file)();
-};
+} libcurves_sym;
 
-extern struct libcurves_sym* libcurves;
-extern struct libcurves_sym* module_curves_load();		// 0fail, addr-ok
+extern libcurves_sym* libcurves;
 
 //-------------------------------------------------------------------
 

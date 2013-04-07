@@ -23,7 +23,6 @@ Sity: Kharkiv
 #endif
 
 #include "camera_info.h"
-#include "motion_detector.h"
 #include "action_stack.h"
 #include "console.h"
 #include "keyboard.h"
@@ -33,6 +32,10 @@ Sity: Kharkiv
 #include "gui.h"
 #include "gui_draw.h"
 #include "script_api.h"
+#include "script.h"
+
+#include "motion_detector.h"
+#include "module_def.h"
 
 // Forward references
 static int md_detect_motion(void);
@@ -101,7 +104,7 @@ struct motion_detector_s
 
     int points ;
 
-// debug
+    // debug
 #ifdef OPT_MD_DEBUG
     int comp_calls_cnt;
     int comp_calls[MD_REC_CALLS_CNT];
@@ -156,12 +159,10 @@ static int action_stack_AS_MOTION_DETECTOR()
             }
         }
 
-        if (libscriptapi)
-        {
-            // We need to recover the motion detector's
-            // result and push it onto the thread's stack.
-            libscriptapi->set_as_ret(motion_detector.return_value);
-        }
+        // We need to recover the motion detector's
+        // result and push it onto the thread's stack.
+        libscriptapi->set_as_ret(motion_detector.return_value);
+
         action_pop_func(0);
         return 1;
     }
@@ -707,50 +708,9 @@ void md_draw_grid()
 
 // =========  MODULE INIT =================
 
-#include "module_def.h"
-int module_idx=-1;
-
 /***************** BEGIN OF AUXILARY PART *********************
-  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
- **************************************************************/
-
-struct libmotiondetect_sym _libmotiondetect = {
-			MAKE_API_VERSION(1,0),	// apiver: increase major if incompatible changes made in module, 
-						// increase minor if compatible changes made(including extending this struct)
-
-        md_close_motion_detector,
-        md_init_motion_detector,
-        md_get_cell_diff,
-        md_draw_grid,
-        md_get_cell_val,
-	};
-
-
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)1,
-
-			&_libmotiondetect
-		};
-
-
-//---------------------------------------------------------
-// PURPOSE:   Bind module symbols with chdk. 
-//		Required function
-// PARAMETERS: pointer to chdk list of export
-// RETURN VALUE: 1 error, 0 ok
-//---------------------------------------------------------
-int _module_loader( unsigned int* chdk_export_list )
-{
-  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-     return 1;
-
-  if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
-	 return 1;
-
-  return 0;
-}
-
+ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+**************************************************************/
 
 //---------------------------------------------------------
 // PURPOSE: Finalize module operations (close allocs, etc)
@@ -762,31 +722,44 @@ int _module_unloader()
     return 0;
 }
 
-
-//---------------------------------------------------------
-// PURPOSE: Default action for simple modules (direct run)
-// NOTE: Please comment this function if no default action and this library module
-//---------------------------------------------------------
-int _module_run(int moduleidx, int argn, int* arguments)
+int _module_can_unload()
 {
-  module_idx=moduleidx;
-
-  return 0;
+    return camera_info.state.state_kbd_script_run == SCRIPT_STATE_INACTIVE;
 }
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+libmotiondetect_sym _libmotiondetect =
+{
+    {
+         0, _module_unloader, _module_can_unload, 0, 0
+    },
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									MODULEINFO_FLAG_SYSTEM,		// flag
-									(int32_t)"Motion Detect",   // Module name
-									1, 0,						// Module version
-									(int32_t)"Motion Detect"
-								 };
+    md_close_motion_detector,
+    md_init_motion_detector,
+    md_get_cell_diff,
+    md_draw_grid,
+    md_get_cell_val,
+};
 
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    MOTION_DETECTOR_VERSION,	// Module version
+
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    (int32_t)"Motion Detect",   // Module name
+    (int32_t)"Motion Detect",
+
+    &_libmotiondetect.base,
+
+    ANY_VERSION,                // CONF version
+    CAM_SCREEN_VERSION,         // CAM SCREEN version
+    ANY_VERSION,                // CAM SENSOR version
+    CAM_INFO_VERSION,           // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/
-

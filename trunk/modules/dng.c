@@ -1,5 +1,4 @@
 #include "camera_info.h"
-#include "stdlib.h"
 #include "modes.h"
 #include "debug_led.h"
 #include "clock.h"
@@ -7,14 +6,20 @@
 #include "shooting.h"
 #include "conf.h"
 #include "console.h"
-#include "dng.h"
 #include "raw.h"
 #include "action_stack.h"
+#include "gui.h"
 #include "gui_mbox.h"
 #include "gui_lang.h"
 #include "gps.h"
 #include "math.h"
 #include "cache.h"
+
+#include "dng.h"
+#include "module_def.h"
+
+// Set to 1 when module loaded and active
+static int running = 0;
 
 //thumbnail
 #define DNG_TH_WIDTH 128
@@ -277,10 +282,10 @@ struct
 
 #define TIFF_HDR_SIZE (8)
 
-char* dng_header_buf;
+char* dng_header_buf = 0;
 int dng_header_buf_size;
 int dng_header_buf_offset;
-char *thumbnail_buf;
+char *thumbnail_buf = 0;
 
 void add_to_buf(void* var, int size)
 {
@@ -639,7 +644,7 @@ void capture_data_for_exif(void)
 
 //-------------------------------------------------------------------
 
-void convert_dng_to_chdk_raw(char* fn)
+int convert_dng_to_chdk_raw(char* fn)
 {
 #define BUF_SIZE (32768)
     FILE *dng, *raw;
@@ -648,7 +653,11 @@ void convert_dng_to_chdk_raw(char* fn)
     struct stat st;
     struct utimbuf t;
 
-    if (stat(fn, &st) != 0 || st.st_size<=camera_sensor.raw_size)  return;
+    if (stat(fn, &st) != 0 || st.st_size<=camera_sensor.raw_size)
+        return 0;
+
+    running = 1;
+
     buf=malloc(BUF_SIZE);
     if (buf)
     {
@@ -683,6 +692,10 @@ void convert_dng_to_chdk_raw(char* fn)
         free(buf);
         finished();
     }  //if (buf)
+
+    running = 0;
+
+    return 1;
 }
 
 //-------------------------------------------------------------------
@@ -840,13 +853,21 @@ void patch_bad_pixels_b(void)
     }
 }
 
-int badpixel_list_loaded_b(void) {
+int badpixel_list_loaded_b(void)
+{
     return (binary_count >= 0) ? 1 : 0;
 }
 
 // -----------------------------------------------
 
 static unsigned int badpix_cnt1;
+
+static int action_stack_BADPIX_S3()
+{
+    action_pop_func(0);
+    running = 0;
+    return 1;
+}
 
 static int action_stack_BADPIX_S2()
 {
@@ -876,6 +897,7 @@ static int action_stack_BADPIX_S2()
     remove(PATH_BAD_TMP_BIN);
 
     // Delay to give user time to read messages
+    action_push_func(action_stack_BADPIX_S3);
     action_push_delay(3000);
 
     return 1;
@@ -931,6 +953,8 @@ void create_badpixel_bin()
         return;
     }
 
+    running = 1;
+
     gui_set_mode(&altGuiHandler);
     // Create an action stack to generate bad pixels - start with action_stack_BADPIX_START func above
     action_stack_create(&action_stack_BADPIX_START);
@@ -976,46 +1000,6 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
 
 /*********** BEGIN OF AUXILARY PART **********************/
 
-#include "module_def.h"
-
-struct libdng_sym _libdng = {
-    MAKE_API_VERSION(1,0),      // apiver: increase major if incompatible changes made in module, 
-    // increase minor if compatible changes made(including extending this struct)
-
-    create_badpixel_bin,
-    raw_init_badpixel_bin,
-    capture_data_for_exif,
-    load_bad_pixels_list_b,
-    badpixel_list_loaded_b,
-
-    convert_dng_to_chdk_raw,
-    write_dng
-};
-
-
-//-------------------------------------------
-void* MODULE_EXPORT_LIST[] = {
-    /* 0 */ (void*)EXPORTLIST_MAGIC_NUMBER,
-    /* 1 */ (void*)1,
-
-    &_libdng
-};
-
-//--------------------------------------------
-int _module_loader( unsigned int* chdk_export_list )
-{
-    if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-        return 1;
-
-    if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, 1, 0 ) )
-        return 1;
-    if ( !API_VERSION_MATCH_REQUIREMENT( camera_info.api_version, 1, 0 ) )
-        return 1;
-
-    return 0;
-}
-
-
 //---------------------------------------------------------
 // PURPOSE: Finalize module operations (close allocs, etc)
 // RETURN VALUE: 0-ok, 1-fail
@@ -1027,19 +1011,47 @@ int _module_unloader()
     return 0;
 }
 
+int _module_can_unload()
+{
+    return (running == 0) && ((conf.save_raw == 0) || (conf.dng_raw == 0));
+}
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {  MODULEINFO_V1_MAGICNUM,
+libdng_sym _libdng =
+{
+    {
+         0, _module_unloader, _module_can_unload, 0, 0
+    },
+
+    create_badpixel_bin,
+    raw_init_badpixel_bin,
+    capture_data_for_exif,
+    load_bad_pixels_list_b,
+    badpixel_list_loaded_b,
+
+    convert_dng_to_chdk_raw,
+    write_dng
+};
+
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
     sizeof(struct ModuleInfo),
+    DNG_VERSION,                // Module version
 
     ANY_CHDK_BRANCH, 0,         // Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,       // Specify platform dependency
-    MODULEINFO_FLAG_SYSTEM,     // flag
-    (int32_t)"DNG (dll)",       // Module name
-    1, 0,                       // Module version
-    (int32_t)"Processing of DNG"
-};
 
+    (int32_t)"DNG (dll)",       // Module name
+    (int32_t)"Processing of DNG",
+
+    &_libdng.base,
+
+    CONF_VERSION,               // CONF version
+    ANY_VERSION,                // CAM SCREEN version
+    CAM_SENSOR_VERSION,         // CAM SENSOR version
+    CAM_INFO_VERSION,           // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/

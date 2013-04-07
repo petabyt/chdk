@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-#include "flt.h"
 #include "myio.h"
+#include "flt.h"
 
 struct flat_hdr* flat;
 unsigned char* flat_buf;
@@ -38,7 +38,7 @@ void print_offs(char *prefix, int offs,char* postfix)
     char* sect="unkn";
     
     if ( !offs ) {
-        printf("%s 0x0\n",prefix);
+        printf("%s 0x00000000\n",prefix);
         return;
     }
     
@@ -48,7 +48,7 @@ void print_offs(char *prefix, int offs,char* postfix)
        { sect="data"; secoffs=flat->data_start;}
     else if  ( offs >=flat->bss_start && offs<flat->reloc_start )
        { sect="bss"; secoffs=flat->bss_start;}         
-    printf("%s 0x%x (%s+0x%x)%s",prefix, offs,sect,offs-secoffs,postfix);
+    printf("%s 0x%08x (%s+0x%08x)%s",prefix, offs,sect,offs-secoffs,postfix);
 }
 
 char* get_flat_string( int32_t offs )
@@ -68,25 +68,6 @@ char* get_flat_string( int32_t offs )
 	buf[sizeof(buf)-1]=0;
 	return buf;
 }
-
-// Return symbol name by its idx
-char* get_import_symbol_inflat( unsigned symidx )
-{
-	char* cur= (char*)flat_buf+flat->symbols_start;
-	char* end= (char*)flat_buf+flat->file_size;
-	int idx=0;
-
-	for( ; idx<symidx && cur<end; idx++) {
-      for (;*cur; cur++);
-	  cur++;
-	}
-
-	if (cur==end)
-	 return "";
-
-	return cur;
-}
-
 
 int main(int argc, char **argv)
 {
@@ -132,27 +113,21 @@ int main(int argc, char **argv)
 	}
 
 	int flat_reloc_count;
-	flat_reloc_count = (flat->import_start-flat->reloc_start)/sizeof(reloc_record_t);
+	flat_reloc_count = (flat->import_start-flat->reloc_start)/sizeof(uint32_t);
 	int flat_import_count;
-	flat_import_count = (flat->file_size-flat->import_start)/sizeof(import_record_t);
+	flat_import_count = (flat->file_size-flat->import_start)/sizeof(uint32_t);
 
 
 	printf("->entry(.text) 0x%x (size %d)\n", flat->entry, flat->data_start - flat->entry );
 	printf("->data_start   0x%x (size %d)\n", flat->data_start,  flat->bss_start - flat->data_start );
 	printf("->bss_start    0x%x (size %d)\n", flat->bss_start, flat->reloc_start - flat->bss_start );
 	printf("->reloc_start  0x%x (size %d)\n", flat->reloc_start, flat->import_start - flat->reloc_start );
-	printf("->import_start 0x%x (size %d)\n", flat->import_start, flat->symbols_start - flat->import_start );
-	printf("->symbol_start 0x%x (size %d)\n", flat->symbols_start, flat->file_size - flat->symbols_start );
-
-	print_offs("\n.._module_loader()   =", flat->_module_loader,"\n");
-	print_offs(".._module_unloader() = ", flat->_module_unloader,"\n");
-	print_offs(".._module_run()      = ", flat->_module_run,"\n");
-	print_offs("..MODULE_EXPORT_LIST = ", flat->_module_exportlist,"\n");
-
+	printf("->import_start 0x%x (size %d)\n", flat->import_start, flat->file_size - flat->import_start );
+    printf("\n");
 
 	if ( flat->rev == FLAT_VERSION )
 	{
-		struct ModuleInfo* _module_info = (struct ModuleInfo*)(flat_buf + flat->_module_info);
+		struct ModuleInfo* _module_info = (struct ModuleInfo*)(flat_buf + flat->_module_info_offset);
 		if ( _module_info->magicnum != MODULEINFO_V1_MAGICNUM ) 
 		{
 		  printf("Malformed module info - bad magicnum!\n");
@@ -167,7 +142,7 @@ int main(int argc, char **argv)
 
 		printf("\nModule info:\n");
 		printf("->Module Name: %s\n", get_flat_string(_module_info->moduleName) );
-		printf("->Module Ver: %d.%d\n", _module_info->major_ver, _module_info->minor_ver );
+		printf("->Module Ver: %d.%d\n", _module_info->module_version.major, _module_info->module_version.minor );
 		
 		char* branches_str[] = {"any branch","CHDK", "CHDK_DE", "CHDK_SDM", "PRIVATEBUILD"};
 		int branch = (_module_info->chdk_required_branch>REQUIRE_CHDK_PRIVATEBUILD) ? 
@@ -177,15 +152,13 @@ int main(int argc, char **argv)
 		  	printf("Any platform.\n");
 		else
 		  	printf(" Platform #%d only.\n", _module_info->chdk_required_platfid );
-		if ( _module_info->flags ) {
-			printf("->Flags:");
-			if ( _module_info->flags & MODULEINFO_FLAG_SYSTEM )
-				printf(" SYSTEM ");
-		    printf("\n");
-		}
-		printf("->Module Info: %s\n", get_flat_string(_module_info->description) );
+	    printf("->Description: %s\n", get_flat_string(_module_info->description) );
+    	print_offs("->lib                 = ", (int)_module_info->lib,"\n");
+	    //print_offs("->_module_loader()    = ", (int)_module_info->loader,"\n");
+	    //print_offs("->_module_unloader()  = ", (int)_module_info->unloader,"\n");
+	    //print_offs("->_module_can_unload()= ", (int)_module_info->can_unload,"\n");
+	    //print_offs("->_module_exit_alt()  = ", (int)_module_info->exit_alt,"\n");
 	}
-		
 		
 	if ( !FLAG_DUMP_FLAT )
 	  return 0;
@@ -198,15 +171,22 @@ int main(int argc, char **argv)
 	int i;
     printf("\nDump relocations 0x%x:\n",flat->reloc_start);
     for( i = 0; i< flat_reloc_count; i++)
-        print_offs("Offs: ",*(int*)(flat_buf+flat->reloc_start+i*sizeof(reloc_record_t)),"\n");
+        print_offs("Offs: ",*(int*)(flat_buf+flat->reloc_start+i*sizeof(uint32_t)),"\n");
 
     printf("\nDump imports 0x%x:\n",flat->import_start);
-    for( i = 0; i< flat_import_count; i++) {
-		import_record_t* record= (import_record_t*)(flat_buf+flat->import_start+i*sizeof(import_record_t));
-		int addend= *(int*)(flat_buf+record->offs);
-
-        print_offs("Offs: ",record->offs,"");
-		printf(" - sym_%d[%s] +0x%x\n", record->importidx, get_import_symbol_inflat(record->importidx), addend);
+    uint32_t *new_import_buf = (uint32_t*)(flat_buf+flat->import_start);
+    for( i = 0; i< flat_import_count; i++)
+    {
+        uint32_t idx = new_import_buf[i++];
+        int cnt = new_import_buf[i] >> 24;
+        int j;
+        for (j=0; j<cnt; j++)
+        {
+            uint32_t offs = new_import_buf[i++] & 0x00FFFFFF;
+            print_offs((j==0)?"Offs: ":"      ",offs,"");
+		    int addend = *(uint32_t*)(flat_buf+offs);
+		    printf(" = sym_%08x[%s]+0x%x\n",idx,get_import_symbol(idx),addend);
+        }
 	}
 
 	return 0;

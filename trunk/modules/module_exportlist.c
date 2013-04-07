@@ -4,50 +4,6 @@
  *    CHDK-FLAT Module System.  Sergey Taranenko aka tsvstar
  */
 
-#include "camera_info.h"
-#include "stdlib.h"
-#include "conf.h"
-#include "lang.h"
-#include "keyboard.h"
-#include "raw_buffer.h"
-#include "gui_draw.h"
-#include "gui_batt.h"
-#include "gui_space.h"
-#include "gui_osd.h"
-#include "gui_mbox.h"
-#include "gui_usb.h"
-#include "raw.h"
-#include "math.h"
-#include "font.h"
-#include "histogram.h"
-#include "shot_histogram.h"
-#include "levent.h"
-#include "ptp_chdk.h"
-#include "shooting.h"
-#include "clock.h"
-#include "viewport.h"
-#include "debug_led.h"
-#include "battery.h"
-#include "properties.h"
-#include "shutdown.h"
-#include "sd_card.h"
-#include "meminfo.h"
-#include "sound.h"
-#include "temperature.h"
-#include "file_counter.h"
-#include "backlight.h"
-#include "modes.h"
-#include "lens.h"
-#include "action_stack.h"
-#include "console.h"
-#include "cache.h"
-
-#include "modules.h"
-#include "module_load.h"
-#include "module_exportlist.h"
-
-extern unsigned _ExecuteEventProcedure(const char *name,...);
-
 // ATTENTION: DO NOT USE BRACES OR OWN /**/-STYLE COMMENTS ANYWHERE IN THIS FILE TO AVOID AUTO PARSING MISTAKES
 
 
@@ -69,34 +25,31 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
 // symbol hash table loaded later (from module_hashlist.h)
 // Symbols to be exported should be on seperate lines, blank lines and '//' style comments are allowed
 
-#if 0
 {
-            module_async_unload,
-            module_set_flags,
-            module_run,
             module_get_adr,
-            module_async_unload_allrunned,
-            module_rawop_load,
-            module_curves_load,
-            module_rawop_unload,
-            module_mpopup_init,
-            module_convert_dng_to_chdk_raw,
-            module_grids_load,
+            module_exit_alt,
             module_restore_edge,
             module_save_edge,
-            module_mdetect_load,
-            module_fselect_init,
-            module_tbox_load,
+            module_set_script_lang,
             &module_colors,
+
+            &libscriptapi,
+            &libtextbox,
+            &libgrids,
+            &librawop,
+            &libmotiondetect,
+            &libcurves,
+            &libdng,
+            &libfselect,
+            &libmpopup,
+            &libtxtread,
 
             &altGuiHandler,
             &camera_info,
             &camera_screen,
             &camera_sensor,
-            &gui_version,
             &conf,
             &dof_values,
-            &libscriptapi,
             &circle_of_confusion,
             &zoom_points,
             &movie_status,
@@ -105,6 +58,7 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
             free,
             umalloc,
             ufree,
+            dcache_clean_all,
 
             write,
             lseek,
@@ -416,14 +370,4 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
             ptp_script_write_msg,
             ptp_script_read_msg,
             ptp_script_write_error_msg,
-
-            dcache_clean_all,
 }
-#endif
-
-// Symbol hash table for resolving exported symbol references
-sym_hash symbol_hash_table[] =
-{
-    { EXPORTLIST_MAGIC_NUMBER, (void*)EXPORTLIST_LAST_IDX },
-#include "module_hashlist.h"
-};

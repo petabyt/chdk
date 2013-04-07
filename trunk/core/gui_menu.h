@@ -72,7 +72,6 @@ extern void gui_menu_init(CMenu *menu_ptr);
 extern int gui_menu_kbd_process();
 extern void gui_menu_draw(int enforce_redraw);
 extern void gui_menu_force_redraw();
-extern void gui_menu_unload_module_menus();
 extern int menu_get_increment_factor();
 extern void menu_set_increment_factor(int n);
 extern char *menu_increment_factor_string();

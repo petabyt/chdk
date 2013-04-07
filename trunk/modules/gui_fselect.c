@@ -9,11 +9,16 @@
 #include "gui_draw.h"
 #include "gui_lang.h"
 #include "gui_mbox.h"
-#include "modules.h"
 #include "raw.h"
 #include "conf.h"
 
-#include "module_load.h"
+#include "gui_fselect.h"
+#include "raw_merge.h"
+#include "dng.h"
+#include "gui_mpopup.h"
+#include "gui_tbox.h"
+#include "gui_read.h"
+#include "module_def.h"
 
 /*
     HISTORY:    1.1 - added tbox usage [CHDK 1.1.1 required]
@@ -24,12 +29,7 @@ void gui_fselect_kbd_process_menu_btn();
 void gui_fselect_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_FSELECT_MODULE =
-    /*GUI_MODE_FSELECT*/    { GUI_MODE_FSELECT, gui_fselect_draw, gui_fselect_kbd_process, gui_fselect_kbd_process_menu_btn, 0, GUI_MODE_MAGICNUM };
-
-extern int module_idx;
-
-struct librawop_sym* librawop_p;
-
+    /*GUI_MODE_FSELECT*/    { GUI_MODE_FSELECT, gui_fselect_draw, gui_fselect_kbd_process, gui_fselect_kbd_process_menu_btn, 0 };
 
 //-------------------------------------------------------------------
 #define HEAD_LINES              1
@@ -59,6 +59,7 @@ struct librawop_sym* librawop_p;
 #define MARKED_BUF_SIZE         0x10000
 
 //-------------------------------------------------------------------
+static int running = 0;
 static char current_dir[100];       // Path for title
 static char marked_dir[100];        // Path for progress box
 static char selected_file[100];     // This full path to current file. So it is return value
@@ -97,7 +98,6 @@ static char *fselect_title;     // Title of fselect window (could be different: 
 
 static void (*fselect_on_select)(const char *fn);
 static char raw_operation;      // info for process_raw_files() RAW_OPERATION_AVERAGE, RAW_OPERATION_SUM,
-static int set_key_redraw_mode; // dirty hack: screen erase & mode restore done after(0) or before(1) call to fselect_on_select
 
 // FSelector POPUP
 #define MPOPUP_CUT              0x0001
@@ -313,18 +313,6 @@ static void gui_fselect_read_dir(const char* dir) {
 }
 
 //-------------------------------------------------------------------
-// Set flag to control how the erase/redraw happens when the set key
-// is pressed.
-// 0 - screen erase & mode restore done after call to fselect_on_select
-// 1 - screen erase & mode restore done before call to fselect_on_select
-// Needed for text reader to work correctly and to stop intermittent
-// crashes when selecting fonts (hack - whole gui/kbd system needs an overhaul).
-void gui_fselect_set_key_redraw(int n)
-{
-    set_key_redraw_mode = n;
-}
-
-//-------------------------------------------------------------------
 // Attempt to set startup directory (and file) based on input 'dir'
 // Note: 'dir' may be a directory name or a file name (including path)
 // Returns 1 if valid directory/file found, 0 otherwise
@@ -370,6 +358,8 @@ int gui_fselect_find_start_dir(const char* dir)
 //-------------------------------------------------------------------
 void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, void (*on_select)(const char *fn))
 {
+    running = 1;
+
     int chars_width = NAME_FONT_SIZE + SIZE_FONT_SIZE + TIME_FONT_SIZE;
     main_w = SPACING/*N*/+SPACING+TAB_DIVIDER+SPACING/*S*/+SPACING+TAB_DIVIDER+SPACING/*T*/+SPACING+SCROLLBAR+chars_width;
     main_h = HEAD_FONT_LINES + TAB_DIVIDER + BODY_FONT_LINES + TAB_DIVIDER + FOOT_FONT_LINES;
@@ -416,7 +406,6 @@ void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, 
     gui_fselect_redraw = 2;
     gui_fselect_readdir = 0;
     gui_fselect_mode_old = gui_set_mode(&GUI_MODE_FSELECT_MODULE);
-    gui_fselect_set_key_redraw(0);
 }
 
 //-------------------------------------------------------------------
@@ -982,55 +971,50 @@ static void fselect_marked_inverse_selection() {
 }
 
 //-------------------------------------------------------------------
-void process_raw_files(void){
- struct fitem *ptr;
+void process_raw_files(void)
+{
+    struct fitem *ptr;
 
- librawop_p=module_rawop_load();
- if (!librawop_p)
-    return;     //exit if fail
-  if ( !API_VERSION_MATCH_REQUIREMENT( librawop_p->version, 1, 0 ) )
-    return;
-
- if ((fselect_marked_count()>1) && librawop_p->raw_merge_start(raw_operation)) {
-   for (ptr=head; ptr; ptr=ptr->next)
-     if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY)) {
-       sprintf(selected_file, "%s/%s", current_dir, ptr->name);
-       librawop_p->raw_merge_add_file(selected_file);
-      }
-  librawop_p->raw_merge_end();
-  gui_fselect_readdir = 1;
- }
+    if ((fselect_marked_count()>1) && librawop->raw_merge_start(raw_operation))
+    {
+        for (ptr=head; ptr; ptr=ptr->next)
+            if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY))
+            {
+                sprintf(selected_file, "%s/%s", current_dir, ptr->name);
+                librawop->raw_merge_add_file(selected_file);
+            }
+        librawop->raw_merge_end();
+        gui_fselect_readdir = 1;
+    }
 }
 
-static void fselect_subtract_cb(unsigned int btn) {
+static void fselect_subtract_cb(unsigned int btn)
+{
     struct fitem *ptr;
     char *raw_subtract_from;
     char *raw_subtract_sub;
     char *raw_subtract_dest;
     if (btn != MBOX_BTN_YES) return;
 
-    librawop_p=module_rawop_load();
-    if (!librawop_p)
-        return;     //exit if fail
-    if ( !API_VERSION_MATCH_REQUIREMENT( librawop_p->version, 1, 0 ) )
-        return;
-
     if(!(raw_subtract_from = malloc(300))) //3x full path
         return;
     raw_subtract_sub = raw_subtract_from + 100;
     raw_subtract_dest = raw_subtract_sub + 100;
     sprintf(raw_subtract_sub,"%s/%s",current_dir,selected->name);
-    for (ptr=head; ptr; ptr=ptr->next) {
+    for (ptr=head; ptr; ptr=ptr->next)
+    {
         if (ptr->marked && ptr->attr != 0xFF &&
             !(ptr->attr & DOS_ATTR_DIRECTORY) &&
             ptr->size == camera_sensor.raw_size &&
-            (strcmp(ptr->name,selected->name)) != 0) {
+            (strcmp(ptr->name,selected->name)) != 0)
+        {
             sprintf(raw_subtract_from,"%s/%s",current_dir,ptr->name);
             sprintf(raw_subtract_dest,"%s/%s%s",current_dir,img_prefixes[conf.sub_batch_prefix],ptr->name+4);
             strcpy(raw_subtract_dest + strlen(raw_subtract_dest) - 4,img_exts[conf.sub_batch_ext]);
             // don't let users attempt to write one of the files being read
-            if( strcmp(raw_subtract_dest,raw_subtract_from) != 0 && strcmp(raw_subtract_dest,raw_subtract_sub) != 0) {
-                librawop_p->raw_subtract(raw_subtract_from,raw_subtract_sub,raw_subtract_dest);
+            if( strcmp(raw_subtract_dest,raw_subtract_from) != 0 && strcmp(raw_subtract_dest,raw_subtract_sub) != 0)
+            {
+                librawop->raw_subtract(raw_subtract_from,raw_subtract_sub,raw_subtract_dest);
             }
         }
     }
@@ -1065,26 +1049,30 @@ static void setup_batch_subtract(void) {
                   MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_subtract_cb);
 }
 //-------------------------------------------------------------------
-void process_dng_to_raw_files(void){
- struct fitem *ptr;
- int i=0;
-   started();
-   msleep(100);
-   finished();
+void process_dng_to_raw_files(void)
+{
+    struct fitem *ptr;
+    int i=0;
+    started();
+    msleep(100);
+    finished();
 
- if (fselect_real_marked_count()) {
-   for (ptr=head; ptr; ptr=ptr->next)
-     if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY)) {
-       sprintf(selected_file, "%s/%s", current_dir, ptr->name);
-       gui_browser_progress_show(selected_file, (i++)*100/fselect_real_marked_count()) ;
-       module_convert_dng_to_chdk_raw(selected_file);
-      }
+    if (fselect_real_marked_count())
+    {
+        for (ptr=head; ptr; ptr=ptr->next)
+            if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY))
+            {
+                sprintf(selected_file, "%s/%s", current_dir, ptr->name);
+                gui_browser_progress_show(selected_file, (i++)*100/fselect_real_marked_count()) ;
+                libdng->convert_dng_to_chdk_raw(selected_file);
+            }
     }
- else {
-   sprintf(selected_file, "%s/%s", current_dir, selected->name);
-   module_convert_dng_to_chdk_raw(selected_file);
- }
-  gui_fselect_readdir = 1;
+    else
+    {
+        sprintf(selected_file, "%s/%s", current_dir, selected->name);
+        libdng->convert_dng_to_chdk_raw(selected_file);
+    }
+    gui_fselect_readdir = 1;
 }
 
 
@@ -1139,15 +1127,13 @@ static void fselect_mpopup_more_cb(unsigned int actn) {
 
     switch (actn) {
         case MPOPUP_MKDIR:
-            if (module_tbox_load())
-                module_tbox_load()->textbox_init(LANG_POPUP_MKDIR, LANG_PROMPT_MKDIR, "", 15, mkdir_cb, 0);
+            libtextbox->textbox_init(LANG_POPUP_MKDIR, LANG_PROMPT_MKDIR, "", 15, mkdir_cb, 0);
             break;
         case MPOPUP_RMDIR:
             confirm_delete_directory();
             break;
         case MPOPUP_RENAME:
-            if (module_tbox_load())
-                module_tbox_load()->textbox_init(LANG_POPUP_RENAME, LANG_PROMPT_RENAME, selected->name, 15, rename_cb, 0);
+            libtextbox->textbox_init(LANG_POPUP_RENAME, LANG_PROMPT_RENAME, selected->name, 15, rename_cb, 0);
             break;
     }
     gui_fselect_redraw = 2;
@@ -1213,11 +1199,11 @@ static void fselect_mpopup_cb(unsigned int actn) {
             break;
 
         case MPOPUP_RAWOPS:
-            module_mpopup_init( popup_rawop, mpopup_rawop_flag, fselect_mpopup_rawop_cb, 0);
+            libmpopup->show_popup( popup_rawop, mpopup_rawop_flag, fselect_mpopup_rawop_cb, 0);
             break;
 
         case MPOPUP_MORE:
-            module_mpopup_init( popup_more, mpopup_more_flag, fselect_mpopup_more_cb, 0);
+            libmpopup->show_popup( popup_more, mpopup_more_flag, fselect_mpopup_more_cb, 0);
         break;
 
         case MPOPUP_CHDK_REPLACE:
@@ -1236,7 +1222,6 @@ void finalize_fselect()
 {
     gui_fselect_free_data();
     gui_fselect_marked_free_data();
-    module_rawop_unload();
 }
 
 static int chk_ext(char *ext, char *tst)
@@ -1256,20 +1241,16 @@ static void exit_fselect(char* file)
 {
     finalize_fselect();
 
-    if (set_key_redraw_mode)
-    {
-        gui_set_mode(gui_fselect_mode_old);
-    }
+    gui_set_mode(gui_fselect_mode_old);
+
     if (fselect_on_select)
     {
         fselect_on_select(file);
         // if called mode will return control to filemanager - we need to redraw it
         gui_fselect_redraw = 2;
     }
-    if (!set_key_redraw_mode)
-    {
-        gui_set_mode(gui_fselect_mode_old);
-    }
+
+    running = 0;
 }
 
 //-------------------------------------------------------------------
@@ -1332,12 +1313,11 @@ int gui_fselect_kbd_process()
                     (selected->name[0] == 'D' && selected->name[1] == 'C' && selected->name[2] == 'I' && selected->name[3] == 'M') ||//If item is DCIM folder
                     (selected->name[3] == 'C'))//If item is a DCIM sub folder
                     i |= MPOPUP_PURGE;//Display PURGE RAW function in popup menu
-                if(selected->size == camera_sensor.raw_size)
+                if (selected->size == camera_sensor.raw_size)
                     mpopup_rawop_flag |= MPOPUP_RAW_DEVELOP;
 
-                if ( module_convert_dng_to_chdk_raw(0) )    // if dng module exist
-                    if((fselect_marked_count()>1)||(selected->size > camera_sensor.raw_size))
-                        mpopup_rawop_flag |= MPOPUP_DNG_TO_CRW;
+                if ((fselect_marked_count()>1)||(selected->size > camera_sensor.raw_size))
+                    mpopup_rawop_flag |= MPOPUP_DNG_TO_CRW;
 
                 if (selected->name[9] == 'B' && selected->name[10] == 'I' && selected->name[11] == 'N') //If item is DCIM folder
                     i |= MPOPUP_CHDK_REPLACE;
@@ -1352,7 +1332,7 @@ int gui_fselect_kbd_process()
                 if ( !(selected->name[0] == '.' && selected->name[1] == '.' && selected->name[2] == 0) ) //If item is not UpDir
                     mpopup_more_flag |=MPOPUP_RENAME;
 
-                module_mpopup_init( popup, i, fselect_mpopup_cb, 0);
+                libmpopup->show_popup( popup, i, fselect_mpopup_cb, 0);
             }
             break;
         case KEY_SET:
@@ -1373,27 +1353,18 @@ int gui_fselect_kbd_process()
                     char *ext = strchr(selected->name,'.');
                     int do_exit = 1;
 
-                    if (chk_ext(ext,"flt"))
+                    if (!fselect_on_select)
                     {
-                        if (!fselect_on_select) {
-                            exit_fselect(0);
-                            do_exit = 0;
-                            module_run(selected_file, 0, 0,0, UNLOAD_IF_ERR);
-                        }
-                    }
-                    else if (chk_ext(ext,"txt") || chk_ext(ext,"log"))
-                    {
-                        if (!fselect_on_select)
+                        if (chk_ext(ext,"txt") || chk_ext(ext,"log"))
                         {
                             exit_fselect(0);
                             do_exit = 0;
-                            int argv[] = {(int)selected_file};
-                            module_run("txtread.flt", 0, 1, argv, UNLOAD_IF_ERR);
+                    		libtxtread->read_file(selected_file);
                         }
                     }
 
-                    if (do_exit) exit_fselect(selected_file);
-                    module_async_unload(module_idx);
+                    if (do_exit)
+                        exit_fselect(selected_file);
                 }
             }
             break;
@@ -1419,43 +1390,13 @@ void gui_fselect_kbd_process_menu_btn()
 {
     // just free resource. callback called with NULL ptr
     exit_fselect(0);
-    module_async_unload(module_idx);
 }
 
-
 // =========  MODULE INIT =================
-int module_idx=-1;
 
 /***************** BEGIN OF AUXILARY PART *********************
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
-
-void* MODULE_EXPORT_LIST[] = {
-    /* 0 */ (void*)EXPORTLIST_MAGIC_NUMBER,
-    /* 1 */ (void*)0
-        };
-
-
-//---------------------------------------------------------
-// PURPOSE:   Bind module symbols with chdk.
-//      Required function
-// PARAMETERS: pointer to chdk list of export
-// RETURN VALUE: 1 error, 0 ok
-//---------------------------------------------------------
-int _module_loader( unsigned int* chdk_export_list )
-{
-  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-     return 1;
-
-  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
-      return 1;
-  if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, 2, 0 ) )
-     return 1;
-
-  return 0;
-}
-
-
 
 //---------------------------------------------------------
 // PURPOSE: Finalize module operations (close allocs, etc)
@@ -1464,53 +1405,48 @@ int _module_loader( unsigned int* chdk_export_list )
 int _module_unloader()
 {
     finalize_fselect();
-
-    //sanity clean to prevent accidentaly assign/restore guimode to unloaded module
-    GUI_MODE_FSELECT_MODULE.magicnum = 0;
-
     return 0;
 }
 
-
-//---------------------------------------------------------
-// PURPOSE: Default action for simple modules (direct run)
-// NOTE: Please comment this function if no default action and this library module
-//---------------------------------------------------------
-int _module_run(int moduleidx, int argn, int* arguments)
+int _module_can_unload()
 {
-  module_idx=moduleidx;
-
-  if ( argn!=0 && argn!=5 ) {
-    module_async_unload(moduleidx);
-    return 1;
-  }
-
-  // Autounloading is unsafe because it should exists to catch finalization of mpopup
-  module_set_flags(module_idx, MODULE_FLAG_DISABLE_AUTOUNLOAD);
-
-  if ( argn == 5 )
-  {
-      gui_fselect_init( arguments[0], (const char*) arguments[1], (const char*) arguments[2], (void*)arguments[3]);
-      gui_fselect_set_key_redraw(arguments[4]);
-  }
-  else
-      gui_fselect_init(LANG_STR_FILE_BROWSER, "A", "A", NULL);
-
-  return 0;
+    return running == 0;
 }
 
+int _module_exit_alt()
+{
+    exit_fselect(0);
+    return 0;
+}
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {  MODULEINFO_V1_MAGICNUM,
-                                    sizeof(struct ModuleInfo),
+libfselect_sym _libfselect =
+{
+    {
+        0, _module_unloader, _module_can_unload, _module_exit_alt, 0
+    },
 
-                                    ANY_CHDK_BRANCH, 0,         // Requirements of CHDK version
-                                    ANY_PLATFORM_ALLOWED,       // Specify platform dependency
-                                    0,                          // flag
-                                    -LANG_MENU_MISC_FILE_BROWSER,   // Module name
-                                    1, 1,                       // Module version
-                                    0
-                                 };
+    gui_fselect_init
+};
+
+struct ModuleInfo _module_info = {
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    GUI_FSELECT_VERSION,        // Module version
+
+    ANY_CHDK_BRANCH, 0,         // Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,       // Specify platform dependency
+
+    -LANG_MENU_MISC_FILE_BROWSER,   // Module name
+    0,
+
+    &_libfselect.base,
+
+    CONF_VERSION,               // CONF version
+    CAM_SCREEN_VERSION,         // CAM SCREEN version
+    CAM_SENSOR_VERSION,         // CAM SENSOR version
+    CAM_INFO_VERSION,           // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/

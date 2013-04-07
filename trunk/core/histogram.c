@@ -4,6 +4,7 @@
 #include "math.h"
 #include "modes.h"
 #include "viewport.h"
+#include "gui.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
 #include "histogram.h"

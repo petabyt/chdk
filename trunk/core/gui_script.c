@@ -1,10 +1,13 @@
+#include "camera_info.h"
 #include "stdlib.h"
 #include "conf.h"
 #include "gui.h"
 #include "gui_lang.h"
 #include "gui_menu.h"
 #include "fileutil.h"
-#include "modules.h"
+
+#include "script_api.h"
+#include "gui_fselect.h"
 
 //-------------------------------------------------------------------
 
@@ -673,7 +676,7 @@ static void gui_load_script_selected(const char *fn) {
 }
 
 static void gui_load_script(int arg) {
-    module_fselect_init(LANG_STR_SELECT_SCRIPT_FILE, conf.script_file, "A/CHDK/SCRIPTS", gui_load_script_selected);
+    libfselect->file_select(LANG_STR_SELECT_SCRIPT_FILE, conf.script_file, "A/CHDK/SCRIPTS", gui_load_script_selected);
 }
 
 static void gui_load_script_default(int arg) {

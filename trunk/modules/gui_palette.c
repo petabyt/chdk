@@ -6,8 +6,8 @@
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_lang.h"
-#include "gui_palette.h"
 
+#include "gui_palette.h"
 #include "module_def.h"
 
 void gui_module_menu_kbd_process();
@@ -15,21 +15,24 @@ int gui_palette_kbd_process();
 void gui_palette_draw();
 
 gui_handler GUI_MODE_PALETTE_MODULE = 
-    /*GUI_MODE_PALETTE*/    { GUI_MODE_PALETTE, gui_palette_draw, gui_palette_kbd_process, gui_module_menu_kbd_process, 0, GUI_MODE_MAGICNUM };
+/*GUI_MODE_PALETTE*/    { GUI_MODE_PALETTE, gui_palette_draw, gui_palette_kbd_process, gui_module_menu_kbd_process, 0 };
 
 //-------------------------------------------------------------------
+static int running = 0;
 static color cl;
 static int palette_mode;
 static void (*palette_on_select)(color clr);
 static int gui_palette_redraw;
 
 //-------------------------------------------------------------------
-void gui_palette_init(int mode, color st_color, void (*on_select)(color clr)) {
+void gui_palette_init(int mode, color st_color, void (*on_select)(color clr))
+{
+    running = 1;
     cl = st_color;
     palette_mode = mode;
     palette_on_select = on_select;
     gui_palette_redraw = 1;
-	gui_set_mode(&GUI_MODE_PALETTE_MODULE);
+    gui_set_mode(&GUI_MODE_PALETTE_MODULE);
 }
 
 //-------------------------------------------------------------------
@@ -117,88 +120,58 @@ void gui_palette_draw() {
     }
 }
 
-extern int module_idx;
-void gui_module_menu_kbd_process() {
-	gui_default_kbd_process_menu_btn();
-  	module_async_unload(module_idx);
+void gui_module_menu_kbd_process()
+{
+    running = 0;
+    gui_default_kbd_process_menu_btn();
 }
 
 // =========  MODULE INIT =================
-int module_idx=-1;
 
 /***************** BEGIN OF AUXILARY PART *********************
-  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
- **************************************************************/
+ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+**************************************************************/
 
-void* MODULE_EXPORT_LIST[] = {
-	/* 0 */	(void*)EXPORTLIST_MAGIC_NUMBER,
-	/* 1 */	(void*)0
-		};
-
-
-//---------------------------------------------------------
-// PURPOSE:   Bind module symbols with chdk. 
-//		Required function
-// PARAMETERS: pointer to chdk list of export
-// RETURN VALUE: 1 error, 0 ok
-//---------------------------------------------------------
-int _module_loader( unsigned int* chdk_export_list )
+int _module_can_unload()
 {
-  if ( chdk_export_list[0] != EXPORTLIST_MAGIC_NUMBER )
-     return 1;
-  if ( !API_VERSION_MATCH_REQUIREMENT( gui_version.common_api, 1, 0 ) )
-	  return 1;
-
-  return 0;
+    return running == 0;
 }
 
-
-
-//---------------------------------------------------------
-// PURPOSE: Finalize module operations (close allocs, etc)
-// RETURN VALUE: 0-ok, 1-fail
-//---------------------------------------------------------
-int _module_unloader()
+int _module_exit_alt()
 {
-  //sanity clean to prevent accidentaly assign/restore guimode to unloaded module 
-  GUI_MODE_PALETTE_MODULE.magicnum = 0;
-
-  return 0;
-}
-
-
-//---------------------------------------------------------
-// PURPOSE: Default action for simple modules (direct run)
-// NOTE: Please comment this function if no default action and this library module
-//---------------------------------------------------------
-int _module_run(int moduleidx, int argn, int* arguments)
-{
-  module_idx=moduleidx;
-
-  if ( argn!=0 && argn!=3) {
-	module_async_unload(moduleidx);
-    return 1;
-  }
-
-  if ( argn==3 )
-    gui_palette_init( arguments[0], (color)arguments[1], (void*)arguments[2]);
-  else
-  	gui_palette_init( PALETTE_MODE_DEFAULT, 0x00, NULL );
-
-  return 0;
+    running = 0;
+    return 0;
 }
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info = {	MODULEINFO_V1_MAGICNUM,
-									sizeof(struct ModuleInfo),
+libpalette_sym _libpalette =
+{
+    {
+         0, 0, _module_can_unload, _module_exit_alt, 0
+    },
 
-									ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-									ANY_PLATFORM_ALLOWED,		// Specify platform dependency
-									0,							// flag
-									(int32_t)"Palette",					// Module name
-									1, 0,						// Module version
-									0
-								 };
+    gui_palette_init
+};
+
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    GUI_PALETTE_VERSION,		// Module version
+
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    (int32_t)"Palette",					// Module name
+    0,
+
+    &_libpalette.base,
+
+    ANY_VERSION,                // CONF version
+    CAM_SCREEN_VERSION,         // CAM SCREEN version
+    ANY_VERSION,                // CAM SENSOR version
+    ANY_VERSION,                // CAM INFO version
+};
 
 /*************** END OF AUXILARY PART *******************/
