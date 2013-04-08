@@ -903,7 +903,7 @@ static int luaCB_wait_click( lua_State* L )
         return lua_yield( L, 0 );
     }
 
-    return 1;
+    return 0;
 }
 
 static int luaCB_is_pressed( lua_State* L )
@@ -1063,7 +1063,7 @@ static int luaCB_draw_pixel( lua_State* L ) {
   coord y1=luaL_checknumber(L,2);
   color cl=get_color(luaL_checknumber(L,3));
   draw_pixel(x1,y1,cl);
-  return 1;
+  return 0;
 }
 
 static int luaCB_draw_line( lua_State* L ) {
@@ -1073,7 +1073,7 @@ static int luaCB_draw_line( lua_State* L ) {
   coord y2=luaL_checknumber(L,4);
   color cl=get_color(luaL_checknumber(L,5));
   draw_line(x1,y1,x2,y2,cl);
-  return 1;
+  return 0;
 }
 
 static int luaCB_draw_rect( lua_State* L ) {
@@ -1084,7 +1084,7 @@ static int luaCB_draw_rect( lua_State* L ) {
   color cl=get_color(luaL_checknumber(L,5));
   int   th=luaL_optnumber(L,6,1);
   draw_rect_thick(x1,y1,x2,y2,cl,th);
-  return 1;
+  return 0;
 }
 
 static int luaCB_draw_rect_filled( lua_State* L ) {
@@ -1097,7 +1097,7 @@ static int luaCB_draw_rect_filled( lua_State* L ) {
   int   th =luaL_optnumber(L,7,1);
   clf=256*clb+clf;
   draw_filled_rect_thick(x1,y1,x2,y2,clf,th);
-  return 1;
+  return 0;
 }
 
 static int luaCB_draw_ellipse( lua_State* L ) {
@@ -1107,7 +1107,7 @@ static int luaCB_draw_ellipse( lua_State* L ) {
   coord b=luaL_checknumber(L,4);
   color cl=get_color(luaL_checknumber(L,5));
   draw_ellipse(x1,y1,a,b,cl);
-  return 1;
+  return 0;
 }
 
 static int luaCB_draw_ellipse_filled( lua_State* L ) {
@@ -1117,7 +1117,7 @@ static int luaCB_draw_ellipse_filled( lua_State* L ) {
   coord b=luaL_checknumber(L,4);
   color cl=256*get_color(luaL_checknumber(L,5));
   draw_filled_ellipse(x1,y1,a,b,cl);
-  return 1;
+  return 0;
 }
 
 static int luaCB_draw_string( lua_State* L ) {
@@ -1128,12 +1128,12 @@ static int luaCB_draw_string( lua_State* L ) {
   color clb=get_color(luaL_checknumber(L,5));
   clf=256*clb+clf;
   draw_string(x1,y1,t,clf);
-  return 1;
+  return 0;
 }
 
 static int luaCB_draw_clear( lua_State* L ) {
   draw_restore();
-  return 1;
+  return 0;
 }
 // end lua draw functions
 
@@ -1590,7 +1590,8 @@ static int luaCB_raw_merge_start( lua_State* L )
     int op = luaL_checknumber(L,1);
     if ((op == RAW_OPERATION_SUM || op == RAW_OPERATION_AVERAGE))
     {
-        return librawop->raw_merge_start(op);   
+        lua_pushboolean(L, librawop->raw_merge_start(op));   
+        return 1;
     }
     else {
         return luaL_argerror(L,1,"invalid raw merge op");
@@ -1600,7 +1601,9 @@ static int luaCB_raw_merge_start( lua_State* L )
 // TODO sanity check file ? Get it from C
 static int luaCB_raw_merge_add_file( lua_State* L )
 {
-    return librawop->raw_merge_add_file(luaL_checkstring( L, 1 ));
+
+    lua_pushboolean(L, librawop->raw_merge_add_file(luaL_checkstring( L, 1 )));
+    return 1;
 }
 
 static int luaCB_raw_merge_end( lua_State* L )
