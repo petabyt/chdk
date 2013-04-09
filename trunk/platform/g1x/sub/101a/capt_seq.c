@@ -105,9 +105,7 @@ asm volatile (
 "       BL      capt_seq_hook_set_nr\n"           		// +++
 
 "		LDR     R0, [R0,#0x10]\n"
-"       BL      sub_FF07B780\n"
-
-"       BL      capt_seq_hook_raw_here\n"           	// +++
+"       BL      sub_FF07B780_my\n"
 
 "		B	loc_FF07B638 \n"
 
@@ -357,6 +355,63 @@ asm volatile (
 	);
 }
 
+void __attribute__((naked,noinline)) sub_FF07B780_my(){
+ asm volatile(
+"                 STMFD   SP!, {R4-R6,LR} \n"
+"                 LDR     R5, =0x40A00 \n"
+"                 MOV     R6, R0 \n"
+"                 LDR     R0, [R5,#0x2C] \n"
+"                 LDR     R4, =0x222F \n"
+"                 CMP     R0, #0 \n"
+"                 BNE     loc_FF07B7DC \n"
+"                 LDRH    R0, [R5] \n"
+"                 CMP     R0, R4 \n"
+"                 SUBNE   R1, R0, #0x4200 \n"
+"                 SUBNES  R1, R1, #0x2E \n"
+"                 BLEQ    sub_FF07DDF8 \n"
+"                 BL      sub_FF07DA94 \n"
+"                 MOV     R1, R6 \n"
+"                 BL      sub_FF07DAEC \n"
+"                 LDR     R0, =0x10F \n"
+"                 MOV     R2, #4 \n"
+"                 ADD     R1, R6, #0x58 \n"
+"                 BL      sub_FF08F90C \n"
+"                 MOV     R2, #4 \n"
+"                 ADD     R1, R6, #0x5C \n"
+"                 MOV     R0, #0x2C \n"
+"                 BL      sub_FF08F90C \n"
+
+"loc_FF07B7DC: \n"
+"                 LDRH    R0, [R5] \n"
+"                 CMP     R0, R4 \n"
+"                 MOV     R0, R6 \n"
+"                 BNE     loc_FF07B7F4 \n"
+"                 BL      sub_FF1D2474 \n"
+"                 B       loc_FF07B7F8 \n"
+
+"loc_FF07B7F4: \n"
+"                 BL      sub_FF1D1468 \n"
+
+"loc_FF07B7F8: \n"
+
+"       BL      capt_seq_hook_raw_here\n"           	// +++  (8/4/2013 - moved here to fix RAW Develop)
+
+"                 MOV     R4, R0 \n"
+"                 MOV     R2, R6 \n"
+"                 MOV     R1, #1 \n"
+"                 BL      sub_FF0790E8 \n"
+"                 TST     R4, #1 \n"
+"                 MOVEQ   R0, R6 \n"
+"                 BLEQ    sub_FF1D0608 \n"
+"                 LDR     R0, [R5,#0xC8] \n"
+"                 CMP     R0, #2 \n"
+"                 LDMNEFD SP!, {R4-R6,PC} \n"
+"                 MOV     R0, R6 \n"
+"                 LDMFD   SP!, {R4-R6,LR} \n"
+"                 B       sub_FF0792BC \n"
+	);
+}
+
 ///*----------------------------------------------------------------------
 // @ 0xff0cda24
 void __attribute__((naked,noinline)) exp_drv_task()
@@ -477,7 +532,7 @@ void __attribute__((naked,noinline)) exp_drv_task()
 "                BL      sub_FF0B97E0 \n"
 "                B       loc_FF0CDB18 \n"
 
-" loc_FF0CDBA4: \n"
+"loc_FF0CDBA4: \n"
 "                CMP     R1, #0x2F \n"
 "                BNE     loc_FF0CDBF4 \n"
 "                LDR     R0, [R6,#0x1C] \n"
