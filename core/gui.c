@@ -1892,6 +1892,12 @@ void gui_set_need_restore()
     gui_osd_need_restore = 1;
 }
 
+void gui_cancel_need_restore()
+{
+    gui_osd_need_restore = 0;
+    gui_mode_need_redraw = 0;
+}
+
 void gui_set_need_redraw()
 {
     gui_mode_need_redraw = 1;

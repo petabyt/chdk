@@ -9,6 +9,9 @@
 #include "script_api.h"
 #include "gui_fselect.h"
 
+// Forward reference
+static void gui_update_script_submenu();
+
 //-------------------------------------------------------------------
 
 #define SCRIPT_DEFAULT_FILENAME     "A/SCRIPT.LUA"
@@ -623,14 +626,10 @@ void script_load(const char *fn)
     script_scan( conf.script_file );                      // re-fill @title/@names/@order/@range/@value + reset values to @default
     load_params_values( conf.script_file, conf.script_param_set );
 
-    extern void gui_update_script_submenu();
     gui_update_script_submenu();
 }
 
 //-------------------------------------------------------------------
-
-// Forward reference
-void gui_update_script_submenu();
 
 static const char* gui_script_param_set_enum(int change, int arg)
 {
@@ -670,8 +669,10 @@ static const char* gui_script_param_save_enum(int change, int arg)
 
 static void gui_load_script_selected(const char *fn) {
     if (fn) {
+        gui_menu_cancel_redraw();   // Stop menu redraw until after menu rebuilt from script params
         save_params_values(0);
         script_load(fn);
+        gui_set_need_restore();
     }
 }
 
@@ -743,7 +744,7 @@ static CMenuItem script_submenu_items[] = {
 
 CMenu script_submenu = {0x27,LANG_MENU_SCRIPT_TITLE, NULL, script_submenu_items };
 
-void gui_update_script_submenu() 
+static void gui_update_script_submenu() 
 {
     register int p, i;
 

@@ -217,6 +217,11 @@ static void gui_menu_erase_and_redraw()
     gui_menu_redraw = 2;
     gui_set_need_restore();
 }
+void gui_menu_cancel_redraw()
+{
+    gui_menu_redraw = 0;
+    gui_cancel_need_restore();
+}
 
 //-------------------------------------------------------------------
 // Function passed to gui_palette_init
