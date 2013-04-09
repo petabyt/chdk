@@ -70,6 +70,7 @@ extern void gui_default_kbd_process_menu_btn();
 
 extern void gui_redraw();
 extern void gui_set_need_restore();
+extern void gui_cancel_need_restore();
 
 extern gui_mode_t gui_get_mode();
 extern gui_handler* gui_set_mode(gui_handler *mode);
