@@ -26,6 +26,9 @@
     #define CAM_HAS_ND_FILTER                   1           // Camera has built-in ND filter (in addition to iris)
     #undef  CAM_KEY_PRESS_DELAY
     #define CAM_KEY_PRESS_DELAY                 60          // delay after a press
+    #define CAM_ADJUSTABLE_ALT_BUTTON       	1
+    #define CAM_ALT_BUTTON_NAMES            	{ "Playback", "Video", "Display" }
+    #define CAM_ALT_BUTTON_OPTIONS          	{ KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1
 
     #define CAM_DRYOS_2_3_R39                   1
@@ -118,6 +121,9 @@
     #define CAM_USB_EVENTID                     0x202       // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
 
     #define CAM_HAS_MOVIE_DIGEST_MODE           1 
+
+    #define CAM_USE_ALT_SET_ZOOM_POINT          1           // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_USE_ALT_PT_MoveOpticalZoomAt    1           // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
     #define MKDIR_RETURN_ONE_ON_SUCCESS         1    // mkdir() return 1 on success, 0 on fail.
 
