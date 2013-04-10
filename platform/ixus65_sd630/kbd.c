@@ -16,9 +16,9 @@ typedef struct {
     long canonkey;
 } KeyMap;
 
-long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-long kbd_mod_state = KEY_MASK;
+static long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_mod_state = KEY_MASK;
 long debug_kbd_state_diff;
 
 static KeyMap keymap[];
