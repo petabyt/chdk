@@ -3,6 +3,7 @@
 #include "conf.h"
 #include "script.h"
 #include "meminfo.h"
+#include "cache.h"
 
 // to keep format simple, we always write meminfo for each
 // but can skip actual getmeminfo since call might crash on mem corruption
@@ -89,14 +90,9 @@ void dbg_dump_write(const char *dumpname,unsigned flags, int user_data_len, char
         }
         write(fd,&pb->m,sizeof(cam_meminfo));
 
-        // poor mans cache clean
-        // read and write 4k of presumably unrelated memory - chdk code
-        static volatile int dummy;
-        int *p;
-        for(p=(int *)camera_info.text_start;p < (int *)(camera_info.text_start+4096);p++) {
-            dummy = *p;
-            *p = dummy;
-        }
+        // clean cache for write()
+        dcache_clean_all();
+
         write(fd,(char *)((int)sp|camera_info.cam_uncached_bit),STACK_DUMP_COUNT*4);
         if(user_data_len && user_data) {
             // we assume user_data has been flushed out by preceding
