@@ -51,7 +51,7 @@ struct flat_hdr {
     union
     {
         uint32_t            _module_info_offset;    // Offset ModuleInfo from beginning of file
-#if __SIZEOF_POINTER__ == 8 // For elfflt.c on 64 bit Linux
+#if defined(USE_INT32_FOR_PTRS) // For elfflt.c on 64 bit Linux
 	    uint32_t            _module_info;           // Ptr to ModuleInfo after relocation
 #else
 	    struct ModuleInfo*  _module_info;           // Ptr to ModuleInfo after relocation
@@ -104,7 +104,7 @@ struct ModuleInfo
 	int32_t             moduleName;			    // pointer to string with module name or -LANG_ID
 	int32_t             description;		    // pointer to string with module description (not currently used)
 
-#if __SIZEOF_POINTER__ == 8 // For elfflt.c on 64 bit Linux
+#if defined(USE_INT32_FOR_PTRS) // For elfflt.c on 64 bit Linux
     uint32_t            lib;
 #else
     base_interface_t*   lib;                    // Pointer to interface library
