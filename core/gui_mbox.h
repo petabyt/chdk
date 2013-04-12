@@ -13,7 +13,6 @@
 #define MBOX_BTN_NO             0x0004
 #define MBOX_BTN_CANCEL         0x0008
 #define MBOX_BTN_YES_NO         0x0006
-#define MBOX_BTN_YES_NO_CANCEL  0x000E
 
 #define MBOX_TEXT_MASK          0x0300
 #define MBOX_TEXT_LEFT          0x0000
