@@ -8,6 +8,7 @@
 #include <fcntl.h>
 
 #include "myio.h"
+#define USE_INT32_FOR_PTRS      // To avoid pointer size issues in structs in flt.h
 #include "flt.h"
 
 struct flat_hdr* flat;
