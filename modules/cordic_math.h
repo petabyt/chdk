@@ -85,9 +85,9 @@ LUALIB_API void polCordic(tangle t, fixed px, fixed py, fixed *r, fixed *theta);
 
 // extern
 // PI/2, PI, 2*PI
-LUALIB_API fixed FULL_CIRCLE[];
-LUALIB_API fixed HALF_CIRCLE[];
-LUALIB_API fixed QUART_CIRCLE[];
+LUAI_DATA fixed FULL_CIRCLE[];
+LUAI_DATA fixed HALF_CIRCLE[];
+LUAI_DATA fixed QUART_CIRCLE[];
 //used by macro
 LUALIB_API fixed floatToFixed(double a);
 LUALIB_API fixed intToFixed(int4b a, int round);
