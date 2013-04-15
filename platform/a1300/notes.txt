@@ -11,7 +11,6 @@ Playback [>] or Help [?] button can be configured as <ALT> mode button.
 KNOWN BUGS
 **********
 - GetBatteryTemperature() returns always -99° Celsius or -146° Fahrenheit
-- Mute during zoom in/out is not implemented
 - Video Time limit removal is not implemented.
 - AF during video recording is disabled.
 - Conflicting CHDK shortcuts

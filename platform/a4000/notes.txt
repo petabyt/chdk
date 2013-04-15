@@ -10,7 +10,7 @@ Playback [>] or Help [?] button can be configured as <ALT> mode button.
 
 KNOWN BUGS
 **********
-- 
+-
 
 For Developers
 **************

@@ -86,6 +86,7 @@ asm volatile (
 //begin patch
       "LDR	   R0, =0x637C \n"		// added, 0x6380-0x4 taken from  "loc_FF95B484:" see commented function below.
       "BL      set_quality \n"		// added
+      "BL      mute_on_zoom\n"  // added
 //end patch      
       "B       loc_FF95B6E0 \n"
 "loc_FF95B6A4:\n"  //Jump Table entry 07
