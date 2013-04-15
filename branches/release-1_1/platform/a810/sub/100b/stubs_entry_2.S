@@ -12,6 +12,8 @@ NHSTUB(MakeDirectory_Fut,           0xff8305a4)
 NHSTUB(MakeAFScan,                   0xff95f0b0) //Obtained comparing code to a495 100f - Camera makes one AF, then crashes.
 //NHSTUB(MakeAFScan,                  0xff831a04) //This is address of DoAFLock
 NHSTUB(platformsub_kbd_fetch_data,  0xff856648)
+NHSTUB(TurnOnMic,                   0xff856e48)
+NHSTUB(TurnOffMic,                  0xff856e74)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
