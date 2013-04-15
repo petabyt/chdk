@@ -316,8 +316,8 @@
 237 "Video quality"
 
 
-238 "Posebne foto operacije"
-239 "Posebne foto operacije"
+238 "Dodatne foto operacije"
+239 "Dodatne foto operacije"
 240 "Brzina zatvaraèa TV"
 241 "    Koeficijent"
 242 "Apertura AV"
@@ -474,8 +474,8 @@
 368 "Omoguæi tonalne krivulje"
 369 "Odaberi datoteku krivulja"
 
-370 "Crtanje rubova"
-371 "Crtanje rubova"
+370 "Panorama-crtanje rubova"
+371 "Panorama-crtanje rubova"
 
 372 "Omoguæi crtanje rubova"
 373 "Prag crtanja rubova"
@@ -545,7 +545,7 @@
 432 "Pobjednik Igraè 2"
 433 "Jesam te"
 434 "Neriješeno"
-435 "Onemoguæi Raw u crtanju rubova"
+435 "Onemoguæi Raw u Panorami"
 436 "Onemoguæi Raw u Auto modu"
 437 "   SAMO u videu"
 438 "   Snaga bljeskalice"
@@ -671,3 +671,7 @@
 550 "Odustajanje [Press half]"
 
 551 "Omoguæi'start skripte'"
+
+552 "Onemoguæi ZOOM tipku"
+
+553 "DNG verzija"
