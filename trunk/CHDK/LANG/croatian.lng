@@ -316,8 +316,8 @@
 237 "Video quality"
 
 
-238 "Posebne foto operacije"
-239 "Posebne foto operacije"
+238 "Dodatne foto operacije"
+239 "Dodatne foto operacije"
 240 "EV korak"
 241 "Dugaèka ekspozicija"
 242 "Apertura AV"
@@ -704,3 +704,11 @@
 574 "Fokus faktor"
 
 575 "ON/OFF tipka za <ALT> mod"
+
+576 "Moduli"
+577 "Modul Inspektor"
+578 "Omoguæi zapisnik"
+579 "Obriši zapisnik"
+
+580 "Omoguæi kratice tipki"
+581 "<< Kratice onemoguæene  >>"
