@@ -3,6 +3,7 @@
 #include "keyboard.h"
 #include "lang.h"
 #include "conf.h"
+#include "console.h"
 #include "gui.h"
 #include "gui_menu.h"
 #include "gui_draw.h"
@@ -1351,6 +1352,9 @@ static void gui_default_draw()
         draw_txt_string(22-strlen(osd_buf)/2, 14, osd_buf, conf.osd_color);
     }
 #endif
+
+    if (conf.console_show)
+        console_draw();
 }
 
 //-------------------------------------------------------------------

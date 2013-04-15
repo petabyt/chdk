@@ -429,6 +429,10 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(294, conf.module_logging,             CONF_DEF_VALUE,     i:0, NULL),
 
     CONF_INFO(295, conf.enable_shortcuts,           CONF_DEF_VALUE,     i:1, NULL),
+
+    // Console settings
+    CONF_INFO(296, conf.console_show,               CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO(297, conf.console_timeout,            CONF_DEF_VALUE,     i:3, NULL),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 
