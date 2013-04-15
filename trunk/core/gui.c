@@ -683,6 +683,31 @@ static void gui_lua_native_call_warning(int arg)
 }
 #endif
 
+static const char* gui_console_show_enum[]={ "ALT", "Always" };
+
+static void gui_console_clear(int arg)
+{
+    console_close();
+    gui_mbox_init(LANG_MENU_CONSOLE_CLEAR, LANG_MENU_CONSOLE_RESET, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+}
+
+static void gui_console_show(int arg)
+{
+    void display_console();
+    display_console();
+}
+
+static CMenuItem console_settings_submenu_items[] = {
+    MENU_ENUM2(0x5f,LANG_MENU_CONSOLE_SHOWIN,       &conf.console_show,         gui_console_show_enum ),
+    MENU_ITEM(0x58,LANG_MENU_CONSOLE_TIMEOUT,       MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.console_timeout, MENU_MINMAX(3, 30) ),
+    MENU_ITEM(0x35,LANG_MENU_CONSOLE_SHOW,          MENUITEM_PROC,              gui_console_show, 0 ),
+    MENU_ITEM(0x35,LANG_MENU_CONSOLE_CLEAR,         MENUITEM_PROC,              gui_console_clear, 0 ),
+    MENU_ITEM(0x51,LANG_MENU_BACK,                  MENUITEM_UP, 0, 0 ),
+    {0}
+};
+
+static CMenu console_settings_submenu = {0x28,LANG_MENU_CONSOLE_SETTINGS, NULL, console_settings_submenu_items };
+
 static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x35,LANG_MENU_MISC_FILE_BROWSER,          MENUITEM_PROC,                  gui_draw_fselect,                   0 ),
     MENU_ITEM   (0x28,LANG_MENU_MODULES,                    MENUITEM_SUBMENU,               &module_submenu,                    0 ),
@@ -691,6 +716,7 @@ static CMenuItem misc_submenu_items[] = {
 #if defined (OPT_GAMES)
     MENU_ITEM   (0x38,LANG_MENU_MISC_GAMES,                 MENUITEM_SUBMENU,               &games_submenu,                     0 ),
 #endif
+    MENU_ITEM   (0x28,LANG_MENU_CONSOLE_SETTINGS,           MENUITEM_SUBMENU,               &console_settings_submenu, 0 ),
 #if CAM_SWIVEL_SCREEN
     MENU_ITEM   (0x5c,LANG_MENU_MISC_FLASHLIGHT,            MENUITEM_BOOL,                  &conf.flashlight, 0 ),
 #endif

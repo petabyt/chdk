@@ -415,6 +415,9 @@ typedef struct {
 
     int enable_shortcuts;     // enable keyboard shortcuts
 
+    int console_show;           // 0 = ALT mode only, 1 = always
+    int console_timeout;        // Delay after last update to stop showing console (seconds)
+
 } Conf;
 
 extern Conf conf;

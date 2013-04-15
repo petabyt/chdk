@@ -710,8 +710,15 @@
 
 #define LANG_MENU_MISC_ENABLE_SHORTCUTS         580
 #define LANG_HELP_SHORTCUTS_DISABLED            581
- 
-#define GUI_LANG_ITEMS                          581
+
+#define LANG_MENU_CONSOLE_SETTINGS              582
+#define LANG_MENU_CONSOLE_SHOWIN                583
+#define LANG_MENU_CONSOLE_TIMEOUT               584
+#define LANG_MENU_CONSOLE_CLEAR                 585
+#define LANG_MENU_CONSOLE_SHOW                  586
+#define LANG_MENU_CONSOLE_RESET                 587
+
+#define GUI_LANG_ITEMS                          587
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
