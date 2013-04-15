@@ -65,6 +65,7 @@
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
+    #define CAM_CAN_MUTE_MICROPHONE         1
 
     #define DNG_VERT_RLE_BADPIXELS          1
 
