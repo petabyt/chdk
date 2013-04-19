@@ -71,8 +71,7 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f() {
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
 	while (physw_run){
-		//_SleepTask(*((int*)0x1c18)); //10); // TODO: how to find this address?
-        _SleepTask(10);
+		_SleepTask(physw_sleep_delay);
 
 		if (wrap_kbd_p1_f() == 1){ // autorepeat ?
 			_kbd_p2_f();
@@ -102,7 +101,7 @@ void jogdial_control(int n)
     {
         // If re-enabling jogdial set the task code current & previous positions to the actual
         // dial positions so that the change won't get processed by the firmware
-        jog_position[0] = jog_position[2] = rear_dial_position;   // TODO: Rear dial in stubs_min.S
+        jog_position[0] = jog_position[2] = rear_dial_position;
     }
     jogdial_stopped = n;
 }
