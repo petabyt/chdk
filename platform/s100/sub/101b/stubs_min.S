@@ -18,4 +18,4 @@ DEF(zoom_busy                               ,0x00009b24) // Found @0xff1c6118,  
 DEF(focus_busy                              ,0x00009940) // Found @0xff1bef10,          stubs_min = 0x00009940 (0x00009940)
 DEF(recreview_hold                          ,0x00005008) // Found @0xff0a51b0,          stubs_min = 0x00005008 (0x00005008)
 
-DEF(rear_dial_position                      ,0xC0240106) // TODO: this is from sx40hs
+DEF(rear_dial_position                      ,0xC0240106)
