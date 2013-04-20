@@ -730,3 +730,8 @@
 585 "Konsole zurücksetzen"
 586 "Zeige letzte Konsole"
 587 "Größe & Position zurücksetzen."
+
+588 "RAM-Dump-Einstellungen"
+589 "Startaddresse"
+590 "Dump-Größe (0=komplett)"
+591 "Startverzögerung (s)"
