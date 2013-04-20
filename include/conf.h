@@ -418,6 +418,9 @@ typedef struct {
     int console_show;           // 0 = ALT mode only, 1 = always
     int console_timeout;        // Delay after last update to stop showing console (seconds)
 
+    int memdmp_start;           // start address for memory dump
+    int memdmp_size;            // amount of memory to dump in bytes (0 for all RAM)
+
 } Conf;
 
 extern Conf conf;

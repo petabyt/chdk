@@ -49,6 +49,10 @@
 //--------------------------
 #include "gui_tbox.h"
 
+// MODULE "HEXBOX"
+//--------------------------
+#include "gui_hexbox.h"
+
 // MODULE "TXTREAD"
 //--------------------------
 #include "gui_read.h"
