@@ -718,7 +718,12 @@
 #define LANG_MENU_CONSOLE_SHOW                  586
 #define LANG_MENU_CONSOLE_RESET                 587
 
-#define GUI_LANG_ITEMS                          587
+#define LANG_MENU_DEBUG_MEMDMP                  588
+#define LANG_MENU_DEBUG_MEMDMP_START            589
+#define LANG_MENU_DEBUG_MEMDMP_SIZE             590
+#define LANG_MENU_DEBUG_MEMDMP_DELAY            591
+
+#define GUI_LANG_ITEMS                          591
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
