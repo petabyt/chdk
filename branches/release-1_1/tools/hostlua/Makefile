@@ -1,6 +1,7 @@
 topdir=../../
 
 SKIPBUILDRULES=1
+SKIPPLATFORMCHECK=1
 
 include $(topdir)makefile.inc
 
@@ -69,7 +70,7 @@ $(LUAC_T): $(LUAC_O) $(LUA_A)
 check:
 
 clean:
-	rm -f $(OBJS) $(LUA_A) $(LUA_T) $(LUAC_T)
+	rm -f $(OBJS) $(LUA_A) $(LUA_T) $(LUAC_T) $(LUA_O) $(LUAC_O)
 
 distclean: clean
 	rm -f $(OBJS:.o=.d)
