@@ -440,9 +440,9 @@ camera_env.require=function(mname)
 	if package.loaded[mname] then
 		return package.loaded[mname]
 	end
-	local f=loadfile(camera_module_root..'/SCRIPTS/'..mname..'.LUA')
+	local f=loadfile(camera_module_root..'/SCRIPTS/'..mname..'.lua')
 	if not f then
-		f=loadfile(camera_module_root..'/LUALIB/'..mname..'.LUA')
+		f=loadfile(camera_module_root..'/LUALIB/'..mname..'.lua')
 	end
 	if not f then
 		error("camera module '"..tostring(mname).."' not found")
