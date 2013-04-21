@@ -688,6 +688,42 @@ libtextbox_sym default_libtextbox =
 // Library pointer
 libtextbox_sym* libtextbox = &default_libtextbox;
 
+/************* MODULE HEXBOX ******/
+
+#define MODULE_NAME_HEXBOX "_hexbox.flt"
+
+// Forward reference
+extern libhexbox_sym default_libhexbox;
+
+module_handler_t h_hexbox =
+{
+    (base_interface_t**)&libhexbox,
+    &default_libhexbox.base,
+    GUI_HEXBOX_VERSION,
+    MODULE_NAME_HEXBOX
+};
+
+// Default (unloaded) function
+static int default_hexbox_init(int *num, char *title, int flags)
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_hexbox))
+        return libhexbox->hexbox_init(num, title, flags);
+
+    // Failure
+    return 0;
+}
+
+// Default library - module unloaded
+libhexbox_sym default_libhexbox =
+{
+    { 0,0,0,0,0 },
+    default_hexbox_init,
+};
+
+// Library pointer
+libhexbox_sym* libhexbox = &default_libhexbox;
+
 /************* MODULE TXTREAD ******/
 
 #define MODULE_NAME_TXTREAD "txtread.flt"

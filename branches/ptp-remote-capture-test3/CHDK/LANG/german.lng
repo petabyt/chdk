@@ -722,4 +722,16 @@
 579 "Modul-Log löschen"
 
 580 "Auslöser-halb-Tastaturkürzel aktivieren"
-581 "<< Tastaturkürzel deaktiviert >>"
+581 " << Tastaturkürzel deaktiviert >>"
+
+582 "Konsole"
+583 "Zeige Konsole in"
+584 "Verberge Konsole in n S."
+585 "Konsole zurücksetzen"
+586 "Zeige letzte Konsole"
+587 "Größe & Position zurücksetzen."
+
+588 "RAM-Dump-Einstellungen"
+589 "Startaddresse"
+590 "Dump-Größe (0=komplett)"
+591 "Startverzögerung (s)"

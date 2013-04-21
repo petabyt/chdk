@@ -3,6 +3,7 @@
 
 #include <unistd.h>
 #include "elf.h"
+#define USE_INT32_FOR_PTRS      // To avoid pointer size issues in structs in flt.h
 #include "flt.h"
 
 #define ELFFLT_OK                  0

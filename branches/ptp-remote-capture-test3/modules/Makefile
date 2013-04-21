@@ -24,7 +24,7 @@ LDOPTS+=-Wl,-N,-Ttext,0 -r -Wl,-d
 FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt \
      _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop10.flt _rawop12.flt \
      txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt _tbox.flt _osd_le.flt \
-     ubasic.flt lua.flt
+     _hexbox.flt ubasic.flt lua.flt
 
 all: $(FLTS)
 
@@ -69,6 +69,7 @@ reversebytes.o: reversebytes.S
 
 calend.elf: gui_calendar.o
 _tbox.elf: gui_tbox.o
+_hexbox.elf: gui_hexbox.o
 benchm.elf: gui_bench.o
 memview.elf: gui_debug.o
 palette.elf: gui_palette.o

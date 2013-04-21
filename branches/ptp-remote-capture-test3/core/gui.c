@@ -10,6 +10,7 @@
 #include "gui_menu.h"
 #include "gui_user_menu.h"
 #include "gui_mbox.h"
+#include "gui_hexbox.h"
 #include "gui_osd.h"
 #include "console.h"
 #include "raw.h"
@@ -27,7 +28,7 @@
 
 //-------------------------------------------------------------------
 // forward declarations
-extern void dump_memory();
+extern void schedule_memdump();
 
 //-------------------------------------------------------------------
 
@@ -285,6 +286,27 @@ static const char* gui_debug_display_modes[] =              { "None", "Props", "
 static const char* gui_debug_display_modes[] =              { "None", "Props", "Params", "Tasks"};
 #endif
 
+extern volatile int memdmp_delay; // from core/main.c
+
+static void gui_menu_edit_hexa_value(int val) {
+    if (val == 1) {
+        libhexbox->hexbox_init( &conf.memdmp_start, lang_str(LANG_MENU_DEBUG_MEMDMP_START), HEXBOX_FLAG_WALIGN );
+    }
+    else if (val == 2) {
+        libhexbox->hexbox_init( &conf.memdmp_size, lang_str(LANG_MENU_DEBUG_MEMDMP_SIZE), HEXBOX_FLAG_WALIGN );
+    }
+}
+
+static CMenuItem memdmp_submenu_items[] = {
+    MENU_ITEM   (0x2a,LANG_MENU_DEBUG_MEMDMP_START,         MENUITEM_PROC,                  gui_menu_edit_hexa_value,           1),
+    MENU_ITEM   (0x2a,LANG_MENU_DEBUG_MEMDMP_SIZE,          MENUITEM_PROC,                  gui_menu_edit_hexa_value,           2),
+    MENU_ITEM   (0x2a,LANG_MENU_DEBUG_MEMDMP_DELAY,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &memdmp_delay, MENU_MINMAX(0, 10)   ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0,                                  0 ),
+    {0}
+};
+
+static CMenu memdmp_submenu = {0x2a,LANG_MENU_DEBUG_MEMDMP, NULL, memdmp_submenu_items };
+
 static CMenuItem debug_submenu_items[] = {
     MENU_ENUM2  (0x5c,LANG_MENU_DEBUG_DISPLAY,              &conf.debug_display,            gui_debug_display_modes ),
     MENU_ITEM   (0x2a,LANG_MENU_DEBUG_PROPCASE_PAGE,        MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &conf.debug_propcase_page, MENU_MINMAX(0, 128) ),
@@ -295,6 +317,7 @@ static CMenuItem debug_submenu_items[] = {
     MENU_ITEM   (0x2a,LANG_MENU_DEBUG_MEMORY_BROWSER,       MENUITEM_PROC,                  gui_menu_run_fltmodule,             "memview.flt" ),
     MENU_ITEM   (0x2a,LANG_MENU_DEBUG_BENCHMARK,            MENUITEM_PROC,                  gui_menu_run_fltmodule,             "benchm.flt" ),
     MENU_ENUM2  (0x5c,LANG_MENU_DEBUG_SHORTCUT_ACTION,      &conf.debug_shortcut_action,    gui_debug_shortcut_modes ),
+    MENU_ITEM   (0x2a,LANG_MENU_DEBUG_MEMDMP,               MENUITEM_SUBMENU,               &memdmp_submenu,                    0 ),
     MENU_ITEM   (0x2a,LANG_SAVE_ROMLOG,                     MENUITEM_PROC,                  save_romlog,                        0 ),
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0,                                  0 ),
     {0}
@@ -683,6 +706,31 @@ static void gui_lua_native_call_warning(int arg)
 }
 #endif
 
+static const char* gui_console_show_enum[]={ "ALT", "Always" };
+
+static void gui_console_clear(int arg)
+{
+    console_close();
+    gui_mbox_init(LANG_MENU_CONSOLE_CLEAR, LANG_MENU_CONSOLE_RESET, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+}
+
+static void gui_console_show(int arg)
+{
+    void display_console();
+    display_console();
+}
+
+static CMenuItem console_settings_submenu_items[] = {
+    MENU_ENUM2(0x5f,LANG_MENU_CONSOLE_SHOWIN,       &conf.console_show,         gui_console_show_enum ),
+    MENU_ITEM(0x58,LANG_MENU_CONSOLE_TIMEOUT,       MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.console_timeout, MENU_MINMAX(3, 30) ),
+    MENU_ITEM(0x35,LANG_MENU_CONSOLE_SHOW,          MENUITEM_PROC,              gui_console_show, 0 ),
+    MENU_ITEM(0x35,LANG_MENU_CONSOLE_CLEAR,         MENUITEM_PROC,              gui_console_clear, 0 ),
+    MENU_ITEM(0x51,LANG_MENU_BACK,                  MENUITEM_UP, 0, 0 ),
+    {0}
+};
+
+static CMenu console_settings_submenu = {0x28,LANG_MENU_CONSOLE_SETTINGS, NULL, console_settings_submenu_items };
+
 static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x35,LANG_MENU_MISC_FILE_BROWSER,          MENUITEM_PROC,                  gui_draw_fselect,                   0 ),
     MENU_ITEM   (0x28,LANG_MENU_MODULES,                    MENUITEM_SUBMENU,               &module_submenu,                    0 ),
@@ -691,6 +739,7 @@ static CMenuItem misc_submenu_items[] = {
 #if defined (OPT_GAMES)
     MENU_ITEM   (0x38,LANG_MENU_MISC_GAMES,                 MENUITEM_SUBMENU,               &games_submenu,                     0 ),
 #endif
+    MENU_ITEM   (0x28,LANG_MENU_CONSOLE_SETTINGS,           MENUITEM_SUBMENU,               &console_settings_submenu, 0 ),
 #if CAM_SWIVEL_SCREEN
     MENU_ITEM   (0x5c,LANG_MENU_MISC_FLASHLIGHT,            MENUITEM_BOOL,                  &conf.flashlight, 0 ),
 #endif
@@ -1892,6 +1941,12 @@ void gui_set_need_restore()
     gui_osd_need_restore = 1;
 }
 
+void gui_cancel_need_restore()
+{
+    gui_osd_need_restore = 0;
+    gui_mode_need_redraw = 0;
+}
+
 void gui_set_need_redraw()
 {
     gui_mode_need_redraw = 1;
@@ -2257,7 +2312,7 @@ static void gui_debug_shortcut(void)
     lastcall=t;
     switch(conf.debug_shortcut_action) {
             case 1:
-                dump_memory();
+                schedule_memdump();
                 break;
             case 2:
                 gui_update_debug_page();

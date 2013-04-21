@@ -14,10 +14,10 @@ int gui_mbox_kbd_process();
 
 static gui_handler mboxGuiHandler = { GUI_MODE_MBOX, gui_mbox_draw, gui_mbox_kbd_process, 0, GUI_MODE_FLAG_NORESTORE_ON_SWITCH };
 
-static gui_handler	*gui_mbox_mode_old;
-static const char*	mbox_title;
-static const char* 	mbox_msg;
-static char 		mbox_to_draw;
+static gui_handler      *gui_mbox_mode_old;
+static const char*      mbox_title;
+static const char*      mbox_msg;
+static char             mbox_to_draw;
 static unsigned int     mbox_flags;
 #define MAX_LINES       8
 #define MAX_WIDTH       35
@@ -27,10 +27,10 @@ static struct {
         unsigned int    flag;
         int             text;
 } buttons[] = {
-        { MBOX_BTN_OK,          LANG_MBOX_BTN_OK    },
-        { MBOX_BTN_YES,         LANG_MBOX_BTN_YES   },
-        { MBOX_BTN_NO,          LANG_MBOX_BTN_NO    },
-        { MBOX_BTN_CANCEL,      LANG_MBOX_BTN_CANCEL}
+        { MBOX_BTN_OK,      LANG_MBOX_BTN_OK    },
+        { MBOX_BTN_YES,     LANG_MBOX_BTN_YES   },
+        { MBOX_BTN_NO,      LANG_MBOX_BTN_NO    },
+        { MBOX_BTN_CANCEL,  LANG_MBOX_BTN_CANCEL}
 };
 #define BUTTON_SIZE     6
 #define BUTTONSNUM      (sizeof(buttons)/sizeof(buttons[0]))
@@ -41,86 +41,83 @@ static coord    mbox_buttons_x, mbox_buttons_y;
 static void (*mbox_on_select)(unsigned int btn);
 
 //-------------------------------------------------------------------
-
-void gui_mbox_init_adv(int title, int msg, const unsigned int flags, void (*on_select)(unsigned int btn),
-			int btn_ok, int btn_yes, int btn_no, int btn_cancel) 
+void gui_mbox_init(int title, int msg, const unsigned int flags, void (*on_select)(unsigned int btn))
 {
     int i;
 
     mbox_buttons_num = 0;
-    for (i=0; i<BUTTONSNUM && mbox_buttons_num<MAX_BUTTONS; ++i) {
+    for (i=0; i<BUTTONSNUM && mbox_buttons_num<MAX_BUTTONS; ++i)
+    {
         if (flags & MBOX_BTN_MASK & buttons[i].flag)
             mbox_buttons[mbox_buttons_num++] = i;
     }
     if (mbox_buttons_num == 0)
         mbox_buttons[mbox_buttons_num++] = 0; // Add button "Ok" if there is no buttons
 
-    switch (flags & MBOX_DEF_MASK) {
-        case MBOX_DEF_BTN1: mbox_button_active = 0; break;
-        case MBOX_DEF_BTN2: mbox_button_active = 1; break;
-        case MBOX_DEF_BTN3: mbox_button_active = 2; break;
-        default: mbox_button_active = 0; break;
+    switch (flags & MBOX_DEF_MASK)
+    {
+        case MBOX_DEF_BTN2:
+            mbox_button_active = 1;
+            break;
+        case MBOX_DEF_BTN3:
+            mbox_button_active = 2;
+            break;
+        case MBOX_DEF_BTN1:
+        default:
+            mbox_button_active = 0;
+            break;
     }
 
     mbox_title = lang_str(title);
     mbox_msg = lang_str(msg);
-    mbox_to_draw = 1;
+    mbox_to_draw = 3;
     mbox_flags = flags;
     mbox_on_select = on_select;
-
-    buttons[0].text=btn_ok;
-    buttons[1].text=btn_yes;
-    buttons[2].text=btn_no;
-    buttons[3].text=btn_cancel;
 
     gui_mbox_mode_old = gui_set_mode(&mboxGuiHandler);
 }
 
-
-void gui_mbox_init(int title, int msg, const unsigned int flags, void (*on_select)(unsigned int btn)) {
-
-	gui_mbox_init_adv(title, msg, flags, on_select,
-               LANG_MBOX_BTN_OK, LANG_MBOX_BTN_YES, LANG_MBOX_BTN_NO, LANG_MBOX_BTN_CANCEL);
-
-}
-
 //-------------------------------------------------------------------
-unsigned int gui_mbox_result() {
-    return buttons[mbox_buttons[mbox_button_active]].flag;
-}
-
-//-------------------------------------------------------------------
-static void gui_mbox_draw_buttons() {
+static void gui_mbox_draw_buttons()
+{
     int i;
     coord x = mbox_buttons_x;
     color cl;
 
-    for (i=0; i<mbox_buttons_num; ++i) {
+    for (i=0; i<mbox_buttons_num; ++i)
+    {
         cl = MAKE_COLOR((mbox_button_active==i)?COLOR_RED:COLOR_BLACK, COLOR_WHITE);
         draw_rect(x-1, mbox_buttons_y-1, x+BUTTON_SIZE*FONT_WIDTH+3, mbox_buttons_y+FONT_HEIGHT+3, COLOR_BLACK); //shadow
         draw_filled_rect(x-2, mbox_buttons_y-2, x+BUTTON_SIZE*FONT_WIDTH+2, mbox_buttons_y+FONT_HEIGHT+2, cl);
         draw_string(x+(((BUTTON_SIZE-strlen(lang_str(buttons[mbox_buttons[i]].text)))*FONT_WIDTH)>>1), mbox_buttons_y, lang_str(buttons[mbox_buttons[i]].text), cl);
-        x+=BUTTON_SIZE*FONT_WIDTH+BUTTON_SEP;
+        x += BUTTON_SIZE*FONT_WIDTH+BUTTON_SEP;
     }
 }
 
 //-------------------------------------------------------------------
-void gui_mbox_draw() {
-    if (mbox_to_draw) {
+void gui_mbox_draw()
+{
+    if (mbox_to_draw & 1)
+    {
         char c[MAX_LINES][MAX_WIDTH+1];
         const char *p=mbox_msg;
         coord x=0, y=0, d;
         unsigned int w, h=0, l=0, bw=(mbox_buttons_num*BUTTON_SIZE*FONT_WIDTH+(mbox_buttons_num-1)*BUTTON_SEP);
 
-        w =strlen(mbox_title);
+        w = strlen(mbox_title);
         if (w > MAX_WIDTH) w = MAX_WIDTH;
-        while (*p) {
-            if (*p == '\n') {
+        while (*p)
+        {
+            if (*p == '\n')
+            {
                 c[h++][l] = 0;
                 l=0;
                 if (h == MAX_LINES) break;
-            } else {
-                if (l < MAX_WIDTH) {
+            }
+            else
+            {
+                if (l < MAX_WIDTH)
+                {
                     c[h][l++]=*p;
                     if (l > w) w = l;
                 }
@@ -146,37 +143,42 @@ void gui_mbox_draw() {
         mbox_buttons_x = x+((w*FONT_WIDTH-bw)>>1);
         mbox_buttons_y = y+h*FONT_HEIGHT+SPACING_BTN;
 
-        while (h) {
+        while (h)
+        {
             l = strlen(c[--h]);
-            switch (mbox_flags & MBOX_TEXT_MASK) {
-                case MBOX_TEXT_LEFT:    d = FONT_WIDTH; break;
+            switch (mbox_flags & MBOX_TEXT_MASK)
+            {
                 case MBOX_TEXT_CENTER:  d = ((w-l)>>1)*FONT_WIDTH; break;
                 case MBOX_TEXT_RIGHT:   d = (w-l-1)*FONT_WIDTH; break;
+                case MBOX_TEXT_LEFT:
                 default:                d = FONT_WIDTH; break;
             }
             draw_string(x+d, y+h*FONT_HEIGHT, c[h], MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); // text
         }
-
-        gui_mbox_draw_buttons();
-
-        mbox_to_draw = 0;
     }
+
+    if (mbox_to_draw & 2)
+    {
+        gui_mbox_draw_buttons();
+    }
+
+    mbox_to_draw = 0;
 }
 
 //-------------------------------------------------------------------
-int gui_mbox_kbd_process() {
-    switch (kbd_get_clicked_key() | get_jogdial_direction()) {
+int gui_mbox_kbd_process()
+{
+    switch (kbd_get_clicked_key() | get_jogdial_direction())
+    {
     case JOGDIAL_LEFT:
     case KEY_LEFT:
-        if (mbox_button_active > 0) --mbox_button_active;
-        else mbox_button_active = mbox_buttons_num-1;
-        gui_mbox_draw_buttons();
+        if (--mbox_button_active < 0) mbox_button_active = mbox_buttons_num - 1;
+        mbox_to_draw = 2;
         break;
     case JOGDIAL_RIGHT:
     case KEY_RIGHT:
-        if (mbox_button_active < mbox_buttons_num-1) ++mbox_button_active;
-        else mbox_button_active = 0;
-        gui_mbox_draw_buttons();
+        if (++mbox_button_active >= mbox_buttons_num) mbox_button_active = 0;
+        mbox_to_draw = 2;
         break;
     case KEY_SET:
         gui_set_mode(gui_mbox_mode_old);
@@ -191,7 +193,8 @@ int gui_mbox_kbd_process() {
 
 //-------------------------------------------------------------------
 
-void gui_browser_progress_show(const char* msg, const unsigned int perc) {
+void gui_browser_progress_show(const char* msg, const unsigned int perc)
+{
     coord x=60, y=100;
     unsigned int w=240, h=40, len;
 

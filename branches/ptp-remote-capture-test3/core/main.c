@@ -7,6 +7,7 @@
 #include "histogram.h"
 #include "raw.h"
 #include "console.h"
+#include "shooting.h"
 
 #include "edgeoverlay.h"
 #include "module_load.h"
@@ -25,6 +26,13 @@ static volatile int spytask_can_start;
     extern void wegpunkt();
 #endif
 
+static unsigned int memdmptick = 0;
+volatile int memdmp_delay = 0; // delay in seconds
+
+void schedule_memdump()
+{
+    memdmptick = get_tick_count() + memdmp_delay * 1000;
+}
 
 void dump_memory()
 {
@@ -32,18 +40,42 @@ void dump_memory()
     static int cnt=1;
     static char fn[32];
 
+    // zero size means all RAM
+    if (conf.memdmp_size == 0) conf.memdmp_size = (unsigned int)camera_info.maxramaddr + 1;
+    // enforce RAM area
+    if ((unsigned int)conf.memdmp_start > (unsigned int)camera_info.maxramaddr)
+        conf.memdmp_start = 0;
+    if ( (unsigned int)conf.memdmp_start + (unsigned int)conf.memdmp_size > ((unsigned int)camera_info.maxramaddr+1) )
+        conf.memdmp_size = (unsigned int)camera_info.maxramaddr + 1 - (unsigned int)conf.memdmp_start;
+
     started();
-    mkdir("A/DCIM");
-    mkdir("A/DCIM/100CANON");
-    sprintf(fn, "A/DCIM/100CANON/CRW_%04d.JPG", cnt++);
-    fd = open(fn, O_WRONLY|O_CREAT, 0777);
-    if (fd) {
-        long val0 = *((long*)(0|CAM_UNCACHED_BIT));
-        write(fd, &val0, 4);
-        write(fd, (void*)4, camera_info.maxramaddr-3);   // camera_info.maxramaddr is last valid RAM location
-        close(fd);
+    // try to avoid hanging the camera
+    if ( !is_video_recording() ) {
+        mkdir("A/DCIM");
+        mkdir("A/DCIM/100CANON");
+        fd = 0;
+        do {
+            sprintf(fn, "A/DCIM/100CANON/CRW_%04d.JPG", cnt++);
+            if (stat(fn,0) != 0) {
+                fd = open(fn, O_WRONLY|O_CREAT, 0777);
+                break;
+            }
+        } while(cnt<9999);
+        if (fd) {
+            if ( conf.memdmp_start == 0 ) {
+                long val0 = *((long*)(0|CAM_UNCACHED_BIT));
+                write(fd, &val0, 4);
+                if  (conf.memdmp_size > 4) {
+                    write(fd, (void*)4, conf.memdmp_size - 4);
+                }
+            }
+            else {
+                write(fd, (void*)conf.memdmp_start, conf.memdmp_size);
+            }
+            close(fd);
+        }
+        vid_bitmap_refresh();
     }
-    vid_bitmap_refresh();
     finished();
 }
 
@@ -178,6 +210,11 @@ void core_spytask()
 
     while (1)
     {
+        if ( memdmptick && (get_tick_count() >= memdmptick) )
+        {
+            memdmptick = 0;
+            dump_memory();
+        }
         // Change ALT mode if the KBD task has flagged a state change
         gui_activate_alt_mode();
 

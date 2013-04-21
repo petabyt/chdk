@@ -706,3 +706,15 @@
 
 580 "Enable Half-Press Shortcut Keys"
 581 "<< Shortcuts disabled  >>"
+
+582 "Console"
+583 "Show console in"
+584 "Hide N secs after last change"
+585 "Reset console"
+586 "Display last console"
+587 "Console size & position reset."
+
+588 "RAM Dump Settings"
+589 "Start Address"
+590 "Dump Size (0 = ALL RAM)"
+591 "Dump Delay (s)"

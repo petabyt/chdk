@@ -43,6 +43,7 @@
             &libfselect,
             &libmpopup,
             &libtxtread,
+            &libhexbox,
 
             &altGuiHandler,
             &camera_info,
