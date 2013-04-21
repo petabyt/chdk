@@ -56,14 +56,6 @@ extern  CMenu   user_submenu;
 
 //-------------------------------------------------------------------
 
-// Run a module directly from a menu
-static void gui_menu_run_fltmodule(int arg)
-{
-    module_run((char*)arg);
-}
-
-//-------------------------------------------------------------------
-
 /*
 common code for "enum" menu items that just take a list of string values and don't require any special setters
 would be better to have another menu item type that does this by default
@@ -314,8 +306,8 @@ static CMenuItem debug_submenu_items[] = {
     MENU_ITEM   (0x2a,LANG_MENU_DEBUG_TASKLIST_START,       MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &debug_tasklist_start, MENU_MINMAX(0, 63) ),
 #endif
     MENU_ITEM   (0x5c,LANG_MENU_DEBUG_SHOW_MISC_VALS,       MENUITEM_BOOL,                  &conf.debug_misc_vals_show,         0 ),
-    MENU_ITEM   (0x2a,LANG_MENU_DEBUG_MEMORY_BROWSER,       MENUITEM_PROC,                  gui_menu_run_fltmodule,             "memview.flt" ),
-    MENU_ITEM   (0x2a,LANG_MENU_DEBUG_BENCHMARK,            MENUITEM_PROC,                  gui_menu_run_fltmodule,             "benchm.flt" ),
+    MENU_ITEM   (0x2a,LANG_MENU_DEBUG_MEMORY_BROWSER,       MENUITEM_PROC,                  module_run,             "memview.flt" ),
+    MENU_ITEM   (0x2a,LANG_MENU_DEBUG_BENCHMARK,            MENUITEM_PROC,                  module_run,             "benchm.flt" ),
     MENU_ENUM2  (0x5c,LANG_MENU_DEBUG_SHORTCUT_ACTION,      &conf.debug_shortcut_action,    gui_debug_shortcut_modes ),
     MENU_ITEM   (0x2a,LANG_MENU_DEBUG_MEMDMP,               MENUITEM_SUBMENU,               &memdmp_submenu,                    0 ),
     MENU_ITEM   (0x2a,LANG_SAVE_ROMLOG,                     MENUITEM_PROC,                  save_romlog,                        0 ),
@@ -560,13 +552,13 @@ static CMenu reader_submenu = {0x37,LANG_MENU_READ_TITLE, NULL, reader_submenu_i
 #if defined (OPT_GAMES)
 
 static CMenuItem games_submenu_items[] = {
-    MENU_ITEM(0x38,LANG_MENU_GAMES_REVERSI,           MENUITEM_PROC,  gui_menu_run_fltmodule, "reversi.flt" ),
-    MENU_ITEM(0x38,LANG_MENU_GAMES_SOKOBAN,           MENUITEM_PROC,  gui_menu_run_fltmodule, "sokoban.flt" ),
-    MENU_ITEM(0x38,LANG_MENU_GAMES_CONNECT4,          MENUITEM_PROC,  gui_menu_run_fltmodule, "4wins.flt" ),
-    MENU_ITEM(0x38,LANG_MENU_GAMES_MASTERMIND,        MENUITEM_PROC,  gui_menu_run_fltmodule, "mastmind.flt" ),
-    MENU_ITEM(0x38,"Snake" ,                          MENUITEM_PROC,  gui_menu_run_fltmodule, "snake.flt" ),
-    MENU_ITEM(0x38,"Tetris",                          MENUITEM_PROC,  gui_menu_run_fltmodule, "tetris.flt" ),
-	MENU_ITEM(0x38,"Sudoku",						  MENUITEM_PROC,  gui_menu_run_fltmodule, "sudoku.flt" ),
+    MENU_ITEM(0x38,LANG_MENU_GAMES_REVERSI,           MENUITEM_PROC,  module_run, "reversi.flt" ),
+    MENU_ITEM(0x38,LANG_MENU_GAMES_SOKOBAN,           MENUITEM_PROC,  module_run, "sokoban.flt" ),
+    MENU_ITEM(0x38,LANG_MENU_GAMES_CONNECT4,          MENUITEM_PROC,  module_run, "4wins.flt" ),
+    MENU_ITEM(0x38,LANG_MENU_GAMES_MASTERMIND,        MENUITEM_PROC,  module_run, "mastmind.flt" ),
+    MENU_ITEM(0x38,"Snake" ,                          MENUITEM_PROC,  module_run, "snake.flt" ),
+    MENU_ITEM(0x38,"Tetris",                          MENUITEM_PROC,  module_run, "tetris.flt" ),
+	MENU_ITEM(0x38,"Sudoku",						  MENUITEM_PROC,  module_run, "sudoku.flt" ),
     MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
     {0}
 };
@@ -654,7 +646,7 @@ static void gui_delete_module_log(int arg)
 }
 
 static CMenuItem module_submenu_items[] = {
-    MENU_ITEM   (0x80,LANG_MENU_MODULE_INSPECTOR,           MENUITEM_PROC,                  gui_menu_run_fltmodule, "modinsp.flt" ),
+    MENU_ITEM   (0x80,LANG_MENU_MODULE_INSPECTOR,           MENUITEM_PROC,                  module_run, "modinsp.flt" ),
     MENU_ITEM   (0x5c,LANG_MENU_MODULE_LOGGING,             MENUITEM_BOOL,                  &conf.module_logging, 0 ),
     MENU_ITEM   (0x2b,LANG_MENU_DELETE_MODULE_LOG,          MENUITEM_PROC,                  gui_delete_module_log, 0 ),
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0, 0 ),
@@ -734,7 +726,7 @@ static CMenu console_settings_submenu = {0x28,LANG_MENU_CONSOLE_SETTINGS, NULL, 
 static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x35,LANG_MENU_MISC_FILE_BROWSER,          MENUITEM_PROC,                  gui_draw_fselect,                   0 ),
     MENU_ITEM   (0x28,LANG_MENU_MODULES,                    MENUITEM_SUBMENU,               &module_submenu,                    0 ),
-    MENU_ITEM   (0x36,LANG_MENU_MISC_CALENDAR,              MENUITEM_PROC,                  gui_menu_run_fltmodule, "calend.flt" ),
+    MENU_ITEM   (0x36,LANG_MENU_MISC_CALENDAR,              MENUITEM_PROC,                  module_run, "calend.flt" ),
     MENU_ITEM   (0x37,LANG_MENU_MISC_TEXT_READER,           MENUITEM_SUBMENU,               &reader_submenu,                    0 ),
 #if defined (OPT_GAMES)
     MENU_ITEM   (0x38,LANG_MENU_MISC_GAMES,                 MENUITEM_SUBMENU,               &games_submenu,                     0 ),
@@ -1827,7 +1819,7 @@ static void gui_menuproc_reset(int arg)
 
 static CMenuItem chdk_settings_menu_items[] = {
     MENU_ITEM   (0x22,LANG_MENU_MAIN_OSD_PARAM,             MENUITEM_SUBMENU,   &osd_submenu, 0 ),
-    MENU_ITEM   (0x72,LANG_MENU_OSD_LAYOUT_EDITOR,          MENUITEM_PROC,      gui_menu_run_fltmodule, "_osd_le.flt" ),
+    MENU_ITEM   (0x72,LANG_MENU_OSD_LAYOUT_EDITOR,          MENUITEM_PROC,      module_run, "_osd_le.flt" ),
     MENU_ITEM   (0x28,LANG_MENU_MAIN_VISUAL_PARAM,          MENUITEM_SUBMENU,   &visual_submenu, 0 ),
     MENU_ITEM   (0x28,LANG_MENU_MENU_SETTINGS,              MENUITEM_SUBMENU,   &menu_settings_submenu, 0 ),
     MENU_ITEM   (0x2f,LANG_MENU_OSD_GRID_PARAMS,            MENUITEM_SUBMENU,   &grid_submenu, 0 ),

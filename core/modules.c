@@ -11,6 +11,14 @@
 #include "modules.h"
 #include "module_load.h"
 
+//------------------------------------------------
+// Dummy functions for default module libraries
+// Used when function does not need to do anything
+// unless module is loaded
+
+static void dummy_void() {}
+static int  dummy_int()  { return 0; }
+
 /************* DYNAMIC LIBRARY RAWOPERATION ******/
 
 static char* rawop_module_name()
@@ -55,16 +63,6 @@ static int default_raw_merge_start(int action)
     // Failure
     return 0;
 }
-static int default_raw_merge_add_file(const char* filename)
-{
-    // Do nothing unless 'raw_merge_start' already called to load module
-    return 0;
-}
-static void default_raw_merge_end()
-{
-    // Do nothing unless 'raw_merge_start' already called to load module
-    return;
-}
 static int default_raw_subtract(const char *from, const char *sub, const char *dest)
 {
     // If load succeeded call module version of function
@@ -80,8 +78,8 @@ librawop_sym default_librawop =
 {
     { 0,0,0,0,0 },
     default_raw_merge_start,
-    default_raw_merge_add_file,
-    default_raw_merge_end,
+    dummy_int,                  //raw_merge_add_file
+    dummy_void,                 //raw_merge_end,
     default_raw_subtract
 };
 
@@ -141,11 +139,6 @@ static void default_load_edge_overlay(const char* fn)
     if (module_edgeovr_load())
         libedgeovr->load_edge_overlay(fn);
 }
-static void default_save_edge_overlay()
-{
-    // Don't need to do anything unless module already loaded
-    return;
-}
 
 // Default library - module unloaded
 libedgeovr_sym default_libedgeovr =
@@ -153,7 +146,7 @@ libedgeovr_sym default_libedgeovr =
     { 0,0,0,0,0 },
     default_edge_overlay,
     default_load_edge_overlay,
-    default_save_edge_overlay
+    dummy_void,                 //save_edge_overlay
 };
 
 // Library pointer
@@ -190,36 +183,16 @@ static int default_md_init_motion_detector(
     // Failure
     return 0;
 }
-static void default_md_close_motion_detector()
-{
-    // Do nothing unless module loaded using 'md_init_motion_detector'
-    return;
-}
-static void default_md_draw_grid()
-{
-    // Do nothing unless module loaded using 'md_init_motion_detector'
-    return;
-}
-static int default_md_get_cell_diff(int column, int row)
-{
-    // Do nothing unless module loaded using 'md_init_motion_detector'
-    return 0;
-}
-static int default_md_get_cell_val(int column, int row)
-{
-    // Do nothing unless module loaded using 'md_init_motion_detector'
-    return 0;
-}
 
 // Default library - module unloaded
 libmotiondetect_sym default_libmotiondetect =
 {
     { 0,0,0,0,0 },
-    default_md_close_motion_detector,
+    dummy_void,                         //md_close_motion_detector
     default_md_init_motion_detector,
-    default_md_get_cell_diff,
-    default_md_draw_grid,
-    default_md_get_cell_val
+    dummy_int,                          //md_get_cell_diff
+    dummy_void,                         //md_draw_grid
+    dummy_int                           //md_get_cell_val
 };
 
 // Library pointer
@@ -286,42 +259,17 @@ static int default_script_start(char const* script, int is_ptp)
     // Failure
     return 0;
 }
-static int default_script_run()
-{
-    // Nothing to do if script not started
-    return 0;
-}
-static void default_script_reset()
-{
-    // Nothing to do if script not started
-    return;
-}
-static void default_set_variable(int varnum, int value)
-{
-    // Nothing to do if script not started
-    return;
-}
-static void default_set_as_ret(int as_ret)
-{
-    // Nothing to do if script not started
-    return;
-}
-static int default_run_restore()
-{
-    // Nothing to do if script not started
-    return 0;
-}
 
 // Default library - module unloaded
 libscriptapi_sym default_libscriptapi =
 {
     { 0,0,0,0,0 },
     default_script_start,
-    default_script_run,
-    default_script_reset,
-    default_set_variable,
-    default_set_as_ret,
-    default_run_restore
+    dummy_int,              //script_run
+    dummy_void,             //script_reset
+    dummy_void,             //set_variable
+    dummy_void,             //set_as_ret
+    dummy_int               //run_restore
 };
 
 // Library pointer
@@ -394,11 +342,6 @@ static void default_curve_init_mode()
     if (module_curves_load())
         libcurves->curve_init_mode();
 }
-static void default_curve_apply()
-{
-    // Do nothing if module not loaded
-    return;
-}
 static void default_curve_set_mode()
 {
     // If load succeeded call module version of function
@@ -417,7 +360,7 @@ libcurves_sym default_libcurves =
 {
     { 0,0,0,0,0 },
     default_curve_init_mode,
-    default_curve_apply,
+    dummy_void,                 //curve_apply
     default_curve_set_mode,
     default_curve_set_file
 };
@@ -587,11 +530,6 @@ static void default_create_badpixel_bin()
     if (module_load(&h_dng))
         libdng->create_badpixel_bin();
 }
-static int default_raw_init_badpixel_bin()
-{
-    // Do nothing unless module is loaded
-    return 0;
-}
 static void default_capture_data_for_exif()
 {
     // If load succeeded call module version of function
@@ -604,11 +542,6 @@ static void default_load_bad_pixels_list_b(char* filename)
     if (module_load(&h_dng))
         libdng->load_bad_pixels_list_b(filename);
 }
-static int default_badpixel_list_loaded_b()
-{
-    // Do nothing unless module is loaded
-    return 0;
-}
 static int default_convert_dng_to_chdk_raw(char* fn)
 {
     // If load succeeded call module version of function
@@ -618,23 +551,18 @@ static int default_convert_dng_to_chdk_raw(char* fn)
     // Failure
     return 0;
 }
-static void default_write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
-{
-    // Do nothing unless module is loaded
-    return;
-}
 
 // Default library - module unloaded
 libdng_sym default_libdng =
 {
     { 0,0,0,0,0 },
     default_create_badpixel_bin,
-    default_raw_init_badpixel_bin,
+    dummy_int,                          //raw_init_badpixel_bin
     default_capture_data_for_exif,
     default_load_bad_pixels_list_b,
-    default_badpixel_list_loaded_b,
+    dummy_int,                          //badpixel_list_loaded_b
     default_convert_dng_to_chdk_raw,
-    default_write_dng
+    dummy_void,                         //write_dng
 };
 
 // Library pointer
