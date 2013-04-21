@@ -8,7 +8,8 @@ include $(topdir)makefile.inc
 LUA_SRC=$(topdir)lib/lua
 CORE_SRC=$(topdir)modules
 
-HOSTCFLAGS+=-DHOST_LUA -DLUA_ANSI -I./include -I$(CORE_SRC) -lm
+HOSTCFLAGS+=-DHOST_LUA -DLUA_ANSI -I./include -I$(CORE_SRC)
+HOSTLDOPTS=-lm
 
 %.o: $(CORE_SRC)/%.c
 	@echo $< \-\> $@
@@ -64,11 +65,11 @@ $(LUA_A): $(OBJS)
 
 $(LUA_T): $(LUA_O) $(LUA_A)
 	@echo $< \-\> $@
-	$(HOSTCC) -o $@ $(HOSTCFLAGS) $(LUA_O) $(LUA_A)
+	$(HOSTCC) -o $@ $(HOSTCFLAGS) $(LUA_O) $(LUA_A) $(HOSTLDOPTS)
 
 $(LUAC_T): $(LUAC_O) $(LUA_A)
 	@echo $< \-\> $@
-	$(HOSTCC) -o $@ $(HOSTCFLAGS) $(LUAC_O) $(LUA_A)
+	$(HOSTCC) -o $@ $(HOSTCFLAGS) $(LUAC_O) $(LUA_A) $(HOSTLDOPTS)
 
 
 check:
