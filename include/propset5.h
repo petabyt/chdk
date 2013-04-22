@@ -8,6 +8,7 @@ The build uses tools/gen_propset_lua.sed to generate propset5.lua from this file
 */
 
 #define PROPCASE_AE_LOCK                         3          // 0 = AE not locked, 1 = AE locked
+#define PROPCASE_AF_ASSIST_BEAM                  5          // 0=disabled,  1=enabled
 #define PROPCASE_REAL_FOCUS_MODE                 6          //??? WIKI|Propcase focus_mode
 #define PROPCASE_AF_FRAME                        8          // 1 = FlexiZone, 2 = Face AiAF / Tracking AF
 #define PROPCASE_AF_LOCK                         11         // 0 = AF not locked, 1 = AF locked
