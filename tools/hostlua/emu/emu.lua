@@ -44,7 +44,10 @@ local camera_state={
     f_mode=0,                   --focus mode, 0=auto, 1=MF, 3=inf., 4=macro, 5=supermacro
     zoom_steps=125,
     zoom=0,
+    autostart=0,
+    IS_mode=0,
 }
+
 
 local buttons={"up", "down", "left", "right", "set", "shoot_half", "shoot_full", "shoot_full_only", "zoom_in", "zoom_out", "menu", "display"}
 
@@ -190,6 +193,11 @@ function camera_funcs.get_raw_count()
     return 100
 end
 
+function camera_funcs.get_IS_mode()
+    return camera_state.IS_mode
+end
+
+
 -- script status
 function camera_funcs.sleep(n)
     camera_state.tick_count=camera_state.tick_count+n
@@ -197,6 +205,10 @@ end
 
 function camera_funcs.get_tick_count()
     return camera_state.tick_count
+end
+
+function camera_funcs.autostarted()
+    return camera_state.autostart
 end
 
 function camera_funcs.get_day_seconds()
@@ -258,6 +270,10 @@ end
 
 function camera_funcs.set_console_autoredraw(n)
     print(">redraw console<", n)
+end
+
+function camera_funcs.draw_string(col,row,msg,c1,c2)
+    print("draw string @ " .. col..":"..row.." Colors:"..c1..":","Msg> "..msg)
 end
 
 -- lens & focus
