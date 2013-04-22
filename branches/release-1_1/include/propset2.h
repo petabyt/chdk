@@ -55,4 +55,5 @@ WARNING:
 #define PROPCASE_VIDEO_RESOLUTION           169
 #define PROPCASE_SERVO_AF                   293     //ixus110 0 = servo AF not active, 1 = servo AF active
 #define PROPCASE_AF_LOCK                    11
+#define PROPCASE_AF_ASSIST_BEAM             5       // 0=disabled,  1=enabled
 #endif
