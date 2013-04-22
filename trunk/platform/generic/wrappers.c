@@ -734,6 +734,20 @@ return (void*)0;
 #endif
 }
 
+char *strstr (const char *s1, const char *s2)
+{
+  const char *p = s1;
+  const int len = _strlen (s2);
+
+  for (; (p = _strchr (p, *s2)) != 0; p++)
+  {
+    if (_strncmp (p, s2, len) == 0)
+      return (char *)p;
+  }
+  return (0);
+}
+
+
 //----------------------------------------------------------------------------
 
 long sprintf(char *s, const char *st, ...)
@@ -1419,23 +1433,9 @@ extern char* second_ext_for_dng; // camera variable!
 p_some_f default_some_f;
 char *   default_second_ext;
 
-char *_strstr (const char *s1, const char *s2)
-{
-  const char *p = s1;
-  const int len = _strlen (s2);
-
-  for (; (p = _strchr (p, *s2)) != 0; p++)
-    {
-      if (_strncmp (p, s2, len) == 0)
-	return (char *)p;
-    }
-  return (0);
-}
-
-
 int my_some_f(char *s, int x){
   char *f;
-  f=_strstr(s, DNG_EXT_FROM);
+  f=strstr(s, DNG_EXT_FROM);
   if (f) _memcpy(f, DNG_EXT_TO, sizeof(DNG_EXT_TO)-1);
   return default_some_f(s, x);
 }

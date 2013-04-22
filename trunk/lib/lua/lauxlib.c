@@ -336,7 +336,6 @@ LUALIB_API int luaL_getn (lua_State *L, int t) {
 /* }====================================================== */
 
 
-#if 0
 LUALIB_API const char *luaL_gsub (lua_State *L, const char *s, const char *p,
                                                                const char *r) {
   const char *wild;
@@ -352,7 +351,6 @@ LUALIB_API const char *luaL_gsub (lua_State *L, const char *s, const char *p,
   luaL_pushresult(&b);
   return lua_tostring(L, -1);
 }
-#endif
 
 LUALIB_API const char *luaL_findtable (lua_State *L, int idx,
                                        const char *fname, int szhint) {

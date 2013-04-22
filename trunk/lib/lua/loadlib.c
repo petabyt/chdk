@@ -345,7 +345,6 @@ static int readable (const char *filename) {
   return 1;
 }
 
-#if 0
 static const char *pushnexttemplate (lua_State *L, const char *path) {
   const char *l;
   while (*path == *LUA_PATHSEP) path++;  /* skip separators */
@@ -378,7 +377,6 @@ static const char *findfile (lua_State *L, const char *name,
   }
   return NULL;  /* not found */
 }
-#endif
 
 static void loaderror (lua_State *L, const char *filename) {
   luaL_error(L, "error loading module " LUA_QS " from file " LUA_QS ":\n\t%s",
@@ -388,26 +386,9 @@ static void loaderror (lua_State *L, const char *filename) {
 
 static int loader_Lua (lua_State *L) {
   const char *filename;
-#if 0
   const char *name = luaL_checkstring(L, 1);
   filename = findfile(L, name, "path");
   if (filename == NULL) return 1;  /* library not found in this path */
-#else
-  lua_pushstring(L, "A/CHDK/SCRIPTS/");
-  lua_pushvalue(L, 1);
-  lua_pushstring(L, ".LUA");
-  lua_concat(L, 3);
-  filename = lua_tostring(L, -1);
-  if (!readable(filename)) {
-    lua_pushstring(L, "A/CHDK/LUALIB/");
-    lua_pushvalue(L, 1);
-    lua_pushstring(L, ".LUA");
-    lua_concat(L, 3);
-    filename = lua_tostring(L, -1);
-    }
-  if (!readable(filename))
-    return 0;
-#endif
   if (luaL_loadfile(L, filename) != 0)
     loaderror(L, filename);
   return 1;  /* library loaded successfully */
@@ -611,12 +592,15 @@ static int ll_seeall (lua_State *L) {
 /* }====================================================== */
 
 
-#if 0
 /* auxiliary mark (for internal use) */
 #define AUXMARK		"\1"
 
 static void setpath (lua_State *L, const char *fieldname, const char *envname,
                                    const char *def) {
+/* CHDK - no environment vars */
+#if defined(HDK_VERSION)
+  lua_pushstring(L, def);  /* use default */
+#else
   const char *path = getenv(envname);
   if (path == NULL)  /* no environment variable? */
     lua_pushstring(L, def);  /* use default */
@@ -627,10 +611,10 @@ static void setpath (lua_State *L, const char *fieldname, const char *envname,
     luaL_gsub(L, path, AUXMARK, def);
     lua_remove(L, -2);
   }
+#endif
   setprogdir(L);
   lua_setfield(L, -2, fieldname);
 }
-#endif
 
 static const luaL_Reg pk_funcs[] = {
 //  {"loadlib", ll_loadlib},
@@ -676,14 +660,12 @@ LUALIB_API int luaopen_package (lua_State *L) {
     lua_rawseti(L, -2, i+1);
   }
   lua_setfield(L, -2, "loaders");  /* put it in field `loaders' */
-#if 0
   setpath(L, "path", LUA_PATH, LUA_PATH_DEFAULT);  /* set field `path' */
   setpath(L, "cpath", LUA_CPATH, LUA_CPATH_DEFAULT); /* set field `cpath' */
   /* store config information */
   lua_pushliteral(L, LUA_DIRSEP "\n" LUA_PATHSEP "\n" LUA_PATH_MARK "\n"
                      LUA_EXECDIR "\n" LUA_IGMARK);
   lua_setfield(L, -2, "config");
-#endif
   /* set field `loaded' */
   luaL_findtable(L, LUA_REGISTRYINDEX, "_LOADED", 2);
   lua_setfield(L, -2, "loaded");

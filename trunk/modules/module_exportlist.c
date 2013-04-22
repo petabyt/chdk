@@ -117,6 +117,7 @@
             strncpy,
             strerror,
             strtoul,
+            strstr,
             tolower,
             toupper,
             memcpy,
