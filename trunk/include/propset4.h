@@ -66,4 +66,6 @@ The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 
 #define PROPCASE_ND_FILTER_STATE                 196     // 0 = out, 1 = in
 
+#define PROPCASE_AF_ASSIST_BEAM                  5       // 0=disabled,  1=enabled
+
 #endif
