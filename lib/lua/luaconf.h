@@ -93,6 +93,19 @@
 #define LUA_CPATH_DEFAULT \
 	".\\?.dll;"  LUA_CDIR"?.dll;" LUA_CDIR"loadall.dll"
 
+#elif defined(HDK_VERSION)
+/*
+** reyalp:
+** CHDK paths. C path does not currently apply, but might 
+** want to support modules eventually
+*/
+#define LUA_ROOT	"A/CHDK/"
+#define LUA_LDIR	LUA_ROOT "LUALIB/"
+//#define LUA_CDIR	LUA_ROOT "MODULES/"
+#define LUA_PATH_DEFAULT  \
+		LUA_ROOT "SCRIPTS/?.lua;"  LUA_LDIR"?.lua;"
+#define LUA_CPATH_DEFAULT  ""
+
 #else
 #define LUA_ROOT	"/usr/local/"
 #define LUA_LDIR	LUA_ROOT "share/lua/5.1/"
