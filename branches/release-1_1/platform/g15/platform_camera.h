@@ -158,7 +158,4 @@
 
     #define MKDIR_RETURN_ONE_ON_SUCCESS         1       // mkdir() return 1 on success, 0 on fail.
 
-    // Define shortcut overrides where defaults are not suitable
-    #define SHORTCUT_TOGGLE_ZEBRA           KEY_ERASE   // On camera Shutter Half Press + Up = switch MF on/off
-
 //----------------------------------------------------------

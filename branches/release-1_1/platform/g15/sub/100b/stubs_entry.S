@@ -18,7 +18,7 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NSTUB(DeleteFile_Fut                          ,0xff01c4f0) //  1 90%
-// ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0x00000000
+// ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff01d000
 // ERROR: kbd_pwr_off is not found.                        //--- ---    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
