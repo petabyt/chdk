@@ -1,6 +1,3 @@
-//static void __attribute__((noreturn)) shutdown();
-//static void __attribute__((noreturn)) panic(int cnt);
-
 extern long *blob_chdk_core;
 extern long blob_chdk_core_size;
 
@@ -66,6 +63,7 @@ void __attribute__((noreturn)) my_restart()
         "MRC     p15, 0, R0, c1, c0\n"
         "ORR     R0, R0, #0x50000\n"
         "MCR     p15, 0, R0, c1, c0\n"
+/*
         "CMP     R4, #3\n"
         "LDREQ   R1, =0x12345678\n"
         "MOV     R0, #0x80000000\n"
@@ -80,7 +78,14 @@ void __attribute__((noreturn)) my_restart()
         "STR     R1, [R0, #0xFFC]\n"
         "loc_FF02D590:\n"
         "LDMFD   SP!, {R4,LR}\n"
-        //"MOV     R0, #0xFF000000\n"
+        "MOV     R0, #0xFF000000\n"
+*/
+        // s100 loader hack to make power button short press work
+        "LDR     R0, =0x12345678\n"
+        "MOV     R1, #0x80000000\n"
+        "STR     R0, [R1,#0xFFC]\n"
+        "LDMFD   SP!, {R4,LR}\n"
+
         "MOV     R0, %0\n" //new jump-vector
         "BX      R0\n"
         : : "r"(MEMISOSTART) : "memory", "r0", "r1", "r2", "r3", "r4");
@@ -88,44 +93,3 @@ void __attribute__((noreturn)) my_restart()
     while(1);
 }
 
-/*
-#define LED_PR 0xC022C30C
-
-static void __attribute__((noreturn)) shutdown()
-{
-    volatile long *p = (void*)LED_PR;
-        
-    asm(
-         "MRS     R1, CPSR\n"
-         "AND     R0, R1, #0x80\n"
-         "ORR     R1, R1, #0x80\n"
-         "MSR     CPSR_cf, R1\n"
-         :::"r1","r0");
-        
-    *p = *p & 0xFFFFFFCF;  // led off.
-
-    while(1);
-}
-
-static void __attribute__((noreturn)) panic(int cnt)
-{
-
-	volatile long *p=(void*)LED_PR;
-	int i;
-
-	for(;cnt>0;cnt--){
-		*p = (*p & 0xFFFFFFCF) | 0x20; // Turn on LED
-
-		for(i=0;i<0x200000;i++){
-			asm ("nop\n");
-			asm ("nop\n");
-		}
-		*p = (*p & 0xFFFFFFCF);		 // Turn off LED
-		for(i=0;i<0x200000;i++){
-			asm ("nop\n");
-			asm ("nop\n");
-		}
-	}
-	shutdown();
-}
-*/
