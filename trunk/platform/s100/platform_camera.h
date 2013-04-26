@@ -65,34 +65,47 @@
     #define CAM_BITMAP_PALETTE              7
 
     #undef  EDGE_HMARGIN
-    #define EDGE_HMARGIN                    28
+    #define EDGE_HMARGIN                    2
 
     #define CAM_DNG_LENS_INFO               { 52,10, 260,10, 20,10, 59,10 }
 
-    #define cam_CFAPattern                  0x01000201 // = [Green Blue Red Green]
-    // TODO: find correct values
-    #define CAM_COLORMATRIX1                  \
-      14134, 1000000, -5576, 1000000, -1527, 1000000, \
-      -1991, 1000000, 10719, 1000000,  1273, 1000000, \
-      -1158, 1000000,  1929, 1000000,  3581, 1000000
-    #define cam_CalibrationIlluminant1      17  // TODO:
+    // From G15 native RAW file as converted to DNG using Adobe DNG Converter
+    // http://www.adobe.com/support/downloads/product.jsp?product=106&platform=Windows
+    // Matrices from converted DNG's EXIF data
+    #define cam_CFAPattern                  0x02010100 // = [Red,Green][Green,Blue]
+    #define cam_CalibrationIlluminant1          17      // Standard Light A
+    #define cam_CalibrationIlluminant2          21      // D65
+    #define CAM_COLORMATRIX1    \
+      9188, 10000,  -3882, 10000,   -248, 10000, \
+     -2564, 10000,   9818, 10000,   3218, 10000, \
+       349, 10000,    317, 10000,   4547, 10000
+    #define CAM_COLORMATRIX2    \
+      7968, 10000,  -2565, 10000,   -636, 10000, \
+     -2873, 10000,  10697, 10000,   2513, 10000, \
+       180, 10000,    667, 10000,   4211, 10000
+    #define CAM_FORWARDMATRIX1    \
+      6196, 10000,   2430, 10000,   1018, 10000, \
+      1505, 10000,   9964, 10000,  -1470, 10000, \
+     -1633, 10000,  -3155, 10000,  13040, 10000
+    #define CAM_FORWARDMATRIX2    \
+      6242, 10000,   4092, 10000,   -691, 10000, \
+       188, 10000,  11431, 10000,  -3312, 10000, \
+      -420, 10000,  -1341, 10000,  10012, 10000
+    #define CAM_DNG_EXPOSURE_BIAS 0,1
 
-    // TODO: check these values
-    #define CAM_JPEG_WIDTH                  4000
-    #define CAM_JPEG_HEIGHT                 3000
+    #define CAM_JPEG_WIDTH                  4048
+    #define CAM_JPEG_HEIGHT                 3048
+    // S100 native RAW converted to DNG's EXIF data: Active Area
     #define CAM_ACTIVE_AREA_X1              104
-    #define CAM_ACTIVE_AREA_Y1              12
-    #define CAM_ACTIVE_AREA_X2              (CAM_RAW_ROWPIX-8)
-    #define CAM_ACTIVE_AREA_Y2              (CAM_RAW_ROWS-64)
+    #define CAM_ACTIVE_AREA_Y1              11
+    #define CAM_ACTIVE_AREA_X2              4152
+    #define CAM_ACTIVE_AREA_Y2              3059
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1   // enable workaround for camera crash at startup when opening the conf / font files
                                                 // see http://chdk.setepontos.com/index.php?topic=6179.0
 
-    // TODO: - we may need this to save memory
-    //#define CAM_ZEBRA_NOBUF                 1
-
-    #define CAM_DATE_FOLDER_NAMING                      1    // TODO
-    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   //  // TODO: use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
+    #define CAM_DATE_FOLDER_NAMING                      1
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
     #undef  CAM_USB_EVENTID

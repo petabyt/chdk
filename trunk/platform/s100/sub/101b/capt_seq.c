@@ -8,11 +8,6 @@ static long *nrflag = (long*)(0xcb38+0x00);  // Found @ ff2a56cc & ff2a5714
 
 #include "../../../generic/capt_seq.c"
 
-//void __attribute__((naked,noinline)) hangdebug() {
-//	debug_led(1);
-//	while(1);
-//}
-
 // @ 0xff07ccdc in firmware
 void __attribute__((naked,noinline)) capt_seq_task() {
 asm volatile (
