@@ -1,6 +1,5 @@
 topdir=../
 
-SKIPBUILDRULES=1
 SKIPPLATFORMCHECK=1
 
 include $(topdir)makefile.inc
@@ -14,6 +13,7 @@ ifeq ($(GCC_VERSION_MAJOR),3)
 endif
 
 CFLAGS+=$(CTHUMB) -mlong-calls -DCHDK_MODULE_CODE
+
 # warning: library order matters!
 LDLIBS= -lgcc
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(topdir)tools/link-boot.ld
@@ -28,28 +28,17 @@ FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect
 
 all: $(FLTS)
 
-%.o: %.c
-	@echo $< \-\> $@
-	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
-
 %.o: games/%.c
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 
-%.elf:
+%.flt:
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
-
-.dep/%.d: %.c .dep
-	$(HOSTCC) $(HOSTCFLAGS) -MM $< > $@.$$$$; \
-	    sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	    rm -f $@.$$$$
-
-%.flt: %.elf
-	@echo \-\> $@
-#	arm-elf-objdump$(EXE) -d -r -x $< >$<.dumpobj
-#	$(topdir)/tools/elf2flt/elf2flt$(EXE) $< $@ -e -f -h -r -s -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt >$@.dump
-	$(topdir)/tools/elf2flt/elf2flt$(EXE) $< $@ -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt > $(DEVNULL)
+	mkdir -p .o
+	$(CC) $(CFLAGS) -o .o/$*.elf -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+#	arm-elf-objdump$(EXE) -d -r -x .o/$*.elf >$*.dumpobj
+#	$(topdir)/tools/elf2flt/elf2flt$(EXE) .o/$*.elf $@ -e -f -h -r -s -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt >$*.dump
+	$(topdir)/tools/elf2flt/elf2flt$(EXE) .o/$*.elf $@ -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt > $(DEVNULL)
 
 raw_merge10.o: raw_merge.c
 	@echo $< \-\> $@
@@ -67,39 +56,39 @@ reversebytes.o: reversebytes.S
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
 
-calend.elf: gui_calendar.o
-_tbox.elf: gui_tbox.o
-_hexbox.elf: gui_hexbox.o
-benchm.elf: gui_bench.o
-memview.elf: gui_debug.o
-palette.elf: gui_palette.o
-mpopup.elf: gui_mpopup.o
-txtread.elf: gui_read.o
-edgeovr.elf: edgeoverlay.o bitvector.o $(OBJ_ISDIGIT)
-zebra.elf: zebra.o
-curves.elf: curves.o
-mdetect.elf: motion_detector.o
-grids.elf: gui_grid.o
-modinsp.elf: module_inspector.o
-_dng.elf: dng.o reversebytes.o
-_rawop10.elf: raw_merge10.o
-_rawop12.elf: raw_merge12.o
-_osd_le.elf: gui_osd_edit.o
-fselect.elf: gui_fselect.o nothumb.o
+calend.flt: gui_calendar.o
+_tbox.flt: gui_tbox.o
+_hexbox.flt: gui_hexbox.o
+benchm.flt: gui_bench.o
+memview.flt: gui_debug.o
+palette.flt: gui_palette.o
+mpopup.flt: gui_mpopup.o
+txtread.flt: gui_read.o
+edgeovr.flt: edgeoverlay.o bitvector.o $(OBJ_ISDIGIT)
+zebra.flt: zebra.o
+curves.flt: curves.o
+mdetect.flt: motion_detector.o
+grids.flt: gui_grid.o
+modinsp.flt: module_inspector.o
+_dng.flt: dng.o reversebytes.o
+_rawop10.flt: raw_merge10.o
+_rawop12.flt: raw_merge12.o
+_osd_le.flt: gui_osd_edit.o
+fselect.flt: gui_fselect.o nothumb.o
 
-4wins.elf: gui_4wins.o
-mastmind.elf: gui_mastermind.o
-reversi.elf: gui_reversi.o
-tetris.elf: gui_tetris.o
-snake.elf: gui_snake.o
-sokoban.elf: gui_sokoban.o
-sudoku.elf: gui_sudoku.o
+4wins.flt: gui_4wins.o
+mastmind.flt: gui_mastermind.o
+reversi.flt: gui_reversi.o
+tetris.flt: gui_tetris.o
+snake.flt: gui_snake.o
+sokoban.flt: gui_sokoban.o
+sudoku.flt: gui_sudoku.o
 
-ubasic.elf: ubasic.o script_key_funcs.o $(topdir)lib/ubasic/libubasic.a
-lua.elf: luascript.o script_key_funcs.o cordic_math.o dbg_dump.o $(topdir)lib/lua/liblua.a
+ubasic.flt: ubasic.o script_key_funcs.o $(topdir)lib/ubasic/libubasic.a
+lua.flt: luascript.o script_key_funcs.o cordic_math.o dbg_dump.o $(topdir)lib/lua/liblua.a
 
 clean:
-	rm -f *.o *.elf.syms *.elf *.flt *.dump *.dumpobj
+	rm -f *.o .o/*.elf *.flt *.dump *.dumpobj
 
 distclean: clean
 #	rm -f *.flt

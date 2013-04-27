@@ -5,8 +5,6 @@ include $(topdir)makefile.inc
 
 CFLAGS+=-DLOW_LEVEL
 
-SUBDIRS=sub
-
 all: all-recursive libplatform.a
 
 OBJS=main.o lib.o wrappers.o kbd.o shooting.o
