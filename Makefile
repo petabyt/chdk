@@ -46,7 +46,7 @@ SUBDIRS+=CHDK
 endif
 
 # Must do platform before core
-SUBDIRS+=platform
+SUBDIRS+=platform/$(PLATFORM) platform/$(PLATFORM)/sub/$(PLATFORMSUB)
 
 # SKIP_CORE prevents cleaning core in root level make, to speed up batch clean
 ifndef SKIP_CORE
@@ -54,7 +54,7 @@ SUBDIRS+=core
 endif
 
 # Must do this last as it builds the final .bin file
-SUBDIRS+=loader
+SUBDIRS+=loader/$(PLATFORM)
 
 .PHONY: fir
 fir: version firsub
