@@ -2247,14 +2247,19 @@ static int luaCB_get_meminfo( lua_State* L ) {
     const char *heapname = luaL_optstring( L, 1, default_heapname );
     cam_meminfo meminfo;
 
-    if (camera_info.exmem == 0)
+    if (strcmp(heapname,"system") == 0)
     {
         GetMemInfo(&meminfo);
     }
-    else
+    else if ((camera_info.exmem != 0) && (strcmp(heapname,"exmem") == 0))
     {
         GetExMemInfo(&meminfo);
         meminfo.allocated_count = -1; // not implemented in suba
+    }
+    else
+    {
+        lua_pushboolean(L,0);
+        return 1;
     }
     // adjust start and size, if CHDK is loaded at heap start
     if(meminfo.start_address == (int)(&_start)) {
