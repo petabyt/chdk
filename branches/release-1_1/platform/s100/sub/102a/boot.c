@@ -13,26 +13,6 @@ void CreateTask_spytask();
 extern volatile int jogdial_stopped;
 void JogDial_task_my(void);
 
-/*
-static void __attribute__((naked,noinline)) blink(int cnt)
-{
-	volatile long *p=(void*)0xC022C30C;
-	int i;
-
-	for(;cnt>0;cnt--){
-		*p = (*p & 0xFFFFFFCF) | 0x20; // Turn on LED
-
-		for(i=0;i<0x200000;i++){
-			asm ("nop\n");
-		}
-		*p = (*p & 0xFFFFFFCF);		 // Turn off LED
-		for(i=0;i<0x200000;i++){
-			asm ("nop\n");
-		}
-	}
-}
-*/
-
 extern void task_CaptSeq();
 extern void task_InitFileModules();
 extern void task_RotaryEncoder();
@@ -50,20 +30,6 @@ void taskHook(context_t **context)
 	if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;
 	if(tcb->entry == (void*)task_ExpDrv)			tcb->entry = (void*)exp_drv_task;
 }
-
-/*---------------------------------------------------------------------
-  Memory Map:
-	0001900     MEMBASEADDR             start of data - used for initialized vars
-	0195D34     MEMISOSTART             start of our data / bss
-
-	0400000                             raw buffers
-	8000000                             end of raw buffers
-
-	C0xxxxxx                            I/O
-
-	FF000000    ROMBASEADDR             start of rom
-	FFFFFFFF                            end of rom
-----------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------
 	boot()
@@ -726,26 +692,6 @@ asm volatile (
 "    LDR     R0, =0xFF05952C\n"
 "    BL      sub_FF00EDC8\n"
 "    B       loc_FF0592CC\n"
-/*
-"dword_FF059524  DCD 0x2700 \n"
-"dword_FF059528  DCD 0x307 \n"
-"dword_FF05952C  DCD 0x61746F52 \n"
-"dword_FF059530  DCD 0x6E457972 \n"
-"dword_FF059534  DCD 0x65646F63 \n"
-"dword_FF059538  DCD 0x632E72 \n"
-"dword_FF05953C  DCD 0x2710 \n"
-"dword_FF059540  DCD 0xFF4538DC \n"
-"dword_FF059544  DCD 0xC0240000 \n"
-"dword_FF059548  DCD 0x209 \n"
-"dword_FF05954C  DCD 0x256 \n"
-"dword_FF059550  DCD 0x2E1 \n"
-"dword_FF059554  DCD 0xFF0591C8 \n"
-"dword_FF059558  DCD 0xFF0591D4 \n"
-"dword_FF05955C  DCD 0x281 \n"
-"dword_FF059560  DCD 0x7FFF \n"
-"dword_FF059564  DCD 0x2C3 \n"
-"dword_FF059568  DCD 0x2CA \n"
-*/
 "loc_FF05956C:\n"
 "    LDR     R0, [R6, R5, LSL #2]\n"
 "    B       loc_FF059334\n"

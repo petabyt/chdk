@@ -16,7 +16,7 @@ void vid_bitmap_refresh()
 
 void shutdown()
 {
-	volatile long *p = (void*)0xC022001C; //TODO: didn't check this
+	volatile long *p = (void*)0xC022001C;
 
 	asm(
 		"MRS     R1, CPSR\n"
@@ -62,23 +62,130 @@ void JogDial_CCW(void){
 	_PostLogicalEventToUI(0x873, 1);  // RotateJogDialLeft (levent_table)
 }
 
-int vid_get_viewport_width()
+void *vid_get_viewport_live_fb() // use sigfinder's address
 {
-	return 360;
+    return vid_get_viewport_fb();
 }
 
-long vid_get_viewport_height()
-{
-   return 240;
-}
+// Defined in stubs_min.S
+extern int active_bitmap_buffer;
+extern char* bitmap_buffer[];
 
 // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
 int vid_get_viewport_yscale() {
 	return 2;
 }
 
-void *vid_get_viewport_live_fb()
+int vid_get_viewport_width()
 {
-    return vid_get_viewport_fb();
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 360;
+    }
+    extern int _GetVRAMHPixelsSize();
+    return _GetVRAMHPixelsSize() >> 1;
 }
 
+// viewport width offset table for each image size
+// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
+static long vp_xo[5] = { 0, 0, 0, 44, 72 };				// should all be even values for edge overlay
+
+int vid_get_viewport_xoffset()
+{
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 0;
+    }
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    {
+        return 0;
+    }
+    else
+    {
+        return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
+}
+
+int vid_get_viewport_display_xoffset()
+{
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 0;
+    }
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    {
+        if (shooting_get_prop(PROPCASE_STITCH_DIRECTION) == 0)      // Direction check
+            if (shooting_get_prop(PROPCASE_STITCH_SEQUENCE) == 0)   // Shot already taken?
+                return 40;
+            else
+                return 140;
+        else
+            if (shooting_get_prop(PROPCASE_STITCH_SEQUENCE) == 0)   // Shot already taken?
+                return 140;
+            else
+                return 40;
+    }
+    else
+    {
+        return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
+}
+
+long vid_get_viewport_height()
+{
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    {
+        return 240;
+    }
+    extern int _GetVRAMVPixelsSize();
+    return _GetVRAMVPixelsSize() >> 1;
+}
+
+static int vp_yoffset(int stitch)
+{
+    // viewport height offset table for each image size
+    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
+    static long vp_yo[5] = { 0, 30, 13, 0, 0 };
+
+    int m = mode_get();
+    if ((m & MODE_MASK) == MODE_PLAY)
+    {
+        return 0;
+    }
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
+    {
+        return stitch;
+    }
+    else if (mode_is_video(m))
+    {
+        return 30;
+    }
+    else
+    {
+	    return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
+}
+
+int vid_get_viewport_yoffset()
+{
+    return vp_yoffset(0);
+}
+
+int vid_get_viewport_display_yoffset()
+{
+    return vp_yoffset(72);
+}
+
+// Functions for PTP Live View system
+int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2; }
+int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() * 2; }
+int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
+int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * 2; }
+int vid_get_viewport_fullscreen_height()        { return 480; }
+int vid_get_palette_type()                      { return 5; }
+int vid_get_palette_size()                      { return 256 * 4; }
+
+void *vid_get_bitmap_active_buffer()
+{
+    return bitmap_buffer[active_bitmap_buffer];
+}
