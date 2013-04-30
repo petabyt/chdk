@@ -118,20 +118,16 @@ const CapturemodeMap modemap[] = {
 	{ MODE_VIDEO_STD,          2612   },// Changed in SX210
 	{ MODE_KIDS_PETS,          32786  },// Changed in SX210
 	{ MODE_INDOOR,             32787  },// Changed in SX210
-
-
-//  	{ MODE_SCN_MINIATURE_EFFECT,         16940  },   //New in sx210 ???
-//  	{ MODE_SCN_FISH_EYE,         16939  },    //New in sx210 ???
-//  	{ MODE_SCN_LOW_LIGHT,         16417 },    //New in sx210 ???
-//  	{ MODE_SCN_SMART_SHUTTER,         33321 },    //New in sx210 ???
+	{ MODE_SCN_MINIATURE,      16940  },   //New in sx210 ???
+	{ MODE_SCN_FISHEYE,        16939  },    //New in sx210 ???
+	{ MODE_SCN_LOWLIGHT,       16417 },    //New in sx210 ???
+	{ MODE_SCN_SMART_SHUTTER,  33320 },    //New in sx210 ???
 //	{ MODE_SCN_SUNSET,         16402  },   //??
 //	{ MODE_SCN_NIGHT_SCENE,    16398  }, //??
 	{ MODE_SCN_FIREWORK,       16408  },// Changed in SX210
 	{ MODE_SCN_BEACH,          16407  },// Changed in SX210
-	{ MODE_SCN_AQUARIUM,       16939  },// ??? Is it fisheye?
 	{ MODE_SCN_FOLIAGE,        16405  },// Changed in SX210
 	{ MODE_SCN_SNOW,           16406  },// Changed in SX210
-	{ MODE_SCN_ISO_3200,       16417  }, //?? Is it lowlight
 	{ MODE_SCN_COLOR_ACCENT,   16925  }, // Changed in SX210?
 	{ MODE_SCN_COLOR_SWAP,     16926  }, // Changed in SX210
 	{ MODE_SCN_STITCH,         16908  }  // Changed in SX210
