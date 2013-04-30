@@ -45,8 +45,6 @@
 
     #define CAM_BRACKETING				1
 
-    #define   CAM_STARTUP_CRASH_FILE_OPEN_FIX   1
-
     #undef  CAM_UNCACHED_BIT  // shut up compiler
     #define CAM_UNCACHED_BIT    0x40000000
     // pattern
@@ -115,5 +113,5 @@
                                               
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
     #define CAM_FIRMWARE_MEMINFO            1
-
+    #define CAM_MIN_ISO_OVERRIDE                60  // see http://chdk.setepontos.com/index.php?topic=5045.msg99863#msg99863
 //----------------------------------------------------------
