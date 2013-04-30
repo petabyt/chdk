@@ -431,7 +431,7 @@ void __attribute__((naked,noinline)) sub_FF1F5D70_my () {
 
 		//begin patch
     		"BL      wait_until_remote_button_is_released\n"
-    		"BL      capt_seq_hook_set_nr\n"
+    //		"BL      capt_seq_hook_set_nr\n"
     	//end patch    
             
     "loc_FF1F5EC0:\n"
