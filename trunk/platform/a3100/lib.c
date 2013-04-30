@@ -105,3 +105,16 @@ void vid_bitmap_refresh() {
 
     _UnlockAndRefresh();
 }
+
+// Defined in stubs_min.S
+extern char active_viewport_buffer;
+extern void* viewport_buffers[];
+
+// Live picture buffer (shoot not pressed)
+void *vid_get_viewport_live_fb()
+{
+    unsigned char buff = (unsigned char) active_viewport_buffer;
+    if (buff == 0) buff = 2;  else buff--;
+    return viewport_buffers[buff];
+}
+
