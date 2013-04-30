@@ -77,6 +77,8 @@
     #define CAM_HAS_ND_FILTER               1
 
     #define CAM_VIDEO_QUALITY_ONLY          1
+    #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
+    #define CAM_CAN_MUTE_MICROPHONE         1
 
     #define CAM_DATE_FOLDER_NAMING          1
 
@@ -86,7 +88,6 @@
 
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_VIDEO_CONTROL
-    #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              15      // palette number reserved for A3300 in core/gui_draw.h
