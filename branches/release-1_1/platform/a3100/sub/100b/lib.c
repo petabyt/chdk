@@ -21,19 +21,6 @@ long hook_raw_size()
 	return 0x011ca240;
 }
 
-
-
-// Live picture buffer (shoot not pressed)
-void *vid_get_viewport_live_fb()
-{
-    //void **fb=(void **)0xFFE9856C;                           // 
-    //unsigned char buff = *((unsigned char*)0x437C);          // found at FF8CD38C (near string "TgTask")
-    //if (buff == 0) buff = 2;  else buff--;    
-    //return fb[buff];
-return (void*)0;
-
-}
-
 // OSD buffer
 void *vid_get_bitmap_fb()
 {
