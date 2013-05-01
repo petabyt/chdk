@@ -4,7 +4,7 @@
 #include "conf.h"
 #include "stdlib.h"
 
-static long *nrflag = (long*)(0xa414+0x0c);  // Found @ ff1f526c & ff1f5288
+static long *nrflag = (long*)(0xCD4C);
 
 #define NR_AUTO (0)                         //have to explictly reset value back to 0 to enable auto
 #define PAUSE_FOR_FILE_COUNTER 300          //Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
@@ -431,7 +431,7 @@ void __attribute__((naked,noinline)) sub_FF1F5D70_my () {
 
 		//begin patch
     		"BL      wait_until_remote_button_is_released\n"
-    //		"BL      capt_seq_hook_set_nr\n"
+    		"BL      capt_seq_hook_set_nr\n"
     	//end patch    
             
     "loc_FF1F5EC0:\n"
