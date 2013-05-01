@@ -94,6 +94,10 @@ DEF(active_viewport_buffer                  ,0x00002150) // Found @0xff044ee8
 // Misc stuff
 DEF(ctypes, 0xff46343e)
 
+// For capt_seq.c
+//static long *nrflag = (long*)(0xceac+0x04);  // Found @ ff2a7988 & ff2a79c4
+//#define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto
+
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
 NSTUB(AllocateMemory                          ,0xff37459c) //101

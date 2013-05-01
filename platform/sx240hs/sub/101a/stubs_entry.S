@@ -99,7 +99,8 @@ DEF(active_bitmap_buffer                    ,0x0000dc24) // Found @0xff2811a0
 DEF(ctypes, 0xff4404b8)
 
 // For capt_seq.c
-//static long *nrflag = (long*)(0xafc4+0x0c);  // Found @ ff1be4e8 & ff1be504
+//static long *nrflag = (long*)(0xdd18+0x00);  // Found @ ff28a10c & ff28a148
+//#define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

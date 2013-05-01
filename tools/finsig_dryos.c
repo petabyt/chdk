@@ -1204,6 +1204,7 @@ func_entry  func_names[] =
 	{ "ResetZoomLens", 1, 1 },
 	{ "ResetFocusLens", 1, 1 },
 	{ "NR_GetDarkSubType", 1, 1 },
+	{ "NR_SetDarkSubType", 1, 1 },
 	{ "SavePaletteData", 1, 1 },
     { "GUISrv_StartGUISystem", 1, 1 },
 
@@ -1436,6 +1437,8 @@ string_sig string_sigs[] = {
     { 2, "ResetFocusLens", "ResetFocusLens", 1 },
     { 2, "NR_GetDarkSubType", "NR_GetDarkSubType", 1 },
     { 2, "NR_GetDarkSubType", "NRTBL.GetDarkSubType", 1 },
+    { 2, "NR_SetDarkSubType", "NR_SetDarkSubType", 1 },
+    { 2, "NR_SetDarkSubType", "NRTBL.SetDarkSubType", 1 },
     { 2, "SavePaletteData", "SavePaletteData", 1 },
     { 2, "GetVRAMHPixelsSize", "GetVRAMHPixelsSize", 1 },
     { 2, "GetVRAMVPixelsSize", "GetVRAMVPixelsSize", 1 },
@@ -3761,105 +3764,106 @@ void find_other_vals(firmware *fw)
 
     // Look for nrflag (for capt_seq.c)
     int k, k1, k2, k3, k4, idx, ofst1, ofst2;
-	k = get_saved_sig(fw, "NR_GetDarkSubType");
-	if (k >= 0)
-	{
-		uint32_t fadr = func_names[k].val;
-		idx = adr2idx(fw, fadr);
 
-        // Found NR_GetDarkSubType function, now follow first BL call.
-        k1 = 0;
-        for (k=idx; k<idx+20; k++)
-        {
-            if (isBL(fw,k))
-            {
-                k1 = idxFollowBranch(fw,k,0x01000001);
-                break;
-            }
-        }
+    // Look for nrflag (for capt_seq.c)
+    found = 0;
+    if (fw->dryos_ver >= 45)
+    {
+	    k = get_saved_sig(fw, "NR_SetDarkSubType");
+	    if (k >= 0)
+	    {
+		    uint32_t fadr = func_names[k].val;
+		    idx = adr2idx(fw, fadr);
 
-        if (k1 > 0)
-        {
-            int found = 0;
-            // Found function called from NR_GetDarkSubType
-            // Check if old version - see what value passed in R3
-            for (k2=0; k2<fw->size && !found; k2++)
+            if (isLDR(fw, idx+1) && isLDR(fw, idx+2))
             {
-                if (isBL(fw,k2) && (idxFollowBranch(fw,k2,0x01000001) == k1))
+                k3 = idx+2;
+                ofst2 = LDR2val(fw, k3);
+
+                for (k1=k3+1; k1<k3+8; k1++)
                 {
-                    // Found call to function, work out R3 value passed in
-                    ofst1 = 0;
-                    k4 = 0;
-                    for (k3=k2; k3>k2-30 && !found; k3--)
+                    if (isB(fw, k1))
                     {
-                        if ((fw->buf[k3] & 0x0F0FF000) == 0x020D3000)       // Dest = R3, Src = SP = skip
+                        k2 = idxFollowBranch(fw,k1,0x01000001);
+                        if (isSTR(fw, k2))
+                        {
+                            found = 1;
                             break;
-                        if ((fw->buf[k3] & 0xFF0FF000) == 0xE2033000)       // ADD/SUB R3,R3,x
-                        {
-                            k4 = k3;
-                            if ((fw->buf[k3] & 0x00F00000) == 0x00400000)   // SUB
-                                ofst1 -= (fw->buf[k3] & 0x00000FFF);
-                            else
-                                ofst1 += (fw->buf[k3] & 0x00000FFF);
                         }
-                        if (isLDR_PC(fw,k3) && ((fw->buf[k3] & 0x0000F000) == 0x00003000))
+                        k2++;
+                        if (isSTR(fw, k2))
                         {
-                            ofst2 = LDR2val(fw,k3);
-                            bprintf("\n// For capt_seq.c\n");
-                            if (ofst1 == 0)
-                                bprintf("//static long *nrflag = (long*)(0x%04x);       // Found @ %08x\n",ofst2,idx2adr(fw,k3));
-                            else if (ofst1 < 0)
-                                bprintf("//static long *nrflag = (long*)(0x%04x-0x%02x);  // Found @ %08x & %08x\n",ofst2,-ofst1,idx2adr(fw,k3),idx2adr(fw,k4));
-                            else
-                                bprintf("//static long *nrflag = (long*)(0x%04x+0x%02x);  // Found @ %08x & %08x\n",ofst2,ofst1,idx2adr(fw,k3),idx2adr(fw,k4));
                             found = 1;
                             break;
                         }
                     }
                 }
+
+                if (found)
+                {
+                    ofst1 = fw->buf[k2] & 0x00000FFF;
+                    bprintf("\n// For capt_seq.c\n");
+                    bprintf("//static long *nrflag = (long*)(0x%04x+0x%02x);  // Found @ %08x & %08x\n",ofst2,ofst1,idx2adr(fw,k3),idx2adr(fw,k2));
+                    bprintf("//#define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto\n");
+                }
+            }
+        }
+    }
+    if (!found)
+    {
+	    k = get_saved_sig(fw, "NR_GetDarkSubType");
+	    if (k >= 0)
+	    {
+		    uint32_t fadr = func_names[k].val;
+		    idx = adr2idx(fw, fadr);
+
+            // Found NR_GetDarkSubType function, now follow first BL call.
+            k1 = 0;
+            for (k=idx; k<idx+20; k++)
+            {
+                if (isBL(fw,k))
+                {
+                    k1 = idxFollowBranch(fw,k,0x01000001);
+                    break;
+                }
             }
 
-            // Try for new version, find address inside function
-            static int fx[2][5] =
+            if (k1 > 0)
             {
-                {  0, 1, 2, 3, 4 },
-                {  0, 1, 3, 4, 5 },
-            };
-    		for (k=k1; k<k1+200 && !found; k++)
-            {
-                if ((fw->buf[k] & 0xFFFF0FFF) == 0x13E00000)    // MOVNE Rx, 0xFFFFFFFF
+                int found = 0;
+                // Found function called from NR_GetDarkSubType
+                // Check if old version - see what value passed in R3
+                for (k2=0; k2<fw->size && !found; k2++)
                 {
-                    for (k2=k-5; k2>k-16 && !found; k2--)
+                    if (isBL(fw,k2) && (idxFollowBranch(fw,k2,0x01000001) == k1))
                     {
-                        int f;
-                        for (f=0; f<2; f++)
+                        // Found call to function, work out R3 value passed in
+                        ofst1 = 0;
+                        k4 = 0;
+                        for (k3=k2; k3>k2-30 && !found; k3--)
                         {
-                            if (isLDR(fw,k2+fx[f][0]) &&                                   // LDR 
-                                ((fw->buf[k2+fx[f][1]] & 0xFFF0FFFF) == 0xE3500000) &&     // CMP Rx, #0
-                                ((fw->buf[k2+fx[f][2]] & 0xFFF00000) == 0x15800000) &&     // STRNE
-                                isLDR(fw,k2+fx[f][3]) &&                                   // LDR
-                                ((fw->buf[k2+fx[f][4]] & 0xFFF0FFFF) == 0xE3500000))       // CMP Rx, #0
+                            if ((fw->buf[k3] & 0x0F0FF000) == 0x020D3000)       // Dest = R3, Src = SP = skip
+                                break;
+                            if ((fw->buf[k3] & 0xFF0FF000) == 0xE2033000)       // ADD/SUB R3,R3,x
                             {
-                                ofst1 = fw->buf[k2+fx[f][0]] & 0x00000FFF;
-                                ofst2 = fw->buf[k2+fx[f][3]] & 0x00000FFF;
-                                int reg1 = fw->buf[k2+fx[f][0]] & 0x000F0000;
-                                int reg2 = fw->buf[k2+fx[f][3]] & 0x000F0000;
-                                if ((reg1 == reg2) && (ofst1 == ofst2 - 4))
-                                {
-                                    reg1 = reg1 >> 4;
-                                    for (k3=k2; k3>k2-50 && !found; k3--)
-                                    {
-                                        if (isLDR_PC(fw,k3) && ((fw->buf[k3] & 0x0000F000) == reg1))
-                                        {
-                                            ofst2 = LDR2val(fw,k3);
-                                            bprintf("\n// For capt_seq.c\n");
-                                            bprintf("//static long *nrflag = (long*)(0x%04x+0x%02x);  // Found @ %08x & %08x\n",ofst2,ofst1,idx2adr(fw,k3),idx2adr(fw,k2));
-                                            bprintf("//#define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto\n");
-                                            found = 1;
-                                            break;
-                                        }
-                                    }
-                                }
+                                k4 = k3;
+                                if ((fw->buf[k3] & 0x00F00000) == 0x00400000)   // SUB
+                                    ofst1 -= (fw->buf[k3] & 0x00000FFF);
+                                else
+                                    ofst1 += (fw->buf[k3] & 0x00000FFF);
+                            }
+                            if (isLDR_PC(fw,k3) && ((fw->buf[k3] & 0x0000F000) == 0x00003000))
+                            {
+                                ofst2 = LDR2val(fw,k3);
+                                bprintf("\n// For capt_seq.c\n");
+                                if (ofst1 == 0)
+                                    bprintf("//static long *nrflag = (long*)(0x%04x);       // Found @ %08x\n",ofst2,idx2adr(fw,k3));
+                                else if (ofst1 < 0)
+                                    bprintf("//static long *nrflag = (long*)(0x%04x-0x%02x);  // Found @ %08x & %08x\n",ofst2,-ofst1,idx2adr(fw,k3),idx2adr(fw,k4));
+                                else
+                                    bprintf("//static long *nrflag = (long*)(0x%04x+0x%02x);  // Found @ %08x & %08x\n",ofst2,ofst1,idx2adr(fw,k3),idx2adr(fw,k4));
+                                found = 1;
+                                break;
                             }
                         }
                     }

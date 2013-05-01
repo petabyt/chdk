@@ -20,8 +20,6 @@ NSTUB(kbd_pwr_off                             ,0xff861ed0) //  2 60%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff89b2a8 -> ff8979b0 -> ff99c92c -> ffad1940 -> ffc093b4
-// Mode 16940 in firmware but not in current modemap
-// Mode 33320 in firmware but not in current modemap
 // Mode 33322 in firmware but not in current modemap
 // Mode 33321 in firmware but not in current modemap
 
