@@ -58,7 +58,6 @@
     #define DNG_EXT_FROM                    ".DPS"
 	
 	#define REMOTE_SYNC_STATUS_LED 	0xc022006C		// specifies an LED that turns on while camera waits for USB remote to sync
-    #define CAM_FIRMWARE_MEMINFO            1
 	
 //----------------------------------------------------------
 

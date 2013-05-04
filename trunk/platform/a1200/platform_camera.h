@@ -107,7 +107,6 @@
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Face", "Disp" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_FACE, KEY_DISPLAY }
 
-    #define CAM_FIRMWARE_MEMINFO             1
 
     #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
     #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments
