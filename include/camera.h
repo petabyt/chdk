@@ -172,11 +172,6 @@
     #undef  PARAM_COPYRIGHT                     // parameter number for GetParameterData to get copyright
     #undef  PARAM_DISPLAY_MODE1                 // param number for LCD display mode when camera in playback
     #undef  PARAM_DISPLAY_MODE2                 // param number for LCD display mode when camera in record view hold mode
-    #undef  CAM_FIRMWARE_MEMINFO                // Use 'GetMemInfo' (dryos) or 'memPartInfoGet'/'memPartFindMax' (vxworks)
-                                                // function in firmware to get free memory details
-                                                // GetMemInfo should be found correctly by the gensig/finsig signature
-                                                // enabled by default for all dryos cams, disable using
-                                                // #define CAM_FIRMWARE_MEMINFO 0
 
     #undef  CAM_NO_MEMPARTINFO                  // VXWORKS camera does not have memPartInfoGet, fall back to memPartFindMax
 
@@ -263,16 +258,6 @@
 
 #ifndef OPT_PTP
     #undef CAM_CHDK_PTP
-#endif
-
-// default CAM_FIRMWARE_MEMINFO on for DryOS cams, but allow #define CAM_FIRMWARE_MEMINFO 0 to turn off
-// TODO this should go away once we are satisfied it works everywhere
-#ifdef CAM_DRYOS
-    #ifndef CAM_FIRMWARE_MEMINFO
-        #define CAM_FIRMWARE_MEMINFO 1
-    #elif CAM_FIRMWARE_MEMINFO == 0
-        #undef CAM_FIRMWARE_MEMINFO
-    #endif
 #endif
 
 // Define default video AF scan buttons if not already defined in platform_camera.h

@@ -64,7 +64,6 @@
     #define DNG_EXT_FROM                        ".DPS"
     #define CAM_EXT_TV_RANGE                    1
 
-    #define CAM_FIRMWARE_MEMINFO                1
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1
     #undef  CAM_AF_LED
     #define CAM_AF_LED                          9   // Index of AF led in camera_set_led function

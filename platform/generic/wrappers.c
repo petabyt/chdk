@@ -1001,8 +1001,6 @@ void *memchr(const void *s, int c, int n) {
 
 void GetMemInfo(cam_meminfo *camera_meminfo)
 {
-#if defined(CAM_FIRMWARE_MEMINFO)
-
 // Use firmware GetMemInfo function to retrieve info about Canon heap memory allocation
 
 #if defined(CAM_DRYOS)
@@ -1053,46 +1051,6 @@ extern int sys_mempart_id;
 #endif
 #endif
 
-#else   //!defined(CAM_FIRMWARE_MEMINFO)
-    // -1 for invalid
-    memset(camera_meminfo,0xFF,sizeof(cam_meminfo));
-
-    // Calculate largest free block size
-	int size, l_size, d;
-    char* ptr;
-
-    size = 16;
-    while (1) {
-        ptr= malloc(size);
-        if (ptr) {
-            free(ptr);
-            size <<= 1;
-        } else
-            break;
-    }
-
-    l_size = size;
-    size >>= 1;
-    d=1024;
-    while (d) {
-        ptr = malloc(size);
-        if (ptr) {
-            free(ptr);
-            d = l_size-size;
-            if (d<0) d=-d;
-            l_size = size;
-            size += d>>1;
-        } else {
-            d = size-l_size;
-            if (d<0) d=-d;
-            l_size = size;
-            size -= d>>1;
-        }
-        
-    }
-
-    camera_meminfo->free_block_max_size = size-1;
-#endif
 }
 
 
