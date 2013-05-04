@@ -150,7 +150,7 @@ end
 function camera_funcs.get_day_seconds()
     local H=os.date("%H")*60*60
     local M=os.date("%M")*60
-    local S=os.date("%H")
+    local S=os.date("%S")
     return H+M+S
 end
 
