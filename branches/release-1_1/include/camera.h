@@ -173,10 +173,6 @@
     #undef  PARAM_COPYRIGHT                     // parameter number for GetParameterData to get copyright
     #undef  PARAM_DISPLAY_MODE1                 // param number for LCD display mode when camera in playback
     #undef  PARAM_DISPLAY_MODE2                 // param number for LCD display mode when camera in record view hold mode
-    #undef  CAM_FIRMWARE_MEMINFO                // Use 'GetMemInfo' (dryos) or 'memPartInfoGet'/'memPartFindMax' (vxworks)
-                                                // function in firmware to get free memory details
-                                                // GetMemInfo should be found correctly by the gensig/finsig signature
-                                                // finder for all dryos based cameras.
 
     #undef  CAM_NO_MEMPARTINFO                  // VXWORKS camera does not have memPartInfoGet, fall back to memPartFindMax
 

@@ -98,7 +98,6 @@
 
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
 
-    #define CAM_FIRMWARE_MEMINFO            1   // Use 'GetMemInfo' to get free memory size.
     
 //----------------------------------------------------------
 

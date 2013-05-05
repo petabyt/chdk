@@ -91,7 +91,6 @@
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 	#define REMOTE_SYNC_STATUS_LED 	0xc0220134		// specifies an LED that turns on while camera waits for USB remote to sync
 
-    #define CAM_FIRMWARE_MEMINFO            1   // Use 'GetMemInfo' to get free memory size.
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                 30      // Override min subject distance
     #undef  CAMERA_MAX_DIST
