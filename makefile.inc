@@ -130,7 +130,10 @@ GCC_VERSION=$(shell $(CC) -dumpversion)
 GCC_VERSION_MAJOR=$(firstword $(subst ., ,$(GCC_VERSION)))
 
 # -msoft-float is used per default but object files are marked as hard-float
-CFLAGS=-fno-inline -Os -fno-strict-aliasing
+# -fno-schedule-insns2 for this gcc bug http://gcc.gnu.org/bugzilla/show_bug.cgi?id=38644
+# technically not required for gcc >= 4.6.3, and probably not required for vxworks cams
+# see http://chdk.setepontos.com/index.php?topic=8273.msg100205#msg100205
+CFLAGS=-fno-inline -Os -fno-strict-aliasing -fno-schedule-insns2
 # flags for gcc v4
 # CFLAGS+=-mcpu=arm946e-s
 # for gcc v3, we use to allow use of strd etc
