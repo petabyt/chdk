@@ -1,5 +1,4 @@
-#ifndef __STUBS_ASM__H__
-#define __STUBS_ASM__H__
+// Common definitions for stubs_entry.S and stubs_entry_2.S macros
 
     .text
 
@@ -21,4 +20,3 @@
     .globl sub_ ## addr ;\
     sub_ ## addr: ;\
 	ldr  pc, =0x ## addr
-#endif
