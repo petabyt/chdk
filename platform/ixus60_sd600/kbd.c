@@ -133,7 +133,7 @@ void hook_kbd_handle_keys()
 
     if (taskFeatherID == 0) {
         taskFeatherID = _taskNameToId("tFeather");
-        printf("taskFeatherID:%x\n", taskFeatherID);
+        _printf("taskFeatherID:%x\n", taskFeatherID);
     }
  #endif  
  

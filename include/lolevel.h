@@ -130,7 +130,7 @@ extern int _vsprintf(char *buf, const char *fmt, __builtin_va_list va_list);
  * You can't use these two directly from THUMB code (core), only from platform.
  */
 //extern int fprintf(FILE *fd, char*buf, ...);
-extern int printf(char *buf, ...);
+extern int _printf(char *buf, ...);
 
 extern void *_malloc(long size);
 extern void _free(void *p);
