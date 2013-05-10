@@ -1,16 +1,23 @@
 #include "../generic/wrappers.c"
+#include "keyboard.h"
 
 long lens_get_focus_pos()
 {
-	return _GetFocusLensSubjectDistance();
+    static long v=MAX_DIST;
+    return (kbd_is_key_pressed(KEY_SHOOT_HALF) || state_kbd_script_run  || shooting_get_focus_mode())?v=_GetFocusLensSubjectDistance():v;
+//	return _GetFocusLensSubjectDistance();
 }
 
 long lens_get_focus_pos_from_lens()
 {
-	return _GetFocusLensSubjectDistanceFromLens(); 
+    static long v=MAX_DIST;
+    return (kbd_is_key_pressed(KEY_SHOOT_HALF) || state_kbd_script_run  || shooting_get_focus_mode())?v=_GetFocusLensSubjectDistanceFromLens():v;
+//	return _GetFocusLensSubjectDistanceFromLens(); 
 }
 
 long lens_get_target_distance()
 {
-	return _GetCurrentTargetDistance();
+    static long v=MAX_DIST;
+    return (kbd_is_key_pressed(KEY_SHOOT_HALF) || state_kbd_script_run  || shooting_get_focus_mode())?v=_GetCurrentTargetDistance():v;
+//	return _GetCurrentTargetDistance();
 }
