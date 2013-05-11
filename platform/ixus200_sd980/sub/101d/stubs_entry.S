@@ -117,7 +117,9 @@ DEF(ctypes, 0xffb3ecfa)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
-NSTUB(AllocateMemory                          ,0xffa9ef6c) //101
+//NSTUB(CreateJumptable                       ,0xffb0f374) //  1
+//NSTUB(_uartr_req                            ,0xff81f964) //111
+//NSTUB(AllocateMemory                        ,0xffa9ef6c) //101
 NSTUB(AllocateUncacheableMemory               ,0xff8389d8) //112
 NSTUB(Close                                   ,0xff835408) //101
 NSTUB(CreateTask                              ,0xff81e5b4) //101
@@ -137,7 +139,7 @@ NSTUB(Fflush_Fut                              ,0xff835138) //  1
 NSTUB(Fgets_Fut                               ,0xff835064) //  1
 NSTUB(Fopen_Fut                               ,0xff834ed0) //101
 NSTUB(Fread_Fut                               ,0xff834fbc) //101
-NSTUB(FreeMemory                              ,0xffa9ef64) //101
+//NSTUB(FreeMemory                            ,0xffa9ef64) //101
 NSTUB(FreeUncacheableMemory                   ,0xff838a18) //112
 NSTUB(Fseek_Fut                               ,0xff8350b0) //101
 NSTUB(Fwrite_Fut                              ,0xff835010) //101
@@ -165,12 +167,12 @@ NSTUB(IsStrobeChargeCompleted                 ,0xff8c3a74) //102
 NSTUB(LEDDrive                                ,0xff85a31c) //103
 NSTUB(LocalTime                               ,0xff8827a4) //115
 NSTUB(LockMainPower                           ,0xff890a00) //103
-NSTUB(Lseek                                   ,0xff835524) //101
+//NSTUB(Lseek                                 ,0xff835524) //101
 NSTUB(MakeDirectory_Fut                       ,0xff834e08) //116
 NSTUB(MoveFocusLensToDistance                 ,0xffb08424) //102
 NSTUB(MoveIrisWithAv                          ,0xffa9c500) //102
 NSTUB(MoveZoomLensWithPoint                   ,0xffa9cb4c) //102
-NSTUB(NewTaskShell                            ,0xff888644) //103
+//NSTUB(NewTaskShell                          ,0xff888644) //103
 NSTUB(Open                                    ,0xff8353b0) //101
 NSTUB(PB2Rec                                  ,0xff893a2c) //104
 NSTUB(PT_MoveDigitalZoomToWide                ,0xff87481c) //102
@@ -184,7 +186,7 @@ NSTUB(Read                                    ,0xff81ab78) //101
 NSTUB(ReadFastDir                             ,0xffa7e3b0) //  3
 NSTUB(Rec2PB                                  ,0xff893a6c) //104
 NSTUB(RefreshPhysicalScreen                   ,0xff9f8850) //104
-NSTUB(Remove                                  ,0xff83543c) //  4
+//NSTUB(Remove                                ,0xff83543c) //  4
 NSTUB(RenameFile_Fut                          ,0xff834d00) //116
 NSTUB(Restart                                 ,0xff83a130) //106
 NSTUB(ScreenLock                              ,0xff9f9a70) //  3
@@ -237,7 +239,7 @@ NSTUB(open                                    ,0xff81a8e0) //  1
 NSTUB(OpenFastDir                             ,0xffa7e27c) //  3
 NSTUB(qsort                                   ,0xff9fc71c) //  1
 NSTUB(rand                                    ,0xff8204f0) //  1
-NSTUB(read                                    ,0xff81ab78) //101
+//NSTUB(read                                  ,0xff81ab78) //101
 NSTUB(reboot_fw_update                        ,0xffa838c0) //106
 NSTUB(set_control_event                       ,0xff89037c) //111
 NSTUB(srand                                   ,0xff8204e4) //  1
@@ -261,4 +263,13 @@ NSTUB(strtolx                                 ,0xff83e078) //109
   DEF(task_RotaryEncoder                      ,0xff85afb0) //107
 NSTUB(time                                    ,0xff882d1c) //109
 NSTUB(vsprintf                                ,0xff820350) //115
-NSTUB(write                                   ,0xff835498) //101
+//NSTUB(write                                 ,0xff835498) //101
+//NSTUB(GetSDProtect                          ,0xff833580) //103
+//NSTUB(StartRecModeMenu                      ,0xff889750) //102
+//NSTUB(DispCon_ShowBitmapColorBar            ,0xff853540) //102
+//NSTUB(ResetZoomLens                         ,0xffa9caa0) //102
+//NSTUB(ResetFocusLens                        ,0xffa9b7a8) //102
+//NSTUB(NR_GetDarkSubType                     ,0xff952784) //102
+//NSTUB(NR_SetDarkSubType                     ,0xff9526dc) //102
+//NSTUB(SavePaletteData                       ,0xffb0cf34) //102
+//NSTUB(GUISrv_StartGUISystem                 ,0xff8a52f4) //101

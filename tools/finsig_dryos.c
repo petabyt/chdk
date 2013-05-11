@@ -1030,24 +1030,27 @@ void fwAddMatch(firmware *fw, uint32_t fadr, int s, int f, int k, int sig)
 
 // Master list of functions / addresses to find
 
+#define DONT_EXPORT     1
+#define OPTIONAL        2
+#define UNUSED          4
+
 typedef struct {
 	char		*name;
-    int         dont_export;
-    int         optional;
+    int         flags;
 	uint32_t	val;
 } func_entry;
 
 func_entry  func_names[] =
 {
     // Do these first as they are needed to find others
-    { "CreateJumptable", 1 },
-    { "_uartr_req", 1 },
+    { "CreateJumptable", UNUSED },
+    { "_uartr_req", UNUSED },
 
-    { "AllocateMemory" },
+    { "AllocateMemory", UNUSED },
     { "AllocateUncacheableMemory" },
     { "Close" },
     { "CreateTask" },
-    { "DebugAssert", 0, 1 },
+    { "DebugAssert", OPTIONAL },
     { "DeleteDirectory_Fut" },
     { "DeleteFile_Fut" },
     { "DoAFLock" },
@@ -1063,7 +1066,7 @@ func_entry  func_names[] =
     { "Fgets_Fut" },
     { "Fopen_Fut" },
     { "Fread_Fut" },
-    { "FreeMemory" },
+    { "FreeMemory", UNUSED },
     { "FreeUncacheableMemory" },
     { "Fseek_Fut" },
     { "Fwrite_Fut" },
@@ -1075,7 +1078,7 @@ func_entry  func_names[] =
     { "GetDrive_TotalClusters" },
     { "GetFocusLensSubjectDistance" },
     { "GetFocusLensSubjectDistanceFromLens" },
-    { "GetImageFolder", 0, 1 },
+    { "GetImageFolder", OPTIONAL },
     { "GetKbdState" },
     { "GetMemInfo" },
     { "GetOpticalTemperature" },
@@ -1086,32 +1089,32 @@ func_entry  func_names[] =
     { "GetVRAMVPixelsSize" },
     { "GetZoomLensCurrentPoint" },
     { "GetZoomLensCurrentPosition" },
-    { "GiveSemaphore", 0, 1 },
+    { "GiveSemaphore", OPTIONAL },
     { "IsStrobeChargeCompleted" },
-    { "LEDDrive", 0, 1 },
+    { "LEDDrive", OPTIONAL },
     { "LocalTime" },
     { "LockMainPower" },
-    { "Lseek" },
+    { "Lseek", UNUSED },
     { "MakeDirectory_Fut" },
-    { "MakeSDCardBootable", 0, 1 },
+    { "MakeSDCardBootable", OPTIONAL },
     { "MoveFocusLensToDistance" },
-    { "MoveIrisWithAv", 0, 1 },
+    { "MoveIrisWithAv", OPTIONAL },
     { "MoveZoomLensWithPoint" },
-    { "NewTaskShell" },
+    { "NewTaskShell", UNUSED },
     { "Open" },
     { "PB2Rec" },
-    { "PT_MoveDigitalZoomToWide", 0, 1 },
-    { "PT_MoveOpticalZoomAt", 0, 1 },
+    { "PT_MoveDigitalZoomToWide", OPTIONAL },
+    { "PT_MoveOpticalZoomAt", OPTIONAL },
     { "PT_PlaySound" },
     { "PostLogicalEventForNotPowerType" },
     { "PostLogicalEventToUI" },
-    { "PutInNdFilter", 0, 1 },
-    { "PutOutNdFilter", 0, 1 },
+    { "PutInNdFilter", OPTIONAL },
+    { "PutOutNdFilter", OPTIONAL },
     { "Read" },
     { "ReadFastDir" },
     { "Rec2PB" },
     { "RefreshPhysicalScreen" },
-    { "Remove" },
+    { "Remove", UNUSED },
     { "RenameFile_Fut" },
     { "Restart" },
     { "ScreenLock" },
@@ -1132,7 +1135,7 @@ func_entry  func_names[] =
     { "UIFS_WriteFirmInfoToFile" },
     { "UnlockAF" },
     { "UnlockMainPower" },
-    { "UnsetZoomForMovie", 0, 1 },
+    { "UnsetZoomForMovie", OPTIONAL },
     { "UpdateMBROnFlash" },
     { "VbattGet" },
     { "Write" },
@@ -1146,7 +1149,7 @@ func_entry  func_names[] =
     { "apex2us" },
     { "close" },
     { "closedir" },
-    { "err_init_task", 0, 1 },
+    { "err_init_task", OPTIONAL },
     { "exmem_alloc" },
     { "free" },
 
@@ -1169,7 +1172,7 @@ func_entry  func_names[] =
     { "OpenFastDir" },
     { "qsort" },
     { "rand" },
-    { "read" },
+    { "read", UNUSED },
     { "reboot_fw_update" },
     { "set_control_event" },
     { "srand" },
@@ -1190,23 +1193,23 @@ func_entry  func_names[] =
     { "task_ExpDrv" },
     { "task_InitFileModules" },
     { "task_MovieRecord" },
-    { "task_PhySw", 0, 1 },
-    { "task_RotaryEncoder", 0, 1 },
+    { "task_PhySw", OPTIONAL },
+    { "task_RotaryEncoder", OPTIONAL },
 
     { "time" },
     { "vsprintf" },
-    { "write" },
+    { "write", UNUSED },
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
-	{ "GetSDProtect", 1 },
-	{ "StartRecModeMenu", 1 },
-	{ "DispCon_ShowBitmapColorBar", 1 },
-	{ "ResetZoomLens", 1, 1 },
-	{ "ResetFocusLens", 1, 1 },
-	{ "NR_GetDarkSubType", 1, 1 },
-	{ "NR_SetDarkSubType", 1, 1 },
-	{ "SavePaletteData", 1, 1 },
-    { "GUISrv_StartGUISystem", 1, 1 },
+	{ "GetSDProtect", UNUSED },
+	{ "StartRecModeMenu", UNUSED },
+	{ "DispCon_ShowBitmapColorBar", UNUSED },
+	{ "ResetZoomLens", OPTIONAL|UNUSED },
+	{ "ResetFocusLens", OPTIONAL|UNUSED },
+	{ "NR_GetDarkSubType", OPTIONAL|UNUSED },
+	{ "NR_SetDarkSubType", OPTIONAL|UNUSED },
+	{ "SavePaletteData", OPTIONAL|UNUSED },
+    { "GUISrv_StartGUISystem", OPTIONAL|UNUSED },
 
     { 0, 0, 0 }
 };
@@ -2585,7 +2588,7 @@ void print_results(const char *curr_name, int k)
 	int err = 0;
     char line[500] = "";
 	
-    if (func_names[k].dont_export) return;
+    if (func_names[k].flags & DONT_EXPORT) return;
 
 	// find best match and report results
 	osig* ostub2 = find_sig(stubs2,curr_name);
@@ -2604,14 +2607,14 @@ void print_results(const char *curr_name, int k)
 
 	if (count == 0)
 	{
-		if (func_names[k].optional) return;
+		if (func_names[k].flags & OPTIONAL) return;
 		char fmt[50] = "";
 		sprintf(fmt, "// ERROR: %%s is not found. %%%ds//--- --- ", (int)(34-strlen(curr_name)));
 		sprintf(line+strlen(line), fmt, curr_name, "");
 	}
 	else
 	{
-		if (ostub2)
+		if (ostub2 || (func_names[k].flags & UNUSED))
 		    sprintf(line+strlen(line),"//%s(%-38s,0x%08x) //%3d ", macro, curr_name, matches->ptr, matches->sig);
 		else
 			sprintf(line+strlen(line),"%s(%-40s,0x%08x) //%3d ", macro, curr_name, matches->ptr, matches->sig);
