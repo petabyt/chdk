@@ -18,7 +18,8 @@
 #include "gui_mpopup.h"
 #include "gui_tbox.h"
 #include "gui_read.h"
-#include "module_def.h"
+
+#include "module_load.h"
 
 /*
     HISTORY:    1.1 - added tbox usage [CHDK 1.1.1 required]
@@ -1350,7 +1351,7 @@ int gui_fselect_kbd_process()
                 } else  {
                     sprintf(selected_file, "%s/%s", current_dir, selected->name);
 
-                    char *ext = strchr(selected->name,'.');
+                    char *ext = strrchr(selected->name,'.');
                     int do_exit = 1;
 
                     if (!fselect_on_select)
@@ -1360,6 +1361,12 @@ int gui_fselect_kbd_process()
                             exit_fselect(0);
                             do_exit = 0;
                     		libtxtread->read_file(selected_file);
+                        }
+                        else if (chk_ext(ext,"flt"))
+                        {
+                            exit_fselect(0);
+                            do_exit = 0;
+                    		module_run(selected_file);
                         }
                     }
 

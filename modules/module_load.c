@@ -25,6 +25,7 @@
 #include "gui_batt.h"
 #include "gui_mbox.h"
 #include "gui_space.h"
+#include "gui_lang.h"
 #include "levent.h"
 #include "sd_card.h"
 #include "sound.h"
@@ -610,38 +611,106 @@ int module_load(module_handler_t* hMod)
 // PURPOSE: 	run simple module "name"
 // RETURN VALUE: passed from module. -1 if something was failed
 //-----------------------------------------------
-static int default_run();
+#define MAX_SIMPLE_MODULE   4
 
-static libsimple_sym default_librun =
+static int default_run0();
+static int default_run1();
+static int default_run2();
+static int default_run3();
+
+static libsimple_sym default_librun[MAX_SIMPLE_MODULE] =
 {
+    { { 0, 0, 0, 0, default_run0 } },
+    { { 0, 0, 0, 0, default_run1 } },
+    { { 0, 0, 0, 0, default_run2 } },
+    { { 0, 0, 0, 0, default_run3 } }
+};
+static libsimple_sym* librun[MAX_SIMPLE_MODULE] = { &default_librun[0], &default_librun[1], &default_librun[2], &default_librun[3] };
+
+static char h_name[4][32];
+
+static module_handler_t h_run[MAX_SIMPLE_MODULE] =
+{
+    { (base_interface_t**)&librun[0], &default_librun[0].base, ANY_VERSION, h_name[0] },
+    { (base_interface_t**)&librun[1], &default_librun[1].base, ANY_VERSION, h_name[1] },
+    { (base_interface_t**)&librun[2], &default_librun[2].base, ANY_VERSION, h_name[2] },
+    { (base_interface_t**)&librun[3], &default_librun[3].base, ANY_VERSION, h_name[3] }
+};
+
+static void module_run_error(int err, char *name)
+{
+    char buf[100];
+    sprintf(buf, lang_str(err), name);
+    gui_mbox_init(LANG_ERROR, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+}
+
+static int default_run(int n)
+{
+    if (module_load(&h_run[n]))
     {
-        0, 0, 0, 0,
-        default_run
+        if ((*h_run[n].lib)->run)
+        {
+            return (*h_run[n].lib)->run();
+        }
+        else
+        {
+            // Error - module does not support 'simple' mode
+            module_run_error(LANG_MODULE_NOT_SIMPLE, h_run[n].name);
+        }
     }
-};
-libsimple_sym*  librun = &default_librun;
 
-static module_handler_t h_run =
+    return -1;
+}
+
+static int default_run0() { return default_run(0); }
+static int default_run1() { return default_run(1); }
+static int default_run2() { return default_run(2); }
+static int default_run3() { return default_run(3); }
+
+static int name_match(char *s, char *d)
 {
-    (base_interface_t**)&librun,
-    &default_librun.base,
-    ANY_VERSION,
-    0
-};
-
-static int default_run()
-{
-    if (module_load(&h_run))
-        if (librun->base.run)
-            librun->base.run();
-
-    return 0;
+    if ((s == 0) || (d == 0)) return 0;
+    if (strlen(s) != strlen(d)) return 0;
+    int i;
+    for (i=0; i<strlen(s); i++)
+        if (tolower(s[i]) != tolower(d[i])) return 0;
+    return 1;
 }
 
 int module_run(char* name)
 {
-    h_run.name = name;
-    return librun->base.run();
+    // Get just name part - not full path
+    char *s = strrchr(name,'/');
+    if (s) name = s + 1;
+
+    int i;
+    for (i=0; i<MAX_SIMPLE_MODULE; i++)
+    {
+        // Check if module loaded (otherwise name not valid)
+        if (*h_run[i].lib != h_run[i].default_lib)
+        {
+            if (name_match(name,h_run[i].name))
+            {
+                // Already loaded
+                return (*h_run[i].lib)->run();
+            }
+        }
+    }
+    for (i=0; i<MAX_SIMPLE_MODULE; i++)
+    {
+        // Look for empty slot
+        if (*h_run[i].lib == h_run[i].default_lib)
+        {
+            // Found space - run module
+            strcpy(h_run[i].name,name);
+            return (*h_run[i].lib)->run();
+        }
+    }
+
+    // Error - no space
+    module_run_error(LANG_MODULE_NO_SPACE, name);
+
+    return -1;
 }
 
 

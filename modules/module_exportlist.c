@@ -31,6 +31,7 @@
             module_restore_edge,
             module_save_edge,
             module_set_script_lang,
+            module_run,
             &module_colors,
 
             &libscriptapi,
