@@ -24,7 +24,7 @@ LDOPTS+=-Wl,-N,-Ttext,0 -r -Wl,-d
 FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt \
      _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop10.flt _rawop12.flt \
      txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt _tbox.flt _osd_le.flt \
-     _hexbox.flt ubasic.flt lua.flt
+     _hexbox.flt ubasic.flt lua.flt cpuinfo.flt
 
 all: $(FLTS)
 
@@ -53,6 +53,10 @@ nothumb.o: nothumb.c
 	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
 
 reversebytes.o: reversebytes.S
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
+
+cpuinfo_arm.o: cpuinfo_arm.c
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
 
@@ -93,8 +97,12 @@ gui_reversi.o: games/gui_reversi.c games/simple_game.c
 gui_tetris.o: games/gui_tetris.c games/simple_game.c
 gui_snake.o: games/gui_snake.c games/simple_game.c
 
+cpuinfo.o: simple_module.c
+
 ubasic.flt: ubasic.o script_key_funcs.o $(topdir)lib/ubasic/libubasic.a
 lua.flt: luascript.o script_key_funcs.o cordic_math.o dbg_dump.o $(topdir)lib/lua/liblua.a
+
+cpuinfo.flt: cpuinfo.o cpuinfo_arm.o 
 
 clean:
 	rm -f *.o .o/*.elf *.flt *.dump *.dumpobj
