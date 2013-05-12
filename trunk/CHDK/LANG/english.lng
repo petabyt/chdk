@@ -718,3 +718,6 @@
 589 "Start Address"
 590 "Dump Size (0 = ALL RAM)"
 591 "Dump Delay (s)"
+
+592 "No space to run module\n'%s'"
+593 "Module\n'%s'\ndoes not support 'simple' mode"

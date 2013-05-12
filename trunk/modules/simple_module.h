@@ -9,7 +9,5 @@ typedef struct
     base_interface_t    base;
 } libsimple_sym;
 
-extern libsimple_sym* librun;
-
 //-------------------------------------------------------------------
 #endif

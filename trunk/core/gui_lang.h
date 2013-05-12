@@ -723,7 +723,10 @@
 #define LANG_MENU_DEBUG_MEMDMP_SIZE             590
 #define LANG_MENU_DEBUG_MEMDMP_DELAY            591
 
-#define GUI_LANG_ITEMS                          591
+#define LANG_MODULE_NO_SPACE                    592
+#define LANG_MODULE_NOT_SIMPLE                  593
+
+#define GUI_LANG_ITEMS                          593
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

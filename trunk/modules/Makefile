@@ -84,6 +84,15 @@ snake.flt: gui_snake.o
 sokoban.flt: gui_sokoban.o
 sudoku.flt: gui_sudoku.o
 
+gui_calendar.o: gui_calendar.c simple_module.c
+gui_bench.o: gui_bench.c simple_module.c
+
+gui_4wins.o: games/gui_4wins.c games/simple_game.c
+gui_mastermind.o: games/gui_mastermind.c games/simple_game.c
+gui_reversi.o: games/gui_reversi.c games/simple_game.c
+gui_tetris.o: games/gui_tetris.c games/simple_game.c
+gui_snake.o: games/gui_snake.c games/simple_game.c
+
 ubasic.flt: ubasic.o script_key_funcs.o $(topdir)lib/ubasic/libubasic.a
 lua.flt: luascript.o script_key_funcs.o cordic_math.o dbg_dump.o $(topdir)lib/lua/liblua.a
 
