@@ -24,7 +24,7 @@ LDOPTS+=-Wl,-N,-Ttext,0 -r -Wl,-d
 FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt \
      _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop10.flt _rawop12.flt \
      txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt _tbox.flt _osd_le.flt \
-     _hexbox.flt ubasic.flt lua.flt cpuinfo.flt
+     _hexbox.flt ubasic.flt lua.flt cpuinfo.flt useredit.flt
 
 all: $(FLTS)
 
@@ -79,6 +79,7 @@ _rawop10.flt: raw_merge10.o
 _rawop12.flt: raw_merge12.o
 _osd_le.flt: gui_osd_edit.o
 fselect.flt: gui_fselect.o nothumb.o
+useredit.flt: user_menu_edit.o
 
 4wins.flt: gui_4wins.o
 mastmind.flt: gui_mastermind.o

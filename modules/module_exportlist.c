@@ -55,12 +55,16 @@
             &circle_of_confusion,
             &zoom_points,
             &movie_status,
+            &root_menu,
+            &user_submenu,
 
             malloc,
             free,
             umalloc,
             ufree,
             dcache_clean_all,
+            load_file_to_cached,
+            conf_save_new_settings_if_changed,
 
             write,
             lseek,
@@ -161,6 +165,7 @@
             gui_browser_progress_show,
             gui_enum_value_change,
             gui_set_need_restore,
+            gui_load_user_menu_script,
 
             gui_osd_calc_dof,
             gui_osd_draw_dof,
@@ -265,6 +270,12 @@
             rbf_font_height,
             rbf_draw_char,
             rbf_load_from_file,
+            rbf_str_width,
+            rbf_draw_menu_header,
+            rbf_draw_symbol,
+            rbf_draw_string_len,
+            rbf_draw_clipped_string,
+            rbf_draw_string,
 
             GetMemInfo,
             GetExMemInfo,

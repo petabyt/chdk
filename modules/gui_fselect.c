@@ -1200,11 +1200,11 @@ static void fselect_mpopup_cb(unsigned int actn) {
             break;
 
         case MPOPUP_RAWOPS:
-            libmpopup->show_popup( popup_rawop, mpopup_rawop_flag, fselect_mpopup_rawop_cb, 0);
+            libmpopup->show_popup( popup_rawop, mpopup_rawop_flag, fselect_mpopup_rawop_cb);
             break;
 
         case MPOPUP_MORE:
-            libmpopup->show_popup( popup_more, mpopup_more_flag, fselect_mpopup_more_cb, 0);
+            libmpopup->show_popup( popup_more, mpopup_more_flag, fselect_mpopup_more_cb);
         break;
 
         case MPOPUP_CHDK_REPLACE:
@@ -1333,7 +1333,7 @@ int gui_fselect_kbd_process()
                 if ( !(selected->name[0] == '.' && selected->name[1] == '.' && selected->name[2] == 0) ) //If item is not UpDir
                     mpopup_more_flag |=MPOPUP_RENAME;
 
-                libmpopup->show_popup( popup, i, fselect_mpopup_cb, 0);
+                libmpopup->show_popup( popup, i, fselect_mpopup_cb);
             }
             break;
         case KEY_SET:

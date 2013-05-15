@@ -42,7 +42,7 @@ typedef void (*mpopup_on_select_t)(unsigned int btn);
 static mpopup_on_select_t mpopup_on_select;
 
 //-------------------------------------------------------------------
-void gui_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode) 
+void gui_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn)) 
 {
     int i;
 

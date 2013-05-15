@@ -458,11 +458,11 @@ module_handler_t h_mpopup =
 };
 
 // Default (unloaded) function
-static void default_show_popup(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode)
+static void default_show_popup(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn))
 {
     // If load succeeded call module version of function
     if (module_load(&h_mpopup))
-        libmpopup->show_popup(popup_actions, flags, on_select, mode);
+        libmpopup->show_popup(popup_actions, flags, on_select);
 }
 
 // Default library - module unloaded
