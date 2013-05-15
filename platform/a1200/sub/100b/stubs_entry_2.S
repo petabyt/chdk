@@ -9,7 +9,7 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULLSUB)
 
 // Override stubs_entry.S
 
-NSTUB(GetBatteryTemperature, NULLSUB)   // Does not work in A1200, SX130 & A800 (included dummy in sub/100c/lib.c)
+NHSTUB(GetBatteryTemperature, NULLSUB)   // Does not work in A1200, SX130 & A800 (included dummy in sub/100c/lib.c)
 
 NHSTUB(MakeAFScan, 0xff8d95ec)
 NHSTUB(LockAndRefresh, 0xff8a39a4)

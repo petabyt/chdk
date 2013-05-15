@@ -12,5 +12,5 @@ NHSTUB(TurnOffMic,                  0xff857034)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
- NSTUB(srand,                       NULL_SUB)  //overridable function
- NSTUB(rand,                        NULL_SUB)  //overridable function
+NHSTUB(srand,                       NULL_SUB)  //overridable function
+NHSTUB(rand,                        NULL_SUB)  //overridable function

@@ -11,12 +11,3 @@ NHSTUB(SetZoomActuatorSpeedPercent,     NULL_SUB)
 NHSTUB(LockAndRefresh,                  0xFFA1ED98)
 NHSTUB(MakeAFScan,                      0xFF970F5C)
 NHSTUB(UnlockAndRefresh,                0xFFA1EDDC)
-
-// Fixed errors in compiler
-STUB(FFB5FA88)
-STUB(FF813404)
-STUB(FF810B20)
-STUB(FF81A244)
-STUB(FF815A94)
-STUB(FF815B7C)
-STUB(FF872F20)

@@ -2,8 +2,8 @@
 #define NULL_SUB 0xFF810958
 
 // Override stubs_entry.S
-NSTUB(PutInNdFilter,                0xFFA0C4E0)
-NSTUB(PutOutNdFilter,               0xFFA0C518)
+NHSTUB(PutInNdFilter,               0xFFA0C4E0)
+NHSTUB(PutOutNdFilter,              0xFFA0C518)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
 NHSTUB(strcmp,                      0xFF81E7F4)

@@ -53,7 +53,7 @@ NHSTUB(kbd_read_keys_r2,            NULL_SUB)
 NHSTUB(memPartInfoGet,              NULL_SUB)
 NHSTUB(memPartFindMax,              0xffac45c0)
 NHSTUB(time, time_my)
-NSTUB(time_orig, 0xffabdc28)
+NHSTUB(time_orig, 0xffabdc28)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
@@ -73,13 +73,7 @@ NHSTUB(ShowAllTaskInfo,             0xFFA9E8E4)
 NHSTUB(ShowCameraLog,               0xFF81A1A8)
 NHSTUB(iosInit,                     0xFFAC3B64)
 NHSTUB(semBCreate,                  0xFFACF180)
-NSTUB(tasktcb,                      0xffad22bc)
+NHSTUB(tasktcb,                     0xffad22bc)
 
 // Manual stubs for asm code in platform/ixus40_sd400 directory
 NHSTUB(sub_FF821D04,                0xFF821D04)
-STUB(FF830AB4)
-STUB(FF830B1C)
-STUB(FF830C5C)
-STUB(FF830D10)
-STUB(FF83103C)
-STUB(FF8310C8)

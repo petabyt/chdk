@@ -78,18 +78,12 @@ NHSTUB(memPartInfoGet,NULL_SUB)
 NHSTUB(semBCreate, 0xffacef28) // this is an inside function...
 NHSTUB(sub_FF821D04, 0xFF821D04) // same
 NHSTUB(time, time_my)
-NSTUB(time_orig, 0xffabd9d0)
-STUB(FF830AB4)
-STUB(FF830B1C)
-STUB(FF830C5C)
-STUB(FF830D10)
-STUB(FF83103C)
-STUB(FF8310C8)
+NHSTUB(time_orig, 0xffabd9d0)
 
 // trial
-NSTUB(EnterToPlayFromRec, 0xFF93D600)
-NSTUB(EnterToRecFromPlay, 0xFF93D534)
-NSTUB(tasktcb, 0xFFAD2064)
+NHSTUB(EnterToPlayFromRec, 0xFF93D600)
+NHSTUB(EnterToRecFromPlay, 0xFF93D534)
+NHSTUB(tasktcb, 0xFFAD2064)
 
 //don't touch these, old notes
 
@@ -100,4 +94,4 @@ NHSTUB(Write, 0xffac272c) // "write"
 NHSTUB(Close, 0xffac265c) // "close"
 */
 
-//NSTUB(time, 0xff8149c8) //Time, but it works equally wrong as time
+//NHSTUB(time, 0xff8149c8) //Time, but it works equally wrong as time

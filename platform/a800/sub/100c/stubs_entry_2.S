@@ -2,7 +2,7 @@
 #define NULL_SUB 0xffc00b28
 
 // Override stubs_entry.S
-NSTUB(GetBatteryTemperature,            NULL_SUB)   // Does not work in SX130 - A800 (included dummy in sub/100c/lib.c)
+NHSTUB(GetBatteryTemperature,           NULL_SUB)   // Does not work in SX130 - A800 (included dummy in sub/100c/lib.c)
 NHSTUB(kbd_pwr_on,                      NULL_SUB)   // endereço dummy com uma instrução bx lr (um ret, creio)
 NHSTUB(mkdir,                           0xffc267fc) // 53% corrigido
 NHSTUB(rand,                            NULL_SUB)   // Não encontrei manualmente

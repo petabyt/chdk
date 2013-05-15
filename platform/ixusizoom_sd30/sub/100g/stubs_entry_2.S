@@ -20,5 +20,5 @@ NHSTUB(SetZoomActuatorSpeedPercent, 0xFFA712B8)
 NHSTUB(kbd_read_keys,               0xFF827CB8)
 NHSTUB(semBCreate,                  0xFFADF884)
 
-NSTUB(printf,                       0xFFACE29C)
-NSTUB(taskNameToId,                 0xFFAE11C0)
+NHSTUB(printf,                      0xFFACE29C)
+NHSTUB(taskNameToId,                0xFFAE11C0)

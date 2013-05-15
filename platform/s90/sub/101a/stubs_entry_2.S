@@ -3,7 +3,7 @@
 
 // Override stubs_entry.S
 NHSTUB(SetScriptMode,               0xFF810F4C)
-NSTUB(kbd_pwr_off,                  0xFF833350)
+NHSTUB(kbd_pwr_off,                 0xFF833350)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
 
 // These don't exist

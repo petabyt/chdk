@@ -2,7 +2,7 @@
 #define NULL_SUB 0xFF810B1C
 
 // Override stubs_entry.S
-NSTUB(GetBatteryTemperature,        NULL_SUB)
+NHSTUB(GetBatteryTemperature,       NULL_SUB)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
 
