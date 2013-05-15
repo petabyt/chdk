@@ -136,7 +136,7 @@ static module_entry modules[MAX_NUM_LOADED_MODULES];
 //-----------------------------------------------
 // Cut module name to 11 sym
 //-----------------------------------------------
-static void flat_module_name_make( char* tgt, char* name )
+static void flat_module_name_make( char* tgt, const char* name )
 {
     char *p = strrchr(name,'/');
     strncpy(tgt, (p) ? p+1 : name, 12);
@@ -146,7 +146,7 @@ static void flat_module_name_make( char* tgt, char* name )
 //-----------------------------------------------
 // Do path to module
 //-----------------------------------------------
-static void flat_module_path_make( char* tgt, char* name )
+static void flat_module_path_make( char* tgt, const char* name )
 {
     // check is name absolute path
     if ( name[0]=='A' && name[1]=='/')
@@ -159,7 +159,7 @@ static void flat_module_path_make( char* tgt, char* name )
 // PURPOSE: Find idx_loaded by module name or by module idx
 // RETURN: -1 if module not loaded yet, otherwise idx in modules[]
 //-----------------------------------------------
-static int module_find(char * name )
+static int module_find(const char * name )
 {
     char namebuf[12];
     int i = (uint32_t)name;
@@ -248,7 +248,7 @@ static int module_do_imports( struct flat_hdr* flat, void* relocbuf, uint32_t im
 }
 
 // variables to quick error
-static char* module_filename;
+static const char* module_filename;
 static int module_fd;
 static struct flat_hdr* flat_buf;
 
@@ -370,7 +370,7 @@ void module_log_clear()
     remove("A/MODULES.LOG");
 }
 
-static void module_log_load(char *name, void* adr)
+static void module_log_load(const char *name, void* adr)
 {
     if (conf.module_logging)
     {
@@ -414,17 +414,148 @@ static int bind_module( module_handler_t* hMod, void* module_lib )
     return 0;
 }
 
+struct flat_hdr* module_preload(const char *name, _version_t ver)
+{
+    module_fd = -1;
+    module_filename = name;
+    flat_buf = 0;
+    buf_load = 0;
+
+    char path[60];
+    struct flat_hdr flat;
+    int size_flat;
+
+    flat_module_path_make(path,module_filename);
+
+    module_fd = open( path, O_RDONLY, 0777 );
+    if ( module_fd <=0 )
+    {
+        moduleload_error("file not found",0);
+        return 0;
+    }
+
+    // @tsv TODO - compare loaded with requested
+    b_read( module_fd, (char*)&flat, sizeof(flat) );
+
+    if ( flat.rev!=FLAT_VERSION || memcmp( flat.magic, FLAT_MAGIC_NUMBER, 4) )
+    {
+        moduleload_error("bad magicnum", 0);
+        return 0;
+    }
+
+    size_flat = flat.reloc_start;
+
+    flat_buf = (struct flat_hdr*)malloc( size_flat );
+    if ( !flat_buf ) 
+    {
+        moduleload_error("malloc",0);
+        return 0;
+    }
+
+    module_log_load(module_filename,flat_buf);
+
+    if ( 0!= lseek(module_fd, 0, SEEK_SET) )
+    {
+        moduleload_error("read",0);
+        return 0;
+    }
+    if ( size_flat != b_read(module_fd, (char*)flat_buf, size_flat) )
+    {
+        moduleload_error("read",0);
+        return 0;
+    }
+
+    // Module info checks
+
+    struct ModuleInfo *mod_info = flat_buf->_module_info = (struct ModuleInfo*)((unsigned int)flat_buf+flat_buf->_module_info_offset);
+
+    if ( mod_info->magicnum != MODULEINFO_V1_MAGICNUM || mod_info->sizeof_struct != sizeof(struct ModuleInfo) )
+    {
+        moduleload_error("Malformed module info", 0 );
+        return 0;
+    }
+
+    if ( mod_info->chdk_required_branch && mod_info->chdk_required_branch != CURRENT_CHDK_BRANCH )
+    {
+        moduleload_error("require different CHDK branch",0 );
+        return 0;
+    }
+
+    if ( mod_info->chdk_required_ver > CHDK_BUILD_NUM) 
+    {
+        moduleload_error("require CHDK%05d", mod_info->chdk_required_ver);
+        return 0;
+    }
+
+    if ( mod_info->chdk_required_platfid && mod_info->chdk_required_platfid != conf.platformid )
+    {
+        moduleload_error("require platfid %d", mod_info->chdk_required_platfid);
+        return 0;
+    }
+
+	if ( !API_VERSION_MATCH_REQUIREMENT( mod_info->module_version, ver ) )
+    {
+        moduleload_error("incorrect module version", 0);
+		return 0;
+    }
+
+	if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, mod_info->conf_ver ) )
+    {
+        moduleload_error("incorrect CONF version", 0);
+		return 0;
+    }
+
+	if ( !API_VERSION_MATCH_REQUIREMENT( camera_screen.api_version, mod_info->cam_screen_ver ) )
+    {
+        moduleload_error("incorrect CAM SCREEN version", 0);
+		return 0;
+    }
+
+	if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, mod_info->cam_sensor_ver ) )
+    {
+        moduleload_error("incorrect CAM SENSOR version", 0);
+		return 0;
+    }
+
+	if ( !API_VERSION_MATCH_REQUIREMENT( camera_info.api_version, mod_info->cam_info_ver ) )
+    {
+        moduleload_error("incorrect CAM INFO version", 0);
+		return 0;
+    }
+
+    // Make relocations
+
+    int reloc_size = flat.import_start - flat.reloc_start;
+    int reloc_count = reloc_size/sizeof(uint32_t);
+    int import_size = flat.file_size - flat.import_start;
+    int import_count = import_size/sizeof(uint32_t);
+
+    if (!alloc_reloc_buf(reloc_size, import_size))
+        return 0;
+    if ( !module_do_action( "reloc", flat.reloc_start, reloc_count, reloc_size, module_do_relocations ) )
+        return 0;
+    if ( !module_do_action( "export", flat.import_start, import_count, import_size, module_do_imports ) )
+        return 0;
+
+    b_close( module_fd );
+    module_fd = -1;
+
+    // TODO these could be changed to operate on affected address ranges only
+    // after relocating but before attempting to execute loaded code
+    // clean data cache to ensure code is in main memory
+    dcache_clean_all();
+    // then flush instruction cache to ensure no addresses containing new code are cached
+    icache_flush_all();
+
+    return flat_buf;
+}
+
 static int _module_load(module_handler_t* hMod)
 {
     int idx;
 
-    module_fd = -1;
-    module_filename = hMod->name;
-    flat_buf = 0;
-    buf_load = 0;
-
     // Check if module loaded
-    idx = module_find(module_filename);
+    idx = module_find(hMod->name);
     if ( idx>=0 )
         return idx;
 
@@ -437,156 +568,34 @@ static int _module_load(module_handler_t* hMod)
         return -1;
     }
 
-    char path[60];
-    struct flat_hdr flat;
-    int size_flat;
-
-    flat_module_path_make(path,module_filename);
-
-    module_fd = open( path, O_RDONLY, 0777 );
-    if ( module_fd <=0 )
+    if (module_preload(hMod->name, hMod->version) != 0)
     {
-        moduleload_error("file not found",0);
-        return -1;
+        // Module is valid. Finalize binding
+        modules[idx].hdr = flat_buf;
+
+        // store runtime params
+        flat_module_name_make(modules[idx].modulename, module_filename);
+        modules[idx].hMod = hMod;
+
+        int bind_err = bind_module( hMod, flat_buf->_module_info->lib );
+
+        if ( flat_buf->_module_info->lib->loader )
+        {
+            uint32_t x = flat_buf->_module_info->lib->loader();
+            bind_err = bind_err || x;
+        }
+
+        if ( bind_err )
+        {
+            module_unload(module_filename);
+            moduleload_error("chdk mismatch",0);
+            return -1;
+        }
+
+        return idx;
     }
 
-    // @tsv TODO - compare loaded with requested
-    b_read( module_fd, (char*)&flat, sizeof(flat) );
-
-    if ( flat.rev!=FLAT_VERSION || memcmp( flat.magic, FLAT_MAGIC_NUMBER, 4) )
-    {
-        moduleload_error("bad magicnum", 0);
-        return -1;
-    }
-
-    size_flat = flat.reloc_start;
-
-    flat_buf = (struct flat_hdr*)malloc( size_flat );
-    if ( !flat_buf ) 
-    {
-        moduleload_error("malloc",0);
-        return -1;
-    }
-
-    module_log_load(module_filename,flat_buf);
-
-    if ( 0!= lseek(module_fd, 0, SEEK_SET) )
-    {
-        moduleload_error("read",0);
-        return -1;
-    }
-    if ( size_flat != b_read(module_fd, (char*)flat_buf, size_flat) )
-    {
-        moduleload_error("read",0);
-        return -1;
-    }
-
-    // Module info checks
-
-    struct ModuleInfo *mod_info = flat_buf->_module_info = (struct ModuleInfo*)((unsigned int)flat_buf+flat_buf->_module_info_offset);
-
-    if ( mod_info->magicnum != MODULEINFO_V1_MAGICNUM || mod_info->sizeof_struct != sizeof(struct ModuleInfo) )
-    {
-        moduleload_error("Malformed module info", 0 );
-        return -1;
-    }
-
-    if ( mod_info->chdk_required_branch && mod_info->chdk_required_branch != CURRENT_CHDK_BRANCH )
-    {
-        moduleload_error("require different CHDK branch",0 );
-        return -1;
-    }
-
-    if ( mod_info->chdk_required_ver > CHDK_BUILD_NUM) 
-    {
-        moduleload_error("require CHDK%05d", mod_info->chdk_required_ver);
-        return -1;
-    }
-
-    if ( mod_info->chdk_required_platfid && mod_info->chdk_required_platfid != conf.platformid )
-    {
-        moduleload_error("require platfid %d", mod_info->chdk_required_platfid);
-        return -1;
-    }
-
-	if ( !API_VERSION_MATCH_REQUIREMENT( mod_info->module_version, hMod->version ) )
-    {
-        moduleload_error("incorrect module version", 0);
-		return 1;
-    }
-
-	if ( !API_VERSION_MATCH_REQUIREMENT( conf.api_version, mod_info->conf_ver ) )
-    {
-        moduleload_error("incorrect CONF version", 0);
-		return 1;
-    }
-
-	if ( !API_VERSION_MATCH_REQUIREMENT( camera_screen.api_version, mod_info->cam_screen_ver ) )
-    {
-        moduleload_error("incorrect CAM SCREEN version", 0);
-		return 1;
-    }
-
-	if ( !API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, mod_info->cam_sensor_ver ) )
-    {
-        moduleload_error("incorrect CAM SENSOR version", 0);
-		return 1;
-    }
-
-	if ( !API_VERSION_MATCH_REQUIREMENT( camera_info.api_version, mod_info->cam_info_ver ) )
-    {
-        moduleload_error("incorrect CAM INFO version", 0);
-		return 1;
-    }
-
-    // Make relocations
-
-    int reloc_size = flat.import_start - flat.reloc_start;
-    int reloc_count = reloc_size/sizeof(uint32_t);
-    int import_size = flat.file_size - flat.import_start;
-    int import_count = import_size/sizeof(uint32_t);
-
-    if (!alloc_reloc_buf(reloc_size, import_size))
-        return -1;
-    if ( !module_do_action( "reloc", flat.reloc_start, reloc_count, reloc_size, module_do_relocations ) )
-        return -1;
-    if ( !module_do_action( "export", flat.import_start, import_count, import_size, module_do_imports ) )
-        return -1;
-
-    b_close( module_fd );
-    module_fd = -1;
-
-    // Module is valid. Finalize binding
-
-    modules[idx].hdr = flat_buf;
-
-    // store runtime params
-    flat_module_name_make(modules[idx].modulename, module_filename);
-    modules[idx].hMod = hMod;
-
-    // TODO these could be changed to operate on affected address ranges only
-    // after relocating but before attempting to execute loaded code
-    // clean data cache to ensure code is in main memory
-    dcache_clean_all();
-    // then flush instruction cache to ensure no addresses containing new code are cached
-    icache_flush_all();
-
-    int bind_err = bind_module( hMod, mod_info->lib );
-
-    if ( mod_info->lib->loader )
-    {
-        uint32_t x = mod_info->lib->loader();
-        bind_err = bind_err || x;
-    }
-
-    if ( bind_err )
-    {
-        module_unload(module_filename);
-        moduleload_error("chdk mismatch",0);
-        return -1;
-    }
-
-    return idx;
+    return -1;
 }
 
 // Return: 0-fail, 1-ok
@@ -737,7 +746,7 @@ static void module_unload_idx(int idx)
     }
 }
 
-void module_unload(char* name)
+void module_unload(const char* name)
 {
     module_unload_idx(module_find(name));
 }

@@ -27,9 +27,12 @@
 #define MENUITEM_F_MINMAX       0x0060
 
 // Value, which specify specific kind of argument
-#define MENUITEM_ARG_MASK       0x0f00
+#define MENUITEM_ARG_MASK       0x0300
 // menuitem.arg contain ptr to callback function
 #define MENUITEM_ARG_CALLBACK   0x0100
+
+// Module added to User Menu
+#define MENUITEM_USER_MODULE    0x0400
 
 #define MENUITEM_HHMMSS         0x1000  // Display / edit value as H:MM:SS
 #define MENUITEM_DECIMAL        0x2000  // Display / edit value as 0.xxxxx

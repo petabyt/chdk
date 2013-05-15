@@ -14,6 +14,7 @@
 #include "gui_mpopup.h"
 #include "gui_fselect.h"
 
+#include "module_load.h"
 #include "module_def.h"
 
 //-------------------------------------------------------------------
@@ -265,6 +266,43 @@ void add_script_to_user_menu(const char* fname, char* title)
             items[i].type = MENUITEM_PROC;
             items[i].text = (int) conf.user_menu_vars.items[i-1].script_title;
             items[i].value = (int *) gui_load_user_menu_script ;
+            items[i].arg = (int) conf.user_menu_vars.items[i-1].script_file;
+            
+            char buf[200];
+            sprintf(buf,lang_str(LANG_USER_MENU_ITEM_ADDED), lang_str(items[i].text));
+            gui_mbox_init(LANG_MENU_USER_MENU, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, NULL);
+            camera_info.state.user_menu_has_changed = 1;
+            return;
+        }
+    }
+    gui_mbox_init(LANG_MENU_USER_MENU, LANG_USER_MENU_FULL, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+}
+
+void add_module_to_user_menu(const char* fname, char* title)
+{
+    int i ;
+    /*
+     * Insert module info at end of existing entries
+     */
+    CMenuItem *items = (CMenuItem*)user_submenu.menu;
+    gui_menu_erase_and_redraw();
+
+    for(i = 1; i < USER_MENU_ITEMS + 1; i++)
+    {
+        if (!items[i].text)   // insert module title & full filename in next available spot 
+        {
+            if (conf.user_menu_vars.items[i-1].script_file == 0)
+                conf.user_menu_vars.items[i-1].script_file = malloc(CONF_STR_LEN);
+            strcpy(conf.user_menu_vars.items[i-1].script_file, fname);
+            if (conf.user_menu_vars.items[i-1].script_title == 0)
+                conf.user_menu_vars.items[i-1].script_title = malloc(CONF_STR_LEN);
+            strcpy(conf.user_menu_vars.items[i-1].script_title, title);
+
+            items[i].symbol = 0x35;
+            items[i].opt_len = 0 ;
+            items[i].type = MENUITEM_PROC|MENUITEM_USER_MODULE;
+            items[i].text = (int) conf.user_menu_vars.items[i-1].script_title;
+            items[i].value = (int *) module_run ;
             items[i].arg = (int) conf.user_menu_vars.items[i-1].script_file;
             
             char buf[200];
@@ -580,10 +618,12 @@ static void gui_uedit_kbd_process_menu_btn()
 //-------------------------------------------------------------------
 #define UEDIT_MENU      1
 #define UEDIT_SCRIPT    2
+#define UEDIT_MODULE    4
 
 static struct mpopup_item popup_uedit[]= {
         { UEDIT_MENU,           LANG_USER_MENU_ITEMS },
         { UEDIT_SCRIPT,         LANG_MENU_USER_MENU_SCRIPT_ADD },
+        { UEDIT_MODULE,         LANG_MENU_USER_MENU_MODULE_ADD },
         { 0,                    0 },
 };
 static void script_scan(const char *fn)
@@ -660,6 +700,37 @@ static void gui_uedit_script_selected(const char *fn)
     }
 }
 
+static void gui_uedit_module_selected(const char *fn)
+{
+    if (fn)
+    {
+        char *ext = strrchr(fn,'.');
+        if (chk_ext(ext,"flt"))
+        {
+            _version_t v = ANY_VERSION;
+            struct flat_hdr* mod = module_preload(fn, v);
+            if (mod > 0)
+            {
+                if (mod->_module_info->lib->run != 0)   // Simple Module?
+                {
+                    char *n;
+                    if (mod->_module_info->moduleName < 0)
+                        n = lang_str(-mod->_module_info->moduleName);
+                    else
+                        n = (char*)mod->_module_info->moduleName;
+                    add_module_to_user_menu(fn, n);
+                    free(mod);
+                }
+                else
+                {
+                    char buf[100];
+                    sprintf(buf, lang_str(LANG_MODULE_NOT_SIMPLE), fn);
+                    gui_mbox_init(LANG_ERROR, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, NULL);
+                }
+            }
+        }
+    }
+}
 static void uedit_set(unsigned int actn)
 {
     switch (actn)
@@ -668,7 +739,10 @@ static void uedit_set(unsigned int actn)
             gui_init(&root_menu);
             break;
         case UEDIT_SCRIPT:
-            libfselect->file_select(LANG_STR_SELECT_SCRIPT_FILE, conf.script_file, "A/CHDK/SCRIPTS", gui_uedit_script_selected);
+            libfselect->file_select(LANG_MENU_USER_MENU_SCRIPT_ADD, conf.script_file, "A/CHDK/SCRIPTS", gui_uedit_script_selected);
+            break;
+        case UEDIT_MODULE:
+            libfselect->file_select(LANG_MENU_USER_MENU_MODULE_ADD, "A/CHDK/MODULES", "A/CHDK/MODULES", gui_uedit_module_selected);
             break;
     }
     gui_menu_erase_and_redraw();
@@ -715,7 +789,7 @@ static int gui_uedit_kbd_process() {
         case KEY_SET:
             if (curr_menu->title == LANG_MENU_USER_MENU)
             {
-                libmpopup->show_popup( popup_uedit, UEDIT_MENU|UEDIT_SCRIPT, uedit_set);
+                libmpopup->show_popup( popup_uedit, UEDIT_MENU|UEDIT_SCRIPT|UEDIT_MODULE, uedit_set);
             }
             else
             {

@@ -10,7 +10,10 @@
 #include "gui_menu.h"
 #include "gui_mbox.h"
 #include "modules.h"
+#include "module_load.h"
 
+#define USER_MENU_IS_SCRIPT     -1
+#define USER_MENU_IS_MODULE     -2
 
 //-------------------------------------------------------------------
 static void rinit()
@@ -241,7 +244,11 @@ void user_menu_save() {
         {
             if ( user_submenu_items[x+1].value == (int *)gui_load_user_menu_script )
             {
-                conf.user_menu_vars.items[x].var = -1 ;                                             // flag script entries specially 
+                conf.user_menu_vars.items[x].var = USER_MENU_IS_SCRIPT;                             // flag script entries specially 
+            }
+            else if ((user_submenu_items[x+1].value == (int *)module_run) && ((user_submenu_items[x+1].type & MENUITEM_USER_MODULE) == MENUITEM_USER_MODULE))
+            {
+                conf.user_menu_vars.items[x].var = USER_MENU_IS_MODULE;                             // flag module entries specially 
             }
             else
             {
@@ -275,13 +282,22 @@ void user_menu_restore() {
        
     for (x=0, y=1; x<USER_MENU_ITEMS; x++, y++)
     {
-        if( conf.user_menu_vars.items[x].var == -1 )    // special flag- there is no hash for script entries
+        if (conf.user_menu_vars.items[x].var == USER_MENU_IS_SCRIPT)    // special flag- there is no hash for script entries
         {   
             user_submenu_items[y].symbol = 0x35;        // restore the script entry
             user_submenu_items[y].opt_len = 0 ;
             user_submenu_items[y].type = MENUITEM_PROC;
             user_submenu_items[y].text = (int) conf.user_menu_vars.items[x].script_title;
             user_submenu_items[y].value = (int *) gui_load_user_menu_script ;
+            user_submenu_items[y].arg = (int) conf.user_menu_vars.items[x].script_file;  
+        }
+        else if (conf.user_menu_vars.items[x].var == USER_MENU_IS_MODULE)    // special flag- there is no hash for module entries
+        {   
+            user_submenu_items[y].symbol = 0x35;        // restore the module entry
+            user_submenu_items[y].opt_len = 0 ;
+            user_submenu_items[y].type = MENUITEM_PROC|MENUITEM_USER_MODULE;
+            user_submenu_items[y].text = (int) conf.user_menu_vars.items[x].script_title;
+            user_submenu_items[y].value = (int *) module_run ;
             user_submenu_items[y].arg = (int) conf.user_menu_vars.items[x].script_file;  
         }
         else

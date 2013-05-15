@@ -729,8 +729,9 @@
 #define LANG_USER_MENU_ADD                      594
 #define LANG_USER_MENU_DEL                      595
 #define LANG_USER_MENU_ITEMS                    596
+#define LANG_MENU_USER_MENU_MODULE_ADD          597
 
-#define GUI_LANG_ITEMS                          596
+#define GUI_LANG_ITEMS                          597
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

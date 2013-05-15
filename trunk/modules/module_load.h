@@ -32,8 +32,9 @@ typedef struct
 // Common module functions
 //-------------------------
 
+struct flat_hdr* module_preload(const char *name, _version_t ver);
 int module_load(module_handler_t* hMod);
-void module_unload(char* name);
+void module_unload(const char* name);
 
 int module_run(char* name);
 
