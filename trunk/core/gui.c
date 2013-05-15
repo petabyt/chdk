@@ -571,7 +571,7 @@ static CMenu games_submenu = {0x38,LANG_MENU_GAMES_TITLE, NULL, games_submenu_it
 static void gui_menuproc_mkbootdisk(int arg)
 {
     mark_filesystem_bootable();
-    gui_mbox_init(LANG_INFORMATION, LANG_CONSOLE_TEXT_FINISHED, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+    gui_mbox_init(LANG_INFORMATION, LANG_CONSOLE_TEXT_FINISHED, MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, NULL);
 }
 
 #if CAM_MULTIPART
@@ -583,7 +583,7 @@ static void card_break_proc(unsigned int btn)
 
 static void gui_menuproc_break_card(int arg)
 {
-    gui_mbox_init(LANG_WARNING, LANG_PARTITIONS_CREATE_WARNING, MBOX_BTN_YES_NO|MBOX_DEF_BTN2|MBOX_TEXT_CENTER, card_break_proc);
+    gui_mbox_init(LANG_WARNING, LANG_PARTITIONS_CREATE_WARNING, MBOX_BTN_YES_NO|MBOX_DEF_BTN2|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, card_break_proc);
 }
 
 static char* partitions_enum=NULL;
@@ -642,7 +642,7 @@ static void gui_delete_module_log_callback(unsigned int btn)
 
 static void gui_delete_module_log(int arg)
 {
-    gui_mbox_init(LANG_WARNING, LANG_MENU_DELETE_MODULE_LOG, MBOX_BTN_YES_NO|MBOX_DEF_BTN2|MBOX_TEXT_CENTER, gui_delete_module_log_callback);
+    gui_mbox_init(LANG_WARNING, LANG_MENU_DELETE_MODULE_LOG, MBOX_BTN_YES_NO|MBOX_DEF_BTN2|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, gui_delete_module_log_callback);
 }
 
 static CMenuItem module_submenu_items[] = {
