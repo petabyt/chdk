@@ -34,39 +34,17 @@ void debug_led(int state)
 void camera_set_led(int led, int state, int bright) {
     return;
     static char led_table[2]={0,4};
-    if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], state);    
+    if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], (!state)&1);
 }
 
 int vid_get_viewport_width()
 {
-    // viewport width table for each image size
-    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_w[4] = { 360, 360, 360, 360 };
-    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    return 360;
 }
 
 long vid_get_viewport_height()
 {
-    // viewport height table for each image size
-    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_h[4] = { 240, 240, 240, 240 };
-    return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-}
-
-int vid_get_viewport_xoffset() 
-{
-    // viewport width offset table for each image size
-    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_w[4] = { 0, 0, 0, 0 };               // should all be even values for edge overlay
-    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-}
-
-int vid_get_viewport_yoffset() 
-{
-    // viewport height offset table for each image size
-    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_h[4] = { 0, 0, 0, 0 };
-    return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    return 240;
 }
 
 // Defined in stubs_entry.S

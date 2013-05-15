@@ -105,6 +105,9 @@ DEF(ctypes, 0xffb2f154)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
+//NSTUB(CreateJumptable                       ,0xffafcee0) //  1
+// ALT: NSTUB(CreateJumptable, 0xffaff250) // 1 32/0
+//NSTUB(_uartr_req                            ,0xff81a7dc) //111
 //NSTUB(AllocateMemory                        ,0xffa89d54) //101
 NSTUB(AllocateUncacheableMemory               ,0xff834288) //112
 NSTUB(Close                                   ,0xff8314d8) //101
@@ -245,3 +248,12 @@ NSTUB(strtolx                                 ,0xff836ffc) //109
 NSTUB(time                                    ,0x003fb794) //  6
 NSTUB(vsprintf                                ,0xff81acc8) //115
 //NSTUB(write                                 ,0xff83152c) //101
+//NSTUB(GetSDProtect                          ,0xff82ed8c) //101
+//NSTUB(StartRecModeMenu                      ,0xff882dbc) //102
+//NSTUB(DispCon_ShowBitmapColorBar            ,0xff852d24) //102
+//NSTUB(ResetZoomLens                         ,0xffa8586c) //102
+//NSTUB(ResetFocusLens                        ,0xffa843e8) //102
+//NSTUB(NR_GetDarkSubType                     ,0xff9f72b4) //102
+//NSTUB(NR_SetDarkSubType                     ,0xff9f71ec) //102
+//NSTUB(SavePaletteData                       ,0xff966ac4) //102
+//NSTUB(GUISrv_StartGUISystem                 ,0xff8985b4) //101
