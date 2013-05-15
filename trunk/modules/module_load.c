@@ -25,6 +25,8 @@
 #include "gui_batt.h"
 #include "gui_mbox.h"
 #include "gui_space.h"
+#include "gui_menu.h"
+#include "gui_user_menu.h"
 #include "gui_lang.h"
 #include "levent.h"
 #include "sd_card.h"
@@ -46,6 +48,7 @@
 #include "math.h"
 #include "file_counter.h"
 #include "lens.h"
+#include "fileutil.h"
 
 #include "modules.h"
 #include "module_load.h"

@@ -34,6 +34,7 @@
 #define MENUITEM_HHMMSS         0x1000  // Display / edit value as H:MM:SS
 #define MENUITEM_DECIMAL        0x2000  // Display / edit value as 0.xxxxx
 #define MENUITEM_SD_INT         0x4000  // Subject Distance Value is potentially a 7 digit int (0-9999999) instead of a 5 digit int (0-99999)
+#define MENUITEM_SCRIPT_PARAM   0x8000  // Script Parameter Menu Item
 
 #define MENU_MINMAX(min, max)   (((max)<<16)|(min&0xFFFF))
 #define MENU_MIN_UNSIGNED(arg)  ((unsigned short)(arg & 0xFFFF))

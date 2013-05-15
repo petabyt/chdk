@@ -8,6 +8,9 @@ extern void move_user_menu_item_up(int* cur_memnu_item_indx);
 extern void move_user_menu_item_down(int* cur_memnu_item_indx);
 extern void user_menu_save();
 extern void user_menu_restore();
+extern void gui_load_user_menu_script(const char *fn);
+
+extern  CMenu   user_submenu;
 
 //-------------------------------------------------------------------
 

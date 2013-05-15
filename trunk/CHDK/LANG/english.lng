@@ -390,6 +390,7 @@
 298 "Override Tv     type ->"
 299 "User Menu Enable"
 300 "User Menu"
+301 "User Menu Edit"
 
 302 " Adapter Lens Scale, 100=1x"
 303 "Show Space Bar"
@@ -721,3 +722,7 @@
 
 592 "No space to run module\n'%s'"
 593 "Module\n'%s'\ndoes not support 'simple' mode"
+
+594 "Add\n%s\nto User Menu?"
+595 "Remove\n%s\nfrom User Menu?"
+596 "Add & Remove Menu items"

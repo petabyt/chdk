@@ -19,7 +19,7 @@ typedef struct
 {
     base_interface_t    base;
 
-    void (*show_popup)(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn), int mode);
+    void (*show_popup)(struct mpopup_item* popup_actions, const unsigned int flags, void (*on_select)(unsigned int actn));
 } libmpopup_sym;
 
 //-------------------------------------------------------------------

@@ -756,7 +756,7 @@ static void gui_update_script_submenu()
 
             script_submenu_items[p].symbol = 0x0;
             script_submenu_items[p].text = (int)script_params[n];
-            script_submenu_items[p].type = MENUITEM_INT;
+            script_submenu_items[p].type = MENUITEM_INT|MENUITEM_SCRIPT_PARAM;
             script_submenu_items[p].value = &conf.script_vars[n];
 
             if (script_range_values[n] != 0)
@@ -766,7 +766,7 @@ static void gui_update_script_submenu()
             }
             else if (script_named_counts[n] != 0)
             {
-                script_submenu_items[p].type = MENUITEM_ENUM2;
+                script_submenu_items[p].type = MENUITEM_ENUM2|MENUITEM_SCRIPT_PARAM;
                 script_submenu_items[p].opt_len = script_named_counts[n];
                 script_submenu_items[p].arg = (int)script_named_values[n];
             }

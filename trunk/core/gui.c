@@ -52,8 +52,6 @@ static char buf[256];
 // Menu definitions 
 //-------------------------------------------------------------------
 
-extern  CMenu   user_submenu;
-
 //-------------------------------------------------------------------
 
 /*
@@ -1721,6 +1719,7 @@ static const char* gui_user_menu_show_enum(int change, int arg)
 static CMenuItem menu_settings_submenu_items[] = {
     MENU_ITEM(0x5f,LANG_MENU_USER_MENU_ENABLE,		MENUITEM_ENUM,          gui_user_menu_show_enum, 0 ),
     MENU_ITEM(0x5c,LANG_MENU_USER_MENU_AS_ROOT,     MENUITEM_BOOL,          &conf.user_menu_as_root, 0 ),
+    MENU_ITEM(0x72,LANG_MENU_USER_MENU_EDIT,        MENUITEM_PROC,          module_run, "useredit.flt" ),
     MENU_ITEM(0x81,LANG_MENU_VIS_MENU_CENTER,       MENUITEM_BOOL,	        &conf.menu_center, 0 ),
     MENU_ITEM(0x81,LANG_MENU_SELECT_FIRST_ENTRY,    MENUITEM_BOOL,	        &conf.menu_select_first_entry, 0 ),
     MENU_ITEM(0x5c,LANG_MENU_SHOW_ALT_HELP,         MENUITEM_BOOL,          &conf.show_alt_helper, 0 ),

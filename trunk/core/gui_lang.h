@@ -389,7 +389,7 @@
 #define LANG_MENU_TV_ENUM_TYPE                  298
 #define LANG_MENU_USER_MENU_ENABLE              299
 #define LANG_MENU_USER_MENU                     300
-#define LANG_MENU_ITEM_BLANK                    301
+#define LANG_MENU_USER_MENU_EDIT                301
 
 #define LANG_MENU_OSD_ZOOM_SCALE                302
 #define LANG_MENU_SPACE_SHOW_BAR                303
@@ -726,7 +726,11 @@
 #define LANG_MODULE_NO_SPACE                    592
 #define LANG_MODULE_NOT_SIMPLE                  593
 
-#define GUI_LANG_ITEMS                          593
+#define LANG_USER_MENU_ADD                      594
+#define LANG_USER_MENU_DEL                      595
+#define LANG_USER_MENU_ITEMS                    596
+
+#define GUI_LANG_ITEMS                          596
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
