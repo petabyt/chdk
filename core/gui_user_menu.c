@@ -52,7 +52,7 @@ void add_user_menu_item(CMenuItem curr_menu_item, int* cur_menu_item_indx)
             user_submenu_items[i] = curr_menu_item;
             char buf[200];
             sprintf(buf,lang_str(LANG_USER_MENU_ITEM_ADDED), lang_str(curr_menu_item.text));
-            gui_mbox_init(LANG_MENU_USER_MENU, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+            gui_mbox_init(LANG_MENU_USER_MENU, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, NULL);
             camera_info.state.user_menu_has_changed = 1;
             return;
         }
@@ -101,7 +101,7 @@ void add_script_to_user_menu( char * fname ,  char * title )
             
             char buf[200];
             sprintf(buf,lang_str(LANG_USER_MENU_ITEM_ADDED), lang_str(user_submenu_items[i].text));
-            gui_mbox_init(LANG_MENU_USER_MENU, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+            gui_mbox_init(LANG_MENU_USER_MENU, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, NULL);
             camera_info.state.user_menu_has_changed = 1;
             return;
         }
