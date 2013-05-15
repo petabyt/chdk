@@ -36,34 +36,12 @@ void camera_set_led(int led, int state, int bright) {
 
 int vid_get_viewport_width()
 {
-    // viewport width table for each image size
-    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_w[4] = { 360, 360, 360, 360 };
-    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    return 360;
 }
 
 long vid_get_viewport_height()
 {
-    // viewport height table for each image size
-    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_h[4] = { 240, 240, 240, 240 };
-    return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-}
-
-int vid_get_viewport_xoffset() 
-{
-    // viewport width offset table for each image size
-    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_w[4] = { 0, 0, 0, 0 };               // should all be even values for edge overlay
-    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-}
-
-int vid_get_viewport_yoffset() 
-{
-    // viewport height offset table for each image size
-    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_h[4] = { 0, 0, 0, 0 };
-    return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    return 240;
 }
 
 void vid_bitmap_refresh() {
@@ -95,7 +73,6 @@ void load_chdk_palette() {
                 int *pal = (int*)vid_get_bitmap_active_palette();
                 if (pal[CHDK_COLOR_BASE+0] != 0x33ADF62)
                 {
-                
                         pal[CHDK_COLOR_BASE+0]  = 0x33ADF62;  // Red
                         pal[CHDK_COLOR_BASE+1]  = 0x326EA40;  // Dark Red
                         pal[CHDK_COLOR_BASE+2]  = 0x34CD57F;  // Light Red
