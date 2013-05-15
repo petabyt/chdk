@@ -8,5 +8,5 @@ NHSTUB(MakeDirectory_Fut,           0xff831974) //mkdir. This requires #define M
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
- NSTUB(srand,                       NULL_SUB)  //overridable function
- NSTUB(rand,                        NULL_SUB)  //overridable function
+NHSTUB(srand,                       NULL_SUB)  //overridable function
+NHSTUB(rand,                        NULL_SUB)  //overridable function

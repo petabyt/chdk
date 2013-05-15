@@ -194,7 +194,7 @@ void __attribute__((naked,noinline)) sub_FF811198_my() { // ASM1989 -> In sx200 
                  "SUB     SP, SP, #0x74\n"
                  "MOV     R0, SP\n"
                  "MOV     R1, #0x74\n"
-                 "BL      sub_FFB5FA88\n"		 // ASM1989 -> In sx200 was: "BL      sub_FFAF8D3C\n"   -> Fail compilation HERE CARE!!!
+                 "BL      sub_FFB5FA88\n"		 // ASM1989 -> In sx200 was: "sub_FFAF8D3C\n"
                  "MOV     R0, #0x53000\n"
                  "STR     R0, [SP,#4]\n"
                //  "LDR     R0, =0x0x152728\n" // In sx200 : 12351C
@@ -234,7 +234,7 @@ void __attribute__((naked,noinline)) sub_FF811198_my() { // ASM1989 -> In sx200 
                  "STR     R0, [SP,#0x68]\n"
                  "MOV     R0, SP\n"
                  "MOV     R2, #0\n"
-                 "BL      sub_FF813404\n"        // ASM1989 -> In sx200 was:   "BL      sub_FF812D68\n"
+                 "BL      sub_FF813404\n"        // ASM1989 -> In sx200 was:   "sub_FF812D68\n"
                  "ADD     SP, SP, #0x74\n"
                  "LDR     PC, [SP],#4\n"
      );
@@ -245,17 +245,17 @@ void __attribute__((naked,noinline)) sub_FF811198_my() { // ASM1989 -> In sx200 
 void __attribute__((naked,noinline)) sub_FF815E58_my() {// ASM1989 -> In sx200 was: sub_FF814D38_my(
      asm volatile (
                  "STMFD   SP!, {R4,LR}\n"
-                 "BL      sub_FF810B20\n"       // ASM1989 -> In sx200 was:  "BL      sub_FF810954\n"
-                 "BL      sub_FF81A244\n"       // ASM1989 -> In sx200 was: "BL      sub_FF8190B4\n"    dmSetup
+                 "BL      sub_FF810B20\n"       // ASM1989 -> In sx200 was:  "sub_FF810954\n"
+                 "BL      sub_FF81A244\n"       // ASM1989 -> In sx200 was: "sub_FF8190B4\n"    dmSetup
                  "CMP     R0, #0\n"
                  "LDRLT   R0, =0xFF815F6C\n"    // ASM1989 -> In sx200 was: "LDRLT   R0, =0xFF814E4C\n"  // "dmSetup"
                  "BLLT    sub_FF815F4C\n"       // ASM1989 -> In sx200 was:  "BLLT    sub_FF814E2C\n"  err_init_task
-                 "BL      sub_FF815A94\n"      // ASM1989 -> In sx200 was: "BL      sub_FF814974\n"
+                 "BL      sub_FF815A94\n"      // ASM1989 -> In sx200 was: "sub_FF814974\n"
                  "CMP     R0, #0\n"
                  "LDRLT   R0, =0xFF815F74\n"    // ASM1989 -> In sx200 was: "LDRLT   R0, =0xFF814E54\n"     // "termDriverInit"
                  "BLLT    sub_FF815F4C\n"	   // ASM1989 -> 	err_init_task
                  "LDR     R0, =0xFF815F84\n"   // ASM1989 -> In sx200 was: "LDR     R0, =0xFF814E64\n"  // "/_term"
-                 "BL      sub_FF815B7C\n"	   // ASM1989 -> In sx200 was:  "BL      sub_FF814A5C\n"  termDeviceCreate
+                 "BL      sub_FF815B7C\n"	   // ASM1989 -> In sx200 was:  "sub_FF814A5C\n"  termDeviceCreate
                  "CMP     R0, #0\n"
                  "LDRLT   R0, =0xFF815F8C\n"   // ASM1989 -> In sx200 was:  FF814E6C // "termDeviceCreate"
                  "BLLT    sub_FF815F4C\n"       // ASM1989 -> err_init_task
@@ -597,7 +597,7 @@ void __attribute__((naked,noinline)) sub_FF873064_my() {  //  ASM1989 -> In sx20
                   							//In sx200 there was: "LDMEQFD SP!, {R4-R6,PC}\n"
                  "LDRNE   R0, [R4,#0x38]\n"		//ASM1989 -> In sx200 was: LDR
                  "MOVNE   R1, R5\n"				//ASM1989 -> In sx200 was: MOV
-                 "BLNE    sub_FF872F20\n"     //ASM1989 -> In sx200 was: "BL      sub_FF8573A0\n"  //Mounter.c:0
+                 "BLNE    sub_FF872F20\n"     //ASM1989 -> In sx200 was: "sub_FF8573A0\n"  //Mounter.c:0
                  // New in sx210
                  "LDR     R2, =0x39410\n"
                  "ADD     R1, R5, R5,LSL#4\n"

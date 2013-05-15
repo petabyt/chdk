@@ -22,6 +22,6 @@ NHSTUB(GiveSemaphore,               0xFF82218C)
 NHSTUB(SetScriptMode,               0xFF9B398C)
 NHSTUB(platformsub_kbd_fetch_data,  0xFF8293AC)
 
-NSTUB(taskNameToId,                 0xFFBAB72C)
+NHSTUB(taskNameToId,                0xFFBAB72C)
 NHSTUB(GetVRAMHPixelsSize,0xFFB567E4) // by find_eventproc name @ 0xFFBBBFC0
 NHSTUB(GetVRAMVPixelsSize,0xFFB567F0) // by find_eventproc name @ 0xFFBBBFC8

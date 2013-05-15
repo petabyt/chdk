@@ -3,7 +3,7 @@
 
 // Override stubs_entry.S
 NHSTUB(DoAFLock,                    0xff878eec)
-NSTUB(GetBatteryTemperature,        NULL_SUB)
+NHSTUB(GetBatteryTemperature,       NULL_SUB)
 NHSTUB(UnlockAF,                    0xff878efc)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)

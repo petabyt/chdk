@@ -17,9 +17,9 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NSTUB(DeleteFile_Fut                        ,0xff830e44) //  1 90%        == 0xff830e44
+//NHSTUB(DeleteFile_Fut                       ,0xff830e44) //  1 90%        == 0xff830e44
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff831954
-//NSTUB(kbd_pwr_off                           ,0xff8569fc) //  2 60%    *** != 0x00000000
+//NHSTUB(kbd_pwr_off                          ,0xff8569fc) //  2 60%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 // ERROR: rand is not found.                               //--- ---    *** != 0x00000000
 // ERROR: srand is not found.                              //--- ---    *** != 0x00000000
@@ -105,155 +105,155 @@ DEF(ctypes, 0xffb0faec)
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
-//NSTUB(CreateJumptable                       ,0xffae305c) //  1
-// ALT: NSTUB(CreateJumptable, 0xffae53cc) // 1 32/0
-//NSTUB(_uartr_req                            ,0xff81a7dc) //111
-//NSTUB(AllocateMemory                        ,0xffa758c4) //101
-NSTUB(AllocateUncacheableMemory               ,0xff834294) //112
-NSTUB(Close                                   ,0xff8314b8) //101
-NSTUB(CreateTask                              ,0x003f6824) //101
-NSTUB(DebugAssert                             ,0x003f6afc) //111
-NSTUB(DeleteDirectory_Fut                     ,0xff830eb8) //116
-NSTUB(DoAFLock                                ,0xff832d38) //102
-NSTUB(EnterToCompensationEVF                  ,0xff832f9c) //104
-NSTUB(ExecuteEventProcedure                   ,0xff87d1a0) //104
-NSTUB(ExitFromCompensationEVF                 ,0xff832fe0) //104
-NSTUB(ExitTask                                ,0x003f6ab4) //101
-NSTUB(ExpCtrlTool_StartContiAE                ,0xff83d720) //104
-NSTUB(ExpCtrlTool_StopContiAE                 ,0xff83d87c) //104
-NSTUB(Fclose_Fut                              ,0xff830f50) //101
-NSTUB(Feof_Fut                                ,0xff83113c) //  1
-NSTUB(Fflush_Fut                              ,0xff831178) //  1
-NSTUB(Fgets_Fut                               ,0xff8310a4) //  6
-NSTUB(Fopen_Fut                               ,0xff830f10) //101
-NSTUB(Fread_Fut                               ,0xff830ffc) //101
-//NSTUB(FreeMemory                            ,0xffa758bc) //101
-NSTUB(FreeUncacheableMemory                   ,0xff8342d4) //112
-NSTUB(Fseek_Fut                               ,0xff8310f0) //101
-NSTUB(Fwrite_Fut                              ,0xff831050) //101
-NSTUB(GetBatteryTemperature                   ,0xff8589e0) //102
-NSTUB(GetCCDTemperature                       ,0xff85896c) //102
-NSTUB(GetCurrentAvValue                       ,0xff956250) //102
-NSTUB(GetDrive_ClusterSize                    ,0xff8664cc) //  6
-NSTUB(GetDrive_FreeClusters                   ,0xff866524) //  6
-NSTUB(GetDrive_TotalClusters                  ,0xff8664fc) //  6
-NSTUB(GetFocusLensSubjectDistance             ,0xff955450) //102
-NSTUB(GetFocusLensSubjectDistanceFromLens     ,0xff9558a0) //  3
-NSTUB(GetImageFolder                          ,0xff9389ac) //  6
-NSTUB(GetKbdState                             ,0xff8569ec) //109
-NSTUB(GetMemInfo                              ,0xff81509c) //115
-NSTUB(GetOpticalTemperature                   ,0xff858a54) //102
-NSTUB(GetParameterData                        ,0xff98a660) //101
-NSTUB(GetPropertyCase                         ,0xff881218) //102
-NSTUB(GetSystemTime                           ,0xffa7591c) //101
-NSTUB(GetVRAMHPixelsSize                      ,0xff84bd7c) //102
-NSTUB(GetVRAMVPixelsSize                      ,0xff84bd88) //102
-NSTUB(GetZoomLensCurrentPoint                 ,0xff9596d0) //102
-NSTUB(GetZoomLensCurrentPosition              ,0xffa66a70) //102
-NSTUB(GiveSemaphore                           ,0x003f7704) //112
-NSTUB(IsStrobeChargeCompleted                 ,0xff8cb1e4) //102
-NSTUB(LEDDrive                                ,0xff96058c) //101
-NSTUB(LocalTime                               ,0x003fb1b8) //115
-NSTUB(LockMainPower                           ,0xff885ac8) //103
-//NSTUB(Lseek                                 ,0xff8316d4) //101
-NSTUB(MakeSDCardBootable                      ,0xff86675c) //105
-NSTUB(MoveFocusLensToDistance                 ,0xffadc114) //102
-NSTUB(MoveIrisWithAv                          ,0xffa70d54) //102
-NSTUB(MoveZoomLensWithPoint                   ,0xffa71488) //102
-//NSTUB(NewTaskShell                          ,0xff880b98) //101
-NSTUB(Open                                    ,0xff8313f0) //101
-NSTUB(PB2Rec                                  ,0xff888810) //104
-NSTUB(PT_MoveDigitalZoomToWide                ,0xff86eab4) //102
-NSTUB(PT_MoveOpticalZoomAt                    ,0xff86ea8c) //102
-NSTUB(PT_PlaySound                            ,0xff8779dc) // 11
-NSTUB(PostLogicalEventForNotPowerType         ,0xff8851bc) //103
-NSTUB(PostLogicalEventToUI                    ,0xff885208) //103
-NSTUB(PutInNdFilter                           ,0xffa71260) //102
-NSTUB(PutOutNdFilter                          ,0xffa71284) //102
-NSTUB(Read                                    ,0xff815b58) //101
-NSTUB(ReadFastDir                             ,0xffa56f94) //115
-NSTUB(Rec2PB                                  ,0xff888850) //104
-NSTUB(RefreshPhysicalScreen                   ,0xff897430) //104
-//NSTUB(Remove                                ,0xff83162c) //  6
-NSTUB(RenameFile_Fut                          ,0xff830db0) //116
-NSTUB(Restart                                 ,0xff835aa8) //106
-NSTUB(ScreenLock                              ,0xff898450) //  4
-NSTUB(ScreenUnlock                            ,0xff8984b4) //  3
-NSTUB(SetAE_ShutterSpeed                      ,0xffadf234) //102
-NSTUB(SetAutoShutdownTime                     ,0xff885b3c) //103
-NSTUB(SetCurrentCaptureModeType               ,0xff88c9e8) //101
-NSTUB(SetFileAttributes                       ,0xff8318bc) //  6
-NSTUB(SetFileTimeStamp                        ,0xff831844) //  6
-NSTUB(SetLogicalEventActive                   ,0xff885844) //101
-NSTUB(SetParameterData                        ,0xff98a5d0) //101
-NSTUB(SetPropertyCase                         ,0xff881090) //102
-NSTUB(SetScriptMode                           ,0xff885894) //101
-NSTUB(SleepTask                               ,0x003f79b0) //101
-NSTUB(TakeSemaphore                           ,0x003f7634) //101
-NSTUB(TurnOffBackLight                        ,0xff892548) //104
-NSTUB(TurnOnBackLight                         ,0xff892530) //104
-NSTUB(UIFS_WriteFirmInfoToFile                ,0xff97c1a0) //101
-NSTUB(UnlockAF                                ,0xff832d70) //102
-NSTUB(UnlockMainPower                         ,0xff885a1c) //103
-NSTUB(UnsetZoomForMovie                       ,0xff990e30) //104
-NSTUB(VbattGet                                ,0xff82c3cc) //101
-NSTUB(Write                                   ,0xff83150c) //101
-NSTUB(WriteSDCard                             ,0xff948710) //108
-NSTUB(_log                                    ,0x003fcce0) //111
-NSTUB(_log10                                  ,0x003fd220) //112
-NSTUB(_pow                                    ,0x003fd398) //114
-NSTUB(_sqrt                                   ,0x003fefbc) //  6
-NSTUB(add_ptp_handler                         ,0xffa1ac68) //  6
-NSTUB(apex2us                                 ,0xff9de728) //  4
-NSTUB(close                                   ,0xff8159b4) //  6
-NSTUB(closedir                                ,0xffa56df0) //  4
-NSTUB(err_init_task                           ,0xff81437c) //111
-NSTUB(exmem_alloc                             ,0xff87bb74) //101
-NSTUB(free                                    ,0xff812f78) //112
-NSTUB(kbd_p1_f                                ,0xff82ee00) //109
-NSTUB(kbd_p1_f_cont                           ,0xff82ee0c) //109
-NSTUB(kbd_p2_f                                ,0xff82e5f8) //109
-NSTUB(kbd_read_keys                           ,0xff82edb0) //109
-NSTUB(kbd_read_keys_r2                        ,0xff856508) //109
-NSTUB(lseek                                   ,0xff8316d4) //101
-NSTUB(malloc                                  ,0xff812f20) //112
-NSTUB(memcmp                                  ,0xff81ae30) //101
-NSTUB(memcpy                                  ,0xff837214) //101
-NSTUB(memset                                  ,0xff9dc9b8) //101
-NSTUB(mkdir                                   ,0xff831954) //  6
-NSTUB(mktime_ext                              ,0xff898980) //  1
-NSTUB(open                                    ,0xff815904) //  6
-NSTUB(OpenFastDir                             ,0xffa56e40) //115
-NSTUB(qsort                                   ,0xff9dc958) //  6
-//NSTUB(read                                  ,0xff815b58) //101
-NSTUB(reboot_fw_update                        ,0xffa5c370) //106
-NSTUB(set_control_event                       ,0xff885504) //111
-NSTUB(stat                                    ,0xff83171c) //109
-NSTUB(strcat                                  ,0xff899000) //  1
-NSTUB(strchr                                  ,0xff812dec) //  1
-NSTUB(strcmp                                  ,0xff81af2c) //101
-NSTUB(strcpy                                  ,0xff81ae18) //101
-NSTUB(strftime                                ,0xff8989cc) //113
-NSTUB(strlen                                  ,0xff812e38) //101
-NSTUB(strncmp                                 ,0xff812da0) //  1
-NSTUB(strncpy                                 ,0xff812d64) //  1
-NSTUB(strrchr                                 ,0xff812e10) //  1
-NSTUB(strtol                                  ,0xff837200) //101
-NSTUB(strtolx                                 ,0xff837004) //109
-  DEF(task_CaptSeq                            ,0xff8712dc) //110
-  DEF(task_ExpDrv                             ,0xff8b0198) //110
-  DEF(task_InitFileModules                    ,0xff889004) //110
-  DEF(task_MovieRecord                        ,0xff95f834) //110
-  DEF(task_PhySw                              ,0xff82e95c) //110
-NSTUB(time                                    ,0x003fb794) //  6
-NSTUB(vsprintf                                ,0xff81acc8) //115
-//NSTUB(write                                 ,0xff83150c) //101
-//NSTUB(GetSDProtect                          ,0xff82ed6c) //101
-//NSTUB(StartRecModeMenu                      ,0xff881c74) //102
-//NSTUB(DispCon_ShowBitmapColorBar            ,0xff852dc0) //102
-//NSTUB(ResetZoomLens                         ,0xffa713dc) //102
-//NSTUB(ResetFocusLens                        ,0xffa6ff58) //102
-//NSTUB(NR_GetDarkSubType                     ,0xff9e4fc8) //102
-//NSTUB(NR_SetDarkSubType                     ,0xff9e4f00) //102
-//NSTUB(SavePaletteData                       ,0xff962f8c) //102
-//NSTUB(GUISrv_StartGUISystem                 ,0xff896ce4) //101
+//NHSTUB(CreateJumptable                      ,0xffae305c) //  1
+// ALT: NHSTUB(CreateJumptable, 0xffae53cc) // 1 32/0
+//NHSTUB(_uartr_req                           ,0xff81a7dc) //111
+//NHSTUB(AllocateMemory                       ,0xffa758c4) //101
+NHSTUB(AllocateUncacheableMemory              ,0xff834294) //112
+NHSTUB(Close                                  ,0xff8314b8) //101
+NHSTUB(CreateTask                             ,0x003f6824) //101
+NHSTUB(DebugAssert                            ,0x003f6afc) //111
+NHSTUB(DeleteDirectory_Fut                    ,0xff830eb8) //116
+NHSTUB(DoAFLock                               ,0xff832d38) //102
+NHSTUB(EnterToCompensationEVF                 ,0xff832f9c) //104
+NHSTUB(ExecuteEventProcedure                  ,0xff87d1a0) //104
+NHSTUB(ExitFromCompensationEVF                ,0xff832fe0) //104
+NHSTUB(ExitTask                               ,0x003f6ab4) //101
+NHSTUB(ExpCtrlTool_StartContiAE               ,0xff83d720) //104
+NHSTUB(ExpCtrlTool_StopContiAE                ,0xff83d87c) //104
+NHSTUB(Fclose_Fut                             ,0xff830f50) //101
+NHSTUB(Feof_Fut                               ,0xff83113c) //  1
+NHSTUB(Fflush_Fut                             ,0xff831178) //  1
+NHSTUB(Fgets_Fut                              ,0xff8310a4) //  6
+NHSTUB(Fopen_Fut                              ,0xff830f10) //101
+NHSTUB(Fread_Fut                              ,0xff830ffc) //101
+//NHSTUB(FreeMemory                           ,0xffa758bc) //101
+NHSTUB(FreeUncacheableMemory                  ,0xff8342d4) //112
+NHSTUB(Fseek_Fut                              ,0xff8310f0) //101
+NHSTUB(Fwrite_Fut                             ,0xff831050) //101
+NHSTUB(GetBatteryTemperature                  ,0xff8589e0) //102
+NHSTUB(GetCCDTemperature                      ,0xff85896c) //102
+NHSTUB(GetCurrentAvValue                      ,0xff956250) //102
+NHSTUB(GetDrive_ClusterSize                   ,0xff8664cc) //  6
+NHSTUB(GetDrive_FreeClusters                  ,0xff866524) //  6
+NHSTUB(GetDrive_TotalClusters                 ,0xff8664fc) //  6
+NHSTUB(GetFocusLensSubjectDistance            ,0xff955450) //102
+NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff9558a0) //  3
+NHSTUB(GetImageFolder                         ,0xff9389ac) //  6
+NHSTUB(GetKbdState                            ,0xff8569ec) //109
+NHSTUB(GetMemInfo                             ,0xff81509c) //115
+NHSTUB(GetOpticalTemperature                  ,0xff858a54) //102
+NHSTUB(GetParameterData                       ,0xff98a660) //101
+NHSTUB(GetPropertyCase                        ,0xff881218) //102
+NHSTUB(GetSystemTime                          ,0xffa7591c) //101
+NHSTUB(GetVRAMHPixelsSize                     ,0xff84bd7c) //102
+NHSTUB(GetVRAMVPixelsSize                     ,0xff84bd88) //102
+NHSTUB(GetZoomLensCurrentPoint                ,0xff9596d0) //102
+NHSTUB(GetZoomLensCurrentPosition             ,0xffa66a70) //102
+NHSTUB(GiveSemaphore                          ,0x003f7704) //112
+NHSTUB(IsStrobeChargeCompleted                ,0xff8cb1e4) //102
+NHSTUB(LEDDrive                               ,0xff96058c) //101
+NHSTUB(LocalTime                              ,0x003fb1b8) //115
+NHSTUB(LockMainPower                          ,0xff885ac8) //103
+//NHSTUB(Lseek                                ,0xff8316d4) //101
+NHSTUB(MakeSDCardBootable                     ,0xff86675c) //105
+NHSTUB(MoveFocusLensToDistance                ,0xffadc114) //102
+NHSTUB(MoveIrisWithAv                         ,0xffa70d54) //102
+NHSTUB(MoveZoomLensWithPoint                  ,0xffa71488) //102
+//NHSTUB(NewTaskShell                         ,0xff880b98) //101
+NHSTUB(Open                                   ,0xff8313f0) //101
+NHSTUB(PB2Rec                                 ,0xff888810) //104
+NHSTUB(PT_MoveDigitalZoomToWide               ,0xff86eab4) //102
+NHSTUB(PT_MoveOpticalZoomAt                   ,0xff86ea8c) //102
+NHSTUB(PT_PlaySound                           ,0xff8779dc) // 11
+NHSTUB(PostLogicalEventForNotPowerType        ,0xff8851bc) //103
+NHSTUB(PostLogicalEventToUI                   ,0xff885208) //103
+NHSTUB(PutInNdFilter                          ,0xffa71260) //102
+NHSTUB(PutOutNdFilter                         ,0xffa71284) //102
+NHSTUB(Read                                   ,0xff815b58) //101
+NHSTUB(ReadFastDir                            ,0xffa56f94) //115
+NHSTUB(Rec2PB                                 ,0xff888850) //104
+NHSTUB(RefreshPhysicalScreen                  ,0xff897430) //104
+//NHSTUB(Remove                               ,0xff83162c) //  6
+NHSTUB(RenameFile_Fut                         ,0xff830db0) //116
+NHSTUB(Restart                                ,0xff835aa8) //106
+NHSTUB(ScreenLock                             ,0xff898450) //  4
+NHSTUB(ScreenUnlock                           ,0xff8984b4) //  3
+NHSTUB(SetAE_ShutterSpeed                     ,0xffadf234) //102
+NHSTUB(SetAutoShutdownTime                    ,0xff885b3c) //103
+NHSTUB(SetCurrentCaptureModeType              ,0xff88c9e8) //101
+NHSTUB(SetFileAttributes                      ,0xff8318bc) //  6
+NHSTUB(SetFileTimeStamp                       ,0xff831844) //  6
+NHSTUB(SetLogicalEventActive                  ,0xff885844) //101
+NHSTUB(SetParameterData                       ,0xff98a5d0) //101
+NHSTUB(SetPropertyCase                        ,0xff881090) //102
+NHSTUB(SetScriptMode                          ,0xff885894) //101
+NHSTUB(SleepTask                              ,0x003f79b0) //101
+NHSTUB(TakeSemaphore                          ,0x003f7634) //101
+NHSTUB(TurnOffBackLight                       ,0xff892548) //104
+NHSTUB(TurnOnBackLight                        ,0xff892530) //104
+NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff97c1a0) //101
+NHSTUB(UnlockAF                               ,0xff832d70) //102
+NHSTUB(UnlockMainPower                        ,0xff885a1c) //103
+NHSTUB(UnsetZoomForMovie                      ,0xff990e30) //104
+NHSTUB(VbattGet                               ,0xff82c3cc) //101
+NHSTUB(Write                                  ,0xff83150c) //101
+NHSTUB(WriteSDCard                            ,0xff948710) //108
+NHSTUB(_log                                   ,0x003fcce0) //111
+NHSTUB(_log10                                 ,0x003fd220) //112
+NHSTUB(_pow                                   ,0x003fd398) //114
+NHSTUB(_sqrt                                  ,0x003fefbc) //  6
+NHSTUB(add_ptp_handler                        ,0xffa1ac68) //  6
+NHSTUB(apex2us                                ,0xff9de728) //  4
+NHSTUB(close                                  ,0xff8159b4) //  6
+NHSTUB(closedir                               ,0xffa56df0) //  4
+NHSTUB(err_init_task                          ,0xff81437c) //111
+NHSTUB(exmem_alloc                            ,0xff87bb74) //101
+NHSTUB(free                                   ,0xff812f78) //112
+NHSTUB(kbd_p1_f                               ,0xff82ee00) //109
+NHSTUB(kbd_p1_f_cont                          ,0xff82ee0c) //109
+NHSTUB(kbd_p2_f                               ,0xff82e5f8) //109
+NHSTUB(kbd_read_keys                          ,0xff82edb0) //109
+NHSTUB(kbd_read_keys_r2                       ,0xff856508) //109
+NHSTUB(lseek                                  ,0xff8316d4) //101
+NHSTUB(malloc                                 ,0xff812f20) //112
+NHSTUB(memcmp                                 ,0xff81ae30) //101
+NHSTUB(memcpy                                 ,0xff837214) //101
+NHSTUB(memset                                 ,0xff9dc9b8) //101
+NHSTUB(mkdir                                  ,0xff831954) //  6
+NHSTUB(mktime_ext                             ,0xff898980) //  1
+NHSTUB(open                                   ,0xff815904) //  6
+NHSTUB(OpenFastDir                            ,0xffa56e40) //115
+NHSTUB(qsort                                  ,0xff9dc958) //  6
+//NHSTUB(read                                 ,0xff815b58) //101
+NHSTUB(reboot_fw_update                       ,0xffa5c370) //106
+NHSTUB(set_control_event                      ,0xff885504) //111
+NHSTUB(stat                                   ,0xff83171c) //109
+NHSTUB(strcat                                 ,0xff899000) //  1
+NHSTUB(strchr                                 ,0xff812dec) //  1
+NHSTUB(strcmp                                 ,0xff81af2c) //101
+NHSTUB(strcpy                                 ,0xff81ae18) //101
+NHSTUB(strftime                               ,0xff8989cc) //113
+NHSTUB(strlen                                 ,0xff812e38) //101
+NHSTUB(strncmp                                ,0xff812da0) //  1
+NHSTUB(strncpy                                ,0xff812d64) //  1
+NHSTUB(strrchr                                ,0xff812e10) //  1
+NHSTUB(strtol                                 ,0xff837200) //101
+NHSTUB(strtolx                                ,0xff837004) //109
+   DEF(task_CaptSeq                           ,0xff8712dc) //110
+   DEF(task_ExpDrv                            ,0xff8b0198) //110
+   DEF(task_InitFileModules                   ,0xff889004) //110
+   DEF(task_MovieRecord                       ,0xff95f834) //110
+   DEF(task_PhySw                             ,0xff82e95c) //110
+NHSTUB(time                                   ,0x003fb794) //  6
+NHSTUB(vsprintf                               ,0xff81acc8) //115
+//NHSTUB(write                                ,0xff83150c) //101
+//NHSTUB(GetSDProtect                         ,0xff82ed6c) //101
+//NHSTUB(StartRecModeMenu                     ,0xff881c74) //102
+//NHSTUB(DispCon_ShowBitmapColorBar           ,0xff852dc0) //102
+//NHSTUB(ResetZoomLens                        ,0xffa713dc) //102
+//NHSTUB(ResetFocusLens                       ,0xffa6ff58) //102
+//NHSTUB(NR_GetDarkSubType                    ,0xff9e4fc8) //102
+//NHSTUB(NR_SetDarkSubType                    ,0xff9e4f00) //102
+//NHSTUB(SavePaletteData                      ,0xff962f8c) //102
+//NHSTUB(GUISrv_StartGUISystem                ,0xff896ce4) //101

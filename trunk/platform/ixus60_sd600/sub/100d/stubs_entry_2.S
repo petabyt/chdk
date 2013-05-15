@@ -21,7 +21,7 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(SetScriptMode,               0xFF970C98)
 NHSTUB(kbd_read_keys,               0xFF826D30)
 
-NSTUB(printf,                       0xFFB08550)
-NSTUB(taskNameToId,                 0xFFB19990)
+NHSTUB(printf,                      0xFFB08550)
+NHSTUB(taskNameToId,                0xFFB19990)
 NHSTUB(GetVRAMHPixelsSize,0xFFAC8E48) // by find_eventproc name @ 0xFFB29170
 NHSTUB(GetVRAMVPixelsSize,0xFFAC8E54) // by find_eventproc name @ 0xFFB29178

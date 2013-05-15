@@ -25,6 +25,6 @@ NHSTUB(MFOff,                       0xFFB0B1B0)
 NHSTUB(MFOn,                        0xFFB0B14C)
 NHSTUB(SetScriptMode,               0xFFB43A00)
 
-NSTUB(taskNameToId,                 0xFF935A64)
+NHSTUB(taskNameToId,                0xFF935A64)
 NHSTUB(GetVRAMHPixelsSize,0xFFA5EE78) // by find_eventproc name @ 0xFFBA2F30
 NHSTUB(GetVRAMVPixelsSize,0xFFA5EE84) // by find_eventproc name @ 0xFFBA2F38

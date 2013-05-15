@@ -2602,8 +2602,8 @@ void print_results(const char *curr_name, int k)
 	// write to header (if error) or body buffer (no error)
 	out_hdr = err;
 
-	char *macro = "NSTUB";
-	if (strncmp(curr_name,"task_",5) == 0) macro = "  DEF";
+	char *macro = "NHSTUB";
+	if (strncmp(curr_name,"task_",5) == 0) macro = "   DEF";
 
 	if (count == 0)
 	{
@@ -2615,9 +2615,9 @@ void print_results(const char *curr_name, int k)
 	else
 	{
 		if (ostub2 || (func_names[k].flags & UNUSED))
-		    sprintf(line+strlen(line),"//%s(%-38s,0x%08x) //%3d ", macro, curr_name, matches->ptr, matches->sig);
+		    sprintf(line+strlen(line),"//%s(%-37s,0x%08x) //%3d ", macro, curr_name, matches->ptr, matches->sig);
 		else
-			sprintf(line+strlen(line),"%s(%-40s,0x%08x) //%3d ", macro, curr_name, matches->ptr, matches->sig);
+			sprintf(line+strlen(line),"%s(%-39s,0x%08x) //%3d ", macro, curr_name, matches->ptr, matches->sig);
 
 		if (matches->fail > 0)
 			sprintf(line+strlen(line),"%2d%% ", matches->success*100/(matches->success+matches->fail));
