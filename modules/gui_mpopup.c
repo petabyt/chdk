@@ -103,8 +103,8 @@ void gui_mpopup_draw() {
         w+=2;
         h = mpopup_actions_num;
     
-        x = 10*FONT_WIDTH;
-        y = 5*FONT_HEIGHT;
+        x = (camera_screen.width - w*FONT_WIDTH) / 2;
+        y = (camera_screen.height - h*FONT_HEIGHT) / 2;
         draw_rect_shadow(x-3, y-3, x+w*FONT_WIDTH+5, y+h*FONT_HEIGHT+4, COLOR_BLACK, 3); //shadow
         draw_filled_rect_thick(x-4, y-4, x+w*FONT_WIDTH+4, y+h*FONT_HEIGHT+3, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), 3); // main box
     

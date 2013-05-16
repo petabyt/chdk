@@ -587,11 +587,13 @@ static void gui_uedit_kbd_process_menu_btn()
 #define UEDIT_MENU      1
 #define UEDIT_SCRIPT    2
 #define UEDIT_MODULE    4
+#define UEDIT_REMOVE    8
 
 static struct mpopup_item popup_uedit[]= {
         { UEDIT_MENU,           LANG_USER_MENU_ITEMS },
         { UEDIT_SCRIPT,         LANG_MENU_USER_MENU_SCRIPT_ADD },
         { UEDIT_MODULE,         LANG_MENU_USER_MENU_MODULE_ADD },
+        { UEDIT_REMOVE,         LANG_MENU_USER_MENU_REMOVE },
         { 0,                    0 },
 };
 
@@ -708,6 +710,9 @@ static void uedit_set(unsigned int actn)
         case UEDIT_MODULE:
             libfselect->file_select(LANG_MENU_USER_MENU_MODULE_ADD, "A/CHDK/MODULES", "A/CHDK/MODULES", gui_uedit_module_selected);
             break;
+        case UEDIT_REMOVE:
+            del_usermenu();
+            break;
     }
     gui_menu_erase_and_redraw();
 }
@@ -736,6 +741,7 @@ static int gui_uedit_kbd_process() {
                 del_usermenu();
             }
             break;
+        case KEY_SHOOT_HALF:
         case KEY_ERASE:
             del_usermenu();
             break;
@@ -753,7 +759,7 @@ static int gui_uedit_kbd_process() {
         case KEY_SET:
             if (curr_menu->title == LANG_MENU_USER_MENU)
             {
-                libmpopup->show_popup( popup_uedit, UEDIT_MENU|UEDIT_SCRIPT|UEDIT_MODULE, uedit_set);
+                libmpopup->show_popup( popup_uedit, UEDIT_MENU|UEDIT_SCRIPT|UEDIT_MODULE|UEDIT_REMOVE, uedit_set);
             }
             else
             {
