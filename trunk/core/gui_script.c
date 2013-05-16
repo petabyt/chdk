@@ -686,12 +686,6 @@ static void gui_load_script_default(int arg) {
     save_params_values(1);
 }
 
-extern void add_script_to_user_menu( char * , char *);
-
-static void gui_add_script_to_user_menu(int arg) {
-    add_script_to_user_menu( conf.script_file ,  script_title );
-}
-
 static const char* gui_script_autostart_modes[]=            { "Off", "On", "Once"};
 
 // Indexes into script_submenu_items array, if you add or remove entries adjust these
@@ -704,7 +698,6 @@ static CMenuItem script_submenu_items[] = {
     // remote autostart
     MENU_ENUM2  (0x5f,LANG_MENU_SCRIPT_AUTOSTART,           &conf.script_startup,               gui_script_autostart_modes ),
     MENU_ITEM   (0x5c,LANG_MENU_LUA_RESTART,                MENUITEM_BOOL,                      &conf.debug_lua_restart_on_error,   0 ),
-    MENU_ITEM   (0x35,LANG_MENU_USER_MENU_SCRIPT_ADD,       MENUITEM_PROC,                      gui_add_script_to_user_menu, 0 ),
     MENU_ITEM   (0x5d,LANG_MENU_SCRIPT_DEFAULT_VAL,         MENUITEM_PROC,                      gui_load_script_default,    0 ),
     MENU_ITEM   (0x5e,LANG_MENU_SCRIPT_PARAM_SET,           MENUITEM_ENUM,                      gui_script_param_set_enum,  0 ),
     MENU_ITEM   (0x5c,LANG_MENU_SCRIPT_PARAM_SAVE,          MENUITEM_ENUM,                      gui_script_param_save_enum, 0 ),

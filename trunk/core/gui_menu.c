@@ -479,54 +479,9 @@ int gui_menu_kbd_process() {
     {
         case KEY_ERASE:
         case KEY_SHOOT_HALF:
-            if (conf.user_menu_enable == 3)
-            {
-                if (curr_menu->title != LANG_MENU_USER_MENU)
-                {
-                    /*
-                    * Add new entry
-                    * user menu is currently not visible so no redraw necessary
-                    */
-                    add_user_menu_item(curr_menu->menu[gui_menu_curr_item],&gui_menu_curr_item);
-                }
-                else
-                {
-                    /*
-                    * Remove entry from menu
-                    */
-                    del_user_menu_item(&gui_menu_curr_item);
-
-                    /*
-                    * Check to see if the last visible entry was deleted and we need need
-                    * to move up our top menu item.
-                    */
-                    if(gui_menu_top_item)
-                        if(!curr_menu->menu[gui_menu_top_item + num_lines-1].text)
-                            gui_menu_top_item--;
-
-                    /*
-                    * menu list is smaller so have to redraw everything to get
-                    * things like scroll bar correct.
-                    */
-                    gui_menu_redraw=2;
-
-                    /*
-                    * if the new menu is smaller than visible menu lines on screen
-                    * you have to restore full screen before menu redraw.
-                    * If you don't do this, then a new smaller menu will be drawn
-                    * on top of the older larger menu
-                    *
-                    */
-                    if(gui_menu_rows() < num_lines)
-                        gui_set_need_restore();
-                }
-            }
-            else
-            {
-                if (!increment_factor())
-                    int_incr = 1;
-                gui_menu_redraw=1;
-            }
+            if (!increment_factor())
+                int_incr = 1;
+            gui_menu_redraw=1;
             break;
         case JOGDIAL_LEFT:
         case KEY_UP:
@@ -663,49 +618,17 @@ int gui_menu_kbd_process() {
             break;
 
         case KEY_ZOOM_IN:
-            /*
-            * Move current entry up in menu
-            * if in user menu edit mode and viewing user menu
-            */
-            if( (conf.user_menu_enable == 3)  && (curr_menu->title == LANG_MENU_USER_MENU)) {
-                move_user_menu_item_up(&gui_menu_curr_item);
-                if(gui_menu_curr_item < gui_menu_top_item+1) {
-                    if(gui_menu_curr_item)
-                        gui_menu_top_item = gui_menu_curr_item-1;
-                }
-                gui_menu_redraw=1;
-            }
-            else
-            {
-                if (decrement_factor())
-                    gui_menu_redraw = 1;
-            }
+            if (decrement_factor())
+                gui_menu_redraw = 1;
             break;
 
         case KEY_ZOOM_OUT:
-            /*
-            * Move current entry down in menu
-            * if in user menu edit mode and viewing user menu
-            */
-            if( (conf.user_menu_enable == 3)  && (curr_menu->title == LANG_MENU_USER_MENU))
-            {
-                move_user_menu_item_down(&gui_menu_curr_item);
-                if(gui_menu_curr_item > gui_menu_top_item + num_lines -2)
-                {
-                    if((gui_menu_curr_item < USER_MENU_ITEMS) && curr_menu->menu[gui_menu_curr_item +1].text)
-                        gui_menu_top_item++;
-                }
-                gui_menu_redraw=1;
-            }
-            else
-            {
-                if (increment_factor())
-                    gui_menu_redraw = 1;
-            }
+            if (increment_factor())
+                gui_menu_redraw = 1;
             break;
 
         case KEY_DISPLAY:
-            if (camera_info.cam_has_zoom_lever || (conf.user_menu_enable == 3 && curr_menu->title == LANG_MENU_USER_MENU))
+            if (camera_info.cam_has_zoom_lever)
             {
                 gui_menu_back();
             }
