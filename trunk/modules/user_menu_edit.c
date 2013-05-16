@@ -95,6 +95,7 @@ static int inUserMenu(int n)
 
 //-------------------------------------------------------------------
 static CMenuItem mod_menu_item;
+static char msgbuf[200];
 
 void add_usermenu_item(unsigned int btn)
 {
@@ -126,9 +127,8 @@ static void add_usermenu()
     if (!inUserMenu(gui_menu_curr_item) && (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_BACK))
     {
         mod_menu_item = curr_menu->menu[gui_menu_curr_item];
-        char buf[100];
-        sprintf(buf,lang_str(LANG_USER_MENU_ADD), lang_str(mod_menu_item.text));
-        gui_mbox_init(LANG_INFORMATION, (int)buf, MBOX_BTN_YES_NO|MBOX_DEF_BTN1|MBOX_TEXT_CENTER, add_usermenu_item);
+        sprintf(msgbuf, lang_str(LANG_USER_MENU_ADD), lang_str(mod_menu_item.text));
+        gui_mbox_init(LANG_INFORMATION, (int)msgbuf, MBOX_BTN_YES_NO|MBOX_DEF_BTN1|MBOX_TEXT_CENTER, add_usermenu_item);
     }
 }
 
@@ -182,13 +182,12 @@ static void del_usermenu()
     if (inUserMenu(gui_menu_curr_item))
     {
         mod_menu_item = curr_menu->menu[gui_menu_curr_item];
-        char buf[100];
-        sprintf(buf,lang_str(LANG_USER_MENU_DEL), lang_str(mod_menu_item.text));
-        gui_mbox_init(LANG_INFORMATION, (int)buf, MBOX_BTN_YES_NO|MBOX_DEF_BTN1|MBOX_TEXT_CENTER, del_usermenu_item);
+        sprintf(msgbuf, lang_str(LANG_USER_MENU_DEL), lang_str(mod_menu_item.text));
+        gui_mbox_init(LANG_INFORMATION, (int)msgbuf, MBOX_BTN_YES_NO|MBOX_DEF_BTN1|MBOX_TEXT_CENTER, del_usermenu_item);
     }
 }
 
-static void move_user_menu_item(int* cur_menu_item_indx, int dir)
+static void move_usermenu_item(int* cur_menu_item_indx, int dir)
 {
     int src_index, dst_index ;
     char *tbuff;
@@ -219,16 +218,16 @@ static void move_user_menu_item(int* cur_menu_item_indx, int dir)
     camera_info.state.user_menu_has_changed = 1;
 }
 
-void move_user_menu_item_up(int* cur_menu_item_indx)
+static void move_usermenu_item_up(int* cur_menu_item_indx)
 {
     /*
      * Move entry up
      */
     if (*cur_menu_item_indx > 1)
-        move_user_menu_item(cur_menu_item_indx, -1);
+        move_usermenu_item(cur_menu_item_indx, -1);
 }
 
-void move_user_menu_item_down(int* cur_menu_item_indx)
+static void move_usermenu_item_down(int* cur_menu_item_indx)
 {
     // don't allow moving link to main menu
     if (*cur_menu_item_indx == 0)
@@ -238,21 +237,21 @@ void move_user_menu_item_down(int* cur_menu_item_indx)
      * Move entry down below next entry if next entry is not empty
      */
     if((*cur_menu_item_indx < (USER_MENU_ITEMS)) && (user_submenu.menu[*cur_menu_item_indx +1].text))
-        move_user_menu_item(cur_menu_item_indx, 1);
+        move_usermenu_item(cur_menu_item_indx, 1);
 }
 
-void add_script_to_user_menu(const char* fname, char* title)
+static void add_extern_to_user_menu(const char* fname, char* title, char sym, short type, int* func)
 {
-    int i ;
+    int i;
     /*
-     * Insert script info at end of existing entries
+     * Insert script/module info at end of existing entries
      */
     CMenuItem *items = (CMenuItem*)user_submenu.menu;
     gui_menu_erase_and_redraw();
 
     for(i = 1; i < USER_MENU_ITEMS + 1; i++)
     {
-        if (!items[i].text)   // insert script title & full filename in next available spot 
+        if (!items[i].text)   // insert script/module title & full filename in next available spot 
         {
             if (conf.user_menu_vars.items[i-1].script_file == 0)
                 conf.user_menu_vars.items[i-1].script_file = malloc(CONF_STR_LEN);
@@ -261,16 +260,15 @@ void add_script_to_user_menu(const char* fname, char* title)
                 conf.user_menu_vars.items[i-1].script_title = malloc(CONF_STR_LEN);
             strcpy(conf.user_menu_vars.items[i-1].script_title, title);
 
-            items[i].symbol = 0x35;
-            items[i].opt_len = 0 ;
-            items[i].type = MENUITEM_PROC;
+            items[i].symbol = sym;
+            items[i].opt_len = 0;
+            items[i].type = type;
             items[i].text = (int) conf.user_menu_vars.items[i-1].script_title;
-            items[i].value = (int *) gui_load_user_menu_script ;
+            items[i].value = func;
             items[i].arg = (int) conf.user_menu_vars.items[i-1].script_file;
             
-            char buf[200];
-            sprintf(buf,lang_str(LANG_USER_MENU_ITEM_ADDED), lang_str(items[i].text));
-            gui_mbox_init(LANG_MENU_USER_MENU, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, NULL);
+            sprintf(msgbuf,lang_str(LANG_USER_MENU_ITEM_ADDED), lang_str(items[i].text));
+            gui_mbox_init(LANG_MENU_USER_MENU, (int)msgbuf, MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, NULL);
             camera_info.state.user_menu_has_changed = 1;
             return;
         }
@@ -278,41 +276,14 @@ void add_script_to_user_menu(const char* fname, char* title)
     gui_mbox_init(LANG_MENU_USER_MENU, LANG_USER_MENU_FULL, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 }
 
-void add_module_to_user_menu(const char* fname, char* title)
+static void add_script_to_user_menu(const char* fname, char* title)
 {
-    int i ;
-    /*
-     * Insert module info at end of existing entries
-     */
-    CMenuItem *items = (CMenuItem*)user_submenu.menu;
-    gui_menu_erase_and_redraw();
+    add_extern_to_user_menu(fname, title, 0x35, MENUITEM_PROC, (int*)gui_load_user_menu_script);
+}
 
-    for(i = 1; i < USER_MENU_ITEMS + 1; i++)
-    {
-        if (!items[i].text)   // insert module title & full filename in next available spot 
-        {
-            if (conf.user_menu_vars.items[i-1].script_file == 0)
-                conf.user_menu_vars.items[i-1].script_file = malloc(CONF_STR_LEN);
-            strcpy(conf.user_menu_vars.items[i-1].script_file, fname);
-            if (conf.user_menu_vars.items[i-1].script_title == 0)
-                conf.user_menu_vars.items[i-1].script_title = malloc(CONF_STR_LEN);
-            strcpy(conf.user_menu_vars.items[i-1].script_title, title);
-
-            items[i].symbol = 0x35;
-            items[i].opt_len = 0 ;
-            items[i].type = MENUITEM_PROC|MENUITEM_USER_MODULE;
-            items[i].text = (int) conf.user_menu_vars.items[i-1].script_title;
-            items[i].value = (int *) module_run ;
-            items[i].arg = (int) conf.user_menu_vars.items[i-1].script_file;
-            
-            char buf[200];
-            sprintf(buf,lang_str(LANG_USER_MENU_ITEM_ADDED), lang_str(items[i].text));
-            gui_mbox_init(LANG_MENU_USER_MENU, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, NULL);
-            camera_info.state.user_menu_has_changed = 1;
-            return;
-        }
-    }
-    gui_mbox_init(LANG_MENU_USER_MENU, LANG_USER_MENU_FULL, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+static void add_module_to_user_menu(const char* fname, char* title)
+{
+    add_extern_to_user_menu(fname, title, 0x28, MENUITEM_PROC|MENUITEM_USER_MODULE, (int*)module_run);
 }
 
 //-------------------------------------------------------------------
@@ -505,8 +476,6 @@ static void gui_draw_text(char *str, int num_symbols)
     rbf_draw_char(xx, yy, ' ', cl);
 }
 
-static char tbuf[64];
-
 // Common code extracted from gui_draw for displaying an int or enum that can be enabled/disabled
 static void gui_draw_state_value(CMenuItem *c)
 {
@@ -562,12 +531,12 @@ static void gui_draw(int enforce_redraw)
                     break;
                 case MENUITEM_SUBMENU_PROC:
                 case MENUITEM_SUBMENU:
-                    sprintf(tbuf, "%s%s", lang_str(curr_menu->menu[imenu].text),(conf.menu_symbol_enable)?"":" ->");
-                    gui_draw_text(tbuf,2);
+                    sprintf(msgbuf, "%s%s", lang_str(curr_menu->menu[imenu].text),(conf.menu_symbol_enable)?"":" ->");
+                    gui_draw_text(msgbuf,2);
                     break;
                 case MENUITEM_UP:
-                    sprintf(tbuf, "%s%s", (conf.menu_symbol_enable)?"":"<- ", lang_str(curr_menu->menu[imenu].text));
-                    gui_draw_text(tbuf,1);
+                    sprintf(msgbuf, "%s%s", (conf.menu_symbol_enable)?"":"<- ", lang_str(curr_menu->menu[imenu].text));
+                    gui_draw_text(msgbuf,1);
                     break;
                 case MENUITEM_PROC:
                     gui_draw_text(lang_str(curr_menu->menu[imenu].text),1);
@@ -609,8 +578,7 @@ static void gui_uedit_kbd_process_menu_btn()
     }
     else
     {
-        gui_menu_redraw = 2;
-        gui_set_need_restore();
+        gui_menu_erase_and_redraw();
         gui_init(&user_submenu);
     }
 }
@@ -626,9 +594,6 @@ static struct mpopup_item popup_uedit[]= {
         { UEDIT_MODULE,         LANG_MENU_USER_MENU_MODULE_ADD },
         { 0,                    0 },
 };
-static void script_scan(const char *fn)
-{
-}
 
 const char* skip_whitespace(const char* p)  { while (*p==' ' || *p=='\t') p++; return p; }                                  // Skip past whitespace
 const char* skip_toeol(const char* p)       { while (*p && *p!='\r' && *p!='\n') p++; return p; }                           // Skip to end of line
@@ -723,9 +688,8 @@ static void gui_uedit_module_selected(const char *fn)
                 }
                 else
                 {
-                    char buf[100];
-                    sprintf(buf, lang_str(LANG_MODULE_NOT_SIMPLE), fn);
-                    gui_mbox_init(LANG_ERROR, (int)buf, MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, NULL);
+                    sprintf(msgbuf, lang_str(LANG_MODULE_NOT_SIMPLE), fn);
+                    gui_mbox_init(LANG_ERROR, (int)msgbuf, MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, NULL);
                 }
             }
         }
@@ -765,7 +729,7 @@ static int gui_uedit_kbd_process() {
         case KEY_LEFT:
             if (curr_menu->title == LANG_MENU_USER_MENU)
             {
-                move_user_menu_item_up(&gui_menu_curr_item);
+                move_usermenu_item_up(&gui_menu_curr_item);
             }
             else
             {
@@ -779,7 +743,7 @@ static int gui_uedit_kbd_process() {
         case KEY_RIGHT:
             if (curr_menu->title == LANG_MENU_USER_MENU)
             {
-                move_user_menu_item_down(&gui_menu_curr_item);
+                move_usermenu_item_down(&gui_menu_curr_item);
             }
             else
             {

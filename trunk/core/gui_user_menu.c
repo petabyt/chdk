@@ -272,8 +272,20 @@ void user_menu_save() {
     } 
 }
 
-void user_menu_restore() {
-    int x,y ;
+static void set_user_menu_extern(int menu, int var, char sym, short type, int* func)
+{
+    // restore the script/module entry
+    user_submenu_items[menu].symbol = sym;
+    user_submenu_items[menu].opt_len = 0;
+    user_submenu_items[menu].type = type;
+    user_submenu_items[menu].text = (int)conf.user_menu_vars.items[var].script_title;
+    user_submenu_items[menu].value = func;
+    user_submenu_items[menu].arg = (int)conf.user_menu_vars.items[var].script_file;  
+}
+
+void user_menu_restore()
+{
+    int x, y;
     CMenuItem* item=0;
     /*
      * First entry in user_submenu_items is reserved for the "Main Menu"
@@ -283,22 +295,12 @@ void user_menu_restore() {
     for (x=0, y=1; x<USER_MENU_ITEMS; x++, y++)
     {
         if (conf.user_menu_vars.items[x].var == USER_MENU_IS_SCRIPT)    // special flag- there is no hash for script entries
-        {   
-            user_submenu_items[y].symbol = 0x35;        // restore the script entry
-            user_submenu_items[y].opt_len = 0 ;
-            user_submenu_items[y].type = MENUITEM_PROC;
-            user_submenu_items[y].text = (int) conf.user_menu_vars.items[x].script_title;
-            user_submenu_items[y].value = (int *) gui_load_user_menu_script ;
-            user_submenu_items[y].arg = (int) conf.user_menu_vars.items[x].script_file;  
+        {
+            set_user_menu_extern(y, x, 0x35, MENUITEM_PROC, (int*)gui_load_user_menu_script);
         }
         else if (conf.user_menu_vars.items[x].var == USER_MENU_IS_MODULE)    // special flag- there is no hash for module entries
         {   
-            user_submenu_items[y].symbol = 0x35;        // restore the module entry
-            user_submenu_items[y].opt_len = 0 ;
-            user_submenu_items[y].type = MENUITEM_PROC|MENUITEM_USER_MODULE;
-            user_submenu_items[y].text = (int) conf.user_menu_vars.items[x].script_title;
-            user_submenu_items[y].value = (int *) module_run ;
-            user_submenu_items[y].arg = (int) conf.user_menu_vars.items[x].script_file;  
+            set_user_menu_extern(y, x, 0x28, MENUITEM_PROC|MENUITEM_USER_MODULE, (int*)module_run);
         }
         else
         { 
