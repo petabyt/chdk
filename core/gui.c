@@ -1706,9 +1706,7 @@ static CMenu menu_font_submenu = {0x28,LANG_MENU_FONT_SETTINGS, NULL, menu_font_
 
 static const char* gui_user_menu_show_enum(int change, int arg)
 {
-    static const char* modes[]={ "Off", "On","On Direct", "Edit" };
-
-    if (conf.user_menu_enable == 3) user_menu_save();
+    static const char* modes[]={ "Off", "On", "On Direct" };
 
     void set_usermenu_state();
     set_usermenu_state();
