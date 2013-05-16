@@ -727,3 +727,4 @@
 595 "Remove\n%s\nfrom User Menu?"
 596 "Add & Remove Menu items"
 597 "Add module to User Menu"
+598 "Remove current item from User Menu"
