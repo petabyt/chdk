@@ -372,8 +372,7 @@
 
 299 "Benutzermenü-Status"
 300 "Benutzermenü"
-
-301 " "
+301 "Benutzermenü editieren"
 
 302 "Objektivadapter 100=1x"
 
@@ -735,3 +734,11 @@
 589 "Startaddresse"
 590 "Dump-Größe (0=komplett)"
 591 "Startverzögerung (s)"
+
+592 "Kein Platz, um Modul\n'%s'\nzu starten."
+593 "Modul\n'%s'\nunterstützt 'einfachen Modus' nicht."
+
+594 "%s\nzum Benutzermenü hinzufügen?"
+595 "%s\nvom Benutzermenü entfernen?"
+596 "Hinzufügen/Entfernen von Menüeinträgen"
+597 "Modul zum Benutzermenu hinzufügen"
