@@ -7,6 +7,8 @@
 #include "math.h"
 #include "modules.h"
 #include "shot_histogram.h"
+#include "gui_lang.h"
+#include "gui_mbox.h"
 
 //-------------------------------------------------------------------
 #define RAW_TARGET_DIRECTORY    "A/DCIM/%03dCANON"
@@ -15,17 +17,30 @@
 #define RAW_BRACKETING_FILENAME "%s%04d_%02d%s" 
 
 //-------------------------------------------------------------------
+#define RAW_DEVELOP_OFF     0
+#define RAW_DEVELOP_RAW     1
+#define RAW_DEVELOP_DNG     2
+
 static char fn[64];
 static char dir[32];
-static int develop_raw=0;
+static int develop_raw = RAW_DEVELOP_OFF;
 
 //-------------------------------------------------------------------
-void raw_prepare_develop(const char* filename) {
-    if (filename) {
-        develop_raw=1;
+void raw_prepare_develop(const char* filename, int prompt)
+{
+    develop_raw = RAW_DEVELOP_OFF;
+    if (filename)
+    {
+        struct stat st;
+        if ((stat(filename,&st) != 0) || (st.st_size < camera_sensor.raw_size))
+            return;
+        if (prompt)
+            gui_mbox_init((int)"", LANG_RAW_DEVELOP_MESSAGE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+        if (st.st_size == camera_sensor.raw_size)
+            develop_raw = RAW_DEVELOP_RAW;
+        else
+            develop_raw = RAW_DEVELOP_DNG;
         strcpy(fn,filename);
-    } else {
-        develop_raw=0;
     }
 }
 
@@ -59,28 +74,30 @@ int raw_savefile()
     rawadr = get_raw_image_addr();
     char *altrawadr = get_alt_raw_image_addr();
 
-#if DNG_SUPPORT
     if (conf.save_raw && conf.dng_raw && is_raw_enabled())
     {                             
         libdng->capture_data_for_exif();
 	}
-#endif    
     if (camera_info.state.state_kbd_script_run && shot_histogram_isenabled()) build_shot_histogram();
 
-#if DNG_SUPPORT
     // count/save badpixels if requested
     if (libdng->raw_init_badpixel_bin())
     {
         return 0;
     }
-#endif    
 
-    if (develop_raw)
+    if (develop_raw != RAW_DEVELOP_OFF)
     {
         started();
-        fd = open(fn, O_RDONLY, 0777);
-        if (fd>=0) {
-            read(fd, rawadr, camera_sensor.raw_size);
+        if (develop_raw == RAW_DEVELOP_DNG)
+        {
+            libdng->load_dng_to_rawbuffer(fn, rawadr);
+        }
+        else
+        {
+            fd = open(fn, O_RDONLY, 0777);
+            if (fd >= 0)
+                read(fd, rawadr, camera_sensor.raw_size);
             close(fd);
         }
 #ifdef OPT_CURVES
@@ -88,7 +105,7 @@ int raw_savefile()
             libcurves->curve_apply();
 #endif
         finished();
-        develop_raw=0;
+        develop_raw = RAW_DEVELOP_OFF;
         return 0;
     }
 
@@ -148,7 +165,6 @@ int raw_savefile()
         fd = open(fn, O_WRONLY|O_CREAT, 0777);
         if (fd>=0) {
             timer=get_tick_count();
-#if DNG_SUPPORT
             if (conf.dng_raw)
             {
                 libdng->write_dng(fd, rawadr, altrawadr, CAM_UNCACHED_BIT );
@@ -160,12 +176,6 @@ int raw_savefile()
             }
             close(fd);
             utime(fn, &t);
-#else
-            // Write active RAW buffer
-            write(fd, (char*)(((unsigned long)rawadr)|CAM_UNCACHED_BIT), camera_sensor.raw_size);
-            close(fd);
-            utime(fn, &t);
-#endif
             if (conf.raw_timer) {
                 timer=get_tick_count()-timer;
                 sprintf(txt, "saving time=%d", timer);
