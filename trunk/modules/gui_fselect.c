@@ -986,6 +986,7 @@ void process_raw_files(void)
             }
         librawop->raw_merge_end();
         gui_fselect_readdir = 1;
+        gui_fselect_redraw = 2;
     }
 }
 
