@@ -644,7 +644,7 @@ void capture_data_for_exif(void)
 
 //-------------------------------------------------------------------
 
-int convert_dng_to_chdk_raw(char* fn)
+static int convert_dng_to_chdk_raw(char* fn)
 {
 #define BUF_SIZE (32768)
     FILE *dng, *raw;
@@ -696,6 +696,26 @@ int convert_dng_to_chdk_raw(char* fn)
     running = 0;
 
     return 1;
+}
+
+static void load_dng_to_rawbuffer(char *fn, char *rawadr)
+{
+    running = 1;
+
+    struct stat st;
+    if ((stat(fn,&st) == 0) && (st.st_size >= camera_sensor.raw_size))
+    {
+        int fd = open(fn, O_RDONLY, 0777);
+        if (fd >= 0)
+        {
+            lseek(fd, st.st_size-camera_sensor.raw_size, SEEK_SET);
+            read(fd, rawadr, camera_sensor.raw_size);
+            close(fd);
+            reverse_bytes_order2(rawadr, rawadr, camera_sensor.raw_size);
+        }
+    }
+
+    running = 0;
 }
 
 //-------------------------------------------------------------------
@@ -1031,7 +1051,8 @@ libdng_sym _libdng =
     badpixel_list_loaded_b,
 
     convert_dng_to_chdk_raw,
-    write_dng
+    write_dng,
+    load_dng_to_rawbuffer
 };
 
 struct ModuleInfo _module_info =

@@ -74,7 +74,6 @@ char *hook_raw_image_addr()
 		return (char*) 0x4132CD20;	// found at (0xFFB59F40) [search CRAW BUF]
 }
 
-#if DNG_SUPPORT
 char *hook_alt_raw_image_addr()
 {
 	if (*((int*)0x34D0) == 0)
@@ -82,7 +81,6 @@ char *hook_alt_raw_image_addr()
 	else
 		return (char*) 0x4132CD20;	// found at (0xFFB59F40) [search CRAW BUF]
 }
-#endif
 */
 
 long hook_raw_size() //ASM1989 ixus1000

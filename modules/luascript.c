@@ -1581,7 +1581,7 @@ static int luaCB_get_mode( lua_State* L )
 // TODO sanity check file ?
 static int luaCB_set_raw_develop( lua_State* L )
 {
-  raw_prepare_develop(luaL_optstring( L, 1, NULL ));
+  raw_prepare_develop(luaL_optstring( L, 1, NULL ), 0);
   return 0;
 }
 

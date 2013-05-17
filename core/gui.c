@@ -1494,8 +1494,6 @@ static CMenu raw_exceptions_submenu = {0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS_
 
 //-------------------------------------------------------------------
 
-#if DNG_SUPPORT
-
 static void cb_change_dng()
 {
      int old=conf.dng_version;
@@ -1518,16 +1516,9 @@ static void gui_menuproc_badpixel_create(int arg)
     libdng->create_badpixel_bin();
 }
 
-#endif
-
 static void raw_fselect_cb(const char * filename)
 {
-    struct stat st;
-    if (!filename) return;
-    stat((char*)filename,&st);
-    if (st.st_size!=camera_sensor.raw_size) return;
-    gui_mbox_init((int)"", LANG_RAW_DEVELOP_MESSAGE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-    raw_prepare_develop((char*)filename);
+    raw_prepare_develop(filename, 1);
 }
 
 static void gui_raw_develop(int arg)
@@ -1549,11 +1540,7 @@ extern void cb_change_dng_usb_ext();
 static const char* gui_raw_nr_modes[] =                     { "Auto", "Off", "On"};
 
 static CMenuItem raw_submenu_items[] = {
-#if DNG_SUPPORT
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE,                   MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.save_raw, (int)cb_change_dng ),
-#else
-    MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE,                   MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.save_raw, 0 ),
-#endif
     MENU_ITEM   (0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS,	MENUITEM_SUBMENU,   &raw_exceptions_submenu, 0 ),
     MENU_ENUM2  (0x5f,LANG_MENU_RAW_NOISE_REDUCTION,        &conf.raw_nr,       gui_raw_nr_modes ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_FIRST_ONLY,             MENUITEM_BOOL,      &conf.raw_save_first_only, 0 ),
@@ -1570,13 +1557,11 @@ static CMenuItem raw_submenu_items[] = {
 #ifdef OPT_DEBUGGING
     MENU_ITEM   (0x5c,LANG_MENU_RAW_TIMER,                  MENUITEM_BOOL,      &conf.raw_timer,            0 ),
 #endif
-#if DNG_SUPPORT
     MENU_ITEM   (0x0 ,(int)"DNG",                           MENUITEM_SEPARATOR,	0,							0 ),
     MENU_ITEM   (0x5c,LANG_MENU_DNG_FORMAT,                 MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.dng_raw , (int)cb_change_dng ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_DNG_EXT,                MENUITEM_BOOL,      &conf.raw_dng_ext, 0 ),
     MENU_ITEM   (0x5f,LANG_MENU_DNG_VERSION,                MENUITEM_ENUM,      gui_dng_version, 0),
     MENU_ITEM   (0x2a,LANG_MENU_BADPIXEL_CREATE,            MENUITEM_PROC,      gui_menuproc_badpixel_create, 0 ),
-#endif
 #if defined (DNG_EXT_FROM)
     MENU_ITEM   (0x71,LANG_MENU_DNG_VIA_USB,                MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.dng_usb_ext , (int)cb_change_dng_usb_ext ),
 #endif

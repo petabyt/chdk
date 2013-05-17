@@ -1091,8 +1091,7 @@ static void fselect_mpopup_rawop_cb(unsigned int actn) {
             break;
         case MPOPUP_RAW_DEVELOP:
             sprintf(buf, "%s/%s", current_dir, selected->name);
-            gui_mbox_init((int)"", LANG_RAW_DEVELOP_MESSAGE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
-            raw_prepare_develop(buf);
+            raw_prepare_develop(buf, 1);
         break;
         case MPOPUP_SUBTRACT:
             setup_batch_subtract();
@@ -1315,7 +1314,7 @@ int gui_fselect_kbd_process()
                     (selected->name[0] == 'D' && selected->name[1] == 'C' && selected->name[2] == 'I' && selected->name[3] == 'M') ||//If item is DCIM folder
                     (selected->name[3] == 'C'))//If item is a DCIM sub folder
                     i |= MPOPUP_PURGE;//Display PURGE RAW function in popup menu
-                if (selected->size == camera_sensor.raw_size)
+                if (selected->size >= camera_sensor.raw_size)
                     mpopup_rawop_flag |= MPOPUP_RAW_DEVELOP;
 
                 if ((fselect_marked_count()>1)||(selected->size > camera_sensor.raw_size))

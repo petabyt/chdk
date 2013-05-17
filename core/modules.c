@@ -535,6 +535,12 @@ static int default_convert_dng_to_chdk_raw(char* fn)
     // Failure
     return 0;
 }
+static void default_load_dng_to_rawbuffer(char *fn, char *rawadr)
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_dng))
+        libdng->load_dng_to_rawbuffer(fn, rawadr);
+}
 
 // Default library - module unloaded
 libdng_sym default_libdng =
@@ -547,6 +553,7 @@ libdng_sym default_libdng =
     dummy_int,                          //badpixel_list_loaded_b
     default_convert_dng_to_chdk_raw,
     dummy_void,                         //write_dng
+    default_load_dng_to_rawbuffer,
 };
 
 // Library pointer

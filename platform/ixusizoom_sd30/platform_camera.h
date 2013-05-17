@@ -35,7 +35,6 @@
     #undef  CAM_HAS_IS
     //#define CAM_CONSOLE_LOG_ENABLED       1
     #undef  CAM_VIDEO_CONTROL
-    #undef  DNG_SUPPORT
 	
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 

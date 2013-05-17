@@ -505,13 +505,11 @@ static void conf_change_video_bitrate()
 
 void conf_change_dng(void)
 {
-#if DNG_SUPPORT
     if (conf.save_raw && conf.dng_raw && conf.dng_version)
     {
         if (!libdng->badpixel_list_loaded_b()) libdng->load_bad_pixels_list_b("A/CHDK/badpixel.bin");
         if (!libdng->badpixel_list_loaded_b()) conf.dng_version=0;
     }
-#endif
 }
 
 #if defined (DNG_EXT_FROM)
