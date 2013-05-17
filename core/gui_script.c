@@ -689,8 +689,8 @@ static void gui_load_script_default(int arg) {
 static const char* gui_script_autostart_modes[]=            { "Off", "On", "Once"};
 
 // Indexes into script_submenu_items array, if you add or remove entries adjust these
-#define SCRIPT_SUBMENU_PARAMS_IDX   9       // First adjustable parameter entry
-#define SCRIPT_SUBMENU_BOTTOM_IDX   35      // 'Back' entry
+#define SCRIPT_SUBMENU_PARAMS_IDX   8       // First adjustable parameter entry
+#define SCRIPT_SUBMENU_BOTTOM_IDX   34      // 'Back' entry
 
 static CMenuItem script_submenu_items[] = {
     MENU_ITEM   (0x35,LANG_MENU_SCRIPT_LOAD,                MENUITEM_PROC,                      gui_load_script,            0 ),
