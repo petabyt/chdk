@@ -21,21 +21,6 @@ static int  dummy_int()  { return 0; }
 
 /************* DYNAMIC LIBRARY RAWOPERATION ******/
 
-static char* rawop_module_name()
-{
-    switch (camera_sensor.bits_per_pixel)
-    {
-    case 10:
-        return "_rawop10.flt";
-    case 12:
-        return "_rawop12.flt";
-    case 14:
-        return "_rawop14.flt";
-    default:
-        return 0;
-    }
-}
-
 // Forward reference
 extern librawop_sym default_librawop;
 
@@ -44,12 +29,11 @@ module_handler_t h_rawop =
     (base_interface_t**)&librawop,
     &default_librawop.base,
     RAW_MERGE_VERSION,
-    0
+    "_rawop.flt"
 };
 
 static int module_load_rawop()
 {
-    h_rawop.name = rawop_module_name();
     return module_load(&h_rawop);
 }
 

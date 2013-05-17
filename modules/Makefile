@@ -22,7 +22,7 @@ LDOPTS+=-Wl,-N,-Ttext,0 -r -Wl,-d
 # Only build modules files here. Platform indepedant code to be linked to code CHDK should be in libraries (above)
 # to avoid 'long_call' overhead
 FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt \
-     _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop10.flt _rawop12.flt \
+     _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop.flt \
      txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt _tbox.flt _osd_le.flt \
      _hexbox.flt ubasic.flt lua.flt cpuinfo.flt useredit.flt
 
@@ -39,14 +39,6 @@ all: $(FLTS)
 #	arm-elf-objdump$(EXE) -d -r -x .o/$*.elf >$*.dumpobj
 #	$(topdir)/tools/elf2flt/elf2flt$(EXE) .o/$*.elf $@ -e -f -h -r -s -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt >$*.dump
 	$(topdir)/tools/elf2flt/elf2flt$(EXE) .o/$*.elf $@ -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt > $(DEVNULL)
-
-raw_merge10.o: raw_merge.c
-	@echo $< \-\> $@
-	$(CC) $(CFLAGS) -nostdinc -c -DCAM_MODULE_SENSOR_BITS_PER_PIXEL=10 -o $@ $<
-
-raw_merge12.o: raw_merge.c
-	@echo $< \-\> $@
-	$(CC) $(CFLAGS) -nostdinc -c -DCAM_MODULE_SENSOR_BITS_PER_PIXEL=12 -o $@ $<
 
 nothumb.o: nothumb.c
 	@echo $< \-\> $@
@@ -75,8 +67,7 @@ mdetect.flt: motion_detector.o
 grids.flt: gui_grid.o
 modinsp.flt: module_inspector.o
 _dng.flt: dng.o reversebytes.o
-_rawop10.flt: raw_merge10.o
-_rawop12.flt: raw_merge12.o
+_rawop.flt: raw_merge.o
 _osd_le.flt: gui_osd_edit.o
 fselect.flt: gui_fselect.o nothumb.o
 useredit.flt: user_menu_edit.o
