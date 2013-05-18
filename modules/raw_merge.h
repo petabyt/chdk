@@ -13,7 +13,7 @@ typedef struct
 	int (*raw_merge_start)(int action);
 	int (*raw_merge_add_file)(const char* filename);
 	void (*raw_merge_end)(void);
-	int (*raw_subtract)(const char *from, const char *sub, const char *dest); 
+	int (*raw_subtract)(const char *fromName, const char *fromDir, const char *subName, const char *subDir); 
 } librawop_sym;
 
 extern librawop_sym* librawop;

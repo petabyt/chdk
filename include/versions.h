@@ -16,7 +16,7 @@
 #define MOTION_DETECTOR_VERSION {2,0}
 #define ZEBRA_VERSION           {2,0}
 #define SCRIPT_API_VERSION      {2,0}
-#define RAW_MERGE_VERSION       {2,0}
+#define RAW_MERGE_VERSION       {3,0}
 #define GUI_TBOX_VERSION        {2,0}
 #define GUI_READ_VERSION        {2,0}
 #define GUI_PALETTE_VERSION     {2,0}
