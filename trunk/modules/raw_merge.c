@@ -171,25 +171,27 @@ int raw_subtract(const char *from, const char *sub, const char *dest)
                     s = ((unsigned short)(bsub[i+ 1])        <<  6) | (bsub[i+ 0] >> 2);
                     d = ((unsigned short)(bacc[i+ 1])        <<  6) | (bacc[i+ 0] >> 2);
                     d = raw_subtract_values(d,s);
-                    bacc[i+ 0] = (bacc[i+0]&0x03)|(d<< 2);
+                    bacc[i+ 0] = (bacc[i+ 0]&0x03)|(d<< 2);
                     bacc[i+ 1] = d>>6;
 
-                    s = ((unsigned short)(bsub[i+ 0] & 0x03) << 12) | (bsub[i+ 3] << 4) | (bsub[i+ 2] >> 4);
-                    d = ((unsigned short)(bacc[i+ 0] & 0x03) << 12) | (bacc[i+ 3] << 4) | (bacc[i+ 2] >> 4);
+                    s = ((unsigned short)(bsub[i+ 0] & 0x03) << 12) | ((unsigned short)(bsub[i+ 3]) << 4) | (bsub[i+ 2] >> 4);
+                    d = ((unsigned short)(bacc[i+ 0] & 0x03) << 12) | ((unsigned short)(bacc[i+ 3]) << 4) | (bacc[i+ 2] >> 4);
                     d = raw_subtract_values(d,s);
-                    bacc[i+ 0] = (bacc[i+0]&0xFC)|(d>>12);
-                    bacc[i+ 2] = (bacc[i+ 2]&0x0F)|(d<< 4); bacc[i+ 3]=d>>4;
+                    bacc[i+ 0] = (bacc[i+ 0]&0xFC)|(d>>12);
+                    bacc[i+ 2] = (bacc[i+ 2]&0x0F)|(d<< 4);
+                    bacc[i+ 3] = d>>4;
 
-                    s = ((unsigned short)(bsub[i+ 2] & 0x0F) << 10) | (bsub[i+ 5] << 2) | (bsub[i+ 4] >> 6);
-                    d = ((unsigned short)(bacc[i+ 2] & 0x0F) << 10) | (bacc[i+ 5] << 2) | (bacc[i+ 4] >> 6);
+                    s = ((unsigned short)(bsub[i+ 2] & 0x0F) << 10) | ((unsigned short)(bsub[i+ 5]) << 2) | (bsub[i+ 4] >> 6);
+                    d = ((unsigned short)(bacc[i+ 2] & 0x0F) << 10) | ((unsigned short)(bacc[i+ 5]) << 2) | (bacc[i+ 4] >> 6);
                     d = raw_subtract_values(d,s);
-                    bacc[i+ 2] = (bacc[i+2]&0xF0)|(d>>10);
-                    bacc[i+ 4] = (bacc[i+ 4]&0x3F)|(d<< 6); bacc[i+ 5]=d>>2;
+                    bacc[i+ 2] = (bacc[i+ 2]&0xF0)|(d>>10);
+                    bacc[i+ 4] = (bacc[i+ 4]&0x3F)|(d<< 6);
+                    bacc[i+ 5] = d>>2;
 
                     s = ((unsigned short)(bsub[i+ 4] & 0x3F) <<  8) | (bsub[i+ 7]);
                     d = ((unsigned short)(bacc[i+ 4] & 0x3F) <<  8) | (bacc[i+ 7]);
                     d = raw_subtract_values(d,s);
-                    bacc[i+ 4] = (bacc[i+4]&0xC0)|(d>> 8);
+                    bacc[i+ 4] = (bacc[i+ 4]&0xC0)|(d>> 8);
                     bacc[i+ 7] = d;
 
                     s = ((unsigned short)(bsub[i+ 6])        <<  6) | (bsub[i+ 9] >> 2);
@@ -198,17 +200,19 @@ int raw_subtract(const char *from, const char *sub, const char *dest)
                     bacc[i+ 6] = d>>6;
                     bacc[i+ 9] = (bacc[i+ 9]&0x03)|(d<< 2);
 
-                    s = ((unsigned short)(bsub[i+ 9] & 0x03) << 12) | (bsub[i+ 8] << 4) | (bsub[i+11] >> 4);
-                    d = ((unsigned short)(bacc[i+ 9] & 0x03) << 12) | (bacc[i+ 8] << 4) | (bacc[i+11] >> 4);
+                    s = ((unsigned short)(bsub[i+ 9] & 0x03) << 12) | ((unsigned short)(bsub[i+ 8]) << 4) | (bsub[i+11] >> 4);
+                    d = ((unsigned short)(bacc[i+ 9] & 0x03) << 12) | ((unsigned short)(bacc[i+ 8]) << 4) | (bacc[i+11] >> 4);
                     d = raw_subtract_values(d,s);
                     bacc[i+ 8] = d>>4;
-                    bacc[i+ 9] = (bacc[i+ 9]&0x3F)|(d>>12); bacc[i+11]=(bacc[i+11]&0x0F)|(d<<4);
+                    bacc[i+ 9] = (bacc[i+ 9]&0xFC)|(d>>12);
+                    bacc[i+11] = (bacc[i+11]&0x0F)|(d<< 4);
 
-                    s = ((unsigned short)(bsub[i+11] & 0x0F) << 10) | (bsub[i+10] << 2) | (bsub[i+13] >> 6);
-                    d = ((unsigned short)(bacc[i+11] & 0x0F) << 10) | (bacc[i+10] << 2) | (bacc[i+13] >> 6);
+                    s = ((unsigned short)(bsub[i+11] & 0x0F) << 10) | ((unsigned short)(bsub[i+10]) << 2) | (bsub[i+13] >> 6);
+                    d = ((unsigned short)(bacc[i+11] & 0x0F) << 10) | ((unsigned short)(bacc[i+10]) << 2) | (bacc[i+13] >> 6);
                     d = raw_subtract_values(d,s);
                     bacc[i+10] = d>>2;
-                    bacc[i+11] = (bacc[i+11]&0xF0)|(d>>10); bacc[i+13]=(bacc[i+13]&0x3F)|(d<<6);
+                    bacc[i+11] = (bacc[i+11]&0xF0)|(d>>10);
+                    bacc[i+13] = (bacc[i+13]&0x3F)|(d<< 6);
 
                     s = ((unsigned short)(bsub[i+13] & 0x3F) <<  8) | (bsub[i+12]);
                     d = ((unsigned short)(bacc[i+13] & 0x3F) <<  8) | (bacc[i+12]);
