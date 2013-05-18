@@ -47,11 +47,11 @@ static int default_raw_merge_start(int action)
     // Failure
     return 0;
 }
-static int default_raw_subtract(const char *from, const char *sub, const char *dest)
+static int default_raw_subtract(const char *fromName, const char *fromDir, const char *subName, const char *subDir)
 {
     // If load succeeded call module version of function
     if (module_load_rawop())
-        return librawop->raw_subtract(from, sub, dest);
+        return librawop->raw_subtract(fromName, fromDir, subName, subDir);
 
     // Failure
     return 0;

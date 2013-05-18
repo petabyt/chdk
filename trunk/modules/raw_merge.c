@@ -21,6 +21,8 @@ static unsigned short *row;
 static unsigned char *rawrow;
 static char namebuf[100];
 
+extern void reverse_bytes_order2(char* from, char* to, int count);
+
 // note: if processing with dcraw etc, zeros may get replaced with interpolated values
 // this may or may not be what you want
 static int raw_subtract_values(int from, int sub)
@@ -28,15 +30,17 @@ static int raw_subtract_values(int from, int sub)
     int result;
     if ((from==0) || (sub==0)) return 0; // bad pixel
     result = from - sub + camera_sensor.black_level;
-    if (result<camera_sensor.black_level) result=camera_sensor.black_level;
-    if (result>camera_sensor.white_level) result=camera_sensor.white_level;
+    if (result < camera_sensor.black_level) result = camera_sensor.black_level;
+    if (result > camera_sensor.white_level) result = camera_sensor.white_level;
     return result;
 }
 
-/* subtract "sub" from "from" and store the result in "dest"*/
-/* TODO allow replacing if dest == from or sub*/
-int raw_subtract(const char *from, const char *sub, const char *dest)
+// subtract "sub" from "from"
+int raw_subtract(const char *fromName, const char* fromDir, const char *subName, const char* subDir)
 {
+    char from[100];
+    char sub[100];
+
     unsigned int req = (camera_sensor.raw_size >> 20) + 1;      // Raw size in MB
     unsigned int avail = GetFreeCardSpaceKb() >> 10;            // Free space in MB
 
@@ -47,23 +51,32 @@ int raw_subtract(const char *from, const char *sub, const char *dest)
         return 0;
     }
 
+    int fromDNG = 0;
+    int subDNG = 0;
     struct stat st;
 
-    if (stat(from,&st) != 0 || st.st_size!=camera_sensor.raw_size)
+    sprintf(from, "%s/%s", fromDir, fromName);
+    if (stat(from,&st) != 0 || st.st_size < camera_sensor.raw_size)
     {
         // TODO: error popup
         return 0;
     }
+    fromDNG = st.st_size - camera_sensor.raw_size;
 
-    if (stat(sub,&st) != 0 || st.st_size!=camera_sensor.raw_size)
+    sprintf(sub, "%s/%s", subDir, subName);
+    if (stat(sub,&st) != 0 || st.st_size < camera_sensor.raw_size)
     {
         // TODO: error popup
         return 0;
     }
+    subDNG = st.st_size - camera_sensor.raw_size;
+
+    sprintf(namebuf, "%s/%s%s", fromDir, img_prefixes[conf.sub_batch_prefix], fromName+4);
+    strcpy(namebuf + strlen(namebuf) - 4, (fromDNG && conf.raw_dng_ext) ? ".DNG" : img_exts[conf.sub_batch_ext]);
 
     FILE *ffrom = fopen(from, "rb");
     FILE *fsub = fopen(sub, "rb");
-    FILE *fdest = fopen(dest, "wb");
+    FILE *fdest = fopen(namebuf, "wb");
 
     unsigned char *bacc = malloc(camera_sensor.raw_rowlen);
     unsigned char *bsub = malloc(camera_sensor.raw_rowlen);
@@ -77,10 +90,32 @@ int raw_subtract(const char *from, const char *sub, const char *dest)
     if (bacc && bsub && ffrom && fsub && fdest)
     {
         started();
+
+        if (fromDNG)
+        {
+            // Copy DNG header to output file
+            int len = fromDNG;
+            while (len > 0)
+            {
+                int l = len;
+                if (l > camera_sensor.raw_rowlen) l = camera_sensor.raw_rowlen;
+                fread(bacc, 1, l, ffrom);
+                fwrite(bacc, 1, l, fdest);
+                len -= l;
+            }
+            fseek(ffrom, fromDNG, SEEK_SET);
+        }
+        if (subDNG)
+        {
+            fseek(fsub, subDNG, SEEK_SET);
+        }
+
         for (j = 0; j < camera_sensor.raw_rows; j++)
         {
             fread(bacc, 1, camera_sensor.raw_rowlen, ffrom);
+            if (fromDNG) reverse_bytes_order2((char*)bacc, (char*)bacc, camera_sensor.raw_rowlen);
             fread(bsub, 1, camera_sensor.raw_rowlen, fsub);
+            if (subDNG) reverse_bytes_order2((char*)bsub, (char*)bsub, camera_sensor.raw_rowlen);
 
             if (camera_sensor.bits_per_pixel == 10)
             {
@@ -222,11 +257,12 @@ int raw_subtract(const char *from, const char *sub, const char *dest)
                 }
             }
 
+            if (fromDNG) reverse_bytes_order2((char*)bacc, (char*)bacc, camera_sensor.raw_rowlen);
             fwrite(bacc, 1, camera_sensor.raw_rowlen, fdest);
             if ((j & 0x1F) == 0)
-                gui_browser_progress_show(dest, j*100/camera_sensor.raw_rows);
+                gui_browser_progress_show(namebuf, j*100/camera_sensor.raw_rows);
         }
-        gui_browser_progress_show(dest, 100);
+        gui_browser_progress_show(namebuf, 100);
         finished();
         status = 1;
     }
@@ -240,7 +276,7 @@ int raw_subtract(const char *from, const char *sub, const char *dest)
         fclose(fdest);
         struct utimbuf t;
         t.actime = t.modtime = time(NULL);
-        utime((char *)dest, &t);
+        utime(namebuf, &t);
     }
 
     running = 0;
@@ -285,11 +321,12 @@ int raw_merge_add_file(const char * filename)
         return 0;
     }
 
-    if (stat(filename,&st) != 0 || st.st_size!=camera_sensor.raw_size)
+    if (stat(filename,&st) != 0 || st.st_size < camera_sensor.raw_size)
     {
         // TODO: error popup
         return 0;
     }
+    int fcrawDNG = st.st_size - camera_sensor.raw_size;
 
     started();
 
@@ -297,13 +334,16 @@ int raw_merge_add_file(const char * filename)
     if (fcraw)
     {
         if (raw_count)
-            fbrawin=fopen(TEMP_FILE_NAME,"rb");
+            fbrawin = fopen(TEMP_FILE_NAME,"rb");
 
         if (!raw_count || fbrawin)
         {
-            fbrawout=fopen(TEMP_FILE_NAME_1,"w+b");
+            fbrawout = fopen(TEMP_FILE_NAME_1,"wb");
             if (fbrawout)
             {
+                if (fcrawDNG)
+                    fseek(fcraw, fcrawDNG, SEEK_SET);
+
                 for (j=0; j<camera_sensor.raw_rows; j++)
                 {
                     if (raw_count)
@@ -312,6 +352,7 @@ int raw_merge_add_file(const char * filename)
                         memset(row, 0, camera_sensor.raw_rowpix*sizeof(unsigned short));
 
                     fread(rawrow, 1, camera_sensor.raw_rowlen, fcraw);
+                    if (fcrawDNG) reverse_bytes_order2((char*)rawrow, (char*)rawrow, camera_sensor.raw_rowlen);
 
                     if (camera_sensor.bits_per_pixel == 10)
                     {
@@ -376,7 +417,8 @@ int raw_merge_add_file(const char * filename)
 void raw_merge_end(void)
 {
     int src,i,j;
-    FILE *fbraw, *fcraw;
+    FILE *fbraw, *fcraw, *fdng = 0;
+    char dest[100];
 
     if (!raw_count)
     {
@@ -385,20 +427,56 @@ void raw_merge_end(void)
         return;
     } 
 
-    i = strlen(namebuf)-3;
-    if (strncmp(namebuf+i,"CR",2)==0)
-        strcpy(namebuf+i,"WAV");
-    else
-        strcpy(namebuf+i,"CRW");
+    struct stat st;
+    if (stat(namebuf,&st) != 0 || st.st_size < camera_sensor.raw_size)
+    {
+        // TODO: error popup
+        return;
+    }
+    int destDNG = st.st_size - camera_sensor.raw_size;
+
+    if (destDNG)
+        fdng = fopen(namebuf,"rb");
+
+    strcpy(dest, namebuf);
+    char *n = strrchr(dest, '/');
+    if (n == 0) n = dest;
+    else n++;
+
+    strncpy(n, img_prefixes[conf.sub_batch_prefix], 4);
+    strcpy(dest + strlen(dest) - 4, (destDNG && conf.raw_dng_ext) ? ".DNG" : img_exts[conf.sub_batch_ext]);
+
+    // Check if overwriting input file
+    if (strcmp(namebuf, dest) == 0)
+    {
+        if (strncmp(n, "IMG", 3) == 0)
+            strncpy(n, "CRW", 3);
+        else
+            strncpy(n, "IMG", 3);
+    }
 
     started();
 
-    fbraw = fopen(TEMP_FILE_NAME,"r+b");
+    fbraw = fopen(TEMP_FILE_NAME,"rb");
     if (fbraw)
     {
-        fcraw = fopen(namebuf,"w+b");
+        fcraw = fopen(dest,"wb");
         if (fcraw)
         {
+            if (destDNG)
+            {
+                // Copy DNG header to output file
+                int len = destDNG;
+                while (len > 0)
+                {
+                    int l = len;
+                    if (l > camera_sensor.raw_rowlen) l = camera_sensor.raw_rowlen;
+                    fread(rawrow, 1, l, fdng);
+                    fwrite(rawrow, 1, l, fcraw);
+                    len -= l;
+                }
+            }
+
             for (j=0; j<camera_sensor.raw_rows; j++)
             {
                 fread(row, 1, camera_sensor.raw_rowpix*sizeof(unsigned short), fbraw);
@@ -469,14 +547,17 @@ void raw_merge_end(void)
                     }
                 }
 
+                if (destDNG) reverse_bytes_order2((char*)rawrow, (char*)rawrow, camera_sensor.raw_rowlen);
                 fwrite(rawrow, 1, camera_sensor.raw_rowlen, fcraw);
                 if ((j & 0x1F) == 0)
-                    gui_browser_progress_show(namebuf, j*100/camera_sensor.raw_rows);
+                    gui_browser_progress_show(dest, j*100/camera_sensor.raw_rows);
             }
             fclose(fcraw);
         }
         fclose(fbraw);
     }
+
+    if (fdng) fclose(fdng);
 
     struct utimbuf t;
     t.actime = t.modtime = time(NULL);

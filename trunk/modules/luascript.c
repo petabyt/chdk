@@ -1601,7 +1601,6 @@ static int luaCB_raw_merge_start( lua_State* L )
 // TODO sanity check file ? Get it from C
 static int luaCB_raw_merge_add_file( lua_State* L )
 {
-
     lua_pushboolean(L, librawop->raw_merge_add_file(luaL_checkstring( L, 1 )));
     return 1;
 }

@@ -67,7 +67,7 @@ mdetect.flt: motion_detector.o
 grids.flt: gui_grid.o
 modinsp.flt: module_inspector.o
 _dng.flt: dng.o reversebytes.o
-_rawop.flt: raw_merge.o
+_rawop.flt: raw_merge.o reversebytes.o
 _osd_le.flt: gui_osd_edit.o
 fselect.flt: gui_fselect.o nothumb.o
 useredit.flt: user_menu_edit.o

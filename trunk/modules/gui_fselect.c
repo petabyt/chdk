@@ -993,34 +993,17 @@ void process_raw_files(void)
 static void fselect_subtract_cb(unsigned int btn)
 {
     struct fitem *ptr;
-    char *raw_subtract_from;
-    char *raw_subtract_sub;
-    char *raw_subtract_dest;
     if (btn != MBOX_BTN_YES) return;
 
-    if(!(raw_subtract_from = malloc(300))) //3x full path
-        return;
-    raw_subtract_sub = raw_subtract_from + 100;
-    raw_subtract_dest = raw_subtract_sub + 100;
-    sprintf(raw_subtract_sub,"%s/%s",current_dir,selected->name);
     for (ptr=head; ptr; ptr=ptr->next)
     {
         if (ptr->marked && ptr->attr != 0xFF &&
             !(ptr->attr & DOS_ATTR_DIRECTORY) &&
-            ptr->size == camera_sensor.raw_size &&
             (strcmp(ptr->name,selected->name)) != 0)
         {
-            sprintf(raw_subtract_from,"%s/%s",current_dir,ptr->name);
-            sprintf(raw_subtract_dest,"%s/%s%s",current_dir,img_prefixes[conf.sub_batch_prefix],ptr->name+4);
-            strcpy(raw_subtract_dest + strlen(raw_subtract_dest) - 4,img_exts[conf.sub_batch_ext]);
-            // don't let users attempt to write one of the files being read
-            if( strcmp(raw_subtract_dest,raw_subtract_from) != 0 && strcmp(raw_subtract_dest,raw_subtract_sub) != 0)
-            {
-                librawop->raw_subtract(raw_subtract_from,raw_subtract_sub,raw_subtract_dest);
-            }
+            librawop->raw_subtract(ptr->name, current_dir, selected->name, current_dir);
         }
     }
-    free(raw_subtract_from);
     gui_fselect_readdir = 1;
     gui_fselect_redraw = 2;
 }
@@ -1032,7 +1015,7 @@ static void setup_batch_subtract(void) {
     int i;
     char *p = buf + sprintf(buf,"%s %s\n",selected->name,lang_str(LANG_FSELECT_SUB_FROM));
     for (ptr=head, i=0; ptr; ptr=ptr->next) {
-        if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY) && ptr->size == camera_sensor.raw_size) {
+        if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY) && ptr->size >= camera_sensor.raw_size) {
             if ( i < MAX_SUB_NAMES ) {
                 sprintf(p, "%s\n",ptr->name);
                 // keep a pointer to the one before the end, so we can stick ...and more on
@@ -1092,7 +1075,7 @@ static void fselect_mpopup_rawop_cb(unsigned int actn) {
         case MPOPUP_RAW_DEVELOP:
             sprintf(buf, "%s/%s", current_dir, selected->name);
             raw_prepare_develop(buf, 1);
-        break;
+            break;
         case MPOPUP_SUBTRACT:
             setup_batch_subtract();
             break;
