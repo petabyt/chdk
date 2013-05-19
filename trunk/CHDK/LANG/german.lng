@@ -504,8 +504,8 @@
 
 401 "Start-Sound an/aus"
 
-402 "RAW-Subtr.-Präfix"
-403 "RAW-Subtr.-Endung"
+402 "RAW-Operation-Präfix"
+403 "RAW-Operation-Endung"
 404 "Subtr. du. Eingangswert"
 405 "Subtr. du. Ausgangswert"
 406 "von"
