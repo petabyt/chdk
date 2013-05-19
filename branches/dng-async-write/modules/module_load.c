@@ -60,7 +60,8 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
 extern int wsleep;
 extern int wcount;
 extern int rsleep;
-
+extern int DNG_CHUNK_SIZE;
+extern int DNG_END_MARGIN;
 
 //********************************************************/
 

@@ -392,4 +392,7 @@
             &wsleep,
             &wcount,
             &rsleep,
+
+            &DNG_CHUNK_SIZE,
+            &DNG_END_MARGIN,
 }

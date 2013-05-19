@@ -994,8 +994,13 @@ char *dng_written_ptr; // set to the end of the last written chunk, incremented 
 char *dng_end_ptr; // set to the end of the buffer
 int dng_fd;
 int dng_need_dereverse;
+
+extern int DNG_CHUNK_SIZE;
+extern int DNG_END_MARGIN;
+/*
 #define DNG_CHUNK_SIZE (512*1024)
 #define DNG_END_MARGIN (512*1024)
+*/
 void dng_writer(void) {
     write(dng_fd, dng_header_buf, dng_header_buf_size);
     write(dng_fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
@@ -1045,7 +1050,7 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
         wcount = 0;
 
         CreateTask("dngwrite",0x18,0x400,dng_writer);
-        // allow dng_writer start writing header
+        // allow dng_writer to start writing header
         // observation on both vx and dryos shows that msleep(0) yields to higher prio task but doesn't force 10ms wait
         msleep(0); 
 

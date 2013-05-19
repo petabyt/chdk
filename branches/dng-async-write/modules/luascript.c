@@ -2296,6 +2296,25 @@ static int luaCB_set_yield( lua_State* L )
   return 2;
 }
 
+/*
+TODO temp testing
+*/
+extern int DNG_CHUNK_SIZE;
+extern int DNG_END_MARGIN;
+static int luaCB_get_dng_vals( lua_State* L )
+{
+  lua_pushnumber(L,DNG_CHUNK_SIZE);
+  lua_pushnumber(L,DNG_END_MARGIN);
+  return 2;
+}
+
+static int luaCB_set_dng_vals( lua_State* L )
+{
+  DNG_CHUNK_SIZE = luaL_checknumber(L,1);
+  DNG_END_MARGIN = luaL_checknumber(L,2);
+  return 0;
+}
+
 //static void register_func( lua_State* L, const char *name, void *func) {
 //  lua_pushcfunction( L, func );
 //  lua_setglobal( L, name );
@@ -2473,6 +2492,9 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(set_yield)
     FUNC(read_usb_msg)
     FUNC(write_usb_msg)
+
+    FUNC(get_dng_vals)
+    FUNC(set_dng_vals)
     {NULL, NULL},
 };
 

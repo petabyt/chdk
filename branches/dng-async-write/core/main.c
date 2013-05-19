@@ -12,6 +12,10 @@
 #include "edgeoverlay.h"
 #include "module_load.h"
 
+//temp for dng test, to make available in both lua and dng modules
+int DNG_CHUNK_SIZE = (512*1024);
+int DNG_END_MARGIN = (512*1024);
+
 //==========================================================
 
 static char osd_buf[50];
