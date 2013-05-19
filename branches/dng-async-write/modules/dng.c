@@ -981,6 +981,8 @@ void create_badpixel_bin()
     action_stack_create(&action_stack_BADPIX_START);
 }
 
+//#define DEBUG_LED ((unsigned volatile *)0xC0220130) // d10 RED
+//#define DEBUG_LED ((unsigned volatile *)0xc0220080) // a540 AF
 
 extern int wsleep;
 extern int wcount;
@@ -991,25 +993,27 @@ char *dng_reversed_ptr; // set to the end of the reversed chunk, incremented by 
 char *dng_written_ptr; // set to the end of the last written chunk, incremented by dng_writer
 char *dng_end_ptr; // set to the end of the buffer
 int dng_fd;
-#define DNG_CHUNK_SIZE (2*1024*1024)
+int dng_need_dereverse;
+#define DNG_CHUNK_SIZE (512*1024)
+#define DNG_END_MARGIN (512*1024)
 void dng_writer(void) {
+    write(dng_fd, dng_header_buf, dng_header_buf_size);
+    write(dng_fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
     while(dng_write_ptr < dng_end_ptr) {
         int size = dng_reversed_ptr - dng_write_ptr; 
-        // this case never seems to be hit, reversing is much faster than writing
         if(!size) {
             wsleep++;
             msleep(10);
             continue;
         }
         wcount++;
-        // we could write as much as available (typically to the end of the buffer on the second call), 
-        // but this gives better performance on cameras that need to de-reverse
-        // could vary size so we just save one chunk_size for the end
-        if(size > DNG_CHUNK_SIZE) {
-            size = DNG_CHUNK_SIZE;
+        // save one chunk size to overlap with de-reverse
+        if(dng_need_dereverse && dng_write_ptr + size == dng_end_ptr && size > DNG_END_MARGIN) {
+            size -= DNG_END_MARGIN;
         }
-        // TODO should only do if using cached
-        dcache_clean_all();
+        if(conf.raw_cache) {
+            dcache_clean_all();
+        }
         write(dng_fd,(char *)dng_write_ptr,size);
         dng_write_ptr += size;
         //msleep(10);
@@ -1031,19 +1035,21 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
         if (conf.dng_version)
             patch_bad_pixels_b();
         create_thumbnail();
-        write(fd, dng_header_buf, dng_header_buf_size);
-        write(fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
-
-        wsleep = 0;
-        rsleep = 0;
-        wcount = 0;
-
         dng_fd = fd;
         dng_write_ptr = (char *)(((unsigned long)altrawadr)|uncachedbit);
         dng_end_ptr = dng_write_ptr + camera_sensor.raw_size;
         dng_reversed_ptr = dng_write_ptr;
+        dng_need_dereverse = (rawadr == altrawadr);
+        wsleep = 0;
+        rsleep = 0;
+        wcount = 0;
+
+        CreateTask("dngwrite",0x18,0x400,dng_writer);
+        // allow dng_writer start writing header
+        // observation on both vx and dryos shows that msleep(0) yields to higher prio task but doesn't force 10ms wait
+        msleep(0); 
+
         int offset = 0;
-        int task_created = 0;
         while(dng_reversed_ptr < dng_end_ptr) {
             int chunk_size;
             if(dng_reversed_ptr + DNG_CHUNK_SIZE > dng_end_ptr) {
@@ -1052,16 +1058,8 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
                 chunk_size = DNG_CHUNK_SIZE;
             }
             reverse_bytes_order2(rawadr+offset, altrawadr+offset, chunk_size);
-            offset += chunk_size;
             dng_reversed_ptr += chunk_size;
-            // TODO might be better to create the task earlier and just wake it up
-            if(!task_created) {
-                // higher priority than spy_task, so should run immediately when writes complete (?)
-                CreateTask("dngwrite",0x18,0x400,dng_writer);
-                task_created = 1;
-            }
-            // sleeping every reverse chunk doesn't seem to impact performance compared 
-            // to just sleeping once after task start, reversing much faster than writing
+            offset += chunk_size;
             // seems to give slightly faster times with less variation
             msleep(10);
         }
@@ -1086,6 +1084,7 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
             }
         } else { // no de-reverse, just wait for write to finish
             while(dng_write_ptr < dng_end_ptr) {
+                rsleep++;
                 msleep(10);
             }
         }
