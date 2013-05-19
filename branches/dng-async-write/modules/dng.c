@@ -14,6 +14,7 @@
 #include "gps.h"
 #include "math.h"
 #include "cache.h"
+#include "task.h"
 
 #include "dng.h"
 #include "module_def.h"
@@ -980,8 +981,45 @@ void create_badpixel_bin()
     action_stack_create(&action_stack_BADPIX_START);
 }
 
+
+extern int wsleep;
+extern int wcount;
+extern int rsleep;
+
+char *dng_write_ptr; // initialized to start of raw buffer, incremented by dng_writer
+char *dng_reversed_ptr; // set to the end of the reversed chunk, incremented by write_dng
+char *dng_written_ptr; // set to the end of the last written chunk, incremented by dng_writer
+char *dng_end_ptr; // set to the end of the buffer
+int dng_fd;
+#define DNG_CHUNK_SIZE (2*1024*1024)
+void dng_writer(void) {
+    while(dng_write_ptr < dng_end_ptr) {
+        int size = dng_reversed_ptr - dng_write_ptr; 
+        // this case never seems to be hit, reversing is much faster than writing
+        if(!size) {
+            wsleep++;
+            msleep(10);
+            continue;
+        }
+        wcount++;
+        // we could write as much as available (typically to the end of the buffer on the second call), 
+        // but this gives better performance on cameras that need to de-reverse
+        // could vary size so we just save one chunk_size for the end
+        if(size > DNG_CHUNK_SIZE) {
+            size = DNG_CHUNK_SIZE;
+        }
+        // TODO should only do if using cached
+        dcache_clean_all();
+        write(dng_fd,(char *)dng_write_ptr,size);
+        dng_write_ptr += size;
+        //msleep(10);
+    }
+    ExitTask();
+}
+
 //-------------------------------------------------------------------
 // Write DNG header, thumbnail and data to file
+
 
 void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit) 
 {
@@ -996,21 +1034,59 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
         write(fd, dng_header_buf, dng_header_buf_size);
         write(fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
 
-        reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
+        wsleep = 0;
+        rsleep = 0;
+        wcount = 0;
 
-        // if reverse was done on cached raw, clean cache before writing
-        if(!((unsigned long)altrawadr & uncachedbit)) {
-            dcache_clean_all();
+        dng_fd = fd;
+        dng_write_ptr = (char *)(((unsigned long)altrawadr)|uncachedbit);
+        dng_end_ptr = dng_write_ptr + camera_sensor.raw_size;
+        dng_reversed_ptr = dng_write_ptr;
+        int offset = 0;
+        int task_created = 0;
+        while(dng_reversed_ptr < dng_end_ptr) {
+            int chunk_size;
+            if(dng_reversed_ptr + DNG_CHUNK_SIZE > dng_end_ptr) {
+                chunk_size = dng_end_ptr - dng_reversed_ptr;
+            } else {
+                chunk_size = DNG_CHUNK_SIZE;
+            }
+            reverse_bytes_order2(rawadr+offset, altrawadr+offset, chunk_size);
+            offset += chunk_size;
+            dng_reversed_ptr += chunk_size;
+            // TODO might be better to create the task earlier and just wake it up
+            if(!task_created) {
+                // higher priority than spy_task, so should run immediately when writes complete (?)
+                CreateTask("dngwrite",0x18,0x400,dng_writer);
+                task_created = 1;
+            }
+            // sleeping every reverse chunk doesn't seem to impact performance compared 
+            // to just sleeping once after task start, reversing much faster than writing
+            // seems to give slightly faster times with less variation
+            msleep(10);
         }
 
-        // Write alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
-        write(fd, (char*)(((unsigned long)altrawadr)|uncachedbit), camera_sensor.raw_size);
-
         if (rawadr == altrawadr) {    // If only one RAW buffer then we have to swap the bytes back
-            reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
-            // if unreverse was done on cached raw, clean cache for jpeg
+            char *dereversed_ptr = (char *)(((unsigned long)altrawadr)|uncachedbit);
+            int offset = 0;
+            while(dereversed_ptr < dng_end_ptr) {
+                int chunk_size = dng_write_ptr - dereversed_ptr;
+                if(!chunk_size) {
+                    msleep(10);
+                    rsleep++;
+                    continue;
+                }
+                reverse_bytes_order2(rawadr+offset, altrawadr+offset, chunk_size);
+                offset += chunk_size;
+                dereversed_ptr += chunk_size;
+            }
+            // if reverse was done on cached raw, clean cache before writing
             if(!((unsigned long)altrawadr & uncachedbit)) {
                 dcache_clean_all();
+            }
+        } else { // no de-reverse, just wait for write to finish
+            while(dng_write_ptr < dng_end_ptr) {
+                msleep(10);
             }
         }
 

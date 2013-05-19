@@ -49,12 +49,18 @@
 #include "file_counter.h"
 #include "lens.h"
 #include "fileutil.h"
+#include "task.h"
 
 #include "modules.h"
 #include "module_load.h"
 #include "module_exportlist.h"
 
 extern unsigned _ExecuteEventProcedure(const char *name,...);
+
+extern int wsleep;
+extern int wcount;
+extern int rsleep;
+
 
 //********************************************************/
 
