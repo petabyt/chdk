@@ -1110,6 +1110,7 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
             reverse_bytes_order2(rawadr+offset, altrawadr+offset, chunk_size);
             dng_reversed_ptr += chunk_size;
             offset += chunk_size;
+            dng_stats.rev_chunk_count++;
             // seems to give slightly faster times with less variation
             msleep(10);
         }

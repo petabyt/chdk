@@ -2323,6 +2323,7 @@ static int luaCB_get_dng_stats( lua_State* L )
     set_number_field(L,"write_wait_count",dng_stats.write_wait_count);
     set_number_field(L,"write_chunk_count",dng_stats.write_chunk_count);
     set_number_field(L,"finish_wait_count",dng_stats.finish_wait_count);
+    set_number_field(L,"rev_chunk_count",dng_stats.rev_chunk_count);
     set_number_field(L,"save_start",dng_stats.save_start);
     set_number_field(L,"save_end",dng_stats.save_end);
     set_number_field(L,"write_hdr_start",dng_stats.write_hdr_start);

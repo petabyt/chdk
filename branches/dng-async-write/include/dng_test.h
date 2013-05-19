@@ -7,6 +7,7 @@ typedef struct {
     int write_wait_count;
     int write_chunk_count;
     int finish_wait_count;
+    int rev_chunk_count;
     int save_start;
     int save_end;
     int write_hdr_start;
