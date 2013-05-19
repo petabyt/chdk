@@ -69,6 +69,11 @@ int vid_get_viewport_yoffset() {
 }
 
 
+// Functions for PTP Live View system
+// 256 entry palette based on 100b sub_FF909B0C
+int vid_get_palette_type()                      { return 3; }
+int vid_get_palette_size()                      { return 256 * 4; }
+
 // Function to load CHDK custom colors into active Canon palette
 
 void *vid_get_bitmap_active_palette() {
