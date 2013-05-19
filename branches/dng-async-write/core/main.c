@@ -12,9 +12,10 @@
 #include "edgeoverlay.h"
 #include "module_load.h"
 
+#include "dng_test.h"
 //temp for dng test, to make available in both lua and dng modules
-int DNG_CHUNK_SIZE = (512*1024);
-int DNG_END_MARGIN = (512*1024);
+dng_stats_t dng_stats;
+dng_conf_t dng_conf;
 
 //==========================================================
 
@@ -129,6 +130,9 @@ void core_spytask()
 {
     int cnt = 1;
     int i=0;
+
+    dng_conf.rev_chunk_size = (512*1024);
+    dng_conf.write_end_chunk = (512*1024);
 
     // Init camera_info bits that can't be done statically
     camera_info_init();

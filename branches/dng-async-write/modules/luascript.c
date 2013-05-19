@@ -39,6 +39,8 @@
 #include "module_def.h"
 #include "luascript.h"
 
+#include "dng_test.h"
+
 #include "../lib/lua/lualib.h"
 #include "../lib/lua/lauxlib.h"
 #include "../lib/lua/lstate.h"  // for L->nCcalls, baseCcalls
@@ -2299,20 +2301,39 @@ static int luaCB_set_yield( lua_State* L )
 /*
 TODO temp testing
 */
-extern int DNG_CHUNK_SIZE;
-extern int DNG_END_MARGIN;
-static int luaCB_get_dng_vals( lua_State* L )
+static int luaCB_get_dng_conf( lua_State* L )
 {
-  lua_pushnumber(L,DNG_CHUNK_SIZE);
-  lua_pushnumber(L,DNG_END_MARGIN);
-  return 2;
+  lua_pushnumber(L,dng_conf.rev_chunk_size);
+  lua_pushnumber(L,dng_conf.write_end_chunk);
+  lua_pushnumber(L,dng_conf.use_orig);
+  return 3;
 }
 
-static int luaCB_set_dng_vals( lua_State* L )
+static int luaCB_set_dng_conf( lua_State* L )
 {
-  DNG_CHUNK_SIZE = luaL_checknumber(L,1);
-  DNG_END_MARGIN = luaL_checknumber(L,2);
+  dng_conf.rev_chunk_size = luaL_checknumber(L,1);
+  dng_conf.write_end_chunk = luaL_checknumber(L,2);
+  dng_conf.use_orig = luaL_checknumber(L,3);
   return 0;
+}
+
+static int luaCB_get_dng_stats( lua_State* L )
+{
+    lua_createtable(L, 0, 13);
+    set_number_field(L,"write_wait_count",dng_stats.write_wait_count);
+    set_number_field(L,"write_chunk_count",dng_stats.write_chunk_count);
+    set_number_field(L,"finish_wait_count",dng_stats.finish_wait_count);
+    set_number_field(L,"save_start",dng_stats.save_start);
+    set_number_field(L,"save_end",dng_stats.save_end);
+    set_number_field(L,"write_hdr_start",dng_stats.write_hdr_start);
+    set_number_field(L,"write_hdr_end",dng_stats.write_hdr_end);
+    set_number_field(L,"write_start",dng_stats.write_start);
+    set_number_field(L,"write_end",dng_stats.write_end);
+    set_number_field(L,"rev_start",dng_stats.rev_start);
+    set_number_field(L,"rev_end",dng_stats.rev_end);
+    set_number_field(L,"derev_start",dng_stats.derev_start);
+    set_number_field(L,"derev_end",dng_stats.derev_end);
+    return 1;
 }
 
 //static void register_func( lua_State* L, const char *name, void *func) {
@@ -2493,8 +2514,9 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(read_usb_msg)
     FUNC(write_usb_msg)
 
-    FUNC(get_dng_vals)
-    FUNC(set_dng_vals)
+    FUNC(get_dng_conf)
+    FUNC(set_dng_conf)
+    FUNC(get_dng_stats)
     {NULL, NULL},
 };
 

@@ -389,10 +389,6 @@
             CreateTask,
             ExitTask,
 
-            &wsleep,
-            &wcount,
-            &rsleep,
-
-            &DNG_CHUNK_SIZE,
-            &DNG_END_MARGIN,
+            &dng_stats,
+            &dng_conf,
 }

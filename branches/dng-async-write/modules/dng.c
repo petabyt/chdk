@@ -17,6 +17,7 @@
 #include "task.h"
 
 #include "dng.h"
+#include "dng_test.h"
 #include "module_def.h"
 
 // Set to 1 when module loaded and active
@@ -981,12 +982,54 @@ void create_badpixel_bin()
     action_stack_create(&action_stack_BADPIX_START);
 }
 
+
+void write_dng_orig(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit) 
+{
+    create_dng_header();
+
+    if (dng_header_buf)
+    {
+        fill_gamma_buf();
+        if (conf.dng_version)
+            patch_bad_pixels_b();
+        create_thumbnail();
+
+        dng_stats.write_hdr_start = get_tick_count();
+
+        write(fd, dng_header_buf, dng_header_buf_size);
+        write(fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
+
+        dng_stats.write_hdr_end = dng_stats.rev_start = get_tick_count();
+
+        reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
+
+        // if reverse was done on cached raw, clean cache before writing
+        if(!((unsigned long)altrawadr & uncachedbit)) {
+            dcache_clean_all();
+        }
+
+        dng_stats.write_start = dng_stats.rev_end = get_tick_count();
+
+        // Write alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
+        write(fd, (char*)(((unsigned long)altrawadr)|uncachedbit), camera_sensor.raw_size);
+
+        dng_stats.write_end = dng_stats.derev_start = get_tick_count();
+
+        if (rawadr == altrawadr) {    // If only one RAW buffer then we have to swap the bytes back
+            reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
+            // if unreverse was done on cached raw, clean cache for jpeg
+            if(!((unsigned long)altrawadr & uncachedbit)) {
+                dcache_clean_all();
+            }
+        }
+        dng_stats.derev_end = get_tick_count();
+
+        free_dng_header();
+    }
+}
+
 //#define DEBUG_LED ((unsigned volatile *)0xC0220130) // d10 RED
 //#define DEBUG_LED ((unsigned volatile *)0xc0220080) // a540 AF
-
-extern int wsleep;
-extern int wcount;
-extern int rsleep;
 
 char *dng_write_ptr; // initialized to start of raw buffer, incremented by dng_writer
 char *dng_reversed_ptr; // set to the end of the reversed chunk, incremented by write_dng
@@ -995,26 +1038,22 @@ char *dng_end_ptr; // set to the end of the buffer
 int dng_fd;
 int dng_need_dereverse;
 
-extern int DNG_CHUNK_SIZE;
-extern int DNG_END_MARGIN;
-/*
-#define DNG_CHUNK_SIZE (512*1024)
-#define DNG_END_MARGIN (512*1024)
-*/
 void dng_writer(void) {
+    dng_stats.write_hdr_start = get_tick_count();
     write(dng_fd, dng_header_buf, dng_header_buf_size);
     write(dng_fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
+    dng_stats.write_start = dng_stats.write_hdr_end = get_tick_count();
     while(dng_write_ptr < dng_end_ptr) {
         int size = dng_reversed_ptr - dng_write_ptr; 
         if(!size) {
-            wsleep++;
+            dng_stats.write_wait_count++;
             msleep(10);
             continue;
         }
-        wcount++;
+        dng_stats.write_chunk_count++;
         // save one chunk size to overlap with de-reverse
-        if(dng_need_dereverse && dng_write_ptr + size == dng_end_ptr && size > DNG_END_MARGIN) {
-            size -= DNG_END_MARGIN;
+        if(dng_need_dereverse && dng_write_ptr + size == dng_end_ptr && size > dng_conf.write_end_chunk) {
+            size -= dng_conf.write_end_chunk;
         }
         if(conf.raw_cache) {
             dcache_clean_all();
@@ -1023,6 +1062,7 @@ void dng_writer(void) {
         dng_write_ptr += size;
         //msleep(10);
     }
+    dng_stats.write_end = get_tick_count();
     ExitTask();
 }
 
@@ -1032,6 +1072,13 @@ void dng_writer(void) {
 
 void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit) 
 {
+    memset(&dng_stats,0,sizeof(dng_stats));
+    dng_stats.save_start = get_tick_count();
+    if(dng_conf.use_orig) {
+        write_dng_orig(fd,rawadr,altrawadr,uncachedbit);
+        dng_stats.save_end = get_tick_count();
+        return;
+    }
     create_dng_header();
 
     if (dng_header_buf)
@@ -1045,9 +1092,6 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
         dng_end_ptr = dng_write_ptr + camera_sensor.raw_size;
         dng_reversed_ptr = dng_write_ptr;
         dng_need_dereverse = (rawadr == altrawadr);
-        wsleep = 0;
-        rsleep = 0;
-        wcount = 0;
 
         CreateTask("dngwrite",0x18,0x400,dng_writer);
         // allow dng_writer to start writing header
@@ -1055,12 +1099,13 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
         msleep(0); 
 
         int offset = 0;
+        dng_stats.rev_start = get_tick_count();
         while(dng_reversed_ptr < dng_end_ptr) {
             int chunk_size;
-            if(dng_reversed_ptr + DNG_CHUNK_SIZE > dng_end_ptr) {
+            if(dng_reversed_ptr + dng_conf.rev_chunk_size > dng_end_ptr) {
                 chunk_size = dng_end_ptr - dng_reversed_ptr;
             } else {
-                chunk_size = DNG_CHUNK_SIZE;
+                chunk_size = dng_conf.rev_chunk_size;
             }
             reverse_bytes_order2(rawadr+offset, altrawadr+offset, chunk_size);
             dng_reversed_ptr += chunk_size;
@@ -1068,6 +1113,7 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
             // seems to give slightly faster times with less variation
             msleep(10);
         }
+        dng_stats.rev_end = dng_stats.derev_start = get_tick_count();
 
         if (rawadr == altrawadr) {    // If only one RAW buffer then we have to swap the bytes back
             char *dereversed_ptr = (char *)(((unsigned long)altrawadr)|uncachedbit);
@@ -1076,7 +1122,7 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
                 int chunk_size = dng_write_ptr - dereversed_ptr;
                 if(!chunk_size) {
                     msleep(10);
-                    rsleep++;
+                    dng_stats.finish_wait_count++;
                     continue;
                 }
                 reverse_bytes_order2(rawadr+offset, altrawadr+offset, chunk_size);
@@ -1089,13 +1135,15 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
             }
         } else { // no de-reverse, just wait for write to finish
             while(dng_write_ptr < dng_end_ptr) {
-                rsleep++;
+                dng_stats.finish_wait_count++;
                 msleep(10);
             }
         }
+        dng_stats.derev_end = get_tick_count();
 
         free_dng_header();
     }
+    dng_stats.save_end = get_tick_count();
 }
 
 /*********** BEGIN OF AUXILARY PART **********************/
