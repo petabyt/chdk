@@ -16,6 +16,7 @@
 #include "clock.h"
 #include "raw_buffer.h"
 #include "shooting.h"
+#include "autoiso.h"
 #include "viewport.h"
 #include "battery.h"
 #include "gui.h"

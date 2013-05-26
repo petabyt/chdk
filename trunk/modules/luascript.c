@@ -15,6 +15,7 @@
 #include "gui_lang.h"
 #include "histogram.h"
 #include "shooting.h"
+#include "autoiso.h"
 #include "battery.h"
 #include "temperature.h"
 #include "backlight.h"

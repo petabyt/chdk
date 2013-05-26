@@ -280,8 +280,6 @@ typedef struct {
     int autoiso_max_iso_auto_real;
     int autoiso_min_iso_real;
     int autoiso2_max_iso_auto_real;
-    int autoiso_min_shutter_numerator;  // converted from enum to numerator
-    int autoiso2_min_shutter_numerator;
     int autoiso2_over;
     
     int overexp_threshold;

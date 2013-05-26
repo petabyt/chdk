@@ -111,7 +111,7 @@ static CMenuItem bracketing_in_continuous_submenu_items[] = {
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0,                                  0 ),
     {0}
 };
-static CMenu bracketing_in_continuous_submenu = {0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS_TITLE, NULL, bracketing_in_continuous_submenu_items };
+static CMenu bracketing_in_continuous_submenu = {0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS_TITLE, bracketing_in_continuous_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -133,26 +133,16 @@ static CMenuItem remote_submenu_items[] = {
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP, 0, 0),
     {0}
 };
-static CMenu remote_submenu = {0x86,LANG_MENU_REMOTE_PARAM_TITLE, NULL, remote_submenu_items };
+static CMenu remote_submenu = {0x86,LANG_MENU_REMOTE_PARAM_TITLE, remote_submenu_items };
 
 //-------------------------------------------------------------------
 
-static const char* gui_autoiso_shutter_modes[] =            { "Auto", "1/8s", "1/15s", "1/30s", "1/60s", "1/125s", "1/250s", "1/500s", "1/1000s" };
-static const int shutter1_values[]={0, 8, 15, 30, 60, 125, 250, 500, 1000 };
+static const char* gui_autoiso_shutter_modes[] = { "Auto", "1/8s", "1/15s", "1/30s", "1/60s", "1/125s", "1/250s", "1/500s", "1/1000s" };
 
-static const char* gui_autoiso2_shutter_modes[]={ "Off", "1/4s", "1/6s", "1/8s", "1/12s", "1/15s", "1/20s", "1/25s", "1/30s",  
- 	                                 "1/40s", "1/50s", "1/60s", "1/80s", "1/100s", "1/125s", "1/160s", "1/250s", "1/500s", "1/1000s"}; 
-static const int shutter2_values[]={0, 4, 6, 8, 12, 15, 20, 25, 30, 40, 50, 60, 80, 100, 125, 160, 200, 250, 500, 1000 };
+static const char* gui_autoiso2_shutter_modes[] = { "Off", "1/4s", "1/6s", "1/8s", "1/12s", "1/15s", "1/20s", "1/25s", "1/30s",  
+                 	                                "1/40s", "1/50s", "1/60s", "1/80s", "1/100s", "1/125s", "1/160s", "1/250s", "1/500s", "1/1000s"}; 
 
-static const char* gui_overexp_ev_modes[]={ "Off", "-1/3 Ev", "-2/3 Ev", "-1 Ev", "-1 1/3Ev", "-1 2/3Ev", "-2 Ev" };
-
-void cb_autoiso_menu_change(unsigned int item)
-{
-    conf.autoiso_min_shutter_numerator = shutter1_values[conf.autoiso_shutter_enum];
-    conf.autoiso2_min_shutter_numerator =  shutter2_values[conf.autoiso2_shutter_enum];
-
-    conf.autoiso_max_iso_auto_real=0;	// set invalid value of real autoiso as flag 'need recalc'
-}
+static const char* gui_overexp_ev_modes[] = { "Off", "-1/3 Ev", "-2/3 Ev", "-1 Ev", "-1 1/3Ev", "-1 2/3Ev", "-2 Ev" };
 
 static CMenuItem autoiso_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_AUTOISO_ENABLED,            MENUITEM_BOOL,                                      &conf.autoiso_enable,       0 ),
@@ -181,7 +171,7 @@ static CMenuItem autoiso_submenu_items[] = {
     {0}
 };
 
-static CMenu autoiso_submenu = {0x2d,LANG_MENU_AUTOISO_TITLE, cb_autoiso_menu_change, autoiso_submenu_items };
+static CMenu autoiso_submenu = {0x2d,LANG_MENU_AUTOISO_TITLE, autoiso_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -295,7 +285,7 @@ static CMenuItem memdmp_submenu_items[] = {
     {0}
 };
 
-static CMenu memdmp_submenu = {0x2a,LANG_MENU_DEBUG_MEMDMP, NULL, memdmp_submenu_items };
+static CMenu memdmp_submenu = {0x2a,LANG_MENU_DEBUG_MEMDMP, memdmp_submenu_items };
 
 static CMenuItem debug_submenu_items[] = {
     MENU_ENUM2  (0x5c,LANG_MENU_DEBUG_DISPLAY,              &conf.debug_display,            gui_debug_display_modes ),
@@ -313,7 +303,7 @@ static CMenuItem debug_submenu_items[] = {
     {0}
 };
 
-static CMenu debug_submenu = {0x2a,LANG_MENU_DEBUG_TITLE, NULL, debug_submenu_items };
+static CMenu debug_submenu = {0x2a,LANG_MENU_DEBUG_TITLE, debug_submenu_items };
 
 #endif
 
@@ -420,7 +410,7 @@ static CMenuItem gps_logging_items[] = {
     {0}
 };
 
-static CMenu gps_logging_submenu = {0x86,LANG_MENU_GPS_LOGGING, NULL, gps_logging_items };
+static CMenu gps_logging_submenu = {0x86,LANG_MENU_GPS_LOGGING, gps_logging_items };
 
 static CMenuItem gps_tagging_items[] = {
     MENU_ITEM	(0x5c,LANG_MENU_GPS_WAYPOINT_SAVE,          MENUITEM_BOOL,          		                    &conf.gps_waypoint_save,	0 ),
@@ -440,7 +430,7 @@ static CMenuItem gps_tagging_items[] = {
     {0}
 };
 
-static CMenu gps_tagging_submenu = {0x86,LANG_MENU_GPS_TAGGING, NULL, gps_tagging_items };
+static CMenu gps_tagging_submenu = {0x86,LANG_MENU_GPS_TAGGING, gps_tagging_items };
 
 static CMenuItem gps_navigation_items[] = {
     MENU_ITEM	(0x2a,LANG_MENU_GPS_KOMPASS_SMOOTH,			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_kompass_smooth,	MENU_MINMAX(1, 40) ),
@@ -453,7 +443,7 @@ static CMenuItem gps_navigation_items[] = {
     {0}
 };
 
-static CMenu gps_navigation_submenu = {0x86,LANG_MENU_GPS_NAVIGATION, NULL, gps_navigation_items };
+static CMenu gps_navigation_submenu = {0x86,LANG_MENU_GPS_NAVIGATION, gps_navigation_items };
 
 static const char* gui_gps_sat_fix[] =                  { "immer", "2D", "3D", "2D/3D" };
 
@@ -473,7 +463,7 @@ static CMenuItem gps_values_items[] = {
     {0}
 };
 
-static CMenu gps_values_submenu = {0x86,LANG_MENU_GPS_VALUES, NULL, gps_values_items };
+static CMenu gps_values_submenu = {0x86,LANG_MENU_GPS_VALUES, gps_values_items };
 
 static CMenuItem gps_submenu_items[] = {
     MENU_ITEM	(0x2a,LANG_MENU_GPS_ON_OFF,					MENUITEM_BOOL,  				&conf.gps_on_off,					0 ),
@@ -492,7 +482,7 @@ static CMenuItem gps_submenu_items[] = {
     {0}
 };
 
-static CMenu gps_submenu = {0x2a,LANG_MENU_GPS, NULL, gps_submenu_items };
+static CMenu gps_submenu = {0x2a,LANG_MENU_GPS, gps_submenu_items };
 
 #endif
 
@@ -544,7 +534,7 @@ static CMenuItem reader_submenu_items[] = {
     {0}
 };
 
-static CMenu reader_submenu = {0x37,LANG_MENU_READ_TITLE, NULL, reader_submenu_items };
+static CMenu reader_submenu = {0x37,LANG_MENU_READ_TITLE, reader_submenu_items };
 
 //-------------------------------------------------------------------
 #if defined (OPT_GAMES)
@@ -561,7 +551,7 @@ static CMenuItem games_submenu_items[] = {
     {0}
 };
 
-static CMenu games_submenu = {0x38,LANG_MENU_GAMES_TITLE, NULL, games_submenu_items };
+static CMenu games_submenu = {0x38,LANG_MENU_GAMES_TITLE, games_submenu_items };
 
 #endif
 //-------------------------------------------------------------------
@@ -628,7 +618,7 @@ static CMenuItem sdcard_submenu_items[] = {
     {0},
 };
 
-static CMenu sdcard_submenu = {0x33,LANG_SD_CARD, NULL, sdcard_submenu_items };
+static CMenu sdcard_submenu = {0x33,LANG_SD_CARD, sdcard_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -651,7 +641,7 @@ static CMenuItem module_submenu_items[] = {
     {0},
 };
 
-static CMenu module_submenu = {0x28,LANG_MENU_MODULES, NULL, module_submenu_items };
+static CMenu module_submenu = {0x28,LANG_MENU_MODULES, module_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -689,7 +679,7 @@ static void lua_native_call_warning(unsigned int btn)
         conf.script_allow_lua_native_calls = 0;
 }
 
-static void gui_lua_native_call_warning(int arg)
+static void gui_lua_native_call_warning()
 {
     if (conf.script_allow_lua_native_calls)
         gui_mbox_init(LANG_WARNING, LANG_MENU_LUA_NATIVE_CALLS_WARNING, MBOX_BTN_YES_NO|MBOX_DEF_BTN2|MBOX_TEXT_CENTER, lua_native_call_warning);
@@ -719,7 +709,7 @@ static CMenuItem console_settings_submenu_items[] = {
     {0}
 };
 
-static CMenu console_settings_submenu = {0x28,LANG_MENU_CONSOLE_SETTINGS, NULL, console_settings_submenu_items };
+static CMenu console_settings_submenu = {0x28,LANG_MENU_CONSOLE_SETTINGS, console_settings_submenu_items };
 
 static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x35,LANG_MENU_MISC_FILE_BROWSER,          MENUITEM_PROC,                  gui_draw_fselect,                   0 ),
@@ -746,7 +736,7 @@ static CMenuItem misc_submenu_items[] = {
     {0},
 };
 
-static CMenu misc_submenu = {0x29,LANG_MENU_MISC_TITLE, NULL, misc_submenu_items };
+static CMenu misc_submenu = {0x29,LANG_MENU_MISC_TITLE, misc_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -760,27 +750,21 @@ static void cb_volts()
     conf.batt_perc_show=0;
 }
 
-static void cb_battery_menu_change(unsigned int item)
+static void cb_batt_max()
 {
-    switch (item) {
-        case 0: //Voltage MAX
-            if (conf.batt_volts_max<conf.batt_volts_min+25) {
-                conf.batt_volts_min = conf.batt_volts_max-25;
-            }
-            break;
-        case 1: //Voltage MIN
-            if (conf.batt_volts_min>conf.batt_volts_max-25) {
-                conf.batt_volts_max = conf.batt_volts_min+25;
-            }
-            break;
-        default:
-            break;
-    }
+    if (conf.batt_volts_max < conf.batt_volts_min + 25)
+        conf.batt_volts_min = conf.batt_volts_max - 25;
+}
+
+static void cb_batt_min()
+{
+    if (conf.batt_volts_min > conf.batt_volts_max - 25)
+        conf.batt_volts_max = conf.batt_volts_min + 25;
 }
 
 static CMenuItem battery_submenu_items[] = {
-    MENU_ITEM   (0x66,LANG_MENU_BATT_VOLT_MAX,              MENUITEM_INT,                           &conf.batt_volts_max,   0 ),
-    MENU_ITEM   (0x67,LANG_MENU_BATT_VOLT_MIN,              MENUITEM_INT,                           &conf.batt_volts_min,   0 ),
+    MENU_ITEM   (0x66,LANG_MENU_BATT_VOLT_MAX,              MENUITEM_INT|MENUITEM_ARG_CALLBACK,     &conf.batt_volts_max,   (int)cb_batt_max ),
+    MENU_ITEM   (0x67,LANG_MENU_BATT_VOLT_MIN,              MENUITEM_INT|MENUITEM_ARG_CALLBACK,     &conf.batt_volts_min,   (int)cb_batt_min ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                     0,                      0 ),
     MENU_ITEM   (0x73,LANG_MENU_BATT_SHOW_PERCENT,          MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,    &conf.batt_perc_show,   (int)cb_perc ),
     MENU_ITEM   (0x73,LANG_MENU_BATT_SHOW_VOLTS,            MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,    &conf.batt_volts_show,  (int)cb_volts ),
@@ -789,7 +773,7 @@ static CMenuItem battery_submenu_items[] = {
     {0}
 };
 
-static CMenu battery_submenu = {0x32,LANG_MENU_BATT_TITLE, cb_battery_menu_change, battery_submenu_items };
+static CMenu battery_submenu = {0x32,LANG_MENU_BATT_TITLE, battery_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -825,7 +809,7 @@ static CMenuItem space_submenu_items[] = {
     {0}
 };
 
-static CMenu space_submenu = {0x33,LANG_MENU_OSD_SPACE_PARAMS_TITLE, NULL, space_submenu_items};
+static CMenu space_submenu = {0x33,LANG_MENU_OSD_SPACE_PARAMS_TITLE, space_submenu_items};
 
 //-------------------------------------------------------------------
 
@@ -844,7 +828,7 @@ static CMenuItem dof_submenu_items[] = {
     {0}
 };
 
-static CMenu dof_submenu = {0x31,LANG_MENU_DOF_TITLE, /*cb_dof_menu_change*/ NULL, dof_submenu_items };
+static CMenu dof_submenu = {0x31,LANG_MENU_DOF_TITLE, dof_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -872,7 +856,7 @@ static CMenuItem values_submenu_items[] = {
     {0}
 };
 
-static CMenu values_submenu = {0x28,LANG_MENU_OSD_VALUES_TITLE, /*cb_values_menu_change*/ NULL, values_submenu_items };
+static CMenu values_submenu = {0x28,LANG_MENU_OSD_VALUES_TITLE, values_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -890,7 +874,7 @@ static CMenuItem clock_submenu_items[] = {
     {0}
 };
 
-static CMenu clock_submenu = {0x34,LANG_MENU_OSD_CLOCK_PARAMS_TITLE, NULL, clock_submenu_items };
+static CMenu clock_submenu = {0x34,LANG_MENU_OSD_CLOCK_PARAMS_TITLE, clock_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -971,7 +955,7 @@ static CMenuItem video_submenu_items[] = {
     {0}
 };
 
-static CMenu video_submenu = {0x23,LANG_MENU_VIDEO_PARAM_TITLE, NULL, video_submenu_items };
+static CMenu video_submenu = {0x23,LANG_MENU_VIDEO_PARAM_TITLE, video_submenu_items };
 
 //-------------------------------------------------------------------
 // "Extra Photo Operations" Menu
@@ -1097,7 +1081,7 @@ static CMenuItem curve_submenu_items[] = {
     {0}
 };
 
-static CMenu curve_submenu = {0x85,LANG_MENU_CURVE_PARAM_TITLE, NULL, curve_submenu_items };
+static CMenu curve_submenu = {0x85,LANG_MENU_CURVE_PARAM_TITLE, curve_submenu_items };
 
 #endif
 
@@ -1251,7 +1235,7 @@ static CMenuItem operation_submenu_items[] = {
     {0}
 };
 
-static CMenu operation_submenu = {0x21,LANG_MENU_OPERATION_PARAM_TITLE, NULL, operation_submenu_items };
+static CMenu operation_submenu = {0x21,LANG_MENU_OPERATION_PARAM_TITLE, operation_submenu_items };
 
 void set_tv_override_menu()
 {
@@ -1311,7 +1295,7 @@ static CMenuItem edge_overlay_submenu_items[] = {
     {0}
 };
 
-static CMenu edge_overlay_submenu = {0x7f,LANG_MENU_EDGE_OVERLAY_TITLE, NULL, edge_overlay_submenu_items };
+static CMenu edge_overlay_submenu = {0x7f,LANG_MENU_EDGE_OVERLAY_TITLE, edge_overlay_submenu_items };
 
 #endif
 
@@ -1341,7 +1325,7 @@ static CMenuItem grid_submenu_items[] = {
     {0}
 };
 
-static CMenu grid_submenu = {0x2f,LANG_MENU_GRID_TITLE, NULL, grid_submenu_items };
+static CMenu grid_submenu = {0x2f,LANG_MENU_GRID_TITLE, grid_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -1385,7 +1369,7 @@ static CMenuItem visual_submenu_items[] = {
     {0}
 };
 
-static CMenu visual_submenu = {0x28,LANG_MENU_VIS_TITLE, NULL, visual_submenu_items };
+static CMenu visual_submenu = {0x28,LANG_MENU_VIS_TITLE, visual_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -1397,7 +1381,7 @@ static CMenuItem raw_state_submenu_items[] = {
     {0}
 };
 
-static CMenu raw_state_submenu = {0x24,LANG_MENU_OSD_RAW_STATE_PARAMS_TITLE, NULL, raw_state_submenu_items };
+static CMenu raw_state_submenu = {0x24,LANG_MENU_OSD_RAW_STATE_PARAMS_TITLE, raw_state_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -1412,7 +1396,7 @@ static CMenuItem touchscreen_submenu_items[] = {
     {0}
 };
 
-static CMenu touchscreen_submenu = {0x28,LANG_MENU_TOUCHSCREEN_VALUES, NULL, touchscreen_submenu_items };
+static CMenu touchscreen_submenu = {0x28,LANG_MENU_TOUCHSCREEN_VALUES, touchscreen_submenu_items };
 
 #endif
 
@@ -1447,7 +1431,7 @@ static CMenuItem osd_submenu_items[] = {
     {0}
 };
 
-static CMenu osd_submenu = {0x22,LANG_MENU_OSD_TITLE, NULL, osd_submenu_items };
+static CMenu osd_submenu = {0x22,LANG_MENU_OSD_TITLE, osd_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -1467,7 +1451,7 @@ static CMenuItem histo_submenu_items[] = {
     {0}
 };
 
-static CMenu histo_submenu = {0x25,LANG_MENU_HISTO_TITLE, NULL, histo_submenu_items };
+static CMenu histo_submenu = {0x25,LANG_MENU_HISTO_TITLE, histo_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -1490,7 +1474,7 @@ static CMenuItem raw_exceptions_submenu_items[] = {
     {0}
 };
 
-static CMenu raw_exceptions_submenu = {0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS_TITLE, NULL, raw_exceptions_submenu_items };
+static CMenu raw_exceptions_submenu = {0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS_TITLE, raw_exceptions_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -1569,7 +1553,7 @@ static CMenuItem raw_submenu_items[] = {
     {0}
 };
 
-static CMenu raw_submenu = {0x24,LANG_MENU_RAW_TITLE, NULL, raw_submenu_items };
+static CMenu raw_submenu = {0x24,LANG_MENU_RAW_TITLE, raw_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -1601,7 +1585,7 @@ static CMenuItem zebra_submenu_items[] = {
     {0}
 };
 
-static CMenu zebra_submenu = {0x26,LANG_MENU_ZEBRA_TITLE, NULL, zebra_submenu_items };
+static CMenu zebra_submenu = {0x26,LANG_MENU_ZEBRA_TITLE, zebra_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -1685,7 +1669,7 @@ static CMenuItem menu_font_submenu_items[] = {
     {0}
 };
 
-static CMenu menu_font_submenu = {0x28,LANG_MENU_FONT_SETTINGS, NULL, menu_font_submenu_items };
+static CMenu menu_font_submenu = {0x28,LANG_MENU_FONT_SETTINGS, menu_font_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -1712,7 +1696,7 @@ static CMenuItem menu_settings_submenu_items[] = {
     {0}
 };
 
-static CMenu menu_settings_submenu = {0x28,LANG_MENU_MENU_SETTINGS, NULL, menu_settings_submenu_items };
+static CMenu menu_settings_submenu = {0x28,LANG_MENU_MENU_SETTINGS, menu_settings_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -1832,7 +1816,7 @@ static CMenuItem chdk_settings_menu_items[] = {
     {0}
 };
 
-CMenu chdk_settings_menu = {0x20,LANG_MENU_CHDK_SETTINGS, NULL, chdk_settings_menu_items };
+CMenu chdk_settings_menu = {0x20,LANG_MENU_CHDK_SETTINGS, chdk_settings_menu_items };
 
 //-------------------------------------------------------------------
 
@@ -1854,7 +1838,7 @@ static CMenuItem root_menu_items[] = {
     {0}
 };
 
-CMenu root_menu = {0x20,LANG_MENU_MAIN_TITLE, NULL, root_menu_items };
+CMenu root_menu = {0x20,LANG_MENU_MAIN_TITLE, root_menu_items };
 
 // Set visibility of User Menu in root menu based on user menu state
 // Note this hack requires the User Menu entry to be the last one in the root_menu_items array above. 

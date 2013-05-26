@@ -5,6 +5,7 @@
 #include "conf.h"
 #include "histogram.h"
 #include "usb_remote.h"
+#include "autoiso.h"
 
 // Shooting function that don't need to be ARM code
 // ARM code shooting functions are in platform/generic/shooting.c
@@ -1051,146 +1052,7 @@ void shooting_video_bitrate_change(int v)
 #endif
 }
 
-void shooting_calc_autoiso_coef( int min_shutter )
-{
-	if ( conf.autoiso2_min_shutter_numerator >= min_shutter ) {
-		conf.autoiso2_coef = 0.0;
-	}
-	else {
-		conf.autoiso2_coef = (float)(conf.autoiso2_max_iso_auto_real - conf.autoiso_max_iso_auto_real) / 
-				(float)( conf.autoiso2_min_shutter_numerator - min_shutter);
-	}
-}
-
-void shooting_recalc_conf_autoiso_values()
-{
-#ifndef USE_REAL_AUTOISO
-    // Initialize only once
-    static int iso_b = 0;   // real base iso
-    static int iso_m = 0;   // marketing base iso
-
-    // @tsv - marketing to real iso correspondance is quite linear so just got multiplier
-    // Base values are correct only when shoot is prepared, so calc multiplier right before first shoot
-    if ( !iso_m || !iso_b )
-    {
-        iso_b = 10 * shooting_get_iso_base();	// 10 - is additional multiplier from user_entered_value
-        iso_m = shooting_get_iso_market_base();
-
-    }
-
-    // check zero in to_market convertion numerator
-    if ( !iso_m )
-    iso_m = iso_m ? iso_m : 1;
-#else
-    // If real ISO in GUI, then just multiply by 10
-    static int iso_b = 10;
-    static int iso_m = 1;
-
-#endif
-
-    // Calculate realISO (real = market * iso_b / iso_m)
-    conf.autoiso_max_iso_hi_real    = conf.autoiso_max_iso_hi    * iso_b / iso_m;
-    conf.autoiso_max_iso_auto_real  = conf.autoiso_max_iso_auto  * iso_b / iso_m; 
-    conf.autoiso_min_iso_real	    = conf.autoiso_min_iso       * iso_b / iso_m;      
-    conf.autoiso2_max_iso_auto_real = conf.autoiso2_max_iso_auto * iso_b / iso_m;
-
-    // There are two exceptional situation: 
-    // 1. shutter_numerator2 should be < shutter_numerator1, otherwise exceptional situation 
-    // 2. autoiso2 <= autoiso1
-    if ( !conf.autoiso2_min_shutter_numerator ) {
-        conf.autoiso2_max_iso_auto_real = conf.autoiso_max_iso_auto_real;
-    }
-
-    // C2=( iso2_max_auto_real - iso_max_auto_real) / ( tv_num[autoiso2_shutter] - tv_numerator[autoiso_shutter])
-    shooting_calc_autoiso_coef( conf.autoiso_min_shutter_numerator );
-}
-
-void shooting_set_autoiso(int iso_mode)
-{
-    short max_iso;
-	if ( iso_mode<=0 && conf.autoiso_max_iso_auto_real==0) {
-		shooting_recalc_conf_autoiso_values();
-	}
-    switch (iso_mode)
-    {
-        case -1: // ISO HI
-			//max_iso = conf.autoiso_max_iso_hi*10;
-			max_iso = conf.autoiso_max_iso_hi_real;
-            break;
-        case 0: // ISO AUTO
-			//max_iso = conf.autoiso_max_iso_auto*10;
-			max_iso = conf.autoiso_max_iso_auto_real;
-            break;
-        default:
-            return;
-    }
-    int m=mode_get()&MODE_SHOOTING_MASK;
-    // TODO also long shutter ?
-    if (m==MODE_M || m==MODE_TV || m==MODE_STITCH) return; //Only operate outside of M and Tv
-	int ev_overexp = 0;
-	if ( conf.overexp_ev_enum )
-	{
-		// No shoot_histogram exist here because no future shot exist yet :)
-		live_histogram_process_quick();
-
-		// step 32 is 1/3ev for tv96
-		if ( live_histogram_get_range(255-conf.autoiso2_over,255) >= conf.overexp_threshold ) {
-			ev_overexp = conf.overexp_ev_enum << 5; 
-		}
-		live_histogram_end_process();
-	}
-
-#ifdef OVEREXP_COMPENSATE_OVERALL
-	float current_shutter = shooting_get_shutter_speed_from_tv96( shooting_get_tv96() + ev_overexp );
-#else
-	float current_shutter = shooting_get_shutter_speed_from_tv96(shooting_get_tv96());
-#endif
-
-    short current_iso=shooting_get_iso_real();
-
-	short min_shutter = conf.autoiso_min_shutter_numerator;
-	if (min_shutter == 0) {
-		short IS_factor = (shooting_get_is_mode()<=1)?conf.autoiso_is_factor:1;
-		min_shutter = get_focal_length(lens_get_zoom_point())*conf.autoiso_user_factor / (IS_factor*1000);
-		//min_shutter is NOT 1/Xs but optimized for the calculation.
-		if ( conf.autoiso2_min_shutter_numerator ) {
-			shooting_calc_autoiso_coef( min_shutter );
-		}
-	}
-
-    short target_iso = current_iso * min_shutter * current_shutter;
-	short min_iso = conf.autoiso_min_iso_real;
-	
-	if (target_iso > max_iso) {
-		ev_overexp=0;
-
-		// AutoISO2 if
-		// 	it is turned on (C2!=0.0)
-		//	and it has valid iso2/shutter2 ( C2<0)
-		//       and non-IsoHI mode
-		if ( !iso_mode && conf.autoiso2_coef < 0.0 ) {
-			target_iso = (max_iso - min_shutter*conf.autoiso2_coef) / ( 1.0 - conf.autoiso2_coef  / (current_shutter * current_iso) );
-			if ( target_iso > conf.autoiso2_max_iso_auto_real ) {
-				target_iso = conf.autoiso2_max_iso_auto_real;
-			}
-		} else {
-			target_iso = max_iso;
-		}
-	} else if (target_iso < min_iso) {
-		target_iso = min_iso;
-	}
-
-    float target_shutter = current_shutter *  current_iso / target_iso;
-	
-#ifdef OVEREXP_COMPENSATE_OVERALL
-	shooting_set_shutter_speed(target_shutter, 0, SET_NOW);
-#else
-	// Daylight only (below autoiso_max) overexp compensation
-	shooting_set_shutter_speed(target_shutter, ev_overexp, SET_NOW);
-#endif
-
-    shooting_set_iso_real(target_iso, SET_NOW);
-}
+//-------------------------------------------------------------------
 
 #if CAM_REAR_CURTAIN
 void shooting_set_flash_sync_curtain(int curtain)
