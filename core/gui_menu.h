@@ -62,7 +62,6 @@ typedef struct {
 typedef struct {
     char                symbol;
     int                 title;
-    void                (*on_change)(unsigned int item);
     const CMenuItem     *menu;
 } CMenu;
 

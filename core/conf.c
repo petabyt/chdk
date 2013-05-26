@@ -36,7 +36,6 @@ static void conf_change_menu_symbol_rbf_file();
 static void conf_change_alt_mode_button();
 static void conf_change_video_bitrate();
 static void conf_change_dng_ext();
-static void conf_change_autoiso();
 static void conf_set_extra_button();
 
 void clear_values()
@@ -412,7 +411,7 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(284, conf.autoiso2_max_iso_auto,      CONF_DEF_VALUE,     i:60, NULL),
     CONF_INFO(285, conf.autoiso2_over,              CONF_DEF_VALUE,     i:1, NULL),
     CONF_INFO(286, conf.overexp_threshold,          CONF_DEF_VALUE,     i:5, NULL),
-    CONF_INFO(287, conf.overexp_ev_enum,            CONF_DEF_VALUE,     i:3, conf_change_autoiso),
+    CONF_INFO(287, conf.overexp_ev_enum,            CONF_DEF_VALUE,     i:3, NULL),
 
 #if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
     CONF_INFO(288, conf.zoom_assist_button_disable, CONF_DEF_VALUE,     i:0, NULL),
@@ -459,7 +458,6 @@ void conf_info_func(unsigned short id)
     case 235: conf_change_dng_ext(); break;
 	case 159:
 	case 283:
-    case 284: conf_change_autoiso(); break;
     case 293: conf_set_extra_button(); break;
     }
 }
@@ -531,12 +529,6 @@ void conf_change_dng_ext(void)
     save_ext_for_dng();
     cb_change_dng_usb_ext();
 #endif 
-}
-
-void conf_change_autoiso()
-{
-  // Use menu callback ( some required enum declaration are isolated there)
-  cb_autoiso_menu_change(-1);
 }
 
 /*

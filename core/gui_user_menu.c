@@ -38,7 +38,7 @@ static CMenuItem user_submenu_items[USER_MENU_ITEMS + 2] = {
 	MENU_ITEM(0x20,LANG_MENU_MAIN_TITLE,     MENUITEM_PROC,  rinit, 0 )
 };
 
-CMenu user_submenu = {0x2e,LANG_MENU_USER_MENU, NULL, user_submenu_items };
+CMenu user_submenu = {0x2e,LANG_MENU_USER_MENU, user_submenu_items };
 
 //-------------------------------------------------------------------
 void gui_load_user_menu_script(const char *fn) 

@@ -85,7 +85,8 @@ extern int shooting_get_user_tv_id();
 extern short shooting_get_tv96();
 extern void shooting_set_tv96(short v, short is_now);
 extern void shooting_set_tv96_direct(short v, short is_now);
-extern void shooting_set_shutter_speed_ubasic(int t, short is_now);
+//extern void shooting_set_shutter_speed_ubasic(int t, short is_now);
+extern void shooting_set_shutter_speed(float t, short ev_correction, short is_now);
 extern short shooting_get_user_tv96();
 extern void shooting_set_user_tv96(short v);
 extern float shooting_get_shutter_speed_from_tv96(short tv);
@@ -141,6 +142,8 @@ extern short shooting_is_infinity_distance();
 
 /******************************************************************/
 
+extern short shooting_get_iso_base();
+extern short shooting_get_iso_market_base();
 extern int shooting_get_iso_mode();
 extern void shooting_set_iso_mode(int v);
 extern short shooting_get_sv96();

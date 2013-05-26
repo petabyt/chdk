@@ -735,7 +735,7 @@ static CMenuItem script_submenu_items[] = {
     {0}
 };
 
-CMenu script_submenu = {0x27,LANG_MENU_SCRIPT_TITLE, NULL, script_submenu_items };
+CMenu script_submenu = {0x27,LANG_MENU_SCRIPT_TITLE, script_submenu_items };
 
 static void gui_update_script_submenu() 
 {

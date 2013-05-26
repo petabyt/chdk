@@ -38,8 +38,8 @@
 #define	HISTO_STEP_SIZE	6
 
 static unsigned char histogram[5][HISTO_WIDTH];             // RGBYG
-static unsigned int *histogram_proc[5] = { 0,0,0,0,0 };     // RGBYG
-static unsigned int histo_max[5], histo_max_center[5];      // RGBYG
+static unsigned short *histogram_proc[5] = { 0,0,0,0,0 };   // RGBYG (unsigned short is large enough provided HISTO_STEP_SIZE >= 3)
+unsigned int histo_max[5], histo_max_center[5];             // RGBYG
 static float histo_max_center_invw[5];                      // RGBYG
 
 static long histo_magnification;
@@ -71,7 +71,7 @@ static void histogram_alloc()
     // This is faster than scaling each value as it is counted
     if (histogram_proc[0] == 0)
     {
-        histogram_proc[0] = malloc(5 * 256 * sizeof(unsigned int));
+        histogram_proc[0] = malloc(5 * 256 * sizeof(unsigned short));
         histogram_proc[1] = histogram_proc[0] + 256;
         histogram_proc[2] = histogram_proc[1] + 256;
         histogram_proc[3] = histogram_proc[2] + 256;
@@ -131,7 +131,7 @@ void histogram_process()
             viewport_width = vid_get_viewport_width();
             viewport_row_offset = vid_get_viewport_row_offset();
             for (c=0; c<5; ++c) {
-                memset(histogram_proc[c],0,256*sizeof(unsigned int));
+                memset(histogram_proc[c],0,256*sizeof(unsigned short));
                 histo_max[c] = histo_max_center[c] = 0;
             }
 
@@ -401,92 +401,4 @@ void gui_osd_draw_histo() {
             draw_filled_rect(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, conf.histo_pos.x+8*FONT_WIDTH, conf.histo_pos.y-1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT));
         }
     }
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-// @tsv
-// Module below calculate live histogram in same way as OSD histogram
-// Difference from shot_histogram family is that live_histogram give answer before shot
-// Regular histogram_process cannot be used, because raw non-summarized 0.255 values required
-// This module is used in AutoISO2 mechanizm.
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-static int* live_histogram_proc;		// Buffer int[256] for histogram
-static int live_histogram_overall;		// Total num of pixels in histogram
-static int histogram_stored_stage = -1;		// Stored value of histogram_stage (-1 = not stored yet)
-
-/*
-build histogram of viewport Y values (downsampled by HISTO_STEP_SIZE) in buf, return total number of pixel
-*/
-int live_histogram_read_y(int *buf)
-{
-    int i;
-    int total=0;
-    int x=0;
-    int vp_width=vid_get_viewport_width();
-    int vp_offset=vid_get_viewport_row_offset();
-    int viewport_size=vid_get_viewport_height() * vid_get_viewport_byte_width() * vid_get_viewport_yscale();
-    unsigned char *img=vid_get_viewport_active_buffer();
-    // can be NULL in playback mode (if a movie is selected)
-    // _fb will give us an address, although it may not contain the data we want!
-    // TODO should probably just return all zeros, but need to make sure auto-iso stuff will handle it
-    if (img==NULL){
-       img = vid_get_viewport_fb();
-    }
-
-    img += vid_get_viewport_image_offset();
-
-    memset( buf, 0, sizeof(int)*256);
-
-    x = 0;	// count how many blocks we have done on the current row (to skip unused buffer space at end of each row)
-
-    for (i=1; i<viewport_size; i+=HISTO_STEP_SIZE*6) {
-       ++buf[img[i]];
-       ++total; // TODO - would be better to just calculate this from dimensions and step
-
-       // Handle case where viewport memory buffer is wider than the actual buffer.
-       x += HISTO_STEP_SIZE * 2;	// viewport width is measured in blocks of three bytes each even though the data is stored in six byte chunks !
-       if (x == vp_width) {
-           i += vp_offset;
-           x = 0;
-       }
-    }
-    return total;
-}
-
-void live_histogram_process_quick()
-{
-    // Small hack: save space reuse common histogram buffer
-    // It should be big enough for int[256]. Currently it is int [5*128]
-    histogram_alloc();
-    live_histogram_proc = (int*)histogram_proc[0];
-
-    // Temporary turn off histogram to prevent data from destroying
-    if ( histogram_stored_stage >=0 )
-	    histogram_stored_stage = histogram_stage;
-    histogram_stage=HISTOGRAM_IDLE_STAGE;
-
-    live_histogram_overall = live_histogram_read_y(live_histogram_proc);
-    live_histogram_overall /= 100;
-}
-
-void live_histogram_end_process()
-{
-    // restart historgram after finish
-    histogram_stage= (histogram_stored_stage==HISTOGRAM_IDLE_STAGE) ? HISTOGRAM_IDLE_STAGE : 0;
-    histogram_stored_stage = -1;
-}
-
-int live_histogram_get_range(int from, int to)
-{
-  int rv;
-
-  if (from<0) from=0;
-  if (to>255) to=255;
-
-  rv=0;
-  for(;from<=to;from++)
-      rv+= live_histogram_proc[from];
- 
-  return rv / live_histogram_overall;
 }

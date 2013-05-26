@@ -261,11 +261,6 @@ static void do_callback()
     {
         ((void (*)())(curr_menu->menu[gui_menu_curr_item].arg))();
     }
-
-    if (curr_menu->on_change)
-    {
-        curr_menu->on_change(gui_menu_curr_item);
-    }
 }
 
 // Update an 'int' value, direction = 1 for increment, -1 for decrement
@@ -407,10 +402,6 @@ static void select_proc()
     if (curr_menu->menu[gui_menu_curr_item].value)
     {
         ((void (*)(int arg))(curr_menu->menu[gui_menu_curr_item].value))(curr_menu->menu[gui_menu_curr_item].arg);
-        if (curr_menu->on_change)
-        {
-            curr_menu->on_change(gui_menu_curr_item);
-        }
         //gui_menu_set_curr_menu(curr_menu, 0, 0); // restore this if it causes problems
         gui_menu_redraw=2;
     }
