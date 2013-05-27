@@ -167,7 +167,7 @@ int raw_savefile()
             timer=get_tick_count();
             if (conf.dng_raw)
             {
-                libdng->write_dng(fd, rawadr, altrawadr, CAM_UNCACHED_BIT );
+                libdng->write_dng(fd, rawadr, altrawadr);
             }
             else 
             {

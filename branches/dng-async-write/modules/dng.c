@@ -23,6 +23,10 @@
 // Set to 1 when module loaded and active
 static int running = 0;
 
+// TODO this should be in a header somewhere
+#define UNCACHE_ADR(ptr) ((void *)((unsigned)(ptr)|camera_info.cam_uncached_bit))
+#define IS_CACHED_ADR(ptr) (!((unsigned)(ptr)&camera_info.cam_uncached_bit))
+
 //thumbnail
 #define DNG_TH_WIDTH 128
 #define DNG_TH_HEIGHT 96
@@ -974,7 +978,7 @@ void create_badpixel_bin()
 }
 
 
-void write_dng_orig(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit) 
+void write_dng_orig(int fd, char* rawadr, char* altrawadr) 
 {
     dng_stats.hdr_create_start = get_tick_count();
     create_dng_header();
@@ -990,7 +994,7 @@ void write_dng_orig(int fd, char* rawadr, char* altrawadr, unsigned long uncache
         dng_stats.thumb_create_end = dng_stats.write_hdr_start = get_tick_count();
 
         dcache_clean_all();
-        write(fd, (char *)((unsigned)dng_header_buf|camera_info.cam_uncached_bit), dng_header_buf_size + DNG_TH_BYTES);
+        write(fd, UNCACHE_ADR(dng_header_buf), dng_header_buf_size + DNG_TH_BYTES);
 
         /*
         write(fd, dng_header_buf, dng_header_buf_size);
@@ -1002,21 +1006,21 @@ void write_dng_orig(int fd, char* rawadr, char* altrawadr, unsigned long uncache
         reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
 
         // if reverse was done on cached raw, clean cache before writing
-        if(!((unsigned long)altrawadr & uncachedbit)) {
+        if(IS_CACHED_ADR(altrawadr)) {
             dcache_clean_all();
         }
 
         dng_stats.write_start = dng_stats.rev_end = get_tick_count();
 
         // Write alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
-        write(fd, (char*)(((unsigned long)altrawadr)|uncachedbit), camera_sensor.raw_size);
+        write(fd, UNCACHE_ADR(altrawadr), camera_sensor.raw_size);
 
         dng_stats.write_end = dng_stats.derev_start = get_tick_count();
 
         if (rawadr == altrawadr) {    // If only one RAW buffer then we have to swap the bytes back
             reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
             // if unreverse was done on cached raw, clean cache for jpeg
-            if(!((unsigned long)altrawadr & uncachedbit)) {
+            if(IS_CACHED_ADR(altrawadr)) {
                 dcache_clean_all();
             }
         }
@@ -1040,7 +1044,7 @@ void dng_writer(void) {
     dng_stats.write_hdr_start = get_tick_count();
     // ensure thumbnail is written to uncached
     dcache_clean_all();
-    write(dng_fd, (char *)((unsigned)dng_header_buf|camera_info.cam_uncached_bit), dng_header_buf_size + DNG_TH_BYTES);
+    write(dng_fd, UNCACHE_ADR(dng_header_buf), dng_header_buf_size + DNG_TH_BYTES);
     free_dng_header();
     dng_stats.write_start = dng_stats.write_hdr_end = get_tick_count();
     while(dng_write_ptr < dng_end_ptr) {
@@ -1058,7 +1062,7 @@ void dng_writer(void) {
         if(conf.raw_cache) {
             dcache_clean_all();
         }
-        write(dng_fd,(char *)dng_write_ptr,size);
+        write(dng_fd,dng_write_ptr,size);
         dng_write_ptr += size;
         //msleep(10);
     }
@@ -1070,12 +1074,12 @@ void dng_writer(void) {
 // Write DNG header, thumbnail and data to file
 
 
-void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit) 
+void write_dng(int fd, char* rawadr, char* altrawadr) 
 {
     memset(&dng_stats,0,sizeof(dng_stats));
     dng_stats.save_start = get_tick_count();
     if(dng_conf.use_orig) {
-        write_dng_orig(fd,rawadr,altrawadr,uncachedbit);
+        write_dng_orig(fd,rawadr,altrawadr);
         dng_stats.save_end = get_tick_count();
         return;
     }
@@ -1092,7 +1096,7 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
         create_thumbnail();
         dng_stats.thumb_create_end = get_tick_count();
         dng_fd = fd;
-        dng_write_ptr = (char *)(((unsigned long)altrawadr)|uncachedbit);
+        dng_write_ptr = UNCACHE_ADR(altrawadr);
         dng_end_ptr = dng_write_ptr + camera_sensor.raw_size;
         dng_reversed_ptr = dng_write_ptr;
         dng_need_dereverse = (rawadr == altrawadr);
@@ -1119,7 +1123,7 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
         dng_stats.rev_end = dng_stats.derev_start = get_tick_count();
 
         if (rawadr == altrawadr) {    // If only one RAW buffer then we have to swap the bytes back
-            char *dereversed_ptr = (char *)(((unsigned long)altrawadr)|uncachedbit);
+            char *dereversed_ptr = UNCACHE_ADR(altrawadr);
             int offset = 0;
             while(dereversed_ptr < dng_end_ptr) {
                 int chunk_size = dng_write_ptr - dereversed_ptr;
@@ -1133,7 +1137,7 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
                 dereversed_ptr += chunk_size;
             }
             // if reverse was done on cached raw, clean cache before writing
-            if(!((unsigned long)altrawadr & uncachedbit)) {
+            if(IS_CACHED_ADR(altrawadr)) {
                 dcache_clean_all();
             }
         } else { // no de-reverse, just wait for write to finish
