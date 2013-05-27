@@ -1093,10 +1093,7 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
         dng_reversed_ptr = dng_write_ptr;
         dng_need_dereverse = (rawadr == altrawadr);
 
-        CreateTask("dngwrite",0x18,0x400,dng_writer);
-        // allow dng_writer to start writing header
-        // observation on both vx and dryos shows that msleep(0) yields to higher prio task but doesn't force 10ms wait
-        msleep(0); 
+        CreateTask("DngWrite",0x18,0x800,dng_writer);
 
         int offset = 0;
         dng_stats.rev_start = get_tick_count();
