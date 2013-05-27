@@ -26,6 +26,7 @@ static int running = 0;
 //thumbnail
 #define DNG_TH_WIDTH 128
 #define DNG_TH_HEIGHT 96
+#define DNG_TH_BYTES (DNG_TH_WIDTH*DNG_TH_HEIGHT*3)
 // higly recommended that DNG_TH_WIDTH*DNG_TH_HEIGHT would be divisible by 512
 
 // new version to support DNG double buffer
@@ -143,7 +144,7 @@ struct dir_entry ifd0[]={
     {0x112,  T_SHORT,      1,  1},                                 // Orientation: 1 - 0th row is top, 0th column is left
     {0x115,  T_SHORT,      1,  3},                                 // SamplesPerPixel: 3
     {0x116,  T_SHORT,      1,  DNG_TH_HEIGHT},                     // RowsPerStrip
-    {0x117,  T_LONG,       1,  DNG_TH_WIDTH*DNG_TH_HEIGHT*3},      // StripByteCounts = preview size
+    {0x117,  T_LONG,       1,  DNG_TH_BYTES},                      // StripByteCounts = preview size
     {0x11C,  T_SHORT,      1,  1},                                 // PlanarConfiguration: 1
     {0x131,  T_ASCII|T_PTR,32, 0},                                 // Software
     {0x132,  T_ASCII,      20, (int)cam_datetime},                 // DateTime
@@ -409,18 +410,13 @@ void create_dng_header(){
     // creating buffer for writing data
     raw_offset=(raw_offset/512+1)*512; // exlusively for CHDK fast file writing
     dng_header_buf_size=raw_offset;
-    dng_header_buf=umalloc(raw_offset);
-    dng_header_buf_offset=0;
-    if (!dng_header_buf) return;
-
-    // create buffer for thumbnail
-    thumbnail_buf = malloc(DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
-    if (!thumbnail_buf)
+    dng_header_buf=malloc(raw_offset + DNG_TH_BYTES);
+    if (!dng_header_buf)
     {
-        ufree(dng_header_buf);
-        dng_header_buf = 0;
         return;
     }
+    thumbnail_buf = dng_header_buf + raw_offset;
+    dng_header_buf_offset=0;
 
     //  writing offsets for EXIF IFD and RAW data and calculating offset for extra data
 
@@ -432,7 +428,7 @@ void create_dng_header(){
         ifd0[GPS_IFD_INDEX].offset = TIFF_HDR_SIZE + (ifd_list[0].count + ifd_list[1].count + ifd_list[2].count) * 12 + 6 + 6 + 6;  // GPS IFD offset
 
     ifd0[THUMB_DATA_INDEX].offset = raw_offset;                                     //StripOffsets for thumbnail
-    ifd1[RAW_DATA_INDEX].offset = raw_offset + DNG_TH_WIDTH * DNG_TH_HEIGHT * 3;    //StripOffsets for main image
+    ifd1[RAW_DATA_INDEX].offset = raw_offset + DNG_TH_BYTES;    //StripOffsets for main image
 
     for (j=0;j<ifd_count;j++)
     {
@@ -507,13 +503,8 @@ void free_dng_header(void)
 {
     if (dng_header_buf)
     {
-        ufree(dng_header_buf);
+        free(dng_header_buf);
         dng_header_buf=NULL;
-    }
-    if (thumbnail_buf)
-    {
-        free(thumbnail_buf);
-        thumbnail_buf = 0;
     }
 }
 
@@ -998,8 +989,13 @@ void write_dng_orig(int fd, char* rawadr, char* altrawadr, unsigned long uncache
         create_thumbnail();
         dng_stats.thumb_create_end = dng_stats.write_hdr_start = get_tick_count();
 
+        dcache_clean_all();
+        write(fd, (char *)((unsigned)dng_header_buf|camera_info.cam_uncached_bit), dng_header_buf_size + DNG_TH_BYTES);
+
+        /*
         write(fd, dng_header_buf, dng_header_buf_size);
         write(fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
+        */
 
         dng_stats.write_hdr_end = dng_stats.rev_start = get_tick_count();
 
@@ -1042,8 +1038,9 @@ int dng_need_dereverse;
 
 void dng_writer(void) {
     dng_stats.write_hdr_start = get_tick_count();
-    write(dng_fd, dng_header_buf, dng_header_buf_size);
-    write(dng_fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
+    // ensure thumbnail is written to uncached
+    dcache_clean_all();
+    write(dng_fd, (char *)((unsigned)dng_header_buf|camera_info.cam_uncached_bit), dng_header_buf_size + DNG_TH_BYTES);
     free_dng_header();
     dng_stats.write_start = dng_stats.write_hdr_end = get_tick_count();
     while(dng_write_ptr < dng_end_ptr) {
