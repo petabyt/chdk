@@ -10,6 +10,10 @@ typedef struct {
     int rev_chunk_count;
     int save_start;
     int save_end;
+    int hdr_create_start;
+    int hdr_create_end;
+    int thumb_create_start;
+    int thumb_create_end;
     int write_hdr_start;
     int write_hdr_end;
     int write_start;

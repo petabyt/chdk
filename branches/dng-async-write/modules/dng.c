@@ -985,16 +985,18 @@ void create_badpixel_bin()
 
 void write_dng_orig(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit) 
 {
+    dng_stats.hdr_create_start = get_tick_count();
     create_dng_header();
+    dng_stats.hdr_create_end = get_tick_count();
 
     if (dng_header_buf)
     {
         fill_gamma_buf();
         if (conf.dng_version)
             patch_bad_pixels_b();
+        dng_stats.thumb_create_start = get_tick_count();
         create_thumbnail();
-
-        dng_stats.write_hdr_start = get_tick_count();
+        dng_stats.thumb_create_end = dng_stats.write_hdr_start = get_tick_count();
 
         write(fd, dng_header_buf, dng_header_buf_size);
         write(fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
@@ -1042,6 +1044,7 @@ void dng_writer(void) {
     dng_stats.write_hdr_start = get_tick_count();
     write(dng_fd, dng_header_buf, dng_header_buf_size);
     write(dng_fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
+    free_dng_header();
     dng_stats.write_start = dng_stats.write_hdr_end = get_tick_count();
     while(dng_write_ptr < dng_end_ptr) {
         int size = dng_reversed_ptr - dng_write_ptr; 
@@ -1079,20 +1082,25 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
         dng_stats.save_end = get_tick_count();
         return;
     }
+    dng_stats.hdr_create_start = get_tick_count();
     create_dng_header();
+    dng_stats.hdr_create_end = get_tick_count();
 
     if (dng_header_buf)
     {
         fill_gamma_buf();
         if (conf.dng_version)
             patch_bad_pixels_b();
+        dng_stats.thumb_create_start = get_tick_count();
         create_thumbnail();
+        dng_stats.thumb_create_end = get_tick_count();
         dng_fd = fd;
         dng_write_ptr = (char *)(((unsigned long)altrawadr)|uncachedbit);
         dng_end_ptr = dng_write_ptr + camera_sensor.raw_size;
         dng_reversed_ptr = dng_write_ptr;
         dng_need_dereverse = (rawadr == altrawadr);
 
+        // TODO should ensure there is no existing task hanging around
         CreateTask("DngWrite",0x18,0x800,dng_writer);
 
         int offset = 0;
@@ -1139,7 +1147,6 @@ void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit)
         }
         dng_stats.derev_end = get_tick_count();
 
-        free_dng_header();
     }
     dng_stats.save_end = get_tick_count();
 }
