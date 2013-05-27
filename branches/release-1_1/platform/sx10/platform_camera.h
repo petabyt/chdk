@@ -69,6 +69,8 @@
     #define CAM_EXT_TV_RANGE                1
 
 	#define REMOTE_SYNC_STATUS_LED 	0xC0220060		// specifies an LED that turns on while camera waits for USB remote to sync
-	
+
+    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1	
+
 //----------------------------------------------------------
 
