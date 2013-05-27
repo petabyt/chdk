@@ -731,9 +731,16 @@ void fill_gamma_buf(void)
 
 void create_thumbnail()
 {
-    register int i, j, x, y, yadj, xadj;
-    register char *buf = thumbnail_buf;
-    register int shift = camera_sensor.bits_per_pixel - 8;
+    char *buf = thumbnail_buf;
+    int shift = camera_sensor.bits_per_pixel - 8;
+
+    int x_inc = camera_sensor.jpeg.width / DNG_TH_WIDTH;
+    int y_inc = camera_sensor.jpeg.height / DNG_TH_HEIGHT;
+
+    int x_end = camera_sensor.active_area.x1 + camera_sensor.jpeg.x + DNG_TH_WIDTH*x_inc;
+    int y_end = camera_sensor.active_area.y1 + camera_sensor.jpeg.y + DNG_TH_HEIGHT*y_inc;
+
+    int x_off,y_off;
 
     // The sensor bayer patterns are:
     //  0x02010100  0x01000201  0x01020001
@@ -742,17 +749,19 @@ void create_thumbnail()
     // for the second pattern yadj shifts the thumbnail row down one line
     // for the third pattern xadj shifts the thumbnail row accross one pixel
     // these make the patterns the same
-    yadj = (camera_sensor.cfa_pattern == 0x01000201) ? 1 : 0;
-    xadj = (camera_sensor.cfa_pattern == 0x01020001) ? 1 : 0;
+    int yadj = (camera_sensor.cfa_pattern == 0x01000201) ? 1 : 0;
+    int xadj = (camera_sensor.cfa_pattern == 0x01020001) ? 1 : 0;
 
-    for (i=0; i<DNG_TH_HEIGHT; i++)
-        for (j=0; j<DNG_TH_WIDTH; j++)
+    for (y_off=camera_sensor.active_area.y1 + camera_sensor.jpeg.y; y_off<y_end; y_off += y_inc)
+        for (x_off=camera_sensor.active_area.x1 + camera_sensor.jpeg.x; x_off<x_end; x_off += x_inc)
         {
-            x = ((camera_sensor.active_area.x1 + camera_sensor.jpeg.x + (camera_sensor.jpeg.width  * j) / DNG_TH_WIDTH)  & 0xFFFFFFFE) + xadj;
-            y = ((camera_sensor.active_area.y1 + camera_sensor.jpeg.y + (camera_sensor.jpeg.height * i) / DNG_TH_HEIGHT) & 0xFFFFFFFE) + yadj;
+            int x = (x_off & 0xFFFFFFFE) + xadj;
+            int y = (y_off & 0xFFFFFFFE) + yadj;
 
             *buf++ = gamma[get_raw_pixel(x,y)>>shift];           // red pixel
-            *buf++ = gamma[6*(get_raw_pixel(x+1,y)>>shift)/10];  // green pixel
+            //*buf++ = gamma[6*(get_raw_pixel(x+1,y)>>shift)/10];  // green pixel
+            int g=get_raw_pixel(x+1,y) >> (shift+1);
+            *buf++ = gamma[g+(g>>2)];  // green pixel was (6*g/10), now (g/2 + g/8)
             *buf++ = gamma[get_raw_pixel(x+1,y+1)>>shift];       // blue pixel
         }
 }
