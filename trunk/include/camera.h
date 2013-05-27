@@ -129,6 +129,7 @@
 
     #undef  CAM_STARTUP_CRASH_FILE_OPEN_FIX     // enable fix for camera intermittently crash at startup when opening the conf / font files
                                                 // Some cameras throw "ASSERT!! FsIoNotify.c Line xxx    Task name: SpyTask" in ROMLOG
+                                                // NOTE enabled for all DRYOS below
     
     // RAW & DNG related values
     #define DEFAULT_RAW_EXT                 1   // extension to use for raw (see raw_exts in conf.c)
@@ -237,6 +238,13 @@
 
 // Include the settings file for the camera model currently being compiled.
 #include "platform_camera.h"
+
+// default to startup crash fix on for DryOS
+// TODO remove from individual camera.h files when verified OK, 
+// defined check is just to avoid warning, can't turn it off on platform_camera.h!
+#if defined(CAM_DRYOS) && !defined(CAM_STARTUP_CRASH_FILE_OPEN_FIX)
+    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
+#endif
 
 //==========================================================
 // END of Camera-dependent settings
