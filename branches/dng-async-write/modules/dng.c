@@ -1063,40 +1063,67 @@ void write_dng_orig(int fd, char* rawadr, char* altrawadr)
 //#define DEBUG_LED ((unsigned volatile *)0xC0220130) // d10 RED
 //#define DEBUG_LED ((unsigned volatile *)0xc0220080) // a540 AF
 
-char *dng_write_ptr; // initialized to start of raw buffer, incremented by dng_writer
-char *dng_reversed_ptr; // set to the end of the reversed chunk, incremented by write_dng
-char *dng_written_ptr; // set to the end of the last written chunk, incremented by dng_writer
-char *dng_end_ptr; // set to the end of the buffer
-int dng_fd;
-int dng_need_dereverse;
+// TODO we really only need done/not done so far
+#define RB_STAGE_DONE           0
+#define RB_STAGE_INIT           1
+#define RB_STAGE_REVERSING      2
+#define RB_STAGE_DEREVERSING    3
+static struct {
+    // all pointers here are cached or uncached per user settings
+    char *src; // intial src address
+    char *dst; // initial dest address, may be same as src
+    char *end; // end of dst
+    char *reversed; // pointer to completed, set by reverse_bytes_task
+    char *written; // pointer to written, set by main task
+    int stage; // stage to detect when done
+} rb_state;
 
-void dng_writer(void) {
-    dng_stats.write_hdr_start = get_tick_count();
-    // ensure thumbnail is written to uncached
-    dcache_clean_all();
-    write(dng_fd, UNCACHE_ADR(dng_header_buf), dng_header_buf_size + DNG_TH_BYTES);
-    free_dng_header();
-    dng_stats.write_start = dng_stats.write_hdr_end = get_tick_count();
-    while(dng_write_ptr < dng_end_ptr) {
-        int size = dng_reversed_ptr - dng_write_ptr; 
-        if(!size) {
-            dng_stats.write_wait_count++;
-            msleep(10);
-            continue;
+void reverse_bytes_task() {
+    int need_dereverse = (rb_state.src == rb_state.dst);
+    char *src = rb_state.src;
+    rb_state.stage = RB_STAGE_REVERSING;
+    rb_state.reversed = rb_state.dst;
+    dng_stats.rev_start = get_tick_count();
+    while(rb_state.reversed < rb_state.end) {
+        int chunk_size;
+        if(rb_state.reversed + dng_conf.rev_chunk_size > rb_state.end) {
+            chunk_size = rb_state.end - rb_state.reversed;
+        } else {
+            chunk_size = dng_conf.rev_chunk_size;
         }
-        dng_stats.write_chunk_count++;
-        // save one chunk size to overlap with de-reverse
-        if(dng_need_dereverse && dng_write_ptr + size == dng_end_ptr && size > dng_conf.write_end_chunk) {
-            size -= dng_conf.write_end_chunk;
+        reverse_bytes_order2(src, rb_state.reversed, chunk_size);
+        src += chunk_size;
+        rb_state.reversed += chunk_size;
+        dng_stats.rev_chunk_count++;
+        // seems to give slightly faster times with less variation
+        // plenty of time for reverse
+        msleep(10);
+    }
+    rb_state.stage = RB_STAGE_DEREVERSING;
+    dng_stats.rev_end = dng_stats.derev_start = get_tick_count();
+    if(need_dereverse) {
+        src = rb_state.src;
+        int offset = 0;
+        while(src < rb_state.end) {
+            int chunk_size = rb_state.written - src;
+            if(!chunk_size) {
+                msleep(10);
+                dng_stats.finish_wait_count++;
+                continue;
+            }
+            reverse_bytes_order(src, chunk_size);
+            src += chunk_size;
         }
-        if(conf.raw_cache) {
+        // if reverse was done on cached raw, 
+        // clean cache so canon FW doesn't see reversed data in uncached
+        if(IS_CACHED_ADR(rb_state.dst)) {
             dcache_clean_all();
         }
-        write(dng_fd,dng_write_ptr,size);
-        dng_write_ptr += size;
-        //msleep(10);
     }
-    dng_stats.write_end = get_tick_count();
+
+    dng_stats.derev_end = get_tick_count();
+
+    rb_state.stage = RB_STAGE_DONE;
     ExitTask();
 }
 
@@ -1117,66 +1144,69 @@ void write_dng(int fd, char* rawadr, char* altrawadr)
     create_dng_header();
     dng_stats.hdr_create_end = get_tick_count();
 
-    if (dng_header_buf)
-    {
-        if (conf.dng_version)
-            patch_bad_pixels_b();
-        dng_stats.thumb_create_start = get_tick_count();
-        create_thumbnail();
-        dng_stats.thumb_create_end = get_tick_count();
-        dng_fd = fd;
-        dng_write_ptr = UNCACHE_ADR(altrawadr);
-        dng_end_ptr = dng_write_ptr + camera_sensor.raw_size;
-        dng_reversed_ptr = dng_write_ptr;
-        dng_need_dereverse = (rawadr == altrawadr);
+    if (!dng_header_buf) {
+        return;
+    }
 
-        // TODO should ensure there is no existing task hanging around
-        CreateTask("DngWrite",0x18,0x800,dng_writer);
+    if (conf.dng_version)
+        patch_bad_pixels_b();
 
-        int offset = 0;
-        dng_stats.rev_start = get_tick_count();
-        while(dng_reversed_ptr < dng_end_ptr) {
-            int chunk_size;
-            if(dng_reversed_ptr + dng_conf.rev_chunk_size > dng_end_ptr) {
-                chunk_size = dng_end_ptr - dng_reversed_ptr;
-            } else {
-                chunk_size = dng_conf.rev_chunk_size;
-            }
-            reverse_bytes_order2(rawadr+offset, altrawadr+offset, chunk_size);
-            dng_reversed_ptr += chunk_size;
-            offset += chunk_size;
-            dng_stats.rev_chunk_count++;
-            // seems to give slightly faster times with less variation
+    dng_stats.thumb_create_start = get_tick_count();
+    create_thumbnail();
+    dng_stats.thumb_create_end = get_tick_count();
+
+    // TODO - sanity check that prevous task isn't hanging around
+    if(rb_state.stage != RB_STAGE_DONE) {
+        int i;
+        for(i=0;i<50;i++) {
+            debug_led(1);
+            msleep(200);
+            debug_led(0);
+            msleep(200);
+        }
+        return;
+    }
+    rb_state.stage = RB_STAGE_INIT;
+    rb_state.src = rawadr;
+    rb_state.written = rb_state.reversed = rb_state.dst = altrawadr;
+    rb_state.end = rb_state.dst + camera_sensor.raw_size;
+
+    // task is created with lower priority than spytask (0x19) 
+    // to improve chance of spytask getting control when write completes
+    CreateTask("RevBytes",0x1A,0x400,reverse_bytes_task);
+
+    dng_stats.write_hdr_start = get_tick_count();
+    // ensure thumbnail is written to uncached
+    dcache_clean_all();
+    write(fd, UNCACHE_ADR(dng_header_buf), dng_header_buf_size + DNG_TH_BYTES);
+    free_dng_header();
+
+    dng_stats.write_start = dng_stats.write_hdr_end = get_tick_count();
+    while(rb_state.written < rb_state.end) {
+        int size = rb_state.reversed - rb_state.written; 
+        if(!size) {
+            dng_stats.write_wait_count++;
             msleep(10);
+            continue;
         }
-        dng_stats.rev_end = dng_stats.derev_start = get_tick_count();
-
-        if (rawadr == altrawadr) {    // If only one RAW buffer then we have to swap the bytes back
-            char *dereversed_ptr = UNCACHE_ADR(altrawadr);
-            int offset = 0;
-            while(dereversed_ptr < dng_end_ptr) {
-                int chunk_size = dng_write_ptr - dereversed_ptr;
-                if(!chunk_size) {
-                    msleep(10);
-                    dng_stats.finish_wait_count++;
-                    continue;
-                }
-                reverse_bytes_order2(rawadr+offset, altrawadr+offset, chunk_size);
-                offset += chunk_size;
-                dereversed_ptr += chunk_size;
-            }
-            // if reverse was done on cached raw, clean cache before writing
-            if(IS_CACHED_ADR(altrawadr)) {
-                dcache_clean_all();
-            }
-        } else { // no de-reverse, just wait for write to finish
-            while(dng_write_ptr < dng_end_ptr) {
-                dng_stats.finish_wait_count++;
-                msleep(10);
-            }
+        dng_stats.write_chunk_count++;
+        // save one chunk size to overlap with de-reverse
+        if((rawadr == altrawadr) && rb_state.written + size == rb_state.end && size > dng_conf.write_end_chunk) {
+            size -= dng_conf.write_end_chunk;
         }
-        dng_stats.derev_end = get_tick_count();
+        // ensure reversed data is cleaned out to uncached before attempting write
+        if(conf.raw_cache) {
+            dcache_clean_all();
+        }
+        write(fd,UNCACHE_ADR(rb_state.written),size);
+        rb_state.written += size;
+        //msleep(10);
+    }
+    dng_stats.write_end = get_tick_count();
 
+    // wait for de-reverse, if required
+    while(rb_state.stage != RB_STAGE_DONE) {
+        msleep(10);
     }
     dng_stats.save_end = get_tick_count();
 }
