@@ -19,6 +19,7 @@
 //NHSTUB(EnterToCompensationEVF               ,0xff8256d8) //104        *** != 0x00000000
 //NHSTUB(ExitFromCompensationEVF              ,0xff82571c) //104        *** != 0x00000000
 //NHSTUB(UnlockAF                             ,0xff825624) //102        *** != 0xff85e924
+//NHSTUB(exmem_free                           ,0xff86c888) //103        *** != 0xff86c7b0
 //NHSTUB(kbd_pwr_off                          ,0xff8470e4) //  2 64%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
@@ -210,6 +211,7 @@ NHSTUB(OpenFastDir                            ,0xffa2a3e0) //  1
 NHSTUB(qsort                                  ,0xffa83b3c) //  1
 NHSTUB(rand                                   ,0xff81cd68) //  1
 //NHSTUB(read                                 ,0xff819ae4) //101
+NHSTUB(realloc                                ,0xff813b1c) //115
 NHSTUB(reboot_fw_update                       ,0xffa31b24) //106
 NHSTUB(set_control_event                      ,0xff877810) //111
 NHSTUB(srand                                  ,0xff81cd5c) //  1
@@ -233,6 +235,10 @@ NHSTUB(strtolx                                ,0xff82d084) //109
 NHSTUB(time                                   ,0xff86bec8) //109
 NHSTUB(vsprintf                               ,0xff81cba4) //115
 //NHSTUB(write                                ,0xff823d5c) //101
+NHSTUB(EngDrvIn                               ,0xffa06ac0) //102
+NHSTUB(EngDrvOut                              ,0xffa06aa4) //102
+NHSTUB(EngDrvRead                             ,0xffa06ac8) //102
+NHSTUB(EngDrvBits                             ,0xffa06ad0) //102
 //NHSTUB(GetSDProtect                         ,0xff821dbc) //103
 //NHSTUB(StartRecModeMenu                     ,0xff87281c) //102
 //NHSTUB(DispCon_ShowBitmapColorBar           ,0xff842d94) //102

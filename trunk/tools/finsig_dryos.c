@@ -1151,6 +1151,7 @@ func_entry  func_names[] =
     { "closedir" },
     { "err_init_task", OPTIONAL },
     { "exmem_alloc" },
+    { "exmem_free", OPTIONAL },
     { "free" },
 
     { "kbd_p1_f" },
@@ -1173,6 +1174,7 @@ func_entry  func_names[] =
     { "qsort" },
     { "rand" },
     { "read", UNUSED },
+    { "realloc", OPTIONAL },
     { "reboot_fw_update" },
     { "set_control_event" },
     { "srand" },
@@ -1199,6 +1201,11 @@ func_entry  func_names[] =
     { "time" },
     { "vsprintf" },
     { "write", UNUSED },
+
+    { "EngDrvIn", OPTIONAL },
+    { "EngDrvOut", OPTIONAL },
+    { "EngDrvRead", OPTIONAL },
+    { "EngDrvBits", OPTIONAL },
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
 	{ "GetSDProtect", UNUSED },
@@ -1354,6 +1361,7 @@ string_sig string_sigs[] = {
 	{ 1, "DoAFLock", "PT_DoAFLock", 0x01000002 },
     { 1, "ExitTask", "ExitTask", 1 },
 	{ 1, "exmem_alloc", "ExMem.AllocCacheable", 4 },
+	{ 1, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
     { 1, "Fclose_Fut", "Fclose_Fut", 1 },
     { 1, "Feof_Fut", "Feof_Fut", 1 },
     { 1, "Fflush_Fut", "Fflush_Fut", 1 },
@@ -1445,7 +1453,13 @@ string_sig string_sigs[] = {
     { 2, "SavePaletteData", "SavePaletteData", 1 },
     { 2, "GetVRAMHPixelsSize", "GetVRAMHPixelsSize", 1 },
     { 2, "GetVRAMVPixelsSize", "GetVRAMVPixelsSize", 1 },
-	
+    { 2, "EngDrvIn", "EngDrvIn", 1 },
+    { 2, "EngDrvOut", "EngDrvOut", 1 },
+    { 2, "EngDrvRead", "EngDrvRead", 1 },
+    { 2, "EngDrvBits", "EngDrvBits", 1 },
+	{ 2, "exmem_alloc", "ExMem.AllocCacheable", 4 },
+	{ 2, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
+
 	{ 3, "AllocateMemory", "AllocateMemory", 1 },
 	{ 3, "FreeMemory", "FreeMemory", 1 },
     { 3, "PostLogicalEventToUI", "PostLogicalEventToUI", 1 },
@@ -1464,6 +1478,7 @@ string_sig string_sigs[] = {
 	{ 3, "PT_MoveDigitalZoomToWide", "PT_MoveDigitalZoomToWide", 1 },
 	{ 3, "PT_PlaySound", "PT_PlaySound", 1 },
 	{ 3, "exmem_alloc", "ExMem.AllocCacheable", 4 },
+	{ 3, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
 	{ 3, "GetSDProtect", "GetSDProtect", 1 },
 
     { 4, "TurnOnBackLight", "TurnOnBackLight", 1 },
@@ -1566,6 +1581,7 @@ string_sig string_sigs[] = {
     { 15, "vsprintf", "\nCPrintf Size Over!!", 0x01000001 },
     { 15, "ReadFastDir", "ReadFast_ERROR\n", 0x01000001 },
     { 15, "OpenFastDir", "OpenFastDir_ERROR\n", 0x01000001 },
+    { 15, "realloc", "fatal error - scanner input buffer overflow", 0x01000001 },
 
     { 16, "DeleteDirectory_Fut", (char*)DeleteDirectory_Fut_test, 0x01000001 },
     { 16, "MakeDirectory_Fut", (char*)MakeDirectory_Fut_test, 0x01000001 },
