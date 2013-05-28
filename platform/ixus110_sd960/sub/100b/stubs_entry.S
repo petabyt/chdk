@@ -15,6 +15,7 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
+//NHSTUB(exmem_free                           ,0xff86a1ac) //103        *** != 0xff86a0d4
 //NHSTUB(kbd_pwr_off                          ,0xff844148) //  2 64%    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
@@ -209,6 +210,7 @@ NHSTUB(OpenFastDir                            ,0xffa3d1b8) //  1
 NHSTUB(qsort                                  ,0xffa9ff78) //  1
 NHSTUB(rand                                   ,0xff81cd64) //  1
 //NHSTUB(read                                 ,0xff819ae4) //101
+NHSTUB(realloc                                ,0xff813b1c) //115
 NHSTUB(reboot_fw_update                       ,0xffa448fc) //106
 NHSTUB(set_control_event                      ,0xff876934) //111
 NHSTUB(srand                                  ,0xff81cd58) //  1
@@ -232,6 +234,10 @@ NHSTUB(strtolx                                ,0xff82ce58) //109
 NHSTUB(time                                   ,0xff8697ec) //109
 NHSTUB(vsprintf                               ,0xff81cba0) //115
 //NHSTUB(write                                ,0xff823d74) //101
+NHSTUB(EngDrvIn                               ,0xffa16d40) //102
+NHSTUB(EngDrvOut                              ,0xffa16d24) //102
+NHSTUB(EngDrvRead                             ,0xffa16d48) //102
+NHSTUB(EngDrvBits                             ,0xffa16d50) //102
 //NHSTUB(GetSDProtect                         ,0xff821dd4) //103
 //NHSTUB(StartRecModeMenu                     ,0xff870134) //102
 //NHSTUB(DispCon_ShowBitmapColorBar           ,0xff83dbfc) //102

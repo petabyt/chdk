@@ -195,6 +195,7 @@ NHSTUB(close                                  ,0xff81a990) //  1
 NHSTUB(closedir                               ,0xffa7d314) //  3
 NHSTUB(err_init_task                          ,0xff815f28) //111
 NHSTUB(exmem_alloc                            ,0xff889d7c) //103
+NHSTUB(exmem_free                             ,0xff889df4) //103
 NHSTUB(free                                   ,0xff814138) //112
 NHSTUB(kbd_p1_f                               ,0xff833498) //109
 NHSTUB(kbd_p1_f_cont                          ,0xff8334a4) //109
@@ -213,6 +214,7 @@ NHSTUB(OpenFastDir                            ,0xffa7d358) //  3
 NHSTUB(qsort                                  ,0xffaeb414) //  1
 NHSTUB(rand                                   ,0xff8204e0) //  1
 //NHSTUB(read                                 ,0xff81ab78) //101
+NHSTUB(realloc                                ,0xffa07184) //115
 NHSTUB(reboot_fw_update                       ,0xffa8299c) //106
 NHSTUB(set_control_event                      ,0xff896850) //111
 NHSTUB(srand                                  ,0xff8204d4) //  1
@@ -237,6 +239,10 @@ NHSTUB(strtolx                                ,0xff83e53c) //109
 NHSTUB(time                                   ,0xff889434) //109
 NHSTUB(vsprintf                               ,0xff820340) //115
 //NHSTUB(write                                ,0xff83530c) //101
+NHSTUB(EngDrvIn                               ,0xffa599c8) //102
+NHSTUB(EngDrvOut                              ,0xffa599ac) //102
+NHSTUB(EngDrvRead                             ,0xffa599d0) //102
+NHSTUB(EngDrvBits                             ,0xffa599d8) //102
 //NHSTUB(GetSDProtect                         ,0xff8333f4) //103
 //NHSTUB(StartRecModeMenu                     ,0xff88fe8c) //102
 //NHSTUB(DispCon_ShowBitmapColorBar           ,0xff85963c) //102

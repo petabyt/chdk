@@ -189,7 +189,8 @@ NHSTUB(apex2us                                ,0xffd6363c) //  4
 NHSTUB(close                                  ,0xffc0a260) //  1
 NHSTUB(closedir                               ,0xffdc1c68) //  1
 NHSTUB(err_init_task                          ,0xffc04eb0) //111
-NHSTUB(exmem_alloc                            ,0xffc56b44) //  1
+NHSTUB(exmem_alloc                            ,0xffc56b44) //102
+NHSTUB(exmem_free                             ,0xffc56bbc) //102
 NHSTUB(free                                   ,0xffc03ab0) //112
 NHSTUB(kbd_p1_f                               ,0xffc131d0) //109
 NHSTUB(kbd_p1_f_cont                          ,0xffc131dc) //109
@@ -210,6 +211,7 @@ NHSTUB(OpenFastDir                            ,0xffdc1b04) //  1
 NHSTUB(qsort                                  ,0xffd62a14) //  1
 NHSTUB(rand                                   ,0xffc0e9f8) //  1
 //NHSTUB(read                                 ,0xffc0a448) //101
+NHSTUB(realloc                                ,0xffc03b90) //115
 NHSTUB(reboot_fw_update                       ,0xffdc6538) //106
 NHSTUB(set_control_event                      ,0xffc5baa4) //  1
 NHSTUB(srand                                  ,0xffc0e9ec) //  1
@@ -232,6 +234,10 @@ NHSTUB(strtolx                                ,0xffc1fa10) //109
    DEF(task_PhySw                             ,0xffc12d78) //107
 NHSTUB(time                                   ,0xffc55f0c) //109
 NHSTUB(vsprintf                               ,0xffc0e7b4) //115
+NHSTUB(EngDrvIn                               ,0xffd9de38) //102
+NHSTUB(EngDrvOut                              ,0xffd9de1c) //102
+NHSTUB(EngDrvRead                             ,0xffd9de40) //102
+NHSTUB(EngDrvBits                             ,0xffd9de48) //102
 //NHSTUB(GetSDProtect                         ,0xffc13094) //102
 //NHSTUB(StartRecModeMenu                     ,0xffd49f28) //102
 //NHSTUB(DispCon_ShowBitmapColorBar           ,0xffc32bf0) //102
