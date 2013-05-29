@@ -2319,11 +2319,13 @@ static int luaCB_set_dng_conf( lua_State* L )
 
 static int luaCB_get_dng_stats( lua_State* L )
 {
-    lua_createtable(L, 0, 18);
+    lua_createtable(L, 0, 22);
     set_number_field(L,"write_wait_count",dng_stats.write_wait_count);
     set_number_field(L,"write_chunk_count",dng_stats.write_chunk_count);
     set_number_field(L,"finish_wait_count",dng_stats.finish_wait_count);
     set_number_field(L,"rev_chunk_count",dng_stats.rev_chunk_count);
+    set_number_field(L,"finit_start",dng_stats.finit_start);
+    set_number_field(L,"finit_end",dng_stats.finit_end);
     set_number_field(L,"hdr_create_start",dng_stats.hdr_create_start);
     set_number_field(L,"hdr_create_end",dng_stats.hdr_create_end);
     set_number_field(L,"thumb_create_start",dng_stats.thumb_create_start);
@@ -2338,6 +2340,8 @@ static int luaCB_get_dng_stats( lua_State* L )
     set_number_field(L,"rev_end",dng_stats.rev_end);
     set_number_field(L,"derev_start",dng_stats.derev_start);
     set_number_field(L,"derev_end",dng_stats.derev_end);
+    set_number_field(L,"close_start",dng_stats.close_start);
+    set_number_field(L,"close_end",dng_stats.close_end);
     return 1;
 }
 

@@ -8,6 +8,8 @@ typedef struct {
     int write_chunk_count;
     int finish_wait_count;
     int rev_chunk_count;
+    int finit_start;
+    int finit_end;
     int save_start;
     int save_end;
     int hdr_create_start;
@@ -22,6 +24,8 @@ typedef struct {
     int rev_end;
     int derev_start;
     int derev_end;
+    int close_start;
+    int close_end;
 } dng_stats_t;
 
 typedef struct {

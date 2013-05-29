@@ -25,6 +25,8 @@ extern int make_pixel_list(char * ptr, int size);
 extern unsigned short get_raw_pixel(unsigned int x,unsigned  int y);
 extern char* get_raw_image_addr(void);
 extern void patch_bad_pixel(unsigned int x,unsigned  int y);
+extern int raw_createfile(void);
+extern void raw_closefile(int fd);
 
 //-------------------------------------------------------------------
 #endif

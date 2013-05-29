@@ -1070,16 +1070,17 @@ void write_dng_orig(int fd, char* rawadr, char* altrawadr)
 #define RB_STAGE_DEREVERSING    3
 static struct {
     // all pointers here are cached or uncached per user settings
+    // the following 3 values are not modifed after initialization
     char *src; // intial src address
     char *dst; // initial dest address, may be same as src
     char *end; // end of dst
+    // the following 3 track the state of the writing and reversing process
     char *reversed; // pointer to completed, set by reverse_bytes_task
     char *written; // pointer to written, set by main task
     int stage; // stage to detect when done
 } rb_state;
 
 void reverse_bytes_task() {
-    int need_dereverse = (rb_state.src == rb_state.dst);
     char *src = rb_state.src;
     rb_state.stage = RB_STAGE_REVERSING;
     rb_state.reversed = rb_state.dst;
@@ -1101,7 +1102,7 @@ void reverse_bytes_task() {
     }
     rb_state.stage = RB_STAGE_DEREVERSING;
     dng_stats.rev_end = dng_stats.derev_start = get_tick_count();
-    if(need_dereverse) {
+    if(rb_state.src == rb_state.dst) {
         src = rb_state.src;
         int offset = 0;
         while(src < rb_state.end) {
@@ -1131,21 +1132,25 @@ void reverse_bytes_task() {
 // Write DNG header, thumbnail and data to file
 
 
-void write_dng(int fd, char* rawadr, char* altrawadr) 
+int write_dng(char* rawadr, char* altrawadr) 
 {
-    memset(&dng_stats,0,sizeof(dng_stats));
+    int fd;
     dng_stats.save_start = get_tick_count();
     if(dng_conf.use_orig) {
-        write_dng_orig(fd,rawadr,altrawadr);
+        fd = raw_createfile();
+        if(fd >= 0) {
+            write_dng_orig(fd,rawadr,altrawadr);
+            raw_closefile(fd);
+        }
         dng_stats.save_end = get_tick_count();
-        return;
+        return (fd >= 0);
     }
     dng_stats.hdr_create_start = get_tick_count();
     create_dng_header();
     dng_stats.hdr_create_end = get_tick_count();
 
     if (!dng_header_buf) {
-        return;
+        return 0;
     }
 
     if (conf.dng_version)
@@ -1164,7 +1169,7 @@ void write_dng(int fd, char* rawadr, char* altrawadr)
             debug_led(0);
             msleep(200);
         }
-        return;
+        return 0;
     }
     rb_state.stage = RB_STAGE_INIT;
     rb_state.src = rawadr;
@@ -1174,6 +1179,16 @@ void write_dng(int fd, char* rawadr, char* altrawadr)
     // task is created with lower priority than spytask (0x19) 
     // to improve chance of spytask getting control when write completes
     CreateTask("RevBytes",0x1A,0x400,reverse_bytes_task);
+
+    fd = raw_createfile();
+    if(fd < 0) {
+        // task already started, pretend write completed and wait
+        rb_state.written = rb_state.end;
+        while(rb_state.stage != RB_STAGE_DONE) {
+            msleep(10);
+        }
+        return 0;
+    }
 
     dng_stats.write_hdr_start = get_tick_count();
     // ensure thumbnail is written to uncached
@@ -1204,11 +1219,14 @@ void write_dng(int fd, char* rawadr, char* altrawadr)
     }
     dng_stats.write_end = get_tick_count();
 
+    raw_closefile(fd);
+
     // wait for de-reverse, if required
     while(rb_state.stage != RB_STAGE_DONE) {
         msleep(10);
     }
     dng_stats.save_end = get_tick_count();
+    return 1;
 }
 
 /*********** BEGIN OF AUXILARY PART **********************/
