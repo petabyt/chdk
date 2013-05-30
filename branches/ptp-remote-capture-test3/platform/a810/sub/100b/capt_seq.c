@@ -31,8 +31,8 @@ typedef struct
     int seek_flag;      // needed for DryOS>=r50
     char name[32];
 } fwt_data_struct;
-#define FWT_MUSTSEEK    2   // value of seek_flag indicating seek is required
-#define FWT_CONDSEEK    3   // value of seek_flag indicating seek is required when file_offset not 0
+#define FWT_MUSTSEEK    2   // value of the masked seek_flag indicating seek is required
+#define FWT_SEEKMASK    0xffffffff   // masks out unneeded bits of seek_flag
 
 #include "../../../generic/capt_seq.c"
 

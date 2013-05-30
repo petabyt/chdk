@@ -165,37 +165,25 @@ void filewrite_set_discard_jpeg(int state) {
 void filewrite_main_hook(fwt_data_struct *fwt_data)
 {
 #ifdef CAM_EXTENDED_FILEWRITETASK
-    // don't forget to #define FWT_CONDSEEK, FWT_MUSTSEEK
+    // don't forget to #define FWT_SEEKMASK, FWT_MUSTSEEK
+
     jpeg_curr_session_chunk = 0;
     /*
-     * file open flags are at offset 0xc for DryOS r50
-     * these are the following for a "complicated" case (in order of appearance)
-     * 0x8301: seek is needed (initial), value passed to open()
-     * 0x8009: no seek
-     * 0x8009: no seek
-     * 0x8001: seek is needed (final)
-     * 
-     * for a simple case
-     * 0x301
-     * 
+     * below information is only valid when this routine is called
+     *
      * seek flag is at offset 0x50 for DryOS r50
-     * 0: no seek
-     * 2: seek                      -> FWT_MUSTSEEK
-     * 3: seek if file offset != 0  -> FWT_CONDSEEK
+     * 2: seek is needed
+     * if not 2, seek is only performed when file_offset is not 0
+     *
+     * seek flag is at offset 0x4c for DryOS r51
+     * if (seek_flag & 0x40) == 0x40 then seek is needed
+     * otherwise, seek is only performed when file_offset is not 0
      */
-    switch ( fwt_data->seek_flag ) {
-        case FWT_MUSTSEEK:
-            jpeg_file_offset = fwt_data->file_offset;
-            break;
-        case FWT_CONDSEEK:
-            if ( fwt_data->file_offset != 0 ) {
-                jpeg_file_offset = fwt_data->file_offset;
-                break;
-            }
-            //fall through
-        default:
-            jpeg_file_offset = -1; // no seek needed
-            break;
+    if ( ((fwt_data->seek_flag & FWT_SEEKMASK) == FWT_MUSTSEEK) || (fwt_data->file_offset != 0) ) {
+        jpeg_file_offset = fwt_data->file_offset;
+    }
+    else {
+        jpeg_file_offset = -1; // no seek needed
     }
     jpeg_full_size = fwt_data->full_size;
 #endif //CAM_EXTENDED_FILEWRITETASK
@@ -260,6 +248,7 @@ void __attribute__((naked,noinline)) capt_seq_hook_set_nr()
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
 // wrapper functions for use in filewritetask
 #ifdef CAM_DRYOS
+static long fwt_bytes_written = 0; // need to track this independently of ptp
 int fwt_open(const char *name, int flags, int mode) {
     if (!ignore_current_write) {
         return _Open(name, flags, mode);
@@ -272,6 +261,7 @@ int fwt_write(int fd, const void *buffer, long nbytes) {
     if (!current_write_ignored) {
         return _Write(fd, buffer, nbytes);
     }
+    fwt_bytes_written += nbytes;
     return (int)nbytes; // "everything's written"
 }
 
@@ -286,13 +276,27 @@ int fwt_lseek(int fd, long offset, int whence) {
 
 int fwt_close (int fd) {
     if (!current_write_ignored) {
-        return _Close(fd);
+        int ret = _Close(fd);
+        if (no_pt_completefilewrite) {
+            imagesavecomplete=1;
+        }
+        fwt_bytes_written = 0;
+        return ret;
     }
+#ifdef CAM_EXTENDED_FILEWRITETASK
+    if (fwt_bytes_written >= jpeg_full_size) {
+        ignore_current_write=0;
+        current_write_ignored=0;
+        fwt_bytes_written = 0;
+    }
+#else
+    ignore_current_write=0;
+    current_write_ignored=0;
+    fwt_bytes_written = 0;
+#endif // CAM_EXTENDED_FILEWRITETASK
     if (no_pt_completefilewrite) {
         imagesavecomplete=1;
     }
-    ignore_current_write=0;
-    current_write_ignored=0;
     return 0;
 }
 #else
