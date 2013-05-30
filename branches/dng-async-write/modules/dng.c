@@ -1205,9 +1205,12 @@ int write_dng(char* rawadr, char* altrawadr)
             continue;
         }
         dng_stats.write_chunk_count++;
-        // save one chunk size to overlap with de-reverse
-        if((rawadr == altrawadr) && rb_state.written + size == rb_state.end && size > dng_conf.write_end_chunk) {
-            size -= dng_conf.write_end_chunk;
+        // if de-reversing, force 3 chunks at the end, gives better performance on vxworks
+        // doesn't seem to have significant cost on dryos
+        if(rawadr == altrawadr) {
+            if(size > dng_conf.write_end_chunk && (rb_state.written + dng_conf.write_end_chunk*3) >= rb_state.end) {
+                size = dng_conf.write_end_chunk;
+            }
         }
         // ensure reversed data is cleaned out to uncached before attempting write
         if(conf.raw_cache) {
@@ -1215,7 +1218,6 @@ int write_dng(char* rawadr, char* altrawadr)
         }
         write(fd,UNCACHE_ADR(rb_state.written),size);
         rb_state.written += size;
-        //msleep(10);
     }
     dng_stats.write_end = get_tick_count();
 
