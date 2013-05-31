@@ -1,5 +1,5 @@
 0xffc00000
-CreateJumptable 0xFFDAB7D4 
+CreateJumptable 0xFFDAB7D4
 GetSystemTime 0xFFDD7EFC
 kbd_pwr_on 0xFFC37068
 kbd_pwr_off 0xFFC370C0

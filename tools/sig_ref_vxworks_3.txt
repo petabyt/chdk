@@ -13,12 +13,12 @@ RenameFile_Fut 0xFFE42084
 Remove 0xFFE46B78
 SetLogicalEventActive 0xFFEDE6B0 22
 SetFileAttributes 0xFFE46D40
-Close 0xFFE46B58  
+Close 0xFFE46B58
 DisplayImagePhysicalScreen 0xFFDDBEEC
 DoAFLock 0xffea4bdc
 EnterToCompensationEVF 0xffea4f84
 Mount_FileSystem 0xFFE45E7C
-Read 0xFFE46BEC 
+Read 0xFFE46BEC
 Write 0xFFE46BF8
 WriteSDCard 0xFFE58EEC
 free 0xFFCD9B84
