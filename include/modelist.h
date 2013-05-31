@@ -134,6 +134,7 @@ enum {
     MODE_SCN_SOFTFOCUS      , // sx260 asm1989
     MODE_SCN_SMOOTH_SKIN    , // sx260
     MODE_DIGITAL_IS         , // a810/a2300
+    MODE_SCN_UNDERWATER_MACRO, // D20
 };
 
 #endif
