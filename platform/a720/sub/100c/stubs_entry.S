@@ -234,10 +234,10 @@ NHSTUB(strtolx                                ,0xffc1fa10) //109
    DEF(task_PhySw                             ,0xffc12d78) //107
 NHSTUB(time                                   ,0xffc55f0c) //109
 NHSTUB(vsprintf                               ,0xffc0e7b4) //115
-NHSTUB(EngDrvIn                               ,0xffd9de38) //102
-NHSTUB(EngDrvOut                              ,0xffd9de1c) //102
-NHSTUB(EngDrvRead                             ,0xffd9de40) //102
-NHSTUB(EngDrvBits                             ,0xffd9de48) //102
+//NHSTUB(EngDrvIn                             ,0xffc13fcc) //102
+//NHSTUB(EngDrvOut                            ,0xffc13fb4) //102
+//NHSTUB(EngDrvRead                           ,0xffc13fd4) //102
+//NHSTUB(EngDrvBits                           ,0xffc13fe8) //102
 //NHSTUB(GetSDProtect                         ,0xffc13094) //102
 //NHSTUB(StartRecModeMenu                     ,0xffd49f28) //102
 //NHSTUB(DispCon_ShowBitmapColorBar           ,0xffc32bf0) //102

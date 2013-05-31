@@ -266,10 +266,10 @@ NHSTUB(strtolx                                ,0xff83e078) //109
 NHSTUB(time                                   ,0xff882ccc) //109
 NHSTUB(vsprintf                               ,0xff820350) //115
 //NHSTUB(write                                ,0xff835498) //101
-NHSTUB(EngDrvIn                               ,0xffa5425c) //102
-NHSTUB(EngDrvOut                              ,0xffa54240) //102
-NHSTUB(EngDrvRead                             ,0xffa54264) //102
-NHSTUB(EngDrvBits                             ,0xffa5426c) //102
+//NHSTUB(EngDrvIn                             ,0xff834464) //102
+//NHSTUB(EngDrvOut                            ,0xff83444c) //102
+//NHSTUB(EngDrvRead                           ,0xff83446c) //102
+//NHSTUB(EngDrvBits                           ,0xff834480) //102
 //NHSTUB(GetSDProtect                         ,0xff833580) //103
 //NHSTUB(StartRecModeMenu                     ,0xff889700) //102
 //NHSTUB(DispCon_ShowBitmapColorBar           ,0xff853540) //102
