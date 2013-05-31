@@ -15,6 +15,7 @@ void taskHook(context_t **context) {
 	if(!_strcmp(tcb->name, "InitFileModules")) tcb->entry = (void*)init_file_modules_task;
 	if(!_strcmp(tcb->name, "MovieRecord"))     tcb->entry = (void*)movie_record_task;
 	if(!_strcmp(tcb->name, "ExpDrvTask"))      tcb->entry = (void*)exp_drv_task;
+	if(!_strcmp(tcb->name, "FileWriteTask"))   tcb->entry = (void*)filewritetask;
 }
 
 void CreateTask_spytask() {
