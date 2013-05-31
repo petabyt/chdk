@@ -85,3 +85,22 @@ int vid_get_viewport_yoffset()
 	static long vp_h[5] = { 0, 30, 13, 0 };
 	return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
+
+
+// Functions for PTP Live View system
+// 256 entry palette based on 100c @ 0xff929a6c
+int vid_get_palette_type()                      { return 3; }
+int vid_get_palette_size()                      { return 256 * 4; }
+
+void *vid_get_bitmap_active_palette() {
+        extern int active_palette_buffer;
+        extern char* palette_buffer[];
+        return (palette_buffer[active_palette_buffer]+8);
+}
+
+extern int active_bitmap_buffer;
+extern char* bitmap_buffer[];
+
+void *vid_get_bitmap_active_buffer() {
+    return bitmap_buffer[active_bitmap_buffer];
+}
