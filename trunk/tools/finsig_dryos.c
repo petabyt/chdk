@@ -1202,10 +1202,10 @@ func_entry  func_names[] =
     { "vsprintf" },
     { "write", UNUSED },
 
-    { "EngDrvIn", OPTIONAL },
-    { "EngDrvOut", OPTIONAL },
-    { "EngDrvRead", OPTIONAL },
-    { "EngDrvBits", OPTIONAL },
+    { "EngDrvIn", OPTIONAL|UNUSED },
+    { "EngDrvOut", OPTIONAL|UNUSED },
+    { "EngDrvRead", OPTIONAL|UNUSED },
+    { "EngDrvBits", OPTIONAL|UNUSED },
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
 	{ "GetSDProtect", UNUSED },
@@ -1453,10 +1453,10 @@ string_sig string_sigs[] = {
     { 2, "SavePaletteData", "SavePaletteData", 1 },
     { 2, "GetVRAMHPixelsSize", "GetVRAMHPixelsSize", 1 },
     { 2, "GetVRAMVPixelsSize", "GetVRAMVPixelsSize", 1 },
-    { 2, "EngDrvIn", "EngDrvIn", 1 },
-    { 2, "EngDrvOut", "EngDrvOut", 1 },
-    { 2, "EngDrvRead", "EngDrvRead", 1 },
-    { 2, "EngDrvBits", "EngDrvBits", 1 },
+    { 2, "EngDrvIn", "EngDrvIn", 2 },
+    { 2, "EngDrvOut", "EngDrvOut", 0x01000005 },
+    { 2, "EngDrvRead", "EngDrvRead", 2 },
+    { 2, "EngDrvBits", "EngDrvBits", 0x01000007 },
 	{ 2, "exmem_alloc", "ExMem.AllocCacheable", 4 },
 	{ 2, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
 
