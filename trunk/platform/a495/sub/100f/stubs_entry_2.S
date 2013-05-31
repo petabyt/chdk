@@ -12,7 +12,7 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 
 // Additional
 NHSTUB(MakeAFScan,                  0xFFD0F2AC)
-NHSTUB(TurnOffMic,                  0xFFC43C28) // Doesn't work
-NHSTUB(TurnOnMic,                   0xFFC43C54) // Doesn't work
+NHSTUB(TurnOnMic,                   0xFFC43C28)
+NHSTUB(TurnOffMic,                  0xFFC43C54)
 NHSTUB(closefastdir,                0xFFDEBA54)
 NHSTUB(platformsub_kbd_fetch_data,  0xFFC435CC)

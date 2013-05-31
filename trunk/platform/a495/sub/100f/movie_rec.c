@@ -322,6 +322,7 @@ void __attribute__((naked,noinline)) sub_FFDF7040_my(){
 
 			"STR     R2, [R1]\n"
 			"STR     R0, [R4]\n"
+            		"BL      mute_on_zoom\n"		 // +
 			"LDMFD   SP!, {R4-R8,PC}\n"
 	);
 }
