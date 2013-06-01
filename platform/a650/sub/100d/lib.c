@@ -1,19 +1,13 @@
 #include "platform.h"
 
-void *hook_raw_fptr()
-{
-    return (void*)0;
-}
-
-void *hook_raw_ret_addr()
-{
-    return (void*)0;
-}
-
 char *hook_raw_image_addr()
 {
  return (char*) (*(int*)0x5684 ? 0x11F6B740 : 0x108057C0);
  //  return (char*)0x108057C0;
+}
+char *hook_alt_raw_image_addr()
+{
+ return (char*) (*(int*)0x5684 ? 0x108057C0 : 0x11F6B740);
 }
 
 long hook_raw_size()
