@@ -51,8 +51,6 @@
 #include "fileutil.h"
 #include "task.h"
 
-#include "dng_test.h"
-
 #include "modules.h"
 #include "module_load.h"
 #include "module_exportlist.h"
