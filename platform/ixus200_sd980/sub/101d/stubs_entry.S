@@ -263,6 +263,7 @@ NHSTUB(strtolx                                ,0xff83e078) //109
    DEF(task_MovieRecord                       ,0xff94b0c4) //107
    DEF(task_PhySw                             ,0xff8331fc) //107
    DEF(task_RotaryEncoder                     ,0xff85afb0) //107
+   DEF(task_TouchPanel                        ,0xff85e89c) //107
 NHSTUB(time                                   ,0xff882d1c) //109
 NHSTUB(vsprintf                               ,0xff820350) //115
 //NHSTUB(write                                ,0xff835498) //101

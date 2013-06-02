@@ -10,5 +10,3 @@ NHSTUB(SetZoomActuatorSpeedPercent,		NULL_SUB)
 // Additional
 NHSTUB(SetCDSGain,						0xFF384A38)
 NHSTUB(GetCdsGainValue,					0xFF384998)
-
-DEF(task_TouchPanel,					0xFF059E84)
