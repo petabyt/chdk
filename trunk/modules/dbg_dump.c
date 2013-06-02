@@ -6,6 +6,7 @@
 #include "cache.h"
 #include "module_load.h"
 #include "clock.h"
+#include "cachebit.h"
 
 // to keep format simple, we always write meminfo for each
 // but can skip actual getmeminfo since call might crash on mem corruption
@@ -66,7 +67,7 @@ typedef union {
 void dbg_dump_write(const char *dumpname,unsigned flags, int user_data_len, char *user_data) {
     static dumpinfo buf;
     // convenient access to uncached version
-    dumpinfo *pb = (dumpinfo *)((int)&buf | camera_info.cam_uncached_bit);
+    dumpinfo *pb = ADR_TO_UNCACHED(&buf);
     
     // use open + uncached mem because we may not have enough memory for fopen
     int fd=open(dumpname, O_WRONLY|O_CREAT|O_TRUNC, 0777);
@@ -146,10 +147,10 @@ void dbg_dump_write(const char *dumpname,unsigned flags, int user_data_len, char
         // clean cache for write()
         dcache_clean_all();
 
-        write(fd,(char *)((int)sp|camera_info.cam_uncached_bit),STACK_DUMP_COUNT*4);
+        write(fd,ADR_TO_UNCACHED(sp),STACK_DUMP_COUNT*4);
         if(user_data_len && user_data) {
             // we assume user_data has been flushed out by preceding
-            write(fd,(char *)((int)user_data|camera_info.cam_uncached_bit),user_data_len);
+            write(fd,ADR_TO_UNCACHED(user_data),user_data_len);
         }
         close(fd);
     } else {
