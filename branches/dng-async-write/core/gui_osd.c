@@ -1047,7 +1047,6 @@ static void gui_debug_draw_tasklist(void)
 
 #endif
 
-#include "dng_test.h"
 //------------------------------------------------------------------- 
 void gui_draw_debug_vals_osd()
 {
@@ -1101,16 +1100,16 @@ void gui_draw_debug_vals_osd()
 
         // show Autofocus status (if AF is working)
         extern volatile long focus_busy;
-        sprintf(osd_buf, "ws:  %8u", dng_stats.write_wait_count);
+        sprintf(osd_buf, "FB:  %8u", focus_busy);
         draw_txt_string(28, 10, osd_buf, conf.osd_color);
 
         // show Zoom status (if Lens is moving)
         extern volatile long zoom_busy;
-        sprintf(osd_buf, "wc:  %8u", dng_stats.write_chunk_count);
+        sprintf(osd_buf, "ZB:  %8u", zoom_busy);
         draw_txt_string(28, 11, osd_buf, conf.osd_color);
 
         // show USB-Power status to debug remote / sync
-        sprintf(osd_buf, "rs: %8u", dng_stats.finish_wait_count);
+        sprintf(osd_buf, "USB: %8u", get_usb_power(1));
         draw_txt_string(28, 12, osd_buf, conf.osd_color);
 
         /*
