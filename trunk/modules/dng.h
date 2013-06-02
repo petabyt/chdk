@@ -17,7 +17,7 @@ typedef struct
 	int  (*badpixel_list_loaded_b)(void);
 
 	int (*convert_dng_to_chdk_raw)(char* fn);
-	void (*write_dng)(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit);
+	int (*write_dng)(char* rawadr, char* altrawadr);
     void (*load_dng_to_rawbuffer)(char *fn, char *rawadr);
 } libdng_sym;
 

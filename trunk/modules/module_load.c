@@ -50,6 +50,7 @@
 #include "file_counter.h"
 #include "lens.h"
 #include "fileutil.h"
+#include "task.h"
 
 #include "modules.h"
 #include "module_load.h"

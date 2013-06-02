@@ -25,7 +25,7 @@
 #define GUI_FSELECT_VERSION     {2,0}
 #define GUI_HEXBOX_VERSION      {1,0}
 #define EDGEOVERLAY_VERSION     {2,0}
-#define DNG_VERSION             {2,1}
+#define DNG_VERSION             {3,0}
 #define CURVES_VERSION          {2,0}
 
 //-------------------------------------------------------------------

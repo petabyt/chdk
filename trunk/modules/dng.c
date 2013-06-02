@@ -14,6 +14,7 @@
 #include "gps.h"
 #include "math.h"
 #include "cache.h"
+#include "task.h"
 
 #include "dng.h"
 #include "module_def.h"
@@ -21,9 +22,14 @@
 // Set to 1 when module loaded and active
 static int running = 0;
 
+// TODO this should be in a header somewhere
+#define UNCACHE_ADR(ptr) ((void *)((unsigned)(ptr)|camera_info.cam_uncached_bit))
+#define IS_CACHED_ADR(ptr) (!((unsigned)(ptr)&camera_info.cam_uncached_bit))
+
 //thumbnail
 #define DNG_TH_WIDTH 128
 #define DNG_TH_HEIGHT 96
+#define DNG_TH_BYTES (DNG_TH_WIDTH*DNG_TH_HEIGHT*3)
 // higly recommended that DNG_TH_WIDTH*DNG_TH_HEIGHT would be divisible by 512
 
 // new version to support DNG double buffer
@@ -141,7 +147,7 @@ struct dir_entry ifd0[]={
     {0x112,  T_SHORT,      1,  1},                                 // Orientation: 1 - 0th row is top, 0th column is left
     {0x115,  T_SHORT,      1,  3},                                 // SamplesPerPixel: 3
     {0x116,  T_SHORT,      1,  DNG_TH_HEIGHT},                     // RowsPerStrip
-    {0x117,  T_LONG,       1,  DNG_TH_WIDTH*DNG_TH_HEIGHT*3},      // StripByteCounts = preview size
+    {0x117,  T_LONG,       1,  DNG_TH_BYTES},                      // StripByteCounts = preview size
     {0x11C,  T_SHORT,      1,  1},                                 // PlanarConfiguration: 1
     {0x131,  T_ASCII|T_PTR,32, 0},                                 // Software
     {0x132,  T_ASCII,      20, (int)cam_datetime},                 // DateTime
@@ -407,18 +413,13 @@ void create_dng_header(){
     // creating buffer for writing data
     raw_offset=(raw_offset/512+1)*512; // exlusively for CHDK fast file writing
     dng_header_buf_size=raw_offset;
-    dng_header_buf=umalloc(raw_offset);
-    dng_header_buf_offset=0;
-    if (!dng_header_buf) return;
-
-    // create buffer for thumbnail
-    thumbnail_buf = malloc(DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
-    if (!thumbnail_buf)
+    dng_header_buf=malloc(raw_offset + DNG_TH_BYTES);
+    if (!dng_header_buf)
     {
-        ufree(dng_header_buf);
-        dng_header_buf = 0;
         return;
     }
+    thumbnail_buf = dng_header_buf + raw_offset;
+    dng_header_buf_offset=0;
 
     //  writing offsets for EXIF IFD and RAW data and calculating offset for extra data
 
@@ -430,7 +431,7 @@ void create_dng_header(){
         ifd0[GPS_IFD_INDEX].offset = TIFF_HDR_SIZE + (ifd_list[0].count + ifd_list[1].count + ifd_list[2].count) * 12 + 6 + 6 + 6;  // GPS IFD offset
 
     ifd0[THUMB_DATA_INDEX].offset = raw_offset;                                     //StripOffsets for thumbnail
-    ifd1[RAW_DATA_INDEX].offset = raw_offset + DNG_TH_WIDTH * DNG_TH_HEIGHT * 3;    //StripOffsets for main image
+    ifd1[RAW_DATA_INDEX].offset = raw_offset + DNG_TH_BYTES;    //StripOffsets for main image
 
     for (j=0;j<ifd_count;j++)
     {
@@ -505,13 +506,8 @@ void free_dng_header(void)
 {
     if (dng_header_buf)
     {
-        ufree(dng_header_buf);
+        free(dng_header_buf);
         dng_header_buf=NULL;
-    }
-    if (thumbnail_buf)
-    {
-        free(thumbnail_buf);
-        thumbnail_buf = 0;
     }
 }
 
@@ -721,8 +717,10 @@ static void load_dng_to_rawbuffer(char *fn, char *rawadr)
 //-------------------------------------------------------------------
 // Functions for creating DNG thumbnail image
 
-static unsigned char gamma[256];
 
+// original code to generate the gamma buf
+/*
+static unsigned char gamma[256];
 void fill_gamma_buf(void)
 {
     int i;
@@ -731,12 +729,39 @@ void fill_gamma_buf(void)
     for (i=12; i<64; i++) gamma[i]=pow_calc_2(255, i, 255, 0.4, 1);
     for (i=64; i<=255; i++) gamma[i]=pow_calc_2(255, i, 255, 0.25, 1);
 }
+*/
 
+static const unsigned char gamma[256] =
+{
+0,15,22,27,31,35,39,42,45,47,50,52,75,77,79,82,
+84,86,88,90,92,93,95,97,99,100,102,103,105,106,108,109,
+111,112,113,115,116,117,119,120,121,122,123,125,126,127,128,129,
+130,131,132,133,134,136,137,138,139,140,141,141,142,143,144,145,
+180,181,181,182,183,183,184,185,185,186,187,187,188,189,189,190,
+190,191,192,192,193,193,194,194,195,195,196,197,197,198,198,199,
+199,200,200,201,201,202,202,203,203,204,204,205,205,206,206,207,
+207,208,208,208,209,209,210,210,211,211,212,212,212,213,213,214,
+214,215,215,215,216,216,217,217,217,218,218,219,219,219,220,220,
+221,221,221,222,222,222,223,223,224,224,224,225,225,225,226,226,
+226,227,227,228,228,228,229,229,229,230,230,230,231,231,231,232,
+232,232,233,233,233,234,234,234,235,235,235,235,236,236,236,237,
+237,237,238,238,238,239,239,239,239,240,240,240,241,241,241,242,
+242,242,242,243,243,243,244,244,244,244,245,245,245,246,246,246,
+246,247,247,247,247,248,248,248,249,249,249,249,250,250,250,250,
+251,251,251,251,252,252,252,252,253,253,253,253,254,254,254,255
+};
 void create_thumbnail()
 {
-    register int i, j, x, y, yadj, xadj;
-    register char *buf = thumbnail_buf;
-    register int shift = camera_sensor.bits_per_pixel - 8;
+    char *buf = thumbnail_buf;
+    int shift = camera_sensor.bits_per_pixel - 8;
+
+    int x_inc = camera_sensor.jpeg.width / DNG_TH_WIDTH;
+    int y_inc = camera_sensor.jpeg.height / DNG_TH_HEIGHT;
+
+    int x_end = camera_sensor.active_area.x1 + camera_sensor.jpeg.x + DNG_TH_WIDTH*x_inc;
+    int y_end = camera_sensor.active_area.y1 + camera_sensor.jpeg.y + DNG_TH_HEIGHT*y_inc;
+
+    int x_off,y_off;
 
     // The sensor bayer patterns are:
     //  0x02010100  0x01000201  0x01020001
@@ -745,17 +770,19 @@ void create_thumbnail()
     // for the second pattern yadj shifts the thumbnail row down one line
     // for the third pattern xadj shifts the thumbnail row accross one pixel
     // these make the patterns the same
-    yadj = (camera_sensor.cfa_pattern == 0x01000201) ? 1 : 0;
-    xadj = (camera_sensor.cfa_pattern == 0x01020001) ? 1 : 0;
+    int yadj = (camera_sensor.cfa_pattern == 0x01000201) ? 1 : 0;
+    int xadj = (camera_sensor.cfa_pattern == 0x01020001) ? 1 : 0;
 
-    for (i=0; i<DNG_TH_HEIGHT; i++)
-        for (j=0; j<DNG_TH_WIDTH; j++)
+    for (y_off=camera_sensor.active_area.y1 + camera_sensor.jpeg.y; y_off<y_end; y_off += y_inc)
+        for (x_off=camera_sensor.active_area.x1 + camera_sensor.jpeg.x; x_off<x_end; x_off += x_inc)
         {
-            x = ((camera_sensor.active_area.x1 + camera_sensor.jpeg.x + (camera_sensor.jpeg.width  * j) / DNG_TH_WIDTH)  & 0xFFFFFFFE) + xadj;
-            y = ((camera_sensor.active_area.y1 + camera_sensor.jpeg.y + (camera_sensor.jpeg.height * i) / DNG_TH_HEIGHT) & 0xFFFFFFFE) + yadj;
+            int x = (x_off & 0xFFFFFFFE) + xadj;
+            int y = (y_off & 0xFFFFFFFE) + yadj;
 
             *buf++ = gamma[get_raw_pixel(x,y)>>shift];           // red pixel
-            *buf++ = gamma[6*(get_raw_pixel(x+1,y)>>shift)/10];  // green pixel
+            //*buf++ = gamma[6*(get_raw_pixel(x+1,y)>>shift)/10];  // green pixel
+            int g=get_raw_pixel(x+1,y) >> (shift+1);
+            *buf++ = gamma[g+(g>>2)];  // green pixel was (6*g/10), now (g/2 + g/8)
             *buf++ = gamma[get_raw_pixel(x+1,y+1)>>shift];       // blue pixel
         }
 }
@@ -980,42 +1007,179 @@ void create_badpixel_bin()
     action_stack_create(&action_stack_BADPIX_START);
 }
 
+// TODO we really only need done/not done so far
+#define RB_STAGE_DONE           0
+#define RB_STAGE_INIT           1
+#define RB_STAGE_REVERSING      2
+#define RB_STAGE_DEREVERSING    3
+
+/*
+chunk size to for reversing task.
+This defines the minimum increment that can be written in the writing task
+smaller sizes reduce the chance the writing task will have to wait for
+the initial reverse to finish, but increases the amount of time spent sleeping, 
+and may increase the number of writes
+From testing, 512kb appears to be a reasonable compromise
+*/
+#define DNG_REV_CHUNK_SIZE  (512*1024)
+
+/*
+chunk size for writing final chunks of DNG
+only applicable to cameras with a single raw buffer
+defines the size of chunks write at the end of the raw data
+This this affects how well the reversing task can restore the buffer to
+original byte order in parallel with writing, and how much overhead there
+is for the final chunk.
+*/
+#define DNG_END_CHUNK_SIZE (512*1024)
+
+/*
+number of minimum number of chunks to write at the end (single raw buffer cams only)
+*/
+#define DNG_END_NUM_CHUNKS (3)
+
+static struct {
+    // all pointers here are cached or uncached per user settings
+    // the following 3 values are not modifed after initialization
+    char *src; // intial src address
+    char *dst; // initial dest address, may be same as src
+    char *end; // end of dst
+    // the following 3 track the state of the writing and reversing process
+    char *reversed; // pointer to completed, set by reverse_bytes_task
+    char *written; // pointer to written, set by main task
+    int stage; // stage to detect when done
+} rb_state;
+
+void reverse_bytes_task() {
+    char *src = rb_state.src;
+    rb_state.stage = RB_STAGE_REVERSING;
+    rb_state.reversed = rb_state.dst;
+    // reverse byte order of frame buffer for DNG in chunks, to allow writing to proceed in parallel
+    while(rb_state.reversed < rb_state.end) {
+        int chunk_size;
+        if(rb_state.reversed + DNG_REV_CHUNK_SIZE > rb_state.end) {
+            chunk_size = rb_state.end - rb_state.reversed;
+        } else {
+            chunk_size = DNG_REV_CHUNK_SIZE;
+        }
+        reverse_bytes_order2(src, rb_state.reversed, chunk_size);
+        src += chunk_size;
+        rb_state.reversed += chunk_size;
+        // seems to give slightly faster times with less variation
+        // usually plenty of time to reverse, but in configurations with
+        // slow camera + small sensor + fast card + single buffer
+        // may cause some avoidable overhead
+        msleep(10);
+    }
+    rb_state.stage = RB_STAGE_DEREVERSING;
+    // if only a single raw buffer exists, restore the original byte order for
+    // the portions of the buffer which have been written out, waiting as needed
+    if(rb_state.src == rb_state.dst) {
+        src = rb_state.src;
+        int offset = 0;
+        while(src < rb_state.end) {
+            int chunk_size = rb_state.written - src;
+            if(!chunk_size) {
+                msleep(10);
+                continue;
+            }
+            reverse_bytes_order(src, chunk_size);
+            src += chunk_size;
+        }
+        // if reverse was done on cached raw, 
+        // clean cache so canon FW doesn't see reversed data in uncached
+        if(IS_CACHED_ADR(rb_state.dst)) {
+            dcache_clean_all();
+        }
+    }
+
+
+    rb_state.stage = RB_STAGE_DONE;
+    ExitTask();
+}
+
 //-------------------------------------------------------------------
 // Write DNG header, thumbnail and data to file
 
-void write_dng(int fd, char* rawadr, char* altrawadr, unsigned long uncachedbit) 
+
+int write_dng(char* rawadr, char* altrawadr) 
 {
+    int fd;
+
     create_dng_header();
 
-    if (dng_header_buf)
-    {
-        fill_gamma_buf();
-        if (conf.dng_version)
-            patch_bad_pixels_b();
-        create_thumbnail();
-        write(fd, dng_header_buf, dng_header_buf_size);
-        write(fd, thumbnail_buf, DNG_TH_WIDTH*DNG_TH_HEIGHT*3);
+    if (!dng_header_buf) {
+        return 0;
+    }
 
-        reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
+    if (conf.dng_version)
+        patch_bad_pixels_b();
 
-        // if reverse was done on cached raw, clean cache before writing
-        if(!((unsigned long)altrawadr & uncachedbit)) {
-            dcache_clean_all();
+    create_thumbnail();
+
+    // TODO - sanity check that prevous task isn't hanging around
+    if(rb_state.stage != RB_STAGE_DONE) {
+        int i;
+        for(i=0;i<50;i++) {
+            debug_led(1);
+            msleep(200);
+            debug_led(0);
+            msleep(200);
         }
+        return 0;
+    }
+    rb_state.stage = RB_STAGE_INIT;
+    rb_state.src = rawadr;
+    rb_state.written = rb_state.reversed = rb_state.dst = altrawadr;
+    rb_state.end = rb_state.dst + camera_sensor.raw_size;
 
-        // Write alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
-        write(fd, (char*)(((unsigned long)altrawadr)|uncachedbit), camera_sensor.raw_size);
+    // task is created with lower priority than spytask (0x19) 
+    // to improve chance of spytask getting control when write completes
+    CreateTask("RevBytes",0x1A,0x400,reverse_bytes_task);
 
-        if (rawadr == altrawadr) {    // If only one RAW buffer then we have to swap the bytes back
-            reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
-            // if unreverse was done on cached raw, clean cache for jpeg
-            if(!((unsigned long)altrawadr & uncachedbit)) {
-                dcache_clean_all();
+    fd = raw_createfile();
+    if(fd < 0) {
+        // task already started, pretend write completed and wait
+        rb_state.written = rb_state.end;
+        while(rb_state.stage != RB_STAGE_DONE) {
+            msleep(10);
+        }
+        return 0;
+    }
+
+    // ensure thumbnail is written to uncached
+    dcache_clean_all();
+    write(fd, UNCACHE_ADR(dng_header_buf), dng_header_buf_size + DNG_TH_BYTES);
+    free_dng_header();
+
+    while(rb_state.written < rb_state.end) {
+        int size = rb_state.reversed - rb_state.written; 
+        if(!size) {
+            msleep(10);
+            continue;
+        }
+        // if de-reversing, force DNG_NUM_END_CHUNKS at the end, gives better performance on vxworks
+        // doesn't seem to have significant cost on dryos
+        if(rawadr == altrawadr) {
+            if(size > DNG_END_CHUNK_SIZE && (rb_state.written + DNG_END_CHUNK_SIZE*DNG_END_NUM_CHUNKS) >= rb_state.end) {
+                size = DNG_END_CHUNK_SIZE;
             }
         }
-
-        free_dng_header();
+        // ensure reversed data is cleaned out to uncached before attempting write
+        if(conf.raw_cache) {
+            dcache_clean_all();
+        }
+        write(fd,UNCACHE_ADR(rb_state.written),size);
+        rb_state.written += size;
     }
+
+    raw_closefile(fd);
+
+    // wait for de-reverse, if required
+    while(rb_state.stage != RB_STAGE_DONE) {
+        msleep(10);
+    }
+    return 1;
 }
 
 /*********** BEGIN OF AUXILARY PART **********************/
