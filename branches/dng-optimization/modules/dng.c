@@ -15,6 +15,7 @@
 #include "math.h"
 #include "cache.h"
 #include "task.h"
+#include "cachebit.h"
 
 #include "dng.h"
 #include "dng_test.h"
@@ -22,10 +23,6 @@
 
 // Set to 1 when module loaded and active
 static int running = 0;
-
-// TODO this should be in a header somewhere
-#define UNCACHE_ADR(ptr) ((void *)((unsigned)(ptr)|camera_info.cam_uncached_bit))
-#define IS_CACHED_ADR(ptr) (!((unsigned)(ptr)&camera_info.cam_uncached_bit))
 
 //thumbnail
 #define DNG_TH_WIDTH 128
@@ -1026,28 +1023,28 @@ void write_dng_orig(int fd, char* rawadr, char* altrawadr)
         dng_stats.thumb_create_end = dng_stats.write_hdr_start = get_tick_count();
 
         dcache_clean_all();
-        write(fd, UNCACHE_ADR(dng_header_buf), dng_header_buf_size + DNG_TH_BYTES);
+        write(fd, ADR_TO_UNCACHED(dng_header_buf), dng_header_buf_size + DNG_TH_BYTES);
 
         dng_stats.write_hdr_end = dng_stats.rev_start = get_tick_count();
 
         reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
 
         // if reverse was done on cached raw, clean cache before writing
-        if(IS_CACHED_ADR(altrawadr)) {
+        if(ADR_IS_CACHED(altrawadr)) {
             dcache_clean_all();
         }
 
         dng_stats.write_start = dng_stats.rev_end = get_tick_count();
 
         // Write alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
-        write(fd, UNCACHE_ADR(altrawadr), camera_sensor.raw_size);
+        write(fd, ADR_TO_UNCACHED(altrawadr), camera_sensor.raw_size);
 
         dng_stats.write_end = dng_stats.derev_start = get_tick_count();
 
         if (rawadr == altrawadr) {    // If only one RAW buffer then we have to swap the bytes back
             reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
             // if unreverse was done on cached raw, clean cache for jpeg
-            if(IS_CACHED_ADR(altrawadr)) {
+            if(ADR_IS_CACHED(altrawadr)) {
                 dcache_clean_all();
             }
         }
@@ -1144,7 +1141,7 @@ void reverse_bytes_task() {
         }
         // if reverse was done on cached raw, 
         // clean cache so canon FW doesn't see reversed data in uncached
-        if(IS_CACHED_ADR(rb_state.dst)) {
+        if(ADR_IS_CACHED(rb_state.dst)) {
             dcache_clean_all();
         }
     }
@@ -1220,7 +1217,7 @@ int write_dng(char* rawadr, char* altrawadr)
     dng_stats.write_hdr_start = get_tick_count();
     // ensure thumbnail is written to uncached
     dcache_clean_all();
-    write(fd, UNCACHE_ADR(dng_header_buf), dng_header_buf_size + DNG_TH_BYTES);
+    write(fd, ADR_TO_UNCACHED(dng_header_buf), dng_header_buf_size + DNG_TH_BYTES);
     free_dng_header();
 
     dng_stats.write_start = dng_stats.write_hdr_end = get_tick_count();
@@ -1243,7 +1240,7 @@ int write_dng(char* rawadr, char* altrawadr)
         if(conf.raw_cache) {
             dcache_clean_all();
         }
-        write(fd,UNCACHE_ADR(rb_state.written),size);
+        write(fd,ADR_TO_UNCACHED(rb_state.written),size);
         rb_state.written += size;
     }
     dng_stats.write_end = get_tick_count();
