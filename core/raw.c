@@ -22,7 +22,6 @@
 #define RAW_DEVELOP_DNG     2
 
 static char fn[64];
-static char dir[32];
 static int develop_raw = RAW_DEVELOP_OFF;
 
 //-------------------------------------------------------------------
@@ -59,16 +58,73 @@ char* get_alt_raw_image_addr(void) {    // return inactive buffer for cameras wi
 }
 //-------------------------------------------------------------------
 
+/*
+create a new raw file and return the file descriptor from open
+name and 
+create directories as need
+should only be called in raw hook
+modifies global fn
+*/
+static int raw_create_time; // time raw file was opened, for time stamp
+static int raw_br_counter;  // bracketing counter for raw suffix
+int raw_createfile()
+{
+    int fd;
+    char dir[32];
+
+    raw_create_time = time(NULL);
+
+    mkdir_if_not_exist("A/DCIM");
+    if (conf.raw_in_dir)
+        get_target_dir_name(dir);
+    else
+        sprintf(dir, RAW_TARGET_DIRECTORY, 100);
+
+    mkdir_if_not_exist(dir);
+
+    sprintf(fn, "%s/", dir);
+    if(raw_br_counter && conf.bracketing_add_raw_suffix && (shooting_get_drive_mode()!=1)) {
+        sprintf(fn+strlen(fn), 
+                RAW_BRACKETING_FILENAME,
+                img_prefixes[conf.raw_prefix],
+                get_target_file_num(),
+                raw_br_counter,
+                conf.dng_raw&&conf.raw_dng_ext ? ".DNG" : img_exts[conf.raw_ext]);
+    } else {
+        sprintf(fn+strlen(fn),
+                RAW_TARGET_FILENAME,
+                img_prefixes[conf.raw_prefix],
+                get_target_file_num(),
+                conf.dng_raw&&conf.raw_dng_ext ? ".DNG" : img_exts[conf.raw_ext]);
+    }
+    fd = open(fn, O_WRONLY|O_CREAT, 0777);
+
+    return fd;
+}
+
+/*
+close filed opened by raw_createfile, set timestamp
+*/
+void raw_closefile(int fd)
+{
+    if(fd < 0) {
+        return;
+    }
+
+    struct utimbuf t;
+    t.actime = t.modtime = raw_create_time;
+    close(fd);
+    utime(fn, &t);
+
+}
+
 // Set in raw_savefile and used in get_raw_pixel & set_raw_pixel (for performance)
 // Don't call set/get_raw_pixel until this value is initialised
 static char *rawadr;    // Pointer to current raw image buffer
 
 int raw_savefile()
 {
-    int ret = 0;
     int fd;
-    static struct utimbuf t;
-    static int br_counter; 
 
     // Get pointers to RAW buffers (will be the same on cameras that don't have two or more buffers)
     rawadr = get_raw_image_addr();
@@ -116,12 +172,12 @@ int raw_savefile()
     if (conf.tv_bracket_value || conf.av_bracket_value || conf.iso_bracket_value || conf.subj_dist_bracket_value)
     {
         if (camera_info.state.state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
-            br_counter = 1;
+            raw_br_counter = 1;
         else
-            br_counter++;
+            raw_br_counter++;
     }
     else
-        br_counter=0;
+        raw_br_counter=0;
 
     // got here second time in a row. Skip second RAW saving.
     if (conf.raw_save_first_only && camera_info.state.state_shooting_progress == SHOOTING_PROGRESS_PROCESSING)
@@ -131,61 +187,34 @@ int raw_savefile()
 
     camera_info.state.state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
 
+    int ret = 0;
     if (conf.save_raw && is_raw_enabled())
     {
-        int timer; char txt[30];
-
         started();
-
-        t.actime = t.modtime = time(NULL);
-
-        mkdir_if_not_exist("A/DCIM");
-        if (conf.raw_in_dir)
-            get_target_dir_name(dir);
-        else
-            sprintf(dir, RAW_TARGET_DIRECTORY, 100);
-
-        mkdir_if_not_exist(dir);
-
-        sprintf(fn, "%s/", dir);
-        if(br_counter && conf.bracketing_add_raw_suffix && (shooting_get_drive_mode()!=1)) {
-            sprintf(fn+strlen(fn), 
-                    RAW_BRACKETING_FILENAME,
-                    img_prefixes[conf.raw_prefix],
-                    get_target_file_num(),
-                    br_counter,
-                    conf.dng_raw&&conf.raw_dng_ext ? ".DNG" : img_exts[conf.raw_ext]);
-        } else {
-            sprintf(fn+strlen(fn),
-                    RAW_TARGET_FILENAME,
-                    img_prefixes[conf.raw_prefix],
-                    get_target_file_num(),
-                    conf.dng_raw&&conf.raw_dng_ext ? ".DNG" : img_exts[conf.raw_ext]);
+        int timer=get_tick_count();
+        if (conf.dng_raw)
+        {
+            ret = libdng->write_dng(rawadr, altrawadr);
         }
-        fd = open(fn, O_WRONLY|O_CREAT, 0777);
-        if (fd>=0) {
-            timer=get_tick_count();
-            if (conf.dng_raw)
-            {
-                libdng->write_dng(fd, rawadr, altrawadr, CAM_UNCACHED_BIT );
-            }
-            else 
-            {
+        else 
+        {
+            fd = raw_createfile();
+            if(fd >= 0) {
                 // Write active RAW buffer
                 write(fd, (char*)(((unsigned long)rawadr)|CAM_UNCACHED_BIT), camera_sensor.raw_size);
+                ret = 1;
+                raw_closefile(fd);
             }
-            close(fd);
-            utime(fn, &t);
-            if (conf.raw_timer) {
-                timer=get_tick_count()-timer;
-                sprintf(txt, "saving time=%d", timer);
-                console_add_line(txt);
-            }
+        }
+
+        if (conf.raw_timer) {
+            char txt[30];
+            timer=get_tick_count()-timer;
+            sprintf(txt, "saving time=%d", timer);
+            console_add_line(txt);
         }
 
         finished();
-
-        ret = (fd >= 0);
     }
 
 #ifdef OPT_CURVES

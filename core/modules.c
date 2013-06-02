@@ -552,7 +552,7 @@ libdng_sym default_libdng =
     default_load_bad_pixels_list_b,
     dummy_int,                          //badpixel_list_loaded_b
     default_convert_dng_to_chdk_raw,
-    dummy_void,                         //write_dng
+    dummy_int,                         //write_dng
     default_load_dng_to_rawbuffer,
 };
 

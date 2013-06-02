@@ -200,6 +200,8 @@
             raw_prepare_develop,
             get_raw_pixel,
             patch_bad_pixel,
+            raw_createfile,
+            raw_closefile,
 
             kbd_get_autoclicked_key,
             kbd_is_key_pressed,
@@ -385,4 +387,8 @@
             ptp_script_write_msg,
             ptp_script_read_msg,
             ptp_script_write_error_msg,
+
+            CreateTask,
+            ExitTask,
+
 }
