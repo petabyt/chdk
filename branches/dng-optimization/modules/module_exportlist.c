@@ -391,4 +391,6 @@
             CreateTask,
             ExitTask,
 
+            &dng_stats,
+            &dng_conf,
 }

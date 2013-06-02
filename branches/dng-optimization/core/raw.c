@@ -9,6 +9,7 @@
 #include "shot_histogram.h"
 #include "gui_lang.h"
 #include "gui_mbox.h"
+#include "dng_test.h"
 
 //-------------------------------------------------------------------
 #define RAW_TARGET_DIRECTORY    "A/DCIM/%03dCANON"
@@ -71,6 +72,7 @@ int raw_createfile()
 {
     int fd;
     char dir[32];
+    dng_stats.finit_start = get_tick_count();
 
     raw_create_time = time(NULL);
 
@@ -99,6 +101,7 @@ int raw_createfile()
     }
     fd = open(fn, O_WRONLY|O_CREAT, 0777);
 
+    dng_stats.finit_end = get_tick_count();
     return fd;
 }
 
@@ -110,12 +113,14 @@ void raw_closefile(int fd)
     if(fd < 0) {
         return;
     }
+    dng_stats.close_start = get_tick_count();
 
     struct utimbuf t;
     t.actime = t.modtime = raw_create_time;
     close(fd);
     utime(fn, &t);
 
+    dng_stats.close_end = get_tick_count();
 }
 
 // Set in raw_savefile and used in get_raw_pixel & set_raw_pixel (for performance)
@@ -190,6 +195,8 @@ int raw_savefile()
     int ret = 0;
     if (conf.save_raw && is_raw_enabled())
     {
+        memset(&dng_stats,0,sizeof(dng_stats));
+
         started();
         int timer=get_tick_count();
         if (conf.dng_raw)
