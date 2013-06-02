@@ -247,6 +247,7 @@ NHSTUB(strtolx                                ,0xff836ffc) //109
    DEF(task_InitFileModules                   ,0xff88a668) //110
    DEF(task_MovieRecord                       ,0xff9632f4) //110
    DEF(task_PhySw                             ,0xff82e97c) //110
+   DEF(task_TouchPanel                        ,0xff859214) //110
 NHSTUB(time                                   ,0x003fb794) //  6
 NHSTUB(vsprintf                               ,0xff81acc8) //115
 //NHSTUB(write                                ,0xff83152c) //101
