@@ -15,16 +15,13 @@
 #include "math.h"
 #include "cache.h"
 #include "task.h"
+#include "cachebit.h"
 
 #include "dng.h"
 #include "module_def.h"
 
 // Set to 1 when module loaded and active
 static int running = 0;
-
-// TODO this should be in a header somewhere
-#define UNCACHE_ADR(ptr) ((void *)((unsigned)(ptr)|camera_info.cam_uncached_bit))
-#define IS_CACHED_ADR(ptr) (!((unsigned)(ptr)&camera_info.cam_uncached_bit))
 
 //thumbnail
 #define DNG_TH_WIDTH 128
@@ -1088,7 +1085,7 @@ void reverse_bytes_task() {
         }
         // if reverse was done on cached raw, 
         // clean cache so canon FW doesn't see reversed data in uncached
-        if(IS_CACHED_ADR(rb_state.dst)) {
+        if(ADR_IS_CACHED(rb_state.dst)) {
             dcache_clean_all();
         }
     }
@@ -1149,7 +1146,7 @@ int write_dng(char* rawadr, char* altrawadr)
 
     // ensure thumbnail is written to uncached
     dcache_clean_all();
-    write(fd, UNCACHE_ADR(dng_header_buf), dng_header_buf_size + DNG_TH_BYTES);
+    write(fd, ADR_TO_UNCACHED(dng_header_buf), dng_header_buf_size + DNG_TH_BYTES);
     free_dng_header();
 
     while(rb_state.written < rb_state.end) {
@@ -1169,7 +1166,7 @@ int write_dng(char* rawadr, char* altrawadr)
         if(conf.raw_cache) {
             dcache_clean_all();
         }
-        write(fd,UNCACHE_ADR(rb_state.written),size);
+        write(fd,ADR_TO_UNCACHED(rb_state.written),size);
         rb_state.written += size;
     }
 

@@ -9,6 +9,7 @@
 #include "shot_histogram.h"
 #include "gui_lang.h"
 #include "gui_mbox.h"
+#include "cachebit.h"
 
 //-------------------------------------------------------------------
 #define RAW_TARGET_DIRECTORY    "A/DCIM/%03dCANON"
@@ -48,13 +49,15 @@ void patch_bad_pixels(void);
 //-------------------------------------------------------------------
 
 char* get_raw_image_addr(void) {
-    if (!conf.raw_cache) return hook_raw_image_addr();
-    else return (char*) ((int)hook_raw_image_addr()&~CAM_UNCACHED_BIT);
+    char *r=hook_raw_image_addr();
+    if (!conf.raw_cache) return r;
+    else return ADR_TO_CACHED(r);
 }
 
 char* get_alt_raw_image_addr(void) {    // return inactive buffer for cameras with multiple RAW buffers (otherwise return active buffer)
-    if (!conf.raw_cache) return hook_alt_raw_image_addr();
-    else return (char*) ((int)hook_alt_raw_image_addr()&~CAM_UNCACHED_BIT);
+    char *r=hook_alt_raw_image_addr();
+    if (!conf.raw_cache) return r;
+    else return ADR_TO_CACHED(r);
 }
 //-------------------------------------------------------------------
 
@@ -201,7 +204,7 @@ int raw_savefile()
             fd = raw_createfile();
             if(fd >= 0) {
                 // Write active RAW buffer
-                write(fd, (char*)(((unsigned long)rawadr)|CAM_UNCACHED_BIT), camera_sensor.raw_size);
+                write(fd, ADR_TO_UNCACHED(rawadr), camera_sensor.raw_size);
                 ret = 1;
                 raw_closefile(fd);
             }
