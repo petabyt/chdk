@@ -90,6 +90,7 @@ DEF(active_viewport_buffer                  ,0x0000437c) // Found @0xff8ceabc
 DEF(ctypes, 0xffad9112)
 
 // For capt_seq.c
+DEF(_nrflag,0x5c98) // Found @ ff93266c (0x5ca0) & ff93268c (-0x08)
 //static long *nrflag = (long*)(0x5ca0-0x08);  // Found @ ff93266c & ff932688
 
 // Stubs below matched 100%.

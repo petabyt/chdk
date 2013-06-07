@@ -81,6 +81,7 @@ DEF(zoom_busy                               ,0x0000d5a8) // Found @0xffd070e0
 DEF(ctypes, 0xffe4dc3a)
 
 // For capt_seq.c
+DEF(_nrflag,0xd784) // Found @ ffd0eca0 (0xd784)
 //static long *nrflag = (long*)(0xd784);       // Found @ ffd0eca0
 
 // Stubs below matched 100%.

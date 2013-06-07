@@ -60,6 +60,13 @@ void hook_raw_save_complete()
     raw_save_stage = RAWDATA_SAVED;
 }
 
+#if defined(USE_STUBS_NRFLAG)
+extern long _nrflag;
+#define set_nrflag(n)   _nrflag = n
+#else
+#define set_nrflag(n)   *nrflag = n
+#endif
+
 void __attribute__((naked,noinline)) capt_seq_hook_set_nr()
 {
  asm volatile("STMFD   SP!, {R0-R12,LR}\n");
@@ -67,14 +74,14 @@ void __attribute__((naked,noinline)) capt_seq_hook_set_nr()
     case NOISE_REDUCTION_AUTO_CANON:
         // leave it alone
 #if defined(NR_AUTO)			// If value defined store it (e.g. for G12 & SX30 need to reset back to 0 to enable auto)
-        *nrflag = NR_AUTO;
+        set_nrflag(NR_AUTO);
 #endif
         break;
     case NOISE_REDUCTION_OFF:
-        *nrflag = NR_OFF;
+        set_nrflag(NR_OFF);
         break;
     case NOISE_REDUCTION_ON:
-        *nrflag = NR_ON;
+        set_nrflag(NR_ON);
         break;
     };
 
