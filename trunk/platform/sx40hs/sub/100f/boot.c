@@ -304,7 +304,7 @@ asm volatile (
 void __attribute__((naked,noinline)) taskcreate_Startup_my() {
 asm volatile (
 "    STMFD   SP!, {R4,LR} \n"
-"    BL      sub_FF024B10 \n"
+//"    BL      _sub_FF024B10 \n"  // --> Nullsub call removed.
 "    BL      sub_FF00FDB8_my \n"  // --> Patched. Old value = 0xFF00FDB8.
 "    MOV     R0, #0 \n"
 "    LDMFD   SP!, {R4,PC} \n"
@@ -367,7 +367,7 @@ asm volatile (
 "    MOV     R1, R5 \n"
 "    MOV     R0, R4 \n"
 //"    BL      _sub_FF024B18 \n"  // See begin of sub_FF000364_my()
-"    BL      sub_FF024B14 \n"
+//"    BL      _sub_FF024B14 \n"  // --> Nullsub call removed.
 "    BL      sub_FF02B6BC \n"
 "    LDR     R1, =0x5CE000 \n"
 "    MOV     R0, #0 \n"
@@ -389,7 +389,7 @@ asm volatile (
 "    BL      sub_FF025C28 \n"
 "    BL      sub_FF023110 \n"
 "    BL      sub_FF0234FC \n"
-"    BL      sub_FF02D7DC \n"
+//"    BL      _sub_FF02D7DC \n"  // --> Nullsub call removed.
 "    BL      sub_FF02D9C8 \n"
 "    BL      sub_FF023CE4 \n"
 "    BL      sub_FF022BAC \n"
