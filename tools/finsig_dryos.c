@@ -3826,6 +3826,7 @@ void find_other_vals(firmware *fw)
                 {
                     ofst1 = fw->buf[k2] & 0x00000FFF;
                     bprintf("\n// For capt_seq.c\n");
+                    bprintf("DEF(_nrflag,0x%04x) // Found @ %08x (0x%04x) & %08x (+0x%02x)\n",ofst2+ofst1,idx2adr(fw,k3),ofst2,idx2adr(fw,k2),ofst1);
                     bprintf("//static long *nrflag = (long*)(0x%04x+0x%02x);  // Found @ %08x & %08x\n",ofst2,ofst1,idx2adr(fw,k3),idx2adr(fw,k2));
                     bprintf("//#define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto\n");
                 }
@@ -3880,11 +3881,20 @@ void find_other_vals(firmware *fw)
                                 ofst2 = LDR2val(fw,k3);
                                 bprintf("\n// For capt_seq.c\n");
                                 if (ofst1 == 0)
+                                {
+                                    bprintf("DEF(_nrflag,0x%04x) // Found @ %08x (0x%04x)\n",ofst2,idx2adr(fw,k3),ofst2);
                                     bprintf("//static long *nrflag = (long*)(0x%04x);       // Found @ %08x\n",ofst2,idx2adr(fw,k3));
+                                }
                                 else if (ofst1 < 0)
+                                {
+                                    bprintf("DEF(_nrflag,0x%04x) // Found @ %08x (0x%04x) & %08x (-0x%02x)\n",ofst2+ofst1,idx2adr(fw,k3),ofst2,idx2adr(fw,k2),-ofst1);
                                     bprintf("//static long *nrflag = (long*)(0x%04x-0x%02x);  // Found @ %08x & %08x\n",ofst2,-ofst1,idx2adr(fw,k3),idx2adr(fw,k4));
+                                }
                                 else
+                                {
+                                    bprintf("DEF(_nrflag,0x%04x) // Found @ %08x (0x%04x) & %08x (+0x%02x)\n",ofst2+ofst1,idx2adr(fw,k3),ofst2,idx2adr(fw,k2),ofst1);
                                     bprintf("//static long *nrflag = (long*)(0x%04x+0x%02x);  // Found @ %08x & %08x\n",ofst2,ofst1,idx2adr(fw,k3),idx2adr(fw,k4));
+                                }
                                 found = 1;
                                 break;
                             }

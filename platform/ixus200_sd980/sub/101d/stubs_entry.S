@@ -113,6 +113,7 @@ DEF(recreview_hold                          ,0x00003818) // Found @0xff89a7c8
 DEF(ctypes, 0xffb3ecfa)
 
 // For capt_seq.c
+DEF(_nrflag,0x6cb0) // Found @ ff9500c0 (0x6cb8) & ff9500e0 (-0x08)
 //static long *nrflag = (long*)(0x6cb8-0x08);  // Found @ ff9500c0 & ff9500dc
 
 // Stubs below matched 100%.

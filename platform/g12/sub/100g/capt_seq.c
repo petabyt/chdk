@@ -5,8 +5,8 @@
 #include "platform.h"
 #include "core.h"
 
-static long *nrflag = (long*)(0x76fc+0x8); // see stubs_entry.S
-#define NR_AUTO (0)							// have to explictly reset value back to 0 to enable auto
+#define USE_STUBS_NRFLAG 1  // see stubs_entry.S
+#define NR_AUTO (0)         // have to explictly reset value back to 0 to enable auto
 
 #include "../../../generic/capt_seq.c"
 

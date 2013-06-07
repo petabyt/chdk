@@ -95,6 +95,7 @@ DEF(active_bitmap_buffer                    ,0x0000a7f4) // Found @0xff2124f4
 DEF(ctypes, 0xff49d22c)
 
 // For capt_seq.c
+DEF(_nrflag,0xcd4c) // Found @ ff2bb2fc (0xcd4c) & ff2bb338 (+0x00)
 //static long *nrflag = (long*)(0xcd4c+0x00);  // Found @ ff2bb2fc & ff2bb338
 //#define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto
 

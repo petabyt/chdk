@@ -95,6 +95,7 @@ DEF(active_viewport_buffer                  ,0x00002150) // Found @0xff044ee8
 DEF(ctypes, 0xff4639ce)
 
 // For capt_seq.c
+DEF(_nrflag,0xceb0) // Found @ ff2a7988 (0xceac) & ff2a79c4 (+0x04)
 //static long *nrflag = (long*)(0xceac+0x04);  // Found @ ff2a7988 & ff2a79c4
 //#define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto
 

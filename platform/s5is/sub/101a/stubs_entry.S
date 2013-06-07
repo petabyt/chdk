@@ -86,6 +86,7 @@ DEF(focus_busy                              ,0x0000b27c) // Found @0xff9507e0
 DEF(ctypes, 0xffa9644e)
 
 // For capt_seq.c
+DEF(_nrflag,0xb704) // Found @ ff9610bc (0xb704)
 //static long *nrflag = (long*)(0xb704);       // Found @ ff9610bc
 
 // Stubs below matched 100%.
