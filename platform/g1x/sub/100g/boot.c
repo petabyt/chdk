@@ -306,7 +306,7 @@ asm volatile (
 void __attribute__((naked,noinline)) taskcreate_Startup_my() {
 asm volatile (
 "    STMFD   SP!, {R4,LR} \n"
-"    BL      sub_FF023984 \n"
+//"    BL      _sub_FF023984 \n"  // --> Nullsub call removed.
 "    BL      sub_FF00FDA4_my \n"  // --> Patched. Old value = 0xFF00FDA4.
 "    MOV     R0, #0 \n"
 "    LDMFD   SP!, {R4,PC} \n"
@@ -363,7 +363,7 @@ asm volatile (
 "    MOV     R1, R5 \n"
 "    MOV     R0, R4 \n"
 //"    BL      _sub_FF02398C \n"  // See begin of sub_FF000364_my()
-"    BL      sub_FF023988 \n"
+//"    BL      _sub_FF023988 \n"  // --> Nullsub call removed.
 "    BL      sub_FF02A470 \n"
 "    LDR     R1, =0x5CE000 \n"
 "    MOV     R0, #0 \n"
@@ -384,7 +384,7 @@ asm volatile (
 "    BL      sub_FF0065E8 \n"
 "    BL      sub_FF024A9C \n"
 "    BL      sub_FF022B80 \n"
-"    BL      sub_FF02C57C \n"
+//"    BL      _sub_FF02C57C \n"  // --> Nullsub call removed.
 "    BL      sub_FF02C768 \n"
 //"    BL      _sub_FF02C610 \n"  // start diskboot.bin
 "    BL      sub_FF02C920 \n"

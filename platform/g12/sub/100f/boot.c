@@ -283,7 +283,7 @@ asm volatile (
 void __attribute__((naked,noinline)) taskcreate_Startup_my() {
 asm volatile (
 "    STMFD   SP!, {R3,LR} \n"
-"    BL      sub_FF83473C \n"
+//"    BL      _sub_FF83473C \n"  // --> Nullsub call removed.
 "    BL      sub_FF83C81C \n"
 "    CMP     R0, #0 \n"
 "    BNE     loc_FF81FB98 \n"
@@ -304,7 +304,7 @@ asm volatile (
 
 "loc_FF81FB98:\n"
 //"    BL      _sub_FF834744 \n"  // See begin of sub_FF810354_my()
-"    BL      sub_FF834740 \n"
+//"    BL      _sub_FF834740 \n"  // --> Nullsub call removed.
 "    BL      sub_FF83AA2C \n"
 "    MOV     R0, #0x46 \n"
 "    BL      _SleepTask \n"
@@ -327,7 +327,7 @@ asm volatile (
 "    BL      sub_FF816594 \n"
 "    BL      sub_FF835898 \n"
 "    BL      sub_FF8339AC \n"
-"    BL      sub_FF83C860 \n"
+//"    BL      _sub_FF83C860 \n"  // --> Nullsub call removed.
 "    BL      sub_FF83CA4C \n"
 //"    BL      _sub_FF83C8F4 \n"  // start diskboot.bin
 "    BL      sub_FF83CBF8 \n"
