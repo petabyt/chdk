@@ -7,7 +7,7 @@
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 #define PTP_CHDK_VERSION_MAJOR 2  // increase only with backwards incompatible changes (and reset minor)
-#define PTP_CHDK_VERSION_MINOR 4  // increase with extensions of functionality
+#define PTP_CHDK_VERSION_MINOR 106  // increase with extensions of functionality
 
 /*
 protocol version history
@@ -19,6 +19,7 @@ protocol version history
 2.2 - live view (work in progress)
 2.3 - live view - released in 1.1
 2.4 - live view protocol 2.1
+2.1xx - TEMP remote capture development test
 */
 
 #define PTP_OC_CHDK 0x9999
@@ -74,6 +75,22 @@ enum ptp_chdk_command {
                             //  return data is protocol information, frame buffer descriptions and selected display data
                             //  Currently a data phase is always returned. Future versions may define other behavior 
                             //  for values in currently unused parameters.
+  // Direct image capture over USB. - 
+  // Under development, subject to change, documentation incomplete
+  // Use lua get_remotecap_support for available data types, lua init_remotecap for setup
+  PTP_CHDK_RemoteCaptureIsReady, // Check if data is available
+                                 // return param1 is status 
+                                 //  0 = not ready
+                                 //  0x10000000 = error
+                                 //  otherwise bitmask of PTP_CHDK_CAPTURE_* datatypes
+  PTP_CHDK_RemoteCaptureGetData  // retrieve data
+                                 // param2 is data to get
+                                 //  0 = camera filename
+                                 //  otherwise bit indicating data type to get
+                                 // return param1 is length
+                                 // return param2 more chunks available?
+                                 //  0 = no more chunks of selected format
+                                 // return param3 seek required to pos (-1 = no seek)
 };
 
 // data types as used by ReadScriptMessage
@@ -104,6 +121,15 @@ enum ptp_chdk_script_data_type {
 #define PTP_CHDK_SCRIPT_STATUS_MSG   0x2 // messages waiting
 // bit flags for scripting support
 #define PTP_CHDK_SCRIPT_SUPPORT_LUA  0x1
+
+// bit flags for remote capture
+// used to select and also to indicate available data in PTP_CHDK_RemoteCaptureIsReady
+#define PTP_CHDK_CAPTURE_JPG    0x1
+#define PTP_CHDK_CAPTURE_RAW    0x2
+#define PTP_CHDK_CAPTURE_YUV    0x4 // not implemented yet
+
+// status from PTP_CHDK_RemoteCaptureIsReady if capture not enabled
+#define PTP_CHDK_CAPTURE_ERR    0x10000000
 
 // message types
 enum ptp_chdk_script_msg_type {

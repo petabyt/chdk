@@ -11,6 +11,7 @@
 #include "meminfo.h"
 #include "modules.h"
 
+#include "remotecap_core.h"
 static int buf_size=0;
 
 // process id for scripts, increments before each attempt to run script
@@ -640,7 +641,55 @@ static int handle_ptp(
             }
         }
         break;
+//#ifdef CAM_CHDK_PTP_REMOTESHOOT
+    case PTP_CHDK_RemoteCaptureIsReady:
+        ptp.num_param = 1;
+        if ( remotecap_get_target() ) {
+            ptp.param1 = remotecap_get_available_data_type();
+        }
+        else {
+            ptp.param1 = PTP_CHDK_CAPTURE_ERR; //error
+        }
+        break;
+    case PTP_CHDK_RemoteCaptureGetData:
+        if ( !remotecap_get_target()) {
+            param2=-1; //choose error path
+        }
+        unsigned int rcgd_size;
+        int rcgd_notlast;
+        char *rcgd_addr;
+        int rcgd_pos;
 
+        rcgd_notlast = remotecap_get_data_chunk(param2, &rcgd_addr, &rcgd_size, &rcgd_pos); // returns "not last chunk"
+        ptp.num_param = 4;
+        ptp.param3 = rcgd_pos; //client needs to seek to this file position before writing the chunk (-1 = ignore)
+        ptp.param4 = (unsigned int)rcgd_addr; //return mem address as additional info
+        if ( (rcgd_addr==0) || (rcgd_size==0) ) {
+            // send dummy data, otherwise error hoses connection
+            send_ptp_data(data,"\0",1);
+            ptp.param1 = 0; //size
+            ptp.param2 = 0; //0 = no more chunks
+            if(rcgd_addr==0) { // null address means error, otherwise just last chunk
+                ptp.code = PTP_RC_GeneralError;
+                remotecap_set_target(0,0,0);
+            }
+        }
+        else {
+            send_ptp_data(data,rcgd_addr,rcgd_size);
+            ptp.param1 = rcgd_size; //size
+            ptp.param2 = rcgd_notlast; // are there chunks left?
+            if (!rcgd_notlast) {
+                remotecap_data_type_done(param2); //data type done
+            }
+            else if (rcgd_notlast == 2) { //jpeg, current queue done
+                remotecap_free_hooks(1); //continue with the next hook
+            }
+        }
+        if ( !rcgd_notlast && !remotecap_get_available_data_type() && (rcgd_addr!=0) ) { //no more chunks of anything the current hook provides
+            remotecap_free_hooks(0);
+        }
+        break;
+//#endif //CAM_CHDK_PTP_REMOTESHOOT
     default:
       ptp.code = PTP_RC_ParameterNotSupported;
       break;

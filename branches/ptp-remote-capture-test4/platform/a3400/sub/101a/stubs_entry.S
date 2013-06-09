@@ -245,6 +245,7 @@ NHSTUB(strtol                                 ,0xff8371f8) //101
 NHSTUB(strtolx                                ,0xff836ffc) //109
    DEF(task_CaptSeq                           ,0xff872424) //110
    DEF(task_ExpDrv                            ,0xff8b1a4c) //110
+   DEF(task_FileWrite                         ,0xffa68cd8) //110
    DEF(task_InitFileModules                   ,0xff88a668) //110
    DEF(task_MovieRecord                       ,0xff963268) //110
    DEF(task_PhySw                             ,0xff82e97c) //110
