@@ -1,16 +1,11 @@
 #include "stdlib.h" // for NULL
 
-#ifdef CAM_CHDK_PTP_REMOTESHOOT
 #include "remotecap_core.h"
 static int ignore_current_write=0; //used by the platform routine to check whether to write the current file
 #ifdef CAM_DRYOS
 volatile int current_write_ignored=0; //needed to prevent nasty surprises with the current override code
 #endif //CAM_DRYOS
-#endif //CAM_CHDK_PTP_REMOTESHOOT
 
-
-#ifdef CAM_CHDK_PTP_REMOTESHOOT
-#ifdef CAM_HAS_FILEWRITETASK_HOOK
 /*
 handle camera specific MAX_CHUNKS_FOR_JPEG, camp_ptp_data_chunk
 get address and size of chunk N
@@ -136,11 +131,6 @@ void remotecap_jpeg_chunks_done() {
 }
 #endif //CAM_EXTENDED_FILEWRITETASK
 
-#endif //CAM_HAS_FILEWRITETASK_HOOK
-
-#endif //CAM_CHDK_PTP_REMOTESHOOT
-
-#ifdef CAM_HAS_FILEWRITETASK_HOOK
 // wrapper functions for use in filewritetask
 #ifdef CAM_DRYOS
 static long fwt_bytes_written = 0; // need to track this independently of ptp
@@ -190,7 +180,7 @@ int fwt_close (int fd) {
 //  imagesavecomplete=1;
     return 0;
 }
-#else
+#else // ifdef CAM_DRYOS
 /*
  * helper function for VxWorks camera
  * to be used when imagesavecomplete handling is needed
@@ -200,6 +190,3 @@ int fwt_after_close (int param) {
     return param;
 }
 #endif //CAM_DRYOS
-#endif //CAM_HAS_FILEWRITETASK_HOOK
-
-
