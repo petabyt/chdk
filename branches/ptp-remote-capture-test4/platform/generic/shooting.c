@@ -96,6 +96,10 @@ void __attribute__((naked,noinline)) shooting_expo_iso_override(void)
     asm volatile("LDMFD   SP!, {R0-R12,PC}\n");
 }
 
+// this can be used to create event procedure "hooks" at certain points in the camera firmware
+// as described in http://chdk.setepontos.com/index.php/topic,5690.0.html
+// not currently used
+#if 0
 //extern unsigned _ExecuteEventProcedure(const char *name,...);
 extern int overridden_PT_CompleteFileWrite();
 
@@ -128,3 +132,4 @@ int register_pt_hooks() {
     //_LogPrintf(0x120,"pt hook(s) registered");
     return 0;
 }
+#endif

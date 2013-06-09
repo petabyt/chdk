@@ -15,16 +15,7 @@
 #endif
 
 static long raw_save_stage;
-static int imagesavecomplete=1;
-#ifdef CAM_HAS_COMPLETEFILEWRITE_REPLACEMENT
-/*
- * should be defined in capt_seq.c for cams that implement fwt_after_close()
- * only makes sense for VxWorks cams (and DryOS < r23)
- */
-static int no_pt_completefilewrite=0;
-#else
-static int no_pt_completefilewrite=1;
-#endif //CAM_HAS_COMPLETEFILEWRITE_REPLACEMENT
+//static int imagesavecomplete=1;
 
 #ifdef CAM_CHDK_PTP_REMOTESHOOT
 #include "remotecap_core.h"
@@ -38,7 +29,7 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
 {
  asm volatile("STMFD   SP!, {R0-R12,LR}\n");
 
-    imagesavecomplete=no_pt_completefilewrite; // TODO is there a better place to do this?
+//    imagesavecomplete=0 // TODO is there a better place to do this?
 
 #ifdef PAUSE_FOR_FILE_COUNTER
     // Some cameras need a slight delay for the file counter to be updated correctly
@@ -284,9 +275,7 @@ int fwt_lseek(int fd, long offset, int whence) {
 int fwt_close (int fd) {
     if (!current_write_ignored) {
         int ret = _Close(fd);
-        if (no_pt_completefilewrite) {
-            imagesavecomplete=1;
-        }
+        //imagesavecomplete=1;
         fwt_bytes_written = 0;
         return ret;
     }
@@ -301,9 +290,7 @@ int fwt_close (int fd) {
     current_write_ignored=0;
     fwt_bytes_written = 0;
 #endif // CAM_EXTENDED_FILEWRITETASK
-    if (no_pt_completefilewrite) {
-        imagesavecomplete=1;
-    }
+//  imagesavecomplete=1;
     return 0;
 }
 #else
@@ -312,24 +299,9 @@ int fwt_close (int fd) {
  * to be used when imagesavecomplete handling is needed
  */
 int fwt_after_close (int param) {
-    imagesavecomplete=1;
+//    imagesavecomplete=1;
     return param;
 }
 #endif //CAM_DRYOS
 #endif //CAM_HAS_FILEWRITETASK_HOOK
 
-void supported_pt_completefilewrite() {
-    no_pt_completefilewrite=0;
-}
-
-void image_save_completed() {
-/* 
- * only called from the overridden PT_CompleteFileWrite eventproc
- */
-    imagesavecomplete = 1;
-    ignore_current_write = 0;
-}
-
-int is_image_save_complete() {
-    return imagesavecomplete;
-}

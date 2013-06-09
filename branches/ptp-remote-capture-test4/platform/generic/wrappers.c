@@ -1733,9 +1733,3 @@ int _rand(void) {
 };
 #endif
 
-// experimental
-int overridden_PT_CompleteFileWrite() {
-    //_LogPrintf(0x120,"my_PT_CompleteFileWrite");
-    image_save_completed();
-    return 0;
-}
