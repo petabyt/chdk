@@ -42,6 +42,10 @@ DEF(some_flag_for_af_scan                   ,0x00006430) // Found @0xff92474c
 DEF(zoom_busy                               ,0x00005e28) // Found @0xff91d798
 DEF(focus_busy                              ,0x00005d20) // Found @0xff918608
 DEF(recreview_hold                          ,0x00003640) // Found @0xff881428
+// Palette colour tables  found @ 0xffb41120
+//DEF(active_palette_buffer                   ,0x000084c4) // Found @0xff9b26f4, ** != ** stubs_min = 0x000084cc (0x84cc)
+//DEF(palette_buffer_ptr                      ,0x000084d4) // Found @0xff9b23b8, ** != ** stubs_min = 0x000084dc (0x84dc)
+// Offset from start of palette_buffer to color data = 12 (Found @0xff9b1364)
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x403f1000; }             // Found @0xff83dc44

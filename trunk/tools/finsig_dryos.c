@@ -520,10 +520,22 @@ uint32_t fwval(firmware *fw, int i)
     return *fwadr(fw,i);
 }
 
+int fwRd(firmware *fw, int i)
+{
+    // Destination register - Rd
+    return (*fwadr(fw,i) & 0x0000F000) >> 12;
+}
+
+int fwRn(firmware *fw, int i)
+{
+    // Source register - Rn
+    return (*fwadr(fw,i) & 0x000F0000) >> 16;
+}
+
 void addBufRange(firmware *fw, int o, int l)
 {
     BufRange *n = malloc(sizeof(BufRange));
-    n->p = &fw->buf[o];
+    n->p = fw->buf + o;
     n->off = o;
     n->len = l;
     n->next = 0;
@@ -545,13 +557,18 @@ int find_str(firmware *fw, char *str)
 	uint32_t *p;
 	int j;
 
-    for (p = fw->buf, j = 0; j < fw->size - nlen/4; j++, p++)
+    BufRange *br = fw->br;
+    while (br)
     {
-        if ((nm0 == *p) && (memcmp(p+1,str+4,nlen-4) == 0))
+        for (p = br->p, j = 0; j < br->len - nlen/4; j++, p++)
         {
-			return j;
-		}
-	}
+            if ((nm0 == *p) && (memcmp(p+1,str+4,nlen-4) == 0))
+            {
+			    return j+br->off;
+		    }
+	    }
+        br = br->next;
+    }
 	
 	return -1;
 }
@@ -732,6 +749,11 @@ int isLDR_PC(firmware *fw, int offset)
 	return ((fwval(fw,offset) & 0xFE1F0000) == 0xE41F0000);
 }
 
+int isLDR_SP(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xFFFF0000) == 0xE59D0000); // LDR Rx,[SP,x]
+}
+
 int isLDR_PC_cond(firmware *fw, int offset)
 {
 	return ((fwval(fw,offset) & 0x0E1F0000) == 0x041F0000);
@@ -752,14 +774,44 @@ int isSTR_PC(firmware *fw, int offset)
 	return ((fwval(fw,offset) & 0xFE1F0000) == 0xE40F0000);
 }
 
+int isLDMFD(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xFFFF0000) == 0xE8BD0000);
+}
+
 int isLDR(firmware *fw, int offset)
 {
 	return ((fwval(fw,offset) & 0xFE100000) == 0xE4100000);
 }
 
+int isLDR_cond(firmware *fw, int offset)
+{
+	return ((fwval(fw,offset) & 0x0E100000) == 0x04100000);
+}
+
+int isADR(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xFE000000) == 0xE2000000); // ADR or MOV
+}
+
+int isSTMFD(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xFFFF0000) == 0xE92D0000); // STMFD SP!, 
+}
+
+int isSTMFD_LR(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xFFFFF000) == 0xE92D4000); // STMFD SP!, {..,LR}
+}
+
 int isSTR(firmware *fw, int offset)
 {
 	return ((fwval(fw,offset) & 0xFE100000) == 0xE4000000);
+}
+
+int isBX(firmware *fw, int offset)
+{
+	return ((fwval(fw,offset) & 0xFFFFFFF0) == 0xE12FFF10);	// BX
 }
 
 int isBL(firmware *fw, int offset)
@@ -770,6 +822,32 @@ int isBL(firmware *fw, int offset)
 int isB(firmware *fw, int offset)
 {
 	return ((fwval(fw,offset) & 0xFF000000) == 0xEA000000);	// B
+}
+
+int isBorBL(firmware *fw, int offset)
+{
+	return ((fwval(fw,offset) & 0xFE000000) == 0xEA000000);	// B or BL
+}
+
+int isCMP(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xFFF00000) == 0xE3500000); // CMP
+}
+
+int isMOV(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xFFF00000) == 0xE1A00000); // MOV
+}
+
+int find_inst(firmware *fw, int (*inst)(firmware*,int), int idx, int len)
+{
+    int k;
+    for (k = idx; k < idx + len; k++)
+    {
+        if (inst(fw, k))
+            return k;
+    }
+    return -1;
 }
 
 void load_firmware(firmware *fw, char *filename, char *base_addr, char *alt_base_addr)
@@ -800,6 +878,9 @@ void load_firmware(firmware *fw, char *filename, char *base_addr, char *alt_base
     fclose(f);
 	
     memset(&fw->buf[fw->size],0xff,32*4);
+	
+    // Find all the valid ranges for checking (skips over large blocks of 0xFFFFFFFF)
+    findRanges(fw);
 
 	bprintf("// Camera info:\n");
 	
@@ -1627,7 +1708,7 @@ int dryos_offset(firmware *fw, string_sig *sig)
 
 //------------------------------------------------------------------------------------------------------------
 
-// Loop through firmware looking for instances if a sig string
+// Loop through firmware looking for instances of a sig string
 // For each one found call the check_match function to see if it matches the sig
 // Return 1 0 match found, else return 0
 int fw_string_process(firmware *fw, string_sig *sig, int k, int (*check_match)(firmware *fw, string_sig *sig, int k, uint32_t *p, int j), int inc_eos)
@@ -1647,6 +1728,46 @@ int fw_string_process(firmware *fw, string_sig *sig, int k, int (*check_match)(f
                 if (check_match(fw,sig,k,p,j))
                     return 1;
             }
+        }
+    }
+
+    return 0;
+}
+
+int fw_string_process_unaligned(firmware *fw, string_sig *sig, int k, int (*check_match)(firmware *fw, string_sig *sig, int k, char *p, int j))
+{
+    int nlen = strlen(sig->ev_name);
+    char *p;
+	int j;
+    BufRange *br;
+
+	for (br = fw->br; br != 0; br = br->next)
+    {
+    	for (p = (char*)br->p, j = 0; j < br->len*4-nlen; p++, j++)
+	    {
+		    if (strcmp(p,sig->ev_name) == 0)
+            {
+                if (check_match(fw,sig,k,p,j+br->off*4))
+                    return 1;
+            }
+        }
+    }
+
+    return 0;
+}
+
+int fw_process(firmware *fw, string_sig *sig, int k, int (*check_match)(firmware *fw, string_sig *sig, int k, uint32_t *p, int j))
+{
+    uint32_t *p;
+	int j;
+    BufRange *br;
+
+	for (br = fw->br; br != 0; br = br->next)
+    {
+    	for (p = br->p, j = br->off; j < br->off+br->len; p++, j++)
+	    {
+            if (check_match(fw,sig,k,p,j))
+                return 1;
         }
     }
 
@@ -1679,35 +1800,25 @@ int match_strsig1(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 //		Function pointer	-		DCD	func
 //				...
 //		String				-	str	DCB	"func"
-int find_strsig2(firmware *fw, string_sig *sig, int k)
+int match_strsig2(firmware *fw, string_sig *sig, int k, char *p, int j)
 {
-    int nlen = strlen(sig->ev_name);
-	int j;
-	
-    char *c = (char*)(&fw->buf[0]);
-    for (j = 0; j < fw->size*4 - nlen; j++, c++)
+    uint32_t sadr = fw->base + j;        // string address
+    int j1;
+    uint32_t *p1;
+    for (p1 = fw->buf, j1 = 0; j1 < fw->size; j1++, p1++)
     {
-        if (strcmp(c,sig->ev_name) == 0)
+        if (*p1 == sadr)                // pointer to string?
         {
-            uint32_t sadr = fw->base + j;        // string address
-            int j1;
-            uint32_t *p1;
-            for (p1 = fw->buf, j1 = 0; j1 < fw->size - nlen/4; j1++, p1++)
+            uint32_t fadr = fw->buf[j1+1];      // function address (*padr)
+            if (idx_valid(fw,adr2idx(fw,fadr)))
             {
-                if (*p1 == sadr)                // pointer to string?
-                {
-                    uint32_t fadr = fw->buf[j1+1];      // function address (*padr)
-                    if (idx_valid(fw,adr2idx(fw,fadr)))
-                    {
-                        uint32_t bfadr = followBranch2(fw, fadr, sig->offset);
-						if ((sig->offset <= 1) || (bfadr != fadr))
-						{
-							//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-							fwAddMatch(fw,bfadr,32,0,k,102);
-							return 1;
-						}
-                    }
-                }
+                uint32_t bfadr = followBranch2(fw, fadr, sig->offset);
+				if ((sig->offset <= 1) || (bfadr != fadr))
+				{
+					//fprintf(stderr,"%s %08x\n",curr_name,fadr);
+					fwAddMatch(fw,bfadr,32,0,k,102);
+					return 1;
+				}
             }
         }
     }
@@ -1725,26 +1836,24 @@ int match_strsig3(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 {
 	uint32_t sadr = idx2adr(fw,j);        // string address
 	int j1;
-	uint32_t *p1;
-	for (p1 = p-3, j1 = j-3; j1 >= 0; j1--, p1--)
+	for (j1 = j-3; j1 >= 0; j1--)
 	{
-		if (((p1[1] & 0xFE0F0000) == 0xE20F0000) && // ADR ?
-			((p1[2] & 0xFE000000) == 0xEA000000))   // B or BL ?
+		if (isADR_PC(fw,j1+1) &&    // ADR ?
+			isBorBL(fw,j1+2))       // B or BL ?
 		{
 			uint32_t padr = ADR2adr(fw,j1+1);
 			if (padr == sadr)
 			{
 				int j2 = j1;
 				int found = 0;
-				if ((p1[0] & 0xFE0F0000) == 0xE20F0000) // ADR ?
+				if (isADR_PC(fw,j1)) // ADR ?
 					found = 1;
 				else
 				{
-					uint32_t *p2;
-					for (p2 = p1-2, j2 = j1-2; j2 >= 0 && j2 >= j1-4096; j2--, p2--)
+					for (j2 = j1-2; j2 >= 0 && j2 >= j1-4096; j2--)
 					{
-						if (((p2[0] & 0xFE0F0000) == 0xE20F0000) && // ADR ?
-							((p2[1] & 0xFF000000) == 0xEA000000))   // B
+						if (isADR_PC(fw,j2) &&  // ADR ?
+							isB(fw,j2+1))       // B
 						{
 							uint32_t fa = idx2adr(fw,j2+1);
 							fa = followBranch(fw,fa,1);
@@ -1782,12 +1891,11 @@ int match_strsig4(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 {
 	uint32_t sadr = idx2adr(fw,j);        // string address
 	int j1;
-	uint32_t *p1;
 	int ofst = sig->offset;
-	for (p1 = fw->buf, j1 = 0; j1 < fw->size; j1++, p1++)
+	for (j1 = 0; j1 < fw->size; j1++)
 	{
-		if (((p1[0] & 0xFFFF0000) == 0xE92D0000) && 	// STMFD
-			((p1[ofst] & 0xFE0F0000) == 0xE20F0000))   	// ADR ?
+		if (isSTMFD(fw,j1) &&       // STMFD
+			isADR_PC(fw,j1+ofst))   // ADR ?
 		{
 			uint32_t padr = ADR2adr(fw,j1+ofst);
 			if (padr == sadr)
@@ -1813,14 +1921,13 @@ int match_strsig5(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 {
 	uint32_t sadr = idx2adr(fw,j);        // string address
 	int j1;
-	uint32_t *p1;
-	for (p1 = fw->buf, j1 = 0; j1 < fw->size; j1++, p1++)
+	for (j1 = 0; j1 < fw->size; j1++)
 	{
-		if ((((p1[1] & 0xFE0F0000) == 0xE20F0000) || ((p1[1] & 0xFE1F0000) == 0xE41F0000)) && // LDR or ADR ?
-			((p1[2] & 0xFE000000) == 0xEA000000))   // B or BL ?
+		if ((isADR_PC(fw,j1+1) || isLDR_PC(fw,j1+1)) && // LDR or ADR ?
+			isBorBL(fw,j1+2))                           // B or BL ?
 		{
 			uint32_t padr;
-			if ((p1[1] & 0xFE1F0000) == 0xE41F0000) // LDR ?
+			if (isLDR_PC(fw,j1+1))                      // LDR ?
                 padr = LDR2val(fw,j1+1);
 			else
                 padr = ADR2adr(fw,j1+1);
@@ -1828,19 +1935,16 @@ int match_strsig5(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 			{
 				int j2 = j1;
 				int found = 0;
-				if ((p1[0] & 0xFE1F0000) == 0xE41F0000) // LDR ?
+				if (isLDR_PC(fw,j1))                    // LDR ?
 					found = 1;
 				else
 				{
-					uint32_t *p2;
-					for (p2 = p1-2, j2 = j1-2; j2 >= 0 && j2 >= j1-4096; j2--, p2--)
+					for (j2 = j1-2; j2 >= 0 && j2 >= j1-4096; j2--)
 					{
-						if (((p2[0] & 0xFE1F0000) == 0xE41F0000) && // LDR ?
-							((p2[1] & 0xFF000000) == 0xEA000000))   // B
+						if (isLDR_PC(fw,j2) &&  // LDR ?
+							isB(fw,j2+1))       // B
 						{
-							uint32_t fa = idx2adr(fw,j2+1);
-							fa = followBranch(fw,fa,1);
-							if (adr2idx(fw,fa) == j1+1)
+							if (idxFollowBranch(fw,j2+1,1) == j1+1)
 							{
 								found = 1;
 								break;
@@ -1876,10 +1980,9 @@ int match_strsig5(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 int match_strsig6(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 {
 	int j1;
-	uint32_t *p1;
-	for (p1 = p-1, j1 = j-1; j1 >= 0; j1--, p1--)
+	for (j1 = j-1; j1 >= 0; j1--)
 	{
-		if ((p1[0] & 0xFFFFF000) == 0xe92d4000)    // STMFD SP!, {..,LR}
+		if (isSTMFD_LR(fw,j1))  // STMFD SP!, {..,LR}
 		{
 			uint32_t fadr = idx2adr(fw,j1);
 			//fprintf(stderr,"%s %08x\n",curr_name,fadr);
@@ -1903,14 +2006,13 @@ int match_strsig7(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 {
 	uint32_t sadr = idx2adr(fw,j);        // string address
 	int j1;
-	uint32_t *p1;
-	for (p1 = p-5, j1 = j-5; j1 >= 0; j1--, p1--)
+	for (j1 = j-5; j1 >= 0; j1--)
 	{
-		if (((p1[0] & 0xFE000000) == 0xE2000000) && // ADR or MOV
-			((p1[1] & 0xFE000000) == 0xE2000000) && // ADR or MOV
-			((p1[2] & 0xFE000000) == 0xE2000000) && // ADR or MOV
-			((p1[3] & 0xFE000000) == 0xE2000000) && // ADR or MOV
-			((p1[4] & 0xFE000000) == 0xEA000000))   // B or BL ?
+		if (isADR(fw,j1)   &&   // ADR or MOV
+			isADR(fw,j1+1) &&   // ADR or MOV
+			isADR(fw,j1+2) &&   // ADR or MOV
+			isADR(fw,j1+3) &&   // ADR or MOV
+			isBorBL(fw,j1+4))   // B or BL ?
 		{
 			uint32_t padr;
 			padr = ADR2adr(fw,j1+0);
@@ -1920,10 +2022,10 @@ int match_strsig7(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 			if (padr == sadr)
 			{
 				uint32_t fadr = 0;
-				if ((p1[0] & 0xFE0FF000) == 0xE20F3000)		 fadr = ADR2adr(fw,j1);		// R3 ?
-				else if ((p1[1] & 0xFE0FF000) == 0xE20F3000) fadr = ADR2adr(fw,j1+1);	// R3 ?
-				else if ((p1[2] & 0xFE0FF000) == 0xE20F3000) fadr = ADR2adr(fw,j1+2);	// R3 ?
-				else if ((p1[3] & 0xFE0FF000) == 0xE20F3000) fadr = ADR2adr(fw,j1+3);	// R3 ?
+				if      (isADR_PC(fw,j1)   && (fwRd(fw,j1)   == 3)) fadr = ADR2adr(fw,j1);      // R3 ?
+				else if (isADR_PC(fw,j1+1) && (fwRd(fw,j1+1) == 3)) fadr = ADR2adr(fw,j1+1);    // R3 ?
+				else if (isADR_PC(fw,j1+2) && (fwRd(fw,j1+2) == 3)) fadr = ADR2adr(fw,j1+2);    // R3 ?
+				else if (isADR_PC(fw,j1+3) && (fwRd(fw,j1+3) == 3)) fadr = ADR2adr(fw,j1+3);    // R3 ?
 				if (fadr != 0)
 				{
 					fadr = followBranch2(fw, fadr, sig->offset);
@@ -1947,17 +2049,17 @@ int match_strsig8(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 	for (j1=j-2; j1<j+8; j1++)
 	{
 		uint32_t fadr = idx2adr(fw,j1);
-		if (fw->buf[j1] >= fw->base)	// pointer ??
+		if (fwval(fw,j1) >= fw->base)   // pointer ??
 		{
 			int j2;
 			for (j2=j1-1; j2>=j1-1000 && j2>=0; j2--)
 			{
 				if (isLDR_PC(fw,j2) && (LDR2adr(fw,j2) == fadr))	// LDR ?
 				{
-					if ((isSTR(fw,j2+1) && ((fw->buf[j2+1] & 0xfff) == ofst)) ||	// STR ?
-						(isSTR(fw,j2+2) && ((fw->buf[j2+2] & 0xfff) == ofst)))		// STR ?
+					if ((isSTR(fw,j2+1) && ((fwval(fw,j2+1) & 0xfff) == ofst)) ||    // STR ?
+						(isSTR(fw,j2+2) && ((fwval(fw,j2+2) & 0xfff) == ofst)))      // STR ?
 					{
-						fadr = fw->buf[j1];
+						fadr = fwval(fw,j1);
 						if (idx_valid(fw,adr2idx(fw,fadr)))
 						{
 							//fprintf(stderr,"%s %08x\n",curr_name,fadr);
@@ -2002,7 +2104,7 @@ int find_strsig8(firmware *fw, string_sig *sig, int k)
 	{
 		if (isLDR(fw,j) && isLDR(fw,j+1) && isLDR(fw,j+2))
 		{
-			ofst = (fw->buf[j] & 0xfff) + (fw->buf[j+1] & 0xfff) + (fw->buf[j+2] & 0xfff);
+			ofst = (fwval(fw,j) & 0xfff) + (fwval(fw,j+1) & 0xfff) + (fwval(fw,j+2) & 0xfff);
 			break;
 		}
 	}
@@ -2055,14 +2157,13 @@ int match_strsig10(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 {
 	uint32_t sadr = idx2adr(fw,j);        // string address
 	int j1;
-	uint32_t *p1;
-	for (p1 = p-5, j1 = j-5; j1 >= 0; j1--, p1--)
+	for (j1 = j-5; j1 >= 0; j1--)
 	{
-		if ((((p1[0] & 0xFE000000) == 0xE2000000) || ((p1[0] & 0xFE000000) == 0xE4000000)) && // LDR, ADR or MOV
-			(((p1[1] & 0xFE000000) == 0xE2000000) || ((p1[1] & 0xFE000000) == 0xE4000000)) && // LDR, ADR or MOV
-			(((p1[2] & 0xFE000000) == 0xE2000000) || ((p1[2] & 0xFE000000) == 0xE4000000)) && // LDR, ADR or MOV
-			(((p1[3] & 0xFE000000) == 0xE2000000) || ((p1[3] & 0xFE000000) == 0xE4000000)) && // LDR, ADR or MOV
-			((p1[4] & 0xFE000000) == 0xEA000000))   // B or BL ?
+		if ((isADR(fw,j1)   || isLDR(fw,j1))   &&   // LDR, ADR or MOV
+			(isADR(fw,j1+1) || isLDR(fw,j1+1)) &&   // LDR, ADR or MOV
+			(isADR(fw,j1+2) || isLDR(fw,j1+2)) &&   // LDR, ADR or MOV
+			(isADR(fw,j1+3) || isLDR(fw,j1+3)) &&   // LDR, ADR or MOV
+			isBorBL(fw,j1+4))                       // B or BL ?
 		{
 			uint32_t padr;
 			padr = ADR2adr(fw,j1+0);
@@ -2072,10 +2173,10 @@ int match_strsig10(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 			if (padr == sadr)
 			{
 				uint32_t fadr = 0;
-				if ((p1[0] & 0xFE0FF000) == 0xE40F3000)		 fadr = LDR2adr(fw,j1);		// R3 ?
-				else if ((p1[1] & 0xFE0FF000) == 0xE40F3000) fadr = LDR2adr(fw,j1+1);	// R3 ?
-				else if ((p1[2] & 0xFE0FF000) == 0xE40F3000) fadr = LDR2adr(fw,j1+2);	// R3 ?
-				else if ((p1[3] & 0xFE0FF000) == 0xE40F3000) fadr = LDR2adr(fw,j1+3);	// R3 ?
+				if      (isLDR_PC(fw,j1)   && (fwRd(fw,j1)   == 3)) fadr = LDR2adr(fw,j1);      // R3 ?
+				else if (isLDR_PC(fw,j1+1) && (fwRd(fw,j1+1) == 3)) fadr = LDR2adr(fw,j1+1);    // R3 ?
+				else if (isLDR_PC(fw,j1+2) && (fwRd(fw,j1+2) == 3)) fadr = LDR2adr(fw,j1+2);    // R3 ?
+				else if (isLDR_PC(fw,j1+3) && (fwRd(fw,j1+3) == 3)) fadr = LDR2adr(fw,j1+3);    // R3 ?
 				if (fadr != 0)
 				{
 					fadr = followBranch2(fw, fw->buf[adr2idx(fw,fadr)], sig->offset);
@@ -2102,10 +2203,9 @@ int match_strsig11(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 	
 	uint32_t sadr = idx2adr(fw,j);        // string address
 	int j1;
-	uint32_t *p1;
-	for (p1 = p-1, j1 = j-1; j1 >= 0; j1--, p1--)
+	for (j1 = j-1; j1 >= 0; j1--)
 	{
-		if ((p1[0] & 0x0E0F0000) == 0x020F0000) // ADR ?
+		if (isADR_PC_cond(fw,j1))   // ADR ?
 		{
 			uint32_t padr = ADR2adr(fw,j1);
 			if (padr == sadr)
@@ -2116,11 +2216,11 @@ int match_strsig11(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 				int found = 0;
 				if (strcmp(sig->name,"set_control_event") == 0)
 				{
-					uint32_t *p2 = p1 - ofst;
-					if (((p2[0] & 0xFF000000) == 0xEB000000) &&		// BL
-						((p2[1] & 0xFFFFF000) == 0xE59D0000) &&		// LDR R0,[SP,x]
-						((p2[2] & 0xFF000000) == 0xEB000000) &&		// BL
-						((p2[3] & 0xFFFFF000) == 0xE1A04000))		// LDR R4, R0
+                    int j2 = j1 - ofst;
+					if (isBL(fw,j2) &&                                                  // BL
+						isLDR_SP(fw,j2+1) && (fwRd(fw,j2+1) == 0) &&                    // LDR R0,[SP,x]
+						isBL(fw,j2+2) &&                                                // BL
+						isMOV(fw,j2+3) && (fwRd(fw,j2+3) == 4) && (fwRn(fw,j2+3) == 0)) // LDR R4, R0
 					{
 						found = 1;
 					}
@@ -2194,42 +2294,32 @@ int find_strsig12(firmware *fw, string_sig *sig, int k)
 //							DCD str
 //			...
 //		String				DCB "str"
-int find_strsig13(firmware *fw, string_sig *sig, int k)
+int match_strsig13(firmware *fw, string_sig *sig, int k, char *p, int j)
 {
-    int nlen = strlen(sig->ev_name);
-	char *p;
-	int j;
-	
-	for (p = (char*)fw->buf, j = 0; j < fw->size*4 - nlen; j++, p++)
+	uint32_t sadr = fw->base + j;			// string address
+	int j1;
+	uint32_t *p1;
+	for (p1 = &fw->buf[(j/4)-1], j1 = (j/4)-1; j1 >= 0; j1--, p1--)
 	{
-		if (strncmp(sig->ev_name,(char*)p,nlen) == 0)
+		if (p1[0] == sadr)    // string ptr
 		{
-			uint32_t sadr = fw->base + j;			// string address
-			int j1;
-			uint32_t *p1;
-			for (p1 = &fw->buf[(j/4)-1], j1 = (j/4)-1; j1 >= 0; j1--, p1--)
+			uint32_t padr = idx2adr(fw,j1);		// string ptr address
+			int j2;
+			uint32_t *p2;
+			for (p2 = p1-1, j2 = j1-1; j2 >= 0; j2--, p2--)
 			{
-				if (p1[0] == sadr)    // string ptr
+				if (p2[0] == padr)    // string ptr address
 				{
-					uint32_t padr = idx2adr(fw,j1);		// string ptr address
-					int j2;
-					uint32_t *p2;
-					for (p2 = p1-1, j2 = j1-1; j2 >= 0; j2--, p2--)
+					uint32_t ppadr = idx2adr(fw,j2);		// string ptr ptr address
+					int j3;
+					for (j3 = j2-1; j3 >= 0; j3--)
 					{
-						if (p2[0] == padr)    // string ptr address
+						if (isLDR_PC(fw,j3) && (LDR2adr(fw,j3) == ppadr))
 						{
-							uint32_t ppadr = idx2adr(fw,j2);		// string ptr ptr address
-							int j3;
-							for (j3 = j2-1; j3 >= 0; j3--)
-							{
-								if (isLDR_PC(fw,j3) && (LDR2adr(fw,j3) == ppadr))
-								{
-									uint32_t fadr = idx2adr(fw,j3-sig->offset);
-									//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-									fwAddMatch(fw,fadr,32,0,k,113);
-									return 1;
-								}
-							}
+							uint32_t fadr = idx2adr(fw,j3-sig->offset);
+							//fprintf(stderr,"%s %08x\n",curr_name,fadr);
+							fwAddMatch(fw,fadr,32,0,k,113);
+							return 1;
 						}
 					}
 				}
@@ -2242,49 +2332,43 @@ int find_strsig13(firmware *fw, string_sig *sig, int k)
 
 // Sig pattern:
 //		Special case for _pow
-int find_strsig14(firmware *fw, string_sig *sig, int k)
+int match_strsig14(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 {
-	uint32_t *p;
-	int j;
-	
-	for (p = fw->buf, j = 0; j < fw->size; j++, p++)
+	// Find values passed to _pow
+	if ((p[0] == 0x00000000) && (p[1] == 0x40000000) && (p[2] == 0x00000000) && (p[3] == 0x408F4000))
 	{
-		// Find values passed to _pow
-		if ((p[0] == 0x00000000) && (p[1] == 0x40000000) && (p[2] == 0x00000000) && (p[3] == 0x408F4000))
+		uint32_t adr1 = idx2adr(fw,j);		// address of 1st value
+		uint32_t adr2 = idx2adr(fw,j+2);	// address of 2nd value
+		uint32_t *p1;
+		int j1;
+		
+		for (p1 = p-5, j1 = j-5; j1>0; p1--, j1--)
 		{
-			uint32_t adr1 = idx2adr(fw,j);		// address of 1st value
-			uint32_t adr2 = idx2adr(fw,j+2);	// address of 2nd value
-			uint32_t *p1;
-			int j1;
-			
-			for (p1 = p-5, j1 = j-5; j1>0; p1--, j1--)
+			if (isADR_PC_cond(fw,j1) &&                 // ADR ?
+				 (p1[1] == 0xE8900003) &&				// LDMIA R0,{R0,R1}
+				isBL(fw,j1+2) &&                        // BL
+				isADR_PC_cond(fw,j1+4))                 // ADR ?
 			{
-				if (((p1[0] & 0x0E0F0000) == 0x020F0000) &&	// ADR ?
-					 (p1[1] == 0xE8900003) &&				// LDMIA R0,{R0,R1}
-					((p1[2] & 0xFF000000) == 0xEB000000) &&	// BL
-					((p1[4] & 0x0E0F0000) == 0x020F0000))	// ADR ?
+				if ((ADR2adr(fw,j1) == adr1) && (ADR2adr(fw,j1+4) == adr2))
 				{
-					if ((ADR2adr(fw,j1) == adr1) && (ADR2adr(fw,j1+4) == adr2))
-					{
-						uint32_t fadr = followBranch(fw,idx2adr(fw,j1+2),0x01000001);
-						//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-						fwAddMatch(fw,fadr,32,0,k,114);
-						return 1;
-					}
+					uint32_t fadr = followBranch(fw,idx2adr(fw,j1+2),0x01000001);
+					//fprintf(stderr,"%s %08x\n",curr_name,fadr);
+					fwAddMatch(fw,fadr,32,0,k,114);
+					return 1;
 				}
-				else
-				if (((p1[0] & 0x0E0F0000) == 0x020F0000) &&	// ADR ?
-					 (p1[2] == 0xE8900003) &&				// LDMIA R0,{R0,R1}
-					((p1[3] & 0xFF000000) == 0xEB000000) &&	// BL
-					((p1[4] & 0x0E0F0000) == 0x020F0000))	// ADR ?
+			}
+			else
+			if (isADR_PC_cond(fw,j1) &&                 // ADR ?
+				 (p1[2] == 0xE8900003) &&				// LDMIA R0,{R0,R1}
+				isBL(fw,j1+3) &&                        // BL
+				isADR_PC_cond(fw,j1+4))                 // ADR ?
+			{
+				if ((ADR2adr(fw,j1) == adr1) && (ADR2adr(fw,j1+4) == adr2))
 				{
-					if ((ADR2adr(fw,j1) == adr1) && (ADR2adr(fw,j1+4) == adr2))
-					{
-						uint32_t fadr = followBranch(fw,idx2adr(fw,j1+3),0x01000001);
-						//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-						fwAddMatch(fw,fadr,32,0,k,114);
-						return 1;
-					}
+					uint32_t fadr = followBranch(fw,idx2adr(fw,j1+3),0x01000001);
+					//fprintf(stderr,"%s %08x\n",curr_name,fadr);
+					fwAddMatch(fw,fadr,32,0,k,114);
+					return 1;
 				}
 			}
 		}
@@ -2306,10 +2390,10 @@ int match_strsig15(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
     uint32_t *p1;
     for (p1 = fw->buf, j1 = 0; j1 < fw->size; j1++, p1++)
     {
-	    if (((p1[0] & 0x0E0F0000) == 0x020F0000) || ((p1[0] & 0x0E1F0000) == 0x041F0000))   // LDR or ADR ?
+	    if (isADR_PC_cond(fw,j1) || isLDR_PC_cond(fw,j1))   // LDR or ADR ?
 	    {
 		    uint32_t padr;
-		    if ((p1[0] & 0x0E1F0000) == 0x041F0000) // LDR ?
+		    if (isLDR_PC_cond(fw,j1)) // LDR ?
                 padr = LDR2val(fw,j1);
 		    else
                 padr = ADR2adr(fw,j1);
@@ -2319,7 +2403,7 @@ int match_strsig15(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 			    uint32_t *p2;
 			    for (p2 = p1-1, j2 = j1-1; j2 >= 0 && j2 >= j1-50; j2--, p2--)
 			    {
-				    if ((p2[0] & 0xFF000000) == 0xEB000000) // BL
+				    if (isBL(fw,j2)) // BL
 				    {
 					    uint32_t fa = idx2adr(fw,j2);
 					    fa = followBranch2(fw,fa,sig->offset);
@@ -2337,34 +2421,29 @@ int match_strsig15(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 
 // Sig pattern:
 //	Function immediately preceeding usage of hex value
-int find_strsig16(firmware *fw, string_sig *sig, int k)
+int match_strsig16(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 {
 	uint32_t nm0 = *((uint32_t*)sig->ev_name);
-	uint32_t *p;
-	int j;
 	
-	for (p = fw->buf, j = 0; j < fw->size; j++, p++)
+	if (isADR_PC_cond(fw,j) || isLDR_PC_cond(fw,j))   // LDR or ADR ?
 	{
-		if (((p[0] & 0x0E0F0000) == 0x020F0000) || ((p[0] & 0x0E1F0000) == 0x041F0000))   // LDR or ADR ?
+		uint32_t padr;
+		if (isLDR_PC_cond(fw,j)) // LDR ?
+            padr = LDR2val(fw,j);
+		else
+            padr = ADR2adr(fw,j);
+		if (padr == nm0)
 		{
-			uint32_t padr;
-			if ((p[0] & 0x0E1F0000) == 0x041F0000) // LDR ?
-                padr = LDR2val(fw,j);
-			else
-                padr = ADR2adr(fw,j);
-			if (padr == nm0)
+			int j2 = j;
+			uint32_t *p2;
+			for (p2 = p-1, j2 = j-1; j2 >= 0 && j2 >= j-50; j2--, p2--)
 			{
-				int j2 = j;
-				uint32_t *p2;
-				for (p2 = p-1, j2 = j-1; j2 >= 0 && j2 >= j-50; j2--, p2--)
+				if (isSTMFD_LR(fw,j2)) // STMFD SP!, {..,LR}
 				{
-					if ((p2[0] & 0xFFFFF000) == 0xe92d4000) // STMFD SP!, {..,LR}
-					{
-						uint32_t fa = idx2adr(fw,j2);
-						//fprintf(stderr,"%s %08x\n",curr_name,fa);
-   						fwAddMatch(fw,fa,32,0,k,116);
-    					return 1;
-					}
+					uint32_t fa = idx2adr(fw,j2);
+					//fprintf(stderr,"%s %08x\n",curr_name,fa);
+					fwAddMatch(fw,fa,32,0,k,116);
+					return 1;
 				}
 			}
 		}
@@ -2377,22 +2456,22 @@ int find_strsig(firmware *fw, string_sig *sig, int k)
 {
 	switch (sig->type)
 	{
-		case 1:		return fw_string_process(fw, sig, k, match_strsig1, 1);
-		case 2:		return find_strsig2(fw, sig, k);
-		case 3:		return fw_string_process(fw, sig, k, match_strsig3, 1);
-		case 4:		return fw_string_process(fw, sig, k, match_strsig4, 1);
-		case 5:		return fw_string_process(fw, sig, k, match_strsig5, 1);
-		case 6:		return fw_string_process(fw, sig, k, match_strsig6, 1);
-		case 7:		return fw_string_process(fw, sig, k, match_strsig7, 1);
-		case 8:		return find_strsig8(fw, sig, k);
-		case 9:		return find_strsig9(fw, sig, k);
-		case 10:	return fw_string_process(fw, sig, k, match_strsig10, 1);
-		case 11:	return fw_string_process(fw, sig, k, match_strsig11, 0);
-		case 12:	return find_strsig12(fw, sig, k);
-		case 13:	return find_strsig13(fw, sig, k);
-		case 14:	return find_strsig14(fw, sig, k);
-		case 15:	return fw_string_process(fw, sig, k, match_strsig15, 1);
-		case 16:	return find_strsig16(fw, sig, k);
+    case 1:		return fw_string_process(fw, sig, k, match_strsig1, 1);
+    case 2:     return fw_string_process_unaligned(fw, sig, k, match_strsig2);
+    case 3:		return fw_string_process(fw, sig, k, match_strsig3, 1);
+    case 4:		return fw_string_process(fw, sig, k, match_strsig4, 1);
+    case 5:		return fw_string_process(fw, sig, k, match_strsig5, 1);
+    case 6:		return fw_string_process(fw, sig, k, match_strsig6, 1);
+    case 7:		return fw_string_process(fw, sig, k, match_strsig7, 1);
+    case 8:		return find_strsig8(fw, sig, k);
+    case 9:		return find_strsig9(fw, sig, k);
+    case 10:	return fw_string_process(fw, sig, k, match_strsig10, 1);
+    case 11:	return fw_string_process(fw, sig, k, match_strsig11, 0);
+    case 12:	return find_strsig12(fw, sig, k);
+    case 13:	return fw_string_process_unaligned(fw, sig, k, match_strsig13);
+    case 14:	return fw_process(fw, sig, k, match_strsig14);
+    case 15:	return fw_string_process(fw, sig, k, match_strsig15, 1);
+    case 16:	return fw_process(fw, sig, k, match_strsig16);
 	}
 	
 	return 0;
@@ -2712,6 +2791,57 @@ int find_nxt_str_ref(firmware *fw, int str_adr, int ofst)
 
 //------------------------------------------------------------------------------------------------------------
 
+int search_fw(firmware *fw, int (*func)(firmware*, int, uint32_t, uint32_t), uint32_t v1, uint32_t v2)
+{
+    BufRange *p = fw->br;
+    while (p)
+    {
+        int k;
+        for (k = p->off; k < p->off + p->len; k++)
+        {
+            int rv = func(fw,k,v1,v2);
+            if (rv != 0)
+                return rv;
+        }
+        p = p->next;
+    }
+    return 0;
+}
+
+int search_fw_bytes(firmware *fw, int (*func)(firmware*, int))
+{
+    BufRange *p = fw->br;
+    while (p)
+    {
+        int k;
+        for (k = p->off*4; k < (p->off + p->len)*4; k++)
+        {
+            if (func(fw,k))
+                return 1;
+        }
+        p = p->next;
+    }
+    return 0;
+}
+
+int search_saved_sig(firmware *fw, char *sig, int (*func)(firmware*, int, int), int v, int ofst, int len)
+{
+    int k = get_saved_sig(fw, sig);
+    if (k >= 0)
+	{
+        int idx = adr2idx(fw, func_names[k].val);
+        for (k=idx+ofst; k<idx+ofst+len; k++)
+        {
+            int rv = func(fw, k, v);
+            if (rv)
+                return rv;
+        }
+    }
+    return 0;
+}
+
+//------------------------------------------------------------------------------------------------------------
+
 typedef struct
 {
 	uint16_t mode;
@@ -2740,16 +2870,63 @@ char* mode_name(uint16_t v)
 	return "";
 }
 
+void output_modemap(firmware *fw, int k)
+{
+    int cnt = 0;
+
+	if (isLDR_PC(fw,k))
+	{
+		k = adr2idx(fw,LDR2val(fw,k));
+		bprintf("%08x\n",idx2adr(fw,k));
+		uint16_t *p = (uint16_t*)(&fw->buf[k]);
+		k = 0;
+		while ((*p != 0xFFFF) && (k < 50))
+		{
+			if (((fw->dryos_ver < 47) && ((*p < 8000) || (*p > 8999))) || ((fw->dryos_ver >= 47) && ((*p < 4000) || (*p > 4999))))
+			{
+				osig *m = find_sig_val(modemap, *p);
+				if (!m)
+				{
+					char *s = mode_name(*p);
+					bprintf("// Mode %5d in firmware but not in current modemap",*p);
+					if (strcmp(s,"") != 0)
+						bprintf(" (%s)",s);
+					bprintf("\n");
+					cnt++;
+				}
+				else
+				{
+					m->pct = 100;
+				}
+			}
+			p++;
+			k++;
+		}
+	}
+	osig *m = modemap;
+	while (m)
+	{
+		if (m->pct != 100)	// not matched above?
+		{
+			bprintf("// Current modemap entry not found in firmware - %-24s %5d\n",m->nm,m->val);
+			cnt++;
+		}
+		m = m->nxt;
+	}
+	if (cnt == 0)
+	{
+		bprintf("// No problems found with modemap table.\n");
+	}
+}
+
 void find_modemap(firmware *fw)
 {
-	int k,k1,cnt = 0;
-	
 	out_hdr = 1;
 	add_blankline();
 
 	bprintf("// Check of modemap from 'platform/CAMERA/shooting.c':\n");
 
-	k = find_str_ref(fw, "AC:PTM_Init");
+	int k = find_str_ref(fw, "AC:PTM_Init");
 	if (k >= 0)
 	{
 		bprintf("// Firmware modemap table found @%08x -> ",idx2adr(fw,k));
@@ -2757,64 +2934,18 @@ void find_modemap(firmware *fw)
 		{
 			k = idxFollowBranch(fw,k+2,0x01000001);
 			bprintf("%08x -> ",idx2adr(fw,k));
-			for (k1 = 22; k1 <= 26; k1++)
+            k = find_inst(fw, isBL, k+22, 5);
+            if (k >= 0)
 			{
-				if (isBL(fw,k+k1))
+				k = idxFollowBranch(fw,k,0x01000001);
+				bprintf("%08x -> ",idx2adr(fw,k));
+                k = find_inst(fw, isBL, k+37, 5);
+                if (k >= 0)
 				{
-					k = idxFollowBranch(fw,k+k1,0x01000001);
+					k = idxFollowBranch(fw,k,0x01000001);
 					bprintf("%08x -> ",idx2adr(fw,k));
-					for (k1 = 37; k1 <= 41; k1++)
-					{
-						if (isBL(fw,k+k1))
-						{
-							k = idxFollowBranch(fw,k+k1,0x01000001);
-							bprintf("%08x -> ",idx2adr(fw,k));
-							if (isLDR_PC(fw,k))
-							{
-								k = adr2idx(fw,LDR2val(fw,k));
-								bprintf("%08x\n",idx2adr(fw,k));
-								uint16_t *p = (uint16_t*)(&fw->buf[k]);
-								k = 0;
-								while ((*p != 0xFFFF) && (k < 50))
-								{
-									if (((fw->dryos_ver < 47) && ((*p < 8000) || (*p > 8999))) || ((fw->dryos_ver >= 47) && ((*p < 4000) || (*p > 4999))))
-									{
-										osig *m = find_sig_val(modemap, *p);
-										if (!m)
-										{
-											char *s = mode_name(*p);
-											bprintf("// Mode %5d in firmware but not in current modemap",*p);
-											if (strcmp(s,"") != 0)
-												bprintf(" (%s)",s);
-											bprintf("\n");
-											cnt++;
-										}
-										else
-										{
-											m->pct = 100;
-										}
-									}
-									p++;
-									k++;
-								}
-							}
-							osig *m = modemap;
-							while (m)
-							{
-								if (m->pct != 100)	// not matched above?
-								{
-									bprintf("// Current modemap entry not found in firmware - %-24s %5d\n",m->nm,m->val);
-									cnt++;
-								}
-								m = m->nxt;
-							}
-							if (cnt == 0)
-							{
-								bprintf("// No problems found with modemap table.\n");
-							}
-							return;
-						}
-					}
+                    output_modemap(fw,k);
+					return;
 				}
 			}
 		}
@@ -2824,7 +2955,17 @@ void find_modemap(firmware *fw)
 
 //------------------------------------------------------------------------------------------------------------
 
-uint32_t craw_bufsize = 0;
+int match_FreeUncacheableMemory(firmware *fw, int k, int v)
+{
+	if ((fw->buf[k] & 0x0FFFF000) == 0x03C00000)	// BIC
+	{
+		uint32_t fadr = ALUop2(fw,k);
+		bprintf("//#undef  CAM_UNCACHED_BIT\n");
+		bprintf("//#define CAM_UNCACHED_BIT  0x%08x // Found @0x%08x\n",fadr,idx2adr(fw,k));
+	}
+
+    return 0;
+}
 
 // Search for things that go in 'platform_camera.h'
 void find_platform_vals(firmware *fw)
@@ -2972,22 +3113,7 @@ void find_platform_vals(firmware *fw)
     }
 
 	// Find 'CAM_UNCACHED_BIT'
-	k = get_saved_sig(fw, "FreeUncacheableMemory");
-	if (k >= 0)
-	{
-		uint32_t fadr = func_names[k].val;
-		int idx = adr2idx(fw, fadr);
-		
-		for (k=idx; k<idx+8; k++)
-		{
-			if ((fw->buf[k] & 0x0FFFF000) == 0x03C00000)	// BIC
-			{
-				fadr = ALUop2(fw,k);
-				bprintf("//#undef  CAM_UNCACHED_BIT\n");
-				bprintf("//#define CAM_UNCACHED_BIT  0x%08x // Found @0x%08x\n",fadr,idx2adr(fw,k));
-			}
-		}
-	}
+	search_saved_sig(fw, "FreeUncacheableMemory", match_FreeUncacheableMemory, 0, 0, 8);
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -3017,6 +3143,42 @@ uint32_t find_viewport_address(firmware *fw, int *kout)
     return 0;
 }
 
+int match_DispCon_ShowBitmapColorBar(firmware *fw, int k, int v)
+{
+	if (isBL(fw,k-1) && // BL
+	    isLDR_PC(fw,k))
+	{
+		uint32_t v1 = LDR2val(fw,k);
+		bprintf("//void *vid_get_bitmap_fb()        { return (void*)0x%08x; }             // Found @0x%08x\n",v1,idx2adr(fw,k));
+		return 1;
+	}
+	else
+	if (isBL(fw,k-1) && // BL
+	    (isLDR_PC(fw,k+1)))
+	{
+		uint32_t v1 = LDR2val(fw,k+1);
+		bprintf("//void *vid_get_bitmap_fb()        { return (void*)0x%08x; }             // Found @0x%08x\n",v1,idx2adr(fw,k));
+		return 1;
+	}
+
+    return 0;
+}
+
+int match_GetParameterData(firmware *fw, int k, int v)
+{
+	if ((fw->buf[k] & 0xFFF00FFF) == 0xE3C00901)	// BIC Rn, Rn, #0x4000
+	{
+		uint32_t r = fw->buf[k] & 0x000F0000;	// Register
+		if (((fw->buf[k+1] & 0xFFF00000) == 0xE3500000) && ((fw->buf[k+1] & 0x000F0000) == r))	// CMP, Rn #val
+		{
+			bprintf("//int get_flash_params_count(void) { return 0x%02x; }                          // Found @0x%08x\n",fw->buf[k+1]&0xFFF,idx2adr(fw,k+1));
+			return 1;
+		}
+	}
+
+    return 0;
+}
+
 // Search for things that go in 'lib.c'
 void find_lib_vals(firmware *fw)
 {
@@ -3028,31 +3190,7 @@ void find_lib_vals(firmware *fw)
 	bprintf("// Values below go in 'lib.c':\n");
 
 	// Find 'vid_get_bitmap_fb'
-	k = get_saved_sig(fw, "DispCon_ShowBitmapColorBar");
-	if (k >= 0)
-	{
-		uint32_t fadr = func_names[k].val;
-		int idx = adr2idx(fw, fadr);
-		
-		for (k=idx+1; k<idx+30; k++)
-		{
-			if (isBL(fw,k-1) && // BL
-			    isLDR_PC(fw,k))
-			{
-				uint32_t v1 = LDR2val(fw,k);
-				bprintf("//void *vid_get_bitmap_fb()        { return (void*)0x%08x; }             // Found @0x%08x\n",v1,idx2adr(fw,k));
-				break;
-			}
-			else
-			if (isBL(fw,k-1) && // BL
-			    (isLDR_PC(fw,k+1)))
-			{
-				uint32_t v1 = LDR2val(fw,k+1);
-				bprintf("//void *vid_get_bitmap_fb()        { return (void*)0x%08x; }             // Found @0x%08x\n",v1,idx2adr(fw,k));
-				break;
-			}
-		}
-	}
+	search_saved_sig(fw, "DispCon_ShowBitmapColorBar", match_DispCon_ShowBitmapColorBar, 0, 1, 30);
 	
 	// find 'vid_get_viewport_fb'
     uint32_t v = find_viewport_address(fw,&k);
@@ -3118,31 +3256,13 @@ void find_lib_vals(firmware *fw)
 	{
 		if (isLDR(fw,k-1))
 		{
-			craw_bufsize = LDR2val(fw,k-1);
+			uint32_t craw_bufsize = LDR2val(fw,k-1);
 			bprintf("//long hook_raw_size()             { return 0x%08x; }                    // Found @0x%08x\n",craw_bufsize,idx2adr(fw,k-1));
 		}
 	}
 	
 	// Find value for 'get_flash_params_count'
-	k = get_saved_sig(fw, "GetParameterData");
-	if (k >= 0)
-	{
-		uint32_t fadr = func_names[k].val;
-		int idx = adr2idx(fw, fadr);
-		
-		for (k=idx; k<idx+30; k++)
-		{
-			if ((fw->buf[k] & 0xFFF00FFF) == 0xE3C00901)	// BIC Rn, Rn, #0x4000
-			{
-				uint32_t r = fw->buf[k] & 0x000F0000;	// Register
-				if (((fw->buf[k+1] & 0xFFF00000) == 0xE3500000) && ((fw->buf[k+1] & 0x000F0000) == r))	// CMP, Rn #val
-				{
-					bprintf("//int get_flash_params_count(void) { return 0x%02x; }                          // Found @0x%08x\n",fw->buf[k+1]&0xFFF,idx2adr(fw,k+1));
-					break;
-				}
-			}
-		}
-	}
+	search_saved_sig(fw, "GetParameterData", match_GetParameterData, 0, 0, 30);
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -3169,10 +3289,531 @@ void print_stubs_min(firmware *fw, const char *name, uint32_t fadr, uint32_t ata
 	bprintf("\n");
 }
 
+int match_levent_table(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+    if ((fw->buf[k] > fw->base) && (fw->buf[k+1] == 0x00000800) && (fw->buf[k+2] == 0x00000002))
+	{
+	    print_stubs_min(fw,"levent_table",idx2adr(fw,k),idx2adr(fw,k));
+	}
+    return 0;
+}
+
+int match_FlashParamsTable2(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+    if (fw->buf[k] == v1)
+    {
+        print_stubs_min(fw,"FlashParamsTable",idx2adr(fw,k),idx2adr(fw,k));
+        return 1;
+    }
+    return 0;
+}
+
+int match_FlashParamsTable(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+    if ((fw->buf[k] > fw->base) && (fw->buf[k+1] == 0x00010000) && (fw->buf[k+2] == 0xFFFF0002))
+    {
+        if (search_fw(fw, match_FlashParamsTable2, idx2adr(fw,k), 0))
+            return 1;
+    }
+    return 0;
+}
+
+int match_movie_status(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+    if (isLDR_PC(fw, k) &&								// LDR R0, =base
+        ((fw->buf[k+1] & 0xFE0F0000) == 0xE20F0000) &&	// ADR R1, =sub
+        isSTR(fw, k+2) &&								// STR R1, [R0,N]
+        (fw->buf[k+3] == 0xE3A01003) &&					// MOV R1, 3
+        isSTR(fw, k+4) &&								// STR R1, [R0,ofst]
+        (LDR2val(fw,k) < fw->base))
+    {
+        uint32_t base = LDR2val(fw,k);
+        uint32_t ofst = fw->buf[k+4] & 0x00000FFF;
+        print_stubs_min(fw,"movie_status",base+ofst,idx2adr(fw,k));
+    }
+    else
+    if (isLDR_PC(fw, k) &&								// LDR R1, =sub
+        isLDR_PC(fw, k+1) &&							// LDR R0, =base
+        isSTR(fw, k+2) &&								// STR R1, [R0,N]
+        (fw->buf[k+3] == 0xE3A01003) &&					// MOV R1, 3
+        isSTR(fw, k+4) &&								// STR R1, [R0,ofst]
+        (LDR2val(fw,k+1) < fw->base))
+    {
+        uint32_t base = LDR2val(fw,k+1);
+        uint32_t ofst = fw->buf[k+4] & 0x00000FFF;
+        print_stubs_min(fw,"movie_status",base+ofst,idx2adr(fw,k));
+    }
+    return 0;
+}
+
+int match_full_screen_refresh(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+	if (((fw->buf[k] & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
+		(fw->buf[k+1] == 0xE5D01000) &&					// LDRB R1, [R0]
+		(fw->buf[k+2] == 0xE3811002) &&					// ORR R1, R1, #2
+		(fw->buf[k+3] == 0xE5C01000) &&					// STRB R1, [R0]
+		(fw->buf[k+4] == 0xE12FFF1E))					// BX LR
+	{
+		uint32_t base = LDR2val(fw,k);
+		print_stubs_min(fw,"full_screen_refresh",base,idx2adr(fw,k));
+	}
+    return 0;
+}
+
+int match_canon_shoot_menu_active(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+	if (((fw->buf[k]   & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
+		((fw->buf[k+1] & 0xFFFFF000) == 0xE5D10000) &&	// LDRB R0, [R1, #n]
+		(fw->buf[k+2] == 0xE2800001) &&					// ADD R0, R0, #1
+		((fw->buf[k+3] & 0xFFFFF000) == 0xE5C10000) &&	// STRB R0, [R1, #n]
+		(isB(fw,k+4)))	                                // B
+	{
+		uint32_t base = LDR2val(fw,k);
+		uint32_t ofst = fw->buf[k+1] & 0x00000FFF;
+		print_stubs_min(fw,"canon_shoot_menu_active",base+ofst,idx2adr(fw,k));
+	}
+	else
+	if (((fw->buf[k]   & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
+		((fw->buf[k+1] & 0xFFFFF000) == 0xE5D01000) &&	// LDRB R1, [R0, #n]
+		(fw->buf[k+2] == 0xE2811001) &&					// ADD R1, R1, #1
+		((fw->buf[k+3] & 0xFFFFF000) == 0xE5C01000) &&	// STRB R1, [R0, #n]
+		(isB(fw,k+4)))	                                // B
+	{
+		uint32_t base = LDR2val(fw,k);
+		uint32_t ofst = fw->buf[k+1] & 0x00000FFF;
+		print_stubs_min(fw,"canon_shoot_menu_active",base+ofst,idx2adr(fw,k));
+	}
+    return 0;
+}
+
+int match_playrec_mode(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+	if (((fw->buf[k]    & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
+		((fw->buf[k+1]  & 0xFFFFF000) == 0xE5810000) &&	// STR R0, [R1, #n]
+		((fw->buf[k+3]  & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
+		((fw->buf[k+4]  & 0xFFFFF000) == 0xE5900000) &&	// LDR R0, [R0, #n]
+		((fw->buf[k+6]  & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
+		((fw->buf[k+9]  & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
+		((fw->buf[k+12] & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
+		((fw->buf[k+15] & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
+		((fw->buf[k+18] & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
+		(LDR2val(fw,k) == LDR2val(fw,k+3)) &&
+		(LDR2val(fw,k) == LDR2val(fw,k+6)) &&
+		(LDR2val(fw,k) == LDR2val(fw,k+9)) &&
+		(LDR2val(fw,k) == LDR2val(fw,k+12)) &&
+		(LDR2val(fw,k) == LDR2val(fw,k+15)) &&
+		(LDR2val(fw,k) == LDR2val(fw,k+18)))
+	{
+		uint32_t base = LDR2val(fw,k);
+		uint32_t ofst = fw->buf[k+1] & 0x00000FFF;
+		print_stubs_min(fw,"playrec_mode",base+ofst,idx2adr(fw,k));
+	}
+    return 0;
+}
+
+int match_some_flag_for_af_scan(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+	if (isB(fw,k)   &&  // B loc
+		isB(fw,k+1) &&  // B loc
+		isB(fw,k+2) &&  // B loc
+		isB(fw,k+3) &&  // B loc
+		isB(fw,k+4) &&  // B loc
+		isB(fw,k+5) &&  // B loc
+		isB(fw,k+6) &&  // B loc
+		isB(fw,k+7) &&  // B loc
+		(followBranch(fw,idx2adr(fw,k),1) != followBranch(fw,idx2adr(fw,k+1),1)) &&
+		(followBranch(fw,idx2adr(fw,k),1) == followBranch(fw,idx2adr(fw,k+2),1)) &&
+		(followBranch(fw,idx2adr(fw,k),1) == followBranch(fw,idx2adr(fw,k+3),1)) &&
+		(followBranch(fw,idx2adr(fw,k),1) != followBranch(fw,idx2adr(fw,k+4),1)) &&
+		(followBranch(fw,idx2adr(fw,k),1) != followBranch(fw,idx2adr(fw,k+5),1)) &&
+		(followBranch(fw,idx2adr(fw,k),1) == followBranch(fw,idx2adr(fw,k+6),1)) &&
+		(followBranch(fw,idx2adr(fw,k),1) == followBranch(fw,idx2adr(fw,k+7),1)) &&
+		(isLDR_PC(fw,adr2idx(fw,followBranch(fw,idx2adr(fw,k),1)))))	// LDR R0, =base
+	{
+		uint32_t base = LDR2val(fw,adr2idx(fw,followBranch(fw,idx2adr(fw,k),1)));
+        if (base < fw->base)
+		    print_stubs_min(fw,"some_flag_for_af_scan",base,followBranch(fw,idx2adr(fw,k),1));
+	}
+    return 0;
+}
+
+int match_palette_data(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+    if ((fw->buf[k] == 0) && (fw->buf[k+1] == 0x00FF0000) &&
+        (fw->buf[k+577] == 1) && (fw->buf[k+578] == 0x00FF0000) && 
+        (fw->buf[k+1154] == 2) && (fw->buf[k+1155] == 0x00FF0000))
+    {
+        return idx2adr(fw,k);
+    }
+    else if ((fw->buf[k] == 0) && (fw->buf[k+1] == 0x00FF0000) &&
+             (fw->buf[k+513] == 1) && (fw->buf[k+514] == 0x00FF0000) && 
+             (fw->buf[k+1026] == 2) && (fw->buf[k+1027] == 0x00FF0000))
+    {
+        return idx2adr(fw,k);
+    }
+    return 0;
+}
+
+int match_palette_buffer_offset(firmware *fw, int k)
+{
+    int idx2 = idxFollowBranch(fw, k, 0x01000001);
+    if (isLDR(fw, idx2+2) && isBL(fw, idx2+3))
+    {
+        uint32_t palette_size = LDR2val(fw,idx2+2);
+        if (palette_size >= 0x400)
+        {
+            bprintf("// Offset from start of palette_buffer to color data = %d (Found @0x%08x)\n",palette_size-0x400,idx2adr(fw,idx2+2));
+            return 1;
+        }
+    }
+    else if (isADR(fw, idx2+2) && isBL(fw, idx2+3))
+    {
+        uint32_t palette_size = ALUop2(fw,idx2+2);
+        if (palette_size >= 0x400)
+        {
+            bprintf("// Offset from start of palette_buffer to color data = %d (Found @0x%08x)\n",palette_size-0x400,idx2adr(fw,idx2+2));
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int match_palette_data2(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+    if (isLDR(fw,k) && (LDR2val(fw,k) == v1))
+    {
+        int k1;
+        for (k1=k+1; k1<k+20; k1++)
+        {
+            if (isBL(fw,k1) && isLDMFD(fw,k1+2))
+            {
+                uint32_t fadr = followBranch(fw, idx2adr(fw,k1), 0x01000001);
+                int idx = adr2idx(fw, fadr);
+                int k2;
+                for (k2=idx; k2<idx+40; k2++)
+                {
+                    if (isSTR(fw,k2) && isLDMFD(fw,k2+1))
+                    {
+                        int ptr_offset = fwval(fw,k2) & 0xFFF;
+                        print_stubs_min(fw,"palette_buffer_ptr",v2+ptr_offset,idx2adr(fw,k2));
+                        int found = 0;
+                        for (k=idx; (k<idx+16) && !found; k++)
+                        {
+                            if (isBL(fw,k) && isCMP(fw,k+1) && isADR_PC(fw,k+2))
+                            {
+                                fadr = ADR2adr(fw,k+2);
+                                idx = adr2idx(fw, fadr);
+                                int k3;
+                                for (k3=idx; (k3<idx+16) && !found; k3++)
+                                {
+                                    if (isBL(fw,k3))
+                                    {
+                                        if (match_palette_buffer_offset(fw,k3))
+                                            return 1;
+                                    }
+                                }
+                            }
+                        }
+                        return 1;
+                    }
+                }
+            }
+            else if (isLDR_cond(fw,k1) && isLDMFD(fw,k1+2) && isBL(fw,k1-2))
+            {
+                int ptr_offset = fwval(fw,k1) & 0xFFF;
+                print_stubs_min(fw,"palette_buffer_ptr",v2+ptr_offset,idx2adr(fw,k1));
+                match_palette_buffer_offset(fw, k1-2);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int match_SavePaletteData(firmware *fw, int idx, int palette_data)
+{
+    if (isBL(fw,idx+13))
+    {
+        uint32_t fadr = followBranch(fw, idx2adr(fw,idx+13), 0x01000001);
+        idx = adr2idx(fw, fadr);
+        if (isLDR(fw,idx) && isLDR(fw,idx+1) && isB(fw,idx+2))
+        {
+            uint32_t palette_control = LDR2val(fw,idx);
+            print_stubs_min(fw,"palette_control",palette_control,idx2adr(fw,idx));
+            int active_offset = fwval(fw,idx+1) & 0xFFF;
+            print_stubs_min(fw,"active_palette_buffer",palette_control+active_offset,idx2adr(fw,idx+1));
+            fadr = followBranch(fw,idx2adr(fw,idx+2),1);
+            idx = adr2idx(fw, fadr);
+            if (isLDR(fw,idx+17) && isLDR(fw,idx+18) && isLDR(fw,idx+12) && (LDR2val(fw,idx+12) == palette_control))
+            {
+                if (isLDR(fw,idx+13))
+                {
+                    int ptr_offset = fwval(fw,idx+13) & 0xFFF;
+                    print_stubs_min(fw,"palette_buffer_ptr",palette_control+ptr_offset,idx2adr(fw,idx+13));
+                }
+                int palette_buffer;
+                if ((fwval(fw,idx+18) & 0x0000F000) == 0)
+                {
+                    palette_buffer = LDR2val(fw,idx+17);
+                    print_stubs_min(fw,"palette_buffer",palette_buffer,idx2adr(fw,idx+17));
+                }
+                else
+                {
+                    palette_buffer = LDR2val(fw,idx+18);
+                    print_stubs_min(fw,"palette_buffer",palette_buffer,idx2adr(fw,idx+18));
+                }
+                if (isBL(fw,idx+26))
+                {
+                    fadr = followBranch(fw, idx2adr(fw,idx+26), 0x01000001);
+                    idx = adr2idx(fw, fadr);
+                    if (isLDR(fw, idx+2) && isBL(fw, idx+3))
+                    {
+                        uint32_t palette_size = LDR2val(fw,idx+2);
+                        if (palette_size >= 0x400)
+                        {
+                            bprintf("// Offset from start of palette_buffer to color data = %d (Found @0x%08x)\n",palette_size-0x400,idx2adr(fw,idx+2));
+                        }
+                    }
+                }
+            }
+        }
+        else if (isLDR(fw,idx) && isLDR(fw,idx+6) && isLDR(fw,idx+7) && isBX(fw,idx+8))
+        {
+            int active_offset = -1;
+            if ((fwval(fw,idx+6) & 0x0000F000) == 0)
+                active_offset = fwval(fw,idx+6) & 0xFFF;
+            else if ((fwval(fw,idx+7) & 0x0000F000) == 0)
+                active_offset = fwval(fw,idx+7) & 0xFFF;
+            if (active_offset >= 0)
+            {
+                uint32_t palette_control = LDR2val(fw,idx);
+                //print_stubs_min(fw,"palette_control",palette_control,idx2adr(fw,idx));
+                print_stubs_min(fw,"active_palette_buffer",palette_control+active_offset,idx2adr(fw,idx+1));
+                search_fw(fw, match_palette_data2, palette_data, palette_control);
+            }
+        }
+    }
+
+    return 0;
+}
+
+int match_viewport_address3(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+    if (isLDR_PC(fw,k) && (LDR2val(fw,k) == v1))
+    {
+        // Scan back to start of function
+        int k1;
+        for (k1=k-1; k1>k-1000; k1--)
+        {
+    		if ((fw->buf[k1] & 0xFFFFF000) == 0xe92d4000)    // STMFD SP!, {..,LR}
+    		{
+                // Check if function sig matches what we want
+                if (isLDR_PC(fw,k1+1) && isLDR_PC(fw,k1+2) && isLDR(fw,k1+3) &&
+                    (((fw->buf[k1+1] & 0x0000F000) >> 12) == ((fw->buf[k1+3] & 0x000F0000) >> 16)))
+                {
+                    uint32_t a = LDR2val(fw,k1+1);
+                    print_stubs_min(fw,"viewport_buffers",v1,idx2adr(fw,k));
+                    print_stubs_min(fw,"active_viewport_buffer",a,idx2adr(fw,k1+1));
+                    return 1;
+                }
+                else if (isLDR_PC(fw,k1+1) && isLDR_PC(fw,k1+3) && isLDR(fw,k1+4) &&
+                    (((fw->buf[k1+1] & 0x0000F000) >> 12) == ((fw->buf[k1+4] & 0x000F0000) >> 16)))
+                {
+                    uint32_t a = LDR2val(fw,k1+1);
+                    print_stubs_min(fw,"viewport_buffers",v1,idx2adr(fw,k));
+                    print_stubs_min(fw,"active_viewport_buffer",a,idx2adr(fw,k1+1));
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int match_viewport_address2(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+    if (fw->buf[k] == v1)
+    {
+        if (search_fw(fw, match_viewport_address3, v1, 0))
+            return 1;
+    }
+    return 0;
+}
+
+int match_viewport_address(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+    if (fw->buf[k] == v1)
+    {
+        // Find location in firmware that points to viewport address
+        if (search_fw(fw, match_viewport_address2, idx2adr(fw,k), 0))
+            return 1;
+    }
+    return 0;
+}
+
+int match_kbd_read_keys(firmware *fw, int k, int v)
+{
+	if (isLDR_PC(fw,k))
+	{
+		print_stubs_min(fw,"physw_status",LDR2val(fw,k),idx2adr(fw,k));
+	}
+
+    return 0;
+}
+
+int match_task_PhySw(firmware *fw, int k, int v)
+{
+	if (isLDR_PC(fw,k))
+	{
+		uint32_t base = LDR2val(fw,k);
+		uint32_t fadr = followBranch(fw, idx2adr(fw,k+1), 1);
+		uint32_t ofst = fw->buf[adr2idx(fw,fadr)] & 0x00000FFF;
+		print_stubs_min(fw,"physw_run",base+ofst,idx2adr(fw,k));
+
+		ofst = fw->buf[k+2] & 0x00000FFF;
+		print_stubs_min(fw,"physw_sleep_delay",base+ofst,idx2adr(fw,k));
+	}
+
+    return 0;
+}
+
+int match_StartRecModeMenu(firmware *fw, int k, int v)
+{
+	if (isLDR_PC(fw,k))
+	{
+		uint32_t base = LDR2val(fw,k);
+        int k1;
+		for (k1=k+1; k1<k+5; k1++)
+		{
+			if (isLDR(fw,k1))
+			{
+				uint32_t ofst = fw->buf[k1] & 0x00000FFF;
+				print_stubs_min(fw,"canon_menu_active",base+ofst,idx2adr(fw,k));
+			}
+		}
+	}
+
+    return 0;
+}
+
+int match_ResetZoomLens(firmware *fw, int k, int v)
+{
+    if (isBL(fw,k))
+    {
+        int idx1 = idxFollowBranch(fw,k,0x01000001);
+        int k1;
+        for (k1=idx1; k1<idx1+50; k1++)
+        {
+            if ((fw->buf[k1] & 0xFFFF0000) == 0xE8BD0000)   // LDMFD
+            {
+                uint32_t fadr = 0;
+                if (isADR_PC(fw,k1+1))
+                {
+                    fadr = ADR2adr(fw,k1+1);
+                }
+                else if (isADR_PC(fw,k1+2))
+                {
+                    fadr = ADR2adr(fw,k1+2);
+                }
+                else if (isADR_PC(fw,k1-3))
+                {
+                    fadr = ADR2adr(fw,k1-3);
+                }
+                else if (isLDR_PC(fw,k1+1))
+                {
+                    fadr = LDR2val(fw,k1+1);
+                }
+                else if (isLDR_PC(fw,k1+2))
+                {
+                    fadr = LDR2val(fw,k1+2);
+                }
+                if (fadr != 0)
+                {
+                    int idx2 = adr2idx(fw,fadr);
+                    if (isLDR_PC(fw,idx2+1) && isLDR(fw,idx2+2))
+                    {
+                        int base = LDR2val(fw,idx2+1);
+                        int ofst = fw->buf[idx2+2] & 0xFFF;
+               			print_stubs_min(fw,"zoom_busy",base+ofst-4,fadr);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
+int match_ResetFocusLens(firmware *fw, int k, int v)
+{
+    if ((fw->buf[k] & 0xFFFF0000) == 0xE8BD0000)   // LDMFD
+    {
+        int k1 = 0;
+        if (isBL(fw,k-2))
+        {
+            k1 = idxFollowBranch(fw,k-2,0x01000001);
+        }
+        if (isBL(fw,k-1))
+        {
+            k1 = idxFollowBranch(fw,k-1,0x01000001);
+        }
+        if (k1 != 0)
+        {
+            if (isLDR_PC(fw,k1+1) && isLDR(fw,k1+3))
+            {
+                int base = LDR2val(fw,k1+1);
+                int ofst = fw->buf[k1+3] & 0xFFF;
+               	print_stubs_min(fw,"focus_busy",base+ofst-4,idx2adr(fw,k1));
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
+
+int match_ScreenLock(firmware *fw, int k, int v)
+{
+    uint32_t screen_lock = idx2adr(fw,k);
+    if (isBL(fw,v) && (followBranch(fw,idx2adr(fw,v),0x01000001) == screen_lock) && isBL(fw,v+2) && isBL(fw,v+3))
+    {
+        uint32_t fadr = followBranch2(fw,idx2adr(fw,v+3),0x01000001);
+        int k1 = adr2idx(fw,fadr);
+        if (isLDR_PC(fw,k1+1))
+        {
+            int reg = (fwval(fw,k1+1) & 0x0000F000) >> 12;
+            uint32_t adr = LDR2val(fw,k1+1);
+            int k2;
+            for (k2=k1; k2<k1+32; k2++)
+            {
+                if (isLDR_PC(fw,k2) && isLDR(fw,k2+1) && (((fwval(fw,k2+1) & 0x000F0000) >> 16) == reg))
+                {
+                    uint32_t bitmap_buffer = LDR2val(fw,k2);
+                    if (bitmap_buffer == (adr + 0x1C))
+                    {
+                        uint32_t active_bitmap_buffer = adr + (fwval(fw,k2+1) & 0xFFF);
+                        print_stubs_min(fw,"bitmap_buffer",bitmap_buffer,idx2adr(fw,k2));
+                        print_stubs_min(fw,"active_bitmap_buffer",active_bitmap_buffer,idx2adr(fw,k2+1));
+                    }
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
+int match_GUISrv_StartGUISystem(firmware *fw, int k, int v)
+{
+    search_saved_sig(fw, "ScreenLock", match_ScreenLock, k, 0, 1);
+    return 0;
+}
+
 // Search for things that go in 'stubs_min.S'
 void find_stubs_min(firmware *fw)
 {
-	int k,k1,k2;
+	int k,k1;
 	
 	out_hdr = 1;
 	add_blankline();
@@ -3180,170 +3821,29 @@ void find_stubs_min(firmware *fw)
 	bprintf("// Values below can be overridden in 'stubs_min.S':\n");
 
 	// Find 'physw_status'
-	k = get_saved_sig(fw, "kbd_read_keys");
-	if (k >= 0)
-	{
-		uint32_t fadr = func_names[k].val;
-		int idx = adr2idx(fw, fadr);
-		
-		for (k=0; k<5; k++)
-		{
-			if (isLDR_PC(fw,idx+k))
-			{
-				print_stubs_min(fw,"physw_status",LDR2val(fw,idx+k),idx2adr(fw,idx+k));
-				//break;
-			}
-		}
-	}
+	search_saved_sig(fw, "kbd_read_keys", match_kbd_read_keys, 0, 0, 5);
 	
 	// Find 'physw_run' & 'physw_sleep_delay'
-	k = get_saved_sig(fw, "task_PhySw");
-	if (k >= 0)
-	{
-		uint32_t fadr = func_names[k].val;
-		int idx = adr2idx(fw, fadr);
-		
-		for (k=0; k<5; k++)
-		{
-			if (isLDR_PC(fw,idx+k))
-			{
-				uint32_t base = LDR2val(fw,idx+k);
-				uint32_t fadr = followBranch(fw, idx2adr(fw,idx+k+1), 1);
-				uint32_t ofst = fw->buf[adr2idx(fw,fadr)] & 0x00000FFF;
-				print_stubs_min(fw,"physw_run",base+ofst,idx2adr(fw,idx+k));
-
-				ofst = fw->buf[idx+k+2] & 0x00000FFF;
-				print_stubs_min(fw,"physw_sleep_delay",base+ofst,idx2adr(fw,idx+k));
-			}
-		}
-	}
+	search_saved_sig(fw, "task_PhySw", match_task_PhySw, 0, 0, 5);
 	
 	// Find 'levent_table'
-	for (k=0; k<fw->size; k++)
-	{
-		if ((fw->buf[k] > fw->base) && (fw->buf[k+1] == 0x00000800) && (fw->buf[k+2] == 0x00000002))
-		{
-			print_stubs_min(fw,"levent_table",idx2adr(fw,k),idx2adr(fw,k));
-			//break;
-		}
-	}
+    search_fw(fw, match_levent_table, 0, 0);
 	
 	// Find 'FlashParamsTable'
-	for (k=0; k<fw->size; k++)
-	{
-		if ((fw->buf[k] > fw->base) && (fw->buf[k+1] == 0x00010000) && (fw->buf[k+2] == 0xFFFF0002))
-		{
-			uint32_t fadr = idx2adr(fw,k);
-			for (k1=0; k1<fw->size; k1++)
-			{
-				if (fw->buf[k1] == fadr)
-				{
-					print_stubs_min(fw,"FlashParamsTable",idx2adr(fw,k1),idx2adr(fw,k1));
-					k = fw->size;
-					//break;
-				}
-			}
-		}
-	}
+    search_fw(fw, match_FlashParamsTable, 0, 0);
 	
 	// Find 'movie_status'
-	for (k=0; k<fw->size; k++)
-	{
-		if (isLDR_PC(fw, k) &&								// LDR R0, =base
-			((fw->buf[k+1] & 0xFE0F0000) == 0xE20F0000) &&	// ADR R1, =sub
-			isSTR(fw, k+2) &&								// STR R1, [R0,N]
-			(fw->buf[k+3] == 0xE3A01003) &&					// MOV R1, 3
-			isSTR(fw, k+4) &&								// STR R1, [R0,ofst]
-			(LDR2val(fw,k) < fw->base))
-		{
-			uint32_t base = LDR2val(fw,k);
-			uint32_t ofst = fw->buf[k+4] & 0x00000FFF;
-			print_stubs_min(fw,"movie_status",base+ofst,idx2adr(fw,k));
-			//break;
-		}
-		else
-		if (isLDR_PC(fw, k) &&								// LDR R1, =sub
-			isLDR_PC(fw, k+1) &&							// LDR R0, =base
-			isSTR(fw, k+2) &&								// STR R1, [R0,N]
-			(fw->buf[k+3] == 0xE3A01003) &&					// MOV R1, 3
-			isSTR(fw, k+4) &&								// STR R1, [R0,ofst]
-			(LDR2val(fw,k+1) < fw->base))
-		{
-			uint32_t base = LDR2val(fw,k+1);
-			uint32_t ofst = fw->buf[k+4] & 0x00000FFF;
-			print_stubs_min(fw,"movie_status",base+ofst,idx2adr(fw,k));
-			//break;
-		}
-	}
+    search_fw(fw, match_movie_status, 0, 0);
 	
 	// Find 'full_screen_refresh'
-	for (k=0; k<fw->size; k++)
-	{
-		if (((fw->buf[k] & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
-			(fw->buf[k+1] == 0xE5D01000) &&					// LDRB R1, [R0]
-			(fw->buf[k+2] == 0xE3811002) &&					// ORR R1, R1, #2
-			(fw->buf[k+3] == 0xE5C01000) &&					// STRB R1, [R0]
-			(fw->buf[k+4] == 0xE12FFF1E))					// BX LR
-		{
-			uint32_t base = LDR2val(fw,k);
-			print_stubs_min(fw,"full_screen_refresh",base,idx2adr(fw,k));
-			//break;
-		}
-	}
+    search_fw(fw, match_full_screen_refresh, 0, 0);
 	
 	// Find 'canon_menu_active'
-	k = get_saved_sig(fw, "StartRecModeMenu");
-	if (k >= 0)
-	{
-		uint32_t fadr = func_names[k].val;
-		int idx = adr2idx(fw, fadr);
-		
-		for (k=0; k<5; k++)
-		{
-			if (isLDR_PC(fw,idx+k))
-			{
-				uint32_t base = LDR2val(fw,idx+k);
-				for (k1=k+1; k1<k+5; k1++)
-				{
-					if (isLDR(fw,idx+k1))
-					{
-						uint32_t ofst = fw->buf[idx+k1] & 0x00000FFF;
-						print_stubs_min(fw,"canon_menu_active",base+ofst,idx2adr(fw,idx+k));
-						//break;
-					}
-				}
-			}
-		}
-	}
+	search_saved_sig(fw, "StartRecModeMenu", match_StartRecModeMenu, 0, 0, 5);
 	
 	// Find 'canon_shoot_menu_active'
-	for (k=0; k<fw->size; k++)
-	{
-		if (((fw->buf[k]   & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
-			((fw->buf[k+1] & 0xFFFFF000) == 0xE5D10000) &&	// LDRB R0, [R1, #n]
-			(fw->buf[k+2] == 0xE2800001) &&					// ADD R0, R0, #1
-			((fw->buf[k+3] & 0xFFFFF000) == 0xE5C10000) &&	// STRB R0, [R1, #n]
-			(isB(fw,k+4)))	                                // B
-		{
-			uint32_t base = LDR2val(fw,k);
-			uint32_t ofst = fw->buf[k+1] & 0x00000FFF;
-			print_stubs_min(fw,"canon_shoot_menu_active",base+ofst,idx2adr(fw,k));
-			//break;
-		}
-		else
-		if (((fw->buf[k]   & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
-			((fw->buf[k+1] & 0xFFFFF000) == 0xE5D01000) &&	// LDRB R1, [R0, #n]
-			(fw->buf[k+2] == 0xE2811001) &&					// ADD R1, R1, #1
-			((fw->buf[k+3] & 0xFFFFF000) == 0xE5C01000) &&	// STRB R1, [R0, #n]
-			(isB(fw,k+4)))	                                // B
-		{
-			uint32_t base = LDR2val(fw,k);
-			uint32_t ofst = fw->buf[k+1] & 0x00000FFF;
-			print_stubs_min(fw,"canon_shoot_menu_active",base+ofst,idx2adr(fw,k));
-			//break;
-		}
-	}
-	
+    search_fw(fw, match_canon_shoot_menu_active, 0, 0);
+
 	// Find 'playrec_mode'
 	int found_playrec_mode = 0;
 	k = find_str_ref(fw, "AFFChg");
@@ -3360,31 +3860,7 @@ void find_stubs_min(firmware *fw)
 	}
 	if (!found_playrec_mode)
 	{
-		for (k=0; k<fw->size; k++)
-		{
-			if (((fw->buf[k]    & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
-				((fw->buf[k+1]  & 0xFFFFF000) == 0xE5810000) &&	// STR R0, [R1, #n]
-				((fw->buf[k+3]  & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
-				((fw->buf[k+4]  & 0xFFFFF000) == 0xE5900000) &&	// LDR R0, [R0, #n]
-				((fw->buf[k+6]  & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
-				((fw->buf[k+9]  & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
-				((fw->buf[k+12] & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
-				((fw->buf[k+15] & 0xFF1FF000) == 0xE51F0000) &&	// LDR R0, =base
-				((fw->buf[k+18] & 0xFF1FF000) == 0xE51F1000) &&	// LDR R1, =base
-				(LDR2val(fw,k) == LDR2val(fw,k+3)) &&
-				(LDR2val(fw,k) == LDR2val(fw,k+6)) &&
-				(LDR2val(fw,k) == LDR2val(fw,k+9)) &&
-				(LDR2val(fw,k) == LDR2val(fw,k+12)) &&
-				(LDR2val(fw,k) == LDR2val(fw,k+15)) &&
-				(LDR2val(fw,k) == LDR2val(fw,k+18)))
-			{
-				uint32_t base = LDR2val(fw,k);
-				uint32_t ofst = fw->buf[k+1] & 0x00000FFF;
-				print_stubs_min(fw,"playrec_mode",base+ofst,idx2adr(fw,k));
-				found_playrec_mode = 1;
-				//break;
-			}
-		}
+        search_fw(fw, match_playrec_mode, 0, 0);
 	}
 	
 	// Find 'zoom_status'
@@ -3448,31 +3924,7 @@ void find_stubs_min(firmware *fw)
 	}
 	
 	// Find 'some_flag_for_af_scan'
-	for (k=0; k<fw->size; k++)
-	{
-		if (isB(fw,k)   &&  // B loc
-			isB(fw,k+1) &&  // B loc
-			isB(fw,k+2) &&  // B loc
-			isB(fw,k+3) &&  // B loc
-			isB(fw,k+4) &&  // B loc
-			isB(fw,k+5) &&  // B loc
-			isB(fw,k+6) &&  // B loc
-			isB(fw,k+7) &&  // B loc
-			(followBranch(fw,idx2adr(fw,k),1) != followBranch(fw,idx2adr(fw,k+1),1)) &&
-			(followBranch(fw,idx2adr(fw,k),1) == followBranch(fw,idx2adr(fw,k+2),1)) &&
-			(followBranch(fw,idx2adr(fw,k),1) == followBranch(fw,idx2adr(fw,k+3),1)) &&
-			(followBranch(fw,idx2adr(fw,k),1) != followBranch(fw,idx2adr(fw,k+4),1)) &&
-			(followBranch(fw,idx2adr(fw,k),1) != followBranch(fw,idx2adr(fw,k+5),1)) &&
-			(followBranch(fw,idx2adr(fw,k),1) == followBranch(fw,idx2adr(fw,k+6),1)) &&
-			(followBranch(fw,idx2adr(fw,k),1) == followBranch(fw,idx2adr(fw,k+7),1)) &&
-			(isLDR_PC(fw,adr2idx(fw,followBranch(fw,idx2adr(fw,k),1)))))	// LDR R0, =base
-		{
-			uint32_t base = LDR2val(fw,adr2idx(fw,followBranch(fw,idx2adr(fw,k),1)));
-            if (base < fw->base)
-			    print_stubs_min(fw,"some_flag_for_af_scan",base,followBranch(fw,idx2adr(fw,k),1));
-			//break;
-		}
-	}
+    search_fw(fw, match_some_flag_for_af_scan, 0, 0);
 
     // focus_len_table
     if (min_focus_len != 0)
@@ -3509,92 +3961,10 @@ void find_stubs_min(firmware *fw)
     }
 	
 	// Find 'zoom_busy'
-	k = get_saved_sig(fw, "ResetZoomLens");
-	if (k >= 0)
-	{
-		uint32_t fadr = func_names[k].val;
-		int idx = adr2idx(fw, fadr);
-		
-		for (k=idx; k<idx+5; k++)
-		{
-            if (isBL(fw,k))
-            {
-                int idx1 = idxFollowBranch(fw,k,0x01000001);
-                for (k1=idx1; k1<idx1+50; k1++)
-                {
-                    if ((fw->buf[k1] & 0xFFFF0000) == 0xE8BD0000)   // LDMFD
-                    {
-                        fadr = 0;
-                        if (isADR_PC(fw,k1+1))
-                        {
-                            fadr = ADR2adr(fw,k1+1);
-                        }
-                        else if (isADR_PC(fw,k1+2))
-                        {
-                            fadr = ADR2adr(fw,k1+2);
-                        }
-                        else if (isADR_PC(fw,k1-3))
-                        {
-                            fadr = ADR2adr(fw,k1-3);
-                        }
-                        else if (isLDR_PC(fw,k1+1))
-                        {
-                            fadr = LDR2val(fw,k1+1);
-                        }
-                        else if (isLDR_PC(fw,k1+2))
-                        {
-                            fadr = LDR2val(fw,k1+2);
-                        }
-                        if (fadr != 0)
-                        {
-                            int idx2 = adr2idx(fw,fadr);
-                            if (isLDR_PC(fw,idx2+1) && isLDR(fw,idx2+2))
-                            {
-                                int base = LDR2val(fw,idx2+1);
-                                int ofst = fw->buf[idx2+2] & 0xFFF;
-                       			print_stubs_min(fw,"zoom_busy",base+ofst-4,fadr);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+	search_saved_sig(fw, "ResetZoomLens", match_ResetZoomLens, 0, 0, 5);
 	
 	// Find 'focus_busy'
-	k = get_saved_sig(fw, "ResetFocusLens");
-	if (k >= 0)
-	{
-		uint32_t fadr = func_names[k].val;
-		int idx = adr2idx(fw, fadr);
-		
-		for (k=idx; k<idx+25; k++)
-		{
-            if ((fw->buf[k] & 0xFFFF0000) == 0xE8BD0000)   // LDMFD
-            {
-                k1 = 0;
-                if (isBL(fw,k-2))
-                {
-                    k1 = idxFollowBranch(fw,k-2,0x01000001);
-                }
-                if (isBL(fw,k-1))
-                {
-                    k1 = idxFollowBranch(fw,k-1,0x01000001);
-                }
-                if (k1 != 0)
-                {
-                    if (isLDR_PC(fw,k1+1) && isLDR(fw,k1+3))
-                    {
-                        int base = LDR2val(fw,k1+1);
-                        int ofst = fw->buf[k1+3] & 0xFFF;
-                       	print_stubs_min(fw,"focus_busy",base+ofst-4,idx2adr(fw,k1));
-                        break;
-                    }
-                }
-            }
-        }
-    }
+	search_saved_sig(fw, "ResetFocusLens", match_ResetFocusLens, 0, 0, 25);
 	
 	// Find 'recreview_hold'
 	k = find_str_ref(fw, "ShootCon_NotifyStartReviewHold");
@@ -3614,150 +3984,32 @@ void find_stubs_min(firmware *fw)
         }
 	}
 	
-	// Find 'palette buffer' info
-	k = get_saved_sig(fw, "SavePaletteData");
-	if (k >= 0)
-	{
-		uint32_t fadr = func_names[k].val;
-		int idx = adr2idx(fw, fadr);
-		
-        if (isBL(fw,idx+13))
-        {
-            fadr = followBranch(fw, idx2adr(fw,idx+13), 0x01000001);
-            idx = adr2idx(fw, fadr);
-            if (isLDR(fw,idx) && isLDR(fw,idx+1) && isB(fw,idx+2))
-            {
-                uint32_t palette_control = LDR2val(fw,idx);
-                print_stubs_min(fw,"palette_control",palette_control,idx2adr(fw,idx));
-                int active_offset = fwval(fw,idx+1) & 0xFFF;
-                print_stubs_min(fw,"active_palette_buffer",palette_control+active_offset,idx2adr(fw,idx+1));
-                fadr = followBranch(fw,idx2adr(fw,idx+2),1);
-                idx = adr2idx(fw, fadr);
-                if (isLDR(fw,idx+17) && isLDR(fw,idx+18) && isLDR(fw,idx+12) && (LDR2val(fw,idx+12) == palette_control))
-                {
-                    int palette_buffer;
-                    if ((fwval(fw,idx+18) & 0x0000F000) == 0)
-                    {
-                        palette_buffer = LDR2val(fw,idx+17);
-                        print_stubs_min(fw,"palette_buffer",palette_buffer,idx2adr(fw,idx+17));
-                    }
-                    else
-                    {
-                        palette_buffer = LDR2val(fw,idx+18);
-                        print_stubs_min(fw,"palette_buffer",palette_buffer,idx2adr(fw,idx+18));
-                    }
-                }
-            }
-        }
-	}
-	
-	// Find 'bitmap buffer' info
-	k = get_saved_sig(fw, "GUISrv_StartGUISystem");
-	if (k >= 0)
-	{
-		uint32_t fadr = func_names[k].val;
-		int idx = adr2idx(fw, fadr);
+    // Find palette colour data
+    uint32_t palette_data = search_fw(fw, match_palette_data, 0, 0);
 
-        uint32_t screen_lock = get_saved_sig(fw, "ScreenLock");
-        if (screen_lock)
-        {
-            screen_lock = func_names[screen_lock].val;
-            for (k=idx; k<idx+32; k++)
-            {
-                if (isBL(fw,k) && (followBranch(fw,idx2adr(fw,k),0x01000001) == screen_lock) && isBL(fw,k+2) && isBL(fw,k+3))
-                {
-                    fadr = followBranch2(fw,idx2adr(fw,k+3),0x01000001);
-                    k1 = adr2idx(fw,fadr);
-                    if (isLDR_PC(fw,k1+1))
-                    {
-                        int reg = (fwval(fw,k1+1) & 0x0000F000) >> 12;
-                        uint32_t adr = LDR2val(fw,k1+1);
-                        for (k2=k1; k2<k1+32; k2++)
-                        {
-                            if (isLDR_PC(fw,k2) && isLDR(fw,k2+1) && (((fwval(fw,k2+1) & 0x000F0000) >> 16) == reg))
-                            {
-                                uint32_t bitmap_buffer = LDR2val(fw,k2);
-                                if (bitmap_buffer == (adr + 0x1C))
-                                {
-                                    uint32_t active_bitmap_buffer = adr + (fwval(fw,k2+1) & 0xFFF);
-                                    print_stubs_min(fw,"bitmap_buffer",bitmap_buffer,idx2adr(fw,k2));
-                                    print_stubs_min(fw,"active_bitmap_buffer",active_bitmap_buffer,idx2adr(fw,k2+1));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+	// Find 'palette buffer' info
+    if (palette_data)
+    {
+        bprintf("// Palette colour tables  found @ 0x%08x\n", palette_data);
+        search_saved_sig(fw, "SavePaletteData", match_SavePaletteData, palette_data, 0, 1);
+	}
+    
+	// Find 'bitmap buffer' info
+	search_saved_sig(fw, "GUISrv_StartGUISystem", match_GUISrv_StartGUISystem, 0, 0, 32);
 
     // Get viewport address
     uint32_t v = find_viewport_address(fw,&k);
 	if (k >= 0)
 	{
-        int found = 0;
-
-        // Find location in firmware that holds viewport address
-        for (k=0; !found && k<fw->size; k++)
-        {
-            if (fw->buf[k] == v)
-            {
-                uint32_t vp = idx2adr(fw,k);
-                // Find location in firmware that points to viewport address
-                for (k1=0; !found && k1<fw->size; k1++)
-                {
-                    if (fw->buf[k1] == vp)
-                    {
-                        // Find code loading from 'vp'
-                        for (k2=0; k2<fw->size; k2++)
-                        {
-                            if (isLDR_PC(fw,k2) && (LDR2val(fw,k2) == vp))
-                            {
-                                // Scan back to start of function
-                                int k3;
-                                for (k3=k2-1; !found && k3>k2-1000; k3--)
-                                {
-                            		if ((fw->buf[k3] & 0xFFFFF000) == 0xe92d4000)    // STMFD SP!, {..,LR}
-                            		{
-                                        // Check if function sig matches what we want
-                                        if (isLDR_PC(fw,k3+1) && isLDR_PC(fw,k3+2) && isLDR(fw,k3+3) &&
-                                            (((fw->buf[k3+1] & 0x0000F000) >> 12) == ((fw->buf[k3+3] & 0x000F0000) >> 16)))
-                                        {
-                                            uint32_t a = LDR2val(fw,k3+1);
-                                            print_stubs_min(fw,"viewport_buffers",vp,idx2adr(fw,k2));
-                                            print_stubs_min(fw,"active_viewport_buffer",a,idx2adr(fw,k3+1));
-                                            found = 1;
-                                        }
-                                        else if (isLDR_PC(fw,k3+1) && isLDR_PC(fw,k3+3) && isLDR(fw,k3+4) &&
-                                            (((fw->buf[k3+1] & 0x0000F000) >> 12) == ((fw->buf[k3+4] & 0x000F0000) >> 16)))
-                                        {
-                                            uint32_t a = LDR2val(fw,k3+1);
-                                            print_stubs_min(fw,"viewport_buffers",vp,idx2adr(fw,k2));
-                                            print_stubs_min(fw,"active_viewport_buffer",a,idx2adr(fw,k3+1));
-                                            found = 1;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        search_fw(fw, match_viewport_address, v, 0);
     }
 }
 
 //------------------------------------------------------------------------------------------------------------
 
-// Search for things
-void find_other_vals(firmware *fw)
+int find_ctypes(firmware *fw, int k)
 {
-	out_hdr = 1;
-	add_blankline();
-
-	bprintf("// Misc stuff\n");
-
-    unsigned char ctypes[] = 
+    static unsigned char ctypes[] = 
     { 
         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x60, 0x60, 0x60, 0x60, 0x60, 0x20, 0x20,
         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
@@ -3769,140 +4021,138 @@ void find_other_vals(firmware *fw)
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0x10, 0x10, 0x10, 0x10, 0x20
     };
 
-    unsigned char *p = (unsigned char*)fw->buf;
-    int i, found = 0;
-    for (i=0; i<fw->size*4-sizeof(ctypes); i++, p++)
+    if (k < (fw->size*4 - sizeof(ctypes)))
     {
-        if (memcmp(p,ctypes,sizeof(ctypes)) == 0)
+        if (memcmp(((char*)fw->buf)+k,ctypes,sizeof(ctypes)) == 0)
         {
-            bprintf("DEF(ctypes, 0x%08x)\n", fw->base + i);
-            found = 1;
-            break;
+            bprintf("DEF(ctypes, 0x%08x)\n", fw->base + k);
+            return 1;
         }
     }
-    if (!found)
+    return 0;
+}
+
+int match_nrflag(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+    if (isBL(fw,k) && (idxFollowBranch(fw,k,0x01000001) == v1))
+    {
+        // Found call to function, work out R3 value passed in
+        int ofst1 = 0;
+        int k3, k4 = 0;
+        for (k3=k; k3>k-30; k3--)
+        {
+            if ((fw->buf[k3] & 0x0F0FF000) == 0x020D3000)       // Dest = R3, Src = SP = skip
+                break;
+            if ((fw->buf[k3] & 0xFF0FF000) == 0xE2033000)       // ADD/SUB R3,R3,x
+            {
+                k4 = k3;
+                if ((fw->buf[k3] & 0x00F00000) == 0x00400000)   // SUB
+                    ofst1 -= (fw->buf[k3] & 0x00000FFF);
+                else
+                    ofst1 += (fw->buf[k3] & 0x00000FFF);
+            }
+            if (isLDR_PC(fw,k3) && ((fw->buf[k3] & 0x0000F000) == 0x00003000))
+            {
+                int ofst2 = LDR2val(fw,k3);
+                bprintf("\n// For capt_seq.c\n");
+                if (ofst1 == 0)
+                {
+                    bprintf("DEF(_nrflag,0x%04x) // Found @ %08x (0x%04x)\n",ofst2,idx2adr(fw,k3),ofst2);
+                    bprintf("//static long *nrflag = (long*)(0x%04x);       // Found @ %08x\n",ofst2,idx2adr(fw,k3));
+                }
+                else if (ofst1 < 0)
+                {
+                    bprintf("DEF(_nrflag,0x%04x) // Found @ %08x (0x%04x) & %08x (-0x%02x)\n",ofst2+ofst1,idx2adr(fw,k3),ofst2,idx2adr(fw,k),-ofst1);
+                    bprintf("//static long *nrflag = (long*)(0x%04x-0x%02x);  // Found @ %08x & %08x\n",ofst2,-ofst1,idx2adr(fw,k3),idx2adr(fw,k4));
+                }
+                else
+                {
+                    bprintf("DEF(_nrflag,0x%04x) // Found @ %08x (0x%04x) & %08x (+0x%02x)\n",ofst2+ofst1,idx2adr(fw,k3),ofst2,idx2adr(fw,k),ofst1);
+                    bprintf("//static long *nrflag = (long*)(0x%04x+0x%02x);  // Found @ %08x & %08x\n",ofst2,ofst1,idx2adr(fw,k3),idx2adr(fw,k4));
+                }
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int match_NR_SetDarkSubType(firmware *fw, int idx, int v)
+{
+    int k1, k2, k3;
+    int found = 0;
+
+    if (isLDR(fw, idx+1) && isLDR(fw, idx+2))
+    {
+        k3 = idx+2;
+        int ofst2 = LDR2val(fw, k3);
+
+        for (k1=k3+1; k1<k3+8; k1++)
+        {
+            if (isB(fw, k1))
+            {
+                k2 = idxFollowBranch(fw,k1,0x01000001);
+                if (isSTR(fw, k2))
+                {
+                    found = 1;
+                    break;
+                }
+                k2++;
+                if (isSTR(fw, k2))
+                {
+                    found = 1;
+                    break;
+                }
+            }
+        }
+
+        if (found)
+        {
+            int ofst1 = fw->buf[k2] & 0x00000FFF;
+            bprintf("\n// For capt_seq.c\n");
+            bprintf("DEF(_nrflag,0x%04x) // Found @ %08x (0x%04x) & %08x (+0x%02x)\n",ofst2+ofst1,idx2adr(fw,k3),ofst2,idx2adr(fw,k2),ofst1);
+            bprintf("//static long *nrflag = (long*)(0x%04x+0x%02x);  // Found @ %08x & %08x\n",ofst2,ofst1,idx2adr(fw,k3),idx2adr(fw,k2));
+            bprintf("//#define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto\n");
+        }
+    }
+
+    return found;
+}
+
+int match_NR_SetDarkSubType2(firmware *fw, int k, int v)
+{
+    // Found NR_GetDarkSubType function, now follow first BL call.
+    if (isBL(fw,k))
+    {
+        k = idxFollowBranch(fw,k,0x01000001);
+        return search_fw(fw, match_nrflag, k, 0);
+    }
+
+    return 0;
+}
+
+// Search for things
+void find_other_vals(firmware *fw)
+{
+	out_hdr = 1;
+	add_blankline();
+
+	bprintf("// Misc stuff\n");
+
+    if (!search_fw_bytes(fw, find_ctypes))
     {
         bprintf("//DEF(ctypes, *** Not Found ***)\n");
     }
 
     // Look for nrflag (for capt_seq.c)
-    int k, k1, k2, k3, k4, idx, ofst1, ofst2;
-
-    // Look for nrflag (for capt_seq.c)
-    found = 0;
+    int found = 0;
     if (fw->dryos_ver >= 45)
     {
-	    k = get_saved_sig(fw, "NR_SetDarkSubType");
-	    if (k >= 0)
-	    {
-		    uint32_t fadr = func_names[k].val;
-		    idx = adr2idx(fw, fadr);
-
-            if (isLDR(fw, idx+1) && isLDR(fw, idx+2))
-            {
-                k3 = idx+2;
-                ofst2 = LDR2val(fw, k3);
-
-                for (k1=k3+1; k1<k3+8; k1++)
-                {
-                    if (isB(fw, k1))
-                    {
-                        k2 = idxFollowBranch(fw,k1,0x01000001);
-                        if (isSTR(fw, k2))
-                        {
-                            found = 1;
-                            break;
-                        }
-                        k2++;
-                        if (isSTR(fw, k2))
-                        {
-                            found = 1;
-                            break;
-                        }
-                    }
-                }
-
-                if (found)
-                {
-                    ofst1 = fw->buf[k2] & 0x00000FFF;
-                    bprintf("\n// For capt_seq.c\n");
-                    bprintf("DEF(_nrflag,0x%04x) // Found @ %08x (0x%04x) & %08x (+0x%02x)\n",ofst2+ofst1,idx2adr(fw,k3),ofst2,idx2adr(fw,k2),ofst1);
-                    bprintf("//static long *nrflag = (long*)(0x%04x+0x%02x);  // Found @ %08x & %08x\n",ofst2,ofst1,idx2adr(fw,k3),idx2adr(fw,k2));
-                    bprintf("//#define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto\n");
-                }
-            }
-        }
+        found = search_saved_sig(fw, "NR_SetDarkSubType", match_NR_SetDarkSubType, 0, 0, 1);
     }
     if (!found)
     {
-	    k = get_saved_sig(fw, "NR_GetDarkSubType");
-	    if (k >= 0)
-	    {
-		    uint32_t fadr = func_names[k].val;
-		    idx = adr2idx(fw, fadr);
-
-            // Found NR_GetDarkSubType function, now follow first BL call.
-            k1 = 0;
-            for (k=idx; k<idx+20; k++)
-            {
-                if (isBL(fw,k))
-                {
-                    k1 = idxFollowBranch(fw,k,0x01000001);
-                    break;
-                }
-            }
-
-            if (k1 > 0)
-            {
-                int found = 0;
-                // Found function called from NR_GetDarkSubType
-                // Check if old version - see what value passed in R3
-                for (k2=0; k2<fw->size && !found; k2++)
-                {
-                    if (isBL(fw,k2) && (idxFollowBranch(fw,k2,0x01000001) == k1))
-                    {
-                        // Found call to function, work out R3 value passed in
-                        ofst1 = 0;
-                        k4 = 0;
-                        for (k3=k2; k3>k2-30 && !found; k3--)
-                        {
-                            if ((fw->buf[k3] & 0x0F0FF000) == 0x020D3000)       // Dest = R3, Src = SP = skip
-                                break;
-                            if ((fw->buf[k3] & 0xFF0FF000) == 0xE2033000)       // ADD/SUB R3,R3,x
-                            {
-                                k4 = k3;
-                                if ((fw->buf[k3] & 0x00F00000) == 0x00400000)   // SUB
-                                    ofst1 -= (fw->buf[k3] & 0x00000FFF);
-                                else
-                                    ofst1 += (fw->buf[k3] & 0x00000FFF);
-                            }
-                            if (isLDR_PC(fw,k3) && ((fw->buf[k3] & 0x0000F000) == 0x00003000))
-                            {
-                                ofst2 = LDR2val(fw,k3);
-                                bprintf("\n// For capt_seq.c\n");
-                                if (ofst1 == 0)
-                                {
-                                    bprintf("DEF(_nrflag,0x%04x) // Found @ %08x (0x%04x)\n",ofst2,idx2adr(fw,k3),ofst2);
-                                    bprintf("//static long *nrflag = (long*)(0x%04x);       // Found @ %08x\n",ofst2,idx2adr(fw,k3));
-                                }
-                                else if (ofst1 < 0)
-                                {
-                                    bprintf("DEF(_nrflag,0x%04x) // Found @ %08x (0x%04x) & %08x (-0x%02x)\n",ofst2+ofst1,idx2adr(fw,k3),ofst2,idx2adr(fw,k2),-ofst1);
-                                    bprintf("//static long *nrflag = (long*)(0x%04x-0x%02x);  // Found @ %08x & %08x\n",ofst2,-ofst1,idx2adr(fw,k3),idx2adr(fw,k4));
-                                }
-                                else
-                                {
-                                    bprintf("DEF(_nrflag,0x%04x) // Found @ %08x (0x%04x) & %08x (+0x%02x)\n",ofst2+ofst1,idx2adr(fw,k3),ofst2,idx2adr(fw,k2),ofst1);
-                                    bprintf("//static long *nrflag = (long*)(0x%04x+0x%02x);  // Found @ %08x & %08x\n",ofst2,ofst1,idx2adr(fw,k3),idx2adr(fw,k4));
-                                }
-                                found = 1;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+	    search_saved_sig(fw, "NR_GetDarkSubType", match_NR_SetDarkSubType2, 0, 0, 20);
     }
 }
 
@@ -4038,6 +4288,20 @@ void print_kmvals()
 	bprintf("//    { 0, 0, 0 }\n//};\n");
 }
 
+int match_GetSDProtect(firmware *fw, int k, int v)
+{
+	if (isB(fw,k))	// B
+	{
+		k = idxFollowBranch(fw,k,1);
+		if (isLDR_PC(fw,k))
+		{
+			return LDR2val(fw,k);
+		}
+	}
+
+    return 0;
+}
+
 void find_key_vals(firmware *fw)
 {
 	int k,k1;
@@ -4046,22 +4310,7 @@ void find_key_vals(firmware *fw)
 	add_blankline();
 
 	// find 'SD_READONLY_FLAG'
-	uint32_t tadr = 0;
-	k = get_saved_sig(fw, "GetSDProtect");
-	if (k >= 0)
-	{
-		uint32_t fadr = func_names[k].val;
-		k = adr2idx(fw,fadr);
-		if (isB(fw,k+1))	// B
-		{
-			fadr = followBranch(fw,fadr+4,1);
-			k1 = adr2idx(fw,fadr);
-			if (isLDR_PC(fw,k1))
-			{
-				tadr = LDR2val(fw,k1);
-			}
-		}
-	}
+	uint32_t tadr = search_saved_sig(fw, "GetSDProtect", match_GetSDProtect, 0, 1, 1);
 	if (tadr == 0)
 	{
 		k = find_str_ref(fw,"SD Not Exist\n");
@@ -4193,9 +4442,6 @@ int main(int argc, char **argv)
     bprintf("#include \"stubs_asm.h\"\n\n");
 
     load_firmware(&fw,argv[1],argv[2],(argc==5)?argv[4]:0);
-	
-    // Find all the valid ranges for checking (skips over large blocks of 0xFFFFFFFF)
-    findRanges(&fw);
 
 	out_hdr = 1;
 	bprintf("// Stubs below should be checked. Stub not matched 100%%, or difference found to current 'stubs_entry_2.S'\n");
@@ -4222,11 +4468,11 @@ int main(int argc, char **argv)
 
     clock_t t2 = clock();
 
-	find_modemap(&fw);
-	find_stubs_min(&fw);
-	find_lib_vals(&fw);
-	find_key_vals(&fw);
-	find_platform_vals(&fw);
+    find_modemap(&fw);
+    find_stubs_min(&fw);
+    find_lib_vals(&fw);
+    find_key_vals(&fw);
+    find_platform_vals(&fw);
     find_other_vals(&fw);
 
     printf("Time to generate stubs %.2f seconds\n",(double)(t2-t1)/(double)CLOCKS_PER_SEC);

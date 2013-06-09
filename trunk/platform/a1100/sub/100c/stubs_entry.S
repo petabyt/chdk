@@ -43,6 +43,10 @@ DEF(focus_len_table                         ,0xfffe2a8c) // Found @0xfffe2a8c
 DEF(zoom_busy                               ,0x00005560) // Found @0xffcf4788
 DEF(focus_busy                              ,0x00005478) // Found @0xffcefa8c
 //DEF(recreview_hold                          ,0x000030e0) // Found @0xffc65938, ** != ** stubs_min = 0xffc00414 (0xFFC00414)
+// Palette colour tables  found @ 0xffea322c
+DEF(active_palette_buffer                   ,0x000075a4) // Found @0xffd67c68
+DEF(palette_buffer_ptr                      ,0x000075b8) // Found @0xffd67b1c
+// Offset from start of palette_buffer to color data = 16 (Found @0xffd669b0)
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x403f1000; }             // Found @0xffc2c594

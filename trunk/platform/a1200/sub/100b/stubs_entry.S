@@ -43,9 +43,12 @@ DEF(focus_len_table                         ,0xfffe2a98) // Found @0xfffe2a98
 DEF(zoom_busy                               ,0x00006510) // Found @0xff960534
 DEF(focus_busy                              ,0x00006420) // Found @0xff95d914
 DEF(recreview_hold                          ,0x00003490) // Found @0xff897fa8
+// Palette colour tables  found @ 0xffbaf328
 DEF(palette_control                         ,0x00008fd0) // Found @0xffa00a04
 DEF(active_palette_buffer                   ,0x00008fd8) // Found @0xffa00a08
+DEF(palette_buffer_ptr                      ,0x00008fdc) // Found @0xffa00dac
 DEF(palette_buffer                          ,0x000b41e4) // Found @0xffa00dbc
+// Offset from start of palette_buffer to color data = 8 (Found @0xffaf6064)
 DEF(viewport_buffers                        ,0xffb56ac8) // Found @0xff851578
 DEF(active_viewport_buffer                  ,0x000020d8) // Found @0xff8512ec
 
