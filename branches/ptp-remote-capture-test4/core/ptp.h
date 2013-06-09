@@ -126,7 +126,6 @@ enum ptp_chdk_script_data_type {
 // used to select and also to indicate available data in PTP_CHDK_RemoteCaptureIsReady
 #define PTP_CHDK_CAPTURE_JPG    0x1
 #define PTP_CHDK_CAPTURE_RAW    0x2
-#define PTP_CHDK_CAPTURE_YUV    0x4 // not implemented yet
 
 // status from PTP_CHDK_RemoteCaptureIsReady if capture not enabled
 #define PTP_CHDK_CAPTURE_ERR    0x10000000

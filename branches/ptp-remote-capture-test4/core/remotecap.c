@@ -29,11 +29,6 @@ int remotecap_get_target_support(void) {
     ret |= PTP_CHDK_CAPTURE_RAW;
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
     ret |= PTP_CHDK_CAPTURE_JPG;
-    // only report YUV if supported, but note may not be available in current mode
-    // TODO should maybe be a camera.h define?
-    if(hook_yuv_shooting_buf_addr() != (void *)0xFFFFFFFF) {
-        ret |= PTP_CHDK_CAPTURE_YUV;
-    }
 #endif
     return ret;
 }
@@ -48,8 +43,6 @@ static int startline=0;
 static int linecount=0;
 
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
-static ptp_data_chunk yuvchunk[MAX_CHUNKS_FOR_YUV];
-static int yuvcurrchnk;
 static int jpegcurrchnk;
 #endif //CAM_HAS_FILEWRITETASK_HOOK
 
@@ -97,7 +90,6 @@ void remotecap_raw_available(void) {
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
     filewrite_set_discard_jpeg(1);
     jpegcurrchnk=0; //needs to be done here
-    yuvcurrchnk=0;
 #endif //CAM_HAS_FILEWRITETASK_HOOK
     if(!(remote_file_target & PTP_CHDK_CAPTURE_RAW)) {
         hook_wait[RC_WAIT_CAPTSEQTASK] = 0; // don't block capt_seq task
@@ -121,22 +113,13 @@ called from filewrite hook to notify code that jpeg data is available
 TODO name is not currently saved here
 */
 void remotecap_jpeg_available(const char *name) {
-    if(!(remote_file_target & (PTP_CHDK_CAPTURE_JPG | PTP_CHDK_CAPTURE_YUV | PTP_CHDK_CAPTURE_RAW))) {
+    if(!(remote_file_target & (PTP_CHDK_CAPTURE_JPG | PTP_CHDK_CAPTURE_RAW))) {
         hook_wait[RC_WAIT_FWTASK] = 0; // don't block filewrite task
         return;
     }
     hook_wait[RC_WAIT_FWTASK] = 3000; // x10ms sleeps = 30 sec timeout, TODO make setable
-#if 0
-    //for use in debug & porting, for example to dump the filewritetask data block or some memory
-    yuvchunk[0].address=0x1000;
-    yuvchunk[0].length=MAXRAMADDR+1-0x1000;
-#else
-    yuvchunk[0].address=(int)hook_yuv_shooting_buf_addr();
-    //UYVY format is assumed, 16bits/pixel total
-    yuvchunk[0].length=hook_yuv_shooting_buf_width()*hook_yuv_shooting_buf_height()*2;
-#endif
 
-    remotecap_set_available_data_type(remote_file_target & (PTP_CHDK_CAPTURE_JPG | PTP_CHDK_CAPTURE_YUV));
+    remotecap_set_available_data_type(remote_file_target & PTP_CHDK_CAPTURE_JPG);
 }
 #endif
 
@@ -160,7 +143,7 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
         case 0: //name
             //two ways to get this
             //1) get_file_next_counter(), may increment between the raw and filewrite hooks
-            //2) from filewritetask data (only available for jpeg and yuv)
+            //2) from filewritetask data (only available for jpeg)
             sprintf(nameforptp,"IMG_%04d",filenumforptp);
             *addr=&nameforptp[0];
             *size=9;
@@ -191,24 +174,6 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
 //                 remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_JPG);
 //             }
             break;
-        case PTP_CHDK_CAPTURE_YUV: //yuv
-            // TODO use the same function as for RAW?
-            if ( yuvcurrchnk >= MAX_CHUNKS_FOR_YUV ) {
-                *addr=(char*)0xffffffff;
-                *size=0;
-            }
-            else {
-                *addr=(char*)yuvchunk[yuvcurrchnk].address;
-                *size=yuvchunk[yuvcurrchnk].length;
-                yuvcurrchnk+=1;
-                if ( yuvcurrchnk < MAX_CHUNKS_FOR_YUV ) {
-                    if ( yuvchunk[yuvcurrchnk].length != 0 ) notlastchunk = 1; // not the last chunk
-                }
-            }
-//             if ( (*addr==0) || (*size==0) || (!notlastchunk) ) {
-//                 remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_YUV);
-//             }
-            break;
 #endif
         default:
             /*
@@ -236,7 +201,7 @@ void remotecap_free_hooks(int mode) {
     else
 #endif
     {
-        // TODO these will be called at the end raw and again at the end of jpeg/yuv
+        // TODO these will be called at the end raw and again at the end of jpeg
         remotecap_set_available_data_type(0); // for fmt -1 case
         // free the filewrite hook
         hook_wait[RC_WAIT_FWTASK] = 0;

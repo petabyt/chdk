@@ -14,6 +14,11 @@ long hook_raw_size()
 }
 
 /*
+YUV buffer created in jpeg processing for < full size jpeg
+not currently used, kept for future reference
+*/
+#if 0
+/*
 buffer that holds the uncompressed yuv source of the fresh jpeg
 not used for L or W picture size
 */
@@ -37,6 +42,7 @@ int hook_yuv_shooting_buf_height() {
         return *(int*)0x33398; //FFCB1D54
     return 0;
 }
+#endif
 
 void *vid_get_bitmap_fb()
 {
