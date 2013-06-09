@@ -62,6 +62,10 @@ void vid_turn_on_updates()
   _RefreshPhysicalScreen(1);
 }
 
+// Functions for PTP Live View system
+int vid_get_palette_type()                      { return 3 ; }          // 1,2,3,4,or 5
+int vid_get_palette_size()                      { return 256 * 4 ; }    // 16*4 or 256*4
+
 void *vid_get_bitmap_active_palette()
 {
     extern int active_palette_buffer;
