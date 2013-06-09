@@ -88,7 +88,7 @@
 
 #elif CAM_BITMAP_PALETTE==2
 
-// Used by :- G10, IXUS95_SD1200, IXUS980_SD990
+// Used by :- IXUS95_SD1200, IXUS980_SD990
 
     #define COLOR_WHITE                 0xD3
     #define COLOR_RED                   0x64
@@ -154,7 +154,7 @@
 
 #elif CAM_BITMAP_PALETTE==3
 
-// Used by :- IXUS120_SD940
+// Used by : 
 
     #define COLOR_WHITE                 0x01
     #define COLOR_RED                   0x2B
@@ -828,7 +828,7 @@
 
 #elif CAM_BITMAP_PALETTE==16
 
-// Used by :- A1200
+// Used by :- A1200, G10, IXUS120_SD940
 
 // Default Canon colors that are the same in record and play modes
 #define COLOR_WHITE         0x01
@@ -838,7 +838,7 @@
 #undef SCREEN_COLOR
 #define SCREEN_COLOR        0x1D
 
-#define COLOR_RED           (CHDK_COLOR_BASE+0)  // overloads @ Canon's best RED else we get a white background on startup splash logo
+#define COLOR_RED           (CHDK_COLOR_BASE+0)  
 #define COLOR_RED_DK        (CHDK_COLOR_BASE+1)
 #define COLOR_RED_LT        (CHDK_COLOR_BASE+2)
 #define COLOR_GREEN         (CHDK_COLOR_BASE+3)
@@ -855,7 +855,7 @@
 #define COLOR_BG            COLOR_GREY
 #define COLOR_FG            COLOR_WHITE
 #define COLOR_SELECTED_BG   COLOR_BLUE_DK  
-#define COLOR_SELECTED_FG   COLOR_WHITE
+#define COLOR_SELECTED_FG   COLOR_YELLOW
 #define COLOR_ALT_BG        COLOR_BG
 #define COLOR_SPLASH_RED    COLOR_RED
 #define COLOR_SPLASH_PINK   COLOR_RED_LT
@@ -873,10 +873,6 @@
 #define COLOR_HISTO_RB      COLOR_RED
 #define COLOR_HISTO_RB_PLAY COLOR_RED
 
-// Icon colors
-// 3 shades of Red, Green, Yellow and Grey
-// Separate definitions for record and playback mode
-// to cater for cameras with variable palettes
 #define	COLOR_ICON_REC_RED		COLOR_RED
 #define	COLOR_ICON_REC_RED_DK		COLOR_RED_DK
 #define	COLOR_ICON_REC_RED_LT		COLOR_RED_LT
@@ -889,7 +885,6 @@
 #define	COLOR_ICON_REC_GREY		COLOR_GREY
 #define	COLOR_ICON_REC_GREY_DK		COLOR_GREY_DK
 #define	COLOR_ICON_REC_GREY_LT		COLOR_GREY_LT
-//
 
 #elif CAM_BITMAP_PALETTE==17 // used in A3100 + A3150^M
     #define COLOR_WHITE                 0x11
