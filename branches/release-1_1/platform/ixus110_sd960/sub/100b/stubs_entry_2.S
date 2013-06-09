@@ -12,4 +12,3 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(LogPrintf,                   0xFF86C85C) //ixus110
 NHSTUB(MakeAFScan,                  0xFF924900) //ixus110
 NHSTUB(ScreenLock,                  0xff9b7738) //ixus110
-NHSTUB(exmem_free,                  0xFF86A0D4) //ixus110
