@@ -253,11 +253,9 @@ extern long hook_raw_size(void); // TODO should use camera_sensor, but see note 
 // version of raw_savefile() for ptp
 int remotecap_raw_savefile(ptp_data_chunk *rawchunk, int startline, int linecount) {
     int ret = 0;
-#if DNG_SUPPORT
     if (conf.dng_raw) {  //REMINDER: set this from script before shooting
         libdng->capture_data_for_exif();
     }
-#endif    
     // Get pointers to RAW buffers (will be the same on cameras that don't have two or more buffers)
     char* rawadr = get_raw_image_addr();
     char* altrawadr = get_alt_raw_image_addr();
@@ -270,13 +268,11 @@ int remotecap_raw_savefile(ptp_data_chunk *rawchunk, int startline, int linecoun
     
 //TODO: partial raw implemented, partial dng not
     
-#if DNG_SUPPORT
     if (conf.dng_raw)
     {
-        libdng->create_dng_for_ptp(rawchunk, rawadr, altrawadr, CAM_UNCACHED_BIT, startline, linecount );
+        libdng->create_dng_for_ptp(rawchunk, rawadr, altrawadr, startline, linecount );
     }
     else 
-#endif
     {
         rawchunk[0].address=(unsigned int)(rawadr+startline*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8 )|CAM_UNCACHED_BIT;
         if ( (startline==0) && (linecount==CAM_RAW_ROWS) )
@@ -300,12 +296,10 @@ int remotecap_raw_savefile(ptp_data_chunk *rawchunk, int startline, int linecoun
         msleep(10);
     }
     
-#if DNG_SUPPORT
     if (conf.dng_raw)
     {
         libdng->free_dng_for_ptp(rawadr, altrawadr);
     }
-#endif
     
     finished();
 

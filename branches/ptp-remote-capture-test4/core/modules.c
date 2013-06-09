@@ -541,7 +541,7 @@ static void default_load_dng_to_rawbuffer(char *fn, char *rawadr)
     if (module_load(&h_dng))
         libdng->load_dng_to_rawbuffer(fn, rawadr);
 }
-static void default_create_dng_for_ptp(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, unsigned long uncachedbit, int startline, int linecount)
+static void default_create_dng_for_ptp(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, int startline, int linecount)
 {
     // Do nothing unless module is loaded
     return;

@@ -1179,7 +1179,7 @@ int write_dng(char* rawadr, char* altrawadr)
     return 1;
 }
 
-void create_dng_for_ptp(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, unsigned long uncachedbit, int startline, int linecount) 
+void create_dng_for_ptp(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, int startline, int linecount) 
 {
     //TODO: implement partial image (?)
     create_dng_header();
@@ -1189,30 +1189,30 @@ void create_dng_for_ptp(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, unsi
         if (conf.dng_version)
             patch_bad_pixels_b();
         create_thumbnail();
-        pdc[0].address = (unsigned int)dng_header_buf|uncachedbit;
+        pdc[0].address = (unsigned int)ADR_TO_UNCACHED(dng_header_buf);
         pdc[0].length = (unsigned int)dng_header_buf_size;
-        pdc[1].address = (unsigned int)thumbnail_buf|uncachedbit;
-        pdc[1].length = DNG_TH_WIDTH*DNG_TH_HEIGHT*3;
+        pdc[1].address = (unsigned int)ADR_TO_UNCACHED(thumbnail_buf);
+        pdc[1].length = DNG_TH_BYTES;
 
         //TODO: reversing could be done on host instead, how about a flag?
         reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
         // if reverse was done on cached raw, clean cache before writing
-        if(!((unsigned long)altrawadr & uncachedbit)) {
+        if(ADR_IS_CACHED(altrawadr)) {
             dcache_clean_all();
         }
 
         // Get alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
-        pdc[2].address = (unsigned int)altrawadr|uncachedbit;
+        pdc[2].address = (unsigned int)ADR_TO_UNCACHED(altrawadr);
         pdc[2].length = camera_sensor.raw_size;
     }
 }
 void free_dng_for_ptp(char* rawadr, char* altrawadr)
 {
     if (rawadr == altrawadr) {   // If only one RAW buffer then we have to swap the bytes back
-        reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
+        reverse_bytes_order(rawadr, camera_sensor.raw_size);
         // if unreverse was done on cached raw, clean cache for jpeg
         // TODO all dng functions should probably use cam_info for uncached bit
-        if(!((unsigned long)altrawadr & camera_info.cam_uncached_bit)) {
+        if(ADR_IS_CACHED(rawadr)) {
             dcache_clean_all();
         }
     }
