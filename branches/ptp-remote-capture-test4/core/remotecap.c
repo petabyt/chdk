@@ -162,17 +162,11 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
                     if ( rawchunk[rawcurrchnk].length != 0 ) notlastchunk = 1; // not the last chunk
                 }
             }
-//             if ( (*addr==0) || (*size==0) || (!notlastchunk) ) {
-//                 remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_RAW);
-//             }
             break;
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
         case PTP_CHDK_CAPTURE_JPG: //jpeg
             notlastchunk = filewrite_get_jpeg_chunk(addr,size,jpegcurrchnk,pos);
             jpegcurrchnk+=1;
-//             if ( (*addr==0) || (*size==0) || (!notlastchunk) ) {
-//                 remotecap_set_available_data_type(available_image_data & ~PTP_CHDK_CAPTURE_JPG);
-//             }
             break;
 #endif
         default:
