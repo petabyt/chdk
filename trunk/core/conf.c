@@ -987,7 +987,7 @@ int is_raw_enabled()
 #if defined(CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN)
         (m == MODE_NIGHT_SCENE) ||                                                          // True if HandHeld Night Scene (SX40HS corrupts JPEG images if RAW enabled in this mode)
 #endif
-        (shooting_get_resolution()==5) ||                                                   // True if shooting resolution is ??? (what is mode 5)
+        (shooting_get_resolution()==5) ||                                                   // True if Canon RAW enabled, for cams that treat it as a resolution setting (g9, g10, s90, sx1? not g12, g1x)
         ((m==MODE_SPORTS) && conf.save_raw_in_sports) ||                                    // True if sports mode and save_raw_in_sports is disabled
         ((m==MODE_AUTO) && conf.save_raw_in_auto) ||                                        // True if auto mode and save_raw_in_auto is disabled
         (conf.edge_overlay_enable && conf.save_raw_in_edgeoverlay) ||                       // True if edge overlay on and save_raw_in_edgeoverlay is disabled
