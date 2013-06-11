@@ -1,6 +1,6 @@
 // Camera - G15 - platform_camera.h
 
-// This file contains the various settings values specific to the G1X camera.
+// This file contains the various settings values specific to the G15 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
