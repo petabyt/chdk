@@ -24,8 +24,8 @@ typedef struct
     void (*load_dng_to_rawbuffer)(char *fn, char *rawadr);
 
     // for remote capture
-    void (*create_dng_for_ptp)(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, int startline, int linecount);
-    void (*free_dng_for_ptp)(char* rawadr, char* altrawadr);
+    void (*create_dng_header_for_ptp)(ptp_data_chunk *pdc);
+    void (*free_dng_header_for_ptp)(void);
 } libdng_sym;
 
 extern libdng_sym* libdng;

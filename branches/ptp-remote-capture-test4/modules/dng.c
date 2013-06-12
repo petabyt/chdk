@@ -1179,47 +1179,20 @@ int write_dng(char* rawadr, char* altrawadr)
     return 1;
 }
 
-void create_dng_for_ptp(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, int startline, int linecount) 
+void create_dng_header_for_ptp(ptp_data_chunk *pdc) 
 {
-    //TODO: implement partial image (?)
     create_dng_header();
-
-    if (dng_header_buf)
-    {
-        if (conf.dng_version)
-            patch_bad_pixels_b();
-        create_thumbnail();
-        pdc[0].address = (unsigned int)ADR_TO_UNCACHED(dng_header_buf);
-        pdc[0].length = (unsigned int)dng_header_buf_size;
-        pdc[1].address = (unsigned int)ADR_TO_UNCACHED(thumbnail_buf);
-        pdc[1].length = DNG_TH_BYTES;
-
-        //TODO: reversing could be done on host instead, how about a flag?
-        reverse_bytes_order2(rawadr, altrawadr, camera_sensor.raw_size);
-        // if reverse was done on cached raw, clean cache before writing
-        if(ADR_IS_CACHED(altrawadr)) {
-            dcache_clean_all();
-        }
-
-        // Get alternate (inactive) buffer that we reversed the bytes into above (if only one buffer then it will be the active buffer instead)
-        pdc[2].address = (unsigned int)ADR_TO_UNCACHED(altrawadr);
-        pdc[2].length = camera_sensor.raw_size;
+    if (dng_header_buf) {
+        pdc->address = (unsigned int)ADR_TO_UNCACHED(dng_header_buf);
+        pdc->length = (unsigned int)dng_header_buf_size;
+    } else {
+        pdc->address = 0;
+        pdc->length = 0;
     }
 }
-void free_dng_for_ptp(char* rawadr, char* altrawadr)
+void free_dng_header_for_ptp()
 {
-    if (rawadr == altrawadr) {   // If only one RAW buffer then we have to swap the bytes back
-        reverse_bytes_order(rawadr, camera_sensor.raw_size);
-        // if unreverse was done on cached raw, clean cache for jpeg
-        // TODO all dng functions should probably use cam_info for uncached bit
-        if(ADR_IS_CACHED(rawadr)) {
-            dcache_clean_all();
-        }
-    }
-    if (dng_header_buf)
-    {
-        free_dng_header();
-    }
+    free_dng_header();
 }
 
 /*********** BEGIN OF AUXILARY PART **********************/
@@ -1258,8 +1231,8 @@ libdng_sym _libdng =
     write_dng,
     load_dng_to_rawbuffer,
     // for remote capture
-	create_dng_for_ptp,
-	free_dng_for_ptp
+	create_dng_header_for_ptp,
+	free_dng_header_for_ptp
 };
 
 struct ModuleInfo _module_info =

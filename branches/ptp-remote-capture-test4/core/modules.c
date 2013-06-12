@@ -541,12 +541,8 @@ static void default_load_dng_to_rawbuffer(char *fn, char *rawadr)
     if (module_load(&h_dng))
         libdng->load_dng_to_rawbuffer(fn, rawadr);
 }
-static void default_create_dng_for_ptp(ptp_data_chunk *pdc, char* rawadr, char* altrawadr, int startline, int linecount)
-{
-    // Do nothing unless module is loaded
-    return;
-}
-static void default_free_dng_for_ptp(char* rawadr, char* altrawadr)
+
+static void default_create_dng_header_for_ptp(ptp_data_chunk *pdc)
 {
     // Do nothing unless module is loaded
     return;
@@ -564,8 +560,8 @@ libdng_sym default_libdng =
     default_convert_dng_to_chdk_raw,
     dummy_int,                         //write_dng
     default_load_dng_to_rawbuffer,
-	default_create_dng_for_ptp,
-	default_free_dng_for_ptp
+	default_create_dng_header_for_ptp, 
+	dummy_void // free_dng_header_for_ptp
 };
 
 // Library pointer

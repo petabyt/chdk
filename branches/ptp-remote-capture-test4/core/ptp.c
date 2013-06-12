@@ -656,11 +656,11 @@ static int handle_ptp(
             param2=-1; //choose error path
         }
         unsigned int rcgd_size;
-        int rcgd_notlast;
+        int rcgd_morechunks;
         char *rcgd_addr;
         int rcgd_pos;
 
-        rcgd_notlast = remotecap_get_data_chunk(param2, &rcgd_addr, &rcgd_size, &rcgd_pos); // returns "not last chunk"
+        rcgd_morechunks = remotecap_get_data_chunk(param2, &rcgd_addr, &rcgd_size, &rcgd_pos); // returns "not last chunk"
         ptp.num_param = 4;
         ptp.param3 = rcgd_pos; //client needs to seek to this file position before writing the chunk (-1 = ignore)
         ptp.param4 = (unsigned int)rcgd_addr; //return mem address as additional info
@@ -677,15 +677,15 @@ static int handle_ptp(
         else {
             send_ptp_data(data,rcgd_addr,rcgd_size);
             ptp.param1 = rcgd_size; //size
-            ptp.param2 = rcgd_notlast; // are there chunks left?
-            if (!rcgd_notlast) {
+            ptp.param2 = rcgd_morechunks; // are there chunks left?
+            if (!rcgd_morechunks) {
                 remotecap_data_type_done(param2); //data type done
             }
-            else if (rcgd_notlast == 2) { //jpeg, current queue done
+            else if (rcgd_morechunks == 2) { //jpeg, current queue done
                 remotecap_free_hooks(1); //continue with the next hook
             }
         }
-        if ( !rcgd_notlast && !remotecap_get_available_data_type() && (rcgd_addr!=0) ) { //no more chunks of anything the current hook provides
+        if ( !rcgd_morechunks && !remotecap_get_available_data_type() && (rcgd_addr!=0) ) { //no more chunks of anything the current hook provides
             remotecap_free_hooks(0);
         }
         break;

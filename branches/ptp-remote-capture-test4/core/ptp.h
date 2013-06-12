@@ -7,7 +7,7 @@
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 #define PTP_CHDK_VERSION_MAJOR 2  // increase only with backwards incompatible changes (and reset minor)
-#define PTP_CHDK_VERSION_MINOR 106  // increase with extensions of functionality
+#define PTP_CHDK_VERSION_MINOR 107  // increase with extensions of functionality
 
 /*
 protocol version history
@@ -126,6 +126,7 @@ enum ptp_chdk_script_data_type {
 // used to select and also to indicate available data in PTP_CHDK_RemoteCaptureIsReady
 #define PTP_CHDK_CAPTURE_JPG    0x1
 #define PTP_CHDK_CAPTURE_RAW    0x2
+#define PTP_CHDK_CAPTURE_DNGHDR 0x4
 
 // status from PTP_CHDK_RemoteCaptureIsReady if capture not enabled
 #define PTP_CHDK_CAPTURE_ERR    0x10000000

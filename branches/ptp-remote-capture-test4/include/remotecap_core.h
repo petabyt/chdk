@@ -21,8 +21,6 @@ void remotecap_free_hooks(int);
 // sets jpeg_chunks to NULL for DryOS r50+
 void remotecap_jpeg_chunks_done(void);
 
-#define MAX_CHUNKS_FOR_RAW 3 //raw data, including the DNG exif and thumbnail when asked
-
 //possible values for remotecap_hook_wait()
 #define RC_WAIT_FWTASK 1
 #define RC_WAIT_CAPTSEQTASK 0
