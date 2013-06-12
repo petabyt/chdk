@@ -23,10 +23,6 @@
 #include "module_load.h"
 
 //-------------------------------------------------------------------
-
-#define SPLASH_TIME               20
-
-//-------------------------------------------------------------------
 // forward declarations
 extern void schedule_memdump();
 
@@ -1886,11 +1882,157 @@ const char* gui_histo_show_enum(int change, int arg)
 #endif
 
 //-------------------------------------------------------------------
+// Splash screen handling
+
+#define SPLASH_TIME 20  // Displays for 1.6 seconds
+                        // gui_redraw called every 4th loop of core_spytask which has 20ms delay per loop = (4*20) * 20 = 1600ms
+
+#if defined(VER_CHDK)
+#define LOGO_WIDTH  149
+#define LOGO_HEIGHT 84
+#else
+#define LOGO_WIDTH  169
+#define LOGO_HEIGHT 74
+#endif
+
+static int gui_splash;
+static char *logo = NULL;
+static int logo_size, logo_text_width, logo_text_height;
+
+static const char *text[] =
+{
+    "CHDK Version '" HDK_VERSION " " BUILD_NUMBER "-" BUILD_SVNREV "'" , 
+    "Build: " __DATE__ " " __TIME__ ,
+    "Camera: " PLATFORM " - " PLATFORMSUB
+};
+
+static const color logo_colors[8] = 
+{
+    COLOR_BLACK,
+    COLOR_SPLASH_RED,
+    COLOR_RED,
+    COLOR_GREY,
+    COLOR_SPLASH_GREY,
+    COLOR_SPLASH_PINK,
+    COLOR_TRANSPARENT,
+    COLOR_WHITE
+};
+
+static void init_splash()
+{
+    gui_splash = (conf.splash_show) ? SPLASH_TIME : 0;
+
+    if (gui_splash)
+    {
+#if defined(VER_CHDK)
+        const char *logo_name="A/CHDK/DATA/logo.dat";
+#else   // CHDK-DE
+        const char *logo_name="A/CHDK/DATA/logo_de.dat";
+#endif
+        struct stat st;
+        if (stat(logo_name,&st) == 0)
+        {
+            logo_size = st.st_size;
+            logo = malloc(logo_size);
+            if (logo)
+            {
+                FILE *fd = fopen(logo_name, "rb");
+                if (fd)
+                {
+                    fread(logo,1,logo_size,fd);
+                    fclose(fd);
+                }
+                else
+                {
+                    free(logo);
+                    logo = NULL;
+                }
+            }
+        }
+
+        logo_text_height = sizeof(text)/sizeof(text[0]);
+        logo_text_width = 0;
+
+        int i;
+        for (i=0; i<logo_text_height; ++i)
+        {
+            int l = strlen(text[i]);
+            if (l > logo_text_width) logo_text_width = l;
+        }
+
+        logo_text_width = logo_text_width * FONT_WIDTH + 10;
+        logo_text_height = logo_text_height * FONT_HEIGHT + 8;
+    }
+}
+
+static void gui_draw_splash()
+{
+    coord x, y;
+    int i;
+    color cl = MAKE_COLOR(COLOR_RED, COLOR_WHITE);
+
+    x = (camera_screen.width-logo_text_width)>>1; 
+    y = ((camera_screen.height-logo_text_height)>>1) + 20;
+
+    draw_filled_round_rect(x, y, x+logo_text_width, y+logo_text_height, MAKE_COLOR(COLOR_RED, COLOR_RED));
+    for (i=0; i<sizeof(text)/sizeof(text[0]); ++i)
+    {
+        draw_string(x+((logo_text_width-strlen(text[i])*FONT_WIDTH)>>1), y+i*FONT_HEIGHT+4, text[i], cl);
+    }
+    if (logo)
+    {
+        int pos;
+        int mx = 0;
+        int my = 0;
+        int offset_x = (camera_screen.width-LOGO_WIDTH)>>1;
+        int offset_y = ((camera_screen.height-LOGO_HEIGHT)>>1) - 42;
+        for (pos=0; pos<logo_size; pos++)
+        {
+            char data = logo[pos];
+            color c = logo_colors[(data>>5) & 0x07];
+            for (i=0; i<(data&0x1F)+1; i++)
+            {
+                if (c!=0x00)
+                {
+                    draw_pixel(offset_x+mx,offset_y+my,c);
+                }
+                if (mx == LOGO_WIDTH)
+                {
+                    mx = 0;
+                    my++;
+                }
+                else
+                {
+                    mx++;
+                }     
+            }
+        }
+    }
+}
+
+static void gui_handle_splash(int force_redraw)
+{
+    if (gui_splash)
+    {
+        if ((gui_get_mode() == GUI_MODE_NONE) || (gui_get_mode() == GUI_MODE_ALT))
+            if (force_redraw || (gui_splash == SPLASH_TIME))
+                gui_draw_splash();
+
+        if (--gui_splash == 0)
+        {
+            if ((gui_get_mode() == GUI_MODE_NONE) || (gui_get_mode() == GUI_MODE_ALT))
+                gui_set_need_restore();
+            free(logo);
+            logo = NULL;
+        }
+    }
+}
+
+//-------------------------------------------------------------------
 static gui_handler *gui_mode=0;	// current gui mode. pointer to gui_handler structure
 
 static int gui_osd_need_restore = 0;    // Set when screen needs to be erase and redrawn
 static int gui_mode_need_redraw = 0;    // Set if current mode needs to redraw itself
-static int gui_splash, gui_splash_mode;
 
 //-------------------------------------------------------------------
 
@@ -1916,11 +2058,13 @@ void gui_init()
     set_tv_override_menu();
 
     gui_set_mode(&defaultGuiHandler);
-    if (conf.start_sound>0)
+    if (conf.start_sound > 0)
     {
         play_sound(4);
     }
-    gui_splash = (conf.splash_show)?SPLASH_TIME:0;
+
+    init_splash();
+
     draw_init();
 
     load_from_file( "A/CHDK/badpixel", make_pixel_list );
@@ -1964,118 +2108,6 @@ gui_handler* gui_set_mode(gui_handler *mode)
 #endif
 
     return old_mode;
-}
-
-//-------------------------------------------------------------------
-#if defined(VER_CHDK)
-#define LOGO_WIDTH  149
-#define LOGO_HEIGHT 84
-#else
-#define LOGO_WIDTH  169
-#define LOGO_HEIGHT 74
-#endif
-
-static void gui_draw_splash(char* logo, int logo_size) {
-    coord w, h, x, y;
-    static const char *text[] = {
-        "CHDK Version '" HDK_VERSION " " BUILD_NUMBER "-" BUILD_SVNREV "'" , 
-        "Build: " __DATE__ " " __TIME__ ,
-        "Camera: " PLATFORM " - " PLATFORMSUB };
-    int i, l;
-    color cl = MAKE_COLOR(COLOR_RED, COLOR_WHITE);
-
-    gui_splash_mode = (mode_get()&MODE_MASK);
-    
-    h=sizeof(text)/sizeof(text[0])*FONT_HEIGHT+8;
-    w=0;
-    for (i=0; i<sizeof(text)/sizeof(text[0]); ++i) {
-        l=strlen(text[i]);
-        if (l>w) w=l;
-    }
-    w=w*FONT_WIDTH+10;
-
-    x = (camera_screen.width-w)>>1; y = ((camera_screen.height-h)>>1) + 20;
-    draw_filled_round_rect(x, y, x+w, y+h, MAKE_COLOR(COLOR_RED, COLOR_RED));
-    for (i=0; i<sizeof(text)/sizeof(text[0]); ++i) {
-        draw_string(x+((w-strlen(text[i])*FONT_WIDTH)>>1), y+i*FONT_HEIGHT+4, text[i], cl);
-    }
-    if(logo){
-      int pos;
-      int mx=0;
-      int my=0;
-      int offset_x = (CAM_SCREEN_WIDTH-LOGO_WIDTH)>>1;
-      int offset_y = ((CAM_SCREEN_HEIGHT-LOGO_HEIGHT)>>1) - 42;
-      const color color_lookup[8] = {COLOR_BLACK,
-                                    COLOR_SPLASH_RED/*0x2E redish*/,
-                                    COLOR_RED,
-                                    COLOR_GREY /*0x3D*/,
-                                    COLOR_SPLASH_GREY /*0x1F*/,
-                                    COLOR_SPLASH_PINK /*0x21 pinkish*/,
-                                    COLOR_TRANSPARENT /*0x00*/,
-                                    COLOR_WHITE /*0x11*/};
-      for(pos=0; pos<logo_size; pos++){
-          char data = logo[pos];
-          color c = color_lookup[(data>>5) & 0x07];
-          for(i=0; i<(data&0x1F)+1; i++){
-              if (c!=0x00){
-                  draw_pixel(offset_x+mx,offset_y+my,c);
-              }
-              if (mx==LOGO_WIDTH){
-                  mx=0;
-                  my++;
-              }else{
-                  mx++;
-              }     
-          }
-      }
-    }
-}
-
-static void gui_handle_splash(void) {
-    static char *logo = NULL;
-    static int logo_size;
-    if (gui_splash) {
-        static int need_logo=1; // don't use logo ptr, since we don't want to keep re-trying
-        if(need_logo) {
-#if defined(VER_CHDK)
-            const char *logo_name="A/CHDK/DATA/logo.dat";
-#else   // CHDK-DE
-            const char *logo_name="A/CHDK/DATA/logo_de.dat";
-#endif
-            FILE *fd;
-            struct stat st;
-            need_logo=0;
-            if (stat(logo_name,&st) == 0) {
-                logo_size=st.st_size;
-                logo=malloc(logo_size);
-                if(logo) {
-                    fd = fopen(logo_name, "rb");
-                    if(fd){
-                        fread(logo,1,logo_size,fd);
-                        fclose(fd);
-                    }
-                    else {
-                        free(logo);
-                        logo=NULL;
-                        need_logo=1;
-                    }
-                }
-            }
-        }
-        if (gui_splash>(SPLASH_TIME-4)) {
-            gui_draw_splash(logo,logo_size);
-           //   conf.show_osd = 0;
-        } else if (gui_splash==1 && (mode_get()&MODE_MASK) == gui_splash_mode && (gui_get_mode()==GUI_MODE_NONE || gui_get_mode()==GUI_MODE_ALT)) {
-            gui_set_need_restore();
-           // conf.show_osd = 1; //had to uncomment in order to fix a bug with disappearing osd...
-        }
-        --gui_splash;
-        if(!gui_splash) {
-            free(logo);
-            logo=NULL;
-            need_logo=1;
-        }
-    }
 }
 
 //-------------------------------------------------------------------
@@ -2521,7 +2553,7 @@ void gui_redraw()
 {
     int flag_gui_enforce_redraw = 0;
 
-    if (!draw_test_guard() && gui_get_mode())     // Attempt to detect screen erase in <Alt> mode, redraw if needed
+    if (!draw_test_guard() && (gui_get_mode() || gui_splash))     // Attempt to detect screen erase in <Alt> mode, redraw if needed
     {
         draw_set_guard();
         flag_gui_enforce_redraw = 1;
@@ -2529,8 +2561,6 @@ void gui_redraw()
         redraw_buttons = 1;
 #endif
     }
-
-    gui_handle_splash();
 
 #ifdef CAM_TOUCHSCREEN_UI
     extern void virtual_buttons();
@@ -2551,6 +2581,8 @@ void gui_redraw()
         gui_mode_need_redraw = 0;
 	    flag_gui_enforce_redraw = 1;
     }
+
+    gui_handle_splash(flag_gui_enforce_redraw);
 
 // DEBUG: uncomment if you want debug values always on top
 //gui_draw_debug_vals_osd();
