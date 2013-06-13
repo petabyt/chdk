@@ -30,6 +30,7 @@ DEF(physw_sleep_delay                       ,0x00001c4c) // Found @0xff834508
 DEF(levent_table                            ,0xffbe12e4) // Found @0xffbe12e4
 DEF(FlashParamsTable                        ,0xffc438fc) // Found @0xffc438fc
 DEF(movie_status                            ,0x00006d54) // Found @0xff980d7c
+DEF(video_compression_rate                  ,0x00006d94) // Found @0xff981838
 DEF(full_screen_refresh                     ,0x00009ca4) // Found @0xffa2efa0
 DEF(canon_menu_active                       ,0x000031b4) // Found @0xff8952c0
 DEF(canon_shoot_menu_active                 ,0x0000836d) // Found @0xff9c4c44

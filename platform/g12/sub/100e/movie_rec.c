@@ -90,8 +90,8 @@ asm volatile (
 "loc_FF987180:\n"
 "    BL      sub_FF9867EC \n"
 
-"    LDR     R0, =0x7318-4\n" // <----   -4 //+ set in sub_FF9867EC above
-"    BL      set_quality\n"                 //+ reset here to user value
+"    LDR     R0, =video_compression_rate\n" //added
+"    BL      set_quality\n"                 //added
 
 "    B       loc_FF9871C4 \n"
 
