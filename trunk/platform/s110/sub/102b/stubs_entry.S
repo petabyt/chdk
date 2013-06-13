@@ -34,6 +34,7 @@ DEF(physw_run                               ,0x00001e80) // Found @0xf8021064
 DEF(physw_sleep_delay                       ,0x00001e88) // Found @0xf8021064
 DEF(levent_table                            ,0xf87c767c) // Found @0xf87c767c
 DEF(FlashParamsTable                        ,0xf890717c) // Found @0xf890717c
+DEF(video_compression_rate                  ,0x00009cec) // Found @0xf82358e0
 DEF(full_screen_refresh                     ,0x0000a9f4) // Found @0xf8282054
 DEF(canon_menu_active                       ,0x00004a18) // Found @0xf80df580
 DEF(canon_shoot_menu_active                 ,0x0000d6a5) // Found @0xf833bda8
@@ -154,7 +155,7 @@ NHSTUB(GetZoomLensCurrentPosition             ,0xf842853c) //102
 NHSTUB(GiveSemaphore                          ,0x0068aaec) //112
 NHSTUB(IsStrobeChargeCompleted                ,0xf8136be8) //102
 NHSTUB(LEDDrive                               ,0xf8262928) //101
-NHSTUB(LocalTime                              ,0xf864859c) //115
+NHSTUB(LocalTime                              ,0x006994c4) //115
 NHSTUB(LockMainPower                          ,0xf80db874) //103
 //NHSTUB(Lseek                                ,0xf8024514) //101
 NHSTUB(MakeSDCardBootable                     ,0xf8093aa8) //105
@@ -252,6 +253,8 @@ NHSTUB(strtolx                                ,0xf803c1cc) //109
    DEF(task_PhySw                             ,0xf8021060) //110
    DEF(task_RotaryEncoder                     ,0xf807bdb8) //110
    DEF(task_TouchPanel                        ,0xf8080d84) //110
+   DEF(hook_CreateTask                        ,0x0068ab8c) //105
+   DEF(hook_CreateTask2                       ,0x0068af04) //107
 NHSTUB(time                                   ,0x0069991c) //  6
 NHSTUB(vsprintf                               ,0xf800d2c4) //115
 //NHSTUB(write                                ,0xf802434c) //101

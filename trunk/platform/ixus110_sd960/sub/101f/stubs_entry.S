@@ -29,6 +29,7 @@ DEF(physw_sleep_delay                       ,0x00001c32) // Found @0xff821a64
 DEF(levent_table                            ,0xffb27f50) // Found @0xffb27f50
 DEF(FlashParamsTable                        ,0xffb5a61c) // Found @0xffb5a61c
 DEF(movie_status                            ,0x00005ef8) // Found @0xff921558
+DEF(video_compression_rate                  ,0x00005f24) // Found @0xff9217c4
 DEF(canon_menu_active                       ,0x00002d10) // Found @0xff870138
 DEF(canon_shoot_menu_active                 ,0x000070c1) // Found @0xff95c9f0
 DEF(playrec_mode                            ,0x00002a78) // Found @0xff8634f0
@@ -63,11 +64,11 @@ DEF(recreview_hold                          ,0x00003640) // Found @0xff881428
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
 //    { 1, KEY_POWER           ,0x00000001 }, // Found @0xffaeeb80, levent 0x600
-//    { 1, KEY_ZOOM_OUT        ,0x00002000 }, // Found @0xffaeeba4, levent 0x03
-//    { 1, KEY_ZOOM_IN         ,0x00004000 }, // Found @0xffaeebb0, levent 0x02
 //    { 1, KEY_SHOOT_FULL      ,0x00009000 }, // Found @0xffaeebbc, levent 0x01
 //    { 1, KEY_SHOOT_FULL_ONLY ,0x00008000 }, // Found @0xffaeebbc, levent 0x01
 //    { 1, KEY_SHOOT_HALF      ,0x00001000 }, // Found @0xffaeeb98, levent 0x00
+//    { 1, KEY_ZOOM_OUT        ,0x00002000 }, // Found @0xffaeeba4, levent 0x03
+//    { 1, KEY_ZOOM_IN         ,0x00004000 }, // Found @0xffaeebb0, levent 0x02
 //    { 2, KEY_LEFT            ,0x00000020 }, // Found @0xffaeec04, levent 0x06
 //    { 2, KEY_RIGHT           ,0x00000040 }, // Found @0xffaeec10, levent 0x07
 //    { 2, KEY_DOWN            ,0x00000080 }, // Found @0xffaeec1c, levent 0x05
@@ -231,11 +232,11 @@ NHSTUB(strncpy                                ,0xff82ce1c) //  1
 NHSTUB(strrchr                                ,0xff9b9d80) //  1
 NHSTUB(strtol                                 ,0xff82d054) //101
 NHSTUB(strtolx                                ,0xff82ce58) //109
-   DEF(task_CaptSeq                           ,0xff85eae4) //107
+   DEF(task_CaptSeq                           ,0xff85eae4) //110
    DEF(task_ExpDrv                            ,0xff89d8cc) //110
-   DEF(task_InitFileModules                   ,0xff87aac0) //107
-   DEF(task_MovieRecord                       ,0xff921840) //107
-   DEF(task_PhySw                             ,0xff821a60) //107
+   DEF(task_InitFileModules                   ,0xff87aac0) //110
+   DEF(task_MovieRecord                       ,0xff921840) //110
+   DEF(task_PhySw                             ,0xff821a60) //110
 NHSTUB(time                                   ,0xff8697ec) //109
 NHSTUB(vsprintf                               ,0xff81cba0) //115
 //NHSTUB(write                                ,0xff823d74) //101

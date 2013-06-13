@@ -641,6 +641,24 @@ int ptr2idx(firmware *fw, int idx)
     return (fwval(fw,idx) - fw->base) >> 2;
 }
 
+uint32_t LDR2adr(firmware *fw, int offset)  // decode LDR instruction at offset and return firmware address pointed to
+{
+    uint32_t inst = fwval(fw,offset);
+    int offst = (inst & 0xFFF);
+    uint32_t fadr = (inst & 0x00800000)?idx2adr(fw,offset+2)+offst:idx2adr(fw,offset+2)-offst;
+    return fadr;
+}
+
+uint32_t LDR2val(firmware *fw, int offset)  // decode LDR instruction at offset and return firmware value stored at the address
+{
+	return fwval(fw,adr2idx(fw,LDR2adr(fw,offset)));
+}
+
+uint32_t LDR2idx(firmware *fw, int offset)  // decode LDR instruction at offset and return firmware buffer index of the new address
+{
+	return adr2idx(fw,LDR2adr(fw,offset));
+}
+
 int idxFollowBranch(firmware *fw, int fidx, int offset)
 {
     if (offset)
@@ -648,11 +666,15 @@ int idxFollowBranch(firmware *fw, int fidx, int offset)
 		uint32_t msk = ~(offset & 0xFF000000);
         fidx += ((offset & 0x00FFFFFF) - 1);
         uint32_t inst = fwval(fw,fidx);
-        if ((inst & (0xFF000000&msk)) == (0xEA000000&msk))    // Branch (B or BL depending on msk)
+        if ((inst & (0xFF000000&msk)) == (0xEA000000&msk))  // Branch (B or BL depending on msk)
         {
             int o = inst & 0x00FFFFFF;
             if (o & 0x00800000) o |= 0xFF000000;
             fidx = fidx + o + 2;
+        }
+        else if ((inst & (0xFFFFF000)) == (0xE51FF000))     // LDR PC,=...
+        {
+            fidx = adr2idx(fw,LDR2val(fw,fidx));
         }
     }
     return fidx;
@@ -666,11 +688,15 @@ uint32_t followBranch(firmware *fw, uint32_t fadr, int offset)
         uint32_t fidx = adr2idx(fw,fadr);  // function index
         fidx += ((offset & 0x00FFFFFF) - 1);
         uint32_t inst = fwval(fw,fidx);
-        if ((inst & (0xFF000000&msk)) == (0xEA000000&msk))    // Branch (B or BL depending on msk)
+        if ((inst & (0xFF000000&msk)) == (0xEA000000&msk))  // Branch (B or BL depending on msk)
         {
             int o = inst & 0x00FFFFFF;
             if (o & 0x00800000) o |= 0xFF000000;
             fadr = idx2adr(fw,fidx+o+2);
+        }
+        else if ((inst & (0xFFFFF000)) == (0xE51FF000))     // LDR PC,=...
+        {
+            fadr = LDR2val(fw,fidx);
         }
     }
     return fadr;
@@ -724,24 +750,6 @@ uint32_t ALUop2(firmware *fw, int offset)  // decode operand2 from ALU inst (not
         break;
     }
     return fadr;
-}
-
-uint32_t LDR2adr(firmware *fw, int offset)  // decode LDR instruction at offset and return firmware address pointed to
-{
-    uint32_t inst = fwval(fw,offset);
-    int offst = (inst & 0xFFF);
-    uint32_t fadr = (inst & 0x00800000)?idx2adr(fw,offset+2)+offst:idx2adr(fw,offset+2)-offst;
-    return fadr;
-}
-
-uint32_t LDR2idx(firmware *fw, int offset)  // decode LDR instruction at offset and return firmware buffer index of the new address
-{
-	return adr2idx(fw,LDR2adr(fw,offset));
-}
-
-uint32_t LDR2val(firmware *fw, int offset)  // decode LDR instruction at offset and return firmware value stored at the address
-{
-	return fwval(fw,adr2idx(fw,LDR2adr(fw,offset)));
 }
 
 int isLDR_PC(firmware *fw, int offset)
@@ -801,7 +809,7 @@ int isSTMFD(firmware *fw, int offset)
 
 int isSTMFD_LR(firmware *fw, int offset)
 {
-    return ((fwval(fw,offset) & 0xFFFFF000) == 0xE92D4000); // STMFD SP!, {..,LR}
+    return ((fwval(fw,offset) & 0xFFFF4000) == 0xE92D4000); // STMFD SP!, {..,LR}
 }
 
 int isSTR(firmware *fw, int offset)
@@ -843,6 +851,17 @@ int find_inst(firmware *fw, int (*inst)(firmware*,int), int idx, int len)
 {
     int k;
     for (k = idx; k < idx + len; k++)
+    {
+        if (inst(fw, k))
+            return k;
+    }
+    return -1;
+}
+
+int find_inst_rev(firmware *fw, int (*inst)(firmware*,int), int idx, int len)
+{
+    int k;
+    for (k = idx; k > idx - len; k--)
     {
         if (inst(fw, k))
             return k;
@@ -1280,6 +1299,9 @@ func_entry  func_names[] =
     { "task_RotaryEncoder", OPTIONAL },
     { "task_TouchPanel", OPTIONAL },
 
+    { "hook_CreateTask" },
+    { "hook_CreateTask2" },
+
     { "time" },
     { "vsprintf" },
     { "write", UNUSED },
@@ -1316,6 +1338,8 @@ sig_stuff min_ver[] = {
 	{ "ScreenLock", 39 },
 	{ "ScreenUnlock", 39 },
 	{ "MakeSDCardBootable", 47 },
+    { "hook_CreateTask", 51 },
+    { "hook_CreateTask2", 51 },
 	
 	{ 0, 0 }
 };
@@ -1589,6 +1613,7 @@ string_sig string_sigs[] = {
 
     { 5, "UIFS_WriteFirmInfoToFile", "UIFS_WriteFirmInfoToFile", 1 },
     { 5, "CreateTask", "CreateTask", 1 },
+    { 5, "hook_CreateTask", "CreateTask", 1 },
     { 5, "ExitTask", "ExitTask", 1 },
     { 5, "SleepTask", "SleepTask", 1 },
 	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
@@ -1599,15 +1624,8 @@ string_sig string_sigs[] = {
 	{ 6, "GetImageFolder", "GetCameraObjectTmpPath ERROR[ID:%lx] [TRY:%lx]\n", 0 },
     { 6, "reboot_fw_update", "FirmUpgrade.c", 0 },
 	
-	{ 7, "task_CaptSeq", "CaptSeqTask", 1 },
-	{ 7, "task_ExpDrv", "ExpDrvTask", 1 },
-	{ 7, "task_InitFileModules", "InitFileModules", 1 },
-	{ 7, "task_MovieRecord", "MovieRecord", 1 },
-	{ 7, "task_PhySw", "PhySw", 1 },
-	{ 7, "task_RotaryEncoder", "RotaryEncoder", 1 },
-	{ 7, "task_RotaryEncoder", "RotarySw", 1 },
-	{ 7, "task_TouchPanel", "TouchPanel", 1 },
-	
+	{ 7, "hook_CreateTask2", "PhySw", 0x01000001 },
+
 	{ 8, "WriteSDCard", "Mounter.c", 0 }, 
 
     // Ensure ordering in func_names is correct for dependencies here
@@ -1995,47 +2013,43 @@ int match_strsig6(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 }
 
 // Sig pattern:
-//		Load Func Address	-	ADR	R3, func	- these four may occur in any order ?
-//		Load String Address	-	ADR	R0, "func"	
-//		Load value			-	MOV R2, x		
-//		Load value			-	MOV R1, y		
-//		Branch				-	BL
-//				...
-//		String				-	DCB	"func"
+//		Str ref -	xDR Rx, =str_ptr
+//			...
+//				    BL	func
+//			...
+//		String		DCB "str"
 int match_strsig7(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 {
-	uint32_t sadr = idx2adr(fw,j);        // string address
-	int j1;
-	for (j1 = j-5; j1 >= 0; j1--)
-	{
-		if (isADR(fw,j1)   &&   // ADR or MOV
-			isADR(fw,j1+1) &&   // ADR or MOV
-			isADR(fw,j1+2) &&   // ADR or MOV
-			isADR(fw,j1+3) &&   // ADR or MOV
-			isBorBL(fw,j1+4))   // B or BL ?
-		{
-			uint32_t padr;
-			padr = ADR2adr(fw,j1+0);
-			if (padr != sadr) padr = ADR2adr(fw,j1+1);
-			if (padr != sadr) padr = ADR2adr(fw,j1+2);
-			if (padr != sadr) padr = ADR2adr(fw,j1+3);
-			if (padr == sadr)
-			{
-				uint32_t fadr = 0;
-				if      (isADR_PC(fw,j1)   && (fwRd(fw,j1)   == 3)) fadr = ADR2adr(fw,j1);      // R3 ?
-				else if (isADR_PC(fw,j1+1) && (fwRd(fw,j1+1) == 3)) fadr = ADR2adr(fw,j1+1);    // R3 ?
-				else if (isADR_PC(fw,j1+2) && (fwRd(fw,j1+2) == 3)) fadr = ADR2adr(fw,j1+2);    // R3 ?
-				else if (isADR_PC(fw,j1+3) && (fwRd(fw,j1+3) == 3)) fadr = ADR2adr(fw,j1+3);    // R3 ?
-				if (fadr != 0)
-				{
-					fadr = followBranch2(fw, fadr, sig->offset);
-					//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-					fwAddMatch(fw,fadr,32,0,k,107);
-					return 1;
-				}
-			}
-		}
-	}
+    uint32_t sadr = idx2adr(fw,j);        // string address
+    int j1;
+    uint32_t *p1;
+    for (p1 = fw->buf, j1 = 0; j1 < fw->size; j1++, p1++)
+    {
+	    if (isADR_PC_cond(fw,j1) || isLDR_PC_cond(fw,j1))   // LDR or ADR ?
+	    {
+		    uint32_t padr;
+		    if (isLDR_PC_cond(fw,j1)) // LDR ?
+                padr = LDR2val(fw,j1);
+		    else
+                padr = ADR2adr(fw,j1);
+		    if (padr == sadr)
+		    {
+			    int j2 = j1;
+			    uint32_t *p2;
+			    for (p2 = p1+1, j2 = j1+1; j2 <= fw->size && j2 <= j1+10; j2++, p2++)
+			    {
+				    if (isBL(fw,j2)) // BL
+				    {
+					    uint32_t fa = idx2adr(fw,j2);
+					    fa = followBranch2(fw,fa,sig->offset);
+					    //fprintf(stderr,"%s %08x\n",curr_name,fa);
+					    fwAddMatch(fw,fa,32,0,k,107);
+					    return 1;
+				    }
+			    }
+		    }
+	    }
+    }
 
 	return 0;
 }
@@ -2173,13 +2187,17 @@ int match_strsig10(firmware *fw, string_sig *sig, int k, uint32_t *p, int j)
 			if (padr == sadr)
 			{
 				uint32_t fadr = 0;
-				if      (isLDR_PC(fw,j1)   && (fwRd(fw,j1)   == 3)) fadr = LDR2adr(fw,j1);      // R3 ?
-				else if (isLDR_PC(fw,j1+1) && (fwRd(fw,j1+1) == 3)) fadr = LDR2adr(fw,j1+1);    // R3 ?
-				else if (isLDR_PC(fw,j1+2) && (fwRd(fw,j1+2) == 3)) fadr = LDR2adr(fw,j1+2);    // R3 ?
-				else if (isLDR_PC(fw,j1+3) && (fwRd(fw,j1+3) == 3)) fadr = LDR2adr(fw,j1+3);    // R3 ?
+				if      (isLDR_PC(fw,j1)   && (fwRd(fw,j1)   == 3)) fadr = LDR2val(fw,j1);      // R3 ?
+				else if (isADR_PC(fw,j1)   && (fwRd(fw,j1)   == 3)) fadr = ADR2adr(fw,j1);      // R3 ?
+				else if (isLDR_PC(fw,j1+1) && (fwRd(fw,j1+1) == 3)) fadr = LDR2val(fw,j1+1);    // R3 ?
+				else if (isADR_PC(fw,j1+1) && (fwRd(fw,j1+1) == 3)) fadr = ADR2adr(fw,j1+1);    // R3 ?
+				else if (isLDR_PC(fw,j1+2) && (fwRd(fw,j1+2) == 3)) fadr = LDR2val(fw,j1+2);    // R3 ?
+				else if (isADR_PC(fw,j1+2) && (fwRd(fw,j1+2) == 3)) fadr = ADR2adr(fw,j1+2);    // R3 ?
+				else if (isLDR_PC(fw,j1+3) && (fwRd(fw,j1+3) == 3)) fadr = LDR2val(fw,j1+3);    // R3 ?
+				else if (isADR_PC(fw,j1+3) && (fwRd(fw,j1+3) == 3)) fadr = ADR2adr(fw,j1+3);    // R3 ?
 				if (fadr != 0)
 				{
-					fadr = followBranch2(fw, fw->buf[adr2idx(fw,fadr)], sig->offset);
+					fadr = followBranch2(fw, fadr, sig->offset);
 					//fprintf(stderr,"%s %08x\n",curr_name,fadr);
 					fwAddMatch(fw,fadr,32,0,k,110);
 					return 1;
@@ -2701,7 +2719,8 @@ void print_results(const char *curr_name, int k)
 	out_hdr = err;
 
 	char *macro = "NHSTUB";
-	if (strncmp(curr_name,"task_",5) == 0) macro = "   DEF";
+	if (strncmp(curr_name,"task_",5) == 0 ||
+        strncmp(curr_name,"hook_",5) == 0) macro = "   DEF";
 
 	if (count == 0)
 	{
@@ -2787,6 +2806,19 @@ int find_nxt_str_ref(firmware *fw, int str_adr, int ofst)
 		}
 	}
 	return -1;
+}
+
+//------------------------------------------------------------------------------------------------------------
+
+int find_BL(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+    if (isBL(fw,k))
+    {
+        int n = idxFollowBranch(fw, k, 0x01000001);
+        if (n == v1)
+            return k;
+    }
+    return 0;
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -3835,6 +3867,37 @@ void find_stubs_min(firmware *fw)
 	// Find 'movie_status'
     search_fw(fw, match_movie_status, 0, 0);
 	
+    // Find 'video_compression_rate'
+	int sadr = find_str(fw, "CompressionRateAdjuster.c");
+	k = find_nxt_str_ref(fw, sadr, -1);
+    int found = 0;
+	while ((k >= 0) && !found)
+	{
+        int f = find_inst_rev(fw, isSTMFD_LR, k-1, 100);
+        if (f != -1)
+        {
+            f = search_fw(fw, find_BL, f, 0);
+            if (f > 0)
+            {
+                f--;
+                if ((fwval(fw,f) & 0xFFF00000) == 0xE2400000)     // SUB
+                {
+                    int src = fwRn(fw,f);
+                    for (k1 = f-1; (k1 > f-10) && !found; k1--)
+                    {
+                        if (isLDR_PC(fw,k1) && (fwRd(fw,k1) == src))
+                        {
+                            uint32_t v = LDR2val(fw,k1) - ALUop2(fw,f);
+                            print_stubs_min(fw,"video_compression_rate",v,idx2adr(fw,k1));
+                            found = 1;
+                        }
+                    }
+                }
+            }
+        }
+        k = find_nxt_str_ref(fw, sadr, k);
+	}
+
 	// Find 'full_screen_refresh'
     search_fw(fw, match_full_screen_refresh, 0, 0);
 	
@@ -3983,7 +4046,7 @@ void find_stubs_min(firmware *fw)
             }
         }
 	}
-	
+
     // Find palette colour data
     uint32_t palette_data = search_fw(fw, match_palette_data, 0, 0);
 
@@ -4258,16 +4321,13 @@ int kinfo_compare(const kinfo *p1, const kinfo *p2)
 			return 1;
 		}
 	}
-    else
+    if (p1->bits > p2->bits)
     {
-        if (p1->bits > p2->bits)
-        {
-            return 1;
-        }
-        else if (p1->bits < p2->bits)
-        {
-            return -1;
-        }
+        return 1;
+    }
+    else if (p1->bits < p2->bits)
+    {
+        return -1;
     }
 
     return 0;

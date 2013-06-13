@@ -104,8 +104,8 @@ asm volatile (
 "    LDR     R1, [R4, #0xF4] \n"
 "    BLX     R1 \n"
 
-"    LDR     R0, =0x2F5C\n"         //added - Found @FF0784A8
-"    BL      set_quality\n"         //added
+"    LDR     R0, =video_compression_rate\n" //added
+"    BL      set_quality\n"                 //added
 
 "    B       loc_FF0786C4 \n"
 

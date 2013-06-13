@@ -30,6 +30,7 @@ DEF(physw_sleep_delay                       ,0x00001c42) // Found @0xff8331c4
 DEF(levent_table                            ,0xffb95d20) // Found @0xffb95d20
 DEF(FlashParamsTable                        ,0xffbe7100) // Found @0xffbe7100
 DEF(movie_status                            ,0x00006d90) // Found @0xff9627d8
+DEF(video_compression_rate                  ,0x00006dbc) // Found @0xff962994
 DEF(full_screen_refresh                     ,0x00009840) // Found @0xffa0ec68
 DEF(canon_menu_active                       ,0x0000303c) // Found @0xff88e1ac
 DEF(canon_shoot_menu_active                 ,0x00008259) // Found @0xff9af8c4
@@ -237,12 +238,12 @@ NHSTUB(strncpy                                ,0xff813f38) //  1
 NHSTUB(strrchr                                ,0xff813fe4) //  1
 NHSTUB(strtol                                 ,0xff83eccc) //101
 NHSTUB(strtolx                                ,0xff83ead0) //109
-   DEF(task_CaptSeq                           ,0xff87b06c) //107
-   DEF(task_ExpDrv                            ,0xff8bfac4) //107
-   DEF(task_InitFileModules                   ,0xff898ea4) //107
-   DEF(task_MovieRecord                       ,0xff962a10) //107
-   DEF(task_PhySw                             ,0xff8331c0) //107
-   DEF(task_RotaryEncoder                     ,0xff860504) //107
+   DEF(task_CaptSeq                           ,0xff87b06c) //110
+   DEF(task_ExpDrv                            ,0xff8bfac4) //110
+   DEF(task_InitFileModules                   ,0xff898ea4) //110
+   DEF(task_MovieRecord                       ,0xff962a10) //110
+   DEF(task_PhySw                             ,0xff8331c0) //110
+   DEF(task_RotaryEncoder                     ,0xff860504) //110
 NHSTUB(time                                   ,0xff887720) //109
 NHSTUB(vsprintf                               ,0xff820354) //115
 //NHSTUB(write                                ,0xff835a10) //101
