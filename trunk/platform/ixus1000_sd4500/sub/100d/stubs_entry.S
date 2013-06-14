@@ -52,8 +52,8 @@ DEF(palette_buffer                          ,0x000b84ac) // Found @0xffa2c2a0
 // Offset from start of palette_buffer to color data = 8 (Found @0xffb2a748)
 DEF(bitmap_buffer                           ,0x0000a374) // Found @0xffa30f50
 DEF(active_bitmap_buffer                    ,0x0000a36c) // Found @0xffa30f54
-DEF(viewport_buffers                        ,0xffb8c558) // Found @0xff8517f8
-DEF(active_viewport_buffer                  ,0x000020dc) // Found @0xff850cec
+DEF(viewport_buffers                        ,0xffb8c558) // Found @0xff851afc
+DEF(active_viewport_buffer                  ,0x000020dc) // Found @0xff85183c
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40471000; }             // Found @0xff85d384
