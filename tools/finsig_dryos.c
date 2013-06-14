@@ -762,6 +762,11 @@ int isSTR_PC(firmware *fw, int offset)
 	return ((fwval(fw,offset) & 0xFE1F0000) == 0xE40F0000);
 }
 
+int isSTR_PC_cond(firmware *fw, int offset)
+{
+	return ((fwval(fw,offset) & 0x0E1F0000) == 0x040F0000);
+}
+
 int isLDMFD(firmware *fw, int offset)
 {
     return ((fwval(fw,offset) & 0xFFFF0000) == 0xE8BD0000);
@@ -795,6 +800,11 @@ int isSTMFD_LR(firmware *fw, int offset)
 int isSTR(firmware *fw, int offset)
 {
 	return ((fwval(fw,offset) & 0xFE100000) == 0xE4000000);
+}
+
+int isSTR_cond(firmware *fw, int offset)
+{
+	return ((fwval(fw,offset) & 0x0E100000) == 0x04000000);
 }
 
 int isBX(firmware *fw, int offset)
@@ -3310,6 +3320,7 @@ int match_movie_status(firmware *fw, int k, uint32_t v1, uint32_t v2)
         uint32_t base = LDR2val(fw,k);
         uint32_t ofst = fw->buf[k+4] & 0x00000FFF;
         print_stubs_min(fw,"movie_status",base+ofst,idx2adr(fw,k));
+        return 1;
     }
     else
     if (isLDR_PC(fw, k) &&								// LDR R1, =sub
@@ -3322,6 +3333,20 @@ int match_movie_status(firmware *fw, int k, uint32_t v1, uint32_t v2)
         uint32_t base = LDR2val(fw,k+1);
         uint32_t ofst = fw->buf[k+4] & 0x00000FFF;
         print_stubs_min(fw,"movie_status",base+ofst,idx2adr(fw,k));
+        return 1;
+    }
+    else
+    if (isLDR_PC(fw, k) &&								        // LDR Rx, =base
+        isLDR(fw, k+1) && (fwRd(fw,k) == fwRn(fw,k+1)) &&       // LDR R0, [Rx, ...]
+        isCMP(fw, k+2) && (fwRd(fw,k+2) == fwRd(fw,k+1)) &&     // CMP R0, #...
+        (fwval(fw,k+3) == 0x03A00005) &&
+        isSTR_cond(fw, k+4) && (fwRn(fw,k+4) == fwRd(fw,k)) &&  // STRxx R0, [Rx,ofst]
+        (LDR2val(fw,k) < fw->base))
+    {
+        uint32_t base = LDR2val(fw,k);
+        uint32_t ofst = fwOp2(fw,k+4);
+        print_stubs_min(fw,"movie_status",base+ofst,idx2adr(fw,k));
+        return 1;
     }
     return 0;
 }
@@ -3582,28 +3607,35 @@ int match_viewport_address3(firmware *fw, int k, uint32_t v1, uint32_t v2)
     if (isLDR_PC(fw,k) && (LDR2val(fw,k) == v1))
     {
         // Scan back to start of function
-        int k1;
-        for (k1=k-1; k1>k-1000; k1--)
+        int k1 = find_inst_rev(fw, isSTMFD_LR, k-1, 1000);
+        if (k1 > 0)
         {
-    		if ((fw->buf[k1] & 0xFFFFF000) == 0xe92d4000)    // STMFD SP!, {..,LR}
-    		{
-                // Check if function sig matches what we want
-                if (isLDR_PC(fw,k1+1) && isLDR_PC(fw,k1+2) && isLDR(fw,k1+3) &&
-                    (((fw->buf[k1+1] & 0x0000F000) >> 12) == ((fw->buf[k1+3] & 0x000F0000) >> 16)))
-                {
-                    uint32_t a = LDR2val(fw,k1+1);
-                    print_stubs_min(fw,"viewport_buffers",v1,idx2adr(fw,k));
-                    print_stubs_min(fw,"active_viewport_buffer",a,idx2adr(fw,k1+1));
-                    return 1;
-                }
-                else if (isLDR_PC(fw,k1+1) && isLDR_PC(fw,k1+3) && isLDR(fw,k1+4) &&
-                    (((fw->buf[k1+1] & 0x0000F000) >> 12) == ((fw->buf[k1+4] & 0x000F0000) >> 16)))
-                {
-                    uint32_t a = LDR2val(fw,k1+1);
-                    print_stubs_min(fw,"viewport_buffers",v1,idx2adr(fw,k));
-                    print_stubs_min(fw,"active_viewport_buffer",a,idx2adr(fw,k1+1));
-                    return 1;
-                }
+            // Check if function sig matches what we want
+            if (isLDR_PC(fw,k1+1) && isLDR_PC(fw,k1+2) && isLDR(fw,k1+3) &&
+                (fwRd(fw,k1+1) == fwRn(fw,k1+3)))
+            {
+                uint32_t a = LDR2val(fw,k1+1);
+                print_stubs_min(fw,"viewport_buffers",v1,idx2adr(fw,k));
+                print_stubs_min(fw,"active_viewport_buffer",a,idx2adr(fw,k1+1));
+                return 1;
+            }
+            else
+            if (isLDR_PC(fw,k1+1) && isLDR_PC(fw,k1+3) && isLDR(fw,k1+4) &&
+                (fwRd(fw,k1+1) == fwRn(fw,k1+4)))
+            {
+                uint32_t a = LDR2val(fw,k1+1);
+                print_stubs_min(fw,"viewport_buffers",v1,idx2adr(fw,k));
+                print_stubs_min(fw,"active_viewport_buffer",a,idx2adr(fw,k1+1));
+                return 1;
+            }
+            else
+            if (isLDR_PC(fw,k1+1) && isLDR_PC(fw,k1+4) && isLDR(fw,k1+5) &&
+                (fwRd(fw,k1+1) == fwRn(fw,k1+5)))
+            {
+                uint32_t a = LDR2val(fw,k1+1);
+                print_stubs_min(fw,"viewport_buffers",v1,idx2adr(fw,k));
+                print_stubs_min(fw,"active_viewport_buffer",a,idx2adr(fw,k1+1));
+                return 1;
             }
         }
     }
