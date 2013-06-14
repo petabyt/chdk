@@ -16,8 +16,8 @@ void shutdown()
     while(1);
 }
 
-
-#define LED_PR 0xc022008C
+// print led (blue)
+#define LED_PR 0xc0220084
 
 void debug_led(int state)
 {

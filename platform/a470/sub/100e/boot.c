@@ -85,7 +85,7 @@ void __attribute__((naked,noinline)) sub_FFC001a4_my() { //#fs
                 "MOV     R0, #0xD3\n"
                 "MSR     CPSR_cxsf, R0\n"
                 "MOV     SP, #0x1000\n"			
-                "LDR     R0, =0xFFC00210\n"
+                "LDR     R0, =0x6C4\n"
                 "LDR     R2, =0xEEEEEEEE\n"
                 "MOV     R3, #0x1000\n"
         "loc_FFC00200:\n"
@@ -1357,6 +1357,8 @@ void __attribute__((naked,noinline)) sub_FFC3C110_my() { //#fs  ; Partition tabl
 "loc_FFC3C1A8:\n"
                 "MOV     R0, R8\n"
                 "BL      sub_FFCF8D9C\n" // Add FAT32 autodetect-code after this line\n"
+                "MOV   R1, R4\n"           //  pointer to MBR in R1
+                "BL    mbr_read_dryos\n"   //  total sectors count in R0 before and after call
 
                 // Start of DataGhost's FAT32 autodetection code
                 // Policy: If there is a partition which has type W95 FAT32, use the first one of those for image storage
@@ -1394,7 +1396,7 @@ void __attribute__((naked,noinline)) sub_FFC3C110_my() { //#fs  ; Partition tabl
                 "ORR     R1, R1, R3,LSL#16\n"
                 "LDRB    R3, [R4,#0x1C7]\n"
                 "LDRB    R2, [R4,#0x1BE]\n"
-                "LDRB    LR, [R4,#0x1FF]\n"  // replaced, see below
+                //"LDRB    LR, [R4,#0x1FF]\n"  // replaced, see below
                 "ORR     R1, R1, R3,LSL#8\n"
                 "LDRB    R3, [R4,#0x1C6]\n"
                 "CMP     R2, #0\n"
@@ -1407,9 +1409,9 @@ void __attribute__((naked,noinline)) sub_FFC3C110_my() { //#fs  ; Partition tabl
                 "ORR     R3, R3, R12,LSL#8\n"
                 "LDRB    R12, [R4,#0x1CA]\n"
                 "ORR     R3, R3, R12\n"
-                "LDRB    R12, [R4,#0x1FE]\n"  // replaced, see below
-                //"LDRB    R12, [LR,#0x1FE]\n"            // New! First MBR signature byte (0x55)
-                //"LDRB    LR, [LR,#0x1FF]\n"             //      Last MBR signature byte (0xAA)
+                //"LDRB    R12, [R4,#0x1FE]\n"  // replaced, see below
+                "LDRB    R12, [LR,#0x1FE]\n"            // New! First MBR signature byte (0x55)
+                "LDRB    LR, [LR,#0x1FF]\n"             //      Last MBR signature byte (0xAA)
                 "MOV     R4, #0\n"
                 "BNE     loc_FFC3C230\n"
                 "CMP     R0, R1\n"
