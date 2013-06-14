@@ -63,7 +63,7 @@
     #define CAM_EXT_TV_RANGE                1
     //#define DNG_EXT_FROM                  ".DPS"
 	
-	#define REMOTE_SYNC_STATUS_LED 	0xc022008C		// specifies an LED that turns on while camera waits for USB remote to sync
+	#define REMOTE_SYNC_STATUS_LED 	0xc0220084		// specifies an LED that turns on while camera waits for USB remote to sync
 	
     #define CAM_OPTIONAL_EXTRA_BUTTON       1       // allow the Power button to be remapped in ALT mode
     #define CAM_EXTRA_BUTTON_NAMES          { "OFF", "Display" }

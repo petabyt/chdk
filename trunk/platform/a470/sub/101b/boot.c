@@ -87,7 +87,7 @@ void __attribute__((naked,noinline)) sub_FFC001a4_my() { //#fs
                 "MOV     R0, #0xD3\n"
                 "MSR     CPSR_cxsf, R0\n"
                 "MOV     SP, #0x1000\n"			
-                "LDR     R0, =0xFFC00210\n"
+                "LDR     R0, =0x6C4\n"
                 "LDR     R2, =0xEEEEEEEE\n"
                 "MOV     R3, #0x1000\n"
         "loc_FFC00200:\n"
@@ -375,7 +375,7 @@ void __attribute__((naked,noinline)) sub_FFC48B2C_my() { //#fs  // CreateTask_Ca
                 "STR     R3, [SP]\n"
                 //"LDR     R3, =0xFFC488A4\n"           // task_CaptSeqTask
                 "LDR     R3, =task_CaptSeqTask_my\n"            // task_CaptSeqTask
-                "LDR     R0, =0xFFC48C70\n"             // aCaptseqtask ; "CaptSeqTask"
+                "LDR     R0, =0xFFC48C60\n"             // aCaptseqtask ; "CaptSeqTask"
                 "MOV     R2, #0x1000\n"
                 "MOV     R1, #0x17\n"
                 "BL      sub_FFC0BBB8\n"                // uKernelMiscCreateTask o. CreateTaskStrict
