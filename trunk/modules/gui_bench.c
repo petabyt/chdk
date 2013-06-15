@@ -132,7 +132,7 @@ static void __attribute__((optimize("O0"))) bench_screen_read() {
     register char c;
     register char *scr;
 
-    scr = vid_get_viewport_fb();
+    scr = vid_get_viewport_active_buffer();
     s = camera_screen.width * vid_get_viewport_height() * 3;
     t = get_tick_count();
     for (n=0; n<64; ++n)
