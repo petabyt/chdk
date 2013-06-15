@@ -48,6 +48,7 @@ DEF(focus_busy                              ,0x0000b27c) // Found @0xff9507e0
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x10361000; }             // Found @0xff84a0b4
 //void *vid_get_viewport_fb()      { return (void*)0x10d29360; }             // Found @0xffa104a0
+DEF(jpeg_count_str                          ,0x00058304) // Found @0xff9be610
 //char *camera_jpeg_count_str()    { return (char*)0x00058304; }             // Found @0xff9be610
 //long hook_raw_size()             { return 0x009dcce0; }                    // Found @0xffa11fa8
 //int get_flash_params_count(void) { return 0x6f; }                          // Found @0xff973064

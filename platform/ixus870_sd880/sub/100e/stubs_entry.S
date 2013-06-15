@@ -38,11 +38,18 @@ DEF(some_flag_for_af_scan                   ,0x00009280) // Found @0xff933c9c
 DEF(zoom_busy                               ,0x000088b4) // Found @0xff92b658
 DEF(focus_busy                              ,0x000087ac) // Found @0xff92663c
 //DEF(recreview_hold                          ,0x00005f94) // Found @0xff882adc, ** != ** stubs_min = 0x00009e9c (0x9E18+0x84)
+// Camera has 2 RAW buffers @ 0x412007fc & 0x429aaa2c
+//  Note: active buffer --> raw_buffers[ active_raw_buffer   *3]
+//        other buffer  --> raw_buffers[(active_raw_buffer^1)*3]
+DEF(raw_buffers                             ,0xffad77a4) // Found @0xffad77a4
+DEF(active_raw_buffer                       ,0x0000533c) // Found @0xff86322c
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x403b1000; }             // Found @0xff841de0
 //void *vid_get_viewport_fb()      { return (void*)0x40a2f2d0; }             // Found @0xffaa19a8
+DEF(viewport_fb_d                           ,0x00005074) // Found 0x501c (@0xff856d80) + 0x58 (@0xff856db8)
 //void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x501c+0x58)); } // Found @0xff856d80 & 0xff856db8
+DEF(jpeg_count_str                          ,0x0004a980) // Found @0xff9ad1fc
 //char *camera_jpeg_count_str()    { return (char*)0x0004a980; }             // Found @0xff9ad1fc
 //long hook_raw_size()             { return 0x00ec04f0; }                    // Found @0xffaa3d88
 //int get_flash_params_count(void) { return 0x78; }                          // Found @0xff95a7ac

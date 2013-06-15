@@ -14,7 +14,7 @@ TARGET_PRIMARY=$(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN
 libplatformsub.a: $(OBJS)
 
 clean:
-	rm -f $(OBJS) libplatformsub.a stubs_entry.S.err stubs_not_found_names.err
+	rm -f *.o libplatformsub.a stubs_entry.S.err stubs_not_found_names.err
 
 distclean: clean
 	rm -f stubs_entry.S stubs_auto.S
