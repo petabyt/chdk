@@ -55,7 +55,9 @@ DEF(active_viewport_buffer                  ,0x000020d0) // Found @0xff851718
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x403f1000; }             // Found @0xff85b834
 //void *vid_get_viewport_fb()      { return (void*)0x40546b80; }             // Found @0xffb1db58
+DEF(viewport_fb_d                           ,0x000029f8) // Found 0x29a0 (@0xff871340) + 0x58 (@0xff871378)
 //void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x29a0+0x58)); } // Found @0xff871340 & 0xff871378
+DEF(jpeg_count_str                          ,0x000b44d4) // Found @0xff9fd22c
 //char *camera_jpeg_count_str()    { return (char*)0x000b44d4; }             // Found @0xff9fd22c
 //long hook_raw_size()             { return 0x014d2400; }                    // Found @0xffb2101c
 //int get_flash_params_count(void) { return 0xa0; }                          // Found @0xff9941e4

@@ -56,6 +56,11 @@ DEF(bitmap_buffer                           ,0x0000d170) // Found @0xff246c14
 DEF(active_bitmap_buffer                    ,0x0000d168) // Found @0xff246c18
 DEF(viewport_buffers                        ,0xff41318c) // Found @0xff03b2d0
 DEF(active_viewport_buffer                  ,0x00002138) // Found @0xff03af6c
+// Camera has 2 RAW buffers @ 0x44000000 & 0x4a7eca00
+//  Note: active buffer --> raw_buffers[active_raw_buffer]
+//        other buffer  --> raw_buffers[active_raw_buffer^1]
+DEF(raw_buffers                             ,0xff42784c) // Found @0xff42784c
+DEF(active_raw_buffer                       ,0x00002eac) // Found @0xff06c918
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x406c5000; }             // Found @0xff0448b8

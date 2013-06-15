@@ -1,6 +1,28 @@
 #include "platform.h"
 #include "lolevel.h"
 
+
+extern  int     active_raw_buffer;
+extern  char*   raw_buffers[];
+
+char *hook_raw_image_addr()
+{
+    return raw_buffers[active_raw_buffer*3];
+}
+
+char *hook_alt_raw_image_addr()
+{
+    return raw_buffers[(active_raw_buffer^1)*3];
+}
+
+
+char *camera_jpeg_count_str()
+{
+    extern char jpeg_count_str[];
+	return jpeg_count_str;
+}
+
+
 void vid_bitmap_refresh()
 {
 	extern int full_screen_refresh;
@@ -70,6 +92,12 @@ void *vid_get_viewport_live_fb()
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
     // Offset the return value because the viewport is left justified instead of centered on this camera
     return viewport_buffers[(active_viewport_buffer-1)&3];
+}
+
+void *vid_get_viewport_fb_d()
+{
+    extern char *viewport_fb_d;
+	return viewport_fb_d;
 }
 
 // Defined in stubs_min.S
