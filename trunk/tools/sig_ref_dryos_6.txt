@@ -6,7 +6,6 @@ set_control_event 0xFF0911B8 22
 GetDrive_ClusterSize 0xFF06ADBC 12
 GetDrive_TotalClusters 0xFF06ADEC 10
 GetDrive_FreeClusters 0xFF06AE14 8
-mkdir 0xff027520
 GetImageFolder 0xFF1598B8
 PT_PlaySound 0xFF07F848
 ReadFastDir 0xFF2DD404

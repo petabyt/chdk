@@ -8,6 +8,4 @@ closedir 0xFFA7E06C 17
 GetFocusLensSubjectDistanceFromLens 0xFF9430E8 22
 add_ptp_handler 0xFFA3F97C
 SetFileTimeStamp 0xFF835694 17
-ScreenLock 0xFF9F98B4 10
-ScreenUnlock 0xFF9F98DC 9
 SetFileAttributes 0xFF8356D8

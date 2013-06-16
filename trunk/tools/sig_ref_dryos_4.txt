@@ -10,5 +10,4 @@ ReadFastDir 0xFFAE2C14 26
 PT_PlaySound 0xFF88A140
 Remove 0xFF837114 14
 OpenFastDir 0xFFAE2AC0
-ScreenLock 0xFF8B4C98 11
 apex2us 0xFFA5C23C

@@ -36,5 +36,4 @@ SetLogicalEventActive 0xFFC5BCD0 20
 GetFocusLensSubjectDistanceFromLens 0xFFCFDE48 22
 add_ptp_handler 0xFFCAD7D0
 set_control_event 0xFFC5BAA4 20
-exmem_alloc 0xFFC56B44 26
 SetFileAttributes 0xFFC15358
