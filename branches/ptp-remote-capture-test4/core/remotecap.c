@@ -66,6 +66,17 @@ int remotecap_set_target ( int type, int lstart, int lcount )
         remotecap_free_hooks(0); //frees up current hook (if any)
         return 1;
     }
+    // invalid range, return error
+    if(lstart<0 || lstart>CAM_RAW_ROWS-1 || lcount<0 || lcount+lstart>CAM_RAW_ROWS) {
+        remote_file_target=0;
+        remotecap_free_hooks(0); //frees up current hook (if any)
+        return 0;
+    }
+    // default lcount = to end of buffer
+    if(lcount == 0) {
+        lcount = CAM_RAW_ROWS - lstart;
+    }
+
     startline=lstart;
     linecount=lcount;
     return 1;
@@ -108,11 +119,6 @@ void remotecap_raw_available(void) {
         return;
     }
     hook_wait[RC_WAIT_CAPTSEQTASK] = 3000; // x10ms sleeps = 30 sec timeout, TODO make setable
-
-    if (startline<0) startline=0;
-    if (startline>CAM_RAW_ROWS-1) startline=0;
-    if (linecount<=0) linecount=CAM_RAW_ROWS;
-    if ( (linecount+startline)>CAM_RAW_ROWS ) linecount=CAM_RAW_ROWS-startline;
 
     remotecap_raw_savefile(&rawchunk,startline,linecount);
 }
