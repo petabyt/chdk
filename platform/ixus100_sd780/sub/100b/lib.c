@@ -87,9 +87,6 @@ char *camera_jpeg_count_str()
 int vid_get_palette_type() { return 3; }
 int vid_get_palette_size() { return 256*4; } // sub_FF8C99C8, 0x400
 
-void *vid_get_bitmap_active_palette() {
-    return (void *)*(unsigned int*)(0x4CB8+0x28);  // sub_FF8C99C8, via sub_FF996CB4 two refs to "Palette Class."
-}
 void *vid_get_bitmap_active_buffer()
 {
     return (void*)(*(int*)(0x4cb8+0x14)); //"Add: %p Width : %ld Hight : %ld", sub_FF8C9A74
