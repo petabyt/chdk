@@ -17,8 +17,8 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(DoAFLock                             ,0xffc27744) //102        *** != 0xffc59f78
 //NHSTUB(LEDDrive                             ,0xffc43a04) //103        *** != 0xffc43acc
-//NHSTUB(ScreenLock                           ,0xffd86d9c) //  3        *** != 0xffd86fa4
-//NHSTUB(ScreenUnlock                         ,0xffd86de0) //  7        *** != 0xffd85c54
+//NHSTUB(ScreenLock                           ,0xffd86d9c) //117        *** != 0xffd86fa4
+//NHSTUB(ScreenUnlock                         ,0xffd86de0) //117        *** != 0xffd85c54
 //NHSTUB(SetScriptMode                        ,0xffc6fd38) //101        *** != 0xffc00f70
 //NHSTUB(UnlockAF                             ,0xffc2777c) //102        *** != 0xffc59f88
 //NHSTUB(kbd_pwr_off                          ,0xffc445a0) //  2 64%    *** != 0x00000000
@@ -105,6 +105,7 @@ DEF(_nrflag,0x5a80) // Found @ ffd17f90 (0x5a88) & ffd17fb0 (-0x08)
 //    Name                                     Address                Comp to stubs_entry_2.S
 //NHSTUB(CreateJumptable                      ,0xffe66520) //  1
 //NHSTUB(_uartr_req                           ,0xffc106ac) //111
+//NHSTUB(StartRecModeMenu                     ,0xffc6d208) //102
 //NHSTUB(AllocateMemory                       ,0xffe08260) //101
 NHSTUB(AllocateUncacheableMemory              ,0xffc296ac) //112
 NHSTUB(Close                                  ,0xffc262b8) //101
@@ -250,7 +251,6 @@ NHSTUB(vsprintf                               ,0xffc111e8) //115
 //NHSTUB(EngDrvRead                           ,0xffc24ba8) //102
 //NHSTUB(EngDrvBits                           ,0xffc24bbc) //102
 //NHSTUB(GetSDProtect                         ,0xffc23ca8) //103
-//NHSTUB(StartRecModeMenu                     ,0xffc6d208) //102
 //NHSTUB(DispCon_ShowBitmapColorBar           ,0xffc3fc4c) //102
 //NHSTUB(ResetZoomLens                        ,0xffe05590) //102
 //NHSTUB(ResetFocusLens                       ,0xffe0458c) //102

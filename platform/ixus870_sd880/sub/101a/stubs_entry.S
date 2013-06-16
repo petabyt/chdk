@@ -98,6 +98,7 @@ DEF(_nrflag,0x9268) // Found @ ff935c18 (0x926c) & ff935c34 (-0x04)
 //    Name                                     Address                Comp to stubs_entry_2.S
 //NHSTUB(CreateJumptable                      ,0xffaa44cc) //  1
 //NHSTUB(_uartr_req                           ,0xff81c2a4) //111
+//NHSTUB(StartRecModeMenu                     ,0xff872294) //102
 //NHSTUB(AllocateMemory                       ,0xffa3d8b8) //101
 NHSTUB(AllocateUncacheableMemory              ,0xff827b68) //112
 NHSTUB(Close                                  ,0xff823af4) //101
@@ -245,7 +246,6 @@ NHSTUB(vsprintf                               ,0xff81caf8) //115
 //NHSTUB(EngDrvRead                           ,0xff822ae0) //102
 //NHSTUB(EngDrvBits                           ,0xff822af4) //102
 //NHSTUB(GetSDProtect                         ,0xff821b7c) //103
-//NHSTUB(StartRecModeMenu                     ,0xff872294) //102
 //NHSTUB(DispCon_ShowBitmapColorBar           ,0xff841dac) //102
 //NHSTUB(ResetZoomLens                        ,0xffa3ae18) //102
 //NHSTUB(ResetFocusLens                       ,0xffa39e2c) //102

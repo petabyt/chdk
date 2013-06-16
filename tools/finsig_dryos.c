@@ -1150,6 +1150,7 @@ func_entry  func_names[] =
     // Do these first as they are needed to find others
     { "CreateJumptable", UNUSED },
     { "_uartr_req", UNUSED },
+	{ "StartRecModeMenu", UNUSED },
 
     { "AllocateMemory", UNUSED },
     { "AllocateUncacheableMemory" },
@@ -1318,7 +1319,6 @@ func_entry  func_names[] =
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
 	{ "GetSDProtect", UNUSED },
-	{ "StartRecModeMenu", UNUSED },
 	{ "DispCon_ShowBitmapColorBar", UNUSED },
 	{ "ResetZoomLens", OPTIONAL|UNUSED },
 	{ "ResetFocusLens", OPTIONAL|UNUSED },
@@ -1694,6 +1694,11 @@ string_sig string_sigs[] = {
     { 16, "MakeDirectory_Fut", (char*)MakeDirectory_Fut_test, 0x01000001 },
     { 16, "RenameFile_Fut", (char*)RenameFile_Fut_test, 0x01000001 },
 	
+    { 17, "ScreenLock", "StartRecModeMenu", 0 },
+    { 17, "ScreenUnlock", "StartRecModeMenu", 0 },
+
+    { 18, "mkdir", "", 0 },
+
     { 0, 0, 0, 0 }
 };
 
@@ -1780,6 +1785,17 @@ int find_BL(firmware *fw, int k, uint32_t v1, uint32_t v2)
     if (isBL(fw,k))
     {
         int n = idxFollowBranch(fw, k, 0x01000001);
+        if (n == v1)
+            return k;
+    }
+    return 0;
+}
+
+int find_B(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+    if (isB(fw,k))
+    {
+        int n = idxFollowBranch(fw, k, 0x00000001);
         if (n == v1)
             return k;
     }
@@ -2550,6 +2566,82 @@ int match_strsig16(firmware *fw, string_sig *sig, int j)
 	return 0;
 }
 
+// Sig pattern:
+//      Special case for ScreenLock & ScreenUnlock
+int find_strsig17(firmware *fw, string_sig *sig)
+{
+	int j = get_saved_sig(fw,"StartRecModeMenu");	
+	
+	if (j >= 0)
+	{
+		if (func_names[j].val != 0)
+		{
+			int idx = adr2idx(fw, func_names[j].val);
+            int k = 0;
+            if (isLDR_PC(fw,idx-3) && isMOV_immed(fw,idx-2) && isB(fw,idx-1))
+            {
+                k = adr2idx(fw,LDR2val(fw,idx-3));
+            }
+            else if (isMOV_immed(fw,idx-3) && isADR_PC(fw,idx-2) && isB(fw,idx-1))
+            {
+                k = adr2idx(fw,ADR2adr(fw,idx-2));
+            }
+            if (k != 0)
+            {
+                uint32_t fadr;
+                if (strcmp(sig->name,"ScreenLock") == 0)
+                    fadr = followBranch(fw,idx2adr(fw,k+1),0x01000001);
+                else
+                {
+                    k = find_inst(fw, isLDMFD, k+1, 60);
+                    fadr = followBranch(fw,idx2adr(fw,k-1),0x01000001);
+                }
+                fwAddMatch(fw,fadr,32,0,117);
+                return 1;
+            }
+		}
+	}
+
+	return 0;
+}
+
+
+// Sig pattern:
+//      Special case for mkdir
+int match_strsig18(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+    if (fwval(fw,k) == 0x12CEA600)
+    {
+        k = find_inst_rev(fw, isSTMFD_LR, k-20, 200);
+        if (k != 0)
+        {
+            if ((((fwval(fw,k+12) & 0xFFF0FFFF) == 0xE350002F) && ((fwval(fw,k+15) & 0xFFF0FFFF) == 0xE3500021) && ((fwval(fw,k+19) & 0xFFF0FFFF) == 0xE3500020)) ||
+                (((fwval(fw,k+11) & 0xFFF0FFFF) == 0xE350002F) && ((fwval(fw,k+14) & 0xFFF0FFFF) == 0xE3500021) && ((fwval(fw,k+18) & 0xFFF0FFFF) == 0xE3500020)))
+            {
+                uint32_t fadr = 0;
+                if (isBL(fw,k+47))
+                {
+                    fadr = followBranch(fw, idx2adr(fw,k+47), 0x01000001);
+                }
+                else if (isBL(fw,k+48))
+                {
+                    fadr = followBranch(fw, idx2adr(fw,k+48), 0x01000001);
+                }
+                if (fadr != 0)
+                {
+                    fwAddMatch(fw,fadr,32,0,118);
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+int find_strsig18(firmware *fw, string_sig *sig)
+{
+    return search_fw(fw, match_strsig18, 0, 0, 1);
+}
+
 int find_strsig(firmware *fw, string_sig *sig)
 {
 	switch (sig->type)
@@ -2570,6 +2662,8 @@ int find_strsig(firmware *fw, string_sig *sig)
     case 14:	return fw_process(fw, sig, match_strsig14);
     case 15:	return fw_string_process(fw, sig, match_strsig15, 1);
     case 16:	return fw_process(fw, sig, match_strsig16);
+    case 17:	return find_strsig17(fw, sig);
+    case 18:	return find_strsig18(fw, sig);
 	}
 	
 	return 0;
@@ -3495,6 +3589,41 @@ int match_palette_buffer_offset(firmware *fw, int k)
     return 0;
 }
 
+int match_palette_data3(firmware *fw, int k, uint32_t palette_data, uint32_t v2)
+{
+    if (isLDR_PC(fw, k) && (LDR2val(fw,k) == palette_data) && isLDR_PC(fw,k-1) && isLDR_PC(fw,k-6) && isLDR(fw,k-5))
+    {
+        int palette_control = LDR2val(fw,k-6);
+        int ptr_offset = fwOp2(fw,k-5);
+        uint32_t fadr = find_inst_rev(fw, isSTMFD_LR, k-7, 30);
+        if (fadr > 0)
+        {
+            int k1 = search_fw(fw, find_B, fadr, 0, 1);
+            if ((k1 > 0) && isLDR_PC(fw,k1-2) && isLDR(fw,k1-1) && (LDR2val(fw,k1-2) == palette_control))
+            {
+                int active_offset = fwOp2(fw,k1-1);
+                print_stubs_min(fw,"active_palette_buffer",palette_control+active_offset,idx2adr(fw,k1-1));
+                print_stubs_min(fw,"palette_buffer_ptr",palette_control+ptr_offset,idx2adr(fw,k-5));
+                if (isBL(fw,k+8))
+                {
+                    fadr = followBranch(fw, idx2adr(fw,k+8), 0x01000001);
+                    int idx = adr2idx(fw, fadr);
+                    if (isLDR(fw, idx+2) && isBL(fw, idx+3))
+                    {
+                        uint32_t palette_size = LDR2val(fw,idx+2);
+                        if (palette_size >= 0x400)
+                        {
+                            bprintf("// Offset from start of palette_buffer to color data = %d (Found @0x%08x)\n",palette_size-0x400,idx2adr(fw,idx+2));
+                        }
+                    }
+                }
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 int match_palette_data2(firmware *fw, int k, uint32_t v1, uint32_t v2)
 {
     if (isLDR(fw,k) && (LDR2val(fw,k) == v1))
@@ -3609,6 +3738,7 @@ int match_SavePaletteData(firmware *fw, int idx, int palette_data)
                 search_fw(fw, match_palette_data2, palette_data, palette_control, 1);
             }
         }
+        return 1;
     }
 
     return 0;
@@ -4075,11 +4205,14 @@ void find_stubs_min(firmware *fw)
     if (palette_data)
     {
         bprintf("// Palette colour tables  found @ 0x%08x\n", palette_data);
-        search_saved_sig(fw, "SavePaletteData", match_SavePaletteData, palette_data, 0, 1);
+        if (search_saved_sig(fw, "SavePaletteData", match_SavePaletteData, palette_data, 0, 1) == 0)
+        {
+            search_fw(fw, match_palette_data3, palette_data, 0, 1);
+        }
 	}
     
 	// Find 'bitmap buffer' info
-	search_saved_sig(fw, "GUISrv_StartGUISystem", match_bitmap_buffer, 0, 0, 32);
+	search_saved_sig(fw, "GUISrv_StartGUISystem", match_bitmap_buffer, 0, 0, 50);
 
     // Get viewport address
     uint32_t v = find_viewport_address(fw,&k);

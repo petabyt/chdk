@@ -115,6 +115,7 @@ DEF(_nrflag,0xceb8) // Found @ ff2a79c0 (0xceb4) & ff2a79fc (+0x04)
 //NHSTUB(CreateJumptable                      ,0xff40afe4) //  1
 // ALT: NHSTUB(CreateJumptable, 0xff40d268) // 1 32/0
 //NHSTUB(_uartr_req                           ,0xff00fef8) //111
+//NHSTUB(StartRecModeMenu                     ,0xff090554) //102
 //NHSTUB(AllocateMemory                       ,0xff374d2c) //101
 NHSTUB(AllocateUncacheableMemory              ,0xff02ac2c) //112
 NHSTUB(Close                                  ,0xff026458) //101
@@ -186,8 +187,8 @@ NHSTUB(RefreshPhysicalScreen                  ,0xff0b308c) //104
 //NHSTUB(Remove                               ,0xff0265cc) //  6
 NHSTUB(RenameFile_Fut                         ,0xff025cdc) //116
 NHSTUB(Restart                                ,0xff02c444) //106
-NHSTUB(ScreenLock                             ,0xff0b42b8) //  4
-NHSTUB(ScreenUnlock                           ,0xff0b431c) //  3
+NHSTUB(ScreenLock                             ,0xff0b42b8) //117
+NHSTUB(ScreenUnlock                           ,0xff0b431c) //117
 NHSTUB(SetAE_ShutterSpeed                     ,0xff407178) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff096dd0) //103
 NHSTUB(SetCurrentCaptureModeType              ,0xff0a0284) //101
@@ -266,7 +267,6 @@ NHSTUB(vsprintf                               ,0xff010980) //115
 //NHSTUB(EngDrvRead                           ,0xff024ac8) //102
 //NHSTUB(EngDrvBits                           ,0xff024adc) //102
 //NHSTUB(GetSDProtect                         ,0xff023c04) //101
-//NHSTUB(StartRecModeMenu                     ,0xff090554) //102
 //NHSTUB(DispCon_ShowBitmapColorBar           ,0xff050174) //102
 //NHSTUB(ResetZoomLens                        ,0xff371db8) //102
 //NHSTUB(ResetFocusLens                       ,0xff3706b4) //102

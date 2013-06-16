@@ -992,37 +992,6 @@ static FuncSig func_sig_set_control_event_1[] = {
 	{ -1, -1, -1 },
 };
 
-static FuncSig func_sig_exmem_alloc_1[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D41F0
-	{   1, 0xe00f7000, 0xf00ff000 }, // ldr:8:0xE51F72E0
-	{   2, 0xe1a06000, 0xfdfff000 }, // mov:6:0xE1A06001
-	{   3, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05002
-	{   4, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE1A04000
-	{   5, 0xe5970000, 0xfdfff000 }, // ldr:4:0xE5970000
-	{   6, 0xe00f1000, 0xf00ff000 }, // ldr:8:0xE59F10DC
-	{   7, 0xe00f3000, 0xf00ff000 }, // ldr:8:0xE59F3128
-	{   8, 0xe00f2000, 0xf00ff000 }, // sub:10:0xE24F2FC2
-	{   9, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFED504
-	{  10, 0xe1a03000, 0xfdfff000 }, // mov:6:0xE3A03000
-	{  11, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02005
-	{  12, 0xe0801000, 0xfdf0f000 }, // add:6:0xE2861040
-	{  13, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
-	{  14, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFEE8
-	{  15, 0xe00f2000, 0xf00ff000 }, // ldr:8:0xE59F20BC
-	{  16, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01001
-	{  17, 0xe1c00000, 0xfdfff000 }, // bic:6:0xE3C00201
-	{  18, 0xe5821000, 0xfdfff000 }, // str:4:0xE7821104
-	{  19, 0xe1550000, 0xfdfff000 }, // cmp:7:0xE3550000
-	{  20, 0xe0804000, 0xfdf0f000 }, // add:6:0xE2804020
-	{  21, 0x18850000, 0xffff0000 }, // stm:5:0x18850050
-	{  22, 0xe5970000, 0xfdfff000 }, // ldr:4:0xE5970000
-	{  23, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFED3E1
-	{  24, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
-	{  25, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD81F0
-	/* 26/26 */
-	{ -1, -1, -1 },
-};
-
 static FuncSig func_sig_SetFileAttributes_1[] = {
 	{   0, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02001
 	{   1, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
@@ -1356,35 +1325,6 @@ static FuncSig func_sig_SetFileTimeStamp_3[] = {
 	{ -1, -1, -1 },
 };
 
-static FuncSig func_sig_ScreenLock_3[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
-	{   1, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB000075
-	{   2, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{   3, 0x18bd0000, 0xffff0000 }, // ldm:5:0x18BD8010
-	{   4, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB00005E
-	{   5, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE51F0F5C
-	{   6, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE590000C
-	{   7, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBF8FAC7
-	{   8, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE3A00000
-	{   9, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD8010
-	/* 10/10 */
-	{ -1, -1, -1 },
-};
-
-static FuncSig func_sig_ScreenUnlock_3[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
-	{   1, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB00006B
-	{   2, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{   3, 0x18bd0000, 0xffff0000 }, // ldm:5:0x18BD8010
-	{   4, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFB68
-	{   5, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE51F0F84
-	{   6, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE590000C
-	{   7, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD4010
-	{   8, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEAF8FABC
-	/* 9/9 */
-	{ -1, -1, -1 },
-};
-
 static FuncSig func_sig_SetFileAttributes_3[] = {
 	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4070
 	{   1, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05000
@@ -1680,22 +1620,6 @@ static FuncSig func_sig_OpenFastDir_4[] = {
 	{ -1, -1, -1 },
 };
 
-static FuncSig func_sig_ScreenLock_4[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
-	{   1, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB000100
-	{   2, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{   3, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE1A04000
-	{   4, 0x0a000000, 0x0f000000 }, // b, bl:3:0x1A000003
-	{   5, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB00010C
-	{   6, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE59F00F4
-	{   7, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE590000C
-	{   8, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFE1723
-	{   9, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
-	{  10, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD8010
-	/* 11/11 */
-	{ -1, -1, -1 },
-};
-
 static FuncSig func_sig_apex2us_4[] = {
 	{   0, 0xe1700d09, 0xfdffffff }, // cmn:7:0xE3700D09
 	{   1, 0xb00f0000, 0xf00ff000 }, // ldr:8:0xB59F0068
@@ -1913,41 +1837,6 @@ static FuncSig func_sig_GetDrive_FreeClusters_6[] = {
 	{   6, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE7900104
 	{   7, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD8010
 	/* 8/8 */
-	{ -1, -1, -1 },
-};
-
-static FuncSig func_sig_mkdir_6[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D41F0
-	{   1, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05000
-	{   3, 0xe1a07000, 0xfdfff000 }, // mov:6:0xE1A07001
-	{   4, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB01094E
-	{   5, 0xe1a08000, 0xfdfff000 }, // mov:6:0xE1A08000
-	{   7, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE3A04000
-	{   8, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB01097D
-	{   9, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
-	{  10, 0x0a000000, 0x0f000000 }, // b, bl:3:0x1A000014
-	{  11, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01001
-	{  12, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00008
-	{  13, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB010E49
-	{  14, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01092
-	{  15, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
-	{  16, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB0030ED
-	{  17, 0xe1a06000, 0xfdfff000 }, // mov:6:0xE1A06000
-	{  18, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00008
-	{  19, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB010E60
-	{  20, 0xe1560000, 0xfdfff000 }, // cmp:7:0xE3560000
-	{  21, 0x0a000000, 0x0f000000 }, // b, bl:3:0x1A000009
-	{  22, 0xe1570000, 0xfdfff000 }, // cmp:7:0xE3570001
-	{  23, 0x11a04000, 0xfdfff000 }, // mov:6:0x13A04001
-	{  24, 0x0a000000, 0x0f000000 }, // b, bl:3:0x1A000004
-	{  25, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
-	{  26, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB010250
-	{  27, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500001
-	{  28, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE1A04000
-	{  29, 0x0a000000, 0x0f000000 }, // b, bl:3:0x1A000001
-	{  30, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
-	{  31, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB0101A1
-	/* 30/32 */
 	{ -1, -1, -1 },
 };
 
@@ -2405,106 +2294,6 @@ static FuncSig func_sig_PT_PlaySound_7[] = {
 	{ -1, -1, -1 },
 };
 
-static FuncSig func_sig_ScreenUnlock_7[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
-	{   1, 0xe00f4000, 0xf00ff000 }, // ldr:8:0xE59F4088
-	{   2, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE5940020
-	{   3, 0xe1700001, 0xfdffffff }, // cmn:7:0xE3700001
-	{   4, 0x000f1000, 0xf00ff000 }, // ldr:8:0x059F1080
-	{   5, 0x000f0000, 0xf00ff000 }, // add:10:0x028F0080
-	{   6, 0x0b000000, 0x0f000000 }, // b, bl:3:0x0BFA4C49
-	{   7, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB00007F
-	{   8, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{   9, 0x18bd0000, 0xffff0000 }, // ldm:5:0x18BD8010
-	{  10, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFB91
-	{  11, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE594000C
-	{  12, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD4010
-	{  13, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEAFA4AE3
-	/* 14/14 */
-	{ -1, -1, -1 },
-};
-
-static FuncSig func_sig_ScreenLock_8[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
-	{   1, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB0000CF
-	{   2, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{   3, 0x18bd0000, 0xffff0000 }, // ldm:5:0x18BD8010
-	{   4, 0xe00f4000, 0xf00ff000 }, // ldr:8:0xE51F47E0
-	{   5, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE5940028
-	{   6, 0xe0800000, 0xfdf0f000 }, // add:6:0xE2800001
-	{   7, 0xe5840000, 0xfdfff000 }, // str:4:0xE5840028
-	{   8, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB0000D8
-	{   9, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE594000C
-	{  10, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBF8CF4C
-	{  11, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE3A00000
-	{  12, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD8010
-	/* 13/13 */
-	{ -1, -1, -1 },
-};
-
-static FuncSig func_sig_ScreenUnlock_8[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
-	{   1, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB0000A6
-	{   2, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{   3, 0x18bd0000, 0xffff0000 }, // ldm:5:0x18BD8010
-	{   4, 0xe00f4000, 0xf00ff000 }, // ldr:8:0xE51F4884
-	{   5, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE5940028
-	{   6, 0xe0400000, 0xfdfff000 }, // sub:6:0xE2400001
-	{   7, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
-	{   8, 0xe5840000, 0xfdfff000 }, // str:4:0xE5840028
-	{   9, 0x0a000000, 0x0f000000 }, // b, bl:3:0x1A000001
-	{  10, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFFD8
-	{  11, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEA000001
-	{  12, 0xb1a00000, 0xfdfff000 }, // mov:6:0xB3A00000
-	{  13, 0xb5840000, 0xfdfff000 }, // str:4:0xB5840028
-	{  14, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE594000C
-	{  15, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD4010
-	{  16, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEAF8CF1D
-	/* 17/17 */
-	{ -1, -1, -1 },
-};
-
-static FuncSig func_sig_ScreenUnlock_9[] = {
-	{   0, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE59F00B4
-	{   1, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
-	{   2, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE5900000
-	{   3, 0xe1700001, 0xfdffffff }, // cmn:7:0xE3700001
-	{   4, 0x000f1000, 0xf00ff000 }, // ldr:8:0x059F10A8
-	{   5, 0x000f0000, 0xf00ff000 }, // add:10:0x028F00A8
-	{   6, 0x0b000000, 0x0f000000 }, // b, bl:3:0x0BFD9B29
-	{   7, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB0000AB
-	{   8, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{   9, 0x18bd0000, 0xffff0000 }, // ldm:5:0x18BD8010
-	{  10, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB0000B8
-	{  11, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE59F0084
-	{  12, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE590000C
-	{  13, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD4010
-	{  14, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEAFE0A3C
-	/* 15/15 */
-	{ -1, -1, -1 },
-};
-
-static FuncSig func_sig_ScreenLock_10[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
-	{   1, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB00006F
-	{   2, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{   3, 0x18bd0000, 0xffff0000 }, // ldm:5:0x18BD8010
-	{   4, 0xe00f4000, 0xf00ff000 }, // ldr:8:0xE51F47E0
-	{   5, 0xe00f1000, 0xf00ff000 }, // add:10:0xE28F1F7B
-	{   6, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE5940020
-	{   7, 0xe0800000, 0xfdf0f000 }, // add:6:0xE2800001
-	{   8, 0xe5840000, 0xfdfff000 }, // str:4:0xE5840020
-	{   9, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE3A00060
-	{  10, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFABF6E
-	{  11, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFA06
-	{  12, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE594000C
-	{  13, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBF9990D
-	{  14, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE3A00000
-	{  15, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD8010
-	/* 16/16 */
-	{ -1, -1, -1 },
-};
-
 static FuncSig func_sig_GetImageFolder_11[] = {
 	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D43F0
 	{   1, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05001
@@ -2579,41 +2368,6 @@ static FuncSig func_sig_PT_PlaySound_11[] = {
 	{ -1, -1, -1 },
 };
 
-static FuncSig func_sig_mkdir_12[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D41FF
-	{   1, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05000
-	{   3, 0xe1a07000, 0xfdfff000 }, // mov:6:0xE1A07001
-	{   4, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB00D291
-	{   5, 0xe1a08000, 0xfdfff000 }, // mov:6:0xE1A08000
-	{   7, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE3A04000
-	{   8, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB00D2C7
-	{   9, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
-	{  10, 0x0a000000, 0x0f000000 }, // b, bl:3:0x1A00003E
-	{  11, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01001
-	{  12, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00008
-	{  13, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB00D808
-	{  14, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00008
-	{  15, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB00D27B
-	{  16, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB00D2C8
-	{  17, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
-	{  18, 0x0a000000, 0x0f000000 }, // b, bl:3:0x0A000024
-	{  19, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00008
-	{  20, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB00D6CB
-	{  21, 0xe0803000, 0xfdf0f000 }, // add:6:0xE28D3004
-	{  22, 0xe0802000, 0xfdf0f000 }, // add:6:0xE28D200C
-	{  23, 0xe0801000, 0xfdf0f000 }, // add:6:0xE2851001
-	{  24, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFF8C63
-	{  25, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
-	{  26, 0x0a000000, 0x0f000000 }, // b, bl:3:0xAA000002
-	{  27, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE3A00000
-	{  28, 0xe080d000, 0xfdf0f000 }, // add:6:0xE28DD010
-	{  29, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD81F0
-	{  30, 0xe0803000, 0xfdf0f000 }, // add:6:0xE28D3008
-	{  31, 0xe58d3000, 0xfdfff000 }, // str:4:0xE58D3000
-	/* 30/32 */
-	{ -1, -1, -1 },
-};
-
 FuncsList func_list[] = {
 	{ "CreateJumptable", func_sig_CreateJumptable_1, 1 },
 	{ "DeleteFile_Fut", func_sig_DeleteFile_Fut_1, 1 },
@@ -2657,14 +2411,6 @@ FuncsList func_list[] = {
 	{ "Remove", func_sig_Remove_4, 4 },
 	{ "Remove", func_sig_Remove_6, 6 },
 	{ "RenameFile_Fut", func_sig_RenameFile_Fut_1, 1 },
-	{ "ScreenLock", func_sig_ScreenLock_10, 10 },
-	{ "ScreenLock", func_sig_ScreenLock_3, 3 },
-	{ "ScreenLock", func_sig_ScreenLock_4, 4 },
-	{ "ScreenLock", func_sig_ScreenLock_8, 8 },
-	{ "ScreenUnlock", func_sig_ScreenUnlock_3, 3 },
-	{ "ScreenUnlock", func_sig_ScreenUnlock_7, 7 },
-	{ "ScreenUnlock", func_sig_ScreenUnlock_8, 8 },
-	{ "ScreenUnlock", func_sig_ScreenUnlock_9, 9 },
 	{ "SetFileAttributes", func_sig_SetFileAttributes_1, 1 },
 	{ "SetFileAttributes", func_sig_SetFileAttributes_3, 3 },
 	{ "SetFileAttributes", func_sig_SetFileAttributes_6, 6 },
@@ -2685,13 +2431,10 @@ FuncsList func_list[] = {
 	{ "closedir", func_sig_closedir_1, 1 },
 	{ "closedir", func_sig_closedir_3, 3 },
 	{ "closedir", func_sig_closedir_4, 4 },
-	{ "exmem_alloc", func_sig_exmem_alloc_1, 1 },
 	{ "kbd_pwr_off", func_sig_kbd_pwr_off_1, 1 },
 	{ "kbd_pwr_off", func_sig_kbd_pwr_off_2, 2 },
 	{ "kbd_pwr_on", func_sig_kbd_pwr_on_1, 1 },
 	{ "kbd_pwr_on", func_sig_kbd_pwr_on_2, 2 },
-	{ "mkdir", func_sig_mkdir_12, 12 },
-	{ "mkdir", func_sig_mkdir_6, 6 },
 	{ "mktime_ext", func_sig_mktime_ext_1, 1 },
 	{ "open", func_sig_open_1, 1 },
 	{ "open", func_sig_open_6, 6 },
