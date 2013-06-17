@@ -36,6 +36,7 @@ NHSTUB(kbd_pwr_off                            ,0xff843204) //  2 64%
 // Current modemap entry not found in firmware - MODE_VIDEO_STD            2597
 
 // Values below can be overridden in 'stubs_min.S':
+DEF(file_system_started                     ,0x000026c8) // Found @0xff850a18
 DEF(physw_status                            ,0x0000e238) // Found @0xff821dcc
 DEF(physw_run                               ,0x00001c34) // Found @0xff821a40
 DEF(physw_sleep_delay                       ,0x00001c32) // Found @0xff821a40

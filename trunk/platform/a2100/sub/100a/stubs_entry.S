@@ -27,6 +27,7 @@ NHSTUB(kbd_pwr_on                             ,0xffc30b94) //  2 82%
 // Current modemap entry not found in firmware - MODE_LONG_SHUTTER        32774
 
 // Values below can be overridden in 'stubs_min.S':
+DEF(file_system_started                     ,0x000025fc) // Found @0xffc3d26c
 DEF(physw_status                            ,0x0000c664) // Found @0xffc11a0c
 DEF(physw_run                               ,0x00001c24) // Found @0xffc11680
 DEF(physw_sleep_delay                       ,0x00001c22) // Found @0xffc11680

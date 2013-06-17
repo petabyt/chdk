@@ -29,6 +29,7 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff173188) //  3 90%
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
+DEF(file_system_started                     ,0x00002c30) // Found @0xff05bf98
 DEF(physw_status                            ,0x00033dd4) // Found @0xff01e874
 DEF(physw_run                               ,0x00001c30) // Found @0xff01e424
 DEF(physw_sleep_delay                       ,0x00001c38) // Found @0xff01e424

@@ -1,6 +1,5 @@
 #include "stubs_asm.h"
 
-//DEF(physw_status, 0xFB20)
 DEF(physw_status, 0xFB20)
 DEF(led_table, 0x7703C)
 
@@ -18,3 +17,5 @@ DEF(second_ext_for_dng, 0x8030)
 DEF(levent_table,0xFF962594)
 DEF(playrec_mode,0x5378) // "MenuIn"
 DEF(sys_mempart_id, 0xda38)
+
+DEF(file_system_started, 0x2C51C)

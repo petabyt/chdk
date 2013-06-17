@@ -29,6 +29,7 @@
 // Current modemap entry not found in firmware - MODE_NIGHT_SNAPSHOT      16395
 
 // Values below can be overridden in 'stubs_min.S':
+DEF(file_system_started                     ,0x000029ec) // Found @0xff850a00
 DEF(physw_status                            ,0x000104d0) // Found @0xff821e34
 DEF(physw_run                               ,0x00001c00) // Found @0xff821ad0
 DEF(physw_sleep_delay                       ,0x00001bfe) // Found @0xff821ad0

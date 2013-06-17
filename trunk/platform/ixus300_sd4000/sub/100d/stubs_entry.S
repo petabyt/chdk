@@ -37,6 +37,7 @@
 // Mode 33289 in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
+DEF(file_system_started                     ,0x00002a04) // Found @0xff870280
 DEF(physw_status                            ,0x00032e94) // Found @0xff8347d4
 DEF(physw_run                               ,0x00001c34) // Found @0xff834404
 DEF(physw_sleep_delay                       ,0x00001c3c) // Found @0xff834404

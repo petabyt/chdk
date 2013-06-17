@@ -29,6 +29,7 @@ NHSTUB(DeleteFile_Fut                         ,0xf8023c84) //  1 90%
 // Mode 33295 in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
+DEF(file_system_started                     ,0x000037e4) // Found @0xf8091b24
 DEF(physw_status                            ,0x000415fc) // Found @0xf8021508
 DEF(physw_run                               ,0x00001e80) // Found @0xf8021064
 DEF(physw_sleep_delay                       ,0x00001e88) // Found @0xf8021064

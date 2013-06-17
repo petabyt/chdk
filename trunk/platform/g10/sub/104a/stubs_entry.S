@@ -23,6 +23,7 @@
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
+DEF(file_system_started                     ,0x00002a4c) // Found @0xff858704
 DEF(physw_status                            ,0x00011cb8) // Found @0xff821c28
 DEF(physw_run                               ,0x00001c2c) // Found @0xff82189c
 DEF(physw_sleep_delay                       ,0x00001c2a) // Found @0xff82189c

@@ -143,7 +143,12 @@ void core_spytask()
     init_chdk_ptp_task();
 #endif
 
+#if defined(CAM_WAIT_FOR_FILESYSTEM)
+    extern int file_system_started;
+    while (file_system_started == 0) msleep(10);
+#else
     while((i++<400) && !spytask_can_start) msleep(10);
+#endif
 
     started();
     msleep(50);

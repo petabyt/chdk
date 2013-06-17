@@ -23,6 +23,7 @@ NHSTUB(kbd_pwr_off                            ,0xff8652c4) //  2 60%
 // Mode 32818 in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
+DEF(file_system_started                     ,0x00002b60) // Found @0xff874d58
 DEF(physw_status                            ,0x00033694) // Found @0xff834580
 DEF(physw_run                               ,0x00001c30) // Found @0xff83412c
 DEF(physw_sleep_delay                       ,0x00001c38) // Found @0xff83412c
