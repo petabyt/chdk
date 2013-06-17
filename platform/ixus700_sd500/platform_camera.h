@@ -60,6 +60,8 @@
     #define DNG_EXT_FROM                    ".DPS"
 	
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_WAIT_FOR_FILESYSTEM             1       // wait for 'file_system_started' on startup
 	
 //----------------------------------------------------------
 

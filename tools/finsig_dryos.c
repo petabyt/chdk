@@ -4003,6 +4003,47 @@ void find_stubs_min(firmware *fw)
 
 	bprintf("// Values below can be overridden in 'stubs_min.S':\n");
 
+    // Find 'file_system_started' flag
+	int sadr = find_str(fw, "FileSem.c");
+	k = find_nxt_str_ref(fw, sadr, -1);
+    int found = 0;
+	while ((k >= 0) && !found)
+	{
+        int f = find_inst_rev(fw, isSTMFD_LR, k-1, 100);
+        if (f != -1)
+        {
+            for (k1=f+1; k1<f+8 && !found; k1++)
+            {
+                if (isMOV(fw,k1) && (fwOp2(fw,k1) == 0))
+                {
+                    int e = find_inst(fw, isLDMFD_PC, k1+1, 50);
+                    if (e != -1)
+                    {
+                        int rd = fwRd(fw,k1);
+                        if (isBL(fw,e-3) && isMOV(fw,e-4) && (fwRd(fw,e-4) == 0) && (fwOp2(fw,e-4) == rd) &&
+                            isLDR_PC_cond(fw,e-8) && (LDR2val(fw,e-8) == 0x09610001) &&
+                            isSTR(fw,e-5))
+                        {
+                            int rn = fwRn(fw,e-5);
+                            int k2;
+                            for (k2=e-8; k2>f && !found; k2--)
+                            {
+                                if (isLDR_PC(fw,k2) && (fwRd(fw,k2) == rn))
+                                {
+                                    int base = LDR2val(fw,k2);
+                                    int ofst = fwOp2(fw,e-5);
+                                    print_stubs_min(fw,"file_system_started",base+ofst,idx2adr(fw,k2));
+                                    found = 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        k = find_nxt_str_ref(fw, sadr, k);
+    }
+
 	// Find 'physw_status'
 	search_saved_sig(fw, "kbd_read_keys", match_physw_status, 0, 0, 5);
 	
@@ -4019,9 +4060,9 @@ void find_stubs_min(firmware *fw)
     search_fw(fw, match_movie_status, 0, 0, 1);
 	
     // Find 'video_compression_rate'
-	int sadr = find_str(fw, "CompressionRateAdjuster.c");
+	sadr = find_str(fw, "CompressionRateAdjuster.c");
 	k = find_nxt_str_ref(fw, sadr, -1);
-    int found = 0;
+    found = 0;
 	while ((k >= 0) && !found)
 	{
         int f = find_inst_rev(fw, isSTMFD_LR, k-1, 100);

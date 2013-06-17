@@ -135,5 +135,8 @@
     #define CAMERA_MIN_DIST                     71      // Override min subject distance
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                     125392  // Override max subject distance
+
+    #define CAM_WAIT_FOR_FILESYSTEM             1       // wait for 'file_system_started' on startup
+
 //----------------------------------------------------------
 
