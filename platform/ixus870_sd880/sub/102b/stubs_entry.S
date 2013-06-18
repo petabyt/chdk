@@ -4,7 +4,7 @@
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
 //   Firmware Ver GM1.02B
-//   Possible corrupt firmware dump - file size to small for start address 0xff810000
+//   Possible corrupt firmware dump - file size too small for start address 0xff810000
 //     file size = 7.88MB, should be 7.94MB
 //   Canon PowerShot SD880 IS
 

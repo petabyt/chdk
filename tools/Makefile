@@ -6,7 +6,9 @@ SKIPPLATFORMCHECK=1
 include $(topdir)makefile.inc
 include $(topdir)version.inc
 
-OBJS=pakwif.o finsig_vxworks.o finsig_dryos.o gensig_vxworks.o gensig_dryos.o dumpchk.o dancingbits.o rawconvert.o dumputil.o find_levent.o find_eventproc.o yuvconvert.o font_8x16_pack.o makelang.o
+OBJS=pakwif.o finsig_vxworks.o finsig_dryos.o gensig_vxworks.o gensig_dryos.o \
+     dumpchk.o dancingbits.o rawconvert.o dumputil.o find_levent.o find_eventproc.o \
+     yuvconvert.o font_8x16_pack.o makelang.o code_gen.o
 
 ifdef OPT_FI2
   SUBDIRS=packfi2
@@ -14,8 +16,9 @@ endif
 
 SUBDIRS+=elf2flt
 
+EXES=makeexport$(EXE) pakwif$(EXE) finsig_vxworks$(EXE) finsig_dryos$(EXE) dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE) code_gen$(EXE)
 
-all: makeexport$(EXE) pakwif$(EXE) finsig_vxworks$(EXE) finsig_dryos$(EXE) dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE)
+all: $(EXES)
 
 # not needed by batch builds, not built by default
 extras: rawconvert$(EXE) yuvconvert$(EXE) find_levent$(EXE) find_eventproc$(EXE) dumpchk$(EXE)
@@ -37,16 +40,16 @@ pakwif$(EXE): pakwif.o
 	@echo $< \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
-finsig_vxworks$(EXE): finsig_vxworks.o
-	@echo $< \-\> $@
+finsig_vxworks$(EXE): finsig_vxworks.o stubs_load.o
+	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
 gensig_vxworks$(EXE): gensig_vxworks.o
 	@echo $< \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
-finsig_dryos$(EXE): finsig_dryos.o
-	@echo $< \-\> $@
+finsig_dryos$(EXE): finsig_dryos.o stubs_load.o firmware_load.o
+	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
 gensig_dryos$(EXE): gensig_dryos.o
@@ -85,17 +88,14 @@ makelang$(EXE): makelang.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
+code_gen$(EXE): code_gen.o stubs_load.o firmware_load.o
+	@echo $^ \-\> $@
+	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
+
 clean:
-	rm -f *.o makeexport$(EXE) pakwif$(EXE) finsig_dryos$(EXE) finsig_vxworks$(EXE) dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE) gensig_dryos$(EXE) gensig_vxworks$(EXE)
-#	if [ -s sig_ref_vxworks_1.bin ] && [ -s sig_ref_vxworks_2.bin ] && [ -s sig_ref_vxworks_3.bin ] ; then \
-#	  rm -f signatures_vxworks.h ; \
-#	fi
-#	if [ -s sig_ref_dryos_1.bin ] ; then \
-#	  rm -f signatures_dryos.h ; \
-#	fi
+	rm -f *.o $(EXES) $(extras)
 
 distclean: clean
-#	rm -f signatures.h
 
 
 signatures_vxworks.h: gensig_vxworks$(EXE) gensigs_vxworks.sh sig_ref_vxworks_1.txt sig_ref_vxworks_1.bin sig_ref_vxworks_2.txt sig_ref_vxworks_2.bin sig_ref_vxworks_3.txt sig_ref_vxworks_3.bin
@@ -162,8 +162,11 @@ sig_ref_dryos_7.bin:
 sig_ref_dryos_11.bin:
 	touch sig_ref_dryos_11.bin
 
-finsig_vxworks.o: finsig_vxworks.c signatures_vxworks.h
-finsig_dryos.o: finsig_dryos.c signatures_dryos.h
+finsig_vxworks.o: finsig_vxworks.c signatures_vxworks.h stubs_load.h
+finsig_dryos.o: finsig_dryos.c signatures_dryos.h stubs_load.h firmware_load.h
+stubs_load.o: stubs_load.c stubs_load.h
+firmware_load.o: firmware_load.c firmware_load.h
+code_gen.o: code_gen.c stubs_load.h firmware_load.h
 
 font_8x16_pack.o: font_8x16_pack.c ../lib/font/font_8x16_uni.h
 

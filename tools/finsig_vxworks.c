@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <time.h>
 
+#include "stubs_load.h"
+
 //------------------------------------------------------------------------------------------------------------
 
 #define MAX_MATCHES (64)
@@ -12,150 +14,6 @@
 //------------------------------------------------------------------------------------------------------------
 
 FILE *out_fp;
-
-//------------------------------------------------------------------------------------------------------------
-
-// Load original stubs_entry_2.s to compare results to
-
-typedef struct _osig
-{
-    char        nm[100];
-    uint32_t    val;
-	char		sval[100];
-    int         pct;
-    struct _osig *nxt;
-} osig;
-
-osig *stubs2 = 0;
-
-void print_stubs(osig *p)
-{
-    while (p)
-    {
-        fprintf(out_fp,"//%s 0x%08x (%s) %d\n",p->nm,p->val,p->sval,p->pct);
-        p = p->nxt;
-    }
-}
-
-int read_line(FILE *f, char *buf)
-{
-    int eof = 0;
-    int len = 0;
-    while (1)
-    {
-        if (fread(buf,1,1,f) != 1) { eof = 1; break; }
-        if ((*buf == 0x0A) || (*buf == 0x0D)) break;
-        len++; 
-        buf++;
-    }
-    *buf = 0;
-    return (eof == 0) || (len > 0);
-}
-
-char* get_str(char *s, char *d)
-{
-    while ((*s == ' ') || (*s == '\t') || (*s == ',')) s++;
-    while (*s && (*s != ' ') && (*s != '\t') && (*s != ',') && (*s != ')'))
-    {
-        *d++ = *s++;
-    }
-	while (*s && (*s != ',') && (*s != ')'))
-	{
-		if (*s == '+')
-		{
-			*d++ = *s++;
-			while ((*s == ' ') || (*s == '\t') || (*s == ',')) s++;
-			while (*s && (*s != ' ') && (*s != '\t') && (*s != ',') && (*s != ')'))
-			{
-				*d++ = *s++;
-			}
-		}
-		else s++;
-	}
-    *d = 0;
-    return s;
-}
-
-void add_sig(char *nm, char *val, int pct, osig **hdr)
-{
-    osig *p = malloc(sizeof(osig));
-    strcpy(p->nm, nm);
-	strcpy(p->sval, val);
-    p->pct = pct;
-    p->nxt = *hdr;
-    *hdr = p;
-
-	uint32_t v = 0, n = 0;
-	if ((strncmp(val,"0x",2) == 0) || (strncmp(val,"0X",2) == 0))
-	{
-		while (val)
-		{
-			sscanf(val,"%x",&n);
-			v += n;
-			val = strchr(val,'+');
-			if (val) val++;
-		}
-	}
-	else
-	{
-		sscanf(val,"%d",&v);
-	}
-
-	p->val = v;
-}
-
-osig* find_sig(osig* p, const char *nm)
-{
-    while (p)
-    {
-        if (strcmp(p->nm, nm) == 0) return p;
-        p = p->nxt;
-    }
-    return 0;
-}
-
-osig* find_sig_val(osig* p, uint32_t val)
-{
-    while (p)
-    {
-        if (p->val == val) return p;
-        p = p->nxt;
-    }
-    return 0;
-}
-
-void load_stubs2()
-{
-    FILE *f = fopen("stubs_entry_2.S", "rb");
-
-    if (f == NULL) return;
-
-    char line[500];
-    char nm[100];
-    char val[12];
-    int pct = 100;
-    char *s;
-
-    while (read_line(f,line))
-    {
-		int off = 7;
-        s = strstr(line, "NHSTUB(");
-		if (s == 0) { off = 6; s = strstr(line, "NSTUB("); }
-		if (s == 0) { off = 4; s = strstr(line, "DEF("); }
-        if (s != 0)
-        {
-            char *c = strstr(line, "//");
-            if ((c == 0) || (c > s))
-            {
-                s = get_str(s+off,nm);
-                get_str(s,val);
-                add_sig(nm, val, pct, &stubs2);
-                pct = 100;
-                continue;
-            }
-        }
-    }
-}
 
 //------------------------------------------------------------------------------------------------------------
 
@@ -264,8 +122,7 @@ int main(int argc, char **argv)
     out_fp = fopen(argv[3],"w");
     if (out_fp == NULL) usage();
 
-    load_stubs2();
-    //print_stubs(stubs2);
+    load_stubs("stubs_entry_2.S", 1);
 
     f = fopen(argv[1], "r+b");
 
@@ -373,7 +230,7 @@ int main(int argc, char **argv)
         }
 
         // find best match and report results
-    	osig* ostub2 = find_sig(stubs2,curr_name);
+    	osig* ostub2 = find_sig(stubs,curr_name);
 
         if (count == 0){
             fprintf(out_fp,"// ERROR: %s is not found!\n", curr_name);
