@@ -20,6 +20,13 @@ distclean: clean
 	rm -f stubs_entry.S stubs_auto.S
 	rm -rf .dep
 
+run-code-gen:
+	@echo $^ \-\> $@
+	if [ -s $(TARGET_PRIMARY) ] && [ -s code_gen.txt ] ; then \
+	  $(topdir)tools/code_gen $(ROMBASEADDR) code_gen.txt $(TARGET_PRIMARY) $(ALT_ROMBASEADDR) ; \
+	else \
+	  echo CAUTION! code_gen cannot be run due to target firmware binary or code_gen.txt not found! ; \
+	fi ; \
 
 stubs_auto.S: $(STUBS_AUTO_DEPS)
 	@echo $^ \-\> $@

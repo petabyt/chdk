@@ -6,48 +6,49 @@
 #include <time.h>
 #include <stdarg.h>
 
-#include "dancingbits.h"
+#include "stubs_load.h"
+#include "firmware_load.h"
 
 //------------------------------------------------------------------------------------------------------------
 
 // Buffer output into header and body sections
 
 FILE    *out_fp;
-char	out_buf[32*1024] = "";
-int		out_len = 0;
-char	hdr_buf[32*1024] = "";
-int		hdr_len = 0;
-int		out_hdr = 1;
+char    out_buf[32*1024] = "";
+int     out_len = 0;
+char    hdr_buf[32*1024] = "";
+int     hdr_len = 0;
+int     out_hdr = 1;
 
 void bprintf(char *fmt, ...)
 {
-	va_list argp;
-	va_start(argp, fmt);
+    va_list argp;
+    va_start(argp, fmt);
 
-	if (out_hdr)
-		hdr_len += vsprintf(hdr_buf+hdr_len,fmt,argp);
-	else
-		out_len += vsprintf(out_buf+out_len,fmt,argp);
+    if (out_hdr)
+        hdr_len += vsprintf(hdr_buf+hdr_len,fmt,argp);
+    else
+        out_len += vsprintf(out_buf+out_len,fmt,argp);
 
-	va_end(argp);
+    va_end(argp);
 }
 
 void add_blankline()
 {
-	if (strcmp(hdr_buf+hdr_len-2,"\n\n") != 0)
-	{
-		hdr_buf[hdr_len++] = '\n';
-		hdr_buf[hdr_len] = 0;
-	}
+    if (strcmp(hdr_buf+hdr_len-2,"\n\n") != 0)
+    {
+        hdr_buf[hdr_len++] = '\n';
+        hdr_buf[hdr_len] = 0;
+    }
 }
 
 void write_output()
 {
-	add_blankline();
+    add_blankline();
     if (out_fp)
     {
-	    fprintf(out_fp,"%s",hdr_buf);
-    	fprintf(out_fp,"%s",out_buf);
+        fprintf(out_fp,"%s",hdr_buf);
+        fprintf(out_fp,"%s",out_buf);
     }
 }
 
@@ -61,326 +62,80 @@ void usage(char *err)
     exit(1);
 }
 
-//------------------------------------------------------------------------------------------------------------
-
-// Load original stubs_entry.S, stubs_entry_2.s and stubs_min.S to compare results to
-
-typedef struct _osig
+void error(char *fmt, int n)
 {
-    char        nm[100];
-    uint32_t    val;
-	char		sval[100];
-    int         pct;
-    struct _osig *nxt;
-} osig;
-
-osig *stubs2 = 0;
-osig *stubs_min = 0;
-osig *modemap = 0;
-
-void print_stubs(osig *p)
-{
-    while (p)
-    {
-        bprintf("//%s 0x%08x (%s) %d\n",p->nm,p->val,p->sval,p->pct);
-        p = p->nxt;
-    }
-}
-
-int read_line(FILE *f, char *buf)
-{
-    int eof = 0;
-    int len = 0;
-    while (1)
-    {
-        if (fread(buf,1,1,f) != 1) { eof = 1; break; }
-        if ((*buf == 0x0A) || (*buf == 0x0D)) break;
-        len++; 
-        buf++;
-    }
-    *buf = 0;
-    return (eof == 0) || (len > 0);
-}
-
-char* get_str(char *s, char *d)
-{
-    while ((*s == ' ') || (*s == '\t') || (*s == ',')) s++;
-    while (*s && (*s != ' ') && (*s != '\t') && (*s != ',') && (*s != ')'))
-    {
-        *d++ = *s++;
-    }
-	while (*s && (*s != ',') && (*s != ')'))
-	{
-		if (*s == '+')
-		{
-			*d++ = *s++;
-			while ((*s == ' ') || (*s == '\t') || (*s == ',')) s++;
-			while (*s && (*s != ' ') && (*s != '\t') && (*s != ',') && (*s != ')'))
-			{
-				*d++ = *s++;
-			}
-		}
-		else s++;
-	}
-    *d = 0;
-    return s;
-}
-
-void add_sig(char *nm, char *val, int pct, osig **hdr)
-{
-    osig *p = malloc(sizeof(osig));
-    strcpy(p->nm, nm);
-	strcpy(p->sval, val);
-    p->pct = pct;
-    p->nxt = *hdr;
-    *hdr = p;
-
-	uint32_t v = 0, n = 0;
-	if ((strncmp(val,"0x",2) == 0) || (strncmp(val,"0X",2) == 0))
-	{
-		while (val)
-		{
-			sscanf(val,"%x",&n);
-			v += n;
-			val = strchr(val,'+');
-			if (val) val++;
-		}
-	}
-	else
-	{
-		sscanf(val,"%d",&v);
-	}
-
-	p->val = v;
-}
-
-osig* find_sig(osig* p, const char *nm)
-{
-    while (p)
-    {
-        if (strcmp(p->nm, nm) == 0) return p;
-        p = p->nxt;
-    }
-    return 0;
-}
-
-osig* find_sig_val(osig* p, uint32_t val)
-{
-    while (p)
-    {
-        if (p->val == val) return p;
-        p = p->nxt;
-    }
-    return 0;
-}
-
-void load_stubs2()
-{
-    FILE *f = fopen("stubs_entry_2.S", "rb");
-
-    if (f == NULL) return;
-
-    char line[500];
-    char nm[100];
-    char val[12];
-    int pct = 100;
-    char *s;
-
-    while (read_line(f,line))
-    {
-		int off = 7;
-        s = strstr(line, "NHSTUB(");
-		if (s == 0) { off = 6; s = strstr(line, "NSTUB("); }
-		if (s == 0) { off = 4; s = strstr(line, "DEF("); }
-        if (s != 0)
-        {
-            char *c = strstr(line, "//");
-            if ((c == 0) || (c > s))
-            {
-                s = get_str(s+off,nm);
-                get_str(s,val);
-                add_sig(nm, val, pct, &stubs2);
-                pct = 100;
-                continue;
-            }
-        }
-    }
-}
-
-void load_stubs_min()
-{
-    FILE *f = fopen("stubs_min.S", "rb");
-
-    if (f == NULL) return;
-
-    char line[500];
-    char nm[100];
-    char val[12];
-    int pct = 100;
-    char *s;
-
-    while (read_line(f,line))
-    {
-		int off = 7;
-        s = strstr(line, "NHSTUB(");
-		if (s == 0) { off = 4; s = strstr(line, "DEF("); }
-        if (s != 0)
-        {
-            char *c = strstr(line, "//");
-            if ((c == 0) || (c > s))
-            {
-                s = get_str(s+off,nm);
-                get_str(s,val);
-                add_sig(nm, val, pct, &stubs_min);
-                pct = 100;
-                continue;
-            }
-        }
-    }
-}
-
-void load_modemap()
-{
-    FILE *f = fopen("../../shooting.c", "rb");
-
-    if (f == NULL) return;
-
-    char line[500];
-    char nm[100];
-    char val[12];
-	int found_modemap = 0;
-    char *s;
-
-    while (read_line(f,line))
-    {
-		if (found_modemap)
-		{
-			s = strstr(line, "};");
-			if (s != 0) return;
-			s = strstr(line, "MODE_");
-			if (s != 0)
-			{
-				char *c = strstr(line, "//");
-				if ((c == 0) || (c > s))
-				{
-					s = get_str(s,nm);
-					get_str(s,val);
-					add_sig(nm, val, 0, &modemap);
-				}
-			}
-		}
-		else
-		{
-			s = strstr(line, "modemap[");
-			if (s != 0) found_modemap = 1;
-		}
-    }
-}
-
-int min_focus_len = 0;
-int max_focus_len = 0;
-
-void load_platform()
-{
-    FILE *f = fopen("../../platform_camera.h", "rb");
-
-    if (f == NULL) return;
-
-    char line[500];
-    char val[12];
-    char div[12];
-    int v, d;
-    char *s;
-
-    while (read_line(f,line))
-    {
-		s = strstr(line, "CAM_DNG_LENS_INFO");
-		if (s != 0)
-		{
-			char *c = strstr(line, "//");
-			if ((c == 0) || (c > s))
-			{
-                s = strstr(line,"{")+1;
-				s = get_str(s,val);
-				s = get_str(s,div);
-                v = atoi(val);
-                d = atoi(div);
-                min_focus_len = (v * 1000) / d;
-				s = get_str(s,val);
-				s = get_str(s,div);
-                v = atoi(val);
-                d = atoi(div);
-                max_focus_len = (v * 1000) / d;
-			}
-		}
-    }
+    bprintf(fmt, n);
+    write_output();
+    exit(1);
 }
 
 //------------------------------------------------------------------------------------------------------------
 
 // Signature match handling
 
+// Structure to store match info
 typedef struct {
     uint32_t ptr;
     uint32_t fail;
     uint32_t success;
-	int sig;
+    int sig;
 } Match;
 
+// qsort compare function the Match struture
 int match_compare(const Match *p1, const Match *p2)
 {
     /* NOTE: If a function has *more* matches, it will be prefered, even if it has a lower percent matches */
     if (p1->success > p2->success)
-	{
-		if ((p2->fail == 0) && (p1->fail > 0))
-		{
-			return 1;
-		}
-		else
-		{
-			return -1;
-		}
-    }
-	else if (p1->success < p2->success)
-	{
-		if ((p1->fail == 0) && (p2->fail > 0))
-		{
-			return -1;
-		}
-		else
-		{
-			return 1;
-		}
-    }
-	else
-	{
-        if (p1->fail < p2->fail)
-		{
+    {
+        if ((p2->fail == 0) && (p1->fail > 0))
+        {
+            return 1;
+        }
+        else
+        {
             return -1;
         }
-		else if (p1->fail > p2->fail)
-		{
+    }
+    else if (p1->success < p2->success)
+    {
+        if ((p1->fail == 0) && (p2->fail > 0))
+        {
+            return -1;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+    else
+    {
+        if (p1->fail < p2->fail)
+        {
+            return -1;
+        }
+        else if (p1->fail > p2->fail)
+        {
             return 1;
         }
     }
 
-	if (p1->sig < p2->sig)
-	{
-		return -1;
-	}
-	else if (p1->sig > p2->sig)
-	{
-		return 1;
-	}
-	
+    if (p1->sig < p2->sig)
+    {
+        return -1;
+    }
+    else if (p1->sig > p2->sig)
+    {
+        return 1;
+    }
+
     /* scores are equal. prefer lower address */
 
     if (p1->ptr < p2->ptr)
-	{
+    {
         return -1;
     }
-	else if (p1->ptr > p2->ptr)
-	{
+    else if (p1->ptr > p2->ptr)
+    {
         return 1;
     }
 
@@ -392,13 +147,27 @@ int match_compare(const Match *p1, const Match *p2)
 Match matches[MAX_MATCHES];
 int count;
 
+// Add a new Match
 void addMatch(uint32_t fadr, int s, int f, int sig)
 {
     matches[count].ptr = fadr;
     matches[count].success = s;
     matches[count].fail = f;
-	matches[count].sig = sig;
+    matches[count].sig = sig;
     count++;
+}
+
+// Add a Match, adjust address for stuff in the block copied to RAM
+void fwAddMatch(firmware *fw, uint32_t fadr, int s, int f, int sig)
+{
+    if ((fadr >= fw->base_copied) && (fadr < (fw->base_copied + fw->size2*4)))
+    {
+        addMatch(fadr - fw->base_copied + fw->base2,s,f,sig);
+    }
+    else
+    {
+        addMatch(fadr,s,f,sig);
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -414,722 +183,8 @@ typedef struct {
 typedef struct {
     const char *name;
     FuncSig *sig;
-	int ver;
+    int ver;
 } FuncsList;
-
-//------------------------------------------------------------------------------------------------------------
-
-// Firmware handling
-
-typedef struct bufrange {
-    uint32_t *p;
-    int off;
-    int len;
-    struct bufrange* next;
-} BufRange;
-
-typedef struct {
-    uint32_t        *buf;
-    uint32_t        base;
-    int             size;
-    BufRange        *br, *last;
-	int			    dryos_ver;
-    int             pid;
-    int             maxram;
-	char		    cam[100];
-
-    // Alt copy of ROM in RAM (DryOS R50, R51)
-    uint32_t        *buf2;          // pointer to loaded FW data that is copied
-    uint32_t        base2;          // RAM address copied to
-    uint32_t        base_copied;    // ROM address copied from
-    int             size2;          // Block size copied (in words)
-
-    // Alt copy of ROM (DryOS R51 - only seen on S110 so far)
-    uint32_t        alt_base;       // Alternative base address
-} firmware;
-
-int idx_valid(firmware *fw, int i)
-{
-    if ((i >= 0) && (i < fw->size))
-        return 1;
-    if ((fw->dryos_ver >= 51) && (fw->alt_base) && (i >= fw->size))
-    {
-        i = ((i * 4) - (fw->alt_base - fw->base)) / 4;
-        if ((i >= 0) && (i < fw->size))
-            return 1;
-    }
-    if ((fw->dryos_ver >= 50) && (i < 0))
-    {
-        i = ((i * 4) + (fw->base - fw->base2)) / 4;
-        if ((i >= 0) && (i < fw->size2))
-            return 1;
-    }
-    return 0;
-}
-
-uint32_t* fwadr(firmware *fw, int i)
-{
-    if ((i >= 0) && (i < fw->size))
-        return &fw->buf[i];
-    if ((fw->dryos_ver >= 51) && (fw->alt_base) && (i >= fw->size))
-    {
-        i = ((i * 4) - (fw->alt_base - fw->base)) / 4;
-        if ((i >= 0) && (i < fw->size))
-            return &fw->buf[i];
-    }
-    if ((fw->dryos_ver >= 50) && (i < 0))
-    {
-        i = ((i * 4) + (fw->base - fw->base2)) / 4;
-        if ((i >= 0) && (i < fw->size2))
-            return &fw->buf2[i];
-    }
-    fprintf(stderr,"Invalid firmware offset %d.\n",i);
-    bprintf("\nInvalid firmware offset %d. Possible corrupt firmware or incorrect start address.\n",i);
-    write_output();
-    exit(1);
-}
-
-uint32_t fwval(firmware *fw, int i)
-{
-    return *fwadr(fw,i);
-}
-
-int fwRd(firmware *fw, int i)
-{
-    // Destination register - Rd
-    return (*fwadr(fw,i) & 0x0000F000) >> 12;
-}
-
-int fwRn(firmware *fw, int i)
-{
-    // Source register - Rn
-    return (*fwadr(fw,i) & 0x000F0000) >> 16;
-}
-
-int fwOp2(firmware *fw, int i)
-{
-    // Operand2
-    return (*fwadr(fw,i) & 0x00000FFF);
-}
-
-void addBufRange(firmware *fw, int o, int l)
-{
-    BufRange *n = malloc(sizeof(BufRange));
-    n->p = fw->buf + o;
-    n->off = o;
-    n->len = l;
-    n->next = 0;
-    if (fw->br == 0)
-    {
-        fw->br = n;
-    }
-    else
-    {
-        fw->last->next = n;
-    }
-    fw->last = n;
-}
-
-int find_str(firmware *fw, char *str)
-{
-    int nlen = strlen(str);
-    uint32_t nm0 = *((uint32_t*)str);
-	uint32_t *p;
-	int j;
-
-    BufRange *br = fw->br;
-    while (br)
-    {
-        for (p = br->p, j = 0; j < br->len - nlen/4; j++, p++)
-        {
-            if ((nm0 == *p) && (memcmp(p+1,str+4,nlen-4) == 0))
-            {
-			    return j+br->off;
-		    }
-	    }
-        br = br->next;
-    }
-	
-	return -1;
-}
-
-void findRanges(firmware *fw)
-{
-    int i, j, k;
-
-    // Find all the valid ranges for checking (skips over large blocks of 0xFFFFFFFF)
-    fw->br = 0; fw->last = 0;
-    k = -1; j = 0;
-    for (i = 0; i < fw->size; i++)
-    {
-        if (fw->buf[i] == 0xFFFFFFFF)   // Possible start of block to skip
-        {
-            if (k == -1)            // Mark start of possible skip block
-            {
-                k = i;
-            }
-        }
-        else                        // Found end of block ?
-        {
-            if (k != -1)
-            {
-                if (i - k > 32)     // If block more than 32 words then we want to skip it
-                {
-                    if (k - j > 8)
-                    {
-                        // Add a range record for the previous valid range (ignore short ranges)
-                        addBufRange(fw,j,k - j);
-                    }
-                    j = i;          // Reset valid range start to current position
-                }
-                k = -1;             // Reset marker for skip block
-            }
-        }
-    }
-    // Add range for last valid block
-    if (k != -1)    
-    {
-        if (k - j > 8)
-        {
-            addBufRange(fw,j,k - j);
-        }
-    }
-    else
-    {
-        if (i - j > 8)
-        {
-            addBufRange(fw,j,i - j);
-        }
-    }
-}
-
-uint32_t idx2adr(firmware *fw, int idx)
-{
-    return fw->base + (idx << 2);
-}
-
-int adr2idx(firmware *fw, uint32_t adr)
-{
-    if (adr < fw->base)
-        return -((fw->base - adr) >> 2);
-    else
-        return (adr - fw->base) >> 2;
-}
-
-int ptr2idx(firmware *fw, int idx)
-{
-    return (fwval(fw,idx) - fw->base) >> 2;
-}
-
-uint32_t LDR2adr(firmware *fw, int offset)  // decode LDR instruction at offset and return firmware address pointed to
-{
-    uint32_t inst = fwval(fw,offset);
-    int offst = (inst & 0xFFF);
-    uint32_t fadr = (inst & 0x00800000)?idx2adr(fw,offset+2)+offst:idx2adr(fw,offset+2)-offst;
-    return fadr;
-}
-
-uint32_t LDR2val(firmware *fw, int offset)  // decode LDR instruction at offset and return firmware value stored at the address
-{
-	return fwval(fw,adr2idx(fw,LDR2adr(fw,offset)));
-}
-
-uint32_t LDR2idx(firmware *fw, int offset)  // decode LDR instruction at offset and return firmware buffer index of the new address
-{
-	return adr2idx(fw,LDR2adr(fw,offset));
-}
-
-int idxFollowBranch(firmware *fw, int fidx, int offset)
-{
-    if (offset)
-    {
-		uint32_t msk = ~(offset & 0xFF000000);
-        fidx += ((offset & 0x00FFFFFF) - 1);
-        uint32_t inst = fwval(fw,fidx);
-        if ((inst & (0xFF000000&msk)) == (0xEA000000&msk))  // Branch (B or BL depending on msk)
-        {
-            int o = inst & 0x00FFFFFF;
-            if (o & 0x00800000) o |= 0xFF000000;
-            fidx = fidx + o + 2;
-        }
-        else if ((inst & (0xFFFFF000)) == (0xE51FF000))     // LDR PC,=...
-        {
-            fidx = adr2idx(fw,LDR2val(fw,fidx));
-        }
-    }
-    return fidx;
-}
-
-uint32_t followBranch(firmware *fw, uint32_t fadr, int offset)
-{
-    if (offset)
-    {
-		uint32_t msk = ~(offset & 0xFF000000);
-        uint32_t fidx = adr2idx(fw,fadr);  // function index
-        fidx += ((offset & 0x00FFFFFF) - 1);
-        uint32_t inst = fwval(fw,fidx);
-        if ((inst & (0xFF000000&msk)) == (0xEA000000&msk))  // Branch (B or BL depending on msk)
-        {
-            int o = inst & 0x00FFFFFF;
-            if (o & 0x00800000) o |= 0xFF000000;
-            fadr = idx2adr(fw,fidx+o+2);
-        }
-        else if ((inst & (0xFFFFF000)) == (0xE51FF000))     // LDR PC,=...
-        {
-            fadr = LDR2val(fw,fidx);
-        }
-    }
-    return fadr;
-}
-
-uint32_t followBranch2(firmware *fw, uint32_t fadr, int offset)
-{
-	fadr = followBranch(fw, fadr, offset);
-	if ((offset & 0x00FFFFFF) == 1)
-		fadr = followBranch(fw, fadr, offset);
-	return fadr;
-}
-
-uint32_t ADR2adr(firmware *fw, int offset)  // decode ADR instruction at offset and return firmware address pointed to
-{
-    uint32_t inst = fwval(fw,offset);
-    int rot = 32 - ((inst & 0xF00) >> 7);
-    int offst = (inst & 0xFF) <<rot;
-    uint32_t fadr = 0;
-    switch (inst & 0x01E00000)
-    {
-    case 0x00400000:    // SUB
-        fadr = idx2adr(fw,offset+2)-offst;
-        break;
-    case 0x00800000:    // ADD
-        fadr = idx2adr(fw,offset+2)+offst;
-        break;
-    case 0x01A00000:    // MOV
-        //fprintf(stderr,"***** ADR2adr MOV\n");
-        break;
-    case 0x01E00000:    // MVN
-        //fprintf(stderr,"***** ADR2adr MVN\n");
-        break;
-    }
-    return fadr;
-}
-
-uint32_t ALUop2(firmware *fw, int offset)  // decode operand2 from ALU inst (not complete!)
-{
-    uint32_t inst = fwval(fw,offset);
-    int rot = 32 - ((inst & 0xF00) >> 7);
-    int offst = (inst & 0xFF) <<rot;
-    uint32_t fadr = 0;
-    switch (inst & 0x03E00000)
-    {
-    case 0x02400000:    // SUB Immed
-    case 0x02800000:    // ADD Immed
-    case 0x03A00000:    // MOV Immed
-    case 0x03C00000:    // BIC Immed
-		fadr = offst;
-        break;
-    }
-    return fadr;
-}
-
-int isLDR_PC(firmware *fw, int offset)
-{
-	return ((fwval(fw,offset) & 0xFE1F0000) == 0xE41F0000);
-}
-
-int isLDR_SP(firmware *fw, int offset)
-{
-    return ((fwval(fw,offset) & 0xFFFF0000) == 0xE59D0000); // LDR Rx,[SP,x]
-}
-
-int isLDR_PC_cond(firmware *fw, int offset)
-{
-	return ((fwval(fw,offset) & 0x0E1F0000) == 0x041F0000);
-}
-
-int isADR_PC(firmware *fw, int offset)
-{
-	return ((fwval(fw,offset) & 0xFE0F0000) == 0xE20F0000);
-}
-
-int isADR_PC_cond(firmware *fw, int offset)
-{
-	return ((fwval(fw,offset) & 0x0E0F0000) == 0x020F0000);
-}
-
-int isSTR_PC(firmware *fw, int offset)
-{
-	return ((fwval(fw,offset) & 0xFE1F0000) == 0xE40F0000);
-}
-
-int isSTR_PC_cond(firmware *fw, int offset)
-{
-	return ((fwval(fw,offset) & 0x0E1F0000) == 0x040F0000);
-}
-
-int isLDMFD(firmware *fw, int offset)
-{
-    return ((fwval(fw,offset) & 0xFFFF0000) == 0xE8BD0000);
-}
-
-int isLDMFD_PC(firmware *fw, int offset)
-{
-    return ((fwval(fw,offset) & 0xFFFF8000) == 0xE8BD8000);
-}
-
-int isLDR(firmware *fw, int offset)
-{
-	return ((fwval(fw,offset) & 0xFE100000) == 0xE4100000);
-}
-
-int isLDR_cond(firmware *fw, int offset)
-{
-	return ((fwval(fw,offset) & 0x0E100000) == 0x04100000);
-}
-
-int isADR(firmware *fw, int offset)
-{
-    return ((fwval(fw,offset) & 0xFE000000) == 0xE2000000); // ADR or MOV
-}
-
-int isSTMFD(firmware *fw, int offset)
-{
-    return ((fwval(fw,offset) & 0xFFFF0000) == 0xE92D0000); // STMFD SP!, 
-}
-
-int isSTMFD_LR(firmware *fw, int offset)
-{
-    return ((fwval(fw,offset) & 0xFFFF4000) == 0xE92D4000); // STMFD SP!, {..,LR}
-}
-
-int isSTR(firmware *fw, int offset)
-{
-	return ((fwval(fw,offset) & 0xFE100000) == 0xE4000000);
-}
-
-int isSTR_cond(firmware *fw, int offset)
-{
-	return ((fwval(fw,offset) & 0x0E100000) == 0x04000000);
-}
-
-int isBX(firmware *fw, int offset)
-{
-	return ((fwval(fw,offset) & 0xFFFFFFF0) == 0xE12FFF10);	// BX
-}
-
-int isBX_LR(firmware *fw, int offset)
-{
-	return (fwval(fw,offset) == 0xE12FFF1E);	            // BX LR
-}
-
-int isBL(firmware *fw, int offset)
-{
-	return ((fwval(fw,offset) & 0xFF000000) == 0xEB000000);	// BL
-}
-
-int isB(firmware *fw, int offset)
-{
-	return ((fwval(fw,offset) & 0xFF000000) == 0xEA000000);	// B
-}
-
-int isBorBL(firmware *fw, int offset)
-{
-	return ((fwval(fw,offset) & 0xFE000000) == 0xEA000000);	// B or BL
-}
-
-int isCMP(firmware *fw, int offset)
-{
-    return ((fwval(fw,offset) & 0xFFF00000) == 0xE3500000); // CMP
-}
-
-int isMOV(firmware *fw, int offset)
-{
-    return ((fwval(fw,offset) & 0xFFF00000) == 0xE1A00000); // MOV
-}
-
-int isMOV_immed(firmware *fw, int offset)
-{
-    return ((fwval(fw,offset) & 0xFFF00000) == 0xE3A00000); // MOV Rd, #
-}
-
-int find_inst(firmware *fw, int (*inst)(firmware*,int), int idx, int len)
-{
-    int k;
-    for (k = idx; (k < fw->size) && (k < idx + len); k++)
-    {
-        if (inst(fw, k))
-            return k;
-    }
-    return -1;
-}
-
-int find_inst_rev(firmware *fw, int (*inst)(firmware*,int), int idx, int len)
-{
-    int k;
-    for (k = idx; (k > 0) && (k > idx - len); k--)
-    {
-        if (inst(fw, k))
-            return k;
-    }
-    return -1;
-}
-
-void load_firmware(firmware *fw, char *filename, char *base_addr, char *alt_base_addr)
-{
-    FILE *f = fopen(filename, "rb");
-    int k;
-
-    if (f == NULL)
-	{
-		fprintf(stderr,"Error opening %s\n",filename);
-        usage("firmware open");
-	}
-
-    fw->base = strtoul(base_addr, NULL, 0);
-    if (alt_base_addr)
-        fw->alt_base = strtoul(alt_base_addr, NULL, 0);
-    else
-        fw->alt_base = 0;
-
-    fseek(f,0,SEEK_END);
-    fw->size = (ftell(f)+3)/4;
-    fseek(f,0,SEEK_SET);
-
-    // Max sig size if 32, add extra space at end of buffer and fill with 0xFFFFFFFF
-    // Allows sig matching past end of firmware without checking each time in the inner loop
-    fw->buf = malloc((fw->size+32)*4);
-    k = fread(fw->buf, 4, fw->size, f);
-    fclose(f);
-	
-    memset(&fw->buf[fw->size],0xff,32*4);
-	
-    // Find all the valid ranges for checking (skips over large blocks of 0xFFFFFFFF)
-    findRanges(fw);
-
-	bprintf("// Camera info:\n");
-	
-	// Get DRYOS version
-	fw->dryos_ver = 0;
-	k = find_str(fw, "DRYOS version 2.3, release #");
-	if (k == -1)
-	{
-		bprintf("//   Can't find DRYOS version !!!\n\n");
-	}
-	else
-	{
-		fw->dryos_ver = atoi(((char*)&fw->buf[k])+28);
-        if (fw->dryos_ver > 52)
-    		bprintf("//   DRYOS R%d (%s) *** New DRYOS Version - please update finsig_dryos.c ***\n",fw->dryos_ver,(char*)&fw->buf[k]);
-        else
-    		bprintf("//   DRYOS R%d (%s)\n",fw->dryos_ver,(char*)&fw->buf[k]);
-	}
-    
-	// Get firmware version info
-	k = find_str(fw, "Firmware Ver ");
-	if (k == -1)
-	{
-		bprintf("//   Can't find firmware version !!!\n\n");
-	}
-	else
-	{
-		bprintf("//   %s",(char*)&fw->buf[k]);
-		bprintf("\n");
-	}
-
-	// Get camera name & platformid     ***** UPDATE for new DryOS version *****
-	int fsize = -((int)fw->base)/4;
-    if (fw->alt_base) fsize = -((int)fw->alt_base)/4;
-	int cam_idx = 0;
-    int pid_idx = 0;
-	switch (fw->dryos_ver)
-	{
-	case 20:
-	case 23:
-	case 31:
-	case 39: 
-        cam_idx = adr2idx(fw,0xFFFE0110); 
-        pid_idx = adr2idx(fw,0xFFFE0130); 
-        break;
-	case 43:
-	case 45: 
-        cam_idx = adr2idx(fw,0xFFFE00D0);
-        pid_idx = adr2idx(fw,0xFFFE0130);
-        break;
-	case 47: 
-        cam_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40170:0xFFFE0170);
-        pid_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40040:0xFFFE0040);
-        break;
-	case 49: 
-	case 50: 
-	case 51:
-	case 52:
-        if (fw->alt_base)
-        {
-            cam_idx = adr2idx(fw,(fw->alt_base==0xFF000000)?0xFFF40190:0xFFFE0170);
-            pid_idx = adr2idx(fw,(fw->alt_base==0xFF000000)?0xFFF40040:0xFFFE0040);
-            if (idx_valid(fw,cam_idx) && (strncmp((char*)fwadr(fw,cam_idx),"Canon ",6) != 0))
-                cam_idx = adr2idx(fw,(fw->alt_base==0xFF000000)?0xFFF40170:0xFFFE0170);
-        }
-        else
-        {
-            cam_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40190:0xFFFE0170);
-            pid_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40040:0xFFFE0040);
-            if (idx_valid(fw,cam_idx) && (strncmp((char*)fwadr(fw,cam_idx),"Canon ",6) != 0))
-                cam_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40170:0xFFFE0170);
-        }
-        break;
-	}
-
-    if (fsize > (fw->size + 256))
-	{
-		bprintf("//   Possible corrupt firmware dump - file size to small for start address 0x%08x\n",fw->base);
-		bprintf("//     file size = %.2fMB, should be %.2fMB\n", ((double)fw->size*4.0)/(1024.0*1024.0),((double)fsize*4.0)/(1024.0*1024.0));
-	}
-	
-	strcpy(fw->cam,"Unknown");
-	if (idx_valid(fw,cam_idx) && (strncmp((char*)fwadr(fw,cam_idx),"Canon ",6) == 0))
-	{
-		strcpy(fw->cam,(char*)fwadr(fw,cam_idx));
-		bprintf("//   %s\n",fw->cam);
-	}
-	else
-	{
-		bprintf("//   Could not find Camera name - possible corrupt firmware dump\n");
-	}
-
-	bprintf("\n// Values for makefile.inc\n");
-	bprintf("//   PLATFORMOSVER = %d\n",fw->dryos_ver);
-
-    if (idx_valid(fw,pid_idx))
-    {
-        fw->pid = fwval(fw,pid_idx) & 0xFFFF;
-		bprintf("//   PLATFORMID = %d (0x%04x) // Found @ 0x%08x\n",fw->pid,fw->pid,idx2adr(fw,pid_idx));
-    }
-    else fw->pid = 0;
-
-    // Calc MAXRAMADDR
-    if (((fw->buf[0x10] & 0xFFFFFF00) == 0xE3A00000) && (fw->buf[0x11] == 0xEE060F12))
-    {
-        fw->maxram = (1 << (((fw->buf[0x10] & 0x3E) >> 1) + 1)) - 1;
-    }
-    else if (((fw->buf[0x14] & 0xFFFFFF00) == 0xE3A00000) && (fw->buf[0x15] == 0xEE060F12))
-    {
-        fw->maxram = (1 << (((fw->buf[0x14] & 0x3E) >> 1) + 1)) - 1;
-    }
-    else fw->maxram = 0;
-
-    if (fw->maxram != 0)
-		bprintf("//   MAXRAMADDR = 0x%08x\n",fw->maxram);
-
-    uint32_t ofst = adr2idx(fw,0xFFFF0000);    // Offset of area to find dancing bits
-    if (idx_valid(fw,ofst) && isB(fw,ofst) && isLDR_PC(fw,ofst+1))
-    {
-        // Get KEYSYS value
-        ofst = adr2idx(fw,LDR2val(fw,ofst+1));     // Address of firmware encryption key
-        if (idx_valid(fw,ofst))
-        {
-            char *ksys = "? Not found, possible new firmware encryption key.";
-            switch (fwval(fw,ofst))
-            {
-            case 0x70726964:    ksys = "d3   "; break;
-            case 0x646C726F:    ksys = "d3enc"; break;
-            case 0x774D450B:    ksys = "d4   "; break;
-            case 0x80751A95:    ksys = "d4a  "; break;
-            case 0x76894368:    ksys = "d4b  "; break;
-            case 0x50838EF7:    ksys = "d4c  "; break;
-            case 0xCCE4D2E6:    ksys = "d4d  "; break;
-            }
-            bprintf("//   KEYSYS = %s              // Found @ 0x%08x\n",ksys,idx2adr(fw,ofst));
-        }
-
-        // Get NEED_ENCODED_DISKBOOT value
-        ofst = ofst + 4; // Address of dancing bits data (try after firmware key)
-        if (idx_valid(fw,ofst))
-        {
-            int fnd = 0, i, j;
-            for (i=0; i<VITALY && !fnd; i++)
-            {
-                fnd = i+1;
-                for (j=0; j<8 && fnd; j++)
-                {
-                    if ((fwval(fw,ofst+j) & 0xFF) != _chr_[i][j])
-                    {
-                        fnd = 0;
-                    }
-                }
-            }
-            if (!fnd)
-            {
-                // Try before firmware key
-                ofst = ofst - 12;
-                for (i=0; i<VITALY && !fnd; i++)
-                {
-                    fnd = i+1;
-                    for (j=0; j<8 && fnd; j++)
-                    {
-                        if ((fwval(fw,ofst+j) & 0xFF) != _chr_[i][j])
-                        {
-                            fnd = 0;
-                        }
-                    }
-                }
-            }
-            if (fnd)
-            {
-        		bprintf("//   NEED_ENCODED_DISKBOOT = %d   // Found @ 0x%08x\n",fnd,idx2adr(fw,ofst));
-            }
-            else
-            {
-        		bprintf("//   NEED_ENCODED_DISKBOOT = ? Not found, possible new 'dancing bits' entry needed. // Found @ 0x%08x\n",idx2adr(fw,ofst));
-            }
-        }
-    }
-
-    // DryOS R50/R51/R52 copies a block of ROM to RAM and then uses that copy
-    // Need to allow for this in finding addresses
-    // Seen on SX260HS
-    if (fw->dryos_ver >= 50)
-    {
-        fw->buf2 = 0;
-        fw->base2 = 0;
-        fw->size2 = 0;
-        
-        int i;
-        // Try and find ROM address copied, and location copied to
-        for (i=3; i<100; i++)
-        {
-            if (isLDR_PC(fw,i) && isLDR_PC(fw,i+1) && (isLDR_PC(fw,i+2)))
-            {
-                uint32_t fadr = LDR2val(fw,i);
-                uint32_t dadr = LDR2val(fw,i+1);
-                uint32_t eadr = LDR2val(fw,i+2);
-                if ((fadr > fw->base) && (dadr < fw->base))
-                {
-                    fw->buf2 = &fw->buf[adr2idx(fw,fadr)];
-                    fw->base2 = dadr;
-                    fw->base_copied = fadr;
-                    fw->size2 = (eadr - dadr) / 4;
-                    bprintf("\n// Note, ROM copied to RAM :- from 0x%08x, to 0x%08x, len %d words.\n",fadr,dadr,(eadr-dadr)/4);
-                    break;
-                }
-            }
-        }
-    }
-
-	bprintf("\n");
-}
-
-void fwAddMatch(firmware *fw, uint32_t fadr, int s, int f, int sig)
-{
-    if ((fadr >= fw->base_copied) && (fadr < (fw->base_copied + fw->size2*4)))
-    {
-        addMatch(fadr - fw->base_copied + fw->base2,s,f,sig);
-    }
-    else
-    {
-        addMatch(fadr,s,f,sig);
-    }
-}
 
 //------------------------------------------------------------------------------------------------------------
 
@@ -1140,9 +195,9 @@ void fwAddMatch(firmware *fw, uint32_t fadr, int s, int f, int sig)
 #define UNUSED          4
 
 typedef struct {
-	char		*name;
+    char        *name;
     int         flags;
-	uint32_t	val;
+    uint32_t    val;
 } func_entry;
 
 func_entry  func_names[] =
@@ -1150,7 +205,7 @@ func_entry  func_names[] =
     // Do these first as they are needed to find others
     { "CreateJumptable", UNUSED },
     { "_uartr_req", UNUSED },
-	{ "StartRecModeMenu", UNUSED },
+    { "StartRecModeMenu", UNUSED },
 
     { "AllocateMemory", UNUSED },
     { "AllocateUncacheableMemory" },
@@ -1318,177 +373,213 @@ func_entry  func_names[] =
     { "EngDrvBits", OPTIONAL|UNUSED },
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
-	{ "GetSDProtect", UNUSED },
-	{ "DispCon_ShowBitmapColorBar", UNUSED },
-	{ "ResetZoomLens", OPTIONAL|UNUSED },
-	{ "ResetFocusLens", OPTIONAL|UNUSED },
-	{ "NR_GetDarkSubType", OPTIONAL|UNUSED },
-	{ "NR_SetDarkSubType", OPTIONAL|UNUSED },
-	{ "SavePaletteData", OPTIONAL|UNUSED },
+    { "GetSDProtect", UNUSED },
+    { "DispCon_ShowBitmapColorBar", UNUSED },
+    { "ResetZoomLens", OPTIONAL|UNUSED },
+    { "ResetFocusLens", OPTIONAL|UNUSED },
+    { "NR_GetDarkSubType", OPTIONAL|UNUSED },
+    { "NR_SetDarkSubType", OPTIONAL|UNUSED },
+    { "SavePaletteData", OPTIONAL|UNUSED },
     { "GUISrv_StartGUISystem", OPTIONAL|UNUSED },
 
     { 0, 0, 0 }
 };
+
+// Return the array index of a named function in the array above
+uint32_t find_saved_sig(const char *name)
+{
+    int i;
+    for (i=0; func_names[i].name != 0; i++)
+    {
+        if (strcmp(name,func_names[i].name) == 0)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// Save the address value found for a function in the above array
+void save_sig(const char *name, uint32_t val)
+{
+    int i = find_saved_sig(name);
+    if (i >= 0)
+    {
+        func_names[i].val = val;
+    }
+}
+
+// Get the saved address value for a named function
+// If the address value is 0 then assume the function search has not occurred yet, so go search for it.
+uint32_t get_saved_sig(firmware *fw, const char *name)
+{
+    int i = find_saved_sig(name);
+    if (i >= 0)
+    {
+        if (func_names[i].val == 0)
+        {
+            // See if the function is in the 'func_list' array below
+            int find_func(const char* name);
+            int k1 = find_func(name);
+            if (k1 >= 0)
+            {
+                // if found do full search
+                void find_matches(firmware*,const char*);
+                find_matches(fw, name);
+                count = 0;
+            }
+            else
+            {
+                // not found, only do string matching search
+                void find_str_sig_matches(firmware*,const char*);
+                find_str_sig_matches(fw, name);
+                count = 0;
+            }
+        }
+        if (func_names[i].val == 0)
+        {
+            // If not found return invalid index
+            i = -1;
+        }
+    }
+    return i;
+}
+
+// Search for something relative to the location stored for a previously matched function
+// Matching is done via the 'func' function, searching continues until 'func' returns non-zero
+// Starts searching at 'ofst' from the saved address for a max of 'len' instructions
+// Returns the 'func' value or 0 if no match found
+int search_saved_sig(firmware *fw, char *sig, int (*func)(firmware*, int, int), int v, int ofst, int len)
+{
+    int k = get_saved_sig(fw, sig);
+    if (k >= 0)
+    {
+        int idx = adr2idx(fw, func_names[k].val);
+        for (k=idx+ofst; k<idx+ofst+len; k++)
+        {
+            int rv = func(fw, k, v);
+            if (rv)
+                return rv;
+        }
+    }
+    return 0;
+}
 
 //------------------------------------------------------------------------------------------------------------
 
 // Signature min / max DryOS versions
 
 typedef struct {
-	char		*name;
-	uint32_t	val;
+    char        *name;
+    uint32_t    val;
 } sig_stuff;
 
 sig_stuff min_ver[] = {
-	{ "ScreenLock", 39 },
-	{ "ScreenUnlock", 39 },
-	{ "MakeSDCardBootable", 47 },
+    { "ScreenLock", 39 },
+    { "ScreenUnlock", 39 },
+    { "MakeSDCardBootable", 47 },
     { "hook_CreateTask", 51 },
     { "hook_CreateTask2", 51 },
-	
-	{ 0, 0 }
+
+    { 0, 0 }
 };
 
 sig_stuff max_ver[] = {
-	{ "UpdateMBROnFlash", 45 },
-	
-	{ 0, 0 }
+    { "UpdateMBROnFlash", 45 },
+
+    { 0, 0 }
 };
 
 int find_min_ver(const char *name)
 {
-	int i;
-	for (i=0; min_ver[i].name != 0; i++)
-	{
-		if (strcmp(name,min_ver[i].name) == 0)
-		{
-			return min_ver[i].val;
-		}
-	}
-	return 0;
+    int i;
+    for (i=0; min_ver[i].name != 0; i++)
+    {
+        if (strcmp(name,min_ver[i].name) == 0)
+        {
+            return min_ver[i].val;
+        }
+    }
+    return 0;
 }
 
 int find_max_ver(const char *name)
 {
-	int i;
-	for (i=0; max_ver[i].name != 0; i++)
-	{
-		if (strcmp(name,max_ver[i].name) == 0)
-		{
-			return max_ver[i].val;
-		}
-	}
-	return 99999;
-}
-
-uint32_t find_saved_sig(const char *name)
-{
-	int i;
-	for (i=0; func_names[i].name != 0; i++)
-	{
-		if (strcmp(name,func_names[i].name) == 0)
-		{
-			return i;
-		}
-	}
-	return -1;
-}
-
-void save_sig(const char *name, uint32_t val)
-{
-	int i = find_saved_sig(name);
-	if (i >= 0)
-	{
-		func_names[i].val = val;
-	}
-}
-
-uint32_t get_saved_sig(firmware *fw, const char *name)
-{
-	int j = find_saved_sig(name);
-	if (j >= 0)
-	{
-		if (func_names[j].val == 0)
-		{
-			int find_func(const char* name);
-			int k1 = find_func(name);
-			if (k1 >= 0)
-			{
-				void find_matches(firmware*,const char*);
-				find_matches(fw, name);
-				count = 0;
-			}
-			else
-			{
-				void find_str_sig_matches(firmware*,const char*);
-				find_str_sig_matches(fw, name);
-				count = 0;
-			}
-		}
-		if (func_names[j].val == 0)
-		{
-			j = -1;
-		}
-	}
-	return j;
+    int i;
+    for (i=0; max_ver[i].name != 0; i++)
+    {
+        if (strcmp(name,max_ver[i].name) == 0)
+        {
+            return max_ver[i].val;
+        }
+    }
+    return 99999;
 }
 
 //------------------------------------------------------------------------------------------------------------
 
 // New string / signature matching structure
 
+// Structure for matching
+
 typedef struct {
-    int     type;           // 1 = func*, string, 2 = string, ... string*, func*, 3 = ADR Rx, func, ADR Ry, string, BL, ... string
-    char    *name;
-    char    *ev_name;
-    int     offset;
-	int		dryos20_offset;     // ***** UPDATE for new DryOS version *****
-	int		dryos23_offset;
-	int		dryos31_offset;
-	int		dryos39_offset;
-	int		dryos43_offset;
-	int		dryos45_offset;
-	int		dryos47_offset;
-	int		dryos49_offset;
-	int		dryos50_offset;
-	int		dryos51_offset;
-	int		dryos52_offset;
+    int     type;               // 1 = func*, string, 2 = string, ... string*, func*, 3 = ADR Rx, func, ADR Ry, string, BL, ... string, etc
+    char    *name;              // function name
+    char    *ev_name;           // event / other name to match in the firmware
+    int     offset;             // offset for following branches, or other tests
+    // DryOS version specific offsets
+    int     dryos20_offset;     // ***** UPDATE for new DryOS version *****
+    int     dryos23_offset;
+    int     dryos31_offset;
+    int     dryos39_offset;
+    int     dryos43_offset;
+    int     dryos45_offset;
+    int     dryos47_offset;
+    int     dryos49_offset;
+    int     dryos50_offset;
+    int     dryos51_offset;
+    int     dryos52_offset;
 } string_sig;
 
+// Load old signature matching data generated by gensig_dryos
 #include "signatures_dryos.h"
 
+// Data for matching the '_log' function
 uint32_t log_test[] = {
-	0x1526E50E, 0x3FDBCB7B, 0
+    0x1526E50E, 0x3FDBCB7B, 0
 };
 
+// Data for matching 'Fut' functions
 uint32_t DeleteDirectory_Fut_test[] = { 0x09400017 };
 uint32_t MakeDirectory_Fut_test[]   = { 0x09400015 };
 uint32_t RenameFile_Fut_test[]      = { 0x09400013 };
 
-string_sig string_sigs[] = {
-	{ 1, "AllocateMemory", "AllocateMemory", 1 },
+// Signature matching data
+string_sig string_sigs[] =
+{
+    { 1, "AllocateMemory", "AllocateMemory", 1 },
     { 1, "Close", "Close", 1 },
-	{ 1, "CreateTask", "CreateTask", 1 },
-	{ 1, "DoAFLock", "PT_DoAFLock", 0x01000002 },
+    { 1, "CreateTask", "CreateTask", 1 },
+    { 1, "DoAFLock", "PT_DoAFLock", 0x01000002 },
     { 1, "ExitTask", "ExitTask", 1 },
-	{ 1, "exmem_alloc", "ExMem.AllocCacheable", 4 },
-	{ 1, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
+    { 1, "exmem_alloc", "ExMem.AllocCacheable", 4 },
+    { 1, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
     { 1, "Fclose_Fut", "Fclose_Fut", 1 },
     { 1, "Feof_Fut", "Feof_Fut", 1 },
     { 1, "Fflush_Fut", "Fflush_Fut", 1 },
     { 1, "Fgets_Fut", "Fgets_Fut", 1 },
     { 1, "Fopen_Fut", "Fopen_Fut", 1 },
     { 1, "Fread_Fut", "Fread_Fut", 1 },
-	{ 1, "FreeMemory", "FreeMemory", 1 },
+    { 1, "FreeMemory", "FreeMemory", 1 },
     { 1, "Fseek_Fut", "Fseek_Fut", 1 },
     { 1, "Fwrite_Fut", "Fwrite_Fut", 1 },
-	{ 1, "GetParameterData", "PTM_RestoreUIProperty", 0xF0000004 },
-	{ 1, "GetPropertyCase", "PT_GetPropertyCaseString", 1 },
-	{ 1, "GetPropertyCase", "PT_GetPropertyCaseInt", 0x0100000F },
-	{ 1, "GetPropertyCase", "GetPropertyCase", 0x0100000F },
-	{ 1, "GetSDProtect", "GetSDProtect", 1 },
-	{ 1, "GetSystemTime", "GetSystemTime", 1 },
-	{ 1, "LEDDrive", "LEDDrive", 1 },
+    { 1, "GetParameterData", "PTM_RestoreUIProperty", 0xF0000004 },
+    { 1, "GetPropertyCase", "PT_GetPropertyCaseString", 1 },
+    { 1, "GetPropertyCase", "PT_GetPropertyCaseInt", 0x0100000F },
+    { 1, "GetPropertyCase", "GetPropertyCase", 0x0100000F },
+    { 1, "GetSDProtect", "GetSDProtect", 1 },
+    { 1, "GetSystemTime", "GetSystemTime", 1 },
+    { 1, "LEDDrive", "LEDDrive", 1 },
     { 1, "LockMainPower", "LockMainPower", 1 },
     { 1, "Lseek", "Lseek", 1 },
     { 1, "lseek", "Lseek", 1 },
@@ -1501,14 +592,14 @@ string_sig string_sigs[] = {
     { 1, "PostLogicalEventForNotPowerType", "PostLogicalEventForNotPowerType", 1 },
     { 1, "Read", "Read", 1 },
     { 1, "read", "Read", 1 },
-	{ 1, "RefreshPhysicalScreen", "RefreshPhysicalScreen", 1 },
+    { 1, "RefreshPhysicalScreen", "RefreshPhysicalScreen", 1 },
     { 1, "SetAutoShutdownTime", "SetAutoShutdownTime", 1 },
     { 1, "SetCurrentCaptureModeType", "SetCurrentCaptureModeType", 1 },
     { 1, "SetLogicalEventActive", "UiEvnt_SetLogicalEventActive", 1 },
     { 1, "SetParameterData", "PTM_BackupUIProperty", 1 },
-	{ 1, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000003 },
-	{ 1, "SetPropertyCase", "SetPropertyCase", 0x01000004 },
-	{ 1, "SetScriptMode", "SetScriptMode", 1 },
+    { 1, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000003 },
+    { 1, "SetPropertyCase", "SetPropertyCase", 0x01000004 },
+    { 1, "SetScriptMode", "SetScriptMode", 1 },
     { 1, "SleepTask", "SleepTask", 1 },
     { 1, "strcmp", "strcmp", 0 },
     { 1, "strcpy", "strcpy", 1 },
@@ -1516,7 +607,7 @@ string_sig string_sigs[] = {
     { 1, "strtol", "atol", 3 },
     { 1, "TakeSemaphore", "TakeSemaphore", 1 },
     { 1, "UIFS_WriteFirmInfoToFile", "UIFS_WriteFirmInfoToFile", 1 },
-	{ 1, "UnlockAF", "PT_UnlockAF", 0x01000002 },
+    { 1, "UnlockAF", "PT_UnlockAF", 0x01000002 },
     { 1, "UnlockMainPower", "UnlockMainPower", 1 },
     { 1, "VbattGet", "VbattGet", 1 },
     { 1, "Write", "Write", 1 },
@@ -1532,29 +623,29 @@ string_sig string_sigs[] = {
     { 2, "MoveFocusLensToDistance", "MoveFocusLensToDistance", 1 },
     { 2, "MoveZoomLensWithPoint", "MoveZoomLensWithPoint", 1 },
     { 2, "GetCurrentAvValue", "GetCurrentAvValue", 1 },
-	{ 2, "PT_MoveOpticalZoomAt", "PT_MoveOpticalZoomAt", 1 },
-	{ 2, "PT_MoveOpticalZoomAt", "SS.MoveOpticalZoomAt", 1 },
-	{ 2, "PT_MoveDigitalZoomToWide", "PT_MoveDigitalZoomToWide", 1 },
-	{ 2, "PT_MoveDigitalZoomToWide", "SS.MoveDigitalZoomToWide", 1 },
-	{ 2, "MoveIrisWithAv", "MoveIrisWithAv", 1},
+    { 2, "PT_MoveOpticalZoomAt", "PT_MoveOpticalZoomAt", 1 },
+    { 2, "PT_MoveOpticalZoomAt", "SS.MoveOpticalZoomAt", 1 },
+    { 2, "PT_MoveDigitalZoomToWide", "PT_MoveDigitalZoomToWide", 1 },
+    { 2, "PT_MoveDigitalZoomToWide", "SS.MoveDigitalZoomToWide", 1 },
+    { 2, "MoveIrisWithAv", "MoveIrisWithAv", 1},
     { 2, "PutInNdFilter", "TurnOnNdFilter", 1 },
     { 2, "PutOutNdFilter", "TurnOffNdFilter", 1 },
     { 2, "PutInNdFilter", "PutInNdFilter", 1 },
     { 2, "PutOutNdFilter", "PutOutNdFilter", 1 },
-	{ 2, "IsStrobeChargeCompleted", "EF.IsChargeFull", 1 },
-	{ 2, "GetPropertyCase", "PT_GetPropertyCaseInt", 0x01000012 },
-	{ 2, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000008 },
-	{ 2, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000009 },
-	{ 2, "UnlockAF", "PT_UnlockAF", 0x01000002 },
-	{ 2, "UnlockAF", "SS.UnlockAF", 0x01000002 },
-	{ 2, "DoAFLock", "PT_DoAFLock", 0x01000002 },
-	{ 2, "DoAFLock", "SS.DoAFLock", 0x01000002 },
-	{ 2, "GetSystemTime", "PT_GetSystemTime", 0x01000003 },
-	{ 2, "PT_PlaySound", "PT_PlaySound", 0x01000005 },
-	{ 2, "StartRecModeMenu", "StartRecModeMenu", 1 },
-	{ 2, "GetSDProtect", "GetSDProtect", 1 },
-	{ 2, "DispCon_ShowBitmapColorBar", "DispCon_ShowBitmapColorBar", 1 },
-	{ 2, "SetAE_ShutterSpeed", "SetAE_ShutterSpeed", 1 },
+    { 2, "IsStrobeChargeCompleted", "EF.IsChargeFull", 1 },
+    { 2, "GetPropertyCase", "PT_GetPropertyCaseInt", 0x01000012 },
+    { 2, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000008 },
+    { 2, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000009 },
+    { 2, "UnlockAF", "PT_UnlockAF", 0x01000002 },
+    { 2, "UnlockAF", "SS.UnlockAF", 0x01000002 },
+    { 2, "DoAFLock", "PT_DoAFLock", 0x01000002 },
+    { 2, "DoAFLock", "SS.DoAFLock", 0x01000002 },
+    { 2, "GetSystemTime", "PT_GetSystemTime", 0x01000003 },
+    { 2, "PT_PlaySound", "PT_PlaySound", 0x01000005 },
+    { 2, "StartRecModeMenu", "StartRecModeMenu", 1 },
+    { 2, "GetSDProtect", "GetSDProtect", 1 },
+    { 2, "DispCon_ShowBitmapColorBar", "DispCon_ShowBitmapColorBar", 1 },
+    { 2, "SetAE_ShutterSpeed", "SetAE_ShutterSpeed", 1 },
     { 2, "ResetZoomLens", "ResetZoomLens", 1 },
     { 2, "ResetFocusLens", "ResetFocusLens", 1 },
     { 2, "NR_GetDarkSubType", "NR_GetDarkSubType", 1 },
@@ -1568,11 +659,11 @@ string_sig string_sigs[] = {
     { 2, "EngDrvOut", "EngDrvOut", 0x01000005 },
     { 2, "EngDrvRead", "EngDrvRead", 2 },
     { 2, "EngDrvBits", "EngDrvBits", 0x01000007 },
-	{ 2, "exmem_alloc", "ExMem.AllocCacheable", 4 },
-	{ 2, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
+    { 2, "exmem_alloc", "ExMem.AllocCacheable", 4 },
+    { 2, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
 
-	{ 3, "AllocateMemory", "AllocateMemory", 1 },
-	{ 3, "FreeMemory", "FreeMemory", 1 },
+    { 3, "AllocateMemory", "AllocateMemory", 1 },
+    { 3, "FreeMemory", "FreeMemory", 1 },
     { 3, "PostLogicalEventToUI", "PostLogicalEventToUI", 1 },
     { 3, "PostLogicalEventForNotPowerType", "PostLogicalEventForNotPowerType", 1 },
     { 3, "LockMainPower", "LockMainPower", 1 },
@@ -1580,17 +671,17 @@ string_sig string_sigs[] = {
     { 3, "SetAutoShutdownTime", "SetAutoShutdownTime", 1 },
     { 3, "NewTaskShell", "NewTaskShell", 1 },
     { 3, "VbattGet", "VbattGet", 1 },
-	{ 3, "LEDDrive", "LEDDrive", 1 },
-	{ 3, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000003 },
-	{ 3, "UnlockAF", "PT_UnlockAF", 0x01000002 },
-	{ 3, "DoAFLock", "PT_DoAFLock", 0x01000002 },
+    { 3, "LEDDrive", "LEDDrive", 1 },
+    { 3, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000003 },
+    { 3, "UnlockAF", "PT_UnlockAF", 0x01000002 },
+    { 3, "DoAFLock", "PT_DoAFLock", 0x01000002 },
     { 3, "UIFS_WriteFirmInfoToFile", "UIFS_WriteFirmInfoToFile", 1 },
-	{ 3, "PT_MoveOpticalZoomAt", "PT_MoveOpticalZoomAt", 1 },
-	{ 3, "PT_MoveDigitalZoomToWide", "PT_MoveDigitalZoomToWide", 1 },
-	{ 3, "PT_PlaySound", "PT_PlaySound", 1 },
-	{ 3, "exmem_alloc", "ExMem.AllocCacheable", 4 },
-	{ 3, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
-	{ 3, "GetSDProtect", "GetSDProtect", 1 },
+    { 3, "PT_MoveOpticalZoomAt", "PT_MoveOpticalZoomAt", 1 },
+    { 3, "PT_MoveDigitalZoomToWide", "PT_MoveDigitalZoomToWide", 1 },
+    { 3, "PT_PlaySound", "PT_PlaySound", 1 },
+    { 3, "exmem_alloc", "ExMem.AllocCacheable", 4 },
+    { 3, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
+    { 3, "GetSDProtect", "GetSDProtect", 1 },
 
     { 4, "TurnOnBackLight", "TurnOnBackLight", 1 },
     { 4, "TurnOffBackLight", "TurnOffBackLight", 1 },
@@ -1604,16 +695,16 @@ string_sig string_sigs[] = {
     { 4, "PB2Rec", "AC:PB2Rec", 6 },
     { 4, "PB2Rec", "AC:PB2Rec", 11 },
     { 4, "Rec2PB", "AC:Rec2PB", 1 },
-	{ 4, "RefreshPhysicalScreen", "ScreenUnLock", 1 },
-	{ 4, "RefreshPhysicalScreen", "ScreenUnLock", 7 },
-	{ 4, "RefreshPhysicalScreen", "ScreenUnLock", 15 },
-	{ 4, "RefreshPhysicalScreen", "Reduce ScreenUnLock", 5 },
-	{ 4, "RefreshPhysicalScreen", "Window:IneffectiveLockPhysicalScreen", 8 },
-	{ 4, "UnsetZoomForMovie", "ZoomCon_UnsetZoomForMovie", 1 },
-	{ 4, "ExpCtrlTool_StopContiAE", "StopContiAE", 9 },
-	{ 4, "ExpCtrlTool_StopContiAE", "StopContiAE", 10 },
-	{ 4, "ExpCtrlTool_StartContiAE", "StartContiAE", 9 },
-	{ 4, "ExpCtrlTool_StartContiAE", "StartContiAE", 10 },
+    { 4, "RefreshPhysicalScreen", "ScreenUnLock", 1 },
+    { 4, "RefreshPhysicalScreen", "ScreenUnLock", 7 },
+    { 4, "RefreshPhysicalScreen", "ScreenUnLock", 15 },
+    { 4, "RefreshPhysicalScreen", "Reduce ScreenUnLock", 5 },
+    { 4, "RefreshPhysicalScreen", "Window:IneffectiveLockPhysicalScreen", 8 },
+    { 4, "UnsetZoomForMovie", "ZoomCon_UnsetZoomForMovie", 1 },
+    { 4, "ExpCtrlTool_StopContiAE", "StopContiAE", 9 },
+    { 4, "ExpCtrlTool_StopContiAE", "StopContiAE", 10 },
+    { 4, "ExpCtrlTool_StartContiAE", "StartContiAE", 9 },
+    { 4, "ExpCtrlTool_StartContiAE", "StartContiAE", 10 },
     { 4, "ExecuteEventProcedure", "Can not Execute ", 14 },
 
     { 5, "UIFS_WriteFirmInfoToFile", "UIFS_WriteFirmInfoToFile", 1 },
@@ -1621,66 +712,66 @@ string_sig string_sigs[] = {
     { 5, "hook_CreateTask", "CreateTask", 1 },
     { 5, "ExitTask", "ExitTask", 1 },
     { 5, "SleepTask", "SleepTask", 1 },
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
-	{ 5, "UpdateMBROnFlash", "MakeBootDisk", 0x01000003,				  11,   11,   11,   11,   11,   11,    1,    1,    1,    1,    1 },
-	{ 5, "MakeSDCardBootable", "MakeBootDisk", 0x01000003,				   1,    1,    1,    1,    1,    1,    8,    8,    8,    8,    8 },
+    //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
+    { 5, "UpdateMBROnFlash", "MakeBootDisk", 0x01000003,                  11,   11,   11,   11,   11,   11,    1,    1,    1,    1,    1 },
+    { 5, "MakeSDCardBootable", "MakeBootDisk", 0x01000003,                 1,    1,    1,    1,    1,    1,    8,    8,    8,    8,    8 },
 
     { 6, "Restart", "Bye", 0 },
-	{ 6, "GetImageFolder", "GetCameraObjectTmpPath ERROR[ID:%lx] [TRY:%lx]\n", 0 },
+    { 6, "GetImageFolder", "GetCameraObjectTmpPath ERROR[ID:%lx] [TRY:%lx]\n", 0 },
     { 6, "reboot_fw_update", "FirmUpgrade.c", 0 },
-	
-	{ 7, "hook_CreateTask2", "PhySw", 0x01000001 },
 
-	{ 8, "WriteSDCard", "Mounter.c", 0 }, 
+    { 7, "hook_CreateTask2", "PhySw", 0x01000001 },
+
+    { 8, "WriteSDCard", "Mounter.c", 0 },
 
     // Ensure ordering in func_names is correct for dependencies here
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
-	{ 9, "kbd_p1_f", "task_PhySw", 0,							           5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
-	{ 9, "kbd_p2_f", "task_PhySw", 0,							           7,    7,    7,    7,    7,    7,    7,    7,    7,    7,    7 },
-	{ 9, "kbd_read_keys", "kbd_p1_f", 0,						           2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
-	{ 9, "kbd_p1_f_cont", "kbd_p1_f", -1,								   3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
+    //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
+    { 9, "kbd_p1_f", "task_PhySw", 0,                                      5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
+    { 9, "kbd_p2_f", "task_PhySw", 0,                                      7,    7,    7,    7,    7,    7,    7,    7,    7,    7,    7 },
+    { 9, "kbd_read_keys", "kbd_p1_f", 0,                                   2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
+    { 9, "kbd_p1_f_cont", "kbd_p1_f", -1,                                  3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
     { 9, "kbd_read_keys_r2", "kbd_read_keys", 0,                          11,   11,   11,   11,   11,   11,   11,   11,   11,   11,   11 },
     { 9, "GetKbdState", "kbd_read_keys", 0,                                8,    8,    8,    8,    8,    8,    8,    8,    8,    8,    8 },
-	{ 9, "GetKbdState", "kbd_read_keys", 0,                                9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9 },
-	{ 9, "strtolx", "strtol", 0,                                           1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
+    { 9, "GetKbdState", "kbd_read_keys", 0,                                9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9 },
+    { 9, "strtolx", "strtol", 0,                                           1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
     { 9, "mkdir", "MakeDirectory_Fut", 0x01000001,                        17,   17,   17,   17,   17,   17,   17,   17,   17,   17,   17 },
     { 9, "mkdir", "MakeDirectory_Fut", 0x01000002,                        17,   17,   17,   17,   17,   17,   17,   17,   17,   17,   17 },
     { 9, "time", "MakeDirectory_Fut", 0,                                  12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12 },
     { 9, "stat", "_uartr_req", 0,                                          0,    0,    0,    4,    4,    4,    4,    4,    4,    4,    4 },
-	
-	{ 10, "task_CaptSeq", "CaptSeqTask", 1 },
-	{ 10, "task_ExpDrv", "ExpDrvTask", 1 },
-	{ 10, "task_InitFileModules", "InitFileModules", 1 },
-	{ 10, "task_MovieRecord", "MovieRecord", 1 },
-	{ 10, "task_PhySw", "PhySw", 1 },
-	{ 10, "task_RotaryEncoder", "RotaryEncoder", 1 },
-	{ 10, "task_RotaryEncoder", "RotarySw", 1 },
-	{ 10, "task_TouchPanel", "TouchPanel", 1 },
 
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
-	{ 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,				   5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
-	{ 11, "err_init_task", "\n-- %s() error in init_task() --", 0,		   2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  15,   15,   15,   15,   15,   15,   15,   15,   15,   15,   15 },
-	{ 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,			  20,   20,   20,   20,   20,   20,   19,   20,   20,   20,   20 },
-	{ 11, "_log", (char*)log_test, 0x01000001,							   1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
-	{ 11, "_uartr_req", "A/uartr.req", 0,							       3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
-	
-	//																	 R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
-	{ 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,						0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54, 0x00, 0x00, 0x00 },
-	{ 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1, 	0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x34, 0x4C, 0x4C, 0x4C },
-	{ 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1, 			0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38, 0x38, 0x50, 0x50, 0x50 },
-	{ 12, "free", "free", 1,											0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30, 0x30, 0x48, 0x48, 0x48 },
-	{ 12, "malloc", "malloc", 0x01000003,								0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C, 0x44, 0x44, 0x44 },
-	{ 12, "TakeSemaphore", "TakeSemaphore", 1,							0x14, 0x14, 0x14, 0x14, 0x14, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C },
-	{ 12, "GiveSemaphore", "GiveSemaphore", 1,							0x18, 0x18, 0x18, 0x18, 0x18, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C,0x354,0x35C,0x35C },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
-	{ 12, "_log10", "_log10", 0x01000006,							   0x000,0x000,0x2C4,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
-	
-	{ 13, "strftime", "Sunday", 1 },
-	
-	{ 14, "_pow", "_pow", 0 },
+    { 10, "task_CaptSeq", "CaptSeqTask", 1 },
+    { 10, "task_ExpDrv", "ExpDrvTask", 1 },
+    { 10, "task_InitFileModules", "InitFileModules", 1 },
+    { 10, "task_MovieRecord", "MovieRecord", 1 },
+    { 10, "task_PhySw", "PhySw", 1 },
+    { 10, "task_RotaryEncoder", "RotaryEncoder", 1 },
+    { 10, "task_RotaryEncoder", "RotarySw", 1 },
+    { 10, "task_TouchPanel", "TouchPanel", 1 },
+
+    //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
+    { 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                 5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
+    { 11, "err_init_task", "\n-- %s() error in init_task() --", 0,         2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
+    { 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,            14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14 },
+    { 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,            15,   15,   15,   15,   15,   15,   15,   15,   15,   15,   15 },
+    { 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,            20,   20,   20,   20,   20,   20,   19,   20,   20,   20,   20 },
+    { 11, "_log", (char*)log_test, 0x01000001,                             1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
+    { 11, "_uartr_req", "A/uartr.req", 0,                                  3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
+
+    //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
+    { 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,                        0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54, 0x00, 0x00, 0x00 },
+    { 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1,  0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x34, 0x4C, 0x4C, 0x4C },
+    { 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1,          0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38, 0x38, 0x50, 0x50, 0x50 },
+    { 12, "free", "free", 1,                                            0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30, 0x30, 0x48, 0x48, 0x48 },
+    { 12, "malloc", "malloc", 0x01000003,                               0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C, 0x44, 0x44, 0x44 },
+    { 12, "TakeSemaphore", "TakeSemaphore", 1,                          0x14, 0x14, 0x14, 0x14, 0x14, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C },
+    { 12, "GiveSemaphore", "GiveSemaphore", 1,                          0x18, 0x18, 0x18, 0x18, 0x18, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 },
+    { 12, "_log10", "_log10", 0x01000006,                               0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C,0x354,0x35C,0x35C },
+    { 12, "_log10", "_log10", 0x01000006,                               0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
+    { 12, "_log10", "_log10", 0x01000006,                               0x000,0x000,0x2C4,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
+
+    { 13, "strftime", "Sunday", 1 },
+
+    { 14, "_pow", "_pow", 0 },
 
     { 15, "LocalTime", "%04d:%02d:%02d %02d:%02d:%02d", 0x01000001 },
     { 15, "GetMemInfo", "Malloc Information\n", 0x01000001 },
@@ -1693,7 +784,7 @@ string_sig string_sigs[] = {
     { 16, "DeleteDirectory_Fut", (char*)DeleteDirectory_Fut_test, 0x01000001 },
     { 16, "MakeDirectory_Fut", (char*)MakeDirectory_Fut_test, 0x01000001 },
     { 16, "RenameFile_Fut", (char*)RenameFile_Fut_test, 0x01000001 },
-	
+
     { 17, "ScreenLock", "StartRecModeMenu", 0 },
     { 17, "ScreenUnlock", "StartRecModeMenu", 0 },
 
@@ -1702,153 +793,36 @@ string_sig string_sigs[] = {
     { 0, 0, 0, 0 }
 };
 
+// Find the named function in the 'func_list' array above, return index of entry
 int find_func(const char* name)
 {
-	int i;
-	for (i=0; func_list[i].name != 0; i++)
-	{
-		if (strcmp(name, func_list[i].name) == 0)
-		{
-			return i;
-		}
-	}
-	return -1;
+    int i;
+    for (i=0; func_list[i].name != 0; i++)
+    {
+        if (strcmp(name, func_list[i].name) == 0)
+        {
+            return i;
+        }
+    }
+    return -1;  // Not found
 }
 
+// Get DryOS version specific offset
 int dryos_offset(firmware *fw, string_sig *sig)
 {
-	switch (fw->dryos_ver)
-	{
-	case 20:	return sig->dryos20_offset;
-	case 23:	return sig->dryos23_offset;
-	case 31:	return sig->dryos31_offset;
-	case 39:	return sig->dryos39_offset;
-	case 43:	return sig->dryos43_offset;
-	case 45:	return sig->dryos45_offset;
-	case 47:	return sig->dryos47_offset;
-	case 49:	return sig->dryos49_offset;
-	case 50:	return sig->dryos50_offset;
-	case 51:	return sig->dryos51_offset;
-	case 52:	return sig->dryos52_offset;
-	}
-	return 0;
-}
-
-//------------------------------------------------------------------------------------------------------------
-
-int find_str_ref(firmware *fw, char *str)
-{
-	int k = find_str(fw, str);
-	if (k >= 0)
-	{
-		uint32_t sadr = idx2adr(fw,k);		// string address
-		for (k=0; k<fw->size; k++)
-		{
-			if (isADR_PC_cond(fw,k) && (ADR2adr(fw,k) == sadr))
-			{
-				return k;
-			}
-            else if (isLDR_PC_cond(fw,k) && (LDR2val(fw,k) == sadr))
-            {
-                return k;
-            }
-		}
-	}
-	return -1;
-}
-
-int find_nxt_str_ref(firmware *fw, int str_adr, int ofst)
-{
-	if (str_adr >= 0)
-	{
-        int k;
-		uint32_t sadr = idx2adr(fw,str_adr);		// string address
-		for (k=ofst+1; k<fw->size; k++)
-		{
-			if (isADR_PC_cond(fw,k) && (ADR2adr(fw,k) == sadr))
-			{
-				return k;
-			}
-            else if (isLDR_PC_cond(fw,k) && (LDR2val(fw,k) == sadr))
-            {
-                return k;
-            }
-		}
-	}
-	return -1;
-}
-
-//------------------------------------------------------------------------------------------------------------
-
-int find_BL(firmware *fw, int k, uint32_t v1, uint32_t v2)
-{
-    if (isBL(fw,k))
+    switch (fw->dryos_ver)
     {
-        int n = idxFollowBranch(fw, k, 0x01000001);
-        if (n == v1)
-            return k;
-    }
-    return 0;
-}
-
-int find_B(firmware *fw, int k, uint32_t v1, uint32_t v2)
-{
-    if (isB(fw,k))
-    {
-        int n = idxFollowBranch(fw, k, 0x00000001);
-        if (n == v1)
-            return k;
-    }
-    return 0;
-}
-
-//------------------------------------------------------------------------------------------------------------
-
-int search_fw(firmware *fw, int (*func)(firmware*, int, uint32_t, uint32_t), uint32_t v1, uint32_t v2, int len)
-{
-    BufRange *p = fw->br;
-    while (p)
-    {
-        int k;
-        for (k = p->off; k <= p->off + p->len - len; k++)
-        {
-            int rv = func(fw,k,v1,v2);
-            if (rv != 0)
-                return rv;
-        }
-        p = p->next;
-    }
-    return 0;
-}
-
-int search_fw_bytes(firmware *fw, int (*func)(firmware*, int))
-{
-    BufRange *p = fw->br;
-    while (p)
-    {
-        int k;
-        for (k = p->off*4; k < (p->off + p->len)*4; k++)
-        {
-            if (func(fw,k))
-                return 1;
-        }
-        p = p->next;
-    }
-    return 0;
-}
-
-int search_saved_sig(firmware *fw, char *sig, int (*func)(firmware*, int, int), int v, int ofst, int len)
-{
-    int k = get_saved_sig(fw, sig);
-    if (k >= 0)
-	{
-        int idx = adr2idx(fw, func_names[k].val);
-        for (k=idx+ofst; k<idx+ofst+len; k++)
-        {
-            int rv = func(fw, k, v);
-            if (rv)
-                return rv;
-        }
+    case 20:    return sig->dryos20_offset;
+    case 23:    return sig->dryos23_offset;
+    case 31:    return sig->dryos31_offset;
+    case 39:    return sig->dryos39_offset;
+    case 43:    return sig->dryos43_offset;
+    case 45:    return sig->dryos45_offset;
+    case 47:    return sig->dryos47_offset;
+    case 49:    return sig->dryos49_offset;
+    case 50:    return sig->dryos50_offset;
+    case 51:    return sig->dryos51_offset;
+    case 52:    return sig->dryos52_offset;
     }
     return 0;
 }
@@ -1857,20 +831,20 @@ int search_saved_sig(firmware *fw, char *sig, int (*func)(firmware*, int, int), 
 
 // Loop through firmware looking for instances of a sig string
 // For each one found call the check_match function to see if it matches the sig
-// Return 1 0 match found, else return 0
+// Return 1 if match found, else return 0
 int fw_string_process(firmware *fw, string_sig *sig, int (*check_match)(firmware *fw, string_sig *sig, int j), int inc_eos)
 {
     int nlen = strlen(sig->ev_name);
-	uint32_t nm0 = *((uint32_t*)sig->ev_name);
+    uint32_t nm0 = *((uint32_t*)sig->ev_name);
     uint32_t *p;
-	int j;
+    int j;
     BufRange *br;
 
-	for (br = fw->br; br != 0; br = br->next)
+    for (br = fw->br; br != 0; br = br->next)
     {
-    	for (p = br->p, j = br->off; j < br->off+br->len-nlen/4; p++, j++)
-	    {
-		    if ((nm0 == *p) && (memcmp(p+1,sig->ev_name+4,nlen-4+inc_eos) == 0))
+        for (p = br->p, j = br->off; j < br->off+br->len-nlen/4; p++, j++)
+        {
+            if ((nm0 == *p) && (memcmp(p+1,sig->ev_name+4,nlen-4+inc_eos) == 0))
             {
                 if (check_match(fw,sig,j))
                     return 1;
@@ -1881,18 +855,20 @@ int fw_string_process(firmware *fw, string_sig *sig, int (*check_match)(firmware
     return 0;
 }
 
+// As above; but scan the firmware byte-by-byte rather than by words
+// Slower; but required when strings are not stores on 32 bit boundaries
 int fw_string_process_unaligned(firmware *fw, string_sig *sig, int (*check_match)(firmware *fw, string_sig *sig, int j))
 {
     int nlen = strlen(sig->ev_name);
     char *p;
-	int j;
+    int j;
     BufRange *br;
 
-	for (br = fw->br; br != 0; br = br->next)
+    for (br = fw->br; br != 0; br = br->next)
     {
-    	for (p = (char*)br->p, j = 0; j < br->len*4-nlen; p++, j++)
-	    {
-		    if (strcmp(p,sig->ev_name) == 0)
+        for (p = (char*)br->p, j = 0; j < br->len*4-nlen; p++, j++)
+        {
+            if (strcmp(p,sig->ev_name) == 0)
             {
                 if (check_match(fw,sig,j+br->off*4))
                     return 1;
@@ -1903,16 +879,19 @@ int fw_string_process_unaligned(firmware *fw, string_sig *sig, int (*check_match
     return 0;
 }
 
+// Loop through the firmware from the start, calling 'check_match' for each location
+// If 'check_match' returns non-zero, exit returning 1.
+// Otherwise returns 0 - no match found.
 int fw_process(firmware *fw, string_sig *sig, int (*check_match)(firmware *fw, string_sig *sig, int j))
 {
     uint32_t *p;
-	int j;
+    int j;
     BufRange *br;
 
-	for (br = fw->br; br != 0; br = br->next)
+    for (br = fw->br; br != 0; br = br->next)
     {
-    	for (p = br->p, j = br->off; j < br->off+br->len; p++, j++)
-	    {
+        for (p = br->p, j = br->off; j < br->off+br->len; p++, j++)
+        {
             if (check_match(fw,sig,j))
                 return 1;
         }
@@ -1928,18 +907,21 @@ int fw_process(firmware *fw, string_sig *sig, int (*check_match)(firmware *fw, s
 // Sig pattern:
 //		Function pointer	-	DCD	func
 //		String				-	DCB	"func"
+// Note: 'func' may not be the target address, the sig->offset value allows selection of another function
+//       called at a fixed number of instructions from the 'func' address found
 int match_strsig1(firmware *fw, string_sig *sig, int j)
 {
-    uint32_t fadr = fwval(fw,j-1);  // function address (*padr)
-    if (idx_valid(fw,adr2idx(fw,fadr)))
+    uint32_t fadr = fwval(fw,j-1);      // function address
+    if (idx_valid(fw,adr2idx(fw,fadr))) // is function address valid
     {
-       	if (sig->offset > 1) fadr = followBranch(fw, fadr, 1);
+        // If function address is a B, and we are following branches, then follow the first B
+        if (sig->offset > 1) fadr = followBranch(fw, fadr, 1);
+        // Follow any subsequent branch at the given offset
         fadr = followBranch2(fw, fadr, sig->offset);
-        //fprintf(stderr,"%s %08x\n",curr_name,fadr);
         fwAddMatch(fw,fadr,32,0,101);
         return 1;
     }
-	return 0;
+    return 0;
 }
 
 // Sig pattern:
@@ -1947,27 +929,28 @@ int match_strsig1(firmware *fw, string_sig *sig, int j)
 //		Function pointer	-		DCD	func
 //				...
 //		String				-	str	DCB	"func"
+// Note: 'func' may not be the target address, the offset value allows selection of another function
+//       called at a fixed number of instructions from the 'func' address found
 int match_strsig2a(firmware *fw, int k, uint32_t sadr, uint32_t offset)
 {
     if (fwval(fw,k) == sadr)                // pointer to string?
     {
-        uint32_t fadr = fwval(fw,k+1);      // function address (*padr)
-        if (idx_valid(fw,adr2idx(fw,fadr)))
+        uint32_t fadr = fwval(fw,k+1);      // function address
+        if (idx_valid(fw,adr2idx(fw,fadr))) // is function address valid
         {
             uint32_t bfadr = followBranch2(fw, fadr, offset);
-			if ((offset <= 1) || (bfadr != fadr))
-			{
-				//fprintf(stderr,"%s %08x\n",curr_name,fadr);
-				fwAddMatch(fw,bfadr,32,0,102);
-				return 1;
-			}
+            if ((offset <= 1) || (bfadr != fadr))
+            {
+                fwAddMatch(fw,bfadr,32,0,102);
+                return 1;
+            }
         }
     }
     return 0;
 }
 int match_strsig2(firmware *fw, string_sig *sig, int j)
 {
-    // Note - 'j' is offset in firmware not instruction index (called from fw_string_process_unaligned)
+    // Note - 'j' is byte offset in firmware not instruction index (called from fw_string_process_unaligned)
     return search_fw(fw, match_strsig2a, fw->base + j, sig->offset, 2);
 }
 
@@ -1977,20 +960,33 @@ int match_strsig2(firmware *fw, string_sig *sig, int j)
 //		Branch				-	BL
 //				...
 //		String				-	DCB	"func"
+// or
+//		Load Func Address	-	ADR	Rx, func
+//                              B   loc
+//              ...
+//                          loc:
+//		Load String Address	-	ADR	Rx, "func"
+//		Branch				-	BL
+//				...
+//		String				-	DCB	"func"
+// 'sadr' = address of "func" string
+// Note: 'func' may not be the target address, the offset value allows selection of another function
+//       called at a fixed number of instructions from the 'func' address found
 int match_strsig3a(firmware *fw, int k, uint32_t sadr, uint32_t offset)
 {
 	if (isADR_PC(fw,k+1) &&    // ADR ?
 		isBorBL(fw,k+2))       // B or BL ?
 	{
-		uint32_t padr = ADR2adr(fw,k+1);
-		if (padr == sadr)
+		uint32_t padr = ADR2adr(fw,k+1);    // get address pointed to by 2nd ADR instructioin
+		if (padr == sadr)                   // does it match target string
 		{
 			int j2 = k;
 			int found = 0;
-			if (isADR_PC(fw,k)) // ADR ?
+			if (isADR_PC(fw,k))             // ADR ?
 				found = 1;
 			else
 			{
+                // May be DCD block between 1st and 2nd ADR
 				for (j2 = k-2; j2 >= 0 && j2 >= k-4096; j2--)
 				{
 					if (isADR_PC(fw,j2) &&  // ADR ?
@@ -2011,7 +1007,6 @@ int match_strsig3a(firmware *fw, int k, uint32_t sadr, uint32_t offset)
 				uint32_t fadr = ADR2adr(fw,j2);
 				if (offset > 1) fadr = followBranch(fw, fadr, 1);
 				fadr = followBranch2(fw, fadr, offset);
-				//fprintf(stderr,"%s %08x\n",curr_name,fadr);
 				fwAddMatch(fw,fadr,32,0,103);
 				return 1;
 			}
@@ -2026,7 +1021,7 @@ int match_strsig3(firmware *fw, string_sig *sig, int j)
 
 // Sig pattern:
 //		Save Regs			-	STMFD
-//				... (ofst)
+//				... (offset)
 //		Load String Address	-	ADR	Rx, "func"
 //				...
 //		String				-	DCB	"func"
@@ -2039,7 +1034,6 @@ int match_strsig4a(firmware *fw, int k, uint32_t sadr, uint32_t offset)
 		if (padr == sadr)
 		{
 			uint32_t fadr = idx2adr(fw,k);
-			//fprintf(stderr,"%s %08x\n",curr_name,fadr);
 			fwAddMatch(fw,fadr,32,0,104);
 			return 1;
 		}
@@ -2053,6 +1047,15 @@ int match_strsig4(firmware *fw, string_sig *sig, int j)
 
 // Sig pattern:
 //		Load Func Address	-	LDR	Rx, =func
+//		Load String Address	-	xDR	Rx, "func"  (LDR or ADR)
+//		Branch				-	BL
+//				...
+//		String				-	DCB	"func"
+// or
+//		Load Func Address	-	LDR	Rx, =func
+//                              B   loc
+//              ...
+//                          loc:
 //		Load String Address	-	xDR	Rx, "func"  (LDR or ADR)
 //		Branch				-	BL
 //				...
@@ -2100,7 +1103,6 @@ int match_strsig5a(firmware *fw, int k, uint32_t sadr, uint32_t offset)
                     if (fadr == fadr2) return 0;
                     fadr = fadr2;
                 }
-				//fprintf(stderr,"%s %08x\n",curr_name,fadr);
 				fwAddMatch(fw,fadr,32,0,105);
 				return 1;
 			}
@@ -2122,7 +1124,6 @@ int match_strsig6(firmware *fw, string_sig *sig, int j)
     if (j1 > 0)
 	{
 		uint32_t fadr = idx2adr(fw,j1);
-		//fprintf(stderr,"%s %08x\n",curr_name,fadr);
 		fwAddMatch(fw,fadr,32,0,106);
 		return 1;
 	}
@@ -2131,7 +1132,7 @@ int match_strsig6(firmware *fw, string_sig *sig, int j)
 }
 
 // Sig pattern:
-//		Str ref -	xDR Rx, =str_ptr
+//		Str ref -	xDRnn Rx, =str_ptr
 //			...
 //				    BL	func
 //			...
@@ -2152,7 +1153,6 @@ int match_strsig7a(firmware *fw, int k, uint32_t sadr, uint32_t offset)
 		    {
 			    uint32_t fa = idx2adr(fw,j2);
 			    fa = followBranch2(fw,fa,offset);
-			    //fprintf(stderr,"%s %08x\n",curr_name,fa);
 			    fwAddMatch(fw,fa,32,0,107);
 			    return 1;
 		    }
@@ -2181,13 +1181,12 @@ int match_strsig8(firmware *fw, string_sig *sig, int j)
 			{
 				if (isLDR_PC(fw,j2) && (LDR2adr(fw,j2) == fadr))	// LDR ?
 				{
-					if ((isSTR(fw,j2+1) && ((fwval(fw,j2+1) & 0xfff) == ofst)) ||    // STR ?
-						(isSTR(fw,j2+2) && ((fwval(fw,j2+2) & 0xfff) == ofst)))      // STR ?
+					if ((isSTR(fw,j2+1) && (fwOp2(fw,j2+1) == ofst)) ||    // STR ?
+						(isSTR(fw,j2+2) && (fwOp2(fw,j2+2) == ofst)))      // STR ?
 					{
 						fadr = fwval(fw,j1);
 						if (idx_valid(fw,adr2idx(fw,fadr)))
 						{
-							//fprintf(stderr,"%s %08x\n",curr_name,fadr);
 							fwAddMatch(fw,fadr,32,0,108);
 							return 1;
 						}
@@ -2229,7 +1228,7 @@ int find_strsig8(firmware *fw, string_sig *sig)
 	{
 		if (isLDR(fw,j) && isLDR(fw,j+1) && isLDR(fw,j+2))
 		{
-			ofst = (fwval(fw,j) & 0xfff) + (fwval(fw,j+1) & 0xfff) + (fwval(fw,j+2) & 0xfff);
+			ofst = fwOp2(fw,j) + fwOp2(fw,j+1) + fwOp2(fw,j+2);
 			break;
 		}
 	}
@@ -2259,7 +1258,6 @@ int find_strsig9(firmware *fw, string_sig *sig)
                 if (sig->offset != -1) fadr2 = followBranch2(fw, fadr2, sig->offset);
                 if ((sig->offset <= 0) || (fadr2 != fadr))
                 {
-    				//fprintf(stderr,"%s %08x\n",curr_name,fadr);
 	    			fwAddMatch(fw,fadr2,32,0,109);
 		    		return 1;
                 }
@@ -2309,7 +1307,6 @@ int match_strsig10(firmware *fw, string_sig *sig, int j)
 				if (fadr != 0)
 				{
 					fadr = followBranch2(fw, fadr, sig->offset);
-					//fprintf(stderr,"%s %08x\n",curr_name,fadr);
 					fwAddMatch(fw,fadr,32,0,110);
 					return 1;
 				}
@@ -2358,7 +1355,6 @@ int match_strsig11(firmware *fw, string_sig *sig, int j)
 					found = 1;
 				if (found && ((sig->offset == 0) || (bfadr != fadr)))
 				{
-					//fprintf(stderr,"%s %08x\n",curr_name,fadr);
 					fwAddMatch(fw,bfadr,32,0,111);
 					return 1;
 				}
@@ -2396,7 +1392,6 @@ int find_strsig12(firmware *fw, string_sig *sig)
 					uint32_t bfadr = followBranch2(fw,fadr,sig->offset);
 					if ((sig->offset <= 1) || ((bfadr != fadr) && ((fw->buf[adr2idx(fw,fadr)] & 0xFFFF0000) == 0xE92D0000)))
 					{
-						//fprintf(stderr,"%s %08x\n",sig->name,bfadr);
 						fwAddMatch(fw,bfadr,32,0,112);
 						return 1;
 					}
@@ -2440,7 +1435,6 @@ int match_strsig13a(firmware *fw, int k, uint32_t sadr, uint32_t offset)
 					if (isLDR_PC(fw,j3) && (LDR2adr(fw,j3) == ppadr))
 					{
 						uint32_t fadr = idx2adr(fw,j3-offset);
-						//fprintf(stderr,"%s %08x\n",curr_name,fadr);
 						fwAddMatch(fw,fadr,32,0,113);
 						return 1;
 					}
@@ -2477,7 +1471,6 @@ int match_strsig14(firmware *fw, string_sig *sig, int j)
 				if ((ADR2adr(fw,j1) == adr1) && (ADR2adr(fw,j1+4) == adr2))
 				{
 					uint32_t fadr = followBranch(fw,idx2adr(fw,j1+2),0x01000001);
-					//fprintf(stderr,"%s %08x\n",curr_name,fadr);
 					fwAddMatch(fw,fadr,32,0,114);
 					return 1;
 				}
@@ -2491,7 +1484,6 @@ int match_strsig14(firmware *fw, string_sig *sig, int j)
 				if ((ADR2adr(fw,j1) == adr1) && (ADR2adr(fw,j1+4) == adr2))
 				{
 					uint32_t fadr = followBranch(fw,idx2adr(fw,j1+3),0x01000001);
-					//fprintf(stderr,"%s %08x\n",curr_name,fadr);
 					fwAddMatch(fw,fadr,32,0,114);
 					return 1;
 				}
@@ -2524,7 +1516,6 @@ int match_strsig15a(firmware *fw, int k, uint32_t sadr, uint32_t offset)
 		    {
 			    uint32_t fa = idx2adr(fw,j2);
 			    fa = followBranch2(fw,fa,offset);
-			    //fprintf(stderr,"%s %08x\n",curr_name,fa);
 			    fwAddMatch(fw,fa,32,0,115);
 			    return 1;
 		    }
@@ -2556,7 +1547,6 @@ int match_strsig16(firmware *fw, string_sig *sig, int j)
             if (j2 > 0)
 			{
 				uint32_t fa = idx2adr(fw,j2);
-				//fprintf(stderr,"%s %08x\n",curr_name,fa);
 				fwAddMatch(fw,fa,32,0,116);
 				return 1;
 			}
@@ -2642,6 +1632,7 @@ int find_strsig18(firmware *fw, string_sig *sig)
     return search_fw(fw, match_strsig18, 0, 0, 1);
 }
 
+// Call processing function based on type
 int find_strsig(firmware *fw, string_sig *sig)
 {
 	switch (sig->type)
@@ -2673,6 +1664,7 @@ int find_strsig(firmware *fw, string_sig *sig)
 
 // Matching functions
 
+// Search using new style matching only
 void find_str_sig_matches(firmware *fw, const char *curr_name)
 {
 	int i;
@@ -2704,6 +1696,8 @@ void find_str_sig_matches(firmware *fw, const char *curr_name)
 	}
 }
 
+// Search using new style matching first
+// If not found used old style matching
 void find_matches(firmware *fw, const char *curr_name)
 {
     FuncSig *sig, *s;
@@ -2868,6 +1862,7 @@ void find_matches(firmware *fw, const char *curr_name)
 	}
 }
 
+// Output match results for function
 void print_results(const char *curr_name, int k)
 {
 	int i;
@@ -2877,7 +1872,7 @@ void print_results(const char *curr_name, int k)
     if (func_names[k].flags & DONT_EXPORT) return;
 
 	// find best match and report results
-	osig* ostub2 = find_sig(stubs2,curr_name);
+	osig* ostub2 = find_sig(stubs,curr_name);
 
 	if ((count == 0)
 		|| (matches->fail > 0)
@@ -3551,13 +2546,13 @@ int match_some_flag_for_af_scan(firmware *fw, int k, uint32_t v1, uint32_t v2)
 int match_palette_data(firmware *fw, int k, uint32_t v1, uint32_t v2)
 {
     if ((fw->buf[k] == 0) && (fw->buf[k+1] == 0x00FF0000) &&
-        (fw->buf[k+577] == 1) && (fw->buf[k+578] == 0x00FF0000) && 
+        (fw->buf[k+577] == 1) && (fw->buf[k+578] == 0x00FF0000) &&
         (fw->buf[k+1154] == 2) && (fw->buf[k+1155] == 0x00FF0000))
     {
         return idx2adr(fw,k);
     }
     else if ((fw->buf[k] == 0) && (fw->buf[k+1] == 0x00FF0000) &&
-             (fw->buf[k+513] == 1) && (fw->buf[k+514] == 0x00FF0000) && 
+             (fw->buf[k+513] == 1) && (fw->buf[k+514] == 0x00FF0000) &&
              (fw->buf[k+1026] == 2) && (fw->buf[k+1027] == 0x00FF0000))
     {
         return idx2adr(fw,k);
@@ -4004,6 +2999,35 @@ void find_stubs_min(firmware *fw)
 	bprintf("// Values below can be overridden in 'stubs_min.S':\n");
 
     // Find 'file_system_started' flag
+    /*
+        Looks for this function - matches instructions marked with *
+        *   STMFD   SP!, {R4-R6,LR}
+            MOV     R5, R1
+        *   MOV     R4, R0
+            BL      sub_XXXXXXXX
+            BL      sub_YYYYYYYY
+            CMP     R0, R4
+            CMPLE   R4, #1
+            MOVGE   R1, #0x70
+            ADRGE   R0, "FileSem.c"             <-- starts from this reference to the 'FileSem.c' string
+            BLGE    DebugAssert
+            MOV     R1, R5
+        *   LDR     R5, =0xNNNN                 <-- base address of variable
+            MOV     R3, #0x72
+            LDR     R0, [R5]
+            ADR     R2, "FileSem.c"
+            BL      takeSemaphore
+            TST     R0, #1
+        *   LDRNE   R0, =0x9610001
+            LDMNEFD SP!, {R4-R6,PC}
+            MOV     R0, #1
+        *   STR     R0, [R5,#M]                 <-- offset of variable
+        *   MOV     R0, R4
+        *   BL      GetDrive_FreeClusters
+            STR     R0, [R5,#0x10]
+            MOV     R0, #0
+        *   LDMFD   SP!, {R4-R6,PC}
+    */
 	int sadr = find_str(fw, "FileSem.c");
 	k = find_nxt_str_ref(fw, sadr, -1);
     int found = 0;
@@ -4251,7 +3275,7 @@ void find_stubs_min(firmware *fw)
             search_fw(fw, match_palette_data3, palette_data, 0, 1);
         }
 	}
-    
+
 	// Find 'bitmap buffer' info
 	search_saved_sig(fw, "GUISrv_StartGUISystem", match_bitmap_buffer, 0, 0, 50);
 
@@ -4360,8 +3384,8 @@ void find_stubs_min(firmware *fw)
 
 int find_ctypes(firmware *fw, int k)
 {
-    static unsigned char ctypes[] = 
-    { 
+    static unsigned char ctypes[] =
+    {
         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x60, 0x60, 0x60, 0x60, 0x60, 0x20, 0x20,
         0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
         0x48, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
@@ -4763,6 +3787,81 @@ void find_key_vals(firmware *fw)
 
 //------------------------------------------------------------------------------------------------------------
 
+// Write out firmware info
+void output_firmware_vals(firmware *fw)
+{
+	bprintf("// Camera info:\n");
+
+	if (fw->dryos_ver == 0)
+	{
+		bprintf("//   Can't find DRYOS version !!!\n\n");
+	}
+	else
+	{
+        if (fw->dryos_ver > 52)
+    		bprintf("//   DRYOS R%d (%s) *** New DRYOS Version - please update finsig_dryos.c ***\n",fw->dryos_ver,fw->dryos_ver_str);
+        else
+    		bprintf("//   DRYOS R%d (%s)\n",fw->dryos_ver,fw->dryos_ver_str);
+	}
+
+    if (fw->firmware_ver_str == 0)
+    {
+        bprintf("//   Can't find firmware version !!!\n\n");
+    }
+    else
+    {
+        bprintf("//   %s",fw->firmware_ver_str);
+        bprintf("\n");
+    }
+
+    if (fw->fsize > (fw->size + 256))
+    {
+        bprintf("//   Possible corrupt firmware dump - file size too small for start address 0x%08x\n",fw->base);
+        bprintf("//     file size = %.2fMB, should be %.2fMB\n", ((double)fw->size*4.0)/(1024.0*1024.0),((double)fw->fsize*4.0)/(1024.0*1024.0));
+    }
+
+    if (fw->cam != 0)
+    {
+        bprintf("//   %s\n",fw->cam);
+    }
+    else
+    {
+        bprintf("//   Could not find Camera name - possible corrupt firmware dump\n");
+    }
+
+    bprintf("\n// Values for makefile.inc\n");
+    bprintf("//   PLATFORMOSVER = %d\n",fw->dryos_ver);
+
+    if (fw->pid != 0)
+    {
+        bprintf("//   PLATFORMID = %d (0x%04x) // Found @ 0x%08x\n",fw->pid,fw->pid,idx2adr(fw,fw->pid_idx));
+    }
+
+    if (fw->maxram != 0)
+        bprintf("//   MAXRAMADDR = 0x%08x\n",fw->maxram);
+
+    if (fw->ksys != 0)
+    {
+        bprintf("//   KEYSYS = %s              // Found @ 0x%08x\n",fw->ksys,idx2adr(fw,fw->ksys_idx));
+
+        if (fw->dancing_bits)
+        {
+            bprintf("//   NEED_ENCODED_DISKBOOT = %d   // Found @ 0x%08x\n",fw->dancing_bits,idx2adr(fw,fw->dancing_bits_idx));
+        }
+        else
+        {
+            bprintf("//   NEED_ENCODED_DISKBOOT = ? Not found, possible new 'dancing bits' entry needed. // Found @ 0x%08x\n",idx2adr(fw,fw->dancing_bits_idx));
+        }
+    }
+
+    if ((fw->dryos_ver >= 50) && (fw->base2 != 0))
+    {
+        bprintf("\n// Note, ROM copied to RAM :- from 0x%08x, to 0x%08x, len %d words.\n",fw->base_copied,fw->base2,fw->size2);
+    }
+
+    bprintf("\n");
+}
+
 int main(int argc, char **argv)
 {
     firmware fw;
@@ -4778,40 +3877,38 @@ int main(int argc, char **argv)
     out_fp = fopen(argv[3],"w");
     if (out_fp == NULL) usage("failed to open outputfile");
 
-    load_stubs2();
-    //print_stubs(stubs2);
-	load_stubs_min();
-    //print_stubs(stubs_min);
-	load_modemap();
-    //print_stubs(modemap);
+    load_stubs("stubs_entry_2.S", 1);
+    load_stubs_min();
+    load_modemap();
     load_platform();
-	
+
     bprintf("// !!! THIS FILE IS GENERATED. DO NOT EDIT. !!!\n");
     bprintf("#include \"stubs_asm.h\"\n\n");
 
     load_firmware(&fw,argv[1],argv[2],(argc==5)?argv[4]:0);
+    output_firmware_vals(&fw);
 
-	out_hdr = 1;
-	bprintf("// Stubs below should be checked. Stub not matched 100%%, or difference found to current 'stubs_entry_2.S'\n");
-	bprintf("//    Name                                     Address      Rule  %%  Comp to stubs_entry_2.S\n");
-	out_hdr = 0;
-	bprintf("// Stubs below matched 100%%.\n");
-	bprintf("//    Name                                     Address                Comp to stubs_entry_2.S\n");
+    out_hdr = 1;
+    bprintf("// Stubs below should be checked. Stub not matched 100%%, or difference found to current 'stubs_entry_2.S'\n");
+    bprintf("//    Name                                     Address      Rule  %%  Comp to stubs_entry_2.S\n");
+    out_hdr = 0;
+    bprintf("// Stubs below matched 100%%.\n");
+    bprintf("//    Name                                     Address                Comp to stubs_entry_2.S\n");
 
     for (k = 0; func_names[k].name; k++)
     {
         count = 0;
         curr_name = func_names[k].name;
 
-		find_matches(&fw, curr_name);
+        find_matches(&fw, curr_name);
 
-		if ((fw.dryos_ver >= find_min_ver(curr_name)) && (fw.dryos_ver <= find_max_ver(curr_name)))
-			print_results(curr_name,k);
+        if ((fw.dryos_ver >= find_min_ver(curr_name)) && (fw.dryos_ver <= find_max_ver(curr_name)))
+            print_results(curr_name,k);
 
-		if (count == 0)
-		{
-			ret = 1;
-		}
+        if (count == 0)
+        {
+            ret = 1;
+        }
     }
 
     clock_t t2 = clock();
@@ -4824,9 +3921,9 @@ int main(int argc, char **argv)
     find_other_vals(&fw);
 
     printf("Time to generate stubs %.2f seconds\n",(double)(t2-t1)/(double)CLOCKS_PER_SEC);
-	
-	write_output();
-	
+
+    write_output();
+
     fclose(out_fp);
 
     return ret;

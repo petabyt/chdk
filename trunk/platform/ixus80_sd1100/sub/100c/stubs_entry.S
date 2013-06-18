@@ -4,7 +4,7 @@
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
 //   Firmware Ver GM1.00C
-//   Possible corrupt firmware dump - file size to small for start address 0xff810000
+//   Possible corrupt firmware dump - file size too small for start address 0xff810000
 //     file size = 7.92MB, should be 7.94MB
 //   Canon DIGITAL IXUS 82 IS
 

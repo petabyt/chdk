@@ -279,3 +279,11 @@ batch-clean:
 	$(MAKE) -C modules clean
 	$(MAKE) -C CHDK clean
 	SKIP_CORE=1 SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST) -noskip
+
+run-code-gen:
+	$(MAKE) -C tools code_gen$(EXE)
+	$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) run-code-gen
+
+batch-run-code-gen:
+	$(MAKE) -C tools code_gen$(EXE)
+	SKIP_CORE=1 SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) run-code-gen $(CAMERA_LIST) -noskip
