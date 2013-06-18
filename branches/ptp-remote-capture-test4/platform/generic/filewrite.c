@@ -33,8 +33,9 @@ int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n,int *pos) {
         if (jpeg_chunks[n+1].length==0) {
             return 0; // last chunk
         }
+        return 1; // not last chunk
     }
-    return 1; // not last chunk
+    return 0; // last chunk
 #else
     if ( jpeg_chunks == NULL ) { //do we have a valid queue?
         int m=50;
