@@ -14,7 +14,6 @@ const char * const new_sa = &_end;
 void task_TouchPanel_my(void);
 
 extern void task_CaptSeq();
-extern void task_InitFileModules();
 extern void task_TouchPanel();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
@@ -25,7 +24,6 @@ void taskHook(context_t **context)
 
 	// Replace firmware task addresses with ours
 	if(tcb->entry == (void*)task_CaptSeq)			tcb->entry = (void*)capt_seq_task; 
-	if(tcb->entry == (void*)task_InitFileModules)	tcb->entry = (void*)init_file_modules_task;
 	if(tcb->entry == (void*)task_TouchPanel)		tcb->entry = (void*)task_TouchPanel_my;
 	if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;
 	if(tcb->entry == (void*)task_ExpDrv)			tcb->entry = (void*)exp_drv_task;
@@ -394,23 +392,6 @@ asm volatile (
 "    LDR     R3, =mykbd_task \n"  // --> Patched. Old value = 0xFF0249C8.
 "    MOV     R2, #0x2000 \n"  // --> Patched. Old value = 0x800. stack size for new task_PhySw
 "    B       sub_FF024A20 \n"  // Continue in firmware
-);
-}
-
-/*************************************************************/
-//** init_file_modules_task @ 0xFF090AB0 - 0xFF090AD0, length=9
-void __attribute__((naked,noinline)) init_file_modules_task() {
-asm volatile (
-"    STMFD   SP!, {R4-R6,LR} \n"
-"    BL      sub_FF088584 \n"
-"    LDR     R5, =0x5006 \n"
-"    MOVS    R4, R0 \n"
-"    MOVNE   R1, #0 \n"
-"    MOVNE   R0, R5 \n"
-"    BLNE    _PostLogicalEventToUI \n"
-"    BL      sub_FF0885B0 \n"
-"    BL      core_spytask_can_start\n"  // CHDK: Set "it's-safe-to-start" flag for spytask
-"    B       sub_FF090AD0 \n"  // Continue in firmware
 );
 }
 
