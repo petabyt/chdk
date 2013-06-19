@@ -15,6 +15,7 @@ extern volatile int jogdial_stopped;
 void JogDial_task_my(void);
 
 extern void task_CaptSeq();
+extern void task_InitFileModules();
 extern void task_RotaryEncoder();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
@@ -25,6 +26,7 @@ void taskHook(context_t **context)
 
 	// Replace firmware task addresses with ours
 	if(tcb->entry == (void*)task_CaptSeq)			tcb->entry = (void*)capt_seq_task; 
+	if(tcb->entry == (void*)task_InitFileModules)	tcb->entry = (void*)init_file_modules_task;
 	if(tcb->entry == (void*)task_RotaryEncoder)		tcb->entry = (void*)JogDial_task_my;
 	if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;
 	if(tcb->entry == (void*)task_ExpDrv)			tcb->entry = (void*)exp_drv_task;
@@ -418,6 +420,23 @@ asm volatile (
 "    LDR     R3, =mykbd_task \n"  // --> Patched. Old value = 0xFF024964.
 "    MOV     R2, #0x2000 \n"  // --> Patched. Old value = 0x800. stack size for new task_PhySw
 "    B       sub_FF0249BC \n"  // Continue in firmware
+);
+}
+
+/*************************************************************/
+//** init_file_modules_task @ 0xFF09BBB0 - 0xFF09BBCC, length=8
+void __attribute__((naked,noinline)) init_file_modules_task() {
+asm volatile (
+"    STMFD   SP!, {R4-R6,LR} \n"
+"    BL      sub_FF0918E8 \n"
+"    LDR     R5, =0x5006 \n"
+"    MOVS    R4, R0 \n"
+"    MOVNE   R1, #0 \n"
+"    MOVNE   R0, R5 \n"
+"    BLNE    _PostLogicalEventToUI \n"
+"    BL      sub_FF091914 \n"
+"    BL      core_spytask_can_start\n"  // CHDK: Set "it's-safe-to-start" flag for spytask
+"    B       sub_FF09BBD0 \n"  // Continue in firmware
 );
 }
 

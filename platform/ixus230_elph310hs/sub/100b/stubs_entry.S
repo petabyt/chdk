@@ -23,7 +23,6 @@ NHSTUB(kbd_pwr_off                            ,0xff057fc8) //  2 60%
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
-DEF(file_system_started                     ,0x00002c04) // Found @0xff067fe8
 DEF(physw_status                            ,0x00034108) // Found @0xff025814
 DEF(physw_run                               ,0x00001c4c) // Found @0xff0253ac
 DEF(physw_sleep_delay                       ,0x00001c54) // Found @0xff0253ac

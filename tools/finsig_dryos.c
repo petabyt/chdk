@@ -2998,76 +2998,6 @@ void find_stubs_min(firmware *fw)
 
 	bprintf("// Values below can be overridden in 'stubs_min.S':\n");
 
-    // Find 'file_system_started' flag
-    /*
-        Looks for this function - matches instructions marked with *
-        *   STMFD   SP!, {R4-R6,LR}
-            MOV     R5, R1
-        *   MOV     R4, R0
-            BL      sub_XXXXXXXX
-            BL      sub_YYYYYYYY
-            CMP     R0, R4
-            CMPLE   R4, #1
-            MOVGE   R1, #0x70
-            ADRGE   R0, "FileSem.c"             <-- starts from this reference to the 'FileSem.c' string
-            BLGE    DebugAssert
-            MOV     R1, R5
-        *   LDR     R5, =0xNNNN                 <-- base address of variable
-            MOV     R3, #0x72
-            LDR     R0, [R5]
-            ADR     R2, "FileSem.c"
-            BL      takeSemaphore
-            TST     R0, #1
-        *   LDRNE   R0, =0x9610001
-            LDMNEFD SP!, {R4-R6,PC}
-            MOV     R0, #1
-        *   STR     R0, [R5,#M]                 <-- offset of variable
-        *   MOV     R0, R4
-        *   BL      GetDrive_FreeClusters
-            STR     R0, [R5,#0x10]
-            MOV     R0, #0
-        *   LDMFD   SP!, {R4-R6,PC}
-    */
-	int sadr = find_str(fw, "FileSem.c");
-	k = find_nxt_str_ref(fw, sadr, -1);
-    int found = 0;
-	while ((k >= 0) && !found)
-	{
-        int f = find_inst_rev(fw, isSTMFD_LR, k-1, 100);
-        if (f != -1)
-        {
-            for (k1=f+1; k1<f+8 && !found; k1++)
-            {
-                if (isMOV(fw,k1) && (fwOp2(fw,k1) == 0))
-                {
-                    int e = find_inst(fw, isLDMFD_PC, k1+1, 50);
-                    if (e != -1)
-                    {
-                        int rd = fwRd(fw,k1);
-                        if (isBL(fw,e-3) && isMOV(fw,e-4) && (fwRd(fw,e-4) == 0) && (fwOp2(fw,e-4) == rd) &&
-                            isLDR_PC_cond(fw,e-8) && (LDR2val(fw,e-8) == 0x09610001) &&
-                            isSTR(fw,e-5))
-                        {
-                            int rn = fwRn(fw,e-5);
-                            int k2;
-                            for (k2=e-8; k2>f && !found; k2--)
-                            {
-                                if (isLDR_PC(fw,k2) && (fwRd(fw,k2) == rn))
-                                {
-                                    int base = LDR2val(fw,k2);
-                                    int ofst = fwOp2(fw,e-5);
-                                    print_stubs_min(fw,"file_system_started",base+ofst,idx2adr(fw,k2));
-                                    found = 1;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        k = find_nxt_str_ref(fw, sadr, k);
-    }
-
 	// Find 'physw_status'
 	search_saved_sig(fw, "kbd_read_keys", match_physw_status, 0, 0, 5);
 	
@@ -3084,9 +3014,9 @@ void find_stubs_min(firmware *fw)
     search_fw(fw, match_movie_status, 0, 0, 1);
 	
     // Find 'video_compression_rate'
-	sadr = find_str(fw, "CompressionRateAdjuster.c");
+	uint32_t sadr = find_str(fw, "CompressionRateAdjuster.c");
 	k = find_nxt_str_ref(fw, sadr, -1);
-    found = 0;
+    int found = 0;
 	while ((k >= 0) && !found)
 	{
         int f = find_inst_rev(fw, isSTMFD_LR, k-1, 100);
