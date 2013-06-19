@@ -29,7 +29,6 @@ NHSTUB(DeleteFile_Fut                         ,0xff830e64) //  1 90%
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
-DEF(file_system_started                     ,0x00002958) // Found @0xff865468
 DEF(physw_status                            ,0x00031bc0) // Found @0xff82edd0
 DEF(physw_run                               ,0x00001c18) // Found @0xff82e980
 DEF(physw_sleep_delay                       ,0x00001c20) // Found @0xff82e980

@@ -35,7 +35,6 @@
 // Current modemap entry not found in firmware - MODE_M                   32769
 
 // Values below can be overridden in 'stubs_min.S':
-DEF(file_system_started                     ,0x0000262c) // Found @0xffc3de4c
 DEF(physw_status                            ,0x0000c338) // Found @0xffc11d70
 DEF(physw_run                               ,0x00001c34) // Found @0xffc119e4
 DEF(physw_sleep_delay                       ,0x00001c32) // Found @0xffc119e4

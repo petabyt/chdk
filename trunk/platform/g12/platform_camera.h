@@ -141,6 +141,4 @@
     // Define shortcut overrides where defaults are not suitable
     #define SHORTCUT_TOGGLE_HISTO               KEY_ERASE   // On camera Shutter Half Press + Up = switch MF on/off
 
-    #define CAM_WAIT_FOR_FILESYSTEM             1       // wait for 'file_system_started' on startup
-
 //----------------------------------------------------------

@@ -24,7 +24,6 @@
 // Current modemap entry not found in firmware - MODE_VIDEO_STD            3622
 
 // Values below can be overridden in 'stubs_min.S':
-DEF(file_system_started                     ,0x00002bc8) // Found @0xff85c9f8
 DEF(physw_status                            ,0x00012da4) // Found @0xff821af4
 DEF(physw_run                               ,0x00001c30) // Found @0xff821768
 DEF(physw_sleep_delay                       ,0x00001c2e) // Found @0xff821768

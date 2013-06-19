@@ -98,6 +98,16 @@ PATCHVAL value=0x2000 comment="stack size for new task_PhySw"
 ENDASM
 ENDFUNC
 
+FUNC sig=task_InitFileModules length=8 name=init_file_modules_task
+ASM
+FW $
+>>>
+"    BL      core_spytask_can_start\n"  // CHDK: Set "it's-safe-to-start" flag for spytask
+<<<
+->FW
+ENDASM
+ENDFUNC
+
 FUNC sig=task_RotaryEncoder name=JogDial_task_my
 ASM
 FW 6

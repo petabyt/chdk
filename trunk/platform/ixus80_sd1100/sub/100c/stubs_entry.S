@@ -26,7 +26,6 @@
 // Mode  2603 in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
-DEF(file_system_started                     ,0x000029ec) // Found @0xff850a54
 DEF(physw_status                            ,0x00010370) // Found @0xff821efc
 DEF(physw_run                               ,0x00001c00) // Found @0xff821b98
 DEF(physw_sleep_delay                       ,0x00001bfe) // Found @0xff821b98
