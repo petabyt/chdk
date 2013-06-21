@@ -132,7 +132,7 @@ static void load_stubs_file(char *name, int exclude_comments, osig **hdr)
 
     char line[500];
     char nm[100];
-    char val[12];
+    char val[100];
     char *s;
 
     while (read_line(f,line))
