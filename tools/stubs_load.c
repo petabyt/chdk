@@ -68,12 +68,13 @@ static char* get_str(char *s, char *d)
 }
 
 // Add a new value to the list
-static void add_sig(char *nm, char *val, osig **hdr)
+static osig* add_sig(char *nm, char *val, osig **hdr)
 {
     osig *p = malloc(sizeof(osig));
     strcpy(p->nm, nm);
 	strcpy(p->sval, val);
     p->pct = 0;
+    p->type = 0;
     p->nxt = *hdr;
     *hdr = p;
 
@@ -94,6 +95,7 @@ static void add_sig(char *nm, char *val, osig **hdr)
 	}
 
 	p->val = v;
+    return p;
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -115,6 +117,17 @@ osig* find_sig_val(osig* p, uint32_t val)
     while (p)
     {
         if (p->val == val) return p;
+        p = p->nxt;
+    }
+    return 0;
+}
+
+// Find an entry by value
+osig* find_sig_val_by_type(osig* p, uint32_t val, int typ)
+{
+    while (p)
+    {
+        if ((p->val == val) && (p->type == typ)) return p;
         p = p->nxt;
     }
     return 0;
@@ -155,10 +168,11 @@ static void load_stubs_file(char *name, int exclude_comments, osig **hdr)
 
     while (read_line(f,line))
     {
+        int typ = TYPE_NHSTUB;
         int off = 7;
         s = strstr(line, "NHSTUB(");
         if (s == 0) { off = 6; s = strstr(line, "NSTUB("); }
-        if (s == 0) { off = 4; s = strstr(line, "DEF("); }
+        if (s == 0) { off = 4; s = strstr(line, "DEF("); typ = TYPE_DEF; }
         if (s != 0)
         {
             char *c = 0;
@@ -168,7 +182,8 @@ static void load_stubs_file(char *name, int exclude_comments, osig **hdr)
             {
                 s = get_str(s+off,nm);
                 get_str(s,val);
-                add_sig(nm, val, hdr);
+                osig *p = add_sig(nm, val, hdr);
+                p->type = typ;
                 continue;
             }
         }
