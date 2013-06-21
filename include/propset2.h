@@ -41,7 +41,8 @@ WARNING:
 #define PROPCASE_BRACKET_MODE               29
 #define PROPCASE_FLASH_SYNC_CURTAIN         64
 #define PROPCASE_METERING_MODE              155
-#define PROPCASE_WB_ADJ                     269 
+#define PROPCASE_WB_MODE                    268     // 0 = Auto, 1 = Daylight, 2 = Cloudy, 3 = Tungsten, 4 = Fluorescent, 5 = Fluoresent H, 6 = Flash, 7 = Custom, 10 Underwater
+#define PROPCASE_WB_ADJ                     269
 #define PROPCASE_ASPECT_RATIO               294
 #define PROPCASE_TIMER_MODE                 223
 #define PROPCASE_OPTICAL_ZOOM_POSITION      195

@@ -58,6 +58,7 @@ The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 #define PROPCASE_TV2                             265     // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_TV                              266     // Need to set this value for overrides to work correctly
 #define PROPCASE_USER_TV                         268
+#define PROPCASE_WB_MODE                         272     // WARNING!!!: This was not verified. 0=AWB, 1=Sunlight, 2=Cloudy, 3=Tungsten, 4=Fluorescent, 5=Fluorescent H, 6=Flash, 7=Underwater, 8=Custom 1, 9=Custom
 #define PROPCASE_WB_ADJ                          273
 #define PROPCASE_ASPECT_RATIO                    300
 

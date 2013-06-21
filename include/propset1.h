@@ -44,6 +44,7 @@ WARNING:
 #define PROPCASE_FLASH_SYNC_CURTAIN         20
 #define PROPCASE_METERING_MODE              9
 #define PROPCASE_WB_ADJ                     100
+#define PROPCASE_WB_MODE                    5  // 0 = Auto, 1 = Daylight, 2 = Cloudy, 3 = Tungsten, 4 = Fluorescent, 5 = Fluoresent H, 6 = Flash, 7 = Custom, 10 Underwater
 #define PROPCASE_OPTICAL_ZOOM_POSITION      99 //untested !
 #define PROPCASE_STITCH_DIRECTION           52 // 0=left>right, 1=right>left. Some cams have more
 #define PROPCASE_STITCH_SEQUENCE            48 // counts shots in stitch sequence, positive for left-right, negative for right-left
