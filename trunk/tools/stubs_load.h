@@ -15,6 +15,7 @@ typedef struct _osig
 extern osig *stubs;
 extern osig *stubs_min;
 extern osig *modemap;
+extern osig *makevals;
 
 extern int min_focus_len;
 extern int max_focus_len;
@@ -22,9 +23,11 @@ extern int max_focus_len;
 // Functions for accessing saved values
 osig* find_sig(osig* p, const char *nm);
 osig* find_sig_val(osig* p, uint32_t val);
+osig* find_match(osig *p, const char *nm, uint32_t val);
 
 // Functions for loading files
 void load_stubs(char *name, int exclude_comments);
 void load_stubs_min();
 void load_modemap();
 void load_platform();
+void load_makefile();

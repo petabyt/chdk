@@ -10,6 +10,7 @@
 //   PLATFORMOSVER = 51
 //   PLATFORMID = 12889 (0x3259) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff
+//   MEMISOSTART = 0x001b3dd4
 //   KEYSYS = d4c                // Found @ 0xffff3c7c
 //   NEED_ENCODED_DISKBOOT = 9   // Found @ 0xffff3c8c
 

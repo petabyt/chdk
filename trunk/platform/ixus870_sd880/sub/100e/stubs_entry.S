@@ -11,6 +11,7 @@
 // Values for makefile.inc
 //   PLATFORMOSVER = 31
 //   MAXRAMADDR = 0x03ffffff
+//   MEMISOSTART = 0x000de578
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
