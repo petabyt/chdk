@@ -19,6 +19,7 @@
 osig *stubs = 0;
 osig *stubs_min = 0;
 osig *modemap = 0;
+osig *makevals = 0;
 
 int min_focus_len = 0;
 int max_focus_len = 0;
@@ -45,17 +46,17 @@ static int read_line(FILE *f, char *buf)
 static char* get_str(char *s, char *d)
 {
     while ((*s == ' ') || (*s == '\t') || (*s == ',')) s++;
-    while (*s && (*s != ' ') && (*s != '\t') && (*s != ',') && (*s != ')'))
+    while (*s && (*s != ' ') && (*s != '\t') && (*s != ',') && (*s != '=') && (*s != ')'))
     {
         *d++ = *s++;
     }
-	while (*s && (*s != ',') && (*s != ')'))
+	while (*s && (*s != ',') && (*s != '=') && (*s != ')'))
 	{
 		if (*s == '+')
 		{
 			*d++ = *s++;
 			while ((*s == ' ') || (*s == '\t') || (*s == ',')) s++;
-			while (*s && (*s != ' ') && (*s != '\t') && (*s != ',') && (*s != ')'))
+			while (*s && (*s != ' ') && (*s != '\t') && (*s != ',') && (*s != '=') && (*s != ')'))
 			{
 				*d++ = *s++;
 			}
@@ -117,6 +118,23 @@ osig* find_sig_val(osig* p, uint32_t val)
         p = p->nxt;
     }
     return 0;
+}
+
+// Find a match (in case of multiple entries)
+// returns first entry matching name & value, 
+// or first entry matching name only (if value does not match),
+// or 0 if no name match
+osig* find_match(osig *p, const char *nm, uint32_t val)
+{
+    p = find_sig(p, nm);
+    osig *f = p;
+    while (p)
+    {
+        if (p->val == val)
+            return p;
+        p = find_sig(p->nxt, nm);
+    }
+    return f;
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -240,6 +258,35 @@ void load_platform()
                 v = atoi(val);
                 d = atoi(div);
                 max_focus_len = (v * 1000) / d;
+			}
+		}
+    }
+}
+
+// Load the build values from the makefile.inc source file
+void load_makefile()
+{
+    FILE *f = fopen("makefile.inc", "rb");
+
+    if (f == NULL) return;
+
+    char line[500];
+    char nm[100];
+    char val[100];
+    char *s;
+
+    while (read_line(f,line))
+    {
+		s = strstr(line, "=");
+		if (s != 0)
+		{
+            char *c = strstr(line, "#");
+			if ((c == 0) || (c > s))
+			{
+                if (c) *c = 0;
+				s = get_str(line,nm);
+				get_str(s+1,val);
+				add_sig(nm, val, &makevals);
 			}
 		}
     }

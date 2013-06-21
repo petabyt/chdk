@@ -12,6 +12,7 @@
 //   PLATFORMOSVER = 31
 //   PLATFORMID = 12694 (0x3196) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
+//   MEMISOSTART = 0x000de578
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

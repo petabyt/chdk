@@ -10,6 +10,7 @@
 //   PLATFORMOSVER = 50
 //   PLATFORMID = 12867 (0x3243) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff
+//   MEMISOSTART = 0x00157ca4
 //   KEYSYS = d4c                // Found @ 0xffff1d28
 //   NEED_ENCODED_DISKBOOT = 8   // Found @ 0xffff1d38
 
@@ -56,6 +57,7 @@ DEF(palette_buffer                          ,0x000b2228) // Found @0xff9d7970
 // Offset from start of palette_buffer to color data = 4 (Found @0xffab97ec)
 DEF(viewport_buffers                        ,0xffb10490) // Found @0xff849bd8
 DEF(active_viewport_buffer                  ,0x000020b4) // Found @0xff849940
+// Camera appears to have only 1 RAW buffer @ 0x420b7fc0 (Found @0xffae3168)
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40411000; }             // Found @0xff852d80
