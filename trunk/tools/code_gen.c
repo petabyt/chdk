@@ -701,7 +701,7 @@ static char * sub_hex8(char * op, t_value w)
     else
     {
         w = followBranch(fw,w,1);           // If call to Branch then follow branch
-        osig *o = find_sig_val(stubs,w);
+        osig *o = find_sig_val_by_type(stubs, w, TYPE_NHSTUB);
         if (o)
         {
             op += sprintf(op,"_%s",o->nm);
@@ -837,6 +837,7 @@ static char * num(char * op, t_value w, int decmax)
  *   5..9     FP register number from nybble
  *   :        copro opcode in bits 21..23 (for MRC/MCR)
  *   ;        copro number in bits 8..11
+ *   =        32 constant (address or data)
  *
  * NB that / takes note of bit 22, too, and does its own ! when appropriate.
  *
@@ -1147,14 +1148,19 @@ lNonStackLFM:											/* not r13 or U=P or wrong offset, so don't treat as sta
         }
         break;
     case 15:										      /* SWI */
-        mnemonic = "SWI";
-        format   = "$";
-        break;
+       // not used in Canon firmware, treat as data
+       /*
+       mnemonic = "SWI";
+       format   = "$";
+       break;
+       */
+       goto lUndefined;
+      
 
-        /* Nasty hack: this is code that won't be reached in the normal
-        * course of events, and after the last case of the switch is a
-        * convenient place for it.
-        */
+/* Nasty hack: this is code that won't be reached in the normal
+ * course of events, and after the last case of the switch is a
+ * convenient place for it.
+ */
 laUndefined:
         strcpy(result.text, "Undefined instruction a");  	  goto lUndefined ;
 lbUndefined:
@@ -1180,9 +1186,16 @@ lkUndefined:
 llUndefined:
         strcpy(result.text, "Undefined instruction l"); 	  goto lUndefined ;
 lUndefined:	  
+        // treat every undefined instruction as data
+        /*
         result.undefined = 1;
-        result.instr = instr ;
+ 	    result.instr = instr ;
         return &result;
+        */
+        result.instr = instr ;
+        mnemonic = ".long";
+        format = "=";
+        instr = 14 << 28; // no condition code please, see below
     }
     *flagp=0;
 
@@ -1227,6 +1240,15 @@ lUndefined:
 
     while ((c=*ip++) != 0) {
         switch(c) {
+          case '=':
+            if (((unsigned long)result.instr > (unsigned long)addr) && ((unsigned long)result.instr < (unsigned long)addr+0x1000)) { // looks like a jumptable
+                result.addrstart = op;
+                op = sub_hex8(op, result.instr);
+            }
+            else {
+                op = yhex8(op, result.instr);
+            }
+            break;
     case '$':
         result.is_SWI = 1;
         result.swinum = instr&0x00FFFFFF;
