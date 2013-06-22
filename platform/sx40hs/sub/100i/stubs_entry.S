@@ -119,10 +119,13 @@ DEF(_nrflag,0xc3f8) // Found @ ff29e3bc (0xc3f8) & ff29e3f8 (+0x00)
 //NHSTUB(AllocateMemory                       ,0xff359788) //101
 NHSTUB(AllocateUncacheableMemory              ,0xff02be60) //112
 NHSTUB(Close                                  ,0xff0275e4) //101
+//NHSTUB(CreateBinarySemaphore                ,0xff02b3a4) //115
+//NHSTUB(CreateCountingSemaphore              ,0xff02b40c) //105
 NHSTUB(CreateTask                             ,0xff00eaf0) //101
 NHSTUB(DebugAssert                            ,0xff00edc8) //111
 NHSTUB(DeleteDirectory_Fut                    ,0xff026fe0) //116
 NHSTUB(DeleteFile_Fut                         ,0xff026efc) //112
+//NHSTUB(DeleteSemaphore                      ,0xff02b464) //105
 NHSTUB(DoAFLock                               ,0xff029330) //102
 NHSTUB(EnterToCompensationEVF                 ,0xff029704) //104
 NHSTUB(ExecuteEventProcedure                  ,0xff08d004) //104

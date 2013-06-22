@@ -105,10 +105,13 @@ DEF(_nrflag,0x5b08) // Found @ ffcfc85c (0x5b10) & ffcfc87c (-0x08)
 //NHSTUB(AllocateMemory                       ,0xffdf5d64) //101
 NHSTUB(AllocateUncacheableMemory              ,0xffc16e98) //112
 NHSTUB(Close                                  ,0xffc138e0) //101
+//NHSTUB(CreateBinarySemaphore                ,0xffc16678) //115
+//NHSTUB(CreateCountingSemaphore              ,0xffc166e0) //105
 NHSTUB(CreateTask                             ,0xffc0afac) //101
 NHSTUB(DebugAssert                            ,0xffc0b284) //111
 NHSTUB(DeleteDirectory_Fut                    ,0xffc13270) //116
 NHSTUB(DeleteFile_Fut                         ,0xffc1318c) //112
+//NHSTUB(DeleteSemaphore                      ,0xffc16738) //105
 NHSTUB(DoAFLock                               ,0xffc14f3c) //102
 NHSTUB(EnterToCompensationEVF                 ,0xffc14fec) //104
 NHSTUB(ExecuteEventProcedure                  ,0xffc554e4) //104
