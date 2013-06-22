@@ -3515,6 +3515,7 @@ typedef struct {
 int     kmask[3];
 kinfo   key_info[100];
 int     kcount = 0;
+uint32_t kshutter_min_bits = 0xFFFFFFFF;
 
 void add_kinfo(int r, uint32_t b, const char *nm, uint32_t adr, uint32_t ev, int inv)
 {
@@ -3526,6 +3527,7 @@ void add_kinfo(int r, uint32_t b, const char *nm, uint32_t adr, uint32_t ev, int
     key_info[kcount].inv = inv;
     kcount++;
     kmask[r] |= b;
+    if ((ev <= 1) && (b < kshutter_min_bits)) kshutter_min_bits = b;
 }
 
 uint32_t add_kmval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev, const char *name, uint32_t xtra)
@@ -3574,6 +3576,29 @@ int kinfo_compare(const kinfo *p1, const kinfo *p2)
         else if (p1->bits < p2->bits)
         {
             return 1;
+        }
+    }
+    // if one entry is shutter then compare to min shutter bits
+    if (p1->ev <= 1)
+    {
+        if (kshutter_min_bits > p2->bits)
+        {
+            return 1;
+        }
+        else if (kshutter_min_bits < p2->bits)
+        {
+            return -1;
+        }
+    }
+    if (p2->ev <= 1)
+    {
+        if (p1->bits > kshutter_min_bits)
+        {
+            return 1;
+        }
+        else if (p1->bits < kshutter_min_bits)
+        {
+            return -1;
         }
     }
     if (p1->bits > p2->bits)

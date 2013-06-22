@@ -67,12 +67,12 @@ DEF(jpeg_count_str                          ,0x000a05dc) // Found @0xffa0e708
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 0, KEY_POWER           ,0x00000008 }, // Found @0xffb6583c, levent 0x600
-//    { 0, KEY_UP              ,0x00000080 }, // Found @0xffb6584c, levent 0x04
-//    { 0, KEY_DOWN            ,0x00000100 }, // Found @0xffb65854, levent 0x05
 //    { 0, KEY_SHOOT_FULL      ,0x00002002 }, // Found @0xffb65834, levent 0x01
 //    { 0, KEY_SHOOT_HALF      ,0x00002000 }, // Found @0xffb6585c, levent 0x00
 //    { 0, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb65834, levent 0x01
+//    { 0, KEY_POWER           ,0x00000008 }, // Found @0xffb6583c, levent 0x600
+//    { 0, KEY_UP              ,0x00000080 }, // Found @0xffb6584c, levent 0x04
+//    { 0, KEY_DOWN            ,0x00000100 }, // Found @0xffb65854, levent 0x05
 //    { 0, KEY_PLAYBACK        ,0x00800000 }, // Found @0xffb6586c, levent 0x601
 //    { 1, KEY_RIGHT           ,0x00004000 }, // Found @0xffb658ec, levent 0x07
 //    { 1, KEY_LEFT            ,0x00008000 }, // Found @0xffb658f4, levent 0x06

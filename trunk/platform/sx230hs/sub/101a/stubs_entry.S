@@ -88,11 +88,11 @@ DEF(jpeg_count_str                          ,0x000ce488) // Found @0xff2399d4
 //    { 0, KEY_MENU            ,0x00040000 }, // Found @0xff3bd1f0, levent 0x09
 //    { 0, KEY_VIDEO           ,0x00080000 }, // Found @0xff3bd1f8, levent 0x12
 //    { 1, KEY_PLAYBACK        ,0x00200000 }, // Found @0xff3bd200, levent 0x601
+//    { 2, KEY_SHOOT_FULL      ,0x00002002 }, // Found @0xff3bd210, levent 0x01
+//    { 2, KEY_SHOOT_HALF      ,0x00002000 }, // Found @0xff3bd230, levent 0x00
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xff3bd210, levent 0x01
 //    { 2, KEY_LEFT            ,0x00000100 }, // Found @0xff3bd220, levent 0x06
 //    { 2, KEY_POWER           ,0x00000800 }, // Found @0xff3bd228, levent 0x600
-//    { 2, KEY_SHOOT_FULL      ,0x00002002 }, // Found @0xff3bd210, levent 0x01
-//    { 2, KEY_SHOOT_HALF      ,0x00002000 }, // Found @0xff3bd230, levent 0x00
 //    { 0, 0, 0 }
 //};
 
