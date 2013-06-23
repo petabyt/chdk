@@ -16,6 +16,7 @@
 #include "cache.h"
 #include "task.h"
 #include "cachebit.h"
+#include "remotecap.h"
 
 #include "dng.h"
 #include "module_def.h"
@@ -1222,7 +1223,7 @@ int _module_unloader()
 
 int _module_can_unload()
 {
-    return (running == 0) && ((conf.save_raw == 0) || (conf.dng_raw == 0));
+    return (running == 0) && (remotecap_using_dng_module() == 0) && ((conf.save_raw == 0) || (conf.dng_raw == 0));
 }
 
 /******************** Module Information structure ******************/

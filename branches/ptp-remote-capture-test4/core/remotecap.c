@@ -20,6 +20,9 @@ int remotecap_set_target ( int type, int lstart, int lcount )
 {
     return 0;
 }
+int remotecap_using_dng_module(void) {
+    return 0;
+}
 #else //CAM_CHDK_PTP_REMOTESHOOT
 static int hook_wait[2]; // counter for raw(0)/filewrite(1) wait, decrements for every 10ms sleep
 
@@ -89,6 +92,15 @@ int remotecap_get_available_data_type(void) {
 void remotecap_set_available_data_type(int type)
 {
     available_image_data = type;
+}
+
+/*
+don't allow unloading DNG module if target is DNG
+not optimal since it could lead to loading/unloading every shot
+could make logic more sophisticated later
+*/
+int remotecap_using_dng_module(void) {
+    return (remote_file_target & PTP_CHDK_CAPTURE_DNGHDR) != 0;
 }
 
 void filewrite_set_discard_jpeg(int state);

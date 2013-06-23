@@ -10,4 +10,6 @@ typedef struct {
 int remotecap_get_target_support(void);
 // set request remote capture data
 int remotecap_set_target(int type, int lstart, int lcount);
+// returns non-zero if remotecap requires the DNG module to stay loaded
+int remotecap_using_dng_module();
 #endif
