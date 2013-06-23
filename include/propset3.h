@@ -24,6 +24,7 @@ WARNING:
 #define PROPCASE_BV                         34
 #define PROPCASE_SUBJECT_DIST1              247
 #define PROPCASE_SUBJECT_DIST2              65
+#define PROPCASE_DATE_STAMP                 66         // 0 = Off, 1 = Date, 2 = Date & Time
 #define PROPCASE_ISO_MODE                   149
 #define PROPCASE_SHOOTING                   208
 #define PROPCASE_IS_FLASH_READY             210 
