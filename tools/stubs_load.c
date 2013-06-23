@@ -14,15 +14,17 @@
 
 //------------------------------------------------------------------------------------------------------------
 
-// Global storage
-
-osig *stubs = 0;
-osig *stubs_min = 0;
-osig *modemap = 0;
-osig *makevals = 0;
-
-int min_focus_len = 0;
-int max_focus_len = 0;
+stub_values* new_stub_values()
+{
+    stub_values *p = malloc(sizeof(stub_values));
+    p->stubs = 0;
+    p->stubs_min = 0;
+    p->modemap = 0;
+    p->makevals = 0;
+    p->min_focus_len = 0;
+    p->max_focus_len = 0;
+    return p;
+}
 
 //------------------------------------------------------------------------------------------------------------
 
@@ -191,19 +193,19 @@ static void load_stubs_file(char *name, int exclude_comments, osig **hdr)
 }
 
 // Load a specified stubs file.
-void load_stubs(char *name, int exclude_comments)
+void load_stubs(stub_values *sv, char *name, int exclude_comments)
 {
-    load_stubs_file(name, exclude_comments, &stubs);
+    load_stubs_file(name, exclude_comments, &sv->stubs);
 }
 
 // Load the 'stubs_min.S' file
-void load_stubs_min()
+void load_stubs_min(stub_values *sv)
 {
-    load_stubs_file("stubs_min.S", 1, &stubs_min);
+    load_stubs_file("stubs_min.S", 1, &sv->stubs_min);
 }
 
 // Load the MODEMAP from the shooting.c source file
-void load_modemap()
+void load_modemap(stub_values *sv)
 {
     FILE *f = fopen("../../shooting.c", "rb");
 
@@ -229,7 +231,7 @@ void load_modemap()
 				{
 					s = get_str(s,nm);
 					get_str(s,val);
-					add_sig(nm, val, &modemap);
+					add_sig(nm, val, &sv->modemap);
 				}
 			}
 		}
@@ -242,7 +244,7 @@ void load_modemap()
 }
 
 // Load the DNG lens info from the 'platform_camera.h' file.
-void load_platform()
+void load_platform(stub_values *sv)
 {
     FILE *f = fopen("../../platform_camera.h", "rb");
 
@@ -267,19 +269,19 @@ void load_platform()
 				s = get_str(s,div);
                 v = atoi(val);
                 d = atoi(div);
-                min_focus_len = (v * 1000) / d;
+                sv->min_focus_len = (v * 1000) / d;
 				s = get_str(s,val);
 				s = get_str(s,div);
                 v = atoi(val);
                 d = atoi(div);
-                max_focus_len = (v * 1000) / d;
+                sv->max_focus_len = (v * 1000) / d;
 			}
 		}
     }
 }
 
 // Load the build values from the makefile.inc source file
-void load_makefile()
+void load_makefile(stub_values *sv)
 {
     FILE *f = fopen("makefile.inc", "rb");
 
@@ -301,7 +303,7 @@ void load_makefile()
                 if (c) *c = 0;
 				s = get_str(line,nm);
 				get_str(s+1,val);
-				add_sig(nm, val, &makevals);
+				add_sig(nm, val, &sv->makevals);
 			}
 		}
     }

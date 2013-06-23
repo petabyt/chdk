@@ -54,6 +54,9 @@ typedef struct {
 
     // Alt copy of ROM (DryOS R51 - only seen on S110 so far)
     uint32_t        alt_base;       // Alternative base address
+
+    // Values loaded from stubs & other files
+    stub_values     *sv;
 } firmware;
 
 // Load a firmware file
