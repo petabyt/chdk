@@ -21,9 +21,12 @@ The build uses tools/gen_propset_lua.sed to generate propset5.lua from this file
 #define PROPCASE_BRACKET_MODE                    29
 #define PROPCASE_BV                              34
 #define PROPCASE_SHOOTING_MODE                   49
+#define PROPCASE_CUSTOM_SATURATION               55         // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_QUALITY                         57
+#define PROPCASE_CUSTOM_CONTRAST                 59         // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_FLASH_SYNC_CURTAIN              64
-#define PROPCASE_SUBJECT_DIST2                   65    
+#define PROPCASE_SUBJECT_DIST2                   65
+#define PROPCASE_DATE_STAMP                      66         // 0 = Off, 1 = Date, 2 = Date & Time
 #define PROPCASE_DELTA_SV                        79
 #define PROPCASE_DIGITAL_ZOOM_MODE               91         // Digital Zoom Mode/State 0 = off/standard, 2 = 1.5x, 3 = 2.0x
 #define PROPCASE_DIGITAL_ZOOM_STATE              94         // Digital Zoom Mode/State 0 = Digital Zoom off, 1 = Digital Zoom on
@@ -40,6 +43,11 @@ The build uses tools/gen_propset_lua.sed to generate propset5.lua from this file
 #define PROPCASE_IS_MODE                         145        // 0 = Continuous, 2 = only Shoot, 4 = OFF
 #define PROPCASE_ISO_MODE                        149
 #define PROPCASE_METERING_MODE                   157
+#define PROPCASE_CUSTOM_BLUE                     177        // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_CUSTOM_GREEN                    178        // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_CUSTOM_RED                      179        // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_CUSTOM_SKIN_TONE                180        // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_MY_COLORS                       188        // 0 = Off, 1 = Vivid, 2 = Neutral, 3 = B/W, 4 = Sepia, 5 = Positive Film, 6 = Lighter Skin Tone, 7 = Darker Skin Tone, 8 = Vivid Red, 9 = Vivid Green, 10 = Vivid Blue, 11 = Custom Color
 #define PROPCASE_ND_FILTER_STATE                 196        // 0 = out, 1 = in
 #define PROPCASE_OPTICAL_ZOOM_POSITION           199
 #define PROPCASE_SHOOTING                        210
@@ -49,6 +57,7 @@ The build uses tools/gen_propset_lua.sed to generate propset5.lua from this file
 #define PROPCASE_ORIENTATION_SENSOR              223
 #define PROPCASE_TIMER_MODE                      227        // 0 = OFF, 1 = 2 sec, 2 = 10 sec, 3 = Costom
 #define PROPCASE_TIMER_DELAY                     228        // timer delay in msec
+#define PROPCASE_CUSTOM_SHARPNESS                229        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_STITCH_DIRECTION                237        // 0=left>right, 1=right>left. Some cams have more
 #define PROPCASE_STITCH_SEQUENCE                 242        // counts shots in stitch sequence, positive=left>right, negative=right>left
 #define PROPCASE_SUBJECT_DIST1                   249
