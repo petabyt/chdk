@@ -832,7 +832,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
         ofst = ofst + 4; // Address of dancing bits data (try after firmware key)
         if (idx_valid(fw,ofst))
         {
-            fw->dancing_bits = 0, i, j;
+            fw->dancing_bits = 0;
             for (i=0; i<VITALY && !fw->dancing_bits; i++)
             {
                 fw->dancing_bits = i+1;
