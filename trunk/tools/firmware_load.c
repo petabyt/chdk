@@ -15,6 +15,7 @@
 #include <stdarg.h>
 
 #include "dancingbits.h"
+#include "stubs_load.h"
 #include "firmware_load.h"
 
 //------------------------------------------------------------------------------------------------------------

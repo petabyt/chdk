@@ -15,14 +15,19 @@ typedef struct _osig
     struct _osig *nxt;      // next list entry
 } osig;
 
-// Global variables for storage
-extern osig *stubs;
-extern osig *stubs_min;
-extern osig *modemap;
-extern osig *makevals;
+// struct for storing an instance of the loaded values for a specific firmware
+typedef struct _stubs
+{
+    osig    *stubs;
+    osig    *stubs_min;
+    osig    *modemap;
+    osig    *makevals;
 
-extern int min_focus_len;
-extern int max_focus_len;
+    int     min_focus_len;
+    int     max_focus_len;
+} stub_values;
+
+stub_values* new_stub_values();
 
 // Functions for accessing saved values
 osig* find_sig(osig* p, const char *nm);
@@ -31,8 +36,8 @@ osig* find_match(osig *p, const char *nm, uint32_t val);
 osig* find_sig_val_by_type(osig* p, uint32_t val, int typ);
 
 // Functions for loading files
-void load_stubs(char *name, int exclude_comments);
-void load_stubs_min();
-void load_modemap();
-void load_platform();
-void load_makefile();
+void load_stubs(stub_values *sv, char *name, int exclude_comments);
+void load_stubs_min(stub_values *sv);
+void load_modemap(stub_values *sv);
+void load_platform(stub_values *sv);
+void load_makefile(stub_values *sv);

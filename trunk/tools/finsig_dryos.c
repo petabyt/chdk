@@ -1868,7 +1868,7 @@ void find_matches(firmware *fw, const char *curr_name)
 }
 
 // Output match results for function
-void print_results(const char *curr_name, int k)
+void print_results(firmware *fw, const char *curr_name, int k)
 {
     int i;
     int err = 0;
@@ -1877,7 +1877,7 @@ void print_results(const char *curr_name, int k)
     if (func_names[k].flags & DONT_EXPORT) return;
 
     // find best match and report results
-    osig* ostub2 = find_sig(stubs,curr_name);
+    osig* ostub2 = find_sig(fw->sv->stubs,curr_name);
 
     if ((count == 0)
         || (matches->fail > 0)
@@ -1978,7 +1978,7 @@ void output_modemap(firmware *fw, int k)
         {
             if (((fw->dryos_ver < 47) && ((*p < 8000) || (*p > 8999))) || ((fw->dryos_ver >= 47) && ((*p < 4000) || (*p > 4999))))
             {
-                osig *m = find_sig_val(modemap, *p);
+                osig *m = find_sig_val(fw->sv->modemap, *p);
                 if (!m)
                 {
                     char *s = mode_name(*p);
@@ -1997,7 +1997,7 @@ void output_modemap(firmware *fw, int k)
             k++;
         }
     }
-    osig *m = modemap;
+    osig *m = fw->sv->modemap;
     while (m)
     {
         if (m->pct != 100)    // not matched above?
@@ -2365,7 +2365,7 @@ void find_lib_vals(firmware *fw)
 
 void print_stubs_min(firmware *fw, const char *name, uint32_t fadr, uint32_t atadr)
 {
-    osig *o = find_sig(stubs_min,name);
+    osig *o = find_sig(fw->sv->stubs_min,name);
     if (o)
     {
         bprintf("//DEF(%-40s,0x%08x) // Found @0x%08x",name,fadr,atadr);
@@ -3141,19 +3141,19 @@ void find_stubs_min(firmware *fw)
     search_fw(fw, match_some_flag_for_af_scan, 0, 0, 1);
 
     // focus_len_table
-    if (min_focus_len != 0)
+    if (fw->sv->min_focus_len != 0)
     {
         int found = 0, pos = 0, len = 0, size = 0;
         for (k=0; k<fw->size; k++)
         {
-            if (fw->buf[k] == min_focus_len)
+            if (fw->buf[k] == fw->sv->min_focus_len)
             {
                 int mul = 1;
                 if ((fw->buf[k+1] == 100) && (fw->buf[k+2] == 0)) mul = 3;
                 if ((fw->buf[k+1] == 100) && (fw->buf[k+2] != 0)) mul = 2;
                 if ((fw->buf[k+1] ==   0) && (fw->buf[k+2] != 0)) mul = 2;
-                for (k1 = k + mul; (k1 < fw->size) && (fw->buf[k1] > fw->buf[k1-mul]) && (fw->buf[k1] > min_focus_len) && (fw->buf[k1] < max_focus_len); k1 += mul) ;
-                if (fw->buf[k1] == max_focus_len)
+                for (k1 = k + mul; (k1 < fw->size) && (fw->buf[k1] > fw->buf[k1-mul]) && (fw->buf[k1] > fw->sv->min_focus_len) && (fw->buf[k1] < fw->sv->max_focus_len); k1 += mul) ;
+                if (fw->buf[k1] == fw->sv->max_focus_len)
                 {
                     found++;
                     pos = k;
@@ -3810,7 +3810,7 @@ void output_firmware_vals(firmware *fw)
 
     if (fw->memisostart != 0)
     {
-        osig *o = find_match(makevals, "MEMISOSTART", fw->memisostart);
+        osig *o = find_match(fw->sv->makevals, "MEMISOSTART", fw->memisostart);
         if (o && (o->val == fw->memisostart))
             bprintf("//   MEMISOSTART = 0x%08x\n",fw->memisostart);
         else
@@ -3854,11 +3854,12 @@ int main(int argc, char **argv)
     out_fp = fopen(argv[3],"w");
     if (out_fp == NULL) usage("failed to open outputfile");
 
-    load_stubs("stubs_entry_2.S", 1);
-    load_stubs_min();
-    load_modemap();
-    load_platform();
-    load_makefile();
+    fw.sv = new_stub_values();
+    load_stubs(fw.sv, "stubs_entry_2.S", 1);
+    load_stubs_min(fw.sv);
+    load_modemap(fw.sv);
+    load_platform(fw.sv);
+    load_makefile(fw.sv);
 
     bprintf("// !!! THIS FILE IS GENERATED. DO NOT EDIT. !!!\n");
     bprintf("#include \"stubs_asm.h\"\n\n");
@@ -3881,7 +3882,7 @@ int main(int argc, char **argv)
         find_matches(&fw, curr_name);
 
         if ((fw.dryos_ver >= find_min_ver(curr_name)) && (fw.dryos_ver <= find_max_ver(curr_name)))
-            print_results(curr_name,k);
+            print_results(&fw,curr_name,k);
 
         if (count == 0)
         {

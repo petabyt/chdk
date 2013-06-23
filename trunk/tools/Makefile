@@ -88,7 +88,7 @@ makelang$(EXE): makelang.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
-code_gen$(EXE): code_gen.o stubs_load.o firmware_load.o
+code_gen$(EXE): code_gen.o stubs_load.o firmware_load.o chdk_dasm.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
@@ -165,8 +165,9 @@ sig_ref_dryos_11.bin:
 finsig_vxworks.o: finsig_vxworks.c signatures_vxworks.h stubs_load.h
 finsig_dryos.o: finsig_dryos.c signatures_dryos.h stubs_load.h firmware_load.h
 stubs_load.o: stubs_load.c stubs_load.h
-firmware_load.o: firmware_load.c firmware_load.h
-code_gen.o: code_gen.c stubs_load.h firmware_load.h
+firmware_load.o: firmware_load.c firmware_load.h stubs_load.h
+code_gen.o: code_gen.c chdk_dasm.h stubs_load.h firmware_load.h
+chdk_dasm.o: chdk_dasm.c chdk_dasm.h stubs_load.h firmware_load.h
 
 font_8x16_pack.o: font_8x16_pack.c ../lib/font/font_8x16_uni.h
 

@@ -122,7 +122,8 @@ int main(int argc, char **argv)
     out_fp = fopen(argv[3],"w");
     if (out_fp == NULL) usage();
 
-    load_stubs("stubs_entry_2.S", 1);
+    stub_values *sv = new_stub_values();
+    load_stubs(sv, "stubs_entry_2.S", 1);
 
     f = fopen(argv[1], "r+b");
 
@@ -230,7 +231,7 @@ int main(int argc, char **argv)
         }
 
         // find best match and report results
-    	osig* ostub2 = find_sig(stubs,curr_name);
+    	osig* ostub2 = find_sig(sv->stubs,curr_name);
 
         if (count == 0){
             fprintf(out_fp,"// ERROR: %s is not found!\n", curr_name);
