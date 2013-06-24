@@ -1190,6 +1190,8 @@ static CMenuItem sd_override_items[2] = {
 };
 #endif
 
+static const char* gui_raw_nr_modes[] =                     { "Auto", "Off", "On"};
+
 static CMenuItem operation_submenu_items[] = {
     MENU_ENUM2  (0x5f,LANG_MENU_OVERRIDE_DISABLE,           &conf.override_disable, gui_override_disable_modes ),
     MENU_ITEM   (0x5c,LANG_MENU_OVERRIDE_DISABLE_ALL,       MENUITEM_BOOL,          &conf.override_disable_all,         0 ),
@@ -1213,6 +1215,7 @@ static CMenuItem operation_submenu_items[] = {
 #if CAM_HAS_ND_FILTER
     MENU_ENUM2  (0x5f,LANG_MENU_OVERRIDE_ND_FILTER,         &conf.nd_filter_state,  gui_nd_filter_state_modes ),
 #endif
+    MENU_ENUM2  (0x5f,LANG_MENU_RAW_NOISE_REDUCTION,        &conf.raw_nr,       gui_raw_nr_modes ), // Dark Frame Subtraction - despite label has nothing to do with RAW
 #if ZOOM_OVERRIDE
     MENU_ITEM   (0x5c,LANG_MENU_OVERRIDE_ZOOM,              MENUITEM_BOOL,          &conf.zoom_override,                0 ),
     MENU_ITEM   (0x5f,LANG_MENU_OVERRIDE_ZOOM_VALUE,        MENUITEM_ENUM,          gui_zoom_override_enum,             0 ),
@@ -1517,12 +1520,9 @@ static const char* gui_bad_pixel_enum(int change, int arg)
 extern void cb_change_dng_usb_ext();
 #endif
 
-static const char* gui_raw_nr_modes[] =                     { "Auto", "Off", "On"};
-
 static CMenuItem raw_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE,                   MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.save_raw, (int)cb_change_dng ),
     MENU_ITEM   (0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS,	MENUITEM_SUBMENU,   &raw_exceptions_submenu, 0 ),
-    MENU_ENUM2  (0x5f,LANG_MENU_RAW_NOISE_REDUCTION,        &conf.raw_nr,       gui_raw_nr_modes ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_FIRST_ONLY,             MENUITEM_BOOL,      &conf.raw_save_first_only, 0 ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_DIR,            MENUITEM_BOOL,      &conf.raw_in_dir, 0 ),
     MENU_ENUM2a (0x5f,LANG_MENU_RAW_PREFIX,                 &conf.raw_prefix,   img_prefixes, NUM_IMG_PREFIXES ),
