@@ -58,4 +58,13 @@ WARNING:
 #define PROPCASE_AF_LOCK                    11
 #define PROPCASE_AF_ASSIST_BEAM             5       // 0=disabled,  1=enabled
 #define PROPCASE_DATE_STAMP                 66         // 0 = Off, 1 = Date, 2 = Date & Time
+#define PROPCASE_CUSTOM_SATURATION          55      // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_CUSTOM_CONTRAST            59      // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_CUSTOM_BLUE                175     // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_CUSTOM_GREEN               176     // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_CUSTOM_RED                 177     // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_CUSTOM_SKIN_TONE           178     // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_MY_COLORS                  184     // 0 = Off, 1 = Vivid, 2 = Neutral, 3 = B/W, 4 = Sepia, 5 = Positive Film, 6 = Lighter Skin Tone, 7 = Darker Skin Tone, 8 = Vivid Red, 9 = Vivid Green, 10 = Vivid Blue, 11 = Custom Color
+#define PROPCASE_CUSTOM_SHARPNESS           225     // Canon Menu slide bar values: 255, 254, 0, 1, 2
+
 #endif
