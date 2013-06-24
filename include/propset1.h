@@ -50,5 +50,14 @@ WARNING:
 #define PROPCASE_STITCH_SEQUENCE            48 // counts shots in stitch sequence, positive for left-right, negative for right-left
 #define PROPCASE_AF_LOCK                    193
 #define PROPCASE_AF_ASSIST_BEAM             63       // 0=disabled,  1=enabled
+#define PROPCASE_DATE_STAMP                 190      // 0 = Off, 1 = Date, 2 = Date & Time, may only function in "postcard mode"
+#define PROPCASE_CUSTOM_SHARPNESS           2       // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_CUSTOM_SATURATION          3       // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_CUSTOM_CONTRAST            4       // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_MY_COLORS                  206     // 0 = Off, 1 = Vivid, 2 = Neutral, 3 = B/W, 4 = Sepia, 5 = Positive Film, 6 = Lighter Skin Tone, 7 = Darker Skin Tone, 8 = Vivid Red, 9 = Vivid Green, 10 = Vivid Blue, 11 = Custom Color
+#define PROPCASE_CUSTOM_RED                 207     // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_CUSTOM_BLUE                208     // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_CUSTOM_GREEN               209     // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_CUSTOM_SKIN_TONE           210     // Canon Menu slide bar values: 255, 254, 0, 1, 2
 
 #endif
