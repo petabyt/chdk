@@ -15,7 +15,6 @@
 #endif
 
 static long raw_save_stage;
-//static int imagesavecomplete=1;
 
 #include "remotecap_core.h"
 
@@ -23,16 +22,14 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
 {
  asm volatile("STMFD   SP!, {R0-R12,LR}\n");
 
-//    imagesavecomplete=0 // TODO is there a better place to do this?
-
 #ifdef PAUSE_FOR_FILE_COUNTER
     // Some cameras need a slight delay for the file counter to be updated correctly
     // before raw_savefile tries to get the file name & directory.
     // Add '#define PAUSE_FOR_FILE_COUNTER 100' in the camera firmware capt_seq.c file.
     // The value can be adjusted as needed for different cameras.
-    if ( (conf.save_raw && is_raw_enabled()) // Only delay if RAW enabled (prevents slowdown in HQ burst mode)
+    if ((conf.save_raw && is_raw_enabled()) // Only delay if RAW enabled (prevents slowdown in HQ burst mode)
 #ifdef CAM_CHDK_PTP_REMOTESHOOT
-        || (remotecap_get_target() & 3) //... or if remote shooting is active
+        || (remotecap_get_target()) //... or if remote shooting is active
 #endif //CAM_CHDK_PTP_REMOTESHOOT
     )
     {
@@ -43,19 +40,10 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
     }
 #endif
 
-#ifdef CAM_CHDK_PTP_REMOTESHOOT
-    if ( remotecap_get_target() != 0 ) //remote redirection
-    {
-        remotecap_raw_available();
-    }
-    else
-#endif //CAM_CHDK_PTP_REMOTESHOOT
-    {
-        raw_save_stage = RAWDATA_AVAILABLE;
-        core_rawdata_available(); //notifies spytask in core/main.c
-        while (raw_save_stage != RAWDATA_SAVED){
-        _SleepTask(10);
-        }
+    raw_save_stage = RAWDATA_AVAILABLE;
+    core_rawdata_available(); //notifies spytask in core/main.c
+    while (raw_save_stage != RAWDATA_SAVED){
+    _SleepTask(10);
     }
  asm volatile("LDMFD   SP!, {R0-R12,PC}\n");
 }
@@ -106,4 +94,3 @@ void __attribute__((naked,noinline)) capt_seq_hook_set_nr()
 
  asm volatile("LDMFD   SP!, {R0-R12,PC}\n");
 }
-

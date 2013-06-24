@@ -4,11 +4,12 @@
 /*
  * remotecap functions not exported to modules
  */
+// get currently selected data types
 int remotecap_get_target(void);
 // get currently available type(s)
 int remotecap_get_available_data_type(void);
 // call from task hooks to notify remotecap of data
-void remotecap_raw_available(void);
+void remotecap_raw_available(char *rawadr);
 void remotecap_jpeg_available(const char *name);
 // called from filewrite/capt_seq to check if it needs to continue waiting
 int remotecap_hook_wait(int);
@@ -23,5 +24,5 @@ void remotecap_jpeg_chunks_done(void);
 
 //possible values for remotecap_hook_wait()
 #define RC_WAIT_FWTASK 1
-#define RC_WAIT_CAPTSEQTASK 0
+#define RC_WAIT_SPYTASK 0
 #endif

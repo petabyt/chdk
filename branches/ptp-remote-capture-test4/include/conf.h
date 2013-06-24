@@ -492,7 +492,10 @@ extern int conf_setValue(unsigned short id, tConfigVal configVal);
 extern const char* img_prefixes[NUM_IMG_PREFIXES];
 extern const char* img_exts[NUM_IMG_EXTS];
 
+// is raw data available in the current mode and not blocked by current "raw exceptions" ?
 extern int is_raw_enabled();
+// is raw data valid raw data available in the current mode
+extern int is_raw_possible();
 
 //-------------------------------------------------------------------
 
