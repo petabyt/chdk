@@ -71,7 +71,6 @@
 
     #define CAM_EXT_TV_RANGE                1
 
-    #define CAM_CHDK_PTP_REMOTESHOOT        1
     #define CAM_HAS_FILEWRITETASK_HOOK      1
 
 //  #define CAM_MULTIPART                   1

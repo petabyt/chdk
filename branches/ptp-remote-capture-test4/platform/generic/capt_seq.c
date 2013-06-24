@@ -28,9 +28,7 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
     // Add '#define PAUSE_FOR_FILE_COUNTER 100' in the camera firmware capt_seq.c file.
     // The value can be adjusted as needed for different cameras.
     if ((conf.save_raw && is_raw_enabled()) // Only delay if RAW enabled (prevents slowdown in HQ burst mode)
-#ifdef CAM_CHDK_PTP_REMOTESHOOT
         || (remotecap_get_target()) //... or if remote shooting is active
-#endif //CAM_CHDK_PTP_REMOTESHOOT
     )
     {
         int fc = get_file_counter();

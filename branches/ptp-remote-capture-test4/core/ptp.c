@@ -641,7 +641,6 @@ static int handle_ptp(
             }
         }
         break;
-//#ifdef CAM_CHDK_PTP_REMOTESHOOT
     case PTP_CHDK_RemoteCaptureIsReady:
         ptp.num_param = 1;
         if ( remotecap_get_target() ) {
@@ -689,7 +688,6 @@ static int handle_ptp(
             remotecap_free_hooks(0);
         }
         break;
-//#endif //CAM_CHDK_PTP_REMOTESHOOT
     default:
       ptp.code = PTP_RC_ParameterNotSupported;
       break;

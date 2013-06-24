@@ -61,5 +61,4 @@
     // camera name
     #define PARAM_CAMERA_NAME               3       // parameter number for GetParameterData
 
-    #define CAM_CHDK_PTP_REMOTESHOOT        1
 //----------------------------------------------------------

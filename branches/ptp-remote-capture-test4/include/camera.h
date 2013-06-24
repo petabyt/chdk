@@ -92,10 +92,9 @@
     #define CAM_EXT_AV_RANGE                6   // Number of 1/3 stop increments to extend the Av range beyond the Canon default smallest aperture
                                                 //  override in platform_camera.h for cameras with different range (e.g. G1X can't go below F/16 so set this to 0)
     #define CAM_CHDK_PTP                    1   // include CHDK PTP support
-    #define CAM_CHDK_PTP_REMOTESHOOT        1   // support for shooting with remote target
 
     #undef  CAM_HAS_FILEWRITETASK_HOOK          // FileWriteTask hook is available (local file write can be prevented)
-    #undef  CAM_EXTENDED_FILEWRITETASK          // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
+    #undef  CAM_FILEWRITETASK_SEEKS          // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
 
     #define CAM_UNCACHED_BIT                0x10000000 // bit indicating the uncached memory
 

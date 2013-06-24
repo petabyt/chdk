@@ -62,7 +62,6 @@
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
     #define CAM_EXT_TV_RANGE                1
     
-    #define CAM_CHDK_PTP_REMOTESHOOT        1
     #define CAM_HAS_FILEWRITETASK_HOOK      1
     
     //#define DNG_EXT_FROM                  ".DPS"

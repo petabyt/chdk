@@ -12,15 +12,15 @@ get address and size of chunk N
 returns NULL addr and zero size when max chunks reached
 */
 static cam_ptp_data_chunk *jpeg_chunks;
-#ifdef CAM_EXTENDED_FILEWRITETASK
+#ifdef CAM_FILEWRITETASK_SEEKS
 static int jpeg_bytes_left;
 static int jpeg_curr_session_chunk;
 static int jpeg_file_offset;
 static int jpeg_full_size;
-#endif //CAM_EXTENDED_FILEWRITETASK
+#endif //CAM_FILEWRITETASK_SEEKS
 
 int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n,int *pos) {
-#ifndef CAM_EXTENDED_FILEWRITETASK
+#ifndef CAM_FILEWRITETASK_SEEKS
     *pos=-1;
     if (n >= MAX_CHUNKS_FOR_JPEG || jpeg_chunks == NULL) {
         *addr=(char *)0xFFFFFFFF; // signals last chunk
@@ -86,7 +86,7 @@ int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n,int *pos) {
 
     return 1; //not last
 
-#endif //CAM_EXTENDED_FILEWRITETASK
+#endif //CAM_FILEWRITETASK_SEEKS
 }
 
 void filewrite_set_discard_jpeg(int state) {
@@ -95,7 +95,7 @@ void filewrite_set_discard_jpeg(int state) {
 
 void filewrite_main_hook(fwt_data_struct *fwt_data)
 {
-#ifdef CAM_EXTENDED_FILEWRITETASK
+#ifdef CAM_FILEWRITETASK_SEEKS
     // don't forget to #define FWT_SEEKMASK, FWT_MUSTSEEK
 
     jpeg_curr_session_chunk = 0;
@@ -117,7 +117,7 @@ void filewrite_main_hook(fwt_data_struct *fwt_data)
         jpeg_file_offset = -1; // no seek needed
     }
     jpeg_full_size = fwt_data->full_size;
-#endif //CAM_EXTENDED_FILEWRITETASK
+#endif //CAM_FILEWRITETASK_SEEKS
     jpeg_chunks = &(fwt_data->pdc[0]);
     remotecap_jpeg_available(&(fwt_data->name[0]));
     while (remotecap_hook_wait(RC_WAIT_FWTASK)) {
@@ -126,11 +126,11 @@ void filewrite_main_hook(fwt_data_struct *fwt_data)
     jpeg_chunks=NULL;
 }
 
-#ifdef CAM_EXTENDED_FILEWRITETASK
+#ifdef CAM_FILEWRITETASK_SEEKS
 void remotecap_jpeg_chunks_done() {
     jpeg_chunks=NULL;
 }
-#endif //CAM_EXTENDED_FILEWRITETASK
+#endif //CAM_FILEWRITETASK_SEEKS
 
 // wrapper functions for use in filewritetask
 #ifdef CAM_DRYOS
@@ -151,14 +151,14 @@ int fwt_write(int fd, const void *buffer, long nbytes) {
     return (int)nbytes; // "everything's written"
 }
 
-#ifdef CAM_EXTENDED_FILEWRITETASK
+#ifdef CAM_FILEWRITETASK_SEEKS
 int fwt_lseek(int fd, long offset, int whence) {
     if (!current_write_ignored) {
         return _lseek(fd, offset, whence);
     }
     return (int)offset; // "file position set to the requested value"
 }
-#endif // CAM_EXTENDED_FILEWRITETASK
+#endif // CAM_FILEWRITETASK_SEEKS
 
 int fwt_close (int fd) {
     if (!current_write_ignored) {
@@ -167,7 +167,7 @@ int fwt_close (int fd) {
         fwt_bytes_written = 0;
         return ret;
     }
-#ifdef CAM_EXTENDED_FILEWRITETASK
+#ifdef CAM_FILEWRITETASK_SEEKS
     if (fwt_bytes_written >= jpeg_full_size) {
         ignore_current_write=0;
         current_write_ignored=0;
@@ -177,7 +177,7 @@ int fwt_close (int fd) {
     ignore_current_write=0;
     current_write_ignored=0;
     fwt_bytes_written = 0;
-#endif // CAM_EXTENDED_FILEWRITETASK
+#endif // CAM_FILEWRITETASK_SEEKS
 //  imagesavecomplete=1;
     return 0;
 }

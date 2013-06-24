@@ -7,23 +7,6 @@
 #include "modules.h"
 #include "raw.h"
 #include "cachebit.h"
-// TODO this won't currently work because ptp.c doesn't know about it
-// could move code for PTP_CHDK_RemoteCaptureGetData here
-#ifndef CAM_CHDK_PTP_REMOTESHOOT
-int remotecap_get_target_support(void) {
-    return 0;
-}
-int remotecap_get_target(void) {
-    return 0;
-}
-int remotecap_set_target ( int type, int lstart, int lcount )
-{
-    return 0;
-}
-int remotecap_using_dng_module(void) {
-    return 0;
-}
-#else //CAM_CHDK_PTP_REMOTESHOOT
 static int hook_wait[2]; // counter for raw(0)/filewrite(1) wait, decrements for every 10ms sleep
 
 static int available_image_data=0; // type of data available
@@ -230,7 +213,7 @@ void remotecap_data_type_done(int type) {
 }
 
 void remotecap_free_hooks(int mode) {
-#ifdef CAM_EXTENDED_FILEWRITETASK
+#ifdef CAM_FILEWRITETASK_SEEKS
     if (mode==1) // for DryOS >= r50
     {
         remotecap_jpeg_chunks_done(); // make jpeg_chunks NULL, immediately
@@ -247,5 +230,3 @@ void remotecap_free_hooks(int mode) {
         hook_wait[RC_WAIT_SPYTASK] = 0;
     }
 }
-
-#endif //CAM_CHDK_PTP_REMOTESHOOT
