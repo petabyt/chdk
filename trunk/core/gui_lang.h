@@ -543,6 +543,9 @@
 #define LANG_MENU_RAW_SAVE_IN_EDGEOVERLAY       435
 #define LANG_MENU_RAW_SAVE_IN_AUTO              436
 #define LANG_MENU_FLASH_VIDEO_OVERRIDE          437
+
+#define LANG_MENU_FLASH_EXP_COMP                438
+
 #define LANG_MENU_RAW_DNG_EXT                   439
 #define LANG_MENU_DNG_VIA_USB                   440 
 #define LANG_MENU_GAMES_MASTERMIND              441
