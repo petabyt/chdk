@@ -16,7 +16,8 @@ endif
 
 SUBDIRS+=elf2flt
 
-EXES=makeexport$(EXE) pakwif$(EXE) finsig_vxworks$(EXE) finsig_dryos$(EXE) dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE) code_gen$(EXE)
+EXES=makeexport$(EXE) pakwif$(EXE) finsig_vxworks$(EXE) finsig_dryos$(EXE) gensig_vxworks$(EXE) gensig_dryos$(EXE) \
+     dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE) code_gen$(EXE)
 
 all: $(EXES)
 
