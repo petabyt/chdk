@@ -149,10 +149,12 @@ void __attribute__((naked,noinline)) capt_seq_task()
                 "BL      shooting_expo_param_override\n"   // +
                 "BL      sub_FFAFCE14\n"
                 "LDR     R3, =0xBDA80\n"
-                "LDR     R2, [R3,#0x24]\n"
-                "CMP     R2, #0\n"
-                "BEQ     loc_FFAFF200\n"
-                "BL      sub_FFAFECC0\n"
+                "MOV     R2, #0 \n"         // added
+                "STR     R2, [R3,#0x24] \n" // added, fixes overrides behavior at short shutter press
+                //"LDR     R2, [R3,#0x24]\n"// above patch makes these lines redundant
+                //"CMP     R2, #0\n"
+                //"BEQ     loc_FFAFF200\n"
+                //"BL      sub_FFAFECC0\n"
                 "B       loc_FFAFF200\n"
 "loc_FFAFF130:\n"                           
                                         
