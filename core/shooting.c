@@ -1061,18 +1061,6 @@ void shooting_set_flash_sync_curtain(int curtain)
 }
 #endif
 
-// forces manual flash. if set, flash will ALWAYS be triggered (manual)
-void shooting_set_flash_video_override(int flash, int power)
-{
-    int mode = 1;
-    if ((conf.flash_manual_override && conf.flash_video_override && is_video_recording()) || (conf.flash_manual_override && !conf.flash_video_override))
-    {
-        set_property_case(PROPCASE_FLASH_ADJUST_MODE, &mode, sizeof(mode));
-        set_property_case(PROPCASE_FLASH_FIRE, &flash, sizeof(flash));
-        set_property_case(PROPCASE_FLASH_MANUAL_OUTPUT, &power, sizeof(power));
-    }
-}
-
 void shooting_set_nd_filter_state(short v, short is_now)
 {
 #if CAM_HAS_ND_FILTER
@@ -1438,6 +1426,35 @@ void set_ev_video(int x)
 //-------------------------------------------------------------------
 // Main exposure override function called from capt_seq_task()
 
+static void shooting_set_flash_override()
+{
+    int mode, flash, power;
+    flash = 1;
+
+    // Set flash mode & override
+    if ((conf.flash_video_override && is_video_recording()) || (!conf.flash_video_override))
+    {
+        if (conf.flash_manual_override)
+        {
+            mode = 1;   // Manual flash
+            power = conf.flash_video_override_power;
+            set_property_case(PROPCASE_FLASH_ADJUST_MODE, &mode, sizeof(mode));
+            set_property_case(PROPCASE_FLASH_FIRE, &flash, sizeof(flash));
+            set_property_case(PROPCASE_FLASH_MANUAL_OUTPUT, &power, sizeof(power));
+        }
+        else if (conf.flash_enable_exp_comp)
+        {
+            mode = 0;   // Auto flash
+            power = (conf.flash_exp_comp - 9) * 32;
+            set_property_case(PROPCASE_FLASH_ADJUST_MODE, &mode, sizeof(mode));
+            set_property_case(PROPCASE_FLASH_FIRE, &flash, sizeof(flash));
+#if defined(PROPCASE_FLASH_EXP_COMP)
+            set_property_case(PROPCASE_FLASH_EXP_COMP, &power, sizeof(power));
+#endif
+        }
+    }
+}
+
 void shooting_expo_param_override_thumb(void)
 {
     if (((camera_info.state.state_kbd_script_run) || (usb_remote_active)) && (photo_param_put_off.tv96 != PHOTO_PARAM_TV_NONE))
@@ -1490,7 +1507,9 @@ void shooting_expo_param_override_thumb(void)
     shooting_set_flash_sync_curtain(conf.flash_sync_curtain);
 #endif
 
-    shooting_set_flash_video_override(conf.flash_manual_override,conf.flash_video_override_power);
+    // Set flash mode & override
+    shooting_set_flash_override();
+
 #if CAM_QUALITY_OVERRIDE
     // this doesn't really need to be set in the override hook.
     // should only need to be set once if the users doesn't change back, but doing it here ensures it is set
@@ -1521,4 +1540,7 @@ void shooting_expo_iso_override_thumb(void)
     else if (conf.nd_filter_state && !(conf.override_disable==1))
         shooting_set_nd_filter_state(conf.nd_filter_state, SET_NOW);
 #endif
+
+    // Set flash mode & override
+    shooting_set_flash_override();
 }

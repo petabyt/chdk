@@ -255,11 +255,11 @@ static void gui_menu_back() {
 //  common code blocks extracted to try and make it easier to understand
 
 // After updating a value check for callback and on_change functions and call if necessary
-static void do_callback()
+static void do_callback(const CMenuItem *mi)
 {
-    if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_ARG_MASK) == MENUITEM_ARG_CALLBACK && curr_menu->menu[gui_menu_curr_item].arg)
+    if ((mi->type & MENUITEM_ARG_MASK) == MENUITEM_ARG_CALLBACK && mi->arg)
     {
-        ((void (*)())(curr_menu->menu[gui_menu_curr_item].arg))();
+        ((void (*)())(mi->arg))();
     }
 }
 
@@ -314,7 +314,7 @@ static void update_int_value(const CMenuItem *mi, int direction)
     }
 
     // execute custom callback and on_change functions
-    do_callback();
+    do_callback(mi);
 
     // force menu redraw
     gui_menu_redraw=1;
@@ -327,7 +327,7 @@ static void update_bool_value(const CMenuItem *mi)
     *(mi->value) = !(*(mi->value));
 
     // execute custom callback and on_change functions
-    do_callback();
+    do_callback(mi);
 
     // force menu redraw
     gui_menu_redraw=1;

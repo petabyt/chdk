@@ -331,7 +331,8 @@ void gui_osd_draw_state()
     }
 #endif
     if (conf.override_disable == 1) gui_print_osd_state_string_chr("NO ", "OVERRIDES");
-    if (conf.flash_manual_override) gui_print_osd_state_string_chr("Flash:", "Manual Override");
+    if (conf.flash_manual_override) gui_print_osd_state_string_chr("Flash:M ", gui_flash_power_modes_enum(0,0));
+    if (conf.flash_enable_exp_comp) gui_print_osd_state_string_chr("Flash:A ", gui_flash_exp_comp_modes_enum(0,0));
 #ifdef OPT_EDGEOVERLAY
     // edgeoverlay state
     if (conf.edge_overlay_enable || gui_mode==GUI_MODE_OSD) {

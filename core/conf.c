@@ -435,6 +435,9 @@ static const ConfInfo conf_info[] = {
 
     CONF_INFO(298, conf.memdmp_start,               CONF_DEF_VALUE,     i:0, NULL),
     CONF_INFO(299, conf.memdmp_size,                CONF_DEF_VALUE,     i:0, NULL),
+
+    CONF_INFO(300, conf.flash_exp_comp,             CONF_DEF_VALUE,     i:9, NULL),
+    CONF_INFO(301, conf.flash_enable_exp_comp,      CONF_DEF_VALUE,     i:0, NULL),
     };
 #define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
 

@@ -81,6 +81,8 @@ extern const char* gui_subj_dist_override_value_enum(int change, int arg);
 extern const char* gui_subj_dist_override_koef_enum(int change, int arg);
 extern const char* gui_tv_override_value_enum(int change, int arg);
 extern const char* gui_hhmss_enum(int change, int arg);
+extern const char* gui_flash_power_modes_enum(int change, int arg);
+extern const char* gui_flash_exp_comp_modes_enum(int change, int arg);
 
 //------------------------------------------------------------------- 
 

@@ -1135,7 +1135,6 @@ const char* gui_hhmss_enum(int change, int arg)
 }
 
 static const char* gui_override_disable_modes[] =           { "No", "Yes" };
-static const char* gui_flash_power_modes[] =                { "Min", "Med", "Max" };
 #if CAM_HAS_ND_FILTER
 static const char* gui_nd_filter_state_modes[] =            { "Off", "In", "Out" };
 #endif
@@ -1143,6 +1142,30 @@ static const char* gui_fast_ev_step_modes[] =               { "1/6 Ev","1/3 Ev",
 #if CAM_QUALITY_OVERRIDE
 static const char* gui_fast_image_quality_modes[] =         { "Sup.Fine", "Fine", "Normal", "Off" };
 #endif
+
+const char* gui_flash_power_modes_enum(int change, int arg)
+{
+    static const char* modes[] = { "Min", "Med", "Max" };
+	const char *rv = gui_change_simple_enum(&conf.flash_video_override_power,change,modes,sizeof(modes)/sizeof(modes[0]));
+    return rv;
+}
+
+const char* gui_flash_exp_comp_modes_enum(int change, int arg)
+{
+    static const char* modes[] = { "-3", "-2.6", "-2.3", "-2", "-1.6", "-1.3", "-1", "-2/3", "-1/3", "0", "+1/3", "+2/3", "+1", "+1.3", "+1.6", "+2", "+2.3", "+2.6", "+3" };
+	const char *rv = gui_change_simple_enum(&conf.flash_exp_comp,change,modes,sizeof(modes)/sizeof(modes[0]));
+    return rv;
+}
+
+static void cb_change_flash_power()
+{
+    if (conf.flash_manual_override) conf.flash_enable_exp_comp = 0;
+}
+
+static void cb_change_flash_exp_comp()
+{
+    if (conf.flash_enable_exp_comp) conf.flash_manual_override = 0;
+}
 
 static CMenuItem tv_override_evstep[2] = {
     MENU_ITEM   (0, LANG_MENU_OVERRIDE_TV_VALUE,  MENUITEM_ENUM,            gui_tv_override_value_enum,         0 ),
@@ -1172,8 +1195,13 @@ static CMenuItem fast_ev_switch[2] = {
 };
 
 static CMenuItem manual_flash[2] = {
-    MENU_ENUM2  (0, 0,                                                      &conf.flash_video_override_power,   gui_flash_power_modes ),
-    MENU_ITEM   (0, 0,  MENUITEM_BOOL,                                      &conf.flash_manual_override,        0 ),
+    MENU_ITEM   (0, 0,  MENUITEM_ENUM,                                      gui_flash_power_modes_enum,         0 ),
+    MENU_ITEM   (0, 0,  MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,                &conf.flash_manual_override,        (int)cb_change_flash_power ),
+};
+
+static CMenuItem flash_exp_comp[2] = {
+    MENU_ITEM   (0, 0,  MENUITEM_ENUM,                                      gui_flash_exp_comp_modes_enum,      0 ),
+    MENU_ITEM   (0, 0,  MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,                &conf.flash_enable_exp_comp,        (int)cb_change_flash_exp_comp ),
 };
 
 #if CAM_HAS_IRIS_DIAPHRAGM
@@ -1205,6 +1233,7 @@ static CMenuItem operation_submenu_items[] = {
     MENU_ITEM   (0x5e,LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE,   MENUITEM_STATE_VAL_PAIR,&sd_override_items,                 0 ),
 #endif
     MENU_ITEM   (0x5c,LANG_MENU_MISC_FAST_EV,               MENUITEM_STATE_VAL_PAIR,&fast_ev_switch,                    0 ),
+    MENU_ITEM   (0x5c, LANG_MENU_FLASH_EXP_COMP,            MENUITEM_STATE_VAL_PAIR,&flash_exp_comp,                    0 ),
     MENU_ITEM   (0x5c, LANG_MENU_FLASH_MANUAL_OVERRIDE,     MENUITEM_STATE_VAL_PAIR,&manual_flash,                      0 ),
 #if CAM_HAS_VIDEO_BUTTON
     MENU_ITEM   (0x5c, LANG_MENU_FLASH_VIDEO_OVERRIDE,      MENUITEM_BOOL,          &conf.flash_video_override,         0 ),
