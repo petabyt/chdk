@@ -249,7 +249,7 @@ ifndef SKIPBUILDRULES
 
 %.bin: %.elf
 	@echo $< \-\> $@
-	$(OBJDUMP) -z -d $< > $@.dump
+	$(OBJDUMP) -j .text -j .rodata.str1.1 -j .data -j .bss -z -d -r -f -h $< > $@.dump
 	$(OBJCOPY) -O binary $< $@
 
 %.elf:

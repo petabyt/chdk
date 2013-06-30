@@ -735,13 +735,13 @@ elfloader_load(char* filename, char* fltfile)
     dump_section( "FLT_data", (unsigned char*)flat_buf+flat->data_start, flat->bss_start-flat->data_start);
     dump_section( "FLT_bss",  (unsigned char*)flat_buf+flat->bss_start, flat->reloc_start-flat->bss_start );
 
-    printf("\nDump relocations:\n");
+    printf("\nDump relocations 0x%x (size=%d):\n",flat->reloc_start,flat_reloc_count*sizeof(reloc_record_t));
     for( i = 0; i< flat_reloc_count; i++)
     {
         print_offs("Offs: ",*(int*)(flat_buf+flat->reloc_start+i*sizeof(reloc_record_t)), "\n");
     }
 
-    printf("\nDump imports:\n");
+    printf("\nDump imports 0x%x (size=%d):\n",flat->import_start,new_import_cnt*sizeof(uint32_t));
     for (i = 0; i< new_import_cnt;)
     {
         uint32_t idx = new_import_buf[i++];
