@@ -642,12 +642,14 @@ static int handle_ptp(
         }
         break;
     case PTP_CHDK_RemoteCaptureIsReady:
-        ptp.num_param = 1;
+        ptp.num_param = 2;
         if ( remotecap_get_target() ) {
             ptp.param1 = remotecap_get_available_data_type();
+            ptp.param2 = get_target_file_num();
         }
         else {
             ptp.param1 = PTP_CHDK_CAPTURE_ERR; //error
+            ptp.param2 = 0;
         }
         break;
     case PTP_CHDK_RemoteCaptureGetData:
@@ -660,9 +662,8 @@ static int handle_ptp(
         int rcgd_pos;
 
         rcgd_morechunks = remotecap_get_data_chunk(param2, &rcgd_addr, &rcgd_size, &rcgd_pos); // returns "not last chunk"
-        ptp.num_param = 4;
+        ptp.num_param = 3;
         ptp.param3 = rcgd_pos; //client needs to seek to this file position before writing the chunk (-1 = ignore)
-        ptp.param4 = (unsigned int)rcgd_addr; //return mem address as additional info
         if ( (rcgd_addr==0) || (rcgd_size==0) ) {
             // send dummy data, otherwise error hoses connection
             send_ptp_data(data,"\0",1);

@@ -11,6 +11,18 @@ static int hook_wait[2]; // counter for raw(0)/filewrite(1) wait, decrements for
 
 static int available_image_data=0; // type of data available
 
+static int remote_file_target=0;
+
+static ptp_data_chunk rawchunk;
+static ptp_data_chunk dng_hdr_chunk;
+static int startline=0;
+static int linecount=0;
+
+#ifdef CAM_HAS_FILEWRITETASK_HOOK
+static int jpegcurrchnk;
+#endif //CAM_HAS_FILEWRITETASK_HOOK
+
+
 int remotecap_get_target_support(void) {
     int ret = (PTP_CHDK_CAPTURE_RAW | PTP_CHDK_CAPTURE_DNGHDR);
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
@@ -18,19 +30,6 @@ int remotecap_get_target_support(void) {
 #endif
     return ret;
 }
-
-static int remote_file_target=0;
-
-static ptp_data_chunk rawchunk;
-static ptp_data_chunk dng_hdr_chunk;
-static char nameforptp[12];
-static long filenumforptp;
-static int startline=0;
-static int linecount=0;
-
-#ifdef CAM_HAS_FILEWRITETASK_HOOK
-static int jpegcurrchnk;
-#endif //CAM_HAS_FILEWRITETASK_HOOK
 
 int remotecap_get_target(void) {
     return remote_file_target;
@@ -94,7 +93,6 @@ int filewrite_get_jpeg_chunk(char **addr,unsigned *size, unsigned n, int *pos);
 extern long hook_raw_size(void); // TODO should use camera_sensor, but see note on size mismatch!
 
 void remotecap_raw_available(char *rawadr) {
-    filenumforptp = get_target_file_num(); // need to get this here for consistency
 // TODO this should probably just be noop if hook doesn't exist
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
     filewrite_set_discard_jpeg(1);
@@ -174,14 +172,6 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
     *pos = -1; // default = sequential
     switch ( fmt )
     {
-        case 0: //name
-            //two ways to get this
-            //1) get_file_next_counter(), may increment between the raw and filewrite hooks
-            //2) from filewritetask data (only available for jpeg)
-            sprintf(nameforptp,"IMG_%04d",filenumforptp);
-            *addr=&nameforptp[0];
-            *size=9;
-            break;
         case PTP_CHDK_CAPTURE_RAW: //raw
             *addr=(char*)rawchunk.address;
             *size=rawchunk.length;

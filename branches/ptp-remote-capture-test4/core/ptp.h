@@ -7,7 +7,7 @@
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 #define PTP_CHDK_VERSION_MAJOR 2  // increase only with backwards incompatible changes (and reset minor)
-#define PTP_CHDK_VERSION_MINOR 107  // increase with extensions of functionality
+#define PTP_CHDK_VERSION_MINOR 108  // increase with extensions of functionality
 
 /*
 protocol version history
@@ -83,10 +83,9 @@ enum ptp_chdk_command {
                                  //  0 = not ready
                                  //  0x10000000 = error
                                  //  otherwise bitmask of PTP_CHDK_CAPTURE_* datatypes
+                                 // return param2 is image number
   PTP_CHDK_RemoteCaptureGetData  // retrieve data
-                                 // param2 is data to get
-                                 //  0 = camera filename
-                                 //  otherwise bit indicating data type to get
+                                 // param2 is bit indicating data type to get
                                  // return param1 is length
                                  // return param2 more chunks available?
                                  //  0 = no more chunks of selected format
