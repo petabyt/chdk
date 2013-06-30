@@ -64,7 +64,8 @@
             umalloc,
             ufree,
             dcache_clean_all,
-            load_file_to_cached,
+            load_file,
+            process_file,
             conf_save_new_settings_if_changed,
 
             write,

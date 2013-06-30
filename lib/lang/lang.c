@@ -125,7 +125,7 @@ void lang_map_preparsed_from_mem( char* gui_lang_default, int num )
 
 //-------------------------------------------------------------------
 void lang_load_from_file(const char *filename) {
-    load_from_file( filename, lang_parse_from_mem );
+    process_file(filename, lang_parse_from_mem, 1);
 }
 
 

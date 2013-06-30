@@ -621,10 +621,9 @@ static void gui_uedit_script_selected(const char *fn)
         char *ext = strrchr(fn,'.');
         if (chk_ext(ext,"lua") || chk_ext(ext,"bas"))
         {
-            int size;
             char* buf;
 
-            buf = load_file_to_cached( fn, &size );
+            buf = load_file(fn, 0, 1);
 
             if (buf)
             {

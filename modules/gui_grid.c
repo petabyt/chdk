@@ -5,12 +5,12 @@
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_lang.h"
-
 #include "gui_grid.h"
+#include "fileutil.h"
+
 #include "module_def.h"
 
 //-------------------------------------------------------------------
-#define GRID_BUF_SIZE               0x1000
 #define GRID_REDRAW_INTERVAL        4
 
 //-------------------------------------------------------------------
@@ -80,7 +80,6 @@ static void process_element(const char *str, int n, grid_elem_type type) {
     }
 
     gptr = malloc(sizeof(struct gline));
-    
    
     if (gptr) {
       gptr->type=type;
@@ -95,73 +94,55 @@ static void process_element(const char *str, int n, grid_elem_type type) {
 }
 
 //-------------------------------------------------------------------
-static void parse_grid_file(const char *fn, const char *ptr) {
-    char *c;
+static int parse_grid_file(char *ptr, int size)
+{
+    if (size > 0)
+    {
+        grid_lines_free_data();
 
-    c=strrchr(fn, '/');
-    strncpy(conf.grid_title, (c)?c+1:fn, sizeof(conf.grid_title));
-    conf.grid_title[sizeof(conf.grid_title)-1]=0;
-
-    while (ptr[0]) {
-        while (ptr[0]==' ' || ptr[0]=='\t') ++ptr; // whitespaces
-        if (ptr[0]=='@') {
-            if (strncmp("@title", ptr, 6)==0) {
-                ptr+=6;
-                process_title(ptr);
-            } else if (strncmp("@line", ptr, 5)==0) {
-                ptr+=5;
-                process_element(ptr, 5, GRID_ELEM_LINE);
-            } else if (strncmp("@rectf", ptr, 6)==0) {
-                ptr+=6;
-                process_element(ptr, 6, GRID_ELEM_FILLED_RECT);
-            } else if (strncmp("@rect", ptr, 5)==0) {
-                ptr+=5;
-                process_element(ptr, 5, GRID_ELEM_RECT);
-            } else if (strncmp("@elpsf", ptr, 6)==0) {
-                ptr+=6;
-                process_element(ptr, 5, GRID_ELEM_FILLED_ELLIPSE);
-            } else if (strncmp("@elps", ptr, 5)==0) {
-                ptr+=5;
-                process_element(ptr, 5, GRID_ELEM_ELLIPSE);
+        while (ptr[0])
+        {
+            while (ptr[0]==' ' || ptr[0]=='\t') ++ptr; // whitespaces
+            if (ptr[0]=='@')
+            {
+                if (strncmp("@title", ptr, 6)==0) {
+                    ptr+=6;
+                    process_title(ptr);
+                } else if (strncmp("@line", ptr, 5)==0) {
+                    ptr+=5;
+                    process_element(ptr, 5, GRID_ELEM_LINE);
+                } else if (strncmp("@rectf", ptr, 6)==0) {
+                    ptr+=6;
+                    process_element(ptr, 6, GRID_ELEM_FILLED_RECT);
+                } else if (strncmp("@rect", ptr, 5)==0) {
+                    ptr+=5;
+                    process_element(ptr, 5, GRID_ELEM_RECT);
+                } else if (strncmp("@elpsf", ptr, 6)==0) {
+                    ptr+=6;
+                    process_element(ptr, 5, GRID_ELEM_FILLED_ELLIPSE);
+                } else if (strncmp("@elps", ptr, 5)==0) {
+                    ptr+=5;
+                    process_element(ptr, 5, GRID_ELEM_ELLIPSE);
+                }
             }
+            while (ptr[0] && ptr[0]!='\n') ++ptr; // unless end of line
+            if (ptr[0]) ++ptr;
         }
-        while (ptr[0] && ptr[0]!='\n') ++ptr; // unless end of line
-        if (ptr[0]) ++ptr;
     }
+
+    return size;
 }
 
 //-------------------------------------------------------------------
 void grid_lines_load(const char *fn)
 {
-    char *buf;
-    const char *grid;
-    int fd;
+    if (process_file(fn, parse_grid_file, 1) > 0)
+    {
+        char* c = strrchr(fn, '/');
+        strncpy(conf.grid_title, (c)?c+1:fn, sizeof(conf.grid_title));
+        conf.grid_title[sizeof(conf.grid_title)-1] = 0;
 
-    if (fn[0]) {
-        buf = umalloc(GRID_BUF_SIZE);
-        if (!buf) return;
-
-        grid = grid_default;
-        fd = open(fn, O_RDONLY, 0777);
-        if (fd>=0) {
-            int rcnt = read(fd, buf, GRID_BUF_SIZE);
-            if (rcnt > 0) {
-                if (rcnt == GRID_BUF_SIZE) 
-        	    buf[GRID_BUF_SIZE-1] = 0;
-                else
-        	    buf[rcnt] = 0;
-                grid = buf;
-            }
-            close(fd);
-            strcpy(conf.grid_lines_file, fn);
-        } else {
-            conf.grid_lines_file[0] = 0;
-        }
-
-        grid_lines_free_data();
-        parse_grid_file(fn, grid);
-    
-        ufree(buf);
+        strcpy(conf.grid_lines_file, fn);
     }
 }
 

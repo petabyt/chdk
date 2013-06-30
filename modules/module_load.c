@@ -89,7 +89,7 @@ typedef int (*_module_action_t)( struct flat_hdr* flat, void* relocbuf, uint32_t
 //**  be loaded										    **
 //********************************************************/
 
-static char* buf_load=0;    // Also used for relocatio & imports
+static char* buf_load=0;    // Also used for relocation & imports
 
 int b_read(int fd, char* buf, int len)
 {

@@ -2096,8 +2096,8 @@ void gui_init()
 
     draw_init();
 
-    load_from_file( "A/CHDK/badpixel", make_pixel_list );
-    load_from_file( "A/CHDK/badpixel.txt", make_pixel_list );
+    process_file( "A/CHDK/badpixel", make_pixel_list, 1 );
+    process_file( "A/CHDK/badpixel.txt", make_pixel_list, 1 );
 }
 
 //-------------------------------------------------------------------
