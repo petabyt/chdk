@@ -19,6 +19,7 @@
 #include "gui_batt.h"
 #include "gui_mbox.h"
 #include "modes.h"
+#include "fileutil.h"
 
 #include "module_def.h"
 #include "simple_module.h"
@@ -1011,11 +1012,11 @@ int gui_sudoku_init()
 	draw|=BG;
 	gui_sudoku_draw(0);
 
-	if (stat("A/CHDK/GAMES/SUDOKU.SAV", 0)==0) { //load last sudoku
-        int f = open("A/CHDK/GAMES/SUDOKU.SAV", O_RDONLY, 0777);
-        read(f, user, sizeof(user));
-        read(f, field, sizeof(field));
-        close(f);
+    char *buf = load_file("A/CHDK/GAMES/SUDOKU.SAV", 0, 0);
+	if (buf) { //load last sudoku
+        memcpy(user, buf, sizeof(user));
+        memcpy(field, buf+sizeof(user), sizeof(field));
+        free(buf);
 	} else {
         sudoku_new();
         memcpy(user, field, sizeof(user));	//copies field[][] in user[][]

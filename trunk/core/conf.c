@@ -10,6 +10,7 @@
 #include "gui_menu.h"
 #include "gui_user_menu.h"
 #include "core.h"
+#include "fileutil.h"
 
 #include "modules.h"
 #include "module_def.h"
@@ -754,75 +755,60 @@ void conf_save()
 //-------------------------------------------------------------------
 void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void (*info_func)(unsigned short id))
 {
-    int fd, rcnt, i;
+    int rcnt, i, offs;
     unsigned short id, size;
-    char *buf;
-    int offs;
-    struct stat st;
 
     config_load_defaults(confinfo, conf_num, info_func);
 
-    if( stat(filename,&st) != 0 || st.st_size < sizeof(int))
-        return;
+    char* buf = load_file(filename, &rcnt, 0);
 
-    if(!(buf=umalloc(st.st_size)))
-        return;
-
-    fd = open(filename, O_RDONLY, 0777); 
-    if( fd < 0 )
+    if (buf)
     {
-        ufree(buf);
-        return;
-    }
-    
-    rcnt = read(fd,buf,st.st_size);
-    close(fd);
-    // read magick value
-    if (*(int *)buf!=CONF_MAGICK_VALUE || rcnt != st.st_size)
-    {
-        ufree(buf);
-        return;
-    }
-
-    offs=sizeof(int);
-    while (1)
-    {
-        if (offs + sizeof(short) > rcnt)
-            break;
-        id=*((short *)(buf + offs));
-        offs += sizeof(short);
-
-        if (offs + sizeof(short) > rcnt)
-            break;
-        size=*((short *)(buf + offs));
-        offs += sizeof(short);
-
-        for (i=0; i<conf_num; ++i)
+        if (*(int*)buf == CONF_MAGICK_VALUE)
         {
-            if (confinfo[i].id==id && confinfo[i].size==size)
+            offs = sizeof(int);
+            while (1)
             {
-                if (offs + size <= rcnt)
+                if (offs + sizeof(short) > rcnt)
+                    break;
+                id = *((short*)(buf + offs));
+                offs += sizeof(short);
+
+                if (offs + sizeof(short) > rcnt)
+                    break;
+                size = *((short*)(buf + offs));
+                offs += sizeof(short);
+
+                for (i=0; i<conf_num; ++i)
                 {
-                    if (confinfo[i].type == CONF_STRUCT_PTR)
+                    if (confinfo[i].id==id && confinfo[i].size==size)
                     {
-                        tVarArrayConfig *cfg = (tVarArrayConfig*)(confinfo[i].var);
-                        size = cfg->load(buf+offs);
+                        if (offs + size <= rcnt)
+                        {
+                            if (confinfo[i].type == CONF_STRUCT_PTR)
+                            {
+                                tVarArrayConfig *cfg = (tVarArrayConfig*)(confinfo[i].var);
+                                size = cfg->load(buf+offs);
+                            }
+                            else
+                            {
+                                memcpy(confinfo[i].var, buf+offs, size);
+                            }
+                            if (info_func) info_func(confinfo[i].id);
+                        }
+                        break;
                     }
-                    else
-                    {
-                        memcpy(confinfo[i].var, buf+offs, size);
-                    }
-                    if (info_func) info_func(confinfo[i].id);
                 }
-                break;
+
+                offs += size;
             }
         }
-
-        offs += size;
+        free(buf);
     }
-    ufree(buf);
+
     // clear any "clear on restart" values
     clear_values();
+
 #if CAM_CHDK_HAS_EXT_VIDEO_TIME
     conf.ext_video_time=0;
 #endif

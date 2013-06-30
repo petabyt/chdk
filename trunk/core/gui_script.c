@@ -454,8 +454,7 @@ int load_params_values(const char *fn, int paramset)
     conf.script_param_set = paramset;
     make_param_filename( MAKE_PARAM_FILENAME, fn, paramset );
 
-    int size;
-    char* buf = load_file( cfg_param_name, &size);
+    char* buf = load_file(cfg_param_name, 0, 1);
     if (!buf)
         return 0;
 
@@ -497,7 +496,7 @@ int load_params_values(const char *fn, int paramset)
         ptr = skip_eol(ptr);
     }
 
-    ufree(buf);
+    free(buf);
 
     return 1;
 }
@@ -590,7 +589,6 @@ void script_reset_to_default_params_values()
 //-------------------------------------------------------------------
 void script_load(const char *fn)
 {
-    int size;
     char* buf;
 
     if(script_source_str && script_source_str != lua_script_default)
@@ -600,13 +598,13 @@ void script_load(const char *fn)
     // if no such one, lua_script_default will be used
     if ( !fn[0] )
     {
-        buf = load_file_to_cached( SCRIPT_DEFAULT_FILENAME, &size );
+        buf = load_file(SCRIPT_DEFAULT_FILENAME, 0, 1);
         if ( buf )
-                fn = SCRIPT_DEFAULT_FILENAME;
+            fn = SCRIPT_DEFAULT_FILENAME;
     }
     else
     {
-        buf = load_file_to_cached( fn, &size );
+        buf = load_file(fn, 0, 1);
     }
 
     if ( !buf )
