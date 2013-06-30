@@ -259,7 +259,7 @@
 204 "Auswahl Gitternetz-Datei..."
 205 "Aktuelles Gitternetz"
 
-206 "Rausch-Reduktion"
+206 "Rauschreduktion"
 
 207 "Ersetze Gitternetzfarbe"
 208 "Linienfarben"
@@ -551,7 +551,7 @@
 436 "RAW im Auto-Modus aus"
 
 437 "   NUR in Video"
-//438 "   Stärke des Blitzes"
+438 "Auto-Blitz + Beli-Komp."
 
 439 "DNG als Dateiendung"
 440 "DNG sichtbar via USB"
@@ -568,7 +568,7 @@
 450 "KEINE FARBEN DOPPELT"
 451 "Zeichensätze zurücksetzen ..."
 452 "Kamera neu starten ..."
-453 "Erzwinge Blitz"
+453 "Manu. Blitz + Stärke"
 
 454 "Ersetze Bildqualität"
 455 "Neustart Lua bei Fehler"
