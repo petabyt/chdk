@@ -174,7 +174,8 @@ void remotecap_jpeg_available() {
     while (remotecap_hook_wait(RC_WAIT_FWTASK)) {
         msleep(10);
     }
-    remotecap_data_type_done(PTP_CHDK_CAPTURE_JPG);
+    // TODO - probably breaks dryos >= r50
+    // remotecap_data_type_done(PTP_CHDK_CAPTURE_JPG);
 }
 #endif
 
