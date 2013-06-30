@@ -10,7 +10,7 @@ int remotecap_get_target(void);
 int remotecap_get_available_data_type(void);
 // call from task hooks to notify remotecap of data
 void remotecap_raw_available(char *rawadr);
-void remotecap_jpeg_available(const char *name);
+void remotecap_jpeg_available();
 // called from filewrite/capt_seq to check if it needs to continue waiting
 int remotecap_hook_wait(int);
 // called by ptp code to get next chunk address/size for the format (fmt) that is being currently worked on

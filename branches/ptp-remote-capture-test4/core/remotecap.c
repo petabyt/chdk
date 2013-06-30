@@ -9,12 +9,17 @@
 #include "cachebit.h"
 static int hook_wait[2]; // counter for raw(0)/filewrite(1) wait, decrements for every 10ms sleep
 
+#define HOOK_WAIT_MAX_DEFAULT 3000 // timeout for remotecap hooks, in 10ms sleeps = 30 sec
+static int hook_wait_max=HOOK_WAIT_MAX_DEFAULT; 
+
 static int available_image_data=0; // type of data available
 
-static int remote_file_target=0;
+static int remote_file_target=0; // requested data types
 
-static ptp_data_chunk rawchunk;
+static ptp_data_chunk raw_chunk;
 static ptp_data_chunk dng_hdr_chunk;
+
+// raw subimage range
 static int startline=0;
 static int linecount=0;
 
@@ -35,6 +40,17 @@ int remotecap_get_target(void) {
     return remote_file_target;
 }
 
+/*
+set hook timeout in ms
+*/
+void remotecap_set_timeout(int timeout) 
+{
+    if(timeout <= 0) {
+        hook_wait_max = HOOK_WAIT_MAX_DEFAULT;
+    } else {
+        hook_wait_max = timeout/10;
+    }
+}
 //called to activate or deactive hooks
 int remotecap_set_target( int type, int lstart, int lcount )
 {
@@ -99,42 +115,47 @@ void remotecap_raw_available(char *rawadr) {
     jpegcurrchnk=0; //needs to be done here
 #endif //CAM_HAS_FILEWRITETASK_HOOK
     if (remote_file_target & PTP_CHDK_CAPTURE_DNGHDR) {
-        hook_wait[RC_WAIT_SPYTASK] = 3000; // x10ms sleeps = 30 sec timeout, TODO make setable
-
         libdng->create_dng_header_for_ptp(&dng_hdr_chunk);
+
+        hook_wait[RC_WAIT_SPYTASK] = hook_wait_max;
         remotecap_set_available_data_type(PTP_CHDK_CAPTURE_DNGHDR);
         while (remotecap_hook_wait(RC_WAIT_SPYTASK)) {
             msleep(10);
         }
+        remotecap_data_type_done(PTP_CHDK_CAPTURE_DNGHDR); // clear on timeout
+
+        dng_hdr_chunk.address = dng_hdr_chunk.length = 0;
         libdng->free_dng_header_for_ptp();
     }
 
     if(!(remote_file_target & PTP_CHDK_CAPTURE_RAW)) {
-        hook_wait[RC_WAIT_SPYTASK] = 0; // don't block
         return;
     }
-    hook_wait[RC_WAIT_SPYTASK] = 3000; // x10ms sleeps = 30 sec timeout, TODO make setable
 
     started();
     
-    rawchunk.address=(unsigned int)ADR_TO_UNCACHED(rawadr+startline*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8);
+    raw_chunk.address=(unsigned int)ADR_TO_UNCACHED(rawadr+startline*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8);
     if ( (startline==0) && (linecount==CAM_RAW_ROWS) )
     {
         //hook_raw_size() is sometimes different than CAM_RAW_ROWS*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8
         // TODO above shoudln't be true!!!
         //if whole size is requested, send hook_raw_size()
-        rawchunk.length=(unsigned int)hook_raw_size();
+        raw_chunk.length=(unsigned int)hook_raw_size();
     }
     else
     {
-        rawchunk.length=linecount*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8;
+        raw_chunk.length=linecount*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8;
     }
   
+    hook_wait[RC_WAIT_SPYTASK] = hook_wait_max;
     remotecap_set_available_data_type(PTP_CHDK_CAPTURE_RAW);
     
     while (remotecap_hook_wait(RC_WAIT_SPYTASK)) {
         msleep(10);
     }
+    remotecap_data_type_done(PTP_CHDK_CAPTURE_RAW);
+
+    raw_chunk.address = raw_chunk.length = 0;
     
     finished();
 }
@@ -142,16 +163,18 @@ void remotecap_raw_available(char *rawadr) {
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
 /*
 called from filewrite hook to notify code that jpeg data is available
-TODO name is not currently saved here
 */
-void remotecap_jpeg_available(const char *name) {
-    if(!(remote_file_target & (PTP_CHDK_CAPTURE_JPG | PTP_CHDK_CAPTURE_RAW))) {
-        hook_wait[RC_WAIT_FWTASK] = 0; // don't block filewrite task
+void remotecap_jpeg_available() {
+    if(!(remote_file_target & PTP_CHDK_CAPTURE_JPG)) {
         return;
     }
-    hook_wait[RC_WAIT_FWTASK] = 3000; // x10ms sleeps = 30 sec timeout, TODO make setable
+    hook_wait[RC_WAIT_FWTASK] = hook_wait_max;
 
-    remotecap_set_available_data_type(remote_file_target & PTP_CHDK_CAPTURE_JPG);
+    remotecap_set_available_data_type(PTP_CHDK_CAPTURE_JPG);
+    while (remotecap_hook_wait(RC_WAIT_FWTASK)) {
+        msleep(10);
+    }
+    remotecap_data_type_done(PTP_CHDK_CAPTURE_JPG);
 }
 #endif
 
@@ -173,8 +196,8 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
     switch ( fmt )
     {
         case PTP_CHDK_CAPTURE_RAW: //raw
-            *addr=(char*)rawchunk.address;
-            *size=rawchunk.length;
+            *addr=(char*)raw_chunk.address;
+            *size=raw_chunk.length;
             break;
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
         case PTP_CHDK_CAPTURE_JPG: //jpeg

@@ -10,6 +10,7 @@
 #include "live_view.h"
 #include "meminfo.h"
 #include "modules.h"
+#include "file_counter.h"
 
 #include "remotecap_core.h"
 static int buf_size=0;

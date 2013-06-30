@@ -119,10 +119,7 @@ void filewrite_main_hook(fwt_data_struct *fwt_data)
     jpeg_full_size = fwt_data->full_size;
 #endif //CAM_FILEWRITETASK_SEEKS
     jpeg_chunks = &(fwt_data->pdc[0]);
-    remotecap_jpeg_available(&(fwt_data->name[0]));
-    while (remotecap_hook_wait(RC_WAIT_FWTASK)) {
-        _SleepTask(10);
-    }
+    remotecap_jpeg_available();
     jpeg_chunks=NULL;
 }
 

@@ -2315,12 +2315,10 @@ static int luaCB_get_remotecap_support( lua_State* L )
 /*
 status=init_remotecap(bitmask[,startline, numlines])
 bitmask = 0 clear usb capture mode
-lines only applies to raw for now
+
+lines only applies to raw
 startline defaults to 0
 numlines defaults to full buffer
-TODO
-should have a timeout
-startline/numlines might not valid across different sources
 */
 static int luaCB_init_remotecap( lua_State* L )
 {
@@ -2329,6 +2327,20 @@ static int luaCB_init_remotecap( lua_State* L )
     int numlines=luaL_optnumber(L, 3, 0);
     lua_pushboolean(L,remotecap_set_target(what,startline,numlines));
     return 1;
+}
+/*
+set_remotecap_timeout(timeout)
+timeout:
+number of milliseconds remote capture will wait for data to be downloaded
+<=0 resets to the default value
+each data type will wait the full timeout value.
+If any data type is not downloaded before the timeout, the next data type will be processed
+however, requesting a timed out data type will reset the entire remote capture
+*/
+static int luaCB_set_remotecap_timeout( lua_State* L )
+{
+    remotecap_set_timeout(luaL_checknumber(L,1));
+    return 0;
 }
 
 #define FUNC( X ) { #X,	luaCB_##X },
@@ -2505,6 +2517,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(write_usb_msg)
     FUNC(get_remotecap_support)
     FUNC(init_remotecap)
+    FUNC(set_remotecap_timeout)
     {NULL, NULL},
 };
 
