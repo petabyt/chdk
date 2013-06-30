@@ -117,14 +117,16 @@ ENCODE_DISKBOOT=$(topdir)tools/dancingbits$(EXE)
 
 ##########################################################################
 
-CC=arm-elf-gcc
-OBJCOPY=arm-elf-objcopy
-OBJDUMP=arm-elf-objdump
-STRIP=arm-elf-strip
-NM=arm-elf-nm
-AR=arm-elf-ar
-RANLIB=arm-elf-ranlib
-SIZE=arm-elf-size
+CROSS_COMPILE=arm-elf-
+
+CC=$(CROSS_COMPILE)gcc
+OBJCOPY=$(CROSS_COMPILE)objcopy
+OBJDUMP=$(CROSS_COMPILE)objdump
+STRIP=$(CROSS_COMPILE)strip
+NM=$(CROSS_COMPILE)nm
+AR=$(CROSS_COMPILE)ar
+RANLIB=$(CROSS_COMPILE)ranlib
+SIZE=$(CROSS_COMPILE)size
 
 GCC_VERSION=$(shell $(CC) -dumpversion)
 GCC_VERSION_MAJOR=$(firstword $(subst ., ,$(GCC_VERSION)))

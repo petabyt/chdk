@@ -36,7 +36,7 @@ all: $(FLTS)
 	@echo \-\> $@
 	mkdir -p .o
 	$(CC) $(CFLAGS) -o .o/$*.elf -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
-#	arm-elf-objdump$(EXE) -d -r -x .o/$*.elf >$*.dumpobj
+#	$(OBJDUMP) -d -r -x .o/$*.elf >$*.dumpobj
 #	$(topdir)/tools/elf2flt/elf2flt$(EXE) .o/$*.elf $@ -e -f -h -r -s -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt >$*.dump
 	$(topdir)/tools/elf2flt/elf2flt$(EXE) .o/$*.elf $@ -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt > $(DEVNULL)
 
