@@ -17,7 +17,7 @@ CFLAGS+=$(CTHUMB) -mlong-calls -DCHDK_MODULE_CODE
 # warning: library order matters!
 LDLIBS= -lgcc
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(topdir)tools/link-boot.ld
-LDOPTS+=-Wl,-N,-Ttext,0 -r -Wl,-d
+LDOPTS+=-Wl,-N,-Ttext,0x24 -r -Wl,-d
 
 # Only build modules files here. Platform indepedant code to be linked to code CHDK should be in libraries (above)
 # to avoid 'long_call' overhead
@@ -36,8 +36,8 @@ all: $(FLTS)
 	@echo \-\> $@
 	mkdir -p .o
 	$(CC) $(CFLAGS) -o .o/$*.elf -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
-#	$(OBJDUMP) -d -r -x .o/$*.elf >$*.dumpobj
-#	$(topdir)/tools/elf2flt/elf2flt$(EXE) .o/$*.elf $@ -e -f -h -r -s -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt >$*.dump
+#	$(OBJDUMP) -j .text -j .rodata.str1.1 -j .data -j .bss -z -d -r -f -h .o/$*.elf >.o/$*.elf.dump
+#	$(topdir)/tools/elf2flt/elf2flt$(EXE) .o/$*.elf $@ -e -f -h -r -s -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt >$@.dump
 	$(topdir)/tools/elf2flt/elf2flt$(EXE) .o/$*.elf $@ -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt > $(DEVNULL)
 
 nothumb.o: nothumb.c
@@ -97,7 +97,7 @@ lua.flt: luascript.o script_key_funcs.o cordic_math.o dbg_dump.o $(topdir)lib/lu
 cpuinfo.flt: cpuinfo.o cpuinfo_arm.o 
 
 clean:
-	rm -f *.o .o/*.elf *.flt *.dump *.dumpobj
+	rm -f *.o .o/*.* *.flt *.dump
 
 distclean: clean
 #	rm -f *.flt

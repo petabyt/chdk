@@ -170,11 +170,11 @@ int main(int argc, char **argv)
     dump_section( "FLT_bss",  flat_buf+flat->bss_start, flat->reloc_start-flat->bss_start );
 
 	int i;
-    printf("\nDump relocations 0x%x:\n",flat->reloc_start);
+    printf("\nDump relocations 0x%x (size=%d):\n",flat->reloc_start,flat_reloc_count*sizeof(uint32_t));
     for( i = 0; i< flat_reloc_count; i++)
         print_offs("Offs: ",*(int*)(flat_buf+flat->reloc_start+i*sizeof(uint32_t)),"\n");
 
-    printf("\nDump imports 0x%x:\n",flat->import_start);
+    printf("\nDump imports 0x%x (size=%d):\n",flat->import_start,flat_import_count*sizeof(uint32_t));
     uint32_t *new_import_buf = (uint32_t*)(flat_buf+flat->import_start);
     for( i = 0; i< flat_import_count; i++)
     {
