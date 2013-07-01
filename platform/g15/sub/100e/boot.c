@@ -163,7 +163,7 @@ asm volatile (
 "    LDR     R1, [R2] \n"
 "    ORR     R1, R1, #1 \n"
 "    STR     R1, [R2] \n"
-"    LDR     R0, =0xFF745BC0 \n"
+"    LDR     R0, =0xFF746280 \n"
 "    LDR     R1, =0x685000 \n"
 "    LDR     R3, =0x695374 \n"
 
@@ -172,7 +172,7 @@ asm volatile (
 "    LDRCC   R2, [R0], #4 \n"
 "    STRCC   R2, [R1], #4 \n"
 "    BCC     loc_FF000144 \n"
-"    LDR     R0, =0xFF7309FC \n"
+"    LDR     R0, =0xFF7310BC \n"
 "    LDR     R1, =0x1900 \n"
 "    LDR     R3, =0x16AC4 \n"
 
@@ -497,7 +497,7 @@ asm volatile (
 "    BL      CreateTask_spytask\n" // added
 "    BL      taskcreatePhySw_my \n"  // --> Patched. Old value = 0xFF019F44.
 "    BL      sub_FF01DAE0 \n"
-"    BL      sub_FF0AE168 \n"
+"    BL      sub_FF0AE1C8 \n"
 "    BL      sub_FF016E50 \n"
 "    BL      sub_FF018C28 \n"
 "    BL      sub_FF021EFC \n"
@@ -531,13 +531,13 @@ asm volatile (
 
 "loc_FF019F78:\n"
 "    BL      sub_FF05EEE0 \n"
-"    BL      sub_FF0979BC \n"
+"    BL      sub_FF097A1C \n"
 "    BL      sub_FF01BB44 \n"
 "    CMP     R0, #0 \n"
 "    BNE     loc_FF019F98 \n"
 "    LDR     R1, =0x3AC18 \n"
 "    MOV     R0, #0 \n"
-"    BL      sub_FF097928 \n"
+"    BL      sub_FF097988 \n"
 
 "loc_FF019F98:\n"
 "    LDMFD   SP!, {R3-R5,PC} \n"
@@ -549,13 +549,13 @@ asm volatile (
 void __attribute__((naked,noinline)) init_file_modules_task() {
 asm volatile (
 "    STMFD   SP!, {R4-R6,LR} \n"
-"    BL      sub_FF099F34 \n"
+"    BL      sub_FF099F94 \n"
 "    LDR     R5, =0x5006 \n"
 "    MOVS    R4, R0 \n"
 "    MOVNE   R1, #0 \n"
 "    MOVNE   R0, R5 \n"
 "    BLNE    _PostLogicalEventToUI \n"
-"    BL      sub_FF099F60 \n"
+"    BL      sub_FF099FC0 \n"
 "    BL      core_spytask_can_start\n"  // CHDK: Set "it's-safe-to-start" flag for spytask
 "    CMP     R4, #0 \n"
 "    LDMNEFD SP!, {R4-R6,PC} \n"
@@ -574,7 +574,7 @@ asm volatile (
 "    SUB     SP, SP, #0x24 \n"
 "    BL      sub_FF05EF4C \n"
 "    LDR     R12, =0x2D54 \n"
-"    LDR     R6, =0xFF4A0F0C \n"
+"    LDR     R6, =0xFF4A1564 \n"
 "    MOV     R0, #0 \n"
 
 // Save pointer for kbd.c routine
