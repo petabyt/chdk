@@ -646,48 +646,43 @@ static int handle_ptp(
         ptp.num_param = 2;
         if ( remotecap_get_target() ) {
             ptp.param1 = remotecap_get_available_data_type();
-            ptp.param2 = get_target_file_num();
+            if(ptp.param1) {
+                ptp.param2 = get_target_file_num();
+            } else {
+                ptp.param2 = 0;
+            }
         }
         else {
-            ptp.param1 = PTP_CHDK_CAPTURE_ERR; //error
+            ptp.param1 = PTP_CHDK_CAPTURE_ERR; //error TODO should this be a ptp error?
             ptp.param2 = 0;
         }
         break;
     case PTP_CHDK_RemoteCaptureGetData:
-        if ( !remotecap_get_target()) {
-            param2=-1; //choose error path
-        }
-        unsigned int rcgd_size;
-        int rcgd_morechunks;
-        char *rcgd_addr;
-        int rcgd_pos;
+        {
+            unsigned int rcgd_size;
+            int rcgd_morechunks;
+            char *rcgd_addr;
+            int rcgd_pos;
 
-        rcgd_morechunks = remotecap_get_data_chunk(param2, &rcgd_addr, &rcgd_size, &rcgd_pos); // returns "not last chunk"
-        ptp.num_param = 3;
-        ptp.param3 = rcgd_pos; //client needs to seek to this file position before writing the chunk (-1 = ignore)
-        if ( (rcgd_addr==0) || (rcgd_size==0) ) {
-            // send dummy data, otherwise error hoses connection
-            send_ptp_data(data,"\0",1);
-            ptp.param1 = 0; //size
-            ptp.param2 = 0; //0 = no more chunks
-            if(rcgd_addr==0) { // null address means error, otherwise just last chunk
-                ptp.code = PTP_RC_GeneralError;
-                remotecap_set_target(0,0,0);
+            rcgd_morechunks = remotecap_get_data_chunk(param2, &rcgd_addr, &rcgd_size, &rcgd_pos);
+            ptp.num_param = 3;
+            ptp.param3 = rcgd_pos; //client needs to seek to this file position before writing the chunk (-1 = ignore)
+            if ( (rcgd_addr==0) || (rcgd_size==0) ) {
+                // send dummy data, otherwise error hoses connection
+                send_ptp_data(data,"\0",1);
+                ptp.param1 = 0; //size
+                ptp.param2 = 0; //0 = no more chunks
+                // TODO switch to status
+                if(rcgd_addr==0) { // null address means error, otherwise just last chunk
+                    ptp.code = PTP_RC_GeneralError;
+                }
             }
-        }
-        else {
-            send_ptp_data(data,rcgd_addr,rcgd_size);
-            ptp.param1 = rcgd_size; //size
-            ptp.param2 = rcgd_morechunks; // are there chunks left?
-            if (!rcgd_morechunks) {
-                remotecap_data_type_done(param2); //data type done
+            else {
+                send_ptp_data(data,rcgd_addr,rcgd_size);
+                ptp.param1 = rcgd_size; //size
+                ptp.param2 = (rcgd_morechunks)?1:0; // are there chunks left? (don't send jpeg special 2 value)
             }
-            else if (rcgd_morechunks == 2) { //jpeg, current queue done
-                remotecap_free_hooks(1); //continue with the next hook
-            }
-        }
-        if ( !rcgd_morechunks && !remotecap_get_available_data_type() && (rcgd_addr!=0) ) { //no more chunks of anything the current hook provides
-            remotecap_free_hooks(0);
+            remotecap_send_complete(rcgd_morechunks,param2); // data send complete, free hooks etc as needed
         }
         break;
     default:

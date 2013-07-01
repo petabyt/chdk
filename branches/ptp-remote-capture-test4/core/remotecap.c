@@ -7,7 +7,6 @@
 #include "modules.h"
 #include "raw.h"
 #include "cachebit.h"
-static int hook_wait[2]; // counter for raw(0)/filewrite(1) wait, decrements for every 10ms sleep
 
 #define HOOK_WAIT_MAX_DEFAULT 3000 // timeout for remotecap hooks, in 10ms sleeps = 30 sec
 static int hook_wait_max=HOOK_WAIT_MAX_DEFAULT; 
@@ -24,7 +23,10 @@ static int startline=0;
 static int linecount=0;
 
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
-static int jpegcurrchnk;
+static int jpeg_curr_chunk;
+#ifdef CAM_FILEWRITETASK_SEEKS
+static int jpeg_session_wait; // should the current invocation of the jpeg hook block
+#endif //CAM_FILEWRITETASK_SEEKS
 #endif //CAM_HAS_FILEWRITETASK_HOOK
 
 
@@ -51,6 +53,23 @@ void remotecap_set_timeout(int timeout)
         hook_wait_max = timeout/10;
     }
 }
+
+int remotecap_get_available_data_type(void) {
+    return available_image_data;
+}
+
+static void remotecap_set_available_data_type(int type)
+{
+    available_image_data = type;
+}
+
+// free hooks, reset target and available
+static void remotecap_reset(void) {
+    remote_file_target=0;
+    remotecap_set_available_data_type(0);
+    // TODO do we need remotecap_jpeg_chunks_done() ?
+}
+
 //called to activate or deactive hooks
 int remotecap_set_target( int type, int lstart, int lcount )
 {
@@ -59,39 +78,27 @@ int remotecap_set_target( int type, int lstart, int lcount )
     if ((type & ~remotecap_get_target_support()) 
         || !(mode_get() & MODE_REC)
         || ((type & PTP_CHDK_CAPTURE_RAW) && !is_raw_possible())) {
-        remote_file_target=0;
-        remotecap_free_hooks(0); //frees up current hook (if any)
+        remotecap_reset();
         return 0;
     }
-    remote_file_target=type;
     // clear requested
     if(type==0) {
-        remotecap_free_hooks(0); //frees up current hook (if any)
+        remotecap_reset();
         return 1;
     }
     // invalid range, return error
     if(lstart<0 || lstart>CAM_RAW_ROWS-1 || lcount<0 || lcount+lstart>CAM_RAW_ROWS) {
-        remote_file_target=0;
-        remotecap_free_hooks(0); //frees up current hook (if any)
+        remotecap_reset();
         return 0;
     }
     // default lcount = to end of buffer
     if(lcount == 0) {
         lcount = CAM_RAW_ROWS - lstart;
     }
-
+    remote_file_target=type;
     startline=lstart;
     linecount=lcount;
     return 1;
-}
-
-int remotecap_get_available_data_type(void) {
-    return available_image_data;
-}
-
-void remotecap_set_available_data_type(int type)
-{
-    available_image_data = type;
 }
 
 /*
@@ -103,6 +110,23 @@ int remotecap_using_dng_module(void) {
     return (remote_file_target & PTP_CHDK_CAPTURE_DNGHDR) != 0;
 }
 
+/*
+return 0 if timed out, otherwise non-zero
+called from tasks that need to wait for data to be read
+*/
+static int remotecap_wait(int datatype) {
+    int wait = hook_wait_max;
+
+    remotecap_set_available_data_type(datatype);
+
+    while (wait && (remotecap_get_available_data_type() & datatype)) {
+        msleep(10);
+        wait--;
+    }
+    return wait;
+}
+
+
 void filewrite_set_discard_jpeg(int state);
 int filewrite_get_jpeg_chunk(char **addr,unsigned *size, unsigned n, int *pos);
 
@@ -112,20 +136,17 @@ void remotecap_raw_available(char *rawadr) {
 // TODO this should probably just be noop if hook doesn't exist
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
     filewrite_set_discard_jpeg(1);
-    jpegcurrchnk=0; //needs to be done here
+    jpeg_curr_chunk=0; //needs to be done here
 #endif //CAM_HAS_FILEWRITETASK_HOOK
     if (remote_file_target & PTP_CHDK_CAPTURE_DNGHDR) {
+        started();
         libdng->create_dng_header_for_ptp(&dng_hdr_chunk);
 
-        hook_wait[RC_WAIT_SPYTASK] = hook_wait_max;
-        remotecap_set_available_data_type(PTP_CHDK_CAPTURE_DNGHDR);
-        while (remotecap_hook_wait(RC_WAIT_SPYTASK)) {
-            msleep(10);
+        if(!remotecap_wait(PTP_CHDK_CAPTURE_DNGHDR)) {
+            remotecap_reset();
         }
-        remotecap_data_type_done(PTP_CHDK_CAPTURE_DNGHDR); // clear on timeout
-
-        dng_hdr_chunk.address = dng_hdr_chunk.length = 0;
         libdng->free_dng_header_for_ptp();
+        finished();
     }
 
     if(!(remote_file_target & PTP_CHDK_CAPTURE_RAW)) {
@@ -147,15 +168,9 @@ void remotecap_raw_available(char *rawadr) {
         raw_chunk.length=linecount*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8;
     }
   
-    hook_wait[RC_WAIT_SPYTASK] = hook_wait_max;
-    remotecap_set_available_data_type(PTP_CHDK_CAPTURE_RAW);
-    
-    while (remotecap_hook_wait(RC_WAIT_SPYTASK)) {
-        msleep(10);
+    if(!remotecap_wait(PTP_CHDK_CAPTURE_RAW)) {
+        remotecap_reset();
     }
-    remotecap_data_type_done(PTP_CHDK_CAPTURE_RAW);
-
-    raw_chunk.address = raw_chunk.length = 0;
     
     finished();
 }
@@ -168,33 +183,41 @@ void remotecap_jpeg_available() {
     if(!(remote_file_target & PTP_CHDK_CAPTURE_JPG)) {
         return;
     }
-    hook_wait[RC_WAIT_FWTASK] = hook_wait_max;
+#ifdef CAM_FILEWRITETASK_SEEKS
+    // need custom wait code here to resume if jpeg queue is done
+    int wait = hook_wait_max;
 
+    jpeg_session_wait = 1;
     remotecap_set_available_data_type(PTP_CHDK_CAPTURE_JPG);
-    while (remotecap_hook_wait(RC_WAIT_FWTASK)) {
+
+    while (wait && jpeg_session_wait && (remotecap_get_available_data_type() & PTP_CHDK_CAPTURE_JPG)) {
         msleep(10);
+        wait--;
     }
-    // TODO - probably breaks dryos >= r50
-    // remotecap_data_type_done(PTP_CHDK_CAPTURE_JPG);
+    if(wait==0) {
+        remotecap_reset();
+    }
+
+#else
+    if(!remotecap_wait(PTP_CHDK_CAPTURE_JPG)) {
+        remotecap_reset();
+    }
+#endif
 }
 #endif
 
-/*
-return true until data is read, or timeout / cancel
-*/
-int remotecap_hook_wait(int which) {
-    if(hook_wait[which]) {
-        hook_wait[which]--;
-    }
-    return hook_wait[which] && remotecap_get_available_data_type();
-}
-
 // called by ptp code to get next chunk address/size for the format (fmt) that is being currently worked on
+// returns 
+// 0 no more chunks
+// 1 more chunks
+// 2 no more chunks in current jpeg queue TODO should keep this as internal state
+// TODO could signal error in return value too
 int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos )
 {
     int morechunks = 0; // default = no more chunks
     *pos = -1; // default = sequential
-    switch ( fmt )
+    
+    switch (fmt & remotecap_get_target() & remotecap_get_available_data_type())
     {
         case PTP_CHDK_CAPTURE_RAW: //raw
             *addr=(char*)raw_chunk.address;
@@ -202,8 +225,8 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
             break;
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
         case PTP_CHDK_CAPTURE_JPG: //jpeg
-            morechunks = filewrite_get_jpeg_chunk(addr,size,jpegcurrchnk,pos);
-            jpegcurrchnk+=1;
+            morechunks = filewrite_get_jpeg_chunk(addr,size,jpeg_curr_chunk,pos);
+            jpeg_curr_chunk+=1;
             break;
 #endif
         case PTP_CHDK_CAPTURE_DNGHDR: // dng header
@@ -212,35 +235,30 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
             break;
         default:
             /*
-             * attempting to get an unsupported image format will result in
-             * freeing up the raw hook
+             * attempting to get an unsupported, unavailable or not requested format
+             * will free all hooks, deactiveate remotecap, and return error status
              */
             *addr=NULL;
             *size=0;
-            remotecap_set_available_data_type(0);
     }
+    if(*addr == NULL) {
+        remotecap_reset();
+        morechunks = 0;
+    }
+
     return morechunks;
 }
 
-void remotecap_data_type_done(int type) {
-    remotecap_set_available_data_type(available_image_data & ~type);
-}
-
-void remotecap_free_hooks(int mode) {
+void remotecap_send_complete(int rcgd_status,int type) {
+    if(rcgd_status == 0) {
+        // currently only one data type can be available at a time
+        remotecap_set_available_data_type(0);
+    }
 #ifdef CAM_FILEWRITETASK_SEEKS
-    if (mode==1) // for DryOS >= r50
-    {
-        remotecap_jpeg_chunks_done(); // make jpeg_chunks NULL, immediately
-        hook_wait[RC_WAIT_FWTASK] = 0; // free the current filewrite hook
+    else if(rcgd_status == 2) { // next jpeg chunks
+        remotecap_jpeg_chunks_done(); // make jpeg_chunks NULL, immediately. TODO needed?
+        jpeg_session_wait = 0;
     }
-    else
 #endif
-    {
-        // TODO these will be called at the end raw and again at the end of jpeg
-        remotecap_set_available_data_type(0); // for fmt -1 case
-        // free the filewrite hook
-        hook_wait[RC_WAIT_FWTASK] = 0;
-        // allow raw hook to continue
-        hook_wait[RC_WAIT_SPYTASK] = 0;
-    }
+    // else more chunks of current type, no action needed
 }

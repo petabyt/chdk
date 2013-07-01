@@ -19,9 +19,13 @@ static int jpeg_file_offset;
 static int jpeg_full_size;
 #endif //CAM_FILEWRITETASK_SEEKS
 
+/*
+called by ptp task (via remotecap.c code) to fetch chunks of jpeg data
+*/
 int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n,int *pos) {
 #ifndef CAM_FILEWRITETASK_SEEKS
     *pos=-1;
+    // TODO null should probably be an error
     if (n >= MAX_CHUNKS_FOR_JPEG || jpeg_chunks == NULL) {
         *addr=(char *)0xFFFFFFFF; // signals last chunk
         *size=0;
@@ -75,17 +79,13 @@ int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n,int *pos) {
             if (jpeg_chunks[jpeg_curr_session_chunk].length==0) { //last chunk of the current queue
                 return 2;
             }
+            return 1; //not last
         }
         else {
             return 2;
         }
     }
-    else {
-        return 0; //last
-    }
-
-    return 1; //not last
-
+    return 0; //last
 #endif //CAM_FILEWRITETASK_SEEKS
 }
 

@@ -2329,17 +2329,20 @@ static int luaCB_init_remotecap( lua_State* L )
     return 1;
 }
 /*
-set_remotecap_timeout(timeout)
+set_remotecap_timeout([timeout])
 timeout:
-number of milliseconds remote capture will wait for data to be downloaded
-<=0 resets to the default value
-each data type will wait the full timeout value.
-If any data type is not downloaded before the timeout, the next data type will be processed
-however, requesting a timed out data type will reset the entire remote capture
+number of milliseconds remote capture waits for data of each type to be downloaded
+<=0 or no value resets to the default value
+If any data type is not downloaded before the timeout expires, remote capture is canceled
+and none of the subsequent data types will be returned
+following a timeout, RemoteCaptureIsReady and RemoteCaptureGetData will behave as if
+remote capture were not initialized
+If the timeout expires while a transfer is in progress, no error will be generated
+but the results may be invalid.
 */
 static int luaCB_set_remotecap_timeout( lua_State* L )
 {
-    remotecap_set_timeout(luaL_checknumber(L,1));
+    remotecap_set_timeout(luaL_optnumber(L,1,0));
     return 0;
 }
 
