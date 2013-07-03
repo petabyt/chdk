@@ -451,7 +451,7 @@ void __attribute__((naked,noinline)) sub_FF01A09C_my() {
 asm volatile (
 "    STMFD   SP!, {R4-R6,LR} \n"
 "    MOV     R6, R0 \n"
-//"    BL      _sub_FF05DE74 \n"  // --> Nullsub call removed.
+//"  BL      _sub_FF05DE74 \n"  // --> Nullsub call removed.
 "    MOV     R0, #0x4B \n"
 "    BL      sub_FF020714 \n"
 "    MOV     R4, #1 \n"
@@ -470,8 +470,8 @@ asm volatile (
 "    MOV     R3, #0 \n"
 "    MOV     R1, R4 \n"
 "    MOV     R0, R5 \n"
-//"    BL      _sub_FF05DE7C \n"  // disable startup checks
-//"    BL      _sub_FF05DE78 \n"  // --> Nullsub call removed.
+//"  BL      _sub_FF05DE7C \n"  // disable startup checks
+//"  BL      _sub_FF05DE78 \n"  // --> Nullsub call removed.
 "    MOV     R0, #1 \n"
 "    LDMFD   SP!, {R4-R6,PC} \n"
 );
@@ -485,12 +485,12 @@ asm volatile (
 "    BL      sub_FF00485C \n"
 "    BL      sub_FF01B218 \n"
 "    BL      sub_FF0192C0 \n"
-//"    BL      _sub_FF05EA98 \n"  // --> Nullsub call removed.
+//"  BL      _sub_FF05EA98 \n"  // --> Nullsub call removed.
 "    BL      sub_FF022370 \n"
-//"    BL      _sub_FF022218 \n"  // DISKBOOT.BIN
+//"  BL      _sub_FF022218 \n"  // DISKBOOT.BIN
 "    BL      sub_FF0224D8 \n"
 "    BL      sub_FF0226A4 \n"
-//"    BL      _sub_FF0224CC \n"  // --> Nullsub call removed.
+//"  BL      _sub_FF0224CC \n"  // --> Nullsub call removed.
 "    BL      sub_FF0223A0 \n"
 "    BL      sub_FF020434 \n"
 "    BL      sub_FF0226AC \n"
@@ -503,7 +503,7 @@ asm volatile (
 "    BL      sub_FF021EFC \n"
 "    BL      sub_FF019274 \n"
 "    BL      sub_FF018BC4 \n"
-//"    BL      _sub_FF0224D0 \n"  // --> Nullsub call removed.
+//"  BL      _sub_FF0224D0 \n"  // --> Nullsub call removed.
 "    BL      sub_FF017B84 \n"
 "    BL      sub_FF018B88 \n"
 "    LDMFD   SP!, {R4,LR} \n"

@@ -452,7 +452,7 @@ void __attribute__((naked,noinline)) sub_FF828EC8_my() {
 asm volatile (
 "    STMFD   SP!, {R4-R6,LR} \n"
 "    MOV     R6, R0 \n"
-//"    BL      _sub_FF86568C \n"  // --> Nullsub call removed.
+//"  BL      _sub_FF86568C \n"  // --> Nullsub call removed.
 "    LDR     R0, =0xC0220114 \n"
 "    BL      sub_FF865ED8 \n"
 "    MOV     R4, #1 \n"
@@ -471,8 +471,8 @@ asm volatile (
 "    MOV     R3, #0 \n"
 "    MOV     R1, R4 \n"
 "    MOV     R0, R5 \n"
-//"    BL      _sub_FF865694 \n"  // Disable StartUpChecks
-//"    BL      _sub_FF865690 \n"  // --> Nullsub call removed.
+//"  BL      _sub_FF865694 \n"  // Disable StartUpChecks
+//"  BL      _sub_FF865690 \n"  // --> Nullsub call removed.
 "    MOV     R0, #1 \n"
 "    LDMFD   SP!, {R4-R6,PC} \n"
 );
@@ -486,9 +486,9 @@ asm volatile (
 "    BL      sub_FF814850 \n"
 "    BL      sub_FF82A04C \n"
 "    BL      sub_FF8281EC \n"
-//"    BL      _sub_FF865EEC \n"  // --> Nullsub call removed.
+//"  BL      _sub_FF865EEC \n"  // --> Nullsub call removed.
 "    BL      sub_FF830784 \n"
-//"    BL      _sub_FF83062C \n"  // load DISKBOOT.BIN
+//"  BL      _sub_FF83062C \n"  // load DISKBOOT.BIN
 "    BL      sub_FF83090C \n"
 "    BL      sub_FF830AD8 \n"
 "    BL      sub_FF8308D0 \n"

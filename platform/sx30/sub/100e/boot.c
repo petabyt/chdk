@@ -283,7 +283,7 @@ asm volatile (
 void __attribute__((naked,noinline)) taskcreate_Startup_my() {
 asm volatile (
 "    STMFD   SP!, {R3,LR} \n"
-//"    BL      _sub_FF86507C \n"  // --> Nullsub call removed.
+//"  BL      _sub_FF86507C \n"  // --> Nullsub call removed.
 "    BL      sub_FF83C880 \n"
 "    CMP     R0, #0 \n"
 "    BNE     loc_FF81FB98 \n"
@@ -303,8 +303,8 @@ asm volatile (
 "    B       loc_FF81FB94 \n"
 
 "loc_FF81FB98:\n"
-//"    BL      _sub_FF865084 \n"  // See begin of sub_FF810354_my()
-//"    BL      _sub_FF865080 \n"  // --> Nullsub call removed.
+//"  BL      _sub_FF865084 \n"  // See begin of sub_FF810354_my()
+//"  BL      _sub_FF865080 \n"  // --> Nullsub call removed.
 "    BL      sub_FF83AA94 \n"
 "    LDR     R1, =0x3CE000 \n"
 "    MOV     R0, #0 \n"
@@ -325,9 +325,9 @@ asm volatile (
 "    BL      sub_FF816594 \n"
 "    BL      sub_FF835894 \n"
 "    BL      sub_FF8339A4 \n"
-//"    BL      _sub_FF865BC8 \n"  // --> Nullsub call removed.
+//"  BL      _sub_FF865BC8 \n"  // --> Nullsub call removed.
 "    BL      sub_FF83CAB0 \n"
-//"    BL      _sub_FF83C958 \n"  // start diskboot.bin
+//"  BL      _sub_FF83C958 \n"  // start diskboot.bin
 "    BL      sub_FF8A04C8 \n"
 "    BL      sub_FF832474 \n"
 "    BL      sub_FF83CAE0 \n"
@@ -529,7 +529,7 @@ asm volatile (
 "    ORR     R1, R1, R3, LSL#16 \n"
 "    LDRB    R3, [R4, #0x1C7] \n"
 "    LDRB    R2, [R4, #0x1BE] \n"
-//"    LDRB    LR, [R4, #0x1FF] \n"  // replaced below
+//"  LDRB    LR, [R4, #0x1FF] \n"  // replaced below
 "    ORR     R1, R1, R3, LSL#8 \n"
 "    LDRB    R3, [R4, #0x1C6] \n"
 "    CMP     R2, #0 \n"
@@ -542,7 +542,7 @@ asm volatile (
 "    ORR     R3, R3, R12, LSL#8 \n"
 "    LDRB    R12, [R4, #0x1CA] \n"
 "    ORR     R3, R3, R12 \n"
-//"    LDRB    R12, [R4, #0x1FE] \n"  // replaced below
+//"  LDRB    R12, [R4, #0x1FE] \n"  // replaced below
 "    LDRB    R12, [LR,#0x1FE]\n"    // replace instructions above
 "    LDRB    LR, [LR,#0x1FF]\n"     // replace instructions above
 "    BNE     loc_FF876888 \n"

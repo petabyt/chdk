@@ -87,9 +87,9 @@ asm volatile (
 "    BL      sub_FF0795A0 \n"
 "    MOV     R0, #0\n"                          // added
 "    STR     R0, [R4,#0x28]\n"                  // added, fixes overrides behavior at short shutter press (from S95)
-//"    LDR     R0, [R4, #0x28] \n"  // above patch makes these three lines redundant
-//"    CMP     R0, #0 \n"
-//"    BLNE    _sub_FF1D5788 \n"
+//"  LDR     R0, [R4, #0x28] \n"  // above patch makes these three lines redundant
+//"  CMP     R0, #0 \n"
+//"  BLNE    _sub_FF1D5788 \n"
 "    B       loc_FF07C734 \n"
 
 "loc_FF07C55C:\n"

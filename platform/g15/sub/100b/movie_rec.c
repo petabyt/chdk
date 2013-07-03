@@ -588,7 +588,7 @@ asm volatile (
 "    BEQ     loc_FF384E88 \n"
 "    CMP     R0, #0x780 \n"
 "    BNE     loc_FF384E90 \n"
-//"    MOV     R0, #0x200000 \n"
+//"  MOV     R0, #0x200000 \n"
 "    MOV     R0, #2097152 \n" // 10 mins
 "    MOV     R6, #5 \n"
 "    STR     R0, [R8, #0xC4] \n"
