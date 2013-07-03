@@ -84,6 +84,8 @@
     The available operations and arguments are:
         FILE filename                               - opens a new file for output
         ENDFILE                                     - closes the current file
+        LI 0|1                                      - enables (LI 1) or disables (LI 0) output of line numbers against disassembled firmware instructions 
+                                                      useful when determining function length
         >>>                                         - copies all lines from the input file to the current output file until
                                                       a line beginning with '<<<' is found.
         >>> prelabel                                - as above, except the lines are copied before the 'loc_XXXXXXXX' label on the current instruction
@@ -404,7 +406,6 @@ void print_args()
 // Globals used for instruction processing
 FILE *outfile;
 int direct_copy;
-t_address func_end;
 int in_func;
 
 //------------------------------------------------------------------------------------------------------------
@@ -424,6 +425,7 @@ int in_func;
 #define REM_OP      12
 #define SKIP_OP     13
 #define CONTFW_OP   14
+#define LI_OP       15
 
 typedef struct _op
 {
@@ -446,9 +448,10 @@ typedef struct _op
     int         fw_len;
     t_address   patch_new_val;
     int         skip_len;
+    int         li_state;
 } op;
 
-op *op_head, *op_tail;
+op *op_head, *op_tail, *cur_func;
 
 void set_op_name(op *p, char *nm)
 {
@@ -499,6 +502,7 @@ op *new_op(int type)
     p->fw_len = -1;
     p->patch_new_val = 0;
     p->skip_len = 0;
+    p->li_state = 0;
 
     if (op_tail)
     {
@@ -749,6 +753,14 @@ void parse_CONTFW()
     new_op(CONTFW_OP);
 }
 
+// Enable or disable line number output
+void parse_LI()
+{
+    op *p = new_op(LI_OP);
+    if (largc > 1)
+        p->li_state = strtol(largs[1],0,0);
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 void op_prelabel(op *p)
@@ -799,30 +811,26 @@ void op_COPY(op *p)
 //  - writes the function start to the source
 void op_FUNC(op *p)
 {
-    t_address func_start;
-    int func_len;
     char func_name[256];
 
     *func_name = 0;
 
-    func_start = p->func_start;
-    func_end = p->func_end;
-    func_len = p->func_len;
+    cur_func = p;
 
     if (p->name)
         strcpy(func_name, p->name);
 
     if (p->patch_ref >= 0)
     {
-        func_start = patch_ref_address[p->patch_ref];
+        p->func_start = patch_ref_address[p->patch_ref];
         strcpy(func_name, patch_ref_name[p->patch_ref]);
     }
 
     in_func = 1;
 
-    if (func_start == 0) chk_args(-1,"Missing FUNC start address",p);
+    if (p->func_start == 0) chk_args(-1,"Missing FUNC start address",p);
 
-    if ((func_end == 0) && (func_len == 0))
+    if ((p->func_end == 0) && (p->func_len == 0))
     {
         op *n = p->next;
         int cont = 1;
@@ -834,20 +842,20 @@ void op_FUNC(op *p)
                 if (n->fw_is_func_end_offset)
                 {
                     cont = 0;
-                    func_len = 0;
+                    p->func_len = 0;
                 }
                 else
                 {
-                    func_len += n->fw_len;
+                    p->func_len += n->fw_len;
                 }
                 break;
             case PATCHSUB_OP:
             case PATCHVAL_OP:
             case REM_OP:
-                func_len++;
+                p->func_len++;
                 break;
             case SKIP_OP:
-                func_len += n->skip_len;
+                p->func_len += n->skip_len;
                 break;
             case ENDFUNC_OP:
                 cont = 0;
@@ -856,36 +864,36 @@ void op_FUNC(op *p)
             n = n->next;
         }
 
-        if (func_len == 0)
+        if (p->func_len == 0)
         {
-            func_end = find_end(fw, func_start);
-            if (func_end == 0)
+            p->func_end = find_end(fw, p->func_start);
+            if (p->func_end == 0)
                 chk_args(-1,"Missing FUNC end address or length",p);
         }
     }
 
-    if ((func_end == 0) && (func_len > 0))
-        func_end = func_start + func_len * 4 - 4;
-    if ((func_len == 0) && (func_end > 0))
-        func_len = (func_end - func_start) / 4 + 1;
-    if (func_end < func_start) chk_args(-1,"FUNC start > end",p);
-    if (func_len != ((func_end - func_start) / 4 + 1)) chk_args(-1,"FUNC start/end/length mismatch",p);
+    if ((p->func_end == 0) && (p->func_len > 0))
+        p->func_end = p->func_start + p->func_len * 4 - 4;
+    if ((p->func_len == 0) && (p->func_end > 0))
+        p->func_len = (p->func_end - p->func_start) / 4 + 1;
+    if (p->func_end < p->func_start) chk_args(-1,"FUNC start > end",p);
+    if (p->func_len != ((p->func_end - p->func_start) / 4 + 1)) chk_args(-1,"FUNC start/end/length mismatch",p);
 
     if (*func_name == 0)
-        sprintf(func_name, "sub_%08X_my", func_start);
+        sprintf(func_name, "sub_%08X_my", p->func_start);
 
-    options.start_address = func_start;
-    options.end_address   = func_end;
+    options.start_address = p->func_start;
+    options.end_address   = p->func_end;
 
     options.flags |= disopt_remember_branches;
-    disassemble1(fw, func_start, func_len);
+    disassemble1(fw, p->func_start, p->func_len);
     options.flags &= ~disopt_remember_branches;
 
     fprintf(outfile,"\n/*************************************************************/");
-    fprintf(outfile,"\n//** %s @ 0x%08X - 0x%08X, length=%d\n", func_name, func_start, last_used_addr, (last_used_addr - func_start) / 4 + 1 ) ;
+    fprintf(outfile,"\n//** %s @ 0x%08X - 0x%08X, length=%d\n", func_name, p->func_start, last_used_addr, (last_used_addr - p->func_start) / 4 + 1 ) ;
     fprintf(outfile,"void __attribute__((naked,noinline)) %s() {\n", func_name);
 
-    addr = func_start;
+    addr = p->func_start;
 }
 
 // Disassemble a block of firmware code to the file
@@ -899,7 +907,7 @@ void op_FW(op *p)
     if (p->fw_end > 0)
         end_address = p->fw_end;
     if (p->fw_is_func_end_offset)
-        end_address = func_end + p->fw_func_end_offset;
+        end_address = cur_func->func_end + p->fw_func_end_offset;
     if (p->fw_len > 0)
         end_address = start_address + p->fw_len * 4 - 4;
 
@@ -1014,7 +1022,15 @@ void do_ops(op *p)
         break;
     case CONTFW_OP:
         // Generate a B instruction to jump back to the firmware code at the current address
+        if (options.flags & disopt_line_numbers) fprintf(outfile,"       ");
         fprintf(outfile,"\"    B       sub_%08X \\n\"  // Continue in firmware\n",addr);
+        break;
+    case LI_OP:
+        // set line number output state
+        if (p->li_state != 0)
+            options.flags |= disopt_line_numbers;
+        else
+            options.flags &= ~disopt_line_numbers;
         break;
     }
 }
@@ -1048,6 +1064,7 @@ void parse_ops()
         if (run_op("REM",       parse_REM))        return;
         if (run_op("SKIP",      parse_SKIP))       return;
         if (run_op("->FW",      parse_CONTFW))     return;
+        if (run_op("LI",        parse_LI))         return;
     }
 }
 

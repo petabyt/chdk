@@ -1205,14 +1205,6 @@ lPling:
 }
 
 //------------------------------------------------------------------------------------------------------------
-static void iscomment(FILE *outfile, t_address addr)
-{
-    if (options.flags & (disopt_comment_lines|disopt_nullsub_call))
-    {
-        fprintf(outfile,"//");
-    }
-}
-
 t_address addr, last_used_addr;
 
 void disassemble1(firmware *fw, t_address start, t_value length)
@@ -1281,7 +1273,6 @@ void disassemble(firmware *fw, FILE *outfile, t_address start, t_value length)
             fprintf(outfile,"\n\"loc_%08X:\\n\"\n", addr);
             dcd_mode_on = 0;
         }	
-        iscomment(outfile,addr);
         struct lnode* lptr = l_search(dcd_list,addr);
         if ( lptr  || dcd_mode_on ) 
         {
@@ -1321,13 +1312,17 @@ void disassemble(firmware *fw, FILE *outfile, t_address start, t_value length)
             else
             {
                 strcat( instr->text, " \\n\"") ;
-                if ( options.flags & disopt_indent_mneumonics_mode) fprintf(outfile,"      ");
-                if ( options.flags & disopt_print_address_mode)
+                if (options.flags & disopt_line_numbers) fprintf(outfile,"/*%3d*/",(addr - options.start_address) / 4 + 1);
+                char *indent = "\"    ";
+                if (options.flags & (disopt_comment_lines|disopt_nullsub_call))
+                    indent = "//\"  ";
+                if (options.flags & disopt_indent_mneumonics_mode)
+                    fprintf(outfile,"      ");
+                if (options.flags & disopt_print_address_mode)
                 {
-                    while ( strlen(instr->text) < 40 ) strcat( instr->text, " ") ;
-                    fprintf(outfile,"\"    %s // rom:%.8x  0x%8.8X", instr->text, addr, w);
+                    fprintf(outfile,"%s%-40s // rom:%.8x  0x%8.8X", indent, instr->text, addr, w);
                 }								
-                else fprintf(outfile,"\"    %s", instr->text);
+                else fprintf(outfile,"%s%s", indent, instr->text);
 
                 if ((options.flags & disopt_patch_branch) || (options.flags & disopt_patch_value))
                 {

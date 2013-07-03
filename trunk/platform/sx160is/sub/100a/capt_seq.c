@@ -83,9 +83,9 @@ asm volatile (
 "    BL      sub_FF8821E8 \n"
 "    MOV     R0, #0\n"                          // added
 "    STR     R0, [R4,#0x28]\n"                  // added, fixes overrides behavior at short shutter press (from S95)
-//"    LDR     R0, [R4, #0x28] \n"  // above patch makes these three lines redundant
-//"    CMP     R0, #0 \n"
-//"    BLNE    _sub_FF995974 \n"
+//"  LDR     R0, [R4, #0x28] \n"  // above patch makes these three lines redundant
+//"  CMP     R0, #0 \n"
+//"  BLNE    _sub_FF995974 \n"
 "    B       loc_FF884954 \n"
 
 "loc_FF884778:\n"
@@ -969,7 +969,7 @@ asm volatile (
 "    MOV     R0, R4 \n"
 "    BL      apex2us \n"  // --> Patched. Old value = 0xFFA26D84. _apex2us
 "    MOV     R4, R0 \n"
-//"    BL      _sub_FF908468 \n"  // --> Nullsub call removed.
+//"  BL      _sub_FF908468 \n"  // --> Nullsub call removed.
 "    MOV     R0, R4 \n"
 "    BL      sub_FF90FF1C \n"
 "    TST     R0, #1 \n"

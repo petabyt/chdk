@@ -61,6 +61,7 @@ declstruct(DisOptions);
 #define disopt_patch_value              0x200   // patch value in next instruction
 #define disopt_remember_branches        0x400   // enable/disable storing branch addresses
 #define disopt_comment_lines            0x800   // enable/disable commenting out of instructions
+#define disopt_line_numbers             0x1000  // print line number of firmware code
 
 defstruct(DisOptions) {
     t_value flags;

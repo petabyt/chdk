@@ -85,9 +85,9 @@ asm volatile (
 "    BL      sub_FF07CD70 \n"
 "    BL      shooting_expo_param_override\n"    // +->
 "    BL      sub_FF0795B8 \n"
-//"    LDR     R0, [R4, #0x28] \n"  // patch below makes these three lines redundant
-//"    CMP     R0, #0 \n"
-//"    BLNE    _sub_FF1D57C4 \n"
+//"  LDR     R0, [R4, #0x28] \n"  // patch below makes these three lines redundant
+//"  CMP     R0, #0 \n"
+//"  BLNE    _sub_FF1D57C4 \n"
 "    MOV     R0, #0\n"                          // +
 "    STR     R0, [R4,#0x28]\n"                  // + fixes overrides behavior at short shutter press
 "    B       loc_FF07C74C \n"
