@@ -133,6 +133,21 @@ int filewrite_get_jpeg_chunk(char **addr,unsigned *size, unsigned n, int *pos);
 extern long hook_raw_size(void); // TODO should use camera_sensor, but see note on size mismatch!
 
 void remotecap_raw_available(char *rawadr) {
+/*
+ensure raw hook is blocked until any prevous remotecap shot is finished or times out
+if prevous times out, remotecap settings will be cleared due to the time out, so no
+remotecap will be done, althouth writes will still be skipped
+wait == 0 timeout shouldn't get hit here unless the script is fiddling with the
+timeout value, but it ensures that we don't block indefinitely.
+*/
+    int wait = hook_wait_max;
+    while (wait && remotecap_get_available_data_type()) {
+        msleep(10);
+        wait--;
+    }
+    if(wait == 0) {
+        remotecap_reset();
+    }
 // TODO this should probably just be noop if hook doesn't exist
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
     filewrite_set_discard_jpeg(1);
