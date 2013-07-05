@@ -23,8 +23,8 @@
     #define CAM_PROPSET                     2
     #define CAM_DRYOS                       1
 
-    #define CAM_RAW_ROWPIX                  3152    // for 7 MP
-    #define CAM_RAW_ROWS                    2340    // for 7 MP
+    #define CAM_RAW_ROWPIX                  3152
+    #define CAM_RAW_ROWS                    2346 // correct firmware value matches raw size, was previously 2340
 
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_HAS_ZOOM_LEVER
