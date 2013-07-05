@@ -21,6 +21,28 @@ long hook_raw_size()
     return 0x3FCB40;   //@ffca81d8, 0x3fc000+0xb40
 }
 
+/*
+YUV buffer created in jpeg processing for < full size jpeg
+not currently used, kept for future reference
+*/
+#if 0
+char *hook_yuv_shooting_buf_addr() { //buffer that holds the uncompressed yuv source of the fresh jpeg
+    return (char*)0x10553180; //not used for L picture size
+}
+
+int hook_yuv_shooting_buf_width() {
+    if (shooting_get_resolution()) //invalid for L picture size
+        return *(int*)0x3716c; //@ffca2d08, ... inside DvlpSeqTask
+    return 0;
+}
+
+int hook_yuv_shooting_buf_height() {
+    if (shooting_get_resolution()) //invalid for L picture size
+        return *(int*)0x37170; //@ffca2d0c, ... inside DvlpSeqTask
+    return 0;
+}
+#endif
+
 int vid_get_viewport_width_proper() {
     int m = mode_get();
     if((m&MODE_MASK) == MODE_PLAY) {

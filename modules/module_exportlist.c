@@ -389,4 +389,8 @@
             CreateTask,
             ExitTask,
 
+            remotecap_get_target_support,
+            remotecap_set_target,
+            remotecap_using_dng_module,
+            remotecap_set_timeout,
 }

@@ -141,6 +141,12 @@ void createHook (void *pNewTcb)
 	}
         #endif
 
+        #if CAM_HAS_FILEWRITETASK_HOOK    
+    if (my_ncmp(name, "tFileWrite", 10) == 0){
+        *entry = (long)filewritetask;
+    }
+        #endif
+
 	core_hook_task_create(pNewTcb);
     }
 }

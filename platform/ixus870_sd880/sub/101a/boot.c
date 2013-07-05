@@ -20,6 +20,8 @@ void taskCreateHook(int *p) {
  if (p[0]==0xFF85E03C)  p[0]=(int)movie_record_task;
  // task_ExpDrvTask
  if (p[0]==0xFF8A4608)  p[0]=(int)exp_drv_task;
+ // task_FileWriteTask
+ if (p[0]==0xFFA1E5C0)  p[0]=(int)filewritetask;
 }
 
 void taskCreateHook2(int *p) { 
@@ -28,6 +30,8 @@ void taskCreateHook2(int *p) {
  if (p[0]==0xFF87C980)  p[0]=(int)init_file_modules_task;
  // task_ExpDrvTask
  if (p[0]==0xFF8A4608)  p[0]=(int)exp_drv_task;
+ // task_FileWriteTask
+ if (p[0]==0xFFA1E5C0)  p[0]=(int)filewritetask;
 }
 
 void CreateTask_spytask() {

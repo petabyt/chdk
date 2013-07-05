@@ -16,6 +16,7 @@
 #include "cache.h"
 #include "task.h"
 #include "cachebit.h"
+#include "remotecap.h"
 
 #include "dng.h"
 #include "module_def.h"
@@ -301,13 +302,18 @@ void add_val_to_buf(int val, int size)
     add_to_buf(&val,size);
 }
 
-void create_dng_header(){
+/*
+create a dng header, including space for thumbnail if required
+if ver1_1 set, creates a dng 1.1 header, otherwise a 1.3 header (matching conf.dng_version)
+if minimal is set, don't pad to 512 byte boundery or create thumbnail
+*/
+void create_dng_header(int ver1_1,int minimal){
     int i,j;
     int extra_offset;
     int raw_offset;
 
     // Set version and opcodes
-    if (conf.dng_version)
+    if (ver1_1)
     {
         // If CHDK is removing bad pixels then set DNG version to 1.1 and remove opcodes
         ifd0[DNG_VERSION_INDEX].offset = BE(0x01010000);
@@ -408,14 +414,21 @@ void create_dng_header(){
     }
 
     // creating buffer for writing data
-    raw_offset=(raw_offset/512+1)*512; // exlusively for CHDK fast file writing
+    if(minimal) {
+        raw_offset=(raw_offset/4+1)*4; // ensure 32 bit aligned
+        dng_header_buf=malloc(raw_offset);
+        thumbnail_buf = NULL;
+    } else {
+        raw_offset=(raw_offset/512+1)*512; // exlusively for CHDK fast file writing
+        dng_header_buf=malloc(raw_offset + DNG_TH_BYTES);
+        thumbnail_buf = dng_header_buf + raw_offset;
+    }
     dng_header_buf_size=raw_offset;
-    dng_header_buf=malloc(raw_offset + DNG_TH_BYTES);
     if (!dng_header_buf)
     {
+        thumbnail_buf = NULL;
         return;
     }
-    thumbnail_buf = dng_header_buf + raw_offset;
     dng_header_buf_offset=0;
 
     //  writing offsets for EXIF IFD and RAW data and calculating offset for extra data
@@ -1103,7 +1116,7 @@ int write_dng(char* rawadr, char* altrawadr)
 {
     int fd;
 
-    create_dng_header();
+    create_dng_header(conf.dng_version,0);
 
     if (!dng_header_buf) {
         return 0;
@@ -1179,6 +1192,22 @@ int write_dng(char* rawadr, char* altrawadr)
     return 1;
 }
 
+void create_dng_header_for_ptp(ptp_data_chunk *pdc) 
+{
+    create_dng_header(0,1);
+    if (dng_header_buf) {
+        pdc->address = (unsigned int)ADR_TO_UNCACHED(dng_header_buf);
+        pdc->length = (unsigned int)dng_header_buf_size;
+    } else {
+        pdc->address = 0;
+        pdc->length = 0;
+    }
+}
+void free_dng_header_for_ptp()
+{
+    free_dng_header();
+}
+
 /*********** BEGIN OF AUXILARY PART **********************/
 
 //---------------------------------------------------------
@@ -1194,7 +1223,7 @@ int _module_unloader()
 
 int _module_can_unload()
 {
-    return (running == 0) && ((conf.save_raw == 0) || (conf.dng_raw == 0));
+    return (running == 0) && (remotecap_using_dng_module() == 0) && ((conf.save_raw == 0) || (conf.dng_raw == 0));
 }
 
 /******************** Module Information structure ******************/
@@ -1213,7 +1242,10 @@ libdng_sym _libdng =
 
     convert_dng_to_chdk_raw,
     write_dng,
-    load_dng_to_rawbuffer
+    load_dng_to_rawbuffer,
+    // for remote capture
+	create_dng_header_for_ptp,
+	free_dng_header_for_ptp
 };
 
 struct ModuleInfo _module_info =

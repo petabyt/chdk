@@ -11,6 +11,7 @@
 #include "meminfo.h"
 #include "modules.h"
 
+#include "remotecap_core.h"
 static int buf_size=0;
 
 // process id for scripts, increments before each attempt to run script
@@ -640,7 +641,40 @@ static int handle_ptp(
             }
         }
         break;
+    case PTP_CHDK_RemoteCaptureIsReady:
+        ptp.num_param = 2;
+        remotecap_is_ready(&ptp.param1,&ptp.param2);
+        break;
+    case PTP_CHDK_RemoteCaptureGetData:
+        {
+            unsigned int rcgd_size;
+            int rcgd_status;
+            char *rcgd_addr;
+            int rcgd_pos;
 
+            rcgd_status = remotecap_get_data_chunk(param2, &rcgd_addr, &rcgd_size, &rcgd_pos);
+            ptp.num_param = 3;
+            ptp.param3 = rcgd_pos; //client needs to seek to this file position before writing the chunk (-1 = ignore)
+            if ( (rcgd_addr==0) || (rcgd_size==0) ) {
+                // send dummy data, otherwise error hoses connection
+                send_ptp_data(data,"\0",1);
+                ptp.param1 = 0; //size
+                ptp.param2 = 0; //0 = no more chunks
+            } else {
+                send_ptp_data(data,rcgd_addr,rcgd_size);
+                ptp.param1 = rcgd_size; //size
+                if(rcgd_status == REMOTECAP_CHUNK_STATUS_MORE) {
+                    ptp.param2 = 1;
+                } else {
+                    ptp.param2 = 0;
+                }
+            }
+            // data send complete, free hooks etc as needed, set error status if required
+            if(!remotecap_send_complete(rcgd_status,param2)) {
+                ptp.code = PTP_RC_GeneralError;
+            }
+        }
+        break;
     default:
       ptp.code = PTP_RC_ParameterNotSupported;
       break;

@@ -20,6 +20,7 @@ extern void task_CaptSeq();
 extern void task_InitFileModules();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
+extern void task_FileWrite();
 
 void taskHook(context_t **context) { 
  task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
@@ -30,6 +31,10 @@ void taskHook(context_t **context) {
  if(tcb->entry == task_InitFileModules) tcb->entry = (void*)init_file_modules_task;
  if(tcb->entry == task_MovieRecord)     tcb->entry = (void*)movie_record_task;
  if(tcb->entry == task_ExpDrv)          tcb->entry = (void*)exp_drv_task;
+// for development testing with/without, not be needed once development is complete
+#ifdef CAM_HAS_FILEWRITETASK_HOOK
+ if(tcb->entry == task_FileWrite)   tcb->entry = (void*)filewritetask;
+#endif
 }
 
 #define DEBUG_LED ((unsigned volatile *)0xC0220130) // RED

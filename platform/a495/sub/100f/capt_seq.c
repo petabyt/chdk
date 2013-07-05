@@ -768,6 +768,8 @@ void __attribute__((naked,noinline)) exp_drv_task(){
 	);
 }
 
+//** sub_FFC8EEA0_my  @ 0xFFC8EEA0 
+
 void __attribute__((naked,noinline)) sub_FFC8EEA0_my(){ // 
 	asm volatile(
 		 "STMFD   SP!, {R4-R8,LR}\n"
@@ -856,6 +858,8 @@ void __attribute__((naked,noinline)) sub_FFC8EEA0_my(){ //
 		"LDMFD   SP!, {R4-R8,PC}\n"
 	);
 }
+
+//** sub_FFC80F4C_my  @ 0xFFC80F4C 
 
 void __attribute__((naked,noinline)) sub_FFC80F4C_my(){ // 
 	asm volatile(

@@ -16,6 +16,7 @@
 #include "histogram.h"
 #include "shooting.h"
 #include "autoiso.h"
+#include "remotecap.h"
 #include "battery.h"
 #include "temperature.h"
 #include "backlight.h"
@@ -2301,6 +2302,49 @@ static int luaCB_set_yield( lua_State* L )
 //  lua_pushcfunction( L, func );
 //  lua_setglobal( L, name );
 //}
+/*
+get remote capture supported types
+bitmask=get_usb_capture_support()
+*/
+static int luaCB_get_usb_capture_support( lua_State* L )
+{
+    lua_pushnumber(L,remotecap_get_target_support());
+    return 1;
+}
+
+/*
+status=init_usb_capture(bitmask[,startline, numlines])
+bitmask = 0 clear usb capture mode
+
+lines only applies to raw
+startline defaults to 0
+numlines defaults to full buffer
+*/
+static int luaCB_init_usb_capture( lua_State* L )
+{
+    int what=luaL_checknumber(L, 1);
+    int startline=luaL_optnumber(L, 2, 0);
+    int numlines=luaL_optnumber(L, 3, 0);
+    lua_pushboolean(L,remotecap_set_target(what,startline,numlines));
+    return 1;
+}
+/*
+set_remotecap_timeout([timeout])
+timeout:
+number of milliseconds remote capture waits for data of each type to be downloaded
+<=0 or no value resets to the default value
+If any data type is not downloaded before the timeout expires, remote capture is canceled
+and none of the subsequent data types will be returned
+following a timeout, RemoteCaptureIsReady and RemoteCaptureGetData will behave as if
+remote capture were not initialized
+If the timeout expires while a transfer is in progress, an error will be generated
+and the data may be incomplete or corrupt
+*/
+static int luaCB_set_usb_capture_timeout( lua_State* L )
+{
+    remotecap_set_timeout(luaL_optnumber(L,1,0));
+    return 0;
+}
 
 #define FUNC( X ) { #X,	luaCB_##X },
 static const luaL_Reg chdk_funcs[] = {
@@ -2474,6 +2518,9 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(set_yield)
     FUNC(read_usb_msg)
     FUNC(write_usb_msg)
+    FUNC(get_usb_capture_support)
+    FUNC(init_usb_capture)
+    FUNC(set_usb_capture_timeout)
     {NULL, NULL},
 };
 

@@ -98,6 +98,8 @@
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Help" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_HELP }
 
+    #define CAM_HAS_FILEWRITETASK_HOOK       1
+    #define CAM_FILEWRITETASK_SEEKS       1
 
     #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
     #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments    

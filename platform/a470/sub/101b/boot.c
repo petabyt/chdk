@@ -17,6 +17,7 @@ void boot();
 void taskCreateHook(int *p) { //function taken from the ixus80 port, adapted of course
  p-=16;
  if (p[0]==0xffc900b8)  p[0]=(int)exp_drv_task; //101b ok
+ if (p[0]==0xFFDC0EA4)  p[0]=(int)filewritetask;
 } 
 
 //All strings changed, now to change subroutines
