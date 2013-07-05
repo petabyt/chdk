@@ -1,5 +1,25 @@
 #include "platform.h"
 
+char *hook_raw_image_addr()
+{
+    return (char*)0x10F06B20; //found at 0xFFD82C10 (100e)
+}
+
+void *vid_get_viewport_fb()
+{
+	 return (void*)0x10659D50; // found at 0xFFE2B904 (100e)
+}
+
+long vid_get_viewport_height()
+{
+    return 240;
+}
+
+void *vid_get_bitmap_fb()  //OSD buffer     
+{
+    return (void*)0x10361000; //found at 0xFFCC2F24 (100e)
+}
+
 void shutdown()
 {
     volatile long *p = (void*)0xc02200a0;
