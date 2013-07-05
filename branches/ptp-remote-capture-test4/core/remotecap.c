@@ -26,6 +26,7 @@ static int linecount=0;
 
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
 static int jpeg_curr_chunk;
+static int jpeg_last_status;
 #ifdef CAM_FILEWRITETASK_SEEKS
 static int jpeg_session_wait; // should the current invocation of the jpeg hook block
 #endif //CAM_FILEWRITETASK_SEEKS
@@ -237,14 +238,10 @@ void remotecap_jpeg_available() {
 #endif
 
 // called by ptp code to get next chunk address/size for the format (fmt) that is being currently worked on
-// returns 
-// 0 no more chunks
-// 1 more chunks
-// 2 no more chunks in current jpeg queue TODO should keep this as internal state
-// TODO could signal error in return value too
+// returns REMOTECAP_CHUNK_STATUS MORE, ERROR or LAST
 int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos )
 {
-    int morechunks = 0; // default = no more chunks
+    int status = REMOTECAP_CHUNK_STATUS_LAST; // default = no more chunks
     *pos = -1; // default = sequential
     
     switch (fmt & remotecap_get_target() & available_image_data)
@@ -255,8 +252,11 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
             break;
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
         case PTP_CHDK_CAPTURE_JPG: //jpeg
-            morechunks = filewrite_get_jpeg_chunk(addr,size,jpeg_curr_chunk,pos);
+            jpeg_last_status = filewrite_get_jpeg_chunk(addr,size,jpeg_curr_chunk,pos);
             jpeg_curr_chunk+=1;
+            if(jpeg_last_status != REMOTECAP_JPEG_CHUNK_STATUS_LAST) {
+                status = REMOTECAP_CHUNK_STATUS_MORE;
+            }
             break;
 #endif
         case PTP_CHDK_CAPTURE_DNGHDR: // dng header
@@ -273,22 +273,28 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
     }
     if(*addr == NULL) {
         remotecap_reset();
-        morechunks = 0;
+        status = REMOTECAP_CHUNK_STATUS_ERROR;
     }
 
-    return morechunks;
+    return status;
 }
 
-void remotecap_send_complete(int rcgd_status,int type) {
-    if(rcgd_status == 0) {
+int remotecap_send_complete(int rcgd_status, int type) {
+    // timeout or canceled: the data type we were sending is no longer available
+    int timeout_flag = (available_image_data != type);
+    if(rcgd_status == REMOTECAP_CHUNK_STATUS_LAST) {
         // currently only one data type can be available at a time
         remotecap_set_available_data_type(0);
     }
 #ifdef CAM_FILEWRITETASK_SEEKS
-    else if(rcgd_status == 2) { // next jpeg chunks
-        remotecap_jpeg_chunks_done(); // make jpeg_chunks NULL, immediately. TODO needed?
+    else if(type == PTP_CHDK_CAPTURE_JPG && jpeg_last_status == REMOTECAP_JPEG_CHUNK_STATUS_SESS_LAST) {
+        remotecap_jpeg_chunks_done(); // make jpeg_chunks NULL, immediately
         jpeg_session_wait = 0;
     }
 #endif
+    if((rcgd_status == REMOTECAP_CHUNK_STATUS_ERROR) || timeout_flag) {
+        return 0;
+    }
     // else more chunks of current type, no action needed
+    return 1;
 }

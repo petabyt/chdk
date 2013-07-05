@@ -29,17 +29,17 @@ int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n,int *pos) {
     if (n >= MAX_CHUNKS_FOR_JPEG || jpeg_chunks == NULL) {
         *addr=(char *)0xFFFFFFFF; // signals last chunk
         *size=0;
-        return 0; // last chunk
+        return REMOTECAP_JPEG_CHUNK_STATUS_LAST; // last chunk
     }
     *addr=(char *)jpeg_chunks[n].address;
     *size=jpeg_chunks[n].length;
     if (n < MAX_CHUNKS_FOR_JPEG-1) {
         if (jpeg_chunks[n+1].length==0) {
-            return 0; // last chunk
+            return REMOTECAP_JPEG_CHUNK_STATUS_LAST; // last chunk
         }
-        return 1; // not last chunk
+        return REMOTECAP_JPEG_CHUNK_STATUS_MORE; // not last chunk
     }
-    return 0; // last chunk
+    return REMOTECAP_JPEG_CHUNK_STATUS_LAST; // last chunk
 #else
     if ( jpeg_chunks == NULL ) { //do we have a valid queue?
         int m=50;
@@ -52,7 +52,7 @@ int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n,int *pos) {
             *addr=(char *)0;
             *size=0;
             *pos=-1;
-            return 0;
+            return REMOTECAP_JPEG_CHUNK_STATUS_LAST;
         }
     }
     if ( n == 0 ) { // first chunk for this shot
@@ -77,15 +77,15 @@ int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n,int *pos) {
     if (jpeg_bytes_left>0) {
         if ( jpeg_curr_session_chunk < MAX_CHUNKS_FOR_JPEG ) {
             if (jpeg_chunks[jpeg_curr_session_chunk].length==0) { //last chunk of the current queue
-                return 2;
+                return REMOTECAP_JPEG_CHUNK_STATUS_SESS_LAST;
             }
-            return 1; //not last
+            return REMOTECAP_JPEG_CHUNK_STATUS_MORE; //not last
         }
         else {
-            return 2;
+            return REMOTECAP_JPEG_CHUNK_STATUS_SESS_LAST;
         }
     }
-    return 0; //last
+    return REMOTECAP_JPEG_CHUNK_STATUS_LAST; //last
 #endif //CAM_FILEWRITETASK_SEEKS
 }
 

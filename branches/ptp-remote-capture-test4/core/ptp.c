@@ -649,11 +649,11 @@ static int handle_ptp(
     case PTP_CHDK_RemoteCaptureGetData:
         {
             unsigned int rcgd_size;
-            int rcgd_morechunks;
+            int rcgd_status;
             char *rcgd_addr;
             int rcgd_pos;
 
-            rcgd_morechunks = remotecap_get_data_chunk(param2, &rcgd_addr, &rcgd_size, &rcgd_pos);
+            rcgd_status = remotecap_get_data_chunk(param2, &rcgd_addr, &rcgd_size, &rcgd_pos);
             ptp.num_param = 3;
             ptp.param3 = rcgd_pos; //client needs to seek to this file position before writing the chunk (-1 = ignore)
             if ( (rcgd_addr==0) || (rcgd_size==0) ) {
@@ -661,17 +661,19 @@ static int handle_ptp(
                 send_ptp_data(data,"\0",1);
                 ptp.param1 = 0; //size
                 ptp.param2 = 0; //0 = no more chunks
-                // TODO switch to status
-                if(rcgd_addr==0) { // null address means error, otherwise just last chunk
-                    ptp.code = PTP_RC_GeneralError;
-                }
-            }
-            else {
+            } else {
                 send_ptp_data(data,rcgd_addr,rcgd_size);
                 ptp.param1 = rcgd_size; //size
-                ptp.param2 = (rcgd_morechunks)?1:0; // are there chunks left? (don't send jpeg special 2 value)
+                if(rcgd_status == REMOTECAP_CHUNK_STATUS_MORE) {
+                    ptp.param2 = 1;
+                } else {
+                    ptp.param2 = 0;
+                }
             }
-            remotecap_send_complete(rcgd_morechunks,param2); // data send complete, free hooks etc as needed
+            // data send complete, free hooks etc as needed, set error status if required
+            if(!remotecap_send_complete(rcgd_status,param2)) {
+                ptp.code = PTP_RC_GeneralError;
+            }
         }
         break;
     default:
