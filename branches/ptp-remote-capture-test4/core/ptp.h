@@ -7,7 +7,8 @@
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 #define PTP_CHDK_VERSION_MAJOR 2  // increase only with backwards incompatible changes (and reset minor)
-#define PTP_CHDK_VERSION_MINOR 108  // increase with extensions of functionality
+#define PTP_CHDK_VERSION_MINOR 5  // increase with extensions of functionality
+                                  // minor > 1000 for development versions
 
 /*
 protocol version history
@@ -19,7 +20,7 @@ protocol version history
 2.2 - live view (work in progress)
 2.3 - live view - released in 1.1
 2.4 - live view protocol 2.1
-2.1xx - TEMP remote capture development test
+2.5 - remote capture
 */
 
 #define PTP_OC_CHDK 0x9999
