@@ -51,6 +51,7 @@
 #include "lens.h"
 #include "fileutil.h"
 #include "task.h"
+#include "callfunc.h"
 
 #include "modules.h"
 #include "module_load.h"
