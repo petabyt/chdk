@@ -145,8 +145,6 @@ static int remotecap_wait(int datatype) {
 void filewrite_set_discard_jpeg(int state);
 int filewrite_get_jpeg_chunk(char **addr,unsigned *size, unsigned n, int *pos);
 
-extern long hook_raw_size(void); // TODO should use camera_sensor, but see note on size mismatch!
-
 void remotecap_raw_available(char *rawadr) {
 /*
 ensure raw hook is blocked until any prevous remotecap shot is finished or times out
@@ -187,17 +185,7 @@ timeout value, but it ensures that we don't block indefinitely.
     started();
     
     raw_chunk.address=(unsigned int)ADR_TO_UNCACHED(rawadr+startline*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8);
-    if ( (startline==0) && (linecount==CAM_RAW_ROWS) )
-    {
-        //hook_raw_size() is sometimes different than CAM_RAW_ROWS*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8
-        // TODO above shoudln't be true!!!
-        //if whole size is requested, send hook_raw_size()
-        raw_chunk.length=(unsigned int)hook_raw_size();
-    }
-    else
-    {
-        raw_chunk.length=linecount*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8;
-    }
+    raw_chunk.length=linecount*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8;
   
     if(!remotecap_wait(PTP_CHDK_CAPTURE_RAW)) {
         remotecap_reset();
