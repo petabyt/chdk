@@ -50,11 +50,4 @@ extern void SetScriptMode(unsigned mode);
 
 extern int switch_mode_usb(int mode); // 0 = playback, 1 = record; return indicates success
                                       // N.B.: switch_mode only supported when USB is connected
-
-/*
- call C function with argument list created at runtime.
- See lib/armutil/callfunc.S for documentation
-*/
-unsigned call_func_ptr(void *func, const unsigned *args, unsigned n_args);
-
 #endif

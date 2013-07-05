@@ -10,6 +10,7 @@
 #include "live_view.h"
 #include "meminfo.h"
 #include "modules.h"
+#include "callfunc.h"
 
 #include "remotecap_core.h"
 static int buf_size=0;
@@ -309,8 +310,13 @@ static int handle_ptp(
 
     case PTP_CHDK_CallFunction:
       {
-        int s;
-        int *buf = (int *) malloc((10+1)*sizeof(int));
+        int s = data->get_data_size(data->handle);
+        if (s <= 0 || (s&3)) // no data or not an integer number of args
+        {
+          ptp.code = PTP_RC_GeneralError;
+          break;
+        }
+        unsigned *buf = malloc(s);
 
         if ( buf == NULL )
         {
@@ -318,15 +324,13 @@ static int handle_ptp(
           break;
         }
 
-        s = data->get_data_size(data->handle);
-        if ( !recv_ptp_data(data,(char *) buf,s) )
+        if ( recv_ptp_data(data,(char *) buf,s) )
         {
+          ptp.num_param = 1;
+          ptp.param1 = call_func_ptr((void *)buf[0],(unsigned *)buf+1,(s-4)/4);
+        } else {
           ptp.code = PTP_RC_GeneralError;
-          break;
         }
-
-        ptp.num_param = 1;
-        ptp.param1 = ((int (*)(int,int,int,int,int,int,int,int,int,int)) buf[0])(buf[1],buf[2],buf[3],buf[4],buf[5],buf[6],buf[7],buf[8],buf[9],buf[10]);
 
         free(buf);
         break;

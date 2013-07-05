@@ -16,6 +16,7 @@
 #include "raw.h"
 #include "modules.h"
 #include "levent.h"
+#include "callfunc.h"
 #ifdef CAM_HAS_GPS
 #include "gps.h"
 #endif
