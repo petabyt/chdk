@@ -5,6 +5,9 @@
 
 #include "flt.h"
 
+// TODO for ptp_data_chunk
+#include "remotecap.h"
+
 // This is to minimize export list to different modules
 typedef struct
 {
@@ -19,6 +22,10 @@ typedef struct
 	int (*convert_dng_to_chdk_raw)(char* fn);
 	int (*write_dng)(char* rawadr, char* altrawadr);
     void (*load_dng_to_rawbuffer)(char *fn, char *rawadr);
+
+    // for remote capture
+    void (*create_dng_header_for_ptp)(ptp_data_chunk *pdc);
+    void (*free_dng_header_for_ptp)(void);
 } libdng_sym;
 
 extern libdng_sym* libdng;

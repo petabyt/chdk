@@ -10,6 +10,8 @@
 #include "gui_lang.h"
 #include "gui_mbox.h"
 #include "cachebit.h"
+#include "remotecap_core.h"
+#include "ptp.h" // for remotecap constants
 
 //-------------------------------------------------------------------
 #define RAW_TARGET_DIRECTORY    "A/DCIM/%03dCANON"
@@ -125,15 +127,47 @@ void raw_closefile(int fd)
 // Don't call set/get_raw_pixel until this value is initialised
 static char *rawadr;    // Pointer to current raw image buffer
 
-int raw_savefile()
+// handle actual raw / dng saving to SD
+static int raw_savefile(char *rawadr, char *altrawadr) {
+    int ret = 0;
+    started();
+    int timer=get_tick_count();
+    if (conf.dng_raw)
+    {
+        ret = libdng->write_dng(rawadr, altrawadr);
+    }
+    else 
+    {
+        int fd = raw_createfile();
+        if(fd >= 0) {
+            // Write active RAW buffer
+            write(fd, ADR_TO_UNCACHED(rawadr), camera_sensor.raw_size);
+            ret = 1;
+            raw_closefile(fd);
+        }
+    }
+
+    if (conf.raw_timer) {
+        char txt[30];
+        timer=get_tick_count()-timer;
+        sprintf(txt, "saving time=%d", timer);
+        console_add_line(txt);
+    }
+
+    finished();
+    return ret;
+}
+
+// processing done when raw hook runs available
+int raw_process()
 {
-    int fd;
 
     // Get pointers to RAW buffers (will be the same on cameras that don't have two or more buffers)
     rawadr = get_raw_image_addr();
     char *altrawadr = get_alt_raw_image_addr();
 
-    if (conf.save_raw && conf.dng_raw && is_raw_enabled())
+    if ((conf.save_raw && conf.dng_raw && is_raw_enabled()) 
+        || (remotecap_get_target() & PTP_CHDK_CAPTURE_DNGHDR))
     {                             
         libdng->capture_data_for_exif();
 	}
@@ -154,7 +188,7 @@ int raw_savefile()
         }
         else
         {
-            fd = open(fn, O_RDONLY, 0777);
+            int fd = open(fn, O_RDONLY, 0777);
             if (fd >= 0)
                 read(fd, rawadr, camera_sensor.raw_size);
             close(fd);
@@ -182,42 +216,21 @@ int raw_savefile()
     else
         raw_br_counter=0;
 
-    // got here second time in a row. Skip second RAW saving.
-    if (conf.raw_save_first_only && camera_info.state.state_shooting_progress == SHOOTING_PROGRESS_PROCESSING)
-    {
-        return 0;
-    }
-
-    camera_info.state.state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
-
     int ret = 0;
-    if (conf.save_raw && is_raw_enabled())
+    // if any remote cap targets, skip local raw
+    if (remotecap_get_target())
     {
-        started();
-        int timer=get_tick_count();
-        if (conf.dng_raw)
-        {
-            ret = libdng->write_dng(rawadr, altrawadr);
-        }
-        else 
-        {
-            fd = raw_createfile();
-            if(fd >= 0) {
-                // Write active RAW buffer
-                write(fd, ADR_TO_UNCACHED(rawadr), camera_sensor.raw_size);
-                ret = 1;
-                raw_closefile(fd);
-            }
-        }
+        camera_info.state.state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
+        remotecap_raw_available(rawadr);
+    }
+    else if (!(conf.raw_save_first_only && camera_info.state.state_shooting_progress == SHOOTING_PROGRESS_PROCESSING))
+    {
+        camera_info.state.state_shooting_progress = SHOOTING_PROGRESS_PROCESSING;
 
-        if (conf.raw_timer) {
-            char txt[30];
-            timer=get_tick_count()-timer;
-            sprintf(txt, "saving time=%d", timer);
-            console_add_line(txt);
+        if (conf.save_raw && is_raw_enabled())
+        {
+            ret = raw_savefile(rawadr,altrawadr);
         }
-
-        finished();
     }
 
 #ifdef OPT_CURVES

@@ -222,7 +222,7 @@ void core_spytask()
 
         if (raw_data_available)
         {
-            raw_need_postprocess = raw_savefile();
+            raw_need_postprocess = raw_process();
             extern void hook_raw_save_complete();
             hook_raw_save_complete();
             raw_data_available = 0;

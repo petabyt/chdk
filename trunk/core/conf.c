@@ -957,25 +957,16 @@ int conf_setValue(unsigned short id, tConfigVal configVal) {
 //-------------------------------------------------------------------
 // Common code extracted from raw.c (raw_savefile) and gui_osd.c (gui_osd_draw_raw_info)
 // returns 0 if RAW save is disabled due to mode settings, etc, return 1 if RAW save OK
-int is_raw_enabled()
-{
+/*
+is raw disabled by exceptions
+*/
+int is_raw_exception() {
     int m = mode_get() & MODE_SHOOTING_MASK;
-
     // NOTE: the conf.save_raw_in variables are negative logic
     //       1 = disable saving raw in this mode, 0 = allow saving raw
     //       variables should be named conf.disable_save_raw_in_XXX
-
-    return !(   // Return false if any of these tests are true
+    return (
         (is_video_recording() && conf.save_raw_in_video) ||                                 // True is movie mode and save_raw_in_video is disabled
-#ifdef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE
-        (shooting_get_resolution()==7) ||                                                   // True if shooting resolution is 'low light'
-#endif
-#if defined(CAM_DISABLE_RAW_IN_HQ_BURST)
-        (m == MODE_SCN_HIGHSPEED_BURST) ||                                                  // True if HQ Burst mode (SX40HS corrupts JPEG images if RAW enabled in this mode)
-#endif
-#if defined(CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN)
-        (m == MODE_NIGHT_SCENE) ||                                                          // True if HandHeld Night Scene (SX40HS corrupts JPEG images if RAW enabled in this mode)
-#endif
         (shooting_get_resolution()==5) ||                                                   // True if Canon RAW enabled, for cams that treat it as a resolution setting (g9, g10, s90, sx1? not g12, g1x)
         ((m==MODE_SPORTS) && conf.save_raw_in_sports) ||                                    // True if sports mode and save_raw_in_sports is disabled
         ((m==MODE_AUTO) && conf.save_raw_in_auto) ||                                        // True if auto mode and save_raw_in_auto is disabled
@@ -984,6 +975,30 @@ int is_raw_enabled()
         ((shooting_get_drive_mode()>=2) && conf.save_raw_in_timer) ||                       // True if drive mode is timer and save_raw_in_timer is disabled
         ((shooting_get_prop(PROPCASE_BRACKET_MODE)==1) && conf.save_raw_in_ev_bracketing)   // True if bracketing enabled and save_raw_in_ev_bracketing is disabled
     );
+}
+
+/*
+is raw possible (i.e. valid raw buffer exists in current mode)
+TODO this might be better as a platform lib.c function rather than a bunch of camera.h ifdefs
+*/
+int is_raw_possible() {
+    int m = mode_get() & MODE_SHOOTING_MASK;
+    return !(0   // Return false if any of these tests are true
+#ifdef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE
+       || (shooting_get_resolution()==7)              // True if shooting resolution is 'low light'
+#endif
+#if defined(CAM_DISABLE_RAW_IN_HQ_BURST)
+       || (m == MODE_SCN_HIGHSPEED_BURST)             // True if HQ Burst mode (SX40HS corrupts JPEG images if RAW enabled in this mode)
+#endif
+#if defined(CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN)
+       || (m == MODE_NIGHT_SCENE)                      // True if HandHeld Night Scene (SX40HS corrupts JPEG images if RAW enabled in this mode)
+#endif
+    );
+}
+
+int is_raw_enabled()
+{
+    return is_raw_possible() && !is_raw_exception();
 }
 
 //-------------------------------------------------------------------

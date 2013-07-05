@@ -93,6 +93,9 @@
                                                 //  override in platform_camera.h for cameras with different range (e.g. G1X can't go below F/16 so set this to 0)
     #define CAM_CHDK_PTP                    1   // include CHDK PTP support
 
+    #undef  CAM_HAS_FILEWRITETASK_HOOK          // FileWriteTask hook is available (local file write can be prevented)
+    #undef  CAM_FILEWRITETASK_SEEKS          // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
+
     #define CAM_UNCACHED_BIT                0x10000000 // bit indicating the uncached memory
 
     #define CAM_SENSOR_BITS_PER_PIXEL       10  // Bits per pixel. 10 is standard, 12 is supported except for curves

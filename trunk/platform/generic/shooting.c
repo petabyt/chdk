@@ -95,3 +95,41 @@ void __attribute__((naked,noinline)) shooting_expo_iso_override(void)
     // Restore registers
     asm volatile("LDMFD   SP!, {R0-R12,PC}\n");
 }
+
+// this can be used to create event procedure "hooks" at certain points in the camera firmware
+// as described in http://chdk.setepontos.com/index.php/topic,5690.0.html
+// not currently used
+#if 0
+//extern unsigned _ExecuteEventProcedure(const char *name,...);
+extern int overridden_PT_CompleteFileWrite();
+
+// ExecuteEventProducedure isn't safe to call from thumb on all cams
+// since there's not much else here, not worth running through call_func_ptr
+int register_pt_hooks() {
+    // older cams only have SystemEventInit
+    // TODO these probably don't support PT_CompleteFileWrite anyway
+    if(_ExecuteEventProcedure("SystemEventInit") == -1) {
+        if(_ExecuteEventProcedure("System.Create") == -1) {
+            return 1;
+        }
+    }
+    if(_ExecuteEventProcedure("RegisterProductTestEvent") == -1) {
+        if(_ExecuteEventProcedure("SS.Create") == -1) {
+            return 2;
+        }
+    }
+    // check if PT_CompleteFileWrite eventproc was registered by above
+    // if not registered, firmware returns -1
+    // default PT_ComleteFileWrite normally returns 0, 
+    // arg will handle if it just does a BX LR
+    if(_ExecuteEventProcedure("PT_CompleteFileWrite",0) == -1) {
+        return 4;
+    }
+    // note override must be in ARM code
+    if(_ExecuteEventProcedure("ExportToEventProcedure","PT_CompleteFileWrite",overridden_PT_CompleteFileWrite) == -1) {
+        return 3;
+    }
+    //_LogPrintf(0x120,"pt hook(s) registered");
+    return 0;
+}
+#endif

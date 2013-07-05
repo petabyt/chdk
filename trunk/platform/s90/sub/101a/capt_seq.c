@@ -1112,5 +1112,6 @@ void __attribute__((naked,noinline)) sub_FF8B079C_my()
         "LDRNE   R0, =0xFF8B05A0\n"
         "BNE     sub_FF81E88C\n"
         "LDMFD   SP!, {R4-R6,PC}\n"
+        ".ltorg"
      );
 };

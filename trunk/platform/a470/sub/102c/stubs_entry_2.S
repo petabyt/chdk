@@ -16,3 +16,5 @@ NHSTUB(PostLEDMessage,              0xFFC3071C)
 NHSTUB(RefreshUSBMode,              0xFFC27730)
 NHSTUB(TurnOffMic,                  0xFFC31660)
 NHSTUB(TurnOnMic,                   0xFFC31634)
+
+//NHSTUB(LogPrintf,                   0xFFC547F4)
