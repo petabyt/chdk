@@ -15,6 +15,8 @@ static int available_image_data=0; // type of data available
 
 static int remote_file_target=0; // requested data types
 
+static int target_file_num; // file number captured in raw hook
+
 static ptp_data_chunk raw_chunk;
 static ptp_data_chunk dng_hdr_chunk;
 
@@ -54,10 +56,22 @@ void remotecap_set_timeout(int timeout)
     }
 }
 
-int remotecap_get_available_data_type(void) {
-    return available_image_data;
+void remotecap_is_ready(int *available_type,int *file_num) {
+    if ( remotecap_get_target() ) {
+        *available_type = available_image_data;
+        if(available_type) {
+            *file_num = target_file_num;
+        } else {
+            *file_num = 0;
+        }
+    }
+    else {
+        *available_type = PTP_CHDK_CAPTURE_NOTSET;
+        *file_num = 0;
+    }
 }
 
+// could | in if we supported multiple types available at the same time
 static void remotecap_set_available_data_type(int type)
 {
     available_image_data = type;
@@ -119,7 +133,7 @@ static int remotecap_wait(int datatype) {
 
     remotecap_set_available_data_type(datatype);
 
-    while (wait && (remotecap_get_available_data_type() & datatype)) {
+    while (wait && (available_image_data & datatype)) {
         msleep(10);
         wait--;
     }
@@ -141,13 +155,14 @@ wait == 0 timeout shouldn't get hit here unless the script is fiddling with the
 timeout value, but it ensures that we don't block indefinitely.
 */
     int wait = hook_wait_max;
-    while (wait && remotecap_get_available_data_type()) {
+    while (wait && available_image_data) {
         msleep(10);
         wait--;
     }
     if(wait == 0) {
         remotecap_reset();
     }
+    target_file_num = get_target_file_num(); // get number once in raw hook to increase odds it matches numbering used by raw
 // TODO this should probably just be noop if hook doesn't exist
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
     filewrite_set_discard_jpeg(1);
@@ -205,7 +220,7 @@ void remotecap_jpeg_available() {
     jpeg_session_wait = 1;
     remotecap_set_available_data_type(PTP_CHDK_CAPTURE_JPG);
 
-    while (wait && jpeg_session_wait && (remotecap_get_available_data_type() & PTP_CHDK_CAPTURE_JPG)) {
+    while (wait && jpeg_session_wait && (available_image_data & PTP_CHDK_CAPTURE_JPG)) {
         msleep(10);
         wait--;
     }
@@ -232,7 +247,7 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
     int morechunks = 0; // default = no more chunks
     *pos = -1; // default = sequential
     
-    switch (fmt & remotecap_get_target() & remotecap_get_available_data_type())
+    switch (fmt & remotecap_get_target() & available_image_data)
     {
         case PTP_CHDK_CAPTURE_RAW: //raw
             *addr=(char*)raw_chunk.address;

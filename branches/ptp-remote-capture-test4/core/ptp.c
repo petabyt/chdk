@@ -644,18 +644,7 @@ static int handle_ptp(
         break;
     case PTP_CHDK_RemoteCaptureIsReady:
         ptp.num_param = 2;
-        if ( remotecap_get_target() ) {
-            ptp.param1 = remotecap_get_available_data_type();
-            if(ptp.param1) {
-                ptp.param2 = get_target_file_num();
-            } else {
-                ptp.param2 = 0;
-            }
-        }
-        else {
-            ptp.param1 = PTP_CHDK_CAPTURE_ERR; //error TODO should this be a ptp error?
-            ptp.param2 = 0;
-        }
+        remotecap_is_ready(&ptp.param1,&ptp.param2);
         break;
     case PTP_CHDK_RemoteCaptureGetData:
         {

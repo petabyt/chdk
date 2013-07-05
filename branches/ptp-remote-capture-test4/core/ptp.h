@@ -81,7 +81,7 @@ enum ptp_chdk_command {
   PTP_CHDK_RemoteCaptureIsReady, // Check if data is available
                                  // return param1 is status 
                                  //  0 = not ready
-                                 //  0x10000000 = error
+                                 //  0x10000000 = remote capture not initialized
                                  //  otherwise bitmask of PTP_CHDK_CAPTURE_* datatypes
                                  // return param2 is image number
   PTP_CHDK_RemoteCaptureGetData  // retrieve data
@@ -128,7 +128,7 @@ enum ptp_chdk_script_data_type {
 #define PTP_CHDK_CAPTURE_DNGHDR 0x4
 
 // status from PTP_CHDK_RemoteCaptureIsReady if capture not enabled
-#define PTP_CHDK_CAPTURE_ERR    0x10000000
+#define PTP_CHDK_CAPTURE_NOTSET 0x10000000
 
 // message types
 enum ptp_chdk_script_msg_type {
