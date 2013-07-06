@@ -13,7 +13,8 @@ typedef struct {
  * fwt_data_struct: defined here as it's camera dependent
  * unneeded members are designated with unkn
  * file_offset, full_size, seek_flag only needs to be defined for DryOS>=r50 generation cameras
- * pdc and name are always needed
+ * pdc is always required
+ * name is not currently used
  */
 typedef struct
 {
