@@ -70,12 +70,13 @@ static char* get_str(char *s, char *d)
 }
 
 // Add a new value to the list
-static osig* add_sig(char *nm, char *val, osig **hdr)
+static osig* add_sig(char *nm, char *val, osig **hdr, int is_comment)
 {
     osig *p = malloc(sizeof(osig));
     strcpy(p->nm, nm);
 	strcpy(p->sval, val);
     p->pct = 0;
+    p->is_comment = is_comment;
     p->type = 0;
     p->nxt = *hdr;
     *hdr = p;
@@ -177,14 +178,12 @@ static void load_stubs_file(char *name, int exclude_comments, osig **hdr)
         if (s == 0) { off = 4; s = strstr(line, "DEF("); typ = TYPE_DEF; }
         if (s != 0)
         {
-            char *c = 0;
-            if (exclude_comments)
-                c = strstr(line, "//");
-            if ((c == 0) || (c > s))
+            char *c = strstr(line, "//");
+            if ((exclude_comments == 0) || (c == 0) || (c > s))
             {
                 s = get_str(s+off,nm);
                 get_str(s,val);
-                osig *p = add_sig(nm, val, hdr);
+                osig *p = add_sig(nm, val, hdr, ((c != 0) && (c <= s)) ? 1 : 0);
                 p->type = typ;
                 continue;
             }
@@ -231,7 +230,7 @@ void load_modemap(stub_values *sv)
 				{
 					s = get_str(s,nm);
 					get_str(s,val);
-					add_sig(nm, val, &sv->modemap);
+					add_sig(nm, val, &sv->modemap, 0);
 				}
 			}
 		}
@@ -303,7 +302,7 @@ void load_makefile(stub_values *sv)
                 if (c) *c = 0;
 				s = get_str(line,nm);
 				get_str(s+1,val);
-				add_sig(nm, val, &sv->makevals);
+				add_sig(nm, val, &sv->makevals, 0);
 			}
 		}
     }

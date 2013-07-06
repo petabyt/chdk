@@ -1023,7 +1023,7 @@ void do_ops(op *p)
     case CONTFW_OP:
         // Generate a B instruction to jump back to the firmware code at the current address
         if (options.flags & disopt_line_numbers) fprintf(outfile,"       ");
-        fprintf(outfile,"\"    B       sub_%08X \\n\"  // Continue in firmware\n",addr);
+        fprintf(outfile,"\"    LDR     PC, =0x%08X \\n\"  // Continue in firmware\n",addr);
         break;
     case LI_OP:
         // set line number output state

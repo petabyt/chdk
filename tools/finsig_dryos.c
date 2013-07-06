@@ -375,6 +375,42 @@ func_entry  func_names[] =
     { "EngDrvRead", OPTIONAL|UNUSED },
     { "EngDrvBits", OPTIONAL|UNUSED },
 
+    // OS functions, mostly to aid firmware analysis. Order is important!
+    { "CreateTaskStrictly", OPTIONAL|UNUSED },
+    { "CreateMessageQueue", OPTIONAL|UNUSED },
+    { "CreateRecursiveLock", OPTIONAL|UNUSED },
+    { "GetSemaphoreValue", OPTIONAL|UNUSED },
+    { "TryTakeSemaphore", OPTIONAL|UNUSED },
+    { "CreateMessageQueueStrictly", OPTIONAL|UNUSED },
+    { "CreateEventFlagStrictly", OPTIONAL|UNUSED },
+    { "CreateBinarySemaphoreStrictly", OPTIONAL|UNUSED },
+    { "CreateCountingSemaphoreStrictly", OPTIONAL|UNUSED },    
+    { "CreateRecursiveLockStrictly", OPTIONAL|UNUSED },
+    { "TakeSemaphoreStrictly", OPTIONAL|UNUSED }, // r23+
+    { "ReceiveMessageQueueStrictly", OPTIONAL|UNUSED }, // r23+
+    { "PostMessageQueueStrictly", OPTIONAL|UNUSED },    // r23+
+    { "WaitForAnyEventFlagStrictly", OPTIONAL|UNUSED }, // r23+
+    { "WaitForAllEventFlagStrictly", OPTIONAL|UNUSED }, // r23+
+    { "AcquireRecursiveLockStrictly", OPTIONAL|UNUSED }, // r23+
+    { "DeleteMessageQueue", OPTIONAL|UNUSED },
+    { "PostMessageQueue", OPTIONAL|UNUSED },
+    { "ReceiveMessageQueue", OPTIONAL|UNUSED },
+    { "TryReceiveMessageQueue", OPTIONAL|UNUSED },
+    { "TryPostMessageQueue", OPTIONAL|UNUSED },
+    { "GetNumberOfPostedMessages", OPTIONAL|UNUSED },
+    { "DeleteRecursiveLock", OPTIONAL|UNUSED },
+    { "AcquireRecursiveLock", OPTIONAL|UNUSED },
+    { "ReleaseRecursiveLock", OPTIONAL|UNUSED },
+    { "WaitForAnyEventFlag", OPTIONAL|UNUSED },
+    { "WaitForAllEventFlag", OPTIONAL|UNUSED },
+    { "ClearEventFlag", OPTIONAL|UNUSED },
+    { "SetEventFlag", OPTIONAL|UNUSED },
+    { "GetEventFlagValue", OPTIONAL|UNUSED },
+    { "CreateEventFlag", OPTIONAL|UNUSED },
+    { "DeleteEventFlag", OPTIONAL|UNUSED },
+    { "CheckAnyEventFlag", OPTIONAL|UNUSED },
+    { "CheckAllEventFlag", OPTIONAL|UNUSED },
+
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
     { "DispCon_ShowBitmapColorBar", UNUSED },
@@ -726,6 +762,7 @@ string_sig string_sigs[] =
     { 6, "reboot_fw_update", "FirmUpgrade.c", 0 },
 
     { 7, "hook_CreateTask2", "PhySw", 0x01000001 },
+    { 7, "CreateTaskStrictly", "PhySw", 0x01000001 },
 
     { 8, "WriteSDCard", "Mounter.c", 0 },
 
@@ -743,6 +780,12 @@ string_sig string_sigs[] =
     { 9, "mkdir", "MakeDirectory_Fut", 0x01000002,                        17,   17,   17,   17,   17,   17,   17,   17,   17,   17,   17 },
     { 9, "time", "MakeDirectory_Fut", 0,                                  12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12 },
     { 9, "stat", "_uartr_req", 0,                                          0,    0,    0,    4,    4,    4,    4,    4,    4,    4,    4 },
+    { 9, "PostMessageQueue", "PostMessageQueueStrictly", 0,                3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
+    { 9, "WaitForAnyEventFlag", "WaitForAnyEventFlagStrictly", 0,          3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
+    { 9, "WaitForAllEventFlag", "WaitForAllEventFlagStrictly", 0,          3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
+    { 9, "CreateMessageQueue", "CreateMessageQueueStrictly", 0,            1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
+    { 9, "CreateRecursiveLock", "CreateRecursiveLockStrictly", 0,          1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
+    { 9, "CreateEventFlag", "CreateEventFlagStrictly", 0,                  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
 
     { 10, "task_CaptSeq", "CaptSeqTask", 1 },
     { 10, "task_ExpDrv", "ExpDrvTask", 1 },
@@ -774,6 +817,10 @@ string_sig string_sigs[] =
     { 12, "_log10", "_log10", 0x01000006,                               0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C,0x354,0x35C,0x35C },
     { 12, "_log10", "_log10", 0x01000006,                               0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
     { 12, "_log10", "_log10", 0x01000006,                               0x000,0x000,0x2C4,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
+    { 12, "ClearEventFlag", "ClearEventFlag", 1,                        0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04 },
+    { 12, "SetEventFlag", "SetEventFlag", 1,                            0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08 },
+    { 12, "WaitForAnyEventFlag", "WaitForAnyEventFlag", 1,              0x0c, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c },
+    { 12, "WaitForAllEventFlag", "WaitForAllEventFlag", 1,              0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10 },
 
     { 13, "strftime", "Sunday", 1 },
 
@@ -796,6 +843,36 @@ string_sig string_sigs[] =
     { 17, "ScreenUnlock", "StartRecModeMenu", 0 },
 
     { 18, "mkdir", "", 0 },
+
+    // Ensure ordering in func_names is correct for dependencies here
+    //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52
+    { 19, "GetSemaphoreValue", "GiveSemaphore", 0,                               0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e },
+    { 19, "CreateMessageQueueStrictly", "CreateTaskStrictly", 0,                 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d },
+    { 19, "CreateEventFlagStrictly", "CreateMessageQueueStrictly", 0,            0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009 },
+    { 19, "CreateBinarySemaphoreStrictly", "CreateEventFlagStrictly", 0,         0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009 },
+    { 19, "CreateCountingSemaphoreStrictly", "CreateBinarySemaphoreStrictly", 0, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009 },
+    { 19, "CreateRecursiveLockStrictly", "CreateCountingSemaphoreStrictly", 0,   0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009 },
+    { 19, "TakeSemaphoreStrictly", "CreateRecursiveLockStrictly", 0,             0x0001, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009 }, // name made up
+    { 19, "ReceiveMessageQueueStrictly", "TakeSemaphoreStrictly", 0,             0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b }, // name made up
+    { 19, "PostMessageQueueStrictly", "ReceiveMessageQueueStrictly", 0,          0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b }, // name made up
+    { 19, "WaitForAnyEventFlagStrictly", "PostMessageQueueStrictly", 0,          0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b }, // name made up
+    { 19, "WaitForAllEventFlagStrictly", "WaitForAnyEventFlagStrictly", 0,       0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b }, // name made up
+    { 19, "AcquireRecursiveLockStrictly", "WaitForAllEventFlagStrictly", 0,      0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b }, // name made up
+
+    { 19, "PostMessageQueue", "TryReceiveMessageQueue", 0,                       0x091f, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001 },
+    { 19, "DeleteMessageQueue", "CreateMessageQueue", 0,                         0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021 },
+    { 19, "ReceiveMessageQueue", "DeleteMessageQueue", 0,                        0x1024, 0x1024, 0x1024, 0x1024, 0x1024, 0x1024, 0x1024, 0x1024, 0x1024, 0x1024, 0x1024 },
+    { 19, "TryReceiveMessageQueue", "ReceiveMessageQueue", 0,                    0x002b, 0x002b, 0x1032, 0x1032, 0x1032, 0x1032, 0x1032, 0x1032, 0x1032, 0x1032, 0x1032 },
+    { 19, "TryPostMessageQueue", "PostMessageQueue", 0,                          0x0027, 0x0027, 0x102e, 0x102e, 0x102e, 0x102e, 0x102e, 0x102e, 0x102e, 0x102e, 0x102e },
+    { 19, "GetNumberOfPostedMessages", "TryPostMessageQueue", 0,                 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010 },
+    { 19, "DeleteRecursiveLock", "CreateRecursiveLock", 0,                       0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014 },
+    { 19, "AcquireRecursiveLock", "DeleteRecursiveLock", 0,                      0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014 },
+    { 19, "ReleaseRecursiveLock", "AcquireRecursiveLock", 0,                     0x0041, 0x0041, 0x0048, 0x0048, 0x0048, 0x0048, 0x0048, 0x0048, 0x0048, 0x0048, 0x0048 },
+    { 19, "GetEventFlagValue", "ClearEventFlag", 0,                              0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e },
+    { 19, "DeleteEventFlag", "CreateEventFlag", 0,                               0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016 },
+    { 19, "CheckAnyEventFlag", "DeleteEventFlag", 0,                             0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014 },
+    { 19, "CheckAllEventFlag", "CheckAnyEventFlag", 0,                           0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012 },
+    { 19, "TryTakeSemaphore", "DeleteSemaphore", 0,                              0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016 },
 
     { 0, 0, 0, 0 }
 };
@@ -1639,6 +1716,49 @@ int find_strsig18(firmware *fw, string_sig *sig)
     return search_fw(fw, match_strsig18, 0, 0, 1);
 }
 
+// Sig pattern:
+//      Func is offset from previously found func
+//          prev_func
+//              ... (offset, less than 0xff)
+//          func
+// dryos_offset to be encoded as: 0xQRPP
+// PP) offset, 0x00...0xff, in words
+// Q) 'previous instruction flag': 0 for LDMFD, 1 for B
+// R) 'additional gap size': 0x0 ... 0xf, to skip an additional gap, in words
+// offset is negative if dryos_offset is negative
+int find_strsig19(firmware *fw, string_sig *sig)
+{
+    int j = get_saved_sig(fw,sig->ev_name);
+    if (j >= 0)
+    {
+        if (func_names[j].val != 0) // address, not idx
+        {
+            int ofst = dryos_offset(fw, sig);
+            int neg = 1;
+            if (ofst<0)
+            {
+                neg=-1;
+                ofst=-ofst;
+            }
+            int addoffs = (ofst & 0xf00)>>8;
+            uint32_t fadr = func_names[j].val+neg*(ofst&0xff)*4;
+            int k = 0;
+            switch ((ofst&0xf000)>>12)
+            {
+                case 0: k = isLDMFD_PC(fw, adr2idx(fw, fadr)-1-addoffs); break;
+                case 1: k = isB(fw, adr2idx(fw, fadr)-1-addoffs); break;
+            }
+            if (k)
+            {
+                fwAddMatch(fw,fadr,32,0,119);
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
+
 // Call processing function based on type
 int find_strsig(firmware *fw, string_sig *sig)
 {
@@ -1662,6 +1782,7 @@ int find_strsig(firmware *fw, string_sig *sig)
     case 16:    return fw_process(fw, sig, match_strsig16);
     case 17:    return find_strsig17(fw, sig);
     case 18:    return find_strsig18(fw, sig);
+    case 19:    return find_strsig19(fw, sig);
     }
 
     return 0;
@@ -1748,7 +1869,7 @@ void find_matches(firmware *fw, const char *curr_name)
     // Not found so far, try instruction comparison matching
     while (!found_ev)
     {
-           sig = func_list[j].sig;
+        sig = func_list[j].sig;
 
         for (n = fw->br; n != 0; n = n->next)
         {

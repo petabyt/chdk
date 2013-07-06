@@ -83,6 +83,7 @@ defstruct(Instruction) {
 char *patch_func_name;
 t_address patch_new_val;
 t_address patch_old_val;
+char *patch_old_func_name;      // if old patched value found in stubs
 int patch_ref_address[20];
 char patch_ref_name[20][256];
 int save_patch_ref;
@@ -263,7 +264,13 @@ struct llist *branch_list;			// create list of branch instruction target address
 /* -----------------------------------------------------------------
  *  Dissassembler Code
  * ----------------------------------------------------------------- */
- 
+
+static void set_patch_old_values(t_address w, char *nm)
+{
+    patch_old_val = w;
+    patch_old_func_name = nm;
+}
+
 extern void swiname(t_value, char *, size_t);
 
 /* op = append(op,ip) === op += sprintf(op,"%s",ip),
@@ -283,13 +290,13 @@ static char * xhex8(char * op, t_value w)
 
     if (options.flags & disopt_patch_value)
     {
-        patch_old_val = w;
+        set_patch_old_values(w, 0);
         w = patch_new_val;
     }
 
     if (options.flags & disopt_patch_branch)
     {
-        patch_old_val = w;
+        set_patch_old_values(w, 0);
         if (patch_func_name)
             op += sprintf(op,"=%s",patch_func_name) ;
         else
@@ -332,7 +339,7 @@ static char * yhex8(char * op, t_value w)
 {
     if (options.flags & disopt_patch_value)
     {
-        patch_old_val = w;
+        set_patch_old_values(w, 0);
         w = patch_new_val;
     }
     op += sprintf(op,"0x%X",w) ;
@@ -348,16 +355,17 @@ static char * sub_hex8(firmware *fw, char * op, t_value w)
 
     char *s = op;
 
+    w = followBranch(fw,w,1);           // If call to Branch then follow branch
+    osig *o = find_sig_val_by_type(fw->sv->stubs, w, TYPE_NHSTUB);
+
     if ((options.flags & disopt_patch_branch) && patch_func_name)
     {
-        patch_old_val = w;
+        set_patch_old_values(w, (o) ? o->nm : 0);
         op += sprintf(op,"%s",patch_func_name);
     }
     else
     {
-        w = followBranch(fw,w,1);           // If call to Branch then follow branch
-        osig *o = find_sig_val_by_type(fw->sv->stubs, w, TYPE_NHSTUB);
-        if (o)
+        if (o && !o->is_comment)
         {
             op += sprintf(op,"_%s",o->nm);
         }
@@ -382,12 +390,16 @@ static char * sub_hex8(firmware *fw, char * op, t_value w)
                         options.flags |= disopt_nullsub_call;
                     }
                     else
+                    {
                         op += sprintf(op,"sub_%08X",w);
+                        if (o && o->is_comment)
+                        op += sprintf(op," /*_%s*/",o->nm);
+                    }
                 }
             }
             if (options.flags & disopt_patch_branch)
             {
-                patch_old_val = w;
+                set_patch_old_values(w, 0);
                 op += sprintf(op,"_my");
             }
         }
@@ -437,7 +449,7 @@ static char * num(char * op, t_value w, int decmax)
 
     if (options.flags & disopt_patch_value)
     {
-        patch_old_val = w;
+        set_patch_old_values(w, 0);
         w = patch_new_val;
     }
 
@@ -1326,7 +1338,10 @@ void disassemble(firmware *fw, FILE *outfile, t_address start, t_value length)
 
                 if ((options.flags & disopt_patch_branch) || (options.flags & disopt_patch_value))
                 {
-                    fprintf(outfile,"  // --> Patched. Old value = 0x%X.", patch_old_val);
+                    if (patch_old_func_name)
+                        fprintf(outfile,"  // --> Patched. Old value = _%s.", patch_old_func_name);
+                    else
+                        fprintf(outfile,"  // --> Patched. Old value = 0x%X.", patch_old_val);
                     if ((options.flags & disopt_patch_comment) && patch_comment)
                     {
                         fprintf(outfile, " %s", patch_comment);

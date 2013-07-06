@@ -247,7 +247,7 @@ asm volatile (
 "    MOV     R0, #0x280 \n"
 "    STR     R0, [SP, #0x68] \n"
 "    LDR     R1, =sub_FF005EE0_my \n"  // --> Patched. Old value = 0xFF005EE0.
-"    B       sub_FF00124C \n"  // Continue in firmware
+"    LDR     PC, =0xFF00124C \n"  // Continue in firmware
 );
 }
 
@@ -342,7 +342,7 @@ asm volatile (
 "    MOV     R3, #0 \n"
 "    STR     R3, [SP] \n"
 "    LDR     R3, =task_Startup_my \n"  // --> Patched. Old value = 0xFF00FBF4.
-"    B       sub_FF00FD30 \n"  // Continue in firmware
+"    LDR     PC, =0xFF00FD30 \n"  // Continue in firmware
 );
 }
 
@@ -376,7 +376,7 @@ asm volatile (
 "    BL      CreateTask_spytask\n"  // added
 
 "    BL      taskcreatePhySw_my \n"  // --> Patched. Old value = 0xFF0249FC.
-"    B       sub_FF00FC50 \n"  // Continue in firmware
+"    LDR     PC, =0xFF00FC50 \n"  // Continue in firmware
 );
 }
 
@@ -393,7 +393,7 @@ asm volatile (
 "    STR     R3, [SP] \n"
 "    LDR     R3, =mykbd_task \n"  // --> Patched. Old value = 0xFF0249C8.
 "    MOV     R2, #0x2000 \n"  // --> Patched. Old value = 0x800. stack size for new task_PhySw
-"    B       sub_FF024A20 \n"  // Continue in firmware
+"    LDR     PC, =0xFF024A20 \n"  // Continue in firmware
 );
 }
 
@@ -410,7 +410,7 @@ asm volatile (
 "    BLNE    _PostLogicalEventToUI \n"
 "    BL      sub_FF0885B0 \n"
 "    BL      core_spytask_can_start\n"  // CHDK: Set "it's-safe-to-start" flag for spytask
-"    B       sub_FF090AD0 \n"  // Continue in firmware
+"    LDR     PC, =0xFF090AD0 \n"  // Continue in firmware
 );
 }
 
@@ -437,21 +437,21 @@ asm volatile (
 "    LDR     R5, =0x28BC \n"
 "    MOV     R1, #0x10 \n"
 "    LDR     R0, [R5, #0x24] \n"
-"    BL      sub_FF07FAFC \n"
+"    BL      sub_FF07FAFC /*_ClearEventFlag*/ \n"
 "    MOV     R6, #7 \n"
 
 "loc_FF059ED8:\n"
 "    LDR     R0, [R5, #0x24] \n"
 "    MOV     R2, #0 \n"
 "    MOV     R1, #0x17 \n"
-"    BL      sub_FF07F924 \n"
+"    BL      sub_FF07F924 /*_WaitForAnyEventFlag*/ \n"
 "    CMP     R0, #0 \n"
 "    LDRNE   R1, =0x322 \n"
 "    LDRNE   R0, =0xFF059C34 \n"
 "    BLNE    _DebugAssert \n"
 "    LDR     R0, [R5, #0x24] \n"
 "    MOV     R1, SP \n"
-"    BL      sub_FF07FB34 \n"
+"    BL      sub_FF07FB34 /*_GetEventFlagValue*/ \n"
 "    CMP     R0, #0 \n"
 "    LDRNE   R1, =0x323 \n"
 "    LDRNE   R0, =0xFF059C34 \n"
@@ -464,13 +464,13 @@ asm volatile (
 "    STR     R6, [R5, #4] \n"
 "    LDR     R0, [R5, #0x24] \n"
 "    MOV     R1, #5 \n"
-"    BL      sub_FF07FAFC \n"
+"    BL      sub_FF07FAFC /*_ClearEventFlag*/ \n"
 "    BL      sub_FF059BE0 \n"
 "    MOV     R4, #0 \n"
 "    BL      sub_FF05A2C8 \n"
 "    LDR     R0, [R5, #0x24] \n"
 "    MOV     R1, #0x80000000 \n"
-"    BL      sub_FF07FAC8 \n"
+"    BL      sub_FF07FAC8 /*_SetEventFlag*/ \n"
 
 "loc_FF059F50:\n"
 "    LDR     R0, [SP] \n"
@@ -478,7 +478,7 @@ asm volatile (
 "    BEQ     loc_FF059F80 \n"
 "    LDR     R0, [R5, #0x24] \n"
 "    MOV     R1, #2 \n"
-"    BL      sub_FF07FAFC \n"
+"    BL      sub_FF07FAFC /*_ClearEventFlag*/ \n"
 "    CMP     R4, #0 \n"
 "    BNE     loc_FF059ED8 \n"
 "    LDR     R0, =0xBB8 \n"
@@ -496,7 +496,7 @@ asm volatile (
 "    BL      sub_FF05A2C8 \n"
 "    LDR     R0, [R5, #0x24] \n"
 "    MOV     R1, #0x14 \n"
-"    BL      sub_FF07FAFC \n"
+"    BL      sub_FF07FAFC /*_ClearEventFlag*/ \n"
 "    CMP     R4, #0 \n"
 "    BEQ     loc_FF059ED8 \n"
 "    BL      sub_FF059E30_my \n"  // --> Patched. Old value = 0xFF059E30.
@@ -511,7 +511,7 @@ asm volatile (
 "    STR     R6, [R5, #4] \n"
 "    LDR     R0, [R5, #0x24] \n"
 "    MOV     R1, #4 \n"
-"    BL      sub_FF07FAFC \n"
+"    BL      sub_FF07FAFC /*_ClearEventFlag*/ \n"
 "    CMP     R4, #0 \n"
 "    BEQ     loc_FF059ED8 \n"
 "    BL      sub_FF059E30_my \n"  // --> Patched. Old value = 0xFF059E30.
@@ -717,6 +717,6 @@ asm volatile (
 "    LDMFD   SP!, {R4,R5,LR} \n"
 "    CMP     R0, #0 \n"
 "    BXNE    LR \n"
-"    B       sub_FF059C58 \n"  // Continue in firmware
+"    LDR     PC, =0xFF059C58 \n"  // Continue in firmware
 );
 }

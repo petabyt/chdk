@@ -11,6 +11,7 @@ typedef struct _osig
     uint32_t    val;        // Value
 	char		sval[100];  // String version of value
     int         type;       // Type of reference (NHSTUB, DEF)
+    int         is_comment; // Used if loading values in comments as well as normal
     int         pct;        // Used for processing modemap entries
     struct _osig *nxt;      // next list entry
 } osig;

@@ -94,7 +94,7 @@
     #define CAM_CHDK_PTP                    1   // include CHDK PTP support
 
     #undef  CAM_HAS_FILEWRITETASK_HOOK          // FileWriteTask hook is available (local file write can be prevented)
-    #undef  CAM_FILEWRITETASK_SEEKS          // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
+    #undef  CAM_FILEWRITETASK_SEEKS             // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
 
     #define CAM_UNCACHED_BIT                0x10000000 // bit indicating the uncached memory
 
@@ -214,9 +214,9 @@
     #define CAMERA_MIN_DIST         0           // Define min distance that can be set in _MoveFocusLensToDistance (allow override - e.g. G12 min dist = 1)
     #define CAMERA_MAX_DIST         65535       // Define max distance that can be set in _MoveFocusLensToDistance (allow override for superzooms - SX30/SX40)
 
-	#undef	DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY	// Draw pixels on active bitmap buffer only.
+    #undef  DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   // Draw pixels on active bitmap buffer only.
                                                 // Requires bitmap_buffer & active_bitmap_buffer location in stubs_min.S or stubs_entry.S.
-	
+
     #undef  CAM_ZOOM_ASSIST_BUTTON_CONTROL      // Activate menu option to enable/disable the zoom assist button on the SX30/SX40
                                                 // For other cameras, requires additional support code in kbd.c (see the SX30 or SX40 version)
 

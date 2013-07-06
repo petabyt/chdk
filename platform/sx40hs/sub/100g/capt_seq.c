@@ -24,7 +24,7 @@ asm volatile (
 "    LDR     R0, [R7, #4] \n"
 "    MOV     R2, #0 \n"
 "    MOV     R1, SP \n"
-"    BL      sub_FF02B0F4 \n"
+"    BL      sub_FF02B0F4 /*_ReceiveMessageQueue*/ \n"
 "    TST     R0, #1 \n"
 "    BEQ     loc_FF07C4A8 \n"
 "    LDR     R1, =0x491 \n"
@@ -300,7 +300,7 @@ asm volatile (
 "    LDR     R0, [SP] \n"
 "    LDR     R1, [R0, #4] \n"
 "    LDR     R0, [R7] \n"
-"    BL      sub_FF088B74 \n"
+"    BL      sub_FF088B74 /*_SetEventFlag*/ \n"
 "    LDR     R5, [SP] \n"
 "    LDR     R0, [R5, #8] \n"
 "    CMP     R0, #0 \n"
@@ -377,7 +377,7 @@ asm volatile (
 "    LDR     R0, [R6, #0x20] \n"
 "    MOV     R2, #0 \n"
 "    ADD     R1, SP, #0x20 \n"
-"    BL      sub_FF02B0F4 \n"
+"    BL      sub_FF02B0F4 /*_ReceiveMessageQueue*/ \n"
 "    LDR     R0, [SP, #0x10] \n"
 "    CMP     R0, #1 \n"
 "    BNE     loc_FF0CC49C \n"
@@ -402,7 +402,7 @@ asm volatile (
 "    BL      sub_FF0CD864 \n"
 "    LDR     R0, [R6, #0x1C] \n"
 "    MOV     R1, #1 \n"
-"    BL      sub_FF088B74 \n"
+"    BL      sub_FF088B74 /*_SetEventFlag*/ \n"
 "    BL      _ExitTask \n"
 "    ADD     SP, SP, #0x24 \n"
 "    LDMFD   SP!, {R4-R9,PC} \n"
@@ -421,14 +421,14 @@ asm volatile (
 "    BNE     loc_FF0CC534 \n"
 "    LDR     R0, [R6, #0x1C] \n"
 "    MOV     R1, #0x80 \n"
-"    BL      sub_FF088BA8 \n"
+"    BL      sub_FF088BA8 /*_ClearEventFlag*/ \n"
 "    LDR     R0, =0xFF0C7464 \n"
 "    MOV     R1, #0x80 \n"
 "    BL      sub_FF1BD7E0 \n"
 "    LDR     R0, [R6, #0x1C] \n"
 "    MOV     R2, R7 \n"
 "    MOV     R1, #0x80 \n"
-"    BL      sub_FF088AB4 \n"
+"    BL      sub_FF088AB4 /*_WaitForAllEventFlag*/ \n"
 "    TST     R0, #1 \n"
 "    LDRNE   R1, =0x14FE \n"
 "    BNE     loc_FF0CC5F0 \n"
@@ -447,14 +447,14 @@ asm volatile (
 "    BL      sub_FF0CC3E0 \n"
 "    LDR     R0, [R6, #0x1C] \n"
 "    MOV     R1, #0x100 \n"
-"    BL      sub_FF088BA8 \n"
+"    BL      sub_FF088BA8 /*_ClearEventFlag*/ \n"
 "    LDR     R0, =0xFF0C7474 \n"
 "    MOV     R1, #0x100 \n"
 "    BL      sub_FF1BE5C8 \n"
 "    LDR     R0, [R6, #0x1C] \n"
 "    MOV     R2, R7 \n"
 "    MOV     R1, #0x100 \n"
-"    BL      sub_FF088AB4 \n"
+"    BL      sub_FF088AB4 /*_WaitForAllEventFlag*/ \n"
 "    TST     R0, #1 \n"
 "    BEQ     loc_FF0CC520 \n"
 "    LDR     R1, =0x1508 \n"
@@ -483,7 +483,7 @@ asm volatile (
 "    BNE     loc_FF0CC5FC \n"
 "    LDR     R0, [R6, #0x1C] \n"
 "    MOV     R1, #4 \n"
-"    BL      sub_FF088BA8 \n"
+"    BL      sub_FF088BA8 /*_ClearEventFlag*/ \n"
 "    LDR     R1, =0xFF0C7494 \n"
 "    LDR     R0, =0xFFFFF400 \n"
 "    MOV     R2, #4 \n"
@@ -492,7 +492,7 @@ asm volatile (
 "    LDR     R0, [R6, #0x1C] \n"
 "    MOV     R2, R7 \n"
 "    MOV     R1, #4 \n"
-"    BL      sub_FF0889D0 \n"
+"    BL      sub_FF0889D0 /*_WaitForAnyEventFlag*/ \n"
 "    TST     R0, #1 \n"
 "    BEQ     loc_FF0CC520 \n"
 "    LDR     R1, =0x1530 \n"
@@ -876,7 +876,7 @@ asm volatile (
 "    MOV     R4, R0 \n"
 "    LDR     R0, [R7, #0x1C] \n"
 "    MOV     R1, #0x3E \n"
-"    BL      sub_FF088BA8 \n"
+"    BL      sub_FF088BA8 /*_ClearEventFlag*/ \n"
 "    MOV     R2, #0 \n"
 "    LDRSH   R0, [R4, #4] \n"
 "    MOV     R1, R2 \n"
@@ -928,7 +928,7 @@ asm volatile (
 "    STRH    R0, [R4, #0xC] \n"
 "    LDRSH   R0, [R4, #6] \n"
 "    BL      sub_FF0B76AC_my \n"  // --> Patched. Old value = 0xFF0B76AC.
-"    B       sub_FF0C8A4C \n"  // Continue in firmware
+"    LDR     PC, =0xFF0C8A4C \n"  // Continue in firmware
 );
 }
 
@@ -952,7 +952,7 @@ asm volatile (
 "    STRH    R4, [R5, #2] \n"
 "    BLEQ    _DebugAssert \n"
 "    MOV     R0, R4 \n"
-"    BL      apex2us \n"  // --> Patched. Old value = 0xFF297C24.
-"    B       sub_FF0B76F0 \n"  // Continue in firmware
+"    BL      apex2us \n"  // --> Patched. Old value = _apex2us.
+"    LDR     PC, =0xFF0B76F0 \n"  // Continue in firmware
 );
 }

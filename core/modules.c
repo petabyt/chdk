@@ -105,7 +105,7 @@ static int module_edgeovr_load()
 
     if ( flag_load_fail==0 )
         if (!module_load(&h_edgeovr))
-    		flag_load_fail = 1;
+            flag_load_fail = 1;
 
     return flag_load_fail == 0;
 }
@@ -542,12 +542,6 @@ static void default_load_dng_to_rawbuffer(char *fn, char *rawadr)
         libdng->load_dng_to_rawbuffer(fn, rawadr);
 }
 
-static void default_create_dng_header_for_ptp(ptp_data_chunk *pdc)
-{
-    // Do nothing unless module is loaded
-    return;
-}
-
 // Default library - module unloaded
 libdng_sym default_libdng =
 {
@@ -558,10 +552,10 @@ libdng_sym default_libdng =
     default_load_bad_pixels_list_b,
     dummy_int,                          //badpixel_list_loaded_b
     default_convert_dng_to_chdk_raw,
-    dummy_int,                         //write_dng
+    dummy_int,                          //write_dng
     default_load_dng_to_rawbuffer,
-    default_create_dng_header_for_ptp, 
-    dummy_void // free_dng_header_for_ptp
+    dummy_void,                         //create_dng_header_for_ptp
+    dummy_void                          //free_dng_header_for_ptp
 };
 
 // Library pointer

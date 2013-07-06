@@ -27,7 +27,7 @@ asm volatile (
 "    LDR     R0, [R4, #0x28] \n"
 "    MOV     R2, #0 \n"
 "    ADD     R1, SP, #4 \n"
-"    BL      sub_004372A4 \n"
+"    BL      sub_004372A4 /*_ReceiveMessageQueue*/ \n"
 "    LDR     R0, [R4, #0x30] \n"
 "    CMP     R0, #0 \n"
 "    LDRNE   R0, [R4, #0x10] \n"
@@ -145,7 +145,7 @@ asm volatile (
 "    STR     R9, [SP] \n"
 "    LDR     R0, [R4, #0x2C] \n"
 "    MOV     R2, R10 \n"
-"    BL      sub_00437C1C \n"
+"    BL      sub_00437C1C /*_PostMessageQueueStrictly*/ \n"
 "    B       loc_FF990234 \n"
 );
 }

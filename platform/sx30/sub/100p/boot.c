@@ -237,7 +237,7 @@ asm volatile (
 "    STR     R0, [SP, #0x1C] \n"
 "    LDR     R0, =0x19B \n"
 "    LDR     R1, =sub_FF815EE0_my \n"  // --> Patched. Old value = 0xFF815EE0.
-"    B       sub_FF8111F0 \n"  // Continue in firmware
+"    LDR     PC, =0xFF8111F0 \n"  // Continue in firmware
 );
 }
 
@@ -313,7 +313,7 @@ asm volatile (
 "    MOV     R3, #0 \n"
 "    STR     R3, [SP] \n"
 "    LDR     R3, =task_Startup_my \n"  // --> Patched. Old value = 0xFF81FAF0.
-"    B       sub_FF81FBC0 \n"  // Continue in firmware
+"    LDR     PC, =0xFF81FBC0 \n"  // Continue in firmware
 );
 }
 
@@ -337,7 +337,7 @@ asm volatile (
 "    BL      CreateTask_spytask\n"  // added
 
 "    BL      taskcreatePhySw_my \n"  // --> Patched. Old value = 0xFF83461C.
-"    B       sub_FF81FB24 \n"  // Continue in firmware
+"    LDR     PC, =0xFF81FB24 \n"  // Continue in firmware
 );
 }
 
@@ -354,7 +354,7 @@ asm volatile (
 "    STR     R3, [SP] \n"
 "    LDR     R3, =mykbd_task \n"  // --> Patched. Old value = 0xFF8345E8.
 "    MOV     R2, #0x2000 \n"  // --> Patched. Old value = 0x800. stack size for new task_PhySw
-"    B       sub_FF834640 \n"  // Continue in firmware
+"    LDR     PC, =0xFF834640 \n"  // Continue in firmware
 );
 }
 
@@ -371,7 +371,7 @@ asm volatile (
 "    BLNE    _PostLogicalEventToUI \n"
 "    BL      sub_FF89A2C4_my \n"  // --> Patched. Old value = 0xFF89A2C4.
 "    BL      core_spytask_can_start\n"  // CHDK: Set "it's-safe-to-start" flag for spytask
-"    B       sub_FF8A3B70 \n"  // Continue in firmware
+"    LDR     PC, =0xFF8A3B70 \n"  // Continue in firmware
 );
 }
 
@@ -382,7 +382,7 @@ asm volatile (
 "    STMFD   SP!, {R4,LR} \n"
 "    MOV     R0, #3 \n"
 "    BL      sub_FF876E1C_my \n"  // --> Patched. Old value = 0xFF876E1C.
-"    B       sub_FF89A2D0 \n"  // Continue in firmware
+"    LDR     PC, =0xFF89A2D0 \n"  // Continue in firmware
 );
 }
 
@@ -412,7 +412,7 @@ asm volatile (
 "    BL      sub_FF8766E0 \n"
 "    MOV     R0, R6 \n"
 "    BL      sub_FF876A44_my \n"  // --> Patched. Old value = 0xFF876A44.
-"    B       sub_FF876E74 \n"  // Continue in firmware
+"    LDR     PC, =0xFF876E74 \n"  // Continue in firmware
 );
 }
 
@@ -431,7 +431,7 @@ asm volatile (
 "    LDR     R0, [R4, #0x38] \n"
 "    MOV     R1, R5 \n"
 "    BL      sub_FF876764_my \n"  // --> Patched. Old value = 0xFF876764.
-"    B       sub_FF876A70 \n"  // Continue in firmware
+"    LDR     PC, =0xFF876A70 \n"  // Continue in firmware
 );
 }
 
@@ -629,7 +629,7 @@ asm volatile (
 "    MOV     R2, #0 \n"
 "    LDR     R0, [R0, #8] \n"
 "    MOV     R1, SP \n"
-"    BL      sub_FF83A4C8 \n"
+"    BL      sub_FF83A4C8 /*_ReceiveMessageQueue*/ \n"
 "    CMP     R0, #0 \n"
 "    LDRNE   R1, =0x262 \n"
 "    LDRNE   R0, =0xFF865FC4 \n"

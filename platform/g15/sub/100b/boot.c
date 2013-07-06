@@ -233,7 +233,7 @@ asm volatile (
 // Execute overwritten instructions from original code, then jump to firmware
 "    STMFD   SP!, {R3-R5,LR} \n"
 "    MOV     R12, R3 \n"
-"    B       sub_0068AF0C \n"  // Continue in firmware
+"    LDR     PC, =0x0068AF0C \n"  // Continue in firmware
 );
 }
 
@@ -254,7 +254,7 @@ asm volatile (
 // Execute overwritten instructions from original code, then jump to firmware
 "    STMFD   SP!, {R1-R9,LR} \n"
 "    MOV     R4, R0 \n"
-"    B       sub_0068AB94 \n"  // Continue in firmware
+"    LDR     PC, =0x0068AB94 \n"  // Continue in firmware
 );
 }
 
@@ -526,7 +526,7 @@ asm volatile (
 "    MOV     R2, #0x2000 \n"  // --> Patched. Old value = 0x800. stack size for new task_PhySw so we don't have to do stack switch
 "    MOV     R1, #0x17 \n"
 "    LDR     R0, =0xFF01A1EC \n"
-"    BL      sub_0068AF04 \n"
+"    BL      sub_0068AF04 /*_CreateTaskStrictly*/ \n"
 "    STR     R0, [R4, #4] \n"
 
 "loc_FF019F78:\n"
@@ -604,7 +604,7 @@ asm volatile (
 "    MOV     R2, #0 \n"
 "    LDR     R0, [R0, #8] \n"
 "    MOV     R1, SP \n"
-"    BL      sub_0068BDE0 \n"
+"    BL      sub_0068BDE0 /*_ReceiveMessageQueue*/ \n"
 "    CMP     R0, #0 \n"
 "    LDRNE   R1, =0x20B \n"
 "    LDRNE   R0, =0xFF05EE64 \n"
