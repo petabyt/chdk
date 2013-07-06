@@ -126,16 +126,80 @@ asm volatile (
 "    ORREQ   R0, R0, #0x8000 \n"
 "    STREQ   R0, [R4, #8] \n"
 //hook start
-"    STMFD   SP!, {R2,R4-R12,LR} \n"
+"    STMFD   SP!, {R2-R12,LR} \n"
 "    MOV     R0, R4 \n"
 "    BL      filewrite_main_hook \n"
-"    LDMFD   SP!, {R2,R4-R12,LR} \n"
+"    LDMFD   SP!, {R2-R12,LR} \n"
 //hook end
 "    LDR     R1, [R4, #8] \n"
 "    LDR     R3, [R4, #0xC] \n"
 "    ADD     R0, R4, #0x50 \n"
-"    BL      fwt_open \n"  // --> Patched. Old value = 0xFF34ADAC.
+"    BL      sub_FF34ADAC_my \n"  // --> Patched. Old value = 0xFF34ADAC.
 "    LDR     PC, =0xFF34AC54 \n"  // Continue in firmware
+);
+}
+
+/*************************************************************/
+//** sub_FF34ADAC_my @ 0xFF34ADAC - 0xFF34AE84, length=55
+void __attribute__((naked,noinline)) sub_FF34ADAC_my() {
+asm volatile (
+"    STMFD   SP!, {R4-R10,LR} \n"
+"    SUB     SP, SP, #0x38 \n"
+"    MOV     R7, R0 \n"
+"    MOV     R8, R1 \n"
+"    MOV     R9, R2 \n"
+"    MOV     R5, R3 \n"
+"    BL      sub_FF205AB0 \n"
+"    AND     R0, R0, #0x7F \n"
+"    CMP     R0, #8 \n"
+"    CMPNE   R0, #0x22 \n"
+"    MOV     R6, #0 \n"
+"    MOVEQ   R4, #1 \n"
+"    MOVNE   R4, R6 \n"
+"    CMP     R4, #1 \n"
+"    BLEQ    sub_FF1D0BE4 \n"
+"    MOV     R2, R9 \n"
+"    MOV     R1, R8 \n"
+"    MOV     R0, R7 \n"
+"    BL      fwt_open \n"  // --> Patched. Old value = _Open.
+"    CMP     R4, #1 \n"
+"    MOV     R10, R0 \n"
+"    BLEQ    sub_FF1D0C34 \n"
+"    CMN     R10, #1 \n"
+"    MOVNE   R0, R10 \n"
+"    BNE     loc_FF34AE80 \n"
+"    CMP     R4, #1 \n"
+"    BLEQ    sub_FF1D0BE4 \n"
+"    MOV     R0, R7 \n"
+"    BL      sub_FF026AE4 \n"
+"    MOV     R2, #0xF \n"
+"    MOV     R1, R7 \n"
+"    MOV     R0, SP \n"
+"    BL      sub_FF45F614 \n"
+"    LDR     R0, =0x41FF \n"
+"    STRB    R6, [SP, #0xF] \n"
+"    STR     R0, [SP, #0x20] \n"
+"    MOV     R0, #0x10 \n"
+"    STR     R0, [SP, #0x24] \n"
+"    ADD     R1, SP, #0x20 \n"
+"    MOV     R0, SP \n"
+"    STR     R6, [SP, #0x28] \n"
+"    STR     R5, [SP, #0x2C] \n"
+"    STR     R5, [SP, #0x30] \n"
+"    STR     R5, [SP, #0x34] \n"
+"    BL      sub_FF06A86C \n"
+"    MOV     R2, R9 \n"
+"    MOV     R1, R8 \n"
+"    MOV     R0, R7 \n"
+"    BL      fwt_open \n"  // --> Patched. Old value = _Open.
+"    CMP     R4, #1 \n"
+"    MOV     R5, R0 \n"
+"    BLEQ    sub_FF1D0C34 \n"
+"    MOV     R0, R5 \n"
+
+"loc_FF34AE80:\n"
+"    ADD     SP, SP, #0x38 \n"
+"    LDMFD   SP!, {R4-R10,PC} \n"
 );
 }
 

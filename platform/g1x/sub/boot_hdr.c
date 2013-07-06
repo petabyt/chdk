@@ -30,8 +30,8 @@ void __attribute__((naked,noinline)) taskHook(context_t **context)
 	if(tcb->entry == (void*)task_RotaryEncoder)		tcb->entry = (void*)JogDial_task_my;
 	if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;
 	if(tcb->entry == (void*)task_ExpDrv)			tcb->entry = (void*)exp_drv_task;
-    //if(tcb->entry == (void*)task_FileWrite)         tcb->entry = (void*)filewritetask;
-    
+    if(tcb->entry == (void*)task_FileWrite)         tcb->entry = (void*)filewritetask;
+
     asm volatile("LDMFD   SP!, {R0-R12,PC}\n");     // G1X crashes without this
 }
 
