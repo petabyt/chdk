@@ -19,6 +19,7 @@ extern void task_InitFileModules();
 extern void task_RotaryEncoder();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
+extern void task_FileWrite();
 
 void __attribute__((naked,noinline)) taskHook(context_t **context)
 { 
@@ -32,6 +33,7 @@ void __attribute__((naked,noinline)) taskHook(context_t **context)
 	if(tcb->entry == (void*)task_RotaryEncoder)		tcb->entry = (void*)JogDial_task_my;
 	if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;
 	if(tcb->entry == (void*)task_ExpDrv)			tcb->entry = (void*)exp_drv_task;
+    if(tcb->entry == (void*)task_FileWrite)         tcb->entry = (void*)filewritetask;
     
     asm volatile("LDMFD   SP!, {R0-R12,PC}\n");     // G1X crashes without this
 }
@@ -260,7 +262,7 @@ asm volatile (
 "    MOV     R0, #0x280 \n"
 "    STR     R0, [SP, #0x68] \n"
 "    LDR     R1, =sub_FF005F38_my \n"  // --> Patched. Old value = 0xFF005F38.
-"    B       sub_FF001258 \n"  // Continue in firmware
+"    LDR     PC, =0xFF001258 \n"  // Continue in firmware
 );
 }
 
@@ -372,7 +374,7 @@ asm volatile (
 "    MOV     R3, #0 \n"
 "    STR     R3, [SP] \n"
 "    LDR     R3, =task_Startup_my \n"  // --> Patched. Old value = 0xFF00FD34.
-"    B       sub_FF00FE68 \n"  // Continue in firmware
+"    LDR     PC, =0xFF00FE68 \n"  // Continue in firmware
 );
 }
 
@@ -395,7 +397,7 @@ asm volatile (
 "    BL      CreateTask_spytask\n"  // added
 
 "    BL      taskcreatePhySw_my \n"  // --> Patched. Old value = 0xFF02380C.
-"    B       sub_FF00FD64 \n"  // Continue in firmware
+"    LDR     PC, =0xFF00FD64 \n"  // Continue in firmware
 );
 }
 
@@ -412,7 +414,7 @@ asm volatile (
 "    STR     R3, [SP] \n"
 "    LDR     R3, =mykbd_task \n"  // --> Patched. Old value = 0xFF0237D8.
 "    MOV     R2, #0x2000 \n"  // --> Patched. Old value = 0x800. stack size for new task_PhySw
-"    B       sub_FF023830 \n"  // Continue in firmware
+"    LDR     PC, =0xFF023830 \n"  // Continue in firmware
 );
 }
 
@@ -429,7 +431,7 @@ asm volatile (
 "    BLNE    _PostLogicalEventToUI \n"
 "    BL      sub_FF0902D0 \n"
 "    BL      core_spytask_can_start\n"  // CHDK: Set "it's-safe-to-start" flag for spytask
-"    B       sub_FF09A998 \n"  // Continue in firmware
+"    LDR     PC, =0xFF09A998 \n"  // Continue in firmware
 );
 }
 
@@ -471,7 +473,7 @@ asm volatile (
 "    MOV     R2, #0 \n"
 "    LDR     R0, [R0, #8] \n"
 "    MOV     R1, SP \n"
-"    BL      sub_FF029EA8 \n"
+"    BL      sub_FF029EA8 /*_ReceiveMessageQueue*/ \n"
 "    CMP     R0, #0 \n"
 "    LDRNE   R1, =0x256 \n"
 "    LDRNE   R0, =0xFF05787C \n"
