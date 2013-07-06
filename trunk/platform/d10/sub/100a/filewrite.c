@@ -1,6 +1,7 @@
 #include "lolevel.h"
 #include "platform.h"
 
+// ifdef allows easy building with/without filewrite support for testing
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
 typedef struct {
     unsigned int address;
@@ -23,7 +24,6 @@ typedef struct
 
 #include "../../../generic/filewrite.c"
 
-// ifdef for development with/without, not be needed once development is complete
 void __attribute__((naked,noinline)) filewritetask() { // FFA25FB4 "FileWriteTask"
 asm volatile (
 "                STMFD   SP!, {R1-R5,LR}\n"
