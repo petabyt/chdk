@@ -20,7 +20,6 @@ static char osd_buf[50];
 
 volatile int chdk_started_flag=0;
 
-static int raw_need_postprocess;
 static volatile int spytask_can_start;
 #ifdef CAM_HAS_GPS
     extern void wegpunkt();
@@ -129,8 +128,6 @@ void core_spytask()
     // Init camera_info bits that can't be done statically
     camera_info_init();
 
-    raw_need_postprocess = 0;
-
     spytask_can_start=0;
 
 #ifdef OPT_EXMEM_MALLOC
@@ -222,7 +219,7 @@ void core_spytask()
 
         if (raw_data_available)
         {
-            raw_need_postprocess = raw_process();
+            raw_process();
             extern void hook_raw_save_complete();
             hook_raw_save_complete();
             raw_data_available = 0;
@@ -264,7 +261,6 @@ void core_spytask()
         if ((camera_info.state.state_shooting_progress == SHOOTING_PROGRESS_PROCESSING) && (!shooting_in_progress()))
         {
             camera_info.state.state_shooting_progress = SHOOTING_PROGRESS_DONE;
-            if (raw_need_postprocess) raw_postprocess();
         }
 
         i = 0;
