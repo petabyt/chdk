@@ -395,6 +395,7 @@
 298 "Tip zatvaraèa"
 299 "Omoguæi korisnièki izbornik"
 300 "Korisnièki izbornik"
+301 "Uredi korisnièki izbornik"
 
 302 "Skala adapt.leæe,100=1x"
 303 "Prikaži SD-memoriju"
@@ -424,9 +425,9 @@
 324 "Min. brzina zatvaraèa"
 325 "Korisnièki koef.(1/FL/factor)"
 326 "IS koef. (Tv*factor)"
-327 "Max ISO HI (x10)"
-328 "Max ISO AUTO (x10)"
-329 "Min ISO (x10)"
+327 "Max ISO HI "
+328 "Max ISO AUTO "
+329 "Min ISO "
 
 330 "Boja naslova u izborniku"
 331 "Boja pozadine u izborniku"
@@ -548,7 +549,7 @@
 435 "Onemoguæi Raw u Panorami"
 436 "Onemoguæi Raw u Auto modu"
 437 "   SAMO u videu"
-//438 "   Snaga bljeskalice"
+438 "Auto blic+Exp.komp."
 439 "'DNG' nastavak datoteke"
 440 "DNG vidljiv preko USB"
 441 "Planiranje"
@@ -664,7 +665,7 @@
 //GPS Ende-----------------------------------------
 
 546 "2.alter.min.zatvaraè"
-547 "2.alter.max.ISO (x10)"
+547 "2.alter.max.ISO "
 548 "Preeksp.kompenzacija"
 549 "Kompenziraj ako je preeksp.>= x%"
 
@@ -712,3 +713,24 @@
 
 580 "Omoguæi kratice tipki"
 581 "<< Kratice onemoguæene  >>"
+
+582 "Konzola"
+583 "Prikaži konzolu u"
+584 "Sakrij N sec.od promjene"
+585 "Reset konzole"
+586 "Prikaži zadnju konzolu"
+587 "Reset velièine i pozicije konzole"
+
+588 "RAM Dump postavke"
+589 "Poèetna adresa"
+590 "Dump_velièina(0=Cijeli RAM)"
+591 "Dump_odgoda (s)"
+
+592 "Nema mjesta za modul\n'%s'"
+593 "Modul\n'%s'\nne podržava 'simple' mod"
+
+594 "Dodaj\n%s\nu korisnièki izbornik?"
+595 "Ukloni\n%s\niz korisnièkog izbornika?"
+596 "Dodaj i ukloni stavke izbornika"
+597 "Dodaj modul u korisnièki izbornik"
+598 "Ukloni stavku iz korisnièkog izbornika"

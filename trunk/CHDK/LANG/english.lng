@@ -417,12 +417,12 @@
 321 "Custom Auto ISO"
 322 "Custom Auto ISO"
 323 "Enable Custom Auto ISO"
-324 "Minimal Shutter speed"
+324 "Minimum Shutter speed"
 325 "User Factor (1/FL/factor)"
 326 "IS Factor (Tv*factor)"
-327 "Max ISO HI (x10)"
-328 "Max ISO AUTO (x10)"
-329 "Min ISO (x10)"
+327 "Max ISO HI"
+328 "Max ISO AUTO"
+329 "Min ISO"
 
 330 "Menu Title Text Color"
 331 "Menu Title Background Color"
@@ -658,10 +658,10 @@
 545	"Navigation to Home Loc started"
 //GPS Ende-----------------------------------------
 
-546 "Second alternative min shutter"
-547 "Second alternative max ISO (x10)"
-548 "Day overexp compensation"
-549 "Compensate if overexp>= x%"
+546 "Fallback Min. Shutter Speed"
+547 "Fallback Max ISO"
+548 "OverExposure Compensation"
+549 "OverExposed Pixel Percentage"
 
 550 "To cancel [Press half]"
 

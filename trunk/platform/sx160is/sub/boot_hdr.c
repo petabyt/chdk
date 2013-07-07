@@ -16,6 +16,7 @@ extern void task_InitFileModules();
 extern void task_RotaryEncoder();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
+extern void task_FileWrite();
 
 /*----------------------------------------------------------------------
     spytask

@@ -442,9 +442,9 @@
  324 "Minimális záridö"
  325 "Felh.tényezö(1/FL/factor)"
  326 "IS tényezö (Tv*tényezö)"
- 327 "Max ISO HI (x10)"
- 328 "Max ISO AUTO (x10)"
- 329 "Min ISO (x10)"
+ 327 "Max ISO HI "
+ 328 "Max ISO AUTO "
+ 329 "Min ISO "
 
  330 "Menü cimke szöveg színe"
  331 "Menü cimke háttér színe"

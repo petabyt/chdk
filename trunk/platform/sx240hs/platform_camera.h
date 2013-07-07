@@ -107,9 +107,6 @@
 
     #define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
 
-    #define USE_REAL_AUTOISO                    1
-    #define OVEREXP_COMPENSATE_OVERALL          1
-
     #define CAM_LOAD_CUSTOM_COLORS              1           // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                     0xA8        // Start color index for CHDK colors loaded into camera palette.
 

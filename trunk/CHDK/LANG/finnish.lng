@@ -451,9 +451,9 @@
 324 "Minimi sulkijan nopeus"
 325 "Oma kerroin(1/FL/kerroin)"
 326 "IS kerroin (Tv*kerroin)"
-327 "Maks. ISO HI (x10)"
-328 "Maks. ISO AUTO (x10)"
-329 "Min ISO (x10)"
+327 "Maks. ISO HI "
+328 "Maks. ISO AUTO "
+329 "Min ISO "
 
 330 "Valikon osakkeen teksti"
 331 "Valikon osakkeen tausta"

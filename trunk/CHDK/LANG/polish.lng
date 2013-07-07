@@ -429,9 +429,9 @@
 324 "Najdluzszy czas migawki"
 325 "Wspólczynnik (1/ogniskowa/k)"
 326 "Wspólczynnik IS (Tv*k)"
-327 "Max ISO HI (x10)"
-328 "Max ISO AUTO (x10)"
-329 "Min ISO (x10)"
+327 "Max ISO HI "
+328 "Max ISO AUTO "
+329 "Min ISO "
 
 330 "Kolor tekstu belki tytulowej menu"
 331 "Kolor tla belki tytulowej menu"

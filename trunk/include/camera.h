@@ -208,8 +208,8 @@
 
     #define CAM_MARKET_ISO_BASE             100 // Base 'market' ISO value (SX40 & G1X use 200)
     #undef  CAM_HAS_HI_ISO_AUTO_MODE            // Define if camera has 'HI ISO Auto' mode (as well as Auto ISO mode), needed for adjustment in user auto ISO menu 
-    #undef  USE_REAL_AUTOISO                    // Define this to use real-iso instead of marketing-iso as values of autoiso mechanizm
-    #undef  OVEREXP_COMPENSATE_OVERALL          // Define this to make overexposure_compensation work for all scenes, instead of day-light only
+    #undef  USE_MARKET_AUTOISO                  // Define this to use market-iso instead of real-iso as values of autoiso mechanizm
+    #undef  OVEREXP_COMPENSATE_OVERALL          // Define this to make overexposure_compensation in Custom AutoISO work for all scenes, instead when ISO is less than max value (i.e. normal daylight)
 
     #define CAMERA_MIN_DIST         0           // Define min distance that can be set in _MoveFocusLensToDistance (allow override - e.g. G12 min dist = 1)
     #define CAMERA_MAX_DIST         65535       // Define max distance that can be set in _MoveFocusLensToDistance (allow override for superzooms - SX30/SX40)
