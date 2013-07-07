@@ -149,4 +149,6 @@
     // Define shortcut overrides where defaults are not suitable
     #define SHORTCUT_TOGGLE_ZEBRA               KEY_ERASE   // On camera Shutter Half Press + Up = switch MF on/off
 
+    #define CAM_HAS_FILEWRITETASK_HOOK          1   // file write hook for remote capture etc
+
 //----------------------------------------------------------
