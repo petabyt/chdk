@@ -13,6 +13,12 @@
 "    LDREQ   R3, =exp_drv_task\n"
 "    BEQ     exitHook\n"
 
+/*** INSTALL filewrite() hook ***/
+"    LDR     R0, =task_FileWrite\n"
+"    CMP     R0, R3\n"
+"    LDREQ   R3, =filewritetask\n"
+"    BEQ     exitHook\n"
+
 /*** INSTALL JogDial() hook ***/
 "    LDR     R0, =task_RotaryEncoder\n"
 "    CMP     R0, R3\n"

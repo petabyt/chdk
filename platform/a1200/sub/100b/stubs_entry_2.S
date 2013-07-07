@@ -15,3 +15,7 @@ NHSTUB(MakeAFScan, 0xff8d95ec)
 NHSTUB(LockAndRefresh, 0xff8a39a4)
 NHSTUB(UnlockAndRefresh, 0xff8a3a08)
 NHSTUB(platformsub_kbd_fetch_data, 0xff85f968)
+
+// Additional
+NHSTUB(TurnOnMic,                   0xff85ffe4)
+NHSTUB(TurnOffMic,                  0xff860010)

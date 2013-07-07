@@ -413,9 +413,9 @@
 324 "Vitesse décl. mini"
 325 "Facteur utilisat. (1/FL/facteur)"
 326 "Facteur IS (Tv*facteur)"
-327 "Max ISO HI (x10)"
-328 "Max ISO AUTO (x10)"
-329 "Min ISO (x10)"
+327 "Max ISO HI "
+328 "Max ISO AUTO "
+329 "Min ISO "
 
 330 "Texte du titre du menu"
 331 "Fond du titre du menu"

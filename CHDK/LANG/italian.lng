@@ -437,9 +437,9 @@
 324 "Velocità MIN otturatore"
 325 "Fat. Utente (1/FL/Fat)"
 326 "Fattore IS (TV*Fat)"
-327 "Max ISO HI (x10)"
-328 "Max ISO AUTO (x10)"
-329 "Min ISO (x10)"
+327 "Max ISO HI "
+328 "Max ISO AUTO "
+329 "Min ISO "
 
 330 "Colore testo menu titolo"
 331 "Colore sfondo menu titolo"

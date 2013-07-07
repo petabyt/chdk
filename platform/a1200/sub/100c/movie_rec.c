@@ -86,6 +86,7 @@ asm volatile (
 "loc_FF9646B8:\n"
       "    LDR     R1, [R4, #0xCC] \n"
       "    BLX     R1 \n"
+      "    BL      mute_on_zoom\n"	            // added
       "    B       loc_FF964700 \n"
 "loc_FF9646C4:\n"
       "    LDR     R1, [R0, #0x18] \n"

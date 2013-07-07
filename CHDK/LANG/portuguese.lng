@@ -430,9 +430,9 @@
 324 "Velocidade minima do disparador"
 325 "Fator do usuario (1/FL/fator)"
 326 "Fator IS (Tv*fator)"
-327 "ISO Maximo - HI (x10)"
-328 "ISO Maximo - AUTO (x10)"
-329 "ISO Minimo (x10)"
+327 "ISO Maximo - HI "
+328 "ISO Maximo - AUTO "
+329 "ISO Minimo "
 
 330 "Cor do titulo do menu"
 331 "Cor de fundo do titulo do menu"

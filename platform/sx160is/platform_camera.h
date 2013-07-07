@@ -78,6 +78,9 @@
     #define CAM_BITMAP_HEIGHT                         270 // Actual height of bitmap screen in rows (240 or 270)
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY           1   // Draw pixels on active bitmap buffer only.
 
+    #define CAM_HAS_FILEWRITETASK_HOOK                  1
+    #define CAM_FILEWRITETASK_SEEKS                     1
+
     #define CAM_ZEBRA_NOBUF                             1
 
     #define PARAM_CAMERA_NAME                           4 // parameter number for GetParameterData

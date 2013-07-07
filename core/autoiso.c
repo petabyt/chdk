@@ -94,7 +94,7 @@ static void shooting_calc_autoiso_coef( int min_shutter )
 
 static void shooting_recalc_conf_autoiso_values()
 {
-#ifndef USE_REAL_AUTOISO
+#ifdef USE_MARKET_AUTOISO
     // Initialize only once
     static int iso_b = 0;   // real base iso
     static int iso_m = 0;   // marketing base iso
@@ -103,7 +103,7 @@ static void shooting_recalc_conf_autoiso_values()
     // Base values are correct only when shoot is prepared, so calc multiplier right before first shoot
     if ( !iso_m || !iso_b )
     {
-        iso_b = 10 * shooting_get_iso_base();	// 10 - is additional multiplier from user_entered_value
+        iso_b = shooting_get_iso_base();
         iso_m = shooting_get_iso_market_base();
     }
 
@@ -111,8 +111,7 @@ static void shooting_recalc_conf_autoiso_values()
     if (iso_m == 0)
         iso_m = 1;
 #else
-    // If real ISO in GUI, then just multiply by 10
-    static int iso_b = 10;
+    static int iso_b = 1;
     static int iso_m = 1;
 #endif
 

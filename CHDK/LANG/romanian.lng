@@ -457,9 +457,9 @@
 324 "Viteza minima shutter"
 325 "Fact. utiliz. (1/FL/factor)"
 326 "Factor IS (Tv*factor)"
-327 "ISO HI MAXim (x10)"
-328 "ISO AUTO MAXim (x10)"
-329 "ISO MINim (x10)"
+327 "ISO HI MAXim "
+328 "ISO AUTO MAXim "
+329 "ISO MINim "
 
 330 "Culoare text titlu meniu"
 331 "Culoare fundal titlu meniu"

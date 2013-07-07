@@ -267,9 +267,9 @@ static const ConfInfo conf_info[] = {
     CONF_INFO(159, conf.autoiso_shutter_enum,       CONF_DEF_VALUE,     i:5, NULL), // 5='1/125'
     CONF_INFO(160, conf.autoiso_user_factor,        CONF_DEF_VALUE,     i:5, NULL),
     CONF_INFO(161, conf.autoiso_is_factor,          CONF_DEF_VALUE,     i:2, NULL),
-    CONF_INFO(162, conf.autoiso_max_iso_hi,         CONF_DEF_VALUE,     i:55, NULL),
-    CONF_INFO(163, conf.autoiso_max_iso_auto,       CONF_DEF_VALUE,     i:32, NULL),
-    CONF_INFO(164, conf.autoiso_min_iso,            CONF_DEF_VALUE,     i:8, NULL),
+    CONF_INFO(162, conf.autoiso_max_iso_hi,         CONF_DEF_VALUE,     i:550, NULL),
+    CONF_INFO(163, conf.autoiso_max_iso_auto,       CONF_DEF_VALUE,     i:320, NULL),
+    CONF_INFO(164, conf.autoiso_min_iso,            CONF_DEF_VALUE,     i:50, NULL),
 
     CONF_INFO(165, conf.menu_title_color,           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_WHITE, COLOR_BLACK), NULL),
     CONF_INFO(166, conf.menu_cursor_color,          CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_SELECTED_BG, COLOR_SELECTED_FG), NULL),
@@ -408,11 +408,11 @@ static const ConfInfo conf_info[] = {
 #endif
 
     // AutoISO2
-    CONF_INFO(283, conf.autoiso2_shutter_enum,      CONF_DEF_VALUE,     i:6, NULL), // 6='1/20'
-    CONF_INFO(284, conf.autoiso2_max_iso_auto,      CONF_DEF_VALUE,     i:60, NULL),
+    CONF_INFO(283, conf.autoiso2_shutter_enum,      CONF_DEF_VALUE,     i:0, NULL), // 0="off" 6='1/20'
+    CONF_INFO(284, conf.autoiso2_max_iso_auto,      CONF_DEF_VALUE,     i:600, NULL),
     CONF_INFO(285, conf.autoiso2_over,              CONF_DEF_VALUE,     i:1, NULL),
     CONF_INFO(286, conf.overexp_threshold,          CONF_DEF_VALUE,     i:5, NULL),
-    CONF_INFO(287, conf.overexp_ev_enum,            CONF_DEF_VALUE,     i:3, NULL),
+    CONF_INFO(287, conf.overexp_ev_enum,            CONF_DEF_VALUE,     i:0, NULL), // 0="off"
 
 #if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
     CONF_INFO(288, conf.zoom_assist_button_disable, CONF_DEF_VALUE,     i:0, NULL),

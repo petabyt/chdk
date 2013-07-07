@@ -440,9 +440,9 @@
 324 "Minimum sluitersnelh."
 325 "Gebr.factor (1/FL/factor)"
 326 "IS-factor (Tv*factor)"
-327 "Max ISO HOOG (x10)"
-328 "Max ISO AUTO (x10)"
-329 "Min ISO (x10)"
+327 "Max ISO HOOG "
+328 "Max ISO AUTO "
+329 "Min ISO "
 
 330 "Menutitel tekstkleur"
 331 "Menutitel achtergr.kleur"

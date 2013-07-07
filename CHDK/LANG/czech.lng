@@ -420,9 +420,9 @@
 324 "Min. rychlost závìrky"
 325 "Uživatel. koefic. (1/FL/koef.)"
 326 "IS koeficient (Tv*koef.)"
-327 "Max ISO HI (x10)"
-328 "Max ISO AUTO (x10)"
-329 "Min ISO (x10)"
+327 "Max ISO HI "
+328 "Max ISO AUTO "
+329 "Min ISO "
 
 330 "Menu - barva textu titulku"
 331 "Menu - barva pozadí titulku"
@@ -659,7 +659,7 @@
 //GPS Ende-----------------------------------------
 
 546 "Druhá alternativní MIN spouš"
-547 "Druhé alternativní MAX ISO (x10)"
+547 "Druhé alternativní MAX ISO "
 548 "Denní kompen. pøeexp."
 549 "Kompenzovat, když pøeexp.>= x%"
 

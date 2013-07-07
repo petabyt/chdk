@@ -405,9 +405,9 @@
 324 "Min. Verschlusszeit"
 325 "Benutzer-Faktor (1/FL/F)"
 326 "IS-Faktor (Tv x Faktor)"
-327 "Max. ISO Hi (x10)"
-328 "Max. ISO Auto (x10)"
-329 "Min. ISO (x10)"
+327 "Max. ISO Hi "
+328 "Max. ISO Auto "
+329 "Min. ISO "
 
 330 "Menü-Titel-Text"
 331 "Menü-Titel-Hintergrund"
@@ -674,7 +674,7 @@
 //GPS Ende-----------------------------------------
 
 546 "2. alternative min. Verschlusszeit"
-547 "2. alternativer max. ISO Auto (x10)"
+547 "2. alternativer max. ISO Auto "
 548 "Überbelichtungskorrektur"
 549 "Korrigiere bei Überbelichtung >=x%"
 

@@ -442,9 +442,9 @@
 324 "Veloc. Mín. de Obtura."
 325 "Fact. Pers. (1/FL/factor)"
 326 "Fact. IS (Tv*factor)"
-327 "ISO Máximo Alto (x10)"
-328 "ISO Máximo AUTO (x10)"
-329 "ISO Mínimo (x10)"
+327 "ISO Máximo Alto "
+328 "ISO Máximo AUTO "
+329 "ISO Mínimo "
 
 330 "Texto del Título del Menú"
 331 "Fondo del Título del Menú"

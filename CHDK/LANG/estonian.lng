@@ -451,9 +451,9 @@
 324 "Minimaalne katikukiirus"
 325 "Kasutajafaktor(1/FL/faktor)"
 326 "IS Faktor (Tv*faktor)"
-327 "Max ISO HI (x10)"
-328 "Max ISO AUTO (x10)"
-329 "Min ISO (x10)"
+327 "Max ISO HI "
+328 "Max ISO AUTO "
+329 "Min ISO "
 
 330 "Menüü tiitli teksti värv"
 331 "Menüü tiitli tausta värv"
