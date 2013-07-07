@@ -72,7 +72,7 @@ modifies global fn
 */
 static int raw_create_time; // time raw file was opened, for time stamp
 static int raw_br_counter;  // bracketing counter for raw suffix
-int raw_createfile()
+int raw_createfile(void)
 {
     int fd;
     char dir[32];
@@ -128,6 +128,7 @@ void raw_closefile(int fd)
 static char *rawadr;    // Pointer to current raw image buffer
 
 // handle actual raw / dng saving to SD
+// returns 1 on successful save, otherwise 0
 static int raw_savefile(char *rawadr, char *altrawadr) {
     int ret = 0;
     started();
@@ -159,9 +160,8 @@ static int raw_savefile(char *rawadr, char *altrawadr) {
 }
 
 // processing done when raw hook runs available
-int raw_process()
+void raw_process(void)
 {
-
     // Get pointers to RAW buffers (will be the same on cameras that don't have two or more buffers)
     rawadr = get_raw_image_addr();
     char *altrawadr = get_alt_raw_image_addr();
@@ -176,7 +176,7 @@ int raw_process()
     // count/save badpixels if requested
     if (libdng->raw_init_badpixel_bin())
     {
-        return 0;
+        return;
     }
 
     if (develop_raw != RAW_DEVELOP_OFF)
@@ -189,9 +189,10 @@ int raw_process()
         else
         {
             int fd = open(fn, O_RDONLY, 0777);
-            if (fd >= 0)
+            if (fd >= 0) {
                 read(fd, rawadr, camera_sensor.raw_size);
-            close(fd);
+                close(fd);
+            }
         }
 #ifdef OPT_CURVES
         if (conf.curve_enable)
@@ -199,7 +200,7 @@ int raw_process()
 #endif
         finished();
         develop_raw = RAW_DEVELOP_OFF;
-        return 0;
+        return;
     }
 
     if (conf.bad_pixel_removal) patch_bad_pixels();
@@ -216,7 +217,6 @@ int raw_process()
     else
         raw_br_counter=0;
 
-    int ret = 0;
     // if any remote cap targets, skip local raw
     if (remotecap_get_target())
     {
@@ -229,7 +229,7 @@ int raw_process()
 
         if (conf.save_raw && is_raw_enabled())
         {
-            ret = raw_savefile(rawadr,altrawadr);
+            raw_savefile(rawadr,altrawadr);
         }
     }
 
@@ -237,11 +237,6 @@ int raw_process()
     if (conf.curve_enable)
         libcurves->curve_apply();
 #endif
-    return ret;
-}
-
-//-------------------------------------------------------------------
-void raw_postprocess() {
 }
 
 //-------------------------------------------------------------------

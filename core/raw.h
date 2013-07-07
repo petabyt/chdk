@@ -18,8 +18,7 @@
 #define RAW_EXT_WAV             4
 
 //-------------------------------------------------------------------
-extern int raw_process();
-extern void raw_postprocess();
+extern void raw_process(void);
 extern void raw_prepare_develop(const char* filename, int prompt);
 extern int make_pixel_list(char * ptr, int size);
 extern unsigned short get_raw_pixel(unsigned int x,unsigned  int y);
