@@ -184,7 +184,7 @@ static int vp_yoffset(int stitch)
     {
         return 0;
     }
-    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
     {
         return stitch;
     }
