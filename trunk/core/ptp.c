@@ -227,7 +227,6 @@ static long script_start_ptp( char *script )
     module_set_script_lang(0);  // Force Lua script language
     if (libscriptapi->script_start(script,1))
     {
-        kbd_set_block(1);
         camera_info.state.auto_started = 0;
         return script_stack_start();
     }

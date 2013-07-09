@@ -233,6 +233,8 @@ int lua_script_start( char const* script, int ptp )
     lua_script_is_ptp = ptp;
     if(ptp) {
         ptp_saved_alt_state = (gui_get_mode() == GUI_MODE_ALT);
+        // put ui in alt state to allow key presses to be sent to script
+        // just setting kbd_blocked leaves UI in a confused state
         if(!ptp_saved_alt_state) {
             enter_alt();
         }
@@ -1180,12 +1182,20 @@ static int luaCB_get_usb_power( lua_State* L )
 static int luaCB_enter_alt( lua_State* L )
 {
   enter_alt();
+  // if alt explicitly changed by script, set as 'saved' state
+  if(lua_script_is_ptp) {
+      ptp_saved_alt_state = 1;
+  }
   return 0;
 }
 
 static int luaCB_exit_alt( lua_State* L )
 {
   exit_alt();
+  // if alt explicitly changed by script, set as 'saved' state
+  if(lua_script_is_ptp) {
+      ptp_saved_alt_state = 0;
+  }
   return 0;
 }
 
