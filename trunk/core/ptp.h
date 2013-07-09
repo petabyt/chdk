@@ -1,7 +1,7 @@
 #ifndef __CHDK_PTP_H
 #define __CHDK_PTP_H
 
-// CHDK PTP protocol interface (can also be used in client PTP progams)
+// CHDK PTP protocol interface (can also be used in client PTP programs)
 
 // Note: used in modules and platform independent code. 
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
@@ -35,7 +35,7 @@ enum ptp_chdk_command {
   PTP_CHDK_SetMemory,       // param2 is address
                             // param3 is size (in bytes)
                             // data is new memory block
-  PTP_CHDK_CallFunction,    // data is array of function pointer and (long) arguments  (max: 10 args)
+  PTP_CHDK_CallFunction,    // data is array of function pointer and 32 bit int arguments (max: 10 args prior to protocol 2.5)
                             // return param1 is return value
   PTP_CHDK_TempData,        // data is data to be stored for later
                             // param2 is for the TD flags below
@@ -76,9 +76,8 @@ enum ptp_chdk_command {
                             //  return data is protocol information, frame buffer descriptions and selected display data
                             //  Currently a data phase is always returned. Future versions may define other behavior 
                             //  for values in currently unused parameters.
-  // Direct image capture over USB. - 
-  // Under development, subject to change, documentation incomplete
-  // Use lua get_remotecap_support for available data types, lua init_remotecap for setup
+  // Direct image capture over USB.
+  // Use lua get_usb_capture_support for available data types, lua init_usb_capture for setup
   PTP_CHDK_RemoteCaptureIsReady, // Check if data is available
                                  // return param1 is status 
                                  //  0 = not ready
@@ -124,9 +123,36 @@ enum ptp_chdk_script_data_type {
 
 // bit flags for remote capture
 // used to select and also to indicate available data in PTP_CHDK_RemoteCaptureIsReady
-#define PTP_CHDK_CAPTURE_JPG    0x1
+/*
+Full jpeg file. Note supported on all cameras, use Lua get_usb_capture_support to check
+*/
+#define PTP_CHDK_CAPTURE_JPG    0x1 
+
+/*
+Raw framebuffer data, in camera native format.
+A subset of rows may be requested in init_usb_capture.
+*/
 #define PTP_CHDK_CAPTURE_RAW    0x2
-#define PTP_CHDK_CAPTURE_DNGHDR 0x4
+
+/*
+DNG header. 
+The header will be DNG version 1.3
+Does not include image data, clients wanting to create a DNG file should also request RAW
+Raw data for all known cameras will be packed, little endian. Client is responsible for
+reversing the byte order if creating a DNG.
+Can requested without RAW to get sensor dimensions, exif values etc.
+
+ifd 0 specifies a 128x96 RGB thumbnail, 4 byte aligned following the header
+client is responsible for generating thumbnail data.
+
+ifd 0 subifd 0 specifies the main image
+The image dimensions always contain the full sensor dimensions, if a sub-image was requested
+with init_usb_capture, the client is responsible for padding the data to the full image or
+adjusting dimensions.
+
+Bad pixels will not be patched, but DNG opcodes will be specify how to patch them
+*/
+#define PTP_CHDK_CAPTURE_DNGHDR 0x4  
 
 // status from PTP_CHDK_RemoteCaptureIsReady if capture not enabled
 #define PTP_CHDK_CAPTURE_NOTSET 0x10000000
