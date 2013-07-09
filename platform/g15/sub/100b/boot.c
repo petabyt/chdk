@@ -41,43 +41,6 @@ void CreateTask_spytask()
 // jogdial positions
 short *jog_position;
 
-///*----------------------------------------------------------------------
-/* ERR99: PATCH the TASK CREATE functions in RAM to install our hooks.
-   To catch all TaskCreate calls (needed to install our own task functions),
-   it is necessary to patch two different TaskCreate functions in RAM. 
- */
-
-void __attribute__((naked,noinline)) HookIntoTaskCreateFunction()
-{
-    asm volatile (
-        "STMFD   SP!, {R0-R2,LR}\n"         // Save all register which are used below
-        
-        /* Install CreateTask patch */
-        "LDR     R0, =patch_CreateTask\n"   // Patch data
-        "LDM     R0, {R1,R2}\n"             // Get two patch instructions
-        "LDR     R0, =hook_CreateTask\n"    // Address to patch
-        "STM     R0, {R1,R2}\n"             // Store patch instructions
-
-        /* Install CreateTask2 patch */
-        "LDR     R0, =patch_CreateTask2\n"  // Patch data
-        "LDM     R0, {R1,R2}\n"             // Get two patch instructions
-        "LDR     R0, =hook_CreateTask2\n"   // Address to patch
-        "STM     R0, {R1,R2}\n"             // Store patch instructions
-
-        "LDMFD   SP!, {R0-R2,PC}\n"         // Restore all used registers
-
-        // Our hook code payload for CreateTask
-"patch_CreateTask:\n"
-        "LDR     PC, [PC,#-0x4]\n"          // Do jump to absolute address CreateTask_my
-        ".long   CreateTask_my\n"
-
-        // Our hook code payload for CreateTask2
-"patch_CreateTask2:\n"
-        "LDR     PC, [PC,#-0x4]\n"          // Do jump to absolute address CreateTask2_my
-        ".long   CreateTask2_my\n"
-    );
-}
-
 /*----------------------------------------------------------------------
     boot()
 
@@ -189,17 +152,24 @@ asm volatile (
 "    STRCC   R2, [R3], #4 \n"
 "    BCC     loc_FF000178 \n"
 /* Install task hooks via 0x193x is not possible with this new dryos version
-   So the below call patches the taskcreate functions in RAM to install our
+   So the below call patches the CreateTask function in RAM to install our
    hook -- ERR99
 */
-"    BL      HookIntoTaskCreateFunction \n"
+        /* Install CreateTask patch */
+        "LDR     R0, =patch_CreateTask\n"   // Patch data
+        "LDM     R0, {R1,R2}\n"             // Get two patch instructions
+        "LDR     R0, =hook_CreateTask\n"    // Address to patch
+        "STM     R0, {R1,R2}\n"             // Store patch instructions
 "    B       sub_FF00038C_my \n"  // --> Patched. Old value = 0xFF00038C.
+"patch_CreateTask:\n"
+        "LDR     PC, [PC,#-0x4]\n"          // Do jump to absolute address CreateTask_my
+        ".long   CreateTask_my\n"
 );
 }
 
 /*************************************************************/
-//** CreateTask2_my @ 0x0068AF04 - 0x0068AF08, length=2
-void __attribute__((naked,noinline)) CreateTask2_my() {
+//** CreateTask_my @ 0x0068AB8C - 0x0068AB90, length=2
+void __attribute__((naked,noinline)) CreateTask_my() {
 asm volatile (
 "    STMFD   SP!, {R0}\n"
 //R3 = Pointer to task function to create
@@ -216,6 +186,12 @@ asm volatile (
 "    LDREQ   R3, =exp_drv_task\n"
 "    BEQ     exitHook\n"
 
+/*** INSTALL filewrite() hook ***/
+"    LDR     R0, =task_FileWrite\n"
+"    CMP     R0, R3\n"
+"    LDREQ   R3, =filewritetask\n"
+"    BEQ     exitHook\n"
+
 /*** INSTALL JogDial() hook ***/
 "    LDR     R0, =task_RotaryEncoder\n"
 "    CMP     R0, R3\n"
@@ -226,29 +202,14 @@ asm volatile (
 "    LDR     R0, =task_MovieRecord\n"
 "    CMP     R0, R3\n"
 "    LDREQ   R3, =movie_record_task\n"
-
-"exitHook:\n" 
-// restore overwritten registers
-"    LDMFD   SP!, {R0}\n"
-// Execute overwritten instructions from original code, then jump to firmware
-"    STMFD   SP!, {R3-R5,LR} \n"
-"    MOV     R12, R3 \n"
-"    LDR     PC, =0x0068AF0C \n"  // Continue in firmware
-);
-}
-
-/*************************************************************/
-//** CreateTask_my @ 0x0068AB8C - 0x0068AB90, length=2
-void __attribute__((naked,noinline)) CreateTask_my() {
-asm volatile (
-"    STMFD   SP!, {R0}\n"
-//R3 = Pointer to task function to create
+"    BEQ     exitHook\n"
 
 /*** INSTALL init_file_modules_task() hook ***/
 "    LDR     R0, =task_InitFileModules\n"
 "    CMP     R0, R3\n"
 "    LDREQ   R3, =init_file_modules_task\n"
 
+"exitHook:\n" 
 // restore overwritten registers
 "    LDMFD   SP!, {R0}\n"
 // Execute overwritten instructions from original code, then jump to firmware
