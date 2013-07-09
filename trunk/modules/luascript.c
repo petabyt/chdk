@@ -52,6 +52,7 @@ lua_State* Lt;
 extern void register_lua_funcs( lua_State* L );
 
 static int lua_script_is_ptp;
+static int ptp_saved_alt_state;
 static int run_first_resume; // 1 first 'resume', 0 = resuming from yield
 static int run_start_tick; // tick count at start of this kbd_task iteration
 static int run_hook_count; // number of calls to the count hook this kbd_task iteration
@@ -221,12 +222,21 @@ void lua_script_finish(lua_State *L)
                 break;
             }
         }
+        if(!ptp_saved_alt_state) {
+            exit_alt();
+        }
     }
 }
 
 int lua_script_start( char const* script, int ptp )
 {
     lua_script_is_ptp = ptp;
+    if(ptp) {
+        ptp_saved_alt_state = (gui_get_mode() == GUI_MODE_ALT);
+        if(!ptp_saved_alt_state) {
+            enter_alt();
+        }
+    }
     L = lua_open();
     luaL_openlibs( L );
     register_lua_funcs( L );
