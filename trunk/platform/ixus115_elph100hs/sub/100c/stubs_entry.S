@@ -272,6 +272,13 @@ NHSTUB(vsprintf                               ,0xff820890) //115
 //NHSTUB(EngDrvOut                            ,0xff835810) //102
 //NHSTUB(EngDrvRead                           ,0xff835830) //102
 //NHSTUB(EngDrvBits                           ,0xff835844) //102
+//NHSTUB(_GetSystemTime                       ,0xff83bdf8) //109
+//NHSTUB(SetTimerAfter                        ,0xff83bf30) //119
+//NHSTUB(SetTimerWhen                         ,0xff83bfb0) //119
+//NHSTUB(CancelTimer                          ,0xff83c014) //119
+//NHSTUB(CancelHPTimer                        ,0xff890234) //119
+//NHSTUB(SetHPTimerAfterTimeout               ,0xff8901ac) //115
+//NHSTUB(SetHPTimerAfterNow                   ,0xff89012c) //119
 //NHSTUB(CreateTaskStrictly                   ,0xff83b8a0) //107
 //NHSTUB(CreateMessageQueue                   ,0xff83af54) //109
 //NHSTUB(CreateRecursiveLock                  ,0xff88c818) //109
