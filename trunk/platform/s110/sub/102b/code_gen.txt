@@ -4,7 +4,7 @@ FILE boot.c
 
 >>> file=../boot_hdr.c
 
-FUNC start=0xFF00000C length=95 name=boot
+FUNC start=0xF800000C length=95 name=boot
 ASM
 FW $-1
 >>>
@@ -39,10 +39,10 @@ ENDFUNC
 FUNC ref=0 length=27
 >>>
 
-    if ( (*(int*)0xC022F48C & 0x800000) )
-        *(int*)(0x2D30+0x4) = 0x2000000;    // Playmode "PhySwConfig.c" @ FF05DE7C
+    if ( (*(int*)0xC022F48C & 0x4) )
+        *(int*)(0x2FF0+0x4) = 0x200000;     // Playmode "PhySwConfig.c" @f807b174
     else
-        *(int*)(0x2D30+0x4) = 0x1000000;    // Shootingmode
+        *(int*)(0x2FF0+0x4) = 0x100000;     // Shootingmode
 
 <<<
 ASM
@@ -51,7 +51,7 @@ PATCHSUB ref=0
 ENDASM
 ENDFUNC
 
-FUNC ref=0 length=44
+FUNC ref=0 length=46
 ASM
 FW 7
 >>>
@@ -66,7 +66,7 @@ FW
 #endif
 
 <<<
-FW 30
+FW 32
 PATCHSUB ref=0
 FW $
 ENDASM
@@ -92,7 +92,7 @@ ENDFUNC
 FUNC ref=0 length=23
 ASM
 FW $-4
-REM "disable startup checks"
+REM "Disable StartUpChecks"
 FW $
 ENDASM
 ENDFUNC
@@ -100,7 +100,7 @@ ENDFUNC
 FUNC ref=1
 ASM
 FW 6
-REM DISKBOOT.BIN
+REM "load DISKBOOT.BIN"
 FW 6
 >>>
 "    BL      CreateTask_spytask\n" // added
@@ -132,7 +132,7 @@ ENDFUNC
 FUNC sig=task_RotaryEncoder name=JogDial_task_my
 ASM
 FW 6
->>>
+>>> prelabel
 
 // Save pointer for kbd.c routine
 "    ADD     R10, SP, #0x18 \n"
@@ -203,7 +203,7 @@ FW $
 ENDASM
 ENDFUNC
 
-FUNC ref=0
+FUNC ref=0 length=205
 ASM
 FW 143
 PATCHSUB ref=0
@@ -232,7 +232,7 @@ ENDFUNC
 
 FUNC ref=1
 ASM
-FW 189
+FW $-55
 >>>
 //begin patch
 "    LDR     R0, =video_compression_rate\n" //added
@@ -252,7 +252,7 @@ FILE capt_seq.c
 
 FUNC sig=task_CaptSeq name=capt_seq_task
 ASM
-FW 60
+FW 59
 >>>
 "    BL      shooting_expo_iso_override\n"      // added
 <<<
@@ -289,8 +289,11 @@ FUNC ref=0
 ASM
 FW 84
 >>> prelabel
+
+//begin patch
 "    BL      wait_until_remote_button_is_released\n" // +++
 "    BL      capt_seq_hook_set_nr\n" // +++
+//end patch
 <<<
 FW $
 ENDASM
