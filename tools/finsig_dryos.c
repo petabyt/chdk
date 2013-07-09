@@ -376,6 +376,13 @@ func_entry  func_names[] =
     { "EngDrvBits", OPTIONAL|UNUSED },
 
     // OS functions, mostly to aid firmware analysis. Order is important!
+    { "_GetSystemTime", OPTIONAL|UNUSED }, // only for locating timer functions
+    { "SetTimerAfter", OPTIONAL|UNUSED },
+    { "SetTimerWhen", OPTIONAL|UNUSED },
+    { "CancelTimer", OPTIONAL|UNUSED },
+    { "CancelHPTimer", OPTIONAL|UNUSED },
+    { "SetHPTimerAfterTimeout", OPTIONAL|UNUSED },
+    { "SetHPTimerAfterNow", OPTIONAL|UNUSED }, 
     { "CreateTaskStrictly", OPTIONAL|UNUSED },
     { "CreateMessageQueue", OPTIONAL|UNUSED },
     { "CreateRecursiveLock", OPTIONAL|UNUSED },
@@ -786,6 +793,7 @@ string_sig string_sigs[] =
     { 9, "CreateMessageQueue", "CreateMessageQueueStrictly", 0,            1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
     { 9, "CreateRecursiveLock", "CreateRecursiveLockStrictly", 0,          1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
     { 9, "CreateEventFlag", "CreateEventFlagStrictly", 0,                  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
+    { 9, "_GetSystemTime", "GetSystemTime", 0,                             2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
 
     { 10, "task_CaptSeq", "CaptSeqTask", 1 },
     { 10, "task_ExpDrv", "ExpDrvTask", 1 },
@@ -834,6 +842,8 @@ string_sig string_sigs[] =
     { 15, "OpenFastDir", "OpenFastDir_ERROR\n", 0x01000001 },
     { 15, "realloc", "fatal error - scanner input buffer overflow", 0x01000001 },
     { 15, "CreateBinarySemaphore", "SdPower.c", 0x01000001 }, 
+    //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52
+    { 15, "SetHPTimerAfterTimeout", "FrameRateGenerator.c", 0x01000001,          0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007 },
 
     { 16, "DeleteDirectory_Fut", (char*)DeleteDirectory_Fut_test, 0x01000001 },
     { 16, "MakeDirectory_Fut", (char*)MakeDirectory_Fut_test, 0x01000001 },
@@ -873,6 +883,11 @@ string_sig string_sigs[] =
     { 19, "CheckAnyEventFlag", "DeleteEventFlag", 0,                             0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014 },
     { 19, "CheckAllEventFlag", "CheckAnyEventFlag", 0,                           0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012 },
     { 19, "TryTakeSemaphore", "DeleteSemaphore", 0,                              0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016 },
+    { 19, "SetTimerAfter", "_GetSystemTime", 0,                                  0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e },
+    { 19, "SetTimerWhen", "SetTimerAfter", 0,                                    0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020 },
+    { 19, "CancelTimer", "SetTimerWhen", 0,                                      0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019 },
+    { 19, "CancelHPTimer", "SetHPTimerAfterTimeout", 0,                          0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022 },
+    { 19, "SetHPTimerAfterNow", "SetHPTimerAfterTimeout", 0,                    -0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020 },
 
     { 0, 0, 0, 0 }
 };
@@ -1584,6 +1599,7 @@ int match_strsig14(firmware *fw, string_sig *sig, int j)
 //      Str ref -   xDR Rx, =str_ptr
 //            ...
 //      String      DCB "str"
+// dryos_ofst: search range limit for the previous bl instruction
 int match_strsig15a(firmware *fw, int k, uint32_t sadr, uint32_t offset)
 {
     if (isADR_PC_cond(fw,k) || isLDR_PC_cond(fw,k))   // LDR or ADR ?
@@ -1595,7 +1611,7 @@ int match_strsig15a(firmware *fw, int k, uint32_t sadr, uint32_t offset)
             padr = ADR2adr(fw,k);
         if (padr == sadr)
         {
-            int j2 = find_inst_rev(fw, isBL, k-1, 50);
+            int j2 = find_inst_rev(fw, isBL, k-1, dryos_ofst);
             if (j2 > 0)
             {
                 uint32_t fa = idx2adr(fw,j2);
@@ -1609,6 +1625,8 @@ int match_strsig15a(firmware *fw, int k, uint32_t sadr, uint32_t offset)
 }
 int match_strsig15(firmware *fw, string_sig *sig, int j)
 {
+    dryos_ofst = dryos_offset(fw,sig);
+    if (dryos_ofst == 0) dryos_ofst = 50;
     return search_fw(fw, match_strsig15a, idx2adr(fw,j), sig->offset, 1);
 }
 

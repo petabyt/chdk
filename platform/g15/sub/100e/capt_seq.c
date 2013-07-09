@@ -524,7 +524,7 @@ asm volatile (
 "    LDR     R0, [SP] \n"
 "    MOV     R3, #0x8000 \n"
 "    MOV     R1, R2 \n"
-"    BL      sub_FF020C0C \n"
+"    BL      sub_FF020C0C /*_SetTimerAfter*/ \n"
 
 "loc_FF1E5DE0:\n"
 "    LDR     R0, [R6, #0x94] \n"
