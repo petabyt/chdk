@@ -148,4 +148,7 @@
     #undef  CAM_AF_LED                                  // AF Lamp index for camera_set_led()
     #define CAM_AF_LED                          1       //
 
+    #define CAM_HAS_FILEWRITETASK_HOOK                  1
+    #define CAM_FILEWRITETASK_SEEKS                     1
+
 //----------------------------------------------------------
