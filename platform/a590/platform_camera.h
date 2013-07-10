@@ -34,6 +34,7 @@
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_DISPLAY }
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     //#define CAM_EV_IN_VIDEO               1      // not working on 101b!!!
+    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
 
     #define CAM_DNG_LENS_INFO               { 58,10, 232,10, 26,10, 55,10 } // See comments in camera.h
     // pattern
@@ -65,6 +66,9 @@
     #define CAMERA_MIN_DIST                 100     // Override min subject distance
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 52855   // Override max subject distance
+
+    #define CAM_HAS_FILEWRITETASK_HOOK       1
+
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 
     // Define shortcut overrides where defaults are not suitable

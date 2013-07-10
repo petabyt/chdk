@@ -22,12 +22,14 @@ void taskCreateHook(int *p) {
  p-=16;
  if (p[0]==0xFFC973E4)  p[0]=(int)exp_drv_task;
  if (p[0]==0xFFC4BBBC)  p[0]=(int)movie_record_task;
+ if (p[0]==0xFFDD6404)  p[0]=(int)filewritetask;
 }
 
 void taskCreateHook2(int *p) { 
  p-=16;
  if (p[0]==0xFFC973E4)  p[0]=(int)exp_drv_task;
  if (p[0]==0xFFC4BBBC)  p[0]=(int)movie_record_task;
+ if (p[0]==0xFFDD6404)  p[0]=(int)filewritetask;
 }
 
 void boot() { //#fs
