@@ -1,6 +1,6 @@
-// Camera - sx260hs - platform_camera.h
+// Camera - sx240hs - platform_camera.h
 
-// This file contains the various settings values specific to the SX260HS camera.
+// This file contains the various settings values specific to the SX240HS camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -26,6 +26,9 @@
     #define CAM_HAS_ND_FILTER                   1 // Camera has built-in ND filter (in addition to iris)
     #undef  CAM_KEY_PRESS_DELAY
     #define CAM_KEY_PRESS_DELAY                 60      // delay after a press
+    #define CAM_ADJUSTABLE_ALT_BUTTON       	1
+    #define CAM_ALT_BUTTON_NAMES            	{ "Playback", "Video", "Display" }
+    #define CAM_ALT_BUTTON_OPTIONS          	{ KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1
 
     #define CAM_DRYOS_2_3_R39                   1
@@ -35,6 +38,7 @@
     #define CAM_DRYOS                           1
     #define CAM_RAW_ROWPIX                      4176        //ASM1989 FINSIG  Found @0xff17db40
     #define CAM_RAW_ROWS                        3060        // Found @0xff17db4c
+    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1           // Draw pixels on active bitmap buffer only.
 
     #define CAM_HAS_CMOS                        1
 
@@ -92,6 +96,9 @@
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX     1           // enable workaround for camera crash at startup when opening the conf / font files
                                                             // see http://chdk.setepontos.com/index.php?topic=6179.0
 
+    #define CAM_HAS_FILEWRITETASK_HOOK          1
+    #define CAM_FILEWRITETASK_SEEKS             1
+
     #define CAM_ZEBRA_NOBUF                     1
 
     #define CAM_QUALITY_OVERRIDE                1
@@ -114,6 +121,9 @@
     #define CAM_USB_EVENTID                     0x202       // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
 
     #define CAM_HAS_MOVIE_DIGEST_MODE           1 
+
+    #define CAM_USE_ALT_SET_ZOOM_POINT          1           // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_USE_ALT_PT_MoveOpticalZoomAt    1           // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
     #define MKDIR_RETURN_ONE_ON_SUCCESS         1    // mkdir() return 1 on success, 0 on fail.
 

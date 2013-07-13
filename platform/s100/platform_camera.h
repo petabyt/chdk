@@ -39,8 +39,9 @@
     #define CAM_KEY_PRESS_DELAY             60      // delay after a press
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
-    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video", "Display" }
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_VIDEO }
+    #define CAM_DISP_BUTTON_NAME            "Video"
     #define CAM_BRACKETING                  1
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  CAM_VIDEO_CONTROL
@@ -112,6 +113,8 @@
     #define CAM_USB_EVENTID         0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
 
 	#define REMOTE_SYNC_STATUS_LED 	0xC022C30C // specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_HAS_GPS                     1
 
     #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #undef CAM_AF_SCAN_DURING_VIDEO_RECORD

@@ -44,7 +44,7 @@ char * camera_jpeg_current_longitude() {    //it is camera_jpeg_current_filename
     return (void*)0xCB7F8;
 }
 
-char * camera_jpeg_current_height() {       //it is camera_jpeg_current_filename + 0x190
-    return (void*)0xCB8F4;
+char * camera_jpeg_current_height() {
+    return (void*)0xCB5D4;
 }
 #endif
