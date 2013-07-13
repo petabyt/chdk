@@ -363,7 +363,7 @@ void gui_osd_draw_values(int showtype)
 
     //gui_osd_calc_expo_param();
 
-    if (conf.values_show_zoom)
+    if (conf.values_show_zoom && (showtype==1) )
     {
         int fl, zp=shooting_get_zoom(), fl1=get_focal_length(zp);     
         switch (conf.zoom_value)

@@ -56,8 +56,8 @@ DEF(palette_buffer                          ,0x000ddb24) // Found @0xff27c924
 // Offset from start of palette_buffer to color data = 4 (Found @0xff3acb90)
 DEF(bitmap_buffer                           ,0x0000dc24) // Found @0xff281164
 DEF(active_bitmap_buffer                    ,0x0000dc1c) // Found @0xff281168
-//DEF(viewport_buffers                        ,0xff441144) // Found @0xff03d9bc,          stubs_min = 0xff441144 (0xFF441144)
-//DEF(active_viewport_buffer                  ,0x000021b0) // Found @0xff03d658,          stubs_min = 0x000021b0 (0x21B0)
+DEF(viewport_buffers                        ,0xff441144) // Found @0xff03d9bc
+DEF(active_viewport_buffer                  ,0x000021b0) // Found @0xff03d658
 // Camera has 2 RAW buffers @ 0x44000000 & 0x4adb54a0
 //  Note: active buffer --> raw_buffers[active_raw_buffer]
 //        other buffer  --> raw_buffers[active_raw_buffer^1]
@@ -243,7 +243,7 @@ NHSTUB(qsort                                  ,0xff281eb4) //  6
 NHSTUB(rand                                   ,0xff2819ec) //  6
 //NHSTUB(read                                 ,0xff005d9c) //101
 NHSTUB(realloc                                ,0xff281f90) //115
-//NHSTUB(reboot_fw_update                     ,0xff3355a0) //106            == 0xff3355a0
+NHSTUB(reboot_fw_update                       ,0xff3355a0) //106
 NHSTUB(set_control_event                      ,0xff0878c8) //111
 NHSTUB(srand                                  ,0xff2819e0) //  6
 NHSTUB(stat                                   ,0xff021f14) //109

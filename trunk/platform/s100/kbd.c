@@ -16,6 +16,13 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 extern void _GetKbdState(long*);
 
+#ifdef CAM_HAS_GPS
+extern int Taste_Funktion;
+extern int Taste_Taste;
+extern int Taste_Druck;
+extern int Taste_press;
+#endif
+
 #define KEYS_MASK0 (0x000181EF)
 #define KEYS_MASK1 (0x00B00000)
 #define KEYS_MASK2 (0x00000000)
@@ -38,7 +45,6 @@ int get_usb_bit()
 static KeyMap keymap[] = {
     { 0, KEY_ERASE           ,0x00000001 },
     { 0, KEY_DOWN            ,0x00000002 }, // Found @0xff45373c, levent 0x05
-    { 0, KEY_DISPLAY         ,0x00000002 },
     { 0, KEY_LEFT            ,0x00000004 }, // Found @0xff453744, levent 0x06
     { 0, KEY_MENU            ,0x00000008 }, // Found @0xff45374c, levent 0x09
     { 0, KEY_SET             ,0x00000020 }, // Found @0xff45375c, levent 0x08
@@ -47,6 +53,7 @@ static KeyMap keymap[] = {
     { 0, KEY_ZOOM_OUT        ,0x00008000 }, // Found @0xff4537ac, levent 0x03
     { 0, KEY_ZOOM_IN         ,0x00010000 }, // Found @0xff4537b4, levent 0x02
     { 0, KEY_VIDEO           ,0x00000100 },
+    { 0, KEY_DISPLAY         ,0x00000100 }, // VIDEO button is used as DISPLAY button
 
     { 1, KEY_PRINT           ,0x00800000 }, // ALT menu on PLAYBACK button
     { 1, KEY_PLAYBACK        ,0x00800000 },
@@ -114,6 +121,21 @@ void my_kbd_read_keys()
 
 	_GetKbdState(kbd_new_state);
 	_kbd_read_keys_r2(kbd_new_state);
+
+#ifdef CAM_HAS_GPS
+	if (Taste_Funktion != 0)
+	{
+		if (Taste_Taste == kbd_get_pressed_key())
+		{
+			Taste_Druck=1;
+			kbd_key_release(Taste_Taste);
+			kbd_key_press(0);
+			Taste_Funktion=0;
+			Taste_Taste=0;
+			msleep(1000);
+			}
+	}
+#endif
 
 	if (kbd_process() == 0){
         // leave it alone...
