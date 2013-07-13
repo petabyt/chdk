@@ -802,6 +802,7 @@ string_sig string_sigs[] =
     { 10, "task_PhySw", "PhySw", 1 },
     { 10, "task_RotaryEncoder", "RotaryEncoder", 1 },
     { 10, "task_RotaryEncoder", "RotarySw", 1 },
+    { 10, "task_RotaryEncoder", "JogDial", 1 },
     { 10, "task_TouchPanel", "TouchPanel", 1 },
     { 10, "task_FileWrite", "FileWriteTask", 1 },
 
