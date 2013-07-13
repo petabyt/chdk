@@ -251,6 +251,7 @@ NHSTUB(strtolx                                ,0xff82da8c) //109
    DEF(task_InitFileModules                   ,0xff881534) //110
    DEF(task_MovieRecord                       ,0xff862148) //110
    DEF(task_PhySw                             ,0xff821894) //110
+   DEF(task_RotaryEncoder                     ,0xff84a480) //110
 NHSTUB(time                                   ,0xff8703ec) //109
 NHSTUB(vsprintf                               ,0xff81cae8) //115
 //NHSTUB(write                                ,0xff823c20) //101
