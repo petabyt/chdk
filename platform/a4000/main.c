@@ -26,7 +26,7 @@ void startup()
 }
 
 // Focus length table in firmware 0xfffeabc8
-#define NUM_FL      64 // 0 - 63, entries in firmware
+#define NUM_FL      127 // 0 - 126, entries in firmware
 #define NUM_DATA    2   // 2 words each entry, first is FL
 extern int focus_len_table[NUM_FL*NUM_DATA];
 
