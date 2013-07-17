@@ -52,8 +52,8 @@ static KeyMap keymap[] = {
     { 0, KEY_RIGHT           ,0x00000080 }, // Found @0xff45376c, levent 0x07
     { 0, KEY_ZOOM_OUT        ,0x00008000 }, // Found @0xff4537ac, levent 0x03
     { 0, KEY_ZOOM_IN         ,0x00010000 }, // Found @0xff4537b4, levent 0x02
-    { 0, KEY_VIDEO           ,0x00000100 },
     { 0, KEY_DISPLAY         ,0x00000100 }, // VIDEO button is used as DISPLAY button
+    { 0, KEY_VIDEO           ,0x00000100 },
 
     { 1, KEY_PRINT           ,0x00800000 }, // ALT menu on PLAYBACK button
     { 1, KEY_PLAYBACK        ,0x00800000 },
