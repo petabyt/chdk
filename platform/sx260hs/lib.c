@@ -29,7 +29,6 @@ void shutdown() {
     while(1);
 }
 
-
 // see http://chdk.wikia.com/wiki/SX260#LED_addresses
 // #define LED_PR 0xC022C30C                       // Power LED (@FF15B178 & @FF15B1CC)
 

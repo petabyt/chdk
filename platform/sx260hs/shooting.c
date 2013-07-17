@@ -142,10 +142,10 @@ const CapturemodeMap modemap[] = {
 #include "../generic/shooting.c"
 
 long get_file_next_counter() {
-    return get_file_counter();              //TESTED DEBUG WORKS
+    return get_file_counter();
 }
 
-long get_target_file_num() {                //TESTED DEBUG WORKS
+long get_target_file_num() {
     long n;
 
     n = get_file_next_counter();
@@ -153,7 +153,7 @@ long get_target_file_num() {                //TESTED DEBUG WORKS
     return n;
 }
 
-long get_target_dir_num() {                 //TESTED DEBUG WORKS
+long get_target_dir_num() {
     long n;
 
     n = get_file_next_counter();
@@ -161,7 +161,7 @@ long get_target_dir_num() {                 //TESTED DEBUG WORKS
     return n;
 }
 
-void get_target_dir_name(char *out) {       //TESTED DEBUG WORKS
+void get_target_dir_name(char *out) {
     extern void _GetImageFolder(char*,int,int,int);
     _GetImageFolder(out,get_file_next_counter(),0x400,time(NULL));
 }

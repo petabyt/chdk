@@ -31,9 +31,8 @@ extern int Taste_press;
 //extern int kbd_blocked;
 #endif
 
-//TODO SX230 CODE
 // override key and feather bits to avoid feather osd messing up chdk display in ALT mode
-#define KEYS_MASK0 (0x00000000)     // old sx230: 000FFC0F  physw_status[0] was 7FC05
+#define KEYS_MASK0 (0x00000000)
 #define KEYS_MASK1 (0x3F800000)     // SX 260 ASm1989
 #define KEYS_MASK2 (0x00001FE0)     // SX 260 ASm1989
 
@@ -53,25 +52,25 @@ int get_usb_bit() {
 
 // Using Finsig
 static KeyMap keymap[] = {
-    { 1, KEY_SHOOT_FULL      , 0x03000000 },    // Found @0xff441588, levent 0x01
-    { 1, KEY_SHOOT_FULL_ONLY , 0x02000000 },    // Found @0xff441588, levent 0x01
-    { 1, KEY_SHOOT_HALF      , 0x01000000 },    // Found @0xff441580, levent 0x00
-    { 1, KEY_ZOOM_OUT        , 0x0C000000 },    // Asm1989 Manual stuff
-    { 1, KEY_ZOOM_OUT        , 0x04000000 },
-    { 1, KEY_ZOOM_OUT        , 0x08000000 },
-    { 1, KEY_ZOOM_IN         , 0x30000000 },
-    { 1, KEY_ZOOM_IN         , 0x10000000 },
-    { 1, KEY_ZOOM_IN         , 0x20000000 },
-    { 1, KEY_PRINT           , 0x00800000 },    // playback = alt button  -> TESTING
-    { 1, KEY_PLAYBACK        , 0x00800000 },    // playback = alt button  -> TESTING
-    { 2, KEY_VIDEO           , 0x00000020 },    // Found @0xff4415d8, levent 0x1a
-    { 2, KEY_MENU            , 0x00000040 },    // Found @0xff4415e0, levent 0x09
-    { 2, KEY_DISPLAY         , 0x00000080 },    // Found @0xff4415e8, levent 0x0a
-    { 2, KEY_UP              , 0x00000100 },    // Found @0xff4415f0, levent 0x04
-    { 2, KEY_DOWN            , 0x00000200 },    // Found @0xff4415f8, levent 0x05
-    { 2, KEY_RIGHT           , 0x00000400 },    // Found @0xff441600, levent 0x07
-    { 2, KEY_LEFT            , 0x00000800 },    // Found @0xff441608, levent 0x06
-    { 2, KEY_SET             , 0x00001000 },    // Found @0xff441610, levent 0x08
+    { 1, KEY_PRINT           ,0x00800000 }, // KEY_PLAYBACK as ALT 
+    { 1, KEY_PLAYBACK        ,0x00800000 }, // Found @0xff441578, levent 0x101
+    { 1, KEY_SHOOT_FULL      ,0x03000000 }, // Found @0xff441588, levent 0x01
+    { 1, KEY_SHOOT_FULL_ONLY ,0x02000000 }, // Found @0xff441588, levent 0x01
+    { 1, KEY_SHOOT_HALF      ,0x01000000 }, // Found @0xff441580, levent 0x00
+    { 1, KEY_ZOOM_OUT        ,0x0C000000 }, // Asm1989 Manual stuff
+    { 1, KEY_ZOOM_OUT        ,0x04000000 },
+    { 1, KEY_ZOOM_OUT        ,0x08000000 },
+    { 1, KEY_ZOOM_IN         ,0x30000000 },
+    { 1, KEY_ZOOM_IN         ,0x10000000 },
+    { 1, KEY_ZOOM_IN         ,0x20000000 },
+    { 2, KEY_VIDEO           ,0x00000020 }, // Found @0xff4415d8, levent 0x1a
+    { 2, KEY_MENU            ,0x00000040 }, // Found @0xff4415e0, levent 0x09
+    { 2, KEY_DISPLAY         ,0x00000080 }, // Found @0xff4415e8, levent 0x0a
+    { 2, KEY_UP              ,0x00000100 }, // Found @0xff4415f0, levent 0x04
+    { 2, KEY_DOWN            ,0x00000200 }, // Found @0xff4415f8, levent 0x05
+    { 2, KEY_RIGHT           ,0x00000400 }, // Found @0xff441600, levent 0x07
+    { 2, KEY_LEFT            ,0x00000800 }, // Found @0xff441608, levent 0x06
+    { 2, KEY_SET             ,0x00001000 }, // Found @0xff441610, levent 0x08
     { 0, 0, 0 }
 };
 
@@ -99,12 +98,21 @@ void my_blinkk(void) {
 
 volatile int jogdial_stopped=0;
 
-extern long __attribute__((naked)) wrap_kbd_p1_f();
+long __attribute__((naked,noinline)) wrap_kbd_p1_f() {
 
+    asm volatile(
+                "STMFD   SP!, {R1-R7,LR}\n"
+                "MOV     R5, #0\n"
+                "BL      my_kbd_read_keys\n"
+                "B       _kbd_p1_f_cont\n"
+    );
+
+    return 0;
+}
 
 static void __attribute__((noinline)) mykbd_task_proceed() {
     while (physw_run) {
-        _SleepTask(*((int*)(0x1C60 +0x8)));     //asm1989 looks like @FF01F158   sx230 @FF0248AC
+        _SleepTask(physw_sleep_delay);
 
         if (wrap_kbd_p1_f() == 1) {             // autorepeat ?
             _kbd_p2_f();
@@ -303,7 +311,7 @@ long kbd_use_zoom_as_mf() {
 
 ///
 int Get_JogDial(void) {
-    return (*(int*)0xC0240104)>>16;             //TODO SX230 CODE 0xC0240000 + 0x104
+    return (*(int*)0xC0240104)>>16;     //TODO SX230 CODE 0xC0240000 + 0x104
 }
 
 static int new_jogdial = 0, old_jogdial = 0;
