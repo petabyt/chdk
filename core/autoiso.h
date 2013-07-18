@@ -9,7 +9,7 @@
 //-------------------------------------------------------------------
 
 extern void shooting_set_autoiso(int iso_mode);
-extern int live_histogram_read_y(int *buf);
+extern int live_histogram_read_y(unsigned short *buf);
 
 //-------------------------------------------------------------------
 #endif

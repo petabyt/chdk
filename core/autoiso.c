@@ -23,7 +23,7 @@ static int live_histogram_overall;		        // Total num of pixels in histogram
 /*
 build histogram of viewport Y values (downsampled by HISTO_STEP_SIZE)
 */
-int live_histogram_read_y()
+int live_histogram_read_y(unsigned short *h)
 {
     int i;
 
@@ -41,13 +41,13 @@ int live_histogram_read_y()
     img += vid_get_viewport_image_offset();
 
     live_histogram_overall = 0;
-    memset(live_histogram_proc, 0, sizeof(unsigned short)*256);
+    memset(h, 0, sizeof(unsigned short)*256);
 
     int x = 0;	// count how many blocks we have done on the current row (to skip unused buffer space at end of each row)
 
     for (i=1; i<viewport_size; i+=HISTO_STEP_SIZE*6)
     {
-        ++live_histogram_proc[img[i]];
+        ++h[img[i]];
         ++live_histogram_overall; // TODO - would be better to just calculate this from dimensions and step
 
         // Handle case where viewport memory buffer is wider than the actual buffer.
@@ -161,7 +161,7 @@ void shooting_set_autoiso(int iso_mode)
     if (conf.overexp_ev_enum)
     {
         // No shoot_histogram exist here because no future shot exist yet :)
-        live_histogram_read_y();
+        live_histogram_read_y(live_histogram_proc);
 
         // step 32 is 1/3ev for tv96
         if (live_histogram_get_range(255-conf.autoiso2_over,255) >= conf.overexp_threshold)
