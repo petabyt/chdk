@@ -18,13 +18,13 @@
 #define	HISTO_STEP_SIZE	6
 
 static unsigned short live_histogram_proc[256]; // Buffer for histogram
-static int live_histogram_overall;		        // Total num of pixels in histogram
 
 /*
 build histogram of viewport Y values (downsampled by HISTO_STEP_SIZE)
 */
 int live_histogram_read_y(unsigned short *h)
 {
+    int total;
     int i;
 
     int vp_width = vid_get_viewport_width();
@@ -40,7 +40,7 @@ int live_histogram_read_y(unsigned short *h)
 
     img += vid_get_viewport_image_offset();
 
-    live_histogram_overall = 0;
+    total = 0;
     memset(h, 0, sizeof(unsigned short)*256);
 
     int x = 0;	// count how many blocks we have done on the current row (to skip unused buffer space at end of each row)
@@ -48,7 +48,7 @@ int live_histogram_read_y(unsigned short *h)
     for (i=1; i<viewport_size; i+=HISTO_STEP_SIZE*6)
     {
         ++h[img[i]];
-        ++live_histogram_overall; // TODO - would be better to just calculate this from dimensions and step
+        ++total; // TODO - would be better to just calculate this from dimensions and step
 
         // Handle case where viewport memory buffer is wider than the actual buffer.
         x += HISTO_STEP_SIZE * 2;	// viewport width is measured in blocks of three bytes each even though the data is stored in six byte chunks !
@@ -59,10 +59,10 @@ int live_histogram_read_y(unsigned short *h)
         }
     }
 
-    return live_histogram_overall;
+    return total;
 }
 
-static int live_histogram_get_range(int from, int to)
+static int live_histogram_get_range(int total,int from, int to)
 {
     if (from < 0) from = 0;
     if (to > 255) to = 255;
@@ -71,7 +71,7 @@ static int live_histogram_get_range(int from, int to)
     for(; from<=to; from++)
         rv += live_histogram_proc[from];
 
-    return (rv * 100) / live_histogram_overall;
+    return (rv * 100) / total;
 }
 
 //-------------------------------------------------------------------
@@ -161,10 +161,10 @@ void shooting_set_autoiso(int iso_mode)
     if (conf.overexp_ev_enum)
     {
         // No shoot_histogram exist here because no future shot exist yet :)
-        live_histogram_read_y(live_histogram_proc);
+        int total = live_histogram_read_y(live_histogram_proc);
 
         // step 32 is 1/3ev for tv96
-        if (live_histogram_get_range(255-conf.autoiso2_over,255) >= conf.overexp_threshold)
+        if (live_histogram_get_range(total,255-conf.autoiso2_over,255) >= conf.overexp_threshold)
             ev_overexp = conf.overexp_ev_enum << 5; 
     }
 
