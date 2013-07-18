@@ -1378,7 +1378,7 @@ total is the total number of pixels, may vary depending on viewport size
 */
 static int luaCB_get_live_histo( lua_State* L )
 {
-  int *h = malloc(256*sizeof(int));
+  unsigned short *h = malloc(256*sizeof(short));
   if(!h) {
       return luaL_error(L,"malloc fail");
   }
