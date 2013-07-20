@@ -189,6 +189,7 @@
     #undef  CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
     #undef  CAM_ISO_LIMIT_IN_HQ_BURST           // Defines max ISO override value for HQ Burst mode (higher values crash camera)
     #undef  CAM_MIN_ISO_OVERRIDE                // Defines min (non-zero) ISO override value - lower value may crash if flash used [0 = AUTO, so always allowed]
+                                                // specify above in "real" ISO, not "market" ISO used in override UI 
     
     #undef  CAM_HAS_GPS                         // for cameras with GPS reseiver: includes the GPS coordinates in in DNG file
 
@@ -208,8 +209,8 @@
 
     #define CAM_MARKET_ISO_BASE             100 // Base 'market' ISO value (SX40 & G1X use 200)
     #undef  CAM_HAS_HI_ISO_AUTO_MODE            // Define if camera has 'HI ISO Auto' mode (as well as Auto ISO mode), needed for adjustment in user auto ISO menu 
-    #undef  USE_MARKET_AUTOISO                  // Define this to use market-iso instead of real-iso as values of autoiso mechanizm
-    #undef  OVEREXP_COMPENSATE_OVERALL          // Define this to make overexposure_compensation in Custom AutoISO work for all scenes, instead when ISO is less than max value (i.e. normal daylight)
+    #undef  USE_MARKET_AUTOISO                  // DEPRECATED DO NOT USE - Define this to use market-iso instead of real-iso as values of autoiso mechanizm
+    #undef  OVEREXP_COMPENSATE_OVERALL          // DEPRECATED DO NOT USE - Define this to make overexposure_compensation in Custom AutoISO work for all scenes, instead when ISO is less than max value (i.e. normal daylight)
 
     #define CAMERA_MIN_DIST         0           // Define min distance that can be set in _MoveFocusLensToDistance (allow override - e.g. G12 min dist = 1)
     #define CAMERA_MAX_DIST         65535       // Define max distance that can be set in _MoveFocusLensToDistance (allow override for superzooms - SX30/SX40)
@@ -239,6 +240,8 @@
     // the following should OK for most cameras released after 2006, but new ports should be checked
     // some cameras treat the lowest ISO value (usually 80) specially. 
     // undefine the _LOW values on cameras which do not have this case
+    // use CHDK/SCRIPTS/TEST/ISORM.LUA to find these values, or manually set the ISO in the canon ui
+    // half shoot, and observe the PROPCASE_SV and PROPCASE_SV_MARKET values
     #define CAM_SV96_MARKET_LOW         449     // market sv96 value for lowest ISO setting in UI
     #define CAM_SV96_REAL_LOW           371     // real sv96 for lowest ISO setting. Some cameras use 370, leaving this as 371 is OK for them
     #define CAM_SV96_MARKET_OFFSET      69      // market-real sv96 value for all other ranges
