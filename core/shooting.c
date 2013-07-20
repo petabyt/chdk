@@ -60,9 +60,27 @@ typedef struct {
 
 static PHOTO_PARAM photo_param_put_off;
 
+static int iso_market_to_real_factor;
+
+#ifdef CAM_SV96_MARKET_LOW
+#define SV96_MARKET_LOW_OFFSET (CAM_SV96_MARKET_LOW - CAM_SV96_REAL_LOW)
+static int iso_market_to_real_factor_low;
+static int iso_market_low;
+#endif
+
 void shooting_init()
 {
     photo_param_put_off.tv96=PHOTO_PARAM_TV_NONE;
+    iso_market_to_real_factor = 1000*pow(2,((double)(CAM_SV96_MARKET_OFFSET)/96.0));
+#ifdef CAM_SV96_MARKET_LOW
+    iso_market_to_real_factor_low = 1000*pow(2,((double)(SV96_MARKET_LOW_OFFSET)/96.0));
+    double t = 3.125*pow(2,((double)(CAM_SV96_MARKET_LOW)/96.0)); 
+    // TODO should be ceil
+    iso_market_low = (int)t;
+    if(t - (int)iso_market_low > 0.0) {
+        iso_market_low += 1;
+    }
+#endif
 }
 
 //-------------------------------------------------------------------
@@ -264,6 +282,14 @@ int shooting_get_luminance()// http://en.wikipedia.org/wiki/APEX_system
     return b;
 }
 
+int iso_market_to_real(int isom)
+{
+#ifdef CAM_SV96_MARKET_LOW
+   if(isom <= iso_market_low) return isom*1000/iso_market_to_real_factor_low; 
+#endif
+   return isom*1000/iso_market_to_real_factor;
+}
+
 //-------------------------------------------------------------------
 // Get override values
 
@@ -287,7 +313,7 @@ static int shooting_get_tv96_override_value()
 
 short shooting_get_iso_override_value()
 {
-    short iso = conf.iso_override_value;
+    short iso = iso_market_to_real(conf.iso_override_value);
 #ifdef CAM_ISO_LIMIT_IN_HQ_BURST
     // Limit max ISO in HQ burst mode (also done in shooting_set_iso_real; but done here so OSD display value is correct)
     if ((mode_get() & MODE_SHOOTING_MASK) == MODE_SCN_HIGHSPEED_BURST)
@@ -1199,7 +1225,7 @@ static void shooting_iso_bracketing(int when)
     if (bracketing.shoot_counter == 0)
     {
         bracketing.iso = shooting_get_iso_real();
-        bracketing.iso_step = conf.iso_bracket_value;
+        bracketing.iso_step = iso_market_to_real(conf.iso_bracket_value);
     }
 
     // Adjust delta ISO value for shot based on shot number

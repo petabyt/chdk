@@ -235,6 +235,14 @@
     #define KBD_REPEAT_DELAY                175
     #define KBD_INITIAL_DELAY               500
 
+    // "real" to "market" conversion definitions
+    // the following should OK for most cameras released after 2006, but new ports should be checked
+    // some cameras treat the lowest ISO value (usually 80) specially. 
+    // undefine the _LOW values on cameras which do not have this case
+    #define CAM_SV96_MARKET_LOW         449     // market sv96 value for lowest ISO setting in UI
+    #define CAM_SV96_REAL_LOW           371     // real sv96 for lowest ISO setting. Some cameras use 370, leaving this as 371 is OK for them
+    #define CAM_SV96_MARKET_OFFSET      69      // market-real sv96 value for all other ranges
+
 //----------------------------------------------------------
 // Overridden values for each camera
 //----------------------------------------------------------

@@ -67,3 +67,10 @@
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1
     #undef  CAM_AF_LED
     #define CAM_AF_LED                          9   // Index of AF led in camera_set_led function
+    
+    // "real" to "market" conversion definitions
+    #undef CAM_SV96_MARKET_LOW                  // no special low values
+    #undef CAM_SV96_REAL_LOW 
+    #undef CAM_SV96_MARKET_OFFSET
+    #define CAM_SV96_MARKET_OFFSET 20           // market-real sv96 value for all other ranges
+

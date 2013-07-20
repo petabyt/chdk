@@ -62,5 +62,11 @@
     #undef  CAM_FLASHPARAMS_VERSION
     #define CAM_FLASHPARAMS_VERSION             2
     
+    // "real" to "market" conversion definitions
+    #undef CAM_SV96_MARKET_LOW                  // no special low values
+    #undef CAM_SV96_REAL_LOW 
+    #undef CAM_SV96_MARKET_OFFSET
+    #define CAM_SV96_MARKET_OFFSET -19          // market-real sv96 value for all other ranges
+    
 //----------------------------------------------------------
 
