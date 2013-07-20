@@ -63,12 +63,11 @@
 
     #define CAM_WAIT_FOR_FILESYSTEM             1       // wait for 'file_system_started' on startup
     
-    // TODO actual values not known
     // "real" to "market" conversion definitions
     #undef CAM_SV96_MARKET_LOW
     #undef CAM_SV96_REAL_LOW 
     #undef CAM_SV96_MARKET_OFFSET
-    #define CAM_SV96_MARKET_OFFSET              0  // 1:1 is likely to be closer than default for old camera
+    #define CAM_SV96_MARKET_OFFSET              20
 	
 //----------------------------------------------------------
 
