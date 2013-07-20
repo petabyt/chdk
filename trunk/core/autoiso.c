@@ -18,6 +18,7 @@
 #define	HISTO_STEP_SIZE	6
 
 static unsigned short live_histogram_proc[256]; // Buffer for histogram
+extern int iso_market_to_real(int);
 
 /*
 build histogram of viewport Y values (downsampled by HISTO_STEP_SIZE)
@@ -94,32 +95,11 @@ static void shooting_calc_autoiso_coef( int min_shutter )
 
 static void shooting_recalc_conf_autoiso_values()
 {
-#ifdef USE_MARKET_AUTOISO
-    // Initialize only once
-    static int iso_b = 0;   // real base iso
-    static int iso_m = 0;   // marketing base iso
-
-    // @tsv - marketing to real iso correspondance is quite linear so just got multiplier
-    // Base values are correct only when shoot is prepared, so calc multiplier right before first shoot
-    if ( !iso_m || !iso_b )
-    {
-        iso_b = shooting_get_iso_base();
-        iso_m = shooting_get_iso_market_base();
-    }
-
-    // check zero in to_market convertion numerator
-    if (iso_m == 0)
-        iso_m = 1;
-#else
-    static int iso_b = 1;
-    static int iso_m = 1;
-#endif
-
-    // Calculate realISO (real = market * iso_b / iso_m)
-    conf.autoiso_max_iso_hi_real    = conf.autoiso_max_iso_hi    * iso_b / iso_m;
-    conf.autoiso_max_iso_auto_real  = conf.autoiso_max_iso_auto  * iso_b / iso_m; 
-    conf.autoiso_min_iso_real	    = conf.autoiso_min_iso       * iso_b / iso_m;      
-    conf.autoiso2_max_iso_auto_real = conf.autoiso2_max_iso_auto * iso_b / iso_m;
+    // convert market to real iso
+    conf.autoiso_max_iso_hi_real    = iso_market_to_real(conf.autoiso_max_iso_hi) ;
+    conf.autoiso_max_iso_auto_real  = iso_market_to_real(conf.autoiso_max_iso_auto) ; 
+    conf.autoiso_min_iso_real	    = iso_market_to_real(conf.autoiso_min_iso) ;      
+    conf.autoiso2_max_iso_auto_real = iso_market_to_real(conf.autoiso2_max_iso_auto) ;
 
     // There are two exceptional situation: 
     // 1. shutter_numerator2 should be < shutter_numerator1, otherwise exceptional situation 

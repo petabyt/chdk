@@ -56,6 +56,13 @@
     #define DNG_EXT_FROM                    ".DPS"
 	
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+
+    // TODO actual values not known
+    // "real" to "market" conversion definitions
+    #undef CAM_SV96_MARKET_LOW
+    #undef CAM_SV96_REAL_LOW 
+    #undef CAM_SV96_MARKET_OFFSET
+    #define CAM_SV96_MARKET_OFFSET              0  // 1:1 is likely to be closer than default for old camera
 	
 //----------------------------------------------------------
 

@@ -43,6 +43,13 @@
     #define KBD_REPEAT_DELAY                140
     #undef  KBD_INITIAL_DELAY
     #define KBD_INITIAL_DELAY               300
+    
+    // TODO actual values not known
+    // "real" to "market" conversion definitions
+    #undef CAM_SV96_MARKET_LOW
+    #undef CAM_SV96_REAL_LOW 
+    #undef CAM_SV96_MARKET_OFFSET
+    #define CAM_SV96_MARKET_OFFSET              0  // 1:1 is likely to be closer than default for old camera
 	
 //----------------------------------------------------------
 

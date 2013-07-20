@@ -61,4 +61,13 @@
     // camera name
     #define PARAM_CAMERA_NAME               3       // parameter number for GetParameterData
 
+    // "real" to "market" conversion definitions
+    #undef CAM_SV96_MARKET_LOW
+    #undef CAM_SV96_REAL_LOW 
+    #undef CAM_SV96_MARKET_OFFSET
+    #define CAM_SV96_MARKET_LOW             418 // different offset from "normal" cams
+    #define CAM_SV96_REAL_LOW               346
+    #define CAM_SV96_MARKET_OFFSET          69  // market-real sv96 value for all other ranges
+
+
 //----------------------------------------------------------

@@ -60,6 +60,12 @@
     #define CAM_FLASHPARAMS_VERSION         2
 
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+    
+    // "real" to "market" conversion definitions
+    #undef CAM_SV96_MARKET_LOW                  // no special low values
+    #undef CAM_SV96_REAL_LOW 
+    #undef CAM_SV96_MARKET_OFFSET
+    #define CAM_SV96_MARKET_OFFSET -10          // market-real sv96 value for all other ranges
 
 //----------------------------------------------------------
 
