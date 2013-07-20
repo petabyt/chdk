@@ -1872,14 +1872,8 @@ static int luaCB_set_record( lua_State* L )
 // only for when USB is connected
 static int luaCB_switch_mode_usb( lua_State* L )
 {
-  int mode = luaL_checknumber(L,1);
-
-  if ( mode != 0 && mode != 1 )
-  {
-    return 0;
-  }
-
-  return switch_mode_usb(mode);
+  switch_mode_usb(luaL_checknumber(L,1));
+  return 0;
 }
  
 /*
