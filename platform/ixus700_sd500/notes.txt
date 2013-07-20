@@ -6,5 +6,3 @@ Camera depending notes:
 - ixus700_sd500 does NOT have a real IRIS Diaphragm, it only has an ND Filter! 
 Mind this.
 - cam supports multipartitions
-- ISO real / market conversion not know, so override values may not match
-  Canon UI values. Please post on the forum if you can test
