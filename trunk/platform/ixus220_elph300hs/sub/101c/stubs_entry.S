@@ -311,6 +311,11 @@ NHSTUB(vsprintf                               ,0xff820898) //115
 //NHSTUB(DeleteEventFlag                      ,0xff88d954) //119
 //NHSTUB(CheckAnyEventFlag                    ,0xff88d9a4) //119
 //NHSTUB(CheckAllEventFlag                    ,0xff88d9ec) //119
+//NHSTUB(RegisterInterruptHandler             ,0xff81e948) //107
+//NHSTUB(UnregisterInterruptHandler           ,0xff81e96c) //119
+//NHSTUB(GetSRAndDisableInterrupt             ,0xff81e984) //119
+//NHSTUB(SetSR                                ,0xff81e988) //119
+//NHSTUB(EnableInterrupt                      ,0xff81e9a8) //119
 //NHSTUB(GetSDProtect                         ,0xff834de0) //101
 //NHSTUB(DispCon_ShowBitmapColorBar           ,0xff85fcd8) //102
 //NHSTUB(ResetZoomLens                        ,0xffaef2e4) //102
