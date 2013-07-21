@@ -18,10 +18,10 @@
 #define	HISTO_STEP_SIZE	6
 
 static unsigned short live_histogram_proc[256]; // Buffer for histogram
-extern int iso_market_to_real(int);
 
 /*
 build histogram of viewport Y values (downsampled by HISTO_STEP_SIZE)
+NOTE also used by lua get_live_histo
 */
 int live_histogram_read_y(unsigned short *h)
 {
@@ -96,10 +96,10 @@ static void shooting_calc_autoiso_coef( int min_shutter )
 static void shooting_recalc_conf_autoiso_values()
 {
     // convert market to real iso
-    conf.autoiso_max_iso_hi_real    = iso_market_to_real(conf.autoiso_max_iso_hi) ;
-    conf.autoiso_max_iso_auto_real  = iso_market_to_real(conf.autoiso_max_iso_auto) ; 
-    conf.autoiso_min_iso_real	    = iso_market_to_real(conf.autoiso_min_iso) ;      
-    conf.autoiso2_max_iso_auto_real = iso_market_to_real(conf.autoiso2_max_iso_auto) ;
+    conf.autoiso_max_iso_hi_real    = shooting_iso_market_to_real(conf.autoiso_max_iso_hi) ;
+    conf.autoiso_max_iso_auto_real  = shooting_iso_market_to_real(conf.autoiso_max_iso_auto) ; 
+    conf.autoiso_min_iso_real	    = shooting_iso_market_to_real(conf.autoiso_min_iso) ;      
+    conf.autoiso2_max_iso_auto_real = shooting_iso_market_to_real(conf.autoiso2_max_iso_auto) ;
 
     // There are two exceptional situation: 
     // 1. shutter_numerator2 should be < shutter_numerator1, otherwise exceptional situation 

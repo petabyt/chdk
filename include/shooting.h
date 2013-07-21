@@ -154,6 +154,9 @@ extern void shooting_set_iso_real(short iso, short is_now);
 extern void shooting_set_sv96(short sv96, short is_now);
 extern short shooting_get_iso_override_value();
 
+extern int shooting_iso_market_to_real(int isom);
+extern int shooting_iso_real_to_market(int isor);
+
 /******************************************************************/
 
 extern short shooting_get_canon_overexposure_value();
