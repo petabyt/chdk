@@ -288,17 +288,23 @@ int shooting_get_luminance()// http://en.wikipedia.org/wiki/APEX_system
 
 int shooting_iso_market_to_real(int isom)
 {
+// Currently disabled because shooting_set_sv96 etc are not aware of special case
+/*
 #ifdef CAM_SV96_MARKET_LOW
    if(isom <= iso_market_low) return isom*ISO_FACTOR_SCALE/iso_market_to_real_factor_low; 
 #endif
+*/
    return isom*ISO_FACTOR_SCALE/iso_market_to_real_factor;
 }
 
 int shooting_iso_real_to_market(int isor)
 {
+// Currently disabled because shooting_set_sv96 etc are not aware of special case
+/*
 #ifdef CAM_SV96_MARKET_LOW
    if(isor <= iso_real_low) return isor*iso_market_to_real_factor_low/ISO_FACTOR_SCALE; 
 #endif
+*/
    return isor*iso_market_to_real_factor/ISO_FACTOR_SCALE;
 }
 
