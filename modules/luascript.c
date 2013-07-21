@@ -1856,15 +1856,11 @@ static int luaCB_is_capture_mode_valid( lua_State* L )
   while not get_mode() do
   	sleep(10)
   end
+  uses switch_mode_usb if required
 */
 static int luaCB_set_record( lua_State* L )
 {
-  if(on_off_value_from_lua_arg(L,1)) {
-    levent_set_record();
-  }
-  else {
-    levent_set_play();
-  }
+  shooting_set_playrec_mode(on_off_value_from_lua_arg(L,1));
   return 0;
 }
 
