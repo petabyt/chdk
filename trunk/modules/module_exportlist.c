@@ -265,6 +265,7 @@
             shooting_set_zoom,
             shooting_set_zoom_rel,
             shooting_set_zoom_speed,
+            shooting_set_playrec_mode,
             shooting_update_dof_values,
 
             rbf_char_width,

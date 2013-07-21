@@ -193,6 +193,9 @@ extern int shooting_set_mode_chdk(int mode);
 // set capture mode from PROPCASE_SHOOTING_MODE value. return 0 if not in rec or mode is -1, otherwise 1
 extern int shooting_set_mode_canon(int mode);
 
+// set switch between play (0) / rec (1) modes, using USB function if needed
+void shooting_set_playrec_mode(int mode);
+
 /******************************************************************/
 
 #define MIN_DIST                    CAMERA_MIN_DIST     // Defined in camera.h (can be overridden in platform_camera.h)

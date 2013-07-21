@@ -2406,7 +2406,7 @@ statement(void)
       break;
 
   case TOKENIZER_SET_RECORD:
-      on_off_statement(token, levent_set_record, levent_set_play);
+      one_int_param_function(token, shooting_set_playrec_mode);
       break;
 
   case TOKENIZER_SET_CAPTURE_MODE:

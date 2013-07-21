@@ -6,6 +6,7 @@
 #include "histogram.h"
 #include "usb_remote.h"
 #include "autoiso.h"
+#include "levent.h"
 
 // Shooting function that don't need to be ARM code
 // ARM code shooting functions are in platform/generic/shooting.c
@@ -1569,4 +1570,21 @@ void shooting_expo_iso_override_thumb(void)
 
     // Set flash mode & override
     shooting_set_flash_override();
+}
+
+/*
+switch camera between playback (0) and record(1)
+uses switch_mode_usb if a usb connection is present
+*/
+void shooting_set_playrec_mode(int mode)
+{
+    if (get_usb_bit_physw()) 
+    {
+        switch_mode_usb(mode);
+        return;
+    }
+    if(mode)
+        levent_set_record();
+    else
+        levent_set_play();
 }
