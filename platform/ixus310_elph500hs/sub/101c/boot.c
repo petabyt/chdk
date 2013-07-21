@@ -434,7 +434,7 @@ asm volatile (
 "    LDR     R2, =0xFF059BD0 \n"
 "    MOV     R1, #0x55 \n"
 "    MOV     R0, R3 \n"
-"    BL      sub_FF00E948 \n"
+"    BL      sub_FF00E948 /*_RegisterInterruptHandler*/ \n"
 "    BL      sub_FF05A2C8 \n"
 "    LDR     R5, =0x28BC \n"
 "    MOV     R1, #0x10 \n"

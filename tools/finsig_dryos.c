@@ -417,6 +417,11 @@ func_entry  func_names[] =
     { "DeleteEventFlag", OPTIONAL|UNUSED },
     { "CheckAnyEventFlag", OPTIONAL|UNUSED },
     { "CheckAllEventFlag", OPTIONAL|UNUSED },
+    { "RegisterInterruptHandler", OPTIONAL|UNUSED },
+    { "UnregisterInterruptHandler", OPTIONAL|UNUSED },
+    { "GetSRAndDisableInterrupt", OPTIONAL|UNUSED }, // disables IRQ, returns a value
+    { "SetSR", OPTIONAL|UNUSED }, // enables IRQ, puts back value returned by GetSR
+    { "EnableInterrupt", OPTIONAL|UNUSED }, // enables IRQ
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -770,6 +775,7 @@ string_sig string_sigs[] =
 
     { 7, "hook_CreateTask2", "PhySw", 0x01000001 },
     { 7, "CreateTaskStrictly", "PhySw", 0x01000001 },
+    { 7, "RegisterInterruptHandler", "WdtInt", 0x01000001 },
 
     { 8, "WriteSDCard", "Mounter.c", 0 },
 
@@ -889,6 +895,10 @@ string_sig string_sigs[] =
     { 19, "CancelTimer", "SetTimerWhen", 0,                                      0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019 },
     { 19, "CancelHPTimer", "SetHPTimerAfterTimeout", 0,                          0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022 },
     { 19, "SetHPTimerAfterNow", "SetHPTimerAfterTimeout", 0,                    -0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020 },
+    { 19, "UnregisterInterruptHandler", "RegisterInterruptHandler", 0,           0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009 },
+    { 19, "GetSRAndDisableInterrupt", "UnregisterInterruptHandler", 0,           0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006 },
+    { 19, "SetSR", "UnregisterInterruptHandler", 0,                              0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007 },
+    { 19, "EnableInterrupt", "UnregisterInterruptHandler", 0,                    0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f },
 
     { 0, 0, 0, 0 }
 };
