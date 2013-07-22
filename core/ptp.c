@@ -664,7 +664,9 @@ static int handle_ptp(
                 ptp.param1 = 0; //size
                 ptp.param2 = 0; //0 = no more chunks
             } else {
-                send_ptp_data(data,rcgd_addr,rcgd_size);
+                // send directly using send_data to avoid multiple send calls
+                data->send_data(data->handle,rcgd_addr,rcgd_size,rcgd_size,0,0,0);
+                
                 ptp.param1 = rcgd_size; //size
                 if(rcgd_status == REMOTECAP_CHUNK_STATUS_MORE) {
                     ptp.param2 = 1;
