@@ -29,7 +29,7 @@ static char* _load_file(const char* name, int* rv_size, int* st_size, int add0)
         {
             // open file & check file is valid
 	        fd = open( name, O_RDONLY, 0777 );
-	        if (fd > 0)
+	        if (fd >= 0)
             {
                 // allocate uncached buffer to read into & check valid
                 char *ubuf = umalloc(512);
