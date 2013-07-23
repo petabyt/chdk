@@ -121,7 +121,7 @@ int load_int_value_file( const char* filename, int* value_p )
 {
 	char *buf;
 
-	buf = load_file(filename, 0, 0);
+	buf = load_file(filename, 0, 1);
 	if (!buf)
 	   return 0;
 	
@@ -145,7 +145,7 @@ void save_int_value_file( const char* filename, int value )
 	int fd = open( filename, O_WRONLY|O_CREAT|O_TRUNC, 0777);
 	if (fd>=0) 
 	{
-		write(fd, buf, strlen(buf));
+		write(fd, buf, strlen(buf)+1);
 		close(fd);
 	} 
 	ufree(buf);
