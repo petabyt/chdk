@@ -61,6 +61,7 @@ static void console_start_line()
 void console_close()
 {
     console_line_length = 0;
+    console_autoredraw = 1;
 }
 
 void console_clear()

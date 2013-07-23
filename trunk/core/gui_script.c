@@ -435,6 +435,8 @@ void get_last_paramset_num(const char *fn)
     make_param_filename( MAKE_PARAMSETNUM_FILENAME, fn, 0);
     if ( !load_int_value_file( cfg_name, &conf.script_param_set ) )
        conf.script_param_set = 0;
+    if ((conf.script_param_set < 0) || (conf.script_param_set > 10))
+       conf.script_param_set = 0;
     make_param_filename( MAKE_PARAM_FILENAME, fn, conf.script_param_set);
 }
 
@@ -451,6 +453,7 @@ int load_params_values(const char *fn, int paramset)
     // skip if 'default' parameters requested
     if (paramset == DEFAULT_PARAM_SET) return 0;
     
+    if ((paramset < 0) || (paramset > 10)) paramset = 0;
     conf.script_param_set = paramset;
     make_param_filename( MAKE_PARAM_FILENAME, fn, paramset );
 
