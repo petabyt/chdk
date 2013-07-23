@@ -149,22 +149,30 @@ void console_set_layout(int x1, int y1, int x2, int y2) //untere linke Ecke(x1,y
     if (x1 > x2) { i = x1; x1 = x2; x2 = i; }
     if (y1 > y2) { i = y1; y1 = y2; y2 = i; }
 
-    if ((x1 >= 0) && (y1 >= 0) && (x2 <= MAX_CONSOLE_LINE_LENGTH) && (y2 <= MAX_CONSOLE_LINES))
-    {
-        //Adjust for new size if needed
-        console_line_length = x2 - x1;
-        console_max_lines = y2 - y1;
+    // Limit values to screen range (TODO: add error message if out of range)
+    if (x1 < 0) x1 = 0;
+    if (x1 > MAX_CONSOLE_LINE_LENGTH) x1 = MAX_CONSOLE_LINE_LENGTH;
+    if (x2 < 0) x2 = 0;
+    if (x2 > MAX_CONSOLE_LINE_LENGTH) x2 = MAX_CONSOLE_LINE_LENGTH;
 
-        // If number of lines in console has reduced and old console has too many lines
-        if (console_num_lines > console_max_lines)
-            console_num_lines = console_max_lines;
+    if (y1 < 0) y1 = 0;
+    if (y1 > MAX_CONSOLE_LINES) y1 = MAX_CONSOLE_LINES;
+    if (y2 < 0) y2 = 0;
+    if (y2 > MAX_CONSOLE_LINES) y2 = MAX_CONSOLE_LINES;
+
+    //Adjust for new size if needed
+    console_line_length = x2 - x1;
+    console_max_lines = y2 - y1;
+
+    // If number of lines in console has reduced and old console has too many lines
+    if (console_num_lines > console_max_lines)
+        console_num_lines = console_max_lines;
         
-        console_x = x1;
-        console_y = MAX_CONSOLE_LINES - y2;
+    console_x = x1;
+    console_y = MAX_CONSOLE_LINES - y2;
 
-		if (console_autoredraw)
-			console_redraw();
-    }
+    if (console_autoredraw)
+        console_redraw();
 }
 
 void console_set_autoredraw(int val)
