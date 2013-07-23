@@ -147,7 +147,7 @@ char* load_file( const char* name, int* rv_size )
     	return 0;
 
 	fd = open( name, O_RDONLY, 0777 );
-	if ( fd <=0 )
+	if ( fd < 0 )
     	return 0;
 
 	buf = umalloc(size+1);
