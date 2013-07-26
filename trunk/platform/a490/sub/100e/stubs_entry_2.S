@@ -9,8 +9,6 @@ NHSTUB(kbd_pwr_off,                 NULL_SUB)
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 
 // Additional
-NHSTUB(LockAndRefresh,              0xFFD7B04C)
 NHSTUB(MakeAFScan,                  0xFFD0F178)
-NHSTUB(TurnOffMic,                  0xFFC43C30) // Doesn't work
-NHSTUB(TurnOnMic,                   0xFFC43C5C) // Doesn't work
-NHSTUB(UnlockAndRefresh,            0xFFD7B090)
+NHSTUB(TurnOnMic,                   0xFFC43C30)
+NHSTUB(TurnOffMic,                  0xFFC43C5C)

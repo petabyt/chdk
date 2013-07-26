@@ -44,15 +44,15 @@ void vid_bitmap_refresh() {
     // asm1989: i've tried refreshphysical screen (screen unlock) and that caused the canon and
     // function menu to not display at all. This seems to work and is called in a similar
     // way in other places where original OSD should be refreshed.
-    extern void _LockAndRefresh();   // wrapper function for screen lock
-    extern void _UnlockAndRefresh();   // wrapper function for screen unlock
+    extern void _ScreenLock();   // wrapper function for screen lock
+    extern void _ScreenUnlock();   // wrapper function for screen unlock
 
-    _LockAndRefresh();
+    _ScreenLock();
 
     enabled_refresh_physical_screen=1;
     full_screen_refresh=3;   // found in ScreenUnlock underneath a CameraLog.c call
 
-    _UnlockAndRefresh();
+    _ScreenUnlock();
 }
 
 // Near "PropertyTableManagerCore.c" ROM:FFD2EBD8

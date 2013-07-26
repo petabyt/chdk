@@ -4,3 +4,6 @@
 TODO:
 
 - probably many things that I couldn't test
+
+Know bugs:
+- remote shoot via chdkptp (rs -jpg | -dng) does not work if camera is in continuous mode.
