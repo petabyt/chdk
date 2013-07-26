@@ -24,6 +24,7 @@ void taskCreateHook(int *p) {
 // if (p[0]==0xFFC5F754)  p[0]=(int)task_InitFileModules_my; //done
  if (p[0]==0xFFC49B18)  p[0]=(int)MovieRecord_Task_my; //done
 // if (p[0]==0xFFC91454)  p[0]=(int)exp_drv_task; //done
+ if (p[0]==0xFFDBFC80)  p[0]=(int)filewritetask;
 }
 
 #define DEBUG_LED 0xC02200C4
