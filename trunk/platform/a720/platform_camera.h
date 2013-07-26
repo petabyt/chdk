@@ -62,13 +62,15 @@
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
 
     #define DNG_EXT_FROM                    ".CR2"
-    
+
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                 59      // Override min subject distance
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 58686   // Override max subject distance
-	
-	#define REMOTE_SYNC_STATUS_LED 	0xc02200C4		// specifies an LED that turns on while camera waits for USB remote to sync
-	
+
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+
+    #define REMOTE_SYNC_STATUS_LED          0xc02200C4  // specifies an LED that turns on while camera waits for USB remote to sync
+
 //----------------------------------------------------------
 
