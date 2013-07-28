@@ -63,7 +63,7 @@ static PHOTO_PARAM photo_param_put_off;
 
 static int iso_market_to_real_factor;
 
-#define ISO_FACTOR_SCALE 1000
+#define ISO_FACTOR_SHIFT 10     // Shift amount to scale ISO values
 #ifdef CAM_SV96_MARKET_LOW
 #define SV96_MARKET_LOW_OFFSET (CAM_SV96_MARKET_LOW - CAM_SV96_REAL_LOW)
 static int iso_market_to_real_factor_low;
@@ -74,16 +74,16 @@ static int iso_real_low;
 void shooting_init()
 {
     photo_param_put_off.tv96=PHOTO_PARAM_TV_NONE;
-    iso_market_to_real_factor = ISO_FACTOR_SCALE*pow(2,((double)(CAM_SV96_MARKET_OFFSET)/96.0));
+    iso_market_to_real_factor = (pow(2,((double)(CAM_SV96_MARKET_OFFSET)/96.0) + ISO_FACTOR_SHIFT) + 0.5);    // pow(2,a) * pow(2,b) == pow(2,a+b)
 #ifdef CAM_SV96_MARKET_LOW
-    iso_market_to_real_factor_low = ISO_FACTOR_SCALE*pow(2,((double)(SV96_MARKET_LOW_OFFSET)/96.0));
+    iso_market_to_real_factor_low = (pow(2,((double)(SV96_MARKET_LOW_OFFSET)/96.0) + ISO_FACTOR_SHIFT) + 0.5);
     double t = 3.125*pow(2,((double)(CAM_SV96_MARKET_LOW)/96.0)); 
     // TODO should be ceil
     iso_market_low = (int)t;
     if(t - iso_market_low > 0.0) {
         iso_market_low += 1;
     }
-    iso_real_low = iso_market_low*ISO_FACTOR_SCALE/iso_market_to_real_factor_low;
+    iso_real_low = ((iso_market_low << ISO_FACTOR_SHIFT) + iso_market_to_real_factor_low/2) / iso_market_to_real_factor_low;
 #endif
 }
 
@@ -291,10 +291,10 @@ int shooting_iso_market_to_real(int isom)
 // Currently disabled because shooting_set_sv96 etc are not aware of special case
 /*
 #ifdef CAM_SV96_MARKET_LOW
-   if(isom <= iso_market_low) return isom*ISO_FACTOR_SCALE/iso_market_to_real_factor_low; 
+   if(isom <= iso_market_low) return ((isom << ISO_FACTOR_SHIFT) + iso_market_to_real_factor_low/2) / iso_market_to_real_factor_low; 
 #endif
 */
-   return isom*ISO_FACTOR_SCALE/iso_market_to_real_factor;
+   return ((isom << ISO_FACTOR_SHIFT) + iso_market_to_real_factor/2) / iso_market_to_real_factor;
 }
 
 int shooting_iso_real_to_market(int isor)
@@ -302,10 +302,10 @@ int shooting_iso_real_to_market(int isor)
 // Currently disabled because shooting_set_sv96 etc are not aware of special case
 /*
 #ifdef CAM_SV96_MARKET_LOW
-   if(isor <= iso_real_low) return isor*iso_market_to_real_factor_low/ISO_FACTOR_SCALE; 
+   if(isor <= iso_real_low) return (isor * iso_market_to_real_factor_low + (1<<(ISO_FACTOR_SHIFT-1))) >> ISO_FACTOR_SHIFT; 
 #endif
 */
-   return isor*iso_market_to_real_factor/ISO_FACTOR_SCALE;
+   return (isor * iso_market_to_real_factor + (1<<(ISO_FACTOR_SHIFT-1))) >> ISO_FACTOR_SHIFT;
 }
 
 //-------------------------------------------------------------------
