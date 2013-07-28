@@ -38,9 +38,9 @@ NHSTUB(GetCurrentTargetDistance, 0xffe83c30)
 // Best match: 80%
 //NHSTUB(GetDrive_ClusterSize, 0xffc5dd00) -- stubs_entry_2.S = 0xffc5dc88
 // Best match: 80%
-NHSTUB(GetDrive_FreeClusters, 0xffc5dcc4)
+//NHSTUB(GetDrive_FreeClusters, 0xffc5dcc4) -- stubs_entry_2.S = 0xffc5dd00
 // Best match: 84%
-NHSTUB(GetDrive_TotalClusters, 0xffc5dc88)
+//NHSTUB(GetDrive_TotalClusters, 0xffc5dc88) -- stubs_entry_2.S = 0xffc5dcc4
 // Best match: 54%
 NHSTUB(GetFocusLensSubjectDistance, 0xffe76038)
 // ALT: NHSTUB(GetFocusLensSubjectDistance, 0xffe76038) // 17/14
