@@ -35,19 +35,11 @@ void taskHook(context_t **context)
 }
 
 /*----------------------------------------------------------------------
-	spytask
------------------------------------------------------------------------*/
-void spytask(long ua, long ub, long uc, long ud, long ue, long uf)
-{
-    core_spytask();
-}
-
-/*----------------------------------------------------------------------
-	CreateTask_spytask
+	CreateTask --> core_spytask
 -----------------------------------------------------------------------*/
 void CreateTask_spytask()
 {
-	_CreateTask("SpyTask", 0x19, 0x2000, spytask, 0);
+	_CreateTask("SpyTask", 0x19, 0x2000, core_spytask, 0);
 }
 
 ///*----------------------------------------------------------------------
