@@ -9,7 +9,11 @@ all: libplatformsub.a
 
 TARGET_PRIMARY=$(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN
 
-#OBJS= should be defined in */sub/*/Makefile
+#OBJS= should be defined in */sub/*/Makefile for camera files
+#add platform dependent 'core' files (build as THUMB)
+OBJS+=main.thm.o gui_draw.thm.o \
+     gui.thm.o kbd_process.thm.o conf.thm.o gui_osd.thm.o raw.thm.o \
+     shot_histogram.thm.o shooting.thm.o camera_info.thm.o remotecap.thm.o
 
 libplatformsub.a: $(OBJS)
 

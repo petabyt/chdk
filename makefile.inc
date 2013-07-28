@@ -231,18 +231,37 @@ default: all
 
 ifndef SKIPBUILDRULES
 
+# rule for building .o from .c in the same directory
 %.o: %.c
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+
+# rule for building .o from .c in the same directory - forces THUMB build
+%.thm.o: %.c
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) $(CTHUMB) -nostdinc -c -o $@ $<
+
+# rule for building .o from .c in the 'core' directory
 %.o: $(topdir)core/%.c
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+
+# rule for building .o from .c in the 'core' directory - forces THUMB build
+%.thm.o: $(topdir)core/%.c
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) $(CTHUMB) -nostdinc -c -o $@ $<
+
+# rule for building .o from .c in the 'modules' directory
 %.o: $(topdir)modules/%.c
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+	
+# rule for building .o from .S in the same directory
 %.o: %.S
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+	
+# rule for building .a
 %.a:
 	@echo $^ \-\> $@
 	$(AR) rcs $@ $^
