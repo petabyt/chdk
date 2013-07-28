@@ -97,7 +97,8 @@
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                        2
 
-    #define CAM_MIN_ISO_OVERRIDE                70      // Defines min (non-zero) ISO override value - lower value may crash if flash used [0 = AUTO, so always allowed]
+    #define CAM_MIN_ISO_OVERRIDE                61  // Defines min real (non-zero) ISO override value - lower value may crash if flash used [0 = AUTO, so always allowed]
+    #undef  CAM_SV96_MARKET_LOW                     // no special low values
 
     // bayer sensor pattern
     #define cam_CFAPattern                      0x02010100 // Red  Green  Green  Blue
