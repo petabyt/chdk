@@ -423,10 +423,6 @@ asm volatile (
 	);
 }
 
-void spytask(long ua, long ub, long uc, long ud, long ue, long uf) {
-
-	core_spytask();
-}
 
 void CreateTask_spytask() {
 
