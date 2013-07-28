@@ -11,7 +11,6 @@ extern void boot();
 
 void startup() {
     long *bss = &link_bss_start;
-    long *ptr;
 
     //debug_led(1);
     //debug_led(0);

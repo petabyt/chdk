@@ -145,8 +145,6 @@ void deleteHook (void *pTcb)
 void startup()
 	{
     long *bss = &link_bss_start;
-    long *ptr;
-    long i,l;
 
     //volatile long *p; p=(void*) 0xc02200E0; *p=0x46; //debug led
 
@@ -168,6 +166,7 @@ void startup()
     // or else sryproc startup will fail from
     // time to time...
 #if 0
+    long *ptr;
     for (ptr=(void*)MEMBASEADDR;((long)ptr)<MEMISOSTART;ptr+=4)
 		{
 		ptr[0]=0x55555555;

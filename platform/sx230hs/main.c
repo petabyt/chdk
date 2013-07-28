@@ -12,7 +12,6 @@ void startup()
 {
 
 	long *bss = &link_bss_start;
-	long *ptr;
 
 	
 	// sanity check

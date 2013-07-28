@@ -16,7 +16,6 @@ long get_sensor_width()
 void startup()
 {
     long *bss = &link_bss_start;
-	long *ptr;
 
 	// sanity check
 	if ((long)&link_bss_end > (MEMISOSTART + MEMISOSIZE)){

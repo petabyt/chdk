@@ -10,7 +10,6 @@ extern void boot();
 void startup() {
 	
 	long *bss = &link_bss_start;
-	long *ptr;
 
 	// sanity check
 	if ((long)&link_bss_end > (MEMISOSTART + MEMISOSIZE)){
