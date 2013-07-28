@@ -11,18 +11,13 @@ LDOPTS+=-Wl,-N,-Ttext,$(MEMISOSTART)
 
 all: main.bin
 
-# Build platform dependent code (independent code is built in lib/core/libcore.a)
-OBJS=entry.o main.o gui_draw.o \
-     gui.o kbd.o conf.o gui_osd.o raw.o \
-     shot_histogram.o shooting.o camera_info.o autoiso.o remotecap.o
-
-gui.o: FORCE
+entry.o: FORCE
 
 FORCE:
 
 main.bin: main.elf
 
-main.elf: $(OBJS) $(topdir)platform/$(PLATFORM)/libplatform.a \
+main.elf: entry.o $(topdir)platform/$(PLATFORM)/libplatform.a \
           $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/libplatformsub.a \
           $(topdir)lib/font/libfont.a $(topdir)lib/math/libmath.a \
           $(topdir)lib/lang/liblang.a $(topdir)lib/armutil/libarmutil.a \

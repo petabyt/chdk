@@ -1,7 +1,10 @@
-#include "platform.h"
 #include "stdlib.h"
 #include "math.h"
 #include "conf.h"
+#include "viewport.h"
+#include "shooting.h"
+#include "modes.h"
+#include "lens.h"
 
 //-------------------------------------------------------------------
 // AUTO ISO
@@ -148,11 +151,7 @@ void shooting_set_autoiso(int iso_mode)
             ev_overexp = conf.overexp_ev_enum << 5; 
     }
 
-#ifdef OVEREXP_COMPENSATE_OVERALL
-    float current_shutter = shooting_get_shutter_speed_from_tv96(shooting_get_tv96() + ev_overexp);
-#else
     float current_shutter = shooting_get_shutter_speed_from_tv96(shooting_get_tv96());
-#endif
 
     short current_iso = shooting_get_iso_real();
 
@@ -195,12 +194,7 @@ void shooting_set_autoiso(int iso_mode)
 
     float target_shutter = current_shutter *  current_iso / target_iso;
 
-#ifdef OVEREXP_COMPENSATE_OVERALL
-    shooting_set_shutter_speed(target_shutter, 0, SET_NOW);
-#else
-    // Daylight only (below autoiso_max) overexp compensation
     shooting_set_shutter_speed(target_shutter, ev_overexp, SET_NOW);
-#endif
 
     shooting_set_iso_real(target_iso, SET_NOW);
 }
