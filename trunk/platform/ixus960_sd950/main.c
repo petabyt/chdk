@@ -12,7 +12,6 @@ return 5760;
 void startup()
 {
 long *bss = &link_bss_start;
-long *ptr;
  
 if ((long)&link_bss_end > (MEMISOSTART + MEMISOSIZE)){
 started();

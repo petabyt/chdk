@@ -135,7 +135,7 @@ void deleteHook (void *pTcb)
 void startup()
 {
     long *bss = &link_bss_start;
-    long *ptr;
+
 
     // sanity check
     if ((long)&link_bss_end > (MEMISOSTART + MEMISOSIZE)){
@@ -155,6 +155,7 @@ void startup()
     // or else sryproc startup will fail from
     // time to time...
 #if 0
+    long *ptr;
     for (ptr=(void*)MEMBASEADDR;((long)ptr)<MEMISOSTART;ptr+=4){
 	ptr[0]=0x55555555;
 	ptr[1]=0x55555555;
