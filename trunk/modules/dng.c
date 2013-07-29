@@ -1196,7 +1196,7 @@ void create_dng_header_for_ptp(ptp_data_chunk *pdc)
 {
     create_dng_header(0,1);
     if (dng_header_buf) {
-        pdc->address = (unsigned int)ADR_TO_UNCACHED(dng_header_buf);
+        pdc->address = dng_header_buf; // cached may be slightly slower, but need to clean otherwise
         pdc->length = (unsigned int)dng_header_buf_size;
     } else {
         pdc->address = 0;
