@@ -53,7 +53,6 @@
     #define CAM_MENU_BORDERWIDTH                10
 
     #define CAM_MIN_ISO_OVERRIDE                49  // Defines min real (non-zero) ISO override value - lower value may crash if flash used [0 = AUTO, so always allowed]
-    #undef  CAM_SV96_MARKET_LOW                     // no special low values
 
     // bayer sensor pattern
     #define cam_CFAPattern                      0x01000201  // Green  Blue  Red  Green
