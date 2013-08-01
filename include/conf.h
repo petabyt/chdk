@@ -437,7 +437,7 @@ extern Conf conf;
 #define TV_OVERRIDE_SHORT_EXP   1
 #define TV_OVERRIDE_LONG_EXP    2
 #define is_tv_override_enabled  (  conf.tv_override_enabled && overrides_are_enabled && \
-                                    ((conf.tv_override_value && (conf.tv_enum_type == TV_OVERRIDE_EV_STEP)) || \
+                                    ((conf.tv_enum_type == TV_OVERRIDE_EV_STEP) || \
                                      (conf.tv_override_short_exp && (conf.tv_enum_type == TV_OVERRIDE_SHORT_EXP)) ||  \
                                      (conf.tv_override_long_exp && (conf.tv_enum_type == TV_OVERRIDE_LONG_EXP)) \
                                      ) \
