@@ -63,13 +63,11 @@
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1       // enable fix for camera crash at startup when opening the conf / font files see http://chdk.setepontos.com/index.php?topic=6179.0
 
     #undef  CAMERA_MIN_DIST
-    #define CAMERA_MIN_DIST                 100     // Override min subject distance
-    #undef  CAMERA_MAX_DIST
-    #define CAMERA_MAX_DIST                 52855   // Override max subject distance
+    #define CAMERA_MIN_DIST                 51     // Override min subject distance
 
     #define CAM_HAS_FILEWRITETASK_HOOK       1
 
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED  0xC02200C4      // specifies an LED that turns on while camera waits for USB remote to sync
 
     // Define shortcut overrides where defaults are not suitable
     // Shutter Half Press + Down = AFL
