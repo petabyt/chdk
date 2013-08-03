@@ -1488,6 +1488,9 @@ static void shooting_set_flash_override()
 #if defined(PROPCASE_FLASH_EXP_COMP)
             set_property_case(PROPCASE_FLASH_EXP_COMP, &power, sizeof(power));
 #endif
+#if defined(PROPCASE_EXT_FLASH_EXP_COMP)
+            set_property_case(PROPCASE_EXT_FLASH_EXP_COMP, &power, sizeof(power));
+#endif
         }
     }
 }

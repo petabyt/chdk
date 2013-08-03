@@ -31,6 +31,7 @@ The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
 #define PROPCASE_FLASH_ADJUST_MODE               121    // 0 = Auto, 1 = Manual
 #define PROPCASE_FLASH_FIRE                      122
 #define PROPCASE_FLASH_EXP_COMP                  127    // APEX96 units
+#define PROPCASE_EXT_FLASH_EXP_COMP              289    // APEX96 units (for external flash if connected)
 #define PROPCASE_FOCUS_MODE                      133
 #define PROPCASE_FLASH_MANUAL_OUTPUT             141
 #define PROPCASE_FLASH_MODE                      143    // 0 = Auto, 1 = On, 2 = Off
