@@ -315,23 +315,45 @@ short shooting_get_iso_market()
     return shooting_get_iso_from_sv96(sv);
 }
 
+static void set_iso_mode(int i)
+{
+    short vv = iso_table[i].prop_id;
+    set_property_case(PROPCASE_ISO_MODE, &vv, sizeof(vv));
+}
+
 void shooting_set_iso_mode(int v)
 {
-    long i;
+    int i;
     if (v < 50) // CHDK ID
     {
         for (i=0; i<ISO_SIZE; i++)
         {
             if (iso_table[i].id == v)
             {
-                short vv = iso_table[i].prop_id;
-                set_property_case(PROPCASE_ISO_MODE, &vv, sizeof(vv));
+                set_iso_mode(i);
                 return;
             }
         }
     }
-    else        // ISO value - TODO find nearest entry in iso_table
+    else        // ISO value - find nearest entry in iso_table and set iso mode to that value
     {
+        if (v <= iso_table[0].prop_id)    // In case no AUTO (0) entry
+        {
+            set_iso_mode(0);
+            return;
+        }
+        for (i=0; i<ISO_SIZE-1; i++)
+        {
+            if ((v > iso_table[i].prop_id) && (v <= iso_table[i+1].prop_id))
+            {
+                if ((v - iso_table[i].prop_id) < (iso_table[i+1].prop_id - v))
+                    set_iso_mode(i);
+                else
+                    set_iso_mode(i+1);
+                return;
+            }
+        }
+        set_iso_mode(ISO_SIZE-1);
     }
 }
 
