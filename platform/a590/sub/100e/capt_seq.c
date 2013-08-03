@@ -65,7 +65,7 @@ asm volatile (
 
 "loc_FFC4F1AC:\n"
 "    BL      sub_FFD1717C \n"
-"    BL      shooting_expo_iso_override\n"      // added
+"    BL      shooting_expo_param_override\n"      // added
 "    B       loc_FFC4F264 \n"
 
 "loc_FFC4F1B4:\n"
