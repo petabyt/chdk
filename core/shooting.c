@@ -29,20 +29,11 @@ extern const ShutterSpeed shutter_speeds_table[];
 extern const unsigned int SS_SIZE;
 extern const ApertureSize aperture_sizes_table[];
 extern const unsigned int AS_SIZE;
-extern const ISOTable iso_table[];
-extern const unsigned int ISO_SIZE;
 extern const CapturemodeMap modemap[];
 extern const unsigned int MODESCNT;
 
 #define AV96_MIN (aperture_sizes_table[0].prop_id)
 #define AV96_MAX (aperture_sizes_table[AS_SIZE-1].prop_id)
-
-//-------------------------------------------------------------------
-// Local shooting calculation variables
-static short iso_market_base=0;
-static short sv96_base=0;
-static short svm96_base=0;
-static short sv96_base_tmp=0;
 
 static short *min_av96_zoom_point_tbl = NULL;
 
@@ -61,31 +52,13 @@ typedef struct {
 
 static PHOTO_PARAM photo_param_put_off;
 
-static int iso_market_to_real_factor;
+//-------------------------------------------------------------------
+// Convert values to/from APEX 96
 
-#define ISO_FACTOR_SHIFT 10     // Shift amount to scale ISO values
-#ifdef CAM_SV96_MARKET_LOW
-#define SV96_MARKET_LOW_OFFSET (CAM_SV96_MARKET_LOW - CAM_SV96_REAL_LOW)
-static int iso_market_to_real_factor_low;
-static int iso_market_low;
-static int iso_real_low;
-#endif
-
-void shooting_init()
-{
-    photo_param_put_off.tv96=PHOTO_PARAM_TV_NONE;
-    iso_market_to_real_factor = (pow(2,((double)(CAM_SV96_MARKET_OFFSET)/96.0) + ISO_FACTOR_SHIFT) + 0.5);    // pow(2,a) * pow(2,b) == pow(2,a+b)
-#ifdef CAM_SV96_MARKET_LOW
-    iso_market_to_real_factor_low = (pow(2,((double)(SV96_MARKET_LOW_OFFSET)/96.0) + ISO_FACTOR_SHIFT) + 0.5);
-    double t = 3.125*pow(2,((double)(CAM_SV96_MARKET_LOW)/96.0)); 
-    // TODO should be ceil
-    iso_market_low = (int)t;
-    if(t - iso_market_low > 0.0) {
-        iso_market_low += 1;
-    }
-    iso_real_low = ((iso_market_low << ISO_FACTOR_SHIFT) + iso_market_to_real_factor_low/2) / iso_market_to_real_factor_low;
-#endif
-}
+static const double sqrt2 = 1.4142135623731;        //square root from 2
+//static const double log_2 = 0.6931471805599;        //natural logarithm of 2
+static const double inv_log_2 = 1.44269504088906;   // 1 / log_2
+static const double k=12.5;                         //K is the reflected-light meter calibration constant
 
 //-------------------------------------------------------------------
 // Functions to access Canon properties
@@ -112,9 +85,6 @@ void shooting_set_prop(int id, int v)
 }
 
 short shooting_get_is_mode()                    { return shooting_get_prop(PROPCASE_IS_MODE); }
-short shooting_get_canon_iso_mode()             { return shooting_get_prop(PROPCASE_ISO_MODE); }
-short shooting_get_svm96()                      { return shooting_get_prop(PROPCASE_SV_MARKET); }
-short shooting_get_sv96()                       { return shooting_get_prop(PROPCASE_SV); }
 short shooting_get_bv96()                       { return shooting_get_prop(PROPCASE_BV); }
 short shooting_get_canon_overexposure_value()   { return shooting_get_prop(PROPCASE_OVEREXPOSURE); }
 short shooting_get_flash_mode()                 { return shooting_get_prop(PROPCASE_FLASH_MODE); }
@@ -195,6 +165,245 @@ short shooting_get_aperture_sizes_table_size()
 }
 
 //-------------------------------------------------------------------
+// ISO section - start
+//-------------------------------------------------------------------
+
+/*
+    Notes on Canon ISO & CHDK ISO overrides.
+    ========================================
+    (philmoz Aug 2013)
+
+    Canon P&S cameras use two different values for ISO in the firmware.
+        - the ISO value displayed on screen & stored in the image EXIF, generally referred to as the 'market' ISO
+        - the value used to program the sensitivity of the sensor and/or set the image tone curve, the 'real' ISO
+
+    The firmware uses the APEX system for ISO (as well as aperture, shutter speed and luminance).
+    See - http://dougkerr.net/pumpkin/#Optics - APEX - The Additive System of Photographic Exposure.
+    The Canon firmware scales the Sv (speed value) by multiplying values by 96 - referred to as Sv96 below.
+
+    Conversion of ISO to/from Sv96 (from the above linked PDF)
+    ----------------------------------------------------------
+        Sv = log2(ISO / 3.125)      ==>     Sv96 = log2(ISO / 3.125) * 96
+        ISO = pow(2, Sv * 3.125)    ==>     ISO = pow(2, Sv96 / 96 * 3.125)
+
+    In the implementation below 3.125 is represented as 100/32, 
+    and log2(x) is calculated as log(x)/log(2), where log is the natural log function found in the firmware.
+
+    Relationship of 'real' to 'market' values.
+    ------------------------------------------
+    In most cases the following equation holds:
+        Sv96_real = Sv96_market - 69
+    In other words the 'real' value is approx. 1/3 stop lower than the market value.
+    On some cameras, when the lowest ISO is set manually on the camera, the equation is:
+        Sv96_real = Sv96_market - 78
+    The difference is less than 1/10th of a stop, so the value 69 is used in the CHDK override code.
+
+    Based on the above equations we can determine that:
+        ISO_real = ISO_market * pow(2, -69/96) ~= ISO_market * 1.65
+    and ISO_market = ISO_real * pow(2,  69/96) ~= ISO_real * 0.61
+    The derivation of this equation is left as an exercise for the reader :)
+
+    Setting ISO on the camera.
+    --------------------------
+    Four PROPCASES are used for ISO settings
+        PROPCASE_ISO_MODE       = ISO value when ISO set manually, 0 for AUTO ISO
+        PROPCASE_SV             = 'real' Sv96 value for ISO
+        PROPCASE_SV_MARKET      = 'market' Sv96 value when ISO set manually
+                                = Sv96 value for camera 'base' ISO (50,100 or 200) when using AUTO ISO
+        PROPCASE_DELTA_SV       = 0 when ISO set manually
+                                = 'market' Sv96 - PROPCASE_SV_MARKET when using AUTO ISO
+
+    From the above:
+        'market' Sv96 = PROPCASE_SV_MARKET + PROPCASE_DELTA_SV
+ */
+
+extern const ISOTable iso_table[];
+extern const unsigned int ISO_SIZE;
+
+short shooting_get_canon_iso_mode()             { return shooting_get_prop(PROPCASE_ISO_MODE); }
+short shooting_get_sv96_market()                { return shooting_get_prop(PROPCASE_SV_MARKET); }
+short shooting_get_sv96_real()                  { return shooting_get_prop(PROPCASE_SV); }
+short shooting_get_sv96_delta()                 { return shooting_get_prop(PROPCASE_DELTA_SV); }
+
+// Local shooting calculation variables
+static short canon_iso_base=0;
+static short canon_sv96_base=0;
+
+// "real" to "market" conversion definitions
+#define SV96_MARKET_OFFSET          69          // market-real sv96 conversion value
+
+// Conversion values for pow(2,-69/96) 'market' to 'real', and pow(2,69/96) 'real' to 'market'
+// Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
+// to the desired multiplication factor as possible within normal ISO range.
+#define ISO_MARKET_TO_REAL_MULT     9955
+#define ISO_MARKET_TO_REAL_SHIFT    14
+#define ISO_MARKET_TO_REAL_ROUND    8192
+#define ISO_REAL_TO_MARKET_MULT     3371
+#define ISO_REAL_TO_MARKET_SHIFT    11
+#define ISO_REAL_TO_MARKET_ROUND    1024
+
+#define ISO_MARKET_TO_REAL(x)       ((x * ISO_MARKET_TO_REAL_MULT + ISO_MARKET_TO_REAL_ROUND) >> ISO_MARKET_TO_REAL_SHIFT)
+#define ISO_REAL_TO_MARKET(x)       ((x * ISO_REAL_TO_MARKET_MULT + ISO_REAL_TO_MARKET_ROUND) >> ISO_REAL_TO_MARKET_SHIFT)
+
+short shooting_get_sv96_from_iso(short iso)
+{
+    // Equivalent to (short)(log2(iso/3.125)*96+0.5) [APEX equation]
+    if (iso > 0)
+        return (short)( log((double)(iso)*32.0/100.0)*96.0*(inv_log_2)+0.5 );
+    return 0;
+}
+
+short shooting_get_iso_from_sv96(short sv96)
+{
+    // APEX equation --> (int)(POWER(2,(iso/96)) * 3.125) + 0.5)
+    return (short)( (double)pow(2, (((double)sv96)/96.0))*100.0/32.0 + 0.5 );
+}
+
+int shooting_iso_market_to_real(int isom)
+{
+   return ISO_MARKET_TO_REAL(isom);
+}
+
+int shooting_iso_real_to_market(int isor)
+{
+   return ISO_REAL_TO_MARKET(isor);
+}
+
+short shooting_get_iso_override_value()
+{
+    short iso = conf.iso_override_value;        // Start with market value
+    // Apply limits if needed
+#ifdef CAM_ISO_LIMIT_IN_HQ_BURST
+    // Limit max ISO in HQ burst mode (also done in shooting_set_iso_real; but done here so OSD display value is correct)
+    if ((mode_get() & MODE_SHOOTING_MASK) == MODE_SCN_HIGHSPEED_BURST)
+        if (iso > CAM_ISO_LIMIT_IN_HQ_BURST) iso = CAM_ISO_LIMIT_IN_HQ_BURST;
+#endif
+#ifdef CAM_MIN_ISO_OVERRIDE
+    // Limit min (non-zero) ISO
+    // Some cameras will crash if flash used and ISO set lower than this value (most easily tested in AUTO mode)
+    if ((iso > 0) && (iso < CAM_MIN_ISO_OVERRIDE)) iso = CAM_MIN_ISO_OVERRIDE;
+#endif
+    return shooting_iso_market_to_real(iso);    // return real value (after limits applied)
+}
+
+int shooting_get_iso_mode()
+{
+    short isov = shooting_get_canon_iso_mode();
+    long i;
+    for (i=0;i<ISO_SIZE;i++)
+    {
+        if (iso_table[i].prop_id == isov)
+            return iso_table[i].id;
+    }
+    return 0;
+}
+
+short shooting_get_iso_real()
+{
+    short sv = shooting_get_sv96_real();
+    if (sv == 0)
+        return 0;
+    return shooting_get_iso_from_sv96(sv);
+}
+
+// AUTOISO:EXIF
+short shooting_get_iso_market()
+{
+    short sv = shooting_get_sv96_market() + shooting_get_sv96_delta();
+    if (sv == 0)
+        return 0;
+    return shooting_get_iso_from_sv96(sv);
+}
+
+void shooting_set_iso_mode(int v)
+{
+    long i;
+    if (v < 50) // CHDK ID
+    {
+        for (i=0; i<ISO_SIZE; i++)
+        {
+            if (iso_table[i].id == v)
+            {
+                short vv = iso_table[i].prop_id;
+                set_property_case(PROPCASE_ISO_MODE, &vv, sizeof(vv));
+                return;
+            }
+        }
+    }
+    else        // ISO value - TODO find nearest entry in iso_table
+    {
+    }
+}
+
+void shooting_set_sv96(short sv96, short is_now)
+{
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    {
+        if (is_now)
+        {
+            while ((shooting_is_flash_ready()!=1) || (focus_busy)) msleep(10);
+
+            short iso_mode = shooting_get_canon_iso_mode();
+            if (iso_mode >= 50)
+                shooting_set_iso_mode(0);   // Force AUTO mode on camera
+
+            short dsv96 = sv96 + SV96_MARKET_OFFSET - canon_sv96_base;
+
+            set_property_case(PROPCASE_SV_MARKET, &canon_sv96_base, sizeof(canon_sv96_base));
+            set_property_case(PROPCASE_SV,        &sv96, sizeof(sv96));
+            set_property_case(PROPCASE_DELTA_SV,  &dsv96, sizeof(dsv96));
+        }
+        else   
+            photo_param_put_off.sv96 = sv96;
+    }
+}
+
+void shooting_set_iso_real(short iso, short is_now)
+{
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    {
+        if (iso > 0)
+        {
+#ifdef CAM_ISO_LIMIT_IN_HQ_BURST
+            // Limit max ISO in HQ burst mode
+            if ((mode_get() & MODE_SHOOTING_MASK) == MODE_SCN_HIGHSPEED_BURST)
+                if (iso > ISO_MARKET_TO_REAL(CAM_ISO_LIMIT_IN_HQ_BURST)) iso = ISO_MARKET_TO_REAL(CAM_ISO_LIMIT_IN_HQ_BURST);
+#endif
+#ifdef CAM_MIN_ISO_OVERRIDE
+            // Limit min (non-zero) ISO
+            if ((iso > 0) && (iso < ISO_MARKET_TO_REAL(CAM_MIN_ISO_OVERRIDE))) iso = ISO_MARKET_TO_REAL(CAM_MIN_ISO_OVERRIDE);
+#endif
+            shooting_set_sv96(shooting_get_sv96_from_iso(iso), is_now);
+        }
+    }
+}
+
+static void iso_init()
+{
+    // Get the camera ISO base value, store in global variable 'canon_iso_base'
+    if (iso_table[1-iso_table[0].id].prop_id == 50)
+        canon_iso_base = 50;
+    else
+        canon_iso_base = CAM_MARKET_ISO_BASE;
+
+    // Get the SV96 value corresponding to the base Canon ISO for the camera
+    // Store in global variable 'canon_sv96_base'
+    canon_sv96_base = shooting_get_sv96_from_iso(canon_iso_base);
+}
+//-------------------------------------------------------------------
+// ISO section - end
+//-------------------------------------------------------------------
+
+//-------------------------------------------------------------------
+// Init
+
+void shooting_init()
+{
+    photo_param_put_off.tv96 = PHOTO_PARAM_TV_NONE;
+    iso_init();
+}
+
+//-------------------------------------------------------------------
 // Get file related info
 
 extern const unsigned int param_file_counter;
@@ -224,42 +433,11 @@ void get_target_dir_name(char *dir) {
 //-------------------------------------------------------------------
 // Convert values to/from APEX 96
 
-static const double sqrt2 = 1.4142135623731;        //square root from 2
-//static const double log_2 = 0.6931471805599;        //natural logarithm of 2
-static const double inv_log_2 = 1.44269504088906;   // 1 / log_2
-static const double k=12.5;                         //K is the reflected-light meter calibration constant
-
-short shooting_get_sv96_from_iso(short iso)
-{
-    if (iso > 0)
-        return (short)(log(pow(2.0,(-7.0/4.0))*(double)(iso))*96.0*(inv_log_2));
-    return 0;
-}
-
-short shooting_get_svm96_from_iso(short iso)
-{
-    if (iso > 0)
-        return (short)(log((double)(iso)*32.0/100.0)*96.0*(inv_log_2));
-    return 0;
-}
-
 short shooting_get_aperture_from_av96(short av96)
 {
     if (av96)
         return (short)((pow(sqrt2, ((double)av96)/96.0))*100.0);
     return -1;
-}
-
-short shooting_get_iso_from_sv96(short sv96)
-{
-    return (short)(pow(2, (((double) sv96+168.0)/96.0)));
-}
-
-short shooting_get_iso_market_from_svm96(short svm96)
-{
-    if (svm96 > 0)
-        return (short)((double)pow(2, (((double)svm96)/96.0))*100.0/32.0);
-    return 0;
 }
 
 short shooting_get_tv96_from_shutter_speed(float t)
@@ -286,28 +464,6 @@ int shooting_get_luminance()// http://en.wikipedia.org/wiki/APEX_system
     return b;
 }
 
-int shooting_iso_market_to_real(int isom)
-{
-// Currently disabled because shooting_set_sv96 etc are not aware of special case
-/*
-#ifdef CAM_SV96_MARKET_LOW
-   if(isom <= iso_market_low) return ((isom << ISO_FACTOR_SHIFT) + iso_market_to_real_factor_low/2) / iso_market_to_real_factor_low; 
-#endif
-*/
-   return ((isom << ISO_FACTOR_SHIFT) + iso_market_to_real_factor/2) / iso_market_to_real_factor;
-}
-
-int shooting_iso_real_to_market(int isor)
-{
-// Currently disabled because shooting_set_sv96 etc are not aware of special case
-/*
-#ifdef CAM_SV96_MARKET_LOW
-   if(isor <= iso_real_low) return (isor * iso_market_to_real_factor_low + (1<<(ISO_FACTOR_SHIFT-1))) >> ISO_FACTOR_SHIFT; 
-#endif
-*/
-   return (isor * iso_market_to_real_factor + (1<<(ISO_FACTOR_SHIFT-1))) >> ISO_FACTOR_SHIFT;
-}
-
 //-------------------------------------------------------------------
 // Get override values
 
@@ -327,22 +483,6 @@ static int shooting_get_tv96_override_value()
         return shooting_get_tv96_from_shutter_speed(((float)conf.tv_override_short_exp)/100000.0);
     else
         return shooting_get_tv96_from_shutter_speed((float)conf.tv_override_long_exp);
-}
-
-short shooting_get_iso_override_value()
-{
-    short iso = shooting_iso_market_to_real(conf.iso_override_value);
-#ifdef CAM_ISO_LIMIT_IN_HQ_BURST
-    // Limit max ISO in HQ burst mode (also done in shooting_set_iso_real; but done here so OSD display value is correct)
-    if ((mode_get() & MODE_SHOOTING_MASK) == MODE_SCN_HIGHSPEED_BURST)
-        if (iso > CAM_ISO_LIMIT_IN_HQ_BURST) iso = CAM_ISO_LIMIT_IN_HQ_BURST;
-#endif
-#ifdef CAM_MIN_ISO_OVERRIDE
-    // Limit min (non-zero) ISO
-    // Some cameras will crash if flash used and ISO set lower than this value (most easily tested in AUTO mode)
-    if ((iso > 0) && (iso < CAM_MIN_ISO_OVERRIDE)) iso = CAM_MIN_ISO_OVERRIDE;
-#endif
-    return iso;
 }
 
 int shooting_get_subject_distance_override_value()
@@ -440,88 +580,6 @@ short shooting_get_min_real_aperture()
 short shooting_get_real_aperture()
 {
     return shooting_get_aperture_from_av96(GetCurrentAvValue());
-}
-
-int shooting_get_iso_mode()
-{
-    short isov;
-    long i;
-    get_property_case(PROPCASE_ISO_MODE, &isov, sizeof(isov));
-    for (i=0;i<ISO_SIZE;i++)
-    {
-        if (iso_table[i].prop_id == isov)
-            return iso_table[i].id;
-    }
-    return 0;
-}
-
-short shooting_get_iso_real()
-{
-    short sv;
-    get_property_case(PROPCASE_SV, &sv, sizeof(sv));
-    if (sv == 0)
-        return 0;
-    return shooting_get_iso_from_sv96(sv);
-}
-
-short shooting_get_base_sv96()
-{
-    short dsv,sv;
-    if (shooting_get_canon_iso_mode()<50)
-    {
-        get_property_case(PROPCASE_DELTA_SV, &dsv, sizeof(dsv));
-        get_property_case(PROPCASE_SV, &sv, sizeof(sv));
-        sv96_base = (sv-dsv);
-    }
-    return sv96_base;
-}
-
-short shooting_get_iso_base()
-{
-    sv96_base = shooting_get_base_sv96();
-    if (sv96_base != 0)
-        return shooting_get_iso_from_sv96(sv96_base);
-    return 0;
-}
-
-short shooting_get_iso_market_base()
-{
-    if (iso_market_base==0)
-    {
-        if (iso_table[1-iso_table[0].id].prop_id == 50) iso_market_base=50;
-        else iso_market_base=CAM_MARKET_ISO_BASE;
-    }
-    return iso_market_base;
-}
-
-// AUTOISO:EXIF
-short shooting_get_iso_market()
-{
-    short iso_mode = shooting_get_canon_iso_mode();
-    if ((iso_mode < 50) || (conf.iso_override_koef && conf.iso_override_value) || (conf.iso_bracket_koef && conf.iso_bracket_value))
-    {
-        // Original code
-        // short iso_b = shooting_get_iso_base();
-        // if (iso_b)
-        //     return (short)((shooting_get_iso_market_base()*shooting_get_iso_real())/iso_b);
-
-        // Above code translates to:
-        //      shooting_get_iso_market_base() * pow(2,((PROPCASE_SV+168)/96)) / pow(2,(((PROPCASE_SV-PROPCASE_DELTA_SV)+168)/96))
-        // code has rounding errors due to return values from pow() being cast to short before multiplication and division
-        // formula can be simplified to:
-        //      shooting_get_iso_market_base() * pow(2,(PROPCASE_DELTA_SV/96))
-        short dsv;
-        get_property_case(PROPCASE_DELTA_SV, &dsv, sizeof(dsv));
-        return (short)((double)shooting_get_iso_market_base() * pow(2, (double)dsv/96.0));
-    }
-    return iso_mode;
-}
-
-short shooting_get_svm96_base()
-{
-    if (svm96_base == 0)
-        svm96_base = shooting_get_svm96_from_iso(shooting_get_iso_market_base());
-    return svm96_base;
 }
 
 int shooting_get_lens_to_focal_plane_width()
@@ -914,71 +972,6 @@ void shooting_set_user_av_by_id(int v)
         }
     }
 #endif
-}
-
-void shooting_set_sv96(short sv96, short is_now)
-{
-    short dsv96=0, iso_mode=shooting_get_canon_iso_mode();
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-    {
-        if (is_now)
-        {
-            if (iso_mode<50)
-                dsv96 =sv96-shooting_get_base_sv96();
-            else if (sv96_base)
-                dsv96=sv96-sv96_base;
-            else if (sv96_base_tmp)
-                dsv96=sv96-sv96_base_tmp;
-            else
-            {
-                sv96_base_tmp= (short)((shooting_get_svm96_base()*shooting_get_sv96())/shooting_get_svm96());
-                dsv96=sv96-sv96_base_tmp;
-            }
-            while ((shooting_is_flash_ready()!=1) || (focus_busy));
-            short svm96_base =shooting_get_svm96_base();
-            if (iso_mode>=50)
-                shooting_set_iso_mode(0);
-            set_property_case(PROPCASE_SV_MARKET, &svm96_base, sizeof(svm96_base));
-            set_property_case(PROPCASE_SV, &sv96, sizeof(sv96));
-            set_property_case(PROPCASE_DELTA_SV, &dsv96, sizeof(dsv96));
-        }
-        else   
-            photo_param_put_off.sv96=sv96;
-    }
-}
-
-void shooting_set_iso_mode(int v)
-{
-    long i;
-    for (i=0;i<ISO_SIZE;i++)
-    {
-        if (iso_table[i].id == v)
-        {
-            short vv = iso_table[i].prop_id;
-            set_property_case(PROPCASE_ISO_MODE, &vv, sizeof(vv));
-            return;
-        }
-    }
-}
-
-void shooting_set_iso_real(short iso, short is_now)
-{
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-    {
-        if (iso>0)
-        {
-#ifdef CAM_ISO_LIMIT_IN_HQ_BURST
-            // Limit max ISO in HQ burst mode
-            if ((mode_get() & MODE_SHOOTING_MASK) == MODE_SCN_HIGHSPEED_BURST)
-                if (iso > CAM_ISO_LIMIT_IN_HQ_BURST) iso = CAM_ISO_LIMIT_IN_HQ_BURST;
-#endif
-#ifdef CAM_MIN_ISO_OVERRIDE
-            // Limit min (non-zero) ISO
-            if ((iso > 0) && (iso < CAM_MIN_ISO_OVERRIDE)) iso = CAM_MIN_ISO_OVERRIDE;
-#endif
-            shooting_set_sv96(shooting_get_sv96_from_iso(iso), is_now);
-        }
-    }
 }
 
 void shooting_set_tv96_direct(short v, short is_now)

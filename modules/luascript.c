@@ -587,7 +587,7 @@ static int luaCB_get_raw_count( lua_State* L )
 
 static int luaCB_get_sv96( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_sv96() );
+  lua_pushnumber( L, shooting_get_sv96_real() );
   return 1;
 }
 

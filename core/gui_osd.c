@@ -36,7 +36,7 @@ typedef struct {
     short tv96;
     short sv96;
     short iso;
-    short sv96_market;
+    //short sv96_market;
     short iso_market;
     short bv96_measured;
     short bv96_seted;       //Ev96_internal-Sv96
@@ -94,9 +94,9 @@ static void gui_osd_calc_expo_param()
 {
     expo.av96=shooting_get_av96();
     expo.tv96=shooting_get_tv96();
-    expo.sv96=shooting_get_sv96();
+    expo.sv96=shooting_get_sv96_real();
     expo.iso=shooting_get_iso_real();
-    expo.sv96_market=shooting_get_svm96();
+    //expo.sv96_market=shooting_get_sv96_market();
     expo.iso_market=shooting_get_iso_market();
     expo.bv96_measured=shooting_get_bv96();
     expo.ev96_seted=expo.tv96+expo.av96; //Tv96+Av96

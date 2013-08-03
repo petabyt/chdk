@@ -60,8 +60,7 @@
 
     #undef  CAM_MARKET_ISO_BASE
     #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value
-    #define CAM_MIN_ISO_OVERRIDE                61  // Defines min real (non-zero) ISO override value - lower value may crash if flash used [0 = AUTO, so always allowed]
-    #undef  CAM_SV96_MARKET_LOW                     // no special low values
+    #define CAM_MIN_ISO_OVERRIDE                100 // Defines min market (non-zero) ISO override value - lower value may crash if flash used [0 = AUTO, so always allowed]
 
     // bayer sensor pattern
     #define cam_CFAPattern                      0x02010100 // Red  Green  Green  Blue

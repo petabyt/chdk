@@ -142,12 +142,10 @@ extern short shooting_is_infinity_distance();
 
 /******************************************************************/
 
-extern short shooting_get_iso_base();
-extern short shooting_get_iso_market_base();
 extern int shooting_get_iso_mode();
 extern void shooting_set_iso_mode(int v);
-extern short shooting_get_sv96();
-extern short shooting_get_svm96();
+extern short shooting_get_sv96_real();
+extern short shooting_get_sv96_market();
 extern short shooting_get_iso_market();
 extern short shooting_get_iso_real();
 extern void shooting_set_iso_real(short iso, short is_now);

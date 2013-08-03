@@ -234,7 +234,7 @@
             shooting_get_real_focus_mode,
             shooting_get_resolution,
             shooting_get_subject_distance,
-            shooting_get_sv96,
+            shooting_get_sv96_real,
             shooting_get_tv96,
             shooting_get_user_av96,
             shooting_get_user_av_id,

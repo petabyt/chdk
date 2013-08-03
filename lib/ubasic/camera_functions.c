@@ -364,7 +364,7 @@ short shooting_get_bv96()
     return 32;
 }
 
-short shooting_get_sv96()
+short shooting_get_sv96_real()
 {
     printf("*** shooting_get_sv96 ***\n");
     return 32;

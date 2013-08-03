@@ -112,7 +112,7 @@
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
                                               
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
-    #define CAM_MIN_ISO_OVERRIDE                60  // see http://chdk.setepontos.com/index.php?topic=5045.msg99863#msg99863
+    #define CAM_MIN_ISO_OVERRIDE                100 // see http://chdk.setepontos.com/index.php?topic=5045.msg99863#msg99863
 
     #define CAM_AV_OVERRIDE_IRIS_FIX        1
 //----------------------------------------------------------

@@ -515,7 +515,7 @@ static int factor(void)
     break;  
   case TOKENIZER_GET_SV96:
     accept(TOKENIZER_GET_SV96);
-    r = (int)shooting_get_sv96();
+    r = (int)shooting_get_sv96_real();
     break;    
   case TOKENIZER_GET_ISO_MODE:
     accept(TOKENIZER_GET_ISO_MODE);
@@ -2154,7 +2154,7 @@ statement(void)
       get_short_var_statement(token, shooting_get_bv96);
       break;
   case TOKENIZER_GET_SV96:
-      get_short_var_statement(token, shooting_get_sv96);
+      get_short_var_statement(token, shooting_get_sv96_real);
       break;
   case TOKENIZER_GET_ISO_MODE:
       get_int_var_statement(token, shooting_get_iso_mode);
