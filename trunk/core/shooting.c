@@ -562,19 +562,6 @@ int shooting_get_user_tv_id()
     return 0;
 }
 
-//const ShutterSpeed *shooting_get_tv_line()
-//{
-//    short tvv;
-//    long i;
-//    get_property_case(PROPCASE_USER_TV, &tvv, sizeof(tvv));
-//    for (i=0;i<SS_SIZE;i++)
-//    {
-//        if (shutter_speeds_table[i].prop_id == tvv)
-//            return &shutter_speeds_table[i];
-//    }
-//    return 0;
-//}
-
 int shooting_get_user_av_id()
 {
 #if CAM_HAS_IRIS_DIAPHRAGM
@@ -870,7 +857,6 @@ void shooting_set_user_tv_by_id(int v)
             {
                 short vv = shutter_speeds_table[i].prop_id;
                 set_property_case(PROPCASE_USER_TV, &vv, sizeof(vv));
-                //set_property_case(PROPCASE_TV, &vv, sizeof(vv));
                 return;
             }
         }
@@ -889,7 +875,6 @@ void shooting_set_user_tv96(short v)
             if (shutter_speeds_table[i].prop_id == v)
             {
                 set_property_case(PROPCASE_USER_TV, &v, sizeof(v));
-                //set_property_case(PROPCASE_TV, &v, sizeof(v));
                 return;
             }
         }
@@ -924,21 +909,6 @@ void shooting_set_user_tv_by_id_rel(int v)
 #endif
 }
 
-void shooting_set_shutter_speed(float t, short ev_correction, short is_now)
-{
-	if (t>0) shooting_set_tv96_direct( shooting_get_tv96_from_shutter_speed(t) + ev_correction, is_now);
-}
-
-// No longer used - 'set_shutter_speed' function disabled in uBasic
-//void shooting_set_shutter_speed_ubasic(int t, short is_now)
-//{
-//    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-//    {
-//        if (t>0)
-//            shooting_set_tv96_direct(shooting_get_tv96_from_shutter_speed(((double)t)/100000), is_now);
-//    }
-//}
-
 void shooting_set_av96(short v, short is_now)
 {
 #if CAM_HAS_IRIS_DIAPHRAGM
@@ -968,7 +938,6 @@ void shooting_set_user_av96(short v)
             if (aperture_sizes_table[i].prop_id == v)
             {
                 set_property_case(PROPCASE_USER_AV, &v, sizeof(v));
-                //set_property_case(PROPCASE_AV, &v, sizeof(v));
                 return;
             }
         }
@@ -988,7 +957,6 @@ void shooting_set_user_av_by_id(int v)
             {
                 short vv = aperture_sizes_table[i].prop_id;
                 set_property_case(PROPCASE_USER_AV, &vv, sizeof(vv));
-                //set_property_case(PROPCASE_AV, &vv, sizeof(vv));
                 return;
             }
         }

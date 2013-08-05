@@ -43,9 +43,6 @@ void clear_values()
 {	
     if (conf.platformid != PLATFORMID) // the following config entries will be resetted if you switch the camera using the same cfg
     {
-#if ZOOM_OVERRIDE
-    conf.zoom_override_value = 0;
-#endif
     conf.fast_ev = 0;
     conf.fast_movie_control = 0;
     conf.fast_movie_quality_control = 0;
@@ -62,12 +59,6 @@ void clear_values()
         conf.iso_override_koef=0;
         conf.nd_filter_state=0;
     }
-#if ZOOM_OVERRIDE
-    if (conf.clear_zoom_override)
-    {
-        conf.zoom_override = 0;
-    }
-#endif
     if (conf.clear_bracket)
     {
         conf.av_bracket_value=0;
@@ -322,14 +313,8 @@ static const ConfInfo conf_info[] = {
    	CONF_INFO(213, conf.debug_display,              CONF_DEF_VALUE, i:0, NULL),
    	CONF_INFO(214, conf.script_param_save,          CONF_DEF_VALUE, i:1, NULL),
     CONF_INFO2(215, conf.ev_video_pos,              CONF_OSD_POS,   18,80),
-#if ZOOM_OVERRIDE
-    CONF_INFO(216, conf.zoom_override_value,        CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(217, conf.zoom_override,              CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(218, conf.clear_zoom_override,        CONF_DEF_VALUE,     i:1, NULL),
-#endif 
     CONF_INFO(219, conf.bracketing_add_raw_suffix,  CONF_DEF_VALUE, i:0, NULL),			
     CONF_INFO(220, conf.temperature_unit,           CONF_DEF_VALUE, i:0, NULL),
-//    CONF_INFO(221, conf.clear_zoom_override,        CONF_DEF_VALUE, i:1, NULL),			
     CONF_INFO(222, conf.edge_overlay_play,          CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(223, conf.edge_overlay_pano,          CONF_DEF_VALUE, i:0, NULL),
     CONF_INFO(224, conf.edge_overlay_zoom,          CONF_DEF_VALUE, i:1, NULL),

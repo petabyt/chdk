@@ -1008,17 +1008,6 @@ const char* gui_av_override_enum(int change, int arg)
 }
 #endif
 
-#if ZOOM_OVERRIDE
-const char* gui_zoom_override_enum(int change, int arg)
-{
-    conf.zoom_override_value+=change;
-    if (conf.zoom_override_value<0) conf.zoom_override_value=zoom_points-1;
-    else if (conf.zoom_override_value>zoom_points-1) conf.zoom_override_value=0;
-    sprintf(buf,"%i",conf.zoom_override_value);
-    return buf; 
-}
-#endif
-
 const char* gui_subj_dist_override_value_enum(int change, int arg)
 {
     static char buf[9];
@@ -1248,11 +1237,6 @@ static CMenuItem operation_submenu_items[] = {
     MENU_ENUM2  (0x5f,LANG_MENU_OVERRIDE_ND_FILTER,         &conf.nd_filter_state,  gui_nd_filter_state_modes ),
 #endif
     MENU_ENUM2  (0x5f,LANG_MENU_RAW_NOISE_REDUCTION,        &conf.raw_nr,       gui_raw_nr_modes ), // Dark Frame Subtraction - despite label has nothing to do with RAW
-#if ZOOM_OVERRIDE
-    MENU_ITEM   (0x5c,LANG_MENU_OVERRIDE_ZOOM,              MENUITEM_BOOL,          &conf.zoom_override,                0 ),
-    MENU_ITEM   (0x5f,LANG_MENU_OVERRIDE_ZOOM_VALUE,        MENUITEM_ENUM,          gui_zoom_override_enum,             0 ),
-    MENU_ITEM   (0x5c,LANG_MENU_CLEAR_ZOOM_OVERRIDE_VALUES, MENUITEM_BOOL,          &conf.clear_zoom_override,          0 ),
-#endif
 #if CAM_QUALITY_OVERRIDE
     MENU_ENUM2  (0x5c,LANG_MENU_MISC_IMAGE_QUALITY,         &conf.fast_image_quality, gui_fast_image_quality_modes ),
 #endif

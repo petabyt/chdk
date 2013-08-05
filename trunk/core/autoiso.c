@@ -194,7 +194,8 @@ void shooting_set_autoiso(int iso_mode)
 
     float target_shutter = current_shutter *  current_iso / target_iso;
 
-    shooting_set_shutter_speed(target_shutter, ev_overexp, SET_NOW);
+	if (target_shutter > 0)
+        shooting_set_tv96_direct(shooting_get_tv96_from_shutter_speed(target_shutter) + ev_overexp, SET_NOW);
 
     shooting_set_iso_real(target_iso, SET_NOW);
 }

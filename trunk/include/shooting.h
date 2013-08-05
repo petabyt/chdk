@@ -83,10 +83,9 @@ extern short shooting_get_flash_mode();
 
 extern int shooting_get_user_tv_id();
 extern short shooting_get_tv96();
+extern short shooting_get_tv96_from_shutter_speed(float t);
 extern void shooting_set_tv96(short v, short is_now);
 extern void shooting_set_tv96_direct(short v, short is_now);
-//extern void shooting_set_shutter_speed_ubasic(int t, short is_now);
-extern void shooting_set_shutter_speed(float t, short ev_correction, short is_now);
 extern short shooting_get_user_tv96();
 extern void shooting_set_user_tv96(short v);
 extern float shooting_get_shutter_speed_from_tv96(short tv);
