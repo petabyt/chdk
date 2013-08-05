@@ -1,7 +1,9 @@
 #include "platform.h"
 
+/*
+// camera has two raw buffers, see platform lib.c
 char *hook_raw_image_addr()     {return (char*) 0x4138AE00;}   //Found @0xff363310 d20 100b Search on JPEG BUFF
-char *hook_alt_raw_image_addr() {return (char*) 0x4138AE00;}   //Found @0xff363310 d20 100b
+*/
 
 char *camera_jpeg_current_filename() {
      return (void*)0xBD06C;                 //0xFF1E2E88 search for  "%03d-%04d"
