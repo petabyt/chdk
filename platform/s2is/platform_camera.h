@@ -57,12 +57,18 @@
 	
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 
-    // TODO actual values not known
-    // "real" to "market" conversion definitions
-    #undef CAM_SV96_MARKET_LOW
-    #undef CAM_SV96_REAL_LOW 
-    #undef CAM_SV96_MARKET_OFFSET
-    #define CAM_SV96_MARKET_OFFSET              0  // 1:1 is likely to be closer than default for old camera
+	// "real" to "market" conversion definitions
+	#define SV96_MARKET_OFFSET          0           // market-real sv96 conversion value
+
+	// Conversion values for 'no' conversion required
+	// Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
+	// to the desired multiplication factor as possible within normal ISO range.
+	#define ISO_MARKET_TO_REAL_MULT     2
+	#define ISO_MARKET_TO_REAL_SHIFT    1
+	#define ISO_MARKET_TO_REAL_ROUND    0
+	#define ISO_REAL_TO_MARKET_MULT     2
+	#define ISO_REAL_TO_MARKET_SHIFT    1
+	#define ISO_REAL_TO_MARKET_ROUND    0
 	
 //----------------------------------------------------------
 
