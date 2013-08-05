@@ -172,7 +172,6 @@ static const struct keyword_token keywords[] = {
   {"set_raw_nr",              TOKENIZER_SET_RAW_NR},
   {"set_raw",                 TOKENIZER_SET_RAW},
   {"set_resolution",          TOKENIZER_SET_RESOLUTION},
-    //{"set_shutter_speed",       TOKENIZER_SET_SHUTTER_SPEED},
   {"set_sv96",		          TOKENIZER_SET_SV96},
   {"set_tv96_direct",         TOKENIZER_SET_TV96_DIRECT},
   {"set_tv_rel",              TOKENIZER_SET_USER_TV_BY_ID_REL}, //FOR COMPATIBILITY

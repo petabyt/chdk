@@ -419,11 +419,6 @@ void shooting_set_tv96(short v, short is_now)
     printf("*** shooting_set_tv96 %d %d ***\n", v, is_now);
 }
 
-void shooting_set_shutter_speed_ubasic(int t, short is_now)
-{
-    printf("*** shooting_set_shutter_speed_ubasic %d %d ***\n", t, is_now);
-}
-
 void shooting_set_tv96_direct(short v, short is_now)
 {
     printf("*** shooting_set_tv96_direct %d %d ***\n", v, is_now);

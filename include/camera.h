@@ -84,8 +84,6 @@
     #undef  CAM_HAS_MOVIE_DIGEST_MODE           // The values in the 'movie_status' variable change if the camera has this mode (see is_video_recording())
     #undef  CAM_HAS_SPORTS_MODE                 // Define to enable the RAW exception override control for SPORTS mode (s3is, sx30, sx40, etc)
 
-    #define ZOOM_OVERRIDE                   0   // Shall zoom-override be used? default 0 becoz not implemented right now
-
     #undef  CAM_REAR_CURTAIN                    // Camera do not have front/rear curtain flash sync in menu
     #undef  CAM_BRACKETING                      // Cameras that have bracketing (focus & ev) in original firmware already, most likely s- & g-series (propcase for digic III not found yet!)
     #undef  CAM_EXT_TV_RANGE                    // CHDK can make exposure time longer than 64s
