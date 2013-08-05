@@ -1,6 +1,19 @@
 #include "platform.h"
 #include "lolevel.h"
 
+extern  int     active_raw_buffer;
+extern  char*   raw_buffers[];
+
+char *hook_raw_image_addr() 
+{
+    return raw_buffers[active_raw_buffer];
+}
+
+char *hook_alt_raw_image_addr()
+{
+    return raw_buffers[active_raw_buffer^1];
+}
+
 void vid_bitmap_refresh() {
     extern int full_screen_refresh;
     extern void _ScreenUnlock();
