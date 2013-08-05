@@ -67,10 +67,16 @@
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1
     #undef  CAM_AF_LED
     #define CAM_AF_LED                          9   // Index of AF led in camera_set_led function
-    
-    // "real" to "market" conversion definitions
-    #undef CAM_SV96_MARKET_LOW                  // no special low values
-    #undef CAM_SV96_REAL_LOW 
-    #undef CAM_SV96_MARKET_OFFSET
-    #define CAM_SV96_MARKET_OFFSET 20           // market-real sv96 value for all other ranges
 
+	// "real" to "market" conversion definitions
+	#define SV96_MARKET_OFFSET          20          // market-real sv96 conversion value
+
+	// Conversion values for pow(2,-20/96) 'market' to 'real', and pow(2,20/96) 'real' to 'market'
+	// Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
+	// to the desired multiplication factor as possible within normal ISO range.
+	#define ISO_MARKET_TO_REAL_MULT     3545
+	#define ISO_MARKET_TO_REAL_SHIFT    12
+	#define ISO_MARKET_TO_REAL_ROUND    2048
+	#define ISO_REAL_TO_MARKET_MULT     9465
+	#define ISO_REAL_TO_MARKET_SHIFT    13
+	#define ISO_REAL_TO_MARKET_ROUND    4096

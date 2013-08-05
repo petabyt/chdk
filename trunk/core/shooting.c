@@ -198,6 +198,9 @@ short shooting_get_aperture_sizes_table_size()
         Sv96_real = Sv96_market - 78
     The difference is less than 1/10th of a stop, so the value 69 is used in the CHDK override code.
 
+    Note: some cameras have a different offset (e.g. IXUS700 uses 'real = market - 20')
+          in this case override the conversion values in the platform_camera.h file
+
     Based on the above equations we can determine that:
         ISO_real = ISO_market * pow(2, -69/96) ~= ISO_market * 1.65
     and ISO_market = ISO_real * pow(2,  69/96) ~= ISO_real * 0.61
@@ -229,6 +232,7 @@ short shooting_get_sv96_delta()                 { return shooting_get_prop(PROPC
 static short canon_iso_base=0;
 static short canon_sv96_base=0;
 
+#if !defined(SV96_MARKET_OFFSET)                // Can be overriden in platform_camera.h (see IXUS700 for example)
 // "real" to "market" conversion definitions
 #define SV96_MARKET_OFFSET          69          // market-real sv96 conversion value
 
@@ -241,6 +245,7 @@ static short canon_sv96_base=0;
 #define ISO_REAL_TO_MARKET_MULT     3371
 #define ISO_REAL_TO_MARKET_SHIFT    11
 #define ISO_REAL_TO_MARKET_ROUND    1024
+#endif
 
 #define ISO_MARKET_TO_REAL(x)       ((x * ISO_MARKET_TO_REAL_MULT + ISO_MARKET_TO_REAL_ROUND) >> ISO_MARKET_TO_REAL_SHIFT)
 #define ISO_REAL_TO_MARKET(x)       ((x * ISO_REAL_TO_MARKET_MULT + ISO_REAL_TO_MARKET_ROUND) >> ISO_REAL_TO_MARKET_SHIFT)
