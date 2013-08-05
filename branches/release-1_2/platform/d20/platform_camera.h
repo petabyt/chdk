@@ -33,12 +33,12 @@
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000
 
-    #define CAM_JPEG_WIDTH                  4000    //Not checked
-    #define CAM_JPEG_HEIGHT                 3000    //Not checked
-    #define CAM_ACTIVE_AREA_X1              16    	//Not checked
-    #define CAM_ACTIVE_AREA_Y1              16      //Not checked
-    #define CAM_ACTIVE_AREA_X2              4000    //Not checked
-    #define CAM_ACTIVE_AREA_Y2              3000    //Not checked
+    #define CAM_JPEG_WIDTH                  4000
+    #define CAM_JPEG_HEIGHT                 3000
+    #define CAM_ACTIVE_AREA_X1              92    	// to image data, border extends to 120
+    #define CAM_ACTIVE_AREA_Y1              16      // to image data, border extends to 34
+    #define CAM_ACTIVE_AREA_X2              4164    // last image data, border at 4136
+    #define CAM_ACTIVE_AREA_Y2              3060    // image data extends to bottom, border starts 3042?
 
     #define CAM_DNG_LENS_INFO               { 50,10, 250,10, 39,10, 48,10 } // See comments in camera.h
     //focus_lens_table seems to be here: 100b: 0xfff4abd8  to 0xfff4afd8
