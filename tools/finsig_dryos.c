@@ -3118,7 +3118,8 @@ int match_bitmap_buffer(firmware *fw, int k, int v)
 
 int match_raw_buffer(firmware *fw, int k, uint32_t rb1, uint32_t v2)
 {
-    if ((fwval(fw,k) == rb1) && (fwval(fw,k+4) == rb1) && (fwval(fw,k-2) != 1))
+    if (((fwval(fw,k) == rb1) && (fwval(fw,k+4) == rb1) && (fwval(fw,k-2) != 1)) ||
+        ((fwval(fw,k) == rb1) && (fwval(fw,k+4) == rb1) && (fwval(fw,k+20) == rb1)))
     {
         uint32_t rb2 = fwval(fw,k+1);
         if ((rb1 != rb2) && (rb2 > 0))
