@@ -20,8 +20,8 @@ extern void _GetKbdState(long*);
 
 // override key and feather bits to avoid feather osd messing up chdk display in ALT mode
 #define KEYS_MASK0 (0x80000000) //Logic OR of group 0 Keymap values
-#define KEYS_MASK1 (0xF0800001) //Logic OR of group 1 Keymap values
-#define KEYS_MASK2 (0x000030C8) //Logic OR of group 2 Keymap values
+#define KEYS_MASK1 (0xF8800001) //Logic OR of group 1 Keymap values
+#define KEYS_MASK2 (0x000030C9) //Logic OR of group 2 Keymap values
 
 #define SD_READONLY_FLAG    0x02000000 // Found @0xffba4b8c, levent 0x20a
 #define SD_READONLY_IDX     2
@@ -46,6 +46,7 @@ static KeyMap keymap[] = {
     { 1, KEY_SHOOT_FULL      ,0x30000000 }, // Found @0xffba4afc, levent 0x01
     { 1, KEY_SHOOT_FULL_ONLY ,0x20000000 }, // Found @0xffba4afc, levent 0x01
     { 1, KEY_SHOOT_HALF      ,0x10000000 }, // Found @0xffba4af4, levent 0x00
+    { 1, KEY_ERASE           ,0x08000000 },
     { 1, KEY_MENU            ,0x00800000 }, // Found @0xffba4ae4, levent 0x09
     { 1, KEY_SET             ,0x00000001 }, // Found @0xffba4acc, levent 0x08
     { 2, KEY_PRINT           ,0x00000008 }, // Key PLAYBACK for ALT menu
@@ -55,6 +56,7 @@ static KeyMap keymap[] = {
     { 2, KEY_ZOOM_OUT        ,0x00000040 }, // Found @0xffba4b2c, levent 0x03
     { 2, KEY_POWER           ,0x00000020 }, // Found @0xffba4b24, levent 0x100
     { 2, KEY_PLAYBACK        ,0x00000008 }, // Found @0xffba4b1c, levent 0x101
+    { 2, KEY_VIDEO           ,0x00000001 },
     { 0, 0, 0 }
 };
 

@@ -9,26 +9,29 @@ ASM
 FW $-1
 >>>
 /* Install task hooks via 0x193x is not possible with this new dryos version
-   So the below call patches the taskcreate functions in RAM to install our
+   So the below code patches the CreateTask function in RAM to install our
    hook -- ERR99
 */
-"    BL      HookIntoTaskCreateFunction \n"
+// Install CreateTask patch
+"    LDR     R0, =patch_CreateTask\n"   // Patch data
+"    LDM     R0, {R1,R2}\n"             // Get two patch instructions
+"    LDR     R0, =hook_CreateTask\n"    // Address to patch
+"    STM     R0, {R1,R2}\n"             // Store patch instructions
+
 <<<
 PATCHSUB ref=0
-ENDASM
-ENDFUNC
+>>>
 
-FUNC sig=hook_CreateTask2 name=CreateTask2_my
-ASM
->>> file=../taskhook2.c
-FW 2
-->FW
+"patch_CreateTask:\n"
+"    LDR     PC, [PC,#-0x4]\n"          // Do jump to absolute address CreateTask_my
+"    .long   CreateTask_my\n"
+<<<
 ENDASM
 ENDFUNC
 
 FUNC sig=hook_CreateTask name=CreateTask_my
 ASM
->>> file=../taskhook.c
+>>> file=../taskhook.S
 FW 2
 ->FW
 ENDASM
