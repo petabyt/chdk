@@ -82,6 +82,8 @@
     #undef CAM_MENU_BORDERWIDTH
     #define CAM_MENU_BORDERWIDTH            10
 
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
+
 	#define REMOTE_SYNC_STATUS_LED 	0xC02200CC		// specifies an LED that turns on while camera waits for USB remote to sync
 //----------------------------------------------------------
 
