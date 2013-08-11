@@ -131,10 +131,10 @@ asm volatile (
 "    ADD     R6, R4, #0x38 \n"
 "    LDR     R5, [R4, #0xC] \n"
 //hook start
-"    STMFD SP!, {R4-R12,LR}\n"
+// "    STMFD SP!, {R4-R12,LR}\n"
 "    MOV R0, R4\n"
 "    BL filewrite_main_hook\n"
-"    LDMFD SP!, {R4-R12,LR}\n"
+// "    LDMFD SP!, {R4-R12,LR}\n"
 //hook end
 "    MOV     R0, R6 \n"
 "    MOV     R1, R7 \n"
@@ -247,10 +247,18 @@ asm volatile (
 "    LDR     R6, =0x9200003 \n"
 "    TST     R1, #0x8000 \n"
 "    BEQ     loc_FFDE3888 \n"
+//mod start
+"    LDR R3, =current_write_ignored\n"
+"    LDR R3, [R3]\n"
+"    CMP R3, #0\n"
+"    BNE loc_D\n" // jump over the next block
+//mod end
+
 "    BL      sub_FFC4E7A0 \n"
 "    B       sub_FFDE388C \n"
 
 "loc_FFDE3888:\n"
+"loc_D:\n"
 "    BL      fwt_close \n"  // --> Patched. Old value = _Close.
 "    LDR     PC, =0xFFDE388C \n"  // Continue in firmware
 );
