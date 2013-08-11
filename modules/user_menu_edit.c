@@ -365,6 +365,8 @@ static void gui_menu_updown(int increment)
 {
     int c, j;
 
+    if (count == 0) return;
+
     // Determine number of rows to move (1 or 4)
     if (camera_info.state.is_shutter_half_press || kbd_is_key_pressed(KEY_ZOOM_IN) || kbd_is_key_pressed(KEY_ZOOM_OUT)) c=4; else c=1;
 
