@@ -150,12 +150,8 @@ asm volatile (
       "STMFD SP!, {R1-R12,LR}\n"
       "MOV R0, R4\n"
       "BL filewrite_main_hook\n"
-      "LDR R0, =ignore_current_write\n"
-      "LDR R0, [R0]\n"
+      "BL filewrite_jpeg_complete\n"
       "CMP R0, #0\n"
-      "LDRNE R1, =ignore_current_write\n"
-      "MOVNE R2, #0\n"
-      "STRNE R2, [R1]\n" //ignore_current_write=0
       "LDRNE R0, =0xFFC01A04\n" // "/null" as file name (works only on VxWorks)
       "LDMFD SP!, {R1-R12,LR}\n"
       "MOVEQ R0, R5\n" //canon file name

@@ -13,6 +13,8 @@ static int hook_wait_max=HOOK_WAIT_MAX_DEFAULT;
 
 static int available_image_data=0; // type of data available
 
+static int pending_image_data=0; // data types requested but not yet transferred in current shot
+
 static int remote_file_target=0; // requested data types
 
 static int target_file_num; // file number captured in raw hook
@@ -82,6 +84,7 @@ static void remotecap_set_available_data_type(int type)
 static void remotecap_reset(void) {
     remote_file_target=0;
     remotecap_set_available_data_type(0);
+    pending_image_data=0;
     // TODO do we need remotecap_jpeg_chunks_done() ?
 }
 
@@ -141,11 +144,18 @@ static int remotecap_wait(int datatype) {
     return wait;
 }
 
+// called from filewrite or spytask when type is fully completed
+void remotecap_type_complete(int type) {
+    pending_image_data = (pending_image_data & ~type);
+}
 
 void filewrite_set_discard_jpeg(int state);
 int filewrite_get_jpeg_chunk(char **addr,unsigned *size, unsigned n, int *pos);
 
 void remotecap_raw_available(char *rawadr) {
+    // get file number as early as possible, before blocking
+    // but don't set until after so it doesn't change value for remotecap_is_ready
+    int next_file_num = get_target_file_num(); 
 /*
 ensure raw hook is blocked until any prevous remotecap shot is finished or times out
 if prevous times out, remotecap settings will be cleared due to the time out, so no
@@ -154,14 +164,17 @@ wait == 0 timeout shouldn't get hit here unless the script is fiddling with the
 timeout value, but it ensures that we don't block indefinitely.
 */
     int wait = hook_wait_max;
-    while (wait && available_image_data) {
+    while (wait && pending_image_data) {
         msleep(10);
         wait--;
     }
     if(wait == 0) {
         remotecap_reset();
     }
-    target_file_num = get_target_file_num(); // get number once in raw hook to increase odds it matches numbering used by raw
+    pending_image_data = remote_file_target;
+    target_file_num = next_file_num;
+// TODO technically this could probably wait until after the raw stuff is done,
+// provided the actual chunks are transmitted
 // TODO this should probably just be noop if hook doesn't exist
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
     filewrite_set_discard_jpeg(1);
@@ -175,6 +188,7 @@ timeout value, but it ensures that we don't block indefinitely.
             remotecap_reset();
         }
         libdng->free_dng_header_for_ptp();
+        remotecap_type_complete(PTP_CHDK_CAPTURE_DNGHDR);
         finished();
     }
 
@@ -190,6 +204,7 @@ timeout value, but it ensures that we don't block indefinitely.
     if(!remotecap_wait(PTP_CHDK_CAPTURE_RAW)) {
         remotecap_reset();
     }
+    remotecap_type_complete(PTP_CHDK_CAPTURE_RAW);
     
     finished();
 }
@@ -199,6 +214,7 @@ timeout value, but it ensures that we don't block indefinitely.
 called from filewrite hook to notify code that jpeg data is available
 */
 void remotecap_jpeg_available() {
+    dbg_printf("jpg av %d",target_file_num);
     if(!(remote_file_target & PTP_CHDK_CAPTURE_JPG)) {
         return;
     }
