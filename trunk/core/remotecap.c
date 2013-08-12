@@ -62,7 +62,7 @@ void remotecap_set_timeout(int timeout)
 void remotecap_is_ready(int *available_type,int *file_num) {
     if ( remotecap_get_target() ) {
         *available_type = available_image_data;
-        if(available_type) {
+        if(available_image_data) {
             *file_num = target_file_num;
         } else {
             *file_num = 0;
