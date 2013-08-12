@@ -1,6 +1,6 @@
-// Camera - A3000 - platform_camera.h
+// Camera - A3100 - platform_camera.h
 
-// This file contains the various settings values specific to the A2000 camera.
+// This file contains the various settings values specific to the A3100 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',

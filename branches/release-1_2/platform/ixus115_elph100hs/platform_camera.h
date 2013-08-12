@@ -1,6 +1,6 @@
 // Camera - ixus115 v2 - platform_camera.h
 
-// This file contains the various settings values specific to the SX220HS camera.
+// This file contains the various settings values specific to the IXUS115/ELPH100HS camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
