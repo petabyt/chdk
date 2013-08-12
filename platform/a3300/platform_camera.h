@@ -86,6 +86,10 @@
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
+    #define CAM_EXT_TV_RANGE                1
+
+    #undef  CAM_HAS_IRIS_DIAPHRAGM
+
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_VIDEO_CONTROL
 

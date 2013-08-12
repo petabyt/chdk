@@ -137,3 +137,4 @@
     #define CAM_QUALITY_OVERRIDE            1 // enable 'super fine' override
     
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1     // cameras intermittently crashing on startup with "ASSERT!! FsIoNotify.c Line 457   Task name: SpyTask" in ROMLOG, ToDo: working ?
+    #define CAM_EXT_TV_RANGE                1

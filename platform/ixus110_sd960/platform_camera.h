@@ -1,6 +1,6 @@
-// Camera - d10 - platform_camera.h
+// Camera - IXUS110_SD960 - platform_camera.h
 
-// This file contains the various settings values specific to the d10 camera.
+// This file contains the various settings values specific to the IXUS110_SD960 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
