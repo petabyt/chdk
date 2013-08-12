@@ -214,7 +214,6 @@ timeout value, but it ensures that we don't block indefinitely.
 called from filewrite hook to notify code that jpeg data is available
 */
 void remotecap_jpeg_available() {
-    dbg_printf("jpg av %d",target_file_num);
     if(!(remote_file_target & PTP_CHDK_CAPTURE_JPG)) {
         return;
     }
