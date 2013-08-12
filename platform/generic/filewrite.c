@@ -3,6 +3,7 @@
 #include "remotecap_core.h"
 static int ignore_current_write=0; //used by the platform routine to check whether to write the current file
 #ifdef CAM_DRYOS
+static long fwt_bytes_written = 0; // need to track this independently of ptp
 volatile int current_write_ignored=0; //needed to prevent nasty surprises with the current override code
 #endif //CAM_DRYOS
 
@@ -123,6 +124,27 @@ void filewrite_main_hook(fwt_data_struct *fwt_data)
     jpeg_chunks=NULL;
 }
 
+// called from filewrite when the hook has returned for the last time for a given file
+// to clear ignored write and tell remotecap raw hook it's ok to proceed to next shot
+// returns whether the write was ignored, for simpler asm code on the cams that need to switch filename
+int filewrite_jpeg_complete(void) {
+    if(ignore_current_write) {
+#ifdef CAM_DRYOS
+#ifdef CAM_FILEWRITETASK_SEEKS
+        if (fwt_bytes_written < jpeg_full_size) {
+            return 1;
+        }
+#endif // CAM_FILEWRITETASK_SEEKS
+        current_write_ignored=0;
+        fwt_bytes_written = 0;
+#endif // CAM_DRYOS
+        ignore_current_write=0;
+        remotecap_type_complete(1); //PTP_CHDK_CAPTURE_JPG
+        return 1;
+    }
+    return 0;
+}
+
 #ifdef CAM_FILEWRITETASK_SEEKS
 void remotecap_jpeg_chunks_done() {
     jpeg_chunks=NULL;
@@ -131,7 +153,6 @@ void remotecap_jpeg_chunks_done() {
 
 // wrapper functions for use in filewritetask
 #ifdef CAM_DRYOS
-static long fwt_bytes_written = 0; // need to track this independently of ptp
 int fwt_open(const char *name, int flags, int mode) {
     if (!ignore_current_write) {
         return _Open(name, flags, mode);
@@ -164,18 +185,7 @@ int fwt_close (int fd) {
         fwt_bytes_written = 0;
         return ret;
     }
-#ifdef CAM_FILEWRITETASK_SEEKS
-    if (fwt_bytes_written >= jpeg_full_size) {
-        ignore_current_write=0;
-        current_write_ignored=0;
-        fwt_bytes_written = 0;
-    }
-#else
-    ignore_current_write=0;
-    current_write_ignored=0;
-    fwt_bytes_written = 0;
-#endif // CAM_FILEWRITETASK_SEEKS
-//  imagesavecomplete=1;
+    filewrite_jpeg_complete();
     return 0;
 }
 #else // ifdef CAM_DRYOS
