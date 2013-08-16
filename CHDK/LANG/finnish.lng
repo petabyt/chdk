@@ -134,7 +134,6 @@
 
 87 "Jännite MAX (mV)"
 88 "Jännite MIN (mV)"
-89 "Pykälä (ON=25mV, EI=1mV)"
 90 "Näytä prosentit"
 91 "Näytä voltit"
 92 "Näytä akun kuvake"
@@ -515,7 +514,6 @@
 378 "Tahdistus käytössä"
 379 "Tahdistuksen viive käytössä"
 380 "Tahdistuksen viive 0.1ms"
-381 "Tahdistuksen viive 0.1s"
 
 382 "AF nappi"
 383 "Lataa oletusasetukset"
@@ -537,8 +535,6 @@
 396 "Lämpötila"
 397 "Näytä lämpötila"
 398 "Videolaadun valvonta"
-399 "Kauko-ohjattu zoomaus"
-400 "Zoomin odotusviive 0.1s"
 401 "Käynnistysääni"
 402 "Raw vähennyksen etuliite"
 403 "Raw vähennyksen tunniste"

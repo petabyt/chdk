@@ -13,15 +13,14 @@
 
 //==========================================================
 
-#define USER_MENU_ITEMS     14
 #define CONF_STR_LEN        100
 
 #define CONF_EMPTY          0
 // regular char-int-short value
 #define CONF_VALUE          1
 #define CONF_DEF_VALUE      1
-// pointer to value
-#define CONF_VALUE_PTR      2
+// pointer to function returning int
+#define CONF_FUNC_PTR       2
 // pointer to array of int
 #define CONF_INT_PTR        3
 // pointer to the string
@@ -110,7 +109,6 @@ typedef struct {
     int show_dof;
     int batt_volts_max;
     int batt_volts_min;
-    int batt_step_25;
     int batt_perc_show;
     int batt_volts_show;
     int batt_icon_show;
@@ -341,7 +339,6 @@ typedef struct {
     int ricoh_ca1_mode;
     int synch_delay_enable;
     int synch_delay_value;
-    int remote_zoom_enable;
 
     int script_param_set;
     int script_param_save;
@@ -476,8 +473,6 @@ extern Conf conf;
 #define VIDEO_MAX_QUALITY       99
 #define VIDEO_DEFAULT_BITRATE   3   // should be 1 for all cams
 
-extern void user_menu_restore();
-
 extern void conf_save();
 extern void conf_restore();
 extern void conf_load_defaults();
@@ -486,6 +481,7 @@ extern void conf_update_prevent_shutdown(void);
 extern void cb_autoiso_menu_change(unsigned int item);  // gui.c
 extern int conf_getValue(unsigned short id, tConfigVal* configVal);
 extern int conf_setValue(unsigned short id, tConfigVal configVal);
+extern void conf_setAutosave(int n);
 
 // reyalp: putting these in conf, since the conf values are lookups for them
 // prefixes and extentions available for raw images (index with conf.raw_prefix etc)
@@ -511,20 +507,19 @@ typedef struct {
         int             i;
         color           cl;
         OSD_pos         pos;
+        long            (*func)(void);
     };
-    // Since only a few of the ConfInfo entries have a 'func' it saves space to not store the function addresses in the ConfInfo struct
-    // handled in conf_info_func code
-    //void                (*func)();
+    unsigned int        last_saved;     // Record last value saved to file to determine if file needs updating
 } ConfInfo;
 
-#define CONF_INFO(id, param, type, def, func) { id, sizeof( param ), type, &param, {def}/*, func*/ }
-#define CONF_INFO2(id, param, type, px, py)   { id, sizeof( param ), type, &param, {pos:{px,py}} }
+#define CONF_INFO(id, param, type, def)     { id, sizeof( param ), type, &param, {def}, 0 }
+#define CONF_INFO2(id, param, type, px, py) { id, sizeof( param ), type, &param, {pos:{px,py}}, 0 }
 
-extern void config_save(const ConfInfo *conf_info, char *filename, int conf_num);
-extern void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void (*info_func)(unsigned short id));
+extern void config_save(ConfInfo *conf_info, const char *filename, int config_base);
+extern void config_restore(ConfInfo *confinfo, const char *filename, void (*info_func)(unsigned short id));
 
-extern void conf_store_old_settings();
-extern int conf_save_new_settings_if_changed();
+extern int save_config_file(int config_base, const char *filename);
+extern int load_config_file(int config_base, const char *filename);
 
 //-------------------------------------------------------------------
 

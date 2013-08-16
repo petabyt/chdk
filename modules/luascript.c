@@ -2108,6 +2108,21 @@ static int luaCB_set_config_value( lua_State* L ) {
     return 1;
 }
 
+static int luaCB_set_config_autosave( lua_State* L ) {
+    conf_setAutosave(luaL_checknumber(L, 1));
+    return 0;
+}
+
+static int luaCB_save_config_file( lua_State* L ) {
+    lua_pushnumber(L, save_config_file(luaL_checknumber(L, 1), luaL_optstring(L, 2, NULL)));
+    return 1;
+}
+
+static int luaCB_load_config_file( lua_State* L ) {
+    lua_pushnumber(L, load_config_file(luaL_checknumber(L, 1), luaL_optstring(L, 2, NULL)));
+    return 1;
+}
+
 static int luaCB_set_file_attributes( lua_State* L ) {
     unsigned int argc = lua_gettop(L);
     if( argc>=2 ) {
@@ -2514,6 +2529,9 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(reboot)
     FUNC(get_config_value)
     FUNC(set_config_value)
+    FUNC(set_config_autosave)
+    FUNC(save_config_file)
+    FUNC(load_config_file)
     FUNC(set_file_attributes)
     FUNC(get_meminfo)
     FUNC(file_browser)

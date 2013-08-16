@@ -123,7 +123,6 @@
 
  87 "Napiecie MAX baterii (mV)"
  88 "Napiecie MIN baterii (mV)"
- 89 "Krok [0]=25mV, [ ]=1mV"
  90 "Pokaz stan baterii jako % pelnej"
  91 "Pokaz stan baterii jako napiecie"
  92 "Pokaz ikone baterii"
@@ -493,7 +492,6 @@
 378 "Wlacz synchronizacje"
 379 "Wlacz opóznianie synchronizacji"
 380 "Opóznianie synchronizacji 0.1ms"
-381 "Opóznianie synchronizacji 0.1s"
 
 382 "Klawisz AF"
 383 "Zaladuj domyslne wartosci parametrów"
@@ -515,8 +513,6 @@
 396 "Temperatura"
 397 "Pokazywac temperature?"
 398 "Kontrolowac jakosc wideo?"
-399 "Wlacz zdalne powiekszanie (Zoom)"
-400 "Zoom Time-out 0.1s"
 401 "Dzwiek przy uruchamianiu"
 402 "Odejmuj przedrostek Raw"
 403 "Odejmuj rozszerzenie Raw"

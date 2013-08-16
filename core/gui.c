@@ -2645,12 +2645,11 @@ void gui_set_alt_mode_state(int new_state)
 // Called from the GUI task code to set the ALT mode state
 void gui_activate_alt_mode()
 {
+    extern gui_handler scriptGuiHandler;
+
     switch (gui_current_alt_state)
     {
     case ALT_MODE_ENTER:
-        conf_store_old_settings();
-
-		extern gui_handler scriptGuiHandler;
         
 	    if (camera_info.state.state_kbd_script_run)
 	        gui_set_mode(&scriptGuiHandler);
@@ -2673,7 +2672,7 @@ void gui_activate_alt_mode()
         break;
 
     case ALT_MODE_LEAVE:
-        conf_save_new_settings_if_changed();
+        conf_save();
 
         // Unload all modules which are marked as safe to unload, or loaded for menus
         module_exit_alt();

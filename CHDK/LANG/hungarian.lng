@@ -136,7 +136,6 @@
 
  87 "Akku MAX Feszültség (mV)"
  88 "Akku MIN Feszültség (mV)"
- 89 "Lépésköz (ON= 25, OFF= 1 mV)"
  90 "Százalékos megjelentítés"
  91 "Feszültség megjelenítése"
  92 "Ikon megjelenítése"
@@ -504,8 +503,7 @@
  378 "Szinkronizálás engedélyezése"
  379 "Szinkr. késleltetés engedélyezése"
  380 "Szinkr. késleltetés 0.1ms"
- 381 "Szinkr. késleltetés 0.1ms"
-
+ 
  382 "AF gomb"
  383 "Alaértelmezés visszaállítása"
  384 "Paraméter beállítás"
@@ -525,8 +523,6 @@
  396 "Hömérséklet"
  397 "Hömérséklet kijelzés?"
  398 "Videó minöség beállítás?"
- 399 "Távvez. Zoom engedélyezés"
- 400 "Zoom idötúllépés 0.1s"
  401 "Indulási hang"
  402 "Raw kivonási elötag"
  403 "Raw kivonási kiterjesztés"

@@ -22,8 +22,9 @@ typedef struct
 
 SokobanConf sconf;
 
-static const ConfInfo conf_info[] = {
-    CONF_INFO( 1, sconf.sokoban_level,          CONF_DEF_VALUE, i:0, NULL),
+static ConfInfo conf_info[] = {
+    CONF_INFO( 1, sconf.sokoban_level,          CONF_DEF_VALUE, i:0),
+    {0,0,0,0,{0}}
 };
 
 void gui_module_menu_kbd_process();
@@ -488,7 +489,8 @@ int _run()
 //---------------------------------------------------------
 int _module_loader( unsigned int* chdk_export_list )
 {
-    config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/sokoban.cfg", sizeof(conf_info)/sizeof(conf_info[0]), 0);
+    sconf.sokoban_level = 0;
+    config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/sokoban.cfg", 0);
     return 0;
 }
 
@@ -498,7 +500,7 @@ int _module_loader( unsigned int* chdk_export_list )
 //---------------------------------------------------------
 int _module_unloader()
 {
-    config_save(&conf_info[0], "A/CHDK/MODULES/CFG/sokoban.cfg", sizeof(conf_info)/sizeof(conf_info[0]));
+    config_save(&conf_info[0], "A/CHDK/MODULES/CFG/sokoban.cfg", 99000);
     return 0;
 }
 

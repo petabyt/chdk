@@ -119,7 +119,6 @@
 
  87 "MAX napìtí baterie (mV)"
  88 "MIN napìtí baterie (mV)"
- 89 "Velikost kroku (ON= 25, OFF= 1 mV)"
  90 "Zobr. procenta baterie"
  91 "Zobr. napìtí baterie"
  92 "Zobr. ikonu baterie"
@@ -482,7 +481,6 @@
 378 "Povolit synchronizaci"
 379 "Povolit synchr. prodlevu"
 380 "Synchr. prodleva 0,1ms"
-381 "Synchr. prodleva 0,1s"
 
 382 "Tlaèítko AF"
 383 "Naèíst vých. hodnoty param."
@@ -504,8 +502,6 @@
 396 "Teplota"
 397 "Zobrazit teplotu?"
 398 "Øídit kvalitu videa?"
-399 "Povolit vzdálené pøiblížení"
-400 "Prodleva pøiblížení 0,1s"
 401 "Zvuk pøi startu"
 402 "Pøedpona operací RAW"
 403 "Pøípona operací RAW"

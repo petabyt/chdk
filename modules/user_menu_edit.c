@@ -815,7 +815,7 @@ int _module_exit_alt()
 
 int _module_unload()
 {
-    conf_save_new_settings_if_changed();
+    conf_save();
     return 0;
 }
 

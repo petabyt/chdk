@@ -136,7 +136,6 @@
 
  87 "Pil MAK Voltaj (mV)"
  88 "Pil MÝN Voltaj (mV)"
- 89 "Adým Boyutu (AÇ=25, KA=1 mV)"
  90 "Doluluðu, Yüzdeyle Göster"
  91 "Doluluðu, mV  ile  Göster"
  92 "Doluluk Simgesi'ni Göster"
@@ -535,7 +534,6 @@
 378 "Senkron'u  Etkinleþtir"
 379 "Senkron Gecikmesi'ni Etknlþ."
 380 "Senkron Gecikmesi 0.1ms"
-381 "Senkron Gecikmesi 0.1s"
 
 
 382 "Basýnca AF Iþýðý'ný Aç"
@@ -563,9 +561,6 @@
 397 "Sýcaklýk Göster ?"
 
 398 "Video Kalitesi Kontrolü ?"
-
-399 "Kumandadan Zum'u Etkinleþtir"
-400 "Zum Zaman Aþýmý 0.1s"
 
 401 "Baþlangýç Sesi"
 

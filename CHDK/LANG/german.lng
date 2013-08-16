@@ -114,7 +114,6 @@
 
  87 "Spannung MAX (mV)"
  88 "Spannung MIN (mV)"
- 89 "25+ Schritte"
  90 "Prozentanzeige"
  91 "Voltanzeige"
  92 "Symbolanzeige"
@@ -472,7 +471,6 @@
 378 "Synchro an/aus"
 379 "Synchro Verzögerung an/aus"
 380 "   Verzögerung 0.1ms"
-381 "   Verzögerung 0.1s"
 
 382 "AF-Taste"
 
@@ -498,9 +496,6 @@
 397 "Temperaturanzeige"
 
 398 "Video-Qualität-Kontrolle"
-
-399 "Fernbedienung-Zoom"
-400 "Zoom Zeitlimit 0.1s"
 
 401 "Start-Sound an/aus"
 

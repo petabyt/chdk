@@ -120,7 +120,6 @@
 
  87 "MAX Voltage (mV)"
  88 "MIN Voltage (mV)"
- 89 "Stapgrootte (AAN=25, UIT=1mV)"
  90 "Toon percentage"
  91 "Toon voltage"
  92 "Toon pictogram"
@@ -503,7 +502,6 @@
 378 "Schakel synch in"
 379 "Schakel synchwachttijd in"
 380 "Synchwachttijd 0,1ms"
-381 "Synchwachttijd 0,1s"
 
 382 "AF-toets"
 383 "Laad standaard parameters"
@@ -525,8 +523,6 @@
 396 "Temperatuur"
 397 "Toon temperatuur?"
 398 "Vid.kwal.beheersing?"
-399 "Schakel a.b.-zoom in"
-400 "Zoom-timeout 0,1s"
 401 "Opstartgeluid"
 402 "Raw-aftrek prefix"
 403 "Raw-aftrek extensie"

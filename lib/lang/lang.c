@@ -140,7 +140,7 @@ char* lang_str(int str) {
 
 //-------------------------------------------------------------------
 // make hash of string
-unsigned lang_strhash31(int langid)
+unsigned int lang_strhash31(int langid)
 {
     if ( langid<MAX_LANGID ) 
 		return langid;

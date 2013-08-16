@@ -123,7 +123,6 @@
 
 #define LANG_MENU_BATT_VOLT_MAX         87
 #define LANG_MENU_BATT_VOLT_MIN         88
-#define LANG_MENU_BATT_STEP_25          89
 #define LANG_MENU_BATT_SHOW_PERCENT     90
 #define LANG_MENU_BATT_SHOW_VOLTS       91
 #define LANG_MENU_BATT_SHOW_ICON        92
@@ -479,7 +478,6 @@
 #define LANG_MENU_SYNCH_ENABLE                  378
 #define LANG_MENU_SYNCH_DELAY_ENABLE            379
 #define LANG_MENU_SYNCH_DELAY_VALUE             380
-#define LANG_MENU_SYNCH_DELAY_COARSE_VALUE      381
 
 #define LANG_MENU_VIDEO_AF_KEY                  382
 #define LANG_MENU_SCRIPT_DEFAULT_VAL            383
@@ -503,8 +501,6 @@
 #define LANG_MENU_OSD_SHOW_TEMP                 397
 #define LANG_MENU_FAST_SWITCH_QUALITY_VIDEO     398
 
-#define LANG_MENU_REMOTE_ZOOM_ENABLE            399
-#define LANG_MENU_REMOTE_ZOOM_TIMEOUT           400
 #define LANG_MENU_MISC_START_SOUND              401
 #define LANG_MENU_SUB_PREFIX                    402
 #define LANG_MENU_SUB_EXTENSION                 403

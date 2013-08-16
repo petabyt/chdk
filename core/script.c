@@ -203,6 +203,7 @@ void script_end()
 	shot_histogram_set(0);
     kbd_key_release_all();
 
+    conf_setAutosave(1);    // Turn on autosave of config file in conf_setValue in case script turned it off
     conf_update_prevent_shutdown();
 }
 

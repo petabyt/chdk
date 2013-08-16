@@ -10,7 +10,9 @@ else
 LOGO=logo_de.dat
 endif
 
-GENLUA=LUALIB/GEN/propset1.lua LUALIB/GEN/propset2.lua LUALIB/GEN/propset3.lua LUALIB/GEN/propset4.lua LUALIB/GEN/propset5.lua LUALIB/GEN/modelist.lua
+GENLUA=LUALIB/GEN/propset1.lua LUALIB/GEN/propset2.lua LUALIB/GEN/propset3.lua LUALIB/GEN/propset4.lua LUALIB/GEN/propset5.lua LUALIB/GEN/modelist.lua \
+       LUALIB/GEN/cnf_core.lua LUALIB/GEN/cnf_osd.lua LUALIB/GEN/cnf_user.lua LUALIB/GEN/cnf_gps.lua
+       
 # generate some lua files from CHDK source
 all: $(GENLUA)
 	@echo "copy" $(LOGO)
@@ -44,6 +46,22 @@ LUALIB/GEN/propset5.lua:  $(topdir)include/propset5.h
 LUALIB/GEN/modelist.lua:  $(topdir)include/modelist.h
 	@echo "->" $@
 	sed -n -f  $(topdir)tools/gen_modelist_lua.sed < $< > $@
+
+LUALIB/GEN/cnf_core.lua: $(topdir)core/conf.c $(topdir)tools/gen_conf_lua$(EXE)
+	@echo "->" $@
+	$(topdir)tools/gen_conf_lua$(EXE) $(topdir)core/conf.c conf_info 1000 > $@
+
+LUALIB/GEN/cnf_osd.lua: $(topdir)core/conf.c $(topdir)tools/gen_conf_lua$(EXE)
+	@echo "->" $@
+	$(topdir)tools/gen_conf_lua$(EXE) $(topdir)core/conf.c osd_conf_info 2000 > $@
+
+LUALIB/GEN/cnf_user.lua: $(topdir)core/conf.c $(topdir)tools/gen_conf_lua$(EXE)
+	@echo "->" $@
+	$(topdir)tools/gen_conf_lua$(EXE) $(topdir)core/conf.c user_menu_conf_info 3000 > $@
+
+LUALIB/GEN/cnf_gps.lua: $(topdir)core/conf.c $(topdir)tools/gen_conf_lua$(EXE)
+	@echo "->" $@
+	$(topdir)tools/gen_conf_lua$(EXE) $(topdir)core/conf.c gps_conf_info 4000 > $@
 
 clean:
 	rm -f $(GENLUA)
