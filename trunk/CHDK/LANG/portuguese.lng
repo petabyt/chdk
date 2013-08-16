@@ -125,7 +125,6 @@
 
  87 "Voltagem MAX"
  88 "Voltagem MIN"
- 89 "Incremento 25+"
  90 "Exibe percentual"
  91 "Exibe voltagem"
  92 "Exibe icone"
@@ -493,7 +492,6 @@
 378 "Liga Sincronismo"
 379 "Liga Atraso sincronismo"
 380 "Atraso sinc. 0,1ms"
-381 "Atraso sinc. 0,1s"
 
 382 "Autofoco"
 383 "Le valores padrao para parametros"
@@ -515,8 +513,6 @@
 396 "Temperatura"
 397 "Exibe temperatura?"
 398 "Controle de qualidade do video?"
-399 "Liga Zoom remoto"
-400 "Tempo do zoom (0,1s)"
 401 "Som ao ligar"
 402 "Subtrai prefixo RAW"
 403 "Subtrai extensao RAW"

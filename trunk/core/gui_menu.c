@@ -983,7 +983,7 @@ void gui_menu_kbd_process_menu_btn()
 {
     extern int gui_user_menu_flag;
 
-    conf_save_new_settings_if_changed();
+    conf_save();
 
     if ( gui_user_menu_flag )
     {

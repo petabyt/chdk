@@ -112,7 +112,6 @@
 
  87 "Tension maxi (mV)"
  88 "Tension mini (mV)"
- 89 "Incréments (ON=25,OFF=1 mV)"
  90 "Afficher pourcentage"
  91 "Afficher tension (mV)"
  92 "Afficher icône"
@@ -476,7 +475,6 @@
 378 "Activer la synchronisation"
 379 "Activer de délai de synchro"
 380 "Délai de synchro 0.1ms"
-381 "Délai de synchro 0.1s"
 
 382 "Touche AF"
 383 "Charger paramètres par défaut"
@@ -498,8 +496,6 @@
 396 "Température"
 397 "Aff. température?"
 398 "Contrôle de qualité vidéo?"
-399 "Activer télécommande du Zoom"
-400 "Zoom Time-out 0.1s"
 401 "Son de démarrage"
 402 "Raw subtract prefix"
 403 "Raw subtract extension"

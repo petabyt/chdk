@@ -124,7 +124,6 @@
 
   87 "Volt. Max. Batería (mV)"
   88 "Volt. Min. Batería (mV)"
-  89 "Tamaño Paso (ON=25,OFF=1mV)"
   90 "Ver Porcentaje de Batería"
   91 "Ver Voltaje de Batería"
   92 "Ver Icono de Batería"
@@ -506,7 +505,6 @@
 378 "Habilitar Sincronía"
 379 "Habilitar Retardo Sincronía"
 380 "Retardo Sincronía 0.1ms"
-381 "Retardo Sincronía 0.1s"
 
 382 "Botón de AF"
 383 "Carga Parámetros Pre-estab."
@@ -528,8 +526,6 @@
 396 "Temperatura"
 397 "Ver Temperatura?"
 398 "Control de Calidad de Video?"
-399 "Habilitar Zoom Remoto"
-400 "Time-out de Zoom 0.1s "
 401 "Sonido de Inicio"
 402 "Prefijo Resta de RAW"
 

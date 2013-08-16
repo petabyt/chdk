@@ -120,7 +120,6 @@
  
  87 "Baterija MAX napon (mV)"
  88 "Baterija MIN napon (mV)"
- 89 "Korak (ON= 25, OFF= 1 mV)" 
  90 "Prikaži postotak baterije"
  91 "Prikaži napon baterije"
  92 "Prikaži ikonu baterije"
@@ -488,7 +487,6 @@
 378 "Omoguæi sinkronizaciju"
 379 "Omoguæi kašnjenje sinkronizacije"
 380 "Kašnjenje sink. 0.1ms"
-381 "Kašnjenje sink. 0.1s"
 
 382 "AF tipka"
 383 "Uèitaj poèetne vrijednosti parametara"
@@ -510,8 +508,6 @@
 396 "Temperatura"
 397 "Prikaži temperaturu?"
 398 "Kontrola kvalitete videa"
-399 "Omoguæi daljinski Zoom"
-400 "Zoom pauza 0.1s"
 401 "Zvuk pri startu"
 402 "Oduzimanje RAW prefiksa"
 403 "Oduzimanje RAW nastavka"

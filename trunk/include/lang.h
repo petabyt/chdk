@@ -14,7 +14,7 @@ extern void lang_load_from_file(const char *filename);
 extern void lang_map_preparsed_from_mem( char* gui_lang_default, int num );
 
 extern char* lang_str(int str);
-extern unsigned lang_strhash31(int langid);
+extern unsigned int lang_strhash31(int langid);
 
 //-------------------------------------------------------------------
 

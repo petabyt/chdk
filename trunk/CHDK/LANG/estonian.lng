@@ -134,7 +134,6 @@
 
  87 "Aku MAX pinge (mV)"
  88 "Aku MIN pinge (mV)"
- 89 "Astmesuurus (ON= 25, OFF= 1 mV)"
  90 "Näita aku protsenti"
  91 "Näita aku pinget"
  92 "Näita aku ikooni"
@@ -515,7 +514,6 @@
 378 "Luba sünkroniseerimine"
 379 "Luba sünkimise viive"
 380 "Sünkimise viive 0.1ms"
-381 "Sünkimise viive 0.1s"
 
 382 "AF-nupp"
 383 "Lae vaikeväärtused"
@@ -537,8 +535,6 @@
 396 "Temperatuur"
 397 "Näita temperatuuri"
 398 "Video kvaliteedi juhtimine"
-399 "Luba kaugjuhtimise suum"
-400 "Suumi taimaut 0.1s"
 401 "Käivitusheli"
 402 "Raw lahutamise eesliide"
 403 "Raw lahutamise laiend"

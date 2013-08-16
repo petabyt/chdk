@@ -119,7 +119,6 @@
 
  87 "Battery MAX Voltage (mV)"
  88 "Battery MIN Voltage (mV)"
- 89 "Step Size (ON= 25, OFF= 1 mV)"
  90 "Show Battery Percent"
  91 "Show Battery Voltage"
  92 "Show Battery Icon"
@@ -482,7 +481,6 @@
 378 "Enable Synch"
 379 "Enable Synch Delay"
 380 "Synch Delay 0.1ms"
-381 "Synch Delay 0.1s"
 
 382 "AF key"
 383 "Load default param values"
@@ -504,8 +502,6 @@
 396 "Temperature"
 397 "Show temperature?"
 398 "Video Quality Control?"
-399 "Enable Remote Zoom"
-400 "Zoom Time-out 0.1s"
 401 "Startup sound"
 402 "RAW operations prefix"
 403 "RAW operations extension"

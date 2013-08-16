@@ -8,12 +8,100 @@
 #include "gui_lang.h"
 #include "gui_draw.h"
 #include "gui_menu.h"
+#include "gui_user_menu.h"
 #include "gui_mbox.h"
 #include "modules.h"
 #include "module_load.h"
 
 #define USER_MENU_IS_SCRIPT     -1
 #define USER_MENU_IS_MODULE     -2
+
+//-------------------------------------------------------------------
+static int user_menu_saved_size()
+{
+    // User menu saved as:
+    //      - num_items (int)
+    //      - (var + script_file + script_title)[num_items]
+    return conf.user_menu_vars.cfg.num_items * (sizeof(int) + CONF_STR_LEN * 2) + sizeof(int);
+}
+
+static char* user_menu_store_data(char *p)
+{
+    int i;
+
+    memcpy(p, &conf.user_menu_vars.cfg.num_items, sizeof(int));
+    p += sizeof(int);
+    
+    for (i=0; i<conf.user_menu_vars.cfg.num_items; i++)
+    {
+        memcpy(p, &conf.user_menu_vars.items[i].var, sizeof(int));
+        p += sizeof(int);
+        memset(p, 0, CONF_STR_LEN * 2);
+        if (conf.user_menu_vars.items[i].script_file) memcpy(p, conf.user_menu_vars.items[i].script_file, strlen(conf.user_menu_vars.items[i].script_file));
+        p += CONF_STR_LEN;
+        if (conf.user_menu_vars.items[i].script_title) memcpy(p, conf.user_menu_vars.items[i].script_title, strlen(conf.user_menu_vars.items[i].script_title));
+        p += CONF_STR_LEN;
+    }
+
+    return p;
+}
+
+static int user_menu_load_data(char *p)
+{
+    int i, n;
+
+    memcpy(&n, p, sizeof(int));
+    if (n > conf.user_menu_vars.cfg.num_items)
+        init_user_menu(n);
+    p += sizeof(int);
+    
+    for (i=0; i<n; i++)
+    {
+        memcpy(&conf.user_menu_vars.items[i].var, p, sizeof(int));
+        p += sizeof(int);
+        if (*p)
+        {
+            if (conf.user_menu_vars.items[i].script_file == 0)
+                conf.user_menu_vars.items[i].script_file = malloc(CONF_STR_LEN);
+            strcpy(conf.user_menu_vars.items[i].script_file,p);
+        }
+        p += CONF_STR_LEN;
+        if (*p)
+        {
+            if (conf.user_menu_vars.items[i].script_title == 0)
+                conf.user_menu_vars.items[i].script_title = malloc(CONF_STR_LEN);
+            strcpy(conf.user_menu_vars.items[i].script_title,p);
+        }
+        p += CONF_STR_LEN;
+    }
+
+    return user_menu_saved_size();
+}
+
+void init_user_menu(int num_items)
+{
+    if (conf.user_menu_vars.items)
+    {
+        int i;
+        for (i=0; i<conf.user_menu_vars.cfg.num_items; i++)
+        {
+            if (conf.user_menu_vars.items[i].script_file)
+                free(conf.user_menu_vars.items[i].script_file);
+            if (conf.user_menu_vars.items[i].script_title)
+                free(conf.user_menu_vars.items[i].script_title);
+        }
+        free(conf.user_menu_vars.items);
+        conf.user_menu_vars.items = 0;
+    }
+
+    conf.user_menu_vars.cfg.num_items = num_items;
+    conf.user_menu_vars.cfg.item_size = sizeof(tUserMenuItem);
+    conf.user_menu_vars.cfg.saved_size = user_menu_saved_size;
+    conf.user_menu_vars.cfg.save = user_menu_store_data;
+    conf.user_menu_vars.cfg.load = user_menu_load_data;
+    conf.user_menu_vars.items = malloc(num_items * sizeof(tUserMenuItem));
+    memset(conf.user_menu_vars.items, 0, num_items * sizeof(tUserMenuItem));
+}
 
 //-------------------------------------------------------------------
 static void rinit()

@@ -120,7 +120,6 @@
 
  87 "Napätie MAX (mV)"
  88 "Napätie MIN (mV)"
- 89 "Krok (ON=25, OFF=1 mV)"
  90 "Batéria - %"
  91 "Batéria - mV"
  92 "Batéria - ikona"
@@ -489,7 +488,6 @@
 378 "Synchronizácia"
 379 "Oneskori synchronizáciu"
 380 "Oneskorenie (krok 0.1ms)"
-381 "Oneskorenie (krok 0.1s)"
 
 382 "Tlaèidlo AF"
 383 "Prvotné hodnoty parametrov"
@@ -511,8 +509,6 @@
 396 "Teplota"
 397 "Teplota"
 398 "Video - ovládanie kvality"
-399 "Dia¾kovı zoom"
-400 "Zoom pauza 0.1s"
 401 "Zvuk pri štarte"
 402 "Odèít. RAW - predpona"
 403 "Odèít. RAW - prípona"

@@ -11,13 +11,10 @@
 #include "gui_user_menu.h"
 #include "core.h"
 #include "fileutil.h"
+#include "lang.h"
 
 #include "modules.h"
 #include "module_def.h"
-
-//-------------------------------------------------------------------
-#define CONF_FILE  "A/CHDK/CCHDK3.CFG"
-#define CONF_MAGICK_VALUE   (0x33204741)
 
 //-------------------------------------------------------------------
 Conf conf = {CONF_VERSION};
@@ -28,27 +25,53 @@ const char* img_prefixes[NUM_IMG_PREFIXES]={ "IMG_", "CRW_", "SND_" /*, "AUT_", 
 const char* img_exts[NUM_IMG_EXTS]={ ".JPG", ".CRW", ".CR2", ".THM", ".WAV"/*, ".AVI", ".MRK"*/};
 
 //-------------------------------------------------------------------
-static int def_batt_volts_max, def_batt_volts_min;
 
-static void conf_change_script_file();
-static void conf_change_font_cp();
-static void conf_change_menu_rbf_file();
-static void conf_change_menu_symbol_rbf_file();
-static void conf_change_alt_mode_button();
-static void conf_change_video_bitrate();
-static void conf_change_dng_ext();
-static void conf_set_extra_button();
+void conf_change_dng(void)
+{
+    if (conf.save_raw && conf.dng_raw && conf.dng_version)
+    {
+        if (!libdng->badpixel_list_loaded_b()) libdng->load_bad_pixels_list_b("A/CHDK/badpixel.bin");
+        if (!libdng->badpixel_list_loaded_b()) conf.dng_version=0;
+    }
+}
 
+#if defined (DNG_EXT_FROM)
+void cb_change_dng_usb_ext()
+{
+    extern void change_ext_to_dng(void);
+    extern void change_ext_to_default(void);
+    if (conf.dng_usb_ext)
+        change_ext_to_dng();
+    else
+        change_ext_to_default();
+}
+#endif
+
+/*
+update the prevent display off/prevent shutdown based on current state
+doesn't really belong in conf but not clear where else it should go
+*/
+void conf_update_prevent_shutdown(void) {
+    if(conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALWAYS 
+        || (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT && gui_get_mode() != GUI_MODE_NONE)
+        || (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT_SCRIPT && camera_info.state.state_kbd_script_run)) {
+        disable_shutdown();
+    } else {
+        enable_shutdown();
+    }
+}
+
+//-------------------------------------------------------------------
 void clear_values()
 {	
     if (conf.platformid != PLATFORMID) // the following config entries will be resetted if you switch the camera using the same cfg
     {
-    conf.fast_ev = 0;
-    conf.fast_movie_control = 0;
-    conf.fast_movie_quality_control = 0;
-    conf.zoom_scale = 100;
-    conf.platformid = PLATFORMID;
-    conf.flash_video_override = 0;
+        conf.fast_ev = 0;
+        conf.fast_movie_control = 0;
+        conf.fast_movie_quality_control = 0;
+        conf.zoom_scale = 100;
+        conf.platformid = PLATFORMID;
+        conf.flash_video_override = 0;
     }
 
     if (conf.clear_override)
@@ -79,585 +102,888 @@ void clear_values()
     //conf.edge_overlay_pano = 0; // reset it because otherwise this feature cant be used at startup (when buffer is empty) - needs workaround other than this!
 }
 
-static const ConfInfo conf_info[] = {
+//-------------------------------------------------------------------
+static ConfInfo user_menu_conf_info[] = {
+    CONF_INFO(  1, conf.user_menu_vars,         CONF_STRUCT_PTR,i:0),
+    CONF_INFO(  2, conf.user_menu_as_root,      CONF_DEF_VALUE, i:0),
+    CONF_INFO(  3, conf.user_menu_enable,       CONF_DEF_VALUE, i:0),
+
+    {0,0,0,0,{0}}
+};
+
+void user_menu_conf_info_func(unsigned short id)
+{
+    switch (id)
+    {
+    case 1: 
+        user_menu_restore(); 
+        break;
+    }
+}
+
+static ConfInfo osd_conf_info[] = {
 /* !!! Do NOT change ID for items defined already! Append a new one at the end! !!! */
-    CONF_INFO(  1, conf.show_osd,               CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(  2, conf.save_raw,               CONF_DEF_VALUE, i:0, conf_change_dng),
-    CONF_INFO(  3, conf.script_shoot_delay,     CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(  4, conf.show_histo,             CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(  5, conf.script_vars,            CONF_INT_PTR,   i:0, NULL),
-    CONF_INFO(  6, conf.script_param_set,       CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(  7, conf.show_dof,               CONF_DEF_VALUE, i:DOF_DONT_SHOW, NULL),
-    CONF_INFO(  8, conf.batt_volts_max,         CONF_VALUE_PTR, ptr:&def_batt_volts_max, NULL),
-    CONF_INFO(  9, conf.batt_volts_min,         CONF_VALUE_PTR, ptr:&def_batt_volts_min, NULL),
-    CONF_INFO( 10, conf.batt_step_25,           CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 11, conf.batt_perc_show,         CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 12, conf.batt_volts_show,        CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 13, conf.batt_icon_show,         CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 14, conf.show_state,             CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 15, conf.show_values,            CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 16, conf.show_overexp,           CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 17, conf.histo_mode,             CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 18, conf.histo_auto_ajust,       CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 19, conf.histo_ignore_boundary,  CONF_DEF_VALUE, i:4, NULL),
-    CONF_INFO( 20, conf.histo_layout,           CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO2( 21, conf.histo_pos,             CONF_OSD_POS,   45,CAM_SCREEN_HEIGHT-HISTO_HEIGHT-40),
-    CONF_INFO2( 22, conf.dof_pos,               CONF_OSD_POS,   90,45),
-    CONF_INFO2( 23, conf.batt_icon_pos,         CONF_OSD_POS,   178,0),
-    CONF_INFO2( 24, conf.batt_txt_pos,          CONF_OSD_POS,   178,FONT_HEIGHT),
-    CONF_INFO2( 25, conf.mode_state_pos,        CONF_OSD_POS,   35,0),
-    CONF_INFO2( 26, conf.values_pos,            CONF_OSD_POS,   CAM_SCREEN_WIDTH-9*FONT_WIDTH,30),
-    CONF_INFO( 27, conf.histo_color,            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_WHITE), NULL),
-    CONF_INFO( 28, conf.osd_color,              CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
-//    CONF_INFO( 29, conf.batt_icon_color,        CONF_DEF_VALUE, cl:COLOR_WHITE, NULL),
-    CONF_INFO( 30, conf.menu_color,             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
-    CONF_INFO( 31, conf.reader_color,           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY, COLOR_WHITE), NULL),
-    CONF_INFO( 32, conf.ricoh_ca1_mode,         CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 33, conf.flashlight,             CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO( 34, conf.ns_enable_memdump,      CONF_DEF_VALUE, i:0, NULL),                                       // ?????
-    CONF_INFO( 34, conf.debug_shortcut_action,  CONF_DEF_VALUE, i:0, NULL), // backwards compatible
-    CONF_INFO( 35, conf.raw_in_dir,             CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 36, conf.raw_prefix,             CONF_DEF_VALUE, i:RAW_PREFIX_CRW, NULL),
-    CONF_INFO( 37, conf.raw_ext,                CONF_DEF_VALUE, i:DEFAULT_RAW_EXT, NULL),
-    CONF_INFO( 38, conf.reader_file,            CONF_CHAR_PTR,   ptr:"A/CHDK/BOOKS/README.TXT", NULL),
-    CONF_INFO( 39, conf.reader_pos,             CONF_DEF_VALUE, i:0, NULL),
-    //CONF_INFO( 40, conf.sokoban_level,          CONF_DEF_VALUE, i:0, NULL),                                       // moved to sokoban module
-    CONF_INFO( 41, conf.show_clock,             CONF_DEF_VALUE, i:2, NULL),
-    CONF_INFO2( 42, conf.clock_pos,             CONF_OSD_POS,   CAM_SCREEN_WIDTH-5*FONT_WIDTH-2,0),
-    CONF_INFO( 43, conf.reader_autoscroll,      CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 44, conf.reader_autoscroll_delay,CONF_DEF_VALUE, i:5, NULL),
-    CONF_INFO( 45, conf.reader_rbf_file,        CONF_CHAR_PTR,   ptr:"", NULL),
-    CONF_INFO( 46, conf.reader_codepage,        CONF_DEF_VALUE, i:FONT_CP_WIN, NULL),
-    CONF_INFO( 47, conf.splash_show,            CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 48, conf.histo_color2,           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_WHITE), NULL),
-    CONF_INFO( 49, conf.zebra_draw,             CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 50, conf.zebra_mode,             CONF_DEF_VALUE, i:ZEBRA_MODE_BLINKED_2, NULL),
-    CONF_INFO( 51, conf.zebra_restore_screen,   CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 52, conf.zebra_restore_osd,      CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 53, conf.zebra_over,             CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 54, conf.zebra_under,            CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 55, conf.zebra_color,            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_RED), NULL),
-    CONF_INFO( 56, conf.zebra_draw_osd,         CONF_DEF_VALUE, i:ZEBRA_DRAW_HISTO, NULL),
-    CONF_INFO( 57, conf.user_menu_as_root,      CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 58, conf.zoom_value,             CONF_DEF_VALUE, i:ZOOM_SHOW_X, NULL),
-    CONF_INFO( 59, conf.use_zoom_mf,            CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 60, conf.raw_save_first_only,    CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 61, conf.reader_wrap_by_words,   CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 62, conf.menu_symbol_enable,     CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO( 63, conf.alt_mode_button,        CONF_DEF_VALUE, i:KEY_PRINT, conf_change_alt_mode_button),
-    CONF_INFO( 64, conf.lang_file,              CONF_CHAR_PTR,   ptr:"", NULL),
-    CONF_INFO( 65, conf.font_cp,                    CONF_DEF_VALUE,     i:FONT_CP_WIN_1252, conf_change_font_cp),
-    CONF_INFO( 66, conf.menu_rbf_file,          CONF_CHAR_PTR,   ptr:"", conf_change_menu_rbf_file),
-    CONF_INFO( 67, conf.alt_prevent_shutdown,   CONF_DEF_VALUE, i:ALT_PREVENT_SHUTDOWN_ALT, conf_update_prevent_shutdown),
-    CONF_INFO( 68, conf.show_grid_lines,        CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 69, conf.grid_lines_file,        CONF_CHAR_PTR,   ptr:"", NULL),
-    CONF_INFO( 70, conf.raw_nr,                 CONF_DEF_VALUE, i:NOISE_REDUCTION_AUTO_CANON, NULL),
-    CONF_INFO( 71, conf.grid_force_color,       CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 72, conf.grid_color,             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
 
-    CONF_INFO( 80, conf.dof_subj_dist_as_near_limit,CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO( 81, conf.dof_use_exif_subj_dist,     CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO( 82, conf.dof_subj_dist_in_misc,      CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO( 83, conf.dof_near_limit_in_misc,     CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO( 84, conf.dof_far_limit_in_misc,      CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO( 85, conf.dof_hyperfocal_in_misc,     CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO( 86, conf.dof_depth_in_misc,          CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO(  1, conf.show_osd,                               CONF_DEF_VALUE, i:1),
+    CONF_INFO(  2, conf.show_osd_in_review,                     CONF_DEF_VALUE, i:0),
+    CONF_INFO(  3, conf.override_disable,                       CONF_DEF_VALUE, i:0),
+    CONF_INFO(  4, conf.override_disable_all,                   CONF_DEF_VALUE, i:1),
+    CONF_INFO(  5, conf.hide_osd,                               CONF_DEF_VALUE, i:1),
 
-    CONF_INFO( 87, conf.values_show_in_review,      CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO( 88, conf.values_show_zoom,           CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO( 89, conf.values_show_real_aperture,  CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO( 90, conf.values_show_real_iso,       CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO( 91, conf.values_show_market_iso,     CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO( 92, conf.values_show_iso_only_in_autoiso_mode, CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO( 93, conf.values_show_ev_seted,       CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO( 94, conf.values_show_ev_measured,    CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO( 95, conf.values_show_bv_measured,    CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO( 96, conf.values_show_bv_seted,       CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO( 97, conf.values_show_overexposure,   CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO( 98, conf.values_show_luminance,      CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO2( 20, conf.histo_pos,                             CONF_OSD_POS,   45,CAM_SCREEN_HEIGHT-HISTO_HEIGHT-40),
+    CONF_INFO2( 21, conf.dof_pos,                               CONF_OSD_POS,   90,45),
+    CONF_INFO2( 22, conf.batt_icon_pos,                         CONF_OSD_POS,   178,0),
+    CONF_INFO2( 23, conf.batt_txt_pos,                          CONF_OSD_POS,   178,FONT_HEIGHT),
+    CONF_INFO2( 24, conf.mode_state_pos,                        CONF_OSD_POS,   35,0),
+    CONF_INFO2( 25, conf.values_pos,                            CONF_OSD_POS,   CAM_SCREEN_WIDTH-9*FONT_WIDTH,30),
+    CONF_INFO2( 26, conf.clock_pos,                             CONF_OSD_POS,   CAM_SCREEN_WIDTH-5*FONT_WIDTH-2,0),
+    CONF_INFO2( 27, conf.space_icon_pos,                        CONF_OSD_POS,   CAM_SCREEN_WIDTH-100,0),
+    CONF_INFO2( 28, conf.space_txt_pos,                         CONF_OSD_POS,   128,0),
+    CONF_INFO2( 29, conf.mode_raw_pos,                          CONF_OSD_POS,   CAM_SCREEN_WIDTH-7*FONT_WIDTH-2,CAM_SCREEN_HEIGHT-3*FONT_HEIGHT-2),
+    CONF_INFO2( 30, conf.space_ver_pos,                         CONF_OSD_POS,   CAM_SCREEN_WIDTH-7,0),
+    CONF_INFO2( 31, conf.space_hor_pos,                         CONF_OSD_POS,   0,CAM_SCREEN_HEIGHT-7),   
+    CONF_INFO2( 32, conf.mode_video_pos,                        CONF_OSD_POS,   CAM_SCREEN_WIDTH-25*FONT_WIDTH-2,CAM_SCREEN_HEIGHT-6*FONT_HEIGHT-2),
+    CONF_INFO2( 33, conf.mode_ev_pos,                           CONF_OSD_POS,   CAM_SCREEN_WIDTH-40*FONT_WIDTH-2,CAM_SCREEN_HEIGHT-8*FONT_HEIGHT-2),
+    CONF_INFO2( 34, conf.temp_pos,                              CONF_OSD_POS,   CAM_SCREEN_WIDTH-9*FONT_WIDTH-2,FONT_HEIGHT),
+    CONF_INFO2( 35, conf.ev_video_pos,                          CONF_OSD_POS,   18,80),
+    CONF_INFO2( 36, conf.usb_info_pos,                          CONF_OSD_POS,   95,0),
 
-    CONF_INFO( 99, conf.video_mode,                 CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(100, conf.video_quality,              CONF_DEF_VALUE,     i:VIDEO_DEFAULT_QUALITY,NULL),
-    CONF_INFO(101, conf.video_bitrate,              CONF_DEF_VALUE,     i:VIDEO_DEFAULT_BITRATE, conf_change_video_bitrate),
-    
-    CONF_INFO(102, conf.tv_override_value,          CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(103, conf.tv_override_enabled,        CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO( 50, conf.histo_color,                            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_WHITE)),
+    CONF_INFO( 51, conf.histo_color2,                           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_WHITE)),
+    CONF_INFO( 52, conf.osd_color,                              CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG)),
+    CONF_INFO( 53, conf.osd_color_warn,                         CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_RED)),
+    CONF_INFO( 54, conf.osd_color_override,                     CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_RED)),
+    CONF_INFO( 55, conf.menu_color,                             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG)),
+    CONF_INFO( 56, conf.menu_title_color,                       CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_WHITE, COLOR_BLACK)),
+    CONF_INFO( 57, conf.menu_cursor_color,                      CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_SELECTED_BG, COLOR_SELECTED_FG)),
+    CONF_INFO( 58, conf.menu_symbol_color,                      CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG)),
+    CONF_INFO( 59, conf.reader_color,                           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY, COLOR_WHITE)),
+    CONF_INFO( 60, conf.grid_color,                             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG)),
+    CONF_INFO( 61, conf.space_color,                            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG)),
+    CONF_INFO( 62, conf.zebra_color,                            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_RED)),
+    CONF_INFO( 63, conf.edge_overlay_color,                     CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_RED)),
 
-    CONF_INFO(104, conf.av_override_value,          CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(105, conf.iso_override_value,         CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(106, conf.iso_override_koef,          CONF_DEF_VALUE,     i:0, NULL),
-    
-    CONF_INFO(107, conf.subj_dist_override_value,   CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(108, conf.subj_dist_override_koef,    CONF_DEF_VALUE,     i:SD_OVERRIDE_OFF, NULL),
-    
-    CONF_INFO(109, conf.tv_bracket_value,           CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(110, conf.av_bracket_value,           CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(111, conf.iso_bracket_value,          CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(112, conf.iso_bracket_koef,           CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(113, conf.subj_dist_bracket_value,    CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(114, conf.subj_dist_bracket_koef,     CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(115, conf.bracket_type,               CONF_DEF_VALUE,     i:0, NULL),
-    
-    CONF_INFO(116, conf.tv_override_long_exp,       CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(117, conf.tv_override_short_exp,      CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(118, conf.av_override_enabled,        CONF_DEF_VALUE,     i:0, NULL),
+    CONF_INFO( 80, conf.show_clock,                             CONF_DEF_VALUE, i:2),
+    CONF_INFO( 81, conf.clock_format,                           CONF_DEF_VALUE, i:0),
+    CONF_INFO( 82, conf.clock_indicator,                        CONF_DEF_VALUE, i:0),
+    CONF_INFO( 33, conf.clock_halfpress,                        CONF_DEF_VALUE, i:1),
 
-#if defined(OPT_FORCE_LUA_CALL_NATIVE)
-    CONF_INFO(119, conf.script_allow_lua_native_calls,CONF_DEF_VALUE,   i:1, NULL),
-#else
-    CONF_INFO(119, conf.script_allow_lua_native_calls,CONF_DEF_VALUE,   i:0, NULL),
-#endif
-    CONF_INFO(120, conf.script_startup,             CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(121, conf.remote_enable,              CONF_DEF_VALUE,     i:0, NULL),
-    
-    CONF_INFO(122, conf.values_show_canon_overexposure, CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(123, conf.clear_override,             CONF_DEF_VALUE,     i:1, NULL),
-    
-    CONF_INFO(124, conf.show_osd_in_review,         CONF_DEF_VALUE,     i:0, NULL),
-    
-//    CONF_INFO(125, conf.dof_dist_from_lens,         CONF_DEF_VALUE,     i:0, NULL),
-    
-    CONF_INFO(126, conf.clear_bracket,              CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO(127, conf.zebra_multichannel,         CONF_DEF_VALUE,     i:0, NULL),
-    
-    CONF_INFO(128, conf.nd_filter_state,            CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(129, conf.histo_show_ev_grid,         CONF_DEF_VALUE,     i:0, NULL),
-    
-    CONF_INFO(130, conf.osd_color_warn,             CONF_DEF_VALUE,     cl:MAKE_COLOR(COLOR_BG, COLOR_RED), NULL),
-    CONF_INFO(131, conf.space_color,                CONF_DEF_VALUE,     cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
-    CONF_INFO(132, conf.space_icon_show,            CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO2(133, conf.space_icon_pos,            CONF_OSD_POS,       CAM_SCREEN_WIDTH-100,0),
-    CONF_INFO(134, conf.space_perc_show,            CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(135, conf.space_mb_show,              CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO2(136, conf.space_txt_pos,             CONF_OSD_POS,       128,0),
-    CONF_INFO(137, conf.show_remaining_raw,         CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO2(138, conf.mode_raw_pos,              CONF_OSD_POS,       CAM_SCREEN_WIDTH-7*FONT_WIDTH-2,CAM_SCREEN_HEIGHT-3*FONT_HEIGHT-2),
-    CONF_INFO(139, conf.show_raw_state,             CONF_DEF_VALUE,     i:1, NULL),
-    
-    CONF_INFO(140, conf.show_values_in_video,       CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(141, conf.tv_enum_type,               CONF_DEF_VALUE,     i:TV_OVERRIDE_EV_STEP, NULL),
+    CONF_INFO( 90, conf.show_state,                             CONF_DEF_VALUE, i:1),
 
-    CONF_INFO(142, conf.user_menu_enable,       CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(143, conf.user_menu_vars,         CONF_STRUCT_PTR,i:0, NULL),
-    CONF_INFO(144, conf.zoom_scale,             CONF_DEF_VALUE, i:100, NULL), 
-    CONF_INFO(145, conf.space_bar_show,         CONF_DEF_VALUE, i:1, NULL), 
-    CONF_INFO(146, conf.space_bar_size,         CONF_DEF_VALUE, i:1, NULL), 
-    CONF_INFO2(147, conf.space_ver_pos,         CONF_OSD_POS,   CAM_SCREEN_WIDTH-7,0),
-    CONF_INFO2(148, conf.space_hor_pos,         CONF_OSD_POS,   0,CAM_SCREEN_HEIGHT-7),   
-    CONF_INFO(149, conf.space_bar_width,        CONF_DEF_VALUE, i:2, NULL), 
-    CONF_INFO(150, conf.space_perc_warn,        CONF_DEF_VALUE, i:10, NULL),
-    CONF_INFO(151, conf.space_mb_warn,          CONF_DEF_VALUE, i:20, NULL),
-    CONF_INFO(152, conf.space_warn_type,        CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(153, conf.remaining_raw_treshold, CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(154, conf.unlock_optical_zoom_for_video, CONF_DEF_VALUE, i:1, NULL), 
-    CONF_INFO(155, conf.clock_format,           CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(156, conf.clock_indicator,        CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(157, conf.clock_halfpress,        CONF_DEF_VALUE, i:1, NULL),
-    
-    CONF_INFO(158, conf.autoiso_enable,             CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(159, conf.autoiso_shutter_enum,       CONF_DEF_VALUE,     i:5, NULL), // 5='1/125'
-    CONF_INFO(160, conf.autoiso_user_factor,        CONF_DEF_VALUE,     i:5, NULL),
-    CONF_INFO(161, conf.autoiso_is_factor,          CONF_DEF_VALUE,     i:2, NULL),
-    CONF_INFO(162, conf.autoiso_max_iso_hi,         CONF_DEF_VALUE,     i:550, NULL),
-    CONF_INFO(163, conf.autoiso_max_iso_auto,       CONF_DEF_VALUE,     i:320, NULL),
-    CONF_INFO(164, conf.autoiso_min_iso,            CONF_DEF_VALUE,     i:50, NULL),
+    CONF_INFO(100, conf.batt_volts_max,                         CONF_FUNC_PTR,  func:get_vbatt_max),
+    CONF_INFO(101, conf.batt_volts_min,                         CONF_FUNC_PTR,  func:get_vbatt_min),
+    CONF_INFO(102, conf.batt_perc_show,                         CONF_DEF_VALUE, i:1),
+    CONF_INFO(103, conf.batt_volts_show,                        CONF_DEF_VALUE, i:0),
+    CONF_INFO(104, conf.batt_icon_show,                         CONF_DEF_VALUE, i:1),
 
-    CONF_INFO(165, conf.menu_title_color,           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_WHITE, COLOR_BLACK), NULL),
-    CONF_INFO(166, conf.menu_cursor_color,          CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_SELECTED_BG, COLOR_SELECTED_FG), NULL),
-    CONF_INFO(167, conf.menu_center,                CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(168, conf.mute_on_zoom,               CONF_DEF_VALUE, i:0, NULL), 
-    CONF_INFO(169, conf.bad_pixel_removal,          CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(170, conf.video_af_key,               CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(171, conf.osd_color_override,         CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_RED), NULL),
-    CONF_INFO(172, conf.override_disable,           CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(173, conf.override_disable_all,       CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(174, conf.hide_osd,                   CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(175, conf.save_raw_in_video,          CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(176, conf.show_movie_time,            CONF_DEF_VALUE, i:3, NULL),
-    CONF_INFO(177, conf.show_movie_refresh,         CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO2(178, conf.mode_video_pos,            CONF_OSD_POS,   CAM_SCREEN_WIDTH-25*FONT_WIDTH-2,CAM_SCREEN_HEIGHT-6*FONT_HEIGHT-2),
-    CONF_INFO(179, conf.clear_video,                CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(180, conf.fast_ev,                    CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(181, conf.fast_ev_step,               CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO2(182, conf.mode_ev_pos,               CONF_OSD_POS,   CAM_SCREEN_WIDTH-40*FONT_WIDTH-2,CAM_SCREEN_HEIGHT-8*FONT_HEIGHT-2),
-    CONF_INFO(183, conf.menu_symbol_rbf_file,       CONF_CHAR_PTR,   ptr:DEFAULT_SYMBOL_FILE, conf_change_menu_symbol_rbf_file),
-    CONF_INFO(184, conf.menu_symbol_color,          CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG), NULL),
-    CONF_INFO(185, conf.curve_file,                 CONF_CHAR_PTR,      ptr:"", NULL),
-    CONF_INFO(186, conf.curve_enable,               CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(187, conf.edge_overlay_enable,        CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(188, conf.edge_overlay_thresh,        CONF_DEF_VALUE, i:60, NULL),
-    CONF_INFO(189, conf.edge_overlay_color,         CONF_DEF_VALUE, cl:0x66, NULL),
-    CONF_INFO(190, conf.synch_enable,               CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(191, conf.synch_delay_enable,         CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(192, conf.synch_delay_value,          CONF_DEF_VALUE, i:100, NULL),
-    //CONF_INFO(193, conf.synch_delay_coarse_value,   CONF_DEF_VALUE, i:0, NULL),                                     // obsolete - no longer used
-    CONF_INFO(194, conf.script_file,                CONF_CHAR_PTR,   ptr:"", conf_change_script_file),
-    CONF_INFO(195, conf.mem_view_addr_init,         CONF_DEF_VALUE, i:0x1000, NULL),
-    CONF_INFO(196, conf.save_raw_in_sports,         CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(197, conf.save_raw_in_burst,          CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(198, conf.save_raw_in_ev_bracketing,  CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(199, conf.save_raw_in_timer,          CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(200, conf.raw_exceptions_warn,        CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(201, conf.menu_select_first_entry,    CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(202, conf.fast_movie_control,         CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(203, conf.show_temp,                  CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO2(204, conf.temp_pos,                  CONF_OSD_POS,   CAM_SCREEN_WIDTH-9*FONT_WIDTH-2,FONT_HEIGHT),
-    CONF_INFO(205, conf.fast_movie_quality_control, CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(206, conf.remote_zoom_enable,         CONF_DEF_VALUE, i:0, NULL),
-//    CONF_INFO(207, conf.zoom_timeout,               CONF_DEF_VALUE, i:5, NULL),   // Not used
-   	CONF_INFO(208, conf.start_sound,                CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(209, conf.sub_batch_prefix,           CONF_DEF_VALUE, i:RAW_PREFIX_SND, NULL), // SND_
-    CONF_INFO(210, conf.sub_batch_ext,              CONF_DEF_VALUE, i:DEFAULT_RAW_EXT, NULL), // .CRW
-//    CONF_INFO(211, conf.sub_in_dark_value,          CONF_DEF_VALUE, i:30, NULL), 
-//    CONF_INFO(212, conf.sub_out_dark_value,         CONF_DEF_VALUE, i:0, NULL), 
-   	CONF_INFO(213, conf.debug_display,              CONF_DEF_VALUE, i:0, NULL),
-   	CONF_INFO(214, conf.script_param_save,          CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO2(215, conf.ev_video_pos,              CONF_OSD_POS,   18,80),
-    CONF_INFO(219, conf.bracketing_add_raw_suffix,  CONF_DEF_VALUE, i:0, NULL),			
-    CONF_INFO(220, conf.temperature_unit,           CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(222, conf.edge_overlay_play,          CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(223, conf.edge_overlay_pano,          CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(224, conf.edge_overlay_zoom,          CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(225, conf.raw_cache,                  CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(226, conf.dng_raw,                    CONF_DEF_VALUE, i:1, conf_change_dng),
-    CONF_INFO(227, conf.flash_sync_curtain,         CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(228, conf.raw_timer,                  CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(229, conf.platformid,                 CONF_DEF_VALUE, i:PLATFORMID, NULL),
-    CONF_INFO(230, conf.save_raw_in_edgeoverlay,    CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(231, conf.save_raw_in_auto,           CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(232, conf.flash_video_override,       CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(233, conf.flash_video_override_power, CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(234, conf.raw_dng_ext,                CONF_DEF_VALUE, i:1, NULL),
-    CONF_INFO(235, conf.dng_usb_ext,                CONF_DEF_VALUE, i:0, conf_change_dng_ext),
-    CONF_INFO(236, conf.flash_manual_override,      CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(237, conf.fast_image_quality,         CONF_DEF_VALUE, i:3, NULL),
-	CONF_INFO(238, conf.debug_lua_restart_on_error, CONF_DEF_VALUE, i:0, NULL),
-	CONF_INFO(239, conf.debug_propcase_page,        CONF_DEF_VALUE, i:0, NULL),
-	CONF_INFO(240, conf.debug_misc_vals_show,       CONF_DEF_VALUE, i:0, NULL),
-	CONF_INFO(241, conf.edge_overlay_filter,        CONF_DEF_VALUE, i:0, NULL),
-	CONF_INFO(242, conf.edge_overlay_show,          CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(243, conf.edge_overlay_pano_overlap,  CONF_DEF_VALUE, i:30, NULL),
+    CONF_INFO(110, conf.reader_file,                            CONF_CHAR_PTR,  ptr:"A/CHDK/BOOKS/README.TXT"),
+    CONF_INFO(111, conf.reader_pos,                             CONF_DEF_VALUE, i:0),
+    CONF_INFO(112, conf.reader_autoscroll,                      CONF_DEF_VALUE, i:0),
+    CONF_INFO(113, conf.reader_autoscroll_delay,                CONF_DEF_VALUE, i:5),
+    CONF_INFO(114, conf.reader_rbf_file,                        CONF_CHAR_PTR,  ptr:""),
+    CONF_INFO(115, conf.reader_codepage,                        CONF_DEF_VALUE, i:FONT_CP_WIN),
+    CONF_INFO(116, conf.reader_wrap_by_words,                   CONF_DEF_VALUE, i:1),
+
+    CONF_INFO(120, conf.splash_show,                            CONF_DEF_VALUE, i:1),
+   	CONF_INFO(121, conf.start_sound,                            CONF_DEF_VALUE, i:0),
+
+    CONF_INFO(130, conf.menu_symbol_enable,                     CONF_DEF_VALUE, i:1),
+    CONF_INFO(131, conf.menu_rbf_file,                          CONF_CHAR_PTR,  ptr:""),
+    CONF_INFO(132, conf.menu_symbol_rbf_file,                   CONF_CHAR_PTR,  ptr:DEFAULT_SYMBOL_FILE),
+    CONF_INFO(133, conf.menu_select_first_entry,                CONF_DEF_VALUE, i:1),
+    CONF_INFO(134, conf.menu_center,                            CONF_DEF_VALUE, i:1),
+    CONF_INFO(135, conf.lang_file,                              CONF_CHAR_PTR,  ptr:""),
+    CONF_INFO(136, conf.font_cp,                                CONF_DEF_VALUE, i:FONT_CP_WIN_1252),
+    CONF_INFO(137, conf.tbox_char_map,                          CONF_DEF_VALUE, i:0),
+
+    CONF_INFO(140, conf.show_grid_lines,                        CONF_DEF_VALUE, i:0),
+    CONF_INFO(141, conf.grid_lines_file,                        CONF_CHAR_PTR,  ptr:""),
+    CONF_INFO(142, conf.grid_force_color,                       CONF_DEF_VALUE, i:0),
+
+    CONF_INFO(150, conf.show_dof,                               CONF_DEF_VALUE, i:DOF_DONT_SHOW),
+    CONF_INFO(151, conf.dof_subj_dist_as_near_limit,            CONF_DEF_VALUE, i:0),
+    CONF_INFO(152, conf.dof_use_exif_subj_dist,                 CONF_DEF_VALUE, i:0),
+    CONF_INFO(153, conf.dof_subj_dist_in_misc,                  CONF_DEF_VALUE, i:1),
+    CONF_INFO(154, conf.dof_near_limit_in_misc,                 CONF_DEF_VALUE, i:1),
+    CONF_INFO(155, conf.dof_far_limit_in_misc,                  CONF_DEF_VALUE, i:1),
+    CONF_INFO(156, conf.dof_hyperfocal_in_misc,                 CONF_DEF_VALUE, i:1),
+    CONF_INFO(157, conf.dof_depth_in_misc,                      CONF_DEF_VALUE, i:0),
+
+    CONF_INFO(160, conf.show_values,                            CONF_DEF_VALUE, i:0),
+    CONF_INFO(161, conf.values_show_in_review,                  CONF_DEF_VALUE, i:0),
+    CONF_INFO(162, conf.values_show_zoom,                       CONF_DEF_VALUE, i:1),
+    CONF_INFO(163, conf.values_show_real_aperture,              CONF_DEF_VALUE, i:0),
+    CONF_INFO(164, conf.values_show_real_iso,                   CONF_DEF_VALUE, i:1),
+    CONF_INFO(165, conf.values_show_market_iso,                 CONF_DEF_VALUE, i:0),
+    CONF_INFO(166, conf.values_show_iso_only_in_autoiso_mode,   CONF_DEF_VALUE, i:0),
+    CONF_INFO(167, conf.values_show_ev_seted,                   CONF_DEF_VALUE, i:0),
+    CONF_INFO(168, conf.values_show_ev_measured,                CONF_DEF_VALUE, i:0),
+    CONF_INFO(169, conf.values_show_bv_measured,                CONF_DEF_VALUE, i:0),
+    CONF_INFO(170, conf.values_show_bv_seted,                   CONF_DEF_VALUE, i:0),
+    CONF_INFO(171, conf.values_show_overexposure,               CONF_DEF_VALUE, i:0),
+    CONF_INFO(172, conf.values_show_luminance,                  CONF_DEF_VALUE, i:0),
+    CONF_INFO(173, conf.values_show_canon_overexposure,         CONF_DEF_VALUE, i:0),
+    CONF_INFO(174, conf.show_values_in_video,                   CONF_DEF_VALUE, i:0),
+    CONF_INFO(175, conf.zoom_value,                             CONF_DEF_VALUE, i:ZOOM_SHOW_X),
+    CONF_INFO(176, conf.zoom_scale,                             CONF_DEF_VALUE, i:100), 
+    
+    CONF_INFO(180, conf.space_icon_show,                        CONF_DEF_VALUE, i:0),
+    CONF_INFO(181, conf.space_perc_show,                        CONF_DEF_VALUE, i:0),
+    CONF_INFO(182, conf.space_mb_show,                          CONF_DEF_VALUE, i:1),
+    CONF_INFO(183, conf.space_bar_show,                         CONF_DEF_VALUE, i:1), 
+    CONF_INFO(184, conf.space_bar_size,                         CONF_DEF_VALUE, i:1), 
+    CONF_INFO(185, conf.space_bar_width,                        CONF_DEF_VALUE, i:2), 
+    CONF_INFO(186, conf.space_perc_warn,                        CONF_DEF_VALUE, i:10),
+    CONF_INFO(187, conf.space_mb_warn,                          CONF_DEF_VALUE, i:20),
+    CONF_INFO(188, conf.space_warn_type,                        CONF_DEF_VALUE, i:0),
+    CONF_INFO(189, conf.show_partition_nr,                      CONF_DEF_VALUE, i:0),
+
+    CONF_INFO(200, conf.show_remaining_raw,                     CONF_DEF_VALUE, i:1),
+    CONF_INFO(201, conf.show_raw_state,                         CONF_DEF_VALUE, i:1),
+    CONF_INFO(202, conf.remaining_raw_treshold,                 CONF_DEF_VALUE, i:0),
+    CONF_INFO(203, conf.raw_exceptions_warn,                    CONF_DEF_VALUE, i:1),
+
+    CONF_INFO(210, conf.show_movie_time,                        CONF_DEF_VALUE, i:3),
+    CONF_INFO(211, conf.show_movie_refresh,                     CONF_DEF_VALUE, i:1),
+
+    CONF_INFO(220, conf.show_temp,                              CONF_DEF_VALUE, i:1),
+    CONF_INFO(221, conf.temperature_unit,                       CONF_DEF_VALUE, i:0),
+
+    CONF_INFO(230, conf.debug_shortcut_action,                  CONF_DEF_VALUE, i:0), // backwards compatible
+   	CONF_INFO(231, conf.debug_display,                          CONF_DEF_VALUE, i:0),
+    CONF_INFO(232, conf.debug_propcase_page,                    CONF_DEF_VALUE, i:0),
+	CONF_INFO(233, conf.debug_misc_vals_show,                   CONF_DEF_VALUE, i:0),
+    CONF_INFO(234, conf.mem_view_addr_init,                     CONF_DEF_VALUE, i:0x1000),
 
     // Touch screen U/I overrides
-    CONF_INFO(244, conf.touchscreen_disable_video_controls,     CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO(245, conf.touchscreen_disable_shortcut_controls,  CONF_DEF_VALUE, i:0, NULL),
+    CONF_INFO(240, conf.touchscreen_disable_video_controls,     CONF_DEF_VALUE, i:0),
+    CONF_INFO(241, conf.touchscreen_disable_shortcut_controls,  CONF_DEF_VALUE, i:0),
 
-    // USB Icon enable & position
-    CONF_INFO(246, conf.usb_info_enable,            CONF_DEF_VALUE, i:0, NULL),
-    CONF_INFO2(247, conf.usb_info_pos,              CONF_OSD_POS,   95,0),
+    CONF_INFO(250, conf.usb_info_enable,                        CONF_DEF_VALUE, i:0),
 
-	// new USB remote stuff
-	CONF_INFO(248, conf.remote_switch_type,         CONF_DEF_VALUE, i:0, NULL),
-	CONF_INFO(249, conf.remote_control_mode,        CONF_DEF_VALUE, i:0, NULL),
-
-	CONF_INFO(250, conf.remote_enable_scripts,      CONF_DEF_VALUE, i:0, NULL),
-
-    CONF_INFO(251, conf.show_partition_nr,          CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(252, conf.ext_video_time,             CONF_DEF_VALUE,     i:0, NULL),
-#ifdef CAM_HAS_GPS
-    // GPS
-    CONF_INFO(253, conf.gps_record,                 CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(254, conf.gps_navi_show,              CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(255, conf.gps_kompass_show,           CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(256, conf.gps_coordinates_show,       CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(257, conf.gps_height_show,            CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(258, conf.gps_waypoint_save,          CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(259, conf.gps_track_time,             CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO(260, conf.gps_kompass_hide,           CONF_DEF_VALUE,     i:0, NULL),
-
-    CONF_INFO(261, conf.gps_wait_for_signal,        CONF_DEF_VALUE,     i:300, NULL),
-    CONF_INFO(262, conf.gps_kompass_time,           CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO(263, conf.gps_navi_time,              CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO(264, conf.gps_wait_for_signal_time,   CONF_DEF_VALUE,     i:5, NULL),
-    CONF_INFO(265, conf.gps_kompass_smooth,         CONF_DEF_VALUE,     i:7, NULL),
-    CONF_INFO(266, conf.gps_batt,                   CONF_DEF_VALUE,     i:25, NULL),
-    CONF_INFO(267, conf.gps_countdown,              CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(268, conf.gps_2D_3D_fix,              CONF_DEF_VALUE,     i:2, NULL),
-    CONF_INFO(269, conf.gps_countdown_blink,        CONF_DEF_VALUE,     i:1, NULL),
-    
-    CONF_INFO(270, conf.gps_rec_play_set,           CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(271, conf.gps_play_dark_set,          CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(272, conf.gps_rec_play_time,          CONF_DEF_VALUE,     i:30, NULL),
-    CONF_INFO(273, conf.gps_play_dark_time,         CONF_DEF_VALUE,     i:45, NULL),
-
-    CONF_INFO(274, conf.gps_rec_play_set_1,         CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(275, conf.gps_play_dark_set_1,        CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(276, conf.gps_rec_play_time_1,        CONF_DEF_VALUE,     i:10, NULL),
-    CONF_INFO(277, conf.gps_play_dark_time_1,       CONF_DEF_VALUE,     i:15, NULL),
-    CONF_INFO(278, conf.gps_show_symbol,            CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(279, conf.gps_batt_warn,              CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(270, conf.gps_track_symbol,           CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(280, conf.gps_test_timezone,          CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(281, conf.gps_beep_warn,              CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(282, conf.gps_on_off,                 CONF_DEF_VALUE,     i:0, NULL),
-#endif
-
-    // AutoISO2
-    CONF_INFO(283, conf.autoiso2_shutter_enum,      CONF_DEF_VALUE,     i:0, NULL), // 0="off" 6='1/20'
-    CONF_INFO(284, conf.autoiso2_max_iso_auto,      CONF_DEF_VALUE,     i:600, NULL),
-    CONF_INFO(285, conf.autoiso2_over,              CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO(286, conf.overexp_threshold,          CONF_DEF_VALUE,     i:5, NULL),
-    CONF_INFO(287, conf.overexp_ev_enum,            CONF_DEF_VALUE,     i:0, NULL), // 0="off"
-
-#if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
-    CONF_INFO(288, conf.zoom_assist_button_disable, CONF_DEF_VALUE,     i:0, NULL),
-#endif
-
-    CONF_INFO(289, conf.dng_version,                CONF_DEF_VALUE,     i:0, conf_change_dng),
-    CONF_INFO(290, conf.tbox_char_map,              CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(291, conf.show_alt_helper,            CONF_DEF_VALUE,     i:1, NULL),
-    CONF_INFO(292, conf.show_alt_helper_delay,      CONF_DEF_VALUE,     i:3, NULL),
-#if defined(CAM_OPTIONAL_EXTRA_BUTTON)
-    CONF_INFO(293, conf.extra_button,               CONF_DEF_VALUE,     i:0, conf_set_extra_button),
-#endif
-
-    CONF_INFO(294, conf.module_logging,             CONF_DEF_VALUE,     i:0, NULL),
-
-    CONF_INFO(295, conf.enable_shortcuts,           CONF_DEF_VALUE,     i:1, NULL),
+    CONF_INFO(260, conf.show_alt_helper,                        CONF_DEF_VALUE, i:1),
+    CONF_INFO(261, conf.show_alt_helper_delay,                  CONF_DEF_VALUE, i:3),
+    CONF_INFO(262, conf.enable_shortcuts,                       CONF_DEF_VALUE, i:1),
+    CONF_INFO(263, conf.extra_button,                           CONF_DEF_VALUE, i:0),
 
     // Console settings
-    CONF_INFO(296, conf.console_show,               CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(297, conf.console_timeout,            CONF_DEF_VALUE,     i:3, NULL),
+    CONF_INFO(270, conf.console_show,                           CONF_DEF_VALUE, i:0),
+    CONF_INFO(271, conf.console_timeout,                        CONF_DEF_VALUE, i:3),
 
-    CONF_INFO(298, conf.memdmp_start,               CONF_DEF_VALUE,     i:0, NULL),
-    CONF_INFO(299, conf.memdmp_size,                CONF_DEF_VALUE,     i:0, NULL),
+    {0,0,0,0,{0}}
+};
 
-    CONF_INFO(300, conf.flash_exp_comp,             CONF_DEF_VALUE,     i:9, NULL),
-    CONF_INFO(301, conf.flash_enable_exp_comp,      CONF_DEF_VALUE,     i:0, NULL),
-    };
-#define CONF_NUM (sizeof(conf_info)/sizeof(conf_info[0]))
+void osd_conf_info_func(unsigned short id)
+{
+    switch (id)
+    {
+    case 131: 
+        rbf_load_from_file(conf.menu_rbf_file, FONT_CP_WIN);
+        break;
+    case 132: 
+        if (!rbf_load_symbol(conf.menu_symbol_rbf_file))
+            conf.menu_symbol_enable=0;
+        break;
+    case 135: 
+        gui_lang_init(); 
+        break;
+    case 136:
+        font_init();
+        font_set(conf.font_cp);
+        break;
+#if CAM_OPTIONAL_EXTRA_BUTTON
+    case 263: 
+        kbd_set_extra_button((short)conf.extra_button);
+        break;
+#endif
+    }
+}
 
-// Since only a few of the ConfInfo entries have a 'func' it saves space to not store the function addresses in the ConfInfo struct
+static ConfInfo conf_info[] = {
+/* !!! Do NOT change ID for items defined already! Append a new one at the end! !!! */
+
+    CONF_INFO(  1, conf.platformid,                             CONF_DEF_VALUE, i:PLATFORMID),
+
+    CONF_INFO(  2, conf.fast_image_quality,                     CONF_DEF_VALUE, i:3),
+
+    CONF_INFO(  3, conf.nd_filter_state,                        CONF_DEF_VALUE, i:0),
+
+    CONF_INFO( 20, conf.save_raw,                               CONF_DEF_VALUE, i:0),
+    CONF_INFO( 21, conf.raw_in_dir,                             CONF_DEF_VALUE, i:0),
+    CONF_INFO( 22, conf.raw_prefix,                             CONF_DEF_VALUE, i:RAW_PREFIX_CRW),
+    CONF_INFO( 23, conf.raw_ext,                                CONF_DEF_VALUE, i:DEFAULT_RAW_EXT),
+    CONF_INFO( 24, conf.raw_save_first_only,                    CONF_DEF_VALUE, i:0),
+    CONF_INFO( 25, conf.save_raw_in_video,                      CONF_DEF_VALUE, i:1),
+    CONF_INFO( 26, conf.save_raw_in_sports,                     CONF_DEF_VALUE, i:0),
+    CONF_INFO( 27, conf.save_raw_in_burst,                      CONF_DEF_VALUE, i:0),
+    CONF_INFO( 28, conf.save_raw_in_ev_bracketing,              CONF_DEF_VALUE, i:0),
+    CONF_INFO( 29, conf.save_raw_in_timer,                      CONF_DEF_VALUE, i:0),
+    CONF_INFO( 30, conf.raw_cache,                              CONF_DEF_VALUE, i:1),
+    CONF_INFO( 31, conf.save_raw_in_edgeoverlay,                CONF_DEF_VALUE, i:0),
+    CONF_INFO( 32, conf.save_raw_in_auto,                       CONF_DEF_VALUE, i:0),
+    CONF_INFO( 33, conf.bad_pixel_removal,                      CONF_DEF_VALUE, i:0),
+    CONF_INFO( 34, conf.raw_timer,                              CONF_DEF_VALUE, i:0),
+    CONF_INFO( 35, conf.raw_dng_ext,                            CONF_DEF_VALUE, i:1),
+    CONF_INFO( 36, conf.dng_raw,                                CONF_DEF_VALUE, i:1),
+    CONF_INFO( 37, conf.dng_version,                            CONF_DEF_VALUE, i:0),
+    CONF_INFO( 38, conf.dng_usb_ext,                            CONF_DEF_VALUE, i:0),
+    CONF_INFO( 39, conf.raw_nr,                                 CONF_DEF_VALUE, i:NOISE_REDUCTION_AUTO_CANON),
+    CONF_INFO( 40, conf.bracketing_add_raw_suffix,              CONF_DEF_VALUE, i:0),			
+    CONF_INFO( 41, conf.sub_batch_prefix,                       CONF_DEF_VALUE, i:RAW_PREFIX_SND), // SND_
+    CONF_INFO( 42, conf.sub_batch_ext,                          CONF_DEF_VALUE, i:DEFAULT_RAW_EXT), // .CRW
+
+    CONF_INFO( 50, conf.script_shoot_delay,                     CONF_DEF_VALUE, i:0),
+    CONF_INFO( 51, conf.script_vars,                            CONF_INT_PTR,   i:0),
+    CONF_INFO( 52, conf.script_param_set,                       CONF_DEF_VALUE, i:0),
+    CONF_INFO( 53, conf.script_startup,                         CONF_DEF_VALUE, i:0),
+    CONF_INFO( 54, conf.script_file,                            CONF_CHAR_PTR,  ptr:""),
+    CONF_INFO( 55, conf.script_param_save,                      CONF_DEF_VALUE, i:1),
+
+    CONF_INFO( 60, conf.show_histo,                             CONF_DEF_VALUE, i:0),
+    CONF_INFO( 61, conf.show_overexp,                           CONF_DEF_VALUE, i:1),
+    CONF_INFO( 62, conf.histo_mode,                             CONF_DEF_VALUE, i:0),
+    CONF_INFO( 63, conf.histo_auto_ajust,                       CONF_DEF_VALUE, i:1),
+    CONF_INFO( 64, conf.histo_ignore_boundary,                  CONF_DEF_VALUE, i:4),
+    CONF_INFO( 65, conf.histo_layout,                           CONF_DEF_VALUE, i:0),
+    CONF_INFO( 66, conf.histo_show_ev_grid,                     CONF_DEF_VALUE, i:0),
+
+    CONF_INFO( 70, conf.zebra_draw,                             CONF_DEF_VALUE, i:0),
+    CONF_INFO( 71, conf.zebra_mode,                             CONF_DEF_VALUE, i:ZEBRA_MODE_BLINKED_2),
+    CONF_INFO( 72, conf.zebra_restore_screen,                   CONF_DEF_VALUE, i:1),
+    CONF_INFO( 73, conf.zebra_restore_osd,                      CONF_DEF_VALUE, i:1),
+    CONF_INFO( 74, conf.zebra_over,                             CONF_DEF_VALUE, i:1),
+    CONF_INFO( 75, conf.zebra_under,                            CONF_DEF_VALUE, i:0),
+    CONF_INFO( 76, conf.zebra_draw_osd,                         CONF_DEF_VALUE, i:ZEBRA_DRAW_HISTO),
+    CONF_INFO( 77, conf.zebra_multichannel,                     CONF_DEF_VALUE, i:0),
+
+    CONF_INFO( 80, conf.video_mode,                             CONF_DEF_VALUE, i:0),
+    CONF_INFO( 81, conf.video_quality,                          CONF_DEF_VALUE, i:VIDEO_DEFAULT_QUALITY),
+    CONF_INFO( 82, conf.video_bitrate,                          CONF_DEF_VALUE, i:VIDEO_DEFAULT_BITRATE),
+    CONF_INFO( 83, conf.clear_video,                            CONF_DEF_VALUE, i:0),
+    CONF_INFO( 84, conf.mute_on_zoom,                           CONF_DEF_VALUE, i:0), 
+    CONF_INFO( 85, conf.video_af_key,                           CONF_DEF_VALUE, i:0),
+    CONF_INFO( 86, conf.unlock_optical_zoom_for_video,          CONF_DEF_VALUE, i:1), 
+    CONF_INFO( 87, conf.fast_ev,                                CONF_DEF_VALUE, i:0),
+    CONF_INFO( 88, conf.fast_ev_step,                           CONF_DEF_VALUE, i:1),
+    CONF_INFO( 89, conf.fast_movie_control,                     CONF_DEF_VALUE, i:0),
+    CONF_INFO( 90, conf.fast_movie_quality_control,             CONF_DEF_VALUE, i:0),
+    CONF_INFO( 91, conf.ext_video_time,                         CONF_DEF_VALUE, i:0),
+
+    CONF_INFO(100, conf.clear_override,                         CONF_DEF_VALUE, i:1),
+    
+    CONF_INFO(110, conf.tv_override_enabled,                    CONF_DEF_VALUE, i:0),
+    CONF_INFO(111, conf.tv_enum_type,                           CONF_DEF_VALUE, i:TV_OVERRIDE_EV_STEP),
+    CONF_INFO(112, conf.tv_override_value,                      CONF_DEF_VALUE, i:0),
+    CONF_INFO(113, conf.tv_override_long_exp,                   CONF_DEF_VALUE, i:0),
+    CONF_INFO(114, conf.tv_override_short_exp,                  CONF_DEF_VALUE, i:0),
+
+    CONF_INFO(120, conf.av_override_enabled,                    CONF_DEF_VALUE, i:0),
+    CONF_INFO(121, conf.av_override_value,                      CONF_DEF_VALUE, i:0),
+
+    CONF_INFO(130, conf.iso_override_value,                     CONF_DEF_VALUE, i:0),
+    CONF_INFO(131, conf.iso_override_koef,                      CONF_DEF_VALUE, i:0),
+    
+    CONF_INFO(140, conf.subj_dist_override_value,               CONF_DEF_VALUE, i:0),
+    CONF_INFO(141, conf.subj_dist_override_koef,                CONF_DEF_VALUE, i:SD_OVERRIDE_OFF),
+    
+    CONF_INFO(150, conf.tv_bracket_value,                       CONF_DEF_VALUE, i:0),
+    CONF_INFO(151, conf.av_bracket_value,                       CONF_DEF_VALUE, i:0),
+    CONF_INFO(152, conf.iso_bracket_value,                      CONF_DEF_VALUE, i:0),
+    CONF_INFO(153, conf.iso_bracket_koef,                       CONF_DEF_VALUE, i:0),
+    CONF_INFO(154, conf.subj_dist_bracket_value,                CONF_DEF_VALUE, i:0),
+    CONF_INFO(155, conf.subj_dist_bracket_koef,                 CONF_DEF_VALUE, i:0),
+    CONF_INFO(156, conf.bracket_type,                           CONF_DEF_VALUE, i:0),
+    CONF_INFO(157, conf.clear_bracket,                          CONF_DEF_VALUE, i:1),
+    
+    CONF_INFO(160, conf.autoiso_enable,                         CONF_DEF_VALUE, i:0),
+    CONF_INFO(161, conf.autoiso_shutter_enum,                   CONF_DEF_VALUE, i:5), // 5='1/125'
+    CONF_INFO(162, conf.autoiso_user_factor,                    CONF_DEF_VALUE, i:5),
+    CONF_INFO(163, conf.autoiso_is_factor,                      CONF_DEF_VALUE, i:2),
+    CONF_INFO(164, conf.autoiso_max_iso_hi,                     CONF_DEF_VALUE, i:550),
+    CONF_INFO(165, conf.autoiso_max_iso_auto,                   CONF_DEF_VALUE, i:320),
+    CONF_INFO(166, conf.autoiso_min_iso,                        CONF_DEF_VALUE, i:50),
+
+    // AutoISO2
+    CONF_INFO(170, conf.autoiso2_shutter_enum,                  CONF_DEF_VALUE, i:0), // 0="off" 6='1/20'
+    CONF_INFO(171, conf.autoiso2_max_iso_auto,                  CONF_DEF_VALUE, i:600),
+    CONF_INFO(172, conf.autoiso2_over,                          CONF_DEF_VALUE, i:1),
+    CONF_INFO(173, conf.overexp_threshold,                      CONF_DEF_VALUE, i:5),
+    CONF_INFO(174, conf.overexp_ev_enum,                        CONF_DEF_VALUE, i:0), // 0="off"
+
+    CONF_INFO(180, conf.curve_file,                             CONF_CHAR_PTR,  ptr:""),
+    CONF_INFO(181, conf.curve_enable,                           CONF_DEF_VALUE, i:0),
+
+    CONF_INFO(190, conf.edge_overlay_enable,                    CONF_DEF_VALUE, i:0),
+    CONF_INFO(191, conf.edge_overlay_thresh,                    CONF_DEF_VALUE, i:60),
+    CONF_INFO(192, conf.edge_overlay_play,                      CONF_DEF_VALUE, i:0),
+    CONF_INFO(193, conf.edge_overlay_pano,                      CONF_DEF_VALUE, i:0),
+    CONF_INFO(194, conf.edge_overlay_zoom,                      CONF_DEF_VALUE, i:1),
+	CONF_INFO(195, conf.edge_overlay_filter,                    CONF_DEF_VALUE, i:0),
+	CONF_INFO(196, conf.edge_overlay_show,                      CONF_DEF_VALUE, i:0),
+    CONF_INFO(197, conf.edge_overlay_pano_overlap,              CONF_DEF_VALUE, i:30),
+    
+    CONF_INFO(200, conf.remote_enable,                          CONF_DEF_VALUE, i:0),
+    CONF_INFO(201, conf.synch_enable,                           CONF_DEF_VALUE, i:0),
+    CONF_INFO(202, conf.synch_delay_enable,                     CONF_DEF_VALUE, i:0),
+    CONF_INFO(203, conf.synch_delay_value,                      CONF_DEF_VALUE, i:100),
+	CONF_INFO(204, conf.remote_switch_type,                     CONF_DEF_VALUE, i:0),
+	CONF_INFO(205, conf.remote_control_mode,                    CONF_DEF_VALUE, i:0),
+	CONF_INFO(206, conf.remote_enable_scripts,                  CONF_DEF_VALUE, i:0),
+    CONF_INFO(207, conf.ricoh_ca1_mode,                         CONF_DEF_VALUE, i:0),
+
+    CONF_INFO(210, conf.flash_sync_curtain,                     CONF_DEF_VALUE, i:0),
+    CONF_INFO(211, conf.flash_video_override,                   CONF_DEF_VALUE, i:0),
+    CONF_INFO(212, conf.flash_video_override_power,             CONF_DEF_VALUE, i:0),
+    CONF_INFO(213, conf.flash_manual_override,                  CONF_DEF_VALUE, i:0),
+    CONF_INFO(214, conf.flash_exp_comp,                         CONF_DEF_VALUE, i:9),
+    CONF_INFO(215, conf.flash_enable_exp_comp,                  CONF_DEF_VALUE, i:0),
+
+    CONF_INFO(220, conf.alt_mode_button,                        CONF_DEF_VALUE, i:KEY_PRINT),
+    CONF_INFO(221, conf.alt_prevent_shutdown,                   CONF_DEF_VALUE, i:ALT_PREVENT_SHUTDOWN_ALT),
+    CONF_INFO(222, conf.use_zoom_mf,                            CONF_DEF_VALUE, i:0),
+    CONF_INFO(223, conf.zoom_assist_button_disable,             CONF_DEF_VALUE, i:0),
+    CONF_INFO(224, conf.debug_lua_restart_on_error,             CONF_DEF_VALUE, i:0),
+    CONF_INFO(225, conf.module_logging,                         CONF_DEF_VALUE, i:0),
+    CONF_INFO(226, conf.flashlight,                             CONF_DEF_VALUE, i:0),
+
+    CONF_INFO(230, conf.memdmp_start,                           CONF_DEF_VALUE, i:0),
+    CONF_INFO(231, conf.memdmp_size,                            CONF_DEF_VALUE, i:0),
+
+    CONF_INFO(999, conf.script_allow_lua_native_calls,          CONF_DEF_VALUE, i:0),
+
+    {0,0,0,0,{0}}
+};
+
 void conf_info_func(unsigned short id)
 {
     switch (id)
     {
-    case  63: conf_change_alt_mode_button(); break;
-    case  64: gui_lang_init(); break;
-    case  65: conf_change_font_cp(); break;
-    case  66: conf_change_menu_rbf_file(); break;
-    case  67: conf_update_prevent_shutdown(); break;
-    case 101: conf_change_video_bitrate(); break;
-    case 143: user_menu_restore(); break;
-    case 183: conf_change_menu_symbol_rbf_file(); break;
-    case 194: conf_change_script_file(); break;
-    case 2:
-    case 226: 
-    case 289: conf_change_dng(); break;
-    case 235: conf_change_dng_ext(); break;
-	case 159:
-	case 283:
-    case 293: conf_set_extra_button(); break;
-    }
-}
-
-//-------------------------------------------------------------------
-
-static void conf_change_font_cp() {
-    font_init();
-    font_set(conf.font_cp);
-}
-
-static void conf_change_script_file() {
-    script_load(conf.script_file);
-}
-
-
-static void conf_change_menu_rbf_file() {
-    rbf_load_from_file(conf.menu_rbf_file, FONT_CP_WIN);
-}
-
-static void conf_change_menu_symbol_rbf_file() {
-    if(!rbf_load_symbol(conf.menu_symbol_rbf_file)) conf.menu_symbol_enable=0;      //AKA
-}
-
-static void conf_change_alt_mode_button() {
-#if CAM_ADJUSTABLE_ALT_BUTTON
-    kbd_set_alt_mode_key_mask(conf.alt_mode_button);
-#else
-    conf.alt_mode_button = KEY_PRINT;
-#endif
-}
-
-static void conf_set_extra_button() {
-#if CAM_OPTIONAL_EXTRA_BUTTON
-    kbd_set_extra_button((short)conf.extra_button);
-#endif
-}
-
-static void conf_change_video_bitrate()
-{
-    shooting_video_bitrate_change(conf.video_bitrate);
-}
-
-void conf_change_dng(void)
-{
-    if (conf.save_raw && conf.dng_raw && conf.dng_version)
-    {
-        if (!libdng->badpixel_list_loaded_b()) libdng->load_bad_pixels_list_b("A/CHDK/badpixel.bin");
-        if (!libdng->badpixel_list_loaded_b()) conf.dng_version=0;
-    }
-}
-
+    case  20:
+    case  36: 
+    case  37: 
+        conf_change_dng(); 
+        break;
 #if defined (DNG_EXT_FROM)
-void cb_change_dng_usb_ext()
-{
-    extern void change_ext_to_dng(void);
-    extern void change_ext_to_default(void);
-    if (conf.dng_usb_ext)
-        change_ext_to_dng();
-    else
-        change_ext_to_default();
-}
-#endif
-
-void conf_change_dng_ext(void)
-{
-#if defined (DNG_EXT_FROM)
-    extern void save_ext_for_dng(void);
-    save_ext_for_dng();
-    cb_change_dng_usb_ext();
+    case  38: 
+        {
+        extern void save_ext_for_dng(void);
+        save_ext_for_dng();
+        cb_change_dng_usb_ext();
+        }
+        break;
 #endif 
-}
-
-/*
-update the prevent display off/prevent shutdown based on current state
-doesn't really belong in conf but not clear where else it should go
-*/
-void conf_update_prevent_shutdown(void) {
-    if(conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALWAYS 
-        || (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT && gui_get_mode() != GUI_MODE_NONE)
-        || (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT_SCRIPT && camera_info.state.state_kbd_script_run)) {
-        disable_shutdown();
-    } else {
-        enable_shutdown();
+    case  54:
+        script_load(conf.script_file);
+        break;
+    case  82: 
+        shooting_video_bitrate_change(conf.video_bitrate);
+        break;
+    case 220:
+#if CAM_ADJUSTABLE_ALT_BUTTON
+        kbd_set_alt_mode_key_mask(conf.alt_mode_button);
+#else
+        conf.alt_mode_button = KEY_PRINT;
+#endif
+        break;
+    case 221: 
+        conf_update_prevent_shutdown(); 
+        break;
     }
 }
 
-//-------------------------------------------------------------------
-static void init_user_menu(int num_items);
+#ifdef CAM_HAS_GPS
+static ConfInfo gps_conf_info[] = {
+    // GPS
+    CONF_INFO(  1, conf.gps_record,                 CONF_DEF_VALUE,     i:0),
+    CONF_INFO(  2, conf.gps_navi_show,              CONF_DEF_VALUE,     i:0),
+    CONF_INFO(  3, conf.gps_kompass_show,           CONF_DEF_VALUE,     i:0),
+    CONF_INFO(  4, conf.gps_coordinates_show,       CONF_DEF_VALUE,     i:0),
+    CONF_INFO(  5, conf.gps_height_show,            CONF_DEF_VALUE,     i:0),
+    CONF_INFO(  6, conf.gps_waypoint_save,          CONF_DEF_VALUE,     i:0),
+    CONF_INFO(  7, conf.gps_track_time,             CONF_DEF_VALUE,     i:1),
+    CONF_INFO(  8, conf.gps_kompass_hide,           CONF_DEF_VALUE,     i:0),
 
-static int user_menu_saved_size()
+    CONF_INFO(  9, conf.gps_wait_for_signal,        CONF_DEF_VALUE,     i:300),
+    CONF_INFO( 10, conf.gps_kompass_time,           CONF_DEF_VALUE,     i:1),
+    CONF_INFO( 11, conf.gps_navi_time,              CONF_DEF_VALUE,     i:1),
+    CONF_INFO( 12, conf.gps_wait_for_signal_time,   CONF_DEF_VALUE,     i:5),
+    CONF_INFO( 13, conf.gps_kompass_smooth,         CONF_DEF_VALUE,     i:7),
+    CONF_INFO( 14, conf.gps_batt,                   CONF_DEF_VALUE,     i:25),
+    CONF_INFO( 15, conf.gps_countdown,              CONF_DEF_VALUE,     i:0),
+    CONF_INFO( 16, conf.gps_2D_3D_fix,              CONF_DEF_VALUE,     i:2),
+    CONF_INFO( 17, conf.gps_countdown_blink,        CONF_DEF_VALUE,     i:1),
+    
+    CONF_INFO( 18, conf.gps_rec_play_set,           CONF_DEF_VALUE,     i:0),
+    CONF_INFO( 19, conf.gps_play_dark_set,          CONF_DEF_VALUE,     i:0),
+    CONF_INFO( 20, conf.gps_rec_play_time,          CONF_DEF_VALUE,     i:30),
+    CONF_INFO( 21, conf.gps_play_dark_time,         CONF_DEF_VALUE,     i:45),
+
+    CONF_INFO( 22, conf.gps_rec_play_set_1,         CONF_DEF_VALUE,     i:0),
+    CONF_INFO( 23, conf.gps_play_dark_set_1,        CONF_DEF_VALUE,     i:0),
+    CONF_INFO( 24, conf.gps_rec_play_time_1,        CONF_DEF_VALUE,     i:10),
+    CONF_INFO( 25, conf.gps_play_dark_time_1,       CONF_DEF_VALUE,     i:15),
+    CONF_INFO( 26, conf.gps_show_symbol,            CONF_DEF_VALUE,     i:0),
+    CONF_INFO( 27, conf.gps_batt_warn,              CONF_DEF_VALUE,     i:0),
+    CONF_INFO( 28, conf.gps_track_symbol,           CONF_DEF_VALUE,     i:0),
+    CONF_INFO( 29, conf.gps_test_timezone,          CONF_DEF_VALUE,     i:0),
+    CONF_INFO( 30, conf.gps_beep_warn,              CONF_DEF_VALUE,     i:0),
+    CONF_INFO( 31, conf.gps_on_off,                 CONF_DEF_VALUE,     i:0),
+
+    {0,0,0,0,{0}}
+};
+#endif
+
+//-------------------------------------------------------------------
+// ID offsets for ConfInfo mapping from Lua libraries
+#define CONF_CORE   1000
+#define CONF_OSD    2000
+#define CONF_USER   3000
+#define CONF_GPS    4000
+
+#define CONF_FILE           "A/CHDK/CCHDK4.CFG"
+#define OSD_CONF_FILE       "A/CHDK/OSD__4.CFG"
+#define USER_MENU_CONF_FILE "A/CHDK/UMENU4.CFG"
+#define GPS_CONF_FILE       "A/CHDK/GPS__4.CFG"
+#define CONF_MAGICK_VALUE   (0x33204741)
+
+typedef struct
 {
-    // User menu saved as:
-    //      - num_items (int)
-    //      - (var + script_file + script_title)[num_items]
-    return conf.user_menu_vars.cfg.num_items * (sizeof(int) + CONF_STR_LEN * 2) + sizeof(int);
+    int         start_id, end_id;
+    ConfInfo    *ci;
+    char        *filename;
+    void        (*info_func)(unsigned short id);
+} confinfo_handler;
+
+static const confinfo_handler confinfo_handlers[] = {
+    { CONF_CORE, CONF_CORE+999, conf_info,           CONF_FILE,           conf_info_func },
+    { CONF_OSD,  CONF_OSD +999, osd_conf_info,       OSD_CONF_FILE,       osd_conf_info_func },
+    { CONF_USER, CONF_USER+999, user_menu_conf_info, USER_MENU_CONF_FILE, user_menu_conf_info_func },
+#ifdef CAM_HAS_GPS
+    { CONF_GPS,  CONF_GPS +999, gps_conf_info,       GPS_CONF_FILE,       0 },
+#endif
+    { 0,0,0,0,0 }
+};
+
+// mapping table to convert previous version (1.2) ConfInfo ID's to new version
+static short conf_map_1_2[] =
+{
+    0,
+    2001, // 1 conf.show_osd
+    1020, // 2 conf.save_raw
+    1050, // 3 conf.script_shoot_delay
+    1060, // 4 conf.show_histo
+    1051, // 5 conf.script_vars
+    1052, // 6 conf.script_param_set
+    2150, // 7 conf.show_dof
+    2100, // 8 conf.batt_volts_max
+    2101, // 9 conf.batt_volts_min
+    0,
+    2102, // 11 conf.batt_perc_show
+    2103, // 12 conf.batt_volts_show
+    2104, // 13 conf.batt_icon_show
+    2090, // 14 conf.show_state
+    2160, // 15 conf.show_values
+    1061, // 16 conf.show_overexp
+    1062, // 17 conf.histo_mode
+    1063, // 18 conf.histo_auto_ajust
+    1064, // 19 conf.histo_ignore_boundary
+    1065, // 20 conf.histo_layout
+    2020, // 21 conf.histo_pos
+    2021, // 22 conf.dof_pos
+    2022, // 23 conf.batt_icon_pos
+    2023, // 24 conf.batt_txt_pos
+    2024, // 25 conf.mode_state_pos
+    2025, // 26 conf.values_pos
+    2050, // 27 conf.histo_color
+    2052, // 28 conf.osd_color
+    0,
+    2055, // 30 conf.menu_color
+    2059, // 31 conf.reader_color
+    1207, // 32 conf.ricoh_ca1_mode
+    1226, // 33 conf.flashlight
+    2230, // 34 conf.debug_shortcut_action
+    1021, // 35 conf.raw_in_dir
+    1022, // 36 conf.raw_prefix
+    1023, // 37 conf.raw_ext
+    2110, // 38 conf.reader_file
+    2111, // 39 conf.reader_pos
+    0,
+    2080, // 41 conf.show_clock
+    2026, // 42 conf.clock_pos
+    2112, // 43 conf.reader_autoscroll
+    2113, // 44 conf.reader_autoscroll_delay
+    2114, // 45 conf.reader_rbf_file
+    2115, // 46 conf.reader_codepage
+    2120, // 47 conf.splash_show
+    2051, // 48 conf.histo_color2
+    1070, // 49 conf.zebra_draw
+    1071, // 50 conf.zebra_mode
+    1072, // 51 conf.zebra_restore_screen
+    1073, // 52 conf.zebra_restore_osd
+    1074, // 53 conf.zebra_over
+    1075, // 54 conf.zebra_under
+    2062, // 55 conf.zebra_color
+    1076, // 56 conf.zebra_draw_osd
+    3002, // 57 conf.user_menu_as_root
+    2175, // 58 conf.zoom_value
+    1222, // 59 conf.use_zoom_mf
+    1024, // 60 conf.raw_save_first_only
+    2116, // 61 conf.reader_wrap_by_words
+    2130, // 62 conf.menu_symbol_enable
+    1220, // 63 conf.alt_mode_button
+    2135, // 64 conf.lang_file
+    2136, // 65 conf.font_cp
+    2131, // 66 conf.menu_rbf_file
+    1221, // 67 conf.alt_prevent_shutdown
+    2140, // 68 conf.show_grid_lines
+    2141, // 69 conf.grid_lines_file
+    1039, // 70 conf.raw_nr
+    2142, // 71 conf.grid_force_color
+    2060, // 72 conf.grid_color
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    2151, // 80 conf.dof_subj_dist_as_near_limit
+    2152, // 81 conf.dof_use_exif_subj_dist
+    2153, // 82 conf.dof_subj_dist_in_misc
+    2154, // 83 conf.dof_near_limit_in_misc
+    2155, // 84 conf.dof_far_limit_in_misc
+    2156, // 85 conf.dof_hyperfocal_in_misc
+    2157, // 86 conf.dof_depth_in_misc
+    2161, // 87 conf.values_show_in_review
+    2162, // 88 conf.values_show_zoom
+    2163, // 89 conf.values_show_real_aperture
+    2164, // 90 conf.values_show_real_iso
+    2165, // 91 conf.values_show_market_iso
+    2166, // 92 conf.values_show_iso_only_in_autoiso_mode
+    2167, // 93 conf.values_show_ev_seted
+    2168, // 94 conf.values_show_ev_measured
+    2169, // 95 conf.values_show_bv_measured
+    2170, // 96 conf.values_show_bv_seted
+    2171, // 97 conf.values_show_overexposure
+    2172, // 98 conf.values_show_luminance
+    1080, // 99 conf.video_mode
+    1081, // 100 conf.video_quality
+    1082, // 101 conf.video_bitrate
+    1112, // 102 conf.tv_override_value
+    1110, // 103 conf.tv_override_enabled
+    1121, // 104 conf.av_override_value
+    1130, // 105 conf.iso_override_value
+    1131, // 106 conf.iso_override_koef
+    1140, // 107 conf.subj_dist_override_value
+    1141, // 108 conf.subj_dist_override_koef
+    1150, // 109 conf.tv_bracket_value
+    1151, // 110 conf.av_bracket_value
+    1152, // 111 conf.iso_bracket_value
+    1153, // 112 conf.iso_bracket_koef
+    1154, // 113 conf.subj_dist_bracket_value
+    1155, // 114 conf.subj_dist_bracket_koef
+    1156, // 115 conf.bracket_type
+    1113, // 116 conf.tv_override_long_exp
+    1114, // 117 conf.tv_override_short_exp
+    1120, // 118 conf.av_override_enabled
+    1999, // 119 conf.script_allow_lua_native_calls
+    1053, // 120 conf.script_startup
+    1200, // 121 conf.remote_enable
+    2173, // 122 conf.values_show_canon_overexposure
+    1100, // 123 conf.clear_override
+    2002, // 124 conf.show_osd_in_review
+    0,
+    1157, // 126 conf.clear_bracket
+    1077, // 127 conf.zebra_multichannel
+    1003, // 128 conf.nd_filter_state
+    1066, // 129 conf.histo_show_ev_grid
+    2053, // 130 conf.osd_color_warn
+    2061, // 131 conf.space_color
+    2180, // 132 conf.space_icon_show
+    2027, // 133 conf.space_icon_pos
+    2181, // 134 conf.space_perc_show
+    2182, // 135 conf.space_mb_show
+    2028, // 136 conf.space_txt_pos
+    2200, // 137 conf.show_remaining_raw
+    2029, // 138 conf.mode_raw_pos
+    2201, // 139 conf.show_raw_state
+    2174, // 140 conf.show_values_in_video
+    1111, // 141 conf.tv_enum_type
+    3003, // 142 conf.user_menu_enable
+    3001, // 143 conf.user_menu_vars
+    2176, // 144 conf.zoom_scale
+    2183, // 145 conf.space_bar_show
+    2184, // 146 conf.space_bar_size
+    2030, // 147 conf.space_ver_pos
+    2031, // 148 conf.space_hor_pos
+    2185, // 149 conf.space_bar_width
+    2186, // 150 conf.space_perc_warn
+    2187, // 151 conf.space_mb_warn
+    2188, // 152 conf.space_warn_type
+    2202, // 153 conf.remaining_raw_treshold
+    1086, // 154 conf.unlock_optical_zoom_for_video
+    2081, // 155 conf.clock_format
+    2082, // 156 conf.clock_indicator
+    2033, // 157 conf.clock_halfpress
+    1160, // 158 conf.autoiso_enable
+    1161, // 159 conf.autoiso_shutter_enum
+    1162, // 160 conf.autoiso_user_factor
+    1163, // 161 conf.autoiso_is_factor
+    1164, // 162 conf.autoiso_max_iso_hi
+    1165, // 163 conf.autoiso_max_iso_auto
+    1166, // 164 conf.autoiso_min_iso
+    2056, // 165 conf.menu_title_color
+    2057, // 166 conf.menu_cursor_color
+    2134, // 167 conf.menu_center
+    1084, // 168 conf.mute_on_zoom
+    1033, // 169 conf.bad_pixel_removal
+    1085, // 170 conf.video_af_key
+    2054, // 171 conf.osd_color_override
+    2003, // 172 conf.override_disable
+    2004, // 173 conf.override_disable_all
+    2005, // 174 conf.hide_osd
+    1025, // 175 conf.save_raw_in_video
+    2210, // 176 conf.show_movie_time
+    2211, // 177 conf.show_movie_refresh
+    2032, // 178 conf.mode_video_pos
+    1083, // 179 conf.clear_video
+    1087, // 180 conf.fast_ev
+    1088, // 181 conf.fast_ev_step
+    2033, // 182 conf.mode_ev_pos
+    2132, // 183 conf.menu_symbol_rbf_file
+    2058, // 184 conf.menu_symbol_color
+    1180, // 185 conf.curve_file
+    1181, // 186 conf.curve_enable
+    1190, // 187 conf.edge_overlay_enable
+    1191, // 188 conf.edge_overlay_thresh
+    2063, // 189 conf.edge_overlay_color
+    1201, // 190 conf.synch_enable
+    1202, // 191 conf.synch_delay_enable
+    1203, // 192 conf.synch_delay_value
+    0,
+    1054, // 194 conf.script_file
+    2234, // 195 conf.mem_view_addr_init
+    1026, // 196 conf.save_raw_in_sports
+    1027, // 197 conf.save_raw_in_burst
+    1028, // 198 conf.save_raw_in_ev_bracketing
+    1029, // 199 conf.save_raw_in_timer
+    2203, // 200 conf.raw_exceptions_warn
+    2133, // 201 conf.menu_select_first_entry
+    1089, // 202 conf.fast_movie_control
+    2220, // 203 conf.show_temp
+    2034, // 204 conf.temp_pos
+    1090, // 205 conf.fast_movie_quality_control
+    0,
+    0,
+    2121, // 208 conf.start_sound
+    1041, // 209 conf.sub_batch_prefix
+    1042, // 210 conf.sub_batch_ext
+    0,
+    0,
+    2231, // 213 conf.debug_display
+    1055, // 214 conf.script_param_save
+    2035, // 215 conf.ev_video_pos
+    0,
+    0,
+    0,
+    1040, // 219 conf.bracketing_add_raw_suffix
+    2221, // 220 conf.temperature_unit
+    0,
+    1192, // 222 conf.edge_overlay_play
+    1193, // 223 conf.edge_overlay_pano
+    1194, // 224 conf.edge_overlay_zoom
+    1030, // 225 conf.raw_cache
+    1036, // 226 conf.dng_raw
+    1210, // 227 conf.flash_sync_curtain
+    1034, // 228 conf.raw_timer
+    1001, // 229 conf.platformid
+    1031, // 230 conf.save_raw_in_edgeoverlay
+    1032, // 231 conf.save_raw_in_auto
+    1211, // 232 conf.flash_video_override
+    1212, // 233 conf.flash_video_override_power
+    1035, // 234 conf.raw_dng_ext
+    1038, // 235 conf.dng_usb_ext
+    1213, // 236 conf.flash_manual_override
+    1002, // 237 conf.fast_image_quality
+    1224, // 238 conf.debug_lua_restart_on_error
+    2232, // 239 conf.debug_propcase_page
+    2233, // 240 conf.debug_misc_vals_show
+    1195, // 241 conf.edge_overlay_filter
+    1196, // 242 conf.edge_overlay_show
+    1197, // 243 conf.edge_overlay_pano_overlap
+    2240, // 244 conf.touchscreen_disable_video_controls
+    2241, // 245 conf.touchscreen_disable_shortcut_controls
+    2250, // 246 conf.usb_info_enable
+    2036, // 247 conf.usb_info_pos
+    1204, // 248 conf.remote_switch_type
+    1205, // 249 conf.remote_control_mode
+    1206, // 250 conf.remote_enable_scripts
+    2189, // 251 conf.show_partition_nr
+    1091, // 252 conf.ext_video_time
+    4001, // 253 conf.gps_record
+    4002, // 254 conf.gps_navi_show
+    4003, // 255 conf.gps_kompass_show
+    4004, // 256 conf.gps_coordinates_show
+    4005, // 257 conf.gps_height_show
+    4006, // 258 conf.gps_waypoint_save
+    4007, // 259 conf.gps_track_time
+    4008, // 260 conf.gps_kompass_hide
+    4009, // 261 conf.gps_wait_for_signal
+    4010, // 262 conf.gps_kompass_time
+    4011, // 263 conf.gps_navi_time
+    4012, // 264 conf.gps_wait_for_signal_time
+    4013, // 265 conf.gps_kompass_smooth
+    4014, // 266 conf.gps_batt
+    4015, // 267 conf.gps_countdown
+    4016, // 268 conf.gps_2D_3D_fix
+    4017, // 269 conf.gps_countdown_blink
+    4018, // 270 conf.gps_rec_play_set
+    4019, // 271 conf.gps_play_dark_set
+    4020, // 272 conf.gps_rec_play_time
+    4021, // 273 conf.gps_play_dark_time
+    4022, // 274 conf.gps_rec_play_set_1
+    4023, // 275 conf.gps_play_dark_set_1
+    4024, // 276 conf.gps_rec_play_time_1
+    4025, // 277 conf.gps_play_dark_time_1
+    4026, // 278 conf.gps_show_symbol
+    4027, // 279 conf.gps_batt_warn
+    4029, // 280 conf.gps_test_timezone
+    4030, // 281 conf.gps_beep_warn
+    4031, // 282 conf.gps_on_off
+    1170, // 283 conf.autoiso2_shutter_enum
+    1171, // 284 conf.autoiso2_max_iso_auto
+    1172, // 285 conf.autoiso2_over
+    1173, // 286 conf.overexp_threshold
+    1174, // 287 conf.overexp_ev_enum
+    1223, // 288 conf.zoom_assist_button_disable
+    1037, // 289 conf.dng_version
+    2137, // 290 conf.tbox_char_map
+    2260, // 291 conf.show_alt_helper
+    2261, // 292 conf.show_alt_helper_delay
+    2263, // 293 conf.extra_button
+    1225, // 294 conf.module_logging
+    2262, // 295 conf.enable_shortcuts
+    2270, // 296 conf.console_show
+    2271, // 297 conf.console_timeout
+    1230, // 298 conf.memdmp_start
+    1231, // 299 conf.memdmp_size
+    1214, // 300 conf.flash_exp_comp
+    1215, // 301 conf.flash_enable_exp_comp
+};
+
+//-------------------------------------------------------------------
+// make hash of memory block
+unsigned int memhash31(unsigned char *mem, int len)
+{
+	unsigned hash=0;
+	for (; len > 0; mem++, len-- )
+		hash = *mem ^ (hash<<6) ^ (hash>>25);
+	return hash;
 }
 
-static char* user_menu_store_data(char *p)
+static void config_update_last_saved(ConfInfo *ci)
 {
     int i;
-
-    memcpy(p, &conf.user_menu_vars.cfg.num_items, sizeof(int));
-    p += sizeof(int);
-    
-    for (i=0; i<conf.user_menu_vars.cfg.num_items; i++)
+    for (i=0; ci[i].id > 0; ++i)
     {
-        memcpy(p, &conf.user_menu_vars.items[i].var, sizeof(int));
-        p += sizeof(int);
-        memset(p, 0, CONF_STR_LEN * 2);
-        if (conf.user_menu_vars.items[i].script_file) memcpy(p, conf.user_menu_vars.items[i].script_file, strlen(conf.user_menu_vars.items[i].script_file));
-        p += CONF_STR_LEN;
-        if (conf.user_menu_vars.items[i].script_title) memcpy(p, conf.user_menu_vars.items[i].script_title, strlen(conf.user_menu_vars.items[i].script_title));
-        p += CONF_STR_LEN;
+        switch (ci[i].type)
+        {
+            case CONF_OSD_POS:
+            case CONF_DEF_VALUE:
+            case CONF_FUNC_PTR:
+                switch (ci[i].size)
+                {
+                    case sizeof(int):
+                        ci[i].last_saved = (unsigned int)*((int*)ci[i].var);
+                        break;
+                    case sizeof(short):
+                        ci[i].last_saved = (unsigned int)*((short*)ci[i].var);
+                        break;
+                    case sizeof(char):
+                        ci[i].last_saved = (unsigned int)*((char*)ci[i].var);
+                        break;
+                }
+                break;
+            case CONF_INT_PTR:
+                ci[i].last_saved = memhash31((unsigned char*)ci[i].var, ci[i].size);
+                break;
+            case CONF_CHAR_PTR:
+                ci[i].last_saved = lang_strhash31((int)ci[i].var);
+                break;
+        }
     }
-
-    return p;
 }
 
-static int user_menu_load_data(char *p)
+static int config_has_changed(ConfInfo *ci)
 {
-    int i, n;
-
-    memcpy(&n, p, sizeof(int));
-    if (n > conf.user_menu_vars.cfg.num_items)
-        init_user_menu(n);
-    p += sizeof(int);
-    
-    for (i=0; i<n; i++)
+    int i;
+    for (i=0; ci[i].id > 0; ++i)
     {
-        memcpy(&conf.user_menu_vars.items[i].var, p, sizeof(int));
-        p += sizeof(int);
-        if (*p)
+        switch (ci[i].type)
         {
-            if (conf.user_menu_vars.items[i].script_file == 0)
-                conf.user_menu_vars.items[i].script_file = malloc(CONF_STR_LEN);
-            strcpy(conf.user_menu_vars.items[i].script_file,p);
+            case CONF_OSD_POS:
+            case CONF_DEF_VALUE:
+            case CONF_FUNC_PTR:
+                switch (ci[i].size)
+                {
+                    case sizeof(int):
+                        if (ci[i].last_saved != (unsigned int)*((int*)ci[i].var))
+                            return 1;
+                        break;
+                    case sizeof(short):
+                        if (ci[i].last_saved != (unsigned int)*((short*)ci[i].var))
+                            return 1;
+                        break;
+                    case sizeof(char):
+                        if (ci[i].last_saved != (unsigned int)*((char*)ci[i].var))
+                            return 1;
+                        break;
+                }
+                break;
+            case CONF_INT_PTR:
+                if (ci[i].last_saved != memhash31((unsigned char*)ci[i].var, ci[i].size))
+                    return 1;
+                break;
+            case CONF_CHAR_PTR:
+                if (ci[i].last_saved != lang_strhash31((int)ci[i].var))
+                    return 1;
+                break;
         }
-        p += CONF_STR_LEN;
-        if (*p)
-        {
-            if (conf.user_menu_vars.items[i].script_title == 0)
-                conf.user_menu_vars.items[i].script_title = malloc(CONF_STR_LEN);
-            strcpy(conf.user_menu_vars.items[i].script_title,p);
-        }
-        p += CONF_STR_LEN;
     }
 
-    return user_menu_saved_size();
-}
-
-static void init_user_menu(int num_items)
-{
-    if (conf.user_menu_vars.items)
-    {
-        int i;
-        for (i=0; i<conf.user_menu_vars.cfg.num_items; i++)
-        {
-            if (conf.user_menu_vars.items[i].script_file)
-                free(conf.user_menu_vars.items[i].script_file);
-            if (conf.user_menu_vars.items[i].script_title)
-                free(conf.user_menu_vars.items[i].script_title);
-        }
-        free(conf.user_menu_vars.items);
-        conf.user_menu_vars.items = 0;
-    }
-
-    conf.user_menu_vars.cfg.num_items = num_items;
-    conf.user_menu_vars.cfg.item_size = sizeof(tUserMenuItem);
-    conf.user_menu_vars.cfg.saved_size = user_menu_saved_size;
-    conf.user_menu_vars.cfg.save = user_menu_store_data;
-    conf.user_menu_vars.cfg.load = user_menu_load_data;
-    conf.user_menu_vars.items = malloc(num_items * sizeof(tUserMenuItem));
-    memset(conf.user_menu_vars.items, 0, num_items * sizeof(tUserMenuItem));
-}
-
-static void conf_init_defaults()
-{
-    // init some defaults values
-    def_batt_volts_max = get_vbatt_max();
-    def_batt_volts_min = get_vbatt_min();
-
-    init_user_menu(USER_MENU_ITEMS);
+    return 0;
 }
 
 //-------------------------------------------------------------------
-void config_load_defaults(const ConfInfo *confinfo, int conf_num, void (*info_func)(unsigned short id))
+static void config_load_defaults(ConfInfo *ci, void (*info_func)(unsigned short id))
 {
     register int i;
 
-    for (i=0; i<conf_num; ++i) {
-        switch (confinfo[i].type) {
+    for (i=0; ci[i].id > 0; ++i) {
+        switch (ci[i].type) {
             case CONF_OSD_POS:
             case CONF_DEF_VALUE:
-                memcpy(confinfo[i].var, &(confinfo[i].i), confinfo[i].size);
+                memcpy(ci[i].var, &(ci[i].i), ci[i].size);
                 break;
             case CONF_INT_PTR:
-                memset(confinfo[i].var, 0, confinfo[i].size);
+                memset(ci[i].var, 0, ci[i].size);
                 break;
-            case CONF_VALUE_PTR:
+            case CONF_FUNC_PTR:
+                *((int*)ci[i].var) = ci[i].func();
+                break;
             case CONF_CHAR_PTR:
-                memcpy(confinfo[i].var, confinfo[i].ptr, confinfo[i].size);
+                memcpy(ci[i].var, ci[i].ptr, ci[i].size);
                 break;
         }
-        if (info_func) info_func(confinfo[i].id);
+        if (info_func) info_func(ci[i].id);
     }
 }
 
 void conf_load_defaults()
 {
-    config_load_defaults(&conf_info[0], CONF_NUM, conf_info_func);
+    int i;
+    for (i=0; confinfo_handlers[i].ci != 0; i++)
+        config_load_defaults(confinfo_handlers[i].ci, confinfo_handlers[i].info_func);
 }
 
 //-------------------------------------------------------------------
@@ -669,22 +995,29 @@ typedef struct
     unsigned short size;
 } ConfInfoSave;
 
-void config_save(const ConfInfo *conf_info, char *filename, int conf_num)
+void config_save(ConfInfo *ci, const char *filename, int config_base)
 {
-    static const long t=CONF_MAGICK_VALUE;
+// if Lua native calls are forced on, don't save state to config file since user did not select it
+#if defined(OPT_FORCE_LUA_CALL_NATIVE)
+    conf.script_allow_lua_native_calls = 0;
+#endif
+
     register int i;
     
-    int size = sizeof(t) + conf_num * sizeof(ConfInfoSave);
-    for (i=0; i<conf_num; i++)
+    for (i=0; ci[i].id > 0; i++);   // Find # of items
+
+    int size = 2 * sizeof(int) + i * sizeof(ConfInfoSave);
+
+    for (i=0; ci[i].id > 0; i++)
     {
-        if (conf_info[i].type == CONF_STRUCT_PTR)
+        if (ci[i].type == CONF_STRUCT_PTR)
         {
-            tVarArrayConfig *cfg = (tVarArrayConfig*)(conf_info[i].var);
+            tVarArrayConfig *cfg = (tVarArrayConfig*)(ci[i].var);
             size += cfg->saved_size();
         }
         else
         {
-            size += conf_info[i].size;
+            size += ci[i].size;
         }
     }
 
@@ -694,25 +1027,31 @@ void config_save(const ConfInfo *conf_info, char *filename, int conf_num)
     int fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC, 0777); 
     if (fd >= 0)
     {
+        int t = CONF_MAGICK_VALUE;
         memcpy(p, &t, sizeof(t));
         p += sizeof(t);
-        for (i=0; i<conf_num; ++i)
+
+        t = config_base;
+        memcpy(p, &t, sizeof(t));
+        p += sizeof(t);
+
+        for (i=0; ci[i].id > 0; ++i)
         {
-            ((ConfInfoSave*)p)->id   = conf_info[i].id;
-            ((ConfInfoSave*)p)->size = conf_info[i].size;
+            ((ConfInfoSave*)p)->id   = ci[i].id;
+            ((ConfInfoSave*)p)->size = ci[i].size;
             p += sizeof(ConfInfoSave);
-            if (conf_info[i].type == CONF_STRUCT_PTR)
+            if (ci[i].type == CONF_STRUCT_PTR)
             {
-                tVarArrayConfig *cfg = (tVarArrayConfig*)(conf_info[i].var);
+                tVarArrayConfig *cfg = (tVarArrayConfig*)(ci[i].var);
                 p = cfg->save(p);
             }
             else
             {
-                memcpy(p, conf_info[i].var, conf_info[i].size);
+                memcpy(p, ci[i].var, ci[i].size);
                 // Clear out unused space after string config item value
-                if ((conf_info[i].size == CONF_STR_LEN) && (strlen(conf_info[i].var) < CONF_STR_LEN))
-                    memset(p+strlen(conf_info[i].var), 0, CONF_STR_LEN-strlen(conf_info[i].var));
-                p += conf_info[i].size;
+                if ((ci[i].size == CONF_STR_LEN) && (strlen(ci[i].var) < CONF_STR_LEN))
+                    memset(p+strlen(ci[i].var), 0, CONF_STR_LEN-strlen(ci[i].var));
+                p += ci[i].size;
             }
         }
 
@@ -720,16 +1059,6 @@ void config_save(const ConfInfo *conf_info, char *filename, int conf_num)
         close(fd);
     }
     ufree(buf);
-}
-
-void conf_save()
-{
-// if Lua native calls are forced on, don't save state to config file since user did not select it
-#if defined(OPT_FORCE_LUA_CALL_NATIVE)
-    conf.script_allow_lua_native_calls = 0;
-#endif
-
-    config_save(&conf_info[0], CONF_FILE, CONF_NUM);
 
 // if Lua native calls are forced on, re-enable native calls
 #if defined(OPT_FORCE_LUA_CALL_NATIVE)
@@ -737,13 +1066,46 @@ void conf_save()
 #endif
 }
 
+void conf_save()
+{
+    int i;
+    for (i=0; confinfo_handlers[i].ci != 0; i++)
+    {
+        if (config_has_changed(confinfo_handlers[i].ci) || ((confinfo_handlers[i].start_id == CONF_USER) && camera_info.state.user_menu_has_changed))
+        {
+            if (confinfo_handlers[i].start_id == CONF_USER)
+        		user_menu_save();
+
+            config_save(confinfo_handlers[i].ci, confinfo_handlers[i].filename, confinfo_handlers[i].start_id);
+            config_update_last_saved(confinfo_handlers[i].ci);
+
+            if (confinfo_handlers[i].start_id == CONF_CORE)
+                save_params_values(0);
+        }
+    }
+}
+
+int save_config_file(int config_base, const char *filename)
+{
+    int i;
+    for (i=0; confinfo_handlers[i].ci != 0; i++)
+    {
+        if ((config_base >= confinfo_handlers[i].start_id) && (config_base <= confinfo_handlers[i].end_id))
+        {
+            config_save(confinfo_handlers[i].ci, (filename != 0) ? filename : confinfo_handlers[i].filename, confinfo_handlers[i].start_id);
+            if (filename == 0)  // Reset 'last_saved' values after saving default file
+                config_update_last_saved(confinfo_handlers[i].ci);
+            return 1;
+        }
+    }
+    return 0;
+}
+
 //-------------------------------------------------------------------
-void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void (*info_func)(unsigned short id))
+void config_restore(ConfInfo *ci, const char *filename, void (*info_func)(unsigned short id))
 {
     int rcnt, i, offs;
     unsigned short id, size;
-
-    config_load_defaults(confinfo, conf_num, info_func);
 
     char* buf = load_file(filename, &rcnt, 0);
 
@@ -751,7 +1113,7 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
     {
         if (*(int*)buf == CONF_MAGICK_VALUE)
         {
-            offs = sizeof(int);
+            offs = 2 * sizeof(int);
             while (1)
             {
                 if (offs + sizeof(short) > rcnt)
@@ -764,22 +1126,22 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
                 size = *((short*)(buf + offs));
                 offs += sizeof(short);
 
-                for (i=0; i<conf_num; ++i)
+                for (i=0; ci[i].id > 0; ++i)
                 {
-                    if (confinfo[i].id==id && confinfo[i].size==size)
+                    if (ci[i].id==id && ci[i].size==size)
                     {
                         if (offs + size <= rcnt)
                         {
-                            if (confinfo[i].type == CONF_STRUCT_PTR)
+                            if (ci[i].type == CONF_STRUCT_PTR)
                             {
-                                tVarArrayConfig *cfg = (tVarArrayConfig*)(confinfo[i].var);
+                                tVarArrayConfig *cfg = (tVarArrayConfig*)(ci[i].var);
                                 size = cfg->load(buf+offs);
                             }
                             else
                             {
-                                memcpy(confinfo[i].var, buf+offs, size);
+                                memcpy(ci[i].var, buf+offs, size);
                             }
-                            if (info_func) info_func(confinfo[i].id);
+                            if (info_func) info_func(ci[i].id);
                         }
                         break;
                     }
@@ -790,79 +1152,190 @@ void config_restore(const ConfInfo *confinfo, char *filename, int conf_num, void
         }
         free(buf);
     }
+}
 
-    // clear any "clear on restart" values
-    clear_values();
+// Try loading old config file
+static int config_restore_1_2(const char *filename)
+{
+    int rv = 0;
+    int rcnt, i, offs;
+    unsigned short id, size;
 
-#if CAM_CHDK_HAS_EXT_VIDEO_TIME
-    conf.ext_video_time=0;
-#endif
+    char* buf = load_file(filename, &rcnt, 0);
+
+    if (buf)
+    {
+        if (*(int*)buf == CONF_MAGICK_VALUE)
+        {
+            rv = 1;
+            offs = sizeof(int);
+            while (1)
+            {
+                if (offs + sizeof(short) > rcnt)
+                    break;
+                id = conf_map_1_2[*((short*)(buf + offs))];
+                offs += sizeof(short);
+
+                if (offs + sizeof(short) > rcnt)
+                    break;
+                size = *((short*)(buf + offs));
+                offs += sizeof(short);
+
+                ConfInfo *ci = 0;
+                void (*info_func)(unsigned short id) = 0;
+                for (i=0; confinfo_handlers[i].ci != 0; i++)
+                {
+                    if ((id >= confinfo_handlers[i].start_id) && (id <= confinfo_handlers[i].end_id))
+                    {
+                        ci = confinfo_handlers[i].ci;
+                        info_func = confinfo_handlers[i].info_func;
+                        id -= confinfo_handlers[i].start_id;
+                        break;
+                    }
+                }
+
+                if (ci != 0)
+                {
+                    for (i=0; ci[i].id > 0; ++i)
+                    {
+                        if (ci[i].id==id && ci[i].size==size)
+                        {
+                            if (offs + size <= rcnt)
+                            {
+                                if (ci[i].type == CONF_STRUCT_PTR)
+                                {
+                                    tVarArrayConfig *cfg = (tVarArrayConfig*)(ci[i].var);
+                                    size = cfg->load(buf+offs);
+                                }
+                                else
+                                {
+                                    memcpy(ci[i].var, buf+offs, size);
+                                }
+                                if (info_func) info_func(ci[i].id);
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                offs += size;
+            }
+        }
+        free(buf);
+    }
+
+    return rv;
 }
 
 void conf_restore()
 {
-    conf_init_defaults();
-    config_restore(&conf_info[0], CONF_FILE, CONF_NUM, conf_info_func);
-    // Fixup old conf.override_disable value
-    if (conf.override_disable == 2) conf.override_disable = 0;
+    int i;
+    int old_config_loaded = 0;
+
+    // init some defaults values
+    init_user_menu(USER_MENU_ITEMS);
+
+    // Load all defaults first, in case we end up loading old file
+    conf_load_defaults();
+
+    // Check if CORE config file exists, if not try loading old (1.2) file
+    if (stat(confinfo_handlers[0].filename,0) != 0)
+        old_config_loaded = config_restore_1_2("A/CHDK/CCHDK3.CFG");
+
+    // Load all new files (that exist)
+    for (i=0; confinfo_handlers[i].ci != 0; i++)
+    {
+        config_restore(confinfo_handlers[i].ci, confinfo_handlers[i].filename, confinfo_handlers[i].info_func);
+        if (old_config_loaded == 0)
+            config_update_last_saved(confinfo_handlers[i].ci);
+    }
+
+    // clear any "clear on restart" values
+    clear_values();
 
 // Enable Lua native calls if builder wants them forced on
 #if defined(OPT_FORCE_LUA_CALL_NATIVE)
     conf.script_allow_lua_native_calls = 1;
 #endif
+
 // If curves not compiled in force option off
 #if !defined(OPT_CURVES)
     conf.curve_enable = 0;
 #endif
+
+    if (old_config_loaded)
+        conf_save();
+}
+
+int load_config_file(int config_base, const char *filename)
+{
+    int i;
+    for (i=0; confinfo_handlers[i].ci != 0; i++)
+    {
+        if ((config_base >= confinfo_handlers[i].start_id) && (config_base <= confinfo_handlers[i].end_id))
+        {
+            config_restore(confinfo_handlers[i].ci, (filename != 0) ? filename : confinfo_handlers[i].filename, confinfo_handlers[i].info_func);
+            if (filename == 0)  // Reset 'last_saved' values if loading default file
+                config_update_last_saved(confinfo_handlers[i].ci);
+            return 1;
+        }
+    }
+    return 0;
 }
 
 //-------------------------------------------------------------------
-int conf_getValue(unsigned short id, tConfigVal* configVal) {
+static int getValue(ConfInfo *ci, unsigned short id, tConfigVal* configVal)
+{
     unsigned short i;
     int ret = CONF_EMPTY;
     OSD_pos* pos;
     
-    if( id==0 ) {
+    if( id==0 )
+    {
         configVal->numb = 0;
-        for( i=0; i<CONF_NUM; ++i ) if( configVal->numb<conf_info[i].id ) configVal->numb = conf_info[i].id;
+        for ( i=0; ci[i].id > 0; ++i )
+            if ( configVal->numb<ci[i].id )
+                configVal->numb = ci[i].id;
         ret = CONF_VALUE;
-    } else {
-        for( i=0; i<CONF_NUM; ++i ) {
-            if( conf_info[i].id==id ) {
-                switch( conf_info[i].type ) {
+    }
+    else
+    {
+        for( i=0; ci[i].id > 0; ++i ) {
+            if( ci[i].id==id ) {
+                switch( ci[i].type ) {
                     case CONF_VALUE:
-                    case CONF_VALUE_PTR:
-                        switch( conf_info[i].size ) {
+                    case CONF_FUNC_PTR:
+                        switch( ci[i].size ) {
                             case sizeof(int):
-                                configVal->numb = *(int*)conf_info[i].var;
+                                configVal->numb = *(int*)ci[i].var;
                                 ret = CONF_VALUE;
                             break;
                             case sizeof(short):
-                                configVal->numb = *(short*)conf_info[i].var;
+                                configVal->numb = *(short*)ci[i].var;
                                 ret = CONF_VALUE;
                             break;
                             case sizeof(char):
-                                configVal->numb = *(char*)conf_info[i].var;
+                                configVal->numb = *(char*)ci[i].var;
                                 ret = CONF_VALUE;
                             break;
                         }
-                        configVal->pInt = (int*)conf_info[i].var;
+                        configVal->pInt = (int*)ci[i].var;
                     break;
                     case CONF_INT_PTR:
-                        configVal->numb = conf_info[i].size/sizeof(int);
-                        configVal->pInt = (int*)conf_info[i].var;
+                        configVal->numb = ci[i].size/sizeof(int);
+                        configVal->pInt = (int*)ci[i].var;
                         ret = CONF_INT_PTR;
                     break;
                     case CONF_CHAR_PTR:
-                        configVal->str = conf_info[i].var;
+                        configVal->str = ci[i].var;
                         ret = CONF_CHAR_PTR;
                     break;
                     case CONF_OSD_POS:
-                        pos = (OSD_pos*)conf_info[i].var;
+                        pos = (OSD_pos*)ci[i].var;
                         configVal->pos.x = pos->x;
                         configVal->pos.y = pos->y;
                         ret = CONF_OSD_POS;
-                        configVal->pInt = (int*)conf_info[i].var;
+                        configVal->pInt = (int*)ci[i].var;
                     break;
                 }
                 break;
@@ -872,32 +1345,51 @@ int conf_getValue(unsigned short id, tConfigVal* configVal) {
     return ret;
 }
 
+int conf_getValue(unsigned short id, tConfigVal* configVal)
+{
+    int i;
+
+    if (id < CONF_CORE)
+        id = conf_map_1_2[id];  // Convert old ID to new ID
+
+    for (i=0; confinfo_handlers[i].ci != 0; i++)
+        if ((id >= confinfo_handlers[i].start_id) && (id <= confinfo_handlers[i].end_id))
+            return getValue(confinfo_handlers[i].ci, id - confinfo_handlers[i].start_id, configVal);
+
+    return CONF_EMPTY;
+}
+
 //-------------------------------------------------------------------
-int conf_setValue(unsigned short id, tConfigVal configVal) {
+static int config_autosave = 1;
+
+static int setValue(ConfInfo *ci, unsigned short id, tConfigVal configVal)
+{
     unsigned short i;
     int ret = CONF_EMPTY, len, len2;
     OSD_pos* pos;
     
     // Don't allow scripts to enable Lua native calls.
-    if (id == 119) return ret;
+    if (id == 999) return ret;
 
-    for( i=0; i<CONF_NUM; ++i ) {
-        if( conf_info[i].id==id ) {
-            switch( conf_info[i].type ) {
+    for ( i=0; ci[i].id > 0; ++i )
+    {
+        if( ci[i].id==id )
+        {
+            switch( ci[i].type ) {
                 case CONF_VALUE:
-                case CONF_VALUE_PTR:
+                case CONF_FUNC_PTR:
                     if( configVal.isNumb ) {
-                        switch( conf_info[i].size ) {
+                        switch( ci[i].size ) {
                             case sizeof(int):
-                                *(int*)conf_info[i].var = (int)configVal.numb;
+                                *(int*)ci[i].var = (int)configVal.numb;
                                 ret = CONF_VALUE;
                             break;
                             case sizeof(short):
-                                *(short*)conf_info[i].var = (short)configVal.numb;
+                                *(short*)ci[i].var = (short)configVal.numb;
                                 ret = CONF_VALUE;
                             break;
                             case sizeof(char):
-                                *(char*)conf_info[i].var = (char)configVal.numb;
+                                *(char*)ci[i].var = (char)configVal.numb;
                                 ret = CONF_VALUE;
                             break;
                         }
@@ -905,10 +1397,10 @@ int conf_setValue(unsigned short id, tConfigVal configVal) {
                 break;
                 case CONF_INT_PTR:
                     if( configVal.isPInt ) {
-                        len = conf_info[i].size;
+                        len = ci[i].size;
                         len2 = configVal.numb*sizeof(int);
                         if( len2<len ) len = len2;
-                        memcpy(conf_info[i].var, configVal.pInt, len);
+                        memcpy(ci[i].var, configVal.pInt, len);
                         ret = CONF_INT_PTR;
                     }
                 break;
@@ -916,14 +1408,14 @@ int conf_setValue(unsigned short id, tConfigVal configVal) {
                     if( configVal.isStr ) {
                         len = strlen(configVal.str);
                         if( len>0 && len<CONF_STR_LEN) {
-                            strncpy(conf_info[i].var, configVal.str ,len+1);
+                            strncpy(ci[i].var, configVal.str ,len+1);
                         }
                         ret = CONF_CHAR_PTR;
                     }
                 break;
                 case CONF_OSD_POS:
                     if( configVal.isPos ) {
-                        pos = (OSD_pos*)conf_info[i].var;
+                        pos = (OSD_pos*)ci[i].var;
                         pos->x = configVal.pos.x;
                         pos->y = configVal.pos.y;
                         ret = CONF_OSD_POS;
@@ -933,10 +1425,30 @@ int conf_setValue(unsigned short id, tConfigVal configVal) {
             break;
         }
     }
-    if( ret!=CONF_EMPTY ) {
+
+    if ((ret!=CONF_EMPTY) && (config_autosave))
         conf_save();
-    }
+
     return ret;
+}
+
+int conf_setValue(unsigned short id, tConfigVal configVal)
+{
+    int i;
+
+    if (id < CONF_CORE)
+        id = conf_map_1_2[id];  // Convert old ID to new ID
+
+    for (i=0; confinfo_handlers[i].ci != 0; i++)
+        if ((id >= confinfo_handlers[i].start_id) && (id <= confinfo_handlers[i].end_id))
+            return setValue(confinfo_handlers[i].ci, id - confinfo_handlers[i].start_id, configVal);
+
+    return CONF_EMPTY;
+}
+
+void conf_setAutosave(int n)
+{
+    config_autosave = (n == 0) ? 0 : 1;
 }
 
 //-------------------------------------------------------------------
@@ -984,28 +1496,6 @@ int is_raw_possible() {
 int is_raw_enabled()
 {
     return is_raw_possible() && !is_raw_exception();
-}
-
-//-------------------------------------------------------------------
-static Conf old_conf;
-
-void conf_store_old_settings()
-{
-    camera_info.state.user_menu_has_changed = 0;
-    old_conf = conf;
-}
-
-int conf_save_new_settings_if_changed()
-{
-    if (camera_info.state.user_menu_has_changed || (memcmp(&old_conf, &conf, sizeof(Conf)) != 0))
-    {
-		user_menu_save();
-        conf_save();
-        save_params_values(0);
-        conf_store_old_settings();
-        return 1;
-    }
-    return 0;
 }
 
 //-------------------------------------------------------------------

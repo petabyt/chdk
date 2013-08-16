@@ -138,7 +138,6 @@
 
  87 "Voltaj MAXim (mV)"
  88 "Voltaj MINim (mV)"
- 89 "Marime niv. (ON=25mV,OFF=1mV)"
  90 "Arata procent"
  91 "Arata voltaj"
  92 "Arata simbol"
@@ -521,7 +520,6 @@
 378 "Activeaza sincronizare"
 379 "Activeaza intarziere sincroniz."
 380 "Intarziere sincronizare 0.1ms"
-381 "Intarziere sincronizare 0.1s"
 
 382 "Tasta AF"
 383 "Incarca valorile implicite"
@@ -544,8 +542,6 @@
 396 "Temperatura"
 397 "Arata temperatura"
 398 "Control al calitatii video"
-399 "Activeaza Zoom la distanta"
-400 "Time-out Zoom 0.1s"
 401 "Sunet pornire"
 402 "Prefix extragere RAW"
 403 "Extensie extragere RAW"

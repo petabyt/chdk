@@ -66,7 +66,6 @@
             dcache_clean_all,
             load_file,
             process_file,
-            conf_save_new_settings_if_changed,
 
             write,
             lseek,
@@ -329,6 +328,9 @@
             conf_getValue,
             conf_save,
             conf_setValue,
+            conf_setAutosave,
+            save_config_file,
+            load_config_file,
 
             DoAFLock,
             UnlockAF,

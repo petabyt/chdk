@@ -126,7 +126,6 @@
  
  87 "Voltaggio MAX batteria (mV)"
  88 "Voltaggio MIN batteria (mV)"
- 89 "Incremento (ON=25, OFF=1 mV)"
  90 "Mostra percentuale batteria"
  91 "Mostra voltaggio batteria"
  92 "Mostra icona batteria"
@@ -501,7 +500,6 @@
 378 "Abilita sincronia"
 379 "Abilita ritardo sincronia"
 380 "Ritardo sincronia 0.1ms"
-381 "Ritardo sincronia 0.1s"
 
 382 "Chiave AF"
 383 "Carica valori predefiniti"
@@ -523,8 +521,6 @@
 396 "Temperatura"
 397 "Mostra temperatura?"
 398 "Controllo qualità video?"
-399 "Abilita zoom remoto"
-400 "Time-out zoom 0.1s"
 401 "Suono iniziale"
 402 "Prefisso file RAW sottratto" 
 403 "Estensione file RAW sottratto" 

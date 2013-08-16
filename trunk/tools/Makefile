@@ -17,7 +17,7 @@ endif
 SUBDIRS+=elf2flt
 
 EXES=makeexport$(EXE) pakwif$(EXE) finsig_vxworks$(EXE) finsig_dryos$(EXE) gensig_vxworks$(EXE) gensig_dryos$(EXE) \
-     dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE) code_gen$(EXE)
+     dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE) code_gen$(EXE) gen_conf_lua$(EXE)
 
 all: $(EXES)
 
@@ -90,6 +90,10 @@ makelang$(EXE): makelang.o
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
 code_gen$(EXE): code_gen.o stubs_load.o firmware_load.o chdk_dasm.o
+	@echo $^ \-\> $@
+	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
+
+gen_conf_lua$(EXE): gen_conf_lua.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
