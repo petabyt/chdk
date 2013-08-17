@@ -1262,9 +1262,6 @@ void conf_restore()
 #if !defined(OPT_CURVES)
     conf.curve_enable = 0;
 #endif
-
-    if (old_config_loaded)
-        conf_save();
 }
 
 int load_config_file(int config_base, const char *filename)
