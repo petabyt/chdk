@@ -1002,7 +1002,7 @@ const char* gui_av_override_enum(int change, int arg)
     if (conf.av_override_value<0) conf.av_override_value=shooting_get_aperture_sizes_table_size()+CAM_EXT_AV_RANGE-1;
     else if (conf.av_override_value>shooting_get_aperture_sizes_table_size()+CAM_EXT_AV_RANGE-1) conf.av_override_value=0;
 
-    short prop_id=shooting_get_aperture_from_av96(shooting_get_av96_override_value());
+    short prop_id = shooting_get_aperture_from_av96(shooting_get_av96_override_value())/10;
     sprintf(buf, "%d.%02d", (int)prop_id/100, (int)prop_id%100 );
     return buf;
 }

@@ -32,9 +32,6 @@ extern const unsigned int AS_SIZE;
 extern const CapturemodeMap modemap[];
 extern const unsigned int MODESCNT;
 
-#define AV96_MIN (aperture_sizes_table[0].prop_id)
-#define AV96_MAX (aperture_sizes_table[AS_SIZE-1].prop_id)
-
 static short *min_av96_zoom_point_tbl = NULL;
 
 DOF_TYPE dof_values;
@@ -55,10 +52,8 @@ static PHOTO_PARAM photo_param_put_off;
 //-------------------------------------------------------------------
 // Convert values to/from APEX 96
 
-static const double sqrt2 = 1.4142135623731;        //square root from 2
-//static const double log_2 = 0.6931471805599;        //natural logarithm of 2
+//static const double log_2 = 0.6931471805599;      // natural logarithm of 2
 static const double inv_log_2 = 1.44269504088906;   // 1 / log_2
-static const double k=12.5;                         //K is the reflected-light meter calibration constant
 
 //-------------------------------------------------------------------
 // Functions to access Canon properties
@@ -88,8 +83,6 @@ short shooting_get_is_mode()                    { return shooting_get_prop(PROPC
 short shooting_get_bv96()                       { return shooting_get_prop(PROPCASE_BV); }
 short shooting_get_canon_overexposure_value()   { return shooting_get_prop(PROPCASE_OVEREXPOSURE); }
 short shooting_get_flash_mode()                 { return shooting_get_prop(PROPCASE_FLASH_MODE); }
-short shooting_get_tv96()                       { return shooting_get_prop(PROPCASE_TV); }
-short shooting_get_av96()                       { return shooting_get_prop(PROPCASE_AV); }
 short shooting_get_focus_mode()                 { return shooting_get_prop(PROPCASE_FOCUS_MODE); }
 short shooting_get_ev_correction1()             { return shooting_get_prop(PROPCASE_EV_CORRECTION_1); }
 short shooting_get_ev_correction2()             { return shooting_get_prop(PROPCASE_EV_CORRECTION_2); }
@@ -120,24 +113,6 @@ short shooting_get_focus_ok()
     return ((shooting_get_focus_state()!=0) && shooting_in_progress());
 }
 
-short shooting_get_user_tv96()
-{
-#if CAM_HAS_USER_TV_MODES
-    return shooting_get_prop(PROPCASE_USER_TV);
-#else
-    return 0;
-#endif
-}
-
-short shooting_get_user_av96()
-{
-#if CAM_HAS_IRIS_DIAPHRAGM
-    return shooting_get_prop(PROPCASE_USER_AV);
-#else
-    return 0;
-#endif
-}
-
 short shooting_get_drive_mode()
 {
     // these cameras do not set PROPCASE_DRIVE_MODE when in custom timer mode
@@ -157,11 +132,6 @@ short shooting_get_drive_mode()
 int shooting_get_zoom()
 {
     return lens_get_zoom_point();
-}
-
-short shooting_get_aperture_sizes_table_size()
-{
-    return AS_SIZE;
 }
 
 //-------------------------------------------------------------------
@@ -422,6 +392,373 @@ static void iso_init()
 //-------------------------------------------------------------------
 
 //-------------------------------------------------------------------
+// Tv section - start
+//-------------------------------------------------------------------
+
+short shooting_get_tv96()                       { return shooting_get_prop(PROPCASE_TV); }
+
+// APEX96 conversion
+
+short shooting_get_tv96_from_shutter_speed(float t)
+{
+    if (t > 0)
+    {
+        t = ((96.0 * -log(t)) * inv_log_2);
+        if (t < 0)
+            return (short)(t - 0.5);
+        return (short)(t + 0.5);
+    }
+    return -10000;
+}
+
+float shooting_get_shutter_speed_from_tv96(short tv96)
+{
+    return pow(2,((float)(-tv96))/96.0);
+}
+
+// Index of '0' entry in the tv_override array (1 sec) (see gui.c for tv_override array)
+#if CAM_EXT_TV_RANGE
+#define tv_override_zero_shift  (18+15)
+#else
+#define tv_override_zero_shift  18
+#endif
+
+// Get Tv override value (APEX96)
+static int shooting_get_tv96_override_value()
+{
+    // Calculate the tv96 value for the tv override
+    if (conf.tv_enum_type==TV_OVERRIDE_EV_STEP)
+        return 32*(conf.tv_override_value-tv_override_zero_shift);
+    else if (conf.tv_enum_type==TV_OVERRIDE_SHORT_EXP)
+        return shooting_get_tv96_from_shutter_speed(((float)conf.tv_override_short_exp)/100000.0);
+    else
+        return shooting_get_tv96_from_shutter_speed((float)conf.tv_override_long_exp);
+}
+
+// Overrides
+
+// Find nearest entry in 'shutter_speeds_table' to the given 'tv96' value
+static int find_nearest_shutter_speed_entry(short tv96)
+{
+    if (tv96 <= shutter_speeds_table[0].prop_id)
+        return 0;
+
+    int i;
+    for (i=0; i<SS_SIZE-1; i++)
+    {
+        if ((tv96 > shutter_speeds_table[i].prop_id) && (tv96 <= shutter_speeds_table[i+1].prop_id))
+        {
+            if ((tv96 - shutter_speeds_table[i].prop_id) < (shutter_speeds_table[i+1].prop_id - tv96))
+                return i;
+            else
+                return i+1;
+        }
+    }
+
+    return SS_SIZE-1;
+}
+
+// Convert 'tv96' value to nearest Canon value from shutter_speeds_table
+static short find_canon_shutter_speed(short tv96)
+{
+    return shutter_speeds_table[find_nearest_shutter_speed_entry(tv96)].prop_id;
+}
+
+void shooting_set_tv96_direct(short tv96, short is_now)
+{
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    {
+        if(is_now)
+        {
+            set_property_case(PROPCASE_TV, &tv96, sizeof(tv96));
+#ifdef PROPCASE_TV2
+            set_property_case(PROPCASE_TV2, &tv96, sizeof(tv96));   // Save override to property that will update JPEG header & Canon OSD
+#endif
+        }
+        else
+            photo_param_put_off.tv96 = tv96;
+    }
+}
+
+void shooting_set_tv96(short tv96, short is_now)
+{
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+        shooting_set_tv96_direct(find_canon_shutter_speed(tv96), is_now);
+}
+
+// User Tv
+
+short shooting_get_user_tv96()
+{
+#if CAM_HAS_USER_TV_MODES
+    return shooting_get_prop(PROPCASE_USER_TV);
+#else
+    return 0;
+#endif
+}
+
+int shooting_get_user_tv_id()
+{
+#if CAM_HAS_USER_TV_MODES
+    return shutter_speeds_table[find_nearest_shutter_speed_entry(shooting_get_user_tv96())].id;
+#else
+    return 0;
+#endif
+}
+
+void shooting_set_user_tv_by_id(int v)
+{
+#if CAM_HAS_USER_TV_MODES
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    {
+        long i;
+        for (i=0;i<SS_SIZE;i++)
+        {
+            if (shutter_speeds_table[i].id == v)
+            {
+                short vv = shutter_speeds_table[i].prop_id;
+                set_property_case(PROPCASE_USER_TV, &vv, sizeof(vv));
+                return;
+            }
+        }
+    }
+#endif
+}
+
+void shooting_set_user_tv_by_id_rel(int v)
+{
+#if CAM_HAS_USER_TV_MODES
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    {
+        int cv = shooting_get_user_tv_id();
+        shooting_set_user_tv_by_id(cv+v);
+    }
+#endif
+}
+
+void shooting_set_user_tv96(short tv96)
+{
+#if CAM_HAS_USER_TV_MODES
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    {
+        tv96 = find_canon_shutter_speed(tv96);
+        set_property_case(PROPCASE_USER_TV, &tv96, sizeof(tv96));
+    }
+#endif
+}
+
+// Only needed on VxWorks
+#if CAM_DRAW_EXPOSITION
+// compare PROPCASE_TV with shutter_speeds_table
+char* shooting_get_tv_str()
+{
+    return (char*)shutter_speeds_table[find_nearest_shutter_speed_entry(shooting_get_tv96())].name;
+}
+#endif
+
+//-------------------------------------------------------------------
+// Tv section - end
+//-------------------------------------------------------------------
+
+//-------------------------------------------------------------------
+// Av section - start
+//-------------------------------------------------------------------
+
+#define AV96_MIN (aperture_sizes_table[0].prop_id)
+#define AV96_MAX (aperture_sizes_table[AS_SIZE-1].prop_id)
+
+short shooting_get_av96()                       { return shooting_get_prop(PROPCASE_AV); }
+short shooting_get_aperture_sizes_table_size()  { return AS_SIZE; }
+
+// APEX96 conversion
+
+short shooting_get_aperture_from_av96(short av96)
+{
+    if (av96)
+        return (short)((pow(2, ((double)av96)/192.0))*1000.0 + 0.5);
+    return -1;
+}
+
+// Get Av override value (APEX96)
+short shooting_get_av96_override_value()
+{
+    if (conf.av_override_value<AS_SIZE)
+        return (short) aperture_sizes_table[conf.av_override_value].prop_id;
+    return (short) (AV96_MAX+32*(conf.av_override_value-AS_SIZE+1));
+}
+
+short shooting_get_real_aperture()
+{
+    return shooting_get_aperture_from_av96(GetCurrentAvValue());
+}
+
+static short shooting_get_min_real_aperture()
+{
+    short av96;
+    get_property_case(PROPCASE_MIN_AV, &av96, sizeof(av96));
+    if (av96)
+        return shooting_get_aperture_from_av96(av96);
+    return shooting_get_real_aperture();
+}
+
+// Overrides
+
+// Find nearest entry in 'aperture_sizes_table' to the given 'av96' value
+#if CAM_HAS_IRIS_DIAPHRAGM
+static int find_nearest_aperture_entry(short av96)
+{
+    if (av96 <= aperture_sizes_table[0].prop_id)
+        return 0;
+
+    int i;
+    for (i=0; i<AS_SIZE-1; i++)
+    {
+        if ((av96 > aperture_sizes_table[i].prop_id) && (av96 <= aperture_sizes_table[i+1].prop_id))
+        {
+            if ((av96 - aperture_sizes_table[i].prop_id) < (aperture_sizes_table[i+1].prop_id - av96))
+                return i;
+            else
+                return i+1;
+        }
+    }
+
+    return AS_SIZE-1;
+}
+
+// Convert 'av96' value to nearest Canon value from aperture_sizes_table
+short find_canon_aperture(short av96)
+{
+    return aperture_sizes_table[find_nearest_aperture_entry(av96)].prop_id;
+}
+#endif
+
+void shooting_set_av96_direct(short av96, short is_now)
+{
+#if CAM_HAS_IRIS_DIAPHRAGM
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    {
+        if(is_now)
+        {
+            set_property_case(PROPCASE_AV, &av96, sizeof(av96));
+#ifdef PROPCASE_AV2
+            set_property_case(PROPCASE_AV2, &av96, sizeof(av96));   // Save override to property that will update JPEG header & Canon OSD
+#endif
+        }
+        else
+            photo_param_put_off.av96 = av96;
+    }
+#endif
+}
+
+void shooting_set_av96(short av96, short is_now)
+{
+#if CAM_HAS_IRIS_DIAPHRAGM
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+        shooting_set_av96_direct(find_canon_aperture(av96), is_now);
+#endif
+}
+
+// User Av
+
+short shooting_get_user_av96()
+{
+#if CAM_HAS_IRIS_DIAPHRAGM
+    return shooting_get_prop(PROPCASE_USER_AV);
+#else
+    return 0;
+#endif
+}
+
+int shooting_get_user_av_id()
+{
+#if CAM_HAS_IRIS_DIAPHRAGM
+    return aperture_sizes_table[find_nearest_aperture_entry(shooting_get_user_av96())].prop_id;
+#else
+    return 0;
+#endif
+}
+
+void shooting_set_user_av_by_id(int v)
+{
+#if CAM_HAS_IRIS_DIAPHRAGM
+    long i;
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    {
+        for (i=0;i<AS_SIZE;i++)
+        {
+            if (aperture_sizes_table[i].id == v)
+            {
+                short vv = aperture_sizes_table[i].prop_id;
+                set_property_case(PROPCASE_USER_AV, &vv, sizeof(vv));
+                return;
+            }
+        }
+    }
+#endif
+}
+
+void shooting_set_user_av_by_id_rel(int v)
+{
+#if CAM_HAS_IRIS_DIAPHRAGM
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    {
+        int cv = shooting_get_user_av_id();
+        shooting_set_user_av_by_id(cv+v);
+    }
+#endif
+}
+
+void shooting_set_user_av96(short av96)
+{
+#if CAM_HAS_IRIS_DIAPHRAGM
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    {
+        av96 = find_canon_aperture(av96);
+        set_property_case(PROPCASE_USER_AV, &av96, sizeof(av96));
+    }
+#endif
+}
+
+// Only needed on VxWorks
+#if CAM_DRAW_EXPOSITION
+// compare PROPCASE_AV with aperture_sizes_table
+char* shooting_get_av_str()
+{
+#if CAM_HAS_IRIS_DIAPHRAGM
+    return (char*)aperture_sizes_table[find_nearest_aperture_entry(shooting_get_av96())].name;
+#else
+    return "?";
+#endif
+}
+#endif
+
+void shooting_set_nd_filter_state(short v, short is_now)
+{
+#if CAM_HAS_ND_FILTER
+    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    {
+        if (is_now)
+        {
+            if (v==1)
+                PutInNdFilter();
+            else if (v==2)
+                PutOutNdFilter();
+#if defined(CAM_HAS_NATIVE_ND_FILTER) && defined(PROPCASE_ND_FILTER_STATE)
+            int n = (v==1) ? 1 : 0;
+            set_property_case(PROPCASE_ND_FILTER_STATE, &n, sizeof(n));
+#endif
+        }
+        else
+            photo_param_put_off.nd_filter = v;
+    }
+#endif
+}
+
+//-------------------------------------------------------------------
+// Av section - end
+//-------------------------------------------------------------------
+
+//-------------------------------------------------------------------
 // Init
 
 void shooting_init()
@@ -460,57 +797,17 @@ void get_target_dir_name(char *dir) {
 //-------------------------------------------------------------------
 // Convert values to/from APEX 96
 
-short shooting_get_aperture_from_av96(short av96)
-{
-    if (av96)
-        return (short)((pow(sqrt2, ((double)av96)/96.0))*100.0);
-    return -1;
-}
+static const double K = 12.5;               // K is the reflected-light meter calibration constant
 
-short shooting_get_tv96_from_shutter_speed(float t)
-{
-    if (t > 0)
-    {
-        t = ((96.0 * log(1.0/t)) * inv_log_2);
-        if (t < 0)
-            return (short)(t - 0.5);
-        return (short)(t + 0.5);
-    }
-    return -10000;
-}
-
-float shooting_get_shutter_speed_from_tv96(short tv)
-{
-    return pow(2,(float)((-1)*tv)/96.0 );
-}
-
-int shooting_get_luminance()// http://en.wikipedia.org/wiki/APEX_system
+int shooting_get_luminance()                // http://en.wikipedia.org/wiki/APEX_system
 {
     short bv = shooting_get_bv96();
-    int b=(int)(100*k*pow(2.0,((double)(bv-168)/96.0)));
+    int b = (int)(100 * K * pow(2.0,((double)(bv-168)/96.0)));
     return b;
 }
 
 //-------------------------------------------------------------------
 // Get override values
-
-// Index of '0' entry in the tv_override array (1 sec) (see gui.c for tv_override array)
-#if CAM_EXT_TV_RANGE
-#define tv_override_zero_shift  (18+15)
-#else
-#define tv_override_zero_shift  18
-#endif
-
-static int shooting_get_tv96_override_value()
-{
-    // Calculate the tv96 value for the tv override
-    if (conf.tv_enum_type==TV_OVERRIDE_EV_STEP)
-        return 32*(conf.tv_override_value-tv_override_zero_shift);
-    else if (conf.tv_enum_type==TV_OVERRIDE_SHORT_EXP)
-        return shooting_get_tv96_from_shutter_speed(((float)conf.tv_override_short_exp)/100000.0);
-    else
-        return shooting_get_tv96_from_shutter_speed((float)conf.tv_override_long_exp);
-}
 
 int shooting_get_subject_distance_override_value()
 {
@@ -518,13 +815,6 @@ int shooting_get_subject_distance_override_value()
         return (conf.subj_dist_override_value < shooting_get_lens_to_focal_plane_width()?0:(conf.subj_dist_override_value - shooting_get_lens_to_focal_plane_width()));
     else
         return INFINITY_DIST;
-}
-
-short shooting_get_av96_override_value()
-{
-    if (conf.av_override_value<AS_SIZE)
-        return (short) aperture_sizes_table[conf.av_override_value].prop_id;
-    return (short) (AV96_MAX+32*(conf.av_override_value-AS_SIZE+1));
 }
 
 //-------------------------------------------------------------------
@@ -552,71 +842,15 @@ int shooting_mode_chdk2canon(int hackmode)
 	return -1; // 0 is a valid mode on old cameras!
 }
 
-int shooting_get_user_tv_id()
-{
-#if CAM_HAS_USER_TV_MODES
-    short tvv;
-    long i;
-    get_property_case(PROPCASE_USER_TV, &tvv, sizeof(tvv));
-    for (i=0;i<SS_SIZE;i++)
-    {
-	    if (shutter_speeds_table[i].prop_id == tvv)
-	        return shutter_speeds_table[i].id;
-    }
-#endif
-    return 0;
-}
-
-int shooting_get_user_av_id()
-{
-#if CAM_HAS_IRIS_DIAPHRAGM
-    short avv;
-    long i;
-    get_property_case(PROPCASE_USER_AV, &avv, sizeof(avv));
-    for (i=0;i<AS_SIZE;i++)
-    {
-        if (aperture_sizes_table[i].prop_id == avv)
-            return aperture_sizes_table[i].id;
-    }
-#endif
-    return 0;
-}
-
-short shooting_get_min_real_aperture()
-{
-    short av96;
-    get_property_case(PROPCASE_MIN_AV, &av96, sizeof(av96));
-    if (av96)
-        return shooting_get_aperture_from_av96(av96);
-    return shooting_get_real_aperture();
-}
-
-short shooting_get_real_aperture()
-{
-    return shooting_get_aperture_from_av96(GetCurrentAvValue());
-}
-
 int shooting_get_lens_to_focal_plane_width()
 {
     return (int)(lens_get_focus_pos()-lens_get_focus_pos_from_lens());
 }
 
-short shooting_get_aperture_from_av96_1e3(short av96) {
-	if (av96) return (short)(pow(sqrt2, (((double)av96)/96.0))*1000.0 + 0.5);
-	else return -1;
-}
-
-int shooting_get_hyperfocal_distance_1e3_f2(int av_1e3, int fl)
-{
-  if ((av_1e3>0) && (fl>0) && (circle_of_confusion>0)) 
-    return (int)(((((double)fl*fl)/(av_1e3*circle_of_confusion)*1000)+fl)+0.5);
-  else return (-1);
-}
-
 int shooting_get_hyperfocal_distance_1e3_f(int av, int fl)
 {
   if ((av>0) && (fl>0) && (circle_of_confusion>0)) 
-    return (int)(((((double)fl*fl)/(av*circle_of_confusion)*100)+fl)+0.5);
+    return (int)(((((double)fl*fl)/(av*circle_of_confusion)*1000)+fl)+0.5);
   else return (-1);
 }
 
@@ -694,7 +928,7 @@ void shooting_update_dof_values()
   }
   else av96 = (abs(curr_av96-prop_av96)<2)?prop_av96:curr_av96;
 
-  av_1e3 = shooting_get_aperture_from_av96_1e3(av96);
+  av_1e3 = shooting_get_aperture_from_av96(av96);
   hyp_1e3 = dof_values.hyperfocal_distance_1e3;
   hyp = dof_values.hyperfocal_distance;
   
@@ -705,7 +939,7 @@ void shooting_update_dof_values()
     hyp = -1;
     dof_values.aperture_value = av_1e3;
     dof_values.focal_length = fl;
-    hyp_1e3 = shooting_get_hyperfocal_distance_1e3_f2(av_1e3, fl);
+    hyp_1e3 = shooting_get_hyperfocal_distance_1e3_f(av_1e3, fl);
     if (hyp_1e3>0) {
       hyp = (hyp_1e3+500)/1000;
       dof_values.min_stack_distance = MAX_DIST;
@@ -814,205 +1048,8 @@ int shooting_is_flash_ready()
     return 1;
 }
 
-// Only needed on VxWorks
-#if CAM_DRAW_EXPOSITION
-
-// compare PROPCASE_TV with shutter_speeds_table
-char* shooting_get_tv_str()
-{
-    short int tvv;
-    long i;
-    get_property_case(PROPCASE_TV, &tvv, sizeof(tvv));
-    for(i=0; i<SS_SIZE; i++)
-    {
-        if(shutter_speeds_table[i].prop_id >= tvv)
-            return (char*)shutter_speeds_table[i].name;
-    }
-    return (void*)"?";
-}
-
-// compare PROPCASE_AV with aperture_sizes_table
-char* shooting_get_av_str()
-{
-    short int avv;
-    long i;
-    get_property_case(PROPCASE_AV, &avv, sizeof(avv));
-    for(i=0; i<AS_SIZE; i++)
-    {
-        if(aperture_sizes_table[i].prop_id == avv)
-            return (char*)aperture_sizes_table[i].name;
-    }
-    return (char*) "?";
-}
-
-#endif
-
 //-------------------------------------------------------------------
 // Overrides for camera settings
-
-void shooting_set_user_tv_by_id(int v)
-{
-#if CAM_HAS_USER_TV_MODES
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-    {
-        long i;
-        for (i=0;i<SS_SIZE;i++)
-        {
-            if (shutter_speeds_table[i].id == v)
-            {
-                short vv = shutter_speeds_table[i].prop_id;
-                set_property_case(PROPCASE_USER_TV, &vv, sizeof(vv));
-                return;
-            }
-        }
-    }
-#endif
-}
-
-void shooting_set_user_tv96(short v)
-{
-#if CAM_HAS_USER_TV_MODES
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-    {
-        long i;
-        for (i=0;i<SS_SIZE;i++)
-        {
-            if (shutter_speeds_table[i].prop_id == v)
-            {
-                set_property_case(PROPCASE_USER_TV, &v, sizeof(v));
-                return;
-            }
-        }
-    }
-#endif
-}
-
-void shooting_set_tv96(short v, short is_now)
-{
-    long i;
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-    {
-        for (i=0;i<SS_SIZE;i++)
-        {
-            if (shutter_speeds_table[i].prop_id == v)
-            {
-                shooting_set_tv96_direct(v, is_now);
-                return;
-            }
-        }
-    }
-}
-
-void shooting_set_user_tv_by_id_rel(int v)
-{
-#if CAM_HAS_USER_TV_MODES
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-    {
-        int cv = shooting_get_user_tv_id();
-        shooting_set_user_tv_by_id(cv+v);
-    }
-#endif
-}
-
-void shooting_set_av96(short v, short is_now)
-{
-#if CAM_HAS_IRIS_DIAPHRAGM
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-    {
-        long i;
-        for (i=0;i<AS_SIZE;i++)
-        {
-            if (aperture_sizes_table[i].prop_id == v)
-            {
-                shooting_set_av96_direct(v, is_now);
-                return;
-            }
-        }
-    }
-#endif
-}
-
-void shooting_set_user_av96(short v)
-{
-#if CAM_HAS_IRIS_DIAPHRAGM
-    long i;
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-    {
-        for (i=0;i<AS_SIZE;i++)
-        {
-            if (aperture_sizes_table[i].prop_id == v)
-            {
-                set_property_case(PROPCASE_USER_AV, &v, sizeof(v));
-                return;
-            }
-        }
-    }
-#endif
-}
-
-void shooting_set_user_av_by_id(int v)
-{
-#if CAM_HAS_IRIS_DIAPHRAGM
-    long i;
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-    {
-        for (i=0;i<AS_SIZE;i++)
-        {
-            if (aperture_sizes_table[i].id == v)
-            {
-                short vv = aperture_sizes_table[i].prop_id;
-                set_property_case(PROPCASE_USER_AV, &vv, sizeof(vv));
-                return;
-            }
-        }
-    }
-#endif
-}
-
-void shooting_set_tv96_direct(short v, short is_now)
-{
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-    {
-        if(is_now)
-        {
-            set_property_case(PROPCASE_TV, &v, sizeof(v));
-#ifdef PROPCASE_TV2
-            set_property_case(PROPCASE_TV2, &v, sizeof(v));   // Save override to property that will update JPEG header & Canon OSD
-#endif
-        }
-        else
-            photo_param_put_off.tv96=v;
-    }
-}
-
-void shooting_set_av96_direct(short v, short is_now)
-{
-#if CAM_HAS_IRIS_DIAPHRAGM
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-    {
-        if(is_now)
-        {
-            set_property_case(PROPCASE_AV, &v, sizeof(v));
-#ifdef PROPCASE_AV2
-            set_property_case(PROPCASE_AV2, &v, sizeof(v));   // Save override to property that will update JPEG header & Canon OSD
-#endif
-        }
-        else
-            photo_param_put_off.av96=v;
-    }
-#endif
-}
-
-void shooting_set_user_av_by_id_rel(int v)
-{
-#if CAM_HAS_IRIS_DIAPHRAGM
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-    {
-        int cv = shooting_get_user_av_id();
-        shooting_set_user_av_by_id(cv+v);
-    }
-#endif
-}
 
 #if CAM_QUALITY_OVERRIDE
 void shooting_set_image_quality(int imq)
@@ -1092,28 +1129,6 @@ void shooting_set_flash_sync_curtain(int curtain)
     set_property_case(PROPCASE_FLASH_SYNC_CURTAIN, &curtain, sizeof(curtain));
 }
 #endif
-
-void shooting_set_nd_filter_state(short v, short is_now)
-{
-#if CAM_HAS_ND_FILTER
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
-    {
-        if (is_now)
-        {
-            if (v==1)
-                PutInNdFilter();
-            else if (v==2)
-                PutOutNdFilter();
-#if defined(CAM_HAS_NATIVE_ND_FILTER) && defined(PROPCASE_ND_FILTER_STATE)
-            int n = (v==1) ? 1 : 0;
-            set_property_case(PROPCASE_ND_FILTER_STATE, &n, sizeof(n));
-#endif
-        }
-        else
-            photo_param_put_off.nd_filter=v;
-    }
-#endif
-}
 
 void unlock_optical_zoom(void)
 {
@@ -1297,7 +1312,6 @@ void shooting_bracketing(void)
             bracketing_step(SET_NOW) ;
         }
     }
-
 }
 
 //-------------------------------------------------------------------
