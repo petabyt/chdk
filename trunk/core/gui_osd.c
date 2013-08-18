@@ -514,8 +514,12 @@ static void gui_osd_draw_movie_time_left()
             draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y+3*FONT_HEIGHT, osd_buf, conf.osd_color);
         }
         // everything else is for when recording
-        if (mode_video)
+        if (!is_video_recording())
+        {
+            record_running = 0;
+            init = 0;
             return;
+        }
     }
 #endif
 
