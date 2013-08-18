@@ -288,7 +288,7 @@ void gui_osd_draw_state()
         }
     }
     if (is_av_override_enabled || gui_mode==GUI_MODE_OSD)  
-        gui_print_osd_state_string_float("AV:%d.%02d", 100, shooting_get_aperture_from_av96(shooting_get_av96_override_value()));
+        gui_print_osd_state_string_float("AV:%d.%02d", 100, shooting_get_aperture_from_av96(shooting_get_av96_override_value())/10);
     if (camera_info.cam_has_nd_filter)
         if ((conf.nd_filter_state && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD) 
             gui_print_osd_state_string_chr("NDFILTER:", ((conf.nd_filter_state==1)?"IN":"OUT"));
@@ -387,7 +387,7 @@ void gui_osd_draw_values(int showtype)
     }
 
     if ((conf.values_show_real_aperture) && (showtype==1))
-         gui_print_osd_misc_string_float("Av :%d.%02d ", 100, shooting_get_real_aperture());
+         gui_print_osd_misc_string_float("Av :%d.%02d ", 100, shooting_get_real_aperture()/10);
     short f_ex = (conf.show_dof==DOF_SHOW_IN_MISC_EX);
     if (((conf.show_dof==DOF_SHOW_IN_MISC) && (showtype)) || f_ex) {
       if (f_ex) gui_osd_calc_dof();
