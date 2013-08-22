@@ -67,6 +67,8 @@
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX     1           // enable workaround for camera crash at startup when opening the conf / font files
                                                             // see http://chdk.setepontos.com/index.php?topic=6179.0
+    #define CAM_HAS_FILEWRITETASK_HOOK          1
+    #define CAM_FILEWRITETASK_SEEKS             1
 
     #define CAM_ZEBRA_ASPECT_ADJUST             1
     #define CAM_ZEBRA_NOBUF                     1
