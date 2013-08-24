@@ -112,13 +112,13 @@ char script_title[36];                                      // Title of current 
 #define DEFAULT_PARAM_SET   10                              // Value of conf.script_param_set for 'Default' rather than saved parameters
 
 char script_params[SCRIPT_NUM_PARAMS][MAX_PARAM_NAME_LEN+1];// Parameter title
-static short script_param_order[SCRIPT_NUM_PARAMS];         // Ordered as_in_script list of variables ( [idx] = id_of_var )
+static char script_param_order[SCRIPT_NUM_PARAMS];          // Ordered as_in_script list of variables ( [idx] = id_of_var )
                                                             // to display in same order in script
 static int script_range_values[SCRIPT_NUM_PARAMS];          // Min/Max values for param validation
-static short script_range_types[SCRIPT_NUM_PARAMS];         // Specifies if range values is signed (-9999-32767) or unsigned (0-65535)
+static char script_range_types[SCRIPT_NUM_PARAMS];          // Specifies if range values is signed (-9999-32767) or unsigned (0-65535)
                                                             // Note: -9999 limit on negative values is due to current gui_menu code (and because menu only displays chars)
 static const char **script_named_values[SCRIPT_NUM_PARAMS]; // Array of list values for named parameters
-static int script_named_counts[SCRIPT_NUM_PARAMS];          // Count of # of entries in each script_list_values array
+static char script_named_counts[SCRIPT_NUM_PARAMS];         // Count of # of entries in each script_list_values array
 static char *script_named_strings[SCRIPT_NUM_PARAMS];       // Base storage for named value string data
 static int script_loaded_params[SCRIPT_NUM_PARAMS];         // Copy of original values of parameters 
                                                             // (detect are they changed or not)
@@ -755,7 +755,7 @@ static void gui_update_script_submenu()
 
             if (script_range_values[n] != 0)
             {
-                script_submenu_items[p].type = script_range_types[n];
+                script_submenu_items[p].type = script_range_types[n]|MENUITEM_SCRIPT_PARAM;
                 script_submenu_items[p].arg = script_range_values[n];
             }
             else if (script_named_counts[n] != 0)
