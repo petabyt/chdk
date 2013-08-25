@@ -98,14 +98,16 @@ int main(int argc, char **argv)
                 {
                     s = get_str(s+off,val);
                     get_str(s,nm);
-                    lastid = atoi(val) + start;
-                    if (firstid == 0)
+                    if (strcmp(nm+5,"script_allow_lua_native_calls") != 0)  // Exclude enabling native calls
                     {
-                        firstid = lastid;
-                        printf(" _first_entry=%d,\n", firstid);
+                        lastid = atoi(val) + start;
+                        if (firstid == 0)
+                        {
+                            firstid = lastid;
+                            printf(" _first_entry=%d,\n", firstid);
+                        }
+                        printf(" %s=%d,\n", nm+5, lastid);
                     }
-                    if (lastid != 119)  // Exclude enabling native calls
-                        printf(" %s=%d,\n", nm+5, atoi(val)+start);
                 }
             }
         }
