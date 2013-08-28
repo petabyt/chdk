@@ -243,7 +243,7 @@ void gui_osd_draw_raw_info()
 
 static const char * shooting_get_bracket_type()
 {
-    static const char * expo_type[] = { "+/-", "-","+"};
+    static const char * expo_type[] = { "+/-", "-", "+", "-/+" };
     return expo_type[conf.bracket_type];
 }
 
