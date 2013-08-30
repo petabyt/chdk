@@ -143,7 +143,7 @@ int idx_valid(firmware *fw, int i)
         if ((i >= 0) && (i < fw->size))
             return 1;
     }
-    if ((fw->dryos_ver >= 50) && (i < 0))
+    if (fw->dryos_ver >= 50)
     {
         i = ((i * 4) + (fw->base - fw->base2)) / 4;
         if ((i >= 0) && (i < fw->size2))
@@ -165,6 +165,12 @@ int adr2idx(firmware *fw, uint32_t adr)
         return -((fw->base - adr) >> 2);
     else
         return (adr - fw->base) >> 2;
+}
+
+// Convert a memory address to a pointer into the firmware memory buffer
+char* adr2ptr(firmware *fw, uint32_t adr)
+{
+    return ((char*)fw->buf) + (adr - fw->base);
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -337,7 +343,8 @@ uint32_t followBranch(firmware *fw, uint32_t fadr, int offset)
         {
             int o = inst & 0x00FFFFFF;
             if (o & 0x00800000) o |= 0xFF000000;
-            fadr = idx2adr(fw,fidx+o+2);
+            if (idx_valid(fw,fidx+o+2))
+                fadr = idx2adr(fw,fidx+o+2);
         }
         else if ((inst & (0xFFFFF000)) == (0xE51FF000))     // LDR PC,=...
         {
@@ -864,6 +871,8 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
         }
     }
     
+    int dx = 3;
+
     // DryOS R50/R51/R52 copies a block of ROM to RAM and then uses that copy
     // Need to allow for this in finding addresses
     // Seen on SX260HS
@@ -887,8 +896,27 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                     fw->base2 = dadr;
                     fw->base_copied = fadr;
                     fw->size2 = (eadr - dadr) / 4;
+                    dx = i+3;
                     break;
                 }
+            }
+        }
+    }
+
+    // Find DATA section info
+    for (i=dx; i<100; i++)
+    {
+        if (isLDR_PC(fw,i) && isLDR_PC(fw,i+1) && (isLDR_PC(fw,i+2)))
+        {
+            uint32_t fadr = LDR2val(fw,i);
+            uint32_t dadr = LDR2val(fw,i+1);
+            uint32_t eadr = LDR2val(fw,i+2);
+            if ((fadr > fw->base) && (dadr < fw->base))
+            {
+                fw->data_start = dadr;
+                fw->data_init_start = fadr;
+                fw->data_len = (eadr - dadr) / 4;
+                break;
             }
         }
     }

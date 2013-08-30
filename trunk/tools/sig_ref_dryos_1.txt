@@ -1,13 +1,9 @@
 0xffc00000
 CreateJumptable 0xFFDAB7D4
-GetSystemTime 0xFFDD7EFC
 kbd_pwr_on 0xFFC37068
 kbd_pwr_off 0xFFC370C0
 GetParameterData 0xFFD1C5B8
 SetParameterData 0xFFD1C528
-open 0xFFC0A1B0
-close 0xFFC0A260 22
-Remove 0xFFC15074 16
 GetDrive_ClusterSize 0xFFC3F4C4 13 0xFFC41890 -4
 GetDrive_TotalClusters 0xFFC3F4F8 13 0xFFC418A0 -5
 GetDrive_FreeClusters 0xFFC3F564 13 0xFFC418B4 -4

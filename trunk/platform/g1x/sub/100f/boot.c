@@ -316,7 +316,7 @@ asm volatile (
 "    BL      sub_FF02C534 \n"
 "    MOVS    R7, R0 \n"
 "    BNE     loc_FF00FE10 \n"
-"    BL      sub_FF025358 \n"
+"    BL      sub_FF025358 /*_IsNormalCameraMode_FW*/ \n"
 "    CMP     R0, #0 \n"
 "    BEQ     loc_FF00FE10 \n"
 "    MOV     R0, #0x4F \n"

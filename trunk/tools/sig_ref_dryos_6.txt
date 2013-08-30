@@ -9,12 +9,9 @@ GetDrive_FreeClusters 0xFF06AE14 8
 GetImageFolder 0xFF1598B8
 PT_PlaySound 0xFF07F848
 ReadFastDir 0xFF2DD404
-Remove 0xFF0271F8 14
 SetFileTimeStamp 0xFF027410
 _sqrt 0xFF3AED14
 add_ptp_handler 0xFF28AA1C
-close 0xFF00ABB4 22
-open 0xFF00AB04
 OpenFastDir 0xFF2DD2B0
 qsort 0xFF359478 19
 time 0xFF084A48

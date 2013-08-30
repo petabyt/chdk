@@ -312,7 +312,7 @@ asm volatile (
 "    BL      sub_FF02D794 \n"
 "    MOVS    R7, R0 \n"
 "    BNE     loc_FF00FE3C \n"
-"    BL      sub_FF0264E4 \n"
+"    BL      sub_FF0264E4 /*_IsNormalCameraMode_FW*/ \n"
 "    CMP     R0, #0 \n"
 "    BEQ     loc_FF00FE3C \n"
 "    MOV     R0, #0x4C \n"
@@ -386,7 +386,7 @@ asm volatile (
 "    BL      sub_FF023CE4 \n"
 "    BL      sub_FF022BAC \n"
 "    MOV     R0, #1 \n"
-"    BL      sub_FF022F7C \n"
+"    BL      sub_FF022F7C /*_i2c_5V_Bus_Pwr_Ctrl_FW*/ \n"
 //"  BL      _sub_FF02D870 \n"  // start diskboot.bin
 "    BL      sub_FF0983F4 \n"
 "    BL      sub_FF02D9F8 \n"

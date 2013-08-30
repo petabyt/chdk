@@ -37,6 +37,7 @@ osig* find_match(osig *p, const char *nm, uint32_t val);
 osig* find_sig_val_by_type(osig* p, uint32_t val, int typ);
 
 // Functions for loading files
+void load_funcs(stub_values *sv, char *name);
 void load_stubs(stub_values *sv, char *name, int exclude_comments);
 void load_stubs_min(stub_values *sv);
 void load_modemap(stub_values *sv);

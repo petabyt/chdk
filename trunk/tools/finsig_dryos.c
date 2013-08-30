@@ -192,6 +192,8 @@ typedef struct {
 #define DONT_EXPORT     1
 #define OPTIONAL        2
 #define UNUSED          4
+#define BAD_MATCH       8
+#define EV_MATCH        16
 
 typedef struct {
     char        *name;
@@ -199,9 +201,14 @@ typedef struct {
     uint32_t    val;
 } func_entry;
 
-func_entry  func_names[] =
+int next_func_entry = 0;
+
+#define MAX_FUNC_ENTRY  2000
+
+func_entry  func_names[MAX_FUNC_ENTRY] =
 {
     // Do these first as they are needed to find others
+    { "ExportToEventProcedure_FW", UNUSED|DONT_EXPORT },
     { "CreateJumptable", UNUSED },
     { "_uartr_req", UNUSED },
     { "StartRecModeMenu", UNUSED },
@@ -277,7 +284,7 @@ func_entry  func_names[] =
     { "ReadFastDir" },
     { "Rec2PB" },
     { "RefreshPhysicalScreen" },
-    { "Remove", UNUSED },
+    { "Remove", OPTIONAL|UNUSED },
     { "RenameFile_Fut" },
     { "Restart" },
     { "ScreenLock" },
@@ -608,6 +615,68 @@ uint32_t RenameFile_Fut_test[]      = { 0x09400013 };
 // Signature matching data
 string_sig string_sigs[] =
 {
+    // Same as previously found eventproc - do these first
+    {20, "AllocateMemory", "AllocateMemory_FW", 1 },
+    {20, "Close", "Close_FW", 1 },
+    {20, "CreateCountingSemaphore", "CreateCountingSemaphore_FW", 1 },
+    {20, "CreateTask", "CreateTask_FW", 1 },
+    {20, "DeleteSemaphore", "DeleteSemaphore_FW", 1 },
+    {20, "DispCon_ShowBitmapColorBar", "DispCon_ShowBitmapColorBar_FW", 1 },
+    {20, "ExitTask", "ExitTask_FW", 1 },
+    {20, "Fclose_Fut", "Fclose_Fut_FW", 1 },
+    {20, "Fopen_Fut", "Fopen_Fut_FW", 1 },
+    {20, "Fread_Fut", "Fread_Fut_FW", 1 },
+    {20, "FreeMemory", "FreeMemory_FW", 1 },
+    {20, "Fseek_Fut", "Fseek_Fut_FW", 1 },
+    {20, "Fwrite_Fut", "Fwrite_Fut_FW", 1 },
+    {20, "GetSDProtect", "GetSDProtect_FW", 1 },
+    {20, "GetSystemTime", "GetSystemTime_FW", 1 },
+    {20, "GetCurrentAvValue", "GetCurrentAvValue_FW", 1 },
+    {20, "GetOpticalTemperature", "GetOpticalTemperature_FW", 1 },
+    {20, "GetVRAMHPixelsSize", "GetVRAMHPixelsSize_FW", 1 },
+    {20, "GetVRAMVPixelsSize", "GetVRAMVPixelsSize_FW", 1 },
+    {20, "GetZoomLensCurrentPoint", "GetZoomLensCurrentPoint_FW", 1 },
+    {20, "GiveSemaphore", "GiveSemaphore_FW", 1 },
+    {20, "GUISrv_StartGUISystem", "GUISrv_StartGUISystem_FW", 1 },
+    {20, "LEDDrive", "LEDDrive_FW", 1 },
+    {20, "LockMainPower", "LockMainPower_FW", 1 },
+    {20, "lseek", "Lseek_FW", 1 },
+    {20, "Lseek", "Lseek_FW", 1 },
+    {20, "MoveIrisWithAv", "MoveIrisWithAv_FW", 1 },
+    {20, "MoveZoomLensWithPoint", "MoveZoomLensWithPoint_FW", 1 },
+    {20, "memcmp", "memcmp_FW", 1 },
+    {20, "memcpy", "memcpy_FW", 1 },
+    {20, "memset", "memset_FW", 1 },
+    {20, "NewTaskShell", "NewTaskShell_FW", 1 },
+    {20, "NR_GetDarkSubType", "NR_GetDarkSubType_FW", 1 },
+    {20, "NR_SetDarkSubType", "NR_SetDarkSubType_FW", 1 },
+    {20, "Open", "Open_FW", 1 },
+    {20, "PostLogicalEventForNotPowerType", "PostLogicalEventForNotPowerType_FW", 1 },
+    {20, "PostLogicalEventToUI", "PostLogicalEventToUI_FW", 1 },
+    {20, "PT_MoveDigitalZoomToWide", "PT_MoveDigitalZoomToWide_FW", 1 },
+    {20, "PT_MoveOpticalZoomAt", "PT_MoveOpticalZoomAt_FW", 1 },
+    {20, "Read", "Read_FW", 1 },
+    {20, "RefreshPhysicalScreen", "RefreshPhysicalScreen_FW", 1 },
+    {20, "ResetFocusLens", "ResetFocusLens_FW", 1 },
+    {20, "ResetZoomLens", "ResetZoomLens_FW", 1 },
+    {20, "SavePaletteData", "SavePaletteData_FW", 1 },
+    {20, "SetAutoShutdownTime", "SetAutoShutdownTime_FW", 1 },
+    {20, "SetCurrentCaptureModeType", "SetCurrentCaptureModeType_FW", 1 },
+    {20, "SetScriptMode", "SetScriptMode_FW", 1 },
+    {20, "SleepTask", "SleepTask_FW", 1 },
+    {20, "strcmp", "j_strcmp_FW", 0 },
+    {20, "strcmp", "strcmp_FW", 0 },
+    {20, "strcpy", "strcpy_FW", 1 },
+    {20, "strlen", "strlen_FW", 1 },
+    {20, "StartRecModeMenu", "StartRecModeMenu_FW", 1 },
+    {20, "TakeSemaphore", "TakeSemaphore_FW", 1 },
+    {20, "UIFS_WriteFirmInfoToFile", "UIFS_WriteFirmInfoToFile_FW", 1 },
+    {20, "UnlockMainPower", "UnlockMainPower_FW", 1 },
+    {20, "VbattGet", "VbattGet_FW", 1 },
+    {20, "write", "Write_FW", 1 },
+    {20, "Write", "Write_FW", 1 },
+
+    { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
     { 1, "Close", "Close", 1 },
     { 1, "CreateTask", "CreateTask", 1 },
@@ -800,6 +869,9 @@ string_sig string_sigs[] =
     { 9, "CreateRecursiveLock", "CreateRecursiveLockStrictly", 0,          1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
     { 9, "CreateEventFlag", "CreateEventFlagStrictly", 0,                  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
     { 9, "_GetSystemTime", "GetSystemTime", 0,                             2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
+    { 9, "close", "Close", 0,                                              2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
+    { 9, "open", "Open", 0,                                                3,    3,    3,    3,   16,   16,   35,   35,   35,   35,   35 },
+    { 9, "open", "Open", 0,                                                3,    3,    3,   13,   16,   16,   35,   35,   35,   35,   35 },
 
     { 10, "task_CaptSeq", "CaptSeqTask", 1 },
     { 10, "task_ExpDrv", "ExpDrvTask", 1 },
@@ -1812,6 +1884,16 @@ int find_strsig(firmware *fw, string_sig *sig)
     case 17:    return find_strsig17(fw, sig);
     case 18:    return find_strsig18(fw, sig);
     case 19:    return find_strsig19(fw, sig);
+    case 20:
+        {
+            int j = find_saved_sig(sig->ev_name);
+            if (j >= 0)
+            {
+                uint32_t fadr = followBranch2(fw,func_names[j].val,sig->offset);
+                fwAddMatch(fw,fadr,32,0,120);
+                return 1;
+            }
+        }
     }
 
     return 0;
@@ -1866,6 +1948,18 @@ void find_matches(firmware *fw, const char *curr_name)
     int found_ev = 0;
 
     count = 0;
+
+    // Already found (eventproc)?
+    i = find_saved_sig(curr_name);
+    if (i >= 0)
+    {
+        if ((func_names[i].val != 0) && (func_names[i].flags & EV_MATCH) != 0)
+        {
+            fwAddMatch(fw,func_names[i].val,32,0,120);
+            found_ev = 1;
+        }
+    }
+
 
     // Try and match using 'string' based signature matching first
     for (i = 0; string_sigs[i].ev_name != 0 && !found_ev; i++)
@@ -2035,7 +2129,14 @@ void print_results(firmware *fw, const char *curr_name, int k)
         || (matches->fail > 0)
         || (ostub2 && (matches->ptr != ostub2->val))
        )
+    {
         err = 1;
+        func_names[k].flags |= BAD_MATCH;
+    }
+    else
+    {
+        if (func_names[k].flags & UNUSED) return;
+    }
 
     // write to header (if error) or body buffer (no error)
     out_hdr = err;
@@ -3908,6 +4009,246 @@ void find_key_vals(firmware *fw)
 
 //------------------------------------------------------------------------------------------------------------
 
+uint32_t nadr;
+uint32_t eadr;
+
+int get_eventproc_val(firmware *fw, int k)
+{
+    if (isADR_PC(fw,k) && (fwRd(fw,k) == 0))
+        nadr = ADR2adr(fw,k);
+    else if (isADR_PC(fw,k) && (fwRd(fw,k) == 1))
+        eadr = ADR2adr(fw,k);
+    else if (isLDR_PC(fw,k) && (fwRd(fw,k) == 0))
+        nadr = LDR2val(fw,k);
+    else if (isLDR_PC(fw,k) && (fwRd(fw,k) == 1))
+        eadr = LDR2val(fw,k);
+    else
+        return 0;
+    return 1;
+}
+
+void add_func_name(char *n, uint32_t eadr, char *suffix)
+{
+    int k;
+
+    char *s = n;
+    if (suffix != 0)
+    {
+        s = malloc(strlen(n) + strlen(suffix) + 1);
+        sprintf(s, "%s%s", n, suffix);
+    }
+
+    for (k=0; func_names[k].name != 0; k++)
+        if (strcmp(func_names[k].name, s) == 0)
+        {
+            if (func_names[k].val == 0)
+            {
+                func_names[k].val = eadr;
+                func_names[k].flags |= EV_MATCH;
+            }
+            return;
+        }
+
+    func_names[next_func_entry].name = s;
+    func_names[next_func_entry].flags = OPTIONAL|UNUSED;
+    func_names[next_func_entry].val = eadr;
+    next_func_entry++;
+    func_names[next_func_entry].name = 0;
+}
+
+void add_func_name2(firmware *fw, uint32_t nadr, uint32_t eadr, char *suffix)
+{
+    char *n = (char*)adr2ptr(fw,nadr);
+    if (isB(fw,adr2idx(fw,eadr)))
+    {
+        char *s = malloc(strlen(n) + 3);
+        sprintf(s,"j_%s",n);
+        add_func_name(s, eadr, suffix);
+        eadr = followBranch(fw,eadr,1);
+    }
+    add_func_name(n, eadr, suffix);
+}
+
+int match_eventproc(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+{
+    if (isBorBL(fw,k))
+    {
+        uint32_t adr = followBranch(fw,idx2adr(fw,k),0x01000001);
+        if (adr == fadr)
+        {
+            nadr = 0;
+            eadr = 0;
+            k--;
+            if (get_eventproc_val(fw, k) == 0)
+            {
+                int k1 = find_inst_rev(fw, isB, k, 500);
+                if (k1 >= 0)
+                {
+                    k = k1 - 1;
+                    get_eventproc_val(fw, k);
+                }
+            }
+            k--;
+            if (get_eventproc_val(fw, k) == 0)
+            {
+                int k1 = find_inst_rev(fw, isB, k, 500);
+                if (k1 >= 0)
+                {
+                    k = k1 - 1;
+                    get_eventproc_val(fw, k);
+                }
+            }
+            if ((nadr != 0) && (eadr != 0))
+            {
+                add_func_name2(fw, nadr, eadr, "_FW");
+            }
+        }
+    }
+    return 0;
+}
+
+int match_registerproc2(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+{
+    if (isBorBL(fw,k))
+    {
+        uint32_t adr = followBranch(fw,idx2adr(fw,k),0x01000001);
+        if (adr == fadr)
+        {
+            nadr = 0;
+            eadr = 0;
+            k--;
+            if (get_eventproc_val(fw, k) == 0)
+            {
+                int k1 = find_inst_rev(fw, isB, k, 500);
+                if (k1 >= 0)
+                {
+                    k = k1 - 1;
+                    get_eventproc_val(fw, k);
+                }
+            }
+            k--;
+            if (get_eventproc_val(fw, k) == 0)
+            {
+                int k1 = find_inst_rev(fw, isB, k, 500);
+                if (k1 >= 0)
+                {
+                    k = k1 - 1;
+                    get_eventproc_val(fw, k);
+                }
+            }
+            if ((nadr != 0) && (eadr != 0))
+            {
+                add_func_name2(fw, nadr, eadr, "_FW");
+            }
+        }
+    }
+    return 0;
+}
+
+int match_registerproc(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+{
+    if (isB(fw,k+1) && isMOV_immed(fw,k) && (fwRd(fw,k) == 2))
+    {
+        uint32_t adr = followBranch(fw,idx2adr(fw,k+1),1);
+        if (adr == fadr)
+        {
+            search_fw(fw, match_registerproc2, idx2adr(fw,k), 0, 2);
+        }
+    }
+    return 0;
+}
+
+int match_registerlists(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+{
+    if (isBorBL(fw,k+1) && isLDR_PC(fw,k) && (fwRd(fw,k) == 0))
+    {
+        uint32_t adr = followBranch2(fw,idx2adr(fw,k+1),0x01000001);
+        if (adr == fadr)
+        {
+            int j = adr2idx(fw,LDR2val(fw,k));
+            if (!idx_valid(fw,j))
+            {
+                j = adr2idx(fw,LDR2val(fw,k) - fw->data_start + fw->data_init_start);
+            }
+            if (idx_valid(fw,j))
+            {
+                while (fwval(fw,j) != 0)
+                {
+                    add_func_name2(fw, fwval(fw,j), fwval(fw,j+1), "_FW");
+                    j += 2;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+void find_eventprocs(firmware *fw)
+{
+    int j = get_saved_sig(fw,"ExportToEventProcedure_FW");
+    if (j >= 0)
+    {
+        uint32_t fadr = func_names[j].val;
+        search_fw(fw, match_eventproc, fadr, 0, 1);
+
+        if (isB(fw,adr2idx(fw,fadr)+2))
+        {
+            fadr = followBranch(fw, fadr+8, 1);
+            add_func_name("RegisterEventProcedure", fadr, 0);
+            search_fw(fw, match_registerproc, fadr, 0, 2);
+        }
+
+        j = get_saved_sig(fw,"SS.Create_FW");
+        if (j >= 0)
+        {
+            j = adr2idx(fw,func_names[j].val);
+            int offsets[] = { 1, 3, 7, 8 };
+            int i;
+            for (i=0; i<4; i++)
+            {
+                if (isLDR_PC(fw,j+offsets[i]) && (fwRd(fw,j+offsets[i]) == 0) && isBL(fw,j+offsets[i]+1))
+                {
+                    fadr = followBranch(fw,idx2adr(fw,j+offsets[i]+1),0x01000001);
+                    search_fw(fw, match_registerlists, fadr, 0, 2);
+                    break;
+                }
+            }
+        }
+
+        j = get_saved_sig(fw,"TerminateAdjustmentSystem_FW");
+        if (j >= 0)
+        {
+            j = adr2idx(fw,func_names[j].val);
+            int k;
+            for (k=j; k<j+8; k++)
+            {
+                if (isBL(fw,k))
+                {
+                    int k1 = adr2idx(fw,followBranch(fw,idx2adr(fw,k),0x01000001));
+                    int k2;
+                    for (k2=k1; k2<k1+20; k2++)
+                    {
+                        if (isLDR_PC(fw,k2) && (fwRd(fw,k2) == 0) && isLDMFD(fw,k2+1))
+                        {
+                            int k3 = adr2idx(fw, LDR2val(fw,k2) - fw->data_start + fw->data_init_start);
+                            if (idx_valid(fw,k3))
+                            {
+                                while (fwval(fw,k3) != 0)
+                                {
+                                    add_func_name2(fw, fwval(fw,k3), fwval(fw,k3+1), "_FW");
+                                    k3 += 2;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------
+
 // Write out firmware info
 void output_firmware_vals(firmware *fw)
 {
@@ -3992,6 +4333,46 @@ void output_firmware_vals(firmware *fw)
     bprintf("\n");
 }
 
+#if defined(__linux__)
+#define stricmp strcasecmp
+#endif
+
+int compare_func_names(const func_entry **p1, const func_entry **p2)
+{
+    return stricmp((*p1)->name, (*p2)->name);
+}
+
+int compare_func_addresses(const func_entry **p1, const func_entry **p2)
+{
+    if ((*p1)->val < (*p2)->val)
+        return -1;
+    else if ((*p1)->val > (*p2)->val)
+        return 1;
+    return compare_func_names(p1,p2);
+}
+
+void write_funcs(firmware *fw, char *filename, func_entry *fns[], int (*compare)(const func_entry **p1, const func_entry **p2))
+{
+    int k;
+
+    qsort(fns, next_func_entry, sizeof(func_entry*), (void*)compare);
+
+    FILE *out_fp = fopen(filename, "w");
+    for (k=0; k<next_func_entry; k++)
+        if ((fns[k]->val != 0) && (strncmp(fns[k]->name,"hook_",5) != 0))
+        {
+            if (fns[k]->flags & BAD_MATCH)
+            {
+                osig* ostub2 = find_sig(fw->sv->stubs,fns[k]->name);
+                if (ostub2 && ostub2->val)
+                    fprintf(out_fp, "0x%08x,%s,(stubs_entry_2.s)\n", ostub2->val, fns[k]->name);
+            }
+            else
+                fprintf(out_fp, "0x%08x,%s\n", fns[k]->val, fns[k]->name);
+        }
+    fclose(out_fp);
+}
+
 int main(int argc, char **argv)
 {
     firmware fw;
@@ -4006,6 +4387,9 @@ int main(int argc, char **argv)
 
     out_fp = fopen(argv[3],"w");
     if (out_fp == NULL) usage("failed to open outputfile");
+
+    for (next_func_entry = 0; func_names[next_func_entry].name != 0; next_func_entry++);
+    int max_find_func = next_func_entry;
 
     fw.sv = new_stub_values();
     load_stubs(fw.sv, "stubs_entry_2.S", 1);
@@ -4027,7 +4411,9 @@ int main(int argc, char **argv)
     bprintf("// Stubs below matched 100%%.\n");
     bprintf("//    Name                                     Address                Comp to stubs_entry_2.S\n");
 
-    for (k = 0; func_names[k].name; k++)
+    find_eventprocs(&fw);
+
+    for (k = 0; k < max_find_func; k++)
     {
         count = 0;
         curr_name = func_names[k].name;
@@ -4043,8 +4429,6 @@ int main(int argc, char **argv)
         }
     }
 
-    clock_t t2 = clock();
-
     find_modemap(&fw);
     find_stubs_min(&fw);
     find_lib_vals(&fw);
@@ -4052,11 +4436,20 @@ int main(int argc, char **argv)
     find_platform_vals(&fw);
     find_other_vals(&fw);
 
-    printf("Time to generate stubs %.2f seconds\n",(double)(t2-t1)/(double)CLOCKS_PER_SEC);
-
     write_output();
 
     fclose(out_fp);
+
+    func_entry *fns[MAX_FUNC_ENTRY];
+    for (k=0; k<next_func_entry; k++)
+        fns[k] = &func_names[k];
+
+    write_funcs(&fw, "funcs_by_name.csv", fns, compare_func_names);
+    write_funcs(&fw, "funcs_by_address.csv", fns, compare_func_addresses);
+
+    clock_t t2 = clock();
+
+    printf("Time to generate stubs %.2f seconds\n",(double)(t2-t1)/(double)CLOCKS_PER_SEC);
 
     return ret;
 }
