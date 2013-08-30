@@ -149,7 +149,7 @@ asm volatile (
 "    MOV     R8, R1 \n"
 "    MOV     R9, R2 \n"
 "    MOV     R5, R3 \n"
-"    BL      sub_FF205AD4 \n"
+"    BL      sub_FF205AD4 /*_PTM_GetWorkingCaptureMode_FW*/ \n"
 "    AND     R0, R0, #0x7F \n"
 "    CMP     R0, #8 \n"
 "    CMPNE   R0, #0x22 \n"
@@ -245,7 +245,7 @@ asm volatile (
 "    LDR     R0, [R9, #4] \n"
 "    MOV     R2, R6 \n"
 "    MOV     R1, R8 \n"
-"    BL      fwt_write \n"  // --> Patched. Old value = _write.
+"    BL      fwt_write \n"  // --> Patched. Old value = _Write.
 "    LDR     PC, =0xFF34AD74 \n"  // Continue in firmware
 );
 }

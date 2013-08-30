@@ -156,6 +156,29 @@ osig* find_match(osig *p, const char *nm, uint32_t val)
 //------------------------------------------------------------------------------------------------------------
 
 // Load a specified file.
+// Add new entries the list pointer to by 'hdr'
+void load_funcs(stub_values *sv, char *name)
+{
+    FILE *f = fopen(name, "rb");
+
+    if (f == NULL) return;
+
+    char line[500];
+    char nm[100];
+    char val[100];
+    char *s;
+
+    while (read_line(f,line))
+    {
+        s = get_str(line,val);
+        get_str(s,nm);
+        osig *p = add_sig(nm, val, &sv->stubs, 1);
+        p->type = TYPE_NHSTUB;
+        continue;
+    }
+}
+
+// Load a specified file.
 // If 'exclude_comments' is non-zero then commented lines are ignored.
 // Add new entries the list pointer to by 'hdr'
 static void load_stubs_file(char *name, int exclude_comments, osig **hdr)

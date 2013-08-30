@@ -281,7 +281,7 @@ asm volatile (
 "    BL      sub_FF83C880 \n"
 "    CMP     R0, #0 \n"
 "    BNE     loc_FF81FB98 \n"
-"    BL      sub_FF836160 \n"
+"    BL      sub_FF836160 /*_IsNormalCameraMode_FW*/ \n"
 "    CMP     R0, #0 \n"
 "    BEQ     loc_FF81FB98 \n"
 "    BL      sub_FF865060 \n"

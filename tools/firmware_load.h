@@ -45,6 +45,9 @@ typedef struct {
     int             ksys_idx;           // Index of the encryption key in the firmware dump
     int             dancing_bits;       // Dancing Bits number for the encryption key
     int             dancing_bits_idx;   // Index of the dancing bits data in the firmware dump
+    uint32_t        data_start;         // Start of DATA section in RAM
+    uint32_t        data_init_start;    // Start of initialisation section for DATA in ROM
+    int             data_len;           // Length of data section
 
     // Alt copy of ROM in RAM (DryOS R50, R51)
     uint32_t        *buf2;          // pointer to loaded FW data that is copied
@@ -70,7 +73,9 @@ int idx_valid(firmware *fw, int i);
 // Convert index to address and vice-versa
 uint32_t idx2adr(firmware *fw, int idx);
 int adr2idx(firmware *fw, uint32_t adr);
+char* adr2ptr(firmware *fw, uint32_t adr);
 
+uint32_t* fwadr(firmware *fw, int i);
 // Get a 32 bit value from the dump at the specified index
 uint32_t fwval(firmware *fw, int i);
 // Extract the source register, destination register or operand2 from the instruction at the specified index

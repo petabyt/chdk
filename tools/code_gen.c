@@ -1140,6 +1140,7 @@ int main(int ac, const char * av[])
 
     // Load function name/address values from stubs files
     fw->sv = new_stub_values();
+    load_funcs(fw->sv, "funcs_by_name.csv");
     load_stubs(fw->sv, "stubs_entry.S", 0);
     load_stubs(fw->sv, "stubs_entry_2.S", 0);   // Load second so values override stubs_entry.S
 

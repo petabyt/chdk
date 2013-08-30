@@ -195,14 +195,14 @@ asm volatile (
 "    LDR     R0, [R9] \n"
 "    MOV     R2, R8 \n"
 "    MOV     R1, R7 \n"
-"    BL      fwt_write \n"  // --> Patched. Old value = _write.
+"    BL      fwt_write \n"  // --> Patched. Old value = _Write.
 "    LDR     R1, [R4, #4] \n"
 "    CMP     R8, R0 \n"
 "    ADD     R1, R1, R0 \n"
 "    STR     R1, [R4, #4] \n"
 "    BEQ     loc_FFDD68B0 \n"
 "    LDR     R0, =0x10B1 \n"
-"    BL      sub_FFC61E48 \n"
+"    BL      sub_FFC61E48 /*_IsControlEventActive_FW*/ \n"
 "    LDR     R1, =0x9200005 \n"
 "    STR     R1, [R4, #0x10] \n"
 "    B       loc_FFDD682C \n"

@@ -186,7 +186,7 @@ asm volatile (
 "    LDR     R0, [R9, #4] \n"
 "    MOV     R2, R6 \n"
 "    MOV     R1, R8 \n"
-"    BL      fwt_write \n"  // --> Patched. Old value = _write.
+"    BL      fwt_write \n"  // --> Patched. Old value = _Write.
 "    LDR     PC, =0xFF3379EC \n"  // Continue in firmware
 );
 }
