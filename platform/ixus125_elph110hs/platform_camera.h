@@ -35,10 +35,10 @@
 
     #define CAM_JPEG_WIDTH                  	4608
     #define CAM_JPEG_HEIGHT                 	3456
-    #define CAM_ACTIVE_AREA_X1                    16    	
-    #define CAM_ACTIVE_AREA_Y1                    26
-    #define CAM_ACTIVE_AREA_X2                  4640
-    #define CAM_ACTIVE_AREA_Y2                  3486
+    #define CAM_ACTIVE_AREA_X1                    96    	
+    #define CAM_ACTIVE_AREA_Y1                    18 // could use 17, but will change effective bayer pattern
+    #define CAM_ACTIVE_AREA_X2                  4776 
+    #define CAM_ACTIVE_AREA_Y2                  3516 // image data goes all the way to the bottom
 
     #define CAM_DNG_LENS_INFO               	{ 43,10, 215,10, 27,10, 59,10 } // See comments in camera.h ixus125
 
