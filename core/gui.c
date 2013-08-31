@@ -22,6 +22,16 @@
 #endif
 #include "usb_remote.h"
 #include "module_load.h"
+#include "clock.h"
+
+// splash screen time
+#if defined(OPT_EXPIRE_TEST)
+#warning OPT_EXPIRE_TEST enabled
+#define SPLASH_TIME 40  // Displays for 3.2 seconds
+#else
+#define SPLASH_TIME 20  // Displays for 1.6 seconds
+                        // gui_redraw called every 4th loop of core_spytask which has 20ms delay per loop = (4*20) * 20 = 1600ms
+#endif
 
 //-------------------------------------------------------------------
 // forward declarations
@@ -173,6 +183,83 @@ static CMenuItem autoiso_submenu_items[] = {
 static CMenu autoiso_submenu = {0x2d,LANG_MENU_AUTOISO_TITLE, autoiso_submenu_items };
 
 //-------------------------------------------------------------------
+#if OPT_EXPIRE_TEST
+
+static int exp_text_width, exp_text_height;
+
+static const char *exp_text[] =
+{
+    "  Test version expired  ",
+    "Please post feedback to:",
+    "  chdk.setepontos.com   ",
+    "Your comments are needed",
+    "to finish this port.    ",
+    "Thanks                  "
+};
+
+#define EXP_TEXT_WIDTH   32
+#define EXP_TEXT_HEIGHT  6
+int get_expire_days_left(void) {
+    time_t ts = time(NULL);
+    if(ts > OPT_EXPIRE_TEST) {
+        return 0;
+    }
+    return (OPT_EXPIRE_TEST - ts)/(60*60*24);
+}
+
+void do_expire_check() {
+    if(get_expire_days_left()) {
+        return;
+    }
+    static int in_splash = SPLASH_TIME;
+
+
+    if(in_splash)
+    {
+        in_splash--;
+        return;
+    }
+
+    color cl;
+    if(gui_get_mode() == GUI_MODE_ALT) {
+        cl=MAKE_COLOR(COLOR_RED, COLOR_WHITE);
+        gui_reset_alt_helper(); // replace the helper with nag screen
+    } else if(gui_get_mode() == GUI_MODE_NONE) {
+        cl=MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE);
+    } else {
+        return;
+    }
+    coord x, y;
+    exp_text_width  = EXP_TEXT_WIDTH * FONT_HEIGHT + 8;
+    exp_text_height = EXP_TEXT_HEIGHT * FONT_WIDTH + 10;
+
+    x = (camera_screen.width-exp_text_width)>>1;
+    y = ((camera_screen.height-exp_text_height)>>1) - 60;
+
+    int i;
+    for (i=0; i<EXP_TEXT_HEIGHT; i++)
+    {
+        draw_string(x+((exp_text_width-strlen(exp_text[i])*FONT_WIDTH)>>1), y+i*FONT_HEIGHT+4, exp_text[i], cl);
+        // outside of alt, just show the "expired" line
+        if(gui_get_mode() != GUI_MODE_ALT) {
+            break;
+        }
+    }
+}
+
+void do_expire_splash(int x,int y) {
+    static char under_dev_text[64];
+    int days_left = get_expire_days_left();
+    color cl = MAKE_COLOR(COLOR_RED, COLOR_WHITE);
+    if(days_left) {
+        sprintf(under_dev_text, "TEST BUILD %d DAYS LEFT",days_left);
+    } else {
+        sprintf(under_dev_text, "TEST BUILD EXPIRED!");
+    }
+    draw_string(x-((strlen(under_dev_text)*FONT_WIDTH)>>1), y, under_dev_text, cl);
+}
+
+#endif
 
 #ifdef OPT_DEBUGGING
 
@@ -1900,8 +1987,6 @@ const char* gui_histo_show_enum(int change, int arg)
 //-------------------------------------------------------------------
 // Splash screen handling
 
-#define SPLASH_TIME 20  // Displays for 1.6 seconds
-                        // gui_redraw called every 4th loop of core_spytask which has 20ms delay per loop = (4*20) * 20 = 1600ms
 
 #if defined(VER_CHDK)
 #define LOGO_WIDTH  149
@@ -1995,6 +2080,11 @@ static void gui_draw_splash()
     {
         draw_string(x+((logo_text_width-strlen(text[i])*FONT_WIDTH)>>1), y+i*FONT_HEIGHT+4, text[i], cl);
     }
+
+#if OPT_EXPIRE_TEST
+    do_expire_splash(x+((logo_text_width)>>1),y+(i+1)*FONT_HEIGHT+4);
+#endif
+
     if (logo)
     {
         int pos;
@@ -2597,6 +2687,10 @@ void gui_redraw()
         gui_mode_need_redraw = 0;
 	    flag_gui_enforce_redraw = 1;
     }
+
+#ifdef OPT_EXPIRE_TEST
+    do_expire_check();
+#endif
 
     gui_handle_splash(flag_gui_enforce_redraw);
 
