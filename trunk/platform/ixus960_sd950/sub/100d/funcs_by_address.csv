@@ -143,11 +143,11 @@
 0xff824fc8,Close
 0xff824fc8,Close_FW
 0xff825070,j_Read_FW
-0xff825074,write
 0xff825074,Write
+0xff825074,write
 0xff825074,Write_FW
-0xff825108,lseek
 0xff825108,Lseek
+0xff825108,lseek
 0xff825108,Lseek_FW
 0xff8251d0,j_Lseek_FW
 0xff8251d4,stat

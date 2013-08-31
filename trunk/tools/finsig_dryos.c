@@ -371,7 +371,6 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "task_TouchPanel", OPTIONAL },
 
     { "hook_CreateTask" },
-    { "hook_CreateTask2" },
 
     { "time" },
     { "vsprintf" },
@@ -537,7 +536,6 @@ sig_stuff min_ver[] = {
     { "ScreenUnlock", 39 },
     { "MakeSDCardBootable", 47 },
     { "hook_CreateTask", 51 },
-    { "hook_CreateTask2", 51 },
 
     { 0, 0 }
 };
@@ -842,7 +840,6 @@ string_sig string_sigs[] =
     { 6, "GetImageFolder", "GetCameraObjectTmpPath ERROR[ID:%lx] [TRY:%lx]\n", 0 },
     { 6, "reboot_fw_update", "FirmUpgrade.c", 0 },
 
-    { 7, "hook_CreateTask2", "PhySw", 0x01000001 },
     { 7, "CreateTaskStrictly", "PhySw", 0x01000001 },
     { 7, "RegisterInterruptHandler", "WdtInt", 0x01000001 },
 
@@ -4339,7 +4336,10 @@ void output_firmware_vals(firmware *fw)
 
 int compare_func_names(const func_entry **p1, const func_entry **p2)
 {
-    return stricmp((*p1)->name, (*p2)->name);
+    int rv = stricmp((*p1)->name, (*p2)->name);     // Case insensitive
+    if (rv != 0)
+        return rv;
+    return strcmp((*p1)->name, (*p2)->name);        // Case sensitive (if equal with insensitive test)
 }
 
 int compare_func_addresses(const func_entry **p1, const func_entry **p2)

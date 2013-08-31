@@ -85,8 +85,8 @@
 0xff8353b4,Close
 0xff8353b4,Close_FW
 0xff835440,j_Read_FW
-0xff835444,write
 0xff835444,Write
+0xff835444,write
 0xff835444,Write_FW
 0xff8354d0,Lseek
 0xff8354d0,lseek

@@ -251,6 +251,5 @@ NHSTUB(strtolx                                ,0xff022874) //109
    DEF(task_PhySw                             ,0xff019e8c) //110
    DEF(task_RotaryEncoder                     ,0xff05dc5c) //110
    DEF(hook_CreateTask                        ,0x0068ab8c) //105
-   DEF(hook_CreateTask2                       ,0x0068af04) //107
 NHSTUB(time                                   ,0x0068f8c8) //  6
 NHSTUB(vsprintf                               ,0xff00b43c) //115

@@ -97,8 +97,8 @@
 0xffaf5708,ClearPMByGpio_FW
 0xffadac70,ClearZoomCommonDriveParam_FW
 0xff9585f0,ClearZoomDriveParam_FW
-0xff8159b4,close
 0xff831628,Close
+0xff8159b4,close
 0xff831628,Close_FW
 0xff81a264,CloseConsole_FW
 0xffa5434c,closedir
@@ -909,8 +909,8 @@
 0xff87b800,PutsCameraLogEvent_FW
 0xff9d6ff0,qsort
 0xff8e3b1c,QuietImager_FW
-0xff815b58,read
 0xff815b58,Read
+0xff815b58,read
 0xff815b58,Read_FW
 0xffa544f0,ReadFastDir
 0xff9d70cc,realloc

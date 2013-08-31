@@ -100,8 +100,8 @@
 0xff837170,Write
 0xff837170,write
 0xff837170,Write_FW
-0xff8371fc,lseek
 0xff8371fc,Lseek
+0xff8371fc,lseek
 0xff8371fc,Lseek_FW
 0xff83721c,OpenForScrip_FW
 0xff837244,stat

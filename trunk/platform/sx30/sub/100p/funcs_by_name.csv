@@ -105,8 +105,8 @@
 0xffaeb788,ClearISZData_FW
 0xffb52504,ClearZoomCommonDriveParam_FW
 0xff9876b8,ClearZoomDriveParam_FW
-0xff81ab8c,close
 0xff8370dc,Close
+0xff81ab8c,close
 0xff8370dc,Close_FW
 0xff81f734,CloseConsole_FW
 0xffacdf0c,closedir
@@ -577,8 +577,8 @@
 0xff989188,GetVcmPiPosition_FW
 0xff9891b0,GetVcmPiStatus_FW
 0xff989234,GetVcmScaleResetThreshold_FW
-0xffb79828,GetVcmSrAd_FW
 0xffb53910,GetVcmSrAD_FW
+0xffb79828,GetVcmSrAd_FW
 0xff989390,GetVcmSrAPos_FW
 0xffb53620,GetVcmSrAPosition_FW
 0xff9893fc,GetVcmSrBPos_FW
@@ -1185,8 +1185,8 @@
 0xffb40868,qsort
 0xff9090cc,QuietImager_FW
 0xffa4dbb0,rand
-0xff81ad74,read
 0xff81ad74,Read
+0xff81ad74,read
 0xff81ad74,Read_FW
 0xfface0b0,ReadFastDir
 0xffa4daec,realloc

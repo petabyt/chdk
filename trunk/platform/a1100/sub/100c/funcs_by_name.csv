@@ -94,8 +94,8 @@
 0xffdf328c,ClearISZData_FW
 0xffe3f6c4,ClearZoomCommonDriveParam_FW
 0xffdee828,ClearZoomDriveParam_FW
-0xffc098fc,close
 0xffc138e0,Close
+0xffc098fc,close
 0xffc138e0,Close_FW
 0xffc0be40,CloseConsole_FW
 0xffddf914,closedir
@@ -748,8 +748,8 @@
 0xffc53284,LocalTime
 0xffc5cce8,LockMainPower
 0xffc5cce8,LockMainPower_FW
-0xffc13a20,lseek
 0xffc13a20,Lseek
+0xffc13a20,lseek
 0xffc13a20,Lseek_FW
 0xffdf5960,MakeBootDisk_FW
 0xffc13200,MakeDirectory_Fut
@@ -832,8 +832,8 @@
 0xffe3e7a4,OneShotWhigeBalance_FW
 0xffe3e7a4,OneTypeWhiteBalance_FW
 0xffcf883c,OnPrintPhySw_FW
-0xffc0984c,open
 0xffc138b8,Open
+0xffc0984c,open
 0xffc138b8,Open_FW
 0xffc0bcd4,OpenConsole_FW
 0xffddf7b0,OpenFastDir
@@ -931,8 +931,8 @@
 0xffe265e4,qsort
 0xffda6488,QuietImager_FW
 0xffc0cd68,rand
-0xffc09ae4,read
 0xffc09ae4,Read
+0xffc09ae4,read
 0xffc09ae4,Read_FW
 0xffddf844,ReadFastDir
 0xffc03b1c,realloc

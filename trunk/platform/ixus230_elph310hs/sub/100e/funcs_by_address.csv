@@ -12,8 +12,8 @@
 0xff00a2ac,GetMemInfo
 0xff00ab14,open
 0xff00abc4,close
-0xff00ad68,read
 0xff00ad68,Read
+0xff00ad68,read
 0xff00ad68,Read_FW
 0xff00ea7c,RegisterInterruptHandler
 0xff00eaa0,UnregisterInterruptHandler

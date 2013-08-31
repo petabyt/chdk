@@ -122,8 +122,8 @@
 0xff419a44,ClearPMByGpio_FW
 0xff3f7bc4,ClearZoomCommonDriveParam_FW
 0xff3615cc,ClearZoomDriveParam_FW
-0xff00abd0,close
 0xff0275bc,Close
+0xff00abd0,close
 0xff0275bc,Close_FW
 0xff00f960,CloseConsole_FW
 0xff349748,closedir
@@ -1692,8 +1692,8 @@
 0xff089234,WaitForAnyEventFlag
 0xff02b974,WaitForAnyEventFlagStrictly
 0xff3716b8,WaitMoveZoomLensComplete_FW
-0xff027610,write
 0xff027610,Write
+0xff027610,write
 0xff027610,Write_FW
 0xff0630d8,WRITEADJTABLETOFROM_FW
 0xff06310c,WRITEADJUSTMENTDATATOFROM_FW

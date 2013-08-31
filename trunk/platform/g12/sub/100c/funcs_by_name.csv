@@ -856,8 +856,8 @@
 0xff863f58,LockHdmiState_FW
 0xff89c204,LockMainPower
 0xff89c204,LockMainPower_FW
-0xff8371fc,lseek
 0xff8371fc,Lseek
+0xff8371fc,lseek
 0xff8371fc,Lseek_FW
 0xffb09294,MakeBootDisk_FW
 0xff836acc,MakeDirectory_Fut
@@ -1051,8 +1051,8 @@
 0xffb5fa2c,qsort
 0xff90526c,QuietImager_FW
 0xffa5b364,rand
-0xff81ad74,read
 0xff81ad74,Read
+0xff81ad74,read
 0xff81ad74,Read_FW
 0xffae2c14,ReadFastDir
 0xffa5b2a0,realloc
@@ -1485,8 +1485,8 @@
 0xff83ae0c,WaitForAllEventFlagStrictly
 0xff88d0d8,WaitForAnyEventFlag
 0xff83ade0,WaitForAnyEventFlagStrictly
-0xff837170,write
 0xff837170,Write
+0xff837170,write
 0xff837170,Write_FW
 0xff86bc64,WRITEADJTABLETOFROM_FW
 0xff86bc88,WRITEADJUSTMENTDATATOFROM_FW

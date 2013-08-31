@@ -111,8 +111,8 @@
 0xff382ae0,ClearPMByGpio_FW
 0xff3611a0,ClearZoomCommonDriveParam_FW
 0xff181384,ClearZoomDriveParam_FW
-0xff00abc4,close
 0xff028024,Close
+0xff00abc4,close
 0xff028024,Close_FW
 0xff00f954,CloseConsole_FW
 0xff2c9854,closedir
@@ -908,8 +908,8 @@
 0xff129414,LockHdmiState_FW
 0xff08f6b0,LockMainPower
 0xff08f6b0,LockMainPower_FW
-0xff028240,lseek
 0xff028240,Lseek
+0xff028240,lseek
 0xff028240,Lseek_FW
 0xff2f02c8,MakeBootDisk_FW
 0xff0279b0,MakeDirectory_Fut
@@ -1562,8 +1562,8 @@
 0xff081b5c,WaitForAnyEventFlag
 0xff02bcb8,WaitForAnyEventFlagStrictly
 0xff2ec86c,WaitMoveZoomLensComplete_FW
-0xff028078,write
 0xff028078,Write
+0xff028078,write
 0xff028078,Write_FW
 0xff05e7b8,WRITEADJTABLETOFROM_FW
 0xff05e7ec,WRITEADJUSTMENTDATATOFROM_FW

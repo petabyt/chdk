@@ -450,8 +450,8 @@
 0xffc51028,LocalTime
 0xffc5b568,LockMainPower
 0xffc5b568,LockMainPower_FW
-0xffc13c9c,lseek
 0xffc13c9c,Lseek
+0xffc13c9c,lseek
 0xffc13c9c,Lseek_FW
 0xffddafdc,MakeBootDisk_FW
 0xffc1347c,MakeDirectory_Fut
@@ -607,8 +607,8 @@
 0xffd67718,qsort
 0xffd8a73c,QuietImager_FW
 0xffc0da14,rand
-0xffc0a15c,read
 0xffc0a15c,Read
+0xffc0a15c,read
 0xffc0a15c,Read_FW
 0xffdc4160,ReadFastDir
 0xffc03b78,realloc
@@ -818,8 +818,8 @@
 0xffc0bd50,WaitForAllEventFlagStrictly
 0xffc1724c,WaitForAnyEventFlag
 0xffc0bd24,WaitForAnyEventFlagStrictly
-0xffc13c08,write
 0xffc13c08,Write
+0xffc13c08,write
 0xffc13c08,Write_FW
 0xffc350a0,WRITEADJTABLETOFROM_FW
 0xffcf8a00,WriteSDCard

@@ -17,8 +17,8 @@
 0xffc05494,StopClockSaver_FW
 0xffc0a1a8,open
 0xffc0a258,close
-0xffc0a440,read
 0xffc0a440,Read
+0xffc0a440,read
 0xffc0a440,Read_FW
 0xffc0b880,RegisterInterruptHandler
 0xffc0b8a4,UnregisterInterruptHandler
@@ -140,11 +140,11 @@
 0xffc1504c,Close
 0xffc1504c,Close_FW
 0xffc150f4,j_Read_FW
-0xffc150f8,write
 0xffc150f8,Write
+0xffc150f8,write
 0xffc150f8,Write_FW
-0xffc1518c,lseek
 0xffc1518c,Lseek
+0xffc1518c,lseek
 0xffc1518c,Lseek_FW
 0xffc15254,j_Lseek_FW
 0xffc15258,stat

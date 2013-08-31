@@ -97,11 +97,11 @@
 0xff838060,Close
 0xff838060,Close_FW
 0xff8380ec,j_Read_FW
-0xff8380f0,write
 0xff8380f0,Write
+0xff8380f0,write
 0xff8380f0,Write_FW
-0xff83817c,lseek
 0xff83817c,Lseek
+0xff83817c,lseek
 0xff83817c,Lseek_FW
 0xff83819c,OpenForScrip_FW
 0xff8381c4,stat

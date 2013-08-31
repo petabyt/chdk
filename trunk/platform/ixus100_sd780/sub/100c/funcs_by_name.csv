@@ -93,8 +93,8 @@
 0xffa3ccf8,ClearISZData_FW
 0xffa94024,ClearZoomCommonDriveParam_FW
 0xffa32d34,ClearZoomDriveParam_FW
-0xff8198fc,close
 0xff823c98,Close
+0xff8198fc,close
 0xff823c98,Close_FW
 0xff81be40,CloseConsole_FW
 0xffa1fe64,closedir

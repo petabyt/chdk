@@ -125,8 +125,8 @@
 0xff01b500,ClearWLANFactoryMode_FW
 0xff34bf7c,ClearZoomCommonDriveParam_FW
 0xff34b9ac,ClearZoomDriveParam_FW
-0xff005b98,close
 0xff01cadc,Close
+0xff005b98,close
 0xff01cadc,Close_FW
 0xff00aa1c,CloseConsole_FW
 0xff36e364,closedir
@@ -696,8 +696,8 @@
 0xff1e8204,GetVcmPwmFrequency_FW
 0xff1e7f08,GetVcmScaleResetThreshold_FW
 0xff1e845c,GetVcmSettingWaitTime_FW
-0xff44fa28,GetVcmSrAd_FW
 0xff42d49c,GetVcmSrAD_FW
+0xff44fa28,GetVcmSrAd_FW
 0xff1e7f88,GetVcmSrAPos_FW
 0xff42d0f8,GetVcmSrAPosition_FW
 0xff1e7fa0,GetVcmSrBPos_FW
@@ -1131,8 +1131,8 @@
 0xff30c9a8,LockHdmiState_FW
 0xff09f41c,LockMainPower
 0xff09f41c,LockMainPower_FW
-0xff01ccf8,lseek
 0xff01ccf8,Lseek
+0xff01ccf8,lseek
 0xff01ccf8,Lseek_FW
 0xff348fc0,Ltkids.SetCapRtsThrough_FW
 0xff348f90,Ltkids.SetCapThrough_FW
@@ -1889,8 +1889,8 @@
 0x0068b9ac,WaitForAnyEventFlag
 0x0068b070,WaitForAnyEventFlagStrictly
 0xff38bacc,WaitMoveZoomLensComplete_FW
-0xff01cb30,write
 0xff01cb30,Write
+0xff01cb30,write
 0xff01cb30,Write_FW
 0xff064a24,WRITEADJTABLETOFROM_FW
 0xff064a5c,WRITEADJUSTMENTDATATOFROM_FW

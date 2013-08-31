@@ -103,8 +103,8 @@
 0xff823e54,Close
 0xff823e54,Close_FW
 0xff823efc,j_Read_FW
-0xff823f00,write
 0xff823f00,Write
+0xff823f00,write
 0xff823f00,Write_FW
 0xff823f94,Lseek
 0xff823f94,lseek

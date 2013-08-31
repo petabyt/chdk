@@ -7,8 +7,8 @@
 0xffc04e98,err_init_task
 0xffc09ec4,open
 0xffc09f74,close
-0xffc0a15c,read
 0xffc0a15c,Read
+0xffc0a15c,read
 0xffc0a15c,Read_FW
 0xffc0b5a0,RegisterInterruptHandler
 0xffc0b5c4,UnregisterInterruptHandler
@@ -106,8 +106,8 @@
 0xffc13c28,Write
 0xffc13c28,write
 0xffc13c28,Write_FW
-0xffc13cbc,lseek
 0xffc13cbc,Lseek
+0xffc13cbc,lseek
 0xffc13cbc,Lseek_FW
 0xffc13d84,j_Lseek_FW
 0xffc13d88,stat

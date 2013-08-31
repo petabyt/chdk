@@ -93,8 +93,8 @@
 0xffa65644,ClearISZData_FW
 0xffacd044,ClearZoomCommonDriveParam_FW
 0xffa5c314,ClearZoomDriveParam_FW
-0xff819864,close
 0xff823a64,Close
+0xff819864,close
 0xff823a64,Close_FW
 0xff81bd88,CloseConsole_FW
 0xffa491f4,closedir
@@ -513,8 +513,8 @@
 0xff944400,GetVcmPiAdValue_FW
 0xff943d80,GetVcmPiPosition_FW
 0xff943da8,GetVcmPiStatus_FW
-0xffaeb2f8,GetVcmSrAd_FW
 0xfface21c,GetVcmSrAD_FW
+0xffaeb2f8,GetVcmSrAd_FW
 0xff943ed8,GetVcmSrAPos_FW
 0xffacdf48,GetVcmSrAPosition_FW
 0xff943f44,GetVcmSrBPos_FW
@@ -977,8 +977,8 @@
 0xffacc514,OneShotWhigeBalance_FW
 0xffacc514,OneTypeWhiteBalance_FW
 0xff948370,OnPrintPhySw_FW
-0xff8197b4,open
 0xff823a3c,Open
+0xff8197b4,open
 0xff823a3c,Open_FW
 0xff81bc1c,OpenConsole_FW
 0xffa49090,OpenFastDir
@@ -1074,8 +1074,8 @@
 0xffab815c,qsort
 0xffa0ca70,QuietImager_FW
 0xff81ccac,rand
-0xff819a4c,read
 0xff819a4c,Read
+0xff819a4c,read
 0xff819a4c,Read_FW
 0xffa49124,ReadFastDir
 0xff813b5c,realloc
@@ -1542,8 +1542,8 @@
 0xff9fd2f4,wblpface.start_FW
 0xff9fd304,wblpface.stop_FW
 0xff9fd2e4,wblpface.term_FW
-0xff823b10,write
 0xff823b10,Write
+0xff823b10,write
 0xff823b10,Write_FW
 0xff850ea8,WRITEADJTABLETOFROM_FW
 0xffad3c7c,WriteGyroAdjustment_FW

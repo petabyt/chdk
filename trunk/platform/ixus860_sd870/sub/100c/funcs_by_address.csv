@@ -142,8 +142,8 @@
 0xff8250d8,Write
 0xff8250d8,write
 0xff8250d8,Write_FW
-0xff82516c,lseek
 0xff82516c,Lseek
+0xff82516c,lseek
 0xff82516c,Lseek_FW
 0xff825234,j_Lseek_FW
 0xff825238,stat

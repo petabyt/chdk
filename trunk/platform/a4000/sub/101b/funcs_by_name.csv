@@ -898,8 +898,8 @@
 0x003fb1b8,LocalTime
 0xff885438,LockMainPower
 0xff885438,LockMainPower_FW
-0xff8316c0,lseek
 0xff8316c0,Lseek
+0xff8316c0,lseek
 0xff8316c0,Lseek_FW
 0xffa758c4,MakeBootDisk_FW
 0xffa758d8,MakeScriptDisk_FW
@@ -991,8 +991,8 @@
 0xffadab90,OneShotWhigeBalance_FW
 0xffadab90,OneTypeWhiteBalance_FW
 0xff95fbc0,OnPrintPhySw_FW
-0xff8158f4,open
 0xff8313dc,Open
+0xff8158f4,open
 0xff8313dc,Open_FW
 0xff81a128,OpenConsole_FW
 0xffa5696c,OpenFastDir

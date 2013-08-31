@@ -877,8 +877,8 @@
 0xffaa5d60,OneShotWhigeBalance_FW
 0xffaa5d60,OneTypeWhiteBalance_FW
 0xff92e500,OnPrintPhySw_FW
-0xff81afd8,open
 0xff83624c,Open
+0xff81afd8,open
 0xff83624c,Open_FW
 0xff820038,OpenConsole_FW
 0xffa2cff8,OpenFastDir
@@ -1372,8 +1372,8 @@
 0xff81f580,WaitForAllEventFlagStrictly
 0xff838b38,WaitForAnyEventFlag
 0xff81f554,WaitForAnyEventFlagStrictly
-0xff836348,write
 0xff836348,Write
+0xff836348,write
 0xff836348,Write_FW
 0xff858580,WRITEADJTABLETOFROM_FW
 0xff8585a4,WRITEADJUSTMENTDATATOFROM_FW

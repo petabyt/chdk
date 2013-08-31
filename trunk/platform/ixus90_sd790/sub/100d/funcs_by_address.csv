@@ -106,8 +106,8 @@
 0xff823e4c,Write
 0xff823e4c,write
 0xff823e4c,Write_FW
-0xff823ee0,lseek
 0xff823ee0,Lseek
+0xff823ee0,lseek
 0xff823ee0,Lseek_FW
 0xff823fa8,j_Lseek_FW
 0xff823fac,stat

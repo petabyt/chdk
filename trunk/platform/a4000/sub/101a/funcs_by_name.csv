@@ -1088,8 +1088,8 @@
 0xff87d6d4,PutsCameraLogEvent_FW
 0xff9dbb6c,qsort
 0xff8e44a4,QuietImager_FW
-0xff815b48,read
 0xff815b48,Read
+0xff815b48,read
 0xff815b48,Read_FW
 0xffa561d4,ReadFastDir
 0xff9dbc48,realloc
@@ -1555,8 +1555,8 @@
 0x003faac8,WaitForAnyEventFlag
 0x003f7bbc,WaitForAnyEventFlagStrictly
 0xffa706a8,WaitMoveZoomLensComplete_FW
-0xff8314f8,write
 0xff8314f8,Write
+0xff8314f8,write
 0xff8314f8,Write_FW
 0xff85b5fc,WRITEADJTABLETOFROM_FW
 0xff85b630,WRITEADJUSTMENTDATATOFROM_FW

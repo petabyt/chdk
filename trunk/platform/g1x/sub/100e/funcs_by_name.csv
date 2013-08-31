@@ -969,8 +969,8 @@
 0xff15c33c,LockHdmiState_FW
 0xff096d28,LockMainPower
 0xff096d28,LockMainPower_FW
-0xff026674,lseek
 0xff026674,Lseek
+0xff026674,lseek
 0xff026674,Lseek_FW
 0xff374af0,MakeBootDisk_FW
 0xff025de4,MakeDirectory_Fut
@@ -1077,8 +1077,8 @@
 0xff401e28,OneShotWhigeBalance_FW
 0xff401e28,OneTypeWhiteBalance_FW
 0xff1cb7cc,OnPrintPhySw_FW
-0xff00ab20,open
 0xff026390,Open
+0xff00ab20,open
 0xff026390,Open_FW
 0xff00f834,OpenConsole_FW
 0xff34c250,OpenFastDir
@@ -1648,8 +1648,8 @@
 0xff08738c,WaitForAnyEventFlag
 0xff02a84c,WaitForAnyEventFlagStrictly
 0xff371734,WaitMoveZoomLensComplete_FW
-0xff0264ac,write
 0xff0264ac,Write
+0xff0264ac,write
 0xff0264ac,Write_FW
 0xff061558,WRITEADJTABLETOFROM_FW
 0xff06158c,WRITEADJUSTMENTDATATOFROM_FW

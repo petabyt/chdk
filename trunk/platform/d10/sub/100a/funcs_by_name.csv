@@ -933,8 +933,8 @@
 0xffa83b3c,qsort
 0xff9e960c,QuietImager_FW
 0xff81cd68,rand
-0xff819ae4,read
 0xff819ae4,Read
+0xff819ae4,read
 0xff819ae4,Read_FW
 0xffa2a474,ReadFastDir
 0xff813b1c,realloc

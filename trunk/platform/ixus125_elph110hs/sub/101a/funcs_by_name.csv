@@ -922,8 +922,8 @@
 0xff2a365c,LockHdmiState_FW
 0xff0807a8,LockMainPower
 0xff0807a8,LockMainPower_FW
-0xff0211cc,lseek
 0xff0211cc,Lseek
+0xff0211cc,lseek
 0xff0211cc,Lseek_FW
 0xff3224e8,MakeBootDisk_FW
 0xff3224fc,MakeScriptDisk_FW
@@ -1016,8 +1016,8 @@
 0xff3a2b44,OneShotWhigeBalance_FW
 0xff3a2b44,OneTypeWhiteBalance_FW
 0xff1952f4,OnPrintPhySw_FW
-0xff005b38,open
 0xff020e88,Open
+0xff005b38,open
 0xff020e88,Open_FW
 0xff00ac30,OpenConsole_FW
 0xff2fca7c,OpenFastDir

@@ -98,8 +98,8 @@
 0xffaf4454,ClearPMByGpio_FW
 0xffad99bc,ClearZoomCommonDriveParam_FW
 0xff9582d0,ClearZoomDriveParam_FW
-0xff8159e4,close
 0xff830074,Close
+0xff8159e4,close
 0xff830074,Close_FW
 0xff81a294,CloseConsole_FW
 0xffa539f0,closedir
@@ -723,8 +723,8 @@
 0x003fb1b8,LocalTime
 0xff883170,LockMainPower
 0xff883170,LockMainPower_FW
-0xff8302f0,lseek
 0xff8302f0,Lseek
+0xff8302f0,lseek
 0xff8302f0,Lseek_FW
 0xffa72038,MakeBootDisk_FW
 0xffa7204c,MakeScriptDisk_FW
@@ -808,8 +808,8 @@
 0xffad884c,OneShotWhigeBalance_FW
 0xffad884c,OneTypeWhiteBalance_FW
 0xff95c1b4,OnPrintPhySw_FW
-0xff815934,open
 0xff82ffac,Open
+0xff815934,open
 0xff82ffac,Open_FW
 0xff81a168,OpenConsole_FW
 0xffa53a40,OpenFastDir
@@ -907,8 +907,8 @@
 0xff87b3c4,PutsCameraLogEvent_FW
 0xff9d6fac,qsort
 0xff8e33b8,QuietImager_FW
-0xff815b88,read
 0xff815b88,Read
+0xff815b88,read
 0xff815b88,Read_FW
 0xffa53ba4,ReadFastDir
 0xff95c64c,ReadModifyWrite_FW
@@ -1275,8 +1275,8 @@
 0x003faac8,WaitForAnyEventFlag
 0x003f7bbc,WaitForAnyEventFlagStrictly
 0xffa6e158,WaitMoveZoomLensComplete_FW
-0xff8300c8,write
 0xff8300c8,Write
+0xff8300c8,write
 0xff8300c8,Write_FW
 0xff85b400,WRITEADJTABLETOFROM_FW
 0xff85b434,WRITEADJUSTMENTDATATOFROM_FW

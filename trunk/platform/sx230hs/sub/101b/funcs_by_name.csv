@@ -917,8 +917,8 @@
 0xff0560d4,LockHdmiState_FW
 0xff093170,LockMainPower
 0xff093170,LockMainPower_FW
-0xff0276d4,lseek
 0xff0276d4,Lseek
+0xff0276d4,lseek
 0xff0276d4,Lseek_FW
 0xff312020,MakeBootDisk_FW
 0xff026e44,MakeDirectory_Fut

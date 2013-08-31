@@ -106,8 +106,8 @@
 0xffaf8714,ClearPMByGpio_FW
 0xffadcd34,ClearZoomCommonDriveParam_FW
 0xff95b35c,ClearZoomDriveParam_FW
-0xff8159b4,close
 0xff8314b8,Close
+0xff8159b4,close
 0xff8314b8,Close_FW
 0xff81a264,CloseConsole_FW
 0xffa576e4,closedir
@@ -898,8 +898,8 @@
 0x003fb1b8,LocalTime
 0xff885ac8,LockMainPower
 0xff885ac8,LockMainPower_FW
-0xff8316d4,lseek
 0xff8316d4,Lseek
+0xff8316d4,lseek
 0xff8316d4,Lseek_FW
 0xffa7670c,MakeBootDisk_FW
 0xffa76720,MakeScriptDisk_FW

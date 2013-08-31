@@ -855,8 +855,8 @@
 0xff886b34,LocalTime
 0xff891e64,LockMainPower
 0xff891e64,LockMainPower_FW
-0xff836ee0,lseek
 0xff836ee0,Lseek
+0xff836ee0,lseek
 0xff836ee0,Lseek_FW
 0xffab72dc,MakeBootDisk_FW
 0xff836650,MakeDirectory_Fut
@@ -945,8 +945,8 @@
 0xffb18eac,OneShotWhigeBalance_FW
 0xffb18eac,OneTypeWhiteBalance_FW
 0xff96aea0,OnPrintPhySw_FW
-0xff81ab04,open
 0xff836bfc,Open
+0xff81ab04,open
 0xff836bfc,Open_FW
 0xff81f6f4,OpenConsole_FW
 0xffa911e0,OpenFastDir
@@ -1474,8 +1474,8 @@
 0xff83a5a8,WaitForAllEventFlagStrictly
 0xff884be0,WaitForAnyEventFlag
 0xff83a57c,WaitForAnyEventFlagStrictly
-0xff836d18,write
 0xff836d18,Write
+0xff836d18,write
 0xff836d18,Write_FW
 0xff864f98,WRITEADJTABLETOFROM_FW
 0xff864fbc,WRITEADJUSTMENTDATATOFROM_FW
