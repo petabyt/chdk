@@ -2372,6 +2372,77 @@ static int luaCB_set_usb_capture_timeout( lua_State* L )
     return 0;
 }
 
+//------------------------------------------------------------------------------------------
+// APEX conversion functions
+
+static int luaCB_iso_to_sv96( lua_State* L )
+{
+  lua_pushnumber(L, shooting_get_sv96_from_iso(luaL_checknumber(L, 1)));
+  return 1;
+}
+
+static int luaCB_sv96_to_iso( lua_State* L )
+{
+  lua_pushnumber(L, shooting_get_iso_from_sv96(luaL_checknumber(L, 1)));
+  return 1;
+}
+
+static int luaCB_iso_real_to_market( lua_State* L )
+{
+  lua_pushnumber(L, shooting_iso_real_to_market(luaL_checknumber(L, 1)));
+  return 1;
+}
+
+static int luaCB_iso_market_to_real( lua_State* L )
+{
+  lua_pushnumber(L, shooting_iso_market_to_real(luaL_checknumber(L, 1)));
+  return 1;
+}
+
+static int luaCB_sv96_real_to_market( lua_State* L )
+{
+  lua_pushnumber(L, shooting_sv96_real_to_market(luaL_checknumber(L, 1)));
+  return 1;
+}
+
+static int luaCB_sv96_market_to_real( lua_State* L )
+{
+  lua_pushnumber(L, shooting_sv96_market_to_real(luaL_checknumber(L, 1)));
+  return 1;
+}
+
+static int luaCB_aperture_to_av96( lua_State* L )
+{
+  lua_pushnumber(L, shooting_get_av96_from_aperture(luaL_checknumber(L, 1)));
+  return 1;
+}
+
+static int luaCB_av96_to_aperture( lua_State* L )
+{
+  lua_pushnumber(L, shooting_get_aperture_from_av96(luaL_checknumber(L, 1)));
+  return 1;
+}
+
+static int luaCB_usec_to_tv96( lua_State* L )
+{
+  lua_pushnumber(L, shooting_get_tv96_from_shutter_speed((float)luaL_checknumber(L, 1)/1000000.0));
+  return 1;
+}
+
+static int luaCB_tv96_to_usec( lua_State* L )
+{
+  lua_pushnumber(L, (int)(shooting_get_shutter_speed_from_tv96(luaL_checknumber(L, 1)) * 1000000.0 + 0.5));
+  return 1;
+}
+
+static int luaCB_seconds_to_tv96( lua_State* L )
+{
+  lua_pushnumber(L, shooting_get_tv96_from_shutter_speed((float)luaL_checknumber(L, 1)/(float)luaL_checknumber(L, 2)));
+  return 1;
+}
+
+//------------------------------------------------------------------------------------------
+
 #define FUNC( X ) { #X,	luaCB_##X },
 static const luaL_Reg chdk_funcs[] = {
     FUNC(shoot)
@@ -2550,6 +2621,19 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_usb_capture_support)
     FUNC(init_usb_capture)
     FUNC(set_usb_capture_timeout)
+
+    FUNC(iso_to_sv96)
+    FUNC(sv96_to_iso)
+    FUNC(iso_real_to_market)
+    FUNC(iso_market_to_real)
+    FUNC(sv96_real_to_market)
+    FUNC(sv96_market_to_real)
+    FUNC(aperture_to_av96)
+    FUNC(av96_to_aperture)
+    FUNC(usec_to_tv96)
+    FUNC(tv96_to_usec)
+    FUNC(seconds_to_tv96)
+
     {NULL, NULL},
 };
 

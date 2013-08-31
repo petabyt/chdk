@@ -96,6 +96,7 @@ extern void shooting_set_user_tv_by_id_rel(int v);
 
 extern short shooting_get_aperture_sizes_table_size();
 extern short shooting_get_aperture_from_av96(short av96);
+extern short shooting_get_av96_from_aperture(short aperture);
 extern int shooting_get_user_av_id();
 extern void shooting_set_user_av_by_id(int v);
 extern short shooting_get_av96();
@@ -151,8 +152,12 @@ extern void shooting_set_iso_real(short iso, short is_now);
 extern void shooting_set_sv96(short sv96, short is_now);
 extern short shooting_get_iso_override_value();
 
-extern int shooting_iso_market_to_real(int isom);
-extern int shooting_iso_real_to_market(int isor);
+extern short shooting_iso_market_to_real(short isom);
+extern short shooting_iso_real_to_market(short isor);
+extern short shooting_sv96_market_to_real(short isom);
+extern short shooting_sv96_real_to_market(short isor);
+extern short shooting_get_sv96_from_iso(short iso);
+extern short shooting_get_iso_from_sv96(short sv96);
 
 /******************************************************************/
 

@@ -91,7 +91,7 @@ static const struct keyword_token keywords[] = {
   {"print",                   TOKENIZER_PRINT},
   {"random",                  TOKENIZER_RANDOM},
   {"click",                   TOKENIZER_CLICK},
-  {"playsound",                   TOKENIZER_PLAY_SOUND},
+  {"playsound",               TOKENIZER_PLAY_SOUND},
   {"press",                   TOKENIZER_PRESS},
   {"release",                 TOKENIZER_RELEASE},
   //{"shot",                    TOKENIZER_SHOOT}, // for compatibility
@@ -126,9 +126,9 @@ static const struct keyword_token keywords[] = {
   {"get_jpg_count",           TOKENIZER_GET_JPG_COUNT},
   {"get_min_stack_dist",      TOKENIZER_GET_MIN_STACK_DIST},
   {"get_movie_status",        TOKENIZER_GET_MOVIE_STATUS},
-  {"get_mode",				        TOKENIZER_GET_MODE},  // Returns 0 in recordmode, 1 in playmode
+  {"get_mode",				  TOKENIZER_GET_MODE},  // Returns 0 in recordmode, 1 in playmode
   {"get_near_limit",          TOKENIZER_GET_NEAR_LIMIT},
-  {"get_platform_id",          TOKENIZER_GET_PLATFORM_ID},
+  {"get_platform_id",         TOKENIZER_GET_PLATFORM_ID},
   {"get_propset",             TOKENIZER_GET_PROPSET},
   {"get_prop",                TOKENIZER_GET_PROP},
   {"get_quality",             TOKENIZER_GET_QUALITY},
@@ -139,7 +139,7 @@ static const struct keyword_token keywords[] = {
   {"get_sv96",	              TOKENIZER_GET_SV96},
   {"get_temperature",         TOKENIZER_GET_TEMPERATURE},
   {"get_tick_count",          TOKENIZER_GET_TICK_COUNT},
-  {"get_time",          			TOKENIZER_GET_TIME},
+  {"get_time",          	  TOKENIZER_GET_TIME},
   {"get_tv96",                TOKENIZER_GET_TV96},
   {"get_user_av_id",          TOKENIZER_GET_USER_AV_ID},
   {"get_user_av96",           TOKENIZER_GET_USER_AV96},
@@ -168,7 +168,7 @@ static const struct keyword_token keywords[] = {
   {"set_movie_status",        TOKENIZER_SET_MOVIE_STATUS},  
   {"set_nd_filter",           TOKENIZER_SET_ND_FILTER},
   {"set_prop",                TOKENIZER_SET_PROP},
-  {"set_quality",                TOKENIZER_SET_QUALITY},
+  {"set_quality",             TOKENIZER_SET_QUALITY},
   {"set_raw_nr",              TOKENIZER_SET_RAW_NR},
   {"set_raw",                 TOKENIZER_SET_RAW},
   {"set_resolution",          TOKENIZER_SET_RESOLUTION},
@@ -224,11 +224,24 @@ static const struct keyword_token keywords[] = {
   {"get_orientation_sensor",  TOKENIZER_GET_ORIENTATION_SENSOR},
   {"get_nd_present",          TOKENIZER_GET_ND_PRESENT},
   {"get_histo_range",         TOKENIZER_GET_HISTO_RANGE},
-   {"shot_histo_enable",       TOKENIZER_SHOT_HISTO_ENABLE},
-   {"set_aflock",            TOKENIZER_SET_AFLOCK},
-  {"is_capture_mode_valid",  TOKENIZER_IS_CAPTURE_MODE_VALID}, 
-  {"reboot",                 TOKENIZER_REBOOT},
+  {"shot_histo_enable",       TOKENIZER_SHOT_HISTO_ENABLE},
+  {"set_aflock",              TOKENIZER_SET_AFLOCK},
+  {"is_capture_mode_valid",   TOKENIZER_IS_CAPTURE_MODE_VALID}, 
+  {"reboot",                  TOKENIZER_REBOOT},
   
+  // APEX functions
+  {"iso_to_sv96",             TOKENIZER_ISO_TO_SV96},
+  {"sv96_to_iso",             TOKENIZER_SV96_TO_ISO},
+  {"iso_real_to_market",      TOKENIZER_ISO_REAL_TO_MARKET},
+  {"iso_market_to_real",      TOKENIZER_ISO_MARKET_TO_REAL},
+  {"sv96_real_to_market",     TOKENIZER_SV96_REAL_TO_MARKET},
+  {"sv96_market_to_real",     TOKENIZER_SV96_MARKET_TO_REAL},
+  {"aperture_to_av96",        TOKENIZER_APERTURE_TO_AV96},
+  {"av96_to_aperture",        TOKENIZER_AV96_TO_APERTURE},
+  {"usec_to_tv96",            TOKENIZER_USEC_TO_TV96},
+  {"tv96_to_usec",            TOKENIZER_TV96_TO_USEC},
+  {"seconds_to_tv96",         TOKENIZER_SECONDS_TO_TV96},
+
   {"end",                     TOKENIZER_END},
 
   {NULL,                      TOKENIZER_ERROR}
