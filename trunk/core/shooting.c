@@ -217,8 +217,8 @@ static short canon_sv96_base=0;
 #define ISO_REAL_TO_MARKET_ROUND    1024
 #endif
 
-#define ISO_MARKET_TO_REAL(x)       ((x * ISO_MARKET_TO_REAL_MULT + ISO_MARKET_TO_REAL_ROUND) >> ISO_MARKET_TO_REAL_SHIFT)
-#define ISO_REAL_TO_MARKET(x)       ((x * ISO_REAL_TO_MARKET_MULT + ISO_REAL_TO_MARKET_ROUND) >> ISO_REAL_TO_MARKET_SHIFT)
+#define ISO_MARKET_TO_REAL(x)       (((int)x * ISO_MARKET_TO_REAL_MULT + ISO_MARKET_TO_REAL_ROUND) >> ISO_MARKET_TO_REAL_SHIFT)
+#define ISO_REAL_TO_MARKET(x)       (((int)x * ISO_REAL_TO_MARKET_MULT + ISO_REAL_TO_MARKET_ROUND) >> ISO_REAL_TO_MARKET_SHIFT)
 
 short shooting_get_sv96_from_iso(short iso)
 {
@@ -234,14 +234,24 @@ short shooting_get_iso_from_sv96(short sv96)
     return (short)( (double)pow(2, (((double)sv96)/96.0))*100.0/32.0 + 0.5 );
 }
 
-int shooting_iso_market_to_real(int isom)
+short shooting_iso_market_to_real(short isom)
 {
    return ISO_MARKET_TO_REAL(isom);
 }
 
-int shooting_iso_real_to_market(int isor)
+short shooting_iso_real_to_market(short isor)
 {
    return ISO_REAL_TO_MARKET(isor);
+}
+
+short shooting_sv96_market_to_real(short sv96)
+{
+   return sv96 - SV96_MARKET_OFFSET;
+}
+
+short shooting_sv96_real_to_market(short sv96)
+{
+   return sv96 + SV96_MARKET_OFFSET;
 }
 
 short shooting_get_iso_override_value()
@@ -577,6 +587,11 @@ short shooting_get_aperture_from_av96(short av96)
     if (av96)
         return (short)((pow(2, ((double)av96)/192.0))*1000.0 + 0.5);
     return -1;
+}
+
+short shooting_get_av96_from_aperture(short aperture)
+{
+    return (int)((log((double)aperture/1000.0) * 192 * inv_log_2) + 0.5);
 }
 
 // Get Av override value (APEX96)

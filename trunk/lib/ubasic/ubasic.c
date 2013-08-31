@@ -629,6 +629,55 @@ static int factor(void)
     int partNr = expr();
     r = swap_partitions(partNr);
     break;
+
+  // APEX functions
+  case TOKENIZER_ISO_TO_SV96:
+    accept(TOKENIZER_ISO_TO_SV96);
+    r = shooting_get_sv96_from_iso(expr());
+    break;
+  case TOKENIZER_SV96_TO_ISO:
+    accept(TOKENIZER_SV96_TO_ISO);
+    r = shooting_get_iso_from_sv96(expr());
+    break;
+  case TOKENIZER_ISO_REAL_TO_MARKET:
+    accept(TOKENIZER_ISO_REAL_TO_MARKET);
+    r = shooting_iso_real_to_market(expr());
+    break;
+  case TOKENIZER_ISO_MARKET_TO_REAL:
+    accept(TOKENIZER_ISO_MARKET_TO_REAL);
+    r = shooting_iso_market_to_real(expr());
+    break;
+  case TOKENIZER_SV96_REAL_TO_MARKET:
+    accept(TOKENIZER_SV96_REAL_TO_MARKET);
+    r = shooting_sv96_real_to_market(expr());
+    break;
+  case TOKENIZER_SV96_MARKET_TO_REAL:
+    accept(TOKENIZER_SV96_MARKET_TO_REAL);
+    r = shooting_sv96_market_to_real(expr());
+    break;
+  case TOKENIZER_APERTURE_TO_AV96:
+    accept(TOKENIZER_APERTURE_TO_AV96);
+    r = shooting_get_av96_from_aperture(expr());
+    break;
+  case TOKENIZER_AV96_TO_APERTURE:
+    accept(TOKENIZER_AV96_TO_APERTURE);
+    r = shooting_get_aperture_from_av96(expr());
+    break;
+  case TOKENIZER_USEC_TO_TV96:
+    accept(TOKENIZER_USEC_TO_TV96);
+    r = shooting_get_tv96_from_shutter_speed((float)expr()/1000000.0);
+    break;
+  case TOKENIZER_TV96_TO_USEC:
+    accept(TOKENIZER_TV96_TO_USEC);
+    r = (int)(shooting_get_shutter_speed_from_tv96(expr()) * 1000000.0 + 0.5);
+    break;
+  case TOKENIZER_SECONDS_TO_TV96:
+    accept(TOKENIZER_SECONDS_TO_TV96);
+    int n = expr();
+    int d = expr();
+    r = shooting_get_tv96_from_shutter_speed((float)n/(float)d);
+    break;
+
   default:
     r = varfactor();
     break;
