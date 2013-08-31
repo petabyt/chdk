@@ -224,6 +224,11 @@ ifdef OPT_WARNINGS
      endif
 endif
 
+ifdef OPT_EXPIRE_TEST
+# convert +n days to unix-ish timestamp
+EXPIRE_TIME:=$(shell expr `date +%s` + $(OPT_EXPIRE_TEST) '*' 86400)
+CFLAGS+= -DOPT_EXPIRE_TEST=$(EXPIRE_TIME)
+endif
 ##########################################################################
 
 .PHONY: default
