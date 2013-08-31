@@ -53,4 +53,4 @@ OPT_GEN_STUBS=1
 DEF_SVN_REF=0
 
 # make the build show an "expired" notice after N days. To encourage users of test builds to provide feedback
-#OPT_EXPIRE_TEST=7
+#OPT_EXPIRE_TEST=
