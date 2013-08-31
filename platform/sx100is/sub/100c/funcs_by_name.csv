@@ -756,8 +756,8 @@
 0xffdbfd80,OneShotWhigeBalance_FW
 0xffcd3634,OnPrintHVStatus_FW
 0xffc12f0c,OnPrintPhySw_FW
-0xffc0a1a8,open
 0xffc15024,Open
+0xffc0a1a8,open
 0xffc15024,Open_FW
 0xffc0d758,OpenConsole_FW
 0xffddc61c,OpenFastDir
@@ -1246,8 +1246,8 @@
 0xffc0c028,WaitForAllEventFlagStrictly
 0xffc19268,WaitForAnyEventFlag
 0xffc0bffc,WaitForAnyEventFlagStrictly
-0xffc150f8,write
 0xffc150f8,Write
+0xffc150f8,write
 0xffc150f8,Write_FW
 0xffc3c904,WRITEADJTABLETOFROM_FW
 0xffdc6030,WriteGyroAdjustment_FW

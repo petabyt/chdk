@@ -113,8 +113,8 @@
 0xff82a3bc,ClearWLANFactoryMode_FW
 0xffa9d030,ClearZoomCommonDriveParam_FW
 0xffa9c818,ClearZoomDriveParam_FW
-0xff81593c,close
 0xff82b998,Close
+0xff81593c,close
 0xff82b998,Close_FW
 0xff819ddc,CloseConsole_FW
 0xffabc7e8,closedir
@@ -938,8 +938,8 @@
 0xffa78d20,LockHdmiState_FW
 0xff8993bc,LockMainPower
 0xff8993bc,LockMainPower_FW
-0xff82bbb4,lseek
 0xff82bbb4,Lseek
+0xff82bbb4,lseek
 0xff82bbb4,Lseek_FW
 0xffae5384,MakeBootDisk_FW
 0xffae5398,MakeScriptDisk_FW
@@ -1117,8 +1117,8 @@
 0xffb39e18,qsort
 0xff900c44,QuietImager_FW
 0xffa24cfc,rand
-0xff815ae0,read
 0xff815ae0,Read
+0xff815ae0,read
 0xff815ae0,Read_FW
 0xffabc98c,ReadFastDir
 0xffa24da8,realloc

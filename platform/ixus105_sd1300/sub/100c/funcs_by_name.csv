@@ -98,8 +98,8 @@
 0xffe19890,ClearISZData_FW
 0xffe74508,ClearZoomCommonDriveParam_FW
 0xffe1498c,ClearZoomDriveParam_FW
-0xffc0aa94,close
 0xffc26b54,Close
+0xffc0aa94,close
 0xffc26b54,Close_FW
 0xffc0f6d0,CloseConsole_FW
 0xffe08f90,closedir
@@ -1381,8 +1381,8 @@
 0xffc29d18,WaitForAllEventFlagStrictly
 0xffc68acc,WaitForAnyEventFlag
 0xffc29cec,WaitForAnyEventFlagStrictly
-0xffc26be4,write
 0xffc26be4,Write
+0xffc26be4,write
 0xffc26be4,Write_FW
 0xffc4bb00,WRITEADJTABLETOFROM_FW
 0xffc4bb24,WRITEADJUSTMENTDATATOFROM_FW

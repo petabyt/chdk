@@ -550,8 +550,8 @@
 0xff957b84,GetVcmPiAdValue_FW
 0xff957504,GetVcmPiPosition_FW
 0xff95752c,GetVcmPiStatus_FW
-0xffb154f4,GetVcmSrAd_FW
 0xffaf9098,GetVcmSrAD_FW
+0xffb154f4,GetVcmSrAd_FW
 0xff95765c,GetVcmSrAPos_FW
 0xffaf8dc4,GetVcmSrAPosition_FW
 0xff9576c8,GetVcmSrBPos_FW
@@ -946,8 +946,8 @@
 0xff84c228,LockHdmiState_FW
 0xff885580,LockMainPower
 0xff885580,LockMainPower_FW
-0xff823b84,lseek
 0xff823b84,Lseek
+0xff823b84,lseek
 0xff823b84,Lseek_FW
 0xff95bc38,m_FW
 0xffa922e4,MakeBootDisk_FW
@@ -1140,8 +1140,8 @@
 0xffa30784,QuietImager_FW
 0xff95bc8c,r_FW
 0xff81ccac,rand
-0xff819a4c,read
 0xff819a4c,Read
+0xff819a4c,read
 0xff819a4c,Read_FW
 0xffa6fe78,ReadFastDir
 0xff813b5c,realloc

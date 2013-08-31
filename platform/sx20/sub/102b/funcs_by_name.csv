@@ -544,8 +544,8 @@
 0xff959a58,GetVcmPiAdValue_FW
 0xff9593ec,GetVcmPiPosition_FW
 0xff959414,GetVcmPiStatus_FW
-0xffb1eb8c,GetVcmSrAd_FW
 0xffaffe44,GetVcmSrAD_FW
+0xffb1eb8c,GetVcmSrAd_FW
 0xff959530,GetVcmSrAPos_FW
 0xffaffb70,GetVcmSrAPosition_FW
 0xff95959c,GetVcmSrBPos_FW
@@ -939,8 +939,8 @@
 0xff85d684,LockHdmiState_FW
 0xff896eac,LockMainPower
 0xff896eac,LockMainPower_FW
-0xff835398,lseek
 0xff835398,Lseek
+0xff835398,lseek
 0xff835398,Lseek_FW
 0xffa9bc20,MakeBootDisk_FW
 0xff834c7c,MakeDirectory_Fut
@@ -1137,8 +1137,8 @@
 0xffaeb4a0,qsort
 0xffa3bcd8,QuietImager_FW
 0xff8204e0,rand
-0xff81ab78,read
 0xff81ab78,Read
+0xff81ab78,read
 0xff81ab78,Read_FW
 0xffa7d518,ReadFastDir
 0xffa07174,realloc
@@ -1619,8 +1619,8 @@
 0xffa27c58,wblpface.start_FW
 0xffa27c68,wblpface.stop_FW
 0xffa27c48,wblpface.term_FW
-0xff83530c,write
 0xff83530c,Write
+0xff83530c,write
 0xff83530c,Write_FW
 0xff864914,WRITEADJTABLETOFROM_FW
 0xff864938,WRITEADJUSTMENTDATATOFROM_FW

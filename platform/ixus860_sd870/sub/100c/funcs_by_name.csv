@@ -733,8 +733,8 @@
 0xff8e6d84,OnPrintHVStatus_FW
 0xff822ee4,OnPrintPhySw_FW
 0xff8e7130,OnPrintTouchWheel_FW
-0xff81a1a8,open
 0xff825004,Open
+0xff81a1a8,open
 0xff825004,Open_FW
 0xff81d758,OpenConsole_FW
 0xffa04040,OpenFastDir

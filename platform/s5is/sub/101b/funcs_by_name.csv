@@ -22,8 +22,8 @@
 0xff82a2a8,ClearEventFlag
 0xff860894,ClearISIComponent_FW
 0xff8608a8,ClearISZData_FW
-0xff81a018,close
 0xff825cc4,Close
+0xff81a018,close
 0xff825cc4,Close_FW
 0xff81d64c,CloseConsole_FW
 0xffa279d0,closedir
@@ -398,8 +398,8 @@
 0xff87272c,PutsCameraLogEvent_FW
 0xff9ca224,qsort
 0xff81e76c,rand
-0xff81a200,read
 0xff825d6c,Read,(stubs_entry_2.s)
+0xff81a200,read
 0xff81a200,Read_FW
 0xffa27900,ReadFastDir
 0xff813be0,realloc

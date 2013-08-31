@@ -805,8 +805,8 @@
 0xff85e9b4,LockHdmiState_FW
 0xff895394,LockMainPower
 0xff895394,LockMainPower_FW
-0xff835acc,lseek
 0xff835acc,Lseek
+0xff835acc,lseek
 0xff835acc,Lseek_FW
 0xffaa3cac,MakeBootDisk_FW
 0xff8353b0,MakeDirectory_Fut

@@ -88,8 +88,8 @@
 0xffe05714,ClearISZData_FW
 0xffe5ab50,ClearZoomCommonDriveParam_FW
 0xffe03134,ClearZoomDriveParam_FW
-0xffc09f50,close
 0xffc13348,Close
+0xffc09f50,close
 0xffc13348,Close_FW
 0xffc0c954,CloseConsole_FW
 0xffdf3688,closedir
@@ -729,8 +729,8 @@
 0xffc595bc,LocalTime
 0xffc63da0,LockMainPower
 0xffc63da0,LockMainPower_FW
-0xffc13488,lseek
 0xffc13488,Lseek
+0xffc13488,lseek
 0xffc13488,Lseek_FW
 0xffe08ab4,MakeBootDisk_FW
 0xffc12c68,MakeDirectory_Fut
@@ -822,8 +822,8 @@
 0xffe59c90,OneShotWhigeBalance_FW
 0xffe59c90,OneTypeWhiteBalance_FW
 0xffd1777c,OnPrintPhySw_FW
-0xffc09ea0,open
 0xffc13320,Open
+0xffc09ea0,open
 0xffc13320,Open_FW
 0xffc0c7e8,OpenConsole_FW
 0xffdf3524,OpenFastDir
@@ -920,8 +920,8 @@
 0xffd9045c,qsort
 0xffdb6bf4,QuietImager_FW
 0xffc0d9bc,rand
-0xffc0a138,read
 0xffc0a138,Read
+0xffc0a138,read
 0xffc0a138,Read_FW
 0xffdf35b8,ReadFastDir
 0xffc03b60,realloc
@@ -1307,8 +1307,8 @@
 0xffda985c,wblpface.start_FW
 0xffda986c,wblpface.stop_FW
 0xffda984c,wblpface.term_FW
-0xffc133f4,write
 0xffc133f4,Write
+0xffc133f4,write
 0xffc133f4,Write_FW
 0xffc3ad0c,WRITEADJTABLETOFROM_FW
 0xffe60e00,WriteGyroAdjustment_FW

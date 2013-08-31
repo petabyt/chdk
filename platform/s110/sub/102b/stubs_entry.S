@@ -255,6 +255,5 @@ NHSTUB(strtolx                                ,0xf803c1cc) //109
    DEF(task_RotaryEncoder                     ,0xf807bdb8) //110
    DEF(task_TouchPanel                        ,0xf8080d84) //110
    DEF(hook_CreateTask                        ,0x0068ab8c) //105
-   DEF(hook_CreateTask2                       ,0x0068af04) //107
 NHSTUB(time                                   ,0x0069991c) //  6
 NHSTUB(vsprintf                               ,0xf800d2c4) //115

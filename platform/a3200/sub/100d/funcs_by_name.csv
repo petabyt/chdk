@@ -1042,8 +1042,8 @@
 0xffafcdd8,qsort
 0xff8f2b14,QuietImager_FW
 0xffa0ab78,rand
-0xff81ad58,read
 0xff81ad58,Read
+0xff81ad58,read
 0xff81ad58,Read_FW
 0xffa90bec,ReadFastDir
 0xffa0aab4,realloc
@@ -1473,8 +1473,8 @@
 0xff83a554,WaitForAllEventFlagStrictly
 0xff884b2c,WaitForAnyEventFlag
 0xff83a528,WaitForAnyEventFlagStrictly
-0xff836cc4,write
 0xff836cc4,Write
+0xff836cc4,write
 0xff836cc4,Write_FW
 0xff864ee4,WRITEADJTABLETOFROM_FW
 0xff864f08,WRITEADJUSTMENTDATATOFROM_FW

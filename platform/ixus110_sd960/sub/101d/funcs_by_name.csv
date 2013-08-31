@@ -93,8 +93,8 @@
 0xffa5ddb8,ClearISZData_FW
 0xffaba998,ClearZoomCommonDriveParam_FW
 0xffa51f98,ClearZoomDriveParam_FW
-0xff8198fc,close
 0xff823cc8,Close
+0xff8198fc,close
 0xff823cc8,Close_FW
 0xff81be40,CloseConsole_FW
 0xffa3d364,closedir
@@ -1332,8 +1332,8 @@
 0xff9d88a0,wblpface.start_FW
 0xff9d88b0,wblpface.stop_FW
 0xff9d8890,wblpface.term_FW
-0xff823d74,write
 0xff823d74,Write
+0xff823d74,write
 0xff823d74,Write_FW
 0xff8491c8,WRITEADJTABLETOFROM_FW
 0xff8491ec,WRITEADJUSTMENTDATATOFROM_FW

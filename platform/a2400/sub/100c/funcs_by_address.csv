@@ -74,8 +74,8 @@
 0xff81509c,GetMemInfo
 0xff815904,open
 0xff8159b4,close
-0xff815b58,read
 0xff815b58,Read
+0xff815b58,read
 0xff815b58,Read_FW
 0xff819db8,RotateConsoleZOder_FW
 0xff819fc8,CPrintf_FW
@@ -155,8 +155,8 @@
 0xff8313f0,Open_FW
 0xff8314b8,Close
 0xff8314b8,Close_FW
-0xff83150c,write
 0xff83150c,Write
+0xff83150c,write
 0xff83150c,Write_FW
 0xff831560,j_Open_FW
 0xff831564,j_Close_FW

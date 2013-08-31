@@ -85,11 +85,11 @@
 0xff83527c,Close
 0xff83527c,Close_FW
 0xff835308,j_Read_FW
-0xff83530c,write
 0xff83530c,Write
+0xff83530c,write
 0xff83530c,Write_FW
-0xff835398,lseek
 0xff835398,Lseek
+0xff835398,lseek
 0xff835398,Lseek_FW
 0xff8353d4,stat
 0xff835508,SetFileTimeStamp

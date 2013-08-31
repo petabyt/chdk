@@ -97,8 +97,8 @@
 0xff8370dc,Close
 0xff8370dc,Close_FW
 0xff837168,j_Read_FW
-0xff83716c,write
 0xff83716c,Write
+0xff83716c,write
 0xff83716c,Write_FW
 0xff8371f8,Lseek
 0xff8371f8,lseek

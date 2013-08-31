@@ -453,8 +453,8 @@
 0xffc522bc,LocalTime
 0xffc5c808,LockMainPower
 0xffc5c808,LockMainPower_FW
-0xffc13cbc,lseek
 0xffc13cbc,Lseek
+0xffc13cbc,lseek
 0xffc13cbc,Lseek_FW
 0xffde5744,MakeBootDisk_FW
 0xffc1349c,MakeDirectory_Fut

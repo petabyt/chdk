@@ -82,11 +82,11 @@
 0xff823af4,Close
 0xff823af4,Close_FW
 0xff823b9c,j_Read_FW
-0xff823ba0,write
 0xff823ba0,Write
+0xff823ba0,write
 0xff823ba0,Write_FW
-0xff823c34,lseek
 0xff823c34,Lseek
+0xff823c34,lseek
 0xff823c34,Lseek_FW
 0xff823cfc,j_Lseek_FW
 0xff823d00,stat

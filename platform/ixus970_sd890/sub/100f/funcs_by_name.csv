@@ -52,8 +52,8 @@
 0xff8461a8,ClearFactoryMode_FW
 0xffa2b320,ClearISIComponent_FW
 0xffa2b344,ClearISZData_FW
-0xff819eac,close
 0xff823d90,Close
+0xff819eac,close
 0xff823d90,Close_FW
 0xff81c8a4,CloseConsole_FW
 0xffa13540,closedir
@@ -491,8 +491,8 @@
 0xff866a50,LocalTime
 0xff875438,LockMainPower
 0xff875438,LockMainPower_FW
-0xff823ed0,lseek
 0xff823ed0,Lseek
+0xff823ed0,lseek
 0xff823ed0,Lseek_FW
 0xffa2eb14,MakeBootDisk_FW
 0xff8236b0,MakeDirectory_Fut
@@ -881,8 +881,8 @@
 0xff81bc88,WaitForAllEventFlagStrictly
 0xff82799c,WaitForAnyEventFlag
 0xff81bc5c,WaitForAnyEventFlagStrictly
-0xff823e3c,write
 0xff823e3c,Write
+0xff823e3c,write
 0xff823e3c,Write_FW
 0xff8479f8,WRITEADJTABLETOFROM_FW
 0xff922764,WriteSDCard

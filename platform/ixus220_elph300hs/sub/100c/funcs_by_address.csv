@@ -12,8 +12,8 @@
 0xff81a29c,GetMemInfo
 0xff81ab04,open
 0xff81abb4,close
-0xff81ad58,read
 0xff81ad58,Read
+0xff81ad58,read
 0xff81ad58,Read_FW
 0xff81e948,RegisterInterruptHandler
 0xff81e96c,UnregisterInterruptHandler
@@ -108,8 +108,8 @@
 0xff838494,j_Close_FW
 0xff838594,j_Read_FW
 0xff838598,j_Write_FW
-0xff838604,lseek
 0xff838604,Lseek
+0xff838604,lseek
 0xff838604,Lseek_FW
 0xff838624,OpenForScrip_FW
 0xff83864c,stat

@@ -495,8 +495,8 @@
 0xff866d20,LocalTime
 0xff875708,LockMainPower
 0xff875708,LockMainPower_FW
-0xff823ee0,lseek
 0xff823ee0,Lseek
+0xff823ee0,lseek
 0xff823ee0,Lseek_FW
 0xffa2d938,MakeBootDisk_FW
 0xff8236c0,MakeDirectory_Fut

@@ -984,8 +984,8 @@
 0xffae5444,qsort
 0xff8e8930,QuietImager_FW
 0xff820774,rand
-0xff81ac7c,read
 0xff81ac7c,Read
+0xff81ac7c,read
 0xff81ac7c,Read_FW
 0xffa75154,ReadFastDir
 0xff9fb320,realloc

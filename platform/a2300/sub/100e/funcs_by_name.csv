@@ -808,8 +808,8 @@
 0xffad879c,OneShotWhigeBalance_FW
 0xffad879c,OneTypeWhiteBalance_FW
 0xff95c424,OnPrintPhySw_FW
-0xff815904,open
 0xff831560,Open
+0xff815904,open
 0xff831560,Open_FW
 0xff81a138,OpenConsole_FW
 0xffa53a98,OpenFastDir

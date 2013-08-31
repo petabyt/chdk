@@ -814,8 +814,8 @@
 0xff860668,LockHdmiState_FW
 0xff8975b4,LockMainPower
 0xff8975b4,LockMainPower_FW
-0xff836d6c,lseek
 0xff836d6c,Lseek
+0xff836d6c,lseek
 0xff836d6c,Lseek_FW
 0xffac4508,MakeBootDisk_FW
 0xff83663c,MakeDirectory_Fut
@@ -1415,8 +1415,8 @@
 0xff83a534,WaitForAllEventFlagStrictly
 0xff888c5c,WaitForAnyEventFlag
 0xff83a508,WaitForAnyEventFlagStrictly
-0xff836ce0,write
 0xff836ce0,Write
+0xff836ce0,write
 0xff836ce0,Write_FW
 0xff868c78,WRITEADJTABLETOFROM_FW
 0xff868c9c,WRITEADJUSTMENTDATATOFROM_FW

@@ -125,8 +125,8 @@
 0xff42554c,ClearPMByGpio_FW
 0xff403b28,ClearZoomCommonDriveParam_FW
 0xff1c581c,ClearZoomDriveParam_FW
-0xff00abd0,close
 0xff026458,Close
+0xff00abd0,close
 0xff026458,Close_FW
 0xff00f960,CloseConsole_FW
 0xff34c9b4,closedir
@@ -1078,8 +1078,8 @@
 0xff4029d4,OneShotWhigeBalance_FW
 0xff4029d4,OneTypeWhiteBalance_FW
 0xff1cb804,OnPrintPhySw_FW
-0xff00ab20,open
 0xff026390,Open
+0xff00ab20,open
 0xff026390,Open_FW
 0xff00f834,OpenConsole_FW
 0xff34ca04,OpenFastDir
@@ -1177,8 +1177,8 @@
 0xff3cbc48,qsort
 0xff1276d0,QuietImager_FW
 0xff29f4c0,rand
-0xff00ad74,read
 0xff00ad74,Read
+0xff00ad74,read
 0xff00ad74,Read_FW
 0xff34cb58,ReadFastDir
 0xff29f400,realloc

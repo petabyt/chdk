@@ -139,8 +139,8 @@
 0xffc1502c,Close
 0xffc1502c,Close_FW
 0xffc150d4,j_Read_FW
-0xffc0a4a8,write,(stubs_entry_2.s)
 0xffc150d8,Write
+0xffc0a4a8,write,(stubs_entry_2.s)
 0xffc150d8,Write_FW
 0xffc1516c,Lseek
 0xffc1516c,lseek

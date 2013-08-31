@@ -648,8 +648,8 @@
 0xffc5bf6c,LockMainPower
 0xffc5bf6c,LockMainPower_FW
 0xffc11254,LowBat_Result_Print_On_FW
-0xffc1516c,lseek
 0xffc1516c,Lseek
+0xffc1516c,lseek
 0xffc1516c,Lseek_FW
 0xffdd8c40,MakeBootDisk_FW
 0xffc14908,MakeDirectory_Fut
@@ -748,8 +748,8 @@
 0xffda56ac,OneShotWhigeBalance_FW
 0xffcc9368,OnPrintHVStatus_FW
 0xffc12ee4,OnPrintPhySw_FW
-0xffc0a1b0,open
 0xffc15004,Open
+0xffc0a1b0,open
 0xffc15004,Open_FW
 0xffc0d760,OpenConsole_FW
 0xffdc1b04,OpenFastDir
@@ -1235,8 +1235,8 @@
 0xffc0c030,WaitForAllEventFlagStrictly
 0xffc18c80,WaitForAnyEventFlag
 0xffc0c004,WaitForAnyEventFlagStrictly
-0xffc0a4a8,write,(stubs_entry_2.s)
 0xffc150d8,Write
+0xffc0a4a8,write,(stubs_entry_2.s)
 0xffc150d8,Write_FW
 0xffc3b728,WRITEADJTABLETOFROM_FW
 0xffdab528,WriteGyroAdjustment_FW

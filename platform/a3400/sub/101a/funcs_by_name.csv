@@ -905,8 +905,8 @@
 0x003fb1b8,LocalTime
 0xff8870ac,LockMainPower
 0xff8870ac,LockMainPower_FW
-0xff8316f4,lseek
 0xff8316f4,Lseek
+0xff8316f4,lseek
 0xff8316f4,Lseek_FW
 0xffa89efc,MakeBootDisk_FW
 0xffa89f10,MakeScriptDisk_FW
@@ -1097,8 +1097,8 @@
 0xff87eeac,PutsCameraLogEvent_FW
 0xff9eec44,qsort
 0xff8e6430,QuietImager_FW
-0xff815b58,read
 0xff815b58,Read
+0xff815b58,read
 0xff815b58,Read_FW
 0xffa6a478,ReadFastDir
 0xff9eed20,realloc
@@ -1589,8 +1589,8 @@
 0x003faac8,WaitForAnyEventFlag
 0x003f7bbc,WaitForAnyEventFlagStrictly
 0xffa85980,WaitMoveZoomLensComplete_FW
-0xff83152c,write
 0xff83152c,Write
+0xff83152c,write
 0xff83152c,Write_FW
 0xff85c238,WRITEADJTABLETOFROM_FW
 0xff85c26c,WRITEADJUSTMENTDATATOFROM_FW

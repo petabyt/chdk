@@ -651,8 +651,8 @@
 0xff86d3d0,LockMainPower
 0xff86d3d0,LockMainPower_FW
 0xff8211f0,LowBat_Result_Print_On_FW
-0xff825108,lseek
 0xff825108,Lseek
+0xff825108,lseek
 0xff825108,Lseek_FW
 0xffa24604,MakeBootDisk_FW
 0xff8248a4,MakeDirectory_Fut
@@ -743,8 +743,8 @@
 0xff8e85bc,OnPrintHVStatus_FW
 0xff822e80,OnPrintPhySw_FW
 0xff8e8968,OnPrintTouchWheel_FW
-0xff81a0e0,open
 0xff824fa0,Open
+0xff81a0e0,open
 0xff824fa0,Open_FW
 0xff81d690,OpenConsole_FW
 0xffa0a128,OpenFastDir

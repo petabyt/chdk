@@ -108,8 +108,8 @@
 0xffc133f0,Write
 0xffc0a198,write,(stubs_entry_2.s)
 0xffc133f0,Write_FW
-0xffc13484,lseek
 0xffc1354c,Lseek,(stubs_entry_2.s)
+0xffc13484,lseek
 0xffc13484,Lseek_FW
 0xffc1354c,j_Lseek_FW
 0xffc13550,stat

@@ -1074,8 +1074,8 @@
 0xff3dde4c,OneShotWhigeBalance_FW
 0xff3dde4c,OneTypeWhiteBalance_FW
 0xff1b9880,OnPrintPhySw_FW
-0xff005b48,open
 0xff021be8,Open
+0xff005b48,open
 0xff021be8,Open_FW
 0xff00ac40,OpenConsole_FW
 0xff32fdc4,OpenFastDir

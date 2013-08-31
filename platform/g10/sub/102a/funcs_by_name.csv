@@ -738,8 +738,8 @@
 0xff871280,LocalTime
 0xff87ef28,LockMainPower
 0xff87ef28,LockMainPower_FW
-0xff8241c8,lseek
 0xff8241c8,Lseek
+0xff8241c8,lseek
 0xff8241c8,Lseek_FW
 0xffa68fa0,MakeBootDisk_FW
 0xff8239a8,MakeDirectory_Fut
@@ -930,8 +930,8 @@
 0xff9db6b4,qsort
 0xffa0aed0,QuietImager_FW
 0xff81ccb8,rand
-0xff819a4c,read
 0xff819a4c,Read
+0xff819a4c,read
 0xff819a4c,Read_FW
 0xffa4a194,ReadFastDir
 0xff813b5c,realloc

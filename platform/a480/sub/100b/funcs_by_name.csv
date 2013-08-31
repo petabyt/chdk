@@ -85,8 +85,8 @@
 0xffc2ef28,ClearFactoryMode_FW
 0xffe0396c,ClearZoomCommonDriveParam_FW
 0xffdbe2e4,ClearZoomDriveParam_FW
-0xffc0a034,close
 0xffc1322c,Close
+0xffc0a034,close
 0xffc1322c,Close_FW
 0xffc0ca58,CloseConsole_FW
 0xffdb0114,closedir
@@ -702,8 +702,8 @@
 0xffe02a60,OneShotWhigeBalance_FW
 0xffe02a60,OneTypeWhiteBalance_FW
 0xffce5c3c,OnPrintPhySw_FW
-0xffc09f84,open
 0xffc13204,Open
+0xffc09f84,open
 0xffc13204,Open_FW
 0xffc0c8ec,OpenConsole_FW
 0xffdaffb0,OpenFastDir
@@ -801,8 +801,8 @@
 0xffdf2a18,qsort
 0xffd8018c,QuietImager_FW
 0xffc0dabc,rand
-0xffc0a21c,read
 0xffc0a21c,Read
+0xffc0a21c,read
 0xffc0a21c,Read_FW
 0xffdb0044,ReadFastDir
 0xffc03b20,realloc
@@ -1128,8 +1128,8 @@
 0xffd6a60c,wblpface.start_FW
 0xffd6a61c,wblpface.stop_FW
 0xffd6a5fc,wblpface.term_FW
-0xffc132d8,write
 0xffc132d8,Write
+0xffc132d8,write
 0xffc132d8,Write_FW
 0xffc309a0,WRITEADJTABLETOFROM_FW
 0xffc309c4,WRITEADJUSTMENTDATATOFROM_FW

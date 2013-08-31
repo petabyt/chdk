@@ -123,8 +123,8 @@
 0xff01b588,ClearWLANFactoryMode_FW
 0xff347028,ClearZoomCommonDriveParam_FW
 0xff346814,ClearZoomDriveParam_FW
-0xff005b98,close
 0xff01cb64,Close
+0xff005b98,close
 0xff01cb64,Close_FW
 0xff00aa1c,CloseConsole_FW
 0xff368dfc,closedir
@@ -976,8 +976,8 @@
 0xff3025cc,LockHdmiState_FW
 0xff09db34,LockMainPower
 0xff09db34,LockMainPower_FW
-0xff01cd80,lseek
 0xff01cd80,Lseek
+0xff01cd80,lseek
 0xff01cd80,Lseek_FW
 0xff343d80,Ltkids.SetCapRtsThrough_FW
 0xff343d50,Ltkids.SetCapThrough_FW
@@ -1091,8 +1091,8 @@
 0xff42bfd8,OneShotWhigeBalance_FW
 0xff42bfd8,OneTypeWhiteBalance_FW
 0xff1e0cc4,OnPrintPhySw_FW
-0xff005ae8,open
 0xff01ca9c,Open
+0xff005ae8,open
 0xff01ca9c,Open_FW
 0xff00a8f0,OpenConsole_FW
 0xff368e4c,OpenFastDir

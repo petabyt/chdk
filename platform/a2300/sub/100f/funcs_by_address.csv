@@ -155,15 +155,15 @@
 0xff831560,Open_FW
 0xff831628,Close
 0xff831628,Close_FW
-0xff83167c,write
 0xff83167c,Write
+0xff83167c,write
 0xff83167c,Write_FW
 0xff8316d0,j_Open_FW
 0xff8316d4,j_Close_FW
 0xff8317d4,j_Read_FW
 0xff8317d8,j_Write_FW
-0xff831844,lseek
 0xff831844,Lseek
+0xff831844,lseek
 0xff831844,Lseek_FW
 0xff831864,OpenForScrip_FW
 0xff83188c,stat

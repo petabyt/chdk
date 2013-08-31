@@ -121,11 +121,11 @@
 0xffc2610c,Close
 0xffc2610c,Close_FW
 0xffc26198,j_Read_FW
-0xffc2619c,write
 0xffc2619c,Write
+0xffc2619c,write
 0xffc2619c,Write_FW
-0xffc26228,lseek
 0xffc26228,Lseek
+0xffc26228,lseek
 0xffc26228,Lseek_FW
 0xffc26248,OpenForScrip_FW
 0xffc26270,stat

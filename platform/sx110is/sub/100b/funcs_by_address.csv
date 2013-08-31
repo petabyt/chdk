@@ -105,11 +105,11 @@
 0xffc13348,Close
 0xffc13348,Close_FW
 0xffc133f0,j_Read_FW
-0xffc133f4,write
 0xffc133f4,Write
+0xffc133f4,write
 0xffc133f4,Write_FW
-0xffc13488,lseek
 0xffc13488,Lseek
+0xffc13488,lseek
 0xffc13488,Lseek_FW
 0xffc13550,j_Lseek_FW
 0xffc13554,stat

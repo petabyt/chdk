@@ -106,8 +106,8 @@
 0xffaf73c8,ClearPMByGpio_FW
 0xffadb9e8,ClearZoomCommonDriveParam_FW
 0xff95b2d0,ClearZoomDriveParam_FW
-0xff8159b4,close
 0xff8314b8,Close
+0xff8159b4,close
 0xff8314b8,Close_FW
 0xff81a264,CloseConsole_FW
 0xffa56df8,closedir
@@ -989,8 +989,8 @@
 0xffada864,OneShotWhigeBalance_FW
 0xffada864,OneTypeWhiteBalance_FW
 0xff960600,OnPrintPhySw_FW
-0xff815904,open
 0xff8313f0,Open
+0xff815904,open
 0xff8313f0,Open_FW
 0xff81a138,OpenConsole_FW
 0xffa56e48,OpenFastDir

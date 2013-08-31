@@ -502,8 +502,8 @@
 0xffc57bd4,LocalTime
 0xffc6211c,LockMainPower
 0xffc6211c,LockMainPower_FW
-0xffc13cc8,lseek
 0xffc13cc8,Lseek
+0xffc13cc8,lseek
 0xffc13cc8,Lseek_FW
 0xffdf24e4,MakeBootDisk_FW
 0xffc134a8,MakeDirectory_Fut
@@ -566,8 +566,8 @@
 0xffd1982c,NR_SetLotasPonyType_FW
 0xffd15160,OffPrintPhySw_FW
 0xffd15150,OnPrintPhySw_FW
-0xffc09ec4,open
 0xffc13b60,Open
+0xffc09ec4,open
 0xffc13b60,Open_FW
 0xffc0c808,OpenConsole_FW
 0xffdd9628,OpenFastDir

@@ -861,8 +861,8 @@
 0xff89d078,LockMainPower
 0xff89d078,LockMainPower_FW
 0xffae6eb8,LockStrobePopUpActuatorVoltageToMax_FW
-0xff83714c,lseek
 0xff83714c,Lseek
+0xff83714c,lseek
 0xff83714c,Lseek_FW
 0xffafb290,MakeBootDisk_FW
 0xff836a1c,MakeDirectory_Fut
@@ -963,8 +963,8 @@
 0xffb5cd54,OneShotWhigeBalance_FW
 0xffb5cd54,OneTypeWhiteBalance_FW
 0xff98713c,OnPrintPhySw_FW
-0xff81aadc,open
 0xff836fc4,Open
+0xff81aadc,open
 0xff836fc4,Open_FW
 0xff81f5c8,OpenConsole_FW
 0xffad3fdc,OpenFastDir
@@ -1063,8 +1063,8 @@
 0xffb4be88,qsort
 0xff904a34,QuietImager_FW
 0xffa4feb0,rand
-0xff81ad74,read
 0xff81ad74,Read
+0xff81ad74,read
 0xff81ad74,Read_FW
 0xffad4130,ReadFastDir
 0xffa4fdec,realloc
@@ -1495,8 +1495,8 @@
 0xff83aca4,WaitForAllEventFlagStrictly
 0xff88e040,WaitForAnyEventFlag
 0xff83ac78,WaitForAnyEventFlagStrictly
-0xff8370c0,write
 0xff8370c0,Write
+0xff8370c0,write
 0xff8370c0,Write_FW
 0xff86bcfc,WRITEADJTABLETOFROM_FW
 0xff86bd20,WRITEADJUSTMENTDATATOFROM_FW

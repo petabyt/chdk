@@ -575,8 +575,8 @@
 0xff9890cc,GetVcmPiPosition_FW
 0xff9890f4,GetVcmPiStatus_FW
 0xff989178,GetVcmScaleResetThreshold_FW
-0xffb79570,GetVcmSrAd_FW
 0xffb53648,GetVcmSrAD_FW
+0xffb79570,GetVcmSrAd_FW
 0xff9892d4,GetVcmSrAPos_FW
 0xffb53358,GetVcmSrAPosition_FW
 0xff989340,GetVcmSrBPos_FW
@@ -988,8 +988,8 @@
 0xff8640e4,LockHdmiState_FW
 0xff8a0290,LockMainPower
 0xff8a0290,LockMainPower_FW
-0xff8371f8,lseek
 0xff8371f8,Lseek
+0xff8371f8,lseek
 0xff8371f8,Lseek_FW
 0xffaee500,MakeBootDisk_FW
 0xff836ac8,MakeDirectory_Fut

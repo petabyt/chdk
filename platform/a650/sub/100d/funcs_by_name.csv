@@ -661,8 +661,8 @@
 0xffc5d20c,LockMainPower
 0xffc5d20c,LockMainPower_FW
 0xffc11148,LowBat_Result_Print_On_FW
-0xffc15060,lseek
 0xffc15060,Lseek
+0xffc15060,lseek
 0xffc15060,Lseek_FW
 0xffde7cf8,MakeBootDisk_FW
 0xffc147fc,MakeDirectory_Fut
@@ -763,8 +763,8 @@
 0xffdb3cec,OneShotWhigeBalance_FW
 0xffccc2c4,OnPrintHVStatus_FW
 0xffc12dd8,OnPrintPhySw_FW
-0xffc0a0e0,open
 0xffc14ef8,Open
+0xffc0a0e0,open
 0xffc14ef8,Open_FW
 0xffc0d690,OpenConsole_FW
 0xffdd05ac,OpenFastDir

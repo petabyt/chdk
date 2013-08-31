@@ -121,8 +121,8 @@
 0xff3a96dc,ClearPMByGpio_FW
 0xff38722c,ClearZoomCommonDriveParam_FW
 0xff2fb44c,ClearZoomDriveParam_FW
-0xff00abb4,close
 0xff027690,Close
+0xff00abb4,close
 0xff027690,Close_FW
 0xff00f820,CloseConsole_FW
 0xff2e438c,closedir
@@ -1597,8 +1597,8 @@
 0xff02b7a8,WaitForAllEventFlagStrictly
 0xff07f924,WaitForAnyEventFlag
 0xff02b77c,WaitForAnyEventFlagStrictly
-0xff0276e4,write
 0xff0276e4,Write
+0xff0276e4,write
 0xff0276e4,Write_FW
 0xff05d290,WRITEADJTABLETOFROM_FW
 0xff05d2b4,WRITEADJUSTMENTDATATOFROM_FW

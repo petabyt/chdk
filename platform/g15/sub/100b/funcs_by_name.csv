@@ -1089,8 +1089,8 @@
 0xff42b9d4,OneShotWhigeBalance_FW
 0xff42b9d4,OneTypeWhiteBalance_FW
 0xff1e0c64,OnPrintPhySw_FW
-0xff005ae8,open
 0xff01ca9c,Open
+0xff005ae8,open
 0xff01ca9c,Open_FW
 0xff00a8f0,OpenConsole_FW
 0xff3688d0,OpenFastDir
@@ -1157,8 +1157,8 @@
 0xff3f62d4,qsort
 0xff12e2d0,QuietImager_FW
 0xff2a7bf4,rand
-0xff005d3c,read
 0xff005d3c,Read
+0xff005d3c,read
 0xff005d3c,Read_FW
 0xff368a24,ReadFastDir
 0xff2a7ca0,realloc

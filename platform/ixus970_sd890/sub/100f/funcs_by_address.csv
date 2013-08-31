@@ -7,8 +7,8 @@
 0xff814e98,err_init_task
 0xff819dfc,open
 0xff819eac,close
-0xff81a094,read
 0xff81a094,Read
+0xff81a094,read
 0xff81a094,Read_FW
 0xff81b4d8,RegisterInterruptHandler
 0xff81b4fc,UnregisterInterruptHandler

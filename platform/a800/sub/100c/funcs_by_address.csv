@@ -127,8 +127,8 @@
 0xffc2640c,j_Close_FW
 0xffc2650c,j_Read_FW
 0xffc26510,j_Write_FW
-0xffc2657c,lseek
 0xffc2657c,Lseek
+0xffc2657c,lseek
 0xffc2657c,Lseek_FW
 0xffc2659c,OpenForScrip_FW
 0xffc265c4,stat

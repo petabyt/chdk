@@ -130,8 +130,8 @@
 0xf8022bd8,ClearWLANFactoryMode_FW
 0xf83ebbb0,ClearZoomCommonDriveParam_FW
 0xf83eb39c,ClearZoomDriveParam_FW
-0xf8005c90,close
 0xf80242f8,Close
+0xf8005c90,close
 0xf80242f8,Close_FW
 0xf800c874,CloseConsole_FW
 0xf840f78c,closedir
@@ -1129,8 +1129,8 @@
 0xf8514080,OneShotWhigeBalance_FW
 0xf8514080,OneTypeWhiteBalance_FW
 0xf82629a8,OnPrintPhySw_FW
-0xf8005be0,open
 0xf8024230,Open
+0xf8005be0,open
 0xf8024230,Open_FW
 0xf800c748,OpenConsole_FW
 0xf840f7dc,OpenFastDir
@@ -1775,8 +1775,8 @@
 0x0068ed30,WaitForAnyEventFlag
 0x0068b070,WaitForAnyEventFlagStrictly
 0xf84531a0,WaitMoveZoomLensComplete_FW
-0xf802434c,write
 0xf802434c,Write
+0xf802434c,write
 0xf802434c,Write_FW
 0xf80856e4,WRITEADJTABLETOFROM_FW
 0xf808571c,WRITEADJUSTMENTDATATOFROM_FW
