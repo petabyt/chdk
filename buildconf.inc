@@ -43,6 +43,11 @@ OPT_GEN_STUBS=1
 # for CHDK-DE presets without OPT_DEFAULT_LANG
 #OPT_DE_VERSION=1
 
+# make the build show an "expired" notice after N days. To encourage users of test builds to provide feedback
+#OPT_EXPIRE_TEST=
+
+# ***please new entries above this line for protecting the chdk shell against errors***
+
 # Override the value below to compile a different default language into
 # the core CHDK code. This will save memory by not loading both english and the
 # desired language.
@@ -51,6 +56,3 @@ OPT_GEN_STUBS=1
 
 # Default svn revision. Used when svnversion fail.
 DEF_SVN_REF=0
-
-# make the build show an "expired" notice after N days. To encourage users of test builds to provide feedback
-#OPT_EXPIRE_TEST=
