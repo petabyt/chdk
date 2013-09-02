@@ -1,4 +1,4 @@
-- press "mode" key shortly for enter/exit <alt mode>, press "mode" key longer for original function
-- press playback (>) key in CHDK menus as disp/erase button
-- Map KEY_PRINT to KEY_PLAYBACK when running script and change back when script isn't running
-- for manual focus using zoom lever when half press shoot button
+- playback (>) key switch to ALT mode and back. Press longer for switching between Play/Shoot mode
+
+Known bugs
+- Live view does not work correctly

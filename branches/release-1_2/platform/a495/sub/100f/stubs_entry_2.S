@@ -2,8 +2,6 @@
 #define NULL_SUB 0xFFC00B20
 
 // Override stubs_entry.S
-NHSTUB(GetDrive_FreeClusters,       0xFFC51320)
-NHSTUB(GetImageFolder,              0xffcf1428) // function before 'GetCameraObjectTmpPath ERROR' string
 NHSTUB(SetScriptMode,               0xFFC00F70)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
 

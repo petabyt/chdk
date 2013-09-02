@@ -201,7 +201,7 @@ asm volatile (
 "    LDR     R0, [R9] \n"
 "    MOV     R2, R8 \n"
 "    MOV     R1, R7 \n"
-"    BL      fwt_write \n"  // --> Patched. Old value = _write.
+"    BL      fwt_write \n"  // --> Patched. Old value = _Write.
 "    LDR     R1, [R4, #4] \n"
 "    CMP     R8, R0 \n"
 "    ADD     R1, R1, R0 \n"

@@ -291,7 +291,7 @@ asm volatile (
 "    BL      sub_FFC2ABA4 \n"
 "    CMP     R0, #0 \n"
 "    BNE     loc_FFC10690 \n"
-"    BL      sub_FFC250BC \n"
+"    BL      sub_FFC250BC /*_IsNormalCameraMode_FW*/ \n"
 "    CMP     R0, #0 \n"
 "    BEQ     loc_FFC10690 \n"
 "    BL      sub_FFC42F0C \n"
