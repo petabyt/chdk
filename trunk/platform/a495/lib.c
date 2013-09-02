@@ -33,7 +33,6 @@ void debug_led(int state)
 // 1/9 - AF LED Orange
 void camera_set_led(int led, int state, int bright) {
     static char led_table[2]={7,9};
-//    if(state<=1) _LEDDrive(led_table[led%2], (!state)&1);
     if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], (!state)&1);
 }
 
@@ -60,6 +59,12 @@ int get_flash_params_count(void){
     return 0x74; 
 }
 
+
+// This camera crashes if GetBatteryTemperature is called, override auto detected stub
+int _GetBatteryTemperature()
+{
+      return -99;
+}
 
 /*void vid_turn_off_updates()
 {

@@ -15,12 +15,10 @@ static long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
-extern void _platformsub_kbd_fetch_data(long*);
-
 #define KEYS_MASK0 (0x00020000)
 #define KEYS_MASK1 (0x00000000)
-#define KEYS_MASK2 (0x017001f4)
-#define KEYS_INV2 (0x01700000)
+#define KEYS_MASK2 (0x01F001F4)
+#define KEYS_INV2  (0x01F00000)
 /*
 the 4 button states residing in the upper half of physw_status[2] seem to be inverted
 to handle these correctly, their value needs to be inverted:
@@ -29,7 +27,7 @@ to handle these correctly, their value needs to be inverted:
 KEYS_INV2 should be used for that
 SD_READONLY_FLAG and USB_MASK are not affected by this
 
-when idle, physw_status[2] looks like: "000001000000000xxxxx000111110100"
+when idle, physw_status[2] looks like: "0000 0100 0000 000x xxxx 0001 1111 0100"
                          KEYS_MASK2 is "00000001011100000000000111110100"
 */
 
@@ -50,22 +48,21 @@ static KeyMap keymap[] = {
     /* tiny bug: key order matters. see kbd_get_pressed_key()
     * for example
     */
-
-    //{ 0, KEY_DISPLAY  , 0x00020000 }, // Playback
-    { 0, KEY_PRINT      , 0x00020000 }, // Playback
-
-    { 2, KEY_SHOOT_FULL , 0x00000030 }, // 0x00000010 (KEY_SHOOT_HALF) + 0x00000020 (KEY_SHOOT_FULL_ONLY)
-    { 2, KEY_SHOOT_FULL_ONLY, 0x00000020 },
-    { 2, KEY_SHOOT_HALF , 0x00000010 },
-    
-    { 2, KEY_UP         , 0x00100000 },
-    { 2, KEY_DOWN       , 0x00200000 },
-    { 2, KEY_LEFT       , 0x00400000 },
-    { 2, KEY_RIGHT      , 0x00000004 },
-    { 2, KEY_SET        , 0x00000100 },
-    { 2, KEY_ZOOM_IN    , 0x00000080 },
-    { 2, KEY_ZOOM_OUT   , 0x00000040 },
-    { 2, KEY_MENU       , 0x01000000 },
+//    { 0, KEY_POWER           ,0x00800000 }, // Found @0xffe84ed4, levent 0x600
+    { 0, KEY_PRINT           ,0x00020000 }, // KEY Playback for ALT menu
+    { 0, KEY_PLAYBACK        ,0x00020000 }, // Found @0xffe84ebc, levent 0x601
+    { 2, KEY_MENU            ,0x01000000 }, // Found @0xffe84f88, levent 0x09 (uses inverted logic in physw_status)
+    { 2, KEY_MODE            ,0x00800000 }, // mode select                    (uses inverted logic in physw_status)
+    { 2, KEY_LEFT            ,0x00400000 }, // Found @0xffe84f70, levent 0x06 (uses inverted logic in physw_status)
+    { 2, KEY_DOWN            ,0x00200000 }, // Found @0xffe84f64, levent 0x05 (uses inverted logic in physw_status)
+    { 2, KEY_UP              ,0x00100000 }, // Found @0xffe84f58, levent 0x04 (uses inverted logic in physw_status)
+    { 2, KEY_SET             ,0x00000100 }, // Found @0xffe84f1c, levent 0x08
+    { 2, KEY_ZOOM_IN         ,0x00000080 }, // Found @0xffe84f10, levent 0x02
+    { 2, KEY_ZOOM_OUT        ,0x00000040 }, // Found @0xffe84f04, levent 0x03
+    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe84ef8, levent 0x01
+    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe84ef8, levent 0x01
+    { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xffe84eec, levent 0x00
+    { 2, KEY_RIGHT           ,0x00000004 }, // Found @0xffe84ee0, levent 0x07
     { 0, 0, 0 }
 };
 
@@ -82,7 +79,7 @@ static void __attribute__((noinline)) mykbd_task_proceed()
 	kbd_new_state[1] = physw_status[1];
 	kbd_new_state[2] = physw_status[2] ^ KEYS_INV2;
 	while (physw_run){
-		_SleepTask(10);
+		_SleepTask(physw_sleep_delay);
 		
 		if (wrap_kbd_p1_f() == 1){ // autorepeat ?
 			_kbd_p2_f();
@@ -90,6 +87,7 @@ static void __attribute__((noinline)) mykbd_task_proceed()
 	}
 }
 
+// no stack manipulation needed here, since we create the task directly
 void __attribute__((naked,noinline)) mykbd_task()
 {
 	mykbd_task_proceed();
@@ -106,34 +104,14 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 			"BL      my_kbd_read_keys\n"     // +
 			"B       _kbd_p1_f_cont\n"       // continue
 	);
-	
 	return 0; // shut up the compiler
 }
 
 
 void my_kbd_read_keys()
 {
-	// If script are running, replace PRINT button with DISPLAY
-	if (camera_info.state.state_kbd_script_run) {
-		int i;
-		for (i=0; keymap[i].hackkey; i++) {
-			if (keymap[i].hackkey == KEY_PRINT) {
-				keymap[i].hackkey = KEY_DISPLAY;
-				break;
-			}
-		}
-	} else {
-		int i;
-		for (i=0; keymap[i].hackkey; i++) {
-			if (keymap[i].hackkey == KEY_DISPLAY) {
-				keymap[i].hackkey = KEY_PRINT;
-				break;
-			}
-		}
-	}
-	
 	kbd_prev_state[0] = kbd_new_state[0];
-	//kbd_prev_state[1] = kbd_new_state[1];
+	kbd_prev_state[1] = kbd_new_state[1];
 	kbd_prev_state[2] = kbd_new_state[2];
 	
 	asm volatile(
@@ -150,11 +128,9 @@ void my_kbd_read_keys()
 	} else {
         // override keys
         physw_status[0] = (kbd_new_state[0] | KEYS_MASK0) & (~KEYS_MASK0 | kbd_mod_state[0]);
-        //physw_status[1] = (kbd_new_state[1] | KEYS_MASK1) & (~KEYS_MASK1 | kbd_mod_state[1]);
+        physw_status[1] = (kbd_new_state[1] | KEYS_MASK1) & (~KEYS_MASK1 | kbd_mod_state[1]);
         physw_status[2] = ((kbd_new_state[2] | KEYS_MASK2) & (~KEYS_MASK2 | kbd_mod_state[2])) ^ KEYS_INV2;
 	}
-	
-	//_kbd_read_keys_r2(physw_status);
 
 	usb_remote_key() ;
 	
@@ -226,7 +202,7 @@ long kbd_get_pressed_key()
 {
 	int i;
 	for (i=0;keymap[i].hackkey;i++){
-		if (kbd_is_key_pressed(keymap[i].hackkey)) {
+		if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0){
 			return keymap[i].hackkey;
 		}
 	}
@@ -245,7 +221,3 @@ long kbd_get_clicked_key()
 	return 0;
 }
 
-
-long kbd_use_zoom_as_mf() {
-	return 0;
-}

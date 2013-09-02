@@ -16,7 +16,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(GetImageFolder                       ,0xffcf1478) //106        *** != 0xffcf1428
 //NHSTUB(SetScriptMode                        ,0xffc6cc58) //120        *** != 0xffc00f70
 NHSTUB(kbd_pwr_off                            ,0xffc435e4) //  2 64%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
@@ -126,10 +125,11 @@ NHSTUB(GetBatteryTemperature                  ,0xffc4561c) //102
 NHSTUB(GetCCDTemperature                      ,0xffc455a8) //102
 NHSTUB(GetCurrentAvValue                      ,0xffd088c0) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xffc512c0) //  4
-//NHSTUB(GetDrive_FreeClusters                ,0xffc51320) //  4            == 0xffc51320
+NHSTUB(GetDrive_FreeClusters                  ,0xffc51320) //  4
 NHSTUB(GetDrive_TotalClusters                 ,0xffc512f4) //  3
 NHSTUB(GetFocusLensSubjectDistance            ,0xffd07bb8) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffd08010) //  3
+NHSTUB(GetImageFolder                         ,0xffcf1478) //106
 NHSTUB(GetKbdState                            ,0xffc435cc) //109
 NHSTUB(GetMemInfo                             ,0xffc0a7f8) //115
 NHSTUB(GetOpticalTemperature                  ,0xffc45694) //120

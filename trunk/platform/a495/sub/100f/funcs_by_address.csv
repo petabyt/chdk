@@ -543,7 +543,7 @@
 0xffced3c8,SetDefaultRecParameter_FW
 0xffced5c8,EnableDebugLogMode_FW
 0xffced5dc,DisableDebugLogMode_FW
-0xffcf1428,GetImageFolder,(stubs_entry_2.s)
+0xffcf1478,GetImageFolder
 0xffcfcbcc,WriteSDCard
 0xffd06c40,EnableCzDebugLog_FW
 0xffd06c58,DisableCzDebugLog_FW
