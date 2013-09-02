@@ -19,7 +19,7 @@ static KeyMap keymap[];
 
 // OK, GetKbdState
 #define KEYS_MASK0 (0x00000000)
-#define KEYS_MASK1 (0x00000000)
+#define KEYS_MASK1 (0xA0000000)
 #define KEYS_MASK2 (0x0FFF)
 
 // D10 verified
@@ -260,7 +260,7 @@ static KeyMap keymap[] = {
 	{ 2, KEY_MENU		, 0x00000400 },
 	{ 2, KEY_DISPLAY	, 0x00000200 },
 	{ 2, KEY_PRINT		, 0x00000800 },
-//	{ 1, KEY_MODE		, 0x20000000 }, // D10 mode select 
+	{ 1, KEY_MODE		, 0x20000000 }, // D10 mode select 
 	{ 1, KEY_PLAYBACK	, 0x80000000 }, // D10 play button
 	{ 0, 0, 0 }
 };
