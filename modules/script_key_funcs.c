@@ -49,9 +49,12 @@ static const struct Keynames {
     { KEY_TIMER,            "timer"      },
     { KEY_EXPO_CORR,        "expo_corr"  },
     { KEY_MICROPHONE,       "fe"         },
+    { KEY_FACE,             "face"       },
     { KEY_ZOOM_ASSIST,      "zoom_assist"},
     { KEY_AE_LOCK,          "ae_lock"    },
     { KEY_METERING,         "metering_mode"},
+    { KEY_HELP,             "help"       },
+    { KEY_MODE,             "mode"       },
     { 0xFF,                 "remote"     },
     { 0xFFFF,               "no_key"     },
 };

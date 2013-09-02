@@ -229,7 +229,7 @@ asm volatile (
 "    STR     R7, [R5, #0x38] \n"
 
 "loc_FFD0C6AC:\n"
-"    BL      sub_FFC6D130 \n"
+"    BL      sub_FFC6D130 /*_HardwareDefect_FW*/ \n"
 "    B       loc_FFD0C610 \n"
 
 "loc_FFD0C6B4:\n"

@@ -2,7 +2,6 @@
 #define NULL_SUB 0xffc00b20
 
 // Override stubs_entry.S
-NHSTUB(GetDrive_FreeClusters,       0xffc51320)
 NHSTUB(SetScriptMode,               0xffc00f70)
 NHSTUB(kbd_pwr_on,                  NULL_SUB)
 

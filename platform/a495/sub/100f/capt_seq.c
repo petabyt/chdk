@@ -929,7 +929,7 @@ asm volatile (
 "    STRH    R4, [R5, #2] \n"
 "    BLEQ    _DebugAssert \n"
 "    MOV     R0, R4 \n"
-"    BL      apex2us \n"  // --> Patched. Old value = _apex2us. _apex2us
+"    BL      apex2us \n"  // --> Patched. Old value = _apex2us.
 "    MOV     R4, R0 \n"
 //"  BL      _sub_FFCB3AB0 \n"  // --> Nullsub call removed.
 "    MOV     R0, R4 \n"

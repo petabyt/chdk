@@ -125,7 +125,7 @@ NHSTUB(GetBatteryTemperature                  ,0xffc4561c) //102
 NHSTUB(GetCCDTemperature                      ,0xffc455a8) //102
 NHSTUB(GetCurrentAvValue                      ,0xffd08810) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xffc512c0) //  4
-//NHSTUB(GetDrive_FreeClusters                ,0xffc51320) //  4            == 0xffc51320
+NHSTUB(GetDrive_FreeClusters                  ,0xffc51320) //  4
 NHSTUB(GetDrive_TotalClusters                 ,0xffc512f4) //  3
 NHSTUB(GetFocusLensSubjectDistance            ,0xffd07b08) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffd07f60) //  3
