@@ -1,3 +1,4 @@
+// TODO this holds and exposure count of some kind, but it only updates when rebooting or switching to play!
 #define PARAM_FILE_COUNTER      0x1
 
 #include "platform.h"
@@ -136,29 +137,25 @@ long get_file_next_counter() {
     return get_file_counter();
 }
 
-// TODO FILE counter doesn't behave the same
 long get_target_file_num() {
-    long n;
-    
-    n = get_file_next_counter();
-    n = (n>>4)&0x3FFF;
-    return n;
+    return get_exposure_counter();
 }
 #if defined(CAM_DATE_FOLDER_NAMING)
 // ELPH130 camera uses date to name directory
+// TODO currently returns something like A/DCIM/101___09/ETC_0112.TMP
+// may need different params
 void get_target_dir_name(char *out)
 {
+    static char buf[32];
     extern void _GetImageFolder(char*,int,int,int);
-    _GetImageFolder(out,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
+    _GetImageFolder(buf,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
+    strncpy(out,buf,15);
+    out[15] = 0;
 }
 #else
 long get_target_dir_num() 
 {
-    long n;
-
-    n = get_file_next_counter();
-    n = (n>>18)&0x3FF;
-    return n;
+    return 0;
 }
 #endif
 
