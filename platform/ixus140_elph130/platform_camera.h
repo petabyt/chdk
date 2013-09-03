@@ -103,10 +103,11 @@
     // TODO max
 
     // TODO
-// asserts ParameterManager.c Line 118
-//    #define CAM_DATE_FOLDER_NAMING                  0x400
+    #define CAM_DATE_FOLDER_NAMING                  0x400
 
     #define PARAM_CAMERA_NAME               3       // parameter number for GetParameterData
+
+    #define CAM_FILE_COUNTER_IS_VAR            1       // file counter is variable file_counter_var in stubs, not a param
 
 // TODO
 //	#define REMOTE_SYNC_STATUS_LED 	0xDEADBEEF		// specifies an LED that turns on while camera waits for USB remote to sync
