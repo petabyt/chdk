@@ -227,6 +227,8 @@
                                                 // Defines 'led' Index value for camera_set_led function to control the AutoFocus assist LED
                                                 // Used for the Motion Detect & Live View buffer testing
 
+    #undef CAM_FILE_COUNTER_IS_VAR              // file counter is variable file_counter_var in stubs, not a param
+
     // Keyboard repeat and initial delays (override in platform_camera.h if needed)
     #define KBD_REPEAT_DELAY                175
     #define KBD_INITIAL_DELAY               500

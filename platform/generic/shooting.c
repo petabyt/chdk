@@ -6,8 +6,10 @@
 #include "stdlib.h"
 #include "conf.h"
 
+#ifndef CAM_FILE_COUNTER_IS_VAR
 #ifndef PARAM_FILE_COUNTER
 #	error Please define PARAM_FILE_COUNTER in platform/CAMERA/shooting.c!
+#endif
 #endif
 
 #define AV96_MIN (aperture_sizes_table[0].prop_id)

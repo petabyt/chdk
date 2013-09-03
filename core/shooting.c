@@ -785,6 +785,19 @@ void shooting_init()
 //-------------------------------------------------------------------
 // Get file related info
 
+#ifdef CAM_FILE_COUNTER_IS_VAR
+extern long file_counter_var;
+long get_file_counter()
+{
+    return file_counter_var;
+}
+long get_exposure_counter()
+{
+    long v = get_file_counter();
+    v = ((v>>4)&0x3FFF);
+    return v;
+}
+#else
 extern const unsigned int param_file_counter;
 
 long get_file_counter()
@@ -801,6 +814,7 @@ long get_exposure_counter()
     v = ((v>>4)&0x3FFF);
     return v;
 }
+#endif
 
 #ifndef CAM_DATE_FOLDER_NAMING
 void get_target_dir_name(char *dir) {
