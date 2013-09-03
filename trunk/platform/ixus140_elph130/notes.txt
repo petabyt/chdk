@@ -26,9 +26,12 @@ led functions
 video functions
 exmem support (note, camera has ~1.7 mb regular heap free on startup with CHDK)
 
+OTHER ISSUES
+************
+Folder naming and file counter use a new method, seem to be working but may have issues
+
 KNOWN BUGS
 **********
-Folder naming and file number for raw and get_image_dir have issues
 Debug LED is AF LED!
 Palette is wrong, not implemented yet
 viewport dimensions are wrong, not implemented yet =histogram, zebra, ptp live view etc broken
