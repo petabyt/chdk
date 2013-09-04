@@ -183,6 +183,8 @@
     #undef  CAM_AV_OVERRIDE_IRIS_FIX            // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
 
     #undef  CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   // For cameras with 'low light' mode that does not work with raw define this
+    #undef  CAM_DISABLE_RAW_IN_ISO_3200         // For cameras that don't have valid raw in ISO3200 mode (different from low light)
+    #undef  CAM_DISABLE_RAW_IN_AUTO             // For cameras that don't have valid raw in AUTO mode
     #undef  CAM_DISABLE_RAW_IN_HQ_BURST         // For cameras with 'HQ Burst' mode that does not work with raw define this
     #undef  CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
     #undef  CAM_ISO_LIMIT_IN_HQ_BURST           // Defines max 'market' ISO override value for HQ Burst mode (higher values crash camera)
