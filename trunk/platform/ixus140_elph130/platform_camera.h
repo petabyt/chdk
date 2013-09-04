@@ -85,6 +85,13 @@
     #undef CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
 
+//    #undef  CAM_BITMAP_PALETTE
+//    #define CAM_BITMAP_PALETTE                  13
+
+//    TODO
+//    #define CAM_LOAD_CUSTOM_COLORS              1   // Enable loading CHDK colors into the camera palette memory/hardware
+//    #define CHDK_COLOR_BASE                     0xCE// Start color index for CHDK colors loaded into camera palette.
+
     // TODO - likely, not tested
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
