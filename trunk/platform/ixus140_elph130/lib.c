@@ -21,8 +21,7 @@ void shutdown()
 }
 
 
-// TODO AF led for now
-#define LED_PR 0xc0223030 // red LED, no DP
+#define LED_PR 0xC0220094 // Green (only non-AF)
 
 void debug_led(int state)
 {
@@ -33,12 +32,9 @@ void debug_led(int state)
 	p[0]=0x44;
 }
 
-// TODO
 void camera_set_led(int led, int state, int bright) {
- /*
- static char led_table[]={0,1,9};
+ static char led_table[]={0,12}; // status, AF
  _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
- */
 }
 
 char *camera_jpeg_count_str()
@@ -67,10 +63,9 @@ char *hook_raw_image_addr()
 
 long hook_raw_size()             { return 0x01794300; }                    // Found @0xff413ff0
 
-// TODO 
 // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
 int vid_get_viewport_yscale() {
-	return 2;               // G12 viewport is 480 pixels high
+	return 2;
 }
 
 int vid_get_viewport_width()
@@ -97,22 +92,10 @@ long vid_get_viewport_height()
 // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
 static long vp_xo[5] = { 0, 0, 0, 44 };				// should all be even values for edge overlay
 
+// elph130 appears to use display offsets exclusively in X
 int vid_get_viewport_xoffset()
 {
-    int m = mode_get();
-    if ((m & MODE_MASK) == MODE_PLAY)
-    {
-        return 0;
-    }
-    else if ((m & MODE_SHOOTING_MASK) == MODE_STITCH)
-    {
-        return 0;
-    }
-    else
-    {
-        return 0;
-//	    return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-    }
+    return 0;
 }
 
 int vid_get_viewport_display_xoffset()
