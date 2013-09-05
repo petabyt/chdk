@@ -31,11 +31,11 @@
     #define CAM_JPEG_WIDTH                  4608
     #define CAM_JPEG_HEIGHT                 3456
 
-    // TODO
-    #define CAM_ACTIVE_AREA_X1              0
-    #define CAM_ACTIVE_AREA_Y1              0
-    #define CAM_ACTIVE_AREA_X2              4704
-    #define CAM_ACTIVE_AREA_Y2              3504
+    // defined to pixels containing any data, commented excludes darker border
+    #define CAM_ACTIVE_AREA_X1              12   // 28
+    #define CAM_ACTIVE_AREA_Y1              10   // 20
+    #define CAM_ACTIVE_AREA_X2              4666 // 4652
+    #define CAM_ACTIVE_AREA_Y2              3492 // 3480
 
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT  0x40000000 // Found @0xff038dd4
