@@ -116,11 +116,13 @@
 
     #define CAM_FILE_COUNTER_IS_VAR            1       // file counter is variable file_counter_var in stubs, not a param
 
-// TODO
-//	#define REMOTE_SYNC_STATUS_LED 	0xDEADBEEF		// specifies an LED that turns on while camera waits for USB remote to sync
+//	only non-AF led available
+	#define REMOTE_SYNC_STATUS_LED 	0xC0220094		// specifies an LED that turns on while camera waits for USB remote to sync
 
-//    #undef CAM_AF_LED
-//    #define CAM_AF_LED                       2
+    #undef CAM_AF_LED
+    #define CAM_AF_LED                         1
+
+    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE  1     // For cameras with 'low light' mode that does not work with raw define this
 
 
 //    #define CAM_HAS_FILEWRITETASK_HOOK      1       // file write hook for remote capture etc
