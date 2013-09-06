@@ -75,16 +75,16 @@ asm volatile (
 "    B       loc_FF0B0924 \n"
 
 "loc_FF0B0794:\n"
-"    BL      shooting_expo_iso_override\n"      // added
+//"    BL      shooting_expo_iso_override\n"      // extra ISO override call doesn't appear to be needed on elph130
 "    BL      sub_FF0B0EB4 \n"
 "    BL      shooting_expo_param_override\n"    // added
 "    BL      sub_FF0AE238 \n"
-// TODO test
-"    MOV     R0, #0\n"                          // added
-"    STR     R0, [R5,#0x28]\n"                  // added, fixes overrides behavior at short shutter press (from S95)
-//"  LDR     R0, [R5, #0x28] \n"  // above patch makes these three lines redundant
-//"  CMP     R0, #0 \n"
-//"  BLNE    _sub_FF1F9248 \n"
+// Following don't appear to be required, needs more testing!
+//"    MOV     R0, #0\n"                          // added
+//"    STR     R0, [R5,#0x28]\n"                  // added, fixes overrides behavior at short shutter press, appears to be required for ISO
+"    LDR     R0, [R5, #0x28] \n"
+"    CMP     R0, #0 \n"
+"    BLNE    sub_FF1F9248 \n"
 "    B       loc_FF0B0924 \n"
 
 "loc_FF0B07AC:\n"

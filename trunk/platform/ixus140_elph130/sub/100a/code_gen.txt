@@ -181,7 +181,7 @@ FW 54
 //<<<
 //FW 38
 >>>
-"    BL      shooting_expo_iso_override\n"      // added
+//"    BL      shooting_expo_iso_override\n"      // extra ISO override call doesn't appear to be needed on elph130
 <<<
 FW 1
 >>>
@@ -189,14 +189,15 @@ FW 1
 <<<
 FW 1
 >>>
-// TODO test
-"    MOV     R0, #0\n"                          // added
-"    STR     R0, [R5,#0x28]\n"                  // added, fixes overrides behavior at short shutter press (from S95)
+// Following don't appear to be required, needs more testing!
+//"    MOV     R0, #0\n"                          // added
+//"    STR     R0, [R5,#0x28]\n"                  // added, fixes overrides behavior at short shutter press, appears to be required for ISO
 <<<
-REM "above patch makes these three lines redundant"
-REM
-REM
-FW 2
+//REM "above patch makes these three lines redundant"
+//REM
+//REM
+//FW 2
+FW 5
 PATCHSUB ref=0
 FW $
 ENDASM
