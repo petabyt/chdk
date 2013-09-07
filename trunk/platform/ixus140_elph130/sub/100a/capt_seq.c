@@ -5,9 +5,8 @@
 #include "platform.h"
 #include "core.h"
 
-// TODO need to verify
-#define USE_STUBS_NRFLAG 1          // see stubs_entry.S
-#define NR_AUTO (0)                 // have to explictly reset value back to 0 to enable auto
+// NOTE auto in P mode doesn't seem to ever enable dark frame, even if you override > 1.3 sec
+static long *nrflag = (long*)(0xE4F0+4); // FF3634B8, 4th arg to  sub_FF2A49C4
 
 #include "../../../generic/capt_seq.c"
 
@@ -79,12 +78,12 @@ asm volatile (
 "    BL      sub_FF0B0EB4 \n"
 "    BL      shooting_expo_param_override\n"    // added
 "    BL      sub_FF0AE238 \n"
-// Following don't appear to be required, needs more testing!
+// try avoid intermittetant override failues on quick press, may not to be 100% effective
 //"    MOV     R0, #0\n"                          // added
-//"    STR     R0, [R5,#0x28]\n"                  // added, fixes overrides behavior at short shutter press, appears to be required for ISO
+//"    STR     R0, [R5,#0x28]\n"                  // added
 "    LDR     R0, [R5, #0x28] \n"
 "    CMP     R0, #0 \n"
-"    BLNE    sub_FF1F9248 \n"
+"    BLNE    sub_FF1F9248_my \n"  // --> Patched. Old value = 0xFF1F9248.
 "    B       loc_FF0B0924 \n"
 
 "loc_FF0B07AC:\n"
@@ -270,7 +269,52 @@ asm volatile (
 }
 
 /*************************************************************/
-//** sub_FF1F916C_my @ 0xFF1F916C - 0xFF1F9244, length=55
+//** sub_FF1F9248_my @ 0xFF1F9248 - 0xFF1F92D4, length=36
+void __attribute__((naked,noinline)) sub_FF1F9248_my() {
+asm volatile (
+"    STMFD   SP!, {R4-R6,LR} \n"
+"    BL      sub_FF0AFDA8 \n"
+"    MOV     R4, R0 \n"
+"    MOV     R0, #0xC \n"
+"    BL      sub_FF0B5F14 \n"
+"    LDR     R6, =0x80CC \n"
+"    TST     R0, #1 \n"
+"    MOV     R5, #1 \n"
+"    BNE     loc_FF1F92D0 \n"
+"    BL      sub_FF0B0EA0 \n"
+"    BL      sub_FF0B1F38 \n"
+"    MOV     R1, R4 \n"
+"    BL      sub_FF0B1F90 \n"
+"    LDR     R0, =0x10E \n"
+"    MOV     R2, #4 \n"
+"    ADD     R1, R4, #0x30 \n"
+"    BL      _SetPropertyCase \n"
+"    MOV     R2, #4 \n"
+"    ADD     R1, R4, #0x34 \n"
+"    MOV     R0, #0x2C \n"
+"    BL      _SetPropertyCase \n"
+"    MOV     R2, #4 \n"
+"    ADD     R1, R4, #8 \n"
+"    MOV     R0, #0x3F \n"
+"    BL      _SetPropertyCase \n"
+"    BL      sub_FF1F9D3C \n"
+"    MVN     R1, #0x1000 \n"
+"    BL      sub_0067F198 /*_ClearEventFlag*/ \n"
+"    MOV     R0, R4 \n"
+"    BL      sub_FF36336C \n"
+"    MOV     R0, R4 \n"
+"    BL      sub_FF363740_my \n"  // --> Patched. Old value = 0xFF363740.
+"    TST     R0, #1 \n"
+"    LDMEQFD SP!, {R4-R6,PC} \n"
+
+"loc_FF1F92D0:\n"
+"    STR     R5, [R6] \n"
+"    LDMFD   SP!, {R4-R6,PC} \n"
+);
+}
+
+/*************************************************************/
+//** sub_FF1F916C_my @ 0xFF1F916C - 0xFF1F9224, length=47
 void __attribute__((naked,noinline)) sub_FF1F916C_my() {
 asm volatile (
 "    STMFD   SP!, {R4-R6,LR} \n"
@@ -281,10 +325,10 @@ asm volatile (
 "    MOV     R4, #0 \n"
 "    CMP     R0, #0 \n"
 "    MOVNE   R4, #0x1D \n"
-"    BNE     loc_FF1F9228 \n"
+"    BNE     sub_FF1F9228 \n"
 "    LDR     R0, [R6, #0x28] \n"
 "    CMP     R0, #0 \n"
-"    BNE     loc_FF1F9228 \n"
+"    BNE     sub_FF1F9228 \n"
 "    BL      sub_FF0B1F38 \n"
 "    MOV     R1, R5 \n"
 "    BL      sub_FF0B1F90 \n"
@@ -305,7 +349,7 @@ asm volatile (
 
 "loc_FF1F91E0:\n"
 "    TST     R4, #1 \n"
-"    BNE     loc_FF1F9228 \n"
+"    BNE     sub_FF1F9228 \n"
 "    BL      sub_FF1F9D3C \n"
 "    MVN     R1, #0x1000 \n"
 "    BL      sub_0067F198 /*_ClearEventFlag*/ \n"
@@ -313,25 +357,116 @@ asm volatile (
 "    BL      sub_FF362ABC \n"
 "    TST     R0, #1 \n"
 "    MOV     R4, R0 \n"
-"    BNE     loc_FF1F9228 \n"
+"    BNE     sub_FF1F9228 \n"
 "    BL      sub_FF0B0EA0 \n"
 "    MOV     R0, R5 \n"
 "    BL      sub_FF36336C \n"
 "    MOV     R0, #2 \n"
 "    BL      sub_FF0B77C4 \n"
 "    MOV     R0, R5 \n"
-"    BL      sub_FF363740 \n"
+"    BL      sub_FF363740_my \n"  // --> Patched. Old value = 0xFF363740.
 "    MOV     R4, R0 \n"
-
-"loc_FF1F9228:\n"
 "    BL      capt_seq_hook_raw_here \n"         // added
-"    MOV     R2, R5 \n"
-"    MOV     R1, #1 \n"
+"    LDR     PC, =0xFF1F9228 \n"  // Continue in firmware
+);
+}
+
+/*************************************************************/
+//** sub_FF363740_my @ 0xFF363740 - 0xFF3637CC, length=36
+void __attribute__((naked,noinline)) sub_FF363740_my() {
+asm volatile (
+"    STMFD   SP!, {R2-R10,LR} \n"
+"    MOV     R4, R0 \n"
+"    BL      sub_FF3632D4 \n"
+"    BL      sub_FF1F980C \n"
+"    LDR     R7, =0x9EA24 \n"
+"    LDR     R9, =0x820D \n"
+"    LDR     R0, [R7, #0x180] \n"
+"    ADD     R6, R7, #0x100 \n"
+"    CMP     R0, #2 \n"
+"    BNE     loc_FF363788 \n"
+"    LDRH    R0, [R7] \n"
+"    CMP     R0, R9 \n"
+"    LDRNEH  R0, [R6, #0x8A] \n"
+"    CMPNE   R0, #3 \n"
+"    LDRNE   R0, [R4, #8] \n"
+"    CMPNE   R0, #1 \n"
+"    MOVLS   R0, #4 \n"
+"    BLLS    sub_FF15C34C \n"
+
+"loc_FF363788:\n"
+"    LDR     R0, =0x12F \n"
+"    MOV     R2, #4 \n"
+"    ADD     R1, SP, #4 \n"
+"    BL      _GetPropertyCase \n"
+"    TST     R0, #1 \n"
+"    MOVNE   R1, #0x170 \n"
+"    LDRNE   R0, =0xFF3639F8 \n"
+"    BLNE    _DebugAssert \n"
+"    LDR     R0, [SP, #4] \n"
+"    AND     R0, R0, #0xFF00 \n"
+"    CMP     R0, #0x600 \n"
+"    LDRNE   R0, =0xFF362FD4 \n"
+"    LDREQ   R0, =0xFF363698 \n"
+"    MOVNE   R1, R4 \n"
+"    MOVEQ   R1, #0 \n"
+"    BL      sub_FF1110E0 \n"
 "    MOV     R0, R4 \n"
-"    BL      sub_FF0AEB38 \n"
-"    TST     R4, #1 \n"
-"    MOVEQ   R0, #0 \n"
-"    STREQ   R0, [R6, #0x28] \n"
-"    LDMFD   SP!, {R4-R6,PC} \n"
+"    BL      sub_FF36341C_my \n"  // --> Patched. Old value = 0xFF36341C.
+"    LDR     PC, =0xFF3637D0 \n"  // Continue in firmware
+);
+}
+
+/*************************************************************/
+//** sub_FF36341C_my @ 0xFF36341C - 0xFF3634C0, length=42
+void __attribute__((naked,noinline)) sub_FF36341C_my() {
+asm volatile (
+"    STMFD   SP!, {R1-R7,LR} \n"
+"    LDR     R6, =0x9EBF4 \n"
+"    LDR     R5, =0x9EA24 \n"
+"    MOV     R4, R0 \n"
+"    LDR     R3, [R6] \n"
+"    LDRSH   R2, [R6, #0xC] \n"
+"    LDRSH   R1, [R6, #0xE] \n"
+"    LDR     R0, [R5, #0x88] \n"
+"    BL      sub_FF1AE7A0 \n"
+"    MOV     R2, #2 \n"
+"    ADD     R1, SP, #8 \n"
+"    MOV     R0, #0xFA \n"
+"    BL      _GetPropertyCase \n"
+"    TST     R0, #1 \n"
+"    LDRNE   R1, =0x2D9 \n"
+"    LDRNE   R0, =0xFF36323C \n"
+"    BLNE    _DebugAssert \n"
+"    LDRSH   R0, [R6, #0xC] \n"
+"    LDRSH   R1, [SP, #8] \n"
+"    BL      sub_FF159890 \n"
+"    LDR     R0, [R5, #0xE4] \n"
+"    CMP     R0, #0 \n"
+"    LDRNEH  R0, [R5] \n"
+"    LDRNE   R1, =0x820D \n"
+"    CMPNE   R0, R1 \n"
+"    LDRNE   R0, =0x9EB24 \n"
+"    LDRNEH  R0, [R0, #0x8A] \n"
+"    CMPNE   R0, #3 \n"
+"    LDRNE   R0, [R4, #8] \n"
+"    CMPNE   R0, #1 \n"
+"    BHI     loc_FF3634C0 \n"
+"    BL      _GetCCDTemperature \n"
+"    LDR     R3, =0xE4F0 \n"
+"    STRH    R0, [R4, #0xA8] \n"
+"    SUB     R2, R3, #4 \n"
+"    STRD    R2, [SP] \n"
+"    MOV     R1, R0 \n"
+"    LDRSH   R2, [R6, #0xC] \n"
+"    LDRH    R0, [R5, #0x5E] \n"
+"    ADD     R3, R3, #4 \n"
+"    BL      sub_FF2A49C4 \n"
+
+"loc_FF3634C0:\n"
+"    BL      wait_until_remote_button_is_released\n" // added
+"    BL      capt_seq_hook_set_nr\n"                 // added
+"    LDRH    R0, [R4, #0xA8] \n"
+"    LDR     PC, =0xFF3634C4 \n"  // Continue in firmware
 );
 }

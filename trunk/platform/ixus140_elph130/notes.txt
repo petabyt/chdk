@@ -17,11 +17,11 @@ RAW/DNG capture (has file/directory issues noted below)
 zebra
 PTP live view, but movie and fisheye mode are not correct
 led functions
+dark frame control - note overrides outside of long shutter mode do not appear to trigger auto dark frame
+usb remote hook - only tested with plug / unplug test
 
 NOT IMPLEMENTED
 ***************
-dark frame control
-usb remote hook
 fast live view buffer
 current bitmap buffer
 extra long exposures / exp_drv task
@@ -32,6 +32,7 @@ exmem support (note, camera has ~1.7 mb regular heap free on startup with CHDK)
 OTHER ISSUES
 ************
 Folder naming and file counter use a new method, seem to be working but may have issues
+Not clear if fast press override hack is needed, needs more testing
 
 KNOWN BUGS
 **********
