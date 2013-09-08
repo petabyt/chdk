@@ -861,6 +861,7 @@
 0xff89d078,LockMainPower
 0xff89d078,LockMainPower_FW
 0xffae6eb8,LockStrobePopUpActuatorVoltageToMax_FW
+0xff8936e4,LogCameraEvent
 0xff83714c,Lseek
 0xff83714c,lseek
 0xff83714c,Lseek_FW

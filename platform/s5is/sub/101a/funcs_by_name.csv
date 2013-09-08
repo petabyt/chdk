@@ -283,6 +283,7 @@
 0xff877df8,LockMainPower_FW
 0xff8b2e10,LockPhysicalScreen_FW
 0xff9c5154,LockRefreshDialog_FW
+0xff872b20,LogCameraEvent
 0xff821b20,LowBat_Result_Print_Off_FW
 0xff821b0c,LowBat_Result_Print_On_FW
 0xff825f94,Lseek,(stubs_entry_2.s)

@@ -896,6 +896,7 @@
 0x003fb1b8,LocalTime
 0xff885ac8,LockMainPower
 0xff885ac8,LockMainPower_FW
+0xff87e08c,LogCameraEvent
 0xff8316d4,Lseek
 0xff8316d4,lseek
 0xff8316d4,Lseek_FW

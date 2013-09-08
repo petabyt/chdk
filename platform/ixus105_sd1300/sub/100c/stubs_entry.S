@@ -149,7 +149,7 @@ NHSTUB(Open                                   ,0xffc26ae8) //120
 NHSTUB(PB2Rec                                 ,0xffc7716c) //104
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xffc5d76c) //120
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xffc5d744) //120
-NHSTUB(PT_PlaySound                           ,0xffc65da4) //  7
+NHSTUB(PT_PlaySound                           ,0xffc65da4) //122
 NHSTUB(PostLogicalEventForNotPowerType        ,0xffc73d34) //120
 NHSTUB(PostLogicalEventToUI                   ,0xffc73d80) //120
 NHSTUB(PutInNdFilter                          ,0xffe18ff8) //102

@@ -4,8 +4,6 @@ GetDrive_FreeClusters 0xff8769a8 9
 srand 0xFFA5B358 13
 rand 0xFFA5B364 10
 qsort 0xFFB5FA2C 18
-closedir 0xFFAE2A70 20
 SetFileTimeStamp 0xFF83737C 23
 ReadFastDir 0xFFAE2C14 26
-PT_PlaySound 0xFF88A140
 OpenFastDir 0xFFAE2AC0

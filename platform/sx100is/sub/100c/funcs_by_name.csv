@@ -653,6 +653,7 @@
 0xffc580ec,LocalTime
 0xffc5f748,LockMainPower
 0xffc5f748,LockMainPower_FW
+0xffc59f58,LogCameraEvent
 0xffc11278,LowBat_Result_Print_On_FW
 0xffc1518c,Lseek
 0xffc1518c,lseek

@@ -331,6 +331,7 @@
 0xff86a0f0,ShowCameraLog_FW
 0xff86a138,StartCameraLog_FW
 0xff86a2fc,StopCameraLog_FW
+0xff86a35c,LogCameraEvent
 0xff86a8fc,OpLog.Stop_FW
 0xff86a928,OpLog.ReadFromROM_FW
 0xff86a9a8,OpLog.ReadFromSD_FW

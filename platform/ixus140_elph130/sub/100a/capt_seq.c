@@ -78,7 +78,7 @@ asm volatile (
 "    BL      sub_FF0B0EB4 \n"
 "    BL      shooting_expo_param_override\n"    // added
 "    BL      sub_FF0AE238 \n"
-// try avoid intermittetant override failues on quick press, may not to be 100% effective
+// try avoid intermittetant override failues on quick press, not needed?
 //"    MOV     R0, #0\n"                          // added
 //"    STR     R0, [R5,#0x28]\n"                  // added
 "    LDR     R0, [R5, #0x28] \n"

@@ -420,6 +420,7 @@
 0xff88c6ac,ShowCameraLog_FW
 0xff88c6fc,StartCameraLog_FW
 0xff88c8c0,StopCameraLog_FW
+0xff88c920,LogCameraEvent
 0xff88cf5c,OpLog.Stop_FW
 0xff88cf88,OpLog.WriteToROM_FW
 0xff88cfb8,j_OpLog.WriteToROM_FW
