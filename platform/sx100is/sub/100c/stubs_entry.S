@@ -188,7 +188,6 @@ NHSTUB(_sqrt                                  ,0xffe5938c) //  1
 NHSTUB(add_ptp_handler                        ,0xffcb53d8) //121
 NHSTUB(apex2us                                ,0xffd7b48c) //121
 NHSTUB(close                                  ,0xffc0a258) //109
-NHSTUB(closedir                               ,0xffddc780) //  1
 NHSTUB(err_init_task                          ,0xffc04eb0) //111
 NHSTUB(exmem_alloc                            ,0xffc58bd8) //102
 NHSTUB(exmem_free                             ,0xffc58c50) //102
@@ -207,6 +206,7 @@ NHSTUB(mkdir                                  ,0xffc153f0) //109
 NHSTUB(mktime_ext                             ,0xffc76ee4) //  1
 NHSTUB(open                                   ,0xffc0a1a8) //109
 NHSTUB(OpenFastDir                            ,0xffddc61c) //  1
+NHSTUB(closedir                               ,0xffddc780) //  1
 NHSTUB(qsort                                  ,0xffd7a864) //  1
 NHSTUB(rand                                   ,0xffc0e9f8) //  1
 NHSTUB(realloc                                ,0xffc03b90) //115
