@@ -477,6 +477,7 @@
 0xff0d2d24,GetCurrentCaptureModeType_FW
 0xff0d4d7c,TurnOnBackLight
 0xff0d4d94,TurnOffBackLight
+0xff0d54c8,PT_PlaySound
 0xff0d8360,mktime_ext
 0xff0d83ac,strftime
 0xff0d8ce0,sscanf_FW

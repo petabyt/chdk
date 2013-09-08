@@ -48,11 +48,23 @@ int get_flash_params_count(void) { return 0x91; }                          // Fo
 
 void *vid_get_bitmap_fb()        { return (void*)0x406b1000; }             // Found @0xff08b550
 void *vid_get_viewport_fb()      { return (void*)0x40806b80; }             // Found @0xff412680
-void *vid_get_viewport_live_fb() { return (void *)0;} // TODO
 void *vid_get_viewport_fb_d()
 {
     extern char *viewport_fb_d;
 	return viewport_fb_d;
+}
+
+void *vid_get_viewport_live_fb()
+{
+    extern char active_viewport_buffer;
+    extern void* viewport_buffers[];
+
+    // no distinct video mode
+    if (/*mode_is_video(mode_get())*/ movie_status == VIDEO_RECORD_IN_PROGRESS)
+        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
+    // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
+    // verified -1 gives best response
+    return viewport_buffers[(active_viewport_buffer-1)&3];
 }
 
 
@@ -139,9 +151,10 @@ int vid_get_viewport_yoffset()
     {
         return 0;
     }
-    else if (mode_is_video(m))
+    // no distinct video mode
+    else if (/*mode_is_video(m)*/ movie_status == VIDEO_RECORD_IN_PROGRESS)
     {
-        return 0;
+        return 30;
     }
     else
     {
@@ -160,7 +173,7 @@ int vid_get_viewport_display_yoffset()
     {
         return 72;
     }
-    else if (mode_is_video(m))
+    else if (/*mode_is_video(m)*/ movie_status == VIDEO_RECORD_IN_PROGRESS)
     {
         return 30;
     }

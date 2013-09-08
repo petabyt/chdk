@@ -1065,6 +1065,7 @@
 0xff410ac8,PrintScanTable_FW
 0xff1f6ce8,PT_MoveDigitalZoomToWide
 0xff1f6cb8,PT_MoveOpticalZoomAt
+0xff0d54c8,PT_PlaySound
 0xff206820,PTM_AllReset_FW
 0xff0c54cc,PTM_AllResetToFactorySetting_FW
 0xff2074d8,PTM_BackupUIProperty_FW
