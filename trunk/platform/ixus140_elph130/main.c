@@ -32,7 +32,7 @@ void startup()
 */
 
 // Focus length table in firmware @FFF4A3E0
-#define NUM_FL      100 // TODO maybe should be 101, optical zoom pos range is 0-100, last entry in table is dupe
+#define NUM_FL      101 // 101 zoom steps
 #define NUM_DATA    2   // 2 words each entry, FL in MM*1000, 100
 extern int focus_len_table[NUM_FL*NUM_DATA];
 
