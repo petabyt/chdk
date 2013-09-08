@@ -26,7 +26,7 @@ NOT IMPLEMENTED
 fast live view buffer
 extra long exposures / exp_drv task
 filewrite hook
-video functions
+video functions / movie_rec task
 exmem support (note, camera has ~1.7 mb regular heap free on startup with CHDK)
 subject distance override
 
@@ -38,3 +38,4 @@ Not clear if fast press override hack is needed, needs more testing
 KNOWN BUGS
 **********
 DNG color matrix is copy+paste from D10
+play_sound is not found
