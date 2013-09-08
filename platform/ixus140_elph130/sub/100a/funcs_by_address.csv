@@ -830,6 +830,7 @@
 0xff250618,UIFS_WirelessExecuteSendForever_FW
 0xff282ec4,qsort
 0xff282f24,realloc
+0xff29de84,apex2us
 0xff2a4c6c,NR_SetDarkSubType
 0xff2a4c6c,NRTBL.SetDarkSubType_FW
 0xff2a4d08,NRTBL.SetDefectCorrectType_FW

@@ -21,7 +21,7 @@
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff87caf4 -> ff8792b0 -> ff9596f4 -> ffa4b9b4 -> ffb2d32c
+// Firmware modemap table found @ffa4b9b4 -> ffb2d32c
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
@@ -183,10 +183,10 @@ NHSTUB(Write                                  ,0xff823ba0) //120
 NHSTUB(WriteSDCard                            ,0xff918858) //108
 NHSTUB(_log                                   ,0xffad3188) //111
 NHSTUB(_log10                                 ,0xffad1e14) //112
-NHSTUB(_pow                                   ,0xffad1f84) //114
+NHSTUB(_pow                                   ,0xffad1f84) //121
 NHSTUB(_sqrt                                  ,0xffad4de4) //  1
-NHSTUB(add_ptp_handler                        ,0xff9ef744) //  3
-NHSTUB(apex2us                                ,0xff9b9440) //  4
+NHSTUB(add_ptp_handler                        ,0xff9ef744) //121
+NHSTUB(apex2us                                ,0xff9b9440) //121
 NHSTUB(close                                  ,0xff819864) //109
 NHSTUB(closedir                               ,0xffa21d70) //  1
 NHSTUB(err_init_task                          ,0xff814e80) //111
@@ -211,7 +211,7 @@ NHSTUB(qsort                                  ,0xffa84fc8) //  1
 NHSTUB(rand                                   ,0xff81ccbc) //  1
 NHSTUB(realloc                                ,0xff813b5c) //115
 NHSTUB(reboot_fw_update                       ,0xffa296a0) //106
-NHSTUB(set_control_event                      ,0xff878894) //  1
+NHSTUB(set_control_event                      ,0xff878894) //111
 NHSTUB(srand                                  ,0xff81ccb0) //  1
 NHSTUB(stat                                   ,0xff823d00) //  1
 NHSTUB(strcat                                 ,0xff892708) //  1

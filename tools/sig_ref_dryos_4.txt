@@ -9,4 +9,3 @@ SetFileTimeStamp 0xFF83737C 23
 ReadFastDir 0xFFAE2C14 26
 PT_PlaySound 0xFF88A140
 OpenFastDir 0xFFAE2AC0
-apex2us 0xFFA5C23C

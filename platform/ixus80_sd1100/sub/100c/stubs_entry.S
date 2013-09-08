@@ -22,7 +22,7 @@
 //NHSTUB(PutOutNdFilter                       ,0xffa237f0) //102        *** != 0xffa7ab08
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff8772b4 -> ff873c7c -> ff95a39c -> ffa37724 -> ffaede90
+// Firmware modemap table found @ffa37724 -> ffaede90
 // Mode  2598 in firmware but not in current modemap
 // Mode  2603 in firmware but not in current modemap
 
@@ -182,10 +182,10 @@ NHSTUB(Write                                  ,0xff823f00) //120
 NHSTUB(WriteSDCard                            ,0xff91f0c8) //108
 NHSTUB(_log                                   ,0xffaa6048) //111
 NHSTUB(_log10                                 ,0xffaa4f8c) //112
-NHSTUB(_pow                                   ,0xffaa50fc) //114
+NHSTUB(_pow                                   ,0xffaa50fc) //121
 NHSTUB(_sqrt                                  ,0xffaa7468) //  1
-NHSTUB(add_ptp_handler                        ,0xff9dab04) //  1
-NHSTUB(apex2us                                ,0xff9ac134) //  4
+NHSTUB(add_ptp_handler                        ,0xff9dab04) //121
+NHSTUB(apex2us                                ,0xff9ac134) //121
 NHSTUB(close                                  ,0xff819f74) //109
 NHSTUB(closedir                               ,0xffa0c20c) //  1
 NHSTUB(err_init_task                          ,0xff814e98) //111

@@ -22,7 +22,7 @@
 NHSTUB(kbd_pwr_on                             ,0xffc315fc) //  2 82%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ffc607f4 -> ffc5d1b8 -> ffd2c328 -> ffdfaf9c -> ffec9ef0
+// Firmware modemap table found @ffdfaf9c -> ffec9ef0
 // Current modemap entry not found in firmware - MODE_SCN_AQUARIUM        16407
 // Current modemap entry not found in firmware - MODE_STITCH              33290
 // Current modemap entry not found in firmware - MODE_M                   32769
@@ -190,10 +190,10 @@ NHSTUB(Write                                  ,0xffc133f0) //120
 NHSTUB(WriteSDCard                            ,0xffcf4e38) //108
 NHSTUB(_log                                   ,0xffe72af4) //111
 NHSTUB(_log10                                 ,0xffe71a38) //112
-NHSTUB(_pow                                   ,0xffe71ba8) //114
+NHSTUB(_pow                                   ,0xffe71ba8) //121
 NHSTUB(_sqrt                                  ,0xffe73e5c) //  1
-NHSTUB(add_ptp_handler                        ,0xffdab87c) //  1
-NHSTUB(apex2us                                ,0xffd7b3dc) //  4
+NHSTUB(add_ptp_handler                        ,0xffdab87c) //121
+NHSTUB(apex2us                                ,0xffd7b3dc) //121
 NHSTUB(close                                  ,0xffc09f50) //109
 NHSTUB(closedir                               ,0xffddc384) //  1
 NHSTUB(err_init_task                          ,0xffc04e84) //111
@@ -218,7 +218,7 @@ NHSTUB(qsort                                  ,0xffe2bbec) //  1
 NHSTUB(rand                                   ,0xffc0d9bc) //  1
 NHSTUB(realloc                                ,0xffc03b60) //115
 NHSTUB(reboot_fw_update                       ,0xffde0b88) //106
-NHSTUB(set_control_event                      ,0xffc5c898) //  1
+NHSTUB(set_control_event                      ,0xffc5c898) //111
 NHSTUB(srand                                  ,0xffc0d9b0) //  1
 NHSTUB(stat                                   ,0xffc13550) //  1
 NHSTUB(strcat                                 ,0xffc6cc70) //  1

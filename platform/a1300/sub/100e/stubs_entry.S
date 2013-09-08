@@ -27,7 +27,7 @@
 // ERROR: srand is not found.                              //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff886a0c -> ff883434 -> ff9846c8 -> ffa80170 -> ffba0d78
+// Firmware modemap table found @ffa80170 -> ffba0d78
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
@@ -202,12 +202,12 @@ NHSTUB(Write                                  ,0xff8300c8) //120
 NHSTUB(WriteSDCard                            ,0xff94748c) //108
 NHSTUB(_log                                   ,0x003fcce0) //111
 NHSTUB(_log10                                 ,0x003fd220) //112
-NHSTUB(_pow                                   ,0x003fd398) //114
+NHSTUB(_pow                                   ,0x003fd398) //121
 NHSTUB(_sqrt                                  ,0x003fefbc) //  6
-NHSTUB(add_ptp_handler                        ,0xffa17594) //  6
-NHSTUB(apex2us                                ,0xff9d8e90) //  4
+NHSTUB(add_ptp_handler                        ,0xffa17594) //121
+NHSTUB(apex2us                                ,0xff9d8e90) //121
 NHSTUB(close                                  ,0xff8159e4) //109
-NHSTUB(closedir                               ,0xffa54424) //  4
+NHSTUB(closedir                               ,0xffa54424) //121
 NHSTUB(err_init_task                          ,0xff81437c) //111
 NHSTUB(exmem_alloc                            ,0xff8791d4) //101
 NHSTUB(exmem_free                             ,0xff87924c) //101
@@ -222,7 +222,7 @@ NHSTUB(malloc                                 ,0xff812f20) //112
 NHSTUB(memcmp                                 ,0xff81ae58) //120
 NHSTUB(memcpy                                 ,0xff835da4) //120
 NHSTUB(memset                                 ,0xff9d71e0) //120
-NHSTUB(mkdir                                  ,0xff8305a4) //118
+NHSTUB(mkdir                                  ,0xff8305a4) //121
 NHSTUB(mktime_ext                             ,0xff896064) //  1
 NHSTUB(open                                   ,0xff815934) //109
 NHSTUB(OpenFastDir                            ,0xffa54474) //115

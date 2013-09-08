@@ -113,6 +113,7 @@ int isSTR_cond(firmware *fw, int offset);
 int isBX(firmware *fw, int offset);
 int isBX_LR(firmware *fw, int offset);
 int isBL(firmware *fw, int offset);
+int isBL_cond(firmware *fw, int offset);
 int isB(firmware *fw, int offset);
 int isBorBL(firmware *fw, int offset);
 int isCMP(firmware *fw, int offset);

@@ -815,43 +815,6 @@ static FuncSig func_sig_GetFocusLensSubjectDistanceFromLens_1[] = {
 	{ -1, -1, -1 },
 };
 
-static FuncSig func_sig_add_ptp_handler_1[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D47F0
-	{   1, 0xe1a07000, 0xfdfff000 }, // mov:6:0xE1A07000
-	{   2, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE59F00C0
-	{   3, 0xe1a08000, 0xfdfff000 }, // mov:6:0xE1A08002
-	{   4, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE5900000
-	{   5, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05001
-	{   6, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
-	{   7, 0x01a00000, 0xfdfff000 }, // mov:6:0x03A00017
-	{   8, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD87F0
-	{   9, 0xe1550000, 0xfdfff000 }, // cmp:7:0xE3550000
-	{  10, 0x01a00000, 0xfdfff000 }, // mov:6:0x03A00003
-	{  11, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD87F0
-	{  12, 0xe5909000, 0xfdfff000 }, // ldr:4:0xE5909000
-	{  13, 0xe0804000, 0xfdf0f000 }, // add:6:0xE2804004
-	{  14, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00009
-	{  15, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01000
-	{  16, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFD7891
-	{  17, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{  18, 0x11a06000, 0xfdfff000 }, // mov:6:0x13A06001
-	{  19, 0x0a000000, 0x0f000000 }, // b, bl:3:0x1A000018
-	{  20, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE1A01007
-	{  21, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
-	{  22, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB00016F
-	{  23, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
-	{  24, 0x0a000000, 0x0f000000 }, // b, bl:3:0x0A000004
-	{  25, 0xe5805000, 0xfdfff000 }, // str:4:0xE580500C
-	{  26, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00009
-	{  27, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFD78BA
-	{  28, 0xe1a06000, 0xfdfff000 }, // mov:6:0xE3A06013
-	{  29, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEA00000E
-	{  30, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE3A00010
-	{  31, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFDAFD3
-	/* 32/32 */
-	{ -1, -1, -1 },
-};
-
 static FuncSig func_sig_set_control_event_1[] = {
 	{   0, 0xe2001000, 0xfffff000 }, // and:7:0xE2001CFF
 	{   1, 0xe200c000, 0xfffff000 }, // and:7:0xE200C101
@@ -1144,43 +1107,6 @@ static FuncSig func_sig_GetFocusLensSubjectDistanceFromLens_3[] = {
 	{  20, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
 	{  21, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD807C
 	/* 22/22 */
-	{ -1, -1, -1 },
-};
-
-static FuncSig func_sig_add_ptp_handler_3[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D47F0
-	{   1, 0xe00f4000, 0xf00ff000 }, // ldr:8:0xE51F4030
-	{   2, 0xe1a07000, 0xfdfff000 }, // mov:6:0xE1A07000
-	{   3, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE5940000
-	{   4, 0xe1a08000, 0xfdfff000 }, // mov:6:0xE1A08002
-	{   5, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
-	{   6, 0x01a00000, 0xfdfff000 }, // mov:6:0x03A00017
-	{   7, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05001
-	{   8, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD87F0
-	{   9, 0xe1550000, 0xfdfff000 }, // cmp:7:0xE3550000
-	{  10, 0x01a00000, 0xfdfff000 }, // mov:6:0x03A00003
-	{  11, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD87F0
-	{  12, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBF87F0F
-	{  13, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
-	{  14, 0x0a000000, 0x0f000000 }, // b, bl:3:0x0A000004
-	{  15, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00007
-	{  16, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFFB5
-	{  17, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{  18, 0x11a00000, 0xfdfff000 }, // mov:6:0x13A00000
-	{  19, 0x18bd0000, 0xffff0000 }, // ldm:5:0x18BD87F0
-	{  20, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE5940000
-	{  21, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01000
-	{  22, 0xe5909000, 0xfdfff000 }, // ldr:4:0xE5909000
-	{  23, 0xe0804000, 0xfdf0f000 }, // add:6:0xE2804004
-	{  24, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00009
-	{  25, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBF7E24F
-	{  26, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{  27, 0x11a06000, 0xfdfff000 }, // mov:6:0x13A06001
-	{  28, 0x0a000000, 0x0f000000 }, // b, bl:3:0x1A000018
-	{  29, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE1A01007
-	{  30, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
-	{  31, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB000133
-	/* 32/32 */
 	{ -1, -1, -1 },
 };
 
@@ -1482,40 +1408,6 @@ static FuncSig func_sig_OpenFastDir_4[] = {
 	{ -1, -1, -1 },
 };
 
-static FuncSig func_sig_apex2us_4[] = {
-	{   0, 0xe1700d09, 0xfdffffff }, // cmn:7:0xE3700D09
-	{   1, 0xb00f0000, 0xf00ff000 }, // ldr:8:0xB59F0068
-	{   2, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
-	{   3, 0x0a000000, 0x0f000000 }, // b, bl:3:0xBA000006
-	{   4, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500E5A
-	{   5, 0xc1a00000, 0xfdfff000 }, // mov:6:0xC3A00E5A
-	{   6, 0x0a000000, 0x0f000000 }, // b, bl:3:0xCA00000B
-	{   7, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500D09
-	{   8, 0x0a000000, 0x0f000000 }, // b, bl:3:0xAA000009
-	{   9, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
-	{  10, 0x0a000000, 0x0f000000 }, // b, bl:3:0x0A000001
-	{  11, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01003
-	{  12, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB055C53
-	{  13, 0xe00f1000, 0xf00ff000 }, // ldr:8:0xE59F103C
-	{  14, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00800
-	{  15, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00840
-	{  16, 0xe0800000, 0xfdf0f000 }, // add:6:0xE0810100
-	{  17, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE5900300
-	{  18, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD8010
-	{  19, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00300
-	{  20, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01060
-	{  21, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB055C4A
-	{  22, 0xe00f1000, 0xf00ff000 }, // ldr:8:0xE59F1020
-	{  23, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00800
-	{  24, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00840
-	{  25, 0xe0800000, 0xfdf0f000 }, // add:6:0xE0810080
-	{  26, 0xe0400000, 0xfdfff000 }, // sub:6:0xE2400C03
-	{  27, 0xe1d00000, 0xfdfff000 }, // bic:6:0xE1D000B0
-	{  28, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD8010
-	/* 29/32 */
-	{ -1, -1, -1 },
-};
-
 static FuncSig func_sig_GetDrive_ClusterSize_5[] = {
 	{   0, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500001
 	{   1, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
@@ -1629,31 +1521,6 @@ static FuncSig func_sig_rand_6[] = {
 	{   6, 0xe5810000, 0xfdfff000 }, // str:4:0xE5810000
 	{   7, 0xe1e01000, 0xfdfff000 }, // mvn:6:0xE3E01902
 	/* 8/10 */
-	{ -1, -1, -1 },
-};
-
-static FuncSig func_sig_set_control_event_6[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
-	{   1, 0xe2001000, 0xfffff000 }, // and:7:0xE2001CFF
-	{   2, 0xe2003000, 0xfffff000 }, // and:7:0xE2003101
-	{   3, 0xe1700001, 0xfdffffff }, // cmn:7:0xE3700001
-	{   4, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE1A01421
-	{   5, 0xe2002000, 0xfffff000 }, // and:7:0xE20020FF
-	{   6, 0xe1a0c000, 0xfdfff000 }, // mov:6:0xE1A0CFA0
-	{   7, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE1A04F23
-	{   8, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8010
-	{   9, 0xe1540000, 0xfdfff000 }, // cmp:7:0xE3540000
-	{  10, 0xe00f3000, 0xf00ff000 }, // ldr:8:0xE59F344C
-	{  11, 0x15832000, 0xfdfff000 }, // str:4:0x17832101
-	{  12, 0x18bd0000, 0xffff0000 }, // ldm:5:0x18BD8010
-	{  13, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE3A00001
-	{  14, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00210
-	{  15, 0xe5932000, 0xfdfff000 }, // ldr:4:0xE7932101
-	{  16, 0xe15c0000, 0xfdfff000 }, // cmp:7:0xE35C0000
-	{  17, 0x01e00000, 0xfdfff000 }, // mvn:6:0x01E00000
-	{  20, 0xe5830000, 0xfdfff000 }, // str:4:0xE7830101
-	{  21, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD8010
-	/* 20/22 */
 	{ -1, -1, -1 },
 };
 
@@ -2200,10 +2067,7 @@ FuncsList func_list[] = {
 	{ "SetParameterData", func_sig_SetParameterData_1, 1 },
 	{ "_sqrt", func_sig__sqrt_1, 1 },
 	{ "_sqrt", func_sig__sqrt_6, 6 },
-	{ "add_ptp_handler", func_sig_add_ptp_handler_1, 1 },
-	{ "add_ptp_handler", func_sig_add_ptp_handler_3, 3 },
 	{ "add_ptp_handler", func_sig_add_ptp_handler_6, 6 },
-	{ "apex2us", func_sig_apex2us_4, 4 },
 	{ "closedir", func_sig_closedir_1, 1 },
 	{ "closedir", func_sig_closedir_3, 3 },
 	{ "closedir", func_sig_closedir_4, 4 },
@@ -2219,7 +2083,6 @@ FuncsList func_list[] = {
 	{ "rand", func_sig_rand_4, 4 },
 	{ "rand", func_sig_rand_6, 6 },
 	{ "set_control_event", func_sig_set_control_event_1, 1 },
-	{ "set_control_event", func_sig_set_control_event_6, 6 },
 	{ "srand", func_sig_srand_1, 1 },
 	{ "srand", func_sig_srand_4, 4 },
 	{ "srand", func_sig_srand_6, 6 },

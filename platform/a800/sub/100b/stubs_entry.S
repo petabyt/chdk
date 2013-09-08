@@ -22,7 +22,7 @@ NHSTUB(kbd_pwr_off                            ,0xffc43e84) //  2 60%
 // ERROR: srand is not found.                              //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ffc739fc -> ffc7069c -> ffd39ee8 -> ffe267ac -> ffee9f10
+// Firmware modemap table found @ffe267ac -> ffee9f10
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
@@ -192,12 +192,12 @@ NHSTUB(Write                                  ,0xffc263b4) //120
 NHSTUB(WriteSDCard                            ,0xffd07b28) //108
 NHSTUB(_log                                   ,0xffe99e98) //111
 NHSTUB(_log10                                 ,0xffe9a3d8) //112
-NHSTUB(_pow                                   ,0xffe9a550) //114
+NHSTUB(_pow                                   ,0xffe9a550) //121
 NHSTUB(_sqrt                                  ,0xffe9c174) //  6
-NHSTUB(add_ptp_handler                        ,0xffdd53ac) //  6
-NHSTUB(apex2us                                ,0xffd8dfd0) //  4
+NHSTUB(add_ptp_handler                        ,0xffdd53ac) //121
+NHSTUB(apex2us                                ,0xffd8dfd0) //121
 NHSTUB(close                                  ,0xffc0b1b8) //109
-NHSTUB(closedir                               ,0xffdff72c) //  4
+NHSTUB(closedir                               ,0xffdff72c) //121
 NHSTUB(err_init_task                          ,0xffc05fd8) //111
 NHSTUB(exmem_alloc                            ,0xffc666d0) //101
 NHSTUB(exmem_free                             ,0xffc66748) //101

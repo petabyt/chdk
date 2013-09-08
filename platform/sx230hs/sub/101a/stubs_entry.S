@@ -21,7 +21,7 @@
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff097158 -> ff093580 -> ff1b8470 -> ff3232ac -> ff4957d8
+// Firmware modemap table found @ff3232ac -> ff4957d8
 // Mode 16936 in firmware but not in current modemap
 // Mode 16938 in firmware but not in current modemap
 
@@ -203,12 +203,12 @@ NHSTUB(Write                                  ,0xff02750c) //120
 NHSTUB(WriteSDCard                            ,0xff171f04) //108
 NHSTUB(_log                                   ,0xff3b6f78) //111
 NHSTUB(_log10                                 ,0xff3b74b8) //112
-NHSTUB(_pow                                   ,0xff3b7630) //114
+NHSTUB(_pow                                   ,0xff3b7630) //121
 NHSTUB(_sqrt                                  ,0xff3b9514) //  6
-NHSTUB(add_ptp_handler                        ,0xff291e00) //  6
-NHSTUB(apex2us                                ,0xff24dfd0) //  4
+NHSTUB(add_ptp_handler                        ,0xff291e00) //121
+NHSTUB(apex2us                                ,0xff24dfd0) //121
 NHSTUB(close                                  ,0xff00abb4) //109
-NHSTUB(closedir                               ,0xff2e6f38) //  4
+NHSTUB(closedir                               ,0xff2e6f38) //121
 NHSTUB(err_init_task                          ,0xff005fd4) //111
 NHSTUB(exmem_alloc                            ,0xff086a00) //101
 NHSTUB(exmem_free                             ,0xff086a78) //101
