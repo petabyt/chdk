@@ -21,7 +21,7 @@ NHSTUB(kbd_pwr_off                            ,0xff86043c) //  2 64%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff8990fc -> ff895738 -> ff9952bc -> ffab487c -> ffbe7010
+// Firmware modemap table found @ffab487c -> ffbe7010
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
@@ -192,12 +192,11 @@ NHSTUB(Write                                  ,0xff835a40) //120
 NHSTUB(WriteSDCard                            ,0xff94b750) //108
 NHSTUB(_log                                   ,0xffb3de8c) //111
 NHSTUB(_log10                                 ,0xffb3cdd0) //112
-NHSTUB(_pow                                   ,0xffb3cf40) //114
+NHSTUB(_pow                                   ,0xffb3cf40) //121
 NHSTUB(_sqrt                                  ,0xffb3f1f4) //  1
-NHSTUB(add_ptp_handler                        ,0xffa4de90) //  3
-NHSTUB(apex2us                                ,0xffa148c0) //  4
+NHSTUB(add_ptp_handler                        ,0xffa4de90) //121
+NHSTUB(apex2us                                ,0xffa148c0) //121
 NHSTUB(close                                  ,0xff81a990) //109
-NHSTUB(closedir                               ,0xffa840f8) //  3
 NHSTUB(err_init_task                          ,0xff815f28) //111
 NHSTUB(exmem_alloc                            ,0xff888138) //103
 NHSTUB(exmem_free                             ,0xff8881b0) //103
@@ -216,6 +215,7 @@ NHSTUB(mkdir                                  ,0xff835e24) //109
 NHSTUB(mktime_ext                             ,0xff8ab050) //  1
 NHSTUB(open                                   ,0xff81a8e0) //109
 NHSTUB(OpenFastDir                            ,0xffa8413c) //  3
+NHSTUB(closedir                               ,0xffa840f8) //  3
 NHSTUB(qsort                                  ,0xffaf38dc) //  1
 NHSTUB(rand                                   ,0xff8204f4) //  1
 NHSTUB(realloc                                ,0xffa1398c) //115

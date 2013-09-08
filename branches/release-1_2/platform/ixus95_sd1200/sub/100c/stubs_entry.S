@@ -25,7 +25,7 @@
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ffc614e8 -> ffc5dfb8 -> ffd1af7c -> ffdf7360 -> ffeb35d8
+// Firmware modemap table found @ffdf7360 -> ffeb35d8
 // Mode  2598 in firmware but not in current modemap
 // Current modemap entry not found in firmware - MODE_VIDEO_COLOR_SWAP     2600
 // Current modemap entry not found in firmware - MODE_VIDEO_COLOR_ACCENT   2599
@@ -198,12 +198,11 @@ NHSTUB(VbattGet                               ,0xffc10644) //120
 NHSTUB(Write                                  ,0xffc13ce8) //120
 NHSTUB(_log                                   ,0xffe61ec0) //111
 NHSTUB(_log10                                 ,0xffe60b4c) //112
-NHSTUB(_pow                                   ,0xffe60cbc) //114
+NHSTUB(_pow                                   ,0xffe60cbc) //121
 NHSTUB(_sqrt                                  ,0xffe63a64) //  1
-NHSTUB(add_ptp_handler                        ,0xffdaa1a0) //  3
-NHSTUB(apex2us                                ,0xffd65d38) //  4
+NHSTUB(add_ptp_handler                        ,0xffdaa1a0) //121
+NHSTUB(apex2us                                ,0xffd65d38) //121
 NHSTUB(close                                  ,0xffc098fc) //109
-NHSTUB(closedir                               ,0xffdd7ae8) //  1
 NHSTUB(err_init_task                          ,0xffc04e2c) //111
 NHSTUB(exmem_alloc                            ,0xffc54ea0) //103
 NHSTUB(exmem_free                             ,0xffc54f18) //103
@@ -221,6 +220,7 @@ NHSTUB(mkdir                                  ,0xffc13fe0) //109
 NHSTUB(mktime_ext                             ,0xffc6d4a4) //  1
 NHSTUB(open                                   ,0xffc0984c) //109
 NHSTUB(OpenFastDir                            ,0xffdd7984) //  1
+NHSTUB(closedir                               ,0xffdd7ae8) //  1
 NHSTUB(qsort                                  ,0xffe1cc78) //  1
 NHSTUB(rand                                   ,0xffc0cd64) //  1
 NHSTUB(realloc                                ,0xffc03b1c) //115

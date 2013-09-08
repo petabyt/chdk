@@ -2,7 +2,6 @@
 Fgets_Fut 0xFF026C6C 19
 srand 0xFF245D20 13
 rand 0xFF245D2C 10
-set_control_event 0xFF0911B8 22
 GetDrive_ClusterSize 0xFF06ADBC 12
 GetDrive_TotalClusters 0xFF06ADEC 10
 GetDrive_FreeClusters 0xFF06AE14 8

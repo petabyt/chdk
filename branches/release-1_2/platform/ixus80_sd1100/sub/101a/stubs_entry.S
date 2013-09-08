@@ -22,7 +22,7 @@
 //NHSTUB(PutOutNdFilter                       ,0xffa237ec) //102        *** != 0xffa7ab04
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff8772b4 -> ff873c7c -> ff95a39c -> ffa37720 -> ffaede88
+// Firmware modemap table found @ffa37720 -> ffaede88
 // Mode  2598 in firmware but not in current modemap
 // Mode  2603 in firmware but not in current modemap
 
@@ -180,12 +180,11 @@ NHSTUB(Write                                  ,0xff823f00) //120
 NHSTUB(WriteSDCard                            ,0xff91f0c8) //108
 NHSTUB(_log                                   ,0xffaa6044) //111
 NHSTUB(_log10                                 ,0xffaa4f88) //112
-NHSTUB(_pow                                   ,0xffaa50f8) //114
+NHSTUB(_pow                                   ,0xffaa50f8) //121
 NHSTUB(_sqrt                                  ,0xffaa7464) //  1
-NHSTUB(add_ptp_handler                        ,0xff9dab00) //  1
-NHSTUB(apex2us                                ,0xff9ac134) //  4
+NHSTUB(add_ptp_handler                        ,0xff9dab00) //121
+NHSTUB(apex2us                                ,0xff9ac134) //121
 NHSTUB(close                                  ,0xff819f74) //109
-NHSTUB(closedir                               ,0xffa0c208) //  1
 NHSTUB(err_init_task                          ,0xff814e98) //111
 NHSTUB(exmem_alloc                            ,0xff867968) //103
 NHSTUB(exmem_free                             ,0xff8679e0) //103
@@ -206,6 +205,7 @@ NHSTUB(mkdir                                  ,0xff8241f8) //109
 NHSTUB(mktime_ext                             ,0xff892aa0) //  1
 NHSTUB(open                                   ,0xff819ec4) //109
 NHSTUB(OpenFastDir                            ,0xffa0c0a4) //  1
+NHSTUB(closedir                               ,0xffa0c208) //  1
 NHSTUB(qsort                                  ,0xff9ab4b4) //  1
 NHSTUB(rand                                   ,0xff81da14) //  1
 NHSTUB(realloc                                ,0xff813b78) //115

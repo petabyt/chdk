@@ -20,7 +20,7 @@
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff87caf4 -> ff8792b0 -> ff9596f0 -> ffa4b9a4 -> ffb2d2ec
+// Firmware modemap table found @ffa4b9a4 -> ffb2d2ec
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
@@ -182,12 +182,11 @@ NHSTUB(Write                                  ,0xff823ba0) //120
 NHSTUB(WriteSDCard                            ,0xff918854) //108
 NHSTUB(_log                                   ,0xffad3148) //111
 NHSTUB(_log10                                 ,0xffad1dd4) //112
-NHSTUB(_pow                                   ,0xffad1f44) //114
+NHSTUB(_pow                                   ,0xffad1f44) //121
 NHSTUB(_sqrt                                  ,0xffad4da4) //  1
-NHSTUB(add_ptp_handler                        ,0xff9ef734) //  3
-NHSTUB(apex2us                                ,0xff9b943c) //  4
+NHSTUB(add_ptp_handler                        ,0xff9ef734) //121
+NHSTUB(apex2us                                ,0xff9b943c) //121
 NHSTUB(close                                  ,0xff819864) //109
-NHSTUB(closedir                               ,0xffa21d60) //  1
 NHSTUB(err_init_task                          ,0xff814e80) //111
 NHSTUB(exmem_alloc                            ,0xff86c19c) //103
 NHSTUB(exmem_free                             ,0xff86c214) //103
@@ -206,11 +205,12 @@ NHSTUB(mkdir                                  ,0xff823e98) //109
 NHSTUB(mktime_ext                             ,0xff893160) //  1
 NHSTUB(open                                   ,0xff8197b4) //109
 NHSTUB(OpenFastDir                            ,0xffa21bfc) //  1
+NHSTUB(closedir                               ,0xffa21d60) //  1
 NHSTUB(qsort                                  ,0xffa84fb8) //  1
 NHSTUB(rand                                   ,0xff81ccbc) //  1
 NHSTUB(realloc                                ,0xff813b5c) //115
 NHSTUB(reboot_fw_update                       ,0xffa29690) //106
-NHSTUB(set_control_event                      ,0xff878894) //  1
+NHSTUB(set_control_event                      ,0xff878894) //111
 NHSTUB(srand                                  ,0xff81ccb0) //  1
 NHSTUB(stat                                   ,0xff823d00) //  1
 NHSTUB(strcat                                 ,0xff892708) //  1

@@ -22,7 +22,7 @@
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ffc636cc -> ffc5fae8 -> ffd257ec -> ffdf5da4 -> ffe9e7ec
+// Firmware modemap table found @ffdf5da4 -> ffe9e7ec
 // Mode  2598 in firmware but not in current modemap
 // Current modemap entry not found in firmware - MODE_INDOOR              32785
 
@@ -183,12 +183,11 @@ NHSTUB(Write                                  ,0xffc150f8) //120
 NHSTUB(WriteSDCard                            ,0xffcff4e8) //108
 NHSTUB(_log                                   ,0xffe57ff0) //111
 NHSTUB(_log10                                 ,0xffe56f34) //112
-NHSTUB(_pow                                   ,0xffe570a4) //114
+NHSTUB(_pow                                   ,0xffe570a4) //121
 NHSTUB(_sqrt                                  ,0xffe59358) //  1
-NHSTUB(add_ptp_handler                        ,0xffcb53a4) //  1
-NHSTUB(apex2us                                ,0xffd7b458) //  4
+NHSTUB(add_ptp_handler                        ,0xffcb53a4) //121
+NHSTUB(apex2us                                ,0xffd7b458) //121
 NHSTUB(close                                  ,0xffc0a258) //109
-NHSTUB(closedir                               ,0xffddc74c) //  1
 NHSTUB(err_init_task                          ,0xffc04eb0) //111
 NHSTUB(exmem_alloc                            ,0xffc58ba4) //102
 NHSTUB(exmem_free                             ,0xffc58c1c) //102
@@ -207,6 +206,7 @@ NHSTUB(mkdir                                  ,0xffc153f0) //109
 NHSTUB(mktime_ext                             ,0xffc76eb0) //  1
 NHSTUB(open                                   ,0xffc0a1a8) //109
 NHSTUB(OpenFastDir                            ,0xffddc5e8) //  1
+NHSTUB(closedir                               ,0xffddc74c) //  1
 NHSTUB(qsort                                  ,0xffd7a830) //  1
 NHSTUB(rand                                   ,0xffc0e9f8) //  1
 NHSTUB(realloc                                ,0xffc03b90) //115

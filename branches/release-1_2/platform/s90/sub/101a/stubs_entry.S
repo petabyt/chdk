@@ -21,7 +21,7 @@
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff898488 -> ff894a8c -> ff993510 -> ffaae8d4 -> ffbef9d4
+// Firmware modemap table found @ffaae8d4 -> ffbef9d4
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
@@ -192,12 +192,11 @@ NHSTUB(Write                                  ,0xff8354a4) //120
 NHSTUB(WriteSDCard                            ,0xff94a588) //108
 NHSTUB(_log                                   ,0xffb3664c) //111
 NHSTUB(_log10                                 ,0xffb352d8) //112
-NHSTUB(_pow                                   ,0xffb35448) //114
+NHSTUB(_pow                                   ,0xffb35448) //121
 NHSTUB(_sqrt                                  ,0xffb381f0) //  1
-NHSTUB(add_ptp_handler                        ,0xffa47014) //  3
-NHSTUB(apex2us                                ,0xffa0d7fc) //  4
+NHSTUB(add_ptp_handler                        ,0xffa47014) //121
+NHSTUB(apex2us                                ,0xffa0d7fc) //121
 NHSTUB(close                                  ,0xff81a990) //109
-NHSTUB(closedir                               ,0xffa7d624) //  3
 NHSTUB(err_init_task                          ,0xff815f28) //111
 NHSTUB(exmem_alloc                            ,0xff88755c) //103
 NHSTUB(exmem_free                             ,0xff8875d4) //103
@@ -216,6 +215,7 @@ NHSTUB(mkdir                                  ,0xff835888) //109
 NHSTUB(mktime_ext                             ,0xff8ac330) //  1
 NHSTUB(open                                   ,0xff81a8e0) //109
 NHSTUB(OpenFastDir                            ,0xffa7d668) //  3
+NHSTUB(closedir                               ,0xffa7d624) //  3
 NHSTUB(qsort                                  ,0xffaec42c) //  1
 NHSTUB(rand                                   ,0xff8204f0) //  1
 NHSTUB(realloc                                ,0xffa0c8c8) //115
