@@ -400,6 +400,7 @@
 0xffc5dcf4,ShowCameraLog_FW
 0xffc5dd44,StartCameraLog_FW
 0xffc5df08,StopCameraLog_FW
+0xffc5df68,LogCameraEvent
 0xffc5e5a4,OpLog.Show_FW
 0xffc5e61c,OpLog.Stop_FW
 0xffc5e648,OpLog.WriteToROM_FW

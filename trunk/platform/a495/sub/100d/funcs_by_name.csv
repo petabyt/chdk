@@ -660,6 +660,7 @@
 0xffc63530,LocalTime
 0xffc6ce40,LockMainPower
 0xffc6ce40,LockMainPower_FW
+0xffc667f8,LogCameraEvent
 0xffc26224,Lseek
 0xffc26224,lseek
 0xffc26224,Lseek_FW

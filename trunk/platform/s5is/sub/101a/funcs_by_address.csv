@@ -388,6 +388,7 @@
 0xff8728b0,ShowCameraLog_FW
 0xff8728f8,StartCameraLog_FW
 0xff872ac0,StopCameraLog_FW
+0xff872b20,LogCameraEvent
 0xff873498,StartWDT_FW
 0xff8734f4,StopWDT_FW
 0xff8735f0,CheckSumAll_FW

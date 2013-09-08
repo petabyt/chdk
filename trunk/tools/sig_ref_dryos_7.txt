@@ -1,2 +1,0 @@
-0xffc00000
-PT_PlaySound 0xFFC5F3B0

@@ -415,6 +415,7 @@
 0xff889a60,ShowCameraLog_FW
 0xff889ab0,StartCameraLog_FW
 0xff889c74,StopCameraLog_FW
+0xff889cd4,LogCameraEvent
 0xff88a310,OpLog.Show_FW
 0xff88a388,OpLog.Stop_FW
 0xff88a3b4,OpLog.WriteToROM_FW

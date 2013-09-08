@@ -20,7 +20,7 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NHSTUB(DeleteFile_Fut                         ,0xff033b68) //  1 90%
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff034678
-//NHSTUB(PT_PlaySound                         ,0xff1faea4) //  6 53%    *** != 0x00000000
+//NHSTUB(PT_PlaySound                         ,0xff0d54c8) //122        *** != 0x00000000
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
 // ERROR: kbd_pwr_off is not found.                        //--- ---    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000

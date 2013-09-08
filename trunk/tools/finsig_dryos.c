@@ -212,6 +212,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "CreateJumptable", UNUSED },
     { "_uartr_req", UNUSED },
     { "StartRecModeMenu", UNUSED },
+    { "LogCameraEvent", UNUSED|DONT_EXPORT },
 
     { "AllocateMemory", UNUSED },
     { "AllocateUncacheableMemory" },
@@ -751,6 +752,35 @@ int find_add_ptp_handler(firmware *fw, string_sig *sig, int k)
     return 0;
 }
 
+// Special case for 'PT_PlaySound'
+int find_PT_PlaySound(firmware *fw)
+{
+    int j, k;
+    int k1 = get_saved_sig(fw,"LogCameraEvent");
+
+    if (k1 >= 0)
+    {
+        j = find_str_ref(fw,"BufAccBeep");
+        if (j >= 0)
+        {
+            k = find_inst(fw, isBL, j+1, 4);
+            if (k >= 0)
+            {
+                uint32_t fadr = followBranch(fw, idx2adr(fw,k), 0x01000001);
+                if (func_names[k1].val == fadr)
+                {
+                    k = find_inst(fw, isB, k+1, 10);
+                    fadr = followBranch(fw, idx2adr(fw, k), 1);
+                    fwAddMatch(fw,fadr,32,0,122);
+                    return 1;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Data for matching the '_log' function
@@ -997,6 +1027,8 @@ string_sig string_sigs[] =
 
     { 7, "CreateTaskStrictly", "PhySw", 0x01000001 },
     { 7, "RegisterInterruptHandler", "WdtInt", 0x01000001 },
+    { 7, "LogCameraEvent", "BufAccBeep", 0x01000001 },
+    { 7, "LogCameraEvent", "MyCamFunc_PlaySound_MYCAM_COVER_OPEN", 0x01000001 },
 
     { 8, "WriteSDCard", "Mounter.c", 0 },
 
@@ -1127,6 +1159,7 @@ string_sig string_sigs[] =
     { 21, "_pow", (char*)find_pow, 0 },
 
     { 22, "closedir", (char*)find_closedir, 0 },
+    { 22, "PT_PlaySound", (char*)find_PT_PlaySound, 0 },
 
     { 0, 0, 0, 0 }
 };
