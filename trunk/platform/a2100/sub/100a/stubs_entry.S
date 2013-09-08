@@ -20,7 +20,7 @@ NHSTUB(kbd_pwr_off                            ,0xffc30bd4) //  2 64%
 NHSTUB(kbd_pwr_on                             ,0xffc30b94) //  2 82%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ffc604e0 -> ffc5cf2c -> ffd1bf30 -> ffdff8dc -> ffebdc2c
+// Firmware modemap table found @ffdff8dc -> ffebdc2c
 // Mode 16390 in firmware but not in current modemap
 // Mode  2598 in firmware but not in current modemap
 // Current modemap entry not found in firmware - MODE_VIDEO_COMPACT        2602
@@ -186,10 +186,10 @@ NHSTUB(Write                                  ,0xffc1398c) //120
 NHSTUB(WriteSDCard                            ,0xffce4718) //108
 NHSTUB(_log                                   ,0xffe6e31c) //111
 NHSTUB(_log10                                 ,0xffe6d260) //112
-NHSTUB(_pow                                   ,0xffe6d3d0) //114
+NHSTUB(_pow                                   ,0xffe6d3d0) //121
 NHSTUB(_sqrt                                  ,0xffe6f684) //  1
-NHSTUB(add_ptp_handler                        ,0xffdb1e84) //  3
-NHSTUB(apex2us                                ,0xffd6ced4) //  4
+NHSTUB(add_ptp_handler                        ,0xffdb1e84) //121
+NHSTUB(apex2us                                ,0xffd6ced4) //121
 NHSTUB(close                                  ,0xffc098fc) //109
 NHSTUB(closedir                               ,0xffde0214) //  1
 NHSTUB(err_init_task                          ,0xffc04e2c) //111

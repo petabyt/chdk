@@ -21,6 +21,7 @@
 0xff366170,AllocateMemory
 0xff366170,AllocateMemory_FW
 0xff038d8c,AllocateUncacheableMemory
+0xff29de84,apex2us
 0xff0d8da4,atol_FW
 0xff1be2a4,AttachIntegCrawData_FW
 0xff31e630,AttachToTransparentMemory_FW

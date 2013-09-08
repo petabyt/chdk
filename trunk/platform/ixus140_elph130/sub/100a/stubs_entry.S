@@ -22,12 +22,12 @@ NHSTUB(DeleteFile_Fut                         ,0xff033b68) //  1 90%
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff034678
 NHSTUB(PT_PlaySound                           ,0xff1faea4) //  6 53%
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
-// ERROR: apex2us is not found.                            //--- ---    *** != 0x00000000
 // ERROR: kbd_pwr_off is not found.                        //--- ---    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff082238 -> ff0c5394 -> ff20756c -> 
+// Firmware modemap table found @ff36a698 -> ff61c088
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0003a950) // Found @0xff0313b4
@@ -42,6 +42,10 @@ DEF(canon_menu_active                       ,0x00003fa0) // Found @0xff0ca2ac
 DEF(canon_shoot_menu_active                 ,0x0000a385) // Found @0xff27c790
 DEF(playrec_mode                            ,0x000039c8) // Found @0xff0b5fec
 DEF(zoom_status                             ,0x0000bbac) // Found @0xff2eee9c
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 2 int value(s), the first is the zoom focus length.
+// there are 101 entries in the table - set NUM_FL to 101
+DEF(focus_len_table                         ,0xfff4a3e0) // Found @0xfff4a3e0
 DEF(zoom_busy                               ,0x00007b20) // Found @0xff1eea84
 DEF(focus_busy                              ,0x00007990) // Found @0xff1e9a80
 DEF(recreview_hold                          ,0x00002d34) // Found @0xff088464
@@ -189,11 +193,12 @@ NHSTUB(Write                                  ,0xff034230) //120
 NHSTUB(WriteSDCard                            ,0xff1dbe64) //108
 NHSTUB(_log                                   ,0x00697808) //111
 NHSTUB(_log10                                 ,0x00697d48) //112
-NHSTUB(_pow                                   ,0x00697ec0) //114
+NHSTUB(_pow                                   ,0x00697ec0) //121
 NHSTUB(_sqrt                                  ,0x00699c5c) //  6
-NHSTUB(add_ptp_handler                        ,0xff16a4a4) //  6
+NHSTUB(add_ptp_handler                        ,0xff16a4a4) //121
+NHSTUB(apex2us                                ,0xff29de84) //121
 NHSTUB(close                                  ,0xff005984) //109
-NHSTUB(closedir                               ,0xff33d6d0) //  4
+NHSTUB(closedir                               ,0xff33d6d0) //121
 NHSTUB(err_init_task                          ,0xff004320) //111
 NHSTUB(exmem_alloc                            ,0xff0bd068) //101
 NHSTUB(exmem_free                             ,0xff0bd0e0) //101
@@ -208,7 +213,7 @@ NHSTUB(malloc                                 ,0xff002e98) //112
 NHSTUB(memcmp                                 ,0xff00ad4c) //120
 NHSTUB(memcpy                                 ,0xff039818) //120
 NHSTUB(memset                                 ,0xff0d8eb8) //120
-NHSTUB(mkdir                                  ,0xff034678) //118
+NHSTUB(mkdir                                  ,0xff034678) //121
 NHSTUB(mktime_ext                             ,0xff0d8360) //  1
 NHSTUB(open                                   ,0xff0058d4) //109
 NHSTUB(OpenFastDir                            ,0xff33d720) //115

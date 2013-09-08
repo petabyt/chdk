@@ -19,7 +19,7 @@
 //NHSTUB(PutOutNdFilter                       ,0xffa299d8) //102        *** != 0xffa82780
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff879344 -> ff875af0 -> ff95c5ac -> ffa3dc5c -> ffaf7e70
+// Firmware modemap table found @ffa3dc5c -> ffaf7e70
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
@@ -179,10 +179,10 @@ NHSTUB(Write                                  ,0xff823e4c) //120
 NHSTUB(WriteSDCard                            ,0xff922a68) //108
 NHSTUB(_log                                   ,0xffaadd18) //111
 NHSTUB(_log10                                 ,0xffaacc5c) //112
-NHSTUB(_pow                                   ,0xffaacdcc) //114
+NHSTUB(_pow                                   ,0xffaacdcc) //121
 NHSTUB(_sqrt                                  ,0xffaaf138) //  1
-NHSTUB(add_ptp_handler                        ,0xff9e0928) //  1
-NHSTUB(apex2us                                ,0xff9b19c0) //  4
+NHSTUB(add_ptp_handler                        ,0xff9e0928) //121
+NHSTUB(apex2us                                ,0xff9b19c0) //121
 NHSTUB(close                                  ,0xff819eac) //109
 NHSTUB(closedir                               ,0xffa123bc) //  1
 NHSTUB(err_init_task                          ,0xff814e98) //111

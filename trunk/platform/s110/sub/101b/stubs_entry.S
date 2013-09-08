@@ -24,7 +24,7 @@ NHSTUB(DeleteFile_Fut                         ,0xf8023c84) //  1 90%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @f8067734 -> f80dbed8 -> f8276d94 -> f845ab84 -> f8907670
+// Firmware modemap table found @f845ab84 -> f8907670
 // Mode 16924 in firmware but not in current modemap
 // Mode  8745 in firmware but not in current modemap
 // Mode 33295 in firmware but not in current modemap
@@ -204,12 +204,12 @@ NHSTUB(Write                                  ,0xf802434c) //120
 NHSTUB(WriteSDCard                            ,0xf821cc90) //108
 NHSTUB(_log                                   ,0x006ae840) //111
 NHSTUB(_log10                                 ,0xf864908c) //112
-NHSTUB(_pow                                   ,0xf8649054) //114
+NHSTUB(_pow                                   ,0xf8649054) //121
 NHSTUB(_sqrt                                  ,0x006b0fd0) //  6
-NHSTUB(add_ptp_handler                        ,0xf81875d8) //  6
-NHSTUB(apex2us                                ,0xf8348270) //  4
+NHSTUB(add_ptp_handler                        ,0xf81875d8) //121
+NHSTUB(apex2us                                ,0xf8348270) //121
 NHSTUB(close                                  ,0xf8005c90) //109
-NHSTUB(closedir                               ,0xf840f78c) //  4
+NHSTUB(closedir                               ,0xf840f78c) //121
 NHSTUB(err_init_task                          ,0xf80043b4) //111
 NHSTUB(exmem_alloc                            ,0xf80d1584) //101
 NHSTUB(exmem_free                             ,0xf80d15fc) //101
@@ -224,7 +224,7 @@ NHSTUB(malloc                                 ,0xf8002efc) //112
 NHSTUB(memcmp                                 ,0xf800d42c) //120
 NHSTUB(memcpy                                 ,0xf803c418) //120
 NHSTUB(memset                                 ,0xf80f0ca8) //120
-NHSTUB(mkdir                                  ,0xf8024794) //118
+NHSTUB(mkdir                                  ,0xf8024794) //121
 NHSTUB(mktime_ext                             ,0xf80f0280) //  1
 NHSTUB(open                                   ,0xf8005be0) //109
 NHSTUB(OpenFastDir                            ,0xf840f7dc) //115
@@ -232,7 +232,7 @@ NHSTUB(qsort                                  ,0xf8345894) //  6
 NHSTUB(rand                                   ,0xf803c3e8) //  6
 NHSTUB(realloc                                ,0xf83458f4) //115
 NHSTUB(reboot_fw_update                       ,0xf8455c40) //106
-NHSTUB(set_control_event                      ,0xf80db1a0) //  6
+NHSTUB(set_control_event                      ,0xf80db1a0) //111
 NHSTUB(srand                                  ,0xf803c3dc) //  6
 NHSTUB(stat                                   ,0xf802455c) //109
 NHSTUB(strcat                                 ,0xf80f0bdc) //  1

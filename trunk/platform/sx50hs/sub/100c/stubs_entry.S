@@ -24,7 +24,7 @@ NHSTUB(DeleteFile_Fut                         ,0xff01c468) //  1 90%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff04aac8 -> ff09f920 -> ff204794 -> ff394820 -> ff6ee034
+// Firmware modemap table found @ff394820 -> ff6ee034
 // Mode 32805 in firmware but not in current modemap
 // Mode 33295 in firmware but not in current modemap
 
@@ -201,12 +201,12 @@ NHSTUB(Write                                  ,0xff01cb30) //120
 NHSTUB(WriteSDCard                            ,0xff1ccb9c) //108
 NHSTUB(_log                                   ,0x00690cd8) //111
 NHSTUB(_log10                                 ,0x00691218) //112
-NHSTUB(_pow                                   ,0x00691390) //114
+NHSTUB(_pow                                   ,0x00691390) //121
 NHSTUB(_sqrt                                  ,0x00693030) //  6
-NHSTUB(add_ptp_handler                        ,0xff300128) //  6
-NHSTUB(apex2us                                ,0xff2b4af4) //  4
+NHSTUB(add_ptp_handler                        ,0xff300128) //121
+NHSTUB(apex2us                                ,0xff2b4af4) //121
 NHSTUB(close                                  ,0xff005b98) //109
-NHSTUB(closedir                               ,0xff36e364) //  4
+NHSTUB(closedir                               ,0xff36e364) //121
 NHSTUB(err_init_task                          ,0xff004310) //111
 NHSTUB(exmem_alloc                            ,0xff095b64) //101
 NHSTUB(exmem_free                             ,0xff095bdc) //101
@@ -221,7 +221,7 @@ NHSTUB(malloc                                 ,0xff002eb4) //112
 NHSTUB(memcmp                                 ,0xff00b5a4) //120
 NHSTUB(memcpy                                 ,0xff022a84) //120
 NHSTUB(memset                                 ,0xff2b2a9c) //120
-NHSTUB(mkdir                                  ,0xff01cf78) //118
+NHSTUB(mkdir                                  ,0xff01cf78) //121
 NHSTUB(mktime_ext                             ,0xff0b1d60) //  1
 NHSTUB(open                                   ,0xff005ae8) //109
 NHSTUB(OpenFastDir                            ,0xff36e3b4) //115

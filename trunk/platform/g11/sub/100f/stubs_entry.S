@@ -21,7 +21,7 @@ NHSTUB(kbd_pwr_off                            ,0xff8603ec) //  2 64%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff899018 -> ff895658 -> ff995248 -> ffab4778 -> ffbe6f0c
+// Firmware modemap table found @ffab4778 -> ffbe6f0c
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
@@ -192,10 +192,10 @@ NHSTUB(Write                                  ,0xff835a10) //120
 NHSTUB(WriteSDCard                            ,0xff94b66c) //108
 NHSTUB(_log                                   ,0xffb3dd88) //111
 NHSTUB(_log10                                 ,0xffb3cccc) //112
-NHSTUB(_pow                                   ,0xffb3ce3c) //114
+NHSTUB(_pow                                   ,0xffb3ce3c) //121
 NHSTUB(_sqrt                                  ,0xffb3f0f0) //  1
-NHSTUB(add_ptp_handler                        ,0xffa4dd8c) //  3
-NHSTUB(apex2us                                ,0xffa1484c) //  4
+NHSTUB(add_ptp_handler                        ,0xffa4dd8c) //121
+NHSTUB(apex2us                                ,0xffa1484c) //121
 NHSTUB(close                                  ,0xff81a990) //109
 NHSTUB(closedir                               ,0xffa83ff4) //  3
 NHSTUB(err_init_task                          ,0xff815f28) //111

@@ -24,7 +24,7 @@
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff0841bc -> ff080a6c -> ff1ca450 -> ff333518 -> ff5e8bc8
+// Firmware modemap table found @ff333518 -> ff5e8bc8
 // Mode 33326 in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
@@ -204,12 +204,12 @@ NHSTUB(Write                                  ,0xff020fa4) //120
 NHSTUB(WriteSDCard                            ,0xff17b53c) //108
 NHSTUB(_log                                   ,0x00690ce0) //111
 NHSTUB(_log10                                 ,0x00691220) //112
-NHSTUB(_pow                                   ,0x00691398) //114
+NHSTUB(_pow                                   ,0x00691398) //121
 NHSTUB(_sqrt                                  ,0x00693038) //  6
-NHSTUB(add_ptp_handler                        ,0xff299f94) //  6
-NHSTUB(apex2us                                ,0xff249874) //  4
+NHSTUB(add_ptp_handler                        ,0xff299f94) //121
+NHSTUB(apex2us                                ,0xff249874) //121
 NHSTUB(close                                  ,0xff005be8) //109
-NHSTUB(closedir                               ,0xff2fc98c) //  4
+NHSTUB(closedir                               ,0xff2fc98c) //121
 NHSTUB(err_init_task                          ,0xff004378) //111
 NHSTUB(exmem_alloc                            ,0xff075cd8) //101
 NHSTUB(exmem_free                             ,0xff075d50) //101
@@ -224,7 +224,7 @@ NHSTUB(malloc                                 ,0xff002f1c) //112
 NHSTUB(memcmp                                 ,0xff00b940) //120
 NHSTUB(memcpy                                 ,0xff0276e4) //120
 NHSTUB(memset                                 ,0xff24799c) //120
-NHSTUB(mkdir                                  ,0xff021480) //118
+NHSTUB(mkdir                                  ,0xff021480) //121
 NHSTUB(mktime_ext                             ,0xff099564) //  1
 NHSTUB(open                                   ,0xff005b38) //109
 NHSTUB(OpenFastDir                            ,0xff2fc9dc) //115

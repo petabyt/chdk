@@ -26,7 +26,7 @@ NHSTUB(DeleteFile_Fut                         ,0xff830e64) //  1 90%
 // ERROR: srand is not found.                              //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff88a7e8 -> ff887370 -> ff98e5ec -> ffa97f14 -> ffbc1928
+// Firmware modemap table found @ffa97f14 -> ffbc1928
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
@@ -202,12 +202,12 @@ NHSTUB(Write                                  ,0xff83152c) //120
 NHSTUB(WriteSDCard                            ,0xff94c1d0) //108
 NHSTUB(_log                                   ,0x003fcce0) //111
 NHSTUB(_log10                                 ,0x003fd220) //112
-NHSTUB(_pow                                   ,0x003fd398) //114
+NHSTUB(_pow                                   ,0x003fd398) //121
 NHSTUB(_sqrt                                  ,0x003ff038) //  6
-NHSTUB(add_ptp_handler                        ,0xffa2d1e4) //  6
-NHSTUB(apex2us                                ,0xff9f0aa0) //  4
+NHSTUB(add_ptp_handler                        ,0xffa2d1e4) //121
+NHSTUB(apex2us                                ,0xff9f0aa0) //121
 NHSTUB(close                                  ,0xff8159b4) //109
-NHSTUB(closedir                               ,0xffa6abc0) //  4
+NHSTUB(closedir                               ,0xffa6abc0) //121
 NHSTUB(err_init_task                          ,0xff81437c) //111
 NHSTUB(exmem_alloc                            ,0xff87ccbc) //101
 NHSTUB(exmem_free                             ,0xff87cd34) //101
@@ -222,14 +222,14 @@ NHSTUB(malloc                                 ,0xff812f20) //112
 NHSTUB(memcmp                                 ,0xff81ae30) //120
 NHSTUB(memcpy                                 ,0xff83720c) //120
 NHSTUB(memset                                 ,0xff9eed30) //120
-NHSTUB(mkdir                                  ,0xff831974) //118
+NHSTUB(mkdir                                  ,0xff831974) //121
 NHSTUB(mktime_ext                             ,0xff89a250) //  1
 NHSTUB(open                                   ,0xff815904) //109
 NHSTUB(OpenFastDir                            ,0xffa6ac10) //115
 NHSTUB(qsort                                  ,0xff9eecd0) //  6
 NHSTUB(realloc                                ,0xff9eedac) //115
 NHSTUB(reboot_fw_update                       ,0xffa70140) //106
-NHSTUB(set_control_event                      ,0xff886ad4) //  6
+NHSTUB(set_control_event                      ,0xff886ad4) //111
 NHSTUB(stat                                   ,0xff83173c) //109
 NHSTUB(strcat                                 ,0xff89a8d0) //  1
 NHSTUB(strchr                                 ,0xff812dec) //  1

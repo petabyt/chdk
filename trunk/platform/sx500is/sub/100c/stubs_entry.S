@@ -24,7 +24,7 @@ NHSTUB(DeleteFile_Fut                         ,0xff01b644) //  1 90%
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
-// Firmware modemap table found @ff047114 -> ff08ca18 -> ff19cea4 -> ff2e3b90 -> ff48d370
+// Firmware modemap table found @ff2e3b90 -> ff48d370
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
@@ -198,12 +198,12 @@ NHSTUB(Write                                  ,0xff01bd0c) //120
 NHSTUB(WriteSDCard                            ,0xff16cab4) //108
 NHSTUB(_log                                   ,0x0043cc38) //111
 NHSTUB(_log10                                 ,0x0043d178) //112
-NHSTUB(_pow                                   ,0x0043d2f0) //114
+NHSTUB(_pow                                   ,0x0043d2f0) //121
 NHSTUB(_sqrt                                  ,0x0043ef14) //  6
-NHSTUB(add_ptp_handler                        ,0xff26772c) //  6
-NHSTUB(apex2us                                ,0xff220c84) //  4
+NHSTUB(add_ptp_handler                        ,0xff26772c) //121
+NHSTUB(apex2us                                ,0xff220c84) //121
 NHSTUB(close                                  ,0xff00593c) //109
-NHSTUB(closedir                               ,0xff2b91e8) //  4
+NHSTUB(closedir                               ,0xff2b91e8) //121
 NHSTUB(err_init_task                          ,0xff004304) //111
 NHSTUB(exmem_alloc                            ,0xff082bd4) //101
 NHSTUB(exmem_free                             ,0xff082c4c) //101
@@ -218,7 +218,7 @@ NHSTUB(malloc                                 ,0xff002ea8) //112
 NHSTUB(memcmp                                 ,0xff00a968) //120
 NHSTUB(memcpy                                 ,0xff021210) //120
 NHSTUB(memset                                 ,0xff21ec2c) //120
-NHSTUB(mkdir                                  ,0xff01c154) //118
+NHSTUB(mkdir                                  ,0xff01c154) //121
 NHSTUB(mktime_ext                             ,0xff09cfac) //  1
 NHSTUB(open                                   ,0xff00588c) //109
 NHSTUB(OpenFastDir                            ,0xff2b9238) //115

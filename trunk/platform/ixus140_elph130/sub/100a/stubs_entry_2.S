@@ -7,7 +7,6 @@ NHSTUB(finish_shutdown,0xFF037FE4) // for shutdown(), to complicated to emulate
 NHSTUB(LogPrintf,0xFF0BF58C) // camera log debugging
 
 // TODO
-NHSTUB(apex2us, NULLSUB)
 // Not needed
 NHSTUB(RefreshPhysicalScreen, NULLSUB)
 // these don't exist
