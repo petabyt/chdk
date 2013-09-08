@@ -6,8 +6,6 @@ NHSTUB(finish_shutdown,0xFF037FE4) // for shutdown(), to complicated to emulate
 // Additional
 NHSTUB(LogPrintf,0xFF0BF58C) // camera log debugging
 
-// TODO, not found
-NHSTUB(PT_PlaySound, NULLSUB)
 // Not needed
 NHSTUB(RefreshPhysicalScreen, NULLSUB)
 // these don't exist

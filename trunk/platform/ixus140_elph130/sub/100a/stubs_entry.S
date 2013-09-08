@@ -20,7 +20,6 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NHSTUB(DeleteFile_Fut                         ,0xff033b68) //  1 90%
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff034678
-//NHSTUB(PT_PlaySound                         ,0xff0d54c8) //122        *** != 0x00000000
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
 // ERROR: kbd_pwr_off is not found.                        //--- ---    *** != 0x00000000
 // ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
@@ -161,6 +160,7 @@ NHSTUB(Open                                   ,0xff034114) //120
 NHSTUB(PB2Rec                                 ,0xff081764) //104
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xff1f6ce8) //102
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xff1f6cb8) //102
+NHSTUB(PT_PlaySound                           ,0xff0d54c8) //122
 NHSTUB(PostLogicalEventForNotPowerType        ,0xff0c45c8) //120
 NHSTUB(PostLogicalEventToUI                   ,0xff0c4614) //120
 NHSTUB(PutInNdFilter                          ,0xff360e70) //102
