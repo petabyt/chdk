@@ -248,7 +248,7 @@ asm volatile (
 "    CMP     R0, #9 \n"
 "    BNE     loc_FF0784C8 \n"
 "    MOV     R0, #0x90000 \n"
-"    BL      sub_FF098460 \n"
+"    BL      sub_FF098460 /*_HardwareDefect_FW*/ \n"
 "    B       loc_FF077FE4 \n"
 
 "loc_FF078050:\n"

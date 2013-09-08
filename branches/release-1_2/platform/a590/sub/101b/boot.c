@@ -286,7 +286,7 @@ asm volatile (
 "    LDR     R1, =0xF128 \n"
 "    LDMFD   SP!, {R3-R5,LR} \n"
 "    MOV     R0, #0 \n"
-"    B       sub_FFC5BE98 \n"
+"    B       sub_FFC5BE98 /*_OpLog.Start_FW*/ \n"
 );
 }
 

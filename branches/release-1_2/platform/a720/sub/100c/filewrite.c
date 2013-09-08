@@ -202,7 +202,7 @@ asm volatile (
 "    STR     R1, [R4, #4] \n"
 "    BEQ     loc_FFDC0128 \n"
 "    LDR     R0, =0x10B1 \n"
-"    BL      sub_FFC5BC60 \n"
+"    BL      sub_FFC5BC60 /*_IsControlEventActive_FW*/ \n"
 "    LDR     R1, =0x9200005 \n"
 "    STR     R1, [R4, #0x10] \n"
 "    B       loc_FFDC00A4 \n"
