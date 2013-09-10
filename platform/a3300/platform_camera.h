@@ -88,6 +88,8 @@
 
     #define CAM_EXT_TV_RANGE                1
 
+    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE  1
+
     #undef  CAM_HAS_IRIS_DIAPHRAGM
 
     #undef  CAM_HAS_MANUAL_FOCUS
