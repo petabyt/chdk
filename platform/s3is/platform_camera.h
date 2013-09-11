@@ -62,6 +62,8 @@
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_HAS_SPORTS_MODE                 1   // Camera has SPORTS mode, enable RAW exception override control
+
+    #define CAM_USB_EVENTID_VXWORKS             0x1085 // LogicalEvent ID for ConnectUSBCable, needed to enable USB mode switch
 	
 //----------------------------------------------------------
 

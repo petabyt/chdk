@@ -198,7 +198,12 @@
                                                 // requires load_chdk_palette() and vid_get_bitmap_active_palette() to be defined
                                                 // correctly for the camera along with
 
-    #define CAM_USB_EVENTID         0x902       // Levent ID for USB control. Changed to 0x202 in DryOS R49 so needs to be overridable.
+    #define CAM_USB_EVENTID         0x902       // event ID for USB control. Changed to 0x202 in DryOS R49 so needs to be overridable.
+                                                // For DryOS only. These are "control events", and don't have the same IDs as "logical events"
+
+    #undef CAM_USB_EVENTID_VXWORKS              // For vxworks cameras that need additional code to unlock mode switching
+                                                // this is the logical event "ConnectUSBCable", usually 0x1085
+                                                // different from CAM_USB_EVENTID since it should be undefined on most cameras
 
     #undef  CAM_NEED_SET_ZOOM_DELAY             // Define to add a delay after setting the zoom position before resetting the focus position in shooting_set_zoom 
 

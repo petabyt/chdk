@@ -1579,17 +1579,15 @@ void __attribute__((weak)) _reboot_fw_update(const char *fw_update)
 }
 #endif
 
-// TODO mode switch function should detect if USB is connected or not,
-// and do regular or special switch as needed
 #ifdef CAM_DRYOS
 int __attribute__((weak)) switch_mode_usb(int mode)
 {
 #ifdef CAM_CHDK_PTP
     if ( mode == 0 ) {
         _Rec2PB();
-        _set_control_event(0x80000000|CAM_USB_EVENTID); // ConnectUSBCable 0x10A5 (0x10B3 in DryOS R49)
+        _set_control_event(0x80000000|CAM_USB_EVENTID);
     } else if ( mode == 1 ) {
-        _set_control_event(CAM_USB_EVENTID); // DisconnectUSBCable 0x10A6 (0x10B4 in DryOS R49)
+        _set_control_event(CAM_USB_EVENTID);
         _PB2Rec();
     } else return 0;
     return 1;
@@ -1603,8 +1601,13 @@ int __attribute__((weak)) switch_mode_usb(int mode)
 int __attribute__((weak)) switch_mode_usb(int mode)
 {
     if ( mode == 0 ) {
+        // TODO should we revert scriptmode and/or levent? seems to work without
         levent_set_play();
     } else if ( mode == 1 ) {
+#ifdef CAM_USB_EVENTID_VXWORKS
+        _SetScriptMode(1); // needed to override event
+        _SetLogicalEventActive(CAM_USB_EVENTID_VXWORKS,0); // set levent "ConnectUSBCable" inactive
+#endif
         levent_set_record();
     } else return 0;
     return 1;
