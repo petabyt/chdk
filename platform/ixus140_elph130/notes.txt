@@ -29,7 +29,6 @@ filewrite hook
 video functions / movie_rec task
 exmem support (note, camera has ~1.7 mb regular heap free on startup with CHDK)
 subject distance override
-optical zoom in video
 
 OTHER ISSUES
 ************
