@@ -227,12 +227,12 @@ NHSTUB(strncpy                                ,0xff82d1bc) //  1
 NHSTUB(strrchr                                ,0xff9d7430) //  1
 NHSTUB(strtol                                 ,0xff82d3f4) //101
 NHSTUB(strtolx                                ,0xff82d1f8) //109
-   DEF(task_CaptSeq                           ,0xff86327c) //110
-   DEF(task_ExpDrv                            ,0xff8a2214) //110
-   DEF(task_FileWrite                         ,0xffa4348c) //110
-   DEF(task_InitFileModules                   ,0xff87f81c) //110
-   DEF(task_MovieRecord                       ,0xff9382b8) //110
-   DEF(task_PhySw                             ,0xff821a90) //110
-   DEF(task_RotaryEncoder                     ,0xff84856c) //110
+   DEF(task_CaptSeq                           ,0xff86327c) //120
+   DEF(task_ExpDrv                            ,0xff8a2214) //120
+   DEF(task_FileWrite                         ,0xffa4348c) //120
+   DEF(task_InitFileModules                   ,0xff87f81c) //120
+   DEF(task_MovieRecord                       ,0xff9382b8) //120
+   DEF(task_PhySw                             ,0xff821a90) //120
+   DEF(task_RotaryEncoder                     ,0xff84856c) //120
 NHSTUB(time                                   ,0xff86e4e4) //109
 NHSTUB(vsprintf                               ,0xff81cba0) //115

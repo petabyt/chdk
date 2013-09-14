@@ -203,7 +203,7 @@ typedef struct {
 
 int next_func_entry = 0;
 
-#define MAX_FUNC_ENTRY  2000
+#define MAX_FUNC_ENTRY  5000
 
 func_entry  func_names[MAX_FUNC_ENTRY] =
 {
@@ -858,6 +858,11 @@ string_sig string_sigs[] =
     {20, "VbattGet", "VbattGet_FW", 1 },
     {20, "write", "Write_FW", 1 },
     {20, "Write", "Write_FW", 1 },
+    {20, "task_CaptSeq", "task_CaptSeqTask", 1 },
+    {20, "task_ExpDrv", "task_ExpDrvTask", 1 },
+    {20, "task_FileWrite", "task_FileWriteTask", 1 },
+    {20, "task_RotaryEncoder", "task_JogDial", 1 },
+    {20, "task_RotaryEncoder", "task_RotarySw", 1 },
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
@@ -1057,16 +1062,16 @@ string_sig string_sigs[] =
     { 9, "open", "Open", 0,                                                3,    3,    3,    3,   16,   16,   35,   35,   35,   35,   35 },
     { 9, "open", "Open", 0,                                                3,    3,    3,   13,   16,   16,   35,   35,   35,   35,   35 },
 
-    { 10, "task_CaptSeq", "CaptSeqTask", 1 },
-    { 10, "task_ExpDrv", "ExpDrvTask", 1 },
-    { 10, "task_InitFileModules", "InitFileModules", 1 },
-    { 10, "task_MovieRecord", "MovieRecord", 1 },
-    { 10, "task_PhySw", "PhySw", 1 },
-    { 10, "task_RotaryEncoder", "RotaryEncoder", 1 },
-    { 10, "task_RotaryEncoder", "RotarySw", 1 },
-    { 10, "task_RotaryEncoder", "JogDial", 1 },
-    { 10, "task_TouchPanel", "TouchPanel", 1 },
-    { 10, "task_FileWrite", "FileWriteTask", 1 },
+    //{ 10, "task_CaptSeq", "CaptSeqTask", 1 },
+    //{ 10, "task_ExpDrv", "ExpDrvTask", 1 },
+    //{ 10, "task_InitFileModules", "InitFileModules", 1 },
+    //{ 10, "task_MovieRecord", "MovieRecord", 1 },
+    //{ 10, "task_PhySw", "PhySw", 1 },
+    //{ 10, "task_RotaryEncoder", "RotaryEncoder", 1 },
+    //{ 10, "task_RotaryEncoder", "RotarySw", 1 },
+    //{ 10, "task_RotaryEncoder", "JogDial", 1 },
+    //{ 10, "task_TouchPanel", "TouchPanel", 1 },
+    //{ 10, "task_FileWrite", "FileWriteTask", 1 },
 
     //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
     { 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                 5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
@@ -1639,54 +1644,54 @@ int find_strsig9(firmware *fw, string_sig *sig)
     return 0;
 }
 
-// Sig pattern:
-//      Load Func Address   -   LDR R3, =func    - these four may occur in any order ?
-//      Load String Address -   ADR R0, "func"
-//      Load value          -   MOV R2, x
-//      Load value          -   MOV R1, y
-//      Branch              -   BL
-//              ...
-//      String              -   DCB "func"
-int match_strsig10(firmware *fw, string_sig *sig, int j)
-{
-    uint32_t sadr = idx2adr(fw,j);        // string address
-    int j1;
-    for (j1 = j-5; j1 >= 0; j1--)
-    {
-        if ((isADR(fw,j1)   || isLDR(fw,j1))   &&   // LDR, ADR or MOV
-            (isADR(fw,j1+1) || isLDR(fw,j1+1)) &&   // LDR, ADR or MOV
-            (isADR(fw,j1+2) || isLDR(fw,j1+2)) &&   // LDR, ADR or MOV
-            (isADR(fw,j1+3) || isLDR(fw,j1+3)) &&   // LDR, ADR or MOV
-            isBorBL(fw,j1+4))                       // B or BL ?
-        {
-            uint32_t padr;
-            padr = ADR2adr(fw,j1+0);
-            if (padr != sadr) padr = ADR2adr(fw,j1+1);
-            if (padr != sadr) padr = ADR2adr(fw,j1+2);
-            if (padr != sadr) padr = ADR2adr(fw,j1+3);
-            if (padr == sadr)
-            {
-                uint32_t fadr = 0;
-                if      (isLDR_PC(fw,j1)   && (fwRd(fw,j1)   == 3)) fadr = LDR2val(fw,j1);      // R3 ?
-                else if (isADR_PC(fw,j1)   && (fwRd(fw,j1)   == 3)) fadr = ADR2adr(fw,j1);      // R3 ?
-                else if (isLDR_PC(fw,j1+1) && (fwRd(fw,j1+1) == 3)) fadr = LDR2val(fw,j1+1);    // R3 ?
-                else if (isADR_PC(fw,j1+1) && (fwRd(fw,j1+1) == 3)) fadr = ADR2adr(fw,j1+1);    // R3 ?
-                else if (isLDR_PC(fw,j1+2) && (fwRd(fw,j1+2) == 3)) fadr = LDR2val(fw,j1+2);    // R3 ?
-                else if (isADR_PC(fw,j1+2) && (fwRd(fw,j1+2) == 3)) fadr = ADR2adr(fw,j1+2);    // R3 ?
-                else if (isLDR_PC(fw,j1+3) && (fwRd(fw,j1+3) == 3)) fadr = LDR2val(fw,j1+3);    // R3 ?
-                else if (isADR_PC(fw,j1+3) && (fwRd(fw,j1+3) == 3)) fadr = ADR2adr(fw,j1+3);    // R3 ?
-                if (fadr != 0)
-                {
-                    fadr = followBranch2(fw, fadr, sig->offset);
-                    fwAddMatch(fw,fadr,32,0,110);
-                    return 1;
-                }
-            }
-        }
-    }
-
-    return 0;
-}
+//// Sig pattern:
+////      Load Func Address   -   LDR R3, =func    - these four may occur in any order ?
+////      Load String Address -   ADR R0, "func"
+////      Load value          -   MOV R2, x
+////      Load value          -   MOV R1, y
+////      Branch              -   BL
+////              ...
+////      String              -   DCB "func"
+//int match_strsig10(firmware *fw, string_sig *sig, int j)
+//{
+//    uint32_t sadr = idx2adr(fw,j);        // string address
+//    int j1;
+//    for (j1 = j-5; j1 >= 0; j1--)
+//    {
+//        if ((isADR(fw,j1)   || isLDR(fw,j1))   &&   // LDR, ADR or MOV
+//            (isADR(fw,j1+1) || isLDR(fw,j1+1)) &&   // LDR, ADR or MOV
+//            (isADR(fw,j1+2) || isLDR(fw,j1+2)) &&   // LDR, ADR or MOV
+//            (isADR(fw,j1+3) || isLDR(fw,j1+3)) &&   // LDR, ADR or MOV
+//            isBorBL(fw,j1+4))                       // B or BL ?
+//        {
+//            uint32_t padr;
+//            padr = ADR2adr(fw,j1+0);
+//            if (padr != sadr) padr = ADR2adr(fw,j1+1);
+//            if (padr != sadr) padr = ADR2adr(fw,j1+2);
+//            if (padr != sadr) padr = ADR2adr(fw,j1+3);
+//            if (padr == sadr)
+//            {
+//                uint32_t fadr = 0;
+//                if      (isLDR_PC(fw,j1)   && (fwRd(fw,j1)   == 3)) fadr = LDR2val(fw,j1);      // R3 ?
+//                else if (isADR_PC(fw,j1)   && (fwRd(fw,j1)   == 3)) fadr = ADR2adr(fw,j1);      // R3 ?
+//                else if (isLDR_PC(fw,j1+1) && (fwRd(fw,j1+1) == 3)) fadr = LDR2val(fw,j1+1);    // R3 ?
+//                else if (isADR_PC(fw,j1+1) && (fwRd(fw,j1+1) == 3)) fadr = ADR2adr(fw,j1+1);    // R3 ?
+//                else if (isLDR_PC(fw,j1+2) && (fwRd(fw,j1+2) == 3)) fadr = LDR2val(fw,j1+2);    // R3 ?
+//                else if (isADR_PC(fw,j1+2) && (fwRd(fw,j1+2) == 3)) fadr = ADR2adr(fw,j1+2);    // R3 ?
+//                else if (isLDR_PC(fw,j1+3) && (fwRd(fw,j1+3) == 3)) fadr = LDR2val(fw,j1+3);    // R3 ?
+//                else if (isADR_PC(fw,j1+3) && (fwRd(fw,j1+3) == 3)) fadr = ADR2adr(fw,j1+3);    // R3 ?
+//                if (fadr != 0)
+//                {
+//                    fadr = followBranch2(fw, fadr, sig->offset);
+//                    fwAddMatch(fw,fadr,32,0,110);
+//                    return 1;
+//                }
+//            }
+//        }
+//    }
+//
+//    return 0;
+//}
 
 // Sig pattern:
 //      Func            -   func
@@ -1982,7 +1987,7 @@ int find_strsig(firmware *fw, string_sig *sig)
     case 7:     return fw_string_process(fw, sig, match_strsig7, 1);
     case 8:     return find_strsig8(fw, sig);
     case 9:     return find_strsig9(fw, sig);
-    case 10:    return fw_string_process(fw, sig, match_strsig10, 1);
+    //case 10:    return fw_string_process(fw, sig, match_strsig10, 1);
     case 11:    return fw_string_process(fw, sig, match_strsig11, 0);
     case 12:    return find_strsig12(fw, sig);
     case 13:    return fw_string_process_unaligned(fw, sig, match_strsig13);
@@ -4363,6 +4368,77 @@ void find_eventprocs(firmware *fw)
     }
 }
 
+int match_createtask(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+{
+    if (isBorBL(fw,k+4))
+    {
+        uint32_t adr = followBranch2(fw,idx2adr(fw,k+4),0x01000001);
+        if (adr == fadr)
+        {
+            if ((isADR(fw,k)   || isLDR(fw,k))   && // LDR, ADR or MOV
+                (isADR(fw,k+1) || isLDR(fw,k+1)) && // LDR, ADR or MOV
+                (isADR(fw,k+2) || isLDR(fw,k+2)) && // LDR, ADR or MOV
+                (isADR(fw,k+3) || isLDR(fw,k+3)))   // LDR, ADR or MOV
+            {
+                fadr = 0;
+                if      (isLDR_PC(fw,k)   && (fwRd(fw,k)   == 3)) fadr = LDR2val(fw,k);
+                else if (isADR_PC(fw,k)   && (fwRd(fw,k)   == 3)) fadr = ADR2adr(fw,k);
+                else if (isLDR_PC(fw,k+1) && (fwRd(fw,k+1) == 3)) fadr = LDR2val(fw,k+1);
+                else if (isADR_PC(fw,k+1) && (fwRd(fw,k+1) == 3)) fadr = ADR2adr(fw,k+1);
+                else if (isLDR_PC(fw,k+2) && (fwRd(fw,k+2) == 3)) fadr = LDR2val(fw,k+2);
+                else if (isADR_PC(fw,k+2) && (fwRd(fw,k+2) == 3)) fadr = ADR2adr(fw,k+2);
+                else if (isLDR_PC(fw,k+3) && (fwRd(fw,k+3) == 3)) fadr = LDR2val(fw,k+3);
+                else if (isADR_PC(fw,k+3) && (fwRd(fw,k+3) == 3)) fadr = ADR2adr(fw,k+3);
+                if (fadr != 0)
+                {
+                    uint32_t sadr = 0;
+                    if      (isLDR_PC(fw,k)   && (fwRd(fw,k)   == 0)) sadr = LDR2val(fw,k);
+                    else if (isADR_PC(fw,k)   && (fwRd(fw,k)   == 0)) sadr = ADR2adr(fw,k);
+                    else if (isLDR_PC(fw,k+1) && (fwRd(fw,k+1) == 0)) sadr = LDR2val(fw,k+1);
+                    else if (isADR_PC(fw,k+1) && (fwRd(fw,k+1) == 0)) sadr = ADR2adr(fw,k+1);
+                    else if (isLDR_PC(fw,k+2) && (fwRd(fw,k+2) == 0)) sadr = LDR2val(fw,k+2);
+                    else if (isADR_PC(fw,k+2) && (fwRd(fw,k+2) == 0)) sadr = ADR2adr(fw,k+2);
+                    else if (isLDR_PC(fw,k+3) && (fwRd(fw,k+3) == 0)) sadr = LDR2val(fw,k+3);
+                    else if (isADR_PC(fw,k+3) && (fwRd(fw,k+3) == 0)) sadr = ADR2adr(fw,k+3);
+                    if (sadr == 0)
+                    {
+                        if (isLDR_PC(fw,k-1) && (fwRd(fw,k-1) == 0))
+                        {
+                            sadr = fwval(fw,adr2idx(fw,LDR2val(fw,k-1)));
+                        }
+                        else if (isLDR_PC(fw,k-2) && (fwRd(fw,k-2) == 0))
+                        {
+                            sadr = fwval(fw,adr2idx(fw,LDR2val(fw,k-2)));
+                        }
+                    }
+                    if (sadr != 0)
+                    {
+                        char *s = adr2ptr(fw,sadr);
+                        char *nm = malloc(strlen(s)+6);
+                        sprintf(nm,"task_%s",s);
+                        add_func_name(nm, fadr, 0);
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+void find_tasks(firmware *fw)
+{
+    int k = get_saved_sig(fw,"CreateTask");
+    if (k >= 0)
+    {
+        search_fw(fw, match_createtask, func_names[k].val, 0, 5);
+    }
+    k = get_saved_sig(fw,"CreateTaskStrictly");
+    if (k >= 0)
+    {
+        search_fw(fw, match_createtask, func_names[k].val, 0, 5);
+    }
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Write out firmware info
@@ -4531,6 +4607,7 @@ int main(int argc, char **argv)
     bprintf("//    Name                                     Address                Comp to stubs_entry_2.S\n");
 
     find_eventprocs(&fw);
+    find_tasks(&fw);
 
     for (k = 0; k < max_find_func; k++)
     {

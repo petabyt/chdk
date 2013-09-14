@@ -29,8 +29,8 @@ asm volatile (
 "    BEQ     loc_FF87AB7C \n"
 "    LDR     R1, =0x476 \n"
 "    LDR     R0, =0xFF87A6E0 \n"
-"    BL      sub_FF81EC88 /*_DebugAssert*/ \n"
-"    BL      sub_FF81EC40 /*_ExitTask_FW*/ \n"
+"    BL      _DebugAssert \n"
+"    BL      _ExitTask \n"
 "    LDMFD   SP!, {R3-R9,PC} \n"
 
 "loc_FF87AB7C:\n"
@@ -243,7 +243,7 @@ asm volatile (
 "loc_FF87AD9C:\n"
 "    LDR     R1, =0x5D7 \n"
 "    LDR     R0, =0xFF87A6E0 \n"
-"    BL      sub_FF81EC88 /*_DebugAssert*/ \n"
+"    BL      _DebugAssert \n"
 
 "loc_FF87ADA8:\n"
 "    LDR     R0, [SP] \n"
@@ -255,7 +255,7 @@ asm volatile (
 "    CMP     R0, #0 \n"
 "    LDREQ   R0, =0xFF87A6E0 \n"
 "    MOVEQ   R1, #0x118 \n"
-"    BLEQ    sub_FF81EC88 /*_DebugAssert*/ \n"
+"    BLEQ    _DebugAssert \n"
 "    STR     R6, [R4, #8] \n"
 "    B       loc_FF87AB50 \n"
 );
@@ -303,11 +303,11 @@ asm volatile (
 "    MOV     R1, SP \n"
 "    ADD     R0, R2, #0x15C \n"
 "    STR     R4, [SP] \n"
-"    BL      sub_FF88CFAC /*_GetPropertyCase*/ \n"
+"    BL      _GetPropertyCase \n"
 "    TST     R0, #1 \n"
 "    MOVNE   R1, #0xBC \n"
 "    LDRNE   R0, =0xFF96F0E0 \n"
-"    BLNE    sub_FF81EC88 /*_DebugAssert*/ \n"
+"    BLNE    _DebugAssert \n"
 "    LDRH    R0, [SP] \n"
 "    CMP     R0, #1 \n"
 "    STRHI   R4, [R5, #0xD4] \n"
@@ -381,7 +381,7 @@ asm volatile (
 "    LDR     R0, [R6, #0x1C] \n"
 "    MOV     R1, #1 \n"
 "    BL      sub_FF884D84 /*_SetEventFlag*/ \n"
-"    BL      sub_FF81EC40 /*_ExitTask_FW*/ \n"
+"    BL      _ExitTask \n"
 "    ADD     SP, SP, #0x24 \n"
 "    LDMFD   SP!, {R4-R9,PC} \n"
 
@@ -477,7 +477,7 @@ asm volatile (
 
 "loc_FF8BE5AC:\n"
 "    LDR     R0, =0xFF8BA6A4 \n"
-"    BL      sub_FF81EC88 /*_DebugAssert*/ \n"
+"    BL      _DebugAssert \n"
 "    B       loc_FF8BE4DC \n"
 
 "loc_FF8BE5B8:\n"
@@ -921,14 +921,14 @@ asm volatile (
 "    CMP     R0, #1 \n"
 "    LDRNE   R1, =0x146 \n"
 "    LDRNE   R0, =0xFF8ABF64 \n"
-"    BLNE    sub_FF81EC88 /*_DebugAssert*/ \n"
+"    BLNE    _DebugAssert \n"
 "    CMN     R4, #0xC00 \n"
 "    LDREQSH R4, [R5, #2] \n"
 "    CMN     R4, #0xC00 \n"
 "    MOVEQ   R1, #0x14C \n"
 "    LDREQ   R0, =0xFF8ABF64 \n"
 "    STRH    R4, [R5, #2] \n"
-"    BLEQ    sub_FF81EC88 /*_DebugAssert*/ \n"
+"    BLEQ    _DebugAssert \n"
 "    MOV     R0, R4 \n"
 "    BL      apex2us \n"  // --> Patched. Old value = _apex2us.
 "    MOV     R4, R0 \n"
@@ -940,6 +940,6 @@ asm volatile (
 "    LDMFD   SP!, {R4-R6,LR} \n"
 "    LDR     R1, =0x151 \n"
 "    LDR     R0, =0xFF8ABF64 \n"
-"    B       sub_FF81EC88 /*_DebugAssert*/ \n"
+"    B       _DebugAssert \n"
 );
 }
