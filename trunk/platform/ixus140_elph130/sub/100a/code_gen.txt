@@ -246,3 +246,27 @@ ENDASM
 ENDFUNC
 
 ENDFILE
+
+//-------------------------- MOVIE_REC.C ----------------------------------------------------------
+// doesn't work with normal methods, camera appears to continuously adjust compression on the fly
+// sub_FF1F4654 appears to be involved
+//FILE movie_rec.c
+
+//>>> file=../movie_rec_hdr.c
+
+//////////////////////////////////////////////////////////////
+// movie_record_task
+//////////////////////////////////////////////////////////////
+//FUNC sig=task_MovieRecord name=movie_record_task
+//ASM
+//FW 59
+//>>>
+//begin patch
+//"    BL      set_quality \n"                 // added
+//end patch
+//<<<
+//FW $
+//ENDASM
+//ENDFUNC
+
+ENDFILE
