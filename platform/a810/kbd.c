@@ -50,18 +50,17 @@ static KeyMap keymap[] = {
 	// always pressed if KEY_SHOOT_FULL is. --MarcusSt
     { 0, KEY_ZOOM_IN         ,0x00002000 }, // Found @0xffb10008, levent 0x02
     { 0, KEY_ZOOM_OUT        ,0x00001000 }, // Found @0xffb10000, levent 0x03
-    { 1, KEY_PRINT           ,0x80000000 }, //KEY Playback for ALT menu
     { 1, KEY_SHOOT_FULL      ,0x00300000 }, // Found @0xffb10018, levent 0x01
     { 1, KEY_SHOOT_FULL_ONLY ,0x00200000 }, // Found @0xffb10018, levent 0x01
     { 1, KEY_SHOOT_HALF      ,0x00100000 }, // Found @0xffb10010, levent 0x00
-    { 1, KEY_SET             ,0x08000000 }, // Found @0xffb10048, levent 0x08    
+    { 1, KEY_SET             ,0x08000000 }, // Found @0xffb10048, levent 0x08
     { 1, KEY_MENU            ,0x04000000 }, // Found @0xffb10040, levent 0x09
     { 1, KEY_LEFT            ,0x02000000 }, // Found @0xffb10038, levent 0x06
     { 1, KEY_RIGHT           ,0x01000000 }, // Found @0xffb10030, levent 0x07
     { 1, KEY_DOWN            ,0x00800000 }, // Found @0xffb10028, levent 0x05
     { 1, KEY_UP              ,0x00400000 }, // Found @0xffb10020, levent 0x04
-    { 1, KEY_PLAYBACK        ,0x80000000 }, // Found @0xffb10068, levent 0x101  
-//    { 1, KEY_POWER           ,0x40000000 }, // Found @0xffb10060, levent 0x100      
+    { 1, KEY_PLAYBACK        ,0x80000000 }, // Found @0xffb10068, levent 0x101
+//    { 1, KEY_POWER           ,0x40000000 }, // Found @0xffb10060, levent 0x100
     { 1, KEY_HELP            ,0x20000000 }, // Found @0xffb10058, levent 0x14
     { 1, KEY_VIDEO           ,0x10000000 }, // Found @0xffb10050, levent 0x1a
     { 0, 0, 0 }
