@@ -245,6 +245,33 @@ FW 1
 ENDASM
 ENDFUNC
 
+//////////////////////////////////////////////////////////////
+// exp_drv_task
+//////////////////////////////////////////////////////////////
+FUNC sig=task_ExpDrv name=exp_drv_task
+ASM
+FW 263
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 49
+PATCHSUB ref=0
+->FW
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 16
+PATCHSUB name=apex2us
+->FW
+ENDASM
+ENDFUNC
+
 ENDFILE
 
 //-------------------------- MOVIE_REC.C ----------------------------------------------------------
