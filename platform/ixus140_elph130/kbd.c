@@ -238,7 +238,7 @@ long kbd_use_zoom_as_mf() {
 static KeyMap keymap[] = {
 //    { 2, KEY_POWER           ,0x00000001 }, // Found @0xff4fba60, levent 0x100
     { 2, KEY_PLAYBACK        ,0x00000002 }, // Found @0xff4fba68, levent 0x101
-    { 2, KEY_PRINT           ,0x00000002 }, // default alt
+//    { 2, KEY_PRINT           ,0x00000002 }, // default alt
     { 2, KEY_SHOOT_FULL      ,0x0000000c }, // Found @0xff4fba78, levent 0x01
     { 2, KEY_SHOOT_FULL_ONLY ,0x00000008 }, // Found @0xff4fba78, levent 0x01
     { 2, KEY_SHOOT_HALF      ,0x00000004 }, // Found @0xff4fba70, levent 0x00
