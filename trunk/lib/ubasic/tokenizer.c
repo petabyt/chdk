@@ -193,6 +193,7 @@ static const struct keyword_token keywords[] = {
   {"wait_click",              TOKENIZER_WAIT_CLICK},
   {"is_pressed",              TOKENIZER_IS_PRESSED},
   {"is_key",                  TOKENIZER_IS_KEY},
+  {"set_exit_key",            TOKENIZER_SET_EXIT_KEY},
   
   {"wheel_right",             TOKENIZER_WHEEL_RIGHT},
   {"wheel_left",              TOKENIZER_WHEEL_LEFT},

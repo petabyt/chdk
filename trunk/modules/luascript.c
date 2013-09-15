@@ -933,6 +933,13 @@ static int luaCB_is_key( lua_State* L )
   return 1;
 }
 
+static int luaCB_set_exit_key( lua_State* L )
+{
+  // TODO can't check if valid for this camera
+  script_set_terminate_key(lua_get_key_arg( L, 1 ),luaL_checkstring( L, 1));
+  return 0;
+}
+
 static int luaCB_wheel_right( lua_State* L )
 {
   JogDial_CW();
@@ -2508,6 +2515,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(wait_click)
     FUNC(is_pressed)
     FUNC(is_key)
+    FUNC(set_exit_key)
     FUNC(wheel_right)
     FUNC(wheel_left)
     FUNC(md_get_cell_diff)

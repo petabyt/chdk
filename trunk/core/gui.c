@@ -2382,7 +2382,16 @@ void gui_chdk_draw()
 {
 #ifdef CAM_DISP_ALT_TEXT
     gui_draw_alt_helper();
-    draw_string(((CAM_SCREEN_WIDTH/2)-(FONT_WIDTH*5/2)), (CAM_SCREEN_HEIGHT-FONT_HEIGHT), "<ALT>", MAKE_COLOR(COLOR_RED, COLOR_WHITE));
+    if ( gui_get_mode() == GUI_MODE_SCRIPT )
+    {
+        char buf[32];
+        script_get_alt_text(buf);
+        draw_string(((CAM_SCREEN_WIDTH/2)-(FONT_WIDTH*strlen(buf)/2)), (CAM_SCREEN_HEIGHT-FONT_HEIGHT), buf, MAKE_COLOR(COLOR_RED, COLOR_WHITE));
+    }
+    else
+    {
+       draw_string(((CAM_SCREEN_WIDTH/2)-(FONT_WIDTH*5/2)), (CAM_SCREEN_HEIGHT-FONT_HEIGHT), "<ALT>", MAKE_COLOR(COLOR_RED, COLOR_WHITE));
+    }
 #else
     gui_draw_osd();
 #endif

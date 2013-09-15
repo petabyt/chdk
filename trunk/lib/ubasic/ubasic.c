@@ -1954,6 +1954,33 @@ static void is_key_statement(void)
     accept_cr();
 }
 
+static void set_exit_key_statement()
+{
+    int k;
+    accept(TOKENIZER_SET_EXIT_KEY);
+    if(tokenizer_token() == TOKENIZER_STRING) 
+    {
+        tokenizer_string(string, sizeof(string));
+        k = script_keyid_by_name(string);
+        if (k <= 0)
+        {
+          ubasic_error = UBASIC_E_UNK_KEY;
+          ended = 1 ;
+        }
+        else
+        {
+            script_set_terminate_key(k,string);
+        }
+    } 
+    else 
+    {
+       DEBUG_PRINTF("ubasic.c: set_exit_key no key specified\n");
+       ended = 1;
+       ubasic_error = UBASIC_E_UNK_KEY;
+    }
+    accept_cr() ;
+}
+
 static void get_config_value_statement()
 {
     int var, var1, var2;
@@ -2328,6 +2355,9 @@ statement(void)
       break;
   case TOKENIZER_IS_KEY:
       is_key_statement();
+      break;
+  case TOKENIZER_SET_EXIT_KEY:
+      set_exit_key_statement();
       break;
 
   case TOKENIZER_WHEEL_LEFT:

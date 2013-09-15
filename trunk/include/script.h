@@ -30,6 +30,9 @@ extern void script_console_add_line(long str_id);
 extern void script_print_screen_statement(int val);
 //-------------------------------------------------------------------
 
+extern void script_get_alt_text(char *buf);
+extern void script_set_terminate_key(int key, const char *keyname);
+
 extern int script_is_running();
 extern long script_stack_start();
 extern long script_start_gui( int autostart );
