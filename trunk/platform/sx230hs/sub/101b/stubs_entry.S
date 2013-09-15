@@ -22,8 +22,7 @@
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff3232b8 -> ff4957e0
-// Mode 16936 in firmware but not in current modemap
-// Mode 16938 in firmware but not in current modemap
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x000358e8) // Found @0xff024d18
