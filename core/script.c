@@ -22,6 +22,9 @@
 static AS_ID running_script_stack_name = 0;     // ID of action_stack, which used to control script processing
 
 //-------------------------------------------------------------------
+// script terminate key, may be set from script
+static int script_terminate_key;
+static char script_terminate_key_name[20]; // TODO this is only here because there's no easy way to map key number back to name
 
 // Forward references
 void script_end();
@@ -130,12 +133,31 @@ int script_is_running()
 }
 
 //-------------------------------------------------------------------
+void script_set_terminate_key(int key, const char *keyname)
+{
+    script_terminate_key = key;
+    strncpy(script_terminate_key_name,keyname,sizeof(script_terminate_key_name));
+    script_terminate_key_name[sizeof(script_terminate_key_name)-1] = 0;
+}
 
+void script_get_alt_text(char *buf)
+{
+   if(script_terminate_key == KEY_SHOOT_FULL)
+   {
+        strcpy(buf,"<ALT>"); // TODO maybe it should be SCRIPT?
+   }
+   else
+   {
+       sprintf(buf,"<EXIT=%s>",script_terminate_key_name);
+   }
+}
 // Main button processing for CHDK Script mode
+
+
 static int gui_script_kbd_process()
 {
     // Stop a script if the shutter button pressed in Script mode
-    if (kbd_is_key_clicked(KEY_SHOOT_FULL))
+    if (kbd_is_key_clicked(script_terminate_key))
     {
         script_console_add_line(LANG_CONSOLE_TEXT_INTERRUPTED);
         if (camera_info.state.state_kbd_script_run == SCRIPT_STATE_INTERRUPTED)
@@ -181,6 +203,9 @@ void script_end()
 {
     // Tell other code that script has ended
     camera_info.state.state_kbd_script_run = SCRIPT_STATE_INACTIVE;
+
+    // reset the script terminate key
+    script_terminate_key = KEY_SHOOT_FULL ;
 
     script_print_screen_end();
 

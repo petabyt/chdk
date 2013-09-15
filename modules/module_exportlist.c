@@ -380,6 +380,7 @@
             levent_index_for_name,
             levent_table,
 
+            script_set_terminate_key,
             script_colors,
             script_start_gui,
             script_end,
