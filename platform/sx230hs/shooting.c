@@ -126,7 +126,9 @@ const CapturemodeMap modemap[] = {
     { MODE_SCN_HIGHSPEED_BURST  , 0x4208    },
     { MODE_SCN_BEST_IMAGE       , 0x4209    },
     { MODE_SCN_TOY_CAMERA       , 0x222f    },
-    { MODE_SCN_MONOCHROME       , 0x2232    }
+    { MODE_SCN_MONOCHROME       , 0x2232    },
+    { MODE_SCN_WINK_SELF_TIMER  , 16938     },
+    { MODE_SCN_FACE_SELF_TIMER  , 16936     },
 };
 
 #include "../generic/shooting.c"

@@ -30,6 +30,8 @@
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
+    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
+
     #undef  CAM_AF_LED
     #define CAM_AF_LED                      1
 
@@ -123,4 +125,6 @@
     #define REMOTE_SYNC_STATUS_LED          0xC0220130  // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_HAS_MOVIE_DIGEST_MODE       1 
+
+    #define CAM_HAS_FILEWRITETASK_HOOK          1   // file write hook for remote capture etc
 //----------------------------------------------------------

@@ -18,7 +18,6 @@ static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static KeyMap keymap[];
-static int alt_mode_led=0;
 extern void _GetKbdState(long*);
 
 #ifdef CAM_HAS_GPS
