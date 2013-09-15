@@ -33,6 +33,8 @@
     #undef  CAM_HAS_CMOS                        // Camera has CMOS sensor
     #undef  CAM_SWIVEL_SCREEN                   // Camera has rotated LCD screen
     #define CAM_USE_ZOOM_FOR_MF             1   // Zoom lever can be used for manual focus adjustments
+    #define CAM_DEFAULT_ALT_BUTTON  KEY_PRINT   // alt button for cameras without adjustable alt
+                                                // redefine if not print to avoid need for KEY_PRINT alias in keymap
     #undef  CAM_ADJUSTABLE_ALT_BUTTON           // ALT-button can be set from menu, must set next two values as well
     #undef  CAM_ALT_BUTTON_NAMES                // Define the list of names for the ALT button   - e.g. { "Print", "Display" }
     #undef  CAM_ALT_BUTTON_OPTIONS              // Define the list of options for the ALT button - e.g. { KEY_PRINT, KEY_DISPLAY }

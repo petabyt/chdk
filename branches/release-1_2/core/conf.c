@@ -41,6 +41,14 @@ static void conf_set_extra_button();
 
 void clear_values()
 {	
+
+#if CAM_ADJUSTABLE_ALT_BUTTON
+    extern const char* gui_alt_mode_button_enum(int change, int arg);
+    gui_alt_mode_button_enum(0,0); // will reset if not in list of valid alt buttons
+#else
+    conf.alt_mode_button = CAM_DEFAULT_ALT_BUTTON; // if not adjustable, force to default
+#endif
+
     if (conf.platformid != PLATFORMID) // the following config entries will be resetted if you switch the camera using the same cfg
     {
 #if ZOOM_OVERRIDE
