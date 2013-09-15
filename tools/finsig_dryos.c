@@ -4525,7 +4525,7 @@ void output_firmware_vals(firmware *fw)
     bprintf("\n");
 }
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(__APPLE__)
 #define stricmp strcasecmp
 #endif
 
