@@ -1801,7 +1801,7 @@ static CMenu menu_settings_submenu = {0x28,LANG_MENU_MENU_SETTINGS, menu_setting
 
 #if CAM_ADJUSTABLE_ALT_BUTTON
 
-static const char* gui_alt_mode_button_enum(int change, int arg)
+const char* gui_alt_mode_button_enum(int change, int arg)
 {
 #if defined(CAM_ALT_BUTTON_NAMES) && defined(CAM_ALT_BUTTON_OPTIONS)
     static const char* names[] = CAM_ALT_BUTTON_NAMES;
