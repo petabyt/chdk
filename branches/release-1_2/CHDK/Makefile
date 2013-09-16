@@ -10,7 +10,9 @@ else
 LOGO=logo_de.dat
 endif
 
-GENLUA=LUALIB/GEN/propset1.lua LUALIB/GEN/propset2.lua LUALIB/GEN/propset3.lua LUALIB/GEN/propset4.lua LUALIB/GEN/propset5.lua LUALIB/GEN/modelist.lua
+GENLUA=LUALIB/GEN/propset1.lua LUALIB/GEN/propset2.lua LUALIB/GEN/propset3.lua LUALIB/GEN/propset4.lua LUALIB/GEN/propset5.lua LUALIB/GEN/propset6.lua \
+		LUALIB/GEN/modelist.lua
+
 # generate some lua files from CHDK source
 all: $(GENLUA)
 	@echo "copy" $(LOGO)
@@ -38,6 +40,10 @@ LUALIB/GEN/propset4.lua:  $(topdir)include/propset4.h
 	sed -n -f  $(topdir)tools/gen_propset_lua.sed < $< > $@
 
 LUALIB/GEN/propset5.lua:  $(topdir)include/propset5.h
+	@echo "->" $@
+	sed -n -f  $(topdir)tools/gen_propset_lua.sed < $< > $@
+
+LUALIB/GEN/propset6.lua:  $(topdir)include/propset6.h
 	@echo "->" $@
 	sed -n -f  $(topdir)tools/gen_propset_lua.sed < $< > $@
 

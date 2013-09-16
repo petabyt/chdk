@@ -18,6 +18,8 @@ elseif get_propset()==4 then
   return require("gen/propset4")
 elseif get_propset()==5 then
   return require("gen/propset5")
+elseif get_propset()==6 then
+  return require("gen/propset6")
 else
   error('Unsupported propset ' .. get_propset(), 1)
 end
