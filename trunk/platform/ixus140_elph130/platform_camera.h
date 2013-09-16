@@ -129,6 +129,9 @@
 
     #define CAM_FILE_COUNTER_IS_VAR            1       // file counter is variable file_counter_var in stubs, not a param
 
+    #define  CAM_HAS_FILEWRITETASK_HOOK        1 // FileWriteTask hook is available (local file write can be prevented)
+    #define  CAM_FILEWRITETASK_SEEKS           1 // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
+
 //	only non-AF led available
 	#define REMOTE_SYNC_STATUS_LED 	0xC0220094		// specifies an LED that turns on while camera waits for USB remote to sync
 
@@ -137,7 +140,5 @@
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE  1     // For cameras with 'low light' mode that does not work with raw define this
 
-
-//    #define CAM_HAS_FILEWRITETASK_HOOK      1       // file write hook for remote capture etc
 
 //----------------------------------------------------------
