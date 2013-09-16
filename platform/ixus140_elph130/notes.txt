@@ -12,8 +12,9 @@ TESTED
 ******
 shutter, iso and ND override (not comprehensively)
 llibtst.lua
+ubtest.bas
 ptp control, rec/play switching
-RAW/DNG capture (has file/directory issues noted below)
+RAW/DNG capture
 zebra
 PTP live view, but note fisheye mode issue below
 led functions
@@ -28,14 +29,15 @@ NOT IMPLEMENTED
 ***************
 video functions / movie_rec task
 exmem support (note, camera has ~1.7 mb regular heap free on startup with CHDK)
-subject distance override
 
 OTHER ISSUES
 ************
 Folder naming and file counter use a new method, seem to be working but may have issues
 Not clear if fast press override hack is needed, needs more testing
+subject distance override is only available in AF lock
 
 KNOWN BUGS
 **********
 DNG color matrix is copy+paste from D10
 PTP Live view and functions like zebra, histogram do not work correctly in fisheye effect mode
+Zoom lever doesn't work when zoom has been set to something other than 0 with set_zoom. set_zoom(0) allows it to work again
