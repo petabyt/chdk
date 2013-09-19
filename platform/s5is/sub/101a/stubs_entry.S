@@ -23,8 +23,7 @@
 //NHSTUB(SetParameterData                     ,0xff972f14) //  1 59%    *** != 0xff972f9c
 // ERROR: UIFS_WriteFirmInfoToFile is not found.           //--- ---    *** != 0x00000000
 //NHSTUB(kbd_pwr_off                          ,0xff84dc38) //  2 67%    *** != 0x00000000
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
-//NHSTUB(srand                                ,0xff81e828) //  1        *** != 0xff81bdb4
+//NHSTUB(srand                                ,0xff81e828) //122        *** != 0xff81bdb4
 //NHSTUB(write                                ,0xff825e38) //120        *** != 0xff81a328
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
@@ -199,7 +198,7 @@ NHSTUB(open                                   ,0xff81a030) //109
 NHSTUB(OpenFastDir                            ,0xffa27934) //  1
 NHSTUB(closedir                               ,0xffa27a98) //  1
 NHSTUB(qsort                                  ,0xff9ca2ec) //  1
-NHSTUB(rand                                   ,0xff81e834) //  1
+NHSTUB(rand                                   ,0xff81e834) //121
 NHSTUB(realloc                                ,0xff813be0) //115
 NHSTUB(reboot_fw_update                       ,0xffa2f824) //106
 NHSTUB(set_control_event                      ,0xff877988) //  1

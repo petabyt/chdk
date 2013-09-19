@@ -8,8 +8,6 @@ GetDrive_ClusterSize 0xFFC3F4C4 13 0xFFC41890 -4
 GetDrive_TotalClusters 0xFFC3F4F8 13 0xFFC418A0 -5
 GetDrive_FreeClusters 0xFFC3F564 13 0xFFC418B4 -4
 _sqrt 0xFFE3DC44
-rand 0xFFC0E9F8
-srand 0xFFC0E9EC
 stat 0xFFC15238
 OpenFastDir 0xFFDC1B04
 ReadFastDir 0xFFDC1B98

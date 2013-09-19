@@ -118,13 +118,12 @@ else
 endif
 
 signatures_dryos.h: gensig_dryos$(EXE) gensigs_dryos.sh sig_ref_dryos_1.txt sig_ref_dryos_1.bin sig_ref_dryos_2.txt sig_ref_dryos_2.bin sig_ref_dryos_3.txt sig_ref_dryos_3.bin \
-                    sig_ref_dryos_4.txt sig_ref_dryos_4.bin sig_ref_dryos_5.txt sig_ref_dryos_5.bin sig_ref_dryos_6.txt sig_ref_dryos_6.bin \
-                    sig_ref_dryos_11.txt sig_ref_dryos_11.bin
+                    sig_ref_dryos_4.txt sig_ref_dryos_4.bin sig_ref_dryos_5.txt sig_ref_dryos_5.bin sig_ref_dryos_6.txt sig_ref_dryos_6.bin
 	@echo \-\> $@
 ifdef OPT_GEN_SIGS
 	if [ -s sig_ref_dryos_1.bin ] && [ -s sig_ref_dryos_2.bin ] && [ -s sig_ref_dryos_3.bin ] && [ -s sig_ref_dryos_4.bin ] && [ -s sig_ref_dryos_5.bin ] && \
-	   [ -s sig_ref_dryos_6.bin ] && [ -s sig_ref_dryos_11.bin ] ; then \
-	  $(SH) ./gensigs_dryos.sh $(SORT) dryos "1 2 3 4 5 6 11" > signatures_dryos.h ; \
+	   [ -s sig_ref_dryos_6.bin ] ; then \
+	  $(SH) ./gensigs_dryos.sh $(SORT) dryos "1 2 3 4 5 6" > signatures_dryos.h ; \
 	else \
 	  echo CAUTION! \'signatures_dryos.h\' is not updated due to \'sig_ref_dryos_?.bin\` is empty! ; \
 	  touch signatures_dryos.h ; \
@@ -160,9 +159,6 @@ sig_ref_dryos_5.bin:
 
 sig_ref_dryos_6.bin:
 	touch sig_ref_dryos_6.bin
-
-sig_ref_dryos_11.bin:
-	touch sig_ref_dryos_11.bin
 
 finsig_vxworks.o: finsig_vxworks.c signatures_vxworks.h stubs_load.h
 finsig_dryos.o: finsig_dryos.c signatures_dryos.h stubs_load.h firmware_load.h

@@ -17,7 +17,6 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NHSTUB(kbd_pwr_off                            ,0xff843204) //  2 64%
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffa4a5e8 -> ffb2e4b4
@@ -225,11 +224,11 @@ NHSTUB(open                                   ,0xff81984c) //109
 NHSTUB(OpenFastDir                            ,0xffa1fce4) //  1
 NHSTUB(closedir                               ,0xffa1fe48) //  1
 NHSTUB(qsort                                  ,0xffa79a30) //  1
-NHSTUB(rand                                   ,0xff81cd64) //  1
+NHSTUB(rand                                   ,0xff81cd64) //121
 NHSTUB(realloc                                ,0xff813b1c) //115
 NHSTUB(reboot_fw_update                       ,0xffa27428) //106
 NHSTUB(set_control_event                      ,0xff873db4) //111
-NHSTUB(srand                                  ,0xff81cd58) //  1
+NHSTUB(srand                                  ,0xff81cd58) //122
 NHSTUB(stat                                   ,0xff823ea4) //  1
 NHSTUB(strcat                                 ,0xff887714) //  1
 NHSTUB(strchr                                 ,0xff88779c) //  1

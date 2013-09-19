@@ -407,6 +407,7 @@
 0xff86c0f0,GetFocusStartZoomPosition_FW
 0xffad8e28,GetFrameRateWithApex_FW
 0xffae0544,GetHour_FW
+0xffa47aa8,getImageDirName
 0xff937624,GetImageFolder
 0xff87d618,GetInternalFirmwareVersion_FW
 0xff95503c,GetIrisAv_FW

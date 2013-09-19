@@ -403,6 +403,7 @@
 0xff879a74,GetGyroHPFINPitch_FW
 0xff879ad0,GetGyroHPFINYaw_FW
 0xffb26f50,GetHour_FW
+0xffa7a1ec,getImageDirName
 0xff94337c,GetImageFolder,(stubs_entry_2.s)
 0xff9644f8,GetIrisAv_FW
 0xff964740,GetIrisCurrentPosition_FW

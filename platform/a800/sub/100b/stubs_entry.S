@@ -16,8 +16,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-NHSTUB(kbd_pwr_off                            ,0xffc43e84) //  2 60%
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 // ERROR: rand is not found.                               //--- ---    *** != 0x00000000
 // ERROR: srand is not found.                              //--- ---    *** != 0x00000000
 
@@ -127,12 +125,12 @@ NHSTUB(Fwrite_Fut                             ,0xffc25ef4) //120
 NHSTUB(GetBatteryTemperature                  ,0xffc45dec) //102
 NHSTUB(GetCCDTemperature                      ,0xffc45d78) //102
 NHSTUB(GetCurrentAvValue                      ,0xffd13ed4) //120
-NHSTUB(GetDrive_ClusterSize                   ,0xffc52da4) //  6
-NHSTUB(GetDrive_FreeClusters                  ,0xffc52dfc) //  6
-NHSTUB(GetDrive_TotalClusters                 ,0xffc52dd4) //  6
+NHSTUB(GetDrive_ClusterSize                   ,0xffc52da4) //122
+NHSTUB(GetDrive_FreeClusters                  ,0xffc52dfc) //119
+NHSTUB(GetDrive_TotalClusters                 ,0xffc52dd4) //119
 NHSTUB(GetFocusLensSubjectDistance            ,0xffd1313c) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffd13598) //  3
-NHSTUB(GetImageFolder                         ,0xffcfa088) //  6
+NHSTUB(GetImageFolder                         ,0xffcfa088) //122
 NHSTUB(GetKbdState                            ,0xffc43e6c) //109
 NHSTUB(GetMemInfo                             ,0xffc0a8a0) //115
 NHSTUB(GetOpticalTemperature                  ,0xffc45e64) //120

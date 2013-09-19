@@ -416,6 +416,7 @@
 0xff87e584,GetGyroHPFINYaw_FW
 0xffb05bfc,GetGyroNoiseData_FW
 0xffb76788,GetHour_FW
+0xffacdf94,getImageDirName
 0xff95f2fc,GetImageFolder
 0xff97fcb8,GetIrisAv_FW
 0xff97fe74,GetIrisCurrentPosition_FW

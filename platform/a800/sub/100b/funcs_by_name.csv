@@ -393,6 +393,7 @@
 0xffc589b8,GetFocusStartZoomPosition_FW
 0xffe69938,GetFrameRateWithApex_FW
 0xffe70bb8,GetHour_FW
+0xffdf2860,getImageDirName
 0xffcfa088,GetImageFolder
 0xffd13ed4,GetIrisAv_FW
 0xffc43e6c,GetKbdState

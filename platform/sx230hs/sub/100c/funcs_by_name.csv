@@ -440,6 +440,7 @@
 0xff074b94,GetGyroHPFINYaw_FW
 0xff30ee24,GetGyroNoiseData_FW
 0xff37d4ec,GetHour_FW
+0xff15eef4,getImageDirName
 0xff15d268,GetImageFolder
 0xff05c5f4,GetInputAverageLevel_FW
 0xff184680,GetIrisAv_FW

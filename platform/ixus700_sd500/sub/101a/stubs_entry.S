@@ -195,6 +195,7 @@ NHSTUB(memPartInfoGet, 0xffabd03c)
 NHSTUB(memchr, 0xffab371c)
 NHSTUB(memcmp, 0xffab3750)
 // ALT: NHSTUB(memcmp, 0xffac1b38) // 9/0
+// ALT: NHSTUB(memcmp, 0xffbd126c) // 9/0
 NHSTUB(memcpy, 0xffab378c)
 NHSTUB(memset, 0xffab3804)
 // Best match: 61%

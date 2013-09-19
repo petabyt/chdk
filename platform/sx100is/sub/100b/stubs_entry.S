@@ -19,7 +19,6 @@
 //NHSTUB(GetZoomLensCurrentPosition           ,0xffdeac68) //102        *** != 0xffd0e36c
 //NHSTUB(MoveFocusLensToDistance              ,0xffdc0d2c) //102        *** != 0xffdc0c60
 //NHSTUB(kbd_pwr_off                          ,0xffc37f10) //  2 67%    *** != 0x00000000
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffdf5da4 -> ffe9e7ec
@@ -208,11 +207,11 @@ NHSTUB(open                                   ,0xffc0a1a8) //109
 NHSTUB(OpenFastDir                            ,0xffddc5e8) //  1
 NHSTUB(closedir                               ,0xffddc74c) //  1
 NHSTUB(qsort                                  ,0xffd7a830) //  1
-NHSTUB(rand                                   ,0xffc0e9f8) //  1
+NHSTUB(rand                                   ,0xffc0e9f8) //121
 NHSTUB(realloc                                ,0xffc03b90) //115
 NHSTUB(reboot_fw_update                       ,0xffde101c) //106
 NHSTUB(set_control_event                      ,0xffc5f150) //  1
-NHSTUB(srand                                  ,0xffc0e9ec) //  1
+NHSTUB(srand                                  ,0xffc0e9ec) //122
 NHSTUB(stat                                   ,0xffc15258) //  1
 NHSTUB(strcat                                 ,0xffc76570) //  1
 NHSTUB(strchr                                 ,0xffc765f8) //  1

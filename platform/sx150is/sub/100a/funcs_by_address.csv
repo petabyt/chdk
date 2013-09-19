@@ -981,6 +981,7 @@
 0xffaa12e4,TerminateSoundRec_FW
 0xffaa1320,InitializeFAGeneralTest_FW
 0xffaa13a0,TerminateFAGeneralTest_FW
+0xffaa9c5c,getImageDirName
 0xffabba64,task_FileScheduleTask
 0xffabca64,task_FileWrite
 0xffabca64,task_FileWriteTask

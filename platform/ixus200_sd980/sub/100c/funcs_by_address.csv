@@ -986,6 +986,7 @@
 0xffa5d31c,StartSoundPlay_FW
 0xffa5d364,InitializeSoundRec_FW
 0xffa5d398,TerminateSoundRec_FW
+0xffa65e18,getImageDirName
 0xffa789b8,task_FileScheduleTask
 0xffa79a40,task_FileWrite
 0xffa79a40,task_FileWriteTask

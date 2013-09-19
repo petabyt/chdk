@@ -19,7 +19,6 @@
 //NHSTUB(DoAFLock                             ,0xff8258d0) //102        *** != 0xff863a80
 //NHSTUB(UnlockAF                             ,0xff825908) //102        *** != 0xff863a90
 //NHSTUB(kbd_pwr_off                          ,0xff84a3a8) //  2 64%    *** != 0x00000000
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffa58654 -> ffb49850
@@ -216,11 +215,11 @@ NHSTUB(open                                   ,0xff8197b4) //109
 NHSTUB(OpenFastDir                            ,0xffa2eaec) //  1
 NHSTUB(closedir                               ,0xffa2ec50) //  1
 NHSTUB(qsort                                  ,0xffa93dc0) //  1
-NHSTUB(rand                                   ,0xff81ccac) //  1
+NHSTUB(rand                                   ,0xff81ccac) //121
 NHSTUB(realloc                                ,0xff813b5c) //115
 NHSTUB(reboot_fw_update                       ,0xffa36580) //106
 NHSTUB(set_control_event                      ,0xff87d448) //111
-NHSTUB(srand                                  ,0xff81cca0) //  1
+NHSTUB(srand                                  ,0xff81cca0) //122
 NHSTUB(stat                                   ,0xff823d80) //  1
 NHSTUB(strcat                                 ,0xff8975b8) //  1
 NHSTUB(strchr                                 ,0xff897640) //  1

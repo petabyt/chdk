@@ -610,8 +610,6 @@ asm volatile (
 "    ADD     R0, R0, R2 \n"
 "    STR     R0, [R1, #0x8C] \n"
 "    LDMFD   SP!, {R0-R12,PC} \n"
-//"  STRVSBT R7, [R8], #-0x66D \n"
-//"  ANDEQ   LR, R0, R0, LSR#0x20 \n"
 
 "loc_FF305A3C:\n"
 "    ADD     R2, R2, #0x1F \n"

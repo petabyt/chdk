@@ -1085,6 +1085,7 @@
 0xff29a674,TerminateFAExtendFile_FW
 0xff29a808,StartTestRecLog_FW
 0xff29a820,StopTestRecLog_FW
+0xff2a27c8,getImageDirName
 0xff2b0c50,task_FORMAT_TASK_PROGRESS
 0xff2b0e30,task_FORMAT_TASK_NAME
 0xff2b81b0,task_FileWrite

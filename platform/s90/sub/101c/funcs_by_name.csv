@@ -402,6 +402,7 @@
 0xff8768d8,GetGyroHPFINPitch_FW
 0xff876934,GetGyroHPFINYaw_FW
 0xffb00560,GetHour_FW
+0xffa6a3fc,getImageDirName
 0xff93c4d4,GetImageFolder
 0xff95a53c,GetIrisAv_FW
 0xff95a6f8,GetIrisCurrentPosition_FW

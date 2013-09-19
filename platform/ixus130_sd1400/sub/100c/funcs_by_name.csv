@@ -390,6 +390,7 @@
 0xff876d88,GetGyroHPFINPitch_FW
 0xff876de4,GetGyroHPFINYaw_FW
 0xffb01c00,GetHour_FW
+0xffa5d944,getImageDirName
 0xff935288,GetImageFolder
 0xff953204,GetIrisAv_FW
 0xffa91800,GetISCenterShiftA_FW

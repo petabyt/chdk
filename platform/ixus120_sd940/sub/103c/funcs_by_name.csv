@@ -391,6 +391,7 @@
 0xff86facc,GetGyroHPFINPitch_FW
 0xff86fb28,GetGyroHPFINYaw_FW
 0xffad5990,GetHour_FW
+0xffa39db0,getImageDirName
 0xff919078,GetImageFolder
 0xff936720,GetIrisAv_FW
 0xffa681c8,GetISDriveAaxis_FW

@@ -22,7 +22,6 @@
 //NHSTUB(WriteSDCard                          ,0xffce4300) //108        *** != 0xffce4118
 //NHSTUB(kbd_read_keys                        ,0xffc11d70) //109        *** != 0xffc11d80
 //NHSTUB(kbd_pwr_off                          ,0xffc30e1c) //  2 64%    *** != 0x00000000
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffdf7360 -> ffeb35d8
@@ -222,11 +221,11 @@ NHSTUB(open                                   ,0xffc0984c) //109
 NHSTUB(OpenFastDir                            ,0xffdd7984) //  1
 NHSTUB(closedir                               ,0xffdd7ae8) //  1
 NHSTUB(qsort                                  ,0xffe1cc78) //  1
-NHSTUB(rand                                   ,0xffc0cd64) //  1
+NHSTUB(rand                                   ,0xffc0cd64) //121
 NHSTUB(realloc                                ,0xffc03b1c) //115
 NHSTUB(reboot_fw_update                       ,0xffddb4fc) //106
 NHSTUB(set_control_event                      ,0xffc5d680) //111
-NHSTUB(srand                                  ,0xffc0cd58) //  1
+NHSTUB(srand                                  ,0xffc0cd58) //122
 NHSTUB(stat                                   ,0xffc13e48) //  1
 NHSTUB(strcat                                 ,0xffc6ca4c) //  1
 NHSTUB(strchr                                 ,0xffc6cad4) //  1
