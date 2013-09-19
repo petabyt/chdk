@@ -124,12 +124,12 @@ NHSTUB(Fwrite_Fut                             ,0xff835eac) //120
 NHSTUB(GetBatteryTemperature                  ,0xff8567fc) //102
 NHSTUB(GetCCDTemperature                      ,0xff856788) //102
 NHSTUB(GetCurrentAvValue                      ,0xff926d50) //120
-NHSTUB(GetDrive_ClusterSize                   ,0xff863130) //  4
+NHSTUB(GetDrive_ClusterSize                   ,0xff863130) //122
 //NHSTUB(GetDrive_FreeClusters                ,0xff863190) //  4            == 0xff863190
 NHSTUB(GetDrive_TotalClusters                 ,0xff863164) //  3
 NHSTUB(GetFocusLensSubjectDistance            ,0xff926048) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff9264a0) //  3
-NHSTUB(GetImageFolder                         ,0xff90c4b4) //106
+NHSTUB(GetImageFolder                         ,0xff90c4b4) //122
 NHSTUB(GetKbdState                            ,0xff8546a8) //109
 NHSTUB(GetMemInfo                             ,0xff81a760) //115
 NHSTUB(GetOpticalTemperature                  ,0xff856870) //120
@@ -214,11 +214,11 @@ NHSTUB(open                                   ,0xff81afd8) //109
 NHSTUB(OpenFastDir                            ,0xffa2cffc) //  4
 NHSTUB(closedir                               ,0xffa2cfac) //121
 NHSTUB(qsort                                  ,0xffa8deb4) //  4
-NHSTUB(rand                                   ,0xff821388) //  1
+NHSTUB(rand                                   ,0xff821388) //121
 NHSTUB(realloc                                ,0xff9b48e0) //115
 NHSTUB(reboot_fw_update                       ,0xffa2e9c4) //106
 NHSTUB(set_control_event                      ,0xff882514) //111
-NHSTUB(srand                                  ,0xff82137c) //  1
+NHSTUB(srand                                  ,0xff82137c) //122
 NHSTUB(stat                                   ,0xff83641c) //109
 NHSTUB(strcat                                 ,0xff8951ec) //  1
 NHSTUB(strchr                                 ,0xff813fe8) //  1

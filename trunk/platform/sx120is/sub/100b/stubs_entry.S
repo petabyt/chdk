@@ -137,7 +137,7 @@ NHSTUB(GetCCDTemperature                      ,0xffc39464) //102
 NHSTUB(GetCurrentAvValue                      ,0xffd0e010) //120
 NHSTUB(GetFocusLensSubjectDistance            ,0xffd0c5f0) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffd0ca40) //  3
-NHSTUB(GetImageFolder                         ,0xffcec100) //106
+NHSTUB(GetImageFolder                         ,0xffcec100) //122
 NHSTUB(GetKbdState                            ,0xffc36edc) //109
 NHSTUB(GetMemInfo                             ,0xffc08d8c) //115
 NHSTUB(GetOpticalTemperature                  ,0xffc39550) //120
@@ -219,11 +219,11 @@ NHSTUB(open                                   ,0xffc095fc) //109
 NHSTUB(OpenFastDir                            ,0xffdfec80) //  1
 NHSTUB(closedir                               ,0xffdfede4) //  1
 NHSTUB(qsort                                  ,0xffe4ef08) //  1
-NHSTUB(rand                                   ,0xffc0ccc4) //  1
+NHSTUB(rand                                   ,0xffc0ccc4) //121
 NHSTUB(realloc                                ,0xffd90d70) //115
 NHSTUB(reboot_fw_update                       ,0xffe027fc) //106
 NHSTUB(set_control_event                      ,0xffc65804) //111
-NHSTUB(srand                                  ,0xffc0ccb8) //  1
+NHSTUB(srand                                  ,0xffc0ccb8) //122
 NHSTUB(strcat                                 ,0xffc75668) //  1
 NHSTUB(strchr                                 ,0xffc756f0) //  1
 NHSTUB(strcmp                                 ,0xffc0cb54) //120

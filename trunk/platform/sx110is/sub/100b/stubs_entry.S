@@ -19,7 +19,6 @@
 //NHSTUB(GetBatteryTemperature                ,0xffc3885c) //102        *** != 0xffc387ec
 //NHSTUB(LEDDrive                             ,0xffc35930) //120        *** != 0xffd17758
 //NHSTUB(kbd_pwr_off                          ,0xffc36434) //  2 60%    *** != 0xffc36444
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0xffc3642c
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffe1421c -> ffedd5f4
@@ -211,11 +210,11 @@ NHSTUB(open                                   ,0xffc09ea0) //109
 NHSTUB(OpenFastDir                            ,0xffdf3524) //  1
 NHSTUB(closedir                               ,0xffdf3688) //  1
 NHSTUB(qsort                                  ,0xffd9045c) //  1
-NHSTUB(rand                                   ,0xffc0d9bc) //  1
+NHSTUB(rand                                   ,0xffc0d9bc) //121
 NHSTUB(realloc                                ,0xffc03b60) //115
 NHSTUB(reboot_fw_update                       ,0xffdf7e8c) //106
 NHSTUB(set_control_event                      ,0xffc6376c) //111
-NHSTUB(srand                                  ,0xffc0d9b0) //  1
+NHSTUB(srand                                  ,0xffc0d9b0) //122
 NHSTUB(stat                                   ,0xffc13554) //  1
 NHSTUB(strcat                                 ,0xffc74984) //  1
 NHSTUB(strchr                                 ,0xffc74a0c) //  1

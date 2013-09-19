@@ -697,6 +697,7 @@
 0xff955ca8,EnableDebugLogMode_FW
 0xff955cbc,DisableDebugLogMode_FW
 0xff959b4c,GetImageFolder
+0xff95b7d8,getImageDirName
 0xff95c284,task_MetaCtg
 0xff9621a0,task_DPOFTask
 0xff96b024,WriteSDCard

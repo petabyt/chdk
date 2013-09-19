@@ -447,6 +447,7 @@
 0xff86d928,GetGyroHPFINPitch_FW
 0xff86d984,GetGyroHPFINYaw_FW
 0xffae2428,GetHour_FW
+0xffa4ad68,getImageDirName
 0xff938a38,GetImageFolder
 0xff87ffb8,GetInternalFirmwareVersion_FW
 0xff9562dc,GetIrisAv_FW

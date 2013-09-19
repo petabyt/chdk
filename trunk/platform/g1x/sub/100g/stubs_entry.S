@@ -16,8 +16,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-// ERROR: kbd_pwr_off is not found.                        //--- ---    *** != 0x00000000
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff388df8 -> ff63a36c
@@ -138,12 +136,12 @@ NHSTUB(Fwrite_Fut                             ,0xff025fec) //120
 NHSTUB(GetBatteryTemperature                  ,0xff05de30) //102
 NHSTUB(GetCCDTemperature                      ,0xff05ddbc) //102
 NHSTUB(GetCurrentAvValue                      ,0xff1c02bc) //120
-NHSTUB(GetDrive_ClusterSize                   ,0xff06cbec) //  6
-NHSTUB(GetDrive_FreeClusters                  ,0xff06cc44) //  6
-NHSTUB(GetDrive_TotalClusters                 ,0xff06cc1c) //  6
+NHSTUB(GetDrive_ClusterSize                   ,0xff06cbec) //122
+NHSTUB(GetDrive_FreeClusters                  ,0xff06cc44) //119
+NHSTUB(GetDrive_TotalClusters                 ,0xff06cc1c) //119
 NHSTUB(GetFocusLensSubjectDistance            ,0xff1be100) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff1be550) //  3
-NHSTUB(GetImageFolder                         ,0xff19a46c) //  6
+NHSTUB(GetImageFolder                         ,0xff19a46c) //122
 NHSTUB(GetKbdState                            ,0xff05726c) //109
 NHSTUB(GetMemInfo                             ,0xff00a2b8) //115
 NHSTUB(GetOpticalTemperature                  ,0xff05dea4) //120
@@ -227,11 +225,11 @@ NHSTUB(open                                   ,0xff00ab20) //109
 NHSTUB(OpenFastDir                            ,0xff34c9e0) //115
 NHSTUB(closedir                               ,0xff34c990) //121
 NHSTUB(qsort                                  ,0xff3cbc24) //  6
-NHSTUB(rand                                   ,0xff29f49c) //  6
+NHSTUB(rand                                   ,0xff29f49c) //121
 NHSTUB(realloc                                ,0xff29f3dc) //115
 NHSTUB(reboot_fw_update                       ,0xff352288) //106
 NHSTUB(set_control_event                      ,0xff09669c) //111
-NHSTUB(srand                                  ,0xff29f490) //  6
+NHSTUB(srand                                  ,0xff29f490) //122
 NHSTUB(stat                                   ,0xff0266bc) //109
 NHSTUB(strcat                                 ,0xff0b498c) //  1
 NHSTUB(strchr                                 ,0xff0040d8) //  1

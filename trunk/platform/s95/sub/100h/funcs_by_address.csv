@@ -973,6 +973,7 @@
 0xffab7428,StartSoundPlay_FW
 0xffab7460,InitializeSoundRec_FW
 0xffab74b0,TerminateSoundRec_FW
+0xffabf4b0,getImageDirName
 0xffad1010,task_FileScheduleTask
 0xffad200c,task_FileWrite
 0xffad200c,task_FileWriteTask

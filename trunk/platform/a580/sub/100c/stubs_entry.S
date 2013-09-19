@@ -206,11 +206,11 @@ NHSTUB(open                                   ,0xffc09ec4) //109
 NHSTUB(OpenFastDir                            ,0xffdce7d0) //  1
 NHSTUB(closedir                               ,0xffdce934) //  1
 NHSTUB(qsort                                  ,0xffd7133c) //  1
-NHSTUB(rand                                   ,0xffc0da14) //  1
+NHSTUB(rand                                   ,0xffc0da14) //121
 NHSTUB(realloc                                ,0xffc03b78) //115
 NHSTUB(reboot_fw_update                       ,0xffdd3138) //106
 NHSTUB(set_control_event                      ,0xffc5c2f8) //  1
-NHSTUB(srand                                  ,0xffc0da08) //  1
+NHSTUB(srand                                  ,0xffc0da08) //122
 NHSTUB(stat                                   ,0xffc13d88) //  1
 NHSTUB(strcat                                 ,0xffc6f4f4) //  1
 NHSTUB(strchr                                 ,0xffc6f57c) //  1

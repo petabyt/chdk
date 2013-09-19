@@ -933,6 +933,7 @@
 0xffa412e0,TerminateFAGeneralTest_FW
 0xffa412e8,InitializeFAExtendFile_FW
 0xffa412f8,TerminateFAExtendFile_FW
+0xffa471a4,getImageDirName
 0xffa4d0f8,task_FORMAT_TASK_PROGRESS
 0xffa4d2d8,task_FORMAT_TASK_NAME
 0xffa513dc,task_FileScheduleTask

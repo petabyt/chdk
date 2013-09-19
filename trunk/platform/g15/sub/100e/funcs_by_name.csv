@@ -492,6 +492,7 @@
 0xff08100c,GetGyroHPFINYaw_FW
 0xff38ec08,GetGyroNoiseData_FW
 0xff431e60,GetHour_FW
+0xff1b34c0,getImageDirName
 0xff1b1544,GetImageFolder
 0xff06108c,GetInputAverageLevel_FW
 0xff0984f4,GetInternalFirmwareVersion_FW

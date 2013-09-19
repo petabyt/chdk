@@ -72,8 +72,7 @@ REM
 "    MOV     R0, #2097152 \n" // 10 mins
 <<<
 FW 97
-REM
-REM
+SKIP 2
 FW $
 ENDASM
 ENDFUNC

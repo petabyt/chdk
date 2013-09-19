@@ -20,8 +20,6 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(DeleteFile_Fut                       ,0xff830e44) //  1 90%        == 0xff830e44
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff831954
-//NHSTUB(kbd_pwr_off                          ,0xff8569fc) //  2 60%    *** != 0x00000000
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 // ERROR: rand is not found.                               //--- ---    *** != 0x00000000
 // ERROR: srand is not found.                              //--- ---    *** != 0x00000000
 
@@ -138,12 +136,12 @@ NHSTUB(Fwrite_Fut                             ,0xff831050) //120
 NHSTUB(GetBatteryTemperature                  ,0xff8589e0) //102
 NHSTUB(GetCCDTemperature                      ,0xff85896c) //102
 NHSTUB(GetCurrentAvValue                      ,0xff956250) //120
-NHSTUB(GetDrive_ClusterSize                   ,0xff8664cc) //  6
-NHSTUB(GetDrive_FreeClusters                  ,0xff866524) //  6
-NHSTUB(GetDrive_TotalClusters                 ,0xff8664fc) //  6
+NHSTUB(GetDrive_ClusterSize                   ,0xff8664cc) //122
+NHSTUB(GetDrive_FreeClusters                  ,0xff866524) //119
+NHSTUB(GetDrive_TotalClusters                 ,0xff8664fc) //119
 NHSTUB(GetFocusLensSubjectDistance            ,0xff955450) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff9558a0) //  3
-NHSTUB(GetImageFolder                         ,0xff9389ac) //  6
+NHSTUB(GetImageFolder                         ,0xff9389ac) //122
 NHSTUB(GetKbdState                            ,0xff8569ec) //109
 NHSTUB(GetMemInfo                             ,0xff81509c) //115
 NHSTUB(GetOpticalTemperature                  ,0xff858a54) //120

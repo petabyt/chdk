@@ -434,6 +434,7 @@
 0xff87d54c,GetGyroHPFINPitch_FW
 0xff87d5a8,GetGyroHPFINYaw_FW
 0xffb573bc,GetHour_FW
+0xff958b8c,getImageDirName
 0xff956f00,GetImageFolder
 0xff97902c,GetIrisAv_FW
 0xffae8368,GetISCrossTalkComp_FW

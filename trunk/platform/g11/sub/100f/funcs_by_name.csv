@@ -399,6 +399,7 @@
 0xff877208,GetGyroHPFINYaw_FW
 0xffaa13a0,GetGyroNoiseData_FW
 0xffb0770c,GetHour_FW
+0xffa70c20,getImageDirName
 0xff93d570,GetImageFolder
 0xff95c14c,GetIrisAv_FW
 0xff95c308,GetIrisCurrentPosition_FW

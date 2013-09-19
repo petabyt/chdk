@@ -717,6 +717,7 @@
 0xff160944,DisableDebugLogMode_FW
 0xff162958,task_dccdCalcTask
 0xff1669bc,GetImageFolder
+0xff1689c4,getImageDirName
 0xff169758,task_MetaCtg
 0xff1708b0,task_DPOFTask
 0xff1727d0,File.ClearExifInfo_FW
