@@ -116,7 +116,7 @@ int vid_get_viewport_xoffset()
     {
         return 0;
     }
-    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == MODE_STITCH) // Stitch mode
     {
         return 0;
     }
@@ -132,7 +132,7 @@ int vid_get_viewport_display_xoffset()
     {
         return 0;
     }
-    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16909) // Stitch mode
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == MODE_STITCH)
     {
         if (shooting_get_prop(PROPCASE_STITCH_DIRECTION) == 0)      // Direction check
             if (shooting_get_prop(PROPCASE_STITCH_SEQUENCE) == 0)   // Shot already taken?
@@ -172,11 +172,11 @@ static int vp_yoffset(int stitch)
     {
         return 0;
     }
-    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == 16908) // Stitch mode
+    else if (shooting_get_prop(PROPCASE_SHOOTING_MODE) == MODE_STITCH)
     {
         return stitch;
     }
-    else if (mode_is_video(m))
+    else if (mode_is_video(m) || movie_status == VIDEO_RECORD_IN_PROGRESS)
     {
         return 30;
     }
