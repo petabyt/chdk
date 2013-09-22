@@ -74,9 +74,9 @@
    
     #define CAM_JPEG_WIDTH                      4000
     #define CAM_JPEG_HEIGHT                     3000
-    #define CAM_ACTIVE_AREA_X1                  96
-    #define CAM_ACTIVE_AREA_Y1                  24
-    #define CAM_ACTIVE_AREA_X2                  4168
+    #define CAM_ACTIVE_AREA_X1                  92
+    #define CAM_ACTIVE_AREA_Y1                  16
+    #define CAM_ACTIVE_AREA_X2                  4164
     #define CAM_ACTIVE_AREA_Y2                  3060
 
     #define PARAM_CAMERA_NAME                   4   // parameter number for GetParameterData - Camera Model name
