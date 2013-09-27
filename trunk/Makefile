@@ -239,6 +239,12 @@ os-camera-list-entry:
 #                                 camera define the alternate firmware here. see COPY_TO comments above.
 # - skip auto build (optional) :- any value in this column will exclude the camera/firmware from the auto build
 
+batch: version
+	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firsub $(CAMERA_LIST) -noskip
+	@echo "**** Summary of memisosizes"
+	cat $(topdir)bin/caminfo.txt
+	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
+
 batch-zip: version alltools allmodules
 	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firzipsub $(CAMERA_LIST)
 	@echo "**** Summary of memisosizes"
