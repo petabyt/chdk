@@ -80,7 +80,7 @@ int load_dump(const char *dumpname,const char *base, dump_t *dump)
 	size_t rcnt;
 
 	dump->base=strtoul(base,NULL,0);
-	if(dump->base != 0xFFC00000 && dump->base != 0xFF810000 && dump->base != 0xFF000000) {
+	if(dump->base != 0xFFC00000 && dump->base != 0xFF810000 && dump->base != 0xFF000000 && dump->base != 0xF8000000) {
 		fprintf(stderr,"error base '%s' %x\n",base,dump->base);
 		return 0;
 	}
