@@ -153,8 +153,8 @@
 
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                     74 // Override min subject distance
-    //#undef  CAMERA_MAX_DIST
-    //#define CAMERA_MAX_DIST                     8881   // TODO -1? // Override max subject distance
+    #undef  CAMERA_MAX_DIST
+    #define CAMERA_MAX_DIST                     131579  // Override max subject distance
 
     #define MKDIR_RETURN_ONE_ON_SUCCESS         1       // mkdir() return 1 on success, 0 on fail.
 
