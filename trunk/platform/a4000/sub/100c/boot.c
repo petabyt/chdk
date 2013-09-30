@@ -146,7 +146,7 @@ void __attribute__((naked,noinline)) sub_FF810380_my() {
 	// C0220048  a4000.100c ??
     // C02200F8  a4000.100c sub_ff81a6ac : C0220000 (@ff81a6b4) + 0xF8 (@ff81a6fc)
     // 0x24B0    a4000.100c loc_ff856420
-    if ((*(int*) 0xC0220048) & 1)                 // look at power-on switch
+    if ((*(int*) 0xC02200F8) & 1)                 // look at power-on switch
             *(int*)(0x24B0+4) = 0x200000;         // start in play mode
     else
             *(int*)(0x24B0+4) = 0x100000;         // start in rec mode    
