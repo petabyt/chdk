@@ -44,7 +44,6 @@ static KeyMap keymap[] = {
 	// always pressed if KEY_SHOOT_FULL is.
     { 0, KEY_ZOOM_IN         ,0x00002000 }, // Found @0xffb0f590, levent 0x02
     { 0, KEY_ZOOM_OUT        ,0x00001000 }, // Found @0xffb0f588, levent 0x03
-    { 1, KEY_PRINT           ,0x80000000 }, // KEY Playback for ALT menu
     { 1, KEY_PLAYBACK        ,0x80000000 }, // Found @0xffb0f5f0, levent 0x101
     { 1, KEY_SHOOT_FULL      ,0x00300000 }, // Found @0xffb0f5a0, levent 0x01
     { 1, KEY_SHOOT_FULL_ONLY ,0x00200000 }, // Found @0xffb0f5a0, levent 0x01
