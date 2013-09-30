@@ -58,6 +58,9 @@
     #define DNG_EXT_FROM                    ".DPS"
 	
 	#define REMOTE_SYNC_STATUS_LED 	0xc022006C		// specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_USB_EVENTID_VXWORKS             0x1085 // LogicalEvent ID for ConnectUSBCable, needed to enable USB mode switch
+                                                       // NOTE switching back to play reportedly does not work on this camera
 	
 //----------------------------------------------------------
 
