@@ -7,4 +7,7 @@ Camera depending notes:
 - G7 supports Multipartition
 - G7 has an ND Filter AND real iris diaphragm (which can be set via photo overrides)
 
+Known issues
+- If you switching to record mode while USB is connected using the CHDK extension,
+  you may not be able to return to playback mode.
 
