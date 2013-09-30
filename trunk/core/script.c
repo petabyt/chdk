@@ -23,7 +23,7 @@ static AS_ID running_script_stack_name = 0;     // ID of action_stack, which use
 
 //-------------------------------------------------------------------
 // script terminate key, may be set from script
-static int script_terminate_key;
+static int script_terminate_key = KEY_SHOOT_FULL;
 static char script_terminate_key_name[20]; // TODO this is only here because there's no easy way to map key number back to name
 
 // Forward references
