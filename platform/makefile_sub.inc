@@ -18,13 +18,13 @@ OBJS+=main.thm.o gui_draw.thm.o \
      gui.thm.o kbd_process.thm.o conf.thm.o gui_osd.thm.o raw.thm.o \
      shot_histogram.thm.o shooting.thm.o camera_info.thm.o remotecap.thm.o
 
-libplatformsub.a: $(OBJS) bin_compat.h
+libplatformsub.a: $(OBJS)
 
 clean:
 	rm -f *.o libplatformsub.a stubs_entry.S.err stubs_not_found_names.err
 
 distclean: clean
-	rm -f stubs_entry.S stubs_auto.S bin_compat.h
+	rm -f stubs_entry.S stubs_auto.S
 	rm -rf .dep
 
 run-code-gen:
