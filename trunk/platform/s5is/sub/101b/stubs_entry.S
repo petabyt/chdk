@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R20 (DRYOS version 2.3, release #0020)
-//   Firmware Ver GM1.01B
+//   "Firmware Ver GM1.01B"      // Found @ 0xff8738e8
+//   Firmware build timestamp: Jun 14 2007 20:11:19
 //   Canon PowerShot S5 IS
 
 // Values for makefile.inc

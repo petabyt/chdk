@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R47 (DRYOS version 2.3, release #0047)
-//   Firmware Ver GM1.01B
+//   "Firmware Ver GM1.01B"      // Found @ 0xff8938a0
+//   Firmware build timestamp: Jun 10 2011 10:48:05
 //   Canon IXUS 115 HS
 
 // Values for makefile.inc

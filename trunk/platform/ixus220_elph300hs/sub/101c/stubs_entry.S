@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R47 (DRYOS version 2.3, release #0047)
-//   Firmware Ver GM1.01C
+//   "Firmware Ver GM1.01C"      // Found @ 0xff894ef0
+//   Firmware build timestamp: May 18 2011 08:56:29
 //   Canon PowerShot ELPH 300HS
 
 // Values for makefile.inc

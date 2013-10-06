@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R43 (DRYOS version 2.3, release #0043)
-//   Firmware Ver GM1.00D
+//   "Firmware Ver GM1.00D"      // Found @ 0xff88e6bc
+//   Firmware build timestamp: Apr 13 2010 20:05:14
 //   Canon IXUS 300 HS
 
 // Values for makefile.inc

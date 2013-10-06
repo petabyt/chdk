@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R50 (DRYOS version 2.3, release #0050)
-//   Firmware Ver GM1.00C
+//   "Firmware Ver GM1.00C"      // Found @ 0xff87dc7c
+//   Firmware build timestamp: Feb 10 2012 15:58:41
 //   Canon PowerShot A2300
 
 // Values for makefile.inc

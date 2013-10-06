@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R39 (DRYOS version 2.3, release #0039)
-//   Firmware Ver GM1.01D
+//   "Firmware Ver GM1.01D"      // Found @ 0xff887c8c
+//   Firmware build timestamp: Jan  7 2010 13:46:41
 //   Canon PowerShot SD980 IS
 
 // Values for makefile.inc

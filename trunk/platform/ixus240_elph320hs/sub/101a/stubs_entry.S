@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R50 (DRYOS version 2.3, release #0050)
-//   Firmware Ver GM1.01A
+//   "Firmware Ver GM1.01A"      // Found @ 0xff0b56fc
+//   Firmware build timestamp: Apr 10 2012 14:00:03
 //   Canon PowerShot ELPH 320 HS
 
 // Values for makefile.inc

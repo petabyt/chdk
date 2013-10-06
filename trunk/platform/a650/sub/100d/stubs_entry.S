@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.00D
+//   "Firmware Ver GM1.00D"      // Found @ 0xffc59fe4
+//   Firmware build timestamp: Jul  6 2007 12:41:33
 //   Canon PowerShot A650 IS
 
 // Values for makefile.inc

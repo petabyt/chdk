@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R39 (DRYOS version 2.3, release #0039)
-//   Firmware Ver GM1.00B
+//   "Firmware Ver GM1.00B"      // Found @ 0xffc5fdec
+//   Firmware build timestamp: Jun  5 2009 17:09:33
 //   Canon PowerShot SX120 IS
 
 // Values for makefile.inc

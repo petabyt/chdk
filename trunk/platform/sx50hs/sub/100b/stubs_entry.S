@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R51 (DRYOS version 2.3, release #0051)
-//   Firmware Ver GM1.00B
+//   "Firmware Ver GM1.00B"      // Found @ 0xff09a18c
+//   Firmware build timestamp: Jul 18 2012 13:23:41
 //   Canon PowerShot SX50 HS
 
 // Values for makefile.inc

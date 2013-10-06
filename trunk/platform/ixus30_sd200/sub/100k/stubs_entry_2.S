@@ -95,3 +95,6 @@ NHSTUB(Close, 0xffac265c) // "close"
 */
 
 //NHSTUB(time, 0xff8149c8) //Time, but it works equally wrong as time
+
+// New finsig_vxworks differences?
+NHSTUB(kbd_pwr_off, 0xffa4155c)

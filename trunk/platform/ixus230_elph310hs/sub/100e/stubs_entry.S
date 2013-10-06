@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R49 (DRYOS version 2.3, release #0049)
-//   Firmware Ver GM1.00E
+//   "Firmware Ver GM1.00E"      // Found @ 0xff089300
+//   Firmware build timestamp: Nov 17 2011 13:09:06
 //   Canon IXUS 230 HS
 
 // Values for makefile.inc

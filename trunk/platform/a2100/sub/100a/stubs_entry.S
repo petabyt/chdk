@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   Firmware Ver GM1.00A
+//   "Firmware Ver GM1.00A"      // Found @ 0xffc5833c
+//   Firmware build timestamp: Jan  5 2009 15:59:12
 //   Canon PowerShot A2100 IS
 
 // Values for makefile.inc

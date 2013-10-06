@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   Firmware Ver GM1.00B
+//   "Firmware Ver GM1.00B"      // Found @ 0xffc50a30
+//   Firmware build timestamp: Dec  5 2008 17:19:05
 //   Canon PowerShot A480
 
 // Values for makefile.inc

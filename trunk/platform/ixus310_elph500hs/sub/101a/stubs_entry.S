@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R47 (DRYOS version 2.3, release #0047)
-//   Firmware Ver GM1.01A
+//   "Firmware Ver GM1.01A"      // Found @ 0xff086dd8
+//   Firmware build timestamp: Feb 14 2011 15:31:00
 //   Canon IXUS 310 HS
 
 // Values for makefile.inc

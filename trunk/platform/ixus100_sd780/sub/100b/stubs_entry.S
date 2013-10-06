@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   Firmware Ver GM1.00B
+//   "Firmware Ver GM1.00B"      // Found @ 0xff86d370
+//   Firmware build timestamp: Dec 19 2008 14:24:25
 //   Canon DIGITAL IXUS 100 IS
 
 // Values for makefile.inc

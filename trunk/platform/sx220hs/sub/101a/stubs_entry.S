@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R47 (DRYOS version 2.3, release #0047)
-//   Firmware Ver GM1.01A
+//   "Firmware Ver GM1.01A"      // Found @ 0xff0899d4
+//   Firmware build timestamp: Feb 14 2011 17:03:56
 //   Canon PowerShot SX220 HS
 
 // Values for makefile.inc

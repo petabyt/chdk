@@ -1136,7 +1136,7 @@ int main(int ac, const char * av[])
 
     // Open Firmware dump file
     fw = malloc(sizeof(firmware));
-    load_firmware(fw, av[3], av[1], (ac==5)?av[4]:0);
+    load_firmware(fw, av[3], av[1], (ac==5)?av[4]:0, OS_DRYOS);
 
     // Load function name/address values from stubs files
     fw->sv = new_stub_values();

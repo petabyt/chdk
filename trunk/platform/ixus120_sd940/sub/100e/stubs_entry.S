@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R39 (DRYOS version 2.3, release #0039)
-//   Firmware Ver GM1.00E
+//   "Firmware Ver GM1.00E"      // Found @ 0xff883a54
+//   Firmware build timestamp: Jul  2 2009 14:36:03
 //   Canon DIGITAL IXUS 120 IS
 
 // Values for makefile.inc

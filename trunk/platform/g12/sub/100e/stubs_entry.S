@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R45 (DRYOS version 2.3, release #0045)
-//   Firmware Ver GM1.00E
+//   "Firmware Ver GM1.00E"      // Found @ 0xff894554
+//   Firmware build timestamp: Sep 15 2010 08:48:05
 //   Canon PowerShot G12
 
 // Values for makefile.inc

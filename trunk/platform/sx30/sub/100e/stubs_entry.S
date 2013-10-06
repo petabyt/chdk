@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R45 (DRYOS version 2.3, release #0045)
-//   Firmware Ver GM1.00E
+//   "Firmware Ver GM1.00E"      // Found @ 0xff898a34
+//   Firmware build timestamp: Aug  4 2010 13:14:20
 //   Canon PowerShot SX30 IS
 
 // Values for makefile.inc

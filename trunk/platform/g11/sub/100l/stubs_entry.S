@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R39 (DRYOS version 2.3, release #0039)
-//   Firmware Ver GM1.00L
+//   "Firmware Ver GM1.00L"      // Found @ 0xff88c7ec
+//   Firmware build timestamp: Jan  7 2010 13:21:02
 //   Canon PowerShot G11
 
 // Values for makefile.inc

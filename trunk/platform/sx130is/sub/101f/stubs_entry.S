@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R45 (DRYOS version 2.3, release #0045)
-//   Firmware Ver GM1.01F
+//   "Firmware Ver GM1.01F"      // Found @ 0xff88c80c
+//   Firmware build timestamp: Apr 13 2011 12:54:08
 //   Canon PowerShot SX130 IS
 
 // Values for makefile.inc

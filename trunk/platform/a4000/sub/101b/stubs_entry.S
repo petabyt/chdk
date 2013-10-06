@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R50 (DRYOS version 2.3, release #0050)
-//   Firmware Ver GM1.01B
+//   "Firmware Ver GM1.01B"      // Found @ 0xff87fb50
+//   Firmware build timestamp: Jun  4 2012 17:29:26
 //   Canon PowerShot A4000 IS
 
 // Values for makefile.inc

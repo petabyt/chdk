@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R43 (DRYOS version 2.3, release #0043)
-//   Firmware Ver GM1.00C
+//   "Firmware Ver GM1.00C"      // Found @ 0xffc6b6c0
+//   Firmware build timestamp: Jan  7 2010 13:32:44
 //   Canon PowerShot A3000 IS
 
 // Values for makefile.inc
