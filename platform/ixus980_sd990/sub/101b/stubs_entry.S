@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   Firmware Ver GM1.01B
+//   "Firmware Ver GM1.01B"      // Found @ 0xff875448
+//   Firmware build timestamp: Jan  9 2009 11:22:10
 //   Canon DIGITAL IXUS 980 IS
 
 // Values for makefile.inc

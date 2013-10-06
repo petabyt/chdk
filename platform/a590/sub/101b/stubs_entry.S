@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.01B
+//   "Firmware Ver GM1.01B"      // Found @ 0xffc5cbc8
+//   Firmware build timestamp: Jan 24 2008 20:41:51
 //   Canon PowerShot A590 IS
 
 // Values for makefile.inc

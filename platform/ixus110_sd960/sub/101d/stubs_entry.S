@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   Firmware Ver GM1.01D
+//   "Firmware Ver GM1.01D"      // Found @ 0xff86e6dc
+//   Firmware build timestamp: Jan 29 2009 13:13:15
 //   Canon IXY DIGITAL 510 IS
 
 // Values for makefile.inc

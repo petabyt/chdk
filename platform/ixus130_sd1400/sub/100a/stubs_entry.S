@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R43 (DRYOS version 2.3, release #0043)
-//   Firmware Ver GM1.00A
+//   "Firmware Ver GM1.00A"      // Found @ 0xff88b250
+//   Firmware build timestamp: Dec  3 2009 20:03:45
 //   Canon IXUS 130
 
 // Values for makefile.inc

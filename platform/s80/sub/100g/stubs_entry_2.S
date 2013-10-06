@@ -35,3 +35,6 @@ NHSTUB(orig_MakeAFScan, 0xff955dd8)
 
 NHSTUB(LEDDrive, 0xFF82DBB8)
 NHSTUB(PostLEDMessage, 0xFF82D8FC)
+
+// New finsig_vxworks differences?
+NHSTUB(kbd_pwr_off, 0xff828fec)

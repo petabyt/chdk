@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R39 (DRYOS version 2.3, release #0039)
-//   Firmware Ver GM1.01C
+//   "Firmware Ver GM1.01C"      // Found @ 0xff887c3c
+//   Firmware build timestamp: Jul 30 2009 18:58:52
 //   Canon DIGITAL IXUS 200 IS
 
 // Values for makefile.inc

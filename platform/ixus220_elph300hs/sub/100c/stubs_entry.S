@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R47 (DRYOS version 2.3, release #0047)
-//   Firmware Ver GM1.00C
+//   "Firmware Ver GM1.00C"      // Found @ 0xff894ef0
+//   Firmware build timestamp: Dec 13 2010 11:33:27
 //   Canon IXUS 220 HS
 
 // Values for makefile.inc

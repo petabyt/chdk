@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   Firmware Ver GM1.02A
+//   "Firmware Ver GM1.02A"      // Found @ 0xff8768bc
+//   Firmware build timestamp: Dec  3 2008 16:23:52
 //   Canon PowerShot G10
 
 // Values for makefile.inc

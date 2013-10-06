@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R50 (DRYOS version 2.3, release #0050)
-//   Firmware Ver GM1.00B
+//   "Firmware Ver GM1.00B"      // Found @ 0xff87d840
+//   Firmware build timestamp: Feb  9 2012 16:38:54
 //   Canon PowerShot A810
 
 // Values for makefile.inc

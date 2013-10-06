@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R50 (DRYOS version 2.3, release #0050)
-//   Firmware Ver GM1.02A
+//   "Firmware Ver GM1.02A"      // Found @ 0xff0b56fc
+//   Firmware build timestamp: Jun  7 2012 15:34:12
 //   Canon IXUS 240 HS
 
 // Values for makefile.inc

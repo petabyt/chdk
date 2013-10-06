@@ -77,3 +77,7 @@ NHSTUB(tasktcb,                     0xffad2294)
 
 // Manual stubs for asm code in platform/ixus40_sd400 directory
 NHSTUB(sub_FF821D04,                0xFF821D04)
+
+// New finsig_vxworks differences?
+NHSTUB(kbd_pwr_off, 0xffa417b0)
+NHSTUB(Feof_Fut, 0xfff17328)

@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R43 (DRYOS version 2.3, release #0043)
-//   Firmware Ver GM1.00C
+//   "Firmware Ver GM1.00C"      // Found @ 0xff8900cc
+//   Firmware build timestamp: Feb  5 2010 13:36:08
 //   Canon PowerShot SX210 IS
 
 // Values for makefile.inc

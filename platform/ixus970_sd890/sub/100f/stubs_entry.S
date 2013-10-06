@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.00F
+//   "Firmware Ver GM1.00F"      // Found @ 0xff86c0a0
+//   Firmware build timestamp: Oct 28 2008 13:41:31
 //   Canon PowerShot SD890 IS
 
 // Values for makefile.inc

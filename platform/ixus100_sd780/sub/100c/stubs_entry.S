@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   Firmware Ver GM1.00C
+//   "Firmware Ver GM1.00C"      // Found @ 0xff86d370
+//   Firmware build timestamp: Jan 13 2009 08:18:45
 //   Canon PowerShot SD780 IS
 
 // Values for makefile.inc

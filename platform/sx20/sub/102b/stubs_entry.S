@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R39 (DRYOS version 2.3, release #0039)
-//   Firmware Ver GM1.02B
+//   "Firmware Ver GM1.02B"      // Found @ 0xff88e3e0
+//   Firmware build timestamp: Aug  4 2009 15:10:37
 //   Canon PowerShot SX20 IS
 
 // Values for makefile.inc

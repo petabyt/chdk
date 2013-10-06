@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.00C
+//   "Firmware Ver GM1.00C"      // Found @ 0xff868588
+//   Firmware build timestamp: Jul 20 2007 18:32:15
 //   Canon DIGITAL IXUS 860 IS
 
 // Values for makefile.inc

@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R45 (DRYOS version 2.3, release #0045)
-//   Firmware Ver GM1.00F
+//   "Firmware Ver GM1.00F"      // Found @ 0xff894e28
+//   Firmware build timestamp: Sep  7 2010 17:48:22
 //   Canon IXUS 1000HS
 
 // Values for makefile.inc

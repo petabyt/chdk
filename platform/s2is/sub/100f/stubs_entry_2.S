@@ -44,3 +44,6 @@ NHSTUB(SetZoomActuatorSpeedPercent, 0xFFA88178)
 NHSTUB(UniqueLedOff,                0xFF82EC54)
 NHSTUB(UniqueLedOn,                 0xFF82EBDC)
 NHSTUB(platformsub_kbd_fetch_data,  0xFF829F8C)
+
+// New finsig_vxworks differences?
+NHSTUB(kbd_pwr_off, 0xff82ae84)

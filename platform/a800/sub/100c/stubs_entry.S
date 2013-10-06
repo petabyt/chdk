@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R47 (DRYOS version 2.3, release #0047)
-//   Firmware Ver GM1.00C
+//   "Firmware Ver GM1.00C"      // Found @ 0xffc6ab10
+//   Firmware build timestamp: Jun  8 2011 12:06:11
 //   Canon PowerShot A800
 
 // Values for makefile.inc

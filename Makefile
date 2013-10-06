@@ -211,7 +211,7 @@ print-missing-dump:
 rebuild-stubs:
 	if [ -s $(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN ] ; then \
 		echo "rebuild stubs for $(PLATFORM)-$(PLATFORMSUB)" ;\
-		$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) stubs_entry.S ;\
+		$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) stubs_entry.S bin_compat.h ;\
 	else \
 		echo "!!! missing primary for $(PLATFORM)-$(PLATFORMSUB)"; \
 	fi

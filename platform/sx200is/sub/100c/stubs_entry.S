@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   Firmware Ver GM1.00C
+//   "Firmware Ver GM1.00C"      // Found @ 0xff8733d4
+//   Firmware build timestamp: Jan 28 2009 14:08:40
 //   Canon PowerShot SX200 IS
 
 // Values for makefile.inc

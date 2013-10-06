@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R45 (DRYOS version 2.3, release #0045)
-//   Firmware Ver GM1.02B
+//   "Firmware Ver GM1.02B"      // Found @ 0xff894e54
+//   Firmware build timestamp: Nov 15 2010 17:58:29
 //   Canon PowerShot SD4500 IS
 
 // Values for makefile.inc

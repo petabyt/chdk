@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.02C
+//   "Firmware Ver GM1.02C"      // Found @ 0xffc56538
+//   Firmware build timestamp: Apr  3 2008 14:14:56
 //   Canon PowerShot A470
 
 // Values for makefile.inc

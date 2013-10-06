@@ -390,7 +390,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "CancelTimer", OPTIONAL|UNUSED },
     { "CancelHPTimer", OPTIONAL|UNUSED },
     { "SetHPTimerAfterTimeout", OPTIONAL|UNUSED },
-    { "SetHPTimerAfterNow", OPTIONAL|UNUSED }, 
+    { "SetHPTimerAfterNow", OPTIONAL|UNUSED },
     { "CreateTaskStrictly", OPTIONAL|UNUSED },
     { "CreateMessageQueue", OPTIONAL|UNUSED },
     { "CreateRecursiveLock", OPTIONAL|UNUSED },
@@ -399,7 +399,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "CreateMessageQueueStrictly", OPTIONAL|UNUSED },
     { "CreateEventFlagStrictly", OPTIONAL|UNUSED },
     { "CreateBinarySemaphoreStrictly", OPTIONAL|UNUSED },
-    { "CreateCountingSemaphoreStrictly", OPTIONAL|UNUSED },    
+    { "CreateCountingSemaphoreStrictly", OPTIONAL|UNUSED },
     { "CreateRecursiveLockStrictly", OPTIONAL|UNUSED },
     { "TakeSemaphoreStrictly", OPTIONAL|UNUSED }, // r23+
     { "ReceiveMessageQueueStrictly", OPTIONAL|UNUSED }, // r23+
@@ -921,8 +921,8 @@ int match_GetDrive_ClusterSize(firmware *fw, int k, uint32_t v1, uint32_t v2)
             {
                 fnd = 1;
             }
-            if ((fnd == 1) && 
-                isLDR_PC(fw,k+1) && 
+            if ((fnd == 1) &&
+                isLDR_PC(fw,k+1) &&
                 ((fwval(fw,k+2) & 0xFFF00FF0) == 0xE0800200) && ((fwval(fw,k+3) & 0xFFF00FF0) == 0xE0800100) &&
                 (fwval(fw,k+4) == 0xE5901004) && (fwval(fw,k+5) == 0xE5900008) && (fwval(fw,k+6) == 0xE0000091) &&
                 isLDMFD_PC(fw,k+7))
@@ -1281,7 +1281,7 @@ string_sig string_sigs[] =
     { 15, "ReadFastDir", "ReadFast_ERROR\n", 0x01000001 },
     { 15, "OpenFastDir", "OpenFastDir_ERROR\n", 0x01000001 },
     { 15, "realloc", "fatal error - scanner input buffer overflow", 0x01000001 },
-    { 15, "CreateBinarySemaphore", "SdPower.c", 0x01000001 }, 
+    { 15, "CreateBinarySemaphore", "SdPower.c", 0x01000001 },
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52
     { 15, "SetHPTimerAfterTimeout", "FrameRateGenerator.c", 0x01000001,          0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007 },
 
@@ -4570,6 +4570,31 @@ void find_tasks(firmware *fw)
     }
 }
 
+void find_builddate(firmware *fw)
+{
+    int j = get_saved_sig(fw,"GetBuildDate_FW");
+    if (j >= 0)
+    {
+        int idx = adr2idx(fw, func_names[j].val);
+        uint32_t adr = ADR2adr(fw, idx);
+        idx = adr2idx(fw, adr);
+        fw->fw_build_date = (char*)&fw->buf[idx];
+    }
+    else
+        fw->fw_build_date = 0;
+
+    j = get_saved_sig(fw,"GetBuildTime_FW");
+    if (j >= 0)
+    {
+        int idx = adr2idx(fw, func_names[j].val);
+        uint32_t adr = ADR2adr(fw, idx);
+        idx = adr2idx(fw, adr);
+        fw->fw_build_time = (char*)&fw->buf[idx];
+    }
+    else
+        fw->fw_build_time = 0;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Write out firmware info
@@ -4595,8 +4620,12 @@ void output_firmware_vals(firmware *fw)
     }
     else
     {
-        bprintf("//   %s",fw->firmware_ver_str);
-        bprintf("\n");
+        bprintf("//   \"%s\"      // Found @ 0x%08x\n",fw->firmware_ver_str,idx2adr(fw,fw->fwver_idx));
+    }
+
+    if (fw->fw_build_date != 0)
+    {
+        bprintf("//   Firmware build timestamp: %s %s\n",fw->fw_build_date, (fw->fw_build_time==0)?"":fw->fw_build_time);
     }
 
     if (fw->fsize > (fw->size + 256))
@@ -4620,6 +4649,10 @@ void output_firmware_vals(firmware *fw)
     if (fw->pid != 0)
     {
         bprintf("//   PLATFORMID = %d (0x%04x) // Found @ 0x%08x\n",fw->pid,fw->pid,idx2adr(fw,fw->pid_idx));
+    }
+    else
+    {
+        bprintf("//   PLATFORMID = ?           // Not found @ 0x%08x\n",idx2adr(fw,fw->pid_idx));
     }
 
     if (fw->maxram != 0)
@@ -4727,7 +4760,9 @@ int main(int argc, char **argv)
     bprintf("// !!! THIS FILE IS GENERATED. DO NOT EDIT. !!!\n");
     bprintf("#include \"stubs_asm.h\"\n\n");
 
-    load_firmware(&fw,argv[1],argv[2],(argc==5)?argv[4]:0);
+    load_firmware(&fw,argv[1],argv[2],(argc==5)?argv[4]:0, OS_DRYOS);
+    find_eventprocs(&fw);
+    find_builddate(&fw);
     output_firmware_vals(&fw);
 
     out_hdr = 1;
@@ -4737,7 +4772,6 @@ int main(int argc, char **argv)
     bprintf("// Stubs below matched 100%%.\n");
     bprintf("//    Name                                     Address                Comp to stubs_entry_2.S\n");
 
-    find_eventprocs(&fw);
     find_tasks(&fw);
 
     for (k = 0; k < max_find_func; k++)

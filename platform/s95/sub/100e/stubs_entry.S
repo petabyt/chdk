@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R45 (DRYOS version 2.3, release #0045)
-//   Firmware Ver GM1.00E
+//   "Firmware Ver GM1.00E"      // Found @ 0xff895480
+//   Firmware build timestamp: Jul 24 2010 21:24:11
 //   Canon PowerShot S95
 
 // Values for makefile.inc

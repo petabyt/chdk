@@ -48,3 +48,6 @@ NHSTUB(kbd_p1_1,                    0xFF8291F0)
 NHSTUB(kbd_p1_2,                    0xFF829258)
 NHSTUB(kbd_p1_3,                    0xFF82963C)
 NHSTUB(platformsub_kbd_fetch_data,  0xFF8297A8)
+
+// New finsig_vxworks differences?
+NHSTUB(kbd_pwr_off, 0xff82a120)

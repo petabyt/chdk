@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R52 (DRYOS version 2.3, release #0052)
-//   Firmware Ver GM1.00A
+//   "Firmware Ver GM1.00A"      // Found @ 0xff0c1640
+//   Firmware build timestamp: Nov 28 2012 14:48:51
 //   Canon PowerShot ELPH 130 IS
 
 // Values for makefile.inc

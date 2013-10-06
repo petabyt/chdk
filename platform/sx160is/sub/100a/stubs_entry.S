@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R51 (DRYOS version 2.3, release #0051)
-//   Firmware Ver GM1.00A
+//   "Firmware Ver GM1.00A"      // Found @ 0xff8941c8
+//   Firmware build timestamp: Jun 20 2012 13:39:37
 //   Canon PowerShot SX160 IS
 
 // Values for makefile.inc

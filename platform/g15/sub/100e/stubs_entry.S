@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R51 (DRYOS version 2.3, release #0051)
-//   Firmware Ver GM1.00E
+//   "Firmware Ver GM1.00E"      // Found @ 0xff09871c
+//   Firmware build timestamp: Oct 19 2012 15:26:54
 //   Canon PowerShot G15
 
 // Values for makefile.inc
