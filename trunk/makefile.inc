@@ -103,6 +103,9 @@ else
   SORT = sort
 endif
 
+# detect GNU Awk, which needs an extra switch to handle hex input
+AWK_OPT_NONDECIMAL:=$(shell if [ `awk -Wv | grep -c "GNU Awk"` -ne 0 ] ; then echo "--non-decimal-data"; fi)
+
 ##########################################################################
 ##########################################################################
 ##########################################################################
