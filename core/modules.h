@@ -61,4 +61,8 @@
 //--------------------------
 #include "script_api.h"
 
+// MODULE "eyefi"
+//--------------------------
+#include "eyefi.h"
+
 #endif

@@ -24,7 +24,7 @@ LDOPTS+=-Wl,-N,-Ttext,0x24 -r -Wl,-d
 FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt \
      _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop.flt \
      txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt _tbox.flt _osd_le.flt \
-     _hexbox.flt ubasic.flt lua.flt cpuinfo.flt useredit.flt
+     _hexbox.flt ubasic.flt lua.flt cpuinfo.flt useredit.flt eyefi.flt
 
 all: $(FLTS)
 
@@ -82,6 +82,7 @@ sudoku.flt: gui_sudoku.o
 
 gui_calendar.o: gui_calendar.c simple_module.c
 gui_bench.o: gui_bench.c simple_module.c
+eyefi.o: eyefi.c simple_module.c
 
 gui_4wins.o: games/gui_4wins.c games/simple_game.c
 gui_mastermind.o: games/gui_mastermind.c games/simple_game.c
@@ -95,6 +96,8 @@ ubasic.flt: ubasic.o script_key_funcs.o $(topdir)lib/ubasic/libubasic.a
 lua.flt: luascript.o script_key_funcs.o cordic_math.o dbg_dump.o $(topdir)lib/lua/liblua.a
 
 cpuinfo.flt: cpuinfo.o cpuinfo_arm.o 
+
+eyefi.flt: eyefi.o md5.o sha1.o
 
 clean:
 	rm -f *.o .o/*.* *.flt *.dump
