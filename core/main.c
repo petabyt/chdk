@@ -241,16 +241,10 @@ void core_spytask()
                 histogram_process();
 
 #ifdef OPT_EDGEOVERLAY
-            if(((gui_get_mode()==GUI_MODE_NONE) || (gui_get_mode()==GUI_MODE_ALT)) && conf.edge_overlay_thresh && conf.edge_overlay_enable)
+            if (((gui_get_mode()==GUI_MODE_NONE) || (gui_get_mode()==GUI_MODE_ALT)) && conf.edge_overlay_thresh && conf.edge_overlay_enable)
             {
                 // We need to skip first tick because stability
-                static int skip_counter=1;
-
-                if (skip_counter>0)
-                {
-                    skip_counter--;
-                }
-                else
+                if (chdk_started_flag)
                 {
                     libedgeovr->edge_overlay();
                 }

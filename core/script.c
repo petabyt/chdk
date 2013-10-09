@@ -142,17 +142,17 @@ void script_set_terminate_key(int key, const char *keyname)
 
 void script_get_alt_text(char *buf)
 {
-   if(script_terminate_key == KEY_SHOOT_FULL)
-   {
+    if ((script_terminate_key == KEY_SHOOT_FULL) || (gui_get_mode() != GUI_MODE_SCRIPT))
+    {
         strcpy(buf,"<ALT>"); // TODO maybe it should be SCRIPT?
-   }
-   else
-   {
-       sprintf(buf,"<EXIT=%s>",script_terminate_key_name);
-   }
+    }
+    else
+    {
+        sprintf(buf,"<EXIT=%s>",script_terminate_key_name);
+    }
 }
-// Main button processing for CHDK Script mode
 
+// Main button processing for CHDK Script mode
 
 static int gui_script_kbd_process()
 {
