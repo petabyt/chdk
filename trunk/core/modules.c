@@ -668,3 +668,41 @@ libtxtread_sym default_libtxtread =
 
 // Library pointer
 libtxtread_sym* libtxtread = &default_libtxtread;
+
+
+/************* MODULE EYEFI ******/
+
+#define MODULE_NAME_EYEFI "eyefi.flt"
+
+// Forward reference
+extern libeyefi_sym default_libeyefi;
+
+module_handler_t h_eyefi=
+{
+    (base_interface_t**)&libeyefi,
+    &default_libeyefi.base,
+    SIMPLE_MODULE_VERSION,
+    MODULE_NAME_EYEFI
+};
+
+// Default (unloaded) function
+static int default_eyefi_init()
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_eyefi))
+	    if (libeyefi->init)
+		return libeyefi->init();
+
+    // Failure
+    return 0;
+}
+
+// Default library - module unloaded
+libeyefi_sym default_libeyefi=
+{
+    { 0,0,0,0,0 },
+    default_eyefi_init
+};
+
+// Library pointer
+libeyefi_sym* libeyefi= &default_libeyefi;

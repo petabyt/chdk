@@ -45,6 +45,7 @@
             &libfselect,
             &libmpopup,
             &libtxtread,
+            &libeyefi,
             &libhexbox,
 
             &altGuiHandler,
