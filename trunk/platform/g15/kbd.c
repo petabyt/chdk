@@ -16,7 +16,7 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 extern void _GetKbdState(long*);
 
-#define KEYS_MASK0 (0x003CF800)
+#define KEYS_MASK0 (0x003EFC00)
 #define KEYS_MASK1 (0x00000000)
 #define KEYS_MASK2 (0x000C8800)
 
@@ -35,6 +35,8 @@ int get_usb_bit()
 }
 
 static KeyMap keymap[] = {
+    { 0, KEY_METERING     ,0x00000400 }, 
+    { 0, KEY_AE_LOCK       ,0x00020000 }, 
     { 0, KEY_SET             ,0x00000800 }, // Found @0xff4a0d2c, levent 0x08
     { 0, KEY_RIGHT           ,0x00001000 }, // Found @0xff4a0d34, levent 0x07
     { 0, KEY_DOWN            ,0x00002000 }, // Found @0xff4a0d3c, levent 0x05

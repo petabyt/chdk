@@ -20,6 +20,7 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
+    #define SHORTCUT_TOGGLE_RAW	KEY_METERING
     #define CAM_PROPSET                         5
     #define CAM_DRYOS                           1
     #define CAM_DRYOS_2_3_R39                   1
@@ -37,8 +38,9 @@
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
 
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
-    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video", "Display" }
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
+    #define CAM_ALT_BUTTON_NAMES                { "Shrtcut", "Video", "Meter", "AE Lock", "Erase" }
+    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY, KEY_AE_LOCK, KEY_ERASE }
+    #define CAM_DISP_BUTTON_NAME                "METER"
 
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
