@@ -958,49 +958,48 @@ static int gui_std_kbd_process()
 //-------------------------------------------------------------------
 int osd_visible(unsigned int playmode)
 {
-    if ( conf.hide_osd == 0 ) return(1) ;
-
-    if( !camera_info.state.is_shutter_half_press)
+    if ( conf.show_osd )
     {
-        if (playmode == MODE_REC)
+        if ( conf.hide_osd == 0 ) return 1;
+
+        if (!camera_info.state.is_shutter_half_press)
         {
-            if ( conf.hide_osd < 2 ) return( 1 ) ;
+            if (playmode == MODE_REC)
+            {
+                if ( conf.hide_osd < 2 ) return 1;
 
 #if defined(PARAM_DISPLAY_MODE1) && defined(PARAM_DISPLAY_MODE2)
-
-			short disp_key_mode ;
-			if (recreview_hold==0)
-			{	
-				if ( shooting_get_display_mode() == 0) return( 1 );			
-			}
-			else
-			{
-				if (conf.show_osd_in_review )
-				{
-					get_parameter_data(PARAM_DISPLAY_MODE2, &disp_key_mode, 2);		
-					if (disp_key_mode == 0 ) return( 1 ) ;
-				}
-			}
-		}
-		else
-		{
-			if (conf.hide_osd == 2 ) 
-			{	
-				short disp_key_mode ;
-
-                get_parameter_data(PARAM_DISPLAY_MODE1, &disp_key_mode, 2);
-                if (disp_key_mode == 1 ) return( 1 ) ;
+                short disp_key_mode ;
+                if (recreview_hold == 0)
+                {	
+                    if (shooting_get_display_mode() == 0) return 1;
+                }
+                else
+                {
+                    if (conf.show_osd_in_review)
+                    {
+                        get_parameter_data(PARAM_DISPLAY_MODE2, &disp_key_mode, 2);
+                        if (disp_key_mode == 0) return 1;
+                    }
+                }
             }
+            else
+            {
+                if (conf.hide_osd == 2 )
+                {
+                    short disp_key_mode ;
+                    get_parameter_data(PARAM_DISPLAY_MODE1, &disp_key_mode, 2);
+                    if (disp_key_mode == 1) return 1;
+                }
+            }
+#else
+                if (shooting_get_display_mode() == 0) return 1;
+            }
+#endif
         }
     }
-#else
-			if ( shooting_get_display_mode() == 0) return 1;
-		}
-	}
-#endif		
 
     return 0;
-
 }
 
 //-------------------------------------------------------------------
@@ -1231,9 +1230,11 @@ void gui_draw_osd()
     
     mode_video = MODE_IS_VIDEO(m);
     mode_photo = ((m&MODE_MASK) == MODE_PLAY) || !(mode_video || (m&MODE_SHOOTING_MASK)==MODE_STITCH);
-    
-    if (((camera_info.state.is_shutter_half_press && (conf.show_histo==SHOW_HALF)) || 
-         ((conf.show_histo==SHOW_ALWAYS) && (recreview_hold==0))) && 
+
+    int is_osd_visible = osd_visible(m & MODE_MASK);
+
+    if (((camera_info.state.is_shutter_half_press && (conf.show_histo==SHOW_HALF)) ||
+         ((conf.show_histo==SHOW_ALWAYS) && (recreview_hold==0))) &&
         (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH))
     {
         gui_osd_draw_histo();
@@ -1248,32 +1249,36 @@ void gui_draw_osd()
               (mode_photo || (m&MODE_SHOOTING_MASK)==MODE_STITCH)) ||
              ((mode_video || is_video_recording()) && conf.show_values_in_video)))
         {
-           if (conf.show_dof!=DOF_DONT_SHOW)
+           if (conf.show_dof != DOF_DONT_SHOW)
                gui_osd_calc_dof();
-           if ((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX))
-               gui_osd_draw_dof();  
-           if (conf.values_show_real_iso || conf.values_show_market_iso || conf.values_show_ev_seted || conf.values_show_ev_measured || 
+           if ((conf.show_dof == DOF_SHOW_IN_DOF) || (conf.show_dof == DOF_SHOW_IN_DOF_EX))
+               gui_osd_draw_dof();
+
+           if (conf.values_show_real_iso || conf.values_show_market_iso || conf.values_show_ev_seted || conf.values_show_ev_measured ||
                conf.values_show_bv_measured || conf.values_show_bv_seted || conf.values_show_overexposure || conf.values_show_canon_overexposure || conf.values_show_luminance)
-               gui_osd_calc_expo_param();           	           
+               gui_osd_calc_expo_param();           	
         }
 
         if (conf.show_state)
             gui_osd_draw_state();
 
-        if (conf.save_raw && conf.show_raw_state && !mode_video && (!camera_info.state.is_shutter_half_press))
-            gui_osd_draw_raw_info();
-        
-        if ((conf.show_values==SHOW_ALWAYS && mode_photo) || 
-            ((mode_video || is_video_recording()) && conf.show_values_in_video) || 
-            ((camera_info.state.is_shutter_half_press || (recreview_hold==1)) && (conf.show_values==SHOW_HALF)))
-            gui_osd_draw_values(1);
-        else if (shooting_get_common_focus_mode() && mode_photo && conf.show_values && !((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX)))   
-            gui_osd_draw_values(2);
-        else if (conf.show_values==SHOW_HALF)
-            gui_osd_draw_values(0);   
+        if (is_osd_visible)
+        {
+            if (conf.save_raw && conf.show_raw_state && !mode_video && (!camera_info.state.is_shutter_half_press))
+                gui_osd_draw_raw_info();
+
+            if ((conf.show_values==SHOW_ALWAYS && mode_photo) ||
+                ((mode_video || is_video_recording()) && conf.show_values_in_video) ||
+                ((camera_info.state.is_shutter_half_press || (recreview_hold==1)) && (conf.show_values==SHOW_HALF)))
+                gui_osd_draw_values(1);
+            else if (shooting_get_common_focus_mode() && mode_photo && conf.show_values && !((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX)))
+                gui_osd_draw_values(2);
+            else if (conf.show_values==SHOW_HALF)
+                gui_osd_draw_values(0);
+        }
     }
 
-    if ( osd_visible(m&MODE_MASK) )  
+    if (is_osd_visible)
     {
         gui_batt_draw_osd();
         gui_space_draw_osd();
@@ -1289,8 +1294,10 @@ void gui_draw_osd()
 
     if ( conf.show_clock )
     {
-        if ( osd_visible(m&MODE_MASK) || ( camera_info.state.is_shutter_half_press && conf.clock_halfpress==0) ) gui_osd_draw_clock(0,0,0);
-        else if ( camera_info.state.is_shutter_half_press && conf.clock_halfpress==1 ) gui_osd_draw_seconds();
+        if ( is_osd_visible || ( camera_info.state.is_shutter_half_press && conf.clock_halfpress==0) )
+            gui_osd_draw_clock(0,0,0);
+        else if ( camera_info.state.is_shutter_half_press && conf.clock_halfpress==1 )
+            gui_osd_draw_seconds();
     }
 
     if ( conf.show_movie_time > 0 && (mode_video || is_video_recording()))
