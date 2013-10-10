@@ -28,7 +28,7 @@ DEF(physw_status                            ,0x000357a8) // Found @0xff024960
 DEF(physw_run                               ,0x00001c40) // Found @0xff0244f4
 DEF(physw_sleep_delay                       ,0x00001c48) // Found @0xff0244f4
 DEF(levent_table                            ,0xff41648c) // Found @0xff41648c
-//DEF(FlashParamsTable                        ,0xff48a6bc) // Found @0xff48a6bc, ** != ** stubs_min = 0xff48a4b8 (0xFF48A4B8)
+DEF(FlashParamsTable                        ,0xff48a6bc) // Found @0xff48a6bc
 DEF(movie_status                            ,0x00008594) // Found @0xff187064
 DEF(video_compression_rate                  ,0x000085d4) // Found @0xff187b20
 DEF(full_screen_refresh                     ,0x0000b35c) // Found @0xff23d628
