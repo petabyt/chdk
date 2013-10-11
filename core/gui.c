@@ -778,18 +778,9 @@ static void gui_lua_native_call_warning()
 static struct mpopup_item popup_eyefi[32];
 static char eyefi_selectedNetwork[65];
 static char eyefi_password[65];
-static char *eyefi_status[]={
-	"not scanning",
-	"locating network",
-	"verifying network_key",
-	"waiting for DHCP",
-	"testing conn. to server",
-	"success"
-};
 
 static void confirm_add_network_cb(unsigned int btn) {
-	int nStatus=sizeof eyefi_status/sizeof *eyefi_status,
-		n,i;
+	int n,i;
 	char s[80];
 	
 	if (btn==MBOX_BTN_YES) {
@@ -806,9 +797,9 @@ static void confirm_add_network_cb(unsigned int btn) {
 				libeyefi->close();
 				return;
 			}
-			if (libeyefi->getBuf()[0]<nStatus) {
-				gui_browser_progress_show(eyefi_status[libeyefi->getBuf()[0]],(libeyefi->getBuf()[0]*100)/nStatus);
-				if (libeyefi->getBuf()[0]==nStatus-1)
+			if (libeyefi->getBuf()[0]<=EYEFI_SUCCESS) {
+				gui_browser_progress_show(libeyefi->statusName(libeyefi->getBuf()[0]),(libeyefi->getBuf()[0]*100)/(EYEFI_SUCCESS+1));
+				if (libeyefi->getBuf()[0]==EYEFI_SUCCESS)
 					break;
 			}
 			else
@@ -816,7 +807,7 @@ static void confirm_add_network_cb(unsigned int btn) {
 		}
 	}
 
-	if (libeyefi->getBuf()[0]!=nStatus-1) {
+	if (libeyefi->getBuf()[0]!=EYEFI_SUCCESS) {
 		gui_set_need_restore();
 		gui_mbox_init(LANG_FAILED,LANG_WRONG_PASSWORD,MBOX_BTN_OK,NULL);
 		libeyefi->close();
@@ -860,6 +851,7 @@ static void select_available_network_cb(unsigned nSelected) {
 	}
 	
 	if (nSelected!=flag) {
+		libeyefi->close();
 		gui_mbox_init(LANG_ADD_NETWORK,LANG_CANNOT_FIND_NETWORK,MBOX_BTN_YES_NO|MBOX_DEF_BTN2,NULL);
 		return;
 	}
@@ -880,6 +872,7 @@ static void gui_menuproc_eyefi_available_networks()
 	
 	if (libeyefi->getAvailableNetworks()<=0) {
 		gui_mbox_init(LANG_ERROR_INITIALIZING_EYEFI,LANG_NO_EYEFI_CARD_FOUND,MBOX_BTN_OK,NULL);
+		libeyefi->close();
 		return;
 	}
 	
@@ -906,10 +899,7 @@ static void gui_menuproc_eyefi_available_networks()
 static void confirm_delete_network_cb(unsigned int btn) {
 	if (btn==MBOX_BTN_YES) {
 		int n=libeyefi->deleteNetwork(eyefi_selectedNetwork);
-		if (n<=0)
-			gui_mbox_init(LANG_SUCCESS,LANG_CANNOT_DELETE_NETWORK,MBOX_BTN_OK,NULL);
-		else
-			gui_mbox_init(LANG_SUCCESS,LANG_NETWORK_DELETED,MBOX_BTN_OK,NULL);
+		gui_mbox_init(LANG_SUCCESS,n<=0?LANG_CANNOT_DELETE_NETWORK:LANG_NETWORK_DELETED,MBOX_BTN_OK,NULL);
 	}
 	libeyefi->close();
 	gui_set_need_restore();
@@ -933,6 +923,7 @@ static void select_configured_network_cb(unsigned nSelected) {
 	
 	static char s[80];
 	if (nSelected!=flag) {
+		libeyefi->close();
 		gui_mbox_init(LANG_POPUP_DELETE,LANG_CANNOT_FIND_NETWORK,MBOX_BTN_YES_NO|MBOX_DEF_BTN2,confirm_delete_network_cb);
 		return;
 	}
@@ -953,6 +944,7 @@ static void gui_menuproc_eyefi_configured_networks()
 	}
 	
 	if (libeyefi->getConfiguredNetworks()<=0) {
+		libeyefi->close();
 		gui_mbox_init(LANG_ERROR_INITIALIZING_EYEFI,LANG_NO_EYEFI_CARD_FOUND,MBOX_BTN_OK,NULL);
 		return;
 	}
@@ -974,14 +966,13 @@ static void gui_menuproc_eyefi_wlan_off() {
 		gui_mbox_init(LANG_ERROR_INITIALIZING_EYEFI,LANG_NOT_ENOUGH_MEMORY,MBOX_BTN_OK,NULL);
 		return;
 	}
-	
-	if (libeyefi->enableWlan(0)<=0) {
-		gui_mbox_init(LANG_ERROR_INITIALIZING_EYEFI,LANG_NOT_ENOUGH_MEMORY,MBOX_BTN_OK,NULL);
-		libeyefi->close();
-		return;
-	}
+
+	int n=libeyefi->enableWlan(0);
 	libeyefi->close();
-	gui_mbox_init(LANG_SUCCESS,LANG_EYEFI_WLAN_TURNED_OFF,MBOX_BTN_OK,NULL);
+	if (n<=0)
+		gui_mbox_init(LANG_ERROR_INITIALIZING_EYEFI,LANG_NOT_ENOUGH_MEMORY,MBOX_BTN_OK,NULL);
+	else
+		gui_mbox_init(LANG_SUCCESS,LANG_EYEFI_WLAN_TURNED_OFF,MBOX_BTN_OK,NULL);
 }
 
 static void gui_menuproc_eyefi_wlan_on() {
@@ -990,13 +981,12 @@ static void gui_menuproc_eyefi_wlan_on() {
 		return;
 	}
 	
-	if (libeyefi->enableWlan(1)<=0) {
-		gui_mbox_init(LANG_ERROR_INITIALIZING_EYEFI,LANG_NOT_ENOUGH_MEMORY,MBOX_BTN_OK,NULL);
-		libeyefi->close();
-		return;
-	}
+	int n=libeyefi->enableWlan(1);
 	libeyefi->close();
-	gui_mbox_init(LANG_SUCCESS,LANG_EYEFI_WLAN_TURNED_ON,MBOX_BTN_OK,NULL);
+	if (n<=0)
+		gui_mbox_init(LANG_ERROR_INITIALIZING_EYEFI,LANG_NOT_ENOUGH_MEMORY,MBOX_BTN_OK,NULL);
+	else
+		gui_mbox_init(LANG_SUCCESS,LANG_EYEFI_WLAN_TURNED_ON,MBOX_BTN_OK,NULL);
 }
 
 static CMenuItem eyefi_submenu_items[] = {
@@ -1055,8 +1045,8 @@ static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_ENABLE_LUA_NATIVE_CALLS,    MENUITEM_BOOL|MENUITEM_ARG_CALLBACK, &conf.script_allow_lua_native_calls, (int)gui_lua_native_call_warning ),
 #endif
     MENU_ITEM   (0x33,LANG_SD_CARD,                         MENUITEM_SUBMENU,               &sdcard_submenu,                    0 ),
-#ifdef OPT_DEBUGGING
     MENU_ITEM   (0x2f,LANG_EYEFI,                           MENUITEM_SUBMENU,               &eyefi_submenu,                     0 ),
+#ifdef OPT_DEBUGGING
     MENU_ITEM   (0x2a,LANG_MENU_MAIN_DEBUG,                 MENUITEM_SUBMENU,               &debug_submenu,                     0 ),
 #endif
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0,                                  0 ),

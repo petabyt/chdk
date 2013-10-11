@@ -16,8 +16,10 @@
 // Used when function does not need to do anything
 // unless module is loaded
 
-static void dummy_void() {}
-static int  dummy_int()  { return 0; }
+static void             dummy_void()    {}
+static int              dummy_int()     { return 0; }
+static char*            dummy_pchar()   { return (char*)0; }
+static unsigned char*   dummy_puchar()  { return (unsigned char*)0; }
 
 /************* DYNAMIC LIBRARY RAWOPERATION ******/
 
@@ -677,7 +679,7 @@ libtxtread_sym* libtxtread = &default_libtxtread;
 // Forward reference
 extern libeyefi_sym default_libeyefi;
 
-module_handler_t h_eyefi=
+module_handler_t h_eyefi =
 {
     (base_interface_t**)&libeyefi,
     &default_libeyefi.base,
@@ -685,24 +687,30 @@ module_handler_t h_eyefi=
     MODULE_NAME_EYEFI
 };
 
-// Default (unloaded) function
 static int default_eyefi_init()
 {
-    // If load succeeded call module version of function
-    if (module_load(&h_eyefi))
-	    if (libeyefi->init)
-		return libeyefi->init();
-
-    // Failure
+    if (module_load(&h_eyefi) && libeyefi->init)
+    	return libeyefi->init();
     return 0;
 }
 
 // Default library - module unloaded
 libeyefi_sym default_libeyefi=
 {
-    { 0,0,0,0,0 },
-    default_eyefi_init
+	{ 0,0,0,0,0 },
+	default_eyefi_init,
+	dummy_void,         //eyefi_close
+	dummy_int,          //eyefi_getAvailableNetworks
+	dummy_int,          //eyefi_getConfiguredNetworks
+	dummy_int,          //eyefi_getNetworkStatus
+	dummy_int,          //eyefi_deleteNetwork
+	dummy_int,          //eyefi_testNetwork
+	dummy_int,          //eyefi_addNetwork
+	dummy_int,          //eyefi_enableWlan
+	dummy_int,          //eyefi_wlanEnabled
+	dummy_puchar,       //eyefi_getBuf
+	dummy_pchar         //eyefi_statusName
 };
 
 // Library pointer
-libeyefi_sym* libeyefi= &default_libeyefi;
+libeyefi_sym* libeyefi = &default_libeyefi;
