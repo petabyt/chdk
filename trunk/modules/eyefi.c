@@ -11,13 +11,21 @@
 #define log(x) console_add_line(x)
 #define Sleep(x) msleep(x)
 #include <assert.h>
-#include <stdio.h>
 #include <string.h>
 #include "eyefi.h"
 
+static int running=0;
 static unsigned char *eyefi_buf=NULL;
 static unsigned int eyefi_cmd,eyefi_cmd1=0;
 static char eyefi_path[]="A/EyeFi/";
+static char *eyefi_status[]={
+	"not scanning",
+	"locating network",
+	"verifying network_key",
+	"waiting for DHCP",
+	"testing conn. to server",
+	"success"
+};
 
 int atoh(char c)
 {
@@ -176,15 +184,16 @@ int eyefi_init() {
 			return 0;
 		}
 	}
-
+	running=1;
 	return 1;
 }
 
 void eyefi_close() {
-	if (eyefi_buf==NULL) {
+	if (eyefi_buf!=NULL) {
 		free(eyefi_buf);
 		eyefi_buf=NULL;
 	}
+	running=0;
 }
 
 struct param {
@@ -285,7 +294,7 @@ int eyefi_testNetwork(char *SSID,char *pwd) {
 int eyefi_enableWlan(int enable) {
 	struct param param;
 	memset(&param,0,sizeof param);
-	param.config.subcommand=WLAN_DISABLE;
+	param.config.subcommand=EYEFI_WLAN_DISABLE;
 	param.config.bytes=1;
 	param.config.args[0]=(unsigned char)enable;
 	eyefi_sendCommandParam('O',&param);
@@ -295,7 +304,7 @@ int eyefi_enableWlan(int enable) {
 int eyefi_wlanEnabled(int *pEnabled) {
 	struct param param;
 	memset(&param,0,sizeof param);
-	param.config.subcommand=WLAN_DISABLE;
+	param.config.subcommand=EYEFI_WLAN_DISABLE;
 	param.config.bytes=0;
 	eyefi_sendCommandParam('o',&param);
 	*pEnabled=eyefi_buf[1];
@@ -311,6 +320,12 @@ int eyefi_addNetwork(char *SSID,char *pwd) {
 	return eyefi_sendCommandParam('a',&param);
 }
 
+char *eyefi_statusName(int n) {
+	if (n<0 || n>=sizeof eyefi_status/sizeof *eyefi_status)
+		return NULL;
+	return eyefi_status[n];
+}
+
 unsigned char *eyefi_getBuf() {
 	return eyefi_buf;
 }
@@ -319,14 +334,24 @@ int basic_module_init() {
     return 1;
 }
 
-// =========  MODULE INIT =================
 
-#include "simple_module.c"
+int _module_unloader() {
+	eyefi_close();
+	return 0;
+}
+
+int _module_can_unload() {
+    return running == 0;
+}
+
+
+
+// =========  MODULE INIT =================
 
 libeyefi_sym _libeyefi =
 {
     {
-        0, 0, 0, 0, 0
+         0, _module_unloader, _module_can_unload, 0, 0
     },
 
 	eyefi_init,
@@ -339,7 +364,8 @@ libeyefi_sym _libeyefi =
 	eyefi_addNetwork,
 	eyefi_enableWlan,
 	eyefi_wlanEnabled,
-	eyefi_getBuf
+	eyefi_getBuf,
+	eyefi_statusName
 };
 
 struct ModuleInfo _module_info =
