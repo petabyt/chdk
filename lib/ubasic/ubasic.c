@@ -2013,6 +2013,41 @@ static void shutdown_statement(void){
   accept_cr();
 }
 
+static void uB_set_av96(int param){
+  shooting_set_av96( param, shooting_in_progress()?SET_NOW:SET_LATER );
+  return ;
+}
+
+static void uB_set_av96_direct(int param){
+  shooting_set_av96_direct( param, shooting_in_progress()?SET_NOW:SET_LATER );
+  return ;
+}
+
+static void uB_set_tv96(int param){
+  shooting_set_tv96( param, shooting_in_progress()?SET_NOW:SET_LATER );
+  return ;
+}
+
+static void uB_set_tv96_direct(int param){
+  shooting_set_tv96_direct( param, shooting_in_progress()?SET_NOW:SET_LATER);
+  return ;
+}
+
+static void uB_set_sv96(int param){
+  shooting_set_sv96( param, shooting_in_progress()?SET_NOW:SET_LATER );
+  return ;
+}
+
+static void uB_set_nd_filter_state(int param) {
+   shooting_set_nd_filter_state( param, shooting_in_progress()?SET_NOW:SET_LATER );
+  return ;
+}
+
+static void uB_set_iso_real(int param) {
+  shooting_set_iso_real( param, shooting_in_progress()?SET_NOW:SET_LATER );
+  return ;
+}
+
 /*---------------------------------------------------------------------------*/
 
 static void md_get_cell_diff_statement()
@@ -2255,10 +2290,10 @@ statement(void)
       break;
 #endif
   case TOKENIZER_SET_TV96_DIRECT:
-      one_short_param_plus_const_function(token, shooting_set_tv96_direct, SET_LATER);
+      one_int_param_function(token, uB_set_tv96_direct);
       break;
   case TOKENIZER_SET_TV96:
-      one_short_param_plus_const_function(token, shooting_set_tv96, SET_LATER);
+      one_int_param_function(token, uB_set_tv96);
       break;
   case TOKENIZER_PLAY_SOUND:
       one_int_param_function(token, (void (*)(int))play_sound);
@@ -2273,10 +2308,10 @@ statement(void)
       one_int_param_function(token, shooting_set_user_tv_by_id_rel);
       break;
   case TOKENIZER_SET_AV96_DIRECT:
-      one_short_param_plus_const_function(token, shooting_set_av96_direct, SET_LATER);
+      one_int_param_function(token, uB_set_av96_direct );
       break;
   case TOKENIZER_SET_AV96:
-      one_short_param_plus_const_function(token, shooting_set_av96, SET_LATER);
+      one_int_param_function(token, uB_set_av96 );
       break;
     
   case TOKENIZER_SET_USER_AV96:
@@ -2290,7 +2325,7 @@ statement(void)
       break;
    
   case TOKENIZER_SET_ND_FILTER:
-      one_short_param_plus_const_function(token, shooting_set_nd_filter_state, SET_LATER);
+      one_int_param_function(token, uB_set_nd_filter_state );
       break;
   
   case TOKENIZER_SET_ZOOM:
@@ -2319,10 +2354,10 @@ statement(void)
   //ARM End
   
   case TOKENIZER_SET_ISO_REAL:
-      one_short_param_plus_const_function(token, shooting_set_iso_real, SET_LATER);
+      one_int_param_function(token, uB_set_iso_real );
       break;
   case TOKENIZER_SET_SV96:
-      one_short_param_plus_const_function(token, shooting_set_sv96, SET_LATER);
+      one_int_param_function(token, uB_set_sv96 );
       break;
 
   case TOKENIZER_SET_ISO_MODE:

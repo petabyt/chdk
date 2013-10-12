@@ -692,13 +692,13 @@ static int luaCB_get_flash_params_count( lua_State* L )
 
 static int luaCB_set_av96_direct( lua_State* L )
 {
-  shooting_set_av96_direct( luaL_checknumber( L, 1 ), SET_LATER );
+  shooting_set_av96_direct( luaL_checknumber( L, 1 ), shooting_in_progress()?SET_NOW:SET_LATER );
   return 0;
 }
 
 static int luaCB_set_av96( lua_State* L )
 {
-  shooting_set_av96( luaL_checknumber( L, 1 ), SET_LATER );
+  shooting_set_av96( luaL_checknumber( L, 1 ), shooting_in_progress()?SET_NOW:SET_LATER );
   return 0;
 }
 
@@ -729,7 +729,7 @@ static int luaCB_set_iso_mode( lua_State* L )
 
 static int luaCB_set_iso_real( lua_State* L )
 {
-  shooting_set_iso_real( luaL_checknumber( L, 1 ), SET_LATER);
+  shooting_set_iso_real( luaL_checknumber( L, 1 ),  shooting_in_progress()?SET_NOW:SET_LATER );
   return 0;
 }
 
@@ -747,7 +747,7 @@ static int luaCB_set_led( lua_State* L )
 
 static int luaCB_set_nd_filter( lua_State* L )
 {
-  shooting_set_nd_filter_state( luaL_checknumber( L, 1 ), SET_LATER);
+  shooting_set_nd_filter_state( luaL_checknumber( L, 1 ), shooting_in_progress()?SET_NOW:SET_LATER );
   return 0;
 }
 
@@ -807,19 +807,19 @@ static int luaCB_get_raw( lua_State* L )
 
 static int luaCB_set_sv96( lua_State* L )
 {
-  shooting_set_sv96(luaL_checknumber( L, 1 ), SET_LATER);
+  shooting_set_sv96(luaL_checknumber( L, 1 ), shooting_in_progress()?SET_NOW:SET_LATER );
   return 0;
 }
 
 static int luaCB_set_tv96_direct( lua_State* L )
 {
-  shooting_set_tv96_direct(luaL_checknumber( L, 1 ), SET_LATER);
+  shooting_set_tv96_direct(luaL_checknumber( L, 1 ), shooting_in_progress()?SET_NOW:SET_LATER );
   return 0;
 }
 
 static int luaCB_set_tv96( lua_State* L )
 {
-  shooting_set_tv96(luaL_checknumber( L, 1 ), SET_LATER);
+  shooting_set_tv96(luaL_checknumber( L, 1 ), shooting_in_progress()?SET_NOW:SET_LATER );
   return 0;
 }
 
