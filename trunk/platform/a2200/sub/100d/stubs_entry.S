@@ -17,7 +17,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(mkdir                                ,0xff837218) //109        *** != 0xff836708
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffac135c -> ffbe5148
@@ -217,6 +216,7 @@ NHSTUB(malloc                                 ,0xff8141ec) //112
 NHSTUB(memcmp                                 ,0xff8208bc) //120
 NHSTUB(memcpy                                 ,0xff83fce0) //120
 NHSTUB(memset                                 ,0xffa04a10) //120
+NHSTUB(mkdir                                  ,0xff837218) //109
 NHSTUB(mktime_ext                             ,0xff8a54e4) //  1
 NHSTUB(open                                   ,0xff81ab04) //109
 NHSTUB(OpenFastDir                            ,0xffa8aec0) //  6

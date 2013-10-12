@@ -14,8 +14,6 @@ long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
-static long alt_mode_key_mask = 0x000C0000;	// disp + set
-
 extern void _GetKbdState(long*);
 
 #define DELAY_TIMEOUT 10000
@@ -24,17 +22,11 @@ extern void _GetKbdState(long*);
 #define KEYS_MASK1			(0x00000001|0x00000002|0x00000003|0x00001000|0x00002000|0x00004000|0x00008000|0x00010000|0x00020000|0x00040000|0x00080000)
 #define KEYS_MASK2			(0x00000000)
 
-#define NEW_SS				(0x2000)
-
 #define SD_READONLY_FLAG	0x00020000 // Found @0xffb56264 (1.00B), levent 0x90a
 #define SD_READONLY_IDX		2
 
 #define USB_MASK			0x04000000 // Found @0xffb5628c (1.00B), levent 0x902
 #define USB_IDX				2
-
-#ifndef MALLOCD_STACK
-static char kbd_stack[NEW_SS];
-#endif
 
 extern void usb_remote_key( void ) ;
 int get_usb_bit()
@@ -48,7 +40,6 @@ int get_usb_bit()
 static KeyMap keymap[] = {
 	
 	/* tiny bug: key order matters. see kbd_get_pressed_key() */
-	{ 0, KEY_PRINT           ,0x01000000 },	// Use KEY_PLAYBACK for ALT menu
     { 0, KEY_PLAYBACK        ,0x01000000 }, // Found @0xffb561dc, levent 0x601	
 	{ 0, KEY_MENU            ,0x04000000 }, // Found @0xffb561e4 (1.00B), levent 0x09
 	{ 0, KEY_FACE            ,0x00800000 },
@@ -84,7 +75,7 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f() {
 static void __attribute__((noinline)) mykbd_task_proceed() {
 	
 	while (physw_run) {
-		_SleepTask(*((int*)(0x1C30+0x8)));//10);	// @FF834218 (1.00B)
+		_SleepTask(physw_sleep_delay);
 		
 		if (wrap_kbd_p1_f() == 1) {   // autorepeat ?
 			_kbd_p2_f();
@@ -99,23 +90,16 @@ void __attribute__((naked,noinline)) mykbd_task() {
 	_ExitTask();
 }
 
+// NOP
 void kbd_set_alt_mode_key_mask(long key) {
-	
-	int i;
-	for (i=0; keymap[i].hackkey; ++i) {
-		if (keymap[i].hackkey == key) {
-			alt_mode_key_mask = keymap[i].canonkey;
-			return;
-		}
-	}
 }
 
 void my_kbd_read_keys() {
-	
+
 	kbd_prev_state[0] = kbd_new_state[0];
 	kbd_prev_state[1] = kbd_new_state[1];
 	kbd_prev_state[2] = kbd_new_state[2];
-	
+
 	_GetKbdState(kbd_new_state);
 	_kbd_read_keys_r2(kbd_new_state);
 	
@@ -130,9 +114,7 @@ void my_kbd_read_keys() {
 		physw_status[1] = (kbd_new_state[1] | KEYS_MASK1) & (~KEYS_MASK1 | kbd_mod_state[1]); 
 		physw_status[2] = (kbd_new_state[2] | KEYS_MASK2) & (~KEYS_MASK2 | kbd_mod_state[2]);
 	}
-	
-	
-        //usb_remote_key(physw_status[USB_IDX]) ;
+
         usb_remote_key() ;
 
         if (conf.remote_enable) {
@@ -140,7 +122,6 @@ void my_kbd_read_keys() {
         } else {
                 physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
         }
-
 
 }
 
@@ -228,7 +209,7 @@ long kbd_get_clicked_key() {
 
 #ifdef CAM_USE_ZOOM_FOR_MF
 long kbd_use_zoom_as_mf() {
-	
+
 	static long v;
 	static long zoom_key_pressed = 0;
 	
