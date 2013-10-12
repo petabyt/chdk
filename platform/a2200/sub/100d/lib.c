@@ -48,19 +48,11 @@ void *vid_get_viewport_fb_d() {
 
 void vid_bitmap_refresh() {
 	
-extern int full_screen_refresh;
-	extern void _LockAndRefresh();		// wrapper function for screen lock
-	extern void _UnlockAndRefresh();	// wrapper function for screen unlock
-	
+	extern int full_screen_refresh;
+	extern void _ScreenUnlock();
+	extern void _ScreenLock();
+
 	full_screen_refresh |= 3;
-	_LockAndRefresh();	
-	_UnlockAndRefresh();
+	_ScreenLock();
+	_ScreenUnlock();
 }
-
-//extern unsigned int screen_width, screen_height, screen_size;
-//extern void draw_filled_rect( int, int, int, int, int );
-
-//void vid_bitmap_refresh()
-//{
-//	draw_filled_rect(0, 0, screen_width, screen_height, 0x00) ;
-//}

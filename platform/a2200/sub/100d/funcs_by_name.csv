@@ -725,7 +725,7 @@
 0xffa04a10,memset_FW
 0xff810dcc,memShow_FW
 0xffa25288,MergeAndConvertDefect_FW
-0xff836708,mkdir,(stubs_entry_2.s)
+0xff837218,mkdir
 0xff8a54e4,mktime_ext
 0xffaafe08,MonSelEvent_FW
 0xffb12b64,MoveComputerZoomToPoint_FW

@@ -66,25 +66,13 @@ void *vid_get_viewport_fb_d() {
 	return (void*)(*(int*)(0x29a0+0x58));	// Found @0xff871344 & 0xff87137c
 }		
 
-//void vid_bitmap_refresh() {
-//	
-//	extern int full_screen_refresh;
-//	extern void _ScreenUnlock();
-//	extern void _ScreenLock();
-//
-//	full_screen_refresh |= 3;
-//	_ScreenLock();
-//	_ScreenUnlock();
-//}
-
 void vid_bitmap_refresh() {
 	
 	extern int full_screen_refresh;
-	extern void _LockAndRefresh();		// wrapper function for screen lock
-	extern void _UnlockAndRefresh();	// wrapper function for screen unlock
-	
-	full_screen_refresh |= 3;
-	_LockAndRefresh();	
-	_UnlockAndRefresh();
-}
+	extern void _ScreenUnlock();
+	extern void _ScreenLock();
 
+	full_screen_refresh |= 3;
+	_ScreenLock();
+	_ScreenUnlock();
+}

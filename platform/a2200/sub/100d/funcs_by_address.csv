@@ -115,7 +115,7 @@
 0xff836fe0,stat
 0xff837108,SetFileTimeStamp
 0xff837180,SetFileAttributes
-0xff836708,mkdir,(stubs_entry_2.s)
+0xff837218,mkdir
 0xff8373f0,j_StartCameraLog_FW
 0xff8373f4,j_ShowCameraLog_FW
 0xff8373f8,j_ShowCameraLogInfo_FW
