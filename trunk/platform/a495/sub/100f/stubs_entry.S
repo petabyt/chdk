@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R43 (DRYOS version 2.3, release #0043)
-//   "Firmware Ver GM1.00F"      // Found @ 0xffc685d8
+//   Firmware Ver GM1.00F   // Found @ 0xffc685d8, "GM1.00F" @ 0xffc685e5
 //   Firmware build timestamp: Mar 26 2010 15:04:27
 //   Canon PowerShot A495
 

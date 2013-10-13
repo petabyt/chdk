@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R49 (DRYOS version 2.3, release #0049)
-//   "Firmware Ver GM1.01B"      // Found @ 0xff0908ac
+//   Firmware Ver GM1.01B   // Found @ 0xff0908ac, "GM1.01B" @ 0xff0908b9
 //   Firmware build timestamp: May  8 2012 10:21:11
 //   Canon PowerShot S100
 

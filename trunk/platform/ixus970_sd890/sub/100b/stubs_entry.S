@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   "Firmware Ver GM1.00B"      // Found @ 0xff86c11c
+//   Firmware Ver GM1.00B   // Found @ 0xff86c11c, "GM1.00B" @ 0xff86c129
 //   Firmware build timestamp: Jan 24 2008 19:30:31
 //   Canon DIGITAL IXUS 970 IS
 

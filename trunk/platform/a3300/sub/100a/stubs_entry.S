@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R47 (DRYOS version 2.3, release #0047)
-//   "Firmware Ver GM1.00A"      // Found @ 0xff88c03c
+//   Firmware Ver GM1.00A   // Found @ 0xff88c03c, "GM1.00A" @ 0xff88c049
 //   Firmware build timestamp: Dec 20 2010 10:59:56
 //   Canon PowerShot A3300 IS
 

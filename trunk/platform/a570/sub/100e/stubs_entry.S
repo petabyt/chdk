@@ -2,7 +2,7 @@
 #include "stubs_asm.h"
 
 // Camera info:
-//   "Firmware Ver GM1.00E"      // Found @ 0xffc08024
+//   Firmware Ver GM1.00E   // Found @ 0xffc08024, "GM1.00E" @ 0xffc08031
 //   Firmware build timestamp: Jan 12 2007 13:33:40
 //   Canon PowerShot A570 IS
 

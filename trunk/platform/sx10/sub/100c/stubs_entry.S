@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   "Firmware Ver GM1.00C"      // Found @ 0xff8787c0
+//   Firmware Ver GM1.00C   // Found @ 0xff8787c0, "GM1.00C" @ 0xff8787cd
 //   Firmware build timestamp: Sep 14 2008 14:57:56
 //   Canon PowerShot SX10 IS
 

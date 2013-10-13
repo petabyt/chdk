@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   "Firmware Ver GM1.00B"      // Found @ 0xffc5e390
+//   Firmware Ver GM1.00B   // Found @ 0xffc5e390, "GM1.00B" @ 0xffc5e39d
 //   Firmware build timestamp: Jun 25 2008 15:08:34
 //   Canon PowerShot SX110 IS
 

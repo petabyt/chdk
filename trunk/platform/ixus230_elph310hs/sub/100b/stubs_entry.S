@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R49 (DRYOS version 2.3, release #0049)
-//   "Firmware Ver GM1.00B"      // Found @ 0xff089300
+//   Firmware Ver GM1.00B   // Found @ 0xff089300, "GM1.00B" @ 0xff08930d
 //   Firmware build timestamp: Sep 14 2011 16:58:06
 //   Canon PowerShot ELPH 310 HS
 

@@ -2,7 +2,7 @@
 #include "stubs_asm.h"
 
 // Camera info:
-//   "Firmware Ver GM1.00C"      // Found @ 0xffc07c68
+//   Firmware Ver GM1.00C   // Found @ 0xffc07c68, "GM1.00C" @ 0xffc07c75
 //   Firmware build timestamp: Dec  4 2006 07:46:45
 //   Canon PowerShot A550
 

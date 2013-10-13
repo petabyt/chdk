@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   "Firmware Ver GM1.00I"      // Found @ 0xff86e880
+//   Firmware Ver GM1.00I   // Found @ 0xff86e880, "GM1.00I" @ 0xff86e88d
 //   Firmware build timestamp: Jun 26 2008 07:11:54
 //   Possible corrupt firmware dump - file size too small for start address 0xff810000
 //     file size = 3.19MB, should be 7.94MB

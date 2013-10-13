@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R47 (DRYOS version 2.3, release #0047)
-//   "Firmware Ver GM1.01G"      // Found @ 0xff894ef0
+//   Firmware Ver GM1.01G   // Found @ 0xff894ef0, "GM1.01G" @ 0xff894efd
 //   Firmware build timestamp: Nov 14 2011 15:00:11
 //   Canon IXUS 220HS
 

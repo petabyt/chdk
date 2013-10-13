@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   "Firmware Ver GM1.00B"      // Found @ 0xffc5853c
+//   Firmware Ver GM1.00B   // Found @ 0xffc5853c, "GM1.00B" @ 0xffc58549
 //   Firmware build timestamp: Jul  9 2008 17:52:41
 //   Canon PowerShot A1000 IS
 

@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R49 (DRYOS version 2.3, release #0049)
-//   "Firmware Ver GM1.00F"      // Found @ 0xff08ea04
+//   Firmware Ver GM1.00F   // Found @ 0xff08ea04, "GM1.00F" @ 0xff08ea11
 //   Firmware build timestamp: Jan 19 2012 17:44:58
 //   Canon PowerShot G1 X
 

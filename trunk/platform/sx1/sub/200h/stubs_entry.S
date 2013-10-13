@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   "Firmware Ver GM2.00H"      // Found @ 0xff87ccb4
+//   Firmware Ver GM2.00H   // Found @ 0xff87ccb4, "GM2.00H" @ 0xff87ccc1
 //   Firmware build timestamp: Feb  4 2009 10:41:18
 //   Canon PowerShot SX1 IS
 

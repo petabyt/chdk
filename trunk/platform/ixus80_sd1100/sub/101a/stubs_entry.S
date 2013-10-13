@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   "Firmware Ver GM1.01A"      // Found @ 0xff86be94
+//   Firmware Ver GM1.01A   // Found @ 0xff86be94, "GM1.01A" @ 0xff86bea1
 //   Firmware build timestamp: Jan 24 2008 19:45:59
 //   Canon DIGITAL IXUS 80 IS
 

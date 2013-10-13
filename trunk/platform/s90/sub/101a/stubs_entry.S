@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R39 (DRYOS version 2.3, release #0039)
-//   "Firmware Ver GM1.01A"      // Found @ 0xff88bb84
+//   Firmware Ver GM1.01A   // Found @ 0xff88bb84, "GM1.01A" @ 0xff88bb91
 //   Firmware build timestamp: Oct 28 2009 15:47:24
 //   Canon PowerShot S90
 

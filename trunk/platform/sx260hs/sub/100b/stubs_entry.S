@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R50 (DRYOS version 2.3, release #0050)
-//   "Firmware Ver GM1.00B"      // Found @ 0xff07f440
+//   Firmware Ver GM1.00B   // Found @ 0xff07f440, "GM1.00B" @ 0xff07f44d
 //   Firmware build timestamp: Jan  6 2012 17:07:27
 //   Canon PowerShot SX260 HS
 

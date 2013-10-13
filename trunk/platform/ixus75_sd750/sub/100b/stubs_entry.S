@@ -2,7 +2,7 @@
 #include "stubs_asm.h"
 
 // Camera info:
-//   "Firmware Ver GM1.00B"      // Found @ 0xff81803c
+//   Firmware Ver GM1.00B   // Found @ 0xff81803c, "GM1.00B" @ 0xff818049
 //   Firmware build timestamp: Jan 24 2007 12:39:53
 //   Possible corrupt firmware dump - file size too small for start address 0xff810000
 //     file size = 3.57MB, should be 7.94MB

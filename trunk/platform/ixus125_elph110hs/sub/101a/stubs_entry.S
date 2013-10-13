@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R50 (DRYOS version 2.3, release #0050)
-//   "Firmware Ver GM1.01A"      // Found @ 0xff07a344
+//   Firmware Ver GM1.01A   // Found @ 0xff07a344, "GM1.01A" @ 0xff07a351
 //   Firmware build timestamp: Jun  7 2012 17:17:15
 //   Canon PowerShot ELPH 110 HS
 

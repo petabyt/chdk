@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R39 (DRYOS version 2.3, release #0039)
-//   "Firmware Ver GM1.03C"      // Found @ 0xff883ab0
+//   Firmware Ver GM1.03C   // Found @ 0xff883ab0, "GM1.03C" @ 0xff883abd
 //   Firmware build timestamp: Jan  7 2010 13:31:50
 //   Canon PowerShot SD940 IS
 
