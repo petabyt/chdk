@@ -2,7 +2,7 @@
 #include "stubs_asm.h"
 
 // Camera info:
-//   "Firmware Version 1.00K"      // Found @ 0xff81e41c
+//   Firmware Version 1.00K   // Found @ 0xff81e41c, "1.00K" @ 0xff81e42d
 //   Firmware build timestamp: Sep  9 2004 21:13:50
 //   Canon DIGITAL IXUS 40
 

@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   "Firmware Ver GM1.00E"      // Found @ 0xff870898
+//   Firmware Ver GM1.00E   // Found @ 0xff870898, "GM1.00E" @ 0xff8708a5
 //   Firmware build timestamp: Aug 22 2008 10:57:30
 //   Possible corrupt firmware dump - file size too small for start address 0xff810000
 //     file size = 4.00MB, should be 7.94MB

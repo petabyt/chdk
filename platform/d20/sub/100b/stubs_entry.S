@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R50 (DRYOS version 2.3, release #0050)
-//   "Firmware Ver GM1.00B"      // Found @ 0xff079260
+//   Firmware Ver GM1.00B   // Found @ 0xff079260, "GM1.00B" @ 0xff07926d
 //   Firmware build timestamp: Mar 19 2012 18:21:09
 //   Canon PowerShot D20
 

@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R49 (DRYOS version 2.3, release #0049)
-//   "Firmware Ver GM1.00G"      // Found @ 0xff090048
+//   Firmware Ver GM1.00G   // Found @ 0xff090048, "GM1.00G" @ 0xff090055
 //   Firmware build timestamp: Sep  9 2011 08:50:44
 //   Canon PowerShot SX40 HS
 

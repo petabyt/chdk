@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   "Firmware Ver GM1.00D"      // Found @ 0xff86e880
+//   Firmware Ver GM1.00D   // Found @ 0xff86e880, "GM1.00D" @ 0xff86e88d
 //   Firmware build timestamp: Jul 23 2007 08:05:13
 //   Canon PowerShot G9
 

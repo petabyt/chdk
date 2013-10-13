@@ -2,7 +2,7 @@
 #include "stubs_asm.h"
 
 // Camera info:
-//   "Firmware Ver GM1.00C"      // Found @ 0xff81a738
+//   Firmware Ver GM1.00C   // Found @ 0xff81a738, "GM1.00C" @ 0xff81a745
 //   Firmware build timestamp: Jul 24 2006 18:57:34
 //   Canon DIGITAL IXUS 900Ti
 

@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R39 (DRYOS version 2.3, release #0039)
-//   "Firmware Ver GM1.01C"      // Found @ 0xff88bbd4
+//   Firmware Ver GM1.01C   // Found @ 0xff88bbd4, "GM1.01C" @ 0xff88bbe1
 //   Firmware build timestamp: Feb  3 2010 08:56:28
 //   Possible corrupt firmware dump - file size too small for start address 0xff810000
 //     file size = 7.15MB, should be 7.94MB

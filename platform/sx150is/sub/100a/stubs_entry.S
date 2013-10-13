@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R49 (DRYOS version 2.3, release #0049)
-//   "Firmware Ver GM1.00A"      // Found @ 0xff893e14
+//   Firmware Ver GM1.00A   // Found @ 0xff893e14, "GM1.00A" @ 0xff893e21
 //   Firmware build timestamp: Jun  3 2011 09:48:04
 //   Canon PowerShot SX150 IS
 

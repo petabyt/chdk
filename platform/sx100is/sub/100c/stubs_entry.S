@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   "Firmware Ver GM1.00C"      // Found @ 0xffc5add8
+//   Firmware Ver GM1.00C   // Found @ 0xffc5add8, "GM1.00C" @ 0xffc5ade5
 //   Firmware build timestamp: Aug 29 2007 15:27:50
 //   Canon PowerShot SX100 IS
 

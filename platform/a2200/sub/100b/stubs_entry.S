@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R47 (DRYOS version 2.3, release #0047)
-//   "Firmware Ver GM1.00B"      // Found @ 0xff889bb0
+//   Firmware Ver GM1.00B   // Found @ 0xff889bb0, "GM1.00B" @ 0xff889bbd
 //   Firmware build timestamp: Dec  6 2010 14:31:05
 //   Canon PowerShot A2200
 

@@ -4620,7 +4620,18 @@ void output_firmware_vals(firmware *fw)
     }
     else
     {
-        bprintf("//   \"%s\"      // Found @ 0x%08x\n",fw->firmware_ver_str,idx2adr(fw,fw->fwver_idx));
+        uint32_t j = idx2adr(fw,fw->fwver_idx);
+        char *c = strrchr(fw->firmware_ver_str,' ') + 1; // points after the last space char
+        uint32_t k = j + c - fw->firmware_ver_str;
+        if ( (k>=j) && (k<j+32) )
+        {
+            bprintf("//   %s   // Found @ 0x%08x, \"%s\" @ 0x%08x\n",fw->firmware_ver_str,j,c,k);
+        }
+        else
+        {
+            // no space found in string (shouldn't happen)
+            bprintf("//   %s   // Found @ 0x%08x, \"%s\" @ 0x%08x\n",fw->firmware_ver_str,j,fw->firmware_ver_str,j);
+        }
     }
 
     if (fw->fw_build_date != 0)

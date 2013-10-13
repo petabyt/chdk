@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   "Firmware Ver GM1.00B"      // Found @ 0xff86e6dc
+//   Firmware Ver GM1.00B   // Found @ 0xff86e6dc, "GM1.00B" @ 0xff86e6e9
 //   Firmware build timestamp: Dec 16 2008 09:12:52
 //   Canon DIGITAL IXUS 110 IS
 

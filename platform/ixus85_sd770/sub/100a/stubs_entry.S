@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   "Firmware Ver GM1.00A"      // Found @ 0xff86bef0
+//   Firmware Ver GM1.00A   // Found @ 0xff86bef0, "GM1.00A" @ 0xff86befd
 //   Firmware build timestamp: Jan 31 2008 13:20:56
 //   Canon PowerShot SD770 IS
 

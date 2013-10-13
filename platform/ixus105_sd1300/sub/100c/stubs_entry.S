@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R43 (DRYOS version 2.3, release #0043)
-//   "Firmware Ver GM1.00C"      // Found @ 0xffc6fc58
+//   Firmware Ver GM1.00C   // Found @ 0xffc6fc58, "GM1.00C" @ 0xffc6fc65
 //   Firmware build timestamp: Jan  7 2010 13:33:51
 //   Canon IXUS 105
 

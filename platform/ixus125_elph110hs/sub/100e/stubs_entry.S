@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R50 (DRYOS version 2.3, release #0050)
-//   "Firmware Ver GM1.00E"      // Found @ 0xff07a344
+//   Firmware Ver GM1.00E   // Found @ 0xff07a344, "GM1.00E" @ 0xff07a351
 //   Firmware build timestamp: Mar 19 2012 09:56:16
 //   Canon IXUS 125 HS
 

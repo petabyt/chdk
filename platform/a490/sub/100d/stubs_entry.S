@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R43 (DRYOS version 2.3, release #0043)
-//   "Firmware Ver GM1.00D"      // Found @ 0xffc684b0
+//   Firmware Ver GM1.00D   // Found @ 0xffc684b0, "GM1.00D" @ 0xffc684bd
 //   Firmware build timestamp: Dec  4 2009 16:32:56
 //   Canon PowerShot A490
 

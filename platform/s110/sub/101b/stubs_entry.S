@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R51 (DRYOS version 2.3, release #0051)
-//   "Firmware Ver GM1.01B"      // Found @ 0xf80d5d0c
+//   Firmware Ver GM1.01B   // Found @ 0xf80d5d0c, "GM1.01B" @ 0xf80d5d19
 //   Firmware build timestamp: Sep 14 2012 10:58:28
 //   Canon PowerShot S110
 

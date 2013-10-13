@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R51 (DRYOS version 2.3, release #0051)
-//   "Firmware Ver GM1.00C"      // Found @ 0xff087344
+//   Firmware Ver GM1.00C   // Found @ 0xff087344, "GM1.00C" @ 0xff087351
 //   Firmware build timestamp: Jun  8 2012 09:42:03
 //   Canon PowerShot SX500 IS
 

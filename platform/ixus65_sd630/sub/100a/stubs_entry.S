@@ -2,7 +2,7 @@
 #include "stubs_asm.h"
 
 // Camera info:
-//   "Firmware Ver GM1.00A"      // Found @ 0xff81a5c4
+//   Firmware Ver GM1.00A   // Found @ 0xff81a5c4, "GM1.00A" @ 0xff81a5d1
 //   Firmware build timestamp: Jan 23 2006 19:44:50
 //   Canon DIGITAL IXUS 65
 

@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R47 (DRYOS version 2.3, release #0047)
-//   "Firmware Ver GM1.00B"      // Found @ 0xff88901c
+//   Firmware Ver GM1.00B   // Found @ 0xff88901c, "GM1.00B" @ 0xff889029
 //   Firmware build timestamp: May 10 2011 20:43:44
 //   Canon PowerShot A1200
 

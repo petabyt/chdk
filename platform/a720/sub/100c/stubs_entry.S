@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   "Firmware Ver GM1.00C"      // Found @ 0xffc58d44
+//   Firmware Ver GM1.00C   // Found @ 0xffc58d44, "GM1.00C" @ 0xffc58d51
 //   Firmware build timestamp: Jul  5 2007 11:32:58
 //   Canon PowerShot A720 IS
 

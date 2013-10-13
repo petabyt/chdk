@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   "Firmware Ver GM1.00B"      // Found @ 0xffc593dc
+//   Firmware Ver GM1.00B   // Found @ 0xffc593dc, "GM1.00B" @ 0xffc593e9
 //   Firmware build timestamp: Dec  8 2008 08:34:18
 //   Canon DIGITAL IXUS 95 IS
 

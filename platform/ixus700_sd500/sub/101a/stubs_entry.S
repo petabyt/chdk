@@ -2,7 +2,7 @@
 #include "stubs_asm.h"
 
 // Camera info:
-//   "Firmware Version GM1.01A"      // Found @ 0xff81a454
+//   Firmware Version GM1.01A   // Found @ 0xff81a454, "GM1.01A" @ 0xff81a465
 //   Firmware build timestamp: Mar 10 2005 15:46:48
 //   Canon DIGITAL IXUS 700
 

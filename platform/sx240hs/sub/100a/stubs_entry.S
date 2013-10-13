@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R50 (DRYOS version 2.3, release #0050)
-//   "Firmware Ver GM1.00A"      // Found @ 0xff07f440
+//   Firmware Ver GM1.00A   // Found @ 0xff07f440, "GM1.00A" @ 0xff07f44d
 //   Firmware build timestamp: Dec 26 2011 10:15:58
 //   Canon PowerShot SX240 HS
 

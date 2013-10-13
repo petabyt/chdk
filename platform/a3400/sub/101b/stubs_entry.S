@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R50 (DRYOS version 2.3, release #0050)
-//   "Firmware Ver GM1.01B"      // Found @ 0xff881328
+//   Firmware Ver GM1.01B   // Found @ 0xff881328, "GM1.01B" @ 0xff881335
 //   Firmware build timestamp: Jun  4 2012 18:29:39
 //   Canon PowerShot A3400 IS
 

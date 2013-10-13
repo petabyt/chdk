@@ -2,7 +2,7 @@
 #include "stubs_asm.h"
 
 // Camera info:
-//   "Firmware Ver GM1.00F"      // Found @ 0xffc0ad28
+//   Firmware Ver GM1.00F   // Found @ 0xffc0ad28, "GM1.00F" @ 0xffc0ad35
 //   Firmware build timestamp: Aug  3 2005 14:17:55
 //   Canon PowerShot A410
 

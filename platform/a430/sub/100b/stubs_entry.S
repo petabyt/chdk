@@ -2,7 +2,7 @@
 #include "stubs_asm.h"
 
 // Camera info:
-//   "Firmware Ver GM1.00B"      // Found @ 0xffc0a208
+//   Firmware Ver GM1.00B   // Found @ 0xffc0a208, "GM1.00B" @ 0xffc0a215
 //   Firmware build timestamp: Dec  6 2005 09:17:55
 //   Canon PowerShot A430
 

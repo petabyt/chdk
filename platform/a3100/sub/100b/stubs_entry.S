@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R43 (DRYOS version 2.3, release #0043)
-//   "Firmware Ver GM1.00B"      // Found @ 0xff87d108
+//   Firmware Ver GM1.00B   // Found @ 0xff87d108, "GM1.00B" @ 0xff87d115
 //   Firmware build timestamp: Jan  7 2010 13:52:57
 //   Canon PowerShot A3100 IS
 

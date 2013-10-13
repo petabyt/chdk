@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   "Firmware Ver GM1.00C"      // Found @ 0xffc5819c
+//   Firmware Ver GM1.00C   // Found @ 0xffc5819c, "GM1.00C" @ 0xffc581a9
 //   Firmware build timestamp: Nov 13 2008 17:08:37
 //   Canon PowerShot A2000 IS
 

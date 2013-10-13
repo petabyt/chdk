@@ -2,7 +2,7 @@
 #include "stubs_asm.h"
 
 // Camera info:
-//   "Firmware Ver GM1.00G"      // Found @ 0xff81a484
+//   Firmware Ver GM1.00G   // Found @ 0xff81a484, "GM1.00G" @ 0xff81a491
 //   Firmware build timestamp: Dec 19 2005 17:03:55
 //   Canon PowerShot S80
 

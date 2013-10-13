@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R47 (DRYOS version 2.3, release #0047)
-//   "Firmware Ver GM1.00C"      // Found @ 0xff08afb4
+//   Firmware Ver GM1.00C   // Found @ 0xff08afb4, "GM1.00C" @ 0xff08afc1
 //   Firmware build timestamp: Feb  8 2011 19:18:03
 //   Canon PowerShot SX230 HS
 

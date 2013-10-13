@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   "Firmware Ver GM1.00C"      // Found @ 0xffc572b0
+//   Firmware Ver GM1.00C   // Found @ 0xffc572b0, "GM1.00C" @ 0xffc572bd
 //   Firmware build timestamp: Jan  8 2008 17:01:40
 //   Canon PowerShot A580
 

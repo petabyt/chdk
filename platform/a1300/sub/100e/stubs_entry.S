@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R50 (DRYOS version 2.3, release #0050)
-//   "Firmware Ver GM1.00E"      // Found @ 0xff87d840
+//   Firmware Ver GM1.00E   // Found @ 0xff87d840, "GM1.00E" @ 0xff87d84d
 //   Firmware build timestamp: Jun  4 2012 18:04:49
 //   Canon PowerShot A1300
 

@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   "Firmware Ver GM1.00E"      // Found @ 0xff875448
+//   Firmware Ver GM1.00E   // Found @ 0xff875448, "GM1.00E" @ 0xff875455
 //   Firmware build timestamp: Aug 22 2008 10:53:49
 //   Canon DIGITAL IXUS 980 IS
 

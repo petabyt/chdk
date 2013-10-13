@@ -3,7 +3,7 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   "Firmware Ver GM1.01A"      // Found @ 0xff870898
+//   Firmware Ver GM1.01A   // Found @ 0xff870898, "GM1.01A" @ 0xff8708a5
 //   Firmware build timestamp: Oct 15 2008 18:36:07
 //   Canon DIGITAL IXUS 870 IS
 
