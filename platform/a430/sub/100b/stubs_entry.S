@@ -8,6 +8,8 @@
 
 // Values for makefile.inc
 //   PLATFORMID = 12536 (0x30f8) // Found @ 0xfffe0130
+//   MAXRAMADDR = 0x00ffffff
+//   MEMISOSTART = 0x0009f7d0
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -52,11 +54,19 @@ NHSTUB(localtime                              ,0xffeaaae0) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xffc5ca48) //  1 90%
 // ERROR: MakeAFScan is not found.                         //--- ---    *** != 0xffd2ac58
 
+// Misc stuff
+// canon_data_src: 0xffec54f0, canon_data_len: 0xd2c0
+
+// For capt_seq.c
+DEF(_nrflag,0x60e8) // Found @ ffd2c978 (0x60e8)
+//static long *nrflag = (long*)(0x60e8);       // Found @ ffd2c978
+
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
 NHSTUB(AllocateUncacheableMemory              ,0xffc048f4) //  1
 NHSTUB(Close                                  ,0xffc5d7a8) //120
 NHSTUB(CreateTask                             ,0xffc11260) //120
+NHSTUB(DebugAssert                            ,0xffc03aec) //1100
 NHSTUB(DeleteFile_Fut                         ,0xffc56944) //  1
 NHSTUB(ExecuteEventProcedure                  ,0xffc0680c) //  1
 NHSTUB(ExitTask                               ,0xffc11620) //120
@@ -98,7 +108,7 @@ NHSTUB(SetFileAttributes                      ,0xffc5d960) //  1
 NHSTUB(SetPropertyCase                        ,0xffc143ec) //  1
 //NHSTUB(SetScriptMode                        ,0xffd3a12c) //120            == 0xffd3a12c
 NHSTUB(SleepTask                              ,0xffc11174) //120
-NHSTUB(TakeSemaphore                          ,0xffc10c70) //  1
+NHSTUB(TakeSemaphore                          ,0xffc10c70) //1101
 NHSTUB(TurnOffBackLight                       ,0xffd81e3c) //  2
 NHSTUB(TurnOnBackLight                        ,0xffd81e0c) //  2
 NHSTUB(UnlockMainPower                        ,0xffd3c2a8) //120

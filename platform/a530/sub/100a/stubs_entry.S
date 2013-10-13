@@ -8,6 +8,8 @@
 
 // Values for makefile.inc
 //   PLATFORMID = 12582 (0x3126) // Found @ 0xfffe0130
+//   MAXRAMADDR = 0x01ffffff
+//   MEMISOSTART = 0x00091c70
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -42,11 +44,15 @@ NHSTUB(localtime                              ,0xffec416c) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xffc5d754) //  1 90%
 // ERROR: MakeAFScan is not found.                         //--- ---    *** != 0xffd35c10
 
+// Misc stuff
+// canon_data_src: 0xffede3c0, canon_data_len: 0xb8d0
+
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
 NHSTUB(AllocateUncacheableMemory              ,0xffc048f0) //  1
 NHSTUB(Close                                  ,0xffc5e4b0) //120
 NHSTUB(CreateTask                             ,0xffc1125c) //120
+NHSTUB(DebugAssert                            ,0xffc03ae8) //1100
 NHSTUB(DeleteFile_Fut                         ,0xffc57620) //  1
 NHSTUB(ExecuteEventProcedure                  ,0xffc06808) //  1
 NHSTUB(ExitTask                               ,0xffc1161c) //120
@@ -88,7 +94,7 @@ NHSTUB(SetFileAttributes                      ,0xffc5e668) //  1
 NHSTUB(SetPropertyCase                        ,0xffc143d4) //  1
 //NHSTUB(SetScriptMode                        ,0xffd45b50) //120            == 0xffd45b50
 NHSTUB(SleepTask                              ,0xffc11170) //120
-NHSTUB(TakeSemaphore                          ,0xffc10c6c) //  1
+NHSTUB(TakeSemaphore                          ,0xffc10c6c) //1101
 NHSTUB(TurnOffBackLight                       ,0xffd93808) //  2
 NHSTUB(TurnOnBackLight                        ,0xffd937d8) //  2
 NHSTUB(UnlockMainPower                        ,0xffd47dfc) //120

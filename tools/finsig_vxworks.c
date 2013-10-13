@@ -283,7 +283,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "PutInNdFilter", OPTIONAL },
     { "PutOutNdFilter", OPTIONAL },
     { "Read" },
-    { "ReadFastDir", UNUSED|DONT_EXPORT },
+//    { "ReadFastDir", UNUSED|DONT_EXPORT },
     { "Rec2PB", UNUSED|DONT_EXPORT },
     { "RefreshPhysicalScreen" },
     { "Remove", OPTIONAL|UNUSED },
@@ -341,7 +341,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "mkdir" },
     { "mktime_ext", UNUSED|DONT_EXPORT },
     { "open" },
-    { "OpenFastDir", UNUSED|DONT_EXPORT },
+//    { "OpenFastDir", UNUSED|DONT_EXPORT },
     { "closedir" },
     { "qsort" },
     { "rand" },
@@ -361,7 +361,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "strncpy" },
     { "strrchr" },
     { "strtol" },
-    { "strtolx", UNUSED|DONT_EXPORT },
+//    { "strtolx", UNUSED|DONT_EXPORT },
 
     { "isdigit" },
     { "isspace" },
@@ -405,7 +405,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "task_MovieRecord", UNUSED|DONT_EXPORT },
     { "task_PhySw", OPTIONAL },
     { "task_RotaryEncoder", OPTIONAL },
-    { "task_TouchPanel", OPTIONAL },
+//    { "task_TouchPanel", OPTIONAL },
 
     //{ "hook_CreateTask" },
 
@@ -419,6 +419,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "EngDrvBits", OPTIONAL|UNUSED },
 
     // OS functions, mostly to aid firmware analysis. Order is important!
+    { "PT_GetSystemTime", OPTIONAL|UNUSED }, // only for locating timer functions
     { "_GetSystemTime", OPTIONAL|UNUSED }, // only for locating timer functions
     { "SetTimerAfter", OPTIONAL|UNUSED },
     { "SetTimerWhen", OPTIONAL|UNUSED },
@@ -436,12 +437,6 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "CreateBinarySemaphoreStrictly", OPTIONAL|UNUSED },
     { "CreateCountingSemaphoreStrictly", OPTIONAL|UNUSED },
     { "CreateRecursiveLockStrictly", OPTIONAL|UNUSED },
-    { "TakeSemaphoreStrictly", OPTIONAL|UNUSED }, // r23+
-    { "ReceiveMessageQueueStrictly", OPTIONAL|UNUSED }, // r23+
-    { "PostMessageQueueStrictly", OPTIONAL|UNUSED },    // r23+
-    { "WaitForAnyEventFlagStrictly", OPTIONAL|UNUSED }, // r23+
-    { "WaitForAllEventFlagStrictly", OPTIONAL|UNUSED }, // r23+
-    { "AcquireRecursiveLockStrictly", OPTIONAL|UNUSED }, // r23+
     { "DeleteMessageQueue", OPTIONAL|UNUSED },
     { "PostMessageQueue", OPTIONAL|UNUSED },
     { "ReceiveMessageQueue", OPTIONAL|UNUSED },
@@ -475,6 +470,10 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "NR_SetDarkSubType", OPTIONAL|UNUSED },
     { "SavePaletteData", OPTIONAL|UNUSED },
     { "GUISrv_StartGUISystem", OPTIONAL|UNUSED },
+
+    { "wrapped_malloc", UNUSED|DONT_EXPORT},    // helper to find malloc, finds the other allocator on ixus30/40
+    { "malloc_alt", UNUSED|DONT_EXPORT },       // should be the same as malloc when found
+    { "WaitForEventFlag", UNUSED|DONT_EXPORT }, // helper to find other eventflag functions
 
     { 0, 0, 0 }
 };
@@ -684,7 +683,7 @@ int find_pow(firmware *fw, string_sig *sig, int j)
     return 0;
 }
 
-// Special case for 'closedir'
+// Special case for 'closedir' (DryOS)
 int find_closedir(firmware *fw)
 {
     int j = get_saved_sig(fw,"OpenFastDir");
@@ -980,10 +979,10 @@ string_sig string_sigs[] =
     { 2, "SavePaletteData", "SavePaletteData", 1 },
     { 2, "GetVRAMHPixelsSize", "GetVRAMHPixelsSize", 1 },
     { 2, "GetVRAMVPixelsSize", "GetVRAMVPixelsSize", 1 },
-    { 2, "EngDrvIn", "EngDrvIn", 2 },
+    { 2, "EngDrvIn", "EngDrvIn", 4 },
     { 2, "EngDrvOut", "EngDrvOut", 0x01000005 },
-    { 2, "EngDrvRead", "EngDrvRead", 2 },
-    { 2, "EngDrvBits", "EngDrvBits", 0x01000007 },
+    { 2, "EngDrvRead", "EngDrvRead", 4 },
+    { 2, "EngDrvBits", "EngDrvBits", 0x01000006 },
     { 2, "exmem_alloc", "ExMem.AllocCacheable", 4 },
     { 2, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
 
@@ -1047,8 +1046,8 @@ string_sig string_sigs[] =
     { 6, "GetImageFolder", "GetCameraObjectTmpPath ERROR[ID:%lx] [TRY:%lx]\n", 0 },
     { 6, "reboot_fw_update", "FirmUpgrade.c", 0 },
 
-    { 7, "CreateTaskStrictly", "PhySw", 0x01000001 },
-    { 7, "RegisterInterruptHandler", "WdtInt", 0x01000001 },
+    { 7, "CreateTaskStrictly", "FileWriteTask", 0x01000001 },
+    { 7, "RegisterInterruptHandler", "SdDmaInt", 0x01000001 },
     { 7, "LogCameraEvent", "BufAccBeep", 0x01000001 },
     { 7, "LogCameraEvent", "MyCamFunc_PlaySound_MYCAM_COVER_OPEN", 0x01000001 },
 
@@ -1063,24 +1062,25 @@ string_sig string_sigs[] =
     //{ 9, "kbd_read_keys_r2", "kbd_read_keys", 0,                          11 },
     { 9, "GetKbdState", "kbd_read_keys", 0,                                8 },
     { 9, "GetKbdState", "kbd_read_keys", 0,                                9 },
-    { 9, "strtolx", "strtol", 0,                                           1 },
+    //{ 9, "strtolx", "strtol", 0,                                           1 },
     //{ 9, "mkdir", "MakeDirectory_Fut", 0x01000001,                        17 },
     //{ 9, "mkdir", "MakeDirectory_Fut", 0x01000002,                        17 },
     //{ 9, "time", "MakeDirectory_Fut", 0,                                  12 },
     { 9, "stat", "_uartr_req", 0,                                          0 },
-    { 9, "PostMessageQueue", "PostMessageQueueStrictly", 0,                3 },
-    { 9, "WaitForAnyEventFlag", "WaitForAnyEventFlagStrictly", 0,          3 },
-    { 9, "WaitForAllEventFlag", "WaitForAllEventFlagStrictly", 0,          3 },
-    { 9, "CreateMessageQueue", "CreateMessageQueueStrictly", 0,            1 },
-    { 9, "CreateRecursiveLock", "CreateRecursiveLockStrictly", 0,          1 },
-    { 9, "CreateEventFlag", "CreateEventFlagStrictly", 0,                  1 },
-    { 9, "_GetSystemTime", "GetSystemTime", 0,                             2 },
+    //{ 9, "PostMessageQueue", "PostMessageQueueStrictly", 0,                3 },
+    //{ 9, "WaitForAnyEventFlag", "WaitForAnyEventFlagStrictly", 0,          3 },
+    //{ 9, "WaitForAllEventFlag", "WaitForAllEventFlagStrictly", 0,          3 },
+    //{ 9, "CreateMessageQueue", "CreateMessageQueueStrictly", 0,            1 },
+    { 9, "CreateRecursiveLock", "CreateRecursiveLockStrictly", 0,       1 },
+    { 9, "CreateRecursiveLock", "CreateRecursiveLockStrictly", 0,       6 },    // old vx
+    { 9, "CreateEventFlag", "CreateEventFlagStrictly", 0,               1 },
+    { 9, "_GetSystemTime", "PT_GetSystemTime", 0,                       3 },
     { 9, "close", "Close", 0,                                              2 },
     { 9, "open", "Open", 0,                                                3 },
     { 9, "open", "Open", 0,                                                3 },
+    { 9, "malloc_alt", "wrapped_malloc", 0,                                2 },
 
     //                                                                   ???
-    { 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                 5 },
     { 11, "err_init_task", "\n-- %s() error in init_task() --", 0,         2 },
     { 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,            14 },
     { 11, "set_control_event", "Button:0x%08X:%s", 0xf1000001,            15 },
@@ -1094,16 +1094,16 @@ string_sig string_sigs[] =
     { 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1,  0x2C },
     { 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1,          0x30 },
     { 12, "free", "free", 1,                                            0x28 },
-    { 12, "malloc", "malloc", 0x01000003,                               0x24 },
+    //{ 12, "malloc", "malloc", 0x01000003,                               0x24 },
     { 12, "TakeSemaphore", "TakeSemaphore", 1,                          0x14 },
     { 12, "GiveSemaphore", "GiveSemaphore", 1,                          0x18 },
     { 12, "_log10", "_log10", 0x01000006,                               0x278 },
     { 12, "_log10", "_log10", 0x01000006,                               0x000 },
     { 12, "_log10", "_log10", 0x01000006,                               0x000 },
-    { 12, "ClearEventFlag", "ClearEventFlag", 1,                        0x04 },
-    { 12, "SetEventFlag", "SetEventFlag", 1,                            0x08 },
-    { 12, "WaitForAnyEventFlag", "WaitForAnyEventFlag", 1,              0x0c },
-    { 12, "WaitForAllEventFlag", "WaitForAllEventFlag", 1,              0x10 },
+    //{ 12, "ClearEventFlag", "ClearEventFlag", 1,                        0x04 },
+    //{ 12, "SetEventFlag", "SetEventFlag", 1,                            0x08 },
+    //{ 12, "WaitForAnyEventFlag", "WaitForAnyEventFlag", 1,              0x0c },
+    //{ 12, "WaitForAllEventFlag", "WaitForAllEventFlag", 1,              0x10 },
 
     { 13, "strftime", "Sunday", 1 },
 
@@ -1111,12 +1111,13 @@ string_sig string_sigs[] =
     { 15, "GetMemInfo", "Malloc Information\n", 0x01000001 },
     { 15, "GetMemInfo", "Malloc Information (%s type)\n", 0x01000001 },
     { 15, "vsprintf", "\nCPrintf Size Over!!", 0x01000001 },
-    { 15, "ReadFastDir", "ReadFast_ERROR\n", 0x01000001 },
-    { 15, "OpenFastDir", "OpenFastDir_ERROR\n", 0x01000001 },
+    //{ 15, "ReadFastDir", "ReadFast_ERROR\n", 0x01000001 },
+    //{ 15, "OpenFastDir", "OpenFastDir_ERROR\n", 0x01000001 },
     { 15, "realloc", "fatal error - scanner input buffer overflow", 0x01000001 },
     { 15, "CreateBinarySemaphore", "SdPower.c", 0x01000001 },
-    //                                                                           ???
-    { 15, "SetHPTimerAfterTimeout", "FrameRateGenerator.c", 0x01000001,          0x0007 },
+    //                                                                           Vx
+    { 15, "SetHPTimerAfterTimeout", "FrameRateGenerator.c", 0x01000001,          0x0008 },
+    { 15, "wrapped_malloc", "\n malloc error \n", 0x01000001,                    0x0010 },
 
     { 16, "DeleteDirectory_Fut", (char*)DeleteDirectory_Fut_test, 0x01000001 },
     { 16, "MakeDirectory_Fut", (char*)MakeDirectory_Fut_test, 0x01000001 },
@@ -1126,43 +1127,56 @@ string_sig string_sigs[] =
     { 17, "ScreenUnlock", "StartRecModeMenu", 0 },
 
     // Ensure ordering in func_names is correct for dependencies here
-    //                                                                           ???
-    { 19, "GetSemaphoreValue", "GiveSemaphore", 0,                               0x000e },
-    { 19, "CreateMessageQueueStrictly", "CreateTaskStrictly", 0,                 0x000d },
-    { 19, "CreateEventFlagStrictly", "CreateMessageQueueStrictly", 0,            0x0009 },
-    { 19, "CreateBinarySemaphoreStrictly", "CreateEventFlagStrictly", 0,         0x0009 },
-    { 19, "CreateCountingSemaphoreStrictly", "CreateBinarySemaphoreStrictly", 0, 0x0009 },
-    { 19, "CreateRecursiveLockStrictly", "CreateCountingSemaphoreStrictly", 0,   0x0009 },
-    { 19, "TakeSemaphoreStrictly", "CreateRecursiveLockStrictly", 0,             0x0001 },
-    { 19, "ReceiveMessageQueueStrictly", "TakeSemaphoreStrictly", 0,             0x000b },
-    { 19, "PostMessageQueueStrictly", "ReceiveMessageQueueStrictly", 0,          0x000b },
-    { 19, "WaitForAnyEventFlagStrictly", "PostMessageQueueStrictly", 0,          0x000b },
-    { 19, "WaitForAllEventFlagStrictly", "WaitForAnyEventFlagStrictly", 0,       0x000b },
-    { 19, "AcquireRecursiveLockStrictly", "WaitForAllEventFlagStrictly", 0,      0x000b },
+    //                                                                           Vx
+    { 19, "CreateMessageQueueStrictly", "CreateTaskStrictly", 0,                 0x0210 },
+    { 19, "CreateMessageQueueStrictly", "CreateTaskStrictly", 0,                 0x0720 }, // old vx
+    { 19, "CreateEventFlagStrictly", "CreateMessageQueueStrictly", 0,            0x010b },
+    { 19, "CreateEventFlagStrictly", "CreateMessageQueueStrictly", 0,            0x0619 }, // old vx
+    { 19, "CreateBinarySemaphoreStrictly", "CreateEventFlagStrictly", 0,         0x010b },
+    { 19, "CreateBinarySemaphoreStrictly", "CreateEventFlagStrictly", 0,         0x081b }, // old vx
+    { 19, "CreateCountingSemaphoreStrictly", "CreateBinarySemaphoreStrictly", 0, 0x010b },
+    { 19, "CreateCountingSemaphoreStrictly", "CreateBinarySemaphoreStrictly", 0, 0x081b }, // old vx
+    { 19, "CreateRecursiveLockStrictly", "CreateCountingSemaphoreStrictly", 0,   0x010b },
+    { 19, "CreateRecursiveLockStrictly", "CreateCountingSemaphoreStrictly", 0,   0x071a }, // old vx
+    //{ 19, "PostMessageQueue", "TryReceiveMessageQueue", 0,                       0x091f },
+    //{ 19, "DeleteMessageQueue", "CreateMessageQueue", 0,                         0x1021 },
+    //{ 19, "ReceiveMessageQueue", "DeleteMessageQueue", 0,                        0x1024 },
+    //{ 19, "TryReceiveMessageQueue", "ReceiveMessageQueue", 0,                    0x002b },
+    { 19, "TryPostMessageQueue", "PostMessageQueue", 0,                          0x058a },
+    { 19, "GetNumberOfPostedMessages", "TryPostMessageQueue", 0,                 0x004b },
+    { 19, "DeleteRecursiveLock", "CreateRecursiveLock", 0,                       0x0247 },
+    { 19, "AcquireRecursiveLock", "DeleteRecursiveLock", 0,                      0x0136 }, // old vx
+    { 19, "AcquireRecursiveLock", "DeleteRecursiveLock", 0,                      0x0026 }, // new vx
+    { 19, "ReleaseRecursiveLock", "AcquireRecursiveLock", 0,                     0x004a }, // old vx
+    { 19, "ReleaseRecursiveLock", "AcquireRecursiveLock", 0,                     0x002a }, // new vx
+    { 19, "GetEventFlagValue", "ClearEventFlag", 0,                              0x0014 },
+    //{ 19, "DeleteEventFlag", "CreateEventFlag", 0,                               0x0016 },
+    { 19, "CheckAnyEventFlag", "CheckAllEventFlag", 0,                          -0x0004 },
+    { 19, "CheckAllEventFlag", "WaitForEventFlag", 0,                           -0x1028 },
+    { 19, "WaitForAnyEventFlag", "WaitForEventFlag", 0,                          0x0569 },
+    { 19, "WaitForAllEventFlag", "WaitForAnyEventFlag", 0,                       0x1004 },
+    { 19, "ClearEventFlag", "SetEventFlag", 0,                                   0x0167 }, // new vx
+    { 19, "ClearEventFlag", "SetEventFlag", 0,                                   0x0165 }, // old vx
+    { 19, "SetEventFlag", "WaitForAllEventFlag", 0,                              0x1004 },
+    { 19, "TryTakeSemaphore", "GiveSemaphore", 0,                               -0x0619 }, // old vx
+    { 19, "TryTakeSemaphore", "GiveSemaphore", 0,                               -0x071c }, // new vx
+    { 19, "GetSemaphoreValue", "GiveSemaphore", 0,                               0x0035 }, // old vx
+    { 19, "GetSemaphoreValue", "GiveSemaphore", 0,                               0x013b }, // new vx
+    { 19, "SetHPTimerAfterNow", "SetHPTimerAfterTimeout", 0,                    -0x0223 },
+    { 19, "CancelHPTimer", "SetHPTimerAfterTimeout", 0,                          0x09fa },
+    { 19, "SetTimerAfter", "_GetSystemTime", 0,                                  0x0355 },
+    { 19, "SetTimerWhen", "SetTimerAfter", 0,                                    0x0327 },
+    { 19, "CancelTimer", "SetTimerWhen", 0,                                      0x026d }, // older vx
+    { 19, "CancelTimer", "SetTimerWhen", 0,                                      0x021e }, // newer vx (no unused functions inbetween)
 
-    { 19, "PostMessageQueue", "TryReceiveMessageQueue", 0,                       0x091f },
-    { 19, "DeleteMessageQueue", "CreateMessageQueue", 0,                         0x1021 },
-    { 19, "ReceiveMessageQueue", "DeleteMessageQueue", 0,                        0x1024 },
-    { 19, "TryReceiveMessageQueue", "ReceiveMessageQueue", 0,                    0x002b },
-    { 19, "TryPostMessageQueue", "PostMessageQueue", 0,                          0x0027 },
-    { 19, "GetNumberOfPostedMessages", "TryPostMessageQueue", 0,                 0x0010 },
-    { 19, "DeleteRecursiveLock", "CreateRecursiveLock", 0,                       0x0014 },
-    { 19, "AcquireRecursiveLock", "DeleteRecursiveLock", 0,                      0x0014 },
-    { 19, "ReleaseRecursiveLock", "AcquireRecursiveLock", 0,                     0x0041 },
-    { 19, "GetEventFlagValue", "ClearEventFlag", 0,                              0x000e },
-    { 19, "DeleteEventFlag", "CreateEventFlag", 0,                               0x0016 },
-    { 19, "CheckAnyEventFlag", "DeleteEventFlag", 0,                             0x0014 },
-    { 19, "CheckAllEventFlag", "CheckAnyEventFlag", 0,                           0x0012 },
-    { 19, "TryTakeSemaphore", "DeleteSemaphore", 0,                              0x0016 },
-    { 19, "SetTimerAfter", "_GetSystemTime", 0,                                  0x004e },
-    { 19, "SetTimerWhen", "SetTimerAfter", 0,                                    0x0020 },
-    { 19, "CancelTimer", "SetTimerWhen", 0,                                      0x0019 },
-    { 19, "CancelHPTimer", "SetHPTimerAfterTimeout", 0,                          0x0022 },
-    { 19, "SetHPTimerAfterNow", "SetHPTimerAfterTimeout", 0,                    -0x0020 },
-    { 19, "UnregisterInterruptHandler", "RegisterInterruptHandler", 0,           0x0009 },
-    { 19, "GetSRAndDisableInterrupt", "UnregisterInterruptHandler", 0,           0x0006 },
-    { 19, "SetSR", "UnregisterInterruptHandler", 0,                              0x1007 },
-    { 19, "EnableInterrupt", "UnregisterInterruptHandler", 0,                    0x170f },
+    { 19, "UnregisterInterruptHandler", "RegisterInterruptHandler", 0,           0x0909 },
+    { 19, "GetSRAndDisableInterrupt", "UnregisterInterruptHandler", 0,           0x0f06 },
+    { 19, "SetSR", "GetSRAndDisableInterrupt", 0,                                0x1003 },
+    { 19, "EnableInterrupt", "SetSR", 0,                                         0x1508 },
+    //{ 19, "UnregisterInterruptHandler", "RegisterInterruptHandler", 0,           0x0009 },
+    //{ 19, "GetSRAndDisableInterrupt", "UnregisterInterruptHandler", 0,           0x0006 },
+    //{ 19, "SetSR", "UnregisterInterruptHandler", 0,                              0x1007 },
+    //{ 19, "EnableInterrupt", "UnregisterInterruptHandler", 0,                    0x170f },
 
     { 21, "add_ptp_handler", (char*)find_add_ptp_handler, 0 },
     //{ 21, "apex2us", (char*)find_apex2us, 0 },
@@ -1173,6 +1187,28 @@ string_sig string_sigs[] =
     { 22, "PT_PlaySound", (char*)find_PT_PlaySound, 0 },
     { 22, "ExportToEventProcedure_FW", (char*)find_ExportToEventProcedure, 0 },
     { 22, "RegisterEventProcedure_FW", (char*)find_RegisterEventProcedure, 0 },
+
+    //                                                                                          Vx
+    { 100, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                                     10 },
+    { 100, "DebugAssert", "\aAssert: File %s,  Expression %s,  Line %d\n", 0,                   14 }, // ixus30,40
+    { 100, "CreateMessageQueue", "CreateMessageQueue : call from interrupt handler", 0,         8 },
+    { 100, "CreateBinarySemaphore", "CreateBinarySemaphore : call from interrupt handler", 0,   9 }, // old vx
+    { 100, "DeleteMessageQueue", "DeleteMessageQueue : call from interrupt handler", 0,         8 },
+    { 100, "PostMessageQueue", "PostMessageQueue : call from interrupt handler", 0,             12 },
+    { 100, "ReceiveMessageQueue", "ReceiveMessageQueue : NULL buffer address", 0,               11 },
+    { 100, "TryReceiveMessageQueue", "TryReceiveMessageQueue : NULL buffer address", 0,         10 },
+    { 100, "CreateEventFlag", "CreateEventFlag : call from interrupt handler", 0,               5 },
+    { 100, "DeleteEventFlag", "DeleteEventFlag : call from interrupt handler", 0,               8 },
+    { 100, "WaitForEventFlag", "WaitForEventFlag : call from interrupt handler", 0,             12 },
+    { 100, "CancelHPTimer", "EventProcedure", 0,                                                101 }, // newest vx
+    
+    { 101, "DeleteSemaphore", "DeleteSemaphore", 0 },
+    { 101, "CreateCountingSemaphore", "CreateCountingSemaphore", 0 },
+    { 101, "TakeSemaphore", "TakeSemaphore", 0 },
+    { 101, "GiveSemaphore", "GiveSemaphore", 0 },
+    { 101, "CreateTask", "CreateTask", 0 },
+    { 101, "ExitTask", "ExitTask", 0 },
+    { 101, "PT_GetSystemTime", "PT_GetSystemTime", 0 },
 
     { 0, 0, 0, 0 }
 };
@@ -1922,6 +1958,75 @@ int find_strsig19(firmware *fw, string_sig *sig)
     return 0;
 }
 
+// Sig pattern (Vx specific?):
+//      Func            -   func
+//            .... (offset)
+//      Ref to string   -       LDR Rx, pstr
+//            ....
+//      Ptr to string   -       DCD pstr
+// based on method 11
+int match_strsig100(firmware *fw, string_sig *sig, int j)
+{
+    int ofst = vxworks_offset(fw, sig);
+
+    uint32_t sadr = idx2adr(fw,j);        // string address
+    int j1;
+    for (j1 = j+256; j1 >= 0; j1--)
+    {
+        if (isLDR(fw,j1))   // LDR ?
+        {
+            uint32_t pval = LDR2val(fw,j1);
+            if (pval == sadr)
+            {
+                uint32_t fadr = idx2adr(fw,j1-ofst);
+                uint32_t bfadr = followBranch(fw,fadr,sig->offset);
+                if ((sig->offset == 0) || (bfadr != fadr))
+                {
+                    fwAddMatch(fw,bfadr,32,0,1100);
+                    return 1;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
+// Sig pattern (VxWorks specific):
+// still needed due to ambiguous parts of code (indirect ExportToEventProcedure, RegisterEventProcedure calls)
+//      String               -   DCB "func"
+//              ...
+//      Load String Address  -   LDR R0, ="func"
+//      Load func Address    -   LDR R1, =func
+// these are parameters for ExportToEventProcedure, RegisterEventProcedure
+int match_strsig101(firmware *fw, string_sig *sig, int j)
+{
+    uint32_t sadr = idx2adr(fw,j);        // string address
+    int j1;
+    for (j1 = j+1024; j1 >= 0; j1--)
+    {
+        if (isLDR(fw,j1) && (fwRd(fw,j1)==0))   // LDR R0,
+        {
+            uint32_t pval = LDR2val(fw,j1);
+            if (pval == sadr) // our string's address
+            {
+                int j2;
+                for (j2 = j1+2; j2 > j1; j2--)
+                {
+                    if (isLDR(fw,j2) && (fwRd(fw,j2)==1)) // LDR R1,
+                    {
+                        uint32_t pval2 = LDR2val(fw,j2);
+                        fwAddMatch(fw,pval2,32,0,1101);
+                        return 1;
+                    }
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
 // Call processing function based on type
 int find_strsig(firmware *fw, string_sig *sig)
 {
@@ -1956,6 +2061,8 @@ int find_strsig(firmware *fw, string_sig *sig)
         }
     case 21:    return fw_process(fw, sig, (int (*)(firmware*, string_sig*, int))(sig->ev_name));
     case 22:    return ((int (*)(firmware*))(sig->ev_name))(fw);
+    case 100:   return fw_string_process(fw, sig, match_strsig100, 0);
+    case 101:   return fw_string_process(fw, sig, match_strsig101, 0);
     }
 
     return 0;
@@ -3695,6 +3802,8 @@ int match_nrflag3(firmware *fw, int k, uint32_t v1, uint32_t v2)
             if (isLDR_PC(fw,k3) && (fwRd(fw,k3) == 3))
             {
                 int ofst2 = LDR2val(fw,k3);
+                if (ofst2 > (fw->data_len*4 + fw->data_start)) // has to be in the preinited data section
+                    return 0;
                 bprintf("\n// For capt_seq.c\n");
                 if (ofst1 == 0)
                 {
@@ -3779,22 +3888,17 @@ void find_other_vals(firmware *fw)
     add_blankline();
 
     bprintf("// Misc stuff\n");
-
+/*
     if (!search_fw_bytes(fw, find_ctypes))
     {
         bprintf("//DEF(ctypes, *** Not Found ***)\n");
     }
+*/   
+    bprintf("// canon_data_src: 0x%x, canon_data_len: 0x%x\n",fw->data_init_start,fw->data_len*4);
+
 
     // Look for nrflag (for capt_seq.c)
-    int found = 0;
-    if (fw->dryos_ver >= 45)
-    {
-        found = search_saved_sig(fw, "NR_SetDarkSubType", match_nrflag, 0, 0, 1);
-    }
-    if (!found)
-    {
-        search_saved_sig(fw, "NR_GetDarkSubType", match_nrflag2, 0, 0, 20);
-    }
+    search_saved_sig(fw, "NR_GetDarkSubType", match_nrflag2, 0, 0, 20);
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -4535,7 +4639,7 @@ int main(int argc, char **argv)
     //find_lib_vals(&fw);
     //find_key_vals(&fw);
     //find_platform_vals(&fw);
-    //find_other_vals(&fw);
+    find_other_vals(&fw);
 
     write_output();
 

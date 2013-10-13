@@ -9,6 +9,8 @@
 //   Could not find Camera name - possible corrupt firmware dump
 
 // Values for makefile.inc
+//   MAXRAMADDR = 0x01ffffff
+//   MEMISOSTART = 0x0009c890
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -56,11 +58,15 @@ NHSTUB(localtime                              ,0xffb07c14) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xff86e8d4) //  1 90%
 // ERROR: MakeAFScan is not found.                         //--- ---    *** != 0xff95fde8
 
+// Misc stuff
+// canon_data_src: 0xffb23040, canon_data_len: 0xbdb0
+
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
 NHSTUB(AllocateUncacheableMemory              ,0xff814cb0) //  1
 NHSTUB(Close                                  ,0xff86f5a4) //120
 NHSTUB(CreateTask                             ,0xff82161c) //120
+NHSTUB(DebugAssert                            ,0xff813b80) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff868744) //  1
 NHSTUB(ExecuteEventProcedure                  ,0xff816bc8) //  1
 NHSTUB(ExitTask                               ,0xff8219dc) //120
@@ -101,7 +107,7 @@ NHSTUB(SetFileAttributes                      ,0xff86f75c) //  1
 NHSTUB(SetPropertyCase                        ,0xff8247c4) //  1
 //NHSTUB(SetScriptMode                        ,0xff96fe60) //120            == 0xff96fe60
 NHSTUB(SleepTask                              ,0xff821530) //120
-NHSTUB(TakeSemaphore                          ,0xff82102c) //  1
+NHSTUB(TakeSemaphore                          ,0xff82102c) //1101
 NHSTUB(TurnOffBackLight                       ,0xff9bb0ac) //  2
 NHSTUB(TurnOnBackLight                        ,0xff9bb07c) //  2
 NHSTUB(UnlockMainPower                        ,0xff972198) //120

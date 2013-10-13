@@ -869,6 +869,17 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
             fw->maxram = (1 << (((fw->buf[0x14] & 0x3E) >> 1) + 1)) - 1;
         }
     }
+    else if (os_type == OS_VXWORKS)
+    {
+        for (k=16; k<100; k++)
+        {
+            if ((fw->buf[k] & 0xFFFF0FFF) == 0xEE060F12) // mcr 15, 0, rx, cr6, cr2, {0}
+            {
+                fw->maxram = (1 << (((fw->buf[k-1] & 0x3E) >> 1) + 1)) - 1;
+                break;
+            }
+        }
+    }
 
     // Find MEMISOSTART
     fw->memisostart = 0;
@@ -879,6 +890,68 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
             if (isLDR_PC(fw,k) && (LDR2val(fw,k) == 0x1900) && isLDR_PC(fw,k+6))
             {
                 fw->memisostart = LDR2val(fw,k+6);
+            }
+        }
+    }
+    else if (os_type == OS_VXWORKS)
+    {
+        for (k=16; k<100; k++)
+        {
+            if (isMOV_immed(fw,k) && (ALUop2(fw,k) == 0x1900) && isLDR_PC(fw,k+11))
+            {
+                fw->memisostart = LDR2val(fw,k+11);
+                // Find DATA section info
+                if (isLDR_PC(fw,k-1) && isLDR_PC(fw,k-4) && ((fwval(fw,k-2) & 0xFFF0FFF0) == 0xE1500000))
+                {
+                    uint32_t fadr = LDR2val(fw,k-1);
+                    uint32_t dadr = 0x1900;
+                    uint32_t eadr = LDR2val(fw,k-4);
+                    if ((fadr > fw->base) && (dadr < fw->base))
+                    {
+                        fw->data_start = dadr;
+                        fw->data_init_start = fadr;
+                        fw->data_len = eadr / 4;
+                    }
+                }
+                break;
+            }
+            else if (isMOV_immed(fw,k) && (ALUop2(fw,k) == 0x1900) && isLDR_PC(fw,k-2) && isLDR_PC(fw,k-3))
+            {
+                // special case ixus30/40
+                fw->maxram = 0x1FFFFFF; // 32MB, difficult to find
+                fw->memisostart = 0x1900 + LDR2val(fw,k-3);
+                // Find DATA section info
+                fw->data_init_start = LDR2val(fw,k-2);
+                fw->data_start = 0x1900;
+                j = idxFollowBranch(fw, k+6, 1);
+                if (j != k+6)
+                {
+                    k = idxFollowBranch(fw, j+1, 0x01000001);
+                    if (k != j+1)
+                    {
+                        if ( isLDR_PC(fw,k+3) )
+                        {
+                            uint32_t eadr = LDR2val(fw,k+3);
+                            if ( (eadr>0x1000) && (eadr< fw->memisostart - 0x1900) )
+                            {
+                                fw->data_len = (eadr - 0x1900) / 4;
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+            else if (isMOV_immed(fw,k) && (ALUop2(fw,k) == 0x1900) && isLDR_PC(fw,k-2) &&
+                        ((fwval(fw,k-1) & 0xFFFF0F00) == 0xE50B0000) && isLDR_PC(fw,k+28) && isLDR_PC(fw,k+4)
+                    )
+            {
+                // special case ixusW
+                fw->memisostart = LDR2val(fw,k+28);
+                // Find DATA section info
+                fw->data_init_start = LDR2val(fw,k-2);
+                fw->data_start = 0x1900;
+                fw->data_len = (LDR2val(fw,k+4) - 0x1900) / 4;
+                break;
             }
         }
     }

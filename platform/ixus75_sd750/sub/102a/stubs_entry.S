@@ -9,6 +9,8 @@
 //   Could not find Camera name - possible corrupt firmware dump
 
 // Values for makefile.inc
+//   MAXRAMADDR = 0x01ffffff
+//   MEMISOSTART = 0x000bf650
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -27,7 +29,6 @@ NHSTUB(PutInNdFilter                          ,0xffa5bd14) //  1 92%
 NHSTUB(PutOutNdFilter                         ,0xffa5bd5c) //  1 94%
 NHSTUB(Restart                                ,0xff81b760) //  1 96%
 NHSTUB(SetParameterData                       ,0xffb458b0) //  1 86%
-NHSTUB(TakeSemaphore                          ,0xffb1fc78) //  1 61%
 NHSTUB(UnsetZoomForMovie                      ,0xff8369cc) //  1 89%
 //NHSTUB(WriteSDCard                          ,0xffab7bd4) //  3 74%    *** != 0xffab7d7c
 // ALT: NHSTUB(WriteSDCard, 0xffab7d7c) // 3 23/8
@@ -54,11 +55,15 @@ NHSTUB(localtime                              ,0xff9233bc) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xffaa4d14) //  3 93%
 NHSTUB(MakeAFScan                             ,0xffb0bb6c) //  2 79%
 
+// Misc stuff
+// canon_data_src: 0xffb95410, canon_data_len: 0xcbf0
+
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
 NHSTUB(AllocateUncacheableMemory              ,0xff81e5b8) //  1
 NHSTUB(Close                                  ,0xffaa59f0) //120
 NHSTUB(CreateTask                             ,0xffb202ac) //120
+NHSTUB(DebugAssert                            ,0xffb2c1b8) //1100
 NHSTUB(DeleteFile_Fut                         ,0xffaa0fc4) //  1
 NHSTUB(DoAFLock                               ,0xffb06254) //102
 NHSTUB(ExecuteEventProcedure                  ,0xff814a6c) //  1
@@ -103,6 +108,7 @@ NHSTUB(SetLogicalEventActive                  ,0xffb4024c) //  3
 NHSTUB(SetPropertyCase                        ,0xff81bb74) //  3
 //NHSTUB(SetScriptMode                        ,0xffb402b0) //120            == 0xffb402b0
 NHSTUB(SleepTask                              ,0xffb201c0) //120
+NHSTUB(TakeSemaphore                          ,0xffb1fc70) //1101
 NHSTUB(TurnOffBackLight                       ,0xff849f2c) //  2
 NHSTUB(TurnOnBackLight                        ,0xff849efc) //  2
 NHSTUB(UnlockAF                               ,0xffb062d4) //102
