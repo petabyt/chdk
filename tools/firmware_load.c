@@ -175,6 +175,13 @@ char* adr2ptr(firmware *fw, uint32_t adr)
 
 //------------------------------------------------------------------------------------------------------------
 
+static int ignore_errors = 0;
+
+void set_ignore_errors(int n)
+{
+    ignore_errors = n;
+}
+
 // These functions should be used to get data & instructions in the firmware dump
 // This will ensure that everything works correctly for code / data referenced in RAM
 // or the 'alternate' base address for the firmware.
@@ -196,6 +203,10 @@ uint32_t* fwadr(firmware *fw, int i)
         i = ((i * 4) + (fw->base - fw->base2)) / 4;
         if ((i >= 0) && (i < fw->size2))
             return &fw->buf2[i];
+    }
+    if (ignore_errors)
+    {
+        return &fw->buf[0];
     }
     fprintf(stderr,"Invalid firmware offset %d.\n",i);
     error("\nInvalid firmware offset %d. Possible corrupt firmware or incorrect start address.\n",i);
