@@ -885,9 +885,11 @@ void op_FUNC(op *p)
     options.start_address = p->func_start;
     options.end_address   = p->func_end;
 
+    set_ignore_errors(1);
     options.flags |= disopt_remember_branches;
     disassemble1(fw, p->func_start, p->func_len);
     options.flags &= ~disopt_remember_branches;
+    set_ignore_errors(0);
 
     fprintf(outfile,"\n/*************************************************************/");
     fprintf(outfile,"\n//** %s @ 0x%08X - 0x%08X, length=%d\n", func_name, p->func_start, last_used_addr, (last_used_addr - p->func_start) / 4 + 1 ) ;
