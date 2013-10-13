@@ -8,6 +8,8 @@
 
 // Values for makefile.inc
 //   PLATFORMID = 12538 (0x30fa) // Found @ 0xfffe0130
+//   MAXRAMADDR = 0x01ffffff
+//   MEMISOSTART = 0x000a27f0
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -55,11 +57,19 @@ NHSTUB(localtime                              ,0xffafd2c0) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xff86f2bc) //  1 73%
 //NHSTUB(MakeAFScan                           ,0xff955dd8) //  1        *** != 0x00000000
 
+// Misc stuff
+// canon_data_src: 0xffb1a3f0, canon_data_len: 0xefe0
+
+// For capt_seq.c
+DEF(_nrflag,0x6e10) // Found @ ff9580b8 (0x6e10)
+//static long *nrflag = (long*)(0x6e10);       // Found @ ff9580b8
+
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
 NHSTUB(AllocateUncacheableMemory              ,0xff814bb0) //  1
 NHSTUB(Close                                  ,0xff870568) //120
 NHSTUB(CreateTask                             ,0xff821564) //120
+NHSTUB(DebugAssert                            ,0xff813a80) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff869328) //  1
 NHSTUB(ExecuteEventProcedure                  ,0xff816ac8) //  1
 NHSTUB(ExitTask                               ,0xff821924) //120
@@ -103,7 +113,7 @@ NHSTUB(SetParameterData                       ,0xff96d9f0) //  1
 NHSTUB(SetPropertyCase                        ,0xff824438) //  1
 //NHSTUB(SetScriptMode                        ,0xff966160) //120            == 0xff966160
 NHSTUB(SleepTask                              ,0xff821478) //120
-NHSTUB(TakeSemaphore                          ,0xff820f74) //  1
+NHSTUB(TakeSemaphore                          ,0xff820f74) //1101
 NHSTUB(TurnOffBackLight                       ,0xff9b93a8) //  1
 NHSTUB(TurnOnBackLight                        ,0xff9b937c) //  1
 NHSTUB(UnlockAF                               ,0xff9512b4) //  1

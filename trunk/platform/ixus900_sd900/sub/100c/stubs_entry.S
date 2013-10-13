@@ -8,6 +8,8 @@
 
 // Values for makefile.inc
 //   PLATFORMID = 12565 (0x3115) // Found @ 0xfffe0130
+//   MAXRAMADDR = 0x03ffffff
+//   MEMISOSTART = 0x000a4d10
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -51,11 +53,15 @@ NHSTUB(localtime                              ,0xffb537f8) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xff87a8ac) //  1 90%
 NHSTUB(MakeAFScan                             ,0xff993be4) //  2 96%
 
+// Misc stuff
+// canon_data_src: 0xffb6da40, canon_data_len: 0xcc00
+
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
 NHSTUB(AllocateUncacheableMemory              ,0xff814ea0) //  1
 NHSTUB(Close                                  ,0xff87b584) //120
 NHSTUB(CreateTask                             ,0xff822594) //120
+NHSTUB(DebugAssert                            ,0xff813d70) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff874444) //  1
 NHSTUB(ExecuteEventProcedure                  ,0xff816d3c) //  1
 NHSTUB(ExitTask                               ,0xff822954) //120
@@ -98,7 +104,7 @@ NHSTUB(SetParameterData                       ,0xff9ad59c) //  2
 NHSTUB(SetPropertyCase                        ,0xff825778) //  2
 //NHSTUB(SetScriptMode                        ,0xff9a6394) //120            == 0xff9a6394
 NHSTUB(SleepTask                              ,0xff8224a8) //120
-NHSTUB(TakeSemaphore                          ,0xff821fa4) //  1
+NHSTUB(TakeSemaphore                          ,0xff821fa4) //1101
 NHSTUB(TurnOffBackLight                       ,0xff9f5338) //  2
 NHSTUB(TurnOnBackLight                        ,0xff9f5308) //  2
 NHSTUB(UnlockMainPower                        ,0xff9a88ac) //120

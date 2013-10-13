@@ -8,6 +8,8 @@
 
 // Values for makefile.inc
 //   PLATFORMID = 12530 (0x30f2) // Found @ 0xffd70130
+//   MAXRAMADDR = 0x01ffffff
+//   MEMISOSTART = 0x0007c2b0
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
@@ -74,11 +76,19 @@ NHSTUB(localtime                              ,0xffab4370) //  1 93%
 // ERROR: Mount_FileSystem is not found.                   //--- ---    *** != 0xff869cd4
 // ERROR: MakeAFScan is not found.                         //--- ---    *** != 0xff94ef7c
 
+// Misc stuff
+// canon_data_src: 0xfface9c0, canon_data_len: 0xd340
+
+// For capt_seq.c
+DEF(_nrflag,0x53ec) // Found @ ff955444 (0x53ec)
+//static long *nrflag = (long*)(0x53ec);       // Found @ ff955444
+
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
 NHSTUB(AllocateUncacheableMemory              ,0xff813ec0) //  1
 //NHSTUB(Close                                ,0xff86a944) //120            == 0xff86a944
 NHSTUB(CreateTask                             ,0xff821a10) //120
+NHSTUB(DebugAssert                            ,0xff813e68) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff8635f0) //  1
 NHSTUB(ExecuteEventProcedure                  ,0xff816164) //  1
 NHSTUB(ExitTask                               ,0xff821dd0) //120
@@ -113,7 +123,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffa738ec) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff96787c) //120
 //NHSTUB(SetScriptMode                        ,0xff966290) //120            == 0xff966290
 NHSTUB(SleepTask                              ,0xff821870) //120
-NHSTUB(TakeSemaphore                          ,0xff8211e0) //  1
+NHSTUB(TakeSemaphore                          ,0xff8211e0) //1101
 NHSTUB(TurnOffBackLight                       ,0xff9a3614) //  1
 NHSTUB(TurnOnBackLight                        ,0xff9a35e8) //  1
 NHSTUB(UnlockMainPower                        ,0xff967a38) //120
