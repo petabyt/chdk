@@ -69,7 +69,6 @@
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video", "Set+ZoomIn" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_VIDEO, KEY_SET | KEY_ZOOM_IN }
-    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
     #define CAM_CAN_SD_OVERRIDE             1    // Camera allows to do subject distance override
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF            // no SD override unless in manual focus mode

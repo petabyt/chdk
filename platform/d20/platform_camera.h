@@ -116,8 +116,6 @@
     #define CAM_QUALITY_OVERRIDE             	1
     #define CAM_DATE_FOLDER_NAMING          	1
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 	1
-
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1
 
     #undef  CAM_USB_EVENTID

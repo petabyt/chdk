@@ -58,9 +58,6 @@
 
     #define cam_CalibrationIlluminant1      1       // Daylight
 
-    #undef  CAM_USES_ASPECT_CORRECTION
-    #define CAM_USES_ASPECT_CORRECTION      1
-
     #define CAM_ZEBRA_NOBUF                 1
 
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
