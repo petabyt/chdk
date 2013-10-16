@@ -203,7 +203,8 @@ void script_end()
 {
     // Tell other code that script has ended
     camera_info.state.state_kbd_script_run = SCRIPT_STATE_INACTIVE;
-
+    camera_info.state.osd_title_line = 1 ;
+    
     // reset the script terminate key
     script_terminate_key = KEY_SHOOT_FULL ;
 
