@@ -237,6 +237,7 @@ void camera_info_init()
     camera_info.bss_end = (int)&link_bss_end;
 
     camera_info.perf.af_led.min = 0xFFFFFFFF;
+    camera_info.state.osd_title_line = 1 ;
 }
 
 //==========================================================

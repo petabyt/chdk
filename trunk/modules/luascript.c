@@ -318,6 +318,22 @@ static int lua_get_key_arg( lua_State * L, int narg )
     return k;
 }
 
+/*
+  get a value where boolean or 0/!0 are accepted for on/off.
+  normal lua toboolean will convert 0 to true, but ubasic and c users 
+  will expect 0 to be off
+  intentional HACK: numbers greater than 1 are returned as is
+*/
+static unsigned on_off_value_from_lua_arg( lua_State* L, int index)
+{
+  if( lua_isboolean(L,index) ) {
+  	return lua_toboolean(L,index);
+  }
+  else {
+  	return luaL_checknumber(L,index); 
+  }
+}
+
 static int luaCB_set_curve_state( lua_State* L )
 {
     libcurves->curve_set_mode(luaL_checknumber( L, 1 ));
@@ -1651,6 +1667,20 @@ static int luaCB_set_backlight( lua_State* L )
   return 0;
 }
 
+// Enable/disable CHDK <ALT> & scriptname OSD items (input argument 1/0)
+static int luaCB_set_draw_title_line( lua_State* L )
+{
+  camera_info.state.osd_title_line= on_off_value_from_lua_arg(L,1);
+  return 0;
+}
+
+// get CHDK <ALT> & scriptname OSD display state (input argument 1/0)
+static int luaCB_get_draw_title_line( lua_State* L )
+{
+   lua_pushboolean( L, camera_info.state.osd_title_line  );
+   return 1;
+}
+
 // get the string or number passed in index and return it as an event id
 static unsigned levent_id_from_lua_arg( lua_State* L, int index)
 {
@@ -1673,21 +1703,6 @@ static unsigned levent_id_from_lua_arg( lua_State* L, int index)
   return event_id;
 }
 
-/*
-  get a value where boolean or 0/!0 are accepted for on/off.
-  normal lua toboolean will convert 0 to true, but ubasic and c users 
-  will expect 0 to be off
-  intentional HACK: numbers greater than 1 are returned as is
-*/
-static unsigned on_off_value_from_lua_arg( lua_State* L, int index)
-{
-  if( lua_isboolean(L,index) ) {
-  	return lua_toboolean(L,index);
-  }
-  else {
-  	return luaL_checknumber(L,index); 
-  }
-}
 
 /*
   return the index of an event, given it's name or event id
@@ -2579,6 +2594,8 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(raw_merge_add_file)
     FUNC(raw_merge_end)
     FUNC(set_backlight)
+    FUNC(set_draw_title_line)
+    FUNC(get_draw_title_line)
     FUNC(set_aflock)
     FUNC(set_curve_state)
     FUNC(get_curve_state)

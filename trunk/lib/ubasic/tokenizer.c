@@ -160,6 +160,8 @@ static const struct keyword_token keywords[] = {
   {"set_capture_mode_canon",  TOKENIZER_SET_CAPTURE_MODE_CANON},
   {"set_capture_mode",        TOKENIZER_SET_CAPTURE_MODE},
   {"set_backlight",           TOKENIZER_SET_BACKLIGHT},
+  {"set_draw_title_line",     TOKENIZER_SET_DRAW_TITLE_LINE},
+  {"get_draw_title_line",     TOKENIZER_GET_DRAW_TITLE_LINE},
   {"set_focus",               TOKENIZER_SET_FOCUS},
   {"set_iso_mode",            TOKENIZER_SET_ISO_MODE},
   {"set_iso_real",            TOKENIZER_SET_ISO_REAL},

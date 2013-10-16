@@ -677,7 +677,11 @@ static int factor(void)
     int d = expr();
     r = shooting_get_tv96_from_shutter_speed((float)n/(float)d);
     break;
-
+  case TOKENIZER_GET_DRAW_TITLE_LINE:    
+    accept(TOKENIZER_GET_DRAW_TITLE_LINE);  
+    r = camera_info.state.osd_title_line ;
+    break;
+      
   default:
     r = varfactor();
     break;
@@ -2488,7 +2492,12 @@ statement(void)
   case TOKENIZER_SET_BACKLIGHT:
       on_off_statement(token, TurnOnBackLight, TurnOffBackLight);
       break;
-
+  case TOKENIZER_SET_DRAW_TITLE_LINE:
+      accept(token);
+      camera_info.state.osd_title_line=expr()?1:0;
+      accept_cr();
+      break;
+      
       // >> mx3 . motion detector
   case   TOKENIZER_MD_DETECT_MOTION:
       md_detect_motion_statement();

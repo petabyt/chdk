@@ -504,6 +504,18 @@ void TurnOffBackLight()
     printf("*** TurnOffBackLight ***\n");
 }
 
+void set_draw_title_line(int m)
+{
+   printf("*** set CHDK OSD title line ( %d ) ***\n",m);
+   return ;
+}
+
+void get_draw_title_line(int m)
+{
+   printf("*** get CHDK OSD title line state ***\n");
+   return ;
+}
+
 void DoAFLock()
 {
     printf("*** DoAFLock ***\n");

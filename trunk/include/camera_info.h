@@ -152,6 +152,7 @@ typedef struct
         long    shutter_open_tick_count;    // For DNG EXIF creation
         int     state_shooting_progress;    // Holds current state when still image being processed
         int     state_kbd_script_run;       // Script execution state
+        int     osd_title_line;             // Display state of CHDK OSD title line
     } state;
 
     // Performance counters

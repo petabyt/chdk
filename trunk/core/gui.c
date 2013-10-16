@@ -2609,21 +2609,39 @@ static void gui_draw_alt_helper()
 #endif
 
 //-------------------------------------------------------------------
+
+
 void gui_chdk_draw()
 {
+    static int clear_for_title = 1;
+
 #ifdef CAM_DISP_ALT_TEXT
     gui_draw_alt_helper();
-    script_get_alt_text(buf);
-    draw_string(((CAM_SCREEN_WIDTH/2)-(FONT_WIDTH*strlen(buf)/2)), (CAM_SCREEN_HEIGHT-FONT_HEIGHT), buf, MAKE_COLOR(COLOR_RED, COLOR_WHITE));
 #else
     gui_draw_osd();
 #endif
 
-    if ((mode_get()&MODE_MASK) == MODE_REC || (mode_get()&MODE_MASK) == MODE_PLAY)
+    if( camera_info.state.osd_title_line ) 
     {
-        draw_txt_string(0, 14, script_title, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-    }
+#ifdef CAM_DISP_ALT_TEXT
+       script_get_alt_text(buf);
+       draw_string(((CAM_SCREEN_WIDTH/2)-(FONT_WIDTH*strlen(buf)/2)), (CAM_SCREEN_HEIGHT-FONT_HEIGHT), buf, MAKE_COLOR(COLOR_RED, COLOR_WHITE));
+#endif     
 
+        if ( (mode_get()&MODE_MASK) == MODE_REC || (mode_get()&MODE_MASK) == MODE_PLAY)
+        {
+            draw_txt_string(0, 14, script_title, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        }
+        clear_for_title = 1;   
+    }
+    else 
+    {
+        if ( clear_for_title )
+        {
+            draw_restore() ;
+            clear_for_title = 0;
+        }
+    }
     console_draw();
 }
 
