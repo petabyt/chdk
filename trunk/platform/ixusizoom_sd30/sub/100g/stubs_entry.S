@@ -16,9 +16,6 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(EnterToCompensationEVF               ,0xff94a9c0) //  1 64%    *** != 0xff948c84
 //NHSTUB(ExitFromCompensationEVF              ,0xff94aac0) //  1 73%    *** != 0xff948c94
-NHSTUB(GetDrive_ClusterSize                   ,0xff86fe04) //  1 92%
-NHSTUB(GetDrive_FreeClusters                  ,0xff86fe7c) //  1 92%
-NHSTUB(GetDrive_TotalClusters                 ,0xff86fe40) //  1 92%
 NHSTUB(GetFocusLensSubjectDistance            ,0xffa7a8b0) //  1 90%
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffa7ae50) //  3 52%
 NHSTUB(GetSystemTime                          ,0xff815094) //  1 96%
@@ -28,7 +25,6 @@ NHSTUB(PutInNdFilter                          ,0xffa854cc) //  1 92%
 // ALT: NHSTUB(PutInNdFilter, 0xffa87058) // 2 25/2
 // ALT: NHSTUB(PutInNdFilter, 0xffa870a0) // 2 25/2
 NHSTUB(PutOutNdFilter                         ,0xffa85514) //  1 94%
-NHSTUB(SetLogicalEventActive                  ,0xff95c1a4) //  3 87%
 NHSTUB(UnsetZoomForMovie                      ,0xff995220) //  1 89%
 NHSTUB(UpdateMBROnFlash                       ,0xff86fb3c) //  1 96%
 NHSTUB(WriteSDCard                            ,0xff87f694) //  1 93%
@@ -55,6 +51,19 @@ NHSTUB(taskIdListGet                          ,0xffae12a4) //  1 82%
 NHSTUB(localtime                              ,0xffacadb4) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xff86f8dc) //  1 90%
 NHSTUB(MakeAFScan                             ,0xff94cf90) //  1 89%
+
+// Check of modemap from 'platform/CAMERA/shooting.c':
+// Firmware modemap table found @ff95e37c -> ff95e37c
+// Strange mode 0x00010010 in firmware, found in modemap as 16 (MODE_SCN_KIDS_PETS)
+// Strange mode 0x00010011 in firmware, found in modemap as 17 (MODE_SCN_FIREWORK)
+// Strange mode 0x00010012 in firmware, found in modemap as 18 (MODE_VIDEO_STD)
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xff9575f8) // Found @0xff9575f8,          stubs_min = 0xff9575f8 (0xFF9575F8)
+//DEF(FlashParamsTable                        ,0xff9604bc) // Found @0xff9604bc, ** != ** stubs_min = 0xff958138 (0xFF958138)
+
+// Values below go in 'lib.c':
+//int get_flash_params_count(void) { return 0x5d; }                          // Found @0xff962c0c
 
 // Misc stuff
 // canon_data_src: 0xffae7ee0, canon_data_len: 0xe7d0
@@ -85,6 +94,9 @@ NHSTUB(Fwrite_Fut                             ,0xff869780) //120
 NHSTUB(GetBatteryTemperature                  ,0xff82dec8) //102
 NHSTUB(GetCCDTemperature                      ,0xff82deb4) //102
 NHSTUB(GetCurrentAvValue                      ,0xffa874ac) //  1
+NHSTUB(GetDrive_ClusterSize                   ,0xff86fe04) //119
+NHSTUB(GetDrive_FreeClusters                  ,0xff86fe7c) //1103
+NHSTUB(GetDrive_TotalClusters                 ,0xff86fe40) //119
 NHSTUB(GetOpticalTemperature                  ,0xff82dea0) //102
 NHSTUB(GetParameterData                       ,0xff962ba0) //  1
 NHSTUB(GetPropertyCase                        ,0xff825bb0) //  1
@@ -109,6 +121,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffa8a798) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff95dfec) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff98a540) //120
 NHSTUB(SetFileAttributes                      ,0xff870814) //  1
+NHSTUB(SetLogicalEventActive                  ,0xff95c1a4) //1104
 NHSTUB(SetParameterData                       ,0xff962ac0) //  1
 NHSTUB(SetPropertyCase                        ,0xff825a94) //  1
 //NHSTUB(SetScriptMode                        ,0xff95c208) //120            == 0xff95c208

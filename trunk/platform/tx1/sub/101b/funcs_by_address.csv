@@ -95,6 +95,8 @@
 0xff81f4ec,UIFS_StartMovieRecord_FW
 0xff81f4f8,UIFS_StopMovieRecord_FW
 0xff81f504,UIFS_SetCradleSetting_FW
+0xff821da0,PB2Rec
+0xff821de0,Rec2PB
 0xff824d94,ExecuteResetFactoryWithRomWrite_FW
 0xff829c58,SetCurrentCaptureModeType
 0xff829c58,SetCurrentCaptureModeType_FW
@@ -331,6 +333,9 @@
 0xffaaa65c,Fflush_Fut
 0xffaae0a8,Unmount_FileSystem
 0xffaae1fc,UpdateMBROnFlash
+0xffaae4c8,GetDrive_ClusterSize
+0xffaae504,GetDrive_TotalClusters
+0xffaae540,GetDrive_FreeClusters
 0xffaaecb4,Open
 0xffaaecb4,Open_FW
 0xffaaecdc,Close
@@ -567,6 +572,7 @@
 0xffb5ba70,DeleteController_FW
 0xffb5bba8,MoveControllerToTopOfZOrder_FW
 0xffb5bd0c,GetSelfControllerHandle_FW
+0xffb5f480,GetLogicalEventName
 0xffb5f518,PostLogicalEventForNotPowerType
 0xffb5f518,PostLogicalEventForNotPowerType_FW
 0xffb5f594,PostLogicalEventToUI
@@ -574,6 +580,8 @@
 0xffb5f61c,PostEventShootSeqToUI_FW
 0xffb5f684,ShowLogicalEventName_FW
 0xffb5f7c4,LogiEvnt_LoadCameraLog_FW
+0xffb61124,set_control_event
+0xffb61384,IsControlEventActive
 0xffb61384,IsControlEventActive_FW
 0xffb61410,SetLogicalEventActive
 0xffb61474,SetScriptMode

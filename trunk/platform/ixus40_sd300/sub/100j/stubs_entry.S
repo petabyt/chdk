@@ -24,9 +24,6 @@ NHSTUB(AllocateUncacheableMemory              ,0xff815288) //  1 65%
 // ALT: NHSTUB(Feof_Fut, 0xfff1732c) // 1 10/0
 //NHSTUB(FreeMemory                           ,0xff81eb10) //120        *** != 0xff81f578
 // ERROR: FreeUncacheableMemory is not found.              //--- ---    *** != 0xff8152bc
-// ERROR: GetDrive_ClusterSize is not found.               //--- ---    *** != 0xff8707ec
-// ERROR: GetDrive_FreeClusters is not found.              //--- ---    *** != 0xff87086c
-// ERROR: GetDrive_TotalClusters is not found.             //--- ---    *** != 0xff87082c
 // ERROR: GetFocusLensSubjectDistance is not found.        //--- ---    *** != 0xffa5fa64
 // ERROR: GetFocusLensSubjectDistanceFromLens is not found.  //--- ---    *** != 0xffa600d8
 // ERROR: GetParameterData is not found.                   //--- ---    *** != 0x00000000
@@ -107,6 +104,14 @@ NHSTUB(localtime                              ,0xffabceb4) //  1 93%
 // ALT: NHSTUB(time, 0xfff51cb0) // 1 25/0
 // ALT: NHSTUB(time, 0xfff51cb0) // 2 25/0
 
+// Check of modemap from 'platform/CAMERA/shooting.c':
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xff9514f0) // Found @0xff9514f0,          stubs_min = 0xff9514f0 (0xFF9514F0)
+//DEF(FlashParamsTable                        ,0xff958138) // Found @0xff958138,          stubs_min = 0xff958138 (0xFF958138)
+
+// Values below go in 'lib.c':
+
 // Misc stuff
 // canon_data_src: 0xffad76d0, canon_data_len: 0xeb60
 
@@ -131,6 +136,9 @@ NHSTUB(Fwrite_Fut                             ,0xff869c28) //  1
 //NHSTUB(GetBatteryTemperature                ,0xffa48900) //102            == 0xffa48900
 //NHSTUB(GetCCDTemperature                    ,0xffa488ec) //102            == 0xffa488ec
 NHSTUB(GetCurrentAvValue                      ,0xffa6aeb0) //  1
+//NHSTUB(GetDrive_ClusterSize                 ,0xff8707ec) //119            == 0xff8707ec
+//NHSTUB(GetDrive_FreeClusters                ,0xff87086c) //1103            == 0xff87086c
+//NHSTUB(GetDrive_TotalClusters               ,0xff87082c) //119            == 0xff87082c
 NHSTUB(GetOpticalTemperature                  ,0xffa488d8) //102
 //NHSTUB(GetZoomLensCurrentPosition           ,0xffa52180) //102            == 0xffa52180
 //NHSTUB(GiveSemaphore                        ,0xff823144) //120            == 0xff823144

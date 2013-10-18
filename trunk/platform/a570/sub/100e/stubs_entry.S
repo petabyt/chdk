@@ -35,6 +35,17 @@ NHSTUB(utime                                  ,0xffefa040) //  1 57%
 NHSTUB(localtime                              ,0xffcd2990) //  1 93%
 NHSTUB(MakeAFScan                             ,0xffeaa230) //  2 86%
 
+// Check of modemap from 'platform/CAMERA/shooting.c':
+// Firmware modemap table found @ffee5e94 -> ffee5e94
+// No problems found with modemap table.
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xffed9260) // Found @0xffed9260,          stubs_min = 0xffed9260 (0xFFED9260)
+//DEF(FlashParamsTable                        ,0xffee8478) // Found @0xffee8478,          stubs_min = 0xffee8478 (0xFFEE8478)
+
+// Values below go in 'lib.c':
+//int get_flash_params_count(void) { return 0x6e; }                          // Found @0xffee3d9c
+
 // Misc stuff
 // canon_data_src: 0xfff2d320, canon_data_len: 0xbf70
 
@@ -63,9 +74,9 @@ NHSTUB(GetCCDTemperature                      ,0xffdeac64) //102
 NHSTUB(GetCurrentAvValue                      ,0xffe05c74) //  2
 // ALT: NHSTUB(GetCurrentAvValue, 0xffe05d6c) // 1 13/0
 // ALT: NHSTUB(GetCurrentAvValue, 0xffe083cc) // 1 13/0
-NHSTUB(GetDrive_ClusterSize                   ,0xffe46344) //  3
-NHSTUB(GetDrive_FreeClusters                  ,0xffe463bc) //  3
-NHSTUB(GetDrive_TotalClusters                 ,0xffe46380) //  3
+NHSTUB(GetDrive_ClusterSize                   ,0xffe46344) //119
+NHSTUB(GetDrive_FreeClusters                  ,0xffe463bc) //1103
+NHSTUB(GetDrive_TotalClusters                 ,0xffe46380) //119
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe72080) //  3
 NHSTUB(GetOpticalTemperature                  ,0xffdeac50) //102
 NHSTUB(GetZoomLensCurrentPoint                ,0xffe86db8) //102
@@ -91,7 +102,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffe0b70c) //102
 NHSTUB(SetAutoShutdownTime                    ,0xffee0aa8) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xffc17d10) //120
 NHSTUB(SetFileAttributes                      ,0xffe46d40) //  3
-NHSTUB(SetLogicalEventActive                  ,0xffede6b0) //  3
+NHSTUB(SetLogicalEventActive                  ,0xffede6b0) //1104
 NHSTUB(SetPropertyCase                        ,0xffc0bb5c) //  3
 //NHSTUB(SetScriptMode                        ,0xffede714) //120            == 0xffede714
 NHSTUB(SleepTask                              ,0xffebe788) //120

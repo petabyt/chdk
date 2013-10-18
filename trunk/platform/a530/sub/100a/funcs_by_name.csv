@@ -126,9 +126,9 @@
 0xffd52e14,GetDialogItemPositionToDialog_FW
 0xffd539ec,GetDialogItemResolution_FW
 0xffd52e48,GetDialogItemResolutionToDialog_FW
-0xffc5dc88,GetDrive_ClusterSize,(stubs_entry_2.s)
-0xffc5dd00,GetDrive_FreeClusters,(stubs_entry_2.s)
-0xffc5dcc4,GetDrive_TotalClusters,(stubs_entry_2.s)
+0xffc5dc88,GetDrive_ClusterSize
+0xffc5dd00,GetDrive_FreeClusters
+0xffc5dcc4,GetDrive_TotalClusters
 0xffc0fb94,GetEventFlagValue
 0xffc0a1f0,GetFirmwareVersion_FW
 0xffd52624,GetFocusedItemIDOfDialogItem_FW
@@ -136,6 +136,7 @@
 0xffd5265c,GetItemHandleOfDialogBox_FW
 0xffc17cac,GetKbdState
 0xffc1ac70,GetLBOffset_FW
+0xffd43c88,GetLogicalEventName
 0xffeb52e0,GetLogToFile_FW
 0xffd47f00,GetMainPowerLockCounter_FW
 0xffc1082c,GetNumberOfPostedMessages
@@ -167,6 +168,7 @@
 0xffec99d4,iosDrvInstall
 0xffebf8ec,isalpha
 0xffddd20c,IsCalledStopEVF_FW
+0xffd45a5c,IsControlEventActive
 0xffd45a5c,IsControlEventActive_FW
 0xffebf91c,isdigit
 0xffd478b4,IsDisableAutoShutdown_FW
@@ -234,6 +236,7 @@
 0xffc0b4ec,OpenConsole_FW
 0xffec59ac,opendir
 0xffc8d948,OutPort_FW
+0xffd7086c,PB2Rec
 0xffc0a808,Peek16_FW
 0xffc0a7ec,Peek32_FW
 0xffc0a824,Peek8_FW
@@ -289,6 +292,7 @@
 0xffc5e544,Read_FW
 0xffec5944,readdir
 0xffeb45a8,realloc
+0xffd708ac,Rec2PB
 0xffc100c0,ReceiveMessageQueue
 0xffd5e944,RefreshPhysicalScreen
 0xffd5e944,RefreshPhysicalScreen_FW
@@ -312,6 +316,7 @@
 0xffc0b2c4,RotateConsoleZOder_FW
 0xffeacf24,ScriptDisEnabled_FW
 0xffeacf38,ScriptEnabled_FW
+0xffd4580c,set_control_event
 0xffe87778,SetAE_ShutterSpeed
 0xffd53798,SetAttributeToDialogItem_FW
 0xffd47c68,SetAutoShutdownTime
@@ -335,6 +340,7 @@
 0xffc02ecc,SetLClk18MHz_FW
 0xffc02ebc,SetLClk36MHz_FW
 0xffc02eac,SetLClk72MHz_FW
+0xffd45ae8,SetLogicalEventActive
 0xffc03090,SetMClk18MHz_FW
 0xffc03068,SetMClk36MHz_FW
 0xffc03024,SetMClk72MHz_FW

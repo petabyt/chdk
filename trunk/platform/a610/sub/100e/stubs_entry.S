@@ -16,6 +16,21 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe66d90) //  3 52%
 
+// Check of modemap from 'platform/CAMERA/shooting.c':
+// Firmware modemap table found @ffd49168 -> ffd49168
+// Strange mode 0x00010012 in firmware, found in modemap as 18 (MODE_VIDEO_STD)
+// Strange mode 0x00010013 in firmware but not in current modemap
+// Strange mode 0x00010014 in firmware but not in current modemap
+// Strange mode 0x00010015 in firmware but not in current modemap
+// Strange mode 0x00020016 in firmware but not in current modemap
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xffd42290) // Found @0xffd42290,          stubs_min = 0xffd42290 (0xFFD42290)
+//DEF(FlashParamsTable                        ,0xffd4b62c) // Found @0xffd4b62c,          stubs_min = 0xffd4b62c (0xFFD4B62C)
+
+// Values below go in 'lib.c':
+//int get_flash_params_count(void) { return 0x5d; }                          // Found @0xffd4e368
+
 // Misc stuff
 // canon_data_src: 0xffed3720, canon_data_len: 0xe910
 
@@ -48,9 +63,9 @@ NHSTUB(GetBatteryTemperature                  ,0xffc1c488) //102
 NHSTUB(GetCCDTemperature                      ,0xffc1c474) //102
 NHSTUB(GetCurrentAvValue                      ,0xffe71314) //  1
 // ALT: NHSTUB(GetCurrentAvValue, 0xffe73714) // 1 13/0
-NHSTUB(GetDrive_ClusterSize                   ,0xffc5bee8) //  1
-NHSTUB(GetDrive_FreeClusters                  ,0xffc5bf60) //  1
-NHSTUB(GetDrive_TotalClusters                 ,0xffc5bf24) //  1
+NHSTUB(GetDrive_ClusterSize                   ,0xffc5bee8) //119
+NHSTUB(GetDrive_FreeClusters                  ,0xffc5bf60) //1103
+NHSTUB(GetDrive_TotalClusters                 ,0xffc5bf24) //119
 NHSTUB(GetFocusLensSubjectDistance            ,0xffe667f0) //  1
 NHSTUB(GetOpticalTemperature                  ,0xffc1c460) //102
 NHSTUB(GetParameterData                       ,0xffd4e2fc) //  1
@@ -79,7 +94,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffe76a00) //102
 NHSTUB(SetAutoShutdownTime                    ,0xffd48dd8) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xffd76e1c) //120
 NHSTUB(SetFileAttributes                      ,0xffc5c8c4) //  1
-NHSTUB(SetLogicalEventActive                  ,0xffd46f7c) //  1
+NHSTUB(SetLogicalEventActive                  ,0xffd46f7c) //1104
 NHSTUB(SetParameterData                       ,0xffd4e21c) //  1
 NHSTUB(SetPropertyCase                        ,0xffc1408c) //  1
 //NHSTUB(SetScriptMode                        ,0xffd46fe4) //120            == 0xffd46fe4

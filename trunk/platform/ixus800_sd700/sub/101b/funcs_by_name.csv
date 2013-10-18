@@ -136,9 +136,9 @@
 0xff97d090,GetDialogItemPositionToDialog_FW
 0xff97dcb0,GetDialogItemResolution_FW
 0xff97d0c4,GetDialogItemResolutionToDialog_FW
-0xff86ed94,GetDrive_ClusterSize,(stubs_entry_2.s)
-0xff86ee0c,GetDrive_FreeClusters,(stubs_entry_2.s)
-0xff86edd0,GetDrive_TotalClusters,(stubs_entry_2.s)
+0xff86ed94,GetDrive_ClusterSize
+0xff86ee0c,GetDrive_FreeClusters
+0xff86edd0,GetDrive_TotalClusters
 0xff81ff58,GetEventFlagValue
 0xff81a5b0,GetFirmwareVersion_FW
 0xff97c8a0,GetFocusedItemIDOfDialogItem_FW
@@ -163,6 +163,7 @@
 0xff97c8d8,GetItemHandleOfDialogBox_FW
 0xff827ecc,GetKbdState
 0xff82ade0,GetLBOffset_FW
+0xff96df9c,GetLogicalEventName
 0xffaf94ac,GetLogToFile_FW
 0xff9722a0,GetMainPowerLockCounter_FW
 0xff820bf0,GetNumberOfPostedMessages
@@ -195,6 +196,7 @@
 0xffb034bc,isalpha
 0xffaba2e4,ISAutoCenter_FW
 0xffa156a8,IsCalledStopEVF_FW
+0xff96fd70,IsControlEventActive
 0xff96fd70,IsControlEventActive_FW
 0xffb034ec,isdigit
 0xff971c54,IsDisableAutoShutdown_FW
@@ -264,6 +266,7 @@
 0xff81b8b0,OpenConsole_FW
 0xffb0944c,opendir
 0xff8a0b9c,OutPort_FW
+0xff99b44c,PB2Rec
 0xff81abcc,Peek16_FW
 0xff81abb0,Peek32_FW
 0xff81abe8,Peek8_FW
@@ -319,6 +322,7 @@
 0xff86f63c,Read_FW
 0xffb093e4,readdir
 0xffaf8774,realloc
+0xff99b48c,Rec2PB
 0xffab87d0,ReceiveFromSrpv_FW
 0xff820484,ReceiveMessageQueue
 0xff988ef0,RefreshPhysicalScreen
@@ -343,6 +347,7 @@
 0xff81b688,RotateConsoleZOder_FW
 0xffaf1158,ScriptDisEnabled_FW
 0xffaf116c,ScriptEnabled_FW
+0xff96fb20,set_control_event
 0xffac9c80,SetAE_ShutterSpeed
 0xff97da5c,SetAttributeToDialogItem_FW
 0xff972008,SetAutoShutdownTime
@@ -378,6 +383,7 @@
 0xff812f64,SetLClk18MHz_FW
 0xff812f54,SetLClk36MHz_FW
 0xff812f44,SetLClk72MHz_FW
+0xff96fdfc,SetLogicalEventActive
 0xff813128,SetMClk18MHz_FW
 0xff813100,SetMClk36MHz_FW
 0xff8130bc,SetMClk72MHz_FW

@@ -14,20 +14,22 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(GetDrive_ClusterSize                 ,0xffc60864) //  3 76%    *** != 0xffc607b0
-//NHSTUB(GetDrive_FreeClusters                ,0xffc607b0) //  1 73%    *** != 0xffc60828
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xffc607ec) // 1 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xffc60828) // 1 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xffc60864) // 1 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xffc607ec) // 3 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xffc60828) // 3 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xffc60864) // 3 19/7
 NHSTUB(Restart                                ,0xffc12fdc) //  1 96%
-NHSTUB(SetLogicalEventActive                  ,0xffd6eab0) //  1 88%
 NHSTUB(UnsetZoomForMovie                      ,0xffda9138) //  1 89%
 NHSTUB(add_ptp_handler                        ,0xffe59fe4) //  1 96%
 NHSTUB(taskIdListGet                          ,0xfff0d6e8) //  1 82%
 NHSTUB(localtime                              ,0xffef96fc) //  1 93%
+
+// Check of modemap from 'platform/CAMERA/shooting.c':
+// Firmware modemap table found @ffd711a8 -> ffd711a8
+// No problems found with modemap table.
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xffd69bbc) // Found @0xffd69bbc,          stubs_min = 0xffd69bbc (0xFFD69BBC)
+//DEF(FlashParamsTable                        ,0xffd73a14) // Found @0xffd73a14,          stubs_min = 0xffd73a14 (0xFFD73A14)
+
+// Values below go in 'lib.c':
+//int get_flash_params_count(void) { return 0x6d; }                          // Found @0xffd760fc
 
 // Misc stuff
 // canon_data_src: 0xfff13950, canon_data_len: 0xbd80
@@ -58,7 +60,9 @@ NHSTUB(GetCCDTemperature                      ,0xffc1d1ec) //102
 NHSTUB(GetCurrentAvValue                      ,0xffeb3d50) //  2
 // ALT: NHSTUB(GetCurrentAvValue, 0xffeb3e48) // 1 13/0
 // ALT: NHSTUB(GetCurrentAvValue, 0xffeb628c) // 1 13/0
-NHSTUB(GetDrive_TotalClusters                 ,0xffc607ec) //  2
+//NHSTUB(GetDrive_ClusterSize                 ,0xffc607b0) //119            == 0xffc607b0
+//NHSTUB(GetDrive_FreeClusters                ,0xffc60828) //1103            == 0xffc60828
+NHSTUB(GetDrive_TotalClusters                 ,0xffc607ec) //119
 NHSTUB(GetFocusLensSubjectDistance            ,0xffea2f3c) //  2
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffea34f0) //  2
 NHSTUB(GetOpticalTemperature                  ,0xffc1d1d8) //102
@@ -87,6 +91,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffeb9144) //102
 NHSTUB(SetAutoShutdownTime                    ,0xffd70e4c) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xffd9da1c) //120
 NHSTUB(SetFileAttributes                      ,0xffc611ec) //  1
+NHSTUB(SetLogicalEventActive                  ,0xffd6eab0) //1104
 NHSTUB(SetParameterData                       ,0xffd75fb0) //  2
 NHSTUB(SetPropertyCase                        ,0xffc14c9c) //  2
 //NHSTUB(SetScriptMode                        ,0xffd6eb18) //120            == 0xffd6eb18

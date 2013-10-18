@@ -119,6 +119,9 @@
 0xfff17328,Feof_Fut,(stubs_entry_2.s)
 0xff869d40,Fflush_Fut
 0xff870344,Unmount_FileSystem
+0xff8707ec,GetDrive_ClusterSize
+0xff87082c,GetDrive_TotalClusters
+0xff87086c,GetDrive_FreeClusters
 0xff885954,EngDrvOut
 0xff885974,EngDrvRead
 0xff885988,EngDrvBits
@@ -201,6 +204,7 @@
 0xff951108,DeleteController_FW
 0xff951240,MoveControllerToTopOfZOrder_FW
 0xff951378,GetSelfControllerHandle_FW
+0xff9539b4,GetLogicalEventName
 0xff953a4c,PostLogicalEventForNotPowerType
 0xff953a4c,PostLogicalEventForNotPowerType_FW
 0xff953ad8,PostLogicalEventToUI

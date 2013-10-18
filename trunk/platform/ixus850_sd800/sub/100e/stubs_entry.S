@@ -19,15 +19,6 @@ NHSTUB(EnterToCompensationEVF                 ,0xff9954ec) //  2 90%
 //NHSTUB(ExitFromCompensationEVF              ,0xff998b8c) //  2 66%    *** != 0xff99552c
 // ALT: NHSTUB(ExitFromCompensationEVF, 0xff998be8) // 2 20/10
 // ALT: NHSTUB(ExitFromCompensationEVF, 0xff998ca4) // 2 20/10
-//NHSTUB(GetDrive_ClusterSize                 ,0xff879cac) //  3 76%    *** != 0xff879bf8
-//NHSTUB(GetDrive_FreeClusters                ,0xff879bf8) //  1 73%    *** != 0xff879c70
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff879c34) // 1 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff879c70) // 1 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff879cac) // 1 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff879c34) // 3 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff879c70) // 3 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff879cac) // 3 19/7
-NHSTUB(GetDrive_TotalClusters                 ,0xff879c34) //  2 92%
 NHSTUB(GetFocusLensSubjectDistance            ,0xffb021e8) //  1 83%
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffb02754) //  2 92%
 NHSTUB(GetPropertyCase                        ,0xff825a14) //  2 92%
@@ -35,7 +26,6 @@ NHSTUB(GetSystemTime                          ,0xff8151ec) //  1 96%
 NHSTUB(PutInNdFilter                          ,0xffb134a4) //  1 92%
 NHSTUB(PutOutNdFilter                         ,0xffb134ec) //  1 94%
 NHSTUB(Restart                                ,0xff823c00) //  1 96%
-NHSTUB(SetLogicalEventActive                  ,0xff9abbe0) //  1 88%
 //NHSTUB(UnlockAF                             ,0xff9955a4) //  1 78%    *** != 0xff995364
 NHSTUB(UnsetZoomForMovie                      ,0xff9e9470) //  1 89%
 //NHSTUB(WriteSDCard                          ,0xff889560) //  2 93%    *** != 0xff8896fc
@@ -53,6 +43,18 @@ NHSTUB(taskIdListGet                          ,0xffb6e3dc) //  1 82%
 NHSTUB(localtime                              ,0xffb5a3f0) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xff879734) //  1 90%
 NHSTUB(MakeAFScan                             ,0xff999cf8) //  2 79%
+
+// Check of modemap from 'platform/CAMERA/shooting.c':
+// Firmware modemap table found @ff9ae2e0 -> ff9ae2e0
+// Mode 33305 in firmware but not in current modemap
+// Current modemap entry not found in firmware - MODE_COLOR_SWAP          33307
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xff9a6cec) // Found @0xff9a6cec,          stubs_min = 0xff9a6cec (0xFF9A6CEC)
+//DEF(FlashParamsTable                        ,0xff9b0860) // Found @0xff9b0860,          stubs_min = 0xff9b0860 (0xFF9B0860)
+
+// Values below go in 'lib.c':
+//int get_flash_params_count(void) { return 0x6d; }                          // Found @0xff9b2f00
 
 // Misc stuff
 // canon_data_src: 0xffb74640, canon_data_len: 0xcbb0
@@ -79,6 +81,9 @@ NHSTUB(GetBatteryTemperature                  ,0xff82e4f0) //102
 NHSTUB(GetCCDTemperature                      ,0xff82e4dc) //102
 NHSTUB(GetCurrentAvValue                      ,0xffb132b0) //  2
 // ALT: NHSTUB(GetCurrentAvValue, 0xffb15558) // 1 13/0
+//NHSTUB(GetDrive_ClusterSize                 ,0xff879bf8) //119            == 0xff879bf8
+//NHSTUB(GetDrive_FreeClusters                ,0xff879c70) //1103            == 0xff879c70
+NHSTUB(GetDrive_TotalClusters                 ,0xff879c34) //119
 NHSTUB(GetOpticalTemperature                  ,0xff82e4c8) //102
 NHSTUB(GetParameterData                       ,0xff9b2e94) //  2
 NHSTUB(GetZoomLensCurrentPoint                ,0xffaf30e4) //102
@@ -101,6 +106,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffb18474) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff9adf84) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff9dd8b4) //120
 NHSTUB(SetFileAttributes                      ,0xff87a634) //  1
+NHSTUB(SetLogicalEventActive                  ,0xff9abbe0) //1104
 NHSTUB(SetParameterData                       ,0xff9b2db4) //  2
 NHSTUB(SetPropertyCase                        ,0xff8258c4) //  2
 //NHSTUB(SetScriptMode                        ,0xff9abc48) //120            == 0xff9abc48

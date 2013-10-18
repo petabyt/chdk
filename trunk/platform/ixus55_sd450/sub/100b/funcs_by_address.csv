@@ -158,6 +158,9 @@
 0xff867bd4,Fflush_Fut
 0xff86d750,Unmount_FileSystem
 0xff86d8a8,UpdateMBROnFlash
+0xff86db70,GetDrive_ClusterSize
+0xff86dbac,GetDrive_TotalClusters
+0xff86dbe8,GetDrive_FreeClusters
 0xff86e36c,Open
 0xff86e36c,Open_FW
 0xff86e394,Close
@@ -257,6 +260,7 @@
 0xff9589fc,DeleteController_FW
 0xff958b34,MoveControllerToTopOfZOrder_FW
 0xff958c6c,GetSelfControllerHandle_FW
+0xff95b990,GetLogicalEventName
 0xff95ba28,PostLogicalEventForNotPowerType
 0xff95ba28,PostLogicalEventForNotPowerType_FW
 0xff95bab4,PostLogicalEventToUI
@@ -264,7 +268,10 @@
 0xff95bb4c,PostEventShootSeqToUI_FW
 0xff95bbc4,ShowLogicalEventName_FW
 0xff95bd0c,LogiEvnt_LoadCameraLog_FW
+0xff95d7b0,set_control_event
+0xff95d9f8,IsControlEventActive
 0xff95d9f8,IsControlEventActive_FW
+0xff95da84,SetLogicalEventActive
 0xff95dae8,SetScriptMode
 0xff95dae8,SetScriptMode_FW
 0xff95daf8,UiEvnt_ShowBitMaps_FW
@@ -368,6 +375,8 @@
 0xff982400,UIFS_StopMovieRecord_FW
 0xff98242c,UIFS_PCaseToPTMID_FW
 0xff982488,UIFS_SetCradleSetting_FW
+0xff984cd8,PB2Rec
+0xff984d18,Rec2PB
 0xff987a50,ExecuteResetFactoryWithRomWrite_FW
 0xff98c0e4,SetCurrentCaptureModeType
 0xff98c0e4,SetCurrentCaptureModeType_FW

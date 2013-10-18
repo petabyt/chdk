@@ -131,12 +131,16 @@
 0xffcaf368,GetDialogItemPositionToDialog_FW
 0xffcafee0,GetDialogItemResolution_FW
 0xffcaf39c,GetDialogItemResolutionToDialog_FW
+0xffe1cfbc,GetDrive_ClusterSize
+0xffe1d034,GetDrive_FreeClusters
+0xffe1cff8,GetDrive_TotalClusters
 0xffe81e08,GetEventFlagValue
 0xffc07b7c,GetFirmwareVersion_FW
 0xffcaec8c,GetFocusedItemIDOfDialogItem_FW
 0xffcaf290,GetFocusScopeToDialog_FW
 0xffcaecc4,GetItemHandleOfDialogBox_FW
 0xffdc05d0,GetLBOffset_FW
+0xffea215c,GetLogicalEventName
 0xffe7ffdc,GetLogToFile_FW
 0xffea6778,GetMainPowerLockCounter_FW
 0xffd4d8a8,GetMontblancVSize_FW
@@ -168,6 +172,7 @@
 0xffcca90c,iosDevDelete
 0xffccabf8,iosDrvInstall
 0xffcc0cec,isalpha
+0xffea4060,IsControlEventActive
 0xffea4060,IsControlEventActive_FW
 0xffcc0d1c,isdigit
 0xffea612c,IsDisableAutoShutdown_FW
@@ -235,6 +240,7 @@
 0xffc08edc,OpenConsole_FW
 0xffebfb04,opendir
 0xffcdb7ac,OutPort_FW
+0xffc11500,PB2Rec
 0xffc081f4,Peek16_FW
 0xffc081e8,Peek32_FW
 0xffc08208,Peek8_FW
@@ -309,6 +315,7 @@
 0xffe1d864,Read_FW
 0xffebfa9c,readdir
 0xffe8f050,realloc
+0xffc11540,Rec2PB
 0xffe82334,ReceiveMessageQueue
 0xffcb9180,RefreshPhysicalScreen
 0xffcb9180,RefreshPhysicalScreen_FW
@@ -334,6 +341,7 @@
 0xffde41c8,SavePaletteData
 0xffe87578,ScriptDisEnabled_FW
 0xffe8758c,ScriptEnabled_FW
+0xffea3e10,set_control_event
 0xffde17ac,SetAE_ShutterSpeed
 0xffcafc8c,SetAttributeToDialogItem_FW
 0xffea64e0,SetAutoShutdownTime
@@ -356,6 +364,7 @@
 0xffc0237c,SetLClk18MHz_FW
 0xffc0236c,SetLClk36MHz_FW
 0xffc0235c,SetLClk72MHz_FW
+0xffea40ec,SetLogicalEventActive
 0xffc025d8,SetMClk18MHz_FW
 0xffc025a4,SetMClk36MHz_FW
 0xffc02548,SetMClk72MHz_FW

@@ -569,6 +569,36 @@ int find_inst_rev(firmware *fw, int (*inst)(firmware*,int), int idx, int len)
     return -1;
 }
 
+// Find the Nth instance of the instruction matched by the 'inst' function
+// Modified version of find_inst()
+int find_Nth_inst(firmware *fw, int (*inst)(firmware*,int), int idx, int len, int N)
+{
+    int k;
+    for (k = idx; (k < fw->size) && (k < idx + len); k++)
+    {
+        if (inst(fw, k))
+            N--;
+        if (N <= 0)
+            return k;
+    }
+    return -1;
+}
+
+// Find the Nth previous instance of the instruction matched by the 'inst' function
+// Modified version of find_inst_rev()
+int find_Nth_inst_rev(firmware *fw, int (*inst)(firmware*,int), int idx, int len, int N)
+{
+    int k;
+    for (k = idx; (k > 0) && (k > idx - len); k--)
+    {
+        if (inst(fw, k))
+            N--;
+        if (N <= 0)
+            return k;
+    }
+    return -1;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Finds the first instance of an instruction that references the specified string in the firmware.

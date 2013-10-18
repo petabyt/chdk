@@ -18,9 +18,6 @@ NHSTUB(EnterToCompensationEVF                 ,0xffafaa6c) //  3 96%
 NHSTUB(FreeUncacheableMemory                  ,0xff81e5d8) //  1 90%
 //NHSTUB(GetCurrentAvValue                    ,0xffa501f4) //  2        *** != 0xffad9e20
 // ALT: NHSTUB(GetCurrentAvValue, 0xffa527c4) // 1 13/0
-NHSTUB(GetDrive_ClusterSize                   ,0xffa99780) //  3 92%
-NHSTUB(GetDrive_FreeClusters                  ,0xffa997f8) //  3 92%
-NHSTUB(GetDrive_TotalClusters                 ,0xffa997bc) //  3 92%
 //NHSTUB(GetFocusLensSubjectDistance          ,0xffad2f40) //  1 90%    *** != 0xffad2f88
 NHSTUB(GetParameterData                       ,0xffb39bec) //  1 86%
 NHSTUB(GetPropertyCase                        ,0xff81bc98) //  2 89%
@@ -54,6 +51,17 @@ NHSTUB(localtime                              ,0xff918fd8) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xffa992b8) //  3 93%
 NHSTUB(MakeAFScan                             ,0xffafffdc) //  2 79%
 
+// Check of modemap from 'platform/CAMERA/shooting.c':
+// Firmware modemap table found @ffb3bd34 -> ffb3bd34
+// No problems found with modemap table.
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xffb2f1c4) // Found @0xffb2f1c4,          stubs_min = 0xffb2f1c4 (0xFFB2F1C4)
+//DEF(FlashParamsTable                        ,0xffb3e3c8) // Found @0xffb3e3c8,          stubs_min = 0xffb3e3c8 (0xFFB3E3C8)
+
+// Values below go in 'lib.c':
+//int get_flash_params_count(void) { return 0x6e; }                          // Found @0xffb39c58
+
 // Misc stuff
 // canon_data_src: 0xffb87f30, canon_data_len: 0xca00
 
@@ -78,6 +86,9 @@ NHSTUB(Fseek_Fut                              ,0xffa9588c) //120
 NHSTUB(Fwrite_Fut                             ,0xffa957ec) //120
 //NHSTUB(GetBatteryTemperature                ,0xffa34470) //102            == 0xffa34470
 NHSTUB(GetCCDTemperature                      ,0xffa3445c) //102
+NHSTUB(GetDrive_ClusterSize                   ,0xffa99780) //119
+NHSTUB(GetDrive_FreeClusters                  ,0xffa997f8) //1103
+NHSTUB(GetDrive_TotalClusters                 ,0xffa997bc) //119
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffad3434) //  3
 NHSTUB(GetOpticalTemperature                  ,0xffa34448) //102
 NHSTUB(GetZoomLensCurrentPoint                ,0xffae5e70) //102
@@ -103,7 +114,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffa55a38) //102
 NHSTUB(SetAutoShutdownTime                    ,0xffb36a04) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff828fc4) //120
 NHSTUB(SetFileAttributes                      ,0xffa9a17c) //  3
-NHSTUB(SetLogicalEventActive                  ,0xffb3460c) //  3
+NHSTUB(SetLogicalEventActive                  ,0xffb3460c) //1104
 NHSTUB(SetPropertyCase                        ,0xff81bb60) //  3
 //NHSTUB(SetScriptMode                        ,0xffb34670) //120            == 0xffb34670
 NHSTUB(SleepTask                              ,0xffb14630) //120

@@ -16,9 +16,6 @@
 //NHSTUB(DoAFLock                             ,0xff951274) //  1 91%    *** != 0xff95124c
 NHSTUB(EnterToCompensationEVF                 ,0xff953378) //  1 87%
 NHSTUB(ExitFromCompensationEVF                ,0xff954c84) //  2 90%
-// ERROR: GetDrive_ClusterSize is not found.               //--- ---    *** != 0xff86f8a4
-//NHSTUB(GetDrive_FreeClusters                ,0xff86f900) //  3 53%    *** != 0xff86f93c
-//NHSTUB(GetDrive_TotalClusters               ,0xff86f900) //  1 65%        == 0xff86f900
 NHSTUB(GetFocusLensSubjectDistance            ,0xffaaab38) //  1 96%
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffaab0d8) //  3 52%
 NHSTUB(GetSystemTime                          ,0xff814de8) //  1 96%
@@ -33,7 +30,6 @@ NHSTUB(GetSystemTime                          ,0xff814de8) //  1 96%
 // ALT: NHSTUB(PutInNdFilter, 0xffab834c) // 2 25/2
 // ALT: NHSTUB(PutInNdFilter, 0xffab8394) // 2 25/2
 NHSTUB(PutOutNdFilter                         ,0xffab6808) //  1 94%
-NHSTUB(SetLogicalEventActive                  ,0xff9660f8) //  1 88%
 NHSTUB(UnsetZoomForMovie                      ,0xff9a40c0) //  1 89%
 NHSTUB(add_ptp_handler                        ,0xffa610a8) //  1 96%
 // ERROR: free is not found.                               //--- ---    *** != 0xffb05b78
@@ -56,6 +52,22 @@ NHSTUB(taskIdListGet                          ,0xffb137b0) //  1 82%
 NHSTUB(localtime                              ,0xffafd2c0) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xff86f2bc) //  1 73%
 //NHSTUB(MakeAFScan                           ,0xff955dd8) //  1        *** != 0x00000000
+
+// Check of modemap from 'platform/CAMERA/shooting.c':
+// Firmware modemap table found @ff968528 -> ff968528
+// Strange mode 0x00010013 in firmware, found in modemap as 19 (MODE_VIDEO_STD)
+// Strange mode 0x00010014 in firmware but not in current modemap
+// Strange mode 0x00010015 in firmware but not in current modemap
+// Strange mode 0x00010016 in firmware but not in current modemap
+// Strange mode 0x00020017 in firmware but not in current modemap
+// Strange mode 0x00030018 in firmware but not in current modemap
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xff96122c) // Found @0xff96122c,          stubs_min = 0xff96122c (0xFF96122C)
+//DEF(FlashParamsTable                        ,0xff96abdc) // Found @0xff96abdc,          stubs_min = 0xff96abdc (0xFF96ABDC)
+
+// Values below go in 'lib.c':
+//int get_flash_params_count(void) { return 0x5d; }                          // Found @0xff96db3c
 
 // Misc stuff
 // canon_data_src: 0xffb1a3f0, canon_data_len: 0xefe0
@@ -86,6 +98,9 @@ NHSTUB(GetBatteryTemperature                  ,0xff82d36c) //102
 NHSTUB(GetCCDTemperature                      ,0xff82d358) //102
 NHSTUB(GetCurrentAvValue                      ,0xffab63a0) //  1
 // ALT: NHSTUB(GetCurrentAvValue, 0xffab87a0) // 1 13/0
+//NHSTUB(GetDrive_ClusterSize                 ,0xff86f8a4) //119            == 0xff86f8a4
+//NHSTUB(GetDrive_FreeClusters                ,0xff86f93c) //1103            == 0xff86f93c
+//NHSTUB(GetDrive_TotalClusters               ,0xff86f900) //119            == 0xff86f900
 NHSTUB(GetOpticalTemperature                  ,0xff82d344) //102
 NHSTUB(GetParameterData                       ,0xff96dad0) //  1
 NHSTUB(GetPropertyCase                        ,0xff824554) //  1
@@ -109,6 +124,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffabba8c) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff968198) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff99855c) //120
 NHSTUB(SetFileAttributes                      ,0xff870720) //  1
+NHSTUB(SetLogicalEventActive                  ,0xff9660f8) //1104
 NHSTUB(SetParameterData                       ,0xff96d9f0) //  1
 NHSTUB(SetPropertyCase                        ,0xff824438) //  1
 //NHSTUB(SetScriptMode                        ,0xff966160) //120            == 0xff966160

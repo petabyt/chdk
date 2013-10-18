@@ -16,10 +16,6 @@
 //NHSTUB(DoAFLock                             ,0xffd26474) //  2 56%    *** != 0xffd2647c
 // ERROR: EnterToCompensationEVF is not found.             //--- ---    *** != 0xffd28268
 //NHSTUB(ExitFromCompensationEVF              ,0xffd2832c) //  1 76%    *** != 0xffd282c4
-//NHSTUB(GetDrive_ClusterSize                 ,0xffc5cff8) //  1 80%    *** != 0xffc5cf80
-NHSTUB(GetDrive_FreeClusters                  ,0xffc5cff8) //  1 80%
-//NHSTUB(GetDrive_TotalClusters               ,0xffc5cf80) //  1 80%    *** != 0xffc5cfbc
-// ALT: NHSTUB(GetDrive_TotalClusters, 0xffc5cfbc) // 1 21/5
 NHSTUB(GetFocusLensSubjectDistance            ,0xffe5bc90) //  1 96%
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe5c230) //  3 52%
 NHSTUB(GetParameterData                       ,0xffd40e2c) //  1 86%
@@ -30,7 +26,6 @@ NHSTUB(PutInNdFilter                          ,0xffe674bc) //  1 92%
 // ALT: NHSTUB(PutInNdFilter, 0xffe6904c) // 2 25/2
 // ALT: NHSTUB(PutInNdFilter, 0xffe69094) // 2 25/2
 NHSTUB(PutOutNdFilter                         ,0xffe67504) //  1 94%
-NHSTUB(SetLogicalEventActive                  ,0xffd3a0c4) //  1 88%
 NHSTUB(SetParameterData                       ,0xffd40d4c) //  1 86%
 //NHSTUB(UnlockAF                             ,0xffcdc024) //  1 78%    *** != 0xffd264c0
 // ALT: NHSTUB(UnlockAF, 0xffd264c4) // 1 11/3
@@ -53,6 +48,25 @@ NHSTUB(taskIdListGet                          ,0xffebeacc) //  1 82%
 NHSTUB(localtime                              ,0xffeaaae0) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xffc5ca48) //  1 90%
 // ERROR: MakeAFScan is not found.                         //--- ---    *** != 0xffd2ac58
+
+// Check of modemap from 'platform/CAMERA/shooting.c':
+// Firmware modemap table found @ffd3c47c -> ffd3c47c
+// Mode  3614 in firmware but not in current modemap
+// Mode  3615 in firmware but not in current modemap
+// Mode  3616 in firmware but not in current modemap
+// Mode  3618 in firmware but not in current modemap
+// Current modemap entry not found in firmware - MODE_VIDEO_COLOR_SWAP     2592
+// Current modemap entry not found in firmware - MODE_VIDEO_COLOR_ACCENT   2591
+// Current modemap entry not found in firmware - MODE_VIDEO_COMPACT        2595
+// Current modemap entry not found in firmware - MODE_VIDEO_SPEED          2594
+// Current modemap entry not found in firmware - MODE_VIDEO_STD            3613
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xffd3547c) // Found @0xffd3547c,          stubs_min = 0xffd3547c (0xFFD3547C)
+//DEF(FlashParamsTable                        ,0xffd3e68c) // Found @0xffd3e68c,          stubs_min = 0xffd3e68c (0xFFD3E68C)
+
+// Values below go in 'lib.c':
+//int get_flash_params_count(void) { return 0x6b; }                          // Found @0xffd40e98
 
 // Misc stuff
 // canon_data_src: 0xffec54f0, canon_data_len: 0xd2c0
@@ -82,6 +96,9 @@ NHSTUB(Fwrite_Fut                             ,0xffc56bb8) //120
 NHSTUB(GetBatteryTemperature                  ,0xffc1ccd0) //102
 NHSTUB(GetCCDTemperature                      ,0xffc1ccbc) //102
 NHSTUB(GetCurrentAvValue                      ,0xffe694a0) //  1
+//NHSTUB(GetDrive_ClusterSize                 ,0xffc5cf80) //119            == 0xffc5cf80
+NHSTUB(GetDrive_FreeClusters                  ,0xffc5cff8) //1103
+//NHSTUB(GetDrive_TotalClusters               ,0xffc5cfbc) //119            == 0xffc5cfbc
 NHSTUB(GetOpticalTemperature                  ,0xffc1cca8) //102
 NHSTUB(GetPropertyCase                        ,0xffc14518) //  1
 NHSTUB(GetZoomLensCurrentPoint                ,0xffe4c738) //102
@@ -105,6 +122,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffe6cb9c) //102
 NHSTUB(SetAutoShutdownTime                    ,0xffd3c0ec) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xffd6b100) //120
 NHSTUB(SetFileAttributes                      ,0xffc5d960) //  1
+NHSTUB(SetLogicalEventActive                  ,0xffd3a0c4) //1104
 NHSTUB(SetPropertyCase                        ,0xffc143ec) //  1
 //NHSTUB(SetScriptMode                        ,0xffd3a12c) //120            == 0xffd3a12c
 NHSTUB(SleepTask                              ,0xffc11174) //120

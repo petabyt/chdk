@@ -160,9 +160,9 @@
 0xffc602ec,Mount_FileSystem
 0xffc60390,Unmount_FileSystem
 0xffc604e4,UpdateMBROnFlash
-0xffc60828,GetDrive_FreeClusters,(stubs_entry_2.s)
+0xffc607b0,GetDrive_ClusterSize
 0xffc607ec,GetDrive_TotalClusters
-0xffc607b0,GetDrive_ClusterSize,(stubs_entry_2.s)
+0xffc60828,GetDrive_FreeClusters
 0xffc60f9c,Open
 0xffc60f9c,Open_FW
 0xffc60fc4,Close
@@ -241,6 +241,7 @@
 0xffd697d4,DeleteController_FW
 0xffd6990c,MoveControllerToTopOfZOrder_FW
 0xffd69a44,GetSelfControllerHandle_FW
+0xffd6cc30,GetLogicalEventName
 0xffd6ccc8,PostLogicalEventForNotPowerType
 0xffd6ccc8,PostLogicalEventForNotPowerType_FW
 0xffd6cd44,PostLogicalEventToUI
@@ -248,7 +249,10 @@
 0xffd6cdcc,PostEventShootSeqToUI_FW
 0xffd6ce34,ShowLogicalEventName_FW
 0xffd6cf7c,LogiEvnt_LoadCameraLog_FW
+0xffd6e7d4,set_control_event
+0xffd6ea24,IsControlEventActive
 0xffd6ea24,IsControlEventActive_FW
+0xffd6eab0,SetLogicalEventActive
 0xffd6eb18,SetScriptMode
 0xffd6eb18,SetScriptMode_FW
 0xffd6eb28,UiEvnt_ShowBitMaps_FW
@@ -356,6 +360,8 @@
 0xffd942f4,UIFS_StartMovieRecord_FW
 0xffd94300,UIFS_StopMovieRecord_FW
 0xffd9430c,UIFS_SetCradleSetting_FW
+0xffd96d88,PB2Rec
+0xffd96dc8,Rec2PB
 0xffd99a5c,ExecuteResetFactoryWithRomWrite_FW
 0xffd9da1c,SetCurrentCaptureModeType
 0xffd9da1c,SetCurrentCaptureModeType_FW

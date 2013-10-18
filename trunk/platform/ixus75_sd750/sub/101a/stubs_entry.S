@@ -16,9 +16,6 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NHSTUB(EnterToCompensationEVF                 ,0xffb0657c) //  3 96%
 NHSTUB(FreeUncacheableMemory                  ,0xff81e5ec) //  1 90%
-NHSTUB(GetDrive_ClusterSize                   ,0xffaa51dc) //  3 92%
-NHSTUB(GetDrive_FreeClusters                  ,0xffaa5254) //  3 92%
-NHSTUB(GetDrive_TotalClusters                 ,0xffaa5218) //  3 92%
 NHSTUB(GetFocusLensSubjectDistance            ,0xffade99c) //  1 90%
 NHSTUB(GetParameterData                       ,0xffb45910) //  1 86%
 NHSTUB(GetPropertyCase                        ,0xff81bcac) //  2 89%
@@ -54,6 +51,17 @@ NHSTUB(localtime                              ,0xff9233bc) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xffaa4d14) //  3 93%
 NHSTUB(MakeAFScan                             ,0xffb0baec) //  2 79%
 
+// Check of modemap from 'platform/CAMERA/shooting.c':
+// Firmware modemap table found @ffb47a6c -> ffb47a6c
+// No problems found with modemap table.
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xffb3aa4c) // Found @0xffb3aa4c,          stubs_min = 0xffb3aa4c (0xFFB3AA4C)
+//DEF(FlashParamsTable                        ,0xffb4a07c) // Found @0xffb4a07c,          stubs_min = 0xffb4a07c (0xFFB4A07C)
+
+// Values below go in 'lib.c':
+//int get_flash_params_count(void) { return 0x6e; }                          // Found @0xffb4597c
+
 // Misc stuff
 // canon_data_src: 0xffb95390, canon_data_len: 0xcbf0
 
@@ -80,6 +88,9 @@ NHSTUB(Fwrite_Fut                             ,0xffaa1248) //120
 NHSTUB(GetCCDTemperature                      ,0xffa3fca8) //102
 NHSTUB(GetCurrentAvValue                      ,0xffa5bb30) //  2
 // ALT: NHSTUB(GetCurrentAvValue, 0xffa5e100) // 1 13/0
+NHSTUB(GetDrive_ClusterSize                   ,0xffaa51dc) //119
+NHSTUB(GetDrive_FreeClusters                  ,0xffaa5254) //1103
+NHSTUB(GetDrive_TotalClusters                 ,0xffaa5218) //119
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffadee90) //  3
 NHSTUB(GetOpticalTemperature                  ,0xffa3fc94) //102
 NHSTUB(GetZoomLensCurrentPoint                ,0xffaf18cc) //102
@@ -104,7 +115,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffa61440) //102
 NHSTUB(SetAutoShutdownTime                    ,0xffb42728) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff82afd0) //120
 NHSTUB(SetFileAttributes                      ,0xffaa5bd8) //  3
-NHSTUB(SetLogicalEventActive                  ,0xffb401cc) //  3
+NHSTUB(SetLogicalEventActive                  ,0xffb401cc) //1104
 NHSTUB(SetPropertyCase                        ,0xff81bb74) //  3
 //NHSTUB(SetScriptMode                        ,0xffb40230) //120            == 0xffb40230
 NHSTUB(SleepTask                              ,0xffb20140) //120
