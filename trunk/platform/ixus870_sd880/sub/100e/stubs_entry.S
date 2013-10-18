@@ -5,15 +5,15 @@
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
 //   Firmware Ver GM1.00E   // Found @ 0xff870898, "GM1.00E" @ 0xff8708a5
 //   Firmware build timestamp: Aug 22 2008 10:57:30
-//   Possible corrupt firmware dump - file size too small for start address 0xff810000
-//     file size = 4.00MB, should be 7.94MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon DIGITAL IXUS 870 IS
 
 // Values for makefile.inc
 //   PLATFORMOSVER = 31
-//   PLATFORMID = ?           // Not found @ 0xfffe0130
+//   PLATFORMID = 12694 (0x3196) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000de578
+//   KEYSYS = d4                 // Found @ 0xffff3554
+//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff3564
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
