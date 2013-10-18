@@ -18,9 +18,6 @@
 // ERROR: EnterToCompensationEVF is not found.             //--- ---    *** != 0x00000000
 //NHSTUB(ExitFromCompensationEVF              ,0xff95d540) //  1 73%    *** != 0x00000000
 //NHSTUB(GetCurrentAvValue                    ,0xffac6190) //  1        *** != 0xffac4014
-//NHSTUB(GetDrive_ClusterSize                 ,0xff86edd0) //  1 76%    *** != 0xff86ed94
-//NHSTUB(GetDrive_FreeClusters                ,0xff86edd0) //  1 80%    *** != 0xff86ee0c
-//NHSTUB(GetDrive_TotalClusters               ,0xff86ed94) //  1 84%    *** != 0xff86edd0
 NHSTUB(GetFocusLensSubjectDistance            ,0xffab4f48) //  1 54%
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffab54e4) //  2 92%
 NHSTUB(GetParameterData                       ,0xff976f30) //  1 86%
@@ -31,7 +28,6 @@ NHSTUB(PutInNdFilter                          ,0xffac4198) //  1 92%
 // ALT: NHSTUB(PutInNdFilter, 0xffac5d38) // 2 25/2
 // ALT: NHSTUB(PutInNdFilter, 0xffac5d80) // 2 25/2
 NHSTUB(PutOutNdFilter                         ,0xffac41e0) //  1 94%
-NHSTUB(SetLogicalEventActive                  ,0xff96fdfc) //  1 88%
 NHSTUB(SetParameterData                       ,0xff976e50) //  1 86%
 //NHSTUB(UnlockAF                             ,0xff903a5c) //  1 78%    *** != 0xff95b468
 // ALT: NHSTUB(UnlockAF, 0xff95b46c) // 1 11/3
@@ -58,6 +54,17 @@ NHSTUB(localtime                              ,0xffb07c0c) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xff86e8d8) //  1 90%
 // ERROR: MakeAFScan is not found.                         //--- ---    *** != 0xff95fdec
 
+// Check of modemap from 'platform/CAMERA/shooting.c':
+// Firmware modemap table found @ff972364 -> ff972364
+// No problems found with modemap table.
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xff96b1cc) // Found @0xff96b1cc,          stubs_min = 0xff96b1cc (0xFF96B1CC)
+//DEF(FlashParamsTable                        ,0xff974740) // Found @0xff974740,          stubs_min = 0xff974740 (0xFF974740)
+
+// Values below go in 'lib.c':
+//int get_flash_params_count(void) { return 0x6b; }                          // Found @0xff976f9c
+
 // Misc stuff
 // canon_data_src: 0xffb23040, canon_data_len: 0xbdb0
 
@@ -81,6 +88,9 @@ NHSTUB(Fseek_Fut                              ,0xff868a54) //120
 NHSTUB(Fwrite_Fut                             ,0xff8689bc) //120
 NHSTUB(GetBatteryTemperature                  ,0xff82d21c) //102
 NHSTUB(GetCCDTemperature                      ,0xff82d208) //102
+//NHSTUB(GetDrive_ClusterSize                 ,0xff86ed94) //119            == 0xff86ed94
+//NHSTUB(GetDrive_FreeClusters                ,0xff86ee0c) //1103            == 0xff86ee0c
+//NHSTUB(GetDrive_TotalClusters               ,0xff86edd0) //119            == 0xff86edd0
 NHSTUB(GetOpticalTemperature                  ,0xff82d1f4) //102
 NHSTUB(GetPropertyCase                        ,0xff8248e4) //  1
 NHSTUB(GetZoomLensCurrentPoint                ,0xffaa5f10) //102
@@ -104,6 +114,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffac9c80) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff972008) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff9a3278) //120
 NHSTUB(SetFileAttributes                      ,0xff86f760) //  1
+NHSTUB(SetLogicalEventActive                  ,0xff96fdfc) //1104
 NHSTUB(SetPropertyCase                        ,0xff8247c8) //  1
 //NHSTUB(SetScriptMode                        ,0xff96fe64) //120            == 0xff96fe64
 NHSTUB(SleepTask                              ,0xff821534) //120

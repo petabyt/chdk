@@ -142,8 +142,8 @@
 0xffd7c784,GetDialogItemPositionToDialog_FW
 0xffd7d248,GetDialogItemResolution_FW
 0xffd7c7b8,GetDialogItemResolutionToDialog_FW
-0xffc607b0,GetDrive_ClusterSize,(stubs_entry_2.s)
-0xffc60828,GetDrive_FreeClusters,(stubs_entry_2.s)
+0xffc607b0,GetDrive_ClusterSize
+0xffc60828,GetDrive_FreeClusters
 0xffc607ec,GetDrive_TotalClusters
 0xffc103f4,GetEventFlagValue
 0xffc0a384,GetFirmwareVersion_FW
@@ -180,6 +180,7 @@
 0xffd7c050,GetItemHandleOfDialogBox_FW
 0xffc18800,GetKbdState
 0xffc1af34,GetLBOffset_FW
+0xffd6cc30,GetLogicalEventName
 0xffeead90,GetLogToFile_FW
 0xffd710e4,GetMainPowerLockCounter_FW
 0xffcc734c,GetMontblancVSize_FW
@@ -217,6 +218,7 @@
 0xffef4e7c,isalpha
 0xffea8dfc,ISAutoCenter_FW
 0xffe07284,IsCalledStopEVF_FW
+0xffd6ea24,IsControlEventActive
 0xffd6ea24,IsControlEventActive_FW
 0xffea91d4,ISControlStart_FW
 0xffea91e0,ISControlStop_FW
@@ -295,6 +297,7 @@
 0xffc0b680,OpenConsole_FW
 0xffefaf3c,opendir
 0xffc92d24,OutPort_FW
+0xffd96d88,PB2Rec
 0xffc0a97c,Peek16_FW
 0xffc0a960,Peek32_FW
 0xffc0a998,Peek8_FW
@@ -356,6 +359,7 @@
 0xffc61058,Read_FW
 0xffefaed4,readdir
 0xffee9a6c,realloc
+0xffd96dc8,Rec2PB
 0xffea7e24,ReceiveFromSrpv_FW
 0xffc10920,ReceiveMessageQueue
 0xffd8752c,RefreshPhysicalScreen
@@ -379,6 +383,7 @@
 0xffee1eac,ScriptDisEnabled_FW
 0xffee1ec0,ScriptEnabled_FW
 0xffea94e0,SelectPositionSignal_FW
+0xffd6e7d4,set_control_event
 0xffeb9144,SetAE_ShutterSpeed
 0xffd7cff4,SetAttributeToDialogItem_FW
 0xffd70e4c,SetAutoShutdownTime
@@ -420,6 +425,7 @@
 0xffc02f78,SetLClk18MHz_FW
 0xffc02f68,SetLClk36MHz_FW
 0xffc02f58,SetLClk72MHz_FW
+0xffd6eab0,SetLogicalEventActive
 0xffc0314c,SetMClk18MHz_FW
 0xffc03124,SetMClk36MHz_FW
 0xffc030e0,SetMClk72MHz_FW

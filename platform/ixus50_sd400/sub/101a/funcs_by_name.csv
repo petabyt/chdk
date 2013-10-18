@@ -122,15 +122,16 @@
 0xff97c070,GetDialogItemPositionToDialog_FW
 0xff97cafc,GetDialogItemResolution_FW
 0xff97c0a4,GetDialogItemResolutionToDialog_FW
-0xff8743bc,GetDrive_ClusterSize,(stubs_entry_2.s)
-0xff874434,GetDrive_FreeClusters,(stubs_entry_2.s)
-0xff8743f8,GetDrive_TotalClusters,(stubs_entry_2.s)
+0xff8743bc,GetDrive_ClusterSize
+0xff874434,GetDrive_FreeClusters
+0xff8743f8,GetDrive_TotalClusters
 0xff820770,GetEventFlagValue
 0xff81ac1c,GetFirmwareVersion_FW
 0xff97b8a8,GetFocusedItemIDOfDialogItem_FW
 0xffa66f2c,GetFocusLensSubjectDistance,(stubs_entry_2.s)
 0xff97be64,GetFocusScopeToDialog_FW
 0xff97b8e0,GetItemHandleOfDialogBox_FW
+0xff96ef0c,GetLogicalEventName
 0xffaa10d0,GetLogToFile_FW
 0xff97237c,GetMainPowerLockCounter_FW
 0xff8214f8,GetNumberOfPostedMessages
@@ -159,6 +160,7 @@
 0xffabd084,iosDrvInstall
 0xffab1ab4,isalpha
 0xff9e8d0c,IsCalledStopEVF_FW
+0xff970608,IsControlEventActive
 0xff970608,IsControlEventActive_FW
 0xffab1ae4,isdigit
 0xff971ce8,IsDisableAutoShutdown_FW
@@ -301,6 +303,7 @@
 0xff81bcf8,RotateConsoleZOder_FW
 0xffa99514,ScriptDisEnabled_FW
 0xffa99528,ScriptEnabled_FW
+0xff9703f4,set_control_event
 0xffa75b1c,SetAE_ShutterSpeed
 0xff97c8a8,SetAttributeToDialogItem_FW
 0xff9720b0,SetAutoShutdownTime
@@ -321,6 +324,7 @@
 0xff812f18,SetLClk18MHz_FW
 0xff812f08,SetLClk36MHz_FW
 0xff812ef8,SetLClk72MHz_FW
+0xff970658,SetLogicalEventActive
 0xff8130dc,SetMClk18MHz_FW
 0xff8130b4,SetMClk36MHz_FW
 0xff813070,SetMClk72MHz_FW

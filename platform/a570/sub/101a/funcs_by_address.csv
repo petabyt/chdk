@@ -94,6 +94,8 @@
 0xffc0f428,UIFS_StartMovieRecord_FW
 0xffc0f434,UIFS_StopMovieRecord_FW
 0xffc0f440,UIFS_SetCradleSetting_FW
+0xffc119b8,PB2Rec
+0xffc119f8,Rec2PB
 0xffc14688,ExecuteResetFactoryWithRomWrite_FW
 0xffc17d10,SetCurrentCaptureModeType
 0xffc17d10,SetCurrentCaptureModeType_FW
@@ -555,12 +557,15 @@
 0xffed8d98,DeleteController_FW
 0xffed8ed0,MoveControllerToTopOfZOrder_FW
 0xffed9034,GetSelfControllerHandle_FW
+0xffedc7a8,GetLogicalEventName
 0xffedc840,PostLogicalEventForNotPowerType
 0xffedc840,PostLogicalEventForNotPowerType_FW
 0xffedc8bc,PostLogicalEventToUI
 0xffedc8bc,PostLogicalEventToUI_FW
 0xffedc944,PostEventShootSeqToUI_FW
 0xffedc9ac,ShowLogicalEventName_FW
+0xffede438,set_control_event
+0xffede698,IsControlEventActive
 0xffede698,IsControlEventActive_FW
 0xffede724,SetLogicalEventActive
 0xffede788,SetScriptMode

@@ -122,15 +122,16 @@
 0xff98e8ac,GetDialogItemPositionToDialog_FW
 0xff98f338,GetDialogItemResolution_FW
 0xff98e8e0,GetDialogItemResolutionToDialog_FW
-0xff8767a0,GetDrive_ClusterSize,(stubs_entry_2.s)
-0xff876838,GetDrive_FreeClusters,(stubs_entry_2.s)
-0xff8767fc,GetDrive_TotalClusters,(stubs_entry_2.s)
+0xff8767a0,GetDrive_ClusterSize
+0xff876838,GetDrive_FreeClusters
+0xff8767fc,GetDrive_TotalClusters
 0xff820918,GetEventFlagValue
 0xff81ad8c,GetFirmwareVersion_FW
 0xff98e0e4,GetFocusedItemIDOfDialogItem_FW
 0xff98e6a0,GetFocusScopeToDialog_FW
 0xff98e11c,GetItemHandleOfDialogBox_FW
 0xff82cabc,GetLBOffset_FW
+0xff9800c0,GetLogicalEventName
 0xffad82d4,GetLogToFile_FW
 0xff98368c,GetMainPowerLockCounter_FW
 0xff8216a0,GetNumberOfPostedMessages
@@ -161,6 +162,7 @@
 0xffaea454,isalpha
 0xffada408,ISAutoCenter_FW
 0xffa0d99c,IsCalledStopEVF_FW
+0xff981918,IsControlEventActive
 0xff981918,IsControlEventActive_FW
 0xffaea484,isdigit
 0xff982ff8,IsDisableAutoShutdown_FW
@@ -307,6 +309,7 @@
 0xffad97ac,RunPb_FW
 0xffad0718,ScriptDisEnabled_FW
 0xffad072c,ScriptEnabled_FW
+0xff981704,set_control_event
 0xffaabe0c,SetAE_ShutterSpeed
 0xff98f0e4,SetAttributeToDialogItem_FW
 0xff9833c0,SetAutoShutdownTime
@@ -327,6 +330,7 @@
 0xff813080,SetLClk18MHz_FW
 0xff813070,SetLClk36MHz_FW
 0xff813060,SetLClk72MHz_FW
+0xff981968,SetLogicalEventActive
 0xff813244,SetMClk18MHz_FW
 0xff81321c,SetMClk36MHz_FW
 0xff8131d8,SetMClk72MHz_FW

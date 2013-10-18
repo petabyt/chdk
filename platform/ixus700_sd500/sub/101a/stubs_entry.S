@@ -21,15 +21,6 @@
 // ALT: NHSTUB(ExitFromCompensationEVF, 0xff951b24) // 1 20/10
 // ALT: NHSTUB(ExitFromCompensationEVF, 0xff951b58) // 1 20/10
 //NHSTUB(GetCurrentAvValue                    ,0xffa71350) //  1        *** != 0xffa4f304
-//NHSTUB(GetDrive_ClusterSize                 ,0xff86a1c8) //  1 84%    *** != 0xff86a150
-//NHSTUB(GetDrive_FreeClusters                ,0xff86a150) //  1 73%    *** != 0xff86a1c8
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff86a18c) // 1 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff86a1c8) // 1 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff86a204) // 1 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff86a18c) // 3 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff86a1c8) // 3 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff86a204) // 3 19/7
-//NHSTUB(GetDrive_TotalClusters               ,0xff86a204) //  1 80%    *** != 0xff86a18c
 //NHSTUB(GetFocusLensSubjectDistance          ,0xffa55f3c) //  1 51%    *** != 0xffa64c48
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffa651c8) //  2 88%
 NHSTUB(GetParameterData                       ,0xff96b7c4) //  1 86%
@@ -46,7 +37,6 @@ NHSTUB(PutOutNdFilter                         ,0xffa6f40c) //  1 94%
 //NHSTUB(Restart                              ,0xff82339c) //  1 84%    *** != 0xff8233a0
 NHSTUB(SetCurrentCaptureModeType              ,0xff98fe2c) //  1 73%
 NHSTUB(SetFileAttributes                      ,0xff86aa9c) //  1 58%
-NHSTUB(SetLogicalEventActive                  ,0xff96622c) //  3 87%
 NHSTUB(SetParameterData                       ,0xff96b6e4) //  1 86%
 // ERROR: SetPropertyCase is not found.                    //--- ---    *** != 0xff825b9c
 //NHSTUB(UnlockAF                             ,0xff94f244) //  1 71%    *** != 0xff94eff4
@@ -76,6 +66,17 @@ NHSTUB(localtime                              ,0xffab4370) //  1 93%
 // ERROR: Mount_FileSystem is not found.                   //--- ---    *** != 0xff869cd4
 // ERROR: MakeAFScan is not found.                         //--- ---    *** != 0xff94ef7c
 
+// Check of modemap from 'platform/CAMERA/shooting.c':
+// Firmware modemap table found @ff967c0c -> ff967c0c
+// No problems found with modemap table.
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xff962594) // Found @0xff962594,          stubs_min = 0xff962594 (0xFF962594)
+//DEF(FlashParamsTable                        ,0xff969790) // Found @0xff969790,          stubs_min = 0xff969790 (0xFF969790)
+
+// Values below go in 'lib.c':
+//int get_flash_params_count(void) { return 0x52; }                          // Found @0xff96b830
+
 // Misc stuff
 // canon_data_src: 0xfface9c0, canon_data_len: 0xd340
 
@@ -103,6 +104,9 @@ NHSTUB(Fseek_Fut                              ,0xff8638fc) //  1
 NHSTUB(Fwrite_Fut                             ,0xff863864) //  1
 //NHSTUB(GetBatteryTemperature                ,0xffa4da28) //102            == 0xffa4da28
 //NHSTUB(GetCCDTemperature                    ,0xffa4da14) //102            == 0xffa4da14
+//NHSTUB(GetDrive_ClusterSize                 ,0xff86a150) //119            == 0xff86a150
+//NHSTUB(GetDrive_FreeClusters                ,0xff86a1c8) //1103            == 0xff86a1c8
+//NHSTUB(GetDrive_TotalClusters               ,0xff86a18c) //119            == 0xff86a18c
 //NHSTUB(GetOpticalTemperature                ,0xffa4da00) //102            == 0xffa4da00
 //NHSTUB(GetZoomLensCurrentPoint              ,0xffa56f6c) //102            == 0xffa56f6c
 //NHSTUB(GetZoomLensCurrentPosition           ,0xffa56f80) //102            == 0xffa56f80
@@ -121,6 +125,7 @@ NHSTUB(RefreshPhysicalScreen                  ,0xff97b578) //120
 NHSTUB(RenameFile_Fut                         ,0xff863570) //  1
 NHSTUB(SetAE_ShutterSpeed                     ,0xffa738ec) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff96787c) //120
+NHSTUB(SetLogicalEventActive                  ,0xff96622c) //1104
 //NHSTUB(SetScriptMode                        ,0xff966290) //120            == 0xff966290
 NHSTUB(SleepTask                              ,0xff821870) //120
 NHSTUB(TakeSemaphore                          ,0xff8211e0) //1101

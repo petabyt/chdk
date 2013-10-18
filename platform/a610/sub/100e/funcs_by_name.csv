@@ -142,6 +142,7 @@
 0xffd54514,GetItemHandleOfDialogBox_FW
 0xffc17564,GetKbdState
 0xffc1a318,GetLBOffset_FW
+0xffd44e6c,GetLogicalEventName
 0xffea124c,GetLogToFile_FW
 0xffd490a4,GetMainPowerLockCounter_FW
 0xffc107e0,GetNumberOfPostedMessages
@@ -172,6 +173,7 @@
 0xffebd340,iosDrvInstall
 0xffeb1d70,isalpha
 0xffde3314,IsCalledStopEVF_FW
+0xffd46ef0,IsControlEventActive
 0xffd46ef0,IsControlEventActive_FW
 0xffeb1da0,isdigit
 0xffd48a78,IsDisableAutoShutdown_FW
@@ -243,6 +245,7 @@
 0xffc0b4a8,OpenConsole_FW
 0xffeb7e30,opendir
 0xffc8d4cc,OutPort_FW
+0xffd6f5e8,PB2Rec
 0xffc0a7c4,Peek16_FW
 0xffc0a7a8,Peek32_FW
 0xffc0a7e0,Peek8_FW
@@ -298,6 +301,7 @@
 0xffc5c7a0,Read_FW
 0xffeb7dc8,readdir
 0xffea0514,realloc
+0xffd6f628,Rec2PB
 0xffc10074,ReceiveMessageQueue
 0xffd5f6c0,RefreshPhysicalScreen
 0xffd5f6c0,RefreshPhysicalScreen_FW
@@ -321,6 +325,7 @@
 0xffc0b280,RotateConsoleZOder_FW
 0xffe9a37c,ScriptDisEnabled_FW
 0xffe9a390,ScriptEnabled_FW
+0xffd46ca8,set_control_event
 0xffe76a00,SetAE_ShutterSpeed
 0xffd555ac,SetAttributeToDialogItem_FW
 0xffd48dd8,SetAutoShutdownTime

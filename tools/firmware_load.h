@@ -135,6 +135,10 @@ int find_str(firmware *fw, char *str);
 int find_inst(firmware *fw, int (*inst)(firmware*,int), int idx, int len);
 // Find the previous instruction of a specified type starting at idx within len instructions
 int find_inst_rev(firmware *fw, int (*inst)(firmware*,int), int idx, int len);
+// Find the Nth instruction of a specified type starting at idx within len instructions
+int find_Nth_inst(firmware *fw, int (*inst)(firmware*,int), int idx, int len, int N);
+// Find the Nth previous instruction of a specified type starting at idx within len instructions
+int find_Nth_inst_rev(firmware *fw, int (*inst)(firmware*,int), int idx, int len, int N);
 
 // Find the first or next reference to a specified string in the dump
 int find_str_ref(firmware *fw, char *str);

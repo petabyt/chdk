@@ -16,15 +16,7 @@
 //NHSTUB(DoAFLock                             ,0xff94f9e0) //  1 91%    *** != 0xff94f9b8
 //NHSTUB(EnterToCompensationEVF               ,0xff951ab0) //  1 87%        == 0xff951ab0
 NHSTUB(ExitFromCompensationEVF                ,0xff95324c) //  2 90%
-//NHSTUB(GetDrive_ClusterSize                 ,0xff872990) //  1 73%        == 0xff872990
-// ALT: NHSTUB(GetDrive_ClusterSize, 0xff8729cc) // 1 19/7
-// ALT: NHSTUB(GetDrive_ClusterSize, 0xff872a08) // 1 19/7
-// ALT: NHSTUB(GetDrive_ClusterSize, 0xff872a44) // 1 19/7
-// ALT: NHSTUB(GetDrive_ClusterSize, 0xff8729cc) // 3 19/7
-// ALT: NHSTUB(GetDrive_ClusterSize, 0xff872a08) // 3 19/7
-// ALT: NHSTUB(GetDrive_ClusterSize, 0xff872a44) // 3 19/7
-//NHSTUB(GetDrive_FreeClusters                ,0xff872990) //  3 80%    *** != 0xff86b75c
-//NHSTUB(GetDrive_TotalClusters               ,0xff872a08) //  2 84%    *** != 0xff8729cc
+//NHSTUB(GetDrive_FreeClusters                ,0xff872a08) //1103        *** != 0xff86b75c
 NHSTUB(GetFocusLensSubjectDistance            ,0xffb751d8) //  1 96%
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffb75778) //  3 92%
 NHSTUB(GetParameterData                       ,0xff96a31c) //  1 96%
@@ -36,7 +28,6 @@ NHSTUB(PutInNdFilter                          ,0xffb7ff84) //  1 92%
 // ALT: NHSTUB(PutInNdFilter, 0xffb81b58) // 2 25/2
 NHSTUB(PutOutNdFilter                         ,0xffb7ffcc) //  1 94%
 //NHSTUB(Restart                              ,0xff8252a4) //  1 96%    *** != 0xff8252a0
-NHSTUB(SetLogicalEventActive                  ,0xff963624) //  1 88%
 //NHSTUB(SetParameterData                     ,0xff96a23c) //  1 96%        == 0xff96a23c
 NHSTUB(UnsetZoomForMovie                      ,0xff9a7ce0) //  1 89%
 NHSTUB(add_ptp_handler                        ,0xffa62090) //  1 96%
@@ -63,6 +54,22 @@ NHSTUB(taskIdListGet                          ,0xffc2c248) //  1 82%
 NHSTUB(localtime                              ,0xffc15040) //  1 93%
 //NHSTUB(Mount_FileSystem                     ,0xff8724d0) //  1 90%        == 0xff8724d0
 NHSTUB(MakeAFScan                             ,0xff9542fc) //  1 96%
+
+// Check of modemap from 'platform/CAMERA/shooting.c':
+// Firmware modemap table found @ff965810 -> ff965810
+// Mode 1 in firmware but not in current modemap
+// Mode 4 in firmware but not in current modemap
+// Strange mode 0x0001000e in firmware, found in modemap as 14 (MODE_VIDEO_STD)
+// Strange mode 0x0001000f in firmware but not in current modemap
+// Strange mode 0x00010010 in firmware but not in current modemap
+// Strange mode 0x00010011 in firmware but not in current modemap
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xff95ec74) // Found @0xff95ec74,          stubs_min = 0xff95ec74 (0xff95ec74)
+//DEF(FlashParamsTable                        ,0xff967a54) // Found @0xff967a54, ** != ** stubs_min = 0xff9670d0 (0xff9670d0)
+
+// Values below go in 'lib.c':
+//int get_flash_params_count(void) { return 0x62; }                          // Found @0xff96a388
 
 // Misc stuff
 // canon_data_src: 0xffc33020, canon_data_len: 0x17370
@@ -92,6 +99,8 @@ NHSTUB(Fwrite_Fut                             ,0xff86c608) //120
 NHSTUB(GetBatteryTemperature                  ,0xff8300c4) //102
 NHSTUB(GetCCDTemperature                      ,0xff8300b0) //102
 NHSTUB(GetCurrentAvValue                      ,0xffb81f64) //  1
+//NHSTUB(GetDrive_ClusterSize                 ,0xff872990) //119            == 0xff872990
+//NHSTUB(GetDrive_TotalClusters               ,0xff8729cc) //119            == 0xff8729cc
 NHSTUB(GetOpticalTemperature                  ,0xff83009c) //102
 NHSTUB(GetPropertyCase                        ,0xff827c9c) //  1
 NHSTUB(GetZoomLensCurrentPoint                ,0xffb66078) //102
@@ -114,6 +123,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffb85250) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff965480) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff99caf0) //120
 NHSTUB(SetFileAttributes                      ,0xff87335c) //  1
+NHSTUB(SetLogicalEventActive                  ,0xff963624) //1104
 NHSTUB(SetPropertyCase                        ,0xff827b80) //  1
 //NHSTUB(SetScriptMode                        ,0xff96368c) //120            == 0xff96368c
 NHSTUB(SleepTask                              ,0xff823c78) //120

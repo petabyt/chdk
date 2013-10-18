@@ -21,9 +21,6 @@ NHSTUB(AllocateUncacheableMemory              ,0xff815288) //  1 65%
 // ERROR: ExitFromCompensationEVF is not found.            //--- ---    *** != 0xff93dfdc
 // ERROR: FreeUncacheableMemory is not found.              //--- ---    *** != 0xff8152bc
 //NHSTUB(GetCurrentAvValue                    ,0xffa6ac58) //  1        *** != 0xffa690a4
-// ERROR: GetDrive_ClusterSize is not found.               //--- ---    *** != 0xff8707ec
-// ERROR: GetDrive_FreeClusters is not found.              //--- ---    *** != 0xff87086c
-// ERROR: GetDrive_TotalClusters is not found.             //--- ---    *** != 0xff87082c
 // ERROR: GetFocusLensSubjectDistance is not found.        //--- ---    *** != 0xffa5f808
 // ERROR: GetFocusLensSubjectDistanceFromLens is not found.  //--- ---    *** != 0xffa5fe7c
 // ERROR: GetParameterData is not found.                   //--- ---    *** != 0x00000000
@@ -104,6 +101,14 @@ NHSTUB(localtime                              ,0xffabcc84) //  1 93%
 // ALT: NHSTUB(time, 0xfff51cb0) // 1 25/0
 // ALT: NHSTUB(time, 0xfff51cb0) // 2 25/0
 
+// Check of modemap from 'platform/CAMERA/shooting.c':
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xff9512ac) // Found @0xff9512ac,          stubs_min = 0xff9512ac (0xff9512ac)
+//DEF(FlashParamsTable                        ,0xff957ef4) // Found @0xff957ef4,          stubs_min = 0xff957ef4 (0xff957ef4)
+
+// Values below go in 'lib.c':
+
 // Misc stuff
 // canon_data_src: 0xffad74a0, canon_data_len: 0xeae0
 
@@ -129,6 +134,9 @@ NHSTUB(Fwrite_Fut                             ,0xff869c28) //  1
 // ALT: NHSTUB(Fwrite_Fut, 0xfff1724c) // 1 26/0
 //NHSTUB(GetBatteryTemperature                ,0xffa486ac) //102            == 0xffa486ac
 //NHSTUB(GetCCDTemperature                    ,0xffa48698) //102            == 0xffa48698
+//NHSTUB(GetDrive_ClusterSize                 ,0xff8707ec) //119            == 0xff8707ec
+//NHSTUB(GetDrive_FreeClusters                ,0xff87086c) //1103            == 0xff87086c
+//NHSTUB(GetDrive_TotalClusters               ,0xff87082c) //119            == 0xff87082c
 //NHSTUB(GetOpticalTemperature                ,0xffa48684) //102            == 0xffa48684
 //NHSTUB(GetZoomLensCurrentPosition           ,0xffa51f24) //102            == 0xffa51f24
 //NHSTUB(GiveSemaphore                        ,0xff823144) //120            == 0xff823144

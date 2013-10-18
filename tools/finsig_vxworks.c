@@ -8,6 +8,8 @@
 #include "stubs_load.h"
 #include "firmware_load.h"
 
+// enable/disable debug output for development
+#define DEBUG_ON 0
 //------------------------------------------------------------------------------------------------------------
 
 // Buffer output into header and body sections
@@ -214,6 +216,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "_uartr_req", UNUSED|DONT_EXPORT },
     { "StartRecModeMenu", UNUSED|DONT_EXPORT },
     { "LogCameraEvent", UNUSED|DONT_EXPORT },
+    { "IsControlEventActive", UNUSED|DONT_EXPORT }, // helper, vx
+    { "GetLogicalEventName", UNUSED|DONT_EXPORT }, // helper, vx, name made up
 
     { "AllocateMemory", UNUSED },
     { "AllocateUncacheableMemory" },
@@ -797,6 +801,71 @@ int find_RegisterEventProcedure(firmware *fw)
     return 0;
 }
 
+// Special case for set_control_event (Vx)
+int find_set_control_event(firmware *fw)
+{
+    int j1, j2, k, found, n;
+    int k1 = get_saved_sig(fw,"IsControlEventActive");
+    int k2 = get_saved_sig(fw,"GetLogicalEventName");
+
+    if ((k1 >= 0) && (k2 >= 0))
+    {
+        j1 = adr2idx(fw, func_names[k1].val);
+        j2 = adr2idx(fw, func_names[k2].val);
+        found = 0;
+        // search from IsControlEventActive backwards
+        for (k=j1-1; k>j1-256; k--)
+        {
+            if (isBL(fw,k))
+            {
+                if (j2 == idxFollowBranch(fw,k,0x01000001))
+                {
+                    // reference to GetLogicalEventName found
+                    found = 1;
+                    break;
+                }
+            }
+        }
+        if (found)
+        {
+            found = 0;
+            // locate function start
+            k = find_inst_rev(fw,isSTMFD_LR,k,60);
+            // locate function end
+            j2 = find_inst(fw,isLDMFD_PC,k+1,128);
+            if ( (k<0) || (j2<0) )
+                return 0;
+            int prevbldest = 0;
+            n = 0;
+            k++;
+            // look for not more than 7 BLs
+            while (n<7)
+            {
+                k = find_inst(fw,isBL,k,32);
+                // too late hit or no hit
+                if ( (k>j2) || (k<0) )
+                    return 0;
+                j1 = idxFollowBranch(fw,k,0x01000001);
+                if (prevbldest==j1)
+                {
+                    // two consecutive calls to set_control_event
+                    found = 1;
+                    break;
+                }
+                prevbldest = j1;
+                n++;
+                k++;
+            }
+            if (found)
+            {
+                fwAddMatch(fw,idx2adr(fw,j1),32,0,122);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Data for matching the '_log' function
@@ -880,6 +949,9 @@ string_sig string_sigs[] =
     {20, "task_RotaryEncoder", "task_JogDial", 1 },
     {20, "task_RotaryEncoder", "task_RotarySw", 1 },
 
+    {20, "IsControlEventActive", "IsControlEventActive_FW", 0 },
+    {20, "GetLogicalEventName", "ShowLogicalEventName_FW", 0x01000002 },
+
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
     { 1, "Close", "Close", 1 },
@@ -948,9 +1020,9 @@ string_sig string_sigs[] =
     { 2, "MoveZoomLensWithPoint", "MoveZoomLensWithPoint", 1 },
     //{ 2, "GetCurrentAvValue", "GetCurrentAvValue", 1 },
     { 2, "PT_MoveOpticalZoomAt", "PT_MoveOpticalZoomAt", 1 },
-    { 2, "PT_MoveOpticalZoomAt", "SS.MoveOpticalZoomAt", 1 },
+    //{ 2, "PT_MoveOpticalZoomAt", "SS.MoveOpticalZoomAt", 1 },
     { 2, "PT_MoveDigitalZoomToWide", "PT_MoveDigitalZoomToWide", 1 },
-    { 2, "PT_MoveDigitalZoomToWide", "SS.MoveDigitalZoomToWide", 1 },
+    //{ 2, "PT_MoveDigitalZoomToWide", "SS.MoveDigitalZoomToWide", 1 },
     { 2, "MoveIrisWithAv", "MoveIrisWithAv", 1},
     //{ 2, "PutInNdFilter", "TurnOnNdFilter", 1 },
     //{ 2, "PutOutNdFilter", "TurnOffNdFilter", 1 },
@@ -961,9 +1033,9 @@ string_sig string_sigs[] =
     { 2, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000008 },
     { 2, "SetPropertyCase", "PT_SetPropertyCaseInt", 0x01000009 },
     { 2, "UnlockAF", "PT_UnlockAF", 0x01000002 },
-    { 2, "UnlockAF", "SS.UnlockAF", 0x01000002 },
+    //{ 2, "UnlockAF", "SS.UnlockAF", 0x01000002 },
     { 2, "DoAFLock", "PT_DoAFLock", 0x01000002 },
-    { 2, "DoAFLock", "SS.DoAFLock", 0x01000002 },
+    //{ 2, "DoAFLock", "SS.DoAFLock", 0x01000002 },
     { 2, "GetSystemTime", "PT_GetSystemTime", 0x01000003 },
     { 2, "PT_PlaySound", "PT_PlaySound", 0x01000005 },
     { 2, "StartRecModeMenu", "StartRecModeMenu", 1 },
@@ -973,9 +1045,9 @@ string_sig string_sigs[] =
     { 2, "ResetZoomLens", "ResetZoomLens", 1 },
     { 2, "ResetFocusLens", "ResetFocusLens", 1 },
     { 2, "NR_GetDarkSubType", "NR_GetDarkSubType", 1 },
-    { 2, "NR_GetDarkSubType", "NRTBL.GetDarkSubType", 1 },
+    //{ 2, "NR_GetDarkSubType", "NRTBL.GetDarkSubType", 1 },
     { 2, "NR_SetDarkSubType", "NR_SetDarkSubType", 1 },
-    { 2, "NR_SetDarkSubType", "NRTBL.SetDarkSubType", 1 },
+    //{ 2, "NR_SetDarkSubType", "NRTBL.SetDarkSubType", 1 },
     { 2, "SavePaletteData", "SavePaletteData", 1 },
     { 2, "GetVRAMHPixelsSize", "GetVRAMHPixelsSize", 1 },
     { 2, "GetVRAMVPixelsSize", "GetVRAMVPixelsSize", 1 },
@@ -1015,10 +1087,10 @@ string_sig string_sigs[] =
     { 4, "ExitFromCompensationEVF", "SSAPI::ExitFromCompensationEVF", 1 },
     { 4, "ExitFromCompensationEVF", "ExpComp Off", 1 },
     { 4, "ExitFromCompensationEVF", "ExpOff", 1 },
-    { 4, "PB2Rec", "AC:PB2Rec", 1 },
-    { 4, "PB2Rec", "AC:PB2Rec", 6 },
-    { 4, "PB2Rec", "AC:PB2Rec", 11 },
-    { 4, "Rec2PB", "AC:Rec2PB", 1 },
+    //{ 4, "PB2Rec", "AC:PB2Rec", 1 },
+    //{ 4, "PB2Rec", "AC:PB2Rec", 6 },
+    //{ 4, "PB2Rec", "AC:PB2Rec", 11 },
+    //{ 4, "Rec2PB", "AC:Rec2PB", 1 },
     { 4, "RefreshPhysicalScreen", "ScreenUnLock", 1 },
     { 4, "RefreshPhysicalScreen", "ScreenUnLock", 7 },
     { 4, "RefreshPhysicalScreen", "ScreenUnLock", 15 },
@@ -1090,16 +1162,16 @@ string_sig string_sigs[] =
     { 11, "_uartr_req", "A/uartr.req", 0,                                  3 },
 
     //                                                                   ???
-    { 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,                        0x38 },
-    { 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1,  0x2C },
-    { 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1,          0x30 },
-    { 12, "free", "free", 1,                                            0x28 },
+    //{ 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,                        0x38 },
+    //{ 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1,  0x2C },
+    //{ 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1,          0x30 },
+    //{ 12, "free", "free", 1,                                            0x28 },
     //{ 12, "malloc", "malloc", 0x01000003,                               0x24 },
-    { 12, "TakeSemaphore", "TakeSemaphore", 1,                          0x14 },
-    { 12, "GiveSemaphore", "GiveSemaphore", 1,                          0x18 },
-    { 12, "_log10", "_log10", 0x01000006,                               0x278 },
-    { 12, "_log10", "_log10", 0x01000006,                               0x000 },
-    { 12, "_log10", "_log10", 0x01000006,                               0x000 },
+    //{ 12, "TakeSemaphore", "TakeSemaphore", 1,                          0x14 },
+    //{ 12, "GiveSemaphore", "GiveSemaphore", 1,                          0x18 },
+    //{ 12, "_log10", "_log10", 0x01000006,                               0x278 },
+    //{ 12, "_log10", "_log10", 0x01000006,                               0x000 },
+    //{ 12, "_log10", "_log10", 0x01000006,                               0x000 },
     //{ 12, "ClearEventFlag", "ClearEventFlag", 1,                        0x04 },
     //{ 12, "SetEventFlag", "SetEventFlag", 1,                            0x08 },
     //{ 12, "WaitForAnyEventFlag", "WaitForAnyEventFlag", 1,              0x0c },
@@ -1177,6 +1249,13 @@ string_sig string_sigs[] =
     //{ 19, "GetSRAndDisableInterrupt", "UnregisterInterruptHandler", 0,           0x0006 },
     //{ 19, "SetSR", "UnregisterInterruptHandler", 0,                              0x1007 },
     //{ 19, "EnableInterrupt", "UnregisterInterruptHandler", 0,                    0x170f },
+    { 19, "GetDrive_TotalClusters", "GetDrive_FreeClusters", 0,                 -0x120f },
+    { 19, "GetDrive_TotalClusters", "GetDrive_FreeClusters", 0,                 -0x130f }, // s80
+    { 19, "GetDrive_TotalClusters", "GetDrive_FreeClusters", 0,                 -0x120e }, // ixus950
+    { 19, "GetDrive_TotalClusters", "GetDrive_FreeClusters", 0,                 -0x1310 }, // old vx
+    { 19, "GetDrive_ClusterSize", "GetDrive_TotalClusters", 0,                  -0x020f },
+    { 19, "GetDrive_ClusterSize", "GetDrive_TotalClusters", 0,                  -0x0217 }, // s80
+    { 19, "GetDrive_ClusterSize", "GetDrive_TotalClusters", 0,                  -0x0310 }, // old vx
 
     { 21, "add_ptp_handler", (char*)find_add_ptp_handler, 0 },
     //{ 21, "apex2us", (char*)find_apex2us, 0 },
@@ -1187,6 +1266,8 @@ string_sig string_sigs[] =
     { 22, "PT_PlaySound", (char*)find_PT_PlaySound, 0 },
     { 22, "ExportToEventProcedure_FW", (char*)find_ExportToEventProcedure, 0 },
     { 22, "RegisterEventProcedure_FW", (char*)find_RegisterEventProcedure, 0 },
+
+    { 22, "set_control_event", (char*)find_set_control_event, 0 }, // vx
 
     //                                                                                          Vx
     { 100, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                                     10 },
@@ -1209,6 +1290,13 @@ string_sig string_sigs[] =
     { 101, "CreateTask", "CreateTask", 0 },
     { 101, "ExitTask", "ExitTask", 0 },
     { 101, "PT_GetSystemTime", "PT_GetSystemTime", 0 },
+
+    { 102, "PB2Rec", "AC:PB2Rec", 0,                                                            0x20 },
+    { 102, "Rec2PB", "AC:Rec2PB", 0,                                                            0x20 },
+
+    { 103, "GetDrive_FreeClusters", "AvailClusters.c", 0,                                       0x04 },
+
+    { 104, "SetLogicalEventActive", "EventReciever.c", 16,                                      0x0000 },
 
     { 0, 0, 0, 0 }
 };
@@ -2027,6 +2115,120 @@ int match_strsig101(firmware *fw, string_sig *sig, int j)
     return 0;
 }
 
+// Sig pattern to identify AC: functions (Vx)
+// Function starts by loading R0 and R1, order is random
+//      Func            -   func
+//      Ref to string   -       LDR R1, pstr
+//      Magic value     -       MOV R0, #val
+
+//            ....
+//      Ptr to string   -       DCD pstr
+// based on method 11
+int match_strsig102(firmware *fw, string_sig *sig, int j)
+{
+    int val = vxworks_offset(fw, sig);
+
+    uint32_t sadr = idx2adr(fw,j);        // string address
+    int j1;
+    for (j1 = j+256; j1 >= 0; j1--)
+    {
+        if (isLDR(fw,j1) && (fwRd(fw,j1)==1))   // LDR R1, =string
+        {
+            uint32_t pval = LDR2val(fw,j1);
+            if (pval == sadr)
+            {
+                if (isMOV_immed(fw,j1-1) && (ALUop2(fw,j1-1)==val))
+                {
+                    fwAddMatch(fw,idx2adr(fw,j1-1),32,0,1102);
+                    return 1;
+                }
+                else if (isMOV_immed(fw,j1+1) && (ALUop2(fw,j1+1)==val))
+                {
+                    fwAddMatch(fw,idx2adr(fw,j1),32,0,1102);
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+// Func is offset from a string, special case for GetDrive_FreeClusters
+//      Func            -   func
+//            ....
+//      string          -   DCB "str"
+int match_strsig103(firmware *fw, string_sig *sig, int j)
+{
+    int ofst = vxworks_offset(fw, sig);
+
+    int j1 = j+ofst;
+    if (isSTMFD_LR(fw,j1))
+    {
+        // get third BL
+        j1 = find_Nth_inst(fw,isBL,j1+1,20,3);
+        if (j1<0)
+            return 0;
+        j1 = idxFollowBranch(fw,j1,0x01000001);
+        // get first B
+        j1 = find_Nth_inst(fw,isB,j1+1,32,1);
+        if (j1<0)
+            return 0;
+        j1 = idxFollowBranch(fw,j1,0x01000001);
+        fwAddMatch(fw,idx2adr(fw,j1),32,0,1103);
+        return 1;
+    }
+    return 0;
+}
+
+// Sig pattern:
+//      Func            -   func
+//            .... [offset]
+//      Nth instruction backwards from string ref
+//      Ref to string   -       LDR Rx, pstr
+//            ....
+//      Ptr to string   -       DCD pstr
+// based on method 11
+// vxworks_offset to be encoded as: 0xQNPP
+// P) additional offset
+// Q) instruction to locate: 0 for STMFD_LR
+// N) search the instruction this many times - 1 (i.e. 0 = first instruction backwards)
+// prev instruction search range is limited by sig->offset
+// the reference to the string has to occur within 256 words (fixed range)
+int match_strsig104(firmware *fw, string_sig *sig, int j)
+{
+    int ofst = vxworks_offset(fw, sig);
+    int prinst = (ofst&0xf000)>>12;
+    int ninst = ((ofst&0xf00)>>8)+1;
+    ofst &= 0xff;
+    void *instid;
+    switch (prinst) {
+        case 0:
+        default:
+            instid = (void*)isSTMFD_LR;
+    }
+
+    uint32_t sadr = idx2adr(fw,j);        // string address
+    int j1;
+    for (j1 = j+256; j1 >= 0; j1--)
+    {
+        if (isLDR(fw,j1))   // LDR ?
+        {
+            uint32_t pval = LDR2val(fw,j1);
+            if (pval == sadr)
+            {
+                int j2 = find_Nth_inst_rev(fw,instid,j1-1,sig->offset,ninst);
+                if (j2>0)
+                {
+                    fwAddMatch(fw,idx2adr(fw,j2-ofst),32,0,1104);
+                    return 1;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
 // Call processing function based on type
 int find_strsig(firmware *fw, string_sig *sig)
 {
@@ -2063,6 +2265,9 @@ int find_strsig(firmware *fw, string_sig *sig)
     case 22:    return ((int (*)(firmware*))(sig->ev_name))(fw);
     case 100:   return fw_string_process(fw, sig, match_strsig100, 0);
     case 101:   return fw_string_process(fw, sig, match_strsig101, 0);
+    case 102:   return fw_string_process(fw, sig, match_strsig102, 0);
+    case 103:   return fw_string_process(fw, sig, match_strsig103, 0);
+    case 104:   return fw_string_process(fw, sig, match_strsig104, 0);
     }
 
     return 0;
@@ -2386,34 +2591,76 @@ char* mode_name(uint16_t v)
     return "";
 }
 
-void output_modemap(firmware *fw, int k)
+void output_modemap(firmware *fw, int k, int l)
 {
     int cnt = 0;
 
-    if (isLDR_PC(fw,k))
+    bprintf("%08x\n",idx2adr(fw,k));
+    // detect table member size
+    if (fw->buf[k] & 0xffff0000)
     {
-        k = adr2idx(fw,LDR2val(fw,k));
-        bprintf("%08x\n",idx2adr(fw,k));
+        // 16bit entries
         uint16_t *p = (uint16_t*)(&fw->buf[k]);
         k = 0;
-        while ((*p != 0xFFFF) && (k < 50))
+        while ((*p != 0xFFFF) && (k < l*2))
         {
-            if (((fw->dryos_ver < 47) && ((*p < 8000) || (*p > 8999))) || ((fw->dryos_ver >= 47) && ((*p < 4000) || (*p > 4999))))
+            osig *m = find_sig_val(fw->sv->modemap, *p);
+            if (!m)
             {
-                osig *m = find_sig_val(fw->sv->modemap, *p);
+                char *s = mode_name(*p);
+                bprintf("// Mode %5d in firmware but not in current modemap",*p);
+                if (strcmp(s,"") != 0)
+                    bprintf(" (%s)",s);
+                bprintf("\n");
+                cnt++;
+            }
+            else
+            {
+                m->pct = 100;
+            }
+            p++;
+            k++;
+        }
+    }
+    else
+    {
+        // 32bit entries (first one is 0)
+        uint32_t *p = (uint32_t*)(&fw->buf[k]);
+        k = 0;
+        while (k < l)
+        {
+            osig *m = find_sig_val(fw->sv->modemap, *p);
+            if (!m)
+            {
+                osig *m = find_sig_val(fw->sv->modemap, (*p)&0xffff);
                 if (!m)
                 {
                     char *s = mode_name(*p);
-                    bprintf("// Mode %5d in firmware but not in current modemap",*p);
+                    if ((*p)&0xffff0000)
+                        bprintf("// Strange mode 0x%08x in firmware but not in current modemap",*p);
+                    else
+                        bprintf("// Mode %d in firmware but not in current modemap",*p);
                     if (strcmp(s,"") != 0)
                         bprintf(" (%s)",s);
                     bprintf("\n");
-                    cnt++;
                 }
                 else
                 {
+                    char *s = mode_name((*p)&0xffff);
+                    if ((*p)&0xffff0000)
+                        bprintf("// Strange mode 0x%08x in firmware, found in modemap as %d (%s)",*p,m->val,m->nm);
+                    else
+                        bprintf("// Mode %d in firmware, found in modemap as %d (%s)",*p,m->val,m->nm); // impossible?
+                    if (strcmp(s,"") != 0)
+                        bprintf(" (%s)",s);
+                    bprintf("\n");
                     m->pct = 100;
                 }
+                cnt++;
+            }
+            else
+            {
+                m->pct = 100;
             }
             p++;
             k++;
@@ -2435,24 +2682,52 @@ void output_modemap(firmware *fw, int k)
     }
 }
 
-int match_modelist(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+int find_modelist(firmware *fw, uint32_t fadr)
 {
-    if (isBX_LR(fw,k) && (fw->buf[k+4] == fadr))
+    uint32_t j1;
+    int k1, k2;
+    // flashparamstable 1st entry
+    j1 = fwval(fw,adr2idx(fw,fadr));
+    k1 = adr2idx(fw,j1);
+    if (k1<0)
+        return 0;
+    k2 = find_inst_rev(fw,isLDMFD_PC,k1-1,50);
+    if (k2<0)
     {
-        fadr = fwval(fw,k+1);
-        int k1;
-        for (k1=k-1; k1>k-20; k1--)
-        {
-            if (isLDR_PC(fw,k1) && (LDR2val(fw,k1) == fadr))
-            {
-                bprintf("// Firmware modemap table found @%08x -> ",idx2adr(fw,k1));
-                output_modemap(fw,k1);
-                return 1;
-            }
-        }
+        // newest vx models
+        k2 = find_Nth_inst_rev(fw,isMOV,k1-1,16,2);
     }
+    if (k2<0)
+        return 0;
+    k1 = find_inst_rev(fw,isLDR,k2,5);
+    if (k1<0)
+        return 0;
+    j1 = LDR2val(fw,k1);
+    k1 = adr2idx(fw,j1);
+    if (k1<0)
+        return 0;
+    j1 = fwval(fw,k1);
+    k1 = adr2idx(fw,j1);
+    if (k1<0)
+        return 0;
+    k1 = find_inst_rev(fw,isMOV,k1-1,120);
+    if (k1<0)
+        return 0;
+    if (fwval(fw,k1) != 0xe1a0f00e) // mov pc, lr
+        return 0;
+    k1--;
+    if (!(isLDR(fw,k1) && (fwRd(fw,k1)==0))) // ldr r0,
+        return 0;
+    k2 = k1;
+    j1 = LDR2val(fw,k1);
+    k1 = adr2idx(fw,j1);
+    if (k1<0)
+        return 0;
+    
+    bprintf("// Firmware modemap table found @%08x -> ",idx2adr(fw,k1));
+    output_modemap(fw,k1,k2-k1);
+    return 1;
 
-    return 0;
 }
 
 static uint32_t FlashParamsTable_address = 0;
@@ -2469,7 +2744,14 @@ int match_FlashParamsTable2(firmware *fw, int k, uint32_t v1, uint32_t v2)
 
 int match_FlashParamsTable(firmware *fw, int k, uint32_t v1, uint32_t v2)
 {
-    if ((fw->buf[k] > fw->base) && (fw->buf[k+1] == 0x00010000) && (fw->buf[k+2] == 0xFFFF0002))
+    if ((fw->buf[k] > fw->base) && (fw->buf[k+1] == 0x00010000) && ((fw->buf[k+2] == 0xFFFF0000)||(fw->buf[k+2] == 0xFFFF0002)))
+    {
+        if (search_fw(fw, match_FlashParamsTable2, idx2adr(fw,k), 0, 1))
+            return 1;
+    }
+    // ixus30, 40
+    if ((fw->buf[k+1] > fw->base) && (fw->buf[k] == 0x00000000) && (fw->buf[k+2] == 0x00000001) &&
+        (fw->buf[k+3] == 0x00000000) && (fw->buf[k+4] == 0xffffffff))
     {
         if (search_fw(fw, match_FlashParamsTable2, idx2adr(fw,k), 0, 1))
             return 1;
@@ -2484,11 +2766,16 @@ void find_modemap(firmware *fw)
     // Find 'FlashParamsTable'
     search_fw(fw, match_FlashParamsTable, 0, 0, 1);
     // Find 'modelist'
+    // get flashparamstable 1st entry -> jump to that address -> search backwards 1st ldmfd_pc (mov pc,lr in newest vx) ->
+    // search backwards ldr address -> jump to that address (this is the propertytable, not researched) ->
+    // get 1st entry -> jump to that address -> search backwards 1st mov pc,lr ->
+    // get modemaptable address from the prev ldr
+    // old vx mode entries are 32 bit, all newer cameras have 16 bit entries
     if (FlashParamsTable_address != 0)
     {
         add_blankline();
         bprintf("// Check of modemap from 'platform/CAMERA/shooting.c':\n");
-        search_fw(fw, match_modelist, FlashParamsTable_address, 0, 5);
+        find_modelist(fw,FlashParamsTable_address);
     }
 }
 
@@ -2707,11 +2994,15 @@ int match_get_flash_params_count(firmware *fw, int k, int v)
 {
     if ((fw->buf[k] & 0xFFF00FFF) == 0xE3C00901)    // BIC Rn, Rn, #0x4000
     {
-        uint32_t r = fw->buf[k] & 0x000F0000;       // Register
-        if (((fw->buf[k+1] & 0xFFF00000) == 0xE3500000) && ((fw->buf[k+1] & 0x000F0000) == r))  // CMP, Rn #val
+        uint32_t r = (fw->buf[k] & 0x0000F000)<<4;       // Register
+        int n;
+        for (n=k+1; n<k+20; n++)
         {
-            bprintf("//int get_flash_params_count(void) { return 0x%02x; }                          // Found @0x%08x\n",fw->buf[k+1]&0xFFF,idx2adr(fw,k+1));
-            return 1;
+            if (((fw->buf[n] & 0xFFF00000) == 0xE3500000) && ((fw->buf[n] & 0x000F0000) == r))  // CMP, Rn #val
+            {
+                bprintf("//int get_flash_params_count(void) { return 0x%02x; }                          // Found @0x%08x\n",fw->buf[n]&0xFFF,idx2adr(fw,n));
+                return 1;
+            }
         }
     }
 
@@ -2721,13 +3012,13 @@ int match_get_flash_params_count(firmware *fw, int k, int v)
 // Search for things that go in 'lib.c'
 void find_lib_vals(firmware *fw)
 {
-    int k,k1;
+    //int k,k1;
 
     out_hdr = 1;
     add_blankline();
 
     bprintf("// Values below go in 'lib.c':\n");
-
+/*
     // Find 'vid_get_bitmap_fb'
     search_saved_sig(fw, "DispCon_ShowBitmapColorBar", match_vid_get_bitmap_fb, 0, 1, 30);
 
@@ -2801,7 +3092,7 @@ void find_lib_vals(firmware *fw)
             bprintf("//long hook_raw_size()             { return 0x%08x; }                    // Found @0x%08x\n",craw_bufsize,idx2adr(fw,k-1));
         }
     }
-
+*/
     // Find value for 'get_flash_params_count'
     search_saved_sig(fw, "GetParameterData", match_get_flash_params_count, 0, 0, 30);
 }
@@ -3422,18 +3713,12 @@ int match_raw_buffer(firmware *fw, int k, uint32_t rb1, uint32_t v2)
 // Search for things that go in 'stubs_min.S'
 void find_stubs_min(firmware *fw)
 {
-    int k,k1;
+    //int k,k1;
 
     out_hdr = 1;
     add_blankline();
 
     bprintf("// Values below can be overridden in 'stubs_min.S':\n");
-
-    // Find 'physw_status'
-    search_saved_sig(fw, "kbd_read_keys", match_physw_status, 0, 0, 5);
-
-    // Find 'physw_run' & 'physw_sleep_delay'
-    search_saved_sig(fw, "task_PhySw", match_physw_run, 0, 0, 5);
 
     // Find 'levent_table'
     search_fw(fw, match_levent_table, 0, 0, 1);
@@ -3441,6 +3726,12 @@ void find_stubs_min(firmware *fw)
     // Find 'FlashParamsTable'
     if (FlashParamsTable_address != 0)
         print_stubs_min(fw,"FlashParamsTable",FlashParamsTable_address,FlashParamsTable_address);
+/*
+    // Find 'physw_status'
+    search_saved_sig(fw, "kbd_read_keys", match_physw_status, 0, 0, 5);
+
+    // Find 'physw_run' & 'physw_sleep_delay'
+    search_saved_sig(fw, "task_PhySw", match_physw_run, 0, 0, 5);
 
     // Find 'movie_status'
     search_fw(fw, match_movie_status, 0, 0, 1);
@@ -3751,6 +4042,7 @@ void find_stubs_min(firmware *fw)
             }
         }
     }
+*/
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -4624,7 +4916,9 @@ int main(int argc, char **argv)
     {
         count = 0;
         curr_name = func_names[k].name;
-
+#if DEBUG_ON
+fprintf(stderr,"%s:",curr_name);
+#endif
         find_matches(&fw, curr_name);
         print_results(&fw,curr_name,k);
 
@@ -4634,9 +4928,9 @@ int main(int argc, char **argv)
         }
     }
 
-    //find_modemap(&fw);
-    //find_stubs_min(&fw);
-    //find_lib_vals(&fw);
+    find_modemap(&fw);
+    find_stubs_min(&fw);
+    find_lib_vals(&fw);
     //find_key_vals(&fw);
     //find_platform_vals(&fw);
     find_other_vals(&fw);

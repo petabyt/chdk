@@ -16,9 +16,6 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NHSTUB(EnterToCompensationEVF                 ,0xffb268b8) //  3 96%
 NHSTUB(FreeUncacheableMemory                  ,0xff81e698) //  1 90%
-NHSTUB(GetDrive_ClusterSize                   ,0xffaae448) //  3 92%
-NHSTUB(GetDrive_FreeClusters                  ,0xffaae4c0) //  3 92%
-NHSTUB(GetDrive_TotalClusters                 ,0xffaae484) //  3 92%
 //NHSTUB(GetFocusLensSubjectDistance          ,0xffaea650) //  1 74%    *** != 0xffaea654
 // ERROR: GetFocusLensSubjectDistanceFromLens is not found.  //--- ---    *** != 0xffaeab54
 NHSTUB(GetParameterData                       ,0xffb66b94) //  1 86%
@@ -45,6 +42,29 @@ NHSTUB(utime                                  ,0xffb7cd84) //  1 57%
 NHSTUB(localtime                              ,0xff924294) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xffaadf80) //  3 93%
 NHSTUB(MakeAFScan                             ,0xffb2c7e4) //  2 79%
+
+// Check of modemap from 'platform/CAMERA/shooting.c':
+// Firmware modemap table found @ffb68d28 -> ffb68d28
+// Current modemap entry not found in firmware - MODE_VIDEO_SUPER_MACRO   34313
+// Current modemap entry not found in firmware - MODE_VIDEO_AQUARIUM      17431
+// Current modemap entry not found in firmware - MODE_VIDEO_BEACH         17428
+// Current modemap entry not found in firmware - MODE_VIDEO_SNOW          17427
+// Current modemap entry not found in firmware - MODE_VIDEO_FOLIAGE       17426
+// Current modemap entry not found in firmware - MODE_VIDEO_INDOOR        17425
+// Current modemap entry not found in firmware - MODE_VIDEO_NIGHT         17419
+// Current modemap entry not found in firmware - MODE_VIDEO_PORTRAIT      17421
+// Current modemap entry not found in firmware - MODE_VIDEO_STITCH        34314
+// Current modemap entry not found in firmware - MODE_VIDEO_COLOR_SWAP    34331
+// Current modemap entry not found in firmware - MODE_VIDEO_COLOR_ACCENT  34330
+// Current modemap entry not found in firmware - MODE_VIDEO_MANUAL        33796
+// Current modemap entry not found in firmware - MODE_VIDEO_STD           33792
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xffb5bf2c) // Found @0xffb5bf2c,          stubs_min = 0xffb5bf2c (0xFFB5BF2C)
+//DEF(FlashParamsTable                        ,0xffb6aecc) // Found @0xffb6aecc,          stubs_min = 0xffb6aecc (0xFFB6AECC)
+
+// Values below go in 'lib.c':
+//int get_flash_params_count(void) { return 0x6e; }                          // Found @0xffb66c00
 
 // Misc stuff
 // canon_data_src: 0xffbbe510, canon_data_len: 0xcea0
@@ -73,6 +93,9 @@ NHSTUB(GetCCDTemperature                      ,0xffa48cec) //102
 NHSTUB(GetCurrentAvValue                      ,0xffa63518) //  2
 // ALT: NHSTUB(GetCurrentAvValue, 0xffa63610) // 1 13/0
 // ALT: NHSTUB(GetCurrentAvValue, 0xffa6600c) // 1 13/0
+NHSTUB(GetDrive_ClusterSize                   ,0xffaae448) //119
+NHSTUB(GetDrive_FreeClusters                  ,0xffaae4c0) //1103
+NHSTUB(GetDrive_TotalClusters                 ,0xffaae484) //119
 //NHSTUB(GetOpticalTemperature                ,0xffa48cd8) //102            == 0xffa48cd8
 //NHSTUB(GetZoomLensCurrentPoint              ,0xffaff734) //102            == 0xffaff734
 //NHSTUB(GetZoomLensCurrentPosition           ,0xffaff748) //102            == 0xffaff748
@@ -97,7 +120,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffa698f8) //102
 NHSTUB(SetAutoShutdownTime                    ,0xffb63784) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff829c58) //120
 NHSTUB(SetFileAttributes                      ,0xffaaee44) //  3
-NHSTUB(SetLogicalEventActive                  ,0xffb61390) //  3
+NHSTUB(SetLogicalEventActive                  ,0xffb61390) //1104
 NHSTUB(SetPropertyCase                        ,0xff81bc20) //  3
 //NHSTUB(SetScriptMode                        ,0xffb613f4) //120            == 0xffb613f4
 NHSTUB(SleepTask                              ,0xffb419dc) //120

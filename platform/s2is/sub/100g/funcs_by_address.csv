@@ -146,9 +146,9 @@
 0xff86fcd4,Feof_Fut
 0xff86fd0c,Fflush_Fut
 0xff876060,Unmount_FileSystem
-0xff87652c,GetDrive_ClusterSize,(stubs_entry_2.s)
-0xff8765c4,GetDrive_FreeClusters,(stubs_entry_2.s)
-0xff876588,GetDrive_TotalClusters,(stubs_entry_2.s)
+0xff87652c,GetDrive_ClusterSize
+0xff876588,GetDrive_TotalClusters
+0xff8765c4,GetDrive_FreeClusters
 0xff8770f4,Open
 0xff8770f4,Open_FW
 0xff877100,Close
@@ -254,6 +254,7 @@
 0xff97d2a8,DeleteController_FW
 0xff97d3e0,MoveControllerToTopOfZOrder_FW
 0xff97d518,GetSelfControllerHandle_FW
+0xff97fe4c,GetLogicalEventName
 0xff97fee4,PostLogicalEventForNotPowerType
 0xff97fee4,PostLogicalEventForNotPowerType_FW
 0xff97ff70,PostLogicalEventToUI
@@ -261,7 +262,10 @@
 0xff980008,PostEventShootSeqToUI_FW
 0xff980080,ShowLogicalEventName_FW
 0xff9801c8,LogiEvnt_LoadCameraLog_FW
+0xff981490,set_control_event
+0xff9816a4,IsControlEventActive
 0xff9816a4,IsControlEventActive_FW
+0xff9816f4,SetLogicalEventActive
 0xff981758,SetScriptMode
 0xff981758,SetScriptMode_FW
 0xff981768,UiEvnt_ShowBitMaps_FW

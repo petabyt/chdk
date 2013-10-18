@@ -18,15 +18,6 @@ NHSTUB(EnterToCompensationEVF                 ,0xff98f004) //  2 90%
 //NHSTUB(ExitFromCompensationEVF              ,0xff992894) //  2 66%    *** != 0xff98f044
 // ALT: NHSTUB(ExitFromCompensationEVF, 0xff9928f0) // 2 20/10
 // ALT: NHSTUB(ExitFromCompensationEVF, 0xff9929ac) // 2 20/10
-//NHSTUB(GetDrive_ClusterSize                 ,0xff87ae24) //  3 76%    *** != 0xff87ad70
-//NHSTUB(GetDrive_FreeClusters                ,0xff87ad70) //  1 73%    *** != 0xff87ade8
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff87adac) // 1 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff87ade8) // 1 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff87ae24) // 1 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff87adac) // 3 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff87ade8) // 3 19/7
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff87ae24) // 3 19/7
-NHSTUB(GetDrive_TotalClusters                 ,0xff87adac) //  2 92%
 NHSTUB(GetFocusLensSubjectDistance            ,0xffb01594) //  2 96%
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffb01b48) //  2 57%
 NHSTUB(GetPropertyCase                        ,0xff8258c8) //  2 92%
@@ -34,7 +25,6 @@ NHSTUB(GetSystemTime                          ,0xff8150d8) //  1 96%
 NHSTUB(PutInNdFilter                          ,0xffb0d140) //  1 92%
 NHSTUB(PutOutNdFilter                         ,0xffb0d188) //  1 94%
 NHSTUB(Restart                                ,0xff823ab4) //  1 96%
-NHSTUB(SetLogicalEventActive                  ,0xff9a632c) //  1 88%
 //NHSTUB(UnlockAF                             ,0xff98f0bc) //  1 78%    *** != 0xff98ee7c
 NHSTUB(UnsetZoomForMovie                      ,0xff9e59f8) //  1 89%
 //NHSTUB(WriteSDCard                          ,0xff88a708) //  2 93%    *** != 0xff88a8a4
@@ -52,6 +42,19 @@ NHSTUB(taskIdListGet                          ,0xffb677e4) //  1 82%
 NHSTUB(localtime                              ,0xffb537f8) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xff87a8ac) //  1 90%
 NHSTUB(MakeAFScan                             ,0xff993be4) //  2 96%
+
+// Check of modemap from 'platform/CAMERA/shooting.c':
+// Firmware modemap table found @ff9a8a74 -> ff9a8a74
+// Mode 32774 in firmware but not in current modemap
+// Mode 32772 in firmware but not in current modemap (MODE_P)
+// Current modemap entry not found in firmware - MODE_M                   33772
+
+// Values below can be overridden in 'stubs_min.S':
+//DEF(levent_table                            ,0xff9a1124) // Found @0xff9a1124,          stubs_min = 0xff9a1124 (0xFF9A1124)
+//DEF(FlashParamsTable                        ,0xff9ab04c) // Found @0xff9ab04c,          stubs_min = 0xff9ab04c (0xFF9AB04C)
+
+// Values below go in 'lib.c':
+//int get_flash_params_count(void) { return 0x6d; }                          // Found @0xff9ad6e8
 
 // Misc stuff
 // canon_data_src: 0xffb6da40, canon_data_len: 0xcc00
@@ -78,6 +81,9 @@ NHSTUB(GetBatteryTemperature                  ,0xff82f584) //102
 NHSTUB(GetCCDTemperature                      ,0xff82f570) //102
 NHSTUB(GetCurrentAvValue                      ,0xffb0cf4c) //  2
 // ALT: NHSTUB(GetCurrentAvValue, 0xffb0f210) // 1 13/0
+//NHSTUB(GetDrive_ClusterSize                 ,0xff87ad70) //119            == 0xff87ad70
+//NHSTUB(GetDrive_FreeClusters                ,0xff87ade8) //1103            == 0xff87ade8
+NHSTUB(GetDrive_TotalClusters                 ,0xff87adac) //119
 NHSTUB(GetOpticalTemperature                  ,0xff82f55c) //102
 NHSTUB(GetParameterData                       ,0xff9ad67c) //  2
 NHSTUB(GetZoomLensCurrentPoint                ,0xffaf1c64) //102
@@ -100,6 +106,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffb1212c) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff9a8718) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff9d9b48) //120
 NHSTUB(SetFileAttributes                      ,0xff87b7ac) //  1
+NHSTUB(SetLogicalEventActive                  ,0xff9a632c) //1104
 NHSTUB(SetParameterData                       ,0xff9ad59c) //  2
 NHSTUB(SetPropertyCase                        ,0xff825778) //  2
 //NHSTUB(SetScriptMode                        ,0xff9a6394) //120            == 0xff9a6394
