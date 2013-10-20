@@ -69,7 +69,7 @@ NHSTUB(MakeAFScan                             ,0xff94e624) //  1 96%
 //DEF(FlashParamsTable                        ,0xff961df8) // Found @0xff961df8,          stubs_min = 0xff961df8 (0xFF961DF8)
 
 // Values below go in 'lib.c':
-//int get_flash_params_count(void) { return 0x5d; }                          // Found @0xff9644b4
+//int get_flash_params_count(void) { return 0x5e; }                          // Found @0xff9644b4
 
 // Misc stuff
 // canon_data_src: 0xffaeb320, canon_data_len: 0xea00

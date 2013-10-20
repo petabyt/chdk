@@ -76,7 +76,7 @@ NHSTUB(localtime                              ,0xffab43c0) //  1 93%
 //DEF(FlashParamsTable                        ,0xff9697e0) // Found @0xff9697e0,          stubs_min = 0xff9697e0 (0xFF9697E0)
 
 // Values below go in 'lib.c':
-//int get_flash_params_count(void) { return 0x52; }                          // Found @0xff96b880
+//int get_flash_params_count(void) { return 0x53; }                          // Found @0xff96b880
 
 // Misc stuff
 // canon_data_src: 0xffacea10, canon_data_len: 0xd340
