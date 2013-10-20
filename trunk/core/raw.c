@@ -353,14 +353,12 @@ void patch_bad_pixels(void) {
     }
 }
 
-#define PIXELS_BUF_SIZE 8192
 int make_pixel_list(char * ptr, int size) {
     int x,y;
     struct point *pixel;
     char *endptr;
 
     if ( size <=0 ) return 0;
-    if ( size >PIXELS_BUF_SIZE ) ptr[PIXELS_BUF_SIZE]=0;
 
     while(*ptr) {
         while (*ptr==' ' || *ptr=='\t') ++ptr;    // whitespaces
