@@ -358,9 +358,9 @@ int make_pixel_list(char * ptr, int size) {
     int x,y;
     struct point *pixel;
     char *endptr;
-	
-	if ( size <=0 ) return 0;
-	if ( size >PIXELS_BUF_SIZE ) ptr[PIXELS_BUF_SIZE]=0;
+
+    if ( size <=0 ) return 0;
+    if ( size >PIXELS_BUF_SIZE ) ptr[PIXELS_BUF_SIZE]=0;
 
     while(*ptr) {
         while (*ptr==' ' || *ptr=='\t') ++ptr;    // whitespaces
@@ -369,23 +369,23 @@ int make_pixel_list(char * ptr, int size) {
             ptr = endptr;
             if (*ptr++==',') {
                 while (*ptr==' ' || *ptr=='\t') ++ptr;    // whitespaces
-                    if (*ptr!='\n' && *ptr!='\r') {
-                        y=strtol(ptr, &endptr, 0);
-                        if (endptr != ptr) {
-                            ptr = endptr;
-                            pixel=malloc(sizeof(struct point));
-                            if (pixel) {
-                                (*pixel).x=x;
-                                (*pixel).y=y;
-                                (*pixel).next=pixel_list;
-                                pixel_list=pixel;
-                            }
+                if (*ptr!='\n' && *ptr!='\r') {
+                    y=strtol(ptr, &endptr, 0);
+                    if (endptr != ptr) {
+                        ptr = endptr;
+                        pixel=malloc(sizeof(struct point));
+                        if (pixel) {
+                            (*pixel).x=x;
+                            (*pixel).y=y;
+                            (*pixel).next=pixel_list;
+                            pixel_list=pixel;
                         }
                     }
                 }
+            }
         }
         while (*ptr && *ptr!='\n') ++ptr;    // unless end of line
         if (*ptr) ++ptr;
     }
-	return 0;
+    return 0;
 }
