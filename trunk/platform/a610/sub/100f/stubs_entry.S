@@ -30,7 +30,7 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe67118) //  3 52%
 //DEF(FlashParamsTable                        ,0xffd4b9b4) // Found @0xffd4b9b4,          stubs_min = 0xffd4b9b4 (0xFFD4B9B4)
 
 // Values below go in 'lib.c':
-//int get_flash_params_count(void) { return 0x5d; }                          // Found @0xffd4e6f0
+//int get_flash_params_count(void) { return 0x5e; }                          // Found @0xffd4e6f0
 
 // Misc stuff
 // canon_data_src: 0xffed3aa0, canon_data_len: 0xe910

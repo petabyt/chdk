@@ -54,7 +54,7 @@ NHSTUB(Mount_FileSystem                       ,0xffc5cdf8) //  1 90%
 //DEF(FlashParamsTable                        ,0xffd5b6e4) // Found @0xffd5b6e4,          stubs_min = 0xffd5b6e4 (0xFFD5B6E4)
 
 // Values below go in 'lib.c':
-//int get_flash_params_count(void) { return 0x6b; }                          // Found @0xffd5df40
+//int get_flash_params_count(void) { return 0x6c; }                          // Found @0xffd5df40
 
 // Misc stuff
 // canon_data_src: 0xffefb340, canon_data_len: 0xb960

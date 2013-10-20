@@ -3000,7 +3000,8 @@ int match_get_flash_params_count(firmware *fw, int k, int v)
         {
             if (((fw->buf[n] & 0xFFF00000) == 0xE3500000) && ((fw->buf[n] & 0x000F0000) == r))  // CMP, Rn #val
             {
-                bprintf("//int get_flash_params_count(void) { return 0x%02x; }                          // Found @0x%08x\n",fw->buf[n]&0xFFF,idx2adr(fw,n));
+                // the found value needs to be increased by one (BLS instruction follows)
+                bprintf("//int get_flash_params_count(void) { return 0x%02x; }                          // Found @0x%08x\n",(fw->buf[n]&0xFFF)+1,idx2adr(fw,n));
                 return 1;
             }
         }
