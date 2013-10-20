@@ -25,7 +25,7 @@
 
     #define CAM_PROPSET                     2
 
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
+    #define CAM_CAN_SD_OVER_IN_AF_LOCK      1   // Camera allows subject distance (focus) override when in AF Lock mode
     #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_HAS_ND_FILTER               1
     #define CAM_HAS_NATIVE_ND_FILTER        1   // Camera has built-in ND filter with Canon menu support for enable/disable
