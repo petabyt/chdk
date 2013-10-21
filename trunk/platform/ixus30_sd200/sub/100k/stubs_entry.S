@@ -7,7 +7,7 @@
 //   Canon DIGITAL IXUS 30
 
 // Values for makefile.inc
-//   PLATFORMID = 12480 (0x30c0) // Found @ 0xffd7014c
+//   PLATFORMID = 12480 (0x30c0) // Found @ 0xffd7014e
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x00072d40
 
