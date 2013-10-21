@@ -798,10 +798,9 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
     fw->fsize = -((int)fw->base)/4;
     if (fw->alt_base) fw->fsize = -((int)fw->alt_base)/4;
     fw->cam_idx = -1;
-    fw->pid_idx = -1;
+    fw->pid_adr = 0xffffffff;
     fw->cam = 0;
     fw->pid = 0;
-    int pid_shift = 0;
     if (os_type == OS_DRYOS)
     {
         switch (fw->dryos_ver)
@@ -811,16 +810,16 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
             case 31:
             case 39:
                 fw->cam_idx = adr2idx(fw,0xFFFE0110);
-                fw->pid_idx = adr2idx(fw,0xFFFE0130);
+                fw->pid_adr = 0xFFFE0130;
                 break;
             case 43:
             case 45:
                 fw->cam_idx = adr2idx(fw,0xFFFE00D0);
-                fw->pid_idx = adr2idx(fw,0xFFFE0130);
+                fw->pid_adr = 0xFFFE0130;
                 break;
             case 47:
                 fw->cam_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40170:0xFFFE0170);
-                fw->pid_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40040:0xFFFE0040);
+                fw->pid_adr = (fw->base==0xFF000000)?0xFFF40040:0xFFFE0040;
                 break;
             case 49:
             case 50:
@@ -829,14 +828,14 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                 if (fw->alt_base)
                 {
                     fw->cam_idx = adr2idx(fw,(fw->alt_base==0xFF000000)?0xFFF40190:0xFFFE0170);
-                    fw->pid_idx = adr2idx(fw,(fw->alt_base==0xFF000000)?0xFFF40040:0xFFFE0040);
+                    fw->pid_adr = (fw->alt_base==0xFF000000)?0xFFF40040:0xFFFE0040;
                     if (idx_valid(fw,fw->cam_idx) && (strncmp((char*)fwadr(fw,fw->cam_idx),"Canon ",6) != 0))
                         fw->cam_idx = adr2idx(fw,(fw->alt_base==0xFF000000)?0xFFF40170:0xFFFE0170);
                 }
                 else
                 {
                     fw->cam_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40190:0xFFFE0170);
-                    fw->pid_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40040:0xFFFE0040);
+                    fw->pid_adr = (fw->base==0xFF000000)?0xFFF40040:0xFFFE0040;
                     if (idx_valid(fw,fw->cam_idx) && (strncmp((char*)fwadr(fw,fw->cam_idx),"Canon ",6) != 0))
                         fw->cam_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40170:0xFFFE0170);
                 }
@@ -850,7 +849,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
         if (idx_valid(fw,k) && (strncmp((char*)fwadr(fw,k),"Canon ",6) == 0))
         {
             fw->cam_idx = k;
-            fw->pid_idx = adr2idx(fw,0xFFD70130);
+            fw->pid_adr = 0xFFD70130;
         }
         else
         {
@@ -859,8 +858,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
             if (idx_valid(fw,k) && (strncmp((char*)fwadr(fw,k),"Canon ",6) == 0))
             {
                 fw->cam_idx = k;
-                fw->pid_idx = adr2idx(fw,0xFFD7014E);
-                pid_shift = 16;
+                fw->pid_adr = 0xFFD7014E;
             }
             else
             {
@@ -868,7 +866,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                 if (idx_valid(fw,k) && (strncmp((char*)fwadr(fw,k),"Canon ",6) == 0))
                 {
                     fw->cam_idx = k;
-                    fw->pid_idx = adr2idx(fw,0xFFFE0130);
+                    fw->pid_adr = 0xFFFE0130;
                 }
             }
         }
@@ -881,9 +879,10 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
     }
 
     // Set ID if found
-    if (idx_valid(fw,fw->pid_idx))
+    if (idx_valid(fw,adr2idx(fw,fw->pid_adr)) && (fw->pid_adr != 0xffffffff))
     {
-        fw->pid = (fwval(fw,fw->pid_idx) >> pid_shift) & 0xFFFF;
+        // get the correct halfword
+        fw->pid = (fwval(fw,adr2idx(fw,fw->pid_adr)) >> ((fw->pid_adr & 2)?16:0)) & 0xFFFF;
     }
 
     // Calc MAXRAMADDR

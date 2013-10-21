@@ -4659,11 +4659,11 @@ void output_firmware_vals(firmware *fw)
 
     if (fw->pid != 0)
     {
-        bprintf("//   PLATFORMID = %d (0x%04x) // Found @ 0x%08x\n",fw->pid,fw->pid,idx2adr(fw,fw->pid_idx));
+        bprintf("//   PLATFORMID = %d (0x%04x) // Found @ 0x%08x\n",fw->pid,fw->pid,fw->pid_adr);
     }
     else
     {
-        bprintf("//   PLATFORMID = ?           // Not found @ 0x%08x\n",idx2adr(fw,fw->pid_idx));
+        bprintf("//   PLATFORMID = ?           // Not found @ 0x%08x\n",fw->pid_adr);
     }
 
     if (fw->maxram != 0)
