@@ -1813,11 +1813,18 @@ static CMenu raw_exceptions_submenu = {0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS_
 
 static void cb_change_dng()
 {
-     int old=conf.dng_version;
-     conf_change_dng();
-     if ((old==1) && (conf.dng_version==0)) gui_mbox_init(LANG_ERROR, LANG_CANNOT_OPEN_BADPIXEL_FILE, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
+    int old=conf.dng_version;
+    conf_change_dng();
+    if ((old==1) && (conf.dng_version==0)) gui_mbox_init(LANG_ERROR, LANG_CANNOT_OPEN_BADPIXEL_FILE, MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, NULL);
 }
-    
+
+static void cb_change_save_raw()
+{
+    conf.save_raw = !conf.save_raw;
+    cb_change_dng();
+    gui_set_need_restore();
+}
+
 static const char* gui_dng_version(int change, int arg)
 {
     static const char* modes[]={ "1.3", "1.1" };
@@ -2610,7 +2617,6 @@ static void gui_draw_alt_helper()
 
 //-------------------------------------------------------------------
 
-
 void gui_chdk_draw()
 {
     static int clear_for_title = 1;
@@ -2769,7 +2775,7 @@ int gui_chdk_kbd_process()
         else if (!shooting_get_common_focus_mode())
         {
             // Not manual focus mode so just update RAW save setting
-            conf.save_raw = !conf.save_raw;
+            cb_change_save_raw();
             gui_set_need_restore();
         }
         else
@@ -2794,7 +2800,7 @@ int gui_chdk_kbd_process()
         else
         {
             // Change RAW save state
-            conf.save_raw = !conf.save_raw;
+            cb_change_save_raw();
             gui_set_need_restore();
         }
     }
