@@ -1119,6 +1119,16 @@ void TurnOffBackLight(void)
   _TurnOffBackLight();
 }
 
+void TurnOnDisplay(void)
+{
+  _TurnOnDisplay();
+}
+
+void TurnOffDisplay(void)
+{
+  _TurnOffDisplay();
+}
+
 void DoAFLock(void)
 {
   _DoAFLock();

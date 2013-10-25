@@ -2492,6 +2492,9 @@ statement(void)
   case TOKENIZER_SET_BACKLIGHT:
       on_off_statement(token, TurnOnBackLight, TurnOffBackLight);
       break;
+  case TOKENIZER_SET_LCDDISPLAY:
+      on_off_statement(token, TurnOnDisplay, TurnOffDisplay);
+      break;
   case TOKENIZER_SET_DRAW_TITLE_LINE:
       accept(token);
       camera_info.state.osd_title_line=expr()?1:0;
