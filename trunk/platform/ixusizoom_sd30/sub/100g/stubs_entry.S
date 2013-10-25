@@ -93,22 +93,23 @@ NHSTUB(Fseek_Fut                              ,0xff869818) //120
 NHSTUB(Fwrite_Fut                             ,0xff869780) //120
 NHSTUB(GetBatteryTemperature                  ,0xff82dec8) //102
 NHSTUB(GetCCDTemperature                      ,0xff82deb4) //102
-NHSTUB(GetCurrentAvValue                      ,0xffa874ac) //  1
+NHSTUB(GetCurrentAvValue                      ,0xffa85348) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xff86fe04) //119
 NHSTUB(GetDrive_FreeClusters                  ,0xff86fe7c) //1103
 NHSTUB(GetDrive_TotalClusters                 ,0xff86fe40) //119
-NHSTUB(GetOpticalTemperature                  ,0xff82dea0) //102
+NHSTUB(GetOpticalTemperature                  ,0xff82dea0) //120
 NHSTUB(GetParameterData                       ,0xff962ba0) //  1
 NHSTUB(GetPropertyCase                        ,0xff825bb0) //  1
-NHSTUB(GetZoomLensCurrentPoint                ,0xffa6b7cc) //102
+NHSTUB(GetZoomLensCurrentPoint                ,0xffa6b7cc) //120
 NHSTUB(GetZoomLensCurrentPosition             ,0xffa6b7e0) //102
 //NHSTUB(GiveSemaphore                        ,0xff8222b0) //120            == 0xff8222b0
 NHSTUB(IsStrobeChargeCompleted                ,0xff8fc68c) //  1
+NHSTUB(LEDDrive                               ,0xff82e420) //120
 NHSTUB(LocalTime                              ,0xff814264) //115
 NHSTUB(LockMainPower                          ,0xff95e0f4) //120
 NHSTUB(MakeDirectory_Fut                      ,0xff869598) //  1
 NHSTUB(MoveFocusLensToDistance                ,0xffa876e4) //102
-NHSTUB(MoveZoomLensWithPoint                  ,0xffa6b6ac) //102
+NHSTUB(MoveZoomLensWithPoint                  ,0xffa6b6ac) //120
 NHSTUB(Open                                   ,0xff870600) //120
 NHSTUB(PT_PlaySound                           ,0xff955ab4) //  1
 NHSTUB(PostLogicalEventForNotPowerType        ,0xff95a1e8) //120
@@ -129,6 +130,8 @@ NHSTUB(SleepTask                              ,0xff82270c) //120
 NHSTUB(TakeSemaphore                          ,0xff8220c8) //1101
 NHSTUB(TurnOffBackLight                       ,0xff9a013c) //  1
 NHSTUB(TurnOnBackLight                        ,0xff9a0110) //  1
+NHSTUB(TurnOnDisplay                          ,0xff920ffc) //120
+NHSTUB(TurnOffDisplay                         ,0xff92100c) //120
 NHSTUB(UnlockAF                               ,0xff948bb4) //  1
 NHSTUB(UnlockMainPower                        ,0xff95e1a8) //120
 //NHSTUB(VbattGet                             ,0xff82cf1c) //120            == 0xff82cf1c
