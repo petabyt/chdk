@@ -276,6 +276,8 @@ extern void _ExitFromCompensationEVF(void);
 
 extern void _TurnOnBackLight(void);
 extern void _TurnOffBackLight(void);
+extern void _TurnOnDisplay(void);
+extern void _TurnOffDisplay(void);
 
 extern void _DoAFLock(void);
 extern void _UnlockAF(void);
