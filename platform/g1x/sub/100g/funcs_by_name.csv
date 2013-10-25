@@ -1679,11 +1679,13 @@
 0xff029f70,TryReceiveMessageQueue
 0xff02a270,TryTakeSemaphore
 0xff0aab7c,TurnOffBackLight
+0xff050610,TurnOffDisplay
 0xff02c1d4,TurnOffE1_FW
 0xff371c60,TurnOffNdFilter_FW
 0xff371cbc,TurnOffNdFilterWithTiming_FW
 0xff05b30c,TurnOffVideoOutMode_FW
 0xff0aab64,TurnOnBackLight
+0xff050600,TurnOnDisplay
 0xff371c3c,TurnOnNdFilter_FW
 0xff371c84,TurnOnNdFilterWithTiming_FW
 0xff05b2dc,TurnOnVideoOutMode_FW

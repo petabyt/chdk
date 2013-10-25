@@ -304,6 +304,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "TakeSemaphore" },
     { "TurnOffBackLight" },
     { "TurnOnBackLight" },
+    { "TurnOnDisplay" },
+    { "TurnOffDisplay" },
     { "UIFS_WriteFirmInfoToFile" },
     { "UnlockAF" },
     { "UnlockMainPower" },
@@ -1048,6 +1050,8 @@ string_sig string_sigs[] =
     {20, "task_FileWrite", "task_FileWriteTask", 1 },
     {20, "task_RotaryEncoder", "task_JogDial", 1 },
     {20, "task_RotaryEncoder", "task_RotarySw", 1 },
+    {20, "TurnOnDisplay", "DispCon_TurnOnDisplay_FW", 0 },
+    {20, "TurnOffDisplay", "DispCon_TurnOffDisplay_FW", 0 },
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
@@ -4463,6 +4467,19 @@ void find_eventprocs(firmware *fw)
                     fadr = followBranch(fw,idx2adr(fw,j+offsets[i]+1),0x01000001);
                     search_fw(fw, match_registerlists, fadr, 0, 2);
                     break;
+                }
+            }
+        }
+        else
+        {
+            // S5IS
+            j = find_strptr_ref(fw,"ResetZoomLens");
+            if (j >= 0)
+            {
+                if (isBorBL(fw,j+1))
+                {
+                    fadr = followBranch(fw,idx2adr(fw,j+1),0x01000001);
+                    search_fw(fw, match_registerlists, fadr, 0, 2);
                 }
             }
         }

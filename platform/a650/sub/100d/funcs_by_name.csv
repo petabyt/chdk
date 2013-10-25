@@ -1279,10 +1279,12 @@
 0xffc127a0,TurnOff_LoadTest_DebugMode_FW
 0xffdaa89c,TurnOffAFLamp_FW
 0xffc69390,TurnOffBackLight
+0xffc33a2c,TurnOffDisplay
 0xffc38340,TurnOffVideoOutMode_FW
 0xffc1278c,TurnOn_LoadTest_DebugMode_FW
 0xffdaa880,TurnOnAFLamp_FW
 0xffc69378,TurnOnBackLight
+0xffc33a1c,TurnOnDisplay
 0xffc382dc,TurnOnVideoOutMode_FW
 0xffd227c0,UI.Create_FW
 0xffd227c0,UI_RegistDebugEventProc_FW

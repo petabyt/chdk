@@ -1619,6 +1619,7 @@
 0xff02b1a0,TryTakeSemaphore
 0xff09b938,TurnOffBackLight
 0xff11fce0,TurnOffDispForTouchPanelAdj_FW
+0xff04fa08,TurnOffDisplay
 0xff02ce74,TurnOffE1_FW
 0xff30c358,TurnOffNdFilter_FW
 0xff05a0c4,TurnOffTouchPanel_FW
@@ -1626,6 +1627,7 @@
 0xff09b920,TurnOnBackLight
 0xff125ddc,TurnOnDispForTouchPanelAdj_FW
 0xff125e28,TurnOnDispForTouchPanelAdjCheck_FW
+0xff04f9f8,TurnOnDisplay
 0xff30c334,TurnOnNdFilter_FW
 0xff05a03c,TurnOnTouchPanel_FW
 0xff057778,TurnOnVideoOutMode_FW

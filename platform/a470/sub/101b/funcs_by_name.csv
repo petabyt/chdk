@@ -848,8 +848,10 @@
 0xffc0b720,TryTakeSemaphore
 0xffda546c,TurnOffAFLamp_FW
 0xffc65db0,TurnOffBackLight
+0xffc2cd08,TurnOffDisplay
 0xffda5450,TurnOnAFLamp_FW
 0xffc65d98,TurnOnBackLight
+0xffc2ccf8,TurnOnDisplay
 0xffd0afd0,UI.Create_FW
 0xffd0afd0,UI_RegistDebugEventProc_FW
 0xffd0a224,UI_ShowStateOfRecMode_FW

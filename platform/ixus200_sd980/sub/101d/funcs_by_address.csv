@@ -177,7 +177,9 @@
 0xff85368c,DispCon_ShowColorChart_FW
 0xff8536b0,DispCon_ShowWhiteLine_FW
 0xff8537d0,DispCon_TurnOnDisplay_FW
+0xff8537d0,TurnOnDisplay
 0xff8537e0,DispCon_TurnOffDisplay_FW
+0xff8537e0,TurnOffDisplay
 0xff8537f0,DispCon_TurnOnBackLight_FW
 0xff853800,DispCon_TurnOffBackLight_FW
 0xff853810,DispCon_SetMaxBackLightBrightness_FW

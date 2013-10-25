@@ -916,7 +916,9 @@
 0xff827f00,TryReceiveMessageQueue
 0xff81b720,TryTakeSemaphore
 0xff87fd7c,TurnOffBackLight
+0xff83e9dc,TurnOffDisplay
 0xff87fd64,TurnOnBackLight
+0xff83e9cc,TurnOnDisplay
 0xff93811c,UI.Create_FW
 0xff93811c,UI_RegistDebugEventProc_FW
 0xff9372f0,UI_ShowStateOfRecMode_FW

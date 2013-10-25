@@ -172,6 +172,8 @@ NHSTUB(SleepTask                              ,0xffc16578) //120
 NHSTUB(TakeSemaphore                          ,0xffc0b850) //120
 NHSTUB(TurnOffBackLight                       ,0xffc5fcec) //104
 NHSTUB(TurnOnBackLight                        ,0xffc5fcd4) //104
+NHSTUB(TurnOnDisplay                          ,0xffc28524) //120
+NHSTUB(TurnOffDisplay                         ,0xffc28534) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xffcfa8ec) //120
 NHSTUB(UnlockAF                               ,0xffc14868) //102
 NHSTUB(UnlockMainPower                        ,0xffc55164) //120

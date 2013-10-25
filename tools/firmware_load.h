@@ -141,6 +141,7 @@ int find_Nth_inst(firmware *fw, int (*inst)(firmware*,int), int idx, int len, in
 int find_Nth_inst_rev(firmware *fw, int (*inst)(firmware*,int), int idx, int len, int N);
 
 // Find the first or next reference to a specified string in the dump
+int find_strptr_ref(firmware *fw, char *str);
 int find_str_ref(firmware *fw, char *str);
 int find_nxt_str_ref(firmware *fw, int str_adr, int ofst);
 

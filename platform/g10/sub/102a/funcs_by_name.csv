@@ -1348,8 +1348,10 @@
 0xff827df8,TryReceiveMessageQueue
 0xff8280f8,TryTakeSemaphore
 0xff88c57c,TurnOffBackLight
+0xff846b24,TurnOffDisplay
 0xff84c0ec,TurnOffVideoOutMode_FW
 0xff88c564,TurnOnBackLight
+0xff846b14,TurnOnDisplay
 0xff84c0b4,TurnOnVideoOutMode_FW
 0xff9467a8,UI.Create_FW
 0xff9467a8,UI_RegistDebugEventProc_FW

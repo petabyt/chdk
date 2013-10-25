@@ -1248,9 +1248,11 @@
 0xff81ba00,TryTakeSemaphore
 0xff8228ac,TurnOff_LoadTest_DebugMode_FW
 0xff87a148,TurnOffBackLight
+0xff84040c,TurnOffDisplay
 0xff8450ac,TurnOffVideoOutMode_FW
 0xff822898,TurnOn_LoadTest_DebugMode_FW
 0xff87a130,TurnOnBackLight
+0xff8403fc,TurnOnDisplay
 0xff845074,TurnOnVideoOutMode_FW
 0xff944670,UI.Create_FW
 0xff944670,UI_RegistDebugEventProc_FW
