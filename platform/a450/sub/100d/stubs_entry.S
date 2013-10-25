@@ -83,22 +83,22 @@ NHSTUB(Fseek_Fut                              ,0xffe190e0) //120
 NHSTUB(Fwrite_Fut                             ,0xffe19040) //120
 //NHSTUB(GetBatteryTemperature                ,0xffdc7d94) //102            == 0xffdc7d94
 NHSTUB(GetCCDTemperature                      ,0xffdc7d80) //102
-NHSTUB(GetCurrentAvValue                      ,0xffddc178) //  2
-// ALT: NHSTUB(GetCurrentAvValue, 0xffdde548) // 1 13/0
+NHSTUB(GetCurrentAvValue                      ,0xffddc178) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xffe1cfd0) //119
 NHSTUB(GetDrive_FreeClusters                  ,0xffe1d048) //1103
 NHSTUB(GetDrive_TotalClusters                 ,0xffe1d00c) //119
-NHSTUB(GetOpticalTemperature                  ,0xffdc7d6c) //102
-NHSTUB(GetZoomLensCurrentPoint                ,0xffe55054) //102
+NHSTUB(GetOpticalTemperature                  ,0xffdc7d6c) //120
+NHSTUB(GetZoomLensCurrentPoint                ,0xffe55054) //120
 NHSTUB(GetZoomLensCurrentPosition             ,0xffe55068) //102
 NHSTUB(GiveSemaphore                          ,0xffe8311c) //120
 NHSTUB(IsStrobeChargeCompleted                ,0xffd45b60) //  2
+NHSTUB(LEDDrive                               ,0xffdc3538) //120
 NHSTUB(LocalTime                              ,0xffe8fd70) //115
 NHSTUB(LockMainPower                          ,0xffea65f4) //120
 NHSTUB(MakeDirectory_Fut                      ,0xffe18e70) //  3
 NHSTUB(MoveFocusLensToDistance                ,0xffdde788) //102
-NHSTUB(MoveIrisWithAv                         ,0xffe49cc4) //102
-NHSTUB(MoveZoomLensWithPoint                  ,0xffe54f2c) //102
+NHSTUB(MoveIrisWithAv                         ,0xffe49cc4) //120
+NHSTUB(MoveZoomLensWithPoint                  ,0xffe54f2c) //120
 NHSTUB(Open                                   ,0xffe1d7bc) //120
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xffe7af44) //120
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xffe7af08) //120
@@ -117,6 +117,8 @@ NHSTUB(SleepTask                              ,0xffe83464) //120
 NHSTUB(TakeSemaphore                          ,0xffe82f14) //1101
 NHSTUB(TurnOffBackLight                       ,0xffc2e3e8) //  2
 NHSTUB(TurnOnBackLight                        ,0xffc2e3b8) //  2
+NHSTUB(TurnOnDisplay                          ,0xffdb9638) //120
+NHSTUB(TurnOffDisplay                         ,0xffdb9648) //120
 NHSTUB(UnlockAF                               ,0xffe6af5c) //102
 NHSTUB(UnlockMainPower                        ,0xffea668c) //120
 NHSTUB(UpdateMBROnFlash                       ,0xffe1cd04) //  1

@@ -308,6 +308,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "TakeSemaphore" },
     { "TurnOffBackLight" },
     { "TurnOnBackLight" },
+    { "TurnOnDisplay" },
+    { "TurnOffDisplay" },
     { "UIFS_WriteFirmInfoToFile", UNUSED|DONT_EXPORT },
     { "UnlockAF" },
     { "UnlockMainPower" },
@@ -948,9 +950,10 @@ string_sig string_sigs[] =
     {20, "task_FileWrite", "task_FileWriteTask", 1 },
     {20, "task_RotaryEncoder", "task_JogDial", 1 },
     {20, "task_RotaryEncoder", "task_RotarySw", 1 },
-
     {20, "IsControlEventActive", "IsControlEventActive_FW", 0 },
     {20, "GetLogicalEventName", "ShowLogicalEventName_FW", 0x01000002 },
+    {20, "TurnOnDisplay", "DispCon_TurnOnDisplay_FW", 0 },
+    {20, "TurnOffDisplay", "DispCon_TurnOffDisplay_FW", 0 },
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
@@ -4525,14 +4528,17 @@ void add_func_name(char *n, uint32_t eadr, char *suffix)
 void add_func_name2(firmware *fw, uint32_t nadr, uint32_t eadr, char *suffix)
 {
     char *n = (char*)adr2ptr(fw,nadr);
-    if (isB(fw,adr2idx(fw,eadr)))
+    if (*n)
     {
-        char *s = malloc(strlen(n) + 3);
-        sprintf(s,"j_%s",n);
-        add_func_name(s, eadr, suffix);
-        eadr = followBranch(fw,eadr,1);
+        if (isB(fw,adr2idx(fw,eadr)))
+        {
+            char *s = malloc(strlen(n) + 3);
+            sprintf(s,"j_%s",n);
+            add_func_name(s, eadr, suffix);
+            eadr = followBranch(fw,eadr,1);
+        }
+        add_func_name(n, eadr, suffix);
     }
-    add_func_name(n, eadr, suffix);
 }
 
 int match_eventproc(firmware *fw, int k, uint32_t fadr, uint32_t v2)
@@ -4548,6 +4554,11 @@ int match_eventproc(firmware *fw, int k, uint32_t fadr, uint32_t v2)
             get_eventproc_val(fw, k);
             k--;
             get_eventproc_val(fw, k);
+            if ((nadr == 0) || (eadr == 0))
+            {
+                k--;
+                get_eventproc_val(fw, k);
+            }
             if ((nadr == 0) || (eadr == 0))
             {
                 k--;
@@ -4569,77 +4580,49 @@ int match_eventproc(firmware *fw, int k, uint32_t fadr, uint32_t v2)
     return 0;
 }
 
-int match_registerproc2(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+int match_registerlists(firmware *fw, int k, uint32_t fadr, uint32_t v2)
 {
     if (isBorBL(fw,k))
     {
-        uint32_t adr = followBranch(fw,idx2adr(fw,k),0x01000001);
+        uint32_t adr = followBranch2(fw,idx2adr(fw,k),0x01000001);
         if (adr == fadr)
         {
-            nadr = 0;
-            eadr = 0;
-            k--;
-            if (get_eventproc_val(fw, k) == 0)
+            int k1;
+            for (k1=k-1; k1>k-6; k1--)
             {
-                int k1 = find_inst_rev(fw, isB, k, 500);
-                if (k1 >= 0)
+                if (isLDR_PC(fw,k1) && (fwRd(fw,k1) == 0))
                 {
-                    k = k1 - 1;
-                    get_eventproc_val(fw, k);
+                    int j = adr2idx(fw,LDR2val(fw,k1));
+                    if (!idx_valid(fw,j))
+                    {
+                        j = adr2idx(fw,LDR2val(fw,k1) - fw->data_start + fw->data_init_start);
+                    }
+                    if (idx_valid(fw,j))
+                    {
+                        while (fwval(fw,j) != 0)
+                        {
+                            add_func_name2(fw, fwval(fw,j), fwval(fw,j+1), "_FW");
+                            j += 2;
+                        }
+                    }
+                    break;
                 }
-            }
-            k--;
-            if (get_eventproc_val(fw, k) == 0)
-            {
-                int k1 = find_inst_rev(fw, isB, k, 500);
-                if (k1 >= 0)
-                {
-                    k = k1 - 1;
-                    get_eventproc_val(fw, k);
-                }
-            }
-            if ((nadr != 0) && (eadr != 0))
-            {
-                add_func_name2(fw, nadr, eadr, "_FW");
             }
         }
     }
     return 0;
 }
 
-int match_registerproc(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+int match_registerlistproc(firmware *fw, int k, uint32_t fadr, uint32_t v2)
 {
-    if (isB(fw,k+1) && isMOV_immed(fw,k) && (fwRd(fw,k) == 2))
+    if (isSTMFD_LR(fw,k) && isBL(fw,k+6) && isLDMFD_PC(fw,k+11))
     {
-        uint32_t adr = followBranch(fw,idx2adr(fw,k+1),1);
+        uint32_t adr = followBranch2(fw,idx2adr(fw,k+6),0x01000001);
         if (adr == fadr)
         {
-            search_fw(fw, match_registerproc2, idx2adr(fw,k), 0, 2);
-        }
-    }
-    return 0;
-}
-
-int match_registerlists(firmware *fw, int k, uint32_t fadr, uint32_t v2)
-{
-    if (isBorBL(fw,k+1) && isLDR_PC(fw,k) && (fwRd(fw,k) == 0))
-    {
-        uint32_t adr = followBranch2(fw,idx2adr(fw,k+1),0x01000001);
-        if (adr == fadr)
-        {
-            int j = adr2idx(fw,LDR2val(fw,k));
-            if (!idx_valid(fw,j))
-            {
-                j = adr2idx(fw,LDR2val(fw,k) - fw->data_start + fw->data_init_start);
-            }
-            if (idx_valid(fw,j))
-            {
-                while (fwval(fw,j) != 0)
-                {
-                    add_func_name2(fw, fwval(fw,j), fwval(fw,j+1), "_FW");
-                    j += 2;
-                }
-            }
+            fadr = idx2adr(fw,k);
+            search_fw(fw, match_registerlists, fadr, 0, 6);
+            return 1;
         }
     }
     return 0;
@@ -4658,6 +4641,7 @@ void find_eventprocs(firmware *fw)
     {
         uint32_t fadr = func_names[j].val;
         search_fw(fw, match_eventproc, fadr, 0, 1);
+        search_fw(fw, match_registerlistproc, fadr, 0, 12);
     }
 }
 

@@ -31,9 +31,8 @@ NHSTUB(AllocateUncacheableMemory              ,0xff815288) //  1 65%
 NHSTUB(GetSystemTime                          ,0xff815638) //  1 96%
 // ALT: NHSTUB(GetSystemTime, 0xfff05c38) // 1 26/1
 // ALT: NHSTUB(GetSystemTime, 0xfff05c38) // 2 26/1
-//NHSTUB(GetZoomLensCurrentPoint              ,0xffa52174) //102        *** != 0xffa51244
+//NHSTUB(GetZoomLensCurrentPoint              ,0xffa52174) //120        *** != 0xffa51244
 // ERROR: IsStrobeChargeCompleted is not found.            //--- ---    *** != 0x00000000
-//NHSTUB(LockMainPower                        ,0xff9561a0) //  1 61%    *** != 0xff95619c
 // ERROR: Open is not found.                               //--- ---    *** != 0xff87167c
 // ERROR: PT_PlaySound is not found.                       //--- ---    *** != 0xff94f2bc
 NHSTUB(PutInNdFilter                          ,0xffa693dc) //  1 92%
@@ -53,7 +52,6 @@ NHSTUB(SetFileAttributes                      ,0xff8717e0) //  1 58%
 // ERROR: SetPropertyCase is not found.                    //--- ---    *** != 0x00000000
 // ERROR: SetScriptMode is not found.                      //--- ---    *** != 0xff955c24
 //NHSTUB(UnlockAF                             ,0xff93e304) //  1 71%    *** != 0xff93e0dc
-//NHSTUB(UnlockMainPower                      ,0xff95625c) //  1 65%    *** != 0xff956258
 NHSTUB(UpdateMBROnFlash                       ,0xff8704d0) //  1 96%
 // ERROR: VbattGet is not found.                           //--- ---    *** != 0xffa5bcc4
 // ERROR: Write is not found.                              //--- ---    *** != 0xff8716f4
@@ -135,18 +133,20 @@ NHSTUB(Fwrite_Fut                             ,0xff869c28) //  1
 // ALT: NHSTUB(Fwrite_Fut, 0xfff1724c) // 1 26/0
 //NHSTUB(GetBatteryTemperature                ,0xffa48900) //102            == 0xffa48900
 //NHSTUB(GetCCDTemperature                    ,0xffa488ec) //102            == 0xffa488ec
-NHSTUB(GetCurrentAvValue                      ,0xffa6aeb0) //  1
+NHSTUB(GetCurrentAvValue                      ,0xffa692fc) //120
 //NHSTUB(GetDrive_ClusterSize                 ,0xff8707ec) //119            == 0xff8707ec
 //NHSTUB(GetDrive_FreeClusters                ,0xff87086c) //1103            == 0xff87086c
 //NHSTUB(GetDrive_TotalClusters               ,0xff87082c) //119            == 0xff87082c
-NHSTUB(GetOpticalTemperature                  ,0xffa488d8) //102
+NHSTUB(GetOpticalTemperature                  ,0xffa488d8) //120
 //NHSTUB(GetZoomLensCurrentPosition           ,0xffa52180) //102            == 0xffa52180
 //NHSTUB(GiveSemaphore                        ,0xff823144) //120            == 0xff823144
+NHSTUB(LEDDrive                               ,0xffa63018) //120
 NHSTUB(LocalTime                              ,0xff814bc4) //115
+//NHSTUB(LockMainPower                        ,0xff95619c) //120            == 0xff95619c
 NHSTUB(MakeDirectory_Fut                      ,0xff869a40) //  1
 // ALT: NHSTUB(MakeDirectory_Fut, 0xfff170e4) // 1 25/0
 NHSTUB(MoveFocusLensToDistance                ,0xffa6b0e8) //102
-NHSTUB(MoveZoomLensWithPoint                  ,0xffa52078) //102
+NHSTUB(MoveZoomLensWithPoint                  ,0xffa52078) //120
 NHSTUB(PostLogicalEventForNotPowerType        ,0xff953a4c) //120
 NHSTUB(PostLogicalEventToUI                   ,0xff953ad8) //120
 NHSTUB(RefreshPhysicalScreen                  ,0xff96c550) //120
@@ -158,6 +158,9 @@ NHSTUB(SleepTask                              ,0xff8235e4) //120
 NHSTUB(TakeSemaphore                          ,0xff822f5c) //1101
 NHSTUB(TurnOffBackLight                       ,0xff99e594) //  1
 NHSTUB(TurnOnBackLight                        ,0xff99e568) //  1
+NHSTUB(TurnOnDisplay                          ,0xff92522c) //120
+NHSTUB(TurnOffDisplay                         ,0xff925254) //120
+//NHSTUB(UnlockMainPower                      ,0xff956258) //120            == 0xff956258
 NHSTUB(_log                                   ,0xffaaebe0) //  1
 // ALT: NHSTUB(_log, 0xfff404cc) // 1 27/0
 // ALT: NHSTUB(_log, 0xfff404cc) // 2 27/0

@@ -17,7 +17,6 @@
 //NHSTUB(DoAFLock                             ,0xff95b41c) //  2 56%    *** != 0xff95b424
 // ERROR: EnterToCompensationEVF is not found.             //--- ---    *** != 0x00000000
 //NHSTUB(ExitFromCompensationEVF              ,0xff95d540) //  1 73%    *** != 0x00000000
-//NHSTUB(GetCurrentAvValue                    ,0xffac6190) //  1        *** != 0xffac4014
 NHSTUB(GetFocusLensSubjectDistance            ,0xffab4f48) //  1 54%
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffab54e4) //  2 92%
 NHSTUB(GetParameterData                       ,0xff976f30) //  1 86%
@@ -88,20 +87,22 @@ NHSTUB(Fseek_Fut                              ,0xff868a54) //120
 NHSTUB(Fwrite_Fut                             ,0xff8689bc) //120
 NHSTUB(GetBatteryTemperature                  ,0xff82d21c) //102
 NHSTUB(GetCCDTemperature                      ,0xff82d208) //102
+//NHSTUB(GetCurrentAvValue                    ,0xffac4014) //120            == 0xffac4014
 //NHSTUB(GetDrive_ClusterSize                 ,0xff86ed94) //119            == 0xff86ed94
 //NHSTUB(GetDrive_FreeClusters                ,0xff86ee0c) //1103            == 0xff86ee0c
 //NHSTUB(GetDrive_TotalClusters               ,0xff86edd0) //119            == 0xff86edd0
-NHSTUB(GetOpticalTemperature                  ,0xff82d1f4) //102
+NHSTUB(GetOpticalTemperature                  ,0xff82d1f4) //120
 NHSTUB(GetPropertyCase                        ,0xff8248e4) //  1
-NHSTUB(GetZoomLensCurrentPoint                ,0xffaa5f10) //102
+NHSTUB(GetZoomLensCurrentPoint                ,0xffaa5f10) //120
 NHSTUB(GetZoomLensCurrentPosition             ,0xffaa5f24) //102
 NHSTUB(GiveSemaphore                          ,0xff821218) //120
 NHSTUB(IsStrobeChargeCompleted                ,0xff91047c) //  1
+NHSTUB(LEDDrive                               ,0xff82d774) //120
 NHSTUB(LocalTime                              ,0xff814208) //115
 NHSTUB(LockMainPower                          ,0xff972104) //120
 NHSTUB(MakeDirectory_Fut                      ,0xff8687d4) //  1
 NHSTUB(MoveFocusLensToDistance                ,0xffac63d8) //102
-NHSTUB(MoveZoomLensWithPoint                  ,0xffaa5df0) //102
+NHSTUB(MoveZoomLensWithPoint                  ,0xffaa5df0) //120
 NHSTUB(Open                                   ,0xff86f580) //120
 NHSTUB(PT_PlaySound                           ,0xff969544) //  1
 NHSTUB(PostLogicalEventForNotPowerType        ,0xff96e034) //120
@@ -121,6 +122,8 @@ NHSTUB(SleepTask                              ,0xff821534) //120
 NHSTUB(TakeSemaphore                          ,0xff821030) //1101
 NHSTUB(TurnOffBackLight                       ,0xff9bb0b0) //  2
 NHSTUB(TurnOnBackLight                        ,0xff9bb080) //  2
+NHSTUB(TurnOnDisplay                          ,0xff933ac4) //120
+NHSTUB(TurnOffDisplay                         ,0xff933ad4) //120
 NHSTUB(UnlockMainPower                        ,0xff97219c) //120
 NHSTUB(UpdateMBROnFlash                       ,0xff86eacc) //  1
 //NHSTUB(VbattGet                             ,0xff82c150) //120            == 0xff82c150
