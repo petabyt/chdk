@@ -1458,11 +1458,13 @@
 0xff837fd0,TryReceiveMessageQueue
 0xff8382d0,TryTakeSemaphore
 0xff89e308,TurnOffBackLight
+0xff8537e0,TurnOffDisplay
 0xff85ea6c,TurnOffTouchPanel_FW
 0xff85c22c,TurnOffVideoOutMode_FW
 0xff89e2f0,TurnOnBackLight
 0xff8fcbe4,TurnOnDispForTouchPanelAdj_FW
 0xff8fcc08,TurnOnDispForTouchPanelAdjCheck_FW
+0xff8537d0,TurnOnDisplay
 0xff85e9c4,TurnOnTouchPanel_FW
 0xff85c1f4,TurnOnVideoOutMode_FW
 0xff94dac4,UI.Create_FW

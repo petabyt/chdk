@@ -1623,9 +1623,11 @@
 0xff8386e0,TryTakeSemaphore
 0xffa4f710,TurnOffAFLamp_FW
 0xff89b6a4,TurnOffBackLight,(stubs_entry_2.s)
+0xff859898,TurnOffDisplay
 0xff860684,TurnOffVideoOutMode_FW
 0xffa4f6f4,TurnOnAFLamp_FW
 0xff8a5ac8,TurnOnBackLight
+0xff859888,TurnOnDisplay
 0xff860634,TurnOnVideoOutMode_FW
 0xff95f110,UI.Create_FW
 0xff95f110,UI_RegistDebugEventProc_FW

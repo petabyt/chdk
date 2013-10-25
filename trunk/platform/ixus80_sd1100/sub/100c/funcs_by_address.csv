@@ -184,7 +184,9 @@
 0xff83e948,DispCon_ShowCustomColorBar_FW
 0xff83e9ac,DispCon_SetDisplayType_FW
 0xff83e9cc,DispCon_TurnOnDisplay_FW
+0xff83e9cc,TurnOnDisplay
 0xff83e9dc,DispCon_TurnOffDisplay_FW
+0xff83e9dc,TurnOffDisplay
 0xff83e9ec,DispCon_SetMaxBackLightBrightness_FW
 0xff83ea78,DispCon_SetVideoAdjParameter_FW
 0xff83ead8,DispCon_GetVideoAdjParameter_FW

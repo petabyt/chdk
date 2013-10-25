@@ -543,6 +543,25 @@ int find_str(firmware *fw, char *str)
     return -1;
 }
 
+// Find the index of a string in the firmware, can start at any address
+// returns firmware address, not index
+uint32_t find_str_bytes(firmware *fw, char *str)
+{
+    BufRange *p = fw->br;
+    while (p)
+    {
+        int k;
+        for (k = p->off*4; k < (p->off + p->len)*4; k++)
+        {
+            if (strcmp(((char*)fw->buf)+k,str) == 0)
+                return fw->base+k;
+        }
+        p = p->next;
+    }
+
+    return 0;
+}
+
 // Find the next instance of the instruction matched by the 'inst' function (from the isXXX functions above)
 // Starts searching at 'idx' for a max of 'len' instructions
 int find_inst(firmware *fw, int (*inst)(firmware*,int), int idx, int len)
@@ -600,6 +619,40 @@ int find_Nth_inst_rev(firmware *fw, int (*inst)(firmware*,int), int idx, int len
 }
 
 //------------------------------------------------------------------------------------------------------------
+
+// Finds the first instance of an instruction that references a pointer to the specified string in the firmware.
+//  e.g.
+//          LDR R0, =p_str  <-- returns index of this instruction
+//  p_str   DCD abcdef
+//  abcdef  DCB "abcdef",0
+int find_strptr_ref(firmware *fw, char *str)
+{
+    uint32_t sadr = find_str_bytes(fw, str);    // string address
+    if (sadr > 0)
+    {
+        int k;
+        for (k=0; k<fw->size; k++)
+        {
+            if (fwval(fw,k) == sadr)
+            {
+                uint32_t fadr = idx2adr(fw,k);  // string pointer address
+                int j;
+                for (j=0; j<fw->size; j++)
+                {
+                    if (isADR_PC_cond(fw,j) && (ADR2adr(fw,j) == fadr))
+                    {
+                        return j;
+                    }
+                    else if (isLDR_PC_cond(fw,j) && (LDR2val(fw,j) == fadr))
+                    {
+                        return j;
+                    }
+                }
+            }
+        }
+    }
+    return -1;
+}
 
 // Finds the first instance of an instruction that references the specified string in the firmware.
 //  e.g.

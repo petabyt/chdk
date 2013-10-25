@@ -17,7 +17,7 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(GetZoomLensCurrentPoint              ,0xff957774) //102        *** != 0xff957cbc
+//NHSTUB(GetZoomLensCurrentPoint              ,0xff957774) //120        *** != 0xff957cbc
 //NHSTUB(GetZoomLensCurrentPosition           ,0xff9575f0) //102        *** != 0xff957cc0
 //NHSTUB(Lseek                                ,0xff825e04) //120        *** != 0xff825ecc
 //NHSTUB(Read                                 ,0xff81a200) //120        *** != 0xff825d6c
@@ -118,7 +118,7 @@ NHSTUB(Fseek_Fut                              ,0xff825848) //120
 NHSTUB(Fwrite_Fut                             ,0xff8257a8) //120
 NHSTUB(GetBatteryTemperature                  ,0xff850564) //102
 NHSTUB(GetCCDTemperature                      ,0xff8504f4) //102
-NHSTUB(GetCurrentAvValue                      ,0xff952d94) //102
+NHSTUB(GetCurrentAvValue                      ,0xff952d94) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xff856d08) //  1
 NHSTUB(GetDrive_FreeClusters                  ,0xff856da8) //  1
 NHSTUB(GetDrive_TotalClusters                 ,0xff856d3c) //  1
@@ -126,20 +126,21 @@ NHSTUB(GetFocusLensSubjectDistance            ,0xff9511a4) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff9514a0) //  1
 NHSTUB(GetKbdState                            ,0xff84da24) //109
 NHSTUB(GetMemInfo                             ,0xff813ca8) //115
-NHSTUB(GetOpticalTemperature                  ,0xff8505d4) //102
+NHSTUB(GetOpticalTemperature                  ,0xff8505d4) //120
 NHSTUB(GetParameterData                       ,0xff972f60) //101
 NHSTUB(GetPropertyCase                        ,0xff87479c) //101
 NHSTUB(GetSystemTime                          ,0xffa411a4) //120
-NHSTUB(GetVRAMHPixelsSize                     ,0xff841228) //102
-NHSTUB(GetVRAMVPixelsSize                     ,0xff841234) //102
+NHSTUB(GetVRAMHPixelsSize                     ,0xff841228) //120
+NHSTUB(GetVRAMVPixelsSize                     ,0xff841234) //120
 NHSTUB(GiveSemaphore                          ,0xff81b868) //120
 NHSTUB(IsStrobeChargeCompleted                ,0xff8db534) //102
+NHSTUB(LEDDrive                               ,0xff84cf24) //120
 NHSTUB(LocalTime                              ,0xff870604) //115
 NHSTUB(LockMainPower                          ,0xff877d30) //120
 NHSTUB(MakeDirectory_Fut                      ,0xff8255a0) //116
 NHSTUB(MoveFocusLensToDistance                ,0xffa0d41c) //102
-NHSTUB(MoveIrisWithAv                         ,0xff9536f0) //102
-NHSTUB(MoveZoomLensWithPoint                  ,0xff957b34) //102
+NHSTUB(MoveIrisWithAv                         ,0xff9536f0) //120
+NHSTUB(MoveZoomLensWithPoint                  ,0xff957b34) //120
 NHSTUB(Open                                   ,0xff825c9c) //120
 NHSTUB(PB2Rec                                 ,0xff87b318) //104
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xff86b964) //120
@@ -166,6 +167,8 @@ NHSTUB(SleepTask                              ,0xff82ab58) //120
 NHSTUB(TakeSemaphore                          ,0xff81b798) //120
 NHSTUB(TurnOffBackLight                       ,0xff8883a0) //104
 NHSTUB(TurnOnBackLight                        ,0xff888388) //104
+NHSTUB(TurnOnDisplay                          ,0xff84a09c) //120
+NHSTUB(TurnOffDisplay                         ,0xff84a0ac) //120
 NHSTUB(UnlockAF                               ,0xff827c34) //103
 NHSTUB(UnlockMainPower                        ,0xff877c8c) //120
 NHSTUB(UpdateMBROnFlash                       ,0xff856ad0) //105

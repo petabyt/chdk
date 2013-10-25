@@ -1246,10 +1246,12 @@
 0xff839c34,TryReceiveMessageQueue
 0xff839f34,TryTakeSemaphore
 0xff89beb8,TurnOffBackLight
+0xff85bc64,TurnOffDisplay
 0xff83bc08,TurnOffE1_FW
 0xffaadb6c,TurnOffNdFilter_FW
 0xff8609ec,TurnOffVideoOutMode_FW
 0xff89bea0,TurnOnBackLight
+0xff85bc54,TurnOnDisplay
 0xffaadb48,TurnOnNdFilter_FW
 0xff860988,TurnOnVideoOutMode_FW
 0xff967024,UI.Create_FW

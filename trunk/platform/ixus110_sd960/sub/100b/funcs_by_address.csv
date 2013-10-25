@@ -177,7 +177,9 @@
 0xff83dd24,DispCon_SetDisplayType_FW
 0xff83dd44,DispCon_ShowColorChart_FW
 0xff83dd68,DispCon_TurnOnDisplay_FW
+0xff83dd68,TurnOnDisplay
 0xff83dd78,DispCon_TurnOffDisplay_FW
+0xff83dd78,TurnOffDisplay
 0xff83dd88,DispCon_TurnOnBackLight_FW
 0xff83dd98,DispCon_TurnOffBackLight_FW
 0xff83dda8,DispCon_SetMaxBackLightBrightness_FW

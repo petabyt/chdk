@@ -184,6 +184,8 @@ NHSTUB(SetScriptMode                          ,0xff896c4c) //120
 NHSTUB(SleepTask                              ,0xff838a6c) //120
 NHSTUB(TakeSemaphore                          ,0xff838734) //120
 NHSTUB(TurnOnBackLight                        ,0xff8a5ac8) //104
+NHSTUB(TurnOnDisplay                          ,0xff859888) //120
+NHSTUB(TurnOffDisplay                         ,0xff859898) //120
 NHSTUB(UnlockMainPower                        ,0xff896e00) //120
 NHSTUB(UpdateMBROnFlash                       ,0xff86f048) //105
 NHSTUB(Write                                  ,0xff83530c) //120

@@ -207,7 +207,9 @@
 0xff051048,DispCon_ShowWhiteLine_FW
 0xff05127c,DispCon_ShowNStepsChart_FW
 0xff0513cc,DispCon_TurnOnDisplay_FW
+0xff0513cc,TurnOnDisplay
 0xff0513dc,DispCon_TurnOffDisplay_FW
+0xff0513dc,TurnOffDisplay
 0xff0513ec,DispCon_TurnOnBackLight_FW
 0xff0513fc,DispCon_TurnOffBackLight_FW
 0xff05140c,DispCon_SetMaxBackLightBrightness_FW
