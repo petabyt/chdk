@@ -133,9 +133,9 @@ NHSTUB(UnlockMainPower                        ,0xffd389cc) //120
 NHSTUB(UpdateMBROnFlash                       ,0xffc59938) //  1
 //NHSTUB(VbattGet                             ,0xffc1b014) //120            == 0xffc1b014
 NHSTUB(Write                                  ,0xffc5a4cc) //120
-NHSTUB(_log                                   ,0xffe9381c) //  1
-NHSTUB(_log10                                 ,0xffe8fcf4) //  1
-NHSTUB(_pow                                   ,0xffe8fe7c) //  1
+NHSTUB(_log                                   ,0xffe9381c) //121
+NHSTUB(_log10                                 ,0xffe8fcf4) //121
+NHSTUB(_pow                                   ,0xffe8fe7c) //121
 NHSTUB(_sqrt                                  ,0xffe91c18) //  1
 NHSTUB(apex2us                                ,0xffc93b4c) //  1
 NHSTUB(close                                  ,0xffe9fa30) //109

@@ -111,9 +111,9 @@ NHSTUB(UpdateMBROnFlash                       ,0xffc5bc20) //  1
 NHSTUB(VbattGet                               ,0xffc1b4cc) //120
 NHSTUB(Write                                  ,0xffc5c7ac) //120
 NHSTUB(WriteSDCard                            ,0xffc6afd8) //  1
-NHSTUB(_log                                   ,0xffea83dc) //  1
-NHSTUB(_log10                                 ,0xffea8a84) //  1
-NHSTUB(_pow                                   ,0xffea8f74) //  1
+NHSTUB(_log                                   ,0xffea83dc) //121
+NHSTUB(_log10                                 ,0xffea8a84) //121
+NHSTUB(_pow                                   ,0xffea8f74) //121
 NHSTUB(_sqrt                                  ,0xffead2c0) //  1
 NHSTUB(add_ptp_handler                        ,0xffe222d0) //  1
 NHSTUB(apex2us                                ,0xffc987ec) //  1

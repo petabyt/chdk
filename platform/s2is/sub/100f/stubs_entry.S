@@ -135,9 +135,9 @@ NHSTUB(TurnOffDisplay                         ,0xff93d060) //120
 NHSTUB(UnlockMainPower                        ,0xff98357c) //120
 //NHSTUB(VbattGet                             ,0xff82d570) //120            == 0xff82d570
 //NHSTUB(Write                                ,0xff8773e0) //120            == 0xff8773e0
-NHSTUB(_log                                   ,0xffae0ac0) //  1
-NHSTUB(_log10                                 ,0xffae1168) //  1
-NHSTUB(_pow                                   ,0xffae1658) //  1
+NHSTUB(_log                                   ,0xffae0ac0) //121
+NHSTUB(_log10                                 ,0xffae1168) //121
+NHSTUB(_pow                                   ,0xffae1658) //121
 NHSTUB(_sqrt                                  ,0xffae59a4) //  1
 NHSTUB(apex2us                                ,0xff8bbe28) //  1
 NHSTUB(close                                  ,0xffaf4540) //109

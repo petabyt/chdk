@@ -1,5 +1,4 @@
 0xFFC00000
-DisplayImagePhysicalScreen 0xFFDDBEEC
 EnterToCompensationEVF 0xffea4f84
 ExitFromCompensationEVF 0xffea5008
 Feof_Fut 0xFFE4249C
