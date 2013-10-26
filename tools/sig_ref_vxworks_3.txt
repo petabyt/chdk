@@ -1,33 +1,22 @@
 0xFFC00000
-Fclose_Fut 0xFFE422A0
-Fopen_Fut 0xFFE42260
-Fread_Fut 0xFFE4235C
-Fseek_Fut 0xFFE42450
-Fwrite_Fut 0xFFE423B0
-GetFocusLensSubjectDistanceFromLens 0xFFE72080
-Fgets_Fut 0xFFE42404
+DisplayImagePhysicalScreen 0xFFDDBEEC
+EnterToCompensationEVF 0xffea4f84
+ExitFromCompensationEVF 0xffea5008
 Feof_Fut 0xFFE4249C
 Fflush_Fut 0xFFE424D8
-MakeDirectory_Fut 0xFFE421E0
-RenameFile_Fut 0xFFE42084
-Remove 0xFFE46B78
-SetLogicalEventActive 0xFFEDE6B0 22
-SetFileAttributes 0xFFE46D40
-Close 0xFFE46B58
-DisplayImagePhysicalScreen 0xFFDDBEEC
-DoAFLock 0xffea4bdc
-EnterToCompensationEVF 0xffea4f84
-Mount_FileSystem 0xFFE45E7C
-Read 0xFFE46BEC
-Write 0xFFE46BF8
-WriteSDCard 0xFFE58EEC
-free 0xFFCD9B84
-kbd_read_keys_r2 0xFFDE74F0
-ExitFromCompensationEVF 0xffea5008
-GetDrive_ClusterSize 0xFFE46344
+Fgets_Fut 0xFFE42404
 GetDrive_FreeClusters 0xFFE463BC
 GetDrive_TotalClusters 0xFFE46380
+GetFocusLensSubjectDistanceFromLens 0xFFE72080
+MakeDirectory_Fut 0xFFE421E0
+Mount_FileSystem 0xFFE45E7C
 PT_PlaySound 0xFFEB5340
+Remove 0xFFE46B78
+RenameFile_Fut 0xFFE42084
+SetFileAttributes 0xFFE46D40
+SetLogicalEventActive 0xFFEDE6B0 22
 SetPropertyCase 0xFFC0BB5C
-UnlockAF 0xffea4c5c
+WriteSDCard 0xFFE58EEC
+free 0xFFCD9B84
 kbd_pwr_off 0xFFDE7BD4
+kbd_read_keys_r2 0xFFDE74F0
