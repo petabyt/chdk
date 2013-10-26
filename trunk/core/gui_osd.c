@@ -1266,16 +1266,16 @@ void gui_draw_osd()
         {
             if (conf.save_raw && conf.show_raw_state && !mode_video && (!camera_info.state.is_shutter_half_press))
                 gui_osd_draw_raw_info();
-
-            if ((conf.show_values==SHOW_ALWAYS && mode_photo) ||
-                ((mode_video || is_video_recording()) && conf.show_values_in_video) ||
-                ((camera_info.state.is_shutter_half_press || (recreview_hold==1)) && (conf.show_values==SHOW_HALF)))
-                gui_osd_draw_values(1);
-            else if (shooting_get_common_focus_mode() && mode_photo && conf.show_values && !((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX)))
-                gui_osd_draw_values(2);
-            else if (conf.show_values==SHOW_HALF)
-                gui_osd_draw_values(0);
         }
+
+        if ((conf.show_values==SHOW_ALWAYS && mode_photo) ||
+            ((mode_video || is_video_recording()) && conf.show_values_in_video) ||
+            ((camera_info.state.is_shutter_half_press || (recreview_hold==1)) && (conf.show_values==SHOW_HALF)))
+            gui_osd_draw_values(1);
+        else if (shooting_get_common_focus_mode() && mode_photo && conf.show_values && !((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX)))
+            gui_osd_draw_values(2);
+        else if (conf.show_values==SHOW_HALF)
+            gui_osd_draw_values(0);
     }
 
     if (is_osd_visible)
