@@ -891,6 +891,7 @@
 0xff861b8c,LockHdmiState_FW
 0xff89c6b8,LockMainPower
 0xff89c6b8,LockMainPower_FW
+0xff89308c,LogCameraEvent
 0xff83817c,Lseek
 0xff83817c,lseek
 0xff83817c,Lseek_FW

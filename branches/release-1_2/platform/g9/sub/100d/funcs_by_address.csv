@@ -465,6 +465,7 @@
 0xff86d790,ShowCameraLog_FW
 0xff86d7d8,StartCameraLog_FW
 0xff86d9a0,StopCameraLog_FW
+0xff86da00,LogCameraEvent
 0xff86e204,task_WdtPrint
 0xff86e2b8,task_WdtReset
 0xff86e378,StartWDT_FW

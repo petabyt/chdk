@@ -440,6 +440,7 @@
 0xff88a668,ShowCameraLog_FW
 0xff88a6b8,StartCameraLog_FW
 0xff88a87c,StopCameraLog_FW
+0xff88a8dc,LogCameraEvent
 0xff88ad70,task_OpePlay
 0xff88af18,OpLog.Show_FW
 0xff88af90,OpLog.Stop_FW

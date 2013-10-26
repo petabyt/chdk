@@ -425,6 +425,7 @@
 0xff0bf314,ShowCameraLog_FW
 0xff0bf364,StartCameraLog_FW
 0xff0bf52c,StopCameraLog_FW
+0xff0bf58c,LogCameraEvent
 0xff0bfa34,task_OpePlay
 0xff0bfb88,OpLog.Stop_FW
 0xff0bfbb4,OpLog.WriteToROM_FW
@@ -506,6 +507,7 @@
 0xff0d347c,task_FaceFrame
 0xff0d4d7c,TurnOnBackLight
 0xff0d4d94,TurnOffBackLight
+0xff0d54c8,PT_PlaySound
 0xff0d8360,mktime_ext
 0xff0d83ac,strftime
 0xff0d8ce0,sscanf_FW

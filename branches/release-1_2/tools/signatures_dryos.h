@@ -1251,31 +1251,6 @@ static FuncSig func_sig_qsort_4[] = {
 	{ -1, -1, -1 },
 };
 
-static FuncSig func_sig_closedir_4[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
-	{   1, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE1A04000
-	{   2, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE5900004
-	{   3, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
-	{   4, 0x0b000000, 0x0f000000 }, // b, bl:3:0x1BF5613A
-	{   5, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE5940000
-	{   6, 0xe1700001, 0xfdffffff }, // cmn:7:0xE3700001
-	{   7, 0x0a000000, 0x0f000000 }, // b, bl:3:0x0A000001
-	{   8, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBF55192
-	{   9, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEA000006
-	{  10, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE5940014
-	{  11, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
-	{  12, 0x0b000000, 0x0f000000 }, // b, bl:3:0x1BF56132
-	{  13, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE594001C
-	{  14, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500001
-	{  15, 0x00800000, 0xfdf0f000 }, // add:6:0x02840020
-	{  16, 0x0b000000, 0x0f000000 }, // b, bl:3:0x0BF752CA
-	{  17, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
-	{  18, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD4010
-	{  19, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEAF560EF
-	/* 20/20 */
-	{ -1, -1, -1 },
-};
-
 static FuncSig func_sig_SetFileTimeStamp_4[] = {
 	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D407C
 	{   1, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05000
@@ -1332,43 +1307,6 @@ static FuncSig func_sig_ReadFastDir_4[] = {
 	{  24, 0xe5c46000, 0xfdfff000 }, // strb:4:0xE5C46000
 	{  25, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEAFFFFFB
 	/* 26/26 */
-	{ -1, -1, -1 },
-};
-
-static FuncSig func_sig_PT_PlaySound_4[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4070
-	{   1, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE1A04000
-	{   2, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05804
-	{   3, 0xe1100901, 0xfdffffff }, // tst:7:0xE3100901
-	{   4, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05825
-	{   5, 0xe1a06000, 0xfdfff000 }, // mov:6:0xE1A06001
-	{   6, 0x0a000000, 0x0f000000 }, // b, bl:3:0x0A000007
-	{   7, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02006
-	{   8, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01000
-	{   9, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
-	{  10, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFF11
-	{  11, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{  12, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
-	{  13, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01F7D
-	{  14, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEA00000E
-	{  15, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE51F00C0
-	{  16, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE5900004
-	{  17, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500001
-	{  18, 0x100f1000, 0xf00ff000 }, // ldr:8:0x159F11E0
-	{  19, 0x100f0000, 0xf00ff000 }, // sub:10:0x124F00C8
-	{  20, 0x0b000000, 0x0f000000 }, // b, bl:3:0x1BFE5278
-	{  21, 0xe1140a02, 0xfdffffff }, // tst:7:0xE3140A02
-	{  22, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
-	{  23, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02006
-	{  24, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01000
-	{  25, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
-	{  26, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFF3F
-	{  27, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{  28, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
-	{  29, 0xe00f1000, 0xf00ff000 }, // ldr:8:0xE59F11B8
-	{  30, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD4070
-	{  31, 0xe00f0000, 0xf00ff000 }, // sub:10:0xE24F00F8
-	/* 32/32 */
 	{ -1, -1, -1 },
 };
 
@@ -1606,43 +1544,6 @@ static FuncSig func_sig_GetImageFolder_6[] = {
 	{ -1, -1, -1 },
 };
 
-static FuncSig func_sig_PT_PlaySound_6[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4070
-	{   1, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE1A04000
-	{   2, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05804
-	{   3, 0xe1100901, 0xfdffffff }, // tst:7:0xE3100901
-	{   4, 0xe1a06000, 0xfdfff000 }, // mov:6:0xE1A06001
-	{   5, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05825
-	{   6, 0x0a000000, 0x0f000000 }, // b, bl:3:0x0A000007
-	{   7, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02006
-	{   8, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01000
-	{   9, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
-	{  10, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFF0C
-	{  11, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{  12, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
-	{  13, 0xe00f1000, 0xf00ff000 }, // ldr:8:0xE59F13DC
-	{  14, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEA00000E
-	{  15, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE51F00AC
-	{  16, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE5900004
-	{  17, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500001
-	{  18, 0x11a01000, 0xfdfff000 }, // mov:6:0x13A01F7F
-	{  19, 0x100f0000, 0xf00ff000 }, // sub:10:0x124F00B4
-	{  20, 0x0b000000, 0x0f000000 }, // b, bl:3:0x1BFE3CFA
-	{  21, 0xe1140a02, 0xfdffffff }, // tst:7:0xE3140A02
-	{  22, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
-	{  23, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02006
-	{  24, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01000
-	{  25, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
-	{  26, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFF3B
-	{  27, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{  28, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
-	{  29, 0xe00f1000, 0xf00ff000 }, // ldr:8:0xE59F13A0
-	{  30, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD4070
-	{  31, 0xe00f0000, 0xf00ff000 }, // sub:10:0xE24F00E4
-	/* 32/32 */
-	{ -1, -1, -1 },
-};
-
 static FuncSig func_sig_ReadFastDir_6[] = {
 	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4070
 	{   1, 0xe1b04000, 0xfdfff000 }, // mov:6:0xE1B04000
@@ -1745,43 +1646,6 @@ static FuncSig func_sig__sqrt_6[] = {
 	{  29, 0xe1b00000, 0xfdfff000 }, // mov:6:0xE1B00080
 	{  31, 0xe1b0e000, 0xfdfff000 }, // mov:6:0xE1B0E0AE
 	/* 27/32 */
-	{ -1, -1, -1 },
-};
-
-static FuncSig func_sig_add_ptp_handler_6[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D47F0
-	{   1, 0xe00f4000, 0xf00ff000 }, // ldr:8:0xE51F4030
-	{   2, 0xe1a08000, 0xfdfff000 }, // mov:6:0xE1A08000
-	{   3, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE5940000
-	{   4, 0xe1a06000, 0xfdfff000 }, // mov:6:0xE1A06001
-	{   5, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
-	{   6, 0xe1a07000, 0xfdfff000 }, // mov:6:0xE1A07002
-	{   7, 0x01a00000, 0xfdfff000 }, // mov:6:0x03A00017
-	{   8, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD87F0
-	{   9, 0xe1560000, 0xfdfff000 }, // cmp:7:0xE3560000
-	{  10, 0x01a00000, 0xfdfff000 }, // mov:6:0x03A00003
-	{  11, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD87F0
-	{  12, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBF66D22
-	{  13, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500000
-	{  14, 0x0a000000, 0x0f000000 }, // b, bl:3:0x0A000004
-	{  15, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00008
-	{  16, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFFB9
-	{  17, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{  18, 0x11a00000, 0xfdfff000 }, // mov:6:0x13A00000
-	{  19, 0x18bd0000, 0xffff0000 }, // ldm:5:0x18BD87F0
-	{  20, 0xe5940000, 0xfdfff000 }, // ldr:4:0xE5940000
-	{  21, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01000
-	{  22, 0xe5909000, 0xfdfff000 }, // ldr:4:0xE5909000
-	{  23, 0xe0804000, 0xfdf0f000 }, // add:6:0xE2804004
-	{  24, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00009
-	{  25, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBF681B9
-	{  26, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{  27, 0x11a05000, 0xfdfff000 }, // mov:6:0x13A05001
-	{  28, 0x0a000000, 0x0f000000 }, // b, bl:3:0x1A000018
-	{  29, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE1A01008
-	{  30, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
-	{  31, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEB000130
-	/* 32/32 */
 	{ -1, -1, -1 },
 };
 
@@ -1906,43 +1770,6 @@ static FuncSig func_sig_SetFileAttributes_6[] = {
 	{ -1, -1, -1 },
 };
 
-static FuncSig func_sig_PT_PlaySound_7[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4070
-	{   1, 0xe1100901, 0xfdffffff }, // tst:7:0xE3100901
-	{   2, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05001
-	{   3, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE1A04000
-	{   4, 0x0a000000, 0x0f000000 }, // b, bl:3:0x0A000007
-	{   5, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02005
-	{   6, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01000
-	{   7, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
-	{   8, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFF2C
-	{   9, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{  10, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
-	{  11, 0xe00f1000, 0xf00ff000 }, // ldr:8:0xE59F11A4
-	{  12, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEA00000E
-	{  13, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE51F008C
-	{  14, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE5900004
-	{  15, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500001
-	{  16, 0x11a01000, 0xfdfff000 }, // mov:6:0x13A01F7D
-	{  17, 0x100f0000, 0xf00ff000 }, // sub:10:0x124F0098
-	{  18, 0x0b000000, 0x0f000000 }, // b, bl:3:0x1BFEC0A0
-	{  19, 0xe1140a02, 0xfdffffff }, // tst:7:0xE3140A02
-	{  20, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
-	{  21, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02005
-	{  22, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01000
-	{  23, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00004
-	{  24, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFF5A
-	{  25, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{  26, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
-	{  27, 0xe00f1000, 0xf00ff000 }, // ldr:8:0xE59F1168
-	{  28, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD4070
-	{  29, 0xe00f0000, 0xf00ff000 }, // sub:10:0xE24F00C8
-	{  30, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEAFEC094
-	{  31, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
-	/* 32/32 */
-	{ -1, -1, -1 },
-};
-
 static FuncSig func_sig_GetImageFolder_11[] = {
 	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D43F0
 	{   1, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05001
@@ -1980,43 +1807,6 @@ static FuncSig func_sig_GetImageFolder_11[] = {
 	{ -1, -1, -1 },
 };
 
-static FuncSig func_sig_PT_PlaySound_11[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4070
-	{   1, 0xe1a04000, 0xfdfff000 }, // mov:6:0xE1A04000
-	{   2, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05804
-	{   3, 0xe1100901, 0xfdffffff }, // tst:7:0xE3100901
-	{   4, 0xe1a06000, 0xfdfff000 }, // mov:6:0xE1A06001
-	{   5, 0xe1a05000, 0xfdfff000 }, // mov:6:0xE1A05825
-	{   6, 0x0a000000, 0x0f000000 }, // b, bl:3:0x0A000007
-	{   7, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02006
-	{   8, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01000
-	{   9, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
-	{  10, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFF0A
-	{  11, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{  12, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
-	{  13, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01F7F
-	{  14, 0x0a000000, 0x0f000000 }, // b, bl:3:0xEA00000E
-	{  15, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE51F00B4
-	{  16, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE5900004
-	{  17, 0xe1500000, 0xfdfff000 }, // cmp:7:0xE3500001
-	{  18, 0x100f1000, 0xf00ff000 }, // ldr:8:0x159F13B0
-	{  19, 0x100f0000, 0xf00ff000 }, // sub:10:0x124F00B8
-	{  20, 0x0b000000, 0x0f000000 }, // b, bl:3:0x1B57E54B
-	{  21, 0xe1140a02, 0xfdffffff }, // tst:7:0xE3140A02
-	{  22, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
-	{  23, 0xe1a02000, 0xfdfff000 }, // mov:6:0xE1A02006
-	{  24, 0xe1a01000, 0xfdfff000 }, // mov:6:0xE3A01000
-	{  25, 0xe1a00000, 0xfdfff000 }, // mov:6:0xE1A00005
-	{  26, 0x0b000000, 0x0f000000 }, // b, bl:3:0xEBFFFF39
-	{  27, 0xe1100001, 0xfdffffff }, // tst:7:0xE3100001
-	{  28, 0x08bd0000, 0xffff0000 }, // ldm:5:0x08BD8070
-	{  29, 0xe00f1000, 0xf00ff000 }, // ldr:8:0xE59F1388
-	{  30, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD4070
-	{  31, 0xe00f0000, 0xf00ff000 }, // sub:10:0xE24F00E8
-	/* 32/32 */
-	{ -1, -1, -1 },
-};
-
 FuncsList func_list[] = {
 	{ "CreateJumptable", func_sig_CreateJumptable_1, 1 },
 	{ "DeleteFile_Fut", func_sig_DeleteFile_Fut_1, 1 },
@@ -2047,10 +1837,6 @@ FuncsList func_list[] = {
 	{ "OpenFastDir", func_sig_OpenFastDir_3, 3 },
 	{ "OpenFastDir", func_sig_OpenFastDir_4, 4 },
 	{ "OpenFastDir", func_sig_OpenFastDir_6, 6 },
-	{ "PT_PlaySound", func_sig_PT_PlaySound_11, 11 },
-	{ "PT_PlaySound", func_sig_PT_PlaySound_4, 4 },
-	{ "PT_PlaySound", func_sig_PT_PlaySound_6, 6 },
-	{ "PT_PlaySound", func_sig_PT_PlaySound_7, 7 },
 	{ "ReadFastDir", func_sig_ReadFastDir_1, 1 },
 	{ "ReadFastDir", func_sig_ReadFastDir_3, 3 },
 	{ "ReadFastDir", func_sig_ReadFastDir_4, 4 },
@@ -2067,10 +1853,8 @@ FuncsList func_list[] = {
 	{ "SetParameterData", func_sig_SetParameterData_1, 1 },
 	{ "_sqrt", func_sig__sqrt_1, 1 },
 	{ "_sqrt", func_sig__sqrt_6, 6 },
-	{ "add_ptp_handler", func_sig_add_ptp_handler_6, 6 },
 	{ "closedir", func_sig_closedir_1, 1 },
 	{ "closedir", func_sig_closedir_3, 3 },
-	{ "closedir", func_sig_closedir_4, 4 },
 	{ "kbd_pwr_off", func_sig_kbd_pwr_off_1, 1 },
 	{ "kbd_pwr_off", func_sig_kbd_pwr_off_2, 2 },
 	{ "kbd_pwr_on", func_sig_kbd_pwr_on_1, 1 },
