@@ -144,7 +144,6 @@ NHSTUB(_log10                                 ,0xffbb98c0) //  1
 NHSTUB(_pow                                   ,0xffbb9db0) //  1
 NHSTUB(_sqrt                                  ,0xffacb378) //  1
 // ALT: NHSTUB(_sqrt, 0xffbbe0fc) // 1 24/0
-// ALT: NHSTUB(_sqrt, 0xffbbe0fc) // 2 24/0
 NHSTUB(apex2us                                ,0xff8b02a8) //  1
 NHSTUB(close                                  ,0xffc1a8ac) //109
 //NHSTUB(kbd_p1_f                             ,0xff829c94) //  1            == 0xff829c94

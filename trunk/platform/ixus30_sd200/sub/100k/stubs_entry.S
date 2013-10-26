@@ -96,7 +96,6 @@ NHSTUB(localtime                              ,0xffabcc84) //  1 93%
 // ERROR: MakeAFScan is not found.                         //--- ---    *** != 0x00000000
 //NHSTUB(time                                 ,0xffabd9d0) //  1        *** != 0x00000000
 // ALT: NHSTUB(time, 0xfff51cb0) // 1 25/0
-// ALT: NHSTUB(time, 0xfff51cb0) // 2 25/0
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 
@@ -161,16 +160,12 @@ NHSTUB(TurnOffDisplay                         ,0xff925014) //120
 //NHSTUB(UnlockMainPower                      ,0xff956014) //120            == 0xff956014
 NHSTUB(_log                                   ,0xffaae9b0) //  1
 // ALT: NHSTUB(_log, 0xfff404cc) // 1 27/0
-// ALT: NHSTUB(_log, 0xfff404cc) // 2 27/0
 NHSTUB(_log10                                 ,0xffaaf058) //  1
 // ALT: NHSTUB(_log10, 0xfff40b74) // 1 27/0
-// ALT: NHSTUB(_log10, 0xfff40b74) // 2 27/0
 NHSTUB(_pow                                   ,0xffaaf548) //  1
 // ALT: NHSTUB(_pow, 0xfff41064) // 1 25/0
-// ALT: NHSTUB(_pow, 0xfff41064) // 2 25/0
 NHSTUB(_sqrt                                  ,0xffab3894) //  1
 // ALT: NHSTUB(_sqrt, 0xfff45834) // 1 24/0
-// ALT: NHSTUB(_sqrt, 0xfff45834) // 2 24/0
 NHSTUB(apex2us                                ,0xff8a9f58) //  1
 NHSTUB(close                                  ,0xffac265c) //  1
 // ALT: NHSTUB(close, 0xfff5693c) // 1 29/0
@@ -188,10 +183,8 @@ NHSTUB(qsort                                  ,0xffabb8c4) //  1
 // ALT: NHSTUB(qsort, 0xfff4fba4) // 1 13/0
 NHSTUB(rand                                   ,0xffabb8e8) //  1
 // ALT: NHSTUB(rand, 0xfff4fbc8) // 1 8/0
-// ALT: NHSTUB(rand, 0xfff4fbc8) // 2 8/0
 NHSTUB(srand                                  ,0xffabb90c) //  1
 // ALT: NHSTUB(srand, 0xfff4fbec) // 1 4/0
-// ALT: NHSTUB(srand, 0xfff4fbec) // 2 4/0
 NHSTUB(stat                                   ,0xffabe558) //  1
 // ALT: NHSTUB(stat, 0xfff52838) // 1 24/0
 NHSTUB(strcat                                 ,0xffabc138) //  1
@@ -207,10 +200,8 @@ NHSTUB(strncmp                                ,0xffabc4e4) //  1
 // ALT: NHSTUB(strncmp, 0xfff507c4) // 1 11/0
 NHSTUB(strncpy                                ,0xffabc528) //  1
 // ALT: NHSTUB(strncpy, 0xfff50808) // 1 24/0
-// ALT: NHSTUB(strncpy, 0xfff50808) // 2 24/0
 NHSTUB(strrchr                                ,0xffabc5ac) //  1
 // ALT: NHSTUB(strrchr, 0xfff5088c) // 1 8/0
-// ALT: NHSTUB(strrchr, 0xfff5088c) // 2 8/0
 NHSTUB(strtol                                 ,0xffabbd00) //  1
 // ALT: NHSTUB(strtol, 0xfff4ffe0) // 1 26/0
 NHSTUB(isdigit                                ,0xffab8374) //  1
@@ -247,7 +238,6 @@ NHSTUB(strpbrk                                ,0xffabc570) //  1
 // ALT: NHSTUB(strpbrk, 0xfff50850) // 1 19/0
 NHSTUB(utime                                  ,0xffabe5ec) //  1
 // ALT: NHSTUB(utime, 0xfff528cc) // 1 26/0
-// ALT: NHSTUB(utime, 0xfff528cc) // 2 26/0
 NHSTUB(mktime                                 ,0xffabce4c) //  1
 // ALT: NHSTUB(mktime, 0xfff5112c) // 1 28/0
 NHSTUB(opendir                                ,0xffabe4c4) //  1
