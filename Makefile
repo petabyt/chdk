@@ -104,7 +104,7 @@ upload: fir
 
 
 infoline:
-	@echo "**** GCC $(GCC_VERSION) : BUILDING CHDK-$(VER), #$(BUILD_NUMBER)$(STATE) FOR $(PLATFORM)-$(PLATFORMSUB)-$(BUILD_SVNREV)"
+	@echo "**** GCC $(GCC_VERSION) : BUILDING CHDK-$(VER), #$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) FOR $(PLATFORM)-$(PLATFORMSUB)"
 
 .PHONY: version
 version: FORCE
@@ -119,25 +119,25 @@ firzip: version firzipsub
 
 
 firzipsub: infoline clean firsub
-	@echo \-\> $(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip
-	rm -f $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip
-	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER) date:`date -R`" | \
-		zip -9jz $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
+	@echo \-\> $(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip
+	rm -f $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(BUILD_SVNREV)$(STATE).zip
+	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER)-$(BUILD_SVNREV) date:`date -R`" | \
+		zip -9jz $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
     ifdef PLATFORMOS
         ifeq ($(PLATFORMOS),vxworks)
-			zip -9j $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/PS.FIR > $(DEVNULL)
+			zip -9j $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/PS.FIR > $(DEVNULL)
 			rm -f $(topdir)bin/PS.FIR
         endif
         ifeq ($(PLATFORMOS),dryos)
             ifdef OPT_FI2
                 ifdef FI2KEY
-					zip -9j $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
+					zip -9j $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
 					rm -f $(topdir)bin/PS.FI2
                 endif
             endif
         endif
     endif
-	zip -9 $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)CHDK/MODULES/* > $(DEVNULL)
+	zip -9 $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)CHDK/MODULES/* > $(DEVNULL)
     # if COPY_TO is defined then copy this camera/firmware version to the copied firmware version
     # Define COPY_TO in $(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc of the source
     # firmware version that needs to be copied to another firmware version
@@ -146,44 +146,44 @@ firzipsub: infoline clean firsub
     ifdef COPY_TO
 		@echo "**** Copying duplicate Firmwares"
 		$(foreach COPY_PLATFORMSUB, $(subst :, ,$(COPY_TO)), \
-			cp $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/$(VER)-$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip ; \
+			cp $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/$(VER)-$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip ; \
 		)
     endif
 	rm -f $(topdir)bin/DISKBOOT.BIN
 
 
 firzipsubcomplete: infoline clean firsub
-	@echo \-\> $(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip
-	rm -f $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip
-	@echo \-\> $(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip
-	rm -f $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip
-	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER)$(STATE) date:`date -R`" | \
-	zip -9jz $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
-	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER)$(STATE) date:`date -R`" | \
-	zip -9jz $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
+	@echo \-\> $(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip
+	rm -f $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip
+	@echo \-\> $(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip
+	rm -f $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip
+	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) date:`date -R`" | \
+	zip -9jz $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
+	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) date:`date -R`" | \
+	zip -9jz $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
 	$(foreach ZIPDIR, $(ZIPDIRS), \
-		zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)$(ZIPDIR) > $(DEVNULL) ; \
+		zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)$(ZIPDIR) > $(DEVNULL) ; \
 	)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)CHDK/syscurves.CVF      > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)doc/changelog.txt  > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)doc/changelog.txt  > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)tools/vers.req  > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)CHDK/syscurves.CVF      > $(DEVNULL)
+	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)doc/changelog.txt  > $(DEVNULL)
+	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)doc/changelog.txt  > $(DEVNULL)
+	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)tools/vers.req  > $(DEVNULL)
 	cat $(topdir)doc/1_intro.txt  $(topdir)platform/$(PLATFORM)/notes.txt $(topdir)doc/2_installation.txt $(topdir)doc/3_faq.txt $(topdir)doc/4_urls.txt $(topdir)doc/5_gpl.txt $(topdir)doc/6_ubasic_copyright.txt > $(topdir)doc/readme.txt
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)doc/readme.txt  > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)doc/readme.txt  > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)CHDK/MODULES/*  > $(DEVNULL)
+	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)doc/readme.txt  > $(DEVNULL)
+	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)doc/readme.txt  > $(DEVNULL)
+	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)CHDK/MODULES/*  > $(DEVNULL)
 
     ifdef PLATFORMOS
         ifeq ($(PLATFORMOS),vxworks)
-			zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)bin/PS.FIR > $(DEVNULL)
-			zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/PS.FIR > $(DEVNULL)
+			zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)bin/PS.FIR > $(DEVNULL)
+			zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/PS.FIR > $(DEVNULL)
 			rm -f $(topdir)bin/PS.FIR
         endif
         ifeq ($(PLATFORMOS),dryos)
             ifdef OPT_FI2
                 ifdef FI2KEY
-					zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
-					zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
+					zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
+					zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
 					rm -f $(topdir)bin/PS.FI2
                 endif
             endif
@@ -197,8 +197,8 @@ firzipsubcomplete: infoline clean firsub
     ifdef COPY_TO
 		@echo "**** Copying duplicate Firmwares"
 		$(foreach COPY_PLATFORMSUB, $(subst :, ,$(COPY_TO)), \
-			cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip $(topdir)bin/$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)-full$(STATE).zip ; \
-			cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip $(topdir)bin/$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)$(STATE).zip ; \
+			cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)bin/$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip ; \
+			cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip ; \
 		)
     endif
 	rm -f $(topdir)bin/DISKBOOT.BIN
