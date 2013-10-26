@@ -140,8 +140,8 @@ NHSTUB(UpdateMBROnFlash                       ,0xff8726c8) //  1
 NHSTUB(Write                                  ,0xff873244) //120
 NHSTUB(WriteSDCard                            ,0xff881a84) //  1
 NHSTUB(_log                                   ,0xffac932c) //111
-NHSTUB(_log10                                 ,0xffbb98c0) //  1
-NHSTUB(_pow                                   ,0xffbb9db0) //  1
+NHSTUB(_log10                                 ,0xffbb98c0) //121
+NHSTUB(_pow                                   ,0xffbb9db0) //121
 NHSTUB(_sqrt                                  ,0xffacb378) //  1
 // ALT: NHSTUB(_sqrt, 0xffbbe0fc) // 1 24/0
 NHSTUB(apex2us                                ,0xff8b02a8) //  1

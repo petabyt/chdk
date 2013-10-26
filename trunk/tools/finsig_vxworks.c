@@ -652,7 +652,7 @@ int find_pow(firmware *fw, string_sig *sig, int j)
     // Find values passed to _pow
     if ((fwval(fw,j) == 0x00000000) && (fwval(fw,j+1) == 0x40000000) && (fwval(fw,j+2) == 0x00000000) && (fwval(fw,j+3) == 0x408F4000))
     {
-        uint32_t adr1 = idx2adr(fw,j);        // address of 1st value
+        uint32_t adr1 = idx2adr(fw,j);      // address of 1st value
         uint32_t adr2 = idx2adr(fw,j+2);    // address of 2nd value
         int j1;
 
@@ -664,6 +664,19 @@ int find_pow(firmware *fw, string_sig *sig, int j)
                 isADR_PC_cond(fw,j1+4))                 // ADR ?
             {
                 if ((ADR2adr(fw,j1) == adr1) && (ADR2adr(fw,j1+4) == adr2))
+                {
+                    uint32_t fadr = followBranch(fw,idx2adr(fw,j1+2),0x01000001);
+                    fwAddMatch(fw,fadr,32,0,121);
+                    return 1;
+                }
+            }
+            else
+            if (isADR_PC_cond(fw,j1) &&                 // ADR ?
+                (fwval(fw,j1+1) == 0xE8900003) &&       // LDMIA R0,{R0,R1}
+                isBL(fw,j1+2) &&                        // BL
+                isADR_PC_cond(fw,j1+3))                 // ADR ?
+            {
+                if ((ADR2adr(fw,j1) == adr1) && (ADR2adr(fw,j1+3) == adr2))
                 {
                     uint32_t fadr = followBranch(fw,idx2adr(fw,j1+2),0x01000001);
                     fwAddMatch(fw,fadr,32,0,121);
@@ -684,6 +697,33 @@ int find_pow(firmware *fw, string_sig *sig, int j)
                 }
             }
         }
+    }
+
+    return 0;
+}
+
+// Special case for _log & _log10
+int find_log(firmware *fw, string_sig *sig, int j)
+{
+    // Find values passed to _log
+    if (isBL(fw,j) && isLDR_PC(fw,j+1) && (LDR2val(fw,j+1) == 0x3FDBCB7B) && isLDR_PC(fw,j+2) && (LDR2val(fw,j+2) == 0x1526E50E))
+    {
+        uint32_t fadr = followBranch(fw,idx2adr(fw,j),0x01000001);
+        fwAddMatch(fw,fadr,32,0,121);
+        return 1;
+    }
+
+    return 0;
+}
+int find_log10(firmware *fw, string_sig *sig, int j)
+{
+    // Find values passed to _log
+    if (isBL(fw,j) && isLDR_PC(fw,j+1) && (LDR2val(fw,j+1) == 0x3FDBCB7B) && isLDR_PC(fw,j+2) && (LDR2val(fw,j+2) == 0x1526E50E))
+    {
+        int k = find_inst_rev(fw, isSTMFD_LR, j-1, 100);
+        uint32_t fadr = idx2adr(fw,k);
+        fwAddMatch(fw,fadr,32,0,121);
+        return 1;
     }
 
     return 0;
@@ -1172,9 +1212,6 @@ string_sig string_sigs[] =
     //{ 12, "malloc", "malloc", 0x01000003,                               0x24 },
     //{ 12, "TakeSemaphore", "TakeSemaphore", 1,                          0x14 },
     //{ 12, "GiveSemaphore", "GiveSemaphore", 1,                          0x18 },
-    //{ 12, "_log10", "_log10", 0x01000006,                               0x278 },
-    //{ 12, "_log10", "_log10", 0x01000006,                               0x000 },
-    //{ 12, "_log10", "_log10", 0x01000006,                               0x000 },
     //{ 12, "ClearEventFlag", "ClearEventFlag", 1,                        0x04 },
     //{ 12, "SetEventFlag", "SetEventFlag", 1,                            0x08 },
     //{ 12, "WaitForAnyEventFlag", "WaitForAnyEventFlag", 1,              0x0c },
@@ -1264,6 +1301,8 @@ string_sig string_sigs[] =
     //{ 21, "apex2us", (char*)find_apex2us, 0 },
     { 21, "mkdir", (char*)find_mkdir, 0 },
     { 21, "_pow", (char*)find_pow, 0 },
+    { 21, "_log", (char*)find_log, 0 },
+    { 21, "_log10", (char*)find_log10, 0 },
 
     { 22, "closedir", (char*)find_closedir, 0 },
     { 22, "PT_PlaySound", (char*)find_PT_PlaySound, 0 },

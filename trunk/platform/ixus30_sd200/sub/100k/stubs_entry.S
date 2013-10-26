@@ -158,10 +158,8 @@ NHSTUB(TurnOnBackLight                        ,0xff99e324) //  1
 NHSTUB(TurnOnDisplay                          ,0xff924fec) //120
 NHSTUB(TurnOffDisplay                         ,0xff925014) //120
 //NHSTUB(UnlockMainPower                      ,0xff956014) //120            == 0xff956014
-NHSTUB(_log                                   ,0xffaae9b0) //  1
-// ALT: NHSTUB(_log, 0xfff404cc) // 1 27/0
-NHSTUB(_log10                                 ,0xffaaf058) //  1
-// ALT: NHSTUB(_log10, 0xfff40b74) // 1 27/0
+NHSTUB(_log                                   ,0xffaae9b0) //121
+NHSTUB(_log10                                 ,0xffaaf058) //121
 NHSTUB(_pow                                   ,0xffaaf548) //  1
 // ALT: NHSTUB(_pow, 0xfff41064) // 1 25/0
 NHSTUB(_sqrt                                  ,0xffab3894) //  1

@@ -111,9 +111,9 @@ NHSTUB(UnsetZoomForMovie                      ,0xffd81f08) //  1
 NHSTUB(UpdateMBROnFlash                       ,0xffc5bfa8) //  1
 NHSTUB(VbattGet                               ,0xffc1b4cc) //120
 NHSTUB(Write                                  ,0xffc5cb34) //120
-NHSTUB(_log                                   ,0xffea8764) //  1
-NHSTUB(_log10                                 ,0xffea8e0c) //  1
-NHSTUB(_pow                                   ,0xffea92fc) //  1
+NHSTUB(_log                                   ,0xffea8764) //121
+NHSTUB(_log10                                 ,0xffea8e0c) //121
+NHSTUB(_pow                                   ,0xffea92fc) //121
 NHSTUB(_sqrt                                  ,0xffead648) //  1
 NHSTUB(add_ptp_handler                        ,0xffe22658) //  1
 NHSTUB(apex2us                                ,0xffc98b74) //  1

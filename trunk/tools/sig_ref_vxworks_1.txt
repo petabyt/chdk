@@ -1,11 +1,7 @@
 0xFFC00000
 AllocateUncacheableMemory 0xFFC048D8
-CreatePhysicalVram 0xFFD11EE4
 DeleteFile_Fut 0xFFC55A2C 12
-DisableDispatch 0xFFC11074
-DisplayImagePhysicalScreen 0xFFD112AC
 DoAFLock 0xffd33094
-EnableDispatch 0xFFC11100
 EnterToCompensationEVF 0xFFD34F38
 ExecuteEventProcedure 0xFFC067F0
 ExitFromCompensationEVF 0xFFD34F98
@@ -32,8 +28,6 @@ MakeDirectory 0xFFC5C9B0
 MakeDirectory_Fut 0xFFC55AB8
 Mount_FileSystem 0xFFC5B9C0
 PT_PlaySound 0xFFD4074C
-PhySw_testgpio 0xFFC17658
-ProtectFile 0xFFC55198
 PutInNdFilter 0xFFE71734
 PutOutNdFilter 0xFFE7177C
 Remove 0xFFC5C72C
@@ -51,8 +45,6 @@ Unmount_FileSystem 0xFFC5BAC8
 UnsetZoomForMovie 0xFFD81B80
 UpdateMBROnFlash 0xFFC5BC20
 WriteSDCard 0xFFC6AFD8
-_log 0xFFEA83DC
-_log10 0xFFEA8A84
 _pow 0xFFEA8F74
 _sqrt 0xFFEAD2C0
 add_ptp_handler 0xFFE222D0

@@ -136,9 +136,9 @@ NHSTUB(UnlockAF                               ,0xff948bb4) //  1
 NHSTUB(UnlockMainPower                        ,0xff95e1a8) //120
 //NHSTUB(VbattGet                             ,0xff82cf1c) //120            == 0xff82cf1c
 NHSTUB(Write                                  ,0xff8706c8) //120
-NHSTUB(_log                                   ,0xffabcba0) //  1
-NHSTUB(_log10                                 ,0xffabd248) //  1
-NHSTUB(_pow                                   ,0xffabd738) //  1
+NHSTUB(_log                                   ,0xffabcba0) //121
+NHSTUB(_log10                                 ,0xffabd248) //121
+NHSTUB(_pow                                   ,0xffabd738) //121
 NHSTUB(_sqrt                                  ,0xffac1a84) //  1
 NHSTUB(apex2us                                ,0xff8aba18) //  1
 NHSTUB(close                                  ,0xffad0620) //109

@@ -1,6 +1,4 @@
 0xFFC00000
-CreatePhysicalVram 0xFFD37D50
-DisplayImagePhysicalScreen 0xffd36fe0
 DoAFLock 0xffd58dbc
 EnterToCompensationEVF 0xffd58f08
 ExitFromCompensationEVF 0xffd5c524
@@ -12,7 +10,6 @@ GetSystemTime 0xFFC04D38
 IsStrobeChargeCompleted 0xFFD11B24
 MakeAFScan 0xFFD5D538
 Mount_FileSystem 0xffc602ec
-PhySw_testgpio 0xFFC1889C
 PutInNdFilter 0xFFEB41D8
 PutOutNdFilter 0xFFEB4220
 SetParameterData 0xFFD75FB0
