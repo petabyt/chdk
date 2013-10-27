@@ -366,6 +366,7 @@
 0xffc56df0,GetFocusStartZoomPosition_FW
 0xffe50f30,GetFrameRateWithApex_FW
 0xffe57a34,GetHour_FW
+0xffddbbd0,getImageDirName
 0xffcf1428,GetImageFolder
 0xffd08810,GetIrisAv_FW
 0xffc435cc,GetKbdState
@@ -1170,9 +1171,11 @@
 0xffc28b68,TryReceiveMessageQueue
 0xffc0efe0,TryTakeSemaphore
 0xffc77f4c,TurnOffBackLight
+0xffc3f328,TurnOffDisplay
 0xffc2a874,TurnOffE1_FW
 0xffc43ce0,TurnOffVideoOutMode_FW
 0xffc77f34,TurnOnBackLight
+0xffc3f2fc,TurnOnDisplay
 0xffc43c7c,TurnOnVideoOutMode_FW
 0xffd0ec30,UI.Create_FW
 0xffd0ec30,UI_RegistDebugEventProc_FW

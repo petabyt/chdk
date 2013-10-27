@@ -396,6 +396,7 @@
 0xffc4c104,GetGyroHPFINPitch_FW
 0xffc4c160,GetGyroHPFINYaw_FW
 0xffe67114,GetHour_FW
+0xffdefaa4,getImageDirName
 0xffcec100,GetImageFolder
 0xffd0e010,GetIrisAv_FW
 0xffd0e1cc,GetIrisCurrentPosition_FW
@@ -1401,9 +1402,11 @@
 0xffc16964,TryTakeSemaphore
 0xffdd7018,TurnOffAFLamp_FW
 0xffc71424,TurnOffBackLight
+0xffc3292c,TurnOffDisplay
 0xffc37b18,TurnOffVideoOutMode_FW
 0xffdd6ffc,TurnOnAFLamp_FW
 0xffc7140c,TurnOnBackLight
+0xffc3291c,TurnOnDisplay
 0xffc37ab4,TurnOnVideoOutMode_FW
 0xffd16aa0,UI.Create_FW
 0xffd16aa0,UI_RegistDebugEventProc_FW

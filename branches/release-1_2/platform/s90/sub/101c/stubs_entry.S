@@ -3,13 +3,15 @@
 
 // Camera info:
 //   DRYOS R39 (DRYOS version 2.3, release #0039)
-//   Firmware Ver GM1.01C
+//   Firmware Ver GM1.01C   // Found @ 0xff88bbd4, "GM1.01C" @ 0xff88bbe1
+//   Firmware build timestamp: Feb  3 2010 08:56:28
 //   Possible corrupt firmware dump - file size too small for start address 0xff810000
 //     file size = 7.15MB, should be 7.94MB
 //   Could not find Camera name - possible corrupt firmware dump
 
 // Values for makefile.inc
 //   PLATFORMOSVER = 39
+//   PLATFORMID = ?           // Not found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x00141dbc
 
@@ -17,7 +19,6 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(SetScriptMode                        ,0xff894498) //120        *** != 0xff810f4c
 //NHSTUB(kbd_pwr_off                          ,0xff85e3a4) //  2 60%    *** != 0xff833350
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffaaea90 -> ffbefb90
@@ -123,12 +124,12 @@ NHSTUB(Fwrite_Fut                             ,0xff83501c) //120
 NHSTUB(GetBatteryTemperature                  ,0xff8615f0) //102
 NHSTUB(GetCCDTemperature                      ,0xff86157c) //102
 NHSTUB(GetCurrentAvValue                      ,0xff95a53c) //120
-NHSTUB(GetDrive_ClusterSize                   ,0xff86e380) //  3
+NHSTUB(GetDrive_ClusterSize                   ,0xff86e380) //122
 NHSTUB(GetDrive_FreeClusters                  ,0xff86e3e0) //  3
 NHSTUB(GetDrive_TotalClusters                 ,0xff86e3b4) //  3
 NHSTUB(GetFocusLensSubjectDistance            ,0xff958b10) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff958f58) //  3
-NHSTUB(GetImageFolder                         ,0xff93c4d4) //106
+NHSTUB(GetImageFolder                         ,0xff93c4d4) //122
 NHSTUB(GetKbdState                            ,0xff85e258) //109
 NHSTUB(GetMemInfo                             ,0xff81a070) //115
 NHSTUB(GetOpticalTemperature                  ,0xff861664) //120
@@ -177,6 +178,8 @@ NHSTUB(SleepTask                              ,0xff838a50) //120
 NHSTUB(TakeSemaphore                          ,0xff838718) //120
 NHSTUB(TurnOffBackLight                       ,0xff8a49c8) //104
 NHSTUB(TurnOnBackLight                        ,0xff8a49b0) //104
+NHSTUB(TurnOnDisplay                          ,0xff85892c) //120
+NHSTUB(TurnOffDisplay                         ,0xff85893c) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff97ec10) //120
 NHSTUB(UnlockAF                               ,0xff836bd0) //102
 NHSTUB(UnlockMainPower                        ,0xff89464c) //120
@@ -212,11 +215,11 @@ NHSTUB(open                                   ,0xff81a8e0) //109
 NHSTUB(OpenFastDir                            ,0xffa7d824) //  3
 NHSTUB(closedir                               ,0xffa7d7e0) //  3
 NHSTUB(qsort                                  ,0xffaec5e8) //  1
-NHSTUB(rand                                   ,0xff8204f0) //  1
+NHSTUB(rand                                   ,0xff8204f0) //121
 NHSTUB(realloc                                ,0xffa0ca84) //115
 NHSTUB(reboot_fw_update                       ,0xffa82e68) //106
 NHSTUB(set_control_event                      ,0xff89409c) //111
-NHSTUB(srand                                  ,0xff8204e4) //  1
+NHSTUB(srand                                  ,0xff8204e4) //122
 NHSTUB(stat                                   ,0xff83556c) //109
 NHSTUB(strcat                                 ,0xff8abb3c) //  1
 NHSTUB(strchr                                 ,0xff813fc0) //  1

@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R45 (DRYOS version 2.3, release #0045)
-//   Firmware Ver GM1.00N
+//   Firmware Ver GM1.00N   // Found @ 0xff898a38, "GM1.00N" @ 0xff898a45
+//   Firmware build timestamp: Mar  9 2011 11:21:08
 //   Canon PowerShot SX30 IS
 
 // Values for makefile.inc
@@ -16,8 +17,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(kbd_pwr_off                          ,0xff865b9c) //  2 60%    *** != 0x00000000
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffb00f38 -> ffc67b70
@@ -137,12 +136,12 @@ NHSTUB(Fwrite_Fut                             ,0xff836cd0) //120
 NHSTUB(GetBatteryTemperature                  ,0xff8697ac) //102
 NHSTUB(GetCCDTemperature                      ,0xff869738) //102
 NHSTUB(GetCurrentAvValue                      ,0xff980704) //120
-NHSTUB(GetDrive_ClusterSize                   ,0xff87724c) //  4
-NHSTUB(GetDrive_FreeClusters                  ,0xff8772ac) //  4
-NHSTUB(GetDrive_TotalClusters                 ,0xff877280) //  3
+NHSTUB(GetDrive_ClusterSize                   ,0xff87724c) //122
+NHSTUB(GetDrive_FreeClusters                  ,0xff8772ac) //119
+NHSTUB(GetDrive_TotalClusters                 ,0xff877280) //119
 NHSTUB(GetFocusLensSubjectDistance            ,0xff97eb04) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff97ef7c) //  3
-NHSTUB(GetImageFolder                         ,0xff95f174) //106
+NHSTUB(GetImageFolder                         ,0xff95f174) //122
 NHSTUB(GetKbdState                            ,0xff865a28) //109
 NHSTUB(GetMemInfo                             ,0xff81a264) //115
 NHSTUB(GetOpticalTemperature                  ,0xff869820) //120
@@ -192,6 +191,8 @@ NHSTUB(SleepTask                              ,0xff83ac1c) //120
 NHSTUB(TakeSemaphore                          ,0xff83a8e4) //120
 NHSTUB(TurnOffBackLight                       ,0xff8b059c) //104
 NHSTUB(TurnOnBackLight                        ,0xff8b0584) //104
+NHSTUB(TurnOnDisplay                          ,0xff85f0a8) //120
+NHSTUB(TurnOffDisplay                         ,0xff85f0b8) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff9aef3c) //120
 NHSTUB(UnlockAF                               ,0xff838af0) //102
 NHSTUB(UnlockMainPower                        ,0xff8a01e8) //120
@@ -226,11 +227,11 @@ NHSTUB(open                                   ,0xff81aadc) //109
 NHSTUB(OpenFastDir                            ,0xffacdf5c) //  4
 NHSTUB(closedir                               ,0xffacdf0c) //121
 NHSTUB(qsort                                  ,0xffb40888) //  4
-NHSTUB(rand                                   ,0xffa4dbb0) //  4
+NHSTUB(rand                                   ,0xffa4dbb0) //121
 NHSTUB(realloc                                ,0xffa4daec) //115
 NHSTUB(reboot_fw_update                       ,0xffad34d0) //106
 NHSTUB(set_control_event                      ,0xff89fbc0) //111
-NHSTUB(srand                                  ,0xffa4dba4) //  4
+NHSTUB(srand                                  ,0xffa4dba4) //122
 NHSTUB(stat                                   ,0xff837240) //109
 NHSTUB(strcat                                 ,0xff8b9a20) //  1
 NHSTUB(strchr                                 ,0xff8140b4) //  1

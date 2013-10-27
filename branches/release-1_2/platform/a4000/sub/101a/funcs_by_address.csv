@@ -236,7 +236,9 @@
 0xff852e44,DispCon_ShowWhiteLine_FW
 0xff853000,DispCon_ShowNStepsChart_FW
 0xff853170,DispCon_TurnOnDisplay_FW
+0xff853170,TurnOnDisplay
 0xff853180,DispCon_TurnOffDisplay_FW
+0xff853180,TurnOffDisplay
 0xff853190,DispCon_TurnOnBackLight_FW
 0xff8531a0,DispCon_TurnOffBackLight_FW
 0xff8531b0,DispCon_SetMaxBackLightBrightness_FW
@@ -992,6 +994,7 @@
 0xffa437f4,TerminateFAGeneralTest_FW
 0xffa437fc,InitializeFAExtendFile_FW
 0xffa4380c,TerminateFAExtendFile_FW
+0xffa496b8,getImageDirName
 0xffa4f60c,task_FORMAT_TASK_PROGRESS
 0xffa4f7ec,task_FORMAT_TASK_NAME
 0xffa538f0,task_FileScheduleTask

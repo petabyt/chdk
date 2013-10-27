@@ -492,6 +492,7 @@
 0xff08100c,GetGyroHPFINYaw_FW
 0xff38ec08,GetGyroNoiseData_FW
 0xff431e60,GetHour_FW
+0xff1b34c0,getImageDirName
 0xff1b1544,GetImageFolder
 0xff06108c,GetInputAverageLevel_FW
 0xff0984f4,GetInternalFirmwareVersion_FW
@@ -1702,11 +1703,13 @@
 0x0068bea8,TryReceiveMessageQueue
 0x0068a9c8,TryTakeSemaphore
 0xff0ad284,TurnOffBackLight
+0xff058168,TurnOffDisplay
 0xff021de0,TurnOffE1_FW
 0xff38dcb8,TurnOffNdFilter_FW
 0xff38dd14,TurnOffNdFilterWithTiming_FW
 0xff0609f4,TurnOffVideoOutMode_FW
 0xff0ad26c,TurnOnBackLight
+0xff058158,TurnOnDisplay
 0xff38dc94,TurnOnNdFilter_FW
 0xff38dcdc,TurnOnNdFilterWithTiming_FW
 0xff0609bc,TurnOnVideoOutMode_FW

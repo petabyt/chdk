@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   Firmware Ver GM1.00C
+//   Firmware Ver GM1.00C   // Found @ 0xff8787c0, "GM1.00C" @ 0xff8787cd
+//   Firmware build timestamp: Sep 14 2008 14:57:56
 //   Canon PowerShot SX10 IS
 
 // Values for makefile.inc
@@ -17,7 +18,6 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(kbd_pwr_off                          ,0xff84b810) //  2 60%    *** != 0x00000000
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffa79978 -> ffb74378
@@ -176,6 +176,8 @@ NHSTUB(SleepTask                              ,0xff827c50) //120
 NHSTUB(TakeSemaphore                          ,0xff827918) //120
 NHSTUB(TurnOffBackLight                       ,0xff88f284) //104
 NHSTUB(TurnOnBackLight                        ,0xff88f26c) //104
+NHSTUB(TurnOnDisplay                          ,0xff846cf0) //120
+NHSTUB(TurnOffDisplay                         ,0xff846d00) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff963734) //120
 NHSTUB(UnlockAF                               ,0xff82589c) //102
 NHSTUB(UnlockMainPower                        ,0xff880ebc) //120
@@ -210,11 +212,11 @@ NHSTUB(open                                   ,0xff8197b4) //109
 NHSTUB(OpenFastDir                            ,0xffa49080) //  1
 NHSTUB(closedir                               ,0xffa491e4) //  1
 NHSTUB(qsort                                  ,0xffab814c) //  1
-NHSTUB(rand                                   ,0xff81ccac) //  1
+NHSTUB(rand                                   ,0xff81ccac) //121
 NHSTUB(realloc                                ,0xff813b5c) //115
 NHSTUB(reboot_fw_update                       ,0xffa50b14) //106
 NHSTUB(set_control_event                      ,0xff880884) //111
-NHSTUB(srand                                  ,0xff81cca0) //  1
+NHSTUB(srand                                  ,0xff81cca0) //122
 NHSTUB(stat                                   ,0xff823c70) //  1
 NHSTUB(strcat                                 ,0xff89b894) //  1
 NHSTUB(strchr                                 ,0xff89b91c) //  1

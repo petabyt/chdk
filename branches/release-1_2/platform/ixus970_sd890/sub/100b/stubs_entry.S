@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.00B
+//   Firmware Ver GM1.00B   // Found @ 0xff86c11c, "GM1.00B" @ 0xff86c129
+//   Firmware build timestamp: Jan 24 2008 19:30:31
 //   Canon DIGITAL IXUS 970 IS
 
 // Values for makefile.inc
@@ -174,6 +175,8 @@ NHSTUB(SleepTask                              ,0xff8283f0) //120
 NHSTUB(TakeSemaphore                          ,0xff81b6ac) //120
 NHSTUB(TurnOffBackLight                       ,0xff881d28) //104
 NHSTUB(TurnOnBackLight                        ,0xff881d10) //104
+NHSTUB(TurnOnDisplay                          ,0xff83e950) //120
+NHSTUB(TurnOffDisplay                         ,0xff83e960) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff9510f4) //120
 NHSTUB(UnlockAF                               ,0xff825bcc) //102
 NHSTUB(UnlockMainPower                        ,0xff875408) //120
@@ -211,11 +214,11 @@ NHSTUB(open                                   ,0xff819dfc) //109
 NHSTUB(OpenFastDir                            ,0xffa1346c) //  1
 NHSTUB(closedir                               ,0xffa135d0) //  1
 NHSTUB(qsort                                  ,0xff9b1ba4) //  1
-NHSTUB(rand                                   ,0xff81d94c) //  1
+NHSTUB(rand                                   ,0xff81d94c) //121
 NHSTUB(realloc                                ,0xff813b78) //115
 NHSTUB(reboot_fw_update                       ,0xffa1af00) //106
 NHSTUB(set_control_event                      ,0xff874e10) //  1
-NHSTUB(srand                                  ,0xff81d940) //  1
+NHSTUB(srand                                  ,0xff81d940) //122
 NHSTUB(stat                                   ,0xff823f9c) //  1
 NHSTUB(strcat                                 ,0xff894190) //  1
 NHSTUB(strchr                                 ,0xff894218) //  1

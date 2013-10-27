@@ -1,11 +1,7 @@
 0xff000000
 Fgets_Fut 0xFF026C6C 19
-srand 0xFF245D20 13
-rand 0xFF245D2C 10
-GetDrive_ClusterSize 0xFF06ADBC 12
 GetDrive_TotalClusters 0xFF06ADEC 10
 GetDrive_FreeClusters 0xFF06AE14 8
-GetImageFolder 0xFF1598B8
 ReadFastDir 0xFF2DD404
 SetFileTimeStamp 0xFF027410
 _sqrt 0xFF3AED14

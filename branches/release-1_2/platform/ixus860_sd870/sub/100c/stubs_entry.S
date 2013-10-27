@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.00C
+//   Firmware Ver GM1.00C   // Found @ 0xff868588, "GM1.00C" @ 0xff868595
+//   Firmware build timestamp: Jul 20 2007 18:32:15
 //   Canon DIGITAL IXUS 860 IS
 
 // Values for makefile.inc
@@ -169,6 +170,8 @@ NHSTUB(SleepTask                              ,0xff829790) //120
 NHSTUB(TakeSemaphore                          ,0xff81ba54) //120
 NHSTUB(TurnOffBackLight                       ,0xff87a148) //104
 NHSTUB(TurnOnBackLight                        ,0xff87a130) //104
+NHSTUB(TurnOnDisplay                          ,0xff8403fc) //120
+NHSTUB(TurnOffDisplay                         ,0xff84040c) //120
 NHSTUB(UnlockAF                               ,0xff826c08) //103
 NHSTUB(UnlockMainPower                        ,0xff86cfa0) //120
 NHSTUB(UnsetZoomForMovie                      ,0xff94a2c4) //104
@@ -203,11 +206,11 @@ NHSTUB(open                                   ,0xff81a1a8) //109
 NHSTUB(OpenFastDir                            ,0xffa04040) //  1
 NHSTUB(closedir                               ,0xffa041a4) //  1
 NHSTUB(qsort                                  ,0xff99eeb4) //  1
-NHSTUB(rand                                   ,0xff81e9fc) //  1
+NHSTUB(rand                                   ,0xff81e9fc) //121
 NHSTUB(realloc                                ,0xff813b90) //115
 NHSTUB(reboot_fw_update                       ,0xffa0ba98) //106
 NHSTUB(set_control_event                      ,0xff86c968) //  1
-NHSTUB(srand                                  ,0xff81e9f0) //  1
+NHSTUB(srand                                  ,0xff81e9f0) //122
 NHSTUB(stat                                   ,0xff825238) //  1
 NHSTUB(strcat                                 ,0xff88fa2c) //  1
 NHSTUB(strchr                                 ,0xff88fab4) //  1

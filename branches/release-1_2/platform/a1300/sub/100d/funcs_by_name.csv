@@ -405,6 +405,7 @@
 0xff86c0f0,GetFocusStartZoomPosition_FW
 0xffad7ac4,GetFrameRateWithApex_FW
 0xffadf1e0,GetHour_FW
+0xffa471a4,getImageDirName
 0xff937580,GetImageFolder
 0xff87d618,GetInternalFirmwareVersion_FW
 0xff954f98,GetIrisAv_FW
@@ -1282,11 +1283,13 @@
 0x003f72e0,TryReceiveMessageQueue
 0x003f75e0,TryTakeSemaphore
 0xff88ff94,TurnOffBackLight
+0xff8525ac,TurnOffDisplay
 0xff8343d4,TurnOffE1_FW
 0xffa6e024,TurnOffNdFilter_FW
 0xffa6e080,TurnOffNdFilterWithTiming_FW
 0xff856f00,TurnOffVideoOutMode_FW
 0xff88ff7c,TurnOnBackLight
+0xff85259c,TurnOnDisplay
 0xffa6e000,TurnOnNdFilter_FW
 0xffa6e048,TurnOnNdFilterWithTiming_FW
 0xff856e9c,TurnOnVideoOutMode_FW

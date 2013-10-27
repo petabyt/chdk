@@ -3,13 +3,15 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.00C
+//   Firmware Ver GM1.00C   // Found @ 0xff86c370, "GM1.00C" @ 0xff86c37d
+//   Firmware build timestamp: Jan  8 2008 14:58:32
 //   Possible corrupt firmware dump - file size too small for start address 0xff810000
 //     file size = 4.00MB, should be 7.94MB
 //   Could not find Camera name - possible corrupt firmware dump
 
 // Values for makefile.inc
 //   PLATFORMOSVER = 23
+//   PLATFORMID = ?           // Not found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000cbc48
 
@@ -169,6 +171,8 @@ NHSTUB(SleepTask                              ,0xff828400) //120
 NHSTUB(TakeSemaphore                          ,0xff81b6ac) //120
 NHSTUB(TurnOffBackLight                       ,0xff881e30) //104
 NHSTUB(TurnOnBackLight                        ,0xff881e18) //104
+NHSTUB(TurnOnDisplay                          ,0xff83ea5c) //120
+NHSTUB(TurnOffDisplay                         ,0xff83ea6c) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff950de8) //120
 NHSTUB(UnlockAF                               ,0xff825bdc) //102
 NHSTUB(UnlockMainPower                        ,0xff87565c) //120
@@ -206,11 +210,11 @@ NHSTUB(open                                   ,0xff819dfc) //109
 NHSTUB(OpenFastDir                            ,0xffa12258) //  1
 NHSTUB(closedir                               ,0xffa123bc) //  1
 NHSTUB(qsort                                  ,0xff9b0d40) //  1
-NHSTUB(rand                                   ,0xff81d95c) //  1
+NHSTUB(rand                                   ,0xff81d95c) //121
 NHSTUB(realloc                                ,0xff813b78) //115
 NHSTUB(reboot_fw_update                       ,0xffa19cec) //106
 NHSTUB(set_control_event                      ,0xff875064) //  1
-NHSTUB(srand                                  ,0xff81d950) //  1
+NHSTUB(srand                                  ,0xff81d950) //122
 NHSTUB(stat                                   ,0xff823fac) //  1
 NHSTUB(strcat                                 ,0xff894370) //  1
 NHSTUB(strchr                                 ,0xff8943f8) //  1

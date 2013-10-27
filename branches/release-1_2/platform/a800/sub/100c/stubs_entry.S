@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R47 (DRYOS version 2.3, release #0047)
-//   Firmware Ver GM1.00C
+//   Firmware Ver GM1.00C   // Found @ 0xffc6ab10, "GM1.00C" @ 0xffc6ab1d
+//   Firmware build timestamp: Jun  8 2011 12:06:11
 //   Canon PowerShot A800
 
 // Values for makefile.inc
@@ -17,8 +18,6 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(GetBatteryTemperature                ,0xffc45dec) //102        *** != 0x00000000
-NHSTUB(kbd_pwr_off                            ,0xffc43e84) //  2 60%
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 // ERROR: rand is not found.                               //--- ---    *** != 0x00000000
 // ERROR: srand is not found.                              //--- ---    *** != 0x00000000
 
@@ -127,12 +126,12 @@ NHSTUB(Fseek_Fut                              ,0xffc25f94) //120
 NHSTUB(Fwrite_Fut                             ,0xffc25ef4) //120
 NHSTUB(GetCCDTemperature                      ,0xffc45d78) //102
 NHSTUB(GetCurrentAvValue                      ,0xffd13ed4) //120
-NHSTUB(GetDrive_ClusterSize                   ,0xffc52da4) //  6
-NHSTUB(GetDrive_FreeClusters                  ,0xffc52dfc) //  6
-NHSTUB(GetDrive_TotalClusters                 ,0xffc52dd4) //  6
+NHSTUB(GetDrive_ClusterSize                   ,0xffc52da4) //122
+NHSTUB(GetDrive_FreeClusters                  ,0xffc52dfc) //119
+NHSTUB(GetDrive_TotalClusters                 ,0xffc52dd4) //119
 NHSTUB(GetFocusLensSubjectDistance            ,0xffd1313c) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffd13598) //  3
-NHSTUB(GetImageFolder                         ,0xffcfa088) //  6
+NHSTUB(GetImageFolder                         ,0xffcfa088) //122
 NHSTUB(GetKbdState                            ,0xffc43e6c) //109
 NHSTUB(GetMemInfo                             ,0xffc0a8a0) //115
 NHSTUB(GetOpticalTemperature                  ,0xffc45e64) //120
@@ -183,6 +182,8 @@ NHSTUB(SleepTask                              ,0xffc29760) //120
 NHSTUB(TakeSemaphore                          ,0xffc0f120) //120
 NHSTUB(TurnOffBackLight                       ,0xffc7b568) //104
 NHSTUB(TurnOnBackLight                        ,0xffc7b550) //104
+NHSTUB(TurnOnDisplay                          ,0xffc3ff34) //120
+NHSTUB(TurnOffDisplay                         ,0xffc3ff44) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xffd2db9c) //120
 NHSTUB(UnlockAF                               ,0xffc27a5c) //102
 NHSTUB(UnlockMainPower                        ,0xffc701e4) //120

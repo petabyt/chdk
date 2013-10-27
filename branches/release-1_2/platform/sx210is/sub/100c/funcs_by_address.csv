@@ -204,7 +204,9 @@
 0xff85bf58,DispCon_ShowColorChart_FW
 0xff85bf7c,DispCon_ShowWhiteLine_FW
 0xff85c1e4,DispCon_TurnOnDisplay_FW
+0xff85c1e4,TurnOnDisplay
 0xff85c1f4,DispCon_TurnOffDisplay_FW
+0xff85c1f4,TurnOffDisplay
 0xff85c204,DispCon_TurnOnBackLight_FW
 0xff85c214,DispCon_TurnOffBackLight_FW
 0xff85c224,DispCon_SetMaxBackLightBrightness_FW
@@ -932,6 +934,7 @@
 0xffa7e238,StartSoundPlay_FW
 0xffa7e280,InitializeSoundRec_FW
 0xffa7e2b4,TerminateSoundRec_FW
+0xffa8622c,getImageDirName
 0xffa9b898,task_FileScheduleTask
 0xffa9c7f8,task_FileWrite
 0xffa9c7f8,task_FileWriteTask

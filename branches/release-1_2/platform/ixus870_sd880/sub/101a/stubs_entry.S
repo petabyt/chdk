@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   Firmware Ver GM1.01A
+//   Firmware Ver GM1.01A   // Found @ 0xff870898, "GM1.01A" @ 0xff8708a5
+//   Firmware build timestamp: Oct 15 2008 18:36:07
 //   Canon DIGITAL IXUS 870 IS
 
 // Values for makefile.inc
@@ -18,7 +19,6 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(GetDrive_TotalClusters               ,0xff8554e0) //  1        *** != 0xff85557c
 //NHSTUB(kbd_pwr_off                          ,0xff846260) //  2 64%    *** != 0x00000000
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffa4b9b4 -> ffb2d2fc
@@ -173,6 +173,8 @@ NHSTUB(SleepTask                              ,0xff8277ec) //120
 NHSTUB(TakeSemaphore                          ,0xff8274b4) //120
 NHSTUB(TurnOffBackLight                       ,0xff886078) //104
 NHSTUB(TurnOnBackLight                        ,0xff886060) //104
+NHSTUB(TurnOnDisplay                          ,0xff841ea8) //120
+NHSTUB(TurnOffDisplay                         ,0xff841eb8) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff94b858) //120
 NHSTUB(UnlockAF                               ,0xff825610) //102
 NHSTUB(UnlockMainPower                        ,0xff878e1c) //120
@@ -208,11 +210,11 @@ NHSTUB(open                                   ,0xff8197b4) //109
 NHSTUB(OpenFastDir                            ,0xffa21c0c) //  1
 NHSTUB(closedir                               ,0xffa21d70) //  1
 NHSTUB(qsort                                  ,0xffa84fc8) //  1
-NHSTUB(rand                                   ,0xff81ccbc) //  1
+NHSTUB(rand                                   ,0xff81ccbc) //121
 NHSTUB(realloc                                ,0xff813b5c) //115
 NHSTUB(reboot_fw_update                       ,0xffa296a0) //106
 NHSTUB(set_control_event                      ,0xff878894) //111
-NHSTUB(srand                                  ,0xff81ccb0) //  1
+NHSTUB(srand                                  ,0xff81ccb0) //122
 NHSTUB(stat                                   ,0xff823d00) //  1
 NHSTUB(strcat                                 ,0xff892708) //  1
 NHSTUB(strchr                                 ,0xff892790) //  1

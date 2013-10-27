@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   Firmware Ver GM1.00B
+//   Firmware Ver GM1.00B   // Found @ 0xff86e6dc, "GM1.00B" @ 0xff86e6e9
+//   Firmware build timestamp: Dec 16 2008 09:12:52
 //   Canon DIGITAL IXUS 110 IS
 
 // Values for makefile.inc
@@ -17,7 +18,6 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(kbd_pwr_off                          ,0xff844148) //  2 64%    *** != 0x00000000
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffa6aaf0 -> ffb5a2d4
@@ -176,6 +176,8 @@ NHSTUB(SleepTask                              ,0xff827160) //120
 NHSTUB(TakeSemaphore                          ,0xff826e28) //120
 NHSTUB(TurnOffBackLight                       ,0xff88492c) //104
 NHSTUB(TurnOnBackLight                        ,0xff884914) //104
+NHSTUB(TurnOnDisplay                          ,0xff83dd68) //120
+NHSTUB(TurnOffDisplay                         ,0xff83dd78) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff938f8c) //120
 NHSTUB(UnlockAF                               ,0xff8253b8) //102
 NHSTUB(UnlockMainPower                        ,0xff876ed4) //120
@@ -211,11 +213,11 @@ NHSTUB(open                                   ,0xff81984c) //109
 NHSTUB(OpenFastDir                            ,0xffa3d1b8) //  1
 NHSTUB(closedir                               ,0xffa3d31c) //  1
 NHSTUB(qsort                                  ,0xffa9ff78) //  1
-NHSTUB(rand                                   ,0xff81cd64) //  1
+NHSTUB(rand                                   ,0xff81cd64) //121
 NHSTUB(realloc                                ,0xff813b1c) //115
 NHSTUB(reboot_fw_update                       ,0xffa448fc) //106
 NHSTUB(set_control_event                      ,0xff876934) //111
-NHSTUB(srand                                  ,0xff81cd58) //  1
+NHSTUB(srand                                  ,0xff81cd58) //122
 NHSTUB(stat                                   ,0xff823ed4) //  1
 NHSTUB(strcat                                 ,0xff88b31c) //  1
 NHSTUB(strchr                                 ,0xff88b3a4) //  1

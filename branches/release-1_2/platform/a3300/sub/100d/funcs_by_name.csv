@@ -422,6 +422,7 @@
 0xff8772d0,GetGyroHPFINPitch_FW
 0xff87732c,GetGyroHPFINYaw_FW
 0xffb1f330,GetHour_FW
+0xffa7ba1c,getImageDirName
 0xff941570,GetImageFolder
 0xff961d00,GetIrisAv_FW
 0xffab4d54,GetISCenterShiftA_FW
@@ -1494,10 +1495,12 @@
 0xff839ca0,TryReceiveMessageQueue
 0xff839fa0,TryTakeSemaphore
 0xff89e35c,TurnOffBackLight
+0xff85bcc8,TurnOffDisplay
 0xff83bc74,TurnOffE1_FW
 0xffab3f1c,TurnOffNdFilter_FW
 0xff860a3c,TurnOffVideoOutMode_FW
 0xff89e344,TurnOnBackLight
+0xff85bcb8,TurnOnDisplay
 0xffab3ef8,TurnOnNdFilter_FW
 0xff8609d8,TurnOnVideoOutMode_FW
 0xff96d004,UI.Create_FW

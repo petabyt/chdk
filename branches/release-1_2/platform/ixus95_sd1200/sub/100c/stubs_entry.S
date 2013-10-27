@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   Firmware Ver GM1.00C
+//   Firmware Ver GM1.00C   // Found @ 0xffc593dc, "GM1.00C" @ 0xffc593e9
+//   Firmware build timestamp: Jan  9 2009 14:57:24
 //   Canon DIGITAL IXUS 95 IS
 
 // Values for makefile.inc
@@ -22,7 +23,6 @@
 //NHSTUB(WriteSDCard                          ,0xffce4300) //108        *** != 0xffce4118
 //NHSTUB(kbd_read_keys                        ,0xffc11d70) //109        *** != 0xffc11d80
 //NHSTUB(kbd_pwr_off                          ,0xffc30e1c) //  2 64%    *** != 0x00000000
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffdf7360 -> ffeb35d8
@@ -190,6 +190,8 @@ NHSTUB(SleepTask                              ,0xffc16f0c) //120
 NHSTUB(TakeSemaphore                          ,0xffc16bd4) //120
 NHSTUB(TurnOffBackLight                       ,0xffc68aa8) //104
 NHSTUB(TurnOnBackLight                        ,0xffc68a90) //104
+NHSTUB(TurnOnDisplay                          ,0xffc2ca70) //120
+NHSTUB(TurnOffDisplay                         ,0xffc2ca80) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xffd0d51c) //120
 NHSTUB(UnlockMainPower                        ,0xffc5db24) //120
 NHSTUB(UnsetZoomForMovie                      ,0xffd21b70) //104
@@ -222,11 +224,11 @@ NHSTUB(open                                   ,0xffc0984c) //109
 NHSTUB(OpenFastDir                            ,0xffdd7984) //  1
 NHSTUB(closedir                               ,0xffdd7ae8) //  1
 NHSTUB(qsort                                  ,0xffe1cc78) //  1
-NHSTUB(rand                                   ,0xffc0cd64) //  1
+NHSTUB(rand                                   ,0xffc0cd64) //121
 NHSTUB(realloc                                ,0xffc03b1c) //115
 NHSTUB(reboot_fw_update                       ,0xffddb4fc) //106
 NHSTUB(set_control_event                      ,0xffc5d680) //111
-NHSTUB(srand                                  ,0xffc0cd58) //  1
+NHSTUB(srand                                  ,0xffc0cd58) //122
 NHSTUB(stat                                   ,0xffc13e48) //  1
 NHSTUB(strcat                                 ,0xffc6ca4c) //  1
 NHSTUB(strchr                                 ,0xffc6cad4) //  1

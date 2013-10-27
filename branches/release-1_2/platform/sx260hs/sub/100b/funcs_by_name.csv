@@ -472,6 +472,7 @@
 0xff069024,GetGyroHPFINPitch_FW
 0xff069080,GetGyroHPFINYaw_FW
 0xff3e470c,GetHour_FW
+0xff1891b0,getImageDirName
 0xff187254,GetImageFolder
 0xff07f218,GetInternalFirmwareVersion_FW
 0xff1ad380,GetIrisAv_FW
@@ -1687,9 +1688,11 @@
 0x0068bcac,TryReceiveMessageQueue
 0x0068a93c,TryTakeSemaphore
 0xff09953c,TurnOffBackLight
+0xff047c6c,TurnOffDisplay
 0xff026cb4,TurnOffE1_FW
 0xff04fcdc,TurnOffVideoOutMode_FW
 0xff099524,TurnOnBackLight
+0xff047c5c,TurnOnDisplay
 0xff04fca4,TurnOnVideoOutMode_FW
 0xff1bbb64,UI.Create_FW
 0xff1bb014,UI.CreatePublic_FW

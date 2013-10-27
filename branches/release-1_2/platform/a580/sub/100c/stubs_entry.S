@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.00C
+//   Firmware Ver GM1.00C   // Found @ 0xffc572b0, "GM1.00C" @ 0xffc572bd
+//   Firmware build timestamp: Jan  8 2008 17:01:40
 //   Canon PowerShot A580
 
 // Values for makefile.inc
@@ -171,6 +172,8 @@ NHSTUB(SleepTask                              ,0xffc17cac) //120
 NHSTUB(TakeSemaphore                          ,0xffc0b774) //120
 NHSTUB(TurnOffBackLight                       ,0xffc66d58) //104
 NHSTUB(TurnOnBackLight                        ,0xffc66d40) //104
+NHSTUB(TurnOnDisplay                          ,0xffc2d674) //120
+NHSTUB(TurnOffDisplay                         ,0xffc2d684) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xffd220a8) //120
 NHSTUB(UnlockAF                               ,0xffc158cc) //102
 NHSTUB(UnlockMainPower                        ,0xffc5c75c) //120
@@ -206,11 +209,11 @@ NHSTUB(open                                   ,0xffc09ec4) //109
 NHSTUB(OpenFastDir                            ,0xffdce7d0) //  1
 NHSTUB(closedir                               ,0xffdce934) //  1
 NHSTUB(qsort                                  ,0xffd7133c) //  1
-NHSTUB(rand                                   ,0xffc0da14) //  1
+NHSTUB(rand                                   ,0xffc0da14) //121
 NHSTUB(realloc                                ,0xffc03b78) //115
 NHSTUB(reboot_fw_update                       ,0xffdd3138) //106
 NHSTUB(set_control_event                      ,0xffc5c2f8) //  1
-NHSTUB(srand                                  ,0xffc0da08) //  1
+NHSTUB(srand                                  ,0xffc0da08) //122
 NHSTUB(stat                                   ,0xffc13d88) //  1
 NHSTUB(strcat                                 ,0xffc6f4f4) //  1
 NHSTUB(strchr                                 ,0xffc6f57c) //  1

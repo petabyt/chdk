@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R50 (DRYOS version 2.3, release #0050)
-//   Firmware Ver GM1.01A
+//   Firmware Ver GM1.01A   // Found @ 0xff881328, "GM1.01A" @ 0xff881335
+//   Firmware build timestamp: Feb 10 2012 14:53:03
 //   Canon PowerShot A3400 IS
 
 // Values for makefile.inc
@@ -20,8 +21,6 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NHSTUB(DeleteFile_Fut                         ,0xff830e64) //  1 90%
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff831974
-//NHSTUB(kbd_pwr_off                          ,0xff8569b0) //  2 60%    *** != 0x00000000
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 // ERROR: rand is not found.                               //--- ---    *** != 0x00000000
 // ERROR: srand is not found.                              //--- ---    *** != 0x00000000
 
@@ -138,12 +137,12 @@ NHSTUB(Fwrite_Fut                             ,0xff831070) //120
 NHSTUB(GetBatteryTemperature                  ,0xff858994) //102
 NHSTUB(GetCCDTemperature                      ,0xff858920) //102
 NHSTUB(GetCurrentAvValue                      ,0xff959c84) //120
-NHSTUB(GetDrive_ClusterSize                   ,0xff867094) //  6
-NHSTUB(GetDrive_FreeClusters                  ,0xff8670ec) //  6
-NHSTUB(GetDrive_TotalClusters                 ,0xff8670c4) //  6
+NHSTUB(GetDrive_ClusterSize                   ,0xff867094) //122
+NHSTUB(GetDrive_FreeClusters                  ,0xff8670ec) //119
+NHSTUB(GetDrive_TotalClusters                 ,0xff8670c4) //119
 NHSTUB(GetFocusLensSubjectDistance            ,0xff958e84) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff9592d4) //  3
-NHSTUB(GetImageFolder                         ,0xff93c3e0) //  6
+NHSTUB(GetImageFolder                         ,0xff93c3e0) //122
 NHSTUB(GetKbdState                            ,0xff8569a0) //109
 NHSTUB(GetMemInfo                             ,0xff81509c) //115
 NHSTUB(GetOpticalTemperature                  ,0xff858a08) //120
@@ -193,6 +192,8 @@ NHSTUB(SleepTask                              ,0x003f79b0) //120
 NHSTUB(TakeSemaphore                          ,0x003f7634) //120
 NHSTUB(TurnOffBackLight                       ,0xff893d3c) //104
 NHSTUB(TurnOnBackLight                        ,0xff893d24) //104
+NHSTUB(TurnOnDisplay                          ,0xff853144) //120
+NHSTUB(TurnOffDisplay                         ,0xff853154) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff9800a0) //120
 NHSTUB(UnlockAF                               ,0xff832dac) //102
 NHSTUB(UnlockMainPower                        ,0xff887000) //120

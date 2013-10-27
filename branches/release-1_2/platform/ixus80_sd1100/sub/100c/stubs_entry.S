@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.00C
+//   Firmware Ver GM1.00C   // Found @ 0xff86be94, "GM1.00C" @ 0xff86bea1
+//   Firmware build timestamp: Jan  8 2008 16:56:15
 //   Possible corrupt firmware dump - file size too small for start address 0xff810000
 //     file size = 7.92MB, should be 7.94MB
 //   Canon DIGITAL IXUS 82 IS
@@ -172,6 +173,8 @@ NHSTUB(SleepTask                              ,0xff8284b4) //120
 NHSTUB(TakeSemaphore                          ,0xff81b774) //120
 NHSTUB(TurnOffBackLight                       ,0xff87fd7c) //104
 NHSTUB(TurnOnBackLight                        ,0xff87fd64) //104
+NHSTUB(TurnOnDisplay                          ,0xff83e9cc) //120
+NHSTUB(TurnOffDisplay                         ,0xff83e9dc) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff94daa4) //120
 NHSTUB(UnlockAF                               ,0xff825c90) //102
 NHSTUB(UnlockMainPower                        ,0xff8737e8) //120
@@ -209,11 +212,11 @@ NHSTUB(open                                   ,0xff819ec4) //109
 NHSTUB(OpenFastDir                            ,0xffa0c0a8) //  1
 NHSTUB(closedir                               ,0xffa0c20c) //  1
 NHSTUB(qsort                                  ,0xff9ab4b4) //  1
-NHSTUB(rand                                   ,0xff81da14) //  1
+NHSTUB(rand                                   ,0xff81da14) //121
 NHSTUB(realloc                                ,0xff813b78) //115
 NHSTUB(reboot_fw_update                       ,0xffa13b3c) //106
 NHSTUB(set_control_event                      ,0xff873384) //  1
-NHSTUB(srand                                  ,0xff81da08) //  1
+NHSTUB(srand                                  ,0xff81da08) //122
 NHSTUB(stat                                   ,0xff824060) //  1
 NHSTUB(strcat                                 ,0xff892020) //  1
 NHSTUB(strchr                                 ,0xff8920a8) //  1

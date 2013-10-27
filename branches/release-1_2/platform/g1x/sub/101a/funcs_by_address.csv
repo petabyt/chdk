@@ -214,7 +214,9 @@
 0xff050294,DispCon_ShowWhiteLine_FW
 0xff050450,DispCon_ShowNStepsChart_FW
 0xff050600,DispCon_TurnOnDisplay_FW
+0xff050600,TurnOnDisplay
 0xff050610,DispCon_TurnOffDisplay_FW
+0xff050610,TurnOffDisplay
 0xff050620,DispCon_TurnOnBackLight_FW
 0xff050630,DispCon_TurnOffBackLight_FW
 0xff050640,DispCon_SetMaxBackLightBrightness_FW
@@ -751,6 +753,7 @@
 0xff194298,EnableDebugLogMode_FW
 0xff1942ac,DisableDebugLogMode_FW
 0xff19a46c,GetImageFolder
+0xff19c420,getImageDirName
 0xff19cee4,task_MetaCtg
 0xff1a39cc,task_DPOFTask
 0xff1a5c2c,File.ClearExifInfo_FW

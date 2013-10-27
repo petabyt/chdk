@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R43 (DRYOS version 2.3, release #0043)
-//   Firmware Ver GM1.00B
+//   Firmware Ver GM1.00B   // Found @ 0xffc6b670, "GM1.00B" @ 0xffc6b67d
+//   Firmware build timestamp: Dec  7 2009 09:08:33
 //   Canon PowerShot A3000 IS
 
 // Values for makefile.inc
@@ -129,12 +130,12 @@ NHSTUB(Fwrite_Fut                             ,0xffc25eac) //120
 NHSTUB(GetBatteryTemperature                  ,0xffc46680) //102
 NHSTUB(GetCCDTemperature                      ,0xffc4660c) //102
 NHSTUB(GetCurrentAvValue                      ,0xffd0c980) //120
-NHSTUB(GetDrive_ClusterSize                   ,0xffc52440) //  4
+NHSTUB(GetDrive_ClusterSize                   ,0xffc52440) //122
 //NHSTUB(GetDrive_FreeClusters                ,0xffc524a0) //  4            == 0xffc524a0
 NHSTUB(GetDrive_TotalClusters                 ,0xffc52474) //  3
 NHSTUB(GetFocusLensSubjectDistance            ,0xffd0bc78) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffd0c0d0) //  3
-NHSTUB(GetImageFolder                         ,0xffcf55a8) //106
+NHSTUB(GetImageFolder                         ,0xffcf55a8) //122
 NHSTUB(GetKbdState                            ,0xffc4452c) //109
 NHSTUB(GetMemInfo                             ,0xffc0a760) //115
 NHSTUB(GetOpticalTemperature                  ,0xffc466f4) //120
@@ -180,6 +181,8 @@ NHSTUB(SleepTask                              ,0xffc29530) //120
 NHSTUB(TakeSemaphore                          ,0xffc0ef9c) //120
 NHSTUB(TurnOffBackLight                       ,0xffc7b3f0) //104
 NHSTUB(TurnOnBackLight                        ,0xffc7b3d8) //104
+NHSTUB(TurnOnDisplay                          ,0xffc3ff5c) //120
+NHSTUB(TurnOffDisplay                         ,0xffc3ff88) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xffd272e8) //120
 NHSTUB(UnlockMainPower                        ,0xffc6fe74) //120
 NHSTUB(UnsetZoomForMovie                      ,0xffd3cba4) //104
@@ -214,11 +217,11 @@ NHSTUB(open                                   ,0xffc0afd8) //109
 NHSTUB(OpenFastDir                            ,0xffdf6210) //  4
 NHSTUB(closedir                               ,0xffdf61c0) //121
 NHSTUB(qsort                                  ,0xffe4719c) //  4
-NHSTUB(rand                                   ,0xffc11388) //  1
+NHSTUB(rand                                   ,0xffc11388) //121
 NHSTUB(realloc                                ,0xffd870f0) //115
 NHSTUB(reboot_fw_update                       ,0xffdf7bd8) //106
 NHSTUB(set_control_event                      ,0xffc6f9b8) //111
-NHSTUB(srand                                  ,0xffc1137c) //  1
+NHSTUB(srand                                  ,0xffc1137c) //122
 NHSTUB(stat                                   ,0xffc2641c) //109
 NHSTUB(strcat                                 ,0xffc7fe68) //  1
 NHSTUB(strchr                                 ,0xffc03fe8) //  1

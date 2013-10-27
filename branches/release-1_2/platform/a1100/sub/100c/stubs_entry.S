@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   Firmware Ver GM1.00C
+//   Firmware Ver GM1.00C   // Found @ 0xffc584f0, "GM1.00C" @ 0xffc584fd
+//   Firmware build timestamp: Apr 24 2009 19:12:45
 //   Canon PowerShot A1100 IS
 
 // Values for makefile.inc
@@ -176,6 +177,8 @@ NHSTUB(SleepTask                              ,0xffc16ac4) //120
 NHSTUB(TakeSemaphore                          ,0xffc1678c) //120
 NHSTUB(TurnOffBackLight                       ,0xffc67d48) //104
 NHSTUB(TurnOnBackLight                        ,0xffc67d30) //104
+NHSTUB(TurnOnDisplay                          ,0xffc2c65c) //120
+NHSTUB(TurnOffDisplay                         ,0xffc2c66c) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xffd0d490) //120
 NHSTUB(UnlockAF                               ,0xffc14f78) //102
 NHSTUB(UnlockMainPower                        ,0xffc5cc3c) //120
@@ -211,11 +214,11 @@ NHSTUB(open                                   ,0xffc0984c) //109
 NHSTUB(OpenFastDir                            ,0xffddf7b0) //  1
 NHSTUB(closedir                               ,0xffddf914) //  1
 NHSTUB(qsort                                  ,0xffe265e4) //  1
-NHSTUB(rand                                   ,0xffc0cd68) //  1
+NHSTUB(rand                                   ,0xffc0cd68) //121
 NHSTUB(realloc                                ,0xffc03b1c) //115
 NHSTUB(reboot_fw_update                       ,0xffde3328) //106
 NHSTUB(set_control_event                      ,0xffc5c798) //111
-NHSTUB(srand                                  ,0xffc0cd5c) //  1
+NHSTUB(srand                                  ,0xffc0cd5c) //122
 NHSTUB(stat                                   ,0xffc13aec) //  1
 NHSTUB(strcat                                 ,0xffc6b7f0) //  1
 NHSTUB(strchr                                 ,0xffc6b878) //  1

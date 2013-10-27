@@ -213,6 +213,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "_uartr_req", UNUSED },
     { "StartRecModeMenu", UNUSED },
     { "LogCameraEvent", UNUSED|DONT_EXPORT },
+    { "getImageDirName", UNUSED|DONT_EXPORT },
 
     { "AllocateMemory", UNUSED },
     { "AllocateUncacheableMemory" },
@@ -303,6 +304,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "TakeSemaphore" },
     { "TurnOffBackLight" },
     { "TurnOnBackLight" },
+    { "TurnOnDisplay" },
+    { "TurnOffDisplay" },
     { "UIFS_WriteFirmInfoToFile" },
     { "UnlockAF" },
     { "UnlockMainPower" },
@@ -330,8 +333,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "kbd_read_keys" },
     { "kbd_read_keys_r2" },
 
-    { "kbd_pwr_off" },
-    { "kbd_pwr_on" },
+    { "kbd_pwr_off", OPTIONAL },
+    { "kbd_pwr_on", OPTIONAL },
     { "lseek" },
     { "malloc" },
     { "memcmp" },
@@ -389,7 +392,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "CancelTimer", OPTIONAL|UNUSED },
     { "CancelHPTimer", OPTIONAL|UNUSED },
     { "SetHPTimerAfterTimeout", OPTIONAL|UNUSED },
-    { "SetHPTimerAfterNow", OPTIONAL|UNUSED }, 
+    { "SetHPTimerAfterNow", OPTIONAL|UNUSED },
     { "CreateTaskStrictly", OPTIONAL|UNUSED },
     { "CreateMessageQueue", OPTIONAL|UNUSED },
     { "CreateRecursiveLock", OPTIONAL|UNUSED },
@@ -398,7 +401,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "CreateMessageQueueStrictly", OPTIONAL|UNUSED },
     { "CreateEventFlagStrictly", OPTIONAL|UNUSED },
     { "CreateBinarySemaphoreStrictly", OPTIONAL|UNUSED },
-    { "CreateCountingSemaphoreStrictly", OPTIONAL|UNUSED },    
+    { "CreateCountingSemaphoreStrictly", OPTIONAL|UNUSED },
     { "CreateRecursiveLockStrictly", OPTIONAL|UNUSED },
     { "TakeSemaphoreStrictly", OPTIONAL|UNUSED }, // r23+
     { "ReceiveMessageQueueStrictly", OPTIONAL|UNUSED }, // r23+
@@ -543,6 +546,8 @@ sig_stuff min_ver[] = {
 
 sig_stuff max_ver[] = {
     { "UpdateMBROnFlash", 45 },
+    { "kbd_pwr_on", 43 },
+    { "kbd_pwr_off", 43 },
 
     { 0, 0 }
 };
@@ -707,6 +712,32 @@ int find_pow(firmware *fw, string_sig *sig, int j)
     return 0;
 }
 
+// Special case for rand
+int find_rand(firmware *fw, string_sig *sig, int j)
+{
+    if (fwval(fw,j) == 0x41C64E6D)
+    {
+        int j1;
+
+        for (j1 = j-1; j1>j-30; j1--)
+        {
+            if (isLDR_PC_cond(fw,j1) &&         // LDR Rx, =0x41C64E6D
+                (LDR2val(fw,j1) == 0x41C64E6D)) // LDMIA R0,{R0,R1}
+            {
+                int k = find_inst_rev(fw, isBX_LR,j1-1,15);
+                if (k >= 0)
+                {
+                    uint32_t fadr = idx2adr(fw, k+1);
+                    fwAddMatch(fw,fadr,32,0,121);
+                    return 1;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
 // Special case for 'closedir'
 int find_closedir(firmware *fw)
 {
@@ -776,6 +807,162 @@ int find_PT_PlaySound(firmware *fw)
                 }
             }
         }
+    }
+
+    return 0;
+}
+
+// Special case for 'getImageDirName'
+int find_getImageDirName(firmware *fw)
+{
+    int k = find_str_ref(fw,"%3d_%02d%02d");
+    if (k >= 0)
+    {
+        k = find_inst_rev(fw, isLDMFD_PC, k-1, 16);
+        if (k >= 0)
+        {
+            uint32_t fadr = idx2adr(fw,k+1);
+            fwAddMatch(fw,fadr,32,0,122);
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+// Special case for 'GetImageFolder'
+uint32_t strGIF = 0;
+int match_GetImageFolder(firmware *fw, int k, uint32_t a_getImageDirName, uint32_t a_TakeSemaphore)
+{
+    int k1, fnd;
+
+    if (isBL(fw,k))
+    {
+        uint32_t fadr = followBranch2(fw,idx2adr(fw,k),0x01000001);
+        if (fadr == a_getImageDirName)
+        {
+            int s = find_inst_rev(fw, isSTMFD_LR, k-1, 80);
+            int e = find_inst(fw, isLDMFD_PC, k+1, 80);
+            if ((s >= 0) && (e >= 0))
+            {
+                fnd = 0;
+                for (k1=s+1; k1<k-1; k1++)
+                {
+                    if (isBL(fw,k1))
+                    {
+                        fadr = followBranch2(fw,idx2adr(fw,k1),0x01000001);
+                        if (fadr == a_TakeSemaphore)
+                        {
+                            fnd++;
+                            break;
+                        }
+                    }
+                }
+                if (fnd != 0)
+                {
+                    for (k1=k+1; k1<e-1; k1++)
+                    {
+                        if ((isLDR_PC(fw,k1) || isADR_PC(fw,k1)) && (idx2adr(fw,k1) == strGIF))
+                        {
+                            fnd--;
+                            break;
+                        }
+                    }
+                }
+                if (fnd != 0)
+                {
+                    fwAddMatch(fw,idx2adr(fw,s),32,0,122);
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+int find_GetImageFolder(firmware *fw)
+{
+    int j = find_str_ref(fw,"GetCameraObjectTmpPath ERROR[ID:%lx] [TRY:%lx]\n");
+    if (j < 0)
+        j = find_str_ref(fw,"_GetCameraObjectTmpPath ERROR[ID:%lx] [TRY:%lx]\n");
+    if (j >= 0)
+    {
+        strGIF = idx2adr(fw,j);
+        int j = get_saved_sig(fw,"TakeSemaphore");
+        int k = get_saved_sig(fw,"getImageDirName");
+        if ((k >= 0) && (j >= 0))
+        {
+            return search_fw(fw, match_GetImageFolder, func_names[k].val, func_names[j].val, 1);
+        }
+    }
+
+    return 0;
+}
+
+// Special case for 'GetDrive_ClusterSize'
+int match_GetDrive_ClusterSize(firmware *fw, int k, uint32_t v1, uint32_t v2)
+{
+    if (isBL_cond(fw,k))
+    {
+        uint32_t fadr = followBranch2(fw,idx2adr(fw,k),0xF1000001);
+        if (fadr == v1)
+        {
+            int fnd = 0;
+            if (isLDR_cond(fw,k-1) && idx_valid(fw,adr2idx(fw,LDR2val(fw,k-1))) && (strcmp(adr2ptr(fw,LDR2val(fw,k-1)),"Mounter.c") == 0))
+            {
+                fnd = 1;
+            }
+            else if (isLDR_cond(fw,k-2) && idx_valid(fw,adr2idx(fw,LDR2val(fw,k-2))) && (strcmp(adr2ptr(fw,LDR2val(fw,k-2)),"Mounter.c") == 0))
+            {
+                fnd = 1;
+            }
+            else if (isADR_PC_cond(fw,k-1) && (strcmp(adr2ptr(fw,ADR2adr(fw,k-1)),"Mounter.c") == 0))
+            {
+                fnd = 1;
+            }
+            else if (isADR_PC_cond(fw,k-2) && (strcmp(adr2ptr(fw,ADR2adr(fw,k-2)),"Mounter.c") == 0))
+            {
+                fnd = 1;
+            }
+            if ((fnd == 1) &&
+                isLDR_PC(fw,k+1) &&
+                ((fwval(fw,k+2) & 0xFFF00FF0) == 0xE0800200) && ((fwval(fw,k+3) & 0xFFF00FF0) == 0xE0800100) &&
+                (fwval(fw,k+4) == 0xE5901004) && (fwval(fw,k+5) == 0xE5900008) && (fwval(fw,k+6) == 0xE0000091) &&
+                isLDMFD_PC(fw,k+7))
+            {
+                k = find_inst_rev(fw,isSTMFD_LR,k-1,8);
+                if (k >= 0)
+                {
+                    if (fwval(fw,k-1) == 0xE3500001)    // CMP R0, #1
+                        k--;
+                    fwAddMatch(fw,idx2adr(fw,k),32,0,122);
+                    return 1;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+int find_GetDrive_ClusterSize(firmware *fw)
+{
+    int k = get_saved_sig(fw,"DebugAssert");
+    if (k >= 0)
+    {
+        return search_fw(fw, match_GetDrive_ClusterSize, func_names[k].val, 0, 16);
+    }
+
+    return 0;
+}
+
+// Special case for srand
+int find_srand(firmware *fw)
+{
+    int k = get_saved_sig(fw,"rand");
+    if (k >= 0)
+    {
+        k = adr2idx(fw, func_names[k].val) - 3;
+        if (isLDR_PC(fw,k) && isSTR(fw,k+1) && isBX_LR(fw,k+2))
+            fwAddMatch(fw,idx2adr(fw,k),32,0,122);
     }
 
     return 0;
@@ -863,6 +1050,8 @@ string_sig string_sigs[] =
     {20, "task_FileWrite", "task_FileWriteTask", 1 },
     {20, "task_RotaryEncoder", "task_JogDial", 1 },
     {20, "task_RotaryEncoder", "task_RotarySw", 1 },
+    {20, "TurnOnDisplay", "DispCon_TurnOnDisplay_FW", 0 },
+    {20, "TurnOffDisplay", "DispCon_TurnOffDisplay_FW", 0 },
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
@@ -1027,7 +1216,6 @@ string_sig string_sigs[] =
     { 5, "MakeSDCardBootable", "MakeBootDisk", 0x01000003,                 1,    1,    1,    1,    1,    1,    8,    8,    8,    8,    8 },
 
     { 6, "Restart", "Bye", 0 },
-    { 6, "GetImageFolder", "GetCameraObjectTmpPath ERROR[ID:%lx] [TRY:%lx]\n", 0 },
     { 6, "reboot_fw_update", "FirmUpgrade.c", 0 },
 
     { 7, "CreateTaskStrictly", "PhySw", 0x01000001 },
@@ -1061,17 +1249,6 @@ string_sig string_sigs[] =
     { 9, "close", "Close", 0,                                              2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
     { 9, "open", "Open", 0,                                                3,    3,    3,    3,   16,   16,   35,   35,   35,   35,   35 },
     { 9, "open", "Open", 0,                                                3,    3,    3,   13,   16,   16,   35,   35,   35,   35,   35 },
-
-    //{ 10, "task_CaptSeq", "CaptSeqTask", 1 },
-    //{ 10, "task_ExpDrv", "ExpDrvTask", 1 },
-    //{ 10, "task_InitFileModules", "InitFileModules", 1 },
-    //{ 10, "task_MovieRecord", "MovieRecord", 1 },
-    //{ 10, "task_PhySw", "PhySw", 1 },
-    //{ 10, "task_RotaryEncoder", "RotaryEncoder", 1 },
-    //{ 10, "task_RotaryEncoder", "RotarySw", 1 },
-    //{ 10, "task_RotaryEncoder", "JogDial", 1 },
-    //{ 10, "task_TouchPanel", "TouchPanel", 1 },
-    //{ 10, "task_FileWrite", "FileWriteTask", 1 },
 
     //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52
     { 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                 5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    5 },
@@ -1108,7 +1285,7 @@ string_sig string_sigs[] =
     { 15, "ReadFastDir", "ReadFast_ERROR\n", 0x01000001 },
     { 15, "OpenFastDir", "OpenFastDir_ERROR\n", 0x01000001 },
     { 15, "realloc", "fatal error - scanner input buffer overflow", 0x01000001 },
-    { 15, "CreateBinarySemaphore", "SdPower.c", 0x01000001 }, 
+    { 15, "CreateBinarySemaphore", "SdPower.c", 0x01000001 },
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52
     { 15, "SetHPTimerAfterTimeout", "FrameRateGenerator.c", 0x01000001,          0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007 },
 
@@ -1158,13 +1335,21 @@ string_sig string_sigs[] =
     { 19, "SetSR", "UnregisterInterruptHandler", 0,                              0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007 },
     { 19, "EnableInterrupt", "UnregisterInterruptHandler", 0,                    0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f },
 
+    { 19, "GetDrive_TotalClusters", "GetDrive_ClusterSize", 0,                   0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x000d, 0x000c, 0x000c, 0x000c, 0x000c, 0x0001 },
+    { 19, "GetDrive_FreeClusters", "GetDrive_TotalClusters", 0,                  0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x000b, 0x000a, 0x000a, 0x000a, 0x000a, 0x0001 },
+
     { 21, "add_ptp_handler", (char*)find_add_ptp_handler, 0 },
     { 21, "apex2us", (char*)find_apex2us, 0 },
     { 21, "mkdir", (char*)find_mkdir, 0 },
     { 21, "_pow", (char*)find_pow, 0 },
+    { 21, "rand", (char*)find_rand, 0 },
 
     { 22, "closedir", (char*)find_closedir, 0 },
     { 22, "PT_PlaySound", (char*)find_PT_PlaySound, 0 },
+    { 22, "getImageDirName", (char*)find_getImageDirName, 0 },
+    { 22, "GetImageFolder", (char*)find_GetImageFolder, 0 },
+    { 22, "GetDrive_ClusterSize", (char*)find_GetDrive_ClusterSize, 0 },
+    { 22, "srand", (char*)find_srand, 0 },
 
     { 0, 0, 0, 0 }
 };
@@ -1644,55 +1829,6 @@ int find_strsig9(firmware *fw, string_sig *sig)
     return 0;
 }
 
-//// Sig pattern:
-////      Load Func Address   -   LDR R3, =func    - these four may occur in any order ?
-////      Load String Address -   ADR R0, "func"
-////      Load value          -   MOV R2, x
-////      Load value          -   MOV R1, y
-////      Branch              -   BL
-////              ...
-////      String              -   DCB "func"
-//int match_strsig10(firmware *fw, string_sig *sig, int j)
-//{
-//    uint32_t sadr = idx2adr(fw,j);        // string address
-//    int j1;
-//    for (j1 = j-5; j1 >= 0; j1--)
-//    {
-//        if ((isADR(fw,j1)   || isLDR(fw,j1))   &&   // LDR, ADR or MOV
-//            (isADR(fw,j1+1) || isLDR(fw,j1+1)) &&   // LDR, ADR or MOV
-//            (isADR(fw,j1+2) || isLDR(fw,j1+2)) &&   // LDR, ADR or MOV
-//            (isADR(fw,j1+3) || isLDR(fw,j1+3)) &&   // LDR, ADR or MOV
-//            isBorBL(fw,j1+4))                       // B or BL ?
-//        {
-//            uint32_t padr;
-//            padr = ADR2adr(fw,j1+0);
-//            if (padr != sadr) padr = ADR2adr(fw,j1+1);
-//            if (padr != sadr) padr = ADR2adr(fw,j1+2);
-//            if (padr != sadr) padr = ADR2adr(fw,j1+3);
-//            if (padr == sadr)
-//            {
-//                uint32_t fadr = 0;
-//                if      (isLDR_PC(fw,j1)   && (fwRd(fw,j1)   == 3)) fadr = LDR2val(fw,j1);      // R3 ?
-//                else if (isADR_PC(fw,j1)   && (fwRd(fw,j1)   == 3)) fadr = ADR2adr(fw,j1);      // R3 ?
-//                else if (isLDR_PC(fw,j1+1) && (fwRd(fw,j1+1) == 3)) fadr = LDR2val(fw,j1+1);    // R3 ?
-//                else if (isADR_PC(fw,j1+1) && (fwRd(fw,j1+1) == 3)) fadr = ADR2adr(fw,j1+1);    // R3 ?
-//                else if (isLDR_PC(fw,j1+2) && (fwRd(fw,j1+2) == 3)) fadr = LDR2val(fw,j1+2);    // R3 ?
-//                else if (isADR_PC(fw,j1+2) && (fwRd(fw,j1+2) == 3)) fadr = ADR2adr(fw,j1+2);    // R3 ?
-//                else if (isLDR_PC(fw,j1+3) && (fwRd(fw,j1+3) == 3)) fadr = LDR2val(fw,j1+3);    // R3 ?
-//                else if (isADR_PC(fw,j1+3) && (fwRd(fw,j1+3) == 3)) fadr = ADR2adr(fw,j1+3);    // R3 ?
-//                if (fadr != 0)
-//                {
-//                    fadr = followBranch2(fw, fadr, sig->offset);
-//                    fwAddMatch(fw,fadr,32,0,110);
-//                    return 1;
-//                }
-//            }
-//        }
-//    }
-//
-//    return 0;
-//}
-
 // Sig pattern:
 //      Func            -   func
 //            .... (offset)
@@ -1987,7 +2123,6 @@ int find_strsig(firmware *fw, string_sig *sig)
     case 7:     return fw_string_process(fw, sig, match_strsig7, 1);
     case 8:     return find_strsig8(fw, sig);
     case 9:     return find_strsig9(fw, sig);
-    //case 10:    return fw_string_process(fw, sig, match_strsig10, 1);
     case 11:    return fw_string_process(fw, sig, match_strsig11, 0);
     case 12:    return find_strsig12(fw, sig);
     case 13:    return fw_string_process_unaligned(fw, sig, match_strsig13);
@@ -4335,6 +4470,19 @@ void find_eventprocs(firmware *fw)
                 }
             }
         }
+        else
+        {
+            // S5IS
+            j = find_strptr_ref(fw,"ResetZoomLens");
+            if (j >= 0)
+            {
+                if (isBorBL(fw,j+1))
+                {
+                    fadr = followBranch(fw,idx2adr(fw,j+1),0x01000001);
+                    search_fw(fw, match_registerlists, fadr, 0, 2);
+                }
+            }
+        }
 
         j = get_saved_sig(fw,"TerminateAdjustmentSystem_FW");
         if (j >= 0)
@@ -4439,6 +4587,31 @@ void find_tasks(firmware *fw)
     }
 }
 
+void find_builddate(firmware *fw)
+{
+    int j = get_saved_sig(fw,"GetBuildDate_FW");
+    if (j >= 0)
+    {
+        int idx = adr2idx(fw, func_names[j].val);
+        uint32_t adr = ADR2adr(fw, idx);
+        idx = adr2idx(fw, adr);
+        fw->fw_build_date = (char*)&fw->buf[idx];
+    }
+    else
+        fw->fw_build_date = 0;
+
+    j = get_saved_sig(fw,"GetBuildTime_FW");
+    if (j >= 0)
+    {
+        int idx = adr2idx(fw, func_names[j].val);
+        uint32_t adr = ADR2adr(fw, idx);
+        idx = adr2idx(fw, adr);
+        fw->fw_build_time = (char*)&fw->buf[idx];
+    }
+    else
+        fw->fw_build_time = 0;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Write out firmware info
@@ -4464,8 +4637,23 @@ void output_firmware_vals(firmware *fw)
     }
     else
     {
-        bprintf("//   %s",fw->firmware_ver_str);
-        bprintf("\n");
+        uint32_t j = idx2adr(fw,fw->fwver_idx);
+        char *c = strrchr(fw->firmware_ver_str,' ') + 1; // points after the last space char
+        uint32_t k = j + c - fw->firmware_ver_str;
+        if ( (k>=j) && (k<j+32) )
+        {
+            bprintf("//   %s   // Found @ 0x%08x, \"%s\" @ 0x%08x\n",fw->firmware_ver_str,j,c,k);
+        }
+        else
+        {
+            // no space found in string (shouldn't happen)
+            bprintf("//   %s   // Found @ 0x%08x, \"%s\" @ 0x%08x\n",fw->firmware_ver_str,j,fw->firmware_ver_str,j);
+        }
+    }
+
+    if (fw->fw_build_date != 0)
+    {
+        bprintf("//   Firmware build timestamp: %s %s\n",fw->fw_build_date, (fw->fw_build_time==0)?"":fw->fw_build_time);
     }
 
     if (fw->fsize > (fw->size + 256))
@@ -4488,7 +4676,11 @@ void output_firmware_vals(firmware *fw)
 
     if (fw->pid != 0)
     {
-        bprintf("//   PLATFORMID = %d (0x%04x) // Found @ 0x%08x\n",fw->pid,fw->pid,idx2adr(fw,fw->pid_idx));
+        bprintf("//   PLATFORMID = %d (0x%04x) // Found @ 0x%08x\n",fw->pid,fw->pid,fw->pid_adr);
+    }
+    else
+    {
+        bprintf("//   PLATFORMID = ?           // Not found @ 0x%08x\n",fw->pid_adr);
     }
 
     if (fw->maxram != 0)
@@ -4596,7 +4788,9 @@ int main(int argc, char **argv)
     bprintf("// !!! THIS FILE IS GENERATED. DO NOT EDIT. !!!\n");
     bprintf("#include \"stubs_asm.h\"\n\n");
 
-    load_firmware(&fw,argv[1],argv[2],(argc==5)?argv[4]:0);
+    load_firmware(&fw,argv[1],argv[2],(argc==5)?argv[4]:0, OS_DRYOS);
+    find_eventprocs(&fw);
+    find_builddate(&fw);
     output_firmware_vals(&fw);
 
     out_hdr = 1;
@@ -4606,7 +4800,6 @@ int main(int argc, char **argv)
     bprintf("// Stubs below matched 100%%.\n");
     bprintf("//    Name                                     Address                Comp to stubs_entry_2.S\n");
 
-    find_eventprocs(&fw);
     find_tasks(&fw);
 
     for (k = 0; k < max_find_func; k++)
@@ -4614,14 +4807,15 @@ int main(int argc, char **argv)
         count = 0;
         curr_name = func_names[k].name;
 
-        find_matches(&fw, curr_name);
-
         if ((fw.dryos_ver >= find_min_ver(curr_name)) && (fw.dryos_ver <= find_max_ver(curr_name)))
+        {
+            find_matches(&fw, curr_name);
             print_results(&fw,curr_name,k);
 
-        if (count == 0)
-        {
-            ret = 1;
+            if (count == 0)
+            {
+                ret = 1;
+            }
         }
     }
 

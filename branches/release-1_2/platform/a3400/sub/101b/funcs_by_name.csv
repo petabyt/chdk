@@ -453,6 +453,7 @@
 0xff86ea6c,GetGyroHPFINPitch_FW
 0xff86eac8,GetGyroHPFINYaw_FW
 0xffafc2ac,GetHour_FW
+0xffa5e244,getImageDirName
 0xff93c46c,GetImageFolder
 0xff881100,GetInternalFirmwareVersion_FW
 0xff959d10,GetIrisAv_FW
@@ -1600,6 +1601,7 @@
 0x003f75e0,TryTakeSemaphore
 0xff893d3c,TurnOffBackLight
 0xff90f32c,TurnOffDispForTouchPanelAdj_FW
+0xff853154,TurnOffDisplay
 0xff835830,TurnOffE1_FW
 0xffa86008,TurnOffNdFilter_FW
 0xffa86064,TurnOffNdFilterWithTiming_FW
@@ -1608,6 +1610,7 @@
 0xff893d24,TurnOnBackLight
 0xff9102a4,TurnOnDispForTouchPanelAdj_FW
 0xff9102f0,TurnOnDispForTouchPanelAdjCheck_FW
+0xff853144,TurnOnDisplay
 0xffa85fe4,TurnOnNdFilter_FW
 0xffa8602c,TurnOnNdFilterWithTiming_FW
 0xff8593dc,TurnOnTouchPanel_FW

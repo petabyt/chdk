@@ -388,6 +388,7 @@
 0xffc590b0,GetGyroHPFINPitch_FW
 0xffc5910c,GetGyroHPFINYaw_FW
 0xffe637b8,GetHour_FW
+0xffde63f0,getImageDirName
 0xffcf55f8,GetImageFolder
 0xffd0ca30,GetIrisAv_FW
 0xffe05898,GetISDriveAaxis_FW
@@ -1379,9 +1380,11 @@
 0xffc28f3c,TryReceiveMessageQueue
 0xffc0ef48,TryTakeSemaphore
 0xffc7b440,TurnOffBackLight
+0xffc3ff88,TurnOffDisplay
 0xffc2ac48,TurnOffE1_FW
 0xffc44ca4,TurnOffVideoOutMode_FW
 0xffc7b428,TurnOnBackLight
+0xffc3ff5c,TurnOnDisplay
 0xffc44c40,TurnOnVideoOutMode_FW
 0xffd15cec,UI.Create_FW
 0xffd15cec,UI_RegistDebugEventProc_FW

@@ -24,20 +24,28 @@ typedef struct bufrange {
     struct bufrange* next;
 } BufRange;
 
+#define OS_DRYOS    0
+#define OS_VXWORKS  1
+
 // Firmware storage and information
 typedef struct {
     uint32_t        *buf;               // Firmware data
     BufRange        *br, *last;         // Valid ranges
+
+    int             os_type;            // 0 = DryOS, 1 = VxWorks
 
     uint32_t        base;               // Base address of the firmware in the camera
     uint32_t        memisostart;        // Start address of the Canon heap memory (where CHDK is loaded)
     int             size;               // Size of the firmware (as loaded from the dump)
     int             fsize;              // Size of the firmware (as determined from the start address)
     int             cam_idx;            // Index of the camera name in the firmware
-    int             pid_idx;            // Index of the camera ID in the firmware
+    uint32_t        pid_adr;            // Address of the camera ID in the firmware
 	int			    dryos_ver;          // DryOS version number
     char            *dryos_ver_str;     // DryOS version string
     char            *firmware_ver_str;  // Camera firmware version string
+    char            *fw_build_date;     // Firmware build date
+    char            *fw_build_time;     // Firmware build time
+    int             fwver_idx;          // Index of camera firmware version string
     int             pid;                // Camera ID
     int             maxram;             // How much memory does the camera have
 	char		    *cam;               // Pointer to camera name string
@@ -63,7 +71,7 @@ typedef struct {
 } firmware;
 
 // Load a firmware file
-void load_firmware(firmware *fw, const char *filename, const char *base_addr, const char *alt_base_addr);
+void load_firmware(firmware *fw, const char *filename, const char *base_addr, const char *alt_base_addr, int os_type);
 
 // Functions for analysing a firmware dump
 
@@ -127,8 +135,13 @@ int find_str(firmware *fw, char *str);
 int find_inst(firmware *fw, int (*inst)(firmware*,int), int idx, int len);
 // Find the previous instruction of a specified type starting at idx within len instructions
 int find_inst_rev(firmware *fw, int (*inst)(firmware*,int), int idx, int len);
+// Find the Nth instruction of a specified type starting at idx within len instructions
+int find_Nth_inst(firmware *fw, int (*inst)(firmware*,int), int idx, int len, int N);
+// Find the Nth previous instruction of a specified type starting at idx within len instructions
+int find_Nth_inst_rev(firmware *fw, int (*inst)(firmware*,int), int idx, int len, int N);
 
 // Find the first or next reference to a specified string in the dump
+int find_strptr_ref(firmware *fw, char *str);
 int find_str_ref(firmware *fw, char *str);
 int find_nxt_str_ref(firmware *fw, int str_adr, int ofst);
 

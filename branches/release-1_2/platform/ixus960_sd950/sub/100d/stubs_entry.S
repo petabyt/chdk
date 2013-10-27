@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.00D
+//   Firmware Ver GM1.00D   // Found @ 0xff86890c, "GM1.00D" @ 0xff868919
+//   Firmware build timestamp: Aug 23 2007 09:21:45
 //   Canon DIGITAL IXUS 960 IS
 
 // Values for makefile.inc
@@ -173,6 +174,8 @@ NHSTUB(SleepTask                              ,0xff829738) //120
 NHSTUB(TakeSemaphore                          ,0xff81b98c) //120
 NHSTUB(TurnOffBackLight                       ,0xff87a430) //104
 NHSTUB(TurnOnBackLight                        ,0xff87a418) //104
+NHSTUB(TurnOnDisplay                          ,0xff840588) //120
+NHSTUB(TurnOffDisplay                         ,0xff840598) //120
 NHSTUB(UnlockAF                               ,0xff826ba4) //103
 NHSTUB(UnlockMainPower                        ,0xff86d324) //120
 NHSTUB(UnsetZoomForMovie                      ,0xff94ca38) //104
@@ -207,11 +210,11 @@ NHSTUB(open                                   ,0xff81a0e0) //109
 NHSTUB(OpenFastDir                            ,0xffa0a128) //  1
 NHSTUB(closedir                               ,0xffa0a28c) //  1
 NHSTUB(qsort                                  ,0xff9a17e4) //  1
-NHSTUB(rand                                   ,0xff81e934) //  1
+NHSTUB(rand                                   ,0xff81e934) //121
 NHSTUB(realloc                                ,0xff813b90) //115
 NHSTUB(reboot_fw_update                       ,0xffa11b80) //106
 NHSTUB(set_control_event                      ,0xff86ccec) //  1
-NHSTUB(srand                                  ,0xff81e928) //  1
+NHSTUB(srand                                  ,0xff81e928) //122
 NHSTUB(stat                                   ,0xff8251d4) //  1
 NHSTUB(strcat                                 ,0xff88fd18) //  1
 NHSTUB(strchr                                 ,0xff88fda0) //  1

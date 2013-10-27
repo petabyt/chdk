@@ -3,13 +3,15 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.00I
+//   Firmware Ver GM1.00I   // Found @ 0xff86e880, "GM1.00I" @ 0xff86e88d
+//   Firmware build timestamp: Jun 26 2008 07:11:54
 //   Possible corrupt firmware dump - file size too small for start address 0xff810000
 //     file size = 3.19MB, should be 7.94MB
 //   Could not find Camera name - possible corrupt firmware dump
 
 // Values for makefile.inc
 //   PLATFORMOSVER = 23
+//   PLATFORMID = ?           // Not found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000b0b68
 
@@ -18,7 +20,6 @@
 //NHSTUB(PutInNdFilter                        ,0xff9384e4) //102        *** != 0xffa0c578
 //NHSTUB(PutOutNdFilter                       ,0xff938508) //102        *** != 0xffa0c5b0
 //NHSTUB(kbd_pwr_off                          ,0xff84944c) //  2 67%    *** != 0x00000000
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffa4c760 -> ffb08114
@@ -171,6 +172,8 @@ NHSTUB(SleepTask                              ,0xff82a610) //120
 NHSTUB(TakeSemaphore                          ,0xff81b98c) //120
 NHSTUB(TurnOffBackLight                       ,0xff87ff88) //104
 NHSTUB(TurnOnBackLight                        ,0xff87ff70) //104
+NHSTUB(TurnOnDisplay                          ,0xff845280) //120
+NHSTUB(TurnOffDisplay                         ,0xff845290) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff99c3b8) //120
 NHSTUB(UnlockAF                               ,0xff827638) //103
 NHSTUB(UnlockMainPower                        ,0xff873144) //120
@@ -206,11 +209,11 @@ NHSTUB(open                                   ,0xff81a0e0) //109
 NHSTUB(OpenFastDir                            ,0xffa2cb40) //  1
 NHSTUB(closedir                               ,0xffa2cca4) //  1
 NHSTUB(qsort                                  ,0xff9be49c) //  1
-NHSTUB(rand                                   ,0xff81e93c) //  1
+NHSTUB(rand                                   ,0xff81e93c) //121
 NHSTUB(realloc                                ,0xff813b90) //115
 NHSTUB(reboot_fw_update                       ,0xffa34598) //106
 NHSTUB(set_control_event                      ,0xff872c2c) //  1
-NHSTUB(srand                                  ,0xff81e930) //  1
+NHSTUB(srand                                  ,0xff81e930) //122
 NHSTUB(stat                                   ,0xff825738) //  1
 NHSTUB(strcat                                 ,0xff895c1c) //  1
 NHSTUB(strchr                                 ,0xff895ca4) //  1

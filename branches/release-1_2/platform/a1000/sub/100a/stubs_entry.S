@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R31 (DRYOS version 2.3, release #0031)
-//   Firmware Ver GM1.00A
+//   Firmware Ver GM1.00A   // Found @ 0xffc5853c, "GM1.00A" @ 0xffc58549
+//   Firmware build timestamp: Jul  3 2008 17:06:02
 //   Canon PowerShot A1000 IS
 
 // Values for makefile.inc
@@ -180,6 +181,8 @@ NHSTUB(SleepTask                              ,0xffc16ff8) //120
 NHSTUB(TakeSemaphore                          ,0xffc0b74c) //120
 NHSTUB(TurnOffBackLight                       ,0xffc67e6c) //104
 NHSTUB(TurnOnBackLight                        ,0xffc67e54) //104
+NHSTUB(TurnOnDisplay                          ,0xffc2cf40) //120
+NHSTUB(TurnOffDisplay                         ,0xffc2cf50) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xffd2048c) //120
 NHSTUB(UnlockAF                               ,0xffc14dd4) //102
 NHSTUB(UnlockMainPower                        ,0xffc5cd24) //120
@@ -215,11 +218,11 @@ NHSTUB(open                                   ,0xffc09ea0) //109
 NHSTUB(OpenFastDir                            ,0xffddc220) //  1
 NHSTUB(closedir                               ,0xffddc384) //  1
 NHSTUB(qsort                                  ,0xffe2bbec) //  1
-NHSTUB(rand                                   ,0xffc0d9bc) //  1
+NHSTUB(rand                                   ,0xffc0d9bc) //121
 NHSTUB(realloc                                ,0xffc03b60) //115
 NHSTUB(reboot_fw_update                       ,0xffde0b88) //106
 NHSTUB(set_control_event                      ,0xffc5c898) //111
-NHSTUB(srand                                  ,0xffc0d9b0) //  1
+NHSTUB(srand                                  ,0xffc0d9b0) //122
 NHSTUB(stat                                   ,0xffc13550) //  1
 NHSTUB(strcat                                 ,0xffc6cc70) //  1
 NHSTUB(strchr                                 ,0xffc6ccf8) //  1

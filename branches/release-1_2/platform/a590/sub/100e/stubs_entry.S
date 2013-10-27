@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.00E
+//   Firmware Ver GM1.00E   // Found @ 0xffc5cbc8, "GM1.00E" @ 0xffc5cbd5
+//   Firmware build timestamp: Jan  8 2008 16:57:22
 //   Canon PowerShot A590 IS
 
 // Values for makefile.inc
@@ -171,6 +172,8 @@ NHSTUB(SleepTask                              ,0xffc18168) //120
 NHSTUB(TakeSemaphore                          ,0xffc0b774) //120
 NHSTUB(TurnOffBackLight                       ,0xffc6c570) //104
 NHSTUB(TurnOnBackLight                        ,0xffc6c558) //104
+NHSTUB(TurnOnDisplay                          ,0xffc313e8) //120
+NHSTUB(TurnOffDisplay                         ,0xffc313f8) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xffd2aa58) //120
 NHSTUB(UnlockAF                               ,0xffc15c1c) //102
 NHSTUB(UnlockMainPower                        ,0xffc62070) //120
@@ -206,11 +209,11 @@ NHSTUB(open                                   ,0xffc09ec4) //109
 NHSTUB(OpenFastDir                            ,0xffdd962c) //  1
 NHSTUB(closedir                               ,0xffdd9790) //  1
 NHSTUB(qsort                                  ,0xffd7d0ec) //  1
-NHSTUB(rand                                   ,0xffc0da14) //  1
+NHSTUB(rand                                   ,0xffc0da14) //121
 NHSTUB(realloc                                ,0xffc03b78) //115
 NHSTUB(reboot_fw_update                       ,0xffdddf94) //106
 NHSTUB(set_control_event                      ,0xffc61c0c) //  1
-NHSTUB(srand                                  ,0xffc0da08) //  1
+NHSTUB(srand                                  ,0xffc0da08) //122
 NHSTUB(stat                                   ,0xffc13d94) //  1
 NHSTUB(strcat                                 ,0xffc74d74) //  1
 NHSTUB(strchr                                 ,0xffc74dfc) //  1

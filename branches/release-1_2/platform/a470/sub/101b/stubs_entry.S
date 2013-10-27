@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.01B
+//   Firmware Ver GM1.01B   // Found @ 0xffc5601c, "GM1.01B" @ 0xffc56029
+//   Firmware build timestamp: Feb 12 2008 21:18:24
 //   Canon PowerShot A470
 
 // Values for makefile.inc
@@ -19,7 +20,6 @@
 //NHSTUB(PutInNdFilter                        ,0xffdd6fc0) //102        *** != 0xffe267b0
 //NHSTUB(PutOutNdFilter                       ,0xffdd6fe4) //102        *** != 0xffe267e8
 //NHSTUB(kbd_pwr_off                          ,0xffc30b30) //  2 67%    *** != 0x00000000
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffde7144 -> ffe8fab0
@@ -164,6 +164,8 @@ NHSTUB(SleepTask                              ,0xffc17c9c) //120
 NHSTUB(TakeSemaphore                          ,0xffc0b774) //120
 NHSTUB(TurnOffBackLight                       ,0xffc65db0) //104
 NHSTUB(TurnOnBackLight                        ,0xffc65d98) //104
+NHSTUB(TurnOnDisplay                          ,0xffc2ccf8) //120
+NHSTUB(TurnOffDisplay                         ,0xffc2cd08) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xffd1f7a4) //120
 NHSTUB(UnlockAF                               ,0xffc158b8) //102
 NHSTUB(UnlockMainPower                        ,0xffc5b4bc) //120
@@ -199,11 +201,11 @@ NHSTUB(open                                   ,0xffc09ec4) //109
 NHSTUB(OpenFastDir                            ,0xffdc40c8) //  1
 NHSTUB(closedir                               ,0xffdc422c) //  1
 NHSTUB(qsort                                  ,0xffd67718) //  1
-NHSTUB(rand                                   ,0xffc0da14) //  1
+NHSTUB(rand                                   ,0xffc0da14) //121
 NHSTUB(realloc                                ,0xffc03b78) //115
 NHSTUB(reboot_fw_update                       ,0xffdc8a30) //106
 NHSTUB(set_control_event                      ,0xffc5b058) //  1
-NHSTUB(srand                                  ,0xffc0da08) //  1
+NHSTUB(srand                                  ,0xffc0da08) //122
 NHSTUB(stat                                   ,0xffc13d68) //  1
 NHSTUB(strcat                                 ,0xffc6e484) //  1
 NHSTUB(strchr                                 ,0xffc6e50c) //  1

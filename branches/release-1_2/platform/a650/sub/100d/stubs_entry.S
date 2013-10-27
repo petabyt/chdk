@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.00D
+//   Firmware Ver GM1.00D   // Found @ 0xffc59fe4, "GM1.00D" @ 0xffc59ff1
+//   Firmware build timestamp: Jul  6 2007 12:41:33
 //   Canon PowerShot A650 IS
 
 // Values for makefile.inc
@@ -170,6 +171,8 @@ NHSTUB(SleepTask                              ,0xffc19890) //120
 NHSTUB(TakeSemaphore                          ,0xffc0b98c) //120
 NHSTUB(TurnOffBackLight                       ,0xffc69390) //104
 NHSTUB(TurnOnBackLight                        ,0xffc69378) //104
+NHSTUB(TurnOnDisplay                          ,0xffc33a1c) //120
+NHSTUB(TurnOffDisplay                         ,0xffc33a2c) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xffd57a68) //120
 NHSTUB(UnlockAF                               ,0xffc16de4) //103
 NHSTUB(UnlockMainPower                        ,0xffc5d160) //120
@@ -207,11 +210,11 @@ NHSTUB(open                                   ,0xffc0a0e0) //109
 NHSTUB(OpenFastDir                            ,0xffdd05ac) //  1
 NHSTUB(closedir                               ,0xffdd0710) //  1
 NHSTUB(qsort                                  ,0xffd702a8) //  1
-NHSTUB(rand                                   ,0xffc0e928) //  1
+NHSTUB(rand                                   ,0xffc0e928) //121
 NHSTUB(realloc                                ,0xffc03b90) //115
 NHSTUB(reboot_fw_update                       ,0xffdd4fe0) //106
 NHSTUB(set_control_event                      ,0xffc5cd44) //  1
-NHSTUB(srand                                  ,0xffc0e91c) //  1
+NHSTUB(srand                                  ,0xffc0e91c) //122
 NHSTUB(stat                                   ,0xffc1512c) //  1
 NHSTUB(strcat                                 ,0xffc739c8) //  1
 NHSTUB(strchr                                 ,0xffc73a50) //  1

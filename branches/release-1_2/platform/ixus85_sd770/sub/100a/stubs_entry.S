@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.00A
+//   Firmware Ver GM1.00A   // Found @ 0xff86bef0, "GM1.00A" @ 0xff86befd
+//   Firmware build timestamp: Jan 31 2008 13:20:56
 //   Canon PowerShot SD770 IS
 
 // Values for makefile.inc
@@ -178,6 +179,8 @@ NHSTUB(SleepTask                              ,0xff8283ec) //120
 NHSTUB(TakeSemaphore                          ,0xff81b6ac) //120
 NHSTUB(TurnOffBackLight                       ,0xff87fdd8) //104
 NHSTUB(TurnOnBackLight                        ,0xff87fdc0) //104
+NHSTUB(TurnOnDisplay                          ,0xff83e918) //120
+NHSTUB(TurnOffDisplay                         ,0xff83e928) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff94eeec) //120
 NHSTUB(UnlockAF                               ,0xff825bc8) //102
 NHSTUB(UnlockMainPower                        ,0xff873844) //120
@@ -215,11 +218,11 @@ NHSTUB(open                                   ,0xff819dfc) //109
 NHSTUB(OpenFastDir                            ,0xffa0e20c) //  1
 NHSTUB(closedir                               ,0xffa0e370) //  1
 NHSTUB(qsort                                  ,0xff9ac928) //  1
-NHSTUB(rand                                   ,0xff81d94c) //  1
+NHSTUB(rand                                   ,0xff81d94c) //121
 NHSTUB(realloc                                ,0xff813b78) //115
 NHSTUB(reboot_fw_update                       ,0xffa15ca0) //106
 NHSTUB(set_control_event                      ,0xff8733e0) //  1
-NHSTUB(srand                                  ,0xff81d940) //  1
+NHSTUB(srand                                  ,0xff81d940) //122
 NHSTUB(stat                                   ,0xff823f98) //  1
 NHSTUB(strcat                                 ,0xff89207c) //  1
 NHSTUB(strchr                                 ,0xff892104) //  1

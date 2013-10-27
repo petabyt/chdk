@@ -210,7 +210,9 @@
 0xff0515f4,DispCon_ShowWhiteLine_FW
 0xff051828,DispCon_ShowNStepsChart_FW
 0xff051978,DispCon_TurnOnDisplay_FW
+0xff051978,TurnOnDisplay
 0xff051988,DispCon_TurnOffDisplay_FW
+0xff051988,TurnOffDisplay
 0xff051998,DispCon_TurnOnBackLight_FW
 0xff0519a8,DispCon_TurnOffBackLight_FW
 0xff0519b8,DispCon_SetMaxBackLightBrightness_FW
@@ -728,6 +730,7 @@
 0xff15954c,EnableDebugLogMode_FW
 0xff159560,DisableDebugLogMode_FW
 0xff15d3f0,GetImageFolder
+0xff15f07c,getImageDirName
 0xff15fb28,task_MetaCtg
 0xff165a44,task_DPOFTask
 0xff171f04,WriteSDCard

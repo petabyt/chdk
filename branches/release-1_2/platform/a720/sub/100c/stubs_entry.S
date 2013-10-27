@@ -3,7 +3,8 @@
 
 // Camera info:
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
-//   Firmware Ver GM1.00C
+//   Firmware Ver GM1.00C   // Found @ 0xffc58d44, "GM1.00C" @ 0xffc58d51
+//   Firmware build timestamp: Jul  5 2007 11:32:58
 //   Canon PowerShot A720 IS
 
 // Values for makefile.inc
@@ -170,6 +171,8 @@ NHSTUB(SleepTask                              ,0xffc196d0) //120
 NHSTUB(TakeSemaphore                          ,0xffc0ba5c) //120
 NHSTUB(TurnOffBackLight                       ,0xffc676f4) //104
 NHSTUB(TurnOnBackLight                        ,0xffc676dc) //104
+NHSTUB(TurnOnDisplay                          ,0xffc32cd4) //120
+NHSTUB(TurnOffDisplay                         ,0xffc32ce4) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xffd4a934) //120
 NHSTUB(UnlockAF                               ,0xffc16d7c) //103
 NHSTUB(UnlockMainPower                        ,0xffc5bec0) //120
@@ -207,11 +210,11 @@ NHSTUB(open                                   ,0xffc0a1b0) //109
 NHSTUB(OpenFastDir                            ,0xffdc1b04) //  1
 NHSTUB(closedir                               ,0xffdc1c68) //  1
 NHSTUB(qsort                                  ,0xffd62a14) //  1
-NHSTUB(rand                                   ,0xffc0e9f8) //  1
+NHSTUB(rand                                   ,0xffc0e9f8) //121
 NHSTUB(realloc                                ,0xffc03b90) //115
 NHSTUB(reboot_fw_update                       ,0xffdc6538) //106
 NHSTUB(set_control_event                      ,0xffc5baa4) //  1
-NHSTUB(srand                                  ,0xffc0e9ec) //  1
+NHSTUB(srand                                  ,0xffc0e9ec) //122
 NHSTUB(stat                                   ,0xffc15238) //  1
 NHSTUB(strcat                                 ,0xffc71b20) //  1
 NHSTUB(strchr                                 ,0xffc71ba8) //  1

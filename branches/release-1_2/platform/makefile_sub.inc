@@ -9,19 +9,22 @@ all: libplatformsub.a
 
 TARGET_PRIMARY=$(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN
 
+FWVERADDR=$(shell grep "Firmware Ver" stubs_entry.S | \
+    awk -F'["|@]' '{printf "%s", substr($$5,2);}')
+
 #OBJS= should be defined in */sub/*/Makefile for camera files
 #add platform dependent 'core' files (build as THUMB)
 OBJS+=main.thm.o gui_draw.thm.o \
      gui.thm.o kbd_process.thm.o conf.thm.o gui_osd.thm.o raw.thm.o \
      shot_histogram.thm.o shooting.thm.o camera_info.thm.o remotecap.thm.o
 
-libplatformsub.a: $(OBJS)
+libplatformsub.a: $(OBJS) bin_compat.h
 
 clean:
 	rm -f *.o libplatformsub.a stubs_entry.S.err stubs_not_found_names.err
 
 distclean: clean
-	rm -f stubs_entry.S stubs_auto.S
+	rm -f stubs_entry.S stubs_auto.S bin_compat.h
 	rm -rf .dep
 
 run-code-gen:
@@ -69,6 +72,27 @@ else
 	echo CAUTION! \'stubs_entry.S\' updating is turned off! ; \
 	touch stubs_entry.S
 endif
+
+bin_compat.h: stubs_entry.S
+# GM version prefix is hardcoded!
+	@echo creating bin_compat.h
+	rm -f bin_compat.h
+	echo "/* THIS FILE IS GENERATED, DO NOT EDIT! */" > bin_compat.h
+	grep "Firmware Ver" stubs_entry.S | \
+	awk -F'["|@]' '{printf "\nver_sig_t ver_sigs[]={\n"; \
+	printf "    {(const char *)%s, \"%s\"},\n", substr($$5,2), $$3;}' >> bin_compat.h
+    # insert each compatible version
+	awk -v ptt="^$(PLATFORM),$(PLATFORMSUB)" -F',' '$$0 ~ ptt {print $$4}' $(topdir)camera_list.csv | \
+	awk -F':' '{for(i=1;i<=NF;i++){ \
+	str=toupper($$i); len=length(str); str1=substr(str,1,len-3) "." substr(str,len-2); \
+	printf "    {(const char *)%s, \"GM%s\"},\n", "$(FWVERADDR)", str1};}' >> bin_compat.h
+    #
+	echo "};" >> bin_compat.h
+	echo "pid_sig_t pid_sigs[]={" >> bin_compat.h
+	grep "PLATFORMID" stubs_entry.S | \
+	awk -F'@' '{printf "    {(short *)%s, PLATFORMID},\n", substr($$2,2);}' >> bin_compat.h
+	echo "};" >> bin_compat.h
+
 
 $(TARGET_PRIMARY):
 	touch $(TARGET_PRIMARY)
