@@ -35,6 +35,7 @@
     #undef  CAM_VIDEO_CONTROL
     #define CAM_MIN_ISO_OVERRIDE            50 // crashes when set to a lower value (not flash related)
     #undef  CAM_HAS_IS
+    #define CAM_DRAW_EXPOSITION             1
 
     #define CAM_DNG_LENS_INFO               { 58,10, 174,10, 28,10, 49,10 } // See comments in camera.h
     // pattern
