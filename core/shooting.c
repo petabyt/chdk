@@ -619,7 +619,6 @@ static short shooting_get_min_real_aperture()
 // Overrides
 
 // Find nearest entry in 'aperture_sizes_table' to the given 'av96' value
-#if CAM_HAS_IRIS_DIAPHRAGM
 static int find_nearest_aperture_entry(short av96)
 {
     if (av96 <= aperture_sizes_table[0].prop_id)
@@ -641,6 +640,7 @@ static int find_nearest_aperture_entry(short av96)
 }
 
 // Convert 'av96' value to nearest Canon value from aperture_sizes_table
+#if CAM_HAS_IRIS_DIAPHRAGM
 short find_canon_aperture(short av96)
 {
     return aperture_sizes_table[find_nearest_aperture_entry(av96)].prop_id;
@@ -739,11 +739,7 @@ void shooting_set_user_av96(short av96)
 // compare PROPCASE_AV with aperture_sizes_table
 char* shooting_get_av_str()
 {
-#if CAM_HAS_IRIS_DIAPHRAGM
     return (char*)aperture_sizes_table[find_nearest_aperture_entry(shooting_get_av96())].name;
-#else
-    return "?";
-#endif
 }
 #endif
 
