@@ -35,6 +35,7 @@
     #undef  CAM_AF_SCAN_DURING_VIDEO_RECORD     //placeholder
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY              1
+    #define CAM_DRAW_EXPOSITION                 1
 
     #undef  CAM_HAS_IS
     #define CAM_MIN_ISO_OVERRIDE                51 // crashes when set to a lower value (not flash related)
