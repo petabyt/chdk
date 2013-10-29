@@ -4,11 +4,10 @@
 // Camera info:
 //   Firmware Ver GM1.00E   // Found @ 0xff81a84c, "GM1.00E" @ 0xff81a859
 //   Firmware build timestamp: Oct  4 2006 10:07:45
-//   Possible corrupt firmware dump - file size too small for start address 0xff810000
-//     file size = 3.44MB, should be 7.94MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon DIGITAL IXUS 850 IS
 
 // Values for makefile.inc
+//   PLATFORMID = 12598 (0x3136) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000ba7b0
 
