@@ -2430,7 +2430,7 @@ void find_matches(firmware *fw, const char *curr_name)
                     if (s->mask == -2)
                     {
                         int end_branch = 0;
-                        uint32_t idx = 0;
+                        int idx = 0;
                         uint32_t *p1 = 0;
                         if ((fw->buf[n->off+i+s->value] & 0x0F000000) == 0x0A000000)   // B
                         {
