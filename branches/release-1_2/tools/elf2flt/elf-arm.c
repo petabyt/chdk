@@ -40,7 +40,7 @@ int apply_realloc( struct relevant_section* base_sect,
   char* patch_name="";		// detected build-in function
 
 
-  if (rela->r_offset < 0 || rela->r_offset > base_sect->size - sizeof(uint32_t)) {
+  if (rela->r_offset > base_sect->size - sizeof(uint32_t)) {
             PRINTERR(stderr, "section %u(%s) reloc %u sym '%s': out of bounds relocation, offset %d size %u\n",
                     relindex, base_sect->name, i, symname,
                    rela->r_offset, base_sect->size);
