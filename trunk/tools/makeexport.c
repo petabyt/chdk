@@ -172,7 +172,8 @@ int main( int argc, char **argv )
     // Main cycle
     for(;*cur; )
     {
-		for(; *cur==9 || *cur==' '; cur++);
+		for(; *cur==9 || *cur==' '; cur++)
+			;
 	    if (*cur=='(') {
 			for(cur++; *cur && *cur!=')'; cur++);
 			for(; *cur==9 || *cur==' ' || *cur==')'; cur++);
