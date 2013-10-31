@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdarg.h>
+#include <ctype.h>
 
 #include "stubs_load.h"
 #include "firmware_load.h"
@@ -406,11 +407,12 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
 
     { "task_CaptSeq", UNUSED|DONT_EXPORT },
     { "task_ExpDrv", UNUSED|DONT_EXPORT },
-    { "task_FileWrite", OPTIONAL },
+    { "task_FileWrite", UNUSED|DONT_EXPORT },
     { "task_InitFileModules", UNUSED|DONT_EXPORT },
     { "task_MovieRecord", UNUSED|DONT_EXPORT },
-    { "task_PhySw", OPTIONAL },
-    { "task_RotaryEncoder", OPTIONAL },
+    { "task_PhySw", UNUSED|DONT_EXPORT },
+    { "task_SwitchCheck", UNUSED|DONT_EXPORT }, // old name for task_PhySw
+    { "task_RotaryEncoder", UNUSED|DONT_EXPORT },
 //    { "task_TouchPanel", OPTIONAL },
 
     //{ "hook_CreateTask" },
@@ -990,6 +992,7 @@ string_sig string_sigs[] =
     {20, "task_FileWrite", "task_FileWriteTask", 1 },
     {20, "task_RotaryEncoder", "task_JogDial", 1 },
     {20, "task_RotaryEncoder", "task_RotarySw", 1 },
+    {20, "task_SwitchCheck", "task_SwitchCheckTask", 1 },
     {20, "IsControlEventActive", "IsControlEventActive_FW", 0 },
     {20, "GetLogicalEventName", "ShowLogicalEventName_FW", 0x01000002 },
     {20, "TurnOnDisplay", "DispCon_TurnOnDisplay_FW", 0 },
@@ -1170,8 +1173,8 @@ string_sig string_sigs[] =
 
     // Ensure ordering in func_names is correct for dependencies here
     //                                                                   ???
-    { 9, "kbd_p1_f", "task_PhySw", 0,                                      5 },
-    { 9, "kbd_p2_f", "task_PhySw", 0,                                      7 },
+    //{ 9, "kbd_p1_f", "task_PhySw", 0,                                      5 },
+    //{ 9, "kbd_p2_f", "task_PhySw", 0,                                      7 },
     { 9, "kbd_read_keys", "kbd_p1_f", 0,                                   2 },
     { 9, "kbd_p1_f_cont", "kbd_p1_f", -1,                                  3 },
     //{ 9, "kbd_read_keys_r2", "kbd_read_keys", 0,                          11 },
@@ -4684,56 +4687,45 @@ void find_eventprocs(firmware *fw)
     }
 }
 
+// LDR R0, =...
+int isLDR_PC_r0(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xFE1FF000) == (0xE41F0000));
+}
+
+// LDR R3, =...
+int isLDR_PC_r3(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xFE1FF000) == (0xE41F3000));
+}
+
 int match_createtask(firmware *fw, int k, uint32_t fadr, uint32_t v2)
 {
-    if (isBorBL(fw,k+4))
+    uint32_t adr = followBranch(fw,idx2adr(fw,k),0x01000001);
+    int j1, j2;
+    // CreateTask* ?
+    if (adr == fadr)
     {
-        uint32_t adr = followBranch2(fw,idx2adr(fw,k+4),0x01000001);
-        if (adr == fadr)
+        j1 = find_inst_rev(fw,isLDR_PC_r3,k,16);
+        j2 = find_inst_rev(fw,isLDR_PC_r0,k,16);
+        // param0 and param3 are needed
+        if ((j1 > 0) && (j2 > 0))
         {
-            if ((isADR(fw,k)   || isLDR(fw,k))   && // LDR, ADR or MOV
-                (isADR(fw,k+1) || isLDR(fw,k+1)) && // LDR, ADR or MOV
-                (isADR(fw,k+2) || isLDR(fw,k+2)) && // LDR, ADR or MOV
-                (isADR(fw,k+3) || isLDR(fw,k+3)))   // LDR, ADR or MOV
+            // check for unwanted function calls
+            if ((find_inst(fw,isBL,j1,16)!=k) || (find_inst(fw,isBL,j2,16)!=k))
+                return 0;
+            // both parameters seem ok
+            uint32_t sadr = LDR2val(fw,j2);
+            uint32_t tadr = LDR2val(fw,j1);
+            if (sadr != 0)
             {
-                fadr = 0;
-                if      (isLDR_PC(fw,k)   && (fwRd(fw,k)   == 3)) fadr = LDR2val(fw,k);
-                else if (isADR_PC(fw,k)   && (fwRd(fw,k)   == 3)) fadr = ADR2adr(fw,k);
-                else if (isLDR_PC(fw,k+1) && (fwRd(fw,k+1) == 3)) fadr = LDR2val(fw,k+1);
-                else if (isADR_PC(fw,k+1) && (fwRd(fw,k+1) == 3)) fadr = ADR2adr(fw,k+1);
-                else if (isLDR_PC(fw,k+2) && (fwRd(fw,k+2) == 3)) fadr = LDR2val(fw,k+2);
-                else if (isADR_PC(fw,k+2) && (fwRd(fw,k+2) == 3)) fadr = ADR2adr(fw,k+2);
-                else if (isLDR_PC(fw,k+3) && (fwRd(fw,k+3) == 3)) fadr = LDR2val(fw,k+3);
-                else if (isADR_PC(fw,k+3) && (fwRd(fw,k+3) == 3)) fadr = ADR2adr(fw,k+3);
-                if (fadr != 0)
+                char *s = adr2ptr(fw,sadr);
+                // check first 2 characters in task name, check valid task address
+                if ((isalnum(s[0])&&isalnum(s[1])) && (idx_valid(fw,adr2idx(fw,tadr))))
                 {
-                    uint32_t sadr = 0;
-                    if      (isLDR_PC(fw,k)   && (fwRd(fw,k)   == 0)) sadr = LDR2val(fw,k);
-                    else if (isADR_PC(fw,k)   && (fwRd(fw,k)   == 0)) sadr = ADR2adr(fw,k);
-                    else if (isLDR_PC(fw,k+1) && (fwRd(fw,k+1) == 0)) sadr = LDR2val(fw,k+1);
-                    else if (isADR_PC(fw,k+1) && (fwRd(fw,k+1) == 0)) sadr = ADR2adr(fw,k+1);
-                    else if (isLDR_PC(fw,k+2) && (fwRd(fw,k+2) == 0)) sadr = LDR2val(fw,k+2);
-                    else if (isADR_PC(fw,k+2) && (fwRd(fw,k+2) == 0)) sadr = ADR2adr(fw,k+2);
-                    else if (isLDR_PC(fw,k+3) && (fwRd(fw,k+3) == 0)) sadr = LDR2val(fw,k+3);
-                    else if (isADR_PC(fw,k+3) && (fwRd(fw,k+3) == 0)) sadr = ADR2adr(fw,k+3);
-                    if (sadr == 0)
-                    {
-                        if (isLDR_PC(fw,k-1) && (fwRd(fw,k-1) == 0))
-                        {
-                            sadr = fwval(fw,adr2idx(fw,LDR2val(fw,k-1)));
-                        }
-                        else if (isLDR_PC(fw,k-2) && (fwRd(fw,k-2) == 0))
-                        {
-                            sadr = fwval(fw,adr2idx(fw,LDR2val(fw,k-2)));
-                        }
-                    }
-                    if (sadr != 0)
-                    {
-                        char *s = adr2ptr(fw,sadr);
-                        char *nm = malloc(strlen(s)+6);
-                        sprintf(nm,"task_%s",s);
-                        add_func_name(nm, fadr, 0);
-                    }
+                    char *nm = malloc(strlen(s)+6);
+                    sprintf(nm,"task_%s",s);
+                    add_func_name(nm, tadr, 0);
                 }
             }
         }
@@ -4934,7 +4926,7 @@ int main(int argc, char **argv)
     bprintf("// Stubs below matched 100%%.\n");
     bprintf("//    Name                                     Address                Comp to stubs_entry_2.S\n");
 
-    //find_tasks(&fw);
+    find_tasks(&fw);
 
     for (k = 0; k < max_find_func; k++)
     {
