@@ -65,6 +65,14 @@ NHSTUB(Mount_FileSystem                       ,0xff86e8d8) //  1 90%
 //int get_flash_params_count(void) { return 0x6c; }                          // Found @0xff976f9c
 
 // Misc stuff
+// LED table init @ 0xff82db60
+// LED #1: 0xc022008c, offset 0x4
+// LED #2: 0xc0220088, offset 0x44
+// LED #3: 0xc0220090, offset 0x84
+// LED #4: 0xc0220098, offset 0xc4
+// LED #5: 0xc0220084, offset 0x204
+// LED #6: 0xc0220080, offset 0x244
+
 // canon_data_src: 0xffb23040, canon_data_len: 0xbdb0
 
 // Stubs below matched 100%.

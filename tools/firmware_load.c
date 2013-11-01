@@ -310,6 +310,26 @@ uint32_t ALUop2(firmware *fw, int offset)
     return fadr;
 }
 
+// decode operand2 from ALU inst (not complete, try2 - based on chdk_dasm code)
+uint32_t ALUop2a(firmware *fw, int offset)
+{
+    uint32_t inst = fwval(fw,offset);
+    uint32_t rot = (inst>>7)&0x1e;
+    uint32_t imm8 = inst & 0xff;
+    uint32_t offst = (imm8>>rot) | (imm8<<(32-rot));
+    uint32_t fadr = 0;
+    switch (inst & 0x03E00000)
+    {
+        case 0x02400000:    // SUB Immed
+        case 0x02800000:    // ADD Immed
+        case 0x03A00000:    // MOV Immed
+        case 0x03C00000:    // BIC Immed
+            fadr = offst;
+            break;
+    }
+    return fadr;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Follow the B / BL / LDR PC instruction at the specified index and return the index of the new location

@@ -33,6 +33,14 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe67118) //  3 52%
 //int get_flash_params_count(void) { return 0x5e; }                          // Found @0xffd4e6f0
 
 // Misc stuff
+// LED table init @ 0xffc1ce80
+// LED #1: 0xc022008c, offset 0x4
+// LED #2: 0xc0220088, offset 0x44
+// LED #3: 0xc0220090, offset 0x84
+// LED #4: 0xc0220094, offset 0xc4
+// LED #5: 0xc0220084, offset 0x204
+// LED #6: 0xc0220080, offset 0x244
+
 // canon_data_src: 0xffed3aa0, canon_data_len: 0xe910
 
 // For capt_seq.c

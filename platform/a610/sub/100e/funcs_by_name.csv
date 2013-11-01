@@ -740,7 +740,7 @@
 0xffc0fc40,RegisterInterruptHandler
 0xffde733c,RegisterLanguageName_FW
 0xffd546e0,RegisterRefreshToDialog_FW
-0xffc123a8,ReleaseRecursiveLock
+0xffc12328,ReleaseRecursiveLock
 0xffe70c44,ReloadCdsAdjustment_FW
 0xffe76668,ReloadColorAdjustment_FW
 0xffe76564,ReloadEfAdjustment_FW

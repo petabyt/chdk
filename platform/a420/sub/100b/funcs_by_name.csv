@@ -696,7 +696,7 @@
 0xffc0fcd0,RegisterInterruptHandler
 0xffdc6544,RegisterLanguageName_FW
 0xffd42bb4,RegisterRefreshToDialog_FW
-0xffc122f0,ReleaseRecursiveLock
+0xffc12270,ReleaseRecursiveLock
 0xffe5b8cc,ReloadCdsAdjustment_FW
 0xffe61410,ReloadColorAdjustment_FW
 0xffe61308,ReloadEfAdjustment_FW

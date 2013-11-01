@@ -1100,7 +1100,7 @@
 0xffeaa4dc,CreateRecursiveLock
 0xffeaa5f8,DeleteRecursiveLock
 0xffeaa690,AcquireRecursiveLock
-0xffeaa7b8,ReleaseRecursiveLock
+0xffeaa738,ReleaseRecursiveLock
 0xffeaa7c8,CreateTaskStrictly
 0xffeaa808,CreateMessageQueueStrictly
 0xffeaa834,CreateEventFlagStrictly

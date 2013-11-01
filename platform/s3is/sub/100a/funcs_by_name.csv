@@ -778,7 +778,7 @@
 0xffa560b4,RegisterLanguageName_FW
 0xff99b4f4,RegisterRefreshToDialog_FW
 0xffae85e0,RegisterZoomSetting_FW
-0xff8226e8,ReleaseRecursiveLock
+0xff822668,ReleaseRecursiveLock
 0xffb0f970,ReloadBPCoeffAdjustment_FW
 0xffb09e68,ReloadCdsAdjustment_FW
 0xffb0fd34,ReloadColorAdjustment_FW

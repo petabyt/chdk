@@ -780,7 +780,7 @@
 0xffc10bc4,RegisterInterruptHandler
 0xffe0a0d8,RegisterLanguageName_FW
 0xffd76f88,RegisterRefreshToDialog_FW
-0xffc131e4,ReleaseRecursiveLock
+0xffc13164,ReleaseRecursiveLock
 0xffeb56a8,ReloadBPCoeffAdjustment_FW
 0xffeb02f4,ReloadCdsAdjustment_FW
 0xffeb5aa4,ReloadColorAdjustment_FW

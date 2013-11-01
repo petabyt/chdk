@@ -55,6 +55,12 @@ NHSTUB(MakeAFScan                             ,0xff9a0560) //  2 79%
 //int get_flash_params_count(void) { return 0x6e; }                          // Found @0xff9bbe74
 
 // Misc stuff
+// LED table init @ 0xff82f464
+// LED #1: 0xc0220068, offset 0xc4
+// LED #2: 0xc022006c, offset 0x204
+// LED #3: 0xc0220094, offset 0x244
+// LED #4: 0xc02200b0, offset 0x384
+
 // canon_data_src: 0xffbb1b50, canon_data_len: 0xd610
 
 // Stubs below matched 100%.

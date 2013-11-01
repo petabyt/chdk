@@ -813,7 +813,7 @@
 0xffeb5e30,RegisterProductTestEvent_FW
 0xffcbc0e0,RegisterRefreshToDialog_FW
 0xffeb6400,RegisterShootSeqEvent_FW
-0xffebf978,ReleaseRecursiveLock
+0xffebf8f8,ReleaseRecursiveLock
 0xffe0af58,ReloadAFAdjustment_FW
 0xffe0af44,ReloadBPCoeffAdjustment_FW
 0xffe05634,ReloadCdsAdjustment_FW

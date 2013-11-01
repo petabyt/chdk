@@ -866,7 +866,7 @@
 0xff821004,RegisterInterruptHandler
 0xffa90014,RegisterLanguageName_FW
 0xff9c2fb4,RegisterRefreshToDialog_FW
-0xff823624,ReleaseRecursiveLock
+0xff8235a4,ReleaseRecursiveLock
 0xffb54e40,ReloadBPCoeffAdjustment_FW
 0xffb4fa74,ReloadCdsAdjustment_FW
 0xffb5523c,ReloadColorAdjustment_FW

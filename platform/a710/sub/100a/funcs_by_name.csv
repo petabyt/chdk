@@ -852,7 +852,7 @@
 0xffc1052c,RegisterInterruptHandler
 0xffe0ce60,RegisterLanguageName_FW
 0xffd7c21c,RegisterRefreshToDialog_FW
-0xffc12b4c,ReleaseRecursiveLock
+0xffc12acc,ReleaseRecursiveLock
 0xffeb8a14,ReloadBPCoeffAdjustment_FW
 0xffeb367c,ReloadCdsAdjustment_FW
 0xffeb8dac,ReloadColorAdjustment_FW

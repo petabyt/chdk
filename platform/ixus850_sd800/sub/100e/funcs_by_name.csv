@@ -823,7 +823,7 @@
 0xff821150,RegisterInterruptHandler
 0xffa684ac,RegisterLanguageName_FW
 0xff9b8b14,RegisterRefreshToDialog_FW
-0xff823770,ReleaseRecursiveLock
+0xff8236f0,ReleaseRecursiveLock
 0xffb17ce0,ReloadBPCoeffAdjustment_FW
 0xffb12c34,ReloadCdsAdjustment_FW
 0xffb180dc,ReloadColorAdjustment_FW

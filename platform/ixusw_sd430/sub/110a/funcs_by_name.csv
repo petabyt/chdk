@@ -718,7 +718,7 @@
 0xff9791ac,RegisterRefreshToDialog_FW
 0xffb4fd98,RegisterResponseConnectPTPIP_FW
 0xffb4fd98,RegisterResponsePTPIP_FW
-0xff824ebc,ReleaseRecursiveLock
+0xff824e3c,ReleaseRecursiveLock
 0xffb7f788,ReloadCdsAdjustment_FW
 0xffb84eb8,ReloadColorAdjustment_FW
 0xffb84db4,ReloadEfAdjustment_FW
