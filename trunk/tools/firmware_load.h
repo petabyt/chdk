@@ -103,6 +103,7 @@ uint32_t LDR2idx(firmware *fw, int offset);
 uint32_t LDR2val(firmware *fw, int offset);
 uint32_t ADR2adr(firmware *fw, int offset);
 uint32_t ALUop2(firmware *fw, int offset);
+uint32_t ALUop2a(firmware *fw, int offset);
 
 // Test instruction at specfied index
 int isLDR_PC(firmware *fw, int offset);

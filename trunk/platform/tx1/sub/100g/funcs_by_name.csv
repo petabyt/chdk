@@ -843,7 +843,7 @@
 0xffb38d7c,RegisterProductTestEvent_FW
 0xff90a424,RegisterRefreshToDialog_FW
 0xffb3934c,RegisterShootSeqEvent_FW
-0xffb42b58,ReleaseRecursiveLock
+0xffb42ad8,ReleaseRecursiveLock
 0xffa68cc0,ReloadBPCoeffAdjustment_FW
 0xffa62e64,ReloadCdsAdjustment_FW
 0xffa69578,ReloadColorAdjustment_FW

@@ -707,7 +707,7 @@
 0xffb0bd68,RegisterProductTestEvent_FW
 0xff90186c,RegisterRefreshToDialog_FW
 0xffb0c338,RegisterShootSeqEvent_FW
-0xffb158a0,ReleaseRecursiveLock
+0xffb15820,ReleaseRecursiveLock
 0xffa5533c,ReloadBPCoeffAdjustment_FW
 0xffa4fc0c,ReloadCdsAdjustment_FW
 0xffa5572c,ReloadColorAdjustment_FW

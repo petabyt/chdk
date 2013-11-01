@@ -1262,7 +1262,7 @@ string_sig string_sigs[] =
     { 19, "DeleteRecursiveLock", "CreateRecursiveLock", 0,                       0x0247 },
     { 19, "AcquireRecursiveLock", "DeleteRecursiveLock", 0,                      0x0136 }, // old vx
     { 19, "AcquireRecursiveLock", "DeleteRecursiveLock", 0,                      0x0026 }, // new vx
-    { 19, "ReleaseRecursiveLock", "AcquireRecursiveLock", 0,                     0x004a }, // old vx
+    { 19, "ReleaseRecursiveLock", "AcquireRecursiveLock", 0,                     0x154a }, // old vx
     { 19, "ReleaseRecursiveLock", "AcquireRecursiveLock", 0,                     0x002a }, // new vx
     { 19, "GetEventFlagValue", "ClearEventFlag", 0,                              0x0014 },
     //{ 19, "DeleteEventFlag", "CreateEventFlag", 0,                               0x0016 },
@@ -4219,6 +4219,96 @@ int match_nrflag2(firmware *fw, int k, int v)
     return 0;
 }
 
+// find LEDs, Vx specific
+
+// ADD Rx, Rx, #0x220000
+int isADD_0x220000(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xfff00fff) == (0xe2800822));
+}
+
+typedef struct {
+    uint32_t addr;  // LED GPIO address
+    int reg;        // register used to assemble the address
+    int offs;       // offset in the LED table
+} LED_s;
+
+int find_leds(firmware *fw)
+{
+    int j1, j2, m, n;
+    LED_s led;
+    int k1 = find_str_ref(fw,"LEDCon");
+    if (k1<0)
+        return 0;
+    k1 = find_inst_rev(fw,isSTMFD_LR,k1,96);
+    if (k1<0)
+        return 0;
+    j1 = find_inst(fw,isBL,k1,80);
+    j2 = find_Nth_inst(fw,isBL,k1,80,3);
+    if ((j1<0) || (j2<0))
+        return 0;
+    // 1st and 3rd BL is memory allocation
+    if (followBranch(fw,idx2adr(fw,j1),0x01000001) != followBranch(fw,idx2adr(fw,j2),0x01000001))
+        return 0;
+    k1 = find_Nth_inst(fw,isBL,k1,80,2);
+    // LED table initializer func
+    k1 = idxFollowBranch(fw,k1,0x01000001);
+    if (k1<0)
+        return 0;
+    bprintf("// LED table init @ 0x%x\n",idx2adr(fw,k1));
+    j2 = 1;
+    while (1)
+    {
+        j1 = find_Nth_inst(fw,isADD_0x220000,k1,40,j2);
+        if (j1>0)
+        {
+            led.reg = fwRd(fw,j1);
+            led.addr = 0x220000;
+            led.offs = 0;
+            n = j1-1;
+            while (!isSTMFD_LR(fw,n))
+            {
+                if ((fwval(fw,n)&0xfffff000) == (0xe2800000+(led.reg<<12)+(led.reg<<16))) // ADD Rx, Rx, #0xc00000yz
+                {
+                    if ( ALUop2a(fw,n) >= 0xc0000000 )
+                    {
+                        led.addr += ALUop2a(fw,n);
+                    }
+                }
+                else if ((fwval(fw,n)&0xfffff000) == (0xe3a00000+(led.reg<<12))) // MOV Rx, #imm
+                {
+                    led.addr += ALUop2a(fw,n);
+                    m = n+1;
+                    while (!isLDMFD_PC(fw,m))
+                    {
+                        if ((fwval(fw,m)&0xfff0f000) == (0xe5800000+(led.reg<<12))) // STR Rx, [Ry, imm]
+                        {
+                            led.offs = fwval(fw,m) & 0xfff;
+                            break;
+                        }
+                        m++;
+                    }
+                    if (led.offs != 0)
+                        break;
+                }
+                n--;
+            }
+            // output data if valid
+            if (led.offs != 0)
+            {
+                bprintf("// LED #%i: 0x%08x, offset 0x%x\n",j2, led.addr, led.offs);
+            }
+            j2++;
+        }
+        else
+        {
+            break;
+        }
+    }
+    bprintf("\n");
+    return 0;
+}
+
 // Search for things
 void find_other_vals(firmware *fw)
 {
@@ -4226,6 +4316,7 @@ void find_other_vals(firmware *fw)
     add_blankline();
 
     bprintf("// Misc stuff\n");
+    find_leds(fw);
 /*
     if (!search_fw_bytes(fw, find_ctypes))
     {

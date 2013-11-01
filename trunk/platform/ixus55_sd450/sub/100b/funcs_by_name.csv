@@ -702,7 +702,7 @@
 0xff81ffcc,RegisterInterruptHandler
 0xffa008e4,RegisterLanguageName_FW
 0xff969ecc,RegisterRefreshToDialog_FW
-0xff822734,ReleaseRecursiveLock
+0xff8226b4,ReleaseRecursiveLock
 0xffa8837c,ReloadCdsAdjustment_FW
 0xffa8daac,ReloadColorAdjustment_FW
 0xffa8d9a8,ReloadEfAdjustment_FW

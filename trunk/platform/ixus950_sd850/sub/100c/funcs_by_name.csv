@@ -787,7 +787,7 @@
 0xffb1ab20,RegisterProductTestEvent_FW
 0xff90d0a4,RegisterRefreshToDialog_FW
 0xffb1b0f0,RegisterShootSeqEvent_FW
-0xffb2463c,ReleaseRecursiveLock
+0xffb245bc,ReleaseRecursiveLock
 0xffa5d418,ReloadAFAdjustment_FW
 0xffa5d404,ReloadBPCoeffAdjustment_FW
 0xffa57ec4,ReloadCdsAdjustment_FW

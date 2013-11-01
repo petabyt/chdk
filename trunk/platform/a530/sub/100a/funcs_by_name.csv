@@ -723,7 +723,7 @@
 0xffc0fccc,RegisterInterruptHandler
 0xffde396c,RegisterLanguageName_FW
 0xffd52828,RegisterRefreshToDialog_FW
-0xffc122ec,ReleaseRecursiveLock
+0xffc1226c,ReleaseRecursiveLock
 0xffe8701c,ReloadBPCoeffAdjustment_FW
 0xffe814a4,ReloadCdsAdjustment_FW
 0xffe873e0,ReloadColorAdjustment_FW

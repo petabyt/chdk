@@ -772,7 +772,7 @@
 0xff82008c,RegisterInterruptHandler
 0xffa1fc84,RegisterLanguageName_FW
 0xff97caa0,RegisterRefreshToDialog_FW
-0xff8226ac,ReleaseRecursiveLock
+0xff82262c,ReleaseRecursiveLock
 0xffac952c,ReloadBPCoeffAdjustment_FW
 0xffac39a4,ReloadCdsAdjustment_FW
 0xffac98f0,ReloadColorAdjustment_FW

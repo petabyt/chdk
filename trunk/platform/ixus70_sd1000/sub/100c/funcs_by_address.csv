@@ -1103,7 +1103,7 @@
 0xffb154d0,CreateRecursiveLock
 0xffb155ec,DeleteRecursiveLock
 0xffb15684,AcquireRecursiveLock
-0xffb157ac,ReleaseRecursiveLock
+0xffb1572c,ReleaseRecursiveLock
 0xffb157bc,CreateTaskStrictly
 0xffb157fc,CreateMessageQueueStrictly
 0xffb15828,CreateEventFlagStrictly
