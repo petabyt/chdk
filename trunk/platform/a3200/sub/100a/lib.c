@@ -21,4 +21,8 @@ void *vid_get_viewport_fb()      { return (void*)0x40546b80; }             // Fo
 void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x29a0+0x58)); } // Found @0xff871340 & 0xff871378
 char *camera_jpeg_count_str()    { return (char*)0x000b44d4; }             // Found @0xff9fd22c
 long hook_raw_size()             { return 0x014d2400; }                    // Found @0xffb21010
-//int get_flash_params_count(void) { return 0xa0; }                          // Found @0xff9941e4
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x5680+0x18)); //found @ 0xff9152d4 a3200 100d, same in 100a
+}

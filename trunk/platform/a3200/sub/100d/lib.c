@@ -42,3 +42,8 @@ void *vid_get_viewport_fb()
 {	
 	return (void*)0x40546b80;       // Found @0xffb1db58   a3200is
 }
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x5680+0x18)); //found @ 0xff9152d4 a3200 100d, same in 100a
+}

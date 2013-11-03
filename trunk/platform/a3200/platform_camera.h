@@ -85,6 +85,9 @@
 
     #define CAM_EXT_TV_RANGE                1
 
+    #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
+    #define CAM_HAS_MOVIE_DIGEST_MODE       1       // no, it doesn't, but movie_status is 6 in movie mode idle
+
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #undef  CAM_HAS_ERASE_BUTTON
 
@@ -92,9 +95,10 @@
     #undef  CAM_VIDEO_CONTROL
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              15      //
+    #define CAM_BITMAP_PALETTE              16      //
 
-    #define CHDK_COLOR_BASE                 0x1D    // Start color index for CHDK colors loaded into camera palette.
+    #define CHDK_COLOR_BASE                 0xE0    // Start color index for CHDK colors loaded into camera palette.
+    #define CAM_LOAD_CUSTOM_COLORS
 
     #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
     #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments    
