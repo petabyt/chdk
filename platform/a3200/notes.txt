@@ -10,10 +10,7 @@ To enter CHDK <Alt> mode use the Playback [>] button.
 
 KNOWN BUGS
 **********
-- Video Time limit removal is not implemented.
-- AF during video recording is not implemented
-- Motion detection was not tested
-- Mute during zoom in/out is not implemented
+- Motion detection tends to crash the cam when grid is enabled
 
 For Developers
 **************
