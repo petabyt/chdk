@@ -1,8 +1,8 @@
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
-#include "keyboard.h"
 #include "conf.h"
+#include "keyboard.h"
 
 typedef struct {
     short grp;
@@ -10,14 +10,10 @@ typedef struct {
     long canonkey;
 } KeyMap;
 
-long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
-static KeyMap keymap[];
-
-static long alt_mode_key_mask = 0x00004000; // key_print
-static int alt_mode_led=0;
 
 #define KEYS_MASK0 (0x00000000)     // physw_status[0]
 //#define KEYS_MASK1 (0x000FC005)
@@ -29,7 +25,7 @@ static int alt_mode_led=0;
 #define KEYS_MASK1 (0x400 | 0x20000 | 0x8000 | 0x800 | 0x1000 | 0x8 | 0x2 |0x10000 |0x80 | \
                    0x2000 | 0x4000  | 0x80000 | 0x40000 ) // the soft press key codes
 
-#define KEYS_MASK2 (0x00002002)  // physw_status[2]
+#define KEYS_MASK2 (0x00002002 | 0x100)  // physw_status[2]
 
 #define NEW_SS (0x2000)
 #define SD_READONLY_FLAG (0x20000)
@@ -49,6 +45,33 @@ int get_usb_bit()
 static char kbd_stack[NEW_SS];
 #endif
 
+static KeyMap keymap[] = {
+
+    { 2, KEY_SHOOT_FULL      ,0x00002002 }, // Found @0xffb8d554, levent 0x01
+    { 2, KEY_SHOOT_HALF      ,0x00002000 }, // Found @0xffb8d56c, levent 0x00
+    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb8d554, levent 0x01
+//    { 2, KEY_POWER           ,0x00000008 }, // Found @0xffb8d55c, levent 0x600
+    { 2, KEY_PLAYBACK        ,0x00000100 }, // Found @0xffb8d564, levent 0x601
+
+    { 1, KEY_VIDEO           ,0x00000080 }, // Found @0xffb8d4e4, levent 0x12
+    { 1, KEY_UP              ,0x00000400 }, // Found @0xffb8d4fc, levent 0x04
+    { 1, KEY_RIGHT           ,0x00000800 }, // Found @0xffb8d504, levent 0x07
+    { 1, KEY_SET             ,0x00001000 }, // Found @0xffb8d50c, levent 0x08
+    { 1, KEY_LEFT            ,0x00008000 }, // Found @0xffb8d524, levent 0x06
+    { 1, KEY_MENU            ,0x00010000 }, // Found @0xffb8d52c, levent 0x09
+    { 1, KEY_DOWN            ,0x00020000 }, // Found @0xffb8d534, levent 0x05
+
+//   { 1, KEY_UP_SOFT         , 0x00000400 },  //
+//   { 1, KEY_DOWN_SOFT        , 0x00000800 },  //
+//   { 1, KEY_LEFT_SOFT        , 0x00001000 },  //
+//   { 1, KEY_RIGHT_SOFT        , 0x00002000 },  //
+//   { 1, KEY_ZOOM_IN_FASTER  , 0x00000008 },  //
+//   { 1, KEY_ZOOM_OUT_FASTER , 0x00000002 },  //
+
+    { 1, KEY_ZOOM_IN         , 0x00000008 },  //
+    { 1, KEY_ZOOM_OUT        , 0x00000002 },  //
+    { 0, 0, 0 }
+};
 
 
 volatile int jogdial_stopped=0;
@@ -119,7 +142,6 @@ void my_kbd_read_keys() {
     //kbd_new_state[0] = physw_status[0];
     kbd_new_state[1] = physw_status[1];
     kbd_new_state[2] = physw_status[2];
-	static char osd_buf[64];
 
     if (kbd_process() == 0) {
         // we read keyboard state with _kbd_read_keys()
@@ -274,25 +296,3 @@ long get_jogdial_direction(void) {
     }
 }
 
-static KeyMap keymap[] = {
-
-   { 2, KEY_SHOOT_FULL   , 0x00002002 },  //
-   { 2, KEY_SHOOT_FULL_ONLY, 0x00002001 },  //
-   { 2, KEY_SHOOT_HALF   , 0x00002000 },  //  ok
-   { 1, KEY_UP               , 0x00000400 },  // ok
-   { 1, KEY_DOWN           , 0x00020000 },  // ok
-   { 1, KEY_LEFT           , 0x00008000 },  // ok
-   { 1, KEY_RIGHT           , 0x00000800 },  // ok
-//   { 1, KEY_UP_SOFT         , 0x00000400 },  //
-//   { 1, KEY_DOWN_SOFT        , 0x00000800 },  //
-//   { 1, KEY_LEFT_SOFT        , 0x00001000 },  //
-//   { 1, KEY_RIGHT_SOFT        , 0x00002000 },  //
-   { 1, KEY_SET           , 0x00001000 },  // ok
-//   { 1, KEY_ZOOM_IN_FASTER  , 0x00000008 },  //
-//   { 1, KEY_ZOOM_OUT_FASTER , 0x00000002 },  //
-   { 1, KEY_ZOOM_IN         , 0x00000008 },  //
-   { 1, KEY_ZOOM_OUT        , 0x00000002 },  //
-   { 1, KEY_MENU           , 0x00010000 },  // ok
-   { 1, KEY_PRINT           , 0x00000080 },  // ok video key
-        { 0, 0, 0 }
-};

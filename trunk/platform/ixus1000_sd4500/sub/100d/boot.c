@@ -4,6 +4,9 @@
 #include "dryos31.h"
 //#include "stdlib.h"
 
+
+extern void task_FileWrite();
+
 //IXUS 1000 100D
 
 int fsionotify_compfail = 0;	// count of number of times the file handle was already in the array
@@ -146,6 +149,7 @@ if(!_strcmp(tcb->name, "InitFileModules")) tcb->entry = (void*)init_file_modules
 //if(!_strcmp(tcb->name, "MovieRecord"))     tcb->entry = (void*)movie_record_task; //JHARP - Verified name - Sept 5, 2010
 if(!_strcmp(tcb->name, "ExpDrvTask"))      tcb->entry = (void*)exp_drv_task; //JHARP - Verified name - Sept 5, 2010
 if(!_strcmp(tcb->name, "RotarySw"))        tcb->entry = (void*)JogDial_task_my; //JHARP - Must verify the code in use - Sept 5, 2010
+    if(tcb->entry == (void*)task_FileWrite)         tcb->entry = (void*)filewritetask;
 
 }
 

@@ -16,3 +16,7 @@ bayer pattern. So only DNG RAW work. For cr2 need change the converter to suppor
 --
 Other known issues
 * The modemap is wrong
+
+To do:
+- CAM_ADJUSTABLE_ALT_BUTTON
+- Liveview does not work. Tested on 101a: http://chdk.setepontos.com/index.php?topic=5722.msg106830#msg106830

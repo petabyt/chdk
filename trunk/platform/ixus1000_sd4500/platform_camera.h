@@ -21,13 +21,12 @@
 // don't override them again in here.
 
 // copied from SX200 and modified
-    #define CAM_DRYOS_2_3_R39               1
     #define CAM_PROPSET                     4
-    
+    #define CAM_DRYOS                       1
+    #define CAM_DRYOS_2_3_R39               1
+
     #define CAM_DATE_FOLDER_NAMING          1
 
-//    #define CAM_PROPSET                   2
-    #define CAM_DRYOS                       1
     #define CAM_RAW_ROWPIX                  3816 // from calcs see 100C lib.c   //ASM1989
     #define CAM_RAW_ROWS                    2784 //  "     "    "    "    "  //ASM1989
     #undef  CAM_EMUL_KEYPRESS_DURATION
@@ -38,8 +37,15 @@
     #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #define CAM_USE_ZOOM_FOR_MF             1
     #define CAM_CAN_SD_OVER_IN_AF_LOCK      1
-    
+
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
+
+    #undef CAM_DEFAULT_ALT_BUTTON
+    #define CAM_DEFAULT_ALT_BUTTON  KEY_VIDEO
+// TODO:
+//    #define CAM_ADJUSTABLE_ALT_BUTTON        1    // ALT-button can be set from menu
+//    #define CAM_ALT_BUTTON_NAMES             { "Playback", "Video"  }
+//    #define CAM_ALT_BUTTON_OPTIONS           { KEY_PLAYBACK, KEY_VIDEO }
 
     //ASM1989 TESTING VIDEO HANG
     //#define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
@@ -124,6 +130,9 @@
    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX  1     // enable workaround for camera crash at startup when opening the conf / font files
                                                     // see http://chdk.setepontos.com/index.php?topic=6179.0
    #define CAM_HAS_CMOS                     1
+
+    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
+    #define CAM_HAS_FILEWRITETASK_HOOK          1
 
 // FOR TESTING PURPOSE
 // push all regs except SP and PC
