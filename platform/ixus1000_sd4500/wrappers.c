@@ -15,6 +15,7 @@ long lens_get_target_distance()
 	return _GetCurrentTargetDistance();
 }
 
+/*
 #define RAND_MAX 0x7fffffff
 
 static unsigned int next = 1;
@@ -23,7 +24,7 @@ int rand_r(unsigned int *seed)
 {
 	*seed = *seed * 1103515245 + 12345;
 	return (*seed % ((unsigned int) RAND_MAX + 1));
-}
+}*/
 
 //int _rand(void)
 //{
@@ -36,6 +37,7 @@ int rand_r(unsigned int *seed)
 //	return 0;				// unused return value
 //}
 
+/*
 char *_strrchr(const char *s, int c) {
 	// waldo - unable to find strrchr in s95 FW - we use our own fn
     //return _strrchr(s, c);
@@ -51,3 +53,4 @@ char *_strrchr(const char *s, int c) {
 
 	return result;
 } 
+*/
