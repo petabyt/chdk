@@ -164,21 +164,20 @@ void draw_vline(coord x, coord y, int len, color cl)
 }
 //-------------------------------------------------------------------
 
-// Local variables set up by draw_rectangle, and used in fill_rect
-static coord xMin, yMin, xMax, yMax;
-
 static void draw_rectangle(coord x1, coord y1, coord x2, coord y2, color cl, int round) 
 {
+     coord xMin, yMin, xMax, yMax;
+
     // Normalise values
     if (x1>x2) {
-    	xMax=x1; xMin=x2;
+        xMax=x1; xMin=x2;
     } else {
-    	xMin=x1; xMax=x2;
+        xMin=x1; xMax=x2;
     }
     if (y1>y2) {
-    	yMax=y1; yMin=y2;
+        yMax=y1; yMin=y2;
     } else {
-    	yMin=y1; yMax=y2;
+        yMin=y1; yMax=y2;
     }
 
     // Check if completely off screen
@@ -234,9 +233,22 @@ void draw_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int
     }
 } 
 //-------------------------------------------------------------------
-static void fill_rect(color cl)
+static void fill_rect(coord x1, coord y1, coord x2, coord y2, color cl) 
 {
+    coord xMin, yMin, xMax, yMax;
     register coord y;
+    
+    // Normalise values
+    if (x1>x2) {
+    	xMax=x1; xMin=x2;
+    } else {
+    	xMin=x1; xMax=x2;
+    }
+    if (y1>y2) {
+    	yMax=y1; yMin=y2;
+    } else {
+    	yMin=y1; yMax=y2;
+    }
 
     // Check if completely off screen
     if ((xMax < 0) || (yMax < 0) || (xMin >= camera_screen.width) || (yMin >= camera_screen.height))
@@ -258,25 +270,25 @@ static void fill_rect(color cl)
 void draw_filled_rect(coord x1, coord y1, coord x2, coord y2, color cl)
 {
     draw_rect(x1, y1, x2, y2, cl);
-    fill_rect(cl);
+    fill_rect(x1, y1, x2, y2, cl);
 }
 
 void draw_filled_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness)
 {
     draw_rect_thick(x1, y1, x2, y2, cl, thickness);
-    fill_rect(cl);
+    fill_rect(x1, y1, x2, y2, cl);
 }
 //-------------------------------------------------------------------
 void draw_filled_round_rect(coord x1, coord y1, coord x2, coord y2, color cl)
 { 
     draw_round_rect(x1, y1, x2, y2, cl); 
-    fill_rect(cl);
+    fill_rect(x1, y1, x2, y2, cl);
 } 
 
 void draw_filled_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness)
 { 
     draw_round_rect_thick(x1, y1, x2, y2, cl, thickness); 
-    fill_rect(cl);
+    fill_rect(x1, y1, x2, y2, cl);
 } 
 //-------------------------------------------------------------------
 void draw_char(coord x, coord y, const char ch, color cl)
