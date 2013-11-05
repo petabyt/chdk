@@ -1037,6 +1037,8 @@ extern void draw_filled_round_rect_thick(coord x1, coord y1, coord x2, coord y2,
 
 extern void draw_char(coord x, coord y, const char ch, color cl);
 extern void draw_string(coord x, coord y, const char *s, color cl);
+extern void draw_char_scaled(coord x, coord y, const char ch, color cl, int xsize, int ysize);
+extern void draw_string_scaled(coord x, coord y, const char *s, color cl, int xsize, int ysize);
 
 extern void draw_txt_rect(coord col, coord row, unsigned int length, unsigned int height, color cl);
 extern void draw_txt_rect_exp(coord col, coord row, unsigned int length, unsigned int height, unsigned int exp, color cl);
