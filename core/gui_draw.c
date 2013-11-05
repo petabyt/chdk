@@ -315,6 +315,45 @@ void draw_char(coord x, coord y, const char ch, color cl)
         draw_hline(x, y+i, FONT_WIDTH, BG_COLOR(cl));
 }
 
+void draw_char_scaled(coord x, coord y, const char ch, color cl, int xsize, int ysize)
+{
+    color clf = MAKE_COLOR(FG_COLOR(cl),FG_COLOR(cl));
+    color clb = MAKE_COLOR(BG_COLOR(cl),BG_COLOR(cl));
+
+    FontData *f = (FontData*)get_current_font_data(ch);
+    const unsigned char *sym = (unsigned char*)f + sizeof(FontData) - f->offset;
+    int i, ii;
+
+    // First draw blank lines at top
+    for (i=0; i<f->offset; i++)
+        draw_filled_rect(x,y+i*ysize,x+FONT_WIDTH*xsize-1,y+i*ysize+ysize-1,clb);
+
+    // Now draw character data
+    for (; i<(f->offset+f->size); i++)
+    {
+        unsigned char last = sym[i] & 0x80;
+        int len = 1;
+        for (ii=1; ii<FONT_WIDTH; ii++)
+        {
+            if (((sym[i] << ii) & 0x80) != last)
+            {
+                draw_filled_rect(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb);
+                last = (sym[i] << ii) & 0x80;
+                len = 1;
+            }
+            else
+            {
+                len++;
+            }
+        }
+        draw_filled_rect(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb);
+    }
+
+    // Last draw blank lines at bottom
+    for (; i<FONT_HEIGHT; i++)
+        draw_filled_rect(x,y+i*ysize,x+FONT_WIDTH*xsize-1,y+i*ysize+ysize-1,clb);
+}
+
 //-------------------------------------------------------------------
 void draw_string(coord x, coord y, const char *s, color cl)
 {
@@ -326,6 +365,21 @@ void draw_string(coord x, coord y, const char *s, color cl)
 	    if ((x>=camera_screen.width) && (*s))
         {
 	        draw_char(x-FONT_WIDTH,y, '>', cl);
+	        break;
+	    }
+    }
+}
+
+void draw_string_scaled(coord x, coord y, const char *s, color cl, int xsize, int ysize)
+{
+    while(*s)
+    {
+	    draw_char_scaled(x, y, *s, cl, xsize, ysize);
+	    s++;
+	    x+=FONT_WIDTH*xsize;
+	    if ((x>=camera_screen.width) && (*s))
+        {
+	        draw_char_scaled(x-FONT_WIDTH*xsize,y, '>', cl, xsize, ysize);
 	        break;
 	    }
     }

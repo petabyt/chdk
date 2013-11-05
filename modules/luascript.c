@@ -1158,14 +1158,21 @@ static int luaCB_draw_ellipse_filled( lua_State* L ) {
   return 0;
 }
 
-static int luaCB_draw_string( lua_State* L ) {
-  coord x1=luaL_checknumber(L,1);
-  coord y1=luaL_checknumber(L,2);
+static int luaCB_draw_string( lua_State* L )
+{
+  coord x1 = luaL_checknumber(L,1);
+  coord y1 = luaL_checknumber(L,2);
   const char *t = luaL_checkstring( L, 3 );
-  color clf=get_color(luaL_checknumber(L,4));
-  color clb=get_color(luaL_checknumber(L,5));
-  clf=256*clb+clf;
-  draw_string(x1,y1,t,clf);
+  color clf = get_color(luaL_checknumber(L,4));
+  color clb = get_color(luaL_checknumber(L,5));
+  int xsize = luaL_optnumber(L,6,1);
+  int ysize = luaL_optnumber(L,7,xsize);
+  
+  if ((xsize <= 1) && (ysize <= 1))
+    draw_string(x1, y1, t, MAKE_COLOR(clb,clf));
+  else
+    draw_string_scaled(x1, y1, t, MAKE_COLOR(clb,clf), xsize, ysize);
+  
   return 0;
 }
 
