@@ -106,8 +106,10 @@
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
-    #define CAM_ALT_BUTTON_NAMES            { "Print", "Face", "Disp"}
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_FACE, KEY_DISPLAY }
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Face", "Disp"}
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_FACE, KEY_DISPLAY }
+
+    #define CAM_HAS_FILEWRITETASK_HOOK       1
 
     // Define shortcut overrides where defaults are not suitable
     // a3200 has no erase button, so make DISP button the toggle_raw and Alt +/- shortcuts.
