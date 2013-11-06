@@ -40,8 +40,7 @@ static KeyMap keymap[] = {
 	// Order IS important. kbd_get_pressed_key will walk down this table  
 	// and take the first matching mask. Notice that KEY_SHOOT_HALF is  
 	// always pressed if KEY_SHOOT_FULL is. --MarcusSt
-    { 0, KEY_PRINT           ,0x00002000 }, //KEY_PLAYBACK as ALT button
-//    { 0, KEY_PLAYBACK        ,0x00002000 }, // Found @0xffb5d4cc, levent 0x601
+    { 0, KEY_PLAYBACK        ,0x00002000 }, // Found @0xffb5d4cc, levent 0x601
 //    { 0, KEY_POWER           ,0x00004000 }, // Found @0xffb5d4d4, levent 0x600
     { 2, KEY_SHOOT_FULL      ,0x00003000 }, // Found @0xffb5d544, levent 0x01
     { 2, KEY_SHOOT_HALF      ,0x00001000 }, // Found @0xffb5d53c, levent 0x00
