@@ -174,7 +174,7 @@ static ConfInfo osd_conf_info[] = {
     CONF_INFO( 80, conf.show_clock,                             CONF_DEF_VALUE, i:2),
     CONF_INFO( 81, conf.clock_format,                           CONF_DEF_VALUE, i:0),
     CONF_INFO( 82, conf.clock_indicator,                        CONF_DEF_VALUE, i:0),
-    CONF_INFO( 33, conf.clock_halfpress,                        CONF_DEF_VALUE, i:1),
+    CONF_INFO( 83, conf.clock_halfpress,                        CONF_DEF_VALUE, i:1),
 
     CONF_INFO( 90, conf.show_state,                             CONF_DEF_VALUE, i:1),
 
@@ -732,7 +732,7 @@ static short conf_map_1_2[] =
     1086, // 154 conf.unlock_optical_zoom_for_video
     2081, // 155 conf.clock_format
     2082, // 156 conf.clock_indicator
-    2033, // 157 conf.clock_halfpress
+    2083, // 157 conf.clock_halfpress
     1160, // 158 conf.autoiso_enable
     1161, // 159 conf.autoiso_shutter_enum
     1162, // 160 conf.autoiso_user_factor
