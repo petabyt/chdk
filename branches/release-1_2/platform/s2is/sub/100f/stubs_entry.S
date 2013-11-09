@@ -80,6 +80,11 @@ NHSTUB(localtime                              ,0xffaeecd4) //  1 93%
 //int get_flash_params_count(void) { return 0x55; }                          // Found @0xff988024
 
 // Misc stuff
+// LED table init @ 0xff82ecb0
+// LED #1: 0xc022008c, offset 0x104
+// LED #2: 0xc0220088, offset 0x144
+// LED #3: 0xc02200fc, offset 0x1c4
+
 // canon_data_src: 0xffb09320, canon_data_len: 0xdbb0
 
 // Stubs below matched 100%.

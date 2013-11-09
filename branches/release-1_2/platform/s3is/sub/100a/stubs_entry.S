@@ -4,11 +4,10 @@
 // Camera info:
 //   Firmware Ver GM1.00A   // Found @ 0xff81a5c4, "GM1.00A" @ 0xff81a5d1
 //   Firmware build timestamp: Feb 22 2006 08:47:32
-//   Possible corrupt firmware dump - file size too small for start address 0xff810000
-//     file size = 3.40MB, should be 7.94MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon PowerShot S3 IS
 
 // Values for makefile.inc
+//   PLATFORMID = 12570 (0x311a) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x00096410
 
@@ -69,6 +68,11 @@ NHSTUB(Mount_FileSystem                       ,0xff870190) //  1 73%
 //int get_flash_params_count(void) { return 0x6c; }                          // Found @0xff994bd4
 
 // Misc stuff
+// LED table init @ 0xff82dce8
+// LED #1: 0xc022008c, offset 0x104
+// LED #2: 0xc0220088, offset 0x144
+// LED #3: 0xc02200fc, offset 0x1c4
+
 // canon_data_src: 0xffb6b240, canon_data_len: 0xc890
 
 // Stubs below matched 100%.
