@@ -507,7 +507,7 @@ static void gui_osd_draw_movie_time_left()
         {
             // gui_print_osd_state_string_chr("Bitrate: ",video_bitrate_strings[conf.video_bitrate]);
             sprintf(osd_buf, "Bit:%5s",gui_video_bitrate_enum(0,0));
-            draw_osd_string(conf.mode_video_pos, 0, 2*FONT_HEIGHT, osd_buf, conf.osd_color.conf.mode_video_scale);
+            draw_osd_string(conf.mode_video_pos, 0, 2*FONT_HEIGHT, osd_buf, conf.osd_color, conf.mode_video_scale);
         }
 #endif
         if ((conf.video_mode == 1 && conf.fast_movie_quality_control==1) || conf.video_quality != VIDEO_DEFAULT_QUALITY)
