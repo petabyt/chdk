@@ -1,6 +1,8 @@
 #ifndef GUI_DRAW_H
 #define GUI_DRAW_H
 
+#include "conf.h"       // load OSD_pos & OSD_scale
+
 //-------------------------------------------------------------------
 
 // Common colors that are the same in all palettes
@@ -1039,6 +1041,7 @@ extern void draw_char(coord x, coord y, const char ch, color cl);
 extern void draw_string(coord x, coord y, const char *s, color cl);
 extern void draw_char_scaled(coord x, coord y, const char ch, color cl, int xsize, int ysize);
 extern void draw_string_scaled(coord x, coord y, const char *s, color cl, int xsize, int ysize);
+extern void draw_osd_string(OSD_pos pos, int xo, int yo, char *s, color c, OSD_scale scale);
 
 extern void draw_txt_rect(coord col, coord row, unsigned int length, unsigned int height, color cl);
 extern void draw_txt_rect_exp(coord col, coord row, unsigned int length, unsigned int height, unsigned int exp, color cl);

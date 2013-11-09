@@ -277,6 +277,25 @@ static ConfInfo osd_conf_info[] = {
     // Console settings
     CONF_INFO(270, conf.console_show,                           CONF_DEF_VALUE, i:0),
     CONF_INFO(271, conf.console_timeout,                        CONF_DEF_VALUE, i:3),
+ 
+    // OSD element scaling factor 
+    CONF_INFO2( 280, conf.histo_scale,                             CONF_OSD_POS, 0,0  ),  // 0=no scale, 1=scale  (0 for future expansion)
+    CONF_INFO2( 281, conf.dof_scale,                               CONF_OSD_POS, 1,1  ),
+    CONF_INFO2( 282, conf.batt_icon_scale,                         CONF_OSD_POS, 0,0  ),
+    CONF_INFO2( 283, conf.batt_txt_scale,                          CONF_OSD_POS, 1,1  ),
+    CONF_INFO2( 284, conf.mode_state_scale,                        CONF_OSD_POS, 0,0  ),
+    CONF_INFO2( 285, conf.values_scale,                            CONF_OSD_POS, 0,0  ),
+    CONF_INFO2( 286, conf.clock_scale,                             CONF_OSD_POS, 1,1  ),
+    CONF_INFO2( 287, conf.space_icon_scale,                        CONF_OSD_POS, 0,0  ),
+    CONF_INFO2( 288, conf.space_txt_scale,                         CONF_OSD_POS, 1,1  ),
+    CONF_INFO2( 289, conf.mode_raw_scale,                          CONF_OSD_POS, 1,1  ),
+    CONF_INFO2( 290, conf.space_ver_scale,                         CONF_OSD_POS, 0,0  ),
+    CONF_INFO2( 291, conf.space_hor_scale,                         CONF_OSD_POS, 0,0  ),   
+    CONF_INFO2( 292, conf.mode_video_scale,                        CONF_OSD_POS, 1,1  ),
+    CONF_INFO2( 293, conf.mode_ev_scale,                           CONF_OSD_POS, 1,1  ),
+    CONF_INFO2( 294, conf.temp_scale,                              CONF_OSD_POS, 1,1  ),
+    CONF_INFO2( 295, conf.ev_video_scale,                          CONF_OSD_POS, 1,1  ),
+    CONF_INFO2( 296, conf.usb_info_scale,                          CONF_OSD_POS, 0,0  ),
 
     {0,0,0,0,{0}}
 };
