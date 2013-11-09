@@ -16,29 +16,30 @@
 
 //-------------------------------------------------------------------
 typedef struct {
-    int     title;
-    OSD_pos *pos;
-    OSD_pos size;
+    int         title;
+    OSD_pos     *pos;
+    OSD_pos     size;
+    OSD_scale   *scale;
 } OSD_elem;
 
 static OSD_elem osd[]={
-    {LANG_OSD_LAYOUT_EDITOR_HISTO,      &conf.histo_pos,        {HISTO_WIDTH+2, HISTO_HEIGHT}   },
-    {LANG_OSD_LAYOUT_EDITOR_DOF_CALC,   &conf.dof_pos,          {23*FONT_WIDTH, 2*FONT_HEIGHT}  },
-    {LANG_OSD_LAYOUT_EDITOR_STATES,     &conf.mode_state_pos,   {12*FONT_WIDTH, 4*FONT_HEIGHT}  },
-    {LANG_OSD_LAYOUT_EDITOR_RAW,        &conf.mode_raw_pos,     {7*FONT_WIDTH, FONT_HEIGHT}     },
-    {LANG_OSD_LAYOUT_EDITOR_MISC,       &conf.values_pos,       {9*FONT_WIDTH, 9*FONT_HEIGHT}   },
-    {LANG_OSD_LAYOUT_EDITOR_BAT_ICON,   &conf.batt_icon_pos,    {28, 12}                        },
-    {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON, &conf.space_icon_pos,   {23, 15}                        },
-    {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON, &conf.space_ver_pos,    {3, 50}                         },
-    {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON, &conf.space_hor_pos,    {50, 3}                         },
-    {LANG_OSD_LAYOUT_EDITOR_BAT_TEXT,   &conf.batt_txt_pos,     {5*FONT_WIDTH, FONT_HEIGHT}     },
-    {LANG_OSD_LAYOUT_EDITOR_SPACE_TEXT, &conf.space_txt_pos,    {5*FONT_WIDTH, FONT_HEIGHT}     },
-    {LANG_OSD_LAYOUT_EDITOR_CLOCK,      &conf.clock_pos,        {5*FONT_WIDTH, FONT_HEIGHT}     },
-    {LANG_OSD_LAYOUT_EDITOR_TEMP,       &conf.temp_pos,         {9*FONT_WIDTH, FONT_HEIGHT}     },
-    {LANG_OSD_LAYOUT_EDITOR_VIDEO,      &conf.mode_video_pos,   {9*FONT_WIDTH, 4*FONT_HEIGHT}   },
-    {LANG_OSD_LAYOUT_EDITOR_EV,         &conf.mode_ev_pos,      {12*FONT_WIDTH, FONT_HEIGHT}    },
-    {LANG_OSD_LAYOUT_EDITOR_EV_VIDEO,   &conf.ev_video_pos,     {70, 24}},
-    {LANG_OSD_LAYOUT_EDITOR_USB_INFO,   &conf.usb_info_pos,     {31, 14}},  
+    {LANG_OSD_LAYOUT_EDITOR_CLOCK,      &conf.clock_pos,        {5*FONT_WIDTH, FONT_HEIGHT},    &conf.clock_scale       },
+    {LANG_OSD_LAYOUT_EDITOR_TEMP,       &conf.temp_pos,         {9*FONT_WIDTH, FONT_HEIGHT},    &conf.temp_scale        },
+    {LANG_OSD_LAYOUT_EDITOR_RAW,        &conf.mode_raw_pos,     {7*FONT_WIDTH, FONT_HEIGHT},    &conf.mode_raw_scale    },
+    {LANG_OSD_LAYOUT_EDITOR_BAT_ICON,   &conf.batt_icon_pos,    {28, 12},                       &conf.batt_icon_scale   },
+    {LANG_OSD_LAYOUT_EDITOR_BAT_TEXT,   &conf.batt_txt_pos,     {5*FONT_WIDTH, FONT_HEIGHT},    &conf.batt_txt_scale    },
+    {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON, &conf.space_icon_pos,   {23, 15},                       &conf.space_icon_scale  },
+    {LANG_OSD_LAYOUT_EDITOR_SPACE_TEXT, &conf.space_txt_pos,    {5*FONT_WIDTH, FONT_HEIGHT},    &conf.space_txt_scale   },
+    {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON, &conf.space_ver_pos,    {3, 50},                        &conf.space_ver_scale   },
+    {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON, &conf.space_hor_pos,    {50, 3},                        &conf.space_hor_scale   },
+    {LANG_OSD_LAYOUT_EDITOR_USB_INFO,   &conf.usb_info_pos,     {31, 14},                       &conf.usb_info_scale    },  
+    {LANG_OSD_LAYOUT_EDITOR_EV,         &conf.mode_ev_pos,      {12*FONT_WIDTH, FONT_HEIGHT},   &conf.mode_ev_scale     },
+    {LANG_OSD_LAYOUT_EDITOR_EV_VIDEO,   &conf.ev_video_pos,     {70, 24},                       &conf.ev_video_scale    },
+    {LANG_OSD_LAYOUT_EDITOR_VIDEO,      &conf.mode_video_pos,   {9*FONT_WIDTH, 4*FONT_HEIGHT},  &conf.mode_video_scale  },
+    {LANG_OSD_LAYOUT_EDITOR_DOF_CALC,   &conf.dof_pos,          {23*FONT_WIDTH, 2*FONT_HEIGHT}, &conf.dof_scale         },
+    {LANG_OSD_LAYOUT_EDITOR_HISTO,      &conf.histo_pos,        {HISTO_WIDTH+2, HISTO_HEIGHT},  &conf.histo_scale       },
+    {LANG_OSD_LAYOUT_EDITOR_STATES,     &conf.mode_state_pos,   {12*FONT_WIDTH, 4*FONT_HEIGHT}, &conf.mode_state_scale  },
+    {LANG_OSD_LAYOUT_EDITOR_MISC,       &conf.values_pos,       {9*FONT_WIDTH, 9*FONT_HEIGHT},  &conf.values_scale      },
     {0}
 };
 
@@ -66,13 +67,19 @@ void gui_osd_draw()
         gui_osd_draw_temp();
         gui_osd_draw_ev_video(1);
         gui_usb_draw_osd();
+
+        int xscale = osd[curr_item].scale->x ;
+        if ( xscale == 0) xscale = 1 ;
+        int yscale = osd[curr_item].scale->y ;
+        if ( yscale == 0) yscale = 1 ;
         for (i=1; i<=2; ++i)
         {
             draw_rect((osd[curr_item].pos->x>=i)?osd[curr_item].pos->x-i:0, (osd[curr_item].pos->y>=i)?osd[curr_item].pos->y-i:0, 
-                      osd[curr_item].pos->x+osd[curr_item].size.x+i-1, osd[curr_item].pos->y+osd[curr_item].size.y+i-1,
+                      (osd[curr_item].pos->x+(osd[curr_item].size.x)*xscale)+i-1, 
+                      (osd[curr_item].pos->y+(osd[curr_item].size.y)*yscale)+i-1,
                       COLOR_GREEN);
         }
-        sprintf(osd_buf, " %s:  x:%d y:%d s:%d ", lang_str(osd[curr_item].title), osd[curr_item].pos->x, osd[curr_item].pos->y, step);
+        sprintf(osd_buf, " %s:  x:%d y:%d s:%d f:%d:%d ", lang_str(osd[curr_item].title), osd[curr_item].pos->x, osd[curr_item].pos->y, step, xscale, yscale);
         draw_string(0, (osd[curr_item].pos->x<strlen(osd_buf)*FONT_WIDTH+4 && osd[curr_item].pos->y<FONT_HEIGHT+4)?camera_screen.height-FONT_HEIGHT:0,
                     osd_buf, MAKE_COLOR(COLOR_RED, COLOR_WHITE));
         osd_to_draw = 0;
@@ -82,6 +89,7 @@ void gui_osd_draw()
 //-------------------------------------------------------------------
 int gui_osd_kbd_process()
 {
+    int xscale, yscale ;
     switch (kbd_get_autoclicked_key())
     {
     case KEY_LEFT:
@@ -125,6 +133,40 @@ int gui_osd_kbd_process()
         step=(step==1)?10:1;
         osd_to_draw = 1;
         break;
+    case KEY_SHOOT_HALF:
+        xscale = osd[curr_item].scale->x ;
+        yscale = osd[curr_item].scale->y ;
+        switch ((xscale<<4)+yscale)
+        {
+        case 0x11 :
+            xscale=2; yscale=1 ;
+            break ;
+        case 0x21 :
+            xscale=2; yscale=2;
+            break ;
+        case 0x22 :
+            xscale=3; yscale=2 ;
+            break ;
+        case 0x32 :
+            xscale=4; yscale=2 ;
+            break ;
+        case 0x42 :
+            xscale=3; yscale=3 ;
+            break ;
+        case 0x33 :
+            xscale=4; yscale=4 ;
+            break ;
+        case 0x44 :
+            xscale=1; yscale=1 ;
+            break ;
+        default :
+            xscale=0; yscale=0 ;
+            break ;
+        }
+        osd[curr_item].scale->x = xscale ;
+        osd[curr_item].scale->y = yscale ;
+        osd_to_draw = 1;
+        break ;
     }
     return 0;
 }

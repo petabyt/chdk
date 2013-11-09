@@ -161,7 +161,7 @@ static void gui_space_draw_value()
         }
     }
 
-    draw_string(conf.space_txt_pos.x, conf.space_txt_pos.y, osd_buf, cl);
+    draw_osd_string(conf.space_txt_pos, 0, 0, osd_buf, cl, conf.space_txt_scale);
 }
 
 //-------------------------------------------------------------------

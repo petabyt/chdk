@@ -385,6 +385,14 @@ void draw_string_scaled(coord x, coord y, const char *s, color cl, int xsize, in
     }
 }
 
+void draw_osd_string(OSD_pos pos, int xo, int yo, char *s, color c, OSD_scale scale)
+{
+    if ((scale.x == 1) && (scale.y == 1))
+        draw_string(pos.x+xo, pos.y+yo, s, c);
+    else
+        draw_string_scaled(pos.x+(xo*scale.x), pos.y+(yo*scale.y), s, c, scale.x, scale.y);
+}
+
 //-------------------------------------------------------------------
 void draw_txt_rect(coord col, coord row, unsigned int length, unsigned int height, color cl)
 {

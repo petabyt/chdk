@@ -68,7 +68,7 @@ static void gui_batt_draw_charge(){
     color cl = (perc<=20)?conf.osd_color_warn:conf.osd_color;
     sprintf(osd_buf, "%3d%%", perc);
     osd_buf[5]=0;
-    draw_string(conf.batt_txt_pos.x, conf.batt_txt_pos.y, osd_buf, cl);
+    draw_osd_string(conf.batt_txt_pos, 0, 0, osd_buf, cl, conf.batt_txt_scale);
 }
 
 //-------------------------------------------------------------------
@@ -78,7 +78,7 @@ static void gui_batt_draw_volts() {
     v = get_batt_average();
     sprintf(osd_buf, "%ld.%03ld", v/1000, v%1000);
     osd_buf[5]=0;
-    draw_string(conf.batt_txt_pos.x, conf.batt_txt_pos.y, osd_buf, conf.osd_color);
+    draw_osd_string(conf.batt_txt_pos, 0, 0, osd_buf, conf.osd_color, conf.batt_txt_scale);
 }
 
 //-------------------------------------------------------------------

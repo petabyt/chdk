@@ -112,33 +112,33 @@ void gui_osd_draw_dof()
     color valid_col = (conf.osd_color & 0xff00) | COLOR_HISTO_G;
     int i=8;
     short f_ex = (conf.show_dof==DOF_SHOW_IN_DOF_EX);
-    draw_string(conf.dof_pos.x, conf.dof_pos.y, "S/NL/FL:", conf.osd_color);
+    draw_osd_string(conf.dof_pos, 0, 0, "S/NL/FL:", conf.osd_color, conf.dof_scale);
     sprintf_dist(osd_buf, (float)dof_values.subject_distance);
     int j=strlen(osd_buf);
-    draw_string(conf.dof_pos.x+i*FONT_WIDTH, conf.dof_pos.y, osd_buf,
-      (f_ex && (dof_values.distance_valid || shooting_get_focus_mode()))?valid_col:conf.osd_color);
+    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, 0, osd_buf,
+      (f_ex && (dof_values.distance_valid || shooting_get_focus_mode()))?valid_col:conf.osd_color, conf.dof_scale);
     i=i+j;
-    draw_string(conf.dof_pos.x+i*FONT_WIDTH, conf.dof_pos.y, "/", conf.osd_color);
+    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, 0, "/", conf.osd_color, conf.dof_scale);
     sprintf_dist(osd_buf, (float)dof_values.near_limit);
     j=strlen(osd_buf);
-    draw_string(conf.dof_pos.x+(++i)*FONT_WIDTH, conf.dof_pos.y, osd_buf,
-      (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color);
+    draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, 0, osd_buf,
+      (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color, conf.dof_scale);
     i=i+j;
-    draw_string(conf.dof_pos.x+i*FONT_WIDTH, conf.dof_pos.y, "/", conf.osd_color);
+    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, 0, "/", conf.osd_color, conf.dof_scale);
     sprintf_dist(osd_buf, (float)dof_values.far_limit);
-    draw_string(conf.dof_pos.x+(++i)*FONT_WIDTH, conf.dof_pos.y, osd_buf,
-      (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color);
+    draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, 0, osd_buf,
+      (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color, conf.dof_scale);
     i=8;
-      draw_string(conf.dof_pos.x, conf.dof_pos.y+FONT_HEIGHT, "DOF/HYP:", conf.osd_color);
+    draw_osd_string(conf.dof_pos, 0, FONT_HEIGHT, "DOF/HYP:", conf.osd_color, conf.dof_scale);
     sprintf_dist(osd_buf, (float)dof_values.depth_of_field);
     j=strlen(osd_buf);
-    draw_string(conf.dof_pos.x+i*FONT_WIDTH, conf.dof_pos.y+FONT_HEIGHT, osd_buf,
-      (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color);
+    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, FONT_HEIGHT, osd_buf,
+      (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color, conf.dof_scale);
     i=i+j;
-    draw_string(conf.dof_pos.x+i*FONT_WIDTH, conf.dof_pos.y+FONT_HEIGHT, "/", conf.osd_color);
+    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, FONT_HEIGHT, "/", conf.osd_color, conf.dof_scale);
     sprintf_dist_hyp(osd_buf, (float)dof_values.hyperfocal_distance);
-    draw_string(conf.dof_pos.x+(++i)*FONT_WIDTH, conf.dof_pos.y+FONT_HEIGHT, osd_buf,
-      (f_ex && dof_values.hyperfocal_valid)?valid_col:conf.osd_color);
+    draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, FONT_HEIGHT, osd_buf,
+      (f_ex && dof_values.hyperfocal_valid)?valid_col:conf.osd_color, conf.dof_scale);
 }
 
 //-------------------------------------------------------------------
@@ -148,7 +148,7 @@ static void gui_print_osd_state_string()
 {
     sprintf(osd_buf+strlen(osd_buf), "%12s", "");
     osd_buf[12]=0;  // limit length to 12 max
-    draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+n, osd_buf, conf.osd_color_override);
+    draw_osd_string(conf.mode_state_pos, 0, n, osd_buf, conf.osd_color_override, conf.mode_state_scale);
     n+=FONT_HEIGHT;
 }
 
@@ -174,7 +174,7 @@ static void gui_print_osd_misc_string()
 {
     sprintf(osd_buf+strlen(osd_buf), "%9s", "");
     osd_buf[9]=0;  // limit length to 9 max
-    draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
+    draw_osd_string(conf.values_pos, 0, m, osd_buf, conf.osd_color, conf.values_scale);
     m+=FONT_HEIGHT;
 }
 
@@ -201,7 +201,7 @@ static void gui_print_osd_dof_string_dist(const char * title, int value, short u
   strcpy(osd_buf, title);
   int i=strlen(osd_buf);
   if (i<8) {
-    draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
+    draw_osd_string(conf.values_pos, 0, m, osd_buf, conf.osd_color, conf.values_scale);
     if (is_hyp) {
         sprintf_dist_hyp(osd_buf, (float)value);
     } else {
@@ -209,10 +209,10 @@ static void gui_print_osd_dof_string_dist(const char * title, int value, short u
     }
     sprintf(osd_buf+strlen(osd_buf), "%9s", "");
     osd_buf[9-i]=0;
-    draw_string(conf.values_pos.x+i*FONT_WIDTH, conf.values_pos.y+m, osd_buf, use_good_color?((conf.osd_color & 0xff00) | COLOR_HISTO_G):conf.osd_color);
+    draw_osd_string(conf.values_pos, i*FONT_WIDTH, m, osd_buf, use_good_color?((conf.osd_color & 0xff00) | COLOR_HISTO_G):conf.osd_color, conf.values_scale);
   } else {
     osd_buf[9]=0;
-    draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
+    draw_osd_string(conf.values_pos, 0, m, osd_buf, conf.osd_color,conf.values_scale);
   }
   m+=FONT_HEIGHT;
 }
@@ -227,11 +227,11 @@ void gui_osd_draw_raw_info()
         {
             int raw_count = GetRawCount();  
             sprintf(osd_buf, "%s:%3d", (conf.dng_raw)?"DNG":"RAW", raw_count);
-            draw_string(conf.mode_raw_pos.x, conf.mode_raw_pos.y, osd_buf, ((raw_count > conf.remaining_raw_treshold) || (b <= 6)) ? conf.osd_color : conf.osd_color_warn);
+            draw_osd_string(conf.mode_raw_pos, 0, 0, osd_buf, ((raw_count > conf.remaining_raw_treshold) || (b <= 6)) ? conf.osd_color : conf.osd_color_warn, conf.mode_raw_scale);
             if (++b > 12) b = 0;
         }
         else
-            draw_string(conf.mode_raw_pos.x, conf.mode_raw_pos.y, (conf.dng_raw)?"DNG":"RAW", conf.osd_color); 
+            draw_osd_string(conf.mode_raw_pos, 0, 0, (conf.dng_raw)?"DNG":"RAW", conf.osd_color,conf.mode_raw_scale); 
     }   
     else if (conf.raw_exceptions_warn)
     {
@@ -460,7 +460,10 @@ void gui_osd_draw_clock(int x, int y, color cl)
         break;  
     }
 
-    draw_string(((x)?x:conf.clock_pos.x)-w*FONT_WIDTH, (y)?y:conf.clock_pos.y, osd_buf, (cl)?cl:conf.osd_color);
+    if (x)  // for gui_4wins.c
+        draw_string(x, y, osd_buf, (cl)?cl:conf.osd_color);
+    else
+        draw_osd_string(conf.clock_pos, 0, 0, osd_buf, (cl)?cl:conf.osd_color, conf.clock_scale);
 }
 
 static void gui_osd_draw_seconds()
@@ -471,11 +474,11 @@ static void gui_osd_draw_seconds()
     sprintf(osd_buf, "%02u", ttm->tm_sec);
     if (conf.clock_pos.x<4*FONT_WIDTH)
     {
-        draw_string(conf.clock_pos.x, conf.clock_pos.y, osd_buf, conf.osd_color);
+        draw_osd_string(conf.clock_pos, 0, 0, osd_buf, conf.osd_color, conf.clock_scale);
     }
     else
     {
-        draw_string(conf.clock_pos.x+(3*FONT_WIDTH), conf.clock_pos.y, osd_buf, conf.osd_color);
+        draw_osd_string(conf.clock_pos, (3*FONT_WIDTH), 0, osd_buf, conf.osd_color, conf.clock_scale);
     }
 }
 
@@ -504,14 +507,14 @@ static void gui_osd_draw_movie_time_left()
         {
             // gui_print_osd_state_string_chr("Bitrate: ",video_bitrate_strings[conf.video_bitrate]);
             sprintf(osd_buf, "Bit:%5s",gui_video_bitrate_enum(0,0));
-            draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y+2*FONT_HEIGHT, osd_buf, conf.osd_color);
+            draw_osd_string(conf.mode_video_pos, 0, 2*FONT_HEIGHT, osd_buf, conf.osd_color.conf.mode_video_scale);
         }
 #endif
         if ((conf.video_mode == 1 && conf.fast_movie_quality_control==1) || conf.video_quality != VIDEO_DEFAULT_QUALITY)
         {
             // gui_print_osd_state_string_int("Quality: ",conf.video_quality);
             sprintf(osd_buf, "Qual:%2i",conf.video_quality);
-            draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y+3*FONT_HEIGHT, osd_buf, conf.osd_color);
+            draw_osd_string(conf.mode_video_pos, 0, 3*FONT_HEIGHT, osd_buf, conf.osd_color,conf.mode_video_scale);
         }
         // everything else is for when recording
         if (!is_video_recording())
@@ -557,7 +560,7 @@ static void gui_osd_draw_movie_time_left()
         if (elapsed < 1)
         {
             sprintf(osd_buf, "Calc...");
-            draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y, osd_buf, conf.osd_color);
+            draw_osd_string(conf.mode_video_pos, 0, 0, osd_buf, conf.osd_color, conf.mode_video_scale);
         }
 
         if (--skipcalls ==0)
@@ -573,12 +576,12 @@ static void gui_osd_draw_movie_time_left()
                 if (conf.show_movie_time & 2)
                 {
                     sprintf(osd_buf, "%04d KB/s", avg_use);
-                    draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y, osd_buf, conf.osd_color);
+                    draw_osd_string(conf.mode_video_pos, 0, 0, osd_buf, conf.osd_color, conf.mode_video_scale);
                 }
                 if (conf.show_movie_time & 1)
                 {
                     sprintf(osd_buf, "-%02d:%02d:%02d", hour, min, sec);
-                    draw_string( conf.mode_video_pos.x, conf.mode_video_pos.y+time_yofst, osd_buf, conf.osd_color);
+                    draw_osd_string(conf.mode_video_pos, 0, time_yofst, osd_buf, conf.osd_color, conf.mode_video_scale);
                 }
 #if CAM_CHDK_HAS_EXT_VIDEO_TIME
                 if( (int)conf.ext_video_time == 1 )
@@ -600,7 +603,7 @@ static void gui_osd_draw_ev()
     if (ev/96 || (ev==0)) sprintf(osd_buf, "EV:  %d %s", abs(ev/96), s[abs(ev/16%6)]);
     else sprintf(osd_buf, "EV:  %s   ", s[abs(ev/16%6)]);
     if (ev>0) osd_buf[4]='+'; else if (ev<0) osd_buf[4]='-';
-    draw_string(conf.mode_ev_pos.x, conf.mode_ev_pos.y, osd_buf, conf.osd_color);
+    draw_osd_string(conf.mode_ev_pos, 0, 0, osd_buf, conf.osd_color, conf.mode_ev_scale);
 }
 
 //-------------------------------------------------------------------
@@ -609,7 +612,8 @@ static void draw_temp(char *lbl, int val, int yofst)
     if (conf.temperature_unit != 0)
         val = (val*18+320)/10;
     sprintf(osd_buf,"%s: %i°",lbl, val);
-    draw_string(conf.temp_pos.x, conf.temp_pos.y+yofst*FONT_HEIGHT, osd_buf, conf.osd_color);
+    draw_osd_string(conf.temp_pos, 0, yofst*FONT_HEIGHT, osd_buf, conf.osd_color, conf.temp_scale);
+
 }
 
 void gui_osd_draw_temp() {
