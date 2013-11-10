@@ -917,30 +917,17 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
     }
     else
     {
-        // IXUS 700
-        int k = adr2idx(fw,0xFFD70110);
-        if (idx_valid(fw,k) && (strncmp((char*)fwadr(fw,k),"Canon ",6) == 0))
+        //                             IXUS 700    IXUS 30/40  IXUS 50     Other
+        uint32_t vx_name_offsets[] = { 0xFFD70110, 0xFFD70120, 0xFFF80110, 0xFFFE0110 };
+        uint32_t vx_pid_offsets[] =  { 0xFFD70130, 0xFFD7014E, 0xFFF80130, 0xFFFE0130 };
+        for (i=0; i<sizeof(vx_name_offsets)/sizeof(vx_name_offsets[0]); i++)
         {
-            fw->cam_idx = k;
-            fw->pid_adr = 0xFFD70130;
-        }
-        else
-        {
-            // IXUS 30 & 40
-            k = adr2idx(fw,0xFFD70120);
+            int k = adr2idx(fw,vx_name_offsets[i]);
             if (idx_valid(fw,k) && (strncmp((char*)fwadr(fw,k),"Canon ",6) == 0))
             {
                 fw->cam_idx = k;
-                fw->pid_adr = 0xFFD7014E;
-            }
-            else
-            {
-                k = adr2idx(fw,0xFFFE0110);
-                if (idx_valid(fw,k) && (strncmp((char*)fwadr(fw,k),"Canon ",6) == 0))
-                {
-                    fw->cam_idx = k;
-                    fw->pid_adr = 0xFFFE0130;
-                }
+                fw->pid_adr = vx_pid_offsets[i];
+                break;
             }
         }
     }
