@@ -47,6 +47,9 @@
     #define CAM_EV_IN_VIDEO                 1
     #define CAM_QUALITY_OVERRIDE            1
 
+    #undef CAM_DEFAULT_ALT_BUTTON
+    #define CAM_DEFAULT_ALT_BUTTON          KEY_PLAYBACK
+
     #undef CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              8
 

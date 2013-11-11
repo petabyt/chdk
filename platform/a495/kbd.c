@@ -49,7 +49,6 @@ static KeyMap keymap[] = {
     * for example
     */
 //    { 0, KEY_POWER           ,0x00800000 }, // Found @0xffe84ed4, levent 0x600
-    { 0, KEY_PRINT           ,0x00020000 }, // KEY Playback for ALT menu
     { 0, KEY_PLAYBACK        ,0x00020000 }, // Found @0xffe84ebc, levent 0x601
     { 2, KEY_MENU            ,0x01000000 }, // Found @0xffe84f88, levent 0x09 (uses inverted logic in physw_status)
     { 2, KEY_MODE            ,0x00800000 }, // mode select                    (uses inverted logic in physw_status)
