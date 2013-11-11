@@ -74,7 +74,7 @@ ROM:FFB1975C                                         ; "VRAM Size     : 0x%x\r"
 void *vid_get_viewport_live_fb()
 {
 //    return (void*)0; // 0x106571F0 + 0x7E900
-    void **fb=(void **)0x5564;
+    void **fb=(void **)0x5564;  //ixus850  @ 0xff8bc488
     unsigned char buff = *((unsigned char*)0x5574);
     if (buff == 0) {
         buff = 2;
@@ -119,7 +119,72 @@ void *vid_get_viewport_fb_d()
 
 long vid_get_viewport_height()
 {
-    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:230;
+    //return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:230;
+    return 240; //nafraf
+    //extern int _GetVRAMVPixelsSize();
+    //return _GetVRAMVPixelsSize();
+}
+
+int vid_get_viewport_width()
+{
+    return 360;
+    //extern int _GetVRAMHPixelsSize();
+    //return _GetVRAMHPixelsSize();
+}
+
+extern int _GetVRAMVPixelsSize();
+extern int _GetVRAMHPixelsSize();
+
+int vid_get_viewport_buffer_width_proper()    { return 720; }
+
+int vid_get_viewport_width_proper() {
+    //return vid_get_viewport_width();
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:_GetVRAMHPixelsSize();
+}
+
+int vid_get_viewport_height_proper() {
+    return ((mode_get()&MODE_MASK) == MODE_PLAY)?240:_GetVRAMVPixelsSize();
+}
+
+int vid_get_viewport_fullscreen_height() {
+    // except for stitch, always full screen
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+        return 240;
+    }
+    return vid_get_viewport_height_proper();
+}
+
+int vid_get_viewport_fullscreen_width() {
+    // except for stitch, always full screen
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+        return 720;
+    }
+    return vid_get_viewport_width_proper();
+}
+
+int vid_get_viewport_display_xoffset_proper() {
+    int val=0;
+    int m = mode_get();
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+        short dir=0;
+        short seq=0;
+        get_property_case(PROPCASE_STITCH_DIRECTION,&dir,sizeof(dir));
+        get_property_case(PROPCASE_STITCH_SEQUENCE,&seq,sizeof(seq));
+        // overall stitch window is 3/4 screen width, centered
+        // live part is 1/2, so margin is either 1/8th or 3/8th
+        if(dir==0) {
+            val = seq?270:90;
+        } else {
+            val = seq?90:270;
+        }
+    }
+    return val;
+}
+int vid_get_viewport_display_yoffset_proper() {
+    int m = mode_get();
+    return ((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH)?60:0; // window is 120, centered in 240 screen
 }
 
 /*****************

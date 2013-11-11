@@ -45,8 +45,7 @@ NHSTUB(MakeAFScan                             ,0xff999cf8) //  2 79%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff9ae2e0 -> ff9ae2e0
-// Mode 33305 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_COLOR_SWAP          33307
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 //DEF(levent_table                            ,0xff9a6cec) // Found @0xff9a6cec,          stubs_min = 0xff9a6cec (0xFF9A6CEC)

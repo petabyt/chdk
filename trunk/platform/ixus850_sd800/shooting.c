@@ -92,35 +92,32 @@ Movie: 640 x 480 / 320 x 240 (30 fps/15 fps) available up to 4GB or 1 hour for e
     320 x 240 (1 min. at 60 fps), 160 x 120 (3 min. at 15 fps)
 canon mode list FF9AE2E0 in 100e
 */
-// PROPCACE 49
+// PROPCASE 0
 const CapturemodeMap modemap[] = {
-    { MODE_LONG_SHUTTER,       32774 }, // guessed
+    { MODE_VIDEO_COLOR_ACCENT,  2594 },
+    { MODE_VIDEO_COLOR_SWAP,    2595 },
+    { MODE_VIDEO_STD,           2596 },
+    { MODE_VIDEO_SPEED,         2597 },
+    { MODE_VIDEO_COMPACT,       2598 },
+
+    { MODE_SCN_NIGHT_SNAPSHOT, 16395 },
+    { MODE_SCN_PORTRAIT,       16397 },
+    { MODE_SCN_KIDS_PETS,      16399 },
+    { MODE_SCN_INDOOR,         16400 },
+    { MODE_SCN_FOLIAGE,        16401 },
+    { MODE_SCN_SNOW,           16402 },
+    { MODE_SCN_BEACH,          16403 },
+    { MODE_SCN_FIREWORK,       16404 },
+    { MODE_SCN_UNDERWATER,     16405 },
+    { MODE_SCN_AQUARIUM,       16406 },
+
+    { MODE_DIGITAL_MACRO,      33288 },
+    { MODE_STITCH,             33290 },
+    { MODE_COLOR_ACCENT,       33305 },
+    { MODE_COLOR_SWAP,         33306 },
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },
-    { MODE_DIGITAL_MACRO,      33288 },
-//    { MODE_PORTRAIT,           32781 }, SCN in canon specs, not in canon list
-//    { MODE_NIGHT_SNAPSHOT,     32779 }, SCN in canon specs, not in canon list
-    { MODE_COLOR_ACCENT,       33306 },
-    { MODE_COLOR_SWAP,         33307 }, // was MY_COLORS
-    { MODE_SCN_PORTRAIT,       16397 }, // guessed
-    { MODE_SCN_NIGHT_SNAPSHOT, 16395 }, // guessed
-    { MODE_SCN_KIDS_PETS,      16400 }, // note 16399 on many other cams!
-    { MODE_SCN_INDOOR,         16401 },
-    { MODE_SCN_FOLIAGE,        16402 },
-    { MODE_SCN_SNOW,           16403 },
-    { MODE_SCN_BEACH,          16404 },
-    { MODE_SCN_FIREWORK,       16405 },
-//    { MODE_SCN_AQUARIUM,       16407 }, 16407 not in canon list
-    { MODE_SCN_AQUARIUM,       16399 }, // guessed
-    { MODE_SCN_UNDERWATER,     16406 },
-    { MODE_VIDEO_COMPACT,      2594  }, // guessed, in canon list
-    { MODE_VIDEO_STD,          2597  },
-    { MODE_VIDEO_SPEED,        2598  },
-//    { MODE_VIDEO_COMPACT,      2599  }, not in canon list
-    { MODE_VIDEO_COLOR_ACCENT, 2595  },
-    { MODE_VIDEO_COLOR_SWAP,   2596  }, // was MY_COLORS
-//    { MODE_VIDEO_TIME_LAPSE,   2601  }, no time lapse in canon specs
-    { MODE_STITCH,             33290 },
+    { MODE_LONG_SHUTTER,       32774 },
 };
 
 #include "../generic/shooting.c"
