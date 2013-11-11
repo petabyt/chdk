@@ -1,6 +1,8 @@
 #include "platform.h"
 #include "lolevel.h"
 
+//These functions now are part of platform/a495/lib.c
+/*
 char *hook_raw_image_addr()
 {
 	return (char*) 0x10E52420; // Ok, ROM:FFCE9A44
@@ -15,10 +17,10 @@ long hook_raw_size()
 void *vid_get_viewport_live_fb()
 {
 	return (void*)0;
-    /*void **fb=(void **)0x3E80;  // ?
-    unsigned char buff = *((unsigned char*)0x3CF0); // sub_FFC87F0C
-    if (buff == 0) buff = 2;  else buff--;    
-    return fb[buff];*/
+    //void **fb=(void **)0x3E80;  // ?
+    //unsigned char buff = *((unsigned char*)0x3CF0); // sub_FFC87F0C
+    //if (buff == 0) buff = 2;  else buff--;    
+    //return fb[buff];
 }
 
 // OSD buffer
@@ -45,3 +47,4 @@ char *camera_jpeg_count_str()
 	return (char*)0x7486C;  // ROM:FFD72194 "9999"
 }
 
+*/

@@ -1,4 +1,1 @@
 - playback (>) key switch to ALT mode and back. Press longer for switching between Play/Shoot mode
-
-Known bugs
-- Live view does not work correctly
