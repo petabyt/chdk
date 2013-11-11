@@ -808,7 +808,7 @@ struct tm *localtime(const time_t *_tod) {
     return _localtime(_tod);
 #else
     // for DRYOS cameras do something with this!  - sizeof(x[]) must be >= sizeof(struct tm) :  'static int x[9];'
-    static int x[9];
+    static int x[10];
     return _LocalTime(_tod, &x);
 #endif
 }
