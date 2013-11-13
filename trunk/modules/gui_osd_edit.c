@@ -86,10 +86,48 @@ void gui_osd_draw()
     }
 }
 
+void osd_font_scale(int dir)   // -1=smaller only, 0=grow & wrap,  1=larger only
+{
+    int xscale, yscale ;
+
+    xscale = osd[curr_item].scale->x ;
+    yscale = osd[curr_item].scale->y ;
+    switch ((xscale<<4)+yscale)
+    {
+        case 0x11 :
+            if ( dir>=0) { xscale=2; yscale=1 ; }
+            break ;
+        case 0x21 :
+            if ( dir>=0) { xscale=2; yscale=2; } else { xscale=1; yscale=1; }
+            break ;
+        case 0x22 :
+            if ( dir>=0) { xscale=3; yscale=2; } else { xscale=2; yscale=1; }
+            break ;
+        case 0x32 :
+            if ( dir>=0) { xscale=4; yscale=2; } else { xscale=2; yscale=2; }
+            break ;
+        case 0x42 :
+            if ( dir>=0) { xscale=3; yscale=3; } else { xscale=3; yscale=2; }
+            break ;
+        case 0x33 :
+            if ( dir>=0) { xscale=4; yscale=4; } else { xscale=4; yscale=2; }
+            break ;
+        case 0x44 :
+            if      ( dir == -1) { xscale=3; yscale=3; }
+        else if ( dir ==  0) { xscale=1; yscale=1; }
+            break ;
+        default :
+            xscale=0; yscale=0 ;
+            break ;
+    }
+    osd[curr_item].scale->x = xscale ;
+    osd[curr_item].scale->y = yscale ;
+    osd_to_draw = 1;
+}
+
 //-------------------------------------------------------------------
 int gui_osd_kbd_process()
 {
-    int xscale, yscale ;
     switch (kbd_get_autoclicked_key())
     {
     case KEY_LEFT:
@@ -134,39 +172,14 @@ int gui_osd_kbd_process()
         osd_to_draw = 1;
         break;
     case KEY_SHOOT_HALF:
-        xscale = osd[curr_item].scale->x ;
-        yscale = osd[curr_item].scale->y ;
-        switch ((xscale<<4)+yscale)
-        {
-        case 0x11 :
-            xscale=2; yscale=1 ;
-            break ;
-        case 0x21 :
-            xscale=2; yscale=2;
-            break ;
-        case 0x22 :
-            xscale=3; yscale=2 ;
-            break ;
-        case 0x32 :
-            xscale=4; yscale=2 ;
-            break ;
-        case 0x42 :
-            xscale=3; yscale=3 ;
-            break ;
-        case 0x33 :
-            xscale=4; yscale=4 ;
-            break ;
-        case 0x44 :
-            xscale=1; yscale=1 ;
-            break ;
-        default :
-            xscale=0; yscale=0 ;
-            break ;
-        }
-        osd[curr_item].scale->x = xscale ;
-        osd[curr_item].scale->y = yscale ;
-        osd_to_draw = 1;
-        break ;
+        osd_font_scale(0) ;
+        break;
+    case KEY_ZOOM_IN:
+        osd_font_scale(1) ;
+        break;
+    case KEY_ZOOM_OUT:
+        osd_font_scale(-1) ;
+        break;
     }
     return 0;
 }
