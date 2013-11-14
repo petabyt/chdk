@@ -142,6 +142,7 @@ void draw_line(coord x1, coord y1, coord x2, coord y2, color cl)
          }
      }
 }
+
 //-------------------------------------------------------------------
 void draw_hline(coord x, coord y, int len, color cl)
 {
@@ -162,134 +163,168 @@ void draw_vline(coord x, coord y, int len, color cl)
     for (; len>0; len--, y++)
         draw_pixel(x, y, cl);
 }
+
 //-------------------------------------------------------------------
-
-static void draw_rectangle(coord x1, coord y1, coord x2, coord y2, color cl, int round) 
+typedef struct
 {
-     coord xMin, yMin, xMax, yMax;
+    coord xMin, yMin, xMax, yMax;
+} rectBox;
 
+static int normalise(rectBox *r, coord x1, coord y1, coord x2, coord y2)
+{
     // Normalise values
     if (x1>x2) {
-        xMax=x1; xMin=x2;
+        r->xMax=x1; r->xMin=x2;
     } else {
-        xMin=x1; xMax=x2;
+        r->xMin=x1; r->xMax=x2;
     }
     if (y1>y2) {
-        yMax=y1; yMin=y2;
+        r->yMax=y1; r->yMin=y2;
     } else {
-        yMin=y1; yMax=y2;
+        r->yMin=y1; r->yMax=y2;
     }
 
     // Check if completely off screen
-    if ((xMax < 0) || (yMax < 0) || (xMin >= camera_screen.width) || (yMin >= camera_screen.height))
-        return;
+    if ((r->xMax < 0) || (r->yMax < 0) || (r->xMin >= camera_screen.width) || (r->yMin >= camera_screen.height))
+        return 0;
+        
+    return 1;
+}
 
+static void shrink(rectBox *r)
+{
+    r->xMin++; r->xMax--;
+    r->yMin++; r->yMax--;
+}
+
+static void shift(rectBox *r)
+{
+    r->xMin++; r->xMax++;
+    r->yMin++; r->yMax++;
+}
+
+static void draw_rectangle(rectBox r, color cl, int round) 
+{
     // Clipping done in draw_hline and draw_vline
-    draw_vline(xMin, yMin + round * 2, yMax - yMin - round * 4 + 1, cl);
-    draw_vline(xMax, yMin + round * 2, yMax - yMin - round * 4 + 1, cl);
-    draw_hline(xMin + 1 + round, yMin, xMax - xMin - round * 2 - 1, cl);
-    draw_hline(xMin + 1 + round, yMax, xMax - xMin - round * 2 - 1, cl);
+    draw_vline(r.xMin, r.yMin + round * 2, r.yMax - r.yMin - round * 4 + 1, cl);
+    draw_vline(r.xMax, r.yMin + round * 2, r.yMax - r.yMin - round * 4 + 1, cl);
+    draw_hline(r.xMin + 1 + round, r.yMin, r.xMax - r.xMin - round * 2 - 1, cl);
+    draw_hline(r.xMin + 1 + round, r.yMax, r.xMax - r.xMin - round * 2 - 1, cl);
+}
+
+static void draw_rectangle_thick(rectBox r, color cl, int thickness, int round)
+{
+    int i;
+    cl = FG_COLOR(cl);
+    draw_rectangle(r,cl,round);
+    for (i=1; i<thickness; i++)
+    {
+        shrink(&r);
+        draw_rectangle(r,cl,0);
+    }
+}
+
+static void fill_rect(rectBox r, color cl) 
+{
+    register coord y;
+    
+    // Clip values
+    if (r.xMin < 0) r.xMin = 0;
+    if (r.yMin < 0) r.yMin = 0;
+    if (r.xMax >= camera_screen.width) r.xMax = camera_screen.width-1;
+    if (r.yMax >= camera_screen.height) r.yMax = camera_screen.height-1;
+
+    cl = BG_COLOR(cl);
+    for (y = r.yMin; y <= r.yMax; ++y)
+        draw_hline(r.xMin, y, r.xMax - r.xMin + 1, cl);
+}
+
+static void draw_filled_rectangle_thick(rectBox r, color cl, int thickness, int round)
+{
+    int i;
+    draw_rectangle(r,FG_COLOR(cl),round);
+    for (i=1; i<thickness; i++)
+    {
+        shrink(&r);
+        draw_rectangle(r,FG_COLOR(cl),0);
+    }
+    shrink(&r);
+    fill_rect(r, cl);
 }
 
 //-------------------------------------------------------------------
 void draw_rect(coord x1, coord y1, coord x2, coord y2, color cl)
 {
-    draw_rectangle(x1,y1,x2,y2,cl&0xff,0);
+    rectBox r;
+    if (normalise(&r,x1,y1,x2,y2))
+        draw_rectangle(r,FG_COLOR(cl),0);
 }
 
 void draw_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness)
 {
-    int i;
-    cl = cl & 0xff;
-    for (i=0; i<thickness; i++)
-    {
-        draw_rectangle(x1+i,y1+i,x2-i,y2-i,cl,0);
-    }
+    rectBox r;
+    if (normalise(&r,x1,y1,x2,y2))
+        draw_rectangle_thick(r,FG_COLOR(cl),thickness,0);
 }
 
 void draw_rect_shadow(coord x1, coord y1, coord x2, coord y2, color cl, int thickness)
 {
     int i;
-    cl = cl & 0xff;
-    for (i=0; i<thickness; i++)
-    {
-        draw_rectangle(x1+i,y1+i,x2+i,y2+i,cl,0);
-    }
+    cl = FG_COLOR(cl);
+    rectBox r;
+    if (normalise(&r,x1,y1,x2,y2))
+        for (i=0; i<thickness; i++)
+        {
+            draw_rectangle(r,cl,0);
+            shift(&r);
+        }
 }
+
 //-------------------------------------------------------------------
 void draw_round_rect(coord x1, coord y1, coord x2, coord y2, color cl)
 { 
-    draw_rectangle(x1,y1,x2,y2,cl&0xff,1);
+    rectBox r;
+    if (normalise(&r,x1,y1,x2,y2))
+        draw_rectangle(r,FG_COLOR(cl),1);
 } 
 
 void draw_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness)
 { 
-    int i;
-    cl = cl & 0xff;
-    draw_rectangle(x1,y1,x2,y2,cl,1);
-    for (i=1; i<thickness; i++)
-    {
-        draw_rectangle(x1+i,y1+i,x2-i,y2-i,cl,0);
-    }
+    rectBox r;
+    if (normalise(&r,x1,y1,x2,y2))
+        draw_rectangle_thick(r,FG_COLOR(cl),thickness,1);
 } 
-//-------------------------------------------------------------------
-static void fill_rect(coord x1, coord y1, coord x2, coord y2, color cl) 
-{
-    coord xMin, yMin, xMax, yMax;
-    register coord y;
-    
-    // Normalise values
-    if (x1>x2) {
-    	xMax=x1; xMin=x2;
-    } else {
-    	xMin=x1; xMax=x2;
-    }
-    if (y1>y2) {
-    	yMax=y1; yMin=y2;
-    } else {
-    	yMin=y1; yMax=y2;
-    }
 
-    // Check if completely off screen
-    if ((xMax < 0) || (yMax < 0) || (xMin >= camera_screen.width) || (yMin >= camera_screen.height))
-        return;
-
-    // Clip values
-    if (xMin < -1) xMin = -1;
-    if (yMin < -1) yMin = -1;
-    if (xMax > camera_screen.width) xMax = camera_screen.width;
-    if (yMax > camera_screen.height) yMax = camera_screen.height;
-
-    cl = BG_COLOR(cl);
-    for (y = yMin+1; y <= yMax-1; ++y)
-    {
-        draw_hline(xMin + 1, y, xMax - xMin - 1, cl);
-    }
-}
 //-------------------------------------------------------------------
 void draw_filled_rect(coord x1, coord y1, coord x2, coord y2, color cl)
 {
-    draw_rect(x1, y1, x2, y2, cl);
-    fill_rect(x1, y1, x2, y2, cl);
+    rectBox r;
+    if (normalise(&r,x1,y1,x2,y2))
+        draw_filled_rectangle_thick(r,cl,1,0);
 }
 
 void draw_filled_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness)
 {
-    draw_rect_thick(x1, y1, x2, y2, cl, thickness);
-    fill_rect(x1, y1, x2, y2, cl);
+    rectBox r;
+    if (normalise(&r,x1,y1,x2,y2))
+        draw_filled_rectangle_thick(r,cl,thickness,0);
 }
+
 //-------------------------------------------------------------------
 void draw_filled_round_rect(coord x1, coord y1, coord x2, coord y2, color cl)
 { 
-    draw_round_rect(x1, y1, x2, y2, cl); 
-    fill_rect(x1, y1, x2, y2, cl);
+    rectBox r;
+    if (normalise(&r,x1,y1,x2,y2))
+        draw_filled_rectangle_thick(r,cl,1,1);
 } 
 
 void draw_filled_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness)
 { 
-    draw_round_rect_thick(x1, y1, x2, y2, cl, thickness); 
-    fill_rect(x1, y1, x2, y2, cl);
+    rectBox r;
+    if (normalise(&r,x1,y1,x2,y2))
+        draw_filled_rectangle_thick(r,cl,thickness,1);
 } 
+
 //-------------------------------------------------------------------
 void draw_char(coord x, coord y, const char ch, color cl)
 {
