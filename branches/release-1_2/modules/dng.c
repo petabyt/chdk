@@ -845,6 +845,7 @@ int raw_init_badpixel_bin()
                     fwrite(c, 1, 4, f);
                 }
                 count = count + len;
+                y += len - 1;
             }
         }
     }
