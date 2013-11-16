@@ -188,11 +188,17 @@ int lua_script_error(lua_State *Lt,int runtime)
     }
     else
     {
-        if (runtime && conf.debug_lua_restart_on_error)
+        if (runtime)
         {
-            script_end();
-            script_start_gui(0);
-            return SCRIPT_RUN_RUNNING;
+            if(conf.debug_lua_restart_on_error) {
+                script_end();
+                script_start_gui(0);
+                return SCRIPT_RUN_RUNNING;
+            }
+        }
+        else // ensure lua_state is closed for compiletime errors
+        {
+            lua_script_reset();
         }
     }
 
