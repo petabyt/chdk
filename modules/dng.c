@@ -812,8 +812,8 @@ int init_badpixel_bin_flag; // contants above to count/create file, > 0 num bad 
 int raw_init_badpixel_bin()
 {
     int count;
-    register unsigned int x, y, len;
-    unsigned short c[2];
+    unsigned int x, y, xlen, ylen;
+    unsigned short c[9];
 
     FILE*f;
     if(init_badpixel_bin_flag == INIT_BADPIXEL_FILE)
@@ -831,22 +831,32 @@ int raw_init_badpixel_bin()
     count = 0;
     for (x=camera_sensor.active_area.x1; x<camera_sensor.active_area.x2; x++)
     {
+    	xlen = 0;
         for (y=camera_sensor.active_area.y1; y<camera_sensor.active_area.y2; y++)
         {
             if (get_raw_pixel(x,y) <= camera_sensor.dng_badpixel_value_limit)
             {
-                for (len=1; len<8 && (y+len)<camera_sensor.active_area.y2; len++)
-                    if (get_raw_pixel(x,y+len) > camera_sensor.dng_badpixel_value_limit)
+                for (ylen=1; ylen<8 && (y+ylen)<camera_sensor.active_area.y2; ylen++)
+                    if (get_raw_pixel(x,y+ylen) > camera_sensor.dng_badpixel_value_limit)
                         break;
                 if (f)
                 {
-                    c[0] = x;
-                    c[1] = y | ((len-1) << 13);
-                    fwrite(c, 1, 4, f);
+                    c[++xlen] = y | ((ylen-1) << 13);
+                    if (xlen == 8)
+                    {
+                        c[0] = x | ((xlen-1) << 13);
+                        fwrite(c, 2, xlen+1, f);
+                        xlen = 0;
+                    }
                 }
-                count = count + len;
-                y += len - 1;
+                count = count + ylen;
+                y += ylen - 1;
             }
+        }
+        if (f && (xlen > 0))
+        {
+            c[0] = x | ((xlen-1) << 13);
+            fwrite(c, 2, xlen+1, f);
         }
     }
     if (f) fclose(f);
@@ -881,7 +891,7 @@ void load_bad_pixels_list_b(char* filename)
     binary_count=-1;
     if (stat(filename,&st)!=0) return;
     filesize=st.st_size;
-    if (filesize%(2*sizeof(short)) != 0) return;
+    if (filesize%sizeof(short) != 0) return;
     if (filesize == 0) { binary_count = 0; return; }    // Allow empty badpixel.bin file
     ptr=malloc(filesize);
     if (!ptr) return;
@@ -891,7 +901,7 @@ void load_bad_pixels_list_b(char* filename)
         fread(ptr,1, filesize,fd);
         fclose(fd);
         binary_list=ptr;
-        binary_count=filesize/(2*sizeof(short));
+        binary_count=filesize/sizeof(short);
     }
     else free(ptr);
 }
@@ -900,14 +910,21 @@ void patch_bad_pixels_b(void)
 {
     int i;
     short* ptr=binary_list;
-    short y, cnt;
-    for (i=0; i<binary_count; i++, ptr+=2)
+    short x, y, xcnt, ycnt;
+    for (i=0; i<binary_count;)
     {
-        y = ptr[1] & 0x1FFF;
-        cnt = (ptr[1] >> 13) & 7;
-        for (; cnt>=0; cnt--, y++)
-            if (get_raw_pixel(ptr[0], y) <= camera_sensor.dng_badpixel_value_limit)
-                patch_bad_pixel(ptr[0], y);
+        x = ptr[i] & 0x1FFF;
+        xcnt = (ptr[i] >> 13) & 7;
+        i++;
+        for (; xcnt>=0; xcnt--)
+        {
+            y = ptr[i] & 0x1FFF;
+            ycnt = (ptr[i] >> 13) & 7;
+            i++;
+            for (; ycnt>=0; ycnt--, y++)
+                if (get_raw_pixel(x, y) <= camera_sensor.dng_badpixel_value_limit)
+                    patch_bad_pixel(x, y);
+        }
     }
 }
 
