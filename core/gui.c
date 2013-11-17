@@ -222,10 +222,10 @@ void do_expire_check() {
     }
 
     color cl;
-    if(gui_get_mode() == GUI_MODE_ALT) {
+    if (camera_info.state.gui_mode_alt) {
         cl=MAKE_COLOR(COLOR_RED, COLOR_WHITE);
         gui_reset_alt_helper(); // replace the helper with nag screen
-    } else if(gui_get_mode() == GUI_MODE_NONE) {
+    } else if (camera_info.state.gui_mode_none) {
         cl=MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE);
     } else {
         return;
@@ -242,7 +242,7 @@ void do_expire_check() {
     {
         draw_string(x+((exp_text_width-strlen(exp_text[i])*FONT_WIDTH)>>1), y+i*FONT_HEIGHT+4, exp_text[i], cl);
         // outside of alt, just show the "expired" line
-        if(gui_get_mode() != GUI_MODE_ALT) {
+        if (!camera_info.state.gui_mode_alt) {
             break;
         }
     }
@@ -2358,13 +2358,13 @@ static void gui_handle_splash(int force_redraw)
 {
     if (gui_splash)
     {
-        if ((gui_get_mode() == GUI_MODE_NONE) || (gui_get_mode() == GUI_MODE_ALT))
+        if (camera_info.state.gui_mode_none || camera_info.state.gui_mode_alt)
             if (force_redraw || (gui_splash == SPLASH_TIME))
                 gui_draw_splash();
 
         if (--gui_splash == 0)
         {
-            if ((gui_get_mode() == GUI_MODE_NONE) || (gui_get_mode() == GUI_MODE_ALT))
+            if (camera_info.state.gui_mode_none || camera_info.state.gui_mode_alt)
                 gui_set_need_restore();
             free(logo);
             logo = NULL;
@@ -2422,12 +2422,17 @@ gui_mode_t gui_get_mode() { return gui_mode->mode; }
 // Set new GUI mode, returns old mode
 gui_handler* gui_set_mode(gui_handler *mode) 
 {
+    // Set up gui mode & state variables
+    camera_info.state.gui_mode = mode->mode;
+    camera_info.state.gui_mode_none = (camera_info.state.gui_mode == GUI_MODE_NONE);
+    camera_info.state.gui_mode_alt = (camera_info.state.gui_mode == GUI_MODE_ALT);
+	
 	if ( gui_mode == mode )
 		return gui_mode;
-	
+
 #ifdef CAM_TOUCHSCREEN_UI
-    if (((gui_mode->mode == GUI_MODE_NONE) != (mode->mode == GUI_MODE_NONE)) ||    // Change from GUI_MODE_NONE to any other or vice-versa
-        ((gui_mode->mode > GUI_MODE_MENU)  != (mode->mode > GUI_MODE_MENU)))       // Switch in & out of menu mode
+    if (((gui_mode->mode == GUI_MODE_NONE) != (mode->mode == GUI_MODE_NONE)) || // Change from GUI_MODE_NONE to any other or vice-versa
+        ((gui_mode->mode >  GUI_MODE_MENU) != (mode->mode >  GUI_MODE_MENU)))   // Switch in & out of menu mode
         redraw_buttons = 1;
 #endif
 
@@ -2447,7 +2452,7 @@ gui_handler* gui_set_mode(gui_handler *mode)
         gui_set_need_redraw();
 
 #ifdef CAM_DISP_ALT_TEXT
-    if (gui_mode->mode == GUI_MODE_ALT)
+    if (camera_info.state.gui_mode_alt)
         gui_reset_alt_helper();
 #endif
 
@@ -2627,27 +2632,25 @@ void gui_chdk_draw()
     gui_draw_osd();
 #endif
 
-    if( camera_info.state.osd_title_line ) 
+    if (camera_info.state.osd_title_line) 
     {
 #ifdef CAM_DISP_ALT_TEXT
-       script_get_alt_text(buf);
-       draw_string(((CAM_SCREEN_WIDTH/2)-(FONT_WIDTH*strlen(buf)/2)), (CAM_SCREEN_HEIGHT-FONT_HEIGHT), buf, MAKE_COLOR(COLOR_RED, COLOR_WHITE));
+        script_get_alt_text(buf);
+        draw_string(((CAM_SCREEN_WIDTH/2)-(FONT_WIDTH*strlen(buf)/2)), (CAM_SCREEN_HEIGHT-FONT_HEIGHT), buf, MAKE_COLOR(COLOR_RED, COLOR_WHITE));
 #endif     
 
-        if ( (mode_get()&MODE_MASK) == MODE_REC || (mode_get()&MODE_MASK) == MODE_PLAY)
+        if (camera_info.state.mode_rec || camera_info.state.mode_play)
         {
-            draw_txt_string(0, 14, script_title, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+            draw_txt_string(CAM_TS_BUTTON_BORDER/FONT_WIDTH, 14, script_title, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
         }
         clear_for_title = 1;   
     }
-    else 
+    else if (clear_for_title)
     {
-        if ( clear_for_title )
-        {
-            draw_restore() ;
-            clear_for_title = 0;
-        }
+        draw_restore() ;
+        clear_for_title = 0;
     }
+
     console_draw();
 }
 
@@ -2776,7 +2779,6 @@ int gui_chdk_kbd_process()
         {
             // Not manual focus mode so just update RAW save setting
             cb_change_save_raw();
-            gui_set_need_restore();
         }
         else
         {
@@ -2801,7 +2803,6 @@ int gui_chdk_kbd_process()
         {
             // Change RAW save state
             cb_change_save_raw();
-            gui_set_need_restore();
         }
     }
 #endif
@@ -2846,8 +2847,7 @@ int gui_chdk_kbd_process()
 #endif
             if (kbd_is_key_clicked(SHORTCUT_SET_HYPERFOCAL))    // Set hyperfocal distance if down pressed
             {
-                int m=mode_get()&MODE_SHOOTING_MASK;
-                if ((m==MODE_M) || (m==MODE_AV))
+                if ((camera_info.state.mode_shooting==MODE_M) || (camera_info.state.mode_shooting==MODE_AV))
                     conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance_1e3_f(shooting_get_aperture_from_av96(shooting_get_user_av96()),get_focal_length(lens_get_zoom_point()))/1000;
                 else conf.subj_dist_override_value=(int)shooting_get_hyperfocal_distance();
                 shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
@@ -2915,7 +2915,7 @@ void gui_redraw()
 {
     int flag_gui_enforce_redraw = 0;
 
-    if (!draw_test_guard() && (gui_get_mode() || gui_splash))     // Attempt to detect screen erase in <Alt> mode, redraw if needed
+    if (!draw_test_guard() && (!camera_info.state.gui_mode_none || gui_splash))     // Attempt to detect screen erase in <Alt> mode, redraw if needed
     {
         draw_set_guard();
         flag_gui_enforce_redraw = 1;

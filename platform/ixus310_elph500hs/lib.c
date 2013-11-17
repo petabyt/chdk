@@ -86,7 +86,7 @@ void *vid_get_viewport_fb()
 
 void *vid_get_viewport_live_fb()
 {
-    if (MODE_IS_VIDEO(mode_get()) || (movie_status==VIDEO_RECORD_IN_PROGRESS))
+    if (camera_info.state.mode_video || (movie_status==VIDEO_RECORD_IN_PROGRESS))
         return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
 
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
@@ -122,7 +122,7 @@ int vid_get_viewport_yscale() {
 
 int vid_get_viewport_width()
 {
-	if ((mode_get() & MODE_MASK) == MODE_PLAY)
+	if (camera_info.state.mode_play)
     {
         return 480;
     }
@@ -132,7 +132,7 @@ int vid_get_viewport_width()
 
 int vid_get_viewport_display_xoffset()
 {
-	if ((mode_get() & MODE_MASK) == MODE_PLAY)
+	if (camera_info.state.mode_play)
     {
         return 0;
     }

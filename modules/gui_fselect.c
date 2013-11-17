@@ -429,7 +429,7 @@ void gui_fselect_draw(int enforce_redraw) {
     char buf[100];
     struct tm *time;
     unsigned long sum_size;
-    color cl_markered = ((mode_get()&MODE_MASK) == MODE_REC)?COLOR_YELLOW:0x66;
+    color cl_markered = (camera_info.state.mode_rec)?COLOR_YELLOW:0x66;
     color cl_marked, cl_selected;
 
     if (gui_fselect_readdir)

@@ -153,6 +153,19 @@ typedef struct
         int     state_shooting_progress;    // Holds current state when still image being processed
         int     state_kbd_script_run;       // Script execution state
         int     osd_title_line;             // Display state of CHDK OSD title line
+
+        int     gui_mode;                   // Current GUI mode (from gui_get_mode())
+        int     gui_mode_none;              // Current GUI mode == GUI_MODE_NONE
+        int     gui_mode_alt;               // Current GUI mode == GUI_MODE_ALT
+
+        int     mode;                       // Camera mode info
+        int     mode_shooting;              // Camera shooting mode
+        int     mode_video;                 // Are we in camera video mode
+        int     mode_rec;                   // Are we in camera record mode (still image)
+        int     mode_rec_or_review;         // Are we in camera record mode (still image) or review hold & OSD displayed in review hold
+        int     mode_play;                  // Are we in camera playback mode
+        int     mode_photo;                 // Are we in camera photo mode (playback or not video and not stitch)
+                                            //  - why is some functionality disabled in MODE_STITCH; but not MODE_SCN_STICH (e.g. bracketing) ?????
     } state;
 
     // Performance counters

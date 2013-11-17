@@ -7,6 +7,7 @@
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
+#include "shooting.h"
 #include "histogram.h"
 
 //-------------------------------------------------------------------
@@ -257,13 +258,13 @@ static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small) {
     switch (hist) 
     {
         case HISTO_R: 
-            cl=((mode_get()&MODE_MASK) == MODE_REC)?COLOR_HISTO_R:COLOR_HISTO_R_PLAY;
+            cl=(camera_info.state.mode_rec)?COLOR_HISTO_R:COLOR_HISTO_R_PLAY;
             break;
         case HISTO_G: 
-            cl=((mode_get()&MODE_MASK) == MODE_REC)?COLOR_HISTO_G:COLOR_HISTO_G_PLAY;
+            cl=(camera_info.state.mode_rec)?COLOR_HISTO_G:COLOR_HISTO_G_PLAY;
             break;
         case HISTO_B:
-            cl=((mode_get()&MODE_MASK) == MODE_REC)?COLOR_HISTO_B:COLOR_HISTO_B_PLAY;
+            cl=(camera_info.state.mode_rec)?COLOR_HISTO_B:COLOR_HISTO_B_PLAY;
             break;
         case HISTO_RGB:
         case HISTO_Y:
@@ -303,15 +304,14 @@ static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small) {
 //-------------------------------------------------------------------
 static void gui_osd_draw_blended_histo(coord x, coord y) {
     register unsigned int i, v, red, grn, blu, sel;
-    int m = ((mode_get()&MODE_MASK) == MODE_REC);
     color cls[] = {
         BG_COLOR(conf.histo_color),
-        (m)?COLOR_HISTO_B:COLOR_HISTO_B_PLAY,
-        (m)?COLOR_HISTO_G:COLOR_HISTO_G_PLAY,
-        (m)?COLOR_HISTO_BG:COLOR_HISTO_BG_PLAY,
-        (m)?COLOR_HISTO_R:COLOR_HISTO_R_PLAY,
-        (m)?COLOR_HISTO_RB:COLOR_HISTO_RB_PLAY,
-        (m)?COLOR_HISTO_RG:COLOR_HISTO_RG_PLAY,
+        (camera_info.state.mode_rec)?COLOR_HISTO_B:COLOR_HISTO_B_PLAY,
+        (camera_info.state.mode_rec)?COLOR_HISTO_G:COLOR_HISTO_G_PLAY,
+        (camera_info.state.mode_rec)?COLOR_HISTO_BG:COLOR_HISTO_BG_PLAY,
+        (camera_info.state.mode_rec)?COLOR_HISTO_R:COLOR_HISTO_R_PLAY,
+        (camera_info.state.mode_rec)?COLOR_HISTO_RB:COLOR_HISTO_RB_PLAY,
+        (camera_info.state.mode_rec)?COLOR_HISTO_RG:COLOR_HISTO_RG_PLAY,
         COLOR_WHITE
     };
 
@@ -338,67 +338,79 @@ static void gui_osd_draw_blended_histo(coord x, coord y) {
 }
 
 //-------------------------------------------------------------------
-void gui_osd_draw_histo() {
-    switch (conf.histo_layout) {
-        case OSD_HISTO_LAYOUT_Y:
-            gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y, 0);
-            break;
-        case OSD_HISTO_LAYOUT_A_Y:
-            gui_osd_draw_single_histo(HISTO_RGB, conf.histo_pos.x, conf.histo_pos.y, 0);
-            gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 0);
-            break;
-        case OSD_HISTO_LAYOUT_R_G_B:
-            gui_osd_draw_single_histo(HISTO_R, conf.histo_pos.x, conf.histo_pos.y, 0);
-            gui_osd_draw_single_histo(HISTO_G, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 0);
-            gui_osd_draw_single_histo(HISTO_B, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT*2, 0);
-            break;
-        case OSD_HISTO_LAYOUT_A_yrgb:
-            gui_osd_draw_single_histo(HISTO_RGB, conf.histo_pos.x, conf.histo_pos.y, 0);
-            gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 1);
-            gui_osd_draw_single_histo(HISTO_R, conf.histo_pos.x+HISTO_WIDTH/2+1, conf.histo_pos.y+HISTO_HEIGHT, 1);
-            gui_osd_draw_single_histo(HISTO_G, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT+HISTO_HEIGHT/2, 1);
-            gui_osd_draw_single_histo(HISTO_B, conf.histo_pos.x+HISTO_WIDTH/2+1, conf.histo_pos.y+HISTO_HEIGHT+HISTO_HEIGHT/2, 1);
-            break;
-        case OSD_HISTO_LAYOUT_Y_argb:
-            gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y, 0);
-            gui_osd_draw_single_histo(HISTO_RGB, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 1);
-            gui_osd_draw_single_histo(HISTO_R, conf.histo_pos.x+HISTO_WIDTH/2+1, conf.histo_pos.y+HISTO_HEIGHT, 1);
-            gui_osd_draw_single_histo(HISTO_G, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT+HISTO_HEIGHT/2, 1);
-            gui_osd_draw_single_histo(HISTO_B, conf.histo_pos.x+HISTO_WIDTH/2+1, conf.histo_pos.y+HISTO_HEIGHT+HISTO_HEIGHT/2, 1);
-            break;
-        case OSD_HISTO_LAYOUT_BLEND:
-            gui_osd_draw_blended_histo(conf.histo_pos.x, conf.histo_pos.y);
-            break;
-        case OSD_HISTO_LAYOUT_BLEND_Y:
-            gui_osd_draw_blended_histo(conf.histo_pos.x, conf.histo_pos.y);
-            gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 0);
-            break;
-        case OSD_HISTO_LAYOUT_A:
-        default:
-            gui_osd_draw_single_histo(HISTO_RGB, conf.histo_pos.x, conf.histo_pos.y, 0);
-            break;
-    }
-
-    if (conf.histo_layout != OSD_HISTO_LAYOUT_R_G_B) {
-        if (under_exposed && conf.show_overexp) {
-            draw_filled_ellipse(conf.histo_pos.x+5, conf.histo_pos.y+5, 3, 3, MAKE_COLOR(BG_COLOR(conf.histo_color2), BG_COLOR(conf.histo_color2)));
+void gui_osd_draw_histo(int is_osd_edit)
+{
+    if (is_osd_edit ||
+        (!camera_info.state.mode_video &&
+         (
+          ((conf.show_histo==SHOW_HALF) && camera_info.state.is_shutter_half_press) ||
+          ((conf.show_histo==SHOW_ALWAYS) && (recreview_hold==0))
+         )
+        )
+       )
+    {
+        switch (conf.histo_layout)
+        {
+            case OSD_HISTO_LAYOUT_Y:
+                gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y, 0);
+                break;
+            case OSD_HISTO_LAYOUT_A_Y:
+                gui_osd_draw_single_histo(HISTO_RGB, conf.histo_pos.x, conf.histo_pos.y, 0);
+                gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 0);
+                break;
+            case OSD_HISTO_LAYOUT_R_G_B:
+                gui_osd_draw_single_histo(HISTO_R, conf.histo_pos.x, conf.histo_pos.y, 0);
+                gui_osd_draw_single_histo(HISTO_G, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 0);
+                gui_osd_draw_single_histo(HISTO_B, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT*2, 0);
+                break;
+            case OSD_HISTO_LAYOUT_A_yrgb:
+                gui_osd_draw_single_histo(HISTO_RGB, conf.histo_pos.x, conf.histo_pos.y, 0);
+                gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 1);
+                gui_osd_draw_single_histo(HISTO_R, conf.histo_pos.x+HISTO_WIDTH/2+1, conf.histo_pos.y+HISTO_HEIGHT, 1);
+                gui_osd_draw_single_histo(HISTO_G, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT+HISTO_HEIGHT/2, 1);
+                gui_osd_draw_single_histo(HISTO_B, conf.histo_pos.x+HISTO_WIDTH/2+1, conf.histo_pos.y+HISTO_HEIGHT+HISTO_HEIGHT/2, 1);
+                break;
+            case OSD_HISTO_LAYOUT_Y_argb:
+                gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y, 0);
+                gui_osd_draw_single_histo(HISTO_RGB, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 1);
+                gui_osd_draw_single_histo(HISTO_R, conf.histo_pos.x+HISTO_WIDTH/2+1, conf.histo_pos.y+HISTO_HEIGHT, 1);
+                gui_osd_draw_single_histo(HISTO_G, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT+HISTO_HEIGHT/2, 1);
+                gui_osd_draw_single_histo(HISTO_B, conf.histo_pos.x+HISTO_WIDTH/2+1, conf.histo_pos.y+HISTO_HEIGHT+HISTO_HEIGHT/2, 1);
+                break;
+            case OSD_HISTO_LAYOUT_BLEND:
+                gui_osd_draw_blended_histo(conf.histo_pos.x, conf.histo_pos.y);
+                break;
+            case OSD_HISTO_LAYOUT_BLEND_Y:
+                gui_osd_draw_blended_histo(conf.histo_pos.x, conf.histo_pos.y);
+                gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 0);
+                break;
+            case OSD_HISTO_LAYOUT_A:
+            default:
+                gui_osd_draw_single_histo(HISTO_RGB, conf.histo_pos.x, conf.histo_pos.y, 0);
+                break;
         }
 
-        if (over_exposed && conf.show_overexp) {
-            draw_filled_ellipse(conf.histo_pos.x+HISTO_WIDTH-5, conf.histo_pos.y+5, 3, 3, MAKE_COLOR(BG_COLOR(conf.histo_color2), BG_COLOR(conf.histo_color2)));
+        if (conf.histo_layout != OSD_HISTO_LAYOUT_R_G_B) {
+            if (under_exposed && conf.show_overexp) {
+                draw_filled_ellipse(conf.histo_pos.x+5, conf.histo_pos.y+5, 3, 3, MAKE_COLOR(BG_COLOR(conf.histo_color2), BG_COLOR(conf.histo_color2)));
+            }
+
+            if (over_exposed && conf.show_overexp) {
+                draw_filled_ellipse(conf.histo_pos.x+HISTO_WIDTH-5, conf.histo_pos.y+5, 3, 3, MAKE_COLOR(BG_COLOR(conf.histo_color2), BG_COLOR(conf.histo_color2)));
+            }
         }
-    }
-    if ((conf.show_overexp ) && camera_info.state.is_shutter_half_press && (under_exposed || over_exposed))
-        draw_string(conf.histo_pos.x+HISTO_WIDTH-FONT_WIDTH*3, conf.histo_pos.y-FONT_HEIGHT, "EXP", conf.histo_color);
-    if (conf.histo_auto_ajust){
-        if (histo_magnification) {
-            char osd_buf[64];
-            sprintf(osd_buf, " %d.%02dx ", histo_magnification/100, histo_magnification%100);
-            draw_string(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, osd_buf, conf.histo_color);
-        } else if (gui_get_mode()==GUI_MODE_OSD){
-            draw_string(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, " 9.99x ", conf.histo_color);
-        } else {
-            draw_filled_rect(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, conf.histo_pos.x+8*FONT_WIDTH, conf.histo_pos.y-1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT));
+        if ((conf.show_overexp ) && camera_info.state.is_shutter_half_press && (under_exposed || over_exposed))
+            draw_string(conf.histo_pos.x+HISTO_WIDTH-FONT_WIDTH*3, conf.histo_pos.y-FONT_HEIGHT, "EXP", conf.histo_color);
+        if (conf.histo_auto_ajust){
+            if (histo_magnification) {
+                char osd_buf[64];
+                sprintf(osd_buf, " %d.%02dx ", histo_magnification/100, histo_magnification%100);
+                draw_string(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, osd_buf, conf.histo_color);
+            } else if (is_osd_edit){
+                draw_string(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, " 9.99x ", conf.histo_color);
+            } else {
+                draw_filled_rect(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, conf.histo_pos.x+8*FONT_WIDTH, conf.histo_pos.y-1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT));
+            }
         }
     }
 }

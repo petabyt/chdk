@@ -94,7 +94,7 @@ int remotecap_set_target( int type, int lstart, int lcount )
     // fail if invalid / unsupported type requested,
     // or current mode cannot support requested types
     if ((type & ~remotecap_get_target_support()) 
-        || !(mode_get() & MODE_REC)
+        || !camera_info.state.mode_rec
         || ((type & PTP_CHDK_CAPTURE_RAW) && !is_raw_possible())) {
         remotecap_reset();
         return 0;

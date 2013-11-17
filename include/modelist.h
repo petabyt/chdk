@@ -96,7 +96,7 @@ enum {
     MODE_SCN_CREATIVE_EFFECT, // "creative light effect", only known on ixus950_sd850
     MODE_EASY               ,
     MODE_SCN_DIGITAL_MACRO  ,
-    MODE_SCN_STITCH         ,
+    MODE_SCN_STITCH         , // Why do we need this as well as MODE_STITCH ???? It is not checked in the code like MODE_STITCH
     MODE_SCN_LONG_SHUTTER   , // only known on sx1, d10
     MODE_LOWLIGHT           , // g11
     MODE_SCN_NOSTALGIC      , // s90

@@ -159,28 +159,18 @@
             draw_set_draw_proc,
             draw_restore,
 
-            gui_get_mode,
             gui_set_mode,
             gui_default_kbd_process_menu_btn,
             get_batt_perc,
-            gui_osd_draw_clock,
             gui_mbox_init,
             gui_browser_progress_show,
             gui_enum_value_change,
             gui_set_need_restore,
             gui_load_user_menu_script,
 
-            gui_osd_calc_dof,
-            gui_osd_draw_dof,
-            gui_batt_draw_osd,
-            gui_space_draw_osd,
-            gui_osd_draw_state,
-            gui_osd_draw_raw_info,
-            gui_osd_draw_values,
-            gui_osd_draw_temp,
+            gui_draw_osd_elements,
+            gui_osd_draw_clock,
             gui_osd_draw_histo,
-            gui_usb_draw_osd,
-            gui_osd_draw_ev_video,
 
             vid_get_bitmap_fb,
             vid_bitmap_refresh,
@@ -212,9 +202,6 @@
 
             debug_led,
             camera_set_led,
-
-            mode_get,
-            mode_is_video,
 
             shooting_get_av96,
             shooting_get_bv96,

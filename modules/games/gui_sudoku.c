@@ -1056,7 +1056,7 @@ void exit_sudoku(int save)
 
 int _run()
 {
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         gui_mbox_init(LANG_MSG_INFO_TITLE, LANG_MSG_SWITCH_TO_PLAY_MODE, MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, 0);
     }

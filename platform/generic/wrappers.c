@@ -1592,7 +1592,7 @@ void *vid_get_viewport_active_buffer()
 {
   void *p;
 
-  if ( (mode_get()&MODE_MASK) == MODE_PLAY )
+  if (camera_info.state.mode_play)
   {
     p = vid_get_viewport_fb_d();
   } else {

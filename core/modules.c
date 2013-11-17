@@ -8,6 +8,7 @@
 
 #include "camera_info.h"
 #include "console.h"
+#include "conf.h"
 #include "modules.h"
 #include "module_load.h"
 
@@ -373,8 +374,9 @@ module_handler_t h_grids =
 static void default_gui_grid_draw_osd(int force)
 {
     // If load succeeded call module version of function
-    if (module_load(&h_grids))
-        libgrids->gui_grid_draw_osd(force);
+    if (conf.show_grid_lines)
+        if (module_load(&h_grids))
+            libgrids->gui_grid_draw_osd(force);
 }
 static void default_grid_lines_load(const char *fn)
 {

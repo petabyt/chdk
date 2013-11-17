@@ -209,6 +209,9 @@ void core_spytask()
 
     while (1)
     {
+        // Set up camera mode & state variables
+        mode_get();
+
         if ( memdmptick && (get_tick_count() >= memdmptick) )
         {
             memdmptick = 0;
@@ -247,7 +250,7 @@ void core_spytask()
                 histogram_process();
 
 #ifdef OPT_EDGEOVERLAY
-            if (((gui_get_mode()==GUI_MODE_NONE) || (gui_get_mode()==GUI_MODE_ALT)) && conf.edge_overlay_thresh && conf.edge_overlay_enable)
+            if ((camera_info.state.gui_mode_none || camera_info.state.gui_mode_alt) && conf.edge_overlay_thresh && conf.edge_overlay_enable)
             {
                 // We need to skip first tick because stability
                 if (chdk_started_flag)

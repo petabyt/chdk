@@ -202,7 +202,7 @@ void gui_menu_init(CMenu *menu_ptr) {
 }
 
 //-------------------------------------------------------------------
-int gui_menu_rows()
+static int gui_menu_rows()
 {
     int n;
     // Count the numer of rows in current menu

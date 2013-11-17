@@ -434,20 +434,20 @@ void anzeige_gps(){
 
 			if (g_d_stat == 0)
 			{
-				f_v_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
-				f_h_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
+				f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
+				f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
 			}
 			if (g_d_stat == 1)
 			{
-				f_v_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
-				f_h_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+				f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+				f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
 			}
 			if (g_d_stat == 2)
 			{
-				f_v_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
-				f_h_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+				f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+				f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
 			}
-			if ((mode_get()&MODE_MASK) == MODE_PLAY)
+			if (camera_info.state.mode_play)
 			{
 				int lati[6];
 				memcpy((void*)lati, camera_jpeg_current_latitude(), sizeof(lati));
@@ -467,31 +467,31 @@ void anzeige_gps(){
 
 				if ((int)lat0e == 0)
 				{
-					f_v_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
-					f_h_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
+					f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
+					f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
 				}
 				else
 				{
-					f_v_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
-					f_h_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+					f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+					f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
 				}
 				if ( strcmp(vBuf0, vBuf1) !=0 )
 				{
-					f_v_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
-					f_h_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+					f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+					f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
 				}
 			}
 
 
 
-			f_v_2=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
-			f_h_2=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
+			f_v_2=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
+			f_h_2=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
 
-			f_v_3=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
-			f_h_3=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+			f_v_3=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+			f_h_3=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
 
-			f_v_4=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
-			f_h_4=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
+			f_v_4=(camera_info.state.mode_rec) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
+			f_h_4=(camera_info.state.mode_rec) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
 
 			for(pos1=0; pos1<laenge1; pos1++)
 			{
@@ -589,20 +589,20 @@ void anzeige_track(){
 			f_v_0=COLOR_GPS_TRANSPARENT;
 			f_h_0=COLOR_GPS_TRANSPARENT;
 
-			f_v_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
-			f_h_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
+			f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
+			f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
 
-			f_v_2=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
-			f_h_2=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
+			f_v_2=(camera_info.state.mode_rec) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
+			f_h_2=(camera_info.state.mode_rec) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
 
-			f_v_3=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
-			f_h_3=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+			f_v_3=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+			f_h_3=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
 
-			f_v_4=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
-			f_h_4=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
+			f_v_4=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
+			f_h_4=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
 
-			f_v_5=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
-			f_h_5=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+			f_v_5=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+			f_h_5=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
 
 			for(pos1=0; pos1<laenge1; pos1++)
 			{
@@ -813,7 +813,7 @@ void gpx_bild_ohne_signal(){
 			// In Play-Modus schalten
 			if ((o == (int)conf.gps_rec_play_time) && ((int)conf.gps_rec_play_set == 1))
 			{
-				if ((mode_get()&MODE_MASK) == MODE_REC)
+				if (camera_info.state.mode_rec)
 				{
 //					zoom=lens_get_zoom_point();
 					levent_set_play();
@@ -823,7 +823,7 @@ void gpx_bild_ohne_signal(){
 			// Hintergrundbeleuchtung abschalten
 			if ((p == (int)conf.gps_play_dark_time) && ((int)conf.gps_play_dark_set == 1))
 			{
-				if ((mode_get()&MODE_MASK) == MODE_PLAY)
+				if (camera_info.state.mode_play)
 				{
 					TurnOffBackLight();
 					blo=1;
@@ -1211,14 +1211,14 @@ void gpx_record(){
 		zae_1++;
 		if ((zae_1 == (int)conf.gps_rec_play_time_1) && ((int)conf.gps_rec_play_set_1 == 1))
 		{
-			if ((mode_get()&MODE_MASK) == MODE_REC)
+			if (camera_info.state.mode_rec)
 			{
 				levent_set_play();
 			}
 		}
 		if ((zae_1 == (int)conf.gps_play_dark_time_1) && ((int)conf.gps_play_dark_set_1 == 1))
 		{
-			if ((mode_get()&MODE_MASK) == MODE_PLAY)
+			if (camera_info.state.mode_play)
 			{
 				TurnOffBackLight();
 			}
@@ -1418,7 +1418,7 @@ double gps_kurswinkel(int zaehler){
 		char anz2[40];
 		char bild[9];
 
-	if (gui_get_mode()==GUI_MODE_NONE)
+	if (camera_info.state.gui_mode_none)
 	{
 		sprintf(vBuf, lang_str(LANG_MENU_GPS_t_9), (int)pdelta.delta);
 		draw_txt_string(16, 9, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_WHITE));
@@ -1462,7 +1462,7 @@ double gps_kurswinkel(int zaehler){
 	else
 	{
 		angle1=(int)marsch;
-		if (gui_get_mode()==GUI_MODE_NONE)
+		if (camera_info.state.gui_mode_none)
 		{
 			sprintf(vBuf, lang_str(LANG_MENU_GPS_t_16), (int)angle1);
 			draw_txt_string(1, 13, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
@@ -1509,14 +1509,14 @@ void anzeige_kompass(){
 	int f_v_1=COLOR_GPS_BLUE;
 	int f_h_1=COLOR_GPS_BLUE;
 
-	int f_v_2=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_WHITE : COLOR_GPS_PLAY_WHITE;
-	int f_h_2=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_WHITE : COLOR_GPS_PLAY_WHITE;
+	int f_v_2=(camera_info.state.mode_rec) ? COLOR_GPS_WHITE : COLOR_GPS_PLAY_WHITE;
+	int f_h_2=(camera_info.state.mode_rec) ? COLOR_GPS_WHITE : COLOR_GPS_PLAY_WHITE;
 
-	int f_v_3=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
-	int f_h_3=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
+	int f_v_3=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
+	int f_h_3=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
 
-	int f_v_4=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
-	int f_h_4=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
+	int f_v_4=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
+	int f_h_4=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
 
 	double alter_c_w=cos(0);
 	double alter_s_w=sin(0);
@@ -1536,27 +1536,27 @@ void anzeige_kompass(){
 
 		if (g_d_stat == 0 )
 		{
-			f_v_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
-			f_h_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
+			f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
+			f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
 		}
 		if (g_d_stat == 1 )
 		{
-			f_v_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
-			f_h_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+			f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+			f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
 		}
 		if (g_d_stat == 2 )
 		{
-			f_v_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
-			f_h_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+			f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+			f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
 		}
-		if (gui_get_mode()==GUI_MODE_NONE)
+		if (camera_info.state.gui_mode_none)
 		{
 			anzeige_kompassbild (bitmap1, offset_x - 27, offset_y -14, f_v_0, f_h_0, f_v_1, f_h_1, f_v_2, f_h_2, f_v_4, f_h_4);
 		}
 		if (g_d_stat == 2 )
 		{
-			f_v_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
-			f_h_1=((mode_get()&MODE_MASK) == MODE_REC) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
+			f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
+			f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
 		}
 		if (m>=0 && m<180)
 		{
@@ -1570,7 +1570,7 @@ void anzeige_kompass(){
 		c_w=cos(w);
 		s_w=sin(w);
 		
-		if (gui_get_mode()==GUI_MODE_NONE)
+		if (camera_info.state.gui_mode_none)
 		{
 			anzeige_kompassnadel (alter_winkel, alter_s_w, alter_c_w, bitmap, laenge, m_x, m_y, offset_x, offset_y, f_v_0, f_h_0, f_v_0, f_h_0);
 			anzeige_kompassnadel (m, s_w, c_w, bitmap, laenge, m_x, m_y, offset_x, offset_y, f_v_1, f_h_1, f_v_3, f_h_3);

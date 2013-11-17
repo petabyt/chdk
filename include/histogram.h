@@ -10,6 +10,6 @@
 #define HISTO_HEIGHT                50
 
 extern void histogram_process();
-extern void gui_osd_draw_histo();
+extern void gui_osd_draw_histo(int is_osd_edit);
 
 #endif

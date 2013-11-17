@@ -313,11 +313,9 @@ static int factor(void)
     break;
   case TOKENIZER_GET_MODE:
     accept(TOKENIZER_GET_MODE);
-    int m=mode_get()&MODE_SHOOTING_MASK;
-    int mode_video=MODE_IS_VIDEO(m);
-    if ((mode_get()&MODE_MASK) != MODE_PLAY) r = 0;
-    if ((mode_get()&MODE_MASK) == MODE_PLAY) r = 1;
-    if (((mode_get()&MODE_MASK) != MODE_PLAY) && mode_video) r = 2;
+    if (!camera_info.state.mode_play) r = 0;
+    if (camera_info.state.mode_play) r = 1;
+    if (!camera_info.state.mode_play && camera_info.state.mode_video) r = 2;
   break;
   case TOKENIZER_GET_RAW_NR:
     accept(TOKENIZER_GET_RAW_NR);
@@ -595,9 +593,8 @@ static int factor(void)
   // NOTE: different from get_mode, since this returns the actual value
   case TOKENIZER_GET_CAPTURE_MODE:
     accept(TOKENIZER_GET_CAPTURE_MODE);
-    r = mode_get();
-    if ( (r&MODE_MASK) == MODE_REC) 
-      r &= MODE_SHOOTING_MASK;
+    if (camera_info.state.mode_rec) 
+      r = camera_info.state.mode_shooting;
     else
       r = 0;
     break;
@@ -1803,16 +1800,14 @@ static void set_focus_statement()
     int to;
     accept(TOKENIZER_SET_FOCUS);
     to = expr();
-    int m=mode_get()&MODE_SHOOTING_MASK;
-	int mode_video=MODE_IS_VIDEO(m);
     if (camera_info.cam_has_manual_focus)
     {
-        if (shooting_get_focus_mode() || (mode_video)) shooting_set_focus(to, SET_NOW);
+        if (shooting_get_focus_mode() || (camera_info.state.mode_video)) shooting_set_focus(to, SET_NOW);
         else shooting_set_focus(to, SET_LATER);
     }
     else
     {
-        if (mode_video) shooting_set_focus(to, SET_NOW);
+        if (camera_info.state.mode_video) shooting_set_focus(to, SET_NOW);
         else shooting_set_focus(to, SET_LATER);    
     }
     accept_cr();

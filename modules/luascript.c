@@ -238,7 +238,7 @@ int lua_script_start( char const* script, int ptp )
 {
     lua_script_is_ptp = ptp;
     if(ptp) {
-        ptp_saved_alt_state = (gui_get_mode() == GUI_MODE_ALT);
+        ptp_saved_alt_state = (camera_info.state.gui_mode_alt);
         // put ui in alt state to allow key presses to be sent to script
         // just setting kbd_blocked leaves UI in a confused state
         if(!ptp_saved_alt_state) {
@@ -727,17 +727,15 @@ static int luaCB_set_av96( lua_State* L )
 static int luaCB_set_focus( lua_State* L )
 {
     int to = luaL_checknumber( L, 1 );
-    int m=mode_get()&MODE_SHOOTING_MASK;
-    int mode_video=MODE_IS_VIDEO(m);
 
     if (camera_info.cam_has_manual_focus)
     {
-        if (shooting_get_focus_mode() || (mode_video)) shooting_set_focus(to, SET_NOW);
+        if (shooting_get_focus_mode() || camera_info.state.mode_video) shooting_set_focus(to, SET_NOW);
         else shooting_set_focus(to, SET_LATER);
     }
     else
     {
-        if (shooting_get_common_focus_mode() || mode_video) shooting_set_focus(to, SET_NOW);
+        if (shooting_get_common_focus_mode() || camera_info.state.mode_video) shooting_set_focus(to, SET_NOW);
         else shooting_set_focus(to, SET_LATER);    
     }
   return 0;
@@ -1093,7 +1091,7 @@ static int get_color(int cl) {
         out=cl;
     else {
         if (cl-256<sizeof(script_colors)) {
-            if((mode_get()&MODE_MASK) == MODE_REC)
+            if(camera_info.state.mode_rec)
                 out=script_colors[cl-256][1];
             else
                 out=script_colors[cl-256][0];
@@ -1630,10 +1628,9 @@ static int luaCB_get_buildinfo( lua_State* L )
 
 static int luaCB_get_mode( lua_State* L )
 {
-  int m = mode_get();
-  lua_pushboolean( L, (m&MODE_MASK) != MODE_PLAY );
-  lua_pushboolean( L, MODE_IS_VIDEO(m) );
-  lua_pushnumber( L, m );
+  lua_pushboolean( L, !camera_info.state.mode_play );
+  lua_pushboolean( L, camera_info.state.mode_video );
+  lua_pushnumber( L, camera_info.state.mode );
   return 3;
 }
 
