@@ -14,5 +14,5 @@ Shortcut Keys
  TOGGLE OSD                RIGHT Key
  TOGGLE DISABLE OVERRIDES  LEFT Key
 
-
-
+Known issues
+ 'Movie Digest' mode does not work under CHDK, camera crashes.
