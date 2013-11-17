@@ -1250,9 +1250,7 @@ void gui_draw_osd()
 
     int is_osd_visible = osd_visible();
 
-    if (is_osd_visible)
-        gui_osd_draw_histo(0);
-
+    gui_osd_draw_histo(0);
     gui_draw_osd_elements(0,0);
 
     if (is_osd_visible)
