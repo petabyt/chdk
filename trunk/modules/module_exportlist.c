@@ -292,6 +292,7 @@
 
             GetMemInfo,
             GetExMemInfo,
+            GetARamInfo,
 
             img_prefixes,
             img_exts,

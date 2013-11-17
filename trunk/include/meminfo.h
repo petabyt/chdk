@@ -22,6 +22,7 @@ typedef struct {
 // Always included for module_inspector
 extern void GetMemInfo(cam_meminfo*);
 extern int GetExMemInfo(cam_meminfo*);
+extern int GetARamInfo(cam_meminfo*);
 
 extern int core_get_free_memory();
 

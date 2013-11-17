@@ -81,20 +81,25 @@ void dump_memory()
 int core_get_free_memory()
 {
     cam_meminfo camera_meminfo;
+    cam_meminfo camera_exmeminfo;
+    cam_meminfo camera_araminfo;
 
-#if defined(OPT_EXMEM_MALLOC) && !defined(OPT_EXMEM_TESTING)
-    // If using the exmem / suba memory allocation system then don't need
-    // to try allocating memory to find out how much is available
-    // Call function to scan free list for the largest free block available.
-    GetExMemInfo(&camera_meminfo);
-#else
+    GetARamInfo(&camera_araminfo);
+    GetExMemInfo(&camera_exmeminfo);
+
     // Call function to fill memory info structure and return size of largest free block
     // If implemented this will use firmware function, otherwise it will calculate largest
     // free block
     GetMemInfo(&camera_meminfo);
-#endif
 
-    return camera_meminfo.free_block_max_size;
+    // Find largest free block
+    int f = camera_meminfo.free_block_max_size;
+    if (camera_exmeminfo.free_block_max_size > f)
+        f = camera_exmeminfo.free_block_max_size;
+    if (camera_araminfo.free_block_max_size > f)
+        f = camera_araminfo.free_block_max_size;
+        
+    return f;
 }
 
 static volatile long raw_data_available;
@@ -130,10 +135,11 @@ void core_spytask()
 
     spytask_can_start=0;
 
-#ifdef OPT_EXMEM_MALLOC
+    extern void aram_malloc_init(void);
+    aram_malloc_init();
+
     extern void exmem_malloc_init(void);
     exmem_malloc_init();
-#endif
 
 #ifdef CAM_CHDK_PTP
     extern void init_chdk_ptp_task();

@@ -856,115 +856,23 @@ double _sqrt(double x) {
 }
 
 //----------------------------------------------------------------------------
-// Memory wrappers
 
 #ifdef OPT_EXMEM_MALLOC
-// I set this up to 16 mb and it still booted...
-#ifndef EXMEM_HEAP_SKIP
-#define EXMEM_HEAP_SKIP 0
-#endif
-#ifndef EXMEM_BUFFER_SIZE
-#define EXMEM_BUFFER_SIZE (1024*1024*2) // default size if not specified by camera
-#endif
-#define EXMEM_HEAP_SIZE (EXMEM_BUFFER_SIZE+EXMEM_HEAP_SKIP)	// desired space + amount to skip for the movie buffers (if needed)
-// these aren't currently needed elsewhere
-/*
-void * exmem_alloc(unsigned pool_id, unsigned size)
+void *exmem_alloc(int pool_id,int size,int unk,int unk2)
 {
-	return _exmem_alloc(pool_id,size,0);
+    return _exmem_alloc(pool_id,size,unk,unk2);
 }
-
-void exmem_free(unsigned pool_id)
-{
-	_exmem_free(pool_id);
-}
-*/
-
-static void *exmem_heap;
-void *exmem_start = 0, *exmem_end = 0;
-int exmem_size = 0;
-
-void *suba_init(void *heap, unsigned size, unsigned rst, unsigned mincell);
-void *suba_alloc(void *heap, unsigned size, unsigned zero);
-int suba_free(void *heap, void *p);
-
-void exmem_malloc_init() {
-	// pool zero is EXMEM_RAMDISK on d10
-	void *mem = _exmem_alloc(0,EXMEM_HEAP_SIZE,0,0);
-	if(mem) {
-#if defined(OPT_CHDK_IN_EXMEM)
-		// If loading CHDK into exmem then move heap start past the end of CHDK
-		// and reduce available space by CHDK size (MEMISOSIZE)
-		// round MEMISOSIZE up to next 4 byte boundary if needed (just in case)
-		exmem_start = mem + ((camera_info.memisosize+3)&0xFFFFFFFC);
-		exmem_size = EXMEM_BUFFER_SIZE - ((camera_info.memisosize+3)&0xFFFFFFFC);
-#else
-		// Set start & size based on requested values
-		exmem_start = mem;
-		exmem_size = EXMEM_BUFFER_SIZE;
 #endif
-		exmem_end = exmem_start + exmem_size;
-#if defined(OPT_EXMEM_TESTING)
-		// For testing exmem allocated memory for corruption from normal camera operations
-		// set the above #define. This will allocate the memory; but won't use it (exmem_heap is set to 0)
-		// Instead all the memory is filled with the guard value below.
-		// In gui_draw_debug_vals_osd (gui.c) the memory is tested for the guard value and if any
-		// corruption has occurred then info about the memory locations that were altered is displayed
-		// If OPT_EXMEM_TESTING is defined then OPT_CHDK_IN_EXMEM should not be set.
-		unsigned long *p;
-		for (p=(unsigned long*)exmem_start; p<(unsigned long*)exmem_end; p++) *p = 0xDEADBEEF;
-		exmem_heap = 0;
-#else
-		// Normal operation, use the suba allocation system to manage the memory block
-		exmem_heap = suba_init(exmem_start,exmem_size,1,8);
-#endif
-	}
-}
 
-void *malloc(long size) {
-	if(exmem_heap)
-		return suba_alloc(exmem_heap,size,0);
-	else
-		return _malloc(size);
-}
-void free(void *p) {
-	if(exmem_heap && (p >= exmem_heap))
-		suba_free(exmem_heap,p);
-	else
-		_free(p);
-}
-
-// Use suba functions to fill meminfo structure to match firmware GetMemInfo function
-
-int GetExMemInfo(cam_meminfo *camera_meminfo)
+void *canon_malloc(long size)
 {
-	extern void suba_getmeminfo(void*, int*, int*, int*, int*, int*, int*);
-
-    camera_meminfo->start_address        = (int)exmem_start;
-    camera_meminfo->end_address          = (int)exmem_start + exmem_size;
-    camera_meminfo->total_size           = exmem_size;
-    suba_getmeminfo(exmem_heap,
-                    &camera_meminfo->allocated_size, &camera_meminfo->allocated_peak, &camera_meminfo->allocated_count,
-                    &camera_meminfo->free_size, &camera_meminfo->free_block_max_size, &camera_meminfo->free_block_count);
-
-    return 1;   // return success
-}
-// regular malloc
-#else
-void *malloc(long size) {
     return _malloc(size);
 }
 
-void free(void *p) {
-    return _free(p);
-}
-
-// Include this for the module_inspector module to simplify symbol export logic
-int GetExMemInfo(cam_meminfo *camera_meminfo)
+void canon_free(void *p)
 {
-    return 0;   // return failure (not implemented)
+    _free(p);
 }
-#endif
 
 void *umalloc(long size) {
     return _AllocateUncacheableMemory(size);
@@ -998,6 +906,8 @@ void *memchr(const void *s, int c, int n) {
 	return (void *)0;
 #endif
 }
+
+//----------------------------------------------------------------------------
 
 void GetMemInfo(cam_meminfo *camera_meminfo)
 {
@@ -1050,9 +960,7 @@ extern int sys_mempart_id;
     camera_meminfo->allocated_count = fw_info[4];
 #endif
 #endif
-
 }
-
 
 //----------------------------------------------------------------------------
 

@@ -2315,6 +2315,7 @@ static int luaCB_get_meminfo( lua_State* L ) {
     // for memory info, duplicated from lowlevel
     extern const char _start;
 
+    // TODO default for combined?
     const char *default_heapname = (camera_info.exmem)?"exmem":"system";
     const char *heapname = luaL_optstring( L, 1, default_heapname );
     cam_meminfo meminfo;
@@ -2322,6 +2323,16 @@ static int luaCB_get_meminfo( lua_State* L ) {
     if (strcmp(heapname,"system") == 0)
     {
         GetMemInfo(&meminfo);
+    }
+    else if ((strcmp(heapname,"aram") == 0))
+    {
+        GetARamInfo(&meminfo);
+        // match exmem behavior, return false if not enabled
+        if(meminfo.start_address == 0) {
+            lua_pushboolean(L,0);
+            return 1;
+        }
+        meminfo.allocated_count = -1; // not implemented in suba
     }
     else if ((camera_info.exmem != 0) && (strcmp(heapname,"exmem") == 0))
     {

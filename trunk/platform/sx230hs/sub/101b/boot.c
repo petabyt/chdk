@@ -201,7 +201,7 @@ void __attribute__((naked,noinline)) sub_FF0011B0_my() {
 "   MOV R0, #0x53000 \n"
 "   STR R0, [SP, #4] \n"
 //PATCH BEGIN
-#if defined(OPT_CHDK_IN_EXMEM)
+#if defined(CHDK_NOT_IN_CANON_HEAP)
         "   LDR R0, =0x18A7FC \n"
 #else
               //"   LDR R0, =0x18A7FC \n"
