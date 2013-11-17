@@ -14,7 +14,7 @@ enum Gui_Mode_ {
     GUI_MODE_MENU,
     GUI_MODE_SCRIPT,
     GUI_MODE_MBOX,
-    GUI_MODE_OSD,
+    GUI_MODE_OSD,       // OSD editor
     GUI_MODE_PALETTE,
     GUI_MODE_FSELECT,
     GUI_MODE_MPOPUP,

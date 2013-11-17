@@ -56,18 +56,8 @@ void gui_osd_draw()
     {
         int i;
         draw_restore();
-        gui_osd_draw_histo();
-        gui_osd_draw_dof();
-        gui_batt_draw_osd();
-        gui_space_draw_osd();
-        gui_osd_draw_state();
-        gui_osd_draw_raw_info();
-        gui_osd_draw_values(2);
-        gui_osd_draw_clock(0,0,0);
-        gui_osd_draw_temp();
-        gui_osd_draw_ev_video(1);
-        gui_usb_draw_osd();
-
+        gui_osd_draw_histo(1);
+        gui_draw_osd_elements(1,0);
         int xscale = osd[curr_item].scale->x ;
         if ( xscale == 0) xscale = 1 ;
         int yscale = osd[curr_item].scale->y ;

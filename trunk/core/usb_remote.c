@@ -415,9 +415,10 @@ int handle_usb_remote()
 			virtual_remote_state = driver_state = logic_module_state = REMOTE_RESET ;
 		}
 
-		int m1=mode_get();
-		if ((m1&MODE_MASK) == MODE_PLAY) camera_mode = CAMERA_MODE_PLAYBACK ;
-		else camera_mode = MODE_IS_VIDEO(m1&MODE_SHOOTING_MASK) ? CAMERA_MODE_VIDEO : CAMERA_MODE_SHOOTING ;
+		if (camera_info.state.mode_play)
+            camera_mode = CAMERA_MODE_PLAYBACK ;
+		else
+            camera_mode = camera_info.state.mode_video ? CAMERA_MODE_VIDEO : CAMERA_MODE_SHOOTING ;
 
 		(*usb_driver[switch_type])(get_usb_power(USB_STATE)); 				// jump to driver state machine
 

@@ -260,7 +260,7 @@ short shooting_get_iso_override_value()
     // Apply limits if needed
 #ifdef CAM_ISO_LIMIT_IN_HQ_BURST
     // Limit max ISO in HQ burst mode (also done in shooting_set_iso_real; but done here so OSD display value is correct)
-    if ((mode_get() & MODE_SHOOTING_MASK) == MODE_SCN_HIGHSPEED_BURST)
+    if (camera_info.state.mode_shooting == MODE_SCN_HIGHSPEED_BURST)
         if (iso > CAM_ISO_LIMIT_IN_HQ_BURST) iso = CAM_ISO_LIMIT_IN_HQ_BURST;
 #endif
 #ifdef CAM_MIN_ISO_OVERRIDE
@@ -344,7 +344,7 @@ void shooting_set_iso_mode(int v)
 
 void shooting_set_sv96(short sv96, short is_now)
 {
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         if (is_now)
         {
@@ -367,13 +367,13 @@ void shooting_set_sv96(short sv96, short is_now)
 
 void shooting_set_iso_real(short iso, short is_now)
 {
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         if (iso > 0)
         {
 #ifdef CAM_ISO_LIMIT_IN_HQ_BURST
             // Limit max ISO in HQ burst mode
-            if ((mode_get() & MODE_SHOOTING_MASK) == MODE_SCN_HIGHSPEED_BURST)
+            if (camera_info.state.mode_shooting == MODE_SCN_HIGHSPEED_BURST)
                 if (iso > ISO_MARKET_TO_REAL(CAM_ISO_LIMIT_IN_HQ_BURST)) iso = ISO_MARKET_TO_REAL(CAM_ISO_LIMIT_IN_HQ_BURST);
 #endif
 #ifdef CAM_MIN_ISO_OVERRIDE
@@ -476,7 +476,7 @@ static short find_canon_shutter_speed(short tv96)
 
 void shooting_set_tv96_direct(short tv96, short is_now)
 {
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         if(is_now)
         {
@@ -492,7 +492,7 @@ void shooting_set_tv96_direct(short tv96, short is_now)
 
 void shooting_set_tv96(short tv96, short is_now)
 {
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
         shooting_set_tv96_direct(find_canon_shutter_speed(tv96), is_now);
 }
 
@@ -519,7 +519,7 @@ int shooting_get_user_tv_id()
 void shooting_set_user_tv_by_id(int v)
 {
 #if CAM_HAS_USER_TV_MODES
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         long i;
         for (i=0;i<SS_SIZE;i++)
@@ -538,7 +538,7 @@ void shooting_set_user_tv_by_id(int v)
 void shooting_set_user_tv_by_id_rel(int v)
 {
 #if CAM_HAS_USER_TV_MODES
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         int cv = shooting_get_user_tv_id();
         shooting_set_user_tv_by_id(cv+v);
@@ -549,7 +549,7 @@ void shooting_set_user_tv_by_id_rel(int v)
 void shooting_set_user_tv96(short tv96)
 {
 #if CAM_HAS_USER_TV_MODES
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         tv96 = find_canon_shutter_speed(tv96);
         set_property_case(PROPCASE_USER_TV, &tv96, sizeof(tv96));
@@ -650,7 +650,7 @@ short find_canon_aperture(short av96)
 void shooting_set_av96_direct(short av96, short is_now)
 {
 #if CAM_HAS_IRIS_DIAPHRAGM
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         if(is_now)
         {
@@ -668,7 +668,7 @@ void shooting_set_av96_direct(short av96, short is_now)
 void shooting_set_av96(short av96, short is_now)
 {
 #if CAM_HAS_IRIS_DIAPHRAGM
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
         shooting_set_av96_direct(find_canon_aperture(av96), is_now);
 #endif
 }
@@ -697,7 +697,7 @@ void shooting_set_user_av_by_id(int v)
 {
 #if CAM_HAS_IRIS_DIAPHRAGM
     long i;
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         for (i=0;i<AS_SIZE;i++)
         {
@@ -715,7 +715,7 @@ void shooting_set_user_av_by_id(int v)
 void shooting_set_user_av_by_id_rel(int v)
 {
 #if CAM_HAS_IRIS_DIAPHRAGM
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         int cv = shooting_get_user_av_id();
         shooting_set_user_av_by_id(cv+v);
@@ -726,7 +726,7 @@ void shooting_set_user_av_by_id_rel(int v)
 void shooting_set_user_av96(short av96)
 {
 #if CAM_HAS_IRIS_DIAPHRAGM
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         av96 = find_canon_aperture(av96);
         set_property_case(PROPCASE_USER_AV, &av96, sizeof(av96));
@@ -746,7 +746,7 @@ char* shooting_get_av_str()
 void shooting_set_nd_filter_state(short v, short is_now)
 {
 #if CAM_HAS_ND_FILTER
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         if (is_now)
         {
@@ -922,7 +922,7 @@ int shooting_get_subject_distance_()
 
 void shooting_update_dof_values()
 {
-  int hyp, hyp_1e3, av_1e3, v, m;
+  int hyp, hyp_1e3, av_1e3, v;
   int dist = shooting_get_subject_distance_();
   int zoom_point = lens_get_zoom_point();
   int fl = get_focal_length(zoom_point);
@@ -947,8 +947,7 @@ void shooting_update_dof_values()
     min_av96_zoom_point_tbl[zoom_point] = min_av96;
   }
 
-  m = mode_get()&MODE_SHOOTING_MASK;
-  if ((m==MODE_M || m==MODE_AV) && (av96>0) && !f_focus_ok) { 
+  if ((camera_info.state.mode_shooting==MODE_M || camera_info.state.mode_shooting==MODE_AV) && (av96>0) && !f_focus_ok) { 
     if (av96 < min_av96_zoom_point) av96 = min_av96_zoom_point;
   }
   else av96 = (abs(curr_av96-prop_av96)<2)?prop_av96:curr_av96;
@@ -1021,12 +1020,11 @@ int shooting_get_hyperfocal_distance()
 
 short shooting_can_focus()
 {
-    int m=mode_get()&MODE_SHOOTING_MASK;
 #if !CAM_CAN_SD_OVER_NOT_IN_MF && CAM_CAN_SD_OVERRIDE
 #if CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY
     if (shooting_get_prop(PROPCASE_AF_LOCK))
         return 1;
-    else if (!MODE_IS_VIDEO(m))
+    else if (!camera_info.state.mode_video)
         return 0;
 #elif CAM_CAN_SD_OVER_IN_AF_LOCK
     if (shooting_get_prop(PROPCASE_AF_LOCK))
@@ -1034,12 +1032,12 @@ short shooting_can_focus()
 #elif CAM_HAS_VIDEO_BUTTON
 	return shooting_get_common_focus_mode();
 #endif
-    return (shooting_get_common_focus_mode() || MODE_IS_VIDEO(m));
+    return (shooting_get_common_focus_mode() || camera_info.state.mode_video);
 #elif !CAM_CAN_SD_OVERRIDE
-    return MODE_IS_VIDEO(m);
+    return camera_info.state.mode_video;
 #elif defined (CAMERA_ixus800_sd700)
     // TODO whats the reason for this ?!?
-    return (shooting_get_zoom()<8) && (m!=MODE_AUTO) && (m!=MODE_SCN_UNDERWATER);
+    return (shooting_get_zoom()<8) && (camera_info.state.mode_shooting!=MODE_AUTO) && (camera_info.state.mode_shooting!=MODE_SCN_UNDERWATER);
 #else
 #ifdef PROPCASE_CONTINUOUS_AF
     if (shooting_get_prop(PROPCASE_CONTINUOUS_AF))
@@ -1089,7 +1087,7 @@ void shooting_set_image_quality(int imq)
 void shooting_set_zoom(int v)
 {
     int dist;
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         dist = shooting_get_subject_distance();
         lens_set_zoom_point(v);
@@ -1103,14 +1101,14 @@ void shooting_set_zoom(int v)
 void shooting_set_zoom_rel(int v)
 {
     int cv = shooting_get_zoom();
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         shooting_set_zoom(cv+v);
     }
 }
 
 void shooting_set_zoom_speed(int v) {
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         lens_set_zoom_speed(v);
     }
@@ -1119,7 +1117,7 @@ void shooting_set_zoom_speed(int v) {
 void shooting_set_focus(int v, short is_now)
 {
     int s=v;
-    if ((mode_get()&MODE_MASK) != MODE_PLAY)
+    if (!camera_info.state.mode_play)
     {
         if ((is_now) && shooting_can_focus())
         {
@@ -1205,7 +1203,6 @@ static void shooting_tv_bracketing(int when)
     // first shot? (actually this is called just after the first shot has been taken)
     if (bracketing.shoot_counter == 0)
     {
-        int m = mode_get()&MODE_SHOOTING_MASK;
         // if Tv override is enabled... (this was adapted from function shooting_expo_param_override() )
         if (is_tv_override_enabled)
         {
@@ -1215,8 +1212,10 @@ static void shooting_tv_bracketing(int when)
         // Tv override is disabled, use camera's opinion of Tv for bracketing seed value.
         else 
         {
-            if (!(m==MODE_M || m==MODE_TV || m==MODE_LONG_SHUTTER)) bracketing.tv96=shooting_get_tv96();
-            else bracketing.tv96=shooting_get_user_tv96();
+            if (!(camera_info.state.mode_shooting==MODE_M || camera_info.state.mode_shooting==MODE_TV || camera_info.state.mode_shooting==MODE_LONG_SHUTTER))
+                bracketing.tv96=shooting_get_tv96();
+            else
+                bracketing.tv96=shooting_get_user_tv96();
         }
         bracketing.tv96_step = 32*conf.tv_bracket_value;
     }
@@ -1238,8 +1237,7 @@ static void shooting_av_bracketing(int when)
     // first shot? (actually this is called just after the first shot has been taken)
     if (bracketing.shoot_counter == 0)
     {
-        int m = mode_get()&MODE_SHOOTING_MASK;
-        if (!(m==MODE_M || m==MODE_AV))
+        if (!(camera_info.state.mode_shooting==MODE_M || camera_info.state.mode_shooting==MODE_AV))
             bracketing.av96 = shooting_get_av96();
         else
             bracketing.av96 = shooting_get_user_av96();
@@ -1329,8 +1327,7 @@ void shooting_bracketing(void)
 {  
     if (shooting_get_drive_mode()!=0)  
     {
-        int m=mode_get()&MODE_SHOOTING_MASK;
-        if (m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE) 
+        if (camera_info.state.mode_shooting!=MODE_STITCH && camera_info.state.mode_shooting!=MODE_SCN_BEST_IMAGE) 
         {
             if (camera_info.state.state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
                 bracketing_reset() ;
@@ -1370,7 +1367,7 @@ int is_video_recording()
     //      4 - movie recording in progress, or in 'movie digest' scene mode
     //      5 - movie recording stopping
     //      6 - in video mode, not recording
-    return ((movie_status == VIDEO_RECORD_IN_PROGRESS) && ((mode_get() & MODE_SHOOTING_MASK) != MODE_VIDEO_MOVIE_DIGEST));
+    return ((movie_status == VIDEO_RECORD_IN_PROGRESS) && (camera_info.state.mode_shooting != MODE_VIDEO_MOVIE_DIGEST));
 #else
     // 'movie_status' values
     //      0 - after startup
@@ -1432,6 +1429,15 @@ int mode_get(void)
     get_property_case(PROPCASE_SHOOTING_MODE, &t, 4);
     mode |= shooting_mode_canon2chdk(t);
 
+    // Set camera state variables from mode info
+    camera_info.state.mode = mode;
+    camera_info.state.mode_shooting = mode & MODE_SHOOTING_MASK;
+    camera_info.state.mode_video = mode_is_video(mode);
+    camera_info.state.mode_rec = ((mode & MODE_MASK) == MODE_REC);
+    camera_info.state.mode_rec_or_review = camera_info.state.mode_rec && (recreview_hold==0 || conf.show_osd_in_review);
+    camera_info.state.mode_play = ((mode & MODE_MASK) == MODE_PLAY);
+    camera_info.state.mode_photo = (camera_info.state.mode_play || !(camera_info.state.mode_video || (mode&MODE_SHOOTING_MASK)==MODE_STITCH));
+
     return (mode);
 }
 
@@ -1467,7 +1473,7 @@ void set_ev_video_avail(int x)
         ev_video=0;
         ExpCtrlTool_StopContiAE(0,0);
         get_property_case(PROPCASE_TV,&save_tv_video,2);
-        if ((mode_get()&MODE_SHOOTING_MASK)==MODE_VIDEO_SPEED)
+        if (camera_info.state.mode_shooting==MODE_VIDEO_SPEED)
             tv_min_video=577;   // 1/60
         else
             tv_min_video=480;   //1/30

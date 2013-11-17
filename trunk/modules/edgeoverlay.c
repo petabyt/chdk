@@ -636,12 +636,10 @@ void edge_overlay()
     // code easier to read.
     int bFullPress = kbd_is_key_pressed(KEY_SHOOT_FULL);
     const int bHalfPress = camera_info.state.is_shutter_half_press;
-    const int bPlayMode = (mode_get() & MODE_MASK) == MODE_PLAY;
+    const int bPlayMode = camera_info.state.mode_play;
     const int bPanoramaMode = (conf.edge_overlay_pano != 0);
     const int bNeedHalfPress = (conf.edge_overlay_show != 1);
     const int bDisplayInPlay = (conf.edge_overlay_play == 1);
-    const int bGuiModeNone = (gui_get_mode() == GUI_MODE_NONE);
-    const int bGuiModeAlt = (gui_get_mode() == GUI_MODE_ALT);
     const int bCanDisplay = (
                                 (!bPlayMode && (bHalfPress || !bNeedHalfPress)) ||   // we have a HalfPress in rec-mode
                                 ( bPlayMode && bDisplayInPlay)  // or we are in play-mode with the right settings
@@ -669,7 +667,7 @@ void edge_overlay()
         // In this state we assume no edge overlay in memory,
         // but we are ready to create one if the user presses wishes so.
 
-        int bRealtimeUpdate = bCanDisplay && (bGuiModeAlt || bGuiModeNone);
+        int bRealtimeUpdate = bCanDisplay && (camera_info.state.gui_mode_alt || camera_info.state.gui_mode_none);
         if (bRealtimeUpdate)
         {
             // We try to detect button presses during the lengthy
@@ -678,7 +676,7 @@ void edge_overlay()
             bFullPress |= draw_edge_overlay();
         }
 
-        int bSwitch2Frozen = bFullPress && !bFullPress_prev && bGuiModeNone;
+        int bSwitch2Frozen = bFullPress && !bFullPress_prev && camera_info.state.gui_mode_none;
         if (bSwitch2Frozen)
         {
             // Switch to Frozen mode
@@ -707,7 +705,7 @@ void edge_overlay()
         // it on screen in 'frozen' mode.
 
         // Move edge overlay around.
-        if (gui_get_mode() == GUI_MODE_ALT)
+        if (camera_info.state.gui_mode_alt)
         {
             if (kbd_is_key_pressed(KEY_RIGHT))
                 xoffset +=XINC;
@@ -719,7 +717,7 @@ void edge_overlay()
                 yoffset -=YINC;
         }
 
-        if (bCanDisplay && (bGuiModeAlt || bGuiModeNone))
+        if (bCanDisplay && (camera_info.state.gui_mode_alt || camera_info.state.gui_mode_none))
         {
             // We try to detect button presses during the lengthy
             // calculations.
@@ -729,7 +727,7 @@ void edge_overlay()
 
         // In event of a FullPress, we either capture a new
         // overlay and stay frozen, OR we go back to live mode.
-        if (bFullPress && !bFullPress_prev && bGuiModeNone)
+        if (bFullPress && !bFullPress_prev && camera_info.state.gui_mode_none)
         {
             // Possible mode switch
             if (bPanoramaMode)

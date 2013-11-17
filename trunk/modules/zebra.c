@@ -204,41 +204,15 @@ static void gui_osd_draw_zebra_osd() {
         case ZEBRA_DRAW_OSD:
             if (conf.show_osd) {
                 draw_set_draw_proc(draw_pixel_buffered);
-                if ((mode_get()&MODE_MASK) == MODE_REC) {
-                    if (conf.show_dof != DOF_DONT_SHOW) gui_osd_calc_dof();
-                    if (conf.show_grid_lines)
-                        libgrids->gui_grid_draw_osd(1);
-                    if (conf.show_dof == DOF_SHOW_IN_DOF) {
-                        gui_osd_draw_dof();
-                    }
-                    if (conf.show_state) {
-                        gui_osd_draw_state();
-                    }
-                    if (conf.save_raw && conf.show_raw_state) {
-                        gui_osd_draw_raw_info();
-                    }
-                    if (conf.show_values) {
-                        gui_osd_draw_values(2);
-                    }
-                }
-                gui_batt_draw_osd();
-                gui_space_draw_osd();
-                if (conf.show_clock) {
-                    gui_osd_draw_clock(0,0,0);
-                }
-                if (conf.show_temp>0) {
-                    gui_osd_draw_temp();
-                }
+                gui_draw_osd_elements(0,1);
                 draw_set_draw_proc(NULL);
             }
             /* no break here */
         case ZEBRA_DRAW_HISTO:
         default:
-            if (conf.show_histo) {
-                draw_set_draw_proc(draw_pixel_buffered);
-                gui_osd_draw_histo();
-                draw_set_draw_proc(NULL);
-            }
+            draw_set_draw_proc(draw_pixel_buffered);
+            gui_osd_draw_histo(0);
+            draw_set_draw_proc(NULL);
             break;
     }
 }
@@ -473,16 +447,14 @@ int gui_osd_draw_zebra(int show)
     if (!gui_osd_zebra_init(show))
         return 0;
 
-    int mrec = ((mode_get()&MODE_MASK) == MODE_REC);
-
     color cls[] = {
         COLOR_TRANSPARENT,
-        (mrec)?COLOR_HISTO_B:COLOR_HISTO_B_PLAY,
-        (mrec)?COLOR_HISTO_G:COLOR_HISTO_G_PLAY,
-        (mrec)?COLOR_HISTO_BG:COLOR_HISTO_BG_PLAY,
-        (mrec)?COLOR_HISTO_R:COLOR_HISTO_R_PLAY,
-        (mrec)?COLOR_HISTO_RB:COLOR_HISTO_RB_PLAY,
-        (mrec)?COLOR_HISTO_RG:COLOR_HISTO_RG_PLAY,
+        (camera_info.state.mode_rec)?COLOR_HISTO_B:COLOR_HISTO_B_PLAY,
+        (camera_info.state.mode_rec)?COLOR_HISTO_G:COLOR_HISTO_G_PLAY,
+        (camera_info.state.mode_rec)?COLOR_HISTO_BG:COLOR_HISTO_BG_PLAY,
+        (camera_info.state.mode_rec)?COLOR_HISTO_R:COLOR_HISTO_R_PLAY,
+        (camera_info.state.mode_rec)?COLOR_HISTO_RB:COLOR_HISTO_RB_PLAY,
+        (camera_info.state.mode_rec)?COLOR_HISTO_RG:COLOR_HISTO_RG_PLAY,
         COLOR_BLACK
     };
 
@@ -499,7 +471,7 @@ int gui_osd_draw_zebra(int show)
     {
         int ready;
         static int n=0;
-        if (!mrec) ready=1;
+        if (!camera_info.state.mode_rec) ready=1;
         else get_property_case(camera_info.props.shooting, &ready, 4);
         n=draw_guard_pixel(); // will be 0 in PLAY mode, should be 1 or 2 in REC mode.
         if(!ready) return 0;
@@ -530,9 +502,9 @@ int gui_osd_draw_zebra(int show)
     }
 
     if (camera_screen.zebra_aspect_adjust)
-        return draw_zebra_aspect_adjust(mrec,f,cls);    // For newer cameras with 720/960 pixel wide screen
+        return draw_zebra_aspect_adjust(camera_info.state.mode_rec,f,cls);    // For newer cameras with 720/960 pixel wide screen
     else
-        return draw_zebra_no_aspect_adjust(mrec,f,cls); // For older cameras with 360/480 pixel wide screen
+        return draw_zebra_no_aspect_adjust(camera_info.state.mode_rec,f,cls); // For older cameras with 360/480 pixel wide screen
 }
 
 

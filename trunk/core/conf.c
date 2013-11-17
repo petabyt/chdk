@@ -53,7 +53,7 @@ doesn't really belong in conf but not clear where else it should go
 */
 void conf_update_prevent_shutdown(void) {
     if(conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALWAYS 
-        || (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT && gui_get_mode() != GUI_MODE_NONE)
+        || (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT && !camera_info.state.gui_mode_none)
         || (conf.alt_prevent_shutdown == ALT_PREVENT_SHUTDOWN_ALT_SCRIPT && camera_info.state.state_kbd_script_run)) {
         disable_shutdown();
     } else {
@@ -1482,7 +1482,7 @@ void conf_setAutosave(int n)
 is raw disabled by exceptions
 */
 int is_raw_exception() {
-    int m = mode_get() & MODE_SHOOTING_MASK;
+    int m = camera_info.state.mode_shooting;
     // NOTE: the conf.save_raw_in variables are negative logic
     //       1 = disable saving raw in this mode, 0 = allow saving raw
     //       variables should be named conf.disable_save_raw_in_XXX
@@ -1503,7 +1503,7 @@ is raw possible (i.e. valid raw buffer exists in current mode)
 TODO this might be better as a platform lib.c function rather than a bunch of camera.h ifdefs
 */
 int is_raw_possible() {
-    int m = mode_get() & MODE_SHOOTING_MASK;
+    int m = camera_info.state.mode_shooting;
     return !(0   // Return false if any of these tests are true
 #ifdef CAM_DISABLE_RAW_IN_AUTO
        || (m == MODE_AUTO)                   // some cameras don't have valid raw in auto mode

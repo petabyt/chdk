@@ -131,7 +131,7 @@ static void gui_space_draw_icon() {
 }
 
 //-------------------------------------------------------------------
-static void gui_space_draw_value()
+static void gui_space_draw_value(int force)
 {
     int offset = 0;
 
@@ -149,7 +149,7 @@ static void gui_space_draw_value()
     }
     else
     {
-        if (conf.space_perc_show)
+        if (conf.space_perc_show || force)
         {
             sprintf(osd_buf+offset, "%3d%%\0", perc);
         }
@@ -166,22 +166,17 @@ static void gui_space_draw_value()
 
 //-------------------------------------------------------------------
 
-void gui_space_draw_osd()
+void gui_space_draw_osd(int is_osd_edit)
 {
-    if (conf.space_icon_show)
-    {
+    if (conf.space_icon_show || is_osd_edit)
         gui_space_draw_icon();
-    }
-    if (conf.space_perc_show || conf.space_mb_show)
-    {
-        gui_space_draw_value();
-    }
-    if (conf.space_bar_show == 1)
-    {
+
+    if (conf.space_perc_show || conf.space_mb_show || is_osd_edit)
+        gui_space_draw_value(is_osd_edit);
+
+    if ((conf.space_bar_show == 1) || is_osd_edit)
         gui_space_draw_spacebar_horizontal();
-    }
-    else if (conf.space_bar_show == 2)
-    {
+
+    if (conf.space_bar_show == 2 || is_osd_edit)
         gui_space_draw_spacebar_vertical();
-    }
 }

@@ -628,7 +628,7 @@ void capture_data_for_exif(void)
     get_property_case(camera_info.props.ev_correction_2, &short_prop_val, sizeof(short_prop_val));
     cam_exp_bias[0] = short_prop_val;
 
-    exif_data.exp_program=mode_get() & MODE_SHOOTING_MASK;
+    exif_data.exp_program = camera_info.state.mode_shooting;
 
     cam_focal_length[0] = get_focal_length(shooting_get_zoom());
     exif_data.effective_focal_length = get_effective_focal_length(shooting_get_zoom()) / 1000;
@@ -1022,7 +1022,7 @@ static int action_stack_BADPIX_START()
 
 void create_badpixel_bin()
 {
-    if (!(mode_get() & MODE_REC))
+    if (!camera_info.state.mode_rec)
     {
         gui_mbox_init(LANG_ERROR, LANG_MSG_RECMODE_REQUIRED, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
         return;

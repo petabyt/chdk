@@ -142,13 +142,13 @@ void script_set_terminate_key(int key, const char *keyname)
 
 void script_get_alt_text(char *buf)
 {
-    if ((script_terminate_key == KEY_SHOOT_FULL) || (gui_get_mode() != GUI_MODE_SCRIPT))
+    if ((script_terminate_key != KEY_SHOOT_FULL) && camera_info.state.state_kbd_script_run)
     {
-        strcpy(buf,"<ALT>"); // TODO maybe it should be SCRIPT?
+        sprintf(buf,"<EXIT=%s>",script_terminate_key_name);
     }
     else
     {
-        sprintf(buf,"<EXIT=%s>",script_terminate_key_name);
+        strcpy(buf,"<ALT>");
     }
 }
 
@@ -179,7 +179,7 @@ void gui_script_draw()
     extern void gui_chdk_draw();
     gui_chdk_draw();
 
-    if ((mode_get()&MODE_MASK) == MODE_REC || (mode_get()&MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_rec || camera_info.state.mode_play)
     {
         static int show_md_grid=0;
         if (camera_info.state.state_kbd_script_run) show_md_grid=5;

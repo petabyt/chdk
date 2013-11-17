@@ -82,16 +82,16 @@ static void gui_batt_draw_volts() {
 }
 
 //-------------------------------------------------------------------
-void gui_batt_draw_osd() {
-    if (conf.batt_perc_show) {
+void gui_batt_draw_osd(int is_osd_edit)
+{
+    if (conf.batt_perc_show || is_osd_edit)
         gui_batt_draw_charge();
-    } else if (conf.batt_volts_show) {
+
+    if (conf.batt_volts_show || is_osd_edit)
         gui_batt_draw_volts();
-    }
     
-    if (conf.batt_icon_show) {
+    if (conf.batt_icon_show || is_osd_edit)
         gui_batt_draw_icon();
-    }
 }
 
 //-------------------------------------------------------------------

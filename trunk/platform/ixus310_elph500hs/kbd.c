@@ -173,7 +173,7 @@ void set_ev_video_avail(int x)
         _GetPropertyCase(PROPCASE_AV,&av_video,2);
         sv_video = cds_gain_value;
 
-        if ((mode_get()&MODE_SHOOTING_MASK)==MODE_VIDEO_SPEED) tv_min_video=577;  // 1/60
+        if (camera_info.state.mode_shooting==MODE_VIDEO_SPEED) tv_min_video=577;  // 1/60
         else tv_min_video=441;  //480; //1/30
     }
     else
@@ -402,8 +402,7 @@ int chdk_process_touch()
     // If in canon menu, let the firmware have all the touch events.
     if (!show_virtual_buttons()) return 0;
 
-    int guiMode = gui_get_mode();
-    int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
+    int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (camera_info.state.mode & MODE_MASK);
 
     // Touch co-ordinate
     unsigned short tx, ty;
@@ -414,14 +413,14 @@ int chdk_process_touch()
     int i;
     for (i=0; keymap[i].hackkey; i++)
     {
-        if ((tx >= keymap[i].x1) && (tx < keymap[i].x2) && (ty >= keymap[i].y1) && (ty < keymap[i].y2) && is_button_active(i,guiMode,camMode))
+        if ((tx >= keymap[i].x1) && (tx < keymap[i].x2) && (ty >= keymap[i].y1) && (ty < keymap[i].y2) && is_button_active(i,camera_info.state.gui_mode,camMode))
         {
             touch_panel_state &= ~keymap[i].canonkey;
         }
     }
 
     // If in alt mode (or about to enter alt mode) block event from firmware
-    return (guiMode != 0) || (((touch_panel_state & 1) == 0) && ((kbd_mod_state[3] & 1) != 0));
+    return !camera_info.state.gui_mode_none || (((touch_panel_state & 1) == 0) && ((kbd_mod_state[3] & 1) != 0));
 }
 
 int redraw_buttons = 1;
@@ -436,21 +435,20 @@ static int draw_test_pixel(coord x, coord y, color c)
 
 void virtual_buttons()
 {
-    int guiMode = gui_get_mode();
     char buf[30];
 
     // If shooting or in any Canon menus then don't display any CHDK buttons
-    if (((guiMode == 0) && camera_info.state.is_shutter_half_press) || !show_virtual_buttons()) return;
+    if ((camera_info.state.gui_mode_none && camera_info.state.is_shutter_half_press) || !show_virtual_buttons()) return;
 
     // Check if border of CHDK button is corrupted, force redraw if so
-    if (!draw_test_pixel(0, 80, (guiMode)?COLOR_GREEN:COLOR_WHITE)) redraw_buttons = 1;
+    if (!draw_test_pixel(0, 80, (camera_info.state.gui_mode)?COLOR_GREEN:COLOR_WHITE)) redraw_buttons = 1;
 
     if (redraw_buttons)
     {
         //ts_redraw_cnt++;
 
         int i, x1, y1, x2, y2, ofst;
-        int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
+        int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (camera_info.state.mode & MODE_MASK);
 
         //c1 = MAKE_COLOR((camMode&MODE_VID)?COLOR_TRANSPARENT:COLOR_BLACK, COLOR_WHITE);
         //c2 = MAKE_COLOR((camMode&MODE_VID)?COLOR_TRANSPARENT:COLOR_RED, (camMode&MODE_VID)?COLOR_RED:COLOR_WHITE);
@@ -459,7 +457,7 @@ void virtual_buttons()
 
         for (i=0; keymap[i].hackkey; i++)
         {
-            if (is_button_displayed(i, guiMode, camMode) && keymap[i].nm)
+            if (is_button_displayed(i, camera_info.state.gui_mode, camMode) && keymap[i].nm)
             {
                 x1 = ((keymap[i].x1 - 70) * 480) / 910;
                 x2 = ((keymap[i].x2 - 70) * 480) / 910 - 1;
@@ -467,7 +465,7 @@ void virtual_buttons()
                 y2 = ((keymap[i].y2 - 90) * 240) / 900 - 1;
 
                 color cl = c1;
-                if (guiMode && (keymap[i].hackkey == KEY_PRINT)) cl = c2;
+                if (camera_info.state.gui_mode && (keymap[i].hackkey == KEY_PRINT)) cl = c2;
                 if (keymap[i].conf_val && *keymap[i].conf_val) cl = c2;
 
                 draw_filled_round_rect_thick(x1, y1, x2, y2, cl, 3);
@@ -507,14 +505,13 @@ int ts_process_touch()
 
     if (touch_panel_state != 0xFFFFFFFF)
     {
-        int guiMode = gui_get_mode();
-        int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
+        int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (camera_info.state.mode & MODE_MASK);
 
         //ts_proc_cnt++;
 
         for (i=0; keymap[i].hackkey; i++)
         {
-            if (is_button_active(i, guiMode, camMode))
+            if (is_button_active(i, camera_info.state.gui_mode, camMode))
             {
                 if (kbd_is_key_clicked(keymap[i].hackkey))
                 {

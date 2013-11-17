@@ -376,7 +376,7 @@ static int action_stack_AS_WAIT_SHOOTING_IN_PROGRESS()
     int timeout = action_top(2);
     int retry = action_top(3);
 
-    if (shooting_in_progress() || MODE_IS_VIDEO(mode_get()))
+    if (shooting_in_progress() || camera_info.state.mode_video)
     {
         // Remove this action from the stack
         action_pop_func(2);

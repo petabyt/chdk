@@ -98,7 +98,7 @@ void *vid_get_viewport_fb()
 
 void *vid_get_viewport_live_fb()
 {
-    if (MODE_IS_VIDEO(mode_get()))
+    if (camera_info.state.mode_video)
         return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
 
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
@@ -128,7 +128,7 @@ int vid_get_viewport_yscale() {
 
 int vid_get_viewport_width()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_play)
     {
         return 360;
     }
@@ -142,7 +142,7 @@ static long vp_xo[5] = { 0, 0, 0, 44, 72 };				// should all be even values for 
 
 int vid_get_viewport_xoffset()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_play)
     {
         return 0;
     }
@@ -158,7 +158,7 @@ int vid_get_viewport_xoffset()
 
 int vid_get_viewport_display_xoffset()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_play)
     {
         return 0;
     }
@@ -183,7 +183,7 @@ int vid_get_viewport_display_xoffset()
 
 long vid_get_viewport_height()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_play)
     {
         return 240;
     }
@@ -197,8 +197,7 @@ static int vp_yoffset(int stitch)
     // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
     static long vp_yo[5] = { 0, 30, 13, 0, 0 };
 
-    int m = mode_get();
-    if ((m & MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_play)
     {
         return 0;
     }
@@ -206,7 +205,7 @@ static int vp_yoffset(int stitch)
     {
         return stitch;
     }
-    else if (mode_is_video(m))
+    else if (camera_info.state.mode_video)
     {
         return 30;
     }

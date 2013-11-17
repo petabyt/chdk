@@ -9,7 +9,7 @@
 //-------------------------------------------------------------------
 
 extern unsigned long get_batt_perc();
-extern void gui_batt_draw_osd();
+extern void gui_batt_draw_osd(int is_osd_edit);
 
 //-------------------------------------------------------------------
 #endif

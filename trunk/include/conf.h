@@ -177,6 +177,24 @@ typedef struct {
     OSD_pos temp_pos;
     OSD_pos ev_video_pos;
     OSD_pos usb_info_pos;
+    
+    OSD_scale histo_scale;
+    OSD_scale dof_scale;
+    OSD_scale batt_icon_scale;
+    OSD_scale space_icon_scale;
+    OSD_scale space_hor_scale;
+    OSD_scale space_ver_scale;
+    OSD_scale batt_txt_scale;
+    OSD_scale space_txt_scale;
+    OSD_scale mode_state_scale;
+    OSD_scale mode_raw_scale;
+    OSD_scale values_scale;
+    OSD_scale clock_scale;
+    OSD_scale mode_video_scale;
+    OSD_scale mode_ev_scale;
+    OSD_scale temp_scale;
+    OSD_scale ev_video_scale;
+    OSD_scale usb_info_scale;
 
     color histo_color;
     color histo_color2; // markers/border
@@ -421,24 +439,6 @@ typedef struct {
 
     int memdmp_start;           // start address for memory dump
     int memdmp_size;            // amount of memory to dump in bytes (0 for all RAM)
-    
-    OSD_scale histo_scale;
-    OSD_scale dof_scale;
-    OSD_scale batt_icon_scale;
-    OSD_scale space_icon_scale;
-    OSD_scale space_hor_scale;
-    OSD_scale space_ver_scale;
-    OSD_scale batt_txt_scale;
-    OSD_scale space_txt_scale;
-    OSD_scale mode_state_scale;
-    OSD_scale mode_raw_scale;
-    OSD_scale values_scale;
-    OSD_scale clock_scale;
-    OSD_scale mode_video_scale;
-    OSD_scale mode_ev_scale;
-    OSD_scale temp_scale;
-    OSD_scale ev_video_scale;
-    OSD_scale usb_info_scale;
 
 } Conf;
 

@@ -372,7 +372,7 @@ void gui_4wins_draw() {
   static char str[16];
   sprintf(str, "Batt: %3d%%", get_batt_perc());
   draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+31, camera_screen.height/FONT_HEIGHT-2, str, INFO_TEXT_COLOR);
-  gui_osd_draw_clock(camera_screen.ts_button_border+35*FONT_WIDTH,208-FONT_HEIGHT,INFO_TEXT_COLOR);
+  gui_osd_draw_clock(camera_screen.ts_button_border+35*FONT_WIDTH,208-FONT_HEIGHT,INFO_TEXT_COLOR,1);
 }
 
 #include "simple_game.c"

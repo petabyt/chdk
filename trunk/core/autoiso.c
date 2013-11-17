@@ -1,4 +1,5 @@
 #include "stdlib.h"
+#include "camera_info.h"
 #include "math.h"
 #include "conf.h"
 #include "viewport.h"
@@ -135,10 +136,9 @@ void shooting_set_autoiso(int iso_mode)
         return;
     }
 
-    int m = mode_get()&MODE_SHOOTING_MASK;
-
     // TODO also long shutter ?
-    if (m==MODE_M || m==MODE_TV || m==MODE_STITCH) return; //Only operate outside of M and Tv
+    if (camera_info.state.mode_shooting==MODE_M || camera_info.state.mode_shooting==MODE_TV || camera_info.state.mode_shooting==MODE_STITCH)
+        return; //Only operate outside of M and Tv
 
     int ev_overexp = 0;
     if (conf.overexp_ev_enum)

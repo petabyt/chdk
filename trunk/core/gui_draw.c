@@ -683,7 +683,7 @@ color icon_green[3], icon_red[3], icon_yellow[3], icon_grey[3];
 
 void draw_get_icon_colors()
 {
-    if((mode_get()&MODE_MASK) == MODE_REC)
+    if (camera_info.state.mode_rec)
     {
         icon_green[0]  = COLOR_ICON_REC_GREEN_DK;  icon_green[1]  = COLOR_ICON_REC_GREEN;  icon_green[2]  = COLOR_ICON_REC_GREEN_LT;
         icon_yellow[0] = COLOR_ICON_REC_YELLOW_DK; icon_yellow[1] = COLOR_ICON_REC_YELLOW; icon_yellow[2] = COLOR_ICON_REC_YELLOW_LT;

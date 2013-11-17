@@ -7,6 +7,12 @@
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 //-------------------------------------------------------------------
+
+// Values for conf.show_histo
+#define SHOW_ALWAYS    1
+#define SHOW_HALF      2
+
+//-------------------------------------------------------------------
 #define ZOOM_SHOW_X                     0
 #define ZOOM_SHOW_FL                    1
 #define ZOOM_SHOW_EFL                   2
@@ -18,21 +24,13 @@
 #define DOF_SHOW_IN_MISC_EX             4
 
 //-------------------------------------------------------------------
-extern void gui_osd_draw_dof();
-extern void gui_osd_draw_state();
-extern void gui_osd_draw_raw_info();
-extern void gui_osd_draw_values(int showtype);
-extern void gui_osd_draw_clock(int x, int y, color cl);
-extern void gui_osd_draw_temp();
+extern void gui_draw_osd_elements(int is_osd_edit, int is_zebra);
+extern void gui_osd_draw_clock(int x, int y, color cl, int is_osd_edit);
 extern void gui_draw_debug_vals_osd();
 extern void gui_update_debug_page();
 
 extern void gui_draw_osd();
 extern void gui_kbd_shortcuts();
-
-extern void gui_osd_calc_dof();
-
-extern void gui_osd_draw_ev_video(int visible);
 
 extern gui_handler defaultGuiHandler;
 

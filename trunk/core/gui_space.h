@@ -9,7 +9,7 @@
 //-------------------------------------------------------------------
 
 extern unsigned long get_space_perc();
-extern void gui_space_draw_osd();
+extern void gui_space_draw_osd(int is_osd_edit);
 
 //-------------------------------------------------------------------
 #endif

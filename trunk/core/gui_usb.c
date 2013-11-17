@@ -45,12 +45,10 @@ static void gui_usb_draw_text(){
     draw_string(conf.usb_info_pos.x, conf.usb_info_pos.y, "<USB>", cl);
 }
 //--------------------------------------------------------------------
-void gui_usb_draw_osd() {
-   
-    if (conf.usb_info_enable == 1 && conf.remote_enable) {
+void gui_usb_draw_osd(int is_osd_edit)
+{
+    if ((conf.usb_info_enable == 1 && conf.remote_enable) || is_osd_edit)
         gui_usb_draw_icon();
-    }
-    if (conf.usb_info_enable == 2 && conf.remote_enable) {
+    else if ((conf.usb_info_enable == 2 && conf.remote_enable) || is_osd_edit)
         gui_usb_draw_text();
-    }
 }
