@@ -110,7 +110,7 @@
 
     #define CAM_ZEBRA_NOBUF                     1
 
-    //#define CAM_QUALITY_OVERRIDE                1 // works not really
+    #define CAM_QUALITY_OVERRIDE                1
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX     1
 
