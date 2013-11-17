@@ -177,7 +177,7 @@ void __attribute__((naked,noinline)) sub_FFC011B4_my() {
 		"mov	r0, #339968\n"	// 0x53000\n"
 		"str	r0, [sp, #4]\n"
 		//"ldr	r0, [pc, #144]"\n"	// ffc01268: (0013a700) 
-#if defined(OPT_CHDK_IN_EXMEM)
+#if defined(CHDK_NOT_IN_CANON_HEAP)
         "LDR     R0, =0x13a700\n" 			// use original heap offset since CHDK is loaded in high memory
 #else
 		"LDR     R0, =new_sa\n"				// + substitutes MEMISOSTART

@@ -1064,37 +1064,14 @@ void gui_draw_debug_vals_osd()
     // Only do memory corruption testing if not recording video
     if (!MODE_IS_VIDEO(mode_get()))
     {
-        // If defined the exmem memory is allocated; but not used for CHDK.
-        // It is filled with a guard value (see wrappers.c) which is checked here
-        // Any corruption is reported, otherwise 'OK' is displayed on screen (along with the exmem memory start address).
-        extern void *exmem_start, *exmem_end;
-        // check exmem allocated memory for corruption
-        unsigned long* p = (unsigned long*)exmem_start;
-        unsigned long *f = 0, *l = 0;
-        long cnt = 0;
-        while (p < (unsigned long*)exmem_end)
-        {
-            if (p[0] != 0xDEADBEEF)
-            {
-                l = p;
-                if (f == 0) f = p;
-                cnt++;
-            }
-            p++;
-        }
-        if (cnt != 0)
-        {
-            sprintf(osd_buf, "s:%8x e:%8x", exmem_start, exmem_end);
-            draw_txt_string(2, 12, osd_buf, conf.osd_color);
-            sprintf(osd_buf, "f:%8x l:%8x c:%d", f, l, cnt);
-        }
-        else
-        {
-            sprintf(osd_buf, "OK 0x%x", exmem_start);
-        }
-        draw_txt_string(2, 13, osd_buf, conf.osd_color);
-        // end of check	
+        extern void exmem_testing();
+        exmem_testing();
     }
+#endif
+
+#if defined(OPT_ARAM_TESTING)
+    extern void aram_testing();
+    aram_testing();
 #endif
 
     // DEBUG: "Show misc. values"

@@ -30,6 +30,9 @@ main.elf: entry.o $(topdir)platform/$(PLATFORM)/libplatform.a \
 	@printf " %s-%s (%s, #%s): MEMISOSIZE used: 0x%s\n" \
       $(PLATFORM) $(PLATFORMSUB) $(PLATFORMOS) $(PLATFORMID) \
       `tail -c16 $(topdir)size.txt | head -c6` >> $(topdir)bin/caminfo.txt
+ifdef OPT_CHDK_IN_ARAM
+	$(topdir)tools/checkbinsize.sh $(topdir)size.txt $(ARAM_HEAP_SIZE)
+endif
 	rm -f $(topdir)size.txt
 
 clean:

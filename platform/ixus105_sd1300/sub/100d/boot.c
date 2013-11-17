@@ -172,7 +172,7 @@ void __attribute__((naked,noinline)) sub_FFC01198_my() {
                  "MOV     R0, #0x53000\n"
                  "STR     R0, [SP,#4]\n"
                  //"LDR     R0, =0x12E9FC\n"
-#if defined(OPT_CHDK_IN_EXMEM)
+#if defined(CHDK_NOT_IN_CANON_HEAP)
                  "LDR     R0, =0x12E9FC\n"
 #else
                  "LDR     R0, =new_sa\n"        // + remove the line ^ if using these two

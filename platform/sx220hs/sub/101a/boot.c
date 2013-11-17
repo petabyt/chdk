@@ -198,7 +198,7 @@ void __attribute__((naked,noinline)) sub_FF0011B0_my() {
                  "BL      sub_FF3AB8C0\n"  //1.01A
                  "MOV     R0, #0x53000\n"
                  "STR     R0, [SP,#4]\n"
-    #if defined(OPT_CHDK_IN_EXMEM)
+    #if defined(CHDK_NOT_IN_CANON_HEAP)
 				 "LDR     R0, =0x186AE4\n"
 	#else			 
                  "LDR     R0, =new_sa\n"		// added

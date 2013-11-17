@@ -177,7 +177,7 @@ asm volatile (
       "    MOV     R0, #0x53000 \n" 
       "    STR     R0, [SP, #4] \n" 
       //"    LDR     R0, =0x13A700 \n"
-#if defined(OPT_CHDK_IN_EXMEM)
+#if defined(CHDK_NOT_IN_CANON_HEAP)
         "LDR     R0, =0x13a700\n" 			// use original heap offset since CHDK is loaded in high memory
 #else
 		"LDR     R0, =new_sa\n"				// + substitutes MEMISOSTART

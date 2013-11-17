@@ -97,7 +97,7 @@ void  h_usrKernelInit()
 	"MOV     R12, #0x800\n"
 	"LDR     R0, =h_usrRoot\n"
 	"MOV     R1, #0x4000\n"
-#if defined(OPT_CHDK_IN_EXMEM)
+#if defined(CHDK_NOT_IN_CANON_HEAP)
     "LDR     R2, =0xA0B70\n" // use original heap offset since CHDK is loaded in high memory
 #else
     "LDR     R2, =new_sa\n"

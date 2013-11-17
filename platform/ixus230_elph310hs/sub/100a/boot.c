@@ -205,7 +205,7 @@ void __attribute__((naked,noinline)) sub_FF0011B0_my() {
             "   BL  sub_FF3A2D24 \n" // diff from 100b - sub_FF3A2D58
             "	MOV	R0, #0x57000 \n"
             "	STR	R0, [SP, #4] \n"
-#if defined(OPT_CHDK_IN_EXMEM)
+#if defined(CHDK_NOT_IN_CANON_HEAP)
             "	LDR	R0, =0x181A9C \n" // use original heap offset since CHDK is loaded in high memory
 #else
             "   LDR     R0, =new_sa \n" // otherwise use patched value

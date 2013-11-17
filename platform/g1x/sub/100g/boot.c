@@ -216,7 +216,7 @@ asm volatile (
 "    MOV     R0, #0x67000 \n"
 "    STR     R0, [SP, #4] \n"
 
-#if defined(OPT_CHDK_IN_EXMEM) // use original heap offset if CHDK is loaded in high memory
+#if defined(CHDK_NOT_IN_CANON_HEAP) // use original heap offset if CHDK is loaded in high memory
 "    LDR     R0, =0x18C7B4 \n"
 #else
 "    LDR     R0, =new_sa\n"   // otherwise use patched value

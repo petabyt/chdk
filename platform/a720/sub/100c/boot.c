@@ -121,7 +121,7 @@ void __attribute__((naked,noinline)) sub_FFC00FB8_my() { //#fs
               "BL      sub_FFE3B620\n"
               "MOV     R0, #0x53000\n"
               "STR     R0, [SP,#0x74-0x70]\n"
-#if defined(OPT_CHDK_IN_EXMEM) 
+#if defined(CHDK_NOT_IN_CANON_HEAP) 
               "LDR     R0, =0x9D024\n" // use original heap offset since CHDK is loaded in high memory 
 #else
               "LDR     R0, =new_sa\n"

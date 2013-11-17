@@ -189,7 +189,7 @@ void __attribute__((naked,noinline)) sub_FF810FC4_my() {
 "                MOV     R0, #0x53000\n"
 "                STR     R0, [SP,#4]\n"
 //"                LDR     R0, =0x146A2C\n"
-#ifdef OPT_CHDK_IN_EXMEM
+#if defined(CHDK_NOT_IN_CANON_HEAP)
 "                LDR     R0, =0x146A2C\n"
 #else
               "LDR     R0, =new_sa\n"
