@@ -4,11 +4,10 @@
 // Camera info:
 //   Firmware Ver GM1.00C   // Found @ 0xffc0a398, "GM1.00C" @ 0xffc0a3a5
 //   Firmware build timestamp: Jul  4 2006 21:35:08
-//   Possible corrupt firmware dump - file size too small for start address 0xffc00000
-//     file size = 3.07MB, should be 4.00MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon PowerShot A630
 
 // Values for makefile.inc
+//   PLATFORMID = 12602 (0x313a) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x00094810
 
