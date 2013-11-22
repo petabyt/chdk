@@ -124,6 +124,7 @@ void histogram_process()
     {
         case 0:
             img=vid_get_viewport_active_buffer();
+            if (!img) return;
 
             img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
             viewport_size = vid_get_viewport_height() * vid_get_viewport_byte_width() * vid_get_viewport_yscale();
@@ -339,7 +340,7 @@ static void gui_osd_draw_blended_histo(coord x, coord y) {
 void gui_osd_draw_histo(int is_osd_edit)
 {
     if (is_osd_edit ||
-        (!camera_info.state.mode_video &&
+        ((camera_info.state.mode_play || !camera_info.state.mode_video) &&
          (
           ((conf.show_histo==SHOW_HALF) && camera_info.state.is_shutter_half_press) ||
           ((conf.show_histo==SHOW_ALWAYS) && (recreview_hold==0))

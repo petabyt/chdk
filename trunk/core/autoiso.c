@@ -30,37 +30,26 @@ NOTE also used by lua get_live_histo
 int live_histogram_read_y(unsigned short *h)
 {
     int total;
-    int i;
 
     int vp_width = vid_get_viewport_width();
+    int vp_height = vid_get_viewport_height();
     int vp_offset = vid_get_viewport_row_offset();
-    int viewport_size = vid_get_viewport_height() * vid_get_viewport_byte_width() * vid_get_viewport_yscale();
 
-    unsigned char *img = vid_get_viewport_active_buffer();
-    // can be NULL in playback mode (if a movie is selected)
-    // _fb will give us an address, although it may not contain the data we want!
-    // TODO should probably just return all zeros, but need to make sure auto-iso stuff will handle it
-    if (img == NULL)
-        img = vid_get_viewport_fb();
-
-    img += vid_get_viewport_image_offset();
-
-    total = 0;
+    total = (vp_width * vp_height) / (HISTO_STEP_SIZE * 2);
     memset(h, 0, sizeof(unsigned short)*256);
 
-    int x = 0;	// count how many blocks we have done on the current row (to skip unused buffer space at end of each row)
+    unsigned char *img = vid_get_viewport_active_buffer();
+    if (!img) return total;
 
-    for (i=1; i<viewport_size; i+=HISTO_STEP_SIZE*6)
+    img += vid_get_viewport_image_offset() + 1;
+
+    int y;
+    for (y=0; y<vp_height; y++, img += vp_offset)
     {
-        ++h[img[i]];
-        ++total; // TODO - would be better to just calculate this from dimensions and step
-
-        // Handle case where viewport memory buffer is wider than the actual buffer.
-        x += HISTO_STEP_SIZE * 2;	// viewport width is measured in blocks of three bytes each even though the data is stored in six byte chunks !
-        if (x == vp_width)
+        int x;
+        for (x=0; x<vp_width; x += HISTO_STEP_SIZE*2, img+=HISTO_STEP_SIZE*6)
         {
-            i += vp_offset;
-            x = 0;
+            ++h[*img];
         }
     }
 

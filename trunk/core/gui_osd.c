@@ -1119,7 +1119,7 @@ void gui_draw_debug_vals_osd()
         */
 
         /*
-        sprintf(osd_buf, "VP:  %#8x", vid_get_viewport_fb_d());
+        sprintf(osd_buf, "VP:  %#8x", vid_get_viewport_active_buffer());
         draw_txt_string(28, 14, osd_buf, conf.osd_color);
         */
 
