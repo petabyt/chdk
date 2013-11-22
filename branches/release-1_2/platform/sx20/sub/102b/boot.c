@@ -173,7 +173,7 @@ void __attribute__((naked,noinline)) sub_FF811178_my() {
                  "BL      sub_FFB36910\n" // changing this from sub_FFB36884, am i voodoing
                  "MOV     R0, #0x53000\n"
                  "STR     R0, [SP,#4]\n"
-#if defined(OPT_CHDK_IN_EXMEM)
+#if defined(CHDK_NOT_IN_CANON_HEAP)
                  "LDR     R0, =0x13DD6C\n" // use original heap offset since CHDK is loaded in high memory
 #else
                  "LDR     R0, =new_sa\n"   // +

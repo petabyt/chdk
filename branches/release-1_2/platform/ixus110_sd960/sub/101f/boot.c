@@ -183,7 +183,7 @@ asm volatile (
       "    BL      sub_FFAE95E0 \n" 
       "    MOV     R0, #0x53000 \n" 
       "    STR     R0, [SP, #4] \n" 
-#ifdef OPT_CHDK_IN_EXMEM
+#ifdef CHDK_NOT_IN_CANON_HEAP
       "    LDR     R0, =0x148428 \n" 
 #else
       "LDR     R0, =new_sa\n"
