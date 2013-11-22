@@ -326,7 +326,7 @@ static void default_histogram_process()
 static void default_gui_osd_draw_histo(int is_osd_edit)
 {
     if (is_osd_edit ||
-        (!camera_info.state.mode_video &&
+        ((camera_info.state.mode_play || !camera_info.state.mode_video) &&
          (
           ((conf.show_histo==SHOW_HALF) && camera_info.state.is_shutter_half_press) ||
           ((conf.show_histo==SHOW_ALWAYS) && (recreview_hold==0))

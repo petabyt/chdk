@@ -459,6 +459,7 @@ int gui_osd_draw_zebra(int show)
     };
 
     img_buf = vid_get_viewport_active_buffer();
+    if (!img_buf) return 0;
 
     if (timer==0)
     {

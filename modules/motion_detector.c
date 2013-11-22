@@ -460,6 +460,7 @@ static int md_detect_motion(void)
     motion_detector.last_measure_time = tick;
 
     unsigned char* img = vid_get_viewport_active_buffer();
+    if (!img) return 0;
 
 #ifdef OPT_MD_DEBUG
     if(motion_detector.comp_calls_cnt==50 && (motion_detector.parameters & MD_MAKE_RAM_DUMP_FILE) != 0 )

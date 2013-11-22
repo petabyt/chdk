@@ -284,6 +284,8 @@ static int calc_edge_overlay()
     int shutter_fullpress = kbd_is_key_pressed(KEY_SHOOT_FULL);
 
     const unsigned char* img = vid_get_viewport_active_buffer();
+    if (!img) return shutter_fullpress;
+
     const unsigned char*  ptrh1 = NULL;    // previous pixel line
     const unsigned char*  ptrh2 = NULL;    // current pixel line
     const unsigned char*  ptrh3 = NULL;    // next pixel line
