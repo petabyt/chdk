@@ -1,11 +1,12 @@
 topdir=../
 
 SKIPPLATFORMCHECK=1
+SKIPINTERWORK=1
 
 include $(topdir)makefile.inc
 
 SUBDIRS=$(topdir)lib/lua $(topdir)lib/ubasic $(topdir)lib/armutil $(topdir)lib/math
-SUBDIRS+=$(topdir)lib/lang $(topdir)lib/font $(topdir)lib/core
+SUBDIRS+=$(topdir)lib/lang $(topdir)lib/font $(topdir)lib/core $(topdir)lib/libc
 
 OBJ_ISDIGIT=
 ifeq ($(GCC_VERSION_MAJOR),3)
@@ -15,16 +16,15 @@ endif
 CFLAGS+=$(CTHUMB) -mlong-calls -DCHDK_MODULE_CODE
 
 # warning: library order matters!
-LDLIBS= -lgcc
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(topdir)tools/link-boot.ld
 LDOPTS+=-Wl,-N,-Ttext,0x24 -r -Wl,-d
 
-# Only build modules files here. Platform indepedant code to be linked to code CHDK should be in libraries (above)
+# Only build modules files here. Platform independant code to be linked to core CHDK should be in libraries (above)
 # to avoid 'long_call' overhead
 FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt \
      _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop.flt \
      txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt _tbox.flt _osd_le.flt \
-     _hexbox.flt ubasic.flt lua.flt cpuinfo.flt useredit.flt eyefi.flt
+     _hexbox.flt ubasic.flt lua.flt cpuinfo.flt useredit.flt eyefi.flt histo.flt
 
 all: $(FLTS)
 
@@ -32,7 +32,7 @@ all: $(FLTS)
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 
-%.flt:
+%.flt: $(topdir)lib/libc/libc.a
 	@echo \-\> $@
 	mkdir -p .o
 	$(CC) $(CFLAGS) -o .o/$*.elf -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
@@ -62,6 +62,7 @@ mpopup.flt: gui_mpopup.o
 txtread.flt: gui_read.o
 edgeovr.flt: edgeoverlay.o bitvector.o $(OBJ_ISDIGIT)
 zebra.flt: zebra.o
+histo.flt: histogram.o
 curves.flt: curves.o
 mdetect.flt: motion_detector.o
 grids.flt: gui_grid.o

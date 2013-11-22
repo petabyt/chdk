@@ -26,6 +26,29 @@
 // Symbols to be exported should be on seperate lines, blank lines and '//' style comments are allowed
 
 {
+    // GCC library functions for linking modules without including
+    // a copy of the GCC library in each module
+            __modsi3,
+            __umodsi3,
+            __divsi3,
+            __udivsi3,
+            __divsf3,
+            __mulsf3,
+            __divdf3,
+            __muldf3,
+            __floatunsisf,
+            __fixunssfsi,
+            __extendsfdf2,
+            __truncdfsf2,
+            __floatsidf,
+            __floatsisf,
+            __fixdfsi,
+            __adddf3,
+            __subdf3,
+            __ltdf2,
+            __gtdf2,
+            __bswapsi2,
+
             module_get_adr,
             module_exit_alt,
             module_restore_edge,
@@ -47,6 +70,7 @@
             &libtxtread,
             &libeyefi,
             &libhexbox,
+            &libhisto,
 
             &altGuiHandler,
             &camera_info,
@@ -57,6 +81,7 @@
             &circle_of_confusion,
             &zoom_points,
             &movie_status,
+            &recreview_hold,
             &root_menu,
             &user_submenu,
 
@@ -170,7 +195,6 @@
 
             gui_draw_osd_elements,
             gui_osd_draw_clock,
-            gui_osd_draw_histo,
 
             vid_get_bitmap_fb,
             vid_bitmap_refresh,

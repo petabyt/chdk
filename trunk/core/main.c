@@ -247,7 +247,7 @@ void core_spytask()
         if (camera_info.state.state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
         {
             if (conf.show_histo)
-                histogram_process();
+                libhisto->histogram_process();
 
 #ifdef OPT_EDGEOVERLAY
             if ((camera_info.state.gui_mode_none || camera_info.state.gui_mode_alt) && conf.edge_overlay_thresh && conf.edge_overlay_enable)

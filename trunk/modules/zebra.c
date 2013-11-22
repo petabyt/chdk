@@ -211,7 +211,7 @@ static void gui_osd_draw_zebra_osd() {
         case ZEBRA_DRAW_HISTO:
         default:
             draw_set_draw_proc(draw_pixel_buffered);
-            gui_osd_draw_histo(0);
+            libhisto->gui_osd_draw_histo(0);
             draw_set_draw_proc(NULL);
             break;
     }

@@ -1,6 +1,7 @@
 topdir=../../
 
 SKIPPLATFORMCHECK=1
+SKIPINTERWORK=1
 
 include $(topdir)makefile.inc
 

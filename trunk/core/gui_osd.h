@@ -7,12 +7,6 @@
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 //-------------------------------------------------------------------
-
-// Values for conf.show_histo
-#define SHOW_ALWAYS    1
-#define SHOW_HALF      2
-
-//-------------------------------------------------------------------
 #define ZOOM_SHOW_X                     0
 #define ZOOM_SHOW_FL                    1
 #define ZOOM_SHOW_EFL                   2

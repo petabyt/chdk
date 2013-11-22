@@ -56,7 +56,7 @@ void gui_osd_draw()
     {
         int i;
         draw_restore();
-        gui_osd_draw_histo(1);
+        libhisto->gui_osd_draw_histo(1);
         gui_draw_osd_elements(1,0);
         int xscale = osd[curr_item].scale->x ;
         if ( xscale == 0) xscale = 1 ;

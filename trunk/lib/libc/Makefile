@@ -1,12 +1,15 @@
 topdir=../../
 
+# Makefile for platform independent 'libc' library
+# Code copied from GCC for linking modules without including GCC library
+
+SKIPPLATFORMCHECK=1
+
 include $(topdir)makefile.inc
 
 CFLAGS+=$(CTHUMB)
 
-OBJS = issmth.o strncmp.o strtol.o strchr.o \
-    memcmp.o memset.o memmove.o memcpy.o strlen.o \
-    strcmp.o
+OBJS = thumb1_case.o
 
 all: libc.a
 
