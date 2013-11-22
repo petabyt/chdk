@@ -150,7 +150,9 @@ endif
 
 
 CTHUMB=-mthumb
+ifndef SKIPINTERWORK
 CFLAGS+=-mthumb-interwork
+endif
 CFLAGS+=-I$(topdir)include -I$(topdir)core -I$(topdir)modules -I$(topdir)platform/$(PLATFORM) $(PLFLAGS) $(CPPFLAGS)
 ifndef SKIPPLATFORMCHECK
 CFLAGS+=-DPLATFORM=\"$(PLATFORM)\" -DPLATFORMSUB=\"$(PLATFORMSUB)\" -DPLATFORMID=$(PLATFORMID) -DCAMERA_$(PLATFORM)=1

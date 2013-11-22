@@ -61,6 +61,32 @@ extern unsigned _ExecuteEventProcedure(const char *name,...);
 
 //********************************************************/
 
+// GCC library functions for linking modules without including
+// a copy of the GCC library in each module
+// Don't need correct function signatures - only here to prevent compiler warnings
+extern void __modsi3(void);
+extern void __umodsi3(void);
+extern void __divsi3(void);
+extern void __udivsi3(void);
+extern void __divsf3(void);
+extern void __mulsf3(void);
+extern void __divdf3(void);
+extern void __muldf3(void);
+extern void __floatunsisf(void);
+extern void __fixunssfsi(void);
+extern void __extendsfdf2(void);
+extern void __truncdfsf2(void);
+extern void __floatsidf(void);
+extern void __floatsisf(void);
+extern void __fixdfsi(void);
+extern void __adddf3(void);
+extern void __subdf3(void);
+extern void __ltdf2(void);
+extern void __gtdf2(void);
+extern void __bswapsi2(void);
+
+//********************************************************/
+
 // Struct for symbol hash table entries
 typedef struct
 {

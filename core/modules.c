@@ -11,6 +11,7 @@
 #include "conf.h"
 #include "modules.h"
 #include "module_load.h"
+#include "shooting.h"
 
 //------------------------------------------------
 // Dummy functions for default module libraries
@@ -298,6 +299,57 @@ libzebra_sym default_libzebra =
 // Library pointer
 libzebra_sym* libzebra = &default_libzebra;
 
+/************* DYNAMIC LIBRARY HISTOGRAM ******/
+
+#define MODULE_NAME_HISTO "histo.flt"
+
+// Forward reference
+extern libhisto_sym default_libhisto;
+
+module_handler_t h_histo =
+{
+    (base_interface_t**)&libhisto,
+    &default_libhisto.base,
+    HISTO_VERSION,
+    MODULE_NAME_HISTO
+};
+
+// Default (unloaded) function(s)
+static void default_histogram_process()
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_histo))
+        libhisto->histogram_process();
+}
+
+// Default (unloaded) function(s)
+static void default_gui_osd_draw_histo(int is_osd_edit)
+{
+    if (is_osd_edit ||
+        (!camera_info.state.mode_video &&
+         (
+          ((conf.show_histo==SHOW_HALF) && camera_info.state.is_shutter_half_press) ||
+          ((conf.show_histo==SHOW_ALWAYS) && (recreview_hold==0))
+         )
+        )
+       )
+    {
+        // If load succeeded call module version of function
+        if (module_load(&h_histo))
+            libhisto->gui_osd_draw_histo(is_osd_edit);
+    }
+}
+
+// Default library - module unloaded
+libhisto_sym default_libhisto =
+{
+    { 0,0,0,0,0 },
+    default_histogram_process,
+    default_gui_osd_draw_histo
+};
+
+// Library pointer
+libhisto_sym* libhisto = &default_libhisto;
 
 /************* DYNAMIC LIBRARY CURVES ******/
 

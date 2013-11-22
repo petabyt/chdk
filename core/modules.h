@@ -17,6 +17,10 @@
 //--------------------------
 #include "zebra.h"
 
+// MODULE "HISTOGRAM OVERLAY"
+//--------------------------
+#include "histogram.h"
+
 // MODULE "CURVES"
 //--------------------------
 #include "curves.h"

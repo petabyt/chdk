@@ -125,8 +125,6 @@ void histogram_process()
         case 0:
             img=vid_get_viewport_active_buffer();
 
-            if (img==NULL)
-                img = vid_get_viewport_fb();
             img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
             viewport_size = vid_get_viewport_height() * vid_get_viewport_byte_width() * vid_get_viewport_yscale();
             viewport_width = vid_get_viewport_width();
@@ -414,3 +412,58 @@ void gui_osd_draw_histo(int is_osd_edit)
         }
     }
 }
+
+
+// =========  MODULE INIT =================
+
+/***************** BEGIN OF AUXILARY PART *********************
+  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+ **************************************************************/
+
+//---------------------------------------------------------
+// PURPOSE: Finalize module operations (close allocs, etc)
+// RETURN VALUE: 0-ok, 1-fail
+//---------------------------------------------------------
+int _module_unloader()
+{
+    return 0;
+}
+
+int _module_can_unload()
+{
+    return conf.show_histo == 0;
+}
+
+/******************** Module Information structure ******************/
+
+libhisto_sym _libhisto =
+{
+    {
+         0, _module_unloader, _module_can_unload, 0, 0
+    },
+
+    histogram_process,
+    gui_osd_draw_histo
+};
+
+struct ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(struct ModuleInfo),
+    HISTO_VERSION,				// Module version
+
+    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+
+    (int32_t)"Histogram Overlay (dll)",// Module name
+    (int32_t)"Histogram Overlay",
+
+    &_libhisto.base,
+
+    CONF_VERSION,               // CONF version
+    CAM_SCREEN_VERSION,         // CAM SCREEN version
+    ANY_VERSION,                // CAM SENSOR version
+    CAM_INFO_VERSION,           // CAM INFO version
+};
+
+/*************** END OF AUXILARY PART *******************/
