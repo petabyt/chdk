@@ -149,7 +149,5 @@
 #define CAM_PROPSET		2
 #define CAM_RAW_ROWPIX    4104 // Found @0xffcc7c70
 #define CAM_RAW_ROWS      3048 // Found @0xffcc7c78
-#undef  CAM_UNCACHED_BIT
-#define CAM_UNCACHED_BIT  0x40000000 // Found @0xffc16edc
-	
+
 	#define REMOTE_SYNC_STATUS_LED 	0xC022000C		// specifies an LED that turns on while camera waits for USB remote to sync
