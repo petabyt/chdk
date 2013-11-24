@@ -687,7 +687,8 @@ static void gui_load_script_default(int arg) {
     save_params_values(1);
 }
 
-static const char* gui_script_autostart_modes[]=            { "Off", "On", "Once"};
+static const char* gui_script_autostart_modes[]=            { "Off", "On", "Once", "ALT"};
+
 
 // Indexes into script_submenu_items array, if you add or remove entries adjust these
 #define SCRIPT_SUBMENU_PARAMS_IDX   8       // First adjustable parameter entry

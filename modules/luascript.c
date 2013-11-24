@@ -1202,7 +1202,7 @@ static int luaCB_set_autostart( lua_State* L )
 {
   int to;
   to = luaL_checknumber( L, 1 );
-  if ( to >= 0 && to <= 2 ) conf.script_startup = to;
+  if ( to >= 0 && to <= 3 ) conf.script_startup = to;
   conf_save();
   return 0;
 }

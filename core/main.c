@@ -194,13 +194,13 @@ void core_spytask()
     camera_info.tick_count_offset = camera_info.tick_count_offset % 1000;
 
     // remote autostart
-    if (conf.script_startup==1)
+    if (conf.script_startup==SCRIPT_AUTOSTART_ALWAYS)
     {
         script_autostart();
     }
-    else if (conf.script_startup==2)
+    else if (conf.script_startup==SCRIPT_AUTOSTART_ONCE)
     {
-        conf.script_startup=0;
+        conf.script_startup=SCRIPT_AUTOSTART_NONE;
         conf_save();
         script_autostart();
     }
