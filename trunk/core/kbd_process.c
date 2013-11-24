@@ -148,8 +148,12 @@ long kbd_process()
         {
             if (key_pressed < CAM_EMUL_KEYPRESS_DELAY)
             {
-                if (!kbd_blocked) 
+                if (!kbd_blocked)
+                {
+                    // if start script on alt set, flag to run it
+                    if(conf.script_startup==SCRIPT_AUTOSTART_ALT) script_run_on_alt_flag = 1;
                     enter_alt();
+                }
                 else
                     exit_alt();
             }

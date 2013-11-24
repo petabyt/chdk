@@ -52,6 +52,8 @@ extern const char _start,_end;
 
 //-------------------------------------------------------------------
 
+int script_run_on_alt_flag ;
+
 int gui_user_menu_flag;
 
 static char buf[256];
@@ -2734,8 +2736,10 @@ static int alt_mode_script_run()
         remote_script_start_ready=1;
 
     // Start a script if the shutter button pressed in <ALT> mode (kdb_blocked) or USB remote sequence not running
-    if (kbd_is_key_clicked(KEY_SHOOT_FULL) || remote_script_start_ready )
+    //  or if script start on <ALT> enabled and this is the first pass through <ALT> mode
+    if ( kbd_is_key_clicked(KEY_SHOOT_FULL) || remote_script_start_ready || script_run_on_alt_flag ) 
     {
+        script_run_on_alt_flag = 0 ;
         script_start_gui(0);
         return 1;
     }

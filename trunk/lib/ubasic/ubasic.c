@@ -1845,7 +1845,7 @@ static void set_autostart_statement()
     accept(TOKENIZER_SET_SCRIPT_AUTOSTART);
     to = expr();
 #ifndef UBASIC_TEST
-	if (to >= 0 && to <= 2) conf.script_startup=to;
+	if (to >= 0 && to <= 3) conf.script_startup=to;
 	conf_save();
 #endif
     accept_cr();

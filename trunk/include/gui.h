@@ -63,6 +63,8 @@ typedef struct
 	int flags;
 } gui_handler;
 
+extern int script_run_on_alt_flag ;
+
 extern gui_handler altGuiHandler;
 
 extern int gui_kbd_process();

@@ -490,6 +490,12 @@ extern Conf conf;
 #define SHOOTING_PROGRESS_PROCESSING    2
 #define SHOOTING_PROGRESS_DONE          3
 
+// script conf.script_startup values
+#define SCRIPT_AUTOSTART_NONE             0
+#define SCRIPT_AUTOSTART_ALWAYS           1
+#define SCRIPT_AUTOSTART_ONCE             2
+#define SCRIPT_AUTOSTART_ALT              3
+
 // video quality defaults. Ideally, these should match the camera default settings
 #define VIDEO_DEFAULT_QUALITY   84  // ? where does 84 come from
 #define VIDEO_MAX_QUALITY       99

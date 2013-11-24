@@ -362,7 +362,7 @@ static ConfInfo conf_info[] = {
     CONF_INFO( 50, conf.script_shoot_delay,                     CONF_DEF_VALUE, i:0),
     CONF_INFO( 51, conf.script_vars,                            CONF_INT_PTR,   i:0),
     CONF_INFO( 52, conf.script_param_set,                       CONF_DEF_VALUE, i:0),
-    CONF_INFO( 53, conf.script_startup,                         CONF_DEF_VALUE, i:0),
+    CONF_INFO( 53, conf.script_startup,                         CONF_DEF_VALUE, i:SCRIPT_AUTOSTART_NONE),
     CONF_INFO( 54, conf.script_file,                            CONF_CHAR_PTR,  ptr:""),
     CONF_INFO( 55, conf.script_param_save,                      CONF_DEF_VALUE, i:1),
 
