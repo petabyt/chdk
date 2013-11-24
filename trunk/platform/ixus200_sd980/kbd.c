@@ -16,7 +16,6 @@ static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static long alt_mode_key_mask = 0x00000800;
-static int alt_mode_led=0;
 
 extern void _platformsub_kbd_fetch_data(long*);
 
