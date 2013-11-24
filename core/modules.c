@@ -79,7 +79,6 @@ librawop_sym* librawop = &default_librawop;
 
 // Storage and interface for edge overlay 'image' buffer.
 // This is so the previous overlay can survive if the module gets unloaded
-// (Need these for the module export list, even if OPT_EDGEOVERLAY is not defined).
 static void* saved_edgebuf = 0;
 static int saved_edgestate = 0;
 

@@ -1,8 +1,6 @@
 #!build time optional components - comment out the features you dont want to have in your build or copy this file to localbuildconf.inc and override settings there
-OPT_GAMES=1
 OPT_CURVES=1
 OPT_DEBUGGING=1
-OPT_EDGEOVERLAY=1
 
 # Force config option on to allow Lua to call arbitrary ROM functions and eventprocs
 # By default this is a user controlled setting in the CHDK UI.
