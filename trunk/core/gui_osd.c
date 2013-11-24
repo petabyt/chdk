@@ -336,13 +336,11 @@ void gui_osd_draw_state(int is_osd_edit)
         if (conf.override_disable == 1) gui_print_osd_state_string_chr("NO ", "OVERRIDES");
         if (conf.flash_manual_override) gui_print_osd_state_string_chr("Flash:M ", gui_flash_power_modes_enum(0,0));
         if (conf.flash_enable_exp_comp) gui_print_osd_state_string_chr("Flash:A ", gui_flash_exp_comp_modes_enum(0,0));
-#ifdef OPT_EDGEOVERLAY
         // edgeoverlay state
         if (conf.edge_overlay_enable || is_osd_edit) {
             if (camera_info.state.edge_state_draw==0) gui_print_osd_state_string_chr("EDGE:", "LIVE");
             else if (camera_info.state.edge_state_draw==1) gui_print_osd_state_string_chr("EDGE:", ((conf.edge_overlay_pano==0)?"FROZEN":"PANO"));
         }
-#endif
 #ifdef CAM_QUALITY_OVERRIDE
         // displaying the overriding picture quality if active
         if (!(conf.fast_image_quality==3) || is_osd_edit) {

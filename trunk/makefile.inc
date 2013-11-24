@@ -163,16 +163,8 @@ LDFLAGS=-L$(topdir)lib/math -L$(topdir)lib/font
 LDFLAGS+=-L$(topdir)lib/libc -L$(topdir)lib/ubasic
 LDFLAGS+=-L$(topdir)platform/$(PLATFORM) -L$(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)
 
-ifdef OPT_GAMES
-CFLAGS+=-DOPT_GAMES
-endif
-
 ifdef OPT_CURVES
 CFLAGS+=-DOPT_CURVES
-endif
-
-ifdef OPT_EDGEOVERLAY
-CFLAGS+=-DOPT_EDGEOVERLAY
 endif
 
 ifdef OPT_MD_DEBUG

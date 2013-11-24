@@ -624,7 +624,6 @@ static CMenuItem reader_submenu_items[] = {
 static CMenu reader_submenu = {0x37,LANG_MENU_READ_TITLE, reader_submenu_items };
 
 //-------------------------------------------------------------------
-#if defined (OPT_GAMES)
 
 static CMenuItem games_submenu_items[] = {
     MENU_ITEM(0x38,LANG_MENU_GAMES_REVERSI,           MENUITEM_PROC,  module_run, "reversi.flt" ),
@@ -640,7 +639,6 @@ static CMenuItem games_submenu_items[] = {
 
 static CMenu games_submenu = {0x38,LANG_MENU_GAMES_TITLE, games_submenu_items };
 
-#endif
 //-------------------------------------------------------------------
 
 static void gui_menuproc_mkbootdisk(int arg)
@@ -1032,9 +1030,7 @@ static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x28,LANG_MENU_MODULES,                    MENUITEM_SUBMENU,               &module_submenu,                    0 ),
     MENU_ITEM   (0x36,LANG_MENU_MISC_CALENDAR,              MENUITEM_PROC,                  module_run, "calend.flt" ),
     MENU_ITEM   (0x37,LANG_MENU_MISC_TEXT_READER,           MENUITEM_SUBMENU,               &reader_submenu,                    0 ),
-#if defined (OPT_GAMES)
     MENU_ITEM   (0x38,LANG_MENU_MISC_GAMES,                 MENUITEM_SUBMENU,               &games_submenu,                     0 ),
-#endif
     MENU_ITEM   (0x28,LANG_MENU_CONSOLE_SETTINGS,           MENUITEM_SUBMENU,               &console_settings_submenu, 0 ),
 #if CAM_SWIVEL_SCREEN
     MENU_ITEM   (0x5c,LANG_MENU_MISC_FLASHLIGHT,            MENUITEM_BOOL,                  &conf.flashlight, 0 ),
@@ -1594,8 +1590,6 @@ void set_tv_override_menu()
 
 //-------------------------------------------------------------------
 
-#ifdef OPT_EDGEOVERLAY
-
 static void gui_load_edge_selected( const char* fn )
 {
     if (fn)
@@ -1629,8 +1623,6 @@ static CMenuItem edge_overlay_submenu_items[] = {
 };
 
 static CMenu edge_overlay_submenu = {0x7f,LANG_MENU_EDGE_OVERLAY_TITLE, edge_overlay_submenu_items };
-
-#endif
 
 //-------------------------------------------------------------------
 
@@ -1674,9 +1666,7 @@ static CMenuItem visual_submenu_items[] = {
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_BKG,             MENUITEM_COLOR_BG,  &conf.osd_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_WARNING,         MENUITEM_COLOR_FG,  &conf.osd_color_warn, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_WARNING_BKG,     MENUITEM_COLOR_BG,  &conf.osd_color_warn, 0 ),
-#ifdef OPT_EDGEOVERLAY
     MENU_ITEM(0x65,LANG_MENU_EDGE_OVERLAY_COLOR,      MENUITEM_COLOR_FG,  &conf.edge_overlay_color,   0 ),
-#endif
     MENU_ITEM(0x65,LANG_MENU_VIS_HISTO,               MENUITEM_COLOR_FG,  &conf.histo_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_HISTO_BKG,           MENUITEM_COLOR_BG,  &conf.histo_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_HISTO_BORDER,        MENUITEM_COLOR_FG,  &conf.histo_color2, 0 ),
@@ -2163,9 +2153,7 @@ static CMenuItem root_menu_items[] = {
     MENU_ITEM   (0x21,LANG_MENU_OPERATION_PARAM,            MENUITEM_SUBMENU,   &operation_submenu, 0 ),
     MENU_ITEM   (0x23,LANG_MENU_VIDEO_PARAM,                MENUITEM_SUBMENU,   &video_submenu,     0 ),
     MENU_ITEM   (0x24,LANG_MENU_MAIN_RAW_PARAM,             MENUITEM_SUBMENU,   &raw_submenu,       0 ),
-#ifdef OPT_EDGEOVERLAY
     MENU_ITEM   (0x7f,LANG_MENU_EDGE_OVERLAY,               MENUITEM_SUBMENU,   &edge_overlay_submenu, 0 ),
-#endif
     MENU_ITEM   (0x25,LANG_MENU_MAIN_HISTO_PARAM,           MENUITEM_SUBMENU,   &histo_submenu, 0 ),
     MENU_ITEM   (0x26,LANG_MENU_MAIN_ZEBRA_PARAM,           MENUITEM_SUBMENU,   &zebra_submenu,     0 ),
     MENU_ITEM   (0x27,LANG_MENU_MAIN_SCRIPT_PARAM,          MENUITEM_SUBMENU,   &script_submenu,    0 ),

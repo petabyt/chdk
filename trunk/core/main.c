@@ -249,7 +249,6 @@ void core_spytask()
             if (conf.show_histo)
                 libhisto->histogram_process();
 
-#ifdef OPT_EDGEOVERLAY
             if ((camera_info.state.gui_mode_none || camera_info.state.gui_mode_alt) && conf.edge_overlay_thresh && conf.edge_overlay_enable)
             {
                 // We need to skip first tick because stability
@@ -258,7 +257,6 @@ void core_spytask()
                     libedgeovr->edge_overlay();
                 }
             }
-#endif
         }
 
         if ((camera_info.state.state_shooting_progress == SHOOTING_PROGRESS_PROCESSING) && (!shooting_in_progress()))
