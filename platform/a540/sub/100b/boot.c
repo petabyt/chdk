@@ -16,6 +16,7 @@ void __attribute__((naked,noinline)) h_usrInit();
 void __attribute__((naked,noinline)) h_usrKernelInit();
 void __attribute__((naked,noinline)) h_usrRoot();
 
+#if 0
 #define LED_PR 0xc0220084
 
 static void blink(int cnt)
@@ -43,6 +44,7 @@ static void __attribute__((noreturn)) panic(int cnt)
         blink(cnt);
 	shutdown();
 }
+#endif
 
 void boot()
 {
