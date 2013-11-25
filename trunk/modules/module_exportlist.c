@@ -304,6 +304,7 @@
             GetMemInfo,
             GetExMemInfo,
             GetARamInfo,
+            GetCombinedMemInfo,
 
             img_prefixes,
             img_exts,

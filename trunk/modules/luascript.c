@@ -2284,11 +2284,12 @@ static void set_meminfo_num( lua_State* L,const char *name, int val) {
 /*
 meminfo=get_meminfo([heapname])
 get camera memory information
-heapname="system" or "exmem" if not given, meminfo is returned for heap used by CHDK for malloc
+heapname="combined", "system", "aram" or "exmem" 
+if not given, combined is returned
 meminfo is false if the requested heapname isn't valid ("exmem" when exmem is not enabled, or unknown)
 otherwise, a table of the form
 meminfo = {
-    name -- string "system" or "exmem"
+    name -- heapname, as above
     chdk_malloc -- bool, this is the heap used by CHDK for malloc
     chdk_start -- number, load address of CHDK
     chdk_size -- number, size of CHDK image
@@ -2312,28 +2313,30 @@ static int luaCB_get_meminfo( lua_State* L ) {
     // for memory info, duplicated from lowlevel
     extern const char _start;
 
-    // TODO default for combined?
-    const char *default_heapname = (camera_info.exmem)?"exmem":"system";
-    const char *heapname = luaL_optstring( L, 1, default_heapname );
+    const char *heapname = luaL_optstring( L, 1, "combined" );
     cam_meminfo meminfo;
-
-    if (strcmp(heapname,"system") == 0)
+    if (strcmp(heapname,"combined") == 0) {
+        GetCombinedMemInfo(&meminfo);
+        meminfo.start_address=meminfo.end_address=-1; // not meaningful
+    }
+    else if (strcmp(heapname,"system") == 0)
     {
         GetMemInfo(&meminfo);
     }
     else if ((strcmp(heapname,"aram") == 0))
     {
-        GetARamInfo(&meminfo);
-        // match exmem behavior, return false if not enabled
-        if(meminfo.start_address == 0) {
+        if(!GetARamInfo(&meminfo)) {
             lua_pushboolean(L,0);
             return 1;
         }
         meminfo.allocated_count = -1; // not implemented in suba
     }
-    else if ((camera_info.exmem != 0) && (strcmp(heapname,"exmem") == 0))
+    else if (strcmp(heapname,"exmem") == 0)
     {
-        GetExMemInfo(&meminfo);
+        if(!GetExMemInfo(&meminfo)) {;
+            lua_pushboolean(L,0);
+            return 1;
+        }
         meminfo.allocated_count = -1; // not implemented in suba
     }
     else
@@ -2348,7 +2351,8 @@ static int luaCB_get_meminfo( lua_State* L ) {
     }
     lua_createtable(L, 0, 13); // might not always use 13, but doesn't hurt
     set_string_field( L,"name", heapname );
-    lua_pushboolean( L, (strcmp(heapname,default_heapname)==0));
+    // CHDK allocates from all available heaps now
+    lua_pushboolean( L, 1);
     lua_setfield(L, -2, "chdk_malloc");
     set_number_field( L, "chdk_start", (int)(&_start) );
     set_number_field( L, "chdk_size", camera_info.memisosize );

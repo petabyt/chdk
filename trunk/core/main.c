@@ -81,25 +81,8 @@ void dump_memory()
 int core_get_free_memory()
 {
     cam_meminfo camera_meminfo;
-    cam_meminfo camera_exmeminfo;
-    cam_meminfo camera_araminfo;
-
-    GetARamInfo(&camera_araminfo);
-    GetExMemInfo(&camera_exmeminfo);
-
-    // Call function to fill memory info structure and return size of largest free block
-    // If implemented this will use firmware function, otherwise it will calculate largest
-    // free block
-    GetMemInfo(&camera_meminfo);
-
-    // Find largest free block
-    int f = camera_meminfo.free_block_max_size;
-    if (camera_exmeminfo.free_block_max_size > f)
-        f = camera_exmeminfo.free_block_max_size;
-    if (camera_araminfo.free_block_max_size > f)
-        f = camera_araminfo.free_block_max_size;
-        
-    return f;
+    GetCombinedMemInfo(&camera_meminfo);
+    return camera_meminfo.free_block_max_size;
 }
 
 static volatile long raw_data_available;

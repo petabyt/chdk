@@ -225,6 +225,53 @@ int GetARamInfo(cam_meminfo *camera_meminfo)
 }
 
 //----------------------------------------------------------------------------
+static void combine_meminfo(cam_meminfo *combined,cam_meminfo *m)
+{
+    combined->total_size += m->total_size;
+    if(m->free_block_max_size > combined->free_block_max_size)
+    {
+        combined->free_block_max_size = m->free_block_max_size; 
+    }
+    combined->free_size += m->free_size;
+    combined->free_block_count += m->free_block_count;
+    // TODO suba values are not equivalent to dryos values
+    combined->allocated_size += m->allocated_size;
+    combined->allocated_peak += m->allocated_peak;
+    // TODO not implemented in suba
+    combined->allocated_count += m->allocated_count;
+}
+
+// Build a combined meminfo from available heaps
+// free block max size is the single largest free block
+// other fields are total, or zero where it doesn't make sense to combine
+void GetCombinedMemInfo(cam_meminfo *camera_meminfo)
+{
+    // get system meminfo, should always be available
+    GetMemInfo(camera_meminfo);
+// some fields are set to -1 for vxworks cams
+#if !defined(CAM_DRYOS)
+    camera_meminfo->allocated_peak = 0;
+    camera_meminfo->total_size = 0;
+#ifdef CAM_NO_MEMPARTINFO
+    // a more useful base value than 0
+    camera_meminfo->free_size = camera_meminfo->free_block_max_size;
+    camera_meminfo->free_block_count = 0;
+    camera_meminfo->allocated_size = 0;
+    camera_meminfo->allocated_count = 0;
+#endif
+#endif
+
+    // these don't make sense to combine
+    camera_meminfo->start_address = camera_meminfo->end_address = 0;
+
+    cam_meminfo m;
+    if(GetARamInfo(&m)) {
+        combine_meminfo(camera_meminfo,&m);
+    }
+    if(GetExMemInfo(&m)) {
+        combine_meminfo(camera_meminfo,&m);
+    }
+}
 
 void *malloc(long size)
 {
