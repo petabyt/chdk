@@ -169,8 +169,9 @@
 0xffd63e48,DisplayDialogBox_FW
 0xffe96b44,DisplayFactoryMode_FW
 0xffd427c4,DisplayTypeChanged_FW
+0xffd42540,DoAELock
 0xffd42540,DoAELock_FW
-0xffd423e8,DoAFLock,(stubs_entry_2.s)
+0xffd423e8,DoAFLock
 0xffd423e8,DoAFLock_FW
 0xffd6425c,DrawBinaryBitmapToDialog_FW
 0xffd64d30,DrawDialogItem_FW
@@ -1191,8 +1192,9 @@
 0xffd42900,UndisplayEVF_FW
 0xffe96b5c,UndisplayFactoryMode_FW
 0xffeca620,UnLoadScript_FW
+0xffd42560,UnlockAE
 0xffd42560,UnlockAE_FW
-0xffd4242c,UnlockAF,(stubs_entry_2.s)
+0xffd4242c,UnlockAF
 0xffd4242c,UnlockAF_FW
 0xffd58f64,UnlockMainPower
 0xffd58f64,UnlockMainPower_FW

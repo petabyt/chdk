@@ -17,9 +17,9 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DoAFLock                             ,0xff8384d8) //102        *** != 0xff878eec
+//NHSTUB(DoAFLock                             ,0xff8384d8) //120        *** != 0xff878eec
 //NHSTUB(GetBatteryTemperature                ,0xff863050) //102        *** != 0x00000000
-//NHSTUB(UnlockAF                             ,0xff838510) //102        *** != 0xff878efc
+//NHSTUB(UnlockAF                             ,0xff838510) //120        *** != 0xff878efc
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffac1640 -> ffbe809c
@@ -115,6 +115,7 @@ NHSTUB(CreateTask                             ,0xff81e8a0) //120
 NHSTUB(DebugAssert                            ,0xff81eb78) //111
 NHSTUB(DeleteDirectory_Fut                    ,0xff836758) //116
 NHSTUB(DeleteFile_Fut                         ,0xff836674) //112
+NHSTUB(DoAELock                               ,0xff838734) //120
 NHSTUB(EnterToCompensationEVF                 ,0xff838628) //104
 NHSTUB(ExecuteEventProcedure                  ,0xff889a98) //104
 NHSTUB(ExitFromCompensationEVF                ,0xff83866c) //104
@@ -190,6 +191,7 @@ NHSTUB(TurnOnBackLight                        ,0xff8a056c) //104
 NHSTUB(TurnOnDisplay                          ,0xff85b8a8) //120
 NHSTUB(TurnOffDisplay                         ,0xff85b8d4) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff98420c) //120
+NHSTUB(UnlockAE                               ,0xff838758) //120
 NHSTUB(UnlockMainPower                        ,0xff893f40) //120
 NHSTUB(UpdateMBROnFlash                       ,0xff870838) //105
 NHSTUB(VbattGet                               ,0xff832fb4) //120

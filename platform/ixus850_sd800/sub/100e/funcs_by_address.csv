@@ -406,7 +406,9 @@
 0xff9952b4,GetMFBarData_FW
 0xff9952d8,AFDistanceChanged_FW
 0xff9952f0,GetMacroSupportZoomPoint_FW
+0xff995318,DoAFLock
 0xff995318,DoAFLock_FW
+0xff995364,UnlockAF
 0xff995364,UnlockAF_FW
 0xff995390,AFCOn_FW
 0xff9953b4,AFCOff_FW
@@ -417,9 +419,10 @@
 0xff99552c,ExitFromCompensationEVF_FW
 0xff99553c,RectifyExposureWithMeasure_FW
 0xff99557c,UpdateEVF_FW
+0xff995584,DoAELock
 0xff995584,DoAELock_FW
+0xff9955a4,UnlockAE
 0xff9955a4,UnlockAE_FW
-0xff995364,UnlockAF,(stubs_entry_2.s)
 0xff9955c0,GetProgramShiftLimitPositive_FW
 0xff9955e4,GetProgramShiftLimitNegative_FW
 0xff995624,FixProgramShift_FW

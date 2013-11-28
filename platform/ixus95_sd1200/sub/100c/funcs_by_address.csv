@@ -114,6 +114,8 @@
 0xffc47b9c,UnlockAF,(stubs_entry_2.s)
 0xffc15348,EnterToCompensationEVF
 0xffc1538c,ExitFromCompensationEVF
+0xffc153e0,DoAELock
+0xffc15404,UnlockAE
 0xffc16414,TestAssert_FW
 0xffc16440,TestAssertInt_FW
 0xffc16460,TestException_FW

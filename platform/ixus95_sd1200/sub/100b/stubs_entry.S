@@ -17,9 +17,9 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DoAFLock                             ,0xffc15298) //102        *** != 0xffc47b8c
+//NHSTUB(DoAFLock                             ,0xffc15298) //120        *** != 0xffc47b8c
 //NHSTUB(SetScriptMode                        ,0xffc5d99c) //120        *** != 0x00000000
-//NHSTUB(UnlockAF                             ,0xffc152d0) //102        *** != 0xffc47b9c
+//NHSTUB(UnlockAF                             ,0xffc152d0) //120        *** != 0xffc47b9c
 //NHSTUB(WriteSDCard                          ,0xffce4300) //108        *** != 0xffce4118
 //NHSTUB(kbd_read_keys                        ,0xffc11d70) //109        *** != 0xffc11d80
 //NHSTUB(kbd_pwr_off                          ,0xffc30e1c) //  2 64%    *** != 0x00000000
@@ -121,6 +121,7 @@ NHSTUB(CreateTask                             ,0xffc0afac) //120
 NHSTUB(DebugAssert                            ,0xffc0b284) //111
 NHSTUB(DeleteDirectory_Fut                    ,0xffc135cc) //116
 NHSTUB(DeleteFile_Fut                         ,0xffc134e8) //112
+NHSTUB(DoAELock                               ,0xffc153e0) //120
 NHSTUB(EnterToCompensationEVF                 ,0xffc15348) //104
 NHSTUB(ExecuteEventProcedure                  ,0xffc565a8) //104
 NHSTUB(ExitFromCompensationEVF                ,0xffc1538c) //104
@@ -193,6 +194,7 @@ NHSTUB(TurnOnBackLight                        ,0xffc68a90) //104
 NHSTUB(TurnOnDisplay                          ,0xffc2ca70) //120
 NHSTUB(TurnOffDisplay                         ,0xffc2ca80) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xffd0d51c) //120
+NHSTUB(UnlockAE                               ,0xffc15404) //120
 NHSTUB(UnlockMainPower                        ,0xffc5db24) //120
 NHSTUB(UnsetZoomForMovie                      ,0xffd21b70) //104
 NHSTUB(UpdateMBROnFlash                       ,0xffc3f674) //105

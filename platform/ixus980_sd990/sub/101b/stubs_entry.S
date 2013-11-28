@@ -17,8 +17,8 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DoAFLock                             ,0xff8258d0) //102        *** != 0xff863a80
-//NHSTUB(UnlockAF                             ,0xff825908) //102        *** != 0xff863a90
+//NHSTUB(DoAFLock                             ,0xff8258d0) //120        *** != 0xff863a80
+//NHSTUB(UnlockAF                             ,0xff825908) //120        *** != 0xff863a90
 //NHSTUB(kbd_pwr_off                          ,0xff84a3a8) //  2 64%    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
@@ -112,6 +112,7 @@ NHSTUB(CreateTask                             ,0xff81aef4) //120
 NHSTUB(DebugAssert                            ,0xff81b1cc) //111
 NHSTUB(DeleteDirectory_Fut                    ,0xff823504) //116
 NHSTUB(DeleteFile_Fut                         ,0xff823420) //112
+NHSTUB(DoAELock                               ,0xff825c20) //120
 NHSTUB(EnterToCompensationEVF                 ,0xff825b7c) //104
 NHSTUB(ExecuteEventProcedure                  ,0xff872670) //104
 NHSTUB(ExitFromCompensationEVF                ,0xff825bc0) //104
@@ -185,6 +186,7 @@ NHSTUB(TurnOnBackLight                        ,0xff88ac88) //104
 NHSTUB(TurnOnDisplay                          ,0xff845fec) //120
 NHSTUB(TurnOffDisplay                         ,0xff845ffc) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff953ba0) //120
+NHSTUB(UnlockAE                               ,0xff825c44) //120
 NHSTUB(UnlockMainPower                        ,0xff87d9d0) //120
 NHSTUB(UnsetZoomForMovie                      ,0xff9689ec) //104
 NHSTUB(UpdateMBROnFlash                       ,0xff859488) //105

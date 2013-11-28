@@ -17,14 +17,14 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DoAFLock                             ,0xff8382e4) //102        *** != 0xff87a910
+//NHSTUB(DoAFLock                             ,0xff8382e4) //120        *** != 0xff87a910
 //NHSTUB(GetImageFolder                       ,0xff94345c) //122        *** != 0xff94337c
 //NHSTUB(MoveFocusLensToDistance              ,0xffb228b0) //102        *** != 0xffb2289c
 //NHSTUB(PutInNdFilter                        ,0xffab69c8) //102        *** != 0xffb2056c
 //NHSTUB(PutOutNdFilter                       ,0xffab69ec) //102        *** != 0xffb205a4
 //NHSTUB(ScreenLock                           ,0xffa13354) //117        *** != 0xffa1356c
 //NHSTUB(SetScriptMode                        ,0xff895904) //120        *** != 0xff810f6c
-//NHSTUB(UnlockAF                             ,0xff83831c) //102        *** != 0xff87a920
+//NHSTUB(UnlockAF                             ,0xff83831c) //120        *** != 0xff87a920
 //NHSTUB(kbd_pwr_off                          ,0xff861a14) //  2 60%    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
@@ -123,6 +123,7 @@ NHSTUB(CreateTask                             ,0xff81e83c) //120
 NHSTUB(DebugAssert                            ,0xff81eb14) //111
 NHSTUB(DeleteDirectory_Fut                    ,0xff836814) //116
 NHSTUB(DeleteFile_Fut                         ,0xff836730) //112
+NHSTUB(DoAELock                               ,0xff8384dc) //120
 NHSTUB(EnterToCompensationEVF                 ,0xff8383e4) //104
 NHSTUB(ExecuteEventProcedure                  ,0xff88b948) //104
 NHSTUB(ExitFromCompensationEVF                ,0xff838428) //104
@@ -193,6 +194,7 @@ NHSTUB(TurnOnBackLight                        ,0xff8a4968) //104
 NHSTUB(TurnOnDisplay                          ,0xff85b4e8) //120
 NHSTUB(TurnOffDisplay                         ,0xff85b4f8) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff984ab4) //120
+NHSTUB(UnlockAE                               ,0xff838500) //120
 NHSTUB(UnlockMainPower                        ,0xff895acc) //120
 NHSTUB(UpdateMBROnFlash                       ,0xff871cb0) //105
 NHSTUB(VbattGet                               ,0xff8330d8) //120

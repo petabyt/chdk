@@ -279,6 +279,8 @@ extern void _TurnOffBackLight(void);
 extern void _TurnOnDisplay(void);
 extern void _TurnOffDisplay(void);
 
+extern void _DoAELock(void);
+extern void _UnlockAE(void);
 extern void _DoAFLock(void);
 extern void _UnlockAF(void);
 

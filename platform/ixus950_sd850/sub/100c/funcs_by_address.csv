@@ -1115,6 +1115,8 @@
 0xffb07b3c,task_ShutdownRecTask
 0xffb09200,DoAFLock
 0xffb09280,UnlockAF
+0xffb09734,DoAELock
+0xffb09784,UnlockAE
 0xffb0cbe0,task_ShootSeqTask
 0xffb0d160,task_SsStartupTask
 0xffb0dd10,task_CaptSeq

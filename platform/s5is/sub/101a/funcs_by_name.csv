@@ -194,6 +194,7 @@
 0xff9c4cc8,DisplayDialogBox_FW
 0xff824a50,DisplayFactoryMode_FW
 0xff860250,DMASioSet_FW
+0xff828214,DoAELock
 0xff86c130,DoAELock_FW
 0xff827c90,DoAFLock
 0xff86c110,DoAFLock_FW
@@ -1419,6 +1420,7 @@
 0xff9c4cf0,UndisplayDialogBox_FW
 0xff824a5c,UndisplayFactoryMode_FW
 0xff86fb58,UnLoadScript_FW
+0xff828250,UnlockAE
 0xff86c140,UnlockAE_FW
 0xff827cfc,UnlockAF
 0xff86c120,UnlockAF_FW

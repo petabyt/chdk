@@ -15,7 +15,6 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NHSTUB(AllocateUncacheableMemory              ,0xff815288) //  1 65%
 // ERROR: Close is not found.                              //--- ---    *** != 0xffac265c
-//NHSTUB(DoAFLock                             ,0xff93e080) //  1 52%    *** != 0xff93de38
 // ERROR: EnterToCompensationEVF is not found.             //--- ---    *** != 0xff93df9c
 // ERROR: ExecuteEventProcedure is not found.              //--- ---    *** != 0xff81756c
 // ERROR: ExitFromCompensationEVF is not found.            //--- ---    *** != 0xff93dfdc
@@ -47,7 +46,6 @@ NHSTUB(SetFileAttributes                      ,0xff8717e0) //  1 58%
 // ERROR: SetParameterData is not found.                   //--- ---    *** != 0x00000000
 // ERROR: SetPropertyCase is not found.                    //--- ---    *** != 0x00000000
 // ERROR: SetScriptMode is not found.                      //--- ---    *** != 0xff9559e0
-//NHSTUB(UnlockAF                             ,0xff93e0c0) //  1 71%    *** != 0xff93de98
 NHSTUB(UpdateMBROnFlash                       ,0xff8704d0) //  1 96%
 // ERROR: VbattGet is not found.                           //--- ---    *** != 0xffa5ba68
 // ERROR: Write is not found.                              //--- ---    *** != 0xffac272c
@@ -114,6 +112,8 @@ NHSTUB(CreateTask                             ,0xff823784) //120
 NHSTUB(DebugAssert                            ,0xff814c10) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff8699b4) //  1
 // ALT: NHSTUB(DeleteFile_Fut, 0xfff17058) // 1 10/0
+NHSTUB(DoAELock                               ,0xff93e058) //120
+//NHSTUB(DoAFLock                             ,0xff93de38) //120            == 0xff93de38
 NHSTUB(ExitTask                               ,0xff823b44) //120
 NHSTUB(Fclose_Fut                             ,0xff869af4) //  1
 //NHSTUB(Feof_Fut                             ,0xff869d08) //  1            == 0xff869d08
@@ -157,6 +157,8 @@ NHSTUB(TurnOffBackLight                       ,0xff99e350) //  1
 NHSTUB(TurnOnBackLight                        ,0xff99e324) //  1
 NHSTUB(TurnOnDisplay                          ,0xff924fec) //120
 NHSTUB(TurnOffDisplay                         ,0xff925014) //120
+NHSTUB(UnlockAE                               ,0xff93e0ac) //120
+//NHSTUB(UnlockAF                             ,0xff93de98) //120            == 0xff93de98
 //NHSTUB(UnlockMainPower                      ,0xff956014) //120            == 0xff956014
 NHSTUB(_log                                   ,0xffaae9b0) //121
 NHSTUB(_log10                                 ,0xffaaf058) //121

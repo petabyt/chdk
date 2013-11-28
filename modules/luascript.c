@@ -366,6 +366,14 @@ static int luaCB_get_curve_file( lua_State* L )
     return 1;
 }
 
+static int luaCB_set_aelock(lua_State* L) 
+{
+  int val = luaL_checknumber(L, 1);
+  if (val>0) DoAELock();  // 1: enable AELock
+  else UnlockAE();       // 0: disable unlock AE
+  return 0;
+}
+
 static int luaCB_set_aflock(lua_State* L) 
 {
   int val = luaL_checknumber(L, 1);
@@ -2632,6 +2640,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(set_lcd_display)
     FUNC(set_draw_title_line)
     FUNC(get_draw_title_line)
+    FUNC(set_aelock)
     FUNC(set_aflock)
     FUNC(set_curve_state)
     FUNC(get_curve_state)

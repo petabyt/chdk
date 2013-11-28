@@ -130,6 +130,8 @@
 0xff878efc,UnlockAF,(stubs_entry_2.s)
 0xff838628,EnterToCompensationEVF
 0xff83866c,ExitFromCompensationEVF
+0xff838734,DoAELock
+0xff838758,UnlockAE
 0xff839a78,CreateMessageQueue
 0xff839afc,DeleteMessageQueue
 0xff839b8c,ReceiveMessageQueue

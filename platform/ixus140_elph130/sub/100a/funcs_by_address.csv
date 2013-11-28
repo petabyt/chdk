@@ -194,6 +194,8 @@
 0xff035a60,UnlockAF
 0xff035c78,EnterToCompensationEVF
 0xff035cbc,ExitFromCompensationEVF
+0xff035d10,DoAELock
+0xff035d34,UnlockAE
 0xff037fe4,TurnOffE1_FW
 0xff038090,task_Bye
 0xff0382e8,Restart

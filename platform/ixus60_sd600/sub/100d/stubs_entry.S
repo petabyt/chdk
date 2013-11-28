@@ -14,7 +14,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DoAFLock                             ,0xff95c3d8) //  2 56%    *** != 0xff95c3e0
 // ERROR: EnterToCompensationEVF is not found.             //--- ---    *** != 0x00000000
 //NHSTUB(ExitFromCompensationEVF              ,0xff95e464) //  1 73%    *** != 0x00000000
 //NHSTUB(GetDrive_FreeClusters                ,0xff86eef0) //1103        *** != 0xff867c04
@@ -29,8 +28,6 @@ NHSTUB(PutInNdFilter                          ,0xffac2194) //  1 92%
 // ALT: NHSTUB(PutInNdFilter, 0xffac3d6c) // 2 25/2
 NHSTUB(PutOutNdFilter                         ,0xffac21dc) //  1 94%
 NHSTUB(SetParameterData                       ,0xff977bf8) //  1 86%
-//NHSTUB(UnlockAF                             ,0xff903a5c) //  1 78%    *** != 0xff95c424
-// ALT: NHSTUB(UnlockAF, 0xff95c428) // 1 11/3
 NHSTUB(UnsetZoomForMovie                      ,0xff9aef90) //  1 89%
 NHSTUB(WriteSDCard                            ,0xff87e128) //  3 64%
 NHSTUB(add_ptp_handler                        ,0xffa75b94) //  1 96%
@@ -83,6 +80,8 @@ NHSTUB(Close                                  ,0xff86f6a0) //120
 NHSTUB(CreateTask                             ,0xff821598) //120
 NHSTUB(DebugAssert                            ,0xff813afc) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff86883c) //  1
+NHSTUB(DoAELock                               ,0xff95c530) //120
+//NHSTUB(DoAFLock                             ,0xff95c3e0) //120            == 0xff95c3e0
 NHSTUB(ExecuteEventProcedure                  ,0xff816b44) //  1
 NHSTUB(ExitTask                               ,0xff821958) //120
 NHSTUB(Fclose_Fut                             ,0xff86897c) //120
@@ -132,6 +131,8 @@ NHSTUB(TurnOffBackLight                       ,0xff9bbc6c) //  2
 NHSTUB(TurnOnBackLight                        ,0xff9bbc3c) //  2
 NHSTUB(TurnOnDisplay                          ,0xff933e14) //120
 NHSTUB(TurnOffDisplay                         ,0xff933e24) //120
+NHSTUB(UnlockAE                               ,0xff95c550) //120
+//NHSTUB(UnlockAF                             ,0xff95c424) //120            == 0xff95c424
 NHSTUB(UnlockMainPower                        ,0xff972f44) //120
 NHSTUB(UpdateMBROnFlash                       ,0xff86ebac) //  1
 //NHSTUB(VbattGet                             ,0xff82c1a0) //120            == 0xff82c1a0

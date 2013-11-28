@@ -137,6 +137,8 @@
 0xff02903c,UnlockAF
 0xff0292a0,EnterToCompensationEVF
 0xff0292e4,ExitFromCompensationEVF
+0xff0293b0,DoAELock
+0xff0293d4,UnlockAE
 0xff02b068,CreateMessageQueue
 0xff02b0ec,DeleteMessageQueue
 0xff02b17c,ReceiveMessageQueue

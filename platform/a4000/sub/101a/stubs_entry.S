@@ -118,7 +118,8 @@ NHSTUB(Close                                  ,0xff8314a4) //120
 NHSTUB(CreateTask                             ,0x003f6824) //120
 NHSTUB(DebugAssert                            ,0x003f6afc) //111
 NHSTUB(DeleteDirectory_Fut                    ,0xff830ea4) //116
-NHSTUB(DoAFLock                               ,0xff832d24) //102
+NHSTUB(DoAELock                               ,0xff833020) //120
+NHSTUB(DoAFLock                               ,0xff832d24) //120
 NHSTUB(EnterToCompensationEVF                 ,0xff832f88) //104
 NHSTUB(ExecuteEventProcedure                  ,0xff87cb10) //104
 NHSTUB(ExitFromCompensationEVF                ,0xff832fcc) //104
@@ -195,7 +196,8 @@ NHSTUB(TurnOnBackLight                        ,0xff891e90) //104
 NHSTUB(TurnOnDisplay                          ,0xff853170) //120
 NHSTUB(TurnOffDisplay                         ,0xff853180) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff97b6d8) //120
-NHSTUB(UnlockAF                               ,0xff832d5c) //102
+NHSTUB(UnlockAE                               ,0xff833044) //120
+NHSTUB(UnlockAF                               ,0xff832d5c) //120
 NHSTUB(UnlockMainPower                        ,0xff88538c) //120
 NHSTUB(UnsetZoomForMovie                      ,0xff9902c0) //104
 NHSTUB(VbattGet                               ,0xff82c3bc) //120

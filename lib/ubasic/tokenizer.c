@@ -229,6 +229,7 @@ static const struct keyword_token keywords[] = {
   {"get_nd_present",          TOKENIZER_GET_ND_PRESENT},
   {"get_histo_range",         TOKENIZER_GET_HISTO_RANGE},
   {"shot_histo_enable",       TOKENIZER_SHOT_HISTO_ENABLE},
+  {"set_aelock",              TOKENIZER_SET_AELOCK},
   {"set_aflock",              TOKENIZER_SET_AFLOCK},
   {"is_capture_mode_valid",   TOKENIZER_IS_CAPTURE_MODE_VALID}, 
   {"reboot",                  TOKENIZER_REBOOT},

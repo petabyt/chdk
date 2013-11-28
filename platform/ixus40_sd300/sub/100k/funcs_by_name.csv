@@ -271,8 +271,9 @@
 0xff9adf80,DisplayMessage_FW
 0xff9ae470,DisplayScreenMessage_FW
 0xff93e868,DisplayTypeChanged_FW
+0xff93e29c,DoAELock
 0xff93e29c,DoAELock_FW
-0xff93e07c,DoAFLock,(stubs_entry_2.s)
+0xff93e07c,DoAFLock
 0xff93e07c,DoAFLock_FW
 0xff81e950,Download_FW
 0xff95e770,DrawBinaryBitmapToDialog_FW
@@ -1412,8 +1413,9 @@
 0xff9adb0c,UndisplayMessage_FW
 0xff9ae440,UndisplayScreenMessage_FW
 0xffa9d800,UnloadScript_FW
+0xff93e2f0,UnlockAE
 0xff93e2f0,UnlockAE_FW
-0xff93e0dc,UnlockAF,(stubs_entry_2.s)
+0xff93e0dc,UnlockAF
 0xff93e0dc,UnlockAF_FW
 0xff98b86c,UnlockEnterToDisplayOff_FW
 0xffa49f4c,UnlockFocusLensDriveGain_FW
