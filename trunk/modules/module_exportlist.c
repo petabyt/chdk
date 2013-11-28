@@ -359,6 +359,8 @@
             save_config_file,
             load_config_file,
 
+            DoAELock,
+            UnlockAE,
             DoAFLock,
             UnlockAF,
 

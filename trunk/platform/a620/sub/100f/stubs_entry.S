@@ -14,7 +14,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DoAFLock                             ,0xffd33b54) //  1 91%    *** != 0xffd33b2c
 NHSTUB(EnterToCompensationEVF                 ,0xffd35c44) //  1 70%
 //NHSTUB(ExitFromCompensationEVF              ,0xffd37430) //  2 90%    *** != 0xffd35ca4
 NHSTUB(GetFocusLensSubjectDistance            ,0xffe6d4ac) //  1 96%
@@ -74,6 +73,8 @@ NHSTUB(Close                                  ,0xffc5ce8c) //120
 NHSTUB(CreateTask                             ,0xffc11230) //120
 NHSTUB(DebugAssert                            ,0xffc03ad0) //1100
 NHSTUB(DeleteFile_Fut                         ,0xffc56340) //  1
+NHSTUB(DoAELock                               ,0xffd33ca4) //120
+//NHSTUB(DoAFLock                             ,0xffd33b2c) //120            == 0xffd33b2c
 NHSTUB(ExecuteEventProcedure                  ,0xffc067f0) //  1
 NHSTUB(ExitTask                               ,0xffc115f0) //120
 NHSTUB(Fclose_Fut                             ,0xffc56480) //120
@@ -127,7 +128,8 @@ NHSTUB(TurnOffBackLight                       ,0xffd95314) //  1
 NHSTUB(TurnOnBackLight                        ,0xffd952e8) //  1
 NHSTUB(TurnOnDisplay                          ,0xffd107d4) //120
 NHSTUB(TurnOffDisplay                         ,0xffd107e4) //120
-NHSTUB(UnlockAF                               ,0xffd33b94) //  1
+NHSTUB(UnlockAE                               ,0xffd33cc4) //120
+NHSTUB(UnlockAF                               ,0xffd33b94) //120
 NHSTUB(UnlockMainPower                        ,0xffd49e50) //120
 NHSTUB(UpdateMBROnFlash                       ,0xffc5c3a0) //  1
 NHSTUB(VbattGet                               ,0xffc1b4ac) //120

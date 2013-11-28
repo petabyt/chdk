@@ -2181,6 +2181,10 @@ statement(void)
   token = tokenizer_token();
 
   switch(token) {
+  // aelock
+  case TOKENIZER_SET_AELOCK:
+      on_off_statement(token, DoAELock, UnlockAE);
+      break;
   // aflock
   case TOKENIZER_SET_AFLOCK:
       on_off_statement(token, DoAFLock, UnlockAF);

@@ -114,6 +114,8 @@
 0xffc14f78,UnlockAF
 0xffc14ff0,EnterToCompensationEVF
 0xffc15034,ExitFromCompensationEVF
+0xffc15088,DoAELock
+0xffc150ac,UnlockAE
 0xffc15fcc,TestAssert_FW
 0xffc15ff8,TestAssertInt_FW
 0xffc16018,TestException_FW

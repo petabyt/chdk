@@ -13,7 +13,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DoAFLock                             ,0xff94f9e0) //  1 91%    *** != 0xff94f9b8
 //NHSTUB(EnterToCompensationEVF               ,0xff951ab0) //  1 87%        == 0xff951ab0
 NHSTUB(ExitFromCompensationEVF                ,0xff95324c) //  2 90%
 //NHSTUB(GetDrive_FreeClusters                ,0xff872a08) //1103        *** != 0xff86b75c
@@ -94,6 +93,8 @@ NHSTUB(Close                                  ,0xff8731a4) //120
 NHSTUB(CreateTask                             ,0xff823d64) //120
 NHSTUB(DebugAssert                            ,0xff8162b4) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff86c394) //  1
+NHSTUB(DoAELock                               ,0xff94fb28) //120
+//NHSTUB(DoAFLock                             ,0xff94f9b8) //120            == 0xff94f9b8
 NHSTUB(ExecuteEventProcedure                  ,0xff8192fc) //  1
 NHSTUB(ExitTask                               ,0xff824124) //120
 NHSTUB(Fclose_Fut                             ,0xff86c4d4) //120
@@ -142,7 +143,8 @@ NHSTUB(TurnOffBackLight                       ,0xff9b3df4) //  1
 NHSTUB(TurnOnBackLight                        ,0xff9b3dc8) //  1
 NHSTUB(TurnOnDisplay                          ,0xff927490) //120
 NHSTUB(TurnOffDisplay                         ,0xff9274a0) //120
-//NHSTUB(UnlockAF                             ,0xff94fa20) //  1            == 0xff94fa20
+NHSTUB(UnlockAE                               ,0xff94fb48) //120
+//NHSTUB(UnlockAF                             ,0xff94fa20) //120            == 0xff94fa20
 NHSTUB(UnlockMainPower                        ,0xff96563c) //120
 NHSTUB(UpdateMBROnFlash                       ,0xff8726c8) //  1
 //NHSTUB(VbattGet                             ,0xff82f0f4) //120            == 0xff82f0f4

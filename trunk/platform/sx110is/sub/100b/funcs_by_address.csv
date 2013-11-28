@@ -137,6 +137,8 @@
 0xffc1509c,UnlockAF
 0xffc15318,EnterToCompensationEVF
 0xffc1535c,ExitFromCompensationEVF
+0xffc153bc,DoAELock
+0xffc153e0,UnlockAE
 0xffc168a8,TestAssert_FW
 0xffc168d4,TestAssertInt_FW
 0xffc168f4,TestException_FW

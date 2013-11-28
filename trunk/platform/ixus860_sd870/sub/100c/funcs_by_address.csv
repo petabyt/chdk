@@ -159,6 +159,8 @@
 0xff826c08,UnlockAF
 0xff826f2c,EnterToCompensationEVF
 0xff826f7c,ExitFromCompensationEVF
+0xff8270cc,DoAELock
+0xff827108,UnlockAE
 0xff828c08,CreateEventFlag
 0xff828c60,DeleteEventFlag
 0xff828cb0,CheckAnyEventFlag

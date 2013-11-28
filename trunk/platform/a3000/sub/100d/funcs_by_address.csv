@@ -154,6 +154,8 @@
 0xffc59f88,UnlockAF,(stubs_entry_2.s)
 0xffc277f4,EnterToCompensationEVF
 0xffc27838,ExitFromCompensationEVF
+0xffc2788c,DoAELock
+0xffc278b0,UnlockAE
 0xffc28908,CreateEventFlag
 0xffc28960,DeleteEventFlag
 0xffc289b0,CheckAnyEventFlag

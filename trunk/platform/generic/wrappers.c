@@ -1037,6 +1037,16 @@ void TurnOffDisplay(void)
   _TurnOffDisplay();
 }
 
+void DoAELock(void)
+{
+  _DoAELock();
+}
+
+void UnlockAE(void)
+{
+  _UnlockAE();
+}
+
 void DoAFLock(void)
 {
   _DoAFLock();

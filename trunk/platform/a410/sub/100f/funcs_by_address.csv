@@ -397,7 +397,9 @@
 0xffd24244,ExitFromCompensationEVF_FW
 0xffd24254,RectifyExposureWithMeasure_FW
 0xffd24264,UpdateEVF_FW
+0xffd2426c,DoAELock
 0xffd2426c,DoAELock_FW
+0xffd2428c,UnlockAE
 0xffd2428c,UnlockAE_FW
 0xffd2429c,GetProgramShiftLimitPositive_FW
 0xffd242c0,GetProgramShiftLimitNegative_FW

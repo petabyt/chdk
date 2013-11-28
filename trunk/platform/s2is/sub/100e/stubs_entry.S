@@ -14,8 +14,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DoAFLock                             ,0xff90903c) //  1 52%    *** != 0xff967f70
-// ALT: NHSTUB(DoAFLock, 0xff968294) // 1 12/11
 // ERROR: EnterToCompensationEVF is not found.             //--- ---    *** != 0xff968150
 //NHSTUB(ExitFromCompensationEVF              ,0xff96b6dc) //  1 70%    *** != 0xff9681a4
 NHSTUB(GetFocusLensSubjectDistance            ,0xffa8e96c) //  1 87%
@@ -32,7 +30,6 @@ NHSTUB(SetCurrentCaptureModeType              ,0xff9aed34) //  1 73%
 NHSTUB(SetFileAttributes                      ,0xff8774cc) //  1 58%
 //NHSTUB(SetParameterData                     ,0xff987fdc) //  1 66%    *** != 0xff987f0c
 // ERROR: SetPropertyCase is not found.                    //--- ---    *** != 0xff825c00
-//NHSTUB(UnlockAF                             ,0xff90907c) //  1 78%    *** != 0xff96804c
 NHSTUB(UpdateMBROnFlash                       ,0xff876480) //  1 96%
 // ERROR: WriteSDCard is not found.                        //--- ---    *** != 0x00000000
 NHSTUB(add_ptp_handler                        ,0xffa4bc48) //  1 96%
@@ -85,6 +82,8 @@ NHSTUB(AllocateUncacheableMemory              ,0xff814810) //  1
 NHSTUB(CreateTask                             ,0xff82239c) //120
 NHSTUB(DebugAssert                            ,0xff813d58) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff86fbf4) //  1
+NHSTUB(DoAELock                               ,0xff96826c) //120
+//NHSTUB(DoAFLock                             ,0xff967f70) //120            == 0xff967f70
 NHSTUB(ExecuteEventProcedure                  ,0xff816ab4) //  1
 NHSTUB(ExitTask                               ,0xff82275c) //120
 NHSTUB(Fclose_Fut                             ,0xff86fd34) //  1
@@ -130,6 +129,8 @@ NHSTUB(TurnOffBackLight                       ,0xff9cbf00) //  1
 NHSTUB(TurnOnBackLight                        ,0xff9cbed4) //  1
 NHSTUB(TurnOnDisplay                          ,0xff93d078) //120
 NHSTUB(TurnOffDisplay                         ,0xff93d088) //120
+NHSTUB(UnlockAE                               ,0xff9682c0) //120
+//NHSTUB(UnlockAF                             ,0xff96804c) //120            == 0xff96804c
 NHSTUB(UnlockMainPower                        ,0xff9835a4) //120
 //NHSTUB(VbattGet                             ,0xff82d570) //120            == 0xff82d570
 //NHSTUB(Write                                ,0xff8773e0) //120            == 0xff8773e0

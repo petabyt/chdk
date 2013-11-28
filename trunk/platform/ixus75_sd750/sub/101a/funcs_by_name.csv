@@ -175,6 +175,7 @@
 0xffa2d1d8,DispDev_EnableEventProc_FW
 0xff90baac,DisplayDialogBox_FW
 0xffa65de8,DisplayFactoryMode_FW
+0xffb06708,DoAELock
 0xffb17bcc,DoAELock_FW
 0xffb061d4,DoAFLock
 0xffb17bac,DoAFLock_FW
@@ -1156,6 +1157,7 @@
 0xff90bad4,UndisplayDialogBox_FW
 0xffa65e00,UndisplayFactoryMode_FW
 0xffb24240,UnLoadScript_FW
+0xffb06758,UnlockAE
 0xffb17bdc,UnlockAE_FW
 0xffb06254,UnlockAF
 0xffb17bbc,UnlockAF_FW

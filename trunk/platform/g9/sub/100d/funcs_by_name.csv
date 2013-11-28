@@ -162,6 +162,7 @@
 0xff90a840,DispDev.Create_FW
 0xff8443f8,DispDev_EnableEventProc_FW
 0xff8241c8,DisplayFactoryMode_FW
+0xff827aa8,DoAELock
 0xff866fcc,DoAELock_FW
 0xff8275cc,DoAFLock
 0xff866fac,DoAFLock_FW
@@ -1394,6 +1395,7 @@
 0xff99c320,UIFS_WriteFirmInfoToFile_FW
 0xff8241d4,UndisplayFactoryMode_FW
 0xff86aa04,UnLoadScript_FW
+0xff827ae4,UnlockAE
 0xff866fdc,UnlockAE_FW
 0xff827638,UnlockAF
 0xff866fbc,UnlockAF_FW

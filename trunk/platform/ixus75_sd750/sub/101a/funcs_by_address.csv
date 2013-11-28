@@ -970,6 +970,8 @@
 0xffb061d4,DoAFLock
 0xffb06254,UnlockAF
 0xffb06600,ExitFromCompensationEVF
+0xffb06708,DoAELock
+0xffb06758,UnlockAE
 0xffb09ac8,task_ShootSeqTask
 0xffb0a048,task_SsStartupTask
 0xffb0aba0,task_CaptSeq

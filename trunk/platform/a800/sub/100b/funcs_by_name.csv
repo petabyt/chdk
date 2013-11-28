@@ -190,6 +190,7 @@
 0xffd1b000,DispDev.Create_FW
 0xffd18c64,DispDev_EnableEventProc_FW
 0xffc24de4,DisplayFactoryMode_FW
+0xffc27b6c,DoAELock
 0xffc27a24,DoAFLock
 0xffd18d68,Driver.Create_FW
 0xffd18d68,Driver_EnableEventProc_FW
@@ -1279,6 +1280,7 @@
 0xffd2db9c,UIFS_WriteFirmInfoToFile_FW
 0xffc24df0,UndisplayFactoryMode_FW
 0xffc64e7c,UnLoadScript_FW
+0xffc27b90,UnlockAE
 0xffc27a5c,UnlockAF
 0xffc701e4,UnlockMainPower
 0xffc701e4,UnlockMainPower_FW

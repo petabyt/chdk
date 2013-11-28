@@ -469,7 +469,9 @@
 0xff93ddc8,AFDistanceChanged_FW
 0xff93de18,MoveFocusByRelative_FW
 0xff93de20,IsAvailableAFLock_FW
+0xff93de38,DoAFLock
 0xff93de38,DoAFLock_FW
+0xff93de98,UnlockAF
 0xff93de98,UnlockAF_FW
 0xff93dee8,GetMinimumAv_FW
 0xff93df0c,GetMinimumAvForZoom_FW
@@ -482,10 +484,10 @@
 0xff93e040,UpdateEVF_FW
 0xff93e048,RectifyExposure_FW
 0xff93e050,IsAvailableAELock_FW
+0xff93e058,DoAELock
 0xff93e058,DoAELock_FW
-0xff93de38,DoAFLock,(stubs_entry_2.s)
+0xff93e0ac,UnlockAE
 0xff93e0ac,UnlockAE_FW
-0xff93de98,UnlockAF,(stubs_entry_2.s)
 0xff93e0dc,GetProgramShiftLimitPositive_FW
 0xff93e100,GetProgramShiftLimitNegative_FW
 0xff93e13c,FixProgramShift_FW

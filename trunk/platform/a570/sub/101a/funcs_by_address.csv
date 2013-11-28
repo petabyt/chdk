@@ -1126,6 +1126,8 @@
 0xffea4cd0,UnlockAF
 0xffea4ff8,EnterToCompensationEVF
 0xffea507c,ExitFromCompensationEVF
+0xffea5190,DoAELock
+0xffea51e0,UnlockAE
 0xffea8184,task_ShootSeqTask
 0xffea8704,task_SsStartupTask
 0xffea9258,task_CaptSeq

@@ -77,7 +77,8 @@ NHSTUB(Close                                  ,0xff86f788) //120
 NHSTUB(CreateTask                             ,0xff822274) //120
 NHSTUB(DebugAssert                            ,0xff813bfc) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff86866c) //  1
-NHSTUB(DoAFLock                               ,0xff94aacc) //  1
+NHSTUB(DoAELock                               ,0xff94ac14) //120
+NHSTUB(DoAFLock                               ,0xff94aacc) //120
 NHSTUB(ExecuteEventProcedure                  ,0xff816c44) //  1
 NHSTUB(ExitTask                               ,0xff822634) //120
 NHSTUB(Fclose_Fut                             ,0xff8687ac) //120
@@ -130,7 +131,8 @@ NHSTUB(TurnOffBackLight                       ,0xff9a2d8c) //  1
 NHSTUB(TurnOnBackLight                        ,0xff9a2d60) //  1
 NHSTUB(TurnOnDisplay                          ,0xff922e3c) //120
 NHSTUB(TurnOffDisplay                         ,0xff922e4c) //120
-NHSTUB(UnlockAF                               ,0xff94ab0c) //  1
+NHSTUB(UnlockAE                               ,0xff94ac34) //120
+NHSTUB(UnlockAF                               ,0xff94ab0c) //120
 NHSTUB(UnlockMainPower                        ,0xff960260) //120
 NHSTUB(UnsetZoomForMovie                      ,0xff99764c) //  1
 NHSTUB(UpdateMBROnFlash                       ,0xff86ec9c) //  1

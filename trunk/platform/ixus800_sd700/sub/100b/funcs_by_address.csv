@@ -291,7 +291,6 @@
 0xff8e3470,task_AfIntSrvTask
 0xff8e4174,task_AFTask
 0xff8f74c0,task_BrtMsrTask
-0xff95b464,UnlockAF,(stubs_entry_2.s)
 0xff9064cc,task_ExpDrv
 0xff9064cc,task_ExpDrvTask
 0xff9101c0,task_EFChargeT
@@ -381,14 +380,17 @@
 0xff95b3bc,GetMFBarData_FW
 0xff95b3e0,AFDistanceChanged_FW
 0xff95b3f8,GetMacroSupportZoomPoint_FW
-0xff95b420,DoAFLock,(stubs_entry_2.s)
+0xff95b420,DoAFLock
 0xff95b420,DoAFLock_FW
+0xff95b464,UnlockAF
 0xff95b464,UnlockAF_FW
 0xff95b538,EnterToCompensationEVF_FW
 0xff95b548,ExitFromCompensationEVF_FW
 0xff95b558,RectifyExposureWithMeasure_FW
 0xff95b568,UpdateEVF_FW
+0xff95b570,DoAELock
 0xff95b570,DoAELock_FW
+0xff95b590,UnlockAE
 0xff95b590,UnlockAE_FW
 0xff95b5a0,GetProgramShiftLimitPositive_FW
 0xff95b5c4,GetProgramShiftLimitNegative_FW

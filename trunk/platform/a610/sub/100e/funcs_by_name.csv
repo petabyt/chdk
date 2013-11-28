@@ -173,6 +173,7 @@
 0xffd545b4,DisplayDialogBox_FW
 0xffe6a874,DisplayFactoryMode_FW
 0xffd33464,DisplayTypeChanged_FW
+0xffd331e4,DoAELock
 0xffd331e4,DoAELock_FW
 0xffd33094,DoAFLock
 0xffd33094,DoAFLock_FW
@@ -1216,6 +1217,7 @@
 0xffd3359c,UndisplayEVF_FW
 0xffe6a88c,UndisplayFactoryMode_FW
 0xffe9a350,UnLoadScript_FW
+0xffd33204,UnlockAE
 0xffd33204,UnlockAE_FW
 0xffd330d4,UnlockAF
 0xffd330d4,UnlockAF_FW

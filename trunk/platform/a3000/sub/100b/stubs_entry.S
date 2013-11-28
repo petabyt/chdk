@@ -17,12 +17,12 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DoAFLock                             ,0xffc27744) //102        *** != 0xffc59f28
+//NHSTUB(DoAFLock                             ,0xffc27744) //120        *** != 0xffc59f28
 //NHSTUB(LEDDrive                             ,0xffc43a04) //120        *** != 0xffc43acc
 //NHSTUB(ScreenLock                           ,0xffd86cec) //117        *** != 0xffd86ef4
 //NHSTUB(ScreenUnlock                         ,0xffd86d30) //117        *** != 0xffd85ba4
 //NHSTUB(SetScriptMode                        ,0xffc6fce8) //120        *** != 0xffc00f70
-//NHSTUB(UnlockAF                             ,0xffc2777c) //102        *** != 0xffc59f38
+//NHSTUB(UnlockAF                             ,0xffc2777c) //120        *** != 0xffc59f38
 //NHSTUB(kbd_pwr_off                          ,0xffc445a0) //  2 64%    *** != 0x00000000
 NHSTUB(kbd_pwr_on                             ,0xffc44560) //  2 82%
 
@@ -112,6 +112,7 @@ NHSTUB(CreateTask                             ,0xffc0f110) //120
 NHSTUB(DebugAssert                            ,0xffc0f5e8) //111
 NHSTUB(DeleteDirectory_Fut                    ,0xffc25d14) //116
 NHSTUB(DeleteFile_Fut                         ,0xffc25c30) //112
+NHSTUB(DoAELock                               ,0xffc2788c) //120
 NHSTUB(EnterToCompensationEVF                 ,0xffc277f4) //104
 NHSTUB(ExecuteEventProcedure                  ,0xffc68908) //104
 NHSTUB(ExitFromCompensationEVF                ,0xffc27838) //104
@@ -184,6 +185,7 @@ NHSTUB(TurnOnBackLight                        ,0xffc7b3d8) //104
 NHSTUB(TurnOnDisplay                          ,0xffc3ff5c) //120
 NHSTUB(TurnOffDisplay                         ,0xffc3ff88) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xffd272e8) //120
+NHSTUB(UnlockAE                               ,0xffc278b0) //120
 NHSTUB(UnlockMainPower                        ,0xffc6fe74) //120
 NHSTUB(UnsetZoomForMovie                      ,0xffd3cba4) //104
 NHSTUB(UpdateMBROnFlash                       ,0xffc522c0) //105

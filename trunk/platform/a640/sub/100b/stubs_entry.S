@@ -14,7 +14,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DoAFLock                             ,0xffd52210) //  2 60%    *** != 0xffd521e8
 NHSTUB(EnterToCompensationEVF                 ,0xffd5235c) //  2 90%
 //NHSTUB(ExitFromCompensationEVF              ,0xffd55af8) //  2 66%    *** != 0xffd55be0
 // ALT: NHSTUB(ExitFromCompensationEVF, 0xffd55b54) // 2 20/10
@@ -25,7 +24,6 @@ NHSTUB(GetPropertyCase                        ,0xffc15484) //  2 92%
 NHSTUB(PutInNdFilter                          ,0xffeb0e50) //  1 92%
 NHSTUB(PutOutNdFilter                         ,0xffeb0e98) //  1 94%
 NHSTUB(Restart                                ,0xffc13674) //  1 96%
-NHSTUB(UnlockAF                               ,0xffd5225c) //  2 91%
 NHSTUB(UnsetZoomForMovie                      ,0xffda5544) //  1 89%
 NHSTUB(add_ptp_handler                        ,0xffe57464) //  1 96%
 // ERROR: free is not found.                               //--- ---    *** != 0xffefd1ac
@@ -64,6 +62,8 @@ NHSTUB(Close                                  ,0xffc625a8) //120
 NHSTUB(CreateTask                             ,0xffc12154) //120
 NHSTUB(DebugAssert                            ,0xffc03cf8) //1100
 NHSTUB(DeleteFile_Fut                         ,0xffc5b46c) //  1
+NHSTUB(DoAELock                               ,0xffd523fc) //120
+//NHSTUB(DoAFLock                             ,0xffd521e8) //120            == 0xffd521e8
 NHSTUB(ExecuteEventProcedure                  ,0xffc0699c) //  1
 NHSTUB(ExitTask                               ,0xffc12514) //120
 NHSTUB(Fclose_Fut                             ,0xffc5b5e0) //120
@@ -115,6 +115,8 @@ NHSTUB(TurnOffBackLight                       ,0xffdba500) //  2
 NHSTUB(TurnOnBackLight                        ,0xffdba4d0) //  2
 NHSTUB(TurnOnDisplay                          ,0xffd2ee4c) //120
 NHSTUB(TurnOffDisplay                         ,0xffd2ee5c) //120
+NHSTUB(UnlockAE                               ,0xffd5241c) //120
+NHSTUB(UnlockAF                               ,0xffd5225c) //120
 NHSTUB(UnlockMainPower                        ,0xffd6ac20) //120
 NHSTUB(UpdateMBROnFlash                       ,0xffc61ac8) //  1
 NHSTUB(VbattGet                               ,0xffc1cd70) //120

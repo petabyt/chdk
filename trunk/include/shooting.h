@@ -175,6 +175,9 @@ extern void shooting_bracketing(void);
 
 /******************************************************************/
 
+extern void DoAELock(void);
+extern void UnlockAE(void);
+
 extern void PutInNdFilter();
 extern void PutOutNdFilter();
 extern long GetCurrentAvValue();
