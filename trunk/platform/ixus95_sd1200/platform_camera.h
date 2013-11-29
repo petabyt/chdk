@@ -33,13 +33,16 @@
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES
 
+    #undef  CAM_DEFAULT_ALT_BUTTON
+    #define CAM_DEFAULT_ALT_BUTTON          KEY_PLAYBACK
+
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
-    //#define CAM_AF_SCAN_DURING_VIDEO_RECORD 1     //TODO: change to define and find NSTUB
+    #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
 
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
 
-    //#define CAM_EXT_TV_RANGE              1
+    #define CAM_EXT_TV_RANGE                1
 
     #undef  CAM_UNCACHED_BIT                        // shut up compiler
     #define CAM_UNCACHED_BIT                0x40000000
@@ -88,5 +91,6 @@
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 	#define REMOTE_SYNC_STATUS_LED 	0xC0220138		// specifies an LED that turns on while camera waits for USB remote to sync
 
+//    #define CAM_HAS_FILEWRITETASK_HOOK       1
 //----------------------------------------------------------
 

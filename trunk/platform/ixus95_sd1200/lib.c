@@ -25,8 +25,7 @@ void shutdown()
 }
 
 int get_flash_params_count(void){
- return 120; // ? _sub_FF962AB8__PropertyTableManagerCore_c__6, similar to s5is
-             // VERIFY_SD1200. Dunno where the above is from (Not SD780)
+ return 0x7a;   // Found @0xffd1c038
 }
 
 
@@ -46,15 +45,6 @@ void camera_set_led(int led, int state, int bright)
 void debug_led(int state)
 {
     * (int *) DEBUG_LED = state ? 0x46 : 0x44;
-}
-
-// from sx10
-void JogDial_CW(void){
- _PostLogicalEventForNotPowerType(0x874, 1);  // RotateJogDialRight
-}
-
-void JogDial_CCW(void){
- _PostLogicalEventForNotPowerType(0x875, 1);  // RotateJogDialLeft
 }
 
 

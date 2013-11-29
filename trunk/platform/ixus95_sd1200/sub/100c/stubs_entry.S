@@ -17,23 +17,11 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DoAFLock                             ,0xffc15298) //120        *** != 0xffc47b8c
-//NHSTUB(SetScriptMode                        ,0xffc5d99c) //120        *** != 0x00000000
-//NHSTUB(UnlockAF                             ,0xffc152d0) //120        *** != 0xffc47b9c
-//NHSTUB(WriteSDCard                          ,0xffce4300) //108        *** != 0xffce4118
-//NHSTUB(kbd_read_keys                        ,0xffc11d70) //109        *** != 0xffc11d80
 //NHSTUB(kbd_pwr_off                          ,0xffc30e1c) //  2 64%    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffdf7360 -> ffeb35d8
 // Mode  2598 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_VIDEO_COLOR_SWAP     2600
-// Current modemap entry not found in firmware - MODE_VIDEO_COLOR_ACCENT   2599
-// Current modemap entry not found in firmware - MODE_VIDEO_STD            2601
-// Current modemap entry not found in firmware - MODE_STITCH              16906
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_SWAP      16924
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_ACCENT    16923
-// Current modemap entry not found in firmware - MODE_M                   32769
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0000c338) // Found @0xffc11d70
@@ -41,7 +29,7 @@ DEF(physw_run                               ,0x00001c34) // Found @0xffc119e4
 DEF(physw_sleep_delay                       ,0x00001c32) // Found @0xffc119e4
 DEF(levent_table                            ,0xffe8c7c4) // Found @0xffe8c7c4
 DEF(FlashParamsTable                        ,0xffeb37a8) // Found @0xffeb37a8
-//DEF(movie_status                            ,0x00005680) // Found @0xffcf8060, ** != ** stubs_min = 0x00005684 (0x5648+0x3c)
+DEF(movie_status                            ,0x00005680) // Found @0xffcf8060
 DEF(canon_menu_active                       ,0x00002bb0) // Found @0xffc5adf8
 DEF(canon_shoot_menu_active                 ,0x0000681d) // Found @0xffd2a1ac
 DEF(playrec_mode                            ,0x00002924) // Found @0xffc4e4ec
@@ -53,7 +41,7 @@ DEF(some_flag_for_af_scan                   ,0x00005b4c) // Found @0xffcfa7ac
 DEF(focus_len_table                         ,0xfffe2a8c) // Found @0xfffe2a8c
 DEF(zoom_busy                               ,0x000055b0) // Found @0xffcf475c
 DEF(focus_busy                              ,0x000054a8) // Found @0xffcef5cc
-//DEF(recreview_hold                          ,0x00003110) // Found @0xffc6677c, ** != ** stubs_min = 0x0000660c (0x6548+0xC4)
+DEF(recreview_hold                          ,0x00003110) // Found @0xffc6677c
 // Palette colour tables  found @ 0xffe9ab78
 DEF(active_palette_buffer                   ,0x000073e8) // Found @0xffd60078
 DEF(palette_buffer_ptr                      ,0x000073fc) // Found @0xffd5ff2c
@@ -122,6 +110,7 @@ NHSTUB(DebugAssert                            ,0xffc0b284) //111
 NHSTUB(DeleteDirectory_Fut                    ,0xffc135cc) //116
 NHSTUB(DeleteFile_Fut                         ,0xffc134e8) //112
 NHSTUB(DoAELock                               ,0xffc153e0) //120
+NHSTUB(DoAFLock                               ,0xffc15298) //120
 NHSTUB(EnterToCompensationEVF                 ,0xffc15348) //104
 NHSTUB(ExecuteEventProcedure                  ,0xffc565a8) //104
 NHSTUB(ExitFromCompensationEVF                ,0xffc1538c) //104
@@ -187,6 +176,7 @@ NHSTUB(SetFileTimeStamp                       ,0xffc13f18) //  1
 NHSTUB(SetLogicalEventActive                  ,0xffc5d94c) //101
 NHSTUB(SetParameterData                       ,0xffd1bf68) //101
 NHSTUB(SetPropertyCase                        ,0xffc5a1e4) //102
+NHSTUB(SetScriptMode                          ,0xffc5d99c) //120
 NHSTUB(SleepTask                              ,0xffc16f0c) //120
 NHSTUB(TakeSemaphore                          ,0xffc16bd4) //120
 NHSTUB(TurnOffBackLight                       ,0xffc68aa8) //104
@@ -195,11 +185,13 @@ NHSTUB(TurnOnDisplay                          ,0xffc2ca70) //120
 NHSTUB(TurnOffDisplay                         ,0xffc2ca80) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xffd0d51c) //120
 NHSTUB(UnlockAE                               ,0xffc15404) //120
+NHSTUB(UnlockAF                               ,0xffc152d0) //120
 NHSTUB(UnlockMainPower                        ,0xffc5db24) //120
 NHSTUB(UnsetZoomForMovie                      ,0xffd21b70) //104
 NHSTUB(UpdateMBROnFlash                       ,0xffc3f674) //105
 NHSTUB(VbattGet                               ,0xffc10644) //120
 NHSTUB(Write                                  ,0xffc13ce8) //120
+NHSTUB(WriteSDCard                            ,0xffce4300) //108
 NHSTUB(_log                                   ,0xffe61ec0) //111
 NHSTUB(_log10                                 ,0xffe60b4c) //112
 NHSTUB(_pow                                   ,0xffe60cbc) //121
@@ -214,6 +206,7 @@ NHSTUB(free                                   ,0xffc03a3c) //112
 NHSTUB(kbd_p1_f                               ,0xffc11dec) //109
 NHSTUB(kbd_p1_f_cont                          ,0xffc11df8) //109
 NHSTUB(kbd_p2_f                               ,0xffc116b0) //109
+NHSTUB(kbd_read_keys                          ,0xffc11d70) //109
 NHSTUB(kbd_read_keys_r2                       ,0xffc30824) //109
 NHSTUB(lseek                                  ,0xffc13d7c) //120
 NHSTUB(malloc                                 ,0xffc03968) //112

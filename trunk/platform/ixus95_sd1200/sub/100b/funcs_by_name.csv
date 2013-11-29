@@ -184,7 +184,7 @@
 0xffcf877c,DispDev_EnableEventProc_FW
 0xffc33c70,DisplayFactoryMode_FW
 0xffc153e0,DoAELock
-0xffc47b8c,DoAFLock,(stubs_entry_2.s)
+0xffc15298,DoAFLock
 0xffcf8874,Driver.Create_FW
 0xffcf8874,Driver_EnableEventProc_FW
 0xffc04db0,drysh_FW
@@ -692,7 +692,7 @@
 0xffc11dec,kbd_p1_f
 0xffc11df8,kbd_p1_f_cont
 0xffc116b0,kbd_p2_f
-0xffc11d80,kbd_read_keys,(stubs_entry_2.s)
+0xffc11d70,kbd_read_keys
 0xffc30824,kbd_read_keys_r2
 0xffcae434,LcdCon_GetLcdAdjParameter_FW
 0xffcae818,LcdCon_GetLcdBackLightParameter_FW
@@ -1108,6 +1108,7 @@
 0xffe3358c,SetReferenceWBGainForCalibration_FW
 0xffe356d4,SetScanLensIndex_FW
 0xffe357dc,SetScanWindowMode_FW
+0xffc5d99c,SetScriptMode
 0xffc5d99c,SetScriptMode_FW
 0xffcf87bc,SetSDPwrPort_FW
 0xffe39108,SetSecond_FW
@@ -1381,7 +1382,7 @@
 0xffc33c7c,UndisplayFactoryMode_FW
 0xffc53940,UnLoadScript_FW
 0xffc15404,UnlockAE
-0xffc47b9c,UnlockAF,(stubs_entry_2.s)
+0xffc152d0,UnlockAF
 0xffc5db24,UnlockMainPower
 0xffc5db24,UnlockMainPower_FW
 0xffe371dc,UnregistColorMatrix_FW
@@ -1410,5 +1411,5 @@
 0xffe3a96c,WriteGyroAdjustment_FW
 0xffe3a92c,WriteHallDeviceAdjustment_FW
 0xffe3a9e8,WritePWMAdjustment_FW
-0xffce4118,WriteSDCard,(stubs_entry_2.s)
+0xffce4300,WriteSDCard
 0xffcff0f4,WriteToRom_FW

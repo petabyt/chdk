@@ -36,8 +36,6 @@ int get_usb_bit()
 	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
 }
 
-volatile int jogdial_stopped=0;
-
 void kbd_fetch_data(long*);
 
 long __attribute__((naked)) wrap_kbd_p1_f() ;
@@ -47,18 +45,17 @@ static void __attribute__((noinline)) mykbd_task_proceed()
 {
     while (physw_run) {
         _SleepTask(10);
-        if (wrap_kbd_p1_f() == 1) { 
+
+        if (wrap_kbd_p1_f() == 1){ // autorepeat ?
             _kbd_p2_f();
         }
     }
 }
 
 // no stack manipulation needed here, since we create the task directly
-void __attribute__((naked,noinline))
-mykbd_task()
+void __attribute__((naked,noinline)) mykbd_task()
 {
     mykbd_task_proceed();
-
     _ExitTask();
 }
 
@@ -84,14 +81,12 @@ void my_kbd_read_keys()
     // _kbd_pwr_on();
 
     kbd_fetch_data(kbd_new_state);
-    char osd_buf[128];
 
     if (kbd_process() == 0) {
         // leave it alone...
         physw_status[0] = kbd_new_state[0];
         physw_status[1] = kbd_new_state[1];
         physw_status[2] = kbd_new_state[2];
-        jogdial_stopped=0;
     } else {
         // override keys
         physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) |
@@ -102,13 +97,6 @@ void my_kbd_read_keys()
 
         physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) |
                           (kbd_mod_state[2] & KEYS_MASK2);
-        if ((jogdial_stopped==0) && !camera_info.state.state_kbd_script_run) {
-                jogdial_stopped=1;
-                get_jogdial_direction();
-        }
-        else if (jogdial_stopped && camera_info.state.state_kbd_script_run)
-                jogdial_stopped=0;
-
     }
     _kbd_read_keys_r2(physw_status);
 
@@ -259,8 +247,7 @@ static KeyMap keymap[] = {
     { 2, KEY_ZOOM_OUT   , 0x00000008 },
     { 2, KEY_MENU       , 0x00000400 },
     { 2, KEY_DISPLAY    , 0x00000200 },
-    { 2, KEY_PRINT      , 0x00000800 }, // Doesn't exist. Faked with KEY_PLAY
-//    { 2, KEY_PLAY       , 0x00000800 },
+    { 2, KEY_PLAYBACK   , 0x00000800 },
     { 0, 0, 0 }
 };
 
