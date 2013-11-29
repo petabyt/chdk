@@ -92,7 +92,6 @@ const ISOTable iso_table[] = {
 // PROPCACE 49
 const CapturemodeMap modemap[] = {
     { MODE_AUTO,               32768 },
-    { MODE_M,                  32769 },
     { MODE_P,                  32772 },
     { MODE_PORTRAIT,           0x800D },
     { MODE_NIGHT_SNAPSHOT,     0x800B },
@@ -108,13 +107,6 @@ const CapturemodeMap modemap[] = {
     { MODE_SCN_AQUARIUM,       0x4018 },
     { MODE_SCN_ISO_3200,       0x401D },
     { MODE_DIGITAL_MACRO,      0x4208 },
-    { MODE_SCN_COLOR_ACCENT,   0x421B },
-    { MODE_SCN_COLOR_SWAP,     0x421C },
-    { MODE_STITCH,             0x420A },
-//    { MODE_QUICK,              33312 },
-    { MODE_VIDEO_STD,          0xA29  },
-    { MODE_VIDEO_COLOR_ACCENT, 0xA27  },
-    { MODE_VIDEO_COLOR_SWAP,   0xA28  },
 };
 
 #include "../generic/shooting.c"
