@@ -14,6 +14,8 @@
 //   MEMISOSTART = 0x000d4ec8
 //   KEYSYS = d4                 // Found @ 0xffff1a9c
 //   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff1aac
+//   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffd15e44
+//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffd15e04
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

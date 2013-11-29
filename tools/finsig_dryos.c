@@ -3969,6 +3969,51 @@ int match_nrflag2(firmware *fw, int k, int v)
     return 0;
 }
 
+void find_AdditionAgent_RAM(firmware *fw)
+{
+    int i = get_saved_sig(fw,"AdditionAgentRAM_FW");
+    uint32_t r, sizeloc = 0, startloc = 0;
+    uint32_t ramsize = 0;
+    uint32_t ramstart = 0;
+    if (i >= 0)
+    {
+        int j1 = adr2idx(fw, func_names[i].val);
+        int n;
+        for (n=1; n<16; n++)
+        {
+            if (fwval(fw,j1+n) == 0xe3500a32) // cmp  r0, #0x32000 
+            {
+                ramsize = 0x32000;
+                sizeloc = idx2adr(fw,j1+n);
+                break;
+            }
+            else if (fwval(fw,j1+n) == 0xe3500a22) // cmp  r0, #0x22000 
+            {
+                ramsize = 0x22000;
+                sizeloc = idx2adr(fw,j1+n);
+                break;
+            }
+        }
+        if (n >= 15)
+            n = 0;
+        j1 += n;
+        for (n=0; n<=16; n++)
+        {
+            r = LDR2val(fw,j1+n);
+            if ( isLDR_PC(fw,j1+n) && (r>fw->memisostart) && (r<fw->maxram) )
+            {
+                ramstart = r;
+                startloc = idx2adr(fw,j1+n);
+            }
+        }
+        if (ramstart>0)
+        {
+            bprintf("//   ARAM_HEAP_START = 0x%x  // Found @ 0x%08x\n",ramstart,startloc);
+            bprintf("//   ARAM_HEAP_SIZE  = 0x%x   // Found @ 0x%08x\n",ramsize,sizeloc);
+        }
+    }
+}
+
 // Search for things
 void find_other_vals(firmware *fw)
 {
@@ -4724,6 +4769,8 @@ void output_firmware_vals(firmware *fw)
         bprintf("\n// Note, ROM copied to RAM :- from 0x%08x, to 0x%08x, len %d words.\n",fw->base_copied,fw->base2,fw->size2);
     }
 
+    find_AdditionAgent_RAM(fw);
+    
     bprintf("\n");
 }
 

@@ -16,6 +16,8 @@
 //   NEED_ENCODED_DISKBOOT = 9   // Found @ 0xffff3c8c
 
 // Note, ROM copied to RAM :- from 0xff746a70, to 0x00685000, len 15789 words.
+//   ARAM_HEAP_START = 0x5ce000  // Found @ 0xff200ce8
+//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff200cac
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

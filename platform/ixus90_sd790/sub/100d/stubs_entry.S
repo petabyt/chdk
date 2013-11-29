@@ -14,6 +14,8 @@
 //   PLATFORMID = ?           // Not found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000cbc48
+//   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffa2d9c4
+//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffa2d984
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
