@@ -4754,13 +4754,22 @@ void output_firmware_vals(firmware *fw)
     {
         bprintf("//   KEYSYS = %s              // Found @ 0x%08x\n",fw->ksys,idx2adr(fw,fw->ksys_idx));
 
-        if (fw->dancing_bits)
+        if (fw->dancing_bits_idx != 0)
         {
-            bprintf("//   NEED_ENCODED_DISKBOOT = %d   // Found @ 0x%08x\n",fw->dancing_bits,idx2adr(fw,fw->dancing_bits_idx));
-        }
-        else
-        {
-            bprintf("//   NEED_ENCODED_DISKBOOT = ? Not found, possible new 'dancing bits' entry needed. // Found @ 0x%08x\n",idx2adr(fw,fw->dancing_bits_idx));
+            if (fw->dancing_bits)
+            {
+                bprintf("//   NEED_ENCODED_DISKBOOT = %d   // Found @ 0x%08x",fw->dancing_bits,idx2adr(fw,fw->dancing_bits_idx));
+                osig *o = find_sig(fw->sv->makevals,"NEED_ENCODED_DISKBOOT");
+                if (o == 0)
+                    bprintf(" (*** NOT IN MAKEFILE.INC ***)");
+                else if (o->val != fw->dancing_bits)
+                    bprintf(" (*** DOES NOT MATCH MAKEFILE.INC VALUE %d ***)",o->val);
+                bprintf("\n");
+            }
+            else
+            {
+                bprintf("//   NEED_ENCODED_DISKBOOT = ? Not found, possible new 'dancing bits' entry needed. // Found @ 0x%08x\n",idx2adr(fw,fw->dancing_bits_idx));
+            }
         }
     }
 

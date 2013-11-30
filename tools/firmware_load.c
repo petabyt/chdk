@@ -488,6 +488,12 @@ int isBX(firmware *fw, int offset)
     return ((fwval(fw,offset) & 0xFFFFFFF0) == 0xE12FFF10);
 }
 
+// BX
+int isBX_cond(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0x0FFFFFF0) == 0x012FFF10);
+}
+
 // BX LR
 int isBX_LR(firmware *fw, int offset)
 {
@@ -1048,6 +1054,8 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
     // Find encryption key & dancing bits
     fw->ksys_idx = 0;
     fw->ksys = 0;
+    fw->dancing_bits_idx = 0;
+    fw->dancing_bits = 0;
     if (os_type == OS_DRYOS)
     {
         uint32_t ofst = adr2idx(fw,0xFFFF0000);    // Offset of area to find dancing bits
@@ -1077,7 +1085,6 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
             ofst = ofst + 4; // Address of dancing bits data (try after firmware key)
             if (idx_valid(fw,ofst))
             {
-                fw->dancing_bits = 0;
                 for (i=0; i<VITALY && !fw->dancing_bits; i++)
                 {
                     fw->dancing_bits = i+1;
@@ -1105,7 +1112,46 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                         }
                     }
                 }
-                fw->dancing_bits_idx = ofst;
+                if (fw->dancing_bits != 0)
+                {
+                    // Make sure LoadBootFile actually fails on files that are not encoded
+                    // E.G. G9 - will load and run an un-encoded DISKBOOT.BIN file
+                    int need_dance = 1;
+                    for (k = ofst; (k>adr2idx(fw,0xFFFF0000)) && need_dance; k--)
+                    {
+                        if (isLDR_PC(fw,k) && (LDR2val(fw,k) == idx2adr(fw,ofst)))
+                        {
+                            j = find_inst_rev(fw,isSTMFD_LR,k-1,10);
+                            if (j >= 0)
+                            {
+                                uint32_t fadr = idx2adr(fw,j);
+                                for (i=j-200; i<j+200 && need_dance; i++)
+                                {
+                                    if (isB(fw,i))
+                                    {
+                                        uint32_t badr = followBranch(fw,idx2adr(fw,i),1);
+                                        if (badr == fadr)
+                                        {
+                                            int l;
+                                            for (l=i-1; l>i-50; l--)
+                                            {
+                                                if (isLDR(fw,l) && isCMP(fw,l+1) && isBX_cond(fw,l+2))
+                                                {
+                                                    need_dance = 0;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (need_dance)
+                        fw->dancing_bits_idx = ofst;
+                    else
+                        fw->dancing_bits = 0;
+                }
             }
         }
     }
