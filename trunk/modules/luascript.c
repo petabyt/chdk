@@ -2337,7 +2337,6 @@ static int luaCB_get_meminfo( lua_State* L ) {
             lua_pushboolean(L,0);
             return 1;
         }
-        meminfo.allocated_count = -1; // not implemented in suba
     }
     else if (strcmp(heapname,"exmem") == 0)
     {
@@ -2345,7 +2344,6 @@ static int luaCB_get_meminfo( lua_State* L ) {
             lua_pushboolean(L,0);
             return 1;
         }
-        meminfo.allocated_count = -1; // not implemented in suba
     }
     else
     {

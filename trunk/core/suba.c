@@ -47,9 +47,16 @@ struct allocator {
 	ref_t tail;                 /* offset to first cell in free list */
 	size_t mincell;    /* min cell size must be at least sizeof cell */
 	size_t size;                        /* total size of memory area */
-	size_t alloc_total;  /* total bytes utilized from this allocator */
-	size_t free_total;   /* total bytes released from this allocator */
-	size_t size_total;  /* total bytes requested from this allocator */
+
+    // CHDK added counters, modeled on DryOS values
+    size_t allocated_count; // total number of current allocations
+    size_t allocated_size; // total amount of memory currently allocated, including overhead
+    size_t allocated_peak; // maximum value of allocated_size encountered
+    
+    // old suba counters, note these increment continuously, could potentially wrap
+//	size_t alloc_total;  /* total bytes utilized from this allocator */
+//	size_t free_total;   /* total bytes released from this allocator */
+//	size_t size_total;  /* total bytes requested from this allocator */
 					/* utilization = size_total / alloc_total * 100
 					 * e.g. 50000.0 / 50911.0 * 100.0 = 98.2%
 					 */
@@ -109,9 +116,10 @@ void suba_getmeminfo(struct allocator *suba, int *allocated_size, int *allocated
     *largest_block = largest;
     *free_size = free;
     *free_block_count = count;
-    *allocated_size = suba->size_total;     // TODO check this is a reasonable value for this field
-    *allocated_peak = suba->alloc_total;    // TODO check this is a reasonable value for this field
-    *allocated_count = 0;                   // TODO implement this
+
+    *allocated_size = suba->allocated_size;
+    *allocated_peak = suba->allocated_peak;
+    *allocated_count = suba->allocated_count;
 }
 
 void *
@@ -233,8 +241,17 @@ again:
 		c1->next = c2->next;
 	}
 
+    // CHDK counters
+	suba->allocated_size += POFF + c2->size;
+	suba->allocated_count++;
+    if(suba->allocated_size > suba->allocated_peak) {
+        suba->allocated_peak = suba->allocated_size;
+    }
+    // old suba counters
+    /*
 	suba->alloc_total += POFF + c2->size;
 	suba->size_total += s;
+    */
 
 	return zero ? memset(C2P(c2), 0, size) : C2P(c2);
 }
@@ -261,8 +278,13 @@ suba_free(void *suba0, void *ptr)
 		PMNF(errno = EINVAL, ": %p: %d", ptr, c2->size);
 		return -1;
 	}
+    // CHDK counters
+	suba->allocated_size -= POFF + c2->size;
+    suba->allocated_count--;
 
-	suba->free_total += POFF + c2->size;
+// old suba counter
+//	suba->free_total += POFF + c2->size;
+
 /*
 	c2->stk[0] = NULL;
 
