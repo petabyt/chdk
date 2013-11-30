@@ -242,3 +242,4 @@ NHSTUB(strtolx                                ,0xff82d1f8) //109
    DEF(task_RotaryEncoder                     ,0xff84856c) //120
 NHSTUB(time                                   ,0xff86e4e4) //109
 NHSTUB(vsprintf                               ,0xff81cba0) //115
+NHSTUB(EngDrvRead                             ,0xff822cdc) //102

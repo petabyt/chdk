@@ -210,3 +210,4 @@ NHSTUB(taskResume                             ,0xffeaf974) //  1
 // ALT: NHSTUB(taskResume, 0xffed3758) // 1 31/0
 NHSTUB(time                                   ,0xffe9c3f8) //  1
 NHSTUB(vsprintf                               ,0xffe9e7d8) //115
+NHSTUB(EngDrvRead                             ,0xffc6b3f8) //102

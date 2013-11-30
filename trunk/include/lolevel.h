@@ -284,6 +284,8 @@ extern void _UnlockAE(void);
 extern void _DoAFLock(void);
 extern void _UnlockAF(void);
 
+extern int _EngDrvRead(int gpio_reg);
+
 extern int _apex2us(int);
 
 extern void _ScreenLock();

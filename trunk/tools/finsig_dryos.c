@@ -384,7 +384,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
 
     { "EngDrvIn", OPTIONAL|UNUSED },
     { "EngDrvOut", OPTIONAL|UNUSED },
-    { "EngDrvRead", OPTIONAL|UNUSED },
+    { "EngDrvRead" },
     { "EngDrvBits", OPTIONAL|UNUSED },
 
     // OS functions, mostly to aid firmware analysis. Order is important!

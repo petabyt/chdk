@@ -255,3 +255,4 @@ NHSTUB(strtolx                                ,0xff03e8dc) //109
    DEF(task_TouchPanel                        ,0xff069ff8) //120
 NHSTUB(time                                   ,0x006998ac) //  6
 NHSTUB(vsprintf                               ,0xff00d6b8) //115
+NHSTUB(EngDrvRead                             ,0xff0269b8) //102

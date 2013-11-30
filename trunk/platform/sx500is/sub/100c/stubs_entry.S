@@ -255,3 +255,4 @@ NHSTUB(strtolx                                ,0xff021000) //109
    DEF(hook_CreateTask                        ,0x004368b0) //105
 NHSTUB(time                                   ,0x0043b6ec) //  6
 NHSTUB(vsprintf                               ,0xff00a800) //115
+NHSTUB(EngDrvRead                             ,0xff01a398) //102

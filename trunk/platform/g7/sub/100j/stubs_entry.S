@@ -190,3 +190,4 @@ NHSTUB(taskSuspend                            ,0xffbab9f0) //  1
 NHSTUB(taskResume                             ,0xffbabbc4) //  1
 NHSTUB(time                                   ,0xffb98648) //  1
 NHSTUB(vsprintf                               ,0xffb9aa28) //115
+NHSTUB(EngDrvRead                             ,0xff88e5bc) //102

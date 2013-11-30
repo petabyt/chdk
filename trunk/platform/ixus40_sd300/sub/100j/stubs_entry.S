@@ -265,3 +265,4 @@ NHSTUB(taskResume                             ,0xffad0e54) //  1
 // ALT: NHSTUB(taskResume, 0xfff73df0) // 1 31/0
 NHSTUB(vsprintf                               ,0xffabffe0) //  1
 // ALT: NHSTUB(vsprintf, 0xfff54090) // 1 13/0
+NHSTUB(EngDrvRead                             ,0xff885974) //102
