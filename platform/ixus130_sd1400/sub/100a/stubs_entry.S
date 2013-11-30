@@ -247,3 +247,4 @@ NHSTUB(strtolx                                ,0xff83f900) //109
    DEF(task_PhySw                             ,0xff8341fc) //120
 NHSTUB(time                                   ,0xff8863bc) //109
 NHSTUB(vsprintf                               ,0xff8205d4) //115
+NHSTUB(EngDrvRead                             ,0xff835468) //102

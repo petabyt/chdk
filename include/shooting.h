@@ -178,6 +178,8 @@ extern void shooting_bracketing(void);
 extern void DoAELock(void);
 extern void UnlockAE(void);
 
+extern int EngDrvRead(int gpio_reg);
+
 extern void PutInNdFilter();
 extern void PutOutNdFilter();
 extern long GetCurrentAvValue();

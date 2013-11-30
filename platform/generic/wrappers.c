@@ -1057,6 +1057,11 @@ void UnlockAF(void)
   _UnlockAF();
 }
 
+int EngDrvRead(int gpio_reg)
+{
+  return _EngDrvRead(gpio_reg);
+}
+
 #if CAM_MULTIPART
 
 #define SECTOR_SIZE 512
