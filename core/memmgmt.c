@@ -234,10 +234,8 @@ static void combine_meminfo(cam_meminfo *combined,cam_meminfo *m)
     }
     combined->free_size += m->free_size;
     combined->free_block_count += m->free_block_count;
-    // TODO suba values are not equivalent to dryos values
     combined->allocated_size += m->allocated_size;
     combined->allocated_peak += m->allocated_peak;
-    // TODO not implemented in suba
     combined->allocated_count += m->allocated_count;
 }
 
