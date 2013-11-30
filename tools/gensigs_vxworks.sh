@@ -27,4 +27,5 @@ for v in $VERSIONS; do
 	)
 done | "$1"
 
-echo -e "\t{ NULL }\n};"
+echo "{ NULL }};"
+echo

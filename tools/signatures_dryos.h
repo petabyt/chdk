@@ -1615,5 +1615,5 @@ FuncsList func_list[] = {
 	{ "strncpy", func_sig_strncpy_1, 1 },
 	{ "strrchr", func_sig_strrchr_1, 1 },
 	{ "time", func_sig_time_6, 6 },
-	{ NULL }
-};
+{ NULL }};
+

@@ -4592,5 +4592,5 @@ FuncsList func_list[] = {
 	{ "utime", func_sig_utime_1, 1 },
 	{ "vsprintf", func_sig_vsprintf_1, 1 },
 	{ "write", func_sig_write_1, 1 },
-	{ NULL }
-};
+{ NULL }};
+
