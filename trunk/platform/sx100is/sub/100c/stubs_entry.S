@@ -13,7 +13,6 @@
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0009f498
 //   KEYSYS = d3                 // Found @ 0xffff1a04
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff19e4
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
