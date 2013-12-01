@@ -25,6 +25,7 @@ NHSTUB(PutInNdFilter                          ,0xffa89174) //  1 92%
 // ALT: NHSTUB(PutInNdFilter, 0xffa8ad00) // 2 25/2
 // ALT: NHSTUB(PutInNdFilter, 0xffa8ad48) // 2 25/2
 NHSTUB(PutOutNdFilter                         ,0xffa891bc) //  1 94%
+//NHSTUB(Remove                               ,0xff8c3324) //  3 52%
 //NHSTUB(WriteSDCard                          ,0xff87eb7c) //  1 93%    *** != 0xff87ed54
 // ALT: NHSTUB(WriteSDCard, 0xff87ed54) // 1 29/2
 NHSTUB(add_ptp_handler                        ,0xffa3d504) //  1 96%

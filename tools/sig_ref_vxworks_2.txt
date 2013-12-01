@@ -1,5 +1,4 @@
 0xFFC00000
-DoAFLock 0xffd58dbc
 EnterToCompensationEVF 0xffd58f08
 ExitFromCompensationEVF 0xffd5c524
 GetFocusLensSubjectDistance 0xFFEA2F3C
@@ -16,10 +15,7 @@ SetParameterData 0xFFD75FB0
 SetPropertyCase 0xFFC14C9C
 TurnOffBackLight 0xffdbd750
 TurnOnBackLight 0xffdbd720
-UnlockAF 0xffd58e08
 WriteSDCard 0xFFC702A4
-chdir 0xFFEFE140
 exmem_alloc 0xFFC02834
 free 0xFFF00ACC
 malloc 0xFFF00AC0
-rename 0xFFEFE0CC

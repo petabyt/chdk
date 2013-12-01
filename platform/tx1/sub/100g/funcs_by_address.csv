@@ -295,7 +295,6 @@
 0xff927248,sprintf_FW
 0xff92839c,sscanf_FW
 0xff92843c,close
-0xff92849c,read
 0xff928580,lseek
 0xff928a80,open
 0xff929634,iosDevDelete

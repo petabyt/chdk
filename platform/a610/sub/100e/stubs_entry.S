@@ -15,6 +15,7 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe66d90) //  3 52%
+//NHSTUB(Remove                               ,0xffcaf510) //  3 52%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffd49168 -> ffd49168

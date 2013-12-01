@@ -217,7 +217,6 @@
 0xff86f57c,Open_FW
 0xff86f5a4,Close
 0xff86f5a4,Close_FW
-0xff86f5c4,Remove
 0xff86f638,Read
 0xff86f638,Read_FW
 0xff86f644,Write
@@ -1282,7 +1281,6 @@
 0xffb0ada4,sprintf_FW
 0xffb0bef8,sscanf_FW
 0xffb0bf98,close
-0xffb0bff8,read
 0xffb0c0dc,lseek
 0xffb0c5dc,open
 0xffb0d190,iosDevDelete

@@ -26,6 +26,7 @@ NHSTUB(PutInNdFilter                          ,0xffb7ff84) //  1 92%
 // ALT: NHSTUB(PutInNdFilter, 0xffb81b10) // 2 25/2
 // ALT: NHSTUB(PutInNdFilter, 0xffb81b58) // 2 25/2
 NHSTUB(PutOutNdFilter                         ,0xffb7ffcc) //  1 94%
+//NHSTUB(Remove                               ,0xff8c6fc4) //  3 52%
 //NHSTUB(Restart                              ,0xff8252a4) //  1 96%    *** != 0xff8252a0
 //NHSTUB(SetParameterData                     ,0xff96a23c) //  1 96%        == 0xff96a23c
 NHSTUB(UnsetZoomForMovie                      ,0xff9a7ce0) //  1 89%

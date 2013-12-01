@@ -28,6 +28,7 @@ NHSTUB(PutInNdFilter                          ,0xffe78004) //  1 92%
 // ALT: NHSTUB(PutInNdFilter, 0xffe79f9c) // 2 25/2
 // ALT: NHSTUB(PutInNdFilter, 0xffe79fe4) // 2 25/2
 NHSTUB(PutOutNdFilter                         ,0xffe78458) //  1 94%
+//NHSTUB(Remove                               ,0xffcaf804) //  3 52%
 NHSTUB(UnsetZoomForMovie                      ,0xffd833dc) //  1 89%
 NHSTUB(add_ptp_handler                        ,0xffe24154) //  1 96%
 // ERROR: free is not found.                               //--- ---    *** != 0xffec5bcc

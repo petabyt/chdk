@@ -30,6 +30,7 @@ NHSTUB(GetSystemTime                          ,0xff814de8) //  1 96%
 // ALT: NHSTUB(PutInNdFilter, 0xffab834c) // 2 25/2
 // ALT: NHSTUB(PutInNdFilter, 0xffab8394) // 2 25/2
 NHSTUB(PutOutNdFilter                         ,0xffab6808) //  1 94%
+//NHSTUB(Remove                               ,0xff8c6724) //  3 52%
 NHSTUB(UnsetZoomForMovie                      ,0xff9a40c0) //  1 89%
 NHSTUB(add_ptp_handler                        ,0xffa610a8) //  1 96%
 // ERROR: free is not found.                               //--- ---    *** != 0xffb05b78

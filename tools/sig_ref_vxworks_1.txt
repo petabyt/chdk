@@ -1,7 +1,6 @@
 0xFFC00000
 AllocateUncacheableMemory 0xFFC048D8
 DeleteFile_Fut 0xFFC55A2C 12
-DoAFLock 0xffd33094
 EnterToCompensationEVF 0xFFD34F38
 ExecuteEventProcedure 0xFFC067F0
 ExitFromCompensationEVF 0xFFD34F98
@@ -24,13 +23,11 @@ GetPropertyCase 0xFFC141A8 26
 GetSystemTime 0xFFC04B10
 IsStrobeChargeCompleted 0xFFCEBE00
 MakeAFScan 0xFFD377B0
-MakeDirectory 0xFFC5C9B0
 MakeDirectory_Fut 0xFFC55AB8
 Mount_FileSystem 0xFFC5B9C0
 PT_PlaySound 0xFFD4074C
 PutInNdFilter 0xFFE71734
 PutOutNdFilter 0xFFE7177C
-Remove 0xFFC5C72C
 RenameFile_Fut 0xFFC559AC
 Restart 0xFFC12800
 SetCurrentCaptureModeType 0xFFD76E1C 16
@@ -40,7 +37,6 @@ SetParameterData 0xFFD4E21C
 SetPropertyCase 0xFFC1408C 29
 TurnOffBackLight 0xffd93454
 TurnOnBackLight 0xffd93428
-UnlockAF 0xffd330d4
 Unmount_FileSystem 0xFFC5BAC8
 UnsetZoomForMovie 0xFFD81B80
 UpdateMBROnFlash 0xFFC5BC20
@@ -49,18 +45,13 @@ _pow 0xFFEA8F74
 _sqrt 0xFFEAD2C0
 add_ptp_handler 0xFFE222D0
 apex2us 0xFFC987EC
-chdir 0xFFEBC51C
 close 0xFFEBBE5C
 closedir 0xFFEB7DFC
 errnoOfTaskGet 0xFFEB85C8
 exmem_alloc 0xFFC02830
 free 0xFFEBEEA8
-ints_disable 0xFFC0D5EC
-ints_enable 0xFFC0D5F8
-ioctl 0xFFEBBF9C
 iosDevAdd 0xFFEBD07C
 iosDevDelete 0xFFEBD054
-iosDevFind 0xFFEBD008
 iosDrvInstall 0xFFEBD340
 isalpha 0xFFEB1D70
 isdigit 0xFFEB1DA0
@@ -86,10 +77,7 @@ open 0xFFEBC4A0
 opendir 0xFFEB7E30
 qsort 0xFFEB5230
 rand 0xFFEB5254
-read 0xFFEBBEBC
 readdir 0xFFEB7DC8
-rename 0xFFEBC4A8
-rewinddir 0xFFEB7DF0
 srand 0xFFEB5278
 stat 0xFFEB7EC4
 strcat 0xFFEB5AA4
@@ -114,4 +102,3 @@ tolower 0xFFEB1E60
 toupper 0xFFEB1E70
 utime 0xFFEB7F58
 vsprintf 0xFFEB971C
-write 0xFFEBBF2C

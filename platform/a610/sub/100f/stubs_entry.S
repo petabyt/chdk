@@ -15,6 +15,7 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe67118) //  3 52%
+//NHSTUB(Remove                               ,0xffcaf898) //  3 52%
 //NHSTUB(WriteSDCard                          ,0xffc6b360) //  1        *** != 0xffc6b188
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
