@@ -1468,9 +1468,7 @@
 0xffac0f68,sscanf_FW
 0xffac265c,close
 0xffac265c,close_FW
-0xffac26bc,read
 0xffac26bc,read_FW
-0xffac272c,write
 0xffac272c,write_FW
 0xffac27a0,lseek
 0xffac27a0,lseek_FW

@@ -836,7 +836,6 @@
 0xff8d418c,QuietImager_FW
 0xffab4fec,rand
 0xff874bfc,Read
-0xffabbc54,read
 0xff874bfc,Read_FW
 0xffab7b60,readdir
 0xffaa0404,realloc

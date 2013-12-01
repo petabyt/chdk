@@ -717,7 +717,6 @@
 0xff8ca510,QuietImager_FW
 0xffafbf24,rand
 0xff8705fc,Read
-0xffb02b8c,read
 0xff8705fc,Read_FW
 0xffafea98,readdir
 0xffae5f78,realloc
@@ -751,7 +750,6 @@
 0xffab6798,ReloadNdFilterAdjustment_FW
 0xffab7878,ReloadWBAdjustment_FW
 0xffab8424,ReloadZoomAdjustment_FW
-0xff870588,Remove
 0xffabf730,RemoveTransparentMemory_FW
 0xff8692a8,RenameFile_Fut
 0xffab8ae8,ResetFocus_FW

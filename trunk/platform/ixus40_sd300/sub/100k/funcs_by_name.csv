@@ -872,7 +872,6 @@
 0xffabbb1c,qsort
 0xff8c51ec,QuietImager_FW
 0xffabbb40,rand
-0xffac2914,read
 0xffac2914,read_FW
 0xffabe6b4,readdir
 0xffa49a54,ReceiveMechaCircuitData_FW
@@ -1480,7 +1479,6 @@
 0xff922568,WhiteDefectDeleteMemory_FW
 0xff8c5420,WithdrawalImagerForEmergency_FW
 0xff811d44,wrapped_malloc
-0xffac2984,write
 0xffac2984,write_FW
 0xffa65170,WRITEADJTABLETOFROM_FW
 0xff922654,WriteEvfDefectAdjData_FW
