@@ -6,8 +6,7 @@ override OPT_CHDK_IN_EXMEM=1
 
 PLATFORMOS=dryos
 
-# address where wif or diskboot code will be loaded by camera, ROM:FFC00134 (OK)
- MEMBASEADDR=0x1900
+ 
 
 # size of memory region for CHDK
 RESTARTSTART=0x50000
@@ -26,9 +25,6 @@ else					#265kb=79467E0, 512kb=79067E0, 640kb=78E67E0
 # ROM:FFC0014C (ok)
    MEMISOSTART=0x13A700 #Valor Original
 endif
-
-PLFLAGS=-DMEMBASEADDR=$(MEMBASEADDR) -DMEMISOSTART=$(MEMISOSTART) -DMEMISOSIZE=$(MEMISOSIZE)
-PLFLAGS+=-DRESTARTSTART=$(RESTARTSTART)
 
 # type of diskboot encoding: undefined = none; 1 = original; 2 = sx200, d10; 3 = ixus200...
 # Dancing Bits

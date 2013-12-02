@@ -3,7 +3,7 @@ PLATFORMID=12791
 
 PLATFORMOS=dryos
 
-MEMBASEADDR=0x1900    # address where wif or diskboot code will be loaded by camera, ROM:FF810134
+    
 MEMISOSTART=0x14B394    # ROM:FF81014C
 ROMBASEADDR=0xFF810000    # 0xFF810000 for S-, SD-, and G- series
 
@@ -15,8 +15,6 @@ MAXRAMADDR=0x7ffffff    # ROM:FF88A424 0x48000000 - CAM_UNCACHED_BIT 0x40000000 
 EXMEM_BUFFER_SIZE=0x400000    # Amount of EXMEM memory to allocate for CHDK = 4MB
 #EXMEM_BUFFER_SIZE=0x200000    # Amount of EXMEM memory to allocate for CHDK = 2MB
 EXMEM_HEAP_SKIP=0x2F7600   # 0x8000000 (RAM) - 0x07D08A00 (Video Buffer Size) ~ 3MB
-
-PLFLAGS=-DMEMBASEADDR=$(MEMBASEADDR) -DMEMISOSTART=$(MEMISOSTART) -DMEMISOSIZE=$(MEMISOSIZE)
 
 # type of diskboot encoding: undefined = none; 1 = original; 2 = sx200, d10; 3 = ixus200...
 # Dancing Bits

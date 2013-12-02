@@ -3,7 +3,6 @@ PLATFORMID=12732
 
 PLATFORMOS=dryos
 
-MEMBASEADDR=0x1900
 ROMBASEADDR=0xff810000
 
 # Set up size variables for EXMEM
@@ -28,12 +27,9 @@ MEMISOSTART=0x146A2C
 endif
 endif
 
-PLFLAGS=-DMEMBASEADDR=$(MEMBASEADDR) -DMEMISOSTART=$(MEMISOSTART) -DMEMISOSIZE=$(MEMISOSIZE)
-
 # type of diskboot encoding: undefined = none; 1 = original; 2 = sx200, d10; 3 = ixus200...
 NEED_ENCODED_DISKBOOT=2
 # type of FI2 encoding
 KEYSYS=d4
-
 
 PLATFORMOSVER=31
