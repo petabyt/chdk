@@ -7,12 +7,8 @@ PLATFORMOSVER=50
 #override OPT_EXMEM_MALLOC=1
 #override OPT_CHDK_IN_EXMEM=1
 
-# address where wif or diskboot code will be loaded by camera
-MEMBASEADDR=0x1900
-
 EXMEM_BUFFER_SIZE=0xA0000 # Amount of EXMEM memory to allocate for CHDK; 40000=256KB, 80000=512KB, A0000=640kb, C0000=768KB, 100000=1MB
 EXMEM_HEAP_SKIP=0x679800  # 0x50000000 - 0x4F986800  size of video buffers in EXMEM area @FF0B1320 - @FF0B1324 ixus240 101a 
-
 
 # points to the start of the memory pool used by the firmware
 ifdef OPT_CHDK_IN_EXMEM
@@ -25,8 +21,6 @@ endif
 ROMBASEADDR=0xFF000000
 
 MAXRAMADDR =0x0FFFFFFF
-
-PLFLAGS=-DMEMBASEADDR=$(MEMBASEADDR) -DMEMISOSTART=$(MEMISOSTART) -DMEMISOSIZE=$(MEMISOSIZE)
 
 # Found @ 0xffff3cf4
 KEYSYS = d4c
