@@ -17,7 +17,7 @@ static KeyMap keymap[];
 
 #define DELAY_TIMEOUT 10000
 
-#define KEYS_MASK0 (0x00002182)     // physw_status[0]
+#define KEYS_MASK0 (0x00802182)     // physw_status[0]
 //#define KEYS_MASK1 (0x000FC005)
 
 //#define KEYS_MASK1 (0x000FCF05)
@@ -280,6 +280,10 @@ long get_jogdial_direction(void) {
     }
 }
 
+// NOP
+void kbd_set_alt_mode_key_mask(long key)
+{
+}
 
 static KeyMap keymap[] = {
 
@@ -287,11 +291,12 @@ static KeyMap keymap[] = {
 
 		//door open a19b -> 219b
 		//power b -> 3
-	{ 0, KEY_SHOOT_FULL	, 0x00000002 },  //   b ->    9
+	{ 0, KEY_SHOOT_FULL	, 0x00002002 },
+	{ 0, KEY_SHOOT_FULL_ONLY	, 0x00000002 },  //   b ->    9
 	{ 0, KEY_SHOOT_HALF	, 0x00002000 },  //a19b -> 819b
 	{ 0, KEY_UP		    , 0x00000080 },  // 9b -> 1b
 	{ 0, KEY_DOWN		, 0x00000100 },  // 19b -> 09b
-
+	{ 0, KEY_PLAYBACK	, 0x00800000 }, // Found @0xffb6586c, levent 0x601 
 
 //                             0x000FC005   #1 Mask
 //	{ 1, KEY_UP		         , 0x00000400 },  // fff -> bff
@@ -310,6 +315,7 @@ static KeyMap keymap[] = {
 	{ 1, KEY_MENU		     , 0x00040000 },  // ASM1989 tested (JH) - fffff -> bffff
 	{ 1, KEY_DISPLAY         , 0x00020000 },  // ASM1989 tested (JH) - fffff -> dffff
 	{ 1, KEY_PRINT		     , 0x00080000 },  // ASM1989 tested (JH) - fffff -> 7ffff
+	{ 1, KEY_VIDEO		     , 0x00080000 },
      	{ 0, 0, 0 }
 };
 /*
