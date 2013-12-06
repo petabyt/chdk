@@ -1220,10 +1220,10 @@ void gui_draw_osd_elements(int is_osd_edit, int is_zebra)
         libgrids->gui_grid_draw_osd(is_zebra);
 
     gui_osd_draw_dof(is_osd_edit);
+    gui_osd_draw_values(is_osd_edit,is_zebra);
 
     if (is_osd_edit || is_zebra || osd_visible())
     {
-        gui_osd_draw_values(is_osd_edit,is_zebra);
         gui_osd_draw_state(is_osd_edit);
         gui_osd_draw_raw_info(is_osd_edit);
         gui_batt_draw_osd(is_osd_edit);
