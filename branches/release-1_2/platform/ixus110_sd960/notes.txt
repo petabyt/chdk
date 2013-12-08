@@ -9,3 +9,7 @@ Camera has no adjustable aperture, only an ND filter.
 - ALT button is the Play [>] button (short press), long press = original function
 
 - exmem allocation is forced due to insufficient amount of free RAM
+
+Other notes
+- Some overrides (Tv?) may be ignored for the first shot after a play -> rec mode transition.
+- The camera may engage the ND filter in bright light, but take the picture without it (not CHDK related).
