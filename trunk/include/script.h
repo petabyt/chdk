@@ -36,6 +36,10 @@ extern void script_set_terminate_key(int key, const char *keyname);
 extern int script_is_running();
 extern long script_stack_start();
 extern long script_start_gui( int autostart );
+// for kbd_task kbd_process only, check if terminate has been requirested by another task
+extern void script_check_terminate(void);
+// request and wait for script terminate from other task
+extern void script_wait_terminate(void);
 extern void script_end();
 //-------------------------------------------------------------------
 

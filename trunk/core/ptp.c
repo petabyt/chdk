@@ -168,6 +168,14 @@ ptp_script_msg* dequeue_script_msg(ptp_script_msg_q *q) {
   return msg;
 }
 
+// remove all messages from queue
+void empty_script_msg_q(ptp_script_msg_q *q) {
+    ptp_script_msg *msg;
+    while((msg = dequeue_script_msg(q))) {
+        free(msg);
+    }
+}
+
 // public interface for script
 // create a message to be queued later
 ptp_script_msg* ptp_script_create_msg(unsigned type, unsigned subtype, unsigned datasize, const void *data) {
@@ -275,7 +283,6 @@ static int handle_ptp(
       break;
     case PTP_CHDK_ScriptStatus:
       ptp.num_param = 1;
-// TODO script_is_running should always be defined, just ret 0 if script disabled
       ptp.param1 = 0;
       ptp.param1 |= script_is_running()?PTP_CHDK_SCRIPT_STATUS_RUN:0;
       ptp.param1 |= (!script_msg_q_empty(&msg_q_out))?PTP_CHDK_SCRIPT_STATUS_MSG:0;
@@ -516,7 +523,6 @@ static int handle_ptp(
       }
       break;
 
-    // TODO this should flush data even if scripting isn't supported
     case PTP_CHDK_ExecuteScript:
       {
         int s;
@@ -526,13 +532,14 @@ static int handle_ptp(
         ptp.num_param = 2;
         ptp.param1 = script_run_id;
 
-        if ( param2 != PTP_CHDK_SL_LUA )
+        s = data->get_data_size(data->handle);
+
+        if ( (param2&PTP_CHDK_SL_MASK) != PTP_CHDK_SL_LUA )
         {
+          flush_recv_ptp_data(data,s);
           ptp.code = PTP_RC_ParameterNotSupported;
           break;
         }
-
-        s = data->get_data_size(data->handle);
         
         buf = (char *) malloc(s);
         if ( buf == NULL )
@@ -542,6 +549,27 @@ static int handle_ptp(
         }
 
         recv_ptp_data(data,buf,s);
+
+        // applies to both running and "interrupted" state, since interrupted means running restore
+        if (camera_info.state.state_kbd_script_run) {
+            // note script ID is still incremented in this case
+            if (param2 & PTP_CHDK_SCRIPT_FL_NOKILL) {
+                ptp.param2 = PTP_CHDK_S_ERRTYPE_COMPILE;
+                free(buf);
+                ptp_script_write_error_msg(PTP_CHDK_S_ERRTYPE_INIT, "script running");
+                break;
+            }
+            // kill the script
+            script_wait_terminate();
+        }
+        // empty message queues if requested. 
+        if(param2 & PTP_CHDK_SCRIPT_FL_FLUSH_CAM_MSGS) {
+            empty_script_msg_q(&msg_q_out);
+        }
+        // Script either was not running or has been killed, so safe to remove from inbound queue outside of kbd task
+        if(param2 & PTP_CHDK_SCRIPT_FL_FLUSH_HOST_MSGS) {
+            empty_script_msg_q(&msg_q_in);
+        }
 
         // error details will be passed in a message
         if (script_start_ptp(buf) < 0) {

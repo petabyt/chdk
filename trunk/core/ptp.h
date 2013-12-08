@@ -7,7 +7,7 @@
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 #define PTP_CHDK_VERSION_MAJOR 2  // increase only with backwards incompatible changes (and reset minor)
-#define PTP_CHDK_VERSION_MINOR 5  // increase with extensions of functionality
+#define PTP_CHDK_VERSION_MINOR 6  // increase with extensions of functionality
                                   // minor > 1000 for development versions
 
 /*
@@ -21,6 +21,7 @@ protocol version history
 2.3 - live view - released in 1.1
 2.4 - live view protocol 2.1
 2.5 - remote capture
+2.6 - script execution flags
 */
 
 #define PTP_OC_CHDK 0x9999
@@ -44,6 +45,7 @@ enum ptp_chdk_command {
                             // return data are file contents
   PTP_CHDK_ExecuteScript,   // data is script to be executed
                             // param2 is language of script
+                            //  in proto 2.6 and later, language is the lower byte, rest is used for PTP_CHDK_SCRIPT_FL* flags
                             // return param1 is script id, like a process id
                             // return param2 is status, PTP_CHDK_S_ERRTYPE*
   PTP_CHDK_ScriptStatus,    // Script execution status
@@ -114,12 +116,19 @@ enum ptp_chdk_script_data_type {
 // Script Languages - for execution only lua is supported for now
 #define PTP_CHDK_SL_LUA    0
 #define PTP_CHDK_SL_UBASIC 1
+#define PTP_CHDK_SL_MASK 0xFF
+
+// bit flags for script start
+#define PTP_CHDK_SCRIPT_FL_NOKILL           0x100 // if script is running return error instead of killing
+#define PTP_CHDK_SCRIPT_FL_FLUSH_CAM_MSGS   0x200 // discard existing cam->host messages before starting
+#define PTP_CHDK_SCRIPT_FL_FLUSH_HOST_MSGS  0x400 // discard existing host->cam messages before starting
 
 // bit flags for script status
 #define PTP_CHDK_SCRIPT_STATUS_RUN   0x1 // script running
 #define PTP_CHDK_SCRIPT_STATUS_MSG   0x2 // messages waiting
 // bit flags for scripting support
 #define PTP_CHDK_SCRIPT_SUPPORT_LUA  0x1
+
 
 // bit flags for remote capture
 // used to select and also to indicate available data in PTP_CHDK_RemoteCaptureIsReady
@@ -150,7 +159,7 @@ The image dimensions always contain the full sensor dimensions, if a sub-image w
 with init_usb_capture, the client is responsible for padding the data to the full image or
 adjusting dimensions.
 
-Bad pixels will not be patched, but DNG opcodes will be specify how to patch them
+Bad pixels will not be patched, but DNG opcodes will specify how to patch them
 */
 #define PTP_CHDK_CAPTURE_DNGHDR 0x4  
 
@@ -171,6 +180,7 @@ enum ptp_chdk_script_error_type {
     PTP_CHDK_S_ERRTYPE_NONE = 0,
     PTP_CHDK_S_ERRTYPE_COMPILE,
     PTP_CHDK_S_ERRTYPE_RUN,
+    PTP_CHDK_S_ERRTYPE_INIT, // script startup error not related to content of the script
 };
 
 // message status
