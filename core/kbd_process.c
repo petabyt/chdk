@@ -111,6 +111,9 @@ long kbd_process()
         }
     }
 
+    // check for & process non-keyboard script terminate
+    script_check_terminate();
+
     // Reset keyboard auto repeat if no buttons pressed
     if (kbd_get_pressed_key() == 0)
         last_kbd_key = 0;

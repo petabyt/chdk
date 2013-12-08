@@ -26,6 +26,8 @@ static AS_ID running_script_stack_name = 0;     // ID of action_stack, which use
 static int script_terminate_key = KEY_SHOOT_FULL;
 static char script_terminate_key_name[20]; // TODO this is only here because there's no easy way to map key number back to name
 
+static int script_terminate_request = 0; // script abort requested from another task (ptp)
+
 // Forward references
 void script_end();
 
@@ -122,6 +124,8 @@ static int action_stack_AS_SCRIPT_RUN()
 
 long script_stack_start()
 {
+    script_terminate_request = 0; // ensure any previous terminate request is cleared
+
     camera_info.state.state_kbd_script_run = SCRIPT_STATE_RAN;
     running_script_stack_name = action_stack_create(&action_stack_AS_SCRIPT_RUN);
     return running_script_stack_name;
@@ -149,6 +153,16 @@ void script_get_alt_text(char *buf)
     else
     {
         strcpy(buf,"<ALT>");
+    }
+}
+
+// check if an external terminate request has been set
+// this is called directly from kbd_process, so it will be processed whether or not in alt mode
+void script_check_terminate(void)
+{
+    if(camera_info.state.state_kbd_script_run && script_terminate_request) {
+        script_console_add_line(LANG_CONSOLE_TEXT_TERMINATED);
+        script_end();
     }
 }
 
@@ -197,6 +211,19 @@ gui_handler scriptGuiHandler = { GUI_MODE_SCRIPT, gui_script_draw, gui_script_kb
 static gui_handler *old_gui_handler = 0;
 
 //-------------------------------------------------------------------
+// request the script end from an external task
+// NOTE this must NOT be called from kbd_task
+void script_wait_terminate(void)
+{
+    if(camera_info.state.state_kbd_script_run == SCRIPT_STATE_INACTIVE) {
+        return;
+    }
+    script_terminate_request = 1;
+    // TODO timeout?
+    while(camera_info.state.state_kbd_script_run != SCRIPT_STATE_INACTIVE) {
+        msleep(10);
+    }
+}
 
 // Terminate a script, either because of error, or the script finished
 void script_end()
@@ -204,7 +231,7 @@ void script_end()
     // Tell other code that script has ended
     camera_info.state.state_kbd_script_run = SCRIPT_STATE_INACTIVE;
     camera_info.state.osd_title_line = 1 ;
-    
+
     // reset the script terminate key
     script_terminate_key = KEY_SHOOT_FULL ;
 
