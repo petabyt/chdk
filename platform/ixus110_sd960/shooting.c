@@ -6,21 +6,27 @@
 // They're linked to FL (zoom) and ND filter.
 // aperture_sizes_table[].id is just a serial number.
 const ApertureSize aperture_sizes_table[] = { // PROPCASE 23
-    {  9, 292, "2.8" }, // zoom 1.0
-    { 10, 308, "3.2" }, // zoom 1.2
-    { 11, 326, "3.2" }, // etc.
-    { 12, 348, "3.5" }, 
-    { 13, 375, "4.0" }, 
-    { 14, 409, "4.5" },
-    { 15, 449, "4.9" },
+    {  9, 290, "2.8" }, // wide angle
+    { 10, 307, "3.2" },
+    { 11, 325, "3.2" },
+    { 12, 347, "3.5" },
+    { 13, 367, "3.5" },
+    { 14, 389, "4.0" },
+    { 15, 413, "4.5" },
+    { 16, 443, "5.0" },
+    { 17, 470, "5.6" },
+    { 18, 494, "5.8" }, // max. opt. zoom
 // The rest are the same physical apertures as above, but with ND:
-    { 16, 575, "8.0" },
-    { 17, 591, "9.0" },
-    { 18, 609, "9.0" },
-    { 19, 631, "10.0" },
-    { 20, 658, "11.0" },
-    { 21, 692, "13.0" },
-    { 22, 732, "14.0" },
+    { 19, 481, "5.6" }, // wide angle
+    { 20, 498, "6.3" },
+    { 21, 516, "6.3" },
+    { 22, 538, "7.1" },
+    { 23, 558, "7.1" },
+    { 24, 580, "8.0" },
+    { 25, 604, "9.0" },
+    { 26, 634, "10" },
+    { 27, 661, "11" },
+    { 28, 685, "11" }, // max. opt. zoom
 };
 
 const ShutterSpeed shutter_speeds_table[] = {
@@ -130,7 +136,7 @@ long get_target_dir_num() {
     return n;
 }
 
-// TODO
-int circle_of_confusion = 6;
+// http://www.dofmaster.com/digital_coc.html
+int circle_of_confusion = 5;
 
 // not used ? -> CAM_DRAW_EXPOSITION
