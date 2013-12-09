@@ -528,9 +528,8 @@ static int handle_ptp(
         int s;
         char *buf;
 
-        script_run_id++;
         ptp.num_param = 2;
-        ptp.param1 = script_run_id;
+        ptp.param1 = script_run_id; // in error case, ID of most recent script
 
         s = data->get_data_size(data->handle);
 
@@ -554,9 +553,10 @@ static int handle_ptp(
         if (camera_info.state.state_kbd_script_run) {
             // note script ID is still incremented in this case
             if (param2 & PTP_CHDK_SCRIPT_FL_NOKILL) {
-                ptp.param2 = PTP_CHDK_S_ERRTYPE_COMPILE;
+                // no message is added in this case, since the running script might also be doing 
+                // stuff with messages
+                ptp.param2 = PTP_CHDK_S_ERR_SCRIPTRUNNING;
                 free(buf);
-                ptp_script_write_error_msg(PTP_CHDK_S_ERRTYPE_INIT, "script running");
                 break;
             }
             // kill the script
@@ -570,6 +570,10 @@ static int handle_ptp(
         if(param2 & PTP_CHDK_SCRIPT_FL_FLUSH_HOST_MSGS) {
             empty_script_msg_q(&msg_q_in);
         }
+
+        // increment script ID if script is loaded
+        script_run_id++;
+        ptp.param1 = script_run_id;
 
         // error details will be passed in a message
         if (script_start_ptp(buf) < 0) {
