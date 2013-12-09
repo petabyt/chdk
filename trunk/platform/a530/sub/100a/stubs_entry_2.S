@@ -25,3 +25,7 @@ NHSTUB(TurnOffMic,                  0xffc1e774)
 NHSTUB(TurnOnMic,                   0xffc1e738)
 NHSTUB(GetVRAMHPixelsSize,0xFFE88958) // by find_eventproc name @ 0xFFEE6DB0
 NHSTUB(GetVRAMVPixelsSize,0xFFE88964) // by find_eventproc name @ 0xFFEE6DB8
+
+
+//Definitions for code_gen
+DEF(task_FileWrite,                 0xffc56548)
