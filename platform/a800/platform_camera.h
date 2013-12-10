@@ -39,7 +39,6 @@
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES
     #undef  CAM_HAS_IS
-    #define CAM_MULTIPART                   1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_REAR_CURTAIN                1
     #undef  DEFAULT_RAW_EXT
