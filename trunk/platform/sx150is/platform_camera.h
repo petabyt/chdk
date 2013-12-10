@@ -31,7 +31,6 @@
     #define CAM_VIDEO_QUALITY_ONLY                      1
     #define CAM_BRACKETING                              1
     #undef  CAM_VIDEO_CONTROL
-    #define CAM_MULTIPART                               1
     #define CAM_HAS_JOGDIAL                             1
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_UNCACHED_BIT

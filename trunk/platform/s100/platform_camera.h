@@ -46,7 +46,6 @@
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
-    #define CAM_MULTIPART                   1
     #define CAM_EXT_TV_RANGE                1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
