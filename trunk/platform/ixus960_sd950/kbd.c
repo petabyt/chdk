@@ -146,6 +146,8 @@ void my_kbd_read_keys()
 
     }
 
+    _kbd_read_keys_r2(physw_status);
+
 	usb_remote_key() ;
 
 	if (conf.remote_enable) {
