@@ -8,5 +8,7 @@
 
 void TurnOnBackLight(void);
 void TurnOffBackLight(void);
+void TurnOnDisplay(void);
+void TurnOffDisplay(void);
 
 #endif

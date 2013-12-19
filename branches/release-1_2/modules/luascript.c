@@ -1650,6 +1650,16 @@ static int luaCB_set_backlight( lua_State* L )
   return 0;
 }
 
+// Enable/disable LCD display (input argument 1/0)
+static int luaCB_set_lcd_display( lua_State* L )
+{
+  int val = (luaL_checknumber(L,1));
+
+  if (val > 0) TurnOnDisplay();
+  else TurnOffDisplay();
+  return 0;
+}
+
 // get the string or number passed in index and return it as an event id
 static unsigned levent_id_from_lua_arg( lua_State* L, int index)
 {
@@ -2491,6 +2501,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(raw_merge_add_file)
     FUNC(raw_merge_end)
     FUNC(set_backlight)
+    FUNC(set_lcd_display)
     FUNC(set_aflock)
     FUNC(set_curve_state)
     FUNC(get_curve_state)

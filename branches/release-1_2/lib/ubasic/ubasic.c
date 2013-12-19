@@ -2412,6 +2412,9 @@ statement(void)
   case TOKENIZER_SET_BACKLIGHT:
       on_off_statement(token, TurnOnBackLight, TurnOffBackLight);
       break;
+  case TOKENIZER_SET_LCDDISPLAY:
+      on_off_statement(token, TurnOnDisplay, TurnOffDisplay);
+      break;
 
       // >> mx3 . motion detector
   case   TOKENIZER_MD_DETECT_MOTION:

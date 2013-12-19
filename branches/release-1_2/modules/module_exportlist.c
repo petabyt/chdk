@@ -293,6 +293,8 @@
 
             TurnOnBackLight,
             TurnOffBackLight,
+            TurnOnDisplay,
+            TurnOffDisplay,
 
             // Action stack functions
             action_stack_create,
