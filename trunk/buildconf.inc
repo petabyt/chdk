@@ -44,6 +44,13 @@ OPT_GEN_STUBS=1
 # make the build show an "expired" notice after N days. To encourage users of test builds to provide feedback
 #OPT_EXPIRE_TEST=
 
+# Generate firmware calls and branches as PC24 relative offsets instead of long calls (saves 2.5 - 3K on core build size)
+#  - requires a 32 bit version of ARM GCC (tested on Windows with GCC 4.4.0, 4.5.1 & 4.6.2), fails on 64 bit GCC (Linux & OSX)
+#  - CHDK must be loaded in the lowest 16MB of RAM, firmware must be in upper 16MB
+#  - will be disabled if OPT_CHDK_IN_EXMEM is enabled
+#  - linker will generate errors if any calls/branches are out of range
+#OPT_FIRMWARE_PC24_CALL=1
+
 # ***please new entries above this line for protecting the chdk shell against errors***
 
 # Override the value below to compile a different default language into
