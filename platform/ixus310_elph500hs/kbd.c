@@ -5,6 +5,7 @@
 #include "conf.h"
 #include "keyboard.h"
 #include "touchscreen.h"
+#include "levent.h"
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
@@ -74,14 +75,14 @@ int get_usb_bit()
 #define TS_KEY_TOGGLE_OSD   203
 #define TS_KEY_TOGGLE_OVRD  204
 #define TS_KEY_TOGGLE_EDGE  205
-#define TS_KEY_TOGGLE_ND    206
-#define TS_KEY_TOGGLE_EV    207
-#define TS_KEY_TOGGLE_TV_DN 208
-#define TS_KEY_TOGGLE_TV_UP 209
-#define TS_KEY_TOGGLE_AV_DN 210
-#define TS_KEY_TOGGLE_AV_UP 211
-#define TS_KEY_TOGGLE_SV_DN 212
-#define TS_KEY_TOGGLE_SV_UP 213
+//#define TS_KEY_TOGGLE_ND    206
+//#define TS_KEY_TOGGLE_EV    207
+//#define TS_KEY_TOGGLE_TV_DN 208
+//#define TS_KEY_TOGGLE_TV_UP 209
+//#define TS_KEY_TOGGLE_AV_DN 210
+//#define TS_KEY_TOGGLE_AV_UP 211
+//#define TS_KEY_TOGGLE_SV_DN 212
+//#define TS_KEY_TOGGLE_SV_UP 213
 #define TS_KEY_PLAYBACK     214 
 #define TS_KEY_POWER        215 
 
@@ -100,194 +101,198 @@ int get_usb_bit()
 
 extern const char* gui_on_off_enum(int change, int arg);
 extern const char* gui_histo_show_enum(int change, int arg);
-extern const char* gui_nd_filter_state_enum(int change, int arg);
+//extern const char* gui_nd_filter_state_enum(int change, int arg);
 extern const char* gui_override_disable_enum(int change, int arg);
 
 #define MODE_VID    0x400
 
-int video_ael;
-int tv_video;
-int av_video;
-int sv_video;
-int tv_min_video;
-extern short cds_gain_value;
-
-void set_tv_video(int x)
-{
-    if (video_ael)
-    {
-        if (x < tv_min_video) x = tv_min_video;
-        if (x > 1152) x = 1152;
-        if (tv_video != x)
-        {
-            tv_video = x;
-            tv_video = _SetAE_ShutterSpeed((short*)&tv_video);
-        }
-    }
-}
-
-void set_av_video(int x)
-{
-    if (video_ael)
-    {
-        if (x < 200) x = 200;
-        if (x > 576) x = 576;
-        if (av_video != x)
-        {
-            av_video = x;
-            shooting_set_av96_direct(av_video,1);
-            extern int _MoveIrisWithAv(short*);
-            _MoveIrisWithAv((short*)&av_video);
-            _GetPropertyCase(PROPCASE_AV,&av_video,2);
-        }
-    }
-}
-
-void set_sv_video(int x)
-{
-    if (video_ael)
-    {
-        if (x < 0) x = 0;
-        if (x > 768) x = 768;
-        sv_video = x;
-
-        extern int _SetCDSGain(short*);
-        _SetCDSGain((short*)&sv_video);
-
-        extern int _GetCdsGainValue();
-        sv_video = _GetCdsGainValue();
-    }
-}
-
-void set_ev_video_avail(int x)
-{
-    if (video_ael == x) return;
-    video_ael = x;
-    if (x)
-    {
-        av_video = tv_video = 0;
-
-        _ExpCtrlTool_StopContiAE(0,0);
-
-        _GetPropertyCase(PROPCASE_TV,&tv_video,2);
-        _GetPropertyCase(PROPCASE_AV,&av_video,2);
-        sv_video = cds_gain_value;
-
-        if (camera_info.state.mode_shooting==MODE_VIDEO_SPEED) tv_min_video=577;  // 1/60
-        else tv_min_video=441;  //480; //1/30
-    }
-    else
-        _ExpCtrlTool_StartContiAE(0,0);
-}
-
-const char* ts_video_nd(int change, int arg)
-{
-    const char *rv = gui_nd_filter_state_enum(change, arg);
-    if (change && video_ael)
-    {
-        shooting_set_nd_filter_state(*(int*)arg,1);
-    }
-    return rv;
-}
-
-const char* ts_video_ev(int change, int arg)
-{
-    if (change)
-    {
-        set_ev_video_avail(!video_ael);
-        // force ND off unless AEL enabled
-        shooting_set_nd_filter_state((video_ael)?conf.nd_filter_state:2,1);
-    }
-    return gui_on_off_enum(0, arg);
-}
-
-static char ev_tv[15];
-
-const char* ts_video_tv_dn(int change, int arg)
-{
-    if (change)
-    {
-        set_tv_video(tv_video - 32);
-    }
-    sprintf(ev_tv,"%4d",tv_video);
-    return ev_tv;
-}
-
-const char* ts_video_tv_up(int change, int arg)
-{
-    if (change)
-    {
-        set_tv_video(tv_video + 32);
-    }
-    sprintf(ev_tv,"%4d",tv_video);
-    return ev_tv;
-}
-
-static char ev_av[15];
-
-const char* ts_video_av_dn(int change, int arg)
-{
-    if (change)
-    {
-        set_av_video(av_video - 32);
-    }
-    sprintf(ev_av,"%4d",av_video);
-    return ev_av;
-}
-
-const char* ts_video_av_up(int change, int arg)
-{
-    if (change)
-    {
-        set_av_video(av_video + 32);
-    }
-    sprintf(ev_av,"%4d",av_video);
-    return ev_av;
-}
-
-static char ev_sv[15];
-
-const char* ts_video_sv_dn(int change, int arg)
-{
-    if (change)
-    {
-        set_sv_video(sv_video - 32);
-    }
-    sprintf(ev_sv,"%4d",sv_video);
-    return ev_sv;
-}
-
-const char* ts_video_sv_up(int change, int arg)
-{
-    if (change)
-    {
-        set_sv_video(sv_video + 32);
-    }
-    sprintf(ev_sv,"%4d",sv_video);
-    return ev_sv;
-}
-
-static char debug_pg[15];
-
-const char* ts_pg_dn(int change, int arg)
-{
-    if (change)
-    {
-        if ((*(int*)arg) > 0) (*(int*)arg)--;
-    }
-    sprintf(debug_pg,"%4d",(*(int*)arg));
-    return debug_pg;
-}
-
-const char* ts_pg_up(int change, int arg)
-{
-    if (change)
-    {
-        (*(int*)arg)++;
-    }
-    sprintf(debug_pg,"%4d",(*(int*)arg));
-    return debug_pg;
-}
+//int video_ael;
+//int tv_video;
+//int av_video;
+//int sv_video;
+//int tv_min_video;
+//extern short cds_gain_value;
+//
+//void set_tv_video(int x)
+//{
+//    if (video_ael)
+//    {
+//        if (x < tv_min_video) x = tv_min_video;
+//        if (x > 1152) x = 1152;
+//        if (tv_video != x)
+//        {
+//            tv_video = x;
+//            tv_video = _SetAE_ShutterSpeed((short*)&tv_video);
+//        }
+//    }
+//}
+//
+//void set_av_video(int x)
+//{
+//    if (video_ael)
+//    {
+//        if (x < 200) x = 200;
+//        if (x > 576) x = 576;
+//        if (av_video != x)
+//        {
+//            av_video = x;
+//            shooting_set_av96_direct(av_video,1);
+//            extern int _MoveIrisWithAv(short*);
+//            _MoveIrisWithAv((short*)&av_video);
+//            _GetPropertyCase(PROPCASE_AV,&av_video,2);
+//        }
+//    }
+//}
+//
+//void set_sv_video(int x)
+//{
+//    if (video_ael)
+//    {
+//        if (x < 0) x = 0;
+//        if (x > 768) x = 768;
+//        sv_video = x;
+//
+//        extern int _SetCDSGain(short*);
+//        _SetCDSGain((short*)&sv_video);
+//
+//        extern int _GetCdsGainValue();
+//        sv_video = _GetCdsGainValue();
+//    }
+//}
+//
+//void set_ev_video_avail(int x)
+//{
+//    if (video_ael == x) return;
+//    video_ael = x;
+//    if (x)
+//    {
+//        av_video = tv_video = 0;
+//
+//        _DoAELock();
+//        //_ExpCtrlTool_StopContiAE(0,0);
+//
+//        _GetPropertyCase(PROPCASE_TV,&tv_video,2);
+//        _GetPropertyCase(PROPCASE_AV,&av_video,2);
+//        sv_video = cds_gain_value;
+//
+//        if (camera_info.state.mode_shooting==MODE_VIDEO_SPEED) tv_min_video=577;  // 1/60
+//        else tv_min_video=441;  //480; //1/30
+//    }
+//    else
+//    {
+//        _UnlockAE();
+//        //_ExpCtrlTool_StartContiAE(0,0);
+//    }
+//}
+//
+//const char* ts_video_nd(int change, int arg)
+//{
+//    const char *rv = gui_nd_filter_state_enum(change, arg);
+//    if (change && video_ael)
+//    {
+//        shooting_set_nd_filter_state(*(int*)arg,1);
+//    }
+//    return rv;
+//}
+//
+//const char* ts_video_ev(int change, int arg)
+//{
+//    if (change)
+//    {
+//        set_ev_video_avail(!video_ael);
+//        // force ND off unless AEL enabled
+//        shooting_set_nd_filter_state((video_ael)?conf.nd_filter_state:2,1);
+//    }
+//    return gui_on_off_enum(0, arg);
+//}
+//
+//static char ev_tv[15];
+//
+//const char* ts_video_tv_dn(int change, int arg)
+//{
+//    if (change)
+//    {
+//        set_tv_video(tv_video - 32);
+//    }
+//    sprintf(ev_tv,"%4d",tv_video);
+//    return ev_tv;
+//}
+//
+//const char* ts_video_tv_up(int change, int arg)
+//{
+//    if (change)
+//    {
+//        set_tv_video(tv_video + 32);
+//    }
+//    sprintf(ev_tv,"%4d",tv_video);
+//    return ev_tv;
+//}
+//
+//static char ev_av[15];
+//
+//const char* ts_video_av_dn(int change, int arg)
+//{
+//    if (change)
+//    {
+//        set_av_video(av_video - 32);
+//    }
+//    sprintf(ev_av,"%4d",av_video);
+//    return ev_av;
+//}
+//
+//const char* ts_video_av_up(int change, int arg)
+//{
+//    if (change)
+//    {
+//        set_av_video(av_video + 32);
+//    }
+//    sprintf(ev_av,"%4d",av_video);
+//    return ev_av;
+//}
+//
+//static char ev_sv[15];
+//
+//const char* ts_video_sv_dn(int change, int arg)
+//{
+//    if (change)
+//    {
+//        set_sv_video(sv_video - 32);
+//    }
+//    sprintf(ev_sv,"%4d",sv_video);
+//    return ev_sv;
+//}
+//
+//const char* ts_video_sv_up(int change, int arg)
+//{
+//    if (change)
+//    {
+//        set_sv_video(sv_video + 32);
+//    }
+//    sprintf(ev_sv,"%4d",sv_video);
+//    return ev_sv;
+//}
+//
+//static char debug_pg[15];
+//
+//const char* ts_pg_dn(int change, int arg)
+//{
+//    if (change)
+//    {
+//        if ((*(int*)arg) > 0) (*(int*)arg)--;
+//    }
+//    sprintf(debug_pg,"%4d",(*(int*)arg));
+//    return debug_pg;
+//}
+//
+//const char* ts_pg_up(int change, int arg)
+//{
+//    if (change)
+//    {
+//        (*(int*)arg)++;
+//    }
+//    sprintf(debug_pg,"%4d",(*(int*)arg));
+//    return debug_pg;
+//}
 
 #if defined(TS_PLAY_POWER_HACK) 
 static int playbutton_hack; 
@@ -322,20 +327,20 @@ static KeyMap keymap[] = {
     //{ 3, TS_PG_DN, 0x40000000, RB(2,0), 0, "Pg -", 2, GUI_MODE_NONE, GUI_MODE_ALT, MODE_REC|MODE_PLAY|MODE_VID, &conf.debug_propcase_page, ts_pg_dn },
     //{ 3, TS_PG_UP, 0x80000000, RB(1,0), 0, "Pg +", 2, GUI_MODE_NONE, GUI_MODE_ALT, MODE_REC|MODE_PLAY|MODE_VID, &conf.debug_propcase_page, ts_pg_up },
 
-	{ 3, TS_KEY_TOGGLE_EV   , 0x00008000, RB(0,2), 2, "AEL",       0,GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &video_ael, ts_video_ev,   &conf.touchscreen_disable_video_controls },
-	{ 3, TS_UP_DN_BUTTON    , 0,         RBW(0,4), 2, " - Tv %s +",0,GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &tv_video, ts_video_tv_dn, &conf.touchscreen_disable_video_controls },
-	{ 3, TS_KEY_TOGGLE_TV_DN, 0x00010000, RB(1,4), 2, 0,  0,         GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &tv_video, ts_video_tv_dn, &conf.touchscreen_disable_video_controls },
-	{ 3, TS_KEY_TOGGLE_TV_UP, 0x00020000, RB(0,4), 2, 0,  0,         GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &tv_video, ts_video_tv_up, &conf.touchscreen_disable_video_controls },
-	{ 3, TS_UP_DN_BUTTON    , 0,         RBW(2,4), 2, " - Av %s +",0,GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &av_video, ts_video_av_dn, &conf.touchscreen_disable_video_controls },
-	{ 3, TS_KEY_TOGGLE_AV_DN, 0x00040000, RB(3,4), 2, 0,  0,         GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &av_video, ts_video_av_dn, &conf.touchscreen_disable_video_controls },
-	{ 3, TS_KEY_TOGGLE_AV_UP, 0x00080000, RB(2,4), 2, 0,  0,         GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &av_video, ts_video_av_up, &conf.touchscreen_disable_video_controls },
-	{ 3, TS_UP_DN_BUTTON    , 0,         RBW(4,4), 2, " - Sv %s +",0,GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &sv_video, ts_video_sv_dn, &conf.touchscreen_disable_video_controls },
-	{ 3, TS_KEY_TOGGLE_SV_DN, 0x00100000, RB(5,4), 2, 0,  0,         GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &sv_video, ts_video_sv_dn, &conf.touchscreen_disable_video_controls },
-	{ 3, TS_KEY_TOGGLE_SV_UP, 0x00200000, RB(4,4), 2, 0,  0,         GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &sv_video, ts_video_sv_up, &conf.touchscreen_disable_video_controls },
-	{ 3, TS_KEY_TOGGLE_ND   , 0x00004000, LB(0,4), 2, "ND",    0,    GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &conf.nd_filter_state, ts_video_nd, &conf.touchscreen_disable_video_controls },
+	//{ 3, TS_KEY_TOGGLE_EV   , 0x00008000, RB(0,2), 2, "AEL",       0,GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &video_ael, ts_video_ev,   &conf.touchscreen_disable_video_controls },
+	//{ 3, TS_UP_DN_BUTTON    , 0,         RBW(0,4), 2, " - Tv %s +",0,GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &tv_video, ts_video_tv_dn, &conf.touchscreen_disable_video_controls },
+	//{ 3, TS_KEY_TOGGLE_TV_DN, 0x00010000, RB(1,4), 2, 0,  0,         GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &tv_video, ts_video_tv_dn, &conf.touchscreen_disable_video_controls },
+	//{ 3, TS_KEY_TOGGLE_TV_UP, 0x00020000, RB(0,4), 2, 0,  0,         GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &tv_video, ts_video_tv_up, &conf.touchscreen_disable_video_controls },
+	//{ 3, TS_UP_DN_BUTTON    , 0,         RBW(2,4), 2, " - Av %s +",0,GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &av_video, ts_video_av_dn, &conf.touchscreen_disable_video_controls },
+	//{ 3, TS_KEY_TOGGLE_AV_DN, 0x00040000, RB(3,4), 2, 0,  0,         GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &av_video, ts_video_av_dn, &conf.touchscreen_disable_video_controls },
+	//{ 3, TS_KEY_TOGGLE_AV_UP, 0x00080000, RB(2,4), 2, 0,  0,         GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &av_video, ts_video_av_up, &conf.touchscreen_disable_video_controls },
+	//{ 3, TS_UP_DN_BUTTON    , 0,         RBW(4,4), 2, " - Sv %s +",0,GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &sv_video, ts_video_sv_dn, &conf.touchscreen_disable_video_controls },
+	//{ 3, TS_KEY_TOGGLE_SV_DN, 0x00100000, RB(5,4), 2, 0,  0,         GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &sv_video, ts_video_sv_dn, &conf.touchscreen_disable_video_controls },
+	//{ 3, TS_KEY_TOGGLE_SV_UP, 0x00200000, RB(4,4), 2, 0,  0,         GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &sv_video, ts_video_sv_up, &conf.touchscreen_disable_video_controls },
+	//{ 3, TS_KEY_TOGGLE_ND   , 0x00004000, LB(0,4), 2, "ND",    0,    GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &conf.nd_filter_state, ts_video_nd, &conf.touchscreen_disable_video_controls },
 
-    { 3, KEY_MENU		    , 0x00000002, LB(0,2), 0, "Menu",  0, GUI_MODE_ALT, 100, MODE_REC|MODE_PLAY },
-	{ 3, KEY_SET		    , 0x00000004, LB(0,3), 0, "Set",   0, GUI_MODE_ALT, 100, MODE_REC|MODE_PLAY },
+    { 3, KEY_MENU		    , 0x00000002, LB(0,2), 0, "Menu",  0, GUI_MODE_ALT, 100, MODE_REC|MODE_PLAY|MODE_VID },
+	{ 3, KEY_SET		    , 0x00000004, LB(0,3), 0, "Set",   0, GUI_MODE_ALT, 100, MODE_REC|MODE_PLAY|MODE_VID },
 
     { 3, TS_KEY_TOGGLE_RAW  , 0x00000100, RB(1,1), 1, "RAW",   0, GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, &conf.save_raw, gui_on_off_enum, &conf.touchscreen_disable_shortcut_controls },
     { 3, TS_KEY_TOGGLE_OSD  , 0x00000200, RB(1,2), 1, "OSD",   0, GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, &conf.show_osd, gui_on_off_enum, &conf.touchscreen_disable_shortcut_controls },
@@ -352,11 +357,11 @@ static KeyMap keymap[] = {
     { 3, KEY_DISPLAY        , 0x00000008, LB(0,4), 0, "Debug", 0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY },
 #endif
     { 3, KEY_DISPLAY	    , 0x00000008, LB(0,4), 0, "Back",  0,    GUI_MODE_MENU,      GUI_MODE_MENU, MODE_REC|MODE_PLAY },
-    { 3, KEY_DISPLAY        , 0x00000008, LB(0,4), 0, "Disp",  0,    GUI_MODE_MENU+1,    100,           MODE_REC|MODE_PLAY },
-    { 3, KEY_UP             , 0x00000010, RB(0,1), 0, "Up",    0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
-    { 3, KEY_LEFT           , 0x00000020, RB(0,2), 0, "Left",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
-    { 3, KEY_RIGHT          , 0x00000040, RB(0,3), 0, "Right", 0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
-    { 3, KEY_DOWN           , 0x00000080, RB(0,4), 0, "Down",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
+    { 3, KEY_DISPLAY        , 0x00000008, LB(0,4), 0, "Disp",  0,    GUI_MODE_MENU+1,    100,           MODE_REC|MODE_PLAY|MODE_VID },
+    { 3, KEY_UP             , 0x00000010, RB(0,1), 0, "Up",    0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY|MODE_VID },
+    { 3, KEY_LEFT           , 0x00000020, RB(0,2), 0, "Left",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY|MODE_VID },
+    { 3, KEY_RIGHT          , 0x00000040, RB(0,3), 0, "Right", 0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY|MODE_VID },
+    { 3, KEY_DOWN           , 0x00000080, RB(0,4), 0, "Down",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY|MODE_VID },
 
     { 3, KEY_UP 		    , 0x00000010, RB(0,0), 0, "Man",   "Focus",  GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, &conf.subj_dist_override_koef, 0, &conf.touchscreen_disable_shortcut_controls },
     { 3, KEY_DISPLAY        , 0x00000008, RB(0,1), 0, "Max",   "Dist",   GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, 0, 0, &conf.touchscreen_disable_shortcut_controls },
@@ -602,15 +607,22 @@ void my_kbd_read_keys()
 	} else {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
 	}
-	
 }
 
 
 /****************/
+static int is_video_key_pressed = 0;
 
 void kbd_key_press(long key)
 {
 	int i;
+
+    if (key == KEY_VIDEO && !is_video_key_pressed)
+    {
+        PostLogicalEventToUI(levent_id_for_name("PressMovieButton"),0);
+        is_video_key_pressed = 1;
+        return;
+    }
 
 	for (i=0;keymap[i].hackkey;i++){
 		if (keymap[i].hackkey == key)
@@ -624,6 +636,14 @@ void kbd_key_press(long key)
 void kbd_key_release(long key)
 {
 	int i;
+
+    if (key == KEY_VIDEO && is_video_key_pressed)
+    {
+        PostLogicalEventToUI(levent_id_for_name("UnpressMovieButton"),0);
+        is_video_key_pressed = 0;
+        return;
+    }
+
 	for (i=0;keymap[i].hackkey;i++){
 		if (keymap[i].hackkey == key){
 			kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
@@ -634,6 +654,12 @@ void kbd_key_release(long key)
 
 void kbd_key_release_all()
 {
+    if (is_video_key_pressed)
+    {
+        PostLogicalEventToUI(levent_id_for_name("UnpressMovieButton"),0);
+        is_video_key_pressed = 0;
+    }
+
 	kbd_mod_state[0] |= KEYS_MASK0;
 	kbd_mod_state[1] |= KEYS_MASK1;
 	kbd_mod_state[2] |= KEYS_MASK2;
