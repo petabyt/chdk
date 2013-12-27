@@ -61,6 +61,7 @@
     #undef  CAM_HAS_MANUAL_FOCUS                // No manual focus mode
 
     #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO // Can already zoom in video, no need to unlock
+    #define CAM_HAS_VIDEO_BUTTON                1
 
     #undef  DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                     2   // use .CR2 
