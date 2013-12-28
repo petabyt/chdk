@@ -57,6 +57,11 @@ long kbd_get_autoclicked_key()
 
 static int kbd_blocked;
 
+int kbd_is_blocked()
+{
+    return kbd_blocked;
+}
+
 void enter_alt()
 {
     get_usb_power(CLEAR_USB_REGISTERS);         // Prevent previous USB remote pulse from starting script.
@@ -68,20 +73,6 @@ void exit_alt()
 {
     kbd_blocked = 0;
     gui_set_alt_mode_state(ALT_MODE_LEAVE);
-}
-
-/* 
-    main kb processing
- */
-
-int kbd_is_blocked()
-{
-	return kbd_blocked;
-}
-
-void kbd_set_block(int bEnableBlock)
-{
-    kbd_blocked = bEnableBlock ? 1 : 0;
 }
 
 //-------------------------------------------------------------------
@@ -196,6 +187,11 @@ long kbd_process()
         return 1;
 
     action_stack_process_all();
+
+    // Check if a PTP script needs to be started
+    //  do this after action_stack_process_all so new script is not run until next timeslice
+    extern void start_ptp_script();
+    start_ptp_script();
 
     return kbd_blocked;
 }

@@ -85,8 +85,6 @@ extern long get_jogdial_direction(void);
 extern void JogDial_CW(void);
 extern void JogDial_CCW(void);
 
-extern void kbd_set_block(int bEnableBlock);
-
 extern void enter_alt();
 extern void exit_alt();
 

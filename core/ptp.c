@@ -229,16 +229,33 @@ int ptp_script_write_error_msg(unsigned errtype, const char *err) {
   return ptp_script_write_msg(msg);
 }
 
+static char*   ptp_script = 0;
+static int     ptp_script_state = 0;
+
+// Called from kbd process to start PTP script
 // Load Lua module, parse PTP script and start execution if parse ok.
+void start_ptp_script()
+{
+    if (ptp_script)
+    {
+        module_set_script_lang(0);  // Force Lua script language
+        if (libscriptapi->script_start(ptp_script,1))
+        {
+            camera_info.state.auto_started = 0;
+            ptp_script_state = script_stack_start();
+        }
+        else
+            ptp_script_state = -1;
+        ptp_script = 0;
+    }
+}
+
+// Setup for kbd task to start script, wait until started and return startup state
 static long script_start_ptp( char *script )
 {
-    module_set_script_lang(0);  // Force Lua script language
-    if (libscriptapi->script_start(script,1))
-    {
-        camera_info.state.auto_started = 0;
-        return script_stack_start();
-    }
-    return -1;
+    ptp_script = script;
+    while (ptp_script) msleep(10);
+    return ptp_script_state;
 }
 
 static int handle_ptp(
