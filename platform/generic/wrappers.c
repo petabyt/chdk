@@ -1027,9 +1027,13 @@ void TurnOffBackLight(void)
   _TurnOffBackLight();
 }
 
+extern void gui_set_need_restore();
+
 void TurnOnDisplay(void)
 {
   _TurnOnDisplay();
+  // required to re-draw the canon and CHDK UI after re-enabling display
+  gui_set_need_restore() ;
 }
 
 void TurnOffDisplay(void)
