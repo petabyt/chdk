@@ -1194,6 +1194,19 @@ static int luaCB_draw_clear( lua_State* L ) {
 }
 // end lua draw functions
 
+// bitmap dimensions, size matches coordinates of draw functions
+static int luaCB_get_gui_screen_width( lua_State* L )
+{
+    lua_pushnumber( L, camera_screen.width );
+    return 1;
+}
+
+static int luaCB_get_gui_screen_height( lua_State* L )
+{
+    lua_pushnumber( L, camera_screen.height );
+    return 1;
+}
+
 static int luaCB_autostarted( lua_State* L )
 {
   lua_pushboolean( L, camera_info.state.auto_started );
@@ -2683,6 +2696,10 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(draw_ellipse_filled)
     FUNC(draw_clear)
     FUNC(draw_string)
+
+    FUNC(get_gui_screen_width)
+    FUNC(get_gui_screen_height)
+
     FUNC(set_yield)
     FUNC(read_usb_msg)
     FUNC(write_usb_msg)
