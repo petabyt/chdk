@@ -50,4 +50,5 @@ WARNING:
 #define PROPCASE_OPTICAL_ZOOM_POSITION      197
 #define PROPCASE_VIDEO_RESOLUTION           169
 #define PROPCASE_AF_ASSIST_BEAM             5       // 0=disabled,  1=enabled
+#define PROPCASE_AF_LOCK                    11      // 0 = AF not locked, 1 = AF locked
 #endif
