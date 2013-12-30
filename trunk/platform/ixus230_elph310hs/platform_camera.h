@@ -37,7 +37,6 @@
 #define CAM_HAS_VIDEO_BUTTON			1
 #define CAM_VIDEO_QUALITY_ONLY                  1
 #define CAM_SHOW_OSD_IN_SHOOT_MENU              1
-#define CAM_HAS_VARIABLE_ASPECT                 1
 #define CAM_QUALITY_OVERRIDE                    1 // enable 'Super Fine' JPEG compression mode
 #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 #define CAM_DRIVE_MODE_FROM_TIMER_MODE	        1

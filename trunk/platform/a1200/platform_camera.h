@@ -98,7 +98,6 @@
     #define CHDK_COLOR_BASE                 0x9F    // Start color index for CHDK colors loaded into camera palette
                                                     // Note: overloads Canon RED for proper logo display
 
-    #define CAM_HAS_VARIABLE_ASPECT         1
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1
     #undef CAM_BITMAP_WIDTH
