@@ -73,7 +73,6 @@
 
     #define PARAM_CAMERA_NAME               	4       // parameter number for GetParameterData
 
-    #define CAM_HAS_VARIABLE_ASPECT         	1
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      	1
     #undef CAM_BITMAP_WIDTH

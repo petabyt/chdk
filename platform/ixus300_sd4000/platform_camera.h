@@ -111,8 +111,6 @@
 
     // everthing below is ToDo !!!!!!!!!!!!!!!!
 
-    //#define CAM_HAS_VARIABLE_ASPECT     1        // ?!? like SX1
-
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1    // camera uses the modified graphics primitives to map screens an viewports to buffers more sized
     #undef CAM_SCREEN_WIDTH

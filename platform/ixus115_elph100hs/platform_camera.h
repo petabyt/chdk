@@ -95,7 +95,6 @@
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              10
 
-    #define CAM_HAS_VARIABLE_ASPECT         1
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1
     #undef CAM_BITMAP_WIDTH

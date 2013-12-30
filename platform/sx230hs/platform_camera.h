@@ -92,7 +92,6 @@
     #undef  CAM_HAS_ERASE_BUTTON
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
-    #define CAM_HAS_VARIABLE_ASPECT         1
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1
     #undef  CAM_SCREEN_WIDTH
