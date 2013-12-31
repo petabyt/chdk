@@ -6,7 +6,7 @@ This may be changed to Video in the options
 
 This camera does not have an adjustable aperture. It does have an ND filter
 
-This is an early alpha port, use at your own risk!
+This is a beta port, use at your own risk!
 
 TESTED
 ******
@@ -35,6 +35,7 @@ OTHER ISSUES
 Folder naming and file counter use a new method, seem to be working but may have issues
 Not clear if fast press override hack is needed, needs more testing
 subject distance override is only available in AF lock
+If using set_aflock from script, you must use set the AF_LOCK propcase to 1
 
 KNOWN BUGS
 **********
