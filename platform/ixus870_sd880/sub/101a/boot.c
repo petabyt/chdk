@@ -182,9 +182,12 @@ void __attribute__((naked,noinline)) sub_FF810F94_my() {
                  "BL      sub_FFAD1AD4\n"
                  "MOV     R0, #0x53000\n"
                  "STR     R0, [SP,#4]\n"
-            //   "LDR     R0, =0xDE578\n"       // MEMISOSTART!!!
+#if defined(CHDK_NOT_IN_CANON_HEAP)
+                 "LDR     R0, =0xDE578\n"       // MEMISOSTART!!!
+#else
                  "LDR     R0, =new_sa\n"        // +
                  "LDR     R0, [R0]\n"           // +
+#endif
                  "LDR     R2, =0x2B9C00\n"
                  "LDR     R1, =0x2B24A8\n"
                  "STR     R0, [SP,#8]\n"
