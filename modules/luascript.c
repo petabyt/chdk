@@ -41,6 +41,7 @@
 #include "gui_tbox.h"
 #include "module_def.h"
 #include "luascript.h"
+#include "script_shoot_hook.h"
 
 #include "../lib/lua/lualib.h"
 #include "../lib/lua/lauxlib.h"
@@ -140,6 +141,7 @@ static ptp_script_msg *lua_create_usb_msg( lua_State* L, int index, unsigned msg
 
 void lua_script_reset()
 {
+    script_shoot_hooks_reset();
     lua_close( L );
     L = 0;
 }
@@ -236,6 +238,7 @@ void lua_script_finish(lua_State *L)
 
 int lua_script_start( char const* script, int ptp )
 {
+    script_shoot_hooks_reset();
     lua_script_is_ptp = ptp;
     if(ptp) {
         ptp_saved_alt_state = (camera_info.state.gui_mode_alt);
@@ -2518,6 +2521,55 @@ static int luaCB_seconds_to_tv96( lua_State* L )
 }
 
 //------------------------------------------------------------------------------------------
+// Shoot hooks
+
+/*
+hook.set(timeout)
+cause hook to block shooting process until timeout or script issues hook.continue
+0 clears
+*/
+static int luaCB_shoot_hook_set( lua_State* L )
+{
+    int hook = lua_tonumber( L, lua_upvalueindex(1) );
+    script_shoot_hook_set(hook,luaL_checknumber(L, 1));
+    return 0;
+}
+
+/*
+hook.is_ready()
+returns true if the hooked task is in the hook
+*/
+static int luaCB_shoot_hook_is_ready( lua_State* L )
+{
+    int hook = lua_tonumber( L, lua_upvalueindex(1) );
+    lua_pushboolean(L,script_shoot_hook_ready(hook));
+    return 1;
+}
+
+/*
+hook.continue()
+allow the hooked task to leave the hook
+*/
+static int luaCB_shoot_hook_continue( lua_State* L )
+{
+    int hook = lua_tonumber( L, lua_upvalueindex(1) );
+    script_shoot_hook_continue(hook);
+    return 0;
+}
+
+/*
+n=hook.count()
+return the number of times the hook has been reached since script start
+note: counts regardless of whether hook is enabled
+*/
+static int luaCB_shoot_hook_count( lua_State* L )
+{
+    int hook = lua_tonumber( L, lua_upvalueindex(1) );
+    lua_pushnumber(L,script_shoot_hook_ready(hook));
+    return 1;
+}
+
+//------------------------------------------------------------------------------------------
 
 #define FUNC( X ) { #X,	luaCB_##X },
 static const luaL_Reg chdk_funcs[] = {
@@ -2722,9 +2774,33 @@ static const luaL_Reg chdk_funcs[] = {
     {NULL, NULL},
 };
 
+void register_shoot_hook_fn(lua_State* L, int hook, void *hook_fn, const char *name)
+{
+    lua_pushnumber( L, hook );
+    lua_pushcclosure( L, hook_fn, 1 );
+    lua_setfield( L, -2, name);
+}
+
+void register_shoot_hooks( lua_State* L )
+{
+    int i;
+    for(i=0; i<SCRIPT_NUM_SHOOT_HOOKS;i++) {
+        lua_createtable(L, 0, 4);
+        register_shoot_hook_fn(L,i,luaCB_shoot_hook_set,"set");
+//        register_shoot_hook_fn(L,i,luaCB_shoot_hook_wait_ready,"wait_ready");
+        register_shoot_hook_fn(L,i,luaCB_shoot_hook_is_ready,"is_ready");
+        register_shoot_hook_fn(L,i,luaCB_shoot_hook_continue,"continue");
+        register_shoot_hook_fn(L,i,luaCB_shoot_hook_count,"count");
+        lua_setglobal( L, shoot_hook_names[i] );
+    }
+}
+
 void register_lua_funcs( lua_State* L )
 {
   const luaL_reg *r;
+
+  register_shoot_hooks( L );
+
   lua_pushlightuserdata( L, action_push_click );
   lua_pushcclosure( L, luaCB_keyfunc, 1 );
   lua_setglobal( L, "click" );
@@ -2795,6 +2871,7 @@ libscriptapi_sym _liblua =
     lua_set_variable,
     lua_set_as_ret,
     lua_run_restore,
+    script_shoot_hook_run,
 };
 
 struct ModuleInfo _module_info =

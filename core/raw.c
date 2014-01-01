@@ -12,6 +12,7 @@
 #include "cachebit.h"
 #include "remotecap_core.h"
 #include "ptp.h" // for remotecap constants
+#include "script_api.h" // for script hook
 
 //-------------------------------------------------------------------
 #define RAW_TARGET_DIRECTORY    "A/DCIM/%03dCANON"
@@ -172,6 +173,8 @@ void raw_process(void)
         libdng->capture_data_for_exif();
 	}
     if (camera_info.state.state_kbd_script_run && shot_histogram_isenabled()) build_shot_histogram();
+
+    libscriptapi->shoot_hook(SCRIPT_SHOOT_HOOK_RAW);
 
     // count/save badpixels if requested
     if (libdng->raw_init_badpixel_bin())
