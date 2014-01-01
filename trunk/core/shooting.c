@@ -7,6 +7,7 @@
 #include "usb_remote.h"
 #include "autoiso.h"
 #include "levent.h"
+#include "script_api.h"
 
 // Shooting function that don't need to be ARM code
 // ARM code shooting functions are in platform/generic/shooting.c
@@ -1595,6 +1596,8 @@ void shooting_expo_param_override_thumb(void)
     // should only need to be set once if the users doesn't change back, but doing it here ensures it is set
     shooting_set_image_quality(conf.fast_image_quality);
 #endif
+
+    libscriptapi->shoot_hook(SCRIPT_SHOOT_HOOK_PRESHOOT);
 }
 
 // Override ISO settings only

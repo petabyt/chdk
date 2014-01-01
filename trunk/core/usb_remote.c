@@ -24,6 +24,7 @@
 #include "action_stack.h"
 #include "gui_draw.h"
 #include "usb_remote.h"
+#include "script_api.h"
 
 
 extern int get_usb_bit() ;
@@ -241,6 +242,9 @@ void usb_remote_status_led(int state)
 void _wait_until_remote_button_is_released(void)
 {
 	int tick;
+
+    // hook for script to block processing just prior to exposure start
+    libscriptapi->shoot_hook(SCRIPT_SHOOT_HOOK_SHOOT);
 
 	if (	( conf.remote_enable )				// menu : USB remote enabled - bracket everything in this function
 		&&	( conf.synch_enable  )				// menu : Sync enabled - tells us to wait for USB to disconnect

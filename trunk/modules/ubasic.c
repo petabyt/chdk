@@ -18,6 +18,8 @@ int jump_label(char * label);
 
 static int ubasic_run_restore(void)             { return jump_label("restore"); }
 
+// shoot hooks not supported in ubasic
+static void ubasic_script_shoot_hook_run(int hook) { return; }
 /******************** Module Information structure ******************/
 
 libscriptapi_sym _libubasic =
@@ -32,6 +34,7 @@ libscriptapi_sym _libubasic =
     ubasic_set_variable,
     ubasic_set_as_ret,
     ubasic_run_restore,
+    ubasic_script_shoot_hook_run,
 };
 
 struct ModuleInfo _module_info =

@@ -94,7 +94,7 @@ gui_snake.o: games/gui_snake.c games/simple_game.c
 cpuinfo.o: simple_module.c
 
 ubasic.flt: ubasic.o script_key_funcs.o $(topdir)lib/ubasic/libubasic.a
-lua.flt: luascript.o script_key_funcs.o cordic_math.o dbg_dump.o $(topdir)lib/lua/liblua.a
+lua.flt: luascript.o script_key_funcs.o script_shoot_hook.o cordic_math.o dbg_dump.o $(topdir)lib/lua/liblua.a
 
 cpuinfo.flt: cpuinfo.o cpuinfo_arm.o 
 

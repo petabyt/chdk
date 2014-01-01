@@ -8,6 +8,12 @@
 #define SCRIPT_RUN_RUNNING      1
 #define SCRIPT_RUN_ERROR        -1
 
+enum {
+    SCRIPT_SHOOT_HOOK_PRESHOOT=0,
+    SCRIPT_SHOOT_HOOK_SHOOT,
+    SCRIPT_SHOOT_HOOK_RAW,
+    SCRIPT_NUM_SHOOT_HOOKS,
+};
 // Module interface for script languages (Lua and uBasic)
 typedef struct
 {
@@ -19,6 +25,7 @@ typedef struct
     void    (*set_variable)(int varnum, int value);
     void    (*set_as_ret)(int as_ret);      // save 'return' value from action stack code (e.g. motion detect, shoot)
     int     (*run_restore)( void );         // run the "restore" function at the end of a script
+    void    (*shoot_hook)(int hook);        // run a hook in the shooting process, called from hooked task
 } libscriptapi_sym;
 
 extern libscriptapi_sym* libscriptapi;

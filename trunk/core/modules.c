@@ -256,7 +256,8 @@ libscriptapi_sym default_libscriptapi =
     dummy_void,             //script_reset
     dummy_void,             //set_variable
     dummy_void,             //set_as_ret
-    dummy_int               //run_restore
+    dummy_int,               //run_restore
+    dummy_void,             //shoot_hook
 };
 
 // Library pointer
