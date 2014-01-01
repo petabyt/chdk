@@ -29,20 +29,23 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
     // The value can be adjusted as needed for different cameras.
 
     // track previous file counter to avoid waits if properly incremented
-    static int last_fc = -1; // initialize to impossible value
+    static int last_fn = -1; // initialize to impossible value
     if ((conf.save_raw && is_raw_enabled()) // Only delay if RAW enabled (prevents slowdown in HQ burst mode)
         || (remotecap_get_target()) //... or if remote shooting is active
     )
     {
-        int fc = get_file_counter();
-        // if the file counter hasn't been incremented by one, or it's the first time through
-        if(fc != last_fc + 1 || last_fc == -1) {
+        // if the file number hasn't been incremented by one, or it's the first time through
+        // use target_file_num rather than file counter since file counter format may vary
+        // file_num should always be 1 to 9999
+        if(last_fn == -1 || get_target_file_num() != (last_fn + 1)) {
+            int fc = get_file_counter();
             int tc = get_tick_count() + PAUSE_FOR_FILE_COUNTER;
-            while ((get_file_counter() == fc) && (get_tick_count() < tc))
+            while ((get_file_counter() == fc) && (get_tick_count() < tc)) {
                 _SleepTask(10);
+            }
         }
     }
-    last_fc = get_file_counter(); // update last_fc regardless of whether raw enabled
+    last_fn = get_target_file_num(); // update last_fn regardless of whether raw enabled
 #endif
 
     raw_save_stage = RAWDATA_AVAILABLE;
