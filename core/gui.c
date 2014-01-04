@@ -128,20 +128,24 @@ static CMenu bracketing_in_continuous_submenu = {0x2c,LANG_MENU_BRACKET_IN_CONTI
 const char* gui_USB_switch_types[] = { "None","OnePush", "TwoPush", "CA-1" };								// note : make sure # of entries less than NUM_USB_INPUT_DRV in usb_remote.c
 const char* gui_USB_control_modes[] = { "None", "Normal", "Quick", "Burst", "Bracket","Zoom", "Video" }; 	// note : make sure # of entries less than NUM_USB_MODULES in usb_remote.c
 
+#ifndef CAM_REMOTE_USES_PRECISION_SYNC
 static CMenuItem synch_delay[2] = {
     MENU_ITEM   (0, 0,  MENUITEM_INT|MENUITEM_F_UNSIGNED,   &conf.synch_delay_value,        0 ),
     MENU_ITEM   (0, 0,  MENUITEM_BOOL,                      &conf.synch_delay_enable,       0 ),
 };
+#endif
 
 static CMenuItem remote_submenu_items[] = {
     MENU_ITEM   (0x71,LANG_MENU_REMOTE_ENABLE,              MENUITEM_BOOL,                  &conf.remote_enable, 0),
     MENU_ENUM2  (0x5f,LANG_MENU_REMOTE_DEVICE,  	        &conf.remote_switch_type,       gui_USB_switch_types ),
     MENU_ENUM2  (0x5f,LANG_MENU_REMOTE_LOGIC,  	            &conf.remote_control_mode,      gui_USB_control_modes ),	
     MENU_ITEM   (0x0, LANG_MENU_REMOTE_OPTIONS,             MENUITEM_SEPARATOR,             0, 0 ), 
-	MENU_ITEM   (0x5c,LANG_MENU_SYNCH_ENABLE,               MENUITEM_BOOL,                  &conf.synch_enable, 0),
+    MENU_ITEM   (0x5c,LANG_MENU_SYNCH_ENABLE,               MENUITEM_BOOL,                  &conf.synch_enable, 0),
+ #ifndef CAM_REMOTE_USES_PRECISION_SYNC
     MENU_ITEM   (0x5e,LANG_MENU_SYNCH_DELAY_VALUE,          MENUITEM_STATE_VAL_PAIR,        &synch_delay,                       10 ),
-	MENU_ITEM   (0x5c,LANG_MENU_SCRIPT_START_ENABLE,        MENUITEM_BOOL,                  &conf.remote_enable_scripts, 0),
-	MENU_ITEM   (0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS,	    MENUITEM_SUBMENU,               &bracketing_in_continuous_submenu,  0 ),    
+ #endif
+    MENU_ITEM   (0x5c,LANG_MENU_SCRIPT_START_ENABLE,        MENUITEM_BOOL,                  &conf.remote_enable_scripts, 0),
+    MENU_ITEM   (0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS,	    MENUITEM_SUBMENU,               &bracketing_in_continuous_submenu,  0 ),    
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP, 0, 0),
     {0}
 };

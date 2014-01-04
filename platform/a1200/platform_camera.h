@@ -122,3 +122,7 @@
 
     #undef  CAM_AF_LED                            // AF Lamp index for camera_set_led()
     #define CAM_AF_LED                       2    //
+
+    #define CAM_REMOTE_USES_PRECISION_SYNC   1    // USB remote precision sync patch works with this camera
+    #define GPIO_VSYNC_CURRENT               0xC0F070C8  // vsync current status register used by USB remote precision sync
+

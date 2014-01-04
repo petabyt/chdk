@@ -39,7 +39,8 @@
     #undef  CAM_ALT_BUTTON_NAMES                // Define the list of names for the ALT button   - e.g. { "Print", "Display" }
     #undef  CAM_ALT_BUTTON_OPTIONS              // Define the list of options for the ALT button - e.g. { KEY_PRINT, KEY_DISPLAY }
     #define CAM_REMOTE                      1   // Camera supports USB-remote
-    #undef  SYNCHABLE_REMOTE_NOT_ENABLED        // Disable support for synchable remote switch (in kbd.c) TODO only used by one camera ???
+    #undef  CAM_REMOTE_USES_PRECISION_SYNC      // Disable experimental USB remote  precision sync patch
+    #undef  GPIO_VSYNC_CURRENT                  // USB remote precision sync : might be 0xC0F070C8 or 0xC0F07008 (http://chdk.setepontos.com/index.php?topic=8312.msg104027#msg104027)
     #undef  CAM_MULTIPART                       // Camera supports SD-card multipartitioning
     #define CAM_HAS_ZOOM_LEVER              1   // Camera has dedicated zoom buttons
     #undef  CAM_DRAW_EXPOSITION                 // Output expo-pair on screen (for cameras which (sometimes) don't do that)
