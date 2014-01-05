@@ -735,6 +735,15 @@ static int luaCB_set_av96( lua_State* L )
   return 0;
 }
 
+static int luaCB_set_focus_interlock_bypass( lua_State* L )
+{
+    int mode = luaL_checknumber( L, 1 );
+
+    set_focus_bypass(mode) ;
+
+    return 0;
+}
+
 static int luaCB_set_focus( lua_State* L )
 {
     int to = luaL_checknumber( L, 1 );
@@ -2612,6 +2621,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(set_av96_direct)
     FUNC(set_av96)
     FUNC(set_focus)
+    FUNC(set_focus_interlock_bypass)
     FUNC(set_iso_mode)
     FUNC(set_iso_real)
     FUNC(set_led)

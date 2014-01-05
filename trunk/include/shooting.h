@@ -139,6 +139,7 @@ extern short shooting_get_drive_mode();
 extern short shooting_can_focus();
 extern short shooting_get_common_focus_mode();
 extern short shooting_is_infinity_distance();
+extern void set_focus_bypass(int);
 
 /******************************************************************/
 
