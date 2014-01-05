@@ -1115,12 +1115,18 @@ void shooting_set_zoom_speed(int v) {
     }
 }
 
+static int focus_interlock_bypass = 0;
+void set_focus_bypass(int m)
+{
+	focus_interlock_bypass = m ;
+}
+
 void shooting_set_focus(int v, short is_now)
 {
     int s=v;
     if (!camera_info.state.mode_play)
     {
-        if ((is_now) && shooting_can_focus())
+        if ((is_now) && ( focus_interlock_bypass || shooting_can_focus())) 
         {
             if (conf.dof_subj_dist_as_near_limit)
             {
