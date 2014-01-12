@@ -2,7 +2,7 @@
 
 NHSTUB(LockAndRefresh, 0xFF8B18F4)
 NHSTUB(UnlockAndRefresh, 0xFF8B1958)
-NHSTUB(MakeAFScan, 0xff8396dc)
+NHSTUB(MakeAFScan, makeafscan_hack)
 
 //All pointed to nullsub_20 (NULL)
 

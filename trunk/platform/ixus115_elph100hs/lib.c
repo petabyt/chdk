@@ -139,3 +139,19 @@ void load_chdk_palette() {
         }
 }
 #endif
+
+// following routines help preventing the "invisible af lock" caused by the movie af scan hack
+
+static int af_locked_in_movierec = 0;
+
+void makeafscan_hack(int *a, int b) {
+    _DoAFLock();
+    af_locked_in_movierec = 1;
+}
+
+void state_check_for_movie_af() {
+    if ((movie_status != VIDEO_RECORD_IN_PROGRESS) && af_locked_in_movierec) {
+        af_locked_in_movierec = 0;
+        _UnlockAF();
+    }
+}

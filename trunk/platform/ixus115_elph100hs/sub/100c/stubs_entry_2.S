@@ -2,7 +2,7 @@
 
 NHSTUB(LockAndRefresh,		0xFF8B18F4)
 NHSTUB(UnlockAndRefresh, 	0xFF8B1958)
-NHSTUB(MakeAFScan, 		0xFF8396DC)	//,0xff839714)//,0xFF8396DC)	//DoAFLock
+NHSTUB(MakeAFScan, makeafscan_hack)
 
 //All pointed to nullsub_20 (NULL)
 NHSTUB(Unmount_FileSystem 						,0xFF907390) //fake
