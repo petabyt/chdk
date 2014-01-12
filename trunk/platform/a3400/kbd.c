@@ -250,3 +250,36 @@ long kbd_use_zoom_as_mf() {
 	return 0;
 }
 #endif
+
+#if 0
+// very basic touch screen support
+// since this camera has a full set of physical buttons, full CHDK touch screen support is not needed
+// the code here (and in boot.c) is currently disabled, since the only use is to prevent passing touch events
+// to the Canon fw
+// could be used to drive a virtual keyboard, if one ever gets implemented
+// 0xc0220200 bit11: 1 when idle, 0 when "heavy" touch, bit7: 1 when idle, 0 when "soft" touch, anywhere on screen
+
+static unsigned short touchx = 0, touchy = 0;
+static unsigned int touchcnt = 0;
+
+void get_touch_data(unsigned short *x, unsigned short *y, unsigned int *cnt)
+{
+    *x=touchx;
+    *y=touchy;
+    *cnt=touchcnt;
+}
+
+// Called from hooked touch panel task (boot.c)
+// Return 0 to allow touch event to pass onto firmware, 1 to block event from firmware.
+int chdk_process_touch()
+{
+    touchcnt++;
+    extern unsigned short touch_screen_x, touch_screen_y;
+    // Touch co-ordinate
+    touchx = ((touch_screen_x & 0x7FFF) >> 5) ^ 0x3FF;
+    touchy = ((touch_screen_y & 0x7FFF) >> 5) ^ 0x3FF;
+
+    // If in alt mode block event from firmware
+    return !camera_info.state.gui_mode_none;
+}
+#endif
