@@ -6,7 +6,7 @@ Porting thread: http://chdk.setepontos.com/index.php?topic=8752.msg91485#msg9148
 To enter CHDK <ALT> mode use the Playback [>] button.
 Long Press of Playback button will execute original Canon functionality.
 
-Playback [>] or Help [?] button can be configured as <ALT> mode button.
+The Playback [>], Help [?] or Video [o] button can be configured as <ALT> mode button.
 
 
 KNOWN BUGS
@@ -23,4 +23,8 @@ For Developers
 - Tables in shooting.c not verified
 - DNG calibration not done
 - camera_set_led() was not implemented.
-
+- MoveFocusLensToDistance crashes the camera when called from the capt_seq override hook in
+ - AF lock
+ - MFOn
+- Attempts to set focus distance override result in a crash when servo AF or continuous AF is active
+- Basic touch screen support is in kbd.c and boot.c, inside "#if 0" blocks

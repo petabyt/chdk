@@ -35,10 +35,10 @@
 
     #define CAM_JPEG_WIDTH                  4608     
     #define CAM_JPEG_HEIGHT                 3456    
-    #define CAM_ACTIVE_AREA_X1              16    	//Not Checked
-    #define CAM_ACTIVE_AREA_Y1              26      //Not Checked
-    #define CAM_ACTIVE_AREA_X2              4640    //Not Checked
-    #define CAM_ACTIVE_AREA_Y2              3486    //Not Checked
+    #define CAM_ACTIVE_AREA_X1              12      // note: wide angle shots have a dark border (that area is excluded from vignetting correction)
+    #define CAM_ACTIVE_AREA_Y1              12
+    #define CAM_ACTIVE_AREA_X2              4668
+    #define CAM_ACTIVE_AREA_Y2              3490
 
     #define CAM_DNG_LENS_INFO               { 50,10, 250,10, 28,10, 69,10 } // See comments in camera.h
 
@@ -91,8 +91,10 @@
     #define CAM_BITMAP_WIDTH                720   // Actual width of bitmap screen in bytes
 
     #define  CAM_ADJUSTABLE_ALT_BUTTON      1    // ALT-button can be set from menu
-    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Help" }
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_HELP }
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Help", "Video" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_HELP, KEY_VIDEO }
+
+    #define SHORTCUT_TOGGLE_RAW             KEY_HELP // replacement for 'DISP', note the possible ALT button conflict
 
 
     #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
