@@ -12,7 +12,7 @@ MEMBASEADDR=0x1900
 ifdef OPT_CHDK_IN_EXMEM
 MEMISOSTART=0x78E67E0   # MAXRAMADDR+1 - EXMEM_HEAP_SKIP - EXMEM_BUFFER_SIZE - 32(0x20) (exmem allocates 64 bytes extra, 32 before and 32 after block allocated)
 else
-MEMISOSTART=0x186AE4   # original non-exmem value
+MEMISOSTART=0x1745bc   # original non-exmem value
 endif
 
 ROMBASEADDR=0xFF810000
