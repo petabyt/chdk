@@ -32,10 +32,10 @@
 
     #define CAM_JPEG_WIDTH                  4000
     #define CAM_JPEG_HEIGHT                 3000
-    #define CAM_ACTIVE_AREA_X1              120
-    #define CAM_ACTIVE_AREA_Y1              36
-    #define CAM_ACTIVE_AREA_X2              4136
-    #define CAM_ACTIVE_AREA_Y2              3040
+    #define CAM_ACTIVE_AREA_X1              92      // note: wide angle shots have a dark border (that area is excluded from vignetting correction)
+    #define CAM_ACTIVE_AREA_Y1              16
+    #define CAM_ACTIVE_AREA_X2              4164
+    #define CAM_ACTIVE_AREA_Y2              3060
 
     #undef  CAM_EMUL_KEYPRESS_DURATION
     #define CAM_EMUL_KEYPRESS_DURATION      10
@@ -45,6 +45,7 @@
     #define CAM_VIDEO_QUALITY_ONLY          1
     #define CAM_EXT_TV_RANGE                1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
+    #define CAM_HAS_MOVIE_DIGEST_MODE       1
 	//#define CAM_EV_IN_VIDEO               1
 	//#define CAM_SHOW_OSD_IN_SHOOT_MENU    1
 	//#define CAM_QUALITY_OVERRIDE          1
@@ -93,7 +94,9 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              10
+    #define CAM_BITMAP_PALETTE              13
+    #define CAM_LOAD_CUSTOM_COLORS          1
+    #define CHDK_COLOR_BASE                 0xE1
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1
