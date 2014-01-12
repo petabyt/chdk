@@ -143,6 +143,9 @@ void my_kbd_read_keys() {
 	} else {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
 	}
+
+    extern void state_check_for_movie_af();
+    state_check_for_movie_af(); // hack to prevent the "invisible af lock" caused by the movie af scan hack
 }
 
 
