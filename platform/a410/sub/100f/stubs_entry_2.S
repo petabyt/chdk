@@ -7,8 +7,6 @@ NHSTUB(DisplayImagePhysicalScreen,  0xffd093a0)
 NHSTUB(EnterToCompensationEVF,      0xFFD24234)
 NHSTUB(ExitFromCompensationEVF,     0xFFD24244)
 NHSTUB(FreeMemory,                  0xffc0b280)
-NHSTUB(GetFocusLensSubjectDistance, 0xffe23180)
-NHSTUB(GetFocusLensSubjectDistanceFromLens, 0xffe231A4)
 NHSTUB(MoveFocusLensToDistance,     MoveFocusLensToDistanceA410) //hack to make this work
 NHSTUB(WriteSDCard,                 0xFFC69824)
 NHSTUB(free,                        0xFFE75B50)
