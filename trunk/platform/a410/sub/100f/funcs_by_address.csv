@@ -847,8 +847,6 @@
 0xffe1b054,TurnOffNdFilterEvent_FW
 0xffe1b084,SetNdFilterDacSettingEvent_FW
 0xffe1c980,task_FocusEvent
-0xffe23180,GetFocusLensSubjectDistance,(stubs_entry_2.s)
-0xffe231a4,GetFocusLensSubjectDistanceFromLens,(stubs_entry_2.s)
 0xffe22ac4,MoveFocusLensWithDistance_FW
 0xffe22b90,ResetFocusLens
 0xffe22b90,ResetFocusLens_FW
