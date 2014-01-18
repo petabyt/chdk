@@ -18,6 +18,8 @@ OBJS+=main.thm.o gui_draw.thm.o memmgmt.thm.o \
      gui.thm.o kbd_process.thm.o conf.thm.o gui_osd.thm.o raw.thm.o usb_sync.thm.o\
      shot_histogram.thm.o shooting.thm.o camera_info.thm.o remotecap.thm.o
 
+capt_seq.o: capt_seq.c $(topdir)platform/generic/capt_seq.c
+
 libplatformsub.a: $(OBJS) bin_compat.h
 
 clean:
