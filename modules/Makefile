@@ -13,7 +13,7 @@ ifeq ($(GCC_VERSION_MAJOR),3)
     OBJ_ISDIGIT+= $(topdir)lib/libc/issmth.o
 endif
 
-CFLAGS+=$(CTHUMB) -mlong-calls -DCHDK_MODULE_CODE
+CFLAGS+=$(CTHUMB) -mlong-calls -DCHDK_MODULE_CODE -fno-reorder-functions
 
 # warning: library order matters!
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(topdir)tools/link-boot.ld
