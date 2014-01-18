@@ -7,7 +7,6 @@ NHSTUB(DisplayImagePhysicalScreen,  0xffd093a0)
 NHSTUB(EnterToCompensationEVF,      0xFFD24234)
 NHSTUB(ExitFromCompensationEVF,     0xFFD24244)
 NHSTUB(FreeMemory,                  0xffc0b280)
-NHSTUB(MoveFocusLensToDistance,     MoveFocusLensToDistanceA410) //hack to make this work
 NHSTUB(WriteSDCard,                 0xFFC69824)
 NHSTUB(free,                        0xFFE75B50)
 NHSTUB(kbd_pwr_off,                 NULL_SUB)
@@ -25,3 +24,5 @@ NHSTUB(MFOff,                       0xffd24c48)
 NHSTUB(MFOn,                        0xffd24c18)
 NHSTUB(SetScriptMode,               0xFFD3799C)
 NHSTUB(exmem_free,                  0xFFC02904)
+
+IGNORE(MoveFocusLensToDistance) // Custom version in focushack.c, ignore firmware version

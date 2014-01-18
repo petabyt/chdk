@@ -18,7 +18,6 @@
 NHSTUB(GetFocusLensSubjectDistance            ,0xffe217a0) //  1 90%
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe21d40) //  3 52%
 NHSTUB(GetSystemTime                          ,0xffc04b4c) //  1 96%
-//NHSTUB(MoveFocusLensToDistance              ,0xffe2e2f4) //102        *** != 0x00000000
 NHSTUB(PutInNdFilter                          ,0xffe2c0dc) //  1 92%
 // ALT: NHSTUB(PutInNdFilter, 0xffe2dc68) // 1 25/2
 // ALT: NHSTUB(PutInNdFilter, 0xffe2dcb0) // 1 25/2
@@ -112,6 +111,7 @@ NHSTUB(LEDDrive                               ,0xffc1d348) //120
 NHSTUB(LocalTime                              ,0xffc04228) //115
 NHSTUB(LockMainPower                          ,0xffd39888) //120
 NHSTUB(MakeDirectory_Fut                      ,0xffc53588) //  1
+//NHSTUB(MoveFocusLensToDistance              ,0xffe2e2f4) //102            Overridden
 NHSTUB(MoveZoomLensWithPoint                  ,0xffe12434) //120
 NHSTUB(Open                                   ,0xffc5a5f0) //120
 NHSTUB(PT_PlaySound                           ,0xffd31254) //  1

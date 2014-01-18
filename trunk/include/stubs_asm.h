@@ -30,3 +30,8 @@
 	ldr  pc, =0x ## addr
 
 #endif
+
+// Force finsig to ignore firmware version of a function - used when a custom
+// version is provided that completely replaces firmware code.
+//  e.g. IGNORE(MoveFocusLensToDistance) for a410 - alternate function supplied in focushack.c
+#define IGNORE(name)

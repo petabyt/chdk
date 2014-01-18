@@ -3,6 +3,7 @@
 
 #define TYPE_NHSTUB 1
 #define TYPE_DEF    2
+#define TYPE_IGNORE 3
 
 // Structure for storing a value from a stubs (or other) file
 typedef struct _osig
