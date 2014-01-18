@@ -6,7 +6,7 @@
 #include "asmsafe.h"
 */
 
-void __attribute__((naked,noinline)) MoveFocusLensToDistanceA410(short* a) //sub_FFD2A438
+void __attribute__((naked,noinline)) _MoveFocusLensToDistance(short* a) //sub_FFD2A438
 {
  asm volatile (
 "                STMFD   SP!, {R4,R5,LR}\n"

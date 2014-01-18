@@ -197,6 +197,7 @@ static void load_stubs_file(char *name, int exclude_comments, osig **hdr)
         int typ = TYPE_NHSTUB;
         int off = 7;
         s = strstr(line, "NHSTUB(");
+        if (s == 0) { off = 7; s = strstr(line, "IGNORE("); typ = TYPE_IGNORE; }
         if (s == 0) { off = 6; s = strstr(line, "NSTUB("); }
         if (s == 0) { off = 4; s = strstr(line, "DEF("); typ = TYPE_DEF; }
         if (s != 0)
@@ -205,7 +206,10 @@ static void load_stubs_file(char *name, int exclude_comments, osig **hdr)
             if ((exclude_comments == 0) || (c == 0) || (c > s))
             {
                 s = get_str(s+off,nm);
-                get_str(s,val);
+                if (typ != TYPE_IGNORE)
+                    get_str(s,val);
+                else
+                    val[0] = 0;
                 osig *p = add_sig(nm, val, hdr, ((c != 0) && (c <= s)) ? 1 : 0);
                 p->type = typ;
                 continue;

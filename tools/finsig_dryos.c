@@ -2389,7 +2389,8 @@ void print_results(firmware *fw, const char *curr_name, int k)
         || (ostub2 && (matches->ptr != ostub2->val))
        )
     {
-        err = 1;
+        if (!ostub2 || (ostub2->type != TYPE_IGNORE))
+            err = 1;
         func_names[k].flags |= BAD_MATCH;
     }
     else
@@ -2426,7 +2427,9 @@ void print_results(firmware *fw, const char *curr_name, int k)
 
     if (ostub2)
     {
-        if ((count > 0) && (matches->ptr == ostub2->val))
+        if (ostub2->type == TYPE_IGNORE)
+            sprintf(line+strlen(line),"       Overridden");
+        else if ((count > 0) && (matches->ptr == ostub2->val))
             sprintf(line+strlen(line),"       == 0x%08x    ",ostub2->val);
         else
             sprintf(line+strlen(line),"   *** != 0x%08x    ",ostub2->val);
