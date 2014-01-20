@@ -3,6 +3,7 @@
 ver_sig_t ver_sigs[]={
     {(const char *)0xff087351, "GM1.00C"},
     {(const char *)0xff087351, "GM1.00D"},
+    {(const char *)0xff087351, "GM1.00E"},
 };
 pid_sig_t pid_sigs[]={
     {(short *)0xfff40040, PLATFORMID},
