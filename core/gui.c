@@ -1764,7 +1764,7 @@ static CMenu osd_submenu = {0x22,LANG_MENU_OSD_TITLE, osd_submenu_items };
 
 //-------------------------------------------------------------------
 
-static const char* gui_histo_show_modes[] =                 { "Don't", "Always", "Shoot" };
+static const char* gui_histo_show_modes[] =                 { "Don't", "Always", "Rec", "Shoot" };
 static const char* gui_histo_view_modes[]={ "RGB", "Y", "RGB Y",  "R G B", "RGB all", "Y all", "Blend", "Blend Y"};
 static const char* gui_histo_transform_modes[]={ "Linear", "Log" };
 
