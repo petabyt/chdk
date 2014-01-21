@@ -74,6 +74,9 @@
 	#define ISO_REAL_TO_MARKET_MULT     3811
 	#define ISO_REAL_TO_MARKET_SHIFT    12
 	#define ISO_REAL_TO_MARKET_ROUND    2048
+    
+    #undef  PARAMETER_DATA_FLAG
+    #define PARAMETER_DATA_FLAG         0       // For calls to _GetParameterData & _SetParameterData
 
 //----------------------------------------------------------
 

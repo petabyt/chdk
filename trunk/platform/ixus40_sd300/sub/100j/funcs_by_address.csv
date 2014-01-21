@@ -552,6 +552,7 @@
 0xff93f4c0,DisableCaptureLog_FW
 0xff93fef0,task_FlushWriteCacheTask
 0xff93ff7c,task_WaitMovieRecordTask
+0xff941a14,IsStrobeChargeCompleted
 0xff944b48,task_CaptSeq
 0xff944b48,task_CaptSeqTask
 0xff945b74,task_DvlpSeqTask

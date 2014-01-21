@@ -144,7 +144,7 @@ void load_chdk_palette() {
 
 static int af_locked_in_movierec = 0;
 
-void makeafscan_hack(int *a, int b) {
+void _MakeAFScan(int *a, int b) {
     _DoAFLock();
     af_locked_in_movierec = 1;
 }

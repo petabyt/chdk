@@ -6,27 +6,13 @@
 extern void _sub_FF821D04(long mem, long *data);
 extern long _GetPropertyCase_orig(long opt_id, void *buf, long bufsize);
 extern long _SetPropertyCase_orig(long opt_id, void *buf, long bufsize);
-extern long _GetParameterData_orig(long id, void *buf, long size);
-extern long _SetParameterData_orig(long id, void *buf, long size);
 extern void _SetAFBeamBrightness(long val);
 extern void _SetAFBeamOff();
 extern unsigned long _time_orig(unsigned long *timer);
 
-//looks like there is no strobechargecompletet flag ?!
-//do it in my own way. found some code to get the eventflag
-//at 0xFF941A14. copied the call there in my own c-code
-//looking at sd400 asm showed that flash info is (val>>20)&1
-//seems correct here as well..
-long IsStrobeChargeCompleted_my(){ //look at ff9417d0
-    volatile long *p = (void*)0x675BC; //
-    long l;
-    _sub_FF821D04(*p, &l); //same
-    return (l>>20)&1;
-}
-
 static unsigned long bootuptime = 0;
 
-unsigned long time_my(unsigned long *timer) {
+unsigned long _time(unsigned long *timer) {
 /*
 the original "time" function doesn't seem to work correctly
 chdk's clock display runs at around 1/7 speed with it (the display is only correct right after bootup)
@@ -103,7 +89,7 @@ void set_shooting_status(long l){
 }
 
 
-void GetPropertyCase_my(long cse, void *ptr, long len){
+long _GetPropertyCase(long cse, void *ptr, long len){
     if (cse == PROPCASE_SHOOTING){
         if (len==sizeof(long)){
             *(long*)ptr = shooting_status_;
@@ -113,27 +99,21 @@ void GetPropertyCase_my(long cse, void *ptr, long len){
             //??? FIXME
         }
     }else{
-        _GetPropertyCase_orig(cse, ptr, len);
+        return _GetPropertyCase_orig(cse, ptr, len);
     }
+    return 0;
 }
 
-void SetPropertyCase_my(long cse, void *ptr, long len){
+long _SetPropertyCase(long cse, void *ptr, long len){
 /*
 PROPCASE_SV_MARKET, PROPCASE_SV, PROPCASE_DELTA_SV -> lower ISO values cause crash
 */
     if (cse == PROPCASE_SHOOTING){
         //do nothing
+        return 0;
     }else{
-        _SetPropertyCase_orig(cse, ptr, len);
+        return _SetPropertyCase_orig(cse, ptr, len);
     }
-}
-
-void GetParameterData_my(long param, void *ptr, long len){
-    _GetParameterData_orig(param&0xfff, ptr, len); //need to work around chdk's hardcoded 0x4000
-}
-
-void SetParameterData_my(long param, void *ptr, long len){
-    _SetParameterData_orig(param&0xfff, ptr, len); //need to work around chdk's hardcoded 0x4000
 }
 
 void shutdown()

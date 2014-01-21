@@ -588,6 +588,7 @@
 0xff82fe0c,IsPhysicalSwitchActive_FW
 0xffab83d4,ispunct
 0xffab83ec,isspace
+0xff9417d0,IsStrobeChargeCompleted
 0xffab8404,isupper
 0xff93ed14,IsWarningBlurring_FW
 0xffab841c,isxdigit

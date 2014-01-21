@@ -488,6 +488,7 @@
 0xff870650,Lseek
 0xffb02c70,lseek
 0xff870650,Lseek_FW
+0xff955dd8,MakeAFScan
 0xffade070,MakeBootDisk_FW
 0xff925da8,MakeDefData_FW
 0xff8693b4,MakeDirectory_Fut
