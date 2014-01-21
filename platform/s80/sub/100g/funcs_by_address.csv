@@ -504,6 +504,7 @@
 0xff9545c8,task_SsStartupTask
 0xff954e2c,task_CaptSeq
 0xff954e2c,task_CaptSeqTask
+0xff955dd8,MakeAFScan
 0xff959548,task_DvlpSeqTask
 0xff9596f0,task_CreateHeaderTask
 0xff95a074,task_FlushWriteCacheTask

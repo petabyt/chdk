@@ -91,43 +91,26 @@ volatile char* bitmap_buffer[2] = { (char*)0x103c79a0,  (char*)(0x103c79a0 + 0x1
 
 extern void _orig_MoveFocusLensToDistance(short *dist);
 
-void my_MoveFocusLensToDistance(short *dist)
+void _MoveFocusLensToDistance(short *dist)
 {
 /*
     Any use of the original MoveFocusLensToDistance fails with an assert due to a "speed limit" check.
     However, with disabled check, the use of MoveFocusLensToDistance seems to cause 
     focus miscalibration (when used in AF and MF), which only goes away with power cycling...
 */
-    int shmode;
+    int shmode, afl;
     _GetPropertyCase(PROPCASE_SHOOTING_MODE, &shmode, 4);
-    if ((shmode == 19) && (movie_status != 4)) return; // only allow during recording when in movie mode
+    _GetPropertyCase(PROPCASE_AF_LOCK, &afl, 4);
+    if (shmode == 19) // MODE_VIDEO_STD
+    {
+        if (movie_status != 4) return; // only allow during recording when in movie mode
+    }
+    else if (!afl) // if not movie mode, AFL has to be active
+    {
+        return;
+    }
     int speedlimitflag = *(int*)0xb23c;
     *(int*)0xb23c = 0;
     _orig_MoveFocusLensToDistance(dist);
     *(int*)0xb23c = speedlimitflag;
-}
-
-extern void _orig_MakeAFScan(void);
-
-void my_MakeAFScan(int *a, int b)
-{
-    _orig_MakeAFScan();
-// wbinteg suspend -> crashes in BrtMsrTask instead
-// +brtmsr -> locks up, crashes after 1 minute timeout
-/*    static int handle_wbinteg = 0, handle_brtmsr = 0;
-
-    if (handle_wbinteg == 0) { handle_wbinteg = _taskNameToId("tWBIntegTa"); }
-    if (handle_brtmsr == 0) { handle_brtmsr = _taskNameToId("tBrtMsrTas"); }
-    if (handle_wbinteg && handle_brtmsr)
-    {
-        debug_led(1);
-        _taskSuspend(handle_wbinteg);
-        _taskSuspend(handle_brtmsr);
-        _orig_MakeAFScan();
-        while (zoom_busy || focus_busy) _SleepTask(10);
-        _SleepTask(100);
-        _taskResume(handle_brtmsr);
-        _taskResume(handle_wbinteg);
-        debug_led(0);
-    }*/
 }

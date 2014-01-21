@@ -19,7 +19,6 @@ NHSTUB(GetFocusLensSubjectDistance            ,0xffaaab38) //  1 96%
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffaab0d8) //  3 52%
 NHSTUB(GetSystemTime                          ,0xff814de8) //  1 96%
 //NHSTUB(LEDDrive                             ,0xff82d8c4) //120        *** != 0xff82dbb8
-//NHSTUB(MoveFocusLensToDistance              ,0xffab89d8) //102        *** != 0x00000000
 //NHSTUB(PutInNdFilter                        ,0xffab63b4) //  1 92%    *** != 0xffab67c0
 // ALT: NHSTUB(PutInNdFilter, 0xffab63fc) // 1 25/2
 // ALT: NHSTUB(PutInNdFilter, 0xffab67c0) // 1 25/2
@@ -52,7 +51,6 @@ NHSTUB(malloc                                 ,0xffb05b6c) //  1 53%
 NHSTUB(taskIdListGet                          ,0xffb137b0) //  1 82%
 NHSTUB(localtime                              ,0xffafd2c0) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xff86f2bc) //  1 73%
-//NHSTUB(MakeAFScan                           ,0xff955dd8) //  1        *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff968528 -> ff968528
@@ -94,7 +92,7 @@ NHSTUB(CreateTask                             ,0xff821564) //120
 NHSTUB(DebugAssert                            ,0xff813a80) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff869328) //  1
 NHSTUB(DoAELock                               ,0xff9513c4) //120
-//NHSTUB(DoAFLock                             ,0xff95124c) //120            == 0xff95124c
+NHSTUB(DoAFLock                               ,0xff95124c) //120
 NHSTUB(ExecuteEventProcedure                  ,0xff816ac8) //  1
 NHSTUB(ExitTask                               ,0xff821924) //120
 NHSTUB(Fclose_Fut                             ,0xff869468) //120
@@ -109,9 +107,9 @@ NHSTUB(Fwrite_Fut                             ,0xff86959c) //120
 NHSTUB(GetBatteryTemperature                  ,0xff82d36c) //102
 NHSTUB(GetCCDTemperature                      ,0xff82d358) //102
 NHSTUB(GetCurrentAvValue                      ,0xffab63a0) //120
-//NHSTUB(GetDrive_ClusterSize                 ,0xff86f8a4) //119            == 0xff86f8a4
-//NHSTUB(GetDrive_FreeClusters                ,0xff86f93c) //1103            == 0xff86f93c
-//NHSTUB(GetDrive_TotalClusters               ,0xff86f900) //119            == 0xff86f900
+NHSTUB(GetDrive_ClusterSize                   ,0xff86f8a4) //119
+NHSTUB(GetDrive_FreeClusters                  ,0xff86f93c) //1103
+NHSTUB(GetDrive_TotalClusters                 ,0xff86f900) //119
 NHSTUB(GetOpticalTemperature                  ,0xff82d344) //120
 NHSTUB(GetParameterData                       ,0xff96dad0) //  1
 NHSTUB(GetPropertyCase                        ,0xff824554) //  1
@@ -122,6 +120,7 @@ NHSTUB(IsStrobeChargeCompleted                ,0xff904154) //  1
 NHSTUB(LocalTime                              ,0xff814108) //115
 NHSTUB(LockMainPower                          ,0xff9682a0) //120
 NHSTUB(MakeDirectory_Fut                      ,0xff8693b4) //  1
+//NHSTUB(MoveFocusLensToDistance              ,0xffab89d8) //102            Overridden
 NHSTUB(MoveZoomLensWithPoint                  ,0xffa97264) //120
 NHSTUB(Open                                   ,0xff870540) //120
 NHSTUB(PT_PlaySound                           ,0xff95f6e8) //  1
@@ -138,7 +137,7 @@ NHSTUB(SetFileAttributes                      ,0xff870720) //  1
 NHSTUB(SetLogicalEventActive                  ,0xff9660f8) //1104
 NHSTUB(SetParameterData                       ,0xff96d9f0) //  1
 NHSTUB(SetPropertyCase                        ,0xff824438) //  1
-//NHSTUB(SetScriptMode                        ,0xff966160) //120            == 0xff966160
+NHSTUB(SetScriptMode                          ,0xff966160) //120
 NHSTUB(SleepTask                              ,0xff821478) //120
 NHSTUB(TakeSemaphore                          ,0xff820f74) //1101
 NHSTUB(TurnOffBackLight                       ,0xff9b93a8) //  1
@@ -149,7 +148,7 @@ NHSTUB(UnlockAE                               ,0xff9513e4) //120
 NHSTUB(UnlockAF                               ,0xff9512b4) //120
 NHSTUB(UnlockMainPower                        ,0xff968354) //120
 NHSTUB(UpdateMBROnFlash                       ,0xff86f580) //  1
-//NHSTUB(VbattGet                             ,0xff82c2b4) //120            == 0xff82c2b4
+NHSTUB(VbattGet                               ,0xff82c2b4) //120
 NHSTUB(Write                                  ,0xff870608) //120
 NHSTUB(WriteSDCard                            ,0xff87ee40) //  1
 NHSTUB(_log                                   ,0xffaef0ac) //121
@@ -212,6 +211,7 @@ NHSTUB(GetCurrentTargetDistance               ,0xffab8748) //  1
 NHSTUB(taskCreateHookAdd                      ,0xffb091ec) //  1
 NHSTUB(taskDeleteHookAdd                      ,0xffb09128) //  1
 NHSTUB(Unmount_FileSystem                     ,0xff86f3d4) //  1
+NHSTUB(MakeAFScan                             ,0xff955dd8) //  1
 NHSTUB(taskSuspend                            ,0xffb138b8) //  1
 NHSTUB(taskResume                             ,0xffb13a8c) //  1
 NHSTUB(time                                   ,0xffafe00c) //  1

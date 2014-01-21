@@ -21,13 +21,11 @@ NHSTUB(AllocateUncacheableMemory              ,0xff815288) //  1 65%
 // ERROR: FreeUncacheableMemory is not found.              //--- ---    *** != 0xff8152bc
 // ERROR: GetFocusLensSubjectDistance is not found.        //--- ---    *** != 0xffa5f808
 // ERROR: GetFocusLensSubjectDistanceFromLens is not found.  //--- ---    *** != 0xffa5fe7c
-// ERROR: GetParameterData is not found.                   //--- ---    *** != 0x00000000
-// ERROR: GetPropertyCase is not found.                    //--- ---    *** != 0x00000000
+// ERROR: GetParameterData is not found.                   //--- ---    *** != 0xff958b44
 NHSTUB(GetSystemTime                          ,0xff815638) //  1 96%
 // ALT: NHSTUB(GetSystemTime, 0xfff05c38) // 1 26/1
 // ALT: NHSTUB(GetSystemTime, 0xfff05c38) // 2 26/1
 //NHSTUB(GetZoomLensCurrentPoint              ,0xffa51f18) //120        *** != 0xffa50fe8
-// ERROR: IsStrobeChargeCompleted is not found.            //--- ---    *** != 0x00000000
 // ERROR: Open is not found.                               //--- ---    *** != 0xffac2ca0
 // ERROR: PT_PlaySound is not found.                       //--- ---    *** != 0xff94f078
 NHSTUB(PutInNdFilter                          ,0xffa69184) //  1 92%
@@ -43,8 +41,7 @@ NHSTUB(PutOutNdFilter                         ,0xffa691cc) //  1 94%
 NHSTUB(SetFileAttributes                      ,0xff8717e0) //  1 58%
 // ALT: NHSTUB(SetFileAttributes, 0xfff1bc4c) // 1 17/12
 //NHSTUB(SetLogicalEventActive                ,0xff955978) //  3 62%    *** != 0x00000000
-// ERROR: SetParameterData is not found.                   //--- ---    *** != 0x00000000
-// ERROR: SetPropertyCase is not found.                    //--- ---    *** != 0x00000000
+// ERROR: SetParameterData is not found.                   //--- ---    *** != 0xff95a258
 // ERROR: SetScriptMode is not found.                      //--- ---    *** != 0xff9559e0
 NHSTUB(UpdateMBROnFlash                       ,0xff8704d0) //  1 96%
 // ERROR: VbattGet is not found.                           //--- ---    *** != 0xffa5ba68
@@ -92,8 +89,6 @@ NHSTUB(localtime                              ,0xffabcc84) //  1 93%
 // ERROR: memPartInfoGet is not found.                     //--- ---    *** != 0x00000000
 // ERROR: Mount_FileSystem is not found.                   //--- ---    *** != 0xff8702e4
 // ERROR: MakeAFScan is not found.                         //--- ---    *** != 0x00000000
-//NHSTUB(time                                 ,0xffabd9d0) //  1        *** != 0x00000000
-// ALT: NHSTUB(time, 0xfff51cb0) // 1 25/0
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 
@@ -113,10 +108,10 @@ NHSTUB(DebugAssert                            ,0xff814c10) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff8699b4) //  1
 // ALT: NHSTUB(DeleteFile_Fut, 0xfff17058) // 1 10/0
 NHSTUB(DoAELock                               ,0xff93e058) //120
-//NHSTUB(DoAFLock                             ,0xff93de38) //120            == 0xff93de38
+NHSTUB(DoAFLock                               ,0xff93de38) //120
 NHSTUB(ExitTask                               ,0xff823b44) //120
 NHSTUB(Fclose_Fut                             ,0xff869af4) //  1
-//NHSTUB(Feof_Fut                             ,0xff869d08) //  1            == 0xff869d08
+NHSTUB(Feof_Fut                               ,0xff869d08) //  1
 // ALT: NHSTUB(Feof_Fut, 0xfff1732c) // 1 10/0
 NHSTUB(Fflush_Fut                             ,0xff869d40) //  1
 NHSTUB(Fgets_Fut                              ,0xff869c78) //  1
@@ -128,21 +123,23 @@ NHSTUB(Fseek_Fut                              ,0xff869cc0) //  1
 // ALT: NHSTUB(Fseek_Fut, 0xfff172e4) // 1 24/0
 NHSTUB(Fwrite_Fut                             ,0xff869c28) //  1
 // ALT: NHSTUB(Fwrite_Fut, 0xfff1724c) // 1 26/0
-//NHSTUB(GetBatteryTemperature                ,0xffa486ac) //102            == 0xffa486ac
-//NHSTUB(GetCCDTemperature                    ,0xffa48698) //102            == 0xffa48698
-//NHSTUB(GetCurrentAvValue                    ,0xffa690a4) //120            == 0xffa690a4
-//NHSTUB(GetDrive_ClusterSize                 ,0xff8707ec) //119            == 0xff8707ec
-//NHSTUB(GetDrive_FreeClusters                ,0xff87086c) //1103            == 0xff87086c
-//NHSTUB(GetDrive_TotalClusters               ,0xff87082c) //119            == 0xff87082c
-//NHSTUB(GetOpticalTemperature                ,0xffa48684) //120            == 0xffa48684
-//NHSTUB(GetZoomLensCurrentPosition           ,0xffa51f24) //102            == 0xffa51f24
-//NHSTUB(GiveSemaphore                        ,0xff823144) //120            == 0xff823144
+NHSTUB(GetBatteryTemperature                  ,0xffa486ac) //102
+NHSTUB(GetCCDTemperature                      ,0xffa48698) //102
+NHSTUB(GetCurrentAvValue                      ,0xffa690a4) //120
+NHSTUB(GetDrive_ClusterSize                   ,0xff8707ec) //119
+NHSTUB(GetDrive_FreeClusters                  ,0xff87086c) //1103
+NHSTUB(GetDrive_TotalClusters                 ,0xff87082c) //119
+NHSTUB(GetOpticalTemperature                  ,0xffa48684) //120
+// ERROR: GetPropertyCase is not found.                    //--- ---        Overridden
+NHSTUB(GetZoomLensCurrentPosition             ,0xffa51f24) //102
+NHSTUB(GiveSemaphore                          ,0xff823144) //120
+NHSTUB(IsStrobeChargeCompleted                ,0xff9417d0) //115
 NHSTUB(LEDDrive                               ,0xffa62dbc) //120
 NHSTUB(LocalTime                              ,0xff814bc4) //115
-//NHSTUB(LockMainPower                        ,0xff955f58) //120            == 0xff955f58
+NHSTUB(LockMainPower                          ,0xff955f58) //120
 NHSTUB(MakeDirectory_Fut                      ,0xff869a40) //  1
 // ALT: NHSTUB(MakeDirectory_Fut, 0xfff170e4) // 1 25/0
-//NHSTUB(MoveFocusLensToDistance              ,0xffa6ae90) //102            == 0xffa6ae90
+NHSTUB(MoveFocusLensToDistance                ,0xffa6ae90) //102
 NHSTUB(MoveZoomLensWithPoint                  ,0xffa51e1c) //120
 NHSTUB(PostLogicalEventForNotPowerType        ,0xff953808) //120
 NHSTUB(PostLogicalEventToUI                   ,0xff953894) //120
@@ -150,7 +147,8 @@ NHSTUB(RefreshPhysicalScreen                  ,0xff96c30c) //120
 NHSTUB(RenameFile_Fut                         ,0xff869934) //  1
 // ALT: NHSTUB(RenameFile_Fut, 0xfff16fd8) // 1 27/0
 NHSTUB(SetAE_ShutterSpeed                     ,0xffa6d214) //102
-//NHSTUB(SetAutoShutdownTime                  ,0xff955e48) //120            == 0xff955e48
+NHSTUB(SetAutoShutdownTime                    ,0xff955e48) //120
+// ERROR: SetPropertyCase is not found.                    //--- ---        Overridden
 NHSTUB(SleepTask                              ,0xff8235e4) //120
 NHSTUB(TakeSemaphore                          ,0xff822f5c) //1101
 NHSTUB(TurnOffBackLight                       ,0xff99e350) //  1
@@ -158,8 +156,8 @@ NHSTUB(TurnOnBackLight                        ,0xff99e324) //  1
 NHSTUB(TurnOnDisplay                          ,0xff924fec) //120
 NHSTUB(TurnOffDisplay                         ,0xff925014) //120
 NHSTUB(UnlockAE                               ,0xff93e0ac) //120
-//NHSTUB(UnlockAF                             ,0xff93de98) //120            == 0xff93de98
-//NHSTUB(UnlockMainPower                      ,0xff956014) //120            == 0xff956014
+NHSTUB(UnlockAF                               ,0xff93de98) //120
+NHSTUB(UnlockMainPower                        ,0xff956014) //120
 NHSTUB(_log                                   ,0xffaae9b0) //121
 NHSTUB(_log10                                 ,0xffaaf058) //121
 NHSTUB(_pow                                   ,0xffaaf548) //  1
@@ -261,6 +259,8 @@ NHSTUB(taskSuspend                            ,0xffad0a50) //  1
 // ALT: NHSTUB(taskSuspend, 0xfff73c1c) // 1 31/0
 NHSTUB(taskResume                             ,0xffad0c24) //  1
 // ALT: NHSTUB(taskResume, 0xfff73df0) // 1 31/0
+//NHSTUB(time                                 ,0xffabd9d0) //  1            Overridden
+// ALT: NHSTUB(time, 0xfff51cb0) // 1 25/0
 NHSTUB(vsprintf                               ,0xffabfdb0) //  1
 // ALT: NHSTUB(vsprintf, 0xfff54090) // 1 13/0
 NHSTUB(EngDrvRead                             ,0xff885974) //102
