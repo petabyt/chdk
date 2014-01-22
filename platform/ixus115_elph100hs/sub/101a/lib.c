@@ -30,35 +30,12 @@ long hook_raw_size()
 
 }
 
-void *vid_get_viewport_live_fb()
-{
-	if ((mode_get()&MODE_MASK) == MODE_REC)
-		return (void*)((void*)(*(int*)(0x2358))-vid_get_viewport_xoffset()*3);	//0x2258
-	return (void*)(void*)(*(int*)(0x2358));
-
-  	// Found by searching RAM locations that referenced 0x405D7980 0x405C6B80 (viewport buffer)
-	// and also changed to the other buffer addresses over time. Then used each here
-	// and selected value that gave the fastest Motion Detect response using http://dataghost.com/chdk/md_meter.html.
-}
-
 // OSD buffer
 void *vid_get_bitmap_fb()
 {
 	//elph100
 	//FF92668C                 LDR     R0, =0x40471000
 	return (void*)0x40471000;
-}
-
-// Live picture buffer (shoot half-pressed)
-void *vid_get_viewport_fb()
-{
-	//elph100
-
-		if ((mode_get()&MODE_MASK) == MODE_REC)
-		return (void*)(0x405C6B80-vid_get_viewport_xoffset()*3);   //return (void*)(0x405C6B80-vid_get_viewport_xoffset()*3)
-
-	return (void*)0x405C6B80;  					                   // found by search for VRAM Address @FFB56360 (near to "VRAM Address")
-
 }
 
 void *vid_get_viewport_fb_d()
