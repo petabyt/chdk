@@ -94,6 +94,24 @@ void *vid_get_bitmap_active_palette() {
         return (palette_buffer[active_palette_buffer]+8);
 }
 
+extern char active_viewport_buffer;
+extern void* viewport_buffers[];
+
+void *vid_get_viewport_fb()
+{
+    // Return first viewport buffer - for case when vid_get_viewport_live_fb not defined
+    return viewport_buffers[0];
+}
+
+void *vid_get_viewport_live_fb()
+{
+    if (camera_info.state.mode_video)
+        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
+
+   // Hopefully return the most recently used viewport buffer
+    return viewport_buffers[(active_viewport_buffer-1)&3];
+}
+
 #ifdef CAM_LOAD_CUSTOM_COLORS
 // Function to load CHDK custom colors into active Canon palette
  
