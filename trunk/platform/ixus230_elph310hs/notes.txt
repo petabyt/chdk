@@ -10,3 +10,5 @@ Support for dual partition is not available.
 
 For more information please refer to IXUS230HS/ELPH310HS Porting Thread:
 http://chdk.setepontos.com/index.php?topic=7149.30
+
+This camera has very little free RAM.
