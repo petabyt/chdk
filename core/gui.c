@@ -1309,8 +1309,8 @@ static const char* gui_tv_enum_type_enum(int change, int arg)
     gui_enum_value_change(&conf.tv_enum_type,change,sizeof(modes)/sizeof(modes[0]));
     if (change)
     {
-        void set_tv_override_menu();
-        set_tv_override_menu();
+        void set_tv_override_menu(CMenu *menu);
+        set_tv_override_menu(get_curr_menu());
     }
     return modes[conf.tv_enum_type]; 
 }
@@ -1572,25 +1572,28 @@ static CMenuItem operation_submenu_items[] = {
 
 static CMenu operation_submenu = {0x21,LANG_MENU_OPERATION_PARAM_TITLE, operation_submenu_items };
 
-void set_tv_override_menu()
+void set_tv_override_menu(CMenu *menu)
 {
-    CMenuItem *mi = find_mnu(&operation_submenu,LANG_MENU_OVERRIDE_TV_VALUE);
-    switch (conf.tv_enum_type)
+    CMenuItem *mi = find_mnu(menu,LANG_MENU_OVERRIDE_TV_VALUE);
+    if (mi)
     {
-    case 0:     // Ev Step
-        mi->value = (int*)(&tv_override_evstep);
-        mi->arg = 1;
-        break;
-    case 1:     // Short exposure
-        mi->value = (int*)(&tv_override_short_exp);
-        mi->arg = 100;
-        break;
+        switch (conf.tv_enum_type)
+        {
+        case 0:     // Ev Step
+            mi->value = (int*)(&tv_override_evstep);
+            mi->arg = 1;
+            break;
+        case 1:     // Short exposure
+            mi->value = (int*)(&tv_override_short_exp);
+            mi->arg = 100;
+            break;
 #ifdef CAM_EXT_TV_RANGE
-    case 2:     // Long exposure
-        mi->value = (int*)(&tv_override_long_exp);
-        mi->arg = 1;
-        break;
+        case 2:     // Long exposure
+            mi->value = (int*)(&tv_override_long_exp);
+            mi->arg = 1;
+            break;
 #endif
+        }
     }
 }
 
@@ -2393,8 +2396,6 @@ void gui_set_need_redraw()
 //-------------------------------------------------------------------
 void gui_init()
 {
-    set_tv_override_menu();
-
     gui_set_mode(&defaultGuiHandler);
     if (conf.start_sound > 0)
     {
