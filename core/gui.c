@@ -790,11 +790,11 @@ static void confirm_add_network_cb(unsigned int btn) {
 	if (btn==MBOX_BTN_YES) {
 		n=libeyefi->testNetwork(eyefi_selectedNetwork,eyefi_password);
 		gui_browser_progress_show("testing network",5);
-		for (i=0;i<30;i++) {
-			msleep(10);			
+		for (i=0;i<50;i++) {
+			msleep(10);
 			n=libeyefi->getNetworkStatus();
-			sprintf(s,"%d %d",n,libeyefi->getBuf()[0]);
-			console_add_line(s);
+			/*sprintf(s,"%d %d",n,libeyefi->getBuf()[0]);
+			console_add_line(s);*/
 			if (libeyefi->getBuf()[0]==0) {
 				gui_set_need_restore();
 				gui_mbox_init(LANG_FAILED,LANG_WRONG_PASSWORD,MBOX_BTN_OK,NULL);
@@ -809,13 +809,13 @@ static void confirm_add_network_cb(unsigned int btn) {
 			else
 				gui_browser_progress_show("????",50);
 		}
-	}
 
-	if (libeyefi->getBuf()[0]!=EYEFI_SUCCESS) {
-		gui_set_need_restore();
-		gui_mbox_init(LANG_FAILED,LANG_WRONG_PASSWORD,MBOX_BTN_OK,NULL);
-		libeyefi->close();
-		return;
+		if (libeyefi->getBuf()[0]!=EYEFI_SUCCESS) {
+			gui_set_need_restore();
+			gui_mbox_init(LANG_FAILED,LANG_WRONG_PASSWORD,MBOX_BTN_OK,NULL);
+			libeyefi->close();
+			return;
+		}
 	}
 	
 	gui_browser_progress_show("adding network",95);
