@@ -14,6 +14,7 @@ extern void task_CaptSeq();
 extern void task_InitFileModules();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
+extern void task_FileWrite();
 
 void taskHook(context_t **context)
 {
@@ -24,6 +25,7 @@ void taskHook(context_t **context)
 	if(tcb->entry == (void*)task_InitFileModules)	tcb->entry = (void*)init_file_modules_task;
 	if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;
 	if(tcb->entry == (void*)task_ExpDrv)			tcb->entry = (void*)exp_drv_task;
+    if(tcb->entry == (void*)task_FileWrite)         tcb->entry = (void*)filewritetask;
 }
 
 /*---------------------------------------------------------------------
@@ -42,6 +44,15 @@ void taskHook(context_t **context)
 	FF000000    ROMBASEADDR             start of rom
 	FFFFFFFF                            end of rom
 ----------------------------------------------------------------------*/
+
+
+/*----------------------------------------------------------------------
+	CreateTask --> core_spytask
+-----------------------------------------------------------------------*/
+void CreateTask_spytask()
+{
+    _CreateTask("SpyTask", 0x19, 0x2000, core_spytask, 0);
+}
 
 /*----------------------------------------------------------------------
 	boot()
@@ -410,20 +421,6 @@ void __attribute__((naked,noinline)) taskcreatePhySw_my() {
     );
 }
 
-/*----------------------------------------------------------------------
-	spytask
------------------------------------------------------------------------*/
-void spytask(long ua, long ub, long uc, long ud, long ue, long uf)
-{
-    core_spytask();
-}
-
-/*----------------------------------------------------------------------
-	CreateTask_spytask
------------------------------------------------------------------------*/
-void CreateTask_spytask() {
-	_CreateTask("SpyTask", 0x19, 0x2000, spytask, 0);
-}
 
 /*----------------------------------------------------------------------
 	init_file_modules_task
