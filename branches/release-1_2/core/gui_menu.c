@@ -189,6 +189,10 @@ void gui_menu_init(CMenu *menu_ptr) {
         else 
             gui_menu_set_curr_menu(menu_ptr, 0, -1);
         gui_menu_stack_ptr = 0;
+
+        // Set active Tv override menu entry if present
+        extern void set_tv_override_menu(CMenu *menu);
+        set_tv_override_menu(curr_menu);
     }
 
     num_lines = camera_screen.height/rbf_font_height()-1;
