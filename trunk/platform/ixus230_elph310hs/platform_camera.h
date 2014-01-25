@@ -105,3 +105,5 @@
 
 #undef  CAM_USB_EVENTID
 #define CAM_USB_EVENTID                         0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
+
+#define CAM_HAS_FILEWRITETASK_HOOK     1   // file write hook for remote capture etc
