@@ -1,0 +1,25 @@
+//-------------------------- MOVIE_REC.C ----------------------------------------------------------
+
+FILE movie_rec.c
+
+>>> file=../movie_rec_hdr.c
+
+//////////////////////////////////////////////////////////////
+// movie_record_task
+//////////////////////////////////////////////////////////////
+FUNC sig=task_MovieRecord name=movie_record_task
+ASM
+FW 63
+>>>
+"    BL      unlock_optical_zoom\n"         // +
+<<<
+FW 4
+>>>
+"    LDR     R0, =video_compression_rate\n" // +
+"    BL      set_quality\n"                 // +
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+ENDFILE
