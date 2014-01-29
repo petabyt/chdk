@@ -212,7 +212,7 @@ asm volatile (
 "    MOV     R0, #0x67000 \n"
 "    STR     R0, [SP, #4] \n"
 
-#if defined(CHDK_NOT_IN_CANON_HEAP_HEAP) // use original heap offset if CHDK is loaded in high memory
+#if defined(CHDK_NOT_IN_CANON_HEAP) // use original heap offset if CHDK is loaded in high memory
 "    LDR     R0, =0x198C30 \n"
 #else
 "    LDR     R0, =new_sa\n"   // otherwise use patched value
@@ -396,6 +396,15 @@ asm volatile (
 "    BL      CreateTask_spytask\n"  // added
 
 "    BL      taskcreatePhySw_my \n"  // --> Patched. Old value = 0xFF024998.
+
+#if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
+"    LDR     R0, =0xE0000\n"    // Pause for startup with battery door open
+"batt_delay:\n"
+"    NOP\n"
+"    SUBS    R0,R0,#1\n"
+"    BNE     batt_delay\n"
+#endif
+
 "    LDR     PC, =0xFF00FD78 \n"  // Continue in firmware
 );
 }

@@ -85,6 +85,17 @@ FW 4
 
 <<<
 PATCHSUB name=taskcreatePhySw_my ref=0
+>>>
+
+#if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
+"    LDR     R0, =0xE0000\n"    // Pause for startup with battery door open
+"batt_delay:\n"
+"    NOP\n"
+"    SUBS    R0,R0,#1\n"
+"    BNE     batt_delay\n"
+#endif
+
+<<<
 ->FW
 ENDASM
 ENDFUNC

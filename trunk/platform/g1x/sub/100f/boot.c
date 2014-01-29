@@ -389,6 +389,15 @@ asm volatile (
 "    BL      CreateTask_spytask\n"  // added
 
 "    BL      taskcreatePhySw_my \n"  // --> Patched. Old value = 0xFF02380C.
+
+#if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
+"    LDR     R0, =0xE0000\n"    // Pause for startup with battery door open
+"batt_delay:\n"
+"    NOP\n"
+"    SUBS    R0,R0,#1\n"
+"    BNE     batt_delay\n"
+#endif
+
 "    LDR     PC, =0xFF00FD64 \n"  // Continue in firmware
 );
 }
