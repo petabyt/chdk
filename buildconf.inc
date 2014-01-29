@@ -51,6 +51,10 @@ OPT_GEN_STUBS=1
 #  - linker will generate errors if any calls/branches are out of range
 #OPT_FIRMWARE_PC24_CALL=1
 
+# Define this to enable camera to run with the battery door open
+#  Note: not implemented for all cameras
+#OPT_RUN_WITH_BATT_COVER_OPEN=1
+
 # ***please new entries above this line for protecting the chdk shell against errors***
 
 # Override the value below to compile a different default language into

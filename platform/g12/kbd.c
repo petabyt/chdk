@@ -37,9 +37,14 @@ extern void _GetKbdState(long*);
 #define KEYS_MASK1 (0x00000000)
 #define KEYS_MASK2 (0x00000003) 
 
-#define SD_READONLY_FLAG (0x20000)
-#define USB_MASK (0x4000000)
-#define USB_IDX 2
+#define SD_READONLY_FLAG    0x00020000 // Found @0xffbb9448, levent 0x90a
+#define SD_READONLY_IDX     2
+
+#define USB_MASK            0x04000000 // Found @0xffbb9478, levent 0x902
+#define USB_IDX             2
+
+#define BATTCOVER_FLAG      0x00008000 // Found @0xffbb9438, levent 0x905
+#define BATTCOVER_IDX       2
 
 extern void usb_remote_key( void ) ;
 int get_usb_bit() 
@@ -166,12 +171,13 @@ void my_kbd_read_keys()
 
 	usb_remote_key() ;
 
-	if (conf.remote_enable) {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-	} else {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
-	}
 
+    physw_status[SD_READONLY_IDX] = physw_status[SD_READONLY_IDX] & ~SD_READONLY_FLAG;
+#if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
+    physw_status[BATTCOVER_IDX] = physw_status[BATTCOVER_IDX] | BATTCOVER_FLAG;
+#endif
+	if (conf.remote_enable)
+		physw_status[USB_IDX] = physw_status[USB_IDX] & ~USB_MASK;
 }
 
 
