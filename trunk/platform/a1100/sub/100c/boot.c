@@ -220,7 +220,7 @@ void __attribute__((naked,noinline)) sub_FFC04D38_my() {
                  "CMP     R0, #0\n"
              //    "ADRLT   R0, sub_FFC04E54\n"// ; "termDriverInit"\n"
                   	"LDRLT     R0,=0xFFC04E54\n"
-                 "BLLT    sub_FFC04E2\n"
+                 "BLLT    sub_FFC04E2C\n"
                 // "ADR     R0, sub_FFC04E64\n"      //; "/_term"
                  "LDR     R0,=0xFFC04E64\n"
                  "BL      sub_FFC04A5C\n"
