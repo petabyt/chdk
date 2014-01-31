@@ -38,7 +38,7 @@
     #undef  DEFAULT_RAW_EXT 
     #define DEFAULT_RAW_EXT                 2  // use .CR2 
     #undef  CAM_EXT_TV_RANGE
-    #undef  CAM_AF_SCAN_DURING_VIDEO_RECORD
+    #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #undef  CAM_CAN_MUTE_MICROPHONE
     #undef  CAM_EV_IN_VIDEO
 
