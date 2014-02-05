@@ -2265,26 +2265,7 @@ static void init_splash()
 #else   // CHDK-DE
         const char *logo_name="A/CHDK/DATA/logo_de.dat";
 #endif
-        struct stat st;
-        if (stat(logo_name,&st) == 0)
-        {
-            logo_size = st.st_size;
-            logo = malloc(logo_size);
-            if (logo)
-            {
-                FILE *fd = fopen(logo_name, "rb");
-                if (fd)
-                {
-                    fread(logo,1,logo_size,fd);
-                    fclose(fd);
-                }
-                else
-                {
-                    free(logo);
-                    logo = NULL;
-                }
-            }
-        }
+        logo = load_file(logo_name, &logo_size, 0);
 
         logo_text_height = sizeof(text)/sizeof(text[0]);
         logo_text_width = 0;
@@ -2363,7 +2344,8 @@ static void gui_handle_splash(int force_redraw)
         {
             if (camera_info.state.gui_mode_none || camera_info.state.gui_mode_alt)
                 gui_set_need_restore();
-            free(logo);
+            if (logo)
+                free(logo);
             logo = NULL;
         }
     }
