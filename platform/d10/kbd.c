@@ -29,6 +29,17 @@ static KeyMap keymap[];
 #define USB_MASK (0x80000)
 #define USB_IDX  2
 
+/*
+battery door switch, 0: door open
+forcing to one allows camera to run with door open.
+Informational only for now,
+making the camera boot with door open requires some ugly changes in boot.c
+see http://chdk.setepontos.com/index.php?topic=5744.0
+found via GetBatteryCoverClose (which looks in a table that tells it the physw word and bit)
+*/
+#define BATTCOVER_IDX  2
+#define BATTCOVER_FLAG (0x8000)
+
 extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
@@ -37,15 +48,6 @@ int get_usb_bit()
 	_kbd_read_keys_r2(usb_physw);
 	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
 }
-/*
-battery door switch, 0: door open
-forcing to one allows camera to run with door open.
-Informational only for now,
-making the camera boot with door open requires some ugly changes in boot.c
-see http://chdk.setepontos.com/index.php?topic=5744.0
-found via GetBatteryCoverClose (which looks in a table that tells it the physw word and bit)
-#define BATDOOR_MASK (0x8000)
-*/
 
 void kbd_fetch_data(long*);
 
@@ -123,7 +125,9 @@ void my_kbd_read_keys()
 	}
 	
 // hide battery door status
-//	physw_status[2] |= BATDOOR_MASK;
+#if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
+    physw_status[BATTCOVER_IDX] = physw_status[BATTCOVER_IDX] | BATTCOVER_FLAG;
+#endif
 
     _kbd_pwr_off();
 }
