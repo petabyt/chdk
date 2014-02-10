@@ -328,6 +328,14 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 "                BL      sub_FF8267FC\n"
 "                BL      sub_FF829308\n"
 "                BL      taskcreatePhySw_my\n"  // we do this here rather than hook so we don't waste the original stack
+#if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
+// Pause for startup with battery door open 0x70000 was not enough, 0x88000 seemed fine
+"    LDR     R0, =0x90000\n"    
+"batt_delay:\n"
+"    NOP\n"
+"    SUBS    R0,R0,#1\n"
+"    BNE     batt_delay\n"
+#endif
 "                LDR     PC, =0xFF81C230\n" // jump back to original firmware
 /*
 //"                BL      sub_FF821A88\n" // taskcreate_PhySw
