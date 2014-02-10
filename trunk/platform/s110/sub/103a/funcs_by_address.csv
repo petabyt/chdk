@@ -460,6 +460,7 @@
 0xf80ce684,task_Epilog
 0xf80ce6c0,EpilogMenu_FW
 0xf80d0134,ExecuteShutDownPropertyService_FW
+0xf80d032c,get_resource_pointer
 0xf80d0478,WriteToRom_FW
 0xf80d0514,EraseRom_FW
 0xf80d05fc,GetRomID_FW

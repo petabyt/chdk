@@ -122,6 +122,7 @@
 0xff8252a0,Restart,(stubs_entry_2.s)
 0xff8253a4,WriteToRom_FW
 0xff82547c,EraseSectorOfRom_FW
+0xff82680c,get_resource_pointer
 0xff8276e4,SaveNetLogToFile_FW
 0xff827798,SaveAllNetLogToFile_FW
 0xff827b80,SetPropertyCase

@@ -315,6 +315,7 @@
 0xff836d74,Fseek_Fut_FW
 0xff836cd4,Fwrite_Fut
 0xff836cd4,Fwrite_Fut_FW
+0xff88e2a4,get_resource_pointer
 0xff8610c4,GetAccelerometerDataWithCorrect_FW
 0xff860500,GetAdChValue_FW
 0xffac52cc,GetAdjAcceleration_FW

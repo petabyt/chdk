@@ -93,6 +93,13 @@ DEF(jpeg_count_str                          ,0x00048ae0) // Found @0xffd67320
 // Misc stuff
 DEF(ctypes, 0xffe5c21e)
 
+// LED table init @ 0xffcc5a6c
+// LED #1: 0xc02200d0, offset 0x84
+// LED #2: 0xc02200c0, offset 0x244
+// LED #3: 0xc02200c4, offset 0x204
+// LED #4: 0xc02200cc, offset 0x4
+// LED #5: 0xc02200c8, offset 0x44
+
 // For capt_seq.c
 DEF(_nrflag,0x8450) // Found @ ffd0f424 (0x8450)
 //static long *nrflag = (long*)(0x8450);       // Found @ ffd0f424

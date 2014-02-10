@@ -349,6 +349,7 @@
 0xffc60f70,task_SsTask
 0xffc61544,PT_PlaySound
 0xffc6446c,ExecuteShutDownPropertyService_FW
+0xffc64980,get_resource_pointer
 0xffc64c3c,WriteToRom_FW
 0xffc64ccc,EraseSectorOfRom_FW
 0xffc64e7c,UnLoadScript_FW

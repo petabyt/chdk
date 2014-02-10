@@ -436,6 +436,7 @@
 0xff081f8c,AcquireRecursiveLock
 0xff0820ac,ReleaseRecursiveLock
 0xff082834,ExecuteShutDownPropertyService_FW
+0xff082d50,get_resource_pointer
 0xff083000,WriteToRom_FW
 0xff083090,EraseRom_FW
 0xff083140,GetRomID_FW

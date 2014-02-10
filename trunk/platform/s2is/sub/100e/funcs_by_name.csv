@@ -332,6 +332,7 @@
 0xff814844,FreeUncacheableMemory
 0xff86ff00,Fseek_Fut
 0xff86fe68,Fwrite_Fut
+0xff8257dc,get_resource_pointer
 0xff82b848,GetAdChValue_FW
 0xffaa173c,GetAdjTableMapVersion_FW
 0xffaa174c,GetAdjTableValueVersion_FW

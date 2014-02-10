@@ -444,6 +444,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "NR_SetDarkSubType", OPTIONAL|UNUSED },
     { "SavePaletteData", OPTIONAL|UNUSED },
     { "GUISrv_StartGUISystem", OPTIONAL|UNUSED },
+    { "get_resource_pointer", OPTIONAL|UNUSED }, // name made up, gets a pointer to a certain resource (font, dialog, icon)
 
     { 0, 0, 0 }
 };
@@ -1296,6 +1297,7 @@ string_sig string_sigs[] =
     { 15, "OpenFastDir", "OpenFastDir_ERROR\n", 0x01000001 },
     { 15, "realloc", "fatal error - scanner input buffer overflow", 0x01000001 },
     { 15, "CreateBinarySemaphore", "SdPower.c", 0x01000001 },
+    { 15, "get_resource_pointer", "Not found icon resource.\r\n", 0x01000001 },
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52
     { 15, "SetHPTimerAfterTimeout", "FrameRateGenerator.c", 0x01000001,          0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007 },
 
@@ -3972,6 +3974,353 @@ int match_nrflag2(firmware *fw, int k, int v)
     return 0;
 }
 
+// find LEDs
+
+// helpers for find_leds()
+int isADD(firmware *fw, int offset)
+{
+    if ((fwval(fw,offset) & 0xfff00000) == (0xe2800000)) // ADD
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int isSUB(firmware *fw, int offset)
+{
+    if ((fwval(fw,offset) & 0xfff00000) == (0xe2400000)) // SUB
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int isSTRw(firmware *fw, int offset)
+{
+    if ((fwval(fw,offset) & 0xfff00000) == (0xe5800000)) // STR Rx, [Ry, #offs]
+    {
+        return 1;
+    }
+    return 0;
+}
+
+typedef struct {
+    uint32_t addr;  // LED GPIO address
+    int reg;        // register used to assemble the address
+    int offs;       // offset in the LED table
+    int done;       // already written
+} LED_s;
+
+// an array of 16 LED candidates should be enough
+#define LEDMAX 16
+
+int find_leds(firmware *fw)
+{
+    int j1, j2, j3;
+    LED_s leds[LEDMAX];
+    int k1 = find_str_ref(fw,"LEDCon");
+    if (k1<0)
+        return 0;
+    k1 = find_inst_rev(fw,isSTMFD_LR,k1,96);
+    if (k1<0)
+        return 0;
+    j1 = find_inst(fw,isBL,k1,80);
+    j2 = find_Nth_inst(fw,isBL,k1,80,3);
+    if ((j1<0) || (j2<0))
+        return 0;
+    // 1st and 3rd BL is memory allocation
+    if (followBranch(fw,idx2adr(fw,j1),0x01000001) != followBranch(fw,idx2adr(fw,j2),0x01000001))
+        return 0;
+    k1 = find_Nth_inst(fw,isBL,k1,80,2);
+    // LED table initializer func
+    k1 = idxFollowBranch(fw,k1,0x01000001);
+    if (k1<0)
+        return 0;
+    bprintf("\n// LED table init @ 0x%x\n",idx2adr(fw,k1));
+
+    j3 = 0; // highest leds[] index
+    j2 = 0;
+    j1 = 0;
+    int found;
+
+    // scan for MMIO addresses loaded via LDR, should work on DIGIC 4 and III cams
+    // some cameras may have specially handled LEDs, they will not be found
+    // DIGIC 5 cams will get no hits here
+    while (j2 < 32)
+    {
+        if (isLDR_PC(fw,k1+j2))
+        {
+            uint32_t l1 = LDR2val(fw,k1+j2);
+            if (l1 >= 0xc0220000)
+            {
+                leds[j3].addr = l1;
+                leds[j3].reg = fwRd(fw,k1+j2);
+                j3++;
+            }
+        }
+        else if (isBX_LR(fw,k1+j2) || isB(fw,k1+j2))
+        {
+            break;
+        }
+        j2++;
+        if (j3>=LEDMAX)
+            break;
+    }
+
+    for (j1=0; j1<LEDMAX; j1++)
+    {
+        leds[j1].offs = 0;
+        leds[j1].done = 0;
+    }
+    j3--;
+    j1 = 0;
+    if (j3 >= 0)
+    {
+        int repeatfrom = 0;
+        int repeatreg = 0;
+        int repeataddr = 0;
+        while (j3 >= 0)
+        {
+            // main cycle to parse the LED table init function
+            // tries to work out the LED MMIO addresses
+
+            j2 = 0;
+            int gotit = 0;
+            if (repeatfrom)
+            {
+                j2 = repeatfrom;
+                leds[j3].reg = repeatreg;
+                leds[j3].addr = repeataddr;
+                leds[j3].done = 0;
+                gotit = 1;
+                repeatfrom = 0;
+            }
+            while (j2 < 32)
+            {
+                found = 0;
+                if (isLDR_PC(fw,k1+j2))
+                {
+                    if (!gotit)
+                    {
+                        uint32_t l1 = LDR2val(fw,k1+j2);
+                        if (l1 >= 0xc0220000)
+                        {
+                            if ((leds[j3].reg == fwRd(fw,k1+j2)) && (leds[j3].addr == LDR2val(fw,k1+j2)))
+                            {
+                                leds[j3].done = 0;
+                                gotit = 1;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (leds[j3].reg == fwRd(fw,k1+j2))
+                        {
+                            break;
+                        }
+                    }
+                }
+                else if (isBX_LR(fw,k1+j2) || isB(fw,k1+j2))
+                {
+                    break;
+                }
+                if (!gotit)
+                {
+                    // fast forward until the LDR in question is found
+                    j2++;
+                    continue;
+                }
+                if (isADD(fw,k1+j2))
+                {
+                    if (leds[j3].reg == fwRd(fw,k1+j2))
+                    {
+                        leds[j3].addr += ALUop2a(fw,k1+j2);
+                        leds[j3].done = 0;
+                    }
+                    else if (leds[j3].reg == fwRn(fw,k1+j2))
+                    {
+                        // MMIO address passed to another register, schedule re-entry if possible
+                        if (!repeatfrom)
+                        {
+                            repeataddr = leds[j3].addr + ALUop2a(fw,k1+j2);
+                            repeatreg = fwRd(fw,k1+j2);
+                            repeatfrom = j2 + 1;
+                        }
+                    }
+                }
+                else if (isSUB(fw,k1+j2))
+                {
+                    if (leds[j3].reg == fwRd(fw,k1+j2))
+                    {
+                        leds[j3].addr -= ALUop2a(fw,k1+j2);
+                        leds[j3].done = 0;
+                    }
+                    else if (leds[j3].reg == fwRn(fw,k1+j2))
+                    {
+                        // MMIO address passed to another register, schedule re-entry if possible
+                        if (!repeatfrom)
+                        {
+                            repeataddr = leds[j3].addr - ALUop2a(fw,k1+j2);
+                            repeatreg = fwRd(fw,k1+j2);
+                            repeatfrom = j2 + 1;
+                        }
+                    }
+                }
+                else if (isSTR(fw,k1+j2))
+                {
+                    // LED references are always stored with STR, not STRB or STRH
+                    // check for matching register
+                    if (leds[j3].reg == fwRd(fw,k1+j2))
+                    {
+                        leds[j3].offs = fwval(fw,k1+j2) & 0xfff;
+                        found = 1;
+                    }
+                }
+                else if (isMOV_immed(fw,k1+j2) && (leds[j3].reg == fwRd(fw,k1+j2)))
+                {
+                    // the register holding the MMIO address gets a new value, start again with the next MMIO, if any
+                    break;
+                }
+                j2++;
+                // output data if valid
+                if (found && (!leds[j3].done))
+                {
+                    j1++;
+                    bprintf("// LED #%i: 0x%08x, offset 0x%x\n",j1, leds[j3].addr, leds[j3].offs);
+                    leds[j3].done = 1;
+                }
+            }
+            if (!repeatfrom)
+            {
+                j3--;
+            }
+        }
+    }
+    else
+    {
+        // DIGIC 5
+        // LEDs are identified by their location in the GPIO table, not their address
+        // some LEDs might be "special cased" and not appear in the GPIO table or the LED table init function
+        // those special cases are not currently handled
+
+        // locate GPIO table first
+        int gpiotbladdr = 0;
+        j2 = find_str_ref(fw,"\n\n Set LCD Driver: Address 0x%04x <-- Data 0x%04x\n");
+        if (j2 > 0)
+        {
+            j2 = find_inst_rev(fw, isBL, j2, 8);
+            if (j2 > 0)
+            {
+                j3 = 2;
+                while (j3 > 0)
+                {
+                    if ( !((fwval(fw,j2-1)&0xfffff000)==0xe3a01000) && !((fwval(fw,j2-2)&0xfffff000)==0xe3a01000) ) // MOV R1, #imm
+                    {
+                        j2 = find_inst_rev(fw, isBL, j2-1, 6);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    j3--;
+                }
+                if (j2 > 0)
+                {
+                    // j2 points to a function that is used to poke GPIOs, based on a GPIO table
+                    j2 = idxFollowBranch(fw, j2, 0x01000001);
+                    if (isLDR_PC(fw,j2))
+                    {
+                        // 1st instruction references the table's address (could change in the future?)
+                        gpiotbladdr = adr2idx(fw, LDR2val(fw, j2));
+                    }
+                }
+            }
+        }
+        // identify the LED(s)
+        j2 = 0;
+        j3 = 0;
+        while (j2 < 32)
+        {
+            // collect all MOV rx, #imm instructions
+            if (isMOV_immed(fw,k1+j2))
+            {
+                uint32_t l1 = ALUop2a(fw,k1+j2);
+                if (l1 < 0x200)
+                {
+                    leds[j3].addr = l1;
+                    leds[j3].reg = fwRd(fw,k1+j2);
+                    j3++;
+                }
+            }
+            else if (isBX_LR(fw,k1+j2) || isB(fw,k1+j2))
+            {
+                break;
+            }
+            j2++;
+            if (j3 >= LEDMAX)
+                break;
+        }
+        j3--;
+        while (j3 >= 0)
+        {
+            j2 = 0;
+            int gotit = 0;
+            while (j2 < 32)
+            {
+                found = 0;
+                if (isMOV_immed(fw,k1+j2) && (!gotit))
+                {
+                    if ((leds[j3].reg == fwRd(fw,k1+j2)) && (leds[j3].addr == ALUop2a(fw,k1+j2)))
+                    {
+                        gotit = 1;
+                    }
+                }
+                else if (isBX_LR(fw,k1+j2) || isB(fw,k1+j2))
+                {
+                    break;
+                }
+                if (!gotit)
+                {
+                    // fast forward until the MOV in question is found
+                    j2++;
+                    continue;
+                }
+                if (isSTRw(fw,k1+j2))
+                {
+                    // LED references are always stored with STR, not STRB or STRH
+                    // check for matching register
+                    if (leds[j3].reg == fwRd(fw,k1+j2))
+                    {
+                        leds[j3].offs = fwval(fw,k1+j2) & 0xfff;
+                        found = 1;
+                    }
+                }
+                // output data if valid
+                if (found)
+                {
+                    j1++;
+                    if (gpiotbladdr)
+                    {
+                        bprintf("// LED #%i: 0x%08x (#%d in GPIO table), offset 0x%x\n",j1, fwval(fw, leds[j3].addr + gpiotbladdr), leds[j3].addr, leds[j3].offs);
+                    }
+                    else
+                    {
+                        bprintf("// LED #%i:  #%d in GPIO table, offset 0x%x\n",j1, leds[j3].addr, leds[j3].offs);
+                    }
+                    break;
+                }
+                j2++;
+            }
+            j3--;
+        }
+        if (gpiotbladdr)
+        {
+            bprintf("// GPIO table @ 0x%x\n",idx2adr(fw, gpiotbladdr));
+        }
+    }
+    return 0;
+}
+
 void find_AdditionAgent_RAM(firmware *fw)
 {
     int i = get_saved_sig(fw,"AdditionAgentRAM_FW");
@@ -4029,6 +4378,7 @@ void find_other_vals(firmware *fw)
     {
         bprintf("//DEF(ctypes, *** Not Found ***)\n");
     }
+    find_leds(fw);
 
     // Look for nrflag (for capt_seq.c)
     int found = 0;

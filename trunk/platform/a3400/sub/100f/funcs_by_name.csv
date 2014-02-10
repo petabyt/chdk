@@ -335,6 +335,7 @@
 0xff831110,Fseek_Fut_FW
 0xff831070,Fwrite_Fut
 0xff831070,Fwrite_Fut_FW
+0xff87baec,get_resource_pointer
 0xffa8681c,GetAccelX_atMechaCpu_FW
 0xffa86838,GetAccelY_atMechaCpu_FW
 0xffa86854,GetAccelZ_atMechaCpu_FW

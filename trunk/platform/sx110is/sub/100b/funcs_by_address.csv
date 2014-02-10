@@ -377,6 +377,7 @@
 0xffc503b0,task_CaptSeq
 0xffc503b0,task_CaptSeqTask
 0xffc5586c,task_SsTask
+0xffc58828,get_resource_pointer
 0xffc58c74,UnLoadScript_FW
 0xffc58d64,Printf_FW
 0xffc58d70,LoadScript_FW

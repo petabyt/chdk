@@ -122,6 +122,7 @@
 0xff823de8,Restart,(stubs_entry_2.s)
 0xff823f20,WriteToRom_FW
 0xff824004,EraseSectorOfRom_FW
+0xff8257dc,get_resource_pointer
 0xff825d08,GetPropertyCase,(stubs_entry_2.s)
 0xff826d9c,ShowPropertyOfCurrentCase_FW
 0xff826dac,ShowAllPropertyOfCurrentCase_FW

@@ -559,6 +559,7 @@
 0xff86c0c0,ShowAllTaskInfo_FW
 0xff86d360,GetLogToFile_FW
 0xff86d5a4,EraseLogSector_FW
+0xff86f6e8,get_resource_pointer
 0xff86fa54,ScriptEnabled_FW
 0xff86fa68,ScriptDisEnabled_FW
 0xff86fa78,Printf_FW

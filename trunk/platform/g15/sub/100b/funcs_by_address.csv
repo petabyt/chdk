@@ -443,6 +443,7 @@
 0xff08f8ac,task_SsTask
 0xff0900b0,PT_PlaySound
 0xff092cf8,ExecuteShutDownPropertyService_FW
+0xff092eec,get_resource_pointer
 0xff093038,WriteToRom_FW
 0xff093094,EraseRom_FW
 0xff09314c,GetRomID_FW

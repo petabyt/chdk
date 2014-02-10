@@ -125,6 +125,7 @@
 0xff823880,task_Bye
 0xff823bd8,WriteToRom_FW
 0xff823cb0,EraseSectorOfRom_FW
+0xff8252b0,get_resource_pointer
 0xff825778,SetPropertyCase
 0xff826f20,Driver_EnableEventProc_FW
 0xff827f10,task_PhySw

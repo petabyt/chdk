@@ -443,6 +443,7 @@
 0xff88e424,DeleteRecursiveLock
 0xff88e474,AcquireRecursiveLock
 0xff88e594,ReleaseRecursiveLock
+0xff88f20c,get_resource_pointer
 0xff88f4c8,WriteToRom_FW
 0xff88f558,EraseSectorOfRom_FW
 0xff88f720,UnLoadScript_FW
