@@ -367,6 +367,7 @@
 0xff027e68,Fseek_Fut_FW
 0xff027dc8,Fwrite_Fut
 0xff027dc8,Fwrite_Fut_FW
+0xff0afecc,get_resource_pointer
 0xff06204c,GetAccelerometerDataWithCorrect_FW
 0xff3e5e38,GetAccelX_atMechaCpu_FW
 0xff3e5e54,GetAccelY_atMechaCpu_FW

@@ -445,6 +445,7 @@
 0xffc51b10,ShowAllTaskInfo_FW
 0xffc52ddc,GetLogToFile_FW
 0xffc5301c,EraseLogSector_FW
+0xffc55140,get_resource_pointer
 0xffc554d8,Printf_FW
 0xffc554f0,UnLoadScript_FW
 0xffc559bc,LoadScript_FW

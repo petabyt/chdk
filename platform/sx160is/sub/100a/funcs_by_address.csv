@@ -400,6 +400,7 @@
 0xff88ae24,task_SsTask
 0xff88b628,PT_PlaySound
 0xff88e6b0,ExecuteShutDownPropertyService_FW
+0xff88e8a4,get_resource_pointer
 0xff88e9f0,WriteToRom_FW
 0xff88ea4c,EraseRom_FW
 0xff88eb08,GetRomID_FW

@@ -414,6 +414,7 @@
 0xff8873bc,DeleteRecursiveLock
 0xff88740c,AcquireRecursiveLock
 0xff88752c,ReleaseRecursiveLock
+0xff8881a4,get_resource_pointer
 0xff8885f0,UnLoadScript_FW
 0xff8886e0,Printf_FW
 0xff8886ec,LoadScript_FW

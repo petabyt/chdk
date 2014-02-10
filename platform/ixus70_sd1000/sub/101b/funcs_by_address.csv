@@ -1112,6 +1112,7 @@
 0xffb15920,CreateRecursiveLockStrictly
 0xffb15eac,MemoryChecker_FW
 0xffb15fdc,VerifyByte_FW
+0xffb17f9c,get_resource_pointer
 0xffb181ac,WriteToRom_FW
 0xffb18284,EraseSectorOfRom_FW
 0xffb18794,LoadScript_FW

@@ -126,6 +126,7 @@
 0xff823abc,Restart,(stubs_entry_2.s)
 0xff823be4,WriteToRom_FW
 0xff823cbc,EraseSectorOfRom_FW
+0xff8252bc,get_resource_pointer
 0xff825784,SetPropertyCase
 0xff826fd4,Driver_EnableEventProc_FW
 0xff827fcc,task_PhySw

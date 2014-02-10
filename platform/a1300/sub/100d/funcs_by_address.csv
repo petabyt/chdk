@@ -378,6 +378,7 @@
 0xff874a14,task_SsTask
 0xff87503c,PT_PlaySound
 0xff877e10,ExecuteShutDownPropertyService_FW
+0xff878004,get_resource_pointer
 0xff878150,WriteToRom_FW
 0xff8781e0,EraseRom_FW
 0xff878294,GetRomID_FW

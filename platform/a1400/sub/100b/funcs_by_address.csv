@@ -372,6 +372,7 @@
 0xff883fec,SSFS_ShootPicture_FW
 0xff884068,task_SsTask
 0xff887318,ExecuteShutDownPropertyService_FW
+0xff88750c,get_resource_pointer
 0xff887658,WriteToRom_FW
 0xff8876b4,EraseRom_FW
 0xff887770,GetRomID_FW

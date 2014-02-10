@@ -338,6 +338,7 @@
 0xff86254c,task_SsTask
 0xff863ac4,GetLogToFile_FW
 0xff863d08,EraseLogSector_FW
+0xff865e2c,get_resource_pointer
 0xff86636c,UnLoadScript_FW
 0xff866414,Printf_FW
 0xff866420,LoadScript_FW

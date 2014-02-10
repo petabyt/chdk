@@ -1110,6 +1110,7 @@
 0xffeaa8b8,CreateRecursiveLockStrictly
 0xffeaae44,MemoryChecker_FW
 0xffeaaf74,VerifyByte_FW
+0xffeacf64,get_resource_pointer
 0xffead174,WriteToRom_FW
 0xffead24c,EraseSectorOfRom_FW
 0xffead75c,LoadScript_FW

@@ -398,6 +398,7 @@
 0xff87ca28,DeleteRecursiveLock
 0xff87ca78,AcquireRecursiveLock
 0xff87cb98,ReleaseRecursiveLock
+0xff87d810,get_resource_pointer
 0xff87dc5c,UnLoadScript_FW
 0xff87dd4c,Printf_FW
 0xff87dd58,LoadScript_FW

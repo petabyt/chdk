@@ -480,6 +480,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "NR_SetDarkSubType", OPTIONAL|UNUSED },
     { "SavePaletteData", OPTIONAL|UNUSED },
     { "GUISrv_StartGUISystem", OPTIONAL|UNUSED },
+    { "get_resource_pointer", OPTIONAL|UNUSED }, // name made up, gets a pointer to a certain resource (font, dialog, icon)
 
     { "wrapped_malloc", UNUSED|DONT_EXPORT},    // helper to find malloc, finds the other allocator on ixus30/40
     { "malloc_alt", UNUSED|DONT_EXPORT },       // should be the same as malloc when found
@@ -1244,6 +1245,7 @@ string_sig string_sigs[] =
     { 15, "SetHPTimerAfterTimeout", "FrameRateGenerator.c", 0x01000001,          0x0008 },
     { 15, "wrapped_malloc", "\n malloc error \n", 0x01000001,                    0x0010 },
     { 15, "IsStrobeChargeCompleted", "\r\nCaptSeq::ChargeNotCompleted!!", 0x01000001 }, // ixus30, 40
+    { 15, "get_resource_pointer", "Not found icon resource.\r\n", 0x01000001,    0x0008 },
 
     { 16, "DeleteDirectory_Fut", (char*)DeleteDirectory_Fut_test, 0x01000001 },
     { 16, "MakeDirectory_Fut", (char*)MakeDirectory_Fut_test, 0x01000001 },

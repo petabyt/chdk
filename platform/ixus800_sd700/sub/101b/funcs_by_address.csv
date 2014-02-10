@@ -122,6 +122,7 @@
 0xff822b38,Restart
 0xff822c38,WriteToRom_FW
 0xff822d10,EraseSectorOfRom_FW
+0xff824340,get_resource_pointer
 0xff8247c8,SetPropertyCase
 0xff8248e4,GetPropertyCase
 0xff825f34,Driver_EnableEventProc_FW

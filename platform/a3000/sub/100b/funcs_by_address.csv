@@ -397,6 +397,7 @@
 0xffc5c198,task_CaptSeqTask
 0xffc61ee4,task_SsTask
 0xffc62498,PT_PlaySound
+0xffc6577c,get_resource_pointer
 0xffc65a38,WriteToRom_FW
 0xffc65ae8,EraseSectorOfRom_FW
 0xffc65cc8,UnLoadScript_FW

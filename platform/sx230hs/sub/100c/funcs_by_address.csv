@@ -451,6 +451,7 @@
 0xff083eec,AcquireRecursiveLock
 0xff08400c,ReleaseRecursiveLock
 0xff084728,ExecuteShutDownPropertyService_FW
+0xff084c3c,get_resource_pointer
 0xff084f44,WriteToRom_FW
 0xff084fd4,EraseSectorOfRom_FW
 0xff08517c,UnLoadScript_FW

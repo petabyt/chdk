@@ -263,6 +263,7 @@
 0xffa959d0,Fut.Save_FW
 0xffa95860,Fwrite_Fut
 0xffa95860,Fwrite_Fut_FW
+0xffb1801c,get_resource_pointer
 0xffa29b78,GetAdChValue_FW
 0xffa5c558,GetAdjTableMapVersion_FW
 0xffa5c568,GetAdjTableValueVersion_FW

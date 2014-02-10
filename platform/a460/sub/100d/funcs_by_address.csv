@@ -1080,6 +1080,7 @@
 0xffe846c8,CreateRecursiveLockStrictly
 0xffe84c54,MemoryChecker_FW
 0xffe84d84,VerifyByte_FW
+0xffe86d44,get_resource_pointer
 0xffe86f54,WriteToRom_FW
 0xffe8702c,EraseSectorOfRom_FW
 0xffe8753c,LoadScript_FW

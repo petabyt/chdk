@@ -315,6 +315,7 @@
 0xff8350b0,Fseek_Fut_FW
 0xff835010,Fwrite_Fut
 0xff835010,Fwrite_Fut_FW
+0xff8819ec,get_resource_pointer
 0xff854f50,GetAdChValue_FW
 0xffa5c3e8,GetAdjAcceleration_FW
 0xffb09510,GetAdjAFInteg_FW

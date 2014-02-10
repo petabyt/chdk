@@ -399,6 +399,7 @@
 0xffc68eb0,DeleteRecursiveLock
 0xffc68f00,AcquireRecursiveLock
 0xffc69020,ReleaseRecursiveLock
+0xffc69c98,get_resource_pointer
 0xffc69f54,WriteToRom_FW
 0xffc6a004,EraseSectorOfRom_FW
 0xffc6a1e4,UnLoadScript_FW

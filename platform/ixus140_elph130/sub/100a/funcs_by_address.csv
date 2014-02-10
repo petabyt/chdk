@@ -402,6 +402,7 @@
 0xff0ba134,task_Epilog
 0xff0ba170,EpilogMenu_FW
 0xff0bbc7c,ExecuteShutDownPropertyService_FW
+0xff0bbe74,get_resource_pointer
 0xff0bbfc0,WriteToRom_FW
 0xff0bc01c,EraseRom_FW
 0xff0bc0d4,GetRomID_FW

@@ -280,6 +280,7 @@
 0xff823c50,Fseek_Fut_FW
 0xff823bb0,Fwrite_Fut
 0xff823bb0,Fwrite_Fut_FW
+0xff870520,get_resource_pointer
 0xff8486cc,GetAdChValue_FW
 0xffad2bb4,GetAdjAFInteg_FW
 0xff84f6f0,GetAdjTableMapVersion_FW

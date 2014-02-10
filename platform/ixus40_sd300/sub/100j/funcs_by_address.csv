@@ -118,6 +118,7 @@
 0xff826048,SetDataChunkSize_FW
 0xff82aa08,SaveProperty_FW
 0xff82aa2c,LoadProperty_FW
+0xff82aa38,get_resource_pointer
 0xff82e004,ShowPropertyOfCurrentCase_FW
 0xff82e018,ShowPropertyOfCase_FW
 0xff82e02c,ShowAllPropertyOfCurrentCase_FW
