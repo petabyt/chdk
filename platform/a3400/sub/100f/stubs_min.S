@@ -4,3 +4,7 @@ DEF(enabled_refresh_physical_screen,    0x392C + 0x10)  // sub_FF8943C8 (0xFF894
 
 DEF(touch_screen_x,                     0x000025d4)
 DEF(touch_screen_y,                     0x000025d6)
+
+// replacement for the missing fw variable
+.globl some_flag_for_af_scan
+some_flag_for_af_scan: .long 0

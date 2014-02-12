@@ -10,3 +10,5 @@ NHSTUB(MakeDirectory_Fut,           0xff831974) //mkdir requires #define MKDIR_R
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(srand,                       NULL_SUB)  //overridable function
 NHSTUB(rand,                        NULL_SUB)  //overridable function
+
+IGNORE(MakeAFScan)  // Custom version in lib.c, ignore firmware version
