@@ -9,8 +9,7 @@ NHSTUB(MakeDirectory_Fut,           0xff8305a4)
 NHSTUB(GetBatteryTemperature,       NULL_SUB)   // Does not work in A1200, SX130, A800 & A810 (included dummy in sub/100c/lib.c)
 
 // Additional
-NHSTUB(MakeAFScan,                  0xff95f260) //Obtained using chdk-pt comparing to 100d
-//NHSTUB(MakeAFScan,                  0xff831a04) //This is address of DoAFLock
+//NHSTUB(MakeAFScan,                  0xff95f260) //Obtained using chdk-pt comparing to 100d
 NHSTUB(platformsub_kbd_fetch_data,  0xff856648)
 NHSTUB(TurnOnMic,                   0xff856e48)
 NHSTUB(TurnOffMic,                  0xff856e74)
@@ -19,3 +18,5 @@ NHSTUB(TurnOffMic,                  0xff856e74)
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(srand,                       NULL_SUB)  //overridable function
 NHSTUB(rand,                        NULL_SUB)  //overridable function
+
+IGNORE(MakeAFScan)  // Custom version in lib.c, ignore firmware version

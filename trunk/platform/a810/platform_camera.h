@@ -107,7 +107,7 @@
     #define CAM_USE_ALT_SET_ZOOM_POINT       1    // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
-//    #define CAM_AF_SCAN_DURING_VIDEO_RECORD  1  //TODO: Disabled until find a solution.
+    #define CAM_AF_SCAN_DURING_VIDEO_RECORD  1
     #define CAM_QUALITY_OVERRIDE             1
 
     #undef  CAM_USB_EVENTID

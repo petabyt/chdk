@@ -104,3 +104,19 @@ void *vid_get_bitmap_active_buffer()
 {
     return (void*)(*(int*)(0x5400+0x18)); //found @ loc_ff909bb0 a810 100b
 }
+
+// following routines help preventing the "invisible af lock" caused by the movie af scan hack
+
+static int af_locked_in_movierec = 0;
+
+void _MakeAFScan(int *a, int b) {
+    _DoAFLock();
+    af_locked_in_movierec = 1;
+}
+
+void state_check_for_movie_af() {
+    if ((movie_status != VIDEO_RECORD_IN_PROGRESS) && af_locked_in_movierec) {
+        af_locked_in_movierec = 0;
+        _UnlockAF();
+    }
+}
