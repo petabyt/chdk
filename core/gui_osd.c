@@ -366,9 +366,9 @@ static void gui_osd_draw_values(int is_osd_edit, int is_zebra)
         //  2   - show DOF values only (for zebra & MF)
         int showtype = 0;
         if (!is_zebra &&
-            ((conf.show_values==SHOW_ALWAYS && camera_info.state.mode_photo) ||
+            ((conf.show_values==SHOW_MISC_ALWAYS && camera_info.state.mode_photo) ||
              ((camera_info.state.mode_video || is_video_recording()) && conf.show_values_in_video) ||
-             ((camera_info.state.is_shutter_half_press || (recreview_hold==1)) && (conf.show_values==SHOW_HALF))))
+             ((camera_info.state.is_shutter_half_press || (recreview_hold==1)) && (conf.show_values==SHOW_MISC_SHOOT))))
             showtype = 1;
         else if (is_zebra || (shooting_get_common_focus_mode() && camera_info.state.mode_photo && conf.show_values && !((conf.show_dof==DOF_SHOW_IN_DOF) || (conf.show_dof==DOF_SHOW_IN_DOF_EX))))
             showtype = 2;
@@ -859,7 +859,7 @@ void gui_kbd_shortcuts()
         if (conf.enable_shortcuts == 1)
         {
             kbd_shortcut(SHORTCUT_TOGGLE_ZEBRA, &conf.zebra_draw, 1);
-            kbd_shortcut(SHORTCUT_TOGGLE_HISTO, &conf.show_histo, SHOW_HALF);
+            kbd_shortcut(SHORTCUT_TOGGLE_HISTO, &conf.show_histo, SHOW_HISTO_HALF);
             kbd_shortcut(SHORTCUT_TOGGLE_OSD, &conf.show_osd, 1);
             kbd_shortcut(SHORTCUT_DISABLE_OVERRIDES, &conf.override_disable, 1);
         }
