@@ -17,6 +17,9 @@
 #define DOF_SHOW_IN_MISC                3
 #define DOF_SHOW_IN_MISC_EX             4
 
+#define SHOW_MISC_ALWAYS                1   // State for 'Show Misc Values' option
+#define SHOW_MISC_SHOOT                 2   // State for 'Show Misc Values' option
+
 //-------------------------------------------------------------------
 extern void gui_draw_osd_elements(int is_osd_edit, int is_zebra);
 extern void gui_osd_draw_clock(int x, int y, color cl, int is_osd_edit);
