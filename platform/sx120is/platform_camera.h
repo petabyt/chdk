@@ -76,6 +76,8 @@
 
     #define CAM_DATE_FOLDER_NAMING          0x100 //Value found in the last function, which is called in GetImageFolder. (first compare)
 
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 	
 //----------------------------------------------------------

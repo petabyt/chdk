@@ -63,6 +63,7 @@ if (p[0]==0xFFC696AC)  p[0]=(int)init_file_modules_task;
 if (p[0]==0xFFC37070)  p[0]=(int)JogDial_task_my;
 if (p[0]==0xFFD144F0)  p[0]=(int)movie_record_task;
 if (p[0]==0xFFC86E80)  p[0]=(int)exp_drv_task;
+if (p[0]==0xFFDFA744)  p[0]=(int)filewritetask;
 }
 
 void CreateTask_spytask() {
