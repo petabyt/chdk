@@ -44,29 +44,32 @@ typedef struct {
 static EXPO_TYPE expo;
 
 //-------------------------------------------------------------------
-static void print_dist(char *buf, float dist, short is_hyp) {
+static void print_dist(char *buf, int dist, short is_hyp) {
 // length of printed string is always 4
     if (dist<=0 || (!(is_hyp) && shooting_is_infinity_distance())) {
         sprintf(buf, " inf");
-    } else if (dist<1000) {
-        sprintf(buf, ".%03d", (int)dist);
-    } else if (dist<10000) {
-        sprintf(buf, "%d.%02d", (int)(dist/1000), (int)(dist/10)%100);
-    } else if (dist<100000) {
-        sprintf(buf, "%02d.%d", (int)(dist/1000), (int)(dist/100)%10);
     } else {
-        sprintf(buf, "%4d", (int)(dist/1000));
+        int i = dist / 1000;
+        int f = dist % 1000;
+        if (i == 0)
+            sprintf(buf, ".%03d", f);
+        else if (i < 10)
+            sprintf(buf, "%d.%02d", i, (f+5)/10);
+        else if (i < 100)
+            sprintf(buf, "%02d.%d", i, (f+50)/100);
+        else
+            sprintf(buf, "%4d", i);
     }
 }
 
 // Append scaled value display of 'dist' to 'osd_buf'
-static void sprintf_dist(char *buf, float dist)
+static void sprintf_dist(char *buf, int dist)
 {
     print_dist(buf, dist, 0);
 }
 
 // Append scaled value display of 'dist' to 'osd_buf'
-static void sprintf_dist_hyp(char *buf, float dist)
+static void sprintf_dist_hyp(char *buf, int dist)
 {
     print_dist(buf, dist, 1);
 }
@@ -111,26 +114,26 @@ void gui_osd_draw_dof(int is_osd_edit)
         int i = 8, j;
         short f_ex = (conf.show_dof==DOF_SHOW_IN_DOF_EX);
         draw_osd_string(conf.dof_pos, 0, 0, "S/NL/FL:", conf.osd_color, conf.dof_scale);
-        sprintf_dist(osd_buf, (float)dof_values.subject_distance);
+        sprintf_dist(osd_buf, dof_values.subject_distance);
         j = strlen(osd_buf);
         draw_osd_string(conf.dof_pos, i*FONT_WIDTH, 0, osd_buf, (f_ex && (dof_values.distance_valid || shooting_get_focus_mode()))?valid_col:conf.osd_color, conf.dof_scale);
         i = i+j;
         draw_osd_string(conf.dof_pos, i*FONT_WIDTH, 0, "/", conf.osd_color, conf.dof_scale);
-        sprintf_dist(osd_buf, (float)dof_values.near_limit);
+        sprintf_dist(osd_buf, dof_values.near_limit);
         j = strlen(osd_buf);
         draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, 0, osd_buf, (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color, conf.dof_scale);
         i = i+j;
 	    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, 0, "/", conf.osd_color, conf.dof_scale);
-        sprintf_dist(osd_buf, (float)dof_values.far_limit);
+        sprintf_dist(osd_buf, dof_values.far_limit);
 	    draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, 0, osd_buf, (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color, conf.dof_scale);
         i = 8;
 	    draw_osd_string(conf.dof_pos, 0, FONT_HEIGHT, "DOF/HYP:", conf.osd_color, conf.dof_scale);
-        sprintf_dist(osd_buf, (float)dof_values.depth_of_field);
+        sprintf_dist(osd_buf, dof_values.depth_of_field);
         j = strlen(osd_buf);
 	    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, FONT_HEIGHT, osd_buf, (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color, conf.dof_scale);
         i = i+j;
 	    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, FONT_HEIGHT, "/", conf.osd_color, conf.dof_scale);
-        sprintf_dist_hyp(osd_buf, (float)dof_values.hyperfocal_distance);
+        sprintf_dist_hyp(osd_buf, dof_values.hyperfocal_distance);
 	    draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, FONT_HEIGHT, osd_buf, (f_ex && dof_values.hyperfocal_valid)?valid_col:conf.osd_color, conf.dof_scale);
     }
 }
@@ -197,9 +200,9 @@ static void gui_print_osd_dof_string_dist(const char * title, int value, short u
   if (i<8) {
     draw_osd_string(conf.values_pos, 0, m, osd_buf, conf.osd_color, conf.values_scale);
     if (is_hyp) {
-        sprintf_dist_hyp(osd_buf, (float)value);
+        sprintf_dist_hyp(osd_buf, value);
     } else {
-        sprintf_dist(osd_buf, (float)value);
+        sprintf_dist(osd_buf, value);
     }
     sprintf(osd_buf+strlen(osd_buf), "%9s", "");
     osd_buf[9-i]=0;
