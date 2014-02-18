@@ -27,8 +27,8 @@
     #undef  CAM_KEY_PRESS_DELAY
     #define CAM_KEY_PRESS_DELAY             60      // delay after a press
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
-    #define CAM_ALT_BUTTON_NAMES            { "Video", "Display", "Playback", "Video" }
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_DISPLAY, KEY_PLAYBACK, KEY_VIDEO }
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Display", "Video" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_DISPLAY,  KEY_VIDEO }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
     #define CAM_DRYOS_2_3_R39               1
@@ -102,4 +102,6 @@
 	
 	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// specifies an LED that turns on while camera waits for USB remote to sync
 	
+    #define CAM_CHDK_HAS_EXT_VIDEO_TIME     	1	
+    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
 //----------------------------------------------------------

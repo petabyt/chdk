@@ -32,7 +32,7 @@ extern void _GetKbdState(long*);
 
 #define KEYS_MASK0 (0x00004000|0X00000004)
 #define KEYS_MASK1 (0x00000000)
-#define KEYS_MASK2 (0x00004000|0x00000300|0x00000100|0x00000080|0x00000040|0x00000010|0x00000020|0x00000004|0x00000008|0x00000002|0x00000001)
+#define KEYS_MASK2 (0x00004800|0x00000300|0x00000100|0x00000080|0x00000040|0x00000010|0x00000020|0x00000004|0x00000008|0x00000002|0x00000001)
 
 #define NEW_SS (0x2000)
 
@@ -58,7 +58,6 @@ static char kbd_stack[NEW_SS];
 static KeyMap keymap[] = {
 	/* tiny bug: key order matters. see kbd_get_pressed_key() */
 
-	{ 2, KEY_PRINT		     ,0x00004000 },  //KEY_VIDEO for ALT menu
     { 2, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffba2b80, levent 0x01
     { 2, KEY_SHOOT_FULL_ONLY ,0x00000200 }, // Found @0xffba2b80, levent 0x01
     { 2, KEY_SHOOT_HALF      ,0x00000100 }, // Found @0xffba2b78, levent 0x00
@@ -71,9 +70,8 @@ static KeyMap keymap[] = {
     { 2, KEY_DOWN            ,0x00000040 }, // Found @0xffba2b68, levent 0x05
 	{ 2, KEY_DISPLAY         ,0x00000040 },
     { 2, KEY_UP              ,0x00000080 }, // Found @0xffba2b70, levent 0x04
-	{ 2, KEY_VIDEO		     , 0x00004000 },
-//	{ 2, KEY_PLAYBACK	     , 0x00008000 },
-	
+	{ 2, KEY_VIDEO		     ,0x00004000 },
+	{ 2, KEY_PLAYBACK        ,0x00000800 },
     { 0, 0, 0 }
 };
 
