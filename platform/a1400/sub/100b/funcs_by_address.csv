@@ -770,7 +770,9 @@
 0xff973808,SS.DoAELock_FW
 0xff973818,SS.UnlockAE_FW
 0xff973828,SS.MFOn_FW
+0xff973828,SS_MFOn
 0xff973838,SS.MFOff_FW
+0xff973838,SS_MFOff
 0xff973848,SS.Create_FW
 0xff97389c,InitializeAdjustmentSystem_FW
 0xff9738d4,TerminateAdjustmentSystem_FW

@@ -427,7 +427,9 @@
 0xff866910,PT_UnlockAF_FW
 0xff866920,PT_DoAELock_FW
 0xff866930,PT_UnlockAE_FW
+0xff866940,PT_MFOn
 0xff866940,PT_MFOn_FW
+0xff866950,PT_MFOff
 0xff866950,PT_MFOff_FW
 0xff866980,RegisterProductTestEvent_FW
 0xff866980,SS.Create_FW
@@ -442,7 +444,9 @@
 0xff866fbc,UnlockAF_FW
 0xff866fcc,DoAELock_FW
 0xff866fdc,UnlockAE_FW
+0xff866fec,MFOn
 0xff866fec,MFOn_FW
+0xff866ffc,MFOff
 0xff866ffc,MFOff_FW
 0xff867024,ShowAllTaskInfo_FW
 0xff8682f0,GetLogToFile_FW

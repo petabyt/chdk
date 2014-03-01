@@ -467,7 +467,9 @@
 0xff09fd70,PT_UnlockAF_FW
 0xff09fd80,PT_DoAELock_FW
 0xff09fd90,PT_UnlockAE_FW
+0xff09fdc0,PT_MFOn
 0xff09fdc0,PT_MFOn_FW
+0xff09fdd0,PT_MFOff
 0xff09fdd0,PT_MFOff_FW
 0xff09fde0,PT_SetLtKids_FW
 0xff09fdf8,SS.Create_FW

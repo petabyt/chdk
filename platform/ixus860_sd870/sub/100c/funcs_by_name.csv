@@ -664,7 +664,9 @@
 0xffa1cfcc,MemoryChecker_FW
 0xffa5b468,memset
 0xffa5b468,memset_FW
+0xff860d04,MFOff
 0xff860d04,MFOff_FW
+0xff860cf4,MFOn
 0xff860cf4,MFOn_FW
 0xff8253d0,mkdir
 0xff89036c,mktime_ext
@@ -813,7 +815,9 @@
 0xff860400,PT_GetWeakBatLv_FW
 0xff8601ec,PT_LCD_BkColor_FW
 0xff860264,PT_LCD_BkColorDef_FW
+0xff860658,PT_MFOff
 0xff860658,PT_MFOff_FW
+0xff860648,PT_MFOn
 0xff860648,PT_MFOn_FW
 0xff85feb4,PT_mod_FW
 0xff8605f8,PT_MoveDigitalZoomAt_FW

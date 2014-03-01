@@ -495,7 +495,9 @@
 0xffd33ac4,StartupForTestRec_FW
 0xffd33b48,PrepareTestRec_FW
 0xffd33b54,ExitTestRec_FW
+0xffd33b70,MFOn
 0xffd33b70,MFOn_FW
+0xffd33ba0,MFOff
 0xffd33ba0,MFOff_FW
 0xffd33be0,ExecuteScript_FW
 0xffd34f38,EnterToCompensationEVF

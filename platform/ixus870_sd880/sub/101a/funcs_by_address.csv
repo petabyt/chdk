@@ -360,7 +360,9 @@
 0xff85f984,PT_UnlockAF_FW
 0xff85f994,PT_DoAELock_FW
 0xff85f9a4,PT_UnlockAE_FW
+0xff85f9b4,PT_MFOn
 0xff85f9b4,PT_MFOn_FW
+0xff85f9c4,PT_MFOff
 0xff85f9c4,PT_MFOff_FW
 0xff85f9d4,SS.Create_FW
 0xff860ddc,task_SsStartupTask

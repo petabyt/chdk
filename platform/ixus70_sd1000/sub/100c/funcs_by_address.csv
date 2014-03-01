@@ -1052,7 +1052,9 @@
 0xffb0c0ac,UnlockAF_FW
 0xffb0c0bc,DoAELock_FW
 0xffb0c0cc,UnlockAE_FW
+0xffb0c0dc,MFOn
 0xffb0c0dc,MFOn_FW
+0xffb0c0ec,MFOff
 0xffb0c0ec,MFOff_FW
 0xffb0c244,RegisterShootSeqEvent_FW
 0xffb0c674,task_SoundRecord

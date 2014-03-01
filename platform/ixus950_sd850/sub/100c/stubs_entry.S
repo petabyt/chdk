@@ -48,6 +48,8 @@ NHSTUB(utime                                  ,0xffb63770) //  1 57%
 NHSTUB(localtime                              ,0xff924818) //  1 93%
 NHSTUB(Mount_FileSystem                       ,0xffaa22e4) //  3 93%
 NHSTUB(MakeAFScan                             ,0xffb0ecb0) //  2 79%
+//NHSTUB(MFOn                                 ,0xffb1af88) //120        *** != 0xffb0b14c
+//NHSTUB(MFOff                                ,0xffb1af98) //120        *** != 0xffb0b1b0
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffb4b564 -> ffb4b564

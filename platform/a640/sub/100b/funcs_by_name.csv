@@ -541,7 +541,9 @@
 0xffefd5b0,memShow_FW
 0xffd52860,MenuIn_FW
 0xffd52894,MenuOut_FW
+0xffd53134,MFOff
 0xffd53134,MFOff_FW
+0xffd53104,MFOn
 0xffd53104,MFOn_FW
 0xffc62800,mkdir
 0xffef5fa4,mktime

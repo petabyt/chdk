@@ -493,7 +493,9 @@
 0xff922850,memset
 0xff922850,memset_FW
 0xff92a9b4,memShow_FW
+0xffb17c7c,MFOff
 0xffb17c7c,MFOff_FW
+0xffb17c6c,MFOn
 0xffb17c6c,MFOn_FW
 0xff923584,mktime
 0xff81f374,ModeLevelMovieRecForScript_FW

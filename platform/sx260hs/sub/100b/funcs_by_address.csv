@@ -451,7 +451,9 @@
 0xff06a1f0,PT_UnlockAF_FW
 0xff06a200,PT_DoAELock_FW
 0xff06a210,PT_UnlockAE_FW
+0xff06a240,PT_MFOn
 0xff06a240,PT_MFOn_FW
+0xff06a250,PT_MFOff
 0xff06a250,PT_MFOff_FW
 0xff06a260,PT_SetLtKids_FW
 0xff06a278,SS.Create_FW

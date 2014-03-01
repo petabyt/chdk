@@ -871,7 +871,9 @@
 0xffc48b58,PT_GetPropertyCaseInt_FW
 0xffc48b18,PT_GetSystemTime_FW
 0xffc48c30,PT_LCD_BkColorDef_FW
+0xffc48d74,PT_MFOff
 0xffc48d74,PT_MFOff_FW
+0xffc48d64,PT_MFOn
 0xffc48d64,PT_MFOn_FW
 0xffc48af0,PT_mod_FW
 0xffc48cfc,PT_MoveDigitalZoomAt_FW

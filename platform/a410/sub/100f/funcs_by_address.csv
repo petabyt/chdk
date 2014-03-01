@@ -460,7 +460,9 @@
 0xffd24b6c,StartupForTestRec_FW
 0xffd24bf0,PrepareTestRec_FW
 0xffd24bfc,ExitTestRec_FW
+0xffd24c18,MFOn
 0xffd24c18,MFOn_FW
+0xffd24c48,MFOff
 0xffd24c48,MFOff_FW
 0xffd24c88,ExecuteScript_FW
 0xffd24234,EnterToCompensationEVF,(stubs_entry_2.s)

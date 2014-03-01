@@ -930,7 +930,9 @@
 0xf8263a5c,SS.DoAELock_FW
 0xf8263a6c,SS.UnlockAE_FW
 0xf8263a7c,SS.MFOn_FW
+0xf8263a7c,SS_MFOn
 0xf8263a8c,SS.MFOff_FW
+0xf8263a8c,SS_MFOff
 0xf8263a9c,SS.Create_FW
 0xf8263af0,InitializeAdjustmentSystem_FW
 0xf8263b28,TerminateAdjustmentSystem_FW

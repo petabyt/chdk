@@ -484,7 +484,9 @@
 0xff94af80,StartupForTestRec_FW
 0xff94b004,PrepareTestRec_FW
 0xff94b010,ExitTestRec_FW
+0xff94b02c,MFOn
 0xff94b02c,MFOn_FW
+0xff94b05c,MFOff
 0xff94b05c,MFOff_FW
 0xff94b09c,ExecuteScript_FW
 0xff94c40c,ExitFromCompensationEVF,(stubs_entry_2.s)

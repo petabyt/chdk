@@ -617,7 +617,9 @@
 0xff85bc6c,PT_GetSystemTime_FW
 0xff85baa0,PT_GetWeakBatLv_FW
 0xff85bd84,PT_LCD_BkColorDef_FW
+0xff85bee0,PT_MFOff
 0xff85bee0,PT_MFOff_FW
+0xff85bed0,PT_MFOn
 0xff85bed0,PT_MFOn_FW
 0xff85bc44,PT_mod_FW
 0xff85be68,PT_MoveDigitalZoomAt_FW

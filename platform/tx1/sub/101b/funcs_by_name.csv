@@ -587,7 +587,9 @@
 0xff923728,memset_FW
 0xff92b88c,memShow_FW
 0xffb23e44,MessageToSubCPU_FW
+0xffb39274,MFOff
 0xffb39274,MFOff_FW
+0xffb39264,MFOn
 0xffb39264,MFOn_FW
 0xff92445c,mktime
 0xff81f414,ModeLevelMovieRecForScript_FW

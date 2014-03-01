@@ -512,7 +512,9 @@
 0xff951748,MenuIn_FW
 0xff95177c,MenuOut_FW
 0xffae8b00,MessageToSubCPU_FW
+0xff951f4c,MFOff
 0xff951f4c,MFOff_FW
+0xff951f1c,MFOn
 0xff951f1c,MFOn_FW
 0xff870750,mkdir
 0xffafd488,mktime
