@@ -559,7 +559,9 @@
 0xff923cac,memset
 0xff923cac,memset_FW
 0xff92be10,memShow_FW
+0xffb0b1b0,MFOff,(stubs_entry_2.s)
 0xffb1af98,MFOff_FW
+0xffb0b14c,MFOn,(stubs_entry_2.s)
 0xffb1af88,MFOn_FW
 0xff9249e0,mktime
 0xff81f398,ModeLevelMovieRecForScript_FW

@@ -551,7 +551,9 @@
 0xff95b884,MenuIn_FW
 0xff95b8b8,MenuOut_FW
 0xffab8780,MessageToSrpv_FW
+0xff95c008,MFOff
 0xff95c008,MFOff_FW
+0xff95bfd8,MFOn
 0xff95bfd8,MFOn_FW
 0xff86f790,mkdir
 0xffb07dd4,mktime

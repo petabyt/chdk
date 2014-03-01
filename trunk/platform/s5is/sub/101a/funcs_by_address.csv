@@ -537,7 +537,9 @@
 0xff86ba5c,PT_UnlockAF_FW
 0xff86ba6c,PT_DoAELock_FW
 0xff86ba7c,PT_UnlockAE_FW
+0xff86ba8c,PT_MFOn
 0xff86ba8c,PT_MFOn_FW
+0xff86ba9c,PT_MFOff
 0xff86ba9c,PT_MFOff_FW
 0xff86bacc,RegisterProductTestEvent_FW
 0xff86c080,MoveOpticalZoomToTele_FW
@@ -551,7 +553,9 @@
 0xff86c120,UnlockAF_FW
 0xff86c130,DoAELock_FW
 0xff86c140,UnlockAE_FW
+0xff86c150,MFOn
 0xff86c150,MFOn_FW
+0xff86c160,MFOff
 0xff86c160,MFOff_FW
 0xff86c188,ShowAllTaskInfo_FW
 0xff86d428,GetLogToFile_FW

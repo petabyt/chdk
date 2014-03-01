@@ -446,6 +446,13 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "GUISrv_StartGUISystem", OPTIONAL|UNUSED },
     { "get_resource_pointer", OPTIONAL|UNUSED }, // name made up, gets a pointer to a certain resource (font, dialog, icon)
 
+    { "MFOn", OPTIONAL },
+    { "MFOff", OPTIONAL },
+    { "PT_MFOn", OPTIONAL },
+    { "PT_MFOff", OPTIONAL },
+    { "SS_MFOn", OPTIONAL },
+    { "SS_MFOff", OPTIONAL },
+
     { 0, 0, 0 }
 };
 
@@ -1063,6 +1070,12 @@ string_sig string_sigs[] =
     {20, "UnlockAE", "SS.UnlockAE_FW", 0x01000002 },
     {20, "UnlockAF", "PT_UnlockAF_FW", 0x01000002 },
     {20, "UnlockAF", "SS.UnlockAF_FW", 0x01000002 },
+    {20, "MFOn", "MFOn_FW", 1 },
+    {20, "MFOff", "MFOff_FW", 1 },
+    {20, "PT_MFOn", "PT_MFOn_FW", 1 },
+    {20, "PT_MFOff", "PT_MFOff_FW", 1 },
+    {20, "SS_MFOn", "SS.MFOn_FW", 1 },
+    {20, "SS_MFOff", "SS.MFOff_FW", 1 },
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },

@@ -892,7 +892,9 @@
 0xff8641b0,PT_GetPropertyCaseInt_FW
 0xff864170,PT_GetSystemTime_FW
 0xff864288,PT_LCD_BkColorDef_FW
+0xff8643cc,PT_MFOff
 0xff8643cc,PT_MFOff_FW
+0xff8643bc,PT_MFOn
 0xff8643bc,PT_MFOn_FW
 0xff864148,PT_mod_FW
 0xff864354,PT_MoveDigitalZoomAt_FW

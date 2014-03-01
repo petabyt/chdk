@@ -364,7 +364,9 @@
 0xffc47b9c,PT_UnlockAF_FW
 0xffc47bac,PT_DoAELock_FW
 0xffc47bbc,PT_UnlockAE_FW
+0xffc47bcc,PT_MFOn
 0xffc47bcc,PT_MFOn_FW
+0xffc47bdc,PT_MFOff
 0xffc47bdc,PT_MFOff_FW
 0xffc47bec,NR_SetDoubleNRType_FW
 0xffc47bf4,SS.Create_FW

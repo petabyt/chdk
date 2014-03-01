@@ -202,3 +202,5 @@ NHSTUB(taskResume                             ,0xffb19170) //  1
 NHSTUB(time                                   ,0xffb051d4) //  1
 NHSTUB(vsprintf                               ,0xffb075b4) //115
 NHSTUB(EngDrvRead                             ,0xff880668) //102
+NHSTUB(MFOn                                   ,0xff95c404) //120
+NHSTUB(MFOff                                  ,0xff95c434) //120

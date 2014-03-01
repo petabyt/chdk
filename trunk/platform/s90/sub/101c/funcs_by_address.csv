@@ -397,7 +397,9 @@
 0xff87778c,PT_UnlockAF_FW
 0xff87779c,PT_DoAELock_FW
 0xff8777ac,PT_UnlockAE_FW
+0xff8777bc,PT_MFOn
 0xff8777bc,PT_MFOn_FW
+0xff8777cc,PT_MFOff
 0xff8777cc,PT_MFOff_FW
 0xff8777dc,SS.Create_FW
 0xff87a258,task_CaptSeq

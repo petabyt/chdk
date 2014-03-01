@@ -267,3 +267,5 @@ NHSTUB(strtolx                                ,0xff0274d4) //109
 NHSTUB(time                                   ,0x0068f8d0) //  6
 NHSTUB(vsprintf                               ,0xff00b7d8) //115
 NHSTUB(EngDrvRead                             ,0xff01f6d8) //102
+NHSTUB(PT_MFOn                                ,0xff065a60) //120
+NHSTUB(PT_MFOff                               ,0xff065a70) //120

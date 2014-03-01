@@ -1166,6 +1166,8 @@
 0xff9757c8,SS.MoveOpticalZoomToWide_FW
 0xff975890,SS.UnlockAE_FW
 0xff975870,SS.UnlockAF_FW
+0xff9758b0,SS_MFOff
+0xff9758a0,SS_MFOn
 0xff9ecf68,sscanf_FW
 0xff885ee8,SSFS_CompleteCaptModeChange_FW
 0xff885ee8,SSFS_CompleteFileWrite_FW

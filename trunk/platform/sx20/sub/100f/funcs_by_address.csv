@@ -389,7 +389,9 @@
 0xff8796c4,PT_UnlockAF_FW
 0xff8796d4,PT_DoAELock_FW
 0xff8796e4,PT_UnlockAE_FW
+0xff8796f4,PT_MFOn
 0xff8796f4,PT_MFOn_FW
+0xff879704,PT_MFOff
 0xff879704,PT_MFOff_FW
 0xff879714,SS.Create_FW
 0xff8797b4,task_RemoteCPUTask

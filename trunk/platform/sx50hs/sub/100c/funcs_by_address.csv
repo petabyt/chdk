@@ -965,7 +965,9 @@
 0xff1f200c,SS.DoAELock_FW
 0xff1f201c,SS.UnlockAE_FW
 0xff1f202c,SS.MFOn_FW
+0xff1f202c,SS_MFOn
 0xff1f203c,SS.MFOff_FW
+0xff1f203c,SS_MFOff
 0xff1f204c,SS.Create_FW
 0xff1f20a0,InitializeAdjustmentSystem_FW
 0xff1f20d8,TerminateAdjustmentSystem_FW

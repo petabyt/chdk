@@ -937,7 +937,9 @@
 0xff870890,PT_GetLocalDateAndTimeString_FW
 0xff870818,PT_GetPropertyCaseInt_FW
 0xff8707d8,PT_GetSystemTime_FW
+0xff8709e0,PT_MFOff
 0xff8709e0,PT_MFOff_FW
+0xff8709d0,PT_MFOn
 0xff8709d0,PT_MFOn_FW
 0xff8707b0,PT_mod_FW
 0xff870950,PT_MoveDigitalZoomAt_FW

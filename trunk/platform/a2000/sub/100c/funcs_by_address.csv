@@ -367,7 +367,9 @@
 0xffc48d34,PT_UnlockAF_FW
 0xffc48d44,PT_DoAELock_FW
 0xffc48d54,PT_UnlockAE_FW
+0xffc48d64,PT_MFOn
 0xffc48d64,PT_MFOn_FW
+0xffc48d74,PT_MFOff
 0xffc48d74,PT_MFOff_FW
 0xffc48d84,SS.Create_FW
 0xffc4a010,task_SsStartupTask

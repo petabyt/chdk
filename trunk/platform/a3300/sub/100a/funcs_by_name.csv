@@ -1008,7 +1008,9 @@
 0xff838234,PT_GetDigitalZoomPosition_FW
 0xff8783bc,PT_GetDigitalZoomTele_FW
 0xff8782d0,PT_GetPropertyCaseInt_FW
+0xff878438,PT_MFOff
 0xff878438,PT_MFOff_FW
+0xff878428,PT_MFOn
 0xff878428,PT_MFOn_FW
 0xff878284,PT_mod_FW
 0xff8783a8,PT_MoveDigitalZoomAt_FW

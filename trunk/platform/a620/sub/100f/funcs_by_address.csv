@@ -495,7 +495,9 @@
 0xffd34730,StartupForTestRec_FW
 0xffd347b4,PrepareTestRec_FW
 0xffd347c0,ExitTestRec_FW
+0xffd347dc,MFOn
 0xffd347dc,MFOn_FW
+0xffd3480c,MFOff
 0xffd3480c,MFOff_FW
 0xffd3484c,ExecuteScript_FW
 0xffd36818,task_ShootSeqTask

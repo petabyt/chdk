@@ -1216,7 +1216,9 @@
 0xffeb6268,UnlockAF_FW
 0xffeb6278,DoAELock_FW
 0xffeb6288,UnlockAE_FW
+0xffeb6298,MFOn
 0xffeb6298,MFOn_FW
+0xffeb62a8,MFOff
 0xffeb62a8,MFOff_FW
 0xffeb6400,RegisterShootSeqEvent_FW
 0xffeb6830,task_SoundRecord

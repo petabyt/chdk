@@ -486,6 +486,9 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "malloc_alt", UNUSED|DONT_EXPORT },       // should be the same as malloc when found
     { "WaitForEventFlag", UNUSED|DONT_EXPORT }, // helper to find other eventflag functions
 
+    { "MFOn", OPTIONAL },
+    { "MFOff", OPTIONAL },
+
     { 0, 0, 0 }
 };
 
@@ -1008,6 +1011,8 @@ string_sig string_sigs[] =
     {20, "DoAELock", "PT_DoAELock_FW", 0x01000002 }, // newer Vx
     {20, "DoAELock", "DoAELock_FW", 1 },
     {20, "UnlockAE", "UnlockAE_FW", 1 },
+    {20, "MFOn", "MFOn_FW", 1 },
+    {20, "MFOff", "MFOff_FW", 1 },
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
