@@ -2,7 +2,7 @@
 IXUS140 / ELPH130IS Notes 
 ************************************
 To enter CHDK <ALT> mode use the [>] Play button.
-This may be changed to Video in the options
+This may be changed to Video in the options, but this conflicts with some shortcuts.
 
 This camera does not have an adjustable aperture. It does have an ND filter
 
@@ -36,6 +36,8 @@ Folder naming and file counter use a new method, seem to be working but may have
 Not clear if fast press override hack is needed, needs more testing
 subject distance override is only available in AF lock
 If using set_aflock from script, you must use set the AF_LOCK propcase to 1
+If the alt key is set to video, the raw/debug shortcut will not work
+The hide OSD on disp option is not available, since the camera has no DISP key
 
 KNOWN BUGS
 **********
