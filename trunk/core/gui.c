@@ -2461,6 +2461,8 @@ static char* gui_shortcut_text(int button)
     case KEY_MENU:
         is_menu_shortcut = 1;
         return "MENU*";
+    case KEY_VIDEO:
+        return "VIDEO";
     default:
         return "?";
     }
