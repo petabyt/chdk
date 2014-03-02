@@ -37,7 +37,7 @@ Not clear if fast press override hack is needed, needs more testing
 subject distance override is only available in AF lock
 If using set_aflock from script, you must use set the AF_LOCK propcase to 1
 If the alt key is set to video, the raw/debug shortcut will not work
-The hide OSD on disp option is not available, since the camera has no DISP key
+The hide OSD when pressing DISP in half shoot shortcut is not available, since the camera has no DISP key
 
 KNOWN BUGS
 **********
