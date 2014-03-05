@@ -1,0 +1,14 @@
+************************************
+IXUS132 / ELPH115IS Notes
+************************************
+To enter CHDK <ALT> mode use the [>] Play button.
+This may be changed to Video in the options
+
+This camera does not have an adjustable aperture. It does have an ND filter
+
+This is an early alpha port, use at your own risk!
+
+
+For Developers
+- Liveview has not been tested
+- movie_rec.c is missing
