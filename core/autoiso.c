@@ -70,8 +70,8 @@ static int live_histogram_get_range(int total,int from, int to)
 
 //-------------------------------------------------------------------
 
-static const int shutter1_values[] = { 0, 8, 15, 30, 60, 125, 250, 500, 1000 };
-static const int shutter2_values[] = { 0, 4, 6, 8, 12, 15, 20, 25, 30, 40, 50, 60, 80, 100, 125, 160, 200, 250, 500, 1000 };
+static const int shutter1_values[] = { 0, 2, 4, 6, 8, 15, 30, 60, 125, 250, 500, 1000, 2000 };
+static const int shutter2_values[] = { 0, 1, 2, 4, 6, 8, 12, 15, 20, 25, 30, 40, 50, 60, 80, 100, 125, 160, 200, 250, 500, 1000, 2000 };
 
 static void shooting_calc_autoiso_coef( int min_shutter )
 {

@@ -153,10 +153,10 @@ static CMenu remote_submenu = {0x86,LANG_MENU_REMOTE_PARAM_TITLE, remote_submenu
 
 //-------------------------------------------------------------------
 
-static const char* gui_autoiso_shutter_modes[] = { "Auto", "1/8s", "1/15s", "1/30s", "1/60s", "1/125s", "1/250s", "1/500s", "1/1000s" };
+static const char* gui_autoiso_shutter_modes[] = { "Auto", "1/2s", "1/4", "1/6", "1/8s", "1/15s", "1/30s", "1/60s", "1/125s", "1/250s", "1/500s", "1/1000s", "1/2000s" };
 
-static const char* gui_autoiso2_shutter_modes[] = { "Off", "1/4s", "1/6s", "1/8s", "1/12s", "1/15s", "1/20s", "1/25s", "1/30s",  
-                 	                                "1/40s", "1/50s", "1/60s", "1/80s", "1/100s", "1/125s", "1/160s", "1/250s", "1/500s", "1/1000s"}; 
+static const char* gui_autoiso2_shutter_modes[] = { "Off", "1s", "1/2","1/4s", "1/6s", "1/8s", "1/12s", "1/15s", "1/20s", "1/25s", "1/30s",  
+                 	                                "1/40s", "1/50s", "1/60s", "1/80s", "1/100s", "1/125s", "1/160s", "1/250s", "1/500s", "1/1000s", "1/2000s" }; 
 
 static const char* gui_overexp_ev_modes[] = { "Off", "-1/3 Ev", "-2/3 Ev", "-1 Ev", "-1 1/3Ev", "-1 2/3Ev", "-2 Ev" };
 
