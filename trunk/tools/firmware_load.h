@@ -56,6 +56,8 @@ typedef struct {
     uint32_t        data_start;         // Start of DATA section in RAM
     uint32_t        data_init_start;    // Start of initialisation section for DATA in ROM
     int             data_len;           // Length of data section
+    uint32_t        uncached_adr;       // Start of un-cached copy of RAM
+    int             uncached_adr_idx;   // Index where un-cached address found
 
     // Alt copy of ROM in RAM (DryOS R50, R51)
     uint32_t        *buf2;          // pointer to loaded FW data that is copied
