@@ -2606,9 +2606,8 @@ int match_CAM_UNCACHED_BIT(firmware *fw, int k, int v)
 {
     if ((fw->buf[k] & 0x0FFFF000) == 0x03C00000)    // BIC
     {
-        uint32_t fadr = ALUop2(fw,k);
-        bprintf("//#undef  CAM_UNCACHED_BIT\n");
-        bprintf("//#define CAM_UNCACHED_BIT  0x%08x // Found @0x%08x\n",fadr,idx2adr(fw,k));
+        fw->uncached_adr = ALUop2(fw,k);
+        fw->uncached_adr_idx = k;
     }
 
     return 0;
@@ -2760,7 +2759,11 @@ void find_platform_vals(firmware *fw)
     }
 
     // Find 'CAM_UNCACHED_BIT'
-    search_saved_sig(fw, "FreeUncacheableMemory", match_CAM_UNCACHED_BIT, 0, 0, 8);
+    if (fw->uncached_adr_idx != 0)
+    {
+        bprintf("//#undef  CAM_UNCACHED_BIT\n");
+        bprintf("//#define CAM_UNCACHED_BIT  0x%08x // Found @0x%08x\n",fw->uncached_adr,idx2adr(fw,fw->uncached_adr_idx));
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -3499,7 +3502,7 @@ int match_bitmap_buffer(firmware *fw, int k, int v)
 
 int match_raw_buffer(firmware *fw, int k, uint32_t rb1, uint32_t v2)
 {
-    if (((fwval(fw,k) == rb1) && (fwval(fw,k+4) == rb1) && (fwval(fw,k-2) != 1)) ||
+    if (((fwval(fw,k) == rb1) && (fwval(fw,k+4) == rb1) && (fwval(fw,k-2) != 1) && (fwval(fw,k+2) >= fw->uncached_adr)) ||
         ((fwval(fw,k) == rb1) && (fwval(fw,k+4) == rb1) && (fwval(fw,k+20) == rb1)))
     {
         uint32_t rb2 = fwval(fw,k+1);
@@ -5254,6 +5257,10 @@ int main(int argc, char **argv)
         }
     }
 
+    fw.uncached_adr = 0;
+    fw.uncached_adr_idx = 0;
+    search_saved_sig(&fw, "FreeUncacheableMemory", match_CAM_UNCACHED_BIT, 0, 0, 8);
+    
     find_modemap(&fw);
     find_stubs_min(&fw);
     find_lib_vals(&fw);
