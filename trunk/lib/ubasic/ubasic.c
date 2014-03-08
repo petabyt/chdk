@@ -678,6 +678,37 @@ static int factor(void)
     accept(TOKENIZER_GET_DRAW_TITLE_LINE);  
     r = camera_info.state.osd_title_line ;
     break;
+  case TOKENIZER_SET_MF:
+      accept(TOKENIZER_SET_MF);
+      if (expr() > 0) r=DoMFLock();
+      else r=UnlockMF();
+      accept_cr();
+      break;
+  case TOKENIZER_SET_FOCUS:
+      accept(TOKENIZER_SET_FOCUS);
+      int sd = expr();
+      if (shooting_get_prop(camera_info.props.af_lock))
+      {
+          shooting_set_focus(sd, SET_NOW);
+      }
+      else
+      {
+          if (camera_info.cam_has_manual_focus)
+          {
+              if (shooting_get_focus_mode() || (camera_info.state.mode_video)) shooting_set_focus(sd, SET_NOW);
+              else shooting_set_focus(sd, SET_LATER);
+          }
+          else
+          {
+              if (camera_info.state.mode_video) shooting_set_focus(sd, SET_NOW);
+              else shooting_set_focus(sd, SET_LATER);    
+          }
+      }
+      r=shooting_can_focus();
+      accept_cr();
+      break;
+
+  //ARM Begin
       
   default:
     r = varfactor();
@@ -1794,25 +1825,6 @@ static void set_propcase_statement(int token, int prop)
     accept_cr();
 }
 
-
-static void set_focus_statement()
-{
-    int to;
-    accept(TOKENIZER_SET_FOCUS);
-    to = expr();
-    if (camera_info.cam_has_manual_focus)
-    {
-        if (shooting_get_focus_mode() || (camera_info.state.mode_video)) shooting_set_focus(to, SET_NOW);
-        else shooting_set_focus(to, SET_LATER);
-    }
-    else
-    {
-        if (camera_info.state.mode_video) shooting_set_focus(to, SET_NOW);
-        else shooting_set_focus(to, SET_LATER);    
-    }
-    accept_cr();
-}
-
 static void set_led_statement()
 {
     int to, to1, to2;
@@ -2341,11 +2353,6 @@ statement(void)
       one_int_param_function(token, shooting_set_zoom_speed);
       break;
 
-  case TOKENIZER_SET_FOCUS:
-      set_focus_statement();
-      break;
-
-  //ARM Begin
 /*
   case TOKENIZER_SET_ISO_MARKET:
       one_int_param_function(token, shooting_set_iso_market);

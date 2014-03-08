@@ -60,5 +60,11 @@
     #define PARAM_CAMERA_NAME               4 // parameter number for GetParameterData
 
 	#define REMOTE_SYNC_STATUS_LED 	0xc0220084				// specifies an LED that turns on while camera waits for USB remote to sync
-//----------------------------------------------------------
-
+ 
+    // Warning : SD override for this camera with these values has not been tested
+    #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

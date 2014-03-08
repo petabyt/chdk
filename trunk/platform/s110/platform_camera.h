@@ -40,7 +40,6 @@
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video", "Display" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
 
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                1
     #define CAM_VIDEO_QUALITY_ONLY              1
@@ -163,5 +162,8 @@
 
     #define CAM_HAS_FILEWRITETASK_HOOK                  1
     #define CAM_FILEWRITETASK_SEEKS                     1
-
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

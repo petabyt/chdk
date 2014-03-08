@@ -23,7 +23,6 @@
     #define CAM_DRYOS                       1
     #define CAM_DRYOS_2_3_R31               1  
 
-//----------------------------------------------------------
 // left as test
 
 #undef CAM_USE_ZOOM_FOR_MF   //      1           // Zoom lever can be used for manual focus adjustments
@@ -151,3 +150,11 @@
 #define CAM_RAW_ROWS      3048 // Found @0xffcc7c78
 
 	#define REMOTE_SYNC_STATUS_LED 	0xC022000C		// specifies an LED that turns on while camera waits for USB remote to sync
+ 
+    // Warning : SD override for this camera with these values has not been tested
+    #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

@@ -89,6 +89,9 @@
 	#define ISO_REAL_TO_MARKET_MULT     3979
 	#define ISO_REAL_TO_MARKET_SHIFT    12
 	#define ISO_REAL_TO_MARKET_ROUND    2048
-
-//----------------------------------------------------------
-
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

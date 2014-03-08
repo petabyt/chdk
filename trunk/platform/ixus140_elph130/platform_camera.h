@@ -148,4 +148,8 @@
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE  1     // For cameras with 'low light' mode that does not work with raw define this
 
     #define SHORTCUT_TOGGLE_RAW          KEY_VIDEO   // conflicts with adjustable alt, but not many to choose from
+
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
 //----------------------------------------------------------

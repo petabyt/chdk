@@ -37,7 +37,6 @@
     #define CAM_HAS_ND_FILTER               1       // ToDo: does camera have ND ?
 
     //#undef  CAM_HAS_MANUAL_FOCUS                  // ToDo: test if its working
-    //#undef  CAM_CAN_SD_OVERRIDE                   // ToDo: looks like always cause ASSERT Error "FocusLensController.c Line 714" on CaptSeqTask
     //#undef  CAM_USE_ZOOM_FOR_MF                   // ToDo: test if its working
 
     //#define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
@@ -134,3 +133,10 @@
     
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1     // cameras intermittently crashing on startup with "ASSERT!! FsIoNotify.c Line 457   Task name: SpyTask" in ROMLOG, ToDo: working ?
     #define CAM_EXT_TV_RANGE                1
+ 
+    // Warning : SD override for this camera with these values has not been tested
+    #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

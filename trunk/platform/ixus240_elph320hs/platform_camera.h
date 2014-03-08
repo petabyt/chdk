@@ -133,4 +133,10 @@
     #define CAM_FILEWRITETASK_SEEKS             1
 
     #define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
-
+ 
+    // Warning : SD override for this camera with these values has not been tested
+    #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

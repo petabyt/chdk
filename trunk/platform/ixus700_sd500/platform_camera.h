@@ -32,7 +32,6 @@
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES
-    #undef  CAM_CAN_SD_OVERRIDE
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #undef  CAM_HAS_IS
     #define CAM_MULTIPART                   1
@@ -76,5 +75,6 @@
 	#define ISO_REAL_TO_MARKET_SHIFT    13
 	#define ISO_REAL_TO_MARKET_ROUND    4096
 	
-//----------------------------------------------------------
-
+ 
+ 
+//--------------------------------------------------

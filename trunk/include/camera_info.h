@@ -114,6 +114,7 @@ typedef struct
         int shooting;
         int resolution;
         int quality;
+        int af_lock;
     } props;
     int rombaseaddr, maxramaddr, memisosize;
     int cam_uncached_bit, exmem;

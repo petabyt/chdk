@@ -107,3 +107,9 @@
     // NOTE both of these conflict with adjustable alt
     #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
     #define SHORTCUT_MF_TOGGLE           KEY_FACE
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

@@ -61,5 +61,9 @@
     #define CAM_ACTIVE_AREA_Y2              1748
     // camera name
     #define PARAM_CAMERA_NAME               3       // parameter number for GetParameterData
-
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

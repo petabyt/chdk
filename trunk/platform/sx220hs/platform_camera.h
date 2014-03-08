@@ -51,7 +51,6 @@
 
     #undef  CAM_HAS_ERASE_BUTTON
 
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
 
     #define CAM_VIDEO_QUALITY_ONLY              1
     #undef  CAM_VIDEO_CONTROL
@@ -124,5 +123,8 @@
     #define REMOTE_SYNC_STATUS_LED              0xC0220130 // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_HAS_FILEWRITETASK_HOOK          1   // file write hook for remote capture etc
-
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

@@ -27,7 +27,6 @@
     #define CAM_RAW_ROWPIX                  4080
     #define CAM_RAW_ROWS                    3048
 
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_VIDEO_QUALITY_ONLY          1
     #define CAM_BRACKETING                  1
@@ -94,5 +93,9 @@
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
 	#define REMOTE_SYNC_STATUS_LED 	0xC0220014		// specifies an LED that turns on while camera waits for USB remote to sync
-
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

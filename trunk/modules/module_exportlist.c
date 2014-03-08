@@ -289,6 +289,7 @@
             shooting_get_av96_from_aperture,
             shooting_get_tv96_from_shutter_speed,
             shooting_get_shutter_speed_from_tv96,
+            shooting_can_focus,
 
             rbf_char_width,
             rbf_font_height,
@@ -363,6 +364,8 @@
             UnlockAE,
             DoAFLock,
             UnlockAF,
+            DoMFLock,
+            UnlockMF,
 
             enter_alt,
             exit_alt,

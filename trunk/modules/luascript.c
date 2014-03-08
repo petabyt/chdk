@@ -385,6 +385,15 @@ static int luaCB_set_aflock(lua_State* L)
   return 0;
 }
 
+static int luaCB_set_mf(lua_State* L) 
+{
+  int val = luaL_checknumber(L, 1);
+  if (val>0) val=DoMFLock();  // 1: enable 
+  else val=UnlockMF();       // 0: disable
+  lua_pushnumber(L, val); 
+  return 1; 
+}
+
 
 static int luaCB_shoot( lua_State* L )
 {
@@ -747,18 +756,25 @@ static int luaCB_set_focus_interlock_bypass( lua_State* L )
 static int luaCB_set_focus( lua_State* L )
 {
     int to = luaL_checknumber( L, 1 );
-
-    if (camera_info.cam_has_manual_focus)
+    if (shooting_get_prop(camera_info.props.af_lock)) 
     {
-        if (shooting_get_focus_mode() || camera_info.state.mode_video) shooting_set_focus(to, SET_NOW);
-        else shooting_set_focus(to, SET_LATER);
+        shooting_set_focus(to, SET_NOW);
     }
     else
     {
-        if (shooting_get_common_focus_mode() || camera_info.state.mode_video) shooting_set_focus(to, SET_NOW);
-        else shooting_set_focus(to, SET_LATER);    
+        if (camera_info.cam_has_manual_focus)
+        {
+            if (shooting_get_focus_mode() || camera_info.state.mode_video) shooting_set_focus(to, SET_NOW);
+            else shooting_set_focus(to, SET_LATER);
+        }
+        else
+        {
+            if (shooting_get_common_focus_mode() || camera_info.state.mode_video) shooting_set_focus(to, SET_NOW);
+            else shooting_set_focus(to, SET_LATER);    
+        }
     }
-  return 0;
+    lua_pushnumber(L, shooting_can_focus()); 
+    return 1; 
 }
 
 static int luaCB_set_iso_mode( lua_State* L )
@@ -2715,6 +2731,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_draw_title_line)
     FUNC(set_aelock)
     FUNC(set_aflock)
+    FUNC(set_mf)
     FUNC(set_curve_state)
     FUNC(get_curve_state)
     FUNC(set_curve_file)

@@ -101,4 +101,9 @@
     #define CAM_AF_LED                       2
 
     #define CAM_HAS_FILEWRITETASK_HOOK      1       // file write hook for remote capture etc
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

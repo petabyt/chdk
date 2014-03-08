@@ -46,7 +46,6 @@
 
 #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE	1 // verify
 
-#undef CAM_CAN_SD_OVER_NOT_IN_MF
 #undef CAM_VIDEO_CONTROL
 #undef CAM_HAS_JOGDIAL
 #undef CAM_USE_ZOOM_FOR_MF
@@ -107,3 +106,9 @@
 #define CAM_USB_EVENTID                         0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
 
 #define CAM_HAS_FILEWRITETASK_HOOK     1   // file write hook for remote capture etc
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

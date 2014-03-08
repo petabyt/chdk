@@ -38,8 +38,6 @@
     #define CAM_RAW_ROWPIX                  4168
     #define CAM_RAW_ROWS                    3060    // actual size from fw 12754080pix at FF375484 -> 19131120/12*8
     #define CAM_HAS_ND_FILTER               1
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
-    #define CAM_CAN_SD_OVER_IN_AF_LOCK      1
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON            1
     #define CAM_VIDEO_QUALITY_ONLY          1
@@ -104,4 +102,9 @@
 	
     #define CAM_CHDK_HAS_EXT_VIDEO_TIME     	1	
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

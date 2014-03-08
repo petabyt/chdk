@@ -49,11 +49,12 @@
     #define CAM_HAS_IRIS_DIAPHRAGM          1   // Camera has real diaphragm mechanism (http://en.wikipedia.org/wiki/Diaphragm_%28optics%29)
     #undef  CAM_HAS_ND_FILTER                   // Camera has build-in ND filter
     #undef  CAM_HAS_NATIVE_ND_FILTER            // Camera has built-in ND filter with Canon menu support for enable/disable
-    #define CAM_CAN_SD_OVER_NOT_IN_MF       1   // Camera allows subject distance (focus) override when not in manual focus mode
-    #undef  CAM_CAN_SD_OVER_IN_AF_LOCK          // Camera allows subject distance (focus) override when in AF Lock mode
-    #undef  CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY     // Camera allows subject distance (focus) override only when in AF Lock mode OR in movie mode
-    #define CAM_CAN_SD_OVERRIDE             1   // Camera allows to do subject distance override
-    #define CAM_HAS_MANUAL_FOCUS            1   // Camera has manual focus mode
+
+    #define CAM_HAS_MANUAL_FOCUS            1   // Camera has native manual focus mode (disables MF shortcut feature)
+    #undef  CAM_SD_OVER_IN_AF                   // Camera allows SD override if MF & AFL not set
+    #undef  CAM_SD_OVER_IN_AFL                  // Camera allows SD override when AFL is set
+    #undef  CAM_SD_OVER_IN_MF                   // Camera allows SD override when MF is set
+
     #define CAM_HAS_USER_TV_MODES           1   // Camera has tv-priority or manual modes with ability to set tv value
     #undef  CAM_SHOW_OSD_IN_SHOOT_MENU          // On some cameras Canon shoot menu has additional functionality and useful in this case to see CHDK OSD in this mode
     #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1 // Camera can unlock optical zoom in video (if it is locked)

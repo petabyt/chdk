@@ -115,14 +115,14 @@
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
 
-    #define CAM_CAN_SD_OVERRIDE              1    // SD override enable
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF             // no SD override unless in manual focus mode
-    #undef  CAM_CAN_SD_OVER_IN_AF_LOCK            // SD override when AF locked only
-    #define CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY  1    // SD override when AF locked or video mode
 
     #undef  CAM_AF_LED                            // AF Lamp index for camera_set_led()
     #define CAM_AF_LED                       2    //
 
     #define CAM_REMOTE_USES_PRECISION_SYNC   1    // USB remote precision sync patch works with this camera
     #define GPIO_VSYNC_CURRENT               0xC0F070C8  // vsync current status register used by USB remote precision sync
-
+ 
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

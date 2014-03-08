@@ -34,9 +34,7 @@
     #define EXMEM_HEAP_SKIP                 (0x08000000-0x07D08A00)     // G12 & SX30 uses movie memory buffers at the top of the memory allocated by exmem_alloc
     #define EXMEM_BUFFER_SIZE (1024*1024*2)        // desired amount of exmem memory to allocate
 
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #define CAM_USE_ZOOM_FOR_MF             1
-    #define CAM_CAN_SD_OVER_IN_AF_LOCK      1
 
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 
@@ -156,6 +154,10 @@
 	
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 	
-
-//----------------------------------------------------------
-
+ 
+    // Warning : SD override for this camera with these values has not been tested
+    #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

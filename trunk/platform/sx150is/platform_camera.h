@@ -25,7 +25,6 @@
     #define CAM_DRYOS_2_3_R39                           1
     #define CAM_DRYOS_2_3_R47                           1 // Defined for cameras with DryOS version R47 or higher
 
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                        1
     #define CAM_VIDEO_QUALITY_ONLY                      1
@@ -107,4 +106,9 @@
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt            1   // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
 	
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

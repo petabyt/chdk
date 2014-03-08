@@ -1021,45 +1021,35 @@ int shooting_get_hyperfocal_distance()
 
 short shooting_can_focus()
 {
-#if !CAM_CAN_SD_OVER_NOT_IN_MF && CAM_CAN_SD_OVERRIDE
-#if CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY
-    if (shooting_get_prop(PROPCASE_AF_LOCK))
-        return 1;
-    else if (!camera_info.state.mode_video)
-        return 0;
-#elif CAM_CAN_SD_OVER_IN_AF_LOCK
-    if (shooting_get_prop(PROPCASE_AF_LOCK))
-        return 1;
-#elif CAM_HAS_VIDEO_BUTTON
-	return shooting_get_common_focus_mode();
+    if( camera_info.state.mode_video == 1) return 1;           // FIXME : default to MF enabled in video mode for no
+    
+    if(camera_info.state.mode_play) return 0 ;                 // don't focus in playback mode
+
+//#ifdef PROPCASE_CONTINUOUS_AF
+//    if (shooting_get_prop(PROPCASE_CONTINUOUS_AF)) return 0;   // don't focus in continuous AF mode
+//#endif
+//#ifdef PROPCASE_SERVO_AF
+//    if (shooting_get_prop(PROPCASE_SERVO_AF)) return 0;        // don't focus in servo AF mode
+//#endif
+#ifdef CAM_SD_OVER_IN_AF
+    if (    (shooting_get_prop(PROPCASE_AF_LOCK)==0)           // allow focus when in AF mode (i.e AFL or MF not enabled)?
+         && (shooting_get_prop(PROPCASE_FOCUS_MODE)==0 )) return 1;
 #endif
-    return (shooting_get_common_focus_mode() || camera_info.state.mode_video);
-#elif !CAM_CAN_SD_OVERRIDE
-    return camera_info.state.mode_video;
-#elif defined (CAMERA_ixus800_sd700)
-    // TODO whats the reason for this ?!?
-    return (shooting_get_zoom()<8) && (camera_info.state.mode_shooting!=MODE_AUTO) && (camera_info.state.mode_shooting!=MODE_SCN_UNDERWATER);
-#else
-#ifdef PROPCASE_CONTINUOUS_AF
-    if (shooting_get_prop(PROPCASE_CONTINUOUS_AF))
-        return 0;
+#ifdef CAM_SD_OVER_IN_AFL
+    if (shooting_get_prop(PROPCASE_AF_LOCK)==1 ) return 1;     // allow focus if AFL enabled and camera can focus that way?
 #endif
-#ifdef PROPCASE_SERVO_AF
-    if (shooting_get_prop(PROPCASE_SERVO_AF))
-        return 0;
+#ifdef CAM_SD_OVER_IN_MF
+    if (shooting_get_prop(PROPCASE_FOCUS_MODE)==1 ) return 1;  // allow focus if MF enabled and camera can focus that way?
 #endif
-    return 1;
-#endif
+    return 0;
 }
 
 short shooting_get_common_focus_mode()
 {
-#if !CAM_HAS_MANUAL_FOCUS && CAM_CAN_SD_OVERRIDE
-    return conf.subj_dist_override_koef;
-#elif !CAM_CAN_SD_OVERRIDE
-    return 0;
+#if !CAM_HAS_MANUAL_FOCUS
+    return conf.subj_dist_override_koef;         // SD override state 0=OFF, 1=ON, 2=Infinity if camera has no native MF mode
 #else
-    return shooting_get_focus_mode();
+    return shooting_get_focus_mode();            // 0=Auto, 1=macro,  2=portrait, 3=Infinity, 4=MF 5=super macro
 #endif
 }
 

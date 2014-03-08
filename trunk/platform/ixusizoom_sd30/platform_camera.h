@@ -57,5 +57,11 @@
 	#define ISO_REAL_TO_MARKET_SHIFT    1
 	#define ISO_REAL_TO_MARKET_ROUND    0
 	
-//----------------------------------------------------------
-
+ 
+    // Warning : SD override for this camera with these values has not been tested
+    #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------
