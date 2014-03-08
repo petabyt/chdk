@@ -42,7 +42,6 @@
 
     #define CAM_HAS_CMOS                        1
 
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                1
     #define CAM_VIDEO_QUALITY_ONLY              1
@@ -131,4 +130,8 @@
 
     #undef  REMOTE_SYNC_STATUS_LED
 //  #define REMOTE_SYNC_STATUS_LED              0xC022C30C  // TODO specifies an LED that turns on while camera waits for USB remote to sync
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

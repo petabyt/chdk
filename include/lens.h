@@ -19,5 +19,8 @@ long lens_get_target_distance();
 void DoAFLock(void);
 void UnlockAF(void);
 
+int DoMFLock(void);
+int UnlockMF(void);
+
 #endif
 

@@ -30,7 +30,6 @@
     #define CAM_HAS_ND_FILTER               1
     #define CAM_DRAW_EXPOSITION             1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_HAS_IS
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 2
@@ -66,4 +65,9 @@
 	
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 	
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

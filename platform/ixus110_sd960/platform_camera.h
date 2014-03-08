@@ -33,8 +33,6 @@
 
     // TODO
     #undef  CAM_HAS_MANUAL_FOCUS
-    #define CAM_CAN_SD_OVER_NOT_IN_MF       1       // Camera allows subject distance (focus) override when not in manual focus mode
-    #define CAM_CAN_SD_OVERRIDE             1       // Camera allows to do subject distance override
     #define CAM_USE_ZOOM_FOR_MF             1
     
     //#define CAM_EV_IN_VIDEO                 1
@@ -108,4 +106,9 @@
     #define CAM_OPTIONAL_EXTRA_BUTTON       1   // allow the Power button to be remapped in ALT mode
     #define CAM_EXTRA_BUTTON_NAMES          { "OFF", "Display" }
     #define CAM_EXTRA_BUTTON_OPTIONS        { 0, KEY_DISPLAY }
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

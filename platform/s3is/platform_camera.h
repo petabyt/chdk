@@ -30,7 +30,6 @@
     #define CAM_ALT_BUTTON_NAMES            { "Shrtcut", "Flash", "Timer", "ISO", "Video" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_FLASH, KEY_TIMER, KEY_ISO, KEY_VIDEO }
     #define CAM_MULTIPART                   1
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON            1
     #define CAM_HAS_HI_ISO_AUTO_MODE        1
@@ -65,5 +64,8 @@
 
     #define CAM_USB_EVENTID_VXWORKS             0x1085 // LogicalEvent ID for ConnectUSBCable, needed to enable USB mode switch
 	
-//----------------------------------------------------------
-
+ 
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

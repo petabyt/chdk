@@ -283,6 +283,12 @@ extern void _DoAELock(void);
 extern void _UnlockAE(void);
 extern void _DoAFLock(void);
 extern void _UnlockAF(void);
+extern void _MFOn(void);
+extern void _MFOff(void);
+extern void _PT_MFOn(void);
+extern void _PT_MFOff(void);
+extern void _SS_MFOn(void);
+extern void _SS_MFOff(void);
 
 extern int _EngDrvRead(int gpio_reg);
 

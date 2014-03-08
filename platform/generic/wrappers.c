@@ -1043,22 +1043,38 @@ void TurnOffDisplay(void)
 
 void DoAELock(void)
 {
-  _DoAELock();
+  if (!camera_info.state.mode_play)
+  {
+     _DoAELock();
+  }
 }
 
 void UnlockAE(void)
 {
-  _UnlockAE();
+  if (!camera_info.state.mode_play)
+  {
+     _UnlockAE();
+  }
 }
 
 void DoAFLock(void)
 {
-  _DoAFLock();
+  if (!camera_info.state.mode_play)
+  {
+     int af_lock=1;
+     _DoAFLock();
+     set_property_case(PROPCASE_AF_LOCK,&af_lock,sizeof(af_lock));
+  }
 }
 
 void UnlockAF(void)
 {
-  _UnlockAF();
+  if (!camera_info.state.mode_play)
+  {
+     int af_lock=0;
+     _UnlockAF();
+     set_property_case(PROPCASE_AF_LOCK,&af_lock,sizeof(af_lock));
+  }
 }
 
 int EngDrvRead(int gpio_reg)

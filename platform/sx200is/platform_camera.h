@@ -26,7 +26,6 @@
     #define CAM_RAW_ROWPIX                  4080    // from calcs see 100C lib.c
     #define CAM_RAW_ROWS                    3048    //  "     "    "    "    "
 
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
 
     #define CAM_VIDEO_QUALITY_ONLY          1
 
@@ -97,4 +96,9 @@
     #define CAMERA_MAX_DIST                 68447   // Override max subject distance
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

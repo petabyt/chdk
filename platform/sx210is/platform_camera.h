@@ -33,7 +33,6 @@
     #define CAM_RAW_ROWPIX              4416 // from calcs see 100C lib.c   //ASM1989 08.20.2010  4416
     #define CAM_RAW_ROWS                3296 //  "     "    "    "    "  //ASM1989 08.20.2010   3296
 
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
     #define CAM_ALT_BUTTON_NAMES                { "Video", "Playback" }
@@ -116,4 +115,8 @@
     #define CAM_MIN_ISO_OVERRIDE                100 // see http://chdk.setepontos.com/index.php?topic=5045.msg99863#msg99863
 
     #define CAM_AV_OVERRIDE_IRIS_FIX        1
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

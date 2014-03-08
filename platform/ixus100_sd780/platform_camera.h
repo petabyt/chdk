@@ -38,8 +38,6 @@
     #define CAM_ALT_BUTTON_NAMES            { "Display", "Playback" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_DISPLAY, KEY_PLAYBACK }
 
-    // #define CAM_CAN_SD_OVER_NOT_IN_MF       1       // Camera allows subject distance (focus) override when not in manual focus mode
-    // #define CAM_CAN_SD_OVERRIDE             1       // Camera allows to do subject distance override
 
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
@@ -106,6 +104,9 @@
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 	#define REMOTE_SYNC_STATUS_LED 	0xC0220128		// specifies an LED that turns on while camera waits for USB remote to sync
-
-//----------------------------------------------------------
-
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

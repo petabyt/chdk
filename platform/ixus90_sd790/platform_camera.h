@@ -65,7 +65,9 @@
     #define REMOTE_SYNC_STATUS_LED 	0xc0220130		// specifies an LED that turns on while camera waits for USB remote to sync
 	
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1       // enable fix for camera crash at startup when opening the conf / font files
-
-
-//----------------------------------------------------------
-
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

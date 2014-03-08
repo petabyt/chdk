@@ -26,7 +26,6 @@
     #define CAM_RAW_ROWS                    2340    // for 7 MP
 
     #define CAM_SWIVEL_SCREEN               1
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_HAS_IS
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 2
@@ -58,5 +57,8 @@
 	
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 	
-//----------------------------------------------------------
-
+ 
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

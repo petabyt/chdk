@@ -32,7 +32,6 @@
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES
-//    #undef  CAM_CAN_SD_OVERRIDE
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #undef  CAM_HAS_IS
     #define CAM_MULTIPART                   1
@@ -64,6 +63,9 @@
     #define CAM_HAS_FILEWRITETASK_HOOK      1
 
     #define REMOTE_SYNC_STATUS_LED 0xC02200B5 // specifies an LED that turns on while camera waits for USB remote to sync
-
-//----------------------------------------------------------
-
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

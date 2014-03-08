@@ -103,9 +103,6 @@
 	#define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
 	#define CHDK_COLOR_BASE                 0xA2    // Start color index for CHDK colors loaded into camera palette.
 	
-	//#define CAM_CAN_SD_OVER_IN_AF_LOCK      1   // Camera allows subject distance (focus) override when in AF Lock mode
-	#undef  CAM_CAN_SD_OVER_NOT_IN_MF
-	#define CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY 1		//exact meaning: SD override works in AF lock or movie mode
 	
 	#define CAM_SHOW_OSD_IN_SHOOT_MENU	1
 
@@ -125,3 +122,8 @@
     #define CAM_CAN_MUTE_MICROPHONE          1
 
     #define CAM_HAS_FILEWRITETASK_HOOK       1
+ 
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

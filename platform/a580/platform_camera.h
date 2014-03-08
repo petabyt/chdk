@@ -35,8 +35,6 @@
     #undef CAM_HAS_USER_TV_MODES // Shutter speed  = TV, Aperture = AV
     #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
-    // #undef CAM_CAN_SD_OVER_NOT_IN_MF
-    // #undef CAM_CAN_SD_OVERRIDE
 
     #undef CAM_HAS_IS
     #define CAM_CAN_MUTE_MICROPHONE         1
@@ -88,4 +86,11 @@
     //Alt mode & Manual mode    
     #define SHORTCUT_SET_INFINITY        KEY_DISPLAY
 	
-//----------------------------------------------------------
+ 
+    // Warning : SD override for this camera with these values has not been tested
+    #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

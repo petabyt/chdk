@@ -34,7 +34,6 @@
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_DISPLAY }
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     //#define CAM_EV_IN_VIDEO               1      // not working on 101b!!!
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
 
     #define CAM_DNG_LENS_INFO               { 58,10, 232,10, 26,10, 55,10 } // See comments in camera.h
     // pattern
@@ -73,6 +72,9 @@
     // Shutter Half Press + Down = AFL
     //Half press shoot button    
     #define SHORTCUT_DISABLE_OVERRIDES   KEY_DISPLAY
-
-//----------------------------------------------------------
-
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

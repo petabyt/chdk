@@ -119,5 +119,9 @@
 
     #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #undef CAM_AF_SCAN_DURING_VIDEO_RECORD
-
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

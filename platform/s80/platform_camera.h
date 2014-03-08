@@ -27,8 +27,6 @@
     #define CAM_RAW_ROWPIX                      3344   // @FF8B49E0 (100g)
     #define CAM_RAW_ROWS                        2484   // @FF8B49E0 (100g)
 
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
-    #define CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY     1 // SD override when AF locked or video mode
     #undef  CAM_HAS_MANUAL_FOCUS                  // needed, SD override is misbehaving in MF
 
     #undef  CAM_HAS_IS    
@@ -80,3 +78,8 @@
 	#define ISO_REAL_TO_MARKET_MULT     9465
 	#define ISO_REAL_TO_MARKET_SHIFT    13
 	#define ISO_REAL_TO_MARKET_ROUND    4096
+ 
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

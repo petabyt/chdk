@@ -64,5 +64,9 @@
 	
 	#define REMOTE_SYNC_STATUS_LED 	0xc02200C4		// specifies an LED that turns on while camera waits for USB remote to sync
 	
-//----------------------------------------------------------
-
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

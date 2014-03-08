@@ -33,8 +33,6 @@
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES
     #define CAM_HAS_HI_ISO_AUTO_MODE        1
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
-    #undef  CAM_CAN_SD_OVERRIDE
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #define CAM_FEATURE_FEATHER             1
     #undef  CAM_HAS_IS
@@ -63,5 +61,11 @@
 	
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 	
-//----------------------------------------------------------
-
+ 
+    // Warning : SD override for this camera with these values has not been tested
+    #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

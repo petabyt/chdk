@@ -25,7 +25,6 @@
     #define CAM_DRYOS_2_3_R39                           1
     #define CAM_DRYOS_2_3_R47                           1 // Defined for cameras with DryOS version R47 or higher
 
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_BRACKETING                              1
     #define CAM_HAS_JOGDIAL                             1
@@ -114,5 +113,8 @@
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0220014		// specifies an LED that turns on while camera waits for USB remote to sync
 
     #define MKDIR_RETURN_ONE_ON_SUCCESS                 1    // mkdir() return 1 on success, 0 on fail.
-
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

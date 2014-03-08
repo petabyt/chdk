@@ -71,10 +71,6 @@
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video", "Set+ZoomIn" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_VIDEO, KEY_SET | KEY_ZOOM_IN }
 
-    #define CAM_CAN_SD_OVERRIDE             1    // Camera allows to do subject distance override
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF            // no SD override unless in manual focus mode
-    #undef  CAM_CAN_SD_OVER_IN_AF_LOCK           // SD override when AF locked only
-    #define CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY 1    // Camera allows subject distance (focus) override only when in AF Lock mode OR in movie mode
     
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  DNG_BADPIXEL_VALUE_LIMIT
@@ -122,5 +118,9 @@
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 //    see http://chdk.setepontos.com/index.php/topic,3994.405.html
-
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------

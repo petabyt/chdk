@@ -46,7 +46,6 @@
     #define CAM_MULTIPART                       1
     #define CAM_HAS_JOGDIAL                     1
     #undef  CAM_USE_ZOOM_FOR_MF
-    #undef  CAM_CAN_SD_OVER_NOT_IN_MF
     #define CAM_HAS_ND_FILTER                   1
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
 
@@ -142,5 +141,9 @@
     #define SHORTCUT_TOGGLE_HISTO               KEY_ERASE   // On camera Shutter Half Press + Up = switch MF on/off
 
     #define CAM_HAS_FILEWRITETASK_HOOK          1   // file write hook for remote capture etc
-
-//----------------------------------------------------------
+ 
+    #define CAM_SD_OVER_IN_AF  1
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
+ 
+//--------------------------------------------------
