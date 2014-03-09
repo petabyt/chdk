@@ -121,7 +121,6 @@
     // TODO largest value obtained focusing at distant things
     #define CAMERA_MAX_DIST              	775194       // Define max distance that can be set in _MoveFocusLensToDistance (allow override for superzooms - SX30/SX40)
 
-    #define  CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY     1 // Camera allows subject distance (focus) override only when in AF Lock mode OR in movie mode
 
     // TODO
     #define CAM_DATE_FOLDER_NAMING              0x400
