@@ -1021,25 +1021,26 @@ int shooting_get_hyperfocal_distance()
 
 short shooting_can_focus()
 {
-    if( camera_info.state.mode_video == 1) return 1;           // FIXME : default to MF enabled in video mode for no
-    
     if(camera_info.state.mode_play) return 0 ;                 // don't focus in playback mode
 
-//#ifdef PROPCASE_CONTINUOUS_AF
-//    if (shooting_get_prop(PROPCASE_CONTINUOUS_AF)) return 0;   // don't focus in continuous AF mode
-//#endif
-//#ifdef PROPCASE_SERVO_AF
-//    if (shooting_get_prop(PROPCASE_SERVO_AF)) return 0;        // don't focus in servo AF mode
-//#endif
-#ifdef CAM_SD_OVER_IN_AF
-    if (    (shooting_get_prop(PROPCASE_AF_LOCK)==0)           // allow focus when in AF mode (i.e AFL or MF not enabled)?
-         && (shooting_get_prop(PROPCASE_FOCUS_MODE)==0 )) return 1;
-#endif
+    if( camera_info.state.mode_video == 1) return 1;           // FIXME : default to MF enabled in video mode for now
+
 #ifdef CAM_SD_OVER_IN_AFL
     if (shooting_get_prop(PROPCASE_AF_LOCK)==1 ) return 1;     // allow focus if AFL enabled and camera can focus that way?
 #endif
 #ifdef CAM_SD_OVER_IN_MF
     if (shooting_get_prop(PROPCASE_FOCUS_MODE)==1 ) return 1;  // allow focus if MF enabled and camera can focus that way?
+#endif
+
+#ifdef CAM_SD_OVER_IN_AF 
+#ifdef PROPCASE_CONTINUOUS_AF
+    if (shooting_get_prop(PROPCASE_CONTINUOUS_AF)) return 0;   // don't focus in continuous AF mode,
+#endif
+#ifdef PROPCASE_SERVO_AF
+    if (shooting_get_prop(PROPCASE_SERVO_AF)) return 0;        // don't focus in servo AF mode
+#endif
+    if (    (shooting_get_prop(PROPCASE_AF_LOCK)==0)           // allow focus when in AF mode (i.e AFL or MF not enabled)?
+         && (shooting_get_prop(PROPCASE_FOCUS_MODE)==0 )) return 1;
 #endif
     return 0;
 }
