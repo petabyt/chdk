@@ -346,17 +346,29 @@ int open (const char *name, int flags, int mode )
     if(!name || name[0]!='A')
         return -1;
 #endif
+/*
 #if defined(CAM_STARTUP_CRASH_FILE_OPEN_FIX)	// enable fix for camera crash at startup when opening the conf / font files
 												// see http://chdk.setepontos.com/index.php?topic=6179.0
 	if (flags == O_RDONLY)						// At startup opening the conf / font files conflicts with Canon task if use _Open. Camera can randomly crash.
 		return _open(name, flags, mode);
 #endif
+*/
+// TESTING - always use _open for dryos
+#if CAM_DRYOS
+    return _open(name, flags, mode);
+#else
     return _Open(name, flags, mode);
+#endif
 }
 
 int close (int fd)
 {
+// TESTING - always use _close for dryos
+#if CAM_DRYOS
+    return _close(fd);
+#else
     return _Close(fd);
+#endif
 }
 
 int write (int fd, const void *buffer, long nbytes)
