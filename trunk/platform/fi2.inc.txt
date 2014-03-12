@@ -36,3 +36,15 @@ ifeq ($(KEYSYS), d4c)
 FI2KEY=
 FI2IV =
 endif
+
+# a1400, a2500
+ifeq ($(KEYSYS), d4d)
+FI2KEY=
+FI2IV =
+endif
+
+# sx510
+ifeq ($(KEYSYS), d4e)
+FI2KEY=
+FI2IV =
+endif
