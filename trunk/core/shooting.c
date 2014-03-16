@@ -1058,7 +1058,7 @@ short shooting_get_common_focus_mode()
 #if !CAM_HAS_MANUAL_FOCUS
     return conf.subj_dist_override_koef;         // SD override state 0=OFF, 1=ON, 2=Infinity if camera has no native MF mode
 #else
-    return shooting_get_focus_mode();            // 0=Auto, 1=macro,  2=portrait, 3=Infinity, 4=MF 5=super macro
+    return shooting_get_focus_mode();            // 0=Auto, 1=manual
 #endif
 }
 
