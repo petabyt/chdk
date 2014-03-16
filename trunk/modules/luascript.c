@@ -755,25 +755,28 @@ static int luaCB_set_focus_interlock_bypass( lua_State* L )
 
 static int luaCB_set_focus( lua_State* L )
 {
-    int to = luaL_checknumber( L, 1 );
-    if (shooting_get_prop(camera_info.props.af_lock)) 
+    int sd = luaL_checknumber( L, 1 );
+    // if sd override not available now, fail immediately without calling set_focus
+    // to avoid unexpected results with SET_LATER
+    if(!shooting_can_focus())
     {
-        shooting_set_focus(to, SET_NOW);
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    // NOTE duplicated in modules/luascript.c and lib/ubasic/ubasic.c
+    // in AF lock or MF (canon or set by MF functions), set focus now
+    if (shooting_get_prop(camera_info.props.af_lock) 
+      || shooting_get_focus_mode()
+      || camera_info.state.mode_video)  // TODO video needs to be investigated, carried over from old code
+    {
+      shooting_set_focus(sd, SET_NOW);
     }
     else
     {
-        if (camera_info.cam_has_manual_focus)
-        {
-            if (shooting_get_focus_mode() || camera_info.state.mode_video) shooting_set_focus(to, SET_NOW);
-            else shooting_set_focus(to, SET_LATER);
-        }
-        else
-        {
-            if (shooting_get_common_focus_mode() || camera_info.state.mode_video) shooting_set_focus(to, SET_NOW);
-            else shooting_set_focus(to, SET_LATER);    
-        }
+      // in an AF mode, set later
+      shooting_set_focus(sd, SET_LATER);
     }
-    lua_pushnumber(L, shooting_can_focus()); 
+    lua_pushboolean(L, 1); 
     return 1; 
 }
 
