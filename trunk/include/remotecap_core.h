@@ -4,8 +4,6 @@
 /*
  * remotecap functions not exported to modules
  */
-// get currently selected data types
-int remotecap_get_target(void);
 // called by ptp to get currently available type and image number
 void remotecap_is_ready(int *available_type,int *image_num);
 // call from task hooks to notify remotecap of data

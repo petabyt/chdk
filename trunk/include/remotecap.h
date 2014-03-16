@@ -10,6 +10,8 @@ typedef struct {
 int remotecap_get_target_support(void);
 // set request remote capture data
 int remotecap_set_target(int type, int lstart, int lcount);
+// get currently selected data types
+int remotecap_get_target(void);
 // set timeout for hooks, in ms. <=0 sets default
 void remotecap_set_timeout(int timeout);
 // returns non-zero if remotecap requires the DNG module to stay loaded

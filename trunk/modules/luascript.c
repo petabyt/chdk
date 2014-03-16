@@ -2458,6 +2458,17 @@ static int luaCB_init_usb_capture( lua_State* L )
     lua_pushboolean(L,remotecap_set_target(what,startline,numlines));
     return 1;
 }
+
+/*
+selected=get_usb_capture_target()
+selected = bitmask passed to init, or 0 if capture not configured or timed out/canceled
+*/
+static int luaCB_get_usb_capture_target( lua_State* L )
+{
+    lua_pushnumber(L,remotecap_get_target());
+    return 1;
+}
+
 /*
 set_remotecap_timeout([timeout])
 timeout:
@@ -2784,6 +2795,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(write_usb_msg)
     FUNC(get_usb_capture_support)
     FUNC(init_usb_capture)
+    FUNC(get_usb_capture_target)
     FUNC(set_usb_capture_timeout)
 
     FUNC(iso_to_sv96)
