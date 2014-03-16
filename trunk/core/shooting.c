@@ -94,6 +94,14 @@ int   shooting_get_exif_subject_dist()          { return shooting_get_prop_int(P
 int   shooting_is_flash()                       { return shooting_get_prop_int(PROPCASE_IS_FLASH_READY); }
 int   shooting_in_progress()                    { return shooting_get_prop_int(PROPCASE_SHOOTING); }
 
+/*
+get focus mode as used in script
+essentially returns PROPCASE_REAL_FOCUS_MODE,
+except MF and Macro values are swapped (presumably for backward compatiblity)
+resulting in:
+0=auto, 1=MF, 3=inf., 4=macro, 5=supermacro
+CHDK set_mf is correctly reported as MF, because set_mf overrides PROPCASE_FOCUS_MODE if needed
+*/
 short shooting_get_real_focus_mode()
 {
     short f = shooting_get_focus_mode();
