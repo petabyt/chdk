@@ -685,28 +685,28 @@ static int factor(void)
       accept_cr();
       break;
   case TOKENIZER_SET_FOCUS:
-      accept(TOKENIZER_SET_FOCUS);
-      int sd = expr();
-      if (shooting_get_prop(camera_info.props.af_lock))
-      {
+    accept(TOKENIZER_SET_FOCUS);
+    int sd = expr();
+    // if sd override not available now, fail immediately without calling set_focus
+    // to avoid unexpected results with SET_LATER
+    r=shooting_can_focus();
+    if(r) {
+        // NOTE duplicated in modules/luascript.c and lib/ubasic/ubasic.c
+        // in AF lock or MF (canon or set by MF functions), set focus now
+        if (shooting_get_prop(camera_info.props.af_lock) 
+          || shooting_get_focus_mode()
+          || camera_info.state.mode_video)  // TODO video needs to be investigated, carried over from old code
+        {
           shooting_set_focus(sd, SET_NOW);
-      }
-      else
-      {
-          if (camera_info.cam_has_manual_focus)
-          {
-              if (shooting_get_focus_mode() || (camera_info.state.mode_video)) shooting_set_focus(sd, SET_NOW);
-              else shooting_set_focus(sd, SET_LATER);
-          }
-          else
-          {
-              if (camera_info.state.mode_video) shooting_set_focus(sd, SET_NOW);
-              else shooting_set_focus(sd, SET_LATER);    
-          }
-      }
-      r=shooting_can_focus();
-      accept_cr();
-      break;
+        }
+        else
+        {
+          // in an AF mode, set later
+          shooting_set_focus(sd, SET_LATER);
+        }
+    }
+    accept_cr();
+    break;
 
   //ARM Begin
       
