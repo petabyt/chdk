@@ -429,6 +429,7 @@
             remotecap_set_target,
             remotecap_using_dng_module,
             remotecap_set_timeout,
+            remotecap_get_target,
 
            set_focus_bypass,
 }
