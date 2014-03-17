@@ -1,6 +1,9 @@
 Detailed change history is available from the trac page http://trac.assembla.com/chdk/timeline
+=1.3=
+Unstable development branch
+
 =1.2=
-Version 1.2 is in the release candidate phase. The following major features were implemented for 1.2.
+Current stable, released July 30 2013. The following major features were implemented for 1.2.
 * intermittent Lua crashing bug fixed (finally. Also backported to 1.1)
 * Improved UI - discussion thread http://chdk.setepontos.com/index.php?topic=8151.0
 ** menu items renamed and sometimes moved for clarity
@@ -25,7 +28,7 @@ Version 1.2 is in the release candidate phase. The following major features were
 * addition of an annoying "help" window that continuously pops up in <ALT> mode until you figure out how to disable it from the CHDK menu
 
 =1.1=
-Current stable, released July 25 2012. Major features added in this release include
+Obsolete, released July 25 2012. Major features added in this release include
 * Loadable binary modules
 * Re-write of USB remote code
 * "Live view" over the CHDK PTP Extension
