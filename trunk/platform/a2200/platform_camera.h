@@ -113,7 +113,7 @@
 	// Not sure values
 	//
 	//#undef  CAM_USE_ZOOM_FOR_MF
-	//#define	CAM_AF_SCAN_DURING_VIDEO_RECORD	1
+	#define	CAM_AF_SCAN_DURING_VIDEO_RECORD	1
 	#define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO  1
     #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
     #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments
