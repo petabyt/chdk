@@ -31,66 +31,50 @@ void camera_set_led(int led, int state, int bright) {
 	_LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
 
-//long vid_get_bitmap_screen_width() {
-//			
-//	return 360;
-//}
-//
-//long vid_get_bitmap_screen_height() {
-//			
-//	return 240;
-//}
-//
-//long vid_get_bitmap_buffer_width() {
-//			
-//	return 720;			// Found @0xFF912C28 (1.00B)
-//}	
-//
-//long vid_get_bitmap_buffer_height() {
-//			
-//	return 240;			// Found @0xFF912C2C (1.00B)
-//}
-
-//int vid_get_viewport_buffer_width() {
-//	
-//	return 720;
-//}
-//
-//int vid_get_viewport_buffer_height() {
-//	
-//	return 240;
-//}
-
-int vid_get_viewport_width() {
-	
-	// viewport width table for each image size
-	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	static long vp_w[4] = { 360, 360, 360, 360 };
-	return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+int vid_get_viewport_width()
+{
+    return 360;
 }
 
-long vid_get_viewport_height() {
-	
-	// viewport height table for each image size
-	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	static long vp_h[4] = { 240, 240, 240, 240 };
-	return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+long vid_get_viewport_height()
+{
+    return 240;
 }
 
-int vid_get_viewport_xoffset() {
-	
-	// viewport width offset table for each image size
-	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	static long vp_w[4] = { 0, 0, 0, 0 };				// should all be even values for edge overlay
-	return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+// Defined in stubs_entry.S
+extern char active_viewport_buffer;
+extern void* viewport_buffers[];
+
+void *vid_get_viewport_fb()
+{
+    // Return first viewport buffer - for case when vid_get_viewport_live_fb not defined
+    return viewport_buffers[0];
 }
 
-int vid_get_viewport_yoffset() {
-	
-	// viewport height offset table for each image size
-	// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	static long vp_h[4] = { 0, 0, 0, 0 };
-	return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+void *vid_get_viewport_live_fb()
+{
+    if (MODE_IS_VIDEO(mode_get()))
+        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
+
+    // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
+    return viewport_buffers[(active_viewport_buffer-1)&3];
+}
+
+void *vid_get_viewport_fb_d()
+{
+    extern char *viewport_fb_d;
+	return viewport_fb_d;
+}
+
+void vid_bitmap_refresh() {
+
+    extern int full_screen_refresh;
+    extern void _ScreenLock();
+    extern void _ScreenUnlock();
+
+    full_screen_refresh |= 3;
+    _ScreenLock();
+    _ScreenUnlock();
 }
 
 //// viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
