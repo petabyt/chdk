@@ -97,6 +97,7 @@ asm volatile (
 
 "    LDR     R0, =video_compression_rate\n" //added
 "    BL      set_quality\n"                 //added
+"    BL      mute_on_zoom\n"                //added
 
 "    B       loc_FF96428C \n"
 
