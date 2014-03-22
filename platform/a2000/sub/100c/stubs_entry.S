@@ -25,7 +25,6 @@
 //NHSTUB(Read                                 ,0xffc0a138) //120        *** != 0xffc133ec
 //NHSTUB(kbd_pwr_off                          ,0xffc31408) //  2 64%    *** != 0xffc31418
 NHSTUB(kbd_pwr_on                             ,0xffc313c8) //  2 82%
-//NHSTUB(write                                ,0xffc133f0) //120        *** != 0xffc0a198
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffdfbf48 -> ffeb9b10
@@ -55,6 +54,7 @@ DEF(focus_busy                              ,0x00007ee4) // Found @0xffcfe824
 //        other buffer  --> raw_buffers[(active_raw_buffer^1)*3]
 DEF(raw_buffers                             ,0xffe7d734) // Found @0xffe7d734
 DEF(active_raw_buffer                       ,0x000051b8) // Found @0xffc4c220
+DEF(fileio_semaphore                        ,0x000026c4) // Found @0xffc3e444
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x10361000; }             // Found @0xffc2cea0

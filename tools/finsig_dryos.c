@@ -349,7 +349,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "closedir" },
     { "qsort" },
     { "rand" },
-    { "read", UNUSED },
+    { "read", UNUSED|OPTIONAL },
     { "realloc", OPTIONAL },
     { "reboot_fw_update" },
     { "set_control_event" },
@@ -380,7 +380,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
 
     { "time" },
     { "vsprintf" },
-    { "write", UNUSED },
+    { "write", UNUSED|OPTIONAL },
 
     { "EngDrvIn", OPTIONAL|UNUSED },
     { "EngDrvOut", OPTIONAL|UNUSED },
@@ -1053,7 +1053,7 @@ string_sig string_sigs[] =
     {20, "UIFS_WriteFirmInfoToFile", "UIFS_WriteFirmInfoToFile_FW", 1 },
     {20, "UnlockMainPower", "UnlockMainPower_FW", 1 },
     {20, "VbattGet", "VbattGet_FW", 1 },
-    {20, "write", "Write_FW", 1 },
+    //{20, "write", "Write_FW", 1 },
     {20, "Write", "Write_FW", 1 },
     {20, "task_CaptSeq", "task_CaptSeqTask", 1 },
     {20, "task_ExpDrv", "task_ExpDrvTask", 1 },
@@ -1111,8 +1111,8 @@ string_sig string_sigs[] =
     { 1, "Open", "Open", 1 },
     { 1, "PostLogicalEventToUI", "PostLogicalEventToUI", 1 },
     { 1, "PostLogicalEventForNotPowerType", "PostLogicalEventForNotPowerType", 1 },
-    { 1, "Read", "Read", 1 },
-    { 1, "read", "Read", 1 },
+    //{ 1, "Read", "Read", 1 },
+    //{ 1, "read", "Read", 1 },
     { 1, "RefreshPhysicalScreen", "RefreshPhysicalScreen", 1 },
     { 1, "SetAutoShutdownTime", "SetAutoShutdownTime", 1 },
     { 1, "SetCurrentCaptureModeType", "SetCurrentCaptureModeType", 1 },
@@ -1131,8 +1131,8 @@ string_sig string_sigs[] =
     //{ 1, "UnlockAF", "PT_UnlockAF", 0x01000002 },
     { 1, "UnlockMainPower", "UnlockMainPower", 1 },
     { 1, "VbattGet", "VbattGet", 1 },
-    { 1, "Write", "Write", 1 },
-    { 1, "write", "Write", 1 },
+    //{ 1, "Write", "Write", 1 },
+    //{ 1, "write", "Write", 1 },
     { 1, "GUISrv_StartGUISystem", "GUISrv_StartGUISystem", 1 },
 
     { 2, "GetBatteryTemperature", "GetBatteryTemperature", 1 },
@@ -1325,11 +1325,17 @@ string_sig string_sigs[] =
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52
     { 19, "GetSemaphoreValue", "GiveSemaphore", 0,                               0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e },
     { 19, "CreateMessageQueueStrictly", "CreateTaskStrictly", 0,                 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d },
+    { 19, "CreateMessageQueueStrictly", "CreateTaskStrictly", 0,                 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000e },
     { 19, "CreateEventFlagStrictly", "CreateMessageQueueStrictly", 0,            0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009 },
+    { 19, "CreateEventFlagStrictly", "CreateMessageQueueStrictly", 0,            0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x000a },
     { 19, "CreateBinarySemaphoreStrictly", "CreateEventFlagStrictly", 0,         0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009 },
+    { 19, "CreateBinarySemaphoreStrictly", "CreateEventFlagStrictly", 0,         0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x000a },
     { 19, "CreateCountingSemaphoreStrictly", "CreateBinarySemaphoreStrictly", 0, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009 },
+    { 19, "CreateCountingSemaphoreStrictly", "CreateBinarySemaphoreStrictly", 0, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x000a },
     { 19, "CreateRecursiveLockStrictly", "CreateCountingSemaphoreStrictly", 0,   0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009 },
+    { 19, "CreateRecursiveLockStrictly", "CreateCountingSemaphoreStrictly", 0,   0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x000a },
     { 19, "TakeSemaphoreStrictly", "CreateRecursiveLockStrictly", 0,             0x0001, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009 }, // name made up
+    { 19, "TakeSemaphoreStrictly", "CreateRecursiveLockStrictly", 0,             0x0001, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x000a }, // name made up
     { 19, "ReceiveMessageQueueStrictly", "TakeSemaphoreStrictly", 0,             0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b }, // name made up
     { 19, "PostMessageQueueStrictly", "ReceiveMessageQueueStrictly", 0,          0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b }, // name made up
     { 19, "WaitForAnyEventFlagStrictly", "PostMessageQueueStrictly", 0,          0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b }, // name made up
@@ -3530,6 +3536,29 @@ int match_raw_buffer(firmware *fw, int k, uint32_t rb1, uint32_t v2)
     return 0;
 }
 
+int match_fileiosem(firmware *fw, int k, uint32_t fadr, uint32_t nadr)
+{
+    if ((k > 5) && isADR_PC(fw, k) && isBL(fw,k+1) && (ADR2adr(fw,k) == nadr) && (followBranch2(fw, idx2adr(fw,k+1), 0x01000001) == fadr))
+    {
+        int j, rn = -1;
+        for (j = k-1; j > k-5; j++)
+        {
+            if (isLDR(fw,j))
+            {
+                if (fwRd(fw,j) == 0)
+                    rn = fwRn(fw, j);
+                else if (fwRd(fw,j) == rn)
+                {
+                    int v = LDR2val(fw,j);
+                    print_stubs_min(fw,"fileio_semaphore",v,idx2adr(fw,j));
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
 // Search for things that go in 'stubs_min.S'
 void find_stubs_min(firmware *fw)
 {
@@ -3860,6 +3889,19 @@ void find_stubs_min(firmware *fw)
             {
                 bprintf("// Camera appears to have only 1 RAW buffer @ 0x%08x (Found @0x%08x)\n", rb1, idx2adr(fw,rb1_idx));
             }
+        }
+    }
+
+    // Find 'fileio_semaphore'
+    k = get_saved_sig(fw, "TakeSemaphoreStrictly");
+    if (k >= 0)
+    {
+        uint32_t fadr = func_names[k].val;
+        k = find_str(fw, "FileSem.c");
+        if (k >= 0)
+        {
+            uint32_t nadr = idx2adr(fw, k);
+            search_fw(fw, match_fileiosem, fadr, nadr, 3);
         }
     }
 }

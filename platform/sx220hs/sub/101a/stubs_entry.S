@@ -19,7 +19,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(write                                ,0xff0270d8) //120        *** != 0xff00adb8
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff318d4c -> ff48a468
@@ -61,6 +60,7 @@ DEF(active_viewport_buffer                  ,0x00002104) // Found @0xff04356c
 //        other buffer  --> raw_buffers[(active_raw_buffer^1)*3]
 DEF(raw_buffers                             ,0xff3b325c) // Found @0xff3b325c
 DEF(active_raw_buffer                       ,0x00003f04) // Found @0xff079b50
+DEF(fileio_semaphore                        ,0x00003c18) // Found @0xff0691e8
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40471000; }             // Found @0xff050f20

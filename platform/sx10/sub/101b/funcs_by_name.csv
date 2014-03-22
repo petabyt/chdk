@@ -1080,7 +1080,6 @@
 0xffa0cb10,QuietImager_FW
 0xff81ccac,rand
 0xff819a4c,Read
-0xff819a4c,read
 0xff819a4c,Read_FW
 0xffa491c4,ReadFastDir
 0xff813b5c,realloc
@@ -1649,7 +1648,6 @@
 0xff9fd3a4,wblpface.stop_FW
 0xff9fd384,wblpface.term_FW
 0xff823b10,Write
-0xff823b10,write
 0xff823b10,Write_FW
 0xff850ea8,WRITEADJTABLETOFROM_FW
 0xffad3da8,WriteGyroAdjustment_FW

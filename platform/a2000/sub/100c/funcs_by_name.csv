@@ -913,7 +913,6 @@
 0xffda0b08,QuietImager_FW
 0xffc0d9bc,rand
 0xffc133ec,Read,(stubs_entry_2.s)
-0xffc0a138,read
 0xffc0a138,Read_FW
 0xffddce7c,ReadFastDir
 0xffc03b60,realloc
@@ -1387,7 +1386,6 @@
 0xffd94664,wblpface.stop_FW
 0xffd94644,wblpface.term_FW
 0xffc133f0,Write
-0xffc0a198,write,(stubs_entry_2.s)
 0xffc133f0,Write_FW
 0xffc35b50,WRITEADJTABLETOFROM_FW
 0xffe46f08,WriteGyroAdjustment_FW

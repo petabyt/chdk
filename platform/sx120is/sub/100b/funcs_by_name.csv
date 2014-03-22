@@ -999,7 +999,6 @@
 0xffdc3eb0,QuietImager_FW
 0xffc0ccc4,rand
 0xffc09894,Read
-0xffc09894,read
 0xffc09894,Read_FW
 0xffdfed14,ReadFastDir
 0xffd90d70,realloc
@@ -1491,7 +1490,6 @@
 0xffdb10a4,wblpface.stop_FW
 0xffdb1084,wblpface.term_FW
 0xffc1393c,Write
-0xffc1393c,write
 0xffc1393c,Write_FW
 0xffc3b654,WRITEADJTABLETOFROM_FW
 0xffc3b678,WRITEADJUSTMENTDATATOFROM_FW

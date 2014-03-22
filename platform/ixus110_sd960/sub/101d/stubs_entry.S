@@ -50,6 +50,7 @@ DEF(recreview_hold                          ,0x00003640) // Found @0xff881428
 //DEF(palette_buffer_ptr                      ,0x000084dc) // Found @0xff9b23f4,          stubs_min = 0x000084dc (0x84dc)
 // Offset from start of palette_buffer to color data = 12 (Found @0xff9b13a0)
 // Camera appears to have only 1 RAW buffer @ 0x424ad900 (Found @0xffac0c44)
+DEF(fileio_semaphore                        ,0x00002730) // Found @0xff851ce8
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x403f1000; }             // Found @0xff83dc44

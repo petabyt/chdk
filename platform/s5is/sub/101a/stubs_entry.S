@@ -24,7 +24,6 @@
 // ERROR: UIFS_WriteFirmInfoToFile is not found.           //--- ---    *** != 0x00000000
 //NHSTUB(kbd_pwr_off                          ,0xff84dc38) //  2 67%    *** != 0x00000000
 //NHSTUB(srand                                ,0xff81e828) //122        *** != 0xff81bdb4
-//NHSTUB(write                                ,0xff825e38) //120        *** != 0xff81a328
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffa450e8 -> ffaefee8

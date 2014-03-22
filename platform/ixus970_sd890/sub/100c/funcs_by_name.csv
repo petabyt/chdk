@@ -654,7 +654,6 @@
 0xff9d5db8,QuietImager_FW
 0xff81d94c,rand
 0xff81a094,Read
-0xff81a094,read
 0xff81a094,Read_FW
 0xffa13500,ReadFastDir
 0xff813b78,realloc
@@ -981,7 +980,6 @@
 0xff8279a0,WaitForAnyEventFlag
 0xff81bc5c,WaitForAnyEventFlagStrictly
 0xff823e3c,Write
-0xff823e3c,write
 0xff823e3c,Write_FW
 0xff8479fc,WRITEADJTABLETOFROM_FW
 0xff9227e0,WriteSDCard

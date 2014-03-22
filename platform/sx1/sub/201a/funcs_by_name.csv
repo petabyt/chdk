@@ -1146,7 +1146,6 @@
 0xff95bc8c,r_FW
 0xff81ccac,rand
 0xff819a4c,Read
-0xff819a4c,read
 0xff819a4c,Read_FW
 0xffa6fe78,ReadFastDir
 0xff813b5c,realloc
@@ -1754,7 +1753,6 @@
 0xffa1d898,wblpface.stop_FW
 0xffa1d878,wblpface.term_FW
 0xff823af0,Write
-0xff823af0,write
 0xff823af0,Write_FW
 0xff853af4,WRITEADJTABLETOFROM_FW
 0xff853b18,WRITEADJUSTMENTDATATOFROM_FW
