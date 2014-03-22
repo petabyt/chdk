@@ -401,7 +401,7 @@ static void mx_dump_memory(void *img){
 
 		sprintf(fn, "A/MD/%04d.FB", cnt );
 		fd = open(fn, O_WRONLY|O_CREAT, 0777);
-		if (fd) {
+		if (fd>=0) {
 	    write(fd, img, camera_screen.width*vid_get_viewport_height()*3);
 	    close(fd);
 		}
