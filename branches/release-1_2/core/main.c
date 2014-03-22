@@ -52,7 +52,7 @@ void dump_memory()
     if ( !is_video_recording() ) {
         mkdir("A/DCIM");
         mkdir("A/DCIM/100CANON");
-        fd = 0;
+        fd = -1;
         do {
             sprintf(fn, "A/DCIM/100CANON/CRW_%04d.JPG", cnt++);
             if (stat(fn,0) != 0) {
@@ -60,7 +60,7 @@ void dump_memory()
                 break;
             }
         } while(cnt<9999);
-        if (fd) {
+        if (fd>=0) {
             if ( conf.memdmp_start == 0 ) {
                 long val0 = *((long*)(0|CAM_UNCACHED_BIT));
                 write(fd, &val0, 4);
