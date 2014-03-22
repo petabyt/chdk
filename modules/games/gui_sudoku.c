@@ -1040,9 +1040,12 @@ void exit_sudoku(int save)
     if (save!=0)
     {
         save = open("A/CHDK/GAMES/SUDOKU.SAV", O_WRONLY|O_CREAT|O_TRUNC, 0777);
-        write(save, user, sizeof(user));
-        write(save, field, sizeof(field));
-        close(save);
+        if (save>=0)
+        {
+            write(save, user, sizeof(user));
+            write(save, field, sizeof(field));
+            close(save);
+        }
     }
     running = 0;
     gui_default_kbd_process_menu_btn();
