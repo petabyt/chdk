@@ -885,7 +885,6 @@
 0xffd9cb9c,QuietImager_FW
 0xffc0e9f8,rand
 0xffc0a440,Read
-0xffc0a440,read
 0xffc0a440,Read_FW
 0xffddc67c,ReadFastDir
 0xffc03b90,realloc
@@ -1342,7 +1341,6 @@
 0xffc19268,WaitForAnyEventFlag
 0xffc0bffc,WaitForAnyEventFlagStrictly
 0xffc150f8,Write
-0xffc150f8,write
 0xffc150f8,Write_FW
 0xffc3c8d0,WRITEADJTABLETOFROM_FW
 0xffdc5ffc,WriteGyroAdjustment_FW

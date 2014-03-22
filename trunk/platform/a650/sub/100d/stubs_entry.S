@@ -17,7 +17,6 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(GetZoomLensCurrentPosition           ,0xffddefdc) //102        *** != 0xffd07fc4
-//NHSTUB(write                                ,0xffc14fcc) //120        *** != 0xffc0a3d8
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffdeadb8 -> ffe8e628
@@ -43,6 +42,7 @@ DEF(zoom_busy                               ,0x0000d5a8) // Found @0xffd070e0
 //        other buffer  --> raw_buffers[(active_raw_buffer^1)*3]
 DEF(raw_buffers                             ,0xffe5aa78) // Found @0xffe5aa78
 DEF(active_raw_buffer                       ,0x00005684) // Found @0xffc4e0f0
+DEF(fileio_semaphore                        ,0x00002bb0) // Found @0xffc418d8
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x10361000; }             // Found @0xffc3396c

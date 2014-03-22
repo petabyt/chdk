@@ -45,6 +45,7 @@ DEF(focus_busy                              ,0x0000e150) // Found @0xff934128
 //        other buffer  --> raw_buffers[(active_raw_buffer^1)*3]
 DEF(raw_buffers                             ,0xffac6740) // Found @0xffac6740
 DEF(active_raw_buffer                       ,0x0000586c) // Found @0xff861840
+DEF(fileio_semaphore                        ,0x00002d68) // Found @0xff853fa8
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x10361000; }             // Found @0xff8451d0

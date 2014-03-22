@@ -18,7 +18,6 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(GetZoomLensCurrentPosition           ,0xffdd0040) //102        *** != 0xffd03b5c
 //NHSTUB(SetPropertyCase                      ,0xffc59b24) //103        *** != 0xffc50cc8
-//NHSTUB(write                                ,0xffc150d8) //120        *** != 0xffc0a4a8
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffddc128 -> ffe7cffc
@@ -44,6 +43,7 @@ DEF(zoom_busy                               ,0x00009dc0) // Found @0xffd02c78
 //DEF(focus_busy                              ,0x00009cb8) // Found @0xffcfcffc, ** != ** stubs_min = 0x00009d50 (0x9D50)
 //DEF(recreview_hold                          ,0x00005dc0) // Found @0xffc64708, ** != ** stubs_min = 0x0000abe8 (0xABE8)
 // Camera appears to have only 1 RAW buffer @ 0x10f6c860 (Found @0xffdab258)
+DEF(fileio_semaphore                        ,0x00002bd4) // Found @0xffc40d18
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x10361000; }             // Found @0xffc32c24

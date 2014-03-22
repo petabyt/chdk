@@ -9,7 +9,6 @@
 0xffc09ea0,open
 0xffc09f50,close
 0xffc133ec,Read,(stubs_entry_2.s)
-0xffc0a138,read
 0xffc0a138,Read_FW
 0xffc0b578,RegisterInterruptHandler
 0xffc0b59c,UnregisterInterruptHandler
@@ -110,7 +109,6 @@
 0xffc13344,Close_FW
 0xffc133ec,j_Read_FW
 0xffc133f0,Write
-0xffc0a198,write,(stubs_entry_2.s)
 0xffc133f0,Write_FW
 0xffc1354c,Lseek,(stubs_entry_2.s)
 0xffc13484,lseek

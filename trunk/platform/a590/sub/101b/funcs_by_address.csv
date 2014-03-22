@@ -9,7 +9,6 @@
 0xffc09ec4,open
 0xffc09f74,close
 0xffc0a15c,Read
-0xffc0a15c,read
 0xffc0a15c,Read_FW
 0xffc0b5a0,RegisterInterruptHandler
 0xffc0b5c4,UnregisterInterruptHandler
@@ -108,7 +107,6 @@
 0xffc13b88,Close_FW
 0xffc13c30,j_Read_FW
 0xffc13c34,Write
-0xffc13c34,write
 0xffc13c34,Write_FW
 0xffc13cc8,Lseek
 0xffc13cc8,lseek

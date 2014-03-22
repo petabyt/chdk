@@ -22,7 +22,6 @@
 0xff819f68,open
 0xff81a018,close
 0xff825d6c,Read,(stubs_entry_2.s)
-0xff81a200,read
 0xff81a200,Read_FW
 0xff81b5c4,RegisterInterruptHandler
 0xff81b5e8,UnregisterInterruptHandler
@@ -152,7 +151,6 @@
 0xff825cc4,Close_FW
 0xff825d6c,j_Read_FW
 0xff825d70,Write
-0xff81a260,write,(stubs_entry_2.s)
 0xff825d70,Write_FW
 0xff825ecc,Lseek,(stubs_entry_2.s)
 0xff825e04,lseek

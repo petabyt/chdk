@@ -59,6 +59,7 @@ DEF(palette_buffer                          ,0x000b42c0) // Found @0xff9d2d68
 DEF(viewport_buffers                        ,0xffb10f24) // Found @0xff849d68
 DEF(active_viewport_buffer                  ,0x000020bc) // Found @0xff849ad0
 // Camera appears to have only 1 RAW buffer @ 0x420b7fc0 (Found @0xffae20c8)
+DEF(fileio_semaphore                        ,0x0000291c) // Found @0xff864c8c
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40411000; }             // Found @0xff852ebc

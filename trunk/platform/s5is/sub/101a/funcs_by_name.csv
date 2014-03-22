@@ -901,7 +901,6 @@
 0xff9ee7e8,QuietImager_FW
 0xff81e834,rand
 0xff825e34,Read,(stubs_entry_2.s)
-0xff81a2c8,read
 0xff81a2c8,Read_FW
 0xffa279c8,ReadFastDir
 0xff813be0,realloc
@@ -1445,7 +1444,6 @@
 0xff82a1d0,WaitForAnyEventFlag
 0xff9eeb10,WithdrawalImagerForEmergency_FW
 0xff825e38,Write
-0xff81a328,write,(stubs_entry_2.s)
 0xff825e38,Write_FW
 0xff852610,WRITEADJTABLETOFROM_FW
 0xffa1221c,WriteGyroAdjustment_FW

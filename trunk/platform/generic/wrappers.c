@@ -336,6 +336,8 @@ short SetAE_ShutterSpeed(short *tv)             { return _SetAE_ShutterSpeed(tv)
     return _creat(name, flags);
 }*/
 
+extern int fileio_semaphore;
+
 int open (const char *name, int flags, int mode )
 {
 #if !CAM_DRYOS
@@ -353,9 +355,11 @@ int open (const char *name, int flags, int mode )
 		return _open(name, flags, mode);
 #endif
 */
-// TESTING - always use _open for dryos
 #if CAM_DRYOS
-    return _open(name, flags, mode);
+    _TakeSemaphore(fileio_semaphore,0);
+    int fd = _Open(name, flags, mode);
+    _GiveSemaphore(fileio_semaphore);
+    return fd;
 #else
     return _Open(name, flags, mode);
 #endif
@@ -363,9 +367,11 @@ int open (const char *name, int flags, int mode )
 
 int close (int fd)
 {
-// TESTING - always use _close for dryos
 #if CAM_DRYOS
-    return _close(fd);
+    _TakeSemaphore(fileio_semaphore,0);
+    int r = _Close(fd);
+    _GiveSemaphore(fileio_semaphore);
+    return r;
 #else
     return _Close(fd);
 #endif
@@ -373,7 +379,14 @@ int close (int fd)
 
 int write (int fd, const void *buffer, long nbytes)
 {
+#if CAM_DRYOS
+    _TakeSemaphore(fileio_semaphore,0);
+    int r = _Write(fd, buffer, nbytes);
+    _GiveSemaphore(fileio_semaphore);
+    return r;
+#else
     return _Write(fd, buffer, nbytes);
+#endif
 }
 
 int read (int fd, void *buffer, long nbytes)

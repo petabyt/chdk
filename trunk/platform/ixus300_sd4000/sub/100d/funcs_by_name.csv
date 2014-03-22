@@ -1024,7 +1024,6 @@
 0xff8f3c3c,QuietImager_FW
 0xff820774,rand
 0xff81ac7c,Read
-0xff81ac7c,read
 0xff81ac7c,Read_FW
 0xffa95de4,ReadFastDir
 0xffa15e58,realloc
@@ -1526,7 +1525,6 @@
 0xff887240,WaitForAnyEventFlag
 0xff83a2cc,WaitForAnyEventFlagStrictly
 0xff836e48,Write
-0xff836e48,write
 0xff836e48,Write_FW
 0xff8671ac,WRITEADJTABLETOFROM_FW
 0xff8671d0,WRITEADJUSTMENTDATATOFROM_FW

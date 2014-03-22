@@ -70,8 +70,8 @@ extern void _UpdateMBROnFlash(int driveno, long offset, char *str);
 //extern int _creat (const char *name, int flags);
 extern int _open (const char *name, int flags, int mode );
 extern int _close (int fd);
-extern int _write (int fd, void *buffer, long nbytes);
-extern int _read (int fd, void *buffer, long nbytes);
+//extern int _write (int fd, const void *buffer, long nbytes);
+//extern int _read (int fd, void *buffer, long nbytes);
 extern int _lseek (int fd, long offset, int whence);
 extern long _mkdir(const char *dirname);
 
@@ -152,6 +152,7 @@ extern int _taskDeleteHookAdd (void *deleteHook);
 extern long _iosDevAdd(void*,void*,int);
 extern long _iosDevDelete(void*);
 extern long _iosDrvInstall(void*,void*,void*,void*,void*,void*,void*);
+extern void _TakeSemaphore(int sem, int timeout);
 extern void _GiveSemaphore(int sem);
 
 /* misc */

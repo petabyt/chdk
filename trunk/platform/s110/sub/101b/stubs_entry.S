@@ -63,6 +63,7 @@ DEF(active_bitmap_buffer                    ,0x0000aa30) // Found @0xf82870d0
 //        other buffer  --> raw_buffers[active_raw_buffer^1]
 DEF(raw_buffers                             ,0xf86759d0) // Found @0xf86759d0
 DEF(active_raw_buffer                       ,0x00003f48) // Found @0xf80c5f8c
+DEF(fileio_semaphore                        ,0x000037dc) // Found @0xf8091bc8
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x406c5000; }             // Found @0xf8074fa0

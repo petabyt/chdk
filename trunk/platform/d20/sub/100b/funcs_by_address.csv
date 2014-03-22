@@ -76,7 +76,6 @@
 0xff005904,open
 0xff0059b4,close
 0xff005b58,Read
-0xff005b58,read
 0xff005b58,Read_FW
 0xff009db8,RotateConsoleZOder_FW
 0xff009fc8,CPrintf_FW
@@ -164,7 +163,6 @@
 0xff0210e4,Close
 0xff0210e4,Close_FW
 0xff021138,Write
-0xff021138,write
 0xff021138,Write_FW
 0xff02118c,j_Open_FW
 0xff021190,j_Close_FW

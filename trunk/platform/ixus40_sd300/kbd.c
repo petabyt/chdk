@@ -43,7 +43,7 @@ typedef enum {
 
 typedef int SEM_ID; 
 extern SEM_ID _semBCreate(int options, SEM_B_STATE initialState);
-extern STATUS _TakeSemaphore(SEM_ID, int);
+//extern STATUS _TakeSemaphore(SEM_ID, int);
 //extern STATUS _GiveSemaphore(SEM_ID);
 SEM_ID semBinary;
 
