@@ -1105,11 +1105,10 @@ void conf_save()
 
             config_save(confinfo_handlers[i].ci, confinfo_handlers[i].filename, confinfo_handlers[i].start_id);
             config_update_last_saved(confinfo_handlers[i].ci);
-
-            if (confinfo_handlers[i].start_id == CONF_CORE)
-                save_params_values(0);
         }
     }
+    // Save current script parameters if they have changed.
+    save_params_values(0);
 }
 
 int save_config_file(int config_base, const char *filename)
