@@ -39,7 +39,9 @@ void *vid_get_bitmap_fb() {
 	
 	return (void*)0x403F1000;	// Found @0xFF85B81C
 }	
-	
+
+// Those functions were replaced by their generic implementation in ../lib.c
+/*
 void *vid_get_viewport_live_fb() {
 	
 	//if ((mode_get()&MODE_MASK) == MODE_REC)
@@ -58,21 +60,11 @@ void *vid_get_viewport_fb() {
 	//	return (void*)(0x40546B80-vid_get_viewport_xoffset()*3);
 		
 	return (void*)0x40546B80;	// Found @0xFFB17310
-}		
+} 
 		
 void *vid_get_viewport_fb_d() {
 	
 
 	return (void*)(*(int*)(0x29a0+0x58));	// Found @0xff871344 & 0xff87137c
 }		
-
-void vid_bitmap_refresh() {
-	
-	extern int full_screen_refresh;
-	extern void _ScreenUnlock();
-	extern void _ScreenLock();
-
-	full_screen_refresh |= 3;
-	_ScreenLock();
-	_ScreenUnlock();
-}
+*/
