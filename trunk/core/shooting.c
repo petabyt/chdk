@@ -1639,7 +1639,7 @@ uses switch_mode_usb if a usb connection is present
 */
 void shooting_set_playrec_mode(int mode)
 {
-    if (get_usb_bit_physw()) 
+    if (conf.remote_enable == 0 && get_usb_bit()) 
     {
         switch_mode_usb(mode);
         return;

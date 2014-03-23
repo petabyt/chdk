@@ -78,8 +78,6 @@ extern long kbd_get_autoclicked_key();
 extern long kbd_use_zoom_as_mf();
 extern void kbd_set_alt_mode_key_mask(long key);
 extern void kbd_set_extra_button(short);
-extern int get_usb_power(int edge);
-int get_usb_bit_physw(void);
 extern long get_jogdial_direction(void);
 
 extern void JogDial_CW(void);

@@ -1706,15 +1706,3 @@ int _rand(void) {
     return value;
 };
 #endif
-
-/*
-return the usb state as seen by the firmware (after any masking for remote)
-TODO this should just check the modified physw bit, but would requires
-kbd.c code for each camera
-*/
-extern int get_usb_bit();
-int get_usb_bit_physw(void)
-{
-    return (conf.remote_enable == 0 && get_usb_bit());
-}
-

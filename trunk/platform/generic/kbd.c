@@ -20,8 +20,6 @@ static long kbd_mod_state = 0xFFFFFFFF ;
 
 static KeyMap keymap[];
 
-extern void usb_remote_key( void ) ;
-
 #define NEW_SS (0x2000)
 #define SD_READONLY_FLAG (0x20000)
 
@@ -141,39 +139,34 @@ void my_kbd_read_keys()
 
     kbd_fetch_data(kbd_new_state);
 
-    if (kbd_process() == 0){
-	// leave it alone...
-	physw_status[0] = kbd_new_state[0];
-	physw_status[1] = kbd_new_state[1];
-	physw_status[2] = kbd_new_state[2];
-	physw_status[alt_mode_key_reg] |= alt_mode_key_mask;
+    if (kbd_process() == 0) {
+        // leave it alone...
+        physw_status[0] = kbd_new_state[0];
+        physw_status[1] = kbd_new_state[1];
+        physw_status[2] = kbd_new_state[2];
+        physw_status[alt_mode_key_reg] |= alt_mode_key_mask;
 
     } else {
-	// override keys
-	physw_status[0] = kbd_new_state[0];
-	physw_status[1] = kbd_new_state[1];
-	physw_status[2] = (kbd_new_state[2] & (~0x1fff)) |
-			  (kbd_mod_state & 0x1fff);
+        // override keys
+        physw_status[0] = kbd_new_state[0];
+        physw_status[1] = kbd_new_state[1];
+        physw_status[2] = (kbd_new_state[2] & (~0x1fff)) | (kbd_mod_state & 0x1fff);
     }
-	
-	usb_remote_key() ;
 
 #if defined(USB_MASK) && defined(USB_IDX)
-		if (conf.remote_enable) {
+    if (conf.remote_enable) {
 
 #if !defined(CAMERA_a530) && !defined(CAMERA_a540)
         physw_status[USB_IDX] = kbd_new_state[USB_IDX] & ~USB_MASK;
 #endif
-        }
+    }
 
 #endif
-
 
     _kbd_read_keys_r2(physw_status);
     physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;
 
     _kbd_pwr_off();
-
 }
 
 void kbd_set_alt_mode_key_mask(long key)

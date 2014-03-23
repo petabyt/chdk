@@ -69,6 +69,7 @@
 #include "lens.h"
 #include "debug_led.h"
 #include "keyboard.h"
+#include "usb_remote.h"
 #include "shutdown.h"
 #include "sound.h"
 #include "motion_detector.h"

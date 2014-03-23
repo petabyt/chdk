@@ -43,7 +43,6 @@ extern int Taste_press;
 #define USB_IDX             2
 
 
-extern void usb_remote_key( int ) ;
 int get_usb_bit() {
     long usb_physw[3];
     usb_physw[USB_IDX] = 0;
@@ -188,8 +187,6 @@ void my_kbd_read_keys() {
         else if (jogdial_stopped && camera_info.state.state_kbd_script_run)
             jogdial_control(0);
     }
-
-    usb_remote_key(physw_status[USB_IDX]) ;
 
     if (conf.remote_enable) {
         physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);

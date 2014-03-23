@@ -13,6 +13,7 @@
 #include "gui_usb.h"
 #include "gui_space.h"
 #include "histogram.h"
+#include "usb_remote.h"
 #ifdef CAM_HAS_GPS
 #include "gps.h"
 #endif

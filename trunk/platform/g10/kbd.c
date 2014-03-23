@@ -18,7 +18,6 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long alt_mode_key_mask = 0x00000200;	// default to G10 Print Key
 
 extern void _GetKbdState(long*);
-extern void usb_remote_key( void ) ;
 
 #define LED_ISO  (void*) 0xC02200D0 // G10 ISO select dial LED
 #define LED_DP   (void*) 0xC02200D4	// G10 direct print button LED
@@ -30,7 +29,6 @@ extern void usb_remote_key( void ) ;
 #define USB_MASK            0x00040000	// Found @0xffb0f94c, levent 0x902
 #define USB_IDX             2    
 
-extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
 	long usb_physw[3];
@@ -151,8 +149,6 @@ void my_kbd_read_keys()
 		else if (jogdial_stopped && camera_info.state.state_kbd_script_run) jogdial_stopped=0;
 	}
 	
-	usb_remote_key() ;
-
 	if (conf.remote_enable) {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
 	} else {

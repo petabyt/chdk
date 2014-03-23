@@ -114,7 +114,6 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long alt_mode_key_mask = 0x08000000;	// Key Print on A2100
 
 extern void _GetKbdState(long*);
-extern void usb_remote_key( void ) ;
 
 
 
@@ -123,7 +122,6 @@ extern void usb_remote_key( void ) ;
 #define USB_MASK            0x00040000 // Found @0xffe71738, levent 0x902
 #define USB_IDX             2
 
-extern void usb_remote_key( void ) ;
 int get_usb_bit() {
 	long usb_physw[3];
 	usb_physw[USB_IDX] = 0;
@@ -283,8 +281,6 @@ void my_kbd_read_keys() {
 	}
 	
 //	_kbd_pwr_off();
-	usb_remote_key() ;
-
 	if (conf.remote_enable) {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
 	} else {

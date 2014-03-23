@@ -23,7 +23,6 @@ static KeyMap keymap[];
 #define USB_MASK 0x40 
 #define USB_IDX  2
 
-extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
 	return 0 ;
@@ -131,8 +130,6 @@ void my_kbd_read_keys()
 			  (kbd_mod_state & 0xaffe);
 	}
 	
-	usb_remote_key();
-
 	if (conf.remote_enable) {
 		physw_status[USB_IDX] = kbd_new_state[USB_IDX] & ~USB_MASK;
 	}

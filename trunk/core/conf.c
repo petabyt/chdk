@@ -12,6 +12,7 @@
 #include "core.h"
 #include "fileutil.h"
 #include "lang.h"
+#include "usb_remote.h"
 
 #include "modules.h"
 #include "module_def.h"
@@ -504,6 +505,11 @@ void conf_info_func(unsigned short id)
         break;
     case  82: 
         shooting_video_bitrate_change(conf.video_bitrate);
+        break;
+    case 200:
+    case 204:
+    case 205:   // USB Remote
+        set_usb_remote_state();
         break;
     case 220:
 #if CAM_ADJUSTABLE_ALT_BUTTON

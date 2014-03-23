@@ -25,7 +25,6 @@ extern void _GetKbdState(long*);
 #define USB_MASK            0x10000000 // Found @0xff4a0e0c, levent 0x202
 #define USB_IDX             2
 
-extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
 	long usb_physw[3];
@@ -140,8 +139,6 @@ void my_kbd_read_keys()
 	}
 
 	//_kbd_read_keys_r2(physw_status);
-
-	usb_remote_key() ;
 
     physw_status[SD_READONLY_IDX] = physw_status[SD_READONLY_IDX] & ~SD_READONLY_FLAG;
 	if (conf.remote_enable) {
