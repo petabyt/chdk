@@ -32,6 +32,7 @@
 #include "debug_led.h"
 #include "meminfo.h"
 #include "callfunc.h"
+#include "usb_remote.h"
 
 #include "script_api.h"
 #include "curves.h"

@@ -40,7 +40,6 @@ extern void _GetKbdState(long*);
 static char kbd_stack[NEW_SS];
 #endif
 
-extern void usb_remote_key( void ) ;
 int get_usb_bit()
 {
         long usb_physw[3];
@@ -121,8 +120,6 @@ void my_kbd_read_keys() {
         physw_status[1] = (kbd_new_state[1] | KEYS_MASK1) & (~KEYS_MASK1 | kbd_mod_state[1]);
         physw_status[2] = (kbd_new_state[2] | KEYS_MASK2) & (~KEYS_MASK2 | kbd_mod_state[2]);
     }
-
-        usb_remote_key() ;
 
         if (conf.remote_enable) {
                 physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);

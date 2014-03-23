@@ -52,6 +52,7 @@
 #include "fileutil.h"
 #include "task.h"
 #include "callfunc.h"
+#include "usb_remote.h"
 
 #include "modules.h"
 #include "module_load.h"

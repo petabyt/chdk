@@ -46,7 +46,6 @@ extern void _GetKbdState(long*);
 #define BATTCOVER_FLAG      0x00008000 // Found @0xffbb9438, levent 0x905
 #define BATTCOVER_IDX       2
 
-extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
 	long usb_physw[3];
@@ -168,9 +167,6 @@ void my_kbd_read_keys()
 	}
 
 	//_kbd_read_keys_r2(physw_status);	// re-reads physw_status[0] from 0x2DE4 at start (so above doesn't work properly) !!!!!
-
-	usb_remote_key() ;
-
 
     physw_status[SD_READONLY_IDX] = physw_status[SD_READONLY_IDX] & ~SD_READONLY_FLAG;
 #if defined(OPT_RUN_WITH_BATT_COVER_OPEN)

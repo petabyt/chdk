@@ -24,7 +24,6 @@ static KeyMap keymap[];
 extern int remote_key ;
 extern int remote_count ;
 extern int usb_power ;
-extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
 	long usb_physw[3];

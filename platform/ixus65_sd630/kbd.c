@@ -30,7 +30,6 @@ static char kbd_stack[NEW_SS];
 #define USB_MASK 0x8000000
 #define USB_IDX  1
 
-extern void usb_remote_key( void ) ;
 int get_usb_bit() 
 {
     register long usb_physw;
@@ -183,8 +182,6 @@ void hook_kbd_handle_keys()
 
 #endif
     }
-
-    usb_remote_key();
     if (conf.remote_enable) {
         physw_status[USB_IDX] = physw_status[USB_IDX] & ~USB_MASK;
     }

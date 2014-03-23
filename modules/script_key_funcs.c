@@ -1,6 +1,7 @@
 #include "camera_info.h"
 #include "stdlib.h"
 #include "keyboard.h"
+#include "usb_remote.h"
 
 //-------------------------------------------------------------------
 // Lua and uBasic script key helper funtions
@@ -8,7 +9,7 @@
 __attribute__((short_call)) int script_key_is_pressed(int k)
 {
     if (k==0xFF)
-        return get_usb_power(1);
+        return get_usb_power(USB_STATE);
     if (k > 0)
         return kbd_is_key_pressed(k);
     return 0;
@@ -17,7 +18,7 @@ __attribute__((short_call)) int script_key_is_pressed(int k)
 __attribute__((short_call)) int script_key_is_clicked(int k)
 {
     if (k==0xFF)
-        return get_usb_power(1);
+        return get_usb_power(USB_STATE);
     if (k > 0)
         return (camera_info.state.kbd_last_clicked == k);
     return 0;

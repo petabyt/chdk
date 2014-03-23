@@ -120,9 +120,27 @@ static CMenuItem bracketing_in_continuous_submenu_items[] = {
 static CMenu bracketing_in_continuous_submenu = {0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS_TITLE, bracketing_in_continuous_submenu_items };
 
 //-------------------------------------------------------------------
+static const char* gui_USB_switch_types_enum(int change, int arg)
+{
+    static const char* modes[] = { "None","OnePush", "TwoPush", "CA-1" };    // note : make sure # of entries less than NUM_USB_INPUT_DRV in usb_remote.c
+	gui_enum_value_change(&conf.remote_switch_type,change,sizeof(modes)/sizeof(modes[0]));
 
-const char* gui_USB_switch_types[] = { "None","OnePush", "TwoPush", "CA-1" };								// note : make sure # of entries less than NUM_USB_INPUT_DRV in usb_remote.c
-const char* gui_USB_control_modes[] = { "None", "Normal", "Quick", "Burst", "Bracket","Zoom", "Video" }; 	// note : make sure # of entries less than NUM_USB_MODULES in usb_remote.c
+    if (change)
+        set_usb_remote_state();
+
+    return modes[conf.remote_switch_type];
+}
+
+static const char* gui_USB_control_modes_enum(int change, int arg)
+{
+    static const char* modes[] = { "None", "Normal", "Quick", "Burst", "Bracket","Zoom", "Video" }; // note : make sure # of entries less than NUM_USB_MODULES in usb_remote.c
+	gui_enum_value_change(&conf.remote_control_mode,change,sizeof(modes)/sizeof(modes[0]));
+
+    if (change)
+        set_usb_remote_state();
+
+    return modes[conf.remote_control_mode];
+}
 
 #ifndef CAM_REMOTE_USES_PRECISION_SYNC
 static CMenuItem synch_delay[2] = {
@@ -132,9 +150,9 @@ static CMenuItem synch_delay[2] = {
 #endif
 
 static CMenuItem remote_submenu_items[] = {
-    MENU_ITEM   (0x71,LANG_MENU_REMOTE_ENABLE,              MENUITEM_BOOL,                  &conf.remote_enable, 0),
-    MENU_ENUM2  (0x5f,LANG_MENU_REMOTE_DEVICE,  	        &conf.remote_switch_type,       gui_USB_switch_types ),
-    MENU_ENUM2  (0x5f,LANG_MENU_REMOTE_LOGIC,  	            &conf.remote_control_mode,      gui_USB_control_modes ),	
+    MENU_ITEM   (0x71,LANG_MENU_REMOTE_ENABLE,              MENUITEM_BOOL|MENUITEM_ARG_CALLBACK, &conf.remote_enable, (int)set_usb_remote_state),
+    MENU_ITEM   (0x5f,LANG_MENU_REMOTE_DEVICE,  	        MENUITEM_ENUM, gui_USB_switch_types_enum, 0),
+    MENU_ITEM   (0x5f,LANG_MENU_REMOTE_LOGIC,  	            MENUITEM_ENUM, gui_USB_control_modes_enum, 0),	
     MENU_ITEM   (0x0, LANG_MENU_REMOTE_OPTIONS,             MENUITEM_SEPARATOR,             0, 0 ), 
     MENU_ITEM   (0x5c,LANG_MENU_SYNCH_ENABLE,               MENUITEM_BOOL,                  &conf.synch_enable, 0),
  #ifndef CAM_REMOTE_USES_PRECISION_SYNC
