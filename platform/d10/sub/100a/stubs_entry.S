@@ -251,5 +251,7 @@ NHSTUB(strtolx                                ,0xff82d084) //109
 NHSTUB(time                                   ,0xff86bec8) //109
 NHSTUB(vsprintf                               ,0xff81cba4) //115
 NHSTUB(EngDrvRead                             ,0xff822c9c) //102
+NHSTUB(CancelHPTimer                          ,0xff86d648) //119
+NHSTUB(SetHPTimerAfterNow                     ,0xff86d540) //119
 NHSTUB(PT_MFOn                                ,0xff85e954) //120
 NHSTUB(PT_MFOff                               ,0xff85e964) //120

@@ -197,5 +197,7 @@ NHSTUB(taskResume                             ,0xffb67ac0) //  1
 NHSTUB(time                                   ,0xffb54544) //  1
 NHSTUB(vsprintf                               ,0xffb56924) //115
 NHSTUB(EngDrvRead                             ,0xff88cf94) //102
+NHSTUB(CancelHPTimer                          ,0xff815f9c) //119
+NHSTUB(SetHPTimerAfterNow                     ,0xff815b28) //119
 //NHSTUB(MFOn                                 ,0xff98fbf0) //120            == 0xff98fbf0
 //NHSTUB(MFOff                                ,0xff98fc20) //120            == 0xff98fc20

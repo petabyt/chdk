@@ -266,3 +266,5 @@ NHSTUB(taskResume                             ,0xffad0e54) //  1
 NHSTUB(vsprintf                               ,0xffabffe0) //  1
 // ALT: NHSTUB(vsprintf, 0xfff54090) // 1 13/0
 NHSTUB(EngDrvRead                             ,0xff885974) //102
+NHSTUB(CancelHPTimer                          ,0xff8166d4) //119
+NHSTUB(SetHPTimerAfterNow                     ,0xff816260) //119
