@@ -116,7 +116,7 @@ DEF(_nrflag,0xe618) // Found @ ff944474 (0xe618)
 NHSTUB(AllocateUncacheableMemory              ,0xff82a788) //112
 NHSTUB(Close                                  ,0xff82552c) //120
 NHSTUB(CreateTask                             ,0xff81baf0) //120
-NHSTUB(DebugAssert                            ,0xff81bfc8) //111
+NHSTUB(DebugAssert                            ,0xff81bfc8) //107
 NHSTUB(DeleteDirectory_Fut                    ,0xff824e78) //116
 NHSTUB(DeleteFile_Fut                         ,0xff824d94) //112
 NHSTUB(DoAELock                               ,0xff827aa8) //120

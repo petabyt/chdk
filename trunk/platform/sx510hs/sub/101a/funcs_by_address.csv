@@ -5,7 +5,7 @@
 0x006b5778,CreateTask_FW
 0x006b5a04,ExitTask
 0x006b5a04,ExitTask_FW
-0x006b5a58,DebugAssert,(stubs_entry_2.s)
+0x006b5a58,DebugAssert
 0x006b7968,CreateBinarySemaphore
 0x006b79d8,CreateCountingSemaphore
 0x006b79d8,CreateCountingSemaphore_FW
@@ -38,6 +38,7 @@
 0x006b8784,CreateRecursiveLock
 0x006b8d2c,SleepTask
 0x006b8d2c,SleepTask_FW
+0x006b9210,time
 0x006b92c4,GetTimeOfSystem_FW
 0x006b9a38,LocalTime
 0x006d7138,_log
@@ -166,6 +167,9 @@
 0xff00d16c,IsNormalCameraMode_FW
 0xff00d184,StartFactoryModeController_FW
 0xff00d3a0,task_FsIoNotifyTask
+0xff010278,GetDrive_ClusterSize
+0xff010a64,GetDrive_TotalClusters
+0xff010a90,GetDrive_FreeClusters
 0xff011ce0,SS.GetDigitalZoomPosition_FW
 0xff012490,DoAFLock
 0xff0124c0,UnlockAF
@@ -416,7 +420,6 @@
 0xff06f920,GetFixedPWMOutB_FW
 0xff072dc4,task_CaptSeq
 0xff072dc4,task_CaptSeqTask
-0xff010a90,GetDrive_FreeClusters,(stubs_entry_2.s)
 0xff07bb6c,SSFS_CompleteCaptModeChange_FW
 0xff07bb6c,SSFS_CompleteFileWrite_FW
 0xff07bb6c,SSFS_CompletePreCapt_FW
@@ -537,7 +540,6 @@
 0xff0fb2ec,MovieAF.Suspend_FW
 0xff0fb300,MovieAF.Resume_FW
 0xff0fcfc8,task_AfIntSrvTask
-0xff010a64,GetDrive_TotalClusters,(stubs_entry_2.s)
 0xff119dcc,task_PrcssFil
 0xff11b994,E2LatOn_FW
 0xff11bad0,ActivateImager_FW
@@ -954,6 +956,7 @@
 0xff27b254,memset
 0xff27b254,memset_FW
 0xff27b2d0,realloc
+0xff2a7800,apex2us
 0xff2adfdc,NR_SetDarkSubType
 0xff2adfdc,NRTBL.SetDarkSubType_FW
 0xff2adff8,NR_GetDarkSubType

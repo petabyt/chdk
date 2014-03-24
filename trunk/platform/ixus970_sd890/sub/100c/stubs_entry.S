@@ -19,7 +19,7 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DebugAssert                          ,0xff81bcf0) //111        *** != 0xff81bcf8
+//NHSTUB(DebugAssert                          ,0xff81bcf0) //107        *** != 0xff81bcf8
 //NHSTUB(PutInNdFilter                        ,0xffa2ac20) //102        *** != 0xffa838f8
 //NHSTUB(PutOutNdFilter                       ,0xffa2ac44) //102        *** != 0xffa8392c
 
