@@ -268,5 +268,7 @@ NHSTUB(strtolx                                ,0xff018044) //109
    DEF(hook_CreateTask                        ,0x006b5778) //105
 NHSTUB(vsprintf                               ,0xff007de0) //115
 NHSTUB(EngDrvRead                             ,0xff00c220) //102
+NHSTUB(CancelHPTimer                          ,0xff082604) //119
+NHSTUB(SetHPTimerAfterNow                     ,0xff0824fc) //119
 NHSTUB(SS_MFOn                                ,0xff1d76f8) //120
 NHSTUB(SS_MFOff                               ,0xff1d7708) //120

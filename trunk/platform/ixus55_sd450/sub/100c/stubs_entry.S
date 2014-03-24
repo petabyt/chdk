@@ -221,5 +221,7 @@ NHSTUB(taskResume                             ,0xffae49b8) //  1
 NHSTUB(time                                   ,0xffacef38) //  1
 NHSTUB(vsprintf                               ,0xffad1318) //115
 NHSTUB(EngDrvRead                             ,0xff87edec) //102
+NHSTUB(CancelHPTimer                          ,0xff815cac) //119
+NHSTUB(SetHPTimerAfterNow                     ,0xff815838) //119
 NHSTUB(MFOn                                   ,0xff94aca4) //120
 NHSTUB(MFOff                                  ,0xff94acd4) //120
