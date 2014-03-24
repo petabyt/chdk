@@ -12,7 +12,6 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 
 // Additional
 NHSTUB(MakeAFScan,                  0xFFDD7F78)
-NHSTUB(PostLEDMessage,              0xFFC3071C)
 NHSTUB(RefreshUSBMode,              0xFFC27730)
 NHSTUB(TurnOffMic,                  0xFFC31660)
 NHSTUB(TurnOnMic,                   0xFFC31634)
