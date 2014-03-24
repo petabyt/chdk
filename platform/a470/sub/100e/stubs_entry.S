@@ -11,7 +11,7 @@
 //   PLATFORMOSVER = 23
 //   PLATFORMID = 12666 (0x317a) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
-//   MEMISOSTART = 0x000a5718  (*** DOES NOT MATCH MAKEFILE VALUE 0x000a5798***)
+//   MEMISOSTART = 0x000a5718
 //   KEYSYS = d3enc              // Found @ 0xffff1a98
 //   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff1a78
 //   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffddb06c
