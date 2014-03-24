@@ -113,7 +113,7 @@ DEF(_nrflag,0x8d14) // Found @ ff939e90 (0x8d14)
 NHSTUB(AllocateUncacheableMemory              ,0xff828630) //112
 NHSTUB(Close                                  ,0xff823e54) //120
 NHSTUB(CreateTask                             ,0xff81b8e0) //120
-NHSTUB(DebugAssert                            ,0xff81bdb8) //111
+NHSTUB(DebugAssert                            ,0xff81bdb8) //107
 NHSTUB(DeleteDirectory_Fut                    ,0xff8237e4) //116
 NHSTUB(DeleteFile_Fut                         ,0xff823700) //112
 NHSTUB(DoAELock                               ,0xff82603c) //120

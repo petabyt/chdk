@@ -121,7 +121,7 @@ DEF(_nrflag,0x9714) // Found @ ff9f469c (0x9714) & ff9f46d8 (+0x00)
 NHSTUB(AllocateUncacheableMemory              ,0xff831d54) //112
 NHSTUB(Close                                  ,0xff82d46c) //120
 NHSTUB(CreateTask                             ,0x003f68b0) //120
-NHSTUB(DebugAssert                            ,0x003f6c28) //111
+NHSTUB(DebugAssert                            ,0x003f6c28) //107
 NHSTUB(DeleteDirectory_Fut                    ,0xff82ce6c) //116
 NHSTUB(DoAELock                               ,0xff82ef2c) //120
 NHSTUB(DoAFLock                               ,0xff82ec4c) //120
@@ -143,8 +143,8 @@ NHSTUB(Fwrite_Fut                             ,0xff82d004) //120
 NHSTUB(GetCCDTemperature                      ,0xff862f5c) //102
 NHSTUB(GetCurrentAvValue                      ,0xff96b8cc) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xff874e6c) //122
-NHSTUB(GetDrive_FreeClusters                  ,0xff875680) //  6
-NHSTUB(GetDrive_TotalClusters                 ,0xff875658) //  6
+NHSTUB(GetDrive_FreeClusters                  ,0xff875680) //119
+NHSTUB(GetDrive_TotalClusters                 ,0xff875658) //122
 NHSTUB(GetFocusLensSubjectDistance            ,0xff96ab98) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff96af2c) //  3
 NHSTUB(GetImageFolder                         ,0xff94aeac) //122
@@ -187,7 +187,7 @@ NHSTUB(SetAutoShutdownTime                    ,0xff8905e0) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff89b0b0) //120
 NHSTUB(SetFileAttributes                      ,0xff82d870) //  6
 NHSTUB(SetFileTimeStamp                       ,0xff82d7f8) //  6
-NHSTUB(SetLogicalEventActive                  ,0xff8902e4) //101
+NHSTUB(SetLogicalEventActive                  ,0xff8902e4) //120
 NHSTUB(SetParameterData                       ,0xff985140) //101
 NHSTUB(SetPropertyCase                        ,0xff88df68) //101
 NHSTUB(SetScriptMode                          ,0xff890334) //120
@@ -256,7 +256,7 @@ NHSTUB(strtolx                                ,0xff831f18) //109
    DEF(task_MovieRecord                       ,0xff9715c8) //120
    DEF(task_PhySw                             ,0xff82a808) //120
    DEF(hook_CreateTask                        ,0x003f68b0) //105
-NHSTUB(time                                   ,0x003fb790) //  6
+NHSTUB(time                                   ,0x003fb790) //119
 NHSTUB(vsprintf                               ,0xff81a7d0) //115
 NHSTUB(EngDrvRead                             ,0xff82bb4c) //102
 NHSTUB(CancelHPTimer                          ,0xff88942c) //119

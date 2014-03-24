@@ -111,7 +111,7 @@ DEF(_nrflag,0x5828) // Found @ ffd10eac (0x5830) & ffd10ecc (-0x08)
 NHSTUB(AllocateUncacheableMemory              ,0xffc292d8) //112
 NHSTUB(Close                                  ,0xffc26108) //120
 NHSTUB(CreateTask                             ,0xffc0f1a8) //120
-NHSTUB(DebugAssert                            ,0xffc0f680) //111
+NHSTUB(DebugAssert                            ,0xffc0f680) //107
 NHSTUB(DeleteDirectory_Fut                    ,0xffc25b64) //116
 NHSTUB(DeleteFile_Fut                         ,0xffc25a80) //112
 NHSTUB(DoAELock                               ,0xffc2769c) //120
@@ -181,7 +181,7 @@ NHSTUB(SetAutoShutdownTime                    ,0xffc6ceb4) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xffc731ec) //120
 NHSTUB(SetFileAttributes                      ,0xffc26400) //  3
 NHSTUB(SetFileTimeStamp                       ,0xffc263a4) //  4
-NHSTUB(SetLogicalEventActive                  ,0xffc6cbb8) //101
+NHSTUB(SetLogicalEventActive                  ,0xffc6cbb8) //120
 NHSTUB(SetParameterData                       ,0xffd2f120) //101
 NHSTUB(SetPropertyCase                        ,0xffc693fc) //102
 NHSTUB(SleepTask                              ,0xffc2915c) //120

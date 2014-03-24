@@ -20,6 +20,7 @@
 0xff37537c,AllocateMemory
 0xff37537c,AllocateMemory_FW
 0xff005f08,AllocateUncacheableMemory
+0xff2a7800,apex2us
 0xff018038,atol_FW
 0xff196e04,AttachIntegCrawData_FW
 0xff32c510,AttachToTransparentMemory_FW
@@ -161,7 +162,7 @@
 0xff04cdac,Dcdc_Down_Avs_Voltage_Step_FW
 0xff04cde0,Dcdc_Get_Avs_Voltage_Step_FW
 0xff04ccec,Dcdc_Set_Avs_Voltage_Step_FW
-0x006b5a58,DebugAssert,(stubs_entry_2.s)
+0x006b5a58,DebugAssert
 0xff0874e8,DeleteController_FW
 0xff006c8c,DeleteDirectory_Fut
 0xff006c18,DeleteFile_Fut,(stubs_entry_2.s)
@@ -434,8 +435,9 @@
 0xff00c09c,GetDialEventId_FW
 0xff06f7a0,GetDISModeParameter_FW
 0xff370148,GetDISModeParamType_FW
-0xff010a90,GetDrive_FreeClusters,(stubs_entry_2.s)
-0xff010a64,GetDrive_TotalClusters,(stubs_entry_2.s)
+0xff010278,GetDrive_ClusterSize
+0xff010a90,GetDrive_FreeClusters
+0xff010a64,GetDrive_TotalClusters
 0xff16bce4,GetDriverInfoEvent_FW
 0xff46ce68,GetEsmAlarm_FW
 0xff46d330,GetEsmCurPos_FW
@@ -1841,6 +1843,7 @@
 0xff32cb68,TerminateSoundRec_FW
 0xff05dfcc,TerminateTestRec_FW
 0xff0399c0,TerminateWLAN_FW
+0x006b9210,time
 0xff09a5bc,TurnOffBackLight
 0xff04954c,TurnOffDisplay
 0xff017610,TurnOffE1_FW

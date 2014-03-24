@@ -21,35 +21,14 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DebugAssert                          ,0x006b5a5c) //111        *** != 0x006b5a58
 //NHSTUB(DeleteFile_Fut                       ,0xff006c18) //  1 90%        == 0xff006c18
 // ERROR: ExpCtrlTool_StartContiAE is not found.           //--- ---    *** != 0xff0254d4
 // ERROR: ExpCtrlTool_StopContiAE is not found.            //--- ---    *** != 0xff025648
-// ERROR: GetDrive_ClusterSize is not found.               //--- ---    *** != 0xff010278
-//NHSTUB(GetDrive_FreeClusters                ,0xff07814c) //  6 55%    *** != 0xff010a90
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff0c15a8) // 6 5/4
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff1c58c0) // 6 5/4
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff230680) // 6 5/4
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff24203c) // 6 5/4
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff24c8d8) // 6 5/4
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff35a67c) // 6 5/4
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff36f0ac) // 6 5/4
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff3d2234) // 6 5/4
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff3dde14) // 6 5/4
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff432ae0) // 6 5/4
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff432b2c) // 6 5/4
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff432c48) // 6 5/4
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff432c68) // 6 5/4
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff432d14) // 6 5/4
-// ALT: NHSTUB(GetDrive_FreeClusters, 0xff463550) // 6 5/4
-//NHSTUB(GetDrive_TotalClusters               ,0xff10e97c) //  3 66%    *** != 0xff010a64
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0xff1c481c) //  3 90%        == 0xff1c481c
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff007728
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
 //NHSTUB(Restart                              ,0xff017914) //106        *** != 0xff01786c
 // ERROR: WriteSDCard is not found.                        //--- ---    *** != 0xff06506c
-// ERROR: apex2us is not found.                            //--- ---    *** != 0xff2a7800
-// ERROR: time is not found.                               //--- ---    *** != 0x006b9210
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff378390 -> ff63f61c
@@ -140,6 +119,7 @@ DEF(_nrflag,0xcf68) // Found @ ff2adf48 (0xcf70) & ff2adf60 (-0x08)
 NHSTUB(AllocateUncacheableMemory              ,0xff005f08) //112
 NHSTUB(Close                                  ,0xff00728c) //120
 NHSTUB(CreateTask                             ,0x006b5778) //120
+//NHSTUB(DebugAssert                          ,0x006b5a58) //107            == 0x006b5a58
 NHSTUB(DeleteDirectory_Fut                    ,0xff006c8c) //116
 NHSTUB(DoAELock                               ,0xff012828) //120
 NHSTUB(DoAFLock                               ,0xff012490) //120
@@ -159,6 +139,9 @@ NHSTUB(Fwrite_Fut                             ,0xff006e24) //120
 NHSTUB(GetBatteryTemperature                  ,0xff053244) //102
 NHSTUB(GetCCDTemperature                      ,0xff0531cc) //102
 NHSTUB(GetCurrentAvValue                      ,0xff06a6c8) //120
+//NHSTUB(GetDrive_ClusterSize                 ,0xff010278) //122            == 0xff010278
+//NHSTUB(GetDrive_FreeClusters                ,0xff010a90) //119            == 0xff010a90
+//NHSTUB(GetDrive_TotalClusters               ,0xff010a64) //122            == 0xff010a64
 NHSTUB(GetFocusLensSubjectDistance            ,0xff1c4438) //102
 NHSTUB(GetImageFolder                         ,0xff19ea90) //122
 NHSTUB(GetKbdState                            ,0xff04f49c) //109
@@ -199,7 +182,7 @@ NHSTUB(SetAutoShutdownTime                    ,0xff08a374) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff097b68) //120
 NHSTUB(SetFileAttributes                      ,0xff007690) //  6
 NHSTUB(SetFileTimeStamp                       ,0xff007618) //  6
-NHSTUB(SetLogicalEventActive                  ,0xff08a038) //101
+NHSTUB(SetLogicalEventActive                  ,0xff08a038) //120
 NHSTUB(SetParameterData                       ,0xff1eb304) //101
 NHSTUB(SetPropertyCase                        ,0xff085bfc) //101
 NHSTUB(SetScriptMode                          ,0xff08a08c) //120
@@ -220,6 +203,7 @@ NHSTUB(_log10                                 ,0x006d7678) //112
 NHSTUB(_pow                                   ,0x006d77f0) //121
 NHSTUB(_sqrt                                  ,0x006d9608) //  6
 NHSTUB(add_ptp_handler                        ,0xff132204) //121
+//NHSTUB(apex2us                              ,0xff2a7800) //121            == 0xff2a7800
 NHSTUB(close                                  ,0xff003ffc) //109
 NHSTUB(err_init_task                          ,0xff004a90) //111
 NHSTUB(exmem_alloc                            ,0xff01436c) //101
@@ -266,6 +250,7 @@ NHSTUB(strtolx                                ,0xff018044) //109
    DEF(task_PhySw                             ,0xff00bc0c) //120
    DEF(task_RotaryEncoder                     ,0xff04f774) //120
    DEF(hook_CreateTask                        ,0x006b5778) //105
+//NHSTUB(time                                 ,0x006b9210) //119            == 0x006b9210
 NHSTUB(vsprintf                               ,0xff007de0) //115
 NHSTUB(EngDrvRead                             ,0xff00c220) //102
 NHSTUB(CancelHPTimer                          ,0xff082604) //119
