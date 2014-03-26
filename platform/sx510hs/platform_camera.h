@@ -119,4 +119,7 @@
     #undef  CAM_KEY_PRESS_DELAY
     #define CAM_KEY_PRESS_DELAY                     120  // delay after a press - Required by zoom_in/zoom_out buttons
 
+    #define CAM_SD_OVER_IN_AF                       1
+    #define CAM_SD_OVER_IN_AFL                      1
+    #define CAM_SD_OVER_IN_MF                       1
 //----------------------------------------------------------

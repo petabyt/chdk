@@ -157,7 +157,7 @@ asm volatile (
 "    LDR     R1, [R2] \n"
 "    ORR     R1, R1, #1 \n"
 "    STR     R1, [R2] \n"
-"    LDR     R0, =0xFF71925C \n"
+"    LDR     R0, =0xFF719234 \n"
 "    LDR     R1, =0x6B1000 \n"
 "    LDR     R3, =0x6DB5D0 \n"
 
@@ -166,7 +166,7 @@ asm volatile (
 "    LDRCC   R2, [R0], #4 \n"
 "    STRCC   R2, [R1], #4 \n"
 "    BCC     loc_FF00013C \n"
-"    LDR     R0, =0xFF702FB4 \n"
+"    LDR     R0, =0xFF702F8C \n"
 "    LDR     R1, =0x1900 \n"
 "    LDR     R3, =0x17BA8 \n"
 
@@ -590,7 +590,7 @@ asm volatile (
 "    SUB     SP, SP, #0x1C \n"
 "    BL      sub_FF04FB1C \n"
 "    LDR     R12, =0x2BAC \n"
-"    LDR     R6, =0xFF568828 \n"
+"    LDR     R6, =0xFF5687FC \n"
 "    MOV     R0, #0 \n"
 "    ADD     R10, SP, #8 \n"
 "    ADD     R9, SP, #0xC \n"
