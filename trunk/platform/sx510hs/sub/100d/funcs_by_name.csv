@@ -281,6 +281,7 @@
 0xff17a574,EngApp.Create_FW
 0xff1d8028,EngApp.CreatePub_FW
 0xff17a520,EngApp.Delete_FW
+0xff00c234,EngDrvBits
 0xff316388,EngDrvBits_FW
 0xff00c218,EngDrvIn
 0xff316378,EngDrvIn_FW
@@ -335,6 +336,8 @@
 0xff0143e4,exmem_free
 0xff0079d8,ExMem_FW
 0xff0d97f0,ExpCtrlTool.SetExpMode_FW
+0xff0254d4,ExpCtrlTool_StartContiAE
+0xff025648,ExpCtrlTool_StopContiAE
 0xff015158,ExportToEventProcedure_FW
 0xff1d7818,FA.Create_FW
 0xff1d7804,FA.Delete_FW

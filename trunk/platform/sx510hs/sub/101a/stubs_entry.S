@@ -22,8 +22,6 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(DeleteFile_Fut                       ,0xff006c18) //  1 90%        == 0xff006c18
-// ERROR: ExpCtrlTool_StartContiAE is not found.           //--- ---    *** != 0xff0254d4
-// ERROR: ExpCtrlTool_StopContiAE is not found.            //--- ---    *** != 0xff025648
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0xff1c481c) //  3 90%        == 0xff1c481c
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff007728
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
@@ -127,6 +125,8 @@ NHSTUB(EnterToCompensationEVF                 ,0xff012780) //104
 NHSTUB(ExecuteEventProcedure                  ,0xff014820) //104
 NHSTUB(ExitFromCompensationEVF                ,0xff0127c8) //104
 NHSTUB(ExitTask                               ,0x006b5a04) //120
+//NHSTUB(ExpCtrlTool_StartContiAE             ,0xff0254d4) //104            == 0xff0254d4
+//NHSTUB(ExpCtrlTool_StopContiAE              ,0xff025648) //104            == 0xff025648
 NHSTUB(Fclose_Fut                             ,0xff006d24) //120
 NHSTUB(Feof_Fut                               ,0xff006f10) //  1
 NHSTUB(Fflush_Fut                             ,0xff006f4c) //  1

@@ -920,11 +920,9 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                 }
                 break;
             case 54:
-                // temporary measure, based on 1 digic 4+ cam
-                fw->cam_idx = adr2idx(fw,(fw->base==0xFF020000)?0xFFF40190:0xFFFE0170);
-                fw->pid_adr = (fw->base==0xFF020000)?0xFFF40040:0xFFFE0040;
-                if (idx_valid(fw,fw->cam_idx) && (strncmp((char*)fwadr(fw,fw->cam_idx),"Canon ",6) != 0))
-                    fw->cam_idx = adr2idx(fw,(fw->base==0xFF020000)?0xFFF40170:0xFFFE0170);
+                // based on 2 digic 4+ cams
+                fw->cam_idx = adr2idx(fw,(fw->base==0xFF020000)?0xFFF40170:0xFFFF0170);
+                fw->pid_adr = (fw->base==0xFF020000)?0xFFF40040:0xFFFF0040;
                 break;
         }
     }

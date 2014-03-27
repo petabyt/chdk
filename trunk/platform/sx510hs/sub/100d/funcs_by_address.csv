@@ -146,6 +146,7 @@
 0xff00c200,EngDrvOut
 0xff00c218,EngDrvIn
 0xff00c220,EngDrvRead
+0xff00c234,EngDrvBits
 0xff00c4f0,DisplayFactoryMode_FW
 0xff00c4fc,UndisplayFactoryMode_FW
 0xff00c680,StopPtpipServiceForFAWLAN_FW
@@ -223,6 +224,8 @@
 0xff018254,strcat
 0xff018290,strncmp
 0xff0182dc,strchr
+0xff0254d4,ExpCtrlTool_StartContiAE
+0xff025648,ExpCtrlTool_StopContiAE
 0xff027f04,task_WBCtrl
 0xff02a140,task_AFTask
 0xff02b448,GetMacroSupportZoomPoint_FW
