@@ -679,35 +679,6 @@ static int factor(void)
     accept(TOKENIZER_GET_DRAW_TITLE_LINE);  
     r = camera_info.state.osd_title_line ;
     break;
-  case TOKENIZER_SET_MF:
-      accept(TOKENIZER_SET_MF);
-      if (expr() > 0) r=DoMFLock();
-      else r=UnlockMF();
-      accept_cr();
-      break;
-  case TOKENIZER_SET_FOCUS:
-    accept(TOKENIZER_SET_FOCUS);
-    int sd = expr();
-    // if sd override not available now, fail immediately without calling set_focus
-    // to avoid unexpected results with SET_LATER
-    r=shooting_can_focus();
-    if(r) {
-        // NOTE duplicated in modules/luascript.c and lib/ubasic/ubasic.c
-        // in AF lock or MF (canon or set by MF functions), set focus now
-        if (shooting_get_prop(camera_info.props.af_lock) 
-          || shooting_get_focus_mode()
-          || camera_info.state.mode_video)  // TODO video needs to be investigated, carried over from old code
-        {
-          shooting_set_focus(sd, SET_NOW);
-        }
-        else
-        {
-          // in an AF mode, set later
-          shooting_set_focus(sd, SET_LATER);
-        }
-    }
-    accept_cr();
-    break;
 
   //ARM Begin
       
@@ -1826,6 +1797,39 @@ static void set_propcase_statement(int token, int prop)
     accept_cr();
 }
 
+
+static void set_mf_statement()
+{
+   accept(TOKENIZER_SET_MF);
+   if (expr() > 0) DoMFLock();
+   else UnlockMF();
+   accept_cr();
+}
+
+static void set_focus_statement()
+{
+    accept(TOKENIZER_SET_FOCUS);
+    int sd = expr();
+    // if sd override not available now, fail immediately without calling set_focus
+    // to avoid unexpected results with SET_LATER
+    if(shooting_can_focus()) {
+        // NOTE duplicated in modules/luascript.c and lib/ubasic/ubasic.c
+        // in AF lock or MF (canon or set by MF functions), set focus now
+        if (shooting_get_prop(camera_info.props.af_lock) 
+          || shooting_get_focus_mode()
+          || camera_info.state.mode_video)  // TODO video needs to be investigated, carried over from old code
+        {
+          shooting_set_focus(sd, SET_NOW);
+        }
+        else
+        {
+          // in an AF mode, set later
+          shooting_set_focus(sd, SET_LATER);
+        }
+    }
+    accept_cr();
+}
+
 static void set_led_statement()
 {
     int to, to1, to2;
@@ -2352,6 +2356,12 @@ statement(void)
       break;
   case TOKENIZER_SET_ZOOM_SPEED:
       one_int_param_function(token, shooting_set_zoom_speed);
+      break;
+  case TOKENIZER_SET_FOCUS:
+      set_focus_statement();
+      break;
+  case TOKENIZER_SET_MF:
+      set_mf_statement();
       break;
 
 /*
