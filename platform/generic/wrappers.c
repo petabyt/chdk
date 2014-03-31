@@ -168,10 +168,6 @@ long lens_get_zoom_pos()
     return _GetZoomLensCurrentPosition();
 }
 
-void lens_set_zoom_pos(long newpos)
-{
-}
-
 long lens_get_zoom_point()
 {
     return _GetZoomLensCurrentPoint();

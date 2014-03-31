@@ -7,7 +7,6 @@
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 long lens_get_zoom_pos();
-void lens_set_zoom_pos(long newpos);
 long lens_get_zoom_point();
 void lens_set_zoom_point(long newpt);
 void lens_set_zoom_speed(long newspd); //for S-series
