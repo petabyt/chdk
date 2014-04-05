@@ -215,6 +215,7 @@ static const struct keyword_token keywords[] = {
   {"get_autostart",           TOKENIZER_GET_SCRIPT_AUTOSTART},
   {"set_autostart",           TOKENIZER_SET_SCRIPT_AUTOSTART},
   {"get_usb_power",           TOKENIZER_GET_USB_POWER},
+  {"enable_highspeed_usb",    TOKENIZER_ENABLE_HIGHSPEED_USB},
   {"exit_alt",                TOKENIZER_EXIT_ALT},
   {"shut_down",               TOKENIZER_SHUT_DOWN},
 

@@ -412,6 +412,9 @@
             camera_shutdown_in_a_second,
 
             get_usb_power,
+            start_usb_HPtimer,
+            stop_usb_HPtimer,
+
             switch_mode_usb,
 
             call_func_ptr,

@@ -15,6 +15,10 @@ extern int get_usb_power(int edge);
 extern void clear_usb_power();
 extern void set_usb_remote_state();
 
+extern int usb_HPtimer_handle;
+extern int start_usb_HPtimer(int);
+extern int stop_usb_HPtimer();
+
 /*===================================================================================================
     Static Variables & #defines
   ===================================================================================================*/
@@ -129,7 +133,8 @@ enum GET_USB_PWR {                          // input parameter for get_usb_power
     USB_STATE ,
     BUFFERED_PULSE ,
     PULSE_COUNT,
-    LM_PULSE_COUNT
+    LM_PULSE_COUNT,
+    HPTIMER_ERROR_COUNT
 } ;
 
 // USB remote processing status

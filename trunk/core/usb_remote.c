@@ -37,7 +37,7 @@ int bracketing_timeout = 0 ;
 int usb_power=0;
 static int usb_count=0;
 static int logic_module_usb_count = 0 ;
-int remote_count, remote_space_count, remote_key;
+int remote_mark_count, remote_space_count;
 
 #define USB_BUFFER_SIZE 16
 static int usb_buffer[USB_BUFFER_SIZE] ;
@@ -227,61 +227,80 @@ void usb_remote_status_led(int state)
 
     usb_remote_key()
 
-    - called from the kbd_process() keyboard handler
-    - monitors USB power state and stores in global variable remote_key
+    - called from the kbd_process() keyboard handler or usb_HPtimer_good()
+    - monitors USB power state and stores in global variable remote_state
     - captures the time of 0->1 and 1->0 transitions and buffers them
-    - store most recent power on pulse width in global variable remote_count
-
+    - stores most recent power on pulse width in global variable usb_power
+    - stores most recent pulse count in global variable usb_count
   ---------------------------------------------------------------------------------------------------------*/
 
-
+void usb_buffer_insert(int value)
+{
+    if ( ++usb_buffer_in > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_in = usb_buffer ;    
+    if ( usb_buffer_in == usb_buffer_out )
+    {
+        if ( ++usb_buffer_out > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_out = usb_buffer ;
+    }
+    *usb_buffer_in = value ;
+}
+ 
 void usb_remote_key( void )
 {
     static int pulse_count=0 ;
 
-    remote_key = get_usb_bit() ;
+    usb_state = get_usb_bit() ;
 
     if(conf.remote_enable)
     {
-        if (remote_key) remote_count++ ;                                // track how long the USB power is on
-        else if(remote_space_count<3000) remote_space_count++ ;         // track how long the USB power is off
-
-        if ( remote_space_count > 50 )                                  // pulse counting done if no activity for 500mSec
-        {
-            if( pulse_count > 0 )
+        if (usb_state)
+        {                                                                   // USB power is ON
+            if (remote_mark_count<30000) remote_mark_count++ ;              // track how long the USB power is ON
+            if (remote_space_count != 0)                                    // is this the 0 -> 1 transistion?
+            {                                                               //
+                usb_buffer_insert(remote_space_count);                      // insert space length into buffer
+                remote_space_count = 0 ;                                    // reset the counter
+            }
+        }
+        else
+        {                                                                   // USB power if OFF
+            if(remote_space_count>-30000) remote_space_count-- ;            // track how long the USB power is OFF (note space counts are negative)
+            if (remote_mark_count != 0)                                     // is this the 1 -> 0 transistion?
+            {                                                               //
+                pulse_count++ ;                                             // count pulses transistions
+                usb_power = remote_mark_count;                              // transfer most recent pulse length to variable read by scripts
+                usb_buffer_insert(remote_mark_count);                       // insert pulse length into buffer
+                remote_mark_count = 0;                                      // reset the counter
+            }                                                               //
+            if ((remote_space_count < -50) && (pulse_count > 0))            // pulse counting done if no activity for 50 timer periods
             {
                 usb_count = pulse_count ;
                 logic_module_usb_count = pulse_count ;
                 pulse_count = 0 ;
             }
         }
-
-        if (( remote_key == 0) && (remote_count > 0)  )                                             //  1 -> 0 transistion ?
-        {
-            if( remote_count > 10 ) pulse_count++ ;                                                 // count pulses longer than 100 msec
-
-            usb_power = remote_count;                                                               // transfer most recent pulse length to variable read by scripts
-
-            if ( ++usb_buffer_in > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_in = usb_buffer ;    // insert power pulse width into the buffer
-            if ( usb_buffer_in == usb_buffer_out )
-            {
-                if ( ++usb_buffer_out > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_out = usb_buffer ;
-            }
-            *usb_buffer_in = remote_count ;
-            remote_count = 0;
-        }
-
-        if (( remote_key == 1) && (remote_space_count > 0)  )                                       // 0 -> 1 transistion ?
-        {
-            if ( ++usb_buffer_in > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_in = usb_buffer ;    // insert space pulse width into the buffer as a negative number
-            if ( usb_buffer_in == usb_buffer_out )
-            {
-                if ( ++usb_buffer_out > &usb_buffer[USB_BUFFER_SIZE-1] ) usb_buffer_out = usb_buffer ;
-            }
-            *usb_buffer_in = 0-remote_space_count ;
-            remote_space_count = 0 ;
-        }
     }
+}
+
+
+/*---------------------------------------------------------------------------------------------------------
+
+     High Precision USB Remote Timer Callback routines.
+
+  ---------------------------------------------------------------------------------------------------------*/
+int usb_HPtimer_error_count;
+
+int usb_HPtimer_good(int time, int interval) 
+{
+    usb_HPtimer_handle=0;
+    start_usb_HPtimer(interval) ;
+    usb_remote_key() ;
+    return 0;
+}
+ 
+int usb_HPtimer_bad(int time, int interval) 
+{
+    usb_HPtimer_error_count++;
+    return (usb_HPtimer_good(time, interval));
 }
 
 /*---------------------------------------------------------------------------------------------------------
@@ -316,7 +335,7 @@ int get_usb_power(int mode)
             usb_power = 0;
             break ;
         case USB_STATE :
-            x=remote_key;
+            x=usb_state;
             break ;
         case BUFFERED_PULSE :
             if ( usb_buffer_out != usb_buffer_in )
@@ -332,6 +351,10 @@ int get_usb_power(int mode)
         case LM_PULSE_COUNT :
             x = logic_module_usb_count;
             logic_module_usb_count = 0;
+            break ;
+        case HPTIMER_ERROR_COUNT :
+            x = usb_HPtimer_error_count;
+            usb_HPtimer_error_count = 0;
             break ;
     }
     return x;

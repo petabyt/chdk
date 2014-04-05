@@ -13,7 +13,7 @@
 #include "gui_lang.h"
 #include "ptp.h"
 #include "clock.h"
-
+#include "usb_remote.h"
 #include "script_api.h"
 #include "motion_detector.h"
 
@@ -266,6 +266,9 @@ long script_start_gui( int autostart )
 
     shot_histogram_set(0);
     camera_info.state.auto_started = autostart;
+
+    // Kill high speed USB timer if running
+    stop_usb_HPtimer();
 
     // Keyboard init
     camera_info.state.kbd_last_clicked = 0;

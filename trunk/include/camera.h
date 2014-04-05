@@ -40,6 +40,8 @@
     #undef  CAM_ALT_BUTTON_OPTIONS              // Define the list of options for the ALT button - e.g. { KEY_PRINT, KEY_DISPLAY }
     #define CAM_REMOTE                      1   // Camera supports USB-remote
     #undef  CAM_REMOTE_USES_PRECISION_SYNC      // Disable experimental USB remote  precision sync patch
+    #undef  CAM_REMOTE_USB_HIGHSPEED            // Enable highspeed measurements of pulse width & counts on USB port 
+    #define CAM_REMOTE_HIGHSPEED_LIMIT 1000     // Set lowest timer value settable by user
     #undef  GPIO_VSYNC_CURRENT                  // USB remote precision sync : might be 0xC0F070C8 or 0xC0F07008 (http://chdk.setepontos.com/index.php?topic=8312.msg104027#msg104027)
     #undef  CAM_MULTIPART                       // Camera supports SD-card multipartitioning
     #define CAM_HAS_ZOOM_LEVER              1   // Camera has dedicated zoom buttons
