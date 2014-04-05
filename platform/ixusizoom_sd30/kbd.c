@@ -23,8 +23,6 @@ static KeyMap keymap[];
 
 #define USB_MASK 0x40 	// not implemented in this camera
 #define USB_IDX 2
-extern int remote_key ;
-extern int remote_count ;
 extern int usb_power ;
 int get_usb_bit() 
 {

@@ -17,7 +17,6 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long alt_mode_key_mask = 0x00000080;
 
 static int usb_power=0;
-static int remote_key, remote_count;
 static int shoot_counter=0;
 
 extern void _GetKbdState(long*);

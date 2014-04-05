@@ -54,8 +54,8 @@ static int kbd_data_process_request_data=0;
 
 #define USB_MASK 0x40 
 #define USB_IDX  2
-extern int remote_key ;
-extern int remote_count ;
+extern int usb_state ;
+extern int remote_mark_count ;
 extern int usb_power ;
 int get_usb_bit() 
 {
@@ -631,12 +631,12 @@ int usb_power_status_override(int status){
  // for get USB power flag read status & USB_MASK
 	
 	if (conf.remote_enable) {
-		remote_key = (status & USB_MASK)==USB_MASK;
-		if (remote_key) 
-			remote_count += 1;
-		else if (remote_count) {
-			usb_power = remote_count;
-			remote_count = 0;
+		usb_state = (status & USB_MASK)==USB_MASK;
+		if (usb_state) 
+			remote_mark_count += 1;
+		else if (remote_mark_count) {
+			usb_power = remote_mark_count;
+			remote_mark_count = 0;
 		}
 		return status &~USB_MASK;
 	}
