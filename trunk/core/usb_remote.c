@@ -126,7 +126,7 @@ static void debug_add_rec()
     if (!debug_rec_buf) return;
 
     debug_rec_buf[debug_num_rec].tick = get_tick_count();
-    debug_rec_buf[debug_num_rec].usb = remote_key;
+    debug_rec_buf[debug_num_rec].usb = usb_state;
 
     debug_rec_buf[debug_num_rec].driver_state = driver_state;
     debug_rec_buf[debug_num_rec].virtual_remote_state = virtual_remote_state;

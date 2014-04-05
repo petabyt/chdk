@@ -34,7 +34,6 @@ static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static int usb_power=0;
-static int remote_key, remote_count;
 static int shoot_counter=0;
 extern void _platformsub_kbd_fetch_data(long*);
 
