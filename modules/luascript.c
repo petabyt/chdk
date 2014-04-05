@@ -1266,6 +1266,17 @@ static int luaCB_get_usb_power( lua_State* L )
   return 1;
 }
 
+// enable USB High Perfomance timer
+static int luaCB_enable_highspeed_usb( lua_State* L )
+{
+  int val= luaL_checknumber(L,1);
+  if (val > 0 )
+     val=start_usb_HPtimer(val);
+  else  val=stop_usb_HPtimer() ;
+  lua_pushnumber(L, val);
+  return 1;
+}
+
 static int luaCB_enter_alt( lua_State* L )
 {
   enter_alt();
@@ -2688,6 +2699,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_autostart)
     FUNC(set_autostart)
     FUNC(get_usb_power)
+    FUNC(enable_highspeed_usb)
     FUNC(enter_alt)
     FUNC(exit_alt)
     FUNC(shut_down)

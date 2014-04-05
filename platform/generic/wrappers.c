@@ -1702,3 +1702,46 @@ int _rand(void) {
     return value;
 };
 #endif
+
+//  USB remote high speed timer for pulse width measurement and pulse counting
+
+extern int _SetHPTimerAfterNow(int delay, int(*good_cb)(int, int), int(*bad_cb)(int, int), int );
+extern int _CancelHPTimer(int);
+extern int usb_HPtimer_bad(int, int);
+extern int usb_HPtimer_good(int, int);
+
+int usb_HPtimer_handle=0;
+int usb_HPtimer_error_count=0;
+
+static int ARM_usb_HPtimer_good(int time, int interval) { return usb_HPtimer_good(time, interval); }
+static int ARM_usb_HPtimer_bad(int time, int interval) { return usb_HPtimer_bad(time, interval); }
+
+int start_usb_HPtimer(int interval)            // return 0 if timer already running or error,  1 if successful
+{
+#ifdef CAM_REMOTE_USB_HIGHSPEED
+
+    if ( usb_HPtimer_handle == 0 )
+    {
+	if(interval < CAM_REMOTE_HIGHSPEED_LIMIT) interval=CAM_REMOTE_HIGHSPEED_LIMIT;
+        usb_HPtimer_handle = _SetHPTimerAfterNow(interval,ARM_usb_HPtimer_good,ARM_usb_HPtimer_bad,interval);
+        if (!(usb_HPtimer_handle & 0x01)) return 1 ;
+        usb_HPtimer_handle = 0 ;
+    }
+#endif
+    return 0;
+}
+
+int stop_usb_HPtimer() 
+{
+#ifdef CAM_REMOTE_USB_HIGHSPEED
+    if( usb_HPtimer_handle ) 
+    {
+	_CancelHPTimer(usb_HPtimer_handle);
+	usb_HPtimer_handle = 0 ;
+	return 1 ;
+    }
+#endif
+    return 0;
+}
+
+
