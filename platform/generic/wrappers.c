@@ -448,7 +448,9 @@ DIR *opendir(const char* name)
     // Save camera internal DIR structure (we don't care what it is)
 #if defined(CAM_DRYOS)
     extern void *_OpenFastDir(const char* name);
+    _TakeSemaphore(fileio_semaphore,0);
     dir->cam_DIR = _OpenFastDir(name);
+    _GiveSemaphore(fileio_semaphore);
 #else
     extern void *_opendir(const char* name);
     dir->cam_DIR = _opendir(name);
@@ -517,7 +519,13 @@ int closedir(DIR *d)
     int rv = -1;
     if (d && d->cam_DIR)
     {
+#if defined(CAM_DRYOS)
+        _TakeSemaphore(fileio_semaphore,0);
         rv = _closedir(d->cam_DIR);
+        _GiveSemaphore(fileio_semaphore);
+#else
+        rv = _closedir(d->cam_DIR);
+#endif
         // Mark closed (just in case)
         d->cam_DIR = 0;
         // Free allocated memory
