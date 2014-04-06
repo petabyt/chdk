@@ -285,6 +285,106 @@ static int os_listdir (lua_State *L) {
   return 1;
 }
 
+#define IDIR_META "chdk_idir_meta"
+
+typedef struct {
+    DIR *dir;
+    int all;
+} idir_udata_t;
+
+static int idir_iter(lua_State *L) {
+    struct dirent *de;
+    idir_udata_t *ud = (idir_udata_t *)luaL_checkudata(L,1,IDIR_META);
+    // dir may be on first call if opendir failed, or previous explicit close
+    if(!ud->dir) {
+        return 0;
+    }
+    // allow explicit close by calling iterator(ud,false)
+    // need to check type because first invocation is called with nil
+    if(lua_type(L, 2) == LUA_TBOOLEAN && lua_toboolean(L,2) == 0) {
+        closedir(ud->dir);
+        ud->dir=NULL;
+        return 0;
+    }
+    while((de = readdir(ud->dir))) {
+        // if not all, skip over ignored items
+        if(!ud->all && (de->d_name[0] == '\xE5' || (strcmp(de->d_name,".")==0) || (strcmp(de->d_name,"..")==0))) {
+            continue;
+        }
+        break;
+    }
+    if(de) {
+        lua_pushstring(L, de->d_name);
+        return 1;
+    } else { // on last, close immediately to avoid keeping the handle open until GC
+        closedir(ud->dir);
+        ud->dir=NULL;
+        return 0;
+    }
+}
+
+static int idir_gc(lua_State *L) {
+    idir_udata_t *ud = (idir_udata_t *)luaL_checkudata(L,1,IDIR_META);
+    if(ud->dir) {
+        closedir(ud->dir);
+    }
+    return 0;
+}
+/*
+  syntax
+    iteratator, userdata = os.idir("name"[,all])
+  each call to iterator(userdata) returns the next directory entry or nil if all
+  entries have been returned
+  typical usage
+    for fname in os.idir("name"[,all]) do ...
+
+  if all is true, includes ".", ".." and (depending on OS) deleted entries
+ NOTES:
+  Except for the root directory, names ending in / will not work
+  If there is an error opening the directory, the results will be identical to
+  an empty directory, unless all is true
+  The directory handle is kept open until all directory entries are iterated
+  or the userdata is GC'd. This means that:
+  1) deep recursive traversals may run into handle limits. 
+  2) If you break out of a loop using the iterator, the handle may remain open for a while.
+  Explicitly calling iterator(userdata,false) will immediately close the handle. This cannot
+  be used with the typical for syntax given above, you must use an explicit while loop like:
+  local idir,ud=os.idir('A/')
+  repeat
+    name=idir(ud)
+    -- break out of loop under some condition
+    if somefunction(name) then
+        break
+    end
+  until not name
+  idir(ud,false) -- ensure directory handle is closed
+*/
+static int os_idir (lua_State *L) {
+  DIR *dir;
+  const char *dirname = luaL_checkstring(L, 1);
+  int all=lua_toboolean(L, 2);
+
+  lua_pushcfunction(L, idir_iter);
+
+  idir_udata_t *ud = lua_newuserdata(L,sizeof(idir_udata_t));
+  ud->dir = opendir(dirname); // may be null, in which case iterator will stop on first iteration
+                                // no obvious way to return error status
+  ud->all = all;
+
+  luaL_getmetatable(L, IDIR_META);
+  lua_setmetatable(L, -2);
+  return 2;
+}
+
+static const luaL_Reg idir_meta_methods[] = {
+  {"__gc", idir_gc},
+  {NULL, NULL}
+};
+static void idir_register(lua_State *L) {
+    luaL_newmetatable(L,IDIR_META);
+    luaL_register(L, NULL, idir_meta_methods);  
+}
+
 // t = stat("name")
 // nil,strerror,errno on fail
 static int os_stat (lua_State *L) {
@@ -387,6 +487,7 @@ static const luaL_Reg syslib[] = {
 #endif
   {"mkdir",     os_mkdir}, // reyalp - NOT STANDARD
   {"listdir",   os_listdir}, // reyalp - NOT STANDARD
+  {"idir",      os_idir}, // reyalp - NOT STANDARD
   {"stat",      os_stat}, // reyalp - NOT STANDARD
   {"utime",     os_utime}, // reyalp - NOT STANDARD
   {"remove",    os_remove},
@@ -406,6 +507,7 @@ static const luaL_Reg syslib[] = {
 
 
 LUALIB_API int luaopen_os (lua_State *L) {
+  idir_register(L);
   luaL_register(L, LUA_OSLIBNAME, syslib);
   return 1;
 }
