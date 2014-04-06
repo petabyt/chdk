@@ -409,6 +409,68 @@ function tlistdir(name,showall)
 	return r
 end
 
+function tidir(name,showall,expect)
+	log('os.idir("',tostring(name),'",',tostring(showall),'): ')
+	local r={}
+	local names={}
+	for fn in os.idir(name,showall) do
+		table.insert(r,fn)
+		names[fn]=true
+	end
+	local msg
+	if expect == 'empty' then
+		if #r ~= 0 then
+			msg="expted empty"
+		end
+	else
+		-- only check that expected are present, vx may include deleted with all
+		for i,fn in ipairs(expect) do
+			if not names[fn] then
+				msg="missing expected file "..tostring(fn)
+			end
+		end
+	end
+	if msg then
+		logfail(tostring(msg))
+	else
+		logok()
+		log("{\n")
+		for k,v in ipairs(r) do
+			log(' ',k,'="',tostring(v),'"\n')
+		end
+		log("}\n")
+	end
+	return r
+end
+
+function tidirbreak(name,limit)
+	log('os.idir("',tostring(name),'"): ')
+	local n=0
+	local idir,ud = os.idir(name)
+	repeat
+		n = n+1
+		fn=idir(ud)
+		if n == limit then
+			break
+		end
+	until not fn
+	local msg
+	if fn and n == limit then
+		idir(ud,false)
+		if idir(ud) ~= nil then
+			msg="explicit close failed"
+		end
+	else
+		msg="limit not reached"
+	end
+	if msg then
+		logfail(tostring(msg))
+	else
+		logok()
+	end
+	return true
+end
+
 function tutime(name,mtime,atime)
 	log('os.utime("',tostring(name),'",',tostring(mtime),',',tostring(atime),'): ')
 	local r,msg = os.utime(name,mtime,atime)
@@ -461,6 +523,15 @@ function os_test()
 		tren(tdir0..tdat0,tdir0..tdat1)
 		tlistdir(tdir0)
 		tlistdir(tdir0,true)
+		if type(os.idir) == 'function' then
+			tidir(tdir0,nil,{'TEST1.DAT'})
+			tidir(tdir0,true,{'TEST1.DAT','.','..'})
+			tidir(tdir0..tdat1,true,'empty') -- dir on a file should give empty
+			tidir('A/BOGUS',true,'empty') -- dir on non-existent should give empty
+			tidirbreak('A/',2) -- root should have more than 2 entries
+		else
+			log('skipping idir, not implemented\n')
+		end
 -- NOTE invalid operations frequently leave the filesystem in a corrupt state
 --		trename(tdir0,tdir1)
 		want_ok=false
