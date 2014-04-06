@@ -77,11 +77,12 @@ void exit_alt()
 
 //-------------------------------------------------------------------
 // Core keyboard handler
+
 long kbd_process()
 {
     static int key_pressed;
 
-    usb_remote_key();
+    if( usb_HPtimer_handle==0) usb_remote_key();
 
     if (camera_info.perf.md_af_tuning)
     {
