@@ -109,25 +109,23 @@ long get_file_next_counter() {
 }
 
 long get_target_file_num() {
-    long n;
-
-    n = get_file_next_counter();
-    n = (n>>4)&0x3FFF;
-    return n;
+    return get_exposure_counter();
 }
 
 #if defined(CAM_DATE_FOLDER_NAMING)
-void get_target_dir_name(char *out) {
+// A1400 camera uses date to name directory
+void get_target_dir_name(char *out)
+{
+    static char buf[32];
     extern void _GetImageFolder(char*,int,int,int);
-    _GetImageFolder(out,get_file_next_counter(),0x400,time(NULL));
+    _GetImageFolder(buf,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
+    strncpy(out,buf,15);
+    out[15] = 0;
 }
 #else
-long get_target_dir_num() {
-    long n;
-
-    n = get_file_next_counter();
-    n = (n>>18)&0x3FF;
-    return n;
+long get_target_dir_num() 
+{
+    return 0;
 }
 #endif
 
