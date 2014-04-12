@@ -671,14 +671,14 @@
 // <ALT> teks layar mode bantuan
 558 "%-20s %-14s"                           // Format Header, sesuaikan jika dibutuhkan; tapi total Len harus 35
 559 "<ALT> Shortcuts"                       // Len harus <= string pertama dalam format header (20)
-560 "Shutter Setengah Tekan +"                  // Len harus <= string pertama dalam format header (20)
+560 "Shutter Half Press +"                  // should be "Shutter Setengah Tekan +", but len must be <= 20
 561 "MENU=CHDK Menu"                        // Len harus <= string kedua dalam format header (14)
-562 "MENU=Menu Pengguna"                        // Len harus <= string kedua dalam format header (14)
+562 "MENU=User Menu"                        // should be "MENU=Menu Pengguna" but len must be <= 14
 563 "SET=Script Menu, SHUTTER=Run Script"   // Len harus <= 35
 564 "Fokus  %5s=Inf.  %5s=HyperFocal"       // Len harus <= 35
 565 "Manual Fokus"
 566 "Sembunyikan OSD/Tampilan Layar CHDK saat menekan"
-567 "  * - Tidak Tersedia pada <ALT> mode  "   // Len harus <= 35
+567 " * - Tidak Tersedia pada <ALT> mode"   // Len harus <= 35
 
 568 "'%s'\nditambahkan ke Menu Pengguna"
 569 "Menu Pengguna penuh"
