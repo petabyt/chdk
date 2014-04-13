@@ -122,4 +122,7 @@
     #define CAM_SD_OVER_IN_AF                       1
     #define CAM_SD_OVER_IN_AFL                      1
     #define CAM_SD_OVER_IN_MF                       1
+
+    #define  DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY      1
+    
 //----------------------------------------------------------

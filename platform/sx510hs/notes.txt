@@ -29,5 +29,4 @@ KNOWN BUGS
 - If zebra enabled, rs -cont=X -jpg has errors
 - Liveview has some problems. After selecting MODE_VIDEO_MOVIE_DIGEST, height is wrong for all modes.
 - Reboot fails sometimes
-- recreview_hold has not been found
 - aperture_sizes_table[] is a copy of ixus140

@@ -13,11 +13,10 @@ DEF(viewport_buffers,               0xff567dec) // by comparison to ixus140
 
 DEF(viewport_fb_d,                  0x00003438) // Found @0xff067204 (0x33e4) + @0xff067240 (0x54) 
 
-//DEF(bitmap_buffer,0x) //
-//DEF(active_bitmap_buffer,0x) //
+DEF(bitmap_buffer,                  0x0000413c) //  @0xff08e1c4 - by comparison to ixus140
+DEF(active_bitmap_buffer,           0x00004138) //  @0xff08e1c8 - by comparison to ixus140
 
-//TODO
-DEF(recreview_hold,                 0x000028f4) //TODO - Only for test
+DEF(recreview_hold,                 0x000028f4+0x84) //@0xff04563c + 0x84 (offset used by A2500)
 
 //TODO
 DEF(rear_dial_position,        0xC0240106)  //To do
