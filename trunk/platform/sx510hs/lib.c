@@ -158,6 +158,8 @@ int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_displa
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
 
+
+#ifdef CAM_LOAD_CUSTOM_COLORS
 void *vid_get_bitmap_active_palette()
 {
     extern int active_palette_buffer;
@@ -171,9 +173,7 @@ void *vid_get_bitmap_active_palette()
     return (p+1);
 }
 
-#ifdef CAM_LOAD_CUSTOM_COLORS
 // Function to load CHDK custom colors into active Canon palette
-
 void load_chdk_palette()
 {
     extern int active_palette_buffer;
