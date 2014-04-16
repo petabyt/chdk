@@ -253,3 +253,4 @@ NHSTUB(MFOn                                   ,0xffc51ad8) //120
 NHSTUB(MFOff                                  ,0xffc51ae8) //120
 NHSTUB(PT_MFOn                                ,0xffc5142c) //120
 NHSTUB(PT_MFOff                               ,0xffc5143c) //120
+NHSTUB(GetAdChValue                           ,0xffc345b8) //120

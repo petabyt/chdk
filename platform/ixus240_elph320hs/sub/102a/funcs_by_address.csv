@@ -250,6 +250,7 @@
 0xff05f99c,DispCon_SaveLcdGainAdjParameter_FW
 0xff05f9b8,DispCon_ShowHdChart_FW
 0xff060b40,GetAdVBattBottom_FW
+0xff060b48,GetAdChValue
 0xff060b48,GetAdChValue_FW
 0xff060b80,_avsShowAdjData_FW
 0xff060d74,_avsInit_FW

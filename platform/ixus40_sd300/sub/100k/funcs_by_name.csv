@@ -377,6 +377,7 @@
 0xff869c28,Fwrite_Fut
 0xff922544,GenerateProgramCorrectsDefectivePixel_FW
 0xff82aa38,get_resource_pointer
+0xffa425e0,GetAdChValue
 0xffa425e0,GetAdChValue_FW
 0xffa648d0,GetAdjTableMapVersion_FW
 0xffa648e0,GetAdjTableValueVersion_FW

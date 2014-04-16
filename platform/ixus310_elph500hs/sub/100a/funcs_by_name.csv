@@ -347,6 +347,7 @@
 0xff027224,Fwrite_Fut_FW
 0xff080af0,get_resource_pointer
 0xff051d74,GetAccelerometerDataWithCorrect_FW
+0xff051000,GetAdChValue
 0xff051000,GetAdChValue_FW
 0xff2c0e74,GetAdjAcceleration_FW
 0xff388c8c,GetAdjAFInteg_FW

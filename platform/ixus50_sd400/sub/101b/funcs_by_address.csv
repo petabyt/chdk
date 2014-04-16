@@ -134,6 +134,7 @@
 0xff829e28,OnPrintHVSw_FW
 0xff829e40,OffPrintHVSw_FW
 0xff82a120,kbd_pwr_off,(stubs_entry_2.s)
+0xff82aaf0,GetAdChValue
 0xff82aaf0,GetAdChValue_FW
 0xff82ab30,GetAdVBattBottom_FW
 0xff82bb9c,SetBattCheckMode_FW

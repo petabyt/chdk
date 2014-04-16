@@ -440,6 +440,7 @@
 0xffdbcf88,LcdCon_SaveLcdBackLightParameter_FW
 0xffdbdbf8,SetSDPwrPort_FW
 0xffdbdc4c,Driver_EnableEventProc_FW
+0xffdbeafc,GetAdChValue
 0xffdbeafc,GetAdChValue_FW
 0xffdbeb2c,GetAdVBattBottom_FW
 0xffdc0278,SetBattCheckMode_FW

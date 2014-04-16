@@ -204,3 +204,4 @@ NHSTUB(CancelHPTimer                          ,0xff8146c8) //1100
 NHSTUB(SetHPTimerAfterNow                     ,0xff8141e0) //119
 NHSTUB(MFOn                                   ,0xffb39264) //120
 NHSTUB(MFOff                                  ,0xffb39274) //120
+NHSTUB(GetAdChValue                           ,0xffa3d91c) //120

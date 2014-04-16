@@ -373,6 +373,7 @@
 0xff38e8f4,GetAccelX_atMechaCpu_FW
 0xff38e910,GetAccelY_atMechaCpu_FW
 0xff38ea2c,GetAccelZ_atMechaCpu_FW
+0xff059368,GetAdChValue
 0xff059368,GetAdChValue_FW
 0xff345944,GetAdjAcceleration_FW
 0xff3459dc,GetAdjAccelerationDataWithCorrect_FW

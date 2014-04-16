@@ -216,6 +216,7 @@
 0xff846e78,DispCon_ShowLcdGainAdjParameter_FW
 0xff846e88,DispCon_SaveLcdGainAdjParameter_FW
 0xff8486c4,GetAdVBattBottom_FW
+0xff8486cc,GetAdChValue
 0xff8486cc,GetAdChValue_FW
 0xff8497c4,Bat_Calc_FW
 0xff8497c4,CalculateBatSenseOffset_FW

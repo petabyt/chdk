@@ -875,6 +875,7 @@
 0xffa468e0,DeleteVcomUart_FW
 0xffa4739c,RegComEventProc_FW
 0xffa476ac,kbd_pwr_off,(stubs_entry_2.s)
+0xffa48074,GetAdChValue
 0xffa48074,GetAdChValue_FW
 0xffa480b4,GetAdVBattBottom_FW
 0xffa4be50,SetMoveSysLowModeOn_FW

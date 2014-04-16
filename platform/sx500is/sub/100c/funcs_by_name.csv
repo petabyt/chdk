@@ -373,6 +373,7 @@
 0xff2db6a8,GetAccelX_atMechaCpu_FW
 0xff2db6c4,GetAccelY_atMechaCpu_FW
 0xff2db6e0,GetAccelZ_atMechaCpu_FW
+0xff05255c,GetAdChValue
 0xff05255c,GetAdChValue_FW
 0xff34f2e8,GetAdjAFInteg_FW
 0xff05e304,GetAdjDataAreaAddress_FW

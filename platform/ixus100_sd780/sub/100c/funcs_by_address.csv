@@ -201,6 +201,7 @@
 0xff83e1d4,DispCon_SaveHdGainAdjParameter_FW
 0xff83e1f0,DispCon_ShowHdChart_FW
 0xff83f704,GetAdVBattBottom_FW
+0xff83f70c,GetAdChValue
 0xff83f70c,GetAdChValue_FW
 0xff840b68,Bat_Calc_FW
 0xff840b68,CalculateBatSenseOffset_FW

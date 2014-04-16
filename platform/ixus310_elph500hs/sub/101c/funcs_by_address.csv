@@ -226,6 +226,7 @@
 0xff04fdb4,DispCon_SaveLcdGainAdjParameter_FW
 0xff04fdd0,DispCon_ShowHdChart_FW
 0xff050ff8,GetAdVBattBottom_FW
+0xff051000,GetAdChValue
 0xff051000,GetAdChValue_FW
 0xff051be0,GetSlantData_FW
 0xff051d68,j_GetX_AxisAcceleration_FW

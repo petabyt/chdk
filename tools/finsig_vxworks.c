@@ -489,6 +489,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
 
+    { "GetAdChValue", OPTIONAL },
+
     { 0, 0, 0 }
 };
 
@@ -1013,6 +1015,7 @@ string_sig string_sigs[] =
     {20, "UnlockAE", "UnlockAE_FW", 1 },
     {20, "MFOn", "MFOn_FW", 1 },
     {20, "MFOff", "MFOff_FW", 1 },
+    {20, "GetAdChValue", "GetAdChValue_FW", 0 },
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },

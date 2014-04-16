@@ -220,6 +220,7 @@
 0xff85c574,DispCon_SaveLcdGainAdjParameter_FW
 0xff85c590,DispCon_ShowHdChart_FW
 0xff85d7ac,GetAdVBattBottom_FW
+0xff85d7b4,GetAdChValue
 0xff85d7b4,GetAdChValue_FW
 0xff85eba0,task_BeepTask
 0xff85ef24,BeepDrive_FW

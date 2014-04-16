@@ -223,6 +223,7 @@
 0xff051788,DispCon_SaveLcdGainAdjParameter_FW
 0xff0517a4,DispCon_ShowHdChart_FW
 0xff0529d8,GetAdVBattBottom_FW
+0xff0529e0,GetAdChValue
 0xff0529e0,GetAdChValue_FW
 0xff053eec,i2c_Bl_Pwr_Ctrl_FW
 0xff054148,i2c_dcdc_dump_FW

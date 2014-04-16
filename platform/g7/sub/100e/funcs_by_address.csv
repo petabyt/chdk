@@ -146,6 +146,7 @@
 0xff82a408,task_JogDial
 0xff82a408,task_RotaryEncoder
 0xff82a5cc,JogInterValSet_FW
+0xff82ac74,GetAdChValue
 0xff82ac74,GetAdChValue_FW
 0xff82aca4,GetAdVBattBottom_FW
 0xff82c4cc,SetBattCheckMode_FW

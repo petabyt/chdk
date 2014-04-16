@@ -282,6 +282,7 @@
 0xffc12e6c,Fwrite_Fut
 0xffc12e6c,Fwrite_Fut_FW
 0xffc52634,get_resource_pointer
+0xffc2eb18,GetAdChValue
 0xffc2eb18,GetAdChValue_FW
 0xffe42754,GetAdjAFInteg_FW
 0xffc35508,GetAdjTableMapVersion_FW
