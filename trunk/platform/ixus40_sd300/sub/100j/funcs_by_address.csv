@@ -964,6 +964,7 @@
 0xffa41014,RegComEventProc_FW
 0xffa417b0,kbd_pwr_off,(stubs_entry_2.s)
 0xffa41d30,ShowAllAdChValue_FW
+0xffa425e0,GetAdChValue
 0xffa425e0,GetAdChValue_FW
 0xffa42664,GetAdVBattBottom_FW
 0xffa47f90,Bat_Calc_FW

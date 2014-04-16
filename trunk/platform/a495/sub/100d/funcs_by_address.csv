@@ -223,6 +223,7 @@
 0xffc3fc10,LcdCon_StartLcdPeriodicalSetting_FW
 0xffc3fc60,LcdCon_StopLcdPeriodicalSetting_FW
 0xffc409a4,GetAdVBattBottom_FW
+0xffc409ac,GetAdChValue
 0xffc409ac,GetAdChValue_FW
 0xffc420b8,task_BeepTask
 0xffc42434,BeepDrive_FW

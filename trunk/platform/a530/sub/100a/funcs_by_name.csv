@@ -264,6 +264,7 @@
 0xffc57894,Fwrite_Fut
 0xffc57894,Fwrite_Fut_FW
 0xffc13f4c,get_resource_pointer
+0xffc197bc,GetAdChValue
 0xffc197bc,GetAdChValue_FW
 0xffe7ae6c,GetAdjTableMapVersion_FW
 0xffe7ae7c,GetAdjTableValueVersion_FW

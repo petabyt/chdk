@@ -197,6 +197,7 @@
 0xffc2cfdc,LcdCon_StartLcdPeriodicalSetting_FW
 0xffc2cfec,LcdCon_StopLcdPeriodicalSetting_FW
 0xffc2e0cc,GetAdVBattBottom_FW
+0xffc2e0d4,GetAdChValue
 0xffc2e0d4,GetAdChValue_FW
 0xffc2f2ec,Bat_Calc_FW
 0xffc2f2ec,CalculateBatSenseOffset_FW

@@ -144,6 +144,7 @@
 0xffc1758c,kbd_pwr_off
 0xffc17c00,OnPrintHVSw_FW
 0xffc17c18,OffPrintHVSw_FW
+0xffc18d60,GetAdChValue
 0xffc18d60,GetAdChValue_FW
 0xffc18da0,GetAdVBattBottom_FW
 0xffc19e74,SetBattCheckMode_FW

@@ -136,6 +136,7 @@
 0xffc17198,OffPrintPhySw_FW
 0xffc171ac,GetSwitchStatus_FW
 0xffc17618,kbd_read_keys_r2
+0xffc18968,GetAdChValue
 0xffc18968,GetAdChValue_FW
 0xffc189a8,GetAdVBattBottom_FW
 0xffc19a74,SetBattCheckMode_FW

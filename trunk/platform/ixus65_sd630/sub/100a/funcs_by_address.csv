@@ -149,6 +149,7 @@
 0xff829ab4,OnPrintFeather_FW
 0xff829acc,OffPrintFeather_FW
 0xff829ae0,SetFeatherPrintInterval_FW
+0xff82a918,GetAdChValue
 0xff82a918,GetAdChValue_FW
 0xff82a958,GetAdVBattBottom_FW
 0xff82ba90,SetBattCheckMode_FW

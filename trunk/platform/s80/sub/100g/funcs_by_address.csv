@@ -147,6 +147,7 @@
 0xff828a74,OffPrintJog_FW
 0xff828bac,JogP_FW
 0xff828fec,kbd_pwr_off,(stubs_entry_2.s)
+0xff829aa0,GetAdChValue
 0xff829aa0,GetAdChValue_FW
 0xff829ae0,GetAdVBattBottom_FW
 0xff82ad60,SetBattCheckMode_FW

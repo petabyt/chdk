@@ -202,6 +202,7 @@
 0xff83f40c,GetZ_AxisAcceleration_FW
 0xff83f418,GetSlantData_FW
 0xff840644,GetAdVBattBottom_FW
+0xff84064c,GetAdChValue
 0xff84064c,GetAdChValue_FW
 0xff841ac0,Bat_Calc_FW
 0xff841ac0,CalculateBatSenseOffset_FW

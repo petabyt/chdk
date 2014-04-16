@@ -361,6 +361,7 @@
 0xff088580,get_resource_pointer
 0xff053028,GetAccelerometerDataWithCorrect_FW
 0xff052e54,GetAccelerometerTemperature_FW
+0xff051d90,GetAdChValue
 0xff051d90,GetAdChValue_FW
 0xff32e314,GetAdjAcceleration_FW
 0xff32e398,GetAdjAccelerationDataWithCorrect_FW

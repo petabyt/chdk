@@ -193,6 +193,7 @@
 0xff83eaa4,DispCon_ShowVideoAdjParameter_FW
 0xff83eabc,DispCon_SaveVideoAdjParameter_FW
 0xff840388,GetAdVBattBottom_FW
+0xff840390,GetAdChValue
 0xff840390,GetAdChValue_FW
 0xff8416bc,task_BeepTask
 0xff841aa4,BeepDrive_FW

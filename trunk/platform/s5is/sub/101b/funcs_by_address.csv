@@ -84,6 +84,7 @@
 0xff81bcec,srand,(stubs_entry_2.s)
 0xff81e76c,rand
 0xff820978,RegComEventProc_FW
+0xff82128c,GetAdChValue
 0xff82128c,GetAdChValue_FW
 0xff821320,GetAdVBattBottom_FW
 0xff821704,SetBattCheckMode_FW

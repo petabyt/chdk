@@ -211,6 +211,7 @@
 0xff8463f0,DispCon_ShowLcdGammaParameter_FW
 0xff846428,DispCon_SaveLcdGammaParameter_FW
 0xff847cb4,GetAdVBattBottom_FW
+0xff847cbc,GetAdChValue
 0xff847cbc,GetAdChValue_FW
 0xff848db4,Bat_Calc_FW
 0xff848db4,CalculateBatSenseOffset_FW

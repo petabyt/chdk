@@ -453,6 +453,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "SS_MFOn", OPTIONAL },
     { "SS_MFOff", OPTIONAL },
 
+    { "GetAdChValue", OPTIONAL },
+
     { 0, 0, 0 }
 };
 
@@ -1154,6 +1156,7 @@ string_sig string_sigs[] =
     {20, "SS_MFOn", "SS.MFOn_FW", 1 },
     {20, "SS_MFOff", "SS.MFOff_FW", 1 },
     {20, "SetLogicalEventActive", "UiEvnt_SetLogicalEventActive_FW", 1 },
+    {20, "GetAdChValue", "GetAdChValue_FW", 0 },
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },

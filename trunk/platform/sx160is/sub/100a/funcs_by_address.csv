@@ -263,6 +263,7 @@
 0xff861178,DispCon_SaveLcdGainAdjParameter_FW
 0xff861194,DispCon_ShowHdChart_FW
 0xff862050,GetAdVBattBottom_FW
+0xff862058,GetAdChValue
 0xff862058,GetAdChValue_FW
 0xff86392c,task_BeepTask
 0xff863cac,BeepDrive_FW

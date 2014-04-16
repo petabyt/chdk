@@ -351,6 +351,7 @@
 0xff033d74,Fwrite_Fut
 0xff033d74,Fwrite_Fut_FW
 0xff0bbe74,get_resource_pointer
+0xff08cac8,GetAdChValue
 0xff08cac8,GetAdChValue_FW
 0xff40f80c,GetAdjAFInteg_FW
 0xff099cac,GetAdjDataAreaAddress_FW

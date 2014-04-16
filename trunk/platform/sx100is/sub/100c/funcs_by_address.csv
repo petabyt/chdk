@@ -237,6 +237,7 @@
 0xffc33e74,DispCon_GetVideoAdjParameter_FW
 0xffc33ebc,DispCon_ShowVideoAdjParameter_FW
 0xffc33ed4,DispCon_SaveVideoAdjParameter_FW
+0xffc35334,GetAdChValue
 0xffc35334,GetAdChValue_FW
 0xffc353d0,GetAdVBattBottom_FW
 0xffc36834,Bat_Calc_FW

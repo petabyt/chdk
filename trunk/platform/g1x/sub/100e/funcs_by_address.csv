@@ -226,6 +226,7 @@
 0xff0507d8,DispCon_SaveVideoAdjParameter_FW
 0xff0507f4,DispCon_ShowHdChart_FW
 0xff051d88,GetAdVBattBottom_FW
+0xff051d90,GetAdChValue
 0xff051d90,GetAdChValue_FW
 0xff051dcc,_avsShowAdjTableData_FW
 0xff051dec,_avsLoadAdjTableData_FW

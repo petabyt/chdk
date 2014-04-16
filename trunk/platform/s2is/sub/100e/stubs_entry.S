@@ -196,3 +196,4 @@ NHSTUB(vsprintf                               ,0xffaf1d80) //115
 NHSTUB(EngDrvRead                             ,0xff88b540) //102
 NHSTUB(CancelHPTimer                          ,0xff815b98) //119
 NHSTUB(SetHPTimerAfterNow                     ,0xff815724) //119
+NHSTUB(GetAdChValue                           ,0xff82b848) //120

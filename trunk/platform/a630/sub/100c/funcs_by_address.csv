@@ -145,6 +145,7 @@
 0xffc18fbc,GetHVSw_FW
 0xffc18fcc,OnPrintHVStatus_FW
 0xffc18fe0,OffPrintHVStatus_FW
+0xffc19b38,GetAdChValue
 0xffc19b38,GetAdChValue_FW
 0xffc19b68,GetAdVBattBottom_FW
 0xffc1b208,SetBattCheckMode_FW
