@@ -9,7 +9,7 @@ ROMBASEADDR=0xff000000
 #EXMEM_HEAP_SKIP=0xFD200	#(0x44000000-0x43F02E00) from sub_FF86CAA8 = size of video buffers in EXMEM area (?)
 #EXMEM_BUFFER_SIZE=0x300000	# Amount of EXMEM memory to allocate for CHDK = 3MB
 
-MAXRAMADDR=0x07ffffff # 64 MB
+MAXRAMADDR=0x07ffffff # 128 MB
 
 # TODO d10 c&p
 #ifdef OPT_CHDK_IN_EXMEM

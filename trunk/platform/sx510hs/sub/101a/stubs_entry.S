@@ -30,7 +30,7 @@
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff378390 -> ff63f61c
-// Mode 33331 in firmware but not in current modemap
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x000188d4) // Found @0xff00c0c4
@@ -125,8 +125,8 @@ NHSTUB(EnterToCompensationEVF                 ,0xff012780) //104
 NHSTUB(ExecuteEventProcedure                  ,0xff014820) //104
 NHSTUB(ExitFromCompensationEVF                ,0xff0127c8) //104
 NHSTUB(ExitTask                               ,0x006b5a04) //120
-//NHSTUB(ExpCtrlTool_StartContiAE             ,0xff0254d4) //104            == 0xff0254d4
-//NHSTUB(ExpCtrlTool_StopContiAE              ,0xff025648) //104            == 0xff025648
+NHSTUB(ExpCtrlTool_StartContiAE               ,0xff0254d4) //104
+NHSTUB(ExpCtrlTool_StopContiAE                ,0xff025648) //104
 NHSTUB(Fclose_Fut                             ,0xff006d24) //120
 NHSTUB(Feof_Fut                               ,0xff006f10) //  1
 NHSTUB(Fflush_Fut                             ,0xff006f4c) //  1
@@ -139,9 +139,9 @@ NHSTUB(Fwrite_Fut                             ,0xff006e24) //120
 NHSTUB(GetBatteryTemperature                  ,0xff053244) //102
 NHSTUB(GetCCDTemperature                      ,0xff0531cc) //102
 NHSTUB(GetCurrentAvValue                      ,0xff06a6c8) //120
-//NHSTUB(GetDrive_ClusterSize                 ,0xff010278) //122            == 0xff010278
-//NHSTUB(GetDrive_FreeClusters                ,0xff010a90) //119            == 0xff010a90
-//NHSTUB(GetDrive_TotalClusters               ,0xff010a64) //122            == 0xff010a64
+NHSTUB(GetDrive_ClusterSize                   ,0xff010278) //122
+NHSTUB(GetDrive_FreeClusters                  ,0xff010a90) //119
+NHSTUB(GetDrive_TotalClusters                 ,0xff010a64) //122
 NHSTUB(GetFocusLensSubjectDistance            ,0xff1c4438) //102
 NHSTUB(GetImageFolder                         ,0xff19ea90) //122
 NHSTUB(GetKbdState                            ,0xff04f49c) //109
@@ -203,7 +203,7 @@ NHSTUB(_log10                                 ,0x006d7678) //112
 NHSTUB(_pow                                   ,0x006d77f0) //121
 NHSTUB(_sqrt                                  ,0x006d9608) //  6
 NHSTUB(add_ptp_handler                        ,0xff132204) //121
-//NHSTUB(apex2us                              ,0xff2a7800) //121            == 0xff2a7800
+NHSTUB(apex2us                                ,0xff2a7800) //121
 NHSTUB(close                                  ,0xff003ffc) //109
 NHSTUB(err_init_task                          ,0xff004a90) //111
 NHSTUB(exmem_alloc                            ,0xff01436c) //101
@@ -250,7 +250,7 @@ NHSTUB(strtolx                                ,0xff018044) //109
    DEF(task_PhySw                             ,0xff00bc0c) //120
    DEF(task_RotaryEncoder                     ,0xff04f774) //120
    DEF(hook_CreateTask                        ,0x006b5778) //105
-//NHSTUB(time                                 ,0x006b9210) //119            == 0x006b9210
+NHSTUB(time                                   ,0x006b9210) //119
 NHSTUB(vsprintf                               ,0xff007de0) //115
 NHSTUB(EngDrvRead                             ,0xff00c220) //102
 NHSTUB(CancelHPTimer                          ,0xff082604) //119

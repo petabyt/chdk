@@ -90,8 +90,9 @@
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE                      13
     #define CAM_LOAD_CUSTOM_COLORS                  1     // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                         0x90  // Start color index for CHDK colors loaded into camera palette.
+    #define CHDK_COLOR_BASE                         0xB0  // Start color index for CHDK colors loaded into camera palette.
 
+    #define CAM_HAS_JOGDIAL                         1
     #define CAM_ADJUSTABLE_ALT_BUTTON               1
     #define CAM_ALT_BUTTON_NAMES                    { "Playback", "Disp", "Video" }
     #define CAM_ALT_BUTTON_OPTIONS                  { KEY_PLAYBACK, KEY_DISPLAY, KEY_VIDEO }
@@ -110,6 +111,11 @@
     #define  CAM_HAS_FILEWRITETASK_HOOK             1 // FileWriteTask hook is available (local file write can be prevented)
     #define  CAM_FILEWRITETASK_SEEKS                1 // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
 
+    #define CAM_HAS_ZOOM_LEVER                      1 // Camera has dedicated zoom buttons
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS         1 // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
+    #define CAM_USE_ALT_SET_ZOOM_POINT              1 // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_USE_ALT_PT_MoveOpticalZoomAt        1 // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
+
 //  only non-AF led available
     #define REMOTE_SYNC_STATUS_LED       0xC022302C  // specifies an LED that turns on while camera waits for USB remote to sync
 
@@ -124,5 +130,7 @@
     #define CAM_SD_OVER_IN_MF                       1
 
     #define  DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY      1
+
+    #define CAM_ZEBRA_NOBUF                         1
     
 //----------------------------------------------------------
