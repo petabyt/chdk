@@ -116,7 +116,7 @@ const CapturemodeMap modemap[] = {
     { MODE_TV,                  32771 },
     { MODE_P,                   32772 },
     { MODE_DISCREET,            32824 },
-//    { STANDARD,                 33331 }, // ??? Exifinfo: Scene Capture Type: Standard
+    { MODE_SCN_NIGHT_SCENE,     33331 }, // This mode is not listed in Canon menu
     { MODE_LIVE,                33339 },
     { MODE_VIDEO_MOVIE_DIGEST,  33340 },
 };

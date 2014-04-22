@@ -7,17 +7,6 @@
 
 const char * const new_sa = &_end;
 
-// Forward declarations
-//extern volatile int jogdial_stopped;
-//void JogDial_task_my(void);
-
-extern void task_CaptSeq();
-extern void task_InitFileModules();
-//extern void task_RotaryEncoder();
-//extern void task_MovieRecord();
-//extern void task_ExpDrv();
-//extern void task_FileWrite();
-
 /*----------------------------------------------------------------------
     CreateTask_spytask
 -----------------------------------------------------------------------*/

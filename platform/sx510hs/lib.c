@@ -54,8 +54,8 @@ void debug_led(int state)
 }
 
 void camera_set_led(int led, int state, int bright) {
- static char led_table[]={0,12}; // status, AF
-    if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], (!state)&1);
+    static char led_table[]={0,12}; // status, AF
+    _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
 
 extern char active_viewport_buffer;
@@ -205,7 +205,6 @@ void load_chdk_palette()
 }
 #endif
 
-//TO DO
 void JogDial_CW(void)
 {
     _PostLogicalEventForNotPowerType(0x872, 1);  // RotateJogDialRight (in table @ ????, fw 1.01a)
