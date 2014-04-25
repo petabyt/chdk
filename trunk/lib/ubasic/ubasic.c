@@ -500,6 +500,10 @@ static int factor(void)
     accept(TOKENIZER_GET_HYPERFOCAL_DIST);
     r = shooting_get_hyperfocal_distance();
     break;  
+   case TOKENIZER_GET_SD_OVER_MODES:
+    accept(TOKENIZER_GET_SD_OVER_MODES);
+    r = sd_over_modes() ;
+    break;
   case TOKENIZER_GET_ISO_MARKET:
     accept(TOKENIZER_GET_ISO_MARKET);
     r = (int)shooting_get_iso_market();

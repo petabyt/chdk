@@ -876,6 +876,21 @@ int shooting_mode_chdk2canon(int hackmode)
 	return -1; // 0 is a valid mode on old cameras!
 }
 
+
+
+int sd_over_modes()
+{  return ( 0
+#ifdef CAM_SD_OVER_IN_AF 
+          + 1
+#endif
+#ifdef CAM_SD_OVER_IN_AFL
+          + 2 
+#endif
+#ifdef CAM_SD_OVER_IN_MF
+          + 4
+#endif
+);  }
+
 int shooting_get_lens_to_focal_plane_width()
 {
     return (int)(lens_get_focus_pos()-lens_get_focus_pos_from_lens());

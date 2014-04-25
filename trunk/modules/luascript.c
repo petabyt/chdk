@@ -395,6 +395,11 @@ static int luaCB_set_mf(lua_State* L)
   return 1; 
 }
 
+static int luaCB_get_sd_over_modes( lua_State* L )
+{
+    lua_pushnumber(L,sd_over_modes());
+    return 1;
+}
 
 static int luaCB_shoot( lua_State* L )
 {
@@ -2759,6 +2764,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(set_aelock)
     FUNC(set_aflock)
     FUNC(set_mf)
+    FUNC(get_sd_over_modes)
     FUNC(set_curve_state)
     FUNC(get_curve_state)
     FUNC(set_curve_file)
