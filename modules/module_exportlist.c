@@ -435,4 +435,5 @@
             remotecap_get_target,
 
            set_focus_bypass,
+           sd_over_modes,
 }

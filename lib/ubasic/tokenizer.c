@@ -118,6 +118,7 @@ static const struct keyword_token keywords[] = {
   {"get_focus_ok",            TOKENIZER_GET_FOCUS_OK},
   {"get_focus_state",         TOKENIZER_GET_FOCUS_STATE},
   {"get_focus",               TOKENIZER_GET_FOCUS},
+  {"get_sd_over_modes",       TOKENIZER_GET_SD_OVER_MODES},
   {"get_hyp_dist",            TOKENIZER_GET_HYPERFOCAL_DIST},
   {"get_iso_market",          TOKENIZER_GET_ISO_MARKET},
   {"get_iso_mode",            TOKENIZER_GET_ISO_MODE},
