@@ -746,3 +746,6 @@
 620 "Force eyefi wlan off"
 621 "Cannot find network"
 622 "No network found"
+
+623 "Input channel"
+

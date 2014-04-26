@@ -13,11 +13,6 @@
 #include "script_api.h"
 #include "shooting.h"
 
-
-extern int get_usb_bit() ;
-extern void usb_remote_status_led(int);
-extern void kbd_synch_delay(int) ;
-
 /*===================================================================================================
     Variables
   ===================================================================================================*/
@@ -25,6 +20,22 @@ extern void kbd_synch_delay(int) ;
 extern int sync_counter;
 extern int usb_sync_wait ;
 extern int usb_remote_active;
+
+/*---------------------------------------------------------------------------------------------------------
+
+    get_remote_state()
+
+    - return state of USB 5V power or value of A/D channel for battery 3rd terminal (if supported & enabled)
+  ---------------------------------------------------------------------------------------------------------*/
+
+int get_remote_state()
+{
+ #ifdef CAM_REMOTE_AtoD_CHANNEL
+    if( conf.remote_input_channel == 1 )
+        return ( (GetAdChValue(CAM_REMOTE_AtoD_CHANNEL) < CAM_REMOTE_AtoD_THRESHOLD) ? 1 : 0 );
+#endif
+    return( get_usb_bit() );
+}
 
 /*---------------------------------------------------------------------------------------------------------
 
@@ -57,7 +68,7 @@ void _wait_until_remote_button_is_released(void)
 
         int std_period = EngDrvRead(GPIO_VSYNC_MAX);
 
-        do { }  while( get_usb_bit() &&  ((int)get_tick_count()-tick < DELAY_TIMEOUT));
+        do { }  while( get_remote_state() &&  ((int)get_tick_count()-tick < DELAY_TIMEOUT));
 
         int cur_cnt = *(volatile int*)(GPIO_VSYNC_CURRENT) & 0xffff; // get the counter state at the time of sync
         
@@ -95,7 +106,7 @@ void _wait_until_remote_button_is_released(void)
     #else // CAM_REMOTE_USES_PRECISION_SYNC
         // delay until USB state goes to "Off" or timeout
 
-        do { }  while( get_usb_bit() &&  ((int)get_tick_count()-tick < DELAY_TIMEOUT));
+        do { }  while( get_remote_state() &&  ((int)get_tick_count()-tick < DELAY_TIMEOUT));
 
         // add a sync calibration delay if requested
 

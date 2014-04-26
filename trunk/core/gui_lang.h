@@ -753,7 +753,9 @@
 #define LANG_CANNOT_FIND_NETWORK	621
 #define LANG_NO_NETWORK_FOUND	622
 
-#define GUI_LANG_ITEMS                          622
+#define LANG_MENU_REMOTE_INPUT_CHANNEL  623
+
+#define GUI_LANG_ITEMS                          623
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

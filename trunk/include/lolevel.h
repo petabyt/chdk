@@ -35,6 +35,11 @@ extern long _VbattGet();
 extern int _GetBatteryTemperature();
 extern int _GetCCDTemperature();
 extern int _GetOpticalTemperature();
+#ifdef CAM_DRYOS
+extern int _GetAdChValue(int) ;
+#else
+extern int _GetAdChValue(int*) ;
+#endif
 extern void _PT_PlaySound(short , void*);
 extern void _RefreshPhysicalScreen(long f);
 extern void _Unmount_FileSystem();

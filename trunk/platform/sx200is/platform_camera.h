@@ -88,7 +88,8 @@
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
-	#define REMOTE_SYNC_STATUS_LED 	0xC0220138		// specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED 	0xC0220138  // specifies an LED that turns on while camera waits for USB remote to sync
+    #define CAM_REMOTE_AtoD_CHANNEL         5   // Camera supports using 3rd battery terminal as well as USB for remote - value = A/D channel to poll
 
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                 58      // Override min subject distance
