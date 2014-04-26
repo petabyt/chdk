@@ -19,7 +19,9 @@ const unsigned int AS_SIZE  = sizeof(aperture_sizes_table)/sizeof(aperture_sizes
 const unsigned int ISO_SIZE = sizeof(iso_table)/sizeof(iso_table[0]);
 const unsigned int MODESCNT = sizeof(modemap)/sizeof(modemap[0]);
 
+#ifndef CAM_FILE_COUNTER_IS_VAR
 const unsigned int param_file_counter = PARAM_FILE_COUNTER;
+#endif
 
 //-------------------------------------------------------------------
 
