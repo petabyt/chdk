@@ -494,7 +494,7 @@ asm volatile (
 "    LDR     R0, [R5, #0x10] \n"
 "    CMP     R0, #7 \n"
 "    BEQ     loc_FF06A0A8 \n"
-"    BL      sub_FF0B1DA4 /*_CancelHPTimer*/ \n"
+"    BL      _CancelHPTimer \n"
 "    STR     R6, [R5, #0x10] \n"
 
 "loc_FF06A0A8:\n"
@@ -529,7 +529,7 @@ asm volatile (
 "    LDR     R0, [R5, #0x10] \n"
 "    CMP     R0, #7 \n"
 "    BEQ     loc_FF06A11C \n"
-"    BL      sub_FF0B1DA4 /*_CancelHPTimer*/ \n"
+"    BL      _CancelHPTimer \n"
 "    STR     R6, [R5, #0x10] \n"
 
 "loc_FF06A11C:\n"

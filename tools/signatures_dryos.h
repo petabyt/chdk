@@ -1301,34 +1301,6 @@ static FuncSig func_sig_Fgets_Fut_6[] = {
 	{ -1, -1, -1 },
 };
 
-static FuncSig func_sig_GetDrive_TotalClusters_6[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
-	{   1, 0xe1b04000, 0xfdfff000 }, // mov:6:0xE1B04000
-	{   2, 0x100f1000, 0xf00ff000 }, // ldr:8:0x159F132C
-	{   3, 0x100f0000, 0xf00ff000 }, // ldr:8:0x151F0340
-	{   4, 0x0b000000, 0x0f000000 }, // b, bl:3:0x1BFE8FA1
-	{   5, 0xe00f1000, 0xf00ff000 }, // ldr:8:0xE51F1CF4
-	{   6, 0xe0800000, 0xfdf0f000 }, // add:6:0xE0840204
-	{   7, 0xe0800000, 0xfdf0f000 }, // add:6:0xE0810100
-	{   8, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE5900034
-	{   9, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD8010
-	/* 10/10 */
-	{ -1, -1, -1 },
-};
-
-static FuncSig func_sig_GetDrive_FreeClusters_6[] = {
-	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4010
-	{   1, 0xe1b04000, 0xfdfff000 }, // mov:6:0xE1B04000
-	{   2, 0x100f1000, 0xf00ff000 }, // ldr:8:0x159F1308
-	{   3, 0x100f0000, 0xf00ff000 }, // ldr:8:0x151F0368
-	{   4, 0x0b000000, 0x0f000000 }, // b, bl:3:0x1BFE8F97
-	{   5, 0xe00f0000, 0xf00ff000 }, // ldr:8:0xE51F0378
-	{   6, 0xe5900000, 0xfdfff000 }, // ldr:4:0xE7900104
-	{   7, 0xe8bd0000, 0xffff0000 }, // ldm:5:0xE8BD8010
-	/* 8/8 */
-	{ -1, -1, -1 },
-};
-
 static FuncSig func_sig_ReadFastDir_6[] = {
 	{   0, 0xe92d0000, 0xffff0000 }, // stm:5:0xE92D4070
 	{   1, 0xe1b04000, 0xfdfff000 }, // mov:6:0xE1B04000
@@ -1568,11 +1540,9 @@ FuncsList func_list[] = {
 	{ "GetDrive_FreeClusters", func_sig_GetDrive_FreeClusters_3, 3 },
 	{ "GetDrive_FreeClusters", func_sig_GetDrive_FreeClusters_4, 4 },
 	{ "GetDrive_FreeClusters", func_sig_GetDrive_FreeClusters_5, 5 },
-	{ "GetDrive_FreeClusters", func_sig_GetDrive_FreeClusters_6, 6 },
 	{ "GetDrive_TotalClusters", func_sig_GetDrive_TotalClusters_1, 1 },
 	{ "GetDrive_TotalClusters", func_sig_GetDrive_TotalClusters_3, 3 },
 	{ "GetDrive_TotalClusters", func_sig_GetDrive_TotalClusters_5, 5 },
-	{ "GetDrive_TotalClusters", func_sig_GetDrive_TotalClusters_6, 6 },
 	{ "GetFocusLensSubjectDistanceFromLens", func_sig_GetFocusLensSubjectDistanceFromLens_1, 1 },
 	{ "GetFocusLensSubjectDistanceFromLens", func_sig_GetFocusLensSubjectDistanceFromLens_3, 3 },
 	{ "GetParameterData", func_sig_GetParameterData_1, 1 },
