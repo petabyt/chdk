@@ -11,13 +11,18 @@ extern int handle_usb_remote();
 extern void wait_until_remote_button_is_released(void);
 extern void usb_remote_key( void );
 extern int get_usb_bit();
+extern int get_remote_state();
 extern int get_usb_power(int edge);
 extern void clear_usb_power();
 extern void set_usb_remote_state();
+extern void usb_remote_status_led(int);
+extern void kbd_synch_delay(int);
 
 extern int usb_HPtimer_handle;
 extern int start_usb_HPtimer(int);
 extern int stop_usb_HPtimer();
+
+extern int GetAdChValue(int);
 
 /*===================================================================================================
     Static Variables & #defines

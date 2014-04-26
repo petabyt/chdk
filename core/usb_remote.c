@@ -248,7 +248,7 @@ void usb_remote_key( void )
 {
     static int pulse_count=0 ;
 
-    usb_state = get_usb_bit() ;
+    usb_state = get_remote_state() ;
 
     if(conf.remote_enable)
     {

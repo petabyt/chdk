@@ -38,8 +38,10 @@
     #undef  CAM_ADJUSTABLE_ALT_BUTTON           // ALT-button can be set from menu, must set next two values as well
     #undef  CAM_ALT_BUTTON_NAMES                // Define the list of names for the ALT button   - e.g. { "Print", "Display" }
     #undef  CAM_ALT_BUTTON_OPTIONS              // Define the list of options for the ALT button - e.g. { KEY_PRINT, KEY_DISPLAY }
-    #define CAM_REMOTE                      1   // Camera supports USB-remote
-    #undef  CAM_REMOTE_USES_PRECISION_SYNC      // Disable experimental USB remote  precision sync patch
+    #define CAM_REMOTE                      1   // Camera supports a remote
+    #undef  CAM_REMOTE_AtoD_CHANNEL             // Camera supports using 3rd battery terminal as well as USB for remote - value = A/D channel to poll (normally 5)
+    #define CAM_REMOTE_AtoD_THRESHOLD       200 // 3rd battery terminal A/D reading threshold ( lower = 1, higher = 0 )
+    #undef  CAM_REMOTE_USES_PRECISION_SYNC      // Disable experimental remote  precision sync patch
     #undef  CAM_REMOTE_USB_HIGHSPEED            // Enable highspeed measurements of pulse width & counts on USB port 
     #define CAM_REMOTE_HIGHSPEED_LIMIT 1000     // Set lowest timer value settable by user
     #undef  GPIO_VSYNC_CURRENT                  // USB remote precision sync : might be 0xC0F070C8 or 0xC0F07008 (http://chdk.setepontos.com/index.php?topic=8312.msg104027#msg104027)

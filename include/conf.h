@@ -439,6 +439,8 @@ typedef struct {
 
     int memdmp_start;           // start address for memory dump
     int memdmp_size;            // amount of memory to dump in bytes (0 for all RAM)
+    
+    int remote_input_channel;   // remote input channel,  0=USB, 1=A/D
 
 } Conf;
 

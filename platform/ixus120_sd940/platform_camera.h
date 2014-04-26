@@ -42,7 +42,7 @@
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_ALT_BUTTON_NAMES            { "Display", "Playback" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_DISPLAY, KEY_PLAYBACK }
-   
+
     #define CAM_DNG_LENS_INFO               { 50,10, 200,10, 28,10, 59,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern                  0x02010100 // Red  Green  Green  Blue
@@ -73,7 +73,7 @@
     // camera name
     #define PARAM_CAMERA_NAME               4   // parameter number for GetParameterData
     #define PARAM_DISPLAY_MODE1             57  // param number for LCD display mode when camera in playback
-    #define PARAM_DISPLAY_MODE2             58  // param number for LCD display mode when camera in record view hold mode	
+    #define PARAM_DISPLAY_MODE2             58  // param number for LCD display mode when camera in record view hold mode
 
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
@@ -93,23 +93,24 @@
     #define EDGE_HMARGIN                    20
 
     #define CAM_ZEBRA_NOBUF                 1
-    
+
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1  // enable workaround for camera crash at startup when opening the conf / font files
                                                // see http://chdk.setepontos.com/index.php?topic=6179.0
-    
+
     #define CAM_DATE_FOLDER_NAMING          0x100 //Value found in the last function, which is called in GetImageFolder. (first compare)
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED  0xC0220130     // specifies an LED that turns on while camera waits for USB remote to sync
+    #define CAM_REMOTE_AtoD_CHANNEL         5      // Camera supports using 3rd battery terminal as well as USB for remote - value = A/D channel to poll
 
     #undef  CAM_AF_LED
     #define CAM_AF_LED                      2       // Index of AF led in camera_set_led function
- 
+
     #define CAM_SD_OVER_IN_AF  1
     #define CAM_SD_OVER_IN_AFL 1
     #define CAM_SD_OVER_IN_MF  1
- 
+
 //--------------------------------------------------

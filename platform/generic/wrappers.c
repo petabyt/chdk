@@ -275,6 +275,21 @@ long stat_get_vbatt()
     return _VbattGet();
 }
 
+//========================================================================
+// NOTE : some early DryOS cameras need a pointer rather than a value and the 
+//        xus30 & 40 want a char * string here. Override this funcion in camera's
+//        lib.c file if impelementing remote via battery 3rd terminal functionality.
+//        see http://chdk.setepontos.com/index.php?topic=10385.msg109353#msg109353
+//
+int __attribute__((weak)) GetAdChValue(int channel)        
+{
+#ifdef CAM_DRYOS
+    return _GetAdChValue(channel);
+#else
+    return _GetAdChValue(&channel);
+#endif
+}
+
 int get_battery_temp()
 {
     return _GetBatteryTemperature();
