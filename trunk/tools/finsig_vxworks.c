@@ -213,7 +213,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     // Do these first as they are needed to find others
     { "ExportToEventProcedure_FW", UNUSED|DONT_EXPORT },
     { "RegisterEventProcedure_FW", UNUSED|DONT_EXPORT },
-    { "CreateJumptable", UNUSED|DONT_EXPORT },
+    //{ "CreateJumptable", UNUSED|DONT_EXPORT },
     { "_uartr_req", UNUSED|DONT_EXPORT },
     { "StartRecModeMenu", UNUSED|DONT_EXPORT },
     { "LogCameraEvent", UNUSED|DONT_EXPORT },
@@ -1876,47 +1876,47 @@ int match_strsig11(firmware *fw, string_sig *sig, int j)
     return 0;
 }
 
-// Sig pattern:
-//      Func is referenced in 'CreateJumptable'
-//          LDR R1, =func
-//          STR R1, [R0,nnn]
-//      nnn - dryos version dependant offset
-int find_strsig12(firmware *fw, string_sig *sig)
-{
-    int j = get_saved_sig(fw,"CreateJumptable");
-
-    int ofst = vxworks_offset(fw, sig);
-
-    if (ofst == 0) return 0;
-
-    if (j >= 0)
-    {
-        if (func_names[j].val != 0)
-        {
-            int idx = adr2idx(fw, func_names[j].val);
-            for(; !isBX_LR(fw,idx); idx++)  // BX LR
-            {
-                if (((fwval(fw,idx+1) & 0xFFFFF000) == 0xE5801000) && // STR R1,[R0,nnn]
-                    (fwOp2(fw,idx+1) == ofst))
-                {
-                    uint32_t fadr = LDR2val(fw,idx);
-                    uint32_t bfadr = followBranch2(fw,fadr,sig->offset);
-                    if ((sig->offset <= 1) || ((bfadr != fadr) && ((fw->buf[adr2idx(fw,fadr)] & 0xFFFF0000) == 0xE92D0000)))
-                    {
-                        fwAddMatch(fw,bfadr,32,0,112);
-                        return 1;
-                    }
-                }
-                else if (isB(fw,idx))    // B
-                {
-                    idx = adr2idx(fw,followBranch(fw,idx2adr(fw,idx),1)) - 1;
-                }
-            }
-        }
-    }
-
-    return 0;
-}
+//// Sig pattern:
+////      Func is referenced in 'CreateJumptable'
+////          LDR R1, =func
+////          STR R1, [R0,nnn]
+////      nnn - dryos version dependant offset
+//int find_strsig12(firmware *fw, string_sig *sig)
+//{
+//    int j = get_saved_sig(fw,"CreateJumptable");
+//
+//    int ofst = vxworks_offset(fw, sig);
+//
+//    if (ofst == 0) return 0;
+//
+//    if (j >= 0)
+//    {
+//        if (func_names[j].val != 0)
+//        {
+//            int idx = adr2idx(fw, func_names[j].val);
+//            for(; !isBX_LR(fw,idx); idx++)  // BX LR
+//            {
+//                if (((fwval(fw,idx+1) & 0xFFFFF000) == 0xE5801000) && // STR R1,[R0,nnn]
+//                    (fwOp2(fw,idx+1) == ofst))
+//                {
+//                    uint32_t fadr = LDR2val(fw,idx);
+//                    uint32_t bfadr = followBranch2(fw,fadr,sig->offset);
+//                    if ((sig->offset <= 1) || ((bfadr != fadr) && ((fw->buf[adr2idx(fw,fadr)] & 0xFFFF0000) == 0xE92D0000)))
+//                    {
+//                        fwAddMatch(fw,bfadr,32,0,112);
+//                        return 1;
+//                    }
+//                }
+//                else if (isB(fw,idx))    // B
+//                {
+//                    idx = adr2idx(fw,followBranch(fw,idx2adr(fw,idx),1)) - 1;
+//                }
+//            }
+//        }
+//    }
+//
+//    return 0;
+//}
 
 // Sig pattern:
 //      Func    -   func
@@ -2310,7 +2310,7 @@ int find_strsig(firmware *fw, string_sig *sig)
     case 8:     return find_strsig8(fw, sig);
     case 9:     return find_strsig9(fw, sig);
     case 11:    return fw_string_process(fw, sig, match_strsig11, 0);
-    case 12:    return find_strsig12(fw, sig);
+    //case 12:    return find_strsig12(fw, sig);
     case 13:    return fw_string_process_unaligned(fw, sig, match_strsig13);
     case 15:    return fw_string_process(fw, sig, match_strsig15, 1);
     case 16:    return fw_process(fw, sig, match_strsig16);
