@@ -22,8 +22,8 @@
 
     #define CAM_PROPSET                     1       // ToDo: test if correct
 
-    #define CAM_RAW_ROWPIX                  3672    // value from RAW file (3648px + 24px)
-    #define CAM_RAW_ROWS                    2760    // value from RAW file (2736 + 24px)
+    #define CAM_RAW_ROWPIX                  3736
+    #define CAM_RAW_ROWS                    2772
 
     //#undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_DRAW_EXPOSITION             1       // ToDo: test if required
@@ -60,12 +60,10 @@
     // cropping
     #define CAM_JPEG_WIDTH                  3648
     #define CAM_JPEG_HEIGHT                 2736
-    #define CAM_ACTIVE_AREA_X1              14      // ??? from G7, A640
-    #define CAM_ACTIVE_AREA_Y1              8       // ??? from G7, A640
-    //#define CAM_ACTIVE_AREA_X2            3672    // from RAW file
-    //#define CAM_ACTIVE_AREA_Y2            2760    // from RAW file
-    #define CAM_ACTIVE_AREA_X2              3682    // ??? from G7, A640, CAM_JPEG_WIDTH + 40
-    #define CAM_ACTIVE_AREA_Y2              2764    // ??? from G7, A640, CAM_JPEG_HEIGHT + 40
+    #define CAM_ACTIVE_AREA_X1              12
+    #define CAM_ACTIVE_AREA_Y1              6
+    #define CAM_ACTIVE_AREA_X2              3684
+    #define CAM_ACTIVE_AREA_Y2              2766
     // camera name
     #define PARAM_CAMERA_NAME               4       // camera param id of EXIF camera model
 
