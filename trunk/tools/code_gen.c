@@ -316,6 +316,7 @@ firmware    *fw;
 
 //------------------------------------------------------------------------------------------------------------
 // Parsing for instruction file
+int lineno;
 int largc;
 char largs[20][256];
 char *last_line;
@@ -392,6 +393,7 @@ char* next_line(char *line)
         if (nxt != 0)
             *nxt++ = 0;
     }
+    lineno++;
     return nxt;
 }
 
@@ -433,6 +435,7 @@ typedef struct _op
 
     int         operation;
     char        *source;
+    int         lineno;
 
     char        *name;
     char        *comment;
@@ -487,6 +490,7 @@ op *new_op(int type)
 
     p->source = malloc(strlen(last_line)+1);
     strcpy(p->source,last_line);
+    p->lineno = lineno;
 
     p->name = 0;
     p->comment = 0;
@@ -524,7 +528,7 @@ void chk_args(int count, char *msg, op *p)
     if (largc != count+1)
     {
         fprintf(stderr,"ERROR - %s\n",msg);
-        fprintf(stderr,"SOURCE - %s\n",p->source);
+        fprintf(stderr,"LINE - %d, SOURCE - %s\n",p->lineno,p->source);
         exit(1);
     }
 }
@@ -535,7 +539,7 @@ void chk_args(int count, char *msg, op *p)
 void parse_FILE()
 {
     op *p = new_op(FILE_OP);
-    chk_args(1,"Missing FILE name",0);
+    chk_args(1,"Missing FILE name",p);
     set_op_name(p,largs[1]);
 }
 
@@ -1083,7 +1087,7 @@ op* last_op = 0;
 void error(char *fmt, int n)
 {
     if (last_op)
-        fprintf(stderr,"Source --> %s\n",last_op->source);
+        fprintf(stderr,"Line - %d, Source --> %s\n",last_op->lineno,last_op->source);
     exit(1);
 }
 
@@ -1153,6 +1157,7 @@ int main(int ac, const char * av[])
     op_head = op_tail = 0;
 
     // Pre-Process
+    lineno = 0;
     char *line = def;
     while ((line != 0) && (*line != 0))
     {
