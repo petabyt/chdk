@@ -27,13 +27,6 @@ extern void _GetKbdState(long*);
 #define USB_MASK            0x00040000 // Found @0xffb10080, levent 0x202
 #define USB_IDX             2
 
-//Is this really used?
-//#define NEW_SS      (0x2000)
-//#ifndef MALLOCD_STACK
-//static char kbd_stack[NEW_SS];
-//#endif
-
-
 
 int get_usb_bit()
 {

@@ -29,9 +29,15 @@ void debug_led(int state)
 // A810 has two 'lights' - Power LED, and AF assist lamp
 // Power Led = first entry in table (led 0)
 // AF Assist Lamp = second entry in table (led 1)
+// State
+// 0 = LED Off
+// 1 = LED On
+// 2 = LED blinks slowly
+// 3 = LED blinks fast
+// 5 = LED blinks fast (3 times)
 void camera_set_led(int led, int state, int bright) {
     static char led_table[2]={0,4};
-    if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], (!state)&1);
+    _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
 
 int vid_get_viewport_width()
