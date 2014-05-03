@@ -22,6 +22,8 @@ Camera has both an iris and an ND filter
 Known bugs
 **********
 - Raw doesn't work in auto mode
+- Remote Capture: LED blinks for ever and camera does not answer to commands after 
+  back to play mode  (http://chdk.wikia.com/wiki/User:Nafraf/RemoteShootIssues)
 
 For Developers
 **************
