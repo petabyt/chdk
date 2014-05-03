@@ -33,10 +33,10 @@ extern int focus_len_table[NUM_FL*NUM_DATA];
 // Conversion factor lens FL --> 35mm equiv
 // lens      35mm     CF
 // ----      ----     --
-//  5         28      ( 28/ 5) * 50 = 280  (min FL)
-// 25        140      (140/25) * 50 = 296  (max FL)
-#define CF_EFL      280
-#define	CF_EFL_DIV  50
+//  5         28      ( 28/ 5) * 60 = 336  (min FL)
+// 25        140      (140/25) * 60 = 336  (max FL)
+#define CF_EFL      336
+#define CF_EFL_DIV  60
 
 const int zoom_points = NUM_FL;
 
