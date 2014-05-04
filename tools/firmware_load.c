@@ -841,6 +841,17 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
     // Find all the valid ranges for checking (skips over large blocks of 0xFFFFFFFF)
     findRanges(fw);
 
+    // Check for DIGIC 4+ dump
+    // assumes dump starting with either the main firmware or the bootloader
+    fw->main_offs = 0;
+    if (os_type == OS_DRYOS)
+    {
+        k = find_str(fw, "gaonisoy");
+        if (k != 1)
+        {
+            fw->main_offs = 0x10000 / 4;
+        }
+    }
     // Get DRYOS version
     fw->dryos_ver = 0;
     if (os_type == OS_DRYOS)
@@ -921,8 +932,8 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                 break;
             case 54:
                 // based on 2 digic 4+ cams
-                fw->cam_idx = adr2idx(fw,(fw->base==0xFF020000)?0xFFF40170:0xFFFF0170);
-                fw->pid_adr = (fw->base==0xFF020000)?0xFFF40040:0xFFFF0040;
+                fw->cam_idx = adr2idx(fw,(fw->base==0xFF010000)?0xFFF40170:0xFFFF0170);
+                fw->pid_adr = (fw->base==0xFF010000)?0xFFF40040:0xFFFF0040;
                 break;
         }
     }
@@ -960,13 +971,13 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
     fw->maxram = 0;
     if (os_type == OS_DRYOS)
     {
-        if (((fw->buf[0x10] & 0xFFFFFF00) == 0xE3A00000) && (fw->buf[0x11] == 0xEE060F12))
+        if (((fw->buf[0x10 + fw->main_offs] & 0xFFFFFF00) == 0xE3A00000) && (fw->buf[0x11 + fw->main_offs] == 0xEE060F12))
         {
-            fw->maxram = (1 << (((fw->buf[0x10] & 0x3E) >> 1) + 1)) - 1;
+            fw->maxram = (1 << (((fw->buf[0x10 + fw->main_offs] & 0x3E) >> 1) + 1)) - 1;
         }
-        else if (((fw->buf[0x14] & 0xFFFFFF00) == 0xE3A00000) && (fw->buf[0x15] == 0xEE060F12))
+        else if (((fw->buf[0x14 + fw->main_offs] & 0xFFFFFF00) == 0xE3A00000) && (fw->buf[0x15 + fw->main_offs] == 0xEE060F12))
         {
-            fw->maxram = (1 << (((fw->buf[0x14] & 0x3E) >> 1) + 1)) - 1;
+            fw->maxram = (1 << (((fw->buf[0x14 + fw->main_offs] & 0x3E) >> 1) + 1)) - 1;
         }
     }
     else if (os_type == OS_VXWORKS)
@@ -985,7 +996,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
     fw->memisostart = 0;
     if (os_type == OS_DRYOS)
     {
-        for (k=0; k<100; k++)
+        for (k=0 + fw->main_offs; k<(100 + fw->main_offs); k++)
         {
             if (isLDR_PC(fw,k) && (LDR2val(fw,k) == 0x1900) && isLDR_PC(fw,k+6))
             {
@@ -1063,7 +1074,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
     fw->dancing_bits = 0;
     if (os_type == OS_DRYOS)
     {
-        uint32_t ofst = adr2idx(fw,0xFFFF0000);    // Offset of area to find dancing bits
+        uint32_t ofst = (fw->main_offs)?0:adr2idx(fw,0xFFFF0000); // Offset of area to find dancing bits
         if (idx_valid(fw,ofst) && isB(fw,ofst) && isLDR_PC(fw,ofst+1))
         {
             // Get KEYSYS value
@@ -1084,6 +1095,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                     case 0x50838EF7:    fw->ksys = "d4c  "; break;
                     case 0xCCE4D2E6:    fw->ksys = "d4d  "; break;
                     case 0x66E0C6D2:    fw->ksys = "d4e  "; break;
+                    case 0xE1268DB4:    fw->ksys = "d4f  "; break;
                 }
             }
 
@@ -1174,7 +1186,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
         fw->size2 = 0;
 
         // Try and find ROM address copied, and location copied to
-        for (i=3; i<100; i++)
+        for (i=3 + fw->main_offs; i<(100 + fw->main_offs); i++)
         {
             if (isLDR_PC(fw,i) && isLDR_PC(fw,i+1) && (isLDR_PC(fw,i+2)))
             {

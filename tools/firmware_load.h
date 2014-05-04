@@ -35,6 +35,7 @@ typedef struct {
     int             os_type;            // 0 = DryOS, 1 = VxWorks
 
     uint32_t        base;               // Base address of the firmware in the camera
+    int             main_offs;          // Offset of main firmware from the start of the dump (for DIGIC 4+ cams)
     uint32_t        memisostart;        // Start address of the Canon heap memory (where CHDK is loaded)
     int             size;               // Size of the firmware (as loaded from the dump)
     int             fsize;              // Size of the firmware (as determined from the start address)
