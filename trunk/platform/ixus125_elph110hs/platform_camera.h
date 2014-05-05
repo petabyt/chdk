@@ -113,5 +113,9 @@
  
     #define CAM_SD_OVER_IN_AF  1
     #define CAM_SD_OVER_IN_MF  1
+
+    #define CAM_ADJUSTABLE_ALT_BUTTON       	1
+    #define CAM_ALT_BUTTON_NAMES            	{ "Playback", "Video" }
+    #define CAM_ALT_BUTTON_OPTIONS          	{ KEY_PLAYBACK, KEY_VIDEO }
  
 //--------------------------------------------------
