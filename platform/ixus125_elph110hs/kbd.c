@@ -20,7 +20,7 @@ extern void _GetKbdState(long*);
 
 // override key and feather bits to avoid feather osd messing up chdk display in ALT mode
 #define KEYS_MASK0 (0x00000F4F)     //Logic OR of group 0 Keymap values
-#define KEYS_MASK1 (0x00F00000)     //Logic OR of group 1 Keymap values
+#define KEYS_MASK1 (0x00B00000)     //Logic OR of group 1 Keymap values
 #define KEYS_MASK2 (0x00000000)     //Logic OR of group 2 Keymap values
 
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags
@@ -51,9 +51,7 @@ static KeyMap keymap[] = {
     { 0, KEY_UP              ,0x00000100 }, // Found @0xff4137c4, levent 0x04
     { 0, KEY_LEFT            ,0x00000400 }, // Found @0xff4137d4, levent 0x06    
     { 0, KEY_DOWN            ,0x00000800 }, // Found @0xff4137dc, levent 0x05
-    { 1, KEY_PRINT           ,0x00800000 }, // KEY_PLAYBACK as ALT 
     { 1, KEY_PLAYBACK        ,0x00800000 }, // Found @0xff413804, levent 0x101    
-    { 1, KEY_POWER           ,0x00400000 }, // Found @0xff4137fc, levent 0x100    
     { 1, KEY_SHOOT_FULL      ,0x00300000 }, // Found @0xff4137f4, levent 0x01
     { 1, KEY_SHOOT_FULL_ONLY ,0x00200000 }, // Found @0xff4137f4, levent 0x01
     { 1, KEY_SHOOT_HALF      ,0x00100000 }, // Found @0xff4137ec, levent 0x00

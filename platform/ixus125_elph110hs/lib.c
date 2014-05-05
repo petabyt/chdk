@@ -1,6 +1,31 @@
 #include "platform.h"
 #include "lolevel.h"
 
+extern  int     active_raw_buffer;
+extern  char*   raw_buffers[];
+
+char *hook_raw_image_addr()
+{
+    return raw_buffers[active_raw_buffer];
+}
+
+char *hook_alt_raw_image_addr()
+{
+    return raw_buffers[(active_raw_buffer^1)];
+}
+
+
+char *camera_jpeg_count_str()
+{
+    extern char jpeg_count_str[];
+	return jpeg_count_str;
+}
+
+int get_flash_params_count(void)
+{
+    return 0xa6;
+}
+
 //To do: find this LED address
 //#define LED_PR 0xC0220160
 
@@ -61,34 +86,12 @@ void *vid_get_viewport_live_fb()
 
 int vid_get_viewport_width()
 {
-    // viewport width table for each image size
-    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_w[4] = { 360, 360, 360, 360 };
-    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    return 360;
 }
 
 long vid_get_viewport_height()
 {
-    // viewport height table for each image size
-    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_h[4] = { 240, 240, 240, 240 };
-    return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-}
-
-int vid_get_viewport_xoffset() 
-{
-    // viewport width offset table for each image size
-    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_w[4] = { 0, 0, 0, 0 };               // should all be even values for edge overlay
-    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-}
-
-int vid_get_viewport_yoffset() 
-{
-    // viewport height offset table for each image size
-    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-    static long vp_h[4] = { 0, 0, 0, 0 };
-    return vp_h[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    return 240;
 }
 
 void vid_bitmap_refresh() {
