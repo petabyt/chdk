@@ -1277,9 +1277,7 @@ void __attribute__((naked,noinline)) task_InitFileModules_my() {
                 "MOVNE   R0, R5\n"
                 "BLNE    sub_FF86B264\n"
                 "BL      sub_FF86A0B0_my\n"  
-
- 
-
+                "BL      core_spytask_can_start\n"      // +
                 "CMP     R4, #0\n"
                 "MOVEQ   R0, R5\n"
                 "LDMEQFD SP!, {R4-R6,LR}\n"
