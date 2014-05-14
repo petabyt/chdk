@@ -140,7 +140,9 @@ static const char* gui_USB_control_modes_enum(int change, int arg)
     return modes[conf.remote_control_mode];
 }
 
+#ifdef CAM_REMOTE_AtoD_CHANNEL
 static const char* gui_remote_channels[] = { "USB", "A/D Ch" };
+#endif
 
 #ifndef CAM_REMOTE_USES_PRECISION_SYNC
 static CMenuItem synch_delay[2] = {
@@ -151,7 +153,9 @@ static CMenuItem synch_delay[2] = {
 
 static CMenuItem remote_submenu_items[] = {
     MENU_ITEM   (0x71,LANG_MENU_REMOTE_ENABLE,              MENUITEM_BOOL|MENUITEM_ARG_CALLBACK, &conf.remote_enable, (int)set_usb_remote_state),
+#ifdef CAM_REMOTE_AtoD_CHANNEL
     MENU_ENUM2  (0x5f,LANG_MENU_REMOTE_INPUT_CHANNEL,       &conf.remote_input_channel,   gui_remote_channels ),
+#endif
     MENU_ITEM   (0x5f,LANG_MENU_REMOTE_DEVICE,              MENUITEM_ENUM,                gui_USB_switch_types_enum, 0),
     MENU_ITEM   (0x5f,LANG_MENU_REMOTE_LOGIC,  	            MENUITEM_ENUM,                gui_USB_control_modes_enum, 0),
     MENU_ITEM   (0x0, LANG_MENU_REMOTE_OPTIONS,             MENUITEM_SEPARATOR,           0, 0 ), 
