@@ -24,7 +24,7 @@ volatile int jogdial_stopped=0;
 
 #define KEYS_MASK0 (0x00000000)
 #define KEYS_MASK1 (0x0000FF30)
-#define KEYS_MASK2 (0x00000300)
+#define KEYS_MASK2 (0x00004B00)
 
 static KeyMap keymap[] = {
 //	{ grp,       hackkey, canonkey  }
@@ -34,16 +34,16 @@ static KeyMap keymap[] = {
 	{ 1, KEY_RIGHT		, 0x00000200 },
 	{ 1, KEY_SET		, 0x00008000 },
 	{ 2, KEY_SHOOT_FULL	, 0x00000300 },
-    { 2, KEY_SHOOT_FULL_ONLY, 0x00000200 },
+	{ 2, KEY_SHOOT_FULL_ONLY, 0x00000200 },
 	{ 2, KEY_SHOOT_HALF	, 0x00000100 },
 	{ 1, KEY_ZOOM_IN	, 0x00000010 },
 	{ 1, KEY_ZOOM_OUT	, 0x00000020 },
 	{ 1, KEY_MENU		, 0x00002000 },
 	{ 1, KEY_DISPLAY	, 0x00001000 },
 	{ 1, KEY_PRINT		, 0x00000800 }, // S Key
-//	{ 2, KEY_PLAY		, 0x00000800 },
-//	{ 2, KEY_RING_FUNC  , 0x00004000 },
-//	{ 2, KEY_POWER      , 0x00000400 },
+	{ 2, KEY_RING_FUNC  , 0x00004000 },
+	{ 2, KEY_PLAYBACK	, 0x00000800 },
+//	{ 2, KEY_POWER		, 0x00000400 },
 	{ 0, 0, 0 }
 };
 
