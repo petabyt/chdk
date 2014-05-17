@@ -60,6 +60,9 @@
 //D10/A490/A495
 #define KEY_MODE            41
 
+//S90/S95/S100/S110
+#define KEY_RING_FUNC       42
+
 #define JOGDIAL_LEFT        100
 #define JOGDIAL_RIGHT       101
 #define FRONTDIAL_LEFT      102

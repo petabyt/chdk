@@ -35,6 +35,10 @@
     #define CAM_HAS_JOGDIAL                 1
     #undef  CAM_HAS_ERASE_BUTTON
 
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Print", "Play", "Disp", "RingFunc" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_PLAYBACK, KEY_DISPLAY, KEY_RING_FUNC }
+
     #define CAM_BRACKETING                  1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
