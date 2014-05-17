@@ -42,7 +42,7 @@
     #undef  CAM_REMOTE_AtoD_CHANNEL             // Camera supports using 3rd battery terminal as well as USB for remote - value = A/D channel to poll (normally 5)
     #define CAM_REMOTE_AtoD_THRESHOLD       200 // 3rd battery terminal A/D reading threshold ( lower = 1, higher = 0 )
     #undef  CAM_REMOTE_USES_PRECISION_SYNC      // Disable experimental remote  precision sync patch
-    #undef  CAM_REMOTE_USB_HIGHSPEED            // Enable highspeed measurements of pulse width & counts on USB port 
+    #define CAM_REMOTE_USB_HIGHSPEED        1   // Enable highspeed measurements of pulse width & counts on USB port 
     #define CAM_REMOTE_HIGHSPEED_LIMIT 1000     // Set lowest timer value settable by user
     #undef  GPIO_VSYNC_CURRENT                  // USB remote precision sync : might be 0xC0F070C8 or 0xC0F07008 (http://chdk.setepontos.com/index.php?topic=8312.msg104027#msg104027)
     #undef  CAM_MULTIPART                       // Camera supports SD-card multipartitioning
