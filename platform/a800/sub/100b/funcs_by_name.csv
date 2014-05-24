@@ -316,7 +316,6 @@
 0xffcf2950,GetAEIntegWinDataWithMode_FW
 0xffcf2b60,GetAllAEIntegralAllValueWithFix_FW
 0xffc23c2c,GetBatteryCoverClose_FW
-0xffc45dec,GetBatteryTemperature
 0xffc45dec,GetBatteryTemperature_FW
 0xffc48ddc,GetBpDBAdjustmentOffset_FW
 0xffc6a868,GetBuildDate_FW

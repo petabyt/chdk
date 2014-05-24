@@ -1,0 +1,72 @@
+//-------------------------- MOVIE_REC.C ----------------------------------------------------------
+FILE movie_rec.c
+
+>>> file=../movie_rec_hdr.c
+
+//////////////////////////////////////////////////////////////
+// movie_record_task
+//////////////////////////////////////////////////////////////
+FUNC sig=task_MovieRecord name=movie_record_task
+ASM
+FW 39
+>>>
+"    BL      unlock_optical_zoom\n" // added
+<<<
+FW 2
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+//////////////////////////////////////////////////////////////
+// movie_record_task -> ref=0
+//////////////////////////////////////////////////////////////
+FUNC ref=0 length=128
+ASM
+FW 105
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+//////////////////////////////////////////////////////////////
+// movie_record_task -> ref=0 -> ref=0
+//////////////////////////////////////////////////////////////
+FUNC ref=0 length=57
+ASM
+FW 13
+REM
+>>>
+"    LDR     R7, =table\n"
+<<<
+FW 17
+PATCHVAL value=0x1A
+PATCHVAL value=0x19
+FW 18
+REM "Replaced by next instruction"
+>>>
+"    LDR     R2, =CompressionRateTable\n"
+<<<
+FW 2
+>>>
+
+"    LDR     R3, =video_mode\n"         // +
+"    LDR     R3, [R3]\n"                // +
+"    LDR     R3, [R3]\n"                // +
+"    CMP     R3, #1\n"                  // +
+"    LDREQ   R3, =video_quality\n"      // +
+"    LDREQ   R3, [R3]\n"                // +
+"    LDREQ   R2, [R3]\n"                // +
+
+<<<
+FW 2
+>>>
+"    BL      mute_on_zoom\n"            // +
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+ENDFILE
+
+

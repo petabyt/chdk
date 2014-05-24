@@ -19,6 +19,7 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
+//NHSTUB(GetBatteryTemperature                ,0xffc45dec) //102        *** != 0x00000000
 // ERROR: rand is not found.                               //--- ---    *** != 0x00000000
 // ERROR: srand is not found.                              //--- ---    *** != 0x00000000
 
@@ -133,7 +134,6 @@ NHSTUB(Fread_Fut                              ,0xffc25ea0) //120
 NHSTUB(FreeUncacheableMemory                  ,0xffc298fc) //112
 NHSTUB(Fseek_Fut                              ,0xffc25f94) //120
 NHSTUB(Fwrite_Fut                             ,0xffc25ef4) //120
-NHSTUB(GetBatteryTemperature                  ,0xffc45dec) //102
 NHSTUB(GetCCDTemperature                      ,0xffc45d78) //102
 NHSTUB(GetCurrentAvValue                      ,0xffd13ed4) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xffc52da4) //122
@@ -223,7 +223,7 @@ NHSTUB(malloc                                 ,0xffc041f0) //112
 NHSTUB(memcmp                                 ,0xffc114d8) //120
 NHSTUB(memcpy                                 ,0xffc2ee6c) //120
 NHSTUB(memset                                 ,0xffd8d00c) //120
-//NHSTUB(mkdir                                ,0xffc267fc) //109            == 0xffc267fc
+NHSTUB(mkdir                                  ,0xffc267fc) //109
 NHSTUB(mktime_ext                             ,0xffc82008) //  1
 NHSTUB(open                                   ,0xffc0b108) //109
 NHSTUB(OpenFastDir                            ,0xffdff77c) //  6

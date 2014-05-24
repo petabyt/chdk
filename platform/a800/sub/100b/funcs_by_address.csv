@@ -240,7 +240,6 @@
 0xffc45c20,task_Thermometer
 0xffc45d78,GetCCDTemperature
 0xffc45d78,GetCCDTemperature_FW
-0xffc45dec,GetBatteryTemperature
 0xffc45dec,GetBatteryTemperature_FW
 0xffc45e64,GetOpticalTemperature
 0xffc45e64,GetOpticalTemperature_FW

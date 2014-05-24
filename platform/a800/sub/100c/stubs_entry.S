@@ -223,7 +223,7 @@ NHSTUB(malloc                                 ,0xffc041f0) //112
 NHSTUB(memcmp                                 ,0xffc114d8) //120
 NHSTUB(memcpy                                 ,0xffc2ee6c) //120
 NHSTUB(memset                                 ,0xffd8d00c) //120
-//NHSTUB(mkdir                                ,0xffc267fc) //109            == 0xffc267fc
+NHSTUB(mkdir                                  ,0xffc267fc) //109
 NHSTUB(mktime_ext                             ,0xffc82008) //  1
 NHSTUB(open                                   ,0xffc0b108) //109
 NHSTUB(OpenFastDir                            ,0xffdff77c) //  6
