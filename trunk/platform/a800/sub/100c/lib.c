@@ -11,27 +11,10 @@ long hook_raw_size()
 	{ return 0x00ec04f0; }        // Found @0xffe73000 de stub_entry.S return 0xEC04F0;           // "CRAW BUFF SIZE"
 }
 
-
-// Live picture buffer (shoot not pressed)
-void *vid_get_viewport_live_fb()
-{
-	return (void*)0;
-    /*void **fb=(void **)0x3E80;  // ?
-    unsigned char buff = *((unsigned char*)0x3CF0); // sub_FFC87F0C
-    if (buff == 0) buff = 2;  else buff--;    
-    return fb[buff];*/
-}
-
 // OSD buffer
 void *vid_get_bitmap_fb()
 {
 	return (void*)0x10361000; // "BmpDDev.c", 0xFFCD1DD4 <-> sub_entry.S { return (void*)0x10361000; } // Found @0xffc3fafc
-}
-
-// Live picture buffer (shoot half-pressed)
-void *vid_get_viewport_fb()
-{
-	{ return (void*)0x1068c2e0; } // Found @0xffe6fb60 de stub_entry.S return (void*)0x10648CC0;  // "VRAM Address" sub_FFCA6830
 }
 
 void *vid_get_viewport_fb_d()

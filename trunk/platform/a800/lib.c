@@ -29,25 +29,40 @@ void debug_led(int state)
 }
 
 void camera_set_led(int led, int state, int bright) {
-    long val = state ? 0x46 : 0x44;
-    switch ( led )
-    {
-    default:
-        *(int*)LED_PR = val;
-    }
+    static char led_table[2]={7,9};
+    if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], (!state)&1);
 }
 
-void vid_bitmap_refresh()// as ixus220 instead of a495
+void vid_bitmap_refresh()
 {
  	extern int full_screen_refresh;
-	extern void _ScreenLock(); // wrapper function for screen lock
-	extern void _ScreenUnlock(); // wrapper function for screen unlock
+	extern void _ScreenLock();
+	extern void _ScreenUnlock();
 
 	full_screen_refresh |= 3; //found in ScreenUnlock
 	_ScreenLock();	
 	_ScreenUnlock();
 }
 
+
+// Defined in stubs_entry.S
+extern char active_viewport_buffer;
+extern void* viewport_buffers[];
+
+void *vid_get_viewport_fb()
+{
+    // Return first viewport buffer - for case when vid_get_viewport_live_fb not defined
+    return viewport_buffers[0];
+}
+
+void *vid_get_viewport_live_fb()
+{
+    if (MODE_IS_VIDEO(mode_get()))
+        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
+
+    // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
+    return viewport_buffers[(active_viewport_buffer-1)&3];
+}
 
 // Near "PropertyTableManagerCore.c" ROM:FFD2ED94
 int get_flash_params_count(void) {
