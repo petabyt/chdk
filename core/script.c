@@ -240,7 +240,16 @@ void script_end()
     // Restore old handler - prevent calling MD draw after module unloaded
     if (old_gui_handler)
     {
-        gui_set_mode(old_gui_handler);
+        extern gui_handler defaultGuiHandler; 
+        // if script switched in or out of alt, try to preserve
+        // TODO is there ever a situation where it should be something other than default or alt?
+        if(old_gui_handler == &altGuiHandler && camera_info.state.gui_mode_none) {
+            gui_set_mode(&defaultGuiHandler);
+        } else if(old_gui_handler == &defaultGuiHandler && camera_info.state.gui_mode_alt) {
+            gui_set_mode(&altGuiHandler);
+        } else {
+            gui_set_mode(old_gui_handler);
+        }
         old_gui_handler = 0;
     }
 
