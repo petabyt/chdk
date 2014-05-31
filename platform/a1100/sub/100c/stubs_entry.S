@@ -177,7 +177,7 @@ NHSTUB(ReadFastDir                            ,0xffddf844) //  1
 NHSTUB(Rec2PB                                 ,0xffc5fb48) //104
 NHSTUB(RefreshPhysicalScreen                  ,0xffd6b630) //104
 NHSTUB(RenameFile_Fut                         ,0xffc13138) //  1
-NHSTUB(Restart                                ,0xffc18594) //106
+NHSTUB(Restart                                ,0xffc18594) //122
 NHSTUB(SetAutoShutdownTime                    ,0xffc5cd5c) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xffc632cc) //120
 NHSTUB(SetFileAttributes                      ,0xffc13c0c) //  1

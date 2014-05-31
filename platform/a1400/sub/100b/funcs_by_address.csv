@@ -196,7 +196,7 @@
 0xff82ef50,UnlockAE
 0xff830fa4,TurnOffE1_FW
 0xff831050,task_Bye
-0xff831200,Restart,(stubs_entry_2.s)
+0xff831200,Restart
 0xff831698,HardwareDefectWithRestart_FW
 0xff8316ec,HardwareDefect_FW
 0xff831aa0,_GetSystemTime

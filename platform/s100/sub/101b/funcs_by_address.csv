@@ -191,7 +191,7 @@
 0xff02c1f4,CancelTimer
 0xff02d2e4,TurnOffE1_FW
 0xff02d398,task_Bye
-0xff02d59c,Restart
+0xff02d4a0,Restart
 0xff02e044,task_StartupImage
 0xff0316c0,memcpy
 0xff0316c0,memcpy_FW

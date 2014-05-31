@@ -978,7 +978,7 @@
 0xffa65948,ResetZoomToFirstPoint_FW
 0xffa65980,ResetZoomToTerminate_FW
 0xffa65980,ResetZoomToTerminatePoint_FW
-0xff83146c,Restart,(stubs_entry_2.s)
+0xff83146c,Restart
 0xff88ec38,RomCheckSum_FW
 0xff819910,RotateConsoleZOder_FW
 0xff86a798,SaveAdjustmentTable_FW

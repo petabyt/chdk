@@ -25,7 +25,6 @@
 //NHSTUB(GetBatteryTemperature                ,0xff862fd0) //102        *** != 0x00000000
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff82d908
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
-//NHSTUB(Restart                              ,0xff8312a8) //106        *** != 0xff831200
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffa9b104 -> ffbebdf0
@@ -180,6 +179,7 @@ NHSTUB(Read                                   ,0xff815a88) //120
 NHSTUB(ReadFastDir                            ,0xffa77d8c) //115
 NHSTUB(Rec2PB                                 ,0xff852df8) //104
 NHSTUB(RenameFile_Fut                         ,0xff82cd64) //116
+//NHSTUB(Restart                              ,0xff831200) //122            == 0xff831200
 NHSTUB(ScreenLock                             ,0xff894df8) //117
 NHSTUB(ScreenUnlock                           ,0xff894e4c) //117
 NHSTUB(SetAE_ShutterSpeed                     ,0xffb13ff4) //102

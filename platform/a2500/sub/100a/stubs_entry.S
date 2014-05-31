@@ -24,7 +24,6 @@
 //NHSTUB(DeleteFile_Fut                       ,0xff82d058) //  1 90%        == 0xff82d058
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff82db68
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
-//NHSTUB(Restart                              ,0xff831514) //106        *** != 0xff83146c
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffa9d028 -> ffbef3b0
@@ -179,6 +178,7 @@ NHSTUB(Read                                   ,0xff815a88) //120
 NHSTUB(ReadFastDir                            ,0xffa79d04) //115
 NHSTUB(Rec2PB                                 ,0xff85302c) //104
 NHSTUB(RenameFile_Fut                         ,0xff82cfc4) //116
+//NHSTUB(Restart                              ,0xff83146c) //122            == 0xff83146c
 NHSTUB(ScreenLock                             ,0xff896d18) //117
 NHSTUB(ScreenUnlock                           ,0xff896d6c) //117
 NHSTUB(SetAE_ShutterSpeed                     ,0xffb15ed8) //102

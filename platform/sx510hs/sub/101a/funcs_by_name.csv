@@ -1279,7 +1279,7 @@
 0xff32bb50,ResetZoomToFirstPoint_FW
 0xff32bb88,ResetZoomToTerminate_FW
 0xff32bb88,ResetZoomToTerminatePoint_FW
-0xff01786c,Restart,(stubs_entry_2.s)
+0xff01786c,Restart
 0xff0845b4,RomCheckSum_FW
 0xff084c78,RotateConsoleZOder_FW
 0xff46d348,RstEsmCurPos_FW

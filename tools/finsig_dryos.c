@@ -803,6 +803,37 @@ int find_closedir(firmware *fw)
     return 0;
 }
 
+// Special case for 'Restart'
+int find_Restart(firmware *fw)
+{
+    int j = get_saved_sig(fw,"reboot_fw_update");
+    if (j >= 0)
+    {
+        int k = get_saved_sig(fw,"StopWDT_FW");
+        if (k >= 0)
+        {
+            j = adr2idx(fw, func_names[j].val);
+            int i;
+            for (i=j+1; i<j+100; i++)
+            {
+                if (isBL(fw,i) && isBL(fw,i+2))
+                {
+                    // find call to StopWDT_FW
+                    uint32_t fadr = followBranch(fw, idx2adr(fw, i), 0x01000001);
+                    if (func_names[k].val == fadr)
+                    {
+                        fadr = followBranch(fw, idx2adr(fw, i+2), 0x01000001);
+                        fwAddMatch(fw,fadr,32,0,122);
+                        return 1;
+                    }
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
 // Special case for 'add_ptp_handler'
 int find_add_ptp_handler(firmware *fw, string_sig *sig, int k)
 {
@@ -1325,7 +1356,7 @@ string_sig string_sigs[] =
     { 5, "UpdateMBROnFlash", "MakeBootDisk", 0x01000003,                  11,   11,   11,   11,   11,   11,    1,    1,    1,    1,    1,    1 },
     { 5, "MakeSDCardBootable", "MakeBootDisk", 0x01000003,                 1,    1,    1,    1,    1,    1,    8,    8,    8,    8,    8,    9 },
 
-    { 6, "Restart", "Bye", 0 },
+    //{ 6, "Restart", "Bye", 0 },
     { 6, "reboot_fw_update", "FirmUpgrade.c", 0 },
 
     { 7, "CreateTaskStrictly", "PhySw", 0x01000001 },
@@ -1473,6 +1504,7 @@ string_sig string_sigs[] =
     { 22, "GetDrive_ClusterSize", (char*)find_GetDrive_ClusterSize, 0 },
     { 22, "GetDrive_TotalClusters", (char*)find_GetDrive_TotalClusters, 0 },
     { 22, "srand", (char*)find_srand, 0 },
+    { 22, "Restart", (char*)find_Restart, 0 },
 
     { 0, 0, 0, 0 }
 };

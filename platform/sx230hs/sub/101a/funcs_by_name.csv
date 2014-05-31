@@ -1175,7 +1175,7 @@
 0xff377d18,ResetZoomToFirstPoint_FW
 0xff377d4c,ResetZoomToTerminate_FW
 0xff377d4c,ResetZoomToTerminatePoint_FW
-0xff02d3d8,Restart,(stubs_entry_2.s)
+0xff02d3d8,Restart
 0xff08aff8,RomCheckSum_FW
 0xff00f374,RotateConsoleZOder_FW
 0xff0610a0,SaveAdjustmentTable_FW

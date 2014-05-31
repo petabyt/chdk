@@ -177,7 +177,7 @@
 0xff02c130,CancelTimer
 0xff02d220,TurnOffE1_FW
 0xff02d2d4,task_Bye
-0xff02d3d8,Restart,(stubs_entry_2.s)
+0xff02d3d8,Restart
 0xff02dec4,task_StartupImage
 0xff03158c,memcpy
 0xff03158c,memcpy_FW

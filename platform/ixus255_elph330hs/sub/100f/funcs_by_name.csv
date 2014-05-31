@@ -1179,7 +1179,7 @@
 0xff398450,ResetZoomToFirstPoint_FW
 0xff398488,ResetZoomToTerminate_FW
 0xff398488,ResetZoomToTerminatePoint_FW
-0xff039728,Restart
+0xff039680,Restart
 0xff0c9b8c,RomCheckSum_FW
 0xff00a960,RotateConsoleZOder_FW
 0xff09db78,SaveAdjustmentTable_FW
