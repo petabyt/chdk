@@ -178,7 +178,7 @@ NHSTUB(Read                                   ,0xff005b28) //120
 NHSTUB(ReadFastDir                            ,0xff33d178) //115
 NHSTUB(Rec2PB                                 ,0xff081778) //104
 NHSTUB(RenameFile_Fut                         ,0xff033ad4) //116
-NHSTUB(Restart                                ,0xff0382e8) //106
+NHSTUB(Restart                                ,0xff038240) //122
 NHSTUB(ScreenLock                             ,0xff0c9c9c) //117
 NHSTUB(ScreenUnlock                           ,0xff0c9cf0) //117
 NHSTUB(SetAE_ShutterSpeed                     ,0xff410ea0) //102

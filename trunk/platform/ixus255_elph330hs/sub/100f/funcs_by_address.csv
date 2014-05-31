@@ -196,7 +196,7 @@
 0xff036cf8,UnlockAE
 0xff039424,TurnOffE1_FW
 0xff0394d0,task_Bye
-0xff039728,Restart
+0xff039680,Restart
 0xff039b00,HardwareDefectWithRestart_FW
 0xff039b54,HardwareDefect_FW
 0xff039f04,_GetSystemTime

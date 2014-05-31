@@ -215,7 +215,7 @@
 0xff017470,NewTaskShell_FW
 0xff017610,TurnOffE1_FW
 0xff0176bc,task_Bye
-0xff01786c,Restart,(stubs_entry_2.s)
+0xff01786c,Restart
 0xff017d00,HardwareDefectWithRestart_FW
 0xff017d54,HardwareDefect_FW
 0xff018038,atol_FW

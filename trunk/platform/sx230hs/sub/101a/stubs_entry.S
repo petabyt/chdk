@@ -19,7 +19,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(Restart                              ,0xff02d4d4) //106        *** != 0xff02d3d8
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff3232ac -> ff4957d8
@@ -188,6 +187,7 @@ NHSTUB(ReadFastDir                            ,0xff2e70dc) //  6
 NHSTUB(Rec2PB                                 ,0xff094d40) //104
 NHSTUB(RefreshPhysicalScreen                  ,0xff0ac09c) //104
 NHSTUB(RenameFile_Fut                         ,0xff026d3c) //116
+//NHSTUB(Restart                              ,0xff02d3d8) //122            == 0xff02d3d8
 NHSTUB(ScreenLock                             ,0xff0ad294) //117
 NHSTUB(ScreenUnlock                           ,0xff0ad2f8) //117
 NHSTUB(SetAE_ShutterSpeed                     ,0xff37b758) //102
