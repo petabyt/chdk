@@ -142,14 +142,14 @@ void gui_osd_draw_dof()
 }
 
 //-------------------------------------------------------------------
-static short n, m; //string number
+static short state_disp_line, misc_disp_line; //string number
 
 static void gui_print_osd_state_string()
 {
     sprintf(osd_buf+strlen(osd_buf), "%12s", "");
     osd_buf[12]=0;  // limit length to 12 max
-    draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+n, osd_buf, conf.osd_color_override);
-    n+=FONT_HEIGHT;
+    draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+state_disp_line, osd_buf, conf.osd_color_override);
+    state_disp_line+=FONT_HEIGHT;
 }
 
 static void gui_print_osd_state_string_int(const char * title, int value)
@@ -174,8 +174,8 @@ static void gui_print_osd_misc_string()
 {
     sprintf(osd_buf+strlen(osd_buf), "%9s", "");
     osd_buf[9]=0;  // limit length to 9 max
-    draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
-    m+=FONT_HEIGHT;
+    draw_string(conf.values_pos.x, conf.values_pos.y+misc_disp_line, osd_buf, conf.osd_color);
+    misc_disp_line+=FONT_HEIGHT;
 }
 
 static void gui_print_osd_misc_string_int(const char * title, int value)
@@ -201,7 +201,7 @@ static void gui_print_osd_dof_string_dist(const char * title, int value, short u
   strcpy(osd_buf, title);
   int i=strlen(osd_buf);
   if (i<8) {
-    draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
+    draw_string(conf.values_pos.x, conf.values_pos.y+misc_disp_line, osd_buf, conf.osd_color);
     if (is_hyp) {
         sprintf_dist_hyp(osd_buf, (float)value);
     } else {
@@ -209,12 +209,12 @@ static void gui_print_osd_dof_string_dist(const char * title, int value, short u
     }
     sprintf(osd_buf+strlen(osd_buf), "%9s", "");
     osd_buf[9-i]=0;
-    draw_string(conf.values_pos.x+i*FONT_WIDTH, conf.values_pos.y+m, osd_buf, use_good_color?((conf.osd_color & 0xff00) | COLOR_HISTO_G):conf.osd_color);
+    draw_string(conf.values_pos.x+i*FONT_WIDTH, conf.values_pos.y+misc_disp_line, osd_buf, use_good_color?((conf.osd_color & 0xff00) | COLOR_HISTO_G):conf.osd_color);
   } else {
     osd_buf[9]=0;
-    draw_string(conf.values_pos.x, conf.values_pos.y+m, osd_buf, conf.osd_color);
+    draw_string(conf.values_pos.x, conf.values_pos.y+misc_disp_line, osd_buf, conf.osd_color);
   }
-  m+=FONT_HEIGHT;
+  misc_disp_line+=FONT_HEIGHT;
 }
 
 //-------------------------------------------------------------------
@@ -262,9 +262,11 @@ static const char * shooting_get_av_bracket_value()
 void gui_osd_draw_state()
 {
     int gui_mode=gui_get_mode();
+    unsigned shooting_mode = mode_get() & MODE_SHOOTING_MASK ;
     long t; 
 
-    n=0;
+    state_disp_line=0;
+
     ///////////////////////////
     //sprintf(osd_buf,"%s",get_debug());
     //draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+6*FONT_HEIGHT, osd_buf, conf.osd_color);
@@ -274,7 +276,7 @@ void gui_osd_draw_state()
     {
         if(camera_info.state.is_shutter_half_press) 
         { 
-            t=(int)(shooting_get_shutter_speed_from_tv96(shooting_get_tv96())*100000);	
+            t=(int)(shooting_get_shutter_speed_from_tv96(shooting_get_tv96())*100000);
             gui_print_osd_state_string_float("TV:%d.%05d", 100000, t);
         }
         else 
@@ -292,7 +294,7 @@ void gui_osd_draw_state()
     if (camera_info.cam_has_nd_filter)
         if ((conf.nd_filter_state && !(conf.override_disable==1))|| gui_mode==GUI_MODE_OSD) 
             gui_print_osd_state_string_chr("NDFILTER:", ((conf.nd_filter_state==1)?"IN":"OUT"));
-    if ((conf.autoiso_enable && shooting_get_iso_mode()<=0 && !(m==MODE_M || m==MODE_TV) && shooting_get_flash_mode() && (autoiso_and_bracketing_overrides_are_enabled)) || gui_mode==GUI_MODE_OSD)  
+    if ((conf.autoiso_enable && shooting_get_iso_mode()<=0 && !(shooting_mode==MODE_M || shooting_mode==MODE_TV) && shooting_get_flash_mode() && (autoiso_and_bracketing_overrides_are_enabled)) || gui_mode==GUI_MODE_OSD)  
         gui_print_osd_state_string_chr("AUTOISO:", ((conf.autoiso_enable==1)?"ON":"OFF"));
     if ((is_sd_override_enabled && shooting_can_focus()) || ((gui_get_mode()==GUI_MODE_ALT) && shooting_get_common_focus_mode()) || gui_mode==GUI_MODE_OSD)
     {
@@ -309,7 +311,7 @@ void gui_osd_draw_state()
     }
     if (is_iso_override_enabled || gui_mode==GUI_MODE_OSD)
         gui_print_osd_state_string_int("ISO:", shooting_iso_real_to_market(shooting_get_iso_override_value())); // get_iso_override returns "real" units, clamped within camera limits
-    if ((gui_mode==GUI_MODE_OSD) || (shooting_get_drive_mode() && m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE))
+    if ((gui_mode==GUI_MODE_OSD) || (shooting_get_drive_mode() && shooting_mode!=MODE_STITCH && shooting_mode!=MODE_SCN_BEST_IMAGE))
     {
       if (is_tv_bracketing_enabled || is_av_bracketing_enabled || is_iso_bracketing_enabled || is_sd_bracketing_enabled)
         gui_print_osd_state_string_chr("BRACKET:", shooting_get_bracket_type());
@@ -359,7 +361,7 @@ void gui_osd_draw_values(int showtype)
 {
     int iso_mode=shooting_get_iso_mode();
 
-    m=0;
+    misc_disp_line=0;
 
     //gui_osd_calc_expo_param();
 
@@ -584,7 +586,7 @@ static void gui_osd_draw_movie_time_left()
                 if( (int)conf.ext_video_time == 1 )
                 {
                     draw_txt_string(0, 13, lang_str(LANG_WARN_VIDEO_EXT_TIME), conf.osd_color_warn);
-                }		
+                }
 #endif
             }
 
@@ -1256,6 +1258,8 @@ void gui_draw_osd()
                conf.values_show_bv_measured || conf.values_show_bv_seted || conf.values_show_overexposure || conf.values_show_canon_overexposure || conf.values_show_luminance)
                gui_osd_calc_expo_param();           	           
         }
+
+        state_disp_line=0;
 
         if (conf.show_state)
             gui_osd_draw_state();
