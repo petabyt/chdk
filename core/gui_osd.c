@@ -267,11 +267,12 @@ static const char * shooting_get_av_bracket_value()
 
 void gui_osd_draw_state(int is_osd_edit)
 {
+    n=0;
+
     if ((conf.show_state && camera_info.state.mode_rec_or_review) || is_osd_edit)
     {
         long t; 
 
-        n=0;
         ///////////////////////////
         //sprintf(osd_buf,"%s",get_debug());
         //draw_string(conf.mode_state_pos.x, conf.mode_state_pos.y+6*FONT_HEIGHT, osd_buf, conf.osd_color);
