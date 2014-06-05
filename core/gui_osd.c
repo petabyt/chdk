@@ -714,8 +714,8 @@ static int kbd_use_up_down_left_right_as_fast_switch()
     // Clear state variable is neither UP or DOWN is pressed
     if (!kbd_is_key_pressed(KEY_UP) && !kbd_is_key_pressed(KEY_DOWN)) key_pressed = 0;
 
-    // Must be in record mode and not have Canon menu open
-    if (canon_shoot_menu_active!=0 || !camera_info.state.mode_rec) return 0;
+    // Must be in record mode and not have either Canon menu open
+    if ( (canon_menu_active!=(int)&canon_menu_active-4) || canon_shoot_menu_active!=0 || !camera_info.state.mode_rec) return 0;
 
     // Adjust exposure if 'Enable Fast EV switch?' option is set
     if (conf.fast_ev && (key_pressed == 0) && (camera_info.state.mode_shooting != MODE_M))
