@@ -129,10 +129,11 @@
         FW n                                        - disassemble the next 'n' instructions to the output file. 
         FW $                                        - disassemble from the current address to the end of the function
         FW $-n                                      - disassemble from the current address to the end of the function - 'n' instructions
-        FW [n|$|$-n] ^X                             - as above but reset the current disassembly address to X before disassembling anything
-                                                      can be user to jump forward in the function.
+        FW Ln                                       - disassemble from the current address to line # 'n' in the current function (use LI 1 to see line numbers)
+        FW [n|$|$-n|Ln] ^X                          - as above but reset the current disassembly address to X before disassembling anything
+                                                      can be used to jump forward in the function.
                                                       X must be inside the function start - end range
-        FW [n|$|$-n] -X                             - as above but reset the current function end address to X before disassembling anything
+        FW [n|$|$-n|Ln] -X                          - as above but reset the current function end address to X before disassembling anything
                                                       no idea if this is of any actual use.
                                                       X must be inside the function start - end range
         REM ["comment"]                             - Disassemble a single instruction; but comment it out in the output file
@@ -353,7 +354,7 @@ char* next_token(char *line)
             n = skip_string(c);
             strncpy(token, c, n-c);
             token[n-c] = 0;
-            return skip_space(n+1);
+            return skip_space((*n)?n+1:n);
         }
         else
         {
@@ -448,6 +449,8 @@ typedef struct _op
     t_address   fw_end;
     int         fw_func_end_offset;
     int         fw_is_func_end_offset;
+    int         fw_func_start_offset;
+    int         fw_is_func_start_offset;
     int         fw_len;
     t_address   patch_new_val;
     int         skip_len;
@@ -503,6 +506,8 @@ op *new_op(int type)
     p->fw_end = 0;
     p->fw_func_end_offset = 0;
     p->fw_is_func_end_offset = 0;
+    p->fw_func_start_offset = 0;
+    p->fw_is_func_start_offset = 0;
     p->fw_len = -1;
     p->patch_new_val = 0;
     p->skip_len = 0;
@@ -665,6 +670,10 @@ void parse_FW()
         case '$':
             p->fw_func_end_offset = strtol(largs[n]+1,0,0) * 4;
             p->fw_is_func_end_offset = 1;
+            break;
+        case 'L':
+            p->fw_func_start_offset = strtol(largs[n]+1,0,0) * 4 - 4;
+            p->fw_is_func_start_offset = 1;
             break;
         default:
             p->fw_len = strtoul(largs[n],0,0);
@@ -914,6 +923,8 @@ void op_FW(op *p)
         end_address = p->fw_end;
     if (p->fw_is_func_end_offset)
         end_address = cur_func->func_end + p->fw_func_end_offset;
+    if (p->fw_is_func_start_offset)
+        end_address = cur_func->func_start + p->fw_func_start_offset;
     if (p->fw_len > 0)
         end_address = start_address + p->fw_len * 4 - 4;
 
