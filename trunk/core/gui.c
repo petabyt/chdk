@@ -2885,6 +2885,15 @@ int gui_chdk_kbd_process()
 }
 
 //-------------------------------------------------------------------
+extern int no_modules_flag;
+void gui_draw_no_module_warning()
+{
+    if ( no_modules_flag == 1 ) {
+        draw_txt_string(1, 1, "ERROR: MISSING MODULES", conf.osd_color_warn);
+    }
+}
+
+//-------------------------------------------------------------------
 // Handler for Menu button press in CHDK Alt mode (not in Menu mode)
 // Enter main menu or user menu based on configuration
 void gui_chdk_kbd_process_menu_btn()
@@ -2943,6 +2952,9 @@ void gui_redraw()
 #endif
 
     gui_handle_splash(flag_gui_enforce_redraw);
+
+    // visible warning if modules missing
+    gui_draw_no_module_warning();
 
 // DEBUG: uncomment if you want debug values always on top
 //gui_draw_debug_vals_osd();
