@@ -2889,7 +2889,7 @@ extern int no_modules_flag;
 void gui_draw_no_module_warning()
 {
     if ( no_modules_flag == 1 ) {
-        draw_txt_string(1, 1, "ERROR: MISSING MODULES", conf.osd_color_warn);
+        draw_txt_string(1, 1, lang_str(LANG_ERROR_MISSING_MODULES), conf.osd_color_warn);
     }
 }
 
