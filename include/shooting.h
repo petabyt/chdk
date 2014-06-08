@@ -132,6 +132,7 @@ extern short shooting_get_focus_ok();
 extern void shooting_update_dof_values();
 extern int shooting_get_hyperfocal_distance();
 extern int shooting_get_hyperfocal_distance_1e3_f(int av, int fl);
+extern int shooting_get_exif_subject_dist();
 extern int shooting_get_subject_distance();
 extern int shooting_get_subject_distance_override_value();
 extern int shooting_get_lens_to_focal_plane_width();
