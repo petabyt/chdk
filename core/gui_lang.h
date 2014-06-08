@@ -755,7 +755,9 @@
 
 #define LANG_MENU_REMOTE_INPUT_CHANNEL  623
 
-#define GUI_LANG_ITEMS                          623
+#define LANG_ERROR_MISSING_MODULES  624
+
+#define GUI_LANG_ITEMS                          624
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
