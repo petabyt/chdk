@@ -762,5 +762,8 @@
 618 "Eyefi wlan apagado"
 619 "Forzar encendido de wlan eyefi wlan"
 620 "Forzar apagado de wlan eyefi"
-621 "No puede encontrar red"
+621 "No se puede encontrar red"
 622 "Red no encontrada"
+
+623 "Canal de entrada"
+624 "ERROR: MÓDULOS NO DISPONIBLES"
