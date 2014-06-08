@@ -76,6 +76,7 @@ static int cam_apex_aperture[2]         = { 0, 96 };            // Aperture in A
 static int cam_exp_bias[2]              = { 0, 96 };
 static int cam_max_av[2]                = { 0, 96 };
 static int cam_focal_length[2]          = { 0, 1000 };
+static int cam_subject_distance[2]      = { 0, 1000 };
 
 struct t_data_for_exif{
     short iso;
@@ -208,10 +209,10 @@ struct dir_entry ifd1[]={
 // Index of specific entries in exif_ifd below.
 // *** warning - if entries are added or removed these should be updated ***
 #define EXPOSURE_PROGRAM_INDEX      2       // tag 0x8822
-#define METERING_MODE_INDEX         10      // tag 0x9207
-#define FLASH_MODE_INDEX            11      // tag 0x9209
-#define SSTIME_INDEX                13      // tag 0x9290
-#define SSTIME_ORIG_INDEX           14      // tag 0x9291
+#define METERING_MODE_INDEX         11      // tag 0x9207
+#define FLASH_MODE_INDEX            12      // tag 0x9209
+#define SSTIME_INDEX                14      // tag 0x9290
+#define SSTIME_ORIG_INDEX           15      // tag 0x9291
 
 struct dir_entry exif_ifd[]={
     {0x829A, T_RATIONAL,   1,  (int)cam_shutter},          // Shutter speed
@@ -224,6 +225,7 @@ struct dir_entry exif_ifd[]={
     {0x9202, T_RATIONAL,   1,  (int)cam_apex_aperture},    // ApertureValue (APEX units)
     {0x9204, T_SRATIONAL,  1,  (int)cam_exp_bias},         // ExposureBias
     {0x9205, T_RATIONAL,   1,  (int)cam_max_av},           // MaxApertureValue
+    {0x9206, T_RATIONAL,   1,  (int)cam_subject_distance}, // SubjectDistance
     {0x9207, T_SHORT,      1,  0},                         // Metering mode
     {0x9209, T_SHORT,      1,  0},                         // Flash mode
     {0x920A, T_RATIONAL,   1,  (int)cam_focal_length},     // FocalLength
@@ -629,6 +631,8 @@ void capture_data_for_exif(void)
     cam_exp_bias[0] = short_prop_val;
 
     exif_data.exp_program = camera_info.state.mode_shooting;
+
+    cam_subject_distance[0] = shooting_get_exif_subject_dist();
 
     cam_focal_length[0] = get_focal_length(shooting_get_zoom());
     exif_data.effective_focal_length = get_effective_focal_length(shooting_get_zoom()) / 1000;
