@@ -20,6 +20,8 @@ static char osd_buf[50];
 
 volatile int chdk_started_flag=0;
 
+int no_modules_flag;
+
 static volatile int spytask_can_start;
 #ifdef CAM_HAS_GPS
     extern void wegpunkt();
@@ -162,6 +164,8 @@ void core_spytask()
     mkdir("A/CHDK/DATA");
     mkdir("A/CHDK/LOGS");
     mkdir("A/CHDK/EDGE");
+
+    no_modules_flag = stat("A/CHDK/MODULES/FSELECT.FLT",0) ? 1 : 0 ;
 
     // Calculate the value of get_tick_count() when the clock ticks over to the next second
     // Used to calculate the SubSecondTime value when saving DNG files.
