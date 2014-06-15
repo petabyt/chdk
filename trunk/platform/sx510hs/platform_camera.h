@@ -28,13 +28,13 @@
     #define CAM_RAW_ROWPIX               4168 // Found @0xff196e7c
     #define CAM_RAW_ROWS                 3062 // Found @0xff196e88
 
-    #define CAM_JPEG_WIDTH               4168 //To do
-    #define CAM_JPEG_HEIGHT              3062 //To do
+    #define CAM_JPEG_WIDTH               4000 // from canon specs
+    #define CAM_JPEG_HEIGHT              2664 
 
-    #define CAM_ACTIVE_AREA_X1              0 //To do
-    #define CAM_ACTIVE_AREA_Y1              0 //To do
-    #define CAM_ACTIVE_AREA_X2           4168 //To do
-    #define CAM_ACTIVE_AREA_Y2           3062 //To do
+    #define CAM_ACTIVE_AREA_X1             96
+    #define CAM_ACTIVE_AREA_Y1             18 // there are values at 17 but keep even to avoid CFA issues
+    #define CAM_ACTIVE_AREA_X2           4168 // active all the way to the edge
+    #define CAM_ACTIVE_AREA_Y2           3062 // active all the way to the bottom
 
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT       0x40000000 // Found @0xff005f4c
