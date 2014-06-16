@@ -29,7 +29,7 @@
     #define CAM_RAW_ROWS                 3062 // Found @0xff196e88
 
     #define CAM_JPEG_WIDTH               4000 // from canon specs
-    #define CAM_JPEG_HEIGHT              2664 
+    #define CAM_JPEG_HEIGHT              3000 
 
     #define CAM_ACTIVE_AREA_X1             96
     #define CAM_ACTIVE_AREA_Y1             18 // there are values at 17 but keep even to avoid CFA issues
