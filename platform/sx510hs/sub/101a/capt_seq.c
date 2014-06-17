@@ -365,6 +365,7 @@ asm volatile (
 "    BL      sub_FF371908 \n"
 "    MOV     R0, R4 \n"
 "    BL      sub_FF371D20_my \n"  // --> Patched. Old value = 0xFF371D20.
+"    BL      capt_seq_hook_raw_here \n"         // added
 "    TST     R0, #1 \n"
 "    LDMEQFD SP!, {R4-R6,PC} \n"
 

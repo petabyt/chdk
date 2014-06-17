@@ -234,6 +234,9 @@ FUNC ref=0
 ASM
 FW 31
 PATCHSUB
+>>>
+"    BL      capt_seq_hook_raw_here \n"         // added
+<<<
 FW $
 ENDASM
 ENDFUNC
