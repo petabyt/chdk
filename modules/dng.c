@@ -24,19 +24,25 @@
 // Set to 1 when module loaded and active
 static int running = 0;
 
-//thumbnail
+// thumbnail size
 #define DNG_TH_WIDTH 128
 #define DNG_TH_HEIGHT 96
 #define DNG_TH_BYTES (DNG_TH_WIDTH*DNG_TH_HEIGHT*3)
-// higly recommended that DNG_TH_WIDTH*DNG_TH_HEIGHT would be divisible by 512
+// highly recommended that DNG_TH_WIDTH*DNG_TH_HEIGHT would be divisible by 512
 
 // new version to support DNG double buffer
 void reverse_bytes_order2(char* from, char* to, int count);
-// convert old version calls to new version (to minimise code changes)
-#define reverse_bytes_order(start, count)   reverse_bytes_order2(start,start,count)
 
-struct dir_entry{unsigned short tag; unsigned short type; unsigned int count; unsigned int offset;};
+// IFD directory entry
+typedef struct
+{
+    unsigned short tag;
+    unsigned short type;
+    unsigned int count;
+    unsigned int offset;
+} dir_entry;
 
+#define T_EOL       0       // End of List
 #define T_BYTE      1
 #define T_ASCII     2
 #define T_SHORT     3
@@ -110,29 +116,28 @@ static unsigned int badpixel_opcode[] =
 
 // warning: according to TIFF format specification, elements must be sorted by tag value in ascending order!
 
-// Index of specific entries in ifd0 below.
-// *** warning - if entries are added or removed these should be updated ***
-#define CAMERA_NAME_INDEX           8       // tag 0x110
-#define THUMB_DATA_INDEX            9       // tag 0x111
-#define ORIENTATION_INDEX           10      // tag 0x112
-#define CHDK_VER_INDEX              15      // tag 0x131
-#define ARTIST_NAME_INDEX           17      // tag 0x13B
-#define SUBIFDS_INDEX               18      // tag 0x14A
-#define COPYRIGHT_INDEX             19      // tag 0x8298
-#define EXIF_IFD_INDEX              20      // tag 0x8769
-#define GPS_IFD_INDEX               21      // tag 0x8825
-#define DNG_VERSION_INDEX           23      // tag 0xC612
-#define UNIQUE_CAMERA_MODEL_INDEX   25      // tag 0xC614
-#define COLOR_MATRIX2_INDEX         27      // tag 0xc622
-#define CALIBRATION1_INDEX          28      // tag 0xc623
-#define CALIBRATION2_INDEX          29      // tag 0xc624
-#define ILLUMINANT2_INDEX           38      // tag 0xc65b
-#define FORWARD_MATRIX1_INDEX       39      // tag 0xc714
-#define FORWARD_MATRIX2_INDEX       40      // tag 0xc715
+// Tags of specific entries in ifd0 below.
+#define CAMERA_NAME_TAG             0x110
+#define THUMB_DATA_TAG              0x111
+#define ORIENTATION_TAG             0x112
+#define CHDK_VER_TAG                0x131
+#define ARTIST_NAME_TAG             0x13B
+#define SUBIFDS_TAG                 0x14A
+#define COPYRIGHT_TAG               0x8298
+#define EXIF_IFD_TAG                0x8769
+#define GPS_IFD_TAG                 0x8825
+#define DNG_VERSION_TAG             0xC612
+#define UNIQUE_CAMERA_MODEL_TAG     0xC614
+#define COLOR_MATRIX2_TAG           0xc622
+#define CALIBRATION1_TAG            0xc623
+#define CALIBRATION2_TAG            0xc624
+#define ILLUMINANT2_TAG             0xc65b
+#define FORWARD_MATRIX1_TAG         0xc714
+#define FORWARD_MATRIX2_TAG         0xc715
 
 #define CAM_MAKE                    "Canon"
 
-struct dir_entry ifd0[]={
+dir_entry ifd0[]={
     {0xFE,   T_LONG,       1,  1},                                 // NewSubFileType: Preview Image
     {0x100,  T_LONG,       1,  DNG_TH_WIDTH},                      // ImageWidth
     {0x101,  T_LONG,       1,  DNG_TH_HEIGHT},                     // ImageLength
@@ -174,14 +179,14 @@ struct dir_entry ifd0[]={
     {0xC65B, T_SHORT|T_PTR,1,  (int)&camera_sensor.calibration_illuminant2}, 
     {0xC714, T_SRATIONAL,  9,  (int)&camera_sensor.forward_matrix1},
     {0xC715, T_SRATIONAL,  9,  (int)&camera_sensor.forward_matrix2},
+    {0, T_EOL, 0, 0},
 };
 
-// Index of specific entries in ifd1 below.
-// *** warning - if entries are added or removed these should be updated ***
-#define RAW_DATA_INDEX              6       // tag 0x111
-#define BADPIXEL_OPCODE_INDEX       21      // tag 0xC740
+// Tags of specific entries in ifd1 below.
+#define RAW_DATA_TAG                0x111
+#define BADPIXEL_OPCODE_TAG         0xC740
 
-struct dir_entry ifd1[]={
+dir_entry ifd1[]={
     {0xFE,   T_LONG,       1,  0},                                 // NewSubFileType: Main Image
     {0x100,  T_LONG|T_PTR, 1,  (int)&camera_sensor.raw_rowpix},    // ImageWidth
     {0x101,  T_LONG|T_PTR, 1,  (int)&camera_sensor.raw_rows},      // ImageLength
@@ -204,17 +209,17 @@ struct dir_entry ifd1[]={
     {0xC620, T_LONG,       2,  (int)&camera_sensor.crop.size},
     {0xC68D, T_LONG,       4,  (int)&camera_sensor.dng_active_area},
     {0xC740, T_UNDEFINED|T_PTR, sizeof(badpixel_opcode),  (int)&badpixel_opcode},
+    {0, T_EOL, 0, 0},
 };
 
-// Index of specific entries in exif_ifd below.
-// *** warning - if entries are added or removed these should be updated ***
-#define EXPOSURE_PROGRAM_INDEX      2       // tag 0x8822
-#define METERING_MODE_INDEX         11      // tag 0x9207
-#define FLASH_MODE_INDEX            12      // tag 0x9209
-#define SSTIME_INDEX                14      // tag 0x9290
-#define SSTIME_ORIG_INDEX           15      // tag 0x9291
+// Tags of specific entries in exif_ifd below.
+#define EXPOSURE_PROGRAM_TAG        0x8822
+#define METERING_MODE_TAG           0x9207
+#define FLASH_MODE_TAG              0x9209
+#define SSTIME_TAG                  0x9290
+#define SSTIME_ORIG_TAG             0x9291
 
-struct dir_entry exif_ifd[]={
+dir_entry exif_ifd[]={
     {0x829A, T_RATIONAL,   1,  (int)cam_shutter},          // Shutter speed
     {0x829D, T_RATIONAL,   1,  (int)cam_aperture},         // Aperture
     {0x8822, T_SHORT,      1,  0},                         // ExposureProgram
@@ -232,11 +237,12 @@ struct dir_entry exif_ifd[]={
     {0x9290, T_ASCII|T_PTR,4,  (int)cam_subsectime},       // DateTime milliseconds
     {0x9291, T_ASCII|T_PTR,4,  (int)cam_subsectime},       // DateTimeOriginal milliseconds
     {0xA405, T_SHORT|T_PTR,1,  (int)&exif_data.effective_focal_length},    // FocalLengthIn35mmFilm
+    {0, T_EOL, 0, 0},
 };
 
 tGPS gps_data;
 
-struct dir_entry gpd_ifd[]={
+dir_entry gpd_ifd[]={
     {0x0000, T_BYTE,              4,  0x00000302},                    //GPSVersionID: 2 3 0 0
     {0x0001, T_ASCII|T_PTR,       2,  (int)gps_data.latitudeRef},     //North or South Latitude "N\0" or "S\0"
     {0x0002, T_RATIONAL,          3,  (int)gps_data.latitude},        //Latitude
@@ -249,6 +255,7 @@ struct dir_entry gpd_ifd[]={
     //{0x000A, T_ASCII,             1,  0},                             //MeasureMode
     {0x0012, T_ASCII,             7,  (int)gps_data.mapDatum},        //MapDatum 7 + 1 pad byte
     {0x001D, T_ASCII,             11, (int)gps_data.dateStamp},       //DateStamp 11 + 1 pad byte
+    {0, T_EOL, 0, 0},
 };
 
 int get_type_size(int type)
@@ -271,20 +278,56 @@ int get_type_size(int type)
     }
 }
 
-#define DIR_SIZE(ifd)   (sizeof(ifd)/sizeof(ifd[0]))
+// IFD types and flags
+#define IFD_0       1
+#define IFD_1       2
+#define IFD_EXIF    3
+#define IFD_GPS     4
+#define IFD_SKIP    0x200       // Set this flag to prevent saving entry to file (used to block GPS if not needed)
 
-struct
+typedef struct
 {
-    struct dir_entry* entry;
-    int count;                  // Number of entries to be saved
-    int entry_count;            // Total number of entries
-} ifd_list[] = 
+    dir_entry* entry;           // List of entries
+    short count;                // Number of entries to be saved
+    short type;                 // Type & flags
+} ifd_entry;
+
+ifd_entry ifd_list[] =
 {
-    {ifd0,      DIR_SIZE(ifd0),     DIR_SIZE(ifd0)}, 
-    {ifd1,      DIR_SIZE(ifd1),     DIR_SIZE(ifd1)}, 
-    {exif_ifd,  DIR_SIZE(exif_ifd), DIR_SIZE(exif_ifd)}, 
-    {gpd_ifd,   DIR_SIZE(gpd_ifd),  DIR_SIZE(gpd_ifd)}
+    {ifd0,      0, IFD_0},
+    {ifd1,      0, IFD_1},
+    {exif_ifd,  0, IFD_EXIF},
+    {gpd_ifd,   0, IFD_GPS},
+    {0,0,0},
 };
+
+// Find an entry in the ifd_list array and return pointer
+static ifd_entry* get_ifd(int type)
+{
+    int i;
+    for (i = 0; ifd_list[i].entry != 0; i++)
+    {
+        if (ifd_list[i].type == type)
+            return &ifd_list[i];
+    }
+    return 0;
+}
+
+// Find a tag by IFD and TAG id, return pointer
+static dir_entry* get_tag(int ifd, int tag)
+{
+    ifd_entry* p = get_ifd(ifd);
+    if (p)
+    {
+        int i;
+        for (i=0; p->entry[i].type != T_EOL; i++)
+        {
+            if (p->entry[i].tag == tag)
+                return &p->entry[i];
+        }
+    }
+    return 0;
+}
 
 #define TIFF_HDR_SIZE (8)
 
@@ -293,15 +336,134 @@ int dng_header_buf_size;
 int dng_header_buf_offset;
 char *thumbnail_buf = 0;
 
+// Helper functions
+
+// Add something to the DNG header buffer, and increment size
 void add_to_buf(void* var, int size)
 {
     memcpy(dng_header_buf+dng_header_buf_offset,var,size);
     dng_header_buf_offset += size;
 }
 
+// Add something to the DNG header buffer, and increment size
 void add_val_to_buf(int val, int size)
 {
     add_to_buf(&val,size);
+}
+
+// Iterate over all IFDs in ifd_list, call 'f' function for any that are not skipped
+static void process_ifd_list(void (*f)(ifd_entry*))
+{
+    int i;
+    for (i=0; ifd_list[i].type!=0; i++)
+    {
+        if ((ifd_list[i].type & IFD_SKIP) == 0)
+        {
+            f(&ifd_list[i]);
+        }
+    }
+}
+
+// Iterate over all entries in an IFD, call 'f' function for any that are not skipped
+static void process_entries(ifd_entry* ifd, void (*f)(ifd_entry*, dir_entry*))
+{
+    int i;
+    for (i=0; ifd->entry[i].type != T_EOL; i++)
+    {
+        if ((ifd->entry[i].type & T_SKIP) == 0)  // Exclude skipped entries (e.g. GPS info if camera doesn't have GPS)
+        {
+            f(ifd, &ifd->entry[i]);
+        }
+    }
+}
+
+// Functions to count the number of valid (non-skipped) entries in an IFD
+// (called via process_ifd_list & process_entries)
+static void inc_ifd_count(ifd_entry* ifd, dir_entry* e)
+{
+    ifd->count++;
+}
+
+static void calc_ifd_count(ifd_entry* ifd)
+{
+    ifd->count = 0;
+    process_entries(ifd, inc_ifd_count);
+}
+
+// Functions to calculate the offset to the raw data
+// (called via process_ifd_list & process_entries)
+static int raw_offset;
+
+static void inc_raw_offset(ifd_entry* ifd, dir_entry* e)
+{
+    raw_offset += 12; // IFD directory entry size
+    int size_ext = get_type_size(e->type) * e->count;
+    if (size_ext > 4) raw_offset += size_ext + (size_ext&1);
+}
+
+static void calc_raw_offset(ifd_entry* ifd)
+{
+    raw_offset+=6; // IFD header+footer
+    process_entries(ifd, inc_raw_offset);   // Add size of each entry to raw_offset
+}
+
+// Function to calculate the offset to extra data to be saved
+// (called via process_ifd_list)
+static int extra_offset;
+
+static void calc_extra_offset(ifd_entry* ifd)
+{
+    extra_offset += 6 + ifd->count * 12; // IFD header+footer
+}
+
+// Functions to add the IFDs and IFD entries to the save buffer
+// (called via process_ifd_list & process_entries)
+static void add_entry_to_buffer(ifd_entry* ifd, dir_entry* e)
+{
+    add_val_to_buf(e->tag, sizeof(short));
+    add_val_to_buf(e->type & 0xFF, sizeof(short));
+    add_val_to_buf(e->count, sizeof(int));
+    int size_ext = get_type_size(e->type) * e->count;
+    if (size_ext <= 4)
+    {
+        if (e->type & T_PTR)
+        {
+            add_to_buf((void*)e->offset, sizeof(int));
+        }
+        else
+        {
+            add_val_to_buf(e->offset, sizeof(int));
+        }
+    }
+    else
+    {
+        add_val_to_buf(extra_offset, sizeof(int));
+        extra_offset += size_ext + (size_ext&1);
+    }
+}
+
+static void add_ifd_to_buffer(ifd_entry* ifd)
+{
+    add_val_to_buf(ifd->count, sizeof(short));  // Add count of entries for this IFD
+    process_entries(ifd, add_entry_to_buffer);  // Add all entries
+    add_val_to_buf(0, sizeof(int));             // Terminate entry list
+}
+
+// Functions to add the extra data to the save buffer
+// (called via process_ifd_list & process_entries)
+static void add_entry_extra_data_to_buffer(ifd_entry* ifd, dir_entry* e)
+{
+    int size_ext = get_type_size(e->type) * e->count;
+    if (size_ext > 4)
+    {
+        add_to_buf((void*)e->offset, size_ext);
+        if (size_ext&1) add_val_to_buf(0, 1);
+    }
+}
+
+static void add_extra_data_to_buffer(ifd_entry* ifd)
+{
+    process_entries(ifd, add_entry_extra_data_to_buffer);
 }
 
 /*
@@ -309,23 +471,23 @@ create a dng header, including space for thumbnail if required
 if ver1_1 set, creates a dng 1.1 header, otherwise a 1.3 header (matching conf.dng_version)
 if minimal is set, don't pad to 512 byte boundery or create thumbnail
 */
-void create_dng_header(int ver1_1,int minimal){
+
+void create_dng_header(int ver1_1, int minimal)
+{
     int i,j;
-    int extra_offset;
-    int raw_offset;
 
     // Set version and opcodes
     if (ver1_1)
     {
         // If CHDK is removing bad pixels then set DNG version to 1.1 and remove opcodes
-        ifd0[DNG_VERSION_INDEX].offset = BE(0x01010000);
-        ifd1[BADPIXEL_OPCODE_INDEX].type |= T_SKIP;
+        get_tag(IFD_0, DNG_VERSION_TAG)->offset = BE(0x01010000);
+        get_tag(IFD_1, BADPIXEL_OPCODE_TAG)->type |= T_SKIP;
     }
     else
     {
         // Set DNG version to 1.3 and add bad pixel opcodes
-        ifd0[DNG_VERSION_INDEX].offset = BE(0x01030000);
-        ifd1[BADPIXEL_OPCODE_INDEX].type &= ~T_SKIP;
+        get_tag(IFD_0, DNG_VERSION_TAG)->offset = BE(0x01030000);
+        get_tag(IFD_1, BADPIXEL_OPCODE_TAG)->type &= ~T_SKIP;
         // Set CFAPattern value
         switch (camera_sensor.cfa_pattern)
         {
@@ -346,8 +508,6 @@ void create_dng_header(int ver1_1,int minimal){
 
     // filling EXIF fields
 
-    int ifd_count = DIR_SIZE(ifd_list);
-
     if (camera_info.props.gps)
     {
         // If camera has GPS get the GPS data
@@ -355,162 +515,89 @@ void create_dng_header(int ver1_1,int minimal){
     }
     else
     {
-        // If no GPS then remove the GPS data from the header - assumes gps_ifd is the last one in ifd_list
-        ifd_count--;
-        ifd0[GPS_IFD_INDEX].type |= T_SKIP;         // mark entry so it is skipped
+        // If no GPS then remove the GPS data from the header
+        get_ifd(IFD_GPS)->type |= IFD_SKIP;
+        get_tag(IFD_0, GPS_IFD_TAG)->type |= T_SKIP;         // mark entry so it is skipped
     }
 
     // Fix the counts and offsets where needed
 
-    ifd0[CAMERA_NAME_INDEX].count = ifd0[UNIQUE_CAMERA_MODEL_INDEX].count = strlen(cam_name) + 1;
-    ifd0[CHDK_VER_INDEX].offset = (int)camera_info.chdk_dng_ver;
-    ifd0[CHDK_VER_INDEX].count = strlen(camera_info.chdk_dng_ver) + 1;
-    ifd0[ARTIST_NAME_INDEX].count = strlen(artist_name) + 1;
-    ifd0[COPYRIGHT_INDEX].count = strlen(copyright) + 1;
-    ifd0[ORIENTATION_INDEX].offset = get_orientation_for_exif(exif_data.orientation);
+    get_tag(IFD_0, CAMERA_NAME_TAG)->count = get_tag(IFD_0, UNIQUE_CAMERA_MODEL_TAG)->count = strlen(cam_name) + 1;
+    get_tag(IFD_0, CHDK_VER_TAG)->offset = (int)camera_info.chdk_dng_ver;
+    get_tag(IFD_0, CHDK_VER_TAG)->count = strlen(camera_info.chdk_dng_ver) + 1;
+    get_tag(IFD_0, ARTIST_NAME_TAG)->count = strlen(artist_name) + 1;
+    get_tag(IFD_0, COPYRIGHT_TAG)->count = strlen(copyright) + 1;
+    get_tag(IFD_0, ORIENTATION_TAG)->offset = get_orientation_for_exif(exif_data.orientation);
 
-    exif_ifd[EXPOSURE_PROGRAM_INDEX].offset = get_exp_program_for_exif(exif_data.exp_program);
-    exif_ifd[METERING_MODE_INDEX].offset = get_metering_mode_for_exif(exif_data.metering_mode);
-    exif_ifd[FLASH_MODE_INDEX].offset = get_flash_mode_for_exif(exif_data.flash_mode, exif_data.flash_fired);
-    exif_ifd[SSTIME_INDEX].count = exif_ifd[SSTIME_ORIG_INDEX].count = strlen(cam_subsectime)+1;
+    get_tag(IFD_EXIF, EXPOSURE_PROGRAM_TAG)->offset = get_exp_program_for_exif(exif_data.exp_program);
+    get_tag(IFD_EXIF, METERING_MODE_TAG)->offset = get_metering_mode_for_exif(exif_data.metering_mode);
+    get_tag(IFD_EXIF, FLASH_MODE_TAG)->offset = get_flash_mode_for_exif(exif_data.flash_mode, exif_data.flash_fired);
+    get_tag(IFD_EXIF, SSTIME_TAG)->count = get_tag(IFD_EXIF, SSTIME_ORIG_TAG)->count = strlen(cam_subsectime)+1;
 
     // Skip color matrix and calibration entries that aren't defined for the camera
     if (camera_sensor.calibration_illuminant2 == 0)
     {
-        ifd0[ILLUMINANT2_INDEX].type |= T_SKIP;
-        ifd0[COLOR_MATRIX2_INDEX].type |= T_SKIP;
+        get_tag(IFD_0, ILLUMINANT2_TAG)->type |= T_SKIP;
+        get_tag(IFD_0, COLOR_MATRIX2_TAG)->type |= T_SKIP;
     }
-    if (camera_sensor.has_calibration1 == 0)    ifd0[CALIBRATION1_INDEX].type |= T_SKIP;
-    if (camera_sensor.has_calibration2 == 0)    ifd0[CALIBRATION2_INDEX].type |= T_SKIP;
-    if (camera_sensor.has_forwardmatrix1 == 0)  ifd0[FORWARD_MATRIX1_INDEX].type |= T_SKIP;
-    if (camera_sensor.has_forwardmatrix2 == 0)  ifd0[FORWARD_MATRIX2_INDEX].type |= T_SKIP;
+    if (camera_sensor.has_calibration1 == 0)    get_tag(IFD_0, CALIBRATION1_TAG)->type |= T_SKIP;
+    if (camera_sensor.has_calibration2 == 0)    get_tag(IFD_0, CALIBRATION2_TAG)->type |= T_SKIP;
+    if (camera_sensor.has_forwardmatrix1 == 0)  get_tag(IFD_0, FORWARD_MATRIX1_TAG)->type |= T_SKIP;
+    if (camera_sensor.has_forwardmatrix2 == 0)  get_tag(IFD_0, FORWARD_MATRIX2_TAG)->type |= T_SKIP;
 
     // fixup up IFD count values, exclude skipped entries
-    for (j=0;j<ifd_count;j++)
-    {
-        ifd_list[j].count = 0;
-        for(i=0; i<ifd_list[j].entry_count; i++)
-        {
-            if ((ifd_list[j].entry[i].type & T_SKIP) == 0)  // Exclude skipped entries (e.g. GPS info if camera doesn't have GPS)
-            {
-                ifd_list[j].count++;
-            }
-        }
-    }
+    process_ifd_list(calc_ifd_count);
 
     // calculating offset of RAW data and count of entries for each IFD
-    raw_offset=TIFF_HDR_SIZE;
-
-    for (j=0;j<ifd_count;j++)
-    {
-        raw_offset+=6; // IFD header+footer
-        for(i=0; i<ifd_list[j].entry_count; i++)
-        {
-            if ((ifd_list[j].entry[i].type & T_SKIP) == 0)  // Exclude skipped entries (e.g. GPS info if camera doesn't have GPS)
-            {
-                raw_offset+=12; // IFD directory entry size
-                int size_ext=get_type_size(ifd_list[j].entry[i].type)*ifd_list[j].entry[i].count;
-                if (size_ext>4) raw_offset+=size_ext+(size_ext&1);
-            }
-        }
-    }
+    raw_offset = TIFF_HDR_SIZE;
+    process_ifd_list(calc_raw_offset);
 
     // creating buffer for writing data
-    if(minimal) {
-        raw_offset=(raw_offset/4+1)*4; // ensure 32 bit aligned
-        dng_header_buf=malloc(raw_offset);
+    if (minimal)
+    {
+        raw_offset = (raw_offset/4+1)*4; // ensure 32 bit aligned
+        dng_header_buf = malloc(raw_offset);
         thumbnail_buf = NULL;
-    } else {
-        raw_offset=(raw_offset/512+1)*512; // exlusively for CHDK fast file writing
-        dng_header_buf=malloc(raw_offset + DNG_TH_BYTES);
+    }
+    else
+    {
+        raw_offset = (raw_offset/512+1)*512; // exclusively for CHDK fast file writing
+        dng_header_buf = malloc(raw_offset + DNG_TH_BYTES);
         thumbnail_buf = dng_header_buf + raw_offset;
     }
-    dng_header_buf_size=raw_offset;
+    dng_header_buf_size = raw_offset;
     if (!dng_header_buf)
     {
         thumbnail_buf = NULL;
         return;
     }
-    dng_header_buf_offset=0;
+    dng_header_buf_offset = 0;
 
     //  writing offsets for EXIF IFD and RAW data and calculating offset for extra data
 
-    extra_offset=TIFF_HDR_SIZE;
-
-    ifd0[SUBIFDS_INDEX].offset = TIFF_HDR_SIZE + ifd_list[0].count * 12 + 6;                            // SubIFDs offset
-    ifd0[EXIF_IFD_INDEX].offset = TIFF_HDR_SIZE + (ifd_list[0].count + ifd_list[1].count) * 12 + 6 + 6; // EXIF IFD offset
+    get_tag(IFD_0, SUBIFDS_TAG)->offset = TIFF_HDR_SIZE + ifd_list[0].count * 12 + 6;                            // SubIFDs offset
+    get_tag(IFD_0, EXIF_IFD_TAG)->offset = TIFF_HDR_SIZE + (ifd_list[0].count + ifd_list[1].count) * 12 + 6 + 6; // EXIF IFD offset
     if (camera_info.props.gps)
-        ifd0[GPS_IFD_INDEX].offset = TIFF_HDR_SIZE + (ifd_list[0].count + ifd_list[1].count + ifd_list[2].count) * 12 + 6 + 6 + 6;  // GPS IFD offset
+        get_tag(IFD_0, GPS_IFD_TAG)->offset = TIFF_HDR_SIZE + (ifd_list[0].count + ifd_list[1].count + ifd_list[2].count) * 12 + 6 + 6 + 6;  // GPS IFD offset
 
-    ifd0[THUMB_DATA_INDEX].offset = raw_offset;                                     //StripOffsets for thumbnail
-    ifd1[RAW_DATA_INDEX].offset = raw_offset + DNG_TH_BYTES;    //StripOffsets for main image
+    get_tag(IFD_0, THUMB_DATA_TAG)->offset = raw_offset;                 //StripOffsets for thumbnail
+    get_tag(IFD_1, RAW_DATA_TAG)->offset = raw_offset + DNG_TH_BYTES;    //StripOffsets for main image
 
-    for (j=0;j<ifd_count;j++)
-    {
-        extra_offset += 6 + ifd_list[j].count * 12; // IFD header+footer
-    }
+    extra_offset=TIFF_HDR_SIZE;
+    process_ifd_list(calc_extra_offset);
 
     // TIFF file header
-
     add_val_to_buf(0x4949, sizeof(short));      // little endian
     add_val_to_buf(42, sizeof(short));          // An arbitrary but carefully chosen number that further identifies the file as a TIFF file.
     add_val_to_buf(TIFF_HDR_SIZE, sizeof(int)); // offset of first IFD
 
     // writing IFDs
+    process_ifd_list(add_ifd_to_buffer);
 
-    for (j=0;j<ifd_count;j++)
-    {
-        int size_ext;
-        add_val_to_buf(ifd_list[j].count, sizeof(short));
-        for(i=0; i<ifd_list[j].entry_count; i++)
-        {
-            if ((ifd_list[j].entry[i].type & T_SKIP) == 0)
-            {
-                add_val_to_buf(ifd_list[j].entry[i].tag, sizeof(short));
-                add_val_to_buf(ifd_list[j].entry[i].type & 0xFF, sizeof(short));
-                add_val_to_buf(ifd_list[j].entry[i].count, sizeof(int));
-                size_ext=get_type_size(ifd_list[j].entry[i].type)*ifd_list[j].entry[i].count;
-                if (size_ext<=4) 
-                {
-                    if (ifd_list[j].entry[i].type & T_PTR)
-                    {
-                        add_to_buf((void*)ifd_list[j].entry[i].offset, sizeof(int));
-                    }
-                    else
-                    {
-                        add_val_to_buf(ifd_list[j].entry[i].offset, sizeof(int));
-                    }
-                }
-                else
-                {
-                    add_val_to_buf(extra_offset, sizeof(int));
-                    extra_offset += size_ext+(size_ext&1);    
-                }
-            }
-        }
-        add_val_to_buf(0, sizeof(int));
-    }
+    // writing extra data (values for entries that don't fit into 4 bytes)
+    process_ifd_list(add_extra_data_to_buffer);
 
-    // writing extra data
-
-    for (j=0;j<ifd_count;j++)
-    {
-        int size_ext;
-        for(i=0; i<ifd_list[j].entry_count; i++)
-        {
-            if ((ifd_list[j].entry[i].type & T_SKIP) == 0)
-            {
-                size_ext=get_type_size(ifd_list[j].entry[i].type)*ifd_list[j].entry[i].count;
-                if (size_ext>4)
-                {
-                    add_to_buf((void*)ifd_list[j].entry[i].offset, size_ext);
-                    if (size_ext&1) add_val_to_buf(0, 1);
-                }
-            }
-        }
-    }
-
-    // writing zeros to tail of dng header (just for fun)
+    // writing zeros to tail of DNG header (just for fun)
     for (i=dng_header_buf_offset; i<dng_header_buf_size; i++) dng_header_buf[i]=0;
 }
 
@@ -519,10 +606,11 @@ void free_dng_header(void)
     if (dng_header_buf)
     {
         free(dng_header_buf);
-        dng_header_buf=NULL;
+        dng_header_buf = NULL;
     }
 }
 
+// Helper functions - convert camera settings to EXIF values
 unsigned short get_exp_program_for_exif(int exp_program)
 {
     switch(exp_program)
@@ -555,7 +643,7 @@ unsigned short get_flash_mode_for_exif(short mode, short fired){
     case 1: return (1<<3)|fired; // on
     case 2: return (2<<3)|fired; // off
     default: return fired;
-    };
+    }
 }
 
 unsigned short get_metering_mode_for_exif(short metering_mode)
@@ -586,6 +674,7 @@ int pow_calc( int mult, int x, int x_div, int y, int y_div)
 	return pow_calc_2( mult, x, x_div, y, y_div);
 }
 
+// Get EXIF values from camera
 void capture_data_for_exif(void)
 {
     short short_prop_val;
@@ -686,11 +775,11 @@ static int convert_dng_to_chdk_raw(char* fn)
                     for (i=0; i<camera_sensor.raw_size/BUF_SIZE; i++)
                     {
                         fread(buf, 1, BUF_SIZE, dng);
-                        reverse_bytes_order((char*)buf, BUF_SIZE);
+                        reverse_bytes_order2((char*)buf, (char*)buf, BUF_SIZE);
                         fwrite(buf, 1, BUF_SIZE, raw);
                     }
                     fread(buf, 1, camera_sensor.raw_size%BUF_SIZE, dng);
-                    reverse_bytes_order((char*)buf, camera_sensor.raw_size%BUF_SIZE);
+                    reverse_bytes_order2((char*)buf, (char*)buf, camera_sensor.raw_size%BUF_SIZE);
                     fwrite(buf, 1, camera_sensor.raw_size%BUF_SIZE, raw);
                     fclose(raw);
                     t.actime = t.modtime = time(NULL);
@@ -1006,7 +1095,7 @@ static int action_stack_BADPIX_START()
 
     action_pop_func(0);
 
-    // Notify yser
+    // Notify user
     console_clear();
     console_add_line("Wait please... ");
     console_add_line("This takes a few seconds,");
@@ -1115,7 +1204,7 @@ void reverse_bytes_task() {
                 msleep(10);
                 continue;
             }
-            reverse_bytes_order(src, chunk_size);
+            reverse_bytes_order2(src, src, chunk_size);
             src += chunk_size;
         }
         // if reverse was done on cached raw, 
