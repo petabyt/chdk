@@ -293,13 +293,26 @@ FUNC ref=1
 ASM
 FW 32
 PATCHSUB name=fwt_write
+FW 18
 ->FW
 ENDASM
 ENDFUNC
 
 FUNC ref=2
 ASM
-FW 13
+FW 11
+>>>
+//mod start
+"    LDR R3, =current_write_ignored\n"
+"    LDR R3, [R3]\n"
+"    CMP R3, #0\n"
+"    BNE loc_D\n" // jump over the next block
+//mod end
+<<<
+FW 2
+>>>
+"loc_D:\n"
+<<<
 PATCHSUB name=fwt_close
 ->FW
 ENDASM

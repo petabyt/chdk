@@ -106,7 +106,7 @@ asm volatile (
 }
 
 /*************************************************************/
-//** sub_FFACBF74_my @ 0xFFACBF74 - 0xFFACBFC8, length=22
+//** sub_FFACBF74_my @ 0xFFACBF74 - 0xFFACC028, length=46
 void __attribute__((naked,noinline)) sub_FFACBF74_my() {
 asm volatile (
 "    STMFD   SP!, {R4-R8,LR} \n"
@@ -137,12 +137,36 @@ asm volatile (
 "    MOV     R2, R8 \n"
 "    MOV     R1, R7 \n"
 "    BL      fwt_open \n"  // --> Patched. Old value = _Open.
-"    LDR     PC, =0xFFACBFCC \n"  // Continue in firmware
+"    CMN     R0, #1 \n"
+"    BNE     sub_FFACC02C \n"
+"    MOV     R0, R6 \n"
+"    BL      sub_FF837470 \n"
+"    MOV     R2, #0xF \n"
+"    MOV     R1, R6 \n"
+"    MOV     R0, SP \n"
+"    BL      sub_FFB9228C \n"
+"    LDR     R0, =0x41FF \n"
+"    MOV     R1, #0 \n"
+"    STRB    R1, [SP, #0xF] \n"
+"    STR     R0, [SP, #0x20] \n"
+"    MOV     R0, #0x10 \n"
+"    ADD     R2, SP, #0x24 \n"
+"    STMIA   R2, {R0,R1,R5} \n"
+"    ADD     R1, SP, #0x20 \n"
+"    MOV     R0, SP \n"
+"    STR     R5, [SP, #0x30] \n"
+"    STR     R5, [SP, #0x34] \n"
+"    BL      sub_FF874F9C \n"
+"    MOV     R2, R8 \n"
+"    MOV     R1, R7 \n"
+"    MOV     R0, R6 \n"
+"    BL      fwt_open \n"  // --> Patched. Old value = _Open.
+"    LDR     PC, =0xFFACC02C \n"  // Continue in firmware
 );
 }
 
 /*************************************************************/
-//** sub_FFACC0B4_my @ 0xFFACC0B4 - 0xFFACC134, length=33
+//** sub_FFACC0B4_my @ 0xFFACC0B4 - 0xFFACC17C, length=51
 void __attribute__((naked,noinline)) sub_FFACC0B4_my() {
 asm volatile (
 "    STMFD   SP!, {R4-R10,LR} \n"
@@ -170,6 +194,8 @@ asm volatile (
 "loc_FFACC0F8:\n"
 "    LDR     R9, =0xC950 \n"
 "    MOV     R4, R6 \n"
+
+"loc_FFACC100:\n"
 "    LDR     R0, [R5, #4] \n"
 "    CMP     R4, #0x1000000 \n"
 "    MOVLS   R8, R4 \n"
@@ -184,7 +210,27 @@ asm volatile (
 "    MOV     R2, R8 \n"
 "    MOV     R1, R7 \n"
 "    BL      fwt_write \n"  // --> Patched. Old value = _Write.
-"    LDR     PC, =0xFFACC138 \n"  // Continue in firmware
+"    LDR     R1, [R5, #4] \n"
+"    CMP     R8, R0 \n"
+"    ADD     R1, R1, R0 \n"
+"    STR     R1, [R5, #4] \n"
+"    BEQ     loc_FFACC160 \n"
+"    CMN     R0, #1 \n"
+"    LDRNE   R0, =0x9200015 \n"
+"    LDREQ   R0, =0x9200005 \n"
+"    STR     R0, [R5, #0x10] \n"
+"    B       loc_FFACC0DC \n"
+
+"loc_FFACC160:\n"
+"    SUB     R4, R4, R0 \n"
+"    CMP     R4, R6 \n"
+"    ADD     R7, R7, R0 \n"
+"    LDRCS   R0, =0xFFACBD8C \n"
+"    MOVCS   R1, #0x2C4 \n"
+"    BLCS    _DebugAssert \n"
+"    CMP     R4, #0 \n"
+"    BNE     loc_FFACC100 \n"
+"    LDR     PC, =0xFFACC180 \n"  // Continue in firmware
 );
 }
 
@@ -203,10 +249,17 @@ asm volatile (
 "    LDR     R6, =0x9200003 \n"
 "    TST     R1, #0x8000 \n"
 "    BEQ     loc_FFACBB5C \n"
+//mod start
+"    LDR R3, =current_write_ignored\n"
+"    LDR R3, [R3]\n"
+"    CMP R3, #0\n"
+"    BNE loc_D\n" // jump over the next block
+//mod end
 "    BL      sub_FF8746D8 \n"
 "    B       sub_FFACBB60 \n"
 
 "loc_FFACBB5C:\n"
+"loc_D:\n"
 "    BL      fwt_close \n"  // --> Patched. Old value = _Close.
 "    LDR     PC, =0xFFACBB60 \n"  // Continue in firmware
 );
