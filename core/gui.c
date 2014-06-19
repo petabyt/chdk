@@ -1361,6 +1361,9 @@ const char* gui_subj_dist_override_value_enum(int change, int arg)
             conf.subj_dist_override_value = MAX_DIST;
         else if (conf.subj_dist_override_value > MAX_DIST)
             conf.subj_dist_override_value = MIN_DIST;
+        // philmoz 19/6/2014 - if SD override is < distance from sensor to front of lens (for current zoom) then adjust SD override
+        if (conf.subj_dist_override_value < shooting_get_lens_to_focal_plane_width())
+            conf.subj_dist_override_value = shooting_get_lens_to_focal_plane_width();
         sprintf(buf, "%7d", shooting_get_subject_distance_override_value());
     }
 
