@@ -94,19 +94,32 @@
 
     #define	CAM_DNG_LENS_INFO                   { 61,10, 305,10, 28,10, 45,10 }	// See comments in camera.h
 
-    // From dcraw
-    #define CAM_COLORMATRIX1                    \
+    // From Adobe DNG converter
+    #define cam_CalibrationIlluminant1          17  // Standard Light A
+    #define CAM_COLORMATRIX1 \
+      14105, 10000, -7096, 10000,  -274, 10000, \
+      -1073, 10000,  9014, 10000,  2450, 10000, \
+         50, 10000,   536, 10000,  5097, 10000
+    #define cam_CalibrationIlluminant2          21  // D65
+    #define CAM_COLORMATRIX2 \
       13244, 10000, -5501, 10000, -1248, 10000, \
       -1508, 10000,  9858, 10000,  1935, 10000, \
        -270, 10000,  1083, 10000,  4366, 10000
-
-    #define cam_CalibrationIlluminant1          17  // Standard Light A
+    #define CAM_FORWARDMATRIX1 \
+       5403, 10000,  3396, 10000,   844, 10000, \
+        146, 10000, 10896, 10000, -1042, 10000, \
+        -98, 10000, -3426, 10000, 11775, 10000
+    #define CAM_FORWARDMATRIX2 \
+       4851, 10000,  5333, 10000,  -542, 10000, \
+        812, 10000, 11996, 10000, -2809, 10000, \
+         55, 10000, -1871, 10000, 10067, 10000
 
     // Sensor size, DNG image size & cropping
     #define CAM_RAW_ROWPIX                      3744
     #define CAM_RAW_ROWS                        2784
-    #define CAM_JPEG_WIDTH                      3684
-    #define CAM_JPEG_HEIGHT                     2760
+    #define CAM_CROP_ORIGIN_X                   20      // Override calculated JPEG Crop position (18)
+    #define CAM_JPEG_WIDTH                      3648
+    #define CAM_JPEG_HEIGHT                     2736
     #define CAM_ACTIVE_AREA_X1                  52
     #define CAM_ACTIVE_AREA_Y1                  12
     #define CAM_ACTIVE_AREA_X2                  (CAM_RAW_ROWPIX-8)

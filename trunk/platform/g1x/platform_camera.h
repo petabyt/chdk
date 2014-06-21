@@ -77,14 +77,14 @@
       7378, 10000,  -1255, 10000,  -1043, 10000, \
      -4088, 10000,  12251, 10000,   2048, 10000, \
       -876, 10000,   1946, 10000,   5805, 10000
-    #define CAM_CAMERACALIBRATION1    \
-     10102, 10000,      0, 10000,      0, 10000, \
-         0, 10000,  10000, 10000,      0, 10000, \
-         0, 10000,  00000, 10000,  10233, 10000
-    #define CAM_CAMERACALIBRATION2    \
-     10102, 10000,      0, 10000,      0, 10000, \
-         0, 10000,  10000, 10000,      0, 10000, \
-         0, 10000,  00000, 10000,  10233, 10000
+//    #define CAM_CAMERACALIBRATION1    \               // These are specific for each camera, not generic to the camera model
+//     10102, 10000,      0, 10000,      0, 10000, \
+//         0, 10000,  10000, 10000,      0, 10000, \
+//         0, 10000,  00000, 10000,  10233, 10000
+//    #define CAM_CAMERACALIBRATION2    \
+//     10102, 10000,      0, 10000,      0, 10000, \
+//         0, 10000,  10000, 10000,      0, 10000, \
+//         0, 10000,  00000, 10000,  10233, 10000
     #define CAM_FORWARDMATRIX1    \
       7310, 10000,    833, 10000,   1500, 10000, \
       2013, 10000,   8875, 10000,   -888, 10000, \
@@ -97,8 +97,9 @@
     // Sensor size, DNG image size & cropping
     #define CAM_RAW_ROWPIX                      4496    // Found @0xff190c98
     #define CAM_RAW_ROWS                        3366    // Found @0xff190ca4
-    #define CAM_JPEG_WIDTH                      4400
-    #define CAM_JPEG_HEIGHT                     3308
+    #define CAM_CROP_ORIGIN_X                   28      // Override calculated JPEG Crop position (26)
+    #define CAM_JPEG_WIDTH                      4352
+    #define CAM_JPEG_HEIGHT                     3264
     #define CAM_ACTIVE_AREA_X1                  80
     #define CAM_ACTIVE_AREA_Y1                  52
     #define CAM_ACTIVE_AREA_X2                  4484
