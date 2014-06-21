@@ -52,7 +52,8 @@ The build uses tools/gen_propset_lua.sed to generate propset6.lua from this file
 #define PROPCASE_MY_COLORS                       187        // 0 = Off, 1 = Vivid, 2 = Neutral, 3 = B/W, 4 = Sepia, 5 = Positive Film, 6 = Lighter Skin Tone, 7 = Darker Skin Tone, 8 = Vivid Red, 9 = Vivid Green, 10 = Vivid Blue, 11 = Custom Color
 #define PROPCASE_ND_FILTER_STATE                 195        // 0 = out, 1 = in
 #define PROPCASE_OPTICAL_ZOOM_POSITION           198 
-#define PROPCASE_SHOOTING                        209 
+#define PROPCASE_EXPOSURE_LOCK                   209     // Old PROPCASE_SHOOTING value - gets set when set_aelock called or AEL button pressed
+#define PROPCASE_SHOOTING                        302     // This value appears to work better - gets set to 1 when camera has focused and set exposure, returns to 0 after shot
 #define PROPCASE_EV_CORRECTION_2                 210
 #define PROPCASE_IS_FLASH_READY                  211
 #define PROPCASE_RESOLUTION                      221        // 0 = L, 1 = M1, 2 = M2, 4 = S, 7 = Low Light
