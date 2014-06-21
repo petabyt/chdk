@@ -25,7 +25,8 @@ WARNING:
 #define PROPCASE_SUBJECT_DIST1              245
 #define PROPCASE_SUBJECT_DIST2              65
 #define PROPCASE_ISO_MODE                   149
-#define PROPCASE_SHOOTING                   206
+#define PROPCASE_EXPOSURE_LOCK              206     // Old PROPCASE_SHOOTING value - gets set when set_aelock called or AEL button pressed
+#define PROPCASE_SHOOTING                   297     // This value appears to work better - gets set to 1 when camera has focused and set exposure, returns to 0 after shot
 #define PROPCASE_IS_FLASH_READY             208
 #define PROPCASE_OVEREXPOSURE               103
 #define PROPCASE_SHOOTING_MODE              49
