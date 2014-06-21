@@ -179,7 +179,7 @@ int gui_mastermind_kbd_process() {
         if (GameGo == 1)
         {
             draw_string(camera_screen.ts_button_border+167, 130 , "                       ", TEXT_COLOR);
-	        switch (kbd_get_autoclicked_key()) 
+	        switch (key) 
 	        {
 		        case KEY_SET:
 			        if(CanNext())
