@@ -1852,6 +1852,15 @@ static const char* gui_dng_version(int change, int arg)
     return modes[conf.dng_version];
 }
 
+static const char* gui_dng_crop_size(int change, int arg)
+{
+    static const char* modes[]={ "JPEG", "Active", "Full" };
+
+    gui_enum_value_change(&conf.dng_crop_size,change,sizeof(modes)/sizeof(modes[0]));
+
+    return modes[conf.dng_crop_size];
+}
+
 static void gui_menuproc_badpixel_create(int arg)
 {
     libdng->create_badpixel_bin();
@@ -1899,6 +1908,7 @@ static CMenuItem raw_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_DNG_FORMAT,                 MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.dng_raw , (int)cb_change_dng ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_DNG_EXT,                MENUITEM_BOOL,      &conf.raw_dng_ext, 0 ),
     MENU_ITEM   (0x5f,LANG_MENU_DNG_VERSION,                MENUITEM_ENUM,      gui_dng_version, 0),
+    MENU_ITEM   (0x5f,LANG_MENU_DNG_CROP_SIZE,              MENUITEM_ENUM,      gui_dng_crop_size, 0),
     MENU_ITEM   (0x2a,LANG_MENU_BADPIXEL_CREATE,            MENUITEM_PROC,      gui_menuproc_badpixel_create, 0 ),
 #if defined (DNG_EXT_FROM)
     MENU_ITEM   (0x71,LANG_MENU_DNG_VIA_USB,                MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.dng_usb_ext , (int)cb_change_dng_usb_ext ),

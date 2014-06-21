@@ -359,6 +359,7 @@ static ConfInfo conf_info[] = {
     CONF_INFO( 40, conf.bracketing_add_raw_suffix,              CONF_DEF_VALUE, i:0),			
     CONF_INFO( 41, conf.sub_batch_prefix,                       CONF_DEF_VALUE, i:RAW_PREFIX_SND), // SND_
     CONF_INFO( 42, conf.sub_batch_ext,                          CONF_DEF_VALUE, i:DEFAULT_RAW_EXT), // .CRW
+    CONF_INFO( 43, conf.dng_crop_size,                          CONF_DEF_VALUE, i:0),
 
     CONF_INFO( 50, conf.script_shoot_delay,                     CONF_DEF_VALUE, i:0),
     CONF_INFO( 51, conf.script_vars,                            CONF_INT_PTR,   i:0),

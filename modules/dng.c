@@ -186,6 +186,11 @@ dir_entry ifd0[]={
 #define RAW_DATA_TAG                0x111
 #define BADPIXEL_OPCODE_TAG         0xC740
 
+// Values are calculated based on user selected 'crop size'
+static int crop_origin[2];
+static int crop_size[2];
+static int active_area[4];
+
 dir_entry ifd1[]={
     {0xFE,   T_LONG,       1,  0},                                 // NewSubFileType: Main Image
     {0x100,  T_LONG|T_PTR, 1,  (int)&camera_sensor.raw_rowpix},    // ImageWidth
@@ -205,9 +210,9 @@ dir_entry ifd1[]={
     {0x828E, T_BYTE|T_PTR, 4,  (int)&camera_sensor.cfa_pattern},
     {0xC61A, T_LONG|T_PTR, 1,  (int)&camera_sensor.black_level},   // BlackLevel
     {0xC61D, T_LONG|T_PTR, 1,  (int)&camera_sensor.white_level},   // WhiteLevel
-    {0xC61F, T_LONG,       2,  (int)&camera_sensor.crop.origin},
-    {0xC620, T_LONG,       2,  (int)&camera_sensor.crop.size},
-    {0xC68D, T_LONG,       4,  (int)&camera_sensor.dng_active_area},
+    {0xC61F, T_LONG,       2,  (int)&crop_origin},
+    {0xC620, T_LONG,       2,  (int)&crop_size},
+    {0xC68D, T_LONG,       4,  (int)&active_area},
     {0xC740, T_UNDEFINED|T_PTR, sizeof(badpixel_opcode),  (int)&badpixel_opcode},
     {0, T_EOL, 0, 0},
 };
@@ -504,6 +509,42 @@ void create_dng_header(int ver1_1, int minimal)
             badpixel_opcode[BADPIX_CFA_INDEX] = BE(2);              // BayerPhase = 2 (top left pixel is green in a green/blue row)
             break;
         }
+    }
+
+    // Set crop origin, size and active area from user selected 'crop size'
+    switch (conf.dng_crop_size)
+    {
+        case 0:     // JPEG
+        default:
+            // Set crop origin & size
+            crop_origin[0] = camera_sensor.jpeg.x;
+            crop_origin[1] = camera_sensor.jpeg.y;
+            crop_size[0] = camera_sensor.jpeg.width;
+            crop_size[1] = camera_sensor.jpeg.height;
+            // Re-set active area (in case user has changed setting)
+            memcpy(active_area, camera_sensor.dng_active_area, sizeof(active_area));
+            break;
+        case 1:     // Active Area
+            // Set crop origin & size
+            crop_origin[0] = 0;
+            crop_origin[1] = 0;
+            crop_size[0] = camera_sensor.active_area.x2 - camera_sensor.active_area.x1;
+            crop_size[1] = camera_sensor.active_area.y2 - camera_sensor.active_area.y1;
+            // Re-set active area (in case user has changed setting)
+            memcpy(active_area, camera_sensor.dng_active_area, sizeof(active_area));
+            break;
+        case 2:     // Full sensor
+            // Set crop origin & size
+            crop_origin[0] = 0;
+            crop_origin[1] = 0;
+            crop_size[0] = camera_sensor.raw_rowpix;
+            crop_size[1] = camera_sensor.raw_rows;
+            // Re-set active area (in case user has changed setting)
+            active_area[0] = 0;
+            active_area[1] = 0;
+            active_area[2] = camera_sensor.raw_rows;
+            active_area[3] = camera_sensor.raw_rowpix;
+            break;
     }
 
     // filling EXIF fields

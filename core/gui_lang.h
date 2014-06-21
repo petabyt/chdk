@@ -320,12 +320,12 @@
 #define LANG_MENU_OPERATION_PARAM_TITLE         238
 #define LANG_MENU_OPERATION_PARAM               239
 #define LANG_MENU_OVERRIDE_TV_VALUE             240
-#define	LANG_MENU_OVERRIDE_TV_LONG_EXP          241
+#define LANG_MENU_OVERRIDE_TV_LONG_EXP          241
 #define LANG_MENU_OVERRIDE_AV_VALUE             242
-#define	LANG_MENU_OVERRIDE_ISO_VALUE            243
-#define	LANG_MENU_OVERRIDE_TV_SHORT_EXP         244
-#define	LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE      245
-#define	LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF       246
+#define LANG_MENU_OVERRIDE_ISO_VALUE            243
+#define LANG_MENU_OVERRIDE_TV_SHORT_EXP         244
+#define LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE      245
+#define LANG_MENU_OVERRIDE_SUBJ_DIST_KOEF       246
 
 #define LANG_MENU_BRACKET_IN_CONTINUOUS_TITLE   247
 #define LANG_MENU_BRACKET_IN_CONTINUOUS         248
@@ -583,12 +583,12 @@
 #define LANG_MENU_REMOTE_OPTIONS                473
 
 #define LANG_STR_TEXTBOX_SETTINGS               474
-#define LANG_MENU_VIS_CHARMAP		            475
-#define LANG_POPUP_MORE				            476
-#define LANG_POPUP_MKDIR			            477
-#define LANG_POPUP_RENAME			            478
-#define LANG_PROMPT_MKDIR			            479
-#define LANG_PROMPT_RENAME			            480
+#define LANG_MENU_VIS_CHARMAP                   475
+#define LANG_POPUP_MORE                         476
+#define LANG_POPUP_MKDIR                        477
+#define LANG_POPUP_RENAME                       478
+#define LANG_PROMPT_MKDIR                       479
+#define LANG_PROMPT_RENAME                      480
 #define LANG_POPUP_RMDIR                        481
 
 //CHDK-DE
@@ -600,7 +600,7 @@
 //-------------------------------------------------------------------
 // GPS
 #define LANG_MENU_GPS                           487
-#define LANG_MENU_GPS_NAVI_SHOW 	            488
+#define LANG_MENU_GPS_NAVI_SHOW                 488
 #define LANG_MENU_GPS_KOMPASS_SHOW              489
 #define LANG_MENU_GPS_COORDINATES_SHOW          490
 #define LANG_MENU_GPS_HEIGHT_SHOW               491
@@ -609,64 +609,64 @@
 #define LANG_MENU_GPS_TRACK_START               494
 #define LANG_MENU_GPS_TRACK_STOP                495
 #define LANG_MENU_GPS_KOMPASS_HIDE              496
-#define LANG_MENU_GPS_NAVI_HIDE					497
-#define LANG_MENU_GPS_WAIT_FOR_SIGNAL			498
-#define LANG_MENU_GPS_KOMPASS_TIME				499
-#define LANG_MENU_GPS_NAVI_TIME					500
-#define LANG_MENU_GPS_REC_PLAY_TIME				501
-#define LANG_MENU_GPS_PLAY_DARK_TIME			502
-#define LANG_MENU_GPS_VALUES					503
-#define LANG_MENU_GPS_WAIT_FOR_SIGNAL_TIME		504
-#define LANG_MENU_GPS_KOMPASS_SMOOTH			505
-#define LANG_MENU_GPS_LOGGING				    506
-#define LANG_MENU_GPS_TAGGING					507
-#define LANG_MENU_GPS_NAVIGATION				508
-#define LANG_MENU_GPS_BATT						509
-#define LANG_MENU_GPS_COUNTDOWN					510
-#define LANG_MENU_GPS_2D_3D_FIX					511
-#define LANG_MENU_GPS_COUNTDOWN_BLINK			512
-#define LANG_MENU_GPS_REC_PLAY_SET				513
-#define LANG_MENU_GPS_PLAY_DARK_SET				514
-#define LANG_MENU_GPS_REC_PLAY_SET_1			515
-#define LANG_MENU_GPS_PLAY_DARK_SET_1			516
-#define LANG_MENU_GPS_REC_PLAY_TIME_1			517
-#define LANG_MENU_GPS_PLAY_DARK_TIME_1			518
-#define LANG_MENU_GPS_SYMBOL_SHOW				519
-#define LANG_MENU_GPS_BATT_WARNING				520
-#define LANG_MENU_GPS_MARK_HOME					521
-#define LANG_MENU_GPS_NAVI_HOME					522
-#define LANG_MENU_GPS_MARK_TIMEZONE				523
-#define LANG_MENU_GPS_TRACK_SYMBOL				524
-#define LANG_MENU_GPS_NAVI_HOME_END				525
-#define LANG_MENU_GPS_TEST_TIMEZONE				526
-#define LANG_MENU_GPS_BEEP_WARNING				527
-#define LANG_MENU_GPS_ON_OFF					528
-#define LANG_MENU_GPS_t_1 						529
-#define LANG_MENU_GPS_t_2  						530
-#define LANG_MENU_GPS_t_3  						531
-#define LANG_MENU_GPS_t_4  						532
-#define LANG_MENU_GPS_t_5  						533
-#define LANG_MENU_GPS_t_6  						534
-#define LANG_MENU_GPS_t_7  						535
-#define LANG_MENU_GPS_t_8  						536
-#define LANG_MENU_GPS_t_9  						537
-#define LANG_MENU_GPS_t_10 						538
-#define LANG_MENU_GPS_t_11 						539
-#define LANG_MENU_GPS_t_12 						540
-#define LANG_MENU_GPS_t_13 						541
-#define LANG_MENU_GPS_t_14 						542
-#define LANG_MENU_GPS_t_15 						543
-#define LANG_MENU_GPS_t_16 						544
-#define LANG_MENU_GPS_t_17 						545	
+#define LANG_MENU_GPS_NAVI_HIDE                 497
+#define LANG_MENU_GPS_WAIT_FOR_SIGNAL           498
+#define LANG_MENU_GPS_KOMPASS_TIME              499
+#define LANG_MENU_GPS_NAVI_TIME                 500
+#define LANG_MENU_GPS_REC_PLAY_TIME             501
+#define LANG_MENU_GPS_PLAY_DARK_TIME            502
+#define LANG_MENU_GPS_VALUES                    503
+#define LANG_MENU_GPS_WAIT_FOR_SIGNAL_TIME      504
+#define LANG_MENU_GPS_KOMPASS_SMOOTH            505
+#define LANG_MENU_GPS_LOGGING                   506
+#define LANG_MENU_GPS_TAGGING                   507
+#define LANG_MENU_GPS_NAVIGATION                508
+#define LANG_MENU_GPS_BATT                      509
+#define LANG_MENU_GPS_COUNTDOWN                 510
+#define LANG_MENU_GPS_2D_3D_FIX                 511
+#define LANG_MENU_GPS_COUNTDOWN_BLINK           512
+#define LANG_MENU_GPS_REC_PLAY_SET              513
+#define LANG_MENU_GPS_PLAY_DARK_SET             514
+#define LANG_MENU_GPS_REC_PLAY_SET_1            515
+#define LANG_MENU_GPS_PLAY_DARK_SET_1           516
+#define LANG_MENU_GPS_REC_PLAY_TIME_1           517
+#define LANG_MENU_GPS_PLAY_DARK_TIME_1          518
+#define LANG_MENU_GPS_SYMBOL_SHOW               519
+#define LANG_MENU_GPS_BATT_WARNING              520
+#define LANG_MENU_GPS_MARK_HOME                 521
+#define LANG_MENU_GPS_NAVI_HOME                 522
+#define LANG_MENU_GPS_MARK_TIMEZONE             523
+#define LANG_MENU_GPS_TRACK_SYMBOL              524
+#define LANG_MENU_GPS_NAVI_HOME_END             525
+#define LANG_MENU_GPS_TEST_TIMEZONE             526
+#define LANG_MENU_GPS_BEEP_WARNING              527
+#define LANG_MENU_GPS_ON_OFF                    528
+#define LANG_MENU_GPS_t_1                       529
+#define LANG_MENU_GPS_t_2                       530
+#define LANG_MENU_GPS_t_3                       531
+#define LANG_MENU_GPS_t_4                       532
+#define LANG_MENU_GPS_t_5                       533
+#define LANG_MENU_GPS_t_6                       534
+#define LANG_MENU_GPS_t_7                       535
+#define LANG_MENU_GPS_t_8                       536
+#define LANG_MENU_GPS_t_9                       537
+#define LANG_MENU_GPS_t_10                      538
+#define LANG_MENU_GPS_t_11                      539
+#define LANG_MENU_GPS_t_12                      540
+#define LANG_MENU_GPS_t_13                      541
+#define LANG_MENU_GPS_t_14                      542
+#define LANG_MENU_GPS_t_15                      543
+#define LANG_MENU_GPS_t_16                      544
+#define LANG_MENU_GPS_t_17                      545
 
-#define LANG_MENU_AUTOISO_MIN_SHUTTER2   		546
-#define LANG_MENU_AUTOISO_MAX_ISO2       		547
-#define LANG_MENU_AUTOISO_OVEREXP_EV     		548
-#define LANG_MENU_AUTOISO_OVEREXP_THRES  		549
+#define LANG_MENU_AUTOISO_MIN_SHUTTER2          546
+#define LANG_MENU_AUTOISO_MAX_ISO2              547
+#define LANG_MENU_AUTOISO_OVEREXP_EV            548
+#define LANG_MENU_AUTOISO_OVEREXP_THRES         549
 
-#define LANG_MENU_GPS_t_18 						550
+#define LANG_MENU_GPS_t_18                      550
 
-#define LANG_MENU_SCRIPT_START_ENABLE			551
+#define LANG_MENU_SCRIPT_START_ENABLE           551
 #define LANG_MENU_MISC_ZOOM_ASSIST              552
 #define LANG_MENU_DNG_VERSION                   553
 #define LANG_MENU_MENU_SETTINGS                 554
@@ -686,8 +686,8 @@
 #define LANG_HELP_HIDE_OSD                      566
 #define LANG_HELP_NOT_ALT                       567
 
-#define LANG_USER_MENU_ITEM_ADDED				568
-#define LANG_USER_MENU_FULL     				569
+#define LANG_USER_MENU_ITEM_ADDED               568
+#define LANG_USER_MENU_FULL                     569
 
 #define LANG_SD_CARD                            570
 #define LANG_MENU_FONT_SETTINGS                 571
@@ -728,36 +728,38 @@
 #define LANG_MENU_USER_MENU_MODULE_ADD          597
 #define LANG_MENU_USER_MENU_REMOVE              598
 
-#define LANG_EYEFI				599
-#define LANG_MENU_EYEFI_TITLE           600
-#define LANG_MENU_EYEFI_AVAILABLE_NETWORKS    601
-#define LANG_MENU_EYEFI_CONFIGURED_NETWORKS	602
-#define LANG_FAILED				603
-#define LANG_SUCCESS			604
-#define LANG_WRONG_PASSWORD		605
-#define LANG_NETWORK_ADDED		606
-#define LANG_PROBLEM_ADDING_NETWORK	607
-#define LANG_ADD_NETWORK			608
-#define LANG_TEST_NETWORK		609
-#define LANG_PASSWORD			610
-#define LANG_ERROR_INITIALIZING_EYEFI	611
-#define LANG_NOT_ENOUGH_MEMORY	612
-#define LANG_NO_EYEFI_CARD_FOUND	613
-#define LANG_CANNOT_DELETE_NETWORK	614
-#define LANG_NETWORK_DELETED		615
-#define LANG_ARE_YOU_SURE		616
-#define LANG_EYEFI_WLAN_TURNED_ON	617
-#define LANG_EYEFI_WLAN_TURNED_OFF	618
-#define LANG_FORCE_EYEFI_WLAN_ON	619
-#define LANG_FORCE_EYEFI_WLAN_OFF	620
-#define LANG_CANNOT_FIND_NETWORK	621
-#define LANG_NO_NETWORK_FOUND	622
+#define LANG_EYEFI                              599
+#define LANG_MENU_EYEFI_TITLE                   600
+#define LANG_MENU_EYEFI_AVAILABLE_NETWORKS      601
+#define LANG_MENU_EYEFI_CONFIGURED_NETWORKS     602
+#define LANG_FAILED                             603
+#define LANG_SUCCESS                            604
+#define LANG_WRONG_PASSWORD                     605
+#define LANG_NETWORK_ADDED                      606
+#define LANG_PROBLEM_ADDING_NETWORK             607
+#define LANG_ADD_NETWORK                        608
+#define LANG_TEST_NETWORK                       609
+#define LANG_PASSWORD                           610
+#define LANG_ERROR_INITIALIZING_EYEFI           611
+#define LANG_NOT_ENOUGH_MEMORY                  612
+#define LANG_NO_EYEFI_CARD_FOUND                613
+#define LANG_CANNOT_DELETE_NETWORK              614
+#define LANG_NETWORK_DELETED                    615
+#define LANG_ARE_YOU_SURE                       616
+#define LANG_EYEFI_WLAN_TURNED_ON               617
+#define LANG_EYEFI_WLAN_TURNED_OFF              618
+#define LANG_FORCE_EYEFI_WLAN_ON                619
+#define LANG_FORCE_EYEFI_WLAN_OFF               620
+#define LANG_CANNOT_FIND_NETWORK                621
+#define LANG_NO_NETWORK_FOUND                   622
 
-#define LANG_MENU_REMOTE_INPUT_CHANNEL  623
+#define LANG_MENU_REMOTE_INPUT_CHANNEL          623
 
-#define LANG_ERROR_MISSING_MODULES  624
+#define LANG_ERROR_MISSING_MODULES              624
 
-#define GUI_LANG_ITEMS                          624
+#define LANG_MENU_DNG_CROP_SIZE                 625
+
+#define GUI_LANG_ITEMS                          625
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

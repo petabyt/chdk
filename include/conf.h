@@ -100,6 +100,7 @@ typedef struct {
     int raw_timer;
     int raw_dng_ext;
     int dng_usb_ext;
+    int dng_crop_size;  // User selectable DNG crop size - 0 = JPEG size (as defined in platform_camera.h), 1 = Active Area, 2 = Full sensor
 
     int show_osd;
     int hide_osd;

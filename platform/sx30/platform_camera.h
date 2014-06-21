@@ -73,8 +73,8 @@
     // Sensor size, DNG image size & cropping
     #define CAM_RAW_ROWPIX                      4464
     #define CAM_RAW_ROWS                        3276
-    #define CAM_JPEG_WIDTH                      4368
-    #define CAM_JPEG_HEIGHT                     3254
+    #define CAM_JPEG_WIDTH                      4320
+    #define CAM_JPEG_HEIGHT                     3240
     #define CAM_ACTIVE_AREA_X1                  24
     #define CAM_ACTIVE_AREA_Y1                  10
     #define CAM_ACTIVE_AREA_X2                  (CAM_RAW_ROWPIX-72)

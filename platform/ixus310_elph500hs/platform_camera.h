@@ -36,8 +36,8 @@
     #define CAM_UNCACHED_BIT                    0x40000000 // Found @0xff02b914
 
     // cropping
-    #define CAM_JPEG_WIDTH                      4016
-    #define CAM_JPEG_HEIGHT                     3004
+    #define CAM_JPEG_WIDTH                      4000
+    #define CAM_JPEG_HEIGHT                     3000
     #define CAM_ACTIVE_AREA_X1                  120
     #define CAM_ACTIVE_AREA_Y1                  36
     #define CAM_ACTIVE_AREA_X2                  4136
