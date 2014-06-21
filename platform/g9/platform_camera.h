@@ -44,21 +44,34 @@
     #define CAM_DNG_LENS_INFO               { 74,10, 444,10, 28,10, 48,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern                  0x02010100 // Red  Green  Green  Blue
-    // color (alternativ: http://lclevy.free.fr/cr2/)
-    #define CAM_COLORMATRIX1                              \
-    1679727, 1000000,  422803, 1000000,  803343, 1000000, \
-     220204, 1000000, 1784845, 1000000,  -63290, 1000000, \
-    -282882, 1000000, -475034, 1000000, 4502592, 1000000
 
-    #define cam_CalibrationIlluminant1      1  // Daylight
+    // From Adobe DNG converter
+    #define cam_CalibrationIlluminant1      17  // Standard Light A
+    #define CAM_COLORMATRIX1 \
+       8796, 10000,  -3770, 10000,   311, 10000, \
+      -4148, 10000,  11362, 10000,  3197, 10000, \
+       -598, 10000,    982, 10000,  5880, 10000
+    #define cam_CalibrationIlluminant2      21  // D65
+    #define CAM_COLORMATRIX2 \
+       7368, 10000,  -2141, 10000,  -598, 10000, \
+      -5621, 10000,  13254, 10000,  2625, 10000, \
+      -1418, 10000,   1696, 10000,  5743, 10000
+    #define CAM_FORWARDMATRIX1 \
+       6878, 10000,  2225, 10000,   540, 10000, \
+       2229, 10000,  8950, 10000, -1179, 10000, \
+        989, 10000, -3091, 10000, 10353, 10000
+    #define CAM_FORWARDMATRIX2 \
+       6872, 10000,  3093, 10000,  -322, 10000, \
+       2761, 10000,  9704, 10000, -2465, 10000, \
+        614, 10000, -1539, 10000,  9176, 10000
 
     // cropping
     #define CAM_JPEG_WIDTH                  4000
     #define CAM_JPEG_HEIGHT                 3000
-    #define CAM_ACTIVE_AREA_X1              52
-    #define CAM_ACTIVE_AREA_Y1              14
-    #define CAM_ACTIVE_AREA_X2              4076
-    #define CAM_ACTIVE_AREA_Y2              3030
+    #define CAM_ACTIVE_AREA_X1              48
+    #define CAM_ACTIVE_AREA_Y1              12
+    #define CAM_ACTIVE_AREA_X2              4080
+    #define CAM_ACTIVE_AREA_Y2              3036
 	
 	#define REMOTE_SYNC_STATUS_LED 	0xC022006C		// specifies an LED that turns on while camera waits for USB remote to sync
 	
