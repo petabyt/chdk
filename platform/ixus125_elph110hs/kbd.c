@@ -46,6 +46,7 @@ static KeyMap keymap[] = {
     { 0, KEY_ZOOM_OUT        ,0x00000004 }, // Found @0xff4137a4, levent 0x03
     { 0, KEY_SET             ,0x00000002 }, // Found @0xff41379c, levent 0x08
     { 0, KEY_MENU            ,0x00000001 }, // Found @0xff413794, levent 0x09
+    { 0, KEY_DISPLAY         ,0x00000040 }, // VIDEO button is used as DISPLAY button
     { 0, KEY_VIDEO           ,0x00000040 }, // Found @0xff4137bc, levent 0x1a
     { 0, KEY_RIGHT           ,0x00000200 }, // Found @0xff4137cc, levent 0x07
     { 0, KEY_UP              ,0x00000100 }, // Found @0xff4137c4, levent 0x04
