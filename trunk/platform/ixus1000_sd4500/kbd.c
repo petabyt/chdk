@@ -14,18 +14,11 @@ static long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
+static long alt_mode_key_mask = 0x00000080; // KEY_VIDEO
 
-#define KEYS_MASK0 (0x00000000)     // physw_status[0]
-//#define KEYS_MASK1 (0x000FC005)
-
-//#define KEYS_MASK1 (0x000FCF05)
-// override key and feather bits to avoid feather osd messing up chdk display in ALT mode
-//#define KEYS_MASK1 (0x000EFC8A)
-
-#define KEYS_MASK1 (0x400 | 0x20000 | 0x8000 | 0x800 | 0x1000 | 0x8 | 0x2 |0x10000 |0x80 | \
-                   0x2000 | 0x4000  | 0x80000 | 0x40000 ) // the soft press key codes
-
-#define KEYS_MASK2 (0x00002002 | 0x100)  // physw_status[2]
+#define KEYS_MASK0 (0x00000000)
+#define KEYS_MASK1 (0x000ffc8f)
+#define KEYS_MASK2 (0x00002102)
 
 #define NEW_SS (0x2000)
 #define SD_READONLY_FLAG (0x20000)
@@ -49,26 +42,27 @@ static KeyMap keymap[] = {
     { 2, KEY_SHOOT_FULL      ,0x00002002 }, // Found @0xffb8d554, levent 0x01
     { 2, KEY_SHOOT_HALF      ,0x00002000 }, // Found @0xffb8d56c, levent 0x00
     { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb8d554, levent 0x01
-//    { 2, KEY_POWER           ,0x00000008 }, // Found @0xffb8d55c, levent 0x600
+    { 2, KEY_POWER           ,0x00000008 }, // Found @0xffb8d55c, levent 0x600
     { 2, KEY_PLAYBACK        ,0x00000100 }, // Found @0xffb8d564, levent 0x601
 
     { 1, KEY_VIDEO           ,0x00000080 }, // Found @0xffb8d4e4, levent 0x12
     { 1, KEY_UP              ,0x00000400 }, // Found @0xffb8d4fc, levent 0x04
     { 1, KEY_RIGHT           ,0x00000800 }, // Found @0xffb8d504, levent 0x07
     { 1, KEY_SET             ,0x00001000 }, // Found @0xffb8d50c, levent 0x08
+    { 1, KEY_UP_SOFT         ,0x00002000 },
+    { 1, KEY_RIGHT_SOFT      ,0x00004000 },
     { 1, KEY_LEFT            ,0x00008000 }, // Found @0xffb8d524, levent 0x06
     { 1, KEY_MENU            ,0x00010000 }, // Found @0xffb8d52c, levent 0x09
     { 1, KEY_DOWN            ,0x00020000 }, // Found @0xffb8d534, levent 0x05
+    { 1, KEY_LEFT_SOFT       ,0x00040000 },
+    { 1, KEY_DOWN_SOFT       ,0x00080000 },
 
-//   { 1, KEY_UP_SOFT         , 0x00000400 },  //
-//   { 1, KEY_DOWN_SOFT        , 0x00000800 },  //
-//   { 1, KEY_LEFT_SOFT        , 0x00001000 },  //
-//   { 1, KEY_RIGHT_SOFT        , 0x00002000 },  //
-//   { 1, KEY_ZOOM_IN_FASTER  , 0x00000008 },  //
-//   { 1, KEY_ZOOM_OUT_FASTER , 0x00000002 },  //
+    // 2 bits used and 4 values per direction, like sx30
+    { 1, KEY_ZOOM_IN         , 0x00000004 }, // 0->4->c->8
+    { 1, KEY_ZOOM_IN         , 0x00000008 },
+    { 1, KEY_ZOOM_OUT        , 0x00000001 }, // 0->1->3->2
+    { 1, KEY_ZOOM_OUT        , 0x00000002 },
 
-    { 1, KEY_ZOOM_IN         , 0x00000008 },  //
-    { 1, KEY_ZOOM_OUT        , 0x00000002 },  //
     { 0, 0, 0 }
 };
 
@@ -144,7 +138,7 @@ void my_kbd_read_keys() {
 
     if (kbd_process() == 0) {
         // we read keyboard state with _kbd_read_keys()
-
+        physw_status[2] |= alt_mode_key_mask;
         jogdial_stopped=0;
     } else {
         // override keys
@@ -166,6 +160,17 @@ void my_kbd_read_keys() {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
 	}
 
+}
+
+void kbd_set_alt_mode_key_mask(long key)
+{
+        int i;
+        for (i=0; keymap[i].hackkey; ++i) {
+                if (keymap[i].hackkey == key) {
+                        alt_mode_key_mask = keymap[i].canonkey;
+                        return;
+                }
+        }
 }
 
 void kbd_key_press(long key) {

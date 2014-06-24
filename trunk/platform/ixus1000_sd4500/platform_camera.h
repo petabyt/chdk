@@ -20,7 +20,6 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-// copied from SX200 and modified
     #define CAM_PROPSET                     4
     #define CAM_DRYOS                       1
     #define CAM_DRYOS_2_3_R39               1
@@ -35,18 +34,17 @@
     #define EXMEM_BUFFER_SIZE (1024*1024*2)        // desired amount of exmem memory to allocate
 
     #define CAM_USE_ZOOM_FOR_MF             1
+    #undef  CAM_HAS_IRIS_DIAPHRAGM
+    #define CAM_HAS_ND_FILTER               1
 
-    #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
-
-    #undef CAM_DEFAULT_ALT_BUTTON
-    #define CAM_DEFAULT_ALT_BUTTON  KEY_VIDEO
-// TODO:
-//    #define CAM_ADJUSTABLE_ALT_BUTTON        1    // ALT-button can be set from menu
-//    #define CAM_ALT_BUTTON_NAMES             { "Playback", "Video"  }
-//    #define CAM_ALT_BUTTON_OPTIONS           { KEY_PLAYBACK, KEY_VIDEO }
+    #define CAM_ADJUSTABLE_ALT_BUTTON        1    // ALT-button can be set from menu
+    #define CAM_ALT_BUTTON_NAMES             { "Video", "Playback"  }
+    #define CAM_ALT_BUTTON_OPTIONS           { KEY_VIDEO, KEY_PLAYBACK }
 
     //ASM1989 TESTING VIDEO HANG
+    #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     //#define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
+
     #define CAM_HAS_VIDEO_BUTTON            1
     #define CAM_VIDEO_QUALITY_ONLY          1
     #undef  CAM_VIDEO_CONTROL
@@ -54,48 +52,34 @@
     #define CAM_HAS_JOGDIAL                 1
     #undef  CAM_USE_ZOOM_FOR_MF
 
-    //Why not??
-    //#define CAM_BRACKETING                1
-
-    #undef  CAM_UNCACHED_BIT  // shut up compiler
+    #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT    0x40000000
 
     #define CAM_DNG_LENS_INFO               { 63,10, 630,10, 34,10, 56,10 } // See comments in camera.h
 
     #define cam_CFAPattern                  0x01020001 // Green Red Blue Green (http://chdk.setepontos.com/index.php?board=29.0)
 
-   #define CAM_COLORMATRIX1                           \
-      14134, 1000000, -5576, 1000000, -1527, 1000000, \
-      -1991, 1000000, 10719, 1000000,  1273, 1000000, \
-      -1158, 1000000,  1929, 1000000,  3581, 1000000
+   #define CAM_COLORMATRIX1                     \
+      12194, 10000, -3534, 10000, -1846, 10000, \
+       -117, 10000,  5518, 10000,   374, 10000, \
+        997, 10000,  1261, 10000,  3258, 10000
 
-//Testing
-    #define cam_CalibrationIlluminant1      1        // Daylight ?!?
-    //#define cam_CalibrationIlluminant1    17 // Standard Light A
-    // cropping  //ASM1989
+    #define cam_CalibrationIlluminant1      1        // Daylight
+
     #define CAM_JPEG_WIDTH                  3648
     #define CAM_JPEG_HEIGHT                 2736
 
-    // ASM1989 for IXus 1000 needs testing
-    #define CAM_ACTIVE_AREA_X1              20 //42
-    #define CAM_ACTIVE_AREA_Y1              10 //24
-    #define CAM_ACTIVE_AREA_X2              3816-126
-    #define CAM_ACTIVE_AREA_Y2              2784-10 //2784-24
-//
-//    #define CAM_ACTIVE_AREA_X1 10 // ToDo, just guesswork
-    //#define CAM_ACTIVE_AREA_Y1 8 // ToDo, just guesswork
-//    #define CAM_ACTIVE_AREA_X2 3600 // ToDo, just guesswork
-    //#define CAM_ACTIVE_AREA_Y2 2750 // ToDo, just guesswork
-
+    // The pixels just outside this area are working but dim. The pixels
+    // outside (4, 4, 3816-92, 2784-0) are black.
+    #define CAM_ACTIVE_AREA_X1              32
+    #define CAM_ACTIVE_AREA_Y1              24
+    #define CAM_ACTIVE_AREA_X2              3816-120
+    #define CAM_ACTIVE_AREA_Y2              2784-20
 
     // camera name
     #define PARAM_CAMERA_NAME               4 // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
-    #undef  CAM_WHITE_LEVEL
-    #undef  CAM_BLACK_LEVEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
-    #define CAM_WHITE_LEVEL                 ((1<<CAM_SENSOR_BITS_PER_PIXEL)-16)
-    #define CAM_BLACK_LEVEL                 110
 
     #define CAM_EXT_TV_RANGE                1
 
@@ -154,9 +138,6 @@
 	
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 	
- 
-    // Warning : SD override for this camera with these values has not been tested
-    #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
     #define CAM_SD_OVER_IN_AFL 1
     #define CAM_SD_OVER_IN_MF  1
  
