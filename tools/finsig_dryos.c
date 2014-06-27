@@ -2911,10 +2911,15 @@ void find_platform_vals(firmware *fw)
                 int k2;
                 for (k2=e-32; k2<e; k2++)
                 {
+                    int b = 0;
                     if (isMOV(fw,k2) && isBL(fw,k2+1) && (fwRnMOV(fw,k2) == r1))
+                        b = 1;
+                    else if (isMOV(fw,k2) && isBL(fw,k2+7) && (fwRnMOV(fw,k2) == r1))
+                        b = 7;
+                    if (b != 0)
                     {
                         int r2 = fwRd(fw,k2);
-                        fadr = followBranch2(fw,idx2adr(fw,k2+1),0x01000001);
+                        fadr = followBranch2(fw,idx2adr(fw,k2+b),0x01000001);
                         k = adr2idx(fw,fadr);
                         int k3;
                         for (k3=k; k3<k+8; k3++)
