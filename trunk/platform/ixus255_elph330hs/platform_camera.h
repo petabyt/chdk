@@ -132,7 +132,7 @@
     #define CAM_SD_OVER_IN_MF  1
 
     // Seems to work
-    #define CAM_DATE_FOLDER_NAMING                  0x400
+    #define CAM_DATE_FOLDER_NAMING                  0x80
 
     #define PARAM_CAMERA_NAME               3       // parameter number for GetParameterData
 

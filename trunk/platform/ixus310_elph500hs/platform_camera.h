@@ -113,7 +113,7 @@
     -75055, 100000,  440444, 100000,  11367, 100000, \
      -5801, 100000,   71589, 100000, 118914, 100000
     
-    #define CAM_DATE_FOLDER_NAMING              1
+    #define CAM_DATE_FOLDER_NAMING              0x400
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX     1   // enable fix for camera crash at startup when opening the conf / font files
                                                     // see http://chdk.setepontos.com/index.php?topic=6179.0

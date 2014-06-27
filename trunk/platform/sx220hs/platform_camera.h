@@ -38,7 +38,7 @@
     #define CAM_DRYOS_2_3_R39                   1
     #define CAM_DRYOS_2_3_R47                   1
     #define CAM_PROPSET                         4
-    #define CAM_DATE_FOLDER_NAMING              1
+    #define CAM_DATE_FOLDER_NAMING              0x400
     #define CAM_DRYOS                           1
     #define CAM_RAW_ROWPIX                      4168
     #define CAM_RAW_ROWS                        3060 // actual size from fw 12754080pix at FF375484 -> 19131120/12*8

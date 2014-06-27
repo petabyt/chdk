@@ -48,7 +48,7 @@
     #define CAM_FEATURE_FEATHER             1
     //#define CAM_SHOW_OSD_IN_SHOOT_MENU      1         // not required anymore, workaround to force CHDK to display OSD in record mode while canon_shoot_menu_active was wrong
     #define CAM_MULTIPART                   1        // ToDo: test if its working
-    #define CAM_DATE_FOLDER_NAMING          1
+    #define CAM_DATE_FOLDER_NAMING          0x100
     //#define CAM_DRAW_EXPOSITION             1      // not required because Canon Firmware does always show it on Shutter half press
     #define CAM_ADJUSTABLE_ALT_BUTTON       1      
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Up + Left" }

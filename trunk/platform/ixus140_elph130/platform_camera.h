@@ -130,7 +130,7 @@
     #define  CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY     1 // Camera allows subject distance (focus) override only when in AF Lock mode OR in movie mode
 
     // TODO
-    #define CAM_DATE_FOLDER_NAMING                  0x400
+    #define CAM_DATE_FOLDER_NAMING                  0x80
 
     #define PARAM_CAMERA_NAME               3       // parameter number for GetParameterData
 

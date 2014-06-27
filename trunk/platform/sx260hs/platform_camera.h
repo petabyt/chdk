@@ -34,7 +34,7 @@
     #define CAM_DRYOS_2_3_R39                   1
     #define CAM_DRYOS_2_3_R47                   1
     #define CAM_PROPSET                         5
-    #define CAM_DATE_FOLDER_NAMING              1
+    #define CAM_DATE_FOLDER_NAMING              0x400
     #define CAM_DRYOS                           1
     #define CAM_RAW_ROWPIX                      4176        //ASM1989 FINSIG  Found @0xff17db40
     #define CAM_RAW_ROWS                        3060        // Found @0xff17db4c

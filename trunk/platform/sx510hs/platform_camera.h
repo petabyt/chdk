@@ -102,7 +102,7 @@
     #define CAM_USB_EVENTID                         0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
 
     // TODO
-    #define CAM_DATE_FOLDER_NAMING                  0x400
+    #define CAM_DATE_FOLDER_NAMING                  0x80
 
     #define PARAM_CAMERA_NAME                       3 // parameter number for GetParameterData
 

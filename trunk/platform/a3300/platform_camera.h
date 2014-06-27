@@ -80,7 +80,7 @@
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_CAN_MUTE_MICROPHONE         1
 
-    #define CAM_DATE_FOLDER_NAMING          1
+    #define CAM_DATE_FOLDER_NAMING          0x400
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 

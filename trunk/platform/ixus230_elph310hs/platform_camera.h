@@ -32,7 +32,7 @@
 #define CAM_ALT_BUTTON_NAMES            { "Playback", "Display", "Video" }
 #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_DISPLAY, KEY_VIDEO }
 
-#define	CAM_DATE_FOLDER_NAMING		    1
+#define	CAM_DATE_FOLDER_NAMING		    0x400
 #define CAM_HAS_ND_FILTER		        1 // verify
 #define CAM_HAS_VIDEO_BUTTON			1
 #define CAM_VIDEO_QUALITY_ONLY                  1
