@@ -142,7 +142,7 @@ long get_target_file_num() {
 }
 #if defined(CAM_DATE_FOLDER_NAMING)
 // ELPH130 camera uses date to name directory
-// TODO currently returns something like A/DCIM/101___09/ETC_0112.TMP
+// TODO GetImageFolder currently returns something like A/DCIM/101___09/ETC_0112.TMP
 // may need different params
 void get_target_dir_name(char *out)
 {
