@@ -93,6 +93,7 @@ uint32_t fwval(firmware *fw, int i);
 // Extract the source register, destination register or operand2 from the instruction at the specified index
 int fwRd(firmware *fw, int i);
 int fwRn(firmware *fw, int i);
+int fwRnMOV(firmware *fw, int i);
 int fwOp2(firmware *fw, int i);
 
 // Follow a branch (or BL) instruction to get to the called address
