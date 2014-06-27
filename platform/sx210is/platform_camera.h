@@ -27,7 +27,7 @@
 
     #define CAM_PROPSET			3
 
-    #define	CAM_DATE_FOLDER_NAMING	1
+    #define	CAM_DATE_FOLDER_NAMING	0x100
 
     #define CAM_DRYOS                   1
     #define CAM_RAW_ROWPIX              4416 // from calcs see 100C lib.c   //ASM1989 08.20.2010  4416

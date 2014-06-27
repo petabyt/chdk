@@ -24,7 +24,7 @@
     #define CAM_DRYOS                       1
     #define CAM_DRYOS_2_3_R39               1
 
-    #define CAM_DATE_FOLDER_NAMING          1
+    #define CAM_DATE_FOLDER_NAMING          0x400
 
     #define CAM_RAW_ROWPIX                  3816 // from calcs see 100C lib.c   //ASM1989
     #define CAM_RAW_ROWS                    2784 //  "     "    "    "    "  //ASM1989

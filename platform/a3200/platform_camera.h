@@ -77,7 +77,7 @@
 
     #define CAM_VIDEO_QUALITY_ONLY          1       //
 
-    #define CAM_DATE_FOLDER_NAMING          1       // ??
+    #define CAM_DATE_FOLDER_NAMING          0x400
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1       // ??
 

@@ -123,7 +123,7 @@
 
 
     // TODO
-    #define CAM_DATE_FOLDER_NAMING              0x400
+    #define CAM_DATE_FOLDER_NAMING              0x80
 
     #define PARAM_CAMERA_NAME               	3       // parameter number for GetParameterData
 

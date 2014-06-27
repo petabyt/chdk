@@ -114,7 +114,7 @@
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt    1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
     #define CAM_QUALITY_OVERRIDE             	1
-    #define CAM_DATE_FOLDER_NAMING          	1
+    #define CAM_DATE_FOLDER_NAMING          	0x400
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1
 

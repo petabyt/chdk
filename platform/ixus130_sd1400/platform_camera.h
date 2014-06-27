@@ -96,7 +96,7 @@
     #define CAM_JPEG_HEIGHT             3240
     // camera name
     #define PARAM_CAMERA_NAME           4			// parameter number for GetParameterData sd990: OK
-    #define CAM_DATE_FOLDER_NAMING      1
+    #define CAM_DATE_FOLDER_NAMING      0x100
 
    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1  
  

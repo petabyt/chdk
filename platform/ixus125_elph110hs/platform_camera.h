@@ -96,7 +96,7 @@
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  	1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
 
     #define CAM_QUALITY_OVERRIDE            	1
-    #define CAM_DATE_FOLDER_NAMING          	1
+    #define CAM_DATE_FOLDER_NAMING          	0x400
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 	1
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  	1
