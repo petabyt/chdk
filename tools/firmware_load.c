@@ -233,6 +233,13 @@ int fwRn(firmware *fw, int i)
     return (*fwadr(fw,i) & 0x000F0000) >> 16;
 }
 
+// Return the source register of the instruction at the specified index
+int fwRnMOV(firmware *fw, int i)
+{
+    // Source register - Rn
+    return (*fwadr(fw,i) & 0x0000000F);
+}
+
 // Return the operand2 value of the instruction at the specified index
 int fwOp2(firmware *fw, int i)
 {
@@ -302,6 +309,7 @@ uint32_t ALUop2(firmware *fw, int offset)
     {
         case 0x02400000:    // SUB Immed
         case 0x02800000:    // ADD Immed
+        case 0x03400000:    // CMP Immed
         case 0x03A00000:    // MOV Immed
         case 0x03C00000:    // BIC Immed
             fadr = offst;

@@ -2895,6 +2895,41 @@ void find_platform_vals(firmware *fw)
         bprintf("//#undef  CAM_UNCACHED_BIT\n");
         bprintf("//#define CAM_UNCACHED_BIT  0x%08x // Found @0x%08x\n",fw->uncached_adr,idx2adr(fw,fw->uncached_adr_idx));
     }
+
+    // Look for CAM_DATE_FOLDER_NAMING value
+    k = get_saved_sig(fw,"GetImageFolder");
+    if (k >= 0)
+    {
+        uint32_t fadr = func_names[k].val;
+        int s = adr2idx(fw,fadr);
+        int e = find_inst(fw, isLDMFD_PC, s+1, 160);
+        for (k1=s+1; k1<s+16; k1++)
+        {
+            if (isMOV(fw,k1) && (fwRnMOV(fw,k1) == 2))
+            {
+                int r1 = fwRd(fw,k1);
+                int k2;
+                for (k2=e-32; k2<e; k2++)
+                {
+                    if (isMOV(fw,k2) && isBL(fw,k2+1) && (fwRnMOV(fw,k2) == r1))
+                    {
+                        int r2 = fwRd(fw,k2);
+                        fadr = followBranch2(fw,idx2adr(fw,k2+1),0x01000001);
+                        k = adr2idx(fw,fadr);
+                        int k3;
+                        for (k3=k; k3<k+8; k3++)
+                        {
+                            if (isCMP(fw,k3) && (fwRn(fw,k3) == r2))
+                            {
+                                int val = ALUop2(fw,k3);
+                                bprintf("//#define CAM_DATE_FOLDER_NAMING 0x%03x // Found @0x%08x (pass as 3rd param to GetImageFolder)\n",val,idx2adr(fw,k3));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------
