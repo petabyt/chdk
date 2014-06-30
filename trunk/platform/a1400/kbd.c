@@ -43,6 +43,7 @@ static KeyMap keymap[] = {
     { 1, KEY_PLAYBACK        ,0x80000000 }, // Found @0xffb4724c, levent 0x101
 //    { 1, KEY_POWER           ,0x40000000 },
     { 1, KEY_HELP            ,0x20000000 },
+    { 1, KEY_DISPLAY         ,0x10000000 }, // VIDEO button is used as DISPLAY button
     { 1, KEY_VIDEO           ,0x10000000 },
     { 1, KEY_SET             ,0x08000000 },
     { 1, KEY_MENU            ,0x04000000 },
