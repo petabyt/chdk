@@ -37,7 +37,7 @@ draw.add = function( d_type, p1, p2, p3, p4, p5, p6, p7 )
         return n;
         end
     if d_type=="string" then
-        SCREEN_DRAWINGS[n]={"s",p1,p2,p3,p4,p5}--x,y,string,foreg_cl,backgr_cl
+        SCREEN_DRAWINGS[n]={"s",p1,p2,p3,p4,p5,p6,p7} --x,y,string,foreg_cl,backgr_cl,fontsizeX,fontsizeY
         return n;
         end
     return false
@@ -70,7 +70,7 @@ draw.replace = function( n, d_type, p1, p2, p3, p4, p5, p6, p7 )
         return n;
         end
     if d_type=="string" then
-        SCREEN_DRAWINGS[n]={"s",p1,p2,p3,p4,p5}--x,y,string,foreg_cl,backgr_cl
+        SCREEN_DRAWINGS[n]={"s",p1,p2,p3,p4,p5,p6,p7}--x,y,string,foreg_cl,backgr_cl,fontsizeX,fontsizeY
         return n;
         end
     return false
@@ -151,7 +151,10 @@ draw.overdraw = function()
             local s=SCREEN_DRAWINGS[i][4]
             local cf=SCREEN_DRAWINGS[i][5]
             local cb=SCREEN_DRAWINGS[i][6]
-            draw_string(x,y,s,draw.make_color(cf),draw.make_color(cb))
+            local fontx=SCREEN_DRAWINGS[i][7]
+            local fonty=SCREEN_DRAWINGS[i][8]
+            if ( fontx == nil ) then draw_string(x,y,s,draw.make_color(cf),draw.make_color(cb)) -- faster if no scaling
+            else draw_string(x,y,s,draw.make_color(cf),draw.make_color(cb),fontx,fonty) end         
             end
         end
     end
