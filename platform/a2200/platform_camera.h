@@ -40,7 +40,7 @@
 	#define CAM_ACTIVE_AREA_X2	4352
 	#define CAM_ACTIVE_AREA_Y2	3275
 	
-	#define	CAM_DNG_LENS_INFO	{ 50,10, 200,10, 27,10, 56,10 } // See comments in camera.h
+	#define	CAM_DNG_LENS_INFO	{ 50,10, 200,10, 28,10, 59,10 } // See comments in camera.h
 	
 	// Almost sure values
 	//
@@ -118,7 +118,10 @@
     #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
     #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments
     #define CAM_NEED_SET_ZOOM_DELAY          300  // Define to add a delay after setting the zoom position
-    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
+    #define CAM_USE_ALT_SET_ZOOM_POINT       1    // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
+
     #define CAM_CAN_MUTE_MICROPHONE          1
 
     #define CAM_HAS_FILEWRITETASK_HOOK       1
