@@ -40,6 +40,7 @@
     #define CAM_ADJUSTABLE_ALT_BUTTON        1    // ALT-button can be set from menu
     #define CAM_ALT_BUTTON_NAMES             { "Video", "Playback"  }
     #define CAM_ALT_BUTTON_OPTIONS           { KEY_VIDEO, KEY_PLAYBACK }
+    #undef  CAM_HAS_DISP_BUTTON
 
     //ASM1989 TESTING VIDEO HANG
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO

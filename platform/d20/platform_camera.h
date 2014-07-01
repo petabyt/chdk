@@ -102,6 +102,7 @@
     #define  CAM_ADJUSTABLE_ALT_BUTTON          1   // ALT-button can be set from menu
     #define CAM_ALT_BUTTON_NAMES                { "Playback", "VIDEO" }
     #define CAM_ALT_BUTTON_OPTIONS              { KEY_PRINT, KEY_VIDEO }
+    #undef  CAM_HAS_DISP_BUTTON
 
     #define CAM_FIRMWARE_MEMINFO                1
 
