@@ -53,7 +53,8 @@
     #define CAM_ADJUSTABLE_ALT_BUTTON       1      
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Up + Left" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_UP | KEY_LEFT }
-
+    #undef  CAM_HAS_DISP_BUTTON
+    
     #undef  DNG_BADPIXEL_VALUE_LIMIT
     #define DNG_BADPIXEL_VALUE_LIMIT        16      // Camera sensor apparently has bad pixels with value > 0 & <=16
 
