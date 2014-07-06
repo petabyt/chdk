@@ -60,7 +60,7 @@
 
     #define CAM_ZEBRA_NOBUF                 1
 
-    #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
+    #define PARAM_CAMERA_NAME               3       // parameter number for GetParameterData
 
     #define CAM_HAS_ND_FILTER               1
 
