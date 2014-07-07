@@ -2935,6 +2935,31 @@ void find_platform_vals(firmware *fw)
             }
         }
     }
+
+    // Find 'PARAM_CAMERA_NAME'
+    if (FlashParamsTable_address != 0)
+    {
+        k1 = adr2idx(fw,FlashParamsTable_address);
+        for (k=k1; k<k1+20; k++)
+        {
+            uint32_t fadr = fwval(fw,k);
+            int k2 = adr2idx(fw,fadr);
+            if (idx_valid(fw,k2))
+            {
+                uint32_t sadr = fwval(fw,k2);
+                k2 = adr2idx(fw,sadr);
+                if (idx_valid(fw,k2))
+                {
+                    char *s = adr2ptr(fw,sadr);
+                    if (((fw->cam != 0) && (strcmp(s,fw->cam) == 0)) || (strcmp(s,"Unknown") == 0))
+                    {
+                        bprintf("//#define PARAM_CAMERA_NAME %d // Found @0x%08x\n",k-k1,fadr);
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------

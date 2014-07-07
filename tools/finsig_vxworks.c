@@ -2850,6 +2850,7 @@ void find_modemap(firmware *fw)
 
 //------------------------------------------------------------------------------------------------------------
 
+/*
 int match_CAM_UNCACHED_BIT(firmware *fw, int k, int v)
 {
     if ((fw->buf[k] & 0x0FFFF000) == 0x03C00000)    // BIC
@@ -2861,6 +2862,7 @@ int match_CAM_UNCACHED_BIT(firmware *fw, int k, int v)
 
     return 0;
 }
+*/
 
 // Search for things that go in 'platform_camera.h'
 void find_platform_vals(firmware *fw)
@@ -2871,6 +2873,8 @@ void find_platform_vals(firmware *fw)
     add_blankline();
 
     bprintf("// Values below go in 'platform_camera.h':\n");
+
+/*
     bprintf("//#define CAM_DRYOS         1\n");
     if (fw->dryos_ver >= 39)
         bprintf("//#define CAM_DRYOS_2_3_R39 1 // Defined for cameras with DryOS version R39 or higher\n");
@@ -3009,6 +3013,32 @@ void find_platform_vals(firmware *fw)
 
     // Find 'CAM_UNCACHED_BIT'
     search_saved_sig(fw, "FreeUncacheableMemory", match_CAM_UNCACHED_BIT, 0, 0, 8);
+*/
+
+    // Find 'PARAM_CAMERA_NAME'
+    if (FlashParamsTable_address != 0)
+    {
+        k1 = adr2idx(fw,FlashParamsTable_address);
+        for (k=k1; k<k1+20; k++)
+        {
+            uint32_t fadr = fwval(fw,k);
+            int k2 = adr2idx(fw,fadr);
+            if (idx_valid(fw,k2))
+            {
+                uint32_t sadr = fwval(fw,k2);
+                k2 = adr2idx(fw,sadr);
+                if (idx_valid(fw,k2))
+                {
+                    char *s = adr2ptr(fw,sadr);
+                    if (((fw->cam != 0) && (strcmp(s,fw->cam) == 0)) || (strcmp(s,"Unknown") == 0))
+                    {
+                        bprintf("//#define PARAM_CAMERA_NAME %d // Found @0x%08x\n",k-k1,fadr);
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------
@@ -5063,7 +5093,7 @@ fprintf(stderr,"%s:",curr_name);
     find_stubs_min(&fw);
     find_lib_vals(&fw);
     //find_key_vals(&fw);
-    //find_platform_vals(&fw);
+    find_platform_vals(&fw);
     find_other_vals(&fw);
 
     write_output();
