@@ -62,6 +62,9 @@ NHSTUB(MakeAFScan                             ,0xffb0ecb0) //  2 79%
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x6f; }                          // Found @0xffb4915c
 
+// Values below go in 'platform_camera.h':
+//#define PARAM_CAMERA_NAME 4 // Found @0xffb4d448
+
 // Misc stuff
 // LED table init @ 0xffa36e50
 // LED #1: 0xc02200cc, offset 0x4

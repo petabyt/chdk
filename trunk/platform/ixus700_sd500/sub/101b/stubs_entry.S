@@ -76,6 +76,9 @@ NHSTUB(localtime                              ,0xffab43c0) //  1 93%
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x53; }                          // Found @0xff96b880
 
+// Values below go in 'platform_camera.h':
+//#define PARAM_CAMERA_NAME 2 // Found @0xff969180
+
 // Misc stuff
 // LED table init @ 0xffa6892c
 // LED #1: 0xc02200d8, offset 0x4

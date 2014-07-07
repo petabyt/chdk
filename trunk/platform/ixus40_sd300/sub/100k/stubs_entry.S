@@ -100,6 +100,8 @@ NHSTUB(localtime                              ,0xffabcedc) //  1 93%
 
 // Values below go in 'lib.c':
 
+// Values below go in 'platform_camera.h':
+
 // Misc stuff
 // canon_data_src: 0xffad7700, canon_data_len: 0xeb60
 

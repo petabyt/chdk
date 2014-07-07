@@ -32,6 +32,9 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe66d90) //  3 52%
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x5e; }                          // Found @0xffd4e368
 
+// Values below go in 'platform_camera.h':
+//#define PARAM_CAMERA_NAME 3 // Found @0xffd4af00
+
 // Misc stuff
 // LED table init @ 0xffc1ce80
 // LED #1: 0xc022008c, offset 0x4
