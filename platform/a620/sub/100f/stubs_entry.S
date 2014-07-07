@@ -52,6 +52,9 @@ NHSTUB(Mount_FileSystem                       ,0xffc5c140) //  1 90%
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x5e; }                          // Found @0xffd4f3bc
 
+// Values below go in 'platform_camera.h':
+//#define PARAM_CAMERA_NAME 3 // Found @0xffd4bdbc
+
 // Misc stuff
 // LED table init @ 0xffc1ce60
 // LED #1: 0xc022008c, offset 0x4

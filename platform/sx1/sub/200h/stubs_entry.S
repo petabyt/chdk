@@ -95,6 +95,7 @@ DEF(jpeg_count_str                          ,0x0005ced4) // Found @0xff9ed730
 //#define CAM_RAW_ROWS      2772 // Found @0xffaf52dc
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff8280b0
+//#define PARAM_CAMERA_NAME 4 // Found @0xffbbd71c
 
 // Misc stuff
 DEF(ctypes, 0xffb2b0c6)
