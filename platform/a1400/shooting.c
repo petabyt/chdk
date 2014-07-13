@@ -1,11 +1,6 @@
 #include "platform.h"
 
 
-//To do: copied from ixus140
-// TODO this holds and exposure count of some kind, but it only updates when rebooting or switching to play!
-#define PARAM_FILE_COUNTER      0x1
-
-
 //To do
 // http://chdk.setepontos.com/index.php?topic=2031.msg27692#msg27692
 // PROPCASE_AV (68)
@@ -113,14 +108,11 @@ long get_target_file_num() {
 }
 
 #if defined(CAM_DATE_FOLDER_NAMING)
-// A1400 camera uses date to name directory
 void get_target_dir_name(char *out)
 {
     static char buf[32];
     extern void _GetImageFolder(char*,int,int,int);
-    _GetImageFolder(buf,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
-    strncpy(out,buf,15);
-    out[15] = 0;
+    _GetImageFolder(out,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
 }
 #else
 long get_target_dir_num() 
