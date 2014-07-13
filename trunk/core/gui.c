@@ -1891,7 +1891,7 @@ static CMenuItem raw_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE,                   MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.save_raw, (int)cb_change_dng ),
     MENU_ITEM   (0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS,	MENUITEM_SUBMENU,   &raw_exceptions_submenu, 0 ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_FIRST_ONLY,             MENUITEM_BOOL,      &conf.raw_save_first_only, 0 ),
-    MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_DIR,            MENUITEM_BOOL,      &conf.raw_in_dir, 0 ),
+    MENU_ENUM2a (0x5f,LANG_MENU_RAW_SAVE_IN_DIR,            &conf.raw_in_dir,   img_folders, NUM_IMG_FOLDER_NAMES ),
     MENU_ENUM2a (0x5f,LANG_MENU_RAW_PREFIX,                 &conf.raw_prefix,   img_prefixes, NUM_IMG_PREFIXES ),
     MENU_ENUM2a (0x5f,LANG_MENU_RAW_EXTENSION,              &conf.raw_ext,      img_exts, NUM_IMG_EXTS ),
     MENU_ENUM2a (0x5f,LANG_MENU_SUB_PREFIX,                 &conf.sub_batch_prefix, img_prefixes, NUM_IMG_PREFIXES ),

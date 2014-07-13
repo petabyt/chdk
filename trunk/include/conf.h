@@ -516,8 +516,10 @@ extern void conf_setAutosave(int n);
 
 // reyalp: putting these in conf, since the conf values are lookups for them
 // prefixes and extentions available for raw images (index with conf.raw_prefix etc)
+#define NUM_IMG_FOLDER_NAMES 3  // 
 #define NUM_IMG_PREFIXES 3  // IMG_ CRW_ SND_ (could add ETC_ SDR_ AUT_ MVI_ MRK_)
 #define NUM_IMG_EXTS 5      // .JPG .CRW .CR2 .THM .WAV (could add .AVI .MRK)
+extern const char* img_folders[NUM_IMG_FOLDER_NAMES];
 extern const char* img_prefixes[NUM_IMG_PREFIXES];
 extern const char* img_exts[NUM_IMG_EXTS];
 
