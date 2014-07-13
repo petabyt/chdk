@@ -141,16 +141,10 @@ long get_target_file_num() {
     return get_exposure_counter();
 }
 #if defined(CAM_DATE_FOLDER_NAMING)
-// ELPH130 camera uses date to name directory
-// TODO GetImageFolder currently returns something like A/DCIM/101___09/ETC_0112.TMP
-// may need different params
 void get_target_dir_name(char *out)
 {
-    static char buf[32];
     extern void _GetImageFolder(char*,int,int,int);
-    _GetImageFolder(buf,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
-    strncpy(out,buf,15);
-    out[15] = 0;
+    _GetImageFolder(out,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
 }
 #else
 long get_target_dir_num() 
