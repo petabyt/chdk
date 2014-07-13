@@ -22,6 +22,7 @@ Conf conf = {CONF_VERSION};
 
 // reyalp: putting these in conf, since the conf values are lookups for them
 // prefixes and extentions available for raw images (index with conf.raw_prefix etc)
+const char* img_folders[NUM_IMG_FOLDER_NAMES]={ "A/DCIM", "withJPG", "A/RAW" };
 const char* img_prefixes[NUM_IMG_PREFIXES]={ "IMG_", "CRW_", "SND_" /*, "AUT_", "ETC_","SDR_", "MVI_", "MRK_"*/};
 const char* img_exts[NUM_IMG_EXTS]={ ".JPG", ".CRW", ".CR2", ".THM", ".WAV"/*, ".AVI", ".MRK"*/};
 
@@ -337,7 +338,7 @@ static ConfInfo conf_info[] = {
     CONF_INFO(  3, conf.nd_filter_state,                        CONF_DEF_VALUE, i:0),
 
     CONF_INFO( 20, conf.save_raw,                               CONF_DEF_VALUE, i:0),
-    CONF_INFO( 21, conf.raw_in_dir,                             CONF_DEF_VALUE, i:0),
+    CONF_INFO( 21, conf.raw_in_dir,                             CONF_DEF_VALUE, i:1),
     CONF_INFO( 22, conf.raw_prefix,                             CONF_DEF_VALUE, i:RAW_PREFIX_CRW),
     CONF_INFO( 23, conf.raw_ext,                                CONF_DEF_VALUE, i:DEFAULT_RAW_EXT),
     CONF_INFO( 24, conf.raw_save_first_only,                    CONF_DEF_VALUE, i:0),

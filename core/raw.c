@@ -15,7 +15,12 @@
 #include "script_api.h" // for script hook
 
 //-------------------------------------------------------------------
-#define RAW_TARGET_DIRECTORY    "A/DCIM/%03dCANON"
+#ifdef CAM_DATE_FOLDER_NAMING
+  #define RAW_TARGET_DIRECTORY    "A/DCIM/101___01"
+#else
+  #define RAW_TARGET_DIRECTORY    "A/DCIM/100CANON"
+#endif
+
 //#define RAW_TMP_FILENAME        "HDK_RAW.TMP"
 #define RAW_TARGET_FILENAME     "%s%04d%s"
 #define RAW_BRACKETING_FILENAME "%s%04d_%02d%s" 
@@ -76,16 +81,26 @@ static int raw_br_counter;  // bracketing counter for raw suffix
 int raw_createfile(void)
 {
     int fd;
-    char dir[32];
+    char dir[32], rdir[32];
 
     raw_create_time = time(NULL);
-
-    mkdir_if_not_exist("A/DCIM");
-    if (conf.raw_in_dir)
-        get_target_dir_name(dir);
-    else
-        sprintf(dir, RAW_TARGET_DIRECTORY, 100);
-
+    
+    switch ( conf.raw_in_dir ) {
+        case 2 :
+            strcpy(dir,"A/RAW");
+            mkdir_if_not_exist(dir);
+            get_target_dir_name(rdir);
+            strcat(dir,&rdir[6]) ;
+            break ;
+        case 1 :
+            mkdir_if_not_exist("A/DCIM");
+            get_target_dir_name(dir);
+            break ;
+        default :
+            mkdir_if_not_exist("A/DCIM");        
+            sprintf(dir, RAW_TARGET_DIRECTORY);
+            break ;
+    }
     mkdir_if_not_exist(dir);
 
     sprintf(fn, "%s/", dir);
