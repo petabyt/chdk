@@ -4,11 +4,10 @@
 // Camera info:
 //   Firmware Ver GM1.00I   // Found @ 0xff81a738, "GM1.00I" @ 0xff81a745
 //   Firmware build timestamp: Nov  1 2006 12:00:20
-//   Possible corrupt firmware dump - file size too small for start address 0xff810000
-//     file size = 3.68MB, should be 7.94MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon PowerShot G7
 
 // Values for makefile.inc
+//   PLATFORMID = 12581 (0x3125) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000a7910
 

@@ -5,15 +5,15 @@
 //   DRYOS R23 (DRYOS version 2.3, release #0023)
 //   Firmware Ver GM1.00D   // Found @ 0xff86c370, "GM1.00D" @ 0xff86c37d
 //   Firmware build timestamp: Jan 24 2008 18:26:41
-//   Possible corrupt firmware dump - file size too small for start address 0xff810000
-//     file size = 3.10MB, should be 7.94MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon DIGITAL IXUS 90 IS
 
 // Values for makefile.inc
 //   PLATFORMOSVER = 23
-//   PLATFORMID = ?           // Not found @ 0xfffe0130
+//   PLATFORMID = 12660 (0x3174) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000cbc48
+//   KEYSYS = d3enc              // Found @ 0xffff33e0
+//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff33c0
 //   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffa2d9c4
 //   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffa2d984
 
@@ -38,6 +38,10 @@ DEF(canon_shoot_menu_active                 ,0x00009fcd) // Found @0xff96c438
 DEF(playrec_mode                            ,0x0000555c) // Found @0xff8613c4
 DEF(zoom_status                             ,0x0000d474) // Found @0xffa3f458
 DEF(some_flag_for_af_scan                   ,0x0000d1f8) // Found @0xffa2a328
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 3 int value(s), the first is the zoom focus length.
+// there are 7 entries in the table - set NUM_FL to 7
+DEF(focus_len_table                         ,0xfffe297c) // Found @0xfffe297c
 DEF(zoom_busy                               ,0x00008a88) // Found @0xff932810
 DEF(focus_busy                              ,0x00008994) // Found @0xff92e3bc
 //DEF(recreview_hold                          ,0x000061a4) // Found @0xff87ee14, ** != ** stubs_min = 0x00009da4 (0x9CF8+0xAC)

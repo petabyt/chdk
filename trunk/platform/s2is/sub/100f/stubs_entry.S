@@ -4,11 +4,10 @@
 // Camera info:
 //   Firmware Ver GM1.00F   // Found @ 0xff81ada0, "GM1.00F" @ 0xff81adad
 //   Firmware build timestamp: Jul 11 2005 16:09:30
-//   Possible corrupt firmware dump - file size too small for start address 0xff810000
-//     file size = 3.03MB, should be 7.94MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon PowerShot S2 IS
 
 // Values for makefile.inc
+//   PLATFORMID = 12528 (0x30f0) // Found @ 0xffd70130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0006ef50
 
