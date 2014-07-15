@@ -4,11 +4,10 @@
 // Camera info:
 //   Firmware Ver GM1.01B   // Found @ 0xff8180ac, "GM1.01B" @ 0xff8180b9
 //   Firmware build timestamp: Mar 23 2007 11:29:53
-//   Possible corrupt firmware dump - file size too small for start address 0xff810000
-//     file size = 4.00MB, should be 7.94MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon PowerShot TX1
 
 // Values for makefile.inc
+//   PLATFORMID = 12544 (0x3100) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000b84d0
 
