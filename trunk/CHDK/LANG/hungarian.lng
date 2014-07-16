@@ -30,7 +30,7 @@
 
  14 "Mentés RAW-ba"
  16 "Csak a sorozat elsö képe RAW"
- 17 "RAW fájl a JPEG-ek mellett"
+ 17 "RAW fájlok könyvtára"
  18 "RAW fájl elötag"
  19 "RAW fájl kiterjesztés"
 
@@ -341,7 +341,7 @@
  255 "Sorozat típusa"
 
  256 "Autostart"
- 257 "Távvezérlés (USB távkioldó)"
+ 257 "Távvezérlés (távkioldó)"
 
  258 "A Lua rendszerhívások engedélyezése\nlehetövé teszi, hogy egy szkript\nesetleg kárt tegyen a gépben.\n\nBiztosan engedélyezed?"
  259 "Lua rendszerhívások engedélyezése"
@@ -760,3 +760,8 @@
 620 "EyeFi WLAN kikapcsolás (kényszerít)"
 621 "A hálózat nem található"
 622 "Nem található hálózat"
+
+623 "Távvezérlés bemenet"
+624 "HIBA: HIÁNYOZNAK A MODULOK"
+
+625 "DNG látható terület"
