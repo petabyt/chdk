@@ -1217,7 +1217,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
     // Find DATA section info
     if (os_type == OS_DRYOS)
     {
-        for (i=dx; i<100; i++)
+        for (i=dx; i<(100 + fw->main_offs); i++)
         {
             if (isLDR_PC(fw,i) && isLDR_PC(fw,i+1) && (isLDR_PC(fw,i+2)))
             {
