@@ -19,7 +19,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DebugAssert                          ,0xff81bcf0) //107        *** != 0xff81bcf8
 //NHSTUB(PutInNdFilter                        ,0xffa2ac20) //102        *** != 0xffa838f8
 //NHSTUB(PutOutNdFilter                       ,0xffa2ac44) //102        *** != 0xffa8392c
 
@@ -117,6 +116,7 @@ DEF(_nrflag,0x91a4) // Found @ ff93db9c (0x91a4)
 NHSTUB(AllocateUncacheableMemory              ,0xff82856c) //112
 NHSTUB(Close                                  ,0xff823d90) //120
 NHSTUB(CreateTask                             ,0xff81b818) //120
+NHSTUB(DebugAssert                            ,0xff81bcf0) //107
 NHSTUB(DeleteDirectory_Fut                    ,0xff823720) //116
 NHSTUB(DeleteFile_Fut                         ,0xff82363c) //112
 NHSTUB(DoAELock                               ,0xff825f78) //120

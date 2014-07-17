@@ -42,7 +42,7 @@
 0xff81bc5c,WaitForAnyEventFlagStrictly
 0xff81bc88,WaitForAllEventFlagStrictly
 0xff81bcb4,AcquireRecursiveLockStrictly
-0xff81bcf8,DebugAssert,(stubs_entry_2.s)
+0xff81bcf0,DebugAssert
 0xff81c3f8,RotateConsoleZOder_FW
 0xff81c608,CPrintf_FW
 0xff81c664,CPutChar_FW

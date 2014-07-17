@@ -28,7 +28,7 @@ asm volatile (
 "    BEQ     loc_FF85E07C \n"
 "    LDR     R1, =0x48E \n"
 "    LDR     R0, =0xFF85DD14 \n"
-"    BL      sub_FF81BCF0 /*_DebugAssert*/ \n"
+"    BL      _DebugAssert \n"
 "    BL      _ExitTask \n"
 "    LDMFD   SP!, {R3-R9,PC} \n"
 
@@ -237,7 +237,7 @@ asm volatile (
 "loc_FF85E29C:\n"
 "    LDR     R1, =0x58E \n"
 "    LDR     R0, =0xFF85DD14 \n"
-"    BL      sub_FF81BCF0 /*_DebugAssert*/ \n"
+"    BL      _DebugAssert \n"
 
 "loc_FF85E2A8:\n"
 "    LDR     R0, [SP] \n"
@@ -249,7 +249,7 @@ asm volatile (
 "    CMP     R0, #0 \n"
 "    LDREQ   R1, =0x10D \n"
 "    LDREQ   R0, =0xFF85DD14 \n"
-"    BLEQ    sub_FF81BCF0 /*_DebugAssert*/ \n"
+"    BLEQ    _DebugAssert \n"
 "    STR     R7, [R4, #8] \n"
 "    B       loc_FF85E050 \n"
 );
@@ -272,7 +272,7 @@ asm volatile (
 "    TST     R0, #1 \n"
 "    MOVNE   R1, #0x218 \n"
 "    LDRNE   R0, =0xFF93DD04 \n"
-"    BLNE    sub_FF81BCF0 /*_DebugAssert*/ \n"
+"    BLNE    _DebugAssert \n"
 "    LDR     R8, =0x19F70 \n"
 "    LDR     R5, =0x19EBC \n"
 "    LDRSH   R1, [R8, #0xE] \n"
@@ -434,7 +434,7 @@ asm volatile (
 
 "loc_FF8B69AC:\n"
 "    LDR     R0, =0xFF8B399C \n"
-"    BL      sub_FF81BCF0 /*_DebugAssert*/ \n"
+"    BL      _DebugAssert \n"
 "    B       loc_FF8B6954 \n"
 
 "loc_FF8B69B8:\n"
@@ -855,14 +855,14 @@ asm volatile (
 "    CMP     R0, #1 \n"
 "    LDRNE   R1, =0x16D \n"
 "    LDRNE   R0, =0xFF895700 \n"
-"    BLNE    sub_FF81BCF0 /*_DebugAssert*/ \n"
+"    BLNE    _DebugAssert \n"
 "    CMN     R4, #0xC00 \n"
 "    LDREQSH R4, [R5, #2] \n"
 "    CMN     R4, #0xC00 \n"
 "    LDREQ   R1, =0x173 \n"
 "    LDREQ   R0, =0xFF895700 \n"
 "    STRH    R4, [R5, #2] \n"
-"    BLEQ    sub_FF81BCF0 /*_DebugAssert*/ \n"
+"    BLEQ    _DebugAssert \n"
 "    MOV     R0, R4 \n"
 "    BL      apex2us \n"  // --> Patched. Old value = _apex2us.
 "    MOV     R4, R0 \n"
@@ -873,7 +873,7 @@ asm volatile (
 "    LDMNEFD SP!, {R4-R6,LR} \n"
 "    MOVNE   R1, #0x178 \n"
 "    LDRNE   R0, =0xFF895700 \n"
-"    BNE     sub_FF81BCF0 /*_DebugAssert*/ \n"
+"    BNE     _DebugAssert \n"
 "    LDMFD   SP!, {R4-R6,PC} \n"
 );
 }

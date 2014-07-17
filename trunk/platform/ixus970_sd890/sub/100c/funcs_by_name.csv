@@ -86,7 +86,7 @@
 0xff81b818,CreateTask
 0xff81b818,CreateTask_FW
 0xff81baf0,CreateTaskStrictly
-0xff81bcf8,DebugAssert,(stubs_entry_2.s)
+0xff81bcf0,DebugAssert
 0xff872b74,DeleteController_FW
 0xff823720,DeleteDirectory_Fut
 0xff8278c0,DeleteEventFlag
