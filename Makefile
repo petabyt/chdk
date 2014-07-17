@@ -60,11 +60,33 @@ endif
 # Must do this last as it builds the final .bin file
 SUBDIRS+=loader/$(PLATFORM)
 
+
+.PHONY: platformcheck
+platformcheck:
+ifndef PLATFORM
+	$(error PLATFORM has not been defined. Specify the PLATFORM to build on the command line or in localbuildconf.inc)
+endif
+ifndef PLATFORMSUB
+	$(error PLATFORMSUB has not been defined. Specify the PLATFORMSUB to build on the command line or in localbuildconf.inc)
+endif
+
+.PHONY: infoline
+infoline: platformcheck
+	@echo "**** GCC $(GCC_VERSION) : BUILDING CHDK-$(VER), #$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) FOR $(PLATFORM)-$(PLATFORMSUB)"
+
+.PHONY: version
+version: FORCE
+	echo "**** Build: $(BUILD_NUMBER)"
+
+.PHONY: FORCE
+FORCE:
+
+
 .PHONY: fir
 fir: version firsub
 
 
-firsub: all
+firsub: platformcheck all
 	mkdir -p $(topdir)bin
 	cp $(topdir)loader/$(PLATFORM)/main.bin $(topdir)bin/main.bin
     ifndef NOZERO100K
@@ -107,18 +129,7 @@ upload: fir
 	/home/vitalyb/Projects/ch/libptp2-1.1.0/src/ptpcam -u -m 0xbf01 --filename $(topdir)bin/PS.FIR
 
 
-infoline:
-	@echo "**** GCC $(GCC_VERSION) : BUILDING CHDK-$(VER), #$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) FOR $(PLATFORM)-$(PLATFORMSUB)"
-
-.PHONY: version
-version: FORCE
-	echo "**** Build: $(BUILD_NUMBER)"
-
-
-.PHONY: FORCE
-FORCE:
-
-
+.PHONY: firzip
 firzip: version firzipsub
 
 
@@ -207,18 +218,29 @@ firzipsubcomplete: infoline clean firsub
     endif
 	rm -f $(topdir)bin/DISKBOOT.BIN
 
-print-missing-dump:
+print-missing-dump: platformcheck
 	if [ ! -s $(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN ] ; then \
 		echo "missing primary for $(PLATFORM) $(PLATFORMSUB)" ; \
 	fi
 
-rebuild-stubs:
+rebuild-stubs: platformcheck
 	if [ -s $(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN ] ; then \
+		$(MAKE) -C tools finsig_dryos$(EXE) ;\
+		$(MAKE) -C tools finsig_vxworks$(EXE) ;\
 		echo "rebuild stubs for $(PLATFORM)-$(PLATFORMSUB)" ;\
+		rm -f $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/stubs_entry.S ;\
 		$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) stubs_entry.S bin_compat.h ;\
 	else \
 		echo "!!! missing primary for $(PLATFORM)-$(PLATFORMSUB)"; \
 	fi
+
+run-code-gen: platformcheck
+	$(MAKE) -C tools code_gen$(EXE)
+	$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) run-code-gen
+
+# note assumes PLATFORMOS is always in same case!
+os-camera-list-entry: platformcheck
+	echo $(PLATFORM),$(PLATFORMSUB),$(subst _,,$(STATE)),$(COPY_TO),$(SKIP_AUTOBUILD) >> camera_list_$(PLATFORMOS).csv
 
 # for batch builds, build tools for vx and dryos once, instead of once for every firmware
 alltools:
@@ -228,10 +250,6 @@ alltools:
 allmodules:
 	$(MAKE) -C modules clean all
 	$(MAKE) -C CHDK clean all
-
-# note assumes PLATFORMOS is always in same case!
-os-camera-list-entry:
-	echo $(PLATFORM),$(PLATFORMSUB),$(subst _,,$(STATE)),$(COPY_TO),$(SKIP_AUTOBUILD) >> camera_list_$(PLATFORMOS).csv
 
 # define targets to batch build all cameras & firmware versions
 # list of cameras/firmware versions is in 'camera_list.csv'
@@ -243,7 +261,7 @@ os-camera-list-entry:
 #                                 camera define the alternate firmware here. see COPY_TO comments above.
 # - skip auto build (optional) :- any value in this column will exclude the camera/firmware from the auto build
 
-batch: version
+batch: version alltools allmodules
 	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firsub $(CAMERA_LIST) -noskip
 	@echo "**** Summary of memisosizes"
 	cat $(topdir)bin/caminfo.txt
@@ -273,14 +291,14 @@ batch-print-missing-dumps:
 	sh tools/auto_build.sh $(MAKE) print-missing-dump $(CAMERA_LIST) -noskip
 
 # rebuild all the stubs_entry.S files    
-batch-rebuild-stubs: alltools
+batch-rebuild-stubs:
 	sh tools/auto_build.sh $(MAKE) rebuild-stubs $(CAMERA_LIST) -noskip
 
 # rebuild all the stubs_entry.S files    
 # parallel version, starts each camera/firmware version build in a seperate session
 # Note:- Windows only, this will use all available CPU and a fair amount of memory
 #        but will rebuild much faster on a machine with many CPU cores
-batch-rebuild-stubs-parallel: alltools
+batch-rebuild-stubs-parallel:
 	sh tools/auto_build_parallel.sh $(MAKE) rebuild-stubs $(CAMERA_LIST) -noskip
 
 batch-clean:
@@ -290,10 +308,5 @@ batch-clean:
 	$(MAKE) -C CHDK clean
 	SKIP_CORE=1 SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST) -noskip
 
-run-code-gen:
-	$(MAKE) -C tools code_gen$(EXE)
-	$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) run-code-gen
-
 batch-run-code-gen:
-	$(MAKE) -C tools code_gen$(EXE)
 	SKIP_CORE=1 SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) run-code-gen $(CAMERA_LIST) -noskip
