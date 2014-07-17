@@ -11,7 +11,7 @@
 //   PLATFORMOSVER = 39
 //   PLATFORMID = 12772 (0x31e4) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
-//   MEMISOSTART = 0x0013dd20  (*** DOES NOT MATCH MAKEFILE VALUE 0x0013dd6c***)
+//   MEMISOSTART = 0x0013dd20
 //   KEYSYS = d4                 // Found @ 0xffff35a0
 //   NEED_ENCODED_DISKBOOT = 3   // Found @ 0xffff35b0
 //   ARAM_HEAP_START = 0x34e000  // Found @ 0xff96b0fc
@@ -35,8 +35,8 @@
 DEF(physw_status                            ,0x00032444) // Found @0xff83341c
 DEF(physw_run                               ,0x00001c44) // Found @0xff83308c
 DEF(physw_sleep_delay                       ,0x00001c42) // Found @0xff83308c
-//DEF(levent_table                            ,0xffba3160) // Found @0xffba3160, ** != ** stubs_min = 0xff98ceac (0xFF98CEAC)
-//DEF(FlashParamsTable                        ,0xffbe8754) // Found @0xffbe8754, ** != ** stubs_min = 0xffb7454c (0xFFB7454C)
+DEF(levent_table                            ,0xffba3160) // Found @0xffba3160
+DEF(FlashParamsTable                        ,0xffbe8754) // Found @0xffbe8754
 DEF(movie_status                            ,0x00002c30) // Found @0xff878db0
 DEF(video_compression_rate                  ,0x00002c5c) // Found @0xff878fb8
 DEF(full_screen_refresh                     ,0x00009cec) // Found @0xffa025cc
