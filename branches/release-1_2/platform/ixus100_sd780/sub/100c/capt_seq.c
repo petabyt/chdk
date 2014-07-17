@@ -111,7 +111,6 @@ void __attribute__((naked,noinline)) sub_FF85DB34_my() {
 "                MOV     R0, R4\n"
 "                BL      sub_FF91F5BC_my\n" // SsCaptureSeq.c:0 nr setup
 //"                BL      sub_FF91F5BC\n" // SsCaptureSeq.c:0 nr setup
-"                BL      capt_seq_hook_raw_here\n"
 "                MOV     R5, R0\n"
 "                B       loc_FF85DBF4\n"
 "loc_FF85DBE4:\n"
@@ -120,6 +119,7 @@ void __attribute__((naked,noinline)) sub_FF85DB34_my() {
 "                CMP     R0, #0\n"
 "                MOVNE   R5, #0x1D\n"
 "loc_FF85DBF4:\n"
+"                BL      capt_seq_hook_raw_here\n"
 "                BL      sub_FF860908\n"
 "                BL      sub_FF860950\n"
 "                BL      sub_FF860990\n"
