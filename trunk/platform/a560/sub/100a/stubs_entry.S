@@ -4,11 +4,10 @@
 // Camera info:
 //   Firmware Ver GM1.00A   // Found @ 0xffc08048, "GM1.00A" @ 0xffc08055
 //   Firmware build timestamp: Dec 14 2006 20:14:41
-//   Possible corrupt firmware dump - file size too small for start address 0xffc00000
-//     file size = 3.14MB, should be 4.00MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon PowerShot A560
 
 // Values for makefile.inc
+//   PLATFORMID = 12621 (0x314d) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000a6090
 
