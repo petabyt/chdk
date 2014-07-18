@@ -4,11 +4,10 @@
 // Camera info:
 //   Firmware Ver GM1.00B   // Found @ 0xffc0a204, "GM1.00B" @ 0xffc0a211
 //   Firmware build timestamp: Jan 12 2006 15:31:55
-//   Possible corrupt firmware dump - file size too small for start address 0xffc00000
-//     file size = 3.03MB, should be 4.00MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon PowerShot A700
 
 // Values for makefile.inc
+//   PLATFORMID = 12567 (0x3117) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0009c090
 
