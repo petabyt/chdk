@@ -451,6 +451,7 @@
 0xffad42f4,GetLoopGain_FW
 0xffa65940,GetLoopGainAdjValue_FW
 0xffa658d0,GetLoopGainCalcData_FW
+0xffad4274,GetLoopGainCalcData_FW
 0xffa6571c,GetLPFParallelBest_FW
 0xffa58880,GetMechaDeviceComparatorHysteresis_FW
 0xffa588a8,GetMechaDeviceComparatorThreshold_FW
@@ -1438,6 +1439,7 @@
 0xff827918,TakeSemaphore
 0xff827918,TakeSemaphore_FW
 0xff827df8,TakeSemaphoreStrictly
+0x00049aec,task_AdditionAgent
 0xff8b82e0,task_AfIntSrvTask
 0xff835578,task_AFTask
 0xff84dc0c,task_ASIF
@@ -1450,9 +1452,13 @@
 0xff868c38,task_CaptSeqTask
 0xff833ca8,task_ChaceFace
 0xff814fd0,task_ClockSave
+0xffa053bc,task_CntFlashTask
 0xff884b2c,task_CommonDrivers
+0xff81b2ac,task_ConsoleSvr
 0xffa65a6c,task_CreateHeaderTask
+0xffad74a8,task_CtgTotalTask
 0xff87de18,task_CtrlSrv
+0xff9124ac,task_dccdCalcTask
 0xffa4e26c,task_DecJpgRd
 0xff8b2690,task_DetectMoveTask
 0xff9e422c,task_DetectVerticalWound
@@ -1469,6 +1475,7 @@
 0xff8ad86c,task_ExpDrvTask
 0xff88d3d0,task_FaceFrame
 0xff90c2bc,task_Fencing
+0xff91ef08,task_FileManMarkAllTask
 0xffa44cc4,task_FileScheduleTask
 0xffa45af8,task_FileWrite
 0xffa45af8,task_FileWriteTask
@@ -1491,9 +1498,12 @@
 0xff84b8d8,task_JogDial
 0xff84a5e8,task_LEDCon
 0xff85fb40,task_LensController
+0xff860614,task_LensController
+0xff81b964,task_LowConsole
 0xffa5857c,task_MechaAlarm
 0xffa58964,task_MechaShutter
 0xff917404,task_MetaCtg
+0xffa390d8,task_MetaCtgPrsTask
 0xff8f7240,task_MotionVector
 0xffa61864,task_MovEdit
 0xff864630,task_MovieRecord
@@ -1506,7 +1516,9 @@
 0xff821784,task_PhySw
 0xff83d1ac,task_PrcssFil
 0xff8e19e0,task_PreLoadTask
+0xff8de5d4,task_PTPSessionTASK
 0xffa16024,task_PTPtoFAPI_EventProcTask
+0xffa1f250,task_RAPI_Task
 0xff8e8d30,task_RapiRevr
 0xffae5d98,task_ReadFileTask
 0xffa46e70,task_ReadScheduleTask

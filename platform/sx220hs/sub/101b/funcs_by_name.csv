@@ -512,6 +512,7 @@
 0xff192340,GetLogToFile_FW
 0xff377290,GetLoopGain_FW
 0xff304964,GetLoopGainAdjValue_FW
+0xff377244,GetLoopGainCalcData_FW
 0xff304870,GetLoopGainCalcData_FW
 0xff3046dc,GetLPFParallelBest_FW
 0xff03ea78,GetMacroSupportZoomPoint_FW
@@ -1448,6 +1449,7 @@
 0xff02b16c,TakeSemaphore
 0xff02b16c,TakeSemaphore_FW
 0xff02b670,TakeSemaphoreStrictly
+0x000c4910,task_AdditionAgent
 0xff0e454c,task_AfIntSrvTask
 0xff03dbf8,task_AFTask
 0xff05c458,task_ASIF
@@ -1467,8 +1469,11 @@
 0xff006124,task_ClockSave
 0xff271914,task_CntFlashTask
 0xff095278,task_CommonDrivers
+0xff00ed68,task_ConsoleSvr
 0xff18e814,task_CreateHeaderTask
+0xff3795a8,task_CtgTotalTask
 0xff08e358,task_CtrlSrv
+0xff157a3c,task_dccdCalcTask
 0xff2dfffc,task_DecJpgRd
 0xff0d992c,task_DetectMoveTask
 0xff0df7fc,task_DevelopModule
@@ -1484,6 +1489,7 @@
 0xff0c3e54,task_ExpDrvTask
 0xff0a03e8,task_FaceFrame
 0xff14f2e8,task_Fencing
+0xff166700,task_FileManMarkAllTask
 0xff2da2a4,task_FileScheduleTask
 0xff2db3e0,task_FileWrite
 0xff2db3e0,task_FileWriteTask
@@ -1504,13 +1510,18 @@
 0xff128a7c,task_LcdConTask
 0xff0553e4,task_LEDCon
 0xff070ef4,task_LensController
+0xff071954,task_LensController
 0xff10b578,task_LiveImageTask
+0xff00f404,task_LowConsole
 0xff1363d8,task_MainTargetTask
 0xff17f73c,task_MechaAlarm
+0xff18145c,task_MechaAlarm
 0xff17fb84,task_MechaCom
 0xff2f3134,task_MechaNCTask
 0xff2ee6dc,task_MechaShutter
 0xff15bff0,task_MetaCtg
+0xff2c818c,task_MetaCtgPrsTask
+0xff2c9644,task_MetaInspiTask
 0xff1325b4,task_MotionVector
 0xff2fff7c,task_MovEdit
 0xff1882f0,task_MovieRecord
@@ -1522,6 +1533,7 @@
 0xff087f08,task_OpePlay
 0xff0244f0,task_PhySw
 0xff046260,task_PrcssFil
+0xff11a254,task_PTPSessionTASK
 0xff289fdc,task_PTPtoFAPI_EventProcTask
 0xff3a3508,task_ReadFileTask
 0xff32380c,task_ReadMultiConTask
@@ -1534,6 +1546,7 @@
 0xff18d664,task_ShutterSoundTask
 0xff0fff00,task_SsgMainTask
 0xff1000b0,task_SsgPeriodTask
+0xff076344,task_SsStartupTask
 0xff07f098,task_SsTask
 0xff00fbf4,task_Startup
 0xff02d938,task_StartupImage

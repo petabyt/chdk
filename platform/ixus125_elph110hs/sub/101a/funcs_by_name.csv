@@ -533,6 +533,7 @@
 0xff3ad220,GetLoopGain_FW
 0xff31fc78,GetLoopGainAdjValue_FW
 0xff31fb84,GetLoopGainCalcData_FW
+0xff3ad1d4,GetLoopGainCalcData_FW
 0xff31f9f0,GetLPFParallelBest_FW
 0xff31ff8c,GetMacroISAngleAndVelocityA_FW
 0xff31ffbc,GetMacroISAngleAndVelocityB_FW
@@ -1490,6 +1491,7 @@
 0x0068a990,TakeSemaphore
 0x0068a990,TakeSemaphore_FW
 0x0068aec0,TakeSemaphoreStrictly
+0x000bfd90,task_AdditionAgent
 0xff0d84bc,task_AfIntSrvTask
 0xff035820,task_AFTask
 0xff04cdb8,task_ASIF
@@ -1506,8 +1508,10 @@
 0xff0044c8,task_ClockSave
 0xff2715ec,task_CntFlashTask
 0xff084068,task_CommonDrivers
+0xff00a2a4,task_ConsoleSvr
 0xff155004,task_CorctTask
 0xff19bd3c,task_CreateHeaderTask
+0xff2e080c,task_CtgTotalTask
 0xff07ee34,task_CtrlSrv
 0xff1629c8,task_dccdCalcTask
 0xff2fe750,task_DecJpgRd
@@ -1525,6 +1529,7 @@
 0xff08e554,task_FaceFrame
 0xff139584,task_FaceScoreTask
 0xff158a6c,task_Fencing
+0xff17633c,task_FileManMarkAllTask
 0xff2fa29c,task_FileScheduleTask
 0xff2fb434,task_FileWrite
 0xff2fb434,task_FileWriteTask
@@ -1545,13 +1550,18 @@
 0xff11db8c,task_LcdConTask
 0xff0493d0,task_LEDCon
 0xff061c5c,task_LensController
+0xff062654,task_LensController
 0xff0ff728,task_LiveImageTask
+0xff00a940,task_LowConsole
 0xff06335c,task_MechaAlarm
+0xff18a078,task_MechaAlarm
 0xff18a548,task_MechaCom
 0xff18c440,task_MechaCPUTransfer
 0xff310900,task_MechaNCTask
 0xff30c2bc,task_MechaShutter
 0xff1697c0,task_MetaCtg
+0xff2ec8c8,task_MetaCtgPrsTask
+0xff2e6e7c,task_MetaInspiTask
 0xff13a1a0,task_MotionVector
 0xff31c67c,task_MovEdit
 0xff193d4c,task_MovieRecord
@@ -1564,6 +1574,7 @@
 0xff12e684,task_OhyearKiLiveAlgor
 0xff078688,task_OpePlay
 0xff01e404,task_PhySw
+0xff10a550,task_PTPSessionTASK
 0xff29958c,task_PTPtoFAPI_EventProcTask_Block
 0xff2994e8,task_PTPtoFAPI_EventProcTask_Try
 0xff2c4d60,task_Raw2Ss2YuvTask
@@ -1576,6 +1587,7 @@
 0xff199fe4,task_ShutterSoundTask
 0xff0f40a4,task_SsgMainTask
 0xff0f425c,task_SsgPeriodTask
+0xff067c04,task_SsStartupTask
 0xff0716a8,task_SsTask
 0xff00b130,task_Startup
 0xff0268c4,task_StartupImage

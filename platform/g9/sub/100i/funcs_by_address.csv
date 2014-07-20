@@ -62,7 +62,9 @@
 0xff81cb50,ExportToEventProcedure_FW
 0xff81cb5c,CreateProxyOfEventProcedure_FW
 0xff81cbb4,DeleteProxyOfEventProcedure_FW
+0xff81cd20,task_ConsoleSvr
 0xff81d348,RotateConsoleZOder_FW
+0xff81d3d8,task_LowConsole
 0xff81d558,CPrintf_FW
 0xff81d5b4,CPutChar_FW
 0xff81d5e0,GetCh_FW
@@ -300,6 +302,7 @@
 0xff84deac,RefreshAdjustmentTableMirror_FW
 0xff84df94,WRITEADJTABLETOFROM_FW
 0xff84dfb0,AddAdjDataToFRom_FW
+0xff84f1f8,task_EnterDPOFAllOrdersTask
 0xff85251c,UpdateMBROnFlash
 0xff852754,GetDrive_ClusterSize
 0xff852788,GetDrive_TotalClusters
@@ -316,6 +319,7 @@
 0xff8593dc,ShowMechaMacro_FW
 0xff8596f8,IsLensOutside_FW
 0xff85971c,task_LensController
+0xff85a1e8,task_LensController
 0xff85ada4,GetLensErrorStatus_FW
 0xff85ae24,MoveLensToFirstPoint_FW
 0xff85ae6c,MoveLensToTerminatePoint_FW
@@ -626,6 +630,7 @@
 0xff8ceb50,ReloadColorAdjustment_FW
 0xff8cf598,task_SyncPeriod
 0xff8cf620,task_SynchTask
+0xff8d20f0,task_EntiCtrl
 0xff8d26d4,task_SesnMngr
 0xff8d31f4,task_TimerUtility
 0xff8d38e8,COMFACHK_StartService_FW
@@ -635,6 +640,7 @@
 0xff8d3a78,COMFACHK_GetTransferTime_FW
 0xff8d3ad8,COMFACHK_SetSendDataSize_FW
 0xff8d897c,add_ptp_handler
+0xff8dab70,task_PTPSessionTASK
 0xff8df4a0,task_PreLoadTask
 0xff8e4264,task_RCTaskResume
 0xff8e56fc,task_TrnsCtrlTask
@@ -670,6 +676,11 @@
 0xff90a8b0,DispDev.Create_FW
 0xff90edfc,task_FolderCreateCheckTask
 0xff90f630,task_MetaCtg
+0xff917100,task_ConfirmPlayOrder
+0xff917100,task_ConfirmPrintOrder
+0xff917100,task_ConfirmTransferOrder
+0xff9171f0,task_ConfirmPlayOrder
+0xff919f74,task_FileManMarkAllTask
 0xff91d264,task_FORMAT_TASK_PROGRESS
 0xff91d364,task_FORMAT_TASK_NAME
 0xff91ddc4,task_ReadAsyncTask
@@ -981,9 +992,16 @@
 0xff9e9ff8,LiveImageTool.ChangeDzoom_FW
 0xff9ea068,j_LiveImageTool.GetDzoomPosition_FW
 0xff9ea06c,LiveImageTool.Jump_FW
+0xff9ed060,task_CnctEntiRcv
+0xff9ed190,task_CnctEntiSnd
+0xff9ede78,task_SesnDaem
+0xff9ef050,task_ReqRecev
 0xff9f0e28,task_DirectOpEventQueueMngr
 0xff9f3118,task_SelectThumbCache
+0xff9f8600,task_RAPI_Task
 0xff9faa74,task_DCPClassTask
+0xff9fb950,task_DcpTrnCtrl
+0xff9fba90,task_DcpTrnTrns
 0xffa01894,TurnOnAFLamp_FW
 0xffa018b0,TurnOffAFLamp_FW
 0xffa04514,PrePro.Unpack_FW
@@ -1287,6 +1305,7 @@
 0xffa18028,j_StopContiMovieFrame_FW
 0xffa1802c,ExecuteDigicon_FW
 0xffa180a8,ExecuteTestRecCF_FW
+0xffa1c460,task_MetaCtgPrsTask
 0xffa29e84,task_FileScheduleTask
 0xffa2acb8,task_FileWrite
 0xffa2acb8,task_FileWriteTask
@@ -1411,6 +1430,7 @@
 0xffa981f4,EF.ExStopPollingForUI_FW
 0xffa98204,EF.ExGetChangeDataFlag_FW
 0xffa98224,EF.ExClearChangeDataFlag_FW
+0xffa987d8,task_EvntExec
 0xffa9e130,SetDefaultRecParameter_FW
 0xffa9e458,SetSensitiveDefectRecParameter_FW
 0xffa9e468,SetSensitiveRecParameter_FW
@@ -1422,6 +1442,7 @@
 0xffa9eca8,StartSoundPlay_FW
 0xffa9ecf0,InitializeSoundRec_FW
 0xffa9ed24,TerminateSoundRec_FW
+0xffaa28c8,task_CtgTotalTask
 0xffaaca28,task_EffctDrv
 0xffabd620,_log10
 0xffabd790,_pow

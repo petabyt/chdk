@@ -1,3 +1,4 @@
+0x001a656c,task_AdditionAgent
 0x0068a848,RegisterInterruptHandler
 0x0068a86c,UnregisterInterruptHandler
 0x0068a884,GetSRAndDisableInterrupt
@@ -75,7 +76,9 @@
 0xf8005c90,close
 0xf8005e34,Read
 0xf8005e34,Read_FW
+0xf800bdbc,task_ConsoleSvr
 0xf800c3c8,RotateConsoleZOder_FW
+0xf800c458,task_LowConsole
 0xf800c5d8,CPrintf_FW
 0xf800c630,CPutChar_FW
 0xf800c658,GetCh_FW
@@ -121,6 +124,7 @@
 0xf8022448,EngDrvBits
 0xf8022704,DisplayFactoryMode_FW
 0xf8022710,UndisplayFactoryMode_FW
+0xf8022850,task_bomStopPTPIPTask
 0xf8022880,StopPtpipServiceForFAWLAN_FW
 0xf8022b98,SetWLANFactoryMode_FW
 0xf8022bd8,ClearWLANFactoryMode_FW
@@ -216,6 +220,7 @@
 0xf8052160,task_AFTask
 0xf80532e0,GetMacroSupportZoomPoint_FW
 0xf80547c4,task_GapMan
+0xf8057c34,task__ImageSensorTask
 0xf805ba1c,LiveImageTool.GetDzoomPosition_FW
 0xf805c31c,GetVRAMHPixelsSize
 0xf805c31c,GetVRAMHPixelsSize_FW
@@ -226,6 +231,8 @@
 0xf8063228,InitializeWLAN_FW
 0xf8063238,TerminateWLAN_FW
 0xf806334c,LeaveWLANNetwork_FW
+0xf8063ff0,task_LachesisTest
+0xf80644e0,task_fprintSNRTask
 0xf8066b30,UIFS_CancelStoreLensTimer_FW
 0xf8066d40,PB2Rec
 0xf8066d80,Rec2PB
@@ -277,6 +284,7 @@
 0xf8076d2c,_avsLoadParamData_FW
 0xf8076d68,_avsSaveAdjData_FW
 0xf8076da8,_avsChk_FW
+0xf8077138,task_Accelerometer
 0xf80779c8,GetSlantData_FW
 0xf8077b38,j_GetX_AxisAcceleration_FW
 0xf8077b3c,j_GetY_AxisAcceleration_FW
@@ -442,6 +450,7 @@
 0xf809f924,GetDISModeParameter_FW
 0xf809faec,GetFixedPWMOutA_FW
 0xf809faf8,GetFixedPWMOutB_FW
+0xf80c0450,task_SsStartupTask
 0xf80c1810,task_CaptSeq
 0xf80c1810,task_CaptSeqTask
 0xf80cbd04,SSFS_CompleteCaptModeChange_FW
@@ -642,6 +651,7 @@
 0xf8184a48,task_PTPtoFAPI_EventProcTask_Try
 0xf8184aec,task_PTPtoFAPI_EventProcTask_Block
 0xf81875d8,add_ptp_handler
+0xf8189610,task_PTPSessionTASK
 0xf818c350,task_NormalThumbCache
 0xf81907d8,task_TrnsCtrlTask
 0xf819b598,task_ComWireless
@@ -697,6 +707,9 @@
 0xf81c37d8,j_TurnOffDispForTouchPanelAdj_FW
 0xf81c4164,task_TouchCalib
 0xf81c4164,task_TouchCalibFA
+0xf81c430c,task_TouchFACheck
+0xf81c43ec,task_TouchSvcCheck
+0xf81c4490,task_TouchAquire
 0xf81c49c8,TouchPanelStartCalibration_FW
 0xf81c4a40,TouchPanelAdjustmentNextStep_FW
 0xf81c4a8c,TouchPanelAdjustmentStart_FW
@@ -827,12 +840,14 @@
 0xf822cc8c,GetZoomPiSensorLevel_FW
 0xf822ccd4,GetFocusPiSensorLevel_FW
 0xf822cd1c,GetIrisPiSensorLevel_FW
+0xf822d7f4,task_MechaAlarm
 0xf822ddd0,task_MechaCPUTransfer
 0xf822e180,GetMechaShutterMoveTime_FW
 0xf822e1a8,GetMechaShutterStatus_FW
 0xf822e468,task_TmgGen
 0xf822eab0,GetAutoPopupStrobeCurrentStatus_FW
 0xf822eb04,task_PopUpStrobe
+0xf822ed84,task_PopDownStrobe
 0xf822f110,GetAutoPopupStrobePiSectionTime_FW
 0xf822f174,PopUpStrobe_FW
 0xf822f1a0,PopDownStrobe_FW
@@ -1212,6 +1227,11 @@
 0xf83ecd08,TerminateFAExtendFile_FW
 0xf83ece9c,StartTestRecLog_FW
 0xf83eceb4,StopTestRecLog_FW
+0xf83ef66c,task_CtgTotalTask
+0xf83f5c78,task_MetaInspiTask
+0xf83fbd74,task_MetaCtgPrsTask
+0xf84042b8,task_FileManMarkAllTask
+0xf8404528,task_SetGeoTagExecution
 0xf8405194,task_FORMAT_TASK_PROGRESS
 0xf8405374,task_FORMAT_TASK_NAME
 0xf840ec68,task_FileWrite
@@ -1864,6 +1884,7 @@
 0xf851d178,SetISTuningOff_FW
 0xf851d18c,SetISGyroCompensationMode_FW
 0xf851d1a8,CalcLoopGain_FW
+0xf851d218,GetLoopGainCalcData_FW
 0xf851d250,SetLoopGain_FW
 0xf851d274,GetLoopGain_FW
 0xf851d27c,SetISLensPWMMode_FW

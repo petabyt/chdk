@@ -1,3 +1,4 @@
+0x000c955c,task_AdditionAgent
 0xff000dd4,memShow_FW
 0xff004050,strncpy
 0xff00408c,strncmp
@@ -25,7 +26,9 @@
 0xff00ed80,ExitTask
 0xff00ed80,ExitTask_FW
 0xff00edc8,DebugAssert
+0xff00eea8,task_ConsoleSvr
 0xff00f4b4,RotateConsoleZOder_FW
+0xff00f544,task_LowConsole
 0xff00f6c4,CPrintf_FW
 0xff00f71c,CPutChar_FW
 0xff00f744,GetCh_FW
@@ -252,6 +255,7 @@
 0xff053cd8,CheckAvs_FW
 0xff053d54,AVS_SetVoltage_FW
 0xff053e0c,_avsSaveAdjTableData_FW
+0xff0541bc,task_Accelerometer
 0xff054838,GetSlantData_FW
 0xff0549dc,j_GetX_AxisAcceleration_FW
 0xff0549e0,j_GetY_AxisAcceleration_FW
@@ -377,6 +381,7 @@
 0xff075618,SetCzDebugFocusMode_FW
 0xff075b6c,IsLensOutside_FW
 0xff075b90,task_LensController
+0xff07665c,task_LensController
 0xff0771a0,GetFocusStartZoomPosition_FW
 0xff077448,task_MechaAlarm
 0xff0778cc,task_ISMainTask
@@ -470,6 +475,7 @@
 0xff079b38,PT_MFOff
 0xff079b38,PT_MFOff_FW
 0xff079b48,SS.Create_FW
+0xff07b960,task_SsStartupTask
 0xff07ccdc,task_CaptSeq
 0xff07ccdc,task_CaptSeqTask
 0xff07f108,task_DvlpSeqTask
@@ -682,6 +688,7 @@
 0xff136c84,task_SyncPeriod
 0xff136d18,task_SynchTask
 0xff138ad4,task_TimerUtility
+0xff13e024,task_PTPSessionTASK
 0xff142a3c,task_NormalThumbCache
 0xff1467d0,task_TrnsCtrlTask
 0xff1515b0,LcdCon_SetLcdBackLightBrightness_FW
@@ -788,6 +795,7 @@
 0xff1941dc,SetDefaultRecParameter_FW
 0xff194508,EnableDebugLogMode_FW
 0xff19451c,DisableDebugLogMode_FW
+0xff196530,task_dccdCalcTask
 0xff19a600,GetImageFolder
 0xff19c5b4,getImageDirName
 0xff19d078,task_MetaCtg
@@ -795,6 +803,8 @@
 0xff1a5dc0,File.ClearExifInfo_FW
 0xff1a5f00,File.Delete_AllImg_FW
 0xff1a5f68,File.Create_FW
+0xff1a93bc,task_FileManMarkAllTask
+0xff1aa4f0,task_GPSLogTask
 0xff1b0930,WriteSDCard
 0xff1b6ff8,task_ImgEdt
 0xff1b7e78,task_ImgTrim
@@ -821,6 +831,7 @@
 0xff1c3748,GetZoomPiSensorLevel_FW
 0xff1c3790,GetFocusPiSensorLevel_FW
 0xff1c37d8,GetIrisPiSensorLevel_FW
+0xff1c41c4,task_MechaAlarm
 0xff1c4768,task_MechaCPUTransfer
 0xff1c4b28,GetMechaShutterMoveTime_FW
 0xff1c4b50,GetMechaShutterStatus_FW
@@ -1098,6 +1109,9 @@
 0xff32ab48,TerminateFAGeneralTest_FW
 0xff32ab50,InitializeFAExtendFile_FW
 0xff32ab60,TerminateFAExtendFile_FW
+0xff32d2b0,task_CtgTotalTask
+0xff338228,task_MetaCtgPrsTask
+0xff339734,task_MetaInspiTask
 0xff3466d8,task_FileScheduleTask
 0xff3476d8,task_FileWrite
 0xff3476d8,task_FileWriteTask
@@ -1789,6 +1803,7 @@
 0xff400d80,j_CancelLoopGainCalc_FW
 0xff400db4,ReloadISAdjustment_FW
 0xff400df0,CalcLoopGain_FW
+0xff400e5c,GetLoopGainCalcData_FW
 0xff400e90,SetLoopGain_FW
 0xff400ea8,GetLoopGain_FW
 0xff400ec4,SetISLensPWMMode_FW

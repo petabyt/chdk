@@ -1182,6 +1182,8 @@
 0x003f7634,TakeSemaphore
 0x003f7634,TakeSemaphore_FW
 0x003f7b38,TakeSemaphoreStrictly
+0xff8472c4,task__ImageSensorTask
+0x000ae6c0,task_AdditionAgent
 0xff8cbc18,task_AfIntSrvTask
 0xff84369c,task_AFTask
 0xff856878,task_AudioTsk
@@ -1196,9 +1198,11 @@
 0xff8144d8,task_ClockSave
 0xffa03f30,task_CntFlashTask
 0xff8867b8,task_CommonDrivers
+0xff8197dc,task_ConsoleSvr
 0xff928044,task_CorctTask
 0xffa3c18c,task_CorrectLiveTassenTask
 0xffa6f3dc,task_CreateHeaderTask
+0xffa436e0,task_CtgTotalTask
 0xff881804,task_CtrlSrv
 0xff93355c,task_dccdCalcTask
 0xffa554f8,task_DecJpgRd
@@ -1214,6 +1218,7 @@
 0xff8ae72c,task_ExpDrvTask
 0xff88ee84,task_FaceFrame
 0xff92af90,task_Fencing
+0xff9427d8,task_FileManMarkAllTask
 0xffa512ac,task_FileScheduleTask
 0xffa523f4,task_FileWrite
 0xffa523f4,task_FileWriteTask
@@ -1230,8 +1235,10 @@
 0xff886780,task_InitFileModules
 0xff90a400,task_LcdConTask
 0xff8558f0,task_LEDCon
+0xff86b520,task_LensController
 0xff86a954,task_LensController
 0xff8ef73c,task_LiveImageTask
+0xff819e78,task_LowConsole
 0xffa6014c,task_MechaShutter
 0xff913f10,task_MotionVector
 0xff95b3ec,task_MovieRecord
@@ -1244,6 +1251,7 @@
 0xff87bb84,task_OpePlay
 0xff82d518,task_PhySw
 0xff8f0600,task_PrcssFil
+0xff8f7e38,task_PTPSessionTASK
 0xffa16704,task_PTPtoFAPI_EventProcTask_Block
 0xffa16660,task_PTPtoFAPI_EventProcTask_Try
 0xffb0a970,task_ReadFileTask
@@ -1255,6 +1263,7 @@
 0xff960a04,task_ShutterSoundTask
 0xff8e4fb4,task_SsgMainTask
 0xff8e516c,task_SsgPeriodTask
+0xff86dc58,task_SsStartupTask
 0xff874a14,task_SsTask
 0xff81a668,task_Startup
 0xff835078,task_StartupImage

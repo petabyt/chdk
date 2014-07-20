@@ -1,3 +1,4 @@
+0x000b9eb4,task_AdditionAgent
 0xff810bd0,memShow_FW
 0xff8139c4,malloc
 0xff813a98,free
@@ -43,7 +44,9 @@
 0xff81bc88,WaitForAllEventFlagStrictly
 0xff81bcb4,AcquireRecursiveLockStrictly
 0xff81bcf0,DebugAssert
+0xff81bdd0,task_ConsoleSvr
 0xff81c3f8,RotateConsoleZOder_FW
+0xff81c488,task_LowConsole
 0xff81c608,CPrintf_FW
 0xff81c664,CPutChar_FW
 0xff81c690,GetCh_FW
@@ -266,6 +269,7 @@
 0xff8523bc,task_SD1stInit
 0xff854e1c,task_ImgPlayDrv
 0xff855fec,task_RedEyeCapt
+0xff85659c,task_LensController
 0xff85710c,task_LensController
 0xff857b4c,IsLensOutside_FW
 0xff857b70,GetLensErrorStatus_FW
@@ -480,6 +484,7 @@
 0xff8c9080,task_PrcssFil
 0xff8c9bc4,task_SyncPeriod
 0xff8c9c4c,task_SynchTask
+0xff8cb628,task_EntiCtrl
 0xff8cbc0c,task_SesnMngr
 0xff8cc72c,task_TimerUtility
 0xff8cce20,COMFACHK_StartService_FW
@@ -488,6 +493,7 @@
 0xff8ccf4c,COMFACHK_StartSendLargeData_FW
 0xff8ccfb0,COMFACHK_GetTransferTime_FW
 0xff8cd010,COMFACHK_SetSendDataSize_FW
+0xff8d3250,task_PTPSessionTASK
 0xff8d64d4,task_PreLoadTask
 0xff8dac08,task_TrnsCtrlTask
 0xff8dd608,task_RapiRevr
@@ -531,9 +537,11 @@
 0xff90196c,SetDefectRecParameter_FW
 0xff901c20,EnableDebugLogMode_FW
 0xff901c34,DisableDebugLogMode_FW
+0xff90431c,task_dccdCalcTask
 0xff9088c0,task_FolderCreateCheckTask
 0xff909108,task_MetaCtg
 0xff90f9b4,task_DPOFTask
+0xff9145cc,task_FileManMarkAllTask
 0xff918308,task_FORMAT_TASK_PROGRESS
 0xff918408,task_FORMAT_TASK_NAME
 0xff922a68,WriteSDCard
@@ -754,10 +762,17 @@
 0xff9d9304,LiveImageTool.ChangeDzoom_FW
 0xff9d9374,j_LiveImageTool.GetDzoomPosition_FW
 0xff9d9378,LiveImageTool.Jump_FW
+0xff9dbc48,task_CnctEntiRcv
+0xff9dbd78,task_CnctEntiSnd
+0xff9dca60,task_SesnDaem
+0xff9ddc38,task_ReqRecev
 0xff9dfa4c,task_DirectOpEventQueueMngr
 0xff9e0924,add_ptp_handler
 0xff9e2fc8,task_SelectThumbCache
+0xff9e8848,task_RAPI_Task
 0xff9e9244,task_DCPClassTask
+0xff9ea120,task_DcpTrnCtrl
+0xff9ea260,task_DcpTrnTrns
 0xff9f45c8,EngDrvOut_FW
 0xff9f45e4,EngDrvIn_FW
 0xff9f45ec,EngDrvRead_FW
@@ -776,6 +791,7 @@
 0xff9f9eac,StartSoundPlay_FW
 0xff9f9ef4,InitializeSoundRec_FW
 0xff9f9f28,TerminateSoundRec_FW
+0xffa02aac,task_MetaCtgPrsTask
 0xffa0e1f8,task_FileScheduleTask
 0xffa0f030,task_FileWrite
 0xffa0f030,task_FileWriteTask
@@ -975,10 +991,12 @@
 0xffa60f24,LCDMsg_SetNum_FW
 0xffa60f34,LCDMsg_SetStr_FW
 0xffa61008,LCDMsg_ChangeColor_FW
+0xffa7cd44,task_EvntExec
 0xffa844b8,MoveFocusLensToDistance
 0xffa86b8c,SetAE_ShutterSpeed
 0xffa88be8,SavePaletteData
 0xffa8a288,CreateJumptable
+0xffa8cfa0,task_CtgTotalTask
 0xffa97350,task_ReadFileTask
 0xffa99fc4,task_EffctDrv
 0xffa9b9e8,MoveDCMotorCW_FW

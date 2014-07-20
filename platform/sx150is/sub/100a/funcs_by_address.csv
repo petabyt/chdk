@@ -1,3 +1,4 @@
+0x000b4d28,task_AdditionAgent
 0xff810dcc,memShow_FW
 0xff814044,strncpy
 0xff814080,strncmp
@@ -25,7 +26,9 @@
 0xff81ed74,ExitTask
 0xff81ed74,ExitTask_FW
 0xff81edbc,DebugAssert
+0xff81ee9c,task_ConsoleSvr
 0xff81f4a8,RotateConsoleZOder_FW
+0xff81f538,task_LowConsole
 0xff81f6b8,CPrintf_FW
 0xff81f710,CPutChar_FW
 0xff81f738,GetCh_FW
@@ -192,6 +195,7 @@
 0xff84cf50,task_AFTask
 0xff84de24,GetMacroSupportZoomPoint_FW
 0xff84ef54,ReloadAFAdjustment_FW
+0xff850f60,task__ImageSensorTask
 0xff8518f4,SetMontblancVSize_FW
 0xff851908,GetMontblancVSize_FW
 0xff854688,LiveImageTool.GetDzoomPosition_FW
@@ -318,6 +322,7 @@
 0xff87b460,task_RedEyeCapt
 0xff87b940,IsLensOutside_FW
 0xff87b964,task_LensController
+0xff87c344,task_LensController
 0xff87ce08,GetFocusStartZoomPosition_FW
 0xff87d0e0,task_MechaAlarm
 0xff87d560,task_ISMainTask
@@ -411,6 +416,7 @@
 0xff87f6e0,PT_MFOff
 0xff87f6e0,PT_MFOff_FW
 0xff87f6f0,SS.Create_FW
+0xff880cb4,task_SsStartupTask
 0xff881eb4,task_CaptSeq
 0xff881eb4,task_CaptSeqTask
 0xff8836f8,task_DvlpSeqTask
@@ -620,6 +626,7 @@
 0xff914908,task_SyncPeriod
 0xff914990,task_SynchTask
 0xff916c34,task_TimerUtility
+0xff91ca68,task_PTPSessionTASK
 0xff9211b0,task_NormalThumbCache
 0xff924e78,task_TrnsCtrlTask
 0xff92abd8,LcdCon_SetLcdBackLightBrightness_FW
@@ -698,12 +705,14 @@
 0xff952dc4,SetDefaultRecParameter_FW
 0xff9530f0,EnableDebugLogMode_FW
 0xff953104,DisableDebugLogMode_FW
+0xff955118,task_dccdCalcTask
 0xff958ff0,GetImageFolder
 0xff95b244,task_MetaCtg
 0xff961588,task_DPOFTask
 0xff9637e0,File.ClearExifInfo_FW
 0xff963920,File.Delete_AllImg_FW
 0xff963988,File.Create_FW
+0xff9667c8,task_FileManMarkAllTask
 0xff96b754,WriteSDCard
 0xff971d74,task_ImgEdt
 0xff972cbc,task_ImgTrim
@@ -734,6 +743,7 @@
 0xff97f114,GetZoomPiSensorLevel_FW
 0xff97f15c,GetFocusPiSensorLevel_FW
 0xff97fcdc,task_MechaCom
+0xff980914,task_MechaAlarm
 0xff980eb4,task_MechaCPUTransfer
 0xff981220,GetMechaShutterMoveTime_FW
 0xff981248,GetMechaShutterStatus_FW
@@ -987,7 +997,10 @@
 0xffaa12e4,TerminateSoundRec_FW
 0xffaa1320,InitializeFAGeneralTest_FW
 0xffaa13a0,TerminateFAGeneralTest_FW
+0xffaa3afc,task_CtgTotalTask
 0xffaa9c5c,getImageDirName
+0xffaaea20,task_MetaCtgPrsTask
+0xffaafef8,task_MetaInspiTask
 0xffabba64,task_FileScheduleTask
 0xffabca64,task_FileWrite
 0xffabca64,task_FileWriteTask
@@ -1647,6 +1660,7 @@
 0xffb51ec0,j_CancelLoopGainCalc_FW
 0xffb51ef4,ReloadISAdjustment_FW
 0xffb51f30,CalcLoopGain_FW
+0xffb51f9c,GetLoopGainCalcData_FW
 0xffb51fd0,SetLoopGain_FW
 0xffb51fe8,GetLoopGain_FW
 0xffb52004,SetISLensPWMMode_FW

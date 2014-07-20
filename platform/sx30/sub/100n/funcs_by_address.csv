@@ -1,3 +1,4 @@
+0x000c9a2c,task_AdditionAgent
 0xff810dc8,memShow_FW
 0xff81402c,strncpy
 0xff814068,strncmp
@@ -25,7 +26,9 @@
 0xff81eb30,ExitTask
 0xff81eb30,ExitTask_FW
 0xff81eb78,DebugAssert
+0xff81ec58,task_ConsoleSvr
 0xff81f280,RotateConsoleZOder_FW
+0xff81f310,task_LowConsole
 0xff81f490,CPrintf_FW
 0xff81f4ec,CPutChar_FW
 0xff81f518,GetCh_FW
@@ -318,6 +321,7 @@
 0xff87c10c,task_RedEyeCapt
 0xff87c590,IsLensOutside_FW
 0xff87c5b4,task_LensController
+0xff87d068,task_LensController
 0xff87dbdc,GetFocusStartZoomPosition_FW
 0xff87de90,task_MechaLog
 0xff87e6ac,GetCurrentZoomLensPosition_FW
@@ -422,6 +426,7 @@
 0xff883cd0,PT_MFOff
 0xff883cd0,PT_MFOff_FW
 0xff883ce0,SS.Create_FW
+0xff885718,task_SsStartupTask
 0xff8868c4,task_CaptSeq
 0xff8868c4,task_CaptSeqTask
 0xff8882f4,task_DvlpSeqTask
@@ -578,6 +583,7 @@
 0xff8e57fc,task_ChaseFrame
 0xff8e6640,task_DispFace
 0xff8e8d88,task_DevelopModule
+0xff8ebc74,task_EFChargeT
 0xff8ec16c,EF.IsChargeFull_FW
 0xff8ec16c,IsStrobeChargeCompleted
 0xff8ee784,task_AfIntSrvTask
@@ -621,6 +627,7 @@
 0xff91aab0,task_SyncPeriod
 0xff91ab38,task_SynchTask
 0xff91cd4c,task_TimerUtility
+0xff9228bc,task_PTPSessionTASK
 0xff926dec,task_NormalThumbCache
 0xff92aba8,task_TrnsCtrlTask
 0xff930ad0,LcdCon_SetLcdType_FW
@@ -707,9 +714,11 @@
 0xff95a808,SetDefaultRecParameter_FW
 0xff95aa08,EnableDebugLogMode_FW
 0xff95aa1c,DisableDebugLogMode_FW
+0xff95ca0c,task_dccdCalcTask
 0xff95f174,GetImageFolder
 0xff960300,task_MetaCtg
 0xff9657dc,task_DPOFTask
+0xff9698dc,task_FileManMarkAllTask
 0xff96db38,WriteSDCard
 0xff974474,task_ImgEdt
 0xff9753bc,task_ImgTrim
@@ -994,6 +1003,7 @@
 0xffa6d168,j_TerminateDefectRec_FW
 0xffa6d214,DevelopTool.DevelopTest_FW
 0xffa75084,ReloadEfAdjustment_FW
+0xffa75fb0,task_CntFlashTask
 0xffa7ac6c,EF.StartEFCharge_FW
 0xffa7acbc,EF.StopEFCharge_FW
 0xffa7accc,EF.SetEFChargeTimeOut_FW
@@ -1058,6 +1068,8 @@
 0xffab1440,InitializeSoundRec_FW
 0xffab1490,TerminateSoundRec_FW
 0xffab9490,getImageDirName
+0xffabd8c4,task_MetaCtgPrsTask
+0xffabe87c,task_MetaInspiTask
 0xffacaf88,task_FileScheduleTask
 0xffacbf84,task_FileWrite
 0xffacbf84,task_FileWriteTask
@@ -1673,12 +1685,14 @@
 0xffb5c030,j_CancelLoopGainCalc_FW
 0xffb5c064,ReloadISAdjustment_FW
 0xffb5c0a0,CalcLoopGain_FW
+0xffb5c110,GetLoopGainCalcData_FW
 0xffb5c144,SetLoopGain_FW
 0xffb5c15c,GetLoopGain_FW
 0xffb5c178,SetISLensPWMMode_FW
 0xffb5c184,GetGyroFilterChargeStatus_FW
 0xffb5c210,SetISCrossTalkCompCoeff_FW
 0xffb5c234,GetISCrossTalkCompCoeff_FW
+0xffb5e37c,task_CtgTotalTask
 0xffb6e800,task_ReadScheduleTask
 0xffb757dc,task_EfctConTask
 0xffb75978,task_EfctConLowTask

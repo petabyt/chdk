@@ -1,3 +1,4 @@
+0x000b5110,task_AdditionAgent
 0xff000dcc,memShow_FW
 0xff004030,strncpy
 0xff00406c,strncmp
@@ -25,7 +26,9 @@
 0xff00ec40,ExitTask
 0xff00ec40,ExitTask_FW
 0xff00ec88,DebugAssert
+0xff00ed68,task_ConsoleSvr
 0xff00f374,RotateConsoleZOder_FW
+0xff00f404,task_LowConsole
 0xff00f584,CPrintf_FW
 0xff00f5dc,CPutChar_FW
 0xff00f604,GetCh_FW
@@ -228,6 +231,7 @@
 0xff050ff8,GetAdVBattBottom_FW
 0xff051000,GetAdChValue
 0xff051000,GetAdChValue_FW
+0xff051490,task_Accelerometer
 0xff051be0,GetSlantData_FW
 0xff051d68,j_GetX_AxisAcceleration_FW
 0xff051d6c,j_GetY_AxisAcceleration_FW
@@ -348,6 +352,7 @@
 0xff06dec0,task_RedEyeCapt
 0xff06e41c,IsLensOutside_FW
 0xff06e440,task_LensController
+0xff06ef9c,task_LensController
 0xff06fac0,GetFocusStartZoomPosition_FW
 0xff06fe00,task_IS_OCtask
 0xff070104,task_ISMainTask
@@ -441,6 +446,7 @@
 0xff072404,PT_MFOff
 0xff072404,PT_MFOff_FW
 0xff072414,SS.Create_FW
+0xff073d68,task_SsStartupTask
 0xff074f1c,task_CaptSeq
 0xff074f1c,task_CaptSeqTask
 0xff076cd4,task_DvlpSeqTask
@@ -651,6 +657,7 @@
 0xff107734,task_SyncPeriod
 0xff1077c8,task_SynchTask
 0xff109a38,task_TimerUtility
+0xff10ef7c,task_PTPSessionTASK
 0xff1134b8,task_NormalThumbCache
 0xff117290,task_TrnsCtrlTask
 0xff11d03c,LcdCon_SetLcdBackLightBrightness_FW
@@ -683,6 +690,8 @@
 0xff125e4c,j_TurnOffDispForTouchPanelAdj_FW
 0xff126730,task_TouchCalib
 0xff126730,task_TouchCalibFA
+0xff1268d4,task_TouchFACheck
+0xff1269b4,task_TouchSvcCheck
 0xff126e98,TouchPanelStartCalibration_FW
 0xff126f18,TouchPanelAdjustmentNextStep_FW
 0xff126f64,TouchPanelAdjustmentStart_FW
@@ -747,10 +756,12 @@
 0xff14d048,SetDefaultRecParameter_FW
 0xff14d248,EnableDebugLogMode_FW
 0xff14d25c,DisableDebugLogMode_FW
+0xff14f270,task_dccdCalcTask
 0xff1510ec,GetImageFolder
 0xff152ca4,getImageDirName
 0xff153724,task_MetaCtg
 0xff159640,task_DPOFTask
+0xff15de34,task_FileManMarkAllTask
 0xff163f5c,WriteSDCard
 0xff16a55c,task_ImgEdt
 0xff16b4a4,task_ImgTrim
@@ -782,6 +793,7 @@
 0xff1782d0,GetZoomPiSensorLevel_FW
 0xff178318,GetFocusPiSensorLevel_FW
 0xff178360,GetIrisPiSensorLevel_FW
+0xff178c40,task_MechaAlarm
 0xff17956c,GetMechaShutterMoveTime_FW
 0xff179594,GetMechaShutterStatus_FW
 0xff179720,ReloadNdFilterAdjustment_FW
@@ -1039,6 +1051,8 @@
 0xff2c22ac,StartSoundPlay_FW
 0xff2c22e4,InitializeSoundRec_FW
 0xff2c2334,TerminateSoundRec_FW
+0xff2cf364,task_MetaCtgPrsTask
+0xff2d081c,task_MetaInspiTask
 0xff2e13d0,task_FileScheduleTask
 0xff2e250c,task_FileWrite
 0xff2e250c,task_FileWriteTask
@@ -1693,6 +1707,7 @@
 0xff3908a0,j_CancelLoopGainCalc_FW
 0xff3908d4,ReloadISAdjustment_FW
 0xff390914,CalcLoopGain_FW
+0xff390980,GetLoopGainCalcData_FW
 0xff3909b4,SetLoopGain_FW
 0xff3909cc,GetLoopGain_FW
 0xff3909e8,SetISLensPWMMode_FW
@@ -1701,6 +1716,7 @@
 0xff390a30,GetGyroFilterChargeStatus_FW
 0xff390ab0,SetISCrossTalkCompCoeff_FW
 0xff390ad4,GetISCrossTalkCompCoeff_FW
+0xff392ce4,task_CtgTotalTask
 0xff3a01a8,task_ReadScheduleTask
 0xff3a7154,task_EfctConTask
 0xff3a72f8,task_EfctConLowTask

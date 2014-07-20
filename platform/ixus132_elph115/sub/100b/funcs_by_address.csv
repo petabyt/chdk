@@ -1,3 +1,4 @@
+0x0015ea18,task_AdditionAgent
 0x00676848,RegisterInterruptHandler
 0x0067686c,UnregisterInterruptHandler
 0x00676884,GetSRAndDisableInterrupt
@@ -77,7 +78,9 @@
 0xff005984,close
 0xff005b28,Read
 0xff005b28,Read_FW
+0xff009718,task_ConsoleSvr
 0xff009d24,RotateConsoleZOder_FW
+0xff009db4,task_LowConsole
 0xff009f34,CPrintf_FW
 0xff009f8c,CPutChar_FW
 0xff009fb4,GetCh_FW
@@ -123,6 +126,7 @@
 0xff0322f8,EngDrvBits
 0xff0325b4,DisplayFactoryMode_FW
 0xff0325c0,UndisplayFactoryMode_FW
+0xff032714,task_bomStopPTPIPTask
 0xff032744,StopPtpipServiceForFAWLAN_FW
 0xff032a68,SetWLANFactoryMode_FW
 0xff032aa8,ClearWLANFactoryMode_FW
@@ -215,6 +219,7 @@
 0xff06c858,task_WBCtrl
 0xff06e9dc,task_AFTask
 0xff06f614,GetMacroSupportZoomPoint_FW
+0xff072528,task__imageSensorTask
 0xff072e88,SetMontblancVSize_FW
 0xff072e9c,GetMontblancVSize_FW
 0xff075d08,LiveImageTool.GetDzoomPosition_FW
@@ -229,6 +234,7 @@
 0xff07d720,LeaveWLANNetwork_FW
 0xff07e5d0,task_LachesisTest
 0xff07ec2c,task_startRedirectUARTTask
+0xff07ee30,task_fprintSNRTask
 0xff081528,UIFS_CancelStoreLensTimer_FW
 0xff081738,PB2Rec
 0xff081778,Rec2PB
@@ -367,6 +373,7 @@
 0xff0a6458,task_SD1stInit
 0xff0a94e4,task_RedEyeCapt
 0xff0aa0e0,task_LensController
+0xff0aadf0,task_LensController
 0xff0ab9c0,IsLensOutside_FW
 0xff0ab9e4,GetFocusStartZoomPosition_FW
 0xff0abc64,task_MechaAlarm
@@ -386,6 +393,7 @@
 0xff0ad56c,GetDISModeParameter_FW
 0xff0ad6e0,GetFixedPWMOutA_FW
 0xff0ad6ec,GetFixedPWMOutB_FW
+0xff0af338,task_SsStartupTask
 0xff0b05bc,task_CaptSeq
 0xff0b05bc,task_CaptSeqTask
 0xff0b77e8,SSFS_CompleteCaptModeChange_FW
@@ -582,6 +590,7 @@
 0xff168bbc,task_PTPtoFAPI_EventProcTask_Try
 0xff168c60,task_PTPtoFAPI_EventProcTask_Block
 0xff16a158,add_ptp_handler
+0xff16c1a4,task_PTPSessionTASK
 0xff16e6e0,task_NormalThumbCache
 0xff172a68,task_TrnsCtrlTask
 0xff17d304,task_ComWireless
@@ -733,6 +742,7 @@
 0xff1eb4f4,GetCurrentAvValue_FW
 0xff1eb4f4,GetIrisAv_FW
 0xff1eb758,GetLensErrorStatus_FW
+0xff1eb81c,task_MechaAlarm
 0xff1ebcc8,task_MechaCom
 0xff1ecd28,GetZoomPiSensorLevel_FW
 0xff1ecd70,GetFocusPiSensorLevel_FW
@@ -1083,6 +1093,10 @@
 0xff31e8c0,StartTestRecLog_FW
 0xff31e8d8,StopTestRecLog_FW
 0xff3213a0,getImageDirName
+0xff322458,task_MetaInspiTask
+0xff328318,task_MetaCtgPrsTask
+0xff32f7f0,task_FileManMarkAllTask
+0xff32fa74,task_SetGeoTagExecution
 0xff3304e4,task_FORMAT_TASK_PROGRESS
 0xff3306c4,task_FORMAT_TASK_NAME
 0xff3392b4,task_FileWrite
@@ -1686,6 +1700,7 @@
 0xff415d24,SetISTuningOff_FW
 0xff415d38,SetISGyroCompensationMode_FW
 0xff415d54,CalcLoopGain_FW
+0xff415dc4,GetLoopGainCalcData_FW
 0xff415dfc,SetLoopGain_FW
 0xff415e20,GetLoopGain_FW
 0xff415e28,SetISLensPWMMode_FW
@@ -1721,6 +1736,7 @@
 0xff416024,CancelLoopGainCalc_FW
 0xff416034,ReloadISAdjustment_FW
 0xff416044,MoveISLensToCentralPosition_FW
+0xff418c40,task_CtgTotalTask
 0xff4299c4,task_ReadFileTask
 0xff4333fc,SetPMByGpio_FW
 0xff433414,ClearPMByGpio_FW

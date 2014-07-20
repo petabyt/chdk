@@ -559,6 +559,7 @@
 0xff238e00,GetLogToFile_FW
 0xff4a02b4,GetLoopGain_FW
 0xff3e1c30,GetLoopGainAdjValue_FW
+0xff4a0258,GetLoopGainCalcData_FW
 0xff3e1b30,GetLoopGainCalcData_FW
 0xff3e1984,GetLPFParallelBest_FW
 0xff3e20b0,GetMacroISAngleAndVelocityA_FW
@@ -1550,12 +1551,14 @@
 0xff316e00,task__cntFlashTask
 0xff073d2c,task__imageSensorTask
 0xff1733c8,task__tgTask
+0x0017ae78,task_AdditionAgent
 0xff150894,task_AfIntSrvTask
 0xff07067c,task_AFTask
 0xff1c33f0,task_ASIF
 0xff1d47b4,task_AutoShutterMan
 0xff0308e8,task_BatteryTask
 0xff0913d8,task_BeepTask
+0xff03367c,task_bomStopPTPIPTask
 0xff1202c8,task_BrtMsrTask
 0xff0394d0,task_Bye
 0xff0b6984,task_CaptSeq
@@ -1565,8 +1568,10 @@
 0xff0044a8,task_ClockSave
 0xff083644,task_CommonDrivers
 0xff198748,task_ComWireless
+0xff00a354,task_ConsoleSvr
 0xff1e0384,task_CorctTask
 0xff236a30,task_CreateHeaderTask
+0xff4a30d4,task_CtgTotalTask
 0xff0cba1c,task_CtrlSrv
 0xff1fd15c,task_dccdCalcTask
 0xff3bd280,task_DecJpgRd
@@ -1585,6 +1590,7 @@
 0xff0dc194,task_FaceFrame
 0xff1da844,task_FaceScoreTask
 0xff1e6528,task_Fencing
+0xff3abab8,task_FileManMarkAllTask
 0xff212c10,task_FileScheduleTask
 0xff3b6654,task_FileWrite
 0xff3b6654,task_FileWriteTask
@@ -1592,6 +1598,7 @@
 0xff3c82e4,task_FocusEvent
 0xff3acca8,task_FORMAT_TASK_NAME
 0xff3acac8,task_FORMAT_TASK_PROGRESS
+0xff080370,task_fprintSNRTask
 0xff099568,task_FrameTask
 0xff0a7b8c,task_FsIoNotifyTask
 0xff334324,task_GapBS
@@ -1608,8 +1615,11 @@
 0xff07fb10,task_LachesisTest
 0xff1b6148,task_LcdConTask
 0xff09315c,task_LEDCon
+0xff0b0e28,task_LensController
 0xff0b0134,task_LensController
 0xff1745d0,task_LiveImageTask
+0xff00a9f0,task_LowConsole
+0xff227274,task_MechaAlarm
 0xff0b1c70,task_MechaAlarm
 0xff227740,task_MechaCom
 0xff2296e0,task_MechaCPUTransfer
@@ -1617,6 +1627,8 @@
 0xff3cc21c,task_MechaShutter
 0xff2153c4,task_MediaStatusMngr
 0xff204460,task_MetaCtg
+0xff3a3554,task_MetaCtgPrsTask
+0xff39cf94,task_MetaInspiTask
 0xff1dabe4,task_MotionVector
 0xff3deb94,task_MovEdit
 0xff230bfc,task_MovieRecord
@@ -1630,6 +1642,7 @@
 0xff0c7f28,task_OpePlay
 0xff031e7c,task_PhySw
 0xff346874,task_PingManager
+0xff186b5c,task_PTPSessionTASK
 0xff1821a4,task_PTPtoFAPI_EventProcTask_Block
 0xff182100,task_PTPtoFAPI_EventProcTask_Try
 0xff37a22c,task_Raw2Ss2YuvTask
@@ -1640,8 +1653,10 @@
 0xff1d225c,task_SceneDetectTask
 0xff0ab7ec,task_SD1stInit
 0xff1a5b2c,task_SelectFuncController
+0xff3abd3c,task_SetGeoTagExecution
 0xff16de0c,task_SsgMainTask
 0xff16dfcc,task_SsgPeriodTask
+0xff0b55f8,task_SsStartupTask
 0xff0c0474,task_SsTask
 0xff08016c,task_startRedirectUARTTask
 0xff00b1e4,task_Startup

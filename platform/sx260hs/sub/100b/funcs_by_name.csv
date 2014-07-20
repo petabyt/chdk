@@ -546,6 +546,7 @@
 0xff3e85a8,GetLoopGain_FW
 0xff355fb8,GetLoopGainAdjValue_FW
 0xff355ec4,GetLoopGainCalcData_FW
+0xff3e855c,GetLoopGainCalcData_FW
 0xff355d30,GetLPFParallelBest_FW
 0xff3562cc,GetMacroISAngleAndVelocityA_FW
 0xff3562fc,GetMacroISAngleAndVelocityB_FW
@@ -1565,6 +1566,7 @@
 0x0068a990,TakeSemaphore
 0x0068a990,TakeSemaphore_FW
 0x0068aec0,TakeSemaphoreStrictly
+0x000d51dc,task_AdditionAgent
 0xff0e1ab4,task_AfIntSrvTask
 0xff036334,task_AFTask
 0xff0517e8,task_ASIF
@@ -1583,8 +1585,10 @@
 0xff0044d8,task_ClockSave
 0xff2aba64,task_CntFlashTask
 0xff08bbfc,task_CommonDrivers
+0xff00a2b4,task_ConsoleSvr
 0xff1757f4,task_CorctTask
 0xff1c049c,task_CreateHeaderTask
+0xff311888,task_CtgTotalTask
 0xff084904,task_CtrlSrv
 0xff1831c4,task_dccdCalcTask
 0xff3319c4,task_DecJpgRd
@@ -1601,6 +1605,7 @@
 0xff097018,task_FaceFrame
 0xff159d74,task_FaceScoreTask
 0xff17925c,task_Fencing
+0xff196cc4,task_FileManMarkAllTask
 0xff32d608,task_FileScheduleTask
 0xff32e7a0,task_FileWrite
 0xff32e7a0,task_FileWriteTask
@@ -1612,6 +1617,7 @@
 0xff05d550,task_FsIoNotifyTask
 0xff110690,task_GapBS
 0xff0386e0,task_GapMan
+0xff197ae8,task_GPSLogTask
 0xff04b258,task_GPStask
 0xff04bed8,task_HecMngTask
 0xff064d34,task_ImgPlayDrv
@@ -1624,13 +1630,18 @@
 0xff13db48,task_LcdConTask
 0xff04cbd0,task_LEDCon
 0xff0663bc,task_LensController
+0xff066e64,task_LensController
 0xff11f370,task_LiveImageTask
+0xff00a950,task_LowConsole
 0xff067bac,task_MechaAlarm
+0xff1ad98c,task_MechaAlarm
 0xff1ade5c,task_MechaCom
 0xff1afd80,task_MechaCPUTransfer
 0xff346934,task_MechaNCTask
 0xff341cb0,task_MechaShutter
 0xff189f44,task_MetaCtg
+0xff31d944,task_MetaCtgPrsTask
+0xff317ef8,task_MetaInspiTask
 0xff15a990,task_MotionVector
 0xff352884,task_MovEdit
 0xff1b82e8,task_MovieRecord
@@ -1644,6 +1655,7 @@
 0xff01f154,task_PhySw
 0xff1b06a4,task_PopDownStrobe
 0xff1b0448,task_PopUpStrobe
+0xff12a1c4,task_PTPSessionTASK
 0xff2c76dc,task_PTPtoFAPI_EventProcTask_Block
 0xff2c7638,task_PTPtoFAPI_EventProcTask_Try
 0xff2f5cc0,task_Raw2Ss2YuvTask
@@ -1657,6 +1669,7 @@
 0xff1be554,task_ShutterSoundTask
 0xff113a40,task_SsgMainTask
 0xff113bf8,task_SsgPeriodTask
+0xff06c388,task_SsStartupTask
 0xff07665c,task_SsTask
 0xff00b140,task_Startup
 0xff027a28,task_StartupImage

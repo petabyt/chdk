@@ -1,3 +1,4 @@
+0x0009b2c4,task_AdditionAgent
 0xff810dc8,memShow_FW
 0xff813f5c,strncpy
 0xff813f98,strncmp
@@ -25,7 +26,9 @@
 0xff81eacc,ExitTask
 0xff81eacc,ExitTask_FW
 0xff81eb14,DebugAssert
+0xff81ebf4,task_ConsoleSvr
 0xff81f21c,RotateConsoleZOder_FW
+0xff81f2ac,task_LowConsole
 0xff81f42c,CPrintf_FW
 0xff81f488,CPutChar_FW
 0xff81f4b4,GetCh_FW
@@ -313,6 +316,7 @@
 0xff876cd8,task_RedEyeCapt
 0xff877264,IsLensOutside_FW
 0xff877288,task_LensController
+0xff877e20,task_LensController
 0xff878918,GetFocusStartZoomPosition_FW
 0xff878d88,task_ISMainTask
 0xff8790c8,ISInitMotion_FW
@@ -402,6 +406,7 @@
 0xff87a960,PT_MFOff
 0xff87a960,PT_MFOff_FW
 0xff87a970,SS.Create_FW
+0xff87c174,task_SsStartupTask
 0xff87d2d8,task_CaptSeq
 0xff87d2d8,task_CaptSeqTask
 0xff87e9c0,task_DvlpSeqTask
@@ -598,6 +603,7 @@
 0xff9016c8,task_SyncPeriod
 0xff90175c,task_SynchTask
 0xff903a78,task_TimerUtility
+0xff909538,task_PTPSessionTASK
 0xff90da14,task_NormalThumbCache
 0xff911af8,task_TrnsCtrlTask
 0xff919f70,LcdCon_SetLcdDriver_FW
@@ -668,9 +674,11 @@
 0xff93f318,SetDefaultRecParameter_FW
 0xff93f518,EnableDebugLogMode_FW
 0xff93f52c,DisableDebugLogMode_FW
+0xff94151c,task_dccdCalcTask
 0xff94337c,GetImageFolder,(stubs_entry_2.s)
 0xff9444a4,task_MetaCtg
 0xff949e58,task_DPOFTask
+0xff94d604,task_FileManMarkAllTask
 0xff952494,WriteSDCard
 0xff958ba4,task_ImgEdt
 0xff959ae4,task_ImgTrim
@@ -946,6 +954,8 @@
 0xffa72234,InitializeSoundRec_FW
 0xffa72268,TerminateSoundRec_FW
 0xffa7a1ec,getImageDirName
+0xffa7e310,task_MetaCtgPrsTask
+0xffa7f2f4,task_MetaInspiTask
 0xffa8f8f4,task_FileScheduleTask
 0xffa908bc,task_FileWrite
 0xffa908bc,task_FileWriteTask
@@ -1517,6 +1527,7 @@
 0xffb29a60,j_CancelLoopGainCalc_FW
 0xffb29a94,ReloadISAdjustment_FW
 0xffb29ad0,CalcLoopGain_FW
+0xffb29b40,GetLoopGainCalcData_FW
 0xffb29b74,SetLoopGain_FW
 0xffb29b8c,GetLoopGain_FW
 0xffb29ba8,SetISLensPWMMode_FW
@@ -1524,6 +1535,7 @@
 0xffb29c80,InitializeMechaDevice_FW
 0xffb29cb8,TerminateMechaDevice_FW
 0xffb29d28,CreateJumptable
+0xffb2cf10,task_CtgTotalTask
 0xffb3d4a0,task_EfctConTask
 0xffb3d63c,task_EfctConLowTask
 0xffb3fa28,MoveDCMotorCW_FW

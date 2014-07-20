@@ -1,3 +1,4 @@
+0x0004a34c,task_AdditionAgent
 0xff810bc4,memShow_FW
 0xff8139a8,malloc
 0xff813a7c,free
@@ -20,7 +21,9 @@
 0xff81b184,ExitTask
 0xff81b184,ExitTask_FW
 0xff81b1cc,DebugAssert
+0xff81b2ac,task_ConsoleSvr
 0xff81b8d4,RotateConsoleZOder_FW
+0xff81b964,task_LowConsole
 0xff81bae4,CPrintf_FW
 0xff81bb40,CPutChar_FW
 0xff81bb6c,GetCh_FW
@@ -284,6 +287,7 @@
 0xff85e5c0,task_RedEyeCapt
 0xff85eb24,IsLensOutside_FW
 0xff85eb48,task_LensController
+0xff85f65c,task_LensController
 0xff86010c,GetFocusStartZoomPosition_FW
 0xff86014c,GetLensErrorStatus_FW
 0xff860510,task_ISMainTask
@@ -538,6 +542,7 @@
 0xff8d3160,task_SyncPeriod
 0xff8d31e8,task_SynchTask
 0xff8d4f74,task_TimerUtility
+0xff8db85c,task_PTPSessionTASK
 0xff8dec68,task_PreLoadTask
 0xff8e3c44,task_RCTaskResume
 0xff8e5098,task_TrnsCtrlTask
@@ -588,9 +593,11 @@
 0xff90f258,ChangeDefectRecPeakHoldSetting_FW
 0xff90f538,EnableDebugLogMode_FW
 0xff90f54c,DisableDebugLogMode_FW
+0xff911c34,task_dccdCalcTask
 0xff916310,task_FolderCreateCheckTask
 0xff916b68,task_MetaCtg
 0xff91b244,task_DPOFTask
+0xff91e6d0,task_FileManMarkAllTask
 0xff92a7c0,WriteSDCard
 0xff930350,task_ImgEdt
 0xff930fec,task_ImgTrim
@@ -793,6 +800,7 @@
 0xff9fd2ec,LineKizuCheck_FW
 0xff9fd76c,DevelopTool.DevelopTest_FW
 0xffa03318,ReloadEfAdjustment_FW
+0xffa040b4,task_CntFlashTask
 0xffa08078,EF.StartEFCharge_FW
 0xffa080c8,EF.StopEFCharge_FW
 0xffa080d8,EF.SetEFChargeTimeOut_FW
@@ -851,6 +859,7 @@
 0xffa14980,task_DirectOpEventQueueMngr
 0xffa1594c,add_ptp_handler
 0xffa17ff0,task_SelectThumbCache
+0xffa1d66c,task_RAPI_Task
 0xffa2a4b8,EngDrvOut_FW
 0xffa2a4d4,EngDrvIn_FW
 0xffa2a4dc,EngDrvRead_FW
@@ -870,6 +879,7 @@
 0xffa31a78,StartSoundPlay_FW
 0xffa31ac0,InitializeSoundRec_FW
 0xffa31af4,TerminateSoundRec_FW
+0xffa39e70,task_MetaCtgPrsTask
 0xffa45b0c,task_FileScheduleTask
 0xffa46a14,task_FileWrite
 0xffa46a14,task_FileWriteTask
@@ -1421,6 +1431,7 @@
 0xffad77e8,InitializeMechaDevice_FW
 0xffad7820,TerminateMechaDevice_FW
 0xffad7890,CreateJumptable
+0xffada70c,task_CtgTotalTask
 0xffae952c,task_ReadFileTask
 0xffaeb298,task_EffctDrv
 0xffaecf34,MoveDCMotorCW_FW

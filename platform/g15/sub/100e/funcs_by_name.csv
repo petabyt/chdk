@@ -576,6 +576,7 @@
 0xff1ea5e4,GetLogToFile_FW
 0xff434cfc,GetLoopGain_FW
 0xff38ea60,GetLoopGainAdjValue_FW
+0xff434ca0,GetLoopGainCalcData_FW
 0xff38e96c,GetLoopGainCalcData_FW
 0xff38e7d8,GetLPFParallelBest_FW
 0xff38ee98,GetMacroISAngleAndVelocityA_FW
@@ -1580,6 +1581,9 @@
 0x0068aa1c,TakeSemaphore
 0x0068aa1c,TakeSemaphore_FW
 0x0068afec,TakeSemaphoreStrictly
+0xff03d088,task__ImageSensorTask
+0xff059dc0,task_Accelerometer
+0x000e1028,task_AdditionAgent
 0xff0fcce0,task_AfIntSrvTask
 0xff0375b4,task_AFTask
 0xff16f498,task_ASIF
@@ -1587,6 +1591,7 @@
 0xff0596dc,task_AvsTask
 0xff01844c,task_BatteryTask
 0xff05c174,task_BeepTask
+0xff01b494,task_bomStopPTPIPTask
 0xff0c2a70,task_BrtMsrTask
 0xff021e90,task_Bye
 0xff085738,task_CaptSeq
@@ -1596,8 +1601,10 @@
 0xff004460,task_ClockSave
 0xff2d68d0,task_CntFlashTask
 0xff04a7b4,task_CommonDrivers
+0xff009f64,task_ConsoleSvr
 0xff19bd3c,task_CorctTask
 0xff1e7abc,task_CreateHeaderTask
+0xff34a5d0,task_CtgTotalTask
 0xff09a210,task_CtrlSrv
 0xff1ad354,task_dccdCalcTask
 0xff36aa4c,task_DecJpgRd
@@ -1615,6 +1622,7 @@
 0xff0ab858,task_FaceFrame
 0xff182348,task_FaceScoreTask
 0xff1a3c7c,task_Fencing
+0xff35ebd0,task_FileManMarkAllTask
 0xff1c2aac,task_FileScheduleTask
 0xff367dc4,task_FileWrite
 0xff367dc4,task_FileWriteTask
@@ -1641,6 +1649,8 @@
 0xff05d664,task_LEDCon
 0xff07de00,task_LensController
 0xff13e3f4,task_LiveImageTask
+0xff00a600,task_LowConsole
+0xff1d7798,task_MechaAlarm
 0xff07fa40,task_MechaAlarm
 0xff1d5eac,task_MechaCom
 0xff1d7d3c,task_MechaCPUTransfer
@@ -1648,6 +1658,8 @@
 0xff378c78,task_MechaShutter
 0xff1c4964,task_MediaStatusMngr
 0xff1b4254,task_MetaCtg
+0xff3566b4,task_MetaCtgPrsTask
+0xff350be8,task_MetaInspiTask
 0xff18316c,task_MotionVector
 0xff38b314,task_MovEdit
 0xff1df310,task_MovieRecord
@@ -1660,6 +1672,7 @@
 0xff177454,task_OhyearKiLiveAlgor
 0xff096ab4,task_OpePlay
 0xff019f10,task_PhySw
+0xff149570,task_PTPSessionTASK
 0xff2f71e4,task_PTPtoFAPI_EventProcTask_Block
 0xff2f7140,task_PTPtoFAPI_EventProcTask_Try
 0xff323f18,task_Raw2Ss2YuvTask
@@ -1674,6 +1687,7 @@
 0xff1e51a0,task_ShutterSoundTask
 0xff13034c,task_SsgMainTask
 0xff13050c,task_SsgPeriodTask
+0xff084354,task_SsStartupTask
 0xff08f90c,task_SsTask
 0xff00adf4,task_Startup
 0xff017328,task_StartupImage

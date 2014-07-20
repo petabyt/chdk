@@ -1,3 +1,4 @@
+0x000d96f4,task_AdditionAgent
 0xff000dd4,memShow_FW
 0xff004050,strncpy
 0xff00408c,strncmp
@@ -25,7 +26,9 @@
 0xff00ed80,ExitTask
 0xff00ed80,ExitTask_FW
 0xff00edc8,DebugAssert
+0xff00eea8,task_ConsoleSvr
 0xff00f4b4,RotateConsoleZOder_FW
+0xff00f544,task_LowConsole
 0xff00f6c4,CPrintf_FW
 0xff00f71c,CPutChar_FW
 0xff00f744,GetCh_FW
@@ -343,6 +346,7 @@
 0xff06f5fc,task_RedEyeCapt
 0xff06fa20,IsLensOutside_FW
 0xff06fa88,task_LensController
+0xff070508,task_LensController
 0xff071088,GetFocusStartZoomPosition_FW
 0xff071334,task_MechaAlarm
 0xff071cd8,GetCurrentZoomLensPosition_FW
@@ -450,6 +454,7 @@
 0xff079168,PT_MFOff
 0xff079168,PT_MFOff_FW
 0xff079178,SS.Create_FW
+0xff07b128,task_SsStartupTask
 0xff07c46c,task_CaptSeq
 0xff07c46c,task_CaptSeqTask
 0xff07e77c,task_DvlpSeqTask
@@ -659,6 +664,7 @@
 0xff1364bc,task_SyncPeriod
 0xff136550,task_SynchTask
 0xff13830c,task_TimerUtility
+0xff13d84c,task_PTPSessionTASK
 0xff141f94,task_NormalThumbCache
 0xff145c5c,task_TrnsCtrlTask
 0xff150b14,LcdCon_SetLcdType_FW
@@ -766,6 +772,7 @@
 0xff1912e8,SetDefaultRecParameter_FW
 0xff191614,EnableDebugLogMode_FW
 0xff191628,DisableDebugLogMode_FW
+0xff19363c,task_dccdCalcTask
 0xff19765c,GetImageFolder
 0xff199634,getImageDirName
 0xff19a0f8,task_MetaCtg
@@ -773,6 +780,7 @@
 0xff1a2e40,File.ClearExifInfo_FW
 0xff1a2f80,File.Delete_AllImg_FW
 0xff1a2fe8,File.Create_FW
+0xff1a6214,task_FileManMarkAllTask
 0xff1ab46c,WriteSDCard
 0xff1b218c,task_ImgEdt
 0xff1b30d8,task_ImgTrim
@@ -802,6 +810,7 @@
 0xff1bf3f0,task_MechaCom
 0xff1c0c9c,GetZoomPiSensorLevel_FW
 0xff1c0cd0,GetFocusPiSensorLevel_FW
+0xff1c16f8,task_MechaAlarm
 0xff1c1c9c,task_MechaCPUTransfer
 0xff1c205c,GetMechaShutterMoveTime_FW
 0xff1c2084,GetMechaShutterStatus_FW
@@ -1169,6 +1178,9 @@
 0xff31c0fc,TerminateFAGeneralTest_FW
 0xff31c104,InitializeFAExtendFile_FW
 0xff31c114,TerminateFAExtendFile_FW
+0xff31e864,task_CtgTotalTask
+0xff3297dc,task_MetaCtgPrsTask
+0xff32acb4,task_MetaInspiTask
 0xff336504,task_FileScheduleTask
 0xff337504,task_FileWrite
 0xff337504,task_FileWriteTask
@@ -1865,6 +1877,7 @@
 0xff3e5a10,j_CancelLoopGainCalc_FW
 0xff3e5a44,ReloadISAdjustment_FW
 0xff3e5a84,CalcLoopGain_FW
+0xff3e5af0,GetLoopGainCalcData_FW
 0xff3e5b24,SetLoopGain_FW
 0xff3e5b3c,GetLoopGain_FW
 0xff3e5b58,SetISLensPWMMode_FW

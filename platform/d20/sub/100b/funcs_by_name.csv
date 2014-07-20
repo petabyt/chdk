@@ -524,6 +524,7 @@
 0xff186764,GetLogToFile_FW
 0xff365430,GetLoopGain_FW
 0xff2e987c,GetLoopGainAdjValue_FW
+0xff3653e4,GetLoopGainCalcData_FW
 0xff2e9788,GetLoopGainCalcData_FW
 0xff2e95f4,GetLPFParallelBest_FW
 0xff2e9b90,GetMacroISAngleAndVelocityA_FW
@@ -1514,6 +1515,8 @@
 0x00477634,TakeSemaphore
 0x00477634,TakeSemaphore_FW
 0x00477b38,TakeSemaphoreStrictly
+0xff047eb4,task_Accelerometer
+0x000b9584,task_AdditionAgent
 0xff0d17f4,task_AfIntSrvTask
 0xff034674,task_AFTask
 0xff04f348,task_ASIF
@@ -1530,8 +1533,10 @@
 0xff0044d8,task_ClockSave
 0xff258098,task_CntFlashTask
 0xff083950,task_CommonDrivers
+0xff0097ac,task_ConsoleSvr
 0xff1407b4,task_CorctTask
 0xff2eb1a4,task_CreateHeaderTask
+0xff2a9220,task_CtgTotalTask
 0xff07e488,task_CtrlSrv
 0xff14c048,task_dccdCalcTask
 0xff2c786c,task_DecJpgRd
@@ -1549,6 +1554,7 @@
 0xff08e4d0,task_FaceFrame
 0xff12be3c,task_FaceScoreTask
 0xff143a6c,task_Fencing
+0xff15e920,task_FileManMarkAllTask
 0xff2c36cc,task_FileScheduleTask
 0xff2c4864,task_FileWrite
 0xff2c4864,task_FileWriteTask
@@ -1558,6 +1564,7 @@
 0xff2bb310,task_FORMAT_TASK_PROGRESS
 0xff032364,task_FrameTask
 0xff05a878,task_FsIoNotifyTask
+0xff15f580,task_GPSLogTask
 0xff04a5b8,task_GPStask
 0xff04b290,task_HecMngTask
 0xff06145c,task_ImgPlayDrv
@@ -1567,14 +1574,19 @@
 0xff064520,task_ISMainTask
 0xff1186cc,task_LcdConTask
 0xff04b768,task_LEDCon
+0xff06356c,task_LensController
 0xff062c40,task_LensController
 0xff0f7098,task_LiveImageTask
+0xff009e48,task_LowConsole
 0xff0640ac,task_MechaAlarm
+0xff173fb8,task_MechaAlarm
 0xff174488,task_MechaCom
 0xff17638c,task_MechaCPUTransfer
 0xff2da7ac,task_MechaNCTask
 0xff2d5398,task_MechaShutter
 0xff152ba4,task_MetaCtg
+0xff2b4bf8,task_MetaCtgPrsTask
+0xff2af74c,task_MetaInspiTask
 0xff12c0e0,task_MotionVector
 0xff2e6074,task_MovEdit
 0xff17ccfc,task_MovieRecord
@@ -1587,6 +1599,7 @@
 0xff0775a4,task_OpePlay
 0xff01e420,task_PhySw
 0xff03ceec,task_PrcssFil
+0xff1056f4,task_PTPSessionTASK
 0xff2720cc,task_PTPtoFAPI_EventProcTask_Block
 0xff272028,task_PTPtoFAPI_EventProcTask_Try
 0xff398efc,task_ReadFileTask
@@ -1598,6 +1611,7 @@
 0xff182e94,task_ShutterSoundTask
 0xff0ec118,task_SsgMainTask
 0xff0ec2d0,task_SsgPeriodTask
+0xff068064,task_SsStartupTask
 0xff06ff10,task_SsTask
 0xff00a638,task_Startup
 0xff026760,task_StartupImage

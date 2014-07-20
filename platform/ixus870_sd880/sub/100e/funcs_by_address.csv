@@ -1,3 +1,4 @@
+0x000484cc,task_AdditionAgent
 0xff810bc4,memShow_FW
 0xff8139a8,malloc
 0xff813a7c,free
@@ -20,7 +21,9 @@
 0xff81b184,ExitTask
 0xff81b184,ExitTask_FW
 0xff81b1cc,DebugAssert
+0xff81b2ac,task_ConsoleSvr
 0xff81b8d4,RotateConsoleZOder_FW
+0xff81b964,task_LowConsole
 0xff81bae4,CPrintf_FW
 0xff81bb40,CPutChar_FW
 0xff81bb6c,GetCh_FW
@@ -275,6 +278,7 @@
 0xff858a1c,task_ImgPlayDrv
 0xff859adc,task_RedEyeCapt
 0xff85a0c0,task_LensController
+0xff85ab78,task_LensController
 0xff85b468,IsLensOutside_FW
 0xff85b48c,GetFocusStartZoomPosition_FW
 0xff85b498,GetLensErrorStatus_FW
@@ -536,6 +540,7 @@
 0xff8c4f44,task_SyncPeriod
 0xff8c4fcc,task_SynchTask
 0xff8c6cd4,task_TimerUtility
+0xff8cd444,task_PTPSessionTASK
 0xff8d0850,task_PreLoadTask
 0xff8d51a0,task_TrnsCtrlTask
 0xff8d7ba0,task_RapiRevr
@@ -584,9 +589,11 @@
 0xff8fd988,ChangeDefectRecPeakHoldSetting_FW
 0xff8fdc68,EnableDebugLogMode_FW
 0xff8fdc7c,DisableDebugLogMode_FW
+0xff900364,task_dccdCalcTask
 0xff904a40,task_FolderCreateCheckTask
 0xff905298,task_MetaCtg
 0xff909974,task_DPOFTask
+0xff90cd9c,task_FileManMarkAllTask
 0xff918854,WriteSDCard
 0xff91de54,task_ImgEdt
 0xff91eaf0,task_ImgTrim
@@ -845,6 +852,7 @@
 0xff9ee768,task_DirectOpEventQueueMngr
 0xff9ef734,add_ptp_handler
 0xff9f1dd8,task_SelectThumbCache
+0xff9f7654,task_RAPI_Task
 0xffa026dc,EngDrvOut_FW
 0xffa026f8,EngDrvIn_FW
 0xffa02700,EngDrvRead_FW
@@ -864,6 +872,7 @@
 0xffa097c4,StartSoundPlay_FW
 0xffa0980c,InitializeSoundRec_FW
 0xffa09840,TerminateSoundRec_FW
+0xffa11bb0,task_MetaCtgPrsTask
 0xffa1d77c,task_FileScheduleTask
 0xffa1e5b0,task_FileWrite
 0xffa1e5b0,task_FileWriteTask
@@ -1391,6 +1400,7 @@
 0xffaa4414,InitializeMechaDevice_FW
 0xffaa444c,TerminateMechaDevice_FW
 0xffaa44bc,CreateJumptable
+0xffaa732c,task_CtgTotalTask
 0xffab5a5c,task_ReadFileTask
 0xffab77c8,task_EffctDrv
 0xffab9470,MoveDCMotorCW_FW

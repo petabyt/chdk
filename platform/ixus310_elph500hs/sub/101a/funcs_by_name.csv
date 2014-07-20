@@ -529,6 +529,7 @@
 0xff3909cc,GetLoopGain_FW
 0xff30d048,GetLoopGainAdjValue_FW
 0xff30cf54,GetLoopGainCalcData_FW
+0xff390980,GetLoopGainCalcData_FW
 0xff30cdc0,GetLPFParallelBest_FW
 0xff03e690,GetMacroSupportZoomPoint_FW
 0xff30cc18,GetMechaDSPVersion_FW
@@ -1492,6 +1493,8 @@
 0xff02b1f4,TakeSemaphore
 0xff02b1f4,TakeSemaphore_FW
 0xff02b6f8,TakeSemaphoreStrictly
+0xff051490,task_Accelerometer
+0x000b5110,task_AdditionAgent
 0xff0de2cc,task_AfIntSrvTask
 0xff03db14,task_AFTask
 0xff058c90,task_ASIF
@@ -1509,8 +1512,11 @@
 0xff006124,task_ClockSave
 0xff2791e8,task_CntFlashTask
 0xff090ae8,task_CommonDrivers
+0xff00ed68,task_ConsoleSvr
 0xff185bbc,task_CreateHeaderTask
+0xff392ce4,task_CtgTotalTask
 0xff08b81c,task_CtrlSrv
+0xff14f270,task_dccdCalcTask
 0xff2e7128,task_DecJpgRd
 0xff0d3830,task_DetectMoveTask
 0xff0d9700,task_DevelopModule
@@ -1526,6 +1532,7 @@
 0xff0bdd18,task_ExpDrvTask
 0xff09a8b0,task_FaceFrame
 0xff146b30,task_Fencing
+0xff15de34,task_FileManMarkAllTask
 0xff2e13d0,task_FileScheduleTask
 0xff2e250c,task_FileWrite
 0xff2e250c,task_FileWriteTask
@@ -1546,14 +1553,19 @@
 0xff070104,task_ISMainTask
 0xff11d770,task_LcdConTask
 0xff05521c,task_LEDCon
+0xff06ef9c,task_LensController
 0xff06e440,task_LensController
 0xff103df0,task_LiveImageTask
+0xff00f404,task_LowConsole
 0xff12dc20,task_MainTargetTask
 0xff176ecc,task_MechaAlarm
+0xff178c40,task_MechaAlarm
 0xff177314,task_MechaCom
 0xff2fb6dc,task_MechaNCTask
 0xff2f6578,task_MechaShutter
 0xff153724,task_MetaCtg
+0xff2cf364,task_MetaCtgPrsTask
+0xff2d081c,task_MetaInspiTask
 0xff129dfc,task_MotionVector
 0xff308524,task_MovEdit
 0xff17fc00,task_MovieRecord
@@ -1566,6 +1578,7 @@
 0xff08530c,task_OpePlay
 0xff0249c8,task_PhySw
 0xff106434,task_PrcssFil
+0xff10ef7c,task_PTPSessionTASK
 0xff28e40c,task_PTPtoFAPI_EventProcTask
 0xff3c1500,task_ReadFileTask
 0xff32e7f4,task_ReadMultiConTask
@@ -1577,6 +1590,7 @@
 0xff184c8c,task_ShutterSoundTask
 0xff0f8a0c,task_SsgMainTask
 0xff0f8bbc,task_SsgPeriodTask
+0xff073d68,task_SsStartupTask
 0xff07c5e4,task_SsTask
 0xff00fbf4,task_Startup
 0xff02d9b4,task_StartupImage
@@ -1588,7 +1602,9 @@
 0xff17d37c,task_TmgGen
 0xff126730,task_TouchCalib
 0xff126730,task_TouchCalibFA
+0xff1268d4,task_TouchFACheck
 0xff059e84,task_TouchPanel
+0xff1269b4,task_TouchSvcCheck
 0xff117290,task_TrnsCtrlTask
 0xff00fe54,task_UartLog
 0xff039dac,task_WBCtrl

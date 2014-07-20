@@ -464,6 +464,7 @@
 0xff9542f4,GetLogToFile_FW
 0xffb0f01c,GetLoopGain_FW
 0xffa9d280,GetLoopGainAdjValue_FW
+0xffb0ef9c,GetLoopGainCalcData_FW
 0xffa9d210,GetLoopGainCalcData_FW
 0xffa9cffc,GetLPFParallelBest_FW
 0xffa9cf08,GetMechaDSPVersion_FW
@@ -1344,6 +1345,7 @@
 0xff838804,TakeSemaphoreStrictly
 0xff84a1e4,task__ImageSensorTask
 0xff855fd4,task_Accelerometer
+0x0007e09c,task_AdditionAgent
 0xff8c5474,task_AfIntSrvTask
 0xff8470b0,task_AFTask
 0xff85d754,task_ASIF
@@ -1357,8 +1359,11 @@
 0xff816078,task_ClockSave
 0xffa2a3dc,task_CntFlashTask
 0xff894538,task_CommonDrivers
+0xff81e96c,task_ConsoleSvr
 0xff950e58,task_CreateHeaderTask
+0xffb123bc,task_CtgTotalTask
 0xff88d674,task_CtrlSrv
+0xff921c00,task_dccdCalcTask
 0xffa80e60,task_DecJpgRd
 0xff8bf01c,task_DetectMoveTask
 0xffa02648,task_DetectVerticalWound
@@ -1376,6 +1381,7 @@
 0xff8ba2d4,task_ExpDrvTask
 0xff89c4bc,task_FaceFrame
 0xff9183cc,task_Fencing
+0xff92f0bc,task_FileManMarkAllTask
 0xffa789b8,task_FileScheduleTask
 0xffa79a40,task_FileWrite
 0xffa79a40,task_FileWriteTask
@@ -1395,10 +1401,13 @@
 0xff947fe8,task_ISComTask
 0xff872a3c,task_ISMainTask
 0xff859c20,task_LEDCon
+0xff8719c4,task_LensController
 0xff870f08,task_LensController
 0xffa376ac,task_LiveImageTask
+0xff81f024,task_LowConsole
 0xffa8d904,task_MechaShutter
 0xff92551c,task_MetaCtg
+0xffa68a2c,task_MetaCtgPrsTask
 0xff8ffdf0,task_MotionVector
 0xffa98bd4,task_MovEdit
 0xff94af08,task_MovieRecord
@@ -1410,6 +1419,7 @@
 0xff88624c,task_OpePlay
 0xff8331fc,task_PhySw
 0xff8e2190,task_PrcssFil
+0xff8e9e50,task_PTPSessionTASK
 0xffa3ef40,task_PTPtoFAPI_EventProcTask
 0xffb1f164,task_ReadFileTask
 0xffa7aed0,task_ReadScheduleTask
@@ -1422,6 +1432,7 @@
 0xff94f800,task_ShutterSoundTask
 0xff8db3d0,task_SsgMainTask
 0xff8db5f4,task_SsgPeriodTask
+0xff875d18,task_SsStartupTask
 0xff87d260,task_SsTask
 0xff81f804,task_Startup
 0xff83a874,task_StartupImage
@@ -1433,6 +1444,7 @@
 0xff8e5248,task_TimerUtility
 0xff8fd3ec,task_TouchCalib
 0xff8fd3ec,task_TouchCalibFA
+0xff8fd59c,task_TouchFACheck
 0xff85e89c,task_TouchPanel
 0xff8f2488,task_TrnsCtrlTask
 0xff81f9f4,task_UartLog

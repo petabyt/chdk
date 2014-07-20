@@ -1,3 +1,4 @@
+0x000bfd90,task_AdditionAgent
 0x0068a7bc,RegisterInterruptHandler
 0x0068a7e0,UnregisterInterruptHandler
 0x0068a7f8,GetSRAndDisableInterrupt
@@ -77,7 +78,9 @@
 0xff005be8,close
 0xff005d8c,Read
 0xff005d8c,Read_FW
+0xff00a2a4,task_ConsoleSvr
 0xff00a8b0,RotateConsoleZOder_FW
+0xff00a940,task_LowConsole
 0xff00aac0,CPrintf_FW
 0xff00ab18,CPutChar_FW
 0xff00ab40,GetCh_FW
@@ -348,6 +351,7 @@
 0xff0604f0,task_ImgPlayDrv
 0xff061650,task_RedEyeCapt
 0xff061c5c,task_LensController
+0xff062654,task_LensController
 0xff0630dc,IsLensOutside_FW
 0xff063100,GetFocusStartZoomPosition_FW
 0xff06335c,task_MechaAlarm
@@ -443,6 +447,7 @@
 0xff065a70,PT_MFOff_FW
 0xff065a80,PT_SetLtKids_FW
 0xff065a98,SS.Create_FW
+0xff067c04,task_SsStartupTask
 0xff068e64,task_CaptSeq
 0xff068e64,task_CaptSeqTask
 0xff0716a8,task_SsTask
@@ -631,6 +636,7 @@
 0xff101694,task_SyncPeriod
 0xff101728,task_SynchTask
 0xff1034ac,task_TimerUtility
+0xff10a550,task_PTPSessionTASK
 0xff10ec98,task_NormalThumbCache
 0xff112960,task_TrnsCtrlTask
 0xff11d490,LcdCon_SetLcdBackLightBrightness_FW
@@ -729,6 +735,7 @@
 0xff172838,File.ClearExifInfo_FW
 0xff172978,File.Delete_AllImg_FW
 0xff1729e0,File.Create_FW
+0xff17633c,task_FileManMarkAllTask
 0xff17b5a4,WriteSDCard
 0xff187bbc,StartCzTuning_FW
 0xff187bc4,MoveCzPeakPositon_FW
@@ -752,6 +759,7 @@
 0xff189f24,ReloadIrisAdjustment_FW
 0xff189f3c,ReloadGetaAdjustment_FW
 0xff189fb4,GetLensErrorStatus_FW
+0xff18a078,task_MechaAlarm
 0xff18a548,task_MechaCom
 0xff18b654,GetZoomPiSensorLevel_FW
 0xff18b69c,GetFocusPiSensorLevel_FW
@@ -1033,6 +1041,9 @@
 0xff2de09c,TerminateFAGeneralTest_FW
 0xff2de0a4,InitializeFAExtendFile_FW
 0xff2de0b4,TerminateFAExtendFile_FW
+0xff2e080c,task_CtgTotalTask
+0xff2e6e7c,task_MetaInspiTask
+0xff2ec8c8,task_MetaCtgPrsTask
 0xff2f3a58,task_FORMAT_TASK_PROGRESS
 0xff2f3c38,task_FORMAT_TASK_NAME
 0xff2fa29c,task_FileScheduleTask
@@ -1674,6 +1685,7 @@
 0xff3ad0f4,j_CancelLoopGainCalc_FW
 0xff3ad128,ReloadISAdjustment_FW
 0xff3ad168,CalcLoopGain_FW
+0xff3ad1d4,GetLoopGainCalcData_FW
 0xff3ad208,SetLoopGain_FW
 0xff3ad220,GetLoopGain_FW
 0xff3ad23c,SetISLensPWMMode_FW
