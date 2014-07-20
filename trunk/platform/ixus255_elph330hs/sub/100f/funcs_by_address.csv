@@ -1,3 +1,4 @@
+0x0017ae78,task_AdditionAgent
 0x0068a848,RegisterInterruptHandler
 0x0068a86c,UnregisterInterruptHandler
 0x0068a884,GetSRAndDisableInterrupt
@@ -77,7 +78,9 @@
 0xff005bdc,close
 0xff005d80,Read
 0xff005d80,Read_FW
+0xff00a354,task_ConsoleSvr
 0xff00a960,RotateConsoleZOder_FW
+0xff00a9f0,task_LowConsole
 0xff00ab70,CPrintf_FW
 0xff00abc8,CPutChar_FW
 0xff00abf0,GetCh_FW
@@ -123,6 +126,7 @@
 0xff033260,EngDrvBits
 0xff03351c,DisplayFactoryMode_FW
 0xff033528,UndisplayFactoryMode_FW
+0xff03367c,task_bomStopPTPIPTask
 0xff0336ac,StopPtpipServiceForFAWLAN_FW
 0xff0339d0,SetWLANFactoryMode_FW
 0xff033a10,ClearWLANFactoryMode_FW
@@ -227,6 +231,7 @@
 0xff07ec60,LeaveWLANNetwork_FW
 0xff07fb10,task_LachesisTest
 0xff08016c,task_startRedirectUARTTask
+0xff080370,task_fprintSNRTask
 0xff082a88,UIFS_CancelStoreLensTimer_FW
 0xff082c98,PB2Rec
 0xff082cd8,Rec2PB
@@ -378,6 +383,7 @@
 0xff0ab7ec,task_SD1stInit
 0xff0af540,task_RedEyeCapt
 0xff0b0134,task_LensController
+0xff0b0e28,task_LensController
 0xff0b1998,IsLensOutside_FW
 0xff0b19bc,GetFocusStartZoomPosition_FW
 0xff0b1c70,task_MechaAlarm
@@ -397,6 +403,7 @@
 0xff0b34d8,GetDISModeParameter_FW
 0xff0b364c,GetFixedPWMOutA_FW
 0xff0b3658,GetFixedPWMOutB_FW
+0xff0b55f8,task_SsStartupTask
 0xff0b6984,task_CaptSeq
 0xff0b6984,task_CaptSeqTask
 0xff0c03f8,SSFS_CompleteCaptModeChange_FW
@@ -593,6 +600,7 @@
 0xff182100,task_PTPtoFAPI_EventProcTask_Try
 0xff1821a4,task_PTPtoFAPI_EventProcTask_Block
 0xff184b10,add_ptp_handler
+0xff186b5c,task_PTPSessionTASK
 0xff189098,task_NormalThumbCache
 0xff18d420,task_TrnsCtrlTask
 0xff198748,task_ComWireless
@@ -753,6 +761,7 @@
 0xff226f4c,GetCurrentAvValue_FW
 0xff226f4c,GetIrisAv_FW
 0xff2271b0,GetLensErrorStatus_FW
+0xff227274,task_MechaAlarm
 0xff227740,task_MechaCom
 0xff2287e0,GetZoomPiSensorLevel_FW
 0xff228828,GetFocusPiSensorLevel_FW
@@ -1119,6 +1128,10 @@
 0xff399604,TerminateFAExtendFile_FW
 0xff399798,StartTestRecLog_FW
 0xff3997b0,StopTestRecLog_FW
+0xff39cf94,task_MetaInspiTask
+0xff3a3554,task_MetaCtgPrsTask
+0xff3abab8,task_FileManMarkAllTask
+0xff3abd3c,task_SetGeoTagExecution
 0xff3acac8,task_FORMAT_TASK_PROGRESS
 0xff3acca8,task_FORMAT_TASK_NAME
 0xff3b6654,task_FileWrite
@@ -1724,6 +1737,7 @@
 0xff4a01b8,SetISTuningOff_FW
 0xff4a01cc,SetISGyroCompensationMode_FW
 0xff4a01e8,CalcLoopGain_FW
+0xff4a0258,GetLoopGainCalcData_FW
 0xff4a0290,SetLoopGain_FW
 0xff4a02b4,GetLoopGain_FW
 0xff4a02bc,SetISLensPWMMode_FW
@@ -1759,6 +1773,7 @@
 0xff4a04b8,CancelLoopGainCalc_FW
 0xff4a04c8,ReloadISAdjustment_FW
 0xff4a04d8,MoveISLensToCentralPosition_FW
+0xff4a30d4,task_CtgTotalTask
 0xff4b46ec,task_ReadFileTask
 0xff4be3fc,SetPMByGpio_FW
 0xff4be414,ClearPMByGpio_FW

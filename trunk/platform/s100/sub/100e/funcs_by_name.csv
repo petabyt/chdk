@@ -553,6 +553,7 @@
 0xff400eb0,GetLoopGain_FW
 0xff3721ec,GetLoopGainAdjValue_FW
 0xff3720f8,GetLoopGainCalcData_FW
+0xff400e64,GetLoopGainCalcData_FW
 0xff371f64,GetLPFParallelBest_FW
 0xff37259c,GetMacroISAngleAndVelocityA_FW
 0xff3725cc,GetMacroISAngleAndVelocityB_FW
@@ -1596,6 +1597,8 @@
 0xff02b3ec,TakeSemaphore
 0xff02b3ec,TakeSemaphore_FW
 0xff02b8f0,TakeSemaphoreStrictly
+0xff0541bc,task_Accelerometer
+0x000c955c,task_AdditionAgent
 0xff0f67bc,task_AfIntSrvTask
 0xff03e8b0,task_AFTask
 0xff05eee4,task_ASIF
@@ -1614,9 +1617,12 @@
 0xff00617c,task_ClockSave
 0xff2ca8dc,task_CntFlashTask
 0xff09ce30,task_CommonDrivers
+0xff00eea8,task_ConsoleSvr
 0xff187df0,task_CorctTask
 0xff1d4354,task_CreateHeaderTask
+0xff32d2b8,task_CtgTotalTask
 0xff0956a8,task_CtrlSrv
+0xff196530,task_dccdCalcTask
 0xff34c7a4,task_DecJpgRd
 0xff0ea458,task_DetectMoveTask
 0xff0f1298,task_DevelopModule
@@ -1632,6 +1638,7 @@
 0xff0cfb78,task_ExpDrvTask
 0xff0aa660,task_FaceFrame
 0xff18d3c0,task_Fencing
+0xff1a93bc,task_FileManMarkAllTask
 0xff3466e0,task_FileScheduleTask
 0xff3476e0,task_FileWrite
 0xff3476e0,task_FileWriteTask
@@ -1642,6 +1649,7 @@
 0xff03c730,task_FrameTask
 0xff06b0c8,task_FsIoNotifyTask
 0xff040df4,task_GapMan
+0xff1aa4f0,task_GPSLogTask
 0xff05675c,task_GPStask
 0xff18a1c8,task_HDRMan
 0xff0571f0,task_HecMngTask
@@ -1656,14 +1664,19 @@
 0xff151cb4,task_LcdConTask
 0xff057f1c,task_LEDCon
 0xff075b90,task_LensController
+0xff07665c,task_LensController
 0xff13434c,task_LiveImageTask
+0xff00f544,task_LowConsole
 0xff16773c,task_MainTargetTask
+0xff1c41c4,task_MechaAlarm
 0xff077448,task_MechaAlarm
 0xff1c270c,task_MechaCom
 0xff1c4768,task_MechaCPUTransfer
 0xff1c86e8,task_MechaNCTask
 0xff35b1cc,task_MechaShutter
 0xff19d078,task_MetaCtg
+0xff338230,task_MetaCtgPrsTask
+0xff33973c,task_MetaInspiTask
 0xff169de8,task_MotionVector
 0xff36cc7c,task_MovEdit
 0xff1cc43c,task_MovieRecord
@@ -1678,6 +1691,7 @@
 0xff024938,task_PhySw
 0xff1c5610,task_PopDownStrobe
 0xff1c544c,task_PopUpStrobe
+0xff13e024,task_PTPSessionTASK
 0xff2e5e7c,task_PTPtoFAPI_EventProcTask_Block
 0xff2e5dd8,task_PTPtoFAPI_EventProcTask_Try
 0xff30dca8,task_Raw2Ss2YuvTask
@@ -1693,6 +1707,7 @@
 0xff1d22e8,task_ShutterSoundTask
 0xff1282c4,task_SsgMainTask
 0xff128474,task_SsgPeriodTask
+0xff07b960,task_SsStartupTask
 0xff0854ec,task_SsTask
 0xff00fd34,task_Startup
 0xff02e044,task_StartupImage

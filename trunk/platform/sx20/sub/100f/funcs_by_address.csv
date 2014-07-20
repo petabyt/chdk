@@ -1,3 +1,4 @@
+0x0006d99c,task_AdditionAgent
 0xff810da8,memShow_FW
 0xff813f38,strncpy
 0xff813f74,strncmp
@@ -25,7 +26,9 @@
 0xff81e844,ExitTask
 0xff81e844,ExitTask_FW
 0xff81e88c,DebugAssert
+0xff81e96c,task_ConsoleSvr
 0xff81ef94,RotateConsoleZOder_FW
+0xff81f024,task_LowConsole
 0xff81f1a4,CPrintf_FW
 0xff81f200,CPutChar_FW
 0xff81f22c,GetCh_FW
@@ -300,6 +303,7 @@
 0xff873f04,task_FirmTransferWaitTask
 0xff874120,IsLensOutside_FW
 0xff874144,task_LensController
+0xff874bfc,task_LensController
 0xff875678,GetFocusStartZoomPosition_FW
 0xff875af4,task_ISMainTask
 0xff875e00,ISInitMotion_FW
@@ -396,6 +400,7 @@
 0xff8797b4,task_RemoteCPUTask
 0xff879880,StartSwitchCheck_FW
 0xff8798dc,StopSwitchCheck_FW
+0xff87b880,task_SsStartupTask
 0xff87cd40,task_CaptSeq
 0xff87cd40,task_CaptSeqTask
 0xff87e70c,task_DvlpSeqTask
@@ -546,6 +551,7 @@
 0xff8c8828,task_ChaseFrame
 0xff8c9638,task_DispFace
 0xff8cb94c,task_DevelopModule
+0xff8cdf0c,task_EFChargeT
 0xff8ce3ac,EF.IsChargeFull_FW
 0xff8ce3ac,IsStrobeChargeCompleted
 0xff8d0028,task_AfIntSrvTask
@@ -558,6 +564,7 @@
 0xff8f2ff4,task_SyncPeriod
 0xff8f307c,task_SynchTask
 0xff8f52a4,task_TimerUtility
+0xff8f9eac,task_PTPSessionTASK
 0xff8fe400,task_NormalThumbCache
 0xff9024e4,task_TrnsCtrlTask
 0xff90aa40,LcdCon_SetLcdDriver_FW
@@ -648,9 +655,11 @@
 0xff92e8d8,ChangeDefectRecMontblancSize_FW
 0xff92ec5c,EnableDebugLogMode_FW
 0xff92ec70,DisableDebugLogMode_FW
+0xff93135c,task_dccdCalcTask
 0xff933544,GetImageFolder
 0xff9348e8,task_MetaCtg
 0xff93a114,task_DPOFTask
+0xff93d9c8,task_FileManMarkAllTask
 0xff940bac,WriteSDCard
 0xff947324,task_ImgEdt
 0xff94823c,task_ImgTrim
@@ -1038,6 +1047,7 @@
 0xffa614c8,InitializeSoundRec_FW
 0xffa614fc,TerminateSoundRec_FW
 0xffa69f7c,getImageDirName
+0xffa6c294,task_MetaCtgPrsTask
 0xffa77c60,task_FileScheduleTask
 0xffa78ce8,task_FileWrite
 0xffa78ce8,task_FileWriteTask
@@ -1625,6 +1635,7 @@
 0xffb06054,SetISGyroFilterCharge_FW
 0xffb060f0,j_CancelLoopGainCalc_FW
 0xffb06110,CalcLoopGain_FW
+0xffb06180,GetLoopGainCalcData_FW
 0xffb061e8,SetLoopGain_FW
 0xffb06200,GetLoopGain_FW
 0xffb0621c,SetISLensPWMMode_FW
@@ -1632,6 +1643,7 @@
 0xffb062e4,InitializeMechaDevice_FW
 0xffb0631c,TerminateMechaDevice_FW
 0xffb0638c,CreateJumptable
+0xffb096f0,task_CtgTotalTask
 0xffb182ec,task_ReadFileTask
 0xffb1c59c,task_EfctConTask
 0xffb1c738,task_EfctConLowTask

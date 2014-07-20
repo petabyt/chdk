@@ -1,3 +1,4 @@
+0x0006ae24,task_AdditionAgent
 0xff810da8,memShow_FW
 0xff813f38,strncpy
 0xff813f74,strncmp
@@ -25,7 +26,9 @@
 0xff81e844,ExitTask
 0xff81e844,ExitTask_FW
 0xff81e88c,DebugAssert
+0xff81e96c,task_ConsoleSvr
 0xff81ef94,RotateConsoleZOder_FW
+0xff81f024,task_LowConsole
 0xff81f1a4,CPrintf_FW
 0xff81f200,CPutChar_FW
 0xff81f22c,GetCh_FW
@@ -287,6 +290,7 @@
 0xff868b0c,task_SD1stInit
 0xff86c05c,task_ImgPlayDrv
 0xff86d130,task_RedEyeCapt
+0xff86d654,task_LensController
 0xff86e0f4,task_LensController
 0xff86e918,IsLensOutside_FW
 0xff86e93c,GetFocusStartZoomPosition_FW
@@ -381,6 +385,7 @@
 0xff8709d4,PT_MFOff
 0xff8709d4,PT_MFOff_FW
 0xff8709e4,SS.Create_FW
+0xff871e2c,task_SsStartupTask
 0xff872f84,task_CaptSeq
 0xff872f84,task_CaptSeqTask
 0xff874488,task_DvlpSeqTask
@@ -550,6 +555,7 @@
 0xff8db434,task_SyncPeriod
 0xff8db4bc,task_SynchTask
 0xff8dd6e4,task_TimerUtility
+0xff8e22ec,task_PTPSessionTASK
 0xff8e6840,task_NormalThumbCache
 0xff8ea924,task_TrnsCtrlTask
 0xff8f2d70,LcdCon_SetLcdDriver_FW
@@ -626,9 +632,11 @@
 0xff914394,ChangeDefectRecMontblancSize_FW
 0xff914718,EnableDebugLogMode_FW
 0xff91472c,DisableDebugLogMode_FW
+0xff916e18,task_dccdCalcTask
 0xff919000,GetImageFolder
 0xff91a380,task_MetaCtg
 0xff91fbac,task_DPOFTask
+0xff923460,task_FileManMarkAllTask
 0xff926644,WriteSDCard
 0xff92c8fc,task_ImgEdt
 0xff92d814,task_ImgTrim
@@ -942,6 +950,7 @@
 0xffa310dc,InitializeSoundRec_FW
 0xffa31110,TerminateSoundRec_FW
 0xffa39b90,getImageDirName
+0xffa3bea8,task_MetaCtgPrsTask
 0xffa47874,task_FileScheduleTask
 0xffa488fc,task_FileWrite
 0xffa488fc,task_FileWriteTask
@@ -1462,6 +1471,7 @@
 0xffad75d8,SetISGyroCompensationMode_FW
 0xffad7674,j_CancelLoopGainCalc_FW
 0xffad7694,CalcLoopGain_FW
+0xffad7704,GetLoopGainCalcData_FW
 0xffad776c,SetLoopGain_FW
 0xffad7784,GetLoopGain_FW
 0xffad77a0,SetISLensPWMMode_FW
@@ -1469,6 +1479,7 @@
 0xffad7868,InitializeMechaDevice_FW
 0xffad78a0,TerminateMechaDevice_FW
 0xffad7910,CreateJumptable
+0xffadab18,task_CtgTotalTask
 0xffae9524,task_ReadFileTask
 0xffaed7d4,task_EfctConTask
 0xffaed970,task_EfctConLowTask

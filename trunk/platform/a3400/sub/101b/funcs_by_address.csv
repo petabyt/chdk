@@ -1,3 +1,4 @@
+0x000ad504,task_AdditionAgent
 0x003f67bc,RegisterInterruptHandler
 0x003f67e0,UnregisterInterruptHandler
 0x003f67f8,GetSRAndDisableInterrupt
@@ -77,7 +78,9 @@
 0xff8159b4,close
 0xff815b58,Read
 0xff815b58,Read_FW
+0xff8197ac,task_ConsoleSvr
 0xff819db8,RotateConsoleZOder_FW
+0xff819e48,task_LowConsole
 0xff819fc8,CPrintf_FW
 0xff81a020,CPutChar_FW
 0xff81a048,GetCh_FW
@@ -214,6 +217,7 @@
 0xff8442d8,task_AFTask
 0xff844e30,GetMacroSupportZoomPoint_FW
 0xff845eec,ReloadAFAdjustment_FW
+0xff847e68,task__ImageSensorTask
 0xff84880c,SetMontblancVSize_FW
 0xff848820,GetMontblancVSize_FW
 0xff84b390,LiveImageTool.GetDzoomPosition_FW
@@ -343,6 +347,7 @@
 0xff86a334,task_ImgPlayDrv
 0xff86b474,task_RedEyeCapt
 0xff86ba7c,task_LensController
+0xff86c768,task_LensController
 0xff86d344,IsLensOutside_FW
 0xff86d368,GetFocusStartZoomPosition_FW
 0xff86d5f8,task_MechaAlarm
@@ -438,6 +443,7 @@
 0xff86fcbc,PT_MFOff_FW
 0xff86fccc,PT_SetLtKids_FW
 0xff86fcd4,SS.Create_FW
+0xff871290,task_SsStartupTask
 0xff872424,task_CaptSeq
 0xff872424,task_CaptSeqTask
 0xff8784fc,task_SsTask
@@ -623,6 +629,7 @@
 0xff8f4a18,task_SyncPeriod
 0xff8f4aa0,task_SynchTask
 0xff8f67fc,task_TimerUtility
+0xff8faf34,task_PTPSessionTASK
 0xff8ff0d8,task_NormalThumbCache
 0xff902da4,task_TrnsCtrlTask
 0xff90cec4,LcdCon_SetLcdBackLightBrightness_FW
@@ -650,6 +657,8 @@
 0xff910314,j_TurnOffDispForTouchPanelAdj_FW
 0xff910bf8,task_TouchCalib
 0xff910bf8,task_TouchCalibFA
+0xff910da0,task_TouchFACheck
+0xff910e80,task_TouchSvcCheck
 0xff911364,TouchPanelStartCalibration_FW
 0xff9113e4,TouchPanelAdjustmentNextStep_FW
 0xff911430,TouchPanelAdjustmentStart_FW
@@ -726,6 +735,7 @@
 0xff945328,File.ClearExifInfo_FW
 0xff945438,File.Delete_AllImg_FW
 0xff94549c,File.Create_FW
+0xff94772c,task_FileManMarkAllTask
 0xff94c1d0,WriteSDCard
 0xff957ba4,StartCzTuning_FW
 0xff957bac,MoveCzPeakPositon_FW
@@ -749,6 +759,7 @@
 0xff959ee8,ReloadIrisAdjustment_FW
 0xff959efc,ReloadGetaAdjustment_FW
 0xff959f74,GetLensErrorStatus_FW
+0xff95a038,task_MechaAlarm
 0xff95a508,task_MechaCom
 0xff95b5f0,GetZoomPiSensorLevel_FW
 0xff95b638,GetFocusPiSensorLevel_FW
@@ -1037,6 +1048,7 @@
 0xffa58380,TerminateFAGeneralTest_FW
 0xffa58388,InitializeFAExtendFile_FW
 0xffa58398,TerminateFAExtendFile_FW
+0xffa5a8b0,task_CtgTotalTask
 0xffa5e244,getImageDirName
 0xffa64198,task_FORMAT_TASK_PROGRESS
 0xffa64378,task_FORMAT_TASK_NAME
@@ -1677,6 +1689,7 @@
 0xffb00004,j_CancelLoopGainCalc_FW
 0xffb00038,ReloadISAdjustment_FW
 0xffb00078,CalcLoopGain_FW
+0xffb000e4,GetLoopGainCalcData_FW
 0xffb00118,SetLoopGain_FW
 0xffb00130,GetLoopGain_FW
 0xffb0014c,SetISLensPWMMode_FW

@@ -1,3 +1,4 @@
+0x0005a264,task_AdditionAgent
 0xff810bc4,memShow_FW
 0xff8139a8,malloc
 0xff813a7c,free
@@ -20,7 +21,9 @@
 0xff81b184,ExitTask
 0xff81b184,ExitTask_FW
 0xff81b1cc,DebugAssert
+0xff81b2ac,task_ConsoleSvr
 0xff81b8d4,RotateConsoleZOder_FW
+0xff81b964,task_LowConsole
 0xff81bae4,CPrintf_FW
 0xff81bb40,CPutChar_FW
 0xff81bb6c,GetCh_FW
@@ -296,6 +299,7 @@
 0xff862cd4,task_FirmTransferWaitTask
 0xff862fdc,IsLensOutside_FW
 0xff863000,task_LensController
+0xff863ad4,task_LensController
 0xff864544,GetFocusStartZoomPosition_FW
 0xff864584,GetLensErrorStatus_FW
 0xff864954,task_ISMainTask
@@ -550,6 +554,7 @@
 0xff8e5670,task_SynchTask
 0xff8e58ac,GetCapSynchroExpTime_FW
 0xff8e7418,task_TimerUtility
+0xff8edb88,task_PTPSessionTASK
 0xff8f0f94,task_PreLoadTask
 0xff8f58e4,task_TrnsCtrlTask
 0xff8f82e4,task_RapiRevr
@@ -613,9 +618,11 @@
 0xff921528,ChangeDefectRecPeakHoldSetting_FW
 0xff921808,EnableDebugLogMode_FW
 0xff92181c,DisableDebugLogMode_FW
+0xff923f88,task_dccdCalcTask
 0xff928684,task_FolderCreateCheckTask
 0xff928edc,task_MetaCtg
 0xff92d5b8,task_DPOFTask
+0xff930a44,task_FileManMarkAllTask
 0xff93dd0c,WriteSDCard
 0xff943c5c,task_ImgEdt
 0xff9448f4,task_ImgTrim
@@ -1002,6 +1009,7 @@
 0xffa39ff0,task_DirectOpEventQueueMngr
 0xffa3afbc,add_ptp_handler
 0xffa3d660,task_SelectThumbCache
+0xffa42edc,task_RAPI_Task
 0xffa481d4,TurnOnAFLamp_FW
 0xffa481f0,TurnOffAFLamp_FW
 0xffa4de9c,EngDrvOut_FW
@@ -1023,6 +1031,7 @@
 0xffa54220,StartSoundPlay_FW
 0xffa54268,InitializeSoundRec_FW
 0xffa5429c,TerminateSoundRec_FW
+0xffa5c5d4,task_MetaCtgPrsTask
 0xffa6b7e0,task_FileScheduleTask
 0xffa6c6e8,task_FileWrite
 0xffa6c6e8,task_FileWriteTask
@@ -1609,6 +1618,7 @@
 0xffafef24,SetISGyroFilterCharge_FW
 0xffafefc0,j_CancelLoopGainCalc_FW
 0xffafefe0,CalcLoopGain_FW
+0xffaff050,GetLoopGainCalcData_FW
 0xffaff0b8,SetLoopGain_FW
 0xffaff0d0,GetLoopGain_FW
 0xffaff184,InitializeMechaDevice_FW
@@ -1664,6 +1674,7 @@
 0xffaffbec,CaptureWithParam_FW
 0xffaffc00,ChangeImageDrive_FW
 0xffaffc14,CreateJumptable
+0xffb02f00,task_CtgTotalTask
 0xffb0fbec,task_ReadFileTask
 0xffb119f8,task_EffctDrv
 0xffb14aac,SetZoomLensICDriveData_FW

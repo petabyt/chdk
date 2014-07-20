@@ -1,3 +1,4 @@
+0x000b60f4,task_AdditionAgent
 0xff810dc8,memShow_FW
 0xff81402c,strncpy
 0xff814068,strncmp
@@ -25,7 +26,9 @@
 0xff81eb30,ExitTask
 0xff81eb30,ExitTask_FW
 0xff81eb78,DebugAssert
+0xff81ec58,task_ConsoleSvr
 0xff81f280,RotateConsoleZOder_FW
+0xff81f310,task_LowConsole
 0xff81f490,CPrintf_FW
 0xff81f4ec,CPutChar_FW
 0xff81f518,GetCh_FW
@@ -337,6 +340,7 @@
 0xff87cb34,CzDebugPrint_FW
 0xff87cff0,IsLensOutside_FW
 0xff87d014,task_LensController
+0xff87dae4,task_LensController
 0xff87e5d4,GetFocusStartZoomPosition_FW
 0xff87e9e0,task_ISMainTask
 0xff87eca8,ISInitMotion_FW
@@ -426,6 +430,7 @@
 0xff880744,PT_MFOff
 0xff880744,PT_MFOff_FW
 0xff880754,SS.Create_FW
+0xff881ff4,task_SsStartupTask
 0xff88322c,task_CaptSeq
 0xff88322c,task_CaptSeqTask
 0xff884c78,task_DvlpSeqTask
@@ -629,6 +634,7 @@
 0xff915f80,task_SyncPeriod
 0xff916008,task_SynchTask
 0xff918248,task_TimerUtility
+0xff91ddb8,task_PTPSessionTASK
 0xff9222e8,task_NormalThumbCache
 0xff9260a4,task_TrnsCtrlTask
 0xff92beec,LcdCon_SetLcdBackLightBrightness_FW
@@ -705,9 +711,11 @@
 0xff959e38,SetDefaultRecParameter_FW
 0xff95a038,EnableDebugLogMode_FW
 0xff95a04c,DisableDebugLogMode_FW
+0xff95c03c,task_dccdCalcTask
 0xff95e84c,GetImageFolder
 0xff95f9b4,task_MetaCtg
 0xff964e90,task_DPOFTask
+0xff968ff4,task_FileManMarkAllTask
 0xff96dd64,WriteSDCard
 0xff974048,task_ImgEdt
 0xff974f90,task_ImgTrim
@@ -980,6 +988,8 @@
 0xffab7460,InitializeSoundRec_FW
 0xffab74b0,TerminateSoundRec_FW
 0xffabf4b0,getImageDirName
+0xffac38e4,task_MetaCtgPrsTask
+0xffac489c,task_MetaInspiTask
 0xffad1010,task_FileScheduleTask
 0xffad200c,task_FileWrite
 0xffad200c,task_FileWriteTask
@@ -1587,6 +1597,7 @@
 0xffb66cd8,j_CancelLoopGainCalc_FW
 0xffb66d0c,ReloadISAdjustment_FW
 0xffb66d44,CalcLoopGain_FW
+0xffb66db4,GetLoopGainCalcData_FW
 0xffb66de8,SetLoopGain_FW
 0xffb66e00,GetLoopGain_FW
 0xffb66e1c,SetISLensPWMMode_FW
@@ -1600,6 +1611,7 @@
 0xffb66f98,GetISEstimateRadius_FW
 0xffb66fa0,SetISMacroMode_FW
 0xffb66ff8,NotifyISMacroDistance_FW
+0xffb69104,task_CtgTotalTask
 0xffb79aa8,task_ReadScheduleTask
 0xffb809f0,task_EfctConTask
 0xffb80b8c,task_EfctConLowTask

@@ -1,3 +1,4 @@
+0x000c3654,task_AdditionAgent
 0x003f6848,RegisterInterruptHandler
 0x003f686c,UnregisterInterruptHandler
 0x003f6884,GetSRAndDisableInterrupt
@@ -77,7 +78,9 @@
 0xff8158e4,close
 0xff815a88,Read
 0xff815a88,Read_FW
+0xff819304,task_ConsoleSvr
 0xff819910,RotateConsoleZOder_FW
+0xff8199a0,task_LowConsole
 0xff819b20,CPrintf_FW
 0xff819b78,CPutChar_FW
 0xff819ba0,GetCh_FW
@@ -122,6 +125,7 @@
 0xff82bdc0,EngDrvBits
 0xff82bfe4,DisplayFactoryMode_FW
 0xff82bff0,UndisplayFactoryMode_FW
+0xff82bffc,task_bomStopPTPIPTask
 0xff82c028,StopPtpipServiceForFAWLAN_FW
 0xff82c0e8,SetWLANFactoryMode_FW
 0xff82c0f0,ClearWLANFactoryMode_FW
@@ -214,6 +218,7 @@
 0xff841040,task_WBCtrl
 0xff8431c4,task_AFTask
 0xff843dfc,GetMacroSupportZoomPoint_FW
+0xff846d08,task__imageSensorTask
 0xff847668,SetMontblancVSize_FW
 0xff84767c,GetMontblancVSize_FW
 0xff84a414,LiveImageTool.GetDzoomPosition_FW
@@ -361,8 +366,10 @@
 0xff877b34,task_SD1stInit
 0xff87a6dc,task_RedEyeCapt
 0xff87b294,task_LensController
+0xff87be7c,task_LensController
 0xff87ca34,IsLensOutside_FW
 0xff87ca58,GetFocusStartZoomPosition_FW
+0xff87dfd8,task_SsStartupTask
 0xff87f1f4,task_CaptSeq
 0xff87f1f4,task_CaptSeqTask
 0xff885ee8,SSFS_CompleteCaptModeChange_FW
@@ -549,6 +556,7 @@
 0xff902c98,task_SyncPeriod
 0xff902d20,task_SynchTask
 0xff904a64,task_TimerUtility
+0xff90a568,task_PTPSessionTASK
 0xff90cde8,task_NormalThumbCache
 0xff910dc4,task_TrnsCtrlTask
 0xff916150,ExecuteResetFactoryWithRomWrite_FW
@@ -1029,6 +1037,7 @@
 0xffa66c9c,StartTestRecLog_FW
 0xffa66cb4,StopTestRecLog_FW
 0xffa69760,getImageDirName
+0xffa6fa20,task_FileManMarkAllTask
 0xffa701f0,task_FORMAT_TASK_PROGRESS
 0xffa703d0,task_FORMAT_TASK_NAME
 0xffa75e64,task_FileWrite
@@ -1423,6 +1432,7 @@
 0xffb18a90,InitializeMechaDevice_FW
 0xffb18acc,TerminateMechaDevice_FW
 0xffb18b44,CreateJumptable
+0xffb1c714,task_CtgTotalTask
 0xffb2a07c,task_ReadFileTask
 0xffb2eda0,SetPMByGpio_FW
 0xffb2edb0,ClearPMByGpio_FW

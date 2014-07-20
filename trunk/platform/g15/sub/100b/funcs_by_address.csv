@@ -1,3 +1,4 @@
+0x000e1028,task_AdditionAgent
 0x0068a848,RegisterInterruptHandler
 0x0068a86c,UnregisterInterruptHandler
 0x0068a884,GetSRAndDisableInterrupt
@@ -77,7 +78,9 @@
 0xff005b98,close
 0xff005d3c,Read
 0xff005d3c,Read_FW
+0xff009f64,task_ConsoleSvr
 0xff00a570,RotateConsoleZOder_FW
+0xff00a600,task_LowConsole
 0xff00a780,CPrintf_FW
 0xff00a7d8,CPutChar_FW
 0xff00a800,GetCh_FW
@@ -123,6 +126,7 @@
 0xff01b258,EngDrvBits
 0xff01b47c,DisplayFactoryMode_FW
 0xff01b488,UndisplayFactoryMode_FW
+0xff01b494,task_bomStopPTPIPTask
 0xff01b4c0,StopPtpipServiceForFAWLAN_FW
 0xff01b580,SetWLANFactoryMode_FW
 0xff01b588,ClearWLANFactoryMode_FW
@@ -219,6 +223,7 @@
 0xff0375b4,task_AFTask
 0xff038734,GetMacroSupportZoomPoint_FW
 0xff039c18,task_GapMan
+0xff03d088,task__ImageSensorTask
 0xff040e70,LiveImageTool.GetDzoomPosition_FW
 0xff041770,GetVRAMHPixelsSize
 0xff041770,GetVRAMHPixelsSize_FW
@@ -273,6 +278,7 @@
 0xff0599b0,_avsLoadParamData_FW
 0xff0599ec,_avsSaveAdjData_FW
 0xff059a2c,_avsChk_FW
+0xff059dc0,task_Accelerometer
 0xff05a684,GetSlantData_FW
 0xff05a6b8,GetAoriAccelerationData_FW
 0xff05a83c,j_GetX_AxisAcceleration_FW
@@ -429,6 +435,7 @@
 0xff081570,GetDISModeParameter_FW
 0xff081738,GetFixedPWMOutA_FW
 0xff081744,GetFixedPWMOutB_FW
+0xff0842f4,task_SsStartupTask
 0xff0856d8,task_CaptSeq
 0xff0856d8,task_CaptSeqTask
 0xff08f830,SSFS_CompleteCaptModeChange_FW
@@ -615,6 +622,7 @@
 0xff140500,task_SyncPeriod
 0xff140594,task_SynchTask
 0xff142314,task_TimerUtility
+0xff149510,task_PTPSessionTASK
 0xff14c594,task_NormalThumbCache
 0xff15066c,task_TrnsCtrlTask
 0xff156b18,ExecuteResetFactoryWithRomWrite_FW
@@ -775,6 +783,7 @@
 0xff1d6e7c,GetZoomPiSensorLevel_FW
 0xff1d6ec4,GetFocusPiSensorLevel_FW
 0xff1d6f0c,GetIrisPiSensorLevel_FW
+0xff1d7738,task_MechaAlarm
 0xff1d7cdc,task_MechaCPUTransfer
 0xff1d80dc,GetMechaShutterMoveTime_FW
 0xff1d8104,GetMechaShutterStatus_FW
@@ -1132,6 +1141,10 @@
 0xff3476f0,TerminateFAExtendFile_FW
 0xff347884,StartTestRecLog_FW
 0xff34789c,StopTestRecLog_FW
+0xff34a054,task_CtgTotalTask
+0xff35066c,task_MetaInspiTask
+0xff356138,task_MetaCtgPrsTask
+0xff35e654,task_FileManMarkAllTask
 0xff35f388,task_FORMAT_TASK_PROGRESS
 0xff35f568,task_FORMAT_TASK_NAME
 0xff367848,task_FileWrite
@@ -1750,6 +1763,7 @@
 0xff4345a8,SetISTuningOff_FW
 0xff4345bc,SetISGyroCompensationMode_FW
 0xff4345d8,CalcLoopGain_FW
+0xff434648,GetLoopGainCalcData_FW
 0xff434680,SetLoopGain_FW
 0xff4346a4,GetLoopGain_FW
 0xff4346ac,SetISLensPWMMode_FW

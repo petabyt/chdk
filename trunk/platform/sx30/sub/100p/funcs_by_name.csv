@@ -504,6 +504,7 @@
 0xff9976b4,GetLogToFile_FW
 0xffb5c13c,GetLoopGain_FW
 0xffaeb9d8,GetLoopGainAdjValue_FW
+0xffb5c0f0,GetLoopGainCalcData_FW
 0xffaeb968,GetLoopGainCalcData_FW
 0xffaeb720,GetLPFParallelBest_FW
 0xff84cf70,GetMacroSupportZoomPoint_FW
@@ -1575,6 +1576,7 @@
 0xff83a8e4,TakeSemaphore_FW
 0xff83adc4,TakeSemaphoreStrictly
 0xff84fcb8,task__ImageSensorTask
+0x000c9a2c,task_AdditionAgent
 0xff8ee784,task_AfIntSrvTask
 0xff84bf88,task_AFTask
 0xff868bd0,task_ASIF
@@ -1589,10 +1591,14 @@
 0xff8868c4,task_CaptSeqTask
 0xff8e57fc,task_ChaseFrame
 0xff816124,task_ClockSave
+0xffa75fb0,task_CntFlashTask
 0xff8a3b88,task_CommonDrivers
+0xff81ec58,task_ConsoleSvr
 0xffaae574,task_CorrectLiveTassenTask
 0xff993df8,task_CreateHeaderTask
+0xffb5e35c,task_CtgTotalTask
 0xff89d044,task_CtrlSrv
+0xff95ca0c,task_dccdCalcTask
 0xffad0c3c,task_DecJpgRd
 0xff8e4498,task_DetectMoveTask
 0xff8e8d88,task_DevelopModule
@@ -1600,6 +1606,7 @@
 0xff9657dc,task_DPOFTask
 0xff8aec7c,task_DSITask
 0xff8882f4,task_DvlpSeqTask
+0xff8ebc74,task_EFChargeT
 0xffb75958,task_EfctConLowTask
 0xffb757bc,task_EfctConTask
 0xff899334,task_EvShel
@@ -1607,6 +1614,7 @@
 0xff8d081c,task_ExpDrvTask
 0xff8ae7e8,task_FaceFrame
 0xff954490,task_Fencing
+0xff9698dc,task_FileManMarkAllTask
 0xffacaf88,task_FileScheduleTask
 0xffacbf84,task_FileWrite
 0xffacbf84,task_FileWriteTask
@@ -1625,13 +1633,17 @@
 0xff87f69c,task_ISMainTask
 0xff85f564,task_LcdConTask
 0xff8647f4,task_LEDCon
+0xff87d068,task_LensController
 0xff87c5b4,task_LensController
 0xff913f84,task_LiveImageTask
+0xff81f310,task_LowConsole
 0xff9834c4,task_MechaAlarm
 0xff980f2c,task_MechaCom
 0xff87de90,task_MechaLog
 0xffade7d0,task_MechaShutter
 0xff960300,task_MetaCtg
+0xffabd8c4,task_MetaCtgPrsTask
+0xffabe87c,task_MetaInspiTask
 0xff937208,task_MotionVector
 0xffae7838,task_MovEdit
 0xff88334c,task_MovieRecord
@@ -1643,6 +1655,7 @@
 0xff897130,task_OpePlay
 0xff8345e8,task_PhySw
 0xff854330,task_PrcssFil
+0xff9228bc,task_PTPSessionTASK
 0xffa8e224,task_PTPtoFAPI_EventProcTask
 0xffb8a980,task_ReadFileTask
 0xffb0aea4,task_ReadMultiConTask
@@ -1656,6 +1669,7 @@
 0xffaec9e8,task_ShutterSoundTask
 0xff90a158,task_SsgMainTask
 0xff90a350,task_SsgPeriodTask
+0xff885718,task_SsStartupTask
 0xff88decc,task_SsTask
 0xff81faf0,task_Startup
 0xff83d078,task_StartupImage

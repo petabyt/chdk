@@ -1,3 +1,4 @@
+0x000dd3d0,task_AdditionAgent
 0x00436848,RegisterInterruptHandler
 0x0043686c,UnregisterInterruptHandler
 0x00436884,GetSRAndDisableInterrupt
@@ -77,7 +78,9 @@
 0xff00593c,close
 0xff005ae0,Read
 0xff005ae0,Read_FW
+0xff009324,task_ConsoleSvr
 0xff009930,RotateConsoleZOder_FW
+0xff0099c0,task_LowConsole
 0xff009b40,CPrintf_FW
 0xff009b98,CPutChar_FW
 0xff009bc0,GetCh_FW
@@ -123,6 +126,7 @@
 0xff01a3ac,EngDrvBits
 0xff01a5d0,DisplayFactoryMode_FW
 0xff01a5dc,UndisplayFactoryMode_FW
+0xff01a5e8,task_bomStopPTPIPTask
 0xff01a614,StopPtpipServiceForFAWLAN_FW
 0xff01a6d4,SetWLANFactoryMode_FW
 0xff01a6dc,ClearWLANFactoryMode_FW
@@ -216,6 +220,7 @@
 0xff0342e0,task_AFTask
 0xff035378,GetMacroSupportZoomPoint_FW
 0xff03681c,task_PrcssFil
+0xff03994c,task__ImageSensorTask
 0xff03a30c,SetMontblancVSize_FW
 0xff03a320,GetMontblancVSize_FW
 0xff03cf94,LiveImageTool.GetDzoomPosition_FW
@@ -398,6 +403,7 @@
 0xff073c84,GetDISModeParameter_FW
 0xff073e4c,GetFixedPWMOutA_FW
 0xff073e58,GetFixedPWMOutB_FW
+0xff075d64,task_SsStartupTask
 0xff07706c,task_CaptSeq
 0xff07706c,task_CaptSeqTask
 0xff07df30,SSFS_CompleteCaptModeChange_FW
@@ -584,6 +590,7 @@
 0xff105170,task_SyncPeriod
 0xff1051f8,task_SynchTask
 0xff106f50,task_TimerUtility
+0xff10cb44,task_PTPSessionTASK
 0xff10fbc8,task_NormalThumbCache
 0xff113cec,task_TrnsCtrlTask
 0xff11968c,ExecuteResetFactoryWithRomWrite_FW
@@ -732,6 +739,7 @@
 0xff17d7c8,task_MechaCom
 0xff17efd4,GetZoomPiSensorLevel_FW
 0xff17f01c,GetFocusPiSensorLevel_FW
+0xff17f854,task_MechaAlarm
 0xff17fdf8,task_MechaCPUTransfer
 0xff1801f8,GetMechaShutterMoveTime_FW
 0xff180220,GetMechaShutterStatus_FW
@@ -1091,7 +1099,11 @@
 0xff29a674,TerminateFAExtendFile_FW
 0xff29a808,StartTestRecLog_FW
 0xff29a820,StopTestRecLog_FW
+0xff29d014,task_CtgTotalTask
 0xff2a27c8,getImageDirName
+0xff2a3850,task_MetaInspiTask
+0xff2a8d9c,task_MetaCtgPrsTask
+0xff2b00e0,task_FileManMarkAllTask
 0xff2b0c50,task_FORMAT_TASK_PROGRESS
 0xff2b0e30,task_FORMAT_TASK_NAME
 0xff2b81b0,task_FileWrite
@@ -1711,6 +1723,7 @@
 0xff355fd4,SetISTuningOff_FW
 0xff355fe8,SetISGyroCompensationMode_FW
 0xff356004,CalcLoopGain_FW
+0xff356074,GetLoopGainCalcData_FW
 0xff3560ac,SetLoopGain_FW
 0xff3560d0,GetLoopGain_FW
 0xff3560d8,SetISLensPWMMode_FW

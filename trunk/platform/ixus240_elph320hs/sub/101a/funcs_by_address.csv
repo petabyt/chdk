@@ -1,3 +1,4 @@
+0x00180ba4,task_AdditionAgent
 0x0068a7bc,RegisterInterruptHandler
 0x0068a7e0,UnregisterInterruptHandler
 0x0068a7f8,GetSRAndDisableInterrupt
@@ -77,7 +78,9 @@
 0xff005cf0,close
 0xff005e94,Read
 0xff005e94,Read_FW
+0xff00c148,task_ConsoleSvr
 0xff00c754,RotateConsoleZOder_FW
+0xff00c7e4,task_LowConsole
 0xff00c964,CPrintf_FW
 0xff00c9bc,CPutChar_FW
 0xff00c9e4,GetCh_FW
@@ -222,6 +225,8 @@
 0xff0561b0,GetMovieJpegVRAMHPixelsSize_FW
 0xff0561bc,GetMovieJpegVRAMVPixelsSize_FW
 0xff056324,StopContinuousVRAMData_FW
+0xff05c14c,task_LachesisTest
+0xff05c868,task_fprintSNRTask
 0xff05ee54,DispCon_ShowColorBar_FW
 0xff05ef14,DispCon_ShowFiveStep_FW
 0xff05f0d0,DispCon_ShowWhiteChart_FW
@@ -260,6 +265,7 @@
 0xff061190,_avsLoadParamData_FW
 0xff0611cc,_avsSaveAdjData_FW
 0xff06120c,_avsChk_FW
+0xff061778,task_Accelerometer
 0xff061e80,GetSlantData_FW
 0xff062040,j_GetX_AxisAcceleration_FW
 0xff062044,j_GetY_AxisAcceleration_FW
@@ -377,6 +383,7 @@
 0xff07cdf4,task_ImgPlayDrv
 0xff07df54,task_RedEyeCapt
 0xff07e560,task_LensController
+0xff07ef58,task_LensController
 0xff07f9e0,IsLensOutside_FW
 0xff07fa04,GetFocusStartZoomPosition_FW
 0xff07fc60,task_MechaAlarm
@@ -472,6 +479,7 @@
 0xff09fdd0,PT_MFOff_FW
 0xff09fde0,PT_SetLtKids_FW
 0xff09fdf8,SS.Create_FW
+0xff0a1de8,task_SsStartupTask
 0xff0a2ff4,task_CaptSeq
 0xff0a2ff4,task_CaptSeqTask
 0xff0aba9c,task_SsTask
@@ -669,6 +677,7 @@
 0xff145dc0,task_PTPtoFAPI_EventProcTask_Try
 0xff145e64,task_PTPtoFAPI_EventProcTask_Block
 0xff1487c8,add_ptp_handler
+0xff14a81c,task_PTPSessionTASK
 0xff14ec28,task_NormalThumbCache
 0xff152c64,task_TrnsCtrlTask
 0xff15d0d0,task_ComWireless
@@ -716,6 +725,8 @@
 0xff1792d4,j_TurnOffDispForTouchPanelAdj_FW
 0xff179bb8,task_TouchCalib
 0xff179bb8,task_TouchCalibFA
+0xff179d60,task_TouchFACheck
+0xff179e40,task_TouchSvcCheck
 0xff17a324,TouchPanelStartCalibration_FW
 0xff17a3a4,TouchPanelAdjustmentNextStep_FW
 0xff17a3f0,TouchPanelAdjustmentStart_FW
@@ -800,6 +811,7 @@
 0xff1c6684,File.ClearExifInfo_FW
 0xff1c67c4,File.Delete_AllImg_FW
 0xff1c682c,File.Create_FW
+0xff1ca188,task_FileManMarkAllTask
 0xff1d1a8c,WriteSDCard
 0xff1ddfd8,StartCzTuning_FW
 0xff1ddfe0,MoveCzPeakPositon_FW
@@ -823,6 +835,7 @@
 0xff1e0340,ReloadIrisAdjustment_FW
 0xff1e0358,ReloadGetaAdjustment_FW
 0xff1e03d0,GetLensErrorStatus_FW
+0xff1e0494,task_MechaAlarm
 0xff1e0964,task_MechaCom
 0xff1e1a70,GetZoomPiSensorLevel_FW
 0xff1e1ab8,GetFocusPiSensorLevel_FW
@@ -1120,6 +1133,9 @@
 0xff38073c,TerminateFAGeneralTest_FW
 0xff380744,InitializeFAExtendFile_FW
 0xff380754,TerminateFAExtendFile_FW
+0xff382e70,task_CtgTotalTask
+0xff3894e0,task_MetaInspiTask
+0xff38ef2c,task_MetaCtgPrsTask
 0xff3960bc,task_FORMAT_TASK_PROGRESS
 0xff39629c,task_FORMAT_TASK_NAME
 0xff39fe14,task_FileScheduleTask
@@ -1766,6 +1782,7 @@
 0xff48e2ec,j_CancelLoopGainCalc_FW
 0xff48e320,ReloadISAdjustment_FW
 0xff48e360,CalcLoopGain_FW
+0xff48e3cc,GetLoopGainCalcData_FW
 0xff48e400,SetLoopGain_FW
 0xff48e418,GetLoopGain_FW
 0xff48e434,SetISLensPWMMode_FW

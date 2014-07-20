@@ -1,3 +1,4 @@
+0x00070548,task_AdditionAgent
 0xffc00dcc,memShow_FW
 0xffc03f60,strncpy
 0xffc03f9c,strncmp
@@ -48,7 +49,9 @@
 0xffc0f618,WaitForAllEventFlagStrictly
 0xffc0f644,AcquireRecursiveLockStrictly
 0xffc0f680,DebugAssert
+0xffc0f760,task_ConsoleSvr
 0xffc0fd88,RotateConsoleZOder_FW
+0xffc0fe18,task_LowConsole
 0xffc0ff98,CPrintf_FW
 0xffc0fff4,CPutChar_FW
 0xffc10020,GetCh_FW
@@ -303,6 +306,7 @@
 0xffc51690,task_SD1stInit
 0xffc5430c,task_ImgPlayDrv
 0xffc5558c,task_RedEyeCapt
+0xffc55b24,task_LensController
 0xffc565c4,task_LensController
 0xffc56e1c,IsLensOutside_FW
 0xffc56e40,GetFocusStartZoomPosition_FW
@@ -342,6 +346,7 @@
 0xffc57260,PT_MFOff
 0xffc57260,PT_MFOff_FW
 0xffc57270,SS.Create_FW
+0xffc582f0,task_SsStartupTask
 0xffc59274,task_CaptSeq
 0xffc59274,task_CaptSeqTask
 0xffc5ee4c,task_SsTask
@@ -533,6 +538,7 @@
 0xffcb7ef0,task_SyncPeriod
 0xffcb7f78,task_SynchTask
 0xffcb9bd0,task_TimerUtility
+0xffcbf020,task_PTPSessionTASK
 0xffcc2f58,task_NormalThumbCache
 0xffcc703c,task_TrnsCtrlTask
 0xffcd2190,LcdCon_SetLcdDriver_FW
@@ -602,8 +608,10 @@
 0xffced3c8,SetDefaultRecParameter_FW
 0xffced5c8,EnableDebugLogMode_FW
 0xffced5dc,DisableDebugLogMode_FW
+0xffcef5cc,task_dccdCalcTask
 0xffcf1478,GetImageFolder
 0xffcf6e68,task_DPOFTask
+0xffcf997c,task_FileManMarkAllTask
 0xffcfcbcc,WriteSDCard
 0xffd0114c,task_ImgTrim
 0xffd02ab0,task_RedEyePly
@@ -1243,6 +1251,7 @@
 0xffe59e80,InitializeMechaDevice_FW
 0xffe59eb8,TerminateMechaDevice_FW
 0xffe59f28,CreateJumptable
+0xffe5cc30,task_CtgTotalTask
 0xffe6af10,MoveDCMotorCW_FW
 0xffe6af80,MoveDCMotorCCW_FW
 0xffe6bad4,GetFocusLensResetVoltage_FW

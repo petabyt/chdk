@@ -1,3 +1,4 @@
+0x000b4530,task_AdditionAgent
 0xff810dcc,memShow_FW
 0xff814030,strncpy
 0xff81406c,strncmp
@@ -25,7 +26,9 @@
 0xff81ec40,ExitTask
 0xff81ec40,ExitTask_FW
 0xff81ec88,DebugAssert
+0xff81ed68,task_ConsoleSvr
 0xff81f374,RotateConsoleZOder_FW
+0xff81f404,task_LowConsole
 0xff81f584,CPrintf_FW
 0xff81f5dc,CPutChar_FW
 0xff81f604,GetCh_FW
@@ -322,6 +325,7 @@
 0xff879540,task_ImgPlayDrv
 0xff87a8b0,task_RedEyeCapt
 0xff87af20,task_LensController
+0xff87b910,task_LensController
 0xff87c338,IsLensOutside_FW
 0xff87c35c,GetFocusStartZoomPosition_FW
 0xff87c768,task_ISMainTask
@@ -415,6 +419,7 @@
 0xff87e6b4,PT_MFOff
 0xff87e6b4,PT_MFOff_FW
 0xff87e6c4,SS.Create_FW
+0xff88018c,task_SsStartupTask
 0xff881368,task_CaptSeq
 0xff881368,task_CaptSeqTask
 0xff8831e8,task_DvlpSeqTask
@@ -621,6 +626,7 @@
 0xff911088,task_SyncPeriod
 0xff91111c,task_SynchTask
 0xff91338c,task_TimerUtility
+0xff9188d0,task_PTPSessionTASK
 0xff91ce0c,task_NormalThumbCache
 0xff920be4,task_TrnsCtrlTask
 0xff9269e8,LcdCon_SetLcdBackLightBrightness_FW
@@ -696,10 +702,12 @@
 0xff952e5c,SetDefaultRecParameter_FW
 0xff95305c,EnableDebugLogMode_FW
 0xff953070,DisableDebugLogMode_FW
+0xff955084,task_dccdCalcTask
 0xff956f00,GetImageFolder
 0xff958b8c,getImageDirName
 0xff959638,task_MetaCtg
 0xff95f554,task_DPOFTask
+0xff963d4c,task_FileManMarkAllTask
 0xff968358,WriteSDCard
 0xff96e958,task_ImgEdt
 0xff96f8a0,task_ImgTrim
@@ -724,6 +732,7 @@
 0xff979228,ReloadGetaAdjustment_FW
 0xff979290,GetLensErrorStatus_FW
 0xff979368,task_MechaAlarm
+0xff9795d4,task_MechaAlarm
 0xff979aa4,task_MechaCom
 0xff97ab20,GetZoomPiSensorLevel_FW
 0xff97ab68,GetFocusPiSensorLevel_FW
@@ -970,6 +979,8 @@
 0xffaa50e8,StartSoundPlay_FW
 0xffaa5120,InitializeSoundRec_FW
 0xffaa5170,TerminateSoundRec_FW
+0xffab21a0,task_MetaCtgPrsTask
+0xffab3658,task_MetaInspiTask
 0xffabfd2c,task_FileScheduleTask
 0xffac0d28,task_FileWrite
 0xffac0d28,task_FileWriteTask
@@ -1574,6 +1585,7 @@
 0xffb5b5bc,j_CancelLoopGainCalc_FW
 0xffb5b5f0,ReloadISAdjustment_FW
 0xffb5b62c,CalcLoopGain_FW
+0xffb5b698,GetLoopGainCalcData_FW
 0xffb5b6cc,SetLoopGain_FW
 0xffb5b6e4,GetLoopGain_FW
 0xffb5b700,SetISLensPWMMode_FW
@@ -1582,6 +1594,7 @@
 0xffb5b748,GetGyroFilterChargeStatus_FW
 0xffb5b7c8,SetISCrossTalkCompCoeff_FW
 0xffb5b7ec,GetISCrossTalkCompCoeff_FW
+0xffb5d9fc,task_CtgTotalTask
 0xffb6e2cc,task_ReadScheduleTask
 0xffb75240,task_EfctConTask
 0xffb753e4,task_EfctConLowTask

@@ -477,6 +477,7 @@
 0xff991938,GetLogToFile_FW
 0xffb7a968,GetLoopGain_FW
 0xffb05b24,GetLoopGainAdjValue_FW
+0xffb7a91c,GetLoopGainCalcData_FW
 0xffb05ab4,GetLoopGainCalcData_FW
 0xffb0586c,GetLPFParallelBest_FW
 0xffb05df4,GetMacroISEstimRadiusA_FW
@@ -1401,6 +1402,7 @@
 0xff83ad5c,TakeSemaphoreStrictly
 0xff850164,task__ImageSensorTask
 0xff86098c,task_Accelerometer
+0x000b5930,task_AdditionAgent
 0xff8ecb14,task_AfIntSrvTask
 0xff84c57c,task_AFTask
 0xff868418,task_ASIF
@@ -1415,9 +1417,13 @@
 0xff8e274c,task_ChaseFrame
 0xff939c4c,task_ChaseTask
 0xff816124,task_ClockSave
+0xffa84e28,task_CntFlashTask
 0xff89fcb4,task_CommonDrivers
+0xff81ec58,task_ConsoleSvr
 0xff98db04,task_CreateHeaderTask
+0xffb7cc6c,task_CtgTotalTask
 0xff898b88,task_CtrlSrv
+0xff95caec,task_dccdCalcTask
 0xffae57ac,task_DecJpgRd
 0xff8e1758,task_DetectMoveTask
 0xff8e6f3c,task_DevelopModule
@@ -1425,6 +1431,7 @@
 0xff965940,task_DPOFTask
 0xff8aa36c,task_DSITask
 0xff883e7c,task_DvlpSeqTask
+0xff8ea0f8,task_EFChargeT
 0xffb9487c,task_EfctConLowTask
 0xffb946e0,task_EfctConTask
 0xff894e58,task_EvShel
@@ -1432,6 +1439,7 @@
 0xff8cc0d0,task_ExpDrvTask
 0xff8a9e94,task_FaceFrame
 0xff95249c,task_Fencing
+0xff969aa4,task_FileManMarkAllTask
 0xffadfaf4,task_FileScheduleTask
 0xffae0af0,task_FileWrite
 0xffae0af0,task_FileWriteTask
@@ -1451,10 +1459,14 @@
 0xff982924,task_ISComTask
 0xff87d8b0,task_ISMainTask
 0xff86440c,task_LEDCon
+0xff87bda0,task_LensController
 0xff87c958,task_LensController
 0xff90fcc0,task_LiveImageTask
+0xff81f310,task_LowConsole
 0xffaf3920,task_MechaShutter
 0xff960464,task_MetaCtg
+0xffad23c8,task_MetaCtgPrsTask
+0xffad3380,task_MetaInspiTask
 0xff93626c,task_MotionVector
 0xffb03204,task_MovEdit
 0xff987094,task_MovieRecord
@@ -1467,6 +1479,7 @@
 0xff892c10,task_OpePlay
 0xff8345ec,task_PhySw
 0xff8544d4,task_PrcssFil
+0xff91e5f0,task_PTPSessionTASK
 0xffa9c7d8,task_PTPtoFAPI_EventProcTask
 0xffbaa3d4,task_ReadFileTask
 0xffb28d50,task_ReadMultiConTask
@@ -1481,6 +1494,7 @@
 0xffb0763c,task_ShutterSoundTask
 0xff9061b8,task_SsgMainTask
 0xff9063b0,task_SsgPeriodTask
+0xff8813c4,task_SsStartupTask
 0xff8899ac,task_SsTask
 0xff81faf0,task_Startup
 0xff83cfe8,task_StartupImage

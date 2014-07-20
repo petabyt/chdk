@@ -59,7 +59,9 @@
 0xffc0cc18,ExportToEventProcedure_FW
 0xffc0cc24,CreateProxyOfEventProcedure_FW
 0xffc0cc7c,DeleteProxyOfEventProcedure_FW
+0xffc0cde8,task_ConsoleSvr
 0xffc0d410,RotateConsoleZOder_FW
+0xffc0d4a0,task_LowConsole
 0xffc0d620,CPrintf_FW
 0xffc0d67c,CPutChar_FW
 0xffc0d6a8,GetCh_FW
@@ -297,6 +299,7 @@
 0xffc3c81c,RefreshAdjustmentTableMirror_FW
 0xffc3c904,WRITEADJTABLETOFROM_FW
 0xffc3c920,AddAdjDataToFRom_FW
+0xffc3dabc,task_EnterDPOFAllOrdersTask
 0xffc40468,UpdateMBROnFlash
 0xffc406a0,GetDrive_ClusterSize
 0xffc406d4,GetDrive_TotalClusters
@@ -313,6 +316,7 @@
 0xffc470b4,ShowMechaMacro_FW
 0xffc473d4,IsLensOutside_FW
 0xffc473f8,task_LensController
+0xffc47ebc,task_LensController
 0xffc489a0,GetLensErrorStatus_FW
 0xffc48a20,MoveLensToFirstPoint_FW
 0xffc48a68,MoveLensToTerminatePoint_FW
@@ -618,6 +622,7 @@
 0xffcabbb4,ReloadColorAdjustment_FW
 0xffcac0a0,task_SyncPeriod
 0xffcac128,task_SynchTask
+0xffcaeb4c,task_EntiCtrl
 0xffcaf130,task_SesnMngr
 0xffcafc50,task_TimerUtility
 0xffcb0344,COMFACHK_StartService_FW
@@ -627,6 +632,7 @@
 0xffcb04d4,COMFACHK_GetTransferTime_FW
 0xffcb0534,COMFACHK_SetSendDataSize_FW
 0xffcb53d8,add_ptp_handler
+0xffcb75cc,task_PTPSessionTASK
 0xffcbb940,task_PreLoadTask
 0xffcc0704,task_RCTaskResume
 0xffcc1b9c,task_TrnsCtrlTask
@@ -660,6 +666,9 @@
 0xffce5c00,FA.Create_FW
 0xffce5c2c,DispDev.Create_FW
 0xffce9d10,task_FolderCreateCheckTask
+0xffcef988,task_ConfirmPrintOrder
+0xffcef988,task_ConfirmTransferOrder
+0xffcf15e8,task_FileManMarkAllTask
 0xffcf3a80,task_FORMAT_TASK_PROGRESS
 0xffcf3b80,task_FORMAT_TASK_NAME
 0xffcf45e0,task_ReadAsyncTask
@@ -956,9 +965,16 @@
 0xffd9f154,LiveImageTool.ChangeDzoom_FW
 0xffd9f1c4,j_LiveImageTool.GetDzoomPosition_FW
 0xffd9f1c8,LiveImageTool.Jump_FW
+0xffda1970,task_CnctEntiRcv
+0xffda1aa0,task_CnctEntiSnd
+0xffda2788,task_SesnDaem
+0xffda3960,task_ReqRecev
 0xffda5738,task_DirectOpEventQueueMngr
 0xffda78dc,task_SelectThumbCache
+0xffdacdc4,task_RAPI_Task
 0xffdaf238,task_DCPClassTask
+0xffdb0114,task_DcpTrnCtrl
+0xffdb0254,task_DcpTrnTrns
 0xffdb6068,TurnOnAFLamp_FW
 0xffdb6084,TurnOffAFLamp_FW
 0xffdb740c,PrePro.Unpack_FW
@@ -1333,6 +1349,7 @@
 0xffe2aab4,atol_FW
 0xffe2aac0,memset
 0xffe2aac0,memset_FW
+0xffe35190,task_EvntExec
 0xffe3c1d8,SetDefaultRecParameter_FW
 0xffe3c4e0,SetSensitiveDefectRecParameter_FW
 0xffe3c4f0,SetSensitiveRecParameter_FW
@@ -1344,6 +1361,7 @@
 0xffe3cd30,StartSoundPlay_FW
 0xffe3cd78,InitializeSoundRec_FW
 0xffe3cdac,TerminateSoundRec_FW
+0xffe4089c,task_CtgTotalTask
 0xffe48efc,task_EffctDrv
 0xffe56f68,_log10
 0xffe570d8,_pow

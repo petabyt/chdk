@@ -1,3 +1,4 @@
+0x000b5930,task_AdditionAgent
 0xff810dc8,memShow_FW
 0xff81402c,strncpy
 0xff814068,strncmp
@@ -25,7 +26,9 @@
 0xff81eb30,ExitTask
 0xff81eb30,ExitTask_FW
 0xff81eb78,DebugAssert
+0xff81ec58,task_ConsoleSvr
 0xff81f280,RotateConsoleZOder_FW
+0xff81f310,task_LowConsole
 0xff81f490,CPrintf_FW
 0xff81f4ec,CPutChar_FW
 0xff81f518,GetCh_FW
@@ -331,6 +334,7 @@
 0xff87a548,task_ImgPlayDrv
 0xff87b900,task_RedEyeCapt
 0xff87bd7c,IsLensOutside_FW
+0xff87bda0,task_LensController
 0xff87c958,task_LensController
 0xff87d498,GetFocusStartZoomPosition_FW
 0xff87d8b0,task_ISMainTask
@@ -424,6 +428,7 @@
 0xff87f6fc,task_RemoteCPUTask
 0xff87f7c8,StartSwitchCheck_FW
 0xff87f824,StopSwitchCheck_FW
+0xff8813c4,task_SsStartupTask
 0xff88261c,task_CaptSeq
 0xff88261c,task_CaptSeqTask
 0xff883e7c,task_DvlpSeqTask
@@ -582,6 +587,7 @@
 0xff8e274c,task_ChaseFrame
 0xff8e3e74,task_DispFace
 0xff8e6f3c,task_DevelopModule
+0xff8ea0f8,task_EFChargeT
 0xff8ea5f0,EF.IsChargeFull_FW
 0xff8ea5f0,IsStrobeChargeCompleted
 0xff8ecb14,task_AfIntSrvTask
@@ -625,6 +631,7 @@
 0xff9167b8,task_SyncPeriod
 0xff916840,task_SynchTask
 0xff918a80,task_TimerUtility
+0xff91e5f0,task_PTPSessionTASK
 0xff922b20,task_NormalThumbCache
 0xff9268dc,task_TrnsCtrlTask
 0xff92c724,LcdCon_SetLcdBackLightBrightness_FW
@@ -701,9 +708,11 @@
 0xff95a8e8,SetDefaultRecParameter_FW
 0xff95aae8,EnableDebugLogMode_FW
 0xff95aafc,DisableDebugLogMode_FW
+0xff95caec,task_dccdCalcTask
 0xff95f2fc,GetImageFolder
 0xff960464,task_MetaCtg
 0xff965940,task_DPOFTask
+0xff969aa4,task_FileManMarkAllTask
 0xff96e820,WriteSDCard
 0xff974b04,task_ImgEdt
 0xff975a4c,task_ImgTrim
@@ -913,6 +922,7 @@
 0xffa7a808,j_TerminateDefectRec_FW
 0xffa7a8a8,DevelopTool.DevelopTest_FW
 0xffa83f6c,ReloadEfAdjustment_FW
+0xffa84e28,task_CntFlashTask
 0xffa89afc,EF.StartEFCharge_FW
 0xffa89b4c,EF.StopEFCharge_FW
 0xffa89b5c,EF.SetEFChargeTimeOut_FW
@@ -981,6 +991,8 @@
 0xffac5f44,InitializeSoundRec_FW
 0xffac5f94,TerminateSoundRec_FW
 0xffacdf94,getImageDirName
+0xffad23c8,task_MetaCtgPrsTask
+0xffad3380,task_MetaInspiTask
 0xffadfaf4,task_FileScheduleTask
 0xffae0af0,task_FileWrite
 0xffae0af0,task_FileWriteTask
@@ -1573,6 +1585,7 @@
 0xffb7a854,j_CancelLoopGainCalc_FW
 0xffb7a888,ReloadISAdjustment_FW
 0xffb7a8c0,CalcLoopGain_FW
+0xffb7a930,GetLoopGainCalcData_FW
 0xffb7a964,SetLoopGain_FW
 0xffb7a97c,GetLoopGain_FW
 0xffb7a998,SetISLensPWMMode_FW
@@ -1586,6 +1599,7 @@
 0xffb7ab14,GetISEstimateRadius_FW
 0xffb7ab1c,SetISMacroMode_FW
 0xffb7ab74,NotifyISMacroDistance_FW
+0xffb7cc80,task_CtgTotalTask
 0xffb8d7ac,task_ReadScheduleTask
 0xffb946f4,task_EfctConTask
 0xffb94890,task_EfctConLowTask

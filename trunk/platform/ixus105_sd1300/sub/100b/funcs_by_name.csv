@@ -446,6 +446,7 @@
 0xffe7bd18,GetLoopGain_FW
 0xffe19a30,GetLoopGainAdjValue_FW
 0xffe199c0,GetLoopGainCalcData_FW
+0xffe7bccc,GetLoopGainCalcData_FW
 0xffe19778,GetLPFParallelBest_FW
 0xffcb2848,GetMacroSupportZoomPoint_FW
 0xffe19670,GetMechaDSPVersion_FW
@@ -1299,6 +1300,7 @@
 0xffc29788,TakeSemaphore_FW
 0xffc29c68,TakeSemaphoreStrictly
 0xffc3a378,task__ImageSensorTask
+0x00073cd0,task_AdditionAgent
 0xffcb0fe4,task_AfIntSrvTask
 0xffcb1ed0,task_AFTask
 0xffc47eb0,task_AudioTsk
@@ -1315,8 +1317,11 @@
 0xffc0609c,task_ClockSave
 0xffdb4ef8,task_CntFlashTask
 0xffc77be0,task_CommonDrivers
+0xffc0ebf4,task_ConsoleSvr
 0xffe19ba8,task_CreateHeaderTask
+0xffe7ee7c,task_CtgTotalTask
 0xffc72d8c,task_CtrlSrv
+0xffcf9e88,task_dccdCalcTask
 0xffcabbb0,task_DetectMoveTask
 0xffcae0f0,task_DevelopModule
 0xffdab814,task_DispFace
@@ -1330,6 +1335,7 @@
 0xffc99618,task_ExpDrvTask
 0xffc7ebc8,task_FaceFrame
 0xffcf0974,task_Fencing
+0xffd0423c,task_FileManMarkAllTask
 0xffe02bfc,task_FileScheduleTask
 0xffe03b5c,task_FileWrite
 0xffe03b5c,task_FileWriteTask
@@ -1346,7 +1352,9 @@
 0xffc43d90,task_LcdConTask
 0xffc46fb8,task_LEDCon
 0xffc5a48c,task_LensController
+0xffc5aeb4,task_LensController
 0xffdced60,task_LiveImageTask
+0xffc0f2ac,task_LowConsole
 0xffd1532c,task_MechaCom
 0xffe10ab8,task_MechaShutter
 0xffcd9400,task_MotionVector
@@ -1357,6 +1365,7 @@
 0xffc6e30c,task_OpePlay
 0xffc241d4,task_PhySw
 0xffcbe544,task_PrcssFil
+0xffcc6b90,task_PTPSessionTASK
 0xffdd6ba0,task_PTPtoFAPI_EventProcTask
 0xffe07eb0,task_ReadFileTask
 0xffe0529c,task_ReadScheduleTask
@@ -1367,6 +1376,7 @@
 0xffd1fe0c,task_ShutterSoundTask
 0xffcb7508,task_SsgMainTask
 0xffcb76fc,task_SsgPeriodTask
+0xffc5e8dc,task_SsStartupTask
 0xffc657a0,task_SsTask
 0xffc0fa8c,task_Startup
 0xffc2bd50,task_StartupImage

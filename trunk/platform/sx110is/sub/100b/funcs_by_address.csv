@@ -1,3 +1,4 @@
+0x00043aa8,task_AdditionAgent
 0xffc00bc8,memShow_FW
 0xffc039ac,malloc
 0xffc03a80,free
@@ -43,7 +44,9 @@
 0xffc0bd30,WaitForAllEventFlagStrictly
 0xffc0bd5c,AcquireRecursiveLockStrictly
 0xffc0bd98,DebugAssert
+0xffc0be78,task_ConsoleSvr
 0xffc0c4a0,RotateConsoleZOder_FW
+0xffc0c530,task_LowConsole
 0xffc0c6b0,CPrintf_FW
 0xffc0c70c,CPutChar_FW
 0xffc0c738,GetCh_FW
@@ -293,6 +296,7 @@
 0xffc47ca0,task_ImgPlayDrv
 0xffc48c90,task_RedEyeCapt
 0xffc491e8,IsLensOutside_FW
+0xffc4920c,task_LensController
 0xffc49ce4,task_LensController
 0xffc4a668,GetFocusStartZoomPosition_FW
 0xffc4a674,GetLensErrorStatus_FW
@@ -516,6 +520,7 @@
 0xffcae164,ReloadColorAdjustment_FW
 0xffcae650,task_SyncPeriod
 0xffcae6d8,task_SynchTask
+0xffcb027c,task_EntiCtrl
 0xffcb0860,task_SesnMngr
 0xffcb1380,task_TimerUtility
 0xffcb1a74,COMFACHK_StartService_FW
@@ -524,6 +529,7 @@
 0xffcb1ba0,COMFACHK_StartSendLargeData_FW
 0xffcb1c04,COMFACHK_GetTransferTime_FW
 0xffcb1c64,COMFACHK_SetSendDataSize_FW
+0xffcb7f50,task_PTPSessionTASK
 0xffcbad08,task_PreLoadTask
 0xffcbfca0,task_RCTaskResume
 0xffcc10f4,task_TrnsCtrlTask
@@ -574,9 +580,11 @@
 0xffce9618,ChangeDefectRecPeakHoldSetting_FW
 0xffce98f8,EnableDebugLogMode_FW
 0xffce990c,DisableDebugLogMode_FW
+0xffcebff4,task_dccdCalcTask
 0xffceefbc,task_FolderCreateCheckTask
 0xffcef7dc,task_MetaCtg
 0xffcf3e8c,task_DPOFTask
+0xffcf71d8,task_FileManMarkAllTask
 0xffd02b30,WriteSDCard
 0xffd06844,task_ImgTrim
 0xffd0819c,task_RedEyePly
@@ -831,10 +839,17 @@
 0xffdb9c38,LiveImageTool.ChangeDzoom_FW
 0xffdb9ca8,j_LiveImageTool.GetDzoomPosition_FW
 0xffdb9cac,LiveImageTool.Jump_FW
+0xffdbc3fc,task_CnctEntiRcv
+0xffdbc52c,task_CnctEntiSnd
+0xffdbd214,task_SesnDaem
+0xffdbe3ec,task_ReqRecev
 0xffdc01f0,task_DirectOpEventQueueMngr
 0xffdc1104,add_ptp_handler
 0xffdc3720,task_SelectThumbCache
+0xffdc8d9c,task_RAPI_Task
 0xffdcb210,task_DCPClassTask
+0xffdcc0ec,task_DcpTrnCtrl
+0xffdcc22c,task_DcpTrnTrns
 0xffdd1edc,TurnOnAFLamp_FW
 0xffdd1ef8,TurnOffAFLamp_FW
 0xffdd34a8,EngDrvOut_FW
@@ -856,6 +871,7 @@
 0xffdd9bb0,StartSoundPlay_FW
 0xffdd9bf8,InitializeSoundRec_FW
 0xffdd9c2c,TerminateSoundRec_FW
+0xffde3ee4,task_MetaCtgPrsTask
 0xffdef0a4,task_FileScheduleTask
 0xffdefed8,task_FileWrite
 0xffdefed8,task_FileWriteTask
@@ -1078,6 +1094,7 @@
 0xffe3659c,LCDMsg_SetNum_FW
 0xffe365ac,LCDMsg_SetStr_FW
 0xffe36674,LCDMsg_ChangeColor_FW
+0xffe528d8,task_EvntExec
 0xffe56e6c,PrintAllAEIntegData_FW
 0xffe57704,AbortAEIntegralValue_FW
 0xffe57758,SetAEIntegStrobeProperty_FW
@@ -1400,6 +1417,7 @@
 0xffe61230,InitializeMechaDevice_FW
 0xffe61268,TerminateMechaDevice_FW
 0xffe612d8,CreateJumptable
+0xffe6410c,task_CtgTotalTask
 0xffe721e8,task_ReadFileTask
 0xffe740e8,task_EffctDrv
 0xffe75da8,MoveDCMotorCW_FW

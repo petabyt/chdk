@@ -1,3 +1,4 @@
+0x000adf50,task_AdditionAgent
 0xff810dcc,memShow_FW
 0xff814030,strncpy
 0xff81406c,strncmp
@@ -25,7 +26,9 @@
 0xff81ec40,ExitTask
 0xff81ec40,ExitTask_FW
 0xff81ec88,DebugAssert
+0xff81ed68,task_ConsoleSvr
 0xff81f374,RotateConsoleZOder_FW
+0xff81f404,task_LowConsole
 0xff81f584,CPrintf_FW
 0xff81f5dc,CPutChar_FW
 0xff81f604,GetCh_FW
@@ -186,6 +189,7 @@
 0xff84c3d4,task_AFTask
 0xff84cedc,GetMacroSupportZoomPoint_FW
 0xff84de24,ReloadAFAdjustment_FW
+0xff84faa8,task__ImageSensorTask
 0xff850428,SetMontblancVSize_FW
 0xff85043c,GetMontblancVSize_FW
 0xff85312c,LiveImageTool.GetDzoomPosition_FW
@@ -308,6 +312,7 @@
 0xff8732d4,task_ImgPlayDrv
 0xff87463c,task_RedEyeCapt
 0xff874b88,task_LensController
+0xff8754e0,task_LensController
 0xff875d88,IsLensOutside_FW
 0xff875dac,GetFocusStartZoomPosition_FW
 0xff876014,PT_CompletePreCapt_FW
@@ -346,6 +351,7 @@
 0xff876254,PT_MFOff
 0xff876254,PT_MFOff_FW
 0xff876264,SS.Create_FW
+0xff87780c,task_SsStartupTask
 0xff8788f0,task_CaptSeq
 0xff8788f0,task_CaptSeqTask
 0xff879e10,task_DvlpSeqTask
@@ -550,6 +556,7 @@
 0xff8fe31c,task_SyncPeriod
 0xff8fe3a4,task_SynchTask
 0xff9005cc,task_TimerUtility
+0xff904ea8,task_PTPSessionTASK
 0xff9093e4,task_NormalThumbCache
 0xff90d1bc,task_TrnsCtrlTask
 0xff912f44,LcdCon_SetLcdBackLightBrightness_FW
@@ -625,9 +632,11 @@
 0xff93aa10,SetDefaultRecParameter_FW
 0xff93ac10,EnableDebugLogMode_FW
 0xff93ac24,DisableDebugLogMode_FW
+0xff93cc38,task_dccdCalcTask
 0xff93e9ac,GetImageFolder
 0xff9408a0,task_MetaCtg
 0xff94600c,task_DPOFTask
+0xff94a3dc,task_FileManMarkAllTask
 0xff94e7cc,WriteSDCard
 0xff954b00,task_ImgTrim
 0xff956dcc,task_RedEyePly
@@ -895,6 +904,8 @@
 0xffa6d354,InitializeSoundRec_FW
 0xffa6d3a4,TerminateSoundRec_FW
 0xffa756fc,getImageDirName
+0xffa7a4a8,task_MetaCtgPrsTask
+0xffa7b960,task_MetaInspiTask
 0xffa87f14,task_FileScheduleTask
 0xffa88ec4,task_FileWrite
 0xffa88ec4,task_FileWriteTask
@@ -1318,6 +1329,7 @@
 0xffb1a8f4,InitializeMechaDevice_FW
 0xffb1a92c,TerminateMechaDevice_FW
 0xffb1a9a0,CreateJumptable
+0xffb1dc00,task_CtgTotalTask
 0xffb2e094,task_ReadScheduleTask
 0xffb34b84,task_EfctConTask
 0xffb34d28,task_EfctConLowTask

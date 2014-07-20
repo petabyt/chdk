@@ -1,3 +1,4 @@
+0x0004e070,task_AdditionAgent
 0xff810bf4,memShow_FW
 0xff813968,malloc
 0xff813a3c,free
@@ -20,7 +21,9 @@
 0xff81b23c,ExitTask
 0xff81b23c,ExitTask_FW
 0xff81b284,DebugAssert
+0xff81b364,task_ConsoleSvr
 0xff81b98c,RotateConsoleZOder_FW
+0xff81ba1c,task_LowConsole
 0xff81bb9c,CPrintf_FW
 0xff81bbf8,CPutChar_FW
 0xff81bc24,GetCh_FW
@@ -289,6 +292,7 @@
 0xff859200,task_ImgPlayDrv
 0xff85a224,task_RedEyeCapt
 0xff85a844,task_LensController
+0xff85b1b0,task_LensController
 0xff85bbd8,IsLensOutside_FW
 0xff85bbfc,GetFocusStartZoomPosition_FW
 0xff85bc3c,GetLensErrorStatus_FW
@@ -379,6 +383,7 @@
 0xff85e964,PT_MFOff
 0xff85e964,PT_MFOff_FW
 0xff85e974,SS.Create_FW
+0xff85fdb8,task_SsStartupTask
 0xff860f34,task_CaptSeq
 0xff860f34,task_CaptSeqTask
 0xff8623cc,task_DvlpSeqTask
@@ -544,6 +549,7 @@
 0xff8c76d0,task_SyncPeriod
 0xff8c7758,task_SynchTask
 0xff8c9964,task_TimerUtility
+0xff8ce484,task_PTPSessionTASK
 0xff8d2e04,task_NormalThumbCache
 0xff8d6d84,task_TrnsCtrlTask
 0xff8deb04,LcdCon_SetLcdDriver_FW
@@ -618,9 +624,11 @@
 0xff8fead0,ChangeDefectRecMontblancSize_FW
 0xff8feed0,EnableDebugLogMode_FW
 0xff8feee4,DisableDebugLogMode_FW
+0xff9015a4,task_dccdCalcTask
 0xff904014,task_FolderCreateCheckTask
 0xff90486c,task_MetaCtg
 0xff909134,task_DPOFTask
+0xff90c88c,task_FileManMarkAllTask
 0xff918b18,WriteSDCard
 0xff91ea34,task_ImgEdt
 0xff91f8e4,task_ImgTrim
@@ -911,6 +919,7 @@
 0xffa0f02c,StartSoundPlay_FW
 0xffa0f074,InitializeSoundRec_FW
 0xffa0f0a8,TerminateSoundRec_FW
+0xffa19624,task_MetaCtgPrsTask
 0xffa251b4,task_FileScheduleTask
 0xffa25fb4,task_FileWrite
 0xffa25fb4,task_FileWriteTask
@@ -1408,6 +1417,7 @@
 0xffa9ed9c,SetISGyroFilterCharge_FW
 0xffa9ee38,j_CancelLoopGainCalc_FW
 0xffa9ee58,CalcLoopGain_FW
+0xffa9eec8,GetLoopGainCalcData_FW
 0xffa9ef30,SetLoopGain_FW
 0xffa9ef48,GetLoopGain_FW
 0xffa9ef64,SetISLensPWMMode_FW
@@ -1415,6 +1425,7 @@
 0xffa9f02c,InitializeMechaDevice_FW
 0xffa9f064,TerminateMechaDevice_FW
 0xffa9f0d4,CreateJumptable
+0xffaa22e4,task_CtgTotalTask
 0xffab0d6c,task_ReadFileTask
 0xffab4068,MoveDCMotorCW_FW
 0xffab40d8,MoveDCMotorCCW_FW
