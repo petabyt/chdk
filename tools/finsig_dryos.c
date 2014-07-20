@@ -4954,15 +4954,21 @@ void add_func_name(char *n, uint32_t eadr, char *suffix)
     }
 
     for (k=0; func_names[k].name != 0; k++)
+    {
         if (strcmp(func_names[k].name, s) == 0)
         {
-            if (func_names[k].val == 0)
+            if (func_names[k].val == 0)             // same name, no address
             {
                 func_names[k].val = eadr;
                 func_names[k].flags |= EV_MATCH;
+                return;
             }
-            return;
+            else if (func_names[k].val == eadr)     // same name, same address
+            {
+                return;
+            }
         }
+    }
 
     func_names[next_func_entry].name = s;
     func_names[next_func_entry].flags = OPTIONAL|UNUSED;
@@ -5175,60 +5181,56 @@ void find_eventprocs(firmware *fw)
     }
 }
 
+uint32_t findTaskAddress(firmware *fw, int k, int reg)
+{
+    int o;
+
+    for (o=-1; o>-7; o--)
+    {
+        if (isLDR_PC(fw,k+o) && (fwRd(fw,k+o) == reg))
+        {
+            uint32_t adr = LDR2val(fw,k+o);
+            int i;
+            for (i=o+1; i<0; i++)
+            {
+                if (fwval(fw,k+i) == (0xE5900000 | (reg << 12) | (reg << 16)))    // LDR Rx,[Rx]
+                {
+                    adr = fwval(fw,adr2idx(fw,adr));
+                }
+            }
+            return adr;
+        }
+        else if (isADR_PC(fw,k+o) && (fwRd(fw,k+o) == reg))
+        {
+            return(ADR2adr(fw,k+o));
+        }
+    }
+
+    return 0;
+}
+
 int match_createtask(firmware *fw, int k, uint32_t fadr, uint32_t v2)
 {
-    if (isBorBL(fw,k+4))
+    if (isBorBL(fw,k))
     {
-        uint32_t adr = followBranch2(fw,idx2adr(fw,k+4),0x01000001);
+        uint32_t adr = followBranch2(fw,idx2adr(fw,k),0x01000001);
         if (adr == fadr)
         {
-            if ((isADR(fw,k)   || isLDR(fw,k))   && // LDR, ADR or MOV
-                (isADR(fw,k+1) || isLDR(fw,k+1)) && // LDR, ADR or MOV
-                (isADR(fw,k+2) || isLDR(fw,k+2)) && // LDR, ADR or MOV
-                (isADR(fw,k+3) || isLDR(fw,k+3)))   // LDR, ADR or MOV
+            fadr = findTaskAddress(fw, k, 3);
+            if (fadr != 0)
             {
-                fadr = 0;
-                if      (isLDR_PC(fw,k)   && (fwRd(fw,k)   == 3)) fadr = LDR2val(fw,k);
-                else if (isADR_PC(fw,k)   && (fwRd(fw,k)   == 3)) fadr = ADR2adr(fw,k);
-                else if (isLDR_PC(fw,k+1) && (fwRd(fw,k+1) == 3)) fadr = LDR2val(fw,k+1);
-                else if (isADR_PC(fw,k+1) && (fwRd(fw,k+1) == 3)) fadr = ADR2adr(fw,k+1);
-                else if (isLDR_PC(fw,k+2) && (fwRd(fw,k+2) == 3)) fadr = LDR2val(fw,k+2);
-                else if (isADR_PC(fw,k+2) && (fwRd(fw,k+2) == 3)) fadr = ADR2adr(fw,k+2);
-                else if (isLDR_PC(fw,k+3) && (fwRd(fw,k+3) == 3)) fadr = LDR2val(fw,k+3);
-                else if (isADR_PC(fw,k+3) && (fwRd(fw,k+3) == 3)) fadr = ADR2adr(fw,k+3);
-                if (fadr != 0)
+                uint32_t sadr = findTaskAddress(fw, k, 0);
+                if (sadr != 0)
                 {
-                    uint32_t sadr = 0;
-                    if      (isLDR_PC(fw,k)   && (fwRd(fw,k)   == 0)) sadr = LDR2val(fw,k);
-                    else if (isADR_PC(fw,k)   && (fwRd(fw,k)   == 0)) sadr = ADR2adr(fw,k);
-                    else if (isLDR_PC(fw,k+1) && (fwRd(fw,k+1) == 0)) sadr = LDR2val(fw,k+1);
-                    else if (isADR_PC(fw,k+1) && (fwRd(fw,k+1) == 0)) sadr = ADR2adr(fw,k+1);
-                    else if (isLDR_PC(fw,k+2) && (fwRd(fw,k+2) == 0)) sadr = LDR2val(fw,k+2);
-                    else if (isADR_PC(fw,k+2) && (fwRd(fw,k+2) == 0)) sadr = ADR2adr(fw,k+2);
-                    else if (isLDR_PC(fw,k+3) && (fwRd(fw,k+3) == 0)) sadr = LDR2val(fw,k+3);
-                    else if (isADR_PC(fw,k+3) && (fwRd(fw,k+3) == 0)) sadr = ADR2adr(fw,k+3);
-                    if (sadr == 0)
-                    {
-                        if (isLDR_PC(fw,k-1) && (fwRd(fw,k-1) == 0))
-                        {
-                            sadr = fwval(fw,adr2idx(fw,LDR2val(fw,k-1)));
-                        }
-                        else if (isLDR_PC(fw,k-2) && (fwRd(fw,k-2) == 0))
-                        {
-                            sadr = fwval(fw,adr2idx(fw,LDR2val(fw,k-2)));
-                        }
-                    }
-                    if (sadr != 0)
-                    {
-                        char *s = adr2ptr(fw,sadr);
-                        char *nm = malloc(strlen(s)+6);
-                        sprintf(nm,"task_%s",s);
-                        add_func_name(nm, fadr, 0);
-                    }
+                    char *s = adr2ptr(fw,sadr);
+                    char *nm = malloc(strlen(s)+6);
+                    sprintf(nm,"task_%s",s);
+                    add_func_name(nm, fadr, 0);
                 }
             }
         }
     }
+
     return 0;
 }
 
@@ -5237,12 +5239,12 @@ void find_tasks(firmware *fw)
     int k = get_saved_sig(fw,"CreateTask");
     if (k >= 0)
     {
-        search_fw(fw, match_createtask, func_names[k].val, 0, 5);
+        search_fw(fw, match_createtask, func_names[k].val, 0, 7);
     }
     k = get_saved_sig(fw,"CreateTaskStrictly");
     if (k >= 0)
     {
-        search_fw(fw, match_createtask, func_names[k].val, 0, 5);
+        search_fw(fw, match_createtask, func_names[k].val, 0, 7);
     }
 }
 
