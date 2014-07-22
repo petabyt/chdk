@@ -55,6 +55,8 @@
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
     #define DNG_EXT_FROM                    ".DPS"
 
+    #define CAM_EXT_TV_RANGE                1
+
     #undef CAM_BITMAP_WIDTH
     #undef CAM_BITMAP_HEIGHT
     #define CAM_BITMAP_WIDTH                480 // Actual width of bitmap screen in bytes

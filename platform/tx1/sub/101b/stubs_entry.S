@@ -100,8 +100,8 @@ NHSTUB(GetDrive_ClusterSize                   ,0xffaae4c8) //119
 NHSTUB(GetDrive_FreeClusters                  ,0xffaae540) //1103
 NHSTUB(GetDrive_TotalClusters                 ,0xffaae504) //119
 NHSTUB(GetOpticalTemperature                  ,0xffa48d58) //120
-//NHSTUB(GetZoomLensCurrentPoint              ,0xffaff7b4) //120            == 0xffaff7b4
-//NHSTUB(GetZoomLensCurrentPosition           ,0xffaff7c8) //102            == 0xffaff7c8
+NHSTUB(GetZoomLensCurrentPoint                ,0xffaff7b4) //120
+NHSTUB(GetZoomLensCurrentPosition             ,0xffaff7c8) //102
 NHSTUB(GiveSemaphore                          ,0xffb41714) //120
 NHSTUB(IsStrobeChargeCompleted                ,0xff9b8f54) //  2
 NHSTUB(LEDDrive                               ,0xffa428a0) //120
@@ -110,7 +110,7 @@ NHSTUB(LockMainPower                          ,0xffb63900) //120
 NHSTUB(MakeDirectory_Fut                      ,0xffaaa364) //  3
 NHSTUB(MoveFocusLensToDistance                ,0xffa662cc) //102
 NHSTUB(MoveIrisWithAv                         ,0xffaf25c8) //120
-//NHSTUB(MoveZoomLensWithPoint                ,0xffaff6d8) //120            == 0xffaff6d8
+NHSTUB(MoveZoomLensWithPoint                  ,0xffaff6d8) //120
 NHSTUB(Open                                   ,0xffaaecb4) //120
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xffb388bc) //120
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xffb38880) //120
@@ -126,7 +126,7 @@ NHSTUB(SetCurrentCaptureModeType              ,0xff829c58) //120
 NHSTUB(SetFileAttributes                      ,0xffaaeec4) //  3
 NHSTUB(SetLogicalEventActive                  ,0xffb61410) //1104
 NHSTUB(SetPropertyCase                        ,0xff81bc20) //  3
-//NHSTUB(SetScriptMode                        ,0xffb61474) //120            == 0xffb61474
+NHSTUB(SetScriptMode                          ,0xffb61474) //120
 NHSTUB(SleepTask                              ,0xffb41a5c) //120
 NHSTUB(TakeSemaphore                          ,0xffb4150c) //1101
 NHSTUB(TurnOffBackLight                       ,0xff848a6c) //  2
