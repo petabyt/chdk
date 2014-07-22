@@ -1769,7 +1769,9 @@
 0xffb16c30,task_MovRead
 0xffb1a1a4,StoptDtExecuteMenu_FW
 0xffb1a3f0,StartDtExecuteMenu_FW
+0xffb26d70,_divmod_signed_int
 0xffb26fe4,_log10
 0xffb27154,_pow
 0xffb28358,_log
+0xffb28f98,_divmod_unsigned_int
 0xffb29fb4,_sqrt

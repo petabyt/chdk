@@ -1,3 +1,5 @@
+0xffb9f3e4,_divmod_signed_int
+0xffba18b4,_divmod_unsigned_int
 0xff83b074,_GetSystemTime
 0xffba0c74,_log
 0xffb9f900,_log10
@@ -477,8 +479,8 @@
 0xff99015c,GetLogToFile_FW
 0xffb66e00,GetLoopGain_FW
 0xffaf848c,GetLoopGainAdjValue_FW
-0xffb66db4,GetLoopGainCalcData_FW
 0xffaf841c,GetLoopGainCalcData_FW
+0xffb66db4,GetLoopGainCalcData_FW
 0xffaf81d4,GetLPFParallelBest_FW
 0xffaf875c,GetMacroISEstimRadiusA_FW
 0xffaf8778,GetMacroISEstimRadiusB_FW
@@ -1469,8 +1471,8 @@
 0xff87e9e0,task_ISMainTask
 0xff85eef4,task_LcdConTask
 0xff86453c,task_LEDCon
-0xff87dae4,task_LensController
 0xff87d014,task_LensController
+0xff87dae4,task_LensController
 0xff90f488,task_LiveImageTask
 0xff81f310,task_LowConsole
 0xffae5778,task_MechaShutter

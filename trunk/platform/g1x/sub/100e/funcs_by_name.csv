@@ -1,6 +1,8 @@
 0xff051dec,_avsLoadAdjTableData_FW
 0xff0522cc,_avsSaveAdjTableData_FW
 0xff051dcc,_avsShowAdjTableData_FW
+0xff45edac,_divmod_signed_int
+0xff45ef90,_divmod_unsigned_int
 0xff02aec8,_GetSystemTime
 0xff45fc28,_log
 0xff460168,_log10
@@ -549,8 +551,8 @@
 0xff1d6638,GetLogToFile_FW
 0xff40c26c,GetLoopGain_FW
 0xff372260,GetLoopGainAdjValue_FW
-0xff40c220,GetLoopGainCalcData_FW
 0xff37216c,GetLoopGainCalcData_FW
+0xff40c220,GetLoopGainCalcData_FW
 0xff371fd8,GetLPFParallelBest_FW
 0xff372610,GetMacroISAngleAndVelocityA_FW
 0xff372640,GetMacroISAngleAndVelocityB_FW

@@ -1999,6 +1999,8 @@
 0xff3ffec0,j_GetVcmDacOutData_FW
 0xff40134c,task_MovRead
 0xff426d44,task_ReadFileTask
+0xff42fdb0,_divmod_signed_int
+0xff42ff94,_divmod_unsigned_int
 0xff430340,_log
 0xff430880,_log10
 0xff4309f8,_pow

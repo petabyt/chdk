@@ -1,6 +1,8 @@
 0xff0536a4,_avsLoadAdjTableData_FW
 0xff053b84,_avsSaveAdjTableData_FW
 0xff053684,_avsShowAdjTableData_FW
+0xff42fdb4,_divmod_signed_int
+0xff42ff98,_divmod_unsigned_int
 0xff02c0fc,_GetSystemTime
 0xff430340,_log
 0xff430880,_log10
@@ -597,8 +599,8 @@
 0xff1d9b04,GetLogToFile_FW
 0xff3e5b40,GetLoopGain_FW
 0xff357580,GetLoopGainAdjValue_FW
-0xff3e5af4,GetLoopGainCalcData_FW
 0xff35748c,GetLoopGainCalcData_FW
+0xff3e5af4,GetLoopGainCalcData_FW
 0xff3572f8,GetLPFParallelBest_FW
 0xff357894,GetMacroISAngleAndVelocityA_FW
 0xff3578c4,GetMacroISAngleAndVelocityB_FW
@@ -1827,8 +1829,8 @@
 0xff072dc4,task_ISMainTask
 0xff1512bc,task_LcdConTask
 0xff056a7c,task_LEDCon
-0xff070508,task_LensController
 0xff06fa88,task_LensController
+0xff070508,task_LensController
 0xff133cc4,task_LiveImageTask
 0xff00f544,task_LowConsole
 0xff165458,task_MainTargetTask

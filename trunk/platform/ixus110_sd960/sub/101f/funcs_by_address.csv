@@ -1447,7 +1447,9 @@
 0xffad61c4,MoveDCMotorCCW_FW
 0xffad6d98,GetFocusLensResetVoltage_FW
 0xffad9668,task_MovRead
+0xffae967c,_divmod_signed_int
 0xffae98f0,_log10
 0xffae9a60,_pow
 0xffaeac64,_log
+0xffaeb8a4,_divmod_unsigned_int
 0xffaec808,_sqrt

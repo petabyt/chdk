@@ -42,6 +42,8 @@
 0x006b9210,time
 0x006b92c4,GetTimeOfSystem_FW
 0x006b9a38,LocalTime
+0x006d4d28,_divmod_signed_int
+0x006d6344,_divmod_unsigned_int
 0x006d7138,_log
 0x006d7678,_log10
 0x006d77f0,_pow

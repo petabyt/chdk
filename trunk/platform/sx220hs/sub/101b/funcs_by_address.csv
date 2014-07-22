@@ -1658,6 +1658,8 @@
 0xff390328,SetDCMotorWaitTime_FW
 0xff3912d8,GetFocusLensResetVoltage_FW
 0xff3a3508,task_ReadFileTask
+0xff3ab920,_divmod_signed_int
+0xff3abb04,_divmod_unsigned_int
 0xff3ac798,_log
 0xff3accd8,_log10
 0xff3ace50,_pow

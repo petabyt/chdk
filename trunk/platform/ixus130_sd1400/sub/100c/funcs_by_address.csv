@@ -1500,7 +1500,9 @@
 0xffb1e1f4,GetFocusLensResetVoltage_FW
 0xffb20b20,task_MovRead
 0xffb224fc,task_AviRead
+0xffb39a60,_divmod_signed_int
 0xffb39e6c,_log10
 0xffb39fdc,_pow
 0xffb3af28,_log
+0xffb3b51c,_divmod_unsigned_int
 0xffb3c2f4,_sqrt

@@ -1484,7 +1484,9 @@
 0xffe8fa0c,task_AviRead
 0xffe91984,task_AviPlay
 0xffe9f528,task_EfctConTask
+0xffea30fc,_divmod_signed_int
 0xffea3260,_log10
 0xffea33d0,_pow
 0xffea431c,_log
+0xffea4910,_divmod_unsigned_int
 0xffea5684,_sqrt

@@ -1422,7 +1422,9 @@
 0xffe5d534,task_AviPlay
 0xffe69464,task_EfctConTask
 0xffe694c0,task_EfctConLowTask
+0xffe6d0fc,_divmod_signed_int
 0xffe6d260,_log10
 0xffe6d3d0,_pow
 0xffe6e31c,_log
+0xffe6e910,_divmod_unsigned_int
 0xffe6f684,_sqrt

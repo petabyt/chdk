@@ -1932,5 +1932,7 @@
 0xf8556cc8,task_ImagePlaySysConTask
 0xf8556fd0,task_ImageRetryConTask
 0xf8594934,task_ReadFileTask
+0xf8648144,_divmod_signed_int
+0xf86482cc,_divmod_unsigned_int
 0xf86488dc,_pow
 0xf8648914,_log10

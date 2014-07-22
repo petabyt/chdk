@@ -1,3 +1,5 @@
+0xffade504,_divmod_signed_int
+0xffae072c,_divmod_unsigned_int
 0xff8281e8,_GetSystemTime
 0xffadfaec,_log
 0xffade778,_log10
@@ -1262,8 +1264,8 @@
 0xff85fa04,task_ISMainTask
 0xff84a480,task_JogDial
 0xff8495cc,task_LEDCon
-0xff85ed18,task_LensController
 0xff85e260,task_LensController
+0xff85ed18,task_LensController
 0xff81b964,task_LowConsole
 0xffa3d308,task_MechaShutter
 0xff90da64,task_MetaCtg
