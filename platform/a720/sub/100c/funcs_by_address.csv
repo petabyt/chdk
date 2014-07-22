@@ -1350,7 +1350,9 @@
 0xffe20a2c,TerminateSoundRec_FW
 0xffe2451c,task_CtgTotalTask
 0xffe2cd58,task_EffctDrv
+0xffe3b6bc,_divmod_signed_int
 0xffe3b820,_log10
 0xffe3b990,_pow
 0xffe3c8dc,_log
+0xffe3ced0,_divmod_unsigned_int
 0xffe3dc44,_sqrt

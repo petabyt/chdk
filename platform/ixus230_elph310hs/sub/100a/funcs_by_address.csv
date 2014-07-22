@@ -1689,6 +1689,8 @@
 0xff383b64,GetFocusLensResetVoltage_FW
 0xff3865c0,task_MovRead
 0xff39aa94,task_ReadFileTask
+0xff3a2d78,_divmod_signed_int
+0xff3a2f5c,_divmod_unsigned_int
 0xff3a3308,_log
 0xff3a3848,_log10
 0xff3a39c0,_pow

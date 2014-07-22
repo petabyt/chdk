@@ -1,3 +1,5 @@
+0xffb58b34,_divmod_signed_int
+0xffb58d18,_divmod_unsigned_int
 0xff83a968,_GetSystemTime
 0xffb590c0,_log
 0xffb59600,_log10
@@ -1450,8 +1452,8 @@
 0xff8fdaa4,task_LiveImageTask
 0xff81f404,task_LowConsole
 0xff91e798,task_MainTargetTask
-0xff96232c,task_MechaAlarm
 0xff9620c0,task_MechaAlarm
+0xff96232c,task_MechaAlarm
 0xff9627fc,task_MechaCom
 0xffaa0794,task_MechaShutter
 0xff943464,task_MetaCtg

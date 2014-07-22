@@ -4,6 +4,8 @@
 0xff061190,_avsLoadParamData_FW
 0xff0611cc,_avsSaveAdjData_FW
 0xff060b80,_avsShowAdjData_FW
+0x006ab91c,_divmod_signed_int
+0x006acf38,_divmod_unsigned_int
 0xff03b578,_GetSystemTime
 0x006ae618,_log
 0x006aeb58,_log10
@@ -1614,8 +1616,8 @@
 0xff05c14c,task_LachesisTest
 0xff16dc80,task_LcdConTask
 0xff064e30,task_LEDCon
-0xff07ef58,task_LensController
 0xff07e560,task_LensController
+0xff07ef58,task_LensController
 0xff13d43c,task_LiveImageTask
 0xff00c7e4,task_LowConsole
 0xff07fc60,task_MechaAlarm

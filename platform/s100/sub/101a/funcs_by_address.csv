@@ -1833,6 +1833,8 @@
 0xff41ab44,GetFocusLensResetVoltage_FW
 0xff41e2e4,task_MovRead
 0xff443e50,task_ReadFileTask
+0xff44e144,_divmod_signed_int
+0xff44e328,_divmod_unsigned_int
 0xff44ef48,_log
 0xff44f410,_log10
 0xff44f574,_pow

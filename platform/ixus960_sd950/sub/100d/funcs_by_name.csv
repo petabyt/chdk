@@ -1,3 +1,5 @@
+0xffa91cb8,_divmod_signed_int
+0xffa934cc,_divmod_unsigned_int
 0xff829b50,_GetSystemTime
 0xffa92ed8,_log
 0xffa91e1c,_log10
@@ -1186,8 +1188,8 @@
 0xff9cb544,task_CnctEntiSnd
 0xff9c305c,task_CntFlashTask
 0xff8710a8,task_CommonDrivers
-0xff909254,task_ConfirmPlayOrder
 0xff909164,task_ConfirmPlayOrder
+0xff909254,task_ConfirmPlayOrder
 0xff909164,task_ConfirmPrintOrder
 0xff909164,task_ConfirmTransferOrder
 0xff81cd20,task_ConsoleSvr

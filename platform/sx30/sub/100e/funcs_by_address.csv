@@ -1795,7 +1795,9 @@
 0xffb796d0,j_GetVcmDacOutData_FW
 0xffb7a418,task_AviRead
 0xffb8a6c8,task_ReadFileTask
+0xffb92584,_divmod_signed_int
 0xffb92990,_log10
 0xffb92b00,_pow
 0xffb93a4c,_log
+0xffb94040,_divmod_unsigned_int
 0xffb94e18,_sqrt

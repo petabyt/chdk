@@ -57,6 +57,8 @@
 0x0067f6b0,LocalTime
 0x0067fb58,time
 0x0067fc08,GetTimeOfSystem_FW
+0x006953f8,_divmod_signed_int
+0x00696a14,_divmod_unsigned_int
 0x00697808,_log
 0x00697d48,_log10
 0x00697ec0,_pow

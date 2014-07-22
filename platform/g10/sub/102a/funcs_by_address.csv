@@ -1440,7 +1440,9 @@
 0xffaf0d1c,task_MovRead
 0xffaf2328,task_AviRead
 0xffaf5600,StartDtExecuteMenu_FW
+0xffb052e0,_divmod_signed_int
 0xffb05554,_log10
 0xffb056c4,_pow
 0xffb068c8,_log
+0xffb07508,_divmod_unsigned_int
 0xffb08524,_sqrt

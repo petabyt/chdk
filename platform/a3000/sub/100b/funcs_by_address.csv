@@ -1472,7 +1472,9 @@
 0xffe79f04,task_AviRead
 0xffe7be6c,task_AviPlay
 0xffe89c4c,task_EfctConTask
+0xffe8d814,_divmod_signed_int
 0xffe8d978,_log10
 0xffe8dae8,_pow
 0xffe8ea34,_log
+0xffe8f028,_divmod_unsigned_int
 0xffe8fd9c,_sqrt

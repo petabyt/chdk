@@ -1,3 +1,5 @@
+0xffbb3570,_divmod_signed_int
+0xffbb5a40,_divmod_unsigned_int
 0xff83b1dc,_GetSystemTime
 0xffbb4e00,_log
 0xffbb3a8c,_log10
@@ -477,8 +479,8 @@
 0xff991938,GetLogToFile_FW
 0xffb7a97c,GetLoopGain_FW
 0xffb05b18,GetLoopGainAdjValue_FW
-0xffb7a930,GetLoopGainCalcData_FW
 0xffb05aa8,GetLoopGainCalcData_FW
+0xffb7a930,GetLoopGainCalcData_FW
 0xffb05860,GetLPFParallelBest_FW
 0xffb05de8,GetMacroISEstimRadiusA_FW
 0xffb05e04,GetMacroISEstimRadiusB_FW

@@ -4,6 +4,8 @@
 0xff0599b0,_avsLoadParamData_FW
 0xff0599ec,_avsSaveAdjData_FW
 0xff0593a0,_avsShowAdjData_FW
+0x00690494,_divmod_signed_int
+0x0069092c,_divmod_unsigned_int
 0xff020ad4,_GetSystemTime
 0x006915c0,_log
 0x00691b00,_log10
@@ -574,8 +576,8 @@
 0xff1ea584,GetLogToFile_FW
 0xff4346a4,GetLoopGain_FW
 0xff38e4e4,GetLoopGainAdjValue_FW
-0xff434648,GetLoopGainCalcData_FW
 0xff38e3f0,GetLoopGainCalcData_FW
+0xff434648,GetLoopGainCalcData_FW
 0xff38e25c,GetLPFParallelBest_FW
 0xff38e894,GetMacroISAngleAndVelocityA_FW
 0xff38e8c4,GetMacroISAngleAndVelocityB_FW
@@ -1646,8 +1648,8 @@
 0xff07de00,task_LensController
 0xff13e394,task_LiveImageTask
 0xff00a600,task_LowConsole
-0xff1d7738,task_MechaAlarm
 0xff07fa40,task_MechaAlarm
+0xff1d7738,task_MechaAlarm
 0xff1d5e4c,task_MechaCom
 0xff1d7cdc,task_MechaCPUTransfer
 0xff1dc070,task_MechaNCTask

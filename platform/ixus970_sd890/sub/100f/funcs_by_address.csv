@@ -999,7 +999,9 @@
 0xffa9cb44,MoveDCMotorCCW_FW
 0xffa9d6cc,GetFocusLensResetVoltage_FW
 0xffaa289c,StartDtExecuteMenu_FW
+0xffaada50,_divmod_signed_int
 0xffaadbb4,_log10
 0xffaadd24,_pow
 0xffaaec70,_log
+0xffaaf264,_divmod_unsigned_int
 0xffab0090,_sqrt

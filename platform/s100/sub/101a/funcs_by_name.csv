@@ -1,6 +1,8 @@
 0xff05392c,_avsLoadAdjTableData_FW
 0xff053e0c,_avsSaveAdjTableData_FW
 0xff05390c,_avsShowAdjTableData_FW
+0xff44e144,_divmod_signed_int
+0xff44e328,_divmod_unsigned_int
 0xff02bfd8,_GetSystemTime
 0xff44ef48,_log
 0xff44f410,_log10
@@ -1668,8 +1670,8 @@
 0xff13434c,task_LiveImageTask
 0xff00f544,task_LowConsole
 0xff16773c,task_MainTargetTask
-0xff1c41c4,task_MechaAlarm
 0xff077448,task_MechaAlarm
+0xff1c41c4,task_MechaAlarm
 0xff1c270c,task_MechaCom
 0xff1c4768,task_MechaCPUTransfer
 0xff1c86e8,task_MechaNCTask

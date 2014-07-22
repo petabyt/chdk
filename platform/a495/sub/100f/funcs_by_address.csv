@@ -1259,7 +1259,9 @@
 0xffe6dc34,task_AviRead
 0xffe6fbac,task_AviPlay
 0xffe7d554,task_EfctConTask
+0xffe8111c,_divmod_signed_int
 0xffe81280,_log10
 0xffe813f0,_pow
 0xffe8233c,_log
+0xffe82930,_divmod_unsigned_int
 0xffe836a4,_sqrt

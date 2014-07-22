@@ -1,3 +1,5 @@
+0xffabd4bc,_divmod_signed_int
+0xffabecd0,_divmod_unsigned_int
 0xff82aa28,_GetSystemTime
 0xffabe6dc,_log
 0xffabd620,_log10

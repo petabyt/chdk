@@ -434,6 +434,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "GetSRAndDisableInterrupt", OPTIONAL|UNUSED }, // disables IRQ, returns a value
     { "SetSR", OPTIONAL|UNUSED }, // enables IRQ, puts back value returned by GetSR
     { "EnableInterrupt", OPTIONAL|UNUSED }, // enables IRQ
+    { "_divmod_signed_int", OPTIONAL|UNUSED}, // division for signed integers, remainder is returned in r1
+    { "_divmod_unsigned_int", OPTIONAL|UNUSED}, // division for unsigned integers, remainder is returned in r1
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -1391,6 +1393,11 @@ string_sig string_sigs[] =
     { 9, "close", "Close", 0,                                              2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2 },
     { 9, "open", "Open", 0,                                                3,    3,    3,    3,   16,   16,   35,   35,   35,   35,   35,   35 },
     { 9, "open", "Open", 0,                                                3,    3,    3,   13,   16,   16,   35,   35,   35,   35,   35,   35 },
+    { 9, "_divmod_signed_int", "PT_mod_FW", 0,                             4,    7,    7,    7,    7,    7,    6,    6,    6,    6,    6,    6 },
+    { 9, "_divmod_signed_int", "PT_mod_FW", 0,                             0,    4,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0 },
+    { 9, "_divmod_signed_int", "mod_FW", 0,                                0,    0,    0,    0,    0,    0,    0,    0,    0,    4,    4,    4 },
+    { 9, "_divmod_unsigned_int", "SetTimerAfter", 0,                      23,   23,   23,   23,   23,   23,   23,   23,   23,   23,   23,    0 },
+    { 9, "_divmod_unsigned_int", "DispCon_ShowWhiteChart_FW", 0,           0,    0,    0,    0,    0,    0,    0,    0,    0,    0,   15,   15 },
 
     //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52   R54
 //    { 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                 5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    1,    6 },

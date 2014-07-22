@@ -1,3 +1,5 @@
+0xffb9283c,_divmod_signed_int
+0xffb942f8,_divmod_unsigned_int
 0xff83b244,_GetSystemTime
 0xffb93d04,_log
 0xffb92c48,_log10
@@ -504,8 +506,8 @@
 0xff9976b4,GetLogToFile_FW
 0xffb5c13c,GetLoopGain_FW
 0xffaeb9d8,GetLoopGainAdjValue_FW
-0xffb5c0f0,GetLoopGainCalcData_FW
 0xffaeb968,GetLoopGainCalcData_FW
+0xffb5c0f0,GetLoopGainCalcData_FW
 0xffaeb720,GetLPFParallelBest_FW
 0xff84cf70,GetMacroSupportZoomPoint_FW
 0xffade6b0,GetMechaDeviceComparatorHysteresis_FW
@@ -1633,8 +1635,8 @@
 0xff87f69c,task_ISMainTask
 0xff85f564,task_LcdConTask
 0xff8647f4,task_LEDCon
-0xff87d068,task_LensController
 0xff87c5b4,task_LensController
+0xff87d068,task_LensController
 0xff913f84,task_LiveImageTask
 0xff81f310,task_LowConsole
 0xff9834c4,task_MechaAlarm

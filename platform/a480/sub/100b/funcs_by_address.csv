@@ -1224,7 +1224,9 @@
 0xffe20468,task_AviPlay
 0xffe2da1c,task_EfctConTask
 0xffe2da78,task_EfctConLowTask
+0xffe31684,_divmod_signed_int
 0xffe317e8,_log10
 0xffe31958,_pow
 0xffe328a4,_log
+0xffe32e98,_divmod_unsigned_int
 0xffe33c0c,_sqrt

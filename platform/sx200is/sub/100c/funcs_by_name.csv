@@ -1,3 +1,5 @@
+0xffaf8dd8,_divmod_signed_int
+0xffafb000,_divmod_unsigned_int
 0xff827ab8,_GetSystemTime
 0xffafa3c0,_log
 0xffaf904c,_log10
@@ -432,8 +434,8 @@
 0xff940b00,GetLogToFile_FW
 0xffac9640,GetLoopGain_FW
 0xffa684a8,GetLoopGainAdjValue_FW
-0xffac95c0,GetLoopGainCalcData_FW
 0xffa68438,GetLoopGainCalcData_FW
+0xffac95c0,GetLoopGainCalcData_FW
 0xffa68280,GetLPFParallelBest_FW
 0xff9323d4,GetMechaShutterStatus_FW
 0xff813be4,GetMemInfo
@@ -1314,8 +1316,8 @@
 0xff85de98,task_ISMainTask
 0xff84856c,task_JogDial
 0xff847078,task_LEDCon
-0xff85d18c,task_LensController
 0xff85c61c,task_LensController
+0xff85d18c,task_LensController
 0xff8cb3f0,task_LiveImageTask
 0xff81ba1c,task_LowConsole
 0xffa59d34,task_MechaShutter

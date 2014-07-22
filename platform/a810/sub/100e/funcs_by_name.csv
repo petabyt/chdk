@@ -1,3 +1,5 @@
+0x003fc49c,_divmod_signed_int
+0x003fc934,_divmod_unsigned_int
 0xff8330c8,_GetSystemTime
 0x003fcce0,_log
 0x003fd220,_log10
@@ -1237,8 +1239,8 @@
 0xff88688c,task_InitFileModules
 0xff90a5a8,task_LcdConTask
 0xff8558f0,task_LEDCon
-0xff86b520,task_LensController
 0xff86a954,task_LensController
+0xff86b520,task_LensController
 0xff8ef8e4,task_LiveImageTask
 0xff819e78,task_LowConsole
 0xffa60b80,task_MechaShutter

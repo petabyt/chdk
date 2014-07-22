@@ -1,3 +1,5 @@
+0xffa92da0,_divmod_signed_int
+0xffa945b4,_divmod_unsigned_int
 0xff82b03c,_GetSystemTime
 0xffa93fc0,_log
 0xffa92f04,_log10
@@ -1295,8 +1297,8 @@
 0xff9f3e04,task_CnctEntiSnd
 0xff9eb448,task_CntFlashTask
 0xff87c028,task_CommonDrivers
-0xff932a80,task_ConfirmPlayOrder
 0xff932990,task_ConfirmPlayOrder
+0xff932a80,task_ConfirmPlayOrder
 0xff932990,task_ConfirmPrintOrder
 0xff932990,task_ConfirmTransferOrder
 0xff81cb50,task_ConsoleSvr
@@ -1342,8 +1344,8 @@
 0xff85f6c8,task_ISCPUInitTask
 0xff85ee6c,task_ISSlantChekTask
 0xff84cb18,task_LEDCon
-0xff85e088,task_LensController
 0xff85d9c0,task_LensController
+0xff85e088,task_LensController
 0xff81d2c0,task_LowConsole
 0xffa36554,task_MechaShutter
 0xff92b088,task_MetaCtg
@@ -1386,9 +1388,9 @@
 0xff8eb790,task_TimerUtility
 0xff844b40,task_TrnsCtrlTask
 0xff81dc40,task_UartLog
-0xff847fe0,task_VcomUart
 0xff8480f4,task_VcomUart
 0xff848044,task_VcomUart
+0xff847fe0,task_VcomUart
 0xff964458,task_WavRead
 0xff964dfc,task_WavWrite
 0xff8d690c,task_WBCtrl

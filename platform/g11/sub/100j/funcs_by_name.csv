@@ -1,3 +1,5 @@
+0xffb3cb1c,_divmod_signed_int
+0xffb3e480,_divmod_unsigned_int
 0xff8396c8,_GetSystemTime
 0xffb3de8c,_log
 0xffb3cdd0,_log10
@@ -454,8 +456,8 @@
 0xff96d104,GetLogToFile_FW
 0xffb0a364,GetLoopGain_FW
 0xffaa1460,GetLoopGainAdjValue_FW
-0xffb0a2e4,GetLoopGainCalcData_FW
 0xffaa13f0,GetLoopGainCalcData_FW
+0xffb0a2e4,GetLoopGainCalcData_FW
 0xffaa11dc,GetLPFParallelBest_FW
 0xffaa10e8,GetMechaDSPVersion_FW
 0xff95d3b8,GetMechaShutterStatus_FW

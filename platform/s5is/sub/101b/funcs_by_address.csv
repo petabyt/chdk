@@ -1475,7 +1475,9 @@
 0xffa73a7c,TerminateSoundRec_FW
 0xffa77368,task_CtgTotalTask
 0xffa82360,task_EffctDrv
+0xffa92cac,_divmod_signed_int
 0xffa92e10,_log10
 0xffa92f80,_pow
 0xffa93ecc,_log
+0xffa944c0,_divmod_unsigned_int
 0xffa95234,_sqrt

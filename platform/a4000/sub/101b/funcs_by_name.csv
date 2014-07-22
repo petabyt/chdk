@@ -1,3 +1,5 @@
+0x003fc49c,_divmod_signed_int
+0x003fc934,_divmod_unsigned_int
 0xff834518,_GetSystemTime
 0x003fcce0,_log
 0x003fd220,_log10
@@ -1520,12 +1522,12 @@
 0xff86c418,task_ISMainTask
 0xff90b68c,task_LcdConTask
 0xff855c18,task_LEDCon
-0xff86b2b4,task_LensController
 0xff86a8d0,task_LensController
+0xff86b2b4,task_LensController
 0xff8f0968,task_LiveImageTask
 0xff819e38,task_LowConsole
-0xff955f20,task_MechaAlarm
 0xff86bfa4,task_MechaAlarm
+0xff955f20,task_MechaAlarm
 0xff9563f0,task_MechaCom
 0xff9582e4,task_MechaCPUTransfer
 0xffa62f5c,task_MechaShutter

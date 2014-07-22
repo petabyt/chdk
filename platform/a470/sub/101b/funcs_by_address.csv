@@ -930,7 +930,9 @@
 0xffe3fe38,GetFocusLensResetVoltage_FW
 0xffe409e4,SetZoomLensICDriveData_FW
 0xffe44704,StartDtExecuteMenu_FW
+0xffe4e2fc,_divmod_signed_int
 0xffe4e460,_log10
 0xffe4e5d0,_pow
 0xffe4f51c,_log
+0xffe4fb10,_divmod_unsigned_int
 0xffe50884,_sqrt

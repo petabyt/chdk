@@ -4,6 +4,8 @@
 0xff058a94,_avsLoadParamData_FW
 0xff058ad0,_avsSaveAdjData_FW
 0xff058484,_avsShowAdjData_FW
+0x00690494,_divmod_signed_int
+0x0069092c,_divmod_unsigned_int
 0xff020bd8,_GetSystemTime
 0x00690cd8,_log
 0x00691218,_log10
@@ -1863,11 +1865,11 @@
 0xff07995c,task_LensController
 0xff141358,task_LiveImageTask
 0xff00a600,task_LowConsole
-0xff1e0934,task_MechaAlarm
 0xff1dddb8,task_MechaAlarm
+0xff1e0934,task_MechaAlarm
 0xff1de240,task_MechaCom
-0xff1e155c,task_MechaCPUTransfer
 0xff1e11d4,task_MechaCPUTransfer
+0xff1e155c,task_MechaCPUTransfer
 0xff380db8,task_MechaNCTask
 0xff37fbf8,task_MechaShutter
 0xff1cb8cc,task_MediaStatusMngr

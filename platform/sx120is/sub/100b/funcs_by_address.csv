@@ -1505,7 +1505,9 @@
 0xffe7de64,task_AviRead
 0xffe7fd60,task_AviPlay
 0xffe8c700,task_EfctConTask
+0xffe90e50,_divmod_signed_int
 0xffe90fb4,_log10
 0xffe91124,_pow
 0xffe92070,_log
+0xffe92664,_divmod_unsigned_int
 0xffe933d8,_sqrt

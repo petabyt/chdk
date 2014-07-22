@@ -4,6 +4,8 @@
 0xf8076d2c,_avsLoadParamData_FW
 0xf8076d68,_avsSaveAdjData_FW
 0xf807671c,_avsShowAdjData_FW
+0xf8648144,_divmod_signed_int
+0xf86482cc,_divmod_unsigned_int
 0xf8039d70,_GetSystemTime
 0x006ae840,_log
 0xf8648914,_log10

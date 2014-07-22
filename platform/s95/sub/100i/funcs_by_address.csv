@@ -1621,7 +1621,9 @@
 0xffb850d0,task_TmgGen
 0xffb86ce8,task_AviRead
 0xffb95dd4,task_ReadFileTask
+0xffb9f3bc,_divmod_signed_int
 0xffb9f8d8,_log10
 0xffb9fa48,_pow
 0xffba0c4c,_log
+0xffba188c,_divmod_unsigned_int
 0xffba2854,_sqrt
