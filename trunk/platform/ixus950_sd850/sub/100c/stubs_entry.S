@@ -4,11 +4,10 @@
 // Camera info:
 //   Firmware Ver GM1.00C   // Found @ 0xff818028, "GM1.00C" @ 0xff818035
 //   Firmware build timestamp: Mar 27 2007 13:40:57
-//   Possible corrupt firmware dump - file size too small for start address 0xff810000
-//     file size = 3.94MB, should be 7.94MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon PowerShot SD850 IS
 
 // Values for makefile.inc
+//   PLATFORMID = 12619 (0x314b) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000ac070
 

@@ -4,11 +4,10 @@
 // Camera info:
 //   Firmware Ver GM1.00E   // Found @ 0xffc0a1ac, "GM1.00E" @ 0xffc0a1b9
 //   Firmware build timestamp: Aug 25 2005 11:33:06
-//   Possible corrupt firmware dump - file size too small for start address 0xffc00000
-//     file size = 2.88MB, should be 4.00MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon PowerShot A610
 
 // Values for makefile.inc
+//   PLATFORMID = 12541 (0x30fd) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000a0b70
 
