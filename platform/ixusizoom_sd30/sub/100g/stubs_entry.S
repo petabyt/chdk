@@ -4,11 +4,10 @@
 // Camera info:
 //   Firmware Ver GM1.00G   // Found @ 0xff81b270, "GM1.00G" @ 0xff81b27d
 //   Firmware build timestamp: Sep 26 2005 18:48:25
-//   Possible corrupt firmware dump - file size too small for start address 0xff810000
-//     file size = 2.90MB, should be 7.94MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon DIGITAL IXUS i zoom
 
 // Values for makefile.inc
+//   PLATFORMID = 12532 (0x30f4) // Found @ 0xffd70130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000a85f0
 
