@@ -1388,9 +1388,9 @@
 0xff8eb790,task_TimerUtility
 0xff844b40,task_TrnsCtrlTask
 0xff81dc40,task_UartLog
-0xff8480f4,task_VcomUart
-0xff848044,task_VcomUart
 0xff847fe0,task_VcomUart
+0xff848044,task_VcomUart
+0xff8480f4,task_VcomUart
 0xff964458,task_WavRead
 0xff964dfc,task_WavWrite
 0xff8d690c,task_WBCtrl
