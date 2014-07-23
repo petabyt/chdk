@@ -45,8 +45,8 @@ NHSTUB(Mount_FileSystem                       ,0xffc5c140) //  1 90%
 // Strange mode 0x00020016 in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xffd4317c) // Found @0xffd4317c,          stubs_min = 0xffd4317c (0xFFD4317C)
-//DEF(FlashParamsTable                        ,0xffd4c4e8) // Found @0xffd4c4e8,          stubs_min = 0xffd4c4e8 (0xFFD4C4E8)
+DEF(levent_table                            ,0xffd4317c) // Found @0xffd4317c
+DEF(FlashParamsTable                        ,0xffd4c4e8) // Found @0xffd4c4e8
 
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x5e; }                          // Found @0xffd4f3bc
@@ -77,7 +77,7 @@ NHSTUB(CreateTask                             ,0xffc11230) //120
 NHSTUB(DebugAssert                            ,0xffc03ad0) //1100
 NHSTUB(DeleteFile_Fut                         ,0xffc56340) //  1
 NHSTUB(DoAELock                               ,0xffd33ca4) //120
-//NHSTUB(DoAFLock                             ,0xffd33b2c) //120            == 0xffd33b2c
+NHSTUB(DoAFLock                               ,0xffd33b2c) //120
 NHSTUB(ExecuteEventProcedure                  ,0xffc067f0) //  1
 NHSTUB(ExitTask                               ,0xffc115f0) //120
 NHSTUB(Fclose_Fut                             ,0xffc56480) //120
@@ -124,7 +124,7 @@ NHSTUB(SetFileAttributes                      ,0xffc5d044) //  1
 NHSTUB(SetLogicalEventActive                  ,0xffd47e3c) //1104
 NHSTUB(SetParameterData                       ,0xffd4f270) //  1
 NHSTUB(SetPropertyCase                        ,0xffc1406c) //  1
-//NHSTUB(SetScriptMode                        ,0xffd47ea4) //120            == 0xffd47ea4
+NHSTUB(SetScriptMode                          ,0xffd47ea4) //120
 NHSTUB(SleepTask                              ,0xffc11144) //120
 NHSTUB(TakeSemaphore                          ,0xffc10c40) //1101
 NHSTUB(TurnOffBackLight                       ,0xffd95314) //  1
