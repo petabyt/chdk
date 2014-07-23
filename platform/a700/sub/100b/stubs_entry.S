@@ -15,7 +15,7 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 // ERROR: EnterToCompensationEVF is not found.             //--- ---    *** != 0xffd4424c
 //NHSTUB(ExitFromCompensationEVF              ,0xffd442e4) //  1 73%    *** != 0xffd442ac
-//NHSTUB(GetFocusLensSubjectDistance          ,0xffe92c14) //  1 54%        == 0xffe92c14
+NHSTUB(GetFocusLensSubjectDistance            ,0xffe92c14) //  1 54%
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe931b0) //  2 92%
 NHSTUB(GetParameterData                       ,0xffd5ded4) //  1 86%
 NHSTUB(GetSystemTime                          ,0xffc04b28) //  1 96%
@@ -47,8 +47,8 @@ NHSTUB(Mount_FileSystem                       ,0xffc5cdf8) //  1 90%
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xffd51f94) // Found @0xffd51f94,          stubs_min = 0xffd51f94 (0xFFD51F94)
-//DEF(FlashParamsTable                        ,0xffd5b6e4) // Found @0xffd5b6e4,          stubs_min = 0xffd5b6e4 (0xFFD5B6E4)
+DEF(levent_table                            ,0xffd51f94) // Found @0xffd51f94
+DEF(FlashParamsTable                        ,0xffd5b6e4) // Found @0xffd5b6e4
 
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x6c; }                          // Found @0xffd5df40
@@ -75,7 +75,7 @@ NHSTUB(CreateTask                             ,0xffc1125c) //120
 NHSTUB(DebugAssert                            ,0xffc03ae8) //1100
 NHSTUB(DeleteFile_Fut                         ,0xffc56cc4) //  1
 NHSTUB(DoAELock                               ,0xffd42540) //120
-//NHSTUB(DoAFLock                             ,0xffd423e8) //120            == 0xffd423e8
+NHSTUB(DoAFLock                               ,0xffd423e8) //120
 NHSTUB(ExecuteEventProcedure                  ,0xffc06808) //  1
 NHSTUB(ExitTask                               ,0xffc1161c) //120
 NHSTUB(Fclose_Fut                             ,0xffc56e04) //120
@@ -90,9 +90,9 @@ NHSTUB(Fwrite_Fut                             ,0xffc56f38) //120
 NHSTUB(GetBatteryTemperature                  ,0xffc1c9bc) //102
 NHSTUB(GetCCDTemperature                      ,0xffc1c9a8) //102
 NHSTUB(GetCurrentAvValue                      ,0xffe9e924) //120
-//NHSTUB(GetDrive_ClusterSize                 ,0xffc5d2b4) //119            == 0xffc5d2b4
-//NHSTUB(GetDrive_FreeClusters                ,0xffc5d32c) //1103            == 0xffc5d32c
-//NHSTUB(GetDrive_TotalClusters               ,0xffc5d2f0) //119            == 0xffc5d2f0
+NHSTUB(GetDrive_ClusterSize                   ,0xffc5d2b4) //119
+NHSTUB(GetDrive_FreeClusters                  ,0xffc5d32c) //1103
+NHSTUB(GetDrive_TotalClusters                 ,0xffc5d2f0) //119
 NHSTUB(GetOpticalTemperature                  ,0xffc1c994) //120
 NHSTUB(GetPropertyCase                        ,0xffc144f0) //  1
 NHSTUB(GetZoomLensCurrentPoint                ,0xffe7f680) //120
@@ -119,7 +119,7 @@ NHSTUB(SetCurrentCaptureModeType              ,0xffd89ee0) //120
 NHSTUB(SetFileAttributes                      ,0xffc5dc80) //  1
 NHSTUB(SetLogicalEventActive                  ,0xffd56bc4) //1104
 NHSTUB(SetPropertyCase                        ,0xffc143d4) //  1
-//NHSTUB(SetScriptMode                        ,0xffd56c2c) //120            == 0xffd56c2c
+NHSTUB(SetScriptMode                          ,0xffd56c2c) //120
 NHSTUB(SleepTask                              ,0xffc11170) //120
 NHSTUB(TakeSemaphore                          ,0xffc10c6c) //1101
 NHSTUB(TurnOffBackLight                       ,0xffda7f60) //  2
@@ -127,10 +127,10 @@ NHSTUB(TurnOnBackLight                        ,0xffda7f30) //  2
 NHSTUB(TurnOnDisplay                          ,0xffd22134) //120
 NHSTUB(TurnOffDisplay                         ,0xffd22144) //120
 NHSTUB(UnlockAE                               ,0xffd42560) //120
-//NHSTUB(UnlockAF                             ,0xffd4242c) //120            == 0xffd4242c
+NHSTUB(UnlockAF                               ,0xffd4242c) //120
 NHSTUB(UnlockMainPower                        ,0xffd58f64) //120
 NHSTUB(UpdateMBROnFlash                       ,0xffc5cfec) //  1
-//NHSTUB(VbattGet                             ,0xffc1b990) //120            == 0xffc1b990
+NHSTUB(VbattGet                               ,0xffc1b990) //120
 NHSTUB(Write                                  ,0xffc5db68) //120
 NHSTUB(_log                                   ,0xffedaee8) //121
 NHSTUB(_log10                                 ,0xffed73c0) //121

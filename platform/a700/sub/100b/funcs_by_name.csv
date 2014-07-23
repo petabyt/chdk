@@ -330,7 +330,6 @@
 0xffe94374,GetFocusLensResetPositionForOutside_FW
 0xffe944c8,GetFocusLensSettingMaxSpeed_FW
 0xffe944dc,GetFocusLensSettingMaxSpeedByDeltaType_FW
-0xffe92c14,GetFocusLensSubjectDistance,(stubs_entry_2.s)
 0xffe945b0,GetFocusLensSubjectDistance_FW
 0xffe945d4,GetFocusLensSubjectDistanceFromLens_FW
 0xffe7afd8,GetFocusPiSensorLevel_FW
