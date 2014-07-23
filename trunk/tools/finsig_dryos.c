@@ -5405,7 +5405,14 @@ int compare_func_names(const func_entry **p1, const func_entry **p2)
     int rv = stricmp((*p1)->name, (*p2)->name);     // Case insensitive
     if (rv != 0)
         return rv;
-    return strcmp((*p1)->name, (*p2)->name);        // Case sensitive (if equal with insensitive test)
+    rv = strcmp((*p1)->name, (*p2)->name);          // Case sensitive (if equal with insensitive test)
+    if (rv != 0)
+        return rv;
+    if ((*p1)->val < (*p2)->val)
+        return -1;
+    else if ((*p1)->val > (*p2)->val)
+        return 1;
+    return 0;
 }
 
 int compare_func_addresses(const func_entry **p1, const func_entry **p2)
