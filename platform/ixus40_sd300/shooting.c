@@ -114,7 +114,8 @@ const CapturemodeMap modemap[] = {
 
 
 long get_file_next_counter() {
-    return ((get_file_counter()>>4)+1)<<4;
+//    return ((get_file_counter()>>4)+1)<<4;
+    return get_file_counter();
 }
 
 long get_target_file_num() {
