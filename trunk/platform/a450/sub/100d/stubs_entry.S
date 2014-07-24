@@ -52,8 +52,8 @@ NHSTUB(MakeAFScan                             ,0xffe7003c) //  2 86%
 // Mode 33290 in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xffe9eca0) // Found @0xffe9eca0,          stubs_min = 0xffe9eca0 (0xFFE9ECA0)
-//DEF(FlashParamsTable                        ,0xffeada74) // Found @0xffeada74,          stubs_min = 0xffeada74 (0xFFEADA74)
+DEF(levent_table                            ,0xffe9eca0) // Found @0xffe9eca0
+DEF(FlashParamsTable                        ,0xffeada74) // Found @0xffeada74
 
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x6f; }                          // Found @0xffea97c4
@@ -91,7 +91,7 @@ NHSTUB(Fopen_Fut                              ,0xffe18ef0) //120
 NHSTUB(Fread_Fut                              ,0xffe18fec) //120
 NHSTUB(Fseek_Fut                              ,0xffe190e0) //120
 NHSTUB(Fwrite_Fut                             ,0xffe19040) //120
-//NHSTUB(GetBatteryTemperature                ,0xffdc7d94) //102            == 0xffdc7d94
+NHSTUB(GetBatteryTemperature                  ,0xffdc7d94) //102
 NHSTUB(GetCCDTemperature                      ,0xffdc7d80) //102
 NHSTUB(GetCurrentAvValue                      ,0xffddc178) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xffe1cfd0) //119
@@ -122,7 +122,7 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xffde17bc) //102
 NHSTUB(SetAutoShutdownTime                    ,0xffea64f8) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xffc17b90) //120
 NHSTUB(SetLogicalEventActive                  ,0xffea4104) //1104
-//NHSTUB(SetScriptMode                        ,0xffea416c) //120            == 0xffea416c
+NHSTUB(SetScriptMode                          ,0xffea416c) //120
 NHSTUB(SleepTask                              ,0xffe83464) //120
 NHSTUB(TakeSemaphore                          ,0xffe82f14) //1101
 NHSTUB(TurnOffBackLight                       ,0xffc2e3e8) //  2
