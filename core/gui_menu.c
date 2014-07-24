@@ -105,8 +105,8 @@ static int increment_factor()
     }
 
     // Calculate max allowed value for int_incr
-    // Default is 10000 for positive int values, 1000 for negative values or 1 otherwise
-    int max = ((item_type == MENUITEM_INT) || (item_flags & MENUITEM_DECIMAL)) ? ((item_val<0)?1000:10000) : 1;
+    // Default is 1000000 for DECIMAL, 10000 for positive int values, 1000 for negative values or 1 otherwise
+    int max = (item_flags & MENUITEM_DECIMAL) ? 100000 : (item_type == MENUITEM_INT) ? ((item_val < 0) ? 1000 : 10000) : 1;
 
     // If an int value has a defined MIN / MAX range then adjust int_incr max to fit the range
     int vmax = 0;
@@ -833,7 +833,10 @@ static void gui_menu_draw_state_value(CMenuItem *c)
         }
         else if (c[0].type & MENUITEM_DECIMAL)
         {
-            gui_set_int_cursor(6);
+            if (int_incr == 100000)
+                rbf_enable_cursor(0,0);     // Skip decimal point if incrementing leftmost digit
+            else
+                gui_set_int_cursor(6);
         }
         else if (c[0].type & MENUITEM_SD_INT)
         {
