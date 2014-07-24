@@ -1416,14 +1416,14 @@ static CMenu curve_submenu = {0x85,LANG_MENU_CURVE_PARAM_TITLE, curve_submenu_it
 #endif
 
 // Display & edit an int value as a decimal.
-// Value ranges from 0 - 100000; but display shows as 0.00000 - 1.00000
+// Value ranges from 0 - 999999; but display shows as 0.00000 - 9.99999
 const char* gui_decimal_enum(int change, int arg)
 {
     int *v = (int*)arg;
 
     *v += change;
     if (*v < 0) *v = 0;
-    if (*v > 100000) *v = 100000;
+    if (*v > 999999) *v = 999999;
 
     sprintf(buf, "%01d.%05d", (int)(*v / 100000), (int)(*v % 100000));
 
