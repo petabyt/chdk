@@ -1,5 +1,10 @@
+0xffb38d54,_dfix
+0xffb38e04,_dfixu
+0xffb38e8c,_dflt
+0xffb38ebc,_dfltu
 0xffb36b68,_divmod_signed_int
 0xffb384cc,_divmod_unsigned_int
+0xffb38f50,_dmul
 0xff839094,_GetSystemTime
 0xffb37ed8,_log
 0xffb36e1c,_log10
@@ -33,6 +38,7 @@
 0xffb04064,Bat_VIN_FW
 0xff85c9b8,BeepDrive_FW
 0xff85c9d8,BeepDriveComp_FW
+0xffafe080,CalcLog10
 0xffafe0bc,CalcLog10_FW
 0xffb06358,CalcLoopGain_FW
 0xffafe1ac,CalcSqrt_FW
@@ -112,6 +118,7 @@
 0xff83527c,Close_FW
 0xff81f448,CloseConsole_FW
 0xffa7d55c,closedir
+0xffa97618,CloseMechaShutter_FW
 0xffa97660,CloseMechaShutterWithTiming_FW
 0xffafd6c0,CloseMShutter_FW
 0xffb1e8e0,CommunicateISCPU_FW
@@ -1050,6 +1057,7 @@
 0xff835224,Open_FW
 0xff81f2dc,OpenConsole_FW
 0xffa7d5a0,OpenFastDir
+0xffa9763c,OpenMechaShutter_FW
 0xffafd6f8,OpenMShutter_FW
 0xff835754,OpLog.Create_FW
 0xff88d5c4,OpLog.Get_FW
@@ -1317,6 +1325,8 @@
 0xffa996a0,SetLPFParallelBest_FW
 0xffa9752c,SetMechaDeviceComparatorHysteresis_FW
 0xffa97514,SetMechaDeviceComparatorThreshold_FW
+0xffa97698,SetMechaShutterCloseDacSetting_FW
+0xffa976b4,SetMechaShutterOpenDacSetting_FW
 0xffa976d0,SetMechaShutterWaitTimeSetting_FW
 0xffb04358,SetMinute_FW
 0xffb04230,SetMonth_FW
@@ -1641,10 +1651,12 @@
 0xffa4f8cc,TurnOffAFLamp_FW
 0xff89b6f4,TurnOffBackLight,(stubs_entry_2.s)
 0xff859898,TurnOffDisplay
+0xffa97778,TurnOffNdFilter_FW
 0xff860684,TurnOffVideoOutMode_FW
 0xffa4f8b0,TurnOnAFLamp_FW
 0xff8a5b18,TurnOnBackLight
 0xff859888,TurnOnDisplay
+0xffa97754,TurnOnNdFilter_FW
 0xff860634,TurnOnVideoOutMode_FW
 0xff95f2cc,UI.Create_FW
 0xff95f2cc,UI_RegistDebugEventProc_FW

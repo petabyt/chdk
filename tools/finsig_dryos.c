@@ -436,6 +436,11 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "EnableInterrupt", OPTIONAL|UNUSED }, // enables IRQ
     { "_divmod_signed_int", OPTIONAL|UNUSED}, // division for signed integers, remainder is returned in r1
     { "_divmod_unsigned_int", OPTIONAL|UNUSED}, // division for unsigned integers, remainder is returned in r1
+    { "_dflt", OPTIONAL|UNUSED}, // int -> double
+    { "_dfltu", OPTIONAL|UNUSED}, // uint -> double
+    { "_dfix", OPTIONAL|UNUSED}, // double -> int
+    { "_dfixu", OPTIONAL|UNUSED}, // double -> uint
+    { "_dmul", OPTIONAL|UNUSED}, // double precision float multiplication
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -447,6 +452,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "SavePaletteData", OPTIONAL|UNUSED },
     { "GUISrv_StartGUISystem", OPTIONAL|UNUSED },
     { "get_resource_pointer", OPTIONAL|UNUSED }, // name made up, gets a pointer to a certain resource (font, dialog, icon)
+    { "CalcLog10", OPTIONAL|UNUSED }, // helper
 
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
@@ -1398,6 +1404,10 @@ string_sig string_sigs[] =
     { 9, "_divmod_signed_int", "mod_FW", 0,                                0,    0,    0,    0,    0,    0,    0,    0,    0,    4,    4,    4 },
     { 9, "_divmod_unsigned_int", "SetTimerAfter", 0,                      23,   23,   23,   23,   23,   23,   23,   23,   23,   23,   23,    0 },
     { 9, "_divmod_unsigned_int", "DispCon_ShowWhiteChart_FW", 0,           0,    0,    0,    0,    0,    0,    0,    0,    0,    0,   15,   15 },
+    { 9, "_dflt", "CalcLog10", 0,                                          9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9 },
+    { 9, "_dfltu", "CalcLog10", 0,                                         4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4 },
+    { 9, "_dmul", "CalcLog10", 0,                                         12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12 },
+    { 9, "_dfix", "CalcLog10", 0,                                         14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14 },
 
     //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52   R54
 //    { 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                 5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    1,    6 },
@@ -1497,6 +1507,9 @@ string_sig string_sigs[] =
 
     { 19, "time", "GetTimeOfSystem_FW", 0,                                       0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001,-0x002c,-0x002d },
     { 19, "time", "GetTimeOfSystem_FW", 0,                                       0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001,-0x002d, 0x0001 }, // alt r52 (sx510)
+
+    { 19, "CalcLog10", "CalcLog10_FW", 0,                                       -0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f },
+    { 19, "_dfixu", "_dfix", 0,                                                  0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c },
 
     { 21, "add_ptp_handler", (char*)find_add_ptp_handler, 0 },
     { 21, "apex2us", (char*)find_apex2us, 0 },
@@ -5097,6 +5110,26 @@ int match_registerlists(firmware *fw, int k, uint32_t fadr, uint32_t v2)
             if (!idx_valid(fw,j))
             {
                 j = adr2idx(fw,LDR2val(fw,k) - fw->data_start + fw->data_init_start);
+            }
+            if (idx_valid(fw,j))
+            {
+                while (fwval(fw,j) != 0)
+                {
+                    add_func_name2(fw, fwval(fw,j), fwval(fw,j+1), "_FW");
+                    j += 2;
+                }
+            }
+        }
+    }
+    else if (isBorBL(fw,k+1) && isLDMFD(fw,k) && isLDR_PC(fw,k-1) && (fwRd(fw,k-1) == 0))
+    {
+        uint32_t adr = followBranch2(fw,idx2adr(fw,k+1),0x01000001);
+        if (adr == fadr)
+        {
+            int j = adr2idx(fw,LDR2val(fw,k-1));
+            if (!idx_valid(fw,j))
+            {
+                j = adr2idx(fw,LDR2val(fw,k-1) - fw->data_start + fw->data_init_start);
             }
             if (idx_valid(fw,j))
             {

@@ -1079,11 +1079,17 @@
 0xffa635e4,SetMechaDeviceComparatorHysteresis_FW
 0xffa635f8,SendMechaCircuitData_FW
 0xffa6361c,ReceiveMechaCircuitDataAll_FW
+0xffa636d0,CloseMechaShutter_FW
+0xffa636f4,OpenMechaShutter_FW
 0xffa63718,CloseMechaShutterWithTiming_FW
+0xffa63750,SetMechaShutterCloseDacSetting_FW
+0xffa6376c,SetMechaShutterOpenDacSetting_FW
 0xffa63788,SetMechaShutterWaitTimeSetting_FW
 0xffa6379c,j_GetMechaShutterStatus_FW
 0xffa6380c,PutInNdFilter
+0xffa6380c,TurnOnNdFilter_FW
 0xffa63830,PutOutNdFilter
+0xffa63830,TurnOffNdFilter_FW
 0xffa63854,SetNdDacSetting_FW
 0xffa638dc,ResetZoomLens
 0xffa638dc,ResetZoomLens_FW
@@ -1287,6 +1293,7 @@
 0xffacc41c,CalculatePeakFromLeastSquareResult_FW
 0xffacc458,CalculateLog2ToApex_FW
 0xffacc46c,CalculatePow2FromApex_FW
+0xffacc47c,CalcLog10
 0xffacc4b8,CalcLog10_FW
 0xffacc4e0,ConvertApexToApexStd_FW
 0xffacc510,ConvertApexStdToApex_FW
@@ -1669,4 +1676,9 @@
 0xffb00850,_pow
 0xffb01a54,_log
 0xffb02694,_divmod_unsigned_int
+0xffb02fd4,_dfix
+0xffb03084,_dfixu
+0xffb0310c,_dflt
+0xffb0313c,_dfltu
+0xffb031d0,_dmul
 0xffb036b0,_sqrt

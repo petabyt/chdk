@@ -1,5 +1,10 @@
+0xffb8a4a0,_dfix
+0xffb8a550,_dfixu
+0xffb8a5d8,_dflt
+0xffb8a608,_dfltu
 0xffb876e4,_divmod_signed_int
 0xffb89bb4,_divmod_unsigned_int
+0xffb8a69c,_dmul
 0xff83bb9c,_GetSystemTime
 0xffb88f74,_log
 0xffb87c00,_log10
@@ -31,6 +36,7 @@
 0xffb4d84c,Bat_VIN_FW
 0xff860680,BeepDrive_FW
 0xff8606a0,BeepDriveComp_FW
+0xffb46f98,CalcLog10
 0xffb46fd4,CalcLog10_FW
 0xffb51e28,CalcLoopGain_FW
 0xffb470c4,CalcSqrt_FW
@@ -104,6 +110,8 @@
 0xff87fbf8,ClearISCalcZData_FW
 0xffae2298,ClearISIComponent_FW
 0xffae22bc,ClearISZData_FW
+0xffac4d94,ClearPMByFs_FW
+0xffac4d6c,ClearPMByGpio_FW
 0xffb4852c,ClearZoomCommonDriveParam_FW
 0xff97c6cc,ClearZoomDriveParam_FW
 0xff838060,Close
@@ -111,6 +119,7 @@
 0xff838060,Close_FW
 0xff81f734,CloseConsole_FW
 0xffab9048,closedir
+0xffae0bc8,CloseMechaShutter_FW
 0xffae0c10,CloseMechaShutterWithTiming_FW
 0xffb465e4,CloseMShutter_FW
 0xffa972d4,ConvertAdjImgDrvModeToAdjImgDriveType_FW
@@ -603,6 +612,7 @@
 0xff94c598,InactivateAdjLog_FW
 0xff9895d8,InitializeAdjustmentFunction_FW
 0xff989568,InitializeAdjustmentSystem_FW
+0xff979020,InitializeBarrelEncoder_FW
 0xff86f3a4,Initializedccd_FW
 0xffb4fee4,InitializeDefectAdjustment_FW
 0xffb33498,InitializeDefectRec_FW
@@ -1018,6 +1028,7 @@
 0xff81f5c8,OpenConsole_FW
 0xffab9098,OpenFastDir
 0xff83819c,OpenForScrip_FW
+0xffae0bec,OpenMechaShutter_FW
 0xffae0c74,OpenMechaShutterToFullOpen_FW
 0xffb4661c,OpenMShutter_FW
 0xff838564,OpLog.Create_FW
@@ -1218,6 +1229,7 @@
 0xff8a5a00,SetCurrentCaptureModeType_FW
 0xffb4d878,SetDate_FW
 0xffb4da74,SetDay_FW
+0xffac4e84,SetDCMotorWaitTime_FW
 0xff94b484,SetDefaultAEIntegSmearLimitter_FW
 0xff94e414,SetDefaultRecParameter_FW
 0xffa531cc,SetDefectRecParam_FW
@@ -1304,6 +1316,8 @@
 0xffae24f0,SetLoopGainAdjValue_FW
 0xffb51a68,SetLPFForParallelFilter_FW
 0xffae2238,SetLPFParallelBest_FW
+0xffae0c48,SetMechaShutterCloseDacSetting_FW
+0xffae0c50,SetMechaShutterOpenDacSetting_FW
 0xffae0c98,SetMechaShutterStanbyPosition_FW
 0xffae0c58,SetMechaShutterWaitTimeSetting_FW
 0xffb4db40,SetMinute_FW
@@ -1313,6 +1327,7 @@
 0xffb470f0,SetOneShotWBParam_FW
 0xffb470f0,SetOneTypeWBParam_FW
 0xff9b1c90,SetParameterData
+0xffac4d5c,SetPMByGpio_FW
 0xffb4e818,SetProductVolume_FW
 0xff895cc0,SetPropertyCase
 0xff98744c,SetRawSWCheckMode_FW
@@ -1565,6 +1580,7 @@
 0xffacebcc,task_ZoomTWEvent
 0xff97ef20,task_ZoomTWSynchro
 0xff9895a0,TerminateAdjustmentSystem_FW
+0xff979030,TerminateBarrelEncoder_FW
 0xff86f450,Terminatedccd_FW
 0xffb4fef4,TerminateDefectAdjustment_FW
 0xffb33504,TerminateDefectRec_FW

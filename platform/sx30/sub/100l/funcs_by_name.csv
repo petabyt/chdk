@@ -1,5 +1,10 @@
+0xffb94b90,_dfix
+0xffb94c40,_dfixu
+0xffb94cc8,_dflt
+0xffb94cf8,_dfltu
 0xffb927e8,_divmod_signed_int
 0xffb942a4,_divmod_unsigned_int
+0xffb94d8c,_dmul
 0xff83b244,_GetSystemTime
 0xffb93cb0,_log
 0xffb92bf4,_log10
@@ -33,6 +38,7 @@
 0xffb578b8,Bat_VIN_FW
 0xff862bac,BeepDrive_FW
 0xff862bcc,BeepDriveComp_FW
+0xffb5169c,CalcLog10
 0xffb516d8,CalcLog10_FW
 0xffb5c01c,CalcLoopGain_FW
 0xffb517c8,CalcSqrt_FW
@@ -112,6 +118,7 @@
 0xff8370dc,Close_FW
 0xff81f734,CloseConsole_FW
 0xffacde88,closedir
+0xffae94c0,CloseMechaShutter_FW
 0xffae9508,CloseMechaShutterWithTiming_FW
 0xffb50ce8,CloseMShutter_FW
 0xffb792dc,CommunicateISCPU_FW
@@ -1103,6 +1110,7 @@
 0xff81f5c8,OpenConsole_FW
 0xffacded8,OpenFastDir
 0xff837218,OpenForScrip_FW
+0xffae94e4,OpenMechaShutter_FW
 0xffb50d20,OpenMShutter_FW
 0xff8375e0,OpLog.Create_FW
 0xff897c24,OpLog.Get_FW
@@ -1384,6 +1392,8 @@
 0xffaeb680,SetLPFParallelBest_FW
 0xffae93d8,SetMechaDeviceComparatorHysteresis_FW
 0xffae93c0,SetMechaDeviceComparatorThreshold_FW
+0xffae9540,SetMechaShutterCloseDacSetting_FW
+0xffae955c,SetMechaShutterOpenDacSetting_FW
 0xffae9578,SetMechaShutterWaitTimeSetting_FW
 0xffb57bac,SetMinute_FW
 0xff85057c,SetMontblancVSize_FW

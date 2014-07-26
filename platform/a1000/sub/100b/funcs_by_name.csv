@@ -1,5 +1,10 @@
+0xffe73970,_dfix
+0xffe73a20,_dfixu
+0xffe73aa8,_dflt
+0xffe73ad8,_dfltu
 0xffe718d4,_divmod_signed_int
 0xffe730e8,_divmod_unsigned_int
+0xffe73b6c,_dmul
 0xffc17420,_GetSystemTime
 0xffe72af4,_log
 0xffe71a38,_log10
@@ -31,6 +36,7 @@
 0xffe445ac,Bat_Save_FW
 0xffe44598,Bat_VIN_FW
 0xffc30458,BeepDrive_FW
+0xffe3ebb0,CalcLog10
 0xffe3ebec,CalcLog10_FW
 0xffe4633c,CalcLoopGain_FW
 0xffe3ecdc,CalcSqrt_FW
@@ -89,6 +95,8 @@
 0xffc46864,ClearISCalcZData_FW
 0xffded24c,ClearISIComponent_FW
 0xffded270,ClearISZData_FW
+0xffe5af68,ClearPMByFs_FW
+0xffe5af00,ClearPMByGpio_FW
 0xffe3fca8,ClearZoomCommonDriveParam_FW
 0xffdeb21c,ClearZoomDriveParam_FW
 0xffc13344,Close
@@ -96,6 +104,7 @@
 0xffc13344,Close_FW
 0xffc0c954,CloseConsole_FW
 0xffddc384,closedir
+0xffdec900,CloseMechaShutter_FW
 0xffdec948,CloseMechaShutterWithTiming_FW
 0xffe3e1f0,CloseMShutter_FW
 0xffca67dc,COMFACHK_GetTransferTime_FW
@@ -825,6 +834,7 @@
 0xffc1331c,Open_FW
 0xffc0c7e8,OpenConsole_FW
 0xffddc220,OpenFastDir
+0xffdec924,OpenMechaShutter_FW
 0xffe3e228,OpenMShutter_FW
 0xffc13a28,OpLog.Create_FW
 0xffc576dc,OpLog.Get_FW
@@ -1004,6 +1014,7 @@
 0xffc634f8,SetCurrentCaptureModeType_FW
 0xffe445c4,SetDate_FW
 0xffe447c0,SetDay_FW
+0xffe5b058,SetDCMotorWaitTime_FW
 0xffe3d4c8,SetDefaultAEIntegSmearLimitter_FW
 0xffcdb4a4,SetDefaultRecParameter_FW
 0xffcdb858,SetDefectRecParameter_FW
@@ -1077,6 +1088,8 @@
 0xffe46344,SetLoopGain_FW
 0xffe46154,SetLPFForParallelFilter_FW
 0xffded1ec,SetLPFParallelBest_FW
+0xffdec980,SetMechaShutterCloseDacSetting_FW
+0xffdec99c,SetMechaShutterOpenDacSetting_FW
 0xffdec9b8,SetMechaShutterWaitTimeSetting_FW
 0xffe4488c,SetMinute_FW
 0xffe44764,SetMonth_FW
@@ -1086,6 +1099,7 @@
 0xffe3ed08,SetOneShotWBParam_FW
 0xffe3ed08,SetOneTypeWBParam_FW
 0xffd2d314,SetParameterData
+0xffe5aef0,SetPMByGpio_FW
 0xffc593c4,SetPropertyCase
 0xffd08830,SetRawSWCheckMode_FW
 0xffe3ee1c,SetReferenceWBGainForCalibration_FW
@@ -1341,10 +1355,12 @@
 0xffdbae04,TurnOffAFLamp_FW
 0xffc67e6c,TurnOffBackLight
 0xffc2cf50,TurnOffDisplay
+0xffdeca60,TurnOffNdFilter_FW
 0xffc31d40,TurnOffVideoOutMode_FW
 0xffdbade8,TurnOnAFLamp_FW
 0xffc67e54,TurnOnBackLight
 0xffc2cf40,TurnOnDisplay
+0xffdeca3c,TurnOnNdFilter_FW
 0xffc31cdc,TurnOnVideoOutMode_FW
 0xffd0a340,UI.Create_FW
 0xffd0a340,UI_RegistDebugEventProc_FW

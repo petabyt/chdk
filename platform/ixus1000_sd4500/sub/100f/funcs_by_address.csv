@@ -727,6 +727,8 @@
 0xff978abc,j_GetBarrelEncoderTargetPosition_FW
 0xff978ac0,SetBarrelEncoderTargetPosition_FW
 0xff978ad4,GetBarrelEncoderValue_FW
+0xff978f70,InitializeBarrelEncoder_FW
+0xff978f80,TerminateBarrelEncoder_FW
 0xff979098,GetMechaShutterMoveTime_FW
 0xff9790c0,GetMechaShutterStatus_FW
 0xff979190,task_ZoomEvent
@@ -1001,8 +1003,12 @@
 0xffabbcb8,task_DecJpgRd
 0xffabe54c,reboot_fw_update
 0xffac30f0,task_ImgDLight
+0xffac4c9c,SetPMByGpio_FW
+0xffac4cac,ClearPMByGpio_FW
+0xffac4cd4,ClearPMByFs_FW
 0xffac4ce4,MoveDCMotorCW_FW
 0xffac4d54,MoveDCMotorCCW_FW
+0xffac4dc4,SetDCMotorWaitTime_FW
 0xffac50b4,task_FocusEvent
 0xffac710c,GetFocusLensResetPosition_FW
 0xffac711c,GetFocusLensResetDefaultPosition_FW
@@ -1123,7 +1129,11 @@
 0xffae0a38,EnablePrismOutPiCircuit_FW
 0xffae0a48,DisablePrismOutPiCircuit_FW
 0xffae0a58,j_GetPrismOutPiSensorLevel_FW
+0xffae0adc,CloseMechaShutter_FW
+0xffae0b00,OpenMechaShutter_FW
 0xffae0b24,CloseMechaShutterWithTiming_FW
+0xffae0b5c,SetMechaShutterCloseDacSetting_FW
+0xffae0b64,SetMechaShutterOpenDacSetting_FW
 0xffae0b6c,SetMechaShutterWaitTimeSetting_FW
 0xffae0b80,j_GetMechaShutterStatus_FW
 0xffae0b84,j_GetMechaShutterMoveTime_FW
@@ -1358,6 +1368,7 @@
 0xffb46e4c,CalculatePeakFromLeastSquareResult_FW
 0xffb46e88,CalculateLog2ToApex_FW
 0xffb46e9c,CalculatePow2FromApex_FW
+0xffb46eac,CalcLog10
 0xffb46ee8,CalcLog10_FW
 0xffb46f10,ConvertApexToApexStd_FW
 0xffb46f40,ConvertApexStdToApex_FW
@@ -1660,4 +1671,9 @@
 0xffb87c78,_pow
 0xffb88e7c,_log
 0xffb89abc,_divmod_unsigned_int
+0xffb8a3a8,_dfix
+0xffb8a458,_dfixu
+0xffb8a4e0,_dflt
+0xffb8a510,_dfltu
+0xffb8a5a4,_dmul
 0xffb8aa84,_sqrt

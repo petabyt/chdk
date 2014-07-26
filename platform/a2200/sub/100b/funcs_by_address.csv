@@ -1149,6 +1149,7 @@
 0xffb11c40,CalculatePeakFromLeastSquareResult_FW
 0xffb11c78,CalculateLog2ToApex_FW
 0xffb11c8c,CalculatePow2FromApex_FW
+0xffb11c9c,CalcLog10
 0xffb11cd8,CalcLog10_FW
 0xffb11d00,ConvertApexToApexStd_FW
 0xffb11d30,ConvertApexStdToApex_FW
@@ -1347,4 +1348,9 @@
 0xffb51670,_log
 0xffb51bb0,_log10
 0xffb51d28,_pow
+0xffb534c8,_dfix
+0xffb53578,_dfixu
+0xffb53600,_dflt
+0xffb53630,_dfltu
+0xffb536c4,_dmul
 0xffb5394c,_sqrt
