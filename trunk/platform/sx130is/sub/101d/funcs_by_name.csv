@@ -1,5 +1,10 @@
+0xffb4c5a4,_dfix
+0xffb4c654,_dfixu
+0xffb4c6dc,_dflt
+0xffb4c70c,_dfltu
 0xffb4a1fc,_divmod_signed_int
 0xffb4bcb8,_divmod_unsigned_int
+0xffb4c7a0,_dmul
 0xff83a908,_GetSystemTime
 0xffb4b6c4,_log
 0xffb4a608,_log10
@@ -31,6 +36,7 @@
 0xffb0dafc,Bat_VIN_FW
 0xff85eab4,BeepDrive_FW
 0xff85ead4,BeepDriveComp_FW
+0xffb08078,CalcLog10
 0xffb080b4,CalcLog10_FW
 0xffb11fd8,CalcLoopGain_FW
 0xffb081a4,CalcSqrt_FW
@@ -100,6 +106,8 @@
 0xff878018,ClearISCalcZData_FW
 0xffaaf134,ClearISIComponent_FW
 0xffaaf158,ClearISZData_FW
+0xffb2d594,ClearPMByFs_FW
+0xffb2d56c,ClearPMByGpio_FW
 0xffb09260,ClearZoomCommonDriveParam_FW
 0xffaa1868,ClearZoomDriveParam_FW
 0xff836cfc,Close
@@ -107,6 +115,7 @@
 0xff836cfc,Close_FW
 0xff81f734,CloseConsole_FW
 0xffa8c2e4,closedir
+0xffaae828,CloseMechaShutter_FW
 0xffaae870,CloseMechaShutterWithTiming_FW
 0xffb076c4,CloseMShutter_FW
 0xffa6ec78,ConvertAdjImgDrvModeToAdjImgDriveType_FW
@@ -922,6 +931,7 @@
 0xff81f5c8,OpenConsole_FW
 0xffa8c334,OpenFastDir
 0xff836e38,OpenForScrip_FW
+0xffaae84c,OpenMechaShutter_FW
 0xffb076fc,OpenMShutter_FW
 0xff837200,OpLog.Create_FW
 0xff88b9f8,OpLog.Get_FW
@@ -1115,6 +1125,7 @@
 0xff89abfc,SetCurrentCaptureModeType_FW
 0xffb0db28,SetDate_FW
 0xffb0dd24,SetDay_FW
+0xffb2d6b4,SetDCMotorWaitTime_FW
 0xff93a1d4,SetDefaultAEIntegSmearLimitter_FW
 0xff93d094,SetDefaultRecParameter_FW
 0xffa2c634,SetDefectRecParam_FW
@@ -1203,6 +1214,8 @@
 0xffaaf38c,SetLoopGainAdjValue_FW
 0xffb11c18,SetLPFForParallelFilter_FW
 0xffaaf0d4,SetLPFParallelBest_FW
+0xffaae8a8,SetMechaShutterCloseDacSetting_FW
+0xffaae8c4,SetMechaShutterOpenDacSetting_FW
 0xffaae8e0,SetMechaShutterWaitTimeSetting_FW
 0xffb0ddf0,SetMinute_FW
 0xffb0dcc8,SetMonth_FW
@@ -1211,6 +1224,7 @@
 0xffb081d0,SetOneShotWBParam_FW
 0xffb081d0,SetOneTypeWBParam_FW
 0xff993978,SetParameterData
+0xffb2d55c,SetPMByGpio_FW
 0xffb0ea90,SetProductVolume_FW
 0xff88d678,SetPropertyCase
 0xff96a8c4,SetRawSWCheckMode_FW

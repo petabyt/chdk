@@ -4,8 +4,12 @@
 0xf8076d2c,_avsLoadParamData_FW
 0xf8076d68,_avsSaveAdjData_FW
 0xf807671c,_avsShowAdjData_FW
+0xf86488e8,_dfix
+0xf86488b0,_dflt
+0xf86488c8,_dfltu
 0xf8648128,_divmod_signed_int
 0xf86482b0,_divmod_unsigned_int
+0xf86488d0,_dmul
 0xf8039d70,_GetSystemTime
 0x006ae840,_log
 0xf86488f8,_log10
@@ -43,6 +47,7 @@
 0xf80797e4,BeepDrive_FW
 0xf8079804,BeepDriveComp_FW
 0xf8077b74,CalcAccelerometerAtanAngle_FW
+0xf851433c,CalcLog10
 0xf8514378,CalcLog10_FW
 0xf851d18c,CalcLoopGain_FW
 0xf8514468,CalcSqrt_FW

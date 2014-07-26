@@ -1,5 +1,10 @@
+0xffba2178,_dfix
+0xffba2228,_dfixu
+0xffba22b0,_dflt
+0xffba22e0,_dfltu
 0xffb9f3bc,_divmod_signed_int
 0xffba188c,_divmod_unsigned_int
+0xffba2374,_dmul
 0xff83b074,_GetSystemTime
 0xffba0c4c,_log
 0xffb9f8d8,_log10
@@ -32,6 +37,7 @@
 0xff862fe0,BeepDrive_FW
 0xff863000,BeepDriveComp_FW
 0xff860dfc,CalcAccelerometerAtanAngle_FW
+0xffb5cd2c,CalcLog10
 0xffb5cd68,CalcLog10_FW
 0xffb66d1c,CalcLoopGain_FW
 0xffb5ce58,CalcSqrt_FW
@@ -103,6 +109,8 @@
 0xff87f6d4,ClearISCalcZData_FW
 0xffaf81f0,ClearISIComponent_FW
 0xffaf8214,ClearISZData_FW
+0xffb82940,ClearPMByFs_FW
+0xffb82918,ClearPMByGpio_FW
 0xffb5de64,ClearZoomCommonDriveParam_FW
 0xffaea6b4,ClearZoomDriveParam_FW
 0xff837030,Close
@@ -110,6 +118,7 @@
 0xff837030,Close_FW
 0xff81f734,CloseConsole_FW
 0xffad3f98,closedir
+0xffaf78f0,CloseMechaShutter_FW
 0xffaf7938,CloseMechaShutterWithTiming_FW
 0xffb5c378,CloseMShutter_FW
 0xffab6764,ConvertAdjImgDrvModeToAdjImgDriveType_FW
@@ -977,6 +986,7 @@
 0xff81f5c8,OpenConsole_FW
 0xffad3fe8,OpenFastDir
 0xff83716c,OpenForScrip_FW
+0xffaf7914,OpenMechaShutter_FW
 0xffb5c3b0,OpenMShutter_FW
 0xff837534,OpLog.Create_FW
 0xff89466c,OpLog.Get_FW
@@ -1175,6 +1185,7 @@
 0xff8a5444,SetCurrentCaptureModeType_FW
 0xffb627d0,SetDate_FW
 0xffb629cc,SetDay_FW
+0xffb82a60,SetDCMotorWaitTime_FW
 0xff956e94,SetDefaultAEIntegSmearLimitter_FW
 0xff959e38,SetDefaultRecParameter_FW
 0xffa6f250,SetDefectRecParam_FW
@@ -1268,6 +1279,8 @@
 0xffb66f4c,SetMacroISGain_FW
 0xffaf87b4,SetMacroISGainA_FW
 0xffaf87c8,SetMacroISGainB_FW
+0xffaf7970,SetMechaShutterCloseDacSetting_FW
+0xffaf798c,SetMechaShutterOpenDacSetting_FW
 0xffaf79a8,SetMechaShutterWaitTimeSetting_FW
 0xffb62a98,SetMinute_FW
 0xffb62970,SetMonth_FW
@@ -1276,6 +1289,7 @@
 0xffb5ce84,SetOneShotWBParam_FW
 0xffb5ce84,SetOneTypeWBParam_FW
 0xff9bbd7c,SetParameterData
+0xffb82908,SetPMByGpio_FW
 0xffb63768,SetProductVolume_FW
 0xff8962ec,SetPropertyCase
 0xff987138,SetRawSWCheckMode_FW

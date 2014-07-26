@@ -133,7 +133,7 @@ NHSTUB(Fseek_Fut                              ,0xffc13750) //120
 NHSTUB(Fwrite_Fut                             ,0xffc136b0) //120
 NHSTUB(GetBatteryTemperature                  ,0xffc377b4) //102
 NHSTUB(GetCCDTemperature                      ,0xffc37744) //102
-NHSTUB(GetCurrentAvValue                      ,0xffd0ce14) //102
+NHSTUB(GetCurrentAvValue                      ,0xffd0ce14) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xffc41688) //  1
 NHSTUB(GetDrive_FreeClusters                  ,0xffc416f0) //  1
 NHSTUB(GetDrive_TotalClusters                 ,0xffc416bc) //  1
@@ -145,8 +145,8 @@ NHSTUB(GetOpticalTemperature                  ,0xffc37824) //120
 NHSTUB(GetParameterData                       ,0xffd352b8) //101
 NHSTUB(GetPropertyCase                        ,0xffc5dab4) //102
 NHSTUB(GetSystemTime                          ,0xffdf1dcc) //120
-NHSTUB(GetVRAMHPixelsSize                     ,0xffc2a77c) //102
-NHSTUB(GetVRAMVPixelsSize                     ,0xffc2a788) //102
+NHSTUB(GetVRAMHPixelsSize                     ,0xffc2a77c) //120
+NHSTUB(GetVRAMVPixelsSize                     ,0xffc2a788) //120
 NHSTUB(GetZoomLensCurrentPoint                ,0xffd0fcc0) //120
 NHSTUB(GetZoomLensCurrentPosition             ,0xffde89e0) //102
 NHSTUB(GiveSemaphore                          ,0xffc0b844) //120

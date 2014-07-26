@@ -1,5 +1,10 @@
+0xffb96780,_dfix
+0xffb96830,_dfixu
+0xffb968b8,_dflt
+0xffb968e8,_dfltu
 0xffb94398,_divmod_signed_int
 0xffb9457c,_divmod_unsigned_int
+0xffb9697c,_dmul
 0xff83bdf8,_GetSystemTime
 0xffb94928,_log
 0xffb94e68,_log10
@@ -32,6 +37,7 @@
 0xffb56f90,Bat_VIN_FW
 0xff862a98,BeepDrive_FW
 0xff862ab8,BeepDriveComp_FW
+0xffb50d28,CalcLog10
 0xffb50d64,CalcLog10_FW
 0xffb5b648,CalcLoopGain_FW
 0xffb50e54,CalcSqrt_FW

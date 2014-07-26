@@ -1176,7 +1176,11 @@
 0xffae9174,SetMechaDeviceComparatorHysteresis_FW
 0xffae9188,SendMechaCircuitData_FW
 0xffae91ac,ReceiveMechaCircuitDataAll_FW
+0xffae925c,CloseMechaShutter_FW
+0xffae9280,OpenMechaShutter_FW
 0xffae92a4,CloseMechaShutterWithTiming_FW
+0xffae92dc,SetMechaShutterCloseDacSetting_FW
+0xffae92f8,SetMechaShutterOpenDacSetting_FW
 0xffae9314,SetMechaShutterWaitTimeSetting_FW
 0xffae9328,j_GetMechaShutterStatus_FW
 0xffae932c,j_GetMechaShutterMoveTime_FW
@@ -1390,6 +1394,7 @@
 0xffb513d8,CalculatePeakFromLeastSquareResult_FW
 0xffb51414,CalculateLog2ToApex_FW
 0xffb51428,CalculatePow2FromApex_FW
+0xffb51438,CalcLog10
 0xffb51474,CalcLog10_FW
 0xffb5149c,ConvertApexToApexStd_FW
 0xffb514cc,ConvertApexStdToApex_FW
@@ -1800,4 +1805,9 @@
 0xffb92b00,_pow
 0xffb93a4c,_log
 0xffb94040,_divmod_unsigned_int
+0xffb9492c,_dfix
+0xffb949dc,_dfixu
+0xffb94a64,_dflt
+0xffb94a94,_dfltu
+0xffb94b28,_dmul
 0xffb94e18,_sqrt

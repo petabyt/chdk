@@ -4,8 +4,13 @@
 0xff049710,_avsLoadParamData_FW
 0xff04974c,_avsSaveAdjData_FW
 0xff049100,_avsShowAdjData_FW
+0x006935d4,_dfix
+0x00693684,_dfixu
+0x0069370c,_dflt
+0x006937b8,_dfltu
 0x0069049c,_divmod_signed_int
 0x00690934,_divmod_unsigned_int
+0x0069384c,_dmul
 0xff0259a8,_GetSystemTime
 0x006915c8,_log
 0x00691b08,_log10
@@ -39,6 +44,7 @@
 0xff3e42c4,Bat_VIN_FW
 0xff04b16c,BeepDrive_FW
 0xff04b18c,BeepDriveComp_FW
+0xff3ddc9c,CalcLog10
 0xff3ddcd8,CalcLog10_FW
 0xff3e84f0,CalcLoopGain_FW
 0xff3dddc8,CalcSqrt_FW

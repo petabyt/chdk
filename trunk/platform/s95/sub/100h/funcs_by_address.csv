@@ -1132,7 +1132,11 @@
 0xffaf7818,j_GetIrisPiSensorLevel_FW
 0xffaf781c,SendMechaCircuitData_FW
 0xffaf7840,ReceiveMechaCircuitDataAll_FW
+0xffaf78f0,CloseMechaShutter_FW
+0xffaf7914,OpenMechaShutter_FW
 0xffaf7938,CloseMechaShutterWithTiming_FW
+0xffaf7970,SetMechaShutterCloseDacSetting_FW
+0xffaf798c,SetMechaShutterOpenDacSetting_FW
 0xffaf79a8,SetMechaShutterWaitTimeSetting_FW
 0xffaf79bc,j_GetMechaShutterStatus_FW
 0xffaf79c0,j_GetMechaShutterMoveTime_FW
@@ -1337,6 +1341,7 @@
 0xffb5cccc,CalculatePeakFromLeastSquareResult_FW
 0xffb5cd08,CalculateLog2ToApex_FW
 0xffb5cd1c,CalculatePow2FromApex_FW
+0xffb5cd2c,CalcLog10
 0xffb5cd68,CalcLog10_FW
 0xffb5cd90,ConvertApexToApexStd_FW
 0xffb5cdc0,ConvertApexStdToApex_FW
@@ -1615,8 +1620,12 @@
 0xffb79a90,task_ReadScheduleTask
 0xffb809d8,task_EfctConTask
 0xffb80b74,task_EfctConLowTask
+0xffb82918,SetPMByGpio_FW
+0xffb82928,ClearPMByGpio_FW
+0xffb82950,ClearPMByFs_FW
 0xffb82960,MoveDCMotorCW_FW
 0xffb829e8,MoveDCMotorCCW_FW
+0xffb82a70,SetDCMotorWaitTime_FW
 0xffb83598,GetFocusLensResetVoltage_FW
 0xffb850e0,task_TmgGen
 0xffb86cf8,task_AviRead
@@ -1626,4 +1635,9 @@
 0xffb9fa58,_pow
 0xffba0c5c,_log
 0xffba189c,_divmod_unsigned_int
+0xffba2188,_dfix
+0xffba2238,_dfixu
+0xffba22c0,_dflt
+0xffba22f0,_dfltu
+0xffba2384,_dmul
 0xffba2864,_sqrt

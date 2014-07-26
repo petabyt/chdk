@@ -1069,7 +1069,11 @@
 0xffe126d4,DisableZoomEncoderCircuit_FW
 0xffe126e4,SendMechaCircuitData_FW
 0xffe12708,ReceiveMechaCircuitDataAll_FW
+0xffe127b8,CloseMechaShutter_FW
+0xffe127dc,OpenMechaShutter_FW
 0xffe12800,CloseMechaShutterWithTiming_FW
+0xffe12838,SetMechaShutterCloseDacSetting_FW
+0xffe12854,SetMechaShutterOpenDacSetting_FW
 0xffe12870,SetMechaShutterWaitTimeSetting_FW
 0xffe12884,j_GetMechaShutterStatus_FW
 0xffe12898,EnableZoomLensEncoderPowerControl_FW
@@ -1241,6 +1245,7 @@
 0xffe61244,CalculatePeakFromLeastSquareResult_FW
 0xffe61280,CalculateLog2ToApex_FW
 0xffe61294,CalculatePow2FromApex_FW
+0xffe612a4,CalcLog10
 0xffe612e0,CalcLog10_FW
 0xffe61308,ConvertApexToApexStd_FW
 0xffe61338,ConvertApexStdToApex_FW
@@ -1499,8 +1504,12 @@
 0xffe6928c,CreateJumptable
 0xffe6c274,task_CtgTotalTask
 0xffe7842c,task_ReadFileTask
+0xffe7af84,SetPMByGpio_FW
+0xffe7af94,ClearPMByGpio_FW
+0xffe7afbc,ClearPMByFs_FW
 0xffe7afcc,MoveDCMotorCW_FW
 0xffe7b054,MoveDCMotorCCW_FW
+0xffe7b0dc,SetDCMotorWaitTime_FW
 0xffe7bc04,GetFocusLensResetVoltage_FW
 0xffe7de64,task_AviRead
 0xffe7fd60,task_AviPlay
@@ -1510,4 +1519,9 @@
 0xffe91124,_pow
 0xffe92070,_log
 0xffe92664,_divmod_unsigned_int
+0xffe92eec,_dfix
+0xffe92f9c,_dfixu
+0xffe93024,_dflt
+0xffe93054,_dfltu
+0xffe930e8,_dmul
 0xffe933d8,_sqrt
