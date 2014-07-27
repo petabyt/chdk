@@ -109,6 +109,7 @@
     #define CAM_SENSOR_BITS_PER_PIXEL           12
 
     #define CAM_EXT_TV_RANGE                    1
+    #define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
     #define CAM_QUALITY_OVERRIDE                1
     #define CAM_REAR_CURTAIN                    1
 
