@@ -12,7 +12,7 @@ void *hook_raw_ret_addr()
 
 char *hook_raw_image_addr()
 {
-    return (char*)0x10584DF4; //OK	=aA08x_crw
+    return (char*)0x10584DF4; //OK	=aA08x_crw  Found @  0xff91e35c
 }
 
 long hook_raw_size()

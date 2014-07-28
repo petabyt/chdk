@@ -84,28 +84,23 @@ video resolutions
 640 x 480/320 x 240 (10 fps/20 fps) available up to 1GB, 160 x 120 (3 min. at 15 fps)
 canon mode list FF95E37C in 100g
 */
-// TODO this is completely wrong, camera has no M, Tv, Av. Should have "long shutter"
-// valid mode 0-15, 0x10010-0x1012
 const CapturemodeMap modemap[] = {
-    { MODE_AUTO,               6  },
-    { MODE_P,                  1  },
-    { MODE_TV,                 3  },
-    { MODE_AV,                 2  },
-    { MODE_M,                  0  },
-    { MODE_PORTRAIT,           9  },
-    { MODE_NIGHT_SCENE,        8  },
-    { MODE_LANDSCAPE,          7  },
-    { MODE_VIDEO_STD,          18 },
-    { MODE_STITCH,             5  },
-    { MODE_MY_COLORS,          4  },
-    { MODE_SCN_UNDERWATER,     13 },
-    { MODE_SCN_NIGHT_SNAPSHOT, 15 },
-    { MODE_SCN_KIDS_PETS,      16 },
-    { MODE_SCN_INDOOR,         14 },
-    { MODE_SCN_FOLIAGE,        10 },
-    { MODE_SCN_SNOW,           11 },
-    { MODE_SCN_BEACH,          12 },
-    { MODE_SCN_FIREWORK,       17 }
+    { MODE_P,                   1 },  // Called "camera manual" on many cameras without a true manual mode, only allows +/- Ev adjustment
+    { MODE_DIGITAL_MACRO,       2 },
+    { MODE_MY_COLORS,           3 },
+    { MODE_STITCH,              4 },
+    { MODE_AUTO,                5 },
+    { MODE_LANDSCAPE,           6 },    
+    { MODE_PORTRAIT,            7 },
+    { MODE_SCN_FOLIAGE,         8 },
+    { MODE_SCN_SNOW,            9 },
+    { MODE_SCN_BEACH,          10 },
+    { MODE_SCN_UNDERWATER,     11 },
+    { MODE_SCN_INDOOR,         12 },
+    { MODE_SCN_NIGHT_SNAPSHOT, 13 },
+    { MODE_SCN_KIDS_PETS,      14 },
+    { MODE_SCN_FIREWORK,       15 },
+    { MODE_VIDEO_STD,          16 },
 };
 
 
