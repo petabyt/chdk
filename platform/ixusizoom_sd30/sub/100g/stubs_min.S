@@ -11,16 +11,20 @@ DEF(zoom_status, 0x7124)
         
 //a bit unsure but might be ok
 DEF(focus_busy, 0x6E488) 
-DEF(movie_status, 0x67108)
-DEF(FlashParamsTable,0xFF958138) // dk
+//DEF(movie_status, 0x67108)
+
+//DEF(FlashParamsTable,0xFF958138) // dk
 
 
-//FIXME: wrong!
-DEF(canon_shoot_menu_active,0x68F1) //WRONG! COPIED FROM SD400
-DEF(recreview_hold, 0x117A8) //WRONG
+//Not tested:
+DEF(canon_menu_active,  0x00008b5c)     //Found in sub_ff9ed320
+DEF(canon_shoot_menu_active,0x7ef4+1)   //Found in sub_ff99d8d8
+DEF(recreview_hold,     0x00086400)     //Found in sub_ff990b58
+DEF(some_f_for_dng,     0x000099d4)     //Found in sub_ffa2bce8 by comparison to ixusw_sd430 110a
+DEF(second_ext_for_dng, 0x000099f8)     //some_f_for_dng + 0x24?
+DEF(movie_status,       0x0007c970)     //Found @ 0xff941abc by comparison to ixusw_sd430 110a
 
 
-DEF(levent_table,0xFF9575F8)
 DEF(playrec_mode, 0x6DA0) // "MenuIn"
 
 DEF(sys_mempart_id, 0xea18)

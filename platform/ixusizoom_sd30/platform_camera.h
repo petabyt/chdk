@@ -35,6 +35,24 @@
     #undef  CAM_HAS_IS
     //#define CAM_CONSOLE_LOG_ENABLED       1
     #undef  CAM_VIDEO_CONTROL
+
+    #define CAM_DNG_LENS_INFO               { 63,10, 149,10, 32,10, 54,10 } // See comments in camera.h
+    #define cam_CFAPattern                  0x02010100 // Red  Green  Green  Blue
+    // color
+    #define CAM_COLORMATRIX1             \
+     536034, 1000000, -173429, 1000000, -89823, 1000000, \
+    -290416, 1000000,  735807, 1000000,  47894, 1000000, \
+     -71455, 1000000,  114314, 1000000, 274533, 1000000
+
+    #define cam_CalibrationIlluminant1      1       // Daylight
+    // cropping
+    #define CAM_JPEG_WIDTH                  2592
+    #define CAM_JPEG_HEIGHT                 1944
+    #define CAM_ACTIVE_AREA_X1              12
+    #define CAM_ACTIVE_AREA_Y1              8
+    #define CAM_ACTIVE_AREA_X2              2628
+    #define CAM_ACTIVE_AREA_Y2              1968
+    #define DNG_EXT_FROM                    ".DPS"
 	
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 
@@ -56,7 +74,13 @@
 	#define ISO_REAL_TO_MARKET_MULT     2
 	#define ISO_REAL_TO_MARKET_SHIFT    1
 	#define ISO_REAL_TO_MARKET_ROUND    0
-	
+
+    #define PARAM_CAMERA_NAME               3    // Found @0xff95fd90
+
+
+    #define CAM_EXT_TV_RANGE                1
+
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
  
     // Warning : SD override for this camera with these values has not been tested
     #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1

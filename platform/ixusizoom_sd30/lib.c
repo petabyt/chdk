@@ -1,6 +1,6 @@
 
 int get_flash_params_count(void){
- return 90;
+ return 0x5e;
 }
 
 void shutdown()

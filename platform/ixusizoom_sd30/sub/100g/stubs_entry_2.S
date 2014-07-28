@@ -5,7 +5,6 @@
 NHSTUB(DisplayImagePhysicalScreen,  0xFF921F58)
 NHSTUB(EnterToCompensationEVF,      0xFF948C84)
 NHSTUB(ExitFromCompensationEVF,     0xFF948C94)
-NHSTUB(VbattGet,                    0xFF82CF1C)
 NHSTUB(free,                        0xFFAD366C)
 NHSTUB(kbd_pwr_off,                 0xFF828F4C)
 NHSTUB(kbd_pwr_on,                  0xFF828F30)
@@ -13,8 +12,6 @@ NHSTUB(kbd_read_keys_r2,            0xFF828950)
 
 // Additional
 NHSTUB(GetCurrentMachineTime,       0xFF81F2D4)
-NHSTUB(GiveSemaphore,               0xFF8222B0)
-NHSTUB(SetScriptMode,               0xFF95C208)
 NHSTUB(SetTimerWhen,                0xFF815284)
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFFA712B8)
 NHSTUB(kbd_read_keys,               0xFF827CB8)

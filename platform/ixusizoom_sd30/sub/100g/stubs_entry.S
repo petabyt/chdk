@@ -54,13 +54,14 @@ NHSTUB(MakeAFScan                             ,0xff94cf90) //  1 89%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff95e37c -> ff95e37c
-// Strange mode 0x00010010 in firmware, found in modemap as 16 (MODE_SCN_KIDS_PETS)
-// Strange mode 0x00010011 in firmware, found in modemap as 17 (MODE_SCN_FIREWORK)
-// Strange mode 0x00010012 in firmware, found in modemap as 18 (MODE_VIDEO_STD)
+// Mode 0 in firmware but not in current modemap
+// Strange mode 0x00010010 in firmware, found in modemap as 16 (MODE_VIDEO_STD)
+// Strange mode 0x00010011 in firmware but not in current modemap
+// Strange mode 0x00010012 in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xff9575f8) // Found @0xff9575f8,          stubs_min = 0xff9575f8 (0xFF9575F8)
-//DEF(FlashParamsTable                        ,0xff9604bc) // Found @0xff9604bc, ** != ** stubs_min = 0xff958138 (0xFF958138)
+DEF(levent_table                            ,0xff9575f8) // Found @0xff9575f8
+DEF(FlashParamsTable                        ,0xff9604bc) // Found @0xff9604bc
 
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x5e; }                          // Found @0xff962c0c
@@ -112,7 +113,7 @@ NHSTUB(GetParameterData                       ,0xff962ba0) //  1
 NHSTUB(GetPropertyCase                        ,0xff825bb0) //  1
 NHSTUB(GetZoomLensCurrentPoint                ,0xffa6b7cc) //120
 NHSTUB(GetZoomLensCurrentPosition             ,0xffa6b7e0) //102
-//NHSTUB(GiveSemaphore                        ,0xff8222b0) //120            == 0xff8222b0
+NHSTUB(GiveSemaphore                          ,0xff8222b0) //120
 NHSTUB(IsStrobeChargeCompleted                ,0xff8fc68c) //  1
 NHSTUB(LEDDrive                               ,0xff82e420) //120
 NHSTUB(LocalTime                              ,0xff814264) //115
@@ -135,7 +136,7 @@ NHSTUB(SetFileAttributes                      ,0xff870814) //  1
 NHSTUB(SetLogicalEventActive                  ,0xff95c1a4) //1104
 NHSTUB(SetParameterData                       ,0xff962ac0) //  1
 NHSTUB(SetPropertyCase                        ,0xff825a94) //  1
-//NHSTUB(SetScriptMode                        ,0xff95c208) //120            == 0xff95c208
+NHSTUB(SetScriptMode                          ,0xff95c208) //120
 NHSTUB(SleepTask                              ,0xff82270c) //120
 NHSTUB(TakeSemaphore                          ,0xff8220c8) //1101
 NHSTUB(TurnOffBackLight                       ,0xff9a013c) //  1
@@ -145,7 +146,7 @@ NHSTUB(TurnOffDisplay                         ,0xff92100c) //120
 NHSTUB(UnlockAE                               ,0xff948cdc) //120
 NHSTUB(UnlockAF                               ,0xff948bb4) //120
 NHSTUB(UnlockMainPower                        ,0xff95e1a8) //120
-//NHSTUB(VbattGet                             ,0xff82cf1c) //120            == 0xff82cf1c
+NHSTUB(VbattGet                               ,0xff82cf1c) //120
 NHSTUB(Write                                  ,0xff8706c8) //120
 NHSTUB(_log                                   ,0xffabcba0) //121
 NHSTUB(_log10                                 ,0xffabd248) //121
