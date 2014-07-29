@@ -10,10 +10,14 @@
 0xf86488bc,_divmod_signed_int
 0xf8648a44,_divmod_unsigned_int
 0xf8649064,_dmul
+0x006b0fb8,_drsb
+0x006b1144,_dsub
 0xf8039d70,_GetSystemTime
 0x006ae840,_log
 0xf864908c,_log10
 0xf8649054,_pow
+0xf8649084,_safe_sqrt
+0x006b1eb8,_scalbn
 0x006b0fd0,_sqrt
 0xf81bb7a0,_srRegDump_FW
 0xf800cda8,_uartr_req

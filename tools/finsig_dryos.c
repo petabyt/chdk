@@ -441,6 +441,14 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "_dfix", OPTIONAL|UNUSED}, // double -> int
     { "_dfixu", OPTIONAL|UNUSED}, // double -> uint
     { "_dmul", OPTIONAL|UNUSED}, // double precision float multiplication
+    { "_ddiv", OPTIONAL|UNUSED}, // double precision float division
+    { "_dadd", OPTIONAL|UNUSED}, // addition for doubles
+    { "_dsub", OPTIONAL|UNUSED}, // subtraction for doubles
+    { "_drsb", OPTIONAL|UNUSED}, // reverse subtraction for doubles (?)
+    { "_dcmp", OPTIONAL|UNUSED}, // comparison of 2 doubles, only updates condition flags
+    { "_dcmp_reverse", OPTIONAL|UNUSED}, // like _dcmp, but operands in reverse order, only updates condition flags
+    { "_safe_sqrt", OPTIONAL|UNUSED}, // only calls _sqrt for numbers >= 0
+    { "_scalbn", OPTIONAL|UNUSED}, // double scalbn (double x, long exp), returns x * FLT_RADIX ** exp
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -1408,6 +1416,12 @@ string_sig string_sigs[] =
     { 9, "_dfltu", "CalcLog10", 0,                                         4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4 },
     { 9, "_dmul", "CalcLog10", 0,                                         12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12 },
     { 9, "_dfix", "CalcLog10", 0,                                         14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14,   14 },
+    { 9, "_dadd", "_pow", 0,                                              26,   26,   26,   26,   26,   26,   29,   29,   29,   29,   29,   29 },
+    { 9, "_dadd", "_pow", 0,                                               1,    1,    1,    1,    1,    1,   24,   24,    1,    1,    1,    1 }, // s100, sx230 (100c only...)
+    { 9, "_scalbn", "_log", 0,                                            19,   19,   19,   19,   19,   19,   18,   18,   18,   18,   18,   18 },
+    { 9, "_scalbn", "_log", 0,                                             1,    1,    1,    1,    1,    1,   14,   14,    1,    1,    1,    1 }, // s100, sx230 (100c only...)
+    { 9, "_safe_sqrt", "CalcSqrt_FW", 0,                                   0,    0,   -3,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6 },
+    { 9, "_ddiv", "ConvertApexStdToApex_FW", 0,                            0,    0,    0,   21,   21,   21,    0,    0,    0,    0,    0,    0 },
 
     //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52   R54
 //    { 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                 5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    1,    6 },
@@ -1500,7 +1514,7 @@ string_sig string_sigs[] =
     { 19, "GetSRAndDisableInterrupt", "UnregisterInterruptHandler", 0,           0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x004c },
     { 19, "SetSR", "UnregisterInterruptHandler", 0,                              0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x104d },
     { 19, "EnableInterrupt", "UnregisterInterruptHandler", 0,                    0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x1755 },
-
+    //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54
     { 19, "GetDrive_TotalClusters", "GetDrive_ClusterSize", 0,                   0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x000d, 0x000c, 0x000c, 0x000c, 0x000c, 0x0001, 0x0001 },
     { 19, "GetDrive_FreeClusters", "GetDrive_TotalClusters", 0,                  0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x000b, 0x000a, 0x000a, 0x000a, 0x000a, 0x000a, 0x000b },
     { 19, "GetDrive_FreeClusters", "GetDrive_TotalClusters", 0,                  0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x000b, 0x0001 }, // alt r52 (sx510)
@@ -1510,6 +1524,15 @@ string_sig string_sigs[] =
 
     { 19, "CalcLog10", "CalcLog10_FW", 0,                                       -0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f },
     { 19, "_dfixu", "_dfix", 0,                                                  0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c },
+    { 19, "_dsub", "_sqrt", 0,                                                   0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d },
+    { 19, "_drsb", "_sqrt", 0,                                                  -0x1114,-0x1114,-0x1114,-0x1114,-0x1114,-0x1114,-0x1106,-0x1106,-0x1106,-0x1106,-0x1106,-0x1106 },
+    { 19, "_dcmp_reverse", "_dmul", 0,                                           0xf000, 0xf000, 0x33fc, 0x33fc, 0x33fc, 0x33fc, 0x43e2, 0x43e2, 0x43e2, 0x43e2, 0xf000, 0xf000 }, // has to come first
+    { 19, "_dcmp_reverse", "_dmul", 0,                                           0x2e80, 0x2e80, 0x3580, 0x3580, 0x3580, 0x3580, 0x3474, 0x3474, 0x3474, 0x3474, 0x3474, 0x3474 },
+    { 19, "_dcmp", "_dfltu", 0,                                                  0x1003, 0x1003, 0x1003, 0x1003, 0x1003, 0x1003, 0x1003, 0x1003, 0x1003, 0x1003, 0x1003, 0x1003 },
+    { 19, "_safe_sqrt", "_dadd", 0,                                              0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000,-0x1d13,-0x1d13,-0x1d13,-0x1d13,-0x1d13,-0x1d13 },
+    { 19, "_safe_sqrt", "_log", 0,                                              -0x132f,-0x132f,-0x1695,-0x132f,-0x132f,-0x132f, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000 },
+    { 19, "_safe_sqrt", "_log", 0,                                               0xf000, 0xf000,-0x132f,-0x1695, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000 },
+    { 19, "_ddiv", "_dadd", 0,                                                   0x10aa, 0x10aa, 0x10aa, 0x10aa, 0x10aa, 0x10c3, 0x10b6, 0x10b6, 0x10b6, 0x10b6, 0x10b6, 0x10b6 },
 
     { 21, "add_ptp_handler", (char*)find_add_ptp_handler, 0 },
     { 21, "apex2us", (char*)find_apex2us, 0 },
@@ -2249,7 +2272,7 @@ int find_strsig17(firmware *fw, string_sig *sig)
 //          func
 // dryos_offset to be encoded as: 0xQRPP
 // PP) offset, 0x00...0xff, in words
-// Q) 'previous instruction flag': 0 for LDMFD, 1 for B
+// Q) 'previous instruction flag': 0 for LDMFD, 1 for B, 2 for conditional B, 3 for mov pc,lr, 4 for bx lr
 // R) 'additional gap size': 0x0 ... 0xf, to skip an additional gap, in words
 // offset is negative if dryos_offset is negative
 int find_strsig19(firmware *fw, string_sig *sig)
@@ -2273,6 +2296,10 @@ int find_strsig19(firmware *fw, string_sig *sig)
             {
                 case 0: k = isLDMFD_PC(fw, adr2idx(fw, fadr)-1-addoffs); break;
                 case 1: k = isB(fw, adr2idx(fw, fadr)-1-addoffs); break;
+                case 2: k = ((fwval(fw, adr2idx(fw, fadr)-1-addoffs) & 0x0f000000) == 0x0a000000); break; // B cond.
+                case 3: k = (fwval(fw, adr2idx(fw, fadr)-1-addoffs) == 0xE1A0F00E); break; // mov pc, lr
+                case 4: k = (fwval(fw, adr2idx(fw, fadr)-1-addoffs) == 0xE12FFF1E); break; // bx lr
+                default: return 0;
             }
             if (k)
             {

@@ -2005,9 +2005,17 @@
 0xff430340,_log
 0xff430880,_log10
 0xff4309f8,_pow
+0xff4319a8,_safe_sqrt
+0xff4319f4,_dadd
+0xff431ccc,_ddiv
 0xff432198,_dfix
 0xff432248,_dfixu
 0xff4322d0,_dflt
 0xff432300,_dfltu
+0xff43230c,_dcmp
 0xff432394,_dmul
+0xff432564,_dcmp_reverse
+0xff432604,_drsb
 0xff43261c,_sqrt
+0xff432790,_dsub
+0xff433504,_scalbn

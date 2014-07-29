@@ -1318,9 +1318,17 @@
 0xffe99ea0,_log
 0xffe9a3e0,_log10
 0xffe9a558,_pow
+0xffe9b508,_safe_sqrt
+0xffe9b554,_dadd
+0xffe9b82c,_ddiv
 0xffe9bcf8,_dfix
 0xffe9bda8,_dfixu
 0xffe9be30,_dflt
 0xffe9be60,_dfltu
+0xffe9be6c,_dcmp
 0xffe9bef4,_dmul
+0xffe9c0c4,_dcmp_reverse
+0xffe9c164,_drsb
 0xffe9c17c,_sqrt
+0xffe9c2f0,_dsub
+0xffe9cfd8,_scalbn

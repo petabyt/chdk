@@ -1734,9 +1734,17 @@
 0xff3cb220,_log
 0xff3cb760,_log10
 0xff3cb8d8,_pow
+0xff3cc990,_safe_sqrt
+0xff3cc9dc,_dadd
+0xff3cccb4,_ddiv
 0xff3cd180,_dfix
 0xff3cd230,_dfixu
 0xff3cd2b8,_dflt
 0xff3cd364,_dfltu
+0xff3cd370,_dcmp
 0xff3cd3f8,_dmul
+0xff3cd780,_dcmp_reverse
+0xff3cd820,_drsb
 0xff3cd838,_sqrt
+0xff3cd9ac,_dsub
+0xff3ce720,_scalbn
