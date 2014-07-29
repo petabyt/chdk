@@ -12,6 +12,7 @@ extern void task_InitFileModules();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
 extern void task_PhySw();
+extern void task_FileWrite();
 
 void taskHook(context_t **context) { 
 	task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
@@ -20,8 +21,9 @@ void taskHook(context_t **context) {
 	if(tcb->entry == (void*)task_PhySw)				tcb->entry = (void*)mykbd_task;
 	if(tcb->entry == (void*)task_CaptSeq)			tcb->entry = (void*)capt_seq_task; 
 	if(tcb->entry == (void*)task_InitFileModules)	tcb->entry = (void*)init_file_modules_task;
-	//if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;
-	//if(tcb->entry == (void*)task_ExpDrv)			tcb->entry = (void*)exp_drv_task;
+	if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;
+	if(tcb->entry == (void*)task_ExpDrv)			tcb->entry = (void*)exp_drv_task;
+    if(tcb->entry == (void*)task_FileWrite)         tcb->entry = (void*)filewritetask;
 } 
 
 void CreateTask_spytask() {
@@ -181,10 +183,12 @@ void __attribute__((naked,noinline)) sub_FFC00FC4_my() {
                 "BL      sub_FFE6C5B0\n"       
                  "MOV     R0, #0x53000\n"
                  "STR     R0, [SP,#4]\n"
-             //    "LDR     R0, =0x12ED1C\n"
-              // Replacement
- 		           "LDR     R0, =new_sa\n"
-   	              "LDR     R0, [R0]\n"
+#if defined(CHDK_NOT_IN_CANON_HEAP) // use original heap offset if CHDK is loaded in high memory
+                 "LDR     R0, =0x12ED1C\n"
+#else
+		         "LDR     R0, =new_sa\n"
+   	             "LDR     R0, [R0]\n"
+#endif
    	              
                  "LDR     R2, =0x2F9C00\n"
                  "LDR     R1, =0x2F24A8\n"
