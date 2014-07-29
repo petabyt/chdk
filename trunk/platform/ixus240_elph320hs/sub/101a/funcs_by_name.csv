@@ -4,6 +4,10 @@
 0xff061190,_avsLoadParamData_FW
 0xff0611cc,_avsSaveAdjData_FW
 0xff060b80,_avsShowAdjData_FW
+0x006aff4c,_dadd
+0x006b08e0,_dcmp
+0x006b0cf0,_dcmp_reverse
+0x006b0224,_ddiv
 0x006b06f0,_dfix
 0x006b07a0,_dfixu
 0x006b0828,_dflt
@@ -11,10 +15,14 @@
 0x006ab91c,_divmod_signed_int
 0x006acf38,_divmod_unsigned_int
 0x006b0968,_dmul
+0x006b0d90,_drsb
+0x006b0f1c,_dsub
 0xff03b578,_GetSystemTime
 0x006ae618,_log
 0x006aeb58,_log10
 0x006aecd0,_pow
+0x006afd88,_safe_sqrt
+0x006b1c90,_scalbn
 0x006b0da8,_sqrt
 0xff170bc4,_srRegDump_FW
 0xff00d19c,_uartr_req

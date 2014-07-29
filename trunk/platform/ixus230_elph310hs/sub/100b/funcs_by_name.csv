@@ -1,3 +1,7 @@
+0xff3a49ec,_dadd
+0xff3a5304,_dcmp
+0xff3a555c,_dcmp_reverse
+0xff3a4cc4,_ddiv
 0xff3a5190,_dfix
 0xff3a5240,_dfixu
 0xff3a52c8,_dflt
@@ -5,10 +9,14 @@
 0xff3a2dac,_divmod_signed_int
 0xff3a2f90,_divmod_unsigned_int
 0xff3a538c,_dmul
+0xff3a55fc,_drsb
+0xff3a5788,_dsub
 0xff02c0a4,_GetSystemTime
 0xff3a3338,_log
 0xff3a3878,_log10
 0xff3a39f0,_pow
+0xff3a49a0,_safe_sqrt
+0xff3a64fc,_scalbn
 0xff3a5614,_sqrt
 0xff00fef0,_uartr_req
 0xff14c818,AbortAEIntegralValue_FW

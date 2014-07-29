@@ -58,7 +58,10 @@
 0x0069991c,time
 0x006999cc,GetTimeOfSystem_FW
 0x006ae840,_log
+0x006b0fb8,_drsb
 0x006b0fd0,_sqrt
+0x006b1144,_dsub
+0x006b1eb8,_scalbn
 0xf8000d88,memShow_FW
 0xf8002d40,strncpy
 0xf8002d7c,strncmp
@@ -1940,4 +1943,5 @@
 0xf864905c,_dfltu
 0xf8649064,_dmul
 0xf864907c,_dfix
+0xf8649084,_safe_sqrt
 0xf864908c,_log10
