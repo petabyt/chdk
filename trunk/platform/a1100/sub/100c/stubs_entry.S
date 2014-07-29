@@ -46,7 +46,7 @@ DEF(some_flag_for_af_scan                   ,0x00005af4) // Found @0xffcfa7a4
 DEF(focus_len_table                         ,0xfffe2a8c) // Found @0xfffe2a8c
 DEF(zoom_busy                               ,0x00005560) // Found @0xffcf4788
 DEF(focus_busy                              ,0x00005478) // Found @0xffcefa8c
-//DEF(recreview_hold                          ,0x000030e0) // Found @0xffc65938, ** != ** stubs_min = 0xffc00414 (0xFFC00414)
+DEF(recreview_hold                          ,0x000030e0) // Found @0xffc65938
 // Palette colour tables  found @ 0xffea322c
 DEF(active_palette_buffer                   ,0x000075a4) // Found @0xffd67c68
 DEF(palette_buffer_ptr                      ,0x000075b8) // Found @0xffd67b1c

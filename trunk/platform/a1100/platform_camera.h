@@ -37,9 +37,9 @@
     #define CAM_REAR_CURTAIN                1
     #undef  DEFAULT_RAW_EXT 
     #define DEFAULT_RAW_EXT                 2  // use .CR2 
-    #undef  CAM_EXT_TV_RANGE
+    #define CAM_EXT_TV_RANGE                1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
-    #undef  CAM_CAN_MUTE_MICROPHONE
+    #define CAM_CAN_MUTE_MICROPHONE         1
     #undef  CAM_EV_IN_VIDEO
 
     #undef  CAM_UNCACHED_BIT
@@ -83,6 +83,8 @@
     #define CAM_MENU_BORDERWIDTH            10
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
+
+    #define CAM_HAS_FILEWRITETASK_HOOK       1
 
 	#define REMOTE_SYNC_STATUS_LED 	0xC02200CC		// specifies an LED that turns on while camera waits for USB remote to sync
  
