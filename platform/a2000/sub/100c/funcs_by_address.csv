@@ -231,7 +231,6 @@
 0xffc33494,GetCCDTemperature
 0xffc33494,GetCCDTemperature_FW
 0xffc33494,GetCurrentCcdTemp_FW
-0xffc33494,GetBatteryTemperature,(stubs_entry_2.s)
 0xffc33504,GetBatteryTemperature_FW
 0xffc33574,GetCurrentOptTemp_FW
 0xffc33574,GetOpticalTemperature

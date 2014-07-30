@@ -315,7 +315,6 @@
 0xffe3dc80,GetAEIntegWinDataWithMode_FW
 0xffe3df14,GetAllAEIntegralAllValueWithFix_FW
 0xffc113e4,GetBatteryCoverClose_FW
-0xffc33494,GetBatteryTemperature,(stubs_entry_2.s)
 0xffc33504,GetBatteryTemperature_FW
 0xffc57ee8,GetBuildDate_FW
 0xffc57ef0,GetBuildTime_FW

@@ -51,7 +51,7 @@ void debug_led(int state)
 
 
 int get_flash_params_count(void){
- return 120; 
+ return 0x77; 
 }
 
 void camera_set_led(int led, int state, int bright) { 
@@ -76,16 +76,15 @@ void camera_set_led(int led, int state, int bright) {
 
 
 /*
-
-
-void JogDial_CW(void){
- _PostLogicalEventForNotPowerType(0x874, 2);  // RotateJogDialRight
-}
-
-void JogDial_CCW(void){
- _PostLogicalEventForNotPowerType(0x875, 2);  // RotateJogDialLeft
-}
+GetBatteryTemperature usually will get back temperature of battery compartment/batteries. GetBatteryTemperature is implemented in Canon's firmware for SX120IS.
+Firmware entry point is identified but function is not usable. 
+Camera will crash if Canon's GetBatteryTemperature is called by CHDK.
+To avoid a crash Canon's GetBatteryTemperature must not called. As long CHDK general code do not distinguish between cameras that support or don't support GetBatteryTemperature, 
+this function will be implemented as specific CHDK-code. It returns always with -99
+This overrides original canon entry point from stubs_entry.S
 */
-
-
+int _GetBatteryTemperature()
+{
+      return -99;
+}
 
