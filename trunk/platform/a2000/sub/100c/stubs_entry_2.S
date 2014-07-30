@@ -3,7 +3,8 @@
 
 // Override stubs_entry.S
 NHSTUB(ExecuteEventProcedure,       0xffc5543c)
-NHSTUB(GetBatteryTemperature,       0xFFC33494) //point to GetCCDTemperature
+//NHSTUB(GetBatteryTemperature,       0xFFC33494) //point to GetCCDTemperature
+NHSTUB(GetBatteryTemperature,       NULL_SUB)   // Does not work in cameras with 2xAA batteries.
 NHSTUB(Lseek,                       0xFFC1354C)
 NHSTUB(Read,                        0xFFC133EC)
 NHSTUB(kbd_pwr_off,                 0xFFC31418)

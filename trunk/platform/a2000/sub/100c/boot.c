@@ -1,6 +1,9 @@
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
+#include "dryos31.h"
+
+#define offsetof(TYPE, MEMBER) ((int) &((TYPE *)0)->MEMBER)
 
 #define DP (void*)0xC02200C4					// direct-print (blue)
 #define LED_PR	0xc02200C4
@@ -13,24 +16,29 @@ const char * const new_sa = &_end;
 void CreateTask_blinker();
 void __attribute__((naked,noinline)) task_blinker();
 
-// Task override registration
-void taskCreateHook(int *p) { 
- p-=17;
- if (p[0]==0xFFC4AE84)  p[0]=(int)capt_seq_task;	
- if (p[0]==0xFFC11060)  p[0]=(int)mykbd_task;
- if (p[0]==0xFFC60268)  p[0]=(int)init_file_modules_task;
- if (p[0]==0xFFC47BB4)  p[0]=(int)movie_record_task;	 
-}
-void taskCreateHook2(int *p) { 
- p-=17;
- if (p[0]==0xFFC60268)  p[0]=(int)init_file_modules_task;
+extern void task_CaptSeq();
+extern void task_InitFileModules();
+extern void task_MovieRecord();
+extern void task_ExpDrv();
+extern void task_PhySw();
+extern void task_FileWrite();
+
+void taskHook(context_t **context) { 
+    task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
+
+    // Replace firmware task addresses with ours
+    if(tcb->entry == (void*)task_PhySw)             tcb->entry = (void*)mykbd_task;
+    if(tcb->entry == (void*)task_CaptSeq)           tcb->entry = (void*)capt_seq_task; 
+    if(tcb->entry == (void*)task_InitFileModules)   tcb->entry = (void*)init_file_modules_task;
+    if(tcb->entry == (void*)task_MovieRecord)       tcb->entry = (void*)movie_record_task;
+    if(tcb->entry == (void*)task_ExpDrv)            tcb->entry = (void*)exp_drv_task;
+    if(tcb->entry == (void*)task_FileWrite)         tcb->entry = (void*)filewritetask;
 }
 
 void CreateTask_spytask() {
         _CreateTask("SpyTask", 0x19, 0x2000, core_spytask, 0);
 };
 
-void boot();
 
 void boot() {
 
@@ -65,8 +73,8 @@ void boot() {
 /* OK */
 void __attribute__((naked,noinline)) sub_FFC001A4_my() {
 
-	*(int*)0x1930=(int)taskCreateHook;
-	*(int*)0x1934=(int)taskCreateHook2;
+	*(int*)0x1930=(int)taskHook;
+	*(int*)0x1934=(int)taskHook;
 
 	// replacement of sub_FFC111A4	
 	// from taskcreate_startup to sub_FFC111A4 
@@ -139,12 +147,13 @@ void __attribute__((naked,noinline)) sub_FFC00F98_my() {
 		     "MOV     R0, #0x53000\n"
 		     "STR     R0, [SP,#0x74-0x70]\n"
 
-				 // Original code...
-   	     //"LDR     R0, =0xD4F38\n"
+#if defined(CHDK_NOT_IN_CANON_HEAP) // use original heap offset if CHDK is loaded in high memory
+		     "LDR     R0, =0xD4F38\n"
+#else
+		     "LDR     R0, =new_sa\n"
+		     "LDR     R0, [R0]\n"
+#endif
 
-				 // Replacement
- 		     "LDR     R0, =new_sa\n"
-   	     "LDR     R0, [R0]\n"
 
 		     "LDR     R2, =0x279C00\n"
 		     "LDR     R1, =0x2724A8\n"

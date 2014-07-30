@@ -20,7 +20,7 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(ExecuteEventProcedure                ,0xffc553c4) //104        *** != 0xffc5543c
-//NHSTUB(GetBatteryTemperature                ,0xffc33504) //102        *** != 0xffc33494
+//NHSTUB(GetBatteryTemperature                ,0xffc33504) //102        *** != 0x00000000
 //NHSTUB(Lseek                                ,0xffc13484) //120        *** != 0xffc1354c
 //NHSTUB(Read                                 ,0xffc0a138) //120        *** != 0xffc133ec
 //NHSTUB(kbd_pwr_off                          ,0xffc31408) //  2 64%    *** != 0xffc31418

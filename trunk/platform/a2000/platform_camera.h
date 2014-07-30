@@ -67,6 +67,9 @@
 
     #define CAM_MULTIPART                   1
 
+    #define CAM_EXT_TV_RANGE                1
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+
 	#define REMOTE_SYNC_STATUS_LED 	0xc02200C4		// specifies an LED that turns on while camera waits for USB remote to sync
  
     #define CAM_SD_OVER_IN_AF  1
