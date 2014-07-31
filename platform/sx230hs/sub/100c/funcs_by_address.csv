@@ -1703,4 +1703,11 @@
 0xff3b9144,_drsb
 0xff3b915c,_sqrt
 0xff3b92d0,_dsub
+0xff3b9654,_f2d
+0xff3b97d8,_fdiv
+0xff3b99bc,_ffix
+0xff3b9a30,_ffixu
+0xff3b9a90,_fflt
+0xff3b9ac4,_ffltu
+0xff3b9b44,_fmul
 0xff3ba030,_scalbn

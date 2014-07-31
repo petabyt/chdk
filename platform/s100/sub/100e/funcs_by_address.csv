@@ -1852,4 +1852,11 @@
 0xff4512bc,_drsb
 0xff4512d4,_sqrt
 0xff451448,_dsub
+0xff4517cc,_f2d
+0xff451950,_fdiv
+0xff451b34,_ffix
+0xff451ba8,_ffixu
+0xff451c08,_fflt
+0xff451c3c,_ffltu
+0xff451cbc,_fmul
 0xff4521a8,_scalbn

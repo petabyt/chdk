@@ -1517,4 +1517,11 @@
 0xffb0a018,_drsb
 0xffb0a068,_sqrt
 0xffb0a1dc,_dsub
+0xffb0a590,_f2d
+0xffb0a73c,_fdiv
+0xffb0a960,_ffix
+0xffb0a9d4,_ffixu
+0xffb0aa34,_fflt
+0xffb0aa68,_ffltu
+0xffb0aa70,_fmul
 0xffb0af34,_scalbn

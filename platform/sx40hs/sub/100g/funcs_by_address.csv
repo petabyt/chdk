@@ -2018,4 +2018,11 @@
 0xff432604,_drsb
 0xff43261c,_sqrt
 0xff432790,_dsub
+0xff432b14,_f2d
+0xff432c98,_fdiv
+0xff432e7c,_ffix
+0xff432ef0,_ffixu
+0xff432f50,_fflt
+0xff432f84,_ffltu
+0xff433004,_fmul
 0xff433504,_scalbn

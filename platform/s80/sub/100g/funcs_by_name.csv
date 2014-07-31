@@ -618,7 +618,7 @@
 0xffab695c,OpenMShutter_FW
 0xff8a2334,OutPort_FW
 0xffab2820,OutputLogToFile_FW
-0xff990a5c,PB2Rec
+0xff990a48,PB2Rec
 0xff81aad8,Peek16_FW
 0xff81aabc,Peek32_FW
 0xff81aaf4,Peek8_FW

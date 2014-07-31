@@ -17,6 +17,13 @@
 0x0069384c,_dmul
 0x00693c74,_drsb
 0x00693e00,_dsub
+0x00694184,_f2d
+0x00694308,_fdiv
+0x006944ec,_ffix
+0x00694560,_ffixu
+0x006945c0,_fflt
+0x006945f4,_ffltu
+0x00694674,_fmul
 0xff0259a8,_GetSystemTime
 0x006915c8,_log
 0x00691b08,_log10

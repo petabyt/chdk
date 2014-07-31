@@ -1625,4 +1625,11 @@
 0xffb96bcc,_drsb
 0xffb96be4,_sqrt
 0xffb96d58,_dsub
+0xffb970dc,_f2d
+0xffb97260,_fdiv
+0xffb97444,_ffix
+0xffb974b8,_ffixu
+0xffb97518,_fflt
+0xffb9754c,_ffltu
+0xffb975cc,_fmul
 0xffb97acc,_scalbn
