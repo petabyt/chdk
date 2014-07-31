@@ -270,6 +270,8 @@ void usb_remote_key( void )
                 usb_power = remote_mark_count;                              // transfer most recent pulse length to variable read by scripts
                 usb_buffer_insert(remote_mark_count);                       // insert pulse length into buffer
                 remote_mark_count = 0;                                      // reset the counter
+                camera_info.state.kbd_last_clicked = 0xFF;                  // flag the remote key as the last one pressed (for scripts)
+                camera_info.state.kbd_last_clicked_time = get_tick_count(); // store key release time too
             }                                                               //
             if ((remote_space_count < -50) && (pulse_count > 0))            // pulse counting done if no activity for 50 timer periods
             {
