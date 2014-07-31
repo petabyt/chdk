@@ -311,6 +311,9 @@ void usb_remote_key( void )
 			}
 			*usb_buffer_in = remote_count ;
 			remote_count = 0;
+                        camera_info.state.kbd_last_clicked = 0xFF;                  // flag the remote key as the last one pressed (for scripts)
+                        camera_info.state.kbd_last_clicked_time = get_tick_count(); // store key release time too
+
 		}
 
 		if (( remote_key == 1) && (remote_space_count > 0)  )										// 0 -> 1 transistion ?

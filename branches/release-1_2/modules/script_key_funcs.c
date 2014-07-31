@@ -16,8 +16,6 @@ __attribute__((short_call)) int script_key_is_pressed(int k)
 
 __attribute__((short_call)) int script_key_is_clicked(int k)
 {
-    if (k==0xFF)
-        return get_usb_power(1);
     if (k > 0)
         return (camera_info.state.kbd_last_clicked == k);
     return 0;
