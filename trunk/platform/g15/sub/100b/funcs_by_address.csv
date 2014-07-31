@@ -75,6 +75,13 @@
 0x00693bc0,_drsb
 0x00693bd8,_sqrt
 0x00693d4c,_dsub
+0x006940d0,_f2d
+0x00694254,_fdiv
+0x00694438,_ffix
+0x006944ac,_ffixu
+0x0069450c,_fflt
+0x00694540,_ffltu
+0x006945c0,_fmul
 0x00694ac0,_scalbn
 0xff000d88,memShow_FW
 0xff002cf8,strncpy

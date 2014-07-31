@@ -12,6 +12,10 @@
 0xf86488d0,_dmul
 0x006b0fb8,_drsb
 0x006b1144,_dsub
+0xf86486d8,_fdiv
+0xf86489f0,_ffix
+0xf86489c0,_fflt
+0xf8648958,_fmul
 0xf8039d70,_GetSystemTime
 0x006ae840,_log
 0xf86488f8,_log10

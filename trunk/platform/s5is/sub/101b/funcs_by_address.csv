@@ -1503,4 +1503,11 @@
 0xffa951e4,_drsb
 0xffa95234,_sqrt
 0xffa953a8,_dsub
+0xffa9575c,_f2d
+0xffa95908,_fdiv
+0xffa95b2c,_ffix
+0xffa95ba0,_ffixu
+0xffa95c00,_fflt
+0xffa95c34,_ffltu
+0xffa95c3c,_fmul
 0xffa960c8,_scalbn

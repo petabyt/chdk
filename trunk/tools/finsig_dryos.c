@@ -449,6 +449,13 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "_dcmp_reverse", OPTIONAL|UNUSED}, // like _dcmp, but operands in reverse order, only updates condition flags
     { "_safe_sqrt", OPTIONAL|UNUSED}, // only calls _sqrt for numbers >= 0
     { "_scalbn", OPTIONAL|UNUSED}, // double scalbn (double x, long exp), returns x * FLT_RADIX ** exp
+    { "_fflt", OPTIONAL|UNUSED}, // int -> float
+    { "_ffltu", OPTIONAL|UNUSED}, // uint -> float
+    { "_ffix", OPTIONAL|UNUSED}, // float -> int
+    { "_ffixu", OPTIONAL|UNUSED}, // float -> uint
+    { "_fmul", OPTIONAL|UNUSED}, // single precision float multiplication
+    { "_fdiv", OPTIONAL|UNUSED}, // single precision float division
+    { "_f2d", OPTIONAL|UNUSED}, // float -> double
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -1422,6 +1429,10 @@ string_sig string_sigs[] =
     { 9, "_scalbn", "_log", 0,                                             1,    1,    1,    1,    1,    1,   14,   14,    1,    1,    1,    1 }, // s100, sx230 (100c only...)
     { 9, "_safe_sqrt", "CalcSqrt_FW", 0,                                   0,    0,   -3,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6 },
     { 9, "_ddiv", "ConvertApexStdToApex_FW", 0,                            0,    0,    0,   21,   21,   21,    0,    0,    0,    0,    0,    0 },
+    { 9, "_fflt", "ConvertApexStdToApex_FW", 0,                           -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7 },
+    { 9, "_ffix", "ConvertApexStdToApex_FW", 0,                           -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4 },
+    { 9, "_fmul", "ConvertApexStdToApex_FW", 0,                           -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5 },
+    { 9, "_fdiv", "ConvertApexToApexStd_FW", 0,                           -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3 },
 
     //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52   R54
 //    { 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                 5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    1,    6 },
@@ -1533,6 +1544,10 @@ string_sig string_sigs[] =
     { 19, "_safe_sqrt", "_log", 0,                                              -0x132f,-0x132f,-0x1695,-0x132f,-0x132f,-0x132f, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000 },
     { 19, "_safe_sqrt", "_log", 0,                                               0xf000, 0xf000,-0x132f,-0x1695, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000 },
     { 19, "_ddiv", "_dadd", 0,                                                   0x10aa, 0x10aa, 0x10aa, 0x10aa, 0x10aa, 0x10c3, 0x10b6, 0x10b6, 0x10b6, 0x10b6, 0x10b6, 0x10b6 },
+    { 19, "_ffixu", "_ffix", 0,                                                  0x311d, 0x311d, 0x311d, 0x311d, 0x311d, 0x311d, 0x311d, 0x311d, 0x311d, 0x311d, 0x311d, 0x311d },
+    { 19, "_ffltu", "_fflt", 0,                                                  0x400d, 0x400d, 0x400d, 0x400d, 0x400d, 0x400d, 0x400d, 0x400d, 0x400d, 0x400d, 0x400d, 0x400d },
+    { 19, "_f2d", "_fdiv", 0,                                                    0xf000,-0x301f,-0x301f,-0x301f,-0x301f,-0x301f,-0x3061,-0x3061,-0x3061,-0x3061,-0x3061,-0x3061 },
+    { 19, "_f2d", "_fdiv", 0,                                                   -0x306b,-0x306b,-0x306b,-0x306b,-0x306b,-0x306b, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000 },
 
     { 21, "add_ptp_handler", (char*)find_add_ptp_handler, 0 },
     { 21, "apex2us", (char*)find_apex2us, 0 },

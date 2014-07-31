@@ -2182,38 +2182,18 @@ int match_strsig101(firmware *fw, string_sig *sig, int j)
 }
 
 // Sig pattern to identify AC: functions (Vx)
-// Function starts by loading R0 and R1, order is random
-//      Func            -   func
-//      Ref to string   -       LDR R1, pstr
-//      Magic value     -       MOV R0, #val
-
-//            ....
-//      Ptr to string   -       DCD pstr
-// based on method 11
+// Function starts directly after its debug string
 int match_strsig102(firmware *fw, string_sig *sig, int j)
 {
-    int val = vxworks_offset(fw, sig);
-
     uint32_t sadr = idx2adr(fw,j);        // string address
-    int j1;
-    for (j1 = j+256; j1 >= 0; j1--)
-    {
-        if (isLDR(fw,j1) && (fwRd(fw,j1)==1))   // LDR R1, =string
-        {
-            uint32_t pval = LDR2val(fw,j1);
-            if (pval == sadr)
-            {
-                if (isMOV_immed(fw,j1-1) && (ALUop2(fw,j1-1)==val))
-                {
-                    fwAddMatch(fw,idx2adr(fw,j1-1),32,0,1102);
-                    return 1;
-                }
-                else if (isMOV_immed(fw,j1+1) && (ALUop2(fw,j1+1)==val))
-                {
-                    fwAddMatch(fw,idx2adr(fw,j1),32,0,1102);
-                    return 1;
-                }
-            }
+    char *n = (char*)adr2ptr(fw,sadr);
+    int nl = 0;
+    if (n) {
+        nl = strlen(n);
+        nl = (((nl+3)>>2)<<2);
+        if (nl > 0) {
+            fwAddMatch(fw,sadr+nl,32,0,1102);
+            return 1;
         }
     }
     return 0;

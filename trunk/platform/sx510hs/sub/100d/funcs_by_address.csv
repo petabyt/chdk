@@ -60,6 +60,13 @@
 0x006d95f0,_drsb
 0x006d9608,_sqrt
 0x006d977c,_dsub
+0x006d9b00,_f2d
+0x006d9c84,_fdiv
+0x006d9e68,_ffix
+0x006d9edc,_ffixu
+0x006d9f3c,_fflt
+0x006d9f70,_ffltu
+0x006d9ff0,_fmul
 0x006da4f0,_scalbn
 0xff000b68,memShow_FW
 0xff002aa0,task_ClockSave

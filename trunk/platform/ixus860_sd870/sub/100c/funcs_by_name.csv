@@ -11,6 +11,13 @@
 0xffa8e390,_dmul
 0xffa8e630,_drsb
 0xffa8e7f4,_dsub
+0xffa8eba8,_f2d
+0xffa8ed54,_fdiv
+0xffa8ef78,_ffix
+0xffa8efec,_ffixu
+0xffa8f04c,_fflt
+0xffa8f080,_ffltu
+0xffa8f088,_fmul
 0xff829ba8,_GetSystemTime
 0xffa8d318,_log
 0xffa8c25c,_log10

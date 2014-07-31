@@ -1821,4 +1821,11 @@
 0xffb950a0,_drsb
 0xffb950f0,_sqrt
 0xffb95264,_dsub
+0xffb95618,_f2d
+0xffb957c4,_fdiv
+0xffb959e8,_ffix
+0xffb95a5c,_ffixu
+0xffb95abc,_fflt
+0xffb95af0,_ffltu
+0xffb95b70,_fmul
 0xffb960b8,_scalbn

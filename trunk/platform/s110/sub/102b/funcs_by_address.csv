@@ -1938,6 +1938,7 @@
 0xf8594934,task_ReadFileTask
 0xf8648144,_divmod_signed_int
 0xf86482cc,_divmod_unsigned_int
+0xf86486f4,_fdiv
 0xf86488cc,_dflt
 0xf86488dc,_pow
 0xf86488e4,_dfltu
@@ -1945,3 +1946,6 @@
 0xf8648904,_dfix
 0xf864890c,_safe_sqrt
 0xf8648914,_log10
+0xf8648974,_fmul
+0xf86489dc,_fflt
+0xf8648a0c,_ffix

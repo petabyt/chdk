@@ -1689,4 +1689,11 @@
 0xffb03660,_drsb
 0xffb036b0,_sqrt
 0xffb03824,_dsub
+0xffb03bd8,_f2d
+0xffb03d84,_fdiv
+0xffb03fa8,_ffix
+0xffb0401c,_ffixu
+0xffb0407c,_fflt
+0xffb040b0,_ffltu
+0xffb040b8,_fmul
 0xffb04544,_scalbn

@@ -1529,4 +1529,11 @@
 0xffb3c2a4,_drsb
 0xffb3c2f4,_sqrt
 0xffb3c468,_dsub
+0xffb3c81c,_f2d
+0xffb3c9c8,_fdiv
+0xffb3cbec,_ffix
+0xffb3cc60,_ffixu
+0xffb3ccc0,_fflt
+0xffb3ccf4,_ffltu
+0xffb3cd74,_fmul
 0xffb3d2bc,_scalbn
