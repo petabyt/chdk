@@ -10,7 +10,7 @@ static long *nrflag = (long*)0x6104;
 #include "../../../generic/capt_seq.c"
 
 /*************************************************************/
-//** capt_seq_task @ 0xFFD45BD8 - 0xFFD45D70, length=103
+//** capt_seq_task @ 0xFFD45BD8 - 0xFFD45D74, length=104
 void __attribute__((naked,noinline)) capt_seq_task() {
 asm volatile (
 "    STMFD   SP!, {R4,LR} \n"
@@ -169,6 +169,7 @@ asm volatile (
 "    BL      _DebugAssert \n"
 "    BL      _ExitTask \n"
 "    ADD     SP, SP, #4 \n"
+"    LDMFD   SP!, {R4,PC} \n"
 );
 }
 
