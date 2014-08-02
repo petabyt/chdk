@@ -506,6 +506,8 @@
 0xffc67620,task_DSITask
 0xffc67d30,TurnOnBackLight
 0xffc67d48,TurnOffBackLight
+0xffc6a85c,DisplayBusyOnScreen
+0xffc6a9c8,UndisplayBusyOnScreen
 0xffc6b564,StartGUISystem_FW
 0xffc6b7e4,atol_FW
 0xffc6b7f0,strcat
@@ -804,6 +806,10 @@
 0xffd21bf8,UIFS_CaptureNoneStop_FW
 0xffd226ec,UnsetZoomForMovie
 0xffd22c68,UIFS_MoveZoomTo_FW
+0xffd64890,CreateDialogBox
+0xffd65298,DisplayDialogBox
+0xffd66f04,add_ui_to_dialog
+0xffd67670,get_string_by_id
 0xffd6b630,RefreshPhysicalScreen
 0xffd6b9a8,strrchr
 0xffd6b9d0,memset

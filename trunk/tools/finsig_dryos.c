@@ -456,6 +456,12 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "_fmul", OPTIONAL|UNUSED}, // single precision float multiplication
     { "_fdiv", OPTIONAL|UNUSED}, // single precision float division
     { "_f2d", OPTIONAL|UNUSED}, // float -> double
+    { "DisplayBusyOnScreen", OPTIONAL|UNUSED}, // displays full screen "busy" message
+    { "UndisplayBusyOnScreen", OPTIONAL|UNUSED},
+    { "CreateDialogBox", OPTIONAL|UNUSED},
+    { "DisplayDialogBox", OPTIONAL|UNUSED},
+    { "add_ui_to_dialog", OPTIONAL|UNUSED}, // name made up, assigns resources to a dialog
+    { "get_string_by_id", OPTIONAL|UNUSED}, // name made up, retrieves a localised or unlocalised string by its ID
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -1111,6 +1117,181 @@ int find_srand(firmware *fw)
     return 0;
 }
 
+static int idx_createdialogbox=-1, idx_displaydialogbox=-1, idx_adduitodialog=-1, idx_getstring=-1;
+
+int find_DisplayBusyOnScreen(firmware *fw)
+{
+
+    int s1 = find_str(fw,"ErrorMessageController.c");
+    int s2 = find_str(fw,"StrMan.c");
+    if (s1 < 0)
+        s1 = find_str(fw,"MessageController.c");
+    int j = find_str_ref(fw,"_PBBusyScrn");
+    if (j < 0)
+        j = find_str_ref(fw,"_PlayBusyScreen");
+
+    if ((j>=0)&&(s1>=0)&&(s2>=0))
+    {
+        int m1 = find_Nth_inst(fw,isBL,j+1,10,4);
+        int m2 = idxFollowBranch(fw,m1,0x01000001);
+
+        int k = find_nxt_str_ref(fw, s1, m2);
+        if ((k <= 0)||(k-m2 >= 22))
+        {
+            // not found, try the next BL
+            m1 = find_inst(fw,isBL,m1+1,4);
+            m2 = idxFollowBranch(fw,m1,0x01000001);
+            k = find_nxt_str_ref(fw, s1, m2);
+        }
+        if ((k > 0)&&(k-m2 < 22))
+        {
+            // the string is referenced near enough
+            idx_createdialogbox = find_inst_rev(fw, isBL, k-1, 4);
+            // DisplayBusyOnScreen is found
+            fwAddMatch(fw,idx2adr(fw,m2),32,0,122);
+            // find additional stuff
+            idx_adduitodialog = find_inst(fw, isBL, k+1, 7);
+            int m3;
+            for (m3=k; m3<k+128; m3++)
+            {
+                // mov r0, #imm or ldr r0, [pc,... between two BLs
+                if (isBL(fw,m3)&&isBL(fw,m3+2)&&
+                    (((fwval(fw,m3+1)&0xfffff000)==0xe3a00000)||((fwval(fw,m3+1)&0xff7ff000)==0xe51f0000)))
+                {
+                    // further check
+                    int m30 = m3+2;
+                    int m4 = idxFollowBranch(fw,m30,0x01000001);
+                    if (m4 > 0)
+                    {
+                        // search for ref. to assert string
+                        int m5 = find_inst(fw, isLDMFD_PC, m4+1, 64);
+                        int m6 = find_nxt_str_ref(fw, s2, m4);
+                        if ((m6 > 0)&&(m6 < m5))
+                        {
+                            idx_getstring = m30;
+                            break;
+                        }
+                        // no string, search for reference to 0x00000020 (string consisting of a single space char)
+                        m5 = find_inst(fw, isADR_PC, m4+1, 10);
+                        if (m5>0)
+                        {
+                            uint32_t u1 = ADR2adr(fw, m5);
+                            if (fwval(fw, adr2idx(fw, u1)) == 0x00000020)
+                            {
+                                idx_getstring = m30;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            m3 = find_inst(fw, isLDMFD_PC, k+30, 64);
+            if (m3>0)
+            {
+                m3 = find_Nth_inst_rev(fw, isBL, m3-1, 8, 2);
+                if (m3>0)
+                {
+                    idx_displaydialogbox = m3;
+                }
+            }
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+int find_UndisplayBusyOnScreen(firmware *fw)
+{
+    if (get_saved_sig(fw,"DisplayBusyOnScreen") < 0) return 0;
+    int j = find_str_ref(fw,"_PBBusyScrn");
+    if (j < 0)
+        j = find_str_ref(fw,"_PlayBusyScreen");
+
+    if (idx_createdialogbox > 0)
+    {
+        int m;
+        for (m=0; m<2; m++)
+        {
+            int n = find_Nth_inst(fw, isSTMFD_LR, idx_createdialogbox + 30, 140, m+1);
+            if (n>0)
+            {
+                uint32_t a1 = idx2adr(fw,n);
+                if (j > 0)
+                {
+                    int k;
+                    for (k=j; k<j+24; k++)
+                    {
+                        if (isBL_cond(fw,k)&&(idx2adr(fw,idxFollowBranch(fw,k,0xe1000001))==a1)) // BLEQ
+                        {
+                            fwAddMatch(fw,a1,32,0,122);
+                            return 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+// TODO: redundant functions follow
+int find_CreateDialogBox(firmware *fw)
+{
+    if (get_saved_sig(fw,"DisplayBusyOnScreen") < 0) return 0;
+    if (idx_createdialogbox > 0)
+    {
+        int n = idxFollowBranch(fw,idx_createdialogbox,0x01000001);
+        if (n>0)
+        {
+            fwAddMatch(fw,idx2adr(fw,n),32,0,122);
+            return 1;
+        }
+    }
+    return 0;
+}
+int find_DisplayDialogBox(firmware *fw)
+{
+    if (get_saved_sig(fw,"DisplayBusyOnScreen") < 0) return 0;
+    if (idx_displaydialogbox > 0)
+    {
+        int n = idxFollowBranch(fw,idx_displaydialogbox,0x01000001);
+        if (n>0)
+        {
+            fwAddMatch(fw,idx2adr(fw,n),32,0,122);
+            return 1;
+        }
+    }
+    return 0;
+}
+int find_add_ui_to_dialog(firmware *fw)
+{
+    if (get_saved_sig(fw,"DisplayBusyOnScreen") < 0) return 0;
+    if (idx_adduitodialog > 0)
+    {
+        int n = idxFollowBranch(fw,idx_adduitodialog,0x01000001);
+        if (n>0)
+        {
+            fwAddMatch(fw,idx2adr(fw,n),32,0,122);
+            return 1;
+        }
+    }
+    return 0;
+}
+int find_get_string_by_id(firmware *fw)
+{
+    if (get_saved_sig(fw,"DisplayBusyOnScreen") < 0) return 0;
+    if (idx_getstring > 0)
+    {
+        int n = idxFollowBranch(fw,idx_getstring,0x01000001);
+        if (n>0)
+        {
+            fwAddMatch(fw,idx2adr(fw,n),32,0,122);
+            return 1;
+        }
+    }
+    return 0;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Data for matching the '_log' function
@@ -1563,6 +1744,12 @@ string_sig string_sigs[] =
     { 22, "GetDrive_TotalClusters", (char*)find_GetDrive_TotalClusters, 0 },
     { 22, "srand", (char*)find_srand, 0 },
     { 22, "Restart", (char*)find_Restart, 0 },
+    { 22, "DisplayBusyOnScreen", (char*)find_DisplayBusyOnScreen, 0 },
+    { 22, "UndisplayBusyOnScreen", (char*)find_UndisplayBusyOnScreen, 0 },
+    { 22, "CreateDialogBox", (char*)find_CreateDialogBox, 0 },
+    { 22, "DisplayDialogBox", (char*)find_DisplayDialogBox, 0 },
+    { 22, "add_ui_to_dialog", (char*)find_add_ui_to_dialog, 0 },
+    { 22, "get_string_by_id", (char*)find_get_string_by_id, 0 },
 
     { 0, 0, 0, 0 }
 };

@@ -31,6 +31,7 @@
 0xffa13b88,ActivateAdjLog_FW
 0xff9ee754,ActivateImager_FW
 0xff8f048c,add_ptp_handler
+0xff9c6630,add_ui_to_dialog
 0xff85262c,AddAdjDataToFRom_FW
 0xff9c4968,AddItemToDialogBox_FW
 0xffa13cb4,AddTransparentMemory_FW
@@ -142,6 +143,7 @@
 0xff81b75c,CreateCountingSemaphore
 0xff81b75c,CreateCountingSemaphore_FW
 0xff81bd3c,CreateCountingSemaphoreStrictly
+0xff9c456c,CreateDialogBox
 0xff9c456c,CreateDialogBox_FW
 0xff9c57c0,CreateDialogItem_FW
 0xff89f130,CreateDpConnectController_FW
@@ -214,6 +216,8 @@
 0xff84a174,DispCon_TurnOffDisplay_FW
 0xff84a164,DispCon_TurnOnDisplay_FW
 0xff849304,DispDev_EnableEventProc_FW
+0xff88a748,DisplayBusyOnScreen
+0xff9c4cc8,DisplayDialogBox
 0xff9c4cc8,DisplayDialogBox_FW
 0xff824a50,DisplayFactoryMode_FW
 0xff860250,DMASioSet_FW
@@ -315,6 +319,7 @@
 0xff825870,Fwrite_Fut
 0xff825870,Fwrite_Fut_FW
 0xff86f7b0,get_resource_pointer
+0xff9c6eb8,get_string_by_id
 0xff821354,GetAdChValue
 0xff821354,GetAdChValue_FW
 0xff85200c,GetAdjTableMapVersion_FW
@@ -1477,6 +1482,7 @@
 0xff8772bc,UIFS_StopPostingUIEvent_FW
 0xff82d438,UIFS_UnmountExtFlash_FW
 0xff879410,UiMemory_Show_FW
+0xff88a8ac,UndisplayBusyOnScreen
 0xff9c4cf0,UndisplayDialogBox_FW
 0xff824a5c,UndisplayFactoryMode_FW
 0xff86fb58,UnLoadScript_FW

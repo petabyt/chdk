@@ -617,6 +617,8 @@
 0xff0ab158,task_DSITask
 0xff0ad6a0,TurnOnBackLight
 0xff0ad6b8,TurnOffBackLight
+0xff0b0e7c,DisplayBusyOnScreen
+0xff0b106c,UndisplayBusyOnScreen
 0xff0b516c,GUISrv_StartGUISystem
 0xff0b516c,GUISrv_StartGUISystem_FW
 0xff0b5954,RefreshPhysicalScreen
@@ -1006,6 +1008,10 @@
 0xff2153b4,task_RealTimeHist
 0xff25ecfc,UIFS_GetNumberOfDisplayedImage_FW
 0xff29363c,IisTimer_FW
+0xff294a48,CreateDialogBox
+0xff295290,DisplayDialogBox
+0xff296cf4,add_ui_to_dialog
+0xff2973e4,get_string_by_id
 0xff29d1a0,memset
 0xff29d1a0,memset_FW
 0xff29d21c,realloc

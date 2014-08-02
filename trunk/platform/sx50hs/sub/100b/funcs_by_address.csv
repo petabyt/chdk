@@ -584,6 +584,8 @@
 0xff0acb78,task_FaceFrame
 0xff0ae598,TurnOnBackLight
 0xff0ae5b0,TurnOffBackLight
+0xff0b12d4,DisplayBusyOnScreen
+0xff0b14c4,UndisplayBusyOnScreen
 0xff0b19a8,task_DSITask
 0xff0b1d60,mktime_ext
 0xff0b1dac,strftime
@@ -1087,6 +1089,10 @@
 0xff2071ac,UI_ShowStateOfRecMode_FW
 0xff2071c0,UI.Create_FW
 0xff2071c0,UI_RegistDebugEventProc_FW
+0xff20ae94,CreateDialogBox
+0xff20b710,DisplayDialogBox
+0xff20d258,add_ui_to_dialog
+0xff20d948,get_string_by_id
 0xff223ce0,UIFS_WriteFirmInfoToFile
 0xff223ce0,UIFS_WriteFirmInfoToFile_FW
 0xff226f78,FmtMenu_ExecuteQuickFormat_FW

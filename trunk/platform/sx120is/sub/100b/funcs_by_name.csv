@@ -33,6 +33,7 @@
 0xffdc3d54,ActivateImager_FW
 0xffdc3de0,ActivateImagerXOne_FW
 0xffdd0ac4,add_ptp_handler
+0xffd8dc3c,add_ui_to_dialog
 0xffd20dc4,AdditionAgentRAM_FW
 0xffde90ac,AddTransparentMemory_FW
 0xffe65774,AdjAEWithAperturePriority_FW
@@ -151,6 +152,7 @@
 0xffc168b4,CreateCountingSemaphore
 0xffc168b4,CreateCountingSemaphore_FW
 0xffc16e50,CreateCountingSemaphoreStrictly
+0xffd8b898,CreateDialogBox
 0xffc58ba0,CreateEventFlag
 0xffc16e08,CreateEventFlagStrictly
 0xffce4bdc,CreateFADBGSingalID_FW
@@ -219,6 +221,8 @@
 0xffc3291c,DispCon_TurnOnDisplay_FW
 0xffd16c70,DispDev.Create_FW
 0xffd149b0,DispDev_EnableEventProc_FW
+0xffc74180,DisplayBusyOnScreen
+0xffd8c2bc,DisplayDialogBox
 0xffc39994,DisplayFactoryMode_FW
 0xffc153c4,DoAELock
 0xffc1516c,DoAFLock
@@ -332,6 +336,7 @@
 0xffc133b8,Fwrite_Fut
 0xffc133b8,Fwrite_Fut_FW
 0xffc59ea4,get_resource_pointer
+0xffd8e3ac,get_string_by_id
 0xffc33f98,GetAdChValue
 0xffc33f98,GetAdChValue_FW
 0xffe63ebc,GetAdjAFInteg_FW
@@ -1507,6 +1512,7 @@
 0xffd15a34,UIFS_UnpressWideButton_FW
 0xffd2b640,UIFS_WriteFirmInfoToFile
 0xffd2b640,UIFS_WriteFirmInfoToFile_FW
+0xffc7438c,UndisplayBusyOnScreen
 0xffc399a0,UndisplayFactoryMode_FW
 0xffc5a2f0,UnLoadScript_FW
 0xffc153e8,UnlockAE

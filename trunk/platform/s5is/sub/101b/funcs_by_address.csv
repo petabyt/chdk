@@ -677,6 +677,8 @@
 0xff888388,TurnOnBackLight
 0xff8883a0,TurnOffBackLight
 0xff8886b8,UiComIF_SendEventToUI_FW
+0xff88a680,DisplayBusyOnScreen
+0xff88a7e4,UndisplayBusyOnScreen
 0xff8940ec,CreatePlayMyColController_FW
 0xff8942ac,DeletePlayMyColController_FW
 0xff896e34,StartDpofPlayLoading_FW
@@ -1009,6 +1011,7 @@
 0xff9c4074,RefreshRegistedRectangleToDialog_FW
 0xff9c4148,DeleteDialogBox_FW
 0xff9c4394,GetItemHandleOfDialogBox_FW
+0xff9c44a4,CreateDialogBox
 0xff9c44a4,CreateDialogBox_FW
 0xff9c4674,MoveViewPortPosition_FW
 0xff9c46cc,ResizeVirtualWindow_FW
@@ -1023,6 +1026,7 @@
 0xff9c4ad4,SetFocusDirectionToDialogItem_FW
 0xff9c4adc,SetFocusItemToDialogItem_FW
 0xff9c4bc8,GetFocusedItemIDOfDialogItem_FW
+0xff9c4c00,DisplayDialogBox
 0xff9c4c00,DisplayDialogBox_FW
 0xff9c4c28,UndisplayDialogBox_FW
 0xff9c4c50,SetBackgroundColorToDialogBox_FW
@@ -1061,6 +1065,8 @@
 0xff9c6278,SetYUVPaletteIndex_FW
 0xff9c6398,SetPaletteToPhysicalScreen_FW
 0xff9c63f8,GetPaletteFromPhysicalScreen_FW
+0xff9c6568,add_ui_to_dialog
+0xff9c6df0,get_string_by_id
 0xff9c722c,SetCurrentPalette_FW
 0xff9c7238,SetSystemColorMode_FW
 0xff9ca224,qsort
