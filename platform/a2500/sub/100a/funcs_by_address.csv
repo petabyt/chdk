@@ -515,6 +515,8 @@
 0xff89e454,TurnOnBackLight
 0xff89e46c,TurnOffBackLight
 0xff89eba0,PT_PlaySound
+0xff8a1120,DisplayBusyOnScreen
+0xff8a129c,UndisplayBusyOnScreen
 0xff8a1914,mktime_ext
 0xff8a1960,strftime
 0xff8a1f88,atol_FW
@@ -888,6 +890,10 @@
 0xff9887b0,UI_ShowStateOfRecMode_FW
 0xff9887c4,UI.Create_FW
 0xff9887c4,UI_RegistDebugEventProc_FW
+0xff989bbc,CreateDialogBox
+0xff98a29c,DisplayDialogBox
+0xff98dde8,add_ui_to_dialog
+0xff98e51c,get_string_by_id
 0xff9a29a0,UIFS_WriteFirmInfoToFile
 0xff9a29a0,UIFS_WriteFirmInfoToFile_FW
 0xff9a5bb0,FmtMenu_ExecuteQuickFormat_FW

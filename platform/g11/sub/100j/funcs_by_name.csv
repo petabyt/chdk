@@ -33,6 +33,7 @@
 0xffa4073c,ActivateImager_FW
 0xffa407c8,ActivateImagerXOne_FW
 0xffa4de90,add_ptp_handler
+0xffa0dd84,add_ui_to_dialog
 0xff971af8,AdditionAgentRAM_FW
 0xffa6802c,AddTransparentMemory_FW
 0xffb05e20,AdjAEWithAperturePriority_FW
@@ -152,6 +153,7 @@
 0xff838c64,CreateCountingSemaphore
 0xff838c64,CreateCountingSemaphore_FW
 0xff839200,CreateCountingSemaphoreStrictly
+0xffa0b9b0,CreateDialogBox
 0xff88520c,CreateEventFlag
 0xff8391b8,CreateEventFlagStrictly
 0xff936130,CreateFADBGSingalID_FW
@@ -220,6 +222,8 @@
 0xff85a6c4,DispCon_TurnOnDisplay_FW
 0xff9656d4,DispDev.Create_FW
 0xff963404,DispDev_EnableEventProc_FW
+0xff8a6894,DisplayBusyOnScreen
+0xffa0c3ec,DisplayDialogBox
 0xff8346dc,DisplayFactoryMode_FW
 0xff8374e0,DoAELock
 0xff837158,DoAFLock
@@ -334,6 +338,7 @@
 0xff8355b8,Fwrite_Fut
 0xff8355b8,Fwrite_Fut_FW
 0xff886510,get_resource_pointer
+0xffa0e574,get_string_by_id
 0xff85bef0,GetAdChValue
 0xff85bef0,GetAdChValue_FW
 0xffb0449c,GetAdjAFInteg_FW
@@ -1541,6 +1546,7 @@
 0xff964490,UIFS_UnpressWideButton_FW
 0xff980560,UIFS_WriteFirmInfoToFile
 0xff980560,UIFS_WriteFirmInfoToFile_FW
+0xff8a6ab8,UndisplayBusyOnScreen
 0xff8346e8,UndisplayFactoryMode_FW
 0xff88695c,UnLoadScript_FW
 0xff837504,UnlockAE

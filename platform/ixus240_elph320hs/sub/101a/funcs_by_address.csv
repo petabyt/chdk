@@ -626,6 +626,8 @@
 0xff0ca314,task_DSITask
 0xff0caf28,TurnOnBackLight
 0xff0caf40,TurnOffBackLight
+0xff0cefc8,DisplayBusyOnScreen
+0xff0cf144,UndisplayBusyOnScreen
 0xff0d2a70,GUISrv_StartGUISystem
 0xff0d2a70,GUISrv_StartGUISystem_FW
 0xff0d321c,RefreshPhysicalScreen
@@ -1029,6 +1031,10 @@
 0xff257428,UIFS_MoveZoomTo_FW
 0xff29734c,UIFS_GetNumberOfDisplayedImage_FW
 0xff2bfa20,UIFS_WirelessExecuteSendForever_FW
+0xff2d9a9c,CreateDialogBox
+0xff2da52c,DisplayDialogBox
+0xff2dc468,add_ui_to_dialog
+0xff2dcc4c,get_string_by_id
 0xff2e34cc,qsort
 0xff2e352c,realloc
 0xff2e5dec,apex2us

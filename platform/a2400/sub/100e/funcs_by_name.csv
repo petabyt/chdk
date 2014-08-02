@@ -34,6 +34,7 @@
 0xff8e4b10,ActivateImagerXOne_FW
 0xffa72f10,ActivateISMD_FW
 0xffa1af08,add_ptp_handler
+0xff9d7040,add_ui_to_dialog
 0xff96e174,AdditionAgentRAM_FW
 0xffa446a0,AddTransparentMemory_FW
 0xffae0a44,AdjAEWithAperturePriority_FW
@@ -156,6 +157,7 @@
 0x003f7530,CreateCountingSemaphore_FW
 0x003f7af0,CreateCountingSemaphoreStrictly
 0xff85b5d4,CreateDefectTableMirror_FW
+0xff9d4f24,CreateDialogBox
 0x003fa990,CreateEventFlag
 0x003f7aa8,CreateEventFlagStrictly
 0xff92ffe0,CreateFADBGSingalID_FW
@@ -233,6 +235,8 @@
 0xff8531e0,DispCon_TurnOnDisplay_FW
 0xff962aec,DispDev.Create_FW
 0xff960594,DispDev_EnableEventProc_FW
+0xff895564,DisplayBusyOnScreen
+0xff9d5744,DisplayDialogBox
 0xff82fe78,DisplayFactoryMode_FW
 0xff833034,DoAELock
 0xff832d38,DoAFLock
@@ -355,6 +359,7 @@
 0xff831050,Fwrite_Fut
 0xff831050,Fwrite_Fut_FW
 0xff87a9a4,get_resource_pointer
+0xff9d7720,get_string_by_id
 0xffa72c80,GetAccelX_atMechaCpu_FW
 0xffa72c9c,GetAccelY_atMechaCpu_FW
 0xffa72cb8,GetAccelZ_atMechaCpu_FW
@@ -1671,6 +1676,7 @@
 0xff961dc8,UIFS_WirelessExecuteSendForever_FW
 0xff97c22c,UIFS_WriteFirmInfoToFile
 0xff97c22c,UIFS_WriteFirmInfoToFile_FW
+0xff895744,UndisplayBusyOnScreen
 0xff82fe84,UndisplayFactoryMode_FW
 0xff87add8,UnLoadScript_FW
 0xff833058,UnlockAE

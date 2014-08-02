@@ -538,6 +538,8 @@
 0xff8a2994,task_DSITask
 0xff8a4934,TurnOnBackLight
 0xff8a494c,TurnOffBackLight
+0xff8a7b80,DisplayBusyOnScreen
+0xff8a7da4,UndisplayBusyOnScreen
 0xff8ab840,GUISrv_StartGUISystem
 0xff8ab840,GUISrv_StartGUISystem_FW
 0xff8abab4,atol_FW
@@ -855,6 +857,10 @@
 0xff99aa3c,UIFS_CaptureNoneStop_FW
 0xff99d084,task_RealTimeHist
 0xff9d8c6c,UIFS_GetNumberOfDisplayedImage_FW
+0xffa04960,CreateDialogBox
+0xffa053a8,DisplayDialogBox
+0xffa06e60,add_ui_to_dialog
+0xffa07610,get_string_by_id
 0xffa08eec,RefreshPhysicalScreen
 0xffa0a10c,ScreenLock
 0xffa0a134,ScreenUnlock

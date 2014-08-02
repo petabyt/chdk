@@ -603,6 +603,8 @@
 0xff097b30,task_DSITask
 0xff099524,TurnOnBackLight
 0xff09953c,TurnOffBackLight
+0xff09cfec,DisplayBusyOnScreen
+0xff09d1d8,UndisplayBusyOnScreen
 0xff0a1064,GUISrv_StartGUISystem
 0xff0a1064,GUISrv_StartGUISystem_FW
 0xff0a180c,RefreshPhysicalScreen
@@ -986,6 +988,10 @@
 0xff1fee00,UIFS_GetNumOfOptZoomPos_FW
 0xff1fef14,UIFS_MoveZoomTo_FW
 0xff23f358,UIFS_GetNumberOfDisplayedImage_FW
+0xff278e6c,CreateDialogBox
+0xff27969c,DisplayDialogBox
+0xff27b058,add_ui_to_dialog
+0xff27b750,get_string_by_id
 0xff2818e8,sscanf_FW
 0xff281978,srand
 0xff281984,rand

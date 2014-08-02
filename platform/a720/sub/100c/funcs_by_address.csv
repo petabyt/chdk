@@ -550,6 +550,8 @@
 0xffc66264,task_DSITask
 0xffc676dc,TurnOnBackLight
 0xffc676f4,TurnOffBackLight
+0xffc6948c,DisplayBusyOnScreen
+0xffc695f0,UndisplayBusyOnScreen
 0xffc70da4,FmtMenu_ExecuteQuickFormat_FW
 0xffc719d4,StartGUISystem_FW
 0xffc71b20,strcat
@@ -960,6 +962,10 @@
 0xffd4c2a4,DeleteLanguageMenu_FW
 0xffd4c6c0,CreateLanguageMenu_FW
 0xffd4e5b8,StartDirectTransferManager_FW
+0xffd5b704,CreateDialogBox
+0xffd5be78,DisplayDialogBox
+0xffd5d7cc,add_ui_to_dialog
+0xffd5dfe0,get_string_by_id
 0xffd62184,RefreshPhysicalScreen
 0xffd62a14,qsort
 0xffd62a50,sscanf_FW
