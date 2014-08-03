@@ -54,12 +54,6 @@ NHSTUB(MakeAFScan                             ,0xff94e624) //  1 96%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff95fb94 -> ff95fb94
-// Mode 7 in firmware but not in current modemap
-// Mode 9 in firmware but not in current modemap
-// Mode 10 in firmware but not in current modemap
-// Mode 11 in firmware but not in current modemap
-// Mode 13 in firmware but not in current modemap
-// Mode 14 in firmware but not in current modemap
 // Strange mode 0x0001000f in firmware, found in modemap as 15 (MODE_VIDEO_STD)
 // Strange mode 0x00010010 in firmware but not in current modemap
 // Strange mode 0x00010011 in firmware but not in current modemap
@@ -144,7 +138,7 @@ NHSTUB(SetFileAttributes                      ,0xff86e478) //  1
 NHSTUB(SetLogicalEventActive                  ,0xff95d9b0) //1104
 NHSTUB(SetParameterData                       ,0xff964368) //  1
 NHSTUB(SetPropertyCase                        ,0xff824360) //  1
-//NHSTUB(SetScriptMode                        ,0xff95da14) //120            == 0xff95da14
+NHSTUB(SetScriptMode                          ,0xff95da14) //120
 NHSTUB(SleepTask                              ,0xff82141c) //120
 NHSTUB(TakeSemaphore                          ,0xff820f18) //1101
 NHSTUB(TurnOffBackLight                       ,0xff9a23e4) //  1
@@ -155,7 +149,7 @@ NHSTUB(UnlockAE                               ,0xff94a338) //120
 NHSTUB(UnlockAF                               ,0xff94a210) //120
 NHSTUB(UnlockMainPower                        ,0xff95f9c0) //120
 NHSTUB(UpdateMBROnFlash                       ,0xff86d7d4) //  1
-//NHSTUB(VbattGet                             ,0xff82b704) //120            == 0xff82b704
+NHSTUB(VbattGet                               ,0xff82b704) //120
 NHSTUB(Write                                  ,0xff86e360) //120
 NHSTUB(WriteSDCard                            ,0xff87cb8c) //  1
 NHSTUB(_log                                   ,0xffabffd8) //121

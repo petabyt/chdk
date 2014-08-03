@@ -21,17 +21,13 @@ static KeyMap keymap[];
 #define SD_READONLY_FLAG (0x20000)
 
 #define USB_MASK 0x40 
-#define USB_IDX  2
+#define USB_IDX  1
 
 int get_usb_bit() 
 {
-	return 0 ;
-/*	
-	long usb_physw[3];
-	usb_physw[USB_IDX] = 0;
-	_kbd_read_keys_r2(usb_physw);
-	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
-*/
+    register long usb_physw;
+    usb_physw = *(long*)0xc0220204; //can be read directly (the usb bit doesn't need kbd_power_on or so)
+    return(( usb_physw & USB_MASK)==USB_MASK);
 }
 
 #ifndef MALLOCD_STACK
