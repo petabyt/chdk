@@ -6,3 +6,7 @@ Camera depending notes:
 - ixus700_sd500 does NOT have a real IRIS Diaphragm, it only has an ND Filter! 
 Mind this.
 - cam supports multipartitions
+
+- USB remote shoot does not work. 
+  http://chdk.setepontos.com/index.php?topic=11723.msg115203#msg115203
+  

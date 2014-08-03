@@ -19,8 +19,10 @@ static KeyMap keymap[];
 #define NEW_SS (0x2000)
 #define SD_READONLY_FLAG (0x20000)
 
-#define USB_MASK 0x40 
-#define USB_IDX 2
+//TODO - USB bit does not work as expected:
+//http://chdk.setepontos.com/index.php?topic=11723.msg115203#msg115203
+#define USB_MASK 0x400 
+#define USB_IDX 1
 extern int usb_state ;
 extern int remote_mark_count ;
 extern int usb_power ;
