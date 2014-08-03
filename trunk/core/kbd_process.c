@@ -55,7 +55,7 @@ long kbd_get_autoclicked_key()
 
 //-------------------------------------------------------------------
 
-static int kbd_blocked;
+int kbd_blocked;
 
 int kbd_is_blocked()
 {
