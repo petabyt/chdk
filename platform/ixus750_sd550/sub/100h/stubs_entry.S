@@ -50,8 +50,8 @@ NHSTUB(MakeAFScan                             ,0xff94f2b0) //  1 89%
 // Strange mode 0x00010012 in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xff95995c) // Found @0xff95995c,          stubs_min = 0xff95995c (0xFF95995C)
-//DEF(FlashParamsTable                        ,0xff962a20) // Found @0xff962a20,          stubs_min = 0xff962a20 (0xFF962A20)
+DEF(levent_table                            ,0xff95995c) // Found @0xff95995c
+DEF(FlashParamsTable                        ,0xff962a20) // Found @0xff962a20
 
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x5e; }                          // Found @0xff9650cc
@@ -128,7 +128,7 @@ NHSTUB(SetFileAttributes                      ,0xff86fcfc) //  1
 NHSTUB(SetLogicalEventActive                  ,0xff95e5d8) //1104
 NHSTUB(SetParameterData                       ,0xff964f80) //  1
 NHSTUB(SetPropertyCase                        ,0xff825414) //  1
-//NHSTUB(SetScriptMode                        ,0xff95e63c) //120            == 0xff95e63c
+NHSTUB(SetScriptMode                          ,0xff95e63c) //120
 NHSTUB(SleepTask                              ,0xff8220d4) //120
 NHSTUB(TakeSemaphore                          ,0xff821a90) //1101
 NHSTUB(TurnOffBackLight                       ,0xff9a3114) //  1
@@ -140,7 +140,7 @@ NHSTUB(UnlockAF                               ,0xff94ae94) //120
 NHSTUB(UnlockMainPower                        ,0xff9605e8) //120
 NHSTUB(UnsetZoomForMovie                      ,0xff9979d4) //  1
 NHSTUB(UpdateMBROnFlash                       ,0xff86f024) //  1
-//NHSTUB(VbattGet                             ,0xff82c54c) //120            == 0xff82c54c
+NHSTUB(VbattGet                               ,0xff82c54c) //120
 NHSTUB(Write                                  ,0xff86fbb0) //120
 NHSTUB(_log                                   ,0xffabff3c) //121
 NHSTUB(_log10                                 ,0xffac05e4) //121
