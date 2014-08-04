@@ -123,8 +123,6 @@
     #undef  CAM_AF_LED
     #define CAM_AF_LED                          1   // Index of AF led in camera_set_led function
  
-    // Warning : SD override for this camera with these values has not been tested
-    #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
     #define CAM_SD_OVER_IN_AF  1
     #define CAM_SD_OVER_IN_MF  1
  
