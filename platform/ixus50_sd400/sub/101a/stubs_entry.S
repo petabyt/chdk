@@ -71,8 +71,8 @@ NHSTUB(localtime                              ,0xffab6334) //  1 93%
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xff96c750) // Found @0xff96c750,          stubs_min = 0xff96c750 (0xFF96C750)
-//DEF(FlashParamsTable                        ,0xff973e0c) // Found @0xff973e0c,          stubs_min = 0xff973e0c (0xFF973E0C)
+DEF(levent_table                            ,0xff96c750) // Found @0xff96c750
+DEF(FlashParamsTable                        ,0xff973e0c) // Found @0xff973e0c
 
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x52; }                          // Found @0xff97604c
@@ -94,12 +94,12 @@ NHSTUB(localtime                              ,0xffab6334) //  1 93%
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
 NHSTUB(AllocateUncacheableMemory              ,0xff8146a0) //  1
-//NHSTUB(Close                                ,0xff874b9c) //120            == 0xff874b9c
+NHSTUB(Close                                  ,0xff874b9c) //120
 NHSTUB(CreateTask                             ,0xff8221f4) //120
 NHSTUB(DebugAssert                            ,0xff813be8) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff86d8d0) //  1
 NHSTUB(DoAELock                               ,0xff959158) //120
-//NHSTUB(DoAFLock                             ,0xff958ef8) //120            == 0xff958ef8
+NHSTUB(DoAFLock                               ,0xff958ef8) //120
 NHSTUB(ExecuteEventProcedure                  ,0xff816944) //  1
 NHSTUB(ExitTask                               ,0xff8225b4) //120
 NHSTUB(Fclose_Fut                             ,0xff86da10) //  1
@@ -111,14 +111,14 @@ NHSTUB(Fread_Fut                              ,0xff86daf4) //  1
 NHSTUB(FreeUncacheableMemory                  ,0xff8146d4) //  1
 NHSTUB(Fseek_Fut                              ,0xff86dbdc) //  1
 NHSTUB(Fwrite_Fut                             ,0xff86db44) //  1
-//NHSTUB(GetBatteryTemperature                ,0xff82d754) //102            == 0xff82d754
-//NHSTUB(GetCCDTemperature                    ,0xff82d740) //102            == 0xff82d740
-//NHSTUB(GetDrive_ClusterSize                 ,0xff8743bc) //119            == 0xff8743bc
-//NHSTUB(GetDrive_FreeClusters                ,0xff874434) //1103            == 0xff874434
-//NHSTUB(GetDrive_TotalClusters               ,0xff8743f8) //119            == 0xff8743f8
-//NHSTUB(GetOpticalTemperature                ,0xff82d72c) //120            == 0xff82d72c
-//NHSTUB(GetZoomLensCurrentPoint              ,0xffa59380) //120            == 0xffa59380
-//NHSTUB(GetZoomLensCurrentPosition           ,0xffa59394) //102            == 0xffa59394
+NHSTUB(GetBatteryTemperature                  ,0xff82d754) //102
+NHSTUB(GetCCDTemperature                      ,0xff82d740) //102
+NHSTUB(GetDrive_ClusterSize                   ,0xff8743bc) //119
+NHSTUB(GetDrive_FreeClusters                  ,0xff874434) //1103
+NHSTUB(GetDrive_TotalClusters                 ,0xff8743f8) //119
+NHSTUB(GetOpticalTemperature                  ,0xff82d72c) //120
+NHSTUB(GetZoomLensCurrentPoint                ,0xffa59380) //120
+NHSTUB(GetZoomLensCurrentPosition             ,0xffa59394) //102
 NHSTUB(GiveSemaphore                          ,0xff821bac) //120
 NHSTUB(IsStrobeChargeCompleted                ,0xff911ca8) //  1
 NHSTUB(LEDDrive                               ,0xff82dc6c) //120
@@ -127,17 +127,17 @@ NHSTUB(LockMainPower                          ,0xff9721b8) //120
 NHSTUB(MakeDirectory_Fut                      ,0xff86d95c) //  1
 NHSTUB(MoveFocusLensToDistance                ,0xffa72c40) //102
 NHSTUB(MoveZoomLensWithPoint                  ,0xffa591fc) //120
-//NHSTUB(Open                                 ,0xff874b90) //120            == 0xff874b90
+NHSTUB(Open                                   ,0xff874b90) //120
 NHSTUB(PT_PlaySound                           ,0xff96ab04) //  1
 NHSTUB(PostLogicalEventForNotPowerType        ,0xff96efa4) //120
 NHSTUB(PostLogicalEventToUI                   ,0xff96f030) //120
-//NHSTUB(Read                                 ,0xff874bfc) //120            == 0xff874bfc
+NHSTUB(Read                                   ,0xff874bfc) //120
 NHSTUB(RefreshPhysicalScreen                  ,0xff985fdc) //120
 NHSTUB(RenameFile_Fut                         ,0xff86d850) //  1
 NHSTUB(SetAE_ShutterSpeed                     ,0xffa75b1c) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff9720b0) //120
 NHSTUB(SetLogicalEventActive                  ,0xff970658) //1104
-//NHSTUB(SetScriptMode                        ,0xff9706bc) //120            == 0xff9706bc
+NHSTUB(SetScriptMode                          ,0xff9706bc) //120
 NHSTUB(SleepTask                              ,0xff822054) //120
 NHSTUB(TakeSemaphore                          ,0xff8219c4) //1101
 NHSTUB(TurnOffBackLight                       ,0xff9aeb2c) //  1
@@ -145,9 +145,9 @@ NHSTUB(TurnOnBackLight                        ,0xff9aeb00) //  1
 NHSTUB(TurnOnDisplay                          ,0xff93bbb8) //120
 NHSTUB(TurnOffDisplay                         ,0xff93bbc8) //120
 NHSTUB(UnlockAE                               ,0xff9591ac) //120
-//NHSTUB(UnlockAF                             ,0xff958f70) //120            == 0xff958f70
+NHSTUB(UnlockAF                               ,0xff958f70) //120
 NHSTUB(UnlockMainPower                        ,0xff97226c) //120
-//NHSTUB(Write                                ,0xff874c08) //120            == 0xff874c08
+NHSTUB(Write                                  ,0xff874c08) //120
 NHSTUB(_log                                   ,0xffaa8120) //121
 NHSTUB(_log10                                 ,0xffaa87c8) //121
 NHSTUB(_pow                                   ,0xffaa8cb8) //121
