@@ -6,5 +6,6 @@ Camera depending notes:
 - ixus50_sd400 does NOT have a real IRIS Diaphragm, it only has an ND Filter! 
 Mind this.
 
-
-
+Known issues
+- USB remote shoot does not work:
+  http://chdk.setepontos.com/index.php?topic=11723.msg115236#msg115236
