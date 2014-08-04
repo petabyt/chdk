@@ -6,5 +6,6 @@ Camera depending notes:
 - ixus40_sd300 does NOT have a real IRIS Diaphragm, it only has an ND Filter! 
 Mind this.
 
-
+Know issues:
+- USB remote does not work.
 
