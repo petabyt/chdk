@@ -60,6 +60,8 @@
     #undef  CAM_FLASHPARAMS_VERSION
     #define CAM_FLASHPARAMS_VERSION         2
 
+    #define CAM_EXT_TV_RANGE                1
+
 //	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
     
 	// "real" to "market" conversion definitions
