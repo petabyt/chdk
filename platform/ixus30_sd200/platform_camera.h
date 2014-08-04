@@ -63,6 +63,8 @@
     #undef  CAM_FLASHPARAMS_VERSION
     #define CAM_FLASHPARAMS_VERSION             2
 
+    #define CAM_EXT_TV_RANGE                    1
+
 	// "real" to "market" conversion definitions
 	#define SV96_MARKET_OFFSET          -19          // market-real sv96 conversion value
 
