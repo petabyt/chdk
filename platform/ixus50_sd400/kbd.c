@@ -20,16 +20,12 @@ static KeyMap keymap[];
 #define SD_READONLY_FLAG (0x20000)
 
 #define USB_MASK 0x40 
-#define USB_IDX 2
-extern int usb_state ;
-extern int remote_mark_count ;
-extern int usb_power ;
+#define USB_IDX 1
+
 int get_usb_bit() 
 {
-	long usb_physw[3];
-	usb_physw[USB_IDX] = 0;
-	_kbd_read_keys_r2(usb_physw);
-	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
+    if ((*(int*)0xc0220204) & USB_MASK) return 1;
+    return 0;
 }
 
 #ifndef MALLOCD_STACK
@@ -217,20 +213,10 @@ long kbd_use_zoom_as_mf() {
 }
 
 int usb_power_status_override(int status){
- // for clear USB power flag  - return status &~USB_MASK;
- // for get USB power flag read status & USB_MASK
-	
-		usb_state = (status & USB_MASK)==USB_MASK;
-		if (usb_state) 
-			remote_mark_count += 1;
-		else if (remote_mark_count) {
-			usb_power = remote_mark_count;
-			remote_mark_count = 0;
-		}
 	if (conf.remote_enable) {
 		return status &~USB_MASK;
 	}
- return status;
+    return status;
 }
 
 
