@@ -1,6 +1,9 @@
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
+#include "dryos31.h"
+
+#define offsetof(TYPE, MEMBER) ((int) &((TYPE *)0)->MEMBER)
 
 const char * const new_sa = &_end;
 
@@ -10,21 +13,27 @@ extern long wrs_kernel_bss_end;
 
 // Forward declarations
 void CreateTask_spytask();
+extern volatile int jogdial_stopped;
 void JogDial_task_my(void);
-void boot();
 
-void taskCreateHook(int *p) { 
- p-=17;
-// if (p[0]==0x)  p[0]=(int)capt_seq_task;
- if (p[0]==0xFF862148)  p[0]=(int)movie_record_task;
-// task_InitFileModules
- if (p[0]==0xFF881534)  p[0]=(int)init_file_modules_task;
- if (p[0]==0xFF84A480)  p[0]=(int)JogDial_task_my;;
-}
-// ??? from sx10
-void taskCreateHook2(int *p) {
- p-=17;
- if (p[0]==0xFF881534)  p[0]=(int)init_file_modules_task;
+extern void task_CaptSeq();
+extern void task_InitFileModules();
+extern void task_MovieRecord();
+extern void task_ExpDrv();
+extern void task_PhySw();
+extern void task_FileWrite();
+extern void task_RotaryEncoder();
+
+void taskHook(context_t **context) { 
+	task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
+
+	// Replace firmware task addresses with ours
+    if(tcb->entry == (void*)task_CaptSeq)           tcb->entry = (void*)capt_seq_task; 
+    if(tcb->entry == (void*)task_InitFileModules)   tcb->entry = (void*)init_file_modules_task;
+    if(tcb->entry == (void*)task_MovieRecord)       tcb->entry = (void*)movie_record_task;
+    if(tcb->entry == (void*)task_ExpDrv)            tcb->entry = (void*)exp_drv_task;
+    if(tcb->entry == (void*)task_FileWrite)         tcb->entry = (void*)filewritetask;
+    if(tcb->entry == (void*)task_RotaryEncoder)     tcb->entry = (void*)JogDial_task_my;
 }
 
 
@@ -55,8 +64,8 @@ void boot() { //#fs
 	canon_bss_start[i]=0;
 
 // see http://chdk.setepontos.com/index.php/topic,2972.msg30712.html#msg30712
-    *(int*)0x1930=(int)taskCreateHook;
-    *(int*)0x1934=(int)taskCreateHook2;
+    *(int*)0x1930=(int)taskHook;
+    *(int*)0x1934=(int)taskHook;
 
 	// similar to SX10 (but no +4 and values are >> 8) via sub_FF849EB0. 
 	// Search on 0x12345678 finds function called by this
@@ -251,7 +260,8 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 
         asm volatile (
 "                 BL      sub_FF8218C8_my\n"// taskcreate_PhySw ->
-"                 BL      sub_FF824A80_my\n" // taskcreate_SsTask -> for shoot seq stuff
+//"                 BL      sub_FF824A80_my\n" // taskcreate_SsTask -> for shoot seq stuff
+"                 BL      sub_FF824A80\n" // call original function, capt_seq_task implemented by taskHook()
 "                 BL      sub_FF829C84\n"
 //"                 BL      sub_FF81EEF8\n" // nullsub
 "                 BL      sub_FF820724\n"
@@ -266,6 +276,7 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 	);
 }
 
+/*
 void __attribute__((naked,noinline)) sub_FF824A80_my() {
 asm volatile (
 "                 STMFD   SP!, {R4,LR}\n"
@@ -362,7 +373,7 @@ void __attribute__((naked,noinline)) sub_FF8661F8_my() {
 "                BL      sub_FF827C80\n"// KernelCreateTask ; LOCATION: KernelMisc.c:19
 "                LDMFD   SP!, {R3-R5,PC}\n"
 	);
-}
+}*/
 
 void __attribute__((naked,noinline)) sub_FF8218C8_my() {
 	asm volatile (
