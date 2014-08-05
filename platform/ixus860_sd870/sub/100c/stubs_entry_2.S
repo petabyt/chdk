@@ -2,7 +2,7 @@
 #define NULL_SUB 0xFF810958
 
 // Override stubs_entry.S
-NHSTUB(GetCCDTemperature,           0xFF846C54)
+//NHSTUB(GetCCDTemperature,           0xFF846C54)
 NHSTUB(NewTaskShell,                0xFFC596B0)
 NHSTUB(PutInNdFilter,               0xFF9E448C)
 NHSTUB(PutOutNdFilter,              0xFF9E44C4)
