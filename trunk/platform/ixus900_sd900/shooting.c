@@ -106,7 +106,8 @@ Shooting Modes:
 // Mapping between camera mode and PROPCASE_SHOOTING_MODE
 const CapturemodeMap modemap[] = {   // PROPCASE 0, check with CHDK debug menu option "Show Parameter Data 0"
     {MODE_AUTO,               32768},
-    {MODE_M,                  33772},
+    {MODE_P,                  32772},
+    {MODE_LONG_SHUTTER,       32774},
     {MODE_DIGITAL_MACRO,      33288},
     {MODE_STITCH,             33290},
     {MODE_COLOR_ACCENT,       33305},
