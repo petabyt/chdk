@@ -44,9 +44,7 @@ NHSTUB(MakeAFScan                             ,0xff993be4) //  2 96%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff9a8a74 -> ff9a8a74
-// Mode 32774 in firmware but not in current modemap
-// Mode 32772 in firmware but not in current modemap (MODE_P)
-// Current modemap entry not found in firmware - MODE_M                   33772
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 //DEF(levent_table                            ,0xff9a1124) // Found @0xff9a1124,          stubs_min = 0xff9a1124 (0xFF9A1124)
@@ -92,8 +90,8 @@ NHSTUB(Fwrite_Fut                             ,0xff8746c8) //120
 NHSTUB(GetBatteryTemperature                  ,0xff82f584) //102
 NHSTUB(GetCCDTemperature                      ,0xff82f570) //102
 NHSTUB(GetCurrentAvValue                      ,0xffb0cf4c) //120
-//NHSTUB(GetDrive_ClusterSize                 ,0xff87ad70) //119            == 0xff87ad70
-//NHSTUB(GetDrive_FreeClusters                ,0xff87ade8) //1103            == 0xff87ade8
+NHSTUB(GetDrive_ClusterSize                   ,0xff87ad70) //119
+NHSTUB(GetDrive_FreeClusters                  ,0xff87ade8) //1103
 NHSTUB(GetDrive_TotalClusters                 ,0xff87adac) //119
 NHSTUB(GetOpticalTemperature                  ,0xff82f55c) //120
 NHSTUB(GetParameterData                       ,0xff9ad67c) //  2
@@ -121,7 +119,7 @@ NHSTUB(SetFileAttributes                      ,0xff87b7ac) //  1
 NHSTUB(SetLogicalEventActive                  ,0xff9a632c) //1104
 NHSTUB(SetParameterData                       ,0xff9ad59c) //  2
 NHSTUB(SetPropertyCase                        ,0xff825778) //  2
-//NHSTUB(SetScriptMode                        ,0xff9a6394) //120            == 0xff9a6394
+NHSTUB(SetScriptMode                          ,0xff9a6394) //120
 NHSTUB(SleepTask                              ,0xff8224a8) //120
 NHSTUB(TakeSemaphore                          ,0xff821fa4) //1101
 NHSTUB(TurnOffBackLight                       ,0xff9f5338) //  2
@@ -129,7 +127,7 @@ NHSTUB(TurnOnBackLight                        ,0xff9f5308) //  2
 NHSTUB(TurnOnDisplay                          ,0xff959058) //120
 NHSTUB(TurnOffDisplay                         ,0xff959068) //120
 NHSTUB(UnlockAE                               ,0xff98f0bc) //120
-//NHSTUB(UnlockAF                             ,0xff98ee7c) //120            == 0xff98ee7c
+NHSTUB(UnlockAF                               ,0xff98ee7c) //120
 NHSTUB(UnlockMainPower                        ,0xff9a88ac) //120
 NHSTUB(UpdateMBROnFlash                       ,0xff87aaa4) //  1
 NHSTUB(VbattGet                               ,0xff82e420) //120
@@ -202,6 +200,6 @@ NHSTUB(vsprintf                               ,0xffb56924) //115
 NHSTUB(EngDrvRead                             ,0xff88cf94) //102
 NHSTUB(CancelHPTimer                          ,0xff815f9c) //119
 NHSTUB(SetHPTimerAfterNow                     ,0xff815b28) //119
-//NHSTUB(MFOn                                 ,0xff98fbf0) //120            == 0xff98fbf0
-//NHSTUB(MFOff                                ,0xff98fc20) //120            == 0xff98fc20
+NHSTUB(MFOn                                   ,0xff98fbf0) //120
+NHSTUB(MFOff                                  ,0xff98fc20) //120
 NHSTUB(GetAdChValue                           ,0xff82b5bc) //120
