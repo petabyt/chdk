@@ -4,11 +4,10 @@
 // Camera info:
 //   Firmware Ver GM1.01A   // Found @ 0xff81ac34, "GM1.01A" @ 0xff81ac41
 //   Firmware build timestamp: Mar 10 2005 16:01:15
-//   Possible corrupt firmware dump - file size too small for start address 0xff810000
-//     file size = 2.80MB, should be 7.94MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon DIGITAL IXUS 50
 
 // Values for makefile.inc
+//   PLATFORMID = 12558 (0x310e) // Found @ 0xfff80130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0007c410
 
