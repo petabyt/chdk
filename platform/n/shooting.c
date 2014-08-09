@@ -110,7 +110,7 @@ long get_target_file_num() {
 void get_target_dir_name(char *out) {
 
     extern void _GetImageFolder(char*,int,int,int);
-    _GetImageFolder(out,get_file_next_counter(),0x400,time(NULL));
+    _GetImageFolder(out,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
 }
 #else
 long get_target_dir_num() {
