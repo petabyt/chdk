@@ -23,20 +23,7 @@ NHSTUB(kbd_pwr_off                            ,0xff843204) //  2 64%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffa4a604 -> ffb2e4d0
-// Mode 16390 in firmware but not in current modemap
-// Mode 16904 in firmware but not in current modemap
-// Mode 16906 in firmware but not in current modemap
-// Mode 16923 in firmware but not in current modemap
-// Mode 16924 in firmware but not in current modemap
-// Mode 16413 in firmware but not in current modemap
-// Mode 16408 in firmware but not in current modemap
-// Mode 16406 in firmware but not in current modemap
-// Mode  2600 in firmware but not in current modemap
-// Mode  2601 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_LANDSCAPE           32780
-// Current modemap entry not found in firmware - MODE_SCN_NIGHT_SCENE     16398
-// Current modemap entry not found in firmware - MODE_VIDEO_SPEED          2598
-// Current modemap entry not found in firmware - MODE_VIDEO_STD            2597
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0000e238) // Found @0xff821dcc

@@ -313,10 +313,12 @@ void __attribute__((naked,noinline)) sub_FF810FC4_my() {
 "                 BL      sub_FFAC7EFC\n"
 "                 MOV     R0, #0x53000\n"
 "                 STR     R0, [SP,#4]\n"
-
+#if defined(CHDK_NOT_IN_CANON_HEAP) // use original heap offset if CHDK is loaded in high memory
+"                 LDR     R0, =0x146B8C \n"
+#else
 "                 LDR     R0, =new_sa\n"	//Replaces original start location 0x146B8C
 "                 LDR     R0, [R0]\n"		//
-
+#endif
 "                 LDR     R2, =0x2F9C00\n"
 "                 LDR     R1, =0x2F24A8\n"
 "                 STR     R0, [SP,#8]\n"
