@@ -57,6 +57,10 @@
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
     #define CAM_MULTIPART                   1
+
+    #define CAM_EXT_TV_RANGE                1
+
+   #define CAM_HAS_FILEWRITETASK_HOOK       1
  
     #define CAM_SD_OVER_IN_AF  1
     #define CAM_SD_OVER_IN_AFL 1
