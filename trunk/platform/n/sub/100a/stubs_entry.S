@@ -23,7 +23,7 @@
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NHSTUB(DeleteFile_Fut                         ,0xff034bb4) //  1 90%
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff0356c4
-// ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
+// ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0xff0399f8
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff3f2834 -> ff899458
