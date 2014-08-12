@@ -26,11 +26,7 @@ NHSTUB(kbd_pwr_on                             ,0xffc315fc) //  2 82%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffdfaf9c -> ffec9ef0
-// Current modemap entry not found in firmware - MODE_SCN_AQUARIUM        16407
-// Current modemap entry not found in firmware - MODE_STITCH              33290
-// Current modemap entry not found in firmware - MODE_M                   32769
-// Current modemap entry not found in firmware - MODE_AV                  32770
-// Current modemap entry not found in firmware - MODE_TV                  32771
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0000f3f8) // Found @0xffc113ec

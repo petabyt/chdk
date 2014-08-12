@@ -104,12 +104,7 @@ const CapturemodeMap modemap[] = {
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },
     { MODE_EASY,               33311 },
-	{ MODE_TV,                 32771 },
-	{ MODE_AV,                 32770 },
-	{ MODE_M,                  32769 },
-	{ MODE_STITCH,             33290 },
 //    { MODE_SCN_WATER,          16406 },  
-    { MODE_SCN_AQUARIUM,       16407 }
 };
 
 #include "../generic/shooting.c"
