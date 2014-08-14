@@ -54,16 +54,15 @@ FUNC ref=0 length=27
 >>>
 
    // Replacement of sub_ for correct power-on.
-   // (short press = playback mode, long press = record mode)
-   //   1) sub_FF0320E8 -> sub_FF090770
-   //      table @ 0xFF5BD7E0 + 0x14*8 =  0xFF5BD880    ( sub_FF0320E8 uses offsets 0x14, 0x51, 0x52, 0x15 )
-   //      entry =  0xC022F488 , 0x00000001
-   //   2) pointer from sub_FF0320E8 -> sub_FF092958 =  0x2FD4
+   // (enables short press = playback mode, long press = record mode)
+   //   1) sub_FF0320E8 -> sub_FF093058 -> sub_FF090770  (sub_FF0320E8 passes 0x14, 0x50, 0x51, 0x15 for play/shoot/wifi/usb ?) 
+   //      table @ 0xFF5BD7E0 + 0x14*8 =  0xFF5BD880    ->  table entry =  0xC022F488 , 0x00000001
+   //   2) pointer from sub_FF0320E8 -> sub_FF092958 =  0x2FD4 & buttons = play:0x01000000 & wifi:0x00200000 shooting:0x004000000 
 
-    if ((*(int*) 0xC022F488) & 1)      // 0x100000 0x200000 0x1000000 0x2000000 0x8000000 ? 
-        *(int*)(0x2FD4) = 0x1000000; // Playmode (Note : 0x200000 indicates startup with the wifi button) 
+    if ((*(int*) 0xC022F488) & 1)       // shooting or playback ? 
+        *(int*)(0x2FD4) = 0x01000000;   // playback mode
     else
-        *(int*)(0x2FD4) = 0x100000; // Shootingmode  TODO : check this
+        *(int*)(0x2FD4) = 0x00400000;   // shooting mode
 
 <<<
 ASM

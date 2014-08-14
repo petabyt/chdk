@@ -232,16 +232,15 @@ asm volatile (
 void __attribute__((naked,noinline)) sub_FF00038C_my() {
 
    // Replacement of sub_ for correct power-on.
-   // (short press = playback mode, long press = record mode)
-   //   1) sub_FF0320E8 -> sub_FF090770
-   //      table @ 0xFF5BD7E0 + 0x14*8 =  0xFF5BD880    ( sub_FF0320E8 uses offsets 0x14, 0x51, 0x52, 0x15 )
-   //      entry =  0xC022F488 , 0x00000001
-   //   2) pointer from sub_FF0320E8 -> sub_FF092958 =  0x2FD4
+   // (enables short press = playback mode, long press = record mode)
+   //   1) sub_FF0320E8 -> sub_FF093058 -> sub_FF090770  (sub_FF0320E8 passes 0x14, 0x50, 0x51, 0x15 for play/shoot/wifi/usb ?) 
+   //      table @ 0xFF5BD7E0 + 0x14*8 =  0xFF5BD880    ->  table entry =  0xC022F488 , 0x00000001
+   //   2) pointer from sub_FF0320E8 -> sub_FF092958 =  0x2FD4 & buttons = play:0x01000000 & wifi:0x00200000 shooting:0x004000000 
 
-    if ((*(int*) 0xC022F488) & 1)      // 0x100000 0x200000 0x1000000 0x2000000 0x8000000 ? 
-        *(int*)(0x2FD4) = 0x1000000; // Playmode (Note : 0x200000 indicates startup with the wifi button) 
+    if ((*(int*) 0xC022F488) & 1)       // shooting or playback ? 
+        *(int*)(0x2FD4) = 0x01000000;   // playback mode
     else
-        *(int*)(0x2FD4) = 0x100000; // Shootingmode  TODO : check this
+        *(int*)(0x2FD4) = 0x00400000;   // shooting mode
 
 asm volatile (
 "    LDR     R0, =0xFF000404 \n"
@@ -478,7 +477,7 @@ asm volatile (
 //"  BL      _sub_FF039714 \n"  // load DISKBOOT.BIN
 "    BL      sub_FF039A04 \n"
 "    BL      sub_FF03A1DC \n"
-//"  BL      _sub_FF0399F8 \n"  // --> Nullsub call removed.
+"    BL      _SetZoomActuatorSpeedPercent \n"
 "    BL      sub_FF0398C8 \n"
 "    BL      sub_FF037F50 \n"
 "    BL      sub_FF03A1E4 \n"
@@ -1050,7 +1049,7 @@ asm volatile (
 "    ADD     R4, R4, #1 \n"
 "    ADD     R0, R0, #1 \n"
 
-// blocking this causes touch task to process touches but not share with the UI - just like MAGIC  !!
+// blocking this causes touch task to process touches but not share with the UI - MAGIC
 "  push   {r1} \n"
 "  ldr    r1,=kbd_blocked \n"
 "  ldr    r1,[r1] \n"
