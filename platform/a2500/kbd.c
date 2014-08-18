@@ -15,6 +15,7 @@ static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 extern void _GetKbdState(long*);
+extern int forced_usb_port ;
 
 // override key and feather bits to avoid feather osd messing up chdk display in ALT mode
 #define KEYS_MASK0         (0x00000000) //Logic OR of group 0 Keymap values
@@ -111,12 +112,17 @@ void my_kbd_read_keys() {
         physw_status[1] = (kbd_new_state[1] | KEYS_MASK1) & (~KEYS_MASK1 | kbd_mod_state[1]);
         physw_status[2] = (kbd_new_state[2] | KEYS_MASK2) & (~KEYS_MASK2 | kbd_mod_state[2]);
     }
+    
+    #ifdef CAM_ALLOWS_USB_PORT_FORCING
+        if ( forced_usb_port )  physw_status[USB_IDX] = (physw_status[USB_IDX]& ~(SD_READONLY_FLAG)) | USB_MASK ;
+        else if (conf.remote_enable)
+                                physw_status[USB_IDX] =  physw_status[USB_IDX] & ~(SD_READONLY_FLAG  | USB_MASK);
+             else               physw_status[USB_IDX] =  physw_status[USB_IDX] & ~SD_READONLY_FLAG;
+    #else
+        if (conf.remote_enable) physw_status[USB_IDX] =  physw_status[USB_IDX] & ~(SD_READONLY_FLAG  | USB_MASK);
+        else                    physw_status[USB_IDX] =  physw_status[USB_IDX] & ~SD_READONLY_FLAG;
+    #endif
 
-        if (conf.remote_enable) {
-                physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-        } else {
-                physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
-        }
 }
 
 void kbd_key_press(long key)

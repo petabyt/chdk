@@ -112,6 +112,7 @@
     #define MKDIR_RETURN_ONE_ON_SUCCESS     1       // mkdir() return 1 on success, 0 on fail.
 
     #define REMOTE_SYNC_STATUS_LED 0xC0220094       // specifies an LED that turns on while camera waits for USB remote to sync
+    #define CAM_ALLOWS_USB_PORT_FORCING     1       // / USB remote state can be forced to be present
 
 //    #undef  CAM_AF_LED
 //    #define CAM_AF_LED                          0   // Index of AF led in camera_set_led function

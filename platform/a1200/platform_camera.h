@@ -120,6 +120,7 @@
     #define CAM_AF_LED                       2    //
 
     #define CAM_REMOTE_USES_PRECISION_SYNC   1    // USB remote precision sync patch works with this camera
+    #define CAM_ALLOWS_USB_PORT_FORCING      1    // USB remote state can be forced to be present
     #define GPIO_VSYNC_CURRENT               0xC0F070C8  // vsync current status register used by USB remote precision sync
  
     #define CAM_SD_OVER_IN_AFL 1

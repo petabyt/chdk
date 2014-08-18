@@ -21,6 +21,7 @@ extern void kbd_synch_delay(int);
 extern int usb_HPtimer_handle;
 extern int start_usb_HPtimer(int);
 extern int stop_usb_HPtimer();
+extern int force_usb_state(int);
 
 extern int GetAdChValue(int);
 
@@ -31,6 +32,7 @@ extern int GetAdChValue(int);
 extern int usb_remote_active;
 extern int usb_sync_wait;
 extern int bracketing_timeout;
+extern int forced_usb_port ;
 
 #undef USB_REMOTE_DEBUGGING
 //#define USB_REMOTE_DEBUGGING 1
