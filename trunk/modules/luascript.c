@@ -1282,6 +1282,16 @@ static int luaCB_enable_highspeed_usb( lua_State* L )
   return 1;
 }
 
+// enable shared USB port between ptp and precision sync
+static int luaCB_usb_force_active( lua_State* L )
+{
+  if (lua_isboolean( L, 1 ))
+    lua_pushnumber(L,force_usb_state( lua_toboolean( L, 1 )));
+  else
+    lua_pushnumber(L,force_usb_state( luaL_checknumber( L, 1 )));
+  return 1;
+}
+
 static int luaCB_enter_alt( lua_State* L )
 {
   enter_alt();
@@ -2705,6 +2715,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(set_autostart)
     FUNC(get_usb_power)
     FUNC(enable_highspeed_usb)
+    FUNC(usb_force_active)    
     FUNC(enter_alt)
     FUNC(exit_alt)
     FUNC(shut_down)

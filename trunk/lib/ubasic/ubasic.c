@@ -689,6 +689,10 @@ static int factor(void)
     if ( hpenable > 0) r = start_usb_HPtimer(hpenable);
     else r = stop_usb_HPtimer();
     break;
+  case TOKENIZER_FORCE_USB_PRESENT:
+    accept(TOKENIZER_FORCE_USB_PRESENT);
+    r=force_usb_state(expr()) ;
+    break;    
 
   //ARM Begin
       

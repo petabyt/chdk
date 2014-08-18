@@ -20,6 +20,7 @@ static int usb_power=0;
 static int shoot_counter=0;
 
 extern void _GetKbdState(long*);
+extern int forced_usb_port ;
 
 #define DELAY_TIMEOUT 10000
 
@@ -120,11 +121,16 @@ void my_kbd_read_keys() {
         physw_status[2] = (kbd_new_state[2] | KEYS_MASK2) & (~KEYS_MASK2 | kbd_mod_state[2]);
     }
 
-        if (conf.remote_enable) {
-                physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-        } else {
-                physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
-        }
+    #ifdef CAM_ALLOWS_USB_PORT_FORCING
+        if ( forced_usb_port )  physw_status[USB_IDX] = (physw_status[USB_IDX]& ~(SD_READONLY_FLAG)) | USB_MASK ;
+        else if (conf.remote_enable)
+                                physw_status[USB_IDX] =  physw_status[USB_IDX] & ~(SD_READONLY_FLAG  | USB_MASK);
+             else               physw_status[USB_IDX] =  physw_status[USB_IDX] & ~SD_READONLY_FLAG;
+    #else
+        if (conf.remote_enable) physw_status[USB_IDX] =  physw_status[USB_IDX] & ~(SD_READONLY_FLAG  | USB_MASK);
+        else                    physw_status[USB_IDX] =  physw_status[USB_IDX] & ~SD_READONLY_FLAG;
+    #endif
+
 }
 
 void kbd_set_alt_mode_key_mask(long key)

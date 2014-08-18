@@ -418,6 +418,8 @@
 
             switch_mode_usb,
 
+            force_usb_state,
+
             call_func_ptr,
             _ExecuteEventProcedure,
 

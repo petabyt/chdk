@@ -17,6 +17,8 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static KeyMap keymap[];
 
+extern int forced_usb_port;
+
 // OK, GetKbdState
 #define KEYS_MASK0 (0x00000000)
 #define KEYS_MASK1 (0xA0000000)
@@ -114,13 +116,16 @@ void my_kbd_read_keys()
     }
     _kbd_read_keys_r2(physw_status);
 
+#ifdef CAM_ALLOWS_USB_PORT_FORCING
+    if ( forced_usb_port )  physw_status[USB_IDX] = (physw_status[USB_IDX]& ~(SD_READONLY_FLAG)) | USB_MASK ;
+    else if (conf.remote_enable)
+                            physw_status[USB_IDX] =  physw_status[USB_IDX] & ~(SD_READONLY_FLAG  | USB_MASK);
+         else               physw_status[USB_IDX] =  physw_status[USB_IDX] & ~SD_READONLY_FLAG;
+#else
+    if (conf.remote_enable) physw_status[USB_IDX] =  physw_status[USB_IDX] & ~(SD_READONLY_FLAG  | USB_MASK);
+    else                    physw_status[USB_IDX] =  physw_status[USB_IDX] & ~SD_READONLY_FLAG;
+#endif
 
-	if (conf.remote_enable) {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-	} else {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
-	}
-	
 // hide battery door status
 #if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
     physw_status[BATTCOVER_IDX] = physw_status[BATTCOVER_IDX] | BATTCOVER_FLAG;

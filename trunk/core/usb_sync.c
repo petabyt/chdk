@@ -21,6 +21,28 @@ extern int sync_counter;
 extern int usb_sync_wait ;
 extern int usb_remote_active;
 
+int forced_usb_port = 0 ;
+
+/*---------------------------------------------------------------------------------------------------------
+
+    force_usb_state()
+        
+      - causes camera to think the USB port is active ( i.e. 5V on the +V input pin)
+      - enables the simultaneous use of the USB port for PTP communications and USB remote precision sync
+
+  ---------------------------------------------------------------------------------------------------------*/
+
+int force_usb_state(int state)
+{
+    forced_usb_port = state ;
+#ifdef CAM_ALLOWS_USB_PORT_FORCING
+    return 1 ;
+#else
+    return 0 ;
+#endif
+}
+
+
 /*---------------------------------------------------------------------------------------------------------
 
     get_remote_state()
@@ -57,12 +79,13 @@ void _wait_until_remote_button_is_released(void)
     // hook for script to block processing just prior to exposure start
     libscriptapi->shoot_hook(SCRIPT_SHOOT_HOOK_SHOOT);
 
-    if (    ( conf.remote_enable )              // menu : USB remote enabled - bracket everything in this function
-        &&  ( conf.synch_enable  )              // menu : Sync enabled - tells us to wait for USB to disconnect
-        &&  ( usb_sync_wait      ) )            // only sync when USB remote is active - don't trap normal shooting
+    if (   ( forced_usb_port && conf.synch_enable )    // forced USB port and menu:sync enabled or
+        ||(    ( conf.remote_enable)                   // menu:USB remote enabled
+            && ( conf.synch_enable )                   // menu:Sync enabled - tells us to wait for USB to disconnect
+            && ( usb_sync_wait     )))                 // only sync when USB remote is active - don't trap normal shooting
     {
-        usb_remote_status_led(1);               // indicate to user we are waiting for remote button to release - this happens every time the camera takes a picture
-        tick = get_tick_count();                // timestamp so we don't hang here forever if something goes wrong
+        usb_remote_status_led(1);                     // indicate to user we are waiting for remote button to release - this happens every time the camera takes a picture
+        tick = get_tick_count();                      // timestamp so we don't hang here forever if something goes wrong
 
     #ifdef CAM_REMOTE_USES_PRECISION_SYNC
 
