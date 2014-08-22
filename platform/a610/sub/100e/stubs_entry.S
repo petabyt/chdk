@@ -25,8 +25,8 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe66d90) //  3 52%
 // Strange mode 0x00020016 in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xffd42290) // Found @0xffd42290,          stubs_min = 0xffd42290 (0xFFD42290)
-//DEF(FlashParamsTable                        ,0xffd4b62c) // Found @0xffd4b62c,          stubs_min = 0xffd4b62c (0xFFD4B62C)
+DEF(levent_table                            ,0xffd42290) // Found @0xffd42290
+DEF(FlashParamsTable                        ,0xffd4b62c) // Found @0xffd4b62c
 
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x5e; }                          // Found @0xffd4e368
@@ -109,7 +109,7 @@ NHSTUB(SetFileAttributes                      ,0xffc5c8c4) //  1
 NHSTUB(SetLogicalEventActive                  ,0xffd46f7c) //1104
 NHSTUB(SetParameterData                       ,0xffd4e21c) //  1
 NHSTUB(SetPropertyCase                        ,0xffc1408c) //  1
-//NHSTUB(SetScriptMode                        ,0xffd46fe4) //120            == 0xffd46fe4
+NHSTUB(SetScriptMode                          ,0xffd46fe4) //120
 NHSTUB(SleepTask                              ,0xffc11164) //120
 NHSTUB(TakeSemaphore                          ,0xffc10c60) //1101
 NHSTUB(TurnOffBackLight                       ,0xffd93454) //  1
