@@ -27,6 +27,7 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe66d90) //  3 52%
 // Values below can be overridden in 'stubs_min.S':
 DEF(levent_table                            ,0xffd42290) // Found @0xffd42290
 DEF(FlashParamsTable                        ,0xffd4b62c) // Found @0xffd4b62c
+DEF_CONST(uiprop_count                      ,0x00000057) // Found @0xffd4d30c
 
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x5e; }                          // Found @0xffd4e368
@@ -201,6 +202,7 @@ NHSTUB(taskResume                             ,0xffeccdbc) //  1
 NHSTUB(time                                   ,0xffeb733c) //  1
 NHSTUB(vsprintf                               ,0xffeb971c) //115
 NHSTUB(EngDrvRead                             ,0xffc6d238) //102
+NHSTUB(PTM_GetCurrentItem                     ,0xffd4bd84) //102
 NHSTUB(CancelHPTimer                          ,0xffc059d4) //119
 NHSTUB(SetHPTimerAfterNow                     ,0xffc05560) //119
 NHSTUB(MFOn                                   ,0xffd33b70) //120

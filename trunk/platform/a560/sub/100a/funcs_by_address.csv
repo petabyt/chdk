@@ -1163,6 +1163,11 @@
 0xffeccb20,PTM_AllResetToFactorySetting_FW
 0xffeccb30,PTM_AllResetProperty_FW
 0xffeccd28,PTM_GetWorkingCaptureMode_FW
+0xffeccd50,PTM_SetCurrentItem
+0xffeccd9c,PTM_GetCurrentItem
+0xffecce94,PTM_NextItem
+0xffecceb0,PTM_PrevItem
+0xffeccf2c,PTM_SetPropertyEnable
 0xffeccfe0,PTM_RestoreUIProperty_FW
 0xffecd058,PTM_NotifyStartRemoteCapture_FW
 0xffecd05c,PTM_NotifyEndRemoteCapture_FW

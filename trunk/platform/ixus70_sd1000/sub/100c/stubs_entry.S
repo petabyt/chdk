@@ -57,6 +57,7 @@ NHSTUB(MakeAFScan                             ,0xffafffdc) //  2 79%
 // Values below can be overridden in 'stubs_min.S':
 //DEF(levent_table                            ,0xffb2f1c4) // Found @0xffb2f1c4,          stubs_min = 0xffb2f1c4 (0xFFB2F1C4)
 //DEF(FlashParamsTable                        ,0xffb3e3c8) // Found @0xffb3e3c8,          stubs_min = 0xffb3e3c8 (0xFFB3E3C8)
+DEF_CONST(uiprop_count                      ,0x0000005d) // Found @0xffb38cec
 
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x6f; }                          // Found @0xffb39c58
@@ -204,6 +205,7 @@ NHSTUB(taskResume                             ,0xff92a5e4) //  1
 NHSTUB(time                                   ,0xff919d24) //  1
 NHSTUB(vsprintf                               ,0xff91bf28) //115
 NHSTUB(EngDrvRead                             ,0xffa3da0c) //102
+NHSTUB(PTM_GetCurrentItem                     ,0xffb379f8) //102
 NHSTUB(CancelHPTimer                          ,0xff814644) //1100
 NHSTUB(SetHPTimerAfterNow                     ,0xff81415c) //119
 NHSTUB(MFOn                                   ,0xffb0c0dc) //120

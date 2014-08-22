@@ -37,6 +37,7 @@ extern gui_handler defaultGuiHandler;
 #define DEBUG_DISPLAY_PROPS 1
 #define DEBUG_DISPLAY_PARAMS 2
 #define DEBUG_DISPLAY_TASKS 3
+#define DEBUG_DISPLAY_UIPROPS 4
 
 //-------------------------------------------------------------------
 

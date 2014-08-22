@@ -53,6 +53,7 @@ DEF(palette_buffer_ptr                      ,0x0000a380) // Found @0xffa07988
 // Offset from start of palette_buffer to color data = 8 (Found @0xffae54a8)
 // Camera appears to have only 1 RAW buffer @ 0x4213a6ec (Found @0xffb0254c)
 DEF(fileio_semaphore                        ,0x000029d0) // Found @0xff86c998
+DEF_CONST(uiprop_count                      ,0x0000006e) // Found @0xff993e68
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40471000; }             // Found @0xff858728
@@ -259,6 +260,7 @@ NHSTUB(strtolx                                ,0xff83e520) //109
 NHSTUB(time                                   ,0xff886be8) //109
 NHSTUB(vsprintf                               ,0xff820350) //115
 NHSTUB(EngDrvRead                             ,0xff834478) //102
+NHSTUB(PTM_GetCurrentItem                     ,0xff8950cc) //105
 NHSTUB(CancelHPTimer                          ,0xff8883e4) //119
 NHSTUB(SetHPTimerAfterNow                     ,0xff8882dc) //119
 NHSTUB(PT_MFOn                                ,0xff87776c) //120

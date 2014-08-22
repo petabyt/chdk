@@ -510,6 +510,7 @@
 0xff894854,PTM_SetCurrentCaptureMode_FW
 0xff894920,j_PTM_GetWorkingCaptureMode_FW
 0xff894924,j_PTM_SetCurrentItem_FW
+0xff894930,PTM_GetCurrentItem
 0xff894930,PTM_GetCurrentItem_FW
 0xff89499c,j_PTM_NextItem_FW
 0xff8949a0,j_PTM_PrevItem_FW
@@ -838,9 +839,13 @@
 0xff987cb0,FmtMenu_ExecuteQuickFormat_FW
 0xff992cd0,PTM_AllReset_FW
 0xff993030,PTM_GetWorkingCaptureMode_FW
+0xff993048,PTM_SetCurrentItem
 0xff993048,PTM_SetCurrentItem_FW
+0xff993360,PTM_NextItem
 0xff993360,PTM_NextItem_FW
+0xff993368,PTM_PrevItem
 0xff993368,PTM_PrevItem_FW
+0xff99366c,PTM_SetPropertyEnable
 0xff99366c,PTM_SetProprietyEnable_FW
 0xff9938b0,PTM_IsEnableItem_FW
 0xff993978,PTM_BackupUIProperty_FW

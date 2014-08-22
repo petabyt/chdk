@@ -817,12 +817,16 @@
 0xff97415c,PTM_AllResetProperty_FW
 0xff97414c,PTM_AllResetToFactorySetting_FW
 0xff9750b4,PTM_BackupUIProperty_FW
+0xff9743a8,PTM_GetCurrentItem
 0xff97505c,PTM_GetCurrentItem_FW
 0xff974248,PTM_GetWorkingCaptureMode_FW
+0xff9744fc,PTM_NextItem
 0xff975074,PTM_NextItem_FW
+0xff974518,PTM_PrevItem
 0xff97508c,PTM_PrevItem_FW
 0xff9750a4,PTM_SaveCustomSetting_FW
 0xff97502c,PTM_SetCurrentCaptureMode_FW
+0xff97435c,PTM_SetCurrentItem
 0xff97503c,PTM_SetCurrentItem_FW
 0xffa2994c,PTPRspnd.BenchMark_FW
 0xffa39414,PTPRspnd.EnableGetTreeInfo_FW

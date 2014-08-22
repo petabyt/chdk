@@ -294,17 +294,18 @@ static void gui_compare_props(int arg)
 	#define NUM_PROPS 512
 	// never freed, but not allocated unless prop compare is used once
 	static int *props = NULL;
+    static int prev_arg = 0;
 	char buf[64];
 	int i;
 	int p;
 	int c;
 
-	if( props )
-	{ // we have previous data set! do a comparison
+	if( props && (arg==prev_arg) )
+	{ // we have previous data (of same kind) set! do a comparison
 		c = 0;
 		for( i = 0; i < NUM_PROPS; ++i )
 		{
-			p = shooting_get_prop(i);
+			p = (arg==0)?shooting_get_prop(i):get_uiprop_value(i);
 			if( props[i] != p )
 			{
 				++c;
@@ -327,15 +328,19 @@ static void gui_compare_props(int arg)
 	}
 	else
 	{
-	// no previous data was set so we save the data initially
-		props = (int *)malloc(NUM_PROPS*sizeof(int));
+	// no previous data (of same kind) was set so we save the data initially
+        if (!props) {
+            // allocate this only once
+            props = (int *)malloc(NUM_PROPS*sizeof(int));
+        }
 		if(props) {
 			for( i = 0; i < NUM_PROPS; ++i )
 			{
-				props[i] = shooting_get_prop(i);
+				props[i] = (arg==0)?shooting_get_prop(i):get_uiprop_value(i);
 			}
 		}
 	}
+    prev_arg = arg;
 }
 
 // Save camera romlog to A/ROMLOG.LOG file
@@ -371,11 +376,11 @@ static void save_romlog(int arg)
     }
 }
 
-static const char* gui_debug_shortcut_modes[] =             { "None", "DmpRAM", "Page", "CmpProps"};
+static const char* gui_debug_shortcut_modes[] =             { "None", "DmpRAM", "Page", "CmpProps", "CmpUIP"};
 #ifdef CAM_DRYOS
-static const char* gui_debug_display_modes[] =              { "None", "Props", "Params" };
+static const char* gui_debug_display_modes[] =              { "None", "Props", "Params", "None",  "UIProps" };
 #else
-static const char* gui_debug_display_modes[] =              { "None", "Props", "Params", "Tasks"};
+static const char* gui_debug_display_modes[] =              { "None", "Props", "Params", "Tasks", "UIProps"};
 #endif
 
 extern volatile int memdmp_delay; // from core/main.c
@@ -2680,7 +2685,10 @@ static void gui_debug_shortcut(void)
                 gui_update_debug_page();
                 break;
             case 3:
-                gui_compare_props(1);
+                gui_compare_props(0); // compare properties
+                break;
+            case 4:
+                gui_compare_props(1); // compare UI properties
                 break;
     }
 #endif

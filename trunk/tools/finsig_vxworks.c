@@ -428,6 +428,12 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "EngDrvRead" },
     { "EngDrvBits", OPTIONAL|UNUSED },
 
+    { "PTM_GetCurrentItem" },
+    { "PTM_SetCurrentItem", UNUSED },
+    { "PTM_NextItem", OPTIONAL|UNUSED },
+    { "PTM_PrevItem", OPTIONAL|UNUSED },
+    { "PTM_SetPropertyEnable", OPTIONAL|UNUSED },
+
     // OS functions, mostly to aid firmware analysis. Order is important!
     { "PT_GetSystemTime", OPTIONAL|UNUSED }, // only for locating timer functions
     { "_GetSystemTime", OPTIONAL|UNUSED }, // only for locating timer functions
@@ -1122,6 +1128,12 @@ string_sig string_sigs[] =
     { 2, "EngDrvBits", "EngDrvBits", 0x01000006 },
     { 2, "exmem_alloc", "ExMem.AllocCacheable", 4 },
     { 2, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
+
+    { 2, "PTM_GetCurrentItem", "PTM_GetCurrentItem", 0x01000003 },
+    { 2, "PTM_SetCurrentItem", "PTM_SetCurrentItem", 8 },
+    { 2, "PTM_NextItem", "PTM_NextItem", 0x01000003 },
+    { 2, "PTM_PrevItem", "PTM_PrevItem", 0x01000003 },
+    { 2, "PTM_SetPropertyEnable", "PTM_SetProprietyEnable", 8 },
 
     { 3, "AllocateMemory", "AllocateMemory", 1 },
     { 3, "FreeMemory", "FreeMemory", 1 },
@@ -3089,6 +3101,58 @@ int match_get_flash_params_count(firmware *fw, int k, int v)
     return 0;
 }
 
+// based on match_get_flash_params_count
+int match_uiprop_count(firmware *fw, int k, int v)
+{
+    uint32_t uic = 0;
+    int j = -1;
+    if (isB(fw, k+6))
+    {
+        j = idxFollowBranch(fw,k+6,0x01000001);
+    }
+    if (j > 0)
+    {
+        int m;
+        for (m=j; m<j+32; m++)
+        {
+            if (isLDMFD_PC(fw,m)) break;
+            if (isCMP(fw,m))
+            {
+                uint32_t v1 = ALUop2(fw,m);
+                if ((v1 > 0x10)&&(v1 < 0xa0))
+                {
+                    uic = v1+1; // BLS follows this CMP instruction
+                    j = m;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (uic == 0) return 0;
+
+    char *name = "uiprop_count";
+    osig *o = find_sig(fw->sv->stubs_min,name);
+    if (o)
+    {
+        bprintf("//DEF_CONST(%-34s,0x%08x) // Found @0x%08x",name,uic,idx2adr(fw,j));
+        if (uic != o->val)
+        {
+            bprintf(", ** != ** stubs_min = 0x%08x (%s)",o->val,o->sval);
+        }
+        else
+        {
+            bprintf(",          stubs_min = 0x%08x (%s)",o->val,o->sval);
+        }
+    }
+    else
+    {
+        bprintf("DEF_CONST(%-34s,0x%08x) // Found @0x%08x",name,uic,idx2adr(fw,j));
+    }
+    bprintf("\n");
+    return 1;
+}
+
 // Search for things that go in 'lib.c'
 void find_lib_vals(firmware *fw)
 {
@@ -4123,6 +4187,9 @@ void find_stubs_min(firmware *fw)
         }
     }
 */
+    // Find UI property count
+    search_saved_sig(fw, "PTM_SetCurrentItem", match_uiprop_count, 0, 0, 30);
+
 }
 
 //------------------------------------------------------------------------------------------------------------

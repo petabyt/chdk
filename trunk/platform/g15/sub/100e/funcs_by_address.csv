@@ -558,10 +558,12 @@
 0xff09e65c,PTM_SetCurrentCaptureMode_FW
 0xff09e7b0,j_PTM_GetWorkingCaptureMode_FW
 0xff09e7b8,j_PTM_SetCurrentItem_FW
+0xff09e7c4,PTM_GetCurrentItem
 0xff09e7c4,PTM_GetCurrentItem_FW
 0xff09e830,j_PTM_NextItem_FW
 0xff09e834,j_PTM_PrevItem_FW
 0xff09e848,j_PTM_IsEnableItem_FW
+0xff09e84c,PTM_SetPropertyEnable
 0xff09e84c,PTM_SetProprietyEnable_FW
 0xff09e900,j_PTM_BackupUIProperty_FW
 0xff09e908,PTM_RestoreUIProperty_FW
@@ -931,8 +933,11 @@
 0xff1f1c68,EFUSE_GetVdlData_FW
 0xff1f5720,PTM_AllReset_FW
 0xff1f5bb0,PTM_GetWorkingCaptureMode_FW
+0xff1f5bc8,PTM_SetCurrentItem
 0xff1f5bc8,PTM_SetCurrentItem_FW
+0xff1f5f28,PTM_NextItem
 0xff1f5f28,PTM_NextItem_FW
+0xff1f5f30,PTM_PrevItem
 0xff1f5f30,PTM_PrevItem_FW
 0xff1f65d0,PTM_IsEnableItem_FW
 0xff1f669c,PTM_BackupUIProperty_FW

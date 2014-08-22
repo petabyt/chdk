@@ -849,6 +849,7 @@
 0xff958210,PTM_AllResetToFactorySetting_FW
 0xff9587ec,PTM_BackupUIProperty_FW
 0xff95876c,PTM_CanItemSelect_FW
+0xff9588c4,PTM_GetCurrentItem
 0xff9586ec,PTM_GetCurrentItem_FW
 0xff9587b4,PTM_GetCurrentItemValue_FW
 0xff9587c4,PTM_GetCurrentPosition_FW
@@ -857,12 +858,15 @@
 0xff958794,PTM_GetItemValue_FW
 0xff95877c,PTM_GetNumOfItem_FW
 0xff9582e4,PTM_GetWorkingCaptureMode_FW
+0xff958a3c,PTM_NextItem
 0xff95871c,PTM_NextItem_FW
 0xff9581a8,PTM_NoticeOfShutdown_FW
+0xff958a58,PTM_PrevItem
 0xff958734,PTM_PrevItem_FW
 0xff958810,PTM_RestoreUIProperty_FW
 0xff9587dc,PTM_SaveCustomSetting_FW
 0xff9586bc,PTM_SetCurrentCaptureMode_FW
+0xff958834,PTM_SetCurrentItem
 0xff9586cc,PTM_SetCurrentItem_FW
 0xffa18fd0,PTPRspnd.BenchMark_FW
 0xffa29e88,PTPRspnd.EnableGetTreeInfo_FW

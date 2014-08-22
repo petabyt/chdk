@@ -720,6 +720,10 @@
 0xff97414c,PTM_AllResetToFactorySetting_FW
 0xff97415c,PTM_AllResetProperty_FW
 0xff974248,PTM_GetWorkingCaptureMode_FW
+0xff97435c,PTM_SetCurrentItem
+0xff9743a8,PTM_GetCurrentItem
+0xff9744fc,PTM_NextItem
+0xff974518,PTM_PrevItem
 0xff97502c,PTM_SetCurrentCaptureMode_FW
 0xff97503c,PTM_SetCurrentItem_FW
 0xff97505c,PTM_GetCurrentItem_FW
