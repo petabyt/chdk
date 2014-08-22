@@ -4,11 +4,10 @@
 // Camera info:
 //   Firmware Ver GM1.00F   // Found @ 0xffc0a1ac, "GM1.00F" @ 0xffc0a1b9
 //   Firmware build timestamp: Dec 20 2005 10:49:50
-//   Possible corrupt firmware dump - file size too small for start address 0xffc00000
-//     file size = 2.88MB, should be 4.00MB
-//   Could not find Camera name - possible corrupt firmware dump
+//   Canon PowerShot A610
 
 // Values for makefile.inc
+//   PLATFORMID = 12541 (0x30fd) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000a0b70
 
@@ -27,8 +26,8 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe67118) //  3 52%
 // Strange mode 0x00020016 in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xffd42618) // Found @0xffd42618,          stubs_min = 0xffd42618 (0xFFD42618)
-//DEF(FlashParamsTable                        ,0xffd4b9b4) // Found @0xffd4b9b4,          stubs_min = 0xffd4b9b4 (0xFFD4B9B4)
+DEF(levent_table                            ,0xffd42618) // Found @0xffd42618
+DEF(FlashParamsTable                        ,0xffd4b9b4) // Found @0xffd4b9b4
 
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x5e; }                          // Found @0xffd4e6f0
@@ -111,7 +110,7 @@ NHSTUB(SetFileAttributes                      ,0xffc5cc4c) //  1
 NHSTUB(SetLogicalEventActive                  ,0xffd47304) //1104
 NHSTUB(SetParameterData                       ,0xffd4e5a4) //  1
 NHSTUB(SetPropertyCase                        ,0xffc1408c) //  1
-//NHSTUB(SetScriptMode                        ,0xffd4736c) //120            == 0xffd4736c
+NHSTUB(SetScriptMode                          ,0xffd4736c) //120
 NHSTUB(SleepTask                              ,0xffc11164) //120
 NHSTUB(TakeSemaphore                          ,0xffc10c60) //1101
 NHSTUB(TurnOffBackLight                       ,0xffd937dc) //  1
