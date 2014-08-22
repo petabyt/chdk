@@ -145,6 +145,14 @@ long set_parameter_data(long id, void *buf, long bufsize)
     return _SetParameterData(id|PARAMETER_DATA_FLAG, buf, bufsize);
 }
 
+short __attribute__((weak)) get_uiprop_value(unsigned long id)
+{
+    // avoid asserts: return 0 if id is above limit
+    if (id >= uiprop_count)
+        return 0;
+    return _PTM_GetCurrentItem(id|0x8000);
+}
+
 void mark_filesystem_bootable()
 {
 #ifdef  CAM_DRYOS_2_3_R47

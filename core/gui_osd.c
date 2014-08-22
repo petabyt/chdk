@@ -1184,6 +1184,20 @@ void gui_draw_debug_vals_osd()
                 draw_string(16,16+16*i,osd_buf, conf.osd_color);
             }
         }
+        if (conf.debug_display == DEBUG_DISPLAY_UIPROPS){
+
+            for (i=0;i<10;i++){
+                p = conf.debug_propcase_page*10+i;
+                if (p>=uiprop_count) {
+                    sprintf(osd_buf, "%3d: Does not exist ", p);
+                } else  {
+                    r = get_uiprop_value(p);
+                    sprintf(osd_buf, "%3d: %hi               ", p, r);
+    }
+                osd_buf[20]=0;
+                draw_string(64,16+16*i,osd_buf, conf.osd_color);
+            }
+        }
     }
 
 #ifndef CAM_DRYOS
@@ -1206,7 +1220,8 @@ void gui_update_debug_page()
     }
     else 
 #endif
-    if (conf.debug_display == DEBUG_DISPLAY_PROPS || conf.debug_display == DEBUG_DISPLAY_PARAMS)
+    if (conf.debug_display == DEBUG_DISPLAY_PROPS || conf.debug_display == DEBUG_DISPLAY_PARAMS
+        || conf.debug_display == DEBUG_DISPLAY_UIPROPS)
     {
         conf.debug_propcase_page += debug_display_direction*1;
         if(conf.debug_propcase_page > 128 || conf.debug_propcase_page < 0) 

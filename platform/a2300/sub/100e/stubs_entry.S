@@ -60,6 +60,7 @@ DEF(viewport_buffers                        ,0xffb0fbc0) // Found @0xff849d68
 DEF(active_viewport_buffer                  ,0x000020bc) // Found @0xff849ad0
 // Camera appears to have only 1 RAW buffer @ 0x420b7fc0 (Found @0xffae0d64)
 DEF(fileio_semaphore                        ,0x0000291c) // Found @0xff864c8c
+DEF_CONST(uiprop_count                      ,0x0000008d) // Found @0xff984fe4
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40411000; }             // Found @0xff852ebc
@@ -264,6 +265,7 @@ NHSTUB(strtolx                                ,0xff83704c) //109
 NHSTUB(time                                   ,0x003fb794) //  6
 NHSTUB(vsprintf                               ,0xff81accc) //115
 NHSTUB(EngDrvRead                             ,0xff82fdb0) //102
+NHSTUB(PTM_GetCurrentItem                     ,0xff883d84) //105
 NHSTUB(CancelHPTimer                          ,0xff87a324) //119
 NHSTUB(SetHPTimerAfterNow                     ,0xff87a21c) //119
 NHSTUB(PT_MFOn                                ,0xff86c930) //120

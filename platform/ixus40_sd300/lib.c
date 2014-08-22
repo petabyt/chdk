@@ -259,3 +259,11 @@ void camera_set_led(int led, int state, int bright)
 		} else
         led_off(led);
 }
+
+short get_uiprop_value(unsigned long id)
+{
+    // avoid asserts: return 0 if id is above limit
+    if (id >= uiprop_count)
+        return 0;
+    return _PTM_GetCurrentItem(id);
+}

@@ -645,6 +645,7 @@
 0xff878418,PTM_AllResetToFactorySetting_FW
 0xff878428,j_PTM_AllResetProperty_FW
 0xff8789cc,j_PTM_GetWorkingCaptureMode_FW
+0xff8789e0,PTM_GetCurrentItem
 0xff878a84,PTM_RestoreUIProperty_FW
 0xff878aa0,PTM_NotifyStartRemoteCapture_FW
 0xff878c14,PTM_NotifyEndRemoteCapture_FW
@@ -990,6 +991,10 @@
 0xff969de0,SystemEventInit_FW
 0xff971f4c,PTM_AllResetProperty_FW
 0xff9723c4,PTM_GetWorkingCaptureMode_FW
+0xff9723dc,PTM_SetCurrentItem
+0xff972778,PTM_NextItem
+0xff972780,PTM_PrevItem
+0xff972b08,PTM_SetPropertyEnable
 0xff972ed4,SetParameterData,(stubs_entry_2.s)
 0xff972f60,GetParameterData
 0xff977824,task_RealTimeHist

@@ -1147,6 +1147,11 @@
 0xffea5948,PTM_AllResetToFactorySetting_FW
 0xffea5958,PTM_AllResetProperty_FW
 0xffea5b50,PTM_GetWorkingCaptureMode_FW
+0xffea5b78,PTM_SetCurrentItem
+0xffea5bc4,PTM_GetCurrentItem
+0xffea5cbc,PTM_NextItem
+0xffea5cd8,PTM_PrevItem
+0xffea5d54,PTM_SetPropertyEnable
 0xffea5e08,PTM_RestoreUIProperty_FW
 0xffea6614,PTM_SetCurrentCaptureMode_FW
 0xffea6624,PTM_SetCurrentItem_FW

@@ -387,6 +387,12 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "EngDrvRead" },
     { "EngDrvBits", OPTIONAL|UNUSED },
 
+    { "PTM_GetCurrentItem" },
+    { "PTM_SetCurrentItem", UNUSED },
+    { "PTM_NextItem", OPTIONAL|UNUSED },
+    { "PTM_PrevItem", OPTIONAL|UNUSED },
+    { "PTM_SetPropertyEnable", OPTIONAL|UNUSED },
+
     // OS functions, mostly to aid firmware analysis. Order is important!
     { "_GetSystemTime", OPTIONAL|UNUSED }, // only for locating timer functions
     { "SetTimerAfter", OPTIONAL|UNUSED },
@@ -1500,6 +1506,12 @@ string_sig string_sigs[] =
     { 2, "exmem_alloc", "ExMem.AllocCacheable", 4 },
     { 2, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
 
+    { 2, "PTM_GetCurrentItem", "PTM_GetCurrentItem", 2 }, // s5is
+    { 2, "PTM_SetCurrentItem", "PTM_SetCurrentItem", 4 }, // s5is
+    { 2, "PTM_NextItem", "PTM_NextItem", 2 }, // s5is
+    { 2, "PTM_PrevItem", "PTM_PrevItem", 2 }, // s5is
+    { 2, "PTM_SetPropertyEnable", "PTM_SetProprietyEnable", 4 }, // s5is
+
     { 3, "AllocateMemory", "AllocateMemory", 1 },
     { 3, "FreeMemory", "FreeMemory", 1 },
     { 3, "PostLogicalEventToUI", "PostLogicalEventToUI", 1 },
@@ -1559,6 +1571,12 @@ string_sig string_sigs[] =
     //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52   R54
     { 5, "UpdateMBROnFlash", "MakeBootDisk", 0x01000003,                  11,   11,   11,   11,   11,   11,    1,    1,    1,    1,    1,    1 },
     { 5, "MakeSDCardBootable", "MakeBootDisk", 0x01000003,                 1,    1,    1,    1,    1,    1,    8,    8,    8,    8,    8,    9 },
+
+    { 5, "PTM_GetCurrentItem", "PTM_GetCurrentItem", 1 },
+    { 5, "PTM_SetCurrentItem", "PTM_SetCurrentItem", 1 },
+    { 5, "PTM_NextItem", "PTM_NextItem", 1 },
+    { 5, "PTM_PrevItem", "PTM_PrevItem", 1 },
+    { 5, "PTM_SetPropertyEnable", "PTM_SetProprietyEnable", 1 },
 
     //{ 6, "Restart", "Bye", 0 },
     { 6, "reboot_fw_update", "FirmUpgrade.c", 0 },
@@ -3274,6 +3292,41 @@ int match_get_flash_params_count(firmware *fw, int k, int v)
     return 0;
 }
 
+// based on match_get_flash_params_count
+int match_uiprop_count(firmware *fw, int k, int v)
+{
+    if ((fw->buf[k] & 0xFFF00FFF) == 0xe3c00902)    // BIC Rn, Rn, #0x8000
+    {
+        uint32_t r = fw->buf[k] & 0x000F0000;       // Register
+        if (((fw->buf[k+1] & 0xFFF00000) == 0xE3500000) && ((fw->buf[k+1] & 0x000F0000) == r))  // CMP, Rn #val
+        {
+            char *name = "uiprop_count";
+            uint32_t fadr = fw->buf[k+1]&0xFFF;
+            osig *o = find_sig(fw->sv->stubs_min,name);
+            if (o)
+            {
+                bprintf("//DEF_CONST(%-34s,0x%08x) // Found @0x%08x",name,fadr,idx2adr(fw,k+1));
+                if (fadr != o->val)
+                {
+                    bprintf(", ** != ** stubs_min = 0x%08x (%s)",o->val,o->sval);
+                }
+                else
+                {
+                    bprintf(",          stubs_min = 0x%08x (%s)",o->val,o->sval);
+                }
+            }
+            else
+            {
+                bprintf("DEF_CONST(%-34s,0x%08x) // Found @0x%08x",name,fadr,idx2adr(fw,k+1));
+            }
+            bprintf("\n");
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 // Search for things that go in 'lib.c'
 void find_lib_vals(firmware *fw)
 {
@@ -4343,6 +4396,9 @@ void find_stubs_min(firmware *fw)
             search_fw(fw, match_fileiosem, fadr, nadr, 3);
         }
     }
+
+    // Find UI property count
+    search_saved_sig(fw, "PTM_SetCurrentItem", match_uiprop_count, 0, 0, 30);
 }
 
 //------------------------------------------------------------------------------------------------------------

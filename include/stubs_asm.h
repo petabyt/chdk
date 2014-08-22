@@ -35,3 +35,8 @@
 // version is provided that completely replaces firmware code.
 //  e.g. IGNORE(MoveFocusLensToDistance) for a410 - alternate function supplied in focushack.c
 #define IGNORE(name)
+
+// Enable outputting constants from stubs_entry.S
+#define DEF_CONST(n, m) \
+    .globl n; n: ;\
+    .long m

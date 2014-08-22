@@ -61,6 +61,7 @@ DEF(active_viewport_buffer                  ,0x00002108) // Found @0xff043b10
 DEF(raw_buffers                             ,0xff3bda4c) // Found @0xff3bda4c
 DEF(active_raw_buffer                       ,0x00003f64) // Found @0xff07b11c
 DEF(fileio_semaphore                        ,0x00003c70) // Found @0xff06a750
+DEF_CONST(uiprop_count                      ,0x00000081) // Found @0xff1b8ae4
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40471000; }             // Found @0xff0514cc
@@ -268,6 +269,7 @@ NHSTUB(strtolx                                ,0xff031690) //109
 NHSTUB(time                                   ,0xff086014) //109
 NHSTUB(vsprintf                               ,0xff010894) //115
 NHSTUB(EngDrvRead                             ,0xff025c5c) //102
+NHSTUB(PTM_GetCurrentItem                     ,0xff093a9c) //105
 NHSTUB(CancelHPTimer                          ,0xff087890) //119
 NHSTUB(SetHPTimerAfterNow                     ,0xff087788) //119
 NHSTUB(PT_MFOn                                ,0xff075d40) //120

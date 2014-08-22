@@ -42,4 +42,7 @@ extern long set_parameter_data(long id, void *buf, long bufsize);
 
 extern int get_flash_params_count(void);
 
+extern short get_uiprop_value(unsigned long id);
+extern int uiprop_count;
+
 #endif

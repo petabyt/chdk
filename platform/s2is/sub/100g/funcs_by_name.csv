@@ -854,12 +854,16 @@
 0xff985994,PTM_AllResetProperty_FW
 0xff985980,PTM_AllResetToFactorySetting_FW
 0xff98687c,PTM_BackupUIProperty_FW
+0xff985c3c,PTM_GetCurrentItem
 0xff986824,PTM_GetCurrentItem_FW
 0xff985adc,PTM_GetWorkingCaptureMode_FW
+0xff985d94,PTM_NextItem
 0xff98683c,PTM_NextItem_FW
+0xff985db0,PTM_PrevItem
 0xff986854,PTM_PrevItem_FW
 0xff98686c,PTM_SaveCustomSetting_FW
 0xff9867f4,PTM_SetCurrentCaptureMode_FW
+0xff985bf0,PTM_SetCurrentItem
 0xff986804,PTM_SetCurrentItem_FW
 0xffa66f1c,PTPRspnd.AddChangedReleaseParamList_FW
 0xffa50394,PTPRspnd.BenchMark_FW

@@ -30,6 +30,7 @@ extern long _GetCurrentAvValue();
 extern long _GetCurrentTargetDistance();
 extern long _GetPropertyCase(long opt_id, void *buf, long bufsize);
 extern long _SetPropertyCase(long opt_id, void *buf, long bufsize);
+extern short _PTM_GetCurrentItem(long id);
 extern long _IsStrobeChargeCompleted();
 extern long _VbattGet();
 extern int _GetBatteryTemperature();

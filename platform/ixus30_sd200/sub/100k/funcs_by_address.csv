@@ -668,6 +668,10 @@
 0xff9587dc,PTM_SaveCustomSetting_FW
 0xff9587ec,PTM_BackupUIProperty_FW
 0xff958810,PTM_RestoreUIProperty_FW
+0xff958834,PTM_SetCurrentItem
+0xff9588c4,PTM_GetCurrentItem
+0xff958a3c,PTM_NextItem
+0xff958a58,PTM_PrevItem
 0xff95d6e8,CreateDialogBox_FW
 0xff95d8cc,DeleteDialogBox_FW
 0xff95d988,ResizeVirtualWindow_FW

@@ -491,6 +491,7 @@
 0xff892d9c,PTM_SetCurrentCaptureMode_FW
 0xff892f08,j_PTM_GetWorkingCaptureMode_FW
 0xff892f0c,j_PTM_SetCurrentItem_FW
+0xff892f18,PTM_GetCurrentItem
 0xff892f18,PTM_GetCurrentItem_FW
 0xff892f84,j_PTM_NextItem_FW
 0xff892f88,j_PTM_PrevItem_FW
@@ -833,9 +834,13 @@
 0xff9816c0,AdditionAgentRAM_FW
 0xff986538,PTM_AllReset_FW
 0xff986890,PTM_GetWorkingCaptureMode_FW
+0xff9868a8,PTM_SetCurrentItem
 0xff9868a8,PTM_SetCurrentItem_FW
+0xff986bc0,PTM_NextItem
 0xff986bc0,PTM_NextItem_FW
+0xff986bc8,PTM_PrevItem
 0xff986bc8,PTM_PrevItem_FW
+0xff986edc,PTM_SetPropertyEnable
 0xff986edc,PTM_SetProprietyEnable_FW
 0xff987124,PTM_IsEnableItem_FW
 0xff9871f0,PTM_BackupUIProperty_FW
