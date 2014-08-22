@@ -118,7 +118,7 @@ const CapturemodeMap modemap[] = {
     { MODE_VIDEO_COLOR_SWAP,    2595 },
     { MODE_VIDEO_STD,           2596 },
     { MODE_VIDEO_COMPACT,       2598 },
-//    { ???,       8221 }, // probably C
+//    { MODE C,       8221 }, // See include/modelist.h
 };
 
 #include "../generic/shooting.c"
