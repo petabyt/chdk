@@ -6,7 +6,6 @@ DEF(playrec_mode, 0x7244)
 
 DEF(zoom_busy, 0x83CF8)
 DEF(focus_busy, 0x840C4)
-DEF(FlashParamsTable,0xFF9B8D0C)
 DEF(canon_menu_active,0x98EC)
 DEF(canon_shoot_menu_active,0x8565)
 DEF(recreview_hold, 0x7F8AC)
@@ -15,5 +14,4 @@ DEF(some_flag_for_af_scan, 0x6E64)
 DEF(zoom_status, 0x83AC)
 DEF(some_f_for_dng, 0xA3A8)
 DEF(second_ext_for_dng, 0xA3CC)
-DEF(levent_table,0xFF9AE7D4)
 DEF(sys_mempart_id, 0xD9A0) // calloc

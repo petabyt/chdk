@@ -10,4 +10,4 @@ Camera depending notes:
 Known issues
 - If you switching to record mode while USB is connected using the CHDK extension,
   you may not be able to return to playback mode.
-
+- Long exposure capture works after half shutter and proper AF but fails after  full shutter press without waiting for AF
