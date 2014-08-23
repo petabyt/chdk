@@ -119,9 +119,9 @@ const CapturemodeMap modemap[] = {
     { MODE_SCN_LANDSCAPE,      16396 },
     { MODE_SCN_SPORT,          16903 },
     { MODE_SCN_COLOR_ACCENT,   16921 }
-// from canon mode list, probably C1, C2
-//    { ???,          8222 },
-//    { ???,   8223 }
+// from canon mode list, C1, C2 - See include/modelist.h
+//    { MODE C1,               8222 },
+//    { MODE C2,               8223 }
 };
 
 #include "../generic/shooting.c"
