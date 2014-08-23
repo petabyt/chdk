@@ -357,7 +357,7 @@
 0xff846ce4,GetBatteryTemperature_FW
 0xff8686e0,GetBuildDate_FW
 0xff8686d8,GetBuildTime_FW
-0xff846e08,GetCCDTemperature,(stubs_entry_2.s)
+0xff846c74,GetCCDTemperature
 0xff846c74,GetCCDTemperature_FW
 0xff9e854c,GetCdsGainValue_FW
 0xff81d5e0,GetCh_FW

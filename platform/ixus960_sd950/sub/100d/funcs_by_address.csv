@@ -257,7 +257,7 @@
 0xff845260,TurnOffVideoOutMode_FW
 0xff846304,task_ASIF
 0xff846a5c,task_Thermometer
-0xff846e08,GetCCDTemperature,(stubs_entry_2.s)
+0xff846c74,GetCCDTemperature
 0xff846c74,GetCCDTemperature_FW
 0xff846c74,GetCurrentCcdTemp_FW
 0xff846ce4,GetBatteryTemperature

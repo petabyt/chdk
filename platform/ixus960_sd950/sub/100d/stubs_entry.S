@@ -16,7 +16,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(GetCCDTemperature                    ,0xff846c74) //102        *** != 0xff846e08
 //NHSTUB(GetOpticalTemperature                ,0xff846d54) //120        *** != 0xff846ce4
 //NHSTUB(NewTaskShell                         ,0xff869278) //120        *** != 0xffc596b0
 //NHSTUB(PutInNdFilter                        ,0xff928924) //102        *** != 0xff9e8ac4
@@ -46,8 +45,8 @@ DEF(some_flag_for_af_scan                   ,0x00011d80) // Found @0xffa20824
 // there are 8 entries in the table - set NUM_FL to 8
 DEF(focus_len_table                         ,0xfffe296c) // Found @0xfffe296c
 DEF(zoom_busy                               ,0x0000de7c) // Found @0xff92a31c
-//DEF(focus_busy                              ,0x0000dd78) // Found @0xff92513c, ** != ** stubs_min = 0x0000dd7c (0xDD7C)
-//DEF(recreview_hold                          ,0x0000618c) // Found @0xff8774b4, ** != ** stubs_min = 0x0000ebfc (0xEBFC)
+DEF(focus_busy                              ,0x0000dd78) // Found @0xff92513c
+DEF(recreview_hold                          ,0x0000618c) // Found @0xff8774b4
 // Camera has 2 RAW buffers @ 0x108067a0 & 0x11f6c720
 //  Note: active buffer --> raw_buffers[ active_raw_buffer   *3]
 //        other buffer  --> raw_buffers[(active_raw_buffer^1)*3]
@@ -136,6 +135,7 @@ NHSTUB(FreeUncacheableMemory                  ,0xff8298e4) //112
 NHSTUB(Fseek_Fut                              ,0xff824b4c) //120
 NHSTUB(Fwrite_Fut                             ,0xff824aac) //120
 NHSTUB(GetBatteryTemperature                  ,0xff846ce4) //102
+NHSTUB(GetCCDTemperature                      ,0xff846c74) //102
 NHSTUB(GetCurrentAvValue                      ,0xff9275c4) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xff84da50) //  1
 NHSTUB(GetDrive_FreeClusters                  ,0xff84daf0) //  1

@@ -1,7 +1,7 @@
 #include "stubs_asm.h"
 
-DEF(focus_busy,                         0xDD7C) //0xDD68 + 0x14 ??? to double check
-DEF(recreview_hold,                     0xEBFC) // 0xEB50+0xAC
+//DEF(focus_busy,                         0xDD7C) //0xDD68 + 0x14 ??? to double check
+//DEF(recreview_hold,                     0xEBFC) // 0xEB50+0xAC
 DEF(some_f_for_dng,                     0xC720)
 DEF(second_ext_for_dng,                 0xC740)
 // Key values for 'Feather' on joystic
