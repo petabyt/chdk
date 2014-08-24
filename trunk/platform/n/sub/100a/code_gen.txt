@@ -235,9 +235,9 @@ FW 1
 <<<
 FW 1
 >>>
-// try avoid intermittetant override failues on quick press, not needed?
-//"    MOV     R0, #0\n"                          // added
-//"    STR     R0, [R5,#0x28]\n"                  // added
+// try avoid intermittetant override failues on quick press
+"    MOV     R0, #0\n"                          // added
+"    STR     R0, [R4,#0x28]\n"                  // added
 <<<
 //REM "above patch makes these three lines redundant"
 //REM

@@ -87,9 +87,9 @@ asm volatile (
 "    BL      sub_FF0B8B24 \n"
 "    BL      shooting_expo_param_override\n"    // added
 "    BL      sub_FF0B5980 \n"
-// try avoid intermittetant override failues on quick press, not needed?
-//"    MOV     R0, #0\n"                          // added
-//"    STR     R0, [R5,#0x28]\n"                  // added
+// try avoid intermittetant override failues on quick press
+"    MOV     R0, #0\n"                          // added
+"    STR     R0, [R4,#0x28]\n"                  // added
 "    LDR     R0, [R4, #0x28] \n"
 "    CMP     R0, #0 \n"
 "    BLNE    sub_FF240064_my \n"  // --> Patched. Old value = 0xFF240064.

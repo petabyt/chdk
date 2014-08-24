@@ -120,27 +120,20 @@ extern int active_palette_buffer;
 extern int** palette_buffer_ptr;
 extern char palette_control;
 
-void *vid_get_bitmap_active_palette()
-{
-    int *p ;
-    
-    p = palette_buffer_ptr[active_palette_buffer+1];
-    
-    if(!p) {                            // active_palette_buffer can point at null when func and menu are opened for the first time
-        p = palette_buffer_ptr[0+1];    // rec mode buffer appears to always be initialized
-    }
-    return (p+1);                      
-}
-
 void load_chdk_palette()
 {
     // active_palette_buffer values
     //  0x00:shooting, 0x04:camera modes menu, 0x0C:func menu, 0x10:playback, 0x14:shooting setup menu, 0x18:wifi menu
-    if ((active_palette_buffer == 0x00) || (active_palette_buffer == 0x10) )
+    if (   ((active_palette_buffer == 0x00) 
+         || (active_palette_buffer == 0x10))
+         && (palette_buffer_ptr[active_palette_buffer+1] !=0) )
     {
-        int * pal = (int*) vid_get_bitmap_active_palette();
-        
-        if (pal[CHDK_COLOR_BASE+0] != 0x3F3ADF62)
+        int* pal = palette_buffer_ptr[active_palette_buffer+1] + 1; 
+        // check that palette_buffer != null and palette transparent & black colors are correct before overwriting palette)
+        if (    (pal!=0) 
+             && (pal[CHDK_COLOR_BASE+0] != 0x3F3ADF62) 
+             && (pal[0x00]==0x00FF0000) 
+             && (pal[0xFF]==0x3F000000) )
         {
             pal[CHDK_COLOR_BASE+0]  = 0x3F3ADF62;  // Red
             pal[CHDK_COLOR_BASE+1]  = 0x3F26EA40;  // Dark Red
@@ -156,7 +149,6 @@ void load_chdk_palette()
             pal[CHDK_COLOR_BASE+11] = 0x3F819137;  // Dark Yellow
             pal[CHDK_COLOR_BASE+12] = 0x3FDED115;  // Light Yellow
             pal[CHDK_COLOR_BASE+13] = 0x1F190000;   // Transparent Light Grey
-            
             
             palette_control = 1; // note appears to be a bitmask, bit 2 is also used
             
