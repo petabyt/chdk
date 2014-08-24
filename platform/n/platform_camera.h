@@ -77,10 +77,10 @@
     #define CAM_FILEWRITETASK_SEEKS         1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
-    #define CAM_ACTIVE_AREA_X1              96              // DNG stuff
-    #define CAM_ACTIVE_AREA_Y1              16
-    #define CAM_ACTIVE_AREA_X2              4072
-    #define CAM_ACTIVE_AREA_Y2              3060
+    #define CAM_ACTIVE_AREA_X1              92              // DNG stuff
+    #define CAM_ACTIVE_AREA_Y1              14
+    #define CAM_ACTIVE_AREA_X2              4160
+    #define CAM_ACTIVE_AREA_Y2              3050
     #define cam_CFAPattern                  0x02010100      // bayer sensor pattern Red  Green  Green  Blue
     #define CAM_DNG_EXPOSURE_BIAS           0,1             // DNG exposure bias value to 0 (to override default of -0.5 in the dng.c code)
     #define CAM_DNG_LENS_INFO               { 28,10, 2240,10, 30,10, 59,10 } // See comments in camera.h

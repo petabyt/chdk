@@ -3,8 +3,8 @@
 #include "stubs_asm.h"
 
 DEF(touch_screen_active,                0x000031E4)     //
-DEF(touch_screen_x,                     0x000A0F08)     //
-DEF(touch_screen_y,                     0x000A0F0A)     //
+DEF(touch_screen_x,                     0x000A0F08)     // FF096A1C LDR     R7, =0xA0EF4  (+0x14)
+DEF(touch_screen_y,                     0x000A0F0A)     // FF096A1C LDR     R7, =0xA0EF4  (+0x16)
 DEF(file_counter_var,                   0x00009EEC)     // found @ 0xFF217EE8 by searching for "FileBackupProperty.c"
 DEF(palette_control,                    0xB0F0)         // 0xFF2590CC
 DEF(active_palette_buffer,              0xB0F8)         // 0xFF2590D4
