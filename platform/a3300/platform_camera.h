@@ -82,7 +82,7 @@
     #define CAM_HAS_MOVIE_DIGEST_MODE       1    // no, it doesn't, but movie_status is 6 in movie mode idle
 
     #define CAM_HAS_ZOOM_LEVER              1    // Camera has dedicated zoom buttons
-    //#define CAM_USE_ZOOM_FOR_MF             1    // UNTESTED, may work: Zoom lever can be used for manual focus adjustments
+    #define CAM_USE_ZOOM_FOR_MF             1    // Zoom lever can be used for manual focus adjustments
     #define CAM_NEED_SET_ZOOM_DELAY         300  // Define to add a delay after setting the zoom position
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
 
