@@ -56,8 +56,8 @@ NHSTUB(Mount_FileSystem                       ,0xff86e8d8) //  1 90%
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xff96b1cc) // Found @0xff96b1cc,          stubs_min = 0xff96b1cc (0xFF96B1CC)
-//DEF(FlashParamsTable                        ,0xff974740) // Found @0xff974740,          stubs_min = 0xff974740 (0xFF974740)
+DEF(levent_table                            ,0xff96b1cc) // Found @0xff96b1cc
+DEF(FlashParamsTable                        ,0xff974740) // Found @0xff974740
 DEF_CONST(uiprop_count                      ,0x00000057) // Found @0xff9761a0
 
 // Values below go in 'lib.c':
@@ -85,7 +85,7 @@ NHSTUB(CreateTask                             ,0xff821620) //120
 NHSTUB(DebugAssert                            ,0xff813b80) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff868748) //  1
 NHSTUB(DoAELock                               ,0xff95b574) //120
-//NHSTUB(DoAFLock                             ,0xff95b424) //120            == 0xff95b424
+NHSTUB(DoAFLock                               ,0xff95b424) //120
 NHSTUB(ExecuteEventProcedure                  ,0xff816bc8) //  1
 NHSTUB(ExitTask                               ,0xff8219e0) //120
 NHSTUB(Fclose_Fut                             ,0xff868888) //120
@@ -99,10 +99,10 @@ NHSTUB(Fseek_Fut                              ,0xff868a54) //120
 NHSTUB(Fwrite_Fut                             ,0xff8689bc) //120
 NHSTUB(GetBatteryTemperature                  ,0xff82d21c) //102
 NHSTUB(GetCCDTemperature                      ,0xff82d208) //102
-//NHSTUB(GetCurrentAvValue                    ,0xffac4014) //120            == 0xffac4014
-//NHSTUB(GetDrive_ClusterSize                 ,0xff86ed94) //119            == 0xff86ed94
-//NHSTUB(GetDrive_FreeClusters                ,0xff86ee0c) //1103            == 0xff86ee0c
-//NHSTUB(GetDrive_TotalClusters               ,0xff86edd0) //119            == 0xff86edd0
+NHSTUB(GetCurrentAvValue                      ,0xffac4014) //120
+NHSTUB(GetDrive_ClusterSize                   ,0xff86ed94) //119
+NHSTUB(GetDrive_FreeClusters                  ,0xff86ee0c) //1103
+NHSTUB(GetDrive_TotalClusters                 ,0xff86edd0) //119
 NHSTUB(GetOpticalTemperature                  ,0xff82d1f4) //120
 NHSTUB(GetPropertyCase                        ,0xff8248e4) //  1
 NHSTUB(GetZoomLensCurrentPoint                ,0xffaa5f10) //120
@@ -129,7 +129,7 @@ NHSTUB(SetCurrentCaptureModeType              ,0xff9a3278) //120
 NHSTUB(SetFileAttributes                      ,0xff86f760) //  1
 NHSTUB(SetLogicalEventActive                  ,0xff96fdfc) //1104
 NHSTUB(SetPropertyCase                        ,0xff8247c8) //  1
-//NHSTUB(SetScriptMode                        ,0xff96fe64) //120            == 0xff96fe64
+NHSTUB(SetScriptMode                          ,0xff96fe64) //120
 NHSTUB(SleepTask                              ,0xff821534) //120
 NHSTUB(TakeSemaphore                          ,0xff821030) //1101
 NHSTUB(TurnOffBackLight                       ,0xff9bb0b0) //  2
@@ -137,10 +137,10 @@ NHSTUB(TurnOnBackLight                        ,0xff9bb080) //  2
 NHSTUB(TurnOnDisplay                          ,0xff933ac4) //120
 NHSTUB(TurnOffDisplay                         ,0xff933ad4) //120
 NHSTUB(UnlockAE                               ,0xff95b594) //120
-//NHSTUB(UnlockAF                             ,0xff95b468) //120            == 0xff95b468
+NHSTUB(UnlockAF                               ,0xff95b468) //120
 NHSTUB(UnlockMainPower                        ,0xff97219c) //120
 NHSTUB(UpdateMBROnFlash                       ,0xff86eacc) //  1
-//NHSTUB(VbattGet                             ,0xff82c150) //120            == 0xff82c150
+NHSTUB(VbattGet                               ,0xff82c150) //120
 NHSTUB(Write                                  ,0xff86f648) //120
 NHSTUB(_log                                   ,0xffb01b2c) //121
 NHSTUB(_log10                                 ,0xffafdecc) //121
