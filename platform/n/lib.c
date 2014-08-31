@@ -122,37 +122,43 @@ extern char palette_control;
 
 void load_chdk_palette()
 {
+    unsigned char theme;
+ 
     // active_palette_buffer values
     //  0x00:shooting, 0x04:camera modes menu, 0x0C:func menu, 0x10:playback, 0x14:shooting setup menu, 0x18:wifi menu
-    if (   ((active_palette_buffer == 0x00) 
+    
+    if (    (active_palette_buffer == 0x00) 
          || (active_palette_buffer == 0x10))
-         && (palette_buffer_ptr[active_palette_buffer+1] !=0) )
     {
-        int* pal = palette_buffer_ptr[active_palette_buffer+1] + 1; 
-        // check that palette_buffer != null and palette transparent & black colors are correct before overwriting palette)
-        if (    (pal!=0) 
-             && (pal[CHDK_COLOR_BASE+0] != 0x3F3ADF62) 
-             && (pal[0x00]==0x00FF0000) 
-             && (pal[0xFF]==0x3F000000) )
+        get_parameter_data(20, &theme, 1);   
+        if (palette_buffer_ptr[active_palette_buffer+theme] !=0)
         {
-            pal[CHDK_COLOR_BASE+0]  = 0x3F3ADF62;  // Red
-            pal[CHDK_COLOR_BASE+1]  = 0x3F26EA40;  // Dark Red
-            pal[CHDK_COLOR_BASE+2]  = 0x3F4CD57F;  // Light Red
-            pal[CHDK_COLOR_BASE+3]  = 0x3F73BFAE;  // Green
-            pal[CHDK_COLOR_BASE+4]  = 0x3F4BD6CA;  // Dark Green
-            pal[CHDK_COLOR_BASE+5]  = 0x3F95AB95;  // Light Green
-            pal[CHDK_COLOR_BASE+6]  = 0x3F4766F0;  // Blue
-            pal[CHDK_COLOR_BASE+7]  = 0x3F1250F3;  // Dark Blue
-            pal[CHDK_COLOR_BASE+8]  = 0x3F7F408F;  // Cyan
-            pal[CHDK_COLOR_BASE+9]  = 0x3F512D5B;  // Magenta
-            pal[CHDK_COLOR_BASE+10] = 0x3FA9A917;  // Yellow
-            pal[CHDK_COLOR_BASE+11] = 0x3F819137;  // Dark Yellow
-            pal[CHDK_COLOR_BASE+12] = 0x3FDED115;  // Light Yellow
-            pal[CHDK_COLOR_BASE+13] = 0x1F190000;   // Transparent Light Grey
-            
-            palette_control = 1; // note appears to be a bitmask, bit 2 is also used
-            
-            vid_bitmap_refresh();
+            int* pal = palette_buffer_ptr[active_palette_buffer+theme] + 1; 
+            // check that palette_buffer != null and palette transparent & black colors are correct before overwriting palette)
+            if (    (pal!=0) 
+                 && (pal[CHDK_COLOR_BASE+0] != 0x3F3ADF62) 
+                 && (pal[0x00]==0x00FF0000) 
+                 && (pal[0xFF]==0x3F000000) )
+            {
+                pal[CHDK_COLOR_BASE+0]  = 0x3F3ADF62;  // Red
+                pal[CHDK_COLOR_BASE+1]  = 0x3F26EA40;  // Dark Red
+                pal[CHDK_COLOR_BASE+2]  = 0x3F4CD57F;  // Light Red
+                pal[CHDK_COLOR_BASE+3]  = 0x3F73BFAE;  // Green
+                pal[CHDK_COLOR_BASE+4]  = 0x3F4BD6CA;  // Dark Green
+                pal[CHDK_COLOR_BASE+5]  = 0x3F95AB95;  // Light Green
+                pal[CHDK_COLOR_BASE+6]  = 0x3F4766F0;  // Blue
+                pal[CHDK_COLOR_BASE+7]  = 0x3F1250F3;  // Dark Blue
+                pal[CHDK_COLOR_BASE+8]  = 0x3F7F408F;  // Cyan
+                pal[CHDK_COLOR_BASE+9]  = 0x3F512D5B;  // Magenta
+                pal[CHDK_COLOR_BASE+10] = 0x3FA9A917;  // Yellow
+                pal[CHDK_COLOR_BASE+11] = 0x3F819137;  // Dark Yellow
+                pal[CHDK_COLOR_BASE+12] = 0x3FDED115;  // Light Yellow
+                pal[CHDK_COLOR_BASE+13] = 0x1F190000;   // Transparent Light Grey
+                
+                palette_control = 1; // note appears to be a bitmask, 2nd bit is also used for something ?
+                
+                vid_bitmap_refresh();
+            }
         }
     }
 }
