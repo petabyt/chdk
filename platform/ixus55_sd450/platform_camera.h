@@ -56,12 +56,9 @@
     #define PARAM_CAMERA_NAME               3       // parameter number for GetParameterData
     #define DNG_EXT_FROM                    ".DPS"
 
-    #define CAM_EXT_TV_RANGE                1
+    #define REMOTE_SYNC_STATUS_LED          0xc02200e4  // specifies an LED that turns on while camera waits for USB remote to sync
 
-	#define REMOTE_SYNC_STATUS_LED 	0xc02200e4		// specifies an LED that turns on while camera waits for USB remote to sync
-	
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

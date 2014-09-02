@@ -54,7 +54,7 @@
     #undef  CAM_USE_ZOOM_FOR_MF
 
     #undef  CAM_UNCACHED_BIT
-    #define CAM_UNCACHED_BIT    0x40000000
+    #define CAM_UNCACHED_BIT                0x40000000
 
     #define CAM_DNG_LENS_INFO               { 63,10, 630,10, 34,10, 56,10 } // See comments in camera.h
 
@@ -82,16 +82,14 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-    #define CAM_EXT_TV_RANGE                1
-
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              7
     #undef  CAM_HAS_ERASE_BUTTON
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
-    #undef CAM_SCREEN_WIDTH
-    #undef CAM_BITMAP_WIDTH
-    #undef CAM_BITMAP_HEIGHT
+    #undef  CAM_SCREEN_WIDTH
+    #undef  CAM_BITMAP_WIDTH
+    #undef  CAM_BITMAP_HEIGHT
     #define CAM_SCREEN_WIDTH                480 // Width of bitmap screen in CHDK co-ordinates
     #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
     #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
@@ -103,17 +101,17 @@
     #define EDGE_HMARGIN                    10  //10 fits video mode of sx210
 
    //zebra letterbox for saving memory
-   #define CAM_ZEBRA_NOBUF                  1
+    #define CAM_ZEBRA_NOBUF                 1
 
-   #define CAM_QUALITY_OVERRIDE             1
-   #define CAM_AF_SCAN_DURING_VIDEO_RECORD  1
+    #define CAM_QUALITY_OVERRIDE            1
+    #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
 
-   #define CAM_STARTUP_CRASH_FILE_OPEN_FIX  1     // enable workaround for camera crash at startup when opening the conf / font files
+    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1     // enable workaround for camera crash at startup when opening the conf / font files
                                                     // see http://chdk.setepontos.com/index.php?topic=6179.0
-   #define CAM_HAS_CMOS                     1
+    #define CAM_HAS_CMOS                    1
 
-    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
-    #define CAM_HAS_FILEWRITETASK_HOOK          1
+    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY 1   // Draw pixels on active bitmap buffer only.
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
 
 // FOR TESTING PURPOSE
 // push all regs except SP and PC
@@ -136,10 +134,10 @@
     ASM_SAFE_ENTER \
     asmcode \
     ASM_SAFE_LEAVE
-	
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
-	
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

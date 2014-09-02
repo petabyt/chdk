@@ -52,17 +52,16 @@
     #define CAM_BRACKETING                      1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY              1
-    #define CAM_EXT_TV_RANGE                    1
     #define CAM_QUALITY_OVERRIDE                1
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                    0x40000000  // S90 @FF8875FC(via ExMem.FreeCacheable)
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
 
     #undef DEFAULT_RAW_EXT
-    #define DEFAULT_RAW_EXT                     2   // use .CR2 
+    #define DEFAULT_RAW_EXT                     2   // use .CR2
 
     #undef CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH	            10
+    #define CAM_MENU_BORDERWIDTH                10
 
     // camera name
     #define PARAM_CAMERA_NAME                   4   // parameter number for GetParameterData - Camera Model name
@@ -92,7 +91,7 @@
 
     #define CAM_DNG_EXPOSURE_BIAS               0,1     // Specify DNG exposure bias value to 0 (to override default of -0.5 in the dng.c code)
 
-    #define	CAM_DNG_LENS_INFO                   { 61,10, 305,10, 28,10, 45,10 }	// See comments in camera.h
+    #define    CAM_DNG_LENS_INFO                { 61,10, 305,10, 28,10, 45,10 }    // See comments in camera.h
 
     // From Adobe DNG converter
     #define cam_CalibrationIlluminant1          17  // Standard Light A
@@ -140,7 +139,7 @@
     #define CAM_LOAD_CUSTOM_COLORS              1   // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                     0xB3// Start color index for CHDK colors loaded into camera palette.
 
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_USE_ALT_SET_ZOOM_POINT          1   // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS     1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
@@ -154,9 +153,9 @@
     #define SHORTCUT_TOGGLE_HISTO               KEY_ERASE   // On camera Shutter Half Press + Up = switch MF on/off
 
     #define CAM_HAS_FILEWRITETASK_HOOK          1   // file write hook for remote capture etc
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AF                   1
+    #define CAM_SD_OVER_IN_AFL                  1
+    #define CAM_SD_OVER_IN_MF                   1
+
 //--------------------------------------------------

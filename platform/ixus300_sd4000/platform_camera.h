@@ -50,11 +50,11 @@
     #define CAM_MULTIPART                   1        // ToDo: test if its working
     #define CAM_DATE_FOLDER_NAMING          0x100
     //#define CAM_DRAW_EXPOSITION             1      // not required because Canon Firmware does always show it on Shutter half press
-    #define CAM_ADJUSTABLE_ALT_BUTTON       1      
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Up + Left" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_UP | KEY_LEFT }
     #undef  CAM_HAS_DISP_BUTTON
-    
+
     #undef  DNG_BADPIXEL_VALUE_LIMIT
     #define DNG_BADPIXEL_VALUE_LIMIT        16      // Camera sensor apparently has bad pixels with value > 0 & <=16
 
@@ -106,38 +106,37 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-    #define PARAM_CAMERA_NAME               4           // parameter number (index) for GetParameterData to get Camera Name
+    #define PARAM_CAMERA_NAME               4       // parameter number (index) for GetParameterData to get Camera Name
     #define DNG_EXT_FROM                    ".CR2"
 
     // everthing below is ToDo !!!!!!!!!!!!!!!!
 
     #undef CAM_USES_ASPECT_CORRECTION
-    #define CAM_USES_ASPECT_CORRECTION      1    // camera uses the modified graphics primitives to map screens an viewports to buffers more sized
+    #define CAM_USES_ASPECT_CORRECTION      1       // camera uses the modified graphics primitives to map screens an viewports to buffers more sized
     #undef CAM_SCREEN_WIDTH
     #undef CAM_BITMAP_WIDTH
     #undef CAM_BITMAP_HEIGHT
-    #define CAM_SCREEN_WIDTH                480 // Width of bitmap screen in CHDK co-ordinates
-    #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
-    #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
+    #define CAM_SCREEN_WIDTH                480     // Width of bitmap screen in CHDK co-ordinates
+    #define CAM_BITMAP_WIDTH                960     // Actual width of bitmap screen in bytes
+    #define CAM_BITMAP_HEIGHT               270     // Actual height of bitmap screen in rows
 
     // Not required
     //#undef EDGE_HMARGIN
     //#define EDGE_HMARGIN 10    // 10 fits video mode of sx210
-	
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 
-    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
-                                                // Used to enabled bracketing in custom timer, required on many recent cameras
-                                                // see http://chdk.setepontos.com/index.php/topic,3994.405.html
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
-    #define CAM_QUALITY_OVERRIDE            1 // enable 'super fine' override
-    
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1     // cameras intermittently crashing on startup with "ASSERT!! FsIoNotify.c Line 457   Task name: SpyTask" in ROMLOG, ToDo: working ?
-    #define CAM_EXT_TV_RANGE                1
- 
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1       // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
+                                                    // Used to enabled bracketing in custom timer, required on many recent cameras
+                                                    // see http://chdk.setepontos.com/index.php/topic,3994.405.html
+
+    #define CAM_QUALITY_OVERRIDE            1       // enable 'super fine' override
+
+    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1       // cameras intermittently crashing on startup with "ASSERT!! FsIoNotify.c Line 457   Task name: SpyTask" in ROMLOG, ToDo: working ?
+
     // Warning : SD override for this camera with these values has not been tested
     #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

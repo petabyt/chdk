@@ -56,16 +56,15 @@
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
     #define CAM_BRACKETING                  1
     #define DNG_EXT_FROM                    ".DPS"
-    #define CAM_EXT_TV_RANGE                1
 
     #define CAM_HAS_FILEWRITETASK_HOOK      1
 
-	#define REMOTE_SYNC_STATUS_LED 	0xc022006C		// specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED          0xc022006C  // specifies an LED that turns on while camera waits for USB remote to sync
 
-    #define CAM_USB_EVENTID_VXWORKS             0x1085 // LogicalEvent ID for ConnectUSBCable, needed to enable USB mode switch
-                                                       // NOTE switching back to play reportedly does not work on this camera
-	
- 
+    #define CAM_USB_EVENTID_VXWORKS         0x1085 // LogicalEvent ID for ConnectUSBCable, needed to enable USB mode switch
+                                                   // NOTE switching back to play reportedly does not work on this camera
+
+
     // Warning : no usable SD override mode found for G7 .. bummer !
- 
+
 //--------------------------------------------------

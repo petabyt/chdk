@@ -84,7 +84,6 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL           12
 
-    #define CAM_EXT_TV_RANGE                    1
     #define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
 
     #undef  CAM_BITMAP_PALETTE
@@ -123,8 +122,8 @@
     #define REMOTE_SYNC_STATUS_LED              0xC0220130 // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_HAS_FILEWRITETASK_HOOK          1   // file write hook for remote capture etc
- 
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AFL                  1
+    #define CAM_SD_OVER_IN_MF                   1
+
 //--------------------------------------------------

@@ -62,8 +62,6 @@
 
     #define CAM_HAS_ND_FILTER               1
 
-    #define CAM_EXT_TV_RANGE                1
-
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
@@ -101,7 +99,7 @@
 
     #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_ZOOM_LEVER              1       // Camera has dedicated zoom buttons
-    #define CAM_USE_ALT_SET_ZOOM_POINT       1      // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_USE_ALT_SET_ZOOM_POINT      1       // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1      // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
 //To do
@@ -118,9 +116,9 @@
 
 //    #undef  CAM_AF_LED
 //    #define CAM_AF_LED                          0   // Index of AF led in camera_set_led function
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

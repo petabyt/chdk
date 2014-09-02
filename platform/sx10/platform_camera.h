@@ -66,13 +66,10 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-    #define CAM_EXT_TV_RANGE                1
+    #define REMOTE_SYNC_STATUS_LED          0xC0220060  // specifies an LED that turns on while camera waits for USB remote to sync
 
-	#define REMOTE_SYNC_STATUS_LED 	0xC0220060		// specifies an LED that turns on while camera waits for USB remote to sync
-	
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

@@ -46,7 +46,7 @@
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
 
     #undef  DEFAULT_RAW_EXT
-    #define DEFAULT_RAW_EXT                     2   // use .CR2 
+    #define DEFAULT_RAW_EXT                     2   // use .CR2
 
     #undef  CAM_MENU_BORDERWIDTH
     #define CAM_MENU_BORDERWIDTH                10
@@ -88,7 +88,6 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL           12
 
-    #define CAM_EXT_TV_RANGE                    1
     #define CAM_QUALITY_OVERRIDE                1
 
     // copied from the SX200 which has the same video buffer size
@@ -123,7 +122,7 @@
     #define CAM_LOAD_CUSTOM_COLORS              1   // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                     0xB3// Start color index for CHDK colors loaded into camera palette.
 
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_NEED_SET_ZOOM_DELAY             300 // SX30 needs a short delay after setting the zoom before resetting focus in shooting_set_zoom()
     #define CAM_USE_ALT_SET_ZOOM_POINT          1   // Define to use the alternate code in lens_set_zoom_point()
@@ -142,8 +141,8 @@
     #define SHORTCUT_TOGGLE_ZEBRA               KEY_ERASE   // On camera Shutter Half Press + Up = switch MF on/off
 
     #define CAM_HAS_FILEWRITETASK_HOOK          1   // file write hook for remote capture etc
- 
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AFL                  1
+    #define CAM_SD_OVER_IN_MF                   1
+
 //--------------------------------------------------

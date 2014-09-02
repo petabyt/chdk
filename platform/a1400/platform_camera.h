@@ -64,8 +64,6 @@
 
     #define CAM_HAS_ND_FILTER               1
 
-    #define CAM_EXT_TV_RANGE                1
-
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
@@ -85,49 +83,49 @@
     #undef  CAM_USE_ZOOM_FOR_MF
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE               13   // palette number reserved in core/gui_draw.h
-    #define CAM_LOAD_CUSTOM_COLORS            1   // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                0xD0   // Start color index for CHDK colors loaded into camera palette
+    #define CAM_BITMAP_PALETTE              13   // palette number reserved in core/gui_draw.h
+    #define CAM_LOAD_CUSTOM_COLORS          1   // Enable loading CHDK colors into the camera palette memory/hardware
+    #define CHDK_COLOR_BASE                 0xD0   // Start color index for CHDK colors loaded into camera palette
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1
     #undef CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                720   // Actual width of bitmap screen in bytes
 
-    #define  CAM_ADJUSTABLE_ALT_BUTTON        1   // ALT-button can be set from menu
-    #define CAM_ALT_BUTTON_NAMES              { "Playback", "Help" }
-    #define CAM_ALT_BUTTON_OPTIONS            { KEY_PLAYBACK, KEY_HELP }
+    #define  CAM_ADJUSTABLE_ALT_BUTTON      1   // ALT-button can be set from menu
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Help" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_HELP }
     #undef  CAM_HAS_DISP_BUTTON
-    #define CAM_DISP_BUTTON_NAME              "Video"
-    #define SHORTCUT_TOGGLE_RAW               KEY_VIDEO
+    #define CAM_DISP_BUTTON_NAME            "Video"
+    #define SHORTCUT_TOGGLE_RAW             KEY_VIDEO
 
-    #define CAM_HAS_FILEWRITETASK_HOOK        1
-    #define CAM_FILEWRITETASK_SEEKS           1
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+    #define CAM_FILEWRITETASK_SEEKS         1
 
-    #define CAM_HAS_ZOOM_LEVER                1    // Camera has dedicated zoom buttons
-    #define CAM_NEED_SET_ZOOM_DELAY           300  // Define to add a delay after setting the zoom position
-    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS   1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
-    #define CAM_USE_ALT_SET_ZOOM_POINT        1    // Define to use the alternate code in lens_set_zoom_point()
-    #define CAM_USE_ALT_PT_MoveOpticalZoomAt  1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
+    #define CAM_HAS_ZOOM_LEVER              1    // Camera has dedicated zoom buttons
+    #define CAM_NEED_SET_ZOOM_DELAY         300  // Define to add a delay after setting the zoom position
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
+    #define CAM_USE_ALT_SET_ZOOM_POINT      1    // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
-    #define CAM_FILE_COUNTER_IS_VAR           1       // file counter is variable file_counter_var in stubs, not a param
+    #define CAM_FILE_COUNTER_IS_VAR         1       // file counter is variable file_counter_var in stubs, not a param
 
-    #define CAM_QUALITY_OVERRIDE              1
+    #define CAM_QUALITY_OVERRIDE            1
 
     #undef  CAM_USB_EVENTID
-    #define CAM_USB_EVENTID                    0x202   // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
-    #define MKDIR_RETURN_ONE_ON_SUCCESS        1       // mkdir() return 1 on success, 0 on fail.
+    #define CAM_USB_EVENTID                 0x202   // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
+    #define MKDIR_RETURN_ONE_ON_SUCCESS     1       // mkdir() return 1 on success, 0 on fail.
 
-    #define REMOTE_SYNC_STATUS_LED    0xC0220120       //specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED          0xC0220120  //specifies an LED that turns on while camera waits for USB remote to sync
 
     #undef  CAM_AF_LED
-    #define CAM_AF_LED                          2      // Index of AF led in camera_set_led function
+    #define CAM_AF_LED                      2      // Index of AF led in camera_set_led function
 
     #undef  CAM_KEY_PRESS_DELAY
-    #define CAM_KEY_PRESS_DELAY                120  // delay after a press - Required by zoom_in/zoom_out buttons
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define CAM_KEY_PRESS_DELAY             120  // delay after a press - Required by zoom_in/zoom_out buttons
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

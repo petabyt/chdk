@@ -41,9 +41,9 @@
     #undef  CAM_HAS_IS
 
     #define CAM_EV_IN_VIDEO                 1 //but not very reliable...
-    
+
     #define CAM_DNG_LENS_INFO               { 54,10, 173,10, 28,10, 51,10 } // See comments in camera.h
-    
+
     // pattern
     #define cam_CFAPattern                  0x02010100 // Red  Green  Green  Blue
     // color
@@ -69,29 +69,27 @@
     // camera name
     #define PARAM_CAMERA_NAME               3 // parameter number for GetParameterData
 
-    #define CAM_EXT_TV_RANGE                1
-
     #define CAM_HAS_FILEWRITETASK_HOOK      1
 
 //  #define CAM_MULTIPART                   1
 
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy				// specifies an LED that turns on while camera waits for USB remote to sync
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy                // specifies an LED that turns on while camera waits for USB remote to sync
 
-	// "real" to "market" conversion definitions
-	#define SV96_MARKET_OFFSET          -4          // market-real sv96 conversion value
+    // "real" to "market" conversion definitions
+    #define SV96_MARKET_OFFSET              -4          // market-real sv96 conversion value
 
-	// Conversion values for pow(2,4/96) 'market' to 'real', and pow(2,-4/96) 'real' to 'market'
-	// Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
-	// to the desired multiplication factor as possible within normal ISO range.
-	#define ISO_MARKET_TO_REAL_MULT     8432
-	#define ISO_MARKET_TO_REAL_SHIFT    14
-	#define ISO_MARKET_TO_REAL_ROUND    8192
-	#define ISO_REAL_TO_MARKET_MULT     3979
-	#define ISO_REAL_TO_MARKET_SHIFT    12
-	#define ISO_REAL_TO_MARKET_ROUND    2048
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    // Conversion values for pow(2,4/96) 'market' to 'real', and pow(2,-4/96) 'real' to 'market'
+    // Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
+    // to the desired multiplication factor as possible within normal ISO range.
+    #define ISO_MARKET_TO_REAL_MULT         8432
+    #define ISO_MARKET_TO_REAL_SHIFT        14
+    #define ISO_MARKET_TO_REAL_ROUND        8192
+    #define ISO_REAL_TO_MARKET_MULT         3979
+    #define ISO_REAL_TO_MARKET_SHIFT        12
+    #define ISO_REAL_TO_MARKET_ROUND        2048
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

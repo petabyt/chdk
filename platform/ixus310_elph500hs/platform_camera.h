@@ -49,11 +49,10 @@
     #define CAM_BRACKETING                      1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY              1
-    #define CAM_EXT_TV_RANGE                    1
     //#define CAM_EV_IN_VIDEO                   1
     //#define CAM_SHOW_OSD_IN_SHOOT_MENU        1
     //#define CAM_QUALITY_OVERRIDE              1
-    
+
     #define CAM_HAS_CMOS                        1
     #define CAM_HAS_ND_FILTER                   1
 
@@ -64,7 +63,7 @@
     #define CAM_HAS_VIDEO_BUTTON                1
 
     #undef  DEFAULT_RAW_EXT
-    #define DEFAULT_RAW_EXT                     2   // use .CR2 
+    #define DEFAULT_RAW_EXT                     2   // use .CR2
 
     #undef  CAM_MENU_BORDERWIDTH
     #define CAM_MENU_BORDERWIDTH                70  // Need to leave this much border to avoid overlap with on screen buttons.
@@ -88,9 +87,9 @@
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION          1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
-    #undef CAM_SCREEN_WIDTH
-    #undef CAM_BITMAP_WIDTH
-    #undef CAM_BITMAP_HEIGHT
+    #undef  CAM_SCREEN_WIDTH
+    #undef  CAM_BITMAP_WIDTH
+    #undef  CAM_BITMAP_HEIGHT
     #define CAM_SCREEN_WIDTH                    480 // Width of bitmap screen in CHDK co-ordinates
     #define CAM_BITMAP_WIDTH                    960 // Actual width of bitmap screen in bytes
     #define CAM_BITMAP_HEIGHT                   270 // Actual height of bitmap screen in rows
@@ -105,14 +104,14 @@
 
     #define CAM_DNG_EXPOSURE_BIAS               0,1     // Specify DNG exposure bias value to 0 (to override default of -0.5 in the dng.c code)
 
-    #define	CAM_DNG_LENS_INFO                   { 43,10, 188,10, 20,10, 58,10 } // See comments in camera.h
+    #define CAM_DNG_LENS_INFO                  { 43,10, 188,10, 20,10, 58,10 } // See comments in camera.h
 
     #define cam_CalibrationIlluminant1          1
     #define CAM_COLORMATRIX1    \
     544808, 100000, -174047, 100000, -80399, 100000, \
     -75055, 100000,  440444, 100000,  11367, 100000, \
      -5801, 100000,   71589, 100000, 118914, 100000
-    
+
     #define CAM_DATE_FOLDER_NAMING              0x400
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX     1   // enable fix for camera crash at startup when opening the conf / font files
@@ -130,7 +129,7 @@
     #define CAM_LOAD_CUSTOM_COLORS              1       // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                     0xA2    // Start color index for CHDK colors loaded into camera palette.
 
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                     71      // Override min subject distance
@@ -138,9 +137,9 @@
     #define CAMERA_MAX_DIST                     125392  // Override max subject distance
 
     #define CAM_HAS_FILEWRITETASK_HOOK          1   // file write hook for remote capture etc
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AF                   1
+    #define CAM_SD_OVER_IN_AFL                  1
+    #define CAM_SD_OVER_IN_MF                   1
+
 //--------------------------------------------------

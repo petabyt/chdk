@@ -48,7 +48,7 @@
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
 
     #undef DEFAULT_RAW_EXT
-    #define DEFAULT_RAW_EXT                     2   // use .CR2 
+    #define DEFAULT_RAW_EXT                     2   // use .CR2
 
     #undef  CAM_MENU_BORDERWIDTH
     #define CAM_MENU_BORDERWIDTH                10
@@ -91,22 +91,21 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL           12
 
-    #define CAM_EXT_TV_RANGE                    1
     #define CAM_QUALITY_OVERRIDE                1
 
     // copied from the SX200 which has the same video buffer size
-    #undef CAM_USES_ASPECT_CORRECTION
-    #define CAM_USES_ASPECT_CORRECTION          1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
-    #undef CAM_BITMAP_WIDTH
-    #undef CAM_BITMAP_HEIGHT
+    #undef  CAM_USES_ASPECT_CORRECTION
+    #define CAM_USES_ASPECT_CORRECTION          1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
+    #undef  CAM_BITMAP_WIDTH
+    #undef  CAM_BITMAP_HEIGHT
     #define CAM_BITMAP_WIDTH                    960 // Actual width of bitmap screen in bytes
     #define CAM_BITMAP_HEIGHT                   270 // Actual height of bitmap screen in rows
 
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE                  13
-  
+
     #undef  EDGE_HMARGIN
-    #define EDGE_HMARGIN 2
+    #define EDGE_HMARGIN                        2
 
     #define CAM_DATE_FOLDER_NAMING              0x400
 
@@ -132,8 +131,8 @@
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202   // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
- 
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_HAS_CMOS                        1
 
@@ -150,8 +149,8 @@
     #define SHORTCUT_TOGGLE_ZEBRA               KEY_ERASE   // On camera Shutter Half Press + Up = switch MF on/off
 
     #define CAM_HAS_FILEWRITETASK_HOOK          1   // file write hook for remote capture etc
- 
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AFL                  1
+    #define CAM_SD_OVER_IN_MF                   1
+
 //--------------------------------------------------

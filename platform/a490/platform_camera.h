@@ -41,7 +41,6 @@
     #define CAM_REAR_CURTAIN                1
     #undef  DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                 2   // use .CR2
-    #define CAM_EXT_TV_RANGE                1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_EV_IN_VIDEO                 1
@@ -76,7 +75,7 @@
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX  1    // enable workaround for camera crash at startup when opening the conf / font files
                                                   // see http://chdk.setepontos.com/index.php?topic=6179.0
 
-    #define CAM_DATE_FOLDER_NAMING          0x100 //Value found in the last function, which is called in GetImageFolder. (first compare)
+    #define CAM_DATE_FOLDER_NAMING           0x100 //Value found in the last function, which is called in GetImageFolder. (first compare)
 
     #define CAM_HAS_FILEWRITETASK_HOOK       1
 
@@ -87,14 +86,14 @@
     #define CAM_USE_ALT_SET_ZOOM_POINT       1    // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

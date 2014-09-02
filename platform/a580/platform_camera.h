@@ -46,12 +46,12 @@
     #undef CAM_VIDEO_CONTROL                            // Not working
 
     #define CAM_DNG_LENS_INFO               { 58,10, 232,10, 26,10, 55,10 } // See comments in camera.h
-	
+
     #undef  CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH            10	
-	
-	#define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1	
-	
+    #define CAM_MENU_BORDERWIDTH            10
+
+    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
+
     // pattern
     #define cam_CFAPattern                  0x01000201 // Green  Blue  Red  Green
     // color
@@ -71,24 +71,22 @@
 
     // camera name
     #define PARAM_CAMERA_NAME               4 // parameter number for GetParameterData
-    #define CAM_EXT_TV_RANGE                1 // CHDK can make exposure time longer than 64s
-	
-	#define REMOTE_SYNC_STATUS_LED 	0xc02200C4		// specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define REMOTE_SYNC_STATUS_LED          0xc02200C4  // specifies an LED that turns on while camera waits for USB remote to sync
 
     // Define shortcut overrides where defaults are not suitable
     // Cam has not erase button AND Half press shoot button + Left sets AFL, + Up sets AEL!
     //Alt mode
-    #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
-    #define SHORTCUT_MF_TOGGLE           KEY_UP
+    #define SHORTCUT_TOGGLE_RAW             KEY_DISPLAY
+    #define SHORTCUT_MF_TOGGLE              KEY_UP
     //Half press shoot button
-    #define SHORTCUT_TOGGLE_HISTO        KEY_MENU
-    #define SHORTCUT_TOGGLE_ZEBRA        KEY_DISPLAY
+    #define SHORTCUT_TOGGLE_HISTO           KEY_MENU
+    #define SHORTCUT_TOGGLE_ZEBRA           KEY_DISPLAY
     //Alt mode & Manual mode    
-    #define SHORTCUT_SET_INFINITY        KEY_DISPLAY
-	
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define SHORTCUT_SET_INFINITY           KEY_DISPLAY
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

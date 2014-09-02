@@ -60,8 +60,6 @@
 
     #define CAM_HAS_ND_FILTER               1
 
-    #define CAM_EXT_TV_RANGE                1
-
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
@@ -98,23 +96,23 @@
     #define SHORTCUT_TOGGLE_RAW             KEY_HELP // replacement for 'DISP', note the possible ALT button conflict
 
 
-    #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
-    #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments    
-    #define CAM_NEED_SET_ZOOM_DELAY          300  // Define to add a delay after setting the zoom position
-    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
-    #define CAM_USE_ALT_SET_ZOOM_POINT       1    // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_HAS_ZOOM_LEVER              1    // Camera has dedicated zoom buttons
+    #define CAM_USE_ZOOM_FOR_MF             1    // Zoom lever can be used for manual focus adjustments    
+    #define CAM_NEED_SET_ZOOM_DELAY         300  // Define to add a delay after setting the zoom position
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
+    #define CAM_USE_ALT_SET_ZOOM_POINT      1    // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
-    #define CAM_AF_SCAN_DURING_VIDEO_RECORD  1
+    #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
 
-    #define CAM_QUALITY_OVERRIDE             1
+    #define CAM_QUALITY_OVERRIDE            1
 
     #undef  CAM_USB_EVENTID
-    #define CAM_USB_EVENTID                     0x202   // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
-    #define CAM_MISSING_RAND                 1    // srand()/rand() functions not found in firmware. If defined, CHDK use functions implemented in C
-    #define MKDIR_RETURN_ONE_ON_SUCCESS      1    // mkdir() return 1 on success, 0 on fail.
+    #define CAM_USB_EVENTID                 0x202   // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
+    #define CAM_MISSING_RAND                1    // srand()/rand() functions not found in firmware. If defined, CHDK use functions implemented in C
+    #define MKDIR_RETURN_ONE_ON_SUCCESS     1    // mkdir() return 1 on success, 0 on fail.
 
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// TODO specifies an LED that turns on while camera waits for USB remote to sync
- 
-    #define CAM_SD_OVER_IN_AF  1
- 
+//    #define REMOTE_SYNC_STATUS_LED     0xC0220130        // TODO specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_SD_OVER_IN_AF               1
+
 //--------------------------------------------------

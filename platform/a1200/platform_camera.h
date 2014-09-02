@@ -64,8 +64,6 @@
 
     #define CAM_HAS_ND_FILTER               1
 
-    #define CAM_EXT_TV_RANGE                1
-
     #define CAM_VIDEO_QUALITY_ONLY          1
 
     #define DNG_VERT_RLE_BADPIXELS          1
@@ -86,7 +84,7 @@
 
     #undef  CAM_VIDEO_CONTROL
 
-    #define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
+    #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
 
     #define CAM_CAN_MUTE_MICROPHONE         1
 
@@ -107,7 +105,6 @@
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Face", "Disp" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_FACE, KEY_DISPLAY }
 
-
     #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
     #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments
     #define CAM_NEED_SET_ZOOM_DELAY          300  // Define to add a delay after setting the zoom position
@@ -115,15 +112,14 @@
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
 
-
     #undef  CAM_AF_LED                            // AF Lamp index for camera_set_led()
     #define CAM_AF_LED                       2    //
 
     #define CAM_REMOTE_USES_PRECISION_SYNC   1    // USB remote precision sync patch works with this camera
     #define CAM_ALLOWS_USB_PORT_FORCING      1    // USB remote state can be forced to be present
     #define GPIO_VSYNC_CURRENT               0xC0F070C8  // vsync current status register used by USB remote precision sync
- 
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AFL               1
+    #define CAM_SD_OVER_IN_MF                1
+
 //--------------------------------------------------

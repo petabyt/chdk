@@ -53,8 +53,8 @@
     #define CAM_ACTIVE_AREA_X2              2628
     #define CAM_ACTIVE_AREA_Y2              1968
     #define DNG_EXT_FROM                    ".DPS"
-	
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
     // Keyboard repeat and initial delays
     #undef  KBD_REPEAT_DELAY
@@ -62,26 +62,23 @@
     #undef  KBD_INITIAL_DELAY
     #define KBD_INITIAL_DELAY               300
 
-	// "real" to "market" conversion definitions
-	#define SV96_MARKET_OFFSET          0           // market-real sv96 conversion value
+    // "real" to "market" conversion definitions
+    #define SV96_MARKET_OFFSET              0           // market-real sv96 conversion value
 
-	// Conversion values for 'no' conversion required
-	// Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
-	// to the desired multiplication factor as possible within normal ISO range.
-	#define ISO_MARKET_TO_REAL_MULT     2
-	#define ISO_MARKET_TO_REAL_SHIFT    1
-	#define ISO_MARKET_TO_REAL_ROUND    0
-	#define ISO_REAL_TO_MARKET_MULT     2
-	#define ISO_REAL_TO_MARKET_SHIFT    1
-	#define ISO_REAL_TO_MARKET_ROUND    0
+    // Conversion values for 'no' conversion required
+    // Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
+    // to the desired multiplication factor as possible within normal ISO range.
+    #define ISO_MARKET_TO_REAL_MULT         2
+    #define ISO_MARKET_TO_REAL_SHIFT        1
+    #define ISO_MARKET_TO_REAL_ROUND        0
+    #define ISO_REAL_TO_MARKET_MULT         2
+    #define ISO_REAL_TO_MARKET_SHIFT        1
+    #define ISO_REAL_TO_MARKET_ROUND        0
 
     #define PARAM_CAMERA_NAME               3    // Found @0xff95fd90
 
-
-    #define CAM_EXT_TV_RANGE                1
-
     #define CAM_HAS_FILEWRITETASK_HOOK      1
- 
+
     // Warning : no know SD override method for this camera
- 
+
 //--------------------------------------------------

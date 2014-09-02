@@ -45,8 +45,6 @@
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
 
-    #define CAM_EXT_TV_RANGE                1
-
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000
 
@@ -56,10 +54,9 @@
     #define CAM_LOAD_CUSTOM_COLORS          1      // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                 0xE2   // Start color index for CHDK colors loaded into camera palette.
 
-
-    #define CAM_QUALITY_OVERRIDE 1
-    #undef CAM_SENSOR_BITS_PER_PIXEL
-    #define CAM_SENSOR_BITS_PER_PIXEL   12
+    #define CAM_QUALITY_OVERRIDE            1
+    #undef  CAM_SENSOR_BITS_PER_PIXEL
+    #define CAM_SENSOR_BITS_PER_PIXEL       12
 
     #define CAM_DNG_LENS_INFO               { 59,10, 179,10, 32,10, 58,10 } // See comments in camera.h
     // pattern
@@ -103,10 +100,10 @@
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
-	#define REMOTE_SYNC_STATUS_LED 	0xC0220128		// specifies an LED that turns on while camera waits for USB remote to sync
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define REMOTE_SYNC_STATUS_LED          0xC0220128  // specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

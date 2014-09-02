@@ -26,8 +26,8 @@
     #define CAM_DRYOS_2_3_R39               1
     #define CAM_DRYOS_2_3_R47               1
 
-    #define CAM_RAW_ROWPIX    				4416 // a3200 Found @0xff93a144
-	#define CAM_RAW_ROWS      				3296 // a3200 Found @0xff93a14c
+    #define CAM_RAW_ROWPIX                  4416 // a3200 Found @0xff93a144
+    #define CAM_RAW_ROWS                    3296 // a3200 Found @0xff93a14c
 
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000  // a3200 Found @0xff83a6c0  
@@ -39,10 +39,10 @@
 //ffb20c48:       e3a00d45        mov     r0, #4416       ; 0x1140
 //ffb20c4c:       e5810000        str     r0, [r1]
 //ffb20c50:       e3a00ece        mov     r0, #3296       ; 0xce0
-    #define CAM_ACTIVE_AREA_X1              96		// 
-    #define CAM_ACTIVE_AREA_Y1              56		//
-    #define CAM_ACTIVE_AREA_X2              4416	//	a3200 found @ffb20c48
-    #define CAM_ACTIVE_AREA_Y2              3296	//	a3200 found @ffb20c50
+    #define CAM_ACTIVE_AREA_X1              96        // 
+    #define CAM_ACTIVE_AREA_Y1              56        //
+    #define CAM_ACTIVE_AREA_X2              4416    //    a3200 found @ffb20c48
+    #define CAM_ACTIVE_AREA_Y2              3296    //    a3200 found @ffb20c50
 
     #define DNG_VERT_RLE_BADPIXELS          1
     #define CAM_DNG_LENS_INFO               { 50,10, 250,10, 28,10, 59,10 } // See comments in camera.h   a3300is
@@ -69,7 +69,7 @@
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_CAN_MUTE_MICROPHONE         1
 
-    #define CAM_ZEBRA_NOBUF                 1		// ??
+    #define CAM_ZEBRA_NOBUF                 1        // ??
 
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
 
@@ -82,8 +82,6 @@
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1       // ??
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1       // ??
-
-    #define CAM_EXT_TV_RANGE                1
 
     #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
     #define CAM_HAS_MOVIE_DIGEST_MODE       1       // no, it doesn't, but movie_status is 6 in movie mode idle
@@ -100,26 +98,26 @@
     #define CHDK_COLOR_BASE                 0xE0    // Start color index for CHDK colors loaded into camera palette.
     #define CAM_LOAD_CUSTOM_COLORS
 
-    #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
-    #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments    
-    #define CAM_NEED_SET_ZOOM_DELAY          300  // Define to add a delay after setting the zoom position
-    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
+    #define CAM_HAS_ZOOM_LEVER              1    // Camera has dedicated zoom buttons
+    #define CAM_USE_ZOOM_FOR_MF             1    // Zoom lever can be used for manual focus adjustments    
+    #define CAM_NEED_SET_ZOOM_DELAY         300  // Define to add a delay after setting the zoom position
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Face", "Disp"}
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_FACE, KEY_DISPLAY }
 
-    #define CAM_HAS_FILEWRITETASK_HOOK       1
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
 
     // Define shortcut overrides where defaults are not suitable
     // a3200 has no erase button, so make DISP button the toggle_raw and Alt +/- shortcuts.
     //Alt mode
     // NOTE both of these conflict with adjustable alt
-    #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
-    #define SHORTCUT_MF_TOGGLE           KEY_FACE
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define SHORTCUT_TOGGLE_RAW             KEY_DISPLAY
+    #define SHORTCUT_MF_TOGGLE              KEY_FACE
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

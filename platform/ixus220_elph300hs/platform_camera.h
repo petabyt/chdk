@@ -21,7 +21,7 @@
 // don't override them again in here.
 
     #define CAM_DRYOS_2_3_R47               1
-    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1
+    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE 1
     #define DNG_VERT_RLE_BADPIXELS          1
     #define CAM_AV_OVERRIDE_IRIS_FIX        1       // for cameras that require _MoveIrisWithAv function to override Av.
     #undef  CAM_KEY_PRESS_DELAY
@@ -51,14 +51,14 @@
 
     #define CAM_DNG_LENS_INFO               { 43,10, 215,10, 27,10, 59,10 } // See comments in camera.h
     #define cam_CFAPattern  0x02010100
-  
+
     #define CAM_COLORMATRIX1    \
     544808, 1000000, -174047, 1000000, -80399, 1000000, \
     -75055, 1000000,  440444, 1000000,  11367, 1000000, \
      -5801, 1000000,   71589, 1000000, 118914, 1000000
-    
+
     #define cam_CalibrationIlluminant1      1
-   
+
     #define CAM_JPEG_WIDTH                  4000
     #define CAM_JPEG_HEIGHT                 3000
     #define CAM_ACTIVE_AREA_X1              120
@@ -68,7 +68,6 @@
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
-    #define CAM_EXT_TV_RANGE                1
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              10
     #undef  CAM_HAS_ERASE_BUTTON
@@ -76,10 +75,10 @@
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
-    #undef CAM_BITMAP_WIDTH
-    #undef CAM_BITMAP_HEIGHT
-    #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
-    #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
+    #undef  CAM_BITMAP_WIDTH
+    #undef  CAM_BITMAP_HEIGHT
+    #define CAM_BITMAP_WIDTH                960     // Actual width of bitmap screen in bytes
+    #define CAM_BITMAP_HEIGHT               270     // Actual height of bitmap screen in rows
 
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                    10
@@ -92,19 +91,19 @@
 
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #undef  CAM_HAS_MANUAL_FOCUS
-    
-    #define CAM_USE_ALT_SET_ZOOM_POINT      1   // Define to use the alternate code in lens_set_zoom_point()
-    #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1  // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
+
+    #define CAM_USE_ALT_SET_ZOOM_POINT      1       // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1      // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
     #define CAM_HAS_CMOS                    1
-	
-	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// specifies an LED that turns on while camera waits for USB remote to sync
-	
-    #define CAM_CHDK_HAS_EXT_VIDEO_TIME     	1	
-    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define REMOTE_SYNC_STATUS_LED          0xC0220130  // specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
+    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY 1     // Draw pixels on active bitmap buffer only.
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

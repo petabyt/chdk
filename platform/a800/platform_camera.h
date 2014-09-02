@@ -22,15 +22,14 @@
 
     #define CAM_PROPSET                     4  //processor DIGIC III, but release date (Phil) and properties like PROPCASE_OPTICAL_ZOOM_POSITION, PROPCASE_SHOOTING,PROPCASE_IS_FLASH_READY as propset4.h
     #define CAM_DRYOS                       1
-    #define CAM_DRYOS_2_3_R39 				1 // Defined for cameras with DryOS version R39 or higher
-	#define CAM_DRYOS_2_3_R47 				1 // Defined for cameras with DryOS version R47 or higher
+    #define CAM_DRYOS_2_3_R39               1 // Defined for cameras with DryOS version R39 or higher
+    #define CAM_DRYOS_2_3_R47               1 // Defined for cameras with DryOS version R47 or higher
 
     #define CAM_RAW_ROWPIX                  3720 //do stub_entry.S
     #define CAM_RAW_ROWS                    2772 //do stub_entry.S
-	#undef  CAM_UNCACHED_BIT
-	#define CAM_UNCACHED_BIT  0x10000000 // Found @0xffc29904
+    #undef  CAM_UNCACHED_BIT
+    #define CAM_UNCACHED_BIT  0x10000000 // Found @0xffc29904
 
-	
     #undef  CAM_USE_ZOOM_FOR_MF  //zoom with buton and not lever
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_IRIS_DIAPHRAGM
@@ -43,11 +42,10 @@
     #define CAM_REAR_CURTAIN                1
     #undef  DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                 2   // use .CR2
-    #define CAM_EXT_TV_RANGE                1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_EV_IN_VIDEO                 1
-	#define CAM_QUALITY_OVERRIDE            1
+    #define CAM_QUALITY_OVERRIDE            1
 
     #undef CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              8
@@ -76,7 +74,7 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-	#define CAM_STARTUP_CRASH_FILE_OPEN_FIX    1     // enable workaround for camera crash at startup when opening the conf / font files
+    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1     // enable workaround for camera crash at startup when opening the conf / font files
                                                     // see http://chdk.setepontos.com/index.php?topic=6179.0
 
     #define CAM_DATE_FOLDER_NAMING          0x400 //Value found in the last function, which is called in GetImageFolder. (first compare)
@@ -85,15 +83,15 @@
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-    #define CAM_NEED_SET_ZOOM_DELAY          300  // Define to add a delay after setting the zoom position    
-    #define CAM_USE_ALT_SET_ZOOM_POINT       1    // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_NEED_SET_ZOOM_DELAY         300  // Define to add a delay after setting the zoom position    
+    #define CAM_USE_ALT_SET_ZOOM_POINT      1    // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
-    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
  
-    #define CAM_MISSING_RAND                 1    // srand()/rand() functions not found in firmware. If defined, CHDK use functions implemented in C
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define CAM_MISSING_RAND                1    // srand()/rand() functions not found in firmware. If defined, CHDK use functions implemented in C
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

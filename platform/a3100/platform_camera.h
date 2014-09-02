@@ -64,7 +64,6 @@
     #define CAM_ACTIVE_AREA_Y2              3038
 
     #undef  CAM_HAS_MANUAL_FOCUS
-    #define CAM_EXT_TV_RANGE                1
 
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
@@ -73,9 +72,9 @@
     #define CAM_DATE_FOLDER_NAMING          0x100   // Camera uses date for naming image folders
 
 
-   #define CAM_STARTUP_CRASH_FILE_OPEN_FIX    1     // enable workaround for camera crash at startup when opening the conf / font files
+   #define CAM_STARTUP_CRASH_FILE_OPEN_FIX  1     // enable workaround for camera crash at startup when opening the conf / font files
 
-    #define REMOTE_SYNC_STATUS_LED 	0xC0220010		// specifies the power led as the LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED          0xC0220010        // specifies the power led as the LED that turns on while camera waits for USB remote to sync
 
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
     
@@ -85,9 +84,9 @@
 
     #undef CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              17
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

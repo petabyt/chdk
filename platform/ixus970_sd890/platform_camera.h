@@ -36,7 +36,6 @@
     #define CAM_MULTIPART                   1
     #define CAM_HAS_JOGDIAL                 1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
-    #define CAM_EXT_TV_RANGE                1
 
     #define CAM_DNG_LENS_INFO               { 66,10, 330,10, 32,10, 57,10 } // See comments in camera.h
     // pattern
@@ -64,11 +63,10 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-	#define REMOTE_SYNC_STATUS_LED 	0xc02200D4		// specifies an LED that turns on while camera waits for USB remote to sync
-	
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define REMOTE_SYNC_STATUS_LED          0xc02200D4  // specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

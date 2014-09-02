@@ -43,18 +43,16 @@
     #define CAM_BRACKETING                  1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
-    #define CAM_EXT_TV_RANGE                1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_HAS_MOVIE_DIGEST_MODE       1
-	//#define CAM_EV_IN_VIDEO               1
+    //#define CAM_EV_IN_VIDEO               1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #define CAM_QUALITY_OVERRIDE            1
 
-    #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
-//    #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments    
-    #define CAM_NEED_SET_ZOOM_DELAY          100  // Define to add a delay after setting the zoom position
-    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
-
+    #define CAM_HAS_ZOOM_LEVER              1    // Camera has dedicated zoom buttons
+//    #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments
+    #define CAM_NEED_SET_ZOOM_DELAY         100  // Define to add a delay after setting the zoom position
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
 
     #define CAM_HAS_CMOS                    1
     #define CAM_HAS_ND_FILTER               1
@@ -62,7 +60,7 @@
     #undef  CAM_HAS_IRIS_DIAPHRAGM
 
     #undef  CAM_HAS_ERASE_BUTTON
-    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1
+    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE 1
     #define DNG_VERT_RLE_BADPIXELS          1
     #define CAM_AV_OVERRIDE_IRIS_FIX        1       // for cameras that require _MoveIrisWithAv function to override Av.
     #undef  CAM_KEY_PRESS_DELAY
@@ -71,13 +69,12 @@
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video", "Set+ZoomIn" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_VIDEO, KEY_SET | KEY_ZOOM_IN }
 
-    
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  DNG_BADPIXEL_VALUE_LIMIT
     #define DNG_BADPIXEL_VALUE_LIMIT        16      // Camera sensor apparently has bad pixels with value > 0 & <=16
 
     #define CAM_DNG_LENS_INFO               { 50,10, 200,10, 28,10, 59,10 } // See comments in camera.h
-    #define cam_CFAPattern  0x02010100
+    #define cam_CFAPattern                  0x02010100
 
     #define CAM_COLORMATRIX1    \
     544808, 1000000, -174047, 1000000, -80399, 1000000, \
@@ -111,16 +108,15 @@
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
-
-    #define REMOTE_SYNC_STATUS_LED 	0xC0220130   // specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED          0xC0220130   // specifies an LED that turns on while camera waits for USB remote to sync
 
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 //    see http://chdk.setepontos.com/index.php/topic,3994.405.html
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

@@ -45,8 +45,6 @@
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
 
-    #define CAM_EXT_TV_RANGE                1
-
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000
 
@@ -90,7 +88,7 @@
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
-	#define REMOTE_SYNC_STATUS_LED 	0xc0220134		// specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED          0xc0220134  // specifies an LED that turns on while camera waits for USB remote to sync
 
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                 30      // Override min subject distance
@@ -98,14 +96,14 @@
     #define CAMERA_MAX_DIST                 193731  // Override max subject distance
 
     #undef CAM_AF_LED
-    #define CAM_AF_LED                       2
+    #define CAM_AF_LED                      2
 
     #define CAM_HAS_FILEWRITETASK_HOOK      1       // file write hook for remote capture etc
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
 
-    #define CAM_ALLOWS_USB_PORT_FORCING      1    // USB remote state can be forced to be present
- 
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
+    #define CAM_ALLOWS_USB_PORT_FORCING     1    // USB remote state can be forced to be present
+
 //--------------------------------------------------

@@ -20,50 +20,49 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-	#define CAM_PROPSET					1
+    #define CAM_PROPSET                     1
 
-	#define CAM_RAW_ROWPIX					2392  // for 4 MP 1/3" sensor size
-	#define CAM_RAW_ROWS					1752  // for 4 MP 1/3" sensor size
+    #define CAM_RAW_ROWPIX                  2392  // for 4 MP 1/3" sensor size
+    #define CAM_RAW_ROWS                    1752  // for 4 MP 1/3" sensor size
 
-	#undef  CAM_USE_ZOOM_FOR_MF
-	#undef  CAM_HAS_ZOOM_LEVER
-	#define CAM_DRAW_EXPOSITION				1
-	#undef  CAM_HAS_ERASE_BUTTON
-	#define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #undef  CAM_USE_ZOOM_FOR_MF
+    #undef  CAM_HAS_ZOOM_LEVER
+    #define CAM_DRAW_EXPOSITION             1
+    #undef  CAM_HAS_ERASE_BUTTON
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_ALT_BUTTON_NAMES            { "Print", "Display" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_DISPLAY }
 
-	#undef  CAM_HAS_IRIS_DIAPHRAGM
-	#define CAM_HAS_ND_FILTER				1
-	#undef  CAM_HAS_MANUAL_FOCUS
-	#undef  CAM_HAS_USER_TV_MODES
-	#define CAM_SHOW_OSD_IN_SHOOT_MENU		1
-	#undef  CAM_HAS_IS
-	#define CAM_AF_SCAN_DURING_VIDEO_RECORD		1
-	#define CAM_EV_IN_VIDEO				1
-	#define CAM_DNG_LENS_INFO	{ 54,10, 173,10, 28,10, 51,10 } // See comments in camera.h
-	// pattern
-	#define cam_CFAPattern 0x01000201  // Green Blue Red Green
-	// color
-	#define CAM_COLORMATRIX1                                \
+    #undef  CAM_HAS_IRIS_DIAPHRAGM
+    #define CAM_HAS_ND_FILTER               1
+    #undef  CAM_HAS_MANUAL_FOCUS
+    #undef  CAM_HAS_USER_TV_MODES
+    #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
+    #undef  CAM_HAS_IS
+    #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
+    #define CAM_EV_IN_VIDEO                 1
+    #define CAM_DNG_LENS_INFO               { 54,10, 173,10, 28,10, 51,10 } // See comments in camera.h
+    // pattern
+    #define cam_CFAPattern 0x01000201  // Green Blue Red Green
+    // color
+    #define CAM_COLORMATRIX1                                \
       479627,  1000000, -156240, 1000000,  -84926, 1000000, \
      -215238,  1000000,  534902, 1000000,   60219, 1000000, \
       -96906,  1000000,  148194, 1000000,  191583, 1000000
 
-	#define cam_CalibrationIlluminant1		1 // Daylight
-	// cropping
-	#define CAM_JPEG_WIDTH			2272
-	#define CAM_JPEG_HEIGHT			1704
-	#define CAM_ACTIVE_AREA_X1		0
-	#define CAM_ACTIVE_AREA_Y1		8
-	#define CAM_ACTIVE_AREA_X2		2336
-	#define CAM_ACTIVE_AREA_Y2		1748
-	// camera name
-	#define PARAM_CAMERA_NAME		3 // parameter number for GetParameterData
-	#define CAM_EXT_TV_RANGE		1
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define cam_CalibrationIlluminant1      1 // Daylight
+    // cropping
+    #define CAM_JPEG_WIDTH                  2272
+    #define CAM_JPEG_HEIGHT                 1704
+    #define CAM_ACTIVE_AREA_X1              0
+    #define CAM_ACTIVE_AREA_Y1              8
+    #define CAM_ACTIVE_AREA_X2              2336
+    #define CAM_ACTIVE_AREA_Y2              1748
+    // camera name
+    #define PARAM_CAMERA_NAME               3 // parameter number for GetParameterData
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

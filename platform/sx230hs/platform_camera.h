@@ -20,7 +20,7 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1
+    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE 1
     #define DNG_VERT_RLE_BADPIXELS          1
     #define CAM_AV_OVERRIDE_IRIS_FIX        1
     #undef  CAM_KEY_PRESS_DELAY
@@ -30,7 +30,7 @@
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
-    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
+    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY 1   // Draw pixels on active bitmap buffer only.
 
     #undef  CAM_AF_LED
     #define CAM_AF_LED                      1
@@ -52,7 +52,7 @@
     #define CAM_VIDEO_QUALITY_ONLY          1
 
     #undef  CAM_VIDEO_CONTROL
-   
+
     #define CAM_HAS_JOGDIAL                 1
     #undef  CAM_USE_ZOOM_FOR_MF
 
@@ -81,8 +81,6 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-    #define CAM_EXT_TV_RANGE                1
-    
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              13
     #define CAM_LOAD_CUSTOM_COLORS          1           // Enable loading CHDK colors into the camera palette memory
@@ -107,7 +105,7 @@
     #define CAM_ZEBRA_NOBUF                 1
 
     #define CAM_QUALITY_OVERRIDE            1
-    
+
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
     #undef  CAMERA_MIN_DIST
@@ -122,11 +120,11 @@
 
     #define REMOTE_SYNC_STATUS_LED          0xC0220130  // specifies an LED that turns on while camera waits for USB remote to sync
 
-    #define CAM_HAS_MOVIE_DIGEST_MODE       1 
+    #define CAM_HAS_MOVIE_DIGEST_MODE       1
 
-    #define CAM_HAS_FILEWRITETASK_HOOK          1   // file write hook for remote capture etc
- 
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define CAM_HAS_FILEWRITETASK_HOOK      1   // file write hook for remote capture etc
+
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

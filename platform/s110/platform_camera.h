@@ -21,9 +21,9 @@
 // don't override them again in here.
 
     #define CAM_PROPSET                         5
-    #define CAM_DRYOS         1
-    #define CAM_DRYOS_2_3_R39 1 // Defined for cameras with DryOS version R39 or higher
-    #define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher
+    #define CAM_DRYOS                           1
+    #define CAM_DRYOS_2_3_R39                   1 // Defined for cameras with DryOS version R39 or higher
+    #define CAM_DRYOS_2_3_R47                   1 // Defined for cameras with DryOS version R47 or higher
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only. Requires active_bitmap_buffer location in stubs_min.S or stubs_entry.S.
 
@@ -37,8 +37,8 @@
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
 
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
-    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video", "Display" }
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_VIDEO, KEY_DISPLAY }
+    #define CAM_ALT_BUTTON_NAMES                { "Playback", "Video", "Display" }
+    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PLAYBACK, KEY_VIDEO, KEY_DISPLAY }
 
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                1
@@ -50,12 +50,12 @@
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
 
     #undef DEFAULT_RAW_EXT
-    #define DEFAULT_RAW_EXT                     2   // use .CR2 
+    #define DEFAULT_RAW_EXT                     2   // use .CR2
 
     #undef  CAM_MENU_BORDERWIDTH
     #define CAM_MENU_BORDERWIDTH                10
 
-    #define CAM_DNG_LENS_INFO               { 52,10, 260,10, 20,10, 59,10 }
+    #define CAM_DNG_LENS_INFO                   { 52,10, 260,10, 20,10, 59,10 }
 
     // From S110 native RAW file as converted to DNG using Adobe DNG Converter
     // http://www.adobe.com/support/downloads/product.jsp?product=106&platform=Windows
@@ -86,10 +86,10 @@
       6304, 10000,   4163, 10000,   -825, 10000, \
       2185, 10000,  11354, 10000,  -3539, 10000, \
        -54, 10000,  -1114, 10000,   9419, 10000
-    #define CAM_DNG_EXPOSURE_BIAS -3,4 // EXIF: Baseline Exposure
+    #define CAM_DNG_EXPOSURE_BIAS               -3,4 // EXIF: Baseline Exposure
 
-    #define CAM_RAW_ROWPIX    4160 // Found @0xf81fdae4
-    #define CAM_RAW_ROWS      3124 // Found @0xf81fdaec
+    #define CAM_RAW_ROWPIX                      4160 // Found @0xf81fdae4
+    #define CAM_RAW_ROWS                        3124 // Found @0xf81fdaec
 
     #define CAM_JPEG_WIDTH                      4034
     #define CAM_JPEG_HEIGHT                     3040
@@ -108,13 +108,12 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL           12
 
-    #define CAM_EXT_TV_RANGE                    1
     #define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
     #define CAM_QUALITY_OVERRIDE                1
     #define CAM_REAR_CURTAIN                    1
 
     #undef CAM_USES_ASPECT_CORRECTION
-    #define CAM_USES_ASPECT_CORRECTION          1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
+    #define CAM_USES_ASPECT_CORRECTION          1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
     #undef CAM_BITMAP_WIDTH
     #undef CAM_BITMAP_HEIGHT
     #define CAM_BITMAP_WIDTH                    960     // Actual width of bitmap screen in bytes
@@ -122,7 +121,7 @@
 
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE                  13
-  
+
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN 2
 
@@ -146,8 +145,8 @@
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202   // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
- 
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_HAS_CMOS                        1
 
@@ -159,12 +158,12 @@
     #define MKDIR_RETURN_ONE_ON_SUCCESS         1       // mkdir() return 1 on success, 0 on fail.
 
     // Define shortcut overrides where defaults are not suitable
-    #define SHORTCUT_TOGGLE_ZEBRA           KEY_ERASE   // On camera Shutter Half Press + Up = switch MF on/off
+    #define SHORTCUT_TOGGLE_ZEBRA               KEY_ERASE   // On camera Shutter Half Press + Up = switch MF on/off
 
-    #define CAM_HAS_FILEWRITETASK_HOOK                  1
-    #define CAM_FILEWRITETASK_SEEKS                     1
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define CAM_HAS_FILEWRITETASK_HOOK          1
+    #define CAM_FILEWRITETASK_SEEKS             1
+
+    #define CAM_SD_OVER_IN_AF                   1
+    #define CAM_SD_OVER_IN_MF                   1
+
 //--------------------------------------------------

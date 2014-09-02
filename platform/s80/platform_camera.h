@@ -29,7 +29,7 @@
 
     #undef  CAM_HAS_MANUAL_FOCUS                  // needed, SD override is misbehaving in MF
 
-    #undef  CAM_HAS_IS    
+    #undef  CAM_HAS_IS
     #define CAM_CAN_MUTE_MICROPHONE             1
     #define CAM_EV_IN_VIDEO                     1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
@@ -60,26 +60,25 @@
     // camera name
     #define PARAM_CAMERA_NAME                   3 // parameter number for GetParameterData
     #define DNG_EXT_FROM                        ".DPS"
-    #define CAM_EXT_TV_RANGE                    1
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1
     #undef  CAM_AF_LED
     #define CAM_AF_LED                          9   // Index of AF led in camera_set_led function
 
-	// "real" to "market" conversion definitions
-	#define SV96_MARKET_OFFSET          20          // market-real sv96 conversion value
+    // "real" to "market" conversion definitions
+    #define SV96_MARKET_OFFSET                  20          // market-real sv96 conversion value
 
-	// Conversion values for pow(2,-20/96) 'market' to 'real', and pow(2,20/96) 'real' to 'market'
-	// Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
-	// to the desired multiplication factor as possible within normal ISO range.
-	#define ISO_MARKET_TO_REAL_MULT     3545
-	#define ISO_MARKET_TO_REAL_SHIFT    12
-	#define ISO_MARKET_TO_REAL_ROUND    2048
-	#define ISO_REAL_TO_MARKET_MULT     9465
-	#define ISO_REAL_TO_MARKET_SHIFT    13
-	#define ISO_REAL_TO_MARKET_ROUND    4096
- 
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    // Conversion values for pow(2,-20/96) 'market' to 'real', and pow(2,20/96) 'real' to 'market'
+    // Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
+    // to the desired multiplication factor as possible within normal ISO range.
+    #define ISO_MARKET_TO_REAL_MULT             3545
+    #define ISO_MARKET_TO_REAL_SHIFT            12
+    #define ISO_MARKET_TO_REAL_ROUND            2048
+    #define ISO_REAL_TO_MARKET_MULT             9465
+    #define ISO_REAL_TO_MARKET_SHIFT            13
+    #define ISO_REAL_TO_MARKET_ROUND            4096
+
+    #define CAM_SD_OVER_IN_AFL                  1
+    #define CAM_SD_OVER_IN_MF                   1
+
 //--------------------------------------------------

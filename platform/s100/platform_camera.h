@@ -20,13 +20,13 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define CAM_DRYOS         1
-    #define CAM_DRYOS_2_3_R39 1 // Defined for cameras with DryOS version R39 or higher
-    #define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher
-    #define CAM_RAW_ROWPIX    4160 // Found @0xff190f44
-    #define CAM_RAW_ROWS      3124 // Found @0xff190f4c
+    #define CAM_DRYOS                       1
+    #define CAM_DRYOS_2_3_R39               1 // Defined for cameras with DryOS version R39 or higher
+    #define CAM_DRYOS_2_3_R47               1 // Defined for cameras with DryOS version R47 or higher
+    #define CAM_RAW_ROWPIX                  4160 // Found @0xff190f44
+    #define CAM_RAW_ROWS                    3124 // Found @0xff190f4c
     #undef  CAM_UNCACHED_BIT
-    #define CAM_UNCACHED_BIT  0x40000000 // Found @0xff02bd84
+    #define CAM_UNCACHED_BIT                0x40000000 // Found @0xff02bd84
     #define CAM_PROPSET                     4
     #define CAM_DRYOS                       1
     #undef  CAM_USE_ZOOM_FOR_MF
@@ -46,7 +46,6 @@
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
-    #define CAM_EXT_TV_RANGE                1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
     // camera name
@@ -75,8 +74,8 @@
     // http://www.adobe.com/support/downloads/product.jsp?product=106&platform=Windows
     // Matrices from converted DNG's EXIF data
     #define cam_CFAPattern                  0x02010100 // = [Red,Green][Green,Blue]
-    #define cam_CalibrationIlluminant1          17      // Standard Light A
-    #define cam_CalibrationIlluminant2          21      // D65
+    #define cam_CalibrationIlluminant1      17      // Standard Light A
+    #define cam_CalibrationIlluminant2      21      // D65
     #define CAM_COLORMATRIX1    \
       9188, 10000,  -3882, 10000,   -248, 10000, \
      -2564, 10000,   9818, 10000,   3218, 10000, \
@@ -106,22 +105,22 @@
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1   // enable workaround for camera crash at startup when opening the conf / font files
                                                 // see http://chdk.setepontos.com/index.php?topic=6179.0
 
-    #define CAM_DATE_FOLDER_NAMING                      0x400
+    #define CAM_DATE_FOLDER_NAMING          0x400
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
     #undef  CAM_USB_EVENTID
-    #define CAM_USB_EVENTID         0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
+    #define CAM_USB_EVENTID                 0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
 
-	#define REMOTE_SYNC_STATUS_LED 	0xC022C30C // specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED          0xC022C30C // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_HAS_GPS                     1
 
     #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #undef CAM_AF_SCAN_DURING_VIDEO_RECORD
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------
