@@ -22,7 +22,9 @@ long lens_get_target_distance()
 int DoMFLock(void)
 {
   if (!camera_info.state.mode_play) {
-     _MFOn();
+     int mf_lock;
+     get_property_case(PROPCASE_FOCUS_MODE,&mf_lock,sizeof(mf_lock));
+     if( mf_lock == 0 ) PostLogicalEventForNotPowerType(levent_id_for_name("PressSw1AndMF"),0);
      return(1);
   }
   return(0);
@@ -31,7 +33,9 @@ int DoMFLock(void)
 int UnlockMF(void)
 {
   if (!camera_info.state.mode_play) {
-     _MFOff();
+     int mf_lock;
+     get_property_case(PROPCASE_FOCUS_MODE,&mf_lock,sizeof(mf_lock));
+     if( mf_lock == 1 ) PostLogicalEventForNotPowerType(levent_id_for_name("PressSw1AndMF"),0);
      return(1);
   }
   return(0);

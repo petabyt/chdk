@@ -66,10 +66,6 @@
 
     #define CAM_USB_EVENTID_VXWORKS         0x10a5 // LogicalEvent ID for ConnectUSBCable, needed to enable USB mode switch 
 
-    // Warning : SD override for this camera with these values has not been tested
-    #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
+    // Warning : no know SD override for this camera
  
 //--------------------------------------------------

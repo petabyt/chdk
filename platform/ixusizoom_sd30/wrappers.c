@@ -21,18 +21,10 @@ long lens_get_focus_pos_from_lens()
  
 int DoMFLock(void)
 {
-  if (!camera_info.state.mode_play) {
-     _MFOn();
-     return(1);
-  }
   return(0);
 }
  
 int UnlockMF(void)
 {
-  if (!camera_info.state.mode_play) {
-     _MFOff();
-     return(1);
-  }
   return(0);
 }
