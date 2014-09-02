@@ -28,7 +28,7 @@
     #define CAM_RAW_ROWPIX                  4784 // Found @0xff1b1290
     #define CAM_RAW_ROWS                    3516 // Found @0xff1b129c
     #undef  CAM_UNCACHED_BIT
-    #define CAM_UNCACHED_BIT  0x40000000 // Found @0xff03b324  ixus240
+    #define CAM_UNCACHED_BIT                0x40000000 // Found @0xff03b324  ixus240
 
     #define CAM_JPEG_WIDTH                  4680
     #define CAM_JPEG_HEIGHT                 3498
@@ -43,7 +43,6 @@
     #define CAM_BRACKETING                  1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
-    #define CAM_EXT_TV_RANGE                1
     //#define CAM_EV_IN_VIDEO               1
     //#define CAM_SHOW_OSD_IN_SHOOT_MENU    1
     //#define CAM_QUALITY_OVERRIDE          1
@@ -115,28 +114,28 @@
 //    #define CAM_AV_OVERRIDE_IRIS_FIX      1   // for cameras that require _MoveIrisWithAv function to override Av in bracketing.
     #undef  CAM_HAS_IRIS_DIAPHRAGM
 
-    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1   // For cameras with 'low light' mode that does now work with raw define this
-    #define CAM_DISABLE_RAW_IN_AUTO             1   // For cameras that don't have valid raw in AUTO mode
-    #define CAM_HAS_MOVIE_DIGEST_MODE           1   // Changes the values in the 'movie_status' variable if the camera has this mode
+    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE 1   // For cameras with 'low light' mode that does now work with raw define this
+    #define CAM_DISABLE_RAW_IN_AUTO         1   // For cameras that don't have valid raw in AUTO mode
+    #define CAM_HAS_MOVIE_DIGEST_MODE       1   // Changes the values in the 'movie_status' variable if the camera has this mode
 
-    #undef CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE                 13
-    #define CAM_LOAD_CUSTOM_COLORS              1   // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                  0xA2   // Start color index for CHDK colors loaded into camera palette.
+    #undef  CAM_BITMAP_PALETTE
+    #define CAM_BITMAP_PALETTE              13
+    #define CAM_LOAD_CUSTOM_COLORS          1   // Enable loading CHDK colors into the camera palette memory/hardware
+    #define CHDK_COLOR_BASE                 0xA2   // Start color index for CHDK colors loaded into camera palette.
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                 0x202   // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
 
-    #define MKDIR_RETURN_ONE_ON_SUCCESS         1   // mkdir() return 1 on success, 0 on fail.
+    #define MKDIR_RETURN_ONE_ON_SUCCESS     1   // mkdir() return 1 on success, 0 on fail.
 
-    #define CAM_HAS_FILEWRITETASK_HOOK          1
-    #define CAM_FILEWRITETASK_SEEKS             1
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+    #define CAM_FILEWRITETASK_SEEKS         1
 
-    #define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
- 
+    #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
+
     // Warning : SD override for this camera with these values has not been tested
     #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

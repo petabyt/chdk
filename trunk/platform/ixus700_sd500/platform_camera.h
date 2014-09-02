@@ -58,25 +58,21 @@
     #define PARAM_CAMERA_NAME               2       // parameter number for GetParameterData
     #define DNG_EXT_FROM                    ".DPS"
 
-    #define CAM_EXT_TV_RANGE                1
-	
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
-    #define CAM_WAIT_FOR_FILESYSTEM             1       // wait for 'file_system_started' on startup
+    #define CAM_WAIT_FOR_FILESYSTEM         1       // wait for 'file_system_started' on startup
 
-	// "real" to "market" conversion definitions
-	#define SV96_MARKET_OFFSET          20          // market-real sv96 conversion value
+    // "real" to "market" conversion definitions
+    #define SV96_MARKET_OFFSET              20          // market-real sv96 conversion value
 
-	// Conversion values for pow(2,-20/96) 'market' to 'real', and pow(2,20/96) 'real' to 'market'
-	// Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
-	// to the desired multiplication factor as possible within normal ISO range.
-	#define ISO_MARKET_TO_REAL_MULT     3545
-	#define ISO_MARKET_TO_REAL_SHIFT    12
-	#define ISO_MARKET_TO_REAL_ROUND    2048
-	#define ISO_REAL_TO_MARKET_MULT     9465
-	#define ISO_REAL_TO_MARKET_SHIFT    13
-	#define ISO_REAL_TO_MARKET_ROUND    4096
-	
- 
- 
+    // Conversion values for pow(2,-20/96) 'market' to 'real', and pow(2,20/96) 'real' to 'market'
+    // Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
+    // to the desired multiplication factor as possible within normal ISO range.
+    #define ISO_MARKET_TO_REAL_MULT         3545
+    #define ISO_MARKET_TO_REAL_SHIFT        12
+    #define ISO_MARKET_TO_REAL_ROUND        2048
+    #define ISO_REAL_TO_MARKET_MULT         9465
+    #define ISO_REAL_TO_MARKET_SHIFT        13
+    #define ISO_REAL_TO_MARKET_ROUND        4096
+
 //--------------------------------------------------

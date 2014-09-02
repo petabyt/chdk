@@ -59,20 +59,17 @@
     #define CAM_ACTIVE_AREA_Y2              2136
     // camera name
     #define PARAM_CAMERA_NAME               3       // parameter number for GetParameterData
-	
-    #define CAM_EXT_TV_RANGE                1
 
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
     // Keyboard repeat and initial delays
     #undef  KBD_REPEAT_DELAY
     #define KBD_REPEAT_DELAY                140
     #undef  KBD_INITIAL_DELAY
     #define KBD_INITIAL_DELAY               300
-	
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

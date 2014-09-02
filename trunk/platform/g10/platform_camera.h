@@ -59,7 +59,6 @@
 
     #define CAM_BRACKETING                  1
     #define CAM_MULTIPART                   1
-    #define CAM_EXT_TV_RANGE                1
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000  // G10 auto found @0xff828844
   
@@ -70,10 +69,10 @@
     #define PARAM_DISPLAY_MODE2             58      // param number for LCD display mode when camera in record view hold mode
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE             16
+    #define CAM_BITMAP_PALETTE              16
 
-    #define CAM_LOAD_CUSTOM_COLORS         1      // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                0xB3   // Start color index for CHDK colors loaded into camera palette.
+    #define CAM_LOAD_CUSTOM_COLORS          1      // Enable loading CHDK colors into the camera palette memory/hardware
+    #define CHDK_COLOR_BASE                 0xB3   // Start color index for CHDK colors loaded into camera palette.
 
 
     #undef  CAM_SENSOR_BITS_PER_PIXEL
@@ -111,13 +110,13 @@
                                                     // Used to enabled bracketing in custom timer, required on many recent cameras
                                                     // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-    #define REMOTE_SYNC_STATUS_LED 	0xC02200DC		// specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED          0xC02200DC  // specifies an LED that turns on while camera waits for USB remote to sync
 
     #undef  CAM_AF_LED
     #define CAM_AF_LED                      5       // Index of AF led in camera_set_led function
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

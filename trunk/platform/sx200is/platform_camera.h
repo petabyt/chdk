@@ -55,20 +55,19 @@
     #define CAM_ACTIVE_AREA_X2              4052
     #define CAM_ACTIVE_AREA_Y2              3014
     // camera name
-    #define PARAM_CAMERA_NAME 4 // parameter number for GetParameterData
+    #define PARAM_CAMERA_NAME               4 // parameter number for GetParameterData
 
     #undef  CAM_SENSOR_BITS_PER_PIXEL
-    #define CAM_SENSOR_BITS_PER_PIXEL   12
+    #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-    #define CAM_EXT_TV_RANGE            1
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              13
     #define CAM_LOAD_CUSTOM_COLORS          1   // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                 0xD0// Start color index for CHDK colors loaded into camera palette.
     #undef  CAM_HAS_ERASE_BUTTON
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
-    #undef CAM_BITMAP_WIDTH
-    #undef CAM_BITMAP_HEIGHT
+    #undef  CAM_BITMAP_WIDTH
+    #undef  CAM_BITMAP_HEIGHT
     #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
     #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
 
@@ -88,7 +87,7 @@
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
-    #define REMOTE_SYNC_STATUS_LED 	0xC0220138  // specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED          0xC0220138  // specifies an LED that turns on while camera waits for USB remote to sync
     #define CAM_REMOTE_AtoD_CHANNEL         5   // Camera supports using 3rd battery terminal as well as USB for remote - value = A/D channel to poll
 
     #undef  CAMERA_MIN_DIST
@@ -97,9 +96,9 @@
     #define CAMERA_MAX_DIST                 68447   // Override max subject distance
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

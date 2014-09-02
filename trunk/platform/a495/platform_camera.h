@@ -41,7 +41,6 @@
     #define CAM_REAR_CURTAIN                1
     #undef  DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                 2   // use .CR2
-    #define CAM_EXT_TV_RANGE                1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_CAN_MUTE_MICROPHONE         1
     #define CAM_EV_IN_VIDEO                 1
@@ -86,21 +85,21 @@
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-    #define CAM_HAS_FILEWRITETASK_HOOK       1
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
 
-    #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
-    #define CAM_NEED_SET_ZOOM_DELAY          150  // Define to add a delay after setting the zoom position
-    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
-    #define CAM_USE_ALT_SET_ZOOM_POINT       1    // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_HAS_ZOOM_LEVER              1    // Camera has dedicated zoom buttons
+    #define CAM_NEED_SET_ZOOM_DELAY         150  // Define to add a delay after setting the zoom position
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
+    #define CAM_USE_ALT_SET_ZOOM_POINT      1    // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
     #undef  CAM_AF_LED
-    #define CAM_AF_LED                       1   // Index of AF led in camera_set_led function
+    #define CAM_AF_LED                      1   // Index of AF led in camera_set_led function
 
-    #define REMOTE_SYNC_STATUS_LED  0xC0220088    // specifies an LED that turns on while camera waits for USB remote to sync
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define REMOTE_SYNC_STATUS_LED          0xC0220088  // specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

@@ -39,7 +39,6 @@
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_EV_IN_VIDEO                 1
     #undef  CAM_VIDEO_CONTROL
-    #define CAM_EXT_TV_RANGE                1 //disabled, because some trouble in video mode (http://forum.chdk-treff.de/viewtopic.php?f=12&t=2284, http://chdk.setepontos.com/index.php?topic=6182.0)
 
     #define CAM_DNG_LENS_INFO               { 58,10, 348,10, 28,10, 48,10 } // See comments in camera.h
     // pattern
@@ -71,9 +70,9 @@
     #define CAM_HAS_FILEWRITETASK_HOOK      1
 
     #define REMOTE_SYNC_STATUS_LED          0xc02200C4  // specifies an LED that turns on while camera waits for USB remote to sync
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

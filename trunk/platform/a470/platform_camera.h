@@ -61,20 +61,19 @@
     // camera name
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
-    #define CAM_EXT_TV_RANGE                1
-    
+
     #define CAM_HAS_FILEWRITETASK_HOOK      1
     
     //#define DNG_EXT_FROM                  ".DPS"
-	
-	#define REMOTE_SYNC_STATUS_LED 	0xc0220084		// specifies an LED that turns on while camera waits for USB remote to sync
-	
+
+    #define REMOTE_SYNC_STATUS_LED          0xc0220084  // specifies an LED that turns on while camera waits for USB remote to sync
+
     #define CAM_OPTIONAL_EXTRA_BUTTON       1       // allow the Power button to be remapped in ALT mode
     #define CAM_EXTRA_BUTTON_NAMES          { "OFF", "Display" }
     #define CAM_EXTRA_BUTTON_OPTIONS        { 0, KEY_DISPLAY }
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

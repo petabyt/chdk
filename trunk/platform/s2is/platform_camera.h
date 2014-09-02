@@ -55,24 +55,22 @@
     #define CAM_BRACKETING                  1
     #define DNG_EXT_FROM                    ".DPS"
 
-    #define CAM_EXT_TV_RANGE                1
-	
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
 
-	// "real" to "market" conversion definitions
-	#define SV96_MARKET_OFFSET          0           // market-real sv96 conversion value
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
-	// Conversion values for 'no' conversion required
-	// Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
-	// to the desired multiplication factor as possible within normal ISO range.
-	#define ISO_MARKET_TO_REAL_MULT     2
-	#define ISO_MARKET_TO_REAL_SHIFT    1
-	#define ISO_MARKET_TO_REAL_ROUND    0
-	#define ISO_REAL_TO_MARKET_MULT     2
-	#define ISO_REAL_TO_MARKET_SHIFT    1
-	#define ISO_REAL_TO_MARKET_ROUND    0
-	
- 
-    // Warning : no know SD override method for this camera 
- 
+    // "real" to "market" conversion definitions
+    #define SV96_MARKET_OFFSET              0           // market-real sv96 conversion value
+
+    // Conversion values for 'no' conversion required
+    // Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
+    // to the desired multiplication factor as possible within normal ISO range.
+    #define ISO_MARKET_TO_REAL_MULT         2
+    #define ISO_MARKET_TO_REAL_SHIFT        1
+    #define ISO_MARKET_TO_REAL_ROUND        0
+    #define ISO_REAL_TO_MARKET_MULT         2
+    #define ISO_REAL_TO_MARKET_SHIFT        1
+    #define ISO_REAL_TO_MARKET_ROUND        0
+
+    // Warning : no know SD override method for this camera
+
 //--------------------------------------------------

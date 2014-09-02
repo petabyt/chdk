@@ -78,8 +78,6 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-    #define CAM_EXT_TV_RANGE                1
-
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
     #undef  CAM_USES_ASPECT_CORRECTION
@@ -103,14 +101,14 @@
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-    #define REMOTE_SYNC_STATUS_LED  0xC0220130     // specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED          0xC0220130  // specifies an LED that turns on while camera waits for USB remote to sync
     #define CAM_REMOTE_AtoD_CHANNEL         5      // Camera supports using 3rd battery terminal as well as USB for remote - value = A/D channel to poll
 
     #undef  CAM_AF_LED
     #define CAM_AF_LED                      2       // Index of AF led in camera_set_led function
 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
 
 //--------------------------------------------------

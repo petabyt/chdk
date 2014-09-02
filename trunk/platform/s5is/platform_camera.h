@@ -33,7 +33,6 @@
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON            1
     #define CAM_HAS_HI_ISO_AUTO_MODE        1
-    #define CAM_EXT_TV_RANGE                1
 
     #define CAM_DNG_LENS_INFO               { 60,10, 720,10, 27,10, 35,10 } // See comments in camera.h
     // pattern
@@ -57,9 +56,9 @@
     #define CAM_BRACKETING                  1
     #define DNG_EXT_FROM                    ".DPS"
 
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
- 
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

@@ -35,9 +35,9 @@
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                            0x40000000
 
-    #define CAM_ADJUSTABLE_ALT_BUTTON           1
-    #define CAM_ALT_BUTTON_NAMES                { "Playback", "Video", "Display" }
-    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
+    #define CAM_ADJUSTABLE_ALT_BUTTON                   1
+    #define CAM_ALT_BUTTON_NAMES                        { "Playback", "Video", "Display" }
+    #define CAM_ALT_BUTTON_OPTIONS                      { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
 
     #define CAM_DNG_LENS_INFO                           { 50,10, 600,10, 34,10, 56,10 } // See comments in camera.h
     // pattern
@@ -48,34 +48,33 @@
       -200195, 1000000,   961551, 1000000,  238645, 1000000, \
        -16441, 1000000,   142319, 1000000,  375979, 1000000
     #define cam_CalibrationIlluminant1                  1 // Daylight
- 
+
     // Sensor size, DNG image size & cropping
-    #define CAM_RAW_ROWPIX                  4464
-    #define CAM_RAW_ROWS                    3276
-    #define CAM_JPEG_WIDTH                  4368
-    #define CAM_JPEG_HEIGHT                 3254
-    #define CAM_ACTIVE_AREA_X1              24
-    #define CAM_ACTIVE_AREA_Y1              10
-    #define CAM_ACTIVE_AREA_X2              (CAM_RAW_ROWPIX-72)
-    #define CAM_ACTIVE_AREA_Y2              (CAM_RAW_ROWS-12)
+    #define CAM_RAW_ROWPIX                              4464
+    #define CAM_RAW_ROWS                                3276
+    #define CAM_JPEG_WIDTH                              4368
+    #define CAM_JPEG_HEIGHT                             3254
+    #define CAM_ACTIVE_AREA_X1                          24
+    #define CAM_ACTIVE_AREA_Y1                          10
+    #define CAM_ACTIVE_AREA_X2                          (CAM_RAW_ROWPIX-72)
+    #define CAM_ACTIVE_AREA_Y2                          (CAM_RAW_ROWS-12)
 
     // camera name
     #define PARAM_CAMERA_NAME                           4 // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL                   12
 
-    #define CAM_EXT_TV_RANGE                            1
     #define CAM_QUALITY_OVERRIDE                        1
 
     // copied from the SX200 which has the same video buffer size
-    #undef CAM_USES_ASPECT_CORRECTION
+    #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION                  1 //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
-    #undef CAM_BITMAP_WIDTH
-    #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
- 
+    #undef  CAM_BITMAP_WIDTH
+    #define CAM_BITMAP_WIDTH                            720 // Actual width of bitmap screen in bytes
+
     #define CAM_ZEBRA_NOBUF                             1
 
-    #undef CAM_BITMAP_PALETTE
+    #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE                          7
 
     //#undef EDGE_HMARGIN
@@ -84,10 +83,10 @@
     #define CAM_DATE_FOLDER_NAMING                      0x400
 
     // Menu width like in g11 and s90
-    #undef CAM_MENU_BORDERWIDTH
+    #undef  CAM_MENU_BORDERWIDTH
     #define CAM_MENU_BORDERWIDTH                        10
     // CR2 accesible through USB
-    #undef DEFAULT_RAW_EXT
+    #undef  DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                             2
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX             1 // enable fix for camera crash at startup when opening the conf / font files
@@ -100,15 +99,13 @@
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                             0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
 
-    #define REMOTE_SYNC_STATUS_LED                      0xC0220014		// specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED                      0xC0220014  // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_USE_ALT_SET_ZOOM_POINT                  1   // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt            1   // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
-	
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define CAM_SD_OVER_IN_AF                           1
+    #define CAM_SD_OVER_IN_AFL                          1
+    #define CAM_SD_OVER_IN_MF                           1
+
 //--------------------------------------------------

@@ -42,8 +42,6 @@
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
 
-    #define CAM_EXT_TV_RANGE                1
-
     #undef  CAM_UNCACHED_BIT                        // shut up compiler
     #define CAM_UNCACHED_BIT                0x40000000
 
@@ -51,11 +49,11 @@
     #define CAM_BITMAP_PALETTE              2
 
     #define CAM_QUALITY_OVERRIDE            1
-	#undef   CAM_SENSOR_BITS_PER_PIXEL
-	#define  CAM_SENSOR_BITS_PER_PIXEL   12
+    #undef   CAM_SENSOR_BITS_PER_PIXEL
+    #define  CAM_SENSOR_BITS_PER_PIXEL      12
 
     #define CAM_DNG_LENS_INFO               { 62,10, 186,10, 28,10, 49,10 } // See comments in camera.h
-	// pattern
+    // pattern
     #define  cam_CFAPattern                 0x02010100      // Red  Green  Green  Blue
 
     // color preliminary
@@ -89,12 +87,12 @@
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
-	#define REMOTE_SYNC_STATUS_LED 	0xC0220138		// specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED          0xC0220138  // specifies an LED that turns on while camera waits for USB remote to sync
 
 //    #define CAM_HAS_FILEWRITETASK_HOOK       1
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

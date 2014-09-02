@@ -20,7 +20,7 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define SHORTCUT_TOGGLE_RAW	KEY_METERING
+    #define SHORTCUT_TOGGLE_RAW                 KEY_METERING
     #define CAM_PROPSET                         5
     #define CAM_DRYOS                           1
     #define CAM_DRYOS_2_3_R39                   1
@@ -90,8 +90,8 @@
        -62, 10000,  -1147, 10000,   9460, 10000
     #define CAM_DNG_EXPOSURE_BIAS -3,4
 
-    #define CAM_RAW_ROWPIX    4160 // Found @0xff1a77cc
-    #define CAM_RAW_ROWS      3124 // Found @0xff1a77d4
+    #define CAM_RAW_ROWPIX                      4160 // Found @0xff1a77cc
+    #define CAM_RAW_ROWS                        3124 // Found @0xff1a77d4
 
     #define CAM_JPEG_WIDTH                      4034
     #define CAM_JPEG_HEIGHT                     3040
@@ -110,7 +110,6 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL           12
 
-    #define CAM_EXT_TV_RANGE                    1
     #define CAM_QUALITY_OVERRIDE                1
     #define CAM_REAR_CURTAIN                    1
 
@@ -140,7 +139,7 @@
                                                         // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
     #define CAM_AV_OVERRIDE_IRIS_FIX            1       // for cameras that require _MoveIrisWithAv function to override Av in bracketing.
-    #define CAM_HAS_MOVIE_DIGEST_MODE          1       // Changes the values in the 'movie_status' variable if the camera has this mode
+    #define CAM_HAS_MOVIE_DIGEST_MODE           1       // Changes the values in the 'movie_status' variable if the camera has this mode
 
     #define CAM_LOAD_CUSTOM_COLORS              1       // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                     0xC0    // Start color index for CHDK colors loaded into camera palette.
@@ -148,7 +147,7 @@
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202   // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
  
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_HAS_CMOS                        1
 
@@ -160,13 +159,13 @@
     #define MKDIR_RETURN_ONE_ON_SUCCESS         1       // mkdir() return 1 on success, 0 on fail.
 
     // Define shortcut overrides where defaults are not suitable
-    #define SHORTCUT_TOGGLE_ZEBRA           KEY_ERASE   // On camera Shutter Half Press + Up = switch MF on/off
+    #define SHORTCUT_TOGGLE_ZEBRA               KEY_ERASE   // On camera Shutter Half Press + Up = switch MF on/off
 
-    #define CAM_HAS_FILEWRITETASK_HOOK                  1
-    #define CAM_FILEWRITETASK_SEEKS                     1
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define CAM_HAS_FILEWRITETASK_HOOK          1
+    #define CAM_FILEWRITETASK_SEEKS             1
+
+    #define CAM_SD_OVER_IN_AF                   1
+    #define CAM_SD_OVER_IN_AFL                  1
+    #define CAM_SD_OVER_IN_MF                   1
+
 //--------------------------------------------------

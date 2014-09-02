@@ -62,7 +62,6 @@
 
     #define CAM_DNG_LENS_INFO                           { 50,10, 800,10, 35,10, 59,10 } // See comments in camera.h
 
-    #define CAM_EXT_TV_RANGE                            1
     #define CAM_QUALITY_OVERRIDE                        1
 
     #define CAM_HAS_VIDEO_BUTTON                        1
@@ -112,8 +111,8 @@
 //  define REMOTE_SYNC_STATUS_LED              0xC0220120 // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define MKDIR_RETURN_ONE_ON_SUCCESS                 1 // mkdir() return 1 on success, 0 on fail.
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define CAM_SD_OVER_IN_AF                           1
+    #define CAM_SD_OVER_IN_MF                           1
+
 //--------------------------------------------------

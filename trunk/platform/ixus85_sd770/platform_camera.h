@@ -36,7 +36,6 @@
     #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #undef  CAM_VIDEO_CONTROL
-    #define CAM_EXT_TV_RANGE                1       // CHDK can make exposure time longer than 64s
 
     #define CAM_DNG_LENS_INFO               { 62,10, 186,10, 28,10, 49,10 } // See comments in camera.h
     // pattern
@@ -60,12 +59,11 @@
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
-	
-	#define REMOTE_SYNC_STATUS_LED 	0xc02200D4		// specifies an LED that turns on while camera waits for USB remote to sync
-	
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+
+    #define REMOTE_SYNC_STATUS_LED          0xc02200D4 // specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

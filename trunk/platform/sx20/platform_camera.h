@@ -65,14 +65,13 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-    #define CAM_EXT_TV_RANGE                1
     #define CAM_QUALITY_OVERRIDE            1
 
     // Updated Aug 2011 to use X2 aspect ratio correction instead of 9/4
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
-    #undef CAM_BITMAP_WIDTH
-    #undef CAM_BITMAP_HEIGHT
+    #undef  CAM_BITMAP_WIDTH
+    #undef  CAM_BITMAP_HEIGHT
     #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
     #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
 
@@ -96,11 +95,10 @@
     #define CAMERA_MIN_DIST                 88      // Override min subject distance
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 66490   // Override max subject distance
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
-	
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+
 //--------------------------------------------------

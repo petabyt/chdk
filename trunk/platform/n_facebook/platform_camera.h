@@ -45,7 +45,6 @@
     #define CAM_HAS_CMOS                    1
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_IRIS_DIAPHRAGM
-    #define CAM_EXT_TV_RANGE                1
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1               // camera uses the modified graphics primitives to map screens and viewports to buffers more sized
@@ -76,35 +75,34 @@
     #define CAM_HAS_FILEWRITETASK_HOOK      1
     #define CAM_FILEWRITETASK_SEEKS         1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
-    
+
     #define CAM_ACTIVE_AREA_X1              92              // DNG stuff
     #define CAM_ACTIVE_AREA_Y1              14
     #define CAM_ACTIVE_AREA_X2              4160
-    #define CAM_ACTIVE_AREA_Y2              3050    
+    #define CAM_ACTIVE_AREA_Y2              3050
 
     #define cam_CFAPattern                  0x02010100      // bayer sensor pattern Red  Green  Green  Blue
     #define CAM_DNG_EXPOSURE_BIAS           0,1             // DNG exposure bias value to 0 (to override default of -0.5 in the dng.c code)
     #define CAM_DNG_LENS_INFO               { 28,10, 2240,10, 30,10, 59,10 } // See comments in camera.h
-    #define cam_CalibrationIlluminant1 1
+    #define cam_CalibrationIlluminant1      1
     #define CAM_COLORMATRIX1    \
     544808, 1000000, -174047, 1000000, -80399, 1000000, \
     -75055, 1000000, 440444, 1000000, 11367, 1000000, \
     -5801, 1000000, 71589, 1000000, 118914, 1000000
 
     #undef  CAM_USB_EVENTID
-    #define CAM_USB_EVENTID                 0x202   // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
+    #define CAM_USB_EVENTID                 0x202           // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
 
-    #define CAM_SD_OVER_IN_AFL              1      // probably not going to work well
-    #define CAM_SD_OVER_IN_MF               1      // 
-
+    #define CAM_SD_OVER_IN_AFL              1               // probably not going to work well
+    #define CAM_SD_OVER_IN_MF               1               //
 
 //------ Powershot N - fence for values checked as okay - stuff below here not checked yet ---------------
 
     #undef  CAM_USE_ZOOM_FOR_MF                             // not useful if cam does not have Canon MF mode - just changes focus mode
-    #define CAM_NEED_SET_ZOOM_DELAY           300           // add a delay after setting the zoom position
-    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS   1             // use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
-    #define CAM_USE_ALT_SET_ZOOM_POINT        1             // use the alternate code in lens_set_zoom_point()
-    #define CAM_USE_ALT_PT_MoveOpticalZoomAt  1             // use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
+    #define CAM_NEED_SET_ZOOM_DELAY         300             // add a delay after setting the zoom position
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1               // use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
+    #define CAM_USE_ALT_SET_ZOOM_POINT      1               // use the alternate code in lens_set_zoom_point()
+    #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1              // use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
     #define CAM_BRACKETING                  1               // allow disable of RAW saving in native Ev bracketing
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1               // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
@@ -114,6 +112,5 @@
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #undef  CAM_CHDK_HAS_EXT_VIDEO_TIME
     //#define CAM_EV_IN_VIDEO               1
-    
 
 //--------------------------------------------------

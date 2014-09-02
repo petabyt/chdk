@@ -86,7 +86,6 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL           12
 
-    #define CAM_EXT_TV_RANGE                    1
     #define CAM_QUALITY_OVERRIDE                1
 
     // copied from the SX200 which has the same video buffer size
@@ -94,8 +93,8 @@
     #define CAM_USES_ASPECT_CORRECTION          1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
     #undef CAM_BITMAP_WIDTH
     #undef CAM_BITMAP_HEIGHT
-    #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
-    #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
+    #define CAM_BITMAP_WIDTH                    960 // Actual width of bitmap screen in bytes
+    #define CAM_BITMAP_HEIGHT                   270 // Actual height of bitmap screen in rows
 
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE                  16
@@ -129,7 +128,7 @@
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202   // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
  
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0xxyyyy		// specifies an LED that turns on while camera waits for USB remote to sync
+//  #define REMOTE_SYNC_STATUS_LED  0xC0xxyyyy  // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_HAS_CMOS                        1
 
@@ -147,10 +146,10 @@
     #undef  CAM_AF_LED                                  // AF Lamp index for camera_set_led()
     #define CAM_AF_LED                          1       //
 
-    #define CAM_HAS_FILEWRITETASK_HOOK                  1
-    #define CAM_FILEWRITETASK_SEEKS                     1
- 
-    #define CAM_SD_OVER_IN_AFL 1
-    #define CAM_SD_OVER_IN_MF  1
- 
+    #define CAM_HAS_FILEWRITETASK_HOOK          1
+    #define CAM_FILEWRITETASK_SEEKS             1
+
+    #define CAM_SD_OVER_IN_AFL                  1
+    #define CAM_SD_OVER_IN_MF                   1
+
 //--------------------------------------------------

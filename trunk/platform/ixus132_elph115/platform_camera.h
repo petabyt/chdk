@@ -25,8 +25,8 @@
     #define CAM_DRYOS_2_3_R39 1 // Defined for cameras with DryOS version R39 or higher
     #define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher
 
-    #define CAM_RAW_ROWPIX    				4704 // Found @0xff1be31c
-    #define CAM_RAW_ROWS      				3504 // Found @0xff1be328
+    #define CAM_RAW_ROWPIX                  4704 // Found @0xff1be31c
+    #define CAM_RAW_ROWS                    3504 // Found @0xff1be328
 
     #define CAM_JPEG_WIDTH                  4608
     #define CAM_JPEG_HEIGHT                 3456
@@ -40,12 +40,12 @@
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT  0x40000000 // Found @0xff038dd4
 
-    #undef CAM_SENSOR_BITS_PER_PIXEL
+    #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-    #define CAM_DNG_LENS_INFO              	{ 50,10, 400,10, 32,10, 69,10 } // See comments in camera.h
+    #define CAM_DNG_LENS_INFO               { 50,10, 400,10, 32,10, 69,10 } // See comments in camera.h
 
-    #define cam_CFAPattern 0x01000201 // Green  Blue  Red  Green
+    #define cam_CFAPattern                  0x01000201 // Green  Blue  Red  Green
 
     // TODO C&P from D10
     #define CAM_COLORMATRIX1                        \
@@ -67,11 +67,9 @@
     #undef  CAM_HAS_USER_TV_MODES
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
-    #define  CAM_EXT_TV_RANGE               1    // CHDK can make exposure time longer than 64s
-
     #undef  CAM_VIDEO_CONTROL
 // not working
-    #undef CAM_CHDK_HAS_EXT_VIDEO_MENU
+    #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
 //    #define CAM_VIDEO_QUALITY_ONLY          1
 //    #define CAM_CHDK_HAS_EXT_VIDEO_MENU     1
 
@@ -80,66 +78,63 @@
 
     #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO  // unlocked in canon firmware by default
 
-    #undef CAM_HAS_MANUAL_FOCUS // :(
+    #undef  CAM_HAS_MANUAL_FOCUS
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
     // MakeDirectory_Fut not found, using mkdir
-    #define MKDIR_RETURN_ONE_ON_SUCCESS 
+    #define MKDIR_RETURN_ONE_ON_SUCCESS
 
     //aspect correction
     #undef  CAM_USES_ASPECT_CORRECTION
-    #define CAM_USES_ASPECT_CORRECTION      	1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
-    #undef CAM_BITMAP_WIDTH
-    #define CAM_BITMAP_WIDTH                	720 // Actual width of bitmap screen in bytes
+    #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
+    #undef  CAM_BITMAP_WIDTH
+    #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
 
-    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
-
+    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY 1   // Draw pixels on active bitmap buffer only.
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE                  13
+    #define CAM_BITMAP_PALETTE              13
 
-    #define CAM_LOAD_CUSTOM_COLORS              1   // Enable loading CHDK colors into the camera palette memory/hardware
+    #define CAM_LOAD_CUSTOM_COLORS          1   // Enable loading CHDK colors into the camera palette memory/hardware
     // doesn't seem to conflict badly with anything
-    #define CHDK_COLOR_BASE                     0x73 // Start color index for CHDK colors loaded into camera palette.
+    #define CHDK_COLOR_BASE                 0x73 // Start color index for CHDK colors loaded into camera palette.
 
-    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  	1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
-                                                	// Used to enabled bracketing in custom timer, required on many recent cameras
-                                                	// see http://chdk.setepontos.com/index.php/topic,3994.405.html
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
+                                                    // Used to enabled bracketing in custom timer, required on many recent cameras
+                                                    // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
-    #define CAM_ADJUSTABLE_ALT_BUTTON           1
-    #define CAM_ALT_BUTTON_NAMES                { "Playback", "Video" }
-    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PLAYBACK, KEY_VIDEO }
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_VIDEO }
 
     // verified
     #undef  CAM_USB_EVENTID
-    #define CAM_USB_EVENTID                         0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
+    #define CAM_USB_EVENTID                 0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
 
     #undef  CAMERA_MIN_DIST
-    #define CAMERA_MIN_DIST                    	45      // Override min subject distance in macro mode
-    #undef CAMERA_MAX_DIST                 
+    #define CAMERA_MIN_DIST                 45      // Override min subject distance in macro mode
+    #undef CAMERA_MAX_DIST
     // TODO largest value obtained focusing at distant things
-    #define CAMERA_MAX_DIST              	775194       // Define max distance that can be set in _MoveFocusLensToDistance (allow override for superzooms - SX30/SX40)
-
+    #define CAMERA_MAX_DIST                 775194       // Define max distance that can be set in _MoveFocusLensToDistance (allow override for superzooms - SX30/SX40)
 
     // TODO
-    #define CAM_DATE_FOLDER_NAMING              0x80
+    #define CAM_DATE_FOLDER_NAMING          0x80
 
-    #define PARAM_CAMERA_NAME               	3       // parameter number for GetParameterData
+    #define PARAM_CAMERA_NAME               3       // parameter number for GetParameterData
 
-    #define CAM_FILE_COUNTER_IS_VAR            	1       // file counter is variable file_counter_var in stubs, not a param
+    #define CAM_FILE_COUNTER_IS_VAR         1       // file counter is variable file_counter_var in stubs, not a param
 
-    #define  CAM_HAS_FILEWRITETASK_HOOK        	1 // FileWriteTask hook is available (local file write can be prevented)
-    #define  CAM_FILEWRITETASK_SEEKS           	1 // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
+    #define  CAM_HAS_FILEWRITETASK_HOOK     1   // FileWriteTask hook is available (local file write can be prevented)
+    #define  CAM_FILEWRITETASK_SEEKS        1   // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
 
-	// TODO
-	// only non-AF led available
-	#define REMOTE_SYNC_STATUS_LED 	0xC0220094		// specifies an LED that turns on while camera waits for USB remote to sync
+    // TODO
+    // only non-AF led available
+    #define REMOTE_SYNC_STATUS_LED          0xC0220094  // specifies an LED that turns on while camera waits for USB remote to sync
 
     #undef CAM_AF_LED
-    #define CAM_AF_LED                         1
+    #define CAM_AF_LED                      1
 
-    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE  1     // For cameras with 'low light' mode that does not work with raw define this
-
+    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE 1     // For cameras with 'low light' mode that does not work with raw define this
 
 //----------------------------------------------------------

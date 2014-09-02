@@ -35,7 +35,7 @@
 
     #define CAM_JPEG_WIDTH                  4608     
     #define CAM_JPEG_HEIGHT                 3456    
-    #define CAM_ACTIVE_AREA_X1              16    	//Not Checked
+    #define CAM_ACTIVE_AREA_X1              16        //Not Checked
     #define CAM_ACTIVE_AREA_Y1              26      //Not Checked
     #define CAM_ACTIVE_AREA_X2              4640    //Not Checked
     #define CAM_ACTIVE_AREA_Y2              3486    //Not Checked
@@ -59,8 +59,6 @@
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
 
     #define CAM_HAS_ND_FILTER               1
-
-    #define CAM_EXT_TV_RANGE                1
 
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  CAM_VIDEO_CONTROL
@@ -91,31 +89,31 @@
     #undef  CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                720   // Actual width of bitmap screen in bytes
 
-    #define CAM_ADJUSTABLE_ALT_BUTTON      1    // ALT-button can be set from menu
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1    // ALT-button can be set from menu
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Help" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_HELP }
     #undef  CAM_HAS_DISP_BUTTON
 
-    #define CAM_HAS_FILEWRITETASK_HOOK       1
-    #define CAM_FILEWRITETASK_SEEKS          1
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+    #define CAM_FILEWRITETASK_SEEKS         1
 
-    #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
-    #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments    
-    #define CAM_NEED_SET_ZOOM_DELAY          300  // Define to add a delay after setting the zoom position
-    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
-    #define CAM_USE_ALT_SET_ZOOM_POINT       1    // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_HAS_ZOOM_LEVER              1    // Camera has dedicated zoom buttons
+    #define CAM_USE_ZOOM_FOR_MF             1    // Zoom lever can be used for manual focus adjustments    
+    #define CAM_NEED_SET_ZOOM_DELAY         300  // Define to add a delay after setting the zoom position
+    #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
+    #define CAM_USE_ALT_SET_ZOOM_POINT      1    // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
-    #define CAM_QUALITY_OVERRIDE             1
+    #define CAM_QUALITY_OVERRIDE            1
 
     #undef  CAM_USB_EVENTID
-    #define CAM_USB_EVENTID                     0x202   // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
-    #define CAM_MISSING_RAND                 1    // srand()/rand() functions not found in firmware. If defined, CHDK use functions implemented in C
-    #define MKDIR_RETURN_ONE_ON_SUCCESS      1    // mkdir() return 1 on success, 0 on fail.
+    #define CAM_USB_EVENTID                 0x202   // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
+    #define CAM_MISSING_RAND                1    // srand()/rand() functions not found in firmware. If defined, CHDK use functions implemented in C
+    #define MKDIR_RETURN_ONE_ON_SUCCESS     1    // mkdir() return 1 on success, 0 on fail.
 
-//	#define REMOTE_SYNC_STATUS_LED 	0xC0220130		// TODO specifies an LED that turns on while camera waits for USB remote to sync
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_MF  1
+//    #define REMOTE_SYNC_STATUS_LED     0xC0220130        // TODO specifies an LED that turns on while camera waits for USB remote to sync
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_MF               1
  
 //--------------------------------------------------
