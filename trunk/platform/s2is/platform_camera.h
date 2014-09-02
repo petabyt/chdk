@@ -73,7 +73,6 @@
 	#define ISO_REAL_TO_MARKET_ROUND    0
 	
  
-    // Warning : SD override for this camera with these values has not been tested
-    #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
+    // Warning : no know SD override method for this camera 
  
 //--------------------------------------------------

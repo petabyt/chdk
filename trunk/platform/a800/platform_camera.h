@@ -92,8 +92,6 @@
  
     #define CAM_MISSING_RAND                 1    // srand()/rand() functions not found in firmware. If defined, CHDK use functions implemented in C
  
-    // Warning : SD override for this camera with these values has not been tested
-    #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
     #define CAM_SD_OVER_IN_AF  1
     #define CAM_SD_OVER_IN_AFL 1
     #define CAM_SD_OVER_IN_MF  1
