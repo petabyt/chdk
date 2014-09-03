@@ -39,7 +39,6 @@
     #define DEFAULT_RAW_EXT                 2  // use .CR2 
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_CAN_MUTE_MICROPHONE         1
-    #undef  CAM_EV_IN_VIDEO
 
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000 // Found @0xffc16e84

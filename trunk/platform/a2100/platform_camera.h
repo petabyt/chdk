@@ -26,13 +26,7 @@
 // left as test
 
     #undef CAM_USE_ZOOM_FOR_MF                      // Zoom lever can be used for manual focus adjustments
-    #define CAM_VIDEO_CONTROL               1       // pause / unpause video recordings
 
-    #undef  CAM_SWIVEL_SCREEN                       // Camera has rotated LCD screen
-
-    #undef  CAM_MULTIPART                           // Camera supports SD-card multipartitioning
-
-    #define CAM_HAS_ZOOM_LEVER              1       // Camera has dedicated zoom buttons
     #define  CAM_DRAW_EXPOSITION            1       // Output expo-pair on screen (for cameras which (sometimes) don't do that)
     #undef CAM_HAS_ERASE_BUTTON                     // Camera has dedicated erase button
     #undef CAM_HAS_IRIS_DIAPHRAGM                   // Camera has real diaphragm mechanism (http://en.wikipedia.org/wiki/Diaphragm_%28optics%29)
@@ -42,9 +36,6 @@
 
     //#undef  CAM_SHOW_OSD_IN_SHOOT_MENU              // On some cameras Canon shoot menu has additional functionality and useful in this case to see CHDK OSD in this mode
 
-    #define CAM_HAS_IS                      1       // Camera has image stabilizer
-
-    #undef  CAM_CONSOLE_LOG_ENABLED                 // Development: internal camera stdout -> A/stdout.txt
     #define  CAM_CAN_MUTE_MICROPHONE        0       // Camera has function to mute microphone
 
     #undef CAM_MENU_BORDERWIDTH

@@ -98,8 +98,6 @@
     #define CHDK_COLOR_BASE                 0xE0    // Start color index for CHDK colors loaded into camera palette.
     #define CAM_LOAD_CUSTOM_COLORS
 
-    #define CAM_HAS_ZOOM_LEVER              1    // Camera has dedicated zoom buttons
-    #define CAM_USE_ZOOM_FOR_MF             1    // Zoom lever can be used for manual focus adjustments    
     #define CAM_NEED_SET_ZOOM_DELAY         300  // Define to add a delay after setting the zoom position
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo
 

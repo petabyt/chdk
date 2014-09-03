@@ -33,12 +33,9 @@
     #define CAM_CAN_MUTE_MICROPHONE             1
     #define CAM_EV_IN_VIDEO                     1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
-    #define CAM_HAS_ERASE_BUTTON                1
     #define CAM_HAS_JOGDIAL                     1
     //#undef CAM_AF_SCAN_DURING_VIDEO_RECORD        // always crashes
-    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
     #undef  CAM_VIDEO_CONTROL
-    #define CAM_CHDK_HAS_EXT_VIDEO_MENU         1
 
     #define CAM_DNG_LENS_INFO                   { 58,10, 207,10, 28,10, 53,10 } // See comments in camera.h
     // pattern
