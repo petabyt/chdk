@@ -57,14 +57,8 @@
 
     #define cam_CalibrationIlluminant1      1       // Daylight
 
-    #undef CAM_SCREEN_WIDTH
-    #define CAM_SCREEN_WIDTH                360
-    #undef CAM_SCREEN_HEIGHT
-    #define CAM_SCREEN_HEIGHT               240
-    #undef CAM_BITMAP_WIDTH
+    #undef  CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                720
-    #undef CAM_BITMAP_HEIGHT
-    #define CAM_BITMAP_HEIGHT               240
 
     #undef     CAM_USES_ASPECT_CORRECTION
     #define    CAM_USES_ASPECT_CORRECTION   1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
@@ -112,9 +106,6 @@
     //
     //#undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
-    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
-    #define CAM_HAS_ZOOM_LEVER              1       // Camera has dedicated zoom buttons
-    #define CAM_USE_ZOOM_FOR_MF             1       // Zoom lever can be used for manual focus adjustments
     #define CAM_NEED_SET_ZOOM_DELAY         300     // Define to add a delay after setting the zoom position
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1       // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
     #define CAM_USE_ALT_SET_ZOOM_POINT      1       // Define to use the alternate code in lens_set_zoom_point()

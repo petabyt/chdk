@@ -33,7 +33,6 @@
 
     // TODO
     #undef  CAM_HAS_MANUAL_FOCUS
-    #define CAM_USE_ZOOM_FOR_MF             1
 
     //#define CAM_EV_IN_VIDEO                 1
 

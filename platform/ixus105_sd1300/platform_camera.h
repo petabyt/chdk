@@ -71,7 +71,7 @@
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
     #undef  CAM_VIDEO_CONTROL
-    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1
+
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1

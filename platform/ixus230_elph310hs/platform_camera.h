@@ -46,15 +46,14 @@
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE 1     // verify
 
-    #undef CAM_VIDEO_CONTROL
-    #undef CAM_HAS_JOGDIAL
-    #undef CAM_USE_ZOOM_FOR_MF
-    #undef CAM_HAS_ERASE_BUTTON
-    #undef CAM_HAS_IRIS_DIAPHRAGM
-    #undef CAM_HAS_MANUAL_FOCUS
-    #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
+    #undef  CAM_VIDEO_CONTROL
+    #undef  CAM_USE_ZOOM_FOR_MF
+    #undef  CAM_HAS_ERASE_BUTTON
+    #undef  CAM_HAS_IRIS_DIAPHRAGM
+    #undef  CAM_HAS_MANUAL_FOCUS
+    #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 
-    #undef CAM_USES_ASPECT_CORRECTION
+    #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
 
     #undef  CAM_BITMAP_WIDTH

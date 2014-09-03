@@ -34,7 +34,6 @@
     #define CAM_MENU_BORDERWIDTH            10
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_HAS_JOGDIAL                 1
-    #define CAM_HAS_ERASE_BUTTON            1
     #undef  CAM_KEY_PRESS_DELAY
     #define CAM_KEY_PRESS_DELAY             60      // delay after a press
 
@@ -117,7 +116,6 @@
     #define CAM_HAS_GPS                     1
 
     #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
-    #undef CAM_AF_SCAN_DURING_VIDEO_RECORD
 
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1

@@ -49,7 +49,6 @@
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #define CAM_QUALITY_OVERRIDE            1
 
-    #define CAM_HAS_ZOOM_LEVER              1    // Camera has dedicated zoom buttons
 //    #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments
     #define CAM_NEED_SET_ZOOM_DELAY         100  // Define to add a delay after setting the zoom position
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoo

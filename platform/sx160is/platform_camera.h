@@ -97,7 +97,6 @@
     #define CAM_DETECT_SCREEN_ERASE                     1 // Turn on guard pixels to detect screen erase and redraw CHDK buttons and menus
 
     #undef  CAM_USE_ZOOM_FOR_MF
-    #define CAM_HAS_ZOOM_LEVER                          1 // Camera has dedicated zoom buttons
     #define CAM_NEED_SET_ZOOM_DELAY                   300 // Define to add a delay after setting the zoom position
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS             1 // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
     #define CAM_USE_ALT_SET_ZOOM_POINT                  1 // Define to use the alternate code in lens_set_zoom_point()

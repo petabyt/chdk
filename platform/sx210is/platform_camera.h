@@ -76,11 +76,7 @@
     // camera name
     #define PARAM_CAMERA_NAME               4 // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
-    #undef  CAM_WHITE_LEVEL
-    #undef  CAM_BLACK_LEVEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
-    #define CAM_WHITE_LEVEL                 ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)
-    #define CAM_BLACK_LEVEL                 127
 
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              5

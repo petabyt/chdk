@@ -48,8 +48,6 @@
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1               // camera uses the modified graphics primitives to map screens and viewports to buffers more sized
-    #undef  CAM_SCREEN_WIDTH
-    #define CAM_SCREEN_WIDTH                360             // Width of bitmap screen in CHDK co-ordinates (360 or 480)
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              13              // existing palette with closest color match for defaults and pallete overwrite support
     #define CAM_LOAD_CUSTOM_COLORS          1               // Enable loading CHDK colors into the camera palette memory/hardware

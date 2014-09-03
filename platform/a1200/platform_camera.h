@@ -105,8 +105,6 @@
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Face", "Disp" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_FACE, KEY_DISPLAY }
 
-    #define CAM_HAS_ZOOM_LEVER               1    // Camera has dedicated zoom buttons
-    #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments
     #define CAM_NEED_SET_ZOOM_DELAY          300  // Define to add a delay after setting the zoom position
     #define CAM_USE_ALT_SET_ZOOM_POINT       1    // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()

@@ -87,18 +87,17 @@
     //To do
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1
-    #undef CAM_BITMAP_WIDTH
+    #undef  CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                720   // Actual width of bitmap screen in bytes
 
-    #define  CAM_ADJUSTABLE_ALT_BUTTON      1   // ALT-button can be set from menu
+    #define CAM_ADJUSTABLE_ALT_BUTTON       1   // ALT-button can be set from menu
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Help" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_HELP }
 
     #define CAM_HAS_FILEWRITETASK_HOOK      1
     #define CAM_FILEWRITETASK_SEEKS         1
 
-    #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
-    #define CAM_HAS_ZOOM_LEVER              1       // Camera has dedicated zoom buttons
+    #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_USE_ALT_SET_ZOOM_POINT      1       // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1      // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 

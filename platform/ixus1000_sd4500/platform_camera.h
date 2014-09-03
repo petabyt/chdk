@@ -33,7 +33,6 @@
     #define EXMEM_HEAP_SKIP                 (0x08000000-0x07D08A00)     // G12 & SX30 uses movie memory buffers at the top of the memory allocated by exmem_alloc
     #define EXMEM_BUFFER_SIZE (1024*1024*2)        // desired amount of exmem memory to allocate
 
-    #define CAM_USE_ZOOM_FOR_MF             1
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
 
