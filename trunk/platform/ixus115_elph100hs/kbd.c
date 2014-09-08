@@ -56,7 +56,6 @@ static KeyMap keymap[] = {
 	// tiny bug: key order matters. KEY_SHOOT_FULL needs to come before KEY_SHOOT_HALF and KEY_SHOOT_FULL_ONLY
 
 	{ 0, KEY_PLAYBACK    ,0x00000001 },
-	{ 0, KEY_PRINT       ,0x00000001 }, // set <ALT> key default to Playback key
 	{ 1, KEY_MENU        ,0x01000000 }, // Found @0xffb99680, levent 0x09
 	{ 1, KEY_SET         ,0x04000000 }, // Found @0xffb99688, levent 0x08
 	{ 1, KEY_ZOOM_OUT    ,0x10000000 }, // Found @0xffb99690, levent 0x03
