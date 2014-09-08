@@ -33,8 +33,6 @@ void taskHook(context_t **context)
 	Main entry point for the CHDK code
 -----------------------------------------------------------------------*/
 
-
-
 void __attribute__((naked,noinline)) boot(  ) {
 asm volatile (
 "	LDR	R1, =0xC0410000 \n"
