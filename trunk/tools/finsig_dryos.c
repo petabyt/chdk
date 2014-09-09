@@ -5181,12 +5181,14 @@ void find_key_vals(firmware *fw)
             print_kval(fw,tadr,tsiz,tlen,0x20A,"SD_READONLY","_FLAG");
             print_kval(fw,tadr,tsiz,tlen,0x202,"USB","_MASK");
             print_kval(fw,tadr,tsiz,tlen,0x205,"BATTCOVER","_FLAG");
+            print_kval(fw,tadr,tsiz,tlen,0x204,"HOTSHOE","_FLAG");
         }
         else
         {
             print_kval(fw,tadr,tsiz,tlen,0x90A,"SD_READONLY","_FLAG");
             print_kval(fw,tadr,tsiz,tlen,0x902,"USB","_MASK");
             print_kval(fw,tadr,tsiz,tlen,0x905,"BATTCOVER","_FLAG");
+            print_kval(fw,tadr,tsiz,tlen,0x904,"HOTSHOE","_FLAG");
         }
 
         uint32_t key_half = add_kmval(fw,tadr,tsiz,tlen,0,"KEY_SHOOT_HALF",0);
