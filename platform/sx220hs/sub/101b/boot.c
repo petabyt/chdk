@@ -388,6 +388,15 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 				 "BL      CreateTask_spytask\n"        // added
 			//	 "BL      sub_FF024524\n"
 				 "BL	  taskcreatePhySw_my\n"        // patched			
+
+                #if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
+                "    LDR     R0, =0x100000\n"    // Pause for startup with battery door open
+                "batt_delay:\n"
+                "    NOP\n"
+                "    SUBS    R0,R0,#1\n"
+                "    BNE     batt_delay\n"
+                #endif
+
                  "BL      sub_FF027F48\n"
                  "BL      sub_FF02D544\n"
                  "BL      sub_FF021638\n"              //nullsub_2

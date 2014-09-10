@@ -31,6 +31,9 @@ extern void _GetKbdState(long*);
 #define USB_MASK (0x4000000)
 #define USB_IDX  2
 
+#define BATTCOVER_FLAG      0x00008000 // Found @0xff3b18a4, levent 0x905
+#define BATTCOVER_IDX       2
+
 int get_usb_bit() 
 {
     long usb_physw[3];
@@ -187,6 +190,9 @@ void my_kbd_read_keys() {
         physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
     } else {
         physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
+#if defined(OPT_RUN_WITH_BATT_COVER_OPEN) 
+        physw_status[BATTCOVER_IDX] = physw_status[BATTCOVER_IDX] | BATTCOVER_FLAG;
+#endif 
     }
 
 }
