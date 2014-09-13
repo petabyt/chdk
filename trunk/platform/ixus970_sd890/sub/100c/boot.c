@@ -26,6 +26,7 @@ void taskCreateHook(int *p) {
 	if (p[0]==0xFF85E03C)  p[0]=(int)capt_seq_task;
 	if (p[0]==0xFF878F84)  p[0]=(int)init_file_modules_task;
 	if (p[0]==0xFF8B6864)  p[0]=(int)exp_drv_task;
+	if (p[0]==0xFFA10248)  p[0]=(int)filewritetask;
 }
 
 void boot()
