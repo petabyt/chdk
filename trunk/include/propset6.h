@@ -74,6 +74,7 @@ The build uses tools/gen_propset_lua.sed to generate propset6.lua from this file
 #define PROPCASE_ASPECT_RATIO                    299        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
 #define PROPCASE_SV                              346        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_GPS                             357        // (CHDKLover, August 2011) - contains a 272 bytes long structure
+#define PROPCASE_TIMER_SHOTS                     376        // Number of shots for TIMER_MODE=Custom
 
 // !not sure
 //#define PROPCASE_DIGITAL_ZOOM_MODE               91         // Digital Zoom Mode/State 0 = off/standard, 2 = 1.7x, 3 = 2.1x
