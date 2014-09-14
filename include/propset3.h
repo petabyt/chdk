@@ -54,4 +54,5 @@ WARNING:
 #define PROPCASE_AF_LOCK                    11      // 0 = AF not locked, 1 = AF locked
 #define PROPCASE_CONTINUOUS_AF              12      // 0 = Continuous AF off, 1 = Continuous AF on
 #define PROPCASE_SERVO_AF                   297     // 0 = Servo AF off, 1 = Servo AF on
+#define PROPCASE_TIMER_SHOTS                336     // Number of shots for TIMER_MODE=Custom
 #endif

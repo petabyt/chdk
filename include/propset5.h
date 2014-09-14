@@ -57,7 +57,7 @@ The build uses tools/gen_propset_lua.sed to generate propset5.lua from this file
 #define PROPCASE_IS_FLASH_READY                  212
 #define PROPCASE_RESOLUTION                      222        // 0 = L, 1 = M1, 2 = M2, 4 = S, 7 = Low Light
 #define PROPCASE_ORIENTATION_SENSOR              223
-#define PROPCASE_TIMER_MODE                      227        // 0 = OFF, 1 = 2 sec, 2 = 10 sec, 3 = Costom
+#define PROPCASE_TIMER_MODE                      227        // 0 = OFF, 1 = 2 sec, 2 = 10 sec, 3 = Custom
 #define PROPCASE_TIMER_DELAY                     228        // timer delay in msec
 #define PROPCASE_CUSTOM_SHARPNESS                229        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_STITCH_DIRECTION                237        // 0=left>right, 1=right>left. Some cams have more
@@ -73,6 +73,7 @@ The build uses tools/gen_propset_lua.sed to generate propset5.lua from this file
 #define PROPCASE_ASPECT_RATIO                    300        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
 #define PROPCASE_SV                              347        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_GPS                             358        // (CHDKLover, August 2011) - contains a 272 bytes long structure
+#define PROPCASE_TIMER_SHOTS                     377        // Number of shots for TIMER_MODE=Custom
 
 // !not sure
 //#define PROPCASE_DIGITAL_ZOOM_MODE               91         // Digital Zoom Mode/State 0 = off/standard, 2 = 1.7x, 3 = 2.1x
