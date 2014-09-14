@@ -86,6 +86,7 @@
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
     #define CAM_HAS_FILEWRITETASK_HOOK      1
+    #define CAM_FILEWRITETASK_MULTIPASS      1
 
     #define CAM_NEED_SET_ZOOM_DELAY         150  // Define to add a delay after setting the zoom position
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom

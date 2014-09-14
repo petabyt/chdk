@@ -106,6 +106,7 @@
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_FACE, KEY_DISPLAY }
 
     #define CAM_HAS_FILEWRITETASK_HOOK      1
+    #define CAM_FILEWRITETASK_MULTIPASS      1
 
     // Define shortcut overrides where defaults are not suitable
     // a3200 has no erase button, so make DISP button the toggle_raw and Alt +/- shortcuts.

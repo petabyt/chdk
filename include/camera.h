@@ -101,7 +101,8 @@
     #define CAM_CHDK_PTP                    1   // include CHDK PTP support
 
     #undef  CAM_HAS_FILEWRITETASK_HOOK          // FileWriteTask hook is available (local file write can be prevented)
-    #undef  CAM_FILEWRITETASK_SEEKS             // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
+    #undef  CAM_FILEWRITETASK_SEEKS             // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, implicitly enables CAM_FILEWRITETASK_MULTIPASS when defined
+    #undef  CAM_FILEWRITETASK_MULTIPASS         // Camera may use multiple FileWriteTask invocations to write larger JPEGs (approx. DryOS r39..49)
 
     #define CAM_UNCACHED_BIT                0x10000000 // bit indicating the uncached memory
 
@@ -284,6 +285,10 @@
 
 #ifndef OPT_PTP
     #undef CAM_CHDK_PTP
+#endif
+
+#ifdef CAM_FILEWRITETASK_SEEKS
+    #define CAM_FILEWRITETASK_MULTIPASS 1
 #endif
 
 // Define default video AF scan buttons if not already defined in platform_camera.h

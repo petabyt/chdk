@@ -78,6 +78,7 @@
     #define CAM_DATE_FOLDER_NAMING           0x100 //Value found in the last function, which is called in GetImageFolder. (first compare)
 
     #define CAM_HAS_FILEWRITETASK_HOOK       1
+    #define CAM_FILEWRITETASK_MULTIPASS      1
 
     #define CAM_NEED_SET_ZOOM_DELAY          150  // Define to add a delay after setting the zoom position
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom

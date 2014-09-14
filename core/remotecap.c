@@ -29,9 +29,9 @@ static int linecount=0;
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
 static int jpeg_curr_chunk;
 static int jpeg_last_status;
-#ifdef CAM_FILEWRITETASK_SEEKS
+#ifdef CAM_FILEWRITETASK_MULTIPASS
 static int jpeg_session_wait; // should the current invocation of the jpeg hook block
-#endif //CAM_FILEWRITETASK_SEEKS
+#endif //CAM_FILEWRITETASK_MULTIPASS
 #endif //CAM_HAS_FILEWRITETASK_HOOK
 
 
@@ -95,7 +95,12 @@ int remotecap_set_target( int type, int lstart, int lcount )
     // or current mode cannot support requested types
     if ((type & ~remotecap_get_target_support()) 
         || !camera_info.state.mode_rec
-        || ((type & PTP_CHDK_CAPTURE_RAW) && !is_raw_possible())) {
+        || ((type & PTP_CHDK_CAPTURE_RAW) && !is_raw_possible())
+#if defined(CAM_FILEWRITETASK_MULTIPASS) && !defined(CAM_FILEWRITETASK_SEEKS)
+    // other drive modes do not work on these cams currently
+        || (shooting_get_drive_mode() != 0)
+#endif
+        ) {
         remotecap_reset();
         return 0;
     }
@@ -217,7 +222,7 @@ void remotecap_jpeg_available() {
     if(!(remote_file_target & PTP_CHDK_CAPTURE_JPG)) {
         return;
     }
-#ifdef CAM_FILEWRITETASK_SEEKS
+#ifdef CAM_FILEWRITETASK_MULTIPASS
     // need custom wait code here to resume if jpeg queue is done
     int wait = hook_wait_max;
 
@@ -289,7 +294,7 @@ int remotecap_send_complete(int rcgd_status, int type) {
         // currently only one data type can be available at a time
         remotecap_set_available_data_type(0);
     }
-#ifdef CAM_FILEWRITETASK_SEEKS
+#ifdef CAM_FILEWRITETASK_MULTIPASS
     else if(type == PTP_CHDK_CAPTURE_JPG && jpeg_last_status == REMOTECAP_JPEG_CHUNK_STATUS_SESS_LAST) {
         remotecap_jpeg_chunks_done(); // make jpeg_chunks NULL, immediately
         jpeg_session_wait = 0;
