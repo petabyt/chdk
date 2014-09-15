@@ -1,11 +1,13 @@
 ************************************
 SX220 HS Notes
+**************
+ To enter CHDK <Alt> mode use the playback button.
 
-To enter CHDK <Alt> mode use the playback button.
-
-Support for dual partition is not available.
+ Support for dual partition is not available.
+ Bootable from FAT32
 
 Shortcut Keys
+*************
  In Alt mode
  TOGGLE RAW                DISPLAY Key
  In Half press shoot Mode  
@@ -14,5 +16,13 @@ Shortcut Keys
  TOGGLE OSD                RIGHT Key
  TOGGLE DISABLE OVERRIDES  LEFT Key
 
+Special features
+****************
+ extended video time 2h
+ optional: battery door open start
+
 Known issues
- 'Movie Digest' mode does not work under CHDK, camera crashes.
+************
+ edge overlay filter function does not work
+
+************************************
