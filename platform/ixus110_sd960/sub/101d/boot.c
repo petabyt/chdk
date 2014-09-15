@@ -20,6 +20,8 @@ extern void task_CaptSeq();
 extern void task_InitFileModules();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
+extern void task_RotaryEncoder();
+extern void task_FileWrite();
 void task_JogDial_my();
 
 void taskHook(context_t **context) { 
@@ -31,7 +33,8 @@ void taskHook(context_t **context) {
  if(tcb->entry == task_InitFileModules) tcb->entry = (void*)init_file_modules_task;
  if(tcb->entry == task_MovieRecord)     tcb->entry = (void*)movie_record_task;
  if(tcb->entry == task_ExpDrv)          tcb->entry = (void*)exp_drv_task;
- if(tcb->entry == (void*)0xFF844220)           tcb->entry = (void*)task_JogDial_my;
+ if(tcb->entry == task_RotaryEncoder)   tcb->entry = (void*)task_JogDial_my;
+ if(tcb->entry == task_FileWrite)       tcb->entry = (void*)filewritetask;
 }
 
 #define DEBUG_LED ((unsigned volatile *)0xC0220130) // green?
