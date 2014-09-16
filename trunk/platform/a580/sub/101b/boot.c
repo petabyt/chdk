@@ -25,6 +25,7 @@ void taskCreateHook(int *p) {
  if (p[0]==0xFFC5FEA0)  p[0]=(int)task_InitFileModules_my;		//done
  if (p[0]==0xFFC46678)  p[0]=(int)MovieRecord_Task_my;		//done
  if (p[0]==0xFFC91194)  p[0]=(int)exp_drv_task; //done
+ if (p[0]==0xFFDCB5A8)  p[0]=(int)filewritetask;
 }
 
 void taskCreateHook2(int *p) { 

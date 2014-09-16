@@ -33,3 +33,18 @@ void debug_led(int state)
 int get_flash_params_count(void){
  return 115; //Corrected! from 114 (x73 = 115 form Stubs_Entry.S)
 }
+
+// PTP display stuff
+// TODO type may not be correct
+int vid_get_palette_type() { return 1; }
+int vid_get_palette_size() { return 16*4; }
+
+void *vid_get_bitmap_active_palette() 
+{
+    return (void *)0x3CEC0;        //Found @ 0xffcc4b7c - Two refs to "BmpDDev"
+}
+
+void *vid_get_bitmap_active_buffer() 
+{
+    return (void*)(*(int*)0x752c); //Found @ 0xffcc4b7c - Two refs to "BmpDDev"
+}
