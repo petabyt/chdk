@@ -12,6 +12,7 @@ void taskCreateHook(int *p)
 	if (p[0]==0xFF85DE30)  p[0]=(int)capt_seq_task; // OK
 	if (p[0]==0xFF87719C)  p[0]=(int)init_file_modules_task; // OK // WORK!
 	if (p[0]==0xFF8B478C)  p[0]=(int)exp_drv_task; // OK
+	if (p[0]==0xFFA0AFE8)  p[0]=(int)filewritetask;
 }
 
 void CreateTask_spytask()
@@ -101,10 +102,13 @@ void __attribute__((naked,noinline)) sub_FF810FA0_my() // OK
 		"MOV     R1, #0x74\n"
 		"BL      sub_FFAA6FAC\n"
 		"MOV     R0, #0x53000\n"
-		"STR     R0, [SP,#0x74-0x70]\n"
-//		"LDR     R0, =0xCBA08\n"
+		"STR     R0, [SP,#4]\n"
+#if defined(CHDK_NOT_IN_CANON_HEAP)
+		"LDR     R0, =0xCBA08\n"
+#else
 		"LDR     R0, =new_sa\n" // +
 		"LDR     R0, [R0]\n" // +
+#endif
 		"LDR     R2, =0x279C00\n"
 		"LDR     R1, =0x272968\n"
 		"STR     R0, [SP,#0x74-0x6C]\n"
