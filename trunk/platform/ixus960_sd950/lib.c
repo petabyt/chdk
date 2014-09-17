@@ -79,3 +79,19 @@ debug_led(state);
 int get_flash_params_count(void){
 return 114; 
 }
+
+// PTP display stuff
+// TODO type may not be correct
+int vid_get_palette_type() { return 1; }
+int vid_get_palette_size() { return 16*4; }
+
+void *vid_get_bitmap_active_palette() 
+{
+    return (void *)0x46384;        //Found @ 0xff8e736c - Two refs to "BmpDDev"
+}
+
+void *vid_get_bitmap_active_buffer() 
+{
+    return (void*)(*(int*)0xD18C); //Found @ 0xff8e736c - Two refs to "BmpDDev"
+}
+
