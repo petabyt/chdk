@@ -19,6 +19,7 @@ void taskCreateHook(unsigned int *p)
 	if (p[0]==0xFF85E2b0)  p[0]=(unsigned int)capt_seq_task;
 	if (p[0]==0xFF8791D0)  p[0]=(unsigned int)init_file_modules_task;
 	if (p[0]==0xFF8b6A80)  p[0]=(unsigned int)exp_drv_task;
+	if (p[0]==0xFFA0F034)  p[0]=(int)filewritetask;
 }
 
 void boot();
@@ -47,11 +48,6 @@ void boot() { //#fs
     for(i=0;i<canon_bss_len/4;i++)
 	canon_bss_start[i]=0;
 
-	// asm volatile ("B   sub_FF810000\n" );
-
- 	 // Captain Hook
-	 *(int*)0x1930 = (int)taskCreateHook;
-
     // jump to init-sequence that follows the data-copy-routine 
     asm volatile ("B  sub_FF8101A4_my\n" );
 }; //#fe
@@ -59,8 +55,14 @@ void boot() { //#fs
 
 // init
 void __attribute__((naked,noinline)) sub_FF8101A4_my() { //#fs 
-        asm volatile (
+    //http://chdk.setepontos.com/index.php/topic,4194.0.html
+    *(int*)0x1930=(int)taskCreateHook;
 
+    // replacement of sub_FF821C08  (sub_FF842634) for correct power-on.
+    //(short press = playback mode, long press = record mode)
+    *(int*)(0x2290)= (*(int*)0xC02200F8) & 1 ? 0x100000 : 0x200000;
+
+        asm volatile (
 "loc_FF8101A4:\n" //                               ; CODE XREF: ROM:FF810160j
         "LDR     R0, =0xFF81021C\n"
         "MOV     R1, #0\n"
@@ -108,10 +110,13 @@ void __attribute__((naked,noinline)) sub_FF810FA0_my() { //#fs
         "MOV     R1, #0x74\n"
         "BL      sub_FFAACA5C\n"
         "MOV     R0, #0x53000\n"
-        "STR     R0, [SP,#0x74-0x70]\n"
-        //"LDR     R0, =0xCBC48\n"
+        "STR     R0, [SP, #4]\n"
+#if defined(CHDK_NOT_IN_CANON_HEAP)
+        "LDR     R0, =0xCBC48\n"
+#else
         "LDR     R0, =new_sa\n"
         "LDR     R0, [R0]\n"
+#endif
         "LDR     R2, =0x279C00\n"
         "LDR     R1, =0x272968\n"
         "STR     R0, [SP,#0x74-0x6C]\n"
@@ -214,7 +219,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() { //#fs
         "B       loc_FF81CCF8\n"
 
 "loc_FF81CCFC:\n" //                               ; CODE XREF: taskcreate_Startup+10j
-        "BL      sub_FF821C08\n"
+//        "BL      sub_FF821C08\n"  // Removed for correct power-on
         "BL      sub_FF821C04\n"
         "BL      sub_FF828278\n"
         "LDR     R1, =0x2CE000\n"
