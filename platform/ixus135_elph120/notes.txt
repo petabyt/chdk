@@ -1,5 +1,5 @@
 ************************************
-IXUS132 / ELPH115IS Notes
+IXUS135 / ELPH120IS Notes
 ************************************
 To enter CHDK <ALT> mode use the [>] Play button.
 This may be changed to Video in the options
