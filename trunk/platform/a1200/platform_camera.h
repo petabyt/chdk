@@ -117,6 +117,8 @@
     #define CAM_ALLOWS_USB_PORT_FORCING      1    // USB remote state can be forced to be present
     #define GPIO_VSYNC_CURRENT               0xC0F070C8  // vsync current status register used by USB remote precision sync
 
+    #define CAM_HAS_FILEWRITETASK_HOOK       1
+
     #define CAM_SD_OVER_IN_AFL               1
     #define CAM_SD_OVER_IN_MF                1
 
