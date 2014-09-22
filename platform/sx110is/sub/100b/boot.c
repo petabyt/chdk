@@ -3,7 +3,9 @@
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
+#include "dryos31.h"
 
+#define offsetof(TYPE, MEMBER) ((int) &((TYPE *)0)->MEMBER)
 
 #define DP (void*)0xC02200C4					// direct-print (blue)
 #define LED_PR	0xc02200C4
@@ -35,22 +37,26 @@ void debug_my_blink()
 //js
 const char * const new_sa = &_end;
 
+extern void task_PhySw();
+extern void task_CaptSeq();
+extern void task_InitFileModules();
+extern void task_MovieRecord();
+extern void task_ExpDrv();
+extern void task_FileWrite();
+extern void task_RotaryEncoder();
 void JogDial_task_my(void);
 
-void taskCreateHook(int *p) { 
- p-=17;
- if (p[0]==0xFFC503B0)  p[0]=(int)capt_seq_task;	
- if (p[0]==0xFFC11060)  p[0]=(int)mykbd_task;
- if (p[0]==0xFFC67A68)  p[0]=(int)init_file_modules_task;
- if (p[0]==0xFFC36528)  p[0]=(int)JogDial_task_my;	
- if (p[0]==0xFFC4CC8C)  p[0]=(int)movie_record_task;	 
- if (p[0]==0xFFC8BDDC)  p[0]=(int)exp_drv_task;	 
+void taskCreateHook(context_t **context) { 
 
-}
+    task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
 
-void taskCreateHook2(int *p) { 
- p-=17;
- if (p[0]==0xFFC67A68)  p[0]=(int)init_file_modules_task;
+    if(tcb->entry == (void*)task_CaptSeq)           tcb->entry = (void*)capt_seq_task;
+    if(tcb->entry == (void*)task_PhySw)             tcb->entry = (void*)mykbd_task;
+    if(tcb->entry == (void*)task_RotaryEncoder)     tcb->entry = (void*)JogDial_task_my;
+    if(tcb->entry == (void*)task_InitFileModules)   tcb->entry = (void*)init_file_modules_task;
+    if(tcb->entry == (void*)task_MovieRecord)       tcb->entry = (void*)movie_record_task;
+    if(tcb->entry == (void*)task_ExpDrv)            tcb->entry = (void*)exp_drv_task;
+    if(tcb->entry == (void*)task_FileWrite)         tcb->entry = (void*)filewritetask;
 }
 
 void CreateTask_spytask() {
@@ -96,7 +102,7 @@ void boot() { //#fs
 //JS
 void __attribute__((naked,noinline)) loc_FFC001A4_my() {
 	*(int*)0x1930=(int)taskCreateHook;
-	*(int*)0x1934=(int)taskCreateHook2;
+	*(int*)0x1934=(int)taskCreateHook;
     *(int*)(0x2478+0x4) = (*(int*)0xC02200B8)&1 ? 0x100000: 0x200000; // replacement of sub_FFC111A4	//from taskcreate_startup to sub_FFC111A4 and there to sub_FFC35CC4
 	asm volatile (
 		"loc_FFC001A4:\n"		
@@ -161,11 +167,13 @@ void __attribute__((naked,noinline)) sub_FFC00F98_my() {
 			"BL 	sub_FFE8F154\n"
 			"MOV 	R0, #0x53000\n"
 			"STR 	R0, [SP,#0x4]\n"
-//			"LDR 	R0, =0xA2728\n"		// <--- removed
 
+#if defined(CHDK_NOT_IN_CANON_HEAP) // use original heap offset if CHDK is loaded in high memory
+			"LDR 	R0, =0xA2728\n"		// <--- removed
+#else
 			"LDR     R0, =new_sa\n"        	// <--- added
 			"LDR     R0, [R0]\n"           // <--- added
-
+#endif
 			"LDR 	R2, =0x279C00\n"
 			"LDR 	R1, =0x2724A8\n"
 			"STR 	R0, [SP,#0x8]\n"
