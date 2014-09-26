@@ -105,6 +105,8 @@
     #define CAM_USB_EVENTID                     0x202   // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
     #define MKDIR_RETURN_ONE_ON_SUCCESS         1       // mkdir() return 1 on success, 0 on fail.
 
+    #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1
+
 //    #define REMOTE_SYNC_STATUS_LED     0xC0220130   // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_SD_OVER_IN_AF                   1
