@@ -29,6 +29,9 @@ extern void _platformsub_kbd_fetch_data(long*);
 #define USB_MASK (0x200000)
 #define USB_IDX  2
 
+#define BATTCOVER_FLAG      0x00008000 // Found @0xffafe43c, levent 0x905
+#define BATTCOVER_IDX       0
+
 int get_usb_bit() 
 {
 	long usb_physw[3];
@@ -175,6 +178,10 @@ void my_kbd_read_keys()
 	}
 	
 	_kbd_read_keys_r2(physw_status);
+
+#if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
+	physw_status[BATTCOVER_IDX] = physw_status[BATTCOVER_IDX] | BATTCOVER_FLAG;
+#endif
 
 	if (conf.remote_enable) {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
