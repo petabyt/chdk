@@ -95,6 +95,8 @@
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 68447   // Override max subject distance
 
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
     #define CAM_SD_OVER_IN_AF               1
