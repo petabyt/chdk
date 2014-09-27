@@ -52,6 +52,7 @@ ENDFUNC
 //////////////////////////////////////////////////////////////
 FUNC ref=0 length=27
 >>>
+
    // Replacement of sub_ for correct power-on.
    // (enables short press = playback mode, long press = record mode)
    //   1) sub_FF0320E8 -> sub_FF093058 -> sub_FF090770  (sub_FF0320E8 passes 0x14, 0x50, 0x51, 0x15 for play/shoot/wifi/usb ?) 
@@ -62,6 +63,7 @@ FUNC ref=0 length=27
         *(int*)(0x2FD4) = 0x01000000;   // playback mode
     else
         *(int*)(0x2FD4) = 0x00400000;   // shooting mode
+
 <<<
 ASM
 FW $-1
@@ -335,7 +337,7 @@ FILE movie_rec.c
 <<<
 FUNC sig=task_MovieRecord name=movie_record_task
 ASM
-FW 58
+FW 59
 >>>
 "    BL      unlock_optical_zoom\n" // added
 <<<

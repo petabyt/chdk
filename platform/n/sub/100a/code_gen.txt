@@ -337,7 +337,7 @@ FILE movie_rec.c
 <<<
 FUNC sig=task_MovieRecord name=movie_record_task
 ASM
-FW 58
+FW 59
 >>>
 "    BL      unlock_optical_zoom\n" // added
 <<<
