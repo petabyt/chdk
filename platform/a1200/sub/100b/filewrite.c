@@ -240,6 +240,7 @@ asm volatile (
 "    CMP R3, #0\n"
 "    BNE loc_D\n" // jump over the next block
 //mod end
+
 "    BL      sub_FF836AE4 \n"
 "    B       sub_FFA891B4 \n"
 

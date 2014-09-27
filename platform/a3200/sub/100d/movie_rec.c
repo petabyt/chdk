@@ -168,7 +168,7 @@ asm volatile (
 
 "loc_FF96919C:\n"
 "    MOV     R1, #0x3E8 \n"
-"    BL      sub_FFB585CC \n"
+"    BL      sub_FFB585CC /*__divmod_unsigned_int*/ \n"
 "    B       loc_FF9691B4 \n"
 
 "loc_FF9691A8:\n"
@@ -405,7 +405,7 @@ asm volatile (
 "    LDR     R9, [R6, #0x4C] \n"
 "    LDR     R1, =0x138D \n"
 "    MUL     R0, R9, R11 \n"
-"    BL      sub_FFB585CC \n"
+"    BL      sub_FFB585CC /*__divmod_unsigned_int*/ \n"
 "    ADD     R0, R0, #1 \n"
 "    ADD     R0, R0, R0, LSL#2 \n"
 "    STR     R0, [R6, #0x48] \n"

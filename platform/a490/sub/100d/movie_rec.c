@@ -252,7 +252,7 @@ asm volatile (
 "    LDR     R1, [R5, #0x4C] \n"
 "    MUL     R0, R1, R0 \n"
 "    LDR     R1, [R5, #0x48] \n"
-"    BL      sub_FFE7FAAC \n"
+"    BL      sub_FFE7FAAC /*__divmod_unsigned_int*/ \n"
 "    MOV     R4, R0 \n"
 "    BL      sub_FFDF66E0 \n"
 "    LDR     R1, [R5, #0x80] \n"
