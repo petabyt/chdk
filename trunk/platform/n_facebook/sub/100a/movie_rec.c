@@ -83,19 +83,19 @@ asm volatile (
 
 "loc_FF23B1C4:\n"
 "    STR     R5, [R4, #8] \n"
-"    BL      unlock_optical_zoom\n" // added
 "    B       loc_FF23B284 \n"
 
 "loc_FF23B1CC:\n"
+"    BL      unlock_optical_zoom\n" // added
 "    BL      sub_FF23A974 \n"
 "    B       loc_FF23B284 \n"
 
 "loc_FF23B1D4:\n"
 "    LDR     R1, [R4, #0xCC] \n"
+"    BLX     R1 \n"
 "    LDR     R0, =video_compression_rate \n" // added
 "    BL      set_quality \n"                 // added
 "    BL      mute_on_zoom \n"                // added
-"    BLX     R1 \n"
 "    B       loc_FF23B284 \n"
 
 "loc_FF23B1E0:\n"
