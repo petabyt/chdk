@@ -1365,11 +1365,13 @@ void disassemble(firmware *fw, FILE *outfile, t_address start, t_value length)
                     if ((options.flags & disopt_patch_comment) && patch_comment)
                     {
                         fprintf(outfile, " %s", patch_comment);
+                        patch_comment = 0;
                     }
                 }
                 else if ((options.flags & disopt_patch_comment) && patch_comment)
                 {
                     fprintf(outfile, "  // %s", patch_comment);
+                    patch_comment = 0;
                 }
                 else if (options.flags & disopt_nullsub_call)
                 {
