@@ -676,8 +676,15 @@ void parse_FW()
             p->fw_is_func_start_offset = 1;
             break;
         default:
-            p->fw_len = strtoul(largs[n],0,0);
-            if (p->fw_len == 0) p->fw_len++;
+            if (strcmp(largs[n], "comment") == 0)
+            {
+                set_op_comment(p,largs[++n]);
+            }
+            else
+            {
+                p->fw_len = strtoul(largs[n],0,0);
+                if (p->fw_len == 0) p->fw_len++;
+            }
             break;
         }
     }
@@ -745,7 +752,7 @@ void parse_REM()
 
     if (largc > 1)
     {
-            set_op_comment(p,largs[1]);
+        set_op_comment(p,largs[1]);
     }
 }
 
@@ -916,6 +923,12 @@ void op_FW(op *p)
 {
     t_address start_address = addr;
     t_address end_address = addr;
+
+    patch_comment = p->comment;
+    if (patch_comment)
+    {
+        options.flags |= disopt_patch_comment;
+    }
 
     if (p->fw_start > 0)
         start_address = p->fw_start;
