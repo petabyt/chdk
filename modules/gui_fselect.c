@@ -40,9 +40,9 @@ gui_handler GUI_MODE_FSELECT_MODULE =
 #define BODY_FONT_LINES         BODY_LINES * FONT_HEIGHT
 #define FOOT_FONT_LINES         FOOT_LINES * FONT_HEIGHT
 
-#define NAME_SIZE               15 // "FILENAME123 "
-#define SIZE_SIZE               7 // "1000 b|M|G"
-#define TIME_SIZE               14 // "01.01'70 00:00"
+#define NAME_SIZE               camera_screen.fselect_name_size  // "FILENAME.123 "  (8.3 filenames)
+#define SIZE_SIZE               camera_screen.fselect_size_size  // "1000 b|M|G"
+#define TIME_SIZE               camera_screen.fselect_time_size  // "01.01'70 00:00"
 
 #define NAME_FONT_SIZE          NAME_SIZE * FONT_WIDTH
 #define EXTE_FONT_SIZE          EXTE_SIZE * FONT_WIDTH
