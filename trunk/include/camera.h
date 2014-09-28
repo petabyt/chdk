@@ -247,6 +247,8 @@
                                                 // Used for the Motion Detect & Live View buffer testing
 
     #undef CAM_FILE_COUNTER_IS_VAR              // file counter is variable file_counter_var in stubs, not a param
+    
+    #define CAM_GUI_FSELECT_SIZE  15, 7, 14     // filename, filesize, filedate camera file select window column widths
 
     // Keyboard repeat and initial delays (override in platform_camera.h if needed)
     #define KBD_REPEAT_DELAY                175

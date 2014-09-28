@@ -73,6 +73,9 @@ typedef struct
     int     zebra_nobuf, zebra_aspect_adjust;           // zebra feature settings
     int     has_variable_aspect;                        // zebra feature settings
     int     menu_border_width;                          // Width of border on each side of CHDK menu
+    int     fselect_name_size;                          // file select window file name column width
+    int     fselect_size_size;                          // file select window file size column width
+    int     fselect_time_size;                          // file select window file date column width
 } _cam_screen;
 
 extern _cam_screen camera_screen;

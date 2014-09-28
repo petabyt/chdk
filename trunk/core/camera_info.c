@@ -114,6 +114,7 @@ _cam_screen camera_screen =
     0,
 #endif
     CAM_MENU_BORDERWIDTH,
+    CAM_GUI_FSELECT_SIZE,
 };
 
 _cam_info camera_info =
