@@ -26,10 +26,11 @@ typedef struct {
     int     *conf_disable;
 } KeyMap;
 
-long kbd_new_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_prev_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_mod_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long touch_panel_state, touch_panel_button;
+long kbd_new_state[4]          = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_prev_state[4]  = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_mod_state[4]   = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long touch_panel_state  =   0xFFFFFFFF;
+static long touch_panel_button =   0xFFFFFFFF;
 
 extern void _GetKbdState(long*);
 extern int kbd_is_blocked(void);
