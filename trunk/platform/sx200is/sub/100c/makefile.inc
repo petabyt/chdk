@@ -6,8 +6,6 @@ PLATFORMOS=dryos
 ROMBASEADDR=0xFF810000
 MAXRAMADDR=0x03FFFFFF
 
-RESTARTSTART=0x50000
-
 # Set up size variables for EXMEM
 EXMEM_HEAP_SKIP=0x2F7600	#(0x44000000-0x43D08A00) from sub_FF86F0C4 = size of video buffers in EXMEM area
 EXMEM_BUFFER_SIZE=0x400000	# Amount of EXMEM memory to allocate for CHDK = 4MB
