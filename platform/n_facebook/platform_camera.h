@@ -62,6 +62,9 @@
     #define CAM_TS_BUTTON_BORDER            50              // 60  = Define this to leave a border on each side of the palette display.
     #undef  CAM_DISP_ALT_TEXT                               // Turn off <ALT> at bottom of screen in Alt mode - changes button color instead
     #define CAM_TOUCHSCREEN_UI              1               // Enable touch screen U/I
+
+    #undef  CAM_EMUL_KEYPRESS_DELAY         
+    #define CAM_EMUL_KEYPRESS_DELAY         80              // Delay to interpret <alt>-button press as longpress
     #undef  CAM_EMUL_KEYPRESS_DURATION
     #define CAM_EMUL_KEYPRESS_DURATION      10
 
