@@ -231,6 +231,8 @@ sx130is,101d,,,
 sx130is,101f,,,
 sx150is,100a,,,
 sx160is,100a,BETA,,
+sx170is,100a,ALPHA,,SKIP_AUTO_BUILD
+sx170is,101a,ALPHA,,SKIP_AUTO_BUILD
 sx20,100f,,,
 sx20,102b,,,
 sx20,102d,,102c,

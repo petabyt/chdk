@@ -1,0 +1,16 @@
+
+PLATFORMID=12918
+
+PLATFORMOS=dryos
+PLATFORMOSVER=52
+
+# start of firmware
+ROMBASEADDR=0xFF810000
+
+# highest RAM address
+MAXRAMADDR=0x03ffffff # 64 MB
+
+MEMISOSTART=0x0016fb10         # original non-exmem
+
+NEED_ENCODED_DISKBOOT = 11
+KEYSYS = d4e
