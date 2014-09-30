@@ -328,15 +328,15 @@ asm volatile (
 "    LDR     R1, [SP, #0x40] \n"
 "    BL      sub_FFA634F4 \n"
 "    LDR     R0, [R6, #0x48] \n"
-"    LDR     R3, =0x65F0 \n"
-"    ADD     R1, R0, #1 \n"
-"    STR     R1, [R6, #0x48] \n"
-"    STR     R3, [SP] \n"
-"    LDR     R0, [SP, #0x40] \n"
-"    SUB     R3, R3, #4 \n"
-"    MOV     R2, #0xF \n"
-"    BL      sub_FFA61698 \n"
-                                   //       |
+"    LDR     R3, =0x65F0 \n"  //     ---> -
+"    ADD     R1, R0, #1 \n"  //            |
+"    STR     R1, [R6, #0x48] \n"  //       |
+"    STR     R3, [SP] \n"  //              |
+"    LDR     R0, [SP, #0x40] \n"  //       |
+"    SUB     R3, R3, #4 \n"  //      ---> -
+"    MOV     R2, #0xF \n"  //              |
+"    BL      sub_FFA61698 \n"  //          |
+                                   //      |
 "    LDR     R0, =0x65F0-4\n"      // -<---     // +
 "    BL      set_quality\n"                     // +
 
