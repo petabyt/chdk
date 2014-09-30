@@ -60,6 +60,13 @@ ENDFUNC
 //////////////////////////////////////////////////////////////
 FUNC ref=0 length=30
 ASM
+FW 4
+FW 4 comment="dmSetup"
+FW 5 comment="termDriverInit"
+FW 5 comment="termDeviceCreate"
+FW 4 comment="stdioSetup"
+FW 4 comment="stdlibSetup"
+FW comment="armlib_setup"
 FW $-1
 PATCHSUB ref=0 name=taskcreate_Startup_my
 ENDASM
@@ -75,7 +82,8 @@ FW 14
 REM "-- replaced for power button startup"
 FW 8
 PATCHSUB ref=0 name=task_Startup_my
-FW $
+FW 2
+FW $ comment="Startup"
 ENDASM
 ENDFUNC
 
@@ -100,7 +108,8 @@ FW 5
 "    BNE     batt_delay\n"
 #endif
 <<<
-FW $
+FW 7 comment="taskcreate_PhySw"
+FW $ comment="taskcreate_TempCheck"
 ENDASM
 ENDFUNC
 
@@ -229,9 +238,17 @@ ENDFUNC
 //////////////////////////////////////////////////////////////
 FUNC ref=0
 ASM
-FW 193
+FW 185
+FW comment = "    ---> -"
+FW comment = "           |"
+FW comment = "      |"
+FW comment = "             |"
+FW comment = "      |"
+FW comment = "     ---> -"
+FW comment = "             |"
+FW comment = "         |"
 >>> prelabel
-                                   //       |
+                                   //      |
 "    LDR     R0, =0x65F0-4\n"      // -<---     // +
 "    BL      set_quality\n"                     // +
 <<<
@@ -298,14 +315,7 @@ ENDFUNC
 FUNC ref=0
 ASM
 FW 16
->>>
-// ShutterSoundTask
-<<<
-FW 16
->>>
-// had sub_FF8FDD18 -> sub_FFA2AC8C ???
-<<<
-FW 11
+FW 27 comment="ShutterSoundTask"
 >>>
 "    BL      wait_until_remote_button_is_released\n"     // +
 "    BL      capt_seq_hook_set_nr\n"                     // +

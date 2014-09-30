@@ -242,29 +242,29 @@ asm volatile (
 "    BL      sub_FF810954 \n"
 "    BL      sub_FF8190B4 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E4C \n"
+"    LDRLT   R0, =0xFF814E4C \n"  // dmSetup
 "    BLLT    _err_init_task \n"
 "    BL      sub_FF814974 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E54 \n"
+"    LDRLT   R0, =0xFF814E54 \n"  // termDriverInit
 "    BLLT    _err_init_task \n"
 "    LDR     R0, =0xFF814E64 \n"
 "    BL      sub_FF814A5C \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E6C \n"
+"    LDRLT   R0, =0xFF814E6C \n"  // termDeviceCreate
 "    BLLT    _err_init_task \n"
 "    LDR     R0, =0xFF814E64 \n"
 "    BL      sub_FF813578 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E80 \n"
+"    LDRLT   R0, =0xFF814E80 \n"  // stdioSetup
 "    BLLT    _err_init_task \n"
 "    BL      sub_FF818BCC \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E8C \n"
+"    LDRLT   R0, =0xFF814E8C \n"  // stdlibSetup
 "    BLLT    _err_init_task \n"
 "    BL      sub_FF8114A8 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E98 \n"
+"    LDRLT   R0, =0xFF814E98 \n"  // armlib_setup
 "    BLLT    _err_init_task \n"
 "    LDMFD   SP!, {R4,LR} \n"
 "    B       taskcreate_Startup_my \n"  // --> Patched. Old value = 0xFF81C260.
@@ -305,7 +305,7 @@ asm volatile (
 "    LDR     R3, =task_Startup_my \n"  // --> Patched. Old value = 0xFF81C1FC.
 "    MOV     R2, #0 \n"
 "    MOV     R1, #0x19 \n"
-"    LDR     R0, =0xFF81C2E0 \n"
+"    LDR     R0, =0xFF81C2E0 \n"  // Startup
 "    BL      _CreateTask \n"
 "    MOV     R0, #0 \n"
 "    LDMFD   SP!, {R12,PC} \n"
@@ -338,14 +338,14 @@ asm volatile (
 "    SUBS    R0,R0,#1\n"
 "    BNE     batt_delay\n"
 #endif
-"    BL      sub_FF821AC4 \n"
+"    BL      sub_FF821AC4 \n"  // taskcreate_PhySw
 "    BL      sub_FF824B14 \n"
 "    BL      sub_FF829434 \n"
 //"  BL      _sub_FF81EFB0 \n"  // --> Nullsub call removed.
 "    BL      sub_FF82087C \n"
 "    BL      sub_FF828E2C \n"
 "    BL      sub_FF820F20 \n"
-"    BL      sub_FF820788 \n"
+"    BL      sub_FF820788 \n"  // taskcreate_TempCheck
 "    BL      sub_FF81FBC4 \n"
 "    BL      sub_FF829F18 \n"
 "    BL      sub_FF820760 \n"
