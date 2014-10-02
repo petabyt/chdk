@@ -282,9 +282,44 @@ static char * append(char * op, const char *ip) {
     return op;
 }
 
+static char * print_ascii_str(firmware *fw, char *op, t_value w)
+{
+    if (isASCIIstring(fw, w))
+    {
+        char s[500];
+        char *p = adr2ptr(fw, w);
+        int i = 0;
+        while (*p)
+        {
+            switch (*p)
+            {
+            case '\r':
+                s[i++] = '\\';
+                s[i++] = 'r';
+                break;
+            case '\n':
+                s[i++] = '\\';
+                s[i++] = 'n';
+                break;
+            case '\t':
+                s[i++] = '\\';
+                s[i++] = 't';
+                break;
+            default:
+                s[i++] = *p;
+                break;
+            }
+            p++;
+        }
+        s[i] = 0;
+        op += sprintf(op," /*'%s'*/",s);
+    }
+    return op;
+}
+
 /* op = xhex8(op,w) === op += sprintf(op,"&%08lX",w)
  */
-static char * xhex8(char * op, t_value w)
+static char * xhex8(firmware *fw, char * op, t_value w)
 {
     char *s = op;
 
@@ -314,7 +349,10 @@ static char * xhex8(char * op, t_value w)
         }
     }
     else
-        op += sprintf(op,"=0x%X",w) ;
+    {
+        op += sprintf(op,"=0x%X",w);
+        op = print_ascii_str(fw, op, w);
+    }
 
     return op;
 }
@@ -322,7 +360,7 @@ static char * xhex8(char * op, t_value w)
 /* op = ahex8(op,w) === op += sprintf(op,"&%08lX",w)
   --> xhex hacked to insert addresses into linked list for use on pass 3
  */
-static char * ahex8(char * op, t_value w)
+static char * ahex8(firmware *fw, char * op, t_value w)
 {
     struct lnode * lptr ;
     lptr = l_search( dcd_list, w) ;  		// does this DCD address exist already ?
@@ -330,12 +368,12 @@ static char * ahex8(char * op, t_value w)
     if ( lptr ) w = lptr->data ;  					// dereference indirect address (typically pass 3)
     else	l_insert(dcd_list, w, 0) ;  	// add node if not found - typically on pass 1
 
-    return xhex8(op, w);
+    return xhex8(fw, op, w);
 }
 
 /* op = yhex8(op,w) === op += sprintf(op,"&%08lX",w)
  */
-static char * yhex8(char * op, t_value w)
+static char * yhex8(firmware *fw, char * op, t_value w)
 {
     if (options.flags & disopt_patch_value)
     {
@@ -343,6 +381,7 @@ static char * yhex8(char * op, t_value w)
         w = patch_new_val;
     }
     op += sprintf(op,"0x%X",w) ;
+    op = print_ascii_str(fw, op, w);
     return op;
 }
 
@@ -953,7 +992,7 @@ lUndefined:
                 op = sub_hex8(fw, op, result.instr);
             }
             else {
-                op = yhex8(op, result.instr);
+                op = yhex8(fw, op, result.instr);
             }
             break;
     case '$':
@@ -1042,7 +1081,7 @@ lPling:
                     /* Now imm8 is 1, 2, 4 or 8. */
                     n += (0x30002010 >> 4*(imm8-1))&15;
                     n= 1<<n ;
-                    op = yhex8(op, n);
+                    op = yhex8(fw, op, n);
                     }
 
                 }
@@ -1057,7 +1096,7 @@ lPling:
                 t_address a = addr+8;
                 if (instr&(1<<22)) a-=imm8; else a+=imm8;
                 result.addrstart=op;
-                op = xhex8(op, a);
+                op = xhex8(fw, op, a);
                 result.target=a; result.target_type=target_Unknown;
             }
             //}
@@ -1194,7 +1233,7 @@ lPling:
                     if (RD_is(15))
                         op = sub_ahex8(fw, result.addrstart, result.target);
                     else
-                    op = ahex8(result.addrstart, result.target);
+                    op = ahex8(fw, result.addrstart, result.target);
                     break;
                 }
             }
