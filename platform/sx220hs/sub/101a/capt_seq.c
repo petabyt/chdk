@@ -28,7 +28,7 @@ asm volatile (
 "    TST     R0, #1 \n"
 "    BEQ     loc_FF077664 \n"
 "    LDR     R1, =0x47A \n"
-"    LDR     R0, =0xFF077054 \n"
+"    LDR     R0, =0xFF077054 /*'SsShootTask.c'*/ \n"
 "    BL      _DebugAssert \n"
 "    BL      _ExitTask \n"
 "    LDMFD   SP!, {R3-R9,PC} \n"
@@ -286,7 +286,7 @@ asm volatile (
 
 "loc_FF0778E4:\n"
 "    LDR     R1, =0x5DB \n"
-"    LDR     R0, =0xFF077054 \n"
+"    LDR     R0, =0xFF077054 /*'SsShootTask.c'*/ \n"
 "    BL      _DebugAssert \n"
 
 "loc_FF0778F0:\n"
@@ -297,7 +297,7 @@ asm volatile (
 "    LDR     R4, [SP] \n"
 "    LDR     R0, [R4, #8] \n"
 "    CMP     R0, #0 \n"
-"    LDREQ   R0, =0xFF077054 \n"
+"    LDREQ   R0, =0xFF077054 /*'SsShootTask.c'*/ \n"
 "    MOVEQ   R1, #0x118 \n"
 "    BLEQ    _DebugAssert \n"
 "    STR     R6, [R4, #8] \n"
@@ -451,7 +451,7 @@ asm volatile (
 "    MOVNE   R1, #0xBC \n"
 "    BL      wait_until_remote_button_is_released\n"    // added
 "    BL      capt_seq_hook_set_nr\n"                    // added
-"    LDRNE   R0, =0xFF18DAB8 \n"
+"    LDRNE   R0, =0xFF18DAB8 /*'SsCaptureSeq.c'*/ \n"
 "    BLNE    _DebugAssert \n"
 "    LDRH    R0, [SP] \n"
 "    CMP     R0, #1 \n"
@@ -623,7 +623,7 @@ asm volatile (
 "    LDR     R1, =0x1788 \n"
 
 "loc_FF0C4014:\n"
-"    LDR     R0, =0xFF0BF8A8 \n"
+"    LDR     R0, =0xFF0BF8A8 /*'ExpDrv.c'*/ \n"
 "    BL      _DebugAssert \n"
 "    B       loc_FF0C3F44 \n"
 
@@ -1070,7 +1070,7 @@ asm volatile (
 "    BL      sub_FF082604 /*_WaitForAllEventFlag*/ \n"
 "    TST     R0, #1 \n"
 "    LDRNE   R1, =0x7E3 \n"
-"    LDRNE   R0, =0xFF0BF8A8 \n"
+"    LDRNE   R0, =0xFF0BF8A8 /*'ExpDrv.c'*/ \n"
 "    BLNE    _DebugAssert \n"
 
 "loc_FF0C06DC:\n"
@@ -1084,7 +1084,7 @@ asm volatile (
 "    LDMEQFD SP!, {R4-R8,PC} \n"
 "    LDMFD   SP!, {R4-R8,LR} \n"
 "    LDR     R1, =0x7E8 \n"
-"    LDR     R0, =0xFF0BF8A8 \n"
+"    LDR     R0, =0xFF0BF8A8 /*'ExpDrv.c'*/ \n"
 "    B       _DebugAssert \n"
 );
 }
@@ -1099,13 +1099,13 @@ asm volatile (
 "    LDR     R0, [R5, #4] \n"
 "    CMP     R0, #1 \n"
 "    LDRNE   R1, =0x146 \n"
-"    LDRNE   R0, =0xFF0B05C0 \n"
+"    LDRNE   R0, =0xFF0B05C0 /*'Shutter.c'*/ \n"
 "    BLNE    _DebugAssert \n"
 "    CMN     R4, #0xC00 \n"
 "    LDREQSH R4, [R5, #2] \n"
 "    CMN     R4, #0xC00 \n"
 "    MOVEQ   R1, #0x14C \n"
-"    LDREQ   R0, =0xFF0B05C0 \n"
+"    LDREQ   R0, =0xFF0B05C0 /*'Shutter.c'*/ \n"
 "    STRH    R4, [R5, #2] \n"
 "    BLEQ    _DebugAssert \n"
 "    MOV     R0, R4 \n"

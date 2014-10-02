@@ -42,7 +42,7 @@ asm volatile (
 "    BL      sub_FF83A460 /*_ReceiveMessageQueue*/ \n"
 "    CMP     R0, #0 \n"
 "    LDRNE   R1, =0x33F \n"
-"    LDRNE   R0, =0xFFAE0BE0 \n"
+"    LDRNE   R0, =0xFFAE0BE0 /*'dwFWrite.c'*/ \n"
 "    BLNE    _DebugAssert \n"
 "    LDR     R0, [SP, #8] \n"
 "    LDR     R1, [R0] \n"
@@ -189,7 +189,7 @@ asm volatile (
 
 "loc_FFAE0F3C:\n"
 "    LDR     R1, =0x299 \n"
-"    LDR     R0, =0xFFAE0BE0 \n"
+"    LDR     R0, =0xFFAE0BE0 /*'dwFWrite.c'*/ \n"
 "    BL      _DebugAssert \n"
 "    B       loc_FFAE0F30 \n"
 
@@ -227,7 +227,7 @@ asm volatile (
 "    SUB     R4, R4, R0 \n"
 "    CMP     R4, R6 \n"
 "    ADD     R7, R7, R0 \n"
-"    LDRCS   R0, =0xFFAE0BE0 \n"
+"    LDRCS   R0, =0xFFAE0BE0 /*'dwFWrite.c'*/ \n"
 "    MOVCS   R1, #0x2C4 \n"
 "    BLCS    _DebugAssert \n"
 "    CMP     R4, #0 \n"

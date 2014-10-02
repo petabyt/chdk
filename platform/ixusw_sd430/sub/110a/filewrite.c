@@ -57,7 +57,7 @@ asm volatile (
 "    CMP     R0, #0 \n"
 "    MOV     R1, SP \n"
 "    BEQ     loc_FF86AC9C \n"
-"    LDR     R0, =0xFF86AAD8 \n"
+"    LDR     R0, =0xFF86AAD8 /*'dwFWrite.c'*/ \n"
 "    MOV     R1, #0x274 \n"
 "    BL      _DebugAssert \n"
 "    B       loc_FF86ACB4 \n"

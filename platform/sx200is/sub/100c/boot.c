@@ -242,29 +242,29 @@ asm volatile (
 "    BL      sub_FF810954 \n"
 "    BL      sub_FF8190B4 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E4C \n"  // dmSetup
+"    LDRLT   R0, =0xFF814E4C /*'dmSetup'*/ \n"  // dmSetup
 "    BLLT    _err_init_task \n"
 "    BL      sub_FF814974 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E54 \n"  // termDriverInit
+"    LDRLT   R0, =0xFF814E54 /*'termDriverInit'*/ \n"  // termDriverInit
 "    BLLT    _err_init_task \n"
-"    LDR     R0, =0xFF814E64 \n"
+"    LDR     R0, =0xFF814E64 /*'/_term'*/ \n"
 "    BL      sub_FF814A5C \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E6C \n"  // termDeviceCreate
+"    LDRLT   R0, =0xFF814E6C /*'termDeviceCreate'*/ \n"  // termDeviceCreate
 "    BLLT    _err_init_task \n"
-"    LDR     R0, =0xFF814E64 \n"
+"    LDR     R0, =0xFF814E64 /*'/_term'*/ \n"
 "    BL      sub_FF813578 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E80 \n"  // stdioSetup
+"    LDRLT   R0, =0xFF814E80 /*'stdioSetup'*/ \n"  // stdioSetup
 "    BLLT    _err_init_task \n"
 "    BL      sub_FF818BCC \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E8C \n"  // stdlibSetup
+"    LDRLT   R0, =0xFF814E8C /*'stdlibSetup'*/ \n"  // stdlibSetup
 "    BLLT    _err_init_task \n"
 "    BL      sub_FF8114A8 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E98 \n"  // armlib_setup
+"    LDRLT   R0, =0xFF814E98 /*'armlib_setup'*/ \n"  // armlib_setup
 "    BLLT    _err_init_task \n"
 "    LDMFD   SP!, {R4,LR} \n"
 "    B       taskcreate_Startup_my \n"  // --> Patched. Old value = 0xFF81C260.
@@ -305,7 +305,7 @@ asm volatile (
 "    LDR     R3, =task_Startup_my \n"  // --> Patched. Old value = 0xFF81C1FC.
 "    MOV     R2, #0 \n"
 "    MOV     R1, #0x19 \n"
-"    LDR     R0, =0xFF81C2E0 \n"  // Startup
+"    LDR     R0, =0xFF81C2E0 /*'Startup'*/ \n"  // Startup
 "    BL      _CreateTask \n"
 "    MOV     R0, #0 \n"
 "    LDMFD   SP!, {R12,PC} \n"
@@ -415,7 +415,7 @@ asm volatile (
 "    LDR     R0, [R4, #0x70] \n"
 "    CMP     R0, #4 \n"
 "    LDREQ   R1, =0x6D8 \n"
-"    LDREQ   R0, =0xFF857190 \n"
+"    LDREQ   R0, =0xFF857190 /*'Mounter.c'*/ \n"
 "    BLEQ    _DebugAssert \n"
 "    MOV     R1, R6 \n"
 "    MOV     R0, R5 \n"
@@ -457,7 +457,7 @@ asm volatile (
 "    BL      sub_FF8576BC \n"
 "    CMP     R0, #0 \n"
 "    LDMEQFD SP!, {R4-R8,LR} \n"
-"    LDREQ   R0, =0xFF8579A8 \n"
+"    LDREQ   R0, =0xFF8579A8 /*'EMEM MOUNT ERROR!!!\n'*/ \n"
 "    BEQ     sub_FF8115A8 \n"
 "    LDMFD   SP!, {R4-R8,PC} \n"
 );
@@ -634,7 +634,7 @@ asm volatile (
 
 "loc_FF857384:\n"
 "    LDR     R1, =0x5C9 \n"
-"    LDR     R0, =0xFF857190 \n"
+"    LDR     R0, =0xFF857190 /*'Mounter.c'*/ \n"
 "    BL      _DebugAssert \n"
 
 "loc_FF857390:\n"
@@ -661,7 +661,7 @@ asm volatile (
 "loc_FF84858C:\n"
 "    LDR     R3, =0x1BB \n"
 "    LDR     R0, [R6, #0xC] \n"
-"    LDR     R2, =0xFF8487C4 \n"
+"    LDR     R2, =0xFF8487C4 /*'JogDial.c'*/ \n"
 "    MOV     R1, #0 \n"
 "    BL      sub_FF827638 /*_TakeSemaphoreStrictly*/ \n"
 "    MOV     R0, #0x28 \n"

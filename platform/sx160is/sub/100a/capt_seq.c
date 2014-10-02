@@ -28,7 +28,7 @@ asm volatile (
 "    TST     R0, #1 \n"
 "    BEQ     loc_FF8846BC \n"
 "    LDR     R1, =0x491 \n"
-"    LDR     R0, =0xFF88407C \n"
+"    LDR     R0, =0xFF88407C /*'SsShootTask.c'*/ \n"
 "    BL      _DebugAssert \n"
 "    BL      _ExitTask \n"
 "    LDMFD   SP!, {R3-R9,PC} \n"
@@ -283,7 +283,7 @@ asm volatile (
 
 "loc_FF884948:\n"
 "    LDR     R1, =0x5F2 \n"
-"    LDR     R0, =0xFF88407C \n"
+"    LDR     R0, =0xFF88407C /*'SsShootTask.c'*/ \n"
 "    BL      _DebugAssert \n"
 
 "loc_FF884954:\n"
@@ -295,7 +295,7 @@ asm volatile (
 "    LDR     R0, [R5, #8] \n"
 "    CMP     R0, #0 \n"
 "    LDREQ   R1, =0x117 \n"
-"    LDREQ   R0, =0xFF88407C \n"
+"    LDREQ   R0, =0xFF88407C /*'SsShootTask.c'*/ \n"
 "    BLEQ    _DebugAssert \n"
 "    STR     R6, [R5, #8] \n"
 "    B       loc_FF884690 \n"
@@ -504,7 +504,7 @@ asm volatile (
 "    LDR     R1, =0x1675 \n"
 
 "loc_FF8C292C:\n"
-"    LDR     R0, =0xFF8BE714 \n"
+"    LDR     R0, =0xFF8BE714 /*'ExpDrv.c'*/ \n"
 "    BL      _DebugAssert \n"
 "    B       loc_FF8C285C \n"
 
@@ -957,13 +957,13 @@ asm volatile (
 "    LDR     R0, [R5, #4] \n"
 "    CMP     R0, #1 \n"
 "    LDRNE   R1, =0x14D \n"
-"    LDRNE   R0, =0xFF8AE23C \n"
+"    LDRNE   R0, =0xFF8AE23C /*'Shutter.c'*/ \n"
 "    BLNE    _DebugAssert \n"
 "    CMN     R4, #0xC00 \n"
 "    LDREQSH R4, [R5, #2] \n"
 "    CMN     R4, #0xC00 \n"
 "    LDREQ   R1, =0x153 \n"
-"    LDREQ   R0, =0xFF8AE23C \n"
+"    LDREQ   R0, =0xFF8AE23C /*'Shutter.c'*/ \n"
 "    STRH    R4, [R5, #2] \n"
 "    BLEQ    _DebugAssert \n"
 "    MOV     R0, R4 \n"
@@ -976,7 +976,7 @@ asm volatile (
 "    LDMEQFD SP!, {R4-R6,PC} \n"
 "    LDMFD   SP!, {R4-R6,LR} \n"
 "    MOV     R1, #0x158 \n"
-"    LDR     R0, =0xFF8AE23C \n"
+"    LDR     R0, =0xFF8AE23C /*'Shutter.c'*/ \n"
 "    B       _DebugAssert \n"
 );
 }

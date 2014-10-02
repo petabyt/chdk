@@ -196,7 +196,7 @@ asm volatile (
 "    BNE     loc_FF948BC4 \n"
 "    BL      sub_FF94AA40 \n"
 "    LDR     R3, =0x85434 \n"
-"    LDR     R0, =0xFF948AA8 \n"
+"    LDR     R0, =0xFF948AA8 /*'JPEGTimeOut'*/ \n"
 "    B       loc_FF948BDC \n"
 
 "loc_FF948BC4:\n"
@@ -205,7 +205,7 @@ asm volatile (
 "    BEQ     loc_FF948BE8 \n"
 "    BL      sub_FF94AA40 \n"
 "    LDR     R3, =0x85434 \n"
-"    LDR     R0, =0xFF948AB4 \n"
+"    LDR     R0, =0xFF948AB4 /*'JPEGICError'*/ \n"
 
 "loc_FF948BDC:\n"
 "    STR     R9, [R3] \n"

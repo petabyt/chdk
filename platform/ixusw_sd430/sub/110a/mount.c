@@ -221,7 +221,7 @@ asm volatile (
 
 "loc_FF8720C0:\n"
 "    MOV     R1, #0x2A8 \n"
-"    LDR     R0, =0xFF871D94 \n"
+"    LDR     R0, =0xFF871D94 /*'Mounter.c'*/ \n"
 "    ADD     R1, R1, #1 \n"
 "    BL      _DebugAssert \n"
 
