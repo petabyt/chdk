@@ -49,8 +49,8 @@ asm volatile (
 "    BL      sub_00477218 /*_ReceiveMessageQueue*/ \n"
 "    CMP     R0, #0 \n"
 "    LDRNE   R1, =0x38E \n"
-"    LDRNE   R0, =0xFF2C512C \n"
-"    BLNE    sub_00476AFC /*_DebugAssert*/ \n"
+"    LDRNE   R0, =0xFF2C512C /*'dwFWrite.c'*/ \n"
+"    BLNE    _DebugAssert \n"
 "    LDR     R0, [SP, #8] \n"
 "    LDR     R1, [R0] \n"
 "    CMP     R1, #0xB \n"
@@ -88,7 +88,7 @@ asm volatile (
 "    LDR     R0, [R5, #8] \n"
 "    CMN     R0, #1 \n"
 "    BEQ     loc_FF2C50B4 \n"
-"    BL      fwt_close \n"  // --> Patched. Old value = _Close_FW.
+"    BL      fwt_close \n"  // --> Patched. Old value = _Close.
 "    MVN     R0, #0 \n"
 "    STR     R0, [R5, #8] \n"
 "    LDR     R0, =0x14B024 \n"
@@ -99,7 +99,7 @@ asm volatile (
 
 "loc_FF2C50B4:\n"
 "    LDR     R0, [R5, #0x10] \n"
-"    BL      sub_00477704 /*_GiveSemaphore_FW*/ \n"
+"    BL      _GiveSemaphore \n"
 "    B       loc_FF2C4FF4 \n"
 
 "loc_FF2C50C0:\n"
@@ -111,7 +111,7 @@ asm volatile (
 "    MOV     R4, R0 \n"
 "    LDR     R0, [R5, #8] \n"
 "    MOV     R2, #0 \n"
-"    BL      fwt_lseek \n"  // --> Patched. Old value = _Lseek_FW.
+"    BL      fwt_lseek \n"  // --> Patched. Old value = _lseek.
 "    CMN     R0, #1 \n"
 "    LDREQ   R0, =0x9200013 \n"
 "    MOV     R1, R4 \n"
@@ -166,7 +166,7 @@ asm volatile (
 "    MOV     R2, R9 \n"
 "    MOV     R1, R8 \n"
 "    MOV     R0, R7 \n"
-"    BL      fwt_open \n"  // --> Patched. Old value = _Open_FW.
+"    BL      fwt_open \n"  // --> Patched. Old value = _Open.
 "    CMN     R0, #1 \n"
 "    BNE     loc_FF2C4DB0 \n"
 "    MOV     R0, R7 \n"
@@ -191,7 +191,7 @@ asm volatile (
 "    MOV     R2, R9 \n"
 "    MOV     R1, R8 \n"
 "    MOV     R0, R7 \n"
-"    BL      sub_FF02101C /*_Open_FW*/ \n"
+"    BL      _Open \n"
 
 "loc_FF2C4DB0:\n"
 "    CMN     R0, #1 \n"
@@ -272,8 +272,8 @@ asm volatile (
 
 "loc_FF2C5350:\n"
 "    LDR     R1, =0x2DD \n"
-"    LDR     R0, =0xFF2C512C \n"
-"    BL      sub_00476AFC /*_DebugAssert*/ \n"
+"    LDR     R0, =0xFF2C512C /*'dwFWrite.c'*/ \n"
+"    BL      _DebugAssert \n"
 
 "loc_FF2C535C:\n"
 "    MOV     R1, R5 \n"
@@ -298,7 +298,7 @@ asm volatile (
 "    LDR     R0, [R9, #8] \n"
 "    MOV     R2, R6 \n"
 "    MOV     R1, R8 \n"
-"    BL      fwt_write \n"  // --> Patched. Old value = _Write_FW.
+"    BL      fwt_write \n"  // --> Patched. Old value = _Write.
 "    LDR     R1, [R5, #4] \n"
 "    CMP     R6, R0 \n"
 "    ADD     R1, R1, R0 \n"
@@ -315,8 +315,8 @@ asm volatile (
 "    CMP     R4, R7 \n"
 "    ADD     R8, R8, R0 \n"
 "    MOVCS   R1, #0x308 \n"
-"    LDRCS   R0, =0xFF2C512C \n"
-"    BLCS    sub_00476AFC /*_DebugAssert*/ \n"
+"    LDRCS   R0, =0xFF2C512C /*'dwFWrite.c'*/ \n"
+"    BLCS    _DebugAssert \n"
 "    CMP     R4, #0 \n"
 "    BNE     loc_FF2C5370 \n"
 "    LDR     R0, [R5] \n"
@@ -358,7 +358,7 @@ asm volatile (
 
 "loc_FF2C4E90:\n"
 "loc_B:\n"
-"    BL      fwt_close \n"  // --> Patched. Old value = _Close_FW.
+"    BL      fwt_close \n"  // --> Patched. Old value = _Close.
 
 "loc_FF2C4E94:\n"
 "    CMP     R0, #0 \n"
@@ -383,8 +383,8 @@ asm volatile (
 "    BL      sub_FF05B928 \n"
 "    CMP     R0, #0 \n"
 "    LDREQ   R1, =0x346 \n"
-"    LDREQ   R0, =0xFF2C512C \n"
-"    BLEQ    sub_00476AFC /*_DebugAssert*/ \n"
+"    LDREQ   R0, =0xFF2C512C /*'dwFWrite.c'*/ \n"
+"    BLEQ    _DebugAssert \n"
 "    LDR     R0, [SP, #0x28] \n"
 "    LDR     R1, [R4, #4] \n"
 "    ADD     R0, R0, R1 \n"
@@ -420,7 +420,7 @@ asm volatile (
 "    MOV     R0, SP \n"
 "    BL      sub_0047C364 \n"
 "    MOV     R0, SP \n"
-"    BL      sub_FF002E38 /*_strlen_FW*/ \n"
+"    BL      _strlen \n"
 "    MOV     R2, #0x54 \n"
 "    ADD     R0, R0, SP \n"
 "    MOV     R1, #0x4D \n"
@@ -433,8 +433,8 @@ asm volatile (
 "    BL      sub_FF05B278 \n"
 "    CMP     R0, #0 \n"
 "    MOVEQ   R1, #0x164 \n"
-"    LDREQ   R0, =0xFF2C512C \n"
-"    BLEQ    sub_00476AFC /*_DebugAssert*/ \n"
+"    LDREQ   R0, =0xFF2C512C /*'dwFWrite.c'*/ \n"
+"    BLEQ    _DebugAssert \n"
 "    MOV     R0, SP \n"
 "    BL      sub_FF05BE3C \n"
 "    ADD     R0, R4, #0x54 \n"

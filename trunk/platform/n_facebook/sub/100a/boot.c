@@ -230,6 +230,7 @@ asm volatile (
 /*************************************************************/
 //** sub_FF00038C_my @ 0xFF00038C - 0xFF0003F4, length=27
 void __attribute__((naked,noinline)) sub_FF00038C_my() {
+
    // Replacement of sub_ for correct power-on.
    // (enables short press = playback mode, long press = record mode)
    //   1) sub_FF0320E8 -> sub_FF093058 -> sub_FF090770  (sub_FF0320E8 passes 0x14, 0x50, 0x51, 0x15 for play/shoot/wifi/usb ?) 
@@ -240,6 +241,7 @@ void __attribute__((naked,noinline)) sub_FF00038C_my() {
         *(int*)(0x2FD4) = 0x01000000;   // playback mode
     else
         *(int*)(0x2FD4) = 0x00400000;   // shooting mode
+
 asm volatile (
 "    LDR     R0, =0xFF000404 \n"
 "    MOV     R1, #0 \n"
@@ -345,29 +347,29 @@ asm volatile (
 "    BL      sub_FF000AE8 \n"
 "    BL      sub_FF00539C \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF00434C \n"
+"    LDRLT   R0, =0xFF00434C /*'dmSetup'*/ \n"
 "    BLLT    _err_init_task \n"
 "    BL      sub_FF003E44 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF004354 \n"
+"    LDRLT   R0, =0xFF004354 /*'termDriverInit'*/ \n"
 "    BLLT    _err_init_task \n"
-"    LDR     R0, =0xFF004364 \n"
+"    LDR     R0, =0xFF004364 /*'/_term'*/ \n"
 "    BL      sub_FF003F2C \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF00436C \n"
+"    LDRLT   R0, =0xFF00436C /*'termDeviceCreate'*/ \n"
 "    BLLT    _err_init_task \n"
-"    LDR     R0, =0xFF004364 \n"
+"    LDR     R0, =0xFF004364 /*'/_term'*/ \n"
 "    BL      sub_FF00294C \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF004380 \n"
+"    LDRLT   R0, =0xFF004380 /*'stdioSetup'*/ \n"
 "    BLLT    _err_init_task \n"
 "    BL      sub_FF004D38 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF00438C \n"
+"    LDRLT   R0, =0xFF00438C /*'stdlibSetup'*/ \n"
 "    BLLT    _err_init_task \n"
 "    BL      sub_FF001604 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF004398 \n"
+"    LDRLT   R0, =0xFF004398 /*'armlib_setup'*/ \n"
 "    BLLT    _err_init_task \n"
 "    LDMFD   SP!, {R4,LR} \n"
 "    B       sub_FF00B24C_my \n"  // --> Patched. Old value = 0xFF00B24C.
@@ -411,7 +413,7 @@ asm volatile (
 "    LDR     R3, =task_Startup_my \n"  // --> Patched. Old value = 0xFF00B1E4.
 "    MOV     R2, #0 \n"
 "    MOV     R1, #0x19 \n"
-"    LDR     R0, =0xFF00B2C8 \n"
+"    LDR     R0, =0xFF00B2C8 /*'Startup'*/ \n"
 "    BL      _CreateTask \n"
 "    MOV     R0, #0 \n"
 "    LDMFD   SP!, {R3,PC} \n"
@@ -510,7 +512,7 @@ asm volatile (
 "    LDR     R3, =mykbd_task \n"  // --> Patched. Old value = 0xFF031F60.
 "    MOV     R2, #0x2000 \n"  // --> Patched. Old value = 0x800. stack size for new task_PhySw so we don't have to do stack switch
 "    MOV     R1, #0x17 \n"
-"    LDR     R0, =0xFF032260 \n"
+"    LDR     R0, =0xFF032260 /*'PhySw'*/ \n"
 "    BL      sub_0068AF04 /*_CreateTaskStrictly*/ \n"
 "    STR     R0, [R4, #4] \n"
 
@@ -586,14 +588,14 @@ asm volatile (
 "    BL      sub_0068B9B0 /*_WaitForAnyEventFlag*/ \n"
 "    CMP     R0, #0 \n"
 "    LDRNE   R1, =0xA01 \n"
-"    LDRNE   R0, =0xFF096194 \n"
+"    LDRNE   R0, =0xFF096194 /*'TouchPanelDriver_TMA340.c'*/ \n"
 "    BLNE    _DebugAssert \n"
 "    LDR     R0, [R4, #0x3C] \n"
 "    MOV     R1, SP \n"
 "    BL      sub_0068BBC0 /*_GetEventFlagValue*/ \n"
 "    CMP     R0, #0 \n"
 "    LDRNE   R1, =0xA15 \n"
-"    LDRNE   R0, =0xFF096194 \n"
+"    LDRNE   R0, =0xFF096194 /*'TouchPanelDriver_TMA340.c'*/ \n"
 "    BLNE    _DebugAssert \n"
 "    BL      sub_FF098108 \n"
 "    LDR     R0, [R4, #0x10] \n"
@@ -790,7 +792,7 @@ asm volatile (
 "    B       loc_FF097820 \n"
 
 "loc_FF097814:\n"
-"    LDR     R0, =0xFF096194 \n"
+"    LDR     R0, =0xFF096194 /*'TouchPanelDriver_TMA340.c'*/ \n"
 "    MOV     R1, #0xA90 \n"
 "    BL      _DebugAssert \n"
 
@@ -829,7 +831,7 @@ asm volatile (
 "    LDR     R0, [R4, #0x1C] \n"
 "    CMP     R0, #1 \n"
 "    LDRNE   R1, =0xAA9 \n"
-"    LDRNE   R0, =0xFF096194 \n"
+"    LDRNE   R0, =0xFF096194 /*'TouchPanelDriver_TMA340.c'*/ \n"
 "    BLNE    _DebugAssert \n"
 "    MOV     R6, #1 \n"
 "    MOV     R0, R6 \n"
@@ -848,7 +850,7 @@ asm volatile (
 "    LDR     R0, [R4, #0x1C] \n"
 "    CMP     R0, #1 \n"
 "    LDRNE   R1, =0xAB4 \n"
-"    LDRNE   R0, =0xFF096194 \n"
+"    LDRNE   R0, =0xFF096194 /*'TouchPanelDriver_TMA340.c'*/ \n"
 "    BLNE    _DebugAssert \n"
 "    MOV     R6, #0 \n"
 "    MOV     R0, R6 \n"
@@ -867,7 +869,7 @@ asm volatile (
 "    LDR     R0, [R4, #0x1C] \n"
 "    CMP     R0, #1 \n"
 "    LDRNE   R1, =0xABF \n"
-"    LDRNE   R0, =0xFF096194 \n"
+"    LDRNE   R0, =0xFF096194 /*'TouchPanelDriver_TMA340.c'*/ \n"
 "    BLNE    _DebugAssert \n"
 "    MOV     R0, #7 \n"
 "    BL      sub_FF09820C \n"
@@ -885,7 +887,7 @@ asm volatile (
 "    LDR     R0, [R4, #0x1C] \n"
 "    CMP     R0, #1 \n"
 "    LDRNE   R1, =0xAC7 \n"
-"    LDRNE   R0, =0xFF096194 \n"
+"    LDRNE   R0, =0xFF096194 /*'TouchPanelDriver_TMA340.c'*/ \n"
 "    BLNE    _DebugAssert \n"
 "    MOV     R0, #0 \n"
 "    BL      sub_FF09820C \n"
@@ -944,7 +946,7 @@ asm volatile (
 "    LDRB    R0, [SP, #0x13] \n"
 "    TST     R0, #0x70 \n"
 "    LDRNE   R1, =0x5D7 \n"
-"    LDRNE   R0, =0xFF096194 \n"
+"    LDRNE   R0, =0xFF096194 /*'TouchPanelDriver_TMA340.c'*/ \n"
 "    BLNE    _DebugAssert \n"
 "    LDRB    R0, [SP, #0x13] \n"
 "    TST     R0, #4 \n"
@@ -961,7 +963,7 @@ asm volatile (
 "    LDRB    R0, [SP, #0x13] \n"
 "    TST     R0, #0x70 \n"
 "    LDRNE   R1, =0x5EE \n"
-"    LDRNE   R0, =0xFF096194 \n"
+"    LDRNE   R0, =0xFF096194 /*'TouchPanelDriver_TMA340.c'*/ \n"
 "    BLNE    _DebugAssert \n"
 
 "loc_FF096A9C:\n"

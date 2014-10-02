@@ -149,7 +149,7 @@ asm volatile (
 
 "loc_FF18DB28:\n"
 "    LDR     R1, [SP, #4] \n"
-"    LDR     R3, =0xFF18B7F0 \n"
+"    LDR     R3, =0xFF18B7F0 /*'MovieRecorder.c'*/ \n"
 "    STR     R5, [R1] \n"
 "    STR     R9, [SP] \n"
 "    LDR     R0, [R4, #0x28] \n"
@@ -223,7 +223,7 @@ asm volatile (
 
 "loc_FF18D0C4:\n"
 "    LDR     R1, =0x777 \n"
-"    LDR     R0, =0xFF18B7F0 \n"
+"    LDR     R0, =0xFF18B7F0 /*'MovieRecorder.c'*/ \n"
 "    BL      _DebugAssert \n"
 
 "loc_FF18D0D0:\n"
@@ -387,7 +387,7 @@ asm volatile (
 "    LDR     R8, [SP, #0x38] \n"
 "    CMP     R0, #0 \n"
 "    LDREQ   R1, =0x32A \n"
-"    LDREQ   R0, =0xFF3042E0 \n"
+"    LDREQ   R0, =0xFF3042E0 /*'MovWriter.c'*/ \n"
 "    MOV     R5, #0 \n"
 "    MOV     R4, R2 \n"
 "    MOV     R10, R3 \n"
@@ -461,7 +461,7 @@ asm volatile (
 
 "loc_FF3057B8:\n"
 "    LDR     R1, =0x35B \n"
-"    LDR     R0, =0xFF3042E0 \n"
+"    LDR     R0, =0xFF3042E0 /*'MovWriter.c'*/ \n"
 "    BL      _DebugAssert \n"
 
 "loc_FF3057C4:\n"
@@ -510,7 +510,7 @@ asm volatile (
 
 "loc_FF305860:\n"
 "    LDR     R1, =0x383 \n"
-"    LDR     R0, =0xFF3042E0 \n"
+"    LDR     R0, =0xFF3042E0 /*'MovWriter.c'*/ \n"
 "    BL      _DebugAssert \n"
 
 "loc_FF30586C:\n"

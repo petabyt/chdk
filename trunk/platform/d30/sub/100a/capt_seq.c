@@ -29,9 +29,9 @@ asm volatile (
 "    TST     R0, #1 \n"
 "    BEQ     loc_FF0693CC \n"
 "    LDR     R1, =0x493 \n"
-"    LDR     R0, =0xFF068E4C \n"
-"    BL      sub_00476AFC /*_DebugAssert*/ \n"
-"    BL      sub_00476AB4 /*_ExitTask_FW*/ \n"
+"    LDR     R0, =0xFF068E4C /*'SsShootTask.c'*/ \n"
+"    BL      _DebugAssert \n"
+"    BL      _ExitTask \n"
 "    LDMFD   SP!, {R3-R9,PC} \n"
 
 "loc_FF0693CC:\n"
@@ -103,11 +103,11 @@ asm volatile (
 "    LDR     R0, =0x10F \n"
 "    MOV     R2, #4 \n"
 "    ADD     R1, R5, #0x24 \n"
-"    BL      sub_FF07A25C /*_SetPropertyCase*/ \n"
+"    BL      _SetPropertyCase \n"
 "    MOV     R2, #4 \n"
 "    ADD     R1, R5, #0x28 \n"
 "    MOV     R0, #0x2C \n"
-"    BL      sub_FF07A25C /*_SetPropertyCase*/ \n"
+"    BL      _SetPropertyCase \n"
 
 "loc_FF0694D0:\n"
 "    MOV     R0, R5 \n"
@@ -292,8 +292,8 @@ asm volatile (
 
 "loc_FF069678:\n"
 "    LDR     R1, =0x5F4 \n"
-"    LDR     R0, =0xFF068E4C \n"
-"    BL      sub_00476AFC /*_DebugAssert*/ \n"
+"    LDR     R0, =0xFF068E4C /*'SsShootTask.c'*/ \n"
+"    BL      _DebugAssert \n"
 
 "loc_FF069684:\n"
 "    LDR     R0, [SP] \n"
@@ -304,8 +304,8 @@ asm volatile (
 "    LDR     R0, [R5, #8] \n"
 "    CMP     R0, #0 \n"
 "    LDREQ   R1, =0x117 \n"
-"    LDREQ   R0, =0xFF068E4C \n"
-"    BLEQ    sub_00476AFC /*_DebugAssert*/ \n"
+"    LDREQ   R0, =0xFF068E4C /*'SsShootTask.c'*/ \n"
+"    BLEQ    _DebugAssert \n"
 "    STR     R6, [R5, #8] \n"
 "    B       loc_FF0693A0 \n"
 );
@@ -414,7 +414,7 @@ asm volatile (
 "    LDR     R0, [R6, #0x1C] \n"
 "    MOV     R1, #1 \n"
 "    BL      sub_0047AC6C /*_SetEventFlag*/ \n"
-"    BL      sub_00476AB4 /*_ExitTask_FW*/ \n"
+"    BL      _ExitTask \n"
 "    ADD     SP, SP, #0x2C \n"
 "    LDMFD   SP!, {R4-R9,PC} \n"
 
@@ -509,8 +509,8 @@ asm volatile (
 "    LDR     R1, =0x15CB \n"
 
 "loc_FF0B2424:\n"
-"    LDR     R0, =0xFF0AD950 \n"
-"    BL      sub_00476AFC /*_DebugAssert*/ \n"
+"    LDR     R0, =0xFF0AD950 /*'ExpDrv.c'*/ \n"
+"    BL      _DebugAssert \n"
 "    B       loc_FF0B2354 \n"
 
 "loc_FF0B2430:\n"
@@ -962,15 +962,15 @@ asm volatile (
 "    LDR     R0, [R5, #4] \n"
 "    CMP     R0, #1 \n"
 "    LDRNE   R1, =0x14D \n"
-"    LDRNE   R0, =0xFF09D7EC \n"
-"    BLNE    sub_00476AFC /*_DebugAssert*/ \n"
+"    LDRNE   R0, =0xFF09D7EC /*'Shutter.c'*/ \n"
+"    BLNE    _DebugAssert \n"
 "    CMN     R4, #0xC00 \n"
 "    LDREQSH R4, [R5, #2] \n"
 "    CMN     R4, #0xC00 \n"
 "    LDREQ   R1, =0x153 \n"
-"    LDREQ   R0, =0xFF09D7EC \n"
+"    LDREQ   R0, =0xFF09D7EC /*'Shutter.c'*/ \n"
 "    STRH    R4, [R5, #2] \n"
-"    BLEQ    sub_00476AFC /*_DebugAssert*/ \n"
+"    BLEQ    _DebugAssert \n"
 "    MOV     R0, R4 \n"
 "    BL      apex2us \n"  // --> Patched. Old value = _apex2us.
 "    LDR     PC, =0xFF09D9F8 \n"  // Continue in firmware

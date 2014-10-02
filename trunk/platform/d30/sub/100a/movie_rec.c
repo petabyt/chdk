@@ -137,7 +137,7 @@ asm volatile (
 
 "loc_FF17D190:\n"
 "    LDR     R1, [SP, #4] \n"
-"    LDR     R3, =0xFF17AAD8 \n"
+"    LDR     R3, =0xFF17AAD8 /*'MovieRecorder.c'*/ \n"
 "    STR     R5, [R1] \n"
 "    STR     R9, [SP] \n"
 "    LDR     R0, [R4, #0x28] \n"

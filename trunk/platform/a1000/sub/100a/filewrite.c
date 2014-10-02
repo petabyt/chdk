@@ -174,7 +174,7 @@ asm volatile (
 
 "loc_FFDD9000:\n"
 "    LDR     R1, =0x205 \n"
-"    LDR     R0, =0xFFDD8F90 \n"
+"    LDR     R0, =0xFFDD8F90 /*'dwFWrite.c'*/ \n"
 "    BL      _DebugAssert \n"
 "    B       loc_FFDD8FF4 \n"
 
@@ -212,7 +212,7 @@ asm volatile (
 "    SUB     R5, R5, R0 \n"
 "    CMP     R5, R6 \n"
 "    ADD     R7, R7, R0 \n"
-"    LDRCS   R0, =0xFFDD8F90 \n"
+"    LDRCS   R0, =0xFFDD8F90 /*'dwFWrite.c'*/ \n"
 "    MOVCS   R1, #0x234 \n"
 "    BLCS    _DebugAssert \n"
 "    CMP     R5, #0 \n"

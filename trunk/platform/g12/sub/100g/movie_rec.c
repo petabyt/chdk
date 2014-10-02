@@ -128,7 +128,7 @@ asm volatile (
 "    STR     R5, [R1] \n"
 "    STR     R3, [SP] \n"
 "    LDR     R0, [R4, #0x28] \n"
-"    LDR     R3, =0xFF985D8C \n"
+"    LDR     R3, =0xFF985D8C /*'MovieRecorder.c'*/ \n"
 "    MOV     R2, R8 \n"
 "    BL      sub_FF83ADB4 /*_PostMessageQueueStrictly*/ \n"
 "    B       loc_FF9870AC \n"

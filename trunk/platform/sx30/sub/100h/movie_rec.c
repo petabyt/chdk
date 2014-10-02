@@ -28,7 +28,7 @@ asm volatile (
 "    MOV     R2, #0 \n"
 "    ADD     R1, SP, #4 \n"
 "    BL      sub_FF83A4C8 /*_ReceiveMessageQueue*/ \n"
-"    LDR     R2, =0xFF881594 \n"
+"    LDR     R2, =0xFF881594 /*'MovieRecorder.c'*/ \n"
 "    LDR     R0, [R4, #0xD0] \n"
 "    MOV     R3, R9 \n"
 "    MOV     R1, R8 \n"
@@ -139,7 +139,7 @@ asm volatile (
 
 "loc_FF8834B0:\n"
 "    LDR     R1, [SP, #4] \n"
-"    LDR     R3, =0xFF881594 \n"
+"    LDR     R3, =0xFF881594 /*'MovieRecorder.c'*/ \n"
 "    STR     R6, [R1] \n"
 "    STR     R10, [SP] \n"
 "    LDR     R0, [R4, #0x28] \n"
