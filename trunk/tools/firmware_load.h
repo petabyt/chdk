@@ -134,6 +134,8 @@ int isCMP(firmware *fw, int offset);
 int isMOV(firmware *fw, int offset);
 int isMOV_immed(firmware *fw, int offset);
 
+int isASCIIstring(firmware *fw, uint32_t adr);
+
 // Find a string in the firmware dump
 int find_str(firmware *fw, char *str);
 // Find the next instruction of a specified type starting at idx within len instructions

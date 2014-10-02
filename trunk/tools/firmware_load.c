@@ -170,6 +170,14 @@ int adr2idx(firmware *fw, uint32_t adr)
 // Convert a memory address to a pointer into the firmware memory buffer
 char* adr2ptr(firmware *fw, uint32_t adr)
 {
+    if ((fw->dryos_ver >= 51) && (fw->alt_base) && (adr >= fw->alt_base))
+    {
+        return ((char*)fw->buf) + (adr - fw->alt_base);
+    }
+    if ((fw->dryos_ver >= 50) && (adr < fw->base))
+    {
+        adr = (adr - fw->base2) + fw->base_copied;
+    }
     return ((char*)fw->buf) + (adr - fw->base);
 }
 
@@ -550,6 +558,26 @@ int isMOV_immed(firmware *fw, int offset)
     return ((fwval(fw,offset) & 0xFFF00000) == 0xE3A00000);
 }
 
+//------------------------------------------------------------------------------------------------------------
+
+int isASCIIstring(firmware *fw, uint32_t adr)
+{
+    if (idx_valid(fw, adr2idx(fw, adr)))
+    {
+        unsigned char *p = (unsigned char*)adr2ptr(fw, adr);
+        int i;
+        for (i = 0; (i < 100) && (p[i] != 0); i++)
+        {
+            if (!((p[i] == '\r') || (p[i] == '\n') || (p[i] == '\t') || ((p[i] >= 0x20) && (p[i] <= 0x7f))))
+            {
+                return 0;
+            }
+        }
+        if ((i >= 2) && (p[i] == 0))
+            return 1;
+    }
+    return 0;
+}
 //------------------------------------------------------------------------------------------------------------
 
 // Find the index of a string in the firmware
