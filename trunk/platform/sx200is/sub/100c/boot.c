@@ -242,29 +242,29 @@ asm volatile (
 "    BL      sub_FF810954 \n"
 "    BL      sub_FF8190B4 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E4C /*'dmSetup'*/ \n"  // dmSetup
+"    LDRLT   R0, =0xFF814E4C /*'dmSetup'*/ \n"
 "    BLLT    _err_init_task \n"
 "    BL      sub_FF814974 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E54 /*'termDriverInit'*/ \n"  // termDriverInit
+"    LDRLT   R0, =0xFF814E54 /*'termDriverInit'*/ \n"
 "    BLLT    _err_init_task \n"
 "    LDR     R0, =0xFF814E64 /*'/_term'*/ \n"
 "    BL      sub_FF814A5C \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E6C /*'termDeviceCreate'*/ \n"  // termDeviceCreate
+"    LDRLT   R0, =0xFF814E6C /*'termDeviceCreate'*/ \n"
 "    BLLT    _err_init_task \n"
 "    LDR     R0, =0xFF814E64 /*'/_term'*/ \n"
 "    BL      sub_FF813578 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E80 /*'stdioSetup'*/ \n"  // stdioSetup
+"    LDRLT   R0, =0xFF814E80 /*'stdioSetup'*/ \n"
 "    BLLT    _err_init_task \n"
 "    BL      sub_FF818BCC \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E8C /*'stdlibSetup'*/ \n"  // stdlibSetup
+"    LDRLT   R0, =0xFF814E8C /*'stdlibSetup'*/ \n"
 "    BLLT    _err_init_task \n"
 "    BL      sub_FF8114A8 \n"
 "    CMP     R0, #0 \n"
-"    LDRLT   R0, =0xFF814E98 /*'armlib_setup'*/ \n"  // armlib_setup
+"    LDRLT   R0, =0xFF814E98 /*'armlib_setup'*/ \n"
 "    BLLT    _err_init_task \n"
 "    LDMFD   SP!, {R4,LR} \n"
 "    B       taskcreate_Startup_my \n"  // --> Patched. Old value = 0xFF81C260.
