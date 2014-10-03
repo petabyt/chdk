@@ -486,7 +486,7 @@ asm volatile (
 "    MOV     R3, #0 \n"
 "    STR     R3, [SP] \n"
 "    LDR     R3, =0xFF93CE44 \n"
-"    LDR     R0, =0xFF93D608 /*'ShutterSoundTask'*/ \n"  // ShutterSoundTask
+"    LDR     R0, =0xFF93D608 /*'ShutterSoundTask'*/ \n"
 "    MOV     R2, #0x400 \n"
 "    MOV     R1, #0x17 \n"
 "    BL      sub_FF827550 /*_CreateTaskStrictly*/ \n"
