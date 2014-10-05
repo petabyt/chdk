@@ -402,6 +402,46 @@ void usb_shoot_module_burst()
             - 5 pulses = zoom full out
   ---------------------------------------------------------------------------------------------------*/
 
+void usb_zoom_step(int zdirection)
+{
+    int zpos, zstep, newzpos ;
+    if (!camera_info.state.mode_play)
+    {
+        // currently used zoom_points values are  6 7 8 10 12 14 15 23 64 101 121 126 127 128 129 201
+        if      (zoom_points <= 16 ) zstep = 1 ;
+        else if (zoom_points <= 32 ) zstep = 2 ;
+        else if (zoom_points <= 64 ) zstep = 6 ;
+        else if (zoom_points <= 110) zstep = 10 ;
+        else if (zoom_points <= 128) zstep = 12 ;
+        else                         zstep = 20 ;
+        zpos = shooting_get_zoom();        
+        // if new pos less than half a step from end of range, go to end
+        if(zdirection>0)
+        {
+            if(zpos+zstep+zstep/2<zoom_points)
+            {
+                newzpos = zpos+zstep;
+            }
+            else
+            {
+                newzpos = zoom_points;
+            }
+        }
+        else
+        {
+            if(zpos-zstep-zstep/2>0)
+            {
+                newzpos = zpos-zstep;
+            }
+            else
+            {
+                newzpos = 0;
+            }
+        }
+        shooting_set_zoom(newzpos);
+    }
+}
+
 void usb_shoot_module_zoom()
 {
     static AS_ID usb_remote_stack_name = 0;
@@ -415,10 +455,10 @@ void usb_shoot_module_zoom()
             switch( get_usb_power(LM_PULSE_COUNT) )
             {
                 case ZOOM_STEP_OUT :
-                    shooting_set_zoom_rel(1) ;
+                    usb_zoom_step(1) ;
                     break ;
                 case ZOOM_STEP_IN :
-                    shooting_set_zoom_rel(-1) ;
+                    usb_zoom_step(-1);
                     break ;
                 case ZOOM_SHOOT :
                     logic_module_state = LM_FULL_PRESS ;
