@@ -116,6 +116,9 @@
     #define CAM_HAS_GPS                     1
 
     #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
+    
+    #define  CAM_USE_ALT_SET_ZOOM_POINT     1
+    #define  CAM_NEED_SET_ZOOM_DELAY        1
 
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1
