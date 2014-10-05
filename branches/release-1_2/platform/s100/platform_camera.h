@@ -121,4 +121,7 @@
     #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #undef CAM_AF_SCAN_DURING_VIDEO_RECORD
 
+    #define  CAM_USE_ALT_SET_ZOOM_POINT     1
+    #define  CAM_NEED_SET_ZOOM_DELAY        1
+
 //----------------------------------------------------------
