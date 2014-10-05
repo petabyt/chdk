@@ -110,7 +110,6 @@ const CapturemodeMap modemap[] = {
     { MODE_SCN_SNOW,           16403 },
     { MODE_SCN_BEACH,          16404 },
     { MODE_SCN_FIREWORK,       16405 },
-    { MODE_INDOOR,             32785 },
     { MODE_KIDS_PETS,          32784 },	
     { MODE_NIGHT_SNAPSHOT,     32779 },
     { MODE_LANDSCAPE,          32780 },	

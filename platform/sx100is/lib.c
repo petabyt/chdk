@@ -79,3 +79,17 @@ void debug_led(int state)
 int get_flash_params_count(void){
  return 114;
 }
+
+// PTP display stuff
+int vid_get_palette_type() { return 1; }
+int vid_get_palette_size() { return 16*4; }
+
+void *vid_get_bitmap_active_palette() 
+{
+    return (void *)0x422f8;        //Found @ 0xffcd22b4 - Two refs to "BmpDDev"
+}
+
+void *vid_get_bitmap_active_buffer() 
+{
+    return (void*)(*(int*)0x99a8); //Found @ 0xffcd22b4 - Two refs to "BmpDDev"
+}

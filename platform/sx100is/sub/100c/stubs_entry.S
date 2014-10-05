@@ -24,7 +24,6 @@
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffdf5dd8 -> ffe9e824
 // Mode  2598 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_INDOOR              32785
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00010c1c) // Found @0xffc130f4
