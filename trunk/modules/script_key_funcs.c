@@ -52,6 +52,7 @@ static const struct Keynames {
     { KEY_ZOOM_ASSIST,      "zoom_assist"},
     { KEY_AE_LOCK,          "ae_lock"    },
     { KEY_METERING,         "metering_mode"},
+    { KEY_PLAYBACK,         "playback"   },
     { KEY_HELP,             "help"       },
     { KEY_MODE,             "mode"       },
     { 0xFF,                 "remote"     },
