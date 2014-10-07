@@ -442,6 +442,8 @@ typedef struct {
     int memdmp_size;            // amount of memory to dump in bytes (0 for all RAM)
     
     int remote_input_channel;   // remote input channel,  0=USB, 1=A/D
+    
+    int hotshoe_override;       // flash hot shoe override (0=no override, 1='not occupied', 2='occupied')
 
 } Conf;
 

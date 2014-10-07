@@ -30,6 +30,9 @@ static int new_jogdial=0, old_jogdial=0;
 #define USB_MASK (0x40000)
 #define USB_IDX  2
 
+#define HOTSHOE_FLAG        0x00040000
+#define HOTSHOE_IDX         0
+
 int get_usb_bit() 
 {
 	long usb_physw[3];
@@ -153,6 +156,10 @@ void my_kbd_read_keys()
 	} else {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
 	}
+
+#ifdef CAM_HOTSHOE_OVERRIDE
+    HOTSHOE_OVERRIDE; /* macro defined in platform.h */
+#endif
 
     _kbd_pwr_off();
     

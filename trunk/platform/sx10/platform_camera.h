@@ -65,6 +65,7 @@
 
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
+    #define CAM_HOTSHOE_OVERRIDE            1
 
     #define REMOTE_SYNC_STATUS_LED          0xC0220060  // specifies an LED that turns on while camera waits for USB remote to sync
 

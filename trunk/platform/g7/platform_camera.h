@@ -59,6 +59,8 @@
 
     #define CAM_HAS_FILEWRITETASK_HOOK      1
 
+    #define CAM_HOTSHOE_OVERRIDE            1
+
     #define REMOTE_SYNC_STATUS_LED          0xc022006C  // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_USB_EVENTID_VXWORKS         0x1085 // LogicalEvent ID for ConnectUSBCable, needed to enable USB mode switch

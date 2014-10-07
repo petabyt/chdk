@@ -149,6 +149,8 @@
     #define CAM_HAS_FILEWRITETASK_HOOK          1
     #define CAM_FILEWRITETASK_SEEKS             1
 
+    #define CAM_HOTSHOE_OVERRIDE                1
+
     #define CAM_SD_OVER_IN_AFL                  1
     #define CAM_SD_OVER_IN_MF                   1
 

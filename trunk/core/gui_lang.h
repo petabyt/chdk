@@ -759,7 +759,12 @@
 
 #define LANG_MENU_DNG_CROP_SIZE                 625
 
-#define GUI_LANG_ITEMS                          625
+#define LANG_MENU_HOTSHOE_OVERRIDE              626
+#define LANG_MENU_HOTSHOE_USED                  627
+#define LANG_MENU_HOTSHOE_EMPTY                 628
+#define LANG_MENU_HOTSHOE_OVERRIDE_OFF          629
+
+#define GUI_LANG_ITEMS                          629
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
