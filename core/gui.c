@@ -1574,14 +1574,14 @@ static CMenuItem operation_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_MISC_FAST_EV,               MENUITEM_STATE_VAL_PAIR,&fast_ev_switch,                    0 ),
     MENU_ITEM   (0x5c, LANG_MENU_FLASH_EXP_COMP,            MENUITEM_STATE_VAL_PAIR,&flash_exp_comp,                    0 ),
     MENU_ITEM   (0x5c, LANG_MENU_FLASH_MANUAL_OVERRIDE,     MENUITEM_STATE_VAL_PAIR,&manual_flash,                      0 ),
-#ifdef CAM_HOTSHOE_OVERRIDE
-    MENU_ENUM2  (0x5c, LANG_MENU_HOTSHOE_OVERRIDE,          &conf.hotshoe_override, gui_hotshoe_override_modes ),
-#endif
 #if CAM_HAS_VIDEO_BUTTON
     MENU_ITEM   (0x5c, LANG_MENU_FLASH_VIDEO_OVERRIDE,      MENUITEM_BOOL,          &conf.flash_video_override,         0 ),
 #endif
 #if CAM_REAR_CURTAIN
     MENU_ITEM   (0x5c, LANG_MENU_REAR_CURTAIN,              MENUITEM_BOOL,          &conf.flash_sync_curtain,           0 ),
+#endif
+#ifdef CAM_HOTSHOE_OVERRIDE
+    MENU_ENUM2  (0x5c, LANG_MENU_HOTSHOE_OVERRIDE,          &conf.hotshoe_override, gui_hotshoe_override_modes ),
 #endif
 #if CAM_HAS_ND_FILTER
     MENU_ENUM2  (0x5f,LANG_MENU_OVERRIDE_ND_FILTER,         &conf.nd_filter_state,  gui_nd_filter_state_modes ),
