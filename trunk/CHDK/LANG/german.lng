@@ -462,7 +462,7 @@
 370 "Konturenüberlagerung"
 371 "Konturenüberlagerung"
 372 "Konturenüberlagerung an/aus"
-373 "   Grenzwert"
+373 "Grenzwert"
 374 "Konturenfarbe"
 
 375 "USB-Fernbedienung-Parameter"
@@ -764,3 +764,8 @@
 624 "FEHLER: Module nicht verfügbar!"
 
 625 "DNG-Crop-Größe"
+
+626 "Blitzschuh-Ersatz"
+627 "benutzt"
+628 "leer"
+629 "aus"
