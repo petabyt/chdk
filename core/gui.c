@@ -79,14 +79,14 @@ void gui_enum_value_change(int *value, int change, unsigned num_items) {
 
 static const char* gui_change_simple_enum(int* value, int change, const char** items, unsigned num_items) {
     gui_enum_value_change(value, change, num_items);
-    return items[*value];
+    return (const char*)lang_str((int)items[*value]);
 }
 
 const char* gui_change_enum2(const CMenuItem *menu_item, int change)
 {
     const char** items = (const char**)menu_item->arg;
     gui_enum_value_change(menu_item->value, change, menu_item->opt_len);
-    return items[*menu_item->value];
+    return (const char*)lang_str((int)items[*menu_item->value]);
 }
 
 //-------------------------------------------------------------------
@@ -1482,6 +1482,10 @@ static const char* gui_fast_ev_step_modes[] =               { "1/6 Ev","1/3 Ev",
 static const char* gui_fast_image_quality_modes[] =         { "Sup.Fine", "Fine", "Normal", "Off" };
 #endif
 
+#ifdef CAM_HOTSHOE_OVERRIDE
+static const char* gui_hotshoe_override_modes[] = { (char*)LANG_MENU_HOTSHOE_OVERRIDE_OFF, (char*)LANG_MENU_HOTSHOE_EMPTY, (char*)LANG_MENU_HOTSHOE_USED };
+#endif
+
 const char* gui_flash_power_modes_enum(int change, int arg)
 {
     static const char* modes[] = { "Min", "Med", "Max" };
@@ -1570,6 +1574,9 @@ static CMenuItem operation_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_MISC_FAST_EV,               MENUITEM_STATE_VAL_PAIR,&fast_ev_switch,                    0 ),
     MENU_ITEM   (0x5c, LANG_MENU_FLASH_EXP_COMP,            MENUITEM_STATE_VAL_PAIR,&flash_exp_comp,                    0 ),
     MENU_ITEM   (0x5c, LANG_MENU_FLASH_MANUAL_OVERRIDE,     MENUITEM_STATE_VAL_PAIR,&manual_flash,                      0 ),
+#ifdef CAM_HOTSHOE_OVERRIDE
+    MENU_ENUM2  (0x5c, LANG_MENU_HOTSHOE_OVERRIDE,          &conf.hotshoe_override, gui_hotshoe_override_modes ),
+#endif
 #if CAM_HAS_VIDEO_BUTTON
     MENU_ITEM   (0x5c, LANG_MENU_FLASH_VIDEO_OVERRIDE,      MENUITEM_BOOL,          &conf.flash_video_override,         0 ),
 #endif
@@ -1880,13 +1887,8 @@ static void gui_raw_develop(int arg)
 {
     libfselect->file_select(LANG_RAW_DEVELOP_SELECT_FILE, "A/DCIM", "A", raw_fselect_cb);
 }
-    
-static const char* gui_bad_pixel_enum(int change, int arg)
-{ 
-    int modes[]={LANG_MENU_BAD_PIXEL_OFF, LANG_MENU_BAD_PIXEL_INTERPOLATION, LANG_MENU_BAD_PIXEL_RAW_CONVERTER};
-    
-    return lang_str((int)gui_change_simple_enum(&conf.bad_pixel_removal,change,(const char**)modes,sizeof(modes)/sizeof(modes[0])));
-}
+
+const char* gui_bad_pixel_removal_modes[] = { (char*)LANG_MENU_BAD_PIXEL_OFF, (char*)LANG_MENU_BAD_PIXEL_INTERPOLATION, (char*)LANG_MENU_BAD_PIXEL_RAW_CONVERTER};
 
 #if defined (DNG_EXT_FROM)
 extern void cb_change_dng_usb_ext();
@@ -1904,7 +1906,7 @@ static CMenuItem raw_submenu_items[] = {
 //  MENU_ITEM   (0x60,LANG_MENU_SUB_IN_DARK_VALUE,          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.sub_in_dark_value, MENU_MINMAX(0, 1023) ),
 //  MENU_ITEM   (0x60,LANG_MENU_SUB_OUT_DARK_VALUE,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.sub_out_dark_value, MENU_MINMAX(0, 1023) ),
     MENU_ITEM   (0x2a,LANG_MENU_RAW_DEVELOP,                MENUITEM_PROC,      gui_raw_develop, 0 ),
-    MENU_ITEM   (0x5c,LANG_MENU_BAD_PIXEL_REMOVAL,          MENUITEM_ENUM,      gui_bad_pixel_enum, 0 ),
+    MENU_ENUM2  (0x5c,LANG_MENU_BAD_PIXEL_REMOVAL,          &conf.bad_pixel_removal, gui_bad_pixel_removal_modes ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_CACHED,                 MENUITEM_BOOL,      &conf.raw_cache,            0 ),
 #ifdef OPT_DEBUGGING
     MENU_ITEM   (0x5c,LANG_MENU_RAW_TIMER,                  MENUITEM_BOOL,      &conf.raw_timer,            0 ),

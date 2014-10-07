@@ -48,6 +48,8 @@ void my_blinkk(void) {
 #define SD_READONLY_FLAG (0x20000)
 #define USB_MASK (0x40000)
 #define USB_IDX  2
+#define HOTSHOE_FLAG        0x10000000 // Found @0xffb44bb4, levent 0x904
+#define HOTSHOE_IDX         2
 
 int get_usb_bit() 
 {
@@ -200,6 +202,9 @@ void my_kbd_read_keys()
 	} else {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
 	}
+#ifdef CAM_HOTSHOE_OVERRIDE
+    HOTSHOE_OVERRIDE; /* macro defined in platform.h */
+#endif
 
 }
 

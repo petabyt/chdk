@@ -115,6 +115,8 @@
     #undef  CAM_AF_LED
     #define CAM_AF_LED                      5       // Index of AF led in camera_set_led function
 
+    #define CAM_HOTSHOE_OVERRIDE            1
+
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1
     #define CAM_SD_OVER_IN_MF               1

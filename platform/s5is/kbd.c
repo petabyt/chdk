@@ -27,6 +27,8 @@ static int alt_mode_led=0;
 #define SD_READONLY_FLAG (0x20000)
 #define USB_MASK (0x200000)
 #define USB_IDX  2
+#define HOTSHOE_FLAG        0x00080000 // Found @0xffa9cec8, levent 0x904
+#define HOTSHOE_IDX         2
 
 int get_usb_bit() 
 {
@@ -216,6 +218,9 @@ void my_kbd_read_keys()
 	} else {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
 	}
+#ifdef CAM_HOTSHOE_OVERRIDE
+    HOTSHOE_OVERRIDE; /* macro defined in platform.h */
+#endif
 
 }
 

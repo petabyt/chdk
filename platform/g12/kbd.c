@@ -46,6 +46,9 @@ extern void _GetKbdState(long*);
 #define BATTCOVER_FLAG      0x00008000 // Found @0xffbb9438, levent 0x905
 #define BATTCOVER_IDX       2
 
+#define HOTSHOE_FLAG        0x01000000 // Found @0xffbb9468, levent 0x904
+#define HOTSHOE_IDX         2
+
 int get_usb_bit() 
 {
 	long usb_physw[3];
@@ -174,6 +177,10 @@ void my_kbd_read_keys()
 #endif
 	if (conf.remote_enable)
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~USB_MASK;
+#ifdef CAM_HOTSHOE_OVERRIDE
+    HOTSHOE_OVERRIDE; /* macro defined in platform.h */
+#endif
+
 }
 
 

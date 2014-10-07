@@ -21,6 +21,8 @@ extern void _GetKbdState(long*);
 #define SD_READONLY_IDX     1
 #define USB_MASK            0x10000000 // Found @0xff49e64c, levent 0x202
 #define USB_IDX             2
+#define HOTSHOE_FLAG        0x00080000 // Found @0xff49e624, levent 0x204
+#define HOTSHOE_IDX         2
 //CHECK
 #define KEYS_MASK0 (0x00CFFDE0)
 #define KEYS_MASK1 (0x00000000)
@@ -155,6 +157,9 @@ void my_kbd_read_keys()
 	if (conf.remote_enable) {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~USB_MASK;
 	}
+#ifdef CAM_HOTSHOE_OVERRIDE
+    HOTSHOE_OVERRIDE; /* macro defined in platform.h */
+#endif
 
 }
 
