@@ -36,7 +36,6 @@ int get_usb_bit()
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 static KeyMap keymap[] = {
     { 0, KEY_PLAYBACK        ,0x00000100 }, // Found @0xffea7a88, levent 0x601
-    { 0, KEY_PRINT           ,0x00000100 }, // ALT menu on PLAYBACK button
     { 0, KEY_POWER           ,0x00000200 }, // Found @0xffea7a94, levent 0x600
     { 0, KEY_MENU            ,0x00000400 }, // Found @0xffea7aa0, levent 0x09
     { 1, KEY_LEFT            ,0x08000000 }, // Found @0xffea7adc, levent 0x06

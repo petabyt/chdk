@@ -8,4 +8,3 @@ NHSTUB(kbd_pwr_on,                  NULL_SUB)
 NHSTUB(MakeAFScan,                  0xFFD1E738)
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 
-NHSTUB(GetDrive_FreeClusters, 0xffc55b78)
