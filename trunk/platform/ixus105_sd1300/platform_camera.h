@@ -65,8 +65,8 @@
     #define CAM_USES_ASPECT_CORRECTION      1
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
-    #define CAM_ALT_BUTTON_NAMES            { "Display", "Playback" }
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_DISPLAY, KEY_PLAYBACK }
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Display" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_DISPLAY }
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
@@ -75,6 +75,9 @@
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
+
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+//    #define CAM_FILEWRITETASK_MULTIPASS     1 // See http://chdk.setepontos.com/index.php?topic=11831.msg117382#msg117382
 
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1
