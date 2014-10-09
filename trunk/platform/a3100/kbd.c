@@ -29,7 +29,7 @@ extern void _platformsub_kbd_fetch_data(long*);
 static KeyMap keymap[] = {
 //	{ grp,       hackkey, canonkey  }
     { 1, KEY_PLAYBACK        ,0x20000000 }, // Found @0xffad9820, levent 0x601
-    { 2, KEY_PRINT			, 0x00000800 }, // Face Key, default Alt key
+    { 2, KEY_FACE			, 0x00000800 }, // Face Key
     { 2, KEY_DISPLAY         ,0x00000400 }, // Found @0xffad98bc, levent 0x0a
     { 2, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffad9850, levent 0x01
     { 2, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffad9844, levent 0x00

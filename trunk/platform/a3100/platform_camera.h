@@ -67,10 +67,12 @@
 
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
+    #define CAM_CAN_MUTE_MICROPHONE         1
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
     #define CAM_DATE_FOLDER_NAMING          0x100   // Camera uses date for naming image folders
 
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
 
    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX  1     // enable workaround for camera crash at startup when opening the conf / font files
 
@@ -79,8 +81,8 @@
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
     
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
-    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Print", "Disp" }
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_PRINT, KEY_DISPLAY }
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Face", "Disp" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_FACE, KEY_DISPLAY }
 
     #undef CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE              17
