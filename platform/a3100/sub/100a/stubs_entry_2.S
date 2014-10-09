@@ -9,9 +9,8 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 
 // Additional
 //NHSTUB(GetLogToFile,                0xFFD1A618)
-NHSTUB(LockAndRefresh,              0xff9b4414)
 NHSTUB(MakeAFScan,                  0xff930894)
-NHSTUB(UnlockAndRefresh,            0xff9b4458)
-NHSTUB(GetDrive_FreeClusters, 0xff863190)
 //NHSTUB(closefastdir,                0xFFDF61C4)
 //NHSTUB(readfastdir,                 0xFFDF6368)
+NHSTUB(TurnOnMic,                   0xff854d68)
+NHSTUB(TurnOffMic,                  0xff854d94)

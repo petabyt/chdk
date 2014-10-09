@@ -12,7 +12,7 @@ Camera depending notes:
 + scripting (lua) works
 + Simple USB remote shutter works
 
-Default Alt key is 'Face/Print'
+Default Alt key is 'Playback [>]'
 Install using the [url=http://chdk.wikia.com/wiki/Prepare_your_SD_card#]Bootable_SD_Card_Method[/url]
 
 This built is based on the port of the A3000 (boot, capt_seq, loader) and the port of the A490 (movie_rec, keyboard routines)
@@ -25,3 +25,4 @@ History of changes
 - added user configurable Alt button (and removed some bugs in kbd.c)
 - Blind port for fw 100b
 - Cosmetic changes improving the readability of chdk menu
+- Port rewritten using code_gen tool, add fwt support, load CHDK in ARAM

@@ -87,23 +87,21 @@ ROM:FFD36E10                 LDRCS   R0, =aPropertytablem ; "PropertyTableManage
  return 0x94;
 }
 void vid_bitmap_refresh() {
-// YET TO DO
-
     extern int enabled_refresh_physical_screen;
     extern int full_screen_refresh;
 
     // asm1989: i've tried refreshphysical screen (screen unlock) and that caused the canon and
     // function menu to not display at all. This seems to work and is called in a similar
     // way in other places where original OSD should be refreshed.
-    extern void _LockAndRefresh();   // wrapper function for screen lock
-    extern void _UnlockAndRefresh();   // wrapper function for screen unlock
+    extern void _ScreenLock();
+    extern void _ScreenUnlock();
 
-    _LockAndRefresh();
+    _ScreenLock();
 
     enabled_refresh_physical_screen=1;
     full_screen_refresh=3;   // found in ScreenUnlock underneath a CameraLog.c call
 
-    _UnlockAndRefresh();
+    _ScreenUnlock();
 }
 
 // Defined in stubs_min.S
@@ -118,3 +116,17 @@ void *vid_get_viewport_live_fb()
     return viewport_buffers[buff];
 }
 
+// Functions for PTP Live View system
+
+void *vid_get_bitmap_active_palette() {
+        return (void*)(*(int*)(0x4c18+0x20));  //Found @ 0xff8ebce8 a3100 100a
+}
+
+// 64 entry palette based on 100a 0xff8ebce8
+int vid_get_palette_type()                      { return 4; }
+int vid_get_palette_size()                      { return 16*4; }
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x4c18+0xC)); //found @ 0xff8ebda4 a3100 100a
+}
