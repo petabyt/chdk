@@ -1,8 +1,6 @@
 0x001a656c,task_AdditionAgent
 0x0068a848,RegisterInterruptHandler
 0x0068a86c,UnregisterInterruptHandler
-0x0068a884,GetSRAndDisableInterrupt
-0x0068a888,SetSR
 0x0068a8a8,EnableInterrupt
 0x0068a8b0,CreateBinarySemaphore
 0x0068a918,CreateCountingSemaphore
@@ -1948,6 +1946,8 @@
 0xf8556fd0,task_ImageRetryConTask
 0xf8594934,task_ReadFileTask
 0xf8648144,_divmod_signed_int
+0xf864820c,GetSRAndDisableInterrupt
+0xf8648214,SetSR
 0xf86482cc,_divmod_unsigned_int
 0xf86486f4,_fdiv
 0xf86488cc,_dflt

@@ -1,7 +1,9 @@
 0x000e9ec0,task_AdditionAgent
 0x006b5624,RegisterInterruptHandler
-0x006b5648,UnregisterInterruptHandler
-0x006b5660,GetSRAndDisableInterrupt
+0x006b5694,UnregisterInterruptHandler
+0x006b5740,GetSRAndDisableInterrupt
+0x006b5744,SetSR
+0x006b5764,EnableInterrupt
 0x006b5778,CreateTask
 0x006b5778,CreateTask_FW
 0x006b5a04,ExitTask

@@ -1632,6 +1632,8 @@ string_sig string_sigs[] =
     { 9, "_ffix", "ConvertApexStdToApex_FW", 0,                           -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4 },
     { 9, "_fmul", "ConvertApexStdToApex_FW", 0,                           -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5 },
     { 9, "_fdiv", "ConvertApexToApexStd_FW", 0,                           -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3 },
+    { 9, "GetSRAndDisableInterrupt", "_GetSystemTime", 0,                  9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9 },
+    { 9, "SetSR", "_GetSystemTime", 0,                                    12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12 },
 
     //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52   R54
 //    { 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                 5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    1,    6 },
@@ -1720,10 +1722,11 @@ string_sig string_sigs[] =
     { 19, "CancelTimer", "SetTimerWhen", 0,                                      0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019 },
     { 19, "CancelHPTimer", "SetHPTimerAfterTimeout", 0,                          0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022 },
     { 19, "SetHPTimerAfterNow", "SetHPTimerAfterTimeout", 0,                    -0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020 },
-    { 19, "UnregisterInterruptHandler", "RegisterInterruptHandler", 0,           0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0013 },
-    { 19, "GetSRAndDisableInterrupt", "UnregisterInterruptHandler", 0,           0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x004c },
-    { 19, "SetSR", "UnregisterInterruptHandler", 0,                              0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x104d },
+    //{ 19, "UnregisterInterruptHandler", "RegisterInterruptHandler", 0,           0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0013 }, // unreliable on r52+
+    //{ 19, "GetSRAndDisableInterrupt", "UnregisterInterruptHandler", 0,           0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x0006, 0x004c }, // unreliable on r52+
+    //{ 19, "SetSR", "UnregisterInterruptHandler", 0,                              0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x1007, 0x104d }, // unreliable on r52+
     { 19, "EnableInterrupt", "UnregisterInterruptHandler", 0,                    0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x170f, 0x1755 },
+    { 19, "EnableInterrupt", "SetSR", 0,                                         0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x1708, 0x1708 },
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54
     { 19, "GetDrive_TotalClusters", "GetDrive_ClusterSize", 0,                   0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x000d, 0x000c, 0x000c, 0x000c, 0x000c, 0x0001, 0x0001 },
     { 19, "GetDrive_FreeClusters", "GetDrive_TotalClusters", 0,                  0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x000b, 0x000a, 0x000a, 0x000a, 0x000a, 0x000a, 0x000b },
@@ -1768,6 +1771,9 @@ string_sig string_sigs[] =
     { 22, "DisplayDialogBox", (char*)find_DisplayDialogBox, 0 },
     { 22, "add_ui_to_dialog", (char*)find_add_ui_to_dialog, 0 },
     { 22, "get_string_by_id", (char*)find_get_string_by_id, 0 },
+
+    //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54
+    { 23, "UnregisterInterruptHandler", "HeadInterrupt1", 76,                    1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
 
     { 0, 0, 0, 0 }
 };
@@ -2532,6 +2538,44 @@ int find_strsig19(firmware *fw, string_sig *sig)
     return 0;
 }
 
+// Sig pattern:
+//      Str ref -   xDRnn Rx, =str_ptr
+//            ...
+//                  BL  func
+//            ...
+//      String      DCB "str"
+// offset: interpreted as max search distance
+// dryos_ofst: 0 for 1st B/BL after str ref, 1 for 2nd, etc.
+// based on method 7
+int match_strsig23a(firmware *fw, int k, uint32_t sadr, uint32_t maxdist)
+{
+    if (isADR_PC_cond(fw,k) || isLDR_PC_cond(fw,k)) // LDR or ADR ?
+    {
+        uint32_t padr;
+        if (isLDR_PC_cond(fw,k)) // LDR ?
+            padr = LDR2val(fw,k);
+        else
+            padr = ADR2adr(fw,k);
+        if (padr == sadr)
+        {
+            int j2 = find_Nth_inst(fw, isBorBL, k+1, maxdist, dryos_ofst+1);
+            if (j2 > 0)
+            {
+                uint32_t fa = idx2adr(fw,j2);
+                fa = followBranch2(fw,fa,0x01000001);
+                fwAddMatch(fw,fa,32,0,123);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+int match_strsig23(firmware *fw, string_sig *sig, int j)
+{
+    dryos_ofst = dryos_offset(fw,sig);
+    return search_fw(fw, match_strsig23a, idx2adr(fw,j), sig->offset, 2);
+}
+
 // Call processing function based on type
 int find_strsig(firmware *fw, string_sig *sig)
 {
@@ -2566,6 +2610,7 @@ int find_strsig(firmware *fw, string_sig *sig)
         }
     case 21:    return fw_process(fw, sig, (int (*)(firmware*, string_sig*, int))(sig->ev_name));
     case 22:    return ((int (*)(firmware*))(sig->ev_name))(fw);
+    case 23:    return fw_string_process(fw, sig, match_strsig23, 1);
     }
 
     return 0;
