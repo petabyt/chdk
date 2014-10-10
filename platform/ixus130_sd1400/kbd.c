@@ -19,7 +19,7 @@ extern void _GetKbdState(long*);
 #define KEYS_MASK0 (0x0000000C)		// physw_status[0]
 					// override key and feather bits to avoid feather osd messing up chdk display in ALT mode
 #define KEYS_MASK1 (0x00000000)		// physw_status[1], override 0xF0 (keys) + 0xF00 (feather)
-#define KEYS_MASK2 (0x000003FD)		// physw_status[2]
+#define KEYS_MASK2 (0x00000BFD)		// physw_status[2]
 
 #define SD_READONLY_FLAG (0x20000)  // SD-Card Lock Status (locked / unlocked)
 #define SD_READONLY_IDX     2  
@@ -36,18 +36,19 @@ int get_usb_bit()
 
 
 static KeyMap keymap[] = {
+    { 0, KEY_SET             ,0x00000004 }, // Found @0xffb3ea64, levent 0x08    
+    { 0, KEY_DISPLAY         ,0x00000008 }, // Found @0xffb3ea70, levent 0x0a 
+    { 2, KEY_PLAYBACK        ,0x00000800 }, // Found @0xffb3eb00, levent 0x601       
     { 2, KEY_UP         , 0x00000080 },
     { 2, KEY_DOWN       , 0x00000040 },
     { 2, KEY_LEFT       , 0x00000010 },
     { 2, KEY_RIGHT      , 0x00000020 },
-    { 0, KEY_SET        , 0x00000004 },
     { 2, KEY_SHOOT_FULL , 0x00000300 },   // 0x00000200(KEY_SHOOT_FULL) + 0x00000100 (KEY_SHOOT_HALF)
     { 2, KEY_SHOOT_FULL_ONLY , 0x00000200 }, 
     { 2, KEY_SHOOT_HALF , 0x00000100 },
     { 2, KEY_ZOOM_IN    , 0x00000004 },
     { 2, KEY_ZOOM_OUT   , 0x00000008 },
     { 2, KEY_MENU       , 0x00000001 },
-    { 0, KEY_PRINT      , 0x00000008 },   // ALT Key workaround: KEY_DISP(8) (camera has no print key)
     { 0, 0, 0 }
 };
 

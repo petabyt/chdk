@@ -780,7 +780,6 @@
 0xff834614,kbd_p1_f
 0xff834620,kbd_p1_f_cont
 0xff833ecc,kbd_p2_f
-0xff811800,kbd_pwr_off,(stubs_entry_2.s)
 0xff83459c,kbd_read_keys
 0xff85f4cc,kbd_read_keys_r2
 0xff90d358,LcdCon_GetLcdAdjParameter_FW

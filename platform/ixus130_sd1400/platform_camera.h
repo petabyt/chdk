@@ -78,6 +78,9 @@
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1  //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
 
+    #undef CAM_DEFAULT_ALT_BUTTON
+    #define CAM_DEFAULT_ALT_BUTTON          KEY_PLAYBACK 
+
     // cropping
     #define CAM_JPEG_WIDTH                  4320
     #define CAM_JPEG_HEIGHT                 3240
@@ -86,6 +89,8 @@
     #define CAM_DATE_FOLDER_NAMING          0x100
 
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
+
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
 
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1
