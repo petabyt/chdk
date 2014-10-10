@@ -270,6 +270,7 @@
 0xffad6658,EnableFocusLensSlopeGain_FW
 0xffad667c,EnableFocusLensWaveLock_FW
 0xffad7248,EnableFocusPiCircuit_FW
+0x003f5764,EnableInterrupt
 0xffad6de0,EnableIris_FW
 0xff985278,EnableIrisActuator_FW
 0xffad8148,EnableISAutoGyroOffset_FW
@@ -616,7 +617,7 @@
 0xffb5ccb8,GetSensorPreGain_FW
 0xffb5d9b8,GetShutterSpeedRegularMaxLimit_FW
 0xffb5d9d4,GetShutterSpeedRegularMinLimit_FW
-0x003f5660,GetSRAndDisableInterrupt
+0x003f5740,GetSRAndDisableInterrupt
 0xff88a10c,GetStringWithPrompt_FW
 0xffb633bc,GetSumYOfVRAMCenterLine_FW
 0xff81bd84,GetSwitchStatus_FW
@@ -1410,6 +1411,7 @@
 0xffb5cca8,SetSensorPreGain_FW
 0xffb5d950,SetShutterSpeed_FW
 0xffb5d8f4,SetShutterSpeedWithMecha_FW
+0x003f5744,SetSR
 0xff81c2ec,SetSSIDForFAWLAN_FW
 0xff85b268,SetStereoSeparation_FW
 0xffa68820,SetTassenAdjSGMode_FW
@@ -1765,7 +1767,7 @@
 0xff88f180,UnlockMainPower
 0xff88f180,UnlockMainPower_FW
 0xffb62198,UnregistColorMatrix_FW
-0x003f5648,UnregisterInterruptHandler
+0x003f5694,UnregisterInterruptHandler
 0xff81abc8,VbattGet
 0xff81abc8,VbattGet_FW
 0xffadd2ec,VerifyByte_FW

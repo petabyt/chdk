@@ -661,7 +661,7 @@
 0xf85137e0,GetShutterSpeedRegularMinLimit_FW
 0xf81bbf24,GetSlantAngle_FW
 0xf80779c8,GetSlantData_FW
-0x0068a884,GetSRAndDisableInterrupt
+0xf86481f0,GetSRAndDisableInterrupt
 0xf800c6a8,GetStringWithPrompt_FW
 0xf8425c30,GetStrobePopUpActuatorCurrentState_FW
 0xf822f438,GetStrobePopUpSectionTime_FW
@@ -1506,7 +1506,7 @@
 0xf8512724,SetSensorPreGain_FW
 0xf851375c,SetShutterSpeed_FW
 0xf8513700,SetShutterSpeedWithMecha_FW
-0x0068a888,SetSR
+0xf86481f8,SetSR
 0xf8022c18,SetSSIDForFAWLAN_FW
 0xf807e2a8,SetStereoSeparation_FW
 0xf8426094,SetStrobePopUpActuatorAmpereLimitMode_FW
