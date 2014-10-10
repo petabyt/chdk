@@ -16,15 +16,15 @@ void vid_bitmap_refresh() {
     // asm1989: i've tried refreshphysical screen (screen unlock) and that caused the canon and
     // function menu to not display at all. This seems to work and is called in a similar
     // way in other places where original OSD should be refreshed.
-    extern void _LockAndRefresh();   // wrapper function for screen lock
-    extern void _UnlockAndRefresh();   // wrapper function for screen unlock
- 
-    _LockAndRefresh();
+    extern void _ScreenLock();
+    extern void _ScreenUnlock();
+
+    _ScreenLock();
  
     enabled_refresh_physical_screen=1;
     full_screen_refresh=3;   // found in ScreenUnlock underneath a CameraLog.c call
  
-    _UnlockAndRefresh();
+    _ScreenUnlock();
 }
 
 void shutdown() {
@@ -77,4 +77,51 @@ void JogDial_CCW(void){
   //_PostLogicalEventForNotPowerType(0x875, 2);  // RotateJogDialLeft
 }
 
+// Viewport and Bitmap values that shouldn't change across firmware versions.
+// Values that may change are in lib.c for each firmware version.
 
+// Defined in stubs_min.S
+extern char active_viewport_buffer;
+extern void* viewport_buffers[];
+
+void *vid_get_viewport_fb()
+{
+    // Return first viewport buffer - for case when vid_get_viewport_live_fb not defined
+    return viewport_buffers[0];
+}
+
+void *vid_get_viewport_live_fb()
+{
+    if (camera_info.state.mode_video)
+        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
+
+    // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
+    return viewport_buffers[(active_viewport_buffer)&3];
+}
+
+void *vid_get_viewport_fb_d()
+{
+    extern char *viewport_fb_d;
+	return viewport_fb_d;
+}
+
+void *vid_get_bitmap_fb()
+{
+    return (void*)0x40431000;               // Found @0xff859828
+}
+
+
+// Functions for PTP Live View system
+// 256 entry palette based on 100a
+// sub_ff90ce84  <- Called for a function with 2 ref to **"Palette Class.
+int vid_get_palette_type()                      { return 3; }
+int vid_get_palette_size()                      { return 256 * 4; }
+
+void *vid_get_bitmap_active_buffer()
+{   //found @loc_ff90cf28 ixus130 100a ->Called before *"..<GetBmpVramInfo> Add
+    return (void*)(*(int*)(0x556C+0x18)); 
+}
+
+void *vid_get_bitmap_active_palette() {
+        return (void*)(*(int*)(0x556C+0x2C));  //Found @ 0xff90ce84 ixus130 100a
+}

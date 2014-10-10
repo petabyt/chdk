@@ -22,28 +22,6 @@ long hook_raw_size() {
     return 0x14d2400;
 }
 
-void *vid_get_viewport_live_fb() {
-    return (void*)0;
-}
-
-/*
-// ?!?
-// Live picture buffer (shoot not pressed)
-// ROM:FF84FB50 ?!?
-void *vid_get_viewport_live_fb() {
-    //void **fb=(void **)0x21E8;      // ?!?
-    //void **fb=(void **)0x21EC;      // ?!?
-    void **fb=(void **)0x21F8;      // ROM:FF85078C ?!? more or less guesswork
-    unsigned char buff = *((unsigned char*)0x204C);   // ROM:FF850904
-    if (buff == 0) {
-        buff = 2;
-    }
-    else {
-        buff--;
-    }
-    return fb[buff];
-}
-*/
 
 // OSD buffer
 // search dispcon* functions and BmpDDev.c
@@ -76,19 +54,19 @@ void *vid_get_viewport_live_fb() {
 // ff90ce6c: 	e5880010 	str	r0, [r8, #16]
 // ff90ce70: 	e3a00000 	mov	r0, #0	; 0x0
 // ff90ce74: 	e8bd81f0 	pop	{r4, r5, r6, r7, r8, pc}
-void *vid_get_bitmap_fb() {
-    return (void*)0x40431000;
-}
+//void *vid_get_bitmap_fb() {
+//    return (void*)0x40431000;
+//}
 
 // search for String "VRAM Address" (like SX10)
 // or search for String "MaxY %ld MinY %ld" and look below
-void *vid_get_viewport_fb() {
-    return (void*)0x40547700;
-}
+//void *vid_get_viewport_fb() {
+//    return (void*)0x40547700;
+//}
 
-void *vid_get_viewport_fb_d() {
-    return (void*)(*(int*)0x29f8);         // ff871dec: 0x29a0 + 0x58
-}
+//void *vid_get_viewport_fb_d() {
+//    return (void*)(*(int*)0x29f8);         // ff871dec: 0x29a0 + 0x58
+//}
 
 int vid_get_viewport_width() { return 360; }
 

@@ -19,7 +19,7 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(kbd_pwr_off                          ,0xff85fb28) //  2 64%    *** != 0xff811800
+//NHSTUB(kbd_pwr_off                          ,0xff85fb28) //  2 64%    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffaa2b24 -> ffbd0b5c
@@ -47,7 +47,7 @@ DEF(focus_len_table                         ,0xfffe2aa0) // Found @0xfffe2aa0
 DEF(zoom_busy                               ,0x00006390) // Found @0xff955f54
 DEF(focus_busy                              ,0x00006234) // Found @0xff951814
 DEF(recreview_hold                          ,0x000035c0) // Found @0xff89a9ac
-DEF(viewport_buffers                        ,0xffb3db40) // Found @0xff84f0cc
+//DEF(viewport_buffers                        ,0xffb3db40) // Found @0xff84f0cc,          stubs_min = 0xffb3db40 (0xffb3db40)
 DEF(active_viewport_buffer                  ,0x00002040) // Found @0xff84ee8c
 // Camera appears to have only 1 RAW buffer @ 0x41db3b80 (Found @0xffb03ef8)
 DEF(fileio_semaphore                        ,0x00002950) // Found @0xff86d9ac
@@ -141,7 +141,7 @@ NHSTUB(GetBatteryTemperature                  ,0xff862d18) //102
 NHSTUB(GetCCDTemperature                      ,0xff862ca4) //102
 NHSTUB(GetCurrentAvValue                      ,0xff953204) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xff86f4b0) //122
-//NHSTUB(GetDrive_FreeClusters                ,0xff86f510) //  4            == 0xff86f510
+NHSTUB(GetDrive_FreeClusters                  ,0xff86f510) //  4
 NHSTUB(GetDrive_TotalClusters                 ,0xff86f4e4) //  3
 NHSTUB(GetFocusLensSubjectDistance            ,0xff952494) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff9528dc) //  3

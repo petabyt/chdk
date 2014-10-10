@@ -14,13 +14,13 @@ long hook_raw_size() {
 
 // search for String "VRAM Address" (like SX10)
 // or search for String "MaxY %ld MinY %ld" and look below
-void *vid_get_viewport_fb() {
-    return (void*)0x40547700;
-}
+//void *vid_get_viewport_fb() {
+//    return (void*)0x40547700;
+//}
 
-void *vid_get_viewport_fb_d() {
-    return (void*)(*(int*)0x29f8);         // ff871dec: 0x29a0 + 0x58
-}
+//void *vid_get_viewport_fb_d() {
+//    return (void*)(*(int*)0x29f8);         // ff871dec: 0x29a0 + 0x58
+//}
 
 /*
 from http://chdk.setepontos.com/index.php?topic=5045.msg54035#msg54035
@@ -53,6 +53,7 @@ FFC293C0                 LDR     R2, [R0,R2,LSL#2]
 You can verify them in memory browser: the index variable should circle through 0,1,2,
 and the table should contain three addresses, starting with the VRAM base address.
 */
+/*
 void *vid_get_viewport_live_fb() {
     return (void*)0;
     // sub_ff84e0e0??? (cf sd990 FF839850)
@@ -65,7 +66,7 @@ void *vid_get_viewport_live_fb() {
         buff--;
     }
     return fb[buff];
-}
+}*/
 
 // OSD buffer
 // search dispcon* functions and BmpDDev.c
@@ -98,9 +99,9 @@ void *vid_get_viewport_live_fb() {
 // ff90ce6c: 	e5880010 	str	r0, [r8, #16]
 // ff90ce70: 	e3a00000 	mov	r0, #0	; 0x0
 // ff90ce74: 	e8bd81f0 	pop	{r4, r5, r6, r7, r8, pc}
-void *vid_get_bitmap_fb() {
-    return (void*)0x40431000;
-}
+//void *vid_get_bitmap_fb() {
+//    return (void*)0x40431000;
+//}
 
 int vid_get_viewport_width() { return 360; }
 
