@@ -74,7 +74,7 @@ unsigned int hash(unsigned char *str)
 //
 // @tsv - Utility to convert export list to different required format
 //
-// USAGE:   makeexport module_exportlist.c module_exportlist.h exportlist.txt module_hashlist.h
+// USAGE:   makeexport module_exportlist.c module_exportlist.h exportlist.inc module_hashlist.h
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char **argv )
@@ -104,7 +104,7 @@ int main( int argc, char **argv )
 	}
 
 	fprintf(out_h,"//Auto generated file. Do not edit the contents of this file.\n");
-	fprintf(out_h,"//Update the core/module_exportlist.c\n\n");
+	fprintf(out_h,"//Update the modules/module_exportlist.c file\n\n");
 	fprintf(out_h,"#ifndef MODULE_EXPORTLIST_H\n");
 	fprintf(out_h,"#define MODULE_EXPORTLIST_H\n\n");
 
@@ -129,45 +129,7 @@ int main( int argc, char **argv )
     char* cur, *cursym;
 
     cur = file1;
-
-    const char* exp_def_tag="/* EXPORTED_DEFINES_";
-	int flag_section_defines = 0;
-
-	fprintf(out_h,"#ifdef CHDK_MODULE_CODE\n");
-    for(; *cur && *cur!='{'; cur++) {
-
-		if ( !strncmp(cur,exp_def_tag,strlen(exp_def_tag)) )
-		{
-			cur+=strlen(exp_def_tag);
-			if (*cur=='B' ) { 
-				fprintf(out_h,"\n//Section: exported defines\n");
-				flag_section_defines=1; 
-			}
-			else if (*cur=='E' ) { flag_section_defines=0;}
-    		for(; *cur && *cur!=10; cur++);
-		}
-
-		if (flag_section_defines) {
-			cursym=cur;
-    		for(; *cur && *cur!=10 && *cur!='='; cur++);
-			if ( *cur=='=' ) {
-				*cur=0;
-				cur++;
-				cut_export_token(cursym);
-				char *symbol = find_last_token(cursym);
-				fprintf(out_h,"#undef %s\n",symbol);
-				fprintf(out_h,"extern %s;\n",cursym);
-    			for(; *cur && *cur!=10; cur++);		//goto eol
-			}
-		}
-    }
-
-	fprintf(out_h,"#endif\n");
-
-	fprintf(out_h,"\n\n");
-	fprintf(out_h,"\n//Section: ids of exported symbols\n");
-
-    for(; *cur && *cur!=10; cur++); 	//get eol
+	fprintf(out_h,"//Section: ids of exported symbols\n");
     
     // Main cycle
     for(;*cur; )
@@ -178,8 +140,6 @@ int main( int argc, char **argv )
 			for(cur++; *cur && *cur!=')'; cur++);
 			for(; *cur==9 || *cur==' ' || *cur==')'; cur++);
 		}
-		//printf("%x [%c]\n",cur-file1,*cur);
-		if ( *cur=='}') {break;}
 
         int is_address = 0;
 	    if (*cur=='&')
@@ -222,7 +182,6 @@ int main( int argc, char **argv )
 
 		for(; *cur && *cur!=10; cur++);
 		for(; *cur==10; cur++);
-	
     }
 
     sort_hash();
