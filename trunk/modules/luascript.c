@@ -1309,6 +1309,12 @@ static int luaCB_exit_alt( lua_State* L )
   return 0;
 }
 
+static int luaCB_get_alt_mode( lua_State* L )
+{
+    lua_pushboolean(L, (camera_info.state.gui_mode != 0));
+    return 1 ;
+}
+
 // optional parameter is 0 for soft shutdown (default) or 1 for hard/immediate
 static int luaCB_shut_down( lua_State* L )
 {
@@ -2715,6 +2721,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(usb_force_active)    
     FUNC(enter_alt)
     FUNC(exit_alt)
+    FUNC(get_alt_mode)
     FUNC(shut_down)
     FUNC(print_screen)
 
