@@ -95,6 +95,9 @@
     #define CAMERA_MIN_DIST                 88      // Override min subject distance
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                 66490   // Override max subject distance
+
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+
 //    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
 //    #define CAM_HOTSHOE_OVERRIDE            1 // does not seem to work, see http://chdk.setepontos.com/index.php?topic=11892.0

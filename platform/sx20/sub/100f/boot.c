@@ -16,7 +16,7 @@ void JogDial_task_my(void);
 
 extern void task_CaptSeq();
 extern void task_ExpDrv();
-//extern void task_FileWrite();
+extern void task_FileWrite();
 extern void task_InitFileModules();
 extern void task_MovieRecord();
 extern void task_RotaryEncoder();
@@ -30,8 +30,8 @@ void taskHook(context_t **context)
     if(tcb->entry == (void*)task_InitFileModules)   tcb->entry = (void*)init_file_modules_task;
     if(tcb->entry == (void*)task_MovieRecord)       tcb->entry = (void*)movie_record_task;
     if(tcb->entry == (void*)task_ExpDrv)            tcb->entry = (void*)exp_drv_task;
-	if(tcb->entry == (void*)task_RotaryEncoder)		tcb->entry = (void*)JogDial_task_my;
-//    if(tcb->entry == (void*)task_FileWrite)         tcb->entry = (void*)filewritetask;
+    if(tcb->entry == (void*)task_RotaryEncoder)     tcb->entry = (void*)JogDial_task_my;
+    if(tcb->entry == (void*)task_FileWrite)         tcb->entry = (void*)filewritetask;
 }
 
 /*----------------------------------------------------------------------
@@ -158,7 +158,7 @@ void __attribute__((naked,noinline)) sub_FF810354_my() {
     *(int*)0x1934=(int)taskHook;
     *(int*)0x1938=(int)taskHook;
 
-    // replacement of sub_FF8331CC for correct power-on.
+    // replacement of sub_FF85E718 for correct power-on.
     *(int*)(0x2564)= (*(int*)0xC0220134)&1 ? 0x2000000 : 0x1000000; 
     
 
