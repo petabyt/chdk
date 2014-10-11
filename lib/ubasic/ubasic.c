@@ -692,6 +692,10 @@ static int factor(void)
   case TOKENIZER_FORCE_USB_PRESENT:
     accept(TOKENIZER_FORCE_USB_PRESENT);
     r=force_usb_state(expr()) ;
+    break;
+  case TOKENIZER_GET_ALT_MODE:
+    accept(TOKENIZER_GET_ALT_MODE);
+    r = (camera_info.state.gui_mode != 0);
     break;    
 
   //ARM Begin
@@ -2517,9 +2521,11 @@ statement(void)
   case TOKENIZER_EXIT_ALT:
       one_int_param_function(token, exit_alt);
       break;
+  case TOKENIZER_ENTER_ALT:
+      one_int_param_function(token, enter_alt);
+      break;      
   case TOKENIZER_SHUT_DOWN:
       shutdown_statement();
-      break;
   case TOKENIZER_SET_BACKLIGHT:
       on_off_statement(token, TurnOnBackLight, TurnOffBackLight);
       break;

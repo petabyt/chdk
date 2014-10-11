@@ -219,6 +219,8 @@ static const struct keyword_token keywords[] = {
   {"enable_remote_hp_timer",    TOKENIZER_ENABLE_REMOTE_HP_TIMER},
   {"usb_force_active",        TOKENIZER_FORCE_USB_PRESENT},  
   {"exit_alt",                TOKENIZER_EXIT_ALT},
+  {"enter_alt",               TOKENIZER_ENTER_ALT}, 
+  {"get_alt_mode",            TOKENIZER_GET_ALT_MODE}, 
   {"shut_down",               TOKENIZER_SHUT_DOWN},
 
   {"get_shooting",            TOKENIZER_GET_SHOOTING},
