@@ -10,14 +10,6 @@ long hook_raw_size()
   return 0x11CA240; // FF867B38
 }
 
-void *vid_get_viewport_live_fb() // found in sub_FF84DDB8
-{
-  void **fb=(void **)0x222C;
-  unsigned char buff = *((unsigned char*)0x206C);
-  if (buff == 0) buff = 2;  else buff--;    
-  return fb[buff];
-}
-
 void *vid_get_bitmap_fb()
 {
   return (void*)0x403F1000; // sub_FF90A358 

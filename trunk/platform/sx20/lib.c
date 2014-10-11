@@ -9,15 +9,15 @@ void vid_bitmap_refresh()
 	// i've tried refreshphysical screen (screen unlock) and that caused the canon and
 	// function menu to not display at all. This seems to work and is called in a similar
 	// way in other places where original OSD should be refreshed.
-	extern void _LockAndRefresh(); // wrapper function for screen lock
-	extern void _UnlockAndRefresh(); // wrapper function for screen unlock
+	extern void _ScreenLock();
+	extern void _ScreenUnlock();
 
-	_LockAndRefresh();
+	_ScreenLock();
 
 	enabled_refresh_physical_screen=1;
 	full_screen_refresh=3; //found in ScreenUnlock underneath a CameraLog.c call sub_FFA02598
 
-	_UnlockAndRefresh();
+	_ScreenUnlock();
 }
 
 
@@ -59,4 +59,24 @@ void JogDial_CW(void){
 
 void JogDial_CCW(void){
  _PostLogicalEventForNotPowerType(0x875, 1);  // RotateJogDialLeft
+}
+
+void *vid_get_viewport_live_fb() // found in sub_FF84DDB8
+{
+  void **fb=(void **)0x222C;
+  unsigned char buff = *((unsigned char*)0x206C);
+  if (buff == 0) buff = 2;  else buff--;    
+  return fb[buff];
+}
+
+//TODO
+// Functions for PTP Live View system
+int vid_get_palette_type()                      { return 3 ; }
+int vid_get_palette_size()                      { return 256 * 4 ; }
+
+void *vid_get_bitmap_active_palette()
+{
+    extern int active_palette_buffer;
+    extern char** palette_buffer_ptr;
+    return palette_buffer_ptr[active_palette_buffer]+8;
 }
