@@ -967,7 +967,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                 }
                 break;
             case 54:
-                // based on 2 digic 4+ cams
+            case 55:
                 fw->cam_idx = adr2idx(fw,(fw->base==0xFF010000)?0xFFF40170:0xFFFF0170);
                 fw->pid_adr = (fw->base==0xFF010000)?0xFFF40040:0xFFFF0040;
                 break;
@@ -1212,7 +1212,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
 
     int dx = 3;
 
-    // DryOS R50/R51/R52 copies a block of ROM to RAM and then uses that copy
+    // DryOS R50/R51/R52 etc. copies a block of ROM to RAM and then uses that copy
     // Need to allow for this in finding addresses
     // Seen on SX260HS
     if (fw->dryos_ver >= 50)
