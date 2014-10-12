@@ -34,8 +34,8 @@ DEF(physw_status                            ,0x00010370) // Found @0xff821efc
 DEF(physw_run                               ,0x00001c00) // Found @0xff821b98
 DEF(physw_sleep_delay                       ,0x00001bfe) // Found @0xff821b98
 DEF(levent_table                            ,0xffacac68) // Found @0xffacac68
-//DEF(FlashParamsTable                        ,0xffaee048) // Found @0xffaee048, ** != ** stubs_min = 0xffaee050 (0xffaee050)
-//DEF(movie_status                            ,0x000053a4) // Found @0xff859b9c, ** != ** stubs_min = 0x000053b4 (0x53b4)
+DEF(FlashParamsTable                        ,0xffaee048) // Found @0xffaee048
+DEF(movie_status                            ,0x000053a4) // Found @0xff859b9c
 DEF(canon_menu_active                       ,0x000094e8) // Found @0xff94cb3c
 DEF(canon_shoot_menu_active                 ,0x00009e2d) // Found @0xff969e40
 DEF(playrec_mode                            ,0x00005534) // Found @0xff860ee8
@@ -46,8 +46,8 @@ DEF(some_flag_for_af_scan                   ,0x0000cf50) // Found @0xffa24140
 // there are 7 entries in the table - set NUM_FL to 7
 DEF(focus_len_table                         ,0xfffe297c) // Found @0xfffe297c
 DEF(zoom_busy                               ,0x000085f0) // Found @0xff92ee60
-//DEF(focus_busy                              ,0x000084fc) // Found @0xff92aa0c, ** != ** stubs_min = 0x00008578 (0x8578)
-//DEF(recreview_hold                          ,0x00005dc4) // Found @0xff87ccf8, ** != ** stubs_min = 0x00009c0c (0x9c0c)
+DEF(focus_busy                              ,0x000084fc) // Found @0xff92aa0c
+DEF(recreview_hold                          ,0x00005dc4) // Found @0xff87ccf8
 // Camera appears to have only 1 RAW buffer @ 0x10f3f400 (Found @0xffa81f28)
 DEF(fileio_semaphore                        ,0x000029e4) // Found @0xff850b00
 DEF_CONST(uiprop_count                      ,0x00000064) // Found @0xff95aa14

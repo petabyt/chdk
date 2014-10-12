@@ -43,5 +43,19 @@ void camera_set_led(int led, int state, int bright)
 
 
 int get_flash_params_count(void){
- return 114; //???
+ return 0x73;
+}
+
+// PTP display stuff
+int vid_get_palette_type() { return 1; }
+int vid_get_palette_size() { return 16*4; }
+
+void *vid_get_bitmap_active_palette() 
+{
+    return (void *)0x3E9B0;        //Found @ 0xff8e7e94 - Two refs to "BmpDDev"
+}
+
+void *vid_get_bitmap_active_buffer() 
+{
+    return (void*)(*(int*)0x7ACC); //Found @ 0xff8e7e94 - Two refs to "BmpDDev"
 }
