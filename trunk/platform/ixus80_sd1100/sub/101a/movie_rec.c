@@ -143,10 +143,10 @@ asm volatile (
 "    LDR     R0, [R5, #0x4C] \n"
 "    MUL     R0, R1, R0 \n"
 "    MOV     R1, #0x3E8 \n"
-"    BL      sub_FFAA663C /*__divmod_unsigned_int*/ \n"
+"    BL      sub_FFAA6638 /*__divmod_unsigned_int*/ \n"
 "    MOV     R1, R0 \n"
 "    LDR     R0, [R5, #0x54] \n"
-"    BL      sub_FFAA663C /*__divmod_unsigned_int*/ \n"
+"    BL      sub_FFAA6638 /*__divmod_unsigned_int*/ \n"
 "    CMP     R1, #0 \n"
 "    BNE     loc_FF859958 \n"
 
@@ -271,7 +271,7 @@ asm volatile (
 "    LDR     R1, [R5, #0x7C] \n"
 "    MUL     R0, R1, R0 \n"
 "    LDR     R1, [R5, #0x78] \n"
-"    BL      sub_FFAA663C /*__divmod_unsigned_int*/ \n"
+"    BL      sub_FFAA6638 /*__divmod_unsigned_int*/ \n"
 "    MOV     R4, R0 \n"
 "    BL      sub_FF9358AC \n"
 "    LDR     R1, [R5, #0x74] \n"
@@ -312,7 +312,7 @@ asm volatile (
 "    BEQ     loc_FF933578 \n"
 "    LDR     R3, [R4, #4] \n"
 "    LDR     R7, =table\n"          // +
-"    LDR     R7, =0xFFAC134C \n"
+"    LDR     R7, =0xFFAC1348 \n"
 "    ADD     R12, R3, R3, LSL#1 \n"
 "    LDR     R3, [R7, R12, LSL#2] \n"
 "    ADD     R6, R7, #0x30 \n"
@@ -360,7 +360,7 @@ asm volatile (
 "    STRNE   R2, [R4, #0xC] \n"
 
 "loc_FF933578:\n"
-"    LDR     R2, =CompressionRateTable \n"  // --> Patched. Old value = 0xFFAC12F0.
+"    LDR     R2, =CompressionRateTable \n"  // --> Patched. Old value = 0xFFAC12EC.
 "    LDR     R3, [R4, #8] \n"
 "    LDR     R2, [R2, R3, LSL#2] \n"
 //mod start

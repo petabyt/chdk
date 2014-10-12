@@ -28,12 +28,14 @@
 
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_HAS_ERASE_BUTTON
+    #define CAM_MULTIPART                   1
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_HAS_USER_TV_MODES
     #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
+    #define CAM_QUALITY_OVERRIDE            1
     // TODO / test
 
     #define CAM_DNG_LENS_INFO               { 62,10, 186,10, 28,10, 49,10 } // See comments in camera.h
@@ -55,6 +57,8 @@
     #define CAM_ACTIVE_AREA_Y2              2476
     // camera name
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
+
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
 
 //    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
