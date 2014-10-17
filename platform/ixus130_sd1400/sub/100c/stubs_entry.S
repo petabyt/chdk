@@ -47,7 +47,7 @@ DEF(focus_len_table                         ,0xfffe2aa0) // Found @0xfffe2aa0
 DEF(zoom_busy                               ,0x00006390) // Found @0xff955f54
 DEF(focus_busy                              ,0x00006234) // Found @0xff951814
 DEF(recreview_hold                          ,0x000035c0) // Found @0xff89a9ac
-//DEF(viewport_buffers                        ,0xffb3db40) // Found @0xff84f0cc,          stubs_min = 0xffb3db40 (0xffb3db40)
+DEF(viewport_buffers                        ,0xffb3db40) // Found @0xff84f0cc
 DEF(active_viewport_buffer                  ,0x00002040) // Found @0xff84ee8c
 // Camera appears to have only 1 RAW buffer @ 0x41db3b80 (Found @0xffb03ef8)
 DEF(fileio_semaphore                        ,0x00002950) // Found @0xff86d9ac

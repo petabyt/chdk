@@ -176,9 +176,14 @@ asm volatile (
 "    BL      sub_FFB39910 \n"    // 1.00a
 "    MOV     R0, #0x53000 \n"
 "    STR     R0, [SP, #4] \n"
-//"    LDR     R0, =0x14FE20 \n"
-"    LDR     R0, =new_sa\n"        // + remove the line ^ if using these two
-"    LDR     R0, [R0]\n"           // + this is related to chdk size
+
+#if defined(CHDK_NOT_IN_CANON_HEAP) // use original heap offset if CHDK is loaded in high memory
+"    LDR     R0, =0x14FE20 \n"
+#else
+"    LDR     R0, =new_sa\n"        // otherwise use patched value
+"    LDR     R0, [R0]\n"           // 
+#endif
+
 "    LDR     R2, =0x339C00\n"
 "    LDR     R1, =0x3324A8\n"
 "    STR     R0, [SP, #8] \n"
