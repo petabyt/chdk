@@ -50,8 +50,7 @@ static KeyMap keymap[] = {
 	{ 2, KEY_LEFT      , 0x00000800 },
 	{ 2, KEY_RIGHT     , 0x00000400 },
 	{ 2, KEY_SET       , 0x00001000 },
-	// { 1, KEY_FACE      , 0x10000000 },
-	{ 1, KEY_PRINT     , 0x10000000 }, // Face -> Print
+	{ 1, KEY_FACE      , 0x10000000 },
 	{ 2, KEY_ERASE     , 0x00008000 },
 	{ 2, KEY_DISPLAY   , 0x00004000 },
 	{ 2, KEY_ZOOM_IN   , 0x00000010 },

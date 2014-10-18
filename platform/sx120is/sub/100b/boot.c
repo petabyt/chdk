@@ -216,9 +216,14 @@ void __attribute__((naked,noinline)) sub_FFC00FC4_my() {
                  "BL      sub_FFE90DB4\n"
                  "MOV     R0, #0x53000\n"
                  "STR     R0, [SP,#4]\n"
-//                 "LDR     R0, =0x10A6AC\n"	// removed
-                 "LDR     R0, =new_sa\n"	// added
-                 "LDR     R0, [R0]\n"		// added
+
+#if defined(CHDK_NOT_IN_CANON_HEAP) // use original heap offset if CHDK is loaded in high memory
+                 "LDR     R0, =0x10A6AC\n"
+#else
+                 "LDR     R0, =new_sa\n"	// otherwise use patched value
+                 "LDR     R0, [R0]\n"
+#endif
+
                  "LDR     R2, =0x2F9C00\n"
                  "LDR     R1, =0x2F24A8\n"
                  "STR     R0, [SP,#8]\n"
