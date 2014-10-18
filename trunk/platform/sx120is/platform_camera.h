@@ -43,6 +43,9 @@
     #define CAM_BLACK_LEVEL                 128     // black level set to 128 per reports on the forum
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
 
+    #undef CAM_DEFAULT_ALT_BUTTON
+    #define CAM_DEFAULT_ALT_BUTTON          KEY_FACE
+
     #define CAM_DNG_LENS_INFO               { 60,10, 600,10, 28,10, 43,10 } // See comments in camera.h
 
     #define cam_CFAPattern                  0x01000201 // Green  Blue  Red  Green

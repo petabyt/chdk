@@ -67,3 +67,14 @@ void JogDial_CW(void){
 void JogDial_CCW(void){
  _PostLogicalEventForNotPowerType(0x877, 1);  // RotateJogDialLeft
 }
+
+// Functions for PTP Live View system
+int vid_get_palette_type()                      { return 3 ; }
+int vid_get_palette_size()                      { return 256 * 4 ; }
+
+void *vid_get_bitmap_active_palette()
+{
+    extern int active_palette_buffer;
+    extern char** palette_buffer_ptr;
+    return palette_buffer_ptr[active_palette_buffer]+8;
+}
