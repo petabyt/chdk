@@ -16,20 +16,21 @@ static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static long alt_mode_key_mask = 0x00800000; // key_print
-static int alt_mode_led=0;
 
 extern void _platformsub_kbd_fetch_data(long*);
 
-#define KEYS_MASK0 (0x00000003)
+#define KEYS_MASK0 (0x00004003)
 #define KEYS_MASK1 (0x0094FFE0)
 #define KEYS_MASK2 (0x00000000)
 
 #define NEW_SS (0x2000)
-#define SD_READONLY_FLAG (0x20000)
-#define USB_MASK (0x40000)
-#define USB_IDX  2
+#define SD_READONLY_FLAG    0x00020000 // Found @0xffb0ad4c, levent 0x90a
+#define SD_READONLY_IDX     2
+#define USB_MASK            0x00040000 // Found @0xffb0ad58, levent 0x902
+#define USB_IDX             2
 #define HOTSHOE_FLAG        0x10000000 // Found @0xffb0ad88, levent 0x904
 #define HOTSHOE_IDX         2
+
 
 int get_usb_bit() 
 {
@@ -50,25 +51,26 @@ static KeyMap keymap[] = {
 	 * for example
 	 */
 
-	{ 0, KEY_SHOOT_FULL	, 0x00000003 },
-    { 0, KEY_SHOOT_FULL_ONLY, 0x00000002 },
-	{ 0, KEY_SHOOT_HALF	, 0x00000001 },
+    { 0, KEY_PLAYBACK        ,0x00004000 }, // Found @0xffb0ad5c, levent 0x601	
+    { 0, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffb0ad44, levent 0x01
+    { 0, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffb0ad44, levent 0x01
+    { 0, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffb0ad38, levent 0x00
 
-	{ 1, KEY_UP		, 0x00000400 },
-	{ 1, KEY_DOWN		, 0x00000800 },
-	{ 1, KEY_LEFT		, 0x00002000 },
-	{ 1, KEY_RIGHT		, 0x00001000 },
-	{ 1, KEY_SET		, 0x00000100 },
-	{ 1, KEY_ZOOM_IN	, 0x00008000 },
-	{ 1, KEY_ZOOM_OUT	, 0x00040000 },
-	{ 1, KEY_MENU		, 0x00004000 },
-	{ 1, KEY_DISPLAY	, 0x00000200 },
-	{ 1, KEY_PRINT		, 0x00800000 },
-	{ 1, KEY_ERASE		, 0x00000080 },
-        { 1, KEY_EXPO_CORR      , 0x00000040 },
-        { 1, KEY_FLASH          , 0x00100000 },
-        { 1, KEY_VIDEO          , 0x00000020 },
-       	{ 0, 0, 0 }
+    { 1, KEY_PRINT		     ,0x00800000 },
+    { 1, KEY_FLASH           ,0x00100000 },
+    { 1, KEY_ZOOM_OUT	     ,0x00040000 },
+    { 1, KEY_ZOOM_IN	     ,0x00008000 },
+    { 1, KEY_LEFT            ,0x00002000 }, // Found @0xffb0ae1c, levent 0x06
+    { 1, KEY_MENU            ,0x00004000 }, // Found @0xffb0ae28, levent 0x09
+    { 1, KEY_RIGHT           ,0x00001000 }, // Found @0xffb0ae10, levent 0x07
+    { 1, KEY_DOWN            ,0x00000800 }, // Found @0xffb0ae04, levent 0x05
+    { 1, KEY_UP              ,0x00000400 }, // Found @0xffb0adf8, levent 0x04
+    { 1, KEY_DISPLAY         ,0x00000200 }, // Found @0xffb0adec, levent 0x0a
+    { 1, KEY_SET             ,0x00000100 }, // Found @0xffb0ade0, levent 0x08
+    { 1, KEY_ERASE		     ,0x00000080 },
+    { 1, KEY_EXPO_CORR       ,0x00000040 },
+    { 1, KEY_VIDEO           ,0x00000020 }, // Found @0xffb0adbc, levent 0x12  
+    { 0, 0, 0 }
 };
 
 
